@@ -91,10 +91,29 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
         return null;
       }
 
-      const result = scan();
+      let result = scan();
       if (production && hasErrors(result.issues)) {
         this.error(`Nội dung không hợp lệ, dừng build:\n${formatIssues(result.issues)}`);
       }
+
+      const totalLessonsInManifest = result.manifest.subjects.reduce(
+        (sum, subject) =>
+          sum + subject.chapters.reduce((cSum, chapter) => cSum + chapter.lessons.length, 0),
+        0,
+      );
+      if (production && totalLessonsInManifest === 0) {
+        if (logger) {
+          logger.warn(
+            '\n[content] Chưa có bài học nào ở trạng thái "published"; giữ các bài học mẫu (draft) trong gói build thử nghiệm.\n',
+          );
+        }
+        result = scanContent({
+          projectRoot,
+          contentDir,
+          publishedOnly: false,
+        });
+      }
+
       if (logger) {
         report(logger, result.issues);
       }

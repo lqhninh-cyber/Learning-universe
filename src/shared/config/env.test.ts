@@ -30,4 +30,23 @@ describe('parseEnv', () => {
       }),
     ).toThrow(/VITE_SUPABASE_URL/);
   });
+
+  it('chặn đứng nếu vô tình truyền service_role JWT hoặc sb_secret_ key vào frontend', () => {
+    const fakeServiceRolePayload = btoa(JSON.stringify({ role: 'service_role', iss: 'supabase' }));
+    const fakeServiceRoleJwt = `eyJhbGciOiJIUzI1NiJ9.${fakeServiceRolePayload}.signature`;
+
+    expect(() =>
+      parseEnv({
+        VITE_SUPABASE_URL: 'https://example.supabase.co',
+        VITE_SUPABASE_ANON_KEY: fakeServiceRoleJwt,
+      }),
+    ).toThrow(/BẢO MẬT/);
+
+    expect(() =>
+      parseEnv({
+        VITE_SUPABASE_URL: 'https://example.supabase.co',
+        VITE_SUPABASE_PUBLISHABLE_KEY: 'sb_secret_1234567890abcdefghij',
+      }),
+    ).toThrow(/BẢO MẬT/);
+  });
 });

@@ -34,6 +34,25 @@ export interface AppEnv {
   readonly isSupabaseConfigured: boolean;
 }
 
+function isForbiddenSecretKey(key: string): boolean {
+  if (/^sb_secret_/i.test(key)) {
+    return true;
+  }
+  const parts = key.split('.');
+  if (parts.length === 3 && parts[1]) {
+    try {
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const jsonText = atob(base64);
+      if (/"role"\s*:\s*"service_role"/.test(jsonText)) {
+        return true;
+      }
+    } catch {
+      // Không phải payload base64 chuẩn, bỏ qua
+    }
+  }
+  return false;
+}
+
 export function parseEnv(input: Record<string, string | undefined>): AppEnv {
   const parsed = rawEnvSchema.safeParse(input);
 
@@ -47,6 +66,13 @@ export function parseEnv(input: Record<string, string | undefined>): AppEnv {
   const supabaseUrl = parsed.data.VITE_SUPABASE_URL;
   const supabaseAnonKey =
     parsed.data.VITE_SUPABASE_ANON_KEY ?? parsed.data.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+  if (supabaseAnonKey && isForbiddenSecretKey(supabaseAnonKey)) {
+    throw new Error(
+      'BẢO MẬT: Tuyệt đối không được truyền service_role hoặc secret key vào biến môi trường frontend!',
+    );
+  }
+
   const siteUrl = parsed.data.VITE_SITE_URL ?? 'http://localhost:5173';
   const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
