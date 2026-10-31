@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { routes } from '@/app/router';
+import { useLearningStore } from '@/features/learning';
 import { MotionProvider } from '@/shared/motion/MotionProvider';
 import { TooltipProvider } from '@/shared/ui/Tooltip';
 
@@ -17,7 +18,11 @@ function renderWithProviders(initialEntry: string) {
 }
 
 describe('App routing smoke test', () => {
-  it('hiển thị trang chủ Learning Universe tại đường dẫn gốc /', async () => {
+  beforeEach(() => {
+    useLearningStore.getState().resetLearningStore();
+  });
+
+  it('hiển thị trang chủ Learning Universe với 2 môn học từ manifest tại /', async () => {
     renderWithProviders('/');
 
     expect(
@@ -25,10 +30,13 @@ describe('App routing smoke test', () => {
         name: /Không gian học tập Toán học đại học/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Nhóm, Vành và Trường/i })).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: /Không gian và Ánh xạ Affine/i }),
-    ).toBeInTheDocument();
+    const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
+    expect(algebraLinks.length).toBeGreaterThan(0);
+    expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');
+
+    const affineLinks = screen.getAllByRole('link', { name: 'Hình học Affine' });
+    expect(affineLinks.length).toBeGreaterThan(0);
+    expect(affineLinks[0]).toHaveAttribute('href', '/mon-hoc/hinh-hoc-affine');
   });
 
   it('hiển thị trang 404 tiếng Việt khi truy cập đường dẫn không tồn tại', async () => {

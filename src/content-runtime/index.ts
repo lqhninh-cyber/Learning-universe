@@ -27,12 +27,18 @@ export { LessonProvider, type LessonProviderProps } from './LessonContext';
 export { LessonMdxView, type LessonMdxViewProps } from './LessonMdxView';
 export { loadLessonModule, type CompiledLessonModule } from './loader';
 export {
+  type AdjacentLessons,
+  getAdjacentLessons,
   getBibliographyEntry,
   getLessonById,
   getLessonBySlug,
   getManifest,
   getSubjectBySlug,
+  getSubjectLessons,
   getSubjects,
+  getSubjectStats,
   type LessonLocation,
+  resolveLessonShortcut,
+  type SubjectStats,
 } from './manifest';
 export { mdxComponents } from './mdx-components';

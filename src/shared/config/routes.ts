@@ -7,6 +7,7 @@ export const ROUTES = {
   subjectOverview: (subjectSlug: string) => `/mon-hoc/${subjectSlug}`,
   lesson: (subjectSlug: string, chapterSlug: string, lessonSlug: string) =>
     `/mon-hoc/${subjectSlug}/${chapterSlug}/${lessonSlug}`,
+  lessonShortcut: (lessonOrChapterSlug: string) => `/bai-hoc/${lessonOrChapterSlug}`,
   about: '/gioi-thieu',
   auth: {
     signIn: '/dang-nhap',

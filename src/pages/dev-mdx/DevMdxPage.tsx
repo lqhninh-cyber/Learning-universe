@@ -9,7 +9,7 @@ import {
   loadLessonModule,
 } from '@/content-runtime';
 import { FadeIn } from '@/shared/motion/FadeIn';
-import { isSubjectThemeId, type SubjectThemeId } from '@/shared/theme/subject-themes';
+import { resolveSubjectThemeId } from '@/shared/theme/subject-themes';
 import { SubjectThemeProvider } from '@/shared/theme/SubjectThemeProvider';
 import {
   Badge,
@@ -74,10 +74,7 @@ export function DevMdxPage() {
     };
   }, [activeLessonId, loadedMap]);
 
-  const themeId: SubjectThemeId =
-    activeLocation && isSubjectThemeId(activeLocation.subject.slug)
-      ? activeLocation.subject.slug
-      : 'default';
+  const themeId = resolveSubjectThemeId(activeLocation?.subject.slug ?? activeLocation?.subject.id);
 
   return (
     <SubjectThemeProvider subject={themeId} className="space-y-10 pb-16">

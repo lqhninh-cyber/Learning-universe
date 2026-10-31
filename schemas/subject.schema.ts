@@ -5,6 +5,8 @@ export const subjectStatusSchema = z.enum(['draft', 'published']);
 
 export const subjectSchema = z.strictObject({
   id: slugSchema,
+  /** Đường dẫn URL tiếng Việt không dấu (nếu khác tên thư mục môn). */
+  slug: slugSchema.optional(),
   title: textSchema,
   shortTitle: textSchema,
   description: textSchema,

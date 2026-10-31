@@ -215,7 +215,11 @@ function scanSubject(
     }
   }
 
-  return { subject: { ...subject, slug: dirName }, chapters, absolutePath: subjectFile };
+  return {
+    subject: { ...subject, slug: subject.slug ?? dirName },
+    chapters,
+    absolutePath: subjectFile,
+  };
 }
 
 function scanChapter(

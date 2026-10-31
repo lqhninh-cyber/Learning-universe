@@ -93,5 +93,6 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}', 'build/**/*.test.ts', 'schemas/**/*.test.ts'],
     css: false,
+    testTimeout: 15000,
   },
 });

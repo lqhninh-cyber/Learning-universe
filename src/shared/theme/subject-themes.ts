@@ -36,8 +36,26 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
 
 export const SubjectThemeContext = createContext<SubjectThemeId>('default');
 
+const SLUG_TO_THEME_ID: Readonly<Record<string, SubjectThemeId>> = {
+  default: 'default',
+  'algebraic-structures': 'algebraic-structures',
+  'cau-truc-dai-so': 'algebraic-structures',
+  'affine-geometry': 'affine-geometry',
+  'hinh-hoc-affine': 'affine-geometry',
+};
+
 export function isSubjectThemeId(value: string): value is SubjectThemeId {
   return Object.hasOwn(SUBJECT_THEMES, value);
+}
+
+/**
+ * Phân giải `id` hoặc `slug` tiếng Việt không dấu của môn học về `SubjectThemeId`.
+ */
+export function resolveSubjectThemeId(subjectOrSlug?: string | null): SubjectThemeId {
+  if (!subjectOrSlug) {
+    return 'default';
+  }
+  return SLUG_TO_THEME_ID[subjectOrSlug] ?? 'default';
 }
 
 export function useSubjectTheme(): SubjectThemeMeta {

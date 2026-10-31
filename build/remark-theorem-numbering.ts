@@ -13,9 +13,35 @@ import {
   NUMBERED_BLOCKS,
   type CounterName,
   type LessonBlockInfo,
+  type LessonHeadingInfo,
   type LessonMeta,
 } from '../schemas/blocks.ts';
 import { parsePrefixedName } from './content-paths.ts';
+
+function slugifyHeading(text: string): string {
+  const normalized = text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[đĐ]/g, 'd')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return normalized || 'muc';
+}
+
+function extractNodeText(node: unknown): string {
+  if (typeof node !== 'object' || node === null) {
+    return '';
+  }
+  const typed = node as { type?: string; value?: unknown; children?: unknown[] };
+  if (typeof typed.value === 'string') {
+    return typed.value;
+  }
+  if (Array.isArray(typed.children)) {
+    return typed.children.map(extractNodeText).join('');
+  }
+  return '';
+}
 
 interface JsxAttribute {
   type: 'mdxJsxAttribute' | 'mdxJsxExpressionAttribute';
@@ -153,12 +179,32 @@ function buildExportProgram(meta: LessonMeta): Program {
 export const remarkTheoremNumbering: Plugin<[], Root> = () => (tree, file) => {
   const numbers = resolveNumbers(file, tree);
   const counters: Record<CounterName, number> = { theory: 0, example: 0, exercise: 0 };
+  const headings: LessonHeadingInfo[] = [];
   const blocks: LessonBlockInfo[] = [];
   const byId = new Map<string, LessonBlockInfo>();
   const usedAnchors = new Set<string>();
 
-  // Lượt 1: đánh số các khối.
+  // Lượt 1: trích xuất headings (h2, h3) và đánh số các khối.
   visit(tree, (node) => {
+    if (node.type === 'heading' && (node.depth === 2 || node.depth === 3)) {
+      const text = extractNodeText(node).trim();
+      if (text) {
+        const baseSlug = slugifyHeading(text);
+        let id = baseSlug;
+        let suffix = 2;
+        while (usedAnchors.has(id)) {
+          id = `${baseSlug}-${suffix}`;
+          suffix += 1;
+        }
+        usedAnchors.add(id);
+
+        const data = (node.data ??= {}) as { hProperties?: Record<string, unknown> };
+        data.hProperties = { ...(data.hProperties ?? {}), id };
+        headings.push({ id, text, depth: node.depth });
+      }
+      return;
+    }
+
     const element = asJsxElement(node);
     if (!element?.name || !isNumberedBlockName(element.name)) {
       return;
@@ -250,6 +296,7 @@ export const remarkTheoremNumbering: Plugin<[], Root> = () => (tree, file) => {
   const meta: LessonMeta = {
     chapterNumber: numbers.chapter,
     lessonNumber: numbers.lesson,
+    headings,
     blocks,
   };
   tree.children.push({

@@ -47,9 +47,17 @@ export interface LessonBlockInfo {
   readonly title: string | null;
 }
 
+/** Thông tin một tiêu đề mục (h2, h3) trong bài học để dựng Mục lục (TOC). */
+export interface LessonHeadingInfo {
+  readonly id: string;
+  readonly text: string;
+  readonly depth: 2 | 3;
+}
+
 /** Metadata biên dịch của một bài, export từ mỗi file MDX dưới tên `lessonMeta`. */
 export interface LessonMeta {
   readonly chapterNumber: number;
   readonly lessonNumber: number;
+  readonly headings: readonly LessonHeadingInfo[];
   readonly blocks: readonly LessonBlockInfo[];
 }

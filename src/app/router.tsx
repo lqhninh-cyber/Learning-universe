@@ -1,5 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { RootHydrateFallback, RootLayout } from '@/layouts/RootLayout';
+import { SubjectLayout } from '@/layouts/SubjectLayout';
 import { ROUTES } from '@/shared/config/routes';
 
 const devRoutes: RouteObject[] = import.meta.env.DEV
@@ -32,6 +33,41 @@ export const routes: RouteObject[] = [
         lazy: async () => {
           const { HomePage } = await import('@/pages/home/HomePage');
           return { Component: HomePage };
+        },
+      },
+      {
+        path: ROUTES.subjects,
+        lazy: async () => {
+          const { SubjectsListPage } = await import('@/pages/subjects/SubjectsListPage');
+          return { Component: SubjectsListPage };
+        },
+      },
+      {
+        path: '/mon-hoc/:subjectSlug',
+        Component: SubjectLayout,
+        children: [
+          {
+            index: true,
+            lazy: async () => {
+              const { SubjectOverviewPage } = await import('@/pages/subjects/SubjectOverviewPage');
+              return { Component: SubjectOverviewPage };
+            },
+          },
+          {
+            path: ':chapterSlug/:lessonSlug',
+            lazy: async () => {
+              const { LessonPage } = await import('@/pages/lesson/LessonPage');
+              return { Component: LessonPage };
+            },
+          },
+        ],
+      },
+      {
+        path: '/bai-hoc/:lessonSlug',
+        lazy: async () => {
+          const { LessonShortcutRedirectPage } =
+            await import('@/pages/lesson/LessonShortcutRedirectPage');
+          return { Component: LessonShortcutRedirectPage };
         },
       },
       ...devRoutes,
