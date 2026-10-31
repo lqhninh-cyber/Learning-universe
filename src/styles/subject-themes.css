@@ -1,0 +1,52 @@
+/**
+ * Hệ thống màu nhận diện theo từng môn học (Subject Theming) bằng OKLCH.
+ * Không nối chuỗi tạo class Tailwind động; mọi component dùng token cố định `subject-50` .. `subject-950`.
+ */
+
+:root,
+[data-subject='default'] {
+  --subject-hue: 260;
+  --subject-50: oklch(0.972 0.008 260);
+  --subject-100: oklch(0.94 0.016 260);
+  --subject-200: oklch(0.885 0.028 260);
+  --subject-300: oklch(0.8 0.05 260);
+  --subject-400: oklch(0.68 0.08 260);
+  --subject-500: oklch(0.56 0.11 260);
+  --subject-600: oklch(0.47 0.11 260);
+  --subject-700: oklch(0.39 0.09 260);
+  --subject-800: oklch(0.32 0.07 260);
+  --subject-900: oklch(0.26 0.05 260);
+  --subject-950: oklch(0.19 0.035 260);
+}
+
+/* Môn 1: Cấu trúc đại số — Indigo / Violet (trừu tượng, logic) */
+[data-subject='algebraic-structures'] {
+  --subject-hue: 275;
+  --subject-50: oklch(0.97 0.016 275);
+  --subject-100: oklch(0.935 0.032 275);
+  --subject-200: oklch(0.875 0.062 275);
+  --subject-300: oklch(0.79 0.105 275);
+  --subject-400: oklch(0.68 0.155 275);
+  --subject-500: oklch(0.585 0.195 275);
+  --subject-600: oklch(0.51 0.21 275);
+  --subject-700: oklch(0.44 0.185 275);
+  --subject-800: oklch(0.375 0.145 275);
+  --subject-900: oklch(0.32 0.11 275);
+  --subject-950: oklch(0.24 0.08 275);
+}
+
+/* Môn 2: Hình học Affine — Teal / Emerald (không gian, trực quan) */
+[data-subject='affine-geometry'] {
+  --subject-hue: 175;
+  --subject-50: oklch(0.972 0.018 175);
+  --subject-100: oklch(0.94 0.038 175);
+  --subject-200: oklch(0.885 0.07 175);
+  --subject-300: oklch(0.805 0.11 175);
+  --subject-400: oklch(0.71 0.135 175);
+  --subject-500: oklch(0.61 0.135 175);
+  --subject-600: oklch(0.525 0.12 175);
+  --subject-700: oklch(0.445 0.1 175);
+  --subject-800: oklch(0.38 0.08 175);
+  --subject-900: oklch(0.325 0.065 175);
+  --subject-950: oklch(0.24 0.048 175);
+}

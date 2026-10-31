@@ -2,6 +2,18 @@ import { createBrowserRouter, type RouteObject } from 'react-router';
 import { RootHydrateFallback, RootLayout } from '@/layouts/RootLayout';
 import { ROUTES } from '@/shared/config/routes';
 
+const devRoutes: RouteObject[] = import.meta.env.DEV
+  ? [
+      {
+        path: ROUTES.devUi,
+        lazy: async () => {
+          const { DevUiPage } = await import('@/pages/dev-ui/DevUiPage');
+          return { Component: DevUiPage };
+        },
+      },
+    ]
+  : [];
+
 export const routes: RouteObject[] = [
   {
     path: ROUTES.home,
@@ -15,6 +27,7 @@ export const routes: RouteObject[] = [
           return { Component: HomePage };
         },
       },
+      ...devRoutes,
       {
         path: '*',
         lazy: async () => {

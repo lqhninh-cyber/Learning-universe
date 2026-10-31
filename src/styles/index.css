@@ -1,9 +1,40 @@
+@import '@fontsource/be-vietnam-pro/400.css';
+@import '@fontsource/be-vietnam-pro/500.css';
+@import '@fontsource/be-vietnam-pro/600.css';
+@import '@fontsource/be-vietnam-pro/700.css';
+@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
+@import './subject-themes.css';
+@import './prose.css';
 
 @theme {
   --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    sans-serif;
+    'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
   --color-surface-canvas: #fafaf9;
   --color-surface-card: #ffffff;
+
+  --color-subject-50: var(--subject-50);
+  --color-subject-100: var(--subject-100);
+  --color-subject-200: var(--subject-200);
+  --color-subject-300: var(--subject-300);
+  --color-subject-400: var(--subject-400);
+  --color-subject-500: var(--subject-500);
+  --color-subject-600: var(--subject-600);
+  --color-subject-700: var(--subject-700);
+  --color-subject-800: var(--subject-800);
+  --color-subject-900: var(--subject-900);
+  --color-subject-950: var(--subject-950);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-surface-canvas);
+    color: var(--color-stone-900);
+  }
 }

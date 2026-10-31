@@ -21,4 +21,5 @@ export const ROUTES = {
     notes: '/ca-nhan/ghi-chu',
   },
   editorial: '/bien-tap',
+  devUi: '/dev/ui',
 } as const;
