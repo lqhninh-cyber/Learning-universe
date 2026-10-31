@@ -30,6 +30,7 @@ export {
   type AdjacentLessons,
   getAdjacentLessons,
   getBibliographyEntry,
+  getContentDiagnostics,
   getLessonById,
   getLessonBySlug,
   getManifest,

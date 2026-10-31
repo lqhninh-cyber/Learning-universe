@@ -80,8 +80,11 @@ export function hasErrors(issues: readonly ContentIssue[]): boolean {
 
 class Scanner {
   readonly issues: ContentIssue[] = [];
+  private readonly options: ScanOptions;
 
-  constructor(private readonly options: ScanOptions) {}
+  constructor(options: ScanOptions) {
+    this.options = options;
+  }
 
   relativeFile(absolutePath: string): string {
     return toPosix(path.relative(this.options.projectRoot, absolutePath));

@@ -45,6 +45,12 @@ export interface LessonBlockInfo {
   /** Nhãn đầy đủ, ví dụ "Định lý 1.1.2". */
   readonly label: string;
   readonly title: string | null;
+  /** Số hiệu gốc trong giáo trình tham khảo (nếu có), ví dụ "Định lý 3.2". */
+  readonly original?: string | null;
+  /** Mã nguồn tham khảo trong bibliography.yaml (nếu có). */
+  readonly source?: string | null;
+  /** Trang tham khảo trong giáo trình gốc (nếu có). */
+  readonly page?: string | null;
 }
 
 /** Thông tin một tiêu đề mục (h2, h3) trong bài học để dựng Mục lục (TOC). */

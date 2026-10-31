@@ -7,7 +7,8 @@ import {
   type ContentIssue,
   type ScanResult,
 } from './content-scanner.ts';
-import type { ContentManifest } from '../schemas/manifest.ts';
+import { validateContent } from './content-validator.ts';
+import type { ContentDiagnostics, ContentManifest } from '../schemas/manifest.ts';
 
 export const VIRTUAL_MANIFEST_ID = 'virtual:content-manifest';
 const RESOLVED_MANIFEST_ID = `\0${VIRTUAL_MANIFEST_ID}`;
@@ -23,8 +24,12 @@ export interface ContentPluginOptions {
  * - `manifest`: cây môn → chương → bài (chỉ metadata, rất nhẹ).
  * - `lessonModules`: bộ nạp lazy cho từng bài. Chỉ các bài có trong manifest được
  *   `import()`, nên bài `draft/review/approved` không bao giờ lọt vào bản production.
+ * - `contentDiagnostics`: kết quả kiểm định kỹ thuật cho `/dev/preview` (rỗng ở bản production).
  */
-export function generateManifestModule(manifest: ContentManifest): string {
+export function generateManifestModule(
+  manifest: ContentManifest,
+  diagnostics: ContentDiagnostics = { issues: [], lessons: [] },
+): string {
   const loaders = manifest.subjects
     .flatMap((subject) => subject.chapters)
     .flatMap((chapter) => chapter.lessons)
@@ -35,6 +40,7 @@ export function generateManifestModule(manifest: ContentManifest): string {
   return [
     `export const manifest = ${JSON.stringify(manifest)};`,
     `export const lessonModules = {\n${loaders.join(',\n')}\n};`,
+    `export const contentDiagnostics = ${JSON.stringify(diagnostics)};`,
     '',
   ].join('\n');
 }
@@ -92,7 +98,18 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
       if (logger) {
         report(logger, result.issues);
       }
-      return generateManifestModule(result.manifest);
+
+      const includeDrafts =
+        process.env.VERCEL_ENV === 'preview' || process.env.VITE_INCLUDE_DRAFTS === 'true';
+      const diagnostics: ContentDiagnostics =
+        !production || includeDrafts
+          ? (() => {
+              const validated = validateContent({ projectRoot, contentDir });
+              return { issues: validated.issues, lessons: validated.lessons };
+            })()
+          : { issues: [], lessons: [] };
+
+      return generateManifestModule(result.manifest, diagnostics);
     },
 
     configureServer(server) {

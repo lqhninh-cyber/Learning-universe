@@ -23,5 +23,5 @@
     "noUncheckedSideEffectImports": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["vite.config.ts", "eslint.config.js", "build", "schemas"]
+  "include": ["vite.config.ts", "eslint.config.js", "build", "schemas", "scripts"]
 }

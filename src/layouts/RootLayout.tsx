@@ -1,4 +1,12 @@
-import { BookOpenText, GraduationCap, Menu, Palette, User, UserCheck } from 'lucide-react';
+import {
+  BookOpenText,
+  GraduationCap,
+  Menu,
+  Palette,
+  ShieldCheck,
+  User,
+  UserCheck,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import { LoginPromptDialog, useLearningStore } from '@/features/learning';
@@ -149,6 +157,13 @@ export function RootLayout() {
                 >
                   <BookOpenText className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
                   <span>MDX Engine</span>
+                </Link>
+                <Link
+                  to={ROUTES.devPreview}
+                  className="hidden items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900 lg:inline-flex"
+                >
+                  <ShieldCheck className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+                  <span>Kiểm định</span>
                 </Link>
               </>
             )}

@@ -6,6 +6,7 @@ import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
 import {
   ChapterAccordionList,
   type LessonLevelFilter,
+  SubjectBibliography,
   SubjectFilterBar,
   SubjectHero,
 } from '@/features/subject';
@@ -128,6 +129,7 @@ export function SubjectOverviewPage() {
           </p>
         </Card>
       )}
+      <SubjectBibliography subject={subject} />
     </FadeIn>
   );
 }

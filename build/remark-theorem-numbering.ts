@@ -244,6 +244,9 @@ export const remarkTheoremNumbering: Plugin<[], Root> = () => (tree, file) => {
       number,
       label: `${spec.label} ${number}`,
       title: getStringAttribute(element, 'title') ?? null,
+      original: getStringAttribute(element, 'original') ?? null,
+      source: getStringAttribute(element, 'source') ?? null,
+      page: getStringAttribute(element, 'page') ?? null,
     };
     blocks.push(info);
     if (id !== null) {

@@ -1,6 +1,7 @@
-import { manifest } from 'virtual:content-manifest';
+import { contentDiagnostics, manifest } from 'virtual:content-manifest';
 import type {
   BibliographyEntry,
+  ContentDiagnostics,
   ContentManifest,
   ManifestChapter,
   ManifestLesson,
@@ -179,4 +180,9 @@ export function getSubjectStats(subject: ManifestSubject): SubjectStats {
 /** Tra cứu mục tài liệu tham khảo trong `bibliography.yaml` theo `id`. */
 export function getBibliographyEntry(sourceId: string): BibliographyEntry | undefined {
   return manifest.bibliography.find((entry) => entry.id === sourceId);
+}
+
+/** Trả về dữ liệu chẩn đoán kỹ thuật của kho nội dung (dùng cho `/dev/preview`). */
+export function getContentDiagnostics(): ContentDiagnostics {
+  return contentDiagnostics;
 }

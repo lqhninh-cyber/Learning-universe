@@ -18,7 +18,11 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test"
+    "content:check": "node scripts/content/check.ts",
+    "content:new": "node scripts/content/new-lesson.ts",
+    "content:approve": "node scripts/content/approve.ts",
+    "content:report": "node scripts/content/report.ts",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run content:check && npm run test"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "5.3.0",

@@ -10,11 +10,13 @@ import {
 } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
 import {
+  DevEditorialBar,
   LessonActionBar,
   LessonNotesPanel,
   LessonPrevNextNav,
   LessonSidebar,
   LessonToc,
+  SourcePanel,
 } from '@/features/lesson-reader';
 import { ROUTES } from '@/shared/config/routes';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -116,6 +118,10 @@ export function LessonPage() {
 
   return (
     <FadeIn className="space-y-6 pb-16">
+      {import.meta.env.DEV && (
+        <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
+      )}
+
       <div className="flex flex-col justify-between gap-4 border-b border-stone-200/80 pb-4 lg:flex-row lg:items-center">
         <Breadcrumb
           items={[
@@ -273,6 +279,8 @@ export function LessonPage() {
                 </div>
               )}
             </div>
+
+            <SourcePanel lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
 
             <footer className="mt-10 border-t border-stone-200 pt-6">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">

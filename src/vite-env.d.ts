@@ -16,6 +16,8 @@ declare module 'virtual:content-manifest' {
   export const manifest: import('@schemas/manifest').ContentManifest;
   /** Bộ nạp lazy thân bài MDX theo `id` bài học (chỉ gồm các bài có trong manifest). */
   export const lessonModules: Readonly<Record<string, () => Promise<unknown>>>;
+  /** Dữ liệu chẩn đoán kỹ thuật cho trang /dev/preview. */
+  export const contentDiagnostics: import('@schemas/manifest').ContentDiagnostics;
 }
 
 /** Mỗi file MDX trong content/ là một bài học. */
