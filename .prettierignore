@@ -1,3 +1,7 @@
+# Nội dung học thuật nằm ở content/ và tests/fixtures/content/ do chủ dự án quản lý;
+# không để Prettier tự định dạng lại MDX, LaTeX hay YAML.
+content/
+tests/fixtures/content/
 dist/
 node_modules/
 coverage/

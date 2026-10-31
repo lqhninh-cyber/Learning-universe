@@ -1,0 +1,157 @@
+---
+id: dinh-nghia-nhom
+title: Định nghĩa Nhóm và các tính chất cơ bản
+description: Bài học mẫu kỹ thuật trình bày định nghĩa phép toán hai ngôi, nhóm, các tính chất cơ bản cùng ví dụ và bài tập tự luyện.
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - nhóm
+  - phép toán hai ngôi
+  - phần tử trung hòa
+sources: []
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: "2026-10-31"
+---
+
+## 1. Phép toán hai ngôi và Định nghĩa Nhóm
+
+Trong đại số trừu tượng, khái niệm **nhóm** xuất phát từ việc trừu tượng hóa các phép toán quen thuộc như phép cộng trên tập số nguyên $\Z$ hoặc phép hợp thành các song ánh.
+
+<Definition id="def-phep-toan-hai-ngoi" title="Phép toán hai ngôi">
+Cho tập hợp khác rỗng $G$. Một **phép toán hai ngôi** trên $G$ là một ánh xạ
+
+$$
+*: G \times G \to G, \quad (a, b) \mapsto a * b.
+$$
+
+Khi không sợ nhầm lẫn, ta thường viết $ab$ thay cho $a * b$ (ký hiệu nhân) hoặc $a + b$ (ký hiệu cộng).
+</Definition>
+
+<Definition id="def-nhom" title="Nhóm">
+Một tập hợp khác rỗng $G$ cùng với một phép toán hai ngôi $*$ trên $G$ được gọi là một **nhóm**, ký hiệu $(G, *)$, nếu thỏa mãn ba tiên đề sau:
+
+1. **Tính kết hợp:** $(a * b) * c = a * (b * c)$ $\text{với mọi } a, b, c \in G$.
+2. **Phần tử trung hòa (đơn vị):** Tồn tại $e \in G$ sao cho $e * a = a * e = a$ $\text{với mọi } a \in G$.
+3. **Phần tử khả nghịch (nghịch đảo):** $\text{Với mọi } a \in G$, tồn tại $a' \in G$ sao cho $a * a' = a' * a = e$.
+
+Nếu ngoài ra $a * b = b * a$ $\text{với mọi } a, b \in G$ thì $(G, *)$ được gọi là **nhóm giao hoán** (hay **nhóm Abel**).
+</Definition>
+
+<Remark title="Về ký hiệu nhân và ký hiệu cộng">
+Trong nhóm tổng quát, ta thường dùng ký hiệu nhân $ab$, gọi $e$ (hoặc $1_G$) là **phần tử đơn vị** và ký hiệu nghịch đảo của $a$ là $a^{-1}$. Riêng với nhóm Abel viết theo lối cộng, phần tử trung hòa được ký hiệu là $0$ và phần tử đối của $a$ được ký hiệu là $-a$.
+</Remark>
+
+## 2. Các tính chất cơ bản của Nhóm
+
+Từ <Ref to="def-nhom" />, ta suy ra ngay tính duy nhất của phần tử đơn vị và phần tử nghịch đảo.
+
+<Proposition id="prop-duy-nhat" title="Tính duy nhất của đơn vị và nghịch đảo">
+Trong một nhóm $(G, *)$ bất kỳ:
+
+1. Phần tử đơn vị $e \in G$ là duy nhất.
+2. $\text{Với mọi } a \in G$, phần tử nghịch đảo của $a$ là duy nhất, ký hiệu là $a^{-1}$.
+</Proposition>
+
+<Proof of="prop-duy-nhat">
+1. Giả sử $e$ và $e'$ đều là phần tử đơn vị của $G$. Vì $e$ là đơn vị nên $e * e' = e'$. Mặt khác, vì $e'$ là đơn vị nên $e * e' = e$. Do đó $e = e'$.
+2. Giả sử $b$ và $c$ cùng là phần tử nghịch đảo của $a \in G$. Sử dụng tính kết hợp trong <Ref to="def-nhom" />, ta có:
+
+$$
+b = b * e = b * (a * c) = (b * a) * c = e * c = c.
+$$
+
+Vậy nghịch đảo của $a$ là duy nhất.
+</Proof>
+
+<Theorem id="thm-gian-uoc-nghich-dao" title="Luật giản ước và nghịch đảo của tích">
+Cho $(G, *)$ là một nhóm và $a, b, c \in G$. Khi đó:
+
+1. **Luật giản ước trái và phải:** Nếu $a * b = a * c$ thì $b = c$; nếu $b * a = c * a$ thì $b = c$.
+2. **Nghịch đảo của phần tử nghịch đảo:** $(a^{-1})^{-1} = a$.
+3. **Nghịch đảo của một tích:** $(a * b)^{-1} = b^{-1} * a^{-1}$.
+</Theorem>
+
+<Proof of="thm-gian-uoc-nghich-dao" defaultOpen={true}>
+1. Giả sử $a * b = a * c$. Nhân $a^{-1}$ vào bên trái hai vế và áp dụng tính kết hợp:
+
+$$
+b = e * b = (a^{-1} * a) * b = a^{-1} * (a * b) = a^{-1} * (a * c) = (a^{-1} * a) * c = e * c = c.
+$$
+
+Luật giản ước phải được chứng minh hoàn toàn tương tự bằng cách nhân $a^{-1}$ vào bên phải.
+
+2. Vì $a * a^{-1} = a^{-1} * a = e$, theo tính duy nhất ở <Ref to="prop-duy-nhat" />, nghịch đảo của $a^{-1}$ chính là $a$, tức là $(a^{-1})^{-1} = a$.
+
+3. Ta kiểm tra trực tiếp:
+
+$$
+(a * b) * (b^{-1} * a^{-1}) = a * (b * b^{-1}) * a^{-1} = a * e * a^{-1} = a * a^{-1} = e.
+$$
+
+Tương tự, $(b^{-1} * a^{-1}) * (a * b) = e$. Vậy $(a * b)^{-1} = b^{-1} * a^{-1}$.
+</Proof>
+
+<Corollary id="cor-phuong-trinh-nhom" title="Phương trình bậc nhất trong nhóm">
+Trong nhóm $(G, *)$, với mọi $a, b \in G$, phương trình $a * x = b$ có nghiệm duy nhất $x = a^{-1} * b$, và phương trình $y * a = b$ có nghiệm duy nhất $y = b * a^{-1}$.
+</Corollary>
+
+<Warning title="Thứ tự khi lấy nghịch đảo của tích">
+Trong nhóm không giao hoán, nhìn chung $(ab)^{-1} \neq a^{-1}b^{-1}$. Theo <Ref to="thm-gian-uoc-nghich-dao" />, thứ tự các nhân tử phải đảo ngược: $(ab)^{-1} = b^{-1}a^{-1}$.
+</Warning>
+
+## 3. Ví dụ và Phản ví dụ
+
+<Example id="ex-nhom-so-nguyen" title="Nhóm cộng các số nguyên">
+Tập các số nguyên $\Z$ cùng với phép cộng thông thường $+$ lập thành một nhóm Abel $(\Z, +)$ với phần tử trung hòa là $0$ và phần tử đối của $n \in \Z$ là $-n$. Tương tự, $(\Q, +)$, $(\R, +)$ và $(\C, +)$ đều là các nhóm Abel.
+</Example>
+
+<Counterexample id="cex-so-nguyen-nhan" title="Tập số nguyên với phép nhân không phải là nhóm">
+Xét $(\Z, \cdot)$ với phép nhân thông thường. Phép nhân có tính kết hợp và có phần tử đơn vị là $1$, nhưng phần tử $2 \in \Z$ không có nghịch đảo trong $\Z$ (vì $\frac{1}{2} \notin \Z$). Do đó $(\Z, \cdot)$ chỉ là vị nhóm, không phải là nhóm.
+</Counterexample>
+
+<Figure caption="Bảng Cayley của nhóm Klein bốn phần tử V = {e, a, b, c} với mọi phần tử đều có cấp 2 (a² = b² = c² = e).">
+| $*$ | $e$ | $a$ | $b$ | $c$ |
+| :---: | :---: | :---: | :---: | :---: |
+| $e$ | $e$ | $a$ | $b$ | $c$ |
+| $a$ | $a$ | $e$ | $c$ | $b$ |
+| $b$ | $b$ | $c$ | $e$ | $a$ |
+| $c$ | $c$ | $b$ | $a$ | $e$ |
+</Figure>
+
+<Note title="Nhóm tự đẳng cấu">
+Với mọi cấu trúc đại số $X$, tập hợp $\Aut(X)$ gồm các tự đẳng cấu trên $X$ cùng với phép hợp thành ánh xạ $\circ$ luôn lập thành một nhóm, có phần tử đơn vị là ánh xạ đồng nhất $\id_X$.
+</Note>
+
+## 4. Bài tập tự luyện
+
+<Exercise id="exr-nhom-cap-hai" title="Nhóm mà mọi phần tử đều tự nghịch đảo">
+Cho nhóm $(G, *)$ thỏa mãn $x * x = e$ $\text{với mọi } x \in G$. Chứng minh rằng $G$ là một nhóm Abel.
+</Exercise>
+
+<Hint>
+Từ giả thiết $x * x = e$, hãy suy ra $x = x^{-1}$ $\text{với mọi } x \in G$, rồi áp dụng công thức nghịch đảo của tích trong <Ref to="thm-gian-uoc-nghich-dao" /> cho phần tử $a * b$.
+</Hint>
+
+<Solution>
+Với mọi $x \in G$, vì $x * x = e$ nên theo tính duy nhất của nghịch đảo (<Ref to="prop-duy-nhat" />) ta có $x^{-1} = x$.
+
+Lấy $a, b \in G$ bất kỳ. Áp dụng tính chất trên cho $a$, $b$ và $a * b \in G$, kết hợp với <Ref to="thm-gian-uoc-nghich-dao" />, ta được:
+
+$$
+a * b = (a * b)^{-1} = b^{-1} * a^{-1} = b * a.
+$$
+
+Vậy $G$ là nhóm Abel.
+</Solution>
+
+<KeyTakeaways>
+- Nhóm $(G, *)$ gồm một phép toán hai ngôi kết hợp, có phần tử đơn vị $e$ và mọi phần tử đều khả nghịch (<Ref to="def-nhom" />).
+- Phần tử đơn vị và phần tử nghịch đảo trong nhóm là duy nhất (<Ref to="prop-duy-nhat" />).
+- Trong nhóm luôn có luật giản ước trái, phải và công thức $(ab)^{-1} = b^{-1}a^{-1}$ (<Ref to="thm-gian-uoc-nghich-dao" />).
+</KeyTakeaways>

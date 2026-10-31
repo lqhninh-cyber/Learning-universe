@@ -41,4 +41,16 @@ describe('App routing smoke test', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Về trang chủ/i })).toHaveAttribute('href', '/');
   });
+
+  it('hiển thị trang kiểm thử Content Engine tại /dev/mdx ở chế độ DEV', async () => {
+    renderWithProviders('/dev/mdx');
+
+    expect(
+      await screen.findByRole('heading', {
+        name: /Content Engine & Academic MDX/i,
+      }),
+    ).toBeInTheDocument();
+    const defItems = await screen.findAllByText('Định nghĩa 1.1.1');
+    expect(defItems.length).toBeGreaterThan(0);
+  });
 });

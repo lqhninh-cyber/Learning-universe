@@ -1,0 +1,7 @@
+id: khong-gian-affine
+title: Không gian Affine và Hệ tọa độ
+description: Định nghĩa không gian affine thông qua tác động của không gian vectơ, quy tắc Chasles, mục tiêu affine và tọa độ điểm.
+objectives:
+  - Hiểu rõ mối liên hệ giữa không gian affine và không gian vectơ nền.
+  - Vận dụng thành thạo tiên đề Chasles và các tính chất của phép cộng điểm với vectơ.
+  - Xác định được tâm tỷ cự và mục tiêu affine trong không gian $n$ chiều.

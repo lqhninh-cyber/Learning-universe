@@ -1,0 +1,14 @@
+id: affine-geometry
+title: Hình học Affine
+shortTitle: HH Affine
+description: Không gian affine, ánh xạ affine và các ứng dụng hình học.
+order: 2
+status: published
+theme:
+  hue: 175
+  icon: compass
+sources:
+  # Chủ dự án sẽ cung cấp giáo trình chính và tài liệu tham khảo (khai báo trong
+  # content/_shared/bibliography.yaml). Không tự điền khi chưa có thông tin chính thức.
+  primary: null
+  references: []

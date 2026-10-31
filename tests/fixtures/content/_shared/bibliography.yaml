@@ -1,0 +1,10 @@
+# [DỮ LIỆU KIỂM THỬ] Thư mục tài liệu GIẢ LẬP, chỉ dùng cho kiểm thử tự động.
+# Không phải thông tin giáo trình thật. Tuyệt đối không sao chép sang content/.
+sources:
+  - id: nguon-kiem-thu
+    type: textbook
+    title: "[DỮ LIỆU KIỂM THỬ] Giáo trình giả lập"
+    authors:
+      - "Tác giả kiểm thử"
+    year: 2000
+    publisher: "Nhà xuất bản kiểm thử"

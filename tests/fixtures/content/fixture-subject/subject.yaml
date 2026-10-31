@@ -1,0 +1,12 @@
+# [DỮ LIỆU KIỂM THỬ] Môn học giả lập, chỉ dùng cho kiểm thử tự động.
+id: fixture-subject
+title: "[KIỂM THỬ] Môn học giả lập"
+shortTitle: KT
+description: "[DỮ LIỆU KIỂM THỬ] Môn học giả lập dùng để kiểm tra Content Engine."
+order: 1
+status: published
+theme:
+  hue: 275
+sources:
+  primary: nguon-kiem-thu
+  references: []

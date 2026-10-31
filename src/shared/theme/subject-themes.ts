@@ -36,6 +36,10 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
 
 export const SubjectThemeContext = createContext<SubjectThemeId>('default');
 
+export function isSubjectThemeId(value: string): value is SubjectThemeId {
+  return Object.hasOwn(SUBJECT_THEMES, value);
+}
+
 export function useSubjectTheme(): SubjectThemeMeta {
   const themeId = useContext(SubjectThemeContext);
   return SUBJECT_THEMES[themeId];

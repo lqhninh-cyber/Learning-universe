@@ -1,0 +1,6 @@
+# [DỮ LIỆU KIỂM THỬ] Chương giả lập, chỉ dùng cho kiểm thử tự động.
+id: fixture-chapter
+title: "[KIỂM THỬ] Chương giả lập"
+description: "[DỮ LIỆU KIỂM THỬ] Chương giả lập dùng để kiểm tra Content Engine."
+objectives:
+  - "[KIỂM THỬ] Kiểm tra đánh số Chương.Bài.Số"

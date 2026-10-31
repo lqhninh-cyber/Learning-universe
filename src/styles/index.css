@@ -3,6 +3,7 @@
 @import '@fontsource/be-vietnam-pro/600.css';
 @import '@fontsource/be-vietnam-pro/700.css';
 @import '@fontsource-variable/jetbrains-mono';
+@import 'katex/dist/katex.min.css';
 @import 'tailwindcss';
 @import './subject-themes.css';
 @import './prose.css';

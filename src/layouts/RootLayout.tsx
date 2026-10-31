@@ -1,4 +1,4 @@
-import { Palette } from 'lucide-react';
+import { BookOpenText, Palette } from 'lucide-react';
 import { Link, Outlet } from 'react-router';
 import { ROUTES } from '@/shared/config/routes';
 import { Badge, Container } from '@/shared/ui';
@@ -24,13 +24,22 @@ export function RootLayout() {
 
           <nav aria-label="Điều hướng chính" className="flex items-center gap-2">
             {import.meta.env.DEV && (
-              <Link
-                to={ROUTES.devUi}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900"
-              >
-                <Palette className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
-                <span>Design System</span>
-              </Link>
+              <>
+                <Link
+                  to={ROUTES.devUi}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900"
+                >
+                  <Palette className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+                  <span>Design System</span>
+                </Link>
+                <Link
+                  to={ROUTES.devMdx}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900"
+                >
+                  <BookOpenText className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+                  <span>MDX Engine</span>
+                </Link>
+              </>
             )}
           </nav>
         </Container>

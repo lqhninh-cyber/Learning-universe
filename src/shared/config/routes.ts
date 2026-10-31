@@ -22,4 +22,5 @@ export const ROUTES = {
   },
   editorial: '/bien-tap',
   devUi: '/dev/ui',
+  devMdx: '/dev/mdx',
 } as const;

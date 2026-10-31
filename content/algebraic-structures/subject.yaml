@@ -1,0 +1,14 @@
+id: algebraic-structures
+title: Cấu trúc đại số
+shortTitle: CTĐS
+description: Nhóm, vành, trường và các đồng cấu.
+order: 1
+status: published
+theme:
+  hue: 275
+  icon: sigma
+sources:
+  # Chủ dự án sẽ cung cấp giáo trình chính và tài liệu tham khảo (khai báo trong
+  # content/_shared/bibliography.yaml). Không tự điền khi chưa có thông tin chính thức.
+  primary: null
+  references: []

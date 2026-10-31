@@ -1,0 +1,115 @@
+---
+id: khong-gian-affine
+title: Khái niệm Không gian Affine và Quy tắc Chasles
+description: Bài học mẫu kỹ thuật trình bày định nghĩa không gian affine trên trường K, quy tắc ba điểm Chasles và các tính chất cơ bản.
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - không gian affine
+  - quy tắc Chasles
+  - hình học tuyên tính
+sources: []
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: "2026-10-31"
+---
+
+## 1. Định nghĩa Không gian Affine
+
+Không gian affine là mô hình hình học thu được khi ta "quên đi" gốc tọa độ của một không gian vectơ, giúp mọi điểm có vai trò bình đẳng như nhau.
+
+<Definition id="def-khong-gian-affine" title="Không gian Affine">
+Cho $\mathbb{K}$-không gian vectơ $V$ và một tập hợp khác rỗng $\mathcal{A}$. Tập $\mathcal{A}$ được gọi là một **không gian affine** liên kết với không gian vectơ nền $V$ (ký hiệu $\overrightarrow{\mathcal{A}} = V$) nếu có một ánh xạ
+
+$$
+\varphi: \mathcal{A} \times \mathcal{A} \to V, \quad (A, B) \mapsto \vect{AB},
+$$
+
+thỏa mãn hai tiên đề sau:
+
+1. **Tiên đề Weyl (tồn tại và duy nhất điểm cuối):** $\text{Với mọi điểm } A \in \mathcal{A}$ và $\text{mọi vectơ } u \in V$, tồn tại duy nhất điểm $B \in \mathcal{A}$ sao cho $\vect{AB} = u$. Ta thường viết $B = A + u$.
+2. **Tiên đề Chasles (quy tắc ba điểm):** $\text{Với mọi } A, B, C \in \mathcal{A}$, ta có
+
+$$
+\vect{AB} + \vect{BC} = \vect{AC}.
+$$
+
+Các phần tử của $\mathcal{A}$ được gọi là các **điểm**, các phần tử của $V$ được gọi là các **vectơ**, và số chiều của $\mathcal{A}$ được định nghĩa là $\dim \mathcal{A} = \dim V$.
+</Definition>
+
+## 2. Các hệ quả trực tiếp từ tiên đề
+
+<Lemma id="lem-vecto-khong" title="Vectơ không và vectơ đối">
+Trong không gian affine $\mathcal{A}$ liên kết với $V$, với mọi điểm $A, B \in \mathcal{A}$ ta có:
+
+1. $\vect{AA} = \vec{0}$ (và ngược lại, nếu $\vect{AB} = \vec{0}$ thì $A = B$).
+2. $\vect{BA} = -\vect{AB}$.
+</Lemma>
+
+<Proof of="lem-vecto-khong">
+1. Áp dụng tiên đề Chasles trong <Ref to="def-khong-gian-affine" /> cho ba điểm trùng nhau $A, A, A$:
+
+$$
+\vect{AA} + \vect{AA} = \vect{AA} \implies \vect{AA} = \vec{0}.
+$$
+
+Ngược lại, nếu $\vect{AB} = \vec{0} = \vect{AA}$ thì theo tính duy nhất trong tiên đề Weyl, ta suy ra $B = A$.
+
+2. Thay $C = A$ vào đẳng thức Chasles $\vect{AB} + \vect{BC} = \vect{AC}$, ta được $\vect{AB} + \vect{BA} = \vect{AA} = \vec{0}$, suy ra $\vect{BA} = -\vect{AB}$.
+</Proof>
+
+<Theorem id="thm-hinh-binh-hanh" title="Quy tắc hình bình hành trong không gian Affine">
+Với mọi bộ bốn điểm $A, B, C, D \in \mathcal{A}$, hai điều kiện sau là tương đương:
+
+$$
+\vect{AB} = \vect{DC} \iff \vect{AD} = \vect{BC}.
+$$
+</Theorem>
+
+<Proof of="thm-hinh-binh-hanh" defaultOpen={true}>
+Theo tiên đề Chasles (<Ref to="def-khong-gian-affine" />) và <Ref to="lem-vecto-khong" />, ta có:
+
+$$
+\vect{AB} - \vect{DC} = (\vect{AD} + \vect{DB}) - (\vect{DB} + \vect{BC}) = \vect{AD} - \vect{BC}.
+$$
+
+Do đó $\vect{AB} = \vect{DC}$ khi và chỉ khi $\vect{AD} = \vect{BC}$.
+</Proof>
+
+## 3. Ví dụ và Bài tập
+
+<Example id="ex-affine-chinh-tac" title="Cấu trúc affine chính tắc trên không gian vectơ">
+Mọi không gian vectơ $V$ trên trường $\R$ đều mang cấu trúc không gian affine chính tắc $\Aff(V)$ khi đặt $\vect{uv} = v - u$ $\text{với mọi } u, v \in V$. Khi đó tiên đề Chasles trở thành hằng đẳng thức $(v - u) + (w - v) = w - u$.
+</Example>
+
+<Exercise id="exr-trung-diem" title="Biểu thức vectơ của trung điểm">
+Cho ba điểm $A, B, I \in \mathcal{A}$ trên không gian affine thực ($\operatorname{char}\mathbb{K} \neq 2$). Chứng minh rằng $\vect{IA} + \vect{IB} = \vec{0}$ khi và chỉ khi $\text{với mọi điểm } O \in \mathcal{A}$, ta có
+
+$$
+\vect{OI} = \frac{1}{2}\bigl(\vect{OA} + \vect{OB}\bigr).
+$$
+</Exercise>
+
+<Hint>
+Sử dụng quy tắc Chasles (<Ref to="def-khong-gian-affine" />) để chèn điểm $O$ vào $\vect{IA} = \vect{OA} - \vect{OI}$ và $\vect{IB} = \vect{OB} - \vect{OI}$.
+</Hint>
+
+<Solution>
+Với điểm $O \in \mathcal{A}$ bất kỳ, theo <Ref to="def-khong-gian-affine" /> và <Ref to="lem-vecto-khong" />, ta viết:
+
+$$
+\vect{IA} + \vect{IB} = (\vect{OA} - \vect{OI}) + (\vect{OB} - \vect{OI}) = \vect{OA} + \vect{OB} - 2\vect{OI}.
+$$
+
+Vì vậy $\vect{IA} + \vect{IB} = \vec{0}$ tương đương với $2\vect{OI} = \vect{OA} + \vect{OB}$, hay $\vect{OI} = \frac{1}{2}(\vect{OA} + \vect{OB})$.
+</Solution>
+
+<KeyTakeaways>
+- Không gian affine $\mathcal{A}$ gắn liền với không gian vectơ nền $V$ qua tiên đề Weyl và tiên đề Chasles (<Ref to="def-khong-gian-affine" />).
+- Đẳng thức hình bình hành $\vect{AB} = \vect{DC} \iff \vect{AD} = \vect{BC}$ (<Ref to="thm-hinh-binh-hanh" />) là công cụ cơ bản để chuyển đổi các quan hệ vectơ.
+</KeyTakeaways>

@@ -11,6 +11,13 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
           return { Component: DevUiPage };
         },
       },
+      {
+        path: ROUTES.devMdx,
+        lazy: async () => {
+          const { DevMdxPage } = await import('@/pages/dev-mdx/DevMdxPage');
+          return { Component: DevMdxPage };
+        },
+      },
     ]
   : [];
 
