@@ -19,6 +19,10 @@ authoring:
   draftedAt: "2026-10-31"
 ---
 
+import WeylChaslesFigure from './figures/weyl-chasles-figure';
+import ParallelogramRuleFigure from './figures/parallelogram-rule-figure';
+import MidpointBarycenterFigure from './figures/midpoint-barycenter-figure';
+
 ## 1. Định nghĩa Không gian Affine
 
 Không gian affine là mô hình hình học thu được khi ta "quên đi" gốc tọa độ của một không gian vectơ, giúp mọi điểm có vai trò bình đẳng như nhau.
@@ -41,6 +45,10 @@ $$
 
 Các phần tử của $\mathcal{A}$ được gọi là các **điểm**, các phần tử của $V$ được gọi là các **vectơ**, và số chiều của $\mathcal{A}$ được định nghĩa là $\dim \mathcal{A} = \dim V$.
 </Definition>
+
+<Figure caption="Hình 1.1: Minh họa tương tác Tiên đề Weyl và Quy tắc ba điểm Chasles (AB + BC = AC) trên mặt phẳng affine.">
+  <WeylChaslesFigure />
+</Figure>
 
 ## 2. Các hệ quả trực tiếp từ tiên đề
 
@@ -81,6 +89,10 @@ $$
 Do đó $\vect{AB} = \vect{DC}$ khi và chỉ khi $\vect{AD} = \vect{BC}$.
 </Proof>
 
+<Figure caption="Hình 1.2: Minh họa tương tác Định lý Hình bình hành (AB = DC ⇔ AD = BC).">
+  <ParallelogramRuleFigure />
+</Figure>
+
 ## 3. Ví dụ và Bài tập
 
 <Example id="ex-affine-chinh-tac" title="Cấu trúc affine chính tắc trên không gian vectơ">
@@ -108,6 +120,10 @@ $$
 
 Vì vậy $\vect{IA} + \vect{IB} = \vec{0}$ tương đương với $2\vect{OI} = \vect{OA} + \vect{OB}$, hay $\vect{OI} = \frac{1}{2}(\vect{OA} + \vect{OB})$.
 </Solution>
+
+<Figure caption="Hình 1.3: Minh họa tương tác biểu thức vectơ của trung điểm và tâm tỉ cự hai điểm.">
+  <MidpointBarycenterFigure />
+</Figure>
 
 <KeyTakeaways>
 - Không gian affine $\mathcal{A}$ gắn liền với không gian vectơ nền $V$ qua tiên đề Weyl và tiên đề Chasles (<Ref to="def-khong-gian-affine" />).

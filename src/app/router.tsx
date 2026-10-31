@@ -26,6 +26,13 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
           return { Component: DevPreviewPage };
         },
       },
+      {
+        path: ROUTES.devFigures,
+        lazy: async () => {
+          const { DevFiguresPage } = await import('@/pages/dev-figures/DevFiguresPage');
+          return { Component: DevFiguresPage };
+        },
+      },
     ]
   : [];
 

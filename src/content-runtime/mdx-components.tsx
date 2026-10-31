@@ -9,6 +9,16 @@ import { KeyTakeaways } from './components/KeyTakeaways';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
 import { Corollary, Definition, Lemma, Proposition, Theorem } from './components/TheoryBlock';
+import {
+  LazyAffineFrame,
+  LazyAffineLine,
+  LazyAffineMapDemo,
+  LazyAffinePlane,
+  LazyBarycenter,
+  LazyDraggablePoint,
+  LazyParallelogram,
+  LazyVectorArrow,
+} from './figure-kit/LazyFigureKit';
 
 /**
  * Bảng ánh xạ thẻ MDX và 18 Academic Components dùng chung cho mọi bài học.
@@ -44,7 +54,17 @@ export const mdxComponents: MDXComponents = {
   Figure,
   KeyTakeaways,
 
-  // 7. Tinh chỉnh các thẻ HTML chuẩn trong bài học
+  // 7. Figure Kit 2D tương tác cho Hình học Affine (nạp lười qua React.lazy)
+  AffinePlane: LazyAffinePlane,
+  DraggablePoint: LazyDraggablePoint,
+  VectorArrow: LazyVectorArrow,
+  AffineLine: LazyAffineLine,
+  AffineFrame: LazyAffineFrame,
+  Parallelogram: LazyParallelogram,
+  Barycenter: LazyBarycenter,
+  AffineMapDemo: LazyAffineMapDemo,
+
+  // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
   table: (props: ComponentPropsWithoutRef<'table'>) => (
     <div className="my-4 overflow-x-auto">
       <table className="w-full border-collapse text-sm text-stone-800" {...props} />

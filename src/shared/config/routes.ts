@@ -25,4 +25,5 @@ export const ROUTES = {
   devUi: '/dev/ui',
   devMdx: '/dev/mdx',
   devPreview: '/dev/preview',
+  devFigures: '/dev/figures',
 } as const;

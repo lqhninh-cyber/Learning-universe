@@ -82,6 +82,10 @@ export default defineConfig({
               name: 'vendor-ui',
               test: /node_modules[\\/](motion|framer-motion|@radix-ui|lucide-react)[\\/]/,
             },
+            {
+              name: 'vendor-mafs',
+              test: /node_modules[\\/](mafs|@use-gesture|use-resize-observer)[\\/]/,
+            },
           ],
         },
       },

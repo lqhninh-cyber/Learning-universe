@@ -12,9 +12,9 @@ Tài liệu này theo dõi trạng thái thực tế của từng giai đoạn s
 | **Giai đoạn 1** | Design System, OKLCH Subject Theming (`algebraic-structures`, `affine-geometry`), UI Primitives & Trang `/dev/ui`                                                                                                                                                                                            | ✅ Đã hoàn thành       | `47e5120`   |
 | **Giai đoạn 2** | Content Engine: Zod Schemas, Vite Content Plugin (`virtual:content-manifest`), Pipeline MDX + KaTeX + Macros, Tự động đánh số 3 bộ đếm (`remark-theorem-numbering`), 18 Academic Components & Trang `/dev/mdx`                                                                                               | ✅ Đã hoàn thành       | `494f56b`   |
 | **Giai đoạn 3** | Không gian học tập công khai & Điều hướng bài học: Trang chủ + Tìm kiếm tức thời, Không gian môn học (`/mon-hoc/:subjectSlug`), Trang bài học 3 cột + Mục lục kép + Điều hướng trước/sau, Đường dẫn rút gọn (`/bai-hoc/:slug`), Lưu tiến độ/yêu thích/ghi chú cục bộ (Zustand + `LoginPromptDialog` theo D1) | ✅ Đã hoàn thành       | `f7629fc`   |
-| **Giai đoạn 4** | Công cụ Quản lý & Kiểm định Nội dung (`content:check`, `content:new`, `content:approve`, `content:report`, `content.lock.json`, `SourcePanel`, `SubjectBibliography`, `DevEditorialBar` & Trang `/dev/preview`)                                                                                              | ✅ Đã hoàn thành       | Đang commit |
-| **Giai đoạn 5** | Figure Kit (Mafs 2D cho Hình học Affine): `AffinePlane`, `DraggablePoint`, `VectorArrow`, `AffineLine`, `Barycenter`, `Parallelogram`, `AffineMapDemo`                                                                                                                                                       | ⏳ Chuẩn bị triển khai | —           |
-| **Giai đoạn 6** | Supabase Auth & PostgreSQL + RLS: Đăng ký/Đăng nhập/Khôi phục mật khẩu, Bảng `profiles`, `user_roles`, `lesson_progress`, `bookmarks`, `lesson_notes`, đồng bộ đa thiết bị, Trang `/ca-nhan` & `/bien-tap`                                                                                                   | 📋 Chưa bắt đầu        | —           |
+| **Giai đoạn 4** | Công cụ Quản lý & Kiểm định Nội dung (`content:check`, `content:new`, `content:approve`, `content:report`, `content.lock.json`, `SourcePanel`, `SubjectBibliography`, `DevEditorialBar` & Trang `/dev/preview`)                                                                                              | ✅ Đã hoàn thành       | `7d01287`   |
+| **Giai đoạn 5** | Figure Kit (Mafs 2D cho Hình học Affine): `AffinePlane`, `DraggablePoint`, `VectorArrow`, `AffineLine`, `AffineFrame`, `Barycenter`, `Parallelogram`, `AffineMapDemo` & Trang `/dev/figures`                                                                                                                 | ✅ Đã hoàn thành       | Đang commit |
+| **Giai đoạn 6** | Supabase Auth & PostgreSQL + RLS: Đăng ký/Đăng nhập/Khôi phục mật khẩu, Bảng `profiles`, `user_roles`, `lesson_progress`, `bookmarks`, `lesson_notes`, đồng bộ đa thiết bị, Trang `/ca-nhan` & `/bien-tap`                                                                                                   | ⏳ Chuẩn bị triển khai | —           |
 | **Giai đoạn 7** | Authoring Kit (`docs/authoring/` + 5 bộ Prompt + 3 Skills Antigravity) & Thí điểm biên soạn nội dung thật từ giáo trình                                                                                                                                                                                      | 📋 Chưa bắt đầu        | —           |
 | **Giai đoạn 8** | Hoàn thiện chuyển cảnh, Kiểm thử E2E / Accessibility / Lighthouse & Triển khai Production trên Vercel                                                                                                                                                                                                        | 📋 Chưa bắt đầu        | —           |
 
@@ -49,10 +49,15 @@ Tài liệu này theo dõi trạng thái thực tế của từng giai đoạn s
 - **Bộ công cụ CLI (`scripts/content/`)**: `content:check`, `content:new`, `content:approve`, `content:report` và file khóa `content.lock.json`.
 - **Hiển thị nguồn học thuật & Không gian xem trước**: `SourcePanel`, `SubjectBibliography`, `DevEditorialBar` và trang `/dev/preview` (`DevPreviewPage`).
 
+### 2.5 Figure Kit 2D với Mafs cho Hình học Affine (GĐ5)
+
+- **Lõi toán học Affine (`src/content-runtime/figure-kit/affine-math.ts`)**: Phép toán vectơ, định thức, giải tọa độ mục tiêu affine xiên $\mathcal{R} = (O; \vec{e}_1, \vec{e}_2)$, tâm tỉ cự và ánh xạ affine phẳng.
+- **8 Component tương tác (`src/content-runtime/figure-kit/`)**: `AffinePlane`, `DraggablePoint`, `VectorArrow`, `AffineLine`, `AffineFrame`, `Parallelogram`, `Barycenter`, `AffineMapDemo` kèm nạp lười (`LazyFigureKit.tsx` + chunk `vendor-mafs`).
+- **3 hình mẫu trong bài học Hình học Affine & Trang `/dev/figures`**: Tích hợp vào [`01-khong-gian-affine.mdx`](file:///d:/Learning-universe/content/affine-geometry/01-khong-gian-affine/01-khong-gian-affine.mdx) và phòng thí nghiệm `/dev/figures` (`DevFiguresPage.tsx`).
+
 ---
 
-## 3. Những hạng mục chưa triển khai (Thuộc GĐ5 – GĐ8)
+## 3. Những hạng mục chưa triển khai (Thuộc GĐ6 – GĐ8)
 
-1. **Figure Kit 2D với Mafs (`src/content-runtime/figure-kit/`):** Các component hình học tương tác cho môn Hình học Affine (Giai đoạn 5).
-2. **Kết nối Supabase Auth & Database thực tế:** Các trang `/dang-nhap`, `/dang-ky`, `/quen-mat-khau`, `/dat-lai-mat-khau`, `/ca-nhan/*`, `/bien-tap`, SQL migrations & RLS policies đồng bộ với `useLearningStore` (Giai đoạn 6).
-3. **Bộ tài liệu Authoring Kit (`docs/authoring/`) & Giáo trình chính thức:** Nhập thông tin giáo trình do chủ dự án cung cấp vào `content/_shared/bibliography.yaml` và biên soạn các bài học xuất bản thật (Giai đoạn 7).
+1. **Kết nối Supabase Auth & Database thực tế:** Các trang `/dang-nhap`, `/dang-ky`, `/quen-mat-khau`, `/dat-lai-mat-khau`, `/ca-nhan/*`, `/bien-tap`, SQL migrations & RLS policies đồng bộ với `useLearningStore` (Giai đoạn 6).
+2. **Bộ tài liệu Authoring Kit (`docs/authoring/`) & Giáo trình chính thức:** Nhập thông tin giáo trình do chủ dự án cung cấp vào `content/_shared/bibliography.yaml` và biên soạn các bài học xuất bản thật (Giai đoạn 7).

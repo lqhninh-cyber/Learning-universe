@@ -1,5 +1,6 @@
 import {
   BookOpenText,
+  Compass,
   GraduationCap,
   Menu,
   Palette,
@@ -164,6 +165,13 @@ export function RootLayout() {
                 >
                   <ShieldCheck className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
                   <span>Kiểm định</span>
+                </Link>
+                <Link
+                  to={ROUTES.devFigures}
+                  className="hidden items-center gap-1.5 rounded-lg border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-100 hover:text-stone-900 lg:inline-flex"
+                >
+                  <Compass className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+                  <span>Figure Kit</span>
                 </Link>
               </>
             )}
