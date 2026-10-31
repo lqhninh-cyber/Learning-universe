@@ -4,4 +4,4 @@ description: Định nghĩa không gian affine thông qua tác động của kh�
 objectives:
   - Hiểu rõ mối liên hệ giữa không gian affine và không gian vectơ nền.
   - Vận dụng thành thạo tiên đề Chasles và các tính chất của phép cộng điểm với vectơ.
-  - Xác định được tâm tỷ cự và mục tiêu affine trong không gian $n$ chiều.
+  - Xác định được tâm tỷ cự và mục tiêu affine trong không gian hữu hạn chiều.

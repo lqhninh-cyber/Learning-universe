@@ -35,11 +35,14 @@ export interface LearningState {
   readonly lastVisitedGlobal: LastVisitedEntry | null;
   /** Thao tác đang chờ xác nhận đăng nhập (D1). */
   readonly pendingPromptAction: PendingLearningAction | null;
+  /** Bài học đang mở khung ghi chú cá nhân. */
+  readonly openNoteLessonId: string | null;
 
   recordLessonVisit: (subjectId: string, lessonId: string) => void;
   toggleLessonCompleted: (lessonId: string) => boolean;
   toggleLessonBookmark: (lessonId: string) => boolean;
   requestNoteAccess: (lessonId: string) => boolean;
+  setOpenNoteLessonId: (lessonId: string | null) => void;
   saveLessonNote: (lessonId: string, body: string) => boolean;
   enableLearnerMode: (learnerName?: string) => void;
   signOutLearnerMode: () => void;
@@ -56,6 +59,7 @@ const INITIAL_DATA = {
   lastVisitedBySubject: {} as Readonly<Record<string, LastVisitedEntry>>,
   lastVisitedGlobal: null as LastVisitedEntry | null,
   pendingPromptAction: null as PendingLearningAction | null,
+  openNoteLessonId: null as string | null,
 };
 
 export const useLearningStore = create<LearningState>()(
@@ -121,6 +125,10 @@ export const useLearningStore = create<LearningState>()(
         return true;
       },
 
+      setOpenNoteLessonId: (lessonId) => {
+        set({ openNoteLessonId: lessonId });
+      },
+
       saveLessonNote: (lessonId, body) => {
         const state = get();
         if (!state.isAuthenticated) {
@@ -149,11 +157,14 @@ export const useLearningStore = create<LearningState>()(
 
         const completedLessons = { ...state.completedLessons };
         const bookmarkedLessons = { ...state.bookmarkedLessons };
+        let openNoteLessonId = state.openNoteLessonId;
 
         if (pending?.type === 'complete') {
           completedLessons[pending.lessonId] = now;
         } else if (pending?.type === 'bookmark') {
           bookmarkedLessons[pending.lessonId] = now;
+        } else if (pending?.type === 'note') {
+          openNoteLessonId = pending.lessonId;
         }
 
         set({
@@ -161,6 +172,7 @@ export const useLearningStore = create<LearningState>()(
           learnerName: learnerName?.trim() || state.learnerName,
           completedLessons,
           bookmarkedLessons,
+          openNoteLessonId,
           pendingPromptAction: null,
         });
       },

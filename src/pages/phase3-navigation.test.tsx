@@ -154,4 +154,35 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
       }),
     ).toBeInTheDocument();
   });
+
+  it('6. Hỗ trợ điều hướng trực tiếp (deep-link) tới trang Danh sách môn (/mon-hoc), ngăn menu di động và trạng thái không tìm thấy môn', async () => {
+    const user = userEvent.setup();
+    const { unmount } = renderRoute('/mon-hoc');
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Danh mục học phần Sư phạm Toán học',
+      }),
+    ).toBeInTheDocument();
+
+    // Kiểm tra nút mở menu điều hướng trên mobile
+    const mobileMenuButton = screen.getByRole('button', { name: 'Mở menu điều hướng' });
+    await user.click(mobileMenuButton);
+    const mobileNav = await screen.findByRole('navigation', { name: 'Menu điều hướng di động' });
+    expect(within(mobileNav).getByRole('link', { name: 'Cấu trúc đại số' })).toHaveAttribute(
+      'href',
+      '/mon-hoc/cau-truc-dai-so',
+    );
+    unmount();
+
+    // Kiểm tra đường dẫn môn học không tồn tại
+    renderRoute('/mon-hoc/mon-khong-ton-tai');
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /Không tìm thấy môn học bạn yêu cầu/i,
+      }),
+    ).toBeInTheDocument();
+  });
 });

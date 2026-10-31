@@ -56,8 +56,15 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
   let production = false;
   let logger: Logger | null = null;
 
-  const scan = (): ScanResult =>
-    scanContent({ projectRoot, contentDir, publishedOnly: production });
+  const scan = (): ScanResult => {
+    const includeDrafts =
+      process.env.VERCEL_ENV === 'preview' || process.env.VITE_INCLUDE_DRAFTS === 'true';
+    return scanContent({
+      projectRoot,
+      contentDir,
+      publishedOnly: production && !includeDrafts,
+    });
+  };
 
   return {
     name: 'learning-universe:content',

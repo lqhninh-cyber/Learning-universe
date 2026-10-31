@@ -43,12 +43,21 @@ export function LessonPage() {
 
   const recordLessonVisit = useLearningStore((state) => state.recordLessonVisit);
   const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
+  const openNoteLessonId = useLearningStore((state) => state.openNoteLessonId);
+  const setOpenNoteLessonId = useLearningStore((state) => state.setOpenNoteLessonId);
 
   const [loadedMap, setLoadedMap] = useState<Readonly<Record<string, CompiledLessonModule>>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [isSidebarDrawerOpen, setIsSidebarDrawerOpen] = useState(false);
   const [isTocDrawerOpen, setIsTocDrawerOpen] = useState(false);
+
+  const isNotesOpen = Boolean(lessonId && openNoteLessonId === lessonId);
+  const handleToggleNotes = () => {
+    if (!lessonId) {
+      return;
+    }
+    setOpenNoteLessonId(isNotesOpen ? null : lessonId);
+  };
 
   const compiled = lessonId ? loadedMap[lessonId] : undefined;
 
@@ -116,12 +125,7 @@ export function LessonPage() {
               label: `Chương ${chapter.number}: ${chapter.title}`,
               href: ROUTES.subjectOverview(subject.slug),
             },
-            {
-              label: `Bài ${chapter.number}.{lesson.number}: ${lesson.title}`.replace(
-                '{lesson.number}',
-                String(lesson.number),
-              ),
-            },
+            { label: `Bài ${chapter.number}.${lesson.number}: ${lesson.title}` },
           ]}
         />
 
@@ -235,7 +239,7 @@ export function LessonPage() {
                 <LessonActionBar
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
-                  onToggleNotes={() => setIsNotesOpen((prev) => !prev)}
+                  onToggleNotes={handleToggleNotes}
                 />
               </div>
             </header>
@@ -246,7 +250,7 @@ export function LessonPage() {
                   key={lesson.id}
                   lessonId={lesson.id}
                   lessonTitle={lesson.title}
-                  onClose={() => setIsNotesOpen(false)}
+                  onClose={() => setOpenNoteLessonId(null)}
                 />
               </div>
             )}
@@ -278,7 +282,7 @@ export function LessonPage() {
                 <LessonActionBar
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
-                  onToggleNotes={() => setIsNotesOpen((prev) => !prev)}
+                  onToggleNotes={handleToggleNotes}
                 />
               </div>
 

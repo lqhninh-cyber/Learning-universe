@@ -29,6 +29,7 @@ npm.cmd run build
 
 ## Tài liệu dự án
 
+- [Tiến độ triển khai dự án (GĐ0 → GĐ8)](./docs/progress.md)
 - [Hướng dẫn cài đặt môi trường](./docs/setup.md)
 - [Nhật ký quyết định kiến trúc (D1–D9)](./docs/decisions.md)
 - [Cấu trúc thư mục nội dung](./content/README.md)

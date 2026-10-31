@@ -1,8 +1,9 @@
-import { BookOpenText, GraduationCap, Palette, User, UserCheck } from 'lucide-react';
-import { Link, Outlet } from 'react-router';
+import { BookOpenText, GraduationCap, Menu, Palette, User, UserCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, Outlet, useLocation } from 'react-router';
 import { LoginPromptDialog, useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
-import { Badge, Button, Container } from '@/shared/ui';
+import { Badge, Button, Container, Drawer } from '@/shared/ui';
 
 export function RootHydrateFallback() {
   return null;
@@ -12,12 +13,69 @@ export function RootLayout() {
   const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const enableLearnerMode = useLearningStore((state) => state.enableLearnerMode);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      try {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } catch {
+        // Bỏ qua trong môi trường jsdom khi kiểm thử
+      }
+    }
+  }, [pathname, hash]);
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900">
       <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
         <Container className="flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 md:gap-6">
+            <div className="md:hidden">
+              <Drawer
+                open={isMobileMenuOpen}
+                onOpenChange={setIsMobileMenuOpen}
+                side="left"
+                title="Điều hướng Learning Universe"
+                trigger={
+                  <Button variant="ghost" size="icon" aria-label="Mở menu điều hướng">
+                    <Menu className="h-5 w-5" aria-hidden="true" />
+                  </Button>
+                }
+              >
+                <nav aria-label="Menu điều hướng di động" className="space-y-2">
+                  <Link
+                    to={ROUTES.home}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                  >
+                    Trang chủ
+                  </Link>
+                  <Link
+                    to={ROUTES.subjects}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                  >
+                    Tất cả môn học
+                  </Link>
+                  <Link
+                    to={ROUTES.subjectOverview('cau-truc-dai-so')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                  >
+                    Cấu trúc đại số
+                  </Link>
+                  <Link
+                    to={ROUTES.subjectOverview('hinh-hoc-affine')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                  >
+                    Hình học Affine
+                  </Link>
+                </nav>
+              </Drawer>
+            </div>
+
             <div className="flex items-center gap-3">
               <Link
                 to={ROUTES.home}
