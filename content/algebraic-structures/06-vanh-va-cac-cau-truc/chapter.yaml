@@ -1,0 +1,10 @@
+id: vanh-va-cac-cau-truc
+number: 6
+title: 'Vành và các cấu trúc liên quan'
+description: 'Chuyển từ một phép toán sang hai phép toán liên kết bởi luật phân phối: tiên đề vành, quy tắc tính toán, phần tử khả nghịch, ước của không, thang bậc cấu trúc từ miền nguyên tới trường, các cách dựng vành mới và tiêu chuẩn vành con.'
+objectives:
+  - 'Nắm vững định nghĩa vành, vành giao hoán, vành có đơn vị và các quy tắc tính toán nền tảng (quy tắc dấu, phân phối đối với phép trừ).'
+  - 'Phân biệt sắc nét nhóm các phần tử khả nghịch R^x với tập các ước của không, và mối liên hệ bản chất với luật giản ước nhân.'
+  - 'Làm chủ sơ đồ thang bậc: Vành ⊃ Vành có 1 ⊃ Vành giao hoán có 1 ⊃ Miền nguyên ⊃ Trường (cùng nhánh Vành chia / Thể).'
+  - 'Phát biểu và chứng minh định lý miền nguyên hữu hạn là trường, hệ quả trên Z/nZ, và các ví dụ kinh điển (Z[i], quaternion H).'
+  - 'Vận dụng các cách dựng vành mới (tích trực tiếp, đa thức, ma trận), tiêu chuẩn vành con và phân tích hiện tượng sai khác phần tử đơn vị giữa vành con và vành mẹ.'

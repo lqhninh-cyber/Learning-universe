@@ -1,0 +1,498 @@
+---
+id: dinh-nghia-vanh-quy-tac-tinh-toan-va-nhom-kha-nghich
+title: 'Định nghĩa vành, quy tắc tính toán và nhóm phần tử khả nghịch'
+description: 'Mở đầu Phần II Cấu trúc đại số: chuyển từ một phép toán sang hệ thống hai phép toán; tiên đề cấu trúc vành; quy tắc tính toán dấu và phân phối; nhóm các phần tử khả nghịch R^x.'
+estimatedMinutes: 35
+level: intermediate
+prerequisites:
+  - dong-cau-nhom-hat-nhan-va-anh
+tags:
+  - vành
+  - vành giao hoán
+  - vành có đơn vị
+  - phần tử khả nghịch
+  - nhóm các đơn vị
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '98-101'
+    sections: 'Mục 6.1, 6.2, 6.3'
+    note: 'Định nghĩa 6.1, Định lý 6.4 (quy tắc tính toán cơ bản), Mệnh đề 6.6 (nhóm các đơn vị)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '145-155'
+    sections: 'Chương 6, Mục 6.1'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu rõ động cơ sư phạm:** Hiểu vì sao đại số cần chuyển từ cấu trúc một phép toán (Nhóm) sang hệ thống tương tác giữa hai phép toán (Vành) thông qua luật phân phối.
+2. **Nắm vững hệ tiên đề cấu trúc Vành:** Kiểm tra chính xác ba nhóm tiên đề: $(R, +)$ là nhóm Abel, $(R, \cdot)$ là nửa nhóm, và phép nhân phân phối hai phía đối với phép cộng.
+3. **Thành thạo các quy ước học thuật của giáo trình:** Nắm vững rằng một vành **không mặc định giao hoán** và **không mặc định có phần tử đơn vị**; nhận diện vành không $\{0\}$.
+4. **Chứng minh và vận dụng các quy tắc tính toán:** Chứng minh các đẳng thức nền tảng $a \cdot 0 = 0 \cdot a = 0$, quy tắc dấu $(-a)b = a(-b) = -(ab)$, $(-a)(-b) = ab$, và phân phối đối với phép trừ.
+5. **Khảo sát nhóm các phần tử khả nghịch $R^\times$:** Xác định các phần tử có nghịch đảo nhân hai phía và chứng minh $R^\times$ lập thành một nhóm dưới phép nhân.
+</Note>
+
+**Kiến thức tiên quyết:** Khái niệm nhóm giao hoán (nhóm Abel) và phép toán hai ngôi từ Chương 1 (<Cite source="gt-ctds-hvk-2026" page="17-25" note="Mục 1.1, 1.2" />).
+
+---
+
+## 1. Khởi nguồn sư phạm: Từ một phép toán đến hệ thống hai phép toán
+
+Trong Phần I của học phần Cấu trúc đại số, chúng ta đã nghiên cứu các tập hợp chỉ được trang bị **một phép toán hai ngôi** duy nhất thỏa mãn tiên đề nhóm. Mô hình nhóm đã giải quyết xuất sắc bài toán đo lường tính đối xứng và các phép biến đổi khả nghịch.
+
+Tuy nhiên, trong hầu hết các không gian số học và giải tích quen thuộc như tập số nguyên $\mathbb{Z}$, số hữu tỉ $\mathbb{Q}$, số thực $\mathbb{R}$, số phức $\mathbb{C}$, không gian ma trận $M_n(\mathbb{R})$, hay vành đa thức $\mathbb{R}[x]$, các phần tử luôn chịu sự tác động đồng thời của **hai phép toán**: phép cộng ($+$) và phép nhân ($\cdot$).
+
+Nếu phân tích riêng lẻ từng phép toán trên tập số nguyên $\mathbb{Z}$:
+- Đối với phép cộng: $(\mathbb{Z}, +)$ là một nhóm Abel hoàn chỉnh, có phần tử trung hòa là $0$ và mọi phần tử $a$ đều có phần tử đối duy nhất là $-a$.
+- Đối với phép nhân: $(\mathbb{Z}, \cdot)$ chỉ là một vị nhóm giao hoán có đơn vị là $1$, nhưng đại đa số các phần tử (ngoại trừ $1$ và $-1$) không có nghịch đảo nhân trong $\mathbb{Z}$.
+
+Điều kỳ diệu gắn kết hai phép toán này lại thành một chỉnh thể đại số thống nhất chính là **luật phân phối của phép nhân đối với phép cộng**:
+$$
+a \cdot (b + c) = a \cdot b + a \cdot c \quad \text{và} \quad (b + c) \cdot a = b \cdot a + c \cdot a.
+$$
+
+Cấu trúc **Vành** (*Ring*) ra đời để mô hình hóa trừu tượng toàn bộ các hệ thống đại số có hai phép toán tương tác với nhau theo quy luật phân phối tự nhiên đó.
+
+---
+
+## 2. Tiên đề cấu trúc Vành và các quy ước chuẩn mực
+
+<Definition id="def-c6-b1-vanh" title="Cấu trúc Vành (Ring)">
+Một **vành** $(R, +, \cdot)$ là một tập hợp khác rỗng $R$ được trang bị hai phép toán hai ngôi, gọi là **phép cộng** (ký hiệu $+$) và **phép nhân** (ký hiệu $\cdot$ hoặc viết liền $ab$), thỏa mãn đồng thời ba nhóm tiên đề sau:
+
+1. **Nhóm cộng Abel:** Cấu trúc $(R, +)$ là một nhóm giao hoán:
+   - *Tính kết hợp:* $(a + b) + c = a + (b + c)$ với mọi $a, b, c \in R$.
+   - *Phần tử không:* Tồn tại phần tử $0_R \in R$ sao cho $a + 0_R = 0_R + a = a$ với mọi $a \in R$.
+   - *Phần tử đối:* Với mỗi $a \in R$, tồn tại $-a \in R$ sao cho $a + (-a) = (-a) + a = 0_R$.
+   - *Tính giao hoán:* $a + b = b + a$ với mọi $a, b \in R$.
+
+2. **Nửa nhóm nhân:** Phép nhân có tính kết hợp:
+   $$
+   (a \cdot b) \cdot c = a \cdot (b \cdot c) \quad \text{với mọi } a, b, c \in R.
+   $$
+
+3. **Luật phân phối hai phía:** Phép nhân phân phối đối với phép cộng ở cả bên trái và bên phải:
+   - *Phân phối trái:* $a \cdot (b + c) = a \cdot b + a \cdot c$ với mọi $a, b, c \in R$.
+   - *Phân phối phải:* $(b + c) \cdot a = b \cdot a + c \cdot a$ với mọi $a, b, c \in R$.
+</Definition>
+
+<Note title="Quy ước học thuật bắt buộc của giáo trình Huỳnh Việt Khánh (2026)">
+Trong toàn bộ học phần này, người học cần ghi nhớ 4 quy ước nền tảng sau:
+
+1. **Không mặc định giao hoán:** Một vành nói chung **không bắt buộc** phép nhân phải giao hoán. Một vành được gọi là **vành giao hoán** (*commutative ring*) nếu bổ sung thêm tiên đề:
+   $$
+   a \cdot b = b \cdot a \quad \text{với mọi } a, b \in R.
+   $$
+2. **Không mặc định có phần tử đơn vị:** Một vành nói chung **không bắt buộc** phải có phần tử đơn vị đối với phép nhân (còn gọi là *rng* hay *vành không đơn vị*). Một vành được gọi là **vành có đơn vị** (*ring with identity*) nếu tồn tại phần tử $1_R \in R$ sao cho:
+   $$
+   a \cdot 1_R = 1_R \cdot a = a \quad \text{với mọi } a \in R.
+   $$
+   Nếu tồn tại, phần tử đơn vị $1_R$ là duy nhất.
+3. **Vành không $\{0\}$ (Trivial ring):** Tập chỉ gồm một phần tử $R = \{0\}$ với $0 + 0 = 0$ và $0 \cdot 0 = 0$ là một vành có đơn vị, trong đó $1_R = 0_R$. Vành này được gọi là *vành không*. Trong mọi vành có đơn vị khác $\{0\}$, ta luôn có $1_R \neq 0_R$.
+4. **Quy ước viết:** Phép trừ được hiểu là phép cộng với phần tử đối: $a - b = a + (-b)$.
+</Note>
+
+<Example id="ex-c6-b1-cac-vanh-chuan-muc" title="Các mô hình vành chuẩn mực">
+1. **Các vành giao hoán có đơn vị kinh điển:** $(\mathbb{Z}, +, \cdot), (\mathbb{Q}, +, \cdot), (\mathbb{R}, +, \cdot), (\mathbb{C}, +, \cdot)$ với phần tử không là $0$ và phần tử đơn vị là $1$.
+2. **Vành các lớp thặng dư modulo $n$:** Với mỗi số nguyên $n \ge 2$, tập $\mathbb{Z}/n\mathbb{Z}$ cùng hai phép toán cộng và nhân modulo $n$ lập thành một vành giao hoán có đơn vị là $[1]_n$.
+3. **Vành không có phần tử đơn vị:** Tập các số nguyên chẵn $2\mathbb{Z} = \{2k \mid k \in \mathbb{Z}\}$ với phép cộng và phép nhân số học thông thường. Đây là một vành giao hoán nhưng **không có phần tử đơn vị**, vì nếu tồn tại $e \in 2\mathbb{Z}$ sao cho $2e = 2$, thì buộc $e = 1 \notin 2\mathbb{Z}$.
+4. **Vành không giao hoán có đơn vị:** Tập hợp các ma trận vuông cấp hai $M_2(\mathbb{R})$ với phép cộng và phép nhân ma trận là một vành có đơn vị $I_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$, nhưng **không giao hoán**. Thật vậy, xét:
+   $$
+   A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}, \quad B = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}.
+   $$
+   Ta tính được:
+   $$
+   AB = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} \neq \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix} = BA.
+   $$
+</Example>
+
+---
+
+## 3. Các quy tắc tính toán nền tảng trong một Vành
+
+Từ các tiên đề vành tối thiểu, chúng ta có thể suy ra toàn bộ các quy tắc đại số nền tảng mà ta thường dùng trong số học phổ thông.
+
+<Theorem id="thm-c6-b1-quy-tac-tinh-toan" title="Quy tắc tính toán cơ bản trong Vành (Định lý 6.4 Giáo trình)">
+Cho $(R, +, \cdot)$ là một vành bất kỳ. Với mọi phần tử $a, b, c \in R$, ta luôn có:
+
+1. **Nhân với phần tử không:**
+   $$
+   a \cdot 0_R = 0_R \cdot a = 0_R.
+   $$
+2. **Quy tắc dấu:**
+   $$
+   (-a) \cdot b = a \cdot (-b) = -(a \cdot b) \quad \text{và} \quad (-a) \cdot (-b) = a \cdot b.
+   $$
+3. **Phân phối đối với phép trừ:**
+   $$
+   a \cdot (b - c) = a \cdot b - a \cdot c \quad \text{và} \quad (b - c) \cdot a = b \cdot a - c \cdot a.
+   $$
+4. **Nếu $R$ có phần tử đơn vị $1_R$:**
+   $$
+   (-1_R) \cdot a = -a \quad \text{và} \quad (-1_R) \cdot (-1_R) = 1_R.
+   $$
+</Theorem>
+
+<Proof>
+Chúng ta tiến hành chứng minh từng hệ quả dựa trên tính duy nhất của phần tử đối trong nhóm cộng $(R, +)$:
+
+1. **Chứng minh $a \cdot 0_R = 0_R$:**
+   Vì $0_R$ là phần tử không của nhóm cộng, ta có $0_R + 0_R = 0_R$. Áp dụng luật phân phối trái:
+   $$
+   a \cdot 0_R = a \cdot (0_R + 0_R) = a \cdot 0_R + a \cdot 0_R.
+   $$
+   Đẳng thức này diễn ra trong nhóm cộng $(R, +)$. Cộng vào hai vế phần tử đối $-(a \cdot 0_R)$, ta được:
+   $$
+   0_R = a \cdot 0_R.
+   $$
+   Hoàn toàn tương tự, từ $0_R + 0_R = 0_R$ áp dụng phân phối phải:
+   $$
+   0_R \cdot a = (0_R + 0_R) \cdot a = 0_R \cdot a + 0_R \cdot a \implies 0_R \cdot a = 0_R.
+   $$
+
+2. **Chứng minh $(-a) \cdot b = -(a \cdot b)$:**
+   Theo định nghĩa phần tử đối trong nhóm cộng, $-(ab)$ là phần tử duy nhất thỏa mãn $ab + (-(ab)) = 0_R$. Ta kiểm tra tổng của $ab$ và $(-a)b$:
+   $$
+   ab + (-a)b = (a + (-a))b = 0_R \cdot b = 0_R.
+   $$
+   Do tính duy nhất của phần tử đối, suy ra $(-a)b = -(ab)$. Tương tự:
+   $$
+   ab + a(-b) = a(b + (-b)) = a \cdot 0_R = 0_R \implies a(-b) = -(ab).
+   $$
+   Tiếp tục áp dụng hai kết quả trên:
+   $$
+   (-a)(-b) = -((-a)b) = -(-(ab)) = ab.
+   $$
+
+3. **Chứng minh phân phối đối với phép trừ:**
+   Nhớ rằng $b - c = b + (-c)$. Áp dụng phân phối trái và quy tắc dấu:
+   $$
+   a(b - c) = a(b + (-c)) = ab + a(-c) = ab + (-(ac)) = ab - ac.
+   $$
+   Tương tự đối với phân phối phải:
+   $$
+   (b - c)a = (b + (-c))a = ba + (-c)a = ba + (-(ca)) = ba - ca.
+   $$
+
+4. **Khi $R$ có đơn vị $1_R$:**
+   Đặt $b = 1_R$ vào quy tắc dấu:
+   $$
+   (-1_R) \cdot a = -(1_R \cdot a) = -a.
+   $$
+   Đặc biệt, thay $a = -1_R$ ta nhận được $(-1_R)(-1_R) = -(-1_R) = 1_R$.
+</Proof>
+
+<Counterexample id="ce-c6-b1-khai-trien-binh-phuong" title="Cảnh báo thứ tự khi khai triển bình phương trong vành không giao hoán">
+Trong một vành không giao hoán, công thức hằng đẳng thức đáng nhớ phổ thông không còn đúng dạng rút gọn! Thật vậy:
+$$
+(a + b)^2 = (a + b)(a + b) = a(a + b) + b(a + b) = a^2 + ab + ba + b^2.
+$$
+Hai số hạng chéo $ab$ và $ba$ **chỉ gộp lại thành $2ab$ khi và chỉ khi $ab = ba$**.
+
+Tương tự:
+$$
+(a - b)(a + b) = a^2 + ab - ba - b^2 \neq a^2 - b^2 \quad \text{nếu } ab \neq ba.
+$$
+*Minh họa cụ thể trong $M_2(\mathbb{R})$:* Lấy $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ và $B = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$. Ta có:
+$$
+A^2 = B^2 = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}, \quad AB = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}, \quad BA = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix}.
+$$
+Do đó:
+$$
+(A + B)^2 = A^2 + AB + BA + B^2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} = I_2,
+$$
+trong khi:
+$$
+A^2 + 2AB + B^2 = 2AB = \begin{pmatrix} 2 & 0 \\ 0 & 0 \end{pmatrix} \neq I_2.
+$$
+</Counterexample>
+
+---
+
+## 4. Phần tử khả nghịch và Nhóm các đơn vị $R^\times$
+
+Khi một vành sở hữu phần tử đơn vị $1_R$, ta có thể nghiên cứu các phần tử có khả năng thực hiện phép chia (tức là có nghịch đảo nhân hai phía).
+
+<Definition id="def-c6-b1-phan-tu-kha-nghich" title="Phần tử khả nghịch (Unit)">
+Cho $(R, +, \cdot)$ là một vành có phần tử đơn vị $1_R$. Một phần tử $u \in R$ được gọi là **khả nghịch** (hay một *đơn vị / unit* của vành $R$) nếu tồn tại phần tử $v \in R$ sao cho:
+$$
+u \cdot v = v \cdot u = 1_R.
+$$
+Nếu tồn tại, phần tử $v$ là duy nhất và được gọi là **phần tử nghịch đảo nhân** của $u$, ký hiệu là $u^{-1}$.
+</Definition>
+
+<Proof>
+*Chứng minh tính duy nhất của nghịch đảo:* Giả sử $v$ và $w$ đều là nghịch đảo của $u$, tức là $uv = vu = 1_R$ và $uw = wu = 1_R$. Khi đó nhờ tính kết hợp của phép nhân:
+$$
+v = v \cdot 1_R = v \cdot (u \cdot w) = (v \cdot u) \cdot w = 1_R \cdot w = w.
+$$
+Vậy phần tử nghịch đảo là duy nhất.
+</Proof>
+
+<Proposition id="prop-c6-b1-nhom-kha-nghich" title="Nhóm các phần tử khả nghịch R^x (Mệnh đề 6.6 Giáo trình)">
+Cho $R$ là một vành có phần tử đơn vị $1_R$. Tập hợp tất cả các phần tử khả nghịch của $R$, ký hiệu là $R^\times$ (hoặc $U(R)$), lập thành một **nhóm** đối với phép nhân của vành $R$.
+
+Nhóm $(R^\times, \cdot)$ được gọi là **nhóm các phần tử khả nghịch** (hay *nhóm đơn vị*) của vành $R$.
+</Proposition>
+
+<Proof>
+Ta kiểm tra 4 tiên đề nhóm cho cấu trúc $(R^\times, \cdot)$:
+1. **Tính đóng:** Với mọi $u, v \in R^\times$, tồn tại $u^{-1}, v^{-1} \in R$. Xét tích $uv$ và $v^{-1}u^{-1}$:
+   $$
+   (uv)(v^{-1}u^{-1}) = u(v v^{-1})u^{-1} = u \cdot 1_R \cdot u^{-1} = u u^{-1} = 1_R.
+   $$
+   Tương tự $(v^{-1}u^{-1})(uv) = 1_R$. Do đó tích $uv$ khả nghịch và có nghịch đảo là $(uv)^{-1} = v^{-1}u^{-1} \in R$. Vậy $uv \in R^\times$.
+2. **Tính kết hợp:** Kế thừa trực tiếp từ tính kết hợp của phép nhân trên vành $R$.
+3. **Phần tử đơn vị:** Ta có $1_R \cdot 1_R = 1_R$, nên $1_R$ khả nghịch và tự là nghịch đảo của chính nó ($1_R^{-1} = 1_R$). Do đó $1_R \in R^\times$.
+4. **Phần tử nghịch đảo:** Với mỗi $u \in R^\times$, vì $u \cdot u^{-1} = u^{-1} \cdot u = 1_R$ nên chính phần tử $u^{-1}$ cũng khả nghịch và $(u^{-1})^{-1} = u \in R^\times$.
+
+Vậy $(R^\times, \cdot)$ là một nhóm.
+</Proof>
+
+<Example id="ex-c6-b1-nhom-kha-nghich-kinh-dien" title="Nhóm khả nghịch của các vành quen thuộc">
+1. **Vành số nguyên $\mathbb{Z}$:** Phương trình $uv = 1$ trong $\mathbb{Z}$ chỉ có đúng hai nghiệm nguyên là $u = 1$ hoặc $u = -1$. Do đó:
+   $$
+   \mathbb{Z}^\times = \{1, -1\} \cong \mathbb{Z}_2.
+   $$
+2. **Vành các số hữu tỉ $\mathbb{Q}$ và số thực $\mathbb{R}$:** Mọi phần tử khác không đều có nghịch đảo thông thường. Do đó:
+   $$
+   \mathbb{Q}^\times = \mathbb{Q} \setminus \{0\}, \quad \mathbb{R}^\times = \mathbb{R} \setminus \{0\}.
+   $$
+3. **Vành thặng dư $\mathbb{Z}/n\mathbb{Z}$:** Lớp $[a]_n$ khả nghịch trong $\mathbb{Z}/n\mathbb{Z}$ khi và chỉ khi tồn tại $u \in \mathbb{Z}$ sao cho $au \equiv 1 \pmod n$, tức là $\gcd(a, n) = 1$ theo đồng nhất thức Bézout. Do đó:
+   $$
+   (\mathbb{Z}/n\mathbb{Z})^\times = U(n) = \{[a]_n \mid 1 \le a < n, \; \gcd(a, n) = 1\},
+   $$
+   với cấp $|(\mathbb{Z}/n\mathbb{Z})^\times| = \varphi(n)$ (hàm phi Euler).
+4. **Vành ma trận $M_n(F)$ trên một trường $F$:** Ma trận $A \in M_n(F)$ khả nghịch khi và chỉ khi $\det(A) \neq 0$. Nhóm các phần tử khả nghịch chính là nhóm tuyến tính tổng quát:
+   $$
+   (M_n(F))^\times = \operatorname{GL}_n(F).
+   $$
+</Example>
+
+---
+
+## 5. Hệ thống bài tập 4 phân lớp có lời giải
+
+<Exercise id="ex-c6-b1-nhom-a" title="Bài tập 6.1 (Nhóm A): Kiểm tra tiên đề và tính khả nghịch trong Z/10Z">
+Trong vành các lớp thặng dư $\mathbb{Z}/10\mathbb{Z}$:
+1. Liệt kê tất cả các phần tử của nhóm khả nghịch $(\mathbb{Z}/10\mathbb{Z})^\times$.
+2. Tìm phần tử nghịch đảo của từng phần tử trong nhóm này.
+3. Nhóm $(\mathbb{Z}/10\mathbb{Z})^\times$ đẳng cấu với nhóm nào trong số $\mathbb{Z}_4$ hay $\mathbb{Z}_2 \times \mathbb{Z}_2$?
+</Exercise>
+
+<Hint>
+Lớp $[a]_{10}$ khả nghịch khi và chỉ khi $\gcd(a, 10) = 1$. Tính cấp của từng phần tử trong nhóm nhân để xác định tính cyclic.
+</Hint>
+
+<Solution>
+1. **Liệt kê các phần tử khả nghịch:**
+   Các số nguyên dương $a < 10$ thỏa mãn $\gcd(a, 10) = 1$ là $1, 3, 7, 9$. Do đó:
+   $$
+   (\mathbb{Z}/10\mathbb{Z})^\times = \{[1], [3], [7], [9]\}.
+   $$
+   Số phần tử của nhóm là $\varphi(10) = 4$.
+
+2. **Tìm nghịch đảo của từng phần tử:**
+   - $[1] \cdot [1] = [1] \implies [1]^{-1} = [1]$.
+   - $[3] \cdot [7] = [21] = [1] \implies [3]^{-1} = [7]$ và $[7]^{-1} = [3]$.
+   - $[9] \cdot [9] = [81] = [1] \implies [9]^{-1} = [9]$.
+
+3. **Xác định cấu trúc nhóm:**
+   Tính lũy thừa của phần tử $[3]$ trong nhóm nhân:
+   $$
+   [3]^1 = [3], \quad [3]^2 = [9], \quad [3]^3 = [27] = [7], \quad [3]^4 = [1].
+   $$
+   Phần tử $[3]$ có cấp bằng $4$. Một nhóm hữu hạn cấp 4 chứa phần tử cấp 4 thì bắt buộc phải là một **nhóm cyclic**:
+   $$
+   (\mathbb{Z}/10\mathbb{Z})^\times = \langle [3] \rangle \cong \mathbb{Z}_4.
+   $$
+</Solution>
+
+---
+
+<Exercise id="ex-c6-b1-nhom-b" title="Bài tập 6.2 (Nhóm B): Vành các số nguyên Gauss Z[i] và nhóm đơn vị">
+Xét tập hợp các số nguyên Gauss:
+$$
+\mathbb{Z}[i] = \{a + bi \mid a, b \in \mathbb{Z}, \; i^2 = -1\}.
+$$
+1. Chứng minh $\mathbb{Z}[i]$ là một vành giao hoán có đơn vị với phép cộng và nhân số phức thông thường.
+2. Với mỗi $z = a + bi \in \mathbb{Z}[i]$, định nghĩa chuẩn $N(z) = |z|^2 = a^2 + b^2 \in \mathbb{Z}_{\ge 0}$. Chứng minh $N(z_1 z_2) = N(z_1) N(z_2)$.
+3. Chứng minh $z \in (\mathbb{Z}[i])^\times \iff N(z) = 1$, từ đó tìm tất cả các phần tử khả nghịch của $\mathbb{Z}[i]$.
+</Exercise>
+
+<Hint>
+Dùng tính chất nhân của chuẩn $N(z_1 z_2) = N(z_1)N(z_2)$. Nếu $z$ khả nghịch thì $z w = 1$, suy ra $N(z)N(w) = N(1) = 1$ trong $\mathbb{Z}$.
+</Hint>
+
+<Solution>
+1. **Chứng minh $\mathbb{Z}[i]$ là vành giao hoán có đơn vị:**
+   - Với mọi $z_1 = a_1 + b_1 i$ và $z_2 = a_2 + b_2 i \in \mathbb{Z}[i]$:
+     $$
+     z_1 - z_2 = (a_1 - a_2) + (b_1 - b_2)i \in \mathbb{Z}[i] \quad (\text{vì } a_1 - a_2, b_1 - b_2 \in \mathbb{Z}),
+     $$
+     $$
+     z_1 z_2 = (a_1 a_2 - b_1 b_2) + (a_1 b_2 + a_2 b_1)i \in \mathbb{Z}[i].
+     $$
+   - Tập $\mathbb{Z}[i]$ khác rỗng (chứa $0 = 0 + 0i$), đóng đối với phép trừ và phép nhân, đồng thời kế thừa tính kết hợp, giao hoán và luật phân phối từ trường số phức $\mathbb{C}$.
+   - Phần tử $1 = 1 + 0i \in \mathbb{Z}[i]$ là phần tử đơn vị. Do đó $\mathbb{Z}[i]$ là vành giao hoán có đơn vị.
+
+2. **Tính chất nhân của chuẩn:**
+   Với $z_1, z_2 \in \mathbb{C}$, chuẩn $N(z) = z \bar{z} = |z|^2$. Ta có:
+   $$
+   N(z_1 z_2) = (z_1 z_2) \overline{(z_1 z_2)} = (z_1 \bar{z}_1)(z_2 \bar{z}_2) = N(z_1) N(z_2).
+   $$
+
+3. **Xác định nhóm khả nghịch:**
+   - Giả sử $z \in (\mathbb{Z}[i])^\times$. Tồn tại $w \in \mathbb{Z}[i]$ sao cho $zw = 1$. Lấy chuẩn hai vế:
+     $$
+     N(z) N(w) = N(zw) = N(1) = 1.
+     $$
+     Vì $N(z), N(w)$ là các số nguyên không âm, nên phương trình $N(z)N(w) = 1$ trong $\mathbb{Z}$ đòi hỏi $N(z) = 1$.
+   - Ngược lại, nếu $N(z) = a^2 + b^2 = 1$, thì $z \bar{z} = 1$. Vì $a, b \in \mathbb{Z}$ nên liên hợp $\bar{z} = a - bi$ cũng thuộc $\mathbb{Z}[i]$, suy ra $z$ khả nghịch với $z^{-1} = \bar{z}$.
+   - Giải phương trình $a^2 + b^2 = 1$ với $a, b \in \mathbb{Z}$:
+     - $a = \pm 1, b = 0 \implies z = \pm 1$.
+     - $a = 0, b = \pm 1 \implies z = \pm i$.
+   - Vậy nhóm các phần tử khả nghịch của $\mathbb{Z}[i]$ là:
+     $$
+     (\mathbb{Z}[i])^\times = \{1, -1, i, -i\} = \langle i \rangle \cong \mathbb{Z}_4.
+     $$
+</Solution>
+
+---
+
+<Exercise id="ex-c6-b1-nhom-c" title="Bài tập 6.3 (Nhóm C): Phân tích công thức khai triển đa thức trong vành không giao hoán">
+Cho $R$ là một vành bất kỳ và $a, b \in R$.
+1. Chứng minh bằng quy nạp rằng nếu $ab = ba$ thì với mọi số nguyên dương $n \ge 1$:
+   $$
+   (a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k.
+   $$
+2. Xây dựng một ví dụ trong $M_2(\mathbb{R})$ chỉ ra hai ma trận $A, B$ sao cho $(A + B)^3 \neq A^3 + 3A^2 B + 3AB^2 + B^3$.
+</Exercise>
+
+<Hint>
+1. Áp dụng công thức truy hồi tổ hợp $\binom{n}{k-1} + \binom{n}{k} = \binom{n+1}{k}$ và tính giao hoán $ab=ba$ để đổi vị trí thừa số $a$ và $b$.
+2. Chọn ma trận tam giác trên để lũy thừa bậc cao triệt tiêu đơn giản.
+</Hint>
+
+<Solution>
+1. **Chứng minh công thức nhị thức Newton khi $ab = ba$:**
+   - Với $n = 1$: $(a + b)^1 = \binom{1}{0} a + \binom{1}{1} b = a + b$, công thức đúng.
+   - Giả sử công thức đúng đến $n \ge 1$: $(a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k$.
+   - Khi đó:
+     $$
+     (a + b)^{n+1} = (a + b)^n (a + b) = \left( \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k \right) a + \left( \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k \right) b.
+     $$
+   - Vì $ab = ba$, ta có $b^k a = a b^k$. Do đó:
+     $$
+     (a + b)^{n+1} = \sum_{k=0}^n \binom{n}{k} a^{n-k+1} b^k + \sum_{k=0}^n \binom{n}{k} a^{n-k} b^{k+1}.
+     $$
+   - Gom hệ số của $a^{n+1-k} b^k$ cho $1 \le k \le n$:
+     $$
+     \left[ \binom{n}{k} + \binom{n}{k-1} \right] a^{n+1-k} b^k = \binom{n+1}{k} a^{n+1-k} b^k.
+     $$
+   - Kết hợp với số hạng đầu $a^{n+1}$ và số hạng cuối $b^{n+1}$, ta thu được công thức đúng cho $n+1$. Theo nguyên lý quy nạp, công thức đúng với mọi $n \ge 1$.
+
+2. **Ví dụ phản chứng trong $M_2(\mathbb{R})$:**
+   Chọn $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ và $B = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$.
+   Ta có:
+   $$
+   AB = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}, \quad BA = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = A.
+   $$
+   Vì $AB \neq BA$, hai ma trận này không giao hoán.
+   Tính tổng $A + B = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix}$. Nhận thấy:
+   $$
+   (A + B)^2 = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} = A + B.
+   $$
+   Do đó $(A + B)^3 = A + B = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix}$.
+   Mặt khác:
+   - $A^2 = 0 \implies A^3 = 0, A^2 B = 0$.
+   - $B^2 = B \implies B^3 = B$.
+   - $AB^2 = (AB)B = 0 \cdot B = 0$.
+   Do đó vế phải nhị thức Newton:
+   $$
+   A^3 + 3A^2 B + 3AB^2 + B^3 = 0 + 0 + 0 + B = B = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}.
+   $$
+   Rõ ràng $\begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \neq \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. Công thức nhị thức Newton hoàn toàn thất bại khi các phần tử không giao hoán.
+</Solution>
+
+---
+
+<Exercise id="ex-c6-b1-nhom-d" title="Bài tập 6.4 (Nhóm D): Cấu trúc nhóm khả nghịch của vành tích trực tiếp">
+Cho $R$ và $S$ là hai vành có phần tử đơn vị lần lượt là $1_R$ và $1_S$. Trên tập tích Descartes $R \times S$, ta định nghĩa hai phép toán cộng và nhân theo từng tọa độ:
+$$
+(r_1, s_1) + (r_2, s_2) = (r_1 + r_2, s_1 + s_2), \quad (r_1, s_1) \cdot (r_2, s_2) = (r_1 r_2, s_1 s_2).
+$$
+1. Chứng minh $R \times S$ là một vành có phần tử đơn vị là $1_{R \times S} = (1_R, 1_S)$.
+2. Chứng minh rằng một phần tử $(u, v) \in R \times S$ khả nghịch khi và chỉ khi $u \in R^\times$ và $v \in S^\times$.
+3. Rút ra đẳng cấu nhóm nhân:
+   $$
+   (R \times S)^\times \cong R^\times \times S^\times.
+   $$
+4. Áp dụng: Tìm cấp và cấu trúc của nhóm $((\mathbb{Z}/3\mathbb{Z}) \times (\mathbb{Z}/5\mathbb{Z}))^\times$.
+</Exercise>
+
+<Hint>
+Phương trình $(u, v)(x, y) = (1_R, 1_S)$ tương đương với hệ hai phương trình độc lập $ux = 1_R$ và $vy = 1_S$.
+</Hint>
+
+<Solution>
+1. **Kiểm tra tiên đề vành cho $R \times S$:**
+   - Phép cộng theo tọa độ biến $R \times S$ thành tích trực tiếp của hai nhóm cộng Abel $(R, +)$ và $(S, +)$, do đó $(R \times S, +)$ là một nhóm Abel có phần tử không là $0_{R \times S} = (0_R, 0_S)$.
+   - Phép nhân có tính kết hợp vì từng thành phần $r_i$ và $s_i$ kết hợp trong $R$ và $S$.
+   - Luật phân phối thỏa mãn trên từng tọa độ:
+     $$
+     (a, b)[(c, d) + (e, f)] = (a, b)(c + e, d + f) = (a(c + e), b(d + f)) = (ac + ae, bd + bf) = (a, b)(c, d) + (a, b)(e, f).
+     $$
+   - Phần tử $(1_R, 1_S)$ thỏa mãn $(r, s)(1_R, 1_S) = (r \cdot 1_R, s \cdot 1_S) = (r, s)$, nên đây là phần tử đơn vị của $R \times S$.
+
+2. **Tiêu chuẩn khả nghịch:**
+   - Phần tử $(u, v) \in R \times S$ khả nghịch khi và chỉ khi tồn tại $(x, y) \in R \times S$ sao cho:
+     $$
+     (u, v)(x, y) = (ux, vy) = (1_R, 1_S) \quad \text{và} \quad (x, y)(u, v) = (xu, yv) = (1_R, 1_S).
+     $$
+   - Điều này tương đương đồng thời:
+     $$
+     \begin{cases} ux = xu = 1_R \\ vy = yv = 1_S \end{cases} \iff u \in R^\times \text{ và } v \in S^\times.
+     $$
+   - Khi đó nghịch đảo nhân là $(u, v)^{-1} = (u^{-1}, v^{-1})$.
+
+3. **Thiết lập đẳng cấu nhóm:**
+   Từ chứng minh trên, tập hợp $(R \times S)^\times$ chính xác bằng tập tích Descartes $R^\times \times S^\times$.
+   Ánh xạ đồng nhất $\theta: (R \times S)^\times \to R^\times \times S^\times, (u, v) \mapsto (u, v)$ bảo toàn phép nhân:
+   $$
+   \theta((u_1, v_1)(u_2, v_2)) = \theta(u_1 u_2, v_1 v_2) = (u_1 u_2, v_1 v_2) = (u_1, v_1)(u_2, v_2) = \theta(u_1, v_1)\theta(u_2, v_2).
+   $$
+   Vì $\theta$ là song ánh, ta có đẳng cấu nhóm $(R \times S)^\times \cong R^\times \times S^\times$.
+
+4. **Áp dụng tính toán:**
+   Với $R = \mathbb{Z}/3\mathbb{Z}$ và $S = \mathbb{Z}/5\mathbb{Z}$:
+   - $R^\times = (\mathbb{Z}/3\mathbb{Z})^\times = \{[1], [2]\} \cong \mathbb{Z}_2$.
+   - $S^\times = (\mathbb{Z}/5\mathbb{Z})^\times = \{[1], [2], [3], [4]\} \cong \mathbb{Z}_4$.
+   Do đó:
+   $$
+   ((\mathbb{Z}/3\mathbb{Z}) \times (\mathbb{Z}/5\mathbb{Z}))^\times \cong \mathbb{Z}_2 \times \mathbb{Z}_4.
+   $$
+   Cấp của nhóm là $2 \times 4 = 8$.
+</Solution>
+
+---
+
+## 6. Tóm tắt các điểm then chốt
+
+<KeyTakeaways>
+- **Định nghĩa Vành:** Cần đồng thời 3 nhóm điều kiện: $(R, +)$ là nhóm Abel, $(R, \cdot)$ là nửa nhóm kết hợp, và phép nhân phân phối hai phía đối với phép cộng.
+- **Quy ước chuẩn mực:** Một vành **không mặc định giao hoán** và **không mặc định có đơn vị**. Vành con của vành có đơn vị có thể không chứa đơn vị (ví dụ $2\mathbb{Z} \subset \mathbb{Z}$).
+- **Quy tắc dấu và phép nhân với 0:** $a \cdot 0 = 0 \cdot a = 0$, $(-a)b = a(-b) = -(ab)$, và $(-a)(-b) = ab$.
+- **Thứ tự nhân:** Trong vành không giao hoán, $(a+b)^2 = a^2 + ab + ba + b^2$, không được tự ý gộp thành $2ab$.
+- **Nhóm các đơn vị $R^\times$:** Tập các phần tử có nghịch đảo nhân hai phía lập thành một nhóm dưới phép nhân. Trong $\mathbb{Z}/n\mathbb{Z}$, nhóm này chính là $U(n)$ có cấp $\varphi(n)$.
+</KeyTakeaways>
