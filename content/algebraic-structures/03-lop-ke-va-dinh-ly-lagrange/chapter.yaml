@@ -1,0 +1,9 @@
+id: lop-ke-va-dinh-ly-lagrange
+number: 3
+title: 'Lớp kề và định lý Lagrange'
+description: 'Lớp kề trái, lớp kề phải, phân hoạch nhóm mẹ, Định lý Lagrange, các hệ quả số học và giới hạn chiều ngược trong A4 và V4.'
+objectives:
+  - 'Xác định các lớp kề trái gH và lớp kề phải Hg, chứng minh tính chất phân hoạch nhóm mẹ và đẳng thế |gH| = |H|.'
+  - 'Phát biểu và chứng minh Định lý Lagrange |G| = [G:H]|H|, vận dụng tính cấp phần tử và các định lý số học Euler, Fermat.'
+  - 'Phân tích các phản ví dụ về chiều đảo của Định lý Lagrange trong V4 và A4.'
+  - 'Giải thành thạo các dạng bài tập phân loại nhóm cấp nhỏ và nhận diện nhóm con chỉ số 2.'
