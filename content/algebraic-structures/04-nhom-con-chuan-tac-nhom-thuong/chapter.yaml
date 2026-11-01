@@ -1,0 +1,9 @@
+id: nhom-con-chuan-tac-nhom-thuong
+number: 4
+title: 'Nhóm con chuẩn tắc và nhóm thương'
+description: 'Phép liên hợp, các tiêu chuẩn tương đương của nhóm con chuẩn tắc, tính xác định tốt của phép toán trên tập lớp kề và cấu trúc nhóm thương.'
+objectives:
+  - 'Nắm vững định nghĩa và 3 điều kiện tương đương của nhóm con chuẩn tắc gN = Ng, gNg⁻¹ = N, gNg⁻¹ ⊆ N.'
+  - 'Hiểu sâu sắc vì sao tính chuẩn tắc là điều kiện cần và đủ để phép nhân lớp kề (aN)(bN) = abN xác định tốt.'
+  - 'Xây dựng bảng Cayley và tính toán thành thạo cấp phần tử trong các nhóm thương kinh điển S3/A3, D10/⟨r⟩, D8/Z(D8).'
+  - 'Giải các bài tập phân lớp A, B, C, D về cấu trúc chuẩn tắc và nhóm thương.'

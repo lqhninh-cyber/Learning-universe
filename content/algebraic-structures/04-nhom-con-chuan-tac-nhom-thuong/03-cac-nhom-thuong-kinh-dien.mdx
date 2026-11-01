@@ -1,0 +1,549 @@
+---
+id: cac-nhom-thuong-kinh-dien
+title: 'Các nhóm thương kinh điển và ứng dụng cấu trúc'
+description: 'Xây dựng bảng Cayley và tính cấp các phần tử trong S3/A3, D10/⟨r⟩, D8/Z(D8); phân biệt sự tồn tại của tập lớp kề với cấu trúc nhóm thương và định lý G/Z(G) cyclic.'
+estimatedMinutes: 40
+level: advanced
+prerequisites:
+  - nhom-thuong-va-tinh-xac-dinh-tot
+tags:
+  - nhóm thương kinh điển
+  - nhóm nhị diện
+  - tâm của nhóm
+  - bảng Cayley
+  - nhóm bốn Klein
+  - G/Z(G) cyclic
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '76-83'
+    sections: 'Mục 4.4, 4.5, 4.6'
+    note: 'Ví dụ 4.10, 4.11, 4.12, Định lý G/Z(G) cyclic'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '120-130'
+    sections: 'Chương 4, Mục 4.3'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Thực hành tính toán thành thạo trong các nhóm thương kinh điển:** Xây dựng bảng Cayley, xác định phần tử đơn vị, phần tử nghịch đảo và tính cấp của từng lớp kề trong các nhóm thương $S_3/A_3$, $D_{10}/\langle r \rangle$, và $D_8/Z(D_8)$.
+2. **Làm chủ cấu trúc nhóm thương theo tâm $G/Z(G)$:** Chứng minh định lý kinh điển *"Nếu nhóm thương $G/Z(G)$ là nhóm cyclic thì nhóm mẹ $G$ bắt buộc phải là nhóm giao hoán"*, từ đó giải thích vì sao $|G/Z(G)|$ không bao giờ có thể là một số nguyên tố.
+3. **Phân biệt rạch ròi tập lớp kề và nhóm thương:** Thấy rõ sự khác biệt giữa việc phân hoạch tập hợp đơn thuần và việc trang bị cấu trúc đại số thông qua tính chuẩn tắc.
+4. **Nhận thức về hiện tượng hai nhóm không đẳng cấu có cùng nhóm thương:** Phân tích nhóm quaternion $Q_8$ và nhóm nhị diện $D_8$ để thấy hai nhóm không đẳng cấu nhưng cùng có nhóm thương theo tâm đẳng cấu với nhóm bốn Klein $V_4$.
+</Note>
+
+**Kiến thức tiên quyết:** Tính xác định tốt của phép nhân lớp kề và các tiên đề nhóm thương từ Bài 2 (<Cite source="gt-ctds-hvk-2026" page="75-77" note="Mục 4.3" />).
+
+---
+
+## 1. Khảo sát các Nhóm thương trong Nhóm Hình học và Hoán vị
+
+Để hiểu rõ cách nhóm thương hoạt động, ta khảo sát các ví dụ cụ thể xuất phát từ các nhóm đối xứng và nhóm nhị diện (<Cite source="gt-ctds-hvk-2026" page="76-78" note="Mục 4.4" />).
+
+### 1.1. Nhóm thương của nhóm đối xứng: $S_n/A_n$
+
+Với mọi $n \ge 2$, nhóm thay phiên $A_n$ (tập hợp các hoán vị chẵn) có chỉ số $[S_n : A_n] = 2$ trong nhóm đối xứng $S_n$.
+Theo định lý về nhóm con có chỉ số 2, ta luôn có:
+$$
+A_n \trianglelefteq S_n.
+$$
+Do đó, nhóm thương $S_n/A_n$ luôn tồn tại và có cấp đúng bằng 2:
+$$
+|S_n/A_n| = [S_n : A_n] = 2.
+$$
+Hai phần tử của nhóm thương $S_n/A_n$ chính là:
+- Lớp kề đơn vị: $\bar{e} = A_n$ (tập hợp toàn bộ các hoán vị chẵn).
+- Lớp kề không tầm thường: $\bar{\tau} = (1\;2)A_n$ (tập hợp toàn bộ các hoán vị lẻ).
+
+Phép nhân trong $S_n/A_n$ phản ánh chính xác quy tắc dấu của hoán vị:
+$$
+\begin{aligned}
+(\text{chẵn}) \cdot (\text{chẵn}) &= (\text{chẵn}) \iff A_n \cdot A_n = A_n, \\
+(\text{chẵn}) \cdot (\text{lẻ}) &= (\text{lẻ}) \iff A_n \cdot ((1\;2)A_n) = (1\;2)A_n, \\
+(\text{lẻ}) \cdot (\text{lẻ}) &= (\text{chẵn}) \iff ((1\;2)A_n) \cdot ((1\;2)A_n) = (1\;2)^2 A_n = A_n.
+\end{aligned}
+$$
+Nhóm thương $S_n/A_n$ là một nhóm cyclic cấp 2, đẳng cấu với $(\mathbb{Z}/2\mathbb{Z}, +)$ hoặc nhóm nhân $\{1, -1\}$.
+
+### 1.2. Nhóm thương của nhóm nhị diện: $D_{2n}/\langle r \rangle$
+
+Nhóm nhị diện $D_{2n}$ (nhóm các phép đối xứng của đa giác đều $n$ cạnh) có cấp $2n$, được sinh bởi phép quay $r$ góc $\frac{2\pi}{n}$ (cấp $n$) và phép đối xứng trục $s$ (cấp 2) thỏa mãn:
+$$
+r^n = e, \quad s^2 = e, \quad rs = sr^{-1}.
+$$
+Xét nhóm con quay $R = \langle r \rangle = \{e, r, r^2, \dots, r^{n-1}\}$ có cấp $n$.
+Chỉ số của $R$ trong $D_{2n}$ là:
+$$
+[D_{2n} : R] = \frac{|D_{2n}|}{|R|} = \frac{2n}{n} = 2.
+$$
+Vì có chỉ số bằng 2, $R$ luôn là một nhóm con chuẩn tắc của $D_{2n}$:
+$$
+R = \langle r \rangle \trianglelefteq D_{2n}.
+$$
+Do đó, nhóm thương $D_{2n}/R$ gồm đúng 2 phần tử:
+$$
+D_{2n}/R = \{R, sR\}.
+$$
+Bảng Cayley của $D_{2n}/R$ có dạng:
+| $\cdot$ | $R$ | $sR$ |
+| :---: | :---: | :---: |
+| $R$ | $R$ | $sR$ |
+| $sR$ | $sR$ | $R$ |
+
+Nhóm thương này "quên" đi chi tiết góc quay của từng phép quay cụ thể, và chỉ giữ lại một thông tin nhị phân: phép biến hình là một **phép quay** (thuộc lớp $R$) hay một **phép đối xứng trục** (thuộc lớp $sR$).
+
+---
+
+## 2. Nhóm thương theo Tâm: Khảo sát mô hình $D_8/Z(D_8)$
+
+Một trong những ứng dụng sâu sắc nhất của nhóm thương là "thu nhỏ" một nhóm không giao hoán bằng cách chia nó cho tâm của chính nó (<Cite source="gt-ctds-hvk-2026" page="77-79" note="Mục 4.5" />).
+
+<Example id="ex-c4-b3-tam-d8" title="Xác định tâm của nhóm nhị diện D8">
+Xét nhóm nhị diện $D_8 = \{e, r, r^2, r^3, s, sr, sr^2, sr^3\}$ gồm 8 phần tử với $r^4 = e, s^2 = e, rs = sr^3$.
+Ta tìm tập hợp tâm $Z(D_8) = \{z \in D_8 \mid zx = xz, \forall x \in D_8\}$.
+
+- Xét phần tử $r^2$:
+  - Với các phép quay: hiển nhiên $r^2 \cdot r^k = r^{k+2} = r^k \cdot r^2$.
+  - Với các phép đối xứng: $r^2 s = r(rs) = r(sr^3) = (rs)r^3 = (sr^3)r^3 = sr^6 = sr^2$.
+  Do đó $r^2$ giao hoán với cả $r$ và $s$. Vì $r$ và $s$ sinh ra toàn thể $D_8$, phần tử $r^2$ giao hoán với mọi phần tử của $D_8$.
+  Suy ra $r^2 \in Z(D_8)$.
+- Xét các phần tử khác:
+  - $r s = sr^3 \ne sr \implies r \notin Z(D_8)$. Tương tự $r^3 \notin Z(D_8)$.
+  - $s r = r^3 s \ne rs \implies s \notin Z(D_8)$. Tương tự $sr, sr^2, sr^3 \notin Z(D_8)$.
+
+Vậy tâm của nhóm nhị diện $D_8$ gồm đúng 2 phần tử:
+$$
+Z(D_8) = \{e, r^2\}.
+$$
+</Example>
+
+Vì tâm luôn là nhóm con chuẩn tắc (Định lý 4.1.4), nhóm thương $D_8/Z(D_8)$ luôn tồn tại.
+
+<Theorem
+  id="thm-c4-b3-cau-truc-d8-chia-tam"
+  title="Cấu trúc nhóm thương D8/Z(D8)"
+  original="Mục 4.5"
+  source="gt-ctds-hvk-2026"
+  page="78"
+>
+Nhóm thương $D_8/Z(D_8)$ có cấp bằng 4 và là một nhóm giao hoán. Mọi phần tử khác đơn vị của $D_8/Z(D_8)$ đều có cấp bằng 2. Do đó:
+$$
+D_8/Z(D_8) \cong V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}.
+$$
+</Theorem>
+
+<Proof of="thm-c4-b3-cau-truc-d8-chia-tam">
+Đặt $Z = Z(D_8) = \{e, r^2\}$. Cấp của nhóm thương là:
+$$
+|D_8/Z| = \frac{|D_8|}{|Z|} = \frac{8}{2} = 4.
+$$
+Bốn lớp kề phân biệt của $Z$ trong $D_8$ là:
+- $\bar{e} = e Z = \{e, r^2\}$.
+- $\bar{r} = r Z = \{r, r^3\}$.
+- $\bar{s} = s Z = \{s, sr^2\}$.
+- $\overline{sr} = sr Z = \{sr, sr^3\}$.
+
+Ta tính bình phương của từng lớp kề trong nhóm thương:
+- $\bar{r}^2 = (rZ)^2 = r^2 Z = Z = \bar{e}$ (vì $r^2 \in Z$).
+- $\bar{s}^2 = (sZ)^2 = s^2 Z = eZ = Z = \bar{e}$ (vì $s^2 = e \in Z$).
+- $(\overline{sr})^2 = (srZ)^2 = (sr)^2 Z = eZ = Z = \bar{e}$ (vì $(sr)^2 = e \in Z$).
+
+Ta kiểm tra tích giữa các phần tử:
+$$
+\bar{r} \cdot \bar{s} = (rZ)(sZ) = (rs)Z = \overline{sr}.
+$$
+Mặt khác:
+$$
+\bar{s} \cdot \bar{r} = (sZ)(rZ) = (sr)Z = \overline{sr}.
+$$
+Do đó $\bar{r}\bar{s} = \bar{s}\bar{r} = \overline{sr}$.
+Bảng Cayley của $D_8/Z$ được lập như sau:
+
+| $\cdot$ | $\bar{e}$ | $\bar{r}$ | $\bar{s}$ | $\overline{sr}$ |
+| :---: | :---: | :---: | :---: | :---: |
+| $\bar{e}$ | $\bar{e}$ | $\bar{r}$ | $\bar{s}$ | $\overline{sr}$ |
+| $\bar{r}$ | $\bar{r}$ | $\bar{e}$ | $\overline{sr}$ | $\bar{s}$ |
+| $\bar{s}$ | $\bar{s}$ | $\overline{sr}$ | $\bar{e}$ | $\bar{r}$ |
+| $\overline{sr}$ | $\overline{sr}$ | $\bar{s}$ | $\bar{r}$ | $\bar{e}$ |
+
+Bảng Cayley này cho thấy:
+1. Phép toán có tính giao hoán.
+2. Mọi phần tử khác đơn vị đều có cấp 2 ($\bar{r}^2 = \bar{s}^2 = (\overline{sr})^2 = \bar{e}$).
+Theo định lý phân loại nhóm cấp 4 (Bài 2, Chương 3), nhóm thương $D_8/Z(D_8)$ bắt buộc phải đẳng cấu với nhóm bốn Klein $V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
+</Proof>
+
+---
+
+## 3. Định lý then chốt: Nếu $G/Z(G)$ là cyclic thì $G$ là nhóm giao hoán
+
+Kết quả tiếp theo là một trong những định lý kinh điển và đẹp nhất về mối quan hệ giữa tâm và nhóm thương (<Cite source="gt-ctds-hvk-2026" page="79-80" note="Mục 4.6" />).
+
+<Theorem
+  id="thm-c4-b3-g-chia-tam-cyclic"
+  title="Định lý G/Z(G) cyclic kéo theo G abel"
+  original="Định lý 4.12"
+  source="gt-ctds-hvk-2026"
+  page="79"
+>
+Cho $(G, \cdot)$ là một nhóm và $Z(G)$ là tâm của $G$. Nếu nhóm thương $G/Z(G)$ là một nhóm cyclic, thì $G$ bắt buộc phải là một **nhóm giao hoán** (nhóm abel).
+Do đó, khi $G/Z(G)$ là cyclic thì $Z(G) = G$, và nhóm thương $G/Z(G)$ chỉ gồm duy nhất một phần tử tầm thường $\{e\}$.
+</Theorem>
+
+<Proof of="thm-c4-b3-g-chia-tam-cyclic">
+Đặt $Z = Z(G)$. Giả sử nhóm thương $G/Z$ là một nhóm cyclic.
+Khi đó tồn tại một phần tử $g \in G$ sao cho lớp kề $gZ$ là phần tử sinh của $G/Z$:
+$$
+G/Z = \langle gZ \rangle.
+$$
+Theo định nghĩa nhóm cyclic, mỗi phần tử của $G/Z$ đều là một lũy thừa của phần tử sinh $gZ$. Do đó, với mọi $x \in G$, lớp kề $xZ$ có dạng:
+$$
+xZ = (gZ)^k = g^k Z, \quad \text{với } k \in \mathbb{Z}.
+$$
+Vì $x \in xZ = g^k Z$, tồn tại phần tử $z_1 \in Z$ sao cho:
+$$
+x = g^k z_1.
+$$
+Hoàn toàn tương tự, lấy một phần tử tùy ý $y \in G$. Lớp kề $yZ$ cũng là lũy thừa của $gZ$, nên tồn tại $m \in \mathbb{Z}$ và $z_2 \in Z$ sao cho:
+$$
+y = g^m z_2.
+$$
+Bây giờ ta tính tích $xy$ và $yx$ trong nhóm $G$:
+- Tính tích $xy$:
+  $$
+  xy = (g^k z_1)(g^m z_2).
+  $$
+  Vì $z_1 \in Z(G)$, theo định nghĩa của tâm, $z_1$ giao hoán với mọi phần tử của $G$, đặc biệt $z_1 g^m = g^m z_1$. Do đó:
+  $$
+  xy = g^k (z_1 g^m) z_2 = g^k (g^m z_1) z_2 = (g^k g^m)(z_1 z_2) = g^{k+m} (z_1 z_2).
+  $$
+- Tính tích $yx$:
+  Hoàn toàn tương tự, vì $z_2 \in Z(G)$, ta có $z_2 g^k = g^k z_2$. Đồng thời $z_1, z_2 \in Z(G)$ nên chúng giao hoán với nhau ($z_2 z_1 = z_1 z_2$). Do đó:
+  $$
+  yx = (g^m z_2)(g^k z_1) = g^m (z_2 g^k) z_1 = g^m (g^k z_2) z_1 = (g^m g^k)(z_2 z_1) = g^{m+k} (z_1 z_2).
+  $$
+
+Vì $g^{k+m} = g^{m+k}$ trong phép lũy thừa số mũ nguyên, ta suy ra:
+$$
+xy = yx.
+$$
+Vì đẳng thức này đúng với mọi cặp phần tử $x, y \in G$, ta kết luận $G$ là một nhóm giao hoán (abel).
+
+Khi $G$ giao hoán, mọi phần tử của $G$ đều giao hoán với toàn bộ nhóm, tức là $Z(G) = G$. Khi đó cấp của nhóm thương là $|G/Z(G)| = |G/G| = 1$. Chứng minh hoàn tất.
+</Proof>
+
+<Corollary
+  id="cor-c4-b3-khong-the-co-cap-nguyen-to"
+  title="Nhóm thương G/Z(G) không bao giờ có cấp nguyên tố"
+  original="Hệ quả 4.13"
+  source="gt-ctds-hvk-2026"
+  page="80"
+>
+Không tồn tại bất kỳ nhóm nào mà nhóm thương $G/Z(G)$ có cấp là một số nguyên tố $p$.
+</Corollary>
+
+<Proof of="cor-c4-b3-khong-the-co-cap-nguyen-to">
+Giả sử phản chứng tồn tại một nhóm $G$ sao cho $|G/Z(G)| = p$ với $p$ là số nguyên tố.
+Theo Hệ quả 3.2.3 (Chương 3), mọi nhóm có cấp là số nguyên tố đều là nhóm cyclic.
+Do đó nhóm thương $G/Z(G)$ bắt buộc phải là một nhóm cyclic.
+Áp dụng Định lý <Ref to="thm-c4-b3-g-chia-tam-cyclic" />, nhóm $G$ bắt buộc phải là nhóm giao hoán.
+Nhưng khi $G$ giao hoán thì $Z(G) = G$, dẫn đến $|G/Z(G)| = 1 \ne p$, mâu thuẫn hoàn toàn với giả thiết $p \ge 2$.
+Mâu thuẫn này chứng minh không bao giờ có $|G/Z(G)| = p$.
+</Proof>
+
+<Example id="ex-c4-b3-giai-thich-d8" title="Giải thích vì sao D8/Z(D8) không thể là Z4">
+Quay trở lại nhóm nhị diện $D_8$ ở Mục 2.
+Ta biết $|D_8/Z(D_8)| = 8 / 2 = 4$.
+Theo phân loại nhóm cấp 4 (Bài 2, Chương 3), chỉ có hai mô hình nhóm cấp 4 là $\mathbb{Z}/4\mathbb{Z}$ (cyclic) và $V_4$ (không cyclic).
+- Nếu $D_8/Z(D_8) \cong \mathbb{Z}/4\mathbb{Z}$ (tức là cyclic), thì theo Định lý <Ref to="thm-c4-b3-g-chia-tam-cyclic" />, nhóm $D_8$ bắt buộc phải là nhóm giao hoán.
+- Nhưng $D_8$ là nhóm không giao hoán ($rs \ne sr$).
+
+Do đó, nhóm thương $D_8/Z(D_8)$ **không thể là nhóm cyclic** $\mathbb{Z}/4\mathbb{Z}$.
+Nó bắt buộc phải là nhóm bốn Klein $V_4$! Định lý $G/Z(G)$ cyclic cho phép ta kết luận cấu trúc này ngay lập tức mà không cần tính từng ô trong bảng Cayley.
+</Example>
+
+---
+
+## 4. Phân biệt sự tồn tại của Tập lớp kề và Cấu trúc Nhóm thương
+
+Bảng đối chiếu dưới đây làm sáng tỏ sự khác biệt bản chất giữa hình học tập hợp và cấu trúc đại số:
+
+| Tiêu chí so sánh | Tập hợp các lớp kề $G/H$ ($H \le G$ bất kỳ) | Nhóm thương $G/N$ ($N \trianglelefteq G$) |
+| :--- | :--- | :--- |
+| **Bản chất toán học** | Một phân hoạch tập hợp của nhóm mẹ $G$ | Một nhóm đại số mới kế thừa phép toán |
+| **Điều kiện tồn tại** | Luôn tồn tại với **mọi** nhóm con $H \le G$ | **Chỉ tồn tại** khi $N$ là nhóm con chuẩn tắc ($N \trianglelefteq G$) |
+| **Phép toán $(aH)(bH) = (ab)H$** | **Không xác định tốt** (phụ thuộc vào đại diện) | **Xác định tốt** (độc lập với cách chọn đại diện) |
+| **Phần tử đơn vị** | Không có (chỉ là tập hợp con) | Lớp kề đơn vị $eN = N$ |
+| **Số lượng phần tử** | Chỉ số $[G:H]$ | Chỉ số $[G:N] = |G|/|N|$ |
+| **Mục đích sử dụng** | Đếm số lượng, phân tích lực lượng (Lagrange) | Rút gọn nhóm, phân loại cấu trúc, xây dựng đồng cấu |
+
+---
+
+## 5. Bài tập rèn luyện
+
+<Exercise
+  id="exr-c4-b3-a1"
+  title="[Nhóm A · Mã CTDS-C4-B3-A01] Bảng Cayley và cấp phần tử của nhóm thương D10/⟨r⟩"
+  source="gt-ctds-hvk-2026"
+  page="78"
+  original="Bài 4.3"
+>
+Xét nhóm nhị diện $D_{10} = \langle r, s \mid r^5 = e, s^2 = e, rs = sr^{-1} \rangle$ gồm 10 phần tử mô tả các phép đối xứng của ngũ giác đều.
+Đặt $R = \langle r \rangle = \{e, r, r^2, r^3, r^4\}$.
+1. Chứng minh rằng $R \trianglelefteq D_{10}$ và tính cấp của nhóm thương $|D_{10}/R|$.
+2. Liệt kê các phần tử của nhóm thương $D_{10}/R$ và lập bảng Cayley.
+3. Tìm cấp của từng phần tử trong nhóm thương $D_{10}/R$.
+</Exercise>
+
+<Hint>
+Vì $|D_{10}| = 10$ và $|R| = 5$, chỉ số $[D_{10} : R] = 2$. Nhóm có chỉ số 2 luôn chuẩn tắc.
+</Hint>
+
+<Solution>
+1. **Chứng minh $R \trianglelefteq D_{10}$ và tính cấp $|D_{10}/R|$:**
+   Cấp của nhóm nhị diện là $|D_{10}| = 2 \cdot 5 = 10$.
+   Cấp của nhóm con quay là $|R| = |\langle r \rangle| = 5$.
+   Chỉ số của $R$ trong $D_{10}$ là:
+   $$
+   [D_{10} : R] = \frac{|D_{10}|}{|R|} = \frac{10}{5} = 2.
+   $$
+   Theo định lý nhóm con có chỉ số 2 (Định lý 4.1.3), ta suy ra $R \trianglelefteq D_{10}$.
+   Cấp của nhóm thương là:
+   $$
+   |D_{10}/R| = [D_{10} : R] = 2.
+   $$
+
+2. **Danh sách phần tử và bảng Cayley:**
+   Vì có cấp 2, nhóm thương gồm đúng hai lớp kề:
+   - Lớp kề đơn vị: $\bar{e} = R = \{e, r, r^2, r^3, r^4\}$ (tập các phép quay).
+   - Lớp kề đối xứng: $\bar{s} = sR = \{s, sr, sr^2, sr^3, sr^4\}$ (tập các phép lật trục).
+
+   Thực hiện các phép nhân lớp kề:
+   - $\bar{e} \cdot \bar{e} = R \cdot R = R = \bar{e}$.
+   - $\bar{e} \cdot \bar{s} = R \cdot (sR) = (es)R = sR = \bar{s}$.
+   - $\bar{s} \cdot \bar{e} = (sR) \cdot R = (se)R = sR = \bar{s}$.
+   - $\bar{s} \cdot \bar{s} = (sR) \cdot (sR) = s^2 R = eR = R = \bar{e}$ (vì $s^2 = e$).
+
+   Bảng Cayley của $D_{10}/R$:
+   | $\cdot$ | $\bar{e}$ | $\bar{s}$ |
+   | :---: | :---: | :---: |
+   | $\bar{e}$ | $\bar{e}$ | $\bar{s}$ |
+   | $\bar{s}$ | $\bar{s}$ | $\bar{e}$ |
+
+3. **Cấp của từng phần tử:**
+   - Phần tử đơn vị $\bar{e} = R$ có cấp bằng 1.
+   - Phần tử $\bar{s} = sR$ thỏa mãn $\bar{s} \ne \bar{e}$ và $\bar{s}^2 = \bar{e}$, nên có cấp bằng 2.
+   Nhóm thương $D_{10}/R$ là nhóm cyclic cấp 2, đẳng cấu với $\mathbb{Z}/2\mathbb{Z}$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Tính đúng $[D_{10} : R] = 2$ và suy ra $R \trianglelefteq D_{10}$: `0,30 đ`
+- Liệt kê đúng 2 lớp kề và lập bảng Cayley chuẩn xác: `0,40 đ`
+- Xác định đúng cấp của $\bar{e}$ (cấp 1) và $\bar{s}$ (cấp 2): `0,30 đ`
+</Solution>
+
+<Exercise
+  id="exr-c4-b3-b1"
+  title="[Nhóm B · Mã CTDS-C4-B3-B01] Tìm tâm Z(D8) và khảo sát nhóm thương D8/Z(D8)"
+  source="gt-ctds-hvk-2026"
+  page="79"
+  original="Bài 4.4"
+>
+Cho $D_8 = \{e, r, r^2, r^3, s, sr, sr^2, sr^3\}$ là nhóm nhị diện cấp 8.
+1. Chứng minh rằng phần tử $r^2$ giao hoán với mọi phần tử của $D_8$ và chỉ ra $Z(D_8) = \{e, r^2\}$.
+2. Tính cấp của nhóm thương $|D_8/Z(D_8)|$.
+3. Hãy tính bình phương của các phần tử $r Z(D_8)$, $s Z(D_8)$ và $(sr) Z(D_8)$ trong nhóm thương, từ đó chứng minh nhóm thương này không phải là nhóm cyclic.
+</Exercise>
+
+<Hint>
+Dùng các hệ thức $r^4 = e, s^2 = e, (sr)^2 = e$. Chú ý rằng một nhóm mà mọi phần tử khác đơn vị đều có cấp 2 thì không thể là nhóm cyclic cấp 4.
+</Hint>
+
+<Solution>
+1. **Chứng minh $r^2 \in Z(D_8)$ và $Z(D_8) = \{e, r^2\}$:**
+   Ta kiểm tra giao hoán của $r^2$ với hai phần tử sinh $r$ và $s$:
+   - $r^2 \cdot r = r^3 = r \cdot r^2$.
+   - $r^2 \cdot s = r(rs) = r(sr^3) = (rs)r^3 = (sr^3)r^3 = sr^6 = sr^2 = s \cdot r^2$.
+   Vì $r^2$ giao hoán với cả hai phần tử sinh của $D_8$, nó giao hoán với mọi phần tử của $D_8$. Do đó $\{e, r^2\} \subseteq Z(D_8)$.
+   Mặt khác:
+   - $rs = sr^3 \ne sr \implies r, r^3 \notin Z(D_8)$.
+   - $sr = r^3 s \ne rs \implies s, sr, sr^2, sr^3 \notin Z(D_8)$.
+   Vậy tâm của $D_8$ đúng bằng $Z(D_8) = \{e, r^2\}$.
+
+2. **Cấp của nhóm thương:**
+   $$
+   |D_8/Z(D_8)| = \frac{|D_8|}{|Z(D_8)|} = \frac{8}{2} = 4.
+   $$
+
+3. **Tính bình phương các lớp kề và kết luận không cyclic:**
+   Đặt $Z = Z(D_8) = \{e, r^2\}$. Ta tính:
+   - $(rZ)^2 = r^2 Z = Z$ (vì $r^2 \in Z$).
+   - $(sZ)^2 = s^2 Z = eZ = Z$ (vì $s^2 = e \in Z$).
+   - $(srZ)^2 = (sr)^2 Z = eZ = Z$ (vì $(sr)^2 = e \in Z$).
+
+   Cả ba phần tử khác đơn vị trong nhóm thương đều thỏa mãn bình phương bằng phần tử đơn vị $Z$.
+   Do đó, không có bất kỳ phần tử nào trong nhóm thương $D_8/Z$ có cấp bằng 4.
+   Vì một nhóm cyclic cấp 4 bắt buộc phải chứa ít nhất một phần tử có cấp 4, ta kết luận nhóm thương $D_8/Z(D_8)$ **không phải là nhóm cyclic**. Nó đẳng cấu với nhóm bốn Klein $V_4$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh $r^2$ giao hoán với $r, s$ và khẳng định $Z(D_8) = \{e, r^2\}$: `0,40 đ`
+- Tính đúng $|D_8/Z(D_8)| = 4$: `0,20 đ`
+- Tính đúng bình phương của 3 lớp kề đều bằng $Z$ và lập luận không cyclic: `0,40 đ`
+</Solution>
+
+<Exercise
+  id="exr-c4-b3-c1"
+  title="[Nhóm C · Mã CTDS-C4-B3-C01] Chiều sâu cấu trúc của Định lý G/Z(G) cyclic"
+  source="gt-ctds-hvk-2026"
+  page="80"
+  original="Bài 4.22"
+>
+Cho $(G, \cdot)$ là một nhóm và $Z(G)$ là tâm của $G$.
+1. Trình bày lại chứng minh: nếu $G/Z(G)$ là nhóm cyclic thì $G$ là nhóm giao hoán.
+2. Giả sử $G$ là một nhóm không giao hoán có cấp 39. Hãy chứng minh rằng tâm $Z(G)$ bắt buộc phải là nhóm tầm thường, tức $|Z(G)| = 1$.
+3. Giải thích tại sao không thể tồn tại một nhóm không giao hoán có cấp $p^2$ với $p$ là số nguyên tố.
+</Exercise>
+
+<Hint>
+Cấp $|G/Z(G)|$ là ước của $|G| = 39 = 3 \cdot 13$. Dùng Định lý 4.3.3 để loại bỏ các trường hợp $|G/Z(G)| \in \{1, 3, 13\}$. Với câu 3, chú ý nhóm cấp $p^2$ luôn có tâm không tầm thường.
+</Hint>
+
+<Solution>
+1. **Chứng minh $G/Z(G)$ cyclic $\implies G$ abel:**
+   Giả sử $G/Z(G) = \langle g Z(G) \rangle$. Với mọi $x, y \in G$, tồn tại $k, m \in \mathbb{Z}$ và $z_1, z_2 \in Z(G)$ sao cho $x = g^k z_1$ và $y = g^m z_2$.
+   Khi đó:
+   $$
+   xy = (g^k z_1)(g^m z_2) = g^k (z_1 g^m) z_2 = g^k (g^m z_1) z_2 = g^{k+m} z_1 z_2.
+   $$
+   Tương tự, $yx = g^{m+k} z_2 z_1 = g^{k+m} z_1 z_2$.
+   Do đó $xy = yx$ với mọi $x, y \in G$, chứng minh $G$ là nhóm abel.
+
+2. **Chứng minh $Z(G) = \{e\}$ khi $G$ không giao hoán cấp 39:**
+   Cấp của nhóm là $|G| = 39 = 3 \cdot 13$.
+   Theo Định lý Lagrange, cấp của nhóm con $Z(G)$ phải là ước của 39:
+   $$
+   |Z(G)| \in \{1, 3, 13, 39\}.
+   $$
+   - Nếu $|Z(G)| = 39$, thì $Z(G) = G$, suy ra $G$ giao hoán, mâu thuẫn với giả thiết $G$ không giao hoán.
+   - Nếu $|Z(G)| = 13$, thì $|G/Z(G)| = 39 / 13 = 3$. Vì 3 là số nguyên tố, nhóm thương $G/Z(G)$ là nhóm cyclic cấp 3. Theo câu 1, điều này kéo theo $G$ giao hoán, mâu thuẫn!
+   - Nếu $|Z(G)| = 3$, thì $|G/Z(G)| = 39 / 3 = 13$. Vì 13 là số nguyên tố, nhóm thương $G/Z(G)$ là nhóm cyclic cấp 13. Theo câu 1, điều này lại kéo theo $G$ giao hoán, mâu thuẫn!
+
+   Do đó, khả năng duy nhất còn lại là:
+   $$
+   |Z(G)| = 1 \implies Z(G) = \{e\}.
+   $$
+
+3. **Giải thích mọi nhóm cấp $p^2$ đều giao hoán:**
+   Một định lý kinh điển của lý thuyết nhóm (hệ quả của phương trình lớp) khẳng định: mọi $p$-nhóm hữu hạn đều có tâm không tầm thường, do đó $|Z(G)| \ge p$.
+   Với $|G| = p^2$, cấp $|Z(G)|$ là ước của $p^2$ và $|Z(G)| \ge p$, nên $|Z(G)| \in \{p, p^2\}$.
+   - Nếu $|Z(G)| = p^2$, thì $Z(G) = G$, suy ra $G$ giao hoán.
+   - Nếu $|Z(G)| = p$, thì $|G/Z(G)| = p^2 / p = p$. Vì $p$ là số nguyên tố, nhóm thương $G/Z(G)$ là nhóm cyclic cấp $p$. Theo câu 1, điều này kéo theo $G$ giao hoán, dẫn tới $Z(G) = G$, tức $|Z(G)| = p^2$, mâu thuẫn với $|Z(G)| = p$.
+   Vậy không thể có $|Z(G)| = p$. Do đó bắt buộc $|Z(G)| = p^2$, tức mọi nhóm cấp $p^2$ đều phải là nhóm giao hoán!
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Trình bày chứng minh $G/Z(G)$ cyclic $\implies G$ abel chuẩn xác: `0,35 đ`
+- Loại trừ các ước 39, 13, 3 và kết luận $|Z(G)| = 1$: `0,35 đ`
+- Lập luận sâu sắc chứng minh mọi nhóm cấp $p^2$ đều abel: `0,30 đ`
+</Solution>
+
+<Exercise
+  id="exr-c4-b3-d1"
+  title="[Nhóm D · Mã CTDS-C4-B3-D01] So sánh cấu trúc nhóm thương của nhóm Quaternion Q8 và D8"
+  source="gt-ctds-hvk-2026"
+  page="82"
+  original="Bài 4.32"
+>
+Cho nhóm quaternion $Q_8 = \{1, -1, i, -i, j, -j, k, -k\}$ cấp 8 với $i^2 = j^2 = k^2 = ijk = -1$.
+1. Tìm tâm $Z(Q_8)$ và chứng minh $Z(Q_8) \trianglelefteq Q_8$.
+2. Tính cấp của nhóm thương $|Q_8/Z(Q_8)|$ và lập bảng Cayley của $Q_8/Z(Q_8)$.
+3. Chứng minh rằng $Q_8/Z(Q_8) \cong V_4$.
+4. So sánh với kết quả $D_8/Z(D_8) \cong V_4$ ở Bài 4.4: Hai nhóm $Q_8$ và $D_8$ có đẳng cấu với nhau không? Rút ra kết luận về việc nhận diện nhóm mẹ qua nhóm thương.
+</Exercise>
+
+<Hint>
+Tâm của $Q_8$ là $\{1, -1\}$. Đếm số phần tử cấp 2 trong $Q_8$ (chỉ có 1 phần tử là $-1$) và trong $D_8$ (có 5 phần tử cấp 2) để chứng minh hai nhóm không đẳng cấu.
+</Hint>
+
+<Solution>
+1. **Tìm tâm $Z(Q_8)$:**
+   Ta biết $ij = k \ne -k = ji$, nên $i, j$ không thuộc tâm. Tương tự $k \notin Z(Q_8)$.
+   Phần tử $-1$ giao hoán với mọi phần tử: $(-1)x = x(-1) = -x$ với mọi $x \in Q_8$.
+   Phần tử $1$ là đơn vị hiển nhiên thuộc tâm.
+   Vậy:
+   $$
+   Z(Q_8) = \{1, -1\}.
+   $$
+   Vì tâm luôn là nhóm con chuẩn tắc (Mệnh đề 4.1.4), ta có $Z(Q_8) \trianglelefteq Q_8$.
+
+2. **Cấp và bảng Cayley của nhóm thương $Q_8/Z(Q_8)$:**
+   Cấp của nhóm thương là:
+   $$
+   |Q_8/Z(Q_8)| = \frac{|Q_8|}{|Z(Q_8)|} = \frac{8}{2} = 4.
+   $$
+   Đặt $Z = \{1, -1\}$. Bốn lớp kề phân biệt là:
+   $$
+   \bar{1} = 1 Z = \{1, -1\}, \quad \bar{i} = i Z = \{i, -i\}, \quad \bar{j} = j Z = \{j, -j\}, \quad \bar{k} = k Z = \{k, -k\}.
+   $$
+   Tính bình phương các lớp kề:
+   - $\bar{i}^2 = i^2 Z = (-1)Z = Z = \bar{1}$.
+   - $\bar{j}^2 = j^2 Z = (-1)Z = Z = \bar{1}$.
+   - $\bar{k}^2 = k^2 Z = (-1)Z = Z = \bar{1}$.
+
+   Tính tích giữa các lớp kề:
+   - $\bar{i}\bar{j} = (ij)Z = kZ = \bar{k}$, và $\bar{j}\bar{i} = (ji)Z = (-k)Z = k(-1)Z = kZ = \bar{k}$.
+   - $\bar{j}\bar{k} = \bar{k}\bar{j} = \bar{i}$.
+   - $\bar{k}\bar{i} = \bar{i}\bar{k} = \bar{j}$.
+
+   Bảng Cayley:
+   | $\cdot$ | $\bar{1}$ | $\bar{i}$ | $\bar{j}$ | $\bar{k}$ |
+   | :---: | :---: | :---: | :---: | :---: |
+   | $\bar{1}$ | $\bar{1}$ | $\bar{i}$ | $\bar{j}$ | $\bar{k}$ |
+   | $\bar{i}$ | $\bar{i}$ | $\bar{1}$ | $\bar{k}$ | $\bar{j}$ |
+   | $\bar{j}$ | $\bar{j}$ | $\bar{k}$ | $\bar{1}$ | $\bar{i}$ |
+   | $\bar{k}$ | $\bar{k}$ | $\bar{j}$ | $\bar{i}$ | $\bar{1}$ |
+
+3. **Chứng minh $Q_8/Z(Q_8) \cong V_4$:**
+   Từ bảng Cayley, nhóm thương có cấp 4 và mọi phần tử khác đơn vị đều có cấp 2 ($\bar{i}^2 = \bar{j}^2 = \bar{k}^2 = \bar{1}$).
+   Do đó $Q_8/Z(Q_8)$ đẳng cấu với nhóm bốn Klein $V_4$.
+
+4. **So sánh $Q_8$ và $D_8$:**
+   - **Hai nhóm không đẳng cấu:**
+     - Trong nhóm $Q_8$, chỉ có **duy nhất 1** phần tử có cấp 2 là $-1$ (các phần tử $\pm i, \pm j, \pm k$ đều có cấp 4).
+     - Trong nhóm $D_8$, có tới **5 phần tử** có cấp 2 là $r^2, s, sr, sr^2, sr^3$.
+     Vì số lượng phần tử cấp 2 là một bất biến đẳng cấu, ta kết luận:
+     $$
+     Q_8 \not\cong D_8.
+     $$
+   - **Kết luận sâu sắc về nhóm thương:**
+     Mặc dù $Q_8 \not\cong D_8$, cả hai nhóm này đều có:
+     $$
+     Q_8/Z(Q_8) \cong V_4 \cong D_8/Z(D_8).
+     $$
+     Điều này chứng minh rằng: **Hai nhóm không đẳng cấu với nhau hoàn toàn có thể có các nhóm thương đẳng cấu với nhau**. Nhóm thương là một phép "chiếu làm mờ" (thu nhỏ) thông tin cấu trúc của nhóm mẹ, nên không thể khôi phục lại nhóm mẹ một cách duy nhất chỉ từ nhóm thương.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Xác định đúng $Z(Q_8) = \{1, -1\}$ và tính đúng $|Q_8/Z| = 4$: `0,25 đ`
+- Lập bảng Cayley chuẩn xác cho $Q_8/Z$: `0,30 đ`
+- Khẳng định và chứng minh $Q_8/Z \cong V_4$: `0,20 đ`
+- Chứng minh $Q_8 \not\cong D_8$ qua số phần tử cấp 2 và rút ra kết luận sâu sắc: `0,25 đ`
+</Solution>
+
+---
+
+## 6. Tóm tắt kiến thức cốt lõi
+
+<KeyTakeaways>
+- **Nhóm thương hình học:** $S_n/A_n \cong \mathbb{Z}/2\mathbb{Z}$ phân loại theo tính chẵn lẻ; $D_{2n}/\langle r \rangle \cong \mathbb{Z}/2\mathbb{Z}$ phân biệt phép quay và phép đối xứng trục.
+- **Mô hình $D_8/Z(D_8)$:** Tâm $Z(D_8) = \{e, r^2\}$. Nhóm thương có cấp 4 và đẳng cấu với nhóm bốn Klein $V_4$.
+- **Định lý $G/Z(G)$ cyclic:** Nếu $G/Z(G)$ là cyclic thì $G$ bắt buộc phải là nhóm giao hoán. Do đó, $|G/Z(G)|$ không bao giờ có thể là số nguyên tố.
+- **Ranh giới đại số:** Tập lớp kề $G/H$ luôn tồn tại để phân hoạch tập hợp, nhưng chỉ trở thành nhóm thương $G/N$ khi $N \trianglelefteq G$.
+- **Tính bất đối xứng của phép thương:** Hai nhóm không đẳng cấu ($Q_8 \not\cong D_8$) hoàn toàn có thể có các nhóm thương theo tâm đẳng cấu với nhau ($Q_8/Z(Q_8) \cong D_8/Z(D_8) \cong V_4$).
+</KeyTakeaways>

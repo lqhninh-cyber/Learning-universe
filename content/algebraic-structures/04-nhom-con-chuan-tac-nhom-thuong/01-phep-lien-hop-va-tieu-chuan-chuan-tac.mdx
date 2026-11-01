@@ -1,0 +1,580 @@
+---
+id: phep-lien-hop-va-tieu-chuan-chuan-tac
+title: 'Phép liên hợp và các tiêu chuẩn nhóm con chuẩn tắc'
+description: 'Phần tử liên hợp, nhóm con liên hợp gHg⁻¹; ba điều kiện tương đương của nhóm con chuẩn tắc (gN = Ng, gNg⁻¹ = N, gNg⁻¹ ⊆ N); các trường hợp chuẩn tắc kinh điển: nhóm giao hoán, nhóm con chỉ số 2, tâm Z(G).'
+estimatedMinutes: 35
+level: intermediate
+prerequisites:
+  - dinh-ly-lagrange-va-ung-dung-so-hoc
+tags:
+  - phép liên hợp
+  - nhóm con liên hợp
+  - nhóm con chuẩn tắc
+  - nhóm con chỉ số 2
+  - tâm của nhóm
+  - phản ví dụ
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '67-74'
+    sections: 'Mục 4.1, 4.2'
+    note: 'Định nghĩa 4.1, Định lý 4.1, Hệ quả 4.3'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '105-115'
+    sections: 'Chương 4, Mục 4.1'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của phép liên hợp:** Nắm vững khái niệm phần tử liên hợp $gxg^{-1}$, ánh xạ tự đẳng cấu liên hợp $c_g$ và nhóm con liên hợp $gHg^{-1}$.
+2. **Làm chủ các tiêu chuẩn tương đương của nhóm con chuẩn tắc:** Chứng minh thành thạo sự tương đương giữa 3 điều kiện cốt lõi: $gN = Ng$, $gNg^{-1} = N$, và $gNg^{-1} \subseteq N$ với mọi $g \in G$.
+3. **Nhận diện nhanh các lớp nhóm con chuẩn tắc kinh điển:** Chứng minh và vận dụng kết quả mọi nhóm con của nhóm abel đều chuẩn tắc, mọi nhóm con có chỉ số 2 đều chuẩn tắc ($[G:H] = 2 \implies H \trianglelefteq G$), và tâm $Z(G)$ luôn là nhóm con chuẩn tắc.
+4. **Phân tích các phản ví dụ và giới hạn logic:** Chỉ ra các nhóm con không chuẩn tắc trong nhóm đối xứng $S_3$ và hiểu rõ tính không bắc cầu của quan hệ chuẩn tắc qua mô hình nhóm nhị diện $D_8$.
+</Note>
+
+**Kiến thức tiên quyết:** Khái niệm lớp kề trái, lớp kề phải và chỉ số nhóm con từ Chương 3 (<Cite source="gt-ctds-hvk-2026" page="55-61" note="Mục 3.1, 3.2" />).
+
+---
+
+## 1. Phép liên hợp và nhóm con liên hợp
+
+Trong một nhóm không giao hoán, tích $xy$ nói chung khác với $yx$. Tuy nhiên, hai phần tử $xy$ và $yx$ có mối liên hệ mật thiết thông qua phép biến đổi:
+$$
+yx = x^{-1}(xy)x.
+$$
+Dạng biến đổi $gxg^{-1}$ đóng vai trò như một phép "đổi hệ quy chiếu" trong lý thuyết nhóm (<Cite source="gt-ctds-hvk-2026" page="67-68" note="Mục 4.1" />).
+
+<Definition
+  id="def-c4-b1-phep-lien-hop"
+  title="Phần tử liên hợp và ánh xạ liên hợp"
+  original="Mục 4.1"
+  source="gt-ctds-hvk-2026"
+  page="67"
+>
+Cho $(G, \cdot)$ là một nhóm và $x \in G$.
+1. Phần tử $y \in G$ được gọi là **liên hợp** với phần tử $x$ trong nhóm $G$ nếu tồn tại phần tử $g \in G$ sao cho:
+   $$
+   y = gxg^{-1}.
+   $$
+2. Với mỗi phần tử $g \in G$ cố định, ánh xạ:
+   $$
+   c_g: G \to G, \quad c_g(x) = gxg^{-1}
+   $$
+   được gọi là **phép liên hợp** bởi phần tử $g$ (hoặc tự đẳng cấu trong sinh bởi $g$).
+</Definition>
+
+<Proposition
+  id="prop-c4-b1-tinh-chat-phep-lien-hop"
+  title="Tính chất của phép liên hợp và nhóm con liên hợp"
+  original="Mệnh đề 4.1"
+  source="gt-ctds-hvk-2026"
+  page="68"
+>
+Cho $(G, \cdot)$ là một nhóm, $g \in G$ và $H \le G$. Khi đó:
+1. Ánh xạ liên hợp $c_g: G \to G$ là một tự đẳng cấu nhóm, tức là một đồng cấu song ánh từ $G$ lên chính nó.
+2. Tập hợp ảnh của $H$ qua $c_g$, ký hiệu là:
+   $$
+   gHg^{-1} = \{ghg^{-1} \mid h \in H\},
+   $$
+   là một nhóm con của $G$, được gọi là **nhóm con liên hợp** với $H$ bởi phần tử $g$.
+3. Nhóm con liên hợp $gHg^{-1}$ đẳng cấu với $H$, do đó $|gHg^{-1}| = |H|$ và $[G : gHg^{-1}] = [G:H]$.
+</Proposition>
+
+<Proof of="prop-c4-b1-tinh-chat-phep-lien-hop">
+1. **Chứng minh $c_g$ là đồng cấu:** Lấy tùy ý $x, y \in G$. Sử dụng tính kết hợp và chèn phần tử đơn vị dưới dạng $e = g^{-1}g$:
+   $$
+   c_g(xy) = g(xy)g^{-1} = g(x \cdot e \cdot y)g^{-1} = g(x g^{-1} g y)g^{-1} = (gxg^{-1})(gyg^{-1}) = c_g(x)c_g(y).
+   $$
+   Do đó $c_g$ là một đồng cấu nhóm.
+   - *Đơn ánh:* Nếu $c_g(x) = c_g(y) \implies gxg^{-1} = gyg^{-1}$, nhân $g^{-1}$ vào bên trái và $g$ vào bên phải của cả hai vế (luật giản ước), ta thu được $x = y$.
+   - *Toàn ánh:* Với mọi $z \in G$, đặt $x = g^{-1}zg \in G$. Khi đó $c_g(x) = g(g^{-1}zg)g^{-1} = z$.
+   Vậy $c_g$ là một song ánh, kéo theo $c_g$ là một tự đẳng cấu nhóm.
+2. Vì $H \le G$ và $c_g$ là đồng cấu, ảnh của một nhóm con qua đồng cấu luôn là một nhóm con: $gHg^{-1} = c_g(H) \le G$.
+3. Thu hẹp của song ánh $c_g$ lên $H$ thiết lập một đẳng cấu nhóm giữa $H$ và $gHg^{-1}$. Do đó hai nhóm con có cùng lực lượng $|gHg^{-1}| = |H|$. Theo Định lý Lagrange, chỉ số của chúng trong $G$ cũng trùng nhau: $[G : gHg^{-1}] = [G:H]$.
+</Proof>
+
+---
+
+## 2. Định nghĩa và Các tiêu chuẩn tương đương của Nhóm con chuẩn tắc
+
+Trong Bài 1 và Bài 2 của Chương 3, ta đã nhận thấy: một số nhóm con $H$ có đặc điểm rất đặc biệt là lớp kề trái luôn trùng với lớp kề phải ($gH = Hg$ với mọi $g \in G$). Những nhóm con như vậy được gọi là nhóm con chuẩn tắc (<Cite source="gt-ctds-hvk-2026" page="69-71" note="Mục 4.2" />).
+
+<Definition
+  id="def-c4-b1-nhom-con-chuan-tac"
+  title="Nhóm con chuẩn tắc"
+  original="Định nghĩa 4.1"
+  source="gt-ctds-hvk-2026"
+  page="69"
+>
+Cho $(G, \cdot)$ là một nhóm. Một nhóm con $N \le G$ được gọi là một **nhóm con chuẩn tắc** (normal subgroup) của $G$ nếu với mọi phần tử $g \in G$ và mọi phần tử $n \in N$, ta luôn có:
+$$
+gng^{-1} \in N.
+$$
+Khi $N$ là nhóm con chuẩn tắc của $G$, ta ký hiệu:
+$$
+N \trianglelefteq G \quad \text{hoặc} \quad G \trianglerighteq N.
+$$
+Nếu $N \trianglelefteq G$ và $N \ne G$, ta gọi $N$ là nhóm con chuẩn tắc thực sự và ký hiệu $N \triangleleft G$.
+</Definition>
+
+<Theorem
+  id="thm-c4-b1-tieu-chuan-tuong-duong"
+  title="Ba tiêu chuẩn tương đương của nhóm con chuẩn tắc"
+  original="Định lý 4.1"
+  source="gt-ctds-hvk-2026"
+  page="70"
+>
+Cho $(G, \cdot)$ là một nhóm và $N$ là một nhóm con của $G$. Các khẳng định sau đây là tương đương:
+1. $N \trianglelefteq G$ (tức là $gng^{-1} \in N$ với mọi $g \in G$ và mọi $n \in N$).
+2. $gNg^{-1} \subseteq N$ với mọi $g \in G$.
+3. $gNg^{-1} = N$ với mọi $g \in G$ (nhóm con $N$ bất biến dưới mọi phép liên hợp).
+4. $gN = Ng$ với mọi $g \in G$ (mỗi lớp kề trái trùng với lớp kề phải tương ứng).
+</Theorem>
+
+<Proof of="thm-c4-b1-tieu-chuan-tuong-duong">
+Ta sẽ chứng minh theo chu trình kéo theo logic: $(1) \iff (2) \implies (3) \implies (4) \implies (2)$.
+
+- **$(1) \iff (2)$:** 
+  Theo định nghĩa tập hợp, $gNg^{-1} = \{gng^{-1} \mid n \in N\}$. 
+  Do đó, điều kiện $gng^{-1} \in N$ với mọi $n \in N$ tương đương trực tiếp với khẳng định tập con $gNg^{-1} \subseteq N$.
+
+- **$(2) \implies (3)$:** 
+  Giả sử $gNg^{-1} \subseteq N$ đúng với mọi $g \in G$.
+  Lấy một phần tử $g \in G$ tùy ý. Vì mệnh đề đúng với mọi phần tử của $G$, nó cũng đúng khi thay $g$ bởi phần tử nghịch đảo $g^{-1} \in G$:
+  $$
+  g^{-1} N (g^{-1})^{-1} \subseteq N \implies g^{-1} N g \subseteq N.
+  $$
+  Bây giờ, nhân $g$ vào bên trái và $g^{-1}$ vào bên phải của bao hàm thức này:
+  $$
+  g (g^{-1} N g) g^{-1} \subseteq g N g^{-1} \implies (g g^{-1}) N (g g^{-1}) \subseteq g N g^{-1} \implies N \subseteq g N g^{-1}.
+  $$
+  Kết hợp hai chiều bao hàm $gNg^{-1} \subseteq N$ và $N \subseteq gNg^{-1}$, ta suy ra:
+  $$
+  gNg^{-1} = N.
+  $$
+
+- **$(3) \implies (4)$:** 
+  Giả sử $gNg^{-1} = N$ đúng với mọi $g \in G$.
+  Nhân phần tử $g$ vào bên phải của cả hai vế:
+  $$
+  (gNg^{-1})g = Ng \implies gN(g^{-1}g) = Ng \implies gN = Ng.
+  $$
+  Như vậy lớp kề trái $gN$ bằng lớp kề phải $Ng$.
+
+- **$(4) \implies (2)$:** 
+  Giả sử $gN = Ng$ đúng với mọi $g \in G$.
+  Nhân phần tử $g^{-1}$ vào bên phải của cả hai vế:
+  $$
+  (gN)g^{-1} = (Ng)g^{-1} \implies gNg^{-1} = N(gg^{-1}) = N \subseteq N.
+  $$
+  Điều này chứng minh $gNg^{-1} \subseteq N$.
+
+Chu trình chứng minh hoàn tất. Bốn điều kiện trên hoàn toàn tương đương nhau.
+</Proof>
+
+---
+
+## 3. Các trường hợp nhóm con chuẩn tắc kinh điển
+
+Dưới đây là ba họ nhóm con chuẩn tắc xuất hiện tự nhiên và thường xuyên nhất trong đại số trừu tượng.
+
+### 3.1. Nhóm con của nhóm giao hoán (Abel)
+
+<Proposition
+  id="prop-c4-b1-nhom-abel-chuan-tac"
+  title="Mọi nhóm con của nhóm giao hoán đều là nhóm con chuẩn tắc"
+  original="Hệ quả 4.2"
+  source="gt-ctds-hvk-2026"
+  page="71"
+>
+Nếu $(G, \cdot)$ là một nhóm giao hoán (nhóm abel), thì mọi nhóm con $H$ của $G$ đều là nhóm con chuẩn tắc của $G$:
+$$
+H \le G \implies H \trianglelefteq G.
+$$
+</Proposition>
+
+<Proof of="prop-c4-b1-nhom-abel-chuan-tac">
+Lấy tùy ý $g \in G$ và $h \in H$. Vì $G$ là nhóm giao hoán, ta có $gh = hg$.
+Do đó:
+$$
+ghg^{-1} = (hg)g^{-1} = h(gg^{-1}) = he = h \in H.
+$$
+Theo Định nghĩa <Ref to="def-c4-b1-nhom-con-chuan-tac" />, ta kết luận $H \trianglelefteq G$.
+</Proof>
+
+### 3.2. Nhóm con có chỉ số bằng 2
+
+<Theorem
+  id="thm-c4-b1-chi-so-2-chuan-tac"
+  title="Mọi nhóm con có chỉ số 2 đều là nhóm con chuẩn tắc"
+  original="Hệ quả 4.3"
+  source="gt-ctds-hvk-2026"
+  page="72"
+>
+Cho $G$ là một nhóm và $H$ là một nhóm con của $G$. Nếu chỉ số của $H$ trong $G$ bằng 2:
+$$
+[G:H] = 2,
+$$
+thì $H$ là một nhóm con chuẩn tắc của $G$ ($H \trianglelefteq G$).
+</Theorem>
+
+<Proof of="thm-c4-b1-chi-so-2-chuan-tac">
+Vì $[G:H] = 2$, nhóm $G$ được phân hoạch thành đúng 2 lớp kề trái:
+$$
+G = H \sqcup gH, \quad \text{với } g \notin H.
+$$
+Mặt khác, $G$ cũng được phân hoạch thành đúng 2 lớp kề phải:
+$$
+G = H \sqcup Hg, \quad \text{với } g \notin H.
+$$
+Từ hai đẳng thức phân hoạch trên, ta suy ra phần bù của $H$ trong $G$ thỏa mãn:
+$$
+G \setminus H = gH \quad \text{và} \quad G \setminus H = Hg.
+$$
+Do đó:
+$$
+gH = Hg, \quad \forall g \notin H.
+$$
+Còn nếu $g \in H$, hiển nhiên $gH = H = Hg$.
+Như vậy ta luôn có $gH = Hg$ với mọi $g \in G$.
+Theo Tiêu chuẩn 4 của Định lý <Ref to="thm-c4-b1-tieu-chuan-tuong-duong" />, ta kết luận $H \trianglelefteq G$.
+</Proof>
+
+<Example id="ex-c4-b1-a3-chuan-tac-trong-s3" title="Nhóm thay phiên An là nhóm con chuẩn tắc của Sn">
+Nhóm đối xứng $S_n$ có cấp $n!$, và nhóm thay phiên $A_n$ (gồm các hoán vị chẵn) có cấp $\frac{n!}{2}$.
+Chỉ số của $A_n$ trong $S_n$ là:
+$$
+[S_n : A_n] = \frac{|S_n|}{|A_n|} = \frac{n!}{\frac{n!}{2}} = 2.
+$$
+Theo Định lý <Ref to="thm-c4-b1-chi-so-2-chuan-tac" />, nhóm thay phiên $A_n$ luôn là một nhóm con chuẩn tắc của $S_n$:
+$$
+A_n \trianglelefteq S_n, \quad \forall n \ge 2.
+$$
+Đặc biệt, $A_3 = \{\operatorname{id}, (1\;2\;3), (1\;3\;2)\} \trianglelefteq S_3$.
+</Example>
+
+### 3.3. Tâm của nhóm $Z(G)$
+
+<Definition
+  id="def-c4-b1-tam-nhom"
+  title="Tâm của nhóm"
+  original="Mục 4.2"
+  source="gt-ctds-hvk-2026"
+  page="73"
+>
+**Tâm** của một nhóm $(G, \cdot)$, ký hiệu là $Z(G)$ (từ tiếng Đức *Zentrum*), là tập hợp tất cả các phần tử của $G$ giao hoán với mọi phần tử khác trong $G$:
+$$
+Z(G) = \{z \in G \mid zx = xz, \forall x \in G\}.
+$$
+</Definition>
+
+<Proposition
+  id="prop-c4-b1-tam-la-nhom-con-chuan-tac"
+  title="Tâm của nhóm luôn là nhóm con chuẩn tắc giao hoán"
+  original="Mệnh đề 4.4"
+  source="gt-ctds-hvk-2026"
+  page="73"
+>
+Cho $(G, \cdot)$ là một nhóm. Khi đó:
+1. $Z(G)$ là một nhóm con của $G$.
+2. $Z(G)$ là một nhóm giao hoán.
+3. $Z(G)$ là một nhóm con chuẩn tắc của $G$: $Z(G) \trianglelefteq G$.
+</Proposition>
+
+<Proof of="prop-c4-b1-tam-la-nhom-con-chuan-tac">
+1. - *Không rỗng:* Phần tử trung hòa $e$ giao hoán với mọi $x \in G$ ($ex = xe = x$), nên $e \in Z(G) \ne \varnothing$.
+   - *Đóng kín dưới phép nhân:* Lấy $z_1, z_2 \in Z(G)$ và $x \in G$. Ta có:
+     $$
+     (z_1 z_2) x = z_1 (z_2 x) = z_1 (x z_2) = (z_1 x) z_2 = (x z_1) z_2 = x (z_1 z_2).
+     $$
+     Suy ra $z_1 z_2 \in Z(G)$.
+   - *Đóng kín dưới nghịch đảo:* Lấy $z \in Z(G)$ và $x \in G$. Từ $zx = xz$, nhân $z^{-1}$ vào cả bên trái và bên phải:
+     $$
+     z^{-1}(zx)z^{-1} = z^{-1}(xz)z^{-1} \implies x z^{-1} = z^{-1} x.
+     $$
+     Suy ra $z^{-1} \in Z(G)$.
+   Vậy $Z(G) \le G$.
+2. Vì mọi phần tử của $Z(G)$ giao hoán với tất cả phần tử của $G$, nên chúng hiển nhiên giao hoán với nhau. Do đó $Z(G)$ là nhóm abel.
+3. Lấy tùy ý $g \in G$ và $z \in Z(G)$. Vì $z \in Z(G)$, $z$ giao hoán với $g$, tức là $gz = zg$.
+   Do đó:
+   $$
+   gzg^{-1} = (zg)g^{-1} = z(gg^{-1}) = z \in Z(G).
+   $$
+   Theo định nghĩa, ta kết luận $Z(G) \trianglelefteq G$.
+</Proof>
+
+---
+
+## 4. Phản ví dụ và Tính không bắc cầu của quan hệ chuẩn tắc
+
+Không phải nhóm con nào cũng là nhóm con chuẩn tắc. Việc hiểu rõ ranh giới này giúp tránh các ngộ nhận tai hại trong suy luận đại số.
+
+<Counterexample id="ctx-c4-b1-khong-chuan-tac-s3" title="Nhóm con không chuẩn tắc trong nhóm đối xứng S3">
+Xét nhóm đối xứng $S_3$ có cấp 6 và nhóm con $H = \{\operatorname{id}, (1\;2)\}$ có cấp 2.
+Chỉ số của $H$ trong $S_3$ là $[S_3 : H] = 6 / 2 = 3 \ne 2$.
+Lấy phần tử $g = (1\;3) \in S_3$. Tính phần tử liên hợp của hoán vị $(1\;2) \in H$:
+$$
+g (1\;2) g^{-1} = (1\;3)(1\;2)(1\;3)^{-1} = (1\;3)(1\;2)(1\;3) = (2\;3).
+$$
+Vì $(2\;3) \notin H$, ta thấy:
+$$
+g H g^{-1} = \{\operatorname{id}, (2\;3)\} \ne H.
+$$
+Do đó, $H = \langle (1\;2) \rangle$ **không phải** là một nhóm con chuẩn tắc của $S_3$ ($H \not\trianglelefteq S_3$).
+Hoàn toàn tương tự, hai nhóm con cấp 2 còn lại là $\langle (1\;3) \rangle$ và $\langle (2\;3) \rangle$ cũng không chuẩn tắc trong $S_3$.
+</Counterexample>
+
+<Counterexample id="ctx-c4-b1-khong-bac-cau-d8" title="Quan hệ nhóm con chuẩn tắc không có tính chất bắc cầu trong D8">
+Trong quan hệ tập hợp, quan hệ nhóm con có tính chất bắc cầu: nếu $K \le H$ và $H \le G$ thì $K \le G$.
+Tuy nhiên, **quan hệ nhóm con chuẩn tắc NÓI CHUNG KHÔNG CÓ TÍNH CHẤT BẮC CẦU!**
+Tức là: $K \trianglelefteq H$ và $H \trianglelefteq G$ **KHÔNG KÉO THEO** $K \trianglelefteq G$.
+
+*Minh họa cụ thể trong nhóm nhị diện $D_8$:*
+Xét nhóm nhị diện $D_8 = \{e, r, r^2, r^3, s, sr, sr^2, sr^3\}$ cấp 8.
+- Xét nhóm con $H = \{e, r^2, s, sr^2\} \le D_8$. Vì $|H| = 4$, chỉ số $[D_8 : H] = 8/4 = 2$.
+  Theo Định lý <Ref to="thm-c4-b1-chi-so-2-chuan-tac" />, ta có $H \trianglelefteq D_8$.
+- Xét nhóm con $K = \{e, s\} \le H$. Vì $|K| = 2$ và $|H| = 4$, chỉ số $[H : K] = 4/2 = 2$.
+  Lại áp dụng Định lý <Ref to="thm-c4-b1-chi-so-2-chuan-tac" /> trong nhóm mẹ $H$, ta có $K \trianglelefteq H$.
+- Bây giờ xét quan hệ giữa $K$ và $D_8$: Lấy phần tử $r \in D_8$. 
+  Tính phần tử liên hợp của $s \in K$ qua $r$:
+  $$
+  r s r^{-1} = r(sr^3) = (rs)r^3 = (sr^3)r^3 = sr^6 = sr^2.
+  $$
+  Vì $sr^2 \notin K = \{e, s\}$, ta thấy $r K r^{-1} = \{e, sr^2\} \ne K$.
+  Do đó:
+  $$
+  K \not\trianglelefteq D_8.
+  $$
+Vậy $K \trianglelefteq H$ và $H \trianglelefteq D_8$, nhưng $K \not\trianglelefteq D_8$.
+</Counterexample>
+
+---
+
+## 5. Bài tập rèn luyện
+
+<Exercise
+  id="exr-c4-b1-a1"
+  title="[Nhóm A · Mã CTDS-C4-B1-A01] Tính toán phần tử liên hợp và nhóm con liên hợp trong S3"
+  source="gt-ctds-hvk-2026"
+  page="78"
+  original="Bài 4.1"
+>
+Cho nhóm đối xứng $S_3 = \{\operatorname{id}, (1\;2), (1\;3), (2\;3), (1\;2\;3), (1\;3\;2)\}$ và nhóm con $H = \{\operatorname{id}, (1\;2)\}$.
+1. Với mỗi phần tử $g \in S_3$, hãy tính phần tử liên hợp $c_g((1\;2)) = g(1\;2)g^{-1}$.
+2. Liệt kê tất cả các nhóm con liên hợp $gHg^{-1}$ với $g \in S_3$. Có bao nhiêu nhóm con liên hợp phân biệt?
+3. Từ kết quả trên, kết luận nhóm con $H$ có chuẩn tắc trong $S_3$ không? Vì sao?
+</Exercise>
+
+<Hint>
+Để tính liên hợp của một chuyển vị bởi một hoán vị: $\sigma (a\;b) \sigma^{-1} = (\sigma(a)\;\sigma(b))$.
+</Hint>
+
+<Solution>
+1. **Tính phần tử liên hợp $g(1\;2)g^{-1}$ với mọi $g \in S_3$:**
+   Sử dụng công thức tính liên hợp của chu trình: với hoán vị $\sigma \in S_n$, ta có $\sigma (a\;b) \sigma^{-1} = (\sigma(a)\;\sigma(b))$.
+   - Với $g = \operatorname{id}$: $\operatorname{id}(1\;2)\operatorname{id}^{-1} = (1\;2)$.
+   - Với $g = (1\;2)$: $(1\;2)(1\;2)(1\;2)^{-1} = (1\;2)$.
+   - Với $g = (1\;3)$: $(1\;3)(1\;2)(1\;3)^{-1} = ((1\;3)(1)\;(1\;3)(2)) = (3\;2) = (2\;3)$.
+   - Với $g = (2\;3)$: $(2\;3)(1\;2)(2\;3)^{-1} = ((2\;3)(1)\;(2\;3)(2)) = (1\;3)$.
+   - Với $g = (1\;2\;3)$: $(1\;2\;3)(1\;2)(1\;2\;3)^{-1} = ((1\;2\;3)(1)\;(1\;2\;3)(2)) = (2\;3)$.
+   - Với $g = (1\;3\;2)$: $(1\;3\;2)(1\;2)(1\;3\;2)^{-1} = ((1\;3\;2)(1)\;(1\;3\;2)(2)) = (3\;1) = (1\;3)$.
+
+2. **Liệt kê các nhóm con liên hợp $gHg^{-1}$:**
+   Vì $g \operatorname{id} g^{-1} = \operatorname{id}$, nhóm con $gHg^{-1} = \{\operatorname{id}, g(1\;2)g^{-1}\}$.
+   Từ câu 1, ta thu được đúng 3 nhóm con liên hợp phân biệt:
+   - $H_1 = \operatorname{id}H\operatorname{id}^{-1} = (1\;2)H(1\;2)^{-1} = \{\operatorname{id}, (1\;2)\} = H$.
+   - $H_2 = (1\;3)H(1\;3)^{-1} = (1\;2\;3)H(1\;2\;3)^{-1} = \{\operatorname{id}, (2\;3)\}$.
+   - $H_3 = (2\;3)H(2\;3)^{-1} = (1\;3\;2)H(1\;3\;2)^{-1} = \{\operatorname{id}, (1\;3)\}$.
+
+3. **Kết luận tính chuẩn tắc:**
+   Vì tồn tại $g = (1\;3) \in S_3$ sao cho $gHg^{-1} = H_2 \ne H$, theo Định lý <Ref to="thm-c4-b1-tieu-chuan-tuong-duong" />, nhóm con $H$ **không phải** là nhóm con chuẩn tắc của $S_3$ ($H \not\trianglelefteq S_3$).
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Tính đúng phần tử liên hợp cho cả 6 phần tử của $S_3$: `0,40 đ`
+- Xác định và liệt kê đủ 3 nhóm con liên hợp phân biệt: `0,35 đ`
+- Kết luận chính xác $H \not\trianglelefteq S_3$ kèm giải thích qua tiêu chuẩn liên hợp: `0,25 đ`
+</Solution>
+
+<Exercise
+  id="exr-c4-b1-b1"
+  title="[Nhóm B · Mã CTDS-C4-B1-B01] Mọi nhóm con chỉ số 2 đều chuẩn tắc"
+  source="gt-ctds-hvk-2026"
+  page="79"
+  original="Bài 4.11"
+>
+Cho $G$ là một nhóm và $H$ là một nhóm con của $G$ thỏa mãn $[G:H] = 2$.
+1. Chứng minh rằng $g^2 \in H$ với mọi $g \in G$.
+2. Sử dụng phân hoạch của các lớp kề để chứng minh rằng $gH = Hg$ với mọi $g \in G$, từ đó suy ra $H \trianglelefteq G$.
+3. Hãy chỉ ra một ví dụ về một nhóm con có chỉ số bằng 3 nhưng **không** phải là nhóm con chuẩn tắc.
+</Exercise>
+
+<Hint>
+Khi $[G:H] = 2$, có đúng hai lớp kề trái: $H$ và phần bù $G \setminus H$. Với câu 3, nhớ lại nhóm con $H = \langle (1\;2) \rangle$ trong $S_3$.
+</Hint>
+
+<Solution>
+1. **Chứng minh $g^2 \in H$ với mọi $g \in G$:**
+   Lấy $g \in G$ tùy ý:
+   - Nếu $g \in H$, vì $H$ là nhóm con đóng kín dưới phép nhân nên $g^2 = g \cdot g \in H$.
+   - Nếu $g \notin H$, hai lớp kề trái của $H$ là $H$ và $gH$. Xét lớp kề $g^2 H = g(gH)$. Nếu $g^2 \notin H$, thì $g^2 H \ne H$. Vì chỉ có hai lớp kề trái, buộc phải có $g^2 H = gH$. Nhân $g^{-1}$ vào bên trái suy ra $gH = H \implies g \in H$, mâu thuẫn với $g \notin H$. Do đó buộc phải có $g^2 H = H \implies g^2 \in H$.
+   Vậy $g^2 \in H$ với mọi $g \in G$.
+
+2. **Chứng minh $H \trianglelefteq G$ qua phân hoạch lớp kề:**
+   Vì $[G:H] = 2$, tập các lớp kề trái phân hoạch $G$ thành $G = H \sqcup gH$ với $g \notin H$.
+   Tương tự, tập các lớp kề phải phân hoạch $G$ thành $G = H \sqcup Hg$ với $g \notin H$.
+   Do đó:
+   $$
+   gH = G \setminus H = Hg, \quad \forall g \notin H.
+   $$
+   Nếu $g \in H$, hiển nhiên $gH = H = Hg$.
+   Như vậy $gH = Hg$ với mọi $g \in G$, chứng minh $H \trianglelefteq G$.
+
+3. **Ví dụ nhóm con chỉ số 3 không chuẩn tắc:**
+   Xét nhóm đối xứng $S_3$ có cấp 6 và nhóm con $H = \langle (1\;2) \rangle = \{\operatorname{id}, (1\;2)\}$ có cấp 2.
+   Chỉ số của $H$ là $[S_3 : H] = 6 / 2 = 3$.
+   Theo Phản ví dụ <Ref to="ctx-c4-b1-khong-chuan-tac-s3" />, $H \not\trianglelefteq S_3$ vì $(1\;3)H(1\;3)^{-1} = \{\operatorname{id}, (2\;3)\} \ne H$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh chặt chẽ $g^2 \in H$ cho cả 2 trường hợp: `0,35 đ`
+- Lập luận phân hoạch $G \setminus H$ chứng minh $gH = Hg \implies H \trianglelefteq G$: `0,35 đ`
+- Nêu đúng ví dụ $H = \langle(1\;2)\rangle \le S_3$ có chỉ số 3 không chuẩn tắc: `0,30 đ`
+</Solution>
+
+<Exercise
+  id="exr-c4-b1-c1"
+  title="[Nhóm C · Mã CTDS-C4-B1-C01] Tính chuẩn tắc phụ thuộc nhóm mẹ và tính không bắc cầu"
+  source="gt-ctds-hvk-2026"
+  page="79"
+  original="Bài 4.15"
+>
+Cho $G$ là nhóm nhị diện $D_8 = \langle r, s \mid r^4 = e, s^2 = e, rs = sr^{-1} \rangle$.
+Đặt $H = \{e, r^2, s, sr^2\}$ và $K = \{e, s\}$.
+1. Chứng minh rằng $H$ là một nhóm con của $D_8$ và $H \trianglelefteq D_8$.
+2. Chứng minh rằng $K$ là một nhóm con của $H$ và $K \trianglelefteq H$.
+3. Kiểm tra tính chuẩn tắc của $K$ trong nhóm mẹ $D_8$ bằng cách tính $r K r^{-1}$.
+4. Rút ra kết luận về tính bắc cầu của quan hệ nhóm con chuẩn tắc.
+</Exercise>
+
+<Hint>
+Sử dụng tiêu chuẩn chỉ số 2 cho $H \le D_8$ và $K \le H$. Sử dụng hệ thức $rs = sr^3$ để tính $rsr^{-1}$.
+</Hint>
+
+<Solution>
+1. **Chứng minh $H \le D_8$ và $H \trianglelefteq D_8$:**
+   Tập $H = \{e, r^2, s, sr^2\}$. Ta kiểm tra bảng nhân:
+   - $(r^2)^2 = r^4 = e$, $s^2 = e$, $(sr^2)^2 = sr^2 s r^2 = s(sr^{-2})r^2 = s^2 = e$.
+   - $r^2 s = sr^{-2} = sr^2 = s r^2$, nên $r^2$ và $s$ giao hoán.
+   - $s(sr^2) = s^2 r^2 = r^2$.
+   Do đó $H$ đóng kín dưới phép nhân, chứa phần tử đơn vị và mỗi phần tử tự nghịch đảo. Vậy $H \le D_8$ (và $H \cong V_4$).
+   Cấp của $H$ là $|H| = 4$. Chỉ số của $H$ trong $D_8$ là:
+   $$
+   [D_8 : H] = \frac{|D_8|}{|H|} = \frac{8}{4} = 2.
+   $$
+   Theo Định lý <Ref to="thm-c4-b1-chi-so-2-chuan-tac" />, nhóm con có chỉ số 2 luôn chuẩn tắc, do đó $H \trianglelefteq D_8$.
+
+2. **Chứng minh $K \le H$ và $K \trianglelefteq H$:**
+   Tập $K = \{e, s\} \subset H$. Vì $s^2 = e$, $K$ là nhóm con cấp 2 của $H$.
+   Chỉ số của $K$ trong $H$ là $[H : K] = |H| / |K| = 4 / 2 = 2$.
+   Lại áp dụng Định lý chỉ số 2 đối với nhóm mẹ $H$, ta suy ra $K \trianglelefteq H$.
+   *(Cách khác: Vì $H$ là nhóm giao hoán nên mọi nhóm con của $H$ đều chuẩn tắc trong $H$).*
+
+3. **Kiểm tra tính chuẩn tắc của $K$ trong $D_8$:**
+   Lấy phần tử $r \in D_8$. Ta tính liên hợp của phần tử sinh $s \in K$ qua $r$:
+   $$
+   r s r^{-1} = (rs) r^3 = (sr^3) r^3 = s r^6 = s r^2.
+   $$
+   Do đó tập liên hợp của $K$ qua $r$ là:
+   $$
+   r K r^{-1} = \{r e r^{-1}, r s r^{-1}\} = \{e, s r^2\}.
+   $$
+   Vì $s r^2 \ne s$, ta có $r K r^{-1} \ne K$.
+   Theo Định lý <Ref to="thm-c4-b1-tieu-chuan-tuong-duong" />, điều này chứng tỏ $K$ **không phải** là nhóm con chuẩn tắc của $D_8$ ($K \not\trianglelefteq D_8$).
+
+4. **Kết luận:**
+   Quan hệ nhóm con chuẩn tắc **không có tính chất bắc cầu**: mặc dù $K \trianglelefteq H$ và $H \trianglelefteq D_8$, ta vẫn có $K \not\trianglelefteq D_8$. Tính chuẩn tắc của một nhóm con phụ thuộc chặt chẽ vào nhóm mẹ bao quanh nó.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh $H \le D_8$ và $H \trianglelefteq D_8$ qua chỉ số 2: `0,25 đ`
+- Chứng minh $K \le H$ và $K \trianglelefteq H$ qua chỉ số 2 hoặc tính abel của $H$: `0,25 đ`
+- Tính đúng $rsr^{-1} = sr^2 \notin K$ chỉ ra $rKr^{-1} \ne K$: `0,30 đ`
+- Rút ra kết luận chính xác về tính không bắc cầu và tính phụ thuộc nhóm mẹ: `0,20 đ`
+</Solution>
+
+<Exercise
+  id="exr-c4-b1-d1"
+  title="[Nhóm D · Mã CTDS-C4-B1-D01] Xác định toàn bộ các nhóm con chuẩn tắc của nhóm thay phiên A4"
+  source="gt-ctds-hvk-2026"
+  page="81"
+  original="Bài 4.28"
+>
+Cho $A_4$ là nhóm thay phiên gồm 12 hoán vị chẵn trên tập $\{1, 2, 3, 4\}$.
+1. Nhắc lại các cấp có thể có của các nhóm con trong $A_4$ theo Định lý Lagrange.
+2. Xét tập hợp $V = \{\operatorname{id}, (1\;2)(3\;4), (1\;3)(2\;4), (1\;4)(2\;3)\}$. Chứng minh rằng $V \trianglelefteq A_4$.
+3. Chứng minh rằng $A_4$ không có bất kỳ nhóm con chuẩn tắc nào có cấp bằng 2 hoặc bằng 3.
+4. Từ các kết quả trên, hãy liệt kê toàn bộ các nhóm con chuẩn tắc của $A_4$.
+</Exercise>
+
+<Hint>
+Một nhóm con chuẩn tắc phải là hợp của các lớp liên hợp. Trong $A_4$, các 3-chu trình bị phân chia như thế nào? Chú ý rằng $A_4$ không có nhóm con cấp 6 (Định lý 3.3.3).
+</Hint>
+
+<Solution>
+1. **Các cấp khả dĩ của nhóm con trong $A_4$:**
+   Vì $|A_4| = 12$, theo Định lý Lagrange, cấp của một nhóm con chỉ có thể là ước của 12:
+   $$
+   d \in \{1, 2, 3, 4, 6, 12\}.
+   $$
+   Theo kết quả Chương 3 (Định lý 3.3.3), $A_4$ không có nhóm con nào cấp 6. Do đó cấp của nhóm con chỉ có thể nhận giá trị trong $\{1, 2, 3, 4, 12\}$.
+
+2. **Chứng minh $V \trianglelefteq A_4$:**
+   Ta đã biết $V$ là nhóm con cấp 4 đẳng cấu với nhóm bốn Klein $V_4$.
+   Tập $V$ gồm phần tử đơn vị $\operatorname{id}$ và toàn bộ 3 phần tử dạng $(ab)(cd)$ có cấp 2 trong $A_4$.
+   Với mọi $\sigma \in A_4$ và mọi phần tử cấp hai $\tau = (ab)(cd) \in V$, phần tử liên hợp là:
+   $$
+   \sigma \tau \sigma^{-1} = (\sigma(a)\;\sigma(b))(\sigma(c)\;\sigma(d)).
+   $$
+   Phần tử này vẫn là tích của hai chuyển vị rời nhau, do đó $\sigma \tau \sigma^{-1} \in V$.
+   Như vậy $\sigma V \sigma^{-1} = V$ với mọi $\sigma \in A_4$, suy ra $V \trianglelefteq A_4$.
+
+3. **Chứng minh không có nhóm con chuẩn tắc cấp 2 hoặc cấp 3:**
+   - *Không có nhóm con chuẩn tắc cấp 2:* Một nhóm con cấp 2 có dạng $H = \{\operatorname{id}, \tau\}$ với $\tau$ là phần tử cấp 2. Nếu $H \trianglelefteq A_4$ thì với mọi $\sigma \in A_4$, $\sigma \tau \sigma^{-1} \in H \implies \sigma \tau \sigma^{-1} = \tau$. Điều này đòi hỏi $\tau$ phải giao hoán với mọi phần tử của $A_4$, tức $\tau \in Z(A_4)$. Nhưng kiểm tra trực tiếp thấy $Z(A_4) = \{\operatorname{id}\}$, nên không có phần tử cấp 2 nào giao hoán với toàn bộ $A_4$. Vậy không tồn tại nhóm con chuẩn tắc cấp 2.
+   - *Không có nhóm con chuẩn tắc cấp 3:* Một nhóm con cấp 3 có dạng $K = \{\operatorname{id}, \rho, \rho^2\}$ với $\rho$ là một 3-chu trình. Nhóm $A_4$ có đúng 8 phần tử 3-chu trình chia thành 4 nhóm con cấp 3. Nếu $K \trianglelefteq A_4$ thì $K$ phải chứa tất cả các phần tử liên hợp của $\rho$. Tuy nhiên, phép liên hợp bởi các hoán vị trong $A_4$ biến 3-chu trình thành các 3-chu trình khác không thuộc $K$ (quỹ đạo liên hợp của 3-chu trình trong $A_4$ có 4 phần tử). Do đó $K$ không thể chuẩn tắc.
+
+4. **Danh sách toàn bộ các nhóm con chuẩn tắc của $A_4$:**
+   Tổng hợp lại:
+   - Cấp 1: Nhóm con tầm thường $\{\operatorname{id}\}$ (luôn chuẩn tắc).
+   - Cấp 4: Nhóm con Klein $V = \{\operatorname{id}, (1\;2)(3\;4), (1\;3)(2\;4), (1\;4)(2\;3)\}$.
+   - Cấp 12: Toàn thể nhóm $A_4$ (luôn chuẩn tắc).
+   
+   Vậy $A_4$ có đúng **3 nhóm con chuẩn tắc**:
+   $$
+   \{\operatorname{id}\}, \quad V, \quad A_4.
+   $$
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Liệt kê các cấp khả dĩ và loại trừ cấp 6: `0,20 đ`
+- Chứng minh $V \trianglelefteq A_4$ qua cấu trúc chu trình liên hợp: `0,30 đ`
+- Chứng minh không có nhóm con chuẩn tắc cấp 2 và cấp 3: `0,30 đ`
+- Kết luận đầy đủ và chính xác danh sách 3 nhóm con chuẩn tắc của $A_4$: `0,20 đ`
+</Solution>
+
+---
+
+## 6. Tóm tắt kiến thức cốt lõi
+
+<KeyTakeaways>
+- **Phép liên hợp:** $c_g(x) = gxg^{-1}$ là tự đẳng cấu nhóm. Nhóm con liên hợp $gHg^{-1}$ có cùng cấp và cùng chỉ số với $H$.
+- **Ba tiêu chuẩn tương đương của nhóm con chuẩn tắc:** $N \trianglelefteq G \iff gNg^{-1} \subseteq N \iff gNg^{-1} = N \iff gN = Ng$ với mọi $g \in G$.
+- **Các trường hợp chuẩn tắc kinh điển:** Mọi nhóm con của nhóm giao hoán đều chuẩn tắc; mọi nhóm con có chỉ số 2 đều chuẩn tắc ($[G:H] = 2 \implies H \trianglelefteq G$); tâm $Z(G)$ luôn là nhóm con chuẩn tắc giao hoán của $G$.
+- **Cảnh báo tính chất:** Quan hệ chuẩn tắc nói chung không có tính chất bắc cầu ($K \trianglelefteq H \trianglelefteq G \not\implies K \trianglelefteq G$), minh họa rõ nét trong nhóm nhị diện $D_8$.
+</KeyTakeaways>
