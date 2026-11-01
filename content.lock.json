@@ -1,5 +1,719 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T00:00:00.000Z",
-  "lessons": {}
+  "updatedAt": "2026-11-01T15:10:10.632Z",
+  "lessons": {
+    "tap-hop-anh-xa-va-cong-cu-so-hoc": {
+      "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "6a25733034e6250ce16d940350980a8117311a7708fc2c1ed1b373d6e4472bc9",
+      "numberedBlocks": {
+        "def-c0-b1-anh-xa-anh-nghich-anh": "0.1.1",
+        "ex-c0-b1-anh-nghich-anh-va-tho": "0.1.1",
+        "def-c0-b1-don-anh-toan-anh-song-anh": "0.1.2",
+        "cex-c0-b1-anh-xa-phu-thuoc-mien-va-doi-mien": "0.1.2",
+        "prop-c0-b1-hop-thanh-song-anh": "0.1.3",
+        "def-c0-b1-chia-het-va-ucln": "0.1.4",
+        "thm-c0-b1-phep-chia-euclid": "0.1.5",
+        "lem-c0-b1-bo-de-euclid-gcd": "0.1.6",
+        "thm-c0-b1-dong-nhat-thuc-bezout": "0.1.7",
+        "def-c0-b1-ham-phi-euler": "0.1.8",
+        "ex-c0-b1-euclid-bezout-euler": "0.1.3",
+        "exr-c0-b1-a1": "0.1.1",
+        "exr-c0-b1-b1": "0.1.2",
+        "exr-c0-b1-c1": "0.1.3",
+        "exr-c0-b1-d1": "0.1.4"
+      }
+    },
+    "quan-he-tuong-duong-va-tap-thuong": {
+      "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/02-quan-he-tuong-duong-va-tap-thuong.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "d72ed2fd87459717d1203fe43907baab506dfef909cca11307f072fe7a32f533",
+      "numberedBlocks": {
+        "def-c0-b2-quan-he-tuong-duong": "0.2.1",
+        "def-c0-b2-lop-tuong-duong-tap-thuong": "0.2.2",
+        "cex-c0-b2-phan-xa-doi-xung-khong-bac-cau": "0.2.1",
+        "def-c0-b2-phan-hoach": "0.2.3",
+        "thm-c0-b2-quan-he-tuong-duong-va-phan-hoach": "0.2.4",
+        "ex-c0-b2-tu-phan-hoach-den-quan-he": "0.2.2",
+        "def-c0-b2-dong-du-modulo-n": "0.2.5",
+        "prop-c0-b2-dong-du-va-ucln": "0.2.6",
+        "prop-c0-b2-quan-he-cung-anh": "0.2.7",
+        "ex-c0-b2-tap-thuong-va-tho": "0.2.3",
+        "exr-c0-b2-a1": "0.2.1",
+        "exr-c0-b2-b1": "0.2.2",
+        "exr-c0-b2-c1": "0.2.3",
+        "exr-c0-b2-d1": "0.2.4"
+      }
+    },
+    "phep-toan-hai-ngoi-va-tinh-xac-dinh-tot": {
+      "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/03-phep-toan-hai-ngoi-va-tinh-xac-dinh-tot.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "ddc00bbed3c3c655b6b0a216c11602d8aa2715f4a5c2bdf8a9cdb33e28f053b2",
+      "numberedBlocks": {
+        "def-c0-b3-phep-toan-hai-ngoi": "0.3.1",
+        "prop-c0-b3-duy-nhat-don-vi-nghich-dao": "0.3.2",
+        "ex-c0-b3-phep-toan-dich-chuyen-va-anh-xa": "0.3.1",
+        "cex-c0-b3-khong-dong-hoac-chi-co-don-vi-mot-phia": "0.3.2",
+        "def-c0-b3-tinh-xac-dinh-tot-anh-xa": "0.3.3",
+        "thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan": "0.3.4",
+        "prop-c0-b3-cong-nhan-modulo-n-va-song-anh-tu-nhien": "0.3.5",
+        "cex-c0-b3-quy-tac-phu-thuoc-dai-dien": "0.3.3",
+        "exr-c0-b3-a1": "0.3.1",
+        "exr-c0-b3-b1": "0.3.2",
+        "exr-c0-b3-c1": "0.3.3",
+        "exr-c0-b3-d1": "0.3.4"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-0": {
+      "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/04-bai-tap-va-tong-ket-chuong-0.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "33ab9c1f87c6997dc122ee579c08c934ca54e5623dcfcc38bb74c6b5833a21c6",
+      "numberedBlocks": {
+        "exr-c0-b4-a1": "0.4.1",
+        "exr-c0-b4-b1": "0.4.2",
+        "exr-c0-b4-c1": "0.4.3",
+        "exr-c0-b4-d1": "0.4.4"
+      }
+    },
+    "nua-nhom-vi-nhom-va-tien-de-nhom": {
+      "path": "content/algebraic-structures/01-nhom-va-cac-vi-du-co-ban/01-nua-nhom-vi-nhom-va-tien-de-nhom.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "de0a712cd3cf530951bd19710770bb5e48aa700572c9785d843fa011e85ae3b1",
+      "numberedBlocks": {
+        "def-c1-b1-nua-nhom-vi-nhom-nhom": "1.1.1",
+        "ex-c1-b1-nhom-bien-doi-tuyen-tinh-dich-chuyen": "1.1.1",
+        "cex-c1-b1-vi-nhom-khong-la-nhom": "1.1.2",
+        "thm-c1-b1-he-qua-tien-de-nhom": "1.1.2",
+        "cor-c1-b1-anh-xa-tinh-tien": "1.1.3",
+        "exr-c1-b1-a1": "1.1.1",
+        "exr-c1-b1-b1": "1.1.2",
+        "exr-c1-b1-c1": "1.1.3",
+        "exr-c1-b1-d1": "1.1.4"
+      }
+    },
+    "luy-thua-nguyen-nhom-huu-han-va-bang-cayley": {
+      "path": "content/algebraic-structures/01-nhom-va-cac-vi-du-co-ban/02-luy-thua-nguyen-nhom-huu-han-va-bang-cayley.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "dedc56c5efce76b6b2b3013cece4c97fd8fb493d472b342802118ea2276b6379",
+      "numberedBlocks": {
+        "def-c1-b2-luy-thua-nguyen": "1.2.1",
+        "thm-c1-b2-quy-tac-luy-thua": "1.2.2",
+        "cex-c1-b2-luy-thua-khong-giao-hoan": "1.2.1",
+        "def-c1-b2-cap-nhom-va-bang-cayley": "1.2.3",
+        "thm-c1-b2-tinh-chat-bang-cayley": "1.2.4",
+        "ex-c1-b2-bang-cayley-cap-4": "1.2.2",
+        "exr-c1-b2-a1": "1.2.1",
+        "exr-c1-b2-b1": "1.2.2",
+        "exr-c1-b2-c1": "1.2.3",
+        "exr-c1-b2-d1": "1.2.4"
+      }
+    },
+    "cac-ho-nhom-co-ban": {
+      "path": "content/algebraic-structures/01-nhom-va-cac-vi-du-co-ban/03-cac-ho-nhom-co-ban.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "b7cfef00bcbaa5b665f1436e0e767c23db0dea0d306731c99dc3c91d16cf9f54",
+      "numberedBlocks": {
+        "def-c1-b3-nhom-so-nguyen-va-dong-du": "1.3.1",
+        "def-c1-b3-nhom-cac-lop-kha-nghich": "1.3.2",
+        "prop-c1-b3-tinh-chat-nhom-un": "1.3.3",
+        "ex-c1-b3-u8-va-u10": "1.3.1",
+        "def-c1-b3-nhom-doi-xung": "1.3.4",
+        "def-c1-b3-chu-trinh-va-chuyen-vi": "1.3.5",
+        "thm-c1-b3-tinh-chat-hoan-vi": "1.3.6",
+        "ex-c1-b3-tinh-toan-trong-s4": "1.3.2",
+        "def-c1-b3-nhom-nhi-dien": "1.3.7",
+        "thm-c1-b3-he-thuc-nhi-dien": "1.3.8",
+        "ex-c1-b3-tinh-toan-trong-d8": "1.3.3",
+        "def-c1-b3-nhom-ma-tran": "1.3.9",
+        "def-c1-b3-nhom-affine": "1.3.10",
+        "prop-c1-b3-bieu-dien-ma-tran-nhom-affine": "1.3.11",
+        "exr-c1-b3-a1": "1.3.1",
+        "exr-c1-b3-b1": "1.3.2",
+        "exr-c1-b3-c1": "1.3.3",
+        "exr-c1-b3-d1": "1.3.4"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-1": {
+      "path": "content/algebraic-structures/01-nhom-va-cac-vi-du-co-ban/04-bai-tap-va-tong-ket-chuong-1.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "370ab0e9430cb2ffb2b56f53d2eadf0e2c17ebbb9f2b9dff9f8b3cf5a325a9f5",
+      "numberedBlocks": {
+        "exr-c1-b4-a1": "1.4.1",
+        "exr-c1-b4-b1": "1.4.2",
+        "exr-c1-b4-c1": "1.4.3",
+        "exr-c1-b4-d1": "1.4.4"
+      }
+    },
+    "nhom-con-va-nhom-con-sinh-boi-mot-tap-hop": {
+      "path": "content/algebraic-structures/02-nhom-con-va-nhom-cyclic/01-nhom-con-va-nhom-con-sinh-boi-mot-tap-hop.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "03958fc9c943666b85941fd985cf1e090e5a66c0e59386d2f6d736d1084aaacd",
+      "numberedBlocks": {
+        "def-c2-b1-nhom-con": "2.1.1",
+        "thm-c2-b1-tieu-chuan-nhom-con": "2.1.2",
+        "thm-c2-b1-tieu-chuan-tap-huu-han": "2.1.3",
+        "ex-c2-b1-nhom-sl2": "2.1.1",
+        "thm-c2-b1-giao-cac-nhom-con": "2.1.4",
+        "thm-c2-b1-hop-hai-nhom-con": "2.1.5",
+        "ex-c2-b1-phan-vi-du-hop-nhom-con": "2.1.2",
+        "def-c2-b1-nhom-con-sinh": "2.1.6",
+        "thm-c2-b1-mo-ta-nhom-con-sinh": "2.1.7",
+        "ex-c2-b1-tap-sinh-s3": "2.1.3",
+        "exr-c2-b1-a1": "2.1.1",
+        "exr-c2-b1-b1": "2.1.2",
+        "exr-c2-b1-c1": "2.1.3",
+        "exr-c2-b1-d1": "2.1.4"
+      }
+    },
+    "cap-cua-phan-tu-va-nhom-cyclic": {
+      "path": "content/algebraic-structures/02-nhom-con-va-nhom-cyclic/02-cap-cua-phan-tu-va-nhom-cyclic.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "5adf5307eb9f89fd9268808fb4f7cdf052672b1f2fe43df094dc15dfeea99fef",
+      "numberedBlocks": {
+        "def-c2-b2-cap-cua-phan-tu": "2.2.1",
+        "thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic": "2.2.2",
+        "def-c2-b2-nhom-cyclic": "2.2.3",
+        "thm-c2-b2-tinh-giao-hoan-nhom-cyclic": "2.2.4",
+        "ex-c2-b2-cac-nhom-so-hoc": "2.2.1",
+        "ex-c2-b2-cap-hoan-vi": "2.2.2",
+        "ex-c2-b2-can-don-vi": "2.2.3",
+        "exr-c2-b2-a1": "2.2.1",
+        "exr-c2-b2-b1": "2.2.2",
+        "exr-c2-b2-c1": "2.2.3",
+        "exr-c2-b2-d1": "2.2.4"
+      }
+    },
+    "cau-truc-nhom-con-cua-nhom-cyclic": {
+      "path": "content/algebraic-structures/02-nhom-con-va-nhom-cyclic/03-cau-truc-nhom-con-cua-nhom-cyclic.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "3b97d247ac9a23f1b7aec17baa30164986b583bc6424e14b79ad3536bd4a6dee",
+      "numberedBlocks": {
+        "thm-c2-b3-dinh-ly-co-ban-nhom-cyclic": "2.3.1",
+        "prop-c2-b3-giao-va-tong-nhom-con-cyclic": "2.3.2",
+        "exr-c2-b3-a1": "2.3.1",
+        "exr-c2-b3-b1": "2.3.2",
+        "exr-c2-b3-c1": "2.3.3",
+        "exr-c2-b3-d1": "2.3.4"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-2": {
+      "path": "content/algebraic-structures/02-nhom-con-va-nhom-cyclic/04-bai-tap-va-tong-ket-chuong-2.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "aeebc77146f4c6e74f0debaf909ab5d85c4ac8d93cf4dfa33473514856eaff4a",
+      "numberedBlocks": {
+        "exr-c2-b4-a1": "2.4.1",
+        "exr-c2-b4-b1": "2.4.2",
+        "exr-c2-b4-c1": "2.4.3",
+        "exr-c2-b4-d1": "2.4.4"
+      }
+    },
+    "lop-ke-phan-hoach-va-chi-so-cua-nhom-con": {
+      "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/01-lop-ke-phan-hoach-va-chi-so-cua-nhom-con.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "cb4f2a70fc3b62e10ba58c1452458675825eac6b9ac68ab53a7cdf22faf52144",
+      "numberedBlocks": {
+        "def-c3-b1-lop-ke": "3.1.1",
+        "thm-c3-b1-cau-truc-cac-lop-ke": "3.1.2",
+        "def-c3-b1-chi-so-nhom-con": "3.1.3",
+        "prop-c3-b1-song-anh-lop-ke-trai-phai": "3.1.4",
+        "ex-c3-b1-lop-ke-trong-z": "3.1.1",
+        "ex-c3-b1-lop-ke-trai-khac-phai-s3": "3.1.2",
+        "thm-c3-b1-nhom-con-chi-so-2": "3.1.5",
+        "exr-c3-b1-a1": "3.1.1",
+        "exr-c3-b1-b1": "3.1.2",
+        "exr-c3-b1-c1": "3.1.3",
+        "exr-c3-b1-d1": "3.1.4"
+      }
+    },
+    "dinh-ly-lagrange-va-ung-dung-so-hoc": {
+      "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/02-dinh-ly-lagrange-va-ung-dung-so-hoc.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "43c83e10459ffca343387bbc576fdc72410271b509c658e4ba9cffffff0382c1",
+      "numberedBlocks": {
+        "thm-c3-b2-lagrange": "3.2.1",
+        "ex-c3-b2-lagrange-s3": "3.2.1",
+        "thm-c3-b2-thap-chi-so": "3.2.2",
+        "cor-c3-b2-cap-phan-tu": "3.2.3",
+        "ex-c3-b2-kiem-tra-cap": "3.2.2",
+        "cor-c3-b2-nhom-cap-nguyen-to": "3.2.4",
+        "thm-c3-b2-euler-fermat": "3.2.5",
+        "ex-c3-b2-tinh-so-mu": "3.2.3",
+        "exr-c3-b2-a1": "3.2.1",
+        "exr-c3-b2-b1": "3.2.2",
+        "exr-c3-b2-c1": "3.2.3",
+        "exr-c3-b2-d1": "3.2.4"
+      }
+    },
+    "chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4": {
+      "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/03-chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "4b058c391d4529492196a72603f376b1b3c46a4f712e262176ac99c901838768",
+      "numberedBlocks": {
+        "ctx-c3-b3-phan-tu-v4": "3.3.1",
+        "thm-c3-b3-cau-truc-a4": "3.3.1",
+        "thm-c3-b3-a4-khong-co-nhom-con-cap-6": "3.3.2",
+        "lem-c3-b3-chi-so-2-binh-phuong": "3.3.3",
+        "thm-c3-b3-cauchy": "3.3.4",
+        "exr-c3-b3-a1": "3.3.1",
+        "exr-c3-b3-b1": "3.3.2",
+        "exr-c3-b3-c1": "3.3.3",
+        "exr-c3-b3-d1": "3.3.4"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-3": {
+      "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/04-bai-tap-va-tong-ket-chuong-3.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "a13f4ecfe4eb69e121b3979db3b2dfe18647b5cd0754d8d694758ce17225c034",
+      "numberedBlocks": {
+        "exr-c3-b4-a1": "3.4.1",
+        "exr-c3-b4-b1": "3.4.2",
+        "exr-c3-b4-c1": "3.4.3",
+        "exr-c3-b4-d1": "3.4.4"
+      }
+    },
+    "phep-lien-hop-va-tieu-chuan-chuan-tac": {
+      "path": "content/algebraic-structures/04-nhom-con-chuan-tac-nhom-thuong/01-phep-lien-hop-va-tieu-chuan-chuan-tac.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "62cdc0c289cabc5a66484409494da7efcecd2d2d8c7ac6c425571cc663054c43",
+      "numberedBlocks": {
+        "def-c4-b1-phep-lien-hop": "4.1.1",
+        "prop-c4-b1-tinh-chat-phep-lien-hop": "4.1.2",
+        "def-c4-b1-nhom-con-chuan-tac": "4.1.3",
+        "thm-c4-b1-tieu-chuan-tuong-duong": "4.1.4",
+        "prop-c4-b1-nhom-abel-chuan-tac": "4.1.5",
+        "thm-c4-b1-chi-so-2-chuan-tac": "4.1.6",
+        "ex-c4-b1-a3-chuan-tac-trong-s3": "4.1.1",
+        "def-c4-b1-tam-nhom": "4.1.7",
+        "prop-c4-b1-tam-la-nhom-con-chuan-tac": "4.1.8",
+        "ctx-c4-b1-khong-chuan-tac-s3": "4.1.2",
+        "ctx-c4-b1-khong-bac-cau-d8": "4.1.3",
+        "exr-c4-b1-a1": "4.1.1",
+        "exr-c4-b1-b1": "4.1.2",
+        "exr-c4-b1-c1": "4.1.3",
+        "exr-c4-b1-d1": "4.1.4"
+      }
+    },
+    "nhom-thuong-va-tinh-xac-dinh-tot": {
+      "path": "content/algebraic-structures/04-nhom-con-chuan-tac-nhom-thuong/02-nhom-thuong-va-tinh-xac-dinh-tot.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "d7a041d3882d860cc00ed854b255ceba3c6213cba027ad8618a7329329f2c29a",
+      "numberedBlocks": {
+        "thm-c4-b2-phep-nhan-xac-dinh-tot": "4.2.1",
+        "ctx-c4-b2-phep-nhan-that-bai-s3": "4.2.1",
+        "def-c4-b2-nhom-thuong": "4.2.2",
+        "thm-c4-b2-tien-de-nhom-thuong": "4.2.3",
+        "thm-c4-b2-ke-thua-abel-cyclic": "4.2.4",
+        "prop-c4-b2-cap-phan-tu-nhom-thuong": "4.2.5",
+        "exr-c4-b2-a1": "4.2.1",
+        "exr-c4-b2-b1": "4.2.2",
+        "exr-c4-b2-c1": "4.2.3",
+        "exr-c4-b2-d1": "4.2.4"
+      }
+    },
+    "cac-nhom-thuong-kinh-dien": {
+      "path": "content/algebraic-structures/04-nhom-con-chuan-tac-nhom-thuong/03-cac-nhom-thuong-kinh-dien.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "dc25b55c2502dd27fdda9f3559215ea24c436f14a3a0d30f8fc48a7636c50009",
+      "numberedBlocks": {
+        "ex-c4-b3-tam-d8": "4.3.1",
+        "thm-c4-b3-cau-truc-d8-chia-tam": "4.3.1",
+        "thm-c4-b3-g-chia-tam-cyclic": "4.3.2",
+        "cor-c4-b3-khong-the-co-cap-nguyen-to": "4.3.3",
+        "ex-c4-b3-giai-thich-d8": "4.3.2",
+        "exr-c4-b3-a1": "4.3.1",
+        "exr-c4-b3-b1": "4.3.2",
+        "exr-c4-b3-c1": "4.3.3",
+        "exr-c4-b3-d1": "4.3.4"
+      }
+    },
+    "dong-cau-nhom-hat-nhan-va-anh": {
+      "path": "content/algebraic-structures/05-dong-cau-nhom-va-dang-cau/01-dong-cau-nhom-hat-nhan-va-anh.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "8a5ce2b895407647023942bf90cd798b7c100639b4b4cff6efa9ae8711cf44f0",
+      "numberedBlocks": {
+        "def-c5-b1-dong-cau-nhom": "5.1.1",
+        "def-c5-b1-phan-loai-dong-cau": "5.1.2",
+        "ex-c5-b1-cac-dong-cau-kinh-dien": "5.1.1",
+        "prop-c5-b1-tinh-chat-co-ban": "5.1.3",
+        "prop-c5-b1-dong-cau-tu-nhom-cyclic": "5.1.4",
+        "def-c5-b1-hat-nhan-va-anh": "5.1.5",
+        "thm-c5-b1-cau-truc-ker-im": "5.1.6",
+        "prop-c5-b1-anh-nghich-anh-nhom-con": "5.1.7",
+        "exr-c5-b1-a1": "5.1.1",
+        "exr-c5-b1-b1": "5.1.2",
+        "exr-c5-b1-c1": "5.1.3",
+        "exr-c5-b1-d1": "5.1.4"
+      }
+    },
+    "phan-tich-qua-nhom-thuong-va-dinh-ly-dang-cau-thu-nhat": {
+      "path": "content/algebraic-structures/05-dong-cau-nhom-va-dang-cau/02-phan-tich-qua-nhom-thuong-va-dinh-ly-dang-cau-thu-nhat.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "bb1e2d08938c8f020308bc6411c3a292d461db9f0a7d07d2714bc4c55e012f3e",
+      "numberedBlocks": {
+        "thm-c5-b2-nguyen-ly-phan-tich": "5.2.1",
+        "thm-c5-b2-dang-cau-thu-nhat": "5.2.2",
+        "ex-c5-b2-sln-la-nhom-con-chuan-tac": "5.2.1",
+        "ex-c5-b2-so-phuc-chia-duong-tron": "5.2.2",
+        "exr-c5-b2-a1": "5.2.1",
+        "exr-c5-b2-b1": "5.2.2",
+        "exr-c5-b2-c1": "5.2.3",
+        "exr-c5-b2-d1": "5.2.4"
+      }
+    },
+    "dinh-ly-dang-cau-thu-hai-thu-ba-va-dinh-ly-tuong-ung": {
+      "path": "content/algebraic-structures/05-dong-cau-nhom-va-dang-cau/03-dinh-ly-dang-cau-thu-hai-thu-ba-va-dinh-ly-tuong-ung.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "fd3fdf780806d8da1173820063e84e82f578042c27066f7102bc0abea9f41386",
+      "numberedBlocks": {
+        "thm-c5-b3-dang-cau-thu-hai": "5.3.1",
+        "thm-c5-b3-dang-cau-thu-ba": "5.3.2",
+        "prop-c5-b3-bat-bien-dang-cau": "5.3.3",
+        "ex-c5-b3-chung-minh-khong-dang-cau": "5.3.1",
+        "thm-c5-b3-dinh-ly-tuong-ung": "5.3.4",
+        "exr-c5-b3-a1": "5.3.1",
+        "exr-c5-b3-b1": "5.3.2",
+        "exr-c5-b3-c1": "5.3.3",
+        "exr-c5-b3-d1": "5.3.4"
+      }
+    },
+    "bai-tap-chuong-5-va-tong-ket-phan-nhom": {
+      "path": "content/algebraic-structures/05-dong-cau-nhom-va-dang-cau/04-bai-tap-chuong-5-va-tong-ket-phan-nhom.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "931fd77afc951c0dd98827ddf95655b251e672bf861ec5ccd06629835f1224b8",
+      "numberedBlocks": {
+        "exr-c5-b4-a1": "5.4.1",
+        "exr-c5-b4-b1": "5.4.2",
+        "exr-c5-b4-c1": "5.4.3",
+        "exr-c5-b4-d1": "5.4.4"
+      }
+    },
+    "dinh-nghia-vanh-quy-tac-tinh-toan-va-nhom-kha-nghich": {
+      "path": "content/algebraic-structures/06-vanh-va-cac-cau-truc/01-dinh-nghia-vanh-quy-tac-tinh-toan-va-nhom-kha-nghich.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "7fb2d47d8ec764dfbfeaa78e24193afb023b08edca1ed3acd2ac6f28b45b77ee",
+      "numberedBlocks": {
+        "def-c6-b1-vanh": "6.1.1",
+        "ex-c6-b1-cac-vanh-chuan-muc": "6.1.1",
+        "thm-c6-b1-quy-tac-tinh-toan": "6.1.2",
+        "ce-c6-b1-khai-trien-binh-phuong": "6.1.2",
+        "def-c6-b1-phan-tu-kha-nghich": "6.1.3",
+        "prop-c6-b1-nhom-kha-nghich": "6.1.4",
+        "ex-c6-b1-nhom-kha-nghich-kinh-dien": "6.1.3",
+        "ex-c6-b1-nhom-a": "6.1.1",
+        "ex-c6-b1-nhom-b": "6.1.2",
+        "ex-c6-b1-nhom-c": "6.1.3",
+        "ex-c6-b1-nhom-d": "6.1.4"
+      }
+    },
+    "uoc-cua-khong-mien-nguyen-vanh-chia-va-truong": {
+      "path": "content/algebraic-structures/06-vanh-va-cac-cau-truc/02-uoc-cua-khong-mien-nguyen-vanh-chia-va-truong.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "732c2a429b24cfd5aa10e51454a8290add985b05f9174e6884ab2dbda2695fa4",
+      "numberedBlocks": {
+        "def-c6-b2-uoc-cua-khong": "6.2.1",
+        "thm-c6-b2-luat-gian-uoc": "6.2.2",
+        "prop-c6-b2-roi-nhau-uoc-khong-va-don-vi": "6.2.3",
+        "def-c6-b2-mien-nguyen-vanh-chia-truong": "6.2.4",
+        "ex-c6-b2-phan-loai-cac-cau-truc": "6.2.1",
+        "thm-c6-b2-mien-nguyen-huu-han-la-truong": "6.2.5",
+        "cor-c6-b2-z-mod-n-la-truong": "6.2.6",
+        "ex-c6-b2-nhom-a": "6.2.1",
+        "ex-c6-b2-nhom-b": "6.2.2",
+        "ex-c6-b2-nhom-c": "6.2.3",
+        "ex-c6-b2-nhom-d": "6.2.4"
+      }
+    },
+    "cac-cach-dung-vanh-va-vanh-con": {
+      "path": "content/algebraic-structures/06-vanh-va-cac-cau-truc/03-cac-cach-dung-vanh-va-vanh-con.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "6fbd1cbba8fec62c37acd6eea0387f94f157ac24da9ce0b942010933a2d334be",
+      "numberedBlocks": {
+        "thm-c6-b3-vanh-da-thuc-tren-mien-nguyen": "6.3.1",
+        "ce-c6-b3-sup-do-cong-thuc-bac": "6.3.1",
+        "def-c6-b3-vanh-con": "6.3.2",
+        "thm-c6-b3-tieu-chuan-vanh-con": "6.3.3",
+        "ex-c6-b3-phan-tich-don-vi-vanh-con": "6.3.2",
+        "prop-c6-b3-dieu-kien-nhan-tap-thuong": "6.3.4",
+        "ce-c6-b3-phep-nhan-hong-tren-tap-thuong": "6.3.3",
+        "ex-c6-b3-nhom-a": "6.3.1",
+        "ex-c6-b3-nhom-b": "6.3.2",
+        "ex-c6-b3-nhom-c": "6.3.3",
+        "ex-c6-b3-nhom-d": "6.3.4"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-6": {
+      "path": "content/algebraic-structures/06-vanh-va-cac-cau-truc/04-bai-tap-va-tong-ket-chuong-6.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "c3260efda26f4d3f27b153e71aad029aba2500c5f5ce369e9cb21ce8582bb6c8",
+      "numberedBlocks": {
+        "thm-c6-b4-vanh-boole": "6.4.1",
+        "thm-c6-b4-da-thuc-kha-nghich": "6.4.2",
+        "ex-c6-b4-nhom-a": "6.4.1",
+        "ex-c6-b4-nhom-b": "6.4.2",
+        "ex-c6-b4-nhom-c": "6.4.3",
+        "ex-c6-b4-nhom-d": "6.4.4"
+      }
+    },
+    "idean-giao-tong-va-idean-sinh": {
+      "path": "content/algebraic-structures/07-idean-va-vanh-thuong/01-idean-giao-tong-va-idean-sinh.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "45d8b1cb182bb470676bd60a2f794142b1168909af7bbf1eebedd5f0b74ec4be",
+      "numberedBlocks": {
+        "ce-c7-b1-that-bai-nhan-lop-q-z": "7.1.1",
+        "def-c7-b1-idean": "7.1.1",
+        "thm-c7-b1-tieu-chuan-idean": "7.1.2",
+        "thm-c7-b1-idean-chua-don-vi": "7.1.3",
+        "cor-c7-b1-idean-cua-truong": "7.1.4",
+        "ex-c7-b1-idean-ma-tran": "7.1.2",
+        "thm-c7-b1-phep-toan-idean": "7.1.5",
+        "def-c7-b1-idean-sinh": "7.1.6",
+        "ce-c7-b1-idean-sinh-vanh-khong-don-vi": "7.1.3",
+        "ex-c7-b1-nhom-a": "7.1.1",
+        "ex-c7-b1-nhom-b": "7.1.2",
+        "ex-c7-b1-nhom-c": "7.1.3",
+        "ex-c7-b1-nhom-d": "7.1.4"
+      }
+    },
+    "vanh-thuong-va-tinh-toan-trong-thuong-da-thuc": {
+      "path": "content/algebraic-structures/07-idean-va-vanh-thuong/02-vanh-thuong-va-tinh-toan-trong-thuong-da-thuc.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "45acbecf3d54b8fa6246b86f75c6545c5931a7f38f8e2f4d20c2f22d91b8796c",
+      "numberedBlocks": {
+        "thm-c7-b2-vanh-thuong": "7.2.1",
+        "def-c7-b2-phep-chieu-chinh-tac": "7.2.2",
+        "thm-c7-b2-dai-dien-chuan": "7.2.3",
+        "ex-c7-b2-bo-ba-mo-hinh": "7.2.1",
+        "thm-c7-b2-nghich-dao-euclid": "7.2.4",
+        "ex-c7-b2-nhom-a": "7.2.1",
+        "ex-c7-b2-nhom-b": "7.2.2",
+        "ex-c7-b2-nhom-c": "7.2.3",
+        "ex-c7-b2-nhom-d": "7.2.4"
+      }
+    },
+    "idean-nguyen-to-va-idean-cuc-dai": {
+      "path": "content/algebraic-structures/07-idean-va-vanh-thuong/03-idean-nguyen-to-va-idean-cuc-dai.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "c689733e14ec2917a9bed8ade15eb8bd809709c7057677701ea783c326587678",
+      "numberedBlocks": {
+        "def-c7-b3-idean-nguyen-to-cuc-dai": "7.3.1",
+        "thm-c7-b3-dac-trung-vanh-thuong": "7.3.2",
+        "ce-c7-b3-idean-x-trong-zx": "7.3.1",
+        "ex-c7-b3-idean-khong-trong-mien-nguyen": "7.3.2",
+        "thm-c7-b3-nguyen-to-cuc-dai-pid": "7.3.3",
+        "ex-c7-b3-hai-mo-hinh-pid": "7.3.3",
+        "ex-c7-b3-nhom-a": "7.3.1",
+        "ex-c7-b3-nhom-b": "7.3.2",
+        "ex-c7-b3-nhom-c": "7.3.3",
+        "ex-c7-b3-nhom-d": "7.3.4"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-7": {
+      "path": "content/algebraic-structures/07-idean-va-vanh-thuong/04-bai-tap-va-tong-ket-chuong-7.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "68b7ca55423aa9b7d113cbb8df7d637487f98b1c7dca7cc880249824340def1b",
+      "numberedBlocks": {
+        "thm-c7-b4-vanh-don-ma-tran": "7.4.1",
+        "thm-c7-b4-dinh-ly-thang-du-trung-hoa": "7.4.2",
+        "ex-c7-b4-a1": "7.4.1",
+        "ex-c7-b4-a2": "7.4.2",
+        "ex-c7-b4-b1": "7.4.3",
+        "ex-c7-b4-b2": "7.4.4",
+        "ex-c7-b4-c1": "7.4.5",
+        "ex-c7-b4-c2": "7.4.6",
+        "ex-c7-b4-d1": "7.4.7",
+        "ex-c7-b4-d2": "7.4.8"
+      }
+    },
+    "dong-cau-vanh-hat-nhan-anh-va-phan-tich-qua-thuong": {
+      "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/01-dong-cau-vanh-hat-nhan-anh-va-phan-tich-qua-thuong.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "7784c5bf1ff18f58993167fcb4cb1976e066b4e0ed4a64820e1fcfe5b144e12f",
+      "numberedBlocks": {
+        "def-c8-b1-dong-cau-vanh": "8.1.1",
+        "prop-c8-b1-phan-tu-luy-dang": "8.1.2",
+        "thm-c8-b1-khi-nao-bao-toan-don-vi": "8.1.3",
+        "counter-c8-b1-khong-bao-toan-don-vi": "8.1.1",
+        "def-c8-b1-hat-nhan-va-anh": "8.1.4",
+        "thm-c8-b1-tinh-chat-hat-nhan-va-anh": "8.1.5",
+        "counter-c8-b1-anh-cua-idean": "8.1.2",
+        "thm-c8-b1-nguyen-ly-phan-tich": "8.1.6",
+        "ex-c8-b1-a1": "8.1.1",
+        "ex-c8-b1-a2": "8.1.2",
+        "ex-c8-b1-b1": "8.1.3",
+        "ex-c8-b1-b2": "8.1.4",
+        "ex-c8-b1-c1": "8.1.5",
+        "ex-c8-b1-c2": "8.1.6",
+        "ex-c8-b1-d1": "8.1.7",
+        "ex-c8-b1-d2": "8.1.8"
+      }
+    },
+    "cac-dinh-ly-dang-cau-vanh-va-dinh-ly-tuong-ung": {
+      "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/02-cac-dinh-ly-dang-cau-vanh-va-dinh-ly-tuong-ung.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "02a00bc58c70f1f87345dfdf1bea8785f828118ad688b79c97c61407fe0d95c1",
+      "numberedBlocks": {
+        "thm-c8-b2-dang-cau-thu-nhat": "8.2.1",
+        "thm-c8-b2-dang-cau-thu-hai": "8.2.2",
+        "thm-c8-b2-dang-cau-thu-ba": "8.2.3",
+        "thm-c8-b2-dinh-ly-tuong-ung": "8.2.4",
+        "ex-c8-b2-a1": "8.2.1",
+        "ex-c8-b2-a2": "8.2.2",
+        "ex-c8-b2-b1": "8.2.3",
+        "ex-c8-b2-b2": "8.2.4",
+        "ex-c8-b2-c1": "8.2.5",
+        "ex-c8-b2-c2": "8.2.6",
+        "ex-c8-b2-d1": "8.2.7",
+        "ex-c8-b2-d2": "8.2.8"
+      }
+    },
+    "dac-so-cua-vanh-va-so-sanh-nhom-vanh": {
+      "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/03-dac-so-cua-vanh-va-so-sanh-nhom-vanh.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "ba5fdebe6cb83c050088c305b560f096270dabc3ee5c5f2bc7acaea252cf0505",
+      "numberedBlocks": {
+        "prop-c8-b3-dong-cau-don-vi": "8.3.1",
+        "def-c8-b3-dac-so": "8.3.2",
+        "thm-c8-b3-dac-so-mien-nguyen": "8.3.3",
+        "thm-c8-b3-dong-cau-frobenius": "8.3.4",
+        "ex-c8-b3-a1": "8.3.1",
+        "ex-c8-b3-a2": "8.3.2",
+        "ex-c8-b3-b1": "8.3.3",
+        "ex-c8-b3-b2": "8.3.4",
+        "ex-c8-b3-c1": "8.3.5",
+        "ex-c8-b3-c2": "8.3.6",
+        "ex-c8-b3-d1": "8.3.7",
+        "ex-c8-b3-d2": "8.3.8"
+      }
+    },
+    "bai-tap-va-tong-ket-chuong-8": {
+      "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/04-bai-tap-va-tong-ket-chuong-8.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "20253ae3e84a166028bd1c4bf2e4b2e8027ff7e179bd759918398d96fbddfc12",
+      "numberedBlocks": {
+        "thm-c8-b4-tinh-cung-so-thuc": "8.4.1",
+        "thm-c8-b4-phan-tich-luy-dang-tam": "8.4.2",
+        "ex-c8-b4-a1": "8.4.1",
+        "ex-c8-b4-a2": "8.4.2",
+        "ex-c8-b4-b1": "8.4.3",
+        "ex-c8-b4-b2": "8.4.4",
+        "ex-c8-b4-c1": "8.4.5",
+        "ex-c8-b4-c2": "8.4.6",
+        "ex-c8-b4-d1": "8.4.7",
+        "ex-c8-b4-d2": "8.4.8"
+      }
+    },
+    "nhan-dien-truong-truong-con-va-truong-con-nguyen-to": {
+      "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/01-nhan-dien-truong-truong-con-va-truong-con-nguyen-to.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "b926d3e9dfd851e2054f2fc369a6d1a82a50426523824534e2e9da794b4a692f",
+      "numberedBlocks": {
+        "thm-c9-b1-nhan-dien-truong": "9.1.1",
+        "def-c9-b1-truong-con": "9.1.2",
+        "thm-c9-b1-tieu-chuan-truong-con": "9.1.3",
+        "ex-c9-b1-q-can-2": "9.1.1",
+        "prop-c9-b1-giao-cac-truong-con": "9.1.4",
+        "def-c9-b1-truong-con-nguyen-to": "9.1.5",
+        "thm-c9-b1-phan-loai-truong-con-nguyen-to": "9.1.6",
+        "ex-c9-b1-a1": "9.1.1",
+        "ex-c9-b1-a2": "9.1.2",
+        "ex-c9-b1-b1": "9.1.3",
+        "ex-c9-b1-b2": "9.1.4",
+        "ex-c9-b1-c1": "9.1.5",
+        "ex-c9-b1-c2": "9.1.6",
+        "ex-c9-b1-d1": "9.1.7",
+        "ex-c9-b1-d2": "9.1.8"
+      }
+    },
+    "phep-dung-truong-cac-thuong-cua-mien-nguyen": {
+      "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/02-phep-dung-truong-cac-thuong-cua-mien-nguyen.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "548f23c258f10296289bcdc886862e854e34601cc2cff7dd49a090f6dd63e0ef",
+      "numberedBlocks": {
+        "prop-c9-b2-quan-he-tuong-duong": "9.2.1",
+        "counter-c9-b2-that-bai-khi-co-uoc-cua-khong": "9.2.1",
+        "thm-c9-b2-tinh-xac-dinh-tot-va-cau-truc-truong": "9.2.2",
+        "thm-c9-b2-nhung-chinh-tac": "9.2.3",
+        "ex-c9-b2-a1": "9.2.1",
+        "ex-c9-b2-a2": "9.2.2",
+        "ex-c9-b2-b1": "9.2.3",
+        "ex-c9-b2-b2": "9.2.4",
+        "ex-c9-b2-c1": "9.2.5",
+        "ex-c9-b2-c2": "9.2.6",
+        "ex-c9-b2-d1": "9.2.7",
+        "ex-c9-b2-d2": "9.2.8"
+      }
+    },
+    "tinh-chat-pho-dung-va-doi-chieu-vanh-thuong-truong-cac-thuong": {
+      "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/03-tinh-chat-pho-dung-va-doi-chieu-vanh-thuong-truong-cac-thuong.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "bafd117f487de854813182b0077d57038225de09e7ff0e85d9356011f0d29104",
+      "numberedBlocks": {
+        "thm-c9-b3-tinh-chat-pho-dung": "9.3.1",
+        "thm-c9-b3-tinh-duy-nhat": "9.3.2",
+        "ex-c9-b3-a1": "9.3.1",
+        "ex-c9-b3-a2": "9.3.2",
+        "ex-c9-b3-b1": "9.3.3",
+        "ex-c9-b3-b2": "9.3.4",
+        "ex-c9-b3-c1": "9.3.5",
+        "ex-c9-b3-c2": "9.3.6",
+        "ex-c9-b3-d1": "9.3.7",
+        "ex-c9-b3-d2": "9.3.8"
+      }
+    },
+    "bai-tap-chuong-9-va-tong-ket-hoc-phan": {
+      "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/04-bai-tap-chuong-9-va-tong-ket-hoc-phan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "187d3cb42a29f933d7c266ab1d9014d394e48d8a554a678fa6f076605d24b0ca",
+      "numberedBlocks": {
+        "thm-c9-b4-truong-huu-han-tuan-hoan": "9.4.1",
+        "ex-c9-b4-a1": "9.4.1",
+        "ex-c9-b4-a2": "9.4.2",
+        "ex-c9-b4-b1": "9.4.3",
+        "ex-c9-b4-b2": "9.4.4",
+        "ex-c9-b4-c1": "9.4.5",
+        "ex-c9-b4-c2": "9.4.6",
+        "ex-c9-b4-d1": "9.4.7",
+        "ex-c9-b4-d2": "9.4.8"
+      }
+    }
+  }
 }
