@@ -136,7 +136,7 @@ describe('Giai đoạn 4 — Giao diện SourcePanel, SubjectBibliography & Tran
     ).toBeInTheDocument();
 
     expect(screen.getByText(/0 lỗi kỹ thuật/i)).toBeInTheDocument();
-    expect(screen.getByText('Định nghĩa Nhóm và các tính chất cơ bản')).toBeInTheDocument();
+    expect(screen.getByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên')).toBeInTheDocument();
     expect(screen.getByText('Khái niệm Không gian Affine và Quy tắc Chasles')).toBeInTheDocument();
 
     // Lọc theo môn Hình học Affine
@@ -144,14 +144,18 @@ describe('Giai đoạn 4 — Giao diện SourcePanel, SubjectBibliography & Tran
     await user.click(within(subjectGroup).getByRole('button', { name: 'Hình học Affine' }));
 
     expect(screen.getByText('Khái niệm Không gian Affine và Quy tắc Chasles')).toBeInTheDocument();
-    expect(screen.queryByText('Định nghĩa Nhóm và các tính chất cơ bản')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên'),
+    ).not.toBeInTheDocument();
 
     // Kiểm tra hướng dẫn lệnh CLI
     expect(screen.getByText('npm.cmd run content:check')).toBeInTheDocument();
   });
 
   it('4. Trang bài học hiển thị thanh biên tập DEV và bảng Nguồn tham khảo & Đối chiếu giáo trình', async () => {
-    renderRoute('/mon-hoc/cau-truc-dai-so/nhom/dinh-nghia-nhom');
+    renderRoute(
+      '/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/nua-nhom-vi-nhom-va-tien-de-nhom',
+    );
 
     expect(
       await screen.findByRole('complementary', { name: /Thanh thông tin biên tập kỹ thuật/i }),

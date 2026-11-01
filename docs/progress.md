@@ -55,6 +55,16 @@ Tài liệu này theo dõi trạng thái thực tế của từng giai đoạn s
 - **8 Component tương tác (`src/content-runtime/figure-kit/`)**: `AffinePlane`, `DraggablePoint`, `VectorArrow`, `AffineLine`, `AffineFrame`, `Parallelogram`, `Barycenter`, `AffineMapDemo` kèm nạp lười (`LazyFigureKit.tsx` + chunk `vendor-mafs`).
 - **3 hình mẫu trong bài học Hình học Affine & Trang `/dev/figures`**: Tích hợp vào [`01-khong-gian-affine.mdx`](file:///d:/Learning-universe/content/affine-geometry/01-khong-gian-affine/01-khong-gian-affine.mdx) và phòng thí nghiệm `/dev/figures` (`DevFiguresPage.tsx`).
 
+### 2.6 Khởi tạo học liệu Cấu trúc Đại số (Chương 0 & Chương 1)
+
+- **Chương 0: Ngôn ngữ và công cụ đại số (`00-ngon-ngu-va-cong-cu-dai-so`)**: 4 bài học hoàn chỉnh (`01-tap-hop-anh-xa-va-cong-cu-so-hoc`, `02-quan-he-tuong-duong-va-tap-thuong`, `03-phep-toan-hai-ngoi-va-tinh-xac-dinh-tot`, `04-bai-tap-va-tong-ket-chuong-0`).
+- **Chương 1: Nhóm và các ví dụ cơ bản (`01-nhom-va-cac-vi-du-co-ban`)**: 4 bài học hoàn chỉnh theo giáo trình TS. Huỳnh Việt Khánh (tr. 17–36, 166–168):
+  - `01-nua-nhom-vi-nhom-va-tien-de-nhom.mdx`: Nửa nhóm, vị nhóm, nhóm, nhóm abel; quy trình 4 bước kiểm tra nhóm; Định lý 1.8 (duy nhất đơn vị/nghịch đảo, giản ước, nghiệm phương trình, $(ab)^{-1} = b^{-1}a^{-1}$, song ánh tịnh tiến $L_a, R_a$); 4 bài tập A, B, C, D kèm thang điểm 1.00.
+  - `02-luy-thua-nguyen-nhom-huu-han-va-bang-cayley.mdx`: Lũy thừa nguyên $a^n$, bội nguyên $na$, Định lý 1.10, cấp của nhóm, Định lý 1.12 bảng Cayley và phân tích nhóm cấp 4; 4 bài tập A, B, C, D kèm thang điểm 1.00.
+  - `03-cac-ho-nhom-co-ban.mdx`: 7 họ nhóm cơ bản ($(\Z, +)$, $(\Z/n\Z, +)$, $U(n)$, $S_n$, $D_{2n}$, $\operatorname{GL}_2(\R)$, $\operatorname{Aff}(\R)$); Mệnh đề 1.21 (biểu diễn ma trận của nhóm affine); Bảng 8 nhóm mẫu (tr. 30); 4 bài tập A, B, C, D (bao gồm Bài 1.20 nhóm cấp chẵn có phần tử cấp 2).
+  - `04-bai-tap-va-tong-ket-chuong-1.mdx`: Sơ đồ tư duy phân cấp cấu trúc; bảng thuật ngữ đối chiếu Việt–Anh; phương pháp giải trọng tâm; 4 bài tập chuyên đề A, B, C, D (phục dựng bảng Cayley, tiên đề tối thiểu một phía - Bài 1.9, nhóm $x^2 = e$ là abel - Bài 1.11, phân loại nhóm cấp $\le 5$ - Bài 1.27–1.28).
+- **Kiểm định học thuật & Kiểm thử kỹ thuật**: Toàn bộ 4 bài ở trạng thái `status: draft`, vượt qua kiểm tra `content:check` với 0 lỗi, `npm.cmd run check` (45/45 test passed) và `npm.cmd run build` thành công.
+
 ---
 
 ## 3. Những hạng mục chưa triển khai (Thuộc GĐ6 – GĐ8)

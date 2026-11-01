@@ -34,9 +34,11 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
       name: /Tìm kiếm môn học hoặc bài học/i,
     });
 
-    await user.type(searchInput, 'nhom con');
+    await user.type(searchInput, 'Cayley');
     const resultsRegion = await screen.findByRole('region', { name: /Kết quả tìm kiếm/i });
-    expect(within(resultsRegion).getByText(/Nhóm con và Tiêu chuẩn nhóm con/i)).toBeInTheDocument();
+    expect(
+      within(resultsRegion).getByText(/Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley/i),
+    ).toBeInTheDocument();
 
     await user.clear(searchInput);
     await user.type(searchInput, 'Chasles');
@@ -54,26 +56,28 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
       await screen.findByRole('heading', { level: 1, name: 'Cấu trúc đại số' }),
     ).toBeInTheDocument();
 
-    // Hiển thị đủ 2 bài trong Chương 1
-    expect(screen.getByText('Định nghĩa Nhóm và các tính chất cơ bản')).toBeInTheDocument();
-    expect(screen.getByText('Nhóm con và Tiêu chuẩn nhóm con')).toBeInTheDocument();
+    // Hiển thị các bài trong môn học
+    expect(screen.getByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên')).toBeInTheDocument();
+    expect(screen.getByText('Hệ thống bài tập và tổng kết Chương 1')).toBeInTheDocument();
 
-    // Lọc theo mức độ "Trung bình" -> chỉ còn bài 1.2
+    // Lọc theo mức độ "Trung bình" -> bài basic bị ẩn, bài intermediate giữ lại
     await user.click(screen.getByRole('button', { name: 'Trung bình' }));
-    expect(screen.queryByText('Định nghĩa Nhóm và các tính chất cơ bản')).not.toBeInTheDocument();
-    expect(screen.getByText('Nhóm con và Tiêu chuẩn nhóm con')).toBeInTheDocument();
+    expect(
+      screen.queryByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên'),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText('Hệ thống bài tập và tổng kết Chương 1')).toBeInTheDocument();
 
-    // Xóa bộ lọc -> hiển thị lại cả 2 bài
+    // Xóa bộ lọc -> hiển thị lại
     await user.click(screen.getByRole('button', { name: /Xóa bộ lọc/i }));
-    expect(screen.getByText('Định nghĩa Nhóm và các tính chất cơ bản')).toBeInTheDocument();
+    expect(screen.getByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên')).toBeInTheDocument();
 
-    // Khi bật chế độ Học viên và đánh dấu hoàn thành 1 bài -> tiến độ chương 1 hiển thị 1/2 bài, tổng thể 17% (1/6 bài)
+    // Khi bật chế độ Học viên và đánh dấu hoàn thành 1 bài -> tiến độ chương 1 hiển thị 1/4 bài, tổng thể 13% (1/8 bài)
     act(() => {
       useLearningStore.getState().enableLearnerMode();
-      useLearningStore.getState().toggleLessonCompleted('dinh-nghia-nhom');
+      useLearningStore.getState().toggleLessonCompleted('nua-nhom-vi-nhom-va-tien-de-nhom');
     });
-    expect((await screen.findAllByText('17%')).length).toBeGreaterThan(0);
-    expect(screen.getByText('Hoàn thành 1/2')).toBeInTheDocument();
+    expect((await screen.findAllByText('13%')).length).toBeGreaterThan(0);
+    expect(screen.getByText('Hoàn thành 1/4')).toBeInTheDocument();
   });
 
   it('3. Không gian môn học (/mon-hoc/hinh-hoc-affine): dùng chung hệ thống component với cấu trúc riêng', async () => {
@@ -87,12 +91,14 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
 
   it('4. Trang bài học: hiển thị MDX, mục lục, hoàn thành bài (D1), ghi chú và chuyển bài tiếp theo', async () => {
     const user = userEvent.setup();
-    renderRoute('/mon-hoc/cau-truc-dai-so/nhom/dinh-nghia-nhom');
+    renderRoute(
+      '/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/nua-nhom-vi-nhom-va-tien-de-nhom',
+    );
 
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'Định nghĩa Nhóm và các tính chất cơ bản',
+        name: 'Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên',
       }),
     ).toBeInTheDocument();
 
@@ -102,8 +108,8 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
 
     const tocNav = screen.getByRole('navigation', { name: 'Mục lục bài học' });
     expect(
-      within(tocNav).getByRole('link', { name: /1\. Phép toán hai ngôi và Định nghĩa Nhóm/i }),
-    ).toHaveAttribute('href', '#1-phep-toan-hai-ngoi-va-dinh-nghia-nhom');
+      within(tocNav).getByRole('link', { name: /1\. Từ phép biến hình đến các tiên đề của Nhóm/i }),
+    ).toHaveAttribute('href', '#1-tu-phep-bien-hinh-den-cac-tien-de-cua-nhom');
 
     // Ở chế độ Khách (Guest), bấm "Đánh dấu hoàn thành" mở hộp thoại LoginPromptDialog (D1)
     const completeButtons = screen.getAllByRole('button', { name: /Đánh dấu hoàn thành/i });
@@ -130,16 +136,16 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     await user.click(screen.getByRole('button', { name: /Lưu ghi chú/i }));
     expect(await screen.findByText(/Đã lưu ghi chú thành công/i)).toBeInTheDocument();
 
-    // Điều hướng sang Bài tiếp theo (Bài 1.2: Nhóm con và Tiêu chuẩn nhóm con)
+    // Điều hướng sang Bài tiếp theo (Bài 1.2: Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley)
     const nextLink = screen.getByRole('link', {
-      name: /Bài tiếp theo.*Nhóm con và Tiêu chuẩn nhóm con/i,
+      name: /Bài tiếp theo.*Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley/i,
     });
     await user.click(nextLink);
 
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'Nhóm con và Tiêu chuẩn nhóm con',
+        name: 'Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley',
       }),
     ).toBeInTheDocument();
   });
@@ -150,7 +156,7 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'Định nghĩa Nhóm và các tính chất cơ bản',
+        name: 'Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên',
       }),
     ).toBeInTheDocument();
   });

@@ -30,22 +30,27 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
 
   it('nạp và hiển thị bài học mẫu Cấu trúc đại số với đầy đủ số hiệu, KaTeX, Ref và Proof', async () => {
     const user = userEvent.setup();
-    const location = getLessonBySlug('algebraic-structures', 'nhom', 'dinh-nghia-nhom');
+    const location = getLessonBySlug(
+      'algebraic-structures',
+      'nhom-va-cac-vi-du-co-ban',
+      'nua-nhom-vi-nhom-va-tien-de-nhom',
+    );
     expect(location).toBeDefined();
-    expect(getLessonById('dinh-nghia-nhom')?.lesson.title).toBe(
-      'Định nghĩa Nhóm và các tính chất cơ bản',
+    expect(getLessonById('nua-nhom-vi-nhom-va-tien-de-nhom')?.lesson.title).toBe(
+      'Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên',
     );
 
-    const compiled = await loadLessonModule('dinh-nghia-nhom');
+    const compiled = await loadLessonModule('nua-nhom-vi-nhom-va-tien-de-nhom');
     expect(compiled.lessonMeta.blocks.map((b) => b.label)).toEqual([
       'Định nghĩa 1.1.1',
-      'Định nghĩa 1.1.2',
-      'Mệnh đề 1.1.3',
-      'Định lý 1.1.4',
-      'Hệ quả 1.1.5',
       'Ví dụ 1.1.1',
       'Phản ví dụ 1.1.2',
+      'Định lý 1.1.2',
+      'Hệ quả 1.1.3',
       'Bài tập 1.1.1',
+      'Bài tập 1.1.2',
+      'Bài tập 1.1.3',
+      'Bài tập 1.1.4',
     ]);
 
     const { container } = render(
@@ -57,20 +62,20 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(container.textContent).toContain('với mọi');
 
     // Kiểm tra các nhãn khối đã đánh số tự động (bao gồm cả thẻ khối và tham chiếu <Ref />)
-    expect(screen.getByText('Định nghĩa 1.1.1')).toBeInTheDocument();
-    expect(screen.getAllByText('Định lý 1.1.4').length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText('Định nghĩa 1.1.1').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Định lý 1.1.2').length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText('Ví dụ 1.1.1')).toBeInTheDocument();
     expect(screen.getByText('Phản ví dụ 1.1.2')).toBeInTheDocument();
     expect(screen.getByText('Bài tập 1.1.1')).toBeInTheDocument();
 
-    // Kiểm tra tham chiếu chéo <Ref to="def-nhom" />
-    const refLinks = screen.getAllByRole('link', { name: 'Định nghĩa 1.1.2' });
+    // Kiểm tra tham chiếu chéo <Ref to="def-c1-b1-nua-nhom-vi-nhom-nhom" />
+    const refLinks = screen.getAllByRole('link', { name: 'Định nghĩa 1.1.1' });
     expect(refLinks.length).toBeGreaterThan(0);
-    expect(refLinks[0]).toHaveAttribute('href', '#def-nhom');
+    expect(refLinks[0]).toHaveAttribute('href', '#def-c1-b1-nua-nhom-vi-nhom-nhom');
 
-    // Kiểm tra đóng/mở chứng minh của Mệnh đề 1.1.3
+    // Kiểm tra đóng/mở chứng minh của Hệ quả 1.1.3
     const proofTrigger = screen.getByRole('button', {
-      name: /Chứng minh \(Mệnh đề 1\.1\.3\)/i,
+      name: /Chứng minh \(Hệ quả 1\.1\.3\)/i,
     });
     await user.click(proofTrigger);
     expect(screen.getAllByLabelText('Kết thúc chứng minh').length).toBeGreaterThan(0);

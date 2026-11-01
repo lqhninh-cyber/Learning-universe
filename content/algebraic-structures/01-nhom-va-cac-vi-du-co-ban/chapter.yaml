@@ -1,0 +1,8 @@
+id: nhom-va-cac-vi-du-co-ban
+number: 1
+title: Nhóm và các ví dụ cơ bản
+description: 'Từ phép biến hình khả nghịch đến các tiên đề nhóm, quy tắc giản ước, lũy thừa nguyên, bảng Cayley và 7 họ nhóm cơ bản.'
+objectives:
+  - 'Phân biệt được nửa nhóm, vị nhóm, nhóm và nhóm abel; vận dụng thành thạo quy trình 4 bước kiểm tra một nhóm.'
+  - 'Chứng minh và áp dụng được tính duy nhất của đơn vị, nghịch đảo, luật giản ước và quy tắc lũy thừa nguyên.'
+  - 'Tính toán thành thạo trên các họ nhóm chuẩn: Z, Z/nZ, U(n), Sym(X), Sn, D2n, GL2(R) và Aff(R).'

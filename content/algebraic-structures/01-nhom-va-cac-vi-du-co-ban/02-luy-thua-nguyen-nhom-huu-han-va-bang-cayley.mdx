@@ -1,0 +1,429 @@
+---
+id: luy-thua-nguyen-nhom-huu-han-va-bang-cayley
+title: 'Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley'
+description: 'Khảo sát quy tắc lũy thừa nguyên trong nhóm nhân và bội nguyên trong nhóm cộng; chứng minh các định lý lũy thừa; tìm hiểu cấp của nhóm và cấu trúc bảng Cayley.'
+estimatedMinutes: 30
+level: basic
+prerequisites:
+  - nua-nhom-vi-nhom-va-tien-de-nhom
+tags:
+  - lũy thừa nguyên
+  - bội nguyên
+  - cấp của nhóm
+  - bảng Cayley
+  - nhóm hữu hạn
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '22-24'
+    sections: 'Mục 1.4, 1.5'
+    note: 'Định lý 1.10 (Quy tắc lũy thừa nguyên), cấp của nhóm và Định lý 1.12 (Bảng Cayley)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '20-25'
+    sections: 'Chương 1, Mục 1.2'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Thao tác thành thạo quy tắc lũy thừa nguyên:** Nắm vững định nghĩa $a^n$ ($n \in \Z$) trong nhóm nhân và $na$ trong nhóm cộng; phát biểu và chứng minh các quy tắc lũy thừa $a^m a^n = a^{m+n}$ và $(a^m)^n = a^{mn}$.
+2. **Hiểu bản chất của cấp nhóm và bảng Cayley:** Nắm vững định nghĩa cấp của nhóm $|G|$; phát biểu và chứng minh định lý đặc trưng của bảng Cayley: mỗi phần tử xuất hiện đúng một lần trên mỗi hàng và mỗi cột.
+3. **Phân tích cấu trúc nhóm cấp nhỏ:** Sử dụng bảng Cayley để giải các bài toán khuyết dữ liệu và phân biệt hai nhóm cấp 4 cơ bản: nhóm cyclic $\Z/4\Z$ và nhóm bốn Klein $V_4$.
+</Note>
+
+**Kiến thức tiên quyết:** Khái niệm nhóm, tính duy nhất của đơn vị và nghịch đảo, luật giản ước và tính song ánh của phép tịnh tiến đã học ở Bài 1.1 (<Cite source="gt-ctds-hvk-2026" page="18-21" note="Mục 1.2 - 1.3" />).
+
+## 1. Quy tắc lũy thừa nguyên và bội nguyên
+
+Trong một nhóm $(G, \cdot)$, phép nhân hai ngôi cho phép ta nhân lặp lại một phần tử $a \in G$ với chính nó. Việc mở rộng số mũ sang toàn bộ tập số nguyên $\Z$ được thực hiện bằng quy nạp (<Cite source="gt-ctds-hvk-2026" page="22" note="Mục 1.4" />).
+
+<Definition
+  id="def-c1-b2-luy-thua-nguyen"
+  title="Lũy thừa nguyên trong nhóm nhân và bội nguyên trong nhóm cộng"
+  original="Mục 1.4"
+  source="gt-ctds-hvk-2026"
+  page="22"
+>
+Cho $(G, \cdot)$ là một nhóm với phần tử đơn vị $e$ và $a \in G$.
+
+1. Với mỗi số nguyên không âm $n \ge 0$, **lũy thừa bậc $n$** của $a$ được định nghĩa bằng quy nạp:
+   $$
+   a^0 = e, \quad a^1 = a, \quad a^n = a^{n-1} \cdot a \quad (n \ge 2).
+   $$
+2. Với mỗi số nguyên âm $n < 0$, ta đặt:
+   $$
+   a^n = (a^{-1})^{-n} = (a^{-1})^{|n|}.
+   $$
+3. Đối với nhóm abel $(G, +)$ viết theo **ký hiệu cộng** với phần tử không $0$, lũy thừa được gọi là **bội nguyên**:
+   $$
+   0a = 0_G, \quad 1a = a, \quad na = (n-1)a + a \quad (n \ge 2); \quad na = (-n)(-a) \quad (n < 0).
+   $$
+</Definition>
+
+Định lý sau đây tổng kết các quy tắc biến đổi lũy thừa quen thuộc trong trường số thực và mở rộng cho một nhóm bất kỳ (<Cite source="gt-ctds-hvk-2026" page="22-23" note="Định lý 1.10" />).
+
+<Theorem
+  id="thm-c1-b2-quy-tac-luy-thua"
+  title="Các quy tắc lũy thừa nguyên trong nhóm"
+  original="Định lý 1.10"
+  source="gt-ctds-hvk-2026"
+  page="22-23"
+>
+Cho $(G, \cdot)$ là một nhóm và $a, b \in G$. Khi đó với mọi $m, n \in \Z$:
+
+1. $a^m \cdot a^n = a^{m+n}$.
+2. $(a^m)^n = a^{mn}$.
+3. $a^{-n} = (a^n)^{-1}$.
+4. Nếu hai phần tử $a$ và $b$ **giao hoán với nhau** ($ab = ba$) thì:
+   $$
+   (ab)^n = a^n b^n, \quad \forall n \in \Z.
+   $$
+</Theorem>
+
+<Proof of="thm-c1-b2-quy-tac-luy-thua" defaultOpen={true}>
+1. **Chứng minh $a^m a^n = a^{m+n}$:**
+   - *Trường hợp $m, n \ge 0$:* Cố định $m \ge 0$. Với $n = 0$, $a^m a^0 = a^m e = a^m = a^{m+0}$. Giả sử đẳng thức đúng đến $n \ge 0$. Khi đó:
+     $$
+     a^m a^{n+1} = a^m (a^n a) = (a^m a^n) a = a^{m+n} a = a^{(m+n)+1} = a^{m+(n+1)}.
+     $$
+     Theo nguyên lý quy nạp, đẳng thức đúng với mọi $m, n \ge 0$.
+   - *Trường hợp $a^n a^{-n} = e$:* Theo định nghĩa lũy thừa số mũ âm, $a^{-n} = (a^{-1})^n$. Ta có $a a^{-1} = e$, quy nạp cho thấy $(a^n)(a^{-1})^n = e$, do đó $(a^n)^{-1} = (a^{-1})^n = a^{-n}$, chứng minh luôn ý (3).
+   - *Các trường hợp $m, n$ mang dấu khác nhau:* Quy nạp và biến đổi dựa trên việc giản ước từng cặp $a a^{-1} = e$.
+2. **Chứng minh $(a^m)^n = a^{mn}$:** Quy nạp tương tự theo $n \ge 0$ dùng ý (1), rồi áp dụng ý (3) khi $n < 0$.
+3. **Chứng minh $(ab)^n = a^n b^n$ khi $ab = ba$:**
+   - Với $n = 0$: $(ab)^0 = e = e \cdot e = a^0 b^0$.
+   - Giả sử đúng với $n \ge 0$. Vì $ab = ba$, ta dễ dàng chỉ ra bằng quy nạp $b a^n = a^n b$. Do đó:
+     $$
+     (ab)^{n+1} = (ab)^n (ab) = (a^n b^n)(ab) = a^n (b^n a) b = a^n (a b^n) b = (a^n a)(b^n b) = a^{n+1} b^{n+1}.
+     $$
+   - Khi $n < 0$, đặt $k = -n > 0$. Vì $ab = ba \implies b^{-1}a^{-1} = a^{-1}b^{-1} \implies (ab)^{-1} = a^{-1}b^{-1}$, áp dụng trường hợp số mũ dương ta có $(ab)^n = ((ab)^{-1})^k = (a^{-1}b^{-1})^k = (a^{-1})^k (b^{-1})^k = a^{-k} b^{-k} = a^n b^n$.
+</Proof>
+
+<Warning title="Công thức (ab)^n = a^n b^n sai trong nhóm không giao hoán">
+Trong một nhóm không abel, công thức $(ab)^2 = a^2 b^2$ nói chung **sai** vì:
+$$
+(ab)^2 = (ab)(ab) = a(ba)b.
+$$
+Đẳng thức $a(ba)b = a(ab)b = a^2 b^2$ chỉ xảy ra khi và chỉ khi $ba = ab$ (sau khi giản ước $a$ ở bên trái và $b$ ở bên phải) (<Cite source="gt-ctds-hvk-2026" page="23" note="Mục 1.4" />).
+</Warning>
+
+<Counterexample id="cex-c1-b2-luy-thua-khong-giao-hoan" title="Lũy thừa của tích trong nhóm ma trận GL_2(R)">
+Trong nhóm $\operatorname{GL}_2(\R)$, xét hai ma trận:
+$$
+A = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \quad B = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}.
+$$
+Ta có $A^2 = I_2$, $B^2 = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix}$, suy ra $A^2 B^2 = I_2 B^2 = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix}$.
+Mặt khác, $AB = \begin{pmatrix} 0 & 1 \\ 1 & 1 \end{pmatrix}$, do đó:
+$$
+(AB)^2 = \begin{pmatrix} 0 & 1 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 0 & 1 \\ 1 & 1 \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 1 & 2 \end{pmatrix} \neq A^2 B^2.
+$$
+</Counterexample>
+
+## 2. Cấp của nhóm và Bảng Cayley
+
+Khi nhóm có số lượng phần tử hữu hạn, toàn bộ cấu trúc đại số của nhóm có thể được mô tả tường minh qua một bảng hình chữ nhật mang tên nhà toán học Arthur Cayley (<Cite source="gt-ctds-hvk-2026" page="23-24" note="Mục 1.5" />).
+
+<Definition
+  id="def-c1-b2-cap-nhom-va-bang-cayley"
+  title="Cấp của nhóm và bảng Cayley"
+  original="Mục 1.5"
+  source="gt-ctds-hvk-2026"
+  page="23-24"
+>
+1. Số lượng phần tử của một nhóm $G$, ký hiệu là $|G|$ (hoặc $\operatorname{card}(G)$), được gọi là **cấp của nhóm** (*order of the group*). Nhóm $G$ được gọi là **nhóm hữu hạn** nếu $|G| < \infty$, và là **nhóm vô hạn** nếu $|G| = \infty$.
+2. Cho $G = \{g_1, g_2, \dots, g_n\}$ là một nhóm hữu hạn cấp $n$. **Bảng Cayley** (hay bảng nhân) của $G$ là bảng vuông kích thước $n \times n$, trong đó ô nằm ở hàng $g_i$ và cột $g_j$ chứa phần tử tích $g_i \cdot g_j$:
+   $$
+   \begin{array}{c|cccc}
+   \cdot & g_1 & g_2 & \dots & g_n \\
+   \hline
+   g_1 & g_1 g_1 & g_1 g_2 & \dots & g_1 g_n \\
+   g_2 & g_2 g_1 & g_2 g_2 & \dots & g_2 g_n \\
+   \vdots & \vdots & \vdots & \ddots & \vdots \\
+   g_n & g_n g_1 & g_n g_2 & \dots & g_n g_n
+   \end{array}
+   $$
+</Definition>
+
+Định lý dưới đây là tính chất hình học đẹp mắt nhất của bảng Cayley, khẳng định bảng Cayley của một nhóm chính là một **hình vuông Latin** (*Latin square*) (<Cite source="gt-ctds-hvk-2026" page="23-24" note="Định lý 1.12" />).
+
+<Theorem
+  id="thm-c1-b2-tinh-chat-bang-cayley"
+  title="Tính chất hoán vị trên các hàng và cột của bảng Cayley"
+  original="Định lý 1.12"
+  source="gt-ctds-hvk-2026"
+  page="23-24"
+>
+Cho $G$ là một nhóm hữu hạn. Khi đó trong bảng Cayley của $G$:
+
+1. Mỗi phần tử của $G$ xuất hiện **đúng một lần trên mỗi hàng**.
+2. Mỗi phần tử của $G$ xuất hiện **đúng một lần trên mỗi cột**.
+3. Nhóm $G$ là **nhóm abel** khi và chỉ khi bảng Cayley **đối xứng qua đường chéo chính**.
+</Theorem>
+
+<Proof of="thm-c1-b2-tinh-chat-bang-cayley" defaultOpen={true}>
+1. Xét hàng ứng với phần tử $a \in G$. Các phần tử trên hàng này chính là các giá trị của ánh xạ tịnh tiến trái $L_a: G \to G, x \mapsto ax$ khi $x$ chạy khắp $G$. Theo Hệ quả 1.1.3 ở Bài 1.1, ánh xạ $L_a$ là một song ánh từ tập hữu hạn $G$ vào chính nó, do đó là một hoán vị của $G$. Vì vậy, mỗi phần tử $y \in G$ xuất hiện đúng một lần dưới dạng $ax$ trên hàng $a$ (tại cột $x = a^{-1}y$).
+2. Hoàn toàn tương tự, các phần tử trên cột $b \in G$ là ảnh của song ánh tịnh tiến phải $R_b: G \to G, x \mapsto xb$, nên mỗi phần tử của $G$ xuất hiện đúng một lần trên mỗi cột.
+3. Ô tại hàng $a$, cột $b$ chứa $ab$; ô tại hàng $b$, cột $a$ chứa $ba$. Bảng Cayley đối xứng qua đường chéo chính khi và chỉ khi ô $(a, b)$ trùng ô $(b, a)$ với mọi $a, b \in G$, tức là $ab = ba$ với mọi $a, b \in G$, hay $G$ là nhóm abel.
+</Proof>
+
+<Example id="ex-c1-b2-bang-cayley-cap-4" title="Hai cấu trúc nhóm cấp 4 phân biệt qua bảng Cayley">
+Mọi nhóm cấp 4 đều là nhóm abel, nhưng có đúng hai bảng Cayley không đẳng cấu với nhau (<Cite source="gt-ctds-hvk-2026" page="24" note="Mục 1.5" />):
+
+1. **Nhóm cyclic cấp 4 (như $\Z/4\Z = \{[0], [1], [2], [3]\}$):**
+   $$
+   \begin{array}{c|cccc}
+   + & [0] & [1] & [2] & [3] \\
+   \hline
+   [0] & [0] & [1] & [2] & [3] \\
+   [1] & [1] & [2] & [3] & [0] \\
+   [2] & [2] & [3] & [0] & [1] \\
+   [3] & [3] & [0] & [1] & [2]
+   \end{array}
+   $$
+   Trong nhóm này có hai phần tử thỏa mãn $x + x \neq [0]$ (là $[1]$ và $[3]$).
+2. **Nhóm bốn Klein $V_4 = \{e, a, b, c\}$:**
+   Mọi phần tử khác đơn vị đều có bình phương bằng đơn vị ($a^2 = b^2 = c^2 = e$) và tích hai phần tử khác nhau cho ra phần tử thứ ba ($ab = ba = c, bc = cb = a, ca = ac = b$):
+   $$
+   \begin{array}{c|cccc}
+   \cdot & e & a & b & c \\
+   \hline
+   e & e & a & b & c \\
+   a & a & e & c & b \\
+   b & b & c & e & a \\
+   c & c & b & a & e
+   \end{array}
+   $$
+   Đường chéo chính của bảng Cayley của nhóm Klein chỉ toàn là phần tử đơn vị $e$.
+</Example>
+
+## 3. Bài tập tự luyện
+
+<Exercise id="exr-c1-b2-a1" title="[Nhóm A · Mã CTDS-C1-B2-A01] Lập bảng Cayley của nhóm U(8) và tính lũy thừa ma trận">
+- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
+- **Chủ đề:** Bảng Cayley của nhóm các phần tử khả nghịch $U(8)$ và tính lũy thừa nguyên trong nhóm ma trận
+- **Mục tiêu đánh giá:** Lập đúng bảng Cayley, nhận xét phần tử đường chéo chính và tính đúng lũy thừa nguyên $A^n$ *(Đánh giá thường xuyên)*
+- **Mức độ khó:** Cơ bản (Mức 1)
+- **Nguồn kiến thức liên quan:** <Ref to="def-c1-b2-luy-thua-nguyen" /> · <Ref to="thm-c1-b2-tinh-chat-bang-cayley" /> · <Cite source="gt-ctds-hvk-2026" page="22-24, 30" note="Mục 1.4 - 1.5 & Bài tập 1.4" />
+
+**Đề bài:**
+
+1. Xét nhóm các lớp khả nghịch modulo $8$: $U(8) = \{[1]_8, [3]_8, [5]_8, [7]_8\}$ với phép nhân lớp đồng dư. Hãy lập bảng Cayley của $U(8)$, kiểm tra tính đối xứng của bảng và cho biết nhóm này có cấu trúc giống $\Z/4\Z$ hay giống nhóm Klein $V_4$.
+2. Trong nhóm $\operatorname{GL}_2(\R)$, cho ma trận $A = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$. Chứng minh bằng quy nạp công thức $A^n = \begin{pmatrix} 1 & n \\ 0 & 1 \end{pmatrix}$ với mọi $n \ge 1$, rồi tìm ma trận $A^{-10}$.
+</Exercise>
+
+<Hint>
+Ở câu (1), tính $3^2, 5^2, 7^2$ modulo $8$ để thấy các phần tử đường chéo chính. Ở câu (2), dùng công thức nghịch đảo $A^{-n} = (A^{-1})^n$ hoặc thay $n = -10$.
+</Hint>
+
+<Solution>
+1. **Lập bảng Cayley của $U(8)$:**
+   Ta có $3 \cdot 3 = 9 \equiv 1$, $5 \cdot 5 = 25 \equiv 1$, $7 \cdot 7 = 49 \equiv 1 \pmod 8$; $3 \cdot 5 = 15 \equiv 7$, $3 \cdot 7 = 21 \equiv 5$, $5 \cdot 7 = 35 \equiv 3 \pmod 8$.
+   Bảng Cayley của $U(8)$:
+   $$
+   \begin{array}{c|cccc}
+   \cdot & [1] & [3] & [5] & [7] \\
+   \hline
+   [1] & [1] & [3] & [5] & [7] \\
+   [3] & [3] & [1] & [7] & [5] \\
+   [5] & [5] & [7] & [1] & [3] \\
+   [7] & [7] & [5] & [3] & [1]
+   \end{array}
+   $$
+   - Bảng đối xứng qua đường chéo chính nên $U(8)$ là nhóm abel.
+   - Đường chéo chính gồm toàn phần tử đơn vị $[1]$, nghĩa là $x^2 = [1]$ với mọi $x \in U(8)$. Do đó $U(8)$ có cấu trúc hoàn toàn trùng khớp với **nhóm bốn Klein $V_4$** (không giống $\Z/4\Z$).
+2. **Tính lũy thừa của ma trận $A$:**
+   - Với $n = 1$: $A^1 = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$, đúng. Giả sử $A^k = \begin{pmatrix} 1 & k \\ 0 & 1 \end{pmatrix}$ với $k \ge 1$. Khi đó:
+     $$
+     A^{k+1} = A^k A = \begin{pmatrix} 1 & k \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & k+1 \\ 0 & 1 \end{pmatrix}.
+     $$
+     Vậy công thức đúng với mọi $n \ge 1$.
+   - Vì $\det(A) = 1$, ma trận nghịch đảo là $A^{-1} = \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix}$. Do đó:
+     $$
+     A^{-10} = (A^{-1})^{10} = \begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix}^{10} = \begin{pmatrix} 1 & -10 \\ 0 & 1 \end{pmatrix}.
+     $$
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1a | Lập đúng bảng Cayley của $U(8)$ | `0,30 đ` |
+| 1b | Nhận xét tính đối xứng và kết luận $U(8)$ có cấu trúc nhóm Klein $V_4$ | `0,20 đ` |
+| 2a | Chứng minh đúng $A^n = \begin{pmatrix} 1 & n \\ 0 & 1 \end{pmatrix}$ bằng quy nạp với $n \ge 1$ | `0,25 đ` |
+| 2b | Tính đúng $A^{-10} = \begin{pmatrix} 1 & -10 \\ 0 & 1 \end{pmatrix}$ | `0,25 đ` |
+</Solution>
+
+<Exercise id="exr-c1-b2-b1" title="[Nhóm B · Mã CTDS-C1-B2-B01] Điền bảng Cayley khuyết và điều kiện giao hoán từ lũy thừa">
+- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
+- **Chủ đề:** Khôi phục bảng Cayley dựa vào tính chất hoán vị trên hàng/cột và chứng minh tính giao hoán
+- **Mục tiêu đánh giá:** Vận dụng <Ref to="thm-c1-b2-tinh-chat-bang-cayley" /> để hoàn thiện bảng nhân và áp dụng luật giản ước biến đổi đẳng thức lũy thừa *(Đánh giá quá trình)*
+- **Mức độ khó:** Trung bình (Mức 2)
+- **Nguồn kiến thức liên quan:** <Ref to="thm-c1-b2-quy-tac-luy-thua" /> · <Ref to="thm-c1-b2-tinh-chat-bang-cayley" /> · <Cite source="gt-ctds-hvk-2026" page="23-24, 32" note="Định lý 1.10, 1.12 & Bài tập 1.15, 1.17" />
+
+**Đề bài:**
+
+1. Cho $G = \{e, a, b, c\}$ là một nhóm với phần tử đơn vị $e$. Giả sử bảng Cayley của $G$ có một số ô đã biết như sau:
+   $$
+   \begin{array}{c|cccc}
+   \cdot & e & a & b & c \\
+   \hline
+   e & e & a & b & c \\
+   a & a & e & ? & ? \\
+   b & b & ? & ? & ? \\
+   c & c & ? & ? & ?
+   \end{array}
+   $$
+   Biết rằng $a^2 = e$. Hãy hoàn thành các ô còn lại của bảng Cayley trên và chỉ rõ lập luận ở từng bước.
+2. Cho nhóm $G$ thỏa mãn đẳng thức $(ab)^2 = a^2 b^2$ với **mọi** $a, b \in G$. Bằng cách khai triển và dùng luật giản ước, hãy chứng minh rằng $G$ là một nhóm abel.
+</Exercise>
+
+<Hint>
+Ở câu (1), hàng $a$ đã có $a, e$, còn thiếu $b, c$. Nếu $ab = b$ thì $a = e$ (vô lý), do đó $ab = c$ và $ac = b$. Tiếp tục suy luận trên các cột. Ở câu (2), viết $(ab)^2 = abab$ rồi giản ước $a$ bên trái và $b$ bên phải.
+</Hint>
+
+<Solution>
+1. **Hoàn thành bảng Cayley:**
+   - Trên hàng $a$: Hai phần tử còn lại là $b$ và $c$. Nếu $ab = b$ thì theo luật giản ước phải $a = e$, mâu thuẫn vì $a \neq e$. Do đó bắt buộc $ab = c$ và $ac = b$.
+   - Trên cột $a$: Đã có $ea = a, aa = e$. Nếu $ba = b$ thì $a = e$ (vô lý). Do đó bắt buộc $ba = c$ và $ca = b$.
+   - Trên hàng $b$: Đã có $be = b, ba = c$. Còn lại hai ô ứng với $bb$ và $bc$. Cột $b$ đã có $eb = b, ab = c$. Nếu $bb = c$ thì cột $b$ bị trùng $c$, mâu thuẫn với <Ref to="thm-c1-b2-tinh-chat-bang-cayley" />. Vậy $bb$ chỉ có thể là $e$ hoặc $a$:
+     - *Nếu $bb = e$:* Khi đó $bc = a$, $cb = a$, $cc = e$. Đây chính là nhóm bốn Klein $V_4$.
+     - *Nếu $bb = a$:* Khi đó $bc = e$, $cb = e$, $cc = a$. Bảng vẫn thỏa mãn các tính chất nhóm (đẳng cấu với $\Z/4\Z$).
+   Cả hai khả năng đều cho ra một bảng Cayley hợp lệ của nhóm cấp 4.
+2. **Chứng minh $G$ là nhóm abel:**
+   Với mọi $a, b \in G$, theo định nghĩa lũy thừa bậc hai:
+   $$
+   (ab)^2 = (ab)(ab) = a(ba)b.
+   $$
+   Theo giả thiết, $(ab)^2 = a^2 b^2 = (aa)(bb) = a(ab)b$. Do đó:
+   $$
+   a(ba)b = a(ab)b.
+   $$
+   Áp dụng luật giản ước trái cho $a$ và luật giản ước phải cho $b$, ta suy ra ngay $ba = ab$. Vì đẳng thức này đúng với mọi $a, b \in G$, nên $G$ là một nhóm abel.
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1a | Lập luận đúng để xác định hàng $a$ ($ab = c, ac = b$) và cột $a$ ($ba = c, ca = b$) | `0,25 đ` |
+| 1b | Phân tích đúng hai trường hợp của $bb$ ($e$ hoặc $a$) và điền hoàn chỉnh bảng Cayley hợp lệ | `0,25 đ` |
+| 2a | Khai triển đúng $(ab)^2 = a(ba)b$ và $a^2 b^2 = a(ab)b$ | `0,25 đ` |
+| 2b | Dùng luật giản ước trái và phải suy ra $ba = ab$ và kết luận $G$ abel | `0,25 đ` |
+</Solution>
+
+<Exercise id="exr-c1-b2-c1" title="[Nhóm C · Mã CTDS-C1-B2-C01] Đặc trưng nhóm thỏa mãn x^2 = e và phản ví dụ lũy thừa bậc ba">
+- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
+- **Chủ đề:** Tính chất của nhóm có mọi phần tử tự nghịch đảo và giới hạn của đẳng thức $(ab)^n = a^n b^n$
+- **Mục tiêu đánh giá:** Chứng minh chặt chẽ mệnh đề $x^2 = e \implies G$ abel và xây dựng phản ví dụ tối tiểu trong nhóm đối xứng $S_3$ *(Kiểm tra giữa kỳ)*
+- **Mức độ khó:** Khá – Giỏi (Mức 3)
+- **Nguồn kiến thức liên quan:** <Ref to="thm-c1-b2-quy-tac-luy-thua" /> · <Cite source="gt-ctds-hvk-2026" page="23, 32" note="Định lý 1.10 & Bài tập 1.19, 1.21" />
+
+**Đề bài:**
+
+1. Cho $(G, \cdot)$ là một nhóm thỏa mãn $x^2 = e$ với mọi $x \in G$. Chứng minh rằng $x = x^{-1}$ với mọi $x \in G$, từ đó chứng minh rằng $G$ là một nhóm abel.
+2. Khẳng định sau đúng hay sai: *"Nếu nhóm $G$ thỏa mãn $(ab)^3 = a^3 b^3$ với mọi $a, b \in G$ thì $G$ là nhóm abel"*? Nếu đúng hãy chứng minh; nếu sai hãy xây dựng một phản ví dụ cụ thể trong nhóm hoán vị $S_3$.
+</Exercise>
+
+<Hint>
+Ở câu (1), từ $x^2 = xx = e$ nhân $x^{-1}$ để có $x = x^{-1}$, sau đó áp dụng cho phần tử tích $ab$. Ở câu (2), trong nhóm $S_3$, mọi phần tử đều có cấp là ước của $6$, hãy kiểm tra xem mọi phần tử có thỏa mãn $x^6 = e$ hay không, nhưng chọn hai hoán vị cấp 3 và cấp 2.
+</Hint>
+
+<Solution>
+1. Với mọi $x \in G$, vì $x^2 = xx = e$, nhân $x^{-1}$ vào bên phải hai vế ta được $x = x^{-1}$.
+   Bây giờ lấy $a, b \in G$ bất kỳ. Khi đó tích $ab \in G$, nên phần tử này cũng tự nghịch đảo:
+   $$
+   ab = (ab)^{-1}.
+   $$
+   Theo công thức nghịch đảo của tích trong nhóm, $(ab)^{-1} = b^{-1}a^{-1}$. Vì $b^{-1} = b$ và $a^{-1} = a$, ta thu được:
+   $$
+   ab = b^{-1}a^{-1} = ba.
+   $$
+   Vậy $G$ là một nhóm abel.
+2. Khẳng định đã cho là **sai**.
+   - *Phản ví dụ trong nhóm $S_3$:* Ta biết $S_3$ là nhóm gồm 6 hoán vị trên $\{1, 2, 3\}$ và $S_3$ không giao hoán. Xét hai hoán vị $\sigma = (1 \, 2)$ (chuyển vị) và $\tau = (1 \, 2 \, 3)$ (chu trình bậc 3).
+     Ta có $\sigma^3 = \sigma^2 \sigma = \sigma$ (vì $\sigma^2 = e$), $\tau^3 = e$. Do đó:
+     $$
+     \sigma^3 \tau^3 = \sigma \cdot e = \sigma = (1 \, 2).
+     $$
+     Mặt khác, tính tích $\sigma \tau = (1 \, 2)(1 \, 2 \, 3) = (2 \, 3)$. Vì $(2 \, 3)$ là một chuyển vị nên có cấp 2, suy ra:
+     $$
+     (\sigma \tau)^3 = (2 \, 3)^3 = (2 \, 3) \neq (1 \, 2) = \sigma^3 \tau^3.
+     $$
+     Đẳng thức $(ab)^3 = a^3 b^3$ thậm chí không đúng với mọi cặp phần tử trong $S_3$, và trên thực tế tồn tại những nhóm không abel cấp 27 thỏa mãn $(ab)^3 = a^3 b^3$ với mọi phần tử nhưng không giao hoán.
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1a | Chứng minh đúng $x^2 = e \implies x = x^{-1}$ | `0,25 đ` |
+| 1b | Vận dụng $(ab) = (ab)^{-1} = b^{-1}a^{-1} = ba$ suy ra $G$ abel | `0,25 đ` |
+| 2a | Khẳng định mệnh đề sai | `0,15 đ` |
+| 2b | Chỉ ra hai phần tử cụ thể trong $S_3$ và tính đúng $(\sigma\tau)^3 \neq \sigma^3\tau^3$ | `0,35 đ` |
+</Solution>
+
+<Exercise id="exr-c1-b2-d1" title="[Nhóm D · Mã CTDS-C1-B2-D01] Phân loại các nhóm cấp 4 qua cấu trúc bảng Cayley">
+- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
+- **Chủ đề:** Phân loại toàn bộ các cấu trúc nhóm cấp 4 dựa vào bảng Cayley và cấp của phần tử
+- **Mục tiêu đánh giá:** Tổng hợp các tính chất của bảng Cayley để chứng minh rằng mọi nhóm cấp 4 chỉ có thể là nhóm cyclic $\Z/4\Z$ hoặc nhóm bốn Klein $V_4$ *(Thi kết thúc học phần)*
+- **Mức độ khó:** Nâng cao (Mức 4)
+- **Nguồn kiến thức liên quan:** <Ref to="thm-c1-b2-quy-tac-luy-thua" /> · <Ref to="thm-c1-b2-tinh-chat-bang-cayley" /> · <Cite source="gt-ctds-hvk-2026" page="23-24, 34" note="Mục 1.5 & Bài tập 1.29" />
+
+**Đề bài:** Cho $(G, \cdot)$ là một nhóm cấp 4 bất kỳ với phần tử đơn vị $e$.
+
+1. Chứng minh rằng nếu $G$ chứa một phần tử $a$ thỏa mãn $a^2 \neq e$ thì $G = \{e, a, a^2, a^3\}$ và $a^4 = e$ (tức $G$ là nhóm cyclic cấp 4, có bảng Cayley giống $\Z/4\Z$).
+2. Chứng minh rằng nếu $G$ không chứa phần tử nào thỏa mãn điều kiện ở câu (1) (tức là $x^2 = e$ với mọi $x \in G$) thì $G$ có bảng Cayley giống nhóm bốn Klein $V_4$.
+3. Kết luận về số lượng cấu trúc nhóm cấp 4 sai khác một phép đổi tên phần tử.
+</Exercise>
+
+<Hint>
+Ở câu (1), xét các lũy thừa $e, a, a^2, a^3$; chứng minh 4 phần tử này phân biệt bằng luật giản ước. Ở câu (2), gọi $G = \{e, a, b, c\}$, dùng kết quả $x^2 = e \implies G$ abel và chứng minh tích hai phần tử khác nhau phải bằng phần tử thứ ba.
+</Hint>
+
+<Solution>
+1. **Trường hợp tồn tại $a \in G$ sao cho $a^2 \neq e$:**
+   Vì $a \neq e$ và $a^2 \neq e$, ta xét 4 phần tử: $e, a, a^2, a^3$.
+   - Nếu $a^3 = e$ thì $a^2 = a^{-1}$, khi đó $a^3 = a \cdot a^2 = e \implies a^2 = a^{-1}$; nhưng cấp nhóm là 4, tập $\{e, a, a^2\}$ gồm 3 phần tử đóng với phép nhân nên là một nhóm con cấp 3, điều này mâu thuẫn vì 3 không chia hết 4. Hoặc lập luận trực tiếp: nếu $a^3 = a$ thì $a^2 = e$ (vô lý); nếu $a^3 = a^2$ thì $a = e$ (vô lý); nếu $a^3 = e$ thì phần tử thứ tư $b \notin \{e, a, a^2\}$ khi nhân với $a$ sẽ cho $ab \notin \{e, a, a^2, b\}$, vô lý vì nhóm chỉ có 4 phần tử.
+   - Do đó 4 phần tử $e, a, a^2, a^3$ đôi một phân biệt. Vì $|G| = 4$, tập hợp này vét cạn $G$:
+     $$
+     G = \{e, a, a^2, a^3\}.
+     $$
+     Khi đó $a^4 = a \cdot a^3$ không thể bằng $a, a^2, a^3$ (do luật giản ước), nên bắt buộc $a^4 = e$. Bảng Cayley của $G$ hoàn toàn trùng với bảng cộng của $\Z/4\Z$ qua phép gán $a^k \leftrightarrow [k]_4$.
+2. **Trường hợp mọi $x \in G$ đều thỏa mãn $x^2 = e$:**
+   Theo <Ref to="exr-c1-b2-c1" />, $G$ là một nhóm abel. Đặt $G = \{e, a, b, c\}$ với $a, b, c$ phân biệt và khác $e$.
+   - Xét tích $ab$: do $a \neq e, b \neq e$ nên $ab \neq a$ và $ab \neq b$. Nếu $ab = e$ thì $b = a^{-1} = a$ (vì $a^2 = e$), mâu thuẫn với $a \neq b$. Vì vậy bắt buộc $ab = c$.
+   - Do tính giao hoán, $ba = ab = c$. Hoàn toàn tương tự, $bc = cb = a$ và $ca = ac = b$.
+   - Cùng với $a^2 = b^2 = c^2 = e$, bảng Cayley của $G$ được xác định duy nhất:
+     $$
+     \begin{array}{c|cccc}
+     \cdot & e & a & b & c \\
+     \hline
+     e & e & a & b & c \\
+     a & a & e & c & b \\
+     b & b & c & e & a \\
+     c & c & b & a & e
+     \end{array}
+     $$
+     Bảng này chính là bảng Cayley của nhóm bốn Klein $V_4$.
+3. **Kết luận:** Mọi nhóm cấp 4 chỉ có thể có đúng một trong **hai cấu trúc** trừu tượng (sai khác một phép đổi tên phần tử/đẳng cấu): nhóm cyclic $\Z/4\Z$ hoặc nhóm bốn Klein $V_4$.
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1 | Chứng minh $e, a, a^2, a^3$ phân biệt và $a^4 = e$, chỉ ra cấu trúc $\Z/4\Z$ | `0,40 đ` |
+| 2 | Chứng minh $ab = c, bc = a, ca = b$ và lập đúng bảng Cayley của nhóm Klein $V_4$ | `0,40 đ` |
+| 3 | Kết luận chính xác chỉ có đúng 2 cấu trúc nhóm cấp 4 | `0,20 đ` |
+</Solution>
+
+<KeyTakeaways>
+- **Quy tắc lũy thừa nguyên (<Ref to="thm-c1-b2-quy-tac-luy-thua" />):** $a^m a^n = a^{m+n}$ và $(a^m)^n = a^{mn}$ luôn đúng trong mọi nhóm; nhưng công thức $(ab)^n = a^n b^n$ chỉ đúng khi $a$ và $b$ giao hoán với nhau.
+- **Tính chất của bảng Cayley (<Ref to="thm-c1-b2-tinh-chat-bang-cayley" />):** Trong bảng Cayley của một nhóm hữu hạn, mỗi phần tử xuất hiện đúng một lần trên mỗi hàng và đúng một lần trên mỗi cột (hình vuông Latin); bảng đối xứng qua đường chéo chính khi và chỉ khi nhóm là abel.
+- **Phân loại nhóm cấp 4:** Chỉ có đúng hai loại nhóm cấp 4: nhóm cyclic $\Z/4\Z$ (có phần tử cấp 4) và nhóm bốn Klein $V_4$ (mọi phần tử khác đơn vị đều có bình phương bằng $e$).
+</KeyTakeaways>
