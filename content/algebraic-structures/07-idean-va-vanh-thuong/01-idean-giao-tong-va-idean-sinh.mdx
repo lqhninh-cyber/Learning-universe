@@ -1,0 +1,493 @@
+---
+id: idean-giao-tong-va-idean-sinh
+title: 'Iđêan trái, phải, hai phía và iđêan sinh'
+description: 'Khởi nguồn từ phép nhân trên tập thương đến điều kiện hấp thụ nhân; định nghĩa iđêan một phía và hai phía; tiêu chuẩn iđêan; các phép toán giao, tổng, tích và iđêan sinh bởi một tập hợp.'
+estimatedMinutes: 40
+level: intermediate
+prerequisites:
+  - cac-cach-dung-vanh-va-vanh-con
+tags:
+  - iđêan
+  - iđêan trái
+  - iđêan phải
+  - điều kiện hấp thụ
+  - tiêu chuẩn iđêan
+  - iđêan chính
+  - iđêan sinh
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '113-118'
+    sections: 'Mục 7.1, 7.2, 7.3'
+    note: 'Định nghĩa 7.1 (iđêan một phía, hai phía), Phản ví dụ 7.4 (vành con không là iđêan), Định lý 7.5 (tiêu chuẩn iđêan), Định nghĩa 7.7 & Định lý 7.8 (iđêan sinh)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '195-208'
+    sections: 'Chương 7, Mục 7.1'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất nguồn gốc của Iđêan:** Giải thích cặn kẽ tại sao một vành con thông thường không thể tạo thành vành thương, và tại sao phép nhân lớp kề $(a+I)(b+I) = ab+I$ đòi hỏi **điều kiện hấp thụ phép nhân**.
+2. **Phân biệt rạch ròi iđêan trái, phải và hai phía:** Nắm vững định nghĩa và nhận diện các iđêan một phía không phải hai phía trong vành ma trận không giao hoán $M_n(F)$.
+3. **Thành thạo Tiêu chuẩn Iđêan:** Áp dụng điều kiện $I \neq \varnothing, x - y \in I, rx \in I, xr \in I$ để kiểm tra một tập con có là iđêan hay không.
+4. **Chứng minh tính chất sụp đổ khi chứa phần tử khả nghịch:** Chứng minh định lý căn bản: Nếu một iđêan $I$ chứa phần tử đơn vị $1_R$ (hoặc bất kỳ phần tử khả nghịch $u \in R^\times$) thì bắt buộc $I = R$.
+5. **Vận dụng các phép toán trên iđêan:** Tính toán giao $I \cap J$, tổng $I + J$, tích $IJ$ và mô tả cấu trúc iđêan sinh $\langle X \rangle$ cũng như iđêan chính $(a) = Ra$.
+</Note>
+
+**Kiến thức tiên quyết:** Tiêu chuẩn vành con và bước đệm dẫn sang cấu trúc thương từ Chương 6 (<Cite source="gt-ctds-hvk-2026" page="104-107" note="Mục 6.6, 6.7, 6.8" />).
+
+---
+
+## 1. Khởi nguồn sư phạm: Từ tập thương cộng đến điều kiện hấp thụ phép nhân
+
+Trong Phần I (Lý thuyết Nhóm), chúng ta đã biết rằng: Muốn phép nhân lớp kề $(aN)(bN) = abN$ trên tập thương $G/N$ xác định tốt, nhóm con $N$ bắt buộc phải là một **nhóm con chuẩn tắc** ($gNg^{-1} = N$).
+
+Bây giờ, xét một vành $(R, +, \cdot)$ và một vành con $S \subseteq R$.
+Vì $(R, +)$ là một nhóm Abel, nên mọi nhóm con cộng $S$ tự động là nhóm con chuẩn tắc đối với phép cộng: $S \trianglelefteq (R, +)$.
+Do đó, tập hợp các lớp kề cộng:
+$$
+R/S = \{a + S \mid a \in R\}
+$$
+luôn luôn lập thành một **nhóm cộng thương** Abel hoàn chỉnh với phép cộng lớp xác định tốt:
+$$
+(a + S) + (b + S) = (a + b) + S.
+$$
+
+Tuy nhiên, để biến $R/S$ thành một **Vành thương**, ta cần định nghĩa thêm phép nhân giữa các lớp kề:
+$$
+(a + S) \cdot (b + S) = (a \cdot b) + S \quad (?).
+$$
+Phép nhân này có tự động xác định tốt như phép cộng hay không?
+
+<Counterexample id="ce-c7-b1-that-bai-nhan-lop-q-z" title="Sự thất bại kinh điển của phép nhân lớp trên Q/Z (Bài tập 7.1 Giáo trình)">
+Xét trường số hữu tỉ $(\mathbb{Q}, +, \cdot)$ và vành con các số nguyên $\mathbb{Z} \subset \mathbb{Q}$.
+Xét nhóm cộng thương $\mathbb{Q}/\mathbb{Z}$. Trong nhóm này, phần tử không có nhiều đại diện khác nhau, chẳng hạn $0 \in \mathbb{Z}$ và $1 \in \mathbb{Z}$, nên:
+$$
+[0] = 0 + \mathbb{Z} = 1 + \mathbb{Z}.
+$$
+Bây giờ, ta lấy lớp này nhân với lớp $\frac{1}{2} + \mathbb{Z}$ theo quy tắc nhân đại diện:
+- Nếu chọn đại diện $0$:
+  $$
+  (0 + \mathbb{Z})\left(\frac{1}{2} + \mathbb{Z}\right) = \left(0 \cdot \frac{1}{2}\right) + \mathbb{Z} = 0 + \mathbb{Z} = \mathbb{Z}.
+  $$
+- Nếu chọn đại diện $1$:
+  $$
+  (1 + \mathbb{Z})\left(\frac{1}{2} + \mathbb{Z}\right) = \left(1 \cdot \frac{1}{2}\right) + \mathbb{Z} = \frac{1}{2} + \mathbb{Z}.
+  $$
+
+Nhận thấy rằng:
+$$
+\frac{1}{2} - 0 = \frac{1}{2} \notin \mathbb{Z} \implies \mathbb{Z} \neq \frac{1}{2} + \mathbb{Z}.
+$$
+Chỉ vì thay đổi đại diện của cùng một lớp mà kết quả phép nhân bị biến đổi hoàn toàn!
+Do đó, phép nhân đại diện $(a + \mathbb{Z})(b + \mathbb{Z}) = ab + \mathbb{Z}$ **hoàn toàn vô nghĩa (không xác định tốt)** trên $\mathbb{Q}/\mathbb{Z}$.
+</Counterexample>
+
+### Phân tích nguyên nhân đại số
+Giả sử ta chọn hai đại diện bất kỳ $a' = a + s_1$ và $b' = b + s_2$ với $s_1, s_2 \in S$.
+Tích của hai đại diện mới trong vành $R$ là:
+$$
+a'b' = (a + s_1)(b + s_2) = ab + a s_2 + s_1 b + s_1 s_2.
+$$
+Để hai đại diện này sinh ra cùng một lớp kề ($a'b' + S = ab + S$), điều kiện cần và đủ là phần chênh lệch phải rơi vào $S$:
+$$
+a'b' - ab = a s_2 + s_1 b + s_1 s_2 \in S.
+$$
+Vì $S$ là vành con, tích nội bộ $s_1 s_2 \in S$. Như vậy điều kiện trở thành:
+$$
+a s_2 + s_1 b \in S \quad \text{với mọi } a, b \in R \text{ và } s_1, s_2 \in S.
+$$
+- Cho $b = 0_R, s_1 = 0_R \implies a s_2 \in S$ với mọi $a \in R, s_2 \in S$ (hấp thụ nhân bên trái).
+- Cho $a = 0_R, s_2 = 0_R \implies s_1 b \in S$ với mọi $b \in R, s_1 \in S$ (hấp thụ nhân bên phải).
+
+Như vậy, tập con $S$ không thể chỉ khép kín với phép nhân nội bộ ($SS \subseteq S$), mà phải có sức mạnh vượt bậc: **hấp thụ mọi phép nhân từ toàn bộ không gian mẹ $R$ bên ngoài** ($RS \subseteq S$ và $SR \subseteq S$)! Cấu trúc sở hữu tính chất hấp thụ này được gọi là **Iđêan**.
+
+---
+
+## 2. Định nghĩa Iđêan và Tiêu chuẩn kiểm tra
+
+<Definition id="def-c7-b1-idean" title="Iđêan Trái, Phải và Hai Phía (Định nghĩa 7.1 Giáo trình)">
+Cho $(R, +, \cdot)$ là một vành và $I$ là một tập con khác rỗng của $R$ ($I \subseteq R, I \neq \varnothing$).
+
+1. **Iđêan trái (*Left Ideal*):** Tập $I$ được gọi là một iđêan trái của $R$ nếu:
+   - $(I, +)$ là một nhóm con của nhóm cộng $(R, +)$ (tức $x - y \in I$ với mọi $x, y \in I$).
+   - $I$ hấp thụ phép nhân bên trái từ $R$:
+     $$
+     \forall r \in R, \; \forall x \in I \implies r \cdot x \in I \quad (\text{ký hiệu: } RI \subseteq I).
+     $$
+
+2. **Iđêan phải (*Right Ideal*):** Tập $I$ được gọi là một iđêan phải của $R$ nếu:
+   - $(I, +)$ là một nhóm con của nhóm cộng $(R, +)$ (tức $x - y \in I$ với mọi $x, y \in I$).
+   - $I$ hấp thụ phép nhân bên phải từ $R$:
+     $$
+     \forall r \in R, \; \forall x \in I \implies x \cdot r \in I \quad (\text{ký hiệu: } IR \subseteq I).
+     $$
+
+3. **Iđêan hai phía (*Two-sided Ideal*):** Tập $I$ được gọi là một iđêan hai phía (hay đơn giản là **iđêan**) của $R$ nếu $I$ đồng thời là một iđêan trái và một iđêan phải của $R$:
+   $$
+   RI \subseteq I \quad \text{và} \quad IR \subseteq I.
+   $$
+   Ký hiệu: $I \trianglelefteq R$. Nếu $I \neq R$, ta gọi $I$ là *iđêan thực sự*, ký hiệu $I \subsetneq R$.
+</Definition>
+
+<Note title="Quy ước học thuật bắt buộc">
+1. Trong giáo trình Huỳnh Việt Khánh, khi gọi ngắn gọn là **iđêan** mà không nói rõ phía, ta **luôn luôn hiểu là iđêan hai phía**.
+2. Nếu vành $R$ là **vành giao hoán**, khái niệm iđêan trái, iđêan phải và iđêan hai phía trùng khớp nhau hoàn toàn:
+   $$
+   rx = xr \implies RI = IR.
+   $$
+3. Mọi vành $R$ luôn có hai iđêan tầm thường là $\{0_R\}$ và chính $R$.
+4. Mọi iđêan đều là vành con (vì $II \subseteq RI \subseteq I$), nhưng **chiều ngược lại hoàn toàn sai** (như $\mathbb{Z} \subset \mathbb{Q}$).
+</Note>
+
+<Theorem id="thm-c7-b1-tieu-chuan-idean" title="Tiêu chuẩn Iđêan (Định lý 7.5 Giáo trình)">
+Cho $R$ là một vành. Một tập con $I \subseteq R$ là một iđêan (hai phía) của $R$ khi và chỉ khi thỏa mãn đồng thời ba điều kiện:
+1. $I \neq \varnothing$.
+2. Với mọi $x, y \in I \implies x - y \in I$ (đóng đối với phép trừ).
+3. Với mọi $r \in R$ và mọi $x \in I \implies r \cdot x \in I$ và $x \cdot r \in I$ (hấp thụ nhân hai phía).
+</Theorem>
+
+<Proof>
+Theo Định nghĩa 7.1, điều kiện (1) và (2) khẳng định $(I, +)$ là một nhóm con của $(R, +)$. Kết hợp với điều kiện hấp thụ nhân hai phía ở (3), ta có ngay $I$ là iđêan hai phía của $R$. Chiều thuận là hiển nhiên theo định nghĩa.
+</Proof>
+
+---
+
+## 3. Hệ quả sụp đổ: Iđêan chứa phần tử khả nghịch
+
+Trong cấu trúc nhóm, nếu một nhóm con chứa phần tử đơn vị thì nó chỉ là chính nhóm con đó. Nhưng trong cấu trúc vành, do tính chất hấp thụ phép nhân, nếu một iđêan chứa phần tử đơn vị hoặc bất kỳ phần tử khả nghịch nào thì **toàn bộ vành mẹ lập tức bị "nuốt chửng" vào trong iđêan đó**.
+
+<Theorem id="thm-c7-b1-idean-chua-don-vi" title="Iđêan chứa Phần tử khả nghịch (Định lý 7.5 Giáo trình, phần 2)">
+Cho $R$ là một vành có phần tử đơn vị $1_R$ và $I$ là một iđêan của $R$. Khi đó:
+1. Nếu $1_R \in I$ thì $I = R$.
+2. Nếu $I$ chứa ít nhất một phần tử khả nghịch $u \in R^\times$ thì $I = R$.
+</Theorem>
+
+<Proof>
+1. Giả sử $1_R \in I$. Vì $I$ là một iđêan của $R$, với mọi phần tử $r \in R$, theo tính chất hấp thụ phép nhân bên trái:
+   $$
+   r = r \cdot 1_R \in I \quad (\text{vì } 1_R \in I).
+   $$
+   Do đó mọi phần tử $r \in R$ đều thuộc $I$, suy ra $R \subseteq I$. Vì $I \subseteq R$, ta kết luận $I = R$.
+
+2. Giả sử tồn tại $u \in I$ sao cho $u \in R^\times$. Theo định nghĩa phần tử khả nghịch, tồn tại $u^{-1} \in R$.
+   Áp dụng tính chất hấp thụ phép nhân cho $u^{-1} \in R$ và $u \in I$:
+   $$
+   1_R = u^{-1} \cdot u \in I.
+   $$
+   Theo câu 1, vì $1_R \in I$, suy ra $I = R$.
+</Proof>
+
+<Corollary id="cor-c7-b1-idean-cua-truong" title="Iđêan duy nhất của Trường">
+Nếu $F$ là một trường thì $F$ chỉ có đúng hai iđêan là $\{0_F\}$ và chính $F$.
+</Corollary>
+
+<Proof>
+Giả sử $I$ là một iđêan của trường $F$ sao cho $I \neq \{0_F\}$. Khi đó tồn tại phần tử $x \in I$ với $x \neq 0_F$.
+Vì $F$ là một trường, mọi phần tử khác không đều khả nghịch, nên $x \in F^\times$.
+Theo Định lý 7.5 (câu 2), vì $I$ chứa phần tử khả nghịch $x$, suy ra $I = F$.
+Vậy một trường không có bất kỳ iđêan thực sự khác không nào.
+</Proof>
+
+---
+
+## 4. Phân biệt Iđêan một phía trong Vành không giao hoán
+
+Trong các vành không giao hoán, ranh giới giữa iđêan trái và iđêan phải thể hiện vô cùng sắc nét qua không gian ma trận.
+
+<Example id="ex-c7-b1-idean-ma-tran" title="Iđêan một phía trong vành ma trận M_2(R)">
+Xét vành ma trận $R = M_2(\mathbb{R})$ và tập con:
+$$
+I = \left\{ \begin{pmatrix} a & 0 \\ b & 0 \end{pmatrix} \;\Bigg|\; a, b \in \mathbb{R} \right\} = M_2(\mathbb{R}) E_{11}.
+$$
+1. **$I$ là một iđêan trái của $M_2(\mathbb{R})$:**
+   - Dễ thấy $I$ đóng đối với phép trừ ma trận.
+   - Lấy tùy ý $A = \begin{pmatrix} p & q \\ r & s \end{pmatrix} \in M_2(\mathbb{R})$ và $X = \begin{pmatrix} a & 0 \\ b & 0 \end{pmatrix} \in I$. Tích bên trái là:
+     $$
+     AX = \begin{pmatrix} p & q \\ r & s \end{pmatrix} \begin{pmatrix} a & 0 \\ b & 0 \end{pmatrix} = \begin{pmatrix} pa + qb & 0 \\ ra + sb & 0 \end{pmatrix}.
+     $$
+     Cột thứ hai của ma trận tích luôn bằng 0, do đó $AX \in I$. Vậy $I$ là một iđêan trái.
+
+2. **$I$ KHÔNG phải là một iđêan phải của $M_2(\mathbb{R})$:**
+   - Lấy ma trận $X = E_{11} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} \in I$.
+   - Chọn ma trận $B = E_{12} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} \in M_2(\mathbb{R})$.
+   - Tích bên phải là:
+     $$
+     XB = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = E_{12}.
+     $$
+   - Ma trận $E_{12}$ có cột thứ hai khác không, nên $E_{12} \notin I$!
+   Do đó $I$ không hấp thụ phép nhân bên phải, tức $I$ **không phải là iđêan phải**, và do đó **không phải là iđêan hai phía**.
+</Example>
+
+---
+
+## 5. Các phép toán trên Iđêan và Iđêan sinh
+
+<Theorem id="thm-c7-b1-phep-toan-idean" title="Giao, Tổng và Tích của các Iđêan">
+Cho $I$ và $J$ là hai iđêan của vành $R$. Khi đó:
+
+1. **Giao:** Giao $I \cap J$ là một iđêan của $R$. Đây là iđêan lớn nhất của $R$ được chứa trong cả $I$ và $J$.
+2. **Tổng:** Tập hợp:
+   $$
+   I + J = \{x + y \mid x \in I, y \in J\}
+   $$
+   là một iđêan của $R$. Đây là iđêan nhỏ nhất của $R$ chứa cả $I$ và $J$.
+3. **Tích:** Tập hợp tất cả các tổng hữu hạn của các tích:
+   $$
+   IJ = \left\{ \sum_{i=1}^k x_i y_i \;\Bigg|\; k \ge 1, \; x_i \in I, \; y_i \in J \right\}
+   $$
+   là một iđêan của $R$. Hơn nữa, ta luôn có quan hệ bao hàm:
+   $$
+   IJ \subseteq I \cap J \subseteq I \subseteq I + J.
+   $$
+</Theorem>
+
+<Proof>
+1. **Chứng minh $I \cap J$ là iđêan:**
+   Vì $0_R \in I \cap J$, giao khác rỗng. Nếu $x, y \in I \cap J$ thì $x - y \in I$ và $x - y \in J$, nên $x - y \in I \cap J$.
+   Với mọi $r \in R$ và $x \in I \cap J$, vì $x \in I \implies rx, xr \in I$; vì $x \in J \implies rx, xr \in J$. Do đó $rx, xr \in I \cap J$. Vậy $I \cap J$ là iđêan.
+
+2. **Chứng minh $I + J$ là iđêan:**
+   Hiển nhiên $0_R = 0_R + 0_R \in I + J$. Hiệu hai phần tử $(x_1 + y_1) - (x_2 + y_2) = (x_1 - x_2) + (y_1 - y_2) \in I + J$.
+   Với mọi $r \in R$:
+   $$
+   r(x + y) = rx + ry \in I + J \quad (\text{vì } rx \in I, ry \in J),
+   $$
+   $$
+   (x + y)r = xr + yr \in I + J \quad (\text{vì } xr \in I, yr \in J).
+   $$
+   Do đó $I + J$ là một iđêan.
+
+3. **Chứng minh $IJ \subseteq I \cap J$:**
+   Với mỗi số hạng $x_i y_i$ có $x_i \in I, y_i \in J$:
+   - Vì $I$ hấp thụ nhân phải và $x_i \in I$ nên $x_i y_i \in I$. Do $I$ đóng với phép cộng nên $\sum x_i y_i \in I$.
+   - Vì $J$ hấp thụ nhân trái và $y_i \in J$ nên $x_i y_i \in J$. Do $J$ đóng với phép cộng nên $\sum x_i y_i \in J$.
+   Do đó mọi phần tử của $IJ$ đều thuộc cả $I$ và $J$, tức $IJ \subseteq I \cap J$.
+</Proof>
+
+<Definition id="def-c7-b1-idean-sinh" title="Iđêan sinh bởi một tập hợp và Iđêan chính (Định lý 7.8 Giáo trình)">
+Cho $R$ là một vành và $X \subseteq R$.
+1. **Iđêan sinh bởi $X$**, ký hiệu $\langle X \rangle$ (hoặc $(X)$), là iđêan nhỏ nhất của $R$ chứa $X$. Nó chính bằng giao của tất cả các iđêan của $R$ chứa $X$.
+2. Khi $R$ là một **vành giao hoán có phần tử đơn vị $1_R$** và $X = \{a\}$ chỉ gồm một phần tử duy nhất, iđêan sinh bởi $a$ được gọi là **iđêan chính** (*principal ideal*) sinh bởi $a$, ký hiệu là $(a)$ hoặc $Ra$:
+   $$
+   (a) = Ra = \{r \cdot a \mid r \in R\}.
+   $$
+</Definition>
+
+<Counterexample id="ce-c7-b1-idean-sinh-vanh-khong-don-vi" title="Sự khác biệt khi vành KHÔNG có phần tử đơn vị">
+Nếu vành $R$ không có phần tử đơn vị, tập $Ra$ **chưa chắc chứa chính phần tử $a$**, và do đó $Ra$ có thể không bằng $\langle a \rangle$!
+*Minh họa trong $R = 2\mathbb{Z}$:*
+- Xét phần tử $a = 2 \in 2\mathbb{Z}$.
+- Tập tích $R a = (2\mathbb{Z}) \cdot 2 = 4\mathbb{Z}$.
+- Rõ ràng $2 \notin 4\mathbb{Z}$, do đó $Ra$ không chứa $a$!
+- Trong khi đó, iđêan nhỏ nhất chứa $2$ của $2\mathbb{Z}$ chính là toàn bộ $2\mathbb{Z}$ (vì $\langle 2 \rangle$ chứa $2$ và đóng với phép cộng).
+- Như vậy trong $2\mathbb{Z}$: $\langle 2 \rangle = 2\mathbb{Z} \neq Ra = 4\mathbb{Z}$.
+Công thức $(a) = Ra$ chỉ đúng khi vành $R$ có phần tử đơn vị $1_R$ (để đảm bảo $a = 1_R \cdot a \in Ra$).
+</Counterexample>
+
+---
+
+## 6. Hệ thống bài tập 4 phân lớp có lời giải
+
+<Exercise id="ex-c7-b1-nhom-a" title="Bài tập 7.1 (Nhóm A): Kiểm tra và nhận diện iđêan trong Z và Z/18Z">
+1. Chứng minh rằng mọi iđêan của vành số nguyên $\mathbb{Z}$ đều là iđêan chính có dạng $n\mathbb{Z}$ với $n \ge 0$.
+2. Tìm tất cả các iđêan của vành $\mathbb{Z}/18\mathbb{Z}$. Iđêan nào chứa phần tử $[5]_{18}$?
+</Exercise>
+
+<Hint>
+1. Sử dụng tính chất nhóm con cyclic của $(\mathbb{Z}, +)$ và tính hấp thụ số học.
+2. Kiểm tra xem $[5]_{18}$ có khả nghịch trong $\mathbb{Z}/18\mathbb{Z}$ hay không.
+</Hint>
+
+<Solution>
+1. **Mọi iđêan của $\mathbb{Z}$ đều có dạng $n\mathbb{Z}$:**
+   - Cho $I$ là một iđêan bất kỳ của $\mathbb{Z}$.
+   - Theo định nghĩa, $(I, +)$ trước hết là một nhóm con của nhóm cộng Abel $(\mathbb{Z}, +)$.
+   - Từ Chương 2, ta đã chứng minh mọi nhóm con của $\mathbb{Z}$ đều là nhóm cyclic có dạng $n\mathbb{Z}$ với $n \ge 0$ ($n$ là số nguyên dương nhỏ nhất thuộc $I$, hoặc $n = 0$ nếu $I = \{0\}$).
+   - Mặt khác, với mọi $k \in \mathbb{Z}$ và $x = nm \in n\mathbb{Z}$, tích $k \cdot x = n(km) \in n\mathbb{Z}$. Do đó $n\mathbb{Z}$ tự động thỏa mãn tính chất hấp thụ phép nhân của $\mathbb{Z}$.
+   Vậy mọi iđêan của $\mathbb{Z}$ đều có dạng $n\mathbb{Z} = (n)$. Vành $\mathbb{Z}$ là một **miền iđêan chính**.
+
+2. **Các iđêan của $\mathbb{Z}/18\mathbb{Z}$:**
+   Các iđêan của $\mathbb{Z}/18\mathbb{Z}$ tương ứng với các ước số nguyên dương của $18$: $d \in \{1, 2, 3, 6, 9, 18\}$.
+   - $d = 1$: $\langle [1] \rangle = \mathbb{Z}/18\mathbb{Z}$.
+   - $d = 2$: $\langle [2] \rangle = \{[0], [2], [4], [6], [8], [10], [12], [14], [16]\}$.
+   - $d = 3$: $\langle [3] \rangle = \{[0], [3], [6], [9], [12], [15]\}$.
+   - $d = 6$: $\langle [6] \rangle = \{[0], [6], [12]\}$.
+   - $d = 9$: $\langle [9] \rangle = \{[0], [9]\}$.
+   - $d = 18$: $\langle [0] \rangle = \{[0]\}$.
+   Xét phần tử $[5]_{18}$: Vì $\gcd(5, 18) = 1$, nên $[5]_{18}$ là một phần tử khả nghịch trong $\mathbb{Z}/18\mathbb{Z}$ (với nghịch đảo là $[11]_{18}$ vì $5 \times 11 = 55 \equiv 1 \pmod{18}$).
+   Theo Định lý 7.5, bất kỳ iđêan nào chứa phần tử khả nghịch đều phải bằng toàn bộ vành.
+   Do đó, iđêan duy nhất của $\mathbb{Z}/18\mathbb{Z}$ chứa $[5]_{18}$ là chính $\mathbb{Z}/18\mathbb{Z}$.
+</Solution>
+
+---
+
+<Exercise id="ex-c7-b1-nhom-b" title="Bài tập 7.2 (Nhóm B): Giao, Tổng và Tích của hai iđêan trong Z">
+Cho hai iđêan $I = m\mathbb{Z}$ và $J = n\mathbb{Z}$ trong vành số nguyên $\mathbb{Z}$ với $m, n \ge 1$.
+1. Chứng minh rằng $I \cap J = \operatorname{lcm}(m, n)\mathbb{Z}$.
+2. Chứng minh rằng $I + J = \gcd(m, n)\mathbb{Z}$.
+3. Chứng minh rằng $IJ = (mn)\mathbb{Z}$.
+4. Khi nào ta có đẳng thức $IJ = I \cap J$?
+</Exercise>
+
+<Hint>
+Dùng đồng nhất thức Bézout cho tổng, và tính chất chia hết cho giao. Chú ý $\gcd(m, n) \operatorname{lcm}(m, n) = mn$.
+</Hint>
+
+<Solution>
+1. **Tìm giao $I \cap J$:**
+   $x \in I \cap J \iff x \in m\mathbb{Z} \text{ và } x \in n\mathbb{Z} \iff m \mid x \text{ và } n \mid x$.
+   Số nguyên $x$ là bội chung của $m$ và $n$ khi và chỉ khi $x$ là bội của bội chung nhỏ nhất $\operatorname{lcm}(m, n)$.
+   Do đó $I \cap J = \operatorname{lcm}(m, n)\mathbb{Z}$.
+
+2. **Tìm tổng $I + J$:**
+   $I + J = \{am + bn \mid a, b \in \mathbb{Z}\}$.
+   Đặt $d = \gcd(m, n)$. Vì $d \mid m$ và $d \mid n$, nên $d \mid (am + bn)$ với mọi $a, b \in \mathbb{Z}$, suy ra $I + J \subseteq d\mathbb{Z}$.
+   Ngược lại, theo đồng nhất thức Bézout, tồn tại $u, v \in \mathbb{Z}$ sao cho $d = um + vn \in I + J$.
+   Vì $I + J$ là một iđêan chứa $d$, nó phải chứa toàn bộ bội của $d$: $d\mathbb{Z} \subseteq I + J$.
+   Vậy $I + J = \gcd(m, n)\mathbb{Z}$.
+
+3. **Tìm tích $IJ$:**
+   Theo định nghĩa, $IJ$ gồm các tổng hữu hạn $\sum x_i y_i$ với $x_i = a_i m$ và $y_i = b_i n$.
+   Khi đó $x_i y_i = (a_i b_i)(mn)$, nên mọi phần tử của $IJ$ đều là bội của $mn$.
+   Mặt khác $mn = (1 \cdot m)(1 \cdot n) \in IJ$, nên $IJ$ chứa $mn$ và sinh ra toàn bộ $(mn)\mathbb{Z}$.
+   Vậy $IJ = (mn)\mathbb{Z}$.
+
+4. **Điều kiện để $IJ = I \cap J$:**
+   Ta có $IJ = I \cap J \iff (mn)\mathbb{Z} = \operatorname{lcm}(m, n)\mathbb{Z} \iff mn = \operatorname{lcm}(m, n)$.
+   Vì $mn = \gcd(m, n) \operatorname{lcm}(m, n)$, đẳng thức xảy ra khi và chỉ khi:
+   $$
+   \gcd(m, n) = 1.
+   $$
+   Tức là $m$ và $n$ nguyên tố cùng nhau (hai iđêan đồng nguyên tố $I + J = \mathbb{Z}$).
+</Solution>
+
+---
+
+<Exercise id="ex-c7-b1-nhom-c" title="Bài tập 7.3 (Nhóm C): Iđêan không chính (2, x) trong vành đa thức Z[x]">
+Trong vành đa thức $\mathbb{Z}[x]$, xét tập con:
+$$
+I = (2, x) = \{2f(x) + x g(x) \mid f(x), g(x) \in \mathbb{Z}[x]\}.
+$$
+1. Chứng minh rằng $I$ là tập hợp tất cả các đa thức $P(x) = a_0 + a_1 x + \dots + a_n x^n \in \mathbb{Z}[x]$ có hệ số tự do $a_0$ là số chẵn.
+2. Chứng minh rằng $I$ là một iđêan của $\mathbb{Z}[x]$.
+3. Chứng minh rằng $I$ **không phải là một iđêan chính** của $\mathbb{Z}[x]$ (nghĩa là không tồn tại đa thức $d(x) \in \mathbb{Z}[x]$ sao cho $I = (d(x))$).
+</Exercise>
+
+<Hint>
+Nếu $I = (d(x))$ thì $d(x)$ phải là ước của cả $2$ và $x$. Xét bậc của $d(x)$ và hệ số hàng đầu.
+</Hint>
+
+<Solution>
+1. **Mô tả cấu trúc của $I$:**
+   Lấy tùy ý $P(x) = 2f(x) + xg(x) \in I$. Thay $x = 0$:
+   $$
+   P(0) = 2f(0) + 0 \cdot g(0) = 2f(0).
+   $$
+   Vì $f(0) \in \mathbb{Z}$, nên hệ số tự do $a_0 = P(0)$ là một số nguyên chẵn.
+   Ngược lại, nếu $P(x) = a_0 + a_1 x + \dots + a_n x^n \in \mathbb{Z}[x]$ với $a_0 = 2k$ ($k \in \mathbb{Z}$), ta có thể viết:
+   $$
+   P(x) = 2k + x(a_1 + a_2 x + \dots + a_n x^{n-1}) = 2f(x) + xg(x),
+   $$
+   với $f(x) = k \in \mathbb{Z}[x]$ và $g(x) = a_1 + a_2 x + \dots + a_n x^{n-1} \in \mathbb{Z}[x]$.
+   Do đó $I$ chính là tập hợp tất cả các đa thức trong $\mathbb{Z}[x]$ có hệ số tự do là số chẵn.
+
+2. **$I$ là một iđêan:**
+   - $I$ là tổng của hai iđêan chính $I = (2) + (x)$ trong vành giao hoán $\mathbb{Z}[x]$.
+   - Theo Định lý 7.5, tổng của hai iđêan luôn là một iđêan. Vậy $I \trianglelefteq \mathbb{Z}[x]$.
+
+3. **$I$ không phải là iđêan chính:**
+   Giả sử phản chứng $I$ là iđêan chính sinh bởi đa thức $d(x) \in \mathbb{Z}[x]$, tức là $I = (d(x))$.
+   - Vì $2 \in I$, nên $2 \in (d(x)) \implies d(x) \mid 2$ trong $\mathbb{Z}[x]$.
+     Vì $\deg(2) = 0$, công thức bậc trên miền nguyên $\mathbb{Z}$ cho ta $\deg(d) \le 0$, suy ra $d(x) = c$ là đa thức hằng nguyên.
+     Các ước số nguyên của $2$ trong $\mathbb{Z}$ chỉ có thể là $c \in \{\pm 1, \pm 2\}$.
+   - Vì $x \in I$, nên $d(x) \mid x \implies c \mid x$ trong $\mathbb{Z}[x]$.
+     Nếu $c = \pm 2$, thì $\pm 2 \mid x$, tức tồn tại $h(x) \in \mathbb{Z}[x]$ sao cho $2h(x) = x$, điều này vô nghiệm vì hệ số của $x$ là $1$ không chia hết cho $2$. Do đó $c \neq \pm 2$.
+   - Vậy chỉ còn khả năng $c = \pm 1$.
+     Nếu $d(x) = \pm 1$, thì $1 \in (d(x)) = I$.
+     Nhưng hệ số tự do của đa thức hằng $1$ là $1$, một số lẻ, mâu thuẫn với câu 1 (mọi phần tử của $I$ có hệ số tự do chẵn)!
+   Mâu thuẫn này chứng tỏ không tồn tại đa thức $d(x)$ nào thỏa mãn $I = (d(x))$.
+   Vậy $I = (2, x)$ không phải là iđêan chính. Vành $\mathbb{Z}[x]$ **không phải là miền iđêan chính**.
+</Solution>
+
+---
+
+<Exercise id="ex-c7-b1-nhom-d" title="Bài tập 7.4 (Nhóm D): Tính đơn của vành ma trận Mn(F)">
+Cho $F$ là một trường bất kỳ và $n \ge 1$ là số nguyên dương. Xét vành ma trận $R = M_n(F)$.
+1. Với mỗi cặp chỉ số $1 \le i, j \le n$, ký hiệu $E_{ij}$ là ma trận có phần tử ở vị trí $(i, j)$ bằng $1$ và các vị trí khác bằng $0$. Chứng minh hệ thức nhân:
+   $$
+   E_{ij} E_{kl} = \delta_{jk} E_{il},
+   $$
+   trong đó $\delta_{jk} = 1$ nếu $j = k$ và $\delta_{jk} = 0$ nếu $j \neq k$.
+2. Cho $I$ là một iđêan **hai phía** của $M_n(F)$. Giả sử $I \neq \{0\}$. Chứng minh tồn tại một ma trận đơn vị cơ sở $E_{11} \in I$.
+3. Rút ra rằng mọi ma trận cơ sở $E_{ij} \in I$, từ đó suy ra ma trận đơn vị $I_n \in I$ và kết luận $I = M_n(F)$.
+4. Ý nghĩa: Vành ma trận $M_n(F)$ trên một trường chỉ có đúng hai iđêan hai phía là $\{0\}$ và $M_n(F)$ (vành đơn).
+</Exercise>
+
+<Hint>
+Lấy ma trận khác không $A = (a_{pq}) \in I$ có phần tử $a_{kl} \neq 0$. Xét tích $E_{ik} A E_{lj}$ để cô lập phần tử $a_{kl}$ tại vị trí $(i, j)$.
+</Hint>
+
+<Solution>
+1. **Kiểm tra tích ma trận cơ sở:**
+   Phần tử ở dòng $p$, cột $q$ của tích $E_{ij} E_{kl}$ là:
+   $$
+   (E_{ij} E_{kl})_{pq} = \sum_{m=1}^n (E_{ij})_{pm} (E_{kl})_{mq}.
+   $$
+   Số hạng trong tổng khác $0$ khi và chỉ khi $p = i, m = j$ và $m = k, q = l$.
+   Điều này đòi hỏi $j = k$, và khi đó phần tử duy nhất khác không nằm ở vị trí $(i, l)$ với giá trị bằng $1$.
+   Vậy $E_{ij} E_{kl} = \delta_{jk} E_{il}$.
+
+2. **Chứng minh tồn tại $E_{11} \in I$:**
+   Vì $I \neq \{0\}$, tồn tại ma trận $A = (a_{ij}) \in I$ với $A \neq 0$. Tồn tại chỉ số $k, l$ sao cho $a_{kl} \neq 0$.
+   Vì $F$ là một trường và $a_{kl} \neq 0$, phần tử $a_{kl}$ có nghịch đảo $a_{kl}^{-1} \in F$.
+   Vì $I$ là iđêan hai phía của $M_n(F)$, nên với mọi ma trận $X, Y \in M_n(F)$, ta có $XAY \in I$.
+   Chọn $X = E_{1k}$ và $Y = a_{kl}^{-1} E_{l1} \in M_n(F)$.
+   Ta tính tích:
+   $$
+   XAY = E_{1k} \left( \sum_{p, q} a_{pq} E_{pq} \right) a_{kl}^{-1} E_{l1} = a_{kl}^{-1} \sum_{p, q} a_{pq} (E_{1k} E_{pq}) E_{l1}.
+   $$
+   Áp dụng hệ thức nhân ở câu 1, $E_{1k} E_{pq} = \delta_{kp} E_{1q}$.
+   Do đó tổng chỉ còn các số hạng với $p = k$:
+   $$
+   XAY = a_{kl}^{-1} \sum_q a_{kq} E_{1q} E_{l1} = a_{kl}^{-1} a_{kl} E_{11} = 1 \cdot E_{11} = E_{11}.
+   $$
+   Vì $X \in M_n(F), A \in I, Y \in M_n(F)$ và $I$ là iđêan hai phía, suy ra $E_{11} \in I$.
+
+3. **Suy ra $I = M_n(F)$:**
+   Với mọi cặp chỉ số $(i, j)$, ta có thể viết:
+   $$
+   E_{ij} = E_{i1} E_{11} E_{1j}.
+   $$
+   Vì $E_{11} \in I$ và $I$ hấp thụ nhân hai phía, nên $E_{ij} \in I$ với mọi $1 \le i, j \le n$.
+   Do đó ma trận đơn vị:
+   $$
+   I_n = \sum_{i=1}^n E_{ii} \in I \quad (\text{vì } I \text{ đóng đối với phép cộng}).
+   $$
+   Theo Định lý 7.5, vì iđêan $I$ chứa phần tử đơn vị $I_n$, ta kết luận $I = M_n(F)$.
+
+4. **Kết luận:**
+   Vành ma trận $M_n(F)$ trên trường $F$ không có bất kỳ iđêan hai phía thực sự khác không nào; hai iđêan hai phía duy nhất là $\{0\}$ và $M_n(F)$. Vành có tính chất này được gọi là một **vành đơn** (*simple ring*).
+</Solution>
+
+---
+
+## 7. Tóm tắt các điểm then chốt
+
+<KeyTakeaways>
+- **Động cơ sư phạm:** Phép nhân trên tập thương $(a+S)(b+S) = ab+S$ đòi hỏi điều kiện hấp thụ phép nhân $RS \subseteq S$ và $SR \subseteq S$. Vành con thông thường không đủ (như phản ví dụ $\mathbb{Q}/\mathbb{Z}$).
+- **Định nghĩa Iđêan:** $I \trianglelefteq R \iff (I, +) \le (R, +)$ và $RI \subseteq I, IR \subseteq I$. Trong vành giao hoán, iđêan trái, phải và hai phía trùng nhau.
+- **Iđêan chứa phần tử khả nghịch:** Nếu $1_R \in I$ hoặc $I \cap R^\times \neq \varnothing$ thì bắt buộc $I = R$. Do đó trường $F$ chỉ có hai iđêan là $\{0\}$ và $F$.
+- **Iđêan một phía trong $M_n(F)$:** Có nhiều iđêan trái (như các ma trận có một số cột bằng 0), nhưng $M_n(F)$ chỉ có đúng 2 iđêan hai phía là $\{0\}$ và $M_n(F)$.
+- **Iđêan chính:** $(a) = Ra$ khi $R$ giao hoán có $1$. Trong vành không có đơn vị, $\langle a \rangle$ có thể khác $Ra$ (ví dụ $\langle 2 \rangle = 2\mathbb{Z} \neq 4\mathbb{Z}$ trong $2\mathbb{Z}$). Trong $\mathbb{Z}[x]$, $(2, x)$ không phải là iđêan chính.
+</KeyTakeaways>

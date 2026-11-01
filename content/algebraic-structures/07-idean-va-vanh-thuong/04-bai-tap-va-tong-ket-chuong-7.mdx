@@ -1,0 +1,503 @@
+---
+id: bai-tap-va-tong-ket-chuong-7
+title: 'Hệ thống bài tập và tổng kết Chương 7'
+description: 'Tổng kết toàn diện kiến thức về iđêan, vành thương, các lớp iđêan đặc biệt (nguyên tố, cực đại) và hệ thống bài tập phân loại bốn nhóm A-B-C-D kèm lời giải chi tiết.'
+estimatedMinutes: 60
+level: advanced
+prerequisites:
+  - idean-nguyen-to-va-idean-cuc-dai
+tags:
+  - chuong-7
+  - tong-ket
+  - idean
+  - vanh-thuong
+  - idean-nguyen-to
+  - idean-cuc-dai
+  - bai-tap
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '124-128, 185-190'
+    sections: 'Mục 7.10, 7.11'
+status: draft
+version: 0.1.0
+---
+
+Chương 7 đánh dấu bước phát triển bản chất trong đại số trừu tượng khi chuyển giao từ cấu trúc nhóm sang cấu trúc vành. Bài học tổng kết này tích hợp toàn bộ các khái niệm trung tâm: từ điều kiện hấp thụ phép nhân của **iđêan**, điều kiện cần và đủ để xây dựng **vành thương** $R/I$, kỹ thuật tính toán biểu diễn chuẩn trong **vành thương đa thức** $F[x]/(f)$, đến hai lớp iđêan nền tảng là **iđêan nguyên tố** và **iđêan cực đại**.
+
+---
+
+## 1. Bản đồ tư duy hệ thống kiến thức Chương 7
+
+Sơ đồ dưới đây tóm lược mạng lưới khái niệm và mối liên kết logic xuyên suốt Chương 7:
+
+```mermaid
+flowchart TD
+  subgraph IdeanCacLoai["1. Khái niệm và Phép toán Iđêan"]
+    A["Vành (R, +, ·)"] --> B["Nhóm con cộng (I, +)"]
+    B --> C1["Iđêan trái: rI ⊆ I"]
+    B --> C2["Iđêan phải: Ir ⊆ I"]
+    C1 & C2 --> C3["Iđêan hai phía: rI ⊆ I và Ir ⊆ I"]
+    C3 --> Op["Phép toán: Giao I ∩ J, Tổng I + J, Tích IJ, Iđêan chính (a) = Ra"]
+  end
+
+  subgraph VanhThuongSec["2. Vành thương và Tính toán"]
+    C3 --> D["Vành thương R/I: các lớp kề a + I"]
+    D --> Welldef["Phép nhân (a+I)(b+I) = ab+I xác định tốt ⟺ I là iđêan 2 phía"]
+    D --> Poly["Vành đa thức F[x]/(f): đại diện chuẩn bậc nhỏ hơn deg f"]
+    Poly --> Trio["Bộ ba kinh điển: F[x]/(x²), R[x]/(x²-1), R[x]/(x²+1) ≅ C"]
+  end
+
+  subgraph PhanLoaiSec["3. Phân loại Iđêan (R giao hoán có 1)"]
+    C3 --> Prime["Iđêan nguyên tố P: ab ∈ P ⟹ a ∈ P hoặc b ∈ P ⟺ R/P là miền nguyên"]
+    C3 --> Max["Iđêan cực đại M: không bị chứa trong iđêan chân phương nào khác ⟺ R/M là trường"]
+    Max -->|Luôn đúng| Prime
+    Prime -.->|Đúng trong PID ngoại trừ (0)| Max
+  end
+
+  subgraph NangCaoSec["4. Định lý sâu sắc"]
+    Prime & Max --> CRT["Định lý Thặng dư Trung Hoa: I + J = R ⟹ R/(I ∩ J) ≅ R/I × R/J"]
+    Prime --> Nil["Căn lũy linh Nil(R) = ⋂ P (P nguyên tố)"]
+    Max --> Simple["Vành đơn: Mn(F) chỉ có hai iđêan hai phía {0} và Mn(F)"]
+  end
+```
+
+---
+
+## 2. Bảng thuật ngữ song ngữ đối chiếu
+
+Bảng dưới đây chuẩn hóa các thuật ngữ toán học trọng tâm của Chương 7 giữa tiếng Việt và tiếng Anh học thuật:
+
+| Thuật ngữ tiếng Việt | Thuật ngữ tiếng Anh | Định nghĩa / Ký hiệu cốt lõi |
+| :--- | :--- | :--- |
+| **Iđêan trái** | *Left ideal* | $(I, +) \le (R, +)$ và $\forall r \in R, x \in I: rx \in I$ ($rI \subseteq I$) |
+| **Iđêan phải** | *Right ideal* | $(I, +) \le (R, +)$ và $\forall r \in R, x \in I: xr \in I$ ($Ir \subseteq I$) |
+| **Iđêan hai phía** | *Two-sided ideal* | Vừa là iđêan trái vừa là iđêan phải ($I \triangleleft R$) |
+| **Điều kiện hấp thụ** | *Absorption property* | Phép nhân với phần tử vành mẹ bất kỳ bị "nuốt chửng" vào trong $I$ |
+| **Iđêan chính** | *Principal ideal* | Iđêan sinh bởi một phần tử: $(a) = Ra = \{ra : r \in R\}$ (vành giao hoán có $1$) |
+| **Vành thương** | *Quotient ring / Factor ring* | Vành các lớp kề $R/I = \{a + I : a \in R\}$ với hai phép toán cộng và nhân lớp kề |
+| **Xác định tốt** | *Well-defined* | Giá trị phép toán độc lập với việc chọn đại diện lớp kề |
+| **Đồng cấu chiếu chính tắc** | *Canonical projection* | $\pi: R \to R/I, a \mapsto a + I$, toàn ánh với $\ker\pi = I$ |
+| **Iđêan nguyên tố** | *Prime ideal* | $P \subsetneq R$ và $ab \in P \implies a \in P$ hoặc $b \in P$ |
+| **Iđêan cực đại** | *Maximal ideal* | $M \subsetneq R$ và nếu $M \subseteq J \subseteq R$ thì $J = M$ hoặc $J = R$ |
+| **Căn lũy linh** | *Nilradical* | Tập hợp mọi phần tử lũy linh $\operatorname{Nil}(R) = \{x \in R : \exists n \ge 1, x^n = 0\}$ |
+| **Căn Jacobson** | *Jacobson radical* | Giao của mọi iđêan cực đại của $R$, ký hiệu $J(R)$ |
+| **Vành đơn** | *Simple ring* | Vành $R \neq \{0\}$ không có iđêan hai phía chân phương nào ngoài $\{0\}$ và $R$ |
+
+---
+
+## 3. Ma trận so sánh cấu trúc iđêan trên các vành đại diện
+
+Để hiểu sâu sắc bản chất và ranh giới định lý, hãy đối chiếu hành vi của iđêan trên 5 họ vành tiêu biểu:
+
+| Vành mẹ $R$ | Mọi iđêan có là iđêan chính? | Các iđêan nguyên tố | Các iđêan cực đại | Mối quan hệ giữa nguyên tố và cực đại |
+| :--- | :--- | :--- | :--- | :--- |
+| $\mathbb{Z}$ | **Có** (mọi $I = n\mathbb{Z}$) | $\{0\}$ và $p\mathbb{Z}$ ($p$ nguyên tố) | $p\mathbb{Z}$ ($p$ nguyên tố) | $\{0\}$ nguyên tố nhưng không cực đại; các iđêan nguyên tố khác đều cực đại |
+| $\mathbb{Z}_n = \mathbb{Z}/n\mathbb{Z}$ | **Có** (ảnh của iđêan trong $\mathbb{Z}$) | $d\mathbb{Z}_n$ với $n/d = p$ nguyên tố | $d\mathbb{Z}_n$ với $n/d = p$ nguyên tố | Mọi iđêan nguyên tố đều là iđêan cực đại (do $\mathbb{Z}_n$ hữu hạn) |
+| $F[x]$ ($F$ trường) | **Có** (mọi $I = (f(x))$) | $\{0\}$ và $(p(x))$ ($p$ bất khả quy) | $(p(x))$ ($p$ bất khả quy) | $\{0\}$ nguyên tố nhưng không cực đại; mọi iđêan khác $\{0\}$ nguyên tố $\iff$ cực đại |
+| $\mathbb{Z}[x]$ | **Không** (ví dụ: $(2, x)$) | $\{0\}$, $(p)$, $(f(x))$, $(p, f(x))$ | $(p, f(x))$ ($p$ nguyên tố, $f$ bất khả quy mod $p$) | Tồn tại iđêan nguyên tố không cực đại khác $\{0\}$: ví dụ $(x)$ và $(2)$ |
+| $M_n(F)$ ($n \ge 2, F$ trường) | Không xét (không giao hoán) | Không có iđêan 2 phía chân phương | Không có iđêan 2 phía chân phương | Vành đơn: chỉ có iđêan hai phía $\{0\}$ và $M_n(F)$ |
+
+---
+
+## 4. Các định lý nâng cao chọn lọc
+
+<Theorem id="thm-c7-b4-vanh-don-ma-tran">
+### Định lý 7.20: Tính đơn của vành ma trận trên một trường
+Cho $F$ là một trường bất kỳ và $n \ge 1$ là số nguyên dương. Vành ma trận $M_n(F)$ là một **vành đơn**, nghĩa là các iđêan hai phía duy nhất của $M_n(F)$ là $\{0\}$ và chính $M_n(F)$.
+</Theorem>
+
+<Proof>
+Giả sử $I$ là một iđêan hai phía của $M_n(F)$ và $I \neq \{0\}$. Ta cần chứng minh $I = M_n(F)$.
+
+Vì $I \neq \{0\}$, tồn tại ma trận $A = (a_{ij}) \in I$ sao cho $A \neq 0$. Do đó, tồn tại cặp chỉ số $(p, q)$ sao cho $a_{pq} \neq 0$. Vì $F$ là một trường, $a_{pq}$ có phần tử nghịch đảo $a_{pq}^{-1} \in F$.
+
+Ký hiệu $E_{ij}$ là ma trận đơn vị vị trí $(i, j)$ (có phần tử tại dòng $i$, cột $j$ bằng $1$, và tất cả các vị trí khác bằng $0$). Khi đó ta có công thức nhân ma trận cơ sở:
+$$
+E_{ik} \cdot E_{lj} = \begin{cases} E_{ij} & \text{nếu } k = l, \\ 0 & \text{nếu } k \neq l. \end{cases}
+$$
+Xét tích ma trận hai phía:
+$$
+E_{ip} \cdot A \cdot E_{qj} = E_{ip} \left( \sum_{u, v} a_{uv} E_{uv} \right) E_{qj} = \sum_{u, v} a_{uv} (E_{ip} E_{uv}) E_{qj} = a_{pq} E_{ij}.
+$$
+Vì $I$ là iđêan hai phía của $M_n(F)$, nên với mọi $i, j \in \{1, \dots, n\}$, ta có:
+$$
+a_{pq} E_{ij} = E_{ip} \cdot A \cdot E_{qj} \in I.
+$$
+Nhân thêm ma trận vô hướng $a_{pq}^{-1} I_n \in M_n(F)$ vào bên trái, do điều kiện hấp thụ của iđêan:
+$$
+E_{ij} = (a_{pq}^{-1} I_n) \cdot (a_{pq} E_{ij}) \in I \quad \forall i, j \in \{1, \dots, n\}.
+$$
+Vì ma trận đơn vị $I_n = \sum_{i=1}^n E_{ii}$, ta suy ra $I_n \in I$. Do $I$ chứa phần tử đơn vị của $M_n(F)$, theo tính chất hấp thụ ta kết luận $I = M_n(F)$.
+</Proof>
+
+<Theorem id="thm-c7-b4-dinh-ly-thang-du-trung-hoa">
+### Định lý 7.21: Định lý Thặng dư Trung Hoa cho Iđêan (Chinese Remainder Theorem)
+Cho $R$ là một vành giao hoán có đơn vị $1 \neq 0$. Hai iđêan $I, J \triangleleft R$ được gọi là **nguyên tố cùng nhau** (hoặc *comaximal*) nếu $I + J = R$. Khi đó:
+1. $I \cap J = IJ$.
+2. Ánh xạ $\psi: R \to R/I \times R/J$ xác định bởi $\psi(x) = (x + I, x + J)$ là một toàn ánh đồng cấu vành với $\ker\psi = I \cap J$.
+3. Ta có đẳng cấu vành:
+$$
+R/(I \cap J) = R/IJ \cong R/I \times R/J.
+$$
+</Theorem>
+
+<Proof>
+1. **Chứng minh $I \cap J = IJ$:** Rõ ràng $IJ \subseteq I \cap J$ luôn đúng với mọi iđêan. Ngược lại, vì $I + J = R$, tồn tại $i_0 \in I$ và $j_0 \in J$ sao cho $i_0 + j_0 = 1$. Với mọi $x \in I \cap J$, ta có:
+$$
+x = x \cdot 1 = x(i_0 + j_0) = x i_0 + x j_0.
+$$
+Vì $x \in J$ nên $x i_0 \in JI = IJ$; vì $x \in I$ nên $x j_0 \in IJ$. Suy ra $x \in IJ$. Vậy $I \cap J = IJ$.
+
+2. **Chứng minh $\psi$ là toàn ánh:** Lấy bất kỳ phần tử $(a + I, b + J) \in R/I \times R/J$. Ta cần tìm $x \in R$ sao cho $\psi(x) = (a + I, b + J)$, tức là $x \equiv a \pmod I$ và $x \equiv b \pmod J$.
+Đặt:
+$$
+x = a j_0 + b i_0.
+$$
+Khi đó:
+- Theo modulo $I$: Vì $i_0 \in I$ và $j_0 = 1 - i_0 \equiv 1 \pmod I$, ta có $x = a(1 - i_0) + b i_0 \equiv a \pmod I$, tức là $x + I = a + I$.
+- Theo modulo $J$: Vì $j_0 \in J$ và $i_0 = 1 - j_0 \equiv 1 \pmod J$, ta có $x = a j_0 + b(1 - j_0) \equiv b \pmod J$, tức là $x + J = b + J$.
+Vậy $\psi(x) = (a + I, b + J)$, chứng tỏ $\psi$ là một toàn ánh.
+
+3. **Hạt nhân và đẳng cấu:** Phần tử $x \in \ker\psi \iff x + I = 0 + I$ và $x + J = 0 + J \iff x \in I$ và $x \in J \iff x \in I \cap J$. Áp dụng Định lý Đẳng cấu thứ nhất cho đồng cấu vành $\psi$, ta nhận được ngay đẳng cấu $R/(I \cap J) \cong R/I \times R/J$.
+</Proof>
+
+---
+
+## 5. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
+
+<Exercise id="ex-c7-b4-a1">
+### Bài 7.4.A1 (Nhóm A - Tính toán đại số trong vành thương)
+Trong vành thương $R = \mathbb{Q}[x]/(x^3 - 2)$, xét phần tử $u = \overline{x - 1} = (x - 1) + (x^3 - 2)$.
+1. Chứng minh rằng $u$ là một phần tử khả nghịch trong $R$.
+2. Sử dụng thuật toán Euclid mở rộng để tìm phần tử nghịch đảo $u^{-1} \in R$ dưới dạng đa thức chuẩn tắc bậc $\le 2$.
+</Exercise>
+
+<Hint>
+Đa thức $f(x) = x^3 - 2$ và $g(x) = x - 1$ nguyên tố cùng nhau trong $\mathbb{Q}[x]$ vì $f(1) = -1 \neq 0$. Tìm hệ thức Bézout $a(x)f(x) + b(x)g(x) = 1$. Khi đó $u^{-1} = \overline{b(x)}$.
+</Hint>
+
+<Solution>
+**Bước 1: Chứng minh tính khả nghịch:**
+Thực hiện chia đa thức $f(x) = x^3 - 2$ cho $g(x) = x - 1$:
+$$
+x^3 - 2 = (x - 1)(x^2 + x + 1) - 1.
+$$
+Do đó:
+$$
+(x - 1)(x^2 + x + 1) - (x^3 - 2) = 1.
+$$
+Vì ước chung lớn nhất của $x^3 - 2$ và $x - 1$ trong $\mathbb{Q}[x]$ bằng $1$, nên $u = \overline{x - 1}$ khả nghịch trong $R = \mathbb{Q}[x]/(x^3 - 2)$.
+
+**Bước 2: Tìm nghịch đảo nhân:**
+Chuyển đẳng thức trên sang vành thương modulo $x^3 - 2$:
+$$
+\overline{(x - 1)} \cdot \overline{(x^2 + x + 1)} - \overline{0} = \overline{1} \implies u \cdot \overline{(x^2 + x + 1)} = \overline{1}.
+$$
+Vậy phần tử nghịch đảo là:
+$$
+u^{-1} = \overline{x^2 + x + 1} = (x^2 + x + 1) + (x^3 - 2).
+$$
+Kiểm tra lại: $u \cdot u^{-1} = (x - 1)(x^2 + x + 1) = x^3 - 1 = (x^3 - 2) + 1 \equiv 1 \pmod{x^3 - 2}$. Kết quả hoàn toàn chính xác.
+</Solution>
+
+<Exercise id="ex-c7-b4-a2">
+### Bài 7.4.A2 (Nhóm A - Nhận diện iđêan trên vành tích)
+Cho vành tích $R = \mathbb{Z} \times \mathbb{Z}$ với phép cộng và phép nhân theo từng tọa độ. Xét ba tập con sau của $R$:
+$$
+I_1 = \{(2a, 3b) : a, b \in \mathbb{Z}\}, \quad I_2 = \{(a, a) : a \in \mathbb{Z}\}, \quad I_3 = \{(a, 0) : a \in \mathbb{Z}\}.
+$$
+Hỏi tập nào là iđêan của $R$? Nếu không phải, hãy chỉ rõ điều kiện nào bị vi phạm.
+</Exercise>
+
+<Solution>
+Ta kiểm tra tiêu chuẩn iđêan cho từng tập:
+
+1. **Xét $I_1$:**
+   - $I_1 = 2\mathbb{Z} \times 3\mathbb{Z}$.
+   - Với mọi $(2a_1, 3b_1), (2a_2, 3b_2) \in I_1$, hiệu là $(2(a_1 - a_2), 3(b_1 - b_2)) \in I_1$.
+   - Với mọi phần tử vành mẹ $(r, s) \in \mathbb{Z} \times \mathbb{Z}$ và $(2a, 3b) \in I_1$:
+     $$
+     (r, s) \cdot (2a, 3b) = (2(ra), 3(sb)) \in I_1.
+     $$
+   - Do đó, $I_1$ thỏa mãn điều kiện hấp thụ nhân. Vậy $I_1$ là một **iđêan** của $\mathbb{Z} \times \mathbb{Z}$.
+
+2. **Xét $I_2$ (đường chéo chính):**
+   - Rõ ràng $(I_2, +)$ là một nhóm con cộng của $\mathbb{Z} \times \mathbb{Z}$.
+   - Tuy nhiên, kiểm tra điều kiện hấp thụ phép nhân: lấy phần tử vành mẹ $(1, 0) \in R$ và phần tử $(1, 1) \in I_2$:
+     $$
+     (1, 0) \cdot (1, 1) = (1 \cdot 1, 0 \cdot 1) = (1, 0).
+     $$
+     Rõ ràng $(1, 0) \notin I_2$ (vì hai tọa độ khác nhau).
+   - Điều kiện hấp thụ bị vi phạm! Vậy $I_2$ **không phải là một iđêan** (dù $I_2$ là một vành con có đơn vị $(1, 1)$).
+
+3. **Xét $I_3$:**
+   - $I_3 = \mathbb{Z} \times \{0\}$.
+   - Hiệu hai phần tử: $(a_1, 0) - (a_2, 0) = (a_1 - a_2, 0) \in I_3$.
+   - Tích với phần tử vành mẹ bất kỳ $(r, s) \in R$:
+     $$
+     (r, s) \cdot (a, 0) = (ra, 0) \in I_3.
+     $$
+   - Vậy $I_3$ là một **iđêan** của $\mathbb{Z} \times \mathbb{Z}$ (chính là hạt nhân của phép chiếu tọa độ thứ hai $\pi_2: \mathbb{Z} \times \mathbb{Z} \to \mathbb{Z}$).
+</Solution>
+
+<Exercise id="ex-c7-b4-b1">
+### Bài 7.4.B1 (Nhóm B - Phân loại iđêan trong vành hữu hạn $\mathbb{Z}_{60}$)
+Xét vành $\mathbb{Z}_{60} = \mathbb{Z}/60\mathbb{Z}$.
+1. Tìm tất cả các iđêan của $\mathbb{Z}_{60}$.
+2. Xác định chính xác các iđêan nguyên tố và các iđêan cực đại của $\mathbb{Z}_{60}$.
+3. Tìm căn lũy linh $\operatorname{Nil}(\mathbb{Z}_{60})$ và tập hợp các phần tử lũy linh của $\mathbb{Z}_{60}$.
+</Exercise>
+
+<Solution>
+**1. Tìm tất cả các iđêan của $\mathbb{Z}_{60}$:**
+Theo Định lý tương ứng iđêan, các iđêan của $\mathbb{Z}_{60}$ tương ứng $1-1$ với các iđêan của $\mathbb{Z}$ chứa $60\mathbb{Z}$, tức là các iđêan dạng $d\mathbb{Z}$ với $d \mid 60$.
+Phân tích thừa số nguyên tố: $60 = 2^2 \times 3 \times 5$. Số ước nguyên dương của $60$ là $(2 + 1)(1 + 1)(1 + 1) = 12$.
+Do đó, $\mathbb{Z}_{60}$ có đúng $12$ iđêan, mỗi iđêan có dạng $I = \langle \bar{d} \rangle$ với $d$ là một ước của $60$:
+$$
+d \in \{1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60\}.
+$$
+
+**2. Xác định các iđêan nguyên tố và cực đại:**
+Vì $\mathbb{Z}_{60}$ là một vành giao hoán hữu hạn, mọi iđêan nguyên tố đều là iđêan cực đại.
+Một iđêan $I = \langle \bar{d} \rangle$ là cực đại khi và chỉ khi vành thương $\mathbb{Z}_{60}/\langle \bar{d} \rangle \cong \mathbb{Z}_d$ là một trường, điều này tương đương với $d$ là một số nguyên tố.
+Các ước nguyên tố của $60$ là $p \in \{2, 3, 5\}$. Do đó:
+- Khi $d = 2$: iđêan cực đại là $\langle \bar{2} \rangle$, vành thương $\mathbb{Z}_{60}/\langle \bar{2} \rangle \cong \mathbb{Z}_2$ (trường).
+- Khi $d = 3$: iđêan cực đại là $\langle \bar{3} \rangle$, vành thương $\mathbb{Z}_{60}/\langle \bar{3} \rangle \cong \mathbb{Z}_3$ (trường).
+- Khi $d = 5$: iđêan cực đại là $\langle \bar{5} \rangle$, vành thương $\mathbb{Z}_{60}/\langle \bar{5} \rangle \cong \mathbb{Z}_5$ (trường).
+
+Như vậy, $\mathbb{Z}_{60}$ có đúng $3$ iđêan nguyên tố và chúng cũng chính là $3$ iđêan cực đại:
+$$
+M_1 = \langle \bar{2} \rangle = 2\mathbb{Z}_{60}, \quad M_2 = \langle \bar{3} \rangle = 3\mathbb{Z}_{60}, \quad M_3 = \langle \bar{5} \rangle = 5\mathbb{Z}_{60}.
+$$
+
+**3. Tìm căn lũy linh $\operatorname{Nil}(\mathbb{Z}_{60})$:**
+Theo định lý căn lũy linh, $\operatorname{Nil}(R)$ là giao của tất cả các iđêan nguyên tố của $R$:
+$$
+\operatorname{Nil}(\mathbb{Z}_{60}) = M_1 \cap M_2 \cap M_3 = \langle \bar{2} \rangle \cap \langle \bar{3} \rangle \cap \langle \bar{5} \rangle.
+$$
+Trong $\mathbb{Z}$, giao $2\mathbb{Z} \cap 3\mathbb{Z} \cap 5\mathbb{Z} = \operatorname{lcm}(2, 3, 5)\mathbb{Z} = 30\mathbb{Z}$.
+Do đó:
+$$
+\operatorname{Nil}(\mathbb{Z}_{60}) = \langle \overline{30} \rangle = \{\bar{0}, \overline{30}\}.
+$$
+Vậy $\mathbb{Z}_{60}$ chỉ có đúng $2$ phần tử lũy linh là $\bar{0}$ và $\overline{30}$ (kiểm tra: $\overline{30}^2 = \overline{900} = \overline{15 \times 60} = \bar{0}$).
+</Solution>
+
+<Exercise id="ex-c7-b4-b2">
+### Bài 7.4.B2 (Nhóm B - Cấu trúc vành thương đa thức thực)
+Xét vành thương $R = \mathbb{R}[x]/(x^4 - 1)$.
+1. Áp dụng Định lý Thặng dư Trung Hoa để phân tích $R$ thành tích trực tiếp của các trường.
+2. Vành $R$ có phải là miền nguyên không? Có phải là trường không?
+3. Tìm tất cả các phần tử lũy đẳng ($e^2 = e$) không tầm thường của $R$.
+</Exercise>
+
+<Solution>
+**1. Phân tích qua Định lý Thặng dư Trung Hoa:**
+Phân tích đa thức $x^4 - 1$ thành tích các nhân tử bất khả quy trên trường số thực $\mathbb{R}$:
+$$
+x^4 - 1 = (x^2 - 1)(x^2 + 1) = (x - 1)(x + 1)(x^2 + 1).
+$$
+Ba đa thức $f_1 = x - 1$, $f_2 = x + 1$, $f_3 = x^2 + 1$ đôi một nguyên tố cùng nhau trong $\mathbb{R}[x]$. Do đó, các iđêan $(x - 1)$, $(x + 1)$, $(x^2 + 1)$ đôi một nguyên tố cùng nhau.
+Theo Định lý Thặng dư Trung Hoa cho iđêan (Định lý 7.21):
+$$
+\mathbb{R}[x]/(x^4 - 1) \cong \mathbb{R}[x]/(x - 1) \times \mathbb{R}[x]/(x + 1) \times \mathbb{R}[x]/(x^2 + 1).
+$$
+Vì $x - 1$ và $x + 1$ là các đa thức bậc nhất, $\mathbb{R}[x]/(x \pm 1) \cong \mathbb{R}$.
+Vì $x^2 + 1$ bất khả quy trên $\mathbb{R}$, $\mathbb{R}[x]/(x^2 + 1) \cong \mathbb{C}$.
+Do đó:
+$$
+R \cong \mathbb{R} \times \mathbb{R} \times \mathbb{C}.
+$$
+
+**2. Nhận định về miền nguyên và trường:**
+Vì $R \cong \mathbb{R} \times \mathbb{R} \times \mathbb{C}$ là tích trực tiếp của ba trường, phần tử $(1, 0, 0)$ và $(0, 1, 0)$ là hai phần tử khác không nhưng có tích bằng:
+$$
+(1, 0, 0) \cdot (0, 1, 0) = (0, 0, 0).
+$$
+Do đó, $R$ chứa các ước của không, nên $R$ **không phải là miền nguyên** và do đó $R$ **không phải là trường**.
+
+**3. Các phần tử lũy đẳng của $R$:**
+Trong vành tích $S = \mathbb{R} \times \mathbb{R} \times \mathbb{C}$, một phần tử $(a, b, c)$ thỏa mãn $(a, b, c)^2 = (a, b, c)$ khi và chỉ khi:
+$$
+a^2 = a \implies a \in \{0, 1\}, \quad b^2 = b \implies b \in \{0, 1\}, \quad c^2 = c \implies c \in \{0, 1\}.
+$$
+Như vậy, có tổng cộng $2 \times 2 \times 2 = 8$ phần tử lũy đẳng.
+Trừ đi hai phần tử tầm thường là $0 = (0, 0, 0)$ và $1 = (1, 1, 1)$, vành $R$ có đúng $6$ phần tử lũy đẳng không tầm thường:
+$$
+(1, 0, 0), (0, 1, 0), (0, 0, 1), (1, 1, 0), (1, 0, 1), (0, 1, 1).
+$$
+Mỗi phần tử này tương ứng duy nhất với một lớp kề đại diện trong $\mathbb{R}[x]/(x^4 - 1)$ thông qua công thức nội suy Bézout.
+</Solution>
+
+<Exercise id="ex-c7-b4-c1">
+### Bài 7.4.C1 (Nhóm C - Vành có mọi iđêan đều nguyên tố là một trường)
+Cho $R$ là một vành giao hoán có phần tử đơn vị $1 \neq 0$. Giả sử rằng **mọi iđêan** của $R$ đều là iđêan nguyên tố.
+Chứng minh rằng $R$ bắt buộc phải là một trường.
+</Exercise>
+
+<Proof>
+Ta tiến hành chứng minh qua hai bước logic:
+
+**Bước 1: Chứng minh $R$ là một miền nguyên.**
+Theo giả thiết, iđêan tầm thường $I = \{0\}$ là một iđêan của $R$, nên $\{0\}$ là một iđêan nguyên tố.
+Theo tiêu chuẩn iđêan nguyên tố:
+$$
+ab \in \{0\} \implies a \in \{0\} \text{ hoặc } b \in \{0\}.
+$$
+Tức là nếu $ab = 0$ thì $a = 0$ hoặc $b = 0$. Vì $R$ giao hoán và $1 \neq 0$, điều này chứng minh $R$ là một **miền nguyên**.
+
+**Bước 2: Chứng minh mọi phần tử khác không đều khả nghịch.**
+Lấy bất kỳ phần tử $a \in R$ sao cho $a \neq 0$. Xét iđêan sinh bởi bình phương của $a$:
+$$
+J = (a^2) = Ra^2.
+$$
+Theo giả thiết, $J$ là một iđêan nguyên tố của $R$.
+Vì $a \cdot a = a^2 \in J$, và $J$ là iđêan nguyên tố, theo định nghĩa ta suy ra:
+$$
+a \in J.
+$$
+Vì $a \in J = Ra^2$, tồn tại phần tử $r \in R$ sao cho:
+$$
+a = r a^2 \iff a(1 - ra) = 0.
+$$
+Vì $R$ là miền nguyên (theo Bước 1) và $a \neq 0$, luật giản ước áp dụng được và ta có:
+$$
+1 - ra = 0 \iff ra = 1.
+$$
+Vì $R$ giao hoán, $ar = ra = 1$, nghĩa là $a$ là phần tử khả nghịch trong $R$ với nghịch đảo $a^{-1} = r$.
+Vì mọi phần tử $a \neq 0$ đều có nghịch đảo nhân, $R$ là một **trường**.
+</Proof>
+
+<Exercise id="ex-c7-b4-c2">
+### Bài 7.4.C2 (Nhóm C - Đặc trưng của Căn Jacobson)
+Cho $R$ là một vành giao hoán có đơn vị $1 \neq 0$. Căn Jacobson $J(R)$ được định nghĩa là giao của tất cả các iđêan cực đại của $R$:
+$$
+J(R) = \bigcap_{M \text{ cực đại}} M.
+$$
+Chứng minh rằng với mọi $x \in R$, ta có mệnh đề tương đương sau:
+$$
+x \in J(R) \iff \forall y \in R, \; 1 - xy \in R^\times \text{ (tức là } 1 - xy \text{ khả nghịch trong } R\text{)}.
+$$
+</Exercise>
+
+<Proof>
+Ta chứng minh mệnh đề theo hai chiều:
+
+**Chiều thuận ($\implies$):** Giả sử $x \in J(R)$, tức là $x \in M$ với mọi iđêan cực đại $M$ của $R$.
+Lấy $y \in R$ tùy ý. Ta cần chứng minh $1 - xy \in R^\times$.
+Phản chứng: giả sử $1 - xy$ không khả nghịch trong $R$.
+Khi đó, iđêan chính sinh bởi $1 - xy$, ký hiệu là $I = (1 - xy)$, là một iđêan chân phương của $R$ (vì nếu $I = R$ thì $1 \in I \implies 1 - xy$ khả nghịch).
+Theo Định lý Krull (mọi iđêan chân phương đều chứa trong ít nhất một iđêan cực đại), tồn tại một iđêan cực đại $M_0$ của $R$ sao cho:
+$$
+1 - xy \in M_0.
+$$
+Mặt khác, vì $x \in J(R)$ và $M_0$ là iđêan cực đại, theo định nghĩa ta có $x \in M_0$.
+Vì $M_0$ là một iđêan và $y \in R$, tính chất hấp thụ cho ta $xy \in M_0$.
+Do đó:
+$$
+1 = (1 - xy) + xy \in M_0.
+$$
+Một iđêan chứa phần tử đơn vị $1$ thì bắt buộc phải bằng toàn bộ vành $R$, mâu thuẫn với việc $M_0$ là iđêan cực đại (do $M_0 \subsetneq R$).
+Mâu thuẫn này chứng tỏ $1 - xy$ phải khả nghịch.
+
+**Chiều đảo ($\impliedby$):** Giả sử với mọi $y \in R$, phần tử $1 - xy$ đều khả nghịch trong $R$.
+Ta cần chứng minh $x \in J(R)$, tức là $x \in M$ với mọi iđêan cực đại $M$.
+Phản chứng: giả sử tồn tại một iđêan cực đại $M_1$ sao cho $x \notin M_1$.
+Vì $M_1$ là cực đại và $x \notin M_1$, iđêan sinh bởi $M_1$ và $x$ phải bằng toàn bộ vành $R$:
+$$
+M_1 + (x) = R.
+$$
+Do $1 \in R$, tồn tại $m \in M_1$ và $y \in R$ sao cho:
+$$
+m + yx = 1 \iff 1 - xy = m \in M_1.
+$$
+Theo giả thiết, phần tử $1 - xy$ khả nghịch trong $R$. Vì $1 - xy \in M_1$, iđêan $M_1$ chứa một phần tử khả nghịch, do đó $M_1 = R$. Điều này mâu thuẫn với tính chất chân phương của iđêan cực đại $M_1 \subsetneq R$.
+Vậy ta phải có $x \in M$ với mọi iđêan cực đại $M$, tức là $x \in J(R)$.
+</Proof>
+
+<Exercise id="ex-c7-b4-d1">
+### Bài 7.4.D1 (Nhóm D - Tính đơn của vành ma trận tổng quát)
+Cho $D$ là một vành chia (không nhất thiết giao hoán). Chứng minh rằng vành ma trận $M_n(D)$ với $n \ge 1$ không có bất kỳ iđêan hai phía nào khác ngoài $\{0\}$ và chính nó. Từ đó, hãy giải thích vì sao tính giao hoán là điều kiện thiết yếu để khái niệm iđêan nguyên tố và iđêan cực đại phát huy ý nghĩa hình học đại số.
+</Exercise>
+
+<Solution>
+**1. Chứng minh $M_n(D)$ là vành đơn:**
+Lấy $I \triangleleft M_n(D)$ là một iđêan hai phía sao cho $I \neq \{0\}$.
+Tồn tại một ma trận khác không $A = (a_{ij}) \in I$. Do $A \neq 0$, tồn tại cặp chỉ số $(r, c)$ sao cho $a_{rc} \neq 0$.
+Vì $D$ là một vành chia, mọi phần tử khác không đều có nghịch đảo hai phía, do đó tồn tại $a_{rc}^{-1} \in D$.
+Gọi $E_{ij}$ là các ma trận cơ sở với số $1$ ở vị trí $(i, j)$ và $0$ ở các vị trí còn lại.
+Với hai cặp chỉ số bất kỳ $(p, q) \in \{1, \dots, n\}^2$, xét ma trận:
+$$
+B = E_{pr} \cdot A \cdot E_{cq} \in I \quad (\text{do } I \text{ là iđêan hai phía}).
+$$
+Tính toán trực tiếp tích ma trận cơ sở:
+$$
+B = E_{pr} \left(\sum_{u, v} a_{uv} E_{uv}\right) E_{cq} = \sum_{u, v} a_{uv} (E_{pr} E_{uv} E_{cq}).
+$$
+Vì $E_{pr} E_{uv} = \delta_{ru} E_{pv}$ và $E_{pv} E_{cq} = \delta_{vc} E_{pq}$, ta thu được:
+$$
+B = a_{rc} E_{pq}.
+$$
+Do $B \in I$, nhân ma trận vô hướng đường chéo $(a_{rc}^{-1} I_n) \in M_n(D)$ vào bên trái:
+$$
+E_{pq} = (a_{rc}^{-1} I_n) \cdot (a_{rc} E_{pq}) \in I.
+$$
+Đẳng thức này đúng với mọi $p, q \in \{1, \dots, n\}$.
+Khi đó ma trận đơn vị $I_n = \sum_{k=1}^n E_{kk} \in I$.
+Vì $I_n \in I$, ta kết luận $I = M_n(D)$. Vậy $M_n(D)$ là một vành đơn.
+
+**2. Ý nghĩa đối với hình học đại số:**
+Trong hình học đại số hiện đại (theo quan điểm Grothendieck), mỗi vành giao hoán $R$ gắn liền với một không gian topo gọi là phổ nguyên tố $\operatorname{Spec}(R)$, trong đó các điểm là các iđêan nguyên tố và các điểm đóng là các iđêan cực đại.
+Nếu vành không giao hoán như $M_n(D)$, cấu trúc iđêan hai phía bị "đóng băng" (vành đơn chỉ có $\{0\}$), khiến cho phổ không còn cấu trúc điểm phong phú. Do đó, lý thuyết phổ đại số hình học chủ yếu phát triển trên nền tảng các vành giao hoán có đơn vị.
+</Solution>
+
+<Exercise id="ex-c7-b4-d2">
+### Bài 7.4.D2 (Nhóm D - Định lý Krull và Bổ đề Zorn)
+Cho $R$ là một vành giao hoán có đơn vị $1 \neq 0$ và $I$ là một iđêan chân phương tùy ý của $R$.
+Sử dụng Bổ đề Zorn để chứng minh tồn tại ít nhất một iđêan cực đại $M$ của $R$ sao cho $I \subseteq M$ (Định lý Krull).
+</Exercise>
+
+<Proof>
+Nhắc lại **Bổ đề Zorn**: Nếu trong một tập sắp thứ tự bộ phận khác rỗng $(P, \le)$, mọi xích (tập con sắp thứ tự toàn phần) đều có một chặn trên trong $P$, thì $P$ có ít nhất một phần tử cực đại.
+
+Áp dụng vào bài toán:
+Xét tập hợp $\mathcal{S}$ gồm tất cả các iđêan chân phương của $R$ chứa $I$:
+$$
+\mathcal{S} = \{J \triangleleft R : I \subseteq J \subsetneq R\}.
+$$
+1. **$\mathcal{S} \neq \emptyset$:** Vì $I$ là iđêan chân phương chứa chính nó, $I \in \mathcal{S}$.
+2. **Quan hệ thứ tự:** Xét quan hệ thứ tự bao hàm tập hợp $\subseteq$ trên $\mathcal{S}$.
+3. **Mọi xích đều có chặn trên trong $\mathcal{S}$:**
+   Giả sử $\mathcal{C} = \{J_\alpha\}_{\alpha \in \Lambda}$ là một xích (tập con sắp thứ tự toàn phần) trong $\mathcal{S}$, nghĩa là với mọi $\alpha, \beta \in \Lambda$, ta có $J_\alpha \subseteq J_\beta$ hoặc $J_\beta \subseteq J_\alpha$.
+   Đặt:
+   $$
+   J_\infty = \bigcup_{\alpha \in \Lambda} J_\alpha.
+   $$
+   Ta chứng minh $J_\infty \in \mathcal{S}$:
+   - *Tính chất nhóm con cộng:* Với $x, y \in J_\infty$, tồn tại $\alpha, \beta$ sao cho $x \in J_\alpha$ và $y \in J_\beta$. Vì $\mathcal{C}$ là xích, giả sử $J_\alpha \subseteq J_\beta$. Khi đó $x, y \in J_\beta$. Do $J_\beta$ là iđêan, $x - y \in J_\beta \subseteq J_\infty$.
+   - *Tính chất hấp thụ:* Với $r \in R$ và $x \in J_\infty$, tồn tại $\alpha$ sao cho $x \in J_\alpha$. Do $J_\alpha$ là iđêan, $rx \in J_\alpha \subseteq J_\infty$.
+   - *Tính chân phương:* Vì mỗi $J_\alpha$ là chân phương, $1 \notin J_\alpha$ với mọi $\alpha$. Do đó $1 \notin \bigcup_{\alpha \in \Lambda} J_\alpha = J_\infty$. Vậy $J_\infty \subsetneq R$.
+   - *Chứa $I$:* Vì mỗi $J_\alpha \supseteq I$, rõ ràng $J_\infty \supseteq I$.
+   
+   Như vậy, $J_\infty \in \mathcal{S}$ và $J_\infty$ là một chặn trên của xích $\mathcal{C}$ trong $\mathcal{S}$.
+
+Theo Bổ đề Zorn, $\mathcal{S}$ có ít nhất một phần tử cực đại, ký hiệu là $M$.
+Ta chứng minh $M$ là một iđêan cực đại của $R$:
+Nếu tồn tại iđêan $K \triangleleft R$ sao cho $M \subsetneq K \subsetneq R$, thì $I \subseteq M \subsetneq K \subsetneq R$, suy ra $K \in \mathcal{S}$. Điều này mâu thuẫn với tính cực đại của $M$ trong $\mathcal{S}$.
+Do đó, $M$ là một iđêan cực đại của $R$ và $I \subseteq M$.
+</Proof>
+
+---
+
+## 6. Tổng kết chương và định hướng tiếp theo
+
+<KeyTakeaways>
+- **Iđêan là hạt nhân:** Khái niệm iđêan trong vành đóng vai trò tương đương hoàn toàn với nhóm con chuẩn tắc trong lý thuyết nhóm: $I$ là iđêan hai phía khi và chỉ khi $I$ là hạt nhân của một đồng cấu vành.
+- **Tính xác định tốt:** Điều kiện hấp thụ phép nhân ($rI \subseteq I$ và $Ir \subseteq I$) không phải là một tiên đề ngẫu nhiên, mà là điều kiện bắt buộc để phép nhân lớp kề $(a+I)(b+I) = ab+I$ xác định tốt trên tập thương $R/I$.
+- **Vành thương đa thức $F[x]/(f)$:** Cho phép kiến tạo các mở rộng trường và các đại số mới. Phép tính thặng dư Euclid đưa mọi phần tử về đại diện chuẩn tắc duy nhất có bậc nhỏ hơn $\deg f$.
+- **Đối ngẫu nguyên tố / cực đại:**
+  - $P$ nguyên tố $\iff R/P$ là miền nguyên.
+  - $M$ cực đại $\iff R/M$ là trường.
+  - Trong vành giao hoán có $1$, cực đại luôn suy ra nguyên tố. Chiều đảo đúng trong các vành chính PID (ngoại trừ iđêan $\{0\}$).
+- **Cầu nối sang Chương 8:** Vành thương $R/I$ và đồng cấu chiếu chính tắc chuẩn bị nền tảng hoàn hảo để nghiên cứu **Đồng cấu vành và các định lý đẳng cấu** trong chương tiếp theo.
+</KeyTakeaways>

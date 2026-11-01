@@ -1,0 +1,10 @@
+id: idean-va-vanh-thuong
+number: 7
+title: 'Iđêan và vành thương'
+description: 'Khái niệm iđêan một phía và hai phía, điều kiện hấp thụ nhân, phép dựng vành thương R/I, tính toán trong vành thương đa thức F[x]/(f), iđêan nguyên tố và iđêan cực đại.'
+objectives:
+  - 'Hiểu sâu sắc vì sao điều kiện hấp thụ phép nhân của iđêan hai phía là điều kiện cần và đủ để phép nhân lớp kề trên R/I xác định tốt.'
+  - 'Phân biệt chính xác iđêan trái, iđêan phải và iđêan hai phía; nắm vững các phép toán giao, tổng, tích và iđêan sinh bởi một tập hợp.'
+  - 'Nắm vững cấu trúc vành thương R/I, tính toán thành thạo đại diện chuẩn trong vành thương đa thức F[x]/(f) và so sánh bộ ba mô hình kinh điển.'
+  - 'Phát biểu và chứng minh định lý đặc trưng: P nguyên tố ⟺ R/P là miền nguyên; M cực đại ⟺ R/M là trường (với R giao hoán có 1).'
+  - 'Giải thành thạo hệ thống bài tập 4 phân lớp A, B, C, D về cấu trúc iđêan và vành thương.'
