@@ -2,4 +2,67 @@
 # QUAN TRỌNG: CHỈ thêm mục mới khi chủ dự án cung cấp thông tin chính thức.
 # Tuyệt đối không suy đoán hay tự tạo tên giáo trình, tác giả, năm hoặc nhà xuất bản.
 
-sources: []
+sources:
+  - id: gt-ctds-hvk-2026
+    type: textbook
+    title: 'Giáo trình Cấu trúc Đại số: Nhóm • Vành • Trường (Đồng cấu, cấu trúc thương và các định lý đẳng cấu)'
+    authors:
+      - 'Huỳnh Việt Khánh'
+    year: 2026
+    publisher: 'Bản thảo giáo trình học phần Cấu trúc đại số (bản kết xuất ngày 10/10/2026)'
+    edition: 'Bản ngày 10/10/2026'
+    language: 'vi'
+    numberingNote: 'Đánh số Định lý, Mệnh đề, Hệ quả, Ví dụ, Phản ví dụ chung theo từng chương (ví dụ: Định lý 0.5, Định lý 1.8); Bài tập đánh số riêng theo từng chương (ví dụ: Bài tập 0.1 đến 0.25).'
+    note: '219 trang PDF (8 trang đầu i-viii + 211 trang nội dung 1-211). Trang PDF = Trang sách + 8.'
+
+  - id: hai-deo-dai-so-hien-dai-2013
+    type: reference-book
+    title: 'Đại số hiện đại'
+    authors:
+      - 'Bùi Xuân Hải'
+      - 'Trịnh Thanh Đèo'
+    year: 2013
+    publisher: 'NXB Đại học Quốc gia TP. Hồ Chí Minh'
+    edition: 'Tái bản lần thứ nhất, có sửa chữa và bổ sung'
+    language: 'vi'
+
+  - id: hung-dai-so-dai-cuong-1999
+    type: reference-book
+    title: 'Đại số đại cương'
+    authors:
+      - 'Nguyễn Hữu Việt Hưng'
+    year: 1999
+    publisher: 'NXB Giáo dục'
+    edition: 'Tái bản lần thứ nhất'
+    language: 'vi'
+
+  - id: bresar-undergraduate-algebra-2019
+    type: reference-book
+    title: 'Undergraduate Algebra: A Unified Approach'
+    authors:
+      - 'Matej Brešar'
+    year: 2019
+    publisher: 'Springer Nature Switzerland AG'
+    isbn: '978-3-030-14052-6'
+    language: 'en'
+
+  - id: gallian-contemporary-abstract-algebra-2017
+    type: reference-book
+    title: 'Contemporary Abstract Algebra'
+    authors:
+      - 'Joseph A. Gallian'
+    year: 2017
+    publisher: 'Cengage Learning'
+    edition: '9th ed.'
+    isbn: '978-1-305-65796-0'
+    language: 'en'
+
+  - id: judson-abstract-algebra-2020
+    type: reference-book
+    title: 'Abstract Algebra: Theory and Applications'
+    authors:
+      - 'Thomas W. Judson'
+    year: 2020
+    publisher: 'Annual Edition 2020 (https://abstract.pugetsound.edu)'
+    edition: 'Annual Edition 2020'
+    language: 'en'

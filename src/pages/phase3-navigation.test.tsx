@@ -67,12 +67,12 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     await user.click(screen.getByRole('button', { name: /Xóa bộ lọc/i }));
     expect(screen.getByText('Định nghĩa Nhóm và các tính chất cơ bản')).toBeInTheDocument();
 
-    // Khi bật chế độ Học viên và đánh dấu hoàn thành 1/2 bài -> tiến độ hiển thị 50%
+    // Khi bật chế độ Học viên và đánh dấu hoàn thành 1 bài -> tiến độ chương 1 hiển thị 1/2 bài, tổng thể 17% (1/6 bài)
     act(() => {
       useLearningStore.getState().enableLearnerMode();
       useLearningStore.getState().toggleLessonCompleted('dinh-nghia-nhom');
     });
-    expect((await screen.findAllByText('50%')).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText('17%')).length).toBeGreaterThan(0);
     expect(screen.getByText('Hoàn thành 1/2')).toBeInTheDocument();
   });
 

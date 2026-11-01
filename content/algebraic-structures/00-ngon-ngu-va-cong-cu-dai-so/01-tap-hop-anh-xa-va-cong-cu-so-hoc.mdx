@@ -1,0 +1,570 @@
+---
+id: tap-hop-anh-xa-va-cong-cu-so-hoc
+title: 'Tập hợp, ánh xạ và công cụ số học trên tập số nguyên'
+description: 'Hệ thống hóa tư tưởng cấu trúc thương, ngôn ngữ tập hợp, ánh xạ, ảnh, nghịch ảnh, thớ cùng các công cụ số học nền tảng trên tập số nguyên: phép chia Euclid, đồng nhất thức Bézout và hàm phi Euler.'
+estimatedMinutes: 35
+level: basic
+prerequisites: []
+tags:
+  - tập hợp
+  - ánh xạ
+  - nghịch ảnh
+  - phép chia Euclid
+  - đồng nhất thức Bézout
+  - hàm phi Euler
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '1-5'
+    sections: 'Mục 0.1, 0.2, 0.3'
+    note: 'Tư tưởng cấu trúc thương, ánh xạ, nghịch ảnh, phép chia Euclid, đồng nhất thức Bézout và hàm phi Euler'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '5-14'
+    sections: 'Chương 0'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Nhận diện tư tưởng cốt lõi của đại số trừu tượng:** Hiểu vì sao một đối tượng toán học có thể có nhiều cách biểu diễn và nắm được quy trình chứng minh hai tập hợp bằng nhau bằng hai bao hàm.
+2. **Sử dụng chính xác ngôn ngữ ánh xạ:** Phân biệt miền xác định, đối miền, ảnh, nghịch ảnh và thớ của một phần tử; kiểm tra tính đơn ánh, toàn ánh, song ánh và thực hiện phép hợp thành ánh xạ theo đúng thứ tự.
+3. **Vận dụng thành thạo công cụ số học trên $\Z$:** Phát biểu và chứng minh định lý phép chia Euclid, áp dụng thuật toán Euclid, đồng nhất thức Bézout, bổ đề chia hết của hai số nguyên tố cùng nhau và tính giá trị hàm phi Euler $\varphi(n)$.
+</Note>
+
+**Kiến thức tiên quyết:** Bài học mở đầu học phần **Cấu trúc đại số**, chỉ yêu cầu người học nắm vững các ký hiệu tập hợp cơ bản ($\in, \subseteq, \cup, \cap, \setminus$) và phép cộng, phép nhân thông thường trên tập số nguyên $\Z$.
+
+## 1. Tư tưởng mở đầu: Một đối tượng, nhiều cách biểu diễn và ngôn ngữ tập hợp
+
+Trong toán học phổ thông cũng như đại số hiện đại, ta thường xuyên gặp hiện tượng **nhiều ký hiệu khác nhau cùng biểu diễn một đối tượng duy nhất** (<Cite source="gt-ctds-hvk-2026" page="1" note="Mục 0.1" />):
+
+- Trên chiếc đồng hồ 12 giờ, thời điểm `2 giờ` và thời điểm `14 giờ` (hay sau `26 giờ` kể từ mốc `0 giờ`) đều chỉ cùng một vị trí kim giờ vì chúng hơn kém nhau một bội nguyên của $12$.
+- Trong tập số hữu tỉ $\Q$, các ký hiệu $\frac{1}{2}$, $\frac{2}{4}$ và $\frac{-3}{-6}$ là những cặp số nguyên khác nhau nhưng đều biểu diễn cùng một phân số vì $1 \cdot 4 = 2 \cdot 2$ và $1 \cdot (-6) = 2 \cdot (-3)$.
+
+Từ các tình huống quen thuộc đó, đại số hiện đại xây dựng các **cấu trúc thương** theo ba bước xuyên suốt toàn bộ học phần (<Cite source="gt-ctds-hvk-2026" page="1-2" note="Mục 0.1" />):
+
+1. Xác định rõ khi nào hai cách viết trên tập hợp gốc $X$ được xem là *tương đương*.
+2. Gom tất cả những phần tử tương đương nhau vào chung một *lớp tương đương*, từ đó hình thành *tập thương*.
+3. Định nghĩa ánh xạ hoặc phép toán mới trên các lớp thông qua *phần tử đại diện*, đồng thời kiểm tra **tính xác định tốt** (*well-definedness*): kết quả thu được chỉ phụ thuộc vào bản thân lớp chứ không phụ thuộc vào việc chọn đại diện nào trong lớp.
+
+Để diễn đạt chặt chẽ ba bước trên, trước hết ta thống nhất ngôn ngữ tập hợp (<Cite source="gt-ctds-hvk-2026" page="2" note="Mục 0.2" />). Cho hai tập hợp $A$ và $B$:
+
+- Ta viết $A \subseteq B$ ($A$ là **tập con** của $B$) nếu mọi phần tử $x \in A$ đều thuộc $B$.
+- Hai tập hợp $A$ và $B$ bằng nhau, ký hiệu $A = B$, khi và chỉ khi chúng có cùng các phần tử. Trong thực hành, để chứng minh $A = B$, chuẩn mực bắt buộc là **chứng minh hai chiều bao hàm**:
+  $$
+  A = B \iff (A \subseteq B \quad \text{và} \quad B \subseteq A).
+  $$
+- **Tích Descartes** của hai tập hợp $X$ và $Y$ là tập hợp tất cả các cặp có thứ tự:
+  $$
+  X \times Y = \{(x, y) \mid x \in X, \, y \in Y\},
+  $$
+  trong đó $(x, y) = (x', y')$ khi và chỉ khi $x = x'$ và $y = y'$.
+
+## 2. Ánh xạ, ảnh, nghịch ảnh, thớ và phép hợp thành
+
+Trong đại số, một ánh xạ không chỉ là một công thức tính toán mà là một bộ ba gồm **miền xác định**, **đối miền** và **quy tắc tương ứng**.
+
+<Definition
+  id="def-c0-b1-anh-xa-anh-nghich-anh"
+  title="Ánh xạ, ảnh, nghịch ảnh và thớ"
+  original="Mục 0.2"
+  source="gt-ctds-hvk-2026"
+  page="2"
+>
+Cho hai tập hợp $X$ và $Y$. Một **ánh xạ** (hay **hàm**) $f: X \to Y$ là một quy tắc gán cho mỗi phần tử $x \in X$ một phần tử **xác định duy nhất** $f(x) \in Y$. Khi đó:
+
+1. Tập $X$ được gọi là **miền xác định** (*domain*), tập $Y$ được gọi là **đối miền** (*codomain*), và $f(x)$ là **ảnh** của phần tử $x$ qua $f$.
+2. Với mỗi tập con $A \subseteq X$, **ảnh của tập con $A$** qua $f$ là tập con của $Y$ xác định bởi:
+   $$
+   f(A) = \{f(x) \mid x \in A\} \subseteq Y.
+   $$
+   Đặc biệt, tập hợp $\operatorname{im} f = f(X) = \{f(x) \mid x \in X\}$ được gọi là **ảnh toàn miền** (hay **tập ảnh**) của ánh xạ $f$.
+3. Với mỗi tập con $B \subseteq Y$, **nghịch ảnh** (hay **tạo ảnh**, *preimage*) của $B$ qua $f$ là tập con của $X$ gồm tất cả các phần tử có ảnh rơi vào $B$:
+   $$
+   f^{-1}(B) = \{x \in X \mid f(x) \in B\} \subseteq X.
+   $$
+   Khi $B = \{y\}$ chỉ gồm một phần tử $y \in Y$, tập hợp $f^{-1}(\{y\}) = \{x \in X \mid f(x) = y\}$ được gọi là **thớ** (*fiber*) của $f$ trên phần tử $y$.
+</Definition>
+
+<Warning title="Ký hiệu nghịch ảnh không đòi hỏi ánh xạ ngược">
+Tập hợp nghịch ảnh $f^{-1}(B)$ và thớ $f^{-1}(\{y\})$ trong <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" /> **luôn tồn tại với mọi ánh xạ** $f: X \to Y$, hoàn toàn không giả thiết $f$ có ánh xạ ngược (<Cite source="gt-ctds-hvk-2026" page="2" note="Mục 0.2" />). Nếu $y \notin \operatorname{im} f$ thì thớ $f^{-1}(\{y\}) = \varnothing$. Chỉ khi nào $f$ là song ánh ta mới có thêm ánh xạ ngược $f^{-1}: Y \to X$ tác động lên từng phần tử.
+</Warning>
+
+<Example id="ex-c0-b1-anh-nghich-anh-va-tho" title="Tính ảnh, nghịch ảnh và các thớ của một ánh xạ trên tập số nguyên">
+Xét ánh xạ $f: \Z \to \Z$ xác định bởi $f(x) = x^2 - 1$ với mọi $x \in \Z$.
+
+1. Với tập con $A = \{-2, 0, 2, 3\} \subseteq \Z$, ảnh của $A$ qua $f$ là:
+   $$
+   f(A) = \{f(-2), f(0), f(2), f(3)\} = \{3, -1, 8\}.
+   $$
+   Lưu ý rằng $f(-2) = f(2) = 3$ nên mặc dù $A$ có $4$ phần tử, tập ảnh $f(A)$ chỉ có $3$ phần tử phân biệt.
+2. Ảnh toàn miền của $f$ là $\operatorname{im} f = f(\Z) = \{k^2 - 1 \mid k \in \Z\} = \{-1, 0, 3, 8, 15, \dots\} \subsetneq \Z$.
+3. Xét tập con $B = \{-2, -1, 3\} \subseteq \Z$. Nghịch ảnh của $B$ qua $f$ là:
+   $$
+   f^{-1}(B) = \{x \in \Z \mid x^2 - 1 \in \{-2, -1, 3\}\} = \{x \in \Z \mid x^2 \in \{-1, 0, 4\}\} = \{-2, 0, 2\}.
+   $$
+   Đặc biệt, thớ của $f$ tại $y = 3$ là $f^{-1}(\{3\}) = \{-2, 2\}$, tại $y = -1$ là $f^{-1}(\{-1\}) = \{0\}$, còn tại $y = 2$ là $f^{-1}(\{2\}) = \varnothing$ (vì $x^2 = 3$ không có nghiệm nguyên).
+</Example>
+
+Tiếp theo, ta nhắc lại ba lớp ánh xạ đóng vai trò trung tâm khi so sánh các cấu trúc đại số (<Cite source="gt-ctds-hvk-2026" page="2-3" note="Mục 0.2" />).
+
+<Definition
+  id="def-c0-b1-don-anh-toan-anh-song-anh"
+  title="Đơn ánh, toàn ánh, song ánh và hợp thành ánh xạ"
+  original="Mục 0.2"
+  source="gt-ctds-hvk-2026"
+  page="2-3"
+>
+Cho ánh xạ $f: X \to Y$.
+
+1. $f$ được gọi là **đơn ánh** (*injective*) nếu các phần tử khác nhau luôn có ảnh khác nhau; tương đương với điều kiện:
+   $$
+   \forall x_1, x_2 \in X, \quad f(x_1) = f(x_2) \implies x_1 = x_2.
+   $$
+2. $f$ được gọi là **toàn ánh** (*surjective*) nếu $\operatorname{im} f = Y$, nghĩa là:
+   $$
+   \forall y \in Y, \, \exists x \in X \quad \text{sao cho} \quad f(x) = y.
+   $$
+3. $f$ được gọi là **song ánh** (*bijective*) nếu $f$ vừa là đơn ánh, vừa là toàn ánh.
+4. Cho thêm ánh xạ $g: Y \to Z$. **Hợp thành** (*composition*) của $f$ và $g$ là ánh xạ $g \circ f: X \to Z$ xác định bởi:
+   $$
+   (g \circ f)(x) = g(f(x)), \quad \forall x \in X.
+   $$
+5. Trên mỗi tập hợp $X$, **ánh xạ đồng nhất** $\id_X: X \to X$ được xác định bởi $\id_X(x) = x$ với mọi $x \in X$.
+</Definition>
+
+<Remark title="Thứ tự đọc phép hợp thành ánh xạ">
+Trong ký hiệu $(g \circ f)(x) = g(f(x))$, ánh xạ viết **bên phải** ($f$) được tác động **trước** lên phần tử $x \in X$ để cho ra $f(x) \in Y$, sau đó ánh xạ viết **bên trái** ($g$) mới tác động lên $f(x)$ để cho ra $g(f(x)) \in Z$ (<Cite source="gt-ctds-hvk-2026" page="3" note="Mục 0.2" />).
+</Remark>
+
+<Counterexample id="cex-c0-b1-anh-xa-phu-thuoc-mien-va-doi-mien" title="Cùng công thức đại số nhưng khác miền xác định và đối miền">
+Tính đơn ánh và toàn ánh của một ánh xạ phụ thuộc thiết yếu vào cả miền xác định $X$ lẫn đối miền $Y$, không chỉ phụ thuộc vào công thức (<Cite source="gt-ctds-hvk-2026" page="3" note="Ví dụ 0.2" />). Chẳng hạn, cùng với quy tắc $x \mapsto x^2$:
+
+1. Ánh xạ $f_1: \R \to \R, x \mapsto x^2$ **không đơn ánh** (vì $f_1(-3) = 9 = f_1(3)$ với $-3 \neq 3$) và **không toàn ánh** (vì $-1 \in \R$ không có tạo ảnh thực).
+2. Ánh xạ $f_2: [0, +\infty) \to \R, x \mapsto x^2$ **đơn ánh** (vì với $x_1, x_2 \ge 0$, $x_1^2 = x_2^2 \implies x_1 = x_2$) nhưng **không toàn ánh**.
+3. Ánh xạ $f_3: \R \to [0, +\infty), x \mapsto x^2$ **toàn ánh** (mọi $y \ge 0$ có $x = \sqrt{y} \in \R$ thỏa mãn $f_3(x) = y$) nhưng **không đơn ánh**.
+4. Ánh xạ $f_4: [0, +\infty) \to [0, +\infty), x \mapsto x^2$ vừa đơn ánh vừa toàn ánh, nên là một **song ánh** với ánh xạ ngược $f_4^{-1}(y) = \sqrt{y}$.
+</Counterexample>
+
+<Proposition
+  id="prop-c0-b1-hop-thanh-song-anh"
+  title="Tính kết hợp của phép hợp thành và tiêu chuẩn khả nghịch của ánh xạ"
+  original="Mục 0.2"
+  source="gt-ctds-hvk-2026"
+  page="3"
+>
+1. **Tính kết hợp của phép hợp thành:** Cho ba ánh xạ $f: X \to Y$, $g: Y \to Z$ và $h: Z \to W$. Khi đó:
+   $$
+   h \circ (g \circ f) = (h \circ g) \circ f.
+   $$
+2. **Đặc trưng song ánh qua ánh xạ ngược hai phía:** Ánh xạ $f: X \to Y$ là song ánh khi và chỉ khi tồn tại ánh xạ $g: Y \to X$ sao cho:
+   $$
+   g \circ f = \id_X \quad \text{và} \quad f \circ g = \id_Y.
+   $$
+   Khi đó ánh xạ $g$ là duy nhất, được gọi là **ánh xạ ngược** của $f$ và ký hiệu là $f^{-1}$.
+</Proposition>
+
+<Proof of="prop-c0-b1-hop-thanh-song-anh" defaultOpen={true}>
+1. Hai ánh xạ $h \circ (g \circ f)$ và $(h \circ g) \circ f$ có cùng miền xác định $X$ và đối miền $W$. Với mọi $x \in X$, theo định nghĩa phép hợp thành trong <Ref to="def-c0-b1-don-anh-toan-anh-song-anh" />, ta có:
+   $$
+   (h \circ (g \circ f))(x) = h((g \circ f)(x)) = h(g(f(x))),
+   $$
+   và
+   $$
+   ((h \circ g) \circ f)(x) = (h \circ g)(f(x)) = h(g(f(x))).
+   $$
+   Do đó $h \circ (g \circ f) = (h \circ g) \circ f$.
+2. **Chiều thuận ($\Rightarrow$):** Giả sử $f: X \to Y$ là song ánh. Với mỗi $y \in Y$, vì $f$ toàn ánh nên tồn tại $x \in X$ sao cho $f(x) = y$; vì $f$ đơn ánh nên phần tử $x$ này là duy nhất. Ta xác định ánh xạ $g: Y \to X$ bằng cách đặt $g(y) = x$, trong đó $x$ là phần tử duy nhất của $X$ thỏa mãn $f(x) = y$. Khi đó với mọi $x \in X$, đặt $y = f(x)$ thì $g(f(x)) = g(y) = x = \id_X(x)$; với mọi $y \in Y$, đặt $x = g(y)$ thì $f(g(y)) = f(x) = y = \id_Y(y)$.
+
+   **Chiều đảo ($\Leftarrow$):** Giả sử tồn tại $g: Y \to X$ sao cho $g \circ f = \id_X$ và $f \circ g = \id_Y$.
+   - *Tính đơn ánh:* Nếu $x_1, x_2 \in X$ thỏa mãn $f(x_1) = f(x_2)$ thì tác động $g$ vào hai vế ta được:
+     $$
+     x_1 = \id_X(x_1) = g(f(x_1)) = g(f(x_2)) = \id_X(x_2) = x_2.
+     $$
+   - *Tính toàn ánh:* Với mỗi $y \in Y$, chọn $x = g(y) \in X$. Khi đó $f(x) = f(g(y)) = \id_Y(y) = y$.
+   Vậy $f$ là song ánh. Cuối cùng, nếu $g_1, g_2: Y \to X$ cùng thỏa mãn hệ thức trên thì nhờ tính kết hợp ở ý (1):
+   $$
+   g_1 = g_1 \circ \id_Y = g_1 \circ (f \circ g_2) = (g_1 \circ f) \circ g_2 = \id_X \circ g_2 = g_2.
+   $$
+</Proof>
+
+## 3. Phép chia Euclid, ước chung lớn nhất, đồng nhất thức Bézout và hàm Euler
+
+Tập số nguyên $\Z$ cùng với quan hệ chia hết là mô hình nguyên mẫu dẫn tới lý thuyết nhóm xiclic, vành $\Z/n\Z$ và vành đa thức ở các chương sau (<Cite source="gt-ctds-hvk-2026" page="3-5" note="Mục 0.3" />).
+
+<Definition
+  id="def-c0-b1-chia-het-va-ucln"
+  title="Quan hệ chia hết và ước chung lớn nhất trên tập số nguyên"
+  original="Mục 0.3.1"
+  source="gt-ctds-hvk-2026"
+  page="3-4"
+>
+Cho các số nguyên $a, b \in \Z$.
+
+1. Ta nói $a$ **chia hết** $b$ (hay $a$ là **ước** của $b$, $b$ là **bội** của $a$), ký hiệu $a \mid b$, nếu tồn tại số nguyên $k \in \Z$ sao cho $b = ak$. Nếu không tồn tại $k \in \Z$ như vậy, ta viết $a \nmid b$.
+2. Với hai số nguyên $a, b \in \Z$ không đồng thời bằng $0$, **ước chung lớn nhất** của $a$ và $b$, ký hiệu $\gcd(a, b)$, là số nguyên dương lớn nhất $d \in \Z^+$ thỏa mãn đồng thời $d \mid a$ và $d \mid b$. Ta quy ước bổ sung $\gcd(0, 0) = 0$; khi đó với mọi $a \in \Z$, ta luôn có $\gcd(a, 0) = |a|$.
+3. Hai số nguyên $a, b \in \Z$ được gọi là **nguyên tố cùng nhau** (*coprime*) nếu $\gcd(a, b) = 1$.
+</Definition>
+
+<Remark title="Hai hệ quả trực tiếp của định nghĩa chia hết">
+Từ biểu thức $b = ak$ trong <Ref to="def-c0-b1-chia-het-va-ucln" />, ta thấy ngay (<Cite source="gt-ctds-hvk-2026" page="3" note="Mục 0.3.1" />):
+
+- **Vai trò của số $0$:** Vì $0 = a \cdot 0$ với mọi $a \in \Z$ nên mọi số nguyên đều là ước của $0$ ($a \mid 0$). Ngược lại, từ $b = 0 \cdot k = 0$ suy ra số $0$ chỉ là ước của chính nó ($0 \mid b \iff b = 0$).
+- **Tính chia hết của tổ hợp tuyến tính:** Nếu $a \mid b$ và $a \mid c$ thì với mọi số nguyên $r, s \in \Z$, ta luôn có $a \mid (rb + sc)$ (vì nếu $b = ak_1, c = ak_2$ thì $rb + sc = a(rk_1 + sk_2)$).
+</Remark>
+
+<Theorem
+  id="thm-c0-b1-phep-chia-euclid"
+  title="Định lý phép chia có dư Euclid trên tập số nguyên"
+  original="Mục 0.3.1"
+  source="gt-ctds-hvk-2026"
+  page="3"
+>
+Cho $a \in \Z$ và $b \in \Z$ với $b > 0$. Khi đó tồn tại **duy nhất** một cặp số nguyên $(q, r) \in \Z^2$ sao cho:
+$$
+a = bq + r \quad \text{và} \quad 0 \le r < b.
+$$
+Số $q$ được gọi là **thương** (*quotient*) và số $r$ được gọi là **số dư** (*remainder*) trong phép chia $a$ cho $b$.
+</Theorem>
+
+<Proof of="thm-c0-b1-phep-chia-euclid" defaultOpen={true}>
+Ta chứng minh định lý thành hai bước: sự tồn tại và tính duy nhất (<Cite source="gt-ctds-hvk-2026" page="3" note="Mục 0.3.1" />).
+
+1. **Sự tồn tại của $(q, r)$:** Xét tập hợp các số nguyên không âm có dạng $a - bk$:
+   $$
+   S = \{a - bk \mid k \in \Z, \, a - bk \ge 0\} \subseteq \N.
+   $$
+   Ta chỉ ra $S \neq \varnothing$. Thật vậy, vì $b \ge 1$ nên nếu chọn $k = -|a| \in \Z$ thì:
+   $$
+   a - bk = a + b|a| \ge a + |a| \ge 0,
+   $$
+   suy ra $a - b(-|a|) \in S$. Vì $S$ là một tập con khác rỗng của tập các số tự nhiên $\N$, theo nguyên lý thứ tự tốt (nguyên lý cực tiểu), $S$ có phần tử nhỏ nhất $r = \min S$. Theo định nghĩa của $S$, tồn tại $q \in \Z$ sao cho $r = a - bq \ge 0$, tức là $a = bq + r$.
+
+   Ta cần chứng minh $r < b$. Giả sử phản chứng rằng $r \ge b$. Khi đó đặt $r' = r - b \ge 0$, ta có:
+   $$
+   r' = (a - bq) - b = a - b(q + 1) \ge 0,
+   $$
+   nên $r' \in S$. Nhưng $r' = r - b < r$ (do $b > 0$), mâu thuẫn với tính nhỏ nhất của $r$ trong $S$. Vậy $0 \le r < b$.
+2. **Tính duy nhất của $(q, r)$:** Giả sử có hai cặp số nguyên $(q, r)$ và $(q', r')$ cùng thỏa mãn:
+   $$
+   a = bq + r = bq' + r', \quad 0 \le r < b, \quad 0 \le r' < b.
+   $$
+   Trừ hai vế ta được $b(q - q') = r' - r$, suy ra $b \cdot |q - q'| = |r' - r|$. Vì $0 \le r, r' < b$ nên khoảng cách giữa hai số này thỏa mãn $0 \le |r' - r| < b$. Nếu $q \neq q'$ thì $|q - q'| \ge 1$, kéo theo $|r' - r| = b \cdot |q - q'| \ge b$, vô lý! Do đó bắt buộc $|q - q'| = 0$, tức là $q = q'$, và từ đó $r = r'$.
+</Proof>
+
+Nhờ <Ref to="thm-c0-b1-phep-chia-euclid" />, việc tìm ước chung lớn nhất của hai số nguyên được quy về dãy các phép chia có dư liên tiếp thông qua bổ đề dưới đây.
+
+<Lemma
+  id="lem-c0-b1-bo-de-euclid-gcd"
+  title="Sự bất biến của ước chung lớn nhất qua phép chia có dư"
+  original="Mục 0.3.1"
+  source="gt-ctds-hvk-2026"
+  page="4"
+>
+Cho $a, b \in \Z$ với $b > 0$. Nếu $a = bq + r$ với $q, r \in \Z$ thì tập các ước chung của $(a, b)$ trùng với tập các ước chung của $(b, r)$. Đặc biệt:
+$$
+\gcd(a, b) = \gcd(b, r).
+$$
+</Lemma>
+
+<Proof of="lem-c0-b1-bo-de-euclid-gcd">
+Với mọi $d \in \Z$, nếu $d \mid a$ và $d \mid b$ thì do $r = a - bq$ là tổ hợp tuyến tính của $a$ và $b$, ta suy ra $d \mid r$; vậy $d$ là ước chung của $b$ và $r$. Ngược lại, nếu $d \mid b$ và $d \mid r$ thì từ $a = bq + r$ suy ra $d \mid a$; vậy $d$ là ước chung của $a$ và $b$. Vì hai cặp $(a, b)$ và $(b, r)$ có cùng tập hợp các ước chung nên ước chung lớn nhất của chúng bằng nhau: $\gcd(a, b) = \gcd(b, r)$.
+</Proof>
+
+Áp dụng lặp lại <Ref to="lem-c0-b1-bo-de-euclid-gcd" /> với dãy số dư giảm thực sự $b > r_1 > r_2 > \dots > r_k > r_{k+1} = 0$ (thuật toán Euclid) và thế ngược từ dưới lên, ta thu được định lý nền tảng nhất của số học sơ cấp trong đại số.
+
+<Theorem
+  id="thm-c0-b1-dong-nhat-thuc-bezout"
+  title="Đồng nhất thức Bézout và hệ quả chia hết"
+  original="Mục 0.3.1"
+  source="gt-ctds-hvk-2026"
+  page="4"
+>
+Cho hai số nguyên $a, b \in \Z$. Khi đó:
+
+1. **Đồng nhất thức Bézout:** Luôn tồn tại các số nguyên $u, v \in \Z$ sao cho:
+   $$
+   \gcd(a, b) = ua + vb.
+   $$
+2. **Tiêu chuẩn nguyên tố cùng nhau:** Hai số nguyên $a, b \in \Z$ nguyên tố cùng nhau ($\gcd(a, b) = 1$) khi và chỉ khi tồn tại $u, v \in \Z$ sao cho:
+   $$
+   ua + vb = 1.
+   $$
+3. **Bổ đề Euclid về tính chia hết:** Cho $a, b, c \in \Z$. Nếu $a \mid bc$ và $\gcd(a, b) = 1$ thì $a \mid c$.
+</Theorem>
+
+<Proof of="thm-c0-b1-dong-nhat-thuc-bezout" defaultOpen={true}>
+1. Nếu $a = b = 0$ thì $\gcd(0, 0) = 0 = 1 \cdot 0 + 1 \cdot 0$. Giả sử $a$ và $b$ không đồng thời bằng $0$. Xét tập hợp tất cả các tổ hợp tuyến tính nguyên dương của $a$ và $b$:
+   $$
+   T = \{xa + yb \mid x, y \in \Z, \, xa + yb > 0\} \subseteq \Z^+.
+   $$
+   Vì $|a| + |b| > 0$ có dạng $(\pm 1)a + (\pm 1)b \in T$ nên $T \neq \varnothing$. Gọi $d = \min T = ua + vb$ (với $u, v \in \Z$) là phần tử nguyên dương nhỏ nhất của $T$. Ta chứng minh $d = \gcd(a, b)$:
+   - Chia $a$ cho $d > 0$ theo <Ref to="thm-c0-b1-phep-chia-euclid" />: $a = dq + r$ với $0 \le r < d$. Khi đó:
+     $$
+     r = a - dq = a - (ua + vb)q = (1 - uq)a + (-vq)b.
+     $$
+     Nếu $r > 0$ thì $r \in T$ nhưng $r < d = \min T$, vô lý! Do đó $r = 0$, tức là $d \mid a$. Hoàn toàn tương tự, $d \mid b$, nên $d$ là một ước chung dương của $a$ và $b$.
+   - Mặt khác, nếu $c \in \Z^+$ là một ước chung bất kỳ của $a$ và $b$ ($c \mid a$ và $c \mid b$) thì $c \mid (ua + vb) = d$, suy ra $c \le d$. Vậy $d = \gcd(a, b) = ua + vb$.
+2. Nếu $\gcd(a, b) = 1$ thì theo ý (1), tồn tại $u, v \in \Z$ sao cho $ua + vb = 1$. Ngược lại, nếu tồn tại $u, v \in \Z$ sao cho $ua + vb = 1$ thì mọi ước chung dương $d$ của $a$ và $b$ đều phải chia hết $ua + vb = 1$, suy ra $d = 1$, tức $\gcd(a, b) = 1$.
+3. Giả sử $a \mid bc$ và $\gcd(a, b) = 1$. Theo ý (2), tồn tại $u, v \in \Z$ sao cho $ua + vb = 1$. Nhân cả hai vế với $c$, ta được:
+   $$
+   c = (ua + vb)c = a(uc) + (bc)v.
+   $$
+   Vì $a \mid a(uc)$ và $a \mid bc$ (theo giả thiết), nên $a$ chia hết tổng $a(uc) + (bc)v = c$, tức là $a \mid c$.
+</Proof>
+
+<Warning title="Hệ số Bézout không duy nhất và chiều ngược của đồng nhất thức Bézout">
+1. Các hệ số nguyên $u, v \in \Z$ trong đồng nhất thức $\gcd(a, b) = ua + vb$ **không duy nhất**: nếu $(u_0, v_0)$ là một cặp nghiệm thì mọi cặp $(u_0 + k b', v_0 - k a')$ với $a' = a/d, b' = b/d, k \in \Z$ cũng thỏa mãn.
+2. Mệnh đề $\gcd(a, b) = 1 \iff \exists u, v \in \Z, ua + vb = 1$ là tương đương hai chiều cho số $1$, nhưng với $d > 1$, sự tồn tại $ua + vb = d$ chỉ suy ra $\gcd(a, b) \mid d$ chứ **không suy ra** $\gcd(a, b) = d$ (ví dụ: $2 \cdot 3 + 1 \cdot 4 = 10$ nhưng $\gcd(3, 4) = 1 \neq 10$).
+</Warning>
+
+Cuối cùng, để chuẩn bị cho việc khảo sát nhóm các phần tử khả nghịch trong $\Z/n\Z$ ở các chương sau, ta giới thiệu hệ đại diện chuẩn và hàm phi Euler (<Cite source="gt-ctds-hvk-2026" page="4-5" note="Mục 0.3.2" />).
+
+<Definition
+  id="def-c0-b1-ham-phi-euler"
+  title="Hệ đại diện chuẩn modulo n và hàm phi của Euler"
+  original="Mục 0.3.2"
+  source="gt-ctds-hvk-2026"
+  page="4-5"
+>
+Cho số nguyên dương $n \ge 1$.
+
+1. Tập hợp các số dư có thể có khi chia cho $n$:
+   $$
+   R_n = \{0, 1, 2, \dots, n - 1\}
+   $$
+   được gọi là **hệ đại diện chuẩn** (hay hệ thặng dư không âm nhỏ nhất) modulo $n$.
+2. **Hàm phi của Euler**, ký hiệu $\varphi(n)$, là số lượng các phần tử trong $R_n$ nguyên tố cùng nhau với $n$:
+   $$
+   \varphi(n) = \bigl|\{k \in R_n \mid \gcd(k, n) = 1\}\bigr|.
+   $$
+</Definition>
+
+<Example id="ex-c0-b1-euclid-bezout-euler" title="Thực hành thuật toán Euclid, tìm hệ số Bézout và tính hàm phi Euler">
+1. **Tìm $\gcd(119, 34)$ và các hệ số Bézout $u, v \in \Z$:**
+   Thực hiện thuật toán Euclid (chia có dư liên tiếp):
+   $$
+   \begin{aligned}
+   119 &= 34 \cdot 3 + 17, \\
+   34 &= 17 \cdot 2 + 0.
+   \end{aligned}
+   $$
+   Số dư khác $0$ cuối cùng là $17$, nên $\gcd(119, 34) = 17$. Từ phép chia đầu tiên, ta rút ngay được:
+   $$
+   17 = 1 \cdot 119 + (-3) \cdot 34,
+   $$
+   nên một cặp hệ số Bézout là $u = 1, v = -3$.
+2. **Tính $\varphi(1) $, $\varphi(9)$ và $\varphi(10)$:**
+   - Với $n = 1$: $R_1 = \{0\}$ và theo quy ước $\gcd(0, 1) = 1$, nên $\varphi(1) = 1$ (<Cite source="gt-ctds-hvk-2026" page="4" note="Ví dụ 0.4" />).
+   - Với $n = 9$: Trong $R_9 = \{0, 1, 2, 3, 4, 5, 6, 7, 8\}$, các phần tử nguyên tố cùng nhau với $9$ là $\{1, 2, 4, 5, 7, 8\}$, nên $\varphi(9) = 6$.
+   - Với $n = 10$: Trong $R_{10} = \{0, 1, \dots, 9\}$, các phần tử nguyên tố cùng nhau với $10$ là $\{1, 3, 7, 9\}$, nên $\varphi(10) = 4$.
+</Example>
+
+## 4. Bài tập tự luyện
+
+<Exercise id="exr-c0-b1-a1" title="[Nhóm A · Mã CTDS-C0-B1-A01] Tính ảnh, nghịch ảnh, thớ của ánh xạ và thực hành thuật toán Euclid">
+- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
+- **Chủ đề:** Ảnh, nghịch ảnh, thớ của ánh xạ; thuật toán Euclid, hệ số Bézout và hàm phi Euler $\varphi(n)$
+- **Mục tiêu đánh giá:** Tính đúng tập ảnh, nghịch ảnh, thớ của ánh xạ cụ thể và tìm đúng cặp hệ số Bézout bằng thế ngược *(Đánh giá thường xuyên)*
+- **Mức độ khó:** Cơ bản (Mức 1)
+- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" /> · <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" /> · <Ref to="def-c0-b1-ham-phi-euler" /> · <Cite source="gt-ctds-hvk-2026" page="2-5" note="Mục 0.2 - 0.3" />
+
+**Đề bài:**
+
+1. Cho ánh xạ $f: \Z \to \Z$ xác định bởi $f(x) = |2x - 3|$ với mọi $x \in \Z$. Hãy tìm tập ảnh $f(\{-1, 0, 1, 2\})$, thớ $f^{-1}(\{5\})$, thớ $f^{-1}(\{4\})$ và nghịch ảnh $f^{-1}(\{0, 1, 3\})$. Ánh xạ $f$ có đơn ánh hay toàn ánh không? Vì sao?
+2. Dùng thuật toán Euclid để tìm $d = \gcd(85, 31)$ và tìm một cặp số nguyên $(u, v) \in \Z^2$ thỏa mãn $85u + 31v = d$. Tính giá trị hàm phi Euler $\varphi(14)$ bằng cách liệt kê các phần tử thỏa mãn trong $R_{14}$.
+</Exercise>
+
+<Hint>
+Ở câu (1), giải phương trình giá trị tuyệt đối $|2x - 3| = y$ trên tập số nguyên $\Z$ và chú ý $2x - 3$ luôn là số lẻ với mọi $x \in \Z$. Ở câu (2), thực hiện phép chia có dư liên tiếp từ $(85, 31)$ đến khi dư bằng $1$ rồi thế ngược từ dưới lên.
+</Hint>
+
+<Solution>
+1. Ta tính lần lượt các tập hợp theo <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" />:
+   - Với $A = \{-1, 0, 1, 2\}$, ta có $f(-1) = 5$, $f(0) = 3$, $f(1) = 1$, $f(2) = 1$. Do đó:
+     $$
+     f(\{-1, 0, 1, 2\}) = \{1, 3, 5\}.
+     $$
+   - Thớ tại $y = 5$: $f^{-1}(\{5\}) = \{x \in \Z \mid |2x - 3| = 5\} = \{x \in \Z \mid 2x - 3 = \pm 5\} = \{-1, 4\}$.
+   - Thớ tại $y = 4$: Vì $2x - 3$ luôn là số nguyên lẻ với mọi $x \in \Z$ nên phương trình $|2x - 3| = 4$ vô nghiệm trên $\Z$. Vậy $f^{-1}(\{4\}) = \varnothing$.
+   - Nghịch ảnh $f^{-1}(\{0, 1, 3\}) = f^{-1}(\{0\}) \cup f^{-1}(\{1\}) \cup f^{-1}(\{3\}) = \varnothing \cup \{1, 2\} \cup \{0, 3\} = \{0, 1, 2, 3\}$.
+   - Ánh xạ $f$ **không đơn ánh** vì $f(1) = 1 = f(2)$ với $1 \neq 2$; đồng thời $f$ **không toàn ánh** vì $f^{-1}(\{4\}) = \varnothing$ (mọi số nguyên âm và số nguyên chẵn đều không thuộc $\operatorname{im} f$).
+2. Thực hiện thuật toán Euclid cho $a = 85$ và $b = 31$:
+   $$
+   \begin{aligned}
+   85 &= 31 \cdot 2 + 23, \\
+   31 &= 23 \cdot 1 + 8, \\
+   23 &= 8 \cdot 2 + 7, \\
+   8 &= 7 \cdot 1 + 1, \\
+   7 &= 1 \cdot 7 + 0.
+   \end{aligned}
+   $$
+   Vậy $d = \gcd(85, 31) = 1$. Thế ngược từ dưới lên:
+   $$
+   \begin{aligned}
+   1 &= 8 - 1 \cdot 7 \\
+     &= 8 - 1 \cdot (23 - 2 \cdot 8) = 3 \cdot 8 - 1 \cdot 23 \\
+     &= 3 \cdot (31 - 1 \cdot 23) - 1 \cdot 23 = 3 \cdot 31 - 4 \cdot 23 \\
+     &= 3 \cdot 31 - 4 \cdot (85 - 2 \cdot 31) = (-4) \cdot 85 + 11 \cdot 31.
+   \end{aligned}
+   $$
+   Vậy một cặp hệ số Bézout là $(u, v) = (-4, 11)$ (thử lại: $85(-4) + 31(11) = -340 + 341 = 1$).
+
+   Với $n = 14$, trong $R_{14} = \{0, 1, 2, \dots, 13\}$, các số nguyên tố cùng nhau với $14$ (tức là không chia hết cho $2$ và không chia hết cho $7$) gồm $\{1, 3, 5, 9, 11, 13\}$. Do đó $\varphi(14) = 6$.
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1a | Tính đúng $f(\{-1,0,1,2\}) = \{1,3,5\}$, $f^{-1}(\{5\}) = \{-1,4\}$ và $f^{-1}(\{4\}) = \varnothing$ | `0,25 đ` |
+| 1b | Tính đúng $f^{-1}(\{0,1,3\}) = \{0,1,2,3\}$ và giải thích đúng vì sao $f$ không đơn ánh, không toàn ánh | `0,25 đ` |
+| 2a | Thực hiện đúng thuật toán Euclid tìm được $\gcd(85, 31) = 1$ và cặp hệ số Bézout $(u, v) = (-4, 11)$ | `0,25 đ` |
+| 2b | Liệt kê đúng tập $\{1, 3, 5, 9, 11, 13\} \subseteq R_{14}$ và kết luận $\varphi(14) = 6$ | `0,25 đ` |
+</Solution>
+
+<Exercise id="exr-c0-b1-b1" title="[Nhóm B · Mã CTDS-C0-B1-B01] Vận dụng đồng nhất thức Bézout và tính chất của nghịch ảnh">
+- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
+- **Chủ đề:** Chứng minh hai tập hợp bằng nhau qua nghịch ảnh và áp dụng tiêu chuẩn Bézout cho hai biểu thức nguyên
+- **Mục tiêu đánh giá:** Vận dụng mẫu chứng minh hai bao hàm cho nghịch ảnh và <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" /> để xử lý bài toán chia hết *(Đánh giá quá trình)*
+- **Mức độ khó:** Trung bình (Mức 2)
+- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" /> · <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" /> · <Cite source="gt-ctds-hvk-2026" page="2-4" note="Mục 0.2 - 0.3" />
+
+**Đề bài:**
+
+1. Cho ánh xạ $f: X \to Y$ và hai tập con $B_1, B_2 \subseteq Y$. Bằng phương pháp chứng minh hai bao hàm, hãy chứng minh rằng nghịch ảnh bảo toàn phép giao:
+   $$
+   f^{-1}(B_1 \cap B_2) = f^{-1}(B_1) \cap f^{-1}(B_2).
+   $$
+2. Cho số nguyên $n \in \Z$. Chứng minh rằng $\gcd(3n + 2, 5n + 3) = 1$. Từ đó chứng minh rằng nếu số nguyên $m \in \Z$ thỏa mãn $(3n + 2) \mid (5n + 3)m$ thì bắt buộc $(3n + 2) \mid m$.
+</Exercise>
+
+<Hint>
+Ở câu (1), lấy $x \in f^{-1}(B_1 \cap B_2)$ rồi khai triển theo định nghĩa <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" /> để chỉ ra hai chiều bao hàm. Ở câu (2), khử $n$ giữa $3n+2$ và $5n+3$ để lập một đồng nhất thức dạng $u(3n+2) + v(5n+3) = 1$, rồi áp dụng ý (2) và ý (3) của <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" />.
+</Hint>
+
+<Solution>
+1. Ta chứng minh hai bao hàm giữa $f^{-1}(B_1 \cap B_2)$ và $f^{-1}(B_1) \cap f^{-1}(B_2)$:
+   - **Chiều ($\subseteq$):** Lấy $x \in f^{-1}(B_1 \cap B_2)$ bất kỳ. Theo <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" />, điều này nghĩa là $f(x) \in B_1 \cap B_2$, suy ra $f(x) \in B_1$ và $f(x) \in B_2$. Do đó $x \in f^{-1}(B_1)$ và $x \in f^{-1}(B_2)$, tức là $x \in f^{-1}(B_1) \cap f^{-1}(B_2)$. Vậy $f^{-1}(B_1 \cap B_2) \subseteq f^{-1}(B_1) \cap f^{-1}(B_2)$.
+   - **Chiều ($\supseteq$):** Ngược lại, lấy $x \in f^{-1}(B_1) \cap f^{-1}(B_2)$ bất kỳ. Khi đó $x \in f^{-1}(B_1)$ và $x \in f^{-1}(B_2)$, nên $f(x) \in B_1$ và $f(x) \in B_2$, suy ra $f(x) \in B_1 \cap B_2$, hay $x \in f^{-1}(B_1 \cap B_2)$. Vậy $f^{-1}(B_1) \cap f^{-1}(B_2) \subseteq f^{-1}(B_1 \cap B_2)$.
+   Kết hợp hai bao hàm, ta có $f^{-1}(B_1 \cap B_2) = f^{-1}(B_1) \cap f^{-1}(B_2)$.
+2. Để khử $n$ giữa $a = 3n + 2$ và $b = 5n + 3$, ta xét tổ hợp tuyến tính với $u = 5, v = -3 \in \Z$:
+   $$
+   5(3n + 2) + (-3)(5n + 3) = (15n + 10) - (15n + 9) = 1.
+   $$
+   Theo tiêu chuẩn nguyên tố cùng nhau trong <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" />, đẳng thức $5(3n+2) + (-3)(5n+3) = 1$ chứng tỏ $\gcd(3n + 2, 5n + 3) = 1$ với mọi $n \in \Z$.
+
+   Tiếp theo, giả sử $(3n + 2) \mid (5n + 3)m$. Vì $\gcd(3n + 2, 5n + 3) = 1$, áp dụng trực tiếp Bổ đề Euclid (ý 3 của <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" />) cho $a = 3n + 2, b = 5n + 3, c = m$, ta suy ra ngay $(3n + 2) \mid m$.
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1a | Chứng minh đúng chiều bao hàm $f^{-1}(B_1 \cap B_2) \subseteq f^{-1}(B_1) \cap f^{-1}(B_2)$ | `0,25 đ` |
+| 1b | Chứng minh đúng chiều bao hàm ngược lại và kết luận hai tập bằng nhau | `0,25 đ` |
+| 2a | Lập được đẳng thức $5(3n+2) - 3(5n+3) = 1$ và suy ra $\gcd(3n+2, 5n+3) = 1$ | `0,25 đ` |
+| 2b | Vận dụng Bổ đề Euclid trong <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" /> để kết luận $(3n+2) \mid m$ | `0,25 đ` |
+</Solution>
+
+<Exercise id="exr-c0-b1-c1" title="[Nhóm C · Mã CTDS-C0-B1-C01] Tính đơn ánh, toàn ánh của ánh xạ hợp thành và phản ví dụ chiều ngược">
+- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
+- **Chủ đề:** Liên hệ giữa tính đơn ánh, toàn ánh của $g \circ f$ với từng ánh xạ thành phần $f$ và $g$
+- **Mục tiêu đánh giá:** Chứng minh chặt chẽ tính chất đơn ánh/toàn ánh qua phép hợp thành và xây dựng phản ví dụ bác bỏ mệnh đề đảo *(Kiểm tra giữa kỳ)*
+- **Mức độ khó:** Khá – Giỏi (Mức 3)
+- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b1-don-anh-toan-anh-song-anh" /> · <Ref to="prop-c0-b1-hop-thanh-song-anh" /> · <Cite source="gt-ctds-hvk-2026" page="2-3, 12" note="Mục 0.2 & Bài tập 0.4" />
+
+**Đề bài:** Cho hai ánh xạ $f: X \to Y$ và $g: Y \to Z$.
+
+1. Chứng minh rằng:
+   - Nếu $g \circ f$ là đơn ánh thì $f$ phải là đơn ánh.
+   - Nếu $g \circ f$ là toàn ánh thì $g$ phải là toàn ánh.
+2. Các khẳng định sau đây đúng hay sai? Nếu sai, hãy dựng một phản ví dụ cụ thể:
+   - *(a)* Nếu $g \circ f$ là đơn ánh thì $g$ cũng là đơn ánh.
+   - *(b)* Nếu $g \circ f$ là toàn ánh thì $f$ cũng là toàn ánh.
+</Exercise>
+
+<Hint>
+Ở câu (1), xuất phát từ giả thiết $f(x_1) = f(x_2)$ rồi tác động $g$ vào hai vế để dùng tính đơn ánh của $g \circ f$; tương tự lấy $z \in Z$ để dùng tính toàn ánh của $g \circ f$. Ở câu (2), hãy xét trường hợp tập trung gian $Y$ có nhiều phần tử hơn cả $X$ và $Z$ (chẳng hạn $|X| = |Z| = 1$ và $|Y| = 2$).
+</Hint>
+
+<Solution>
+1. **Chứng minh các chiều đúng:**
+   - Giả sử $g \circ f: X \to Z$ là đơn ánh. Lấy $x_1, x_2 \in X$ bất kỳ sao cho $f(x_1) = f(x_2)$. Tác động ánh xạ $g$ vào hai vế, ta có:
+     $$
+     (g \circ f)(x_1) = g(f(x_1)) = g(f(x_2)) = (g \circ f)(x_2).
+     $$
+     Vì $g \circ f$ là đơn ánh nên từ $(g \circ f)(x_1) = (g \circ f)(x_2)$ suy ra $x_1 = x_2$. Vậy $f$ là đơn ánh.
+   - Giả sử $g \circ f: X \to Z$ là toàn ánh. Lấy $z \in Z$ bất kỳ. Vì $g \circ f$ toàn ánh nên tồn tại $x \in X$ sao cho $(g \circ f)(x) = z$, tức là $g(f(x)) = z$. Đặt $y = f(x) \in Y$, ta có $g(y) = z$. Vậy mọi $z \in Z$ đều có tạo ảnh $y \in Y$ qua $g$, nghĩa là $g$ là toàn ánh.
+2. **Cả hai khẳng định (a) và (b) đều sai.** Ta xây dựng một phản ví dụ chung cho cả hai khẳng định:
+   Chọn $X = \{1\}$, $Y = \{1, 2\}$, $Z = \{1\}$. Xét hai ánh xạ:
+   - $f: X \to Y$ xác định bởi $f(1) = 1$;
+   - $g: Y \to Z$ xác định bởi $g(1) = 1$ và $g(2) = 1$.
+   Khi đó ánh xạ hợp thành $g \circ f: X \to Z$ biến $1 \mapsto g(f(1)) = g(1) = 1$ chính là ánh xạ đồng nhất trên tập một phần tử $\{1\}$, nên $g \circ f$ vừa là đơn ánh, vừa là toàn ánh (thậm chí là song ánh). Tuy nhiên:
+   - $g$ **không đơn ánh** vì $g(1) = 1 = g(2)$ với $1 \neq 2$ (bác bỏ khẳng định a);
+   - $f$ **không toàn ánh** vì phần tử $2 \in Y$ không thuộc $\operatorname{im} f = \{1\}$ (bác bỏ khẳng định b).
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1a | Chứng minh đúng: $g \circ f$ đơn ánh $\implies f$ đơn ánh | `0,25 đ` |
+| 1b | Chứng minh đúng: $g \circ f$ toàn ánh $\implies g$ toàn ánh | `0,25 đ` |
+| 2a | Kết luận khẳng định (a) sai và chỉ ra phản ví dụ hợp lệ ($g \circ f$ đơn ánh nhưng $g$ không đơn ánh) | `0,25 đ` |
+| 2b | Kết luận khẳng định (b) sai và chỉ ra phản ví dụ hợp lệ ($g \circ f$ toàn ánh nhưng $f$ không toàn ánh) | `0,25 đ` |
+</Solution>
+
+<Exercise id="exr-c0-b1-d1" title="[Nhóm D · Mã CTDS-C0-B1-D01] Tổng hợp Bổ đề Euclid cho hai ước nguyên tố cùng nhau và đặc trưng đơn ánh, toàn ánh qua ảnh – nghịch ảnh">
+- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
+- **Chủ đề:** Kết hợp đồng nhất thức Bézout cho nhiều ước số và đặc trưng tính đơn ánh/toàn ánh qua tác động của $f, f^{-1}$ lên các tập con
+- **Mục tiêu đánh giá:** Tổng hợp công cụ số học và ngôn ngữ ánh xạ để chứng minh các mệnh đề nền tảng chuẩn bị cho cấu trúc thương *(Thi kết thúc học phần)*
+- **Mức độ khó:** Nâng cao (Mức 4)
+- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b1-anh-xa-anh-nghich-anh" /> · <Ref to="def-c0-b1-don-anh-toan-anh-song-anh" /> · <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" /> · <Cite source="gt-ctds-hvk-2026" page="2-4, 12-13" note="Mục 0.2 - 0.3 & Bài tập 0.3, 0.7" />
+
+**Đề bài:**
+
+1. Cho các số nguyên $a, b, m \in \Z$ với $a \neq 0, b \neq 0$. Chứng minh rằng nếu $a \mid m$, $b \mid m$ và $\gcd(a, b) = 1$ thì $ab \mid m$. Khẳng định này còn đúng không nếu bỏ giả thiết $\gcd(a, b) = 1$?
+2. Cho ánh xạ $f: X \to Y$. Chứng minh rằng:
+   - *(a)* Với mọi tập con $A \subseteq X$, ta luôn có $A \subseteq f^{-1}(f(A))$; hơn nữa dấu bằng $A = f^{-1}(f(A))$ xảy ra với mọi $A \subseteq X$ khi và chỉ khi $f$ là **đơn ánh**.
+   - *(b)* Với mọi tập con $B \subseteq Y$, ta luôn có $f(f^{-1}(B)) \subseteq B$; hơn nữa dấu bằng $f(f^{-1}(B)) = B$ xảy ra với mọi $B \subseteq Y$ khi và chỉ khi $f$ là **toàn ánh**.
+</Exercise>
+
+<Hint>
+Ở câu (1), viết $m = ak$ rồi áp dụng Bổ đề Euclid (<Ref to="thm-c0-b1-dong-nhat-thuc-bezout" />) cho $b \mid ak$ với $\gcd(a, b) = 1$ (hoặc nhân hai vế của $ua + vb = 1$ với $m$). Ở câu (2a), để chứng minh chiều đảo, hãy xét các tập con một phần tử $A = \{x_0\}$; ở câu (2b), xét $B = Y$.
+</Hint>
+
+<Solution>
+1. Vì $a \mid m$ nên tồn tại $k \in \Z$ sao cho $m = ak$. Theo giả thiết $b \mid m$, tức là $b \mid ak$. Do $\gcd(a, b) = 1$, áp dụng Bổ đề Euclid (ý 3 của <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" />) ta suy ra $b \mid k$. Vì vậy tồn tại $q \in \Z$ sao cho $k = bq$. Thay vào biểu thức của $m$, ta được $m = a(bq) = (ab)q$, suy ra $ab \mid m$.
+
+   Nếu bỏ giả thiết $\gcd(a, b) = 1$, khẳng định **không còn đúng**: chẳng hạn chọn $a = 4, b = 6, m = 12$ thì $4 \mid 12$ và $6 \mid 12$, nhưng $ab = 24 \nmid 12$ (vì $\gcd(4, 6) = 2 \neq 1$).
+2. **Chứng minh ý (a):**
+   - Với mọi $A \subseteq X$ và mọi $x \in A$, ta có $f(x) \in f(A)$, nên theo định nghĩa nghịch ảnh (<Ref to="def-c0-b1-anh-xa-anh-nghich-anh" />), $x \in f^{-1}(f(A))$. Vậy $A \subseteq f^{-1}(f(A))$.
+   - *Nếu $f$ đơn ánh:* Lấy $x \in f^{-1}(f(A))$ bất kỳ. Khi đó $f(x) \in f(A)$, nghĩa là tồn tại $a \in A$ sao cho $f(x) = f(a)$. Vì $f$ đơn ánh nên $x = a \in A$. Do đó $f^{-1}(f(A)) \subseteq A$, kết hợp với bao hàm trên suy ra $A = f^{-1}(f(A))$.
+   - *Ngược lại, nếu $A = f^{-1}(f(A))$ với mọi $A \subseteq X$:* Lấy $x_1, x_2 \in X$ sao cho $f(x_1) = f(x_2)$. Xét tập con một phần tử $A = \{x_1\} \subseteq X$. Vì $f(x_2) = f(x_1) \in f(A)$ nên $x_2 \in f^{-1}(f(A)) = A = \{x_1\}$, suy ra $x_2 = x_1$. Vậy $f$ là đơn ánh.
+
+   **Chứng minh ý (b):**
+   - Với mọi $B \subseteq Y$ và mọi $y \in f(f^{-1}(B))$, tồn tại $x \in f^{-1}(B)$ sao cho $y = f(x)$. Vì $x \in f^{-1}(B)$ nên $y = f(x) \in B$. Vậy $f(f^{-1}(B)) \subseteq B$.
+   - *Nếu $f$ toàn ánh:* Lấy $y \in B \subseteq Y$ bất kỳ. Vì $f$ toàn ánh nên tồn tại $x \in X$ sao cho $f(x) = y \in B$, suy ra $x \in f^{-1}(B)$ và do đó $y = f(x) \in f(f^{-1}(B))$. Vậy $B \subseteq f(f^{-1}(B))$, dẫn đến $f(f^{-1}(B)) = B$.
+   - *Ngược lại, nếu $f(f^{-1}(B)) = B$ với mọi $B \subseteq Y$:* Chọn $B = Y$, ta có $f^{-1}(Y) = X$, suy ra $\operatorname{im} f = f(X) = f(f^{-1}(Y)) = Y$. Vậy $f$ là toàn ánh.
+
+**Thang điểm đánh giá (1,00 điểm):**
+
+| Ý | Nội dung đạt được | Điểm |
+| :---: | :--- | :---: |
+| 1 | Chứng minh đúng $a \mid m, b \mid m, \gcd(a,b)=1 \implies ab \mid m$ và nêu phản ví dụ khi $\gcd(a,b) > 1$ | `0,30 đ` |
+| 2a | Chứng minh $A \subseteq f^{-1}(f(A))$ và tương đương hai chiều $A = f^{-1}(f(A)) \iff f$ đơn ánh | `0,35 đ` |
+| 2b | Chứng minh $f(f^{-1}(B)) \subseteq B$ và tương đương hai chiều $f(f^{-1}(B)) = B \iff f$ toàn ánh | `0,35 đ` |
+</Solution>
+
+<KeyTakeaways>
+- **Tư tưởng cấu trúc thương và chứng minh bằng hai bao hàm:** Nhiều ký hiệu khác nhau có thể biểu diễn cùng một đối tượng toán học; để chứng minh hai tập hợp bằng nhau ($A = B$), luôn kiểm tra hai bao hàm $A \subseteq B$ và $B \subseteq A$.
+- **Ảnh, nghịch ảnh và thớ (<Ref to="def-c0-b1-anh-xa-anh-nghich-anh" />):** Nghịch ảnh $f^{-1}(B) = \{x \in X \mid f(x) \in B\}$ và thớ $f^{-1}(\{y\})$ luôn xác định với mọi ánh xạ $f: X \to Y$ mà không đòi hỏi $f$ khả nghịch.
+- **Đơn ánh, toàn ánh, song ánh và hợp thành (<Ref to="def-c0-b1-don-anh-toan-anh-song-anh" />, <Ref to="prop-c0-b1-hop-thanh-song-anh" />):** Tính đơn ánh/toàn ánh phụ thuộc vào cả miền xác định và đối miền; phép hợp thành $(g \circ f)(x) = g(f(x))$ có tính kết hợp và $f$ là song ánh khi và chỉ khi có ánh xạ ngược hai phía.
+- **Công cụ số học trên $\Z$ (<Ref to="thm-c0-b1-phep-chia-euclid" />, <Ref to="thm-c0-b1-dong-nhat-thuc-bezout" />, <Ref to="def-c0-b1-ham-phi-euler" />):** Phép chia Euclid cho thương và số dư duy nhất ($a = bq + r, 0 \le r < b$); đồng nhất thức Bézout khẳng định $\gcd(a, b) = ua + vb$, từ đó dẫn tới tiêu chuẩn nguyên tố cùng nhau $\gcd(a, b) = 1 \iff \exists u, v \in \Z, ua + vb = 1$, Bổ đề Euclid ($a \mid bc, \gcd(a,b)=1 \implies a \mid c$) và hàm phi Euler $\varphi(n) = |\{k \in R_n \mid \gcd(k, n) = 1\}|$.
+</KeyTakeaways>

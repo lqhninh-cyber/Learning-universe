@@ -2,14 +2,17 @@ id: algebraic-structures
 slug: cau-truc-dai-so
 title: Cấu trúc đại số
 shortTitle: CTĐS
-description: Nhóm, vành, trường và các đồng cấu.
+description: Nhóm, vành, miền nguyên, trường, cấu trúc thương và các định lý đẳng cấu dành cho sinh viên Sư phạm Toán học.
 order: 1
 status: published
 theme:
   hue: 275
   icon: sigma
 sources:
-  # Chủ dự án sẽ cung cấp giáo trình chính và tài liệu tham khảo (khai báo trong
-  # content/_shared/bibliography.yaml). Không tự điền khi chưa có thông tin chính thức.
-  primary: null
-  references: []
+  primary: gt-ctds-hvk-2026
+  references:
+    - hai-deo-dai-so-hien-dai-2013
+    - hung-dai-so-dai-cuong-1999
+    - bresar-undergraduate-algebra-2019
+    - gallian-contemporary-abstract-algebra-2017
+    - judson-abstract-algebra-2020

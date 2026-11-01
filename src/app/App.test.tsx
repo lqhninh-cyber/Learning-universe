@@ -58,7 +58,7 @@ describe('App routing smoke test', () => {
         name: /Content Engine & Academic MDX/i,
       }),
     ).toBeInTheDocument();
-    const defItems = await screen.findAllByText('Định nghĩa 1.1.1');
+    const defItems = await screen.findAllByText(/Định nghĩa \d+\.\d+\.\d+/);
     expect(defItems.length).toBeGreaterThan(0);
   });
 });

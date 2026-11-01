@@ -1,0 +1,7 @@
+id: ngon-ngu-va-cong-cu-dai-so
+title: Ngôn ngữ và công cụ đại số
+description: Hệ thống hóa ngôn ngữ tập hợp, ánh xạ, thớ, công cụ số học trên tập số nguyên, quan hệ tương đương, tập thương, phép toán hai ngôi và tiêu chuẩn xác định tốt.
+objectives:
+  - Phân biệt rõ miền xác định, đối miền, ảnh, nghịch ảnh và thớ của ánh xạ; vận dụng thuật toán Euclid, đồng nhất thức Bézout và hàm phi Euler trên tập số nguyên.
+  - Thiết lập được sự tương ứng hai chiều giữa quan hệ tương đương và phân hoạch của một tập hợp thông qua các lớp tương đương và tập thương.
+  - Kiểm tra được các tính chất của phép toán hai ngôi và chứng minh tính xác định tốt khi định nghĩa ánh xạ hoặc phép toán trên tập thương.

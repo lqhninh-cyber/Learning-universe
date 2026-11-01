@@ -16,14 +16,16 @@ import {
 import { TooltipProvider } from '@/shared/ui';
 
 describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components', () => {
-  it('giữ content/_shared/bibliography.yaml rỗng và không tự tạo giáo trình trong content/', () => {
+  it('nạp đúng thư mục tài liệu và nguồn giáo trình đã khai báo', () => {
     const manifest = getManifest();
-    expect(manifest.bibliography).toEqual([]);
+    expect(manifest.bibliography.length).toBeGreaterThanOrEqual(1);
+    expect(manifest.bibliography.some((b) => b.id === 'gt-ctds-hvk-2026')).toBe(true);
 
-    for (const subject of getSubjects()) {
-      expect(subject.sources.primary).toBeNull();
-      expect(subject.sources.references).toEqual([]);
-    }
+    const ctds = getSubjects().find((s) => s.id === 'algebraic-structures');
+    expect(ctds?.sources.primary).toBe('gt-ctds-hvk-2026');
+
+    const affine = getSubjects().find((s) => s.id === 'affine-geometry');
+    expect(affine?.sources.primary).toBeNull();
   });
 
   it('nạp và hiển thị bài học mẫu Cấu trúc đại số với đầy đủ số hiệu, KaTeX, Ref và Proof', async () => {
