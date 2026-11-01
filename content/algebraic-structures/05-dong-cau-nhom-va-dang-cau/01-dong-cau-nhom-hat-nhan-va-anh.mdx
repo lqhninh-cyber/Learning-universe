@@ -1,0 +1,533 @@
+---
+id: dong-cau-nhom-hat-nhan-va-anh
+title: 'Đồng cấu nhóm, đẳng cấu, hạt nhân và ảnh'
+description: 'Định nghĩa đồng cấu nhóm, đơn cấu, toàn cấu, đẳng cấu; tính chất bảo toàn đơn vị, nghịch đảo và cấp; hạt nhân ker, ảnh im và tiêu chuẩn đơn cấu ker = {e}.'
+estimatedMinutes: 35
+level: intermediate
+prerequisites:
+  - phep-lien-hop-va-tieu-chuan-chuan-tac
+tags:
+  - đồng cấu nhóm
+  - đơn cấu
+  - toàn cấu
+  - đẳng cấu
+  - hạt nhân
+  - ảnh
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '83-86'
+    sections: 'Mục 5.1, 5.2, 5.3'
+    note: 'Định nghĩa 5.1, Mệnh đề 5.2, 5.3, Định lý 5.5 (Hạt nhân và ảnh)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '130-142'
+    sections: 'Chương 5, Mục 5.1'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất cấu trúc của ánh xạ bảo toàn phép toán:** Nắm vững định nghĩa đồng cấu nhóm $\varphi(xy) = \varphi(x)\varphi(y)$, phân biệt đơn cấu, toàn cấu, đẳng cấu ($\cong$) và tự đẳng cấu ($\operatorname{Aut}(G)$).
+2. **Làm chủ các tính chất cơ bản của đồng cấu:** Chứng minh đồng cấu luôn bảo toàn phần tử đơn vị ($\varphi(e_G) = e_K$), bảo toàn nghịch đảo ($\varphi(x^{-1}) = (\varphi(x))^{-1}$), bảo toàn lũy thừa và chia hết cấp phần tử ($\operatorname{ord}(\varphi(x)) \mid \operatorname{ord}(x)$).
+3. **Phân tích hai trụ cột: Hạt nhân ($\ker\varphi$) và Ảnh ($\operatorname{im}\varphi$):** Chứng minh $\operatorname{im}\varphi \le K$ và hạt nhân luôn là nhóm con chuẩn tắc $\ker\varphi \trianglelefteq G$; sử dụng tiêu chuẩn đơn cấu cốt lõi: $\varphi$ là đơn ánh $\iff \ker\varphi = \{e_G\}$.
+4. **Xác định các đồng cấu xuất phát từ nhóm cyclic:** Vận dụng nguyên lý đồng cấu từ nhóm cyclic được định đoạt hoàn toàn bởi ảnh của phần tử sinh để đếm và tìm mọi đồng cấu giữa các nhóm cyclic hữu hạn.
+</Note>
+
+**Kiến thức tiên quyết:** Lý thuyết nhóm con chuẩn tắc $N \trianglelefteq G$ và cấp của phần tử từ Chương 2 và Chương 4 (<Cite source="gt-ctds-hvk-2026" page="67-73" note="Mục 4.1, 4.2" />).
+
+---
+
+## 1. Định nghĩa Đồng cấu nhóm và các phân loại
+
+Trong đại số trừu tượng, để so sánh và liên kết hai cấu trúc nhóm khác nhau $(G, \cdot)$ và $(K, *)$, ta cần các ánh xạ không chỉ tác động lên phần tử mà còn phải bảo toàn cấu trúc đại số (<Cite source="gt-ctds-hvk-2026" page="83-84" note="Mục 5.1" />).
+
+<Definition
+  id="def-c5-b1-dong-cau-nhom"
+  title="Đồng cấu nhóm"
+  original="Định nghĩa 5.1"
+  source="gt-ctds-hvk-2026"
+  page="83"
+>
+Cho hai nhóm $(G, \cdot)$ và $(K, *)$. Một ánh xạ $\varphi: G \to K$ được gọi là một **đồng cấu nhóm** (group homomorphism) nếu với mọi $x, y \in G$, ta có:
+$$
+\varphi(x \cdot y) = \varphi(x) * \varphi(y).
+$$
+Khi không sợ nhầm lẫn phép toán, ta thường viết ngắn gọn:
+$$
+\varphi(xy) = \varphi(x)\varphi(y).
+$$
+</Definition>
+
+Dựa vào tính chất tập hợp của ánh xạ, các đồng cấu nhóm được phân loại như sau:
+
+<Definition
+  id="def-c5-b1-phan-loai-dong-cau"
+  title="Đơn cấu, Toàn cấu, Đẳng cấu và Tự đẳng cấu"
+  original="Mục 5.1"
+  source="gt-ctds-hvk-2026"
+  page="84"
+>
+Cho $\varphi: G \to K$ là một đồng cấu nhóm.
+1. $\varphi$ được gọi là một **đơn cấu** (monomorphism) nếu $\varphi$ là một đơn ánh.
+2. $\varphi$ được gọi là một **toàn cấu** (epimorphism) nếu $\varphi$ là một toàn ánh.
+3. $\varphi$ được gọi là một **đẳng cấu** (isomorphism) nếu $\varphi$ là một song ánh (vừa là đơn ánh, vừa là toàn ánh). Khi đó, hai nhóm $G$ và $K$ được gọi là **đẳng cấu với nhau**, ký hiệu:
+   $$
+   G \cong K.
+   $$
+4. Một đẳng cấu từ nhóm $G$ lên chính nó ($\varphi: G \to G$) được gọi là một **tự đẳng cấu** (automorphism) của $G$. Tập hợp tất cả các tự đẳng cấu của $G$ lập thành một nhóm dưới phép hợp thành ánh xạ, ký hiệu là $\operatorname{Aut}(G)$.
+</Definition>
+
+<Example id="ex-c5-b1-cac-dong-cau-kinh-dien" title="Các ví dụ kinh điển về đồng cấu nhóm">
+1. **Hàm mũ:** Ánh xạ $\exp: (\mathbb{R}, +) \to (\mathbb{R}_{>0}, \cdot)$ xác định bởi $\exp(x) = e^x$.
+   Với mọi $x, y \in \mathbb{R}$, ta có $\exp(x + y) = e^{x+y} = e^x \cdot e^y = \exp(x) \cdot \exp(y)$.
+   Vì $\exp$ là song ánh với ánh xạ ngược $\ln$, đây là một **đẳng cấu nhóm**: $(\mathbb{R}, +) \cong (\mathbb{R}_{>0}, \cdot)$.
+2. **Ánh xạ dấu của hoán vị:** Ánh xạ $\operatorname{sgn}: S_n \to \{1, -1\}$ xác định bởi dấu của hoán vị là một **toàn cấu nhóm** (với $n \ge 2$), vì $\operatorname{sgn}(\sigma \tau) = \operatorname{sgn}(\sigma)\operatorname{sgn}(\tau)$.
+3. **Định thức ma trận:** Ánh xạ $\det: \operatorname{GL}_n(\mathbb{R}) \to \mathbb{R}^\times$ cho bởi $A \mapsto \det(A)$ là một **toàn cấu nhóm**, vì $\det(AB) = \det(A)\det(B)$.
+4. **Chiếu chính tắc:** Ánh xạ $\pi: \mathbb{Z} \to \mathbb{Z}/n\mathbb{Z}$ cho bởi $\pi(a) = \bar{a}$ là một **toàn cấu nhóm cộng**, vì $\pi(a + b) = \overline{a + b} = \bar{a} + \bar{b} = \pi(a) + \pi(b)$.
+</Example>
+
+---
+
+## 2. Các tính chất cơ bản của Đồng cấu nhóm
+
+<Proposition
+  id="prop-c5-b1-tinh-chat-co-ban"
+  title="Tính chất đại số cơ bản của đồng cấu nhóm"
+  original="Mệnh đề 5.2"
+  source="gt-ctds-hvk-2026"
+  page="84"
+>
+Cho $\varphi: G \to K$ là một đồng cấu nhóm. Khi đó:
+1. $\varphi$ biến phần tử trung hòa của $G$ thành phần tử trung hòa của $K$:
+   $$
+   \varphi(e_G) = e_K.
+   $$
+2. $\varphi$ bảo toàn phần tử nghịch đảo: với mọi $x \in G$,
+   $$
+   \varphi(x^{-1}) = (\varphi(x))^{-1}.
+   $$
+3. $\varphi$ bảo toàn lũy thừa: với mọi $x \in G$ và mọi $n \in \mathbb{Z}$,
+   $$
+   \varphi(x^n) = (\varphi(x))^n.
+   $$
+4. Nếu phần tử $x \in G$ có cấp hữu hạn $\operatorname{ord}(x) < \infty$, thì cấp của ảnh $\varphi(x)$ trong $K$ là một ước của cấp của $x$:
+   $$
+   \operatorname{ord}(\varphi(x)) \mid \operatorname{ord}(x).
+   $$
+</Proposition>
+
+<Proof of="prop-c5-b1-tinh-chat-co-ban">
+1. Vì $e_G = e_G \cdot e_G$ trong $G$, áp dụng tính chất đồng cấu:
+   $$
+   \varphi(e_G) = \varphi(e_G \cdot e_G) = \varphi(e_G) \cdot \varphi(e_G).
+   $$
+   Nhân cả hai vế với $(\varphi(e_G))^{-1}$ trong $K$ (hoặc dùng luật giản ước), ta thu được:
+   $$
+   \varphi(e_G) = e_K.
+   $$
+2. Với mọi $x \in G$, ta có $x \cdot x^{-1} = e_G$. Áp dụng tính chất đồng cấu và câu 1:
+   $$
+   \varphi(x) \cdot \varphi(x^{-1}) = \varphi(x \cdot x^{-1}) = \varphi(e_G) = e_K.
+   $$
+   Tương tự, $\varphi(x^{-1}) \cdot \varphi(x) = e_K$. Theo tính duy nhất của phần tử nghịch đảo trong $K$, ta có $\varphi(x^{-1}) = (\varphi(x))^{-1}$.
+3. Với $n = 0$, $\varphi(x^0) = \varphi(e_G) = e_K = (\varphi(x))^0$. Với $n > 0$, chứng minh quy nạp hiển nhiên. Với $n < 0$, đặt $n = -m$ ($m > 0$), ta có $\varphi(x^n) = \varphi((x^m)^{-1}) = (\varphi(x^m))^{-1} = ((\varphi(x))^m)^{-1} = (\varphi(x))^{-m} = (\varphi(x))^n$.
+4. Đặt $m = \operatorname{ord}(x) < \infty$, nghĩa là $x^m = e_G$. Áp dụng câu 3:
+   $$
+   (\varphi(x))^m = \varphi(x^m) = \varphi(e_G) = e_K.
+   $$
+   Theo tính chất cơ bản của cấp phần tử (Chương 2), điều này kéo theo $\operatorname{ord}(\varphi(x)) \mid m = \operatorname{ord}(x)$.
+</Proof>
+
+<Proposition
+  id="prop-c5-b1-dong-cau-tu-nhom-cyclic"
+  title="Đồng cấu từ nhóm cyclic được xác định bởi phần tử sinh"
+  original="Mệnh đề 5.3"
+  source="gt-ctds-hvk-2026"
+  page="85"
+>
+Cho $G = \langle a \rangle$ là một nhóm cyclic. Một đồng cấu nhóm $\varphi: G \to K$ được xác định hoàn toàn và duy nhất bởi ảnh của phần tử sinh $\varphi(a) \in K$. 
+Cụ thể, với mọi $k \in \mathbb{Z}$, ta luôn có:
+$$
+\varphi(a^k) = (\varphi(a))^k.
+$$
+Hơn nữa, nếu $G$ là nhóm cyclic hữu hạn cấp $n$ ($a^n = e_G$), thì $\varphi(a)$ bắt buộc phải thỏa mãn:
+$$
+(\varphi(a))^n = e_K \iff \operatorname{ord}(\varphi(a)) \mid n.
+$$
+</Proposition>
+
+<Proof of="prop-c5-b1-dong-cau-tu-nhom-cyclic">
+Vì $G = \langle a \rangle$, mọi phần tử $x \in G$ đều có dạng $x = a^k$ với $k \in \mathbb{Z}$.
+Theo Mệnh đề <Ref to="prop-c5-b1-tinh-chat-co-ban" />, ta có $\varphi(x) = \varphi(a^k) = (\varphi(a))^k$. Do đó giá trị $\varphi(x)$ tại mọi điểm đều bị ấn định duy nhất khi ta biết $\varphi(a)$.
+Nếu $|G| = n$, thì $a^n = e_G$, suy ra $(\varphi(a))^n = \varphi(a^n) = \varphi(e_G) = e_K \implies \operatorname{ord}(\varphi(a)) \mid n$.
+</Proof>
+
+---
+
+## 3. Hạt nhân ($\ker$) và Ảnh ($\operatorname{im}$) của Đồng cấu
+
+Hai đối tượng gắn liền mật thiết nhất với mỗi đồng cấu nhóm chính là hạt nhân và ảnh của nó (<Cite source="gt-ctds-hvk-2026" page="85-86" note="Mục 5.2" />).
+
+<Definition
+  id="def-c5-b1-hat-nhan-va-anh"
+  title="Hạt nhân và Ảnh của đồng cấu nhóm"
+  original="Định nghĩa 5.4"
+  source="gt-ctds-hvk-2026"
+  page="85"
+>
+Cho $\varphi: G \to K$ là một đồng cấu nhóm.
+1. **Hạt nhân** (kernel) của $\varphi$, ký hiệu là $\ker\varphi$, là tập hợp tất cả các phần tử của $G$ được ánh xạ về phần tử trung hòa của $K$:
+   $$
+   \ker\varphi = \{x \in G \mid \varphi(x) = e_K\} = \varphi^{-1}(\{e_K\}).
+   $$
+2. **Ảnh** (image) của $\varphi$, ký hiệu là $\operatorname{im}\varphi$ (hoặc $\varphi(G)$), là tập hợp tất cả các giá trị nhận được trong $K$:
+   $$
+   \operatorname{im}\varphi = \{\varphi(x) \mid x \in G\} \subseteq K.
+   $$
+</Definition>
+
+<Theorem
+  id="thm-c5-b1-cau-truc-ker-im"
+  title="Cấu trúc đại số của Hạt nhân và Ảnh"
+  original="Định lý 5.5"
+  source="gt-ctds-hvk-2026"
+  page="85"
+>
+Cho $\varphi: G \to K$ là một đồng cấu nhóm. Khi đó:
+1. $\operatorname{im}\varphi$ là một nhóm con của $K$:
+   $$
+   \operatorname{im}\varphi \le K.
+   $$
+2. $\ker\varphi$ luôn là một **nhóm con chuẩn tắc** của $G$:
+   $$
+   \ker\varphi \trianglelefteq G.
+   $$
+3. Với mỗi phần tử $y \in \operatorname{im}\varphi$, thớ của $y$ qua $\varphi$ chính là một lớp kề trái (đồng thời là lớp kề phải) của $\ker\varphi$:
+   $$
+   \varphi^{-1}(\{y\}) = g \ker\varphi = (\ker\varphi) g, \quad \text{với } g \in G \text{ thỏa } \varphi(g) = y.
+   $$
+4. **Tiêu chuẩn đơn cấu:** Đồng cấu $\varphi$ là một đơn ánh khi và chỉ khi hạt nhân của nó là nhóm tầm thường:
+   $$
+   \varphi \text{ là đơn ánh} \iff \ker\varphi = \{e_G\}.
+   $$
+</Theorem>
+
+<Proof of="thm-c5-b1-cau-truc-ker-im">
+1. **Chứng minh $\operatorname{im}\varphi \le K$:**
+   - *Không rỗng:* Vì $\varphi(e_G) = e_K$, ta có $e_K \in \operatorname{im}\varphi \ne \varnothing$.
+   - *Đóng kín dưới nhân và nghịch đảo:* Lấy $u, v \in \operatorname{im}\varphi$, tồn tại $x, y \in G$ sao cho $u = \varphi(x)$ và $v = \varphi(y)$.
+     Khi đó $u v^{-1} = \varphi(x)(\varphi(y))^{-1} = \varphi(x)\varphi(y^{-1}) = \varphi(xy^{-1})$.
+     Vì $xy^{-1} \in G$, ta suy ra $uv^{-1} \in \operatorname{im}\varphi$. Theo tiêu chuẩn một bước, $\operatorname{im}\varphi \le K$.
+
+2. **Chứng minh $\ker\varphi \trianglelefteq G$:**
+   - *Là nhóm con:* Vì $\varphi(e_G) = e_K$, ta có $e_G \in \ker\varphi \ne \varnothing$.
+     Lấy $x, y \in \ker\varphi$, tức $\varphi(x) = e_K$ và $\varphi(y) = e_K$.
+     Khi đó $\varphi(xy^{-1}) = \varphi(x)(\varphi(y))^{-1} = e_K \cdot e_K^{-1} = e_K$, suy ra $xy^{-1} \in \ker\varphi$. Do đó $\ker\varphi \le G$.
+   - *Tính chuẩn tắc:* Lấy tùy ý $g \in G$ và $x \in \ker\varphi$. Ta tính ảnh của phần tử liên hợp:
+     $$
+     \varphi(gxg^{-1}) = \varphi(g)\varphi(x)\varphi(g^{-1}) = \varphi(g) \cdot e_K \cdot (\varphi(g))^{-1} = \varphi(g)(\varphi(g))^{-1} = e_K.
+     $$
+     Điều này chứng minh $gxg^{-1} \in \ker\varphi$ với mọi $g \in G$ và $x \in \ker\varphi$. Vậy $\ker\varphi \trianglelefteq G$.
+
+3. **Cấu trúc thớ $\varphi^{-1}(\{y\}) = g\ker\varphi$:**
+   Lấy $x \in G$. Ta có chuỗi tương đương:
+   $$
+   \varphi(x) = y \iff \varphi(x) = \varphi(g) \iff (\varphi(g))^{-1}\varphi(x) = e_K \iff \varphi(g^{-1}x) = e_K \iff g^{-1}x \in \ker\varphi \iff x \in g\ker\varphi.
+   $$
+   Do đó tập nghịch ảnh $\varphi^{-1}(\{y\})$ đúng bằng lớp kề $g\ker\varphi$. Vì $\ker\varphi \trianglelefteq G$, lớp kề trái cũng chính là lớp kề phải $(\ker\varphi)g$.
+
+4. **Chứng minh tiêu chuẩn đơn cấu:**
+   - *Chiều thuận ($\implies$):* Giả sử $\varphi$ là đơn ánh. Lấy $x \in \ker\varphi$, ta có $\varphi(x) = e_K$.
+     Mặt khác $\varphi(e_G) = e_K$. Do đó $\varphi(x) = \varphi(e_G)$. Vì $\varphi$ là đơn ánh, suy ra $x = e_G$. Vậy $\ker\varphi = \{e_G\}$.
+   - *Chiều ngược ($\impliedby$):* Giả sử $\ker\varphi = \{e_G\}$. Lấy $x, y \in G$ thỏa $\varphi(x) = \varphi(y)$.
+     Khi đó $\varphi(xy^{-1}) = \varphi(x)(\varphi(y))^{-1} = \varphi(x)(\varphi(x))^{-1} = e_K$.
+     Suy ra $xy^{-1} \in \ker\varphi$. Vì $\ker\varphi = \{e_G\}$, ta có $xy^{-1} = e_G \implies x = y$.
+     Vậy $\varphi$ là đơn ánh.
+</Proof>
+
+---
+
+## 4. Ảnh và Nghịch ảnh của Nhóm con
+
+<Proposition
+  id="prop-c5-b1-anh-nghich-anh-nhom-con"
+  title="Bảo toàn nhóm con và nhóm con chuẩn tắc qua đồng cấu"
+  original="Mệnh đề 5.6"
+  source="gt-ctds-hvk-2026"
+  page="86"
+>
+Cho $\varphi: G \to K$ là một đồng cấu nhóm.
+1. Nếu $H$ là một nhóm con của $G$ ($H \le G$), thì ảnh $\varphi(H)$ là một nhóm con của $K$ ($\varphi(H) \le K$).
+2. Nếu $L$ là một nhóm con của $K$ ($L \le K$), thì tạo ảnh $\varphi^{-1}(L)$ là một nhóm con của $G$ ($\varphi^{-1}(L) \le G$).
+3. Nếu $L$ là nhóm con chuẩn tắc của $K$ ($L \trianglelefteq K$), thì tạo ảnh $\varphi^{-1}(L)$ luôn là nhóm con chuẩn tắc của $G$:
+   $$
+   L \trianglelefteq K \implies \varphi^{-1}(L) \trianglelefteq G.
+   $$
+4. Nếu $H \trianglelefteq G$ và $\varphi$ là một **toàn cấu**, thì ảnh $\varphi(H)$ là nhóm con chuẩn tắc của $K$:
+   $$
+   H \trianglelefteq G \text{ và } \varphi \text{ toàn ánh} \implies \varphi(H) \trianglelefteq K.
+   $$
+</Proposition>
+
+<Proof of="prop-c5-b1-anh-nghich-anh-nhom-con">
+1. Vì $e_G \in H$, ta có $e_K = \varphi(e_G) \in \varphi(H)$. Với $u, v \in \varphi(H)$, tồn tại $h_1, h_2 \in H$ sao cho $u = \varphi(h_1), v = \varphi(h_2)$. Khi đó $uv^{-1} = \varphi(h_1 h_2^{-1}) \in \varphi(H)$ vì $h_1 h_2^{-1} \in H$.
+2. Vì $\varphi(e_G) = e_K \in L$, ta có $e_G \in \varphi^{-1}(L)$. Lấy $x, y \in \varphi^{-1}(L)$, tức $\varphi(x), \varphi(y) \in L$. Ta có $\varphi(xy^{-1}) = \varphi(x)(\varphi(y))^{-1} \in L$ (do $L \le K$), nên $xy^{-1} \in \varphi^{-1}(L)$.
+3. Lấy $g \in G$ và $x \in \varphi^{-1}(L)$. Ta có $\varphi(gxg^{-1}) = \varphi(g)\varphi(x)(\varphi(g))^{-1}$. Vì $\varphi(x) \in L$ và $L \trianglelefteq K$, phần tử liên hợp này thuộc $L$. Do đó $gxg^{-1} \in \varphi^{-1}(L)$, suy ra $\varphi^{-1}(L) \trianglelefteq G$.
+4. Lấy $k \in K$ và $u \in \varphi(H)$. Vì $\varphi$ là toàn ánh, tồn tại $g \in G$ sao cho $k = \varphi(g)$. Đồng thời tồn tại $h \in H$ sao cho $u = \varphi(h)$. Khi đó $k u k^{-1} = \varphi(g)\varphi(h)(\varphi(g))^{-1} = \varphi(ghg^{-1})$. Vì $H \trianglelefteq G$, ta có $ghg^{-1} \in H$, kéo theo $k u k^{-1} \in \varphi(H)$. Vậy $\varphi(H) \trianglelefteq K$.
+</Proof>
+
+> [!WARNING] Lưu ý về điều kiện toàn ánh ở câu 4
+> Nếu $\varphi$ không toàn ánh, ảnh của nhóm con chuẩn tắc $\varphi(H)$ nói chung **chỉ chuẩn tắc trong $\operatorname{im}\varphi$, chứ không nhất thiết chuẩn tắc trong toàn bộ nhóm đích $K$**! Chúng ta sẽ kiểm chứng phản ví dụ này ở Bài tập 5.1.3.
+
+---
+
+## 5. Bài tập rèn luyện
+
+<Exercise
+  id="exr-c5-b1-a1"
+  title="[Nhóm A · Mã CTDS-C5-B1-A01] Kiểm tra đồng cấu, xác định hạt nhân và ảnh"
+  source="gt-ctds-hvk-2026"
+  page="92"
+  original="Bài 5.1"
+>
+Xét các ánh xạ sau:
+1. $\varphi_1: (\mathbb{Z}, +) \to (\mathbb{Z}, +)$ xác định bởi $\varphi_1(x) = 5x$.
+2. $\varphi_2: (\mathbb{R}, +) \to (\mathbb{C}^\times, \cdot)$ xác định bởi $\varphi_2(x) = \cos(2\pi x) + i \sin(2\pi x) = e^{2\pi i x}$.
+3. $\varphi_3: \operatorname{GL}_2(\mathbb{R}) \to (\mathbb{R}^\times, \cdot)$ xác định bởi $\varphi_3(A) = \det(A)$.
+
+Với mỗi ánh xạ trên, hãy chứng minh nó là một đồng cấu nhóm, tìm hạt nhân $\ker\varphi_i$, ảnh $\operatorname{im}\varphi_i$, và cho biết ánh xạ có phải là đơn cấu hoặc toàn cấu không.
+</Exercise>
+
+<Hint>
+Dùng công thức Euler $e^{2\pi i(x+y)} = e^{2\pi i x} e^{2\pi i y}$ và định thức $\det(AB) = \det(A)\det(B)$.
+</Hint>
+
+<Solution>
+1. **Khảo sát $\varphi_1(x) = 5x$ trên $(\mathbb{Z}, +)$:**
+   - *Đồng cấu:* Với mọi $x, y \in \mathbb{Z}$, $\varphi_1(x + y) = 5(x + y) = 5x + 5y = \varphi_1(x) + \varphi_1(y)$. Vậy $\varphi_1$ là đồng cấu.
+   - *Hạt nhân:* $\ker\varphi_1 = \{x \in \mathbb{Z} \mid 5x = 0\} = \{0\}$.
+   - *Ảnh:* $\operatorname{im}\varphi_1 = \{5x \mid x \in \mathbb{Z}\} = 5\mathbb{Z}$.
+   - *Phân loại:* Vì $\ker\varphi_1 = \{0\}$, $\varphi_1$ là một **đơn cấu**. Tuy nhiên $\varphi_1$ **không toàn cấu** vì $\operatorname{im}\varphi_1 = 5\mathbb{Z} \ne \mathbb{Z}$ (ví dụ $1 \notin 5\mathbb{Z}$).
+
+2. **Khảo sát $\varphi_2(x) = e^{2\pi i x}$ từ $(\mathbb{R}, +) \to (\mathbb{C}^\times, \cdot)$:**
+   - *Đồng cấu:* $\varphi_2(x + y) = e^{2\pi i(x+y)} = e^{2\pi i x} \cdot e^{2\pi i y} = \varphi_2(x) \cdot \varphi_2(y)$.
+   - *Hạt nhân:* $\ker\varphi_2 = \{x \in \mathbb{R} \mid e^{2\pi i x} = 1\} = \{x \in \mathbb{R} \mid 2\pi x = 2k\pi, k \in \mathbb{Z}\} = \mathbb{Z}$.
+   - *Ảnh:* $\operatorname{im}\varphi_2 = \{z \in \mathbb{C} \mid |z| = 1\} = \mathbb{S}^1$ (đường tròn đơn vị trong mặt phẳng phức).
+   - *Phân loại:* Vì $\ker\varphi_2 = \mathbb{Z} \ne \{0\}$, $\varphi_2$ **không đơn cấu**. Vì $\operatorname{im}\varphi_2 = \mathbb{S}^1 \ne \mathbb{C}^\times$ (chẳng hạn $2 \notin \mathbb{S}^1$), $\varphi_2$ **không toàn cấu**.
+
+3. **Khảo sát $\varphi_3(A) = \det(A)$ từ $\operatorname{GL}_2(\mathbb{R}) \to (\mathbb{R}^\times, \cdot)$:**
+   - *Đồng cấu:* $\varphi_3(AB) = \det(AB) = \det(A)\det(B) = \varphi_3(A)\varphi_3(B)$.
+   - *Hạt nhân:* $\ker\varphi_3 = \{A \in \operatorname{GL}_2(\mathbb{R}) \mid \det(A) = 1\} = \operatorname{SL}_2(\mathbb{R})$ (nhóm tuyến tính đặc biệt cấp 2).
+   - *Ảnh:* Với mọi $r \in \mathbb{R}^\times$, ma trận đường chéo $A = \begin{pmatrix} r & 0 \\ 0 & 1 \end{pmatrix}$ có $\det(A) = r$. Do đó $\operatorname{im}\varphi_3 = \mathbb{R}^\times$.
+   - *Phân loại:* $\varphi_3$ là một **toàn cấu**, nhưng **không đơn cấu** vì $\ker\varphi_3 = \operatorname{SL}_2(\mathbb{R}) \ne \{I_2\}$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Khảo sát đúng $\varphi_1$: đồng cấu, $\ker = \{0\}$, $\operatorname{im} = 5\mathbb{Z}$, đơn cấu không toàn cấu: `0,35 đ`
+- Khảo sát đúng $\varphi_2$: đồng cấu, $\ker = \mathbb{Z}$, $\operatorname{im} = \mathbb{S}^1$, không đơn không toàn: `0,35 đ`
+- Khảo sát đúng $\varphi_3$: đồng cấu, $\ker = \operatorname{SL}_2(\mathbb{R})$, $\operatorname{im} = \mathbb{R}^\times$, toàn cấu: `0,30 đ`
+</Solution>
+
+<Exercise
+  id="exr-c5-b1-b1"
+  title="[Nhóm B · Mã CTDS-C5-B1-B01] Tìm và đếm số lượng đồng cấu giữa các nhóm cyclic hữu hạn"
+  source="gt-ctds-hvk-2026"
+  page="93"
+  original="Bài 5.9"
+>
+Cho hai số nguyên dương $m, n \ge 2$. Xét hai nhóm cyclic $\mathbb{Z}/m\mathbb{Z}$ và $\mathbb{Z}/n\mathbb{Z}$.
+1. Giả sử $\varphi: \mathbb{Z}/m\mathbb{Z} \to \mathbb{Z}/n\mathbb{Z}$ là một đồng cấu nhóm. Đặt $\varphi([1]_m) = [c]_n$. Chứng minh rằng $c$ phải thỏa mãn điều kiện $m \cdot [c]_n = [0]_n$, tương đương với $n \mid mc$.
+2. Tìm tất cả các đồng cấu nhóm từ $\mathbb{Z}/6\mathbb{Z}$ vào $\mathbb{Z}/9\mathbb{Z}$.
+3. Chứng minh rằng tổng số đồng cấu nhóm từ $\mathbb{Z}/m\mathbb{Z}$ vào $\mathbb{Z}/n\mathbb{Z}$ đúng bằng ước số chung lớn nhất $\gcd(m, n)$.
+</Exercise>
+
+<Hint>
+Phần tử sinh $[1]_m$ có cấp $m$, nên ảnh $\varphi([1]_m)$ phải có cấp là ước của $m$. Số nghiệm của phương trình đồng dư $mc \equiv 0 \pmod n$ trong $\{0, 1, \dots, n-1\}$ bằng $\gcd(m, n)$.
+</Hint>
+
+<Solution>
+1. **Điều kiện của ảnh phần tử sinh:**
+   Trong $\mathbb{Z}/m\mathbb{Z}$, ta có $m \cdot [1]_m = [m]_m = [0]_m$.
+   Áp dụng tính chất đồng cấu:
+   $$
+   [0]_n = \varphi([0]_m) = \varphi(m \cdot [1]_m) = m \cdot \varphi([1]_m) = m \cdot [c]_n = [mc]_n.
+   $$
+   Theo định nghĩa lớp thặng dư trong $\mathbb{Z}/n\mathbb{Z}$, $[mc]_n = [0]_n \iff mc \equiv 0 \pmod n \iff n \mid mc$.
+
+2. **Tìm các đồng cấu từ $\mathbb{Z}/6\mathbb{Z} \to \mathbb{Z}/9\mathbb{Z}$:**
+   Áp dụng với $m = 6, n = 9$. Ta tìm các giá trị $c \in \{0, 1, 2, \dots, 8\}$ sao cho $9 \mid 6c \iff 3 \mid 2c \iff 3 \mid c$.
+   Các giá trị của $c$ thỏa mãn là:
+   $$
+   c \in \{0, 3, 6\}.
+   $$
+   Do đó có đúng 3 đồng cấu nhóm $\varphi_c: \mathbb{Z}/6\mathbb{Z} \to \mathbb{Z}/9\mathbb{Z}$ xác định bởi $\varphi_c([x]_6) = [cx]_9$:
+   - $\varphi_0([x]_6) = [0]_9$ (đồng cấu tầm thường).
+   - $\varphi_3([x]_6) = [3x]_9$.
+   - $\varphi_6([x]_6) = [6x]_9$.
+
+3. **Chứng minh số đồng cấu bằng $\gcd(m, n)$:**
+   Đặt $d = \gcd(m, n)$. Ta có:
+   $$
+   mc \equiv 0 \pmod n \iff \frac{m}{d} c \equiv 0 \pmod{\frac{n}{d}}.
+   $$
+   Vì $\gcd(\frac{m}{d}, \frac{n}{d}) = 1$, điều này tương đương với $\frac{n}{d} \mid c$.
+   Do đó, $c$ phải là bội số của $\frac{n}{d}$ trong tập $\{0, 1, \dots, n-1\}$.
+   Các giá trị khả dĩ của $c$ có dạng:
+   $$
+   c = k \cdot \frac{n}{d}, \quad \text{với } k \in \{0, 1, \dots, d - 1\}.
+   $$
+   Rõ ràng có đúng $d = \gcd(m, n)$ giá trị phân biệt của $k$.
+   Mỗi giá trị này xác định duy nhất một đồng cấu nhóm hợp thức.
+   Vậy số lượng đồng cấu nhóm từ $\mathbb{Z}/m\mathbb{Z}$ vào $\mathbb{Z}/n\mathbb{Z}$ đúng bằng $\gcd(m, n)$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Thiết lập điều kiện $n \mid mc$ chặt chẽ qua cấp phần tử sinh: `0,30 đ`
+- Tìm đầy đủ 3 đồng cấu cụ thể giữa $\mathbb{Z}_6$ và $\mathbb{Z}_9$: `0,35 đ`
+- Chứng minh tổng quát số nghiệm bằng $\gcd(m, n)$: `0,35 đ`
+</Solution>
+
+<Exercise
+  id="exr-c5-b1-c1"
+  title="[Nhóm C · Mã CTDS-C5-B1-C01] Ảnh của nhóm con chuẩn tắc khi đồng cấu không toàn ánh"
+  source="gt-ctds-hvk-2026"
+  page="94"
+  original="Bài 5.33"
+>
+Cho $\varphi: G \to K$ là một đồng cấu nhóm và $N \trianglelefteq G$.
+1. Chứng minh rằng $\varphi(N)$ luôn là một nhóm con chuẩn tắc của nhóm ảnh: $\varphi(N) \trianglelefteq \operatorname{im}\varphi$.
+2. Hãy chỉ ra một phản ví dụ cụ thể chứng minh rằng nếu $\varphi$ không toàn ánh, thì $\varphi(N)$ **không nhất thiết** là nhóm con chuẩn tắc của nhóm đích $K$.
+</Exercise>
+
+<Hint>
+Dùng phép nhúng (nhóm con) $\iota: H \hookrightarrow G$. Chọn $H$ và nhóm con $N \trianglelefteq H$ sao cho $N$ không chuẩn tắc trong $G$ (ví dụ mô hình tính không bắc cầu trong $D_8$).
+</Hint>
+
+<Solution>
+1. **Chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$:**
+   Ta đã biết $\varphi(N) \le \operatorname{im}\varphi$ theo Mệnh đề <Ref to="prop-c5-b1-anh-nghich-anh-nhom-con" />.
+   Lấy tùy ý $y \in \operatorname{im}\varphi$ và $u \in \varphi(N)$.
+   Theo định nghĩa, tồn tại $g \in G$ sao cho $y = \varphi(g)$, và tồn tại $n \in N$ sao cho $u = \varphi(n)$.
+   Ta tính phần tử liên hợp của $u$ qua $y$:
+   $$
+   y u y^{-1} = \varphi(g)\varphi(n)(\varphi(g))^{-1} = \varphi(g n g^{-1}).
+   $$
+   Vì $N \trianglelefteq G$, ta có $g n g^{-1} \in N$.
+   Do đó $y u y^{-1} = \varphi(g n g^{-1}) \in \varphi(N)$.
+   Điều này chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$.
+
+2. **Phản ví dụ $\varphi(N) \not\trianglelefteq K$ khi $\varphi$ không toàn ánh:**
+   Xét nhóm nhị diện $K = D_8 = \langle r, s \mid r^4 = e, s^2 = e, rs = sr^{-1} \rangle$.
+   Xét nhóm con $G = H = \{e, r^2, s, sr^2\} \le D_8$. Ta biết $H$ là nhóm abel cấp 4 (nhóm bốn Klein).
+   Xét nhóm con $N = \{e, s\} \le H$. Vì $H$ là nhóm giao hoán, $N$ là nhóm con chuẩn tắc của $H$:
+   $$
+   N \trianglelefteq H = G.
+   $$
+   Bây giờ xét ánh xạ nhúng chính tắc:
+   $$
+   \iota: G \hookrightarrow K, \quad \iota(x) = x, \; \forall x \in G.
+   $$
+   Ánh xạ $\iota$ hiển nhiên là một đồng cấu nhóm (đơn cấu), và $\iota$ không toàn ánh vì $|G| = 4 < 8 = |K|$.
+   Ảnh của nhóm con chuẩn tắc $N$ qua $\iota$ chính là:
+   $$
+   \iota(N) = N = \{e, s\} \subset D_8.
+   $$
+   Tuy nhiên, ta đã chứng minh ở Bài 1 (Phản ví dụ 4.1.2) rằng $r N r^{-1} = \{e, sr^2\} \ne N$.
+   Do đó:
+   $$
+   \iota(N) \not\trianglelefteq K.
+   $$
+   Phản ví dụ này chứng minh rằng điều kiện $\varphi$ toàn ánh trong Mệnh đề <Ref to="prop-c5-b1-anh-nghich-anh-nhom-con" /> là hoàn toàn không thể bỏ qua.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$ chặt chẽ qua liên hợp đại diện: `0,40 đ`
+- Xây dựng phép nhúng $H \hookrightarrow D_8$ với $N = \{e, s\}$: `0,35 đ`
+- Tính toán chỉ rõ $rNr^{-1} \ne N$ để kết luận $\iota(N) \not\trianglelefteq D_8$: `0,25 đ`
+</Solution>
+
+<Exercise
+  id="exr-c5-b1-d1"
+  title="[Nhóm D · Mã CTDS-C5-B1-D01] Cấu trúc nhóm tự đẳng cấu của nhóm cyclic Aut(Z/nZ)"
+  source="gt-ctds-hvk-2026"
+  page="95"
+  original="Bài 5.34"
+>
+Cho $n \ge 2$ và nhóm cyclic $(\mathbb{Z}/n\mathbb{Z}, +)$.
+1. Cho $\varphi \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$. Đặt $\varphi([1]_n) = [a]_n$. Chứng minh rằng $[a]_n$ bắt buộc phải là một phần tử sinh của $\mathbb{Z}/n\mathbb{Z}$, tương đương với $\gcd(a, n) = 1$.
+2. Ngược lại, chứng minh rằng với mỗi $a \in \mathbb{Z}$ thỏa $\gcd(a, n) = 1$, ánh xạ $\varphi_a([x]_n) = [ax]_n$ là một tự đẳng cấu của $\mathbb{Z}/n\mathbb{Z}$.
+3. Chứng minh rằng nhóm tự đẳng cấu $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$ đẳng cấu với nhóm nhân các phần tử khả nghịch $U(n) = (\mathbb{Z}/n\mathbb{Z})^\times$:
+   $$
+   \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n).
+   $$
+4. Hãy suy ra cấp của nhóm $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$ theo phi hàm Euler $\varphi(n)$.
+</Exercise>
+
+<Hint>
+Một tự đẳng cấu biến phần tử sinh thành phần tử sinh. Ánh xạ $\Phi: \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \to U(n)$ cho bởi $\Phi(\varphi) = \varphi([1])$ là một đẳng cấu nhóm.
+</Hint>
+
+<Solution>
+1. **$\varphi \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \implies \gcd(a, n) = 1$:**
+   Vì $\varphi$ là tự đẳng cấu, $\varphi$ là một toàn ánh. Do đó:
+   $$
+   \operatorname{im}\varphi = \varphi(\mathbb{Z}/n\mathbb{Z}) = \mathbb{Z}/n\mathbb{Z}.
+   $$
+   Vì $\mathbb{Z}/n\mathbb{Z} = \langle [1]_n \rangle$, ta có $\varphi(\mathbb{Z}/n\mathbb{Z}) = \langle \varphi([1]_n) \rangle = \langle [a]_n \rangle$.
+   Suy ra $\langle [a]_n \rangle = \mathbb{Z}/n\mathbb{Z}$, tức $[a]_n$ là một phần tử sinh của nhóm cyclic $\mathbb{Z}/n\mathbb{Z}$.
+   Theo tính chất phần tử sinh của nhóm cyclic (Chương 2, Định lý 2.3.2), điều này tương đương với:
+   $$
+   \gcd(a, n) = 1.
+   $$
+
+2. **Ánh xạ $\varphi_a$ là tự đẳng cấu khi $\gcd(a, n) = 1$:**
+   - *Đồng cấu:* $\varphi_a([x] + [y]) = [a(x+y)] = [ax] + [ay] = \varphi_a([x]) + \varphi_a([y])$.
+   - *Đơn ánh:* $\ker\varphi_a = \{[x] \in \mathbb{Z}/n\mathbb{Z} \mid [ax] = [0]\} = \{[x] \mid n \mid ax\}$. Vì $\gcd(a, n) = 1$, theo bổ đề Gauss ta có $n \mid x \implies [x] = [0]$. Do đó $\ker\varphi_a = \{[0]\}$. Theo tiêu chuẩn đơn cấu, $\varphi_a$ là đơn ánh.
+   - *Toàn ánh:* Vì $\mathbb{Z}/n\mathbb{Z}$ là tập hữu hạn và $\varphi_a$ là đơn ánh từ tập hữu hạn vào chính nó, $\varphi_a$ tự động là toàn ánh.
+   Vậy $\varphi_a \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$.
+
+3. **Chứng minh $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n)$:**
+   Xét ánh xạ:
+   $$
+   \Phi: \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \to U(n) = (\mathbb{Z}/n\mathbb{Z})^\times, \quad \Phi(\varphi) = \varphi([1]_n).
+   $$
+   - *Đồng cấu:* Lấy $\varphi, \psi \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$. Đặt $\psi([1]) = [b]$ và $\varphi([1]) = [a]$. Khi đó:
+     $$
+     (\varphi \circ \psi)([1]) = \varphi(\psi([1])) = \varphi([b]) = \varphi(b \cdot [1]) = b \cdot \varphi([1]) = b \cdot [a] = [ba] = [a][b].
+     $$
+     Do đó $\Phi(\varphi \circ \psi) = \Phi(\varphi) \cdot \Phi(\psi)$. Vậy $\Phi$ là đồng cấu nhóm.
+   - *Song ánh:* 
+     Theo câu 1 và 2, mỗi phần tử $[a] \in U(n)$ tương ứng duy nhất với tự đẳng cấu $\varphi_a$ thỏa $\varphi_a([1]) = [a]$.
+     Do đó $\Phi$ là một song ánh.
+   Vậy $\Phi$ là một đẳng cấu nhóm, suy ra $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n)$.
+
+4. **Cấp của nhóm tự đẳng cấu:**
+   $$
+   |\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})| = |U(n)| = \varphi(n).
+   $$
+   (Ví dụ: $|\operatorname{Aut}(\mathbb{Z}/8\mathbb{Z})| = \varphi(8) = 4$, và nhóm này đẳng cấu với $U(8) \cong V_4$).
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh $\varphi([1])$ là phần tử sinh $\iff \gcd(a, n) = 1$: `0,25 đ`
+- Chứng minh $\varphi_a$ là tự đẳng cấu qua $\ker\varphi_a = \{[0]\}$: `0,25 đ`
+- Thiết lập đồng cấu $\Phi$, chứng minh bảo toàn tích và là song ánh: `0,35 đ`
+- Kết luận chính xác $|\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})| = \varphi(n)$: `0,15 đ`
+</Solution>
+
+---
+
+## 6. Tóm tắt kiến thức cốt lõi
+
+<KeyTakeaways>
+- **Đồng cấu nhóm:** Ánh xạ $\varphi: G \to K$ bảo toàn phép toán: $\varphi(xy) = \varphi(x)\varphi(y)$. Tự động bảo toàn đơn vị $\varphi(e_G) = e_K$, nghịch đảo $\varphi(x^{-1}) = (\varphi(x))^{-1}$ và cấp phần tử $\operatorname{ord}(\varphi(x)) \mid \operatorname{ord}(x)$.
+- **Cấu trúc Hạt nhân và Ảnh:** $\operatorname{im}\varphi \le K$ và $\ker\varphi \trianglelefteq G$. Mỗi thớ $\varphi^{-1}(\{y\})$ là một lớp kề của hạt nhân.
+- **Tiêu chuẩn đơn cấu:** $\varphi$ là đơn ánh khi và chỉ khi $\ker\varphi = \{e_G\}$.
+- **Đồng cấu từ nhóm cyclic:** Hoàn toàn bị ấn định bởi ảnh của phần tử sinh $\varphi(a)$. Số đồng cấu từ $\mathbb{Z}/m\mathbb{Z} \to \mathbb{Z}/n\mathbb{Z}$ đúng bằng $\gcd(m, n)$.
+- **Nhóm tự đẳng cấu:** $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n)$, có cấp đúng bằng giá trị phi hàm Euler $\varphi(n)$.
+</KeyTakeaways>

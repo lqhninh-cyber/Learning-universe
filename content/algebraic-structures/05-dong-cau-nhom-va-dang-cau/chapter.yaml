@@ -1,0 +1,9 @@
+id: dong-cau-nhom-va-dang-cau
+number: 5
+title: 'Đồng cấu nhóm và các định lý đẳng cấu'
+description: 'Đồng cấu nhóm, đẳng cấu, hạt nhân ker, ảnh im, nguyên lý phân tích qua thương, ba định lý đẳng cấu nhóm, các bất biến đẳng cấu và Định lý tương ứng.'
+objectives:
+  - 'Nắm vững định nghĩa đồng cấu, đơn cấu, toàn cấu, đẳng cấu nhóm, cách xác định hạt nhân ker và ảnh im.'
+  - 'Phát biểu và chứng minh Nguyên lý phân tích qua thương và Định lý đẳng cấu thứ nhất: G/ker(phi) ≅ im(phi).'
+  - 'Vận dụng Định lý đẳng cấu thứ hai, thứ ba, các bất biến đẳng cấu và Định lý tương ứng để nhận diện cấu trúc nhóm thương.'
+  - 'Giải thành thạo các dạng bài tập chuyên sâu 4 phân lớp A, B, C, D khép lại Phần I (Lý thuyết Nhóm).'

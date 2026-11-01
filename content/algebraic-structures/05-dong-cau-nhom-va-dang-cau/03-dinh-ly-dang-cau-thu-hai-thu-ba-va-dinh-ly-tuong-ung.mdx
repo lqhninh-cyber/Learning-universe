@@ -1,0 +1,484 @@
+---
+id: dinh-ly-dang-cau-thu-hai-thu-ba-va-dinh-ly-tuong-ung
+title: 'Định lý đẳng cấu thứ hai, thứ ba, bất biến đẳng cấu và Định lý tương ứng'
+description: 'Định lý đẳng cấu thứ hai (sơ đồ kim cương), Định lý đẳng cấu thứ ba (giản ước phân số), các bất biến đẳng cấu để chứng minh không đẳng cấu, và Định lý tương ứng về mạng nhóm con.'
+estimatedMinutes: 40
+level: advanced
+prerequisites:
+  - phan-tich-qua-nhom-thuong-va-dinh-ly-dang-cau-thu-nhat
+tags:
+  - định lý đẳng cấu thứ hai
+  - định lý đẳng cấu thứ ba
+  - bất biến đẳng cấu
+  - định lý tương ứng
+  - tích trực tiếp trong
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '89-92'
+    sections: 'Mục 5.5.2, 5.5.3, 5.6, 5.7, 5.8'
+    note: 'Định lý 5.14 (Đẳng cấu thứ hai), Định lý 5.16 (Đẳng cấu thứ ba), Mệnh đề 5.18 (Bất biến), Định lý 5.19 (Định lý tương ứng)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '150-162'
+    sections: 'Chương 5, Mục 5.3'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu và chứng minh Định lý đẳng cấu thứ hai (Sơ đồ kim cương):** Nắm vững cấu trúc $H/(H \cap N) \cong HN/N$ khi $H \le G$ và $N \trianglelefteq G$.
+2. **Hiểu và chứng minh Định lý đẳng cấu thứ ba (Quy tắc giản ước nhóm thương):** Nắm vững đẳng cấu $(G/N)/(H/N) \cong G/H$ khi $N \subseteq H$ cùng là nhóm con chuẩn tắc của $G$.
+3. **Sử dụng thành thạo các bất biến đẳng cấu:** Nhận diện và chứng minh hai nhóm không đẳng cấu với nhau thông qua cấp phần tử, tính giao hoán, tính cyclic và cấu trúc tâm $Z(G)$.
+4. **Làm chủ Định lý tương ứng (Lattice Theorem):** Thiết lập song ánh bảo toàn quan hệ bao hàm giữa các nhóm con chứa $N$ trong $G$ và các nhóm con của nhóm thương $G/N$.
+</Note>
+
+**Kiến thức tiên quyết:** Định lý đẳng cấu thứ nhất và quy trình thiết lập đồng cấu toàn ánh từ Bài 2 (<Cite source="gt-ctds-hvk-2026" page="87-89" note="Mục 5.4, 5.5.1" />).
+
+---
+
+## 1. Định lý đẳng cấu thứ hai (Sơ đồ kim cương)
+
+Khi một nhóm con $H$ và một nhóm con chuẩn tắc $N$ tương tác trong cùng một nhóm mẹ $G$, tương quan giữa giao $H \cap N$ và tích $HN$ được mô tả hoàn hảo bởi Định lý đẳng cấu thứ hai (<Cite source="gt-ctds-hvk-2026" page="89-90" note="Mục 5.5.2" />).
+
+<Theorem
+  id="thm-c5-b3-dang-cau-thu-hai"
+  title="Định lý đẳng cấu thứ hai"
+  original="Định lý 5.14"
+  source="gt-ctds-hvk-2026"
+  page="89"
+>
+Cho $(G, \cdot)$ là một nhóm, $H$ là một nhóm con của $G$ ($H \le G$) và $N$ là một nhóm con chuẩn tắc của $G$ ($N \trianglelefteq G$). Khi đó:
+1. Tập tích $HN = \{hn \mid h \in H, n \in N\}$ là một nhóm con của $G$: $HN \le G$.
+2. $N$ là một nhóm con chuẩn tắc của $HN$: $N \trianglelefteq HN$.
+3. Giao $H \cap N$ là một nhóm con chuẩn tắc của $H$: $H \cap N \trianglelefteq H$.
+4. Ta có đẳng cấu nhóm tự nhiên:
+   $$
+   H/(H \cap N) \cong HN/N.
+   $$
+</Theorem>
+
+<Proof of="thm-c5-b3-dang-cau-thu-hai">
+1. **Chứng minh $HN \le G$:**
+   Vì $N \trianglelefteq G$, ta có $hN = Nh$ với mọi $h \in H$. Do đó:
+   $$
+   HN = \bigcup_{h \in H} hN = \bigcup_{h \in H} Nh = NH.
+   $$
+   Theo tính chất tích hai nhóm con (Chương 3), hai nhóm con giao hoán được qua phép nhân tập hợp ($HN = NH$) khi và chỉ khi tích của chúng $HN$ là một nhóm con của $G$.
+2. **Chứng minh $N \trianglelefteq HN$:**
+   Rõ ràng $N \subseteq HN$ (vì $e \in H \implies n = en \in HN$). Vì $N \trianglelefteq G$ và $HN \le G$, tính chất chuẩn tắc trong nhóm mẹ $G$ hiển nhiên được bảo toàn khi thu hẹp về nhóm con $HN$.
+3. **Chứng minh đẳng cấu $H/(H \cap N) \cong HN/N$:**
+   Ta sử dụng trực tiếp Định lý đẳng cấu thứ nhất bằng cách xây dựng ánh xạ:
+   $$
+   \theta: H \to HN/N, \quad \theta(h) = hN.
+   $$
+   - *Đồng cấu:* Với mọi $h_1, h_2 \in H$, theo quy tắc nhân lớp kề trong nhóm thương $HN/N$:
+     $$
+     \theta(h_1 h_2) = (h_1 h_2)N = (h_1 N)(h_2 N) = \theta(h_1)\theta(h_2).
+     $$
+   - *Toàn ánh:* Một phần tử tùy ý của nhóm thương $HN/N$ có dạng $xN$ với $x \in HN$. Tồn tại $h \in H$ và $n \in N$ sao cho $x = hn$. Khi đó:
+     $$
+     xN = (hn)N = h(nN) = hN = \theta(h).
+     $$
+     Do đó $\theta$ là một toàn cấu nhóm ($\operatorname{im}\theta = HN/N$).
+   - *Hạt nhân:*
+     $$
+     \ker\theta = \{h \in H \mid \theta(h) = e_{HN/N}\} = \{h \in H \mid hN = N\} = \{h \in H \mid h \in N\} = H \cap N.
+     $$
+     Vì hạt nhân của một đồng cấu luôn là nhóm con chuẩn tắc, điều này đồng thời chứng minh $H \cap N \trianglelefteq H$.
+
+Áp dụng Định lý đẳng cấu thứ nhất cho toàn cấu $\theta$:
+$$
+H/\ker\theta \cong \operatorname{im}\theta \iff H/(H \cap N) \cong HN/N.
+$$
+Chứng minh hoàn tất.
+</Proof>
+
+---
+
+## 2. Định lý đẳng cấu thứ ba (Quy tắc giản ước nhóm thương)
+
+Khi ta có một chuỗi nhóm con chuẩn tắc lồng nhau, việc lấy thương liên tiếp tuân theo quy tắc hoàn toàn tương tự như phép giản ước phân số: $\frac{G/N}{H/N} \cong \frac{G}{H}$ (<Cite source="gt-ctds-hvk-2026" page="90-91" note="Mục 5.5.3" />).
+
+<Theorem
+  id="thm-c5-b3-dang-cau-thu-ba"
+  title="Định lý đẳng cấu thứ ba"
+  original="Định lý 5.16"
+  source="gt-ctds-hvk-2026"
+  page="90"
+>
+Cho $(G, \cdot)$ là một nhóm, $N$ và $H$ là hai nhóm con chuẩn tắc của $G$ ($N \trianglelefteq G$ và $H \trianglelefteq G$) thỏa mãn $N \subseteq H$. Khi đó:
+1. Nhóm thương $H/N$ là một nhóm con chuẩn tắc của nhóm thương $G/N$:
+   $$
+   H/N \trianglelefteq G/N.
+   $$
+2. Ta có đẳng cấu nhóm tự nhiên:
+   $$
+   (G/N)/(H/N) \cong G/H.
+   $$
+</Theorem>
+
+<Proof of="thm-c5-b3-dang-cau-thu-ba">
+Xét ánh xạ tự nhiên từ nhóm thương $G/N$ sang nhóm thương $G/H$:
+$$
+\psi: G/N \to G/H, \quad \psi(aN) = aH.
+$$
+1. **Tính xác định tốt:** Nếu $aN = bN$, theo tiêu chuẩn lớp kề ta có $a^{-1}b \in N$. Vì $N \subseteq H$, suy ra $a^{-1}b \in H \implies aH = bH$. Vậy $\psi(aN) = \psi(bN)$.
+2. **Đồng cấu:** Với mọi $aN, bN \in G/N$:
+   $$
+   \psi((aN)(bN)) = \psi((ab)N) = (ab)H = (aH)(bH) = \psi(aN)\psi(bN).
+   $$
+3. **Toàn ánh:** Với mọi lớp kề $aH \in G/H$, ta có $aH = \psi(aN)$, do đó $\operatorname{im}\psi = G/H$.
+4. **Hạt nhân:** Phần tử đơn vị của $G/H$ là lớp kề $H$. Do đó:
+   $$
+   \ker\psi = \{aN \in G/N \mid \psi(aN) = H\} = \{aN \in G/N \mid aH = H\} = \{aN \in G/N \mid a \in H\} = H/N.
+   $$
+   Vì hạt nhân luôn chuẩn tắc, điều này chứng minh $H/N \trianglelefteq G/N$.
+
+Áp dụng Định lý đẳng cấu thứ nhất cho toàn cấu $\psi$:
+$$
+(G/N)/\ker\psi \cong \operatorname{im}\psi \iff (G/N)/(H/N) \cong G/H.
+$$
+Chứng minh hoàn tất.
+</Proof>
+
+---
+
+## 3. Các bất biến đẳng cấu để chứng minh hai nhóm không đẳng cấu
+
+Để chứng minh hai nhóm $G$ và $K$ **đẳng cấu với nhau**, ta phải thiết lập một song ánh bảo toàn phép toán. 
+Tuy nhiên, để chứng minh hai nhóm **không đẳng cấu với nhau** ($G \not\cong K$), ta không thể kiểm tra từng ánh xạ (vì có vô số ánh xạ). Thay vào đó, ta dựa vào các **bất biến đẳng cấu** (<Cite source="gt-ctds-hvk-2026" page="91" note="Mục 5.6" />).
+
+<Proposition
+  id="prop-c5-b3-bat-bien-dang-cau"
+  title="Các bất biến đẳng cấu cốt lõi"
+  original="Mệnh đề 5.18"
+  source="gt-ctds-hvk-2026"
+  page="91"
+>
+Nếu hai nhóm $G$ và $K$ đẳng cấu với nhau ($G \cong K$), thì mọi thuộc tính đại số của chúng phải hoàn toàn trùng khớp:
+1. **Lực lượng (Cấp):** $|G| = |K|$.
+2. **Tính giao hoán:** $G$ là nhóm giao hoán khi và chỉ khi $K$ là nhóm giao hoán.
+3. **Tính cyclic:** $G$ là nhóm cyclic khi và chỉ khi $K$ là nhóm cyclic.
+4. **Phổ cấp phần tử:** Với mỗi số nguyên dương $d \ge 1$, số lượng các phần tử có cấp $d$ trong $G$ bằng số lượng các phần tử có cấp $d$ trong $K$.
+5. **Cấu trúc tâm:** Các tâm đẳng cấu với nhau: $Z(G) \cong Z(K)$, do đó $|Z(G)| = |Z(K)|$.
+6. **Cấu trúc nhóm con:** Với mỗi số nguyên dương $m \ge 1$, số lượng nhóm con có cấp $m$ trong $G$ bằng số lượng nhóm con có cấp $m$ trong $K$.
+</Proposition>
+
+<Example id="ex-c5-b3-chung-minh-khong-dang-cau" title="Áp dụng bất biến chứng minh các cặp nhóm không đẳng cấu">
+1. **$(\mathbb{Q}, +) \not\cong (\mathbb{Q}^\times, \cdot)$:**
+   Trong nhóm nhân $\mathbb{Q}^\times$, phần tử $-1$ có cấp hữu hạn bằng 2 ($(-1)^2 = 1$).
+   Trong khi đó, trong nhóm cộng $\mathbb{Q}$, với mọi số hữu tỉ $x \ne 0$, $n \cdot x = 0 \iff n = 0$, nghĩa là không có bất kỳ phần tử khác 0 nào có cấp hữu hạn. Vì số lượng phần tử cấp 2 khác nhau ($1 \ne 0$), hai nhóm không thể đẳng cấu.
+2. **$S_4 \not\cong D_{24}$:**
+   Cả hai nhóm đều có cấp bằng 24 ($|S_4| = 24 = |D_{24}|$) và đều không giao hoán.
+   Tuy nhiên, nhóm nhị diện $D_{24}$ chứa phép quay $r$ có cấp bằng 12.
+   Trong khi đó, trong nhóm đối xứng $S_4$, cấp của các phần tử chỉ có thể là 1, 2, 3, hoặc 4 (cấp lớn nhất là 4 của 4-chu trình). Vì $S_4$ không có phần tử cấp 12, ta kết luận $S_4 \not\cong D_{24}$.
+</Example>
+
+---
+
+## 4. Định lý tương ứng về Mạng nhóm con (Lattice Theorem)
+
+Định lý tương ứng thiết lập một "tấm gương" phản chiếu hoàn hảo giữa cấu trúc nhóm con của nhóm mẹ $G$ và nhóm thương $G/N$ (<Cite source="gt-ctds-hvk-2026" page="91-92" note="Mục 5.7" />).
+
+<Theorem
+  id="thm-c5-b3-dinh-ly-tuong-ung"
+  title="Định lý tương ứng về mạng nhóm con"
+  original="Định lý 5.19"
+  source="gt-ctds-hvk-2026"
+  page="91"
+>
+Cho $(G, \cdot)$ là một nhóm và $N \trianglelefteq G$. Gọi $\pi: G \to G/N$ là ánh xạ chiếu chính tắc.
+Khi đó, ánh xạ:
+$$
+\Psi: \{H \le G \mid N \subseteq H\} \longrightarrow \{\bar{H} \le G/N\}, \quad \Psi(H) = H/N
+$$
+là một **song ánh bảo toàn quan hệ bao hàm**, với ánh xạ ngược cho bởi:
+$$
+\Psi^{-1}(\bar{H}) = \pi^{-1}(\bar{H}) = \{g \in G \mid gN \in \bar{H}\}.
+$$
+Hơn nữa, song ánh này bảo toàn đầy đủ các tính chất cấu trúc:
+1. **Bảo toàn thứ tự:** Với $N \subseteq H_1, H_2 \le G$, ta có $H_1 \subseteq H_2 \iff H_1/N \subseteq H_2/N$.
+2. **Bảo toàn chỉ số:** $[H_2 : H_1] = [H_2/N : H_1/N]$. Đặc biệt $[G : H] = [(G/N) : (H/N)]$.
+3. **Bảo toàn tính chuẩn tắc:** $H \trianglelefteq G \iff H/N \trianglelefteq G/N$. Khi đó $(G/N)/(H/N) \cong G/H$.
+</Theorem>
+
+<Proof of="thm-c5-b3-dinh-ly-tuong-ung">
+1. **$\Psi$ là song ánh:**
+   - Với $H \le G$ chứa $N$, theo Mệnh đề 5.1.4, ảnh $\pi(H) = H/N$ là một nhóm con của $G/N$. Ta có $\pi^{-1}(\pi(H)) = \{g \in G \mid gN \in H/N\} = \{g \in G \mid g \in HN\}$. Vì $N \subseteq H$, ta có $HN = H$, nên $\pi^{-1}(H/N) = H$. Do đó $\Psi^{-1} \circ \Psi = \operatorname{id}$.
+   - Ngược lại, với $\bar{H} \le G/N$, đặt $H = \pi^{-1}(\bar{H})$. Vì $e_{G/N} = N \in \bar{H}$, ta có $N = \pi^{-1}(\{N\}) \subseteq \pi^{-1}(\bar{H}) = H$. Và $\pi(H) = \pi(\pi^{-1}(\bar{H})) = \bar{H}$ (do $\pi$ toàn ánh). Do đó $\Psi \circ \Psi^{-1} = \operatorname{id}$.
+   Vậy $\Psi$ là một song ánh.
+2. **Bảo toàn thứ tự và chỉ số:**
+   Tính bảo toàn bao hàm là hiển nhiên từ tính chất ánh xạ. Về chỉ số, theo Định lý đẳng cấu thứ ba (<Ref to="thm-c5-b3-dang-cau-thu-ba" />), $(H_2/N)/(H_1/N) \cong H_2/H_1$, do đó lực lượng lớp kề (chỉ số) phải trùng nhau.
+3. **Bảo toàn tính chuẩn tắc:**
+   Nếu $H \trianglelefteq G$, vì $\pi$ là toàn cấu, theo Mệnh đề 5.1.4 ta có $\pi(H) = H/N \trianglelefteq G/N$. Ngược lại nếu $H/N \trianglelefteq G/N$, theo Mệnh đề 5.1.4 tạo ảnh $\pi^{-1}(H/N) = H \trianglelefteq G$. Đẳng cấu theo sau trực tiếp từ Định lý đẳng cấu thứ ba.
+</Proof>
+
+---
+
+## 5. Bài tập rèn luyện
+
+<Exercise
+  id="exr-c5-b3-a1"
+  title="[Nhóm A · Mã CTDS-C5-B3-A01] Áp dụng Định lý đẳng cấu II và III cho nhóm số nguyên Z"
+  source="gt-ctds-hvk-2026"
+  page="93"
+  original="Bài 5.19"
+>
+Trong nhóm cộng các số nguyên $(\mathbb{Z}, +)$:
+1. Cho hai nhóm con $H = 12\mathbb{Z}$ và $N = 18\mathbb{Z}$. Hãy tìm tổng $H + N$ và giao $H \cap N$.
+2. Áp dụng Định lý đẳng cấu thứ hai để viết đẳng cấu giữa các nhóm thương tương ứng và rút ra một hệ thức số học quen thuộc liên hệ giữa $\gcd$ và $\operatorname{lcm}$.
+3. Cho chuỗi nhóm con $N = 24\mathbb{Z} \subseteq H = 6\mathbb{Z} \subseteq G = \mathbb{Z}$. Áp dụng Định lý đẳng cấu thứ ba cho thương của các nhóm này.
+</Exercise>
+
+<Hint>
+Trong $\mathbb{Z}$, $a\mathbb{Z} + b\mathbb{Z} = \gcd(a, b)\mathbb{Z}$ và $a\mathbb{Z} \cap b\mathbb{Z} = \operatorname{lcm}(a, b)\mathbb{Z}$.
+</Hint>
+
+<Solution>
+1. **Tìm tổng $H + N$ và giao $H \cap N$:**
+   Theo tính chất nhóm con của $\mathbb{Z}$ (Chương 2):
+   - Tổng: $H + N = 12\mathbb{Z} + 18\mathbb{Z} = \gcd(12, 18)\mathbb{Z} = 6\mathbb{Z}$.
+   - Giao: $H \cap N = 12\mathbb{Z} \cap 18\mathbb{Z} = \operatorname{lcm}(12, 18)\mathbb{Z} = 36\mathbb{Z}$.
+
+2. **Áp dụng Định lý đẳng cấu thứ hai:**
+   Vì $(\mathbb{Z}, +)$ là nhóm abel, mọi nhóm con đều chuẩn tắc.
+   Theo Định lý đẳng cấu thứ hai (<Ref to="thm-c5-b3-dang-cau-thu-hai" />) với phép toán cộng:
+   $$
+   H / (H \cap N) \cong (H + N) / N.
+   $$
+   Thay các nhóm con cụ thể vào:
+   $$
+   12\mathbb{Z} / 36\mathbb{Z} \cong 6\mathbb{Z} / 18\mathbb{Z}.
+   $$
+   - Cấp của vế trái là $[12\mathbb{Z} : 36\mathbb{Z}] = \frac{36}{12} = 3 = \frac{\operatorname{lcm}(12, 18)}{12}$.
+   - Cấp của vế phải là $[6\mathbb{Z} : 18\mathbb{Z}] = \frac{18}{6} = 3 = \frac{18}{\gcd(12, 18)}$.
+   
+   Từ đẳng thức cấp của hai nhóm thương đẳng cấu:
+   $$
+   \frac{\operatorname{lcm}(a, b)}{a} = \frac{b}{\gcd(a, b)} \implies \gcd(a, b) \cdot \operatorname{lcm}(a, b) = a \cdot b.
+   $$
+   Hệ thức số học quen thuộc $\gcd(a, b) \cdot \operatorname{lcm}(a, b) = ab$ chính là biểu hiện cấp lực lượng của Định lý đẳng cấu thứ hai!
+
+3. **Áp dụng Định lý đẳng cấu thứ ba:**
+   Vì $24\mathbb{Z} \subseteq 6\mathbb{Z} \subseteq \mathbb{Z}$, áp dụng Định lý đẳng cấu thứ ba (<Ref to="thm-c5-b3-dang-cau-thu-ba" />):
+   $$
+   (\mathbb{Z}/24\mathbb{Z}) / (6\mathbb{Z}/24\mathbb{Z}) \cong \mathbb{Z}/6\mathbb{Z}.
+   $$
+   Về mặt số phần tử: $|\mathbb{Z}/24\mathbb{Z}| = 24$, $|6\mathbb{Z}/24\mathbb{Z}| = 24 / 6 = 4$. Cấp của nhóm thương bên trái là $24 / 4 = 6$, đúng bằng cấp $|\mathbb{Z}/6\mathbb{Z}| = 6$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Tính đúng $H + N = 6\mathbb{Z}$ và $H \cap N = 36\mathbb{Z}$: `0,30 đ`
+- Thiết lập đẳng cấu $12\mathbb{Z}/36\mathbb{Z} \cong 6\mathbb{Z}/18\mathbb{Z}$ và suy ra $\gcd \cdot \operatorname{lcm} = ab$: `0,40 đ`
+- Áp dụng đúng Định lý đẳng cấu III cho $(\mathbb{Z}_{24})/(6\mathbb{Z}_{24}) \cong \mathbb{Z}_6$: `0,30 đ`
+</Solution>
+
+<Exercise
+  id="exr-c5-b3-b1"
+  title="[Nhóm B · Mã CTDS-C5-B3-B01] Tìm toàn bộ nhóm con của nhóm thương bằng Định lý tương ứng"
+  source="gt-ctds-hvk-2026"
+  page="93"
+  original="Bài 5.20"
+>
+Xét nhóm cyclic $G = \mathbb{Z}/36\mathbb{Z}$ và nhóm con $N = \langle [12]_{36} \rangle = \{[0], [12], [24]\}$.
+1. Tìm tất cả các nhóm con $H$ của $G$ chứa nhóm con $N$ ($N \subseteq H \le G$).
+2. Áp dụng Định lý tương ứng để liệt kê toàn bộ các nhóm con của nhóm thương $G/N$.
+3. Nhóm thương $G/N$ đẳng cấu với mô hình nhóm quen thuộc nào?
+</Exercise>
+
+<Hint>
+Mọi nhóm con của $\mathbb{Z}/36\mathbb{Z}$ có dạng $\langle [d] \rangle$ với $d \mid 36$. Điều kiện $N \subseteq H$ tương đương với $[12] \in \langle [d] \rangle \iff d \mid 12$.
+</Hint>
+
+<Solution>
+1. **Tìm các nhóm con $H \le \mathbb{Z}/36\mathbb{Z}$ chứa $N = \langle [12] \rangle$:**
+   Mỗi nhóm con của nhóm cyclic $G = \mathbb{Z}/36\mathbb{Z}$ được sinh bởi một ước dương $d$ của 36:
+   $$
+   H_d = \langle [d]_{36} \rangle, \quad \text{với } d \in \{1, 2, 3, 4, 6, 9, 12, 18, 36\}.
+   $$
+   Nhóm con $H_d$ chứa $N = \langle [12] \rangle$ khi và chỉ khi phần tử sinh $[12]$ thuộc $H_d$, nghĩa là $d$ phải là ước của 12:
+   $$
+   d \mid 12.
+   $$
+   Các ước nguyên dương chung của 12 và 36 (chính là các ước của 12) là:
+   $$
+   d \in \{1, 2, 3, 4, 6, 12\}.
+   $$
+   Do đó có đúng 6 nhóm con của $G$ chứa $N$:
+   - $H_1 = \langle [1] \rangle = \mathbb{Z}/36\mathbb{Z}$.
+   - $H_2 = \langle [2] \rangle$.
+   - $H_3 = \langle [3] \rangle$.
+   - $H_4 = \langle [4] \rangle$.
+   - $H_6 = \langle [6] \rangle$.
+   - $H_{12} = \langle [12] \rangle = N$.
+
+2. **Liệt kê các nhóm con của nhóm thương $G/N$:**
+   Theo Định lý tương ứng (<Ref to="thm-c5-b3-dinh-ly-tuong-ung" />), các nhóm con của $G/N$ tương ứng song ánh 1-1 với 6 nhóm con $H_d$ ở câu 1.
+   Do đó, nhóm thương $G/N$ có đúng 6 nhóm con là:
+   - $\bar{H}_1 = H_1/N = (G/N)$ (toàn thể nhóm thương).
+   - $\bar{H}_2 = H_2/N = \langle [2] + N \rangle$.
+   - $\bar{H}_3 = H_3/N = \langle [3] + N \rangle$.
+   - $\bar{H}_4 = H_4/N = \langle [4] + N \rangle$.
+   - $\bar{H}_6 = H_6/N = \langle [6] + N \rangle$.
+   - $\bar{H}_{12} = N/N = \{e_{G/N}\}$ (nhóm con tầm thường).
+
+3. **Mô hình đẳng cấu của $G/N$:**
+   Theo Định lý đẳng cấu thứ ba, vì $N = 12\mathbb{Z}/36\mathbb{Z}$ và $G = \mathbb{Z}/36\mathbb{Z}$:
+   $$
+   G/N = (\mathbb{Z}/36\mathbb{Z}) / (12\mathbb{Z}/36\mathbb{Z}) \cong \mathbb{Z}/12\mathbb{Z}.
+   $$
+   Nhóm thương $G/N$ là một nhóm cyclic cấp 12, đẳng cấu với $\mathbb{Z}/12\mathbb{Z}$. Mạng lưới 6 nhóm con của nó tương ứng chính xác với 6 ước của 12.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Xác định đúng điều kiện $d \mid 12$ và liệt kê đủ 6 nhóm con $H_d$: `0,40 đ`
+- Vận dụng Định lý tương ứng suy ra đúng 6 nhóm con của $G/N$: `0,35 đ`
+- Nhận diện đúng $G/N \cong \mathbb{Z}/12\mathbb{Z}$ qua Định lý đẳng cấu III: `0,25 đ`
+</Solution>
+
+<Exercise
+  id="exr-c5-b3-c1"
+  title="[Nhóm C · Mã CTDS-C5-B3-C01] Bác bỏ đẳng cấu nhóm bằng phương pháp bất biến đại số"
+  source="gt-ctds-hvk-2026"
+  page="94"
+  original="Bài 5.23, 5.26"
+>
+Chứng minh rằng các cặp nhóm sau đây không đẳng cấu với nhau:
+1. $(\mathbb{R}, +)$ và $(\mathbb{R}^\times, \cdot)$.
+2. Nhóm đối xứng $S_4$ và nhóm nhị diện $D_{24}$.
+3. Nhóm nhân $U(8) = (\mathbb{Z}/8\mathbb{Z})^\times$ và $U(10) = (\mathbb{Z}/10\mathbb{Z})^\times$.
+</Exercise>
+
+<Hint>
+Tìm các bất biến đẳng cấu: số phần tử cấp hữu hạn, cấp lớn nhất của phần tử, hoặc tính cyclic.
+</Hint>
+
+<Solution>
+1. **Chứng minh $(\mathbb{R}, +) \not\cong (\mathbb{R}^\times, \cdot)$:**
+   Giả sử phản chứng tồn tại đẳng cấu nhóm $\varphi: (\mathbb{R}, +) \to (\mathbb{R}^\times, \cdot)$.
+   Trong nhóm nhân $(\mathbb{R}^\times, \cdot)$, phần tử $-1$ có cấp 2 vì $(-1)^2 = 1$ và $-1 \ne 1$.
+   Vì $\varphi$ là song ánh, tồn tại số thực $x \in \mathbb{R}$ sao cho $\varphi(x) = -1$.
+   Theo Mệnh đề 5.1.2, đẳng cấu bảo toàn cấp phần tử, do đó cấp của $x$ trong $(\mathbb{R}, +)$ phải bằng 2:
+   $$
+   2 \cdot x = 0 \iff x + x = 0.
+   $$
+   Trong trường số thực, phương trình $2x = 0$ chỉ có nghiệm duy nhất là $x = 0$.
+   Nhưng nếu $x = 0$, ta có $\varphi(0) = 1 \ne -1$, mâu thuẫn!
+   Vậy không thể tồn tại đẳng cấu giữa $(\mathbb{R}, +)$ và $(\mathbb{R}^\times, \cdot)$.
+
+2. **Chứng minh $S_4 \not\cong D_{24}$:**
+   Cả hai nhóm đều có cấp bằng 24: $|S_4| = 4! = 24$ và $|D_{24}| = 2 \cdot 12 = 24$.
+   Cả hai nhóm đều không giao hoán.
+   Tuy nhiên:
+   - Trong nhóm nhị diện $D_{24}$, phép quay cơ bản $r$ có cấp bằng 12 ($\operatorname{ord}(r) = 12$).
+   - Trong nhóm đối xứng $S_4$, cấp của mỗi hoán vị bằng bội chung nhỏ nhất của độ dài các chu trình rời nhau. Cấu trúc chu trình trong $S_4$ chỉ có thể là: chuyển vị (cấp 2), 3-chu trình (cấp 3), 4-chu trình (cấp 4), tích hai chuyển vị rời (cấp $\operatorname{lcm}(2, 2) = 2$).
+   Cấp lớn nhất của một phần tử trong $S_4$ chỉ bằng 4. Nhóm $S_4$ **không có bất kỳ phần tử nào có cấp bằng 12**.
+   Vì phổ cấp phần tử là một bất biến đẳng cấu, ta kết luận $S_4 \not\cong D_{24}$.
+
+3. **Chứng minh $U(8) \not\cong U(10)$:**
+   Ta liệt kê các phần tử của từng nhóm:
+   - $U(8) = \{[1], [3], [5], [7]\}$ có cấp $|U(8)| = \varphi(8) = 4$. Tính bình phương:
+     $3^2 = 9 \equiv 1 \pmod 8$; $5^2 = 25 \equiv 1 \pmod 8$; $7^2 = 49 \equiv 1 \pmod 8$.
+     Mọi phần tử khác đơn vị trong $U(8)$ đều có cấp 2. Do đó $U(8) \cong V_4$ (không cyclic).
+   - $U(10) = \{[1], [3], [7], [9]\}$ có cấp $|U(10)| = \varphi(10) = 4$. Tính lũy thừa của phần tử $[3]$:
+     $3^1 = 3, 3^2 = 9 \equiv -1, 3^3 = 27 \equiv 7, 3^4 = 81 \equiv 1 \pmod{10}$.
+     Phần tử $[3]$ có cấp đúng bằng 4. Do đó $U(10) = \langle [3] \rangle \cong \mathbb{Z}/4\mathbb{Z}$ là nhóm cyclic.
+   
+   Vì một nhóm là cyclic còn nhóm kia không cyclic, ta kết luận $U(8) \not\cong U(10)$.
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh $(\mathbb{R}, +) \not\cong (\mathbb{R}^\times, \cdot)$ qua phần tử cấp 2: `0,35 đ`
+- Chứng minh $S_4 \not\cong D_{24}$ qua sự tồn tại của phần tử cấp 12: `0,35 đ`
+- Chứng minh $U(8) \not\cong U(10)$ qua tính cyclic: `0,30 đ`
+</Solution>
+
+<Exercise
+  id="exr-c5-b3-d1"
+  title="[Nhóm D · Mã CTDS-C5-B3-D01] Định lý nhận diện Tích trực tiếp trong"
+  source="gt-ctds-hvk-2026"
+  page="95"
+  original="Bài 5.39"
+>
+Cho $(G, \cdot)$ là một nhóm, $H$ và $K$ là hai nhóm con của $G$ thỏa mãn ba điều kiện:
+1. $H \trianglelefteq G$ và $K \trianglelefteq G$.
+2. $H \cap K = \{e\}$.
+3. $HK = G$.
+
+Hãy chứng minh rằng:
+- Với mọi $h \in H$ và mọi $k \in K$, ta có $hk = kh$ (phần tử của $H$ và $K$ giao hoán với nhau).
+- Ánh xạ $\theta: H \times K \to G$ xác định bởi $\theta(h, k) = hk$ là một đẳng cấu nhóm, suy ra $G \cong H \times K$.
+</Exercise>
+
+<Hint>
+Xét giao hoán tử $x = hkh^{-1}k^{-1}$. Phân tích $x = (hkh^{-1})k^{-1} \in K$ và $x = h(kh^{-1}k^{-1}) \in H$ để suy ra $x \in H \cap K = \{e\}$.
+</Hint>
+
+<Solution>
+1. **Chứng minh $hk = kh$ với mọi $h \in H, k \in K$:**
+   Xét phần tử giao hoán tử:
+   $$
+   x = h k h^{-1} k^{-1}.
+   $$
+   - Vì $K \trianglelefteq G$, phần tử liên hợp $h k h^{-1} \in K$. Do đó:
+     $$
+     x = (h k h^{-1}) k^{-1} \in K \cdot K \subseteq K.
+     $$
+   - Mặt khác, vì $H \trianglelefteq G$, phần tử liên hợp $k h^{-1} k^{-1} \in H$. Do đó:
+     $$
+     x = h (k h^{-1} k^{-1}) \in H \cdot H \subseteq H.
+     $$
+   Từ hai kết quả trên, ta suy ra:
+   $$
+   x \in H \cap K.
+   $$
+   Theo giả thiết 2, $H \cap K = \{e\}$. Do đó buộc phải có:
+   $$
+   h k h^{-1} k^{-1} = e \implies hk = kh.
+   $$
+   Vậy mọi phần tử của $H$ đều giao hoán với mọi phần tử của $K$.
+
+2. **Chứng minh $\theta: H \times K \to G$ là một đẳng cấu nhóm:**
+   Ánh xạ $\theta(h, k) = hk$.
+   - **Đồng cấu:** Lấy $(h_1, k_1), (h_2, k_2) \in H \times K$. Sử dụng tính giao hoán $k_1 h_2 = h_2 k_1$ vừa chứng minh:
+     $$
+     \theta((h_1, k_1)(h_2, k_2)) = \theta(h_1 h_2, k_1 k_2) = (h_1 h_2)(k_1 k_2) = h_1 (h_2 k_1) k_2 = h_1 (k_1 h_2) k_2 = (h_1 k_1)(h_2 k_2) = \theta(h_1, k_1)\theta(h_2, k_2).
+     $$
+     Vậy $\theta$ là một đồng cấu nhóm.
+   - **Toàn ánh:** Với mọi $g \in G$, theo giả thiết $G = HK$, tồn tại $h \in H, k \in K$ sao cho $g = hk = \theta(h, k)$. Do đó $\theta$ là toàn ánh.
+   - **Đơn ánh:** Ta tìm hạt nhân của $\theta$:
+     $$
+     (h, k) \in \ker\theta \iff \theta(h, k) = e \iff hk = e \iff h = k^{-1}.
+     $$
+     Vì $h \in H$ và $k^{-1} \in K$, ta có $h \in H \cap K$.
+     Theo giả thiết $H \cap K = \{e\}$, suy ra $h = e$, kéo theo $k = e$.
+     Do đó $\ker\theta = \{(e, e)\} = \{e_{H \times K}\}$.
+     Theo tiêu chuẩn đơn cấu, $\theta$ là đơn ánh.
+
+Vì $\theta$ vừa là đồng cấu, vừa là đơn ánh và toàn ánh, $\theta$ là một đẳng cấu nhóm.
+Ta kết luận $G \cong H \times K$ (gọi là tích trực tiếp trong của $H$ và $K$).
+
+**Tiêu chí đánh giá (Rubric 1,00 điểm):**
+- Chứng minh $hkh^{-1}k^{-1} \in H \cap K = \{e\} \implies hk = kh$: `0,40 đ`
+- Chứng minh $\theta$ là đồng cấu dựa vào tính giao hoán: `0,25 đ`
+- Chứng minh $\theta$ là toàn ánh từ $G = HK$: `0,15 đ`
+- Chứng minh $\ker\theta = \{(e, e)\} \implies \theta$ đơn ánh và kết luận $G \cong H \times K$: `0,20 đ`
+</Solution>
+
+---
+
+## 6. Tóm tắt kiến thức cốt lõi
+
+<KeyTakeaways>
+- **Định lý đẳng cấu thứ hai:** $H/(H \cap N) \cong HN/N$. Liên kết giao và tích của hai nhóm con thông qua sơ đồ kim cương.
+- **Định lý đẳng cấu thứ ba:** $(G/N)/(H/N) \cong G/H$. Quy tắc giản ước nhóm thương tương tự phân số.
+- **Bất biến đẳng cấu:** Hai nhóm đẳng cấu phải có cùng cấp, tính giao hoán, tính cyclic, số phần tử mỗi cấp và cấu trúc tâm. Dùng bất biến là cách duy nhất để chứng minh không đẳng cấu.
+- **Định lý tương ứng:** Mạng lưới nhóm con chứa $N$ trong $G$ tương ứng 1-1 và bảo toàn quan hệ bao hàm, chỉ số và tính chuẩn tắc với mạng lưới nhóm con của $G/N$.
+- **Tích trực tiếp trong:** Nếu $H, K \trianglelefteq G$, $H \cap K = \{e\}$ và $HK = G$, thì $G \cong H \times K$.
+</KeyTakeaways>
