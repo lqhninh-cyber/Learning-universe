@@ -8,3 +8,4 @@ objectives:
   - 'Làm chủ sơ đồ thang bậc: Vành ⊃ Vành có 1 ⊃ Vành giao hoán có 1 ⊃ Miền nguyên ⊃ Trường (cùng nhánh Vành chia / Thể).'
   - 'Phát biểu và chứng minh định lý miền nguyên hữu hạn là trường, hệ quả trên Z/nZ, và các ví dụ kinh điển (Z[i], quaternion H).'
   - 'Vận dụng các cách dựng vành mới (tích trực tiếp, đa thức, ma trận), tiêu chuẩn vành con và phân tích hiện tượng sai khác phần tử đơn vị giữa vành con và vành mẹ.'
+  - 'Phân tích bước đệm dẫn sang phép nhân trên tập thương: Vì sao vành con chưa đủ để xây dựng vành thương và sự cần thiết của điều kiện hấp thụ nhân của iđêan.'

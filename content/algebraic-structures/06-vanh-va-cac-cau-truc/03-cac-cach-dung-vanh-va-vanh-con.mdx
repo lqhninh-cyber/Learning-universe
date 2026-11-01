@@ -225,7 +225,76 @@ flowchart TD
 
 ---
 
-## 5. Hệ thống bài tập 4 phân lớp có lời giải
+## 5. Bước đệm sư phạm: Phép nhân trên tập thương và vì sao Vành con chưa đủ?
+
+Một câu hỏi cốt tử mang tính dẫn dắt toàn bộ Phần II của Cấu trúc đại số là:
+> **Nếu $S$ là một vành con của $R$, khi nào tập các lớp kề cộng $R/S$ có thể trang bị phép nhân để trở thành một Vành thương?**
+
+<Proposition id="prop-c6-b3-dieu-kien-nhan-tap-thuong" title="Điều kiện để phép nhân lớp kề xác định tốt trên tập thương">
+Cho $R$ là một vành và $S$ là một vành con của $R$.
+1. Vì $(R, +)$ là một nhóm Abel, mọi nhóm con cộng $S$ đều tự động là nhóm con chuẩn tắc: $S \trianglelefteq (R, +)$. Do đó tập các lớp kề cộng:
+   $$
+   R/S = \{a + S \mid a \in R\}
+   $$
+   luôn lập thành một **nhóm cộng thương** Abel xác định tốt với phép cộng $(a + S) + (b + S) = (a + b) + S$.
+2. Để phép nhân tự nhiên giữa các lớp kề:
+   $$
+   (a + S) \cdot (b + S) = (a \cdot b) + S
+   $$
+   **xác định tốt** (*well-defined*, tức là không phụ thuộc vào đại diện được chọn), điều kiện cần và đủ là $S$ phải thỏa mãn **tính chất hấp thụ phép nhân hai phía**:
+   $$
+   r \cdot s \in S \quad \text{và} \quad s \cdot r \in S \quad \text{với mọi } r \in R \text{ và mọi } s \in S.
+   $$
+</Proposition>
+
+<Proof>
+Giả sử ta chọn hai đại diện khác $a' \in a + S$ và $b' \in b + S$. Theo định nghĩa lớp kề cộng, tồn tại $s_1, s_2 \in S$ sao cho:
+$$
+a' = a + s_1, \quad b' = b + s_2.
+$$
+Tích của hai đại diện mới trong vành $R$ là:
+$$
+a'b' = (a + s_1)(b + s_2) = ab + a s_2 + s_1 b + s_1 s_2.
+$$
+Để phép nhân trên tập thương xác định tốt, hai tích đại diện phải sinh ra cùng một lớp kề, tức là $a'b' + S = ab + S$, tương đương với việc phần chênh lệch phải thuộc về $S$:
+$$
+a'b' - ab = a s_2 + s_1 b + s_1 s_2 \in S.
+$$
+Vì $S$ là một vành con, tích nội bộ $s_1 s_2$ hiển nhiên thuộc $S$. Do đó điều kiện cần và đủ tương đương với:
+$$
+a s_2 + s_1 b \in S \quad \text{với mọi } a, b \in R \text{ và } s_1, s_2 \in S.
+$$
+- Cho $b = 0_R$ và $s_1 = 0_R$: ta buộc phải có $a s_2 \in S$ với mọi $a \in R$ và mọi $s_2 \in S$ (hấp thụ bên trái: $RS \subseteq S$).
+- Cho $a = 0_R$ và $s_2 = 0_R$: ta buộc phải có $s_1 b \in S$ với mọi $b \in R$ và mọi $s_1 \in S$ (hấp thụ bên phải: $SR \subseteq S$).
+
+Ngược lại, nếu $RS \subseteq S$ và $SR \subseteq S$, thì hiển nhiên $a s_2 \in S$ và $s_1 b \in S$, kéo theo $a'b' - ab \in S$, và phép nhân lớp kề hoàn toàn xác định tốt.
+</Proof>
+
+<Counterexample id="ce-c6-b3-phep-nhan-hong-tren-tap-thuong" title="Sự sụp đổ của phép nhân lớp kề trên vành con Z ⊂ Q">
+Xét trường số hữu tỉ $\mathbb{Q}$ và vành con các số nguyên $\mathbb{Z} \subset \mathbb{Q}$.
+- Nhóm cộng thương $\mathbb{Q}/\mathbb{Z}$ là một nhóm Abel xác định tốt (nhóm các góc xoay hữu tỉ của đường tròn).
+- Hãy thử thực hiện phép nhân lớp kề: $(a + \mathbb{Z})(b + \mathbb{Z}) = ab + \mathbb{Z}$.
+  - Lấy hai lớp: $1/2 + \mathbb{Z}$ và $1/3 + \mathbb{Z}$.
+  - Lựa chọn đại diện 1: Chọn $a = 1/2, b = 1/3$. Tích là:
+    $$
+    ab = \frac{1}{2} \cdot \frac{1}{3} = \frac{1}{6} \implies \left(\frac{1}{2} + \mathbb{Z}\right)\left(\frac{1}{3} + \mathbb{Z}\right) = \frac{1}{6} + \mathbb{Z}.
+    $$
+  - Lựa chọn đại diện 2: Thay $a$ bằng đại diện khác $a' = 1/2 + 1 = 3/2 \in 1/2 + \mathbb{Z}$, giữ nguyên $b = 1/3$. Tích mới là:
+    $$
+    a'b = \frac{3}{2} \cdot \frac{1}{3} = \frac{1}{2} \implies \left(\frac{3}{2} + \mathbb{Z}\right)\left(\frac{1}{3} + \mathbb{Z}\right) = \frac{1}{2} + \mathbb{Z}.
+    $$
+  - So sánh hai kết quả: Hiệu giữa hai đại diện tích là $\frac{1}{2} - \frac{1}{6} = \frac{1}{3} \notin \mathbb{Z}$, do đó:
+    $$
+    \frac{1}{6} + \mathbb{Z} \neq \frac{1}{2} + \mathbb{Z}!
+    $$
+Kết quả nhân lớp kề phụ thuộc vào việc chọn đại diện. Phép nhân $(a + \mathbb{Z})(b + \mathbb{Z}) = ab + \mathbb{Z}$ **hoàn toàn vô nghĩa (không xác định tốt)** trên $\mathbb{Q}/\mathbb{Z}$.
+
+*Bình luận sư phạm:* Vành con $\mathbb{Z}$ không thể hấp thụ phép nhân từ bên ngoài của $\mathbb{Q}$ (chẳng hạn $\frac{1}{2} \in \mathbb{Q}, 1 \in \mathbb{Z}$ nhưng $\frac{1}{2} \cdot 1 = \frac{1}{2} \notin \mathbb{Z}$). Để xây dựng được một **Vành thương** $R/I$, ta cần một cấu trúc mạnh hơn vành con thông thường: đó chính là **Iđêan** (*Ideal*) — đối tượng trung tâm của Chương 7.
+</Counterexample>
+
+---
+
+## 6. Hệ thống bài tập 4 phân lớp có lời giải
 
 <Exercise id="ex-c6-b3-nhom-a" title="Bài tập 6.9 (Nhóm A): Kiểm tra tiêu chuẩn vành con">
 Trong các tập con sau của trường số thực $\mathbb{R}$, tập nào là vành con của $\mathbb{R}$?
@@ -431,7 +500,7 @@ Dùng các ma trận đơn vị cơ sở $E_{11}, E_{12}, E_{21}, E_{22}$. Đẳ
 
 ---
 
-## 6. Tóm tắt các điểm then chốt
+## 7. Tóm tắt các điểm then chốt
 
 <KeyTakeaways>
 - **Bốn cách dựng vành mới:** Vành tích $R \times S$ (luôn có ước của không khi $R, S \neq \{0\}$), vành hàm $R^X$, vành ma trận $M_n(R)$ (không giao hoán), và vành đa thức $R[x]$.
@@ -439,4 +508,5 @@ Dùng các ma trận đơn vị cơ sở $E_{11}, E_{12}, E_{21}, E_{22}$. Đẳ
 - **Sự sụp đổ công thức bậc:** Nếu $R$ có ước của không, bậc của tích đa thức có thể bị giảm và có thể tồn tại đa thức khả nghịch bậc cao (như $[1]+[2]x$ trong $(\mathbb{Z}/4\mathbb{Z})[x]$).
 - **Tiêu chuẩn vành con:** $S \subseteq R$ là vành con $\iff S \neq \varnothing, x - y \in S, xy \in S$ với mọi $x, y \in S$.
 - **Hiện tượng đơn vị của vành con:** Vành con không nhất thiết có đơn vị (ví dụ $2\mathbb{Z} \subset \mathbb{Z}$), hoặc có thể có đơn vị riêng khác đơn vị vành mẹ (ví dụ $\mathbb{R}E_{11} \subset M_2(\mathbb{R})$ có đơn vị riêng $E_{11} \neq I_2$).
+- **Bước đệm sang Vành thương:** Phép nhân lớp kề $(a+S)(b+S) = ab+S$ chỉ xác định tốt khi $S$ hấp thụ phép nhân hai phía ($rS \subseteq S, Sr \subseteq S$). Khái niệm này đòi hỏi cấu trúc Iđêan ở Chương 7.
 </KeyTakeaways>
