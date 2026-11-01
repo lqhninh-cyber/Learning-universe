@@ -6,7 +6,25 @@ import { routes } from '@/app/router';
 import { MotionProvider } from '@/shared/motion/MotionProvider';
 import { useSubjectTheme } from '@/shared/theme/subject-themes';
 import { SubjectThemeProvider } from '@/shared/theme/SubjectThemeProvider';
-import { Badge, Breadcrumb, Button, Collapsible, ProgressRing, TooltipProvider } from '@/shared/ui';
+import {
+  AffineGridMotif,
+  AlgebraicSymmetryMotif,
+  Badge,
+  Breadcrumb,
+  Button,
+  Collapsible,
+  DefinitionPillarMotif,
+  DongSonConcentricMotif,
+  ExamplePillarMotif,
+  ExercisePillarMotif,
+  HeritageDivider,
+  KagomeWeaveDivider,
+  ProgressRing,
+  ProofPillarMotif,
+  TheoremPillarMotif,
+  TheoryPillarMotif,
+  TooltipProvider,
+} from '@/shared/ui';
 
 function ThemeConsumerProbe() {
   const theme = useSubjectTheme();
@@ -94,5 +112,26 @@ describe('Design System & Subject Theming (Giai đoạn 1)', () => {
 
     await user.click(screen.getByRole('button', { name: /Hình học Affine/i }));
     expect(container.querySelector('[data-subject="affine-geometry"]')).toBeInTheDocument();
+  });
+
+  it('kết xuất đầy đủ 11 component họa tiết di sản với aria-hidden="true" chuẩn accessibility', () => {
+    const { container } = render(
+      <div>
+        <DongSonConcentricMotif data-testid="dong-son" />
+        <AlgebraicSymmetryMotif data-testid="algebra-motif" />
+        <AffineGridMotif data-testid="affine-motif" />
+        <HeritageDivider data-testid="heritage-divider" />
+        <KagomeWeaveDivider data-testid="kagome-divider" />
+        <TheoryPillarMotif data-testid="theory-motif" />
+        <DefinitionPillarMotif data-testid="definition-motif" />
+        <TheoremPillarMotif data-testid="theorem-motif" />
+        <ProofPillarMotif data-testid="proof-motif" />
+        <ExamplePillarMotif data-testid="example-motif" />
+        <ExercisePillarMotif data-testid="exercise-motif" />
+      </div>,
+    );
+
+    const hiddenElements = container.querySelectorAll('[aria-hidden="true"]');
+    expect(hiddenElements.length).toBeGreaterThanOrEqual(11);
   });
 });

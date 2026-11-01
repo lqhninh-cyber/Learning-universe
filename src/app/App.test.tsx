@@ -39,6 +39,53 @@ describe('App routing smoke test', () => {
     expect(affineLinks[0]).toHaveAttribute('href', '/mon-hoc/hinh-hoc-affine');
   });
 
+  it('hiển thị đầy đủ 7 khu vực của trang chủ theo concept Di sản tri thức & Hình học bản sắc', async () => {
+    renderWithProviders('/');
+
+    // 1. Eyebrow & Hero Section
+    expect(await screen.findByText('KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI')).toBeInTheDocument();
+    expect(screen.getByText(/KHAI MỞ TRI THỨC/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Khám phá môn học/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Bắt đầu hành trình/i })).toBeInTheDocument();
+
+    // 2. Ô tìm kiếm bài học
+    expect(
+      screen.getByRole('searchbox', { name: /Tìm kiếm môn học hoặc bài học/i }),
+    ).toBeInTheDocument();
+
+    // 3. Khu vực môn học
+    expect(
+      screen.getByRole('heading', { name: /KHÔNG GIAN KHÁM PHÁ TRI THỨC/i }),
+    ).toBeInTheDocument();
+
+    // 4. Khu vực Thư viện tri thức (6 trụ cột)
+    expect(screen.getByRole('heading', { name: /THƯ VIỆN TRI THỨC/i })).toBeInTheDocument();
+    expect(screen.getByText('Lý thuyết')).toBeInTheDocument();
+    expect(screen.getByText('Định nghĩa')).toBeInTheDocument();
+    expect(screen.getByText('Định lý & Bổ đề')).toBeInTheDocument();
+    expect(screen.getByText('Chứng minh')).toBeInTheDocument();
+    expect(screen.getByText('Ví dụ minh họa')).toBeInTheDocument();
+    expect(screen.getByText('Bài tập & Lời giải')).toBeInTheDocument();
+
+    // 5. Khu vực Bản đồ tri thức
+    expect(
+      screen.getByRole('heading', { name: /KẾT NỐI NHỮNG MIỀN TRI THỨC/i }),
+    ).toBeInTheDocument();
+
+    // 6. Khu vực Hành trình học tập
+    expect(
+      screen.getByRole('heading', { name: /HÀNH TRÌNH CHINH PHỤC TRI THỨC/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Trải nghiệm tự do ở Chế độ Khách/i)).toBeInTheDocument();
+
+    // 7. Footer đồng bộ bản sắc
+    expect(
+      screen.getByText(
+        /Nền tảng học tập Toán học đại học đương đại lấy cảm hứng từ cấu trúc Thư viện đình làng/i,
+      ),
+    ).toBeInTheDocument();
+  });
+
   it('hiển thị trang 404 tiếng Việt khi truy cập đường dẫn không tồn tại', async () => {
     renderWithProviders('/duong-dan-khong-ton-tai');
 
