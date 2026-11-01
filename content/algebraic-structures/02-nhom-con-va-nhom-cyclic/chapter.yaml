@@ -1,0 +1,9 @@
+id: nhom-con-va-nhom-cyclic
+number: 2
+title: 'Nhóm con và nhóm cyclic'
+description: 'Tiêu chuẩn nhóm con, nhóm con sinh bởi một tập hợp, cấp của phần tử, phân loại và cấu trúc mạng nhóm con của nhóm cyclic.'
+objectives:
+  - 'Vận dụng thành thạo tiêu chuẩn nhóm con (dạng nhân xy⁻¹ ∈ H và dạng cộng x - y ∈ H) để chứng minh một tập con là nhóm con.'
+  - 'Xác định nhóm con sinh ⟨S⟩, phân biệt tính chất giao và hợp của các nhóm con.'
+  - 'Tính cấp của phần tử ord(a) và vận dụng mối quan hệ giữa cấp phần tử với đẳng thức lũy thừa a^k = e ⟺ ord(a) | k.'
+  - 'Phân loại toàn bộ các nhóm con của nhóm cyclic ⟨a⟩ cấp n và xác định số phần tử sinh φ(n).'

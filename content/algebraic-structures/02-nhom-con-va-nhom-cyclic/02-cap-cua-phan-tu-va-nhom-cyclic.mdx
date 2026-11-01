@@ -1,0 +1,513 @@
+---
+id: cap-cua-phan-tu-va-nhom-cyclic
+title: 'Cấp của phần tử và nhóm cyclic'
+description: 'Khái niệm cấp của phần tử, quan hệ giữa cấp phần tử và đẳng thức lũy thừa, cấu trúc nhóm con cyclic và hai mô hình chuẩn Z, Z/nZ.'
+estimatedMinutes: 30
+level: basic
+prerequisites:
+  - nhom-con-va-nhom-con-sinh-boi-mot-tap-hop
+tags:
+  - cấp của phần tử
+  - nhóm cyclic
+  - phần tử sinh
+  - mô hình chuẩn
+  - căn của đơn vị
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '41-44'
+    sections: 'Mục 2.3'
+    note: 'Định nghĩa 2.7 (Cấp phần tử), Định lý 2.8 (Hai mô hình cyclic chuẩn)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '56-65'
+    sections: 'Chương 2, Mục 2.2'
+status: draft
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-01'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Phân biệt cấp hữu hạn và cấp vô hạn của một phần tử:** Nắm vững định nghĩa $\operatorname{ord}(a)$, thành thạo quy tắc nhận diện $a^k = e \iff \operatorname{ord}(a) \mid k$ và mối liên hệ giữa các số mũ $a^k = a^m \iff k \equiv m \pmod{\operatorname{ord}(a)}$.
+2. **Làm chủ cấu trúc nhóm cyclic:** Hiểu định nghĩa nhóm cyclic $G = \langle a \rangle$ và mối liên hệ tự nhiên với hai mô hình chuẩn: nhóm vô hạn $\Z$ và nhóm hữu hạn $\Z/n\Z$.
+3. **Tính toán cấp phần tử trên các họ nhóm cụ thể:** Xác định chính xác cấp của hoán vị qua bội chung nhỏ nhất các chu trình rời, cấp của phép quay trong nhóm nhị diện, và nhóm các căn bậc $n$ của đơn vị $\mu_n \le \mathbb{C}^\times$.
+</Note>
+
+**Kiến thức tiên quyết:** Khái niệm nhóm con và nhóm con sinh bởi một tập hợp đã học ở Bài 2.1 (<Cite source="gt-ctds-hvk-2026" page="37-41" note="Mục 2.1 - 2.2" />).
+
+## 1. Cấp của một phần tử trong nhóm
+
+Trong một nhóm $(G, \cdot)$, khi xét các lũy thừa lặp lại của cùng một phần tử $a$:
+$$
+a^0 = e, \quad a^1 = a, \quad a^2 = a \cdot a, \quad a^3, \dots
+$$
+có thể xảy ra hai trường hợp: hoặc các lũy thừa này không bao giờ quay lại phần tử đơn vị $e$, hoặc tồn tại một số mũ dương đưa $a$ về $e$ (<Cite source="gt-ctds-hvk-2026" page="41-42" note="Mục 2.3" />).
+
+<Definition
+  id="def-c2-b2-cap-cua-phan-tu"
+  title="Cấp của một phần tử trong nhóm"
+  original="Mục 2.3"
+  source="gt-ctds-hvk-2026"
+  page="41"
+>
+Cho $(G, \cdot)$ là một nhóm và $a \in G$.
+1. Nếu tồn tại số nguyên dương $k \in \Z^+$ sao cho $a^k = e$, thì số nguyên dương $n$ **nhỏ nhất** thỏa mãn $a^n = e$ được gọi là **cấp** (*order*) của phần tử $a$, ký hiệu là $\operatorname{ord}(a) = n$ (hoặc $|a| = n$).
+2. Nếu không tồn tại số nguyên dương nào thỏa mãn $a^k = e$, ta nói $a$ có **cấp vô hạn**, ký hiệu là $\operatorname{ord}(a) = \infty$.
+
+*Quy ước nhóm cộng:* Khi $G$ là nhóm cộng với phần tử không $0$, cấp của $a$ là số nguyên dương $n$ nhỏ nhất sao cho:
+$$
+na = \underbrace{a + a + \cdots + a}_{n \text{ lần}} = 0.
+$$
+</Definition>
+
+<Remark title="Phần tử duy nhất có cấp 1">
+Trong mọi nhóm $G$, phần tử đơn vị $e$ thỏa mãn $e^1 = e$ nên $\operatorname{ord}(e) = 1$. Ngược lại, nếu $\operatorname{ord}(a) = 1$ thì theo định nghĩa số nguyên dương nhỏ nhất là 1, tức $a^1 = e \implies a = e$. Do đó:
+$$
+\operatorname{ord}(a) = 1 \iff a = e.
+$$
+Mọi phần tử khác đơn vị ($a \neq e$) đều có cấp lớn hơn hoặc bằng 2 (hoặc có cấp vô hạn).
+</Remark>
+
+## 2. Quan hệ giữa cấp phần tử và đẳng thức lũy thừa
+
+Cấp của một phần tử chi phối toàn bộ quy luật tính toán lũy thừa của phần tử đó thông qua phép chia Euclid (<Cite source="gt-ctds-hvk-2026" page="42" note="Định lý 2.8" />):
+
+<Theorem
+  id="thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic"
+  title="Quan hệ lũy thừa và hai mô hình cyclic chuẩn (Định lý 2.8)"
+  original="Định lý 2.8"
+  source="gt-ctds-hvk-2026"
+  page="42"
+>
+Cho $G$ là một nhóm và $a \in G$. Xét nhóm con $\langle a \rangle = \{a^k \mid k \in \Z\}$ sinh bởi phần tử $a$.
+
+1. **Trường hợp $\operatorname{ord}(a) = \infty$:**
+   - Với hai số nguyên $k, m \in \Z$, ta có $a^k = a^m \iff k = m$.
+   - Nhóm con $\langle a \rangle$ gồm vô hạn phần tử đôi một phân biệt:
+     $$
+     \langle a \rangle = \{\dots, a^{-2}, a^{-1}, e, a, a^2, \dots\}.
+     $$
+   - Khi đó $\langle a \rangle$ đẳng cấu với nhóm cộng các số nguyên $(\Z, +)$.
+
+2. **Trường hợp $\operatorname{ord}(a) = n < \infty$:**
+   - (a) Với mỗi $k \in \Z$, ta có:
+     $$
+     a^k = e \iff n \mid k.
+     $$
+   - (b) Với hai số nguyên $k, m \in \Z$, ta có:
+     $$
+     a^k = a^m \iff k \equiv m \pmod n.
+     $$
+   - (c) Nhóm con $\langle a \rangle$ gồm đúng $n$ phần tử phân biệt:
+     $$
+     \langle a \rangle = \{e, a, a^2, \dots, a^{n-1}\},
+     $$
+     do đó cấp của nhóm con bằng cấp của phần tử: $|\langle a \rangle| = \operatorname{ord}(a) = n$.
+   - (d) Khi đó $\langle a \rangle$ đẳng cấu với nhóm thặng dư môđulô $n$ là $(\Z/n\Z, +)$.
+</Theorem>
+
+<Proof of="thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic">
+1. **Trường hợp $\operatorname{ord}(a) = \infty$:**
+   Giả sử $a^k = a^m$ với $k \ge m$. Nhân hai vế với $a^{-m}$, ta được $a^{k-m} = e$.
+   Nếu $k > m$, thì $k - m$ là một số nguyên dương thỏa mãn $a^{k-m} = e$, mâu thuẫn với giả thiết $\operatorname{ord}(a) = \infty$.
+   Do đó bắt buộc $k = m$. Các lũy thừa $a^k$ đôi một phân biệt. Ánh xạ $f: \Z \to \langle a \rangle, k \mapsto a^k$ là một song ánh bảo toàn phép toán ($f(k + m) = a^{k+m} = a^k a^m = f(k)f(m)$), nên $\langle a \rangle \cong (\Z, +)$.
+
+2. **Trường hợp $\operatorname{ord}(a) = n < \infty$:**
+   - **Chứng minh ý (a):**
+     - Chiều đảo: Nếu $n \mid k$, thì $k = qn$ với $q \in \Z$. Khi đó $a^k = a^{qn} = (a^n)^q = e^q = e$.
+     - Chiều thuận: Giả sử $a^k = e$. Thực hiện phép chia Euclid $k$ cho $n$: tồn tại các số nguyên $q, r$ sao cho:
+       $$
+       k = qn + r, \quad 0 \le r < n.
+       $$
+       Khi đó:
+       $$
+       e = a^k = a^{qn + r} = (a^n)^q \cdot a^r = e^q \cdot a^r = a^r.
+       $$
+       Ta thu được $a^r = e$ với $0 \le r < n$. Nếu $r > 0$, thì $r$ là một số nguyên dương nhỏ hơn $n$ thỏa mãn $a^r = e$, mâu thuẫn với tính nhỏ nhất của cấp $n = \operatorname{ord}(a)$.
+       Vì vậy bắt buộc $r = 0$, nghĩa là $k = qn$, tức $n \mid k$.
+   - **Chứng minh ý (b):**
+     $$
+     a^k = a^m \iff a^k a^{-m} = e \iff a^{k-m} = e \iff n \mid (k - m) \iff k \equiv m \pmod n.
+     $$
+   - **Chứng minh ý (c):**
+     Với mỗi $k \in \Z$, chia $k$ cho $n$: $k = qn + r$ với $0 \le r < n$. Khi đó $a^k = a^r \in \{e, a, a^2, \dots, a^{n-1}\}$. Do đó $\langle a \rangle = \{e, a, \dots, a^{n-1}\}$.
+     Hơn nữa, nếu $0 \le i < j < n$ mà $a^i = a^j$ thì $j - i \in \{1, \dots, n-1\}$ và $a^{j-i} = e$, mâu thuẫn. Vậy $n$ phần tử này đôi một phân biệt.
+   - **Chứng minh ý (d):** Ánh xạ $g: \Z/n\Z \to \langle a \rangle, [k]_n \mapsto a^k$ xác định tốt và là một đẳng cấu nhóm.
+</Proof>
+
+## 3. Nhóm cyclic và các ví dụ nền tảng
+
+<Definition
+  id="def-c2-b2-nhom-cyclic"
+  title="Nhóm cyclic và phần tử sinh"
+  original="Mục 2.3"
+  source="gt-ctds-hvk-2026"
+  page="42"
+>
+Một nhóm $G$ được gọi là một **nhóm cyclic** (*cyclic group*) nếu nó được sinh bởi một phần tử duy nhất:
+$$
+G = \langle a \rangle = \{a^k \mid k \in \Z\}.
+$$
+Phần tử $a$ được gọi là một **phần tử sinh** (*generator*) của nhóm cyclic $G$.
+- Nếu $|G| = \infty$, thì $G$ là **nhóm cyclic vô hạn**.
+- Nếu $|G| = n < \infty$, thì $G$ là **nhóm cyclic hữu hạn cấp $n$**.
+</Definition>
+
+<Theorem
+  id="thm-c2-b2-tinh-giao-hoan-nhom-cyclic"
+  title="Tính giao hoán của nhóm cyclic"
+  original="Mục 2.3"
+  source="gt-ctds-hvk-2026"
+  page="42"
+>
+Mọi nhóm cyclic đều là nhóm giao hoán (nhóm abel).
+</Theorem>
+
+<Proof of="thm-c2-b2-tinh-giao-hoan-nhom-cyclic">
+Giả sử $G = \langle a \rangle$. Lấy hai phần tử tùy ý $x, y \in G$. Theo định nghĩa, tồn tại các số nguyên $k, m \in \Z$ sao cho $x = a^k$ và $y = a^m$.
+Áp dụng quy tắc lũy thừa nguyên:
+$$
+xy = a^k a^m = a^{k+m} = a^{m+k} = a^m a^k = yx.
+$$
+Vậy $xy = yx$ với mọi $x, y \in G$. Do đó $G$ là nhóm abel.
+</Proof>
+
+### Các ví dụ chuẩn về cấp phần tử và nhóm cyclic
+
+<Example id="ex-c2-b2-cac-nhom-so-hoc" title="Mô hình chuẩn của nhóm cyclic: Z và Z/nZ">
+1. Nhóm cộng các số nguyên $(\Z, +) = \langle 1 \rangle = \langle -1 \rangle$ là nhóm cyclic vô hạn. Hai phần tử sinh duy nhất của $\Z$ là $1$ và $-1$. Mọi phần tử $k \neq 0$ đều có cấp vô hạn: $\operatorname{ord}(k) = \infty$.
+2. Nhóm $(\Z/n\Z, +) = \langle [1]_n \rangle$ là nhóm cyclic hữu hạn cấp $n$. Cấp của phần tử đơn vị $[0]_n$ bằng 1; cấp của phần tử sinh $[1]_n$ bằng $n$.
+</Example>
+
+<Example id="ex-c2-b2-cap-hoan-vi" title="Cấp của chu trình và hoán vị trong Sn">
+Cho $\sigma \in S_n$.
+1. Nếu $\sigma = (i_1 \, i_2 \, \dots \, i_m)$ là một chu trình độ dài $m$, thì tác động $m$ lần đưa mỗi chỉ số về vị trí cũ: $\sigma^m = \operatorname{id}$. Hơn nữa với $1 \le k < m$, $\sigma^k(i_1) = i_{1+k} \neq i_1$ nên $\sigma^k \neq \operatorname{id}$. Do đó:
+   $$
+   \operatorname{ord}((i_1 \, i_2 \, \dots \, i_m)) = m.
+   $$
+   *Cấp của một chu trình bằng đúng độ dài của nó.*
+2. Nếu hoán vị $\sigma$ phân tích thành tích của các chu trình **rời nhau**: $\sigma = c_1 c_2 \cdots c_r$, thì vì các chu trình rời nhau giao hoán với nhau, ta có $\sigma^k = c_1^k c_2^k \cdots c_r^k$. Do đó $\sigma^k = \operatorname{id} \iff c_i^k = \operatorname{id}, \forall i \iff |c_i| \mid k, \forall i$. Suy ra:
+   $$
+   \operatorname{ord}(\sigma) = \operatorname{lcm}(|c_1|, |c_2|, \dots, |c_r|).
+   $$
+   Ví dụ trong $S_5$: hoán vị $\sigma = (1 \, 2 \, 3)(4 \, 5)$ có cấp bằng $\operatorname{lcm}(3, 2) = 6$.
+</Example>
+
+<Example id="ex-c2-b2-can-don-vi" title="Nhóm các căn bậc n của đơn vị trong C*">
+Trong nhóm nhân các số phức khác không $(\mathbb{C}^\times, \cdot)$, xét tập hợp các căn bậc $n$ của đơn vị:
+$$
+\mu_n = \left\{ z \in \mathbb{C} \;\middle|\; z^n = 1 \right\} = \left\{ e^{i \frac{2k\pi}{n}} \;\middle|\; k = 0, 1, \dots, n-1 \right\}.
+$$
+Đặt $\zeta_n = e^{i \frac{2\pi}{n}} = \cos\left(\frac{2\pi}{n}\right) + i\sin\left(\frac{2\pi}{n}\right)$. Khi đó:
+$$
+\mu_n = \left\{ \zeta_n^0, \zeta_n^1, \dots, \zeta_n^{n-1} \right\} = \langle \zeta_n \rangle.
+$$
+Do đó $\mu_n$ là một nhóm cyclic hữu hạn cấp $n$ nhúng trong $\mathbb{C}^\times$, đẳng cấu với $(\Z/n\Z, +)$.
+</Example>
+
+---
+
+## 4. Bài tập tự luyện
+
+<Exercise id="exr-c2-b2-a1" title="[Nhóm A · Mã CTDS-C2-B2-A01] Tính cấp của các hoán vị trong S6">
+- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
+- **Chủ đề:** Phân tích hoán vị thành chu trình rời và tính cấp bằng $\operatorname{lcm}$
+- **Mục tiêu đánh giá:** Tính đúng cấp của chu trình và hoán vị tổng quát trong nhóm đối xứng *(Đánh giá thường xuyên)*
+- **Mức độ khó:** Cơ bản (Mức 1)
+
+Trong nhóm hoán vị $S_6$, xét hai hoán vị sau:
+$$
+\alpha = \begin{pmatrix} 1 & 2 & 3 & 4 & 5 & 6 \\ 3 & 6 & 1 & 5 & 4 & 2 \end{pmatrix}, \quad \beta = (1 \, 4 \, 2)(3 \, 5)(2 \, 4 \, 6).
+$$
+1. Phân tích $\alpha$ thành tích của các chu trình rời nhau và tìm cấp $\operatorname{ord}(\alpha)$.
+2. Phân tích $\beta$ thành tích của các chu trình rời nhau và tìm cấp $\operatorname{ord}(\beta)$.
+3. Tính $\alpha^{2026}$.
+
+<details>
+<summary>Gợi ý</summary>
+
+1. Theo dõi quỹ đạo của từng phần tử: $1 \to 3 \to 1$ cho ta $(1 \, 3)$, tiếp tục với $2, 4, 5, 6$. Cấp bằng $\operatorname{lcm}$ độ dài các chu trình rời.
+2. Thực hiện nhân các chu trình trong $\beta$ từ phải sang trái trước khi tìm các chu trình rời.
+3. Chia số mũ $2026$ cho cấp của $\alpha$.
+</details>
+
+<details>
+<summary>Lời giải chi tiết</summary>
+
+**Ý 1: Phân tích $\alpha$ và tìm $\operatorname{ord}(\alpha)$**
+Theo dõi từng phần tử qua $\alpha$:
+- $1 \mapsto 3 \mapsto 1 \implies$ chu trình $(1 \, 3)$ có độ dài 2.
+- $2 \mapsto 6 \mapsto 2 \implies$ chu trình $(2 \, 6)$ có độ dài 2.
+- $4 \mapsto 5 \mapsto 4 \implies$ chu trình $(4 \, 5)$ có độ dài 2.
+Do đó $\alpha = (1 \, 3)(2 \, 6)(4 \, 5)$ là tích của 3 chu trình rời nhau có độ dài lần lượt là $2, 2, 2$.
+Cấp của $\alpha$ là:
+$$
+\operatorname{ord}(\alpha) = \operatorname{lcm}(2, 2, 2) = 2.
+$$
+
+**Ý 2: Rút gọn $\beta$ và tìm $\operatorname{ord}(\beta)$**
+Ta tính tích $\beta = (1 \, 4 \, 2)(3 \, 5)(2 \, 4 \, 6)$ từ phải sang trái:
+- $1 \xrightarrow{(2 \, 4 \, 6)} 1 \xrightarrow{(3 \, 5)} 1 \xrightarrow{(1 \, 4 \, 2)} 4$
+- $4 \xrightarrow{(2 \, 4 \, 6)} 6 \xrightarrow{(3 \, 5)} 6 \xrightarrow{(1 \, 4 \, 2)} 6$
+- $6 \xrightarrow{(2 \, 4 \, 6)} 2 \xrightarrow{(3 \, 5)} 2 \xrightarrow{(1 \, 4 \, 2)} 1$
+Như vậy ta có chu trình $(1 \, 4 \, 6)$.
+Tiếp tục với các phần tử còn lại:
+- $2 \xrightarrow{(2 \, 4 \, 6)} 4 \xrightarrow{(3 \, 5)} 4 \xrightarrow{(1 \, 4 \, 2)} 2 \implies \beta(2) = 2$.
+- $3 \xrightarrow{(2 \, 4 \, 6)} 3 \xrightarrow{(3 \, 5)} 5 \xrightarrow{(1 \, 4 \, 2)} 5$
+- $5 \xrightarrow{(2 \, 4 \, 6)} 5 \xrightarrow{(3 \, 5)} 3 \xrightarrow{(1 \, 4 \, 2)} 3$
+Như vậy ta có chu trình $(3 \, 5)$.
+Vậy dạng phân tích thành các chu trình rời nhau của $\beta$ là:
+$$
+\beta = (1 \, 4 \, 6)(3 \, 5).
+$$
+Cấp của $\beta$ là:
+$$
+\operatorname{ord}(\beta) = \operatorname{lcm}(3, 2) = 6.
+$$
+
+**Ý 3: Tính $\alpha^{2026}$**
+Vì $\operatorname{ord}(\alpha) = 2$ và $2026$ chia hết cho 2 ($2026 = 2 \times 1013$):
+$$
+\alpha^{2026} = (\alpha^2)^{1013} = (\operatorname{id})^{1013} = \operatorname{id}.
+$$
+</details>
+
+| Tiêu chí đánh giá | Điểm tối đa |
+| :--- | :---: |
+| Phân tích đúng $\alpha = (1 \, 3)(2 \, 6)(4 \, 5)$ và tìm đúng $\operatorname{ord}(\alpha) = 2$ | 0.35 điểm |
+| Nhân đúng $\beta$ từ phải sang trái, đưa về dạng rời $\beta = (1 \, 4 \, 6)(3 \, 5)$ và tìm đúng $\operatorname{ord}(\beta) = 6$ | 0.45 điểm |
+| Tính đúng $\alpha^{2026} = \operatorname{id}$ nhờ đẳng thức chia hết số mũ | 0.20 điểm |
+| **Tổng điểm** | **1.00 điểm** |
+</Exercise>
+
+<Exercise id="exr-c2-b2-b1" title="[Nhóm B · Mã CTDS-C2-B2-B01] Bất biến của cấp phần tử qua phép liên hợp">
+- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
+- **Chủ đề:** Cấp của phần tử liên hợp $gag^{-1}$ và cấp của tích $ab$ so với $ba$
+- **Mục tiêu đánh giá:** Chứng minh $\operatorname{ord}(gag^{-1}) = \operatorname{ord}(a)$ và $\operatorname{ord}(ab) = \operatorname{ord}(ba)$ *(Đánh giá thường xuyên)*
+- **Mức độ khó:** Trung bình (Mức 2)
+
+Cho $G$ là một nhóm và $a, g \in G$.
+1. Chứng minh rằng với mọi số nguyên $k \in \Z$, ta có $(gag^{-1})^k = g a^k g^{-1}$.
+2. Chứng minh rằng phần tử liên hợp $gag^{-1}$ có cùng cấp với $a$, nghĩa là:
+   $$
+   \operatorname{ord}(gag^{-1}) = \operatorname{ord}(a).
+   $$
+3. Với hai phần tử bất kỳ $a, b \in G$, chứng minh rằng $\operatorname{ord}(ab) = \operatorname{ord}(ba)$.
+
+<details>
+<summary>Gợi ý</summary>
+
+1. Quy nạp với $k \ge 1$ bằng cách triệt tiêu các cặp $g^{-1}g = e$, sau đó xét trường hợp $k < 0$.
+2. Sử dụng <Ref to="thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic" />: $(gag^{-1})^k = e \iff g a^k g^{-1} = e \iff a^k = e$.
+3. Biểu diễn $ba$ dưới dạng liên hợp của $ab$: $ba = a^{-1}(ab)a$.
+</details>
+
+<details>
+<summary>Lời giải chi tiết</summary>
+
+**Ý 1: Chứng minh $(gag^{-1})^k = g a^k g^{-1}$**
+- Với $k = 0$: $(gag^{-1})^0 = e$ và $g a^0 g^{-1} = geg^{-1} = gg^{-1} = e$. Đẳng thức đúng.
+- Với $k \ge 1$: ta dùng quy nạp.
+  - Với $k = 1$: hiển nhiên $(gag^{-1})^1 = gag^{-1}$.
+  - Giả sử đẳng thức đúng đến $k \ge 1$: $(gag^{-1})^k = ga^k g^{-1}$.
+  - Khi đó:
+    $$
+    (gag^{-1})^{k+1} = (gag^{-1})^k (gag^{-1}) = (ga^k g^{-1})(gag^{-1}) = ga^k (g^{-1}g) a g^{-1} = ga^k e a g^{-1} = ga^{k+1}g^{-1}.
+    $$
+    Đẳng thức đúng với mọi $k \in \Z^+$.
+- Với $k = -m$ ($m \in \Z^+$):
+  $$
+  (gag^{-1})^{-m} = ((gag^{-1})^m)^{-1} = (ga^m g^{-1})^{-1} = (g^{-1})^{-1} (a^m)^{-1} g^{-1} = g a^{-m} g^{-1}.
+  $$
+Vậy đẳng thức đúng với mọi $k \in \Z$.
+
+**Ý 2: Chứng minh $\operatorname{ord}(gag^{-1}) = \operatorname{ord}(a)$**
+- Với mỗi số nguyên $k \in \Z$:
+  $$
+  (gag^{-1})^k = e \iff ga^k g^{-1} = e \iff a^k = g^{-1} e g = g^{-1}g = e.
+  $$
+- Nếu $\operatorname{ord}(a) = \infty$, thì không tồn tại $k \in \Z^+$ để $a^k = e$, do đó cũng không tồn tại $k \in \Z^+$ để $(gag^{-1})^k = e$, nên $\operatorname{ord}(gag^{-1}) = \infty$.
+- Nếu $\operatorname{ord}(a) = n < \infty$, thì $n$ là số nguyên dương nhỏ nhất sao cho $a^n = e$. Theo tương đương trên, $n$ cũng chính là số nguyên dương nhỏ nhất sao cho $(gag^{-1})^n = e$.
+Do đó $\operatorname{ord}(gag^{-1}) = n = \operatorname{ord}(a)$.
+
+**Ý 3: Chứng minh $\operatorname{ord}(ab) = \operatorname{ord}(ba)$**
+Ta nhận thấy:
+$$
+ba = a^{-1}(ab)a = a^{-1}(ab)(a^{-1})^{-1}.
+$$
+Đặt $g = a^{-1}$, ta có $ba = g(ab)g^{-1}$, nghĩa là $ba$ là một phần tử liên hợp của $ab$.
+Áp dụng kết quả ở Ý 2 cho phần tử $x = ab$ và $g = a^{-1}$:
+$$
+\operatorname{ord}(ba) = \operatorname{ord}(g(ab)g^{-1}) = \operatorname{ord}(ab).
+$$
+</details>
+
+| Tiêu chí đánh giá | Điểm tối đa |
+| :--- | :---: |
+| Chứng minh quy nạp chính xác $(gag^{-1})^k = g a^k g^{-1}$ cho mọi $k \in \Z$ | 0.35 điểm |
+| Thiết lập tương đương $(gag^{-1})^k = e \iff a^k = e$ và suy ra cùng cấp | 0.35 điểm |
+| Viết đúng $ba = a^{-1}(ab)a$ và áp dụng bất biến liên hợp suy ra $\operatorname{ord}(ab) = \operatorname{ord}(ba)$ | 0.30 điểm |
+| **Tổng điểm** | **1.00 điểm** |
+</Exercise>
+
+<Exercise id="exr-c2-b2-c1" title="[Nhóm C · Mã CTDS-C2-B2-C01] Cấp của lũy thừa nguyên tố cùng nhau">
+- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
+- **Chủ đề:** Tính cấp của phần tử lũy thừa $\operatorname{ord}(a^k)$ khi $\gcd(k, n) = 1$
+- **Mục tiêu đánh giá:** Vận dụng bổ đề Euclid và điều kiện chia hết để chứng minh bảo toàn cấp *(Đánh giá thường xuyên)*
+- **Mức độ khó:** Nâng cao (Mức 3)
+
+Cho $G$ là một nhóm và $a \in G$ là phần tử có cấp hữu hạn $\operatorname{ord}(a) = n$.
+1. Cho $k \in \Z$ thỏa mãn $\gcd(k, n) = 1$. Chứng minh rằng phần tử $a^k$ cũng có cấp bằng $n$, nghĩa là $\operatorname{ord}(a^k) = n$.
+2. Cho ví dụ trong nhóm cyclic $(\Z/12\Z, +)$ chỉ ra một phần tử có cấp 12 và tìm ít nhất hai lũy thừa (bội số) khác có cùng cấp 12.
+
+<details>
+<summary>Gợi ý</summary>
+
+1. Đặt $m = \operatorname{ord}(a^k)$. Ta cần chứng minh $m \mid n$ và $n \mid m$. Ta có $(a^k)^n = (a^n)^k = e^k = e \implies m \mid n$. Mặt khác $(a^k)^m = e \implies a^{km} = e \implies n \mid km$. Vì $\gcd(k, n) = 1$, áp dụng bổ đề Euclid suy ra $n \mid m$.
+2. Trong $\Z/12\Z$, phần tử $[1]_{12}$ có cấp 12. Tìm các số $k$ nguyên tố cùng nhau với 12.
+</details>
+
+<details>
+<summary>Lời giải chi tiết</summary>
+
+**Ý 1: Chứng minh $\operatorname{ord}(a^k) = n$ khi $\gcd(k, n) = 1$**
+Đặt $m = \operatorname{ord}(a^k)$. Theo định nghĩa của cấp, $m$ là số nguyên dương nhỏ nhất sao cho $(a^k)^m = e$.
+1. Xét lũy thừa bậc $n$ của $a^k$:
+   $$
+   (a^k)^n = a^{kn} = (a^n)^k = e^k = e.
+   $$
+   Theo <Ref to="thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic" />, vì $(a^k)^n = e$ nên cấp $m$ phải là ước của $n$:
+   $$
+   m \mid n.
+   $$
+2. Mặt khác, vì $\operatorname{ord}(a^k) = m$, ta có:
+   $$
+   (a^k)^m = e \implies a^{km} = e.
+   $$
+   Lại áp dụng <Ref to="thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic" /> cho phần tử $a$ có cấp $n$, ta có:
+   $$
+   n \mid km.
+   $$
+3. Vì $n \mid km$ và theo giả thiết $\gcd(k, n) = 1$, theo **Bổ đề Euclid**, ta suy ra:
+   $$
+   n \mid m.
+   $$
+4. Từ hai kết quả $m \mid n$ và $n \mid m$ với $m, n \in \Z^+$, ta kết luận:
+   $$
+   m = n.
+   $$
+Vậy $\operatorname{ord}(a^k) = n$.
+
+**Ý 2: Ví dụ minh họa trong $\Z/12\Z$**
+Trong nhóm cộng $\Z/12\Z$, phần tử $a = [1]_{12}$ có cấp bằng $12$.
+Các số nguyên $1 \le k < 12$ nguyên tố cùng nhau với $12$ ($\gcd(k, 12) = 1$) là $k \in \{1, 5, 7, 11\}$.
+Theo kết quả trên, các bội sau của $[1]_{12}$ cũng đều có cấp bằng 12:
+- $k = 5: 5 \cdot [1]_{12} = [5]_{12}$, có cấp $\operatorname{ord}([5]_{12}) = 12$.
+- $k = 7: 7 \cdot [1]_{12} = [7]_{12}$, có cấp $\operatorname{ord}([7]_{12}) = 12$.
+- $k = 11: 11 \cdot [1]_{12} = [11]_{12}$, có cấp $\operatorname{ord}([11]_{12}) = 12$.
+Kiểm tra trực tiếp với $[5]_{12}$: các bội $1 \cdot 5 = 5, 2 \cdot 5 = 10, 3 \cdot 5 = 3, 4 \cdot 5 = 8, 5 \cdot 5 = 1, 6 \cdot 5 = 6$ đều khác $0 \pmod{12}$, và bội nhỏ nhất chia hết cho 12 là $12 \cdot 5 = 60$. Cấp đúng bằng 12.
+</details>
+
+| Tiêu chí đánh giá | Điểm tối đa |
+| :--- | :---: |
+| Chứng minh $(a^k)^n = e \implies m \mid n$ | 0.35 điểm |
+| Chứng minh $a^{km} = e \implies n \mid km$ và dùng bổ đề Euclid suy ra $n \mid m \implies m = n$ | 0.35 điểm |
+| Xác định đúng $[5]_{12}, [7]_{12}, [11]_{12}$ trong $\Z/12\Z$ và kiểm tra cấp 12 | 0.30 điểm |
+| **Tổng điểm** | **1.00 điểm** |
+</Exercise>
+
+<Exercise id="exr-c2-b2-d1" title="[Nhóm D · Mã CTDS-C2-B2-D01] Cấp của tích hai phần tử giao hoán có cấp nguyên tố cùng nhau">
+- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
+- **Chủ đề:** Bài toán 2.29 giáo trình chính — Cấp của tích hai phần tử giao hoán
+- **Mục tiêu đánh giá:** Chứng minh $\operatorname{ord}(ab) = mn$ khi $ab = ba$ và $\gcd(m, n) = 1$ *(Đánh giá thường xuyên)*
+- **Mức độ khó:** Rất khó (Mức 4)
+
+Cho $G$ là một nhóm và $a, b \in G$ là hai phần tử thỏa mãn ba điều kiện:
+1. $a$ và $b$ giao hoán với nhau: $ab = ba$.
+2. $\operatorname{ord}(a) = m$ và $\operatorname{ord}(b) = n$ (với $m, n \in \Z^+$).
+3. $\gcd(m, n) = 1$.
+
+Hãy chứng minh rằng:
+1. $\langle a \rangle \cap \langle b \rangle = \{e\}$.
+2. Cấp của tích $ab$ bằng đúng tích các cấp: $\operatorname{ord}(ab) = mn$.
+3. Hãy chỉ ra một phản ví dụ cho thấy kết luận $\operatorname{ord}(ab) = mn$ có thể sai nếu bỏ giả thiết $\gcd(m, n) = 1$ hoặc bỏ giả thiết $ab = ba$.
+
+<details>
+<summary>Gợi ý</summary>
+
+1. Lấy $x \in \langle a \rangle \cap \langle b \rangle$, thì $\operatorname{ord}(x)$ vừa là ước của $m$ vừa là ước của $n$.
+2. Đặt $k = \operatorname{ord}(ab)$. Vì $ab = ba$ nên $(ab)^{mn} = (a^m)^n (b^n)^m = e \implies k \mid mn$. Mặt khác $(ab)^k = e \implies a^k = b^{-k} \in \langle a \rangle \cap \langle b \rangle = \{e\} \implies a^k = e, b^k = e \implies m \mid k, n \mid k$. Vì $\gcd(m, n) = 1$ nên $mn \mid k$.
+3. Phản ví dụ không nguyên tố cùng nhau: $a = b$ có cấp 2; phản ví dụ không giao hoán: hai chuyển vị trong $S_3$.
+</details>
+
+<details>
+<summary>Lời giải chi tiết</summary>
+
+**Ý 1: Chứng minh $\langle a \rangle \cap \langle b \rangle = \{e\}$**
+Lấy một phần tử bất kỳ $x \in \langle a \rangle \cap \langle b \rangle$.
+- Vì $x \in \langle a \rangle$ và $|\langle a \rangle| = m$, nên $\operatorname{ord}(x)$ là ước của $m$ (theo Định lý 2.8).
+- Vì $x \in \langle b \rangle$ và $|\langle b \rangle| = n$, nên $\operatorname{ord}(x)$ là ước của $n$.
+Do đó $\operatorname{ord}(x)$ là một ước chung dương của $m$ và $n$.
+Theo giả thiết $\gcd(m, n) = 1$, suy ra $\operatorname{ord}(x) = 1$.
+Theo nhận xét về phần tử duy nhất có cấp 1, ta bắt buộc phải có $x = e$.
+Vậy $\langle a \rangle \cap \langle b \rangle = \{e\}$.
+
+**Ý 2: Chứng minh $\operatorname{ord}(ab) = mn$**
+Đặt $k = \operatorname{ord}(ab)$.
+1. Vì $ab = ba$, ta có $(ab)^{mn} = a^{mn} b^{mn} = (a^m)^n (b^n)^m = e^n e^m = e$.
+   Theo Định lý 2.8, cấp $k$ phải là ước của $mn$:
+   $$
+   k \mid mn.
+   $$
+2. Mặt khác, theo định nghĩa của cấp $k = \operatorname{ord}(ab)$, ta có:
+   $$
+   (ab)^k = e \implies a^k b^k = e \implies a^k = b^{-k}.
+   $$
+   Phần tử $a^k$ thuộc $\langle a \rangle$, và phần tử $b^{-k}$ thuộc $\langle b \rangle$.
+   Do đó $a^k \in \langle a \rangle \cap \langle b \rangle$.
+   Theo kết quả ở Ý 1, $\langle a \rangle \cap \langle b \rangle = \{e\}$, nên bắt buộc:
+   $$
+   a^k = e \quad \text{và} \quad b^{-k} = e \implies b^k = e.
+   $$
+3. Từ $a^k = e$ và $\operatorname{ord}(a) = m$, suy ra $m \mid k$.
+   Từ $b^k = e$ và $\operatorname{ord}(b) = n$, suy ra $n \mid k$.
+   Vì $m \mid k$ và $n \mid k$ mà $\gcd(m, n) = 1$, theo tính chất số học ta có:
+   $$
+   mn \mid k.
+   $$
+4. Từ hai khẳng định $k \mid mn$ và $mn \mid k$ với $k, mn \in \Z^+$, ta suy ra:
+   $$
+   k = mn.
+   $$
+Vậy $\operatorname{ord}(ab) = mn$.
+
+**Ý 3: Phản ví dụ khi bỏ từng giả thiết**
+- *Khi $\gcd(m, n) > 1$:* Trong nhóm $(\Z/4\Z, +)$, chọn $a = [2]_4$ và $b = [2]_4$. Ta có $\operatorname{ord}(a) = 2, \operatorname{ord}(b) = 2$ (ở đây $\gcd(2, 2) = 2 > 1$). Phép cộng giao hoán. Nhưng $a + b = [2] + [2] = [4] = [0]$, có cấp bằng $1 \neq 2 \times 2 = 4$.
+- *Khi $ab \neq ba$:* Trong nhóm hoán vị $S_3$, chọn hai chuyển vị $a = (1 \, 2)$ và $b = (1 \, 3)$. Ta có $\operatorname{ord}(a) = 2$ và $\operatorname{ord}(b) = 2$. Tích $ab = (1 \, 2)(1 \, 3) = (1 \, 3 \, 2)$ có cấp bằng $3 \neq 2 \times 2 = 4$. Hơn nữa ở đây cũng không giao hoán.
+Một ví dụ khác không giao hoán có $\gcd(m, n) = 1$: Trong nhóm nhị diện $D_6$ (đối xứng tam giác đều), phép phản xạ $s$ có cấp 2 và phép quay $r$ có cấp 3 với $\gcd(2, 3) = 1$. Tích $sr$ là một phép phản xạ nên có cấp bằng $2 \neq 2 \times 3 = 6$. Lý do là vì $s$ và $r$ không giao hoán ($sr = r^2 s \neq rs$).
+</details>
+
+| Tiêu chí đánh giá | Điểm tối đa |
+| :--- | :---: |
+| Chứng minh $\operatorname{ord}(x) \mid \gcd(m, n) = 1 \implies \langle a \rangle \cap \langle b \rangle = \{e\}$ | 0.30 điểm |
+| Chứng minh $(ab)^{mn} = e \implies k \mid mn$ | 0.20 điểm |
+| Biến đổi $a^k = b^{-k} \in \{e\} \implies m \mid k, n \mid k \implies mn \mid k \implies k = mn$ | 0.30 điểm |
+| Chỉ ra đúng phản ví dụ khi $\gcd(m, n) > 1$ và khi không giao hoán | 0.20 điểm |
+| **Tổng điểm** | **1.00 điểm** |
+</Exercise>
+
+---
+
+<KeyTakeaways>
+- **Cấp của phần tử $\operatorname{ord}(a)$:** Số nguyên dương nhỏ nhất $n$ sao cho $a^n = e$. Tính chất cốt lõi: $a^k = e \iff \operatorname{ord}(a) \mid k$ và $a^k = a^m \iff k \equiv m \pmod{\operatorname{ord}(a)}$.
+- **Hai mô hình cyclic chuẩn:** Mọi nhóm cyclic vô hạn đều đẳng cấu với $(\Z, +)$; mọi nhóm cyclic hữu hạn cấp $n$ đều đẳng cấu với $(\Z/n\Z, +)$.
+- **Cấp trong nhóm đối xứng:** Cấp của một chu trình bằng độ dài của nó; cấp của hoán vị bằng $\operatorname{lcm}$ độ dài các chu trình rời nhau.
+- **Tích hai phần tử giao hoán có cấp nguyên tố cùng nhau:** Nếu $ab = ba$ và $\gcd(\operatorname{ord}(a), \operatorname{ord}(b)) = 1$ thì $\operatorname{ord}(ab) = \operatorname{ord}(a)\operatorname{ord}(b)$.
+</KeyTakeaways>
