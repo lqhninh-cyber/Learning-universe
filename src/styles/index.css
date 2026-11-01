@@ -16,8 +16,22 @@
     'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
 
-  --color-surface-canvas: #fafaf9;
+  --color-surface-canvas: #f7f4ec;
   --color-surface-card: #ffffff;
+
+  /* Bảng màu Di sản Việt Nam — Learning Universe */
+  --color-vn-bg: #f7f4ec;
+  --color-vn-surface: #efe7d6;
+  --color-vn-surface-card: #fcfbf7;
+  --color-vn-primary: #173e35;
+  --color-vn-primary-hover: #1f5045;
+  --color-vn-secondary: #8b302d;
+  --color-vn-accent: #b89555;
+  --color-vn-accent-light: #d4b77f;
+  --color-vn-text: #292824;
+  --color-vn-muted: #68645c;
+  --color-vn-border: #ddd5c3;
+  --color-vn-border-soft: #eae3d4;
 
   --color-subject-50: var(--subject-50);
   --color-subject-100: var(--subject-100);

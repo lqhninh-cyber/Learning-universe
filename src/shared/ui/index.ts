@@ -17,4 +17,10 @@ export { Kbd } from './Kbd';
 export { ProgressRing, type ProgressRingProps } from './ProgressRing';
 export { Skeleton } from './Skeleton';
 export { Tooltip, type TooltipProps, TooltipProvider, type TooltipProviderProps } from './Tooltip';
+export {
+  AffineGridMotif,
+  AlgebraicSymmetryMotif,
+  DongSonConcentricMotif,
+  HeritageDivider,
+} from './HeritageMotifs';
 export { badgeVariants, buttonVariants, containerVariants } from './variants';

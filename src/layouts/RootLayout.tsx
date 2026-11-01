@@ -36,8 +36,8 @@ export function RootLayout() {
   }, [pathname, hash]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50 text-stone-900">
-      <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
+    <div className="bg-vn-bg text-vn-text flex min-h-screen flex-col">
+      <header className="border-vn-border/70 bg-vn-bg/90 sticky top-0 z-30 border-b backdrop-blur-md">
         <Container className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3 md:gap-6">
             <div className="md:hidden">
@@ -56,28 +56,28 @@ export function RootLayout() {
                   <Link
                     to={ROUTES.home}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
                   >
                     Trang chủ
                   </Link>
                   <Link
                     to={ROUTES.subjects}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
                   >
                     Tất cả môn học
                   </Link>
                   <Link
                     to={ROUTES.subjectOverview('cau-truc-dai-so')}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
                   >
                     Cấu trúc đại số
                   </Link>
                   <Link
                     to={ROUTES.subjectOverview('hinh-hoc-affine')}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block rounded-xl px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-100"
+                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
                   >
                     Hình học Affine
                   </Link>
@@ -88,12 +88,15 @@ export function RootLayout() {
             <div className="flex items-center gap-3">
               <Link
                 to={ROUTES.home}
-                className="inline-flex items-center gap-2 text-lg font-semibold tracking-tight text-stone-900 transition-colors hover:text-stone-700"
+                className="text-vn-text hover:text-vn-primary inline-flex items-center gap-2 text-lg font-semibold tracking-tight transition-colors"
               >
-                <GraduationCap className="h-5 w-5 text-stone-800" aria-hidden="true" />
+                <GraduationCap className="text-vn-primary h-5 w-5" aria-hidden="true" />
                 <span>Learning Universe</span>
               </Link>
-              <Badge variant="neutral" className="hidden sm:inline-flex">
+              <Badge
+                variant="neutral"
+                className="border-vn-border bg-vn-surface/60 text-vn-primary hidden font-medium sm:inline-flex"
+              >
                 Sư phạm Toán học
               </Badge>
             </div>
@@ -101,19 +104,19 @@ export function RootLayout() {
             <nav aria-label="Liên kết môn học" className="hidden items-center gap-4 md:flex">
               <Link
                 to={ROUTES.subjects}
-                className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900"
+                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
               >
                 Môn học
               </Link>
               <Link
                 to={ROUTES.subjectOverview('cau-truc-dai-so')}
-                className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900"
+                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
               >
                 Cấu trúc đại số
               </Link>
               <Link
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
-                className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900"
+                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
               >
                 Hình học Affine
               </Link>
@@ -187,10 +190,10 @@ export function RootLayout() {
 
       <LoginPromptDialog />
 
-      <footer className="border-t border-stone-200/80 bg-white">
-        <Container className="flex flex-col items-center justify-between gap-2 py-6 text-xs text-stone-500 sm:flex-row">
+      <footer className="border-vn-border/70 bg-vn-surface/40 border-t">
+        <Container className="text-vn-muted flex flex-col items-center justify-between gap-2 py-6 text-xs sm:flex-row">
           <p>© {new Date().getFullYear()} Learning Universe. Nền tảng học tập Sư phạm Toán học.</p>
-          <p>Giai đoạn 3 — Không gian học tập công khai & Điều hướng bài học</p>
+          <p className="text-vn-muted">Không gian học tập đại học đương đại · Di sản & Tri thức</p>
         </Container>
       </footer>
     </div>
