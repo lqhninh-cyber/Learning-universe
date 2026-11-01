@@ -71,7 +71,7 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     await user.click(screen.getByRole('button', { name: /Xóa bộ lọc/i }));
     expect(screen.getByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên')).toBeInTheDocument();
 
-    // Khi bật chế độ Học viên và đánh dấu hoàn thành 1 bài -> tiến độ chương 1 hiển thị 1/4 bài, tổng thể 3% (1/31 bài)
+    // Khi bật chế độ Học viên và đánh dấu hoàn thành 1 bài -> tiến độ chương 1 hiển thị 1/4 bài, tổng thể 3% (1/35 bài)
     act(() => {
       useLearningStore.getState().enableLearnerMode();
       useLearningStore.getState().toggleLessonCompleted('nua-nhom-vi-nhom-va-tien-de-nhom');

@@ -1,0 +1,542 @@
+---
+id: cac-dinh-ly-dang-cau-vanh-va-dinh-ly-tuong-ung
+title: 'Ba định lý đẳng cấu vành và Định lý tương ứng'
+description: 'Phát biểu và chứng minh chi tiết ba định lý đẳng cấu vành; các ứng dụng mẫu kinh điển trong vành đa thức và vành số nguyên Gauss; định lý tương ứng bảo toàn tính nguyên tố và cực đại.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - dong-cau-vanh-hat-nhan-anh-va-phan-tich-qua-thuong
+tags:
+  - định lý đẳng cấu vành
+  - đẳng cấu thứ nhất
+  - đẳng cấu thứ hai
+  - đẳng cấu thứ ba
+  - định lý tương ứng
+  - vành thương
+  - số nguyên Gauss
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '134-137'
+    sections: 'Mục 8.5, 8.6'
+    note: 'Định lý 8.8 (Đẳng cấu thứ nhất), Định lý 8.14 (Đẳng cấu thứ hai), Định lý 8.16 (Đẳng cấu thứ ba), Định lý 8.18 (Định lý tương ứng)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '225-235'
+    sections: 'Chương 7, Mục 7.2'
+status: draft
+version: 0.1.0
+---
+
+Bộ ba định lý đẳng cấu và Định lý tương ứng là những công cụ then chốt trong đại số trừu tượng. Nếu như trong lý thuyết nhóm, các định lý này giúp nhận diện nhóm thương $G/N$, thì trong lý thuyết vành, chúng cho phép "nhìn xuyên qua" cấu trúc phức tạp của các vành thương $R/I$, chuyển các bài toán tính toán đại số trừu tượng về các trường số và vành quen thuộc như $\mathbb{C}$, $\mathbb{Z}_n$, hay $\mathbb{Q}(\sqrt{d})$.
+
+---
+
+## 1. Định lý đẳng cấu thứ nhất cho vành
+
+<Theorem id="thm-c8-b2-dang-cau-thu-nhat">
+### Định lý 8.8: Định lý đẳng cấu thứ nhất (First Isomorphism Theorem)
+Cho $f: R \to S$ là một đồng cấu vành. Khi đó ánh xạ:
+$$
+\bar{f}: R/\ker f \longrightarrow \operatorname{im} f, \quad \bar{f}(a + \ker f) = f(a)
+$$
+là một **đẳng cấu vành**.
+Do đó ta có đẳng cấu:
+$$
+R/\ker f \cong \operatorname{im} f.
+$$
+Đặc biệt, nếu $f$ là một **toàn ánh** thì $R/\ker f \cong S$.
+</Theorem>
+
+<Proof>
+Đặt $K = \ker f$. Theo Định lý 8.5, $K$ là một iđêan hai phía của $R$, do đó vành thương $R/K$ được xác định tốt. Ta kiểm tra $\bar{f}$ là một đẳng cấu qua 4 bước:
+
+1. **Tính xác định tốt và tính đơn ánh:**
+   Với mọi $a, b \in R$:
+   $$
+   a + K = b + K \iff a - b \in K = \ker f \iff f(a - b) = 0_S \iff f(a) = f(b) \iff \bar{f}(a + K) = \bar{f}(b + K).
+   $$
+   - Chiều $\implies$ chứng minh $\bar{f}$ **xác định tốt** (kết quả không phụ thuộc vào đại diện).
+   - Chiều $\impliedby$ chứng minh $\bar{f}$ là một **đơn ánh**.
+
+2. **Tính bảo toàn phép cộng và phép nhân:**
+   Với mọi $a + K, b + K \in R/K$:
+   $$
+   \bar{f}((a + K) + (b + K)) = \bar{f}((a + b) + K) = f(a + b) = f(a) + f(b) = \bar{f}(a + K) + \bar{f}(b + K),
+   $$
+   $$
+   \bar{f}((a + K)(b + K)) = \bar{f}(ab + K) = f(ab) = f(a)f(b) = \bar{f}(a + K) \bar{f}(b + K).
+   $$
+   Nếu $R, S$ có đơn vị và $f(1_R) = 1_S$, ta cũng có $\bar{f}(1_R + K) = f(1_R) = 1_S$.
+   Vậy $\bar{f}$ là một đồng cấu vành.
+
+3. **Tính toàn ánh:**
+   Lấy bất kỳ $y \in \operatorname{im} f$. Theo định nghĩa của ảnh, tồn tại $x \in R$ sao cho $y = f(x)$. Khi đó:
+   $$
+   y = f(x) = \bar{f}(x + K) \in \bar{f}(R/K).
+   $$
+   Vậy $\bar{f}$ là một toàn ánh lên $\operatorname{im} f$.
+
+Kết hợp lại, $\bar{f}$ là một song ánh đồng cấu vành, tức là một đẳng cấu: $R/\ker f \cong \operatorname{im} f$.
+</Proof>
+
+---
+
+## 2. Các ứng dụng mẫu kinh điển của Định lý đẳng cấu thứ nhất
+
+Để nhận diện một vành thương $R/I$, chiến lược đại số chuẩn mực là: **Dựng một đồng cấu vành toàn ánh $f: R \to S$ sao cho $\ker f = I$. Khi đó $R/I \cong S$ ngay lập tức.**
+
+### Ứng dụng 1: Vành thương bậc nhất $F[x]/(x - a) \cong F$
+Cho $F$ là một trường và $a \in F$. Xét đồng cấu tính giá trị:
+$$
+\operatorname{ev}_a: F[x] \to F, \quad P(x) \mapsto P(a).
+$$
+- $\operatorname{ev}_a$ là toàn ánh vì với mọi $c \in F$, đa thức hằng $P(x) = c$ có $\operatorname{ev}_a(c) = c$.
+- Hạt nhân: $P(x) \in \ker(\operatorname{ev}_a) \iff P(a) = 0 \iff P(x)$ chia hết cho $x - a$ theo Định lý Bézout. Do đó $\ker(\operatorname{ev}_a) = (x - a)$.
+Áp dụng Định lý đẳng cấu thứ nhất:
+$$
+F[x]/(x - a) \cong F.
+$$
+
+### Ứng dụng 2: Dựng trường số phức $\mathbb{R}[x]/(x^2 + 1) \cong \mathbb{C}$
+Xét đồng cấu thế:
+$$
+f: \mathbb{R}[x] \to \mathbb{C}, \quad P(x) \mapsto P(i).
+$$
+- $f$ là toàn ánh vì với mọi số phức $a + bi \in \mathbb{C}$, đa thức bậc nhất $P(x) = bx + a$ thỏa mãn $f(P(x)) = a + bi$.
+- Đa thức $x^2 + 1$ bất khả quy trên $\mathbb{R}$ và triệt tiêu tại $i$, nên $\ker f = (x^2 + 1)$.
+Áp dụng Định lý đẳng cấu thứ nhất:
+$$
+\mathbb{R}[x]/(x^2 + 1) \cong \mathbb{C}.
+$$
+
+### Ứng dụng 3: Dựng vành số nguyên Gauss $\mathbb{Z}[x]/(x^2 + 1) \cong \mathbb{Z}[i]$
+Đồng cấu thế $g: \mathbb{Z}[x] \to \mathbb{C}, P(x) \mapsto P(i)$ có ảnh là:
+$$
+\operatorname{im} g = \{P(i) \mid P(x) \in \mathbb{Z}[x]\} = \{a + bi \mid a, b \in \mathbb{Z}\} = \mathbb{Z}[i],
+$$
+và hạt nhân $\ker g = (x^2 + 1)\mathbb{Z}[x]$.
+Theo Định lý 8.8:
+$$
+\mathbb{Z}[x]/(x^2 + 1) \cong \mathbb{Z}[i].
+$$
+
+---
+
+## 3. Định lý đẳng cấu thứ hai và thứ ba
+
+<Theorem id="thm-c8-b2-dang-cau-thu-hai">
+### Định lý 8.14: Định lý đẳng cấu thứ hai (Second Isomorphism Theorem)
+Cho $S$ là một vành con của $R$ và $I$ là một iđêan hai phía của $R$. Khi đó:
+1. Tổng $S + I = \{s + i \mid s \in S, i \in I\}$ là một vành con của $R$.
+2. Giao $S \cap I$ là một iđêan hai phía của $S$.
+3. $I$ là một iđêan hai phía của $S + I$.
+4. Ta có đẳng cấu vành:
+$$
+(S + I)/I \cong S/(S \cap I).
+$$
+</Theorem>
+
+<Proof>
+1. **$S + I$ là vành con:**
+   - Vì $0 \in S$ và $0 \in I$, $0 = 0 + 0 \in S + I$.
+   - Với mọi $s_1 + i_1, s_2 + i_2 \in S + I$:
+     $$
+     (s_1 + i_1) - (s_2 + i_2) = (s_1 - s_2) + (i_1 - i_2) \in S + I.
+     $$
+     $$
+     (s_1 + i_1)(s_2 + i_2) = s_1 s_2 + \underbrace{s_1 i_2 + i_1 s_2 + i_1 i_2}_{\in I \text{ do tính hấp thụ}} \in S + I.
+     $$
+   Do đó $S + I$ là một vành con của $R$.
+
+2. **$S \cap I \triangleleft S$:**
+   Rõ ràng $S \cap I$ là nhóm con cộng của $S$. Với $s \in S$ và $x \in S \cap I$: vì $x \in I$ và $I \triangleleft R$, ta có $sx \in I$ và $xs \in I$. Mặt khác $s, x \in S$ nên $sx, xs \in S$. Vậy $sx, xs \in S \cap I$.
+
+3. **Đẳng cấu:**
+   Xét ánh xạ chiếu chính tắc $\pi: R \to R/I$ và thu hẹp của $\pi$ lên vành con $S$:
+   $$
+   \theta = \pi|_S: S \longrightarrow (S + I)/I, \quad \theta(s) = s + I.
+   $$
+   - $\theta$ là một đồng cấu vành (vì là thu hẹp của đồng cấu $\pi$).
+   - *Tính toàn ánh:* Phần tử tùy ý của $(S + I)/I$ có dạng $(s + i) + I = s + (i + I) = s + I = \theta(s)$. Vậy $\theta$ toàn ánh.
+   - *Hạt nhân:* $\ker\theta = \{s \in S \mid s + I = 0 + I\} = \{s \in S \mid s \in I\} = S \cap I$.
+   Áp dụng Định lý đẳng cấu thứ nhất cho đồng cấu $\theta$, ta thu được ngay:
+   $$
+   S/(S \cap I) \cong (S + I)/I.
+   $$
+</Proof>
+
+<Theorem id="thm-c8-b2-dang-cau-thu-ba">
+### Định lý 8.16: Định lý đẳng cấu thứ ba (Third Isomorphism Theorem)
+Cho $I$ và $J$ là hai iđêan hai phía của vành $R$ sao cho $I \subseteq J$. Khi đó:
+1. $J/I = \{j + I \mid j \in J\}$ là một iđêan hai phía của vành thương $R/I$.
+2. Ta có đẳng cấu vành:
+$$
+(R/I)/(J/I) \cong R/J.
+$$
+</Theorem>
+
+<Proof>
+Xét ánh xạ tự nhiên:
+$$
+\psi: R/I \longrightarrow R/J, \quad \psi(a + I) = a + J.
+$$
+1. **Tính xác định tốt:** Nếu $a + I = a' + I$, tức $a - a' \in I$. Vì $I \subseteq J$, ta có $a - a' \in J$, suy ra $a + J = a' + J$. Vậy $\psi$ xác định tốt.
+2. **$\psi$ là đồng cấu toàn ánh:**
+   - $\psi((a + I) + (b + I)) = \psi((a + b) + I) = (a + b) + J = (a + J) + (b + J) = \psi(a + I) + \psi(b + I)$.
+   - $\psi((a + I)(b + I)) = \psi(ab + I) = ab + J = (a + J)(b + J) = \psi(a + I)\psi(b + I)$.
+   - Với mọi $a + J \in R/J$, rõ ràng $\psi(a + I) = a + J$, nên $\psi$ toàn ánh.
+3. **Hạt nhân:**
+   $$
+   \ker\psi = \{a + I \in R/I \mid \psi(a + I) = 0 + J\} = \{a + I \in R/I \mid a \in J\} = J/I.
+   $$
+Theo Định lý đẳng cấu thứ nhất áp dụng cho $\psi$, ta nhận được $J/I \triangleleft R/I$ và $(R/I)/(J/I) \cong R/J$.
+</Proof>
+
+---
+
+## 4. Định lý tương ứng cho iđêan
+
+<Theorem id="thm-c8-b2-dinh-ly-tuong-ung">
+### Định lý 8.18: Định lý tương ứng (Correspondence Theorem / Lattice Theorem)
+Cho $I$ là một iđêan hai phía của vành $R$. Ánh xạ:
+$$
+\Phi: \{J \triangleleft R \mid I \subseteq J\} \longrightarrow \{\bar{J} \triangleleft R/I\}, \quad J \longmapsto J/I
+$$
+là một **song ánh** bảo toàn quan hệ thứ tự bao hàm:
+1. $J_1 \subseteq J_2 \iff J_1/I \subseteq J_2/I$.
+2. $(J_1 \cap J_2)/I = (J_1/I) \cap (J_2/I)$ và $(J_1 + J_2)/I = (J_1/I) + (J_2/I)$.
+3. Hơn nữa, nếu $R$ là vành giao hoán có đơn vị:
+   - $J$ là **iđêan nguyên tố** của $R$ $\iff J/I$ là **iđêan nguyên tố** của $R/I$.
+   - $J$ là **iđêan cực đại** của $R$ $\iff J/I$ là **iđêan cực đại** của $R/I$.
+</Theorem>
+
+<Proof>
+Song ánh ngược của $\Phi$ được cho bởi phép nghịch ảnh qua phép chiếu chính tắc $\pi_I: R \to R/I$:
+$$
+\Phi^{-1}(\bar{J}) = \pi_I^{-1}(\bar{J}) = \{x \in R \mid x + I \in \bar{J}\}.
+$$
+Theo tính chất của ánh xạ chiếu toàn ánh, các phép toán giao, tổng và quan hệ thứ tự bao hàm đều được bảo toàn nguyên vẹn.
+
+Để chứng minh tính bảo toàn nguyên tố và cực đại, ta sử dụng Định lý đẳng cấu thứ ba:
+$$
+(R/I)/(J/I) \cong R/J.
+$$
+Theo Định lý 7.17 (đặc trưng vành thương):
+- $J$ là iđêan nguyên tố của $R \iff R/J$ là miền nguyên $\iff (R/I)/(J/I)$ là miền nguyên $\iff J/I$ là iđêan nguyên tố của $R/I$.
+- $J$ là iđêan cực đại của $R \iff R/J$ là trường $\iff (R/I)/(J/I)$ là trường $\iff J/I$ là iđêan cực đại của $R/I$.
+Chứng minh hoàn tất.
+</Proof>
+
+---
+
+## 5. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
+
+<Exercise id="ex-c8-b2-a1">
+### Bài 8.2.A1 (Nhóm A - Dựng đẳng cấu trường bằng đồng cấu tính giá trị)
+Sử dụng Định lý đẳng cấu thứ nhất để chứng minh rằng:
+$$
+\mathbb{Q}[x]/(x^2 - 2) \cong \mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b \in \mathbb{Q}\}.
+$$
+</Exercise>
+
+<Solution>
+Xét ánh xạ tính giá trị tại $\sqrt{2}$:
+$$
+\operatorname{ev}_{\sqrt{2}}: \mathbb{Q}[x] \longrightarrow \mathbb{R}, \quad P(x) \longmapsto P(\sqrt{2}).
+$$
+1. **Kiểm tra đồng cấu vành:** Theo tính chất đại số cơ bản, phép thế một số thực vào đa thức luôn bảo toàn phép cộng và phép nhân đa thức, đồng thời $\operatorname{ev}_{\sqrt{2}}(1) = 1$. Do đó $\operatorname{ev}_{\sqrt{2}}$ là một đồng cấu vành.
+2. **Xác định ảnh:**
+   Với mọi đa thức $P(x) \in \mathbb{Q}[x]$, chia $P(x)$ cho $x^2 - 2$:
+   $$
+   P(x) = Q(x)(x^2 - 2) + (ax + b) \quad (a, b \in \mathbb{Q}).
+   $$
+   Thay $x = \sqrt{2}$:
+   $$
+   P(\sqrt{2}) = Q(\sqrt{2})(0) + a\sqrt{2} + b = b + a\sqrt{2} \in \mathbb{Q}(\sqrt{2}).
+   $$
+   Ngược lại, với mọi $b + a\sqrt{2} \in \mathbb{Q}(\sqrt{2})$, xét đa thức $ax + b \in \mathbb{Q}[x]$, ta có $\operatorname{ev}_{\sqrt{2}}(ax + b) = b + a\sqrt{2}$.
+   Do đó $\operatorname{im}(\operatorname{ev}_{\sqrt{2}}) = \mathbb{Q}(\sqrt{2})$.
+3. **Xác định hạt nhân:**
+   $$
+   P(x) \in \ker(\operatorname{ev}_{\sqrt{2}}) \iff P(\sqrt{2}) = 0 \iff b + a\sqrt{2} = 0.
+   $$
+   Vì $\sqrt{2}$ là số vô tỉ và $a, b \in \mathbb{Q}$, ta bắt buộc phải có $a = b = 0$.
+   Suy ra phần dư bằng $0$, nghĩa là $P(x)$ chia hết cho $x^2 - 2$.
+   Vậy $\ker(\operatorname{ev}_{\sqrt{2}}) = (x^2 - 2)$.
+
+Áp dụng Định lý đẳng cấu thứ nhất:
+$$
+\mathbb{Q}[x]/\ker(\operatorname{ev}_{\sqrt{2}}) \cong \operatorname{im}(\operatorname{ev}_{\sqrt{2}}) \iff \mathbb{Q}[x]/(x^2 - 2) \cong \mathbb{Q}(\sqrt{2}).
+$$
+</Solution>
+
+<Exercise id="ex-c8-b2-a2">
+### Bài 8.2.A2 (Nhóm A - Kiểm tra Định lý đẳng cấu thứ hai trên $\mathbb{Z}$)
+Trong vành số nguyên $\mathbb{Z}$, đặt vành con $S = 4\mathbb{Z}$ và iđêan $I = 6\mathbb{Z}$.
+1. Xác định tổng $S + I$ và giao $S \cap I$.
+2. Áp dụng Định lý đẳng cấu thứ hai để chỉ ra đẳng cấu giữa hai vành thương tương ứng và tìm số phần tử của chúng.
+</Exercise>
+
+<Solution>
+1. **Xác định $S + I$ và $S \cap I$:**
+   - Tổng của hai iđêan trong $\mathbb{Z}$ là $m\mathbb{Z} + n\mathbb{Z} = \gcd(m, n)\mathbb{Z}$:
+     $$
+     S + I = 4\mathbb{Z} + 6\mathbb{Z} = \gcd(4, 6)\mathbb{Z} = 2\mathbb{Z}.
+     $$
+   - Giao của hai iđêan trong $\mathbb{Z}$ là $m\mathbb{Z} \cap n\mathbb{Z} = \operatorname{lcm}(m, n)\mathbb{Z}$:
+     $$
+     S \cap I = 4\mathbb{Z} \cap 6\mathbb{Z} = \operatorname{lcm}(4, 6)\mathbb{Z} = 12\mathbb{Z}.
+     $$
+
+2. **Áp dụng Định lý đẳng cấu thứ hai:**
+   Theo Định lý 8.14:
+   $$
+   (S + I)/I \cong S/(S \cap I).
+   $$
+   Thay các tập hợp cụ thể vào:
+   $$
+   (2\mathbb{Z})/(6\mathbb{Z}) \cong (4\mathbb{Z})/(12\mathbb{Z}).
+   $$
+   - Số phần tử của vế trái: $[2\mathbb{Z} : 6\mathbb{Z}] = \frac{6}{2} = 3$. Các phần tử là:
+     $$
+     (2\mathbb{Z})/(6\mathbb{Z}) = \{0 + 6\mathbb{Z}, 2 + 6\mathbb{Z}, 4 + 6\mathbb{Z}\}.
+     $$
+   - Số phần tử của vế phải: $[4\mathbb{Z} : 12\mathbb{Z}] = \frac{12}{4} = 3$. Các phần tử là:
+     $$
+     (4\mathbb{Z})/(12\mathbb{Z}) = \{0 + 12\mathbb{Z}, 4 + 12\mathbb{Z}, 8 + 12\mathbb{Z}\}.
+     $$
+   Đẳng cấu được thiết lập bởi ánh xạ $s + 12\mathbb{Z} \mapsto s + 6\mathbb{Z}$. Cả hai vành thương đều đẳng cấu với vành $\mathbb{Z}/3\mathbb{Z}$.
+</Solution>
+
+<Exercise id="ex-c8-b2-b1">
+### Bài 8.2.B1 (Nhóm B - Vành thương của số nguyên Gauss $\mathbb{Z}[i]/(2 + i)$)
+Chứng minh rằng vành thương $\mathbb{Z}[i]/(2 + i)$ đẳng cấu với trường hữu hạn $\mathbb{Z}/5\mathbb{Z} \cong \mathbb{F}_5$.
+</Exercise>
+
+<Solution>
+Ta sử dụng phương pháp xây dựng đồng cấu từ $\mathbb{Z}$ vào vành thương $\mathbb{Z}[i]/(2 + i)$ hoặc qua biểu diễn đa thức.
+
+**Cách 1: Xây dựng đồng cấu từ $\mathbb{Z}$ lên $\mathbb{Z}[i]/(2 + i)$:**
+Xét phép nhúng $j: \mathbb{Z} \hookrightarrow \mathbb{Z}[i]$ và hợp với phép chiếu chính tắc $\pi: \mathbb{Z}[i] \to \mathbb{Z}[i]/(2 + i)$:
+$$
+\phi = \pi \circ j: \mathbb{Z} \longrightarrow \mathbb{Z}[i]/(2 + i), \quad \phi(n) = n + (2 + i).
+$$
+$\phi$ là một đồng cấu vành bảo toàn đơn vị.
+
+- **Chứng minh $\phi$ là toàn ánh:**
+  Trong vành thương $\mathbb{Z}[i]/(2 + i)$, ta có:
+  $$
+  2 + i \equiv 0 \implies i \equiv -2 \pmod{2 + i}.
+  $$
+  Do đó, với bất kỳ phần tử $a + bi \in \mathbb{Z}[i]$:
+  $$
+  a + bi \equiv a + b(-2) = a - 2b \pmod{2 + i}.
+  $$
+  Vì $a - 2b \in \mathbb{Z}$, ta có:
+  $$
+  (a + bi) + (2 + i) = (a - 2b) + (2 + i) = \phi(a - 2b).
+  $$
+  Điều này chứng minh mọi lớp kề trong $\mathbb{Z}[i]/(2 + i)$ đều có một đại diện là số nguyên thực. Vậy $\phi$ là **toàn ánh**.
+
+- **Xác định $\ker\phi$:**
+  $$
+  n \in \ker\phi \iff n \in (2 + i)\mathbb{Z}[i] \iff \exists (c + di) \in \mathbb{Z}[i]: n = (2 + i)(c + di).
+  $$
+  Lấy chuẩn phức hai vế:
+  $$
+  N(n) = N(2 + i) N(c + di) \iff n^2 = (2^2 + 1^2)(c^2 + d^2) = 5(c^2 + d^2).
+  $$
+  Suy ra $5 \mid n^2 \implies 5 \mid n$. Vậy $\ker\phi \subseteq 5\mathbb{Z}$.
+  Ngược lại, ta có:
+  $$
+  5 = (2 + i)(2 - i) \in (2 + i)\mathbb{Z}[i],
+  $$
+  nên $5 \in \ker\phi$, suy ra $5\mathbb{Z} \subseteq \ker\phi$.
+  Do đó $\ker\phi = 5\mathbb{Z}$.
+
+Áp dụng Định lý đẳng cấu thứ nhất cho $\phi$:
+$$
+\mathbb{Z}/\ker\phi \cong \operatorname{im}\phi \iff \mathbb{Z}/5\mathbb{Z} \cong \mathbb{Z}[i]/(2 + i).
+$$
+Vì $5$ là số nguyên tố, $\mathbb{Z}/5\mathbb{Z}$ là một trường, do đó $\mathbb{Z}[i]/(2 + i)$ là một trường gồm 5 phần tử.
+</Solution>
+
+<Exercise id="ex-c8-b2-b2">
+### Bài 8.2.B2 (Nhóm B - Ứng dụng Định lý tương ứng tìm iđêan trong vành thương)
+Xét vành $R = \mathbb{R}[x]/(x^3 - x)$.
+1. Sử dụng Định lý tương ứng để xác định tất cả các iđêan của $R$.
+2. Chỉ ra các iđêan nguyên tố và các iđêan cực đại của $R$.
+</Exercise>
+
+<Solution>
+Đặt $f(x) = x^3 - x = x(x - 1)(x + 1) \in \mathbb{R}[x]$ và $I = (f(x))$.
+Theo Định lý tương ứng (Định lý 8.18), các iđêan của $R = \mathbb{R}[x]/I$ tương ứng $1-1$ với các iđêan của $\mathbb{R}[x]$ chứa $I$.
+Vì $\mathbb{R}[x]$ là vành chính (PID), mọi iđêan đều có dạng $(g(x))$.
+Điều kiện $(f(x)) \subseteq (g(x))$ tương đương với $g(x) \mid f(x)$.
+
+**1. Liệt kê các iđêan:**
+Các ước monic của $f(x) = x(x - 1)(x + 1)$ trong $\mathbb{R}[x]$ là:
+- Bậc 0: $1$ (tương ứng iđêan toàn vành $R$).
+- Bậc 1: $x$, $x - 1$, $x + 1$.
+- Bậc 2: $x(x - 1) = x^2 - x$, $x(x + 1) = x^2 + x$, $(x - 1)(x + 1) = x^2 - 1$.
+- Bậc 3: $x(x - 1)(x + 1) = x^3 - x$ (tương ứng iđêan tầm thường $\{0\}$).
+Như vậy, vành $R$ có đúng $2^3 = 8$ iđêan, mỗi iđêan có dạng $(g(x))/I$ với $g(x) \mid (x^3 - x)$.
+
+**2. Xác định các iđêan nguyên tố và cực đại:**
+Theo Định lý 8.18:
+- Iđêan $(g(x))/I$ là cực đại $\iff (g(x))$ là iđêan cực đại chứa $I \iff g(x)$ là đa thức bất khả quy chia hết $f(x)$.
+Các nhân tử bất khả quy bậc 1 của $f(x)$ là $x$, $x - 1$, và $x + 1$.
+Do đó, $R$ có đúng $3$ iđêan cực đại:
+$$
+M_1 = (x)/I, \quad M_2 = (x - 1)/I, \quad M_3 = (x + 1)/I.
+$$
+Vành thương tại các iđêan này là $R/M_k \cong \mathbb{R}[x]/(g_k(x)) \cong \mathbb{R}$ (là trường).
+Vì $R$ là vành hữu hạn chiều trên $\mathbb{R}$, mọi iđêan nguyên tố của $R$ đều là iđêan cực đại. Do đó $M_1, M_2, M_3$ cũng chính là $3$ iđêan nguyên tố duy nhất của $R$.
+</Solution>
+
+<Exercise id="ex-c8-b2-c1">
+### Bài 8.2.C1 (Nhóm C - Dựng trường hữu hạn 9 phần tử $\mathbb{F}_9$)
+Chứng minh rằng vành thương $K = \mathbb{Z}[x]/(x^2 + 1, 3)$ là một trường có đúng 9 phần tử.
+</Exercise>
+
+<Proof>
+Ta áp dụng Định lý đẳng cấu thứ ba để phân rã phép dựng thành hai bước:
+Xét hai iđêan $I = (3) = 3\mathbb{Z}[x]$ và $J = (x^2 + 1, 3)$ trong $\mathbb{Z}[x]$. Rõ ràng $I \subseteq J$.
+Theo Định lý đẳng cấu thứ ba:
+$$
+\mathbb{Z}[x]/J = \mathbb{Z}[x]/(x^2 + 1, 3) \cong (\mathbb{Z}[x]/I) / (J/I).
+$$
+1. **Bước 1: Tính thương theo modulo 3:**
+   Đồng cấu chiếu hệ số modulo 3:
+   $$
+   \phi: \mathbb{Z}[x] \to \mathbb{Z}_3[x], \quad \sum a_k x^k \mapsto \sum \bar{a}_k x^k.
+   $$
+   $\phi$ là toàn ánh với $\ker\phi = 3\mathbb{Z}[x] = I$.
+   Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}[x]/I \cong \mathbb{Z}_3[x] = \mathbb{F}_3[x]$.
+
+2. **Bước 2: Tính ảnh của $J$ qua $\phi$:**
+   Ảnh của iđêan $J = (x^2 + 1, 3)$ qua $\phi$ là iđêan sinh bởi các ảnh của phần tử sinh:
+   $$
+   \phi(J) = (\phi(x^2 + 1), \phi(3)) = (x^2 + \bar{1}, \bar{0}) = (x^2 + 1) \triangleleft \mathbb{F}_3[x].
+   $$
+   Do đó:
+   $$
+   K \cong \mathbb{F}_3[x]/(x^2 + 1).
+   $$
+
+3. **Bước 3: Kiểm tra tính chất trường và số phần tử:**
+   - Trong $\mathbb{F}_3 = \{\bar{0}, \bar{1}, \bar{2}\}$:
+     $$
+     0^2 + 1 = 1 \neq 0, \quad 1^2 + 1 = 2 \neq 0, \quad 2^2 + 1 = 5 \equiv 2 \neq 0.
+     $$
+     Đa thức bậc hai $x^2 + 1$ không có nghiệm trong $\mathbb{F}_3$, do đó nó bất khả quy trên trường $\mathbb{F}_3$.
+   - Vì $\mathbb{F}_3[x]$ là PID và $x^2 + 1$ bất khả quy, iđêan $(x^2 + 1)$ là iđêan cực đại.
+   - Do đó vành thương $K \cong \mathbb{F}_3[x]/(x^2 + 1)$ là một **trường**.
+   - Mỗi phần tử trong $\mathbb{F}_3[x]/(x^2 + 1)$ có biểu diễn chuẩn tắc duy nhất dạng $ax + b$ với $a, b \in \mathbb{F}_3$. Vì có $3$ cách chọn $a$ và $3$ cách chọn $b$, số phần tử của trường là:
+     $$
+     |K| = 3 \times 3 = 9.
+     $$
+Vậy $K \cong \mathbb{F}_9$.
+</Proof>
+
+<Exercise id="ex-c8-b2-c2">
+### Bài 8.2.C2 (Nhóm C - Nhúng vành thương vào tích trực tiếp)
+Cho $R$ là một vành và $I, J$ là hai iđêan hai phía của $R$.
+1. Xét ánh xạ $f: R \to (R/I) \times (R/J)$ định bởi $f(a) = (a + I, a + J)$. Chứng minh $f$ là một đồng cấu vành và tìm $\ker f$.
+2. Áp dụng Định lý đẳng cấu thứ nhất để suy ra $(R/(I \cap J))$ đẳng cấu với một vành con của $(R/I) \times (R/J)$.
+</Exercise>
+
+<Proof>
+1. **Kiểm tra đồng cấu và hạt nhân:**
+   - Bảo toàn phép cộng:
+     $$
+     f(a + b) = ((a + b) + I, (a + b) + J) = (a + I, a + J) + (b + I, b + J) = f(a) + f(b).
+     $$
+   - Bảo toàn phép nhân:
+     $$
+     f(ab) = (ab + I, ab + J) = (a + I, a + J) \cdot (b + I, b + J) = f(a) f(b).
+     $$
+   - Hạt nhân:
+     $$
+     a \in \ker f \iff (a + I, a + J) = (0 + I, 0 + J) \iff a \in I \text{ và } a \in J \iff a \in I \cap J.
+     $$
+     Vậy $\ker f = I \cap J$.
+
+2. **Đẳng cấu với vành con:**
+   Theo Định lý đẳng cấu thứ nhất:
+   $$
+   R/\ker f \cong \operatorname{im} f \iff R/(I \cap J) \cong \operatorname{im} f.
+   $$
+   Vì $\operatorname{im} f$ là một vành con của $(R/I) \times (R/J)$, ta suy ra $R/(I \cap J)$ đẳng cấu với một vành con của $(R/I) \times (R/J)$ (nhúng chính tắc).
+   Ánh xạ $f$ là toàn ánh (nghĩa là $\operatorname{im} f = (R/I) \times (R/J)$) khi và chỉ khi hai iđêan nguyên tố cùng nhau: $I + J = R$ (Định lý Thặng dư Trung Hoa).
+</Proof>
+
+<Exercise id="ex-c8-b2-d1">
+### Bài 8.2.D1 (Nhóm D - Tính iđêan chính của vành số nguyên Gauss $\mathbb{Z}[i]$)
+Sử dụng thuật toán chia Euclid với chuẩn phức $N(a + bi) = a^2 + b^2$ để chứng minh rằng mọi iđêan của vành số nguyên Gauss $\mathbb{Z}[i]$ đều là iđêan chính (tức $\mathbb{Z}[i]$ là một PID).
+</Exercise>
+
+<Proof>
+Lấy $I$ là một iđêan tùy ý của $\mathbb{Z}[i]$.
+Nếu $I = \{0\}$, thì $I = (0)$ là iđêan chính.
+Giả sử $I \neq \{0\}$. Tập hợp các chuẩn của phần tử khác không trong $I$:
+$$
+\mathcal{S} = \{N(z) \mid z \in I, z \neq 0\} \subseteq \mathbb{Z}^+.
+$$
+Theo nguyên lý cực tiểu của tập số nguyên dương, $\mathcal{S}$ có phần tử nhỏ nhất. Gọi $w \in I \setminus \{0\}$ là phần tử có chuẩn nhỏ nhất đó: $N(w) = \min \mathcal{S}$.
+Ta sẽ chứng minh $I = (w) = w\mathbb{Z}[i]$.
+
+Rõ ràng $(w) \subseteq I$ vì $w \in I$ và $I$ là iđêan.
+Ngược lại, lấy phần tử $z \in I$ bất kỳ. Xét thương trong trường số phức $\mathbb{C}$:
+$$
+\frac{z}{w} = x + yi \quad (x, y \in \mathbb{R}).
+$$
+Chọn các số nguyên $p, q \in \mathbb{Z}$ gần $x, y$ nhất, nghĩa là:
+$$
+|x - p| \le \frac{1}{2}, \quad |y - q| \le \frac{1}{2}.
+$$
+Đặt $q_0 = p + qi \in \mathbb{Z}[i]$ và đặt phần dư $r = z - q_0 w \in \mathbb{Z}[i]$.
+Vì $z \in I$ và $w \in I$, ta có $r = z - q_0 w \in I$.
+Tính chuẩn của phần dư $r$:
+$$
+N(r) = N(w(x + yi - (p + qi))) = N(w) \cdot \left[ (x - p)^2 + (y - q)^2 \right] \le N(w) \left( \frac{1}{4} + \frac{1}{4} \right) = \frac{1}{2} N(w).
+$$
+Nếu $r \neq 0$, thì $N(r) \in \mathcal{S}$ và $N(r) \le \frac{1}{2}N(w) < N(w)$, điều này mâu thuẫn với tính nhỏ nhất của $N(w)$ trong $\mathcal{S}$!
+Do đó ta bắt buộc phải có $r = 0$, nghĩa là:
+$$
+z = q_0 w \in (w).
+$$
+Vậy $I = (w)$. Ta kết luận $\mathbb{Z}[i]$ là một miền iđêan chính (PID).
+</Proof>
+
+<Exercise id="ex-c8-b2-d2">
+### Bài 8.2.D2 (Nhóm D - Bảo toàn tính cực đại qua toàn ánh)
+Cho $f: R \to S$ là một đồng cấu vành toàn ánh và $M$ là một iđêan của $R$ chứa $\ker f$.
+Chứng minh rằng $M$ là iđêan cực đại của $R$ khi và chỉ khi $f(M)$ là iđêan cực đại của $S$.
+</Exercise>
+
+<Proof>
+Đặt $K = \ker f$. Theo giả thiết, $K \subseteq M \triangleleft R$.
+Theo Định lý đẳng cấu thứ nhất: $R/K \cong S$ qua đẳng cấu $\bar{f}(a + K) = f(a)$.
+Dưới đẳng cấu này, iđêan $M/K \triangleleft R/K$ tương ứng chính xác với $f(M) \triangleleft S$.
+Áp dụng Định lý đẳng cấu thứ ba:
+$$
+S/f(M) \cong (R/K)/(M/K) \cong R/M.
+$$
+Theo Định lý 7.17 (tiêu chuẩn iđêan cực đại trong vành giao hoán có đơn vị):
+- $M$ là iđêan cực đại của $R \iff R/M$ là một trường.
+- $f(M)$ là iđêan cực đại của $S \iff S/f(M)$ là một trường.
+Vì $R/M \cong S/f(M)$, vành này là trường khi và chỉ khi vành kia là trường.
+Do đó $M$ là cực đại trong $R$ khi và chỉ khi $f(M)$ là cực đại trong $S$.
+</Proof>
+
+---
+
+## 6. Tóm tắt trọng tâm bài học
+
+<KeyTakeaways>
+- **Định lý đẳng cấu thứ nhất:** $R/\ker f \cong \operatorname{im} f$. Để nhận diện cấu trúc một vành thương $R/I$, hãy tìm một toàn ánh đồng cấu $f$ từ $R$ có hạt nhân đúng bằng $I$.
+- **Định lý đẳng cấu thứ hai:** $(S + I)/I \cong S/(S \cap I)$ (với $S$ là vành con, $I$ là iđêan).
+- **Định lý đẳng cấu thứ ba:** $(R/I)/(J/I) \cong R/J$ (với $I \subseteq J$). Cho phép "rút gọn" hai tầng thương liên tiếp.
+- **Định lý tương ứng:** Thiết lập tương ứng $1-1$ bảo toàn trật tự giữa các iđêan của $R$ chứa $I$ và các iđêan của $R/I$. Quan trọng nhất: bảo toàn tính nguyên tố ($P \leftrightarrow P/I$) và tính cực đại ($M \leftrightarrow M/I$).
+- **Số nguyên Gauss $\mathbb{Z}[i]$:** Là một miền iđêan chính (PID). Các vành thương $\mathbb{Z}[i]/(a+bi)$ được phân tích dễ dàng nhờ Định lý đẳng cấu I và III.
+</KeyTakeaways>

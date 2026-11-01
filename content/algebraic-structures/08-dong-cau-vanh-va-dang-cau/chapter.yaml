@@ -1,0 +1,11 @@
+id: dong-cau-vanh-va-dang-cau
+number: 8
+title: 'Đồng cấu vành và các định lý đẳng cấu'
+description: 'Ánh xạ bảo toàn hai phép toán, vai trò của điều kiện đơn vị, hạt nhân và ảnh, nguyên lý phân tích qua vành thương, ba định lý đẳng cấu vành, định lý tương ứng và đặc số của vành.'
+objectives:
+  - 'Hiểu sâu sắc định nghĩa đồng cấu vành, vai trò của điều kiện bảo toàn đơn vị f(1_R) = 1_S và các phản ví dụ khi thiếu tính toàn ánh.'
+  - 'Chứng minh thành thạo: hạt nhân ker(f) là iđêan hai phía, ảnh im(f) là vành con và tiêu chuẩn đơn cấu ker(f) = {0}.'
+  - 'Phát biểu và chứng minh nguyên lý phân tích qua vành thương và ba định lý đẳng cấu vành (Định lý 8.8, 8.14, 8.16).'
+  - 'Vận dụng định lý đẳng cấu thứ nhất nhận diện các cấu trúc vành thương kinh điển trong vành đa thức và vành số nguyên Gauss.'
+  - 'Hiểu bản chất của đặc số char(R) qua đồng cấu đơn vị tự nhiên từ Z vào R và chứng minh đặc số của miền nguyên luôn bằng 0 hoặc số nguyên tố.'
+  - 'Giải thành thạo hệ thống bài tập 4 phân lớp A, B, C, D về đồng cấu vành, bất biến đẳng cấu và định lý thặng dư Trung Hoa.'
