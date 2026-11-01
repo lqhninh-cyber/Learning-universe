@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, CheckCircle2, PlayCircle, Sparkles } from 'lucide-react';
+import { PlayCircle, Sparkles } from 'lucide-react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjects } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
@@ -83,46 +83,6 @@ export function HomePage() {
           {subjects.map((subject) => (
             <SubjectCard key={subject.id} subject={subject} />
           ))}
-        </div>
-      </section>
-
-      <section
-        aria-label="Đặc điểm học thuật của Learning Universe"
-        className="grid gap-4 rounded-3xl border border-stone-200/80 bg-white p-6 sm:grid-cols-3 sm:p-8"
-      >
-        <div className="space-y-2">
-          <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-stone-800">
-            <BookOpen className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <h3 className="text-sm font-semibold text-stone-900">Đánh số Chương.Bài.Số chặt chẽ</h3>
-          <p className="text-xs leading-relaxed text-stone-600">
-            Mọi định nghĩa, định lý, bổ đề, hệ quả, ví dụ và bài tập được đánh số tự động và liên
-            kết chéo chính xác.
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-stone-800">
-            <BookMarked className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <h3 className="text-sm font-semibold text-stone-900">Chứng minh & Lời giải từng bước</h3>
-          <p className="text-xs leading-relaxed text-stone-600">
-            Khối chứng minh và lời giải bài tập được thiết kế đóng/mở chủ động để rèn luyện tư duy
-            chứng minh toán học.
-          </p>
-        </div>
-
-        <div className="space-y-2">
-          <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-stone-800">
-            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <h3 className="text-sm font-semibold text-stone-900">
-            Đọc công khai & Lưu tiến độ cá nhân
-          </h3>
-          <p className="text-xs leading-relaxed text-stone-600">
-            Mọi bài giảng đều mở công khai. Khi bật chế độ Học viên, bạn có thể lưu tiến độ, đánh
-            dấu bài yêu thích và ghi chú.
-          </p>
         </div>
       </section>
 

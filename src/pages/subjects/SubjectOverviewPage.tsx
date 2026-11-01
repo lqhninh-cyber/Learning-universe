@@ -25,6 +25,21 @@ export function SubjectOverviewPage() {
 
   const stats = useMemo(() => (subject ? getSubjectStats(subject) : null), [subject]);
 
+  const popularTags = useMemo(() => {
+    if (!subject) return [];
+    const frequency = new Map<string, number>();
+    for (const chapter of subject.chapters) {
+      for (const lesson of chapter.lessons) {
+        for (const tag of lesson.tags) {
+          frequency.set(tag, (frequency.get(tag) ?? 0) + 1);
+        }
+      }
+    }
+    return [...frequency.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([tag]) => tag);
+  }, [subject]);
+
   const filteredChapters = useMemo<readonly ManifestChapter[]>(() => {
     if (!subject) {
       return [];
@@ -111,7 +126,7 @@ export function SubjectOverviewPage() {
             onLevelChange={setSelectedLevel}
             selectedTag={selectedTag}
             onTagChange={setSelectedTag}
-            availableTags={stats.tags}
+            availableTags={popularTags}
             shownCount={shownLessonCount}
             totalCount={stats.lessonCount}
             onReset={handleResetFilters}

@@ -20,6 +20,8 @@ export function ProgressRing({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (clamped / 100) * circumference;
 
+  const fontSizeClass = size < 40 ? 'text-[10px]' : 'text-[11px]';
+
   return (
     <div
       role="progressbar"
@@ -27,10 +29,10 @@ export function ProgressRing({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label={`Tiến độ ${clamped}%`}
-      className={cn('relative inline-flex items-center justify-center', className)}
+      className={cn('relative inline-flex shrink-0 items-center justify-center', className)}
       style={{ width: size, height: size }}
     >
-      <svg width={size} height={size} className="-rotate-90 transform" aria-hidden="true">
+      <svg width={size} height={size} className="block -rotate-90 transform" aria-hidden="true">
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -52,7 +54,14 @@ export function ProgressRing({
         />
       </svg>
       {showLabel && (
-        <span className="font-mono text-[11px] font-medium text-stone-700">{clamped}%</span>
+        <span
+          className={cn(
+            'pointer-events-none absolute inset-0 flex items-center justify-center text-center font-mono leading-none font-medium text-stone-700 select-none',
+            fontSizeClass,
+          )}
+        >
+          {clamped}%
+        </span>
       )}
     </div>
   );

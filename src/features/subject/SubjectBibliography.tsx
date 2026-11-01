@@ -1,7 +1,7 @@
 import type { BibliographyEntry, ManifestSubject } from '@schemas/index';
-import { BookOpenCheck, Library } from 'lucide-react';
+import { BookOpenCheck, FileText, Library } from 'lucide-react';
 import { getBibliographyEntry } from '@/content-runtime';
-import { Badge, Card } from '@/shared/ui';
+import { Badge, Button, Card } from '@/shared/ui';
 
 export interface SubjectBibliographyProps {
   readonly subject: ManifestSubject;
@@ -23,6 +23,10 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
   }));
 
   const hasSources = Boolean(subject.sources.primary) || subject.sources.references.length > 0;
+  const pdfHref =
+    subject.slug === 'cau-truc-dai-so' || subject.sources.primary === 'gt-ctds-hvk-2026'
+      ? '/docs/Giao_trinh_Cau_truc_dai_so.pdf'
+      : null;
 
   return (
     <section aria-label="Giáo trình và tài liệu tham khảo môn học" className="pt-2">
@@ -67,6 +71,21 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
                   </div>
                 ) : (
                   <p className="mt-2 font-mono text-xs text-stone-700">{subject.sources.primary}</p>
+                )}
+                {pdfHref && (
+                  <div className="mt-3 border-t border-stone-100 pt-3">
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="hover:border-subject-300 hover:bg-subject-50 hover:text-subject-700 h-8 gap-1.5 border-stone-200 text-xs font-medium text-stone-700 transition-colors"
+                    >
+                      <a href={pdfHref} target="_blank" rel="noopener noreferrer">
+                        <FileText className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
+                        <span>Đọc giáo trình PDF</span>
+                      </a>
+                    </Button>
+                  </div>
                 )}
               </div>
             )}

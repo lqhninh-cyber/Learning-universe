@@ -1,4 +1,5 @@
-import { Filter, RotateCcw, Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, Filter, RotateCcw, Search } from 'lucide-react';
+import { useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui';
 
@@ -37,8 +38,24 @@ export function SubjectFilterBar({
   totalCount,
   onReset,
 }: SubjectFilterBarProps) {
+  const [isTagsExpanded, setIsTagsExpanded] = useState(false);
+  const MAX_VISIBLE_TAGS = 10;
+
   const hasActiveFilter =
     searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTag !== null;
+
+  const visibleTags = (() => {
+    if (isTagsExpanded || availableTags.length <= MAX_VISIBLE_TAGS) {
+      return availableTags;
+    }
+    const top = availableTags.slice(0, MAX_VISIBLE_TAGS);
+    if (selectedTag && !top.includes(selectedTag)) {
+      return [...top, selectedTag];
+    }
+    return top;
+  })();
+
+  const hiddenCount = availableTags.length - MAX_VISIBLE_TAGS;
 
   return (
     <section
@@ -93,9 +110,9 @@ export function SubjectFilterBar({
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="mr-1 inline-flex items-center gap-1 text-xs font-medium text-stone-500">
               <Filter className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Chủ đề:</span>
+              <span>Chủ đề phổ biến:</span>
             </span>
-            {availableTags.map((tag) => {
+            {visibleTags.map((tag) => {
               const active = selectedTag === tag;
               return (
                 <button
@@ -106,7 +123,7 @@ export function SubjectFilterBar({
                   className={cn(
                     'cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                     active
-                      ? 'border-subject-300 bg-subject-100 text-subject-900 border'
+                      ? 'border-subject-300 bg-subject-100 text-subject-900 border font-semibold'
                       : 'border border-stone-200/80 bg-stone-50 text-stone-600 hover:bg-stone-100',
                   )}
                 >
@@ -114,6 +131,26 @@ export function SubjectFilterBar({
                 </button>
               );
             })}
+            {availableTags.length > MAX_VISIBLE_TAGS && (
+              <button
+                type="button"
+                onClick={() => setIsTagsExpanded((prev) => !prev)}
+                aria-expanded={isTagsExpanded}
+                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-dashed border-stone-300 bg-white px-2 py-1 text-xs font-medium text-stone-600 transition-colors hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900"
+              >
+                {isTagsExpanded ? (
+                  <>
+                    <span>Thu gọn</span>
+                    <ChevronUp className="h-3 w-3" aria-hidden="true" />
+                  </>
+                ) : (
+                  <>
+                    <span>+{hiddenCount} chủ đề khác</span>
+                    <ChevronDown className="h-3 w-3" aria-hidden="true" />
+                  </>
+                )}
+              </button>
+            )}
           </div>
 
           <div className="flex items-center gap-3 text-xs text-stone-500">
