@@ -1,0 +1,11 @@
+id: truong-con-truong-cac-thuong
+number: 9
+title: 'Trường con và trường các thương'
+description: 'Nhận diện trường qua cấu trúc iđêan, trường con nguyên tố theo đặc số, phép dựng trường các thương Frac(R) từ miền nguyên, tính chất phổ dụng và tổng kết toàn bộ học phần Cấu trúc đại số.'
+objectives:
+  - 'Nhận diện trường qua cấu trúc iđêan đơn giản (chỉ có {0} và chính nó) và tính chất đơn cấu của mọi đồng cấu vành xuất phát từ trường.'
+  - 'Nắm vững tiêu chuẩn trường con, phân loại trường con nguyên tố P_F theo đặc số (Q khi char F = 0 và F_p khi char F = p).'
+  - 'Hiểu sâu sắc vai trò của miền nguyên trong việc thiết lập tính bắc cầu của quan hệ phân số và tính xác định tốt của các phép toán trên Frac(R).'
+  - 'Phát biểu và chứng minh tính chất phổ dụng của trường các thương Frac(R) và áp dụng để nhận diện nhanh các trường thương cụ thể.'
+  - 'Nắm vững sự đối ngẫu sâu sắc giữa phép dựng Vành thương R/I (đồng nhất về 0) và Trường các thương Frac(R) (bổ sung nghịch đảo nhân).'
+  - 'Giải thành thạo hệ thống bài tập 4 phân lớp A, B, C, D về cấu trúc trường và tổng kết toàn diện toàn bộ học phần Cấu trúc đại số.'

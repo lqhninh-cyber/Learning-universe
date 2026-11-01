@@ -1,0 +1,499 @@
+---
+id: phep-dung-truong-cac-thuong-cua-mien-nguyen
+title: 'Quan hệ phân số và phép dựng trường các thương Frac(R)'
+description: 'Xây dựng trường các thương Frac(R) từ một miền nguyên R qua quan hệ tương đương phân số; chứng minh tính xác định tốt của các phép toán; đơn cấu nhúng chính tắc và các mô hình trường thương kinh điển.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - nhan-dien-truong-truong-con-va-truong-con-nguyen-to
+tags:
+  - trường các thương
+  - Frac
+  - miền nguyên
+  - quan hệ phân số
+  - xác định tốt
+  - đơn cấu nhúng
+sources:
+  - source: gt-ctds-hvk-2026
+    pages: '149-154'
+    sections: 'Mục 9.5, 9.6, 9.7'
+    note: 'Mệnh đề 9.11 (Quan hệ phân số), Định lý 9.12 (Tính xác định tốt & Cấu trúc trường Frac R), Định nghĩa 9.13 (Trường các thương và đơn cấu nhúng chính tắc)'
+  - source: hai-deo-dai-so-hien-dai-2013
+    pages: '255-265'
+    sections: 'Chương 8, Mục 8.2'
+status: draft
+version: 0.1.0
+---
+
+Trong số học sơ cấp, khi tập hợp số nguyên $\mathbb{Z}$ không cho phép chia $1$ cho $2$, ta mở rộng $\mathbb{Z}$ thành trường số hữu tỉ $\mathbb{Q}$ bằng cách xem mỗi số hữu tỉ là một "phân số" $\frac{a}{b}$ với $b \neq 0$. Trong đại số trừu tượng, quá trình này được tổng quát hóa cho **bất kỳ miền nguyên $R$ nào**: từ vành đa thức $F[x]$ tạo ra trường phân thức $F(x)$, từ vành số nguyên Gauss $\mathbb{Z}[i]$ tạo ra trường hữu tỉ Gauss $\mathbb{Q}(i)$.
+
+Bài học này trình bày tỉ mỉ quy trình dựng **trường các thương** $\operatorname{Frac}(R)$, làm rõ vì sao giả thiết miền nguyên là điều kiện sống còn đối với tính bắc cầu của quan hệ phân số, và chứng minh tính xác định tốt của các phép toán đại số.
+
+---
+
+## 1. Quan hệ tương đương phân số trên miền nguyên
+
+Cho $(R, +, \cdot)$ là một **miền nguyên** (vành giao hoán có đơn vị $1 \neq 0$ và không có ước của không).
+Xét tập hợp tất cả các cặp có phần tử thứ hai khác không:
+$$
+\mathcal{P}_R = R \times (R \setminus \{0\}) = \{(a, b) \mid a, b \in R, b \neq 0\}.
+$$
+Mỗi cặp $(a, b)$ đóng vai trò là một "phân số hình thức" với tử số $a$ và mẫu số $b$. Ta định nghĩa quan hệ $\sim$ trên $\mathcal{P}_R$ mô phỏng quy tắc hai phân số bằng nhau khi "tích chéo bằng nhau":
+$$
+(a, b) \sim (c, d) \iff ad = bc.
+$$
+
+<Proposition id="prop-c9-b2-quan-he-tuong-duong">
+### Mệnh đề 9.11: Quan hệ phân số là quan hệ tương đương
+Nếu $R$ là một miền nguyên, thì quan hệ $\sim$ xác định ở trên là một **quan hệ tương đương** trên $\mathcal{P}_R$.
+</Proposition>
+
+<Proof>
+Ta kiểm tra 3 tiên đề của quan hệ tương đương:
+
+1. **Tính phản xạ:** Với mọi $(a, b) \in \mathcal{P}_R$, vì $R$ giao hoán nên $ab = ba$. Do đó $(a, b) \sim (a, b)$.
+2. **Tính đối xứng:** Giả sử $(a, b) \sim (c, d)$. Khi đó $ad = bc \iff cb = da$ (do $R$ giao hoán) $\iff (c, d) \sim (a, b)$.
+3. **Tính bắc cầu (Bắt buộc dùng tính chất miền nguyên):**
+   Giả sử $(a, b) \sim (c, d)$ và $(c, d) \sim (e, f)$.
+   Theo định nghĩa:
+   $$
+   ad = bc \quad (1) \quad \text{và} \quad cf = de \quad (2).
+   $$
+   Nhân cả hai vế của (1) với $f \in R \setminus \{0\}$:
+   $$
+   (ad)f = (bc)f \iff a d f = b (cf).
+   $$
+   Thay $cf = de$ từ (2) vào vế phải:
+   $$
+   a d f = b (de) \iff (af)d = (be)d \iff (af - be)d = 0.
+   $$
+   Vì $d \in R \setminus \{0\}$ (do $(c, d) \in \mathcal{P}_R$) và **$R$ là một miền nguyên** (không có ước của không khác không), đẳng thức $(af - be)d = 0$ kéo theo:
+   $$
+   af - be = 0 \iff af = be.
+   $$
+   Theo định nghĩa của quan hệ $\sim$, điều này có nghĩa là $(a, b) \sim (e, f)$.
+   Vậy quan hệ $\sim$ có tính bắc cầu.
+</Proof>
+
+---
+
+## 2. Vì sao tính bắc cầu bị phá vỡ khi có ước của không?
+
+Sự tồn tại của ước của không sẽ làm sụp đổ toàn bộ phép dựng phân số ngay từ bước đầu tiên!
+
+<Counterexample id="counter-c9-b2-that-bai-khi-co-uoc-cua-khong">
+### Phản ví dụ: Sự thất bại của tính bắc cầu trên vành có ước của không
+Xét vành $R = \mathbb{Z}/6\mathbb{Z} = \{\bar{0}, \bar{1}, \bar{2}, \bar{3}, \bar{4}, \bar{5}\}$, không phải là miền nguyên vì $\bar{2} \cdot \bar{3} = \bar{0}$.
+Xét ba cặp trong $\mathcal{P}_R = R \times (R \setminus \{\bar{0}\})$:
+$$
+x = (\bar{3}, \bar{2}), \quad y = (\bar{0}, \bar{4}), \quad z = (\bar{0}, \bar{1}).
+$$
+1. **Kiểm tra $x \sim y$:**
+   Tích chéo: $\bar{3} \cdot \bar{4} = \overline{12} = \bar{0}$ và $\bar{2} \cdot \bar{0} = \bar{0}$.
+   Vì $\bar{3} \cdot \bar{4} = \bar{2} \cdot \bar{0}$, ta có $(\bar{3}, \bar{2}) \sim (\bar{0}, \bar{4})$.
+2. **Kiểm tra $y \sim z$:**
+   Tích chéo: $\bar{0} \cdot \bar{1} = \bar{0}$ và $\bar{4} \cdot \bar{0} = \bar{0}$.
+   Vì $\bar{0} \cdot \bar{1} = \bar{4} \cdot \bar{0}$, ta có $(\bar{0}, \bar{4}) \sim (\bar{0}, \bar{1})$.
+3. **Kiểm tra $x \sim z$:**
+   Tích chéo: $\bar{3} \cdot \bar{1} = \bar{3}$, trong khi $\bar{2} \cdot \bar{0} = \bar{0}$.
+   Vì $\bar{3} \neq \bar{0}$, ta có $(\bar{3}, \bar{2}) \not\sim (\bar{0}, \bar{1})$!
+
+Tính bắc cầu hoàn toàn thất bại: $x \sim y$ và $y \sim z$ nhưng $x \not\sim z$. Điều này chứng minh rằng **giả thiết $R$ là miền nguyên là điều kiện bắt buộc không thể lược bỏ**.
+</Counterexample>
+
+---
+
+## 3. Phép dựng Trường các thương $\operatorname{Frac}(R)$
+
+Vì $\sim$ là một quan hệ tương đương trên $\mathcal{P}_R$, ta ký hiệu lớp tương đương của cặp $(a, b)$ dưới dạng phân số quen thuộc:
+$$
+\frac{a}{b} = [(a, b)] = \{(c, d) \in \mathcal{P}_R \mid ad = bc\}.
+$$
+Tập thương tương ứng được ký hiệu là:
+$$
+\operatorname{Frac}(R) = \mathcal{P}_R / \sim \;= \left\{ \frac{a}{b} \;\middle|\; a \in R, b \in R \setminus \{0\} \right\}.
+$$
+
+Trên tập thương $\operatorname{Frac}(R)$, ta định nghĩa hai phép toán cộng và nhân theo quy tắc số học thông thường:
+1. **Phép cộng:**
+$$
+\frac{a}{b} + \frac{c}{d} = \frac{ad + bc}{bd}.
+$$
+2. **Phép nhân:**
+$$
+\frac{a}{b} \cdot \frac{c}{d} = \frac{ac}{bd}.
+$$
+
+*Nhận xét về mẫu số:* Vì $b \neq 0$ và $d \neq 0$, và $R$ là miền nguyên, ta luôn có $bd \neq 0$. Do đó mẫu số mới luôn nằm trong $R \setminus \{0\}$, bảo đảm kết quả thuộc $\operatorname{Frac}(R)$.
+
+<Theorem id="thm-c9-b2-tinh-xac-dinh-tot-va-cau-truc-truong">
+### Định lý 9.12: Tính xác định tốt và Cấu trúc trường của $\operatorname{Frac}(R)$
+1. Phép cộng và phép nhân trên $\operatorname{Frac}(R)$ là **xác định tốt** (kết quả không phụ thuộc vào đại diện lớp tương đương được chọn).
+2. $(\operatorname{Frac}(R), +, \cdot)$ lập thành một **trường**, được gọi là **trường các thương** (field of fractions / quotient field) của miền nguyên $R$.
+</Theorem>
+
+<Proof>
+Ta chứng minh theo hai phần:
+
+### Phần 1: Chứng minh tính xác định tốt
+Giả sử $\frac{a}{b} = \frac{a'}{b'}$ và $\frac{c}{d} = \frac{c'}{d'}$, nghĩa là:
+$$
+ab' = a'b \quad (1) \quad \text{và} \quad cd' = c'd \quad (2).
+$$
+
+- **Xác định tốt của phép cộng:**
+  Ta cần chứng minh $\frac{ad + bc}{bd} = \frac{a'd' + b'c'}{b'd'}$, tức là tích chéo bằng nhau:
+  $$
+  (ad + bc)(b'd') = (a'd' + b'c')(bd).
+  $$
+  Khai triển vế trái:
+  $$
+  (ad + bc)(b'd') = adb'd' + bcb'd' = (ab')dd' + (cd')bb'.
+  $$
+  Thay $ab' = a'b$ và $cd' = c'd$ vào:
+  $$
+  (ab')dd' + (cd')bb' = (a'b)dd' + (c'd)bb' = a'd'bd + b'c'bd = (a'd' + b'c')(bd).
+  $$
+  Đẳng thức tích chéo được thỏa mãn. Vậy phép cộng xác định tốt.
+
+- **Xác định tốt của phép nhân:**
+  Ta cần chứng minh $\frac{ac}{bd} = \frac{a'c'}{b'd'}$, tức là $(ac)(b'd') = (a'c')(bd)$.
+  Thật vậy:
+  $$
+  (ac)(b'd') = (ab')(cd') = (a'b)(c'd) = (a'c')(bd).
+  $$
+  Vậy phép nhân xác định tốt.
+
+### Phần 2: Kiểm tra các tiên đề trường
+- **Nhóm cộng abel:**
+  - Kết hợp: $\left(\frac{a}{b} + \frac{c}{d}\right) + \frac{e}{f} = \frac{adf + bcf + bde}{bdf} = \frac{a}{b} + \left(\frac{c}{d} + \frac{e}{f}\right)$.
+  - Giao hoán: $\frac{a}{b} + \frac{c}{d} = \frac{ad + bc}{bd} = \frac{cb + da}{db} = \frac{c}{d} + \frac{a}{b}$.
+  - Phần tử không: $0_{\operatorname{Frac}(R)} = \frac{0}{1} = \frac{0}{b}$ với mọi $b \neq 0$ (vì $\frac{a}{b} + \frac{0}{1} = \frac{a \cdot 1 + b \cdot 0}{b \cdot 1} = \frac{a}{b}$).
+  - Phần tử đối: $-\frac{a}{b} = \frac{-a}{b}$.
+- **Nhóm nhân các phần tử khác không:**
+  - Giao hoán và kết hợp: Kế thừa trực tiếp từ tính giao hoán và kết hợp của phép nhân trong $R$.
+  - Phần tử đơn vị: $1_{\operatorname{Frac}(R)} = \frac{1}{1} = \frac{b}{b}$ với mọi $b \neq 0$ (vì $\frac{a}{b} \cdot \frac{1}{1} = \frac{a}{b}$).
+  - Phần tử nghịch đảo: Lấy $\frac{a}{b} \in \operatorname{Frac}(R)$ sao cho $\frac{a}{b} \neq \frac{0}{1}$.
+    Điều kiện này tương đương với $a \cdot 1 \neq b \cdot 0 \iff a \neq 0$.
+    Vì $a \in R \setminus \{0\}$, cặp $(b, a) \in \mathcal{P}_R$, nên $\frac{b}{a} \in \operatorname{Frac}(R)$. Khi đó:
+    $$
+    \frac{a}{b} \cdot \frac{b}{a} = \frac{ab}{ba} = \frac{1}{1} = 1_{\operatorname{Frac}(R)}.
+    $$
+    Vậy mọi phần tử khác không đều có nghịch đảo: $\left(\frac{a}{b}\right)^{-1} = \frac{b}{a}$.
+- **Phân phối:** $(\frac{a}{b} + \frac{c}{d})\frac{e}{f} = \frac{ad+bc}{bd}\frac{e}{f} = \frac{ade+bce}{bdf} = \frac{ae}{bf} + \frac{ce}{df}$.
+- Vì $1 \neq 0$ trong $R$, ta có $\frac{1}{1} \neq \frac{0}{1}$.
+Vậy $\operatorname{Frac}(R)$ là một trường.
+</Proof>
+
+---
+
+## 4. Đơn cấu nhúng chính tắc
+
+<Theorem id="thm-c9-b2-nhung-chinh-tac">
+### Định nghĩa 9.13 & Mệnh đề 9.14: Đơn cấu nhúng chính tắc
+Cho $R$ là một miền nguyên. Ánh xạ:
+$$
+\iota_R: R \longrightarrow \operatorname{Frac}(R), \quad \iota_R(a) = \frac{a}{1}
+$$
+là một **đơn cấu vành bảo toàn đơn vị**.
+Do đó, $R$ đẳng cấu với vành con $\iota_R(R) = \left\{ \frac{a}{1} \;\middle|\; a \in R \right\}$ của $\operatorname{Frac}(R)$.
+</Theorem>
+
+<Proof>
+- Bảo toàn phép cộng: $\iota_R(a + b) = \frac{a + b}{1} = \frac{a \cdot 1 + 1 \cdot b}{1 \cdot 1} = \frac{a}{1} + \frac{b}{1} = \iota_R(a) + \iota_R(b)$.
+- Bảo toàn phép nhân: $\iota_R(ab) = \frac{ab}{1} = \frac{a}{1} \cdot \frac{b}{1} = \iota_R(a)\iota_R(b)$.
+- Bảo toàn đơn vị: $\iota_R(1_R) = \frac{1_R}{1_R} = 1_{\operatorname{Frac}(R)}$.
+- Tính đơn ánh: Giả sử $a \in \ker\iota_R$. Khi đó $\frac{a}{1} = \frac{0}{1} \iff a \cdot 1 = 1 \cdot 0 \iff a = 0$.
+  Vậy $\ker\iota_R = \{0\}$, chứng tỏ $\iota_R$ là một đơn ánh.
+</Proof>
+
+Nhờ đơn cấu $\iota_R$, ta có thể **đồng nhất** phần tử $a \in R$ với phân số $\frac{a}{1} \in \operatorname{Frac}(R)$ và xem $R$ là một vành con thực thụ của $\operatorname{Frac}(R)$:
+$$
+R \subseteq \operatorname{Frac}(R).
+$$
+Khi đó mỗi phân số được viết dưới dạng tích của một phần tử với nghịch đảo của một phần tử trong $R$:
+$$
+\frac{a}{b} = \frac{a}{1} \cdot \left(\frac{b}{1}\right)^{-1} = a \cdot b^{-1}.
+$$
+
+---
+
+## 5. Các mô hình trường các thương kinh điển
+
+| Miền nguyên ban đầu $R$ | Trường các thương $\operatorname{Frac}(R)$ | Mô tả cụ thể |
+| :--- | :--- | :--- |
+| Vành số nguyên $\mathbb{Z}$ | Trường số hữu tỉ $\mathbb{Q}$ | $\operatorname{Frac}(\mathbb{Z}) = \left\{ \frac{a}{b} \mid a, b \in \mathbb{Z}, b \neq 0 \right\} = \mathbb{Q}$ |
+| Vành đa thức $F[x]$ ($F$ trường) | Trường phân thức $F(x)$ | $F(x) = \left\{ \frac{P(x)}{Q(x)} \mid P, Q \in F[x], Q \neq 0 \right\}$ |
+| Số nguyên Gauss $\mathbb{Z}[i]$ | Trường số hữu tỉ Gauss $\mathbb{Q}(i)$ | $\operatorname{Frac}(\mathbb{Z}[i]) = \{u + vi \mid u, v \in \mathbb{Q}\} = \mathbb{Q}(i)$ |
+| Vành $\mathbb{Z}[\sqrt{d}]$ ($d$ không chính phương) | Trường số bậc hai $\mathbb{Q}(\sqrt{d})$ | $\operatorname{Frac}(\mathbb{Z}[\sqrt{d}]) = \{u + v\sqrt{d} \mid u, v \in \mathbb{Q}\} = \mathbb{Q}(\sqrt{d})$ |
+| Bản thân một trường $F$ | Chính trường đó $F$ | Nếu $F$ là trường thì $\operatorname{Frac}(F) \cong F$ (mọi phân số $\frac{a}{b} = ab^{-1} \in F$) |
+
+---
+
+## 6. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
+
+<Exercise id="ex-c9-b2-a1">
+### Bài 9.2.A1 (Nhóm A - Tính toán và rút gọn phân số đại số)
+1. Trong trường phân thức $\mathbb{Q}(x) = \operatorname{Frac}(\mathbb{Q}[x])$, thực hiện phép tính và rút gọn:
+$$
+A = \frac{x}{x^2 - 1} + \frac{1}{x + 1}.
+$$
+2. Trong trường các thương của vành số nguyên Gauss $\operatorname{Frac}(\mathbb{Z}[i])$, tìm nghịch đảo của phần tử $\alpha = \frac{2 + i}{1 - i}$ và biểu diễn dưới dạng $u + vi$ với $u, v \in \mathbb{Q}$.
+</Exercise>
+
+<Solution>
+1. **Tính toán trong $\mathbb{Q}(x)$:**
+   Ta có mẫu số chung là $x^2 - 1 = (x - 1)(x + 1)$:
+   $$
+   A = \frac{x}{x^2 - 1} + \frac{x - 1}{(x + 1)(x - 1)} = \frac{x + (x - 1)}{x^2 - 1} = \frac{2x - 1}{x^2 - 1}.
+   $$
+   Vì $\gcd(2x - 1, x^2 - 1) = 1$, phân thức $\frac{2x - 1}{x^2 - 1}$ đã ở dạng tối giản.
+
+2. **Tìm nghịch đảo của $\alpha$ trong $\operatorname{Frac}(\mathbb{Z}[i])$:**
+   Phần tử $\alpha = \frac{2 + i}{1 - i}$.
+   Nghịch đảo của $\alpha$ là:
+   $$
+   \alpha^{-1} = \frac{1 - i}{2 + i}.
+   $$
+   Nhân cả tử và mẫu với số phức liên hợp $2 - i$:
+   $$
+   \alpha^{-1} = \frac{(1 - i)(2 - i)}{(2 + i)(2 - i)} = \frac{2 - i - 2i + i^2}{2^2 + 1^2} = \frac{2 - 3i - 1}{5} = \frac{1 - 3i}{5} = \frac{1}{5} - \frac{3}{5}i.
+   $$
+   Kiểm tra: $\alpha \cdot \alpha^{-1} = \frac{2+i}{1-i} \cdot \frac{1-i}{2+i} = \frac{1}{1}$. Kết quả hoàn toàn chính xác.
+</Solution>
+
+<Exercise id="ex-c9-b2-a2">
+### Bài 9.2.A2 (Nhóm A - Kiểm tra quan hệ tương đương phân số)
+Trong miền nguyên $R = \mathbb{Z}[\sqrt{2}]$, xét hai cặp:
+$$
+u = (2 + \sqrt{2}, \; 3 - \sqrt{2}) \quad \text{và} \quad v = (8 + 5\sqrt{2}, \; 7).
+$$
+Hỏi $u$ và $v$ có tương đương với nhau trong $\mathcal{P}_R$ không? (Tức là $\frac{2+\sqrt{2}}{3-\sqrt{2}} = \frac{8+5\sqrt{2}}{7}$ trong $\operatorname{Frac}(R)$?)
+</Exercise>
+
+<Solution>
+Ta kiểm tra điều kiện tích chéo $ad = bc$:
+- Tính vế trái $ad$:
+  $$
+  ad = (2 + \sqrt{2}) \cdot 7 = 14 + 7\sqrt{2}.
+  $$
+- Tính vế phải $bc$:
+  $$
+  bc = (3 - \sqrt{2})(8 + 5\sqrt{2}) = 3 \cdot 8 + 3 \cdot 5\sqrt{2} - 8\sqrt{2} - 5(\sqrt{2})^2 = 24 + 15\sqrt{2} - 8\sqrt{2} - 10 = 14 + 7\sqrt{2}.
+  $$
+Vì $ad = bc = 14 + 7\sqrt{2}$, ta kết luận:
+$$
+u \sim v.
+$$
+Nghĩa là trong trường $\mathbb{Q}(\sqrt{2})$, hai phân số này bằng nhau.
+</Solution>
+
+<Exercise id="ex-c9-b2-b1">
+### Bài 9.2.B1 (Nhóm B - Trường các thương của một trường)
+Chứng minh rằng nếu $F$ là một trường thì trường các thương $\operatorname{Frac}(F)$ đẳng cấu tự nhiên với chính $F$.
+</Exercise>
+
+<Solution>
+Xét đơn cấu nhúng chính tắc $\iota_F: F \to \operatorname{Frac}(F), a \mapsto \frac{a}{1}$.
+Ta đã biết theo Mệnh đề 9.14 rằng $\iota_F$ là một đơn cấu vành bảo toàn đơn vị.
+Ta cần chứng minh $\iota_F$ là một **toàn ánh**:
+Lấy bất kỳ phần tử $\frac{a}{b} \in \operatorname{Frac}(F)$ với $a, b \in F, b \neq 0$.
+Vì $F$ là một trường và $b \neq 0$, phần tử $b$ có nghịch đảo $b^{-1} \in F$.
+Đặt $c = ab^{-1} \in F$. Khi đó trong trường $F$:
+$$
+c \cdot 1 = (ab^{-1}) \cdot 1 = a \cdot b^{-1}, \quad \text{và} \quad a \cdot 1 = a.
+$$
+Do đó $c \cdot b = (ab^{-1})b = a(b^{-1}b) = a \cdot 1 = a$.
+Điều này chứng tỏ tích chéo:
+$$
+c \cdot b = 1 \cdot a \implies (c, 1) \sim (a, b) \implies \frac{c}{1} = \frac{a}{b}.
+$$
+Do đó:
+$$
+\frac{a}{b} = \iota_F(c) \in \iota_F(F).
+$$
+Vậy $\iota_F$ là một toàn ánh.
+Vì $\iota_F$ vừa là đơn ánh vừa là toàn ánh, nó là một đẳng cấu trường: $\operatorname{Frac}(F) \cong F$.
+</Solution>
+
+<Exercise id="ex-c9-b2-b2">
+### Bài 9.2.B2 (Nhóm B - Trường các thương của vành số nguyên bậc hai)
+Cho $d$ là một số nguyên không phải số chính phương. Xét miền nguyên $R = \mathbb{Z}[\sqrt{d}] = \{a + b\sqrt{d} \mid a, b \in \mathbb{Z}\}$.
+Chứng minh rằng trường các thương $\operatorname{Frac}(\mathbb{Z}[\sqrt{d}])$ đẳng cấu với trường số bậc hai:
+$$
+\mathbb{Q}(\sqrt{d}) = \{u + v\sqrt{d} \mid u, v \in \mathbb{Q}\}.
+$$
+</Exercise>
+
+<Solution>
+Xét ánh xạ:
+$$
+\psi: \operatorname{Frac}(\mathbb{Z}[\sqrt{d}]) \longrightarrow \mathbb{Q}(\sqrt{d}), \quad \psi\left(\frac{a + b\sqrt{d}}{c + d'\sqrt{d}}\right) = \frac{a + b\sqrt{d}}{c + d'\sqrt{d}}.
+$$
+1. **Tính xác định tốt:**
+   Nếu $\frac{a + b\sqrt{d}}{c + d'\sqrt{d}} = \frac{a' + b'\sqrt{d}}{c' + d''\sqrt{d}}$ trong $\operatorname{Frac}(R)$, thì theo định nghĩa:
+   $$
+   (a + b\sqrt{d})(c' + d''\sqrt{d}) = (a' + b'\sqrt{d})(c + d'\sqrt{d}) \quad \text{trong } \mathbb{Z}[\sqrt{d}].
+   $$
+   Vì $\mathbb{Z}[\sqrt{d}] \subset \mathbb{Q}(\sqrt{d})$ và $\mathbb{Q}(\sqrt{d})$ là một trường, chia hai vế cho $(c + d'\sqrt{d})(c' + d''\sqrt{d}) \neq 0$ cho ta thương bằng nhau trong $\mathbb{Q}(\sqrt{d})$. Vậy $\psi$ xác định tốt.
+2. **$\psi$ là đồng cấu vành:** Kế thừa từ các phép tính số thực/số phức thông thường.
+3. **$\psi$ là đơn ánh:** Vì $\operatorname{Frac}(R)$ là một trường và $\mathbb{Q}(\sqrt{d}) \neq \{0\}$, theo Định lý 9.1, $\psi$ bắt buộc phải là một đơn cấu.
+4. **$\psi$ là toàn ánh:** Lấy bất kỳ $u + v\sqrt{d} \in \mathbb{Q}(\sqrt{d})$ với $u = \frac{p}{q}, v = \frac{r}{s}$ ($p, q, r, s \in \mathbb{Z}, q, s > 0$).
+   Quy đồng mẫu số chung $m = qs \in \mathbb{Z}^+$:
+   $$
+   u + v\sqrt{d} = \frac{ps + rq\sqrt{d}}{qs} = \frac{a + b\sqrt{d}}{m} \quad (a = ps, b = rq \in \mathbb{Z}).
+   $$
+   Phần tử này chính là ảnh của phân số $\frac{a + b\sqrt{d}}{m} \in \operatorname{Frac}(\mathbb{Z}[\sqrt{d}])$ qua $\psi$.
+Vậy $\psi$ là một đẳng cấu: $\operatorname{Frac}(\mathbb{Z}[\sqrt{d}]) \cong \mathbb{Q}(\sqrt{d})$.
+</Solution>
+
+<Exercise id="ex-c9-b2-c1">
+### Bài 9.2.C1 (Nhóm C - Tính cực tiểu của trường các thương)
+Cho $R$ là một miền nguyên và $K$ là một trường bất kỳ chứa $R$ như một vành con (với $1_R = 1_K$).
+Chứng minh rằng trường con nhỏ nhất của $K$ chứa $R$ đẳng cấu với $\operatorname{Frac}(R)$.
+</Exercise>
+
+<Proof>
+Đặt $F$ là trường con nhỏ nhất của $K$ chứa $R$:
+$$
+F = \bigcap \{L \subseteq K \mid L \text{ là trường con của } K \text{ chứa } R\}.
+$$
+Xét tập hợp các thương trong $K$:
+$$
+S = \{ab^{-1} \in K \mid a \in R, b \in R \setminus \{0\}\}.
+$$
+1. **$S \subseteq F$:** Vì $F$ là trường con chứa $R$, với mọi $a \in R$ và $b \in R \setminus \{0\}$, ta có $a, b \in F$. Vì $F$ là trường, $b^{-1} \in F$, do đó $ab^{-1} \in F$. Vậy $S \subseteq F$.
+2. **$S$ là một trường con của $K$:**
+   - $0 = 0 \cdot 1^{-1} \in S$, $1 = 1 \cdot 1^{-1} \in S$.
+   - Hiệu hai phần tử: $a b^{-1} - c d^{-1} = (ad - bc)(bd)^{-1} \in S$ (vì $ad - bc \in R$ và $bd \in R \setminus \{0\}$).
+   - Tích với nghịch đảo của phần tử khác không $c d^{-1} \neq 0$ (suy ra $c \neq 0$):
+     $$
+     (a b^{-1})(c d^{-1})^{-1} = (a b^{-1})(d c^{-1}) = (ad)(bc)^{-1} \in S.
+     $$
+   Theo Mệnh đề 9.4, $S$ là một trường con của $K$.
+3. **$S$ chứa $R$:** Với mọi $a \in R$, $a = a \cdot 1^{-1} \in S$.
+4. **Kết luận $F = S$:** Vì $F$ là trường con nhỏ nhất chứa $R$ và $S$ là trường con chứa $R$, ta có $F \subseteq S$. Kết hợp với (1), ta được $F = S$.
+
+Ánh xạ $\theta: \operatorname{Frac}(R) \to S, \frac{a}{b} \mapsto ab^{-1}$ là một đẳng cấu trường được xác định tốt (theo Định lý 9.12).
+Vậy trường con nhỏ nhất của $K$ chứa $R$ đẳng cấu với $\operatorname{Frac}(R)$.
+</Proof>
+
+<Exercise id="ex-c9-b2-c2">
+### Bài 9.2.C2 (Nhóm C - Đẳng cấu miền nguyên và đẳng cấu trường các thương)
+Cho $R$ và $S$ là hai miền nguyên.
+1. Chứng minh rằng nếu $R \cong S$ thì $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
+2. Chiều ngược lại có đúng không? Nếu $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$ thì có suy ra được $R \cong S$ không? Hãy giải thích và chỉ ra phản ví dụ.
+</Exercise>
+
+<Solution>
+**1. Chiều thuận ($R \cong S \implies \operatorname{Frac}(R) \cong \operatorname{Frac}(S)$):**
+Giả sử $\phi: R \to S$ là một đẳng cấu vành.
+Xét ánh xạ $\tilde{\phi}: \operatorname{Frac}(R) \to \operatorname{Frac}(S)$ định bởi:
+$$
+\tilde{\phi}\left(\frac{a}{b}\right) = \frac{\phi(a)}{\phi(b)}.
+$$
+- *Xác định tốt:* Nếu $\frac{a}{b} = \frac{a'}{b'}$, thì $ab' = a'b$. Do $\phi$ là đồng cấu, $\phi(a)\phi(b') = \phi(a')\phi(b) \implies \frac{\phi(a)}{\phi(b)} = \frac{\phi(a')}{\phi(b')}$.
+- *Đồng cấu:* Dễ dàng kiểm tra $\tilde{\phi}$ bảo toàn phép cộng và nhân phân số.
+- *Đẳng cấu:* Ánh xạ ngược của $\tilde{\phi}$ chính là $\widetilde{\phi^{-1}}: \frac{c}{d} \mapsto \frac{\phi^{-1}(c)}{\phi^{-1}(d)}$.
+Vậy $\tilde{\phi}$ là một đẳng cấu trường, suy ra $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
+
+**2. Chiều ngược lại là SAI:**
+$\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$ **không kéo theo** $R \cong S$.
+- **Phản ví dụ 1:**
+  Chọn $R = \mathbb{Z}$ và $S = \mathbb{Q}$.
+  Ta có $\operatorname{Frac}(\mathbb{Z}) = \mathbb{Q}$, và theo Bài 9.2.B1, $\operatorname{Frac}(\mathbb{Q}) \cong \mathbb{Q}$.
+  Như vậy $\operatorname{Frac}(R) \cong \operatorname{Frac}(S) \cong \mathbb{Q}$.
+  Tuy nhiên $R = \mathbb{Z}$ và $S = \mathbb{Q}$ rõ ràng không đẳng cấu vì $\mathbb{Q}$ là một trường (mọi phần tử khác 0 đều khả nghịch) trong khi $\mathbb{Z}$ không phải là trường.
+- **Phản ví dụ 2 (Cùng không phải là trường):**
+  Chọn $R = \mathbb{Z}$ và $S = \mathbb{Z}[x]$. Khi đó $\operatorname{Frac}(\mathbb{Z}) = \mathbb{Q}$ và $\operatorname{Frac}(\mathbb{Z}[x]) = \mathbb{Q}(x) \not\cong \mathbb{Q}$.
+  Hoặc tinh tế hơn: chọn $R = \mathbb{Z}$ và $S = \mathbb{Z}[\sqrt{4}] = \mathbb{Z}$.
+  Chọn $R = \mathbb{Z}[2x]$ và $S = \mathbb{Z}[x]$. Hai miền nguyên này không đẳng cấu nhưng cùng có trường các thương là $\mathbb{Q}(x)$.
+</Solution>
+
+<Exercise id="ex-c9-b2-d1">
+### Bài 9.2.D1 (Nhóm D - Hai miền nguyên khác nhau có cùng trường các thương)
+Xét hai vành con sau của trường số phức $\mathbb{C}$:
+$$
+R_1 = \mathbb{Z}[\sqrt{-3}] = \{a + b\sqrt{-3} \mid a, b \in \mathbb{Z}\},
+$$
+$$
+R_2 = \mathbb{Z}[\omega] = \{a + b\omega \mid a, b \in \mathbb{Z}\} \quad \text{với } \omega = \frac{-1 + \sqrt{-3}}{2}.
+$$
+1. Chứng minh rằng $R_1 \subsetneq R_2$.
+2. Chứng minh rằng $\operatorname{Frac}(R_1) \cong \operatorname{Frac}(R_2) \cong \mathbb{Q}(\sqrt{-3})$.
+3. Chứng minh rằng $R_1$ và $R_2$ không đẳng cấu với nhau (gợi ý: đếm số phần tử khả nghịch).
+</Exercise>
+
+<Proof>
+1. **$R_1 \subsetneq R_2$:**
+   Ta có $\sqrt{-3} = 2\omega + 1 \in R_2$. Do đó mọi phần tử $a + b\sqrt{-3} = a + b(2\omega + 1) = (a + b) + 2b\omega \in R_2$.
+   Vậy $R_1 \subseteq R_2$.
+   Mặt khác $\omega \notin R_1$ vì phần thực của nó là $-\frac{1}{2} \notin \mathbb{Z}$.
+   Do đó $R_1 \subsetneq R_2$.
+
+2. **Cùng trường các thương:**
+   - Theo Bài 9.2.B2: $\operatorname{Frac}(R_1) = \operatorname{Frac}(\mathbb{Z}[\sqrt{-3}]) \cong \mathbb{Q}(\sqrt{-3})$.
+   - Vì $\mathbb{Q}(\sqrt{-3})$ là một trường chứa $R_2$ (do $\omega \in \mathbb{Q}(\sqrt{-3})$), trường các thương $\operatorname{Frac}(R_2)$ là trường con nhỏ nhất chứa $R_2$, nên $\operatorname{Frac}(R_2) \subseteq \mathbb{Q}(\sqrt{-3})$.
+   - Mặt khác $\operatorname{Frac}(R_1) \subseteq \operatorname{Frac}(R_2)$ vì $R_1 \subseteq R_2$.
+   Do đó $\mathbb{Q}(\sqrt{-3}) = \operatorname{Frac}(R_1) \subseteq \operatorname{Frac}(R_2) \subseteq \mathbb{Q}(\sqrt{-3})$.
+   Vậy $\operatorname{Frac}(R_1) \cong \operatorname{Frac}(R_2) \cong \mathbb{Q}(\sqrt{-3})$.
+
+3. **$R_1 \not\cong R_2$:**
+   Ta so sánh nhóm các phần tử khả nghịch $R^\times$:
+   - Trong $R_1 = \mathbb{Z}[\sqrt{-3}]$: Chuẩn $N(a + b\sqrt{-3}) = a^2 + 3b^2$.
+     Phần tử $a + b\sqrt{-3}$ khả nghịch $\iff a^2 + 3b^2 = 1 \iff a = \pm 1, b = 0$.
+     Do đó $R_1^\times = \{\pm 1\}$, chỉ có đúng $2$ phần tử khả nghịch.
+   - Trong $R_2 = \mathbb{Z}[\omega]$: Phần tử $\omega$ thỏa mãn $\omega^3 = 1$, do đó $\omega$ khả nghịch với $\omega^{-1} = \omega^2$.
+     Chuẩn $N(a + b\omega) = a^2 - ab + b^2 = 1$ có đúng $6$ nghiệm: $\pm 1, \pm \omega, \pm \omega^2$.
+     Do đó $R_2^\times = \{\pm 1, \pm \omega, \pm \omega^2\}$, có đúng $6$ phần tử khả nghịch.
+   Vì số lượng phần tử khả nghịch là bất biến đẳng cấu và $2 \neq 6$, ta kết luận $R_1 \not\cong R_2$.
+</Proof>
+
+<Exercise id="ex-c9-b2-d2">
+### Bài 9.2.D2 (Nhóm D - Bước đệm sang Địa phương hóa: Vành phân số $S^{-1}R$)
+Cho $R$ là một miền nguyên và $S \subseteq R \setminus \{0\}$ là một tập con nhân đóng chứa $1$ ($1 \in S$ và $s_1, s_2 \in S \implies s_1 s_2 \in S$).
+1. Chứng minh rằng tập hợp $S^{-1}R = \left\{ \frac{a}{s} \in \operatorname{Frac}(R) \;\middle|\; a \in R, s \in S \right\}$ là một vành con của $\operatorname{Frac}(R)$ chứa $R$.
+2. Cho $p$ là một số nguyên tố trong $\mathbb{Z}$, xét $S = \mathbb{Z} \setminus p\mathbb{Z}$ (tập các số nguyên không chia hết cho $p$). Hãy mô tả vành $S^{-1}\mathbb{Z}$ và tìm nhóm phần tử khả nghịch của nó.
+</Exercise>
+
+<Solution>
+**1. Chứng minh $S^{-1}R$ là vành con:**
+- Vì $0 \in R$ và $1 \in S$, $0 = \frac{0}{1} \in S^{-1}R$.
+- Vì $1 \in R$ và $1 \in S$, $1 = \frac{1}{1} \in S^{-1}R$.
+- Lấy $\frac{a}{s_1}, \frac{b}{s_2} \in S^{-1}R$ (với $a, b \in R$ và $s_1, s_2 \in S$):
+  $$
+  \frac{a}{s_1} - \frac{b}{s_2} = \frac{a s_2 - b s_1}{s_1 s_2}.
+  $$
+  Vì $R$ là vành nên $a s_2 - b s_1 \in R$. Vì $S$ nhân đóng nên $s_1 s_2 \in S$. Do đó hiệu thuộc $S^{-1}R$.
+- Tích hai phần tử:
+  $$
+  \frac{a}{s_1} \cdot \frac{b}{s_2} = \frac{ab}{s_1 s_2}.
+  $$
+  Vì $ab \in R$ và $s_1 s_2 \in S$, tích thuộc $S^{-1}R$.
+Theo tiêu chuẩn vành con, $S^{-1}R$ là một vành con của $\operatorname{Frac}(R)$.
+Với mọi $a \in R$, $\frac{a}{1} \in S^{-1}R$ (do $1 \in S$), nên $R \subseteq S^{-1}R$.
+
+**2. Xét $S = \mathbb{Z} \setminus p\mathbb{Z}$ và vành $\mathbb{Z}_{(p)} = S^{-1}\mathbb{Z}$:**
+- Vành này là tập hợp tất cả các số hữu tỉ có mẫu số không chia hết cho $p$:
+  $$
+  \mathbb{Z}_{(p)} = \left\{ \frac{a}{b} \in \mathbb{Q} \;\middle|\; a, b \in \mathbb{Z}, \gcd(a, b) = 1, p \nmid b \right\}.
+  $$
+- Một phần tử $\frac{a}{b} \in \mathbb{Z}_{(p)}$ khả nghịch khi và chỉ khi nghịch đảo của nó $\frac{b}{a}$ cũng thuộc $\mathbb{Z}_{(p)}$, điều này tương đương với mẫu số mới $a$ cũng không chia hết cho $p$:
+  $$
+  (\mathbb{Z}_{(p)})^\times = \left\{ \frac{a}{b} \in \mathbb{Q} \;\middle|\; p \nmid a \text{ và } p \nmid b \right\}.
+  $$
+- Các phần tử không khả nghịch là những phân số có tử số chia hết cho $p$: $M = p\mathbb{Z}_{(p)} = \left\{ \frac{pa'}{b} \;\middle|\; p \nmid b \right\}$.
+- Tập $M$ chính là **iđêan cực đại duy nhất** của $\mathbb{Z}_{(p)}$ (vành địa phương).
+</Solution>
+
+---
+
+## 7. Tóm tắt trọng tâm bài học
+
+<KeyTakeaways>
+- **Quan hệ phân số:** $(a, b) \sim (c, d) \iff ad = bc$ trên tập cặp $\mathcal{P}_R = R \times (R \setminus \{0\})$.
+- **Vai trò của Miền nguyên:** Luật giản ước nhân của miền nguyên là điều kiện bắt buộc để chứng minh tính bắc cầu $(af - be)d = 0 \implies af = be$. Khi vành có ước của không, quan hệ phân số sụp đổ hoàn toàn.
+- **Trường các thương $\operatorname{Frac}(R)$:** Là tập các lớp phân số $\frac{a}{b}$ với phép cộng và phép nhân phân số thông thường. Mọi phần tử khác không $\frac{a}{b} \neq 0$ đều có nghịch đảo $\frac{b}{a}$.
+- **Đơn cấu nhúng:** $\iota_R: R \hookrightarrow \operatorname{Frac}(R), a \mapsto \frac{a}{1}$ cho phép đồng nhất $R$ thành vành con của $\operatorname{Frac}(R)$.
+- **Các mô hình kinh điển:** $\operatorname{Frac}(\mathbb{Z}) = \mathbb{Q}$, $\operatorname{Frac}(F[x]) = F(x)$, $\operatorname{Frac}(\mathbb{Z}[i]) \cong \mathbb{Q}(i)$, $\operatorname{Frac}(\mathbb{Z}[\sqrt{d}]) \cong \mathbb{Q}(\sqrt{d})$.
+</KeyTakeaways>
