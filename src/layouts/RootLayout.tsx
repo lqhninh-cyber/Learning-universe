@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import { LoginPromptDialog, useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
-import { Badge, Button, Container, Drawer } from '@/shared/ui';
+import { Badge, Button, Container, Drawer, KagomeWeaveDivider } from '@/shared/ui';
 
 export function RootHydrateFallback() {
   return null;
@@ -190,10 +190,58 @@ export function RootLayout() {
 
       <LoginPromptDialog />
 
-      <footer className="border-vn-border/70 bg-vn-surface/40 border-t">
-        <Container className="text-vn-muted flex flex-col items-center justify-between gap-2 py-6 text-xs sm:flex-row">
-          <p>© {new Date().getFullYear()} Learning Universe. Nền tảng học tập Sư phạm Toán học.</p>
-          <p className="text-vn-muted">Không gian học tập đại học đương đại · Di sản & Tri thức</p>
+      <footer className="border-vn-border/70 bg-vn-surface/35 border-t">
+        <KagomeWeaveDivider />
+        <Container className="space-y-6 py-8">
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <GraduationCap className="text-vn-primary h-5 w-5" aria-hidden="true" />
+                <span className="text-vn-text font-bold">Learning Universe</span>
+                <span className="text-vn-muted text-xs">· Sư phạm Toán học</span>
+              </div>
+              <p className="text-vn-muted max-w-xl text-xs leading-relaxed">
+                Nền tảng học tập Toán học đại học đương đại lấy cảm hứng từ cấu trúc Thư viện đình
+                làng & Di sản tri thức Việt Nam. 100% nội dung học thuật chuẩn mực, nguồn mở và phi
+                lợi nhuận.
+              </p>
+            </div>
+
+            <nav
+              aria-label="Điều hướng chân trang"
+              className="flex flex-wrap gap-x-6 gap-y-2 text-xs"
+            >
+              <Link
+                to={ROUTES.home}
+                className="text-vn-muted hover:text-vn-primary transition-colors"
+              >
+                Trang chủ
+              </Link>
+              <Link
+                to={ROUTES.subjects}
+                className="text-vn-muted hover:text-vn-primary transition-colors"
+              >
+                Tất cả môn học
+              </Link>
+              <Link
+                to={ROUTES.subjectOverview('cau-truc-dai-so')}
+                className="text-vn-muted hover:text-vn-primary transition-colors"
+              >
+                Cấu trúc đại số
+              </Link>
+              <Link
+                to={ROUTES.subjectOverview('hinh-hoc-affine')}
+                className="text-vn-muted hover:text-vn-primary transition-colors"
+              >
+                Hình học Affine
+              </Link>
+            </nav>
+          </div>
+
+          <div className="border-vn-border/50 text-vn-muted flex flex-col items-center justify-between gap-2 border-t pt-4 text-[11px] sm:flex-row">
+            <p>© {new Date().getFullYear()} Learning Universe. Bảo lưu bản quyền học thuật.</p>
+            <p>Không gian tri thức mở · Chuẩn mực & Khách quan</p>
+          </div>
         </Container>
       </footer>
     </div>

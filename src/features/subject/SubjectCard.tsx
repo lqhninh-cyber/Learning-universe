@@ -16,7 +16,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  ProgressRing,
 } from '@/shared/ui';
 
 export interface SubjectCardProps {
@@ -64,8 +63,20 @@ export function SubjectCard({ subject }: SubjectCardProps) {
       <Card
         accent="subjectTop"
         interactive
-        className="border-vn-border/80 bg-vn-surface-card hover:border-vn-accent/60 flex h-full flex-col justify-between shadow-2xs transition-all duration-200 hover:shadow-md"
+        className="border-vn-border/80 bg-vn-surface-card hover:border-vn-accent/60 relative flex h-full flex-col justify-between overflow-hidden shadow-2xs transition-all duration-200 hover:shadow-md"
       >
+        {/* Họa tiết kỷ hà nhận diện môn học chìm ở góc card */}
+        <div
+          className="text-vn-accent pointer-events-none absolute -top-3 -right-3 h-20 w-20 opacity-[0.08]"
+          aria-hidden="true"
+        >
+          {subject.slug === 'cau-truc-dai-so' ? (
+            <AlgebraicSymmetryMotif className="h-full w-full" />
+          ) : (
+            <AffineGridMotif className="h-full w-full" />
+          )}
+        </div>
+
         <div>
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
@@ -73,7 +84,11 @@ export function SubjectCard({ subject }: SubjectCardProps) {
                 <SubjectIcon slug={subject.slug} icon={subject.theme.icon} />
                 <span>{subject.title}</span>
               </Badge>
-              <ProgressRing value={progressValue} size={38} strokeWidth={3.5} />
+              {isAuthenticated && stats.lessonCount > 0 && (
+                <span className="text-vn-primary border-vn-border bg-vn-surface/60 rounded-md border px-2 py-0.5 text-xs font-semibold">
+                  {progressValue}%
+                </span>
+              )}
             </div>
             <CardTitle className="mt-2 text-xl font-bold">
               <Link
@@ -120,10 +135,22 @@ export function SubjectCard({ subject }: SubjectCardProps) {
               </div>
             )}
 
+            {/* Thanh tiến độ ngang chuẩn xác */}
             {isAuthenticated && stats.lessonCount > 0 && (
-              <p className="text-subject-700 text-xs font-medium">
-                Đã hoàn thành {completedCount}/{stats.lessonCount} bài học ({progressValue}%)
-              </p>
+              <div className="space-y-1.5 pt-1">
+                <div className="text-vn-muted flex items-center justify-between text-xs">
+                  <span>
+                    Hoàn thành: {completedCount}/{stats.lessonCount} bài
+                  </span>
+                  <span className="text-vn-primary font-semibold">{progressValue}%</span>
+                </div>
+                <div className="bg-vn-border/60 h-1.5 w-full overflow-hidden rounded-full">
+                  <div
+                    className="bg-vn-primary h-full rounded-full transition-all duration-300"
+                    style={{ width: `${progressValue}%` }}
+                  />
+                </div>
+              </div>
             )}
           </CardContent>
         </div>

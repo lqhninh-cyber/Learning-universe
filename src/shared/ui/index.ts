@@ -20,7 +20,14 @@ export { Tooltip, type TooltipProps, TooltipProvider, type TooltipProviderProps 
 export {
   AffineGridMotif,
   AlgebraicSymmetryMotif,
+  DefinitionPillarMotif,
   DongSonConcentricMotif,
+  ExamplePillarMotif,
+  ExercisePillarMotif,
   HeritageDivider,
+  KagomeWeaveDivider,
+  ProofPillarMotif,
+  TheoremPillarMotif,
+  TheoryPillarMotif,
 } from './HeritageMotifs';
 export { badgeVariants, buttonVariants, containerVariants } from './variants';
