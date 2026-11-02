@@ -84,7 +84,10 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     renderRoute('/mon-hoc/hinh-hoc-affine');
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Hình học Affine' }),
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Hình học Affine và hình học Euclide',
+      }),
     ).toBeInTheDocument();
     expect(screen.getByText('Khái niệm Không gian Affine và Quy tắc Chasles')).toBeInTheDocument();
   });

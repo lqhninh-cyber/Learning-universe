@@ -25,7 +25,7 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(ctds?.sources.primary).toBe('gt-ctds-hvk-2026');
 
     const affine = getSubjects().find((s) => s.id === 'affine-geometry');
-    expect(affine?.sources.primary).toBeNull();
+    expect(affine?.sources.primary).toBe('gt-hhcc-nmh-2004');
   });
 
   it('nạp và hiển thị bài học mẫu Cấu trúc đại số với đầy đủ số hiệu, KaTeX, Ref và Proof', async () => {

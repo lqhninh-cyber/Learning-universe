@@ -139,9 +139,11 @@ describe('Giai đoạn 4 — Giao diện SourcePanel, SubjectBibliography & Tran
     expect(screen.getByText('Nửa nhóm, vị nhóm, nhóm và các hệ quả đầu tiên')).toBeInTheDocument();
     expect(screen.getByText('Khái niệm Không gian Affine và Quy tắc Chasles')).toBeInTheDocument();
 
-    // Lọc theo môn Hình học Affine
+    // Lọc theo môn Hình học Affine và hình học Euclide
     const subjectGroup = screen.getByRole('group', { name: /Lọc theo môn học/i });
-    await user.click(within(subjectGroup).getByRole('button', { name: 'Hình học Affine' }));
+    await user.click(
+      within(subjectGroup).getByRole('button', { name: 'Hình học Affine và hình học Euclide' }),
+    );
 
     expect(screen.getByText('Khái niệm Không gian Affine và Quy tắc Chasles')).toBeInTheDocument();
     expect(

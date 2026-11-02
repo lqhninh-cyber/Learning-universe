@@ -119,7 +119,7 @@ export function SubjectOverviewPage() {
 
       {/* Khối Phòng Lab tương tác chuyên sâu cho Hình học Affine và hình học Euclide */}
       {subject.slug === 'hinh-hoc-affine' && (
-        <Card className="border-subject-200/90 bg-gradient-to-br from-subject-50/50 via-white to-stone-50/70 p-6 sm:p-8 shadow-xs">
+        <Card className="border-subject-200/90 from-subject-50/50 bg-gradient-to-br via-white to-stone-50/70 p-6 shadow-xs sm:p-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
@@ -133,7 +133,10 @@ export function SubjectOverviewPage() {
                 Phòng Lab &amp; Ôn tập tương tác Hình học cao cấp
               </h2>
               <p className="max-w-2xl text-sm leading-relaxed text-stone-600">
-                Toàn bộ tài liệu bài giảng 3 chương (Không gian afin, Không gian Ơclit, Không gian xạ ảnh) tích hợp cùng hệ thống 61 bài tập có gợi ý và giải chi tiết từng bước, 47 câu trắc nghiệm nhanh, bộ luyện tính toán tự sinh số liệu và chế độ thi thử thông minh.
+                Toàn bộ tài liệu bài giảng 3 chương (Không gian afin, Không gian Ơclit, Không gian
+                xạ ảnh) tích hợp cùng hệ thống 61 bài tập có gợi ý và giải chi tiết từng bước, 47
+                câu trắc nghiệm nhanh, bộ luyện tính toán tự sinh số liệu và chế độ thi thử thông
+                minh.
               </p>
             </div>
             <div className="shrink-0">

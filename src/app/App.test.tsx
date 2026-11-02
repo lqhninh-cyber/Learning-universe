@@ -34,7 +34,9 @@ describe('App routing smoke test', () => {
     expect(algebraLinks.length).toBeGreaterThan(0);
     expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');
 
-    const affineLinks = screen.getAllByRole('link', { name: 'Hình học Affine' });
+    const affineLinks = screen.getAllByRole('link', {
+      name: 'Hình học Affine và hình học Euclide',
+    });
     expect(affineLinks.length).toBeGreaterThan(0);
     expect(affineLinks[0]).toHaveAttribute('href', '/mon-hoc/hinh-hoc-affine');
   });

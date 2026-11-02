@@ -2,6 +2,8 @@
 # không để Prettier tự định dạng lại MDX, LaTeX hay YAML.
 content/
 tests/fixtures/content/
+raw-data/
+public/interactive/
 dist/
 node_modules/
 coverage/
