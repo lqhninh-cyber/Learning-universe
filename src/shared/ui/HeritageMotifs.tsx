@@ -1,10 +1,76 @@
 import { cn } from '@/shared/lib/cn';
 
 /**
- * Họa tiết vòng tròn đồng tâm Đông Sơn (Đồ họa nền Hero)
- * Lớp 1: Di sản tri thức — Vòng tròn lan tỏa tri thức toán học.
+ * HỌA TIẾT TRỐNG ĐỒNG ĐÔNG SƠN NÂNG CAO (Dong Son Drum Visual Landmark)
+ * Kết hợp 6 vành hoa văn đặc trưng của trống đồng Ngọc Lũ / Hoàng Hạ:
+ * - Tâm: Mặt trời 14 tia nhọn xen kẽ họa tiết lông đuôi chim / lông công.
+ * - Vành 1: Chuỗi hạt vừng chấm tròn đồng tâm.
+ * - Vành 2: Vành răng cưa / răng lược tam giác đối xứng.
+ * - Vành 3: Đàn chim Lạc bay sải cánh ngược chiều kim đồng hồ (khí động học cổ điển).
+ * - Vành 4: Vòng tròn kép có tâm điểm nối tiếp tuyến.
+ * - Vành 5: Hoa văn thổ cẩm quả trám hình thoi liên hoàn.
+ * - Vành 6: Vòng nan nón lá xoắn ốc lan tỏa ra không gian 2.5D.
  */
-export function DongSonConcentricMotif({ className }: { readonly className?: string }) {
+export function DongSonDrumVisual({ className }: { readonly className?: string }) {
+  // Tạo 14 cánh mặt trời Đông Sơn
+  const sunRays = Array.from({ length: 14 }).map((_, i) => {
+    const angle = (i * 2 * Math.PI) / 14;
+    const nextAngle = ((i + 0.5) * 2 * Math.PI) / 14;
+    const prevAngle = ((i - 0.5) * 2 * Math.PI) / 14;
+    const rTip = 72;
+    const rBase = 22;
+    const xTip = 300 + rTip * Math.cos(angle);
+    const yTip = 300 + rTip * Math.sin(angle);
+    const xBase1 = 300 + rBase * Math.cos(prevAngle);
+    const yBase1 = 300 + rBase * Math.sin(prevAngle);
+    const xBase2 = 300 + rBase * Math.cos(nextAngle);
+    const yBase2 = 300 + rBase * Math.sin(nextAngle);
+    return `M 300 300 L ${xBase1.toFixed(1)} ${yBase1.toFixed(1)} L ${xTip.toFixed(1)} ${yTip.toFixed(1)} L ${xBase2.toFixed(1)} ${yBase2.toFixed(1)} Z`;
+  });
+
+  // Tạo 6 chú chim Lạc bay sải cánh ngược chiều kim đồng hồ
+  const lacBirds = Array.from({ length: 6 }).map((_, i) => {
+    const baseAngle = (i * 2 * Math.PI) / 6;
+    const rotDeg = (baseAngle * 180) / Math.PI + 90;
+    // Bán kính quỹ đạo bay: r = 180
+    const cx = 300 + 178 * Math.cos(baseAngle);
+    const cy = 300 + 178 * Math.sin(baseAngle);
+    return (
+      <g
+        key={i}
+        transform={`translate(${cx.toFixed(1)}, ${cy.toFixed(1)}) rotate(${rotDeg.toFixed(1)}) scale(0.85)`}
+      >
+        {/* Mỏ chim dài, đầu và mắt */}
+        <path d="M 0 -22 L 2 -10 L 0 -8 L -2 -10 Z" fill="currentColor" fillOpacity="0.8" />
+        <circle cx="0" cy="-9" r="0.8" fill="#8b302d" />
+        {/* Thân chim thon vuốt cong */}
+        <path
+          d="M 0 -8 C 4 -2, 4 8, 0 16 C -4 8, -4 -2, 0 -8 Z"
+          fill="currentColor"
+          fillOpacity="0.75"
+        />
+        {/* Cánh phải sải rộng xòe răng lược */}
+        <path
+          d="M 2 -4 C 12 -8, 26 -4, 32 4 C 24 6, 14 4, 3 2 Z"
+          fill="currentColor"
+          fillOpacity="0.6"
+        />
+        <line x1="10" y1="-2" x2="16" y2="3" stroke="currentColor" strokeWidth="0.75" />
+        <line x1="18" y1="-1" x2="24" y2="4" stroke="currentColor" strokeWidth="0.75" />
+        {/* Cánh trái thuôn gọn */}
+        <path
+          d="M -2 -4 C -12 -8, -26 -4, -32 4 C -24 6, -14 4, -3 2 Z"
+          fill="currentColor"
+          fillOpacity="0.6"
+        />
+        <line x1="-10" y1="-2" x2="-16" y2="3" stroke="currentColor" strokeWidth="0.75" />
+        <line x1="-18" y1="-1" x2="-24" y2="4" stroke="currentColor" strokeWidth="0.75" />
+        {/* Đuôi chim xòe 3 nhánh bay lượn */}
+        <path d="M 0 16 L -5 28 L 0 25 L 5 28 Z" fill="currentColor" fillOpacity="0.7" />
+      </g>
+    );
+  });
+
   return (
     <svg
       viewBox="0 0 600 600"
@@ -13,41 +79,30 @@ export function DongSonConcentricMotif({ className }: { readonly className?: str
       className={cn('pointer-events-none select-none', className)}
       aria-hidden="true"
     >
-      <circle
-        cx="300"
-        cy="300"
-        r="48"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeDasharray="3 3"
-      />
-      <circle cx="300" cy="300" r="96" stroke="currentColor" strokeWidth="0.75" />
-      <circle
-        cx="300"
-        cy="300"
-        r="148"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeDasharray="4 4"
-      />
-      <circle cx="300" cy="300" r="204" stroke="currentColor" strokeWidth="0.75" />
-      <circle
-        cx="300"
-        cy="300"
-        r="256"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeDasharray="6 4"
-      />
-      <circle cx="300" cy="300" r="290" stroke="currentColor" strokeWidth="0.75" />
+      {/* Vòng hào quang nền mờ */}
+      <circle cx="300" cy="300" r="290" fill="url(#dg-ambient)" />
 
-      {/* 8 tia mặt trời kỷ hà hình thoi tối giản */}
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i * Math.PI) / 4;
-        const x1 = 300 + 48 * Math.cos(angle);
-        const y1 = 300 + 48 * Math.sin(angle);
-        const x2 = 300 + 290 * Math.cos(angle);
-        const y2 = 300 + 290 * Math.sin(angle);
+      {/* 1. Mặt trời 14 tia trung tâm */}
+      <circle cx="300" cy="300" r="22" fill="currentColor" fillOpacity="0.85" />
+      <circle cx="300" cy="300" r="8" fill="#8b302d" fillOpacity="0.9" />
+      {sunRays.map((d, idx) => (
+        <path
+          key={idx}
+          d={d}
+          fill="currentColor"
+          fillOpacity="0.85"
+          stroke="currentColor"
+          strokeWidth="0.5"
+        />
+      ))}
+
+      {/* Vành lông đuôi công xen giữa các tia */}
+      {Array.from({ length: 14 }).map((_, i) => {
+        const angle = ((i + 0.5) * 2 * Math.PI) / 14;
+        const x1 = 300 + 42 * Math.cos(angle);
+        const y1 = 300 + 42 * Math.sin(angle);
+        const x2 = 300 + 68 * Math.cos(angle);
+        const y2 = 300 + 68 * Math.sin(angle);
         return (
           <line
             key={i}
@@ -56,20 +111,227 @@ export function DongSonConcentricMotif({ className }: { readonly className?: str
             x2={x2}
             y2={y2}
             stroke="currentColor"
-            strokeWidth="0.5"
-            strokeDasharray="2 4"
+            strokeWidth="0.75"
+            strokeDasharray="2 2"
+            strokeOpacity="0.6"
           />
         );
       })}
 
-      {/* Điểm nhấn vòng tròn ngoại vi */}
-      {Array.from({ length: 16 }).map((_, i) => {
-        const angle = (i * Math.PI) / 8;
-        const cx = 300 + 204 * Math.cos(angle);
-        const cy = 300 + 204 * Math.sin(angle);
-        return <circle key={i} cx={cx} cy={cy} r="2" fill="currentColor" fillOpacity="0.6" />;
+      {/* 2. Vành hạt vừng (Stippling Ring r = 85..95) */}
+      <circle cx="300" cy="300" r="82" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+      <circle cx="300" cy="300" r="96" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+      {Array.from({ length: 28 }).map((_, i) => {
+        const angle = (i * 2 * Math.PI) / 28;
+        const cx = 300 + 89 * Math.cos(angle);
+        const cy = 300 + 89 * Math.sin(angle);
+        return <circle key={i} cx={cx} cy={cy} r="1.5" fill="currentColor" fillOpacity="0.75" />;
       })}
+
+      {/* 3. Vành răng cưa nhọn (Serrated Teeth Ring r = 108..130) */}
+      <circle cx="300" cy="300" r="108" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+      <circle cx="300" cy="300" r="132" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+      {Array.from({ length: 28 }).map((_, i) => {
+        const a1 = (i * 2 * Math.PI) / 28;
+        const a2 = ((i + 0.5) * 2 * Math.PI) / 28;
+        const a3 = ((i + 1) * 2 * Math.PI) / 28;
+        const x1 = 300 + 108 * Math.cos(a1);
+        const y1 = 300 + 108 * Math.sin(a1);
+        const xTip = 300 + 132 * Math.cos(a2);
+        const yTip = 300 + 132 * Math.sin(a2);
+        const x2 = 300 + 108 * Math.cos(a3);
+        const y2 = 300 + 108 * Math.sin(a3);
+        return (
+          <path
+            key={i}
+            d={`M ${x1.toFixed(1)} ${y1.toFixed(1)} L ${xTip.toFixed(1)} ${yTip.toFixed(1)} L ${x2.toFixed(1)} ${y2.toFixed(1)}`}
+            stroke="currentColor"
+            strokeWidth="0.75"
+            fill="currentColor"
+            fillOpacity="0.15"
+          />
+        );
+      })}
+
+      {/* 4. Vành chim Lạc bay (Lac Bird Ring r = 145..215) */}
+      <circle
+        cx="300"
+        cy="300"
+        r="146"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeOpacity="0.8"
+      />
+      <circle
+        cx="300"
+        cy="300"
+        r="212"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeOpacity="0.8"
+      />
+      {lacBirds}
+
+      {/* 5. Vành vòng tròn kép có tâm (Concentric Eyelets r = 222..244) */}
+      <circle cx="300" cy="300" r="222" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+      <circle cx="300" cy="300" r="244" stroke="currentColor" strokeWidth="1" strokeOpacity="0.7" />
+      {Array.from({ length: 24 }).map((_, i) => {
+        const angle = (i * 2 * Math.PI) / 24;
+        const nextAngle = ((i + 1) * 2 * Math.PI) / 24;
+        const cx = 300 + 233 * Math.cos(angle);
+        const cy = 300 + 233 * Math.sin(angle);
+        const nextCx = 300 + 233 * Math.cos(nextAngle);
+        const nextCy = 300 + 233 * Math.sin(nextAngle);
+        return (
+          <g key={i}>
+            <circle
+              cx={cx}
+              cy={cy}
+              r="4.5"
+              stroke="currentColor"
+              strokeWidth="0.75"
+              strokeOpacity="0.8"
+            />
+            <circle cx={cx} cy={cy} r="1.5" fill="currentColor" fillOpacity="0.9" />
+            <line
+              x1={cx}
+              y1={cy}
+              x2={nextCx}
+              y2={nextCy}
+              stroke="currentColor"
+              strokeWidth="0.5"
+              strokeOpacity="0.5"
+            />
+          </g>
+        );
+      })}
+
+      {/* 6. Vành thổ cẩm quả trám hình thoi (Diamond Brocade Ring r = 252..276) */}
+      <circle
+        cx="300"
+        cy="300"
+        r="252"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeOpacity="0.75"
+      />
+      <circle
+        cx="300"
+        cy="300"
+        r="278"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeOpacity="0.75"
+      />
+      {Array.from({ length: 24 }).map((_, i) => {
+        const a1 = (i * 2 * Math.PI) / 24;
+        const aMid = ((i + 0.5) * 2 * Math.PI) / 24;
+        const a2 = ((i + 1) * 2 * Math.PI) / 24;
+        const xLeft = 300 + 265 * Math.cos(a1);
+        const yLeft = 300 + 265 * Math.sin(a1);
+        const xTop = 300 + 278 * Math.cos(aMid);
+        const yTop = 300 + 278 * Math.sin(aMid);
+        const xRight = 300 + 265 * Math.cos(a2);
+        const yRight = 300 + 265 * Math.sin(a2);
+        const xBottom = 300 + 252 * Math.cos(aMid);
+        const yBottom = 300 + 252 * Math.sin(aMid);
+        return (
+          <g key={i}>
+            <polygon
+              points={`${xLeft.toFixed(1)},${yLeft.toFixed(1)} ${xTop.toFixed(1)},${yTop.toFixed(1)} ${xRight.toFixed(1)},${yRight.toFixed(1)} ${xBottom.toFixed(1)},${yBottom.toFixed(1)}`}
+              stroke="currentColor"
+              strokeWidth="0.75"
+              fill="currentColor"
+              fillOpacity="0.12"
+            />
+            <circle
+              cx={300 + 265 * Math.cos(aMid)}
+              cy={300 + 265 * Math.sin(aMid)}
+              r="1"
+              fill="currentColor"
+            />
+          </g>
+        );
+      })}
+
+      {/* 7. Vành ngoài cùng: Cấu trúc nan nón lá xoắn ốc (Logarithmic Conical Rays) */}
+      <circle
+        cx="300"
+        cy="300"
+        r="290"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeOpacity="0.8"
+      />
+      {Array.from({ length: 16 }).map((_, i) => {
+        const angle = (i * 2 * Math.PI) / 16;
+        const x1 = 300 + 278 * Math.cos(angle);
+        const y1 = 300 + 278 * Math.sin(angle);
+        const x2 = 300 + 298 * Math.cos(angle + 0.08);
+        const y2 = 300 + 298 * Math.sin(angle + 0.08);
+        return (
+          <line
+            key={i}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeOpacity="0.6"
+          />
+        );
+      })}
+
+      {/* Định nghĩa Gradient ánh kim đồng */}
+      <defs>
+        <radialGradient id="dg-ambient" cx="300" cy="300" r="290" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#b89555" stopOpacity="0.12" />
+          <stop offset="60%" stopColor="#173e35" stopOpacity="0.06" />
+          <stop offset="100%" stopColor="#f7f4ec" stopOpacity="0" />
+        </radialGradient>
+      </defs>
     </svg>
+  );
+}
+
+/**
+ * Họa tiết vòng tròn đồng tâm Đông Sơn (Tương thích ngược nhưng nâng cấp độ sắc nét)
+ */
+export function DongSonConcentricMotif({ className }: { readonly className?: string }) {
+  return <DongSonDrumVisual className={className} />;
+}
+
+/**
+ * DẢI HOA VĂN HỒI VĂN / RĂNG LƯỢC TRUYỀN THỐNG (Traditional Meander Border)
+ * Sử dụng làm dải viền trang nhã dưới Navbar hoặc đỉnh các Card môn học.
+ */
+export function TraditionalMeanderBorder({ className }: { readonly className?: string }) {
+  return (
+    <div
+      className={cn('h-1.5 w-full overflow-hidden opacity-80 select-none', className)}
+      aria-hidden="true"
+    >
+      <svg
+        width="100%"
+        height="6"
+        viewBox="0 0 400 6"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="repeat-x"
+      >
+        <pattern id="meander-pat" x="0" y="0" width="20" height="6" patternUnits="userSpaceOnUse">
+          <path
+            d="M 0 5 L 8 5 L 8 1 L 14 1 L 14 3 L 11 3 L 11 4 L 17 4 L 17 1 L 20 1"
+            stroke="#b89555"
+            strokeWidth="0.8"
+            strokeLinecap="square"
+          />
+          <circle cx="4" cy="2.5" r="0.75" fill="#8b302d" />
+        </pattern>
+        <rect width="100%" height="6" fill="url(#meander-pat)" />
+      </svg>
+    </div>
   );
 }
 
@@ -156,20 +418,20 @@ export function HeritageDivider({ className }: { readonly className?: string }) 
       className={cn('flex items-center justify-center gap-2.5 py-4 select-none', className)}
       aria-hidden="true"
     >
-      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#ddd5c3] to-[#b89555]/50" />
-      <div className="flex items-center gap-1 text-[#b89555]">
-        <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#ddd5c3] to-[#b89555]/60" />
+      <div className="flex items-center gap-1.5 text-[#b89555]">
+        <svg width="24" height="14" viewBox="0 0 24 14" fill="none">
           <path
-            d="M10 0L17 6L10 12L3 6L10 0Z"
+            d="M12 0L22 7L12 14L2 7L12 0Z"
             fill="currentColor"
             fillOpacity="0.25"
             stroke="currentColor"
-            strokeWidth="0.75"
+            strokeWidth="0.8"
           />
-          <circle cx="10" cy="6" r="1.5" fill="currentColor" />
+          <circle cx="12" cy="7" r="2" fill="#8b302d" />
         </svg>
       </div>
-      <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#ddd5c3] to-[#b89555]/50" />
+      <div className="h-px flex-1 bg-gradient-to-l from-transparent via-[#ddd5c3] to-[#b89555]/60" />
     </div>
   );
 }
@@ -180,31 +442,58 @@ export function HeritageDivider({ className }: { readonly className?: string }) 
 export function KagomeWeaveDivider({ className }: { readonly className?: string }) {
   return (
     <div
-      className={cn('w-full overflow-hidden py-1 opacity-60 select-none', className)}
+      className={cn('w-full overflow-hidden py-1.5 opacity-75 select-none', className)}
       aria-hidden="true"
     >
       <svg
         width="100%"
-        height="8"
-        viewBox="0 0 1200 8"
+        height="10"
+        viewBox="0 0 1200 10"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
       >
         <line
           x1="0"
-          y1="4"
+          y1="5"
           x2="1200"
-          y2="4"
+          y2="5"
           stroke="#ddd5c3"
           strokeWidth="0.75"
           strokeDasharray="6 3 2 3"
         />
-        <circle cx="300" cy="4" r="2" fill="#b89555" />
-        <circle cx="600" cy="4" r="2.5" fill="#173e35" />
-        <circle cx="900" cy="4" r="2" fill="#b89555" />
+        <circle cx="200" cy="5" r="2" fill="#b89555" />
+        <circle cx="400" cy="5" r="2.5" fill="#173e35" />
+        <circle cx="600" cy="5" r="3" fill="#8b302d" />
+        <circle cx="800" cy="5" r="2.5" fill="#173e35" />
+        <circle cx="1000" cy="5" r="2" fill="#b89555" />
       </svg>
     </div>
+  );
+}
+
+/**
+ * Họa tiết góc mộc bản đình làng (Woodblock Corner Motif) cho Thư viện tri thức
+ */
+export function WoodblockCornerMotif({ className }: { readonly className?: string }) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('text-vn-accent pointer-events-none select-none', className)}
+      aria-hidden="true"
+    >
+      <path
+        d="M 2 18 L 2 2 L 18 2"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="square"
+      />
+      <rect x="4" y="4" width="3" height="3" fill="currentColor" fillOpacity="0.4" />
+    </svg>
   );
 }
 

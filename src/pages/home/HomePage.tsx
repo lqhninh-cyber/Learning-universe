@@ -24,13 +24,15 @@ import {
   Button,
   Card,
   DefinitionPillarMotif,
-  DongSonConcentricMotif,
+  DongSonDrumVisual,
   ExamplePillarMotif,
   ExercisePillarMotif,
   HeritageDivider,
   ProofPillarMotif,
   TheoremPillarMotif,
   TheoryPillarMotif,
+  TraditionalMeanderBorder,
+  WoodblockCornerMotif,
 } from '@/shared/ui';
 
 export function HomePage() {
@@ -95,85 +97,125 @@ export function HomePage() {
         onMouseLeave={handleMouseLeave}
         className="border-vn-border/70 from-vn-surface/40 via-vn-surface/20 relative overflow-hidden rounded-3xl border bg-gradient-to-b to-transparent p-6 shadow-xs sm:p-10 lg:p-12"
       >
-        {/* Đồ họa SVG vòng tròn đồng tâm Đông Sơn mờ nhẹ với hiệu ứng parallax 2.5D */}
+        {/* Đồ họa SVG chim Lạc và Trống đồng Đông Sơn mờ nền cho màn hình nhỏ */}
         <div
-          className="pointer-events-none absolute -top-24 -right-20 transition-transform duration-300 ease-out sm:-top-16 sm:-right-16"
+          className="pointer-events-none absolute -top-24 -right-20 transition-transform duration-300 ease-out sm:-top-16 sm:-right-16 lg:hidden"
           style={{
             transform: `translate3d(${parallaxOffset.x}px, ${parallaxOffset.y}px, 0)`,
           }}
           aria-hidden="true"
         >
-          <DongSonConcentricMotif className="text-vn-accent h-[440px] w-[440px] opacity-[0.14] sm:h-[540px] sm:w-[540px]" />
+          <DongSonDrumVisual className="text-vn-accent h-[440px] w-[440px] opacity-[0.16] sm:h-[540px] sm:w-[540px]" />
         </div>
 
-        <div className="relative z-10 space-y-6">
-          {/* Eyebrow */}
-          <div className="border-vn-accent/40 bg-vn-surface/80 text-vn-primary inline-flex items-center gap-2 rounded-full border px-4 py-1 text-xs font-semibold tracking-wider uppercase">
-            <span className="bg-vn-secondary h-2 w-2 rounded-full" />
-            <span>KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI</span>
-          </div>
+        <div className="relative z-10 grid gap-8 lg:grid-cols-12 lg:items-center">
+          {/* Cột trái: Văn bản & Thao tác chính */}
+          <div className="space-y-6 lg:col-span-7">
+            {/* Eyebrow */}
+            <div className="border-vn-accent/40 bg-vn-surface/80 text-vn-primary inline-flex items-center gap-2 rounded-full border px-4 py-1 text-xs font-semibold tracking-wider uppercase">
+              <span className="bg-vn-secondary h-2 w-2 rounded-full" />
+              <span>KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI</span>
+            </div>
 
-          {/* Tiêu đề cấp 1 H1 bảo toàn kiểm thử tự động và yêu cầu người dùng */}
-          <div className="space-y-3">
-            <h1 className="space-y-1.5">
-              <span className="text-vn-accent block text-xs font-semibold tracking-widest uppercase sm:text-sm">
-                Không gian học tập Toán học đại học
-              </span>
-              <span className="text-vn-text block text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-                KHAI MỞ TRI THỨC <br className="hidden sm:inline" />
-                <span className="text-vn-primary">KẾT NỐI TƯƠNG LAI</span>
-              </span>
-            </h1>
+            {/* Tiêu đề cấp 1 H1 bảo toàn kiểm thử tự động và yêu cầu người dùng */}
+            <div className="space-y-3">
+              <h1 className="space-y-1.5">
+                <span className="text-vn-accent block text-xs font-semibold tracking-widest uppercase sm:text-sm">
+                  Không gian học tập Toán học đại học
+                </span>
+                <span className="text-vn-text block text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-5xl xl:text-6xl">
+                  KHAI MỞ TRI THỨC <br className="hidden sm:inline" />
+                  <span className="text-vn-primary">KẾT NỐI TƯƠNG LAI</span>
+                </span>
+              </h1>
 
-            <p className="text-vn-muted max-w-2xl text-base leading-relaxed sm:text-lg">
-              Learning Universe là không gian học tập nơi tri thức được hệ thống hóa, khám phá và
-              kết nối thông qua những trải nghiệm học tập trực quan, hiện đại cho sinh viên Sư phạm
-              Toán học.
-            </p>
-          </div>
+              <p className="text-vn-muted max-w-2xl text-base leading-relaxed sm:text-lg">
+                Learning Universe là không gian học tập nơi tri thức được hệ thống hóa, khám phá và
+                kết nối thông qua những trải nghiệm học tập trực quan, hiện đại cho sinh viên Sư
+                phạm Toán học.
+              </p>
+            </div>
 
-          {/* Hành động kép (Dual CTA) */}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <Button
-              type="button"
-              variant="primary"
-              size="lg"
-              onClick={scrollToSubjects}
-              className="bg-vn-primary hover:bg-vn-primary-hover text-white shadow-xs"
-            >
-              <span>Khám phá môn học</span>
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Button>
-
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-vn-border bg-vn-surface-card hover:border-vn-primary text-vn-text"
-            >
-              <Link
-                to={
-                  lastLocation
-                    ? ROUTES.lesson(
-                        lastLocation.subject.slug,
-                        lastLocation.chapter.slug,
-                        lastLocation.lesson.slug,
-                      )
-                    : ROUTES.lesson(
-                        'cau-truc-dai-so',
-                        '00-nhap-mon',
-                        '01-tap-hop-anh-xa-va-cong-cu-so-hoc',
-                      )
-                }
+            {/* Hành động kép (Dual CTA) */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <Button
+                type="button"
+                variant="primary"
+                size="lg"
+                onClick={scrollToSubjects}
+                className="bg-vn-primary hover:bg-vn-primary-hover text-white shadow-xs"
               >
-                <span>Bắt đầu hành trình</span>
-              </Link>
-            </Button>
+                <span>Khám phá môn học</span>
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-vn-border bg-vn-surface-card hover:border-vn-primary text-vn-text"
+              >
+                <Link
+                  to={
+                    lastLocation
+                      ? ROUTES.lesson(
+                          lastLocation.subject.slug,
+                          lastLocation.chapter.slug,
+                          lastLocation.lesson.slug,
+                        )
+                      : ROUTES.lesson(
+                          'cau-truc-dai-so',
+                          '00-nhap-mon',
+                          '01-tap-hop-anh-xa-va-cong-cu-so-hoc',
+                        )
+                  }
+                >
+                  <span>Bắt đầu hành trình</span>
+                </Link>
+              </Button>
+            </div>
+
+            {/* Thanh tìm kiếm tức thời */}
+            <div className="pt-2">
+              <SearchBar className="max-w-xl" />
+            </div>
           </div>
 
-          {/* Thanh tìm kiếm tức thời */}
-          <div className="pt-2">
-            <SearchBar className="max-w-2xl" />
+          {/* Cột phải: Biểu tượng Thị giác Di sản Tri thức Việt Nam (Hero Cultural Landmark Card) */}
+          <div className="hidden lg:col-span-5 lg:flex lg:flex-col lg:items-center lg:justify-center">
+            <div
+              className="border-vn-border/70 bg-vn-surface-card/85 relative flex w-full max-w-[360px] flex-col items-center justify-center overflow-hidden rounded-3xl border p-7 shadow-sm backdrop-blur-xs transition-transform duration-300 ease-out"
+              style={{
+                transform: `translate3d(${parallaxOffset.x}px, ${parallaxOffset.y}px, 0)`,
+              }}
+            >
+              {/* Bốn mộng gỗ góc thẻ truyền thống */}
+              <WoodblockCornerMotif className="text-vn-accent/35 absolute top-2.5 left-2.5 h-4 w-4" />
+              <WoodblockCornerMotif className="text-vn-accent/35 absolute top-2.5 right-2.5 h-4 w-4 -scale-x-100" />
+              <WoodblockCornerMotif className="text-vn-accent/35 absolute bottom-2.5 left-2.5 h-4 w-4 -scale-y-100" />
+              <WoodblockCornerMotif className="text-vn-accent/35 absolute right-2.5 bottom-2.5 h-4 w-4 -scale-100" />
+
+              {/* Trống đồng Đông Sơn trung tâm sắc nét, tỉ mỉ */}
+              <div className="relative flex h-64 w-64 items-center justify-center">
+                <DongSonDrumVisual className="text-vn-primary h-full w-full" />
+              </div>
+
+              {/* Nhãn nhận diện di sản học thuật */}
+              <div className="mt-4 w-full space-y-2 text-center">
+                <div className="border-vn-secondary/30 bg-vn-secondary/10 text-vn-secondary inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold tracking-wide">
+                  <span className="bg-vn-secondary h-1.5 w-1.5 rounded-full" />
+                  <span>Di sản Tri thức & Văn hóa Việt</span>
+                </div>
+                <p className="text-vn-muted text-[11px] leading-snug">
+                  10 Chương · 40 Bài học · Mã nguồn mở 100%
+                </p>
+              </div>
+
+              {/* Dải hồi văn đáy thẻ */}
+              <div className="mt-3 w-full">
+                <TraditionalMeanderBorder className="text-vn-accent/30" />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -238,7 +280,8 @@ export function HomePage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* 1. Lý thuyết */}
-          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 space-y-2.5 rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 relative space-y-2.5 overflow-hidden rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+            <WoodblockCornerMotif className="text-vn-accent/30 pointer-events-none absolute top-2 right-2 h-3.5 w-3.5" />
             <div className="flex items-center gap-3">
               <div className="border-vn-border bg-vn-surface/60 text-vn-primary flex h-9 w-9 items-center justify-center rounded-xl border">
                 <TheoryPillarMotif />
@@ -252,7 +295,8 @@ export function HomePage() {
           </Card>
 
           {/* 2. Định nghĩa */}
-          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 space-y-2.5 rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 relative space-y-2.5 overflow-hidden rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+            <WoodblockCornerMotif className="text-vn-accent/30 pointer-events-none absolute top-2 right-2 h-3.5 w-3.5" />
             <div className="flex items-center gap-3">
               <div className="border-vn-border bg-vn-surface/60 text-vn-primary flex h-9 w-9 items-center justify-center rounded-xl border">
                 <DefinitionPillarMotif />
@@ -266,7 +310,8 @@ export function HomePage() {
           </Card>
 
           {/* 3. Định lý & Bổ đề */}
-          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 space-y-2.5 rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 relative space-y-2.5 overflow-hidden rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+            <WoodblockCornerMotif className="text-vn-accent/30 pointer-events-none absolute top-2 right-2 h-3.5 w-3.5" />
             <div className="flex items-center gap-3">
               <div className="border-vn-border bg-vn-surface/60 text-vn-accent flex h-9 w-9 items-center justify-center rounded-xl border">
                 <TheoremPillarMotif />
@@ -280,7 +325,8 @@ export function HomePage() {
           </Card>
 
           {/* 4. Chứng minh */}
-          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 space-y-2.5 rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 relative space-y-2.5 overflow-hidden rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+            <WoodblockCornerMotif className="text-vn-accent/30 pointer-events-none absolute top-2 right-2 h-3.5 w-3.5" />
             <div className="flex items-center gap-3">
               <div className="border-vn-border bg-vn-surface/60 text-vn-secondary flex h-9 w-9 items-center justify-center rounded-xl border">
                 <ProofPillarMotif />
@@ -294,7 +340,8 @@ export function HomePage() {
           </Card>
 
           {/* 5. Ví dụ trực quan */}
-          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 space-y-2.5 rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 relative space-y-2.5 overflow-hidden rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+            <WoodblockCornerMotif className="text-vn-accent/30 pointer-events-none absolute top-2 right-2 h-3.5 w-3.5" />
             <div className="flex items-center gap-3">
               <div className="border-vn-border bg-vn-surface/60 text-vn-primary flex h-9 w-9 items-center justify-center rounded-xl border">
                 <ExamplePillarMotif />
@@ -308,7 +355,8 @@ export function HomePage() {
           </Card>
 
           {/* 6. Bài tập & Lời giải */}
-          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 space-y-2.5 rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+          <Card className="border-vn-border/80 bg-vn-surface-card hover:border-vn-primary/40 relative space-y-2.5 overflow-hidden rounded-2xl p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs">
+            <WoodblockCornerMotif className="text-vn-accent/30 pointer-events-none absolute top-2 right-2 h-3.5 w-3.5" />
             <div className="flex items-center gap-3">
               <div className="border-vn-border bg-vn-surface/60 text-vn-primary flex h-9 w-9 items-center justify-center rounded-xl border">
                 <ExercisePillarMotif />
@@ -344,6 +392,7 @@ export function HomePage() {
         </div>
 
         <div className="border-vn-border/80 bg-vn-surface-card relative overflow-hidden rounded-3xl border p-6 sm:p-8">
+          <TraditionalMeanderBorder className="text-vn-accent/25 -mt-2 mb-4" />
           {/* Dòng chảy khái niệm trực quan */}
           <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

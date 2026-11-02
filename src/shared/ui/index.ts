@@ -22,6 +22,7 @@ export {
   AlgebraicSymmetryMotif,
   DefinitionPillarMotif,
   DongSonConcentricMotif,
+  DongSonDrumVisual,
   ExamplePillarMotif,
   ExercisePillarMotif,
   HeritageDivider,
@@ -29,5 +30,7 @@ export {
   ProofPillarMotif,
   TheoremPillarMotif,
   TheoryPillarMotif,
+  TraditionalMeanderBorder,
+  WoodblockCornerMotif,
 } from './HeritageMotifs';
 export { badgeVariants, buttonVariants, containerVariants } from './variants';
