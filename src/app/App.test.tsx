@@ -27,7 +27,7 @@ describe('App routing smoke test', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /Không gian học tập Toán học đại học/i,
+        name: /Không gian học tập & Khám phá Toán học/i,
       }),
     ).toBeInTheDocument();
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
@@ -43,9 +43,9 @@ describe('App routing smoke test', () => {
     renderWithProviders('/');
 
     // 1. Eyebrow & Hero Section
-    expect(await screen.findByText('KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI')).toBeInTheDocument();
+    expect(await screen.findByText('CHÀO MỪNG BẠN ĐẾN VỚI LEARNING UNIVERSE')).toBeInTheDocument();
     expect(
-      screen.getByText(/Nền tảng tổng hợp lý thuyết, định nghĩa, định lý/i),
+      screen.getByText(/Nơi lưu trữ và chia sẻ hệ thống bài giảng, định lý/i),
     ).toBeInTheDocument();
 
     // 2. Ô tìm kiếm bài học

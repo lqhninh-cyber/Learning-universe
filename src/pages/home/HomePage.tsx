@@ -69,18 +69,19 @@ export function HomePage() {
           {/* Huy hiệu danh mục học thuật */}
           <div className="inline-flex items-center gap-2 rounded-full border border-[var(--bg-muted)] bg-[var(--bg-surface)] px-4 py-1 text-xs font-semibold tracking-wider text-[var(--accent-primary)] uppercase">
             <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)]" />
-            <span>KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI</span>
+            <span>CHÀO MỪNG BẠN ĐẾN VỚI LEARNING UNIVERSE</span>
           </div>
 
-          {/* Tiêu đề cấp 1 H1 (Font có chân Crimson Pro) và Đoạn mô tả học thuật trực diện */}
+          {/* Tiêu đề cấp 1 H1 (Font có chân Crimson Pro) và Đoạn mô tả học thuật */}
           <div className="space-y-4">
             <h1 className="font-serif text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-4xl lg:text-5xl">
-              Không gian học tập Toán học đại học
+              Không gian học tập & Khám phá Toán học
             </h1>
 
             <p className="mx-auto max-w-2xl text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-              Nền tảng tổng hợp lý thuyết, định nghĩa, định lý, chứng minh và bài tập có hướng dẫn
-              giải chuyên ngành Toán học.
+              Nơi lưu trữ và chia sẻ hệ thống bài giảng, định lý, chứng minh chặt chẽ cùng các
+              chuyên đề bài tập chuyên sâu, đồng hành cùng bạn trên hành trình chinh phục Toán học
+              cao cấp.
             </p>
           </div>
 

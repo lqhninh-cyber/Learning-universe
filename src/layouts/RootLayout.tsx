@@ -97,7 +97,7 @@ export function RootLayout() {
                 variant="neutral"
                 className="border-vn-border bg-vn-surface/60 text-vn-primary hidden font-medium sm:inline-flex"
               >
-                Sư phạm Toán học
+                Toán học
               </Badge>
             </div>
 
@@ -198,7 +198,7 @@ export function RootLayout() {
               <div className="flex items-center gap-2">
                 <GraduationCap className="text-vn-primary h-5 w-5" aria-hidden="true" />
                 <span className="text-vn-text font-bold">Learning Universe</span>
-                <span className="text-vn-muted text-xs">· Sư phạm Toán học</span>
+                <span className="text-vn-muted text-xs">· Toán học</span>
               </div>
               <p className="text-vn-muted max-w-xl text-xs leading-relaxed">
                 Nền tảng học tập Toán học đại học đương đại lấy cảm hứng từ cấu trúc Thư viện đình
