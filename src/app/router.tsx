@@ -57,6 +57,20 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.glossary,
+        lazy: async () => {
+          const { GlossaryPage } = await import('@/pages/glossary/GlossaryPage');
+          return { Component: GlossaryPage };
+        },
+      },
+      {
+        path: '/glossary',
+        lazy: async () => {
+          const { GlossaryPage } = await import('@/pages/glossary/GlossaryPage');
+          return { Component: GlossaryPage };
+        },
+      },
+      {
         path: '/mon-hoc/:subjectSlug',
         Component: SubjectLayout,
         children: [

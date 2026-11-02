@@ -1,0 +1,446 @@
+[
+  {
+    "id": "dang-cau",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["\\cong", "đẳng cấu", "dang cau", "isomorphism"],
+    "symbol": "\\cong",
+    "nameVi": "Đẳng cấu",
+    "nameEn": "Isomorphism",
+    "brief": "Đồng cấu song ánh giữa hai cấu trúc đại số bảo toàn toàn bộ các phép toán tương ứng.",
+    "intuition": "Hai cấu trúc đẳng cấu là bản sao hoàn hảo của nhau về mặt đại số, chỉ khác nhau ở cách đặt tên các phần tử.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/dong-cau-nhom-hat-nhan-va-anh"
+  },
+  {
+    "id": "v4",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["V_4", "V4", "nhóm bốn Klein", "nhom bon Klein", "nhóm Klein", "Klein four-group"],
+    "symbol": "V_4",
+    "nameVi": "Nhóm bốn Klein",
+    "nameEn": "Klein four-group",
+    "brief": "Nhóm cấp 4 nhỏ nhất không cyclic. Gồm 4 phần tử {e, a, b, c}, trong đó mọi phần tử khác đơn vị đều có cấp 2 (x² = e).",
+    "intuition": "Tương đương 4 phép đối xứng của hình chữ nhật phẳng (đứng yên, lật ngang, lật dọc, quay 180°). Đẳng cấu với Z/2Z × Z/2Z.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/cac-ho-nhom-co-ban"
+  },
+  {
+    "id": "nhom-con-chuan-tac",
+    "subject": "cau-truc-dai-so",
+    "patterns": [
+      "\\unlhd",
+      "\\triangleleft",
+      "nhóm con chuẩn tắc",
+      "nhom con chuan tac",
+      "normal subgroup"
+    ],
+    "symbol": "\\unlhd",
+    "nameVi": "Nhóm con chuẩn tắc",
+    "nameEn": "Normal subgroup",
+    "brief": "Nhóm con N của G bất biến dưới mọi phép liên hợp: gNg⁻¹ = N với mọi g ∈ G. Lớp kề trái trùng lớp kề phải.",
+    "intuition": "Điều kiện cần và đủ để tập các lớp kề G/N thừa hưởng phép toán của G và tạo thành nhóm thương.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-con-chuan-tac-nhom-thuong/phep-lien-hop-va-tieu-chuan-chuan-tac"
+  },
+  {
+    "id": "hat-nhan",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["\\ker", "hạt nhân", "hat nhan", "kernel"],
+    "symbol": "\\ker \\varphi",
+    "nameVi": "Hạt nhân đồng cấu",
+    "nameEn": "Kernel",
+    "brief": "Tập hợp tất cả phần tử của nhóm nguồn được ánh xạ về phần tử trung hòa của nhóm đích qua đồng cấu φ.",
+    "intuition": "Đo lường mức độ sai khác giữa φ và đơn ánh: φ là đơn ánh khi và chỉ khi hạt nhân chỉ gồm duy nhất phần tử đơn vị {e}.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/dong-cau-nhom-hat-nhan-va-anh"
+  },
+  {
+    "id": "anh-dong-cau",
+    "subject": "cau-truc-dai-so",
+    "patterns": [
+      "\\operatorname{im}",
+      "\\mathrm{Im}",
+      "ảnh của đồng cấu",
+      "anh cua dong cau",
+      "image"
+    ],
+    "symbol": "\\operatorname{im} \\varphi",
+    "nameVi": "Ảnh của đồng cấu",
+    "nameEn": "Image of homomorphism",
+    "brief": "Tập hợp tất cả các giá trị φ(x) trong nhóm đích; luôn lập thành một nhóm con của nhóm đích.",
+    "intuition": "Đo lường phạm vi bao phủ của đồng cấu: φ là toàn ánh khi và chỉ khi ảnh trùng toàn bộ nhóm đích.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/dong-cau-nhom-hat-nhan-va-anh"
+  },
+  {
+    "id": "nhom-thuong-z-nz",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["\\mathbb{Z}/n\\mathbb{Z}", "\\mathbb{Z}_n", "Z/nZ", "nhóm các lớp thặng dư"],
+    "symbol": "\\mathbb{Z}/n\\mathbb{Z}",
+    "nameVi": "Nhóm thặng dư modulo n",
+    "nameEn": "Integers modulo n",
+    "brief": "Nhóm thương của nhóm số nguyên Z đối với nhóm con nZ, gồm n lớp thặng dư {0̄, 1̄, ..., n-1̄}.",
+    "intuition": "Mô hình số học đồng hồ chu kỳ: khi kim đồng hồ đi hết n đơn vị sẽ quay trở lại mốc 0 ban đầu.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-con-chuan-tac-nhom-thuong/cac-nhom-thuong-kinh-dien"
+  },
+  {
+    "id": "nhom-doi-xung",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["S_n", "nhóm đối xứng", "nhom doi xung", "symmetric group", "nhóm hoán vị"],
+    "symbol": "S_n",
+    "nameVi": "Nhóm đối xứng cấp n",
+    "nameEn": "Symmetric group",
+    "brief": "Nhóm tất cả các hoán vị của n phần tử cùng phép hợp thành ánh xạ, có cấp đúng bằng n!.",
+    "intuition": "Đại diện cho mọi khả năng xáo trộn thứ tự n đối tượng; theo Định lý Cayley, mọi nhóm hữu hạn đều nhúng được vào S_n.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/cac-ho-nhom-co-ban"
+  },
+  {
+    "id": "nhom-nhi-dien",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["D_{2n}", "D_n", "nhóm nhị diện", "nhom nhi dien", "dihedral group"],
+    "symbol": "D_{2n}",
+    "nameVi": "Nhóm nhị diện",
+    "nameEn": "Dihedral group",
+    "brief": "Nhóm các phép đối xứng bảo toàn đa giác đều n cạnh trong mặt phẳng, gồm n phép quay và n phép đối xứng trục.",
+    "intuition": "Minh họa hình học trực quan nhất về tính không giao hoán: phép quay rồi lật khác hoàn toàn với lật rồi mới quay.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/cac-ho-nhom-co-ban"
+  },
+  {
+    "id": "dong-cau",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["đồng cấu", "dong cau", "homomorphism", "đồng cấu nhóm"],
+    "symbol": "\\varphi",
+    "nameVi": "Đồng cấu",
+    "nameEn": "Homomorphism",
+    "brief": "Ánh xạ giữa hai cấu trúc đại số bảo toàn phép toán: ảnh của tích bằng tích các ảnh.",
+    "intuition": "Chiếc cầu nối truyền tải thông tin cấu trúc đại số từ không gian này sang không gian khác mà không làm méo mó phép toán.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/dong-cau-nhom-hat-nhan-va-anh"
+  },
+  {
+    "id": "vanh-thuong",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["R/I", "vành thương", "vanh thuong", "quotient ring"],
+    "symbol": "R/I",
+    "nameVi": "Vành thương",
+    "nameEn": "Quotient ring",
+    "brief": "Vành các lớp kề của vành R theo một iđêan hai phía I, với hai phép cộng và nhân đại diện xác định tốt.",
+    "intuition": "Phép 'thu gọn' vành R bằng cách quy ước mọi phần tử thuộc iđêan I đều tương đương với số 0.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/vanh-thuong-va-tinh-toan-trong-thuong-da-thuc"
+  },
+  {
+    "id": "idean",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["iđêan", "idean", "ideal", "iđêan hai phía"],
+    "symbol": "I \\triangleleft R",
+    "nameVi": "Iđêan",
+    "nameEn": "Ideal",
+    "brief": "Vành con I của vành R có tính chất 'hút': với mọi r ∈ R và x ∈ I thì rx ∈ I và xr ∈ I.",
+    "intuition": "Đóng vai trò trong lý thuyết vành tương đương nhóm con chuẩn tắc: hạt nhân của đồng cấu vành chính là một iđêan.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/idean-giao-tong-va-idean-sinh"
+  },
+  {
+    "id": "idean-nguyen-to",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["iđêan nguyên tố", "idean nguyen to", "prime ideal"],
+    "symbol": "\\mathfrak{p}",
+    "nameVi": "Iđêan nguyên tố",
+    "nameEn": "Prime ideal",
+    "brief": "Iđêan thực sự P của vành giao hoán R thỏa mãn: nếu ab ∈ P thì a ∈ P hoặc b ∈ P. Tương đương với việc vành thương R/P là một miền nguyên.",
+    "intuition": "Sự tổng quát hóa của số nguyên tố: tích hai số chia hết cho p đòi hỏi ít nhất một thừa số phải chia hết cho p.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/idean-nguyen-to-va-idean-cuc-dai"
+  },
+  {
+    "id": "idean-cuc-dai",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["iđêan cực đại", "idean cuc dai", "maximal ideal"],
+    "symbol": "\\mathfrak{m}",
+    "nameVi": "Iđêan cực đại",
+    "nameEn": "Maximal ideal",
+    "brief": "Iđêan thực sự M của vành R không bị chứa trong bất kỳ iđêan thực sự nào khác. Tương đương với việc vành thương R/M là một trường.",
+    "intuition": "Iđêan lớn nhất có thể trước khi bao trùm toàn bộ vành; triệt tiêu nó sẽ giải phóng cấu trúc đại số mạnh nhất là trường.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/idean-nguyen-to-va-idean-cuc-dai"
+  },
+  {
+    "id": "nhom-cyclic",
+    "subject": "cau-truc-dai-so",
+    "patterns": [
+      "\\langle g \\rangle",
+      "nhóm cyclic",
+      "nhom cyclic",
+      "nhóm xiclic",
+      "cyclic group"
+    ],
+    "symbol": "\\langle g \\rangle",
+    "nameVi": "Nhóm cyclic",
+    "nameEn": "Cyclic group",
+    "brief": "Nhóm được sinh bởi duy nhất một phần tử g: mọi phần tử đều có dạng lũy thừa g^k với k ∈ Z.",
+    "intuition": "Cấu trúc nhóm đơn giản và tuần hoàn nhất: nếu hữu hạn cấp n thì đẳng cấu với Z/nZ, nếu vô hạn thì đẳng cấu với Z.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-con-va-nhom-cyclic/cap-cua-phan-tu-va-nhom-cyclic"
+  },
+  {
+    "id": "dinh-ly-lagrange",
+    "subject": "cau-truc-dai-so",
+    "patterns": [
+      "[G:H]",
+      "định lý Lagrange",
+      "dinh ly Lagrange",
+      "Lagrange theorem",
+      "chỉ số nhóm con"
+    ],
+    "symbol": "|G| = [G:H] \\cdot |H|",
+    "nameVi": "Định lý Lagrange",
+    "nameEn": "Lagrange's theorem",
+    "brief": "Trong nhóm hữu hạn G, cấp của mọi nhóm con H và cấp của mọi phần tử đều là ước số của cấp của G.",
+    "intuition": "Phân hoạch nhóm thành các lớp kề có kích thước bằng nhau tuyệt đối, giống như lát sàn bằng các viên gạch đồng kích thước.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc"
+  },
+  {
+    "id": "nhom-thay-phien",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["A_n", "nhóm thay phiên", "nhom thay phien", "alternating group"],
+    "symbol": "A_n",
+    "nameVi": "Nhóm thay phiên cấp n",
+    "nameEn": "Alternating group",
+    "brief": "Nhóm con gồm tất cả các hoán vị chẵn trong nhóm đối xứng S_n, có cấp bằng n!/2.",
+    "intuition": "Nhóm các phép quay bảo toàn khối đa diện đều: A₄ tương ứng khối tứ diện đều, A₅ tương ứng khối 20 mặt đều.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4"
+  },
+  {
+    "id": "mien-nguyen",
+    "subject": "cau-truc-dai-so",
+    "patterns": ["miền nguyên", "mien nguyen", "integral domain"],
+    "symbol": "ab = 0 \\implies a=0 \\lor b=0",
+    "nameVi": "Miền nguyên",
+    "nameEn": "Integral domain",
+    "brief": "Vành giao hoán có đơn vị khác 0 và không có ước của không (tích hai phần tử khác 0 luôn khác 0).",
+    "intuition": "Không gian đại số cho phép áp dụng luật giản ước: ax = ay với a ≠ 0 suy ra x = y, tương tự tập số nguyên Z.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/vanh-va-cac-cau-truc/uoc-cua-khong-mien-nguyen-vanh-chia-va-truong"
+  },
+  {
+    "id": "truong-cac-thuong",
+    "subject": "cau-truc-dai-so",
+    "patterns": [
+      "\\operatorname{Frac}(R)",
+      "trường các thương",
+      "truong cac thuong",
+      "field of fractions"
+    ],
+    "symbol": "\\operatorname{Frac}(R)",
+    "nameVi": "Trường các thương",
+    "nameEn": "Field of fractions",
+    "brief": "Trường nhỏ nhất chứa miền nguyên R, xây dựng từ các lớp tương đương của các cặp phân số (a, b) với b ≠ 0.",
+    "intuition": "Mở rộng tự nhiên giống như cách từ tập số nguyên Z xây dựng nên trường số hữu tỉ Q thông qua các phân số a/b.",
+    "relatedLesson": "/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/phep-dung-truong-cac-thuong-cua-mien-nguyen"
+  },
+  {
+    "id": "khong-gian-afin",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "\\mathbb{A}^n",
+      "không gian afin",
+      "khong gian afin",
+      "không gian affine",
+      "khong gian affine",
+      "affine space"
+    ],
+    "symbol": "\\mathbb{A}^n",
+    "nameVi": "Không gian Affine",
+    "nameEn": "Affine space",
+    "brief": "Tập hợp các điểm gắn với một không gian vectơ liên kết qua ánh xạ thỏa mãn hai hệ thức Chasles của Weyl.",
+    "intuition": "Hình học của các điểm tự do không có gốc tọa độ ưu tiên: chỉ có vector nối giữa hai điểm, không có vector vị trí tuyệt đối.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/khong-gian-affine"
+  },
+  {
+    "id": "muc-tieu-afin",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "mục tiêu afin",
+      "muc tieu afin",
+      "mục tiêu affine",
+      "muc tieu affine",
+      "affine frame"
+    ],
+    "symbol": "(O; \\vec{e}_1, \\dots, \\vec{e}_n)",
+    "nameVi": "Mục tiêu Affine",
+    "nameEn": "Affine frame",
+    "brief": "Hệ gồm một điểm gốc O và một cơ sở của không gian vectơ liên kết, cho phép đồng nhất mỗi điểm với một bộ tọa độ số.",
+    "intuition": "Hệ quy chiếu định vị toàn bộ không gian: chọn một mốc neo O và các hướng đo lường cơ sở.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin"
+  },
+  {
+    "id": "sieu-phang",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["siêu phẳng", "sieu phang", "hyperplane"],
+    "symbol": "\\dim \\alpha = n - 1",
+    "nameVi": "Siêu phẳng",
+    "nameEn": "Hyperplane",
+    "brief": "Phẳng affine có số chiều n - 1 trong không gian affine n chiều; xác định bởi một phương trình tuyến tính bậc nhất.",
+    "intuition": "Bức tường chia đôi không gian: trong 2D là đường thẳng, trong 3D là mặt phẳng.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin"
+  },
+  {
+    "id": "tam-ti-cu",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["tâm tỉ cự", "tam ti cu", "tâm tỷ cự", "tam ty cu", "barycenter"],
+    "symbol": "\\sum \\lambda_i \\vec{GA_i} = \\vec{0}",
+    "nameVi": "Tâm tỉ cự",
+    "nameEn": "Barycenter",
+    "brief": "Điểm G duy nhất ứng với hệ điểm {Aᵢ} và hệ trọng số {λᵢ} (tổng λᵢ ≠ 0) thỏa mãn tổng λᵢ·GAᵢ = 0.",
+    "intuition": "Trọng tâm vật lý của hệ chất điểm có khối lượng: điểm cân bằng của toàn bộ hệ điểm.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem"
+  },
+  {
+    "id": "tap-loi",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["tập lồi", "tap loi", "bao lồi", "bao loi", "convex set"],
+    "symbol": "[A, B] \\subset C",
+    "nameVi": "Tập lồi",
+    "nameEn": "Convex set",
+    "brief": "Tập hợp các điểm C sao cho với mọi cặp điểm A, B thuộc C thì toàn bộ đoạn thẳng AB đều nằm trong C.",
+    "intuition": "Khối hình học không có góc khuyết hay vết lõm: đứng tại bất kỳ điểm nào bên trong đều nhìn thấy mọi điểm khác.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc"
+  },
+  {
+    "id": "anh-xa-afin",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["ánh xạ afin", "anh xa afin", "ánh xạ affine", "anh xa affine", "affine map"],
+    "symbol": "\\vec{f}(\\vec{AB}) = \\vec{f(A)f(B)}",
+    "nameVi": "Ánh xạ Affine",
+    "nameEn": "Affine map",
+    "brief": "Ánh xạ giữa hai không gian affine cảm sinh một ánh xạ tuyến tính giữa hai không gian vectơ liên kết tương ứng.",
+    "intuition": "Phép biến hình bảo toàn tính thẳng hàng, tính song song và tỉ số đơn của ba điểm thẳng hàng.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/anh-xa-afin-va-phep-bien-doi-afin"
+  },
+  {
+    "id": "phep-bien-doi-afin",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "phép biến đổi afin",
+      "phep bien doi afin",
+      "phép biến đổi affine",
+      "affine transformation"
+    ],
+    "symbol": "f \\in \\operatorname{Aff}(\\mathbb{A}^n)",
+    "nameVi": "Phép biến đổi Affine",
+    "nameEn": "Affine transformation",
+    "brief": "Song ánh affine từ một không gian affine vào chính nó; tập hợp các phép biến đổi affine lập thành nhóm Aff(A).",
+    "intuition": "Tổ hợp các phép quay, tịnh tiến, co giãn theo trục và biến dạng trượt (shear) trong không gian.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin"
+  },
+  {
+    "id": "sieu-mat-bac-hai",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["siêu mặt bậc hai", "sieu mat bac hai", "quadric"],
+    "symbol": "Q(x) = 0",
+    "nameVi": "Siêu mặt bậc hai",
+    "nameEn": "Quadric hypersurface",
+    "brief": "Tập hợp các điểm có tọa độ thỏa mãn một phương trình đại số đa thức bậc hai nhiều biến số.",
+    "intuition": "Khái quát hóa đường conic (elip, parabol, hyperbol) và mặt bậc hai (mặt cầu, elipsoid) lên không gian n chiều.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin"
+  },
+  {
+    "id": "khong-gian-euclide",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "\\mathbb{E}^n",
+      "không gian Euclide",
+      "khong gian Euclide",
+      "không gian Ơclit",
+      "khong gian Oclit",
+      "Euclidean space"
+    ],
+    "symbol": "\\mathbb{E}^n",
+    "nameVi": "Không gian Euclide",
+    "nameEn": "Euclidean space",
+    "brief": "Không gian affine thực mà không gian vectơ liên kết được trang bị thêm một tích vô hướng xác định dương.",
+    "intuition": "Không gian hình học trực quan có đầy đủ thước đo độ dài đoạn thẳng, khoảng cách và số đo góc giữa các hướng.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide"
+  },
+  {
+    "id": "muc-tieu-truc-chuan",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["mục tiêu trực chuẩn", "muc tieu truc chuan", "orthonormal frame"],
+    "symbol": "\\vec{e}_i \\cdot \\vec{e}_j = \\delta_{ij}",
+    "nameVi": "Mục tiêu trực chuẩn",
+    "nameEn": "Orthonormal frame",
+    "brief": "Mục tiêu affine có các vectơ cơ sở đôi một vuông góc và đều có độ dài chuẩn bằng 1.",
+    "intuition": "Hệ tọa độ Descartes vuông góc chuẩn mực giúp công thức khoảng cách và tích vô hướng có dạng đơn giản nhất.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan"
+  },
+  {
+    "id": "anh-xa-dang-cu",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "ánh xạ đẳng cự",
+      "anh xa dang cu",
+      "phép biến đổi đẳng cự",
+      "phep bien doi dang cu",
+      "isometry"
+    ],
+    "symbol": "d(f(A), f(B)) = d(A, B)",
+    "nameVi": "Ánh xạ đẳng cự",
+    "nameEn": "Isometry",
+    "brief": "Ánh xạ bảo toàn tuyệt đối khoảng cách giữa mọi cặp điểm trong không gian Euclide.",
+    "intuition": "Chuyển động của một vật rắn cứng trong không gian: không làm biến dạng, co giãn hay bóp méo hình dạng vật thể.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu"
+  },
+  {
+    "id": "khong-gian-xa-anh",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["\\mathbb{P}^n", "không gian xạ ảnh", "khong gian xa anh", "projective space"],
+    "symbol": "\\mathbb{P}(V)",
+    "nameVi": "Không gian Xạ ảnh",
+    "nameEn": "Projective space",
+    "brief": "Tập hợp tất cả các đường thẳng một chiều đi qua gốc tọa độ của một không gian vectơ V.",
+    "intuition": "Không gian affine được bổ sung các 'điểm ở vô tận': hai đường thẳng song song trong không gian affine sẽ cắt nhau tại điểm vô tận xạ ảnh.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh"
+  },
+  {
+    "id": "toa-do-xa-anh",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["tọa độ xạ ảnh", "toa do xa anh", "homogeneous coordinates", "tọa độ thuần nhất"],
+    "symbol": "(x_0 : x_1 : \\dots : x_n)",
+    "nameVi": "Tọa độ Xạ ảnh",
+    "nameEn": "Homogeneous coordinates",
+    "brief": "Bộ n + 1 số thực không đồng thời bằng 0 xác định một điểm xạ ảnh theo lớp tỉ lệ: (x₀ : ... : xₙ) tương đương (kx₀ : ... : kxₙ).",
+    "intuition": "Biểu diễn điểm thông thường và điểm vô tận trên cùng một hệ phương trình đại số thuần nhất đối xứng.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/toa-do-xa-anh-va-muc-tieu-xa-anh"
+  },
+  {
+    "id": "ti-so-kep",
+    "subject": "hinh-hoc-affine",
+    "patterns": ["tỉ số kép", "ti so kep", "tỷ số kép", "cross-ratio", "hàng điểm điều hòa"],
+    "symbol": "(A, B, C, D)",
+    "nameVi": "Tỉ số kép",
+    "nameEn": "Cross-ratio",
+    "brief": "Bất biến xạ ảnh cơ bản của bộ 4 điểm thẳng hàng, không đổi qua mọi phép chiếu xạ ảnh.",
+    "intuition": "Bất biến cốt lõi của phép nhìn phối cảnh và thị giác: tỉ số khoảng cách bị biến dạng khi nhìn nghiêng nhưng tỉ số kép luôn bất biến.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/ti-so-kep"
+  },
+  {
+    "id": "nguyen-tac-doi-ngau",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "nguyên tắc đối ngẫu",
+      "nguyen tac doi ngau",
+      "duality principle",
+      "đối ngẫu xạ ảnh"
+    ],
+    "symbol": "\\text{Điểm} \\longleftrightarrow \\text{Siêu phẳng}",
+    "nameVi": "Nguyên tắc đối ngẫu",
+    "nameEn": "Duality principle",
+    "brief": "Trong không gian xạ ảnh, mọi định lý đúng về quan hệ liên thuộc giữa điểm và siêu phẳng đều cho ta một định lý đối ngẫu đúng tương ứng.",
+    "intuition": "Đổi vai trò 'điểm' thành 'đường thẳng' (trong mặt phẳng) và ngược lại: chứng minh một định lý, nhận được hai kết quả hình học.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/nguyen-tac-doi-ngau-trong-khong-gian-xa-anh"
+  },
+  {
+    "id": "cuc-va-doi-cuc",
+    "subject": "hinh-hoc-affine",
+    "patterns": [
+      "cực và siêu phẳng đối cực",
+      "cuc va sieu phang doi cuc",
+      "cực và đối cực",
+      "pole and polar"
+    ],
+    "symbol": "P \\longleftrightarrow \\pi",
+    "nameVi": "Cực và Siêu phẳng đối cực",
+    "nameEn": "Pole and Polar",
+    "brief": "Tương ứng 1-1 giữa một điểm (cực) và một siêu phẳng (đối cực) thông qua dạng song tuyến tính đối xứng của một siêu mặt bậc hai.",
+    "intuition": "Từ một điểm cực ngoài đường tròn kẻ hai tiếp tuyến, đường thẳng nối hai tiếp điểm chính là đường đối cực của điểm cực đó.",
+    "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/cuc-va-sieu-phang-doi-cuc"
+  }
+]

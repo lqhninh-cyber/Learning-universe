@@ -109,3 +109,19 @@
   overflow-y: hidden;
   padding: 0.35rem 0;
 }
+
+.lu-glossary-term {
+  border-bottom: 1.5px dotted var(--accent-primary, #b45309);
+  cursor: help;
+  text-decoration: none;
+  border-radius: 2px;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.lu-glossary-term:hover,
+.lu-glossary-term:focus-visible {
+  background-color: rgba(180, 83, 9, 0.08);
+  border-bottom-style: solid;
+}

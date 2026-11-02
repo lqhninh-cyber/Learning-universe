@@ -1,0 +1,45 @@
+import katex from 'katex';
+import { useMemo } from 'react';
+import { cn } from '@/shared/lib/cn';
+
+export interface KatexMathProps {
+  readonly math: string;
+  readonly display?: boolean;
+  readonly className?: string;
+}
+
+const KATEX_MACROS = {
+  '\\N': '\\mathbb{N}',
+  '\\Z': '\\mathbb{Z}',
+  '\\Q': '\\mathbb{Q}',
+  '\\R': '\\mathbb{R}',
+  '\\C': '\\mathbb{C}',
+  '\\Aff': '\\operatorname{Aff}',
+  '\\id': '\\operatorname{id}',
+  '\\ker': '\\operatorname{ker}',
+  '\\im': '\\operatorname{im}',
+  '\\vect': '\\overrightarrow{#1}',
+};
+
+export function KatexMath({ math, display = false, className }: KatexMathProps) {
+  const html = useMemo(() => {
+    try {
+      return katex.renderToString(math, {
+        displayMode: display,
+        throwOnError: false,
+        strict: 'ignore',
+        macros: KATEX_MACROS,
+      });
+    } catch {
+      return math;
+    }
+  }, [math, display]);
+
+  return (
+    <span
+      className={cn('inline-block select-none', className)}
+      dangerouslySetInnerHTML={{ __html: html }}
+      aria-label={math}
+    />
+  );
+}

@@ -37,10 +37,14 @@ export interface LearningState {
   readonly pendingPromptAction: PendingLearningAction | null;
   /** Bài học đang mở khung ghi chú cá nhân. */
   readonly openNoteLessonId: string | null;
+  /** Bật hoặc tắt tự động chú thích ký hiệu & thuật ngữ trong bài học (Zen Mode). Mặc định `true`. */
+  readonly glossaryAnnotationsEnabled: boolean;
 
   recordLessonVisit: (subjectId: string, lessonId: string) => void;
   toggleLessonCompleted: (lessonId: string) => boolean;
   toggleLessonBookmark: (lessonId: string) => boolean;
+  toggleGlossaryAnnotations: () => void;
+  setGlossaryAnnotationsEnabled: (enabled: boolean) => void;
   requestNoteAccess: (lessonId: string) => boolean;
   setOpenNoteLessonId: (lessonId: string | null) => void;
   saveLessonNote: (lessonId: string, body: string) => boolean;
@@ -60,6 +64,7 @@ const INITIAL_DATA = {
   lastVisitedGlobal: null as LastVisitedEntry | null,
   pendingPromptAction: null as PendingLearningAction | null,
   openNoteLessonId: null as string | null,
+  glossaryAnnotationsEnabled: true,
 };
 
 export const useLearningStore = create<LearningState>()(
@@ -114,6 +119,14 @@ export const useLearningStore = create<LearningState>()(
         }
         set({ bookmarkedLessons: next });
         return true;
+      },
+
+      toggleGlossaryAnnotations: () => {
+        set((state) => ({ glossaryAnnotationsEnabled: !state.glossaryAnnotationsEnabled }));
+      },
+
+      setGlossaryAnnotationsEnabled: (enabled) => {
+        set({ glossaryAnnotationsEnabled: enabled });
       },
 
       requestNoteAccess: (lessonId) => {
@@ -202,6 +215,7 @@ export const useLearningStore = create<LearningState>()(
         lessonNotes: state.lessonNotes,
         lastVisitedBySubject: state.lastVisitedBySubject,
         lastVisitedGlobal: state.lastVisitedGlobal,
+        glossaryAnnotationsEnabled: state.glossaryAnnotationsEnabled,
       }),
     },
   ),

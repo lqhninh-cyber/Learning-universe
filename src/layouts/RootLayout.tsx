@@ -81,6 +81,13 @@ export function RootLayout() {
                   >
                     Hình học Affine và hình học Euclide
                   </Link>
+                  <Link
+                    to={ROUTES.glossary}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
+                  >
+                    Tra cứu thuật ngữ & ký hiệu
+                  </Link>
                 </nav>
               </Drawer>
             </div>
@@ -119,6 +126,12 @@ export function RootLayout() {
                 className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
               >
                 Hình học Affine và hình học Euclide
+              </Link>
+              <Link
+                to={ROUTES.glossary}
+                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
+              >
+                Thuật ngữ & Ký hiệu
               </Link>
             </nav>
           </div>
@@ -234,6 +247,12 @@ export function RootLayout() {
                 className="text-vn-muted hover:text-vn-primary transition-colors"
               >
                 Hình học Affine và hình học Euclide
+              </Link>
+              <Link
+                to={ROUTES.glossary}
+                className="text-vn-muted hover:text-vn-primary transition-colors"
+              >
+                Tra cứu thuật ngữ & ký hiệu
               </Link>
             </nav>
           </div>
