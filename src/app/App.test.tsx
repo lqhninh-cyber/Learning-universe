@@ -44,7 +44,9 @@ describe('App routing smoke test', () => {
 
     // 1. Eyebrow & Hero Section
     expect(await screen.findByText('KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI')).toBeInTheDocument();
-    expect(screen.getByText(/KHAI MỞ TRI THỨC/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Nền tảng tổng hợp lý thuyết, định nghĩa, định lý/i),
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Khám phá môn học/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Bắt đầu hành trình/i })).toBeInTheDocument();
 

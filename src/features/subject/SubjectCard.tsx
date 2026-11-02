@@ -16,7 +16,6 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  WoodblockCornerMotif,
 } from '@/shared/ui';
 
 export interface SubjectCardProps {
@@ -66,13 +65,9 @@ export function SubjectCard({ subject }: SubjectCardProps) {
         interactive
         className="border-vn-border/80 bg-vn-surface-card hover:border-vn-accent/60 relative flex h-full flex-col justify-between overflow-hidden shadow-2xs transition-all duration-200 hover:shadow-md"
       >
-        {/* Họa tiết mộng gỗ góc thẻ truyền thống */}
-        <WoodblockCornerMotif className="text-vn-accent/35 pointer-events-none absolute top-1.5 left-1.5 h-3.5 w-3.5" />
-        <WoodblockCornerMotif className="text-vn-accent/35 pointer-events-none absolute top-1.5 right-1.5 h-3.5 w-3.5 -scale-x-100" />
-
         {/* Họa tiết kỷ hà nhận diện môn học chìm ở góc card */}
         <div
-          className="text-vn-accent pointer-events-none absolute -top-3 -right-3 h-20 w-20 opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.18]"
+          className="text-vn-accent pointer-events-none absolute -top-3 -right-3 h-20 w-20 opacity-[0.10] transition-opacity duration-300 group-hover:opacity-[0.16]"
           aria-hidden="true"
         >
           {subject.slug === 'cau-truc-dai-so' ? (

@@ -12,14 +12,7 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import { LoginPromptDialog, useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
-import {
-  Badge,
-  Button,
-  Container,
-  Drawer,
-  KagomeWeaveDivider,
-  TraditionalMeanderBorder,
-} from '@/shared/ui';
+import { Badge, Button, Container, Drawer, KagomeWeaveDivider } from '@/shared/ui';
 
 export function RootHydrateFallback() {
   return null;
@@ -187,7 +180,6 @@ export function RootLayout() {
             )}
           </nav>
         </Container>
-        <TraditionalMeanderBorder className="text-vn-primary/25" />
       </header>
 
       <main className="flex-1 py-10 sm:py-12">
