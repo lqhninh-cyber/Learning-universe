@@ -34,18 +34,18 @@ export function Exercise({
     <section
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className="my-6 scroll-mt-24 rounded-2xl border border-stone-200/90 bg-white p-5 shadow-2xs sm:p-6"
+      className="my-6 scroll-mt-24 rounded-2xl border border-[var(--bg-muted)] bg-[#FAF8F5] p-5 shadow-2xs sm:p-6"
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
           <Badge variant="subject" className="font-semibold">
             {headingLabel}
           </Badge>
-          {title && <h4 className="text-base font-semibold text-stone-900">{title}</h4>}
+          {title && <h4 className="text-base font-semibold text-[var(--text-primary)]">{title}</h4>}
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-stone-800">{children}</div>
+      <div className="space-y-3 text-[var(--text-primary)]">{children}</div>
     </section>
   );
 }
@@ -62,13 +62,13 @@ export function Hint({ title = 'Gợi ý', defaultOpen = false, children }: Hint
       <Collapsible
         defaultOpen={defaultOpen}
         title={
-          <span className="inline-flex items-center gap-2 text-stone-700">
+          <span className="inline-flex items-center gap-2 text-[var(--text-secondary)]">
             <HelpCircle className="text-subject-600 h-4 w-4" aria-hidden="true" />
             <span>{title}</span>
           </span>
         }
-        className="border-stone-200/80 bg-stone-50/50"
-        contentClassName="bg-white text-stone-700"
+        className="border-[var(--bg-muted)] bg-[var(--bg-surface)]/25"
+        contentClassName="bg-[#FAF8F5] text-[var(--text-secondary)]"
       >
         <div className="space-y-2">{children}</div>
       </Collapsible>
@@ -92,13 +92,13 @@ export function Solution({
       <Collapsible
         defaultOpen={defaultOpen}
         title={
-          <span className="inline-flex items-center gap-2 text-stone-800">
+          <span className="inline-flex items-center gap-2 text-[var(--text-primary)]">
             <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" />
             <span>{title}</span>
           </span>
         }
-        className="border-stone-200/90 bg-stone-50/60"
-        contentClassName="bg-white text-base text-stone-800"
+        className="border-[var(--bg-muted)] bg-[var(--bg-surface)]/25"
+        contentClassName="bg-[#FAF8F5] text-base text-[var(--text-primary)]"
       >
         <div className="space-y-3">{children}</div>
       </Collapsible>

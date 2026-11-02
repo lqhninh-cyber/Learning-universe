@@ -44,19 +44,22 @@ function BaseExampleBlock({
         'my-6 scroll-mt-24 rounded-2xl border p-5 transition-colors sm:p-6',
         isCounterexample
           ? 'border-amber-200/90 bg-amber-50/35'
-          : 'border-stone-200/90 bg-stone-50/55',
+          : 'border-[var(--bg-muted)] bg-[#FAF8F5]',
       )}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
-          <Badge variant={isCounterexample ? 'draft' : 'neutral'} className="font-semibold">
+          <Badge
+            variant={isCounterexample ? 'draft' : 'neutral'}
+            className="font-semibold tracking-tight"
+          >
             {headingLabel}
           </Badge>
-          {title && <h4 className="text-base font-semibold text-stone-900">{title}</h4>}
+          {title && <h4 className="text-base font-semibold text-[var(--text-primary)]">{title}</h4>}
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-stone-800">{children}</div>
+      <div className="space-y-3 text-[var(--text-primary)]">{children}</div>
     </section>
   );
 }

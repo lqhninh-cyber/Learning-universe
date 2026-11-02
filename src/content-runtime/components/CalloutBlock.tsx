@@ -21,16 +21,16 @@ const CALLOUT_STYLES: Record<
 > = {
   Remark: {
     defaultTitle: 'Nhận xét',
-    containerClass: 'border-stone-200/90 bg-stone-50/80',
-    iconClass: 'text-subject-600',
-    titleClass: 'text-stone-900',
+    containerClass: 'border-[var(--bg-muted)] bg-[var(--bg-surface)]/25',
+    iconClass: 'text-[var(--accent-primary)]',
+    titleClass: 'text-[var(--text-primary)]',
     Icon: Lightbulb,
   },
   Note: {
     defaultTitle: 'Ghi chú',
-    containerClass: 'border-subject-200/80 bg-subject-50/35',
-    iconClass: 'text-subject-600',
-    titleClass: 'text-subject-900',
+    containerClass: 'border-[var(--bg-muted)] bg-[var(--accent-verandah)]/10',
+    iconClass: 'text-[var(--accent-verandah)]',
+    titleClass: 'text-[var(--text-primary)]',
     Icon: Info,
   },
   Warning: {
@@ -60,7 +60,9 @@ function BaseCalloutBlock({
         <IconComponent className={cn('h-4 w-4 shrink-0', style.iconClass)} aria-hidden="true" />
         <p className={cn('text-sm font-semibold', style.titleClass)}>{heading}</p>
       </div>
-      <div className="space-y-2 text-sm leading-relaxed text-stone-700">{children}</div>
+      <div className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)]">
+        {children}
+      </div>
     </aside>
   );
 }

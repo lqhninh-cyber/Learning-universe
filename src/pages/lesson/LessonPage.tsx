@@ -122,7 +122,7 @@ export function LessonPage() {
         <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
       )}
 
-      <div className="flex flex-col justify-between gap-4 border-b border-stone-200/80 pb-4 lg:flex-row lg:items-center">
+      <div className="flex flex-col justify-between gap-4 border-b border-[var(--bg-muted)] pb-4 lg:flex-row lg:items-center">
         <Breadcrumb
           items={[
             { label: 'Trang chủ', href: ROUTES.home },
@@ -175,42 +175,50 @@ export function LessonPage() {
         </div>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-12">
-        <aside className="hidden lg:col-span-3 lg:block">
+      {/* Bố cục 3 cột Edward Tufte Layout: Nav (240px) | Content (minmax(0, 65ch)) | Marginalia (minmax(240px, 280px)) */}
+      <div className="grid gap-8 lg:grid-cols-[240px_minmax(0,65ch)_minmax(240px,280px)] lg:justify-center">
+        {/* Cột 1: Danh mục điều hướng bài học cố định */}
+        <aside className="hidden lg:block lg:w-[240px]" aria-label="Danh mục điều hướng bài học">
           <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
             <LessonSidebar subject={subject} activeLessonId={lesson.id} />
           </div>
         </aside>
 
-        <div className="min-w-0 lg:col-span-6">
-          <Card className="p-6 sm:p-8 lg:p-10">
-            <header className="space-y-4 border-b border-stone-200 pb-6">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="subject">
-                  Chương {chapter.number} · Bài {chapter.number}.{lesson.number}
-                </Badge>
-                <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
-                {lesson.status !== 'published' && (
-                  <Badge variant={lesson.status}>Bản {lesson.status}</Badge>
-                )}
-              </div>
+        {/* Cột 2: Cột văn bản chính */}
+        <main className="min-w-0">
+          <article className="rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] p-6 shadow-xs sm:p-8 lg:p-10">
+            <header className="space-y-4 border-b border-[var(--bg-muted)] pb-6">
+              {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
+              <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="subject">
+                    Chương {chapter.number} · Bài {chapter.number}.{lesson.number}
+                  </Badge>
+                  <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
+                  {lesson.status !== 'published' && (
+                    <Badge variant={lesson.status}>Bản {lesson.status}</Badge>
+                  )}
+                </div>
 
-              <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+                <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text-muted)]">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
+                    <span>Thời lượng đọc: ~{lesson.estimatedMinutes} phút</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Layers className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
+                    <span>Phiên bản {lesson.version}</span>
+                  </span>
+                </div>
+              </aside>
+
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl">
                 {lesson.title}
               </h1>
 
-              <p className="text-base leading-relaxed text-stone-600">{lesson.description}</p>
-
-              <div className="flex flex-wrap items-center gap-4 text-xs text-stone-500">
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
-                  <span>Thời lượng đọc: ~{lesson.estimatedMinutes} phút</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Layers className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
-                  <span>Phiên bản {lesson.version}</span>
-                </span>
-              </div>
+              <p className="text-base leading-relaxed text-[var(--text-secondary)]">
+                {lesson.description}
+              </p>
 
               {lesson.prerequisites.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-stone-600">
@@ -282,9 +290,9 @@ export function LessonPage() {
 
             <SourcePanel lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
 
-            <footer className="mt-10 border-t border-stone-200 pt-6">
+            <footer className="mt-10 border-t border-[var(--bg-muted)] pt-6">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <p className="text-xs text-stone-500">
+                <p className="text-xs text-[var(--text-muted)]">
                   Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.
                 </p>
                 <LessonActionBar
@@ -296,10 +304,15 @@ export function LessonPage() {
 
               <LessonPrevNextNav subjectSlug={subject.slug} lessonId={lesson.id} />
             </footer>
-          </Card>
-        </div>
+          </article>
+        </main>
 
-        <aside className="hidden lg:col-span-3 lg:block">
+        {/* Cột 3: Cột biên tập lề (Marginalia / TOC / Ghi chú ngữ cảnh) */}
+        <aside
+          className="hidden lg:block lg:w-[280px]"
+          role="complementary"
+          aria-label="Cột biên tập lề và mục lục"
+        >
           <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pl-2">
             <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
           </div>

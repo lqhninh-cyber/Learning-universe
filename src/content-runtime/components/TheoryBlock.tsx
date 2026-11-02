@@ -57,8 +57,8 @@ export function SourceAttributionBadge({
   }
 
   const badgeNode = (
-    <span className="inline-flex items-center gap-1 rounded-md border border-stone-200/90 bg-white/90 px-2 py-0.5 text-xs font-normal text-stone-600">
-      <BookOpen className="h-3 w-3 text-stone-400" aria-hidden="true" />
+    <span className="inline-flex items-center gap-1 rounded-md border border-[var(--bg-muted)] bg-[var(--bg-surface)]/60 px-2 py-0.5 text-xs font-normal text-[var(--text-secondary)]">
+      <BookOpen className="h-3 w-3 text-[var(--text-muted)]" aria-hidden="true" />
       <span>{parts.join(' · ')}</span>
     </span>
   );
@@ -107,8 +107,8 @@ function BaseTheoryBlock({
       className={cn(
         'my-6 scroll-mt-24 rounded-2xl border p-5 shadow-2xs transition-colors sm:p-6',
         isDefinition
-          ? 'border-l-subject-600 border-l-4 border-stone-200/90 bg-white'
-          : 'border-subject-200/80 border-l-subject-500 bg-subject-50/45 border-l-4',
+          ? 'border-l-4 border-[var(--bg-muted)] border-l-[var(--accent-primary)] bg-[#FAF8F5]'
+          : 'border-l-4 border-[var(--bg-muted)] border-l-[var(--accent-wood)] bg-[#FAF8F5]',
       )}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -116,11 +116,11 @@ function BaseTheoryBlock({
           <Badge variant="subject" className="font-semibold tracking-tight">
             {headingLabel}
           </Badge>
-          {title && <h4 className="text-base font-semibold text-stone-900">{title}</h4>}
+          {title && <h4 className="text-base font-semibold text-[var(--text-primary)]">{title}</h4>}
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-stone-800">{children}</div>
+      <div className="space-y-3 text-[var(--text-primary)]">{children}</div>
     </section>
   );
 }
