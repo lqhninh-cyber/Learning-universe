@@ -1,0 +1,390 @@
+---
+id: mot-so-dinh-li-quan-trong-trong-mat-phang-xa-anh
+title: "Một số Định lí Quan trọng trong Mặt phẳng Xạ ảnh P2"
+description: "Các định lý hình học xạ ảnh kinh điển: Định lý Desargues, Định lý Pappus, Định lý Pascal và Định lý Brianchon."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "định lý Desargues"
+  - "định lý Pappus"
+  - "định lý Pascal"
+  - "định lý Brianchon"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '246-255'
+    sections: '§10'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Ánh xạ xạ ảnh
+
+<Definition id="def-p10-1" title="a) Ánh xạ xạ ảnh giữa hai hàng điểm và hai chùm đường thẳng">
+Ánh xạ *f* biến mỗi điểm của đường thẳng m thành một điểm của đường thẳng $m'$, hoặc biến mỗi đường thẳng của chùm tâm S thành một đường thẳng của chùm tâm $S'$, là *ánh xạ xạ ảnh* nếu nó bảo tồn tỉ số kép của 4 điểm của hàng, hoặc bảo tồn tỉ số kép của 4 đường thẳng của chùm.
+
+Khi đó ta nói có một *liên hệ xạ ảnh* giữa hai hàng điểm hoặc giữa hai chùm đường thẳng, kí hiệu ${A, B, C, \dots } ∧ {A', B', C', \dots }$ hay ${m} ∧ {m'}; {a, b, c, \dots } ∧ {a', b', c', \dots }$ hay ${S} ∧ {S'}$. Ánh xạ xạ ảnh ở đây chính là phép đẳng cấu xạ ảnh giữa hai hàng điểm hoặc giữa hai chùm đường thẳng.
+</Definition>
+
+<Theorem id="thm-p10-2" title="b) Sự xác định ánh xạ xạ ảnh trong">
+$\mathbb{P} ^{2}$.
+
+Định lí. Nếu cho ba điểm phân biệt A, B, C thuộc đường thẳng m và ba điểm phân biệt $A', B', C'$ thuộc đường thẳng $m'$ thì có một ánh xạ xạ ảnh duy nhất $f: {m} \to {m'}$ sao cho $f(A) = A', f(B) = B', f(C) = C'$.
+</Theorem>
+
+<Proof of="thm-p10-2">
+Trên m chọn mục tiêu xạ ảnh \{A, B; C\} và trên $m'$ chọn mục tiêu ${A', B'; C'}$.
+
+Khi đó có một phép đẳng cấu xạ ảnh *f* duy nhất với $f(A) = A', f(B) = B', f(C) = C'$, và nếu $M' = f(M)$ thì (ABCM) $= (A'B'C'M')$; phương trình của *f* là $x'_{1} = x_{1}, x'_{2} = x_{2}$, trong đó $(x_{1}, x_{2})$ là tọa độ của M đối với \{A, B; C\} và $(x'_{1}, x'_{2})$ là tọa độ của $M'$ đối với ${A', B'; C'}$.
+
+Nếu chọn mục tiêu xạ ảnh tùy ý thì phương trình của phép đẳng cấu xạ ảnh có dạng
+ 
+
+$$
+x'_{1} = a_{11}x_{1} + a_{12}x_{2}; x'_{2} = a_{21}x_{1} + a_{22}x_{2}, a_{11}a_{22} - a_{12}a_{21} \neq 0.
+$$
+
+ 
+Dùng tọa độ không thuần nhất $X = \frac{x_{1}}{x_{2}}, X' = \frac{x'_{1}}{x'_{2}}$ thì
+ 
+
+$$
+X' = (a_{11}X + a_{12}) / (a_{21}X + a_{22}).
+$$
+
+ 
+
+**Định lí đối ngẫu.**
+
+Cho ba đường thẳng phân biệt a, b, c thuộc chùm tâm S và ba đường thẳng phân biệt $a', b', c'$ thuộc chùm tâm $S'$ thì có một phép đẳng cấu xạ ảnh duy nhất $f: {S} \to {S'}$ sao cho $f(a) = a', f(b) = b', f(c) = c'$.
+
+(Không cần chứng minh vì theo nguyên tắc đối ngẫu định lí đối ngẫu đúng; nếu $m \in$ chùm S và $m' = f(m)$ thì vẫn có $(a b c m) = (a' b' c' m').)$
+</Proof>
+
+<Example id="ex-p10-4" title="Ví dụ">
+Phép đẳng cấu xạ ảnh $X' = \frac{X + 1}{X + 2}$ trên hàng điểm (định thức [[1,1],[1,2]] bằng $1 \neq 0)$ biến $0, 1, 2, 3, \infty$ thành $\frac{1}{2}, \frac{2}{3}, \frac{3}{4}, \frac{4}{5}, 1$.
+
+Tỉ số kép (ABCD) $= (\frac{c-a}{c-b})$ : $(\frac{d-a}{d-b})$ của bốn điểm 0, 1, 2, 3 bằng 2 : $\frac{3}{2} = \frac{4}{3}$, và của bốn điểm ảnh $\frac{1}{2}, \frac{2}{3}, \frac{3}{4}, \frac{4}{5}$ cũng bằng 3 : $\frac{9}{4} = \frac{4}{3}$: tỉ số kép được bảo tồn.
+</Example>
+
+## 2. Phép phối cảnh
+
+<Definition id="def-p10-5" title="a) Định nghĩa">
+• Một ánh xạ xạ ảnh giữa hai hàng điểm gọi là *phép phối cảnh* (hay phép chiếu xuyên tâm) nếu các đường thẳng nối các điểm tương ứng luôn đi qua một điểm O cố định; O gọi là *tâm phối cảnh*.
+
+• Một ánh xạ xạ ảnh giữa hai chùm đường thẳng gọi là *phép phối cảnh* nếu giao điểm của các cặp đường thẳng tương ứng luôn nằm trên một đường thẳng t cố định; t gọi là *trục phối cảnh*.
+
+Kí hiệu sự liên hệ phối cảnh giữa hai hàng điểm là ${A, B, C, \dots } ⩙ {A', B', C', \dots }$ hay ${m} ⩙ {m'}$; giữa hai chùm là ${a, b, c, \dots } ⩙ {a', b', c', \dots }$ hay ${S} ⩙ {S'}$.
+</Definition>
+
+<Theorem id="thm-p10-6" title="b) Định lí">
+Điều kiện cần và đủ để ánh xạ xạ ảnh $f: {m} \to {m'}$ giữa hai hàng điểm là phép phối cảnh là giao điểm O của hai giá tự ứng, nghĩa là $f(O) = O$.
+</Theorem>
+
+<Proof of="thm-p10-6">
+• Nếu *f* là phép phối cảnh (phép chiếu xuyên tâm) thì rõ ràng $O = m \cap m'$ là tự ứng.
+
+• Ngược lại, nếu *f* có điểm O tự ứng, cần chứng minh *f* là phép phối cảnh.
+
+Trên m lấy hai điểm A, B sao cho O, A, B phân biệt; gọi $A' = f(A), B' = f(B)$; khi đó $O = f(O)$ và $O, A', B'$ cũng phân biệt. Ánh xạ xạ ảnh *f* hoàn toàn được xác định bởi hai bộ ba (O, A, B) và $(O, A', B')$.
+
+Gọi $S = AA' \cap BB'$ thì *f* là phép chiếu xuyên tâm với tâm chiếu S.
+
+Vậy *f* là phối cảnh giữa hai hàng điểm m và $m'$.
+
+**c) Định lí đối ngẫu.**
+
+Điều kiện cần và đủ để ánh xạ xạ ảnh *f* giữa hai chùm đường thẳng ${S} \to {S'}$ là phép phối cảnh là đường thẳng nối hai tâm tự ứng: $f(SS') = SS'$.
+</Proof>
+
+<Example id="ex-p10-8" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ lấy $m: x_{3} = 0, m': x_{2} = 0$, tâm chiếu $O = (1,1,1)$.
+
+Phép chiếu xuyên tâm từ m lên $m'$ là $(a, b, 0) ↦ (a-b, 0, -b)$; giao điểm của hai giá $m \cap m' = (1,0,0)$ biến thành chính nó $(a = 1, b = 0$ cho $(1,0,0))$, đúng như định lí b): phép phối cảnh có giao điểm của hai giá tự ứng.
+</Example>
+
+## 3. Định lí Steiner
+
+<Theorem id="thm-p10-9" title="a) Định lí thuận">
+Nếu ánh xạ xạ ảnh $f: {A_{1}} \to {A_{2}}$ giữa hai chùm tâm $A_{1}$ và $A_{2}$ không phải là phép phối cảnh thì giao điểm của các đường thẳng tương ứng nằm trên một đường conic.
+</Theorem>
+
+<Proof of="thm-p10-9">
+Gọi $g_{3} = A_{1}A_{2}$.
+
+Vì *f* không phải phối cảnh nên $f(g_{3}) \neq g_{3}$; đặt $g_{1} = f(g_{3})$ (đi qua $A_{2})$ và $g_{2} = f^{-1}(g_{3})$ (đi qua $A_{1})$.
+
+Khi đó $g_{1}, g_{2}, g_{3}$ phân biệt; gọi $A_{3} = g_{1} \cap g_{2}$.
+
+Lấy đường thẳng e của chùm tâm $A_{1}$ khác $g_{2}, g_{3}$ và $e' = f(e)$.
+
+Với một đường thẳng m bất kì của chùm $A_{1}$ và $m' = f(m)$ ta có $(g_{3}, g_{2}, e, m) = (g_{1}, g_{3}, e', m')$.
+
+Gọi $E = e \cap e', M = m \cap m', E_{2} = e \cap g_{1}, E_{1} = e' \cap g_{2}, M_{2} = m \cap g_{1}, M_{1} = m' \cap g_{2}$.
+
+Cắt chùm $A_{1}$ bởi $g_{1}$ và chùm $A_{2}$ bởi $g_{2}$ ta được $(A_{2}A_{3}E_{2}M_{2}) = (A_{3}A_{1}E_{1}M_{1})$.
+
+Chọn ${A_{1}, A_{2}, A_{3}; E}$ làm mục tiêu xạ ảnh và gọi $(x_{1}, x_{2}, x_{3})$ là tọa độ của M; khi đó $(A_{2}A_{3}E_{2}M_{2}) = \frac{x_{2}}{x_{3}}$ và $(A_{3}A_{1}E_{1}M_{1}) = \frac{x_{3}}{x_{1}}$, nên $\frac{x_{2}}{x_{3}} = \frac{x_{3}}{x_{1}}$, tức
+ 
+
+$$
+x^{2}_{3} - x_{1}x_{2} = 0.
+$$
+
+ 
+Đây là phương trình một đường conic, đi qua $E (E = (1,1,1)$ thỏa) và tiếp xúc với $g_{2}$ và $g_{1}$ tại $A_{1}$ và $A_{2}$.
+</Proof>
+
+<Example id="ex-p10-11" title="Ví dụ">
+Conic $x^{2}_{3} = x_{1}x_{2}$ đi qua $A_{1} = (1,0,0), A_{2} = (0,1,0), E = (1,1,1)$ và $M = (4,1,2)$ (vì $2^{2} = 4·1)$.
+
+Với M này $\frac{x_{2}}{x_{3}} = \frac{1}{2}$ và $\frac{x_{3}}{x_{1}} = \frac{2}{4} = \frac{1}{2}$, đúng bằng nhau, như chứng minh trên.
+</Example>
+
+<Theorem id="thm-p10-12" title="b) Định lí đảo">
+Nếu $A_{1}, A_{2}$ là hai điểm cố định của một đường conic (S) và M là điểm thay đổi trên (S) thì ánh xạ $f: {A_{1}} \to {A_{2}}$ giữa hai chùm sao cho $f(A_{1}M) = A_{2}M$ là một ánh xạ xạ ảnh nhưng không phải là phối cảnh.
+</Theorem>
+
+<Proof of="thm-p10-12">
+Gọi $g_{3} = A_{1}A_{2}$ và $g_{1}, g_{2}$ lần lượt là các tiếp tuyến của (S) tại $A_{2}$ và $A_{1}; g_{1} \cap g_{2} = A_{3}$.
+
+Lấy điểm cố định $E \in (S)$ khác $A_{1}, A_{2}$; đặt $E_{2} = A_{1}E \cap A_{2}A_{3}$ và $E_{1} = A_{2}E \cap A_{1}A_{3}$.
+
+Với $M \in (S)$ khác $A_{1}, A_{2}$, đặt $M_{2} = A_{1}M \cap A_{2}A_{3}, M_{1} = A_{2}M \cap A_{1}A_{3}$.
+
+Chọn ${A_{1}, A_{2}, A_{3}; E}$ làm mục tiêu xạ ảnh; vì $E \in (S)$ và $g_{1}, g_{2}$ là tiếp tuyến tại $A_{2}, A_{1}$, phương trình của (S) là $x^{2}_{3} - x_{1}x_{2} = 0$, nên $\frac{x_{2}}{x_{3}} = \frac{x_{3}}{x_{1}}$.
+
+Mặt khác $\frac{x_{2}}{x_{3}} = (A_{2}A_{3}E_{2}M_{2})$ và $\frac{x_{3}}{x_{1}} = (A_{3}A_{1}E_{1}M_{1})$, do đó $(A_{2}A_{3}E_{2}M_{2}) = (A_{3}A_{1}E_{1}M_{1})$, hay $(A_{1}A_{2}, A_{1}A_{3}, A_{1}E_{2}, A_{1}M_{2}) = (A_{2}A_{3}, A_{2}A_{1}, A_{2}E_{1}, A_{2}M_{1})$.
+
+Vậy *f* bảo tồn tỉ số kép biến chùm $A_{1}$ thành chùm $A_{2}$, và đường thẳng nối hai tâm $A_{1}A_{2}$ không tự ứng: *f* là ánh xạ xạ ảnh không phải phối cảnh.
+
+**Định lí thuận đối ngẫu.**
+
+Nếu $f: {m_{1}} \to {m_{2}}$ là ánh xạ xạ ảnh giữa hai hàng điểm có giá $m_{1}, m_{2}$ nhưng không phải phối cảnh thì các đường thẳng nối các cặp điểm tương ứng tiếp xúc với một đường conic.
+
+**Định lí đảo đối ngẫu.**
+
+Nếu $m_{1}, m_{2}$ là hai tiếp tuyến khác nhau của một conic và m là tiếp tuyến thay đổi của nó thì ánh xạ $f: {m_{1}} \to {m_{2}}$ sao cho giao điểm của $m_{1}$ và m biến thành giao điểm của $m_{2}$ và m là ánh xạ xạ ảnh nhưng không phải phối cảnh.
+</Proof>
+
+## 4. Vấn đề xác định một conic
+
+<Theorem id="thm-p10-14" title="a) Định lí">
+Cho 5 điểm A, B, C, D, E trong đó không có ba điểm nào thẳng hàng, bao giờ cũng có một đường conic duy nhất đi qua 5 điểm đó.
+</Theorem>
+
+<Proof of="thm-p10-14">
+Xét hai chùm tâm A và B và ánh xạ xạ ảnh $f: {A} \to {B}$ sao cho $f(AC) = BC, f(AD) = BD, f(AE) = BE$. Ánh xạ *f* như vậy hoàn toàn được xác định và không phải phối cảnh.
+
+Theo định lí Steiner thuận, giao điểm của các cặp đường thẳng tương ứng là một conic $(S)$, đi qua 5 điểm A, B, C, D, E.
+
+Tính duy nhất của (S) suy ra từ tính duy nhất của *f*.
+</Proof>
+
+<Theorem id="thm-p10-16" title="b) Định lí đối ngẫu">
+Cho 5 đường thẳng a, b, c, d, e trong đó không có ba đường nào đồng quy, bao giờ cũng có một conic duy nhất tiếp xúc với 5 đường thẳng đó.
+</Theorem>
+
+<Example id="ex-p10-17" title="Ví dụ">
+Năm điểm (1,0,0), (0,1,0), (1,1,1), (4,1,2), (1,4,2) không có ba điểm nào thẳng hàng (chẳng hạn định thức của (1,1,1), (4,1,2), (1,4,2) bằng $3 \neq 0)$.
+
+Hệ 5 phương trình tuyến tính trong 6 hệ số của conic tổng quát có hạng 5, nghiệm duy nhất sai khác một hệ số tỉ lệ là $x^{2}_{3} - x_{1}x_{2} = 0$: đó là conic duy nhất đi qua 5 điểm.
+</Example>
+
+<Definition id="def-p10-18" title="c) Các trường hợp đặc biệt">
+Nếu thay điều kiện conic đi qua một điểm bằng điều kiện conic tiếp xúc với một đường thẳng, ta có:
+
+• Cho 4 điểm A, B, C, D trong đó không có ba điểm nào thẳng hàng và một đường thẳng a đi qua A nhưng không đi qua các điểm còn lại.
+
+Khi đó có một conic duy nhất đi qua A, B, C, D và tiếp xúc với a tại A.
+
+• Cho 4 đường thẳng a, b, c, d trong đó không có ba đường nào đồng quy và một điểm A thuộc đường thẳng a nhưng không thuộc các đường còn lại.
+
+Khi đó có một conic duy nhất tiếp xúc với a, b, c, d và đi qua A.
+
+• Cho ba điểm A, B, C không thẳng hàng, đường thẳng a đi qua A nhưng không đi qua B và C, đường thẳng b đi qua B nhưng không đi qua A và C.
+
+Khi đó có một conic duy nhất đi qua C, tiếp xúc với a tại A và tiếp xúc với b tại B.
+
+• Cho ba đường thẳng a, b, c không đồng quy, điểm A thuộc a nhưng không thuộc b và c, điểm B thuộc b nhưng không thuộc a và c.
+
+Khi đó có một conic duy nhất tiếp xúc với c, tiếp xúc với a tại A và tiếp xúc với b tại B.
+</Definition>
+
+## 5. Định lí Pascal (Paxcan)
+
+<Definition id="def-p10-19" title="a) Định nghĩa">
+Trong $\mathbb{P} ^{2}$, tập hợp 6 điểm và 6 đường thẳng sao cho mỗi điểm là giao của hai đường thẳng, mỗi đường thẳng đi qua hai và chỉ hai điểm, gọi là một *hình lục giác*.
+
+Các điểm đã cho gọi là *đỉnh* và các đường thẳng gọi là *cạnh*.
+
+Có thể sắp xếp các đỉnh và cạnh theo thứ tự bằng cách đánh số: $A_{1}, a_{1}, A_{2}, a_{2}, A_{3}, a_{3}, A_{4}, a_{4}, A_{5}, a_{5}, A_{6}, a_{6} (A_{1}$ là đỉnh và $a_{1}$ là cạnh) sao cho cạnh a$_{i}$ đi qua hai đỉnh A$_{i}$ và A$_{i+1}$ (xem $A_{7}$ là $A_{1})$, nên cạnh a$_{i}$ và a$_{i+1}$ đi qua đỉnh A$_{i+1}$ (xem $a_{7}$ là $a_{1})$.
+
+Các cặp đỉnh $A_{1}$ và $A_{4}, A_{2}$ và $A_{5}, A_{3}$ và $A_{6}$ gọi là các *cặp đỉnh đối diện*; các cặp cạnh $a_{1}$ và $a_{4}, a_{2}$ và $a_{5}, a_{3}$ và $a_{6}$ gọi là các *cặp cạnh đối diện*.
+</Definition>
+
+<Example id="ex-p10-20" title="Ví dụ">
+Sáu điểm $A_{1}, \dots , A_{6}$ trên một conic, đánh số theo thứ tự quanh conic, tạo thành lục giác $A_{1}A_{2}A_{3}A_{4}A_{5}A_{6}$ với các cạnh $a_{1} = A_{1}A_{2}, a_{2} = A_{2}A_{3}, \dots , a_{6} = A_{6}A_{1}$.
+
+Cặp cạnh đối diện $a_{1} = A_{1}A_{2}$ và $a_{4} = A_{4}A_{5}$ cắt nhau tại một điểm; tương tự $a_{2}$ và $a_{5}, a_{3}$ và $a_{6}: ba$ điểm giao điểm này là các điểm sẽ được xét trong định lí Pascal.
+</Example>
+
+<Theorem id="thm-p10-21" title="b) Định lí Pascal">
+Điều kiện cần và đủ để một lục giác nội tiếp trong một conic (các đỉnh thuộc conic) là giao điểm của các cặp cạnh đối diện nằm trên một đường thẳng (gọi là *đường thẳng Pascal*).
+</Theorem>
+
+<Proof of="thm-p10-21">
+• Giả sử lục giác $A_{1}A_{2}A_{3}A_{4}A_{5}A_{6}$ nội tiếp trong một conic.
+
+Theo định lí Steiner đảo, hai chùm tâm $A_{1}$ và $A_{5}$ có liên hệ xạ ảnh: ${A_{1}A_{2}, A_{1}A_{3}, A_{1}A_{4}, A_{1}A_{6}} ∧ {A_{5}A_{2}, A_{5}A_{3}, A_{5}A_{4}, A_{5}A_{6}}$.
+
+Cắt chùm $A_{1}$ bởi đường thẳng $A_{3}A_{4}$ và chùm $A_{5}$ bởi đường thẳng $A_{2}A_{3}$.
+
+Gọi $B = A_{3}A_{4} \cap A_{1}A_{2}, P = A_{3}A_{4} \cap A_{1}A_{6}, Q = A_{1}A_{2} \cap A_{4}A_{5}, R = A_{2}A_{3} \cap A_{5}A_{6}, C = A_{2}A_{3} \cap A_{5}A_{4}$.
+
+Giữa hai hàng điểm nằm trên $A_{3}A_{4}$ và $A_{2}A_{3}$ ta có ${B, A_{3}, A_{4}, P} ∧ {A_{2}, A_{3}, C, R}$.
+
+Liên hệ xạ ảnh này có điểm $A_{3}$ là giao của hai giá tự ứng nên là phép phối cảnh.
+
+Vì $A_{2}B \cap CA_{4} = Q$ nên Q là tâm phối cảnh.
+
+Vậy đường thẳng PR đi qua tâm phối cảnh Q, nghĩa là ba điểm P, Q, R thẳng hàng.
+
+• Ngược lại, giả sử lục giác $A_{1}A_{2}A_{3}A_{4}A_{5}A_{6}$ có giao điểm P, Q, R của các cặp cạnh đối diện thẳng hàng.
+
+Gọi $(S')$ là conic xác định bởi 5 điểm $A_{1}, \dots , A_{5}$ và giả sử $(S')$ cắt đường thẳng $A_{1}A_{6}$ tại $A'_{6}$; cần chứng minh $A'_{6}$ trùng $A_{6}$.
+
+Theo phần thuận, vì lục giác $A_{1}A_{2}A_{3}A_{4}A_{5}A'_{6}$ nội tiếp $(S')$ nên PQ chính là đường thẳng Pascal.
+
+Ta có $R = PQ \cap A_{2}A_{3}$ và $A_{6} = A_{1}P \cap A_{5}R = A'_{6}$.
+
+Vậy $A'_{6}$ trùng $A_{6}$.
+</Proof>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Nếu đường bậc hai suy biến thành hai đường thẳng phân biệt ta có định lí Pappus.
+
+Vậy định lí Pappus là một trường hợp đặc biệt của định lí Pascal.
+</Remark>
+
+<Example id="ex-p10-23" title="Ví dụ">
+Conic $x^{2}_{3} = x_{1}x_{2}$ có các điểm $(t^{2}, 1, t)$.
+
+Lục giác nội tiếp ứng với $t = 1, 2, 3, -1, -2, 0$: 
+
+$$
+\begin{cases} A_{1} = (1,1,1) \\ A_{2} = (4,1,2) \\ A_{3} = (9,1,3) \\ A_{4} = (1,1,-1) \\ A_{5} = (4,1,-2) \\ A_{6} = (0,1,0). \end{cases}
+$$
+
+ Các giao điểm của cạnh đối diện: $P = A_{3}A_{4} \cap A_{6}A_{1} = (3,-1,3), Q = A_{1}A_{2} \cap A_{4}A_{5} = (-2,1,0), R = A_{2}A_{3} \cap A_{5}A_{6} = (-12,7,6)$; định thức của ba hàng này là $3(6-0) + 1(-12-0) + 3(-14+12) = 18 - 12 - 6 = 0$, nên P, Q, R thẳng hàng (đường thẳng Pascal).
+
+Ví dụ Pappus (conic suy biến): $A_{1}(0,0), A_{3}(1,0), A_{5}(3,0)$ trên đường $y = 0; A_{2}(1,2), A_{4}(2,2), A_{6}(4,2)$ trên đường $y = 2$.
+
+Các giao điểm $P = (\frac{4}{3}, \frac{2}{3}), Q = (\frac{3}{2}, 3), R = (1, -4)$ đều nằm trên đường thẳng có hệ số góc 14 (đoạn PQ và PR cùng hệ số góc 14), tức là thẳng hàng.
+</Example>
+
+<Definition id="def-p10-24" title="c) Các trường hợp đặc biệt của định lí Pascal">
+Ta có thể xem ngũ giác, tứ giác, tam giác nội tiếp một conic là các trường hợp đặc biệt của lục giác khi một cặp đỉnh, hai cặp đỉnh hay ba cặp đỉnh trùng nhau.
+
+Khi đó ta xem cạnh của lục giác chứa cặp đỉnh trùng nhau là tiếp tuyến của conic tại điểm đó.
+
+Định lí Pascal vẫn đúng trong các trường hợp đặc biệt đó.
+</Definition>
+
+<Example id="ex-p10-25" title="Ví dụ">
+Cho tam giác nội tiếp conic $x^{2}_{3} = x_{1}x_{2}$ với các đỉnh $t = 1, 2, 3$ và coi mỗi đỉnh là hai đỉnh trùng nhau.
+
+Khi đó các cạnh "suy biến" là tiếp tuyến tại đỉnh.
+
+Định lí Pascal cho kết quả: giao điểm của mỗi tiếp tuyến với cạnh đối diện của tam giác nằm trên một đường thẳng chung (ba điểm thẳng hàng).
+</Example>
+
+## 6. Định lí Brianchon (Briăng-sông)
+
+<Theorem id="thm-p10-26" title="a) Định lí">
+Điều kiện cần và đủ để một lục giác ngoại tiếp một đường conic (các cạnh tiếp xúc với conic) là các đường thẳng nối các đỉnh đối diện đồng quy tại một điểm (gọi là *điểm Brianchon*).
+
+**Chú ý.** Định lí Brianchon là định lí đối ngẫu của định lí Pascal trong $\mathbb{P} ^{2}$.
+</Theorem>
+
+<Definition id="def-p10-27" title="b) Các trường hợp đặc biệt">
+Tương tự định lí Pascal, ta có thể xem ngũ giác, tứ giác, tam giác ngoại tiếp conic là những trường hợp đặc biệt của lục giác khi có một cặp cạnh, hai cặp cạnh hay ba cặp cạnh trùng nhau.
+
+Khi đó ta xem đỉnh của cặp cạnh trùng nhau là tiếp điểm của conic với cặp cạnh đó.
+</Definition>
+
+<Example id="ex-p10-28" title="Ví dụ">
+Tam giác ABC với A(0,0), B(4,0), C(0,3) ngoại tiếp đường tròn tâm $(1,1)$ bán kính 1 (các tiếp điểm trên AB, AC, BC lần lượt là $(1,0), (0,1), (\frac{8}{5}, \frac{9}{5}))$.
+
+Đây là trường hợp tam giác của định lí Brianchon: các đường thẳng nối mỗi đỉnh với tiếp điểm trên cạnh đối diện đồng quy.
+
+Thật vậy, đường thẳng từ A đến $(\frac{8}{5}, \frac{9}{5})$ có phương trình $y = (\frac{9}{8})x$; từ C đến $(1,0)$ là $y = 3 - 3x$; từ B đến $(0,1)$ là $y = 1 - \frac{x}{4}$.
+
+Hai đường đầu cắt nhau tại $(\frac{8}{11}, \frac{9}{11})$ và điểm này cũng thuộc đường thứ $ba (1 - \frac{2}{11} = \frac{9}{11})$.
+
+Vậy ba đường đồng quy tại $(\frac{8}{11}, \frac{9}{11})$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p10-1" title="Xác định một conic và các trường hợp đặc biệt (§10, mục 4)">
+Trong P², cho 4 điểm A, B, C, D không có ba điểm nào thẳng hàng và một đường thẳng a đi qua A nhưng không đi qua B, C, D. Có bao nhiêu conic đi qua A, B, C, D và tiếp xúc với a tại A?
+</Exercise>
+
+<Hint>
+Năm điều kiện (kể cả điều kiện tiếp xúc) xác định conic.
+</Hint>
+
+<Solution>
+Điều kiện tiếp xúc với a tại A thay cho điểm thứ năm.
+
+Theo trường hợp đặc biệt của định lí xác định conic (§10, mục 4c): có đúng một conic.
+
+**Đáp án:** Đúng một conic
+</Solution>
+
+<Exercise id="exr-p10-2" title="Ánh xạ xạ ảnh giữa hai hàng điểm bảo tồn tỉ số kép (§10, mục 1)">
+Trên một đường thẳng với tọa độ không thuần nhất X, ánh xạ X' = (X + 1)/(X + 2) có phải ánh xạ xạ ảnh không? Tính tỉ số kép của 0, 1, 2, 3 và của bốn điểm ảnh.
+</Exercise>
+
+<Hint>
+Ánh xạ xạ ảnh có dạng X' = (a₁₁X + a₁₂)/(a₂₁X + a₂₂) với định thức khác 0; (ABCD) = ((c-a)/(c-b)) : ((d-a)/(d-b)).
+</Hint>
+
+<Solution>
+Định thức |1 1; 1 2| = 1  $ neq$  0 nên là ánh xạ xạ ảnh.
+
+(0,1,2,3): (2/1) : (3/2) = 4/3.
+
+Ảnh 1/2, 2/3, 3/4, 4/5: (1/4)/(1/12) = 3 và (3/10)/(2/15) = 9/4; tỉ số 3 : 9/4 = 4/3.
+
+**Đáp án:** Là ánh xạ xạ ảnh; hai tỉ số kép đều bằng 4/3
+</Solution>
+
+<Exercise id="exr-p10-3" title="Định lí Pascal: kiểm tra bằng số (§10, mục 5)">
+Conic x₃² = x₁x₂ có các điểm (t², 1, t). Cho lục giác A₁(1,1,1), A₂(4,1,2), A₃(9,1,3), A₄(1,1,-1), A₅(4,1,-2), A₆(0,1,0) nội tiếp conic. Tính P = A₃A₄ ∩ A₆A₁, Q = A₁A₂ ∩ A₄A₅, R = A₂A₃ ∩ A₅A₆ và kiểm tra thẳng hàng.
+</Exercise>
+
+<Hint>
+Đường thẳng qua hai điểm: tích có hướng; giao điểm hai đường: tích có hướng của hai bộ tọa độ đường; thẳng hàng khi định thức bằng 0.
+</Hint>
+
+<Solution>
+P = (3,-1,3), Q = (-2,1,0), R = (-12,7,6) (tính bằng tích có hướng).
+
+Định thức của ba hàng P, Q, R: 3(6 - 0) + 1(-12 - 0) + 3(-14 + 12) = 18 - 12 - 6 = 0.
+
+**Đáp án:** P, Q, R thẳng hàng (định thức bằng 0), đúng như định lí Pascal
+</Solution>
+
+<KeyTakeaways>
+- Định lý Desargues liên hệ giữa hai tam giác thấu xạ từ một điểm và thấu xạ từ một đường thẳng.
+- Định lý Pascal và Brianchon là cặp định lý đối ngẫu nổi tiếng đối với lục giác nội tiếp và ngoại tiếp conic.
+</KeyTakeaways>

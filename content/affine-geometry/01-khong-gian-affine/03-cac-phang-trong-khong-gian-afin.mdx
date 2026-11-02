@@ -1,0 +1,321 @@
+---
+id: cac-phang-trong-khong-gian-afin
+title: "Các Phẳng trong Không gian Affine"
+description: "Định nghĩa m-phẳng, phương của phẳng, vị trí tương đối và phương trình tham số, tổng quát."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "m-phẳng"
+  - "phương trình phẳng"
+  - "vị trí tương đối"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '25-33'
+    sections: '§3'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-s3-1" title="Định nghĩa">
+Cho không gian afin $\mathcal{A}$ liên kết với $\overline{\mathcal{A}}$, I là một điểm của $\mathcal{A}$ và ᾱ là một không gian con của $\overline{\mathcal{A}}$.
+
+Tập hợp $\alpha = {M \in \mathcal{A} | \vect{IM} \in \overline{\alpha}}$ gọi là *cái phẳng afin* α đi qua I và có phương là ᾱ.
+
+Nếu $dim \overline{\alpha} = m$ thì α gọi là *phẳng m chiều* (*m-phẳng*).
+</Definition>
+
+0-phẳng là điểm, 1-phẳng là đường thẳng, 2-phẳng là mặt phẳng; n-phẳng của $\mathcal{A} ^{n}$ chính là $\mathcal{A} ^{n}$.
+
+Nếu $dim \mathcal{A} = n$ thì (n−1)-phẳng còn gọi là *siêu phẳng*.
+
+<Remark title="Chú ý">
+Chú ý.
+
+Điểm I không đóng vai trò đặc biệt: nếu $K \in \alpha$ thì $M \in \alpha \iff \vect{IM} \in \overline{\alpha} \iff \vect{IM} - \vect{IK} \in \overline{\alpha} \iff \vect{KM} \in \overline{\alpha}$, nên K có thể thay vai trò của I.
+</Remark>
+
+## 2. Định lí
+
+<Theorem id="thm-s3-2" title="Định lí">
+Nếu α là m-phẳng của $\mathcal{A}$ có phương ᾱ thì α là một không gian afin m chiều liên kết với không gian vectơ ᾱ.
+</Theorem>
+
+<Example id="ex-s3-3" title="Ví dụ">
+Trong $\mathcal{A}^{3} = \R^{3}$, lấy $I(1,0,0)$ và $\overline{\alpha} = span{(1,1,0), (0,1,1)} (dim \overline{\alpha} = 2)$.
+
+Khi đó α là 2-phẳng, cũng là siêu phẳng vì $2 = n-1$.
+
+Điểm $K(2,1,0) \in \alpha$ vì $\vect{IK} = (1,1,0) \in \overline{\alpha}$, còn $M(1,0,1) \notin \alpha$ vì $\vect{IM} = (0,0,1)$ không có dạng $a(1,1,0) + b(0,1,1) = (a, a+b, b)$.
+
+Theo chú ý trên, có thể dùng K thay cho I để mô tả cùng phẳng α.
+</Example>
+
+## 3. Định lí
+
+<Theorem id="thm-s3-4" title="Định lí">
+Qua $m+1$ *điểm độc lập* của không gian afin $\mathcal{A}$ có một và chỉ một m-phẳng $(m \ge 0)$.
+
+**Hệ quả.** $m+1$ điểm của $\mathcal{A}$ độc lập $\iff$ chúng không cùng thuộc một (m−1)-phẳng $(m \ge 1)$.
+</Theorem>
+
+<Proof of="thm-s3-4">
+Với A$_{0}$,…,A$_{m}$ độc lập, cái phẳng đi qua A$_{0}$ có phương ᾱ nhận m vectơ $\vect{A_{0}A_{i}}$ làm cơ sở thì chứa mọi A$_{i}$; ngược lại mọi m-phẳng chứa $m+1$ điểm độc lập đó phải có phương chứa các vectơ ấy, nên trùng với phẳng này.
+</Proof>
+
+<Example id="ex-s3-6" title="Ví dụ">
+Trong $\R ^{3}$, ba điểm A(0,0,0), B(1,0,0), C(0,1,0) độc lập $(m = 2)$ nên xác định đúng một 2-phẳng: mặt phẳng $z = 0$.
+
+Ba điểm O(0,0,0), P(1,1,1), Q(2,2,2) không độc lập vì cùng thuộc đường thẳng (1-phẳng) qua O với phương $(1,1,1)$.
+</Example>
+
+## 4. Phương trình tham số của m-phẳng
+
+**a) Lập phương trình.**
+
+Trong $\mathcal{A} ^{n}$ cho m-phẳng xác định bởi $m+1$ điểm độc lập A$_{0}$,…,A$_{m}$ với $A_{i} = (a_{i1}, \dots ,a_{in})$ đối với mục tiêu đã chọn.
+
+Phương của nó nhận $\vect{A_{0}A_{i}}$ làm cơ sở nên
+
+Dạng ma trận: $[x] = t_{1}([a_{1}] - [a_{0}]) + \dots + t_{m}([a_{m}] - [a_{0}]) + [a_{0}] (2)$.
+
+Dạng tọa độ:
+
+Hệ $(3)$ gồm n phương trình gọi là *phương trình tham số* của m-phẳng; t$_{1}$,…,t$_{m}$ là các *tham số*.
+
+Ma trận M (n hàng, m cột) của các hệ số t$_{j}$ có hạng m vì m vectơ $\vect{A_{0}A_{j}}$ độc lập.
+
+<Theorem id="thm-s3-7" title="Định lí (b)">
+Nếu hệ $x_{i} = t_{1}b_{1i} + \dots + t_{m}b_{mi} + b_{0i} (4), i = 1..n$, có ma trận $B = [b_{ji}]$ hạng m thì đối với mục tiêu đã chọn, $(4)$ là phương trình của một m-phẳng hoàn toàn xác định.
+</Theorem>
+
+<Proof of="thm-s3-7">
+Xét $m+1$ điểm $B_{0}(b_{0i}), B_{j}(b_{ji} + b_{0i})$.
+
+Vì B hạng m nên m vectơ $\vect{B_{0}B_{j}}$ độc lập, do đó hệ $m+1$ điểm độc lập; viết phương trình tham số của m-phẳng qua chúng ta được đúng hệ $(4)$.
+</Proof>
+
+**c) Trường hợp $m = 1$.**
+
+Đường thẳng đi qua $A(a_{i}), B(b_{i}): x_{i} = t(b_{i} - a_{i}) + a_{i}, i = 1..n$; nó qua A và có phương sinh bởi $\vect{AB}$.
+
+<Example id="ex-s3-9" title="Ví dụ">
+Trong $\R ^{3}$, đường thẳng qua A(1,2,3), B(2,0,5) có $\vect{AB} = (1,-2,2)$ nên  
+
+$$
+\begin{cases} x = 1 + t \\ y = 2 - 2t \\ z = 3 + 2t. \end{cases}
+$$
+
+ Với $t = 2$ ta được điểm $(3,-2,7)$.
+</Example>
+
+## 5. Phương trình tổng quát của m-phẳng trong An
+
+<Theorem id="thm-s3-10" title="Định lí">
+Mỗi m-phẳng trong $\mathcal{A} ^{n}$ được biểu thị bằng một hệ $n-m$ phương trình tuyến tính với các biến x$_{1}$,…,x$_{n}$ và có hạng $n-m$:
+ 
+
+$$
+\sum_{j=1}^{n} c_{ij}x_{j} + c_{i} = 0, i = 1, \dots ,n-m. (5)
+$$
+
+ 
+Đó là *phương trình tổng quát* của m-phẳng.
+
+Ngược lại, mỗi hệ phương trình tuyến tính $n-m$ phương trình theo x$_{1}$,…,x$_{n}$ có hạng $n-m$ biểu thị một m-phẳng hoàn toàn xác định của $\mathcal{A} ^{n}$.
+</Theorem>
+
+<Proof of="thm-s3-10">
+Ở $(4)$, hạng $B = m$ nên chọn được m phương trình độc lập (giả sử m hàng đầu), giải t$_{1}$,…,t$_{m}$ theo x$_{1}$,…,x$_{m}$ rồi thế vào $n-m$ phương trình còn lại; được hệ dạng $(5)$ mà các cột ứng với x$_{m+1}$,…,x$_{n}$ tạo định thức con cấp $n-m$ bằng $1 \neq 0$, nên hạng $n-m$.
+</Proof>
+
+**Nhận xét.** Mỗi siêu phẳng $(m = n-1)$ có dạng $a_{1}x_{1} + \dots + a_{n}x_{n} + b = 0$ với $(a_{1}, \dots ,a_{n}) \neq 0$.
+
+Mỗi m-phẳng là giao của $n-m$ siêu phẳng.
+
+<Example id="ex-s3-12" title="Ví dụ (thí dụ của sách, tr. 18)">
+Trong $\mathcal{A} ^{5}$, mặt phẳng α qua $M_{0}(2,0,1,0,-1)$, có phương sinh bởi $\vec{a} = (1,1,2,1,1), \vec{b} = (1,2,1,-2,3)$.
+
+Phương trình tham số: 
+
+$$
+\begin{cases} x_{1} = 2 + t_{1} + t_{2} \\ x_{2} = t_{1} + 2t_{2} \\ x_{3} = 1 + 2t_{1} + t_{2} \\ x_{4} = t_{1} - 2t_{2} \\ x_{5} = -1 + t_{1} + 3t_{2}. \end{cases}
+$$
+
+ Từ hai phương trình đầu: 
+
+$$
+\begin{cases} t_{1} = 2x_{1} - x_{2} - 4 \\ t_{2} = x_{2} - x_{1} + 2. \end{cases}
+$$
+
+ Thế vào ba phương trình sau được phương trình tổng quát (hạng $5 - 2 = 3)$:
+ 
+
+$$
+3x_{1} - x_{2} - x_{3} - 5 = 0; 4x_{1} - 3x_{2} - x_{4} - 8 = 0; x_{1} - 2x_{2} + x_{5} - 1 = 0.
+$$
+</Example>
+
+## 6. Vị trí tương đối của các phẳng trong An
+
+Cho p-phẳng $\mathcal{A} ^{p}$ có phương $V ^{p}$ và q-phẳng $\mathcal{A} ^{q}$ có phương $V^{q}, p \le q$.
+
+Xét $V^{p} \cap V^{q}$ và $\mathcal{A}^{p} \cap \mathcal{A}^{q}$:
+
+<Definition id="def-s3-13" title="a) Định nghĩa">
+α) Nếu $V^{p} \cap V^{q} = 0$: nếu $\mathcal{A}^{p} \cap \mathcal{A}^{q} \neq ∅$ thì có *một điểm chung duy nhất*; nếu $= ∅$ thì gọi là *chéo nhau (hoàn toàn)*.
+
+β) Nếu $V^{p} \cap V^{q} = V^{r}$ với $r > 0$ (có r phương chung): nếu r < p và có điểm chung thì giao là r-phẳng có phương $V ^{r}$; nếu r < p và không có điểm chung thì *chéo nhau không hoàn toàn*.
+
+Nếu $r = p$ (tức $V^{p} \subset V^{q}$, *cùng phương*): có điểm chung thì $\mathcal{A}^{p} \subset \mathcal{A}^{q}$; không có điểm chung thì $\mathcal{A} ^{p}$ *song song* với $\mathcal{A} ^{q}$ (khi $p = q$: hai phẳng song song với nhau).
+
+γ) *Tổng* $\mathcal{A}^{p} + \mathcal{A}^{q}$ là giao của tất cả các phẳng chứa cả hai (khác với tổng theo nghĩa tập hợp).
+</Definition>
+
+<Theorem id="thm-s3-14" title="b) Định lí">
+Giao của hai phẳng α, β hoặc là rỗng hoặc là một phẳng có phương $\overline{\alpha} \cap \overline{\beta}$.
+
+**Hệ quả.** Tổng $\alpha + \beta$ là một phẳng.
+</Theorem>
+
+<Theorem id="thm-s3-15" title="c) Định lí">
+α và β cắt nhau $\iff$ với mọi $A \in \alpha , B \in \beta$ có $\vect{AB} \in \overline{\alpha} + \overline{\beta}$.
+</Theorem>
+
+<Example id="ex-s3-16" title="Ví dụ">
+Trong $\R ^{3}$, trục Ox (qua O, phương $(1,0,0))$ và đường thẳng d$_{1}$ qua $(0,1,0)$ phương $(1,0,0): V^{1} \cap V^{1} = V^{1} (r = p = q)$, không có điểm chung nên song song.
+
+Ox và d$_{2}$ qua $(0,0,1)$ phương $(0,1,0)$: phương chung chỉ 0, Ox có dạng (s,0,0), d$_{2}$ có dạng $(0,u,1)$ nên không giao nhau $\implies$ chéo nhau hoàn toàn.
+
+Kiểm tra định lí c cho cặp Ox, d$_{2}$: $\vect{AB}$ với A(0,0,0), B(0,0,1) là $(0,0,1) \notin \overline{\alpha} + \overline{\beta} = span{(1,0,0),(0,1,0)}$, phù hợp với việc chúng không cắt nhau.
+</Example>
+
+## 7. Định lí về số chiều của tổng và giao của hai phẳng
+
+<Theorem id="thm-s3-17" title="Định lí">
+Cho α, β có phương ᾱ, β̄ trong $\mathcal{A} ^{n}$:
+
+a) Nếu α, β cắt nhau thì $dim( \alpha + \beta ) = dim \alpha + dim \beta - dim( \alpha \cap \beta )$.
+
+b) Nếu α, β không cắt nhau thì $dim( \alpha + \beta ) = dim \alpha + dim \beta - dim(\overline{\alpha} \cap \overline{\beta}) + 1$.
+</Theorem>
+
+<Proof of="thm-s3-17">
+a) Lấy $I \in \alpha \cap \beta$; khi đó $\alpha + \beta$ đi qua I với phương $\overline{\alpha} + \overline{\beta}$, và $dim(\overline{\alpha} \cap \overline{\beta}) = dim( \alpha \cap \beta )$, nên $dim( \alpha + \beta ) = dim(\overline{\alpha}+\overline{\beta}) = dim \overline{\alpha} + dim \overline{\beta} - dim(\overline{\alpha} \cap \overline{\beta})$.
+
+b) Theo 6c), mọi $A \in \alpha , B \in \beta$ có $\vect{AB} \notin \overline{\alpha} + \overline{\beta}$.
+
+Gọi δ̄ là không gian một chiều sinh bởi $\vect{AB}$; phẳng qua điểm $E \in \alpha$ với phương $(\overline{\alpha} + \overline{\beta}) ⊕ \overline{\delta}$ chứa α, β và đường AB, và là phẳng nhỏ nhất như vậy, nên $dim( \alpha + \beta ) = dim(\overline{\alpha}+\overline{\beta}) + 1 = dim \alpha + dim \beta - dim(\overline{\alpha} \cap \overline{\beta}) + 1$.
+</Proof>
+
+<Example id="ex-s3-19" title="Ví dụ">
+Trong $\R ^{3}$: Ox và Oy cắt nhau tại O nên $dim(Ox + Oy) = 1 + 1 - 0 = 2$ (mặt phẳng $z = 0)$.
+
+Ox và d$_{2}$ ở ví dụ trên không cắt nhau, $dim(\overline{\alpha} \cap \overline{\beta}) = 0$, nên $dim(Ox + d_{2}) = 1 + 1 - 0 + 1 = 3$, tức là cả $\R ^{3}$.
+</Example>
+
+## 8. Định lí
+
+<Theorem id="thm-s3-20" title="Định lí">
+Cho siêu phẳng $\mathcal{A} ^{n-1}$ và m-phẳng $\mathcal{A}^{m} (1 \le m \le n-1)$.
+
+Khi đó $\mathcal{A} ^{m}$ hoặc cùng phương với $\mathcal{A} ^{n-1}$, hoặc cắt $\mathcal{A} ^{n-1}$ theo một (m−1)-phẳng.
+</Theorem>
+
+<Proof of="thm-s3-20">
+Giả sử hai phẳng có điểm chung.
+
+Nếu $\mathcal{A}^{m} \subset \mathcal{A}^{n-1}$ thì cùng phương.
+
+Nếu không, $\mathcal{A}^{m} + \mathcal{A}^{n-1} = \mathcal{A}^{n}$; theo $7a), n = m + (n-1) - dim(\mathcal{A}^{m} \cap \mathcal{A}^{n-1})$, suy ra dim(giao) $= m - 1$.
+
+Nếu không có điểm chung, áp dụng $7b): n = m + (n-1) + 1 - dim(\overline{\alpha} \cap \overline{\beta})$, nên dim($\overline{\mathcal{A}} ^{m} \cap \overline{\mathcal{A}} ^{n-1}) = m$, tức $\overline{\mathcal{A}} ^{m} \subset \overline{\mathcal{A}} ^{n-1}$: hai phẳng cùng phương.
+</Proof>
+
+<Example id="ex-s3-22" title="Ví dụ">
+Trong $\R^{3} (n = 3)$, siêu phẳng $P: x + y + z = 0$ và đường thẳng d qua $(1,1,1)$ phương $(1,0,0) (m = 1)$.
+
+Điểm $(1+t, 1, 1) \in P \iff t = -3$, nên d cắt P tại điểm duy nhất $(-2,1,1)$, tức là một $(m-1) =$ 0-phẳng, đúng như định lí.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-s3-1" title="Phương trình tham số của đường thẳng (§3, mục 4)">
+Viết phương trình tham số của đường thẳng đi qua A(1,0,2) và B(3,1,1) trong A³.
+</Exercise>
+
+<Hint>
+Đường thẳng qua A có phương AB.
+</Hint>
+
+<Solution>
+AB = (2,1,-1).
+
+x = 1 + 2t, y = t, z = 2 - t.
+
+**Đáp án:** x = 1 + 2t, y = t, z = 2 - t
+</Solution>
+
+<Exercise id="exr-s3-2" title="Phương trình tổng quát của m-phẳng (§3, mục 5)">
+Trong A⁴, mặt phẳng  $ alpha$  đi qua M₀(1,0,0,0) và có phương sinh bởi a = (1,1,0,1), b = (0,1,1,0). Viết phương trình tổng quát của  $ alpha$ .
+</Exercise>
+
+<Hint>
+Viết phương trình tham số theo t₁, t₂ rồi khử tham số.  $ alpha$  là 2-phẳng trong A⁴ nên hệ có n - m = 2 phương trình.
+</Hint>
+
+<Solution>
+x₁ = 1 + t₁, x₂ = t₁ + t₂, x₃ = t₂, x₄ = t₁.
+
+Từ x₄ và x₃: t₁ = x₄, t₂ = x₃.
+
+Thế vào x₁, x₂: x₁ = 1 + x₄ và x₂ = x₄ + x₃.
+
+**Đáp án:** x₁ - x₄ - 1 = 0; x₂ - x₃ - x₄ = 0
+</Solution>
+
+<Exercise id="exr-s3-3" title="Giao của siêu phẳng và m-phẳng (§3, mục 6)">
+Trong A³ tìm giao điểm của mặt phẳng x + 2y - z = 4 với đường thẳng x = 1 + t, y = t, z = t.
+</Exercise>
+
+<Hint>
+Thế phương trình tham số của đường thẳng vào phương trình mặt phẳng.
+</Hint>
+
+<Solution>
+(1 + t) + 2t - t = 4 nên 1 + 2t = 4, t = 3/2.
+
+Thay t = 3/2: (x, y, z) = (5/2, 3/2, 3/2).
+
+**Đáp án:** (5/2, 3/2, 3/2)
+</Solution>
+
+<Exercise id="exr-s3-4" title="Vị trí tương đối của hai đường thẳng (§3, mục 6)">
+Trong A³ cho d₁: x = 1 + t, y = 2 - t, z = t và d₂: x = 2s, y = 1 + s, z = 3 - s. Xét vị trí tương đối của d₁ và d₂.
+</Exercise>
+
+<Hint>
+So sánh phương, rồi xét xem hai đường có đồng phẳng không (định thức của hai vectơ phương và vectơ nối hai điểm).
+</Hint>
+
+<Solution>
+Phương a = (1,-1,1) và b = (2,1,-1) không tỉ lệ, nên không song song.
+
+M₁(1,2,0), M₂(0,1,3), M₁M₂ = (-1,-1,3).
+
+Định thức của a, b, M₁M₂ bằng 6  $ neq$  0: ba vectơ không đồng phẳng, hai đường không cắt nhau.
+
+**Đáp án:** d₁ và d₂ chéo nhau
+</Solution>
+
+<KeyTakeaways>
+- Một m-phẳng được xác định bởi một điểm đi qua và một không gian con vectơ m chiều làm phương.
+- Hai phẳng có thể trùng nhau, song song, cắt nhau hoặc chéo nhau tùy thuộc vào quan hệ giữa hai phương.
+</KeyTakeaways>

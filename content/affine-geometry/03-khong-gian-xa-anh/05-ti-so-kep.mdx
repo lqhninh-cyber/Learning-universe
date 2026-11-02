@@ -1,0 +1,442 @@
+---
+id: ti-so-kep
+title: "Tỉ số Kép và Hàng điểm Điều hòa"
+description: "Tỉ số kép của bốn điểm thẳng hàng, tính bất biến qua phép chiếu xạ ảnh, hàng điểm điều hòa và tứ giác toàn phần."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "tỉ số kép"
+  - "hàng điểm điều hòa"
+  - "tứ giác toàn phần"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '201-212'
+    sections: '§5'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Tỉ số kép của 4 điểm thẳng hàng
+
+<Definition id="def-p5-1" title="a) Định nghĩa">
+Trong $\mathbb{P} ^{n}$ với mục tiêu xạ ảnh cho trước, trên một đường thẳng xác định bởi hai điểm phân biệt A, B, lấy các điểm C và D không trùng với A hoặc B.
+
+Gọi $\vec{a}$, $\vec{b}$, $\vec{c}$, $\vec{d}$ là các vectơ đại diện cho A, B, C, D, ta có
+ 
+
+$$
+\vec{c} = \lambda _{1}\vec{a} + μ_{1}\vec{b}; \vec{d} = \lambda _{2}\vec{a} + μ_{2}\vec{b} hay [C] = \lambda _{1}[A] + μ_{1}[B]; [D] = \lambda _{2}[A] + μ_{2}[B].
+$$
+
+ 
+Khi đó tỉ số $(\frac{μ_{1}}{\lambda _{1}})$ : $(\frac{μ_{2}}{\lambda _{2}})$ gọi là *tỉ số kép của 4 điểm* A, B, C, D lấy theo thứ tự đó, kí hiệu
+ 
+
+$$
+(ABCD) = (\frac{μ_{1}}{\lambda _{1}}) : (\frac{μ_{2}}{\lambda _{2}}).
+$$
+
+ 
+Bốn điểm A, B, C, D cùng thuộc một đường thẳng như trên gọi là một *hàng điểm*, đường thẳng đó là *giá* của hàng điểm.
+
+Các số $\lambda _{1}, μ_{1}$ có thể thay bằng $k \lambda _{1}, kμ_{1} (k \neq 0)$, các số $\lambda _{2}, μ_{2}$ cũng thế.
+</Definition>
+
+<Remark title="Chú ý">
+Nhận xét.
+
+Tỉ số kép không phụ thuộc vào việc chọn mục tiêu tọa độ.
+
+Thật vậy, nếu ma trận chuyển từ mục tiêu cũ sang mục tiêu mới là M thì 
+
+$$
+\begin{cases} [A'] = M[A] \\ [B'] = M[B] \\ [C'] = M[C] \\ [D'] = M[D]. \end{cases}
+$$
+
+Thay vào hệ thức định nghĩa: $[C'] = M[C] = \lambda _{1}M[A] + μ_{1}M[B] = \lambda _{1}[A'] + μ_{1}[B']$ và $[D'] = \lambda _{2}[A'] + μ_{2}[B']$.
+
+Vậy đối với mục tiêu mới $(A'B'C'D') = (\frac{μ_{1}}{\lambda _{1}})$ : $(\frac{μ_{2}}{\lambda _{2}})$, giá trị không đổi.
+</Remark>
+
+<Example id="ex-p5-2" title="Ví dụ">
+Trên $\mathbb{P} ^{1}$ lấy $A = (1,0), B = (0,1), C = (1,1), D = (1,2)$.
+
+Ta có $C = 1·A + 1·B$ nên $\lambda _{1} = μ_{1} = 1; D = 1·A + 2·B$ nên  
+
+$$
+\begin{cases} \lambda _{2} = 1 \\ μ_{2} = 2. \end{cases}
+$$
+
+ Vậy
+ 
+
+$$
+(ABCD) = (\frac{1}{1}) : (\frac{2}{1}) = \frac{1}{2}.
+$$
+
+ 
+
+Thay (C, D) bằng $(kC, k'D)$ cho cùng kết quả vì chỉ đổi $( \lambda _{1}, μ_{1})$ và $( \lambda _{2}, μ_{2})$ theo hệ số tỉ lệ.
+</Example>
+
+<Theorem id="thm-p5-3" title="b) Các tính chất">
+α) Giá trị của tỉ số kép không lệ thuộc việc chọn mục tiêu nên qua một phép biến đổi xạ ảnh, tỉ số kép của bốn điểm thẳng hàng không đổi: nếu *f* biến A, B, C, D thẳng hàng thành $A', B', C', D'$ thì (ABCD) $= (A'B'C'D')$.
+
+Ta nói tỉ số kép là một *bất biến xạ ảnh*.
+
+β) Từ định nghĩa suy ra:
+
+• (ABCD) $=$ (BADC) $=$ (CDAB) $=$ (DCBA);
+
+• (ABCD) $=$ *1***/***BACD* $=$ *1***/***ABDC*;
+
+• (ABCD) $= 1 -$ (ACBD) $= 1 -$ (DBCA).
+
+γ) Các trường hợp đặc biệt (mở rộng định nghĩa):
+
+• (ABCC) $= 1 (D ≡ C)$; (AACD) $= 1 (A ≡ B)$;
+
+• (ABAD) $=$ (ABCB) $= 0 (C ≡ A$ hoặc D ≡ B);
+
+• (ABBD) $=$ (ABCA) $= \infty (C ≡ B$ hoặc D ≡ A).
+</Theorem>
+
+<Example id="ex-p5-4" title="Ví dụ">
+Với (ABCD) $= \frac{1}{2}$ ở ví dụ trên: (BADC) $=$ (CDAB) $=$ (DCBA) $= \frac{1}{2}$; (BACD) $= 2 =$ *1***/***ABCD* và (ABDC) $= 2$; (ACBD) $= \frac{1}{2}$ nên $1 -$ (ACBD) $= \frac{1}{2} =$ (ABCD); (DBCA) cũng cho $1 -$ (DBCA) $= \frac{1}{2}$.
+</Example>
+
+<Definition id="def-p5-5" title="c) Hàng điểm điều hòa">
+Nếu (ABCD) $= -1$ thì ta nói cặp điểm C, D *chia điều hòa* cặp điểm A, B.
+
+Vì (ABCD) $=$ (CDAB) nên khi đó (CDAB) $= -1$, tức cặp A, B cũng chia điều hòa cặp C, D.
+
+Ta gọi cặp điểm A, B và cặp điểm C, D *liên hiệp điều hòa* với nhau; bốn điểm A, B, C, D làm thành một *hàng điểm điều hòa*.
+</Definition>
+
+<Example id="ex-p5-6" title="Ví dụ">
+$A = (1,0), B = (0,1), C = (1,1), D = (1,-1)$ trên $\mathbb{P}^{1}: C = 1·A + 1·B, D = 1·A - 1·B$ nên (ABCD) $= (\frac{1}{1})$ : 
+
+$$
+(\frac{-1}{1}) = -1.
+$$
+
+ Vậy C, D chia điều hòa A, B.
+</Example>
+
+<Definition id="def-p5-7" title="d) Hình bốn cạnh toàn phần — α) Định nghĩa">
+Trong $\mathbb{P} ^{2}$, tập hợp gồm 4 đường thẳng trong đó không có 3 đường nào đồng quy gọi là một *hình bốn cạnh toàn phần*.
+
+Mỗi đường thẳng là một *cạnh* (4 cạnh).
+
+Mỗi giao điểm của hai cạnh là một *đỉnh* (6 đỉnh).
+
+Hai đỉnh không thuộc cùng một cạnh gọi là *hai đỉnh đối diện* (3 cặp đỉnh đối diện).
+
+Mỗi đường thẳng nối hai đỉnh đối diện là một *đường chéo* (3 đường chéo).
+
+Mỗi giao điểm của hai đường chéo là một *điểm chéo* (3 điểm chéo).
+</Definition>
+
+<Theorem id="thm-p5-8" title="β) Định lí">
+Trong một hình bốn cạnh toàn phần, trên mỗi đường chéo, hai đỉnh đối diện và hai điểm chéo liên hiệp điều hòa với nhau.
+</Theorem>
+
+<Proof of="thm-p5-8">
+Cho hình bốn cạnh toàn phần $AA'BB'CC'$ có các đường chéo $AA', BB', CC'$.
+
+Trên đường chéo $CC'$ cần chứng minh $(CC'EF) = -1$.
+
+Chọn ${A, B', B; A'}$ làm mục tiêu xạ ảnh, tức $A = (1,0,0), B' = (0,1,0), B = (0,0,1), A' = (1,1,1)$.
+
+Ta có $C = AB \cap A'B' = (1,0,1)$ và $C' = AB' \cap A'B = (1,1,0)$.
+
+Do đó đường thẳng $CC'$ có tọa độ $[-1,1,1]$ và $AA'$ có tọa độ $[0,-1,1]$, nên $E = CC' \cap AA' = (2,1,1)$; đường thẳng $BB'$ có tọa độ $[-1,0,0]$ nên $F = CC' \cap BB' = (0,1,-1)$.
+
+Để tính $(CC'EF)$ đặt $[E] = \lambda _{1}[C] + μ_{1}[C']$ và $[F] = \lambda _{2}[C] + μ_{2}[C']$:
+ 
+
+$$
+(2,1,1) = \lambda _{1}(1,0,1) + μ_{1}(1,1,0) \implies \lambda _{1} = 1, μ_{1} = 1; (0,1,-1) = \lambda _{2}(1,0,1) + μ_{2}(1,1,0) \implies \lambda _{2} = -1, μ_{2} = 1.
+$$
+
+ 
+Vậy $(CC'EF) = (\frac{μ_{1}}{\lambda _{1}})$ : $(\frac{μ_{2}}{\lambda _{2}}) = (\frac{1}{1})$ : $(\frac{1}{-1}) = -1$.
+
+Tính tương tự được $(BB'DF) = -1$ và $(AA'DE) = -1$.
+</Proof>
+
+<Example id="ex-p5-10" title="Ví dụ">
+Trong hình trên, $D = AA' \cap BB'$ có tọa độ $(0,1,1)$ (vì $AA'$ là $x_{3} = x_{2}$ và $BB'$ là $x_{1} = 0)$.
+
+Với $B = (0,0,1), B' = (0,1,0): D = 1·B + 1·B'$ và $F = (0,1,-1) = -1·B + 1·B'$ nên $(BB'DF) = (\frac{1}{1})$ : $(\frac{1}{-1}) = -1$, đúng như định lí.
+</Example>
+
+## 2. Tỉ số kép của bốn siêu phẳng thuộc một chùm
+
+<Definition id="def-p5-11" title="a) Định nghĩa chùm siêu phẳng">
+Trong $\mathbb{P} ^{n}$, tập hợp các siêu phẳng cùng đi qua một (n−2)-phẳng gọi là một *chùm siêu phẳng*, và (n−2)-phẳng đó là *giá* của chùm.
+
+Một chùm được xác định bởi hai siêu phẳng phân biệt của chùm.
+
+Gọi P, Q là hai siêu phẳng phân biệt của chùm với tọa độ $P = [p_{1}, \dots , p_{n+1}], Q = [q_{1}, \dots , q_{n+1}]$ đối với mục tiêu cho trước.
+
+Khi đó giá của chùm có phương trình
+ 
+
+$$
+\begin{cases} p_{1}x_{1} + \dots + p_{n+1}x_{n+1} = 0 \\ q_{1}x_{1} + \dots + q_{n+1}x_{n+1} = 0. \end{cases}
+$$
+
+ 
+Nếu một siêu phẳng $R = [r_{1}, \dots , r_{n+1}]$ của chùm thì vì R đi qua $P \cap Q$ nên $r_{i} = \lambda p_{i} + μq_{i} (i = 1, \dots , n+1)$ với $( \lambda , μ) \neq (0,0)$.
+
+Mỗi cặp $( \lambda , μ) \neq (0,0)$ xác định một siêu phẳng của chùm, và (λ, μ), (kλ, kμ) xác định cùng một siêu phẳng.
+
+Viết [P], [Q], [R] là cột tọa độ của P, Q, R thì $[R] = \lambda [P] + μ[Q]$.
+</Definition>
+
+<Definition id="def-p5-12" title="b) Tỉ số kép của bốn siêu phẳng">
+Cho chùm xác định bởi P, Q; R và S là hai siêu phẳng của chùm: $[R] = \lambda _{1}[P] + μ_{1}[Q]$ và $[S] = \lambda _{2}[P] + μ_{2}[Q]$.
+
+Khi đó tỉ số $(\frac{μ_{1}}{\lambda _{1}})$ : $(\frac{μ_{2}}{\lambda _{2}})$ là *tỉ số kép của 4 siêu phẳng* P, Q, R, S lấy theo thứ tự đó:
+ 
+
+$$
+(PQRS) = (\frac{μ_{1}}{\lambda _{1}}) : (\frac{μ_{2}}{\lambda _{2}}).
+$$
+
+ 
+Tỉ số kép của 4 siêu phẳng thuộc một chùm có các tính chất giống tỉ số kép của bốn điểm thẳng hàng.
+
+Nếu (PQRS) $= -1$ thì bốn siêu phẳng P, Q, R, S làm thành một *chùm điều hòa*.
+</Definition>
+
+<Theorem id="thm-p5-13" title="c) Định lí">
+Trong $\mathbb{P} ^{n}$, cho một chùm bốn siêu phẳng P, Q, R, S và một đường thẳng d không cắt giá của chùm.
+
+Nếu A, B, C, D lần lượt là giao điểm của d với P, Q, R, S thì
+ 
+
+$$
+(PQRS) = (ABCD).
+$$
+</Theorem>
+
+<Proof of="thm-p5-13">
+Chọn mục tiêu xạ ảnh \{A$_{i}$; E\} sao cho $A_{1} = A, A_{2} = B$ còn $A_{3}, \dots , A_{n+1}$ thuộc giá của chùm.
+
+Khi đó siêu phẳng P đi qua mọi đỉnh của mục tiêu trừ $A_{2}$ nên P có phương trình $x_{2} = 0$ và tọa độ $[0,1,0, \dots ,0]$; tương tự Q có phương trình $x_{1} = 0$ và tọa độ $[1,0, \dots ,0]$.
+
+Giả sử R có $[R] = \lambda _{1}[P] + μ_{1}[Q]$, tức $R = [μ_{1}, \lambda _{1}, 0, \dots , 0]$ và có phương trình $μ_{1}x_{1} + \lambda _{1}x_{2} = 0$.
+
+Đường thẳng AB có phương trình tham số $[X] = t_{1}[A] + t_{2}[B]$, tức $X = (t_{1}, t_{2}, 0, \dots , 0)$.
+
+Điểm $C \in AB \cap R$ thỏa $μ_{1}t_{1} + \lambda _{1}t_{2} = 0$, chọn $t_{1} = - \lambda _{1}, t_{2} = μ_{1}: C = (- \lambda _{1}, μ_{1}, 0, \dots , 0)$, tức $[C] = - \lambda _{1}[A] + μ_{1}[B] (1)$.
+
+Với $D \in AB \cap S, [S] = \lambda _{2}[P] + μ_{2}[Q]$, tương tự $[D] = - \lambda _{2}[A] + μ_{2}[B] (2)$.
+
+Từ $(1)$ và $(2)$:
+ 
+
+$$
+(ABCD) = (\frac{μ_{1}}{- \lambda _{1}}) : (\frac{μ_{2}}{- \lambda _{2}}) = (\frac{μ_{1}}{\lambda _{1}}) : (\frac{μ_{2}}{\lambda _{2}}) = (PQRS).
+$$
+</Proof>
+
+<Example id="ex-p5-15" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, chùm đường thẳng qua điểm $(0,0,1)$: 
+
+$$
+\begin{cases} P: x_{1} = 0 \\ Q: x_{2} = 0 \\ R: x_{1} + x_{2} = 0 \\ S: x_{1} - x_{2} = 0. \end{cases}
+$$
+
+ Tọa độ $P = [1,0,0], Q = [0,1,0], R = [1,1,0] = 1·P + 1·Q, S = [1,-1,0] = 1·P - 1·Q$, nên (PQRS) $= (\frac{1}{1})$ : $(\frac{-1}{1}) = -1$ (chùm điều hòa).
+
+Đường thẳng $d: x_{3} = 0$ không đi qua $(0,0,1)$ cắt P, Q, R, S tại $A = (0,1,0), B = (1,0,0), C = (1,-1,0), D = (1,1,0)$.
+
+$C = -1·A + 1·B$ và $D = 1·A + 1·B$, nên (ABCD) $= (\frac{1}{-1})$ : $(\frac{1}{1}) = -1 =$ (PQRS).
+</Example>
+
+<Definition id="def-p5-16" title="Ứng dụng">
+Trong $\mathbb{P} ^{2}$ bằng phương pháp cắt và chiếu có thể chuyển tỉ số kép của một chùm bốn đường thẳng sang một chùm bốn đường thẳng khác, hoặc chuyển tỉ số kép của một hàng bốn điểm sang một hàng bốn điểm khác: (abcd) $=$ (ABCD) $= (a'b'c'd')$ và (ABCD) $=$ (abcd) $= (A'B'C'D')$.
+</Definition>
+
+## 3. Tọa độ xạ ảnh không thuần nhất
+
+<Definition id="def-p5-17" title="a) Trên đường thẳng xạ ảnh — α) Định nghĩa">
+Trên đường thẳng xạ ảnh $\mathbb{P} ^{1}$ với mục tiêu xạ ảnh ${A_{1}, A_{2}; E}$ đã chọn, một điểm $X \neq A_{1}$ có tọa độ xạ ảnh $(x_{1}, x_{2})$.
+
+Khi đó tỉ số $\frac{x_{1}}{x_{2}}$ gọi là *tọa độ xạ ảnh không thuần nhất* của điểm X đối với mục tiêu xạ ảnh đã cho; mục tiêu có $A_{1} = (1,0), A_{2} = (0,1), E = (1,1)$.
+</Definition>
+
+<Theorem id="thm-p5-18" title="β) Tính chất">
+Tọa độ xạ ảnh không thuần nhất của một điểm X trên đường thẳng xạ ảnh đối với mục tiêu ${A_{1}, A_{2}; E}$ bằng tỉ số kép $(A_{1}A_{2}EX)$.
+</Theorem>
+
+<Proof of="thm-p5-18">
+Để tính $(A_{1}A_{2}EX)$, giả sử $[E] = \lambda _{1}[A_{1}] + μ_{1}[A_{2}]$ và $[X] = \lambda _{2}[A_{1}] + μ_{2}[A_{2}]$.
+
+Thay tọa độ của $A_{1}, A_{2}, E, X$:
+ 
+
+$$
+(1,1) = \lambda _{1}(1,0) + μ_{1}(0,1) \implies \lambda _{1} = 1, μ_{1} = 1; (x_{1}, x_{2}) = \lambda _{2}(1,0) + μ_{2}(0,1) \implies \lambda _{2} = x_{1}, μ_{2} = x_{2}.
+$$
+
+ 
+Vậy $(A_{1}A_{2}EX) = (\frac{1}{1})$ : $(\frac{x_{2}}{x_{1}}) = \frac{x_{1}}{x_{2}}$.
+</Proof>
+
+<Remark title="Chú ý">
+Nhận xét.
+
+Trên đường thẳng xạ ảnh, nếu biết tọa độ xạ ảnh của điểm X là $(x_{1}, x_{2})$ với $x_{2} \neq 0$ thì tọa độ không thuần nhất của X là $\frac{x_{1}}{x_{2}}$.
+
+Ngược lại, nếu biết tọa độ không thuần nhất của một điểm là m thì tọa độ xạ ảnh của nó là (m, 1).
+
+Đặc biệt, với tọa độ xạ ảnh là cặp $(x_{1}, 0)$ ta quy ước tọa độ không thuần nhất là $\infty$ (vô tận) và ngược lại.
+</Remark>
+
+<Example id="ex-p5-20" title="Ví dụ">
+Trên $\mathbb{P} ^{1}$ với mục tiêu ${A_{1} = (1,0), A_{2} = (0,1); E = (1,1)}$, điểm $X = (3,2)$ có tọa độ không thuần nhất $\frac{3}{2}$.
+
+Kiểm tra bằng tỉ số kép: $E = 1·A_{1} + 1·A_{2}$ và $X = 3·A_{1} + 2·A_{2}$ nên $(A_{1}A_{2}EX) = (\frac{1}{1})$ : 
+
+$$
+(\frac{2}{3}) = \frac{3}{2}.
+$$
+
+ Điểm có tọa độ không thuần nhất $m = 5$ có tọa độ xạ ảnh $(5,1)$; điểm $(4,0) = 4A_{1}$ có tọa độ không thuần nhất $\infty$.
+</Example>
+
+<Definition id="def-p5-21" title="b) Trong không gian xạ ảnh Pn — α) Định nghĩa">
+Trong $\mathbb{P} ^{n}$, với mục tiêu xạ ảnh \{A$_{i}$; E\} cho trước, cho điểm X có tọa độ xạ ảnh $(x_{1}, x_{2}, \dots , x_{n+1})$ với $x_{n+1} \neq 0$.
+
+Khi đó bộ n số thực có thứ tự $(X_{1}, X_{2}, \dots , X_{n})$, trong đó $X_{i} = \frac{x_{i}}{x_{n+1}} (i = 1, 2, \dots , n)$, gọi là *tọa độ xạ ảnh không thuần nhất* của điểm X đối với mục tiêu đã cho.
+</Definition>
+
+<Theorem id="thm-p5-22" title="β) Tính chất">
+Trong $\mathbb{P} ^{n}$ cho mục tiêu \{A$_{i}$; E\}.
+
+Xét đường thẳng A$_{i}$A$_{n+1}$ và chùm siêu phẳng P, Q, R, S có giá là (n−2)-phẳng xác định bởi $n-1$ đỉnh còn lại của mục tiêu và lần lượt đi qua các điểm A$_{i}$, A$_{n+1}$, E, X.
+
+Gọi E$_{i}$ và X$_{i}$ lần lượt là giao điểm của đường thẳng A$_{i}$A$_{n+1}$ với R và S.
+
+Khi đó
+ 
+
+$$
+(A_{i}A_{n+1}E_{i}X_{i}) = \frac{x_{i}}{x_{n+1}}.
+$$
+</Theorem>
+
+<Proof of="thm-p5-22">
+Siêu phẳng P không đi qua A$_{n+1}$ nên có phương trình $x_{n+1} = 0$, tức $P = [0, \dots ,0,1]$.
+
+Siêu phẳng Q không đi qua A$_{i}$ nên có phương trình $x_{i} = 0$, tức $Q = [0, \dots ,0,1,0, \dots ,0]$ (số 1 ở cột thứ i).
+
+Mọi siêu phẳng T của chùm (P, Q) có $[T] = \lambda [P] + μ[Q]$, tức $T = (0, \dots , 0, μ, 0, \dots , 0, \lambda )$ và có phương trình $μx_{i} + \lambda x_{n+1} = 0$.
+
+• R là siêu phẳng của chùm đi qua $E(1,1, \dots ,1)$ nên $μ + \lambda = 0$; chọn $μ = 1, \lambda = -1: [R] = -[P] + [Q]$.
+
+• S là siêu phẳng của chùm đi qua $X(x_{1}, \dots , x_{n+1})$ nên $μx_{i} + \lambda x_{n+1} = 0$; chọn $μ = x_{n+1}, \lambda = -x_{i}: [S] = -x_{i}[P] + x_{n+1}[Q]$.
+
+Do đó (PQRS) $= (\frac{1}{-1})$ : $(\frac{x_{n+1}}{-x_{i}}) = \frac{x_{i}}{x_{n+1}}$.
+
+Mặt khác (PQRS) $=$ (A$_{i}$A$_{n+1}$E$_{i}$X$_{i}$), nên (A$_{i}$A$_{n+1}$E$_{i}$X$_{i}$) $= \frac{x_{i}}{x_{n+1}}$.
+
+Đẳng thức này chứng tỏ trên đường thẳng A$_{i}$A$_{n+1}$ tọa độ xạ ảnh không thuần nhất của X$_{i}$ đối với mục tiêu \{A$_{i}$, A$_{n+1}$; E$_{i}$\} là $\frac{x_{i}}{x_{n+1}}$.
+
+Vậy nếu điểm $X \in \mathbb{P}^{n}$ có tọa độ xạ ảnh $(x_{1}, \dots , x_{n+1})$ với $x_{n+1} \neq 0$ thì tọa độ xạ ảnh không thuần nhất của nó là bộ n số
+ 
+
+$$
+(\frac{x_{1}}{x_{n+1}}, \frac{x_{2}}{x_{n+1}}, \dots , \frac{x_{n}}{x_{n+1}}) = (X_{1}, X_{2}, \dots , X_{n}), X_{i} = \frac{x_{i}}{x_{n+1}}.
+$$
+
+ 
+Ngược lại, nếu biết tọa độ không thuần nhất $(X_{1}, X_{2}, \dots , X_{n})$ của một điểm thì tọa độ xạ ảnh của nó là $(X_{1}, X_{2}, \dots , X_{n}, 1)$.
+</Proof>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Các điểm có tọa độ xạ ảnh $(x_{1}, \dots , x_{n+1})$ với $x_{n+1} = 0$ đều không xác định được tọa độ xạ ảnh không thuần nhất, vì khi đó ta có bộ n số $\infty$ và một bộ như thế ứng với tất cả các điểm X của siêu phẳng có phương trình $x_{n+1} = 0$ chứa các đỉnh $A_{1}, A_{2}, \dots , A_{n}$.
+</Remark>
+
+<Example id="ex-p5-24" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ với mục tiêu ${A_{1}, A_{2}, A_{3}; E}$, điểm $X = (4,6,2)$ có $x_{3} = 2 \neq 0$ nên tọa độ không thuần nhất là $(X_{1}, X_{2}) = (\frac{4}{2}, \frac{6}{2}) = (2, 3)$.
+
+Ngược lại điểm có tọa độ không thuần nhất $(2,3)$ có tọa độ xạ ảnh $(2,3,1)$ (cũng là $(4,6,2)$ vì cùng tỉ lệ).
+
+Kiểm tra bằng tỉ số kép trên đường thẳng $A_{1}A_{3}$ (phương trình $x_{2} = 0): E_{1} = (1,0,1) = 1·A_{1} + 1·A_{3}$ và $X_{1} = (4,0,2) = 4A_{1} + 2A_{3}$ (hình chiếu của X lên $A_{1}A_{3})$ nên $(A_{1}A_{3}E_{1}X_{1}) = (\frac{1}{1})$ : 
+
+$$
+(\frac{2}{4}) = 2 = \frac{x_{1}}{x_{3}}.
+$$
+
+ Điểm $(1,2,0)$ có $x_{3} = 0$, ta không gán cho nó tọa độ không thuần nhất hữu hạn (nó thuộc đường thẳng $x_{3} = 0$ chứa $A_{1}, A_{2})$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p5-1" title="Tỉ số kép của 4 điểm thẳng hàng (§5, mục 1)">
+Trên P¹ cho A(1,0), B(0,1), C(1,1), D(1,2). Tính (ABCD).
+</Exercise>
+
+<Hint>
+Viết C =  $ lambda$ ₁A + μ₁B, D =  $ lambda$ ₂A + μ₂B thì (ABCD) = (μ₁/ $ lambda$ ₁) : (μ₂/ $ lambda$ ₂).
+</Hint>
+
+<Solution>
+C = 1·A + 1·B và D = 1·A + 2·B.
+
+(ABCD) = (1/1) : (2/1).
+
+**Đáp án:** 1/2
+</Solution>
+
+<Exercise id="exr-p5-2" title="Hàng điểm điều hòa (§5, mục 1c)">
+Trên P¹ cho A(1,0), B(0,1), C(1,1). Tìm điểm D sao cho (ABCD) = -1.
+</Exercise>
+
+<Hint>
+Đặt D =  $ lambda$ ₂A + μ₂B; ở đây μ₁/ $ lambda$ ₁ = 1.
+</Hint>
+
+<Solution>
+(1/1) : (μ₂/ $ lambda$ ₂) = -1 nên μ₂/ $ lambda$ ₂ = -1.
+
+Chọn  $ lambda$ ₂ = 1, μ₂ = -1: D = A - B.
+
+**Đáp án:** D(1, -1)
+</Solution>
+
+<Exercise id="exr-p5-3" title="Tỉ số kép của chùm đường thẳng và bất biến khi cắt chùm (§5, mục 2)">
+Trong P² cho chùm bốn đường thẳng a: x₁ = 0, b: x₂ = 0, c: x₁ + x₂ = 0, d: x₁ + 2x₂ = 0. Tính (abcd), rồi cắt chùm bởi đường thẳng ℓ: x₁ + x₂ - x₃ = 0 và kiểm tra tỉ số kép của bốn giao điểm.
+</Exercise>
+
+<Hint>
+(abcd) = (μ₁/ $ lambda$ ₁) : (μ₂/ $ lambda$ ₂) với [c] =  $ lambda$ ₁[a] + μ₁[b], [d] =  $ lambda$ ₂[a] + μ₂[b].
+</Hint>
+
+<Solution>
+[c] = [1,1,0] = 1·[a] + 1·[b]; [d] = [1,2,0] = 1·[a] + 2·[b]. Vậy (abcd) = (1/1) : (2/1) = 1/2.
+
+Giao với ℓ: A = (0,1,1), B = (1,0,1), C = (1,-1,0), D = (-2,1,-1).
+
+C = -1·A + 1·B, D = 1·A - 2·B nên (ABCD) = (1/(-1)) : (-2/1) = 1/2: bằng (abcd).
+
+**Đáp án:** (abcd) = 1/2, và bốn giao điểm cũng có tỉ số kép 1/2
+</Solution>
+
+<KeyTakeaways>
+- Tỉ số kép là bất biến cơ bản quan trọng nhất của hình học xạ ảnh.
+- Hàng điểm điều hòa xuất hiện tự nhiên từ các đường chéo của tứ giác toàn phần.
+</KeyTakeaways>

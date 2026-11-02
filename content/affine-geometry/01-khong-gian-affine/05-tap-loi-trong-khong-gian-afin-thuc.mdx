@@ -1,0 +1,172 @@
+---
+id: tap-loi-trong-khong-gian-afin-thuc
+title: "Tập Lồi trong Không gian Affine Thực"
+description: "Đoạn thẳng, tập lồi, tổ hợp lồi, bao lồi và đơn hình trong không gian thực."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "tập lồi"
+  - "bao lồi"
+  - "đơn hình"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '40-47'
+    sections: '§5'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Đoạn thẳng
+
+Cho hai điểm phân biệt P, Q của $\mathcal{A}$ thực.
+
+Điểm M thuộc đường thẳng $PQ \iff$ với điểm O tùy ý, $\vect{OM} = \lambda \vect{OP} + μ\vect{OQ}$ với $\lambda + μ = 1$.
+
+<Definition id="def-s5-1" title="Định nghĩa">
+*Đoạn thẳng PQ* là tập hợp các điểm M sao cho $\vect{OM} = \lambda \vect{OP} + (1- \lambda )\vect{OQ}$ với $0 \le \lambda \le 1$.
+
+P, Q gọi là hai *mút*; các điểm ứng với $0 < \lambda < 1$ gọi là điểm *ở giữa* P và Q.
+</Definition>
+
+## 2. Tỉ số đơn của hệ ba điểm thẳng hàng
+
+<Definition id="def-s5-2" title="Định nghĩa">
+Cho $P \neq Q$.
+
+Điểm $M \neq Q$ thuộc đường thẳng PQ khi và chỉ khi có $k \in \R \ {1}$ để $\vect{MP} = k\vect{MQ}; k$ gọi là *tỉ số đơn* của ba điểm M, P, Q (theo thứ tự đó), kí hiệu $k =$ (MPQ).
+
+Trung điểm M của PQ có (MPQ) $= -1$.
+</Definition>
+
+Đổi thứ tự thì giá trị thay đổi: (MQP) $=$ *1***/***MPQ*, (PMQ) $=$ (MPQ)/((MPQ) $- 1)$, (QPM) $= 1 -$ (MPQ).
+
+Quy ước khi hai điểm trùng nhau: (MMQ) $= 0$, (MPM) $= \infty$, (MPP) $= 1$.
+
+<Example id="ex-s5-3" title="Ví dụ">
+Trên trục $Ox, P(0,0), Q(4,0), M(6,0): \vect{MP} = (-6,0) = 3·(-2,0) = 3\vect{MQ}$ nên (MPQ) $= 3$.
+
+Khi đó (PMQ) $= \frac{3}{2}$ (đúng vì $\vect{PM} = (6,0) = 1,5·\vect{PQ})$ và (QPM) $= 1 - 3 = -2$ (đúng vì $\vect{QP} = (-4,0) = -2·\vect{QM})$.
+</Example>
+
+## 3. Tập lồi
+
+<Definition id="def-s5-4" title="Định nghĩa">
+Tập X trong không gian afin thực $\mathcal{A}$ gọi là *tập lồi* nếu với mọi $P, Q \in X$ thì đoạn thẳng PQ nằm hoàn toàn trong X.
+</Definition>
+
+**Thí dụ.**
+
+Mỗi m-phẳng α trong $\mathcal{A}$ thực là tập lồi, vì nếu $P, Q \in \alpha$ phân biệt thì toàn bộ đường thẳng $PQ \subset \alpha$, nên đoạn $PQ \subset \alpha$.
+
+## 4. Đơn hình m chiều
+
+Trong $\mathcal{A} ^{n}$ cho $m+1$ điểm độc lập $A_{0}, \dots ,A_{m} (0 \le m \le n), A_{i} = (a_{i1}, \dots ,a_{in})$.
+
+Phương trình tham số của m-phẳng qua chúng là $x_{i} = a_{0i} + t_{1}(a_{1i} - a_{0i}) + \dots + t_{m}(a_{mi} - a_{0i})$.
+
+Đặt $t_{0} = 1 - t_{1} - \dots - t_{m}$, tức $t_{0} + t_{1} + \dots + t_{m} = 1$, ta được $x_{i} =$ t$_{0}$a$_{0i} +$ t$_{1}$a$_{1i} + \dots +$ t$_{m}$a$_{mi}$.
+
+<Definition id="def-s5-5" title="Định nghĩa">
+Tập hợp các điểm $X \in \mathcal{A}^{n}$ có tọa độ thỏa $x_{i} =$ t$_{0}$a$_{0i} + \dots +$ t$_{m}$a$_{mi}$ với $t_{0} + \dots + t_{m} = 1$ và $t_{i} \ge 0 (i = 0..m)$ gọi là *đơn hình m chiều* (m-đơn hình), kí hiệu S(A$_{0}$,…,A$_{m}$); A$_{i}$ gọi là các *đỉnh*.
+
+Tương đương: $\vect{OM} = \sum_{i=0}^{m} \lambda _{i}\vect{OP_{i}}$ với $\sum_{i=0}^{m} \lambda _{i} = 1, \lambda _{i} \ge 0$.
+</Definition>
+
+Đơn hình 0 chiều là một điểm; 1, 2, 3 chiều lần lượt là *đoạn thẳng, tam giác, tứ diện*.
+
+Đỉnh A$_{i}$ ứng với $t_{i} = 1$ và $t_{j} = 0 (j \neq i)$.
+
+<Theorem id="thm-s5-6" title="Định lí">
+Đơn hình m chiều là một tập lồi.
+</Theorem>
+
+<Proof of="thm-s5-6">
+Lấy $M, N \in S$ với $\vect{OM} = \sum_{i=0}^{m} \lambda _{i}\vect{OP_{i}}, \vect{ON} = \sum_{i=0}^{m}μ_{i}\vect{OP_{i}} (\sum_{i=0}^{m} \lambda _{i} = \sum_{i=0}^{m}μ_{i} = 1; \lambda _{i}, μ_{i} \ge 0)$.
+
+Điểm $X \in MN$ có $\vect{OX} = t\vect{OM} + (1-t)\vect{ON} = \sum_{i=0}^{m}[t \lambda _{i} + (1-t)μ_{i}]\vect{OP_{i}}, 0 \le t \le 1$.
+
+Các hệ số không âm và có tổng $t + (1-t) = 1$, nên $X \in S$.
+</Proof>
+
+## 5. Hình hộp m chiều
+
+<Definition id="def-s5-8" title="Định nghĩa">
+Cho $m+1$ điểm độc lập P$_{0}$,…,P$_{m}$ của $\mathcal{A} ^{n}$ thực.
+
+Tập hợp các điểm M sao cho $\vect{P_{0}M} = \sum_{i=1}^{m} \lambda _{i}\vect{P_{0}P_{i}}$ với $0 \le \lambda _{i} \le 1$ gọi là *hình hộp m chiều* (m-hộp); các P$_{i}$ gọi là đỉnh của m-hộp.
+</Definition>
+
+<Theorem id="thm-s5-9" title="Định lí">
+Hình hộp m chiều là một tập lồi.
+</Theorem>
+
+<Proof of="thm-s5-9">
+Với M, N có hệ số $\lambda _{i}, μ_{i} \in [0,1]$, điểm $X \in MN$ có $\vect{P_{0}X} = t\vect{P_{0}M} + (1-t)\vect{P_{0}N} = \sum_{i=1}^{m}[t \lambda _{i} + (1-t)μ_{i}]\vect{P_{0}P_{i}}$.
+
+Vì $0 \le t \le 1$ nên $0 \le t \lambda _{i} + (1-t)μ_{i} \le t + (1-t) = 1$, suy ra X thuộc m-hộp.
+</Proof>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Một m-hộp có 2$^{m}$ đỉnh phân biệt; đỉnh P$_{0}$ ứng với mọi $\lambda _{i} = 0$, các đỉnh P$_{i}$ ứng với $\lambda _{i} = 1, \lambda _{j} = 0 (j \neq i)$.
+
+Gốc P$_{0}$ không đóng vai trò đặc biệt: mọi đỉnh đều có thể làm gốc.
+
+Hộp 0, 1, 2, 3 chiều lần lượt là *điểm, đoạn thẳng, hình bình hành, hình hộp*.
+</Remark>
+
+<Example id="ex-s5-11" title="Ví dụ">
+Trong $\R ^{2}$, A$_{0}$(0,0), A$_{1}$(1,0), A$_{2}$(0,1).
+
+Đơn hình $S(A_{0},A_{1},A_{2})$ là tam giác đặc; điểm $(\frac{1}{4}, \frac{1}{4})$ có $(t_{0},t_{1},t_{2}) = (\frac{1}{2}, \frac{1}{4}, \frac{1}{4})$ nên thuộc S, còn $(1,1)$ cần $t_{1} = t_{2} = 1, t_{0} = -1 < 0$ nên không thuộc S.
+
+Cùng ba điểm đó, 2-hộp $(0 \le \lambda _{1}, \lambda _{2} \le 1)$ là hình vuông đơn vị $[0,1]^{2}$, và $(1,1)$ thuộc hình hộp này.
+
+Cả hai đều là tập lồi.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-s5-1" title="Tỉ số đơn của ba điểm thẳng hàng (§5, mục 2)">
+Trên một đường thẳng của A¹ cho A, B, C có tọa độ lần lượt 0, 4, 6. Tính tỉ số đơn (CAB).
+</Exercise>
+
+<Hint>
+(MPQ) = k nếu MP = k·MQ (M là điểm thứ nhất).
+</Hint>
+
+<Solution>
+CA = 0 - 6 = -6 và CB = 4 - 6 = -2.
+
+CA = k·CB nên k = (-6)/(-2) = 3.
+
+**Đáp án:** (CAB) = 3
+</Solution>
+
+<Exercise id="exr-s5-2" title="Đoạn thẳng và tập lồi (§5, mục 1)">
+Cho P(1,2), Q(5,0). Trong hai điểm M(3,1) và N(7,-1), điểm nào thuộc đoạn thẳng PQ?
+</Exercise>
+
+<Hint>
+M thuộc đoạn PQ khi M = P + t·PQ với 0  $ le$  t  $ le$  1.
+</Hint>
+
+<Solution>
+PQ = (4,-2). M: (3,1) = (1 + 4t, 2 - 2t) cho t = 1/2  $ in$  [0,1].
+
+N: (7,-1) = (1 + 4t, 2 - 2t) cho t = 3/2 &gt; 1.
+
+**Đáp án:** M thuộc đoạn PQ (t = 1/2); N nằm trên đường thẳng PQ nhưng ngoài đoạn (t = 3/2).
+</Solution>
+
+<KeyTakeaways>
+- Tập lồi chứa toàn bộ đoạn thẳng nối hai điểm bất kỳ thuộc tập.
+- Bao lồi của một tập hợp là tập hợp tất cả các tổ hợp lồi của các phần tử thuộc tập đó.
+</KeyTakeaways>

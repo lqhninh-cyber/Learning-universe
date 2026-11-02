@@ -1,0 +1,210 @@
+---
+id: khong-gian-xa-anh
+title: "Không gian Xạ ảnh"
+description: "Định nghĩa không gian xạ ảnh xây dựng từ không gian vectơ, điểm xạ ảnh và số chiều."
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - "không gian xạ ảnh"
+  - "tia vectơ"
+  - "chiều xạ ảnh"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '165-173'
+    sections: '§1'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-p1-1" title="Định nghĩa">
+Giả sử $V ^{n+1}$ là không gian vectơ $n+1$ chiều $(n \ge 0)$ trên trường $\mathbb{K}$ và **X** là một tập hợp không rỗng tùy ý.
+
+Kí hiệu P($V ^{n+1}$) là tập hợp tất cả các không gian con một chiều của $V ^{n+1}$, nghĩa là mỗi phần tử của P($V ^{n+1}$) là một không gian con $V ^{1}$ của $V ^{n+1}$.
+
+Nếu có song ánh $π: P(V^{n+1}) \to \mathbf{X}$ thì bộ ba (**X**, π, $V ^{n+1}$) gọi là *không gian xạ ảnh n chiều liên kết với không gian vectơ* $V ^{n+1}$ trên trường $\mathbb{K}$, kí hiệu là $\mathbb{P}^{n} = (\mathbf{X}, π, V^{n+1})$.
+</Definition>
+
+Tùy theo $V ^{n+1}$ là không gian vectơ thực hay phức, ta được không gian xạ ảnh $\mathbb{P} ^{n}$ *thực* hay *phức*.
+
+Giáo trình này chủ yếu trình bày về không gian xạ ảnh thực.
+
+Mỗi điểm của $\mathbb{P} ^{n}$ là ảnh, qua song ánh π, của một không gian con $V ^{1}$ sinh bởi một vectơ $\vec{x} \neq \vec{0}$ của $V ^{n+1}$.
+
+<Definition id="def-p1-2" title="m-phẳng xạ ảnh">
+Nếu $V ^{m+1}$ là không gian vectơ con của $V^{n+1} (0 \le m \le n)$ thì tập hợp con π[P($V ^{m+1}$)] của **X** gọi là *m-phẳng xạ ảnh* của $\mathbb{P} ^{n}$.
+
+Do đó 0-phẳng còn gọi là *điểm*, 1-phẳng còn gọi là *đường thẳng*, (n−1)-phẳng còn gọi là *siêu phẳng*.
+
+Giả sử $\mathbf{X}' = π[P(V^{m+1})]$ là m-phẳng.
+
+Khi đó $π' = π|P(V^{m+1})$ là song ánh $P(V^{m+1}) \to \mathbf{X}'$, nên $(\mathbf{X}', π', V^{m+1})$ cũng là không gian xạ ảnh m chiều, kí hiệu $\mathbb{P}^{m} = (\mathbf{X}', π', V^{m+1})$.
+</Definition>
+
+<Example id="ex-p1-3" title="Ví dụ">
+Với $V^{2} = \R^{2}, P(V^{2})$ là tập các đường thẳng đi qua gốc tọa độ, nên $\mathbb{P} ^{1}$ là đường thẳng xạ ảnh thực.
+
+Mỗi đường thẳng qua gốc có phương trình $y = kx (k \in \R)$ hoặc $x = 0$, tức là có "một điểm ứng với mỗi giá trị k" cộng thêm điểm $x = 0$.
+
+Trong $\R ^{3}$, $\mathbb{P} ^{2}$ có điểm là các đường thẳng qua gốc, và mỗi mặt phẳng qua gốc $(V^{2} \subset V^{3})$ cho một đường thẳng xạ ảnh (1-phẳng).
+</Example>
+
+## 2. Các mô hình của không gian xạ ảnh
+
+<Definition id="def-p1-4" title="a) Mô hình vectơ">
+Lấy **X** chính là tập hợp P($V ^{n+1}$) và song ánh π là phép đồng nhất.
+
+Điểm của không gian xạ ảnh [P($V ^{n+1}$), π, $V ^{n+1}$] là các không gian con một chiều của $V ^{n+1}$.
+
+Tập hợp các không gian con một chiều thuộc một không gian con $m+1$ chiều nào đó là một m-phẳng của không gian xạ ảnh này.
+</Definition>
+
+<Example id="ex-p1-5" title="Ví dụ">
+Trong $V^{3} = \R^{3}$, các không gian con một chiều span\{(1,0,0)\}, span\{(0,1,0)\}, span\{(1,1,0)\} đều nằm trong không gian con hai chiều ${x_{3} = 0}$.
+
+Vậy ba điểm xạ ảnh tương ứng cùng thuộc một đường thẳng xạ ảnh (1-phẳng).
+</Example>
+
+<Definition id="def-p1-6" title="b) Mô hình số học">
+Xét các bộ số thực có thứ tự $(x_{1}, x_{2}, \dots , x_{n+1})$ trong đó có ít nhất một số khác 0.
+
+Hai bộ (x$_{i}$) và (y$_{i}$) gọi là tương đương khi và chỉ khi có số thực $\lambda \neq 0$ sao cho $x_{i} = \lambda y_{i} (i = 1, \dots ,n+1)$.
+
+Tập hợp các bộ số thực nói trên được phân thành các lớp tương đương.
+
+Gọi $\mathbb{K}$ là tập hợp tất cả các lớp tương đương đó.
+
+Gọi $V ^{n+1}$ là một không gian vectơ đã chọn cơ sở.
+
+Song ánh $π: P(V^{n+1}) \to \mathbb{K}$ được xác định như sau: với không gian con một chiều $V ^{1}$, chọn trên $V ^{1}$ một vectơ $\vec{x} \neq \vec{0}$ có tọa độ $(x_{1}, \dots , x_{n+1})$ đối với cơ sở đã chọn; $V ^{1}$ ứng với lớp tương đương có đại diện là $(x_{1}, \dots , x_{n+1})$.
+
+Vậy ($\mathbb{K}$, π, $V ^{n+1}$) là một *mô hình số học* của $\mathbb{P} ^{n}$.
+</Definition>
+
+<Example id="ex-p1-7" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, các bộ $(1,2,3), (2,4,6), (-1,-2,-3)$ tương đương nhau $( \lambda = 2, -1)$ nên biểu diễn cùng một điểm.
+
+Bộ $(1,2,4)$ không tương đương với $(1,2,3)$ (không có λ để $1 = \lambda ·1, 2 = \lambda ·2, 4 = \lambda ·3)$, nên là một điểm khác.
+
+Bộ $(0,0,0)$ không biểu diễn điểm nào.
+</Example>
+
+<Definition id="def-p1-8" title="c) Mô hình bó">
+Trong không gian afin $\mathcal{A} ^{n+1}$ xây dựng trên $V ^{n+1}$, lấy một điểm O tùy ý.
+
+Gọi **X** là tập hợp tất cả các đường thẳng của $\mathcal{A} ^{n+1}$ cùng đi qua O; một tập hợp **X** như vậy gọi là *bó đường thẳng tâm O*.
+
+Nếu $V ^{1}$ là không gian con một chiều của $V ^{n+1}$ thì π($V ^{1}$) là đường thẳng có phương $V ^{1}$.
+
+Ta có song ánh $π: P(V^{n+1}) \to \mathbf{X}$, nên (**X**, π, $V ^{n+1}$) là mô hình của $\mathbb{P} ^{n}$.
+
+Mỗi đường thẳng của bó biểu thị một "điểm xạ ảnh".
+
+Hai đường thẳng phân biệt của bó tạo nên một mặt phẳng afin đi qua O, biểu thị một "đường thẳng xạ ảnh".
+
+Tập hợp các "điểm xạ ảnh" cùng thuộc một "đường thẳng xạ ảnh" là một tập hợp "điểm" khép kín: nếu điểm C chuyển động theo chiều từ A đến B của đường thẳng AB thì sau khi vượt qua B, điểm đó vẫn đi theo hướng cũ và sẽ trở về A.
+
+Vì vậy đường thẳng xạ ảnh không giống với đường thẳng afin hay đường thẳng Ơclit: nó là một đường khép kín.
+
+Muốn biểu thị một "mặt phẳng xạ ảnh" (2-phẳng), ta lấy ba đường thẳng của bó tâm O không cùng nằm trong một mặt phẳng afin; chúng biểu thị ba "điểm xạ ảnh" A, B, C không thẳng hàng.
+
+Khi đó trên "mặt phẳng xạ ảnh ABC" có các "đường thẳng xạ ảnh" AB, BC, CA, và từ tính chất khép kín của các đường thẳng đó ta hình dung tính chất khép kín của "mặt phẳng xạ ảnh ABC".
+</Definition>
+
+<Example id="ex-p1-9" title="Ví dụ">
+Trong $\R ^{3}$, bó tâm O gồm các đường thẳng qua gốc.
+
+Ba đường thẳng chứa các vectơ (1,0,0), (0,1,0), (1,1,0) cùng nằm trong mặt phẳng $x_{3} = 0$, nên biểu thị ba điểm xạ ảnh thẳng hàng.
+
+Ba đường thẳng chứa (1,0,0), (0,1,0), (0,0,1) không đồng phẳng, nên biểu thị ba điểm xạ ảnh không thẳng hàng, xác định một mặt phẳng xạ ảnh.
+</Example>
+
+<Definition id="def-p1-10" title="d) Mô hình afin có bổ sung các phần tử vô tận">
+Gọi $\mathcal{A} ^{n+1}$ là không gian afin $n+1$ chiều liên kết với $V ^{n+1}$ và $\mathcal{A} ^{n}$ là một siêu phẳng của $\mathcal{A} ^{n+1}$ có phương là không gian con $V^{n} \subset V^{n+1}$.
+
+Xét tập hợp
+ 
+
+$$
+Ā^{n} = \mathcal{A}^{n} \cup P(V^{n})
+$$
+
+ 
+và xây dựng song ánh $π: P(V^{n+1}) \to Ā^{n}$: lấy một điểm cố định O của $\mathcal{A} ^{n+1}$ không nằm trên $\mathcal{A} ^{n}$; với mỗi không gian con một chiều $V ^{1}$ của $V ^{n+1}$:
+
+– Nếu $V ^{1}$ ⊄ $V ^{n}$ thì trên $\mathcal{A} ^{n}$ có một điểm M duy nhất sao cho $\vect{OM} \in V^{1}$; đặt $π(V^{1}) = M$.
+
+– Nếu $V^{1} \subset V^{n}$ thì đặt $π(V^{1}) = M_{\infty}$.
+
+Có thể hiểu π($V ^{1}$) là điểm gặp nhau của những đường thẳng song song với nhau trong $\mathcal{A} ^{n}$ có cùng phương $V ^{1}$; ta gọi đó là *điểm vô tận* của các đường thẳng song song đó.
+
+Dễ chứng minh π là song ánh, vì mỗi đường thẳng của bó tâm O ứng 1–1 với một điểm của Ā$^{n}$.
+
+Vậy (Ā$^{n}$, π, $V ^{n+1}$) là một không gian xạ ảnh n chiều, gọi là *mô hình afin có bổ sung các phần tử vô tận*.
+</Definition>
+
+<Definition id="def-p1-11" title="Các m-phẳng và siêu phẳng vô tận trong mô hình afin">
+Mỗi điểm xạ ảnh là một điểm thông thường của $\mathcal{A} ^{n}$ hoặc một không gian con một chiều của $V ^{n}$ (là phương của $\mathcal{A} ^{n}$).
+
+Mỗi m-phẳng của không gian xạ ảnh là:
+
+– hoặc tập hợp $\mathcal{A}^{m} \cup P(V^{m})$, trong đó $\mathcal{A} ^{m}$ là m-phẳng afin, $V ^{m}$ là phương của nó và P($V ^{m}$) là tập hợp các $V^{1} \subset V^{m}$;
+
+– hoặc tập hợp P($V ^{m+1}$) với $V^{m+1} \subset V^{n}$, gọi là *m-phẳng vô tận* (m-phẳng chứa toàn điểm vô tận).
+
+Nếu a và b là hai đường thẳng song song có cùng phương $V ^{1}$ thì $a \cup π(V^{1})$ và $b \cup π(V^{1})$ là hai đường thẳng của Ā$^{n}$ có chung điểm π($V ^{1}$) (điểm vô tận).
+
+Tập hợp các điểm vô tận của Ā$^{n}$ nằm trên một (n−1)-phẳng gọi là *siêu phẳng vô tận*.
+
+Như vậy Ā$^{n}$ có được bằng cách lấy $\mathcal{A} ^{n}$ và bổ sung các điểm vô tận của mọi đường thẳng thuộc $\mathcal{A} ^{n}$.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Trên mỗi đường thẳng của $\mathcal{A} ^{n}$ chỉ được bổ sung thêm một điểm vô tận.
+
+Trong không gian xạ ảnh Ā$^{n}$ các điểm afin thông thường và các điểm vô tận có vai trò bình đẳng vì đều là điểm xạ ảnh như nhau.
+
+Vì vậy khi dùng mô hình này để minh họa các khái niệm và tính chất của không gian xạ ảnh, cần hiểu rõ bản chất của điểm vô tận để khỏi nhầm lẫn: điểm vô tận là khái niệm không có trong không gian afin và cũng không được nêu tên trong không gian xạ ảnh.
+</Remark>
+
+<Example id="ex-p1-12" title="Ví dụ">
+Lấy $\mathcal{A} ^{2}$ là mặt phẳng $x_{3} = 1$ trong $\R ^{3}$ (siêu phẳng của $\mathcal{A} ^{3}$), O là gốc tọa độ, $V^{2} = {x_{3} = 0}$.
+
+Đường thẳng $span{(2,4,1)}$ cắt $\mathcal{A} ^{2}$ tại điểm $M(2,4)$, nên π cho điểm afin M.
+
+Đường thẳng $span{(1,2,0)} \subset V^{2}$ ứng với điểm vô tận.
+
+Hai đường thẳng song song $y = 2x$ và $y = 2x + 5$ của $\mathcal{A} ^{2}$ cùng có phương $(1,2)$, nên khi bổ sung chúng cắt nhau tại điểm vô tận $π(span{(1,2,0)})$; tập các điểm vô tận của Ā$^{2}$ là một đường thẳng xạ ảnh (siêu phẳng vô tận).
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p1-1" title="Không gian xạ ảnh và mô hình vectơ (§1)">
+Trong mô hình vectơ của P², điểm là gì? Hai vectơ (1,2,3) và (2,4,6) của R³ ứng với mấy điểm của P²?
+</Exercise>
+
+<Hint>
+Điểm của P(Vⁿ⁺¹) là không gian con một chiều của Vⁿ⁺¹.
+</Hint>
+
+<Solution>
+Mỗi điểm của P² là một không gian con một chiều (đường thẳng qua gốc) của R³.
+
+(2,4,6) = 2·(1,2,3) cùng sinh ra một không gian con một chiều.
+
+**Đáp án:** Điểm là một đường thẳng qua gốc của R³; hai vectơ ứng với cùng một điểm của P².
+</Solution>
+
+<KeyTakeaways>
+- Không gian xạ ảnh n chiều là tập hợp tất cả các đường thẳng đi qua gốc tọa độ trong không gian vectơ n+1 chiều.
+- Mọi cặp đường thẳng phân biệt trong mặt phẳng xạ ảnh đều cắt nhau tại đúng một điểm.
+</KeyTakeaways>

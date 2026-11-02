@@ -1,0 +1,220 @@
+---
+id: sieu-cau-trong-khong-gian-euclide
+title: "Siêu cầu trong Không gian Ơclit"
+description: "Tâm và bán kính siêu cầu, phương trình siêu cầu, vị trí tương đối giữa phẳng và siêu cầu."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "siêu cầu"
+  - "tiếp diện"
+  - "mặt cầu"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '154-162'
+    sections: '§10'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-e10-1" title="Định nghĩa">
+Trong $\mathbb{E} ^{n}$ cho điểm I cố định, tập hợp tất cả những điểm M sao cho $d(I,M) = r (r > 0$ cho trước) gọi là *siêu cầu (thực)* tâm I, bán kính r, kí hiệu $S(I,r) = {M \in \mathbb{E}^{n} | d(I,M) = r}$.
+
+Trong $\mathbb{E} ^{2}$ siêu cầu là đường tròn, trong $\mathbb{E} ^{3}$ là mặt cầu.
+</Definition>
+
+## 2. Phương trình của siêu cầu thực
+
+Với mục tiêu trực chuẩn, I(a$_{1}$,…,a$_{n}$), M(x$_{1}$,…,x$_{n}$) thuộc $S(I,r)$ khi và chỉ khi $\sum_{i=1}^{n}(x_{i} - a_{i})^{2} = r^{2}$.
+
+Viết lại: $\sum_{i=1}^{n}x^{2}_{i} - 2\sum_{i=1}^{n}a_{i}x_{i} + \sum_{i=1}^{n}a^{2}_{i} - r^{2} = 0 (1)$.
+
+Vậy siêu cầu thực là một siêu mặt bậc hai.
+
+## 3. Siêu cầu tổng quát
+
+<Definition id="def-e10-2" title="Định nghĩa">
+Siêu mặt bậc hai (S) gọi là *siêu cầu tổng quát* nếu có phương trình
+ 
+
+$$
+\sum_{i=1}^{n} x^{2}_{i} + 2\sum_{i=1}^{n} a_{i}x_{i} + a_{0} = 0 (2) \iff \sum_{i=1}^{n}(x_{i} + a_{i})^{2} = \sum_{i=1}^{n}a^{2}_{i} - a_{0}. (2')
+$$
+
+ 
+a) Nếu $\sum_{i=1}^{n}a^{2}_{i} - a_{0} > 0$ thì $(2')$ là *siêu cầu thực* tâm $I(-a_{1}, \dots ,-a_{n})$, bán kính $r = \sqrt{\sum_{i=1}^{n}a^{2}_{i} - a_{0}}$.
+
+b) Nếu $\sum_{i=1}^{n}a^{2}_{i} - a_{0} = 0$ thì (S) là *siêu cầu điểm* tâm I, bán kính 0.
+
+c) Nếu $\sum_{i=1}^{n}a^{2}_{i} - a_{0} < 0$ thì (S) là *siêu cầu ảo* tâm I (không chứa điểm thực nào).
+</Definition>
+
+<Example id="ex-e10-3" title="Ví dụ">
+Trong $\mathbb{E}^{2}, x^{2} + y^{2} - 2x + 4y + 1 = 0$ có $a_{1} = -1, a_{2} = 2, a_{0} = 1; \sum_{i=1}^{n}a^{2}_{i} - a_{0} = 1 + 4 - 1 = 4 > 0$: đường tròn tâm $I(1,-2)$, bán kính 2 (kiểm tra: 
+
+$$
+(x-1)^{2} + (y+2)^{2} = 4).
+$$
+
+ Còn $x^{2} + y^{2} + 1 = 0$ có $\sum_{i=1}^{n}a^{2}_{i} - a_{0} = -1 < 0$ nên là siêu cầu ảo; $x^{2} + y^{2} = 0$ là siêu cầu điểm tâm O.
+</Example>
+
+## 4. Miền trong và miền ngoài của siêu cầu thực
+
+<Theorem id="thm-e10-4" title="Định nghĩa và tính chất">
+Cho $S(I,r)$.
+
+*Miền trong* là tập các điểm T với $d(I,T) < r$; *miền ngoài* là tập các điểm N với $d(I,N) > r$.
+
+Miền trong là một tập lồi; còn đoạn thẳng nối một điểm thuộc miền trong với một điểm thuộc miền ngoài cắt mặt cầu $S(I,r)$ tại một điểm.
+</Theorem>
+
+<Proof of="thm-e10-4">
+Điểm M thuộc đoạn $PQ: \vect{IM} = t\vect{IP} + (1-t)\vect{IQ}, 0 \le t \le 1$, nên $IM^{2} = t^{2}IP^{2} + (1-t)^{2}IQ^{2} + 2t(1-t)\vect{IP}·\vect{IQ}$.
+
+Nếu P, Q thuộc miền trong: $\vect{IP}·\vect{IQ} \le |IP||IQ| < r^{2}$ nên $IM^{2} < r^{2}[t^{2} + (1-t)^{2} + 2t(1-t)] = r^{2}$.
+
+Nếu P trong, Q ngoài: hàm $f(t) = IM^{2}$ có $f(0) = IQ^{2} > r^{2}, f(1) = IP^{2} < r^{2}$, nên có $t \in (0,1)$ để $f(t) = r^{2}$.
+</Proof>
+
+<Example id="ex-e10-6" title="Ví dụ">
+Đường tròn $S(O,5)$ trong $\mathbb{E} ^{2}$: P(1,1) thuộc miền trong $(OP = \sqrt{2} < 5), Q(6,0)$ thuộc miền ngoài.
+
+Đoạn $PQ: (1 + 5t, 1 - t)$, điều kiện $(1+5t)^{2} + (1-t)^{2} = 25 \iff 26t^{2} + 8t - 23 = 0$, có nghiệm $t ≈ 0,80 \in (0,1)$ (nghiệm kia âm), nên đoạn PQ cắt đường tròn tại đúng một điểm.
+</Example>
+
+## 5. Phương chính và siêu phẳng kính chính của siêu cầu
+
+<Theorem id="thm-e10-7" title="Tính chất">
+• Đối với siêu cầu tổng quát, mọi vectơ $\vec{c} \neq \vec{0}$ đều không phải phương tiệm cận và luôn là phương chính (vì $A = I$, mọi $\vec{c} \neq 0$ là vectơ riêng).
+
+• Mọi siêu phẳng đi qua tâm $I(-a_{1}, \dots ,-a_{n})$ có dạng $\sum_{i=1}^{n} \alpha _{i}(x_{i} + a_{i}) = 0$, là siêu phẳng kính liên hợp với phương $\vect{\alpha} = ( \alpha _{1}, \dots , \alpha _{n})$; vì $\vect{\alpha}$ là phương chính nên nó là *siêu phẳng kính chính*.
+
+• *Siêu tiếp diện* tại $M_{0}(x^{0}_{i}) \in S(I,r)$ là siêu phẳng qua M$_{0}$ vuông góc với đường thẳng IM$_{0}$; vectơ $\vect{IM_{0}} = (x^{0}_{i} + a_{i})$ là vectơ pháp tuyến của nó.
+
+Đường thẳng qua tâm gọi là *đường kính*.
+</Theorem>
+
+<Example id="ex-e10-8" title="Ví dụ">
+Mặt cầu $x^{2} + y^{2} + z^{2} = 9$ (tâm $O, a_{i} = 0), M_{0}(1,2,2)$ thuộc mặt cầu $(1 + 4 + 4 = 9)$.
+
+$\vect{OM_{0}} = (1,2,2)$ là pháp tuyến nên siêu tiếp diện (mặt phẳng tiếp xúc) tại M$_{0}$ là $x + 2y + 2z - 9 = 0$.
+
+Khoảng cách từ O đến mặt phẳng này là $\frac{9}{\sqrt{1+4+4}} = 3 = r$, đúng như mặt phẳng tiếp xúc.
+</Example>
+
+## 6. Phương tích của một điểm đối với siêu cầu
+
+<Definition id="def-e10-9" title="a) Định nghĩa">
+Với siêu cầu $(S): f(x_{1}, \dots ,x_{n}) = \sum_{i=1}^{n}x^{2}_{i} + 2\sum_{i=1}^{n}a_{i}x_{i} + a_{0} = 0$ và điểm $M_{0}(x^{0}_{i})$, giá trị $f(x^{0}_{1}, \dots ,x^{0}_{n})$ gọi là *phương tích của điểm M$_{0}$ đối với siêu cầu (S)*, kí hiệu $𝒫(M_{0})/(S)$.
+</Definition>
+
+<Theorem id="thm-e10-10" title="b) Định lí">
+Trong $\mathbb{E} ^{n}$, nếu đường thẳng Δ đi qua M$_{0}$ cắt siêu cầu (S) tại hai điểm M$_{1}$, M$_{2}$ thì $𝒫(M_{0})/(S) = \vect{M_{0}M_{1}}·\vect{M_{0}M_{2}}$.
+</Theorem>
+
+<Proof of="thm-e10-10">
+Đường thẳng $Δ: x_{i} = x^{0}_{i} + \lambda u_{i}$.
+
+Thay vào $(S): ([u]*[u]) \lambda ^{2} + 2([u]*[x^{0}] + [a]*[u]) \lambda + f(x^{0}) = 0$.
+
+Hai nghiệm λ$_{1}$, λ$_{2}$ ứng với M$_{1}$, M$_{2}$ thỏa $\lambda _{1} \lambda _{2} = f(x^{0}) / ([u]*[u])$.
+
+Mà $\vect{M_{0}M_{1}} = \lambda _{1}\vec{u}, \vect{M_{0}M_{2}} = \lambda _{2}\vec{u}$ nên tích vô hướng bằng $\lambda _{1} \lambda _{2}\vec{u}^{2} = f(x^{0}) = 𝒫(M_{0})/(S)$.
+</Proof>
+
+<Example id="ex-e10-12" title="Ví dụ">
+$(S): x^{2} + y^{2} - 25 = 0$ và $M_{0}(6,0)$: 
+
+$$
+𝒫 = 36 - 25 = 11.
+$$
+
+ Đường thẳng Δ qua M$_{0}$ phương $(-1,0)$ cắt (S) tại $M_{1}(5,0), M_{2}(-5,0)$: 
+
+$$
+\vect{M_{0}M_{1}}·\vect{M_{0}M_{2}} = (-1,0)·(-11,0) = 11 .
+$$
+
+ Điểm trên đường tròn có $𝒫 = 0$, điểm bên trong có $𝒫 < 0$.
+</Example>
+
+## 7. Siêu phẳng đẳng phương
+
+<Theorem id="thm-e10-13" title="a) Định lí">
+Trong $\mathbb{E} ^{n}$ cho hai siêu cầu (S$_{1}$), (S$_{2}$) có tâm không trùng nhau.
+
+Khi đó tập hợp những điểm M có cùng phương tích đối với (S$_{1}$) và (S$_{2}$) nằm trên một siêu phẳng, vuông góc với đường thẳng nối hai tâm.
+</Theorem>
+
+<Proof of="thm-e10-13">
+Với $f_{1} = [x]*[x] + 2[a]*[x] + a_{0} (S_{1}), f_{2} = [x]*[x] + 2[b]*[x] + b_{0} (S_{2})$, điều kiện $f_{1} = f_{2}$ là
+ 
+
+$$
+2([a] - [b])*[x] + a_{0} - b_{0} = 0. (1)
+$$
+
+ 
+Tâm $I_{1}(-a_{i}) \neq I_{2}(-b_{i})$ nên $[a] \neq [b]$, và $(1)$ là phương trình một siêu phẳng với vectơ pháp tuyến $\vec{n} = (a_{1}-b_{1}, \dots ,a_{n}-b_{n})$, cùng phương với $\vect{I_{1}I_{2}}$; nên siêu phẳng vuông góc với I$_{1}$I$_{2}$.
+</Proof>
+
+<Definition id="def-e10-15" title="b) Định nghĩa">
+Siêu phẳng này gọi là *siêu phẳng đẳng phương* của hai siêu cầu.
+</Definition>
+
+<Example id="ex-e10-16" title="Ví dụ">
+$(S_{1}): x^{2} + y^{2} - 1 = 0 (a = 0, a_{0} = -1)$ và $(S_{2}): (x-4)^{2} + y^{2} - 1 = 0$, tức $x^{2} + y^{2} - 8x + 15 = 0 (b = (-4,0), b_{0} = 15)$.Phương trình $(1)$: 
+
+$$
+2(4,0)·(x,y) - 1 - 15 = 0 \iff x = 2.
+$$
+
+ Đây là đường thẳng vuông góc với đường nối hai tâm O(0,0), (4,0), đi qua trung điểm.
+
+Kiểm tra:$M(2,5)$ có $f_{1} = 4 + 25 - 1 = 28$ và $f_{2} = 4 + 25 - 16 + 15 = 28$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e10-1" title="Siêu cầu: phương trình tổng quát (§10, mục 3)">
+Mặt cầu x² + y² + z² - 2x + 4y - 6z + 5 = 0 trong E³: tìm tâm và bán kính.
+</Exercise>
+
+<Hint>
+Đưa về Σ[i=1|n](xᵢ + aᵢ)² = Σ[i=1|n]aᵢ² - a₀.
+</Hint>
+
+<Solution>
+(x - 1)² + (y + 2)² + (z - 3)² = 1 + 4 + 9 - 5 = 9.
+
+**Đáp án:** Tâm I(1, -2, 3), bán kính R = 3
+</Solution>
+
+<Exercise id="exr-e10-2" title="Phương tích và trục đẳng phương (§10, mục 6–7)">
+Cho hai đường tròn (C₁): x² + y² - 4 = 0 và (C₂): (x - 3)² + y² - 1 = 0 trong E². Tính phương tích của O(0,0) đối với (C₂) và viết phương trình trục đẳng phương của hai đường tròn.
+</Exercise>
+
+<Hint>
+Phương tích là giá trị vế trái; trục đẳng phương: f₁ = f₂.
+</Hint>
+
+<Solution>
+(C₂): x² + y² - 6x + 8 = 0 nên phương tích của O là 8.
+
+f₁ = f₂: -4 = -6x + 8 nên x = 2.
+
+**Đáp án:** Phương tích 8; trục đẳng phương x = 2
+</Solution>
+
+<KeyTakeaways>
+- Siêu cầu trong không gian n chiều là tập hợp các điểm cách đều một điểm cố định (tâm).
+- Giao của siêu cầu với một phẳng nếu không rỗng thì là một siêu cầu trong không gian phẳng đó.
+</KeyTakeaways>

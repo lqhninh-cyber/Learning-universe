@@ -1,0 +1,409 @@
+---
+id: cuc-va-sieu-phang-doi-cuc
+title: "Cực và Siêu phẳng Đối cực đối với Siêu mặt Bậc hai"
+description: "Khái niệm liên hiệp, cực và siêu phẳng đối cực, tiếp diện và nón tiếp xúc đối với siêu mặt bậc hai."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "cực và đối cực"
+  - "tiếp diện"
+  - "liên hiệp"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '238-245'
+    sections: '§9'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-p9-1" title="Định nghĩa">
+Trong $\mathbb{P} ^{n}$ với mục tiêu xạ ảnh cho trước, cho siêu mặt bậc hai $(S): [x]*A[x] = \sum_{i,j=1}^{n+1}$ a$_{ij}$x$_{i}$x$_{j} = 0 (1)$ và điểm U có tọa độ $(u_{1}, u_{2}, \dots , u_{n+1})$.
+
+Xét phương trình
+ 
+
+$$
+[u]*A[x] = \sum_{i,j=1}^{n+1} a_{ij}u_{i}x_{j} = 0. (2)
+$$
+
+ 
+Nếu $n+1$ hệ số $\sum_{i=1}^{n+1} a_{ij}u_{i} (j = 1, \dots , n+1)$ không đồng thời bằng 0 thì $(2)$ là phương trình của một siêu phẳng P.
+
+Siêu phẳng P gọi là *siêu phẳng đối cực* của điểm U đối với (S); điểm U gọi là *điểm cực* (*cực điểm*) của siêu phẳng P đối với (S).
+
+Nếu cả $n+1$ hệ số đó đều bằng 0 thì U gọi là *điểm đặc biệt* của (S); khi đó không có siêu phẳng đối cực của U.
+</Definition>
+
+<Example id="ex-p9-2" title="Thí dụ">
+Cho đường bậc hai (S) trong $\mathbb{P}^{2}: 2x^{2}_{1} + x^{2}_{2} - 2x^{2}_{3} - 6x_{1}x_{2} + 4x_{2}x_{3} = 0$ và điểm $U(2, -1, 5)$.
+
+Tìm siêu phẳng đối cực của U.
+
+*Giải.*
+
+Viết (S) dạng $[x]*A[x] = 0$ với A có các hàng $(2, -3, 0), (-3, 1, 2), (0, 2, -2)$.
+
+Siêu phẳng đối cực của $U(2,-1,5)$ có phương trình $[u]*A[x] = 0$, tức $[2 -1 5]·A = (4+3+0, -6-1+10, 0-2-10) = (7, 3, -12)$.
+
+Vậy
+ 
+
+$$
+7x_{1} + 3x_{2} - 12x_{3} = 0.
+$$
+
+ 
+
+Ví dụ khác: với conic $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0 (A = diag(1,1,-1))$, điểm $U = (1,0,1)$ thuộc conic có đối cực $x_{1} - x_{3} = 0$, chính là tiếp tuyến tại U.
+</Example>
+
+## 2. Tính chất
+
+<Theorem id="thm-p9-3" title="Tính chất">
+a) Nếu $U = (u_{1}, \dots , u_{n+1})$ là điểm đặc biệt của (S) thì (S) suy biến và $U \in (S)$.
+
+b) Nếu (S) không suy biến thì mọi điểm của không gian đều có một siêu phẳng đối cực duy nhất đối với (S).
+</Theorem>
+
+<Proof of="thm-p9-3">
+a) Ta có $\sum_{i=1}^{n+1} a_{ij}u_{i} = 0$ với mọi j.
+
+Vì các u$_{i}$ không đồng thời bằng 0 nên hệ này có nghiệm không tầm thường, tức $det[a_{ij}] = 0$, nên (S) suy biến.
+
+Nhân phương trình thứ j của hệ với u$_{j}$ rồi cộng lại: $\sum_{i,j=1}^{n+1}$ a$_{ij}$u$_{i}$u$_{j} = 0$, tức $U \in (S)$.
+
+b) suy từ a): nếu (S) không suy biến thì không có điểm đặc biệt, nên mọi điểm có siêu phẳng đối cực, duy nhất vì phương trình $(2)$ xác định siêu phẳng duy nhất.
+</Proof>
+
+<Example id="ex-p9-5" title="Ví dụ">
+Đường bậc hai $x^{2}_{1} - x^{2}_{2} = 0 (A = diag(1,-1,0)$, suy biến) có điểm $U = (0,0,1)$ với $A·u = (0,0,0)$, nên U là điểm đặc biệt; đúng như tính chất a), U thuộc đường $(0 - 0 = 0)$ và (S) suy biến.
+</Example>
+
+## 3. Định lí
+
+<Theorem id="thm-p9-6" title="Định lí">
+Nếu (S) là một siêu mặt bậc hai không suy biến thì bất kì siêu phẳng nào của $\mathbb{P} ^{n}$ cũng có một điểm cực duy nhất đối với (S).
+</Theorem>
+
+<Proof of="thm-p9-6">
+Giả sử (S): $\sum_{i,j=1}^{n+1}$ a$_{ij}$x$_{i}$x$_{j} = 0$ với $det[a_{ij}] \neq 0$ và siêu phẳng $P: \sum_{j=1}^{n+1} c_{j}x_{j} = 0 (3)$.
+
+Nếu $U(u_{1}, \dots , u_{n+1})$ là điểm cực của P thì P có phương trình $\sum_{i,j=1}^{n+1}$ a$_{ij}$u$_{i}$x$_{j} = 0 (4)$.
+
+Từ $(3)$ và $(4): \sum_{i=1}^{n+1} a_{ij}u_{i} = c_{j}, j = 1, \dots , n+1$.
+
+Đây là hệ $n+1$ phương trình tuyến tính không thuần nhất với $det[a_{ij}] \neq 0$ nên có nghiệm duy nhất $(u_{1}, \dots , u_{n+1}) \neq (0, \dots , 0)$ vì các c$_{j}$ không đồng thời bằng 0.
+
+Vậy có một điểm cực U duy nhất.
+</Proof>
+
+<Example id="ex-p9-8" title="Ví dụ">
+Với conic $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0 (A = diag(1,1,-1))$ và đường thẳng $P: x_{1} + 2x_{2} - 3x_{3} = 0 (c = (1,2,-3))$: giải $A·u = c$ được $u = (1, 2, 3)$.
+
+Vậy điểm cực của P là $U = (1,2,3)$; kiểm tra: đối cực của U có phương trình $1·x_{1} + 2·x_{2} - 3·x_{3} = 0$, trùng P.
+</Example>
+
+## 4. Định lí
+
+<Theorem id="thm-p9-9" title="Định lí">
+Các khái niệm "điểm cực", "siêu phẳng đối cực" ở trên đều là khái niệm xạ ảnh.
+</Theorem>
+
+<Proof of="thm-p9-9">
+Cho $(S): [x]*A[x] = 0$ với $det[a_{ij}] \neq 0$ và điểm U(u$_{i}$); siêu phẳng đối cực của U có phương trình $[u]*A[x] = 0$.
+
+Với phép biến đổi xạ ảnh *f* có phương trình $[x] = B[x']: f(S) = S'$ có phương trình $[x']*B*AB[x'] = 0$.
+
+Điểm U biến thành $U' = f(U)$ với $[u] = B[u']$, và siêu phẳng đối cực của U biến thành $(B[u'])*A(B[x']) = 0$, tức $[u']*B*AB[x'] = 0$.
+
+Đó chính là phương trình siêu phẳng đối cực của $U'$ đối với $S'$.
+</Proof>
+
+<Example id="ex-p9-11" title="Ví dụ">
+Với $(S): x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0, U = (1,0,1)$ có đối cực $x_{1} - x_{3} = 0$.
+
+Dùng phép biến đổi $[x] = B[x'], B = diag(1,1,2): S'$ có ma trận $B*AB = diag(1,1,-4)$, tức $x'^{2}_{1} + x'^{2}_{2} - 4x'^{2}_{3} = 0$; điểm U có $[u'] = B^{-1}[u] = (1, 0, \frac{1}{2})$ và đối cực của $U'$ đối với $S'$ là $[u']*B*AB[x'] = x'_{1} - 2x'_{3} = 0$.
+
+Đối cực cũ $x_{1} - x_{3} = 0$ viết theo $x' (x_{1} = x'_{1}, x_{3} = 2x'_{3})$ cũng là $x'_{1} - 2x'_{3} = 0$: trùng nhau.
+</Example>
+
+## 5. Giao điểm của một siêu mặt bậc hai với một đường thẳng
+
+<Theorem id="thm-p9-12" title="Phương trình giao điểm">
+Trong $\mathbb{P}^{n} (n >$;
+
+1) với mục tiêu cho trước, cho $(S): [x]*A[x] = 0$ và đường thẳng xác định bởi hai điểm phân biệt $U(u_{i}), V(v_{i}): x_{i} = \lambda u_{i} + μv_{i} (i = 1, \dots , n+1)$.
+
+Giao điểm thỏa $\sum_{i,j=1}^{n+1} a_{ij}( \lambda u_{i} + μv_{i})( \lambda u_{j} + μv_{j}) = 0 (5)$, tức
+ 
+
+$$
+P \lambda ^{2} + 2Q \lambda μ + Rμ^{2} = 0, (5')
+$$
+
+ 
+với $P = [u]*A[u], Q = [u]*A[v], R = [v]*A[v]$.
+
+Mỗi cặp $( \lambda , μ) \neq (0,0)$ nghiệm của $(5')$ cho một giao điểm.
+
+**a) Trường hợp $Q^{2} - PR \neq 0$.** $1°)$ Nếu $P \neq 0$ thì $μ = 0$ kéo theo $\lambda = 0$ (loại), nên $μ \neq 0$; chia cho $μ^{2}: P(\frac{\lambda}{μ})^{2} + 2Q(\frac{\lambda}{μ}) + R = 0$, phương trình bậc hai có hai nghiệm phân biệt: nếu thực ta được hai giao điểm thực, nếu phức liên hợp ta được hai giao điểm ảo liên hợp. $2°)$ Nếu $P = 0 (U \in (S))$ thì $Q \neq 0, (5')$ thành $(2Q \lambda + Rμ)μ = 0$: nghiệm $μ = 0$ ứng với điểm U, nghiệm thứ hai $2Q(\frac{\lambda}{μ}) + R = 0$ cho giao điểm thứ hai khác U.
+
+Vậy nếu $Q^{2} - PR \neq 0$, đường thẳng UV cắt (S) tại hai điểm thực phân biệt hoặc hai điểm ảo liên hợp.
+
+**b) Trường hợp $Q^{2} - PR = 0$** (một trong P, Q, R khác $0): (5')$ có nghiệm duy nhất, đường thẳng UV và (S) có một giao điểm kép duy nhất; ta nói UV *tiếp xúc* với (S).
+
+**c) Trường hợp $P = Q = R = 0$:** mọi cặp (λ, μ) nghiệm đúng $(5')$ nên cả đường thẳng UV thuộc (S); ta nói UV là một *đường sinh* của (S).
+</Theorem>
+
+<Example id="ex-p9-13" title="Ví dụ">
+Với (S): 
+
+$$
+x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0 (A = diag(1,1,-1)):
+$$
+
+ $• U = (0,0,1), V = (1,0,0): P = -1, Q = 0, R = 1$, nên $Q^{2} - PR = 1 \neq 0; (5')$ là $- \lambda ^{2} + μ^{2} = 0, \lambda = \pm μ$ cho hai giao điểm thực $(1,0,1)$ và $(1,0,-1)$.
+
+• $U = (1,0,1) \in (S), V = (0,1,0): P = 0, Q = 0, R = 1$, nên $Q^{2} - PR = 0$: đường thẳng nối $(1,0,1)$ và $(0,1,0)$ tiếp xúc với conic (các điểm (λ, μ, λ) thỏa $μ^{2} = 0)$.
+
+• Với mặt $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} - x^{2}_{4} = 0$ trong $\mathbb{P}^{3}, U = (1,0,1,0), V = (0,1,0,1): P = 1 - 1 = 0, R = 1 - 1 = 0, Q = 0$: đường thẳng UV nằm trên mặt (là đường sinh).
+</Example>
+
+## 6. Định lí
+
+<Theorem id="thm-p9-14" title="Định lí">
+Nếu một điểm U không thuộc siêu mặt bậc hai (S) và một đường thẳng đi qua U cắt siêu phẳng đối cực của U tại V đồng thời cắt (S) tại hai điểm phân biệt M, N (thực hoặc ảo liên hợp) thì (UVMN) $= -1$.
+</Theorem>
+
+<Proof of="thm-p9-14">
+Giả sử $(S): [x]*A[x] = 0, U = (u_{i}), V = (v_{i})$.
+
+Giao điểm M, N của UV với (S) xác định bởi $(5'): P \lambda ^{2} + 2Q \lambda μ + Rμ^{2} = 0$.
+
+Vì $U \notin (S)$ nên $P = [u]*A[u] \neq 0$.
+
+Vì V thuộc siêu phẳng đối cực của U nên $Q = [u]*A[v] = 0$.
+
+Phương trình trở thành $P \lambda ^{2} + Rμ^{2} = 0$.
+
+Vì UV cắt (S) tại hai điểm phân biệt nên $Q^{2} - PR \neq 0$, mà $Q = 0$ nên $R \neq 0$.
+
+Do đó $\lambda ^{2} = -(\frac{R}{P})μ^{2}$ và có hai nghiệm: với $μ_{1} = 1, \lambda _{1} = \sqrt{\frac{-R}{P}}$ cho điểm M; với $μ_{2} = 1, \lambda _{2} = -\sqrt{\frac{-R}{P}}$ cho điểm N.
+
+Vì $[M] = \lambda _{1}[U] + μ_{1}[V]$ và $[N] = \lambda _{2}[U] + μ_{2}[V]$ nên
+ 
+
+$$
+(UVMN) = (\frac{μ_{1}}{\lambda _{1}}) : (\frac{μ_{2}}{\lambda _{2}}) = \frac{\lambda _{2}}{\lambda _{1}} = -1.
+$$
+</Proof>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Nếu $Q^{2} - PR = 0$ thì $R = 0$, khi đó $\lambda _{1} = \lambda _{2} = 0$ và ba điểm M, N, V trùng nhau. Áp dụng kết quả này, để vẽ đường đối cực của điểm U đối với đường bậc hai $(S)$, ta vẽ hai tiếp tuyến UT và $UT'$ từ U tới (S); đường đối cực của U là đường thẳng $TT'$.
+</Remark>
+
+<Example id="ex-p9-16" title="Ví dụ">
+Với $(S): x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ và $U = (0,0,1)$ (không thuộc $(S))$, đối cực của U là $x_{3} = 0$.
+
+Đường thẳng $x_{1} = 0$ qua U cắt đối cực tại $V = (0,1,0)$ và cắt (S) tại $M = (0,1,1), N = (0,1,-1)$.
+
+Ta có $M = 1·U + 1·V, N = -1·U + 1·V$, nên (UVMN) $= (\frac{1}{1})$ : 
+
+$$
+(\frac{1}{-1}) = -1.
+$$
+</Example>
+
+## 7. Định nghĩa
+
+<Definition id="def-p9-17" title="Định nghĩa">
+Hai điểm U, V thỏa (UVMN) $= -1$ như ở định lí 6 gọi là *liên hợp với nhau* đối với siêu mặt bậc hai (S).
+
+Do đó siêu phẳng đối cực của điểm $U (U \notin (S))$ là tập hợp tất cả các điểm V liên hợp của U đối với (S).
+
+Hai điểm U, V liên hợp với nhau đối với (S) khi và chỉ khi $[u]*A[v] = 0$.
+</Definition>
+
+<Example id="ex-p9-18" title="Ví dụ">
+Với $(S): x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$, hai điểm $U = (0,0,1)$ và $V = (0,1,0)$ liên hợp vì $[u]*A[v] = (0,0,1)·diag(1,1,-1)·(0,1,0) = 0$.
+
+Còn $(0,0,1)$ và $(1,0,0)$ cũng liên hợp, nhưng $(0,0,1)$ và $(0,1,1)$ thì không: 
+
+$$
+[u]*A[v] = -1 \neq 0.
+$$
+</Example>
+
+## 8. Định lí
+
+<Theorem id="thm-p9-19" title="Định lí">
+Nếu điểm V nằm trên siêu phẳng đối cực của điểm U đối với siêu mặt bậc hai (S) thì điểm U nằm trên siêu phẳng đối cực của điểm V đối với (S).
+</Theorem>
+
+<Proof of="thm-p9-19">
+Giả sử $(S): [x]*A[x] = 0$.
+
+Điều kiện để V nằm trên siêu phẳng đối cực của U là $[u]*A[v] = 0$.
+
+Suy ra $[v]*A*[u] = 0$ hay $[v]*A[u] = 0$ vì $A* = A$.
+
+Đẳng thức này chứng tỏ U nằm trên siêu phẳng đối cực của V đối với (S).
+
+**Áp dụng.**
+
+Trong $\mathbb{P} ^{2}$, định lí này dùng để chứng minh ba điểm A, B, C thẳng hàng khi biết ba đường đối cực của chúng (đối với một đường bậc hai) đồng quy, và ngược lại.
+</Proof>
+
+<Example id="ex-p9-21" title="Ví dụ">
+Với $(S): x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$, điểm $U = (0,0,1)$ có đối cực $x_{3} = 0$.
+
+Điểm $V = (1,0,0)$ thuộc $x_{3} = 0$; đối cực của V là $x_{1} = 0$, và đi qua U vì $0 = 0$.
+
+Đúng như định lí: V thuộc đối cực của U thì U thuộc đối cực của V.
+</Example>
+
+## 9. Siêu phẳng tiếp xúc, r-phẳng tiếp xúc
+
+<Definition id="def-p9-22" title="Định nghĩa">
+Nếu điểm U nằm trên siêu mặt bậc hai (S) nhưng không phải điểm đặc biệt của (S) thì siêu phẳng đối cực của U là *siêu phẳng tiếp xúc* của (S) tại U.
+
+Thật vậy, siêu phẳng đối cực của U có phương trình $[u]*A[x] = 0$ và vì $U \in (S)$ nên $[u]*A[u] = 0$, tức U thuộc siêu phẳng đối cực của nó.
+
+Mọi r-phẳng $(1 \le r \le n-1)$ đi qua U và nằm trong siêu phẳng tiếp xúc gọi là *r-phẳng tiếp xúc* của (S) tại U.
+
+Đường thẳng tiếp xúc với (S) tại U gọi là *tiếp tuyến* của (S) tại U.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Các điểm đặc biệt của siêu mặt bậc hai (S) không có các r-phẳng tiếp xúc.
+</Remark>
+
+<Example id="ex-p9-23" title="Ví dụ">
+Với conic $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ và $U = (1,0,1) \in (S)$: đối cực $x_{1} - x_{3} = 0$ là tiếp tuyến tại U (đường thẳng này cắt conic tại duy nhất điểm $(1,0,1)$, vì $x_{1} = x_{3}$ cho $x^{2}_{2} = 0)$.
+
+Với $n = 2$ các r-phẳng tiếp xúc $(1 \le r \le 1)$ chỉ là đường thẳng tiếp xúc.
+</Example>
+
+## 10. Siêu mặt lớp hai
+
+<Definition id="def-p9-24" title="a) Định nghĩa">
+Trong $\mathbb{P} ^{n}$ với mục tiêu xạ ảnh đã chọn, tập các siêu phẳng tạo nên một *siêu mặt lớp hai* nếu tọa độ $[u_{1}, \dots , u_{n+1}]$ của chúng thỏa mãn
+ 
+
+$$
+[u]*A[u] = 0 hay \sum_{i,j=1}^{n+1} a_{ij}u_{i}u_{j} = 0,
+$$
+
+ 
+trong đó $a_{ij} = a_{ji}$ và các a$_{ij}$ không đồng thời bằng 0.
+
+Nếu ma trận $A = [a_{ij}]$ không suy biến ta có *siêu mặt lớp hai không suy biến*; nếu A suy biến ta có *siêu mặt lớp hai suy biến*.
+
+Siêu mặt lớp hai là khái niệm đối ngẫu của siêu mặt bậc hai.
+</Definition>
+
+<Theorem id="thm-p9-25" title="b) Định lí">
+Tập hợp tất cả các siêu phẳng tiếp xúc với siêu mặt bậc hai không suy biến $[x]*A[x] = 0$ là một siêu mặt lớp hai có phương trình
+ 
+
+$$
+[u]*A^{-1}[u] = 0.
+$$
+
+ 
+
+**Hệ quả.** Mỗi siêu mặt lớp hai không suy biến có phương trình $[u]*B[u] = 0$ đều có thể xem là tập hợp tất cả các siêu phẳng tiếp xúc của siêu mặt bậc hai $[x]*B^{-1}[x] = 0$.
+</Theorem>
+
+<Proof of="thm-p9-25">
+• Giả sử siêu phẳng $[u]*[x] = 0$ tiếp xúc với (S); ta chứng minh nó thuộc siêu mặt lớp hai $[u]*A^{-1}[u] = 0$.
+
+Gọi $(a_{1}, \dots , a_{n+1})$ là tọa độ của điểm tiếp xúc, thuộc (S); siêu phẳng tiếp xúc tại điểm đó có phương trình $[a]*A[x] = 0$.
+
+Vậy $[u]* = [a]*A$ nên $[u] = A*[a] = A[a]$ (vì $A* = A)$.
+
+Do đó $[u]*A^{-1}[u] = [a]*A·A^{-1}·A[a] = [a]*A[a] = 0$.
+
+• Ngược lại, giả sử siêu phẳng $[u]*[x] = 0$ thuộc siêu mặt lớp hai $[u]*A^{-1}[u] = 0$; ta chứng minh nó tiếp xúc với (S).
+
+Lấy điểm $A(a_{1}, \dots , a_{n+1})$ sao cho $[a] = A^{-1}[u]$.
+
+Khi đó $A[a] = [u]$, tức $[a]*A = [u]*$.
+
+Thay vào phương trình lớp hai: $[a]*A·A^{-1}·A[a] = 0 \iff [a]*A[a] = 0$, nên điểm A thuộc (S).
+
+Siêu phẳng đối cực của A đối với (S) là $[a]*A[x] = 0$; vì $[a]*A = [u]*$ nên đó chính là $[u]*[x] = 0$, và điểm A nằm trên siêu phẳng này vì $[u]*[a] = [u]*A^{-1}[u] = 0$.
+
+Vậy $[u]*[x] = 0$ là siêu phẳng tiếp xúc của (S) tại A.
+</Proof>
+
+<Example id="ex-p9-27" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, conic $x^{2}_{1} + 4x^{2}_{2} - x^{2}_{3} = 0$ có $A = diag(1,4,-1), A^{-1} = diag(1, \frac{1}{4}, -1)$, nên các tiếp tuyến thỏa $u^{2}_{1} + \frac{u^{2}_{2}}{4} - u^{2}_{3} = 0$.
+
+Tiếp tuyến tại $(1,0,1)$ là đối cực $[1,0,-1]$: 
+
+$$
+1 + 0 - 1 = 0 .
+$$
+
+ Tiếp tuyến tại $(0,1,2)$ (thuộc conic vì $4 - 4 = 0)$ là đối cực $[0,4,-2]$: 
+
+$$
+0 + \frac{16}{4} - 4 = 0 .
+$$
+
+ Đường thẳng [1,1,0] không thuộc siêu mặt lớp hai $(1 + \frac{1}{4} \neq 0)$, nên không là tiếp tuyến.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p9-1" title="Cực, đối cực và tiếp tuyến của siêu mặt bậc hai (§9)">
+Cho conic (S): x₁² + x₂² - x₃² = 0 trong P². Chứng minh U(3,4,5) thuộc (S) và viết phương trình tiếp tuyến của (S) tại U.
+</Exercise>
+
+<Hint>
+Tiếp tuyến tại điểm thuộc (S) chính là đối cực [u]ᵀA[x] = 0 của điểm đó.
+</Hint>
+
+<Solution>
+9 + 16 - 25 = 0 nên U  $ in$  (S); A = diag(1,1,-1) không suy biến.
+
+[u]ᵀA = (3, 4, -5).
+
+Tiếp tuyến: 3x₁ + 4x₂ - 5x₃ = 0.
+
+**Đáp án:** 3x₁ + 4x₂ - 5x₃ = 0
+</Solution>
+
+<Exercise id="exr-p9-2" title="Cực và đối cực đối với conic (§9)">
+Cho conic (S): x₁² + x₂² - x₃² = 0. (a) Tìm đối cực của điểm U(2,1,1). (b) Tìm điểm cực của đường thẳng x₁ - 2x₂ + x₃ = 0.
+</Exercise>
+
+<Hint>
+Đối cực của U: [u]ᵀA[x] = 0. Điểm cực của đường thẳng [c]: giải A[u] = [c].
+</Hint>
+
+<Solution>
+A = diag(1,1,-1). (a) [u]ᵀA = (2, 1, -1), đối cực 2x₁ + x₂ - x₃ = 0.
+
+(b) A[u] = (1,-2,1) nên u = (1, -2, -1).
+
+**Đáp án:** (a) 2x₁ + x₂ - x₃ = 0; (b) điểm (1, -2, -1)
+</Solution>
+
+<KeyTakeaways>
+- Mỗi điểm không kỳ dị có một siêu phẳng đối cực xác định qua quan hệ liên hiệp với siêu mặt bậc hai.
+- Nếu điểm nằm trên siêu mặt bậc hai thì siêu phẳng đối cực chính là tiếp diện tại điểm đó.
+</KeyTakeaways>

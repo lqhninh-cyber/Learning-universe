@@ -1,0 +1,206 @@
+---
+id: muc-tieu-truc-chuan-toa-do-truc-chuan
+title: "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn"
+description: "Cơ sở trực chuẩn, mục tiêu trực chuẩn, ma trận trực kinh và công thức đổi mục tiêu trực chuẩn."
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - "mục tiêu trực chuẩn"
+  - "tọa độ trực chuẩn"
+  - "ma trận trực kinh"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '96-102'
+    sections: '§3'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Mục tiêu trực chuẩn
+
+<Definition id="def-e3-1" title="Định nghĩa">
+Mục tiêu afin \{O; $\vect{e_{1}}$,…,$\vect{e_{n}}$\} của $\mathbb{E} ^{n}$ gọi là *mục tiêu trực chuẩn* (hệ tọa độ Đề-các vuông góc) nếu cơ sở \{$\vect{e_{i}}$\} của **Ē**$^{n}$ là cơ sở trực chuẩn:
+ 
+
+$$
+\vect{e_{i}}·\vect{e_{j}} = \delta _{ij} = 0 khi i \neq j; = 1 khi i = j, (i, j = 1, \dots ,n).
+$$
+</Definition>
+
+## 2. Tọa độ trực chuẩn
+
+Tọa độ của điểm thuộc $\mathbb{E} ^{n}$ đối với một mục tiêu trực chuẩn gọi là *tọa độ trực chuẩn* (tọa độ Đề-các vuông góc).
+
+Mọi không gian vectơ Ơclit n chiều $(n \ge 1)$ đều có cơ sở trực chuẩn, nên $\mathbb{E} ^{n}$ luôn có mục tiêu trực chuẩn.
+
+## 3. Đổi mục tiêu trực chuẩn
+
+<Theorem id="thm-e3-2" title="Công thức">
+Cho hai mục tiêu trực chuẩn \{O; $\vect{e_{i}}$\} và \{O′; $\vect{e'_{i}}$\}.
+
+Gọi C là ma trận chuyển từ \{$\vect{e_{i}}$\} sang \{$\vect{e'_{i}}$\}; vì cả hai cơ sở đều trực chuẩn nên C là ma trận trực giao cấp n.
+
+Công thức đổi mục tiêu trực chuẩn là
+ 
+
+$$
+[x] = C*[x'] + [a_{0}],
+$$
+
+ 
+trong đó $C*$ là ma trận chuyển vị của C, [a$_{0}$] là cột tọa độ của gốc O′ đối với \{O; $\vect{e_{i}}$\}, còn [x], [x′] là cột tọa độ của cùng một điểm đối với hai mục tiêu.
+</Theorem>
+
+<Example id="ex-e3-3" title="Ví dụ">
+Trong $\mathbb{E} ^{2}$ với mục tiêu trực chuẩn \{O; $\vect{e_{1}}$, $\vect{e_{2}}$\}, xét \{O′; $\vect{e'_{1}}$, $\vect{e'_{2}}$\} với $O'(1,0), \vect{e'_{1}} = (0,1), \vect{e'_{2}} = (-1,0)$.
+
+Khi đó $C = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$ (hàng là tọa độ của $\vect{e'_{i}}), CC* = I$ nên C trực giao.
+
+Công thức cho  
+
+$$
+\begin{cases} x_{1} = -x'_{2} + 1 \\ x_{2} = x'_{1}. \end{cases}
+$$
+
+ Kiểm tra: điểm $x' = (1,0)$ là $O' + \vect{e'_{1}} = (1,1)$, và công thức cho (1,1). ✓
+</Example>
+
+## 4. Khoảng cách giữa hai điểm
+
+<Definition id="def-e3-4" title="Định nghĩa">
+Khoảng cách giữa hai điểm M, N của $\mathbb{E} ^{n}$ là số $d(M,N) = |\vect{MN}| = \sqrt{\vect{MN}^{2}}$ (độ dài của đoạn thẳng).
+</Definition>
+
+Như vậy dựa vào tích vô hướng, ta định nghĩa được khái niệm khoảng cách giữa hai điểm hay độ dài của một đoạn thẳng hay mô-đun của một vectơ.
+
+Do đó:
+
+<Theorem id="thm-e3-5" title="Tính chất">
+a) $d(M,N) = d(N,M)$;
+
+b) $d(M,N) \ge 0$ và $d(M,N) = 0 \iff M ≡ N$;
+
+c) $d(M,N) + d(N,P) \ge d(M,P)$ với mọi M, N, P;
+
+d) nếu M, N, P phân biệt thì N thuộc đoạn $MP \iff d(M,N) + d(N,P) = d(M,P)$;
+
+e) với tọa độ trực chuẩn M(x$_{i}$), N(y$_{i}$):
+ 
+
+$$
+d(M,N) = \sqrt{\sum_{i=1}^{n} (y_{i} - x_{i})^{2}}.
+$$
+</Theorem>
+
+<Example id="ex-e3-6" title="Ví dụ">
+Trong $\mathbb{E} ^{3}$, M(1,2,2), N(4,6,14): 
+
+$$
+d(M,N) = \sqrt{9 + 16 + 144} = 13.
+$$
+
+ Với $P(7,10,26): d(N,P) = 13$ và $d(M,P) = \sqrt{36 + 64 + 576} = 26 = d(M,N) + d(N,P)$, nên N thuộc đoạn MP (N là trung điểm). ✓
+</Example>
+
+## 5. Biểu thức tọa độ của tích vô hướng trong VnE
+
+<Theorem id="thm-e3-7" title="Công thức">
+Đối với mục tiêu trực chuẩn, $\vec{a} = (a_{1}, \dots ,a_{n}), \vec{b} = (b_{1}, \dots ,b_{n})$ thì $\vec{a}·\vec{b} = \sum_{i=1}^{n}a_{i}\vect{e_{i}}·\sum_{j=1}^{n}b_{j}\vect{e_{j}} = \sum_{i=1}^{n}a_{i}b_{i}$.
+
+Hệ quả:
+ 
+
+$$
+|\vec{a}| = \sqrt{\sum_{i=1}^{n}a^{2}_{i}}, cos(\vec{a},\vec{b}) = \sum_{i=1}^{n}a_{i}b_{i} / (\sqrt{\sum_{i=1}^{n}a^{2}_{i}}·\sqrt{\sum_{i=1}^{n}b^{2}_{i}}).
+$$
+</Theorem>
+
+<Example id="ex-e3-8" title="Ví dụ">
+$\vec{a} = (1,2,2), \vec{b} = (3,0,4): \vec{a}·\vec{b} = 3 + 0 + 8 = 11, |\vec{a}| = 3, |\vec{b}| = 5$, nên $cos(\vec{a},\vec{b}) = \frac{11}{15}$.
+</Example>
+
+## 6. Biểu thức tọa độ của tích có hướng trong V3E
+
+<Theorem id="thm-e3-9" title="a) Công thức">
+Trong hệ tọa độ Đề-các vuông góc Oxyz, $\vec{a} = (a_{1},a_{2},a_{3}), \vec{b} = (b_{1},b_{2},b_{3})$ thì $\vec{c} = \vec{a} ∧ \vec{b}$ có tọa độ
+ 
+
+$$
+\vec{c} = ( |a_{2} a_{3}; b_{2} b_{3}|, |a_{3} a_{1}; b_{3} b_{1}|, |a_{1} a_{2}; b_{1} b_{2}| ).
+$$
+
+ 
+b) Hệ quả. Nếu φ là góc giữa $\vec{a}$, $\vec{b}$ thì
+ 
+
+$$
+sin \varphi = \pm |\vec{a} ∧ \vec{b}| / (|\vec{a}||\vec{b}|) = \sqrt{|a_{2} a_{3}; b_{2} b_{3}|^{2} + |a_{3} a_{1}; b_{3} b_{1}|^{2} + |a_{1} a_{2}; b_{1} b_{2}|^{2}} / (\sqrt{a^{2}_{1}+a^{2}_{2}+a^{2}_{3}}·\sqrt{b^{2}_{1}+b^{2}_{2}+b^{2}_{3}}).
+$$
+</Theorem>
+
+<Example id="ex-e3-10" title="Ví dụ">
+$\vec{a} = (1,2,3), \vec{b} = (4,5,6)$: các định thức cấp 2 là $2·6 - 3·5 = -3, 3·4 - 1·6 = 6, 1·5 - 2·4 = -3$, nên $\vec{a} ∧ \vec{b} = (-3,6,-3)$.
+
+Kiểm tra vuông góc:$(-3,6,-3)·(1,2,3) = -3 + 12 - 9 = 0$ và $(-3,6,-3)·(4,5,6) = -12 + 30 - 18 = 0$.Độ dài $\sqrt{54}, |\vec{a}| = \sqrt{14}, |\vec{b}| = \sqrt{77}$ nên $sin \varphi = \frac{\sqrt{54}}{\sqrt{1078}} (≈ 0,224)$.
+</Example>
+
+Gọi S là diện tích hình bình hành dựng trên $\vec{a}$, $\vec{b}$ thì
+ 
+
+$$
+S = |\vec{a} ∧ \vec{b}| = \sqrt{|a_{2} a_{3}; b_{2} b_{3}|^{2} + |a_{3} a_{1}; b_{3} b_{1}|^{2} + |a_{1} a_{2}; b_{1} b_{2}|^{2}}.
+$$
+
+<Example id="ex-e3-11" title="Ví dụ">
+Với $\vec{a} = (1,2,3), \vec{b} = (4,5,6)$ ở ví dụ trên: 
+
+$$
+S = \sqrt{9 + 36 + 9} = \sqrt{54} = 3\sqrt{6}.
+$$
+</Example>
+
+## 7. Biểu thức tọa độ của tích hỗn hợp trong V3E
+
+<Theorem id="thm-e3-12" title="Công thức">
+Trong hệ tọa độ Đề-các vuông góc, cho ba vectơ không đồng phẳng $\vec{a} = (a_{1},a_{2},a_{3}), \vec{b} = (b_{1},b_{2},b_{3}), \vec{c} = (c_{1},c_{2},c_{3})$.
+
+Gọi V là thể tích hình hộp dựng trên ba vectơ ấy thì $\pm V = (\vec{a},\vec{b},\vec{c}) = (\vec{a} ∧ \vec{b})·\vec{c} = |a_{2} a_{3}; b_{2} b_{3}|c_{1} + |a_{3} a_{1}; b_{3} b_{1}|c_{2} + |a_{1} a_{2}; b_{1} b_{2}|c_{3}$, tức là
+ 
+
+$$
+(\vec{a},\vec{b},\vec{c}) = det [a_{1} a_{2} a_{3}; b_{1} b_{2} b_{3}; c_{1} c_{2} c_{3}] = \pm V.
+$$
+</Theorem>
+
+<Example id="ex-e3-13" title="Ví dụ">
+$\vec{a} = (1,0,0), \vec{b} = (1,2,0), \vec{c} = (1,1,3)$: định thức tam giác dưới bằng $1·2·3 = 6$ nên $V = 6$ và dấu dương cho biết tam diện thuận.
+
+Hoán đổi hai vectơ bất kì thì định thức đổi dấu $(-6)$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e3-1" title="Khoảng cách giữa hai điểm (§3, mục 4)">
+Trong E³ có M(1,2,2) và N(4,6,14). Tính d(M, N).
+</Exercise>
+
+<Hint>
+d(M,N) = √(Σ[i=1|n](yᵢ) - xᵢ)².
+</Hint>
+
+<Solution>
+d = √(3² + 4² + 12²) = √169.
+
+**Đáp án:** 13
+</Solution>
+
+<KeyTakeaways>
+- Trong mục tiêu trực chuẩn, tích vô hướng và khoảng cách có biểu thức tọa độ đơn giản nhất.
+- Ma trận chuyển cơ sở giữa hai mục tiêu trực chuẩn là ma trận trực giao (trực kinh).
+</KeyTakeaways>

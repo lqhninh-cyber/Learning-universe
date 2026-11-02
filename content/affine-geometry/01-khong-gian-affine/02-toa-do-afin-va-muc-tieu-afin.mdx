@@ -1,0 +1,117 @@
+---
+id: toa-do-afin-va-muc-tieu-afin
+title: "Tọa độ Affine và Mục tiêu Affine"
+description: "Mục tiêu affine, tọa độ điểm đối với mục tiêu và công thức đổi mục tiêu affine."
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - "mục tiêu affine"
+  - "tọa độ affine"
+  - "đổi cơ sở"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '16-24'
+    sections: '§2'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Mục tiêu afin
+
+<Definition id="def-s2-1" title="Định nghĩa">
+Trong $\mathcal{A} ^{n}$ liên kết với $V ^{n}$, một tập hợp có thứ tự gồm $n+1$ điểm độc lập \{E$_{0}$, E$_{1}$,…, E$_{n}$\} gọi là một *mục tiêu afin* của $\mathcal{A} ^{n}$.
+
+Điểm E$_{0}$ gọi là *gốc* của mục tiêu, các E$_{i}$ gọi là các *đỉnh thứ i*.
+
+Kí hiệu ${E_{0}; E_{i}}, i = 1..n$.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Các vectơ $\vect{e_{i}} = \vect{E_{0}E_{i}}$ là một cơ sở của $V ^{n}$, gọi là *cơ sở nền* của mục tiêu.
+
+Mỗi mục tiêu chỉ có một cơ sở nền duy nhất, nhưng một cơ sở của $V ^{n}$ có thể là nền của nhiều mục tiêu khác nhau.
+
+Nếu chọn gốc O thì kí hiệu mục tiêu là \{O; $\vect{e_{i}}$\}.
+</Remark>
+
+## 2. Tọa độ afin của một điểm
+
+Với mục tiêu \{O; $\vect{e_{i}}$\} và điểm $X \in \mathcal{A}^{n}$, tồn tại duy nhất $(x_{1}, \dots ,x_{n}) \in \mathbb{K}^{n}$ sao cho
+
+Bộ $(x_{1}, \dots ,x_{n})$ gọi là *tọa độ afin* của X đối với mục tiêu đã chọn, kí hiệu X(x$_{i}$).
+
+Gốc E$_{0}$ có tọa độ (0,…,0); E$_{i}$ có tọa độ $(0, \dots ,1, \dots ,0)$ với số 1 ở vị trí thứ i.
+
+Nếu X(x$_{i}$), Y(y$_{i}$) thì $\vect{XY} = \vect{OY} - \vect{OX}$ có tọa độ $(y_{1}-x_{1}, \dots ,y_{n}-x_{n})$ đối với cơ sở \{$\vect{e_{i}}$\}.
+
+## 3. Đổi mục tiêu afin
+
+Cho hai mục tiêu \{E$_{0}$; E$_{i}$\} và \{E′$_{0}$; E′$_{i}$\} ứng với hai cơ sở nền \{$\vect{e_{i}}$\} và \{$\vect{e'_{i}}$\}.
+
+Giả sử E′$_{i}$ có tọa độ $(a_{i1}, \dots ,a_{in})$ đối với mục tiêu thứ nhất, $i = 0,1, \dots ,n$.
+
+Ma trận chuyển từ cơ sở \{$\vect{E_{0}E_{i}}$\} sang \{$\vect{E'_{0}E'_{i}}$\} là
+
+<Theorem id="thm-s2-2" title="Công thức đổi mục tiêu">
+Gọi [x], [x′] là ma trận cột tọa độ của cùng một điểm X đối với mục tiêu cũ và mới, [a$_{0}$] là cột tọa độ $(a_{01}, \dots ,a_{0n})$ của E′$_{0}$, và $C*$ là ma trận chuyển vị của C.
+
+Khi đó
+ 
+
+$$
+[x] = C*[x'] + [a_{0}], [x'] = (C*)^{-1}[x] - (C*)^{-1}[a_{0}].
+$$
+</Theorem>
+
+<Proof of="thm-s2-2">
+Từ $\vect{E_{0}X} = \vect{E_{0}E'_{0}} + \vect{E'_{0}X}$ suy ra $[x] = [a_{0}] + [x]$, trong đó [x̄] là tọa độ của vectơ $\vect{E'_{0}X}$ đối với cơ sở \{$\vect{e_{i}}$\}.
+
+Theo công thức đổi cơ sở, $[x] = C*[x']$.
+</Proof>
+
+<Example id="ex-s2-4" title="Ví dụ">
+Trong $\R ^{2}$ với mục tiêu chuẩn tắc, lấy mục tiêu mới E′$_{0}$(1,1), E′$_{1}$(2,1), E′$_{2}$(1,3).Khi đó $\vect{e'_{1}} = (1,0), \vect{e'_{2}} = (0,2)$ và $[a_{0}] = (1,1)$.Ma trận chuyển $C = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}$ (hàng i là $(a_{i1}-a_{01}, a_{i2}-a_{02})), det C = 2 \neq 0$.
+
+Công thức đổi mục tiêu cho x$_{1}$ = 1 + x′$_{1}$, x$_{2}$ = 1 + 2x′$_{2}$, và ngược lại 
+
+$$
+\begin{cases} x'_{1} = x_{1} - 1 \\ x'_{2} = \frac{x_{2} - 1}{2}. \end{cases}
+$$
+
+Điểm X(3, 5) có tọa độ mới (2, 2); kiểm tra: 
+
+$$
+2(1,0) + 2(0,2) = (2,4) = \vect{E'_{0}X} = (3-1, 5-1).
+$$
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-s2-1" title="Tọa độ afin, đổi mục tiêu afin (§2)">
+Trong A² có mục tiêu \{O; e₁, e₂\} (tọa độ gốc). Mục tiêu mới \{O'; e'₁, e'₂\} với O'(2,1), e'₁ = (1,1), e'₂ = (0,1). Tìm tọa độ mới của X(5,6).
+</Exercise>
+
+<Hint>
+Tọa độ mới (x'₁, x'₂) thỏa O'X = x'₁e'₁ + x'₂e'₂.
+</Hint>
+
+<Solution>
+O'X = (5-2, 6-1) = (3,5).
+
+(3,5) = x'₁(1,1) + x'₂(0,1) nên x'₁ = 3 và x'₂ = 5 - 3 = 2.
+
+**Đáp án:** X(3, 2)
+</Solution>
+
+<KeyTakeaways>
+- Mục tiêu affine trong không gian n chiều gồm n+1 điểm độc lập (một gốc và n đỉnh).
+- Công thức đổi mục tiêu cho phép chuyển đổi tọa độ điểm giữa hai hệ quy chiếu qua ma trận chuyển cơ sở.
+</KeyTakeaways>

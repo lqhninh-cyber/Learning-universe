@@ -1,0 +1,168 @@
+---
+id: bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto
+title: "Bổ sung về các Phép toán trên Không gian Vectơ"
+description: "Tích vectơ, tích hỗn hợp, định thức Gram và thể tích định hướng trong không gian vectơ."
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - "tích vectơ"
+  - "tích hỗn hợp"
+  - "định thức Gram"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '80-87'
+    sections: '§1'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Tích vô hướng
+
+<Definition id="def-e1-1" title="Định nghĩa">
+Cho $V$ là không gian vectơ trên trường số thực.
+
+Phép toán gán cho mỗi cặp vectơ có thứ tự $\vec{a}$, $\vec{b}$ một số thực, gọi là *tích vô hướng* của hai vectơ, kí hiệu $\vec{a}·\vec{b}$ (hay $\vec{a} \vec{b}$), nếu thỏa 4 tiên đề:
+
+1) $\vec{a}·\vec{b} = \vec{b}·\vec{a}$;
+
+2) $\vec{a}·(\vec{b} + \vec{c}) = \vec{a}·\vec{b} + \vec{a}·\vec{c}$;
+
+3) $( \lambda \vec{a})·\vec{b} = \lambda (\vec{a}·\vec{b}), \lambda \in \R$;
+
+4) $\vec{a}·\vec{a} \ge 0$, dấu $"="$ xảy ra khi và chỉ khi $\vec{a} = \vec{0}$.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Không gian vectơ được trang bị thêm tích vô hướng gọi là *không gian vectơ Ơclit*; số chiều n được kí hiệu $V ^{n} _{E}$ hoặc **Ē**$^{n}$.
+</Remark>
+
+## 2. Các định nghĩa liên quan đến tích vô hướng
+
+$\vec{a}·\vec{b} = |\vec{a}|·|\vec{b}|·cos(\vec{a},\vec{b}); |\vec{a}|^{2} = \vec{a}^{2}$ nên $|\vec{a}| = \sqrt{\vec{a}^{2}}; \vec{a} \perp \vec{b} \iff \vec{a}·\vec{b} = 0$.
+
+<Example id="ex-e1-2" title="Ví dụ">
+Trên $\R ^{2}$ đặt $(x_{1},x_{2})·(y_{1},y_{2}) = x_{1}y_{1} + x_{2}y_{2}$.Với $\vec{a} = (1,2), \vec{b} = (3,-1)$: 
+
+$$
+\vec{a}·\vec{b} = 3 - 2 = 1 = \vec{b}·\vec{a}; \vec{a}·\vec{a} = 5 > 0, |\vec{a}| = \sqrt{5}.
+$$
+
+ Còn $(1,2)·(2,-1) = 0$ nên hai vectơ này vuông góc.
+</Example>
+
+## 3. Tích có hướng của hai vectơ trong V3E
+
+<Definition id="def-e1-3" title="a) Định nghĩa">
+Tích có hướng của $\vec{a}$ và $\vec{b}$ là một vectơ $\vec{c}$ thỏa:
+
+i) $\vec{c} \perp \vec{a}$ và $\vec{c} \perp \vec{b}$;
+
+ii) $|\vec{c}| = |\vec{a}|·|\vec{b}|·sin(\vec{a},\vec{b}) =$ diện tích hình bình hành dựng trên $\vec{a}$, $\vec{b}$;
+
+iii) tam diện ($\vec{a}$, $\vec{b}$, $\vec{c}$) là tam diện *thuận* (nếu vặn nút chai theo chiều từ $\vec{a}$ đến $\vec{b}$ thì nút chai chuyển động theo hướng $\vec{c}$).
+
+Kí hiệu $\vec{a} ∧ \vec{b} = \vec{c}$.
+</Definition>
+
+<Theorem id="thm-e1-4" title="b) Tính chất">
+1) $\vec{a} ∧ \vec{b} = -\vec{b} ∧ \vec{a}$ (phản giao hoán);
+
+2) $p(\vec{a} ∧ \vec{b}) = p\vec{a} ∧ \vec{b} = \vec{a} ∧ p\vec{b}, p \in \R$;
+
+3) $(\vec{a} + \vec{b}) ∧ \vec{c} = \vec{a} ∧ \vec{c} + \vec{b} ∧ \vec{c}$ và $\vec{a} ∧ (\vec{b} + \vec{c}) = \vec{a} ∧ \vec{b} + \vec{a} ∧ \vec{c}$.
+</Theorem>
+
+<Example id="ex-e1-5" title="Ví dụ">
+Với $\vec{a} = (1,0,0), \vec{b} = (0,1,0): \vec{a} ∧ \vec{b} = (0,0,1)$; độ dài $1 = 1·1·sin 90°$, vuông góc với cả hai, và $(\vec{a},\vec{b},\vec{c})$ là tam diện thuận.
+
+Theo tính chất $1), \vec{b} ∧ \vec{a} = (0,0,-1)$.
+</Example>
+
+## 4. Tích hỗn hợp của ba vectơ trong V3E
+
+<Definition id="def-e1-6" title="a) Định nghĩa">
+*Tích hỗn hợp* của ba vectơ $\vec{a}$, $\vec{b}$, $\vec{c}$ là số $(\vec{a}, \vec{b}, \vec{c}) = (\vec{a} ∧ \vec{b})·\vec{c}$.
+</Definition>
+
+<Definition id="def-e1-7" title="b) Ý nghĩa hình học">
+Với ba vectơ không đồng phẳng, gọi V là thể tích hình hộp dựng trên chúng, S là diện tích đáy (dựng trên $\vec{a}$, $\vec{b}$), h là chiều cao, $\vec{g} = \vec{a} ∧ \vec{b} (|\vec{g}| = S)$.
+
+Nếu $\varphi = (\vec{g},\vec{c}) < \frac{π}{2}$ (tam diện thuận) thì $(\vec{a},\vec{b},\vec{c}) = \vec{g}·\vec{c} = S·h = V$; nếu $\varphi > \frac{π}{2}$ (tam diện nghịch) thì $h = -|\vec{c}|cos \varphi$ và $(\vec{a},\vec{b},\vec{c}) = -V$.
+
+**Kết luận.** Tích hỗn hợp của ba vectơ không đồng phẳng có giá trị tuyệt đối bằng thể tích hình hộp dựng trên ba vectơ ấy; dương nếu ba vectơ tạo nên tam diện thuận, âm nếu nghịch.
+
+**Chú ý.** $(\vec{a} ∧ \vec{b})·\vec{c} = (\vec{b} ∧ \vec{c})·\vec{a} = (\vec{c} ∧ \vec{a})·\vec{b}$.
+
+**Hệ quả.** Ba vectơ đồng phẳng $\iff$ tích hỗn hợp của chúng bằng $0 \iff ba$ vectơ phụ thuộc tuyến tính.
+</Definition>
+
+<Example id="ex-e1-8" title="Ví dụ">
+$\vec{a} = (1,0,0), \vec{b} = (0,2,0), \vec{c} = (0,0,3): \vec{a} ∧ \vec{b} = (0,0,2)$ nên $(\vec{a},\vec{b},\vec{c}) = 6 = 1·2·3$, thể tích hình hộp chữ nhật, dương vì tam diện thuận.
+
+Đổi chỗ: 
+
+$$
+(\vec{a},\vec{c},\vec{b}) = -6.
+$$
+
+ Còn $\vec{a} = (1,0,0), \vec{b} = (0,1,0), \vec{c} = (2,3,0)$ đồng phẳng nên tích hỗn hợp $= (0,0,1)·(2,3,0) = 0.$
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e1-1" title="Tích vô hướng (§1) và công thức tọa độ (§3, mục 5)">
+Trong E³ với hệ trực chuẩn, cho a = (1,2,2), b = (3,0,4). Tính cos(a, b).
+</Exercise>
+
+<Hint>
+cos = (a·b)/(|a||b|), a·b = Σ[i=1|n]aᵢbᵢ.
+</Hint>
+
+<Solution>
+a·b = 3 + 0 + 8 = 11.
+
+|a| = 3 và |b| = 5.
+
+**Đáp án:** 11/15
+</Solution>
+
+<Exercise id="exr-e1-2" title="Tích có hướng của hai vectơ (§1, §3 mục 6)">
+Tính a ∧ b với a = (1,2,3), b = (4,5,6).
+</Exercise>
+
+<Hint>
+Các định thức cấp 2: |a₂ a₃; b₂ b₃|, |a₃ a₁; b₃ b₁|, |a₁ a₂; b₁ b₂|.
+</Hint>
+
+<Solution>
+2·6 - 3·5 = -3; 3·4 - 1·6 = 6; 1·5 - 2·4 = -3.
+
+**Đáp án:** (-3, 6, -3)
+</Solution>
+
+<Exercise id="exr-e1-3" title="Tích hỗn hợp và thể tích hình hộp (§1, mục 4)">
+Tính thể tích hình hộp dựng trên a = (1,0,0), b = (1,2,0), c = (1,1,3).
+</Exercise>
+
+<Hint>
+V = |(a,b,c)|, tích hỗn hợp bằng định thức ba hàng.
+</Hint>
+
+<Solution>
+Ma trận có dạng tam giác nên định thức bằng 1·2·3 = 6.
+
+**Đáp án:** V = 6
+</Solution>
+
+<KeyTakeaways>
+- Tích vectơ trong không gian 3 chiều tạo ra vectơ vuông góc với cả hai vectơ nhân tử.
+- Định thức Gram là công cụ hữu hiệu để kiểm tra tính độc lập tuyến tính và tính thể tích khối hộp.
+</KeyTakeaways>

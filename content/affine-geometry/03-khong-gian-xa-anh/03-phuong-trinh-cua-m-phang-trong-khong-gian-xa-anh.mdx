@@ -1,0 +1,486 @@
+---
+id: phuong-trinh-cua-m-phang-trong-khong-gian-xa-anh
+title: "Phương trình của m-Phẳng trong Không gian Xạ ảnh"
+description: "Phương trình tham số và phương trình thuần nhất của m-phẳng, chùm siêu phẳng xạ ảnh."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "m-phẳng"
+  - "phương trình thuần nhất"
+  - "chùm siêu phẳng"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '182-190'
+    sections: '§3'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+Ta biết m-phẳng trong $\mathbb{P} ^{n}$ được xác định bởi $m+1$ điểm độc lập, nghĩa là trong không gian $V ^{n+1}$ liên kết với $\mathbb{P}^{n}, m+1$ vectơ đại diện của $m+1$ điểm đã cho tạo nên một hệ $m+1$ vectơ độc lập tuyến tính.
+
+## 1. Phương trình tham số của m-phẳng xạ ảnh
+
+Giả sử trong $\mathbb{P} ^{n}$, m-phẳng $\mathbb{P} ^{m}$ xác định bởi $m+1$ điểm độc lập $A_{1}, A_{2}, \dots , A_{m+1}$ và đối với mục tiêu xạ ảnh cho trước, các điểm A$_{i}$ có tọa độ $A_{i} = (a_{i1}, a_{i2}, \dots , a_{i,n+1}), i = 1, \dots , m+1$.
+
+Gọi $\vect{a_{i}}$ là các vectơ trong $V ^{n+1}$ đại diện cho A$_{i}$; vì $m+1$ điểm độc lập nên chúng độc lập tuyến tính và tạo nên một cơ sở của không gian vectơ $V ^{m+1}$.
+
+Ta có $X(x_{1}, \dots , x_{n+1}) \in \mathbb{P}^{m} \iff \vec{x} \in V^{m+1} \iff \vec{x} = \sum_{i=1}^{m+1}t_{i}\vect{a_{i}}$.
+
+Viết dưới dạng tọa độ:
+
+<Theorem id="thm-p3-1" title="Phương trình tham số">
+$$
+x_{1} = t_{1}a_{11} + t_{2}a_{21} + \dots + t_{m+1}a_{m+1,1}; x_{2} = t_{1}a_{12} + t_{2}a_{22} + \dots + t_{m+1}a_{m+1,2}; \dots ; x_{n+1} = t_{1}a_{1,n+1} + t_{2}a_{2,n+1} + \dots + t_{m+1}a_{m+1,n+1}. (1)
+$$
+
+ 
+Vì $m+1$ vectơ $\vect{a_{i}}$ độc lập tuyến tính nên ma trận [a$_{ij}$] của hệ $(1)$ có hạng $m+1$.
+
+Dạng ma trận: $[x] = t_{1}[a_{1}] + t_{2}[a_{2}] + \dots + t_{m+1}[a_{m+1}] (1')$, trong đó [x], [a$_{i}$] là ma trận cột tọa độ của điểm X và của các điểm A$_{i}$.
+
+Với mỗi bộ $m+1$ giá trị của các tham số $t_{1}, \dots , t_{m+1}$ không đồng thời bằng 0 ta có một điểm X thuộc $\mathbb{P} ^{m}$ và ngược lại; một bộ $m+1$ tham số nhân với hệ số tỉ lệ $k \neq 0$ ứng 1–1 với một điểm $X \in \mathbb{P}^{m}$.
+
+Phương trình $(1)$ và $(1')$ gọi là *phương trình tham số của m-phẳng xạ ảnh* $\mathbb{P} ^{m}$ xác định bởi $m+1$ điểm độc lập $A_{1}, \dots , A_{m+1}$.
+
+Ngược lại, mọi phương trình tham số dạng $(1)$ hoặc $(1')$ mà ma trận [a$_{ij}$] có hạng $m+1$ đều là phương trình tham số của một m-phẳng trong $\mathbb{P} ^{n}$.
+
+Thật vậy, vì [a$_{ij}$] có hạng $m+1$ nên $m+1$ điểm A$_{i}$ có tọa độ $(a_{i1}, \dots , a_{i,n+1})$ là hệ điểm độc lập; viết phương trình tham số của m-phẳng xác định bởi chúng ta lại được $(1)$.
+</Theorem>
+
+<Example id="ex-p3-2" title="Ví dụ">
+Trong $\mathbb{P} ^{3}$, đường thẳng $(m = 1)$ đi qua $A_{1} = (1,2,0,1)$ và $A_{2} = (0,1,1,2)$.
+
+Hai vectơ (1,2,0,1), (0,1,1,2) độc lập tuyến tính (ma trận hạng 2), nên $A_{1}, A_{2}$ độc lập.
+
+Phương trình tham số:
+ 
+
+$$
+\begin{cases} x_{1} = t_{1} \\ x_{2} = 2t_{1} + t_{2} \\ x_{3} = t_{2} \\ x_{4} = t_{1} + 2t_{2}. \end{cases}
+$$
+
+ 
+
+Với $(t_{1}, t_{2}) = (1,1)$ ta được điểm $(1,3,1,3)$; nhân $(t_{1}, t_{2})$ với $k \neq 0$ vẫn cho cùng điểm đó.
+</Example>
+
+## 2. Phương trình tổng quát của m-phẳng xạ ảnh
+
+<Theorem id="thm-p3-3" title="Định lí">
+Trong $\mathbb{P} ^{n}$:
+
+a) Một m-phẳng xạ ảnh $\mathbb{P}^{m} (0 \le m < n)$ được biểu thị bằng một hệ phương trình tuyến tính thuần nhất có hạng $n-m$; đó là phương trình tổng quát của m-phẳng đối với một mục tiêu xạ ảnh cho trước.
+
+b) Ngược lại, đối với một mục tiêu xạ ảnh đã chọn, bất kì hệ phương trình tuyến tính thuần nhất có hạng $n-m (0 \le m < n)$ đều là phương trình của một m-phẳng xác định.
+</Theorem>
+
+<Proof of="thm-p3-3">
+a) Xét phương trình tham số của m-phẳng xác định bởi $m+1$ điểm độc lập $A_{i}: x_{j} = t_{1}a_{1j} + \dots +$ t$_{m+1}$a$_{m+1,j}$, $j = 1, \dots , n+1$.
+
+Đây là hệ $n+1$ phương trình với $m+1$ ẩn t$_{i}$ và có hạng $m+1$, nên chọn được $m+1$ phương trình độc lập; giả sử $m+1$ phương trình đầu.
+
+Giải hệ này ta được t$_{i}$ là các biểu thức bậc nhất theo $x_{1}, \dots , x_{m+1}$.
+
+Thay vào $n-m$ phương trình còn lại ta được phương trình tổng quát dạng
+ 
+
+$$
+c_{i1}x_{1} + c_{i2}x_{2} + \dots + c_{i,m+1}x_{m+1} + x_{m+1+i} = 0, i = 1, \dots , n-m. (2)
+$$
+
+ 
+Quá trình tìm các nghiệm t$_{i}$ rồi thay vào $n-m$ phương trình còn lại gọi là *quá trình khử tham số*.
+
+Sau khi khử ta có hệ phương trình tuyến tính thuần nhất có ma trận hệ số gồm $n-m$ hàng và $n+1$ cột, hạng $n-m$.
+
+Viết gọn:
+ 
+
+$$
+\sum_{j=1}^{n+1} a_{ij}x_{j} = 0, i = 1, 2, \dots , n-m. (2')
+$$
+
+ 
+b) Giả sử có hệ phương trình tuyến tính thuần nhất hạng $n-m$, với $n+1$ ẩn.
+
+Hệ có $(n+1)-(n-m) = m+1$ nghiệm độc lập tuyến tính và mọi nghiệm khác đều biểu thị tuyến tính qua $m+1$ nghiệm đó, gọi là $(b_{i1}, \dots , b_{i,n+1}), i = 1, \dots , m+1$.
+
+Gọi $\vect{b_{i}}$ là các vectơ của $V ^{n+1}$ có tọa độ $(b_{i1}, \dots , b_{i,n+1})$ đối với cơ sở đã cho; chúng độc lập tuyến tính và xác định một không gian $V ^{m+1}$.
+
+Gọi $\mathbb{P} ^{m}$ là m-phẳng xạ ảnh liên kết với $V ^{m+1}$.
+
+Khi đó $X \in \mathbb{P}^{m} \iff \vec{x} = t_{1}\vect{b_{1}} + \dots + t_{m+1}\vect{b_{m+1}}$, tức là $X \in \mathbb{P}^{m}$ khi và chỉ khi tọa độ của X thỏa hệ đã cho.
+
+Vậy $(2')$ là phương trình tổng quát của một m-phẳng xạ ảnh.
+</Proof>
+
+<Example id="ex-p3-5" title="Ví dụ">
+Với đường thẳng ở ví dụ trên $(A_{1} = (1,2,0,1), A_{2} = (0,1,1,2)$ trong $\mathbb{P} ^{3}$), khử $t_{1}, t_{2}$: từ $x_{1} = t_{1}$ và $x_{3} = t_{2}$ thay vào hai phương trình còn lại được
+ 
+
+$$
+\begin{cases} 2x_{1} - x_{2} + x_{3} = 0 \\ x_{1} + 2x_{3} - x_{4} = 0. \end{cases}
+$$
+
+ 
+
+Đây là hệ $n-m = 3-1 = 2$ phương trình độc lập.
+
+Kiểm tra: $A_{1}$ cho $2 - 2 + 0 = 0$ và $1 + 0 - 1 = 0; A_{2}$ cho $0 - 1 + 1 = 0$ và $0 + 2 - 2 = 0$.
+</Example>
+
+## 3. Phương trình tổng quát của siêu phẳng trong Pn
+
+<Theorem id="thm-p3-6" title="a) Phương trình tổng quát">
+Với $m = n-1$, phương trình tổng quát của siêu phẳng gồm $n-m = 1$ phương trình và có dạng
+ 
+
+$$
+u_{1}x_{1} + u_{2}x_{2} + \dots + u_{n+1}x_{n+1} = 0 hay \sum_{i=1}^{n+1} u_{i}x_{i} = 0, (3)
+$$
+
+ 
+trong đó các hệ số u$_{i}$ không đồng thời bằng 0 (vì phương trình có ma trận hạng 1).
+
+Ngược lại mỗi phương trình dạng $(3)$ đều là phương trình của một siêu phẳng xác định.
+</Theorem>
+
+<Definition id="def-p3-7" title="b) Tọa độ của siêu phẳng xạ ảnh">
+Cho siêu phẳng $u_{1}x_{1} + u_{2}x_{2} + \dots + u_{n+1}x_{n+1} = 0$ trong $\mathbb{P} ^{n}$.
+
+Bộ số $[u_{1}, u_{2}, \dots , u_{n+1}]$ gọi là *tọa độ của siêu phẳng* (kí hiệu bằng ngoặc vuông để phân biệt với tọa độ của điểm).
+
+Biết tọa độ của siêu phẳng thì siêu phẳng hoàn toàn xác định (viết được phương trình) và ngược lại.
+
+Tọa độ siêu phẳng có các tính chất giống tọa độ xạ ảnh của điểm:
+
+• Các u$_{i}$ không đồng thời bằng 0.
+
+• Mỗi bộ $[u_{1}, \dots , u_{n+1}]$ xác định một siêu phẳng duy nhất.
+
+• Hai bộ số [u$_{i}$] và [v$_{i}$] xác định một siêu phẳng khi và chỉ khi có số $k \neq 0$ sao cho $u_{i} = kv_{i}$ với mọi i.
+</Definition>
+
+<Example id="ex-p3-8" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, đường thẳng $x_{1} - 2x_{2} + 3x_{3} = 0$ có tọa độ $[1, -2, 3]$, và $[2, -4, 6]$ cũng là tọa độ của chính đường thẳng đó.
+
+Đường thẳng $x_{3} = 0$ (đường thẳng $A_{1}A_{2})$ có tọa độ [0, 0, 1].
+
+Điểm $(3, 0, -1)$ thỏa $x_{1} - 2x_{2} + 3x_{3} = 3 - 0 - 3 = 0$ nên thuộc đường thẳng thứ nhất.
+</Example>
+
+## 4. Các thí dụ
+
+<Example id="ex-p3-9" title="Thí dụ 1">
+Trong $\mathbb{P} ^{2}$ với mục tiêu xạ ảnh cho trước, viết phương trình đường thẳng đi qua hai điểm phân biệt $A(a_{1}, a_{2}, a_{3})$ và $B(b_{1}, b_{2}, b_{3})$.
+
+*Giải.*
+
+Gọi $\vec{x}$, $\vec{a}$, $\vec{b}$ lần lượt đại diện cho $X(x_{1}, x_{2}, x_{3})$ thuộc đường thẳng AB, A và B.
+
+$X \in AB \iff {\vec{x}, \vec{a}, \vec{b}}$ phụ thuộc tuyến tính $\iff$ định thức cấp 3 của ba hàng $(x_{1},x_{2},x_{3}), (a_{1},a_{2},a_{3}), (b_{1},b_{2},b_{3})$ bằng 0.
+
+Vậy phương trình tổng quát của đường thẳng AB là
+ 
+
+$$
+u_{1}x_{1} + u_{2}x_{2} + u_{3}x_{3} = 0, [u_{1}, u_{2}, u_{3}] = [ |a_{2} a_{3}; b_{2} b_{3}|, |a_{3} a_{1}; b_{3} b_{1}|, |a_{1} a_{2}; b_{1} b_{2}| ].
+$$
+
+ 
+
+Ví dụ số: A(1,0,1), B(0,1,2) cho $[u_{1}, u_{2}, u_{3}] = [0·2 - 1·1, 1·0 - 1·2, 1·1 - 0·0] = [-1, -2, 1]$, tức $-x_{1} - 2x_{2} + x_{3} = 0$.
+
+Kiểm tra: A cho $-1 + 0 + 1 = 0; B$ cho $0 - 2 + 2 = 0$.
+</Example>
+
+<Example id="ex-p3-10" title="Thí dụ 2 (định lí Desargues)">
+Trong $\mathbb{P} ^{2}$, nếu hai tam giác ABC và $A'B'C'$ có các đường thẳng nối các đỉnh ứng $AA', BB', CC'$ đồng quy tại một điểm O thì giao điểm của các cặp cạnh tương ứng $AB \cap A'B', BC \cap B'C', CA \cap C'A'$ nằm trên một đường thẳng.
+
+*Giải.*
+
+Chọn mục tiêu xạ ảnh \{A, B, C; O\}, ta có
+ 
+
+$$
+\begin{cases} A = (1,0,0) \\ B = (0,1,0) \\ C = (0,0,1) \\ O = (1,1,1). \end{cases}
+$$
+
+ 
+
+Điểm $A'$ thẳng hàng với A và O nên $[A'] = \lambda [O] + μ[A] = ( \lambda +μ, \lambda , \lambda )$.
+
+Chọn $\lambda = 1$ và $\lambda +μ = a$, được $A' = (a,1,1)$.
+
+Tương tự $B' = (1,b,1), C' = (1,1,c)$.
+
+Gọi P, Q, R lần lượt là giao điểm $AB \cap A'B', BC \cap B'C', CA \cap C'A'$.
+
+Đường thẳng AB có tọa độ [0,0,1] (phương trình $x_{3} = 0)$, đường thẳng $A'B'$ có tọa độ $[1-b, 1-a, ab-1]$.
+
+Vì $P = AB \cap A'B'$ nên tọa độ P thỏa hệ
+ 
+
+$$
+\begin{cases} x_{3} = 0 \\ (1-b)x_{1} + (1-a)x_{2} + (ab-1)x_{3} = 0. \end{cases}
+$$
+
+ 
+
+Giải hệ được $P = (a-1, 1-b, 0)$.
+
+Tương tự $Q = (0, 1-b, c-1), R = (1-a, 0, c-1)$.
+
+Ba điểm P, Q, R thẳng hàng vì định thức của chúng bằng 0:
+ 
+
+$$
+(a-1)(1-b)(c-1) + (1-b)(c-1)(1-a) = (1-b)(c-1)[(a-1) + (1-a)] = 0.
+$$
+</Example>
+
+## 5. Vị trí tương đối của các phẳng trong Pn
+
+Bài toán xét vị trí tương đối của các m-phẳng trong không gian xạ ảnh đơn giản hơn trong không gian afin hoặc Ơclit: ta chỉ cần xét sự cắt nhau hoặc chéo nhau của các phẳng.
+
+<Definition id="def-p3-11" title="a) Sự cắt nhau và chéo nhau của các phẳng xạ ảnh">
+• Hai phẳng xạ ảnh của $\mathbb{P} ^{n}$ gọi là *cắt nhau* nếu chúng có điểm chung, nghĩa là giao khác rỗng.
+
+Giao của hai phẳng là một phẳng có số chiều lớn nhất thuộc các phẳng cho trước.
+
+• Hai phẳng xạ ảnh của $\mathbb{P} ^{n}$ gọi là *chéo nhau* nếu chúng không có điểm chung.
+</Definition>
+
+<Example id="ex-p3-12" title="Ví dụ">
+Trong $\mathbb{P} ^{3}$, đường thẳng $x_{1} = x_{2} = 0$ (chứa các điểm $(0,0,x_{3},x_{4}))$ và đường thẳng $x_{3} = x_{4} = 0$ (chứa $(x_{1},x_{2},0,0))$ không có điểm chung (một điểm chung phải có cả bốn tọa độ bằng 0, không phải điểm xạ ảnh), nên chéo nhau.
+
+Trong $\mathbb{P} ^{2}$, hai đường thẳng phân biệt bất kì luôn có điểm chung: $x_{1} - 2x_{2} + 3x_{3} = 0$ và $x_{3} = 0$ cắt nhau tại (2, 1, 0).
+</Example>
+
+<Definition id="def-p3-13" title="b) Tổng của hai phẳng">
+*Tổng* của hai phẳng là giao của tất cả các phẳng chứa đồng thời cả hai phẳng đó.
+
+Do đó tổng của hai phẳng là phẳng có số chiều bé nhất chứa các phẳng cho trước.
+
+Khái niệm tổng của hai phẳng khác với tổng hiểu theo nghĩa tập hợp.
+
+Chẳng hạn, tổng của hai đường thẳng xạ ảnh phân biệt cắt nhau là mặt phẳng chứa hai đường thẳng ấy; nếu hai đường thẳng xạ ảnh chéo nhau (không cắt nhau) thì tổng của chúng là không gian xạ ảnh $\mathbb{P} ^{3}$ chứa hai đường thẳng ấy.
+</Definition>
+
+<Theorem id="thm-p3-14" title="Công thức số chiều của tổng và giao">
+Để xét vị trí tương đối của hai phẳng xạ ảnh ta dựa vào các không gian vectơ con liên kết với chúng.
+
+Với hai phẳng xạ ảnh P và Q:
+
+• Nếu P và Q cắt nhau:
+ 
+
+$$
+dim(P + Q) = dim P + dim Q - dim(P \cap Q).
+$$
+
+ 
+
+• Nếu P và Q chéo nhau:
+ 
+
+$$
+dim(P + Q) = dim P + dim Q + 1.
+$$
+
+ 
+
+Từ định nghĩa về tổng và giao của hai phẳng xạ ảnh, bằng phương pháp quy nạp ta suy ra định nghĩa của tổng và giao một số hữu hạn các phẳng trong $\mathbb{P} ^{n}$.
+</Theorem>
+
+<Example id="ex-p3-15" title="Ví dụ">
+Trong $\mathbb{P} ^{3}$, hai đường thẳng $x_{3} = x_{4} = 0$ và $x_{1} = x_{4} = 0$ cắt nhau tại điểm $(0,1,0,0)$, nên $dim(P + Q) = 1 + 1 - 0 = 2$: tổng là mặt phẳng $x_{4} = 0$.
+
+Hai đường thẳng $x_{1} = x_{2} = 0$ và $x_{3} = x_{4} = 0$ chéo nhau, nên $dim(P + Q) = 1 + 1 + 1 = 3$: tổng là cả $\mathbb{P} ^{3}$.
+</Example>
+
+<Definition id="def-p3-16" title="c) Hệ siêu phẳng độc lập">
+Trong $\mathbb{P} ^{n}$ với mục tiêu xạ ảnh đã chọn, cho m siêu phẳng có tọa độ $[u_{i1}, u_{i2}, \dots , u_{i,n+1}], i = 1, \dots , m$ và $0 < m \le n+1. m$ siêu phẳng đó gọi là *độc lập* nếu ma trận $[u_{ij}] (i = 1, \dots , m; j = 1, \dots , n+1)$ có hạng bằng m.
+</Definition>
+
+<Theorem id="thm-p3-17" title="d) Định lí">
+Giao của m siêu phẳng độc lập $(0 < m < n)$ là một (n−m)-phẳng.
+
+**Hệ quả.** Phương trình của một m-phẳng trong $\mathbb{P} ^{n}$ có dạng $\sum_{j=1}^{n+1} a_{ij}x_{j} = 0 (i = 1, \dots , n-m)$, tức là giao của $n-m$ siêu phẳng độc lập.
+
+Từ đó giao của n siêu phẳng độc lập là một điểm. Áp dụng vào mặt phẳng xạ ảnh $\mathbb{P} ^{2}$: hai đường thẳng phân biệt luôn luôn cắt nhau.
+</Theorem>
+
+<Proof of="thm-p3-17">
+Xét hệ m phương trình độc lập
+ 
+
+$$
+\sum_{j=1}^{n+1} u_{ij}x_{j} = 0, i = 1, \dots , m.
+$$
+
+ 
+Mỗi phương trình của hệ biểu thị một siêu phẳng, nên một điểm X cùng thuộc m siêu phẳng đó khi và chỉ khi tọa độ $(x_{1}, \dots , x_{n+1})$ của nó là nghiệm của hệ.
+
+Đây là hệ tuyến tính thuần nhất có hạng m nên là phương trình tổng quát của một (n−m)-phẳng.
+</Proof>
+
+<Example id="ex-p3-19" title="Ví dụ">
+Trong $\mathbb{P}^{3} (n = 3)$, hai siêu phẳng $x_{1} = 0$ và $x_{2} = 0$ có ma trận hệ số hạng 2 nên độc lập; giao của chúng là $(n-m) = 3-2 =$ 1-phẳng, gồm các điểm $(0, 0, x_{3}, x_{4})$, tức là một đường thẳng.
+
+Ba siêu phẳng $x_{1} = 0, x_{2} = 0, x_{3} = 0$ độc lập và cắt nhau tại một điểm $(0,0,0,1)$.
+</Example>
+
+<Theorem id="thm-p3-20" title="e) Định lí">
+Giao của một siêu phẳng $\mathbb{P} ^{n-1}$ và một m-phẳng $\mathbb{P} ^{m}$ không nằm trong siêu phẳng đó là một (m−1)-phẳng.
+
+**Hệ quả.**
+
+• Hai siêu phẳng phân biệt của $\mathbb{P} ^{n}$ luôn cắt nhau theo một (n−2)-phẳng.
+
+• Một siêu phẳng và một đường thẳng không thuộc siêu phẳng đó luôn cắt nhau tại một điểm.
+</Theorem>
+
+<Proof of="thm-p3-20">
+Giả sử siêu phẳng $\mathbb{P} ^{n-1}$ có phương trình $\sum_{i=1}^{n+1} u_{i}x_{i} = 0$ và m-phẳng $\mathbb{P} ^{m}$ có phương trình $\sum_{j=1}^{n+1} a_{ij}x_{j} = 0, i = 1, \dots , n-m$.
+
+Hệ tìm giao gồm $n-m+1$ phương trình và có hạng $n-m+1$: nếu hạng chỉ là $n-m$ thì mọi điểm của $\mathbb{P} ^{m}$ đều thuộc $\mathbb{P} ^{n-1}$, trái giả thiết.
+
+Vì hạng bằng $n-m+1$ nên hệ xác định một (m−1)-phẳng (vì $n - (n-m+1) = m-1)$.
+</Proof>
+
+<Example id="ex-p3-22" title="Ví dụ">
+Trong $\mathbb{P} ^{3}$, siêu phẳng (mặt phẳng) $x_{4} = 0$ và đường thẳng đi qua (1,0,0,1), (0,1,0,2) (không nằm trong mặt phẳng).
+
+Điểm $t_{1}(1,0,0,1) + t_{2}(0,1,0,2)$ thuộc mặt phẳng khi $x_{4} = t_{1} + 2t_{2} = 0$, chọn $t_{2} = 1, t_{1} = -2$ được $(-2, 1, 0, 0)$.
+
+Vậy giao là một điểm, tức $(m-1) =$ 0-phẳng.
+</Example>
+
+<Example id="ex-p3-23" title="Thí dụ 1">
+Trong $\mathbb{P} ^{2}$ cho hai đường thẳng a, b có phương trình đối với mục tiêu cho trước: 
+
+$$
+(a): a_{1}x_{1} + a_{2}x_{2} + a_{3}x_{3} = 0; (b): b_{1}x_{1} + b_{2}x_{2} + b_{3}x_{3} = 0.
+$$
+
+ Tìm tọa độ giao điểm của chúng.
+
+*Giải.*
+
+Tọa độ giao điểm thỏa hệ
+ 
+
+$$
+\begin{cases} a_{1}x_{1} + a_{2}x_{2} = -a_{3}x_{3} \\ b_{1}x_{1} + b_{2}x_{2} = -b_{3}x_{3}. \end{cases}
+$$
+
+ 
+
+Đây là hệ Crame.
+
+Đặt $D = |a_{1} a_{2}; b_{1} b_{2}|$; khi đó $D_{x_{1}} = |a_{2} a_{3}; b_{2} b_{3}|·x_{3}, D_{x_{2}} = |a_{3} a_{1}; b_{3} b_{1}|·x_{3}$, nên  
+
+$$
+\begin{cases} x_{1} = \frac{D_{x_{1}}}{D} \\ x_{2} = \frac{D_{x_{2}}}{D}. \end{cases}
+$$
+
+ Chọn $x_{3} = D = |a_{1} a_{2}; b_{1} b_{2}|$ ta có
+ 
+
+$$
+(x_{1}, x_{2}, x_{3}) = ( |a_{2} a_{3}; b_{2} b_{3}|, |a_{3} a_{1}; b_{3} b_{1}|, |a_{1} a_{2}; b_{1} b_{2}| ).
+$$
+
+ 
+
+Ví dụ số: $(a): x_{1} + x_{2} + x_{3} = 0$ và $(b): x_{1} - x_{2} + 2x_{3} = 0$, ta có $(a_{1},a_{2},a_{3}) = (1,1,1), (b_{1},b_{2},b_{3}) = (1,-1,2)$, giao điểm $(|1 1; -1 2|, |1 1; 2 1|, |1 1; 1 -1|) = (3, -1, -2)$.
+
+Kiểm tra: $3 - 1 - 2 = 0$ và $3 + 1 - 4 = 0$.
+</Example>
+
+<Example id="ex-p3-24" title="Thí dụ 2">
+Trong $\mathbb{P} ^{3}$ cho hai đường thẳng d và $d'$ có phương trình đối với mục tiêu cho trước:
+ 
+
+$$
+(d): a_{1}x_{1} + a_{2}x_{2} + a_{3}x_{3} + a_{4}x_{4} = 0; b_{1}x_{1} + b_{2}x_{2} + b_{3}x_{3} + b_{4}x_{4} = 0.
+$$
+
+  
+
+$$
+(d'): u_{1}x_{1} + u_{2}x_{2} + u_{3}x_{3} + u_{4}x_{4} = 0; v_{1}x_{1} + v_{2}x_{2} + v_{3}x_{3} + v_{4}x_{4} = 0.
+$$
+
+ Tìm điều kiện cần và đủ để d và $d'$ chéo nhau.
+
+*Giải.*
+
+Giao điểm của d và $d'$ (nếu có) là điểm $M(x_{1}, x_{2}, x_{3}, x_{4})$ có tọa độ thỏa hệ bốn phương trình trên.
+
+Đây là hệ tuyến tính thuần nhất, và nghiệm tầm thường $(0,0,0,0)$ không phải là tọa độ của điểm xạ ảnh.
+
+Vậy điều kiện cần và đủ để d và $d'$ chéo nhau là định thức cấp 4 của các hàng $(a_{1},a_{2},a_{3},a_{4}), (b_{1},b_{2},b_{3},b_{4}), (u_{1},u_{2},u_{3},u_{4}), (v_{1},v_{2},v_{3},v_{4})$ khác 0 (lúc đó hệ chỉ có nghiệm tầm thường $(0,0,0,0)$ và $d \cap d' = ∅)$.
+
+Ví dụ số: $d: x_{3} = 0; x_{4} = 0$ (các hàng (0,0,1,0), (0,0,0,1)) và $d': x_{1} = 0; x_{2} = 0$ (các hàng (1,0,0,0), (0,1,0,0)); định thức của bốn hàng này có giá trị tuyệt đối bằng $1 \neq 0$ nên d và $d'$ chéo nhau.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p3-1" title="Phương trình của đường thẳng qua hai điểm (§3, mục 4)">
+Trong P², viết phương trình đường thẳng đi qua A(1,0,1) và B(0,1,2).
+</Exercise>
+
+<Hint>
+Tọa độ đường thẳng là tích có hướng của hai bộ tọa độ.
+</Hint>
+
+<Solution>
+[u₁, u₂, u₃] = [|0 1; 1 2|, |1 1; 2 0|, |1 0; 0 1|] = [-1, -2, 1].
+
+Kiểm tra: A cho -1 + 0 + 1 = 0; B cho 0 - 2 + 2 = 0.
+
+**Đáp án:** -x₁ - 2x₂ + x₃ = 0
+</Solution>
+
+<Exercise id="exr-p3-2" title="Giao điểm của hai đường thẳng trong P² (§3, thí dụ 1)">
+Tìm giao điểm của hai đường thẳng x₁ + x₂ + x₃ = 0 và x₁ - x₂ + 2x₃ = 0 trong P².
+</Exercise>
+
+<Hint>
+Giao điểm có tọa độ bằng tích có hướng của hai bộ tọa độ đường thẳng.
+</Hint>
+
+<Solution>
+(1,1,1) × (1,-1,2) = (1·2 - 1·(-1), 1·1 - 1·2, 1·(-1) - 1·1) = (3, -1, -2).
+
+**Đáp án:** (3, -1, -2)
+</Solution>
+
+<Exercise id="exr-p3-3" title="Giao của đường thẳng với siêu phẳng trong P³ (§3, mục 5e)">
+Trong P³ cho A(1,0,0,1), B(0,1,0,1) và mặt phẳng  $ alpha$ : x₁ - x₂ + x₃ = 0. Tìm giao điểm của đường thẳng AB với  $ alpha$ .
+</Exercise>
+
+<Hint>
+Điểm của AB:  $ lambda$ A + μB; thế vào phương trình mặt phẳng.
+</Hint>
+
+<Solution>
+ $ lambda$ A + μB = ( $ lambda$ , μ, 0,  $ lambda$  + μ).
+
+Thế vào  $ alpha$ :  $ lambda$  - μ + 0 = 0 nên  $ lambda$  = μ; chọn  $ lambda$  = μ = 1.
+
+**Đáp án:** (1, 1, 0, 2)
+</Solution>
+
+<KeyTakeaways>
+- Mỗi m-phẳng trong không gian xạ ảnh ứng với một không gian con vectơ m+1 chiều của không gian vectơ nền.
+- Siêu phẳng xạ ảnh có phương trình là một phương trình tuyến tính thuần nhất đối với tọa độ xạ ảnh.
+</KeyTakeaways>

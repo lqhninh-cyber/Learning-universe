@@ -1,0 +1,221 @@
+---
+id: anh-xa-afin-va-phep-bien-doi-afin
+title: "Ánh xạ Affine và Phép Biến đổi Affine"
+description: "Định nghĩa ánh xạ affine, ánh xạ tuyến tính liên kết, phương trình tọa độ và phép biến đổi affine."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "ánh xạ affine"
+  - "phép biến đổi"
+  - "ma trận affine"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '48-58'
+    sections: '§6'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-s6-1" title="Định nghĩa">
+Cho $\mathcal{A}$, $\mathcal{A}$′ là hai không gian afin trên $\mathbb{K}$ liên kết với $V$, $V$′. Ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ gọi là *ánh xạ afin* nếu có ánh xạ tuyến tính $\varphi : V \to V'$ sao cho với mọi $M, N \in \mathcal{A}, M' = f(M), N' = f(N)$ thì $\vect{M'N'} = \varphi (\vect{MN})$. Ánh xạ φ gọi là *ánh xạ tuyến tính liên kết* với *f*, kí hiệu $\varphi =$ *f̄*.
+</Definition>
+
+## 2. Tính chất của ánh xạ afin
+
+<Theorem id="thm-s6-2" title="Tính chất">
+a) Mỗi ánh xạ afin *f* chỉ có một ánh xạ tuyến tính liên kết duy nhất (vì $\varphi (\vect{MN}) = \vect{M'N'} = \varphi '(\vect{MN})$ với mọi M, N).
+
+b) Với mỗi ánh xạ tuyến tính $\varphi : V \to V'$ và cặp điểm $I \in \mathcal{A}, I' \in \mathcal{A}'$, có duy nhất ánh xạ afin *f* nhận φ làm ánh xạ tuyến tính liên kết và $f(I) = I' (M'$ xác định bởi $\vect{I'M'} = \varphi (\vect{IM}))$.
+
+c) Tích g∘*f* của hai ánh xạ afin là ánh xạ afin, có ánh xạ tuyến tính liên kết là ψ∘φ.
+
+d) Cho $n+1$ điểm độc lập M$_{0}$,…,M$_{n}$ của $\mathcal{A} ^{n}$ và $n+1$ điểm tùy ý M′$_{0}$,…,M′$_{n}$ của $\mathcal{A}$′.
+
+Khi đó có một và chỉ một ánh xạ afin $f: \mathcal{A}^{n} \to \mathcal{A}'$ sao cho $f(M_{i}) = M'_{i}, i = 0..n$.
+
+e) Ánh xạ afin biến một m-phẳng của $\mathcal{A}$ thành một l-phẳng của $\mathcal{A}$′ với $l \le m$ (vì ảnh của phương của m-phẳng qua φ là không gian con l chiều, $l \le m)$.
+</Theorem>
+
+## 3. Đẳng cấu afin
+
+<Definition id="def-s6-3" title="Định nghĩa">
+Ánh xạ afin $f: \mathcal{A} \to \mathcal{A}'$ là song ánh thì gọi là *phép đẳng cấu afin* của $\mathcal{A}$ lên $\mathcal{A}$′.
+
+Khi đó $\mathcal{A}$ và $\mathcal{A}$′ có cùng số chiều và φ là phép đẳng cấu tuyến tính giữa hai không gian vectơ liên kết.
+
+**Hệ quả.** Với hai mục tiêu afin \{E$_{0}$; E$_{i}$\} của $\mathcal{A} ^{n}$ và \{E′$_{0}$; E′$_{i}$\} của $\mathcal{A}$′$^{n}$, có duy nhất một phép đẳng cấu afin *f* sao cho $f(E_{i}) = E'_{i}, i = 0..n$.
+</Definition>
+
+## 4. Phép biến đổi afin
+
+<Definition id="def-s6-4" title="Định nghĩa">
+Phép đẳng cấu afin $f: \mathcal{A} \to \mathcal{A}$ của $\mathcal{A}$ lên chính nó gọi là *phép biến đổi afin* (*phép afin*).
+
+Khi đó ánh xạ tuyến tính liên kết φ là một phép tự đẳng cấu (phép biến đổi tuyến tính) của $\overline{\mathcal{A}}$.
+
+Thí dụ (phép tịnh tiến). Cố định $\vec{v} \in V$, xét $f: M ↦ M'$ với $\vect{MM'} = \vec{v}$.
+
+Đó là phép tịnh tiến t$_{v}$, với $\varphi = Id_{V}$.
+
+Ngược lại phép biến đổi afin có $\varphi = Id_{V}$ là phép tịnh tiến.
+</Definition>
+
+<Theorem id="thm-s6-5" title="Định lí">
+b) Cho hai hệ $n+1$ điểm độc lập A$_{0}$,…,A$_{n}$ và A′$_{0}$,…,A′$_{n}$ của $\mathcal{A} ^{n}$; có duy nhất phép biến đổi afin *f* với $f(A_{i}) = A'_{i}$.
+
+c) Tích của hai phép afin là phép afin có phép biến đổi tuyến tính liên kết là tích ψ∘φ; đảo ngược *f*$^{-1}$ là phép afin có phép liên kết φ$^{-1}$.
+
+d) Phép biến đổi afin biến m-phẳng thành m-phẳng (áp dụng 2e cho *f* và *f*$^{-1}$ để có $l \le m$ và $m \le l)$.
+
+Đặc biệt biến đường thẳng thành đường thẳng.
+
+e) Phép biến đổi afin bảo tồn tỉ số đơn: nếu P, Q, R thẳng hàng và $P' = f(P), \dots$ thì P′, Q′, R′ thẳng hàng và (PQR) $= (P'Q'R')$.
+</Theorem>
+
+<Proof of="thm-s6-5">
+Nếu $\vect{PQ} = \lambda \vect{PR}$ thì $\vect{P'Q'} = \varphi (\vect{PQ}) = \lambda \varphi (\vect{PR}) = \lambda \vect{P'R'}$.
+</Proof>
+
+<Example id="ex-s6-7" title="Ví dụ">
+Tịnh tiến t$_{v}$ với $\vec{v} = (2,1)$ biến $M(x,y)$ thành $M'(x+2, y+1); \varphi = Id$.
+
+Nó biến đường thẳng $y = 3x$ thành đường thẳng qua $(2,1)$ cùng phương $(1,3)$ (vẫn là 1-phẳng).
+
+Với phép afin *f* ở mục 5 dưới đây, P(0,0), Q(1,0), R(2,0) có $\vect{PQ} = ½\vect{PR}$; ảnh P′(1,2), Q′(2,3), R′(3,4) có $\vect{P'Q'} = (1,1) = ½(2,2) = ½\vect{P'R'}$, tỉ số không đổi.
+</Example>
+
+## 5. Phương trình của phép biến đổi afin
+
+Trong $\mathcal{A} ^{n}$ với mục tiêu \{E$_{0}$; E$_{i}$\}, cho phép afin *f* và $E'_{i} = f(E_{i})$.
+
+Gọi C là ma trận chuyển từ cơ sở \{$\vect{E_{0}E_{i}}$\} sang \{$\vect{E'_{0}E'_{i}}$\}, và $(b_{1}, \dots ,b_{n})$ là tọa độ của $E'_{0} = f(E_{0})$.
+
+Nếu X(x$_{i}$) và $X' = f(X)$ có tọa độ (x′$_{i}$) thì
+
+<Theorem id="thm-s6-8" title="Phương trình của phép afin">
+$$
+[x'] = C*[x] + [b]. (1)
+$$
+
+  Ma trận $C*$ không suy biến gọi là *ma trận của phép afin* *f*.
+
+Đối với cơ sở \{$\vect{e_{i}}$\}, phép biến đổi tuyến tính liên kết φ có phương trình $[x'] = C*[x]$.
+
+Ngược lại, đối với mục tiêu đã chọn, mỗi phương trình $[x'] = B[x] + [b]$ với B là ma trận vuông cấp n không suy biến là phương trình của một phép biến đổi afin duy nhất.
+</Theorem>
+
+<Example id="ex-s6-9" title="Thí dụ 1 (sách)">
+Phép tịnh tiến t$_{v}$ có $\varphi = Id$ nên ma trận là ma trận đơn vị: $[x'] = [x] + [b]$, với [b] là tọa độ của $E'_{0} = t_{v}(E_{0})$.
+
+Thí dụ 2 (sách).
+
+Trong $\mathcal{A} ^{2}$, lập phương trình phép afin *f* biến $A(1,0), B(0,2), C(-3,0)$ thành $A'(2,3), B'(-1,4), C'(-2,-1)$.Đặt $x'_{1} = a_{1}x_{1} + a_{2}x_{2} + c_{1}, x'_{2} = b_{1}x_{1} + b_{2}x_{2} + c_{2}$.Thay ba cặp điểm được hệ 6 phương trình: 
+
+$$
+\begin{cases} 2 = a_{1} + c_{1} \\ 3 = b_{1} + c_{2} \\ -1 = 2a_{2} + c_{1} \\ 4 = 2b_{2} + c_{2} \\ -2 = -3a_{1} + c_{1} \\ -1 = -3b_{1} + c_{2}. \end{cases}
+$$
+
+ Giải ra $a_{1} = 1, a_{2} = -1, c_{1} = 1, b_{1} = b_{2} = 1, c_{2} = 2$:
+ 
+
+$$
+x'_{1} = x_{1} - x_{2} + 1, x'_{2} = x_{1} + x_{2} + 2.
+$$
+</Example>
+
+## 6. Phương trình của phép biến đổi afin đối với hai mục tiêu khác nhau
+
+<Theorem id="thm-s6-10" title="Định lí">
+Nếu đối với \{E$_{0}$; E$_{i}$\}, *f* có phương trình $[x'] = B[x] + [b]$, và đối với mục tiêu khác \{E′$_{0}$; E′$_{i}$\} có phương trình $[x'] = B'[x] + [b']$, thì
+ 
+
+$$
+B' = (C*)^{-1} B C*,
+$$
+
+ 
+với C là ma trận chuyển từ \{$\vect{E_{0}E_{i}}$\} sang \{$\vect{E'_{0}E'_{i}}$\} (vì B, B′ là ma trận của cùng φ đối với hai cơ sở).
+
+**Chú ý.** Khi cho $[x] = [0]$ thì $[x'] = [b]: (b_{1}, \dots ,b_{n})$ chính là tọa độ của *f*(E$_{0}$) đối với mục tiêu đã cho.
+</Theorem>
+
+<Example id="ex-s6-11" title="Ví dụ">
+Lấy $B = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}$ của *f* ở thí dụ 2.
+
+Đổi sang mục tiêu cùng gốc với $\vect{e'_{1}} = \vect{e_{1}}, \vect{e'_{2}} = 2\vect{e_{2}}$, tức $C = C* = diag(1, 2)$.Khi đó $B' =$ C$^{-1}$BC $= \begin{pmatrix} 1 & -2 \\ ½ & 1 \end{pmatrix}$.Kiểm tra: $\varphi (\vect{e_{1}}) = (1,1) = \vect{e'_{1}} + ½\vect{e'_{2}}$ (cột 1 của B′ là (1, ½)) và $\varphi (\vect{e'_{2}}) = (-2,2) = -2\vect{e'_{1}} + \vect{e'_{2}}$ (cột 2 là $(-2, 1)).$
+</Example>
+
+## 7. Ảnh của đơn hình m chiều và của hình hộp m chiều qua phép biến đổi afin f
+
+<Theorem id="thm-s6-12" title="Định lí">
+a) Qua phép biến đổi afin, một đơn hình m chiều biến thành một đơn hình m chiều: $S(A'_{0}, \dots ,A'_{m}) = f(S(A_{0}, \dots ,A_{m}))$, với $A'_{i} = f(A_{i})$.
+
+b) Qua phép biến đổi afin, một m-hộp biến thành một m-hộp.
+</Theorem>
+
+<Proof of="thm-s6-12">
+Vì *f* có phương trình $[x'] = B[x] + [b]$ nên điểm X có $[x] = t_{0}[a_{0}] + \dots + t_{m}[a_{m}] (\sum_{i=0}^{m}t_{i} = 1, t_{i} \ge 0)$ có ảnh $[x'] = B(\sum_{i=0}^{m}t_{i}[a_{i}]) + [b] = \sum_{i=0}^{m}t_{i}(B[a_{i}] + [b]) = \sum_{i=0}^{m}t_{i}[a'_{i}]$, tức X′ thuộc đơn hình xác định bởi A′$_{0}$,…,A′$_{m}$ (độc lập vì *f* song ánh); ngược lại mọi điểm của đơn hình ấy là ảnh.
+
+*Chứng minh b).* Nếu $\vect{P_{0}M} = \sum_{i=1}^{m} \lambda _{i}\vect{P_{0}P_{i}} (0 \le \lambda _{i} \le 1)$ thì $\varphi (\vect{P_{0}M}) = \sum_{i=1}^{m} \lambda _{i}\vect{P'_{0}P'_{i}}$, tức M′ thuộc hình hộp $H(P'_{0}, \dots ,P'_{m})$; các điểm P′$_{i}$ độc lập.
+</Proof>
+
+<Example id="ex-s6-14" title="Ví dụ">
+Với $f: x'_{1} = x_{1} - x_{2} + 1, x'_{2} = x_{1} + x_{2} + 2$ (thí dụ 2), tam giác A$_{0}$(0,0), A$_{1}$(1,0), A$_{2}$(0,1) biến thành tam giác A′$_{0}$(1,2), A′$_{1}$(2,3), A′$_{2}$(0,3).
+
+Điểm $(¼,¼) = ½A_{0} + ¼A_{1} + ¼A_{2}$ có ảnh $(1, \frac{5}{2})$, đúng bằng $½(1,2) + ¼(2,3) + ¼(0,3) = (1, \frac{5}{2})$.
+
+Hình vuông đơn vị (2-hộp) biến thành hình bình hành có đỉnh (1,2), (2,3), (0,3), (1,4).
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-s6-1" title="Phép biến đổi afin và phương trình (§6, mục 5)">
+Phép afin f của A² biến O(0,0), E₁(1,0), E₂(0,1) lần lượt thành (1,2), (2,3), (0,3). Viết phương trình của f và tìm ảnh của M(2,1).
+</Exercise>
+
+<Hint>
+Ảnh của gốc cho phần tự do, ảnh của e₁, e₂ cho các cột của ma trận.
+</Hint>
+
+<Solution>
+f(O) = (1,2) nên phần tự do là (1,2).
+
+ $ varphi$ (e₁) = (2,3) - (1,2) = (1,1);  $ varphi$ (e₂) = (0,3) - (1,2) = (-1,1).
+
+x' = x - y + 1, y' = x + y + 2.
+
+M(2,1) ↦ (2-1+1, 2+1+2) = (2,5).
+
+**Đáp án:** f(M) = (2,5); phương trình: x' = x - y + 1, y' = x + y + 2
+</Solution>
+
+<Exercise id="exr-s6-2" title="Phép biến đổi afin và hệ số diện tích (§6)">
+Phép afin f của A² biến O(0,0), E₁(1,0), E₂(0,1) lần lượt thành O(0,0), (1,1), (-1,1). Tìm ảnh của M(2,3) và định thức của phần tuyến tính (hệ số biến diện tích).
+</Exercise>
+
+<Hint>
+Hai cột của ma trận là ảnh của e₁ và e₂.
+</Hint>
+
+<Solution>
+Ma trận B = [[1,-1],[1,1]], f(x,y) = (x - y, x + y).
+
+f(2,3) = (2 - 3, 2 + 3) = (-1, 5).
+
+det B = 1·1 - (-1)·1 = 2.
+
+**Đáp án:** f(M) = (-1, 5); det = 2 (diện tích mọi hình nhân đôi)
+</Solution>
+
+<KeyTakeaways>
+- Ánh xạ affine là ánh xạ giữa hai không gian affine bảo toàn quan hệ vectơ qua ánh xạ tuyến tính liên kết.
+- Phép biến đổi affine hoàn toàn xác định khi biết ảnh của một mục tiêu affine.
+</KeyTakeaways>

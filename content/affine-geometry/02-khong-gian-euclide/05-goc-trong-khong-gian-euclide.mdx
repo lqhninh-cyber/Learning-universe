@@ -1,0 +1,157 @@
+---
+id: goc-trong-khong-gian-euclide
+title: "Góc trong Không gian Ơclit"
+description: "Định nghĩa góc giữa hai đường thẳng, góc giữa đường thẳng và phẳng, góc giữa hai phẳng."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "góc"
+  - "độ đo góc"
+  - "trực giao"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '113-120'
+    sections: '§5'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Góc giữa hai vectơ
+
+<Definition id="def-e5-1" title="Định nghĩa">
+Trong $\mathbb{E} ^{n}$, góc giữa hai vectơ $\vec{u}$, $\vec{v}$ khác $\vec{0}$ là số φ với
+ 
+
+$$
+0 \le \varphi \le π và cos \varphi = \vec{u}·\vec{v} / (|\vec{u}||\vec{v}|).
+$$
+
+ 
+Suy ra:
+
+a) nếu $\vec{u}$, $\vec{v}$ phụ thuộc tuyến tính thì $\varphi = 0$ hoặc $\varphi = π$ (vì $\vec{v} = \lambda \vec{u}$ cho $cos \varphi = \lambda |\vec{u}|^{2}/(| \lambda ||\vec{u}|^{2}) = \pm 1)$;
+
+b) nếu $\vec{u} \perp \vec{v}$ thì $\varphi = \frac{π}{2}$;
+
+c) với ba điểm A, B, C bất kì: **$BC^{2} = AB^{2} + AC^{2} -$ 2·AB·AC·cosÂ**, trong đó Â là góc giữa $\vect{AB}$ và $\vect{AC}$ (vì $\vect{BC}^{2} = (\vect{AC} - \vect{AB})^{2} = AC^{2} + AB^{2} - 2\vect{AB}·\vect{AC})$.
+</Definition>
+
+<Example id="ex-e5-2" title="Ví dụ">
+$$
+\vec{u} = (1,1,0), \vec{v} = (0,1,1): cos \varphi = 1/(\sqrt{2}·\sqrt{2}) = \frac{1}{2}, \varphi = \frac{π}{3}.
+$$
+
+ Với $A(0,0), B(2,0), C(1,1): BC^{2} = 2; AB = 2, AC = \sqrt{2}$, Â $= \frac{π}{4}$ nên $AB^{2} + AC^{2} -$ 2·AB·AC·cosÂ $= 4 + 2 - 2·2·\sqrt{2}·(\frac{\sqrt{2}}{2}) = 2.$
+</Example>
+
+## 2. Góc giữa hai đường thẳng
+
+<Definition id="def-e5-3" title="Định nghĩa">
+Hai đường thẳng Δ, Δ′ trong $\mathbb{E} ^{n}$ có phương $V$, $V$′; lấy $\vec{a} \in V, \vec{b} \in V'$ khác $\vec{0}$.
+
+*Góc giữa hai đường thẳng* là số φ với
+ 
+
+$$
+0 \le \varphi \le \frac{π}{2} và cos \varphi = |\vec{a}·\vec{b}| / (|\vec{a}||\vec{b}|).
+$$
+
+ 
+Định nghĩa không phụ thuộc cách chọn $\vec{a}$, $\vec{b}$ (thay bằng λ$\vec{a}$, μ$\vec{b}$ với $\lambda , μ \neq 0)$.
+
+Nếu $Δ // Δ'$ thì $\varphi = 0$; nếu $Δ \perp Δ'$ thì $\varphi = \frac{π}{2}$.
+</Definition>
+
+<Example id="ex-e5-4" title="Ví dụ">
+Δ có phương (1,0), Δ′ có phương $(1,1)$ trong $\mathbb{E} ^{2}$: 
+
+$$
+\begin{cases} cos \varphi = \frac{1}{\sqrt{2}} \\ \varphi = \frac{π}{4}. \end{cases}
+$$
+
+ Thay phương $(1,1)$ bằng $(-2,-2)$ thì $cos \varphi = |-2|/(1·2\sqrt{2}) = \frac{1}{\sqrt{2}}$, không đổi.
+</Example>
+
+## 3. Góc giữa hai siêu phẳng
+
+<Definition id="def-e5-5" title="Định nghĩa">
+Trong $\mathbb{E} ^{n}$, gọi a, b là các đường thẳng lần lượt trực giao với siêu phẳng α, β.
+
+*Góc giữa hai siêu phẳng* α, β là góc giữa hai đường thẳng a và b (không phụ thuộc cách chọn a, b).
+</Definition>
+
+<Example id="ex-e5-6" title="Ví dụ">
+Trong $\mathbb{E} ^{3}$, mặt phẳng $x = 0$ (pháp tuyến $(1,0,0))$ và $x + y = 0$ (pháp tuyến $(1,1,0))$: 
+
+$$
+\begin{cases} cos \varphi = \frac{1}{\sqrt{2}} \\ \varphi = \frac{π}{4}. \end{cases}
+$$
+</Example>
+
+## 4. Góc giữa đường thẳng và siêu phẳng
+
+<Theorem id="thm-e5-7" title="Định nghĩa">
+Đường thẳng a và siêu phẳng β: nếu $a \perp \beta$ thì góc giữa chúng là góc vuông.
+
+Nếu a không vuông góc với β, lấy đường thẳng $a' \perp \beta$, gọi φ là góc giữa a và a′; góc giữa a và β là $\theta \ge 0$ với $\theta = \frac{π}{2} - \varphi$.
+
+Nếu $\vec{u}$ là vectơ chỉ phương của a và $\vec{n}$ là vectơ pháp tuyến của β thì
+ 
+
+$$
+sin \theta = cos \varphi = |\vec{u}·\vec{n}| / (|\vec{u}||\vec{n}|), cos \theta = \sqrt{1 - (\vec{u}·\vec{n})^{2} / (\vec{u}^{2}\vec{n}^{2})}.
+$$
+</Theorem>
+
+<Example id="ex-e5-8" title="Ví dụ">
+Trong $\mathbb{E} ^{3}$, đường thẳng a phương $\vec{u} = (1,1,1)$ và mặt phẳng β: 
+
+$$
+z = 0 (\vec{n} = (0,0,1)): sin \theta = \frac{1}{\sqrt{3}}, cos \theta = \sqrt{1 - \frac{1}{3}} = \sqrt{\frac{2}{3}}.
+$$
+
+ (Khi $a \perp \beta , \vec{u} // \vec{n}$ nên $sin \theta = 1, \theta = \frac{π}{2}.)$
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e5-1" title="Góc giữa hai vectơ (§5, mục 1)">
+Tính góc giữa u = (1,1,0) và v = (0,1,1) trong E³.
+</Exercise>
+
+<Hint>
+cos  $ varphi$  = (u·v)/(|u||v|), 0  $ le$   $ varphi$   $ le$  π.
+</Hint>
+
+<Solution>
+u·v = 1 và |u| = |v| = √2 nên cos  $ varphi$  = 1/2.
+
+**Đáp án:** 60° (π/3)
+</Solution>
+
+<Exercise id="exr-e5-2" title="Góc giữa đường thẳng và siêu phẳng (§5, mục 4)">
+Tính sin của góc  $ theta$  giữa đường thẳng có phương u = (1,2,2) và mặt phẳng 2x - y + 2z + 1 = 0 trong E³.
+</Exercise>
+
+<Hint>
+sin  $ theta$  = |u·n|/(|u||n|) với n là vectơ pháp tuyến.
+</Hint>
+
+<Solution>
+n = (2, -1, 2).
+
+u·n = 2 - 2 + 4 = 4, |u| = 3, |n| = 3.
+
+**Đáp án:** sin  $ theta$  = 4/9
+</Solution>
+
+<KeyTakeaways>
+- Góc giữa hai đường thẳng được xác định qua góc giữa hai vectơ chỉ phương của chúng.
+- Hai phẳng vuông góc khi và chỉ khi vectơ pháp tuyến của chúng trực giao.
+</KeyTakeaways>

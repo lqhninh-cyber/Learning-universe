@@ -1,0 +1,182 @@
+---
+id: sieu-mat-bac-hai-trong-khong-gian-euclide
+title: "Siêu mặt Bậc hai trong Không gian Ơclit"
+description: "Phân loại mêtric các siêu mặt bậc hai, phương chính, trục đối xứng và dạng chính tắc."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "siêu mặt bậc hai"
+  - "phân loại mêtric"
+  - "dạng chính tắc"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '144-153'
+    sections: '§9'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Dạng chính tắc của phương trình siêu mặt bậc hai trong En
+
+Trong $\mathbb{E} ^{n}$ với mục tiêu trực chuẩn, cho siêu mặt bậc hai $(S): [x]*A[x] + 2[a]*[x] + a_{0} = 0 (1)$.
+
+Vì A đối xứng nên có ma trận trực giao B sao cho $B*AB$ chéo.
+
+Dùng phép đổi tọa độ trực chuẩn $[x] = B[x']$, phương trình $(1)$ thành $[x']*B*AB[x'] + 2[a]*B[x'] + a_{0} = 0 (2)$, tức là
+ 
+
+$$
+\sum_{i=1}^{r} b_{i}x'^{2}_{i} + 2\sum_{i=1}^{n} c_{i}x'_{i} + d = 0, 1 \le r \le n, b_{i} \neq 0. (3)
+$$
+
+ 
+Mục tiêu mới vẫn trực chuẩn vì B trực giao.
+
+Tiếp theo tịnh tiến mục tiêu: $x″_{i} = x'_{i} + \frac{c_{i}}{b_{i}} (i \le r), x″_{j} = x'_{j} (j > r) (4)$, phương trình thành
+ 
+
+$$
+\sum_{i=1}^{r} b_{i}x″^{2}_{i} + 2\sum_{j=r+1}^{n} c_{j}x″_{j} + d' = 0. (5)
+$$
+
+ 
+Việc chuyển mục tiêu theo công thức $(4)$ là một phép tịnh tiến mục tiêu nên ta vẫn được một mục tiêu trực chuẩn.
+
+**Trường hợp (I):** $c_{j} = 0$ với $j = r+1..n$ và $d' \neq 0$: phương trình có dạng $\sum_{i=1}^{r} \lambda _{i}x^{2}_{i} = 1, 1 \le r \le n$.
+
+**Trường hợp (II):** $c_{j} = 0$ và $d' = 0: \sum_{i=1}^{r} \lambda _{i}x^{2}_{i} = 0, 1 \le r \le n$.
+
+**Trường hợp (III):** $r < n$ và có $c_{j} \neq 0$ (giả sử $c_{r+1} \neq 0)$.
+
+Có thể giả thiết $d' = 0$: nếu $d' \neq 0$, tịnh tiến $x‴_{r+1} = x″_{r+1} + \frac{d'}{2c_{r+1}}$ để triệt tiêu số hạng tự do.
+
+Đặt $m = \sqrt{\sum_{j=r+1}^{n}c^{2}_{j}}, c'_{j} = \frac{c_{j}}{m} (\sum_{j=r+1}^{n}c'^{2}_{j} = 1)$ thì $(5)$ thành $\sum_{i=1}^{r}b_{i}x″^{2}_{i} + 2m\sum_{j=r+1}^{n}c'_{j}x″_{j} = 0 (7)$.
+
+Dùng phép đổi mục tiêu trực chuẩn $X_{i} = x″_{i} (i \le r), X_{r+1} = \sum_{j=r+1}^{n}c'_{j}x″_{j}, X_{k} = \sum_{j=r+1}^{n} \gamma _{kj}x″_{j} (k = r+2..n)$, chọn γ$_{kj}$ sao cho ma trận phép đổi trực giao.
+
+Khi đó $(7)$ có dạng
+ 
+
+$$
+\sum_{i=1}^{r} b_{i}X^{2}_{i} + 2mX_{r+1} = 0, 1 \le r < n.
+$$
+
+<Theorem id="thm-e9-1" title="Định lí">
+Đối với mọi siêu mặt bậc hai (S) trong $\mathbb{E} ^{n}$, luôn tìm được một mục tiêu trực chuẩn sao cho phương trình của (S) đối với mục tiêu đó có một trong ba dạng chính tắc $(I) \sum_{i=1}^{r} \lambda _{i}x^{2}_{i} = 1; (II) \sum_{i=1}^{r} \lambda _{i}x^{2}_{i} = 0$; (III) $\sum_{i=1}^{r}b_{i}x^{2}_{i} + 2mx_{r+1} = 0$.
+
+**Hệ quả.** Hai siêu mặt bậc hai bằng nhau (tương đương Ơclit) khi và chỉ khi chúng có phương trình chính tắc giống nhau.
+</Theorem>
+
+## 2. Thí dụ
+
+<Example id="ex-e9-2" title="Thí dụ (sách, tr. 123–126)">
+Trong $\mathbb{E} ^{3}$ với mục tiêu trực chuẩn, (S): 
+
+$$
+x^{2}_{1} + x^{2}_{2} + 4x^{2}_{3} + 2x_{1}x_{2} + 4x_{1}x_{3} + 4x_{2}x_{3} - 6x_{3} + 1 = 0.
+$$
+
+ Tìm mục tiêu trực chuẩn đưa (S) về dạng chính tắc.
+
+Ma trận $A = \begin{pmatrix} 1 & 1 & 2 \\ 1 & 1 & 2 \\ 2 & 2 & 4 \end{pmatrix}$, đa thức đặc trưng $- \lambda ^{2}( \lambda - 6)$, nên các giá trị riêng $\lambda _{1,2} = 0, \lambda _{3} = 6$.
+
+Với $\lambda = 0: x_{1} + x_{2} + 2x_{3} = 0$; chọn $\vect{a_{1}} = (1,-1,0), \vect{a_{2}} = (1,1,-1)$ (vuông góc với $\vect{a_{1}}$).
+
+Với $\lambda = 6$ chọn $\vect{a_{3}} = (1,1,2)$.
+
+Chuẩn hóa:
+ 
+
+$$
+\begin{cases} \vect{u_{1}} = (\frac{1}{\sqrt{2}}, \frac{-1}{\sqrt{2}}, 0) \\ \vect{u_{2}} = (\frac{1}{\sqrt{3}}, \frac{1}{\sqrt{3}}, \frac{-1}{\sqrt{3}}) \\ \vect{u_{3}} = (\frac{1}{\sqrt{6}}, \frac{1}{\sqrt{6}}, \frac{2}{\sqrt{6}}). \end{cases}
+$$
+
+ 
+
+Với $[x] = B[x']$ (các cột của B là $\vect{u_{i}}), B*AB = diag(0,0,6)$.
+
+Phần bậc nhất $-6x_{3} + 1$ trở thành $6x'_{2}/\sqrt{3} - 12x'_{3}/\sqrt{6} + 1$, nên phương trình là $6x'^{2}_{3} + 6x'_{2}/\sqrt{3} - 12x'_{3}/\sqrt{6} + 1 = 0$.
+
+Tịnh tiến $X_{1} = x'_{1}, X_{2} = x'_{2}, X_{3} = x'_{3} - \frac{1}{\sqrt{6}}$ được $6X^{2}_{3} + 6X_{2}/\sqrt{3} = 0$, hay **$\sqrt{3}·X^{2}_{3} + X_{2} = 0$**: mặt trụ parabolic.
+</Example>
+
+## 3. Phương chính của siêu mặt bậc hai trong En
+
+<Definition id="def-e9-3" title="a) Định nghĩa">
+Vectơ $\vec{c} = (c_{1}, \dots ,c_{n}) \neq \vec{0}$ gọi là *phương chính* của (S) nếu $A[c] = \lambda [c]$, tức $\sum_{j=1}^{n}a_{ij}c_{j} = \lambda c_{i} (i = 1..n)$.
+
+Nói cách khác, $\vec{c}$ là vectơ riêng của ma trận A.
+</Definition>
+
+<Theorem id="thm-e9-4" title="b) Tính chất">
+• Phương chính không phải là phương tiệm cận khi và chỉ khi giá trị riêng tương ứng $\lambda \neq 0$ (vì $[c]*A[c] = \lambda [c]*[c]$ và $[c]*[c] \neq 0)$.
+
+• Siêu phẳng kính liên hợp với phương chính $\vec{c}$ có phương vuông góc với $\vec{c}$: nếu $\vec{c}$ không tiệm cận thì siêu phẳng kính có phương trình $[c]*(A[x] + [a]) = 0$, và vì $A[c] = \lambda [c]$ nên $\vec{c}$ là vectơ pháp tuyến của nó.
+
+• *Siêu phẳng kính chính* là siêu phẳng kính liên hợp với một phương chính.
+
+Phép đối xứng qua siêu phẳng kính chính biến (S) thành chính nó.
+</Theorem>
+
+<Theorem id="thm-e9-5" title="c) Định lí">
+Trong $\mathbb{E} ^{n}$ đối với hệ tọa độ trực chuẩn, nếu phương trình của (S) có dạng $\sum_{i=1}^{n}b_{i}x^{2}_{i} + 2\sum_{i=1}^{n}a_{i}x_{i} + a_{0} = 0$ thì các vectơ $\vect{e_{1}}$,…,$\vect{e_{n}}$ đều là những phương chính của (S).
+
+(Vì $A = diag(b_{1}, \dots ,b_{n})$ nên $\vect{e_{i}}$ là vectơ riêng ứng với b$_{i}$.)
+</Theorem>
+
+<Example id="ex-e9-6" title="Ví dụ">
+Trong $\mathbb{E}^{2}, (S): 2x^{2} + 2xy + 2y^{2} - 3 = 0$ có $A = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}$.Các giá trị riêng 3 và 1, phương chính $\vec{c} = (1,1) (A\vec{c} = 3\vec{c})$ và $(1,-1) (A\vec{c} = \vec{c})$.
+
+Cả hai đều có $\lambda \neq 0$ nên không phải phương tiệm cận.
+
+Siêu phẳng kính liên hợp với $\vec{c} = (1,1): (1,1)·(2x + y, x + 2y) = 3x + 3y = 0$, tức $x + y = 0$, có phương $(1,-1)$ vuông góc $\vec{c}$.
+
+Phép đối xứng qua đường đó, $(x,y) ↦ (-y,-x)$, giữ nguyên vế trái $2x^{2} + 2xy + 2y^{2}$, nên biến (S) thành chính nó. ✓
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e9-1" title="Dạng chính tắc của siêu mặt bậc hai trong Eⁿ (§9)">
+Đưa đường bậc hai 2x² + 2xy + 2y² = 3 trong E² về dạng chính tắc bằng một mục tiêu trực chuẩn. Cho biết loại và các bán trục.
+</Exercise>
+
+<Hint>
+Tìm giá trị riêng và vectơ riêng trực chuẩn của A = [[2,1],[1,2]].
+</Hint>
+
+<Solution>
+det(A -  $ lambda$ I) = (2 -  $ lambda$ )² - 1 = 0 cho  $ lambda$  = 3 và  $ lambda$  = 1.
+
+Vectơ riêng trực chuẩn: (1,1)/√2 ứng  $ lambda$  = 3; (1,-1)/√2 ứng  $ lambda$  = 1.
+
+Phương trình: 3X² + Y² = 3, tức X² + Y²/3 = 1.
+
+**Đáp án:** X² + Y²/3 = 1: đường elip, bán trục 1 (dọc (1,1)) và √3 (dọc (1,-1))
+</Solution>
+
+<Exercise id="exr-e9-2" title="Phương chính và phương tiệm cận (§9, mục 3)">
+Tìm các phương chính và phương tiệm cận (nếu có) của đường bậc hai x² + 4xy + y² = 6 trong E².
+</Exercise>
+
+<Hint>
+Phương chính là vectơ riêng của A; phương tiệm cận [c]ᵀA[c] = 0.
+</Hint>
+
+<Solution>
+A = [[1,2],[2,1]] có giá trị riêng 3 và -1, vectơ riêng (1,1) và (1,-1).
+
+Phương tiệm cận: c₁² + 4c₁c₂ + c₂² = 0, với c = (1, k): k² + 4k + 1 = 0.
+
+**Đáp án:** Phương chính (1,1) và (1,-1); phương tiệm cận (1, -2 + √3) và (1, -2 - √3) (hypebol)
+</Solution>
+
+<KeyTakeaways>
+- Bằng phép đổi mục tiêu trực chuẩn, phương trình siêu mặt bậc hai luôn đưa được về dạng chính tắc.
+- Các bất biến mêtric của siêu mặt bậc hai được xác định qua trị riêng của ma trận dạng toàn phương.
+</KeyTakeaways>

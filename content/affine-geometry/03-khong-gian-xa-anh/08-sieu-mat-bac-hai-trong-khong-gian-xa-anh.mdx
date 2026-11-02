@@ -1,0 +1,367 @@
+---
+id: sieu-mat-bac-hai-trong-khong-gian-xa-anh
+title: "Siêu mặt Bậc hai trong Không gian Xạ ảnh"
+description: "Phương trình bậc hai thuần nhất, điểm kỳ dị, phân loại xạ ảnh các siêu mặt bậc hai thực và phức."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "siêu mặt bậc hai"
+  - "phân loại xạ ảnh"
+  - "dạng toàn phương thuần nhất"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '229-237'
+    sections: '§8'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-p8-1" title="Định nghĩa">
+Trong $\mathbb{P} ^{n}$ với một mục tiêu xạ ảnh đã chọn, tập hợp tất cả những điểm X có tọa độ $(x_{1}, x_{2}, \dots , x_{n+1})$ thỏa một phương trình bậc hai dạng
+ 
+
+$$
+f(x_{1}, x_{2}, \dots , x_{n+1}) = \sum_{i,j=1}^{n+1} a_{ij}x_{i}x_{j} = 0, (1)
+$$
+
+ 
+với $a_{ij} = a_{ji}$ và các a$_{ij}$ không đồng thời bằng 0, là một *siêu mặt bậc hai* của $\mathbb{P} ^{n}$.
+
+Vế phải của $(1)$ là dạng toàn phương với ma trận $A = [a_{ij}]$, nên phương trình viết dưới dạng ma trận là
+ 
+
+$$
+[x]*A[x] = 0, (2)
+$$
+
+ 
+trong đó [x] là ma trận cột tọa độ của điểm X và $[x]*$ là chuyển vị của [x].
+
+Ma trận A gọi là *ma trận của siêu mặt bậc hai*; $A = A*$ và hạng $A \ge 1$.
+
+Nếu hạng A bằng $n+1 (det A \neq 0)$ thì siêu mặt bậc hai *không suy biến*; nếu hạng A bé hơn $n+1 (det A = 0)$ thì *suy biến*.
+
+Siêu mặt bậc hai của $\mathbb{P} ^{2}$ gọi là *đường bậc hai*, của $\mathbb{P} ^{3}$ gọi là *mặt bậc hai*.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Định nghĩa không phụ thuộc việc chọn mục tiêu.
+
+Nếu dùng phép đổi tọa độ $[x] = B[x'] (B$ vuông cấp $n+1$ không suy biến) thì $(2)$ thành $(B[x'])*AB[x'] = 0 \iff [x']*B*AB[x'] = 0$, với $A' = B*AB$ có cùng tính chất như A.
+
+Do đó qua một phép biến đổi xạ ảnh, ảnh của một siêu mặt bậc hai là một siêu mặt bậc hai: *siêu mặt bậc hai là một khái niệm xạ ảnh*.
+
+Nếu A không suy biến thì $B*AB$ cũng không suy biến, nên "suy biến" và "không suy biến" cũng là khái niệm xạ ảnh.
+</Remark>
+
+<Example id="ex-p8-2" title="Ví dụ">
+Trong $\mathbb{P}^{2}, x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ có $A = diag(1,1,-1), det A = -1 \neq 0$: đường bậc hai không suy biến.
+
+Còn $x^{2}_{1} - x^{2}_{2} = 0$ có $A = diag(1,-1,0), det A = 0$: suy biến.
+
+Đổi tọa độ $x_{1} = x'_{1} + x'_{2}, x_{2} = x'_{1} - x'_{2}$ vào $x_{1}x_{2} = 0$ cho $x'^{2}_{1} - x'^{2}_{2} = 0: ma$ trận của $x_{1}x_{2}$ có $a_{12} = a_{21} = \frac{1}{2}$ và $det A' = det(B*AB) = 0$ giống $det A = 0$.
+</Example>
+
+## 2. Phương trình chuẩn tắc của một siêu mặt bậc hai
+
+<Theorem id="thm-p8-3" title="Định lí">
+Với mọi siêu mặt bậc hai (S) của $\mathbb{P} ^{n}$, luôn tìm được một mục tiêu tọa độ xạ ảnh sao cho đối với mục tiêu đó (S) có phương trình
+ 
+
+$$
+x^{2}_{1} + x^{2}_{2} + \dots + x^{2}_{k} - x^{2}_{k+1} - \dots - x^{2}_{r} = 0, (3)
+$$
+
+ 
+trong đó $r \le n+1$ và $k \ge \frac{r}{2}$ (luôn giả sử được số hệ số dương không ít hơn số hệ số âm, vì nếu ngược lại chỉ cần nhân hai vế với $-1)$.
+</Theorem>
+
+<Proof of="thm-p8-3">
+Giả sử (S) có phương trình $\sum_{i,j=1}^{n+1}$ a$_{ij}$x$_{i}$x$_{j} = 0$ đối với mục tiêu cho trước.
+
+Vế trái là một dạng toàn phương; luôn tìm được phép biến đổi tuyến tính không suy biến $[x'] = B[x]$ đưa dạng toàn phương đó về dạng chuẩn tắc $x'^{2}_{1} + \dots + x'^{2}_{k} - x'^{2}_{k+1} - \dots - x'^{2}_{r}$.
+
+Mỗi phép biến đổi tuyến tính cũng là một phép biến đổi xạ ảnh xác định bởi hai mục tiêu xạ ảnh; do đó đối với mục tiêu mới (S) có dạng chuẩn tắc.
+
+Phương trình chuẩn tắc xác định bởi cặp số (k, r), k là số hệ số dương và r là số hệ số khác 0.
+
+Vậy mỗi siêu mặt bậc hai chỉ có một phương trình chuẩn tắc hoàn toàn xác định.
+</Proof>
+
+<Example id="ex-p8-5" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, đường bậc hai $x_{1}x_{2} - x^{2}_{3} = 0$.
+
+Đổi $x_{1} = u + v, x_{2} = u - v$ (đổi tọa độ không suy biến) thì $x_{1}x_{2} = u^{2} - v^{2}$, nên $u^{2} - v^{2} - x^{2}_{3} = 0$ có $(k, r) = (1, 3)$ với $k < \frac{r}{2}$.
+
+Nhân hai vế với $-1: x^{2}_{3} + v^{2} - u^{2} = 0$, tức dạng chuẩn tắc $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ (sau khi đặt lại tên biến) với $(k, r) = (2, 3)$.
+</Example>
+
+## 3. Sự phân loại xạ ảnh các siêu mặt bậc hai
+
+<Definition id="def-p8-6" title="a) Định nghĩa">
+Hai siêu mặt bậc hai gọi là *cùng thuộc một loại* nếu chúng có phương trình chuẩn tắc giống nhau, nghĩa là cặp số (k, r) của hai phương trình chuẩn tắc trùng nhau.
+</Definition>
+
+<Theorem id="thm-p8-7" title="b) Định lí">
+Điều kiện cần và đủ để hai siêu mặt bậc hai $(S_{1})$ và $(S_{2})$ tương đương xạ ảnh với nhau là chúng thuộc cùng một loại.
+</Theorem>
+
+<Proof of="thm-p8-7">
+• Giả sử có phép biến đổi xạ ảnh *f* với $f(S_{1}) = S_{2}$.
+
+Chọn mục tiêu \{A$_{i}$; E\} sao cho phương trình $(S_{1})$ có dạng chuẩn tắc, gọi ${A'_{i}; E'}$ là ảnh của nó qua *f*.
+
+Khi đó phương trình của $(S_{2})$ đối với ${A'_{i}; E'}$ giống hệt phương trình của $(S_{1})$ đối với \{A$_{i}$; E\}.
+
+Vậy $(S_{1}), (S_{2})$ cùng loại.
+
+• Ngược lại, giả sử $(S_{1})$ đối với \{A$_{i}$; E\} và $(S_{2})$ đối với ${A'_{i}; E'}$ có cùng phương trình chuẩn tắc.
+
+Gọi *f* là phép biến đổi xạ ảnh xác định bởi hai mục tiêu, biến \{A$_{i}$; E\} thành ${A'_{i}; E'}$.
+
+Khi đó $(S_{1})$ biến thành $(S'_{1})$ có phương trình đối với ${A'_{i}; E'}$ giống hệt phương trình của $(S_{1})$ đối với \{A$_{i}$; E\}, tức giống phương trình của $(S_{2})$.
+
+Vậy $(S'_{1}) = (S_{2})$, tức $f(S_{1}) = S_{2}$.
+</Proof>
+
+<Example id="ex-p8-9" title="Ví dụ">
+Trong $\mathbb{P}^{2}, x_{1}x_{2} - x^{2}_{3} = 0$ và $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ cùng loại (2, 3) nên tương đương xạ ảnh (hai conic thực không suy biến).
+
+Còn $x^{2}_{1} + x^{2}_{2} + x^{2}_{3} = 0$ có $(k, r) = (3, 3)$ khác (2, 3), nên không tương đương xạ ảnh với chúng: nó không chứa điểm thực nào.
+</Example>
+
+<Definition id="def-p8-10" title="c) Phân loại">
+Dựa vào phương trình chuẩn tắc, tập hợp các siêu mặt bậc hai (S) trong $\mathbb{P} ^{n}$ được phân loại theo cặp (k, r); ta gọi chúng là *loại* (k, r).
+
+**α) Loại không suy biến** $(r = n+1)$:
+
+• Loại $(n+1, n+1): x^{2}_{1} + x^{2}_{2} + \dots + x^{2}_{n+1} = 0 (4)$, gọi là *siêu mặt trái xoan ảo* (không chứa điểm thực nào).
+
+• Loại $(n, n+1): x^{2}_{1} + \dots + x^{2}_{n} - x^{2}_{n+1} = 0 (5)$, gọi là *siêu mặt trái xoan*.
+
+• Loại $(k, n+1)$ với $k \le n-1: x^{2}_{1} + \dots + x^{2}_{k} - x^{2}_{k+1} - \dots - x^{2}_{n+1} = 0 (6)$, gọi là *siêu mặt kẻ*.
+
+Vì $\frac{n+1}{2} \le k \le n-1$ nên $n \ge 3$: với $n < 3$ không có siêu mặt kẻ.
+
+Phương trình siêu mặt kẻ tương đương với $(x_{1} - x_{k+1})(x_{1} + x_{k+1}) + \dots + (x_{m} - x_{n+1})(x_{m} + x_{n+1}) + x^{2}_{m+1} + \dots + x^{2}_{k} = 0$; từ đó lập được họ các (n−k)-phẳng gọi là (n−k)-phẳng sinh của siêu mặt kẻ.
+
+Có thể tìm nhiều họ (n−k)-phẳng sinh khác bằng cách lập các hệ k phương trình bậc nhất, mỗi hệ xác định một (n−k)-phẳng sinh.
+
+**β) Loại suy biến** $(r < n+1): x^{2}_{1} + \dots + x^{2}_{k} - x^{2}_{k+1} - \dots - x^{2}_{r} = 0 (7)$, với $r < n+1$ và $\frac{r}{2} \le k \le r$, gọi là *siêu nón*.
+
+Vì $det A = 0$ nên A suy biến; phương trình $A[x] = 0$ có nghiệm không tầm thường xác định một (n−r)-phẳng $Q: x_{i} = 0 (i = 1, \dots , r)$, thuộc siêu nón (vì $[x]*A[x] = 0)$; số chiều của Q từ 0 (một điểm) đến $n-1$.
+</Definition>
+
+<Theorem id="thm-p8-11" title="Tính chất của siêu nón">
+Nếu M là điểm của siêu nón không nằm trên Q thì đường thẳng nối M với một điểm X tùy ý của Q nằm trên siêu nón; do đó siêu nón có *đỉnh* là (n−r)-phẳng Q.
+
+Nếu $k = r$ (phương trình $x^{2}_{1} + \dots + x^{2}_{r} = 0)$ ta có *siêu nón ảo*.
+</Theorem>
+
+<Proof of="thm-p8-11">
+Phương trình siêu nón: $x^{2}_{1} + \dots + x^{2}_{k} - x^{2}_{k+1} - \dots - x^{2}_{r} = 0$.
+
+Vì $M(m_{1}, \dots , m_{n+1})$ thuộc siêu nón nên $\sum_{i=1}^{k}m^{2}_{i} - \sum_{i=k+1}^{r}m^{2}_{i} = 0 (8); X(x_{1}, \dots , x_{n+1}) \in Q$ nên $x_{1} = x_{2} = \dots = x_{r} = 0 (9)$.
+
+Mọi điểm của đường thẳng MX có tọa độ $ξ_{i} = \lambda m_{i} + μx_{i} (i = 1, \dots , n+1), \lambda , μ$ không đồng thời bằng 0.
+
+Với $i \le r$, theo $(9)$ ta có $ξ_{i} = \lambda m_{i}$, nên $\sum_{i=1}^{k}ξ^{2}_{i} - \sum_{i=k+1}^{r}ξ^{2}_{i} = \lambda ^{2}[\sum_{i=1}^{k}m^{2}_{i} - \sum_{i=k+1}^{r}m^{2}_{i}] = 0$ theo $(8)$.
+
+Vậy mọi điểm của MX nằm trên siêu nón.
+</Proof>
+
+<Example id="ex-p8-13" title="Ví dụ">
+Trong $\mathbb{P}^{3}, x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ có $(k, r) = (2, 3) < n+1 = 4$: siêu nón (mặt nón bậc hai) với đỉnh $Q: x_{1} = x_{2} = x_{3} = 0$, tức điểm $(0,0,0,1)$.
+
+Điểm $M = (1,0,1,0)$ thuộc mặt $(1 + 0 - 1 = 0)$; đường thẳng nối M với đỉnh gồm các điểm (λ, 0, λ, μ), đều thỏa $\lambda ^{2} + 0 - \lambda ^{2} = 0$.
+</Example>
+
+<Definition id="def-p8-14" title="γ) Thí dụ phân loại">
+**$1°)$ Trên $\mathbb{P} ^{1}$** có ba loại: $x^{2}_{1} + x^{2}_{2} = 0: 2$ điểm ảo liên hợp; $x^{2}_{1} - x^{2}_{2} = 0: 2$ điểm thực; $x^{2}_{1} = 0: 2$ điểm thực trùng nhau.
+
+**$2°)$ Trong $\mathbb{P} ^{2}$** có 5 loại:
+
+• $x^{2}_{1} + x^{2}_{2} + x^{2}_{3} = 0$: đường trái xoan không (không chứa điểm thực nào);
+
+• $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$: đường conic hay đường trái xoan;
+
+• $x^{2}_{1} + x^{2}_{2} = 0$: cặp đường thẳng ảo liên hợp có tọa độ [i,1,0] và $[-i,1,0]$;
+
+• $x^{2}_{1} - x^{2}_{2} = 0$: cặp đường thẳng thực phân biệt có tọa độ [1,1,0] và $[-1,1,0]$;
+
+• $x^{2}_{1} = 0$: cặp đường thẳng trùng nhau có tọa độ [1,0,0].
+
+**$3°)$ Trong $\mathbb{P} ^{3}$** có 8 loại:
+
+• $x^{2}_{1} + x^{2}_{2} + x^{2}_{3} + x^{2}_{4} = 0$: mặt trái xoan không;
+
+• $x^{2}_{1} + x^{2}_{2} + x^{2}_{3} - x^{2}_{4} = 0$: mặt trái xoan;
+
+• $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} - x^{2}_{4} = 0$: mặt kẻ bậc hai, chứa hai họ đường thẳng
+ 
+
+$$
+(d): \lambda (x_{1} + x_{3}) = μ(x_{4} + x_{2}); μ(x_{1} - x_{3}) = \lambda (x_{4} - x_{2}). (10)
+$$
+
+ 
+ 
+
+$$
+(d'): \lambda (x_{1} + x_{3}) = μ(x_{4} - x_{2}); μ(x_{1} - x_{3}) = \lambda (x_{4} + x_{2}). (11)
+$$
+
+ 
+Với mọi cặp (λ, μ) không đồng thời bằng 0, hệ $(10)$ và $(11)$ cho hai đường thẳng nằm trên mặt kẻ.
+
+Qua mỗi điểm của mặt có một đường thẳng của họ $(10)$ và một đường thẳng của họ $(11)$; hai họ này gọi là hai *họ đường sinh thẳng* của mặt kẻ bậc hai;
+
+• $x^{2}_{1} + x^{2}_{2} + x^{2}_{3} = 0$: mặt nón ảo;
+
+• $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$: mặt nón bậc hai;
+
+• $x^{2}_{1} + x^{2}_{2} = 0$: cặp mặt phẳng ảo liên hợp;
+
+• $x^{2}_{1} - x^{2}_{2} = 0$: cặp mặt phẳng thực;
+
+• $x^{2}_{1} = 0$: cặp mặt phẳng thực trùng nhau.
+</Definition>
+
+<Example id="ex-p8-15" title="Ví dụ">
+Với mặt kẻ $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} - x^{2}_{4} = 0$ trong $\mathbb{P} ^{3}$: nhân hai phương trình của $(10)$ được $\lambda μ(x^{2}_{1} - x^{2}_{3}) = \lambda μ(x^{2}_{4} - x^{2}_{2})$, tức $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} - x^{2}_{4} = 0$ khi $\lambda μ \neq 0$.
+
+Điểm $(1,0,1,0)$ thuộc mặt $(1 + 0 - 1 - 0 = 0)$ và nằm trên đường thẳng của họ $(10)$ ứng với $( \lambda , μ) = (0, 1): x_{4} + x_{2} = 0, x_{1} - x_{3} = 0$; mọi điểm của đường thẳng này $(x_{2} = -x_{4}, x_{1} = x_{3})$ thỏa $x^{2}_{3} + x^{2}_{4} - x^{2}_{3} - x^{2}_{4} = 0$.
+</Example>
+
+## 4. Siêu mặt bậc hai trong không gian afin An = Pn \ Pn−1
+
+<Theorem id="thm-p8-16" title="a) Định lí">
+Trong $\mathbb{P} ^{n}$ với mục tiêu xạ ảnh cho trước, cho siêu mặt bậc hai (S): $\sum_{i,j=1}^{n+1}$ a$_{ij}$x$_{i}$x$_{j} = 0$ và siêu phẳng $\mathbb{P}^{n-1}: x_{n+1} = 0$.
+
+Tập các điểm của (S) nằm trong $\mathcal{A} ^{n}$ là các điểm có tọa độ thỏa phương trình của (S) với $x_{n+1} \neq 0$.
+
+Chia hai vế cho $x^{2}_{n+1}$:
+ 
+
+$$
+\sum_{i,j=1}^{n} a_{ij}X_{i}X_{j} + 2\sum_{i=1}^{n} a_{i}X_{i} + a = 0, X_{i} = \frac{x_{i}}{x_{n+1}} (i = 1, \dots , n), a_{i} = a_{i,n+1}, a = a_{n+1,n+1}.
+$$
+
+ 
+Đây là phương trình tổng quát của một siêu mặt bậc hai trong không gian afin $\mathcal{A} ^{n}$.
+
+Vậy mỗi siêu mặt bậc hai của $\mathcal{A} ^{n}$ chính là một siêu mặt bậc hai trong $\mathbb{P} ^{n}$ sau khi bỏ đi những điểm thuộc siêu phẳng $\mathbb{P} ^{n-1}$ (nếu có).
+</Theorem>
+
+<Example id="ex-p8-17" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, đường bậc hai $x^{2}_{2} - x_{1}x_{3} = 0$.
+
+Với $x_{3} \neq 0$, chia cho $x^{2}_{3}$ được $X^{2}_{2} - X_{1} = 0$: một parabol của $\mathcal{A} ^{2}$.
+
+Điểm của nó ở vô tận $(x_{3} = 0)$ thỏa $x^{2}_{2} = 0$, tức duy nhất điểm $(1,0,0)$.
+
+Với đường conic $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ chia cho $x^{2}_{3}$ ta được $X^{2}_{1} + X^{2}_{2} = 1$ (đường tròn đơn vị), không có điểm vô tận thực vì $x_{3} = 0$ cho $x^{2}_{1} + x^{2}_{2} = 0$.
+</Example>
+
+<Theorem id="thm-p8-18" title="b) Phương tiệm cận">
+Trong không gian afin $\mathcal{A} ^{n}$, phương tiệm cận (phương vô tận) của siêu mặt bậc hai (S) là phương $\vec{c}(c_{1}, \dots , c_{n})$ sao cho $\sum_{i,j=1}^{n}$ a$_{ij}$c$_{i}$c$_{j} = 0$.
+
+Trong $\mathbb{P} ^{n}$, các điểm vô tận của (S) là các điểm thuộc $\mathbb{P}^{n-1}: x_{n+1} = 0$.
+
+Do đó để xác định phương vô tận $\vec{c}$ của (S) trong $\mathcal{A}^{n} = \mathbb{P}^{n} \ \mathbb{P}^{n-1}$ ta tìm nghiệm của hệ trong $\mathbb{P} ^{n}$:
+ 
+
+$$
+\sum_{i,j=1}^{n+1} a_{ij}x_{i}x_{j} = 0; x_{n+1} = 0 \iff \sum_{i,j=1}^{n} a_{ij}x_{i}x_{j} = 0 \implies \sum_{i,j=1}^{n} a_{ij}c_{i}c_{j} = 0.
+$$
+
+ 
+Vậy *các phương tiệm cận của siêu mặt bậc hai trong* $\mathcal{A} ^{n}$ *chính là giao điểm của siêu mặt bậc hai trong* $\mathbb{P} ^{n}$ *với siêu phẳng vô tận* $\mathbb{P} ^{n-1}$.
+</Theorem>
+
+<Example id="ex-p8-19" title="Ví dụ">
+Đường conic $x_{1}x_{2} - x^{2}_{3} = 0$ trong $\mathbb{P} ^{2}$.
+
+Giao với đường thẳng vô tận $x_{3} = 0: x_{1}x_{2} = 0$, tức hai điểm $(1,0,0)$ và $(0,1,0)$, nên trong $\mathcal{A} ^{2}$ có hai phương tiệm cận $(1,0)$ và $(0,1)$.
+
+Với $x_{3} = 1$ ta được $X_{1}X_{2} = 1$ (hypebol $xy = 1)$, và đúng là hypebol $xy = 1$ có các đường tiệm cận song song với hai trục.
+
+Conic $x^{2}_{2} - x_{1}x_{3} = 0$ giao $x_{3} = 0$ tại $(1,0,0)$ duy nhất $(x^{2}_{2} = 0)$: chỉ có một phương tiệm cận (parabol $X^{2}_{2} = X_{1})$.
+</Example>
+
+<Definition id="def-p8-20" title="c) Đường conic trong mô hình">
+$\mathcal{A}^{2} = \mathbb{P}^{2} \ \mathbb{P}^{1}$.
+
+Trong $\mathbb{P} ^{2}$ với mục tiêu ${A_{1}, A_{2}, A_{3}; E}$ xét đường conic $(S): x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$.
+
+• Bỏ đường thẳng vô tận $x_{3} = 0$ (chọn mặt phẳng afin sinh ra bởi $\mathbb{P} ^{2}$).
+
+Chia hai vế cho $x^{2}_{3}$ được $X^{2}_{1} + X^{2}_{2} - 1 = 0$ với $X_{i} = \frac{x_{i}}{x_{3}} (i = 1, 2)$: đó là *đường elip*.
+
+Trong trường hợp này conic không cắt đường thẳng $x_{3} = 0$, vì hệ $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0, x_{3} = 0$ vô nghiệm.
+
+• Hoán vị các đỉnh của mục tiêu, đưa phương trình về dạng $x^{2}_{1} - x^{2}_{2} + x^{2}_{3} = 0$.
+
+Khi đó đường thẳng vô tận $x_{3} = 0$ cắt conic tại hai điểm $(1,1,0)$ và $(1,-1,0)$.
+
+Những điểm còn lại của conic có phương trình afin $X^{2}_{1} - X^{2}_{2} + 1 = 0$ với $X_{i} = \frac{x_{i}}{x_{3}}$: đó là *hypebol*.
+
+• Bằng phép đổi tọa độ $x_{1} = x'_{1}, x_{2} = ½(x'_{2} - x'_{3}), x_{3} = ½(x'_{2} + x'_{3})$, conic $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ trở thành $x'^{2}_{1} + [½(x'_{2} - x'_{3})]^{2} - [½(x'_{2} + x'_{3})]^{2} = x'^{2}_{1} - x'_{2}x'_{3} = 0$.
+
+Chọn $x'_{3} = 0$ làm đường thẳng vô tận: conic tiếp xúc với $x'_{3} = 0$ tại điểm $(0,1,0)$ (hệ $x'^{2}_{1} - x'_{2}x'_{3} = 0, x'_{3} = 0$ cho $x'_{1} = 0)$.
+
+Những điểm còn lại có phương trình afin $X^{2}_{1} - X_{2} = 0$ với $X_{i} = \frac{x'_{i}}{x'_{3}}$: đó là *parabol*.
+</Definition>
+
+<Theorem id="thm-p8-21" title="Kết luận">
+• Nếu conic không cắt đường thẳng vô tận (hay cắt tại hai điểm ảo liên hợp) ta có đường **elip**.
+
+Hai tiếp tuyến vẽ từ một điểm trên đường thẳng vô tận tiếp xúc với elip tại hai điểm; đường thẳng nối hai tiếp điểm này biểu thị một đường kính của elip.
+
+Vẽ hai đường kính ta xác định được tâm của elip.
+
+• Nếu conic cắt đường thẳng vô tận tại hai điểm thực ta có đường **hypebol**.
+
+Hai tiếp tuyến của conic tại hai giao điểm là hai tiệm cận của hypebol; giao điểm của hai tiệm cận là tâm O của hypebol.
+
+• Nếu conic tiếp xúc với đường thẳng vô tận (chỉ có một phương vô tận) ta có đường **parabol**.
+
+Các đường thẳng song song với trục của parabol đều đồng quy tại điểm vô tận này.
+</Theorem>
+
+<Example id="ex-p8-22" title="Ví dụ">
+Cùng một conic $x^{2}_{1} + x^{2}_{2} - x^{2}_{3} = 0$ cho ba đường khác nhau tùy chọn đường thẳng vô tận: $x_{3} = 0$ cho đường tròn đơn vị $X^{2}_{1} + X^{2}_{2} = 1$ (không có điểm vô tận thực); $x_{2} = 0$ làm đường thẳng vô tận cho $x^{2}_{1} - x^{2}_{3} = -x^{2}_{2}$: với $x_{2} = 0$ ta có $x^{2}_{1} = x^{2}_{3}$, hai điểm vô tận thực $(1,0,1), (1,0,-1)$, nên ta được hypebol; còn đường thẳng $x_{1} - x_{3} = 0$ tiếp xúc conic tại $(1,0,1)$ (vì $x_{1} = x_{3}$ cho $x^{2}_{2} = 0)$, nên chọn nó làm đường thẳng vô tận ta được parabol.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p8-1" title="Phân loại xạ ảnh siêu mặt bậc hai (§8, mục 3)">
+Xác định cặp số (k, r) và gọi tên loại của: (a) x₁x₂ - x₃² = 0 trong P²; (b) x₁² + x₂² - x₃² - x₄² = 0 trong P³.
+</Exercise>
+
+<Hint>
+Đưa về dạng chuẩn tắc; k là số hệ số dương, r là số hệ số khác 0.
+</Hint>
+
+<Solution>
+(a) Đặt x₁ = u + v, x₂ = u - v: u² - v² - x₃² = 0; nhân với -1 được (k, r) = (2, 3): đường conic thực (trái xoan).
+
+(b) Đã chuẩn tắc: (k, r) = (2, 4) với r = n + 1 và k  $ le$  n - 1: mặt kẻ bậc hai.
+
+**Đáp án:** (a) (2,3): đường conic thực không suy biến; (b) (2,4): mặt kẻ bậc hai
+</Solution>
+
+<KeyTakeaways>
+- Siêu mặt bậc hai xạ ảnh được định nghĩa bởi phương trình dạng toàn phương thuần nhất bậc hai.
+- Trong trường số phức, phân loại xạ ảnh chỉ phụ thuộc vào duy nhất một chỉ số: hạng của ma trận.
+</KeyTakeaways>

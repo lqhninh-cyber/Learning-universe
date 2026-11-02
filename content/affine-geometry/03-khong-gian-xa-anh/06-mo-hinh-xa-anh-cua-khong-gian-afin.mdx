@@ -1,0 +1,424 @@
+---
+id: mo-hinh-xa-anh-cua-khong-gian-afin
+title: "Mô hình Xạ ảnh của Không gian Affine"
+description: "Phần bù xạ ảnh, siêu phẳng vô tận, tọa độ không thuần nhất và nhúng không gian affine vào xạ ảnh."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "phần bù xạ ảnh"
+  - "siêu phẳng vô tận"
+  - "nhúng affine"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '213-220'
+    sections: '§6'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Xây dựng mô hình của An từ Pn
+
+Xuất phát từ không gian afin $\mathcal{A} ^{n}$, ta đã biết cách xây dựng mô hình của $\mathbb{P} ^{n}$ bằng cách thêm vào $\mathcal{A} ^{n}$ những điểm vô tận.
+
+Bây giờ ngược lại, từ $\mathbb{P} ^{n}$ ta bỏ bớt đi một số điểm để xây dựng mô hình của không gian afin.
+
+Chọn trong $\mathbb{P} ^{n}$ một siêu phẳng $\mathbb{P} ^{n-1}$ nào đó và gọi $\mathcal{A}^{n} = \mathbb{P}^{n} \ \mathbb{P}^{n-1}$ là tập hợp những điểm của $\mathbb{P} ^{n}$ không thuộc $\mathbb{P} ^{n-1}$.
+
+<Theorem id="thm-p6-1" title="Định lí">
+$\mathcal{A}^{n} = \mathbb{P}^{n} \ \mathbb{P}^{n-1}$ là một không gian afin n chiều.
+</Theorem>
+
+<Proof of="thm-p6-1">
+Chọn mục tiêu xạ ảnh \{A$_{i}$; E\} của $\mathbb{P} ^{n}$ sao cho các đỉnh $A_{1}, A_{2}, \dots , A_{n}$ thuộc $\mathbb{P} ^{n-1}$, do đó đỉnh A$_{n+1}$ không thuộc $\mathbb{P} ^{n-1}$.
+
+Đối với mục tiêu này siêu phẳng $\mathbb{P} ^{n-1}$ có phương trình $x_{n+1} = 0$.
+
+Mọi điểm X thuộc $\mathcal{A} ^{n}$ có tọa độ xạ ảnh $(x_{1}, \dots , x_{n+1})$ với $x_{n+1} \neq 0$ và có tọa độ xạ ảnh không thuần nhất $(X_{1}, \dots , X_{n}), X_{i} = \frac{x_{i}}{x_{n+1}}$.
+
+Vậy có tương ứng 1–1 giữa các điểm của $\mathcal{A} ^{n}$ và các bộ n số thực có thứ tự $(X_{1}, \dots , X_{n})$.
+
+Với hai điểm X, Y của $\mathcal{A} ^{n}$ có tọa độ không thuần nhất $(X_{1}, \dots , X_{n})$ và $(Y_{1}, \dots , Y_{n})$, cho ứng với một vectơ của không gian vectơ $V ^{n}$ có tọa độ $(Y_{1} - X_{1}, \dots , Y_{n} - X_{n})$.
+
+Dễ thấy sự tương ứng này thỏa hai tiên đề của không gian afin.
+
+Vậy $\mathcal{A} ^{n}$ là không gian afin n chiều.
+</Proof>
+
+<Example id="ex-p6-3" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ chọn $\mathbb{P}^{1}: x_{3} = 0$ làm đường thẳng bị bỏ.
+
+Điểm $X = (4,6,2)$ có $x_{3} \neq 0$ nên thuộc $\mathcal{A} ^{2}$ với tọa độ $(X_{1}, X_{2}) = (2, 3)$.
+
+Điểm $Y = (10,14,2)$ có tọa độ (5, 7).
+
+Vectơ $\vect{XY}$ có tọa độ $(5-2, 7-3) = (3, 4)$.
+
+Hai điểm $(1,2,0)$ và $(2,4,0)$ thuộc $\mathbb{P} ^{1}$ nên bị loại khỏi $\mathcal{A} ^{2}$.
+</Example>
+
+## 2. Một số thể hiện trên mô hình
+
+<Definition id="def-p6-4" title="a) Tọa độ afin và mục tiêu afin">
+Xét mục tiêu xạ ảnh \{A$_{i}$; E\} của $\mathbb{P} ^{n}$.
+
+Gọi E$_{i}$ là giao điểm của đường thẳng A$_{i}$A$_{n+1}$ với siêu phẳng chứa các đỉnh $A_{j} (j \neq i, n+1)$ còn lại và điểm E; X$_{i}$ là giao điểm của đường thẳng đó với siêu phẳng chứa các A$_{j}$ còn lại và điểm X.
+
+Ta có các tỉ số kép
+ 
+
+$$
+(A_{i}A_{n+1}E_{i}X_{i}) = \frac{x_{i}}{x_{n+1}} = X_{i} và (A_{i}A_{n+1}E_{i}E_{i}) = 1.
+$$
+
+ 
+Do đó các điểm E$_{i}$ có tọa độ xạ ảnh $E_{1} = (1,0, \dots ,0,1), E_{2} = (0,1,0, \dots ,0,1), \dots , E_{n} = (0, \dots ,0,1,1)$, tức tọa độ không thuần nhất $E_{1} = (1,0, \dots ,0), E_{2} = (0,1,0, \dots ,0), \dots , E_{n} = (0, \dots ,0,1)$.
+
+Điểm $A_{n+1} = (0,0, \dots ,0,1)$ có tọa độ không thuần nhất $(0,0, \dots ,0)$.
+
+Theo cách đặt tương ứng khi xây dựng mô hình:
+ 
+
+$$
+\vect{A_{n+1}E_{1}} = (1,0, \dots ,0) = \vect{e_{1}}; \vect{A_{n+1}E_{2}} = (0,1,0, \dots ,0) = \vect{e_{2}}; \dots ; \vect{A_{n+1}E_{n}} = (0, \dots ,0,1) = \vect{e_{n}}.
+$$
+
+ 
+Các vectơ $\vect{A_{n+1}E_{i}}$ chính là các vectơ cơ sở $\vect{e_{i}}$ của $V ^{n}$, nên có thể dùng bộ điểm ${A_{n+1}; E_{1}, E_{2}, \dots , E_{n}}$ làm *mục tiêu afin* của $\mathcal{A}^{n} = \mathbb{P}^{n} \ \mathbb{P}^{n-1}$; mục tiêu afin này gọi là được sinh ra bởi mục tiêu xạ ảnh \{A$_{i}$; E\} đã cho.
+
+Nếu $X \in \mathcal{A}^{n}$ có tọa độ không thuần nhất $(X_{1}, \dots , X_{n})$ thì $\vect{A_{n+1}X} = (X_{1} - 0, \dots , X_{n} - 0) = (X_{1}, \dots , X_{n})$.
+</Definition>
+
+<Theorem id="thm-p6-5" title="Kết luận">
+Tọa độ xạ ảnh không thuần nhất của một điểm X thuộc $\mathcal{A} ^{n}$ đối với mục tiêu xạ ảnh \{A$_{i}$; E\} chính là tọa độ afin của X đối với mục tiêu afin ${A_{n+1}; E_{i}} (i = 1, \dots , n)$; mục tiêu afin này được sinh ra bởi mục tiêu xạ ảnh đã cho.
+</Theorem>
+
+<Example id="ex-p6-6" title="Ví dụ">
+Trong mặt phẳng afin $\mathcal{A}^{2} = \mathbb{P}^{2} \ \mathbb{P}^{1}$, mục tiêu afin ${A_{3}; E_{1}, E_{2}}$ được sinh ra bởi mục tiêu xạ ảnh ${A_{1}, A_{2}, A_{3}; E}$, với $A_{3} = (0,0,1), E_{1} = (1,0,1), E_{2} = (0,1,1)$.
+
+Đường thẳng $\mathbb{P}^{1} = A_{1}A_{2}$ có phương trình $x_{3} = 0$ là đường thẳng vô tận, nên không có trong mặt phẳng afin; các đường thẳng đồng quy tại $A_{1}$ hoặc $A_{2}$ (nằm trên $\mathbb{P} ^{1}$) trở thành những đường thẳng song song với nhau trong mặt phẳng afin.
+
+Với $X = (4,6,2): \vect{A_{3}X} = (\frac{4}{2}, \frac{6}{2}) = (2,3) = 2\vect{e_{1}} + 3\vect{e_{2}}$, vì $\vect{A_{3}E_{1}} = (1,0) = \vect{e_{1}}$ và $\vect{A_{3}E_{2}} = (0,1) = \vect{e_{2}}$.
+</Example>
+
+<Definition id="def-p6-7" title="b) Các m-phẳng afin">
+Xét một m-phẳng $\mathbb{P} ^{m}$ của $\mathbb{P} ^{n}$ không nằm trong siêu phẳng $\mathbb{P} ^{n-1}$.
+
+Đối với mục tiêu xạ ảnh đã chọn sao cho $\mathbb{P} ^{n-1}$ có phương trình $x_{n+1} = 0, \mathbb{P}^{m}$ có phương trình $\sum_{j=1}^{n+1} a_{ij}x_{j} = 0 (i = 1, \dots , n-m)$, với [a$_{ij}$] có hạng $n-m$.
+
+Gọi $\mathcal{A} ^{m}$ là tập các điểm của $\mathbb{P} ^{m}$ không thuộc $\mathbb{P} ^{n-1}$, tức $\mathcal{A}^{m} = \mathbb{P}^{m} \cap \mathcal{A}^{n}$.
+
+Mỗi điểm $X \in \mathcal{A}^{m}$ có tọa độ không thuần nhất $(X_{1}, \dots , X_{n}), X_{i} = \frac{x_{i}}{x_{n+1}}$, và $X \in \mathcal{A}^{m} \iff \sum_{j=1}^{n+1} a_{ij}x_{j} = 0$ với $x_{n+1} \neq 0$.
+
+Chia hai vế cho x$_{n+1}$:
+ 
+
+$$
+\sum_{j=1}^{n} a_{ij}X_{j} + a_{i,n+1} = 0, i = 1, \dots , n-m.
+$$
+</Definition>
+
+<Theorem id="thm-p6-8" title="Định lí">
+Hệ trên có ma trận hệ số $[a_{ij}] (i = 1..n-m; j = 1..n)$ hạng $n-m$, nên là phương trình của một m-phẳng afin.
+
+Vậy mỗi m-phẳng afin $\mathcal{A} ^{m}$ chính là một m-phẳng xạ ảnh $\mathbb{P} ^{m}$ (không thuộc $\mathbb{P} ^{n-1}$) sau khi bỏ đi những điểm nằm trên siêu phẳng $\mathbb{P} ^{n-1}$.
+</Theorem>
+
+<Proof of="thm-p6-8">
+Xét hệ gồm $n-m$ phương trình trên và phương trình $x_{n+1} = 0$.
+
+Vì $\mathbb{P} ^{m}$ không thuộc $\mathbb{P} ^{n-1}$ nên hệ này có hạng $n-m+1$.
+
+Ma trận của hệ gồm $n-m$ hàng $(a_{i1}, \dots , a_{in} | a_{i,n+1})$ và hàng cuối $(0, \dots , 0 | 1)$.
+
+Nếu $[a_{ij}] (n-m$ hàng, n cột) có hạng nhỏ hơn $n-m$ thì ma trận này có hạng nhỏ hơn $n-m+1$, vô lí.
+
+Vậy [a$_{ij}$] có hạng $n-m$.
+</Proof>
+
+<Example id="ex-p6-10" title="Ví dụ">
+Trong $\mathbb{P}^{2} (n = 2, m = 1)$ đường thẳng $x_{1} + x_{2} - 2x_{3} = 0$ không thuộc $\mathbb{P}^{1}: x_{3} = 0$.
+
+Chia cho $x_{3}$ ta được $X_{1} + X_{2} - 2 = 0$, một đường thẳng của $\mathcal{A} ^{2}$; ma trận hệ số (1, 1) có hạng $1 = n-m$.
+
+Điểm $(1,-1,0)$ của đường thẳng này nằm trên $\mathbb{P} ^{1}$ nên bị bỏ đi khỏi đường thẳng afin.
+</Example>
+
+<Theorem id="thm-p6-11" title="c) Sự cùng phương của các phẳng afin">
+Trong $\mathbb{P} ^{n}$ cho hai phẳng phân biệt $\mathbb{P} ^{r}$ và $\mathbb{P}^{s} (r \ge s)$ đều không thuộc $\mathbb{P} ^{n-1}$, có giao $\mathbb{P}^{r} \cap \mathbb{P}^{s} = \mathbf{Q}^{s-1}$ là phẳng (s−1)-chiều thuộc $\mathbb{P} ^{n-1}$.
+
+Khi đó $\mathbb{P} ^{r}$ \ $\mathbb{P} ^{n-1}$ và $\mathbb{P} ^{s}$ \ $\mathbb{P} ^{n-1}$ là hai phẳng afin song song.
+</Theorem>
+
+<Proof of="thm-p6-11">
+Đối với mục tiêu đã chọn giả sử $(\mathbb{P}^{r}): \sum_{j=1}^{n+1} a_{ij}x_{j} = 0 (i = 1, \dots , n-r)$ và $(\mathbb{P}^{s}): \sum_{j=1}^{n+1} b_{ij}x_{j} = 0 (i = 1, \dots , n-s)$.
+
+Vì $\mathbf{Q}^{s-1} = \mathbb{P}^{r} \cap \mathbb{P}^{s} \cap \mathbb{P}^{n-1}$, phương trình của **Q**$^{s-1}$ gồm cả hai hệ trên và $x_{n+1} = 0$.
+
+Hệ này gồm $2n - (r+s) + 1$ phương trình nhưng vì $dim \mathbf{Q} = s-1$ nên chỉ có $n - (s-1) = n-s+1$ phương trình độc lập; có thể lấy $n-s+1$ phương trình cuối làm phương trình của **Q**$^{s-1}$.
+
+Vậy mỗi hệ số a$_{ij}$ ở vế trái của $n-r$ phương trình đầu biểu thị tuyến tính qua các hệ số vế trái của $n-s+1$ phương trình cuối.
+
+Gọi $\mathcal{A} ^{r}$, $\mathcal{A} ^{s}$ là hai phẳng afin sinh ra bởi $\mathbb{P} ^{r}$, $\mathbb{P} ^{s}$; phương trình của chúng đối với mục tiêu afin là $(\mathcal{A}^{r}): \sum_{j=1}^{n} a_{ij}X_{j} + a_{i,n+1} = 0 (i = 1, \dots , n-r)$ và $(\mathcal{A}^{s}): \sum_{j=1}^{n} b_{ij}X_{j} + b_{i,n+1} = 0 (i = 1, \dots , n-s)$.
+
+Vì $a_{ij} = k_{i1}b_{1j} + k_{i2}b_{2j} + \dots + k_{i,n-s}b_{n-s,j} (i = 1, \dots , n-r; j = 1, \dots , n)$, phương $V ^{s}$ của $\mathcal{A} ^{s}$ nằm trong phương $V ^{r}$ của $\mathcal{A} ^{r}$, tức $\mathcal{A} ^{s}$ cùng phương với $\mathcal{A} ^{r}$; hai phẳng đó phân biệt nên $\mathcal{A} ^{s}$ song song với $\mathcal{A} ^{r}$.
+</Proof>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Ta thường gọi các điểm của siêu phẳng $\mathbb{P} ^{n-1}$ là các *điểm vô tận*.
+
+Do đó nếu hai phẳng $\mathbb{P} ^{r}$ và $\mathbb{P} ^{s}$ có giao là phẳng **Q** chứa toàn điểm vô tận $(\mathbf{Q} \subset \mathbb{P}^{n-1})$ thì ta nói $\mathcal{A} ^{s}$ song song với $\mathcal{A} ^{r}$.
+</Remark>
+
+<Example id="ex-p6-13" title="Thí dụ">
+Trong $\mathcal{A}^{2} = \mathbb{P}^{2} \ \mathbb{P}^{1}$, hai đường thẳng a, b song song với nhau nghĩa là hai đường thẳng đó cắt nhau tại một điểm nằm trên $\mathbb{P} ^{1}$.
+
+Một hình tứ giác ABCD có $AB \cap DC$ và $AD \cap BC$ thuộc $\mathbb{P} ^{1}$ thì tứ giác đó biểu thị cho hình bình hành ABCD trong mặt phẳng afin $(H.40)$.
+
+Ví dụ số: $x_{1} + x_{2} - 2x_{3} = 0$ và $x_{1} + x_{2} + 3x_{3} = 0$ cắt nhau tại điểm $(1,-1,0)$ (thuộc $\mathbb{P} ^{1}$: 
+
+$$
+x_{3} = 0).
+$$
+
+ Trong $\mathcal{A} ^{2}$ chúng là $X_{1} + X_{2} = 2$ và $X_{1} + X_{2} = -3$: hai đường thẳng song song.
+</Example>
+
+<Theorem id="thm-p6-14" title="d) Phép biến đổi afin">
+Trong tập hợp tất cả các phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$ xét những phép biến siêu phẳng $\mathbb{P} ^{n-1}$ thành chính nó.
+
+Mỗi phép như vậy biến điểm có tọa độ xạ ảnh $(x_{1}, \dots , x_{n+1})$ thành điểm có tọa độ $(x'_{1}, \dots , x'_{n+1})$ sao cho nếu $x_{n+1} = 0$ thì $x'_{n+1} = 0$ và nếu $x_{n+1} \neq 0$ thì $x'_{n+1} \neq 0$.
+
+Muốn vậy, phương trình của phép biến đổi xạ ảnh cần có phương trình $x'_{n+1} = x_{n+1}$.
+
+Do đó phương trình có dạng
+ 
+
+$$
+x'_{i} = \sum_{j=1}^{n+1} a_{ij}x_{j} (i = 1, \dots , n); x'_{n+1} = x_{n+1},
+$$
+
+ 
+trong đó ma trận A của phép biến đổi xạ ảnh là ma trận vuông cấp $n+1$ không suy biến có hàng cuối $(0, 0, \dots , 0, 1)$.
+
+**Kết luận.** Mỗi phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$ biến $\mathbb{P} ^{n-1}$ thành chính nó sinh ra trên $\mathcal{A} ^{n}$ một phép biến đổi afin.
+
+Ngược lại, mỗi phép biến đổi afin của $\mathcal{A} ^{n}$ đều có thể xem như được sinh ra bởi một phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$ biến siêu phẳng $\mathbb{P} ^{n-1}$ thành chính nó.
+</Theorem>
+
+<Proof of="thm-p6-14">
+Lấy điểm $X \in \mathcal{A}^{n}$ có tọa độ xạ ảnh $(x_{1}, \dots , x_{n+1})$ với $x_{n+1} \neq 0$.
+
+Qua phép biến đổi xạ ảnh trên, X biến thành $X'$ có tọa độ $(x'_{1}, \dots , x'_{n+1})$ với $x'_{n+1} \neq 0$.
+
+Chuyển sang tọa độ afin ta có
+ 
+
+$$
+X'_{1} = a_{11}X_{1} + a_{12}X_{2} + \dots + a_{1n}X_{n} + a_{1,n+1}; X'_{2} = a_{21}X_{1} + a_{22}X_{2} + \dots + a_{2n}X_{n} + a_{2,n+1}; \dots ; X'_{n} = a_{n1}X_{1} + a_{n2}X_{2} + \dots + a_{nn}X_{n} + a_{n,n+1},
+$$
+
+ 
+với $A' = [a_{ij}] (i, j = 1, \dots , n)$ là ma trận vuông cấp n không suy biến (vì $det A = det A')$, nên đây là phép biến đổi afin.
+
+Ngược lại, từ một phép biến đổi afin, chuyển từ tọa độ afin sang tọa độ xạ ảnh ta có n phương trình đầu của phép biến đổi xạ ảnh với điều kiện $x_{n+1} \neq 0$; thêm phương trình $x'_{n+1} = x_{n+1}$ và cho phép x$_{n+1}$ bằng 0, ta được phương trình của phép biến đổi xạ ảnh sinh ra phép biến đổi afin đó; phép này biến $\mathbb{P} ^{n-1}$ thành chính nó.
+</Proof>
+
+<Example id="ex-p6-16" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ lấy $x'_{1} = x_{1} + 2x_{2} + 3x_{3}; x'_{2} = x_{2} + 4x_{3}; x'_{3} = x_{3}, ma$ trận có hàng cuối $(0,0,1)$ và định thức $1 \neq 0$.
+
+Trên $\mathcal{A} ^{2}$ (x$_{3}$ ≠ 0) chia cho x$_{3}$ ta được phép biến đổi afin 
+
+$$
+\begin{cases} X'_{1} = X_{1} + 2X_{2} + 3 \\ X'_{2} = X_{2} + 4. \end{cases}
+$$
+
+Điểm $X = (1,1,1)$ biến thành $(6,5,1)$ tức $X' = (6,5)$: đúng $1 + 2 + 3 = 6$ và $1 + 4 = 5$.
+
+Điểm vô tận $(0,1,0)$ biến thành $(2,1,0)$, vẫn là điểm vô tận.
+</Example>
+
+<Definition id="def-p6-17" title="e) Tỉ số kép — α)">
+Giả sử A, B, C, D là bốn điểm phân biệt nằm trên một đường thẳng xạ ảnh l của $\mathbb{P} ^{n}$ nhưng không điểm nào thuộc siêu phẳng $\mathbb{P} ^{n-1}$.
+
+Chọn mục tiêu xạ ảnh \{A$_{i}$; E\} sao cho $A_{n+1} = A, A_{1} = l \cap \mathbb{P}^{n-1}$.
+
+Khi đó các điểm B, C, D có tọa độ biểu thị tuyến tính qua tọa độ của A$_{n+1}$ và $A_{1}: A = (0, \dots , 0, 1), B = (b, 0, \dots , 0, 1), C = (c, 0, \dots , 0, 1), D = (d, 0, \dots , 0, 1)$ (vì $(b_{1}, \dots , b_{n+1}) = \lambda (0, \dots , 0, 1) + μ(1, 0, \dots , 0) = (μ, 0, \dots , 0, \lambda ) ~ (b, 0, \dots , 0, 1)$ với $b = \frac{μ}{\lambda})$.
+</Definition>
+
+<Theorem id="thm-p6-18" title="Công thức">
+Với các điểm trên:
+ 
+
+$$
+(ABCD) = (\frac{c}{b-c}) : (\frac{d}{b-d}) = \frac{CAB}{DAB}.
+$$
+</Theorem>
+
+<Proof of="thm-p6-18">
+$[C] = \lambda _{1}[A] + μ_{1}[B]$ và $[D] = \lambda _{2}[A] + μ_{2}[B]$ với $[C] = (\frac{b-c}{b})[A] + (\frac{c}{b})[B]$ và $[D] = (\frac{b-d}{b})[A] + (\frac{d}{b})[B]$; do đó (ABCD) $= (\frac{μ_{1}}{\lambda _{1}})$ : $(\frac{μ_{2}}{\lambda _{2}}) = (\frac{c}{b-c})$ : $(\frac{d}{b-d})$.
+
+Chuyển sang tọa độ afin: $A = (0, \dots ,0), B = (b,0, \dots ,0), C = (c,0, \dots ,0), D = (d,0, \dots ,0)$, nên $\vect{CA} = (-c,0, \dots ,0), \vect{DA} = (-d,0, \dots ,0), \vect{CB} = (b-c,0, \dots ,0), \vect{DB} = (b-d,0, \dots ,0)$.
+
+Vậy (CAB) $= \frac{-c}{b-c}$, (DAB) $= \frac{-d}{b-d}$ và (ABCD) $=$ *CAB***/***DAB*: tỉ số kép bằng tỉ số của hai tỉ số đơn.
+</Proof>
+
+<Example id="ex-p6-20" title="Ví dụ">
+Trên một đường thẳng của $\mathcal{A} ^{n}$ lấy A (tọa độ $0), B (b = 2), C (c = 1), D (d = 4)$.
+
+Khi đó (ABCD) $= (\frac{1}{2-1})$ : 
+
+$$
+(\frac{4}{2-4}) = 1 : (-2) = \frac{-1}{2}.
+$$
+
+ Kiểm tra: (CAB) $= \frac{-1}{2-1} = -1$, (DAB) $= \frac{-4}{2-4} = 2$ và *CAB***/***DAB* $= \frac{-1}{2}$.
+</Example>
+
+<Theorem id="thm-p6-21" title="β) Điểm vô tận">
+Nếu một trong bốn điểm là điểm vô tận, chẳng hạn $D \in \mathbb{P}^{n-1}$ thì $D ≡ A_{1}$ và $[D] = -[A] + [B]$, nên (ABCD) $= (\frac{c}{b-c})$ : $(\frac{1}{-1}) = \frac{-c}{b-c} =$ (CAB).
+
+Vậy
+ 
+
+$$
+(ABCD_{\infty}) = (CAB).
+$$
+
+ 
+Đặc biệt, nếu (ABCD$_{\infty}$) $= -1 (D$ vô tận) thì C là trung điểm của đoạn AB:
+ 
+
+$$
+(ABCD_{\infty}) = (CAB) = -1.
+$$
+</Theorem>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Tỉ số đơn của ba điểm thẳng hàng không phải là khái niệm của hình học xạ ảnh, nên trung điểm của một đoạn thẳng cũng không phải khái niệm có trong không gian xạ ảnh.
+</Remark>
+
+<Example id="ex-p6-22" title="Ví dụ">
+Trong $\mathcal{A} ^{2}$ lấy A, B và trung điểm C của AB; D là điểm vô tận của đường thẳng AB.
+
+Khi đó (CAB) $= -1$ (vì $\vect{CA} = -\vect{CB})$, nên (ABCD$_{\infty}$) $= -1$: bốn điểm A, B, C, D$_{\infty}$ làm thành hàng điểm điều hòa.
+
+Nếu C chia AB theo tỉ số (CAB) $= -2 (\vect{CA} = -2\vect{CB})$ thì (ABCD$_{\infty}$) $= -2$.
+</Example>
+
+## 3. Vài áp dụng của mô hình
+
+<Definition id="def-p6-23" title="a) Dùng hình học afin để nghiên cứu hình học xạ ảnh">
+Ta có thể chứng minh một số định lí của hình học xạ ảnh hoặc giải một số bài toán xạ ảnh bằng cách dựa vào những kết quả đã biết của hình học afin: sau khi chọn khéo siêu phẳng vô tận $\mathbb{P} ^{n-1}$, ta chuyển một bài toán xạ ảnh thành một bài toán afin mà cách giải dễ thực hiện hơn.
+</Definition>
+
+<Example id="ex-p6-24" title="Thí dụ">
+Chứng minh: trong một hình bốn cạnh toàn phần, trên mỗi đường chéo hai đỉnh đối diện và hai điểm chéo liên hiệp điều hòa với nhau.
+
+Trước đây ta đã giải bài toán này bằng công cụ xạ ảnh; bây giờ dùng mô hình afin.
+
+Chọn siêu phẳng vô tận $\mathbb{P} ^{n-1}$ đi qua hai điểm $C, C'$ và không đi qua một đỉnh nào khác của hình bốn cạnh toàn phần $AA'BB'CC'$.
+
+Khi đó hai đường thẳng AB và $A'B'$ song song nhau, hai đường thẳng $AB'$ và $A'B$ cũng song song nhau, nên tứ giác ABA′B′ là một hình bình hành của $\mathcal{A} ^{2}$.
+
+Theo hình học afin, điểm chéo D là trung điểm của $AA'$ và $BB'$.
+
+Vì vậy điểm D cùng với điểm vô tận E của $AA'$ liên hiệp điều hòa với hai điểm $A, A'$; trên đường chéo $BB'$, điểm D cùng với điểm vô tận F liên hiệp điều hòa với hai điểm $B, B'$.
+
+Do đó
+ 
+
+$$
+(AA'DE_{\infty}) = (DAA') = -1; (BB'DF_{\infty}) = (DBB') = -1.
+$$
+
+ 
+
+Đó là điều phải chứng minh.
+</Example>
+
+<Definition id="def-p6-25" title="b) Dùng hình học xạ ảnh để nghiên cứu hình học afin">
+Ta có thể chứng minh một số định lí của hình học afin hoặc giải một số bài toán afin bằng cách dựa vào những kết quả đã biết của hình học xạ ảnh.
+</Definition>
+
+<Example id="ex-p6-26" title="Thí dụ">
+Cho hình bình hành ABCD.
+
+Một đường thẳng song song với cạnh AB cắt các cạnh AD, BC lần lượt tại E và F.
+
+Một đường thẳng khác song song với cạnh AD cắt các cạnh AB, DC lần lượt tại G và H.
+
+Gọi $P = BE \cap DG, Q = EF \cap GH$.
+
+Chứng minh ba điểm P, Q, C thẳng hàng.
+
+*Giải.*
+
+Bổ sung các điểm vô tận vào mặt phẳng afin chứa ABCD: các đường thẳng AB, EF, DC đồng quy tại điểm M vô tận, và AD, GH, BC đồng quy tại điểm N vô tận.
+
+Sau khi thêm đường thẳng vô tận ta có mặt phẳng xạ ảnh và bài toán: *cho ba điểm G, B, M thuộc một đường thẳng và ba điểm E, D, N thuộc một đường thẳng khác; gọi $P = EB \cap DG, Q = EM \cap NG, R = DM \cap NB$; chứng minh ba điểm P, Q, R thẳng hàng.* Áp dụng định lí Pappus ta có ngay kết quả cần chứng minh (R chính là điểm C).
+</Example>
+
+<Definition id="def-p6-27" title="c) Sáng tạo các bài toán mới">
+α) Từ một bài toán xạ ảnh, bằng cách chọn các siêu phẳng khác nhau đóng vai trò siêu phẳng vô tận, ta có nhiều bài toán afin khác nhau mà kết quả suy ra từ kết quả đã biết trong không gian xạ ảnh.
+
+β) Từ một bài toán afin ta suy ra một bài toán xạ ảnh bằng cách bổ sung các điểm vô tận thuộc một siêu phẳng vô tận; kết quả suy ra từ bài toán afin cho trước.
+
+γ) Từ một bài toán afin có thể suy ra nhiều bài toán afin khác bằng cách kết hợp hai cách trên.
+
+Thông qua mô hình xạ ảnh của không gian afin, giữa không gian afin và không gian xạ ảnh có sự liên quan rất mật thiết; giữa hình học afin và hình học xạ ảnh có nhiều mối liên hệ sẽ được tìm hiểu thêm ở các phần sau.
+</Definition>
+
+<Example id="ex-p6-28" title="Ví dụ">
+Định lí xạ ảnh "hai đường thẳng phân biệt trong $\mathbb{P} ^{2}$ luôn cắt nhau" cho các bài toán afin khác nhau tùy cách chọn đường thẳng vô tận. Hai đường thẳng $x_{2} = 0$ và $x_{2} + x_{3} = 0$ cắt nhau tại điểm $(1, 0, 0)$. Nếu chọn đường thẳng vô tận là $x_{3} = 0$ thì điểm đó thuộc đường thẳng vô tận, nên trong $\mathcal{A} ^{2}$ hai đường thẳng $X_{2} = 0$ và $X_{2} = -1$ song song. Nếu chọn đường thẳng vô tận là $x_{1} = 0$ thì $(1, 0, 0)$ là điểm thông thường, nên trong mặt phẳng afin mới hai đường thẳng đó cắt nhau.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p6-1" title="Mô hình afin của không gian xạ ảnh (§6)">
+Trong P², lấy x₃ = 0 làm đường thẳng vô tận. Conic x₂² - x₁x₃ = 0 trở thành đường gì trong mặt phẳng afin? Tìm các điểm vô tận của nó.
+</Exercise>
+
+<Hint>
+Chia hai vế cho x₃². Giao với x₃ = 0 cho các điểm vô tận.
+</Hint>
+
+<Solution>
+Chia cho x₃²: X₂² - X₁ = 0.
+
+Giao với x₃ = 0: x₂² = 0, chỉ một điểm vô tận (1,0,0).
+
+**Đáp án:** Parabol X₂² = X₁ với một điểm vô tận (1,0,0) (conic tiếp xúc với đường thẳng vô tận)
+</Solution>
+
+<Exercise id="exr-p6-2" title="Mô hình afin: song song và điểm vô tận (§6, mục 2c)">
+Trong P² cho hai đường thẳng x₁ - x₂ = 0 và x₁ - x₂ + 2x₃ = 0. Tìm giao điểm của chúng. Khi chọn x₃ = 0 làm đường thẳng vô tận, chúng là hai đường nào trong mặt phẳng afin? Nếu chọn x₁ = 0 làm đường thẳng vô tận thì sao?
+</Exercise>
+
+<Hint>
+Hai đường thẳng của mặt phẳng afin song song khi giao điểm của chúng thuộc đường thẳng vô tận.
+</Hint>
+
+<Solution>
+Giao: x₁ = x₂ và x₃ = 0, tức (1,1,0).
+
+Với x₃ = 0 làm đường vô tận: giao điểm thuộc đường vô tận nên song song (X₁ - X₂ = 0 và X₁ - X₂ + 2 = 0).
+
+Với x₁ = 0 làm đường vô tận: (1,1,0) có x₁  $ neq$  0 là điểm thông thường nên hai đường cắt nhau.
+
+**Đáp án:** Giao (1,1,0). Với x₃ = 0: hai đường thẳng song song; với x₁ = 0: hai đường thẳng cắt nhau.
+</Solution>
+
+<KeyTakeaways>
+- Không gian affine có thể xem như phần bù của một siêu phẳng (siêu phẳng vô tận) trong không gian xạ ảnh.
+- Các đường thẳng song song trong không gian affine sẽ cắt nhau tại một điểm thuộc siêu phẳng vô tận.
+</KeyTakeaways>

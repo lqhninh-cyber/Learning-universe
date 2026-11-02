@@ -1,0 +1,306 @@
+---
+id: cac-phang-trong-khong-gian-euclide
+title: "Các Phẳng trong Không gian Ơclit"
+description: "Bù vuông góc, khoảng cách từ điểm đến phẳng và khoảng cách giữa hai phẳng chéo nhau."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "phẳng trực giao"
+  - "khoảng cách"
+  - "hình chiếu vuông góc"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '103-112'
+    sections: '§4'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+Trong $\mathbb{E} ^{n}$ (liên kết với $V ^{n} _{E}$), các phẳng có những tính chất giống như trong không gian afin.
+
+Ngoài ra còn có các vấn đề mới liên quan đến tích vô hướng: vuông góc và khoảng cách giữa các phẳng.
+
+## 1. Vị trí tương đối của các phẳng trong En
+
+<Definition id="def-e4-1" title="a) Định nghĩa">
+Cho phẳng α có phương ᾱ và phẳng β có phương β̄.
+
+• α và β *vuông góc với nhau*, kí hiệu $\alpha \perp \beta$ (cũng kí hiệu $\overline{\alpha} \perp \overline{\beta})$, nếu hai không gian vectơ ᾱ và β̄ trực giao (mọi vectơ thuộc ᾱ đều trực giao với mọi vectơ thuộc β̄).
+
+• α và β *bù vuông góc với nhau* nếu ᾱ và β̄ bù trực giao trong **Ē**$^{n}$, nghĩa là $\overline{\alpha} ⊕ \overline{\beta} = \mathbf{\overline{E}}^{n} (dim \overline{\alpha} + dim \overline{\beta} = n)$.
+</Definition>
+
+<Theorem id="thm-e4-2" title="b) Định lí">
+Hai phẳng vuông góc với nhau có không quá một điểm chung.
+
+Hai phẳng bù vuông góc có một điểm chung duy nhất.
+
+**Hệ quả 1.** Tổng của hai phẳng bù vuông góc là $\mathbb{E} ^{n}$.
+
+**Hệ quả 2.** Trong $\mathbb{E} ^{n}$, qua một điểm cho trước có một và chỉ một phẳng bù vuông góc với phẳng đã cho.
+</Theorem>
+
+<Proof of="thm-e4-2">
+Nếu $\alpha \perp \beta$ có hai điểm chung M, N thì $\vect{MN} \in \overline{\alpha} \cap \overline{\beta}$ nên $\vect{MN}·\vect{MN} = 0$, suy ra $M = N$.
+
+Nếu α, β bù vuông góc mà $\alpha \cap \beta = ∅$ thì $dim( \alpha + \beta ) = dim \overline{\alpha} + dim \overline{\beta} - dim(\overline{\alpha} \cap \overline{\beta}) + 1 = n + 1$, vô lí; vậy có điểm chung, và duy nhất theo phần trên.
+</Proof>
+
+<Example id="ex-e4-4" title="Ví dụ">
+Trong $\mathbb{E}^{3} = \R^{3}$, mặt phẳng α:$z = 0 (\overline{\alpha} = span{(1,0,0), (0,1,0)})$ và trục $Oz (\overline{\beta} = span{(0,0,1)})$.Mọi vectơ của ᾱ trực giao với $(0,0,1)$ nên $\alpha \perp \beta ; dim \overline{\alpha} + dim \overline{\beta} = 3$ nên chúng bù vuông góc, và có đúng một điểm chung là O.
+
+Còn hai mặt phẳng vuông góc ở phổ thông (chẳng hạn $x = 0$ và $y = 0$, phương có chiều $2 + 2 >$;
+
+3) *không* thỏa định nghĩa này; đó là vuông góc không hoàn toàn.
+</Example>
+
+<Theorem id="thm-e4-5" title="c) Định lí">
+Trong $\mathbb{E} ^{n}$ cho điểm A và phẳng β không chứa A.
+
+Khi đó trong β có một điểm A′ duy nhất sao cho $d(A,A') \le d(A,M)$ với mọi $M \in \beta$.
+
+Số $d(A,A')$ gọi là *khoảng cách từ A tới phẳng β*, kí hiệu $d(A, \beta )$.
+
+**Hệ quả.** Nếu $A \in \beta$ thì $d(A, \beta ) = 0$.
+</Theorem>
+
+<Proof of="thm-e4-5">
+Qua A có một phẳng α duy nhất bù vuông góc với β; chúng cắt nhau tại điểm duy nhất $A' \in \beta$.
+
+Với $M \in \beta , \vect{AA'} \in \overline{\alpha}$ và $\vect{A'M} \in \overline{\beta}$ nên $\vect{A'M} \perp \vect{AA'}$; theo Pitago $d(A,M)^{2} = d(A,A')^{2} + d(A',M)^{2} \ge d(A,A')^{2}$, dấu $"="$ chỉ khi $M = A'$.
+</Proof>
+
+<Theorem id="thm-e4-7" title="d) Định lí">
+Nếu α vuông góc với β và γ bù vuông góc với β thì α cùng phương với $\gamma (\overline{\alpha} \subset \overline{\gamma})$.
+
+**Hệ quả.** Hai phẳng phân biệt cùng bù vuông góc với phẳng thứ ba thì song song với nhau và có cùng số chiều.
+</Theorem>
+
+<Example id="ex-e4-8" title="Ví dụ">
+Trong $\mathbb{E} ^{3}$, A(1,2,3) và $\beta : z = 0$.Phẳng qua A bù vuông góc với β là đường thẳng $x = 1, y = 2$, cắt β tại $A'(1,2,0)$, nên $d(A, \beta ) = 3$.Với $M(0,0,0) \in \beta$: 
+
+$$
+d(A,M) = \sqrt{14} > 3.
+$$
+
+ Với d): đường thẳng $\alpha = Ox$ vuông góc với $\beta ' = Oz$, và mặt phẳng $\gamma : z = 0$ bù vuông góc với β′; đúng là $\overline{\alpha} = span{(1,0,0)} \subset \overline{\gamma}$.
+</Example>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Khái niệm vuông góc của hai mặt phẳng trong $\mathbb{E} ^{3}$ ở phổ thông không thỏa định nghĩa nêu trên; đó là sự vuông góc không hoàn toàn.
+</Remark>
+
+## 2. Khoảng cách giữa hai cái phẳng
+
+<Definition id="def-e4-9" title="a) Định nghĩa">
+Khoảng cách giữa hai phẳng α, β là số $d( \alpha , \beta ) = inf d(M,N)$ với $M \in \alpha , N \in \beta$.
+
+Nếu $\alpha \cap \beta \neq ∅$ thì $d( \alpha , \beta ) = 0$; nếu $\alpha \cap \beta = ∅$ thì $d( \alpha , \beta ) > 0$.
+</Definition>
+
+<Definition id="def-e4-10" title="b) Đường vuông góc chung">
+Đường thẳng Δ gọi là *đường vuông góc chung* của α và β nếu Δ vuông góc với cả α và β, đồng thời Δ cắt cả α và β.
+
+Trong $\mathbb{E} ^{3}$, hai đường thẳng chéo nhau có đường vuông góc chung duy nhất; đường thẳng α song song với mặt phẳng β có vô số đường vuông góc chung.
+</Definition>
+
+<Theorem id="thm-e4-11" title="c) Định lí">
+Nếu Δ là đường vuông góc chung của α và β, cắt α, β lần lượt tại I và J thì $d( \alpha , \beta ) = d(I,J)$.
+</Theorem>
+
+<Proof of="thm-e4-11">
+Với $M \in \alpha , N \in \beta : \vect{MN} = \vect{MI} + \vect{IJ} + \vect{JN}$ nên $|\vect{MN}|^{2} = |\vect{MI} + \vect{JN}|^{2} + |\vect{IJ}|^{2} + 2\vect{IJ}·(\vect{MI} + \vect{JN})$.
+
+Vì $\vect{IJ}·\vect{MI} = 0$ và $\vect{IJ}·\vect{JN} = 0$ nên $|\vect{MN}|^{2} \ge |\vect{IJ}|^{2}$, tức $d(M,N) \ge d(I,J)$.
+</Proof>
+
+<Theorem id="thm-e4-13" title="d) Định lí">
+Nếu α, β *chéo nhau* $( \alpha \cap \beta = ∅$ và $\overline{\alpha} \cap \overline{\beta} = {\vec{0}})$ thì chúng có đường vuông góc chung duy nhất.
+
+**Hệ quả 1.** Nếu $I \notin \beta$ thì qua I có đường thẳng duy nhất vuông góc với β và cắt β tại J (J là *hình chiếu vuông góc* của I trên β), và $d(I, \beta ) = d(I,J)$.
+
+**Hệ quả 2.** Nếu α song song với $\beta ( \alpha \cap \beta = ∅, \overline{\alpha} \subset \overline{\beta})$ thì với $I \in \alpha$, đường thẳng qua I vuông góc với β là đường vuông góc chung; $d( \alpha , \beta ) = d(I, \beta )$ với mọi $I \in \alpha$, và có vô số đường vuông góc chung.
+</Theorem>
+
+<Proof of="thm-e4-13">
+Gọi γ̄ là không gian con bù trực giao với $\overline{\alpha} + \overline{\beta}$.
+
+Với $P \in \alpha , Q \in \beta , \vect{PQ} = \vec{u} + \vec{v}$ với $\vec{u} \in \overline{\alpha} + \overline{\beta}, \vec{v} \in \overline{\gamma}$.
+
+Phân tích $\vec{u} = \vec{x} + \vec{y} (\vec{x} \in \overline{\alpha}, \vec{y} \in \overline{\beta})$, lấy I, J sao cho $\vect{PI} = \vec{x}, \vect{JQ} = \vec{y}$; khi đó $\vect{IJ} = \vec{v} \in \overline{\gamma}$ nên IJ vuông góc với cả α, β.
+
+Nếu có thêm $Δ' = I'J'$ thì $\vect{II'} = \vect{JJ'} \in \overline{\alpha} \cap \overline{\beta} = {\vec{0}}$, nên Δ′ ≡ Δ.
+</Proof>
+
+<Example id="ex-e4-15" title="Ví dụ">
+Trong $\mathbb{E}^{3}, \alpha = Ox$ (qua O, phương $(1,0,0))$ và β qua $(0,0,1)$ phương $(0,1,0)$.
+
+Chúng chéo nhau (không giao nhau, phương chung chỉ \{0\}).
+
+Đường vuông góc chung là $Δ: x = 0, y = 0$, cắt α tại $I(0,0,0)$ và β tại $J(0,0,1)$, nên $d( \alpha , \beta ) = 1$.
+
+Kiểm tra: M(s,0,0), N(0,u,1) có $d(M,N)^{2} = s^{2} + u^{2} + 1 \ge 1.$ Với hai mặt phẳng song song $z = 0$ và $z = 1$: lấy $I(0,0,0), d(I, {z=1}) = 1$ nên $d = 1$.
+</Example>
+
+## 3. Khoảng cách từ một điểm đến một siêu phẳng
+
+<Definition id="def-e4-16" title="a) Vectơ pháp tuyến">
+Trong $\mathbb{E} ^{n}$ với mục tiêu trực chuẩn, siêu phẳng α có phương trình $a_{1}x_{1} + \dots + a_{n}x_{n} + a_{0} = 0$.
+
+Vectơ $\vec{n} = (a_{1}, \dots ,a_{n})$ trực giao với ᾱ: với $P(p_{i}) \in \alpha$ và $M(x_{i}) \in \alpha$, từ $\sum_{i=1}^{n}a_{i}p_{i} + a_{0} = 0$ và $\sum_{i=1}^{n}a_{i}x_{i} + a_{0} = 0$ suy ra $\sum_{i=1}^{n}a_{i}(x_{i} - p_{i}) = 0$, tức $\vec{n}·\vect{PM} = 0$.
+
+Ta gọi $\vec{n}$ là *vectơ pháp tuyến* của siêu phẳng α.
+</Definition>
+
+<Theorem id="thm-e4-17" title="b) Công thức khoảng cách">
+Cho điểm $I(x^{0}_{1}, \dots ,x^{0}_{n}) \notin \alpha , J$ là hình chiếu vuông góc của I trên α.
+
+Vì $\vect{IJ} \perp \overline{\alpha}$ nên $\vect{IJ} = t\vec{n}$, đường thẳng $IJ: x_{i} = x^{0}_{i} + a_{i}t$.
+
+Thay vào phương trình $\alpha : \sum_{i=1}^{n}a_{i}x^{0}_{i} + a_{0} + (\sum_{i=1}^{n}a^{2}_{i})t = 0$, nên $t = -(\sum_{i=1}^{n}a_{i}x^{0}_{i} + a_{0}) / \sum_{i=1}^{n}a^{2}_{i}$ và $|\vec{n}| = \sqrt{\sum_{i=1}^{n}a^{2}_{i}}$.
+
+Vì $|\vect{IJ}| = |t|·|\vec{n}|$:
+ 
+
+$$
+d(I, \alpha ) = |\sum_{i=1}^{n} a_{i}x^{0}_{i} + a_{0}| / \sqrt{\sum_{i=1}^{n} a^{2}_{i}}.
+$$
+
+ 
+Nếu $I \in \alpha$ thì $d(I, \alpha ) = 0$.
+
+Với $n = 2$ hoặc $n = 3$ ta tìm lại công thức khoảng cách từ một điểm đến đường thẳng hay mặt phẳng ở phổ thông.
+</Theorem>
+
+<Example id="ex-e4-18" title="Ví dụ">
+Trong $\mathbb{E} ^{3}$, I(1,2,3) và $\alpha : 2x - y + 2z - 4 = 0$.
+
+$\vec{n} = (2,-1,2), |\vec{n}| = 3; \sum_{i=1}^{n}a_{i}x^{0}_{i} + a_{0} = 2 - 2 + 6 - 4 = 2$, nên $d(I, \alpha ) = \frac{2}{3}$.
+
+Hình chiếu: $t = \frac{-2}{9}, J = (1 + 2t, 2 - t, 3 + 2t) = (\frac{5}{9}, \frac{20}{9}, \frac{23}{9})$; kiểm tra $J \in \alpha$:$\frac{10 - 20 + 46}{9} - 4 = 0$, và $|\vect{IJ}| = |t|·3 = \frac{2}{3}$.
+</Example>
+
+## 4. Các thí dụ
+
+<Example id="ex-e4-19" title="Thí dụ 1 (sách, tr. 99–100)">
+Trong $\mathbb{E} ^{3}$ với mục tiêu trực chuẩn, tìm khoảng cách từ $M(1,-2,3)$ đến đường thẳng Δ qua $A(2,0,1), B(3,-1,2)$.
+
+Phương của Δ là $\vect{AB} = (1,-1,1); \vect{AM} = (-1,-2,2)$.
+
+Khoảng cách $d(M,Δ)$ là chiều cao của hình bình hành dựng trên $\vect{AB}$, $\vect{AM}$, nên $d = S/|\vect{AB}|$ với $S = |\vect{AB} ∧ \vect{AM}|$.
+
+Các định thức cấp 2 là $0, -3, -3$ nên $S = \sqrt{18}; |\vect{AB}| = \sqrt{3}$.Vậy $d(M,Δ) = \frac{\sqrt{18}}{\sqrt{3}} = \sqrt{6}$.**Nhận xét.**
+
+Cũng có thể lập mặt phẳng qua M vuông góc với Δ, tìm giao điểm I với Δ, rồi $d(M,Δ) = |\vect{MI}|$.
+</Example>
+
+<Example id="ex-e4-20" title="Thí dụ 2 (sách, tr. 100–101)">
+Tìm khoảng cách giữa hai đường thẳng chéo nhau $Δ_{1}: \frac{x}{1} = \frac{y-4}{-3} = \frac{z-3}{-2}$ và $Δ_{2}: x = y = z - 1$ trong $\mathbb{E} ^{3}$. Δ$_{1}$ qua $M_{1}(0,4,3)$, phương $\vect{a_{1}} = (1,-3,-2); Δ_{2}$ qua $M_{2}(0,0,1)$, phương $\vect{a_{2}} = (1,1,1); \vect{M_{1}M_{2}} = (0,-4,-2)$.
+
+Hai mặt của hình hộp chứa Δ$_{1}$ và song song với Δ$_{2}$ hoặc chứa Δ$_{2}$ và song song với Δ$_{1}$ là hai mặt đáy của nó.
+
+Khoảng cách $d(Δ_{1},Δ_{2})$ chính là chiều cao của hình hộp.
+
+Hình hộp dựng trên $\vect{a_{1}}$, $\vect{a_{2}}$, $\vect{M_{1}M_{2}}$ có chiều cao $h = d(Δ_{1},Δ_{2}) = \frac{V}{S}$, với $V = |(\vect{a_{1}},\vect{a_{2}},\vect{M_{1}M_{2}})| = 4$ (định thức cấp 3) và $S = |\vect{a_{1}} ∧ \vect{a_{2}}| = \sqrt{1 + 9 + 16} = \sqrt{26}$.Vậy $d(Δ_{1},Δ_{2}) = \frac{4}{\sqrt{26}} = 2\sqrt{26}/13$.
+</Example>
+
+<Example id="ex-e4-21" title="Thí dụ 3 (sách, tr. 101–103)">
+Trong $\mathbb{E} ^{4}$, phẳng α: 
+
+$$
+\begin{cases} x_{1} + x_{2} + x_{3} - x_{4} + 1 = 0 \\ 2x_{1} + x_{2} - 2x_{3} + x_{4} + 2 = 0. \end{cases}
+$$
+
+ Tìm $d(M, \alpha )$ với $M(2,-1,3,1)$.
+
+Các vectơ $\vect{n_{1}} = (1,1,1,-1), \vect{n_{2}} = (2,1,-2,1)$ vuông góc với phương của α, nên là cơ sở của phương của phẳng β qua M bù vuông góc với α (β là 2-phẳng).
+
+Phương trình tham số của β: 
+
+$$
+\begin{cases} x_{1} = 2 + t_{1} + 2t_{2} \\ x_{2} = -1 + t_{1} + t_{2} \\ x_{3} = 3 + t_{1} - 2t_{2} \\ x_{4} = 1 - t_{1} + t_{2}. \end{cases}
+$$
+
+ Khử t$_{1}$, t$_{2}$ được phương trình tổng quát của β: 
+
+$$
+\begin{cases} -3x_{1} + 4x_{2} - x_{3} + 13 = 0 \\ 2x_{1} - 3x_{2} - x_{4} - 6 = 0. \end{cases}
+$$
+
+ Giao điểm duy nhất M$_{0}$ của α và β (hình chiếu vuông góc của M trên α) là nghiệm của hệ 4 phương trình: 
+
+$$
+M_{0} = (1,-2,2,2).
+$$
+
+ Khi đó $\vect{MM_{0}} = (-1,-1,-1,1)$ và $d(M, \alpha ) = |\vect{MM_{0}}| = \sqrt{1+1+1+1} = 2$.**Chú ý.**
+
+Trong $\mathbb{E} ^{4}$, hai phẳng hai chiều α, β chỉ có một điểm chung duy nhất khi bù vuông góc; điều này không xảy ra trong $\mathbb{E} ^{3}$.
+
+Trong $\mathbb{E} ^{4}$ còn có trường hợp một đường thẳng và một mặt phẳng chéo nhau (không có phương chung và không có điểm chung).
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e4-1" title="Khoảng cách từ điểm đến siêu phẳng (§4, mục 3)">
+Tính khoảng cách từ I(1,2,3) đến mặt phẳng 2x - y + 2z - 4 = 0.
+</Exercise>
+
+<Hint>
+d(I,  $ alpha$ ) = |Σ[i=1|n]aᵢxᵢ⁰ + a₀|/√(Σ[i=1|n]aᵢ²).
+</Hint>
+
+<Solution>
+Tử số: |2 - 2 + 6 - 4| = 2.
+
+Mẫu số: √(4 + 1 + 4) = 3.
+
+**Đáp án:** 2/3
+</Solution>
+
+<Exercise id="exr-e4-2" title="Khoảng cách từ điểm đến đường thẳng (§4, thí dụ 1)">
+Tính khoảng cách từ M(0,1,2) đến đường thẳng đi qua A(1,0,0), B(1,1,1).
+</Exercise>
+
+<Hint>
+d = |AB ∧ AM|/|AB| (diện tích hình bình hành chia cho đáy).
+</Hint>
+
+<Solution>
+AB = (0,1,1), AM = (-1,1,2).
+
+AB ∧ AM = (1·2 - 1·1, 1·(-1) - 0·2, 0·1 - 1·(-1)) = (1,-1,1), độ dài √3.
+
+|AB| = √2 nên d = √3/√2 = √6/2.
+
+**Đáp án:** √6/2
+</Solution>
+
+<Exercise id="exr-e4-3" title="Khoảng cách giữa hai đường thẳng chéo nhau (§4, mục 2)">
+Trong E³ cho Δ₁ đi qua M₁(0,0,0) với phương a = (1,1,0) và Δ₂ đi qua M₂(0,0,1) với phương b = (1,0,1). Tính khoảng cách giữa Δ₁ và Δ₂.
+</Exercise>
+
+<Hint>
+d = |(a, b, M₁M₂)|/|a ∧ b| (chiều cao hình hộp).
+</Hint>
+
+<Solution>
+a ∧ b = (1·1 - 0·0, 0·1 - 1·1, 1·0 - 1·1) = (1, -1, -1), độ dài √3.
+
+M₁M₂ = (0,0,1) nên tích hỗn hợp = -1.
+
+**Đáp án:** d = 1/√3 = √3/3
+</Solution>
+
+<KeyTakeaways>
+- Hình chiếu vuông góc của một điểm lên phẳng cho điểm gần nhất thuộc phẳng.
+- Khoảng cách giữa hai phẳng chéo nhau bằng độ dài đoạn vuông góc chung.
+</KeyTakeaways>

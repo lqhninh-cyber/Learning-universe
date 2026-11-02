@@ -1,0 +1,592 @@
+---
+id: anh-xa-xa-anh-va-bien-doi-xa-anh
+title: "Ánh xạ Xạ ảnh và Biến đổi Xạ ảnh"
+description: "Ánh xạ xạ ảnh sinh bởi ánh xạ tuyến tính, tính đơn ánh/song ánh, ma trận của phép biến đổi xạ ảnh."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "ánh xạ xạ ảnh"
+  - "biến đổi xạ ảnh"
+  - "ma trận xạ ảnh"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '191-200'
+    sections: '§4'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Ánh xạ xạ ảnh
+
+<Definition id="def-p4-1" title="a) Định nghĩa">
+Cho hai không gian xạ ảnh có cùng số chiều là $\mathbb{P} ^{n}$ và $\mathbb{P}'^{n}$ lần lượt liên kết với hai không gian vectơ $V ^{n+1}$ và $V'^{n+1}$. Ánh xạ $f: \mathbb{P}^{n} \to \mathbb{P}'^{n}$ gọi là *ánh xạ xạ ảnh* nếu có một phép đẳng cấu tuyến tính $\varphi : V^{n+1} \to V'^{n+1}$ sao cho nếu $\vec{a}$ là vectơ đại diện của điểm A của $\mathbb{P} ^{n}$ thì φ($\vec{a}$) là vectơ đại diện của điểm *f*(A) thuộc $\mathbb{P}'^{n}$.
+
+Ta nói *f* được *cảm sinh* bởi phép đẳng cấu tuyến tính φ.
+</Definition>
+
+<Example id="ex-p4-2" title="Ví dụ">
+Lấy $\varphi : \R^{3} \to \R^{3}, \varphi (x_{1}, x_{2}, x_{3}) = (x_{1}, 2x_{2}, 3x_{3})$ (đẳng cấu vì định thức bằng 6).
+
+Nó cảm sinh ánh xạ xạ ảnh $f: \mathbb{P}^{2} \to \mathbb{P}^{2}$ với $f(1,1,1) = (1,2,3)$ và $f(2,2,2) = (2,4,6) = (1,2,3)$: hai vectơ đại diện cùng một điểm cho cùng ảnh.
+</Example>
+
+<Theorem id="thm-p4-3" title="b) Tính chất">
+α) Ánh xạ xạ ảnh là một song ánh, nên còn gọi là *phép đẳng cấu xạ ảnh*.
+
+Nếu *f* cảm sinh bởi φ thì $f^{-1}: \mathbb{P}'^{n} \to \mathbb{P}^{n}$ là ánh xạ xạ ảnh cảm sinh bởi φ$^{-1}$.
+
+β) Một lớp các phép đẳng cấu tuyến tính vị tự nhau biến $V ^{n+1}$ thành $V'^{n+1}$ cùng cảm sinh một ánh xạ xạ ảnh *f*; ngược lại mỗi ánh xạ xạ ảnh đều được cảm sinh bởi một họ các phép đẳng cấu tuyến tính vị tự với nhau.
+
+γ) Qua ánh xạ xạ ảnh, một hệ điểm độc lập biến thành hệ điểm độc lập, và một hệ điểm không độc lập biến thành hệ điểm không độc lập.
+
+δ) Nếu $f: \mathbb{P}^{n} \to \mathbb{P}'^{n}$ và $g: \mathbb{P}'^{n} \to \mathbb{P}″^{n}$ là hai ánh xạ xạ ảnh lần lượt cảm sinh bởi φ và ψ thì tích g∘*f* là ánh xạ xạ ảnh cảm sinh bởi tích ψ∘φ.
+</Theorem>
+
+<Example id="ex-p4-4" title="Ví dụ">
+Với *f* ở ví dụ trên $( \varphi = diag(1,2,3)): ba$ điểm độc lập (1,0,0), (0,1,0), (0,0,1) biến thành (1,0,0), (0,2,0), (0,0,3) cũng độc lập.
+
+Ba điểm không độc lập (1,1,0), (1,0,0), (0,1,0) (vì $(1,1,0) = (1,0,0) + (0,1,0))$ biến thành (1,2,0), (1,0,0), (0,2,0), vẫn không độc lập vì $(1,2,0) = (1,0,0) + (0,2,0)$.
+</Example>
+
+<Theorem id="thm-p4-5" title="c) Định lí">
+Cho $n+2$ điểm $A_{1}, A_{2}, \dots , A_{n+2}$ của $\mathbb{P} ^{n}$, trong đó bất kì $n+1$ điểm nào cũng độc lập, và cho $n+2$ điểm $A'_{1}, \dots , A'_{n+2}$ của $\mathbb{P}'^{n}$ cũng có tính chất như vậy.
+
+Khi đó có một ánh xạ xạ ảnh duy nhất $f: \mathbb{P}^{n} \to \mathbb{P}'^{n}$ sao cho $f(A_{i}) = A'_{i}$ với $i = 1, 2, \dots , n+2$.
+</Theorem>
+
+<Proof of="thm-p4-5">
+Trong $\mathbb{P} ^{n}$ và $\mathbb{P}'^{n}$ chọn các mục tiêu ${A_{1}, \dots , A_{n+1}; A_{n+2}}$ và ${A'_{1}, \dots , A'_{n+1}; A'_{n+2}}$, ứng với hai cơ sở \{$\vect{e_{i}}$\} và \{$\vect{e'_{i}}$\}.
+
+Khi đó $\vec{e} = \sum_{i=1}^{n+1}\vect{e_{i}}$ đại diện cho A$_{n+2}$ và $\vect{e'} = \sum_{i=1}^{n+1}\vect{e'_{i}}$ đại diện cho $A'_{n+2}$.
+
+Có phép đẳng cấu tuyến tính φ duy nhất với $\varphi (\vect{e_{i}}) = \vect{e'_{i}}$.
+
+Gọi *f* là ánh xạ xạ ảnh cảm sinh bởi φ thì $f(A_{i}) = A'_{i} (i = 1, \dots , n+1)$ và $\varphi (\vec{e}) = \sum_{i=1}^{n+1} \varphi (\vect{e_{i}}) = \sum_{i=1}^{n+1}\vect{e'_{i}} = \vect{e'}$ nên $f(A_{n+2}) = A'_{n+2}$.
+
+Giả sử ánh xạ xạ ảnh $f'$ cũng thỏa $f'(A_{i}) = A'_{i} (i = 1, \dots , n+2)$; gọi $\varphi '$ là phép đẳng cấu cảm sinh $f'$.
+
+Ta có $\varphi '(\vect{e_{i}}) = \lambda _{i}\vect{e'_{i}}$ với $\lambda _{i} \neq 0$ (vì λ$_{i} \vect{e'_{i}}$ cũng đại diện cho $A'_{i})$.
+
+Do đó $\varphi '(\vec{e}) = \sum_{i=1}^{n+1} \lambda _{i}\vect{e'_{i}} (1)$.
+
+Mặt khác vì $f'(A_{n+2}) = A'_{n+2}$ nên $\varphi '(\vec{e}) = \lambda \vect{e'} = \sum_{i=1}^{n+1} \lambda \vect{e'_{i}}$ với $\lambda \neq 0 (2)$.
+
+Từ $(1)$ và $(2): \sum_{i=1}^{n+1}( \lambda _{i} - \lambda )\vect{e'_{i}} = \vec{0}$; vì \{$\vect{e'_{i}}$\} độc lập tuyến tính nên $\lambda _{i} = \lambda$ với mọi i.
+
+Vậy $\varphi '(\vect{e_{i}}) = \lambda \vect{e'_{i}}$, tức $\varphi '$ và φ vị tự với nhau, cùng cảm sinh một ánh xạ xạ ảnh: $f' = f$.
+</Proof>
+
+<Example id="ex-p4-7" title="Ví dụ">
+Trên $\mathbb{P}^{1} (n = 1)$ lấy ba điểm $A_{1} = (1,0), A_{2} = (0,1), A_{3} = (1,1)$ (hai điểm bất kì độc lập) và $A'_{1} = (0,1), A'_{2} = (1,0), A'_{3} = (1,1)$.
+
+Có đúng một ánh xạ xạ ảnh *f* với $f(A_{i}) = A'_{i}$: đó là phép hoán đổi tọa độ $(x_{1}, x_{2}) ↦ (x_{2}, x_{1})$, cảm sinh bởi φ có ma trận hàng (0,1), (1,0).
+
+Kiểm tra: 
+
+$$
+\begin{cases} \varphi (1,0) = (0,1) \\ \varphi (0,1) = (1,0) \\ \varphi (1,1) = (1,1). \end{cases}
+$$
+</Example>
+
+<Theorem id="thm-p4-8" title="d) Định lí">
+Qua ánh xạ xạ ảnh $f: \mathbb{P}^{n} \to \mathbb{P}'^{n}$, một m-phẳng của $\mathbb{P} ^{n}$ biến thành một m-phẳng của $\mathbb{P}'^{n}$.
+</Theorem>
+
+<Proof of="thm-p4-8">
+Chọn trong $\mathbb{P} ^{n}$ một mục tiêu xạ ảnh \{A$_{i}$; E\}.
+
+Khi đó $f({A_{i}; E}) = {A'_{i}; E'}$ thuộc $\mathbb{P}'^{n}$, và có thể chọn nó làm mục tiêu xạ ảnh của $\mathbb{P}'^{n}$.
+
+Tọa độ của điểm X đối với \{A$_{i}$; E\} hoàn toàn giống tọa độ của *f*(X) đối với ${A'_{i}; E'}$.
+
+Do đó phương trình của m-phẳng $\mathbb{P} ^{m}$ đối với \{A$_{i}$; E\} giống hệt phương trình của *f*($\mathbb{P} ^{m}$) đối với ${A'_{i}; E'}$.
+
+Vậy *f*($\mathbb{P} ^{m}$) là một m-phẳng.
+</Proof>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Vì ánh xạ xạ ảnh biến đường thẳng thành đường thẳng nên người ta nói ánh xạ xạ ảnh có tính chất *cộng tuyến*.
+</Remark>
+
+<Example id="ex-p4-10" title="Ví dụ">
+Với *f* cảm sinh bởi $\varphi = diag(1,2,3)$ trên $\mathbb{P} ^{2}$, đường thẳng $x_{1} + x_{2} + x_{3} = 0$ (chứa $(1,-1,0)$ và $(0,1,-1))$ biến thành đường thẳng qua $(1,-2,0)$ và $(0,2,-3)$, tức là $6x_{1} + 3x_{2} + 2x_{3} = 0$.
+
+Kiểm tra: $(1,-2,0)$ cho $6 - 6 + 0 = 0$ và $(0,2,-3)$ cho $0 + 6 - 6 = 0$.
+
+Đường thẳng vẫn là đường thẳng.
+</Example>
+
+## 2. Biến đổi xạ ảnh
+
+<Definition id="def-p4-11" title="a) Định nghĩa">
+Ánh xạ xạ ảnh $f: \mathbb{P}^{n} \to \mathbb{P}^{n}$ biến không gian xạ ảnh thành chính nó gọi là *phép biến đổi xạ ảnh*.
+
+Phép biến đổi xạ ảnh này được cảm sinh bởi một phép biến đổi tuyến tính $\varphi : V^{n+1} \to V^{n+1}$.
+</Definition>
+
+<Theorem id="thm-p4-12" title="b) Tính chất">
+Từ các tính chất của ánh xạ xạ ảnh ta suy ra:
+
+α) Trong $\mathbb{P} ^{n}$, một phép biến đổi xạ ảnh *f* được xác định bởi:
+
+– hoặc hai mục tiêu xạ ảnh \{A$_{i}$; E\} và ${A'_{i}; E'}$ với $f(A_{i}) = A'_{i} (i = 1, \dots , n+1)$ và $f(E) = E'$;
+
+– hoặc hai bộ $n+2$ điểm $A_{1}, \dots , A_{n+2}$ và $A'_{1}, \dots , A'_{n+2}$ trong mỗi bộ bất cứ $n+1$ điểm nào cũng độc lập, với $f(A_{i}) = A'_{i} (i = 1, \dots , n+2)$.
+
+β) Phép biến đổi xạ ảnh biến một m-phẳng thành một m-phẳng; vì biến đường thẳng thành đường thẳng nên còn gọi là *phép cộng tuyến*.
+</Theorem>
+
+<Example id="ex-p4-13" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, cho bốn điểm $A_{1} = (1,0,0), A_{2} = (0,1,0), A_{3} = (0,0,1), E = (1,1,1)$ và bốn điểm ảnh $A'_{1} = (0,1,1), A'_{2} = (2,0,1), A'_{3} = (1,1,0), E' = (1,1,1)$.
+
+Bốn điểm sau cũng có tính chất bất cứ ba điểm nào cũng độc lập (chẳng hạn định thức của $A'_{1}, A'_{2}, A'_{3}$ bằng $3 \neq 0)$.
+
+Vậy có đúng một phép biến đổi xạ ảnh *f* với $f(A_{i}) = A'_{i}$ và $f(E) = E'$ (xem thí dụ bên dưới).
+</Example>
+
+## c) Phương trình của phép biến đổi xạ ảnh
+
+<Theorem id="thm-p4-14" title="α) Lập phương trình">
+Gọi $f: \mathbb{P}^{n} \to \mathbb{P}^{n}$ là phép biến đổi xạ ảnh cảm sinh bởi phép biến đổi tuyến tính φ của $V ^{n+1}$.
+
+Chọn mục tiêu \{A$_{i}$; E\} và cơ sở tương ứng \{$\vect{e_{i}}$\} của $V ^{n+1}$.
+
+Qua *f*, điểm X có tọa độ $(x_{1}, \dots , x_{n+1})$ biến thành $X' = f(X)$ có tọa độ $(x'_{1}, \dots , x'_{n+1})$.
+
+Vectơ φ($\vec{x}$) cũng đại diện cho $X'$ nên $\vect{x'} = k \varphi (\vec{x})$ với $k \neq 0$.
+
+Do đó, nếu gọi B là ma trận của φ đối với cơ sở \{$\vect{e_{i}}$\}, phương trình của *f* đối với mục tiêu \{A$_{i}$; E\} là
+ 
+
+$$
+[x'] = kB[x], k \neq 0,
+$$
+
+ 
+trong đó B là ma trận vuông cấp $n+1$ không suy biến.
+
+Nếu gọi ${\vect{e'_{i}}} = { \varphi (\vect{e_{i}})}$ và C là ma trận chuyển từ cơ sở \{$\vect{e_{i}}$\} sang \{$\vect{e'_{i}}$\} thì có thể viết
+ 
+
+$$
+[x'] = kC*[x], k \neq 0.
+$$
+
+ 
+Ngược lại, với mục tiêu xạ ảnh cho trước, mỗi phương trình dạng $[x'] = B[x]$ với B là ma trận vuông cấp $n+1$ không suy biến là phương trình của một phép biến đổi xạ ảnh xác định.
+</Theorem>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Có thể xem phương trình $[x'] = kC*[x]$ là một công thức đổi tọa độ: nó nêu liên hệ giữa tọa độ của cùng một điểm $X' = f(X)$ đối với hai mục tiêu \{A$_{i}$; E\} và ${A'_{i}; E'} = f({A_{i}; E})$, trong đó $[x']$ là tọa độ của $X'$ đối với \{A$_{i}$; E\}, [x] là tọa độ của $X'$ đối với ${A'_{i}; E'}$, còn C là ma trận chuyển từ mục tiêu \{A$_{i}$; E\} sang mục tiêu ${A'_{i}; E'}$.
+</Remark>
+
+<Example id="ex-p4-15" title="β) Thí dụ">
+Trong $\mathbb{P} ^{2}$ với mục tiêu ${A_{1}, A_{2}, A_{3}; E}$, cho $A'_{1}(0,1,1), A'_{2}(2,0,1), A'_{3}(1,1,0)$.
+
+Lập phương trình phép biến đổi xạ ảnh *f* sao cho $f(A_{i}) = A'_{i} (i = 1,2,3)$ và $f(E) = E$.
+
+*Giải.*
+
+Phương trình của *f* có dạng
+ 
+
+$$
+\begin{cases} kx'_{1} = a_{1}x_{1} + a_{2}x_{2} + a_{3}x_{3} \\ kx'_{2} = b_{1}x_{1} + b_{2}x_{2} + b_{3}x_{3} \\ kx'_{3} = c_{1}x_{1} + c_{2}x_{2} + c_{3}x_{3}. \end{cases}
+$$
+
+ 
+
+Theo giả thiết: $A_{1}(1,0,0) \to A'_{1}(0,1,1)$ nên
+ 
+
+$$
+\begin{cases} 0 = a_{1} \\ k_{1}·1 = b_{1} \\ k_{1}·1 = c_{1}. (1)–(3) \end{cases}
+$$
+
+ 
+$A_{2}(0,1,0) \to A'_{2}(2,0,1)$ nên
+ 
+
+$$
+\begin{cases} k_{2}·2 = a_{2} \\ 0 = b_{2} \\ k_{2}·1 = c_{2}. (4)–(6) \end{cases}
+$$
+
+ 
+$A_{3}(0,0,1) \to A'_{3}(1,1,0)$ nên
+ 
+
+$$
+\begin{cases} k_{3}·1 = a_{3} \\ k_{3}·1 = b_{3} \\ 0 = c_{3}. (7)–(9) \end{cases}
+$$
+
+ 
+$E(1,1,1) \to E(1,1,1)$ nên
+ 
+
+$$
+\begin{cases} k_{4}·1 = a_{1} + a_{2} + a_{3} \\ k_{4}·1 = b_{1} + b_{2} + b_{3} \\ k_{4}·1 = c_{1} + c_{2} + c_{3}. (10)–(12) \end{cases}
+$$
+
+ 
+Đây là hệ 12 phương trình với 13 ẩn có tính chất đẳng cấp (xác định sai khác một hệ số tỉ lệ), nên chọn $k_{1} = 1$.
+
+Từ ba phương trình đầu: 
+
+$$
+b_{1} = c_{1} = 1.
+$$
+
+ Từ (1), (5), (9): 
+
+$$
+a_{1} = b_{2} = c_{3} = 0.
+$$
+
+ Từ (7), (8): 
+
+$$
+a_{3} = b_{3}.
+$$
+
+ Từ (10), (11): 
+
+$$
+a_{2} = b_{1} = 1.
+$$
+
+ Từ $(4): k_{2} = \frac{1}{2}$ và $c_{2} = \frac{1}{2}$.
+
+Do đó $k_{4} = \frac{3}{2}$ và $a_{3} = b_{3} = \frac{1}{2} = k_{3}$.
+
+Vậy
+ 
+
+$$
+[a_{ij}] = hàng (0, 1, \frac{1}{2}); hàng (1, 0, \frac{1}{2}); hàng (1, \frac{1}{2}, 0).
+$$
+
+ 
+
+Để gọn, lấy ma trận $B = \begin{pmatrix} 0 & 2 & 1 \\ 2 & 0 & 1 \\ 2 & 1 & 0 \end{pmatrix}$.
+
+Phương trình của phép biến đổi xạ ảnh *f* đối với mục tiêu đã cho:
+ 
+
+$$
+\begin{cases} kx'_{1} = 2x_{2} + x_{3} \\ kx'_{2} = 2x_{1} + x_{3} \\ kx'_{3} = 2x_{1} + x_{2}. \end{cases}
+$$
+
+ 
+
+*Nhận xét.*
+
+Có thể giải gọn hơn: gọi $\vect{e'_{1}}$, $\vect{e'_{2}}$, $\vect{e'_{3}}$, $\vect{e'}$ đại diện cho $A'_{1}, A'_{2}, A'_{3}, E$; ta có $\vect{e'} = \vect{e'_{1}} + \vect{e'_{2}} + \vect{e'_{3}}$, nên $(1,1,1) = \alpha (0,1,1) + \beta (2,0,1) + \gamma (1,1,0)$, tức là
+ 
+
+$$
+\begin{cases} 1 = 2 \beta + \gamma \\ 1 = \alpha + \gamma \\ 1 = \alpha + \beta . \end{cases}
+$$
+
+ 
+
+Giải được $\beta = \gamma = \frac{1}{3}, \alpha = \frac{2}{3}$.
+
+Vậy $\vect{e'_{1}} = (0, \frac{2}{3}, \frac{2}{3}), \vect{e'_{2}} = (\frac{2}{3}, 0, \frac{1}{3}), \vect{e'_{3}} = (\frac{1}{3}, \frac{1}{3}, 0)$.
+
+Ma trận chuyển C có các hàng là ba vectơ này, $C*$ có các cột là ba vectơ này; ma trận $B = 3C* = \begin{pmatrix} 0 & 2 & 1 \\ 2 & 0 & 1 \\ 2 & 1 & 0 \end{pmatrix}$ và phương trình là $k[x'] = B[x]$, trùng với kết quả trên.
+
+Kiểm tra: 
+
+$$
+B(1,0,0) = (0,2,2) ~ (0,1,1) = A'_{1}; B(0,1,0) = (2,0,1) = A'_{2}; B(0,0,1) = (1,1,0) = A'_{3}; B(1,1,1) = (3,3,3) ~ (1,1,1) = E.
+$$
+</Example>
+
+## d) Nhóm các phép biến đổi xạ ảnh và hình học xạ ảnh
+
+<Theorem id="thm-p4-16" title="α) Định lí">
+Tập hợp các phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$ lập thành một nhóm với phép toán lấy tích các phép biến đổi.
+</Theorem>
+
+<Proof of="thm-p4-16">
+• Tích của hai phép biến đổi xạ ảnh $f_{1}, f_{2}$ là một phép biến đổi xạ ảnh: gọi $\varphi _{1}, \varphi _{2}$ là hai phép biến đổi tuyến tính lần lượt cảm sinh $f_{1}, f_{2}$ thì phép biến đổi tuyến tính tích $\varphi = \varphi _{2}∘ \varphi _{1}$ cảm sinh $f = f_{2}∘f_{1}$.
+
+• Gọi *f* là phép biến đổi xạ ảnh cảm sinh bởi φ thì φ$^{-1}$ là phép biến đổi tuyến tính cảm sinh *f*$^{-1}$, nên đảo ngược của một phép biến đổi xạ ảnh là phép biến đổi xạ ảnh.
+
+Vậy tập hợp các phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$ lập thành một nhóm.
+
+Nhóm này đẳng cấu với nhóm thương của nhóm các phép biến đổi tuyến tính của $V ^{n+1}$ theo nhóm các phép vị tự.
+
+Người ta còn gọi nhóm các phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$ là nhóm các phép biến đổi cộng tuyến, kí hiệu 𝒫$^{n}$.
+</Proof>
+
+<Example id="ex-p4-18" title="Ví dụ">
+Trong $\mathbb{P}^{2}, f_{1}$ có ma trận $B_{1} = diag(1,2,3)$ và $f_{2}$ có ma trận $B_{2} = \begin{pmatrix} 0 & 2 & 1 \\ 2 & 0 & 1 \\ 2 & 1 & 0 \end{pmatrix}$.
+
+Tích $f_{2}∘f_{1}$ có ma trận $B_{2}B_{1} = \begin{pmatrix} 0 & 4 & 3 \\ 2 & 0 & 3 \\ 2 & 2 & 0 \end{pmatrix}$ (nhân mỗi cột của $B_{2}$ với 1, 2, 3), khác 0 về định thức nên là phép biến đổi xạ ảnh; phép ngược $f^{-1}_{1}$ có ma trận $B^{-1}_{1} = diag(1, \frac{1}{2}, \frac{1}{3})$.
+</Example>
+
+<Definition id="def-p4-19" title="β) Hình học xạ ảnh">
+*Hình học xạ ảnh n chiều* nghiên cứu những tính chất bất biến qua nhóm các phép biến đổi xạ ảnh 𝒫$^{n}$; những tính chất đó gọi là *tính chất xạ ảnh*.
+
+Chẳng hạn phép biến đổi xạ ảnh biến m-phẳng thành m-phẳng, nên m-phẳng là một khái niệm xạ ảnh; ngoài ra tính chất thẳng hàng của ba điểm và tính chất đồng quy của các đường thẳng cũng là tính chất xạ ảnh.
+
+Những khái niệm như sự song song của hai đường thẳng, sự vuông góc, độ dài đoạn thẳng, sự đồng dạng của hai tam giác… không phải là khái niệm xạ ảnh vì chúng không phải là bất biến của nhóm các phép biến đổi xạ ảnh.
+
+Việc nghiên cứu hình học xạ ảnh bằng phương pháp nhóm giúp phân biệt các khái niệm afin, Ơclit và xạ ảnh, đồng thời tìm ra mối liên hệ mật thiết giữa ba thứ hình học afin, Ơclit và xạ ảnh.
+</Definition>
+
+<Example id="ex-p4-20" title="Ví dụ">
+Với $f_{1} (B_{1} = diag(1,2,3)): ba$ điểm thẳng hàng $(1,-1,0), (0,1,-1), (1,0,-1)$ (vì $(1,0,-1) = (1,-1,0) + (0,1,-1))$ biến thành $(1,-2,0), (0,2,-3), (1,0,-3)$; và $(1,0,-3) = (1,-2,0) + (0,2,-3)$, vẫn thẳng hàng (bất biến xạ ảnh).
+
+Ngược lại, "song song" không phải khái niệm xạ ảnh: trong $\mathbb{P} ^{2}$ hai đường thẳng phân biệt bất kì đều cắt nhau. Chẳng hạn $x_{1} = 0$ và $x_{1} + x_{3} = 0$ song song trong mô hình afin $x_{3} = 1$ (hai đường $x_{1} = 0$ và $x_{1} = -1$), nhưng trong $\mathbb{P} ^{2}$ chúng cắt nhau tại điểm vô tận $(0, 1, 0)$.
+</Example>
+
+## e) Điểm kép hay điểm bất động của phép biến đổi xạ ảnh
+
+<Definition id="def-p4-21" title="α) Định nghĩa">
+Điểm $M \in \mathbb{P}^{n}$ gọi là *điểm kép* (*điểm bất động*) của phép biến đổi xạ ảnh *f* nếu $M = f(M)$.
+</Definition>
+
+<Theorem id="thm-p4-22" title="β) Tìm điểm kép">
+Giả sử $M = f(M)$ và φ là phép biến đổi tuyến tính cảm sinh *f*.
+
+Nếu $\vec{x}$ đại diện cho M thì $\varphi (\vec{x}) = \vect{x'} = k\vec{x} (k \neq 0)$ cũng đại diện cho M; vậy $\vec{x}$ là vectơ riêng và k là giá trị riêng của φ.
+
+Nếu *f* có phương trình $k[x'] = B[x]$ thì phương trình tìm điểm kép là
+ 
+
+$$
+k[x] = B[x] \iff (B - kI)[x] = 0, (I là ma trận đơn vị).
+$$
+
+ 
+Đây là hệ $n+1$ phương trình thuần nhất với $n+1$ ẩn; để có nghiệm không tầm thường (tọa độ các điểm kép) điều kiện cần và đủ là
+ 
+
+$$
+|B - kI| = 0.
+$$
+
+ 
+Với mỗi nghiệm $k = k_{i}$ ta có tập các điểm kép ứng với giá trị riêng k$_{i}$ có tọa độ thỏa $(B - k_{i}I)[x] = 0$.
+
+Nếu hạng của ma trận $(B - k_{i}I)$ bằng $m (0 < m \le n)$ thì hệ xác định một (n−m)-phẳng gồm toàn điểm kép ứng với k$_{i}$.
+</Theorem>
+
+<Example id="ex-p4-23" title="γ) Thí dụ">
+Trong $\mathbb{P} ^{2}$ tìm điểm kép của phép biến đổi xạ ảnh có phương trình
+ 
+
+$$
+\begin{cases} kx'_{1} = x_{2} + x_{3} \\ kx'_{2} = x_{1} + x_{3} \\ kx'_{3} = x_{1} + x_{2}. \end{cases}
+$$
+
+ 
+
+*Giải.*
+
+Phương trình tìm điểm kép:
+ 
+
+$$
+\begin{cases} -kx_{1} + x_{2} + x_{3} = 0 \\ x_{1} - kx_{2} + x_{3} = 0 \\ x_{1} + x_{2} - kx_{3} = 0. \end{cases}
+$$
+
+ 
+
+Điều kiện có nghiệm không tầm thường: định thức của ma trận hệ số (hàng $(-k,1,1), (1,-k,1), (1,1,-k))$ bằng $0 \iff (k+1)^{2}(k-2) = 0$.
+
+• Với $k = -1$: cả ba phương trình đều là $x_{1} + x_{2} + x_{3} = 0$ (hạng 1), nên tập các điểm kép là đường thẳng $x_{1} + x_{2} + x_{3} = 0$.
+
+• Với $k = 2$: hệ $-2x_{1} + x_{2} + x_{3} = 0; x_{1} - 2x_{2} + x_{3} = 0; x_{1} + x_{2} - 2x_{3} = 0$ có hạng 2, tức $x_{1} = x_{2} = x_{3}$, nên điểm kép là $(1,1,1)$.
+
+Tóm lại tập các điểm kép gồm đường thẳng $x_{1} + x_{2} + x_{3} = 0$ và điểm $(1,1,1)$; điểm này không thuộc đường thẳng kia $(1+1+1 = 3 \neq 0)$.
+</Example>
+
+## f) Các phép thấu xạ
+
+<Definition id="def-p4-24" title="Định nghĩa">
+Phép thấu xạ là phép biến đổi xạ ảnh đặc biệt.
+
+Nếu tập các điểm kép của *f* là một m-phẳng P và một (n−m−1)-phẳng Q chéo nhau thì *f* gọi là *phép thấu xạ m-cấp*.
+
+Khi đó đường thẳng $MN (M \in P, N \in Q)$ biến thành chính nó vì M và N đều là điểm kép.
+
+Nếu $m = 0$ thì P là một điểm gọi là *tâm thấu xạ*, Q là một siêu phẳng gọi là *nền thấu xạ*; đó là phép thấu xạ 0-cấp (*thấu xạ tâm*), mọi đường thẳng qua tâm biến thành chính nó.
+
+Nếu các điểm kép của *f* là một siêu phẳng thì gọi là *phép thấu xạ đặc biệt* (tâm thuộc nền).
+
+Phép đồng nhất của $\mathbb{P} ^{n}$ cũng xem là phép thấu xạ (mọi điểm là điểm kép), gọi là *phép thấu xạ tầm thường*.
+</Definition>
+
+<Example id="ex-p4-25" title="Ví dụ">
+Trong $\mathbb{P}^{2}, f: (x_{1}, x_{2}, x_{3}) ↦ (x_{1}, x_{2}, 2x_{3})$ có $B = diag(1,1,2)$: với $k = 1, B - I = diag(0,0,1)$ hạng 1 nên điểm kép tạo thành đường thẳng $x_{3} = 0$; với $k = 2, B - 2I = diag(-1,-1,0)$ hạng 2 nên có điểm kép $(0,0,1)$.
+
+Điểm $(0,0,1)$ không thuộc đường thẳng $x_{3} = 0$, nên *f* là phép thấu xạ tâm $(0,0,1)$, nền $x_{3} = 0$: đường thẳng qua $(0,0,1)$ và $(a,b,0)$ gồm các điểm $(a,b,s)$ biến thành $(a,b,2s)$, vẫn thuộc đường thẳng đó.
+
+Còn $f: (x_{1},x_{2},x_{3}) ↦ (x_{1} + x_{3}, x_{2}, x_{3})$ chỉ có giá trị riêng $k = 1$, các điểm kép tạo thành đường thẳng $x_{3} = 0$ (hạng của $B - I$ bằng 1): đây là thấu xạ đặc biệt, tâm $(1,0,0)$ thuộc nền.
+</Example>
+
+## 3. Phép chiếu xuyên tâm
+
+Hình học xạ ảnh đã ra đời từ việc nghiên cứu các bất biến qua phép chiếu xuyên tâm trong không gian hai chiều và ba chiều thông thường.
+
+Trong không gian ba chiều thông thường, các hình biểu diễn xây dựng trên cơ sở lí thuyết về phép chiếu xuyên tâm gọi là *hình biểu diễn phối cảnh*.
+
+Phép chiếu xuyên tâm là một thí dụ quan trọng của ánh xạ xạ ảnh.
+
+<Definition id="def-p4-26" title="a) Định nghĩa">
+Trong $\mathbb{P}^{n} (n \ge 2)$ cho hai siêu phẳng phân biệt P và $P'$ và một điểm O nằm ngoài hai siêu phẳng đó.
+
+Với mỗi điểm $M \in P$ tìm được điểm $M' = OM \cap P'$ duy nhất. Ánh xạ $f: P \to P'$ sao cho $M' = f(M)$ gọi là *phép chiếu xuyên tâm* từ P lên $P'$ bởi tâm chiếu O.
+</Definition>
+
+<Example id="ex-p4-27" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, lấy $P: x_{3} = 0, P': x_{2} = 0, O = (1,1,1)$ (không thuộc cả hai đường thẳng).
+
+Với $M = (a, b, 0) \in P$, đường thẳng OM gồm các điểm $t(1,1,1) + s(a,b,0)$; điểm thuộc $P'$ cần $x_{2} = t + sb = 0$, chọn $s = 1, t = -b$ được $M' = (a-b, 0, -b)$.
+
+Chẳng hạn $M = (1,1,0) ↦ M' = (0,0,-1) = (0,0,1)$; kiểm tra $O, M, M'$ thẳng hàng: định thức của (1,1,1), (1,1,0), (0,0,1) bằng 0.
+
+Giao điểm $P \cap P' = (1,0,0) ↦ (1,0,0)$: là điểm bất động.
+</Example>
+
+<Theorem id="thm-p4-28" title="b) Định lí">
+Phép chiếu xuyên tâm *f* từ siêu phẳng $\mathbb{P} ^{n-1}$ lên siêu phẳng $\mathbb{P}'^{n-1}$ là một ánh xạ xạ ảnh (phép đẳng cấu xạ ảnh).
+</Theorem>
+
+<Proof of="thm-p4-28">
+Gọi $V^{n}, V'^{n}$ là các không gian vectơ liên kết với $\mathbb{P}^{n-1}, \mathbb{P}'^{n-1}$.
+
+Gọi $\mathbb{P}^{n-2} = \mathbb{P}^{n-1} \cap \mathbb{P}'^{n-1}$ (một (n−2)-phẳng).
+
+Trong $\mathbb{P} ^{n-1}$ lấy n điểm độc lập $A_{1}, \dots , A_{n}$ với $A_{1}, \dots , A_{n-1}$ thuộc $\mathbb{P} ^{n-2}$ và $A_{n} \notin \mathbb{P}^{n-2}$.
+
+Gọi *f* là phép chiếu xuyên tâm tâm O thì $f(A_{i}) = A_{i} (i = 1, \dots , n-1)$ và $f(A_{n}) = A'_{n} \in \mathbb{P}'^{n-1}, A'_{n} \notin \mathbb{P}^{n-2}$.
+
+• Hệ ${A_{1}, \dots , A_{n-1}, A'_{n}}$ gồm n điểm độc lập: nếu không thì $A'_{n} \in \mathbb{P}^{n-2}$, suy ra đường thẳng $A_{n}A'_{n}$ thuộc $\mathbb{P} ^{n-1}$ và $O \in \mathbb{P}^{n-1}$, trái giả thiết.
+
+• Gọi $\vect{e_{1}}, \dots , \vect{e_{n}}, \vect{e'_{n}}, \vec{e}$ đại diện cho $A_{1}, \dots , A_{n}, A'_{n}, O$.
+
+Vì $A'_{n}, A_{n}, O$ thẳng hàng nên $\vect{e'_{n}} = \alpha \vect{e_{n}} + \beta \vec{e}$ với $\alpha \neq 0$ (nếu $\alpha = 0$ thì $O \in \mathbb{P}'^{n-1}$, trái giả thiết).
+
+Chọn $\alpha = 1: \vect{e'_{n}} = \vect{e_{n}} + \lambda \vec{e}$ với $\lambda = \beta \neq 0$ (nếu $\lambda = 0$ thì $A_{n} = A'_{n}$, trái giả thiết).
+
+• Gọi $ε = {\vect{e_{1}}, \dots , \vect{e_{n}}}$ là cơ sở của $V ^{n}$ và $ε' = {\vect{e_{1}}, \dots , \vect{e_{n-1}}, \vect{e'_{n}}}$ là cơ sở của $V'^{n}$; gọi φ là phép đẳng cấu tuyến tính xác định bởi hai cơ sở.
+
+Với $X \in \mathbb{P}^{n-1}$ có $\vec{x} = \sum_{i=1}^{n}x_{i}\vect{e_{i}}$, khi đó
+ 
+
+$$
+\varphi (\vec{x}) = x_{1}\vect{e_{1}} + \dots + x_{n-1}\vect{e_{n-1}} + x_{n}\vect{e'_{n}} = \vec{x} + x_{n} \lambda \vec{e}.
+$$
+
+ 
+Đặt $\lambda _{x} = x_{n} \lambda$ thì $\varphi (\vec{x}) = \vec{x} + \lambda _{x}\vec{e}: ba$ vectơ φ($\vec{x}$), $\vec{x}$, $\vec{e}$ phụ thuộc tuyến tính, nên φ($\vec{x}$) đại diện cho một điểm $X'$ thuộc đường thẳng OX; mặt khác $\varphi (\vec{x}) \in V'^{n}$ nên $X' \in \mathbb{P}'^{n-1}$.
+
+Vậy $X' = OX \cap \mathbb{P}'^{n-1}$ chính là ảnh của X qua phép chiếu xuyên tâm, và phép chiếu này là ánh xạ xạ ảnh cảm sinh bởi φ.
+</Proof>
+
+<Theorem id="thm-p4-30" title="c) Định lí">
+Cho hai siêu phẳng phân biệt $\mathbb{P} ^{n-1}$ và $\mathbb{P}'^{n-1}$ của $\mathbb{P}^{n} (n \ge 2)$. Ánh xạ xạ ảnh $f: \mathbb{P}^{n-1} \to \mathbb{P}'^{n-1}$ là phép chiếu xuyên tâm khi và chỉ khi $f(M) = M$ với mọi điểm $M \in \mathbb{P}^{n-1} \cap \mathbb{P}'^{n-1}$.
+</Theorem>
+
+<Proof of="thm-p4-30">
+Gọi $\mathbb{P}^{n-2} = \mathbb{P}^{n-1} \cap \mathbb{P}'^{n-1}$.
+
+• Nếu *f* là phép chiếu xuyên tâm thì rõ ràng $f(M) = M$ với mọi $M \in \mathbb{P}^{n-2}$.
+
+• Ngược lại, giả sử *f* là ánh xạ xạ ảnh với $f(M) = M$ mọi $M \in \mathbb{P}^{n-2}$.
+
+Trong $\mathbb{P} ^{n-1}$ chọn mục tiêu \{A$_{i}$; E\} sao cho $A_{1}, \dots , A_{n-1} \in \mathbb{P}^{n-2}$, còn A$_{n}$ và E không thuộc $\mathbb{P} ^{n-2}$.
+
+Gọi $A'_{n} = f(A_{n})$ và $E' = f(E)$; trên $\mathbb{P}'^{n-1}$ mục tiêu ${A_{1}, \dots , A_{n-1}, A'_{n}; E'}$ là ảnh của \{A$_{i}$; E\}.
+
+Gọi $M = A_{n}E \cap \mathbb{P}^{n-2}$ thì $M \in \mathbb{P}^{n-2}$ và $f(M) = M$ nên đường thẳng $A'_{n}E'$ cũng đi qua M.
+
+Trong mặt phẳng xạ ảnh xác định bởi hai đường thẳng A$_{n}$E và $A'_{n}E'$ (phân biệt, cắt nhau), hai đường thẳng $A_{n}A'_{n}$ và $EE'$ cắt nhau tại O.
+
+Gọi $f'$ là phép chiếu xuyên tâm với tâm O thì $f'({A_{i}; E}) = {A'_{i}; E'}$.
+
+Do ánh xạ xạ ảnh xác định duy nhất bởi hai mục tiêu nên $f' = f$.
+
+Vậy *f* là phép chiếu xuyên tâm.
+</Proof>
+
+<Example id="ex-p4-32" title="Ví dụ">
+Với $P: x_{3} = 0, P': x_{2} = 0, O = (1,1,1)$ ở ví dụ trên: $f(a, b, 0) = (a-b, 0, -b)$ là ánh xạ xạ ảnh (cảm sinh bởi ma trận biến (a, b) thành $(a-b, -b)$ qua hệ tọa độ $(x_{1}, x_{2})$ trên P và $(x_{1}, x_{3})$ trên $P')$.
+
+Điểm $P \cap P' = (1,0,0)$ có $f(1,0,0) = (1,0,0)$ đúng như định lí c: ánh xạ này cố định giao điểm của hai đường thẳng nên là phép chiếu xuyên tâm.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p4-1" title="Biến đổi xạ ảnh biến đường thẳng thành đường thẳng (§4)">
+Phép biến đổi xạ ảnh f của P² có ma trận B = diag(1,2,3) (x' = Bx). Tìm ảnh của đường thẳng x₁ + x₂ + x₃ = 0.
+</Exercise>
+
+<Hint>
+Lấy hai điểm của đường thẳng, tìm ảnh, viết phương trình đường qua hai ảnh.
+</Hint>
+
+<Solution>
+Hai điểm (1,-1,0) và (0,1,-1).
+
+Ảnh: (1,-2,0) và (0,2,-3).
+
+Tọa độ đường thẳng qua hai ảnh: [(-2)(-3) - 0, 0·0 - 1·(-3), 1·2 - (-2)·0] = [6, 3, 2].
+
+**Đáp án:** 6x₁ + 3x₂ + 2x₃ = 0
+</Solution>
+
+<Exercise id="exr-p4-2" title="Điểm kép của phép biến đổi xạ ảnh (§4, mục 2e)">
+Tìm điểm kép của phép biến đổi xạ ảnh trong P²: kx'₁ = x₂ + x₃, kx'₂ = x₁ + x₃, kx'₃ = x₁ + x₂.
+</Exercise>
+
+<Hint>
+Giải |B - kI| = 0 rồi (B - kI)x = 0 cho từng giá trị riêng.
+</Hint>
+
+<Solution>
+|B - kI| = 0 cho (k + 1)²(k - 2) = 0: k = -1 (kép) hoặc k = 2.
+
+k = -1: hạng 1, x₁ + x₂ + x₃ = 0: cả một đường thẳng điểm kép.
+
+k = 2: x₁ = x₂ = x₃, điểm kép (1,1,1).
+
+**Đáp án:** Đường thẳng x₁ + x₂ + x₃ = 0 và điểm (1,1,1)
+</Solution>
+
+<Exercise id="exr-p4-3" title="Phép biến đổi xạ ảnh xác định bởi mục tiêu và điểm kép (§4, mục 2)">
+Tìm phương trình phép biến đổi xạ ảnh f của P² sao cho f(A₁) = A₂, f(A₂) = A₃, f(A₃) = A₁, f(E) = E (mục tiêu \{A₁,A₂,A₃;E\}). Tìm các điểm kép thực của f.
+</Exercise>
+
+<Hint>
+Cột thứ i của ma trận là tọa độ ảnh của đỉnh A_i; điểm kép ứng với giá trị riêng thực.
+</Hint>
+
+<Solution>
+f(1,0,0) = (0,1,0), f(0,1,0) = (0,0,1), f(0,0,1) = (1,0,0): x'₁ = x₃, x'₂ = x₁, x'₃ = x₂. Kiểm tra f(1,1,1) = (1,1,1).
+
+Giá trị riêng của ma trận hoán vị vòng quanh: 1,  $ omega$ ,  $ omega$ ² ( $ omega$  ba căn bậc ba phức của 1).
+
+Chỉ k = 1 là thực: (B - I)x = 0 cho x₁ = x₂ = x₃, điểm (1,1,1).
+
+**Đáp án:** Điểm kép thực duy nhất là E(1,1,1); phương trình: k x'₁ = x₃, k x'₂ = x₁, k x'₃ = x₂
+</Solution>
+
+<KeyTakeaways>
+- Ánh xạ xạ ảnh biến các điểm thẳng hàng thành các điểm thẳng hàng và bảo toàn tính phụ thuộc xạ ảnh.
+- Phép biến đổi xạ ảnh được biểu diễn qua ma trận vuông không suy biến sai khác một thừa số vô hướng.
+</KeyTakeaways>

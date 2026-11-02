@@ -1,0 +1,222 @@
+---
+id: nguyen-tac-doi-ngau-trong-khong-gian-xa-anh
+title: "Nguyên tắc Đối ngẫu trong Không gian Xạ ảnh"
+description: "Không gian đối ngẫu, mối quan hệ đối ngẫu giữa điểm và siêu phẳng, nguyên tắc đối ngẫu hình học."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "nguyên tắc đối ngẫu"
+  - "không gian đối ngẫu"
+  - "siêu phẳng"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '221-228'
+    sections: '§7'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+Trong $\mathbb{P} ^{n}$, hai phẳng $\mathbb{P} ^{r}$ và $\mathbb{P} ^{s}$ có *quan hệ liên thuộc* nếu $\mathbb{P}^{r} \subset \mathbb{P}^{s}$ (ta nói $\mathbb{P} ^{r}$ thuộc $\mathbb{P} ^{s}$) hoặc $\mathbb{P}^{s} \subset \mathbb{P}^{r}$ (ta nói $\mathbb{P} ^{s}$ thuộc $\mathbb{P} ^{r}$).
+
+Trong cả hai trường hợp ta kí hiệu $\mathbb{P} ^{r}$ ⋈ $\mathbb{P} ^{s}$, và dùng từ "thuộc" để diễn tả mối quan hệ đó; từ "thuộc" có nghĩa là "nằm trên", "đi qua", "chứa",… Chẳng hạn điểm A ⋈ $\mathbb{P} ^{m}$ nghĩa là điểm A thuộc $\mathbb{P} ^{m}$ hay $\mathbb{P} ^{m}$ thuộc điểm A.
+
+## 1. Khái niệm về sự đối ngẫu
+
+Trong $\mathbb{P} ^{n}$ với mục tiêu xạ ảnh \{A$_{i}$; E\} cho trước, gọi $\mathbb{P} _{*}$ là tập hợp các siêu phẳng của $\mathbb{P} ^{n}$ và xét ánh xạ $p: \mathbb{P}^{n} \to \mathbb{P}^{n}_{*}$ sao cho mỗi điểm có tọa độ $(x_{1}, \dots , x_{n+1})$ của $\mathbb{P} ^{n}$ ứng với siêu phẳng có tọa độ $[x_{1}, \dots , x_{n+1}]$.
+
+Rõ ràng p là song ánh, và $\mathbb{P} ^{n} _{*}$ là một mô hình của không gian xạ ảnh n chiều trong đó mỗi "điểm" là một siêu phẳng của $\mathbb{P} ^{n}$.
+
+Qua p, mỗi khái niệm trong $\mathbb{P} ^{n}$ có khái niệm tương ứng trong $\mathbb{P} ^{n} _{*}$; chẳng hạn trong $\mathbb{P} ^{2}$ điểm $M = (1,2,3)$ ứng với siêu phẳng (đường thẳng) $x_{1} + 2x_{2} + 3x_{3} = 0$ trong $\mathbb{P} ^{2} _{*}$.
+
+<Definition id="def-p7-1" title="Hai cách hiểu của một phương trình">
+Xét đẳng thức $u_{1}x_{1} + u_{2}x_{2} + \dots + u_{n+1}x_{n+1} = 0$, trong đó $u_{1}, \dots , u_{n+1}$ là hằng số không đồng thời bằng 0 và $x_{1}, \dots , x_{n+1}$ là biến số.
+
+Phương trình đó có thể hiểu theo hai cách:
+
+a) Cho tập hợp những điểm $X(x_{1}, \dots , x_{n+1})$ thuộc siêu phẳng có tọa độ $[u_{1}, \dots , u_{n+1}]$.
+
+b) Cho tập hợp những siêu phẳng có tọa độ $[x_{1}, \dots , x_{n+1}]$ cùng đi qua một điểm U có tọa độ $(u_{1}, \dots , u_{n+1})$.
+
+Với cách hiểu thứ nhất ta có điểm (x$_{i}$) thuộc siêu phẳng [u$_{i}$]; nếu thay chữ "điểm" và "siêu phẳng" cho nhau ta có ngay cách hiểu thứ hai: siêu phẳng [x$_{i}$] thuộc điểm (u$_{i}$).
+
+Ta nói *điểm và siêu phẳng là hai khái niệm đối ngẫu của nhau*.
+</Definition>
+
+<Example id="ex-p7-2" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, điểm $X = (1,-2,1)$ thuộc đường thẳng có tọa độ [1,1,1] vì $1 - 2 + 1 = 0$.
+
+Đối ngẫu: đường thẳng $[1,-2,1]$ (phương trình $x_{1} - 2x_{2} + x_{3} = 0)$ đi qua điểm $(1,1,1)$, vì cùng đẳng thức $1·1 + 1·(-2) + 1·1 = 0$.
+</Example>
+
+Trong không gian xạ ảnh còn có các khái niệm khác được suy ra từ khái niệm điểm và siêu phẳng cùng với sự liên thuộc giữa chúng; ta sẽ có khái niệm đối ngẫu của những khái niệm mới ấy.
+
+Dựa trên cặp khái niệm cơ bản điểm và siêu phẳng ta tìm được khái niệm đối ngẫu của m-phẳng qua định lí sau.
+
+## 2. Định lí
+
+<Theorem id="thm-p7-3" title="Định lí">
+Trong $\mathbb{P} ^{n}$, đối ngẫu của một m-phẳng là một (n−m−1)-phẳng.
+
+**Hệ quả.** Đối ngẫu của m-phẳng $\mathbb{P} ^{m}$ trong $\mathbb{P} ^{n}$ là (n−m−1)-phẳng $\mathbb{P}^{n-m-1} = ⋂_{X \in \mathbb{P}^{m}} p(X)$.
+</Theorem>
+
+<Proof of="thm-p7-3">
+Trong $\mathbb{P} ^{n}$ với mục tiêu cho trước, cho m-phẳng $\mathbb{P} ^{m}$ có phương trình
+ 
+
+$$
+a_{i1}x_{1} + a_{i2}x_{2} + \dots + a_{i,n+1}x_{n+1} = 0, i = 1, \dots , n-m.
+$$
+
+ 
+Có thể xem $\mathbb{P} ^{m}$ là giao của $n-m$ siêu phẳng độc lập.
+
+Với mỗi điểm $X(x_{1}, \dots , x_{n+1}) \in \mathbb{P}^{m}$, qua song ánh p ta có siêu phẳng p(X) có tọa độ $[x_{1}, \dots , x_{n+1}]$.
+
+Dựa vào phương trình của $\mathbb{P} ^{m}$, các siêu phẳng p(X) chứa $n-m$ điểm độc lập $A_{i} = (a_{i1}, \dots , a_{i,n+1}), i = 1, \dots , n-m$.
+
+Các siêu phẳng p(X) biến thiên nhưng luôn chứa $n-m$ điểm độc lập đó.
+
+Gọi $\mathbb{P} ^{n-m-1}$ là (n−m−1)-phẳng xác định bởi $n-m$ điểm A$_{i}$; ta có $\mathbb{P}^{n-m-1} \subset p(X)$ với mọi $X \in \mathbb{P}^{m}$, tức là
+ 
+
+$$
+\mathbb{P}^{n-m-1} \subset ⋂_{X \in \mathbb{P}^{m}} p(X). (1)
+$$
+
+ 
+Trong $\mathbb{P} ^{m}$ lấy $m+1$ điểm độc lập $B_{1}, \dots , B_{m+1}$.
+
+Qua p ta có $m+1$ siêu phẳng p(B$_{i}$) cũng độc lập, nên giao của chúng là một phẳng $n-m-1$ chiều và chứa $\mathbb{P} ^{n-m-1}$.
+
+Hai phẳng cùng số chiều và chứa nhau nên bằng nhau: $\mathbb{P}^{n-m-1} = ⋂_{i=1..m+1} p(B_{i})$.
+
+Mặt khác
+ 
+
+$$
+⋂_{X \in \mathbb{P}^{m}} p(X) \subset ⋂_{B_{i} \in \mathbb{P}^{m}} p(B_{i}) = \mathbb{P}^{n-m-1}. (2)
+$$
+
+ 
+Từ $(1)$ và $(2): ⋂_{X \in \mathbb{P}^{m}} p(X) = \mathbb{P}^{n-m-1}$.
+
+Vậy đối ngẫu của một m-phẳng là một (n−m−1)-phẳng.
+</Proof>
+
+<Example id="ex-p7-5" title="Ví dụ">
+Trong $\mathbb{P}^{2} (n = 2)$: đối ngẫu của điểm $A (m = 0)$ là $(2-0-1) =$ 1-phẳng, tức đường thẳng $[a_{1}, a_{2}, a_{3}]$ nếu $A = (a_{1}, a_{2}, a_{3})$.
+
+Đối ngẫu của đường thẳng $x_{1} - x_{2} = 0 (m = 1)$ là $(2-1-1) =$ 0-phẳng, tức điểm $(1,-1,0)$: thật vậy mọi điểm $X = (t,t,s)$ của đường thẳng có $p(X) = [t,t,s]$ đi qua $(1,-1,0)$ vì $t - t + 0 = 0$.
+</Example>
+
+## 3. Định lí
+
+<Theorem id="thm-p7-6" title="Định lí">
+Trong $\mathbb{P} ^{n}$, nếu hai phẳng $\mathbb{P} ^{r}$ và $\mathbb{P} ^{s}$ thuộc nhau thì hai phẳng đối ngẫu của chúng cũng thuộc nhau.
+
+**Hệ quả.** Nếu $\mathbb{P}^{r} \subset \mathbb{P}^{s}$ thì các phẳng đối ngẫu của chúng thỏa $\mathbb{P}^{n-r-1} \supset \mathbb{P}^{n-s-1}$.
+</Theorem>
+
+<Proof of="thm-p7-6">
+Giả sử $\mathbb{P}^{r} \subset \mathbb{P}^{s}$.
+
+Nếu lấy điểm $X \in \mathbb{P}^{r}$ thì $X \in \mathbb{P}^{s}$, và khi đó $⋂_{X \in \mathbb{P}^{s}} p(X) \subset p(X)$ và $⋂_{X \in \mathbb{P}^{r}} p(X) \subset p(X)$.
+
+Từ đó suy ra $⋂_{X \in \mathbb{P}^{s}} p(X) \subset ⋂_{X \in \mathbb{P}^{r}} p(X)$ vì $\mathbb{P}^{r} \subset \mathbb{P}^{s}$.
+
+Vậy hai phẳng đối ngẫu thuộc nhau.
+</Proof>
+
+<Example id="ex-p7-8" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, điểm $A = (1,1,0)$ thuộc đường thẳng $d: x_{1} - x_{2} = 0 (d$ có tọa độ $[1,-1,0])$.
+
+Đối ngẫu: đối ngẫu của A là đường thẳng $[1,1,0] (x_{1} + x_{2} = 0)$, đối ngẫu của d là điểm $(1,-1,0)$; và điểm $(1,-1,0)$ thuộc đường thẳng [1,1,0] vì $1 - 1 = 0$.
+
+Quan hệ "A thuộc d" biến thành "đối ngẫu của d thuộc đối ngẫu của A", đúng như hệ quả $(r = 0, s = 1: \mathbb{P}^{1} \supset \mathbb{P}^{0})$.
+</Example>
+
+## 4. Nguyên tắc đối ngẫu
+
+<Definition id="def-p7-9" title="a) Định nghĩa">
+Giả sử A là một mệnh đề nói về những phẳng của $\mathbb{P} ^{n}$ và về quan hệ liên thuộc giữa chúng.
+
+Nếu trong A ta thay các từ "m-phẳng" bằng các từ "(n−m−1)-phẳng", còn tất cả các từ khác giữ nguyên, thì ta được mệnh đề $A*$ gọi là *mệnh đề đối ngẫu* của A.
+
+Nếu $A*$ là mệnh đề đối ngẫu của A thì ngược lại A là mệnh đề đối ngẫu của $A*; A$ và $A*$ gọi là hai mệnh đề đối ngẫu của nhau.
+
+Hai khái niệm được định nghĩa bằng hai mệnh đề đối ngẫu của nhau gọi là hai *khái niệm đối ngẫu* của nhau.
+
+Từ đó, trong $\mathbb{P} ^{n}$ mỗi khái niệm được định nghĩa thông qua "phẳng" và sự liên thuộc đều có khái niệm đối ngẫu; chẳng hạn khái niệm đối ngẫu của đường thẳng (tập các điểm cùng thuộc một 1-phẳng) là (n−2)-phẳng (tập các siêu phẳng cùng thuộc một (n−2)-phẳng).
+</Definition>
+
+<Theorem id="thm-p7-10" title="b) Nguyên tắc đối ngẫu">
+Trong $\mathbb{P} ^{n}$, nếu A là một mệnh đề đúng thì mệnh đề đối ngẫu $A*$ cũng đúng.
+
+Do đó có thể thay việc chứng minh một định lí bằng việc chứng minh định lí đối ngẫu của nó, và giải một bài toán bằng cách giải bài toán đối ngẫu của bài toán đã cho.
+</Theorem>
+
+<Example id="ex-p7-11" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$: "Hai điểm phân biệt xác định một đường thẳng đi qua chúng" có mệnh đề đối ngẫu "Hai đường thẳng phân biệt xác định một điểm thuộc cả hai" (chúng cắt nhau).
+
+Trong $\mathbb{P} ^{3}$ (điểm ↔ mặt phẳng, đường thẳng ↔ đường thẳng): "Ba điểm không thẳng hàng xác định một mặt phẳng" có đối ngẫu "Ba mặt phẳng không cùng chứa một đường thẳng cắt nhau tại một điểm".
+</Example>
+
+## 5. Các thí dụ
+
+<Definition id="def-p7-12" title="a) Khái niệm đối ngẫu">
+Các cặp khái niệm đối ngẫu:
+
+• Trong $\mathbb{P} ^{2}$: điểm ↔ đường thẳng; hình ba đỉnh ↔ hình ba cạnh; hàng điểm ↔ chùm đường thẳng; hình bốn cạnh toàn phần ↔ hình bốn đỉnh toàn phần.
+
+• Trong $\mathbb{P} ^{3}$: điểm ↔ mặt phẳng; đường thẳng ↔ đường thẳng; hàng điểm ↔ chùm mặt phẳng.
+
+• Trong $\mathbb{P} ^{n}$: điểm ↔ siêu phẳng; đường thẳng ↔ (n−2)-phẳng; hàng điểm ↔ chùm siêu phẳng; m-phẳng ↔ (n−m−1)-phẳng.
+</Definition>
+
+<Theorem id="thm-p7-13" title="b) Định lí đối ngẫu">
+(thí dụ trong $\mathbb{P} ^{2}$).
+
+**Định lí A.**
+
+Trong một hình bốn cạnh toàn phần, trên mỗi đường chéo hai đỉnh đối diện cùng với hai điểm chéo liên hiệp điều hòa với nhau.
+
+**Định lí $A*$.**
+
+Trong một hình bốn đỉnh toàn phần, tại mỗi điểm chéo hai cạnh đối diện cùng với hai đường chéo liên hiệp điều hòa với nhau.
+</Theorem>
+
+<Example id="ex-p7-14" title="Ví dụ">
+Định lí Desargues (hai tam giác có các đường thẳng nối các đỉnh ứng đồng quy thì các giao điểm của các cặp cạnh ứng thẳng hàng) trong $\mathbb{P} ^{2}$ có mệnh đề đối ngẫu là định lí đảo: nếu giao điểm của các cặp cạnh tương ứng của hai tam giác thẳng hàng thì các đường thẳng nối các đỉnh tương ứng đồng quy.
+
+Theo nguyên tắc đối ngẫu, hai mệnh đề đúng hoặc sai cùng nhau.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p7-1" title="Đối ngẫu điểm – đường thẳng (§7, mục 1)">
+Trong P², tìm đường thẳng đối ngẫu của điểm (2,-1,3) và điểm đối ngẫu của đường thẳng x₁ - 2x₃ = 0.
+</Exercise>
+
+<Hint>
+Điểm (u₁,u₂,u₃) ứng với siêu phẳng [u₁,u₂,u₃]: u₁x₁ + u₂x₂ + u₃x₃ = 0.
+</Hint>
+
+<Solution>
+Điểm (2,-1,3) ứng với đường thẳng 2x₁ - x₂ + 3x₃ = 0.
+
+Đường thẳng x₁ - 2x₃ = 0 có tọa độ [1,0,-2] nên ứng với điểm (1,0,-2).
+
+**Đáp án:** 2x₁ - x₂ + 3x₃ = 0 và điểm (1, 0, -2)
+</Solution>
+
+<KeyTakeaways>
+- Không gian xạ ảnh đối ngẫu có các điểm là các siêu phẳng của không gian xạ ảnh ban đầu.
+- Mọi định lý đúng trong không gian xạ ảnh đều dẫn đến một định lý đối ngẫu đúng bằng cách hoán đổi vai trò của điểm và siêu phẳng.
+</KeyTakeaways>

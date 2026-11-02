@@ -1,0 +1,136 @@
+---
+id: hinh-hoc-euclide
+title: "Hình học Ơclit theo Quan điểm Klein"
+description: "Các bất biến của nhóm đẳng cự, các hình bằng nhau và hệ thống tiên đề hình học Ơclit."
+estimatedMinutes: 45
+level: intermediate
+prerequisites: []
+tags:
+  - "hình học Ơclit"
+  - "bất biến đẳng cự"
+  - "quan điểm Klein"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '130-136'
+    sections: '§7'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+Không gian Ơclit $\mathbb{E} ^{n}$ cũng là một không gian afin nên trong đó có các phép biến đổi afin.
+
+Các phép biến đổi afin này cùng với phép toán lấy tích các ánh xạ làm thành một nhóm.
+
+Các phép dời hình của $\mathbb{E} ^{n}$ là các phép afin đặc biệt có tính chất không làm thay đổi khoảng cách giữa hai điểm bất kì.
+
+Bởi vậy tập hợp các phép dời hình là một bộ phận của tập hợp các phép biến đổi afin.
+
+Ta đã biết hình học afin của không gian Ơclit $\mathbb{E} ^{n}$ là môn học nghiên cứu mọi bất biến afin của không gian đó.
+
+Gọi 𝒜$^{n}$ là nhóm các phép biến đổi afin của $\mathbb{E} ^{n}$ và gọi 𝒟$^{n}$ là nhóm các phép dời hình của $\mathbb{E} ^{n}$.
+
+Ta có $𝒟^{n} \subset 𝒜^{n}$ và có định nghĩa về hình học Ơclit n chiều như sau:
+
+## 1. Định nghĩa
+
+<Definition id="def-e7-1" title="Định nghĩa">
+Hình học của nhóm các phép dời hình 𝒟$^{n}$ của $\mathbb{E} ^{n}$ gọi là *hình học Ơclit n chiều*.
+
+Hai hình gọi là *tương đương Ơclit* nếu có một phép dời hình biến hình này thành hình kia; hai hình ứng với nhau qua tích một số phép dời hình gọi là *bằng nhau*.
+
+Hình học Ơclit nghiên cứu những tính chất không thay đổi qua các phép dời hình của nhóm 𝒟$^{n}$, tức là những tính chất nếu có ở một hình này thì cũng có ở những hình bằng nó.
+</Definition>
+
+## 2. Mối quan hệ giữa hình học afin và hình học Ơclit trong En
+
+Vì 𝒟$^{n}$ là nhóm con của 𝒜$^{n}$ nên *hình học afin là một bộ phận của hình học Ơclit*: các tính chất afin cũng là tính chất Ơclit và được nghiên cứu trong hình học Ơclit.
+
+Ngược lại không đúng: các tính chất bất biến qua nhóm dời chưa chắc bất biến afin (tính vuông góc, số đo khoảng cách, số đo góc,…).
+
+Vì vậy hình học Ơclit phong phú hơn hình học afin.
+
+Khi nghiên cứu hình học Ơclit, việc phân biệt một tính chất là afin hay Ơclit thuần túy rất quan trọng.
+
+Giả sử hình H có tính chất α: nếu α là tính chất afin thì những hình tương đương afin với H cũng có tính chất α; còn nếu α là tính chất Ơclit thì chỉ có thể nói những hình bằng hình H mới có tính chất đó.
+
+Tính chất “trong tam giác đều đường cao là đường trung tuyến” không áp dụng được cho tam giác bất kì (vì qua phép afin tam giác đều biến thành tam giác bất kì); ngược lại tính chất “ba đường trung tuyến của tam giác đồng quy” đúng cho mọi tam giác vì đó là tính chất afin.
+
+## 3. Phương pháp dùng hình tương đương afin để giải toán
+
+<Definition id="def-e7-2" title="Phương pháp">
+Vì hình học afin là một bộ phận của hình học Ơclit nên khi nghiên cứu hình học afin ta có thể dùng các phương tiện của hình học Ơclit.
+
+Giả sử cần chứng minh một hình H có tính chất α mà α là tính chất afin.
+
+Khi đó có thể chứng minh α đối với một hình H′ nào đó tương đương afin với H; bởi vậy có thể chọn trong lớp tương đương afin với H một hình H′ đặc biệt mà tính chất α dễ chứng minh hơn.
+</Definition>
+
+<Example id="ex-e7-3" title="Bài toán (sách, tr. 114–115)">
+Cho tam giác ABC; trên các cạnh BC, CA, AB lấy lần lượt A′, B′, C′ sao cho (BCA′) $=$ (CAB′) $=$ (ABC′) $= \frac{4}{3}$.
+
+Chứng minh ABC và A′B′C′ có cùng trọng tâm.
+
+*Giải.*
+
+Đây là bài toán afin vì tam giác, tỉ số đơn, trọng tâm đều là khái niệm afin.
+
+Đối với hình học Ơclit thì tam giác đều là một loại tam giác đặc biệt đối với các tam giác bất kì khác, nhưng đối với hình học afin thì tam giác đều tương đương afin với mọi tam giác bất kì khác.
+
+Lấy phép afin *f* biến tam giác ABC thành tam giác đều A$_{1}$B$_{1}$C$_{1}$; trọng tâm G của ABC biến thành trọng tâm G′ của A$_{1}$B$_{1}$C$_{1}$, và A′, B′, C′ biến thành A$_{1}$′, B$_{1}$′, C$_{1}$′ với cùng tỉ số đơn $\frac{4}{3}$.
+
+Phép quay góc $120°$ quanh G′ biến $A_{1} \to B_{1} \to C_{1} \to A_{1}$, nên cũng biến $A_{1}' \to B_{1}' \to C_{1}' \to A_{1}'$; tức tam giác A$_{1}$′B$_{1}$′C$_{1}$′ biến thành chính nó, nên G′ cũng là trọng tâm của nó. Áp dụng *f*$^{-1}$ ta được G là trọng tâm chung của ABC và A′B′C′.
+
+*Kiểm tra bằng số.*
+
+A(0,0), B(4,0), C(0,4): từ (BCA′) $= \frac{4}{3}$ có $\vect{BA'} = ¾\vect{BC}$ nên $A' = (1,3)$, tương tự $B' = (0,1), C' = (3,0)$.
+
+Tổng tọa độ $A' + B' + C' = (4,4) = A + B + C$, nên hai tam giác cùng trọng tâm $(\frac{4}{3}, \frac{4}{3})$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e7-1" title="Quan hệ giữa hình học afin và hình học Ơclit (§7, mục 2)">
+Phép afin f: x' = x + y, y' = y. Với O(0,0), A(1,0), B(0,1), so sánh độ dài OB, góc AOB, tính song song và tỉ số đơn trước và sau f. Kết luận gì về tính chất afin và tính chất Ơclit?
+</Exercise>
+
+<Hint>
+Tính ảnh O', A', B' rồi so sánh từng đại lượng.
+</Hint>
+
+<Solution>
+O' = (0,0), A' = (1,0), B' = (1,1).
+
+OB = 1 nhưng O'B' = √2; góc AOB = 90° nhưng cos(A'O'B') = 1/√2, góc 45°.
+
+Song song và tỉ số đơn được bảo toàn (phép afin).
+
+**Đáp án:** Độ dài và góc không bất biến afin (chỉ bất biến Ơclit); song song và tỉ số đơn là bất biến afin.
+</Solution>
+
+<Exercise id="exr-e7-2" title="Phương pháp dùng hình tương đương afin (§7, mục 3)">
+Cho tam giác ABC, trên BC, CA, AB lấy A', B', C' sao cho (BCA') = (CAB') = (ABC') = 3. Chứng minh ABC và A'B'C' có cùng trọng tâm. Kiểm tra bằng số với A(0,0), B(4,0), C(0,4).
+</Exercise>
+
+<Hint>
+Đây là bài toán afin: chuyển ABC thành tam giác đều bằng phép afin rồi dùng phép quay 120°.
+</Hint>
+
+<Solution>
+Phép afin f biến ABC thành tam giác đều A₁B₁C₁ (bảo toàn tỉ số đơn và trọng tâm).
+
+Phép quay 120° quanh trọng tâm G₁ đưa A₁ → B₁ → C₁ → A₁ nên cũng đưa A'₁ → B'₁ → C'₁ → A'₁, do đó G₁ là trọng tâm của A'₁B'₁C'₁; áp dụng f⁻¹.
+
+Kiểm tra: A' = (8/3, 4/3), B' = (0, 8/3), C' = (4/3, 0); tổng bằng (4, 4) = A + B + C.
+
+**Đáp án:** Hai tam giác có cùng trọng tâm (4/3, 4/3) trong ví dụ số
+</Solution>
+
+<KeyTakeaways>
+- Hình học Ơclit là hình học nghiên cứu các tính chất bất biến đối với nhóm các phép biến đổi đẳng cự.
+- Hai hình được gọi là bằng nhau nếu tồn tại một phép đẳng cự biến hình này thành hình kia.
+</KeyTakeaways>

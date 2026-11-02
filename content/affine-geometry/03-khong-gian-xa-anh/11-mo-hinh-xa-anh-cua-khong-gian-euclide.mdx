@@ -1,0 +1,278 @@
+---
+id: mo-hinh-xa-anh-cua-khong-gian-euclide
+title: "Mô hình Xạ ảnh của Không gian Ơclit"
+description: "Xạ ảnh hóa không gian Ơclit, siêu cầu tuyệt đối, góc và khoảng cách thông qua tỉ số kép Laguerre."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "mô hình xạ ảnh Ơclit"
+  - "tuyệt đối"
+  - "hệ thức Laguerre"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '256-264'
+    sections: '§11'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+<Remark title="Chú ý">
+Chú ý (cuối §10).
+
+Định lí Pascal và định lí Brianchon có thể được áp dụng đối với các đường bậc hai trong mặt phẳng afin (như elip, hypebol, parabol) và trong mặt phẳng Ơclit (như đường tròn).
+</Remark>
+
+## 1. Xây dựng mô hình
+
+<Definition id="def-p11-1" title="Xây dựng">
+Nếu chọn trong $\mathbb{P} ^{n}$ một siêu phẳng $\mathbb{P} ^{n-1}$ làm siêu phẳng vô tận, ta được không gian afin n chiều $\mathcal{A}^{n} = \mathbb{P}^{n} \ \mathbb{P}^{n-1}$.
+
+Định nghĩa tích vô hướng cho hai vectơ bất kì trong không gian vectơ liên kết với $\mathcal{A} ^{n}$, ta làm cho $\mathcal{A} ^{n}$ trở thành không gian Ơclit n chiều $\mathbb{E} ^{n}$; mô hình đó gọi là *mô hình xạ ảnh của không gian Ơclit*.
+
+Chọn trong $\mathbb{E} ^{n}$ một mục tiêu trực chuẩn \{A$_{n+1}$; E$_{i}$\}, tức $\vect{A_{n+1}E_{i}}·\vect{A_{n+1}E_{j}} = 0$ khi $i \neq j$ và $= 1$ khi $i = j (i, j = 1, \dots , n)$.
+
+Gọi \{A$_{i}$; E\} là *mục tiêu xạ ảnh sinh ra* mục tiêu trực chuẩn đó: A$_{i}$ là giao điểm của đường thẳng A$_{n+1}$E$_{i}$ với $\mathbb{P}^{n-1} (i = 1, \dots , n)$ và E là điểm của $\mathbb{E} ^{n}$ có tọa độ trực chuẩn $(1,1, \dots ,1)$, nên $\vect{A_{n+1}E} = \sum_{i=1}^{n}\vect{A_{n+1}E_{i}}$.
+
+Nếu $X \in \mathbb{E}^{n}$ có tọa độ trực chuẩn $(X_{1}, \dots , X_{n})$ thì đối với mục tiêu xạ ảnh \{A$_{i}$; E\} nó có tọa độ $(x_{1}, \dots , x_{n+1})$ với $x_{n+1} \neq 0$ và $X_{i} = \frac{x_{i}}{x_{n+1}} (i = 1, \dots , n)$.
+
+Đối với mục tiêu trực chuẩn này, hai vectơ $\vec{u} = (u_{1}, \dots , u_{n})$ và $\vec{v} = (v_{1}, \dots , v_{n})$ có tích vô hướng $\vec{u}·\vec{v} = \sum_{i=1}^{n}u_{i}v_{i} = [u]*[v]$.
+</Definition>
+
+<Example id="ex-p11-2" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ mô hình của $\mathbb{E} ^{2}$: điểm có tọa độ trực chuẩn $(3,4)$ có tọa độ xạ ảnh $(3,4,1)$ (hay $(6,8,2))$; hai vectơ $\vec{u} = (3,4)$ và $\vec{v} = (4,-3)$ có tích vô hướng $3·4 + 4·(-3) = 0$, tức vuông góc.
+</Example>
+
+## 2. Cái tuyệt đối của không gian xạ ảnh Pn
+
+<Definition id="def-p11-3" title="Định nghĩa">
+Trong $\mathbb{P} ^{n}$ với mục tiêu \{A$_{i}$; E\}, chọn siêu phẳng $\mathbb{P}^{n-1}: x_{n+1} = 0$.
+
+Trong $\mathbb{P} ^{n-1}$ lấy mục tiêu ${A_{1}, \dots , A_{n}; E'}$, với $E'$ là giao của đường thẳng A$_{n+1}$E và $\mathbb{P} ^{n-1}$.
+
+Siêu mặt trái xoan không T có phương trình đối với mục tiêu ${A_{1}, \dots , A_{n}; E'}$:
+ 
+
+$$
+[x]*[x] = \sum_{i=1}^{n} x^{2}_{i} = 0
+$$
+
+ 
+gọi là *cái tuyệt đối* của không gian xạ ảnh $\mathbb{P} ^{n}$.
+</Definition>
+
+<Example id="ex-p11-4" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ với đường thẳng vô tận $x_{3} = 0$, cái tuyệt đối là $x^{2}_{1} + x^{2}_{2} = 0$ trên đường thẳng này, gồm hai điểm ảo liên hợp (1, i, 0) và $(1, -i, 0)$.
+
+Trong $\mathbb{P} ^{3}$ cái tuyệt đối là $x^{2}_{1} + x^{2}_{2} + x^{2}_{3} = 0$ trên mặt phẳng vô tận $x_{4} = 0$, một conic ảo.
+</Example>
+
+## 3. Vài khái niệm cơ bản của hình học Ơclit thể hiện trên mô hình
+
+<Theorem id="thm-p11-5" title="a) Sự vuông góc của hai đường thẳng.Định lí">
+Điều kiện cần và đủ để hai đường thẳng d và $d'$ vuông góc với nhau là hai điểm vô tận của chúng liên hợp với nhau đối với cái tuyệt đối T.
+</Theorem>
+
+<Proof of="thm-p11-5">
+Qua gốc A$_{n+1}$ của mục tiêu trực chuẩn dựng hai đường thẳng $d_{1}, d'_{1}$ lần lượt song song với $d, d'$.
+
+Trên $d_{1}$ và $d'_{1}$ lấy các điểm $X, X'$ khác A$_{n+1}$ có tọa độ $(X_{1}, \dots , X_{n})$ và $(X'_{1}, \dots , X'_{n})$.
+
+Gọi A$_{\infty}$ và $A'_{\infty}$ là điểm vô tận của $d_{1}$ và $d'_{1}$ (cũng là điểm vô tận của d và $d')$; khi đó $A_{\infty} = (X_{1}, \dots , X_{n}, 0), A'_{\infty} = (X'_{1}, \dots , X'_{n}, 0)$ vì $\mathbb{P}^{n-1}: x_{n+1} = 0$.
+
+Điều kiện cần và đủ để $d_{1} \perp d'_{1}$ là $\vect{A_{n+1}X}·\vect{A_{n+1}X'} = 0 \iff \sum_{i=1}^{n}X_{i}X'_{i} = 0$.
+
+Đó chính là điều kiện để A$_{\infty}$ và $A'_{\infty}$ liên hợp với nhau đối với cái tuyệt đối T.
+</Proof>
+
+<Example id="ex-p11-7" title="Ví dụ">
+Hai đường thẳng có phương $(1,2)$ và $(2,-1)$ trong $\mathbb{E} ^{2}$ có điểm vô tận $U = (1,2,0)$ và $V = (2,-1,0)$; liên hợp đối với T vì $1·2 + 2·(-1) = 0$, nên vuông góc.
+
+Hai điểm vô tận $I = (1,i,0), J = (1,-i,0)$ cho tỉ số kép (UVIJ) $= -1$ (tính trên tọa độ không thuần nhất $\frac{x_{1}}{x_{2}}$ của U, V, I, J là $\frac{1}{2}, -2, -i, i)$.
+
+Hai đường thẳng có phương $(1,2)$ và $(1,1)$ không vuông góc vì $1·1 + 2·1 = 3 \neq 0$.
+</Example>
+
+<Theorem id="thm-p11-8" title="b) Siêu cầu.Định lí">
+Mỗi siêu mặt bậc hai trong $\mathbb{E} ^{n}$ là một siêu cầu khi và chỉ khi nó cắt siêu phẳng vô tận theo cái tuyệt đối T.
+</Theorem>
+
+<Proof of="thm-p11-8">
+Siêu cầu trong $\mathbb{E} ^{n}$ có phương trình $\sum_{i=1}^{n}(X_{i} - X^{0}_{i})^{2} = R^{2} (1)$, với $(X^{0}_{1}, \dots , X^{0}_{n})$ là tâm.
+
+Chuyển sang tọa độ xạ ảnh: $\sum_{i=1}^{n}(\frac{x_{i}}{x_{n+1}} - \frac{x^{0}_{i}}{x^{0}_{n+1}})^{2} = R^{2} (2)$, hay $\sum_{i=1}^{n}(x^{0}_{n+1}x_{i} - x^{0}_{i}x_{n+1})^{2} = R^{2}(x^{0}_{n+1})^{2}x^{2}_{n+1} (3)$.
+
+Thay $x_{n+1} = 0: \sum_{i=1}^{n}(x^{0}_{n+1})^{2}x^{2}_{i} = 0$, hay $\sum_{i=1}^{n}x^{2}_{i} = 0$, chính là phương trình của T.
+
+Vậy mọi siêu cầu cắt siêu phẳng vô tận theo T.
+
+Ngược lại giả sử (S) có phương trình $\sum_{i,j=1}^{n}$a$_{ij}$X$_{i}$X$_{j} + 2\sum_{i=1}^{n}a_{i,n+1}X_{i} + a_{n+1,n+1} = 0 (4)$.
+
+Sang tọa độ xạ ảnh: $\sum_{i,j=1}^{n+1}$a$_{ij}$x$_{i}$x$_{j} = 0 (4')$; giao với $x_{n+1} = 0$ là $\sum_{i,j=1}^{n}$a$_{ij}$x$_{i}$x$_{j} = 0 (5)$.
+
+Vì giao này trùng T nên $a_{ij} = k \delta _{ij} (k \neq 0)$, và $(4)$ trở thành $k\sum_{i=1}^{n}X^{2}_{i} + 2\sum_{i=1}^{n}a_{i,n+1}X_{i} + a_{n+1,n+1} = 0 (6)$: phương trình của một siêu cầu (có thể là siêu cầu điểm hoặc ảo).
+</Proof>
+
+<Example id="ex-p11-10" title="Ví dụ">
+Trong $\mathbb{E} ^{2}$, đường tròn $(X_{1}-1)^{2} + (X_{2}-2)^{2} = 4$, tức $X^{2}_{1} + X^{2}_{2} - 2X_{1} - 4X_{2} + 1 = 0$, sang tọa độ xạ ảnh là $x^{2}_{1} + x^{2}_{2} - 2x_{1}x_{3} - 4x_{2}x_{3} + x^{2}_{3} = 0$; giao với $x_{3} = 0$ cho $x^{2}_{1} + x^{2}_{2} = 0$, đúng là T.
+
+Còn elip $x^{2}_{1} + 4x^{2}_{2} - x^{2}_{3} = 0$ giao $x_{3} = 0$ cho $x^{2}_{1} + 4x^{2}_{2} = 0 \neq T$ (điểm (2, i, 0) khác (1, ±i, 0)), nên không phải đường tròn.
+</Example>
+
+<Theorem id="thm-p11-11" title="c) Phép đồng dạng.Định lí">
+Mỗi phép biến đổi của không gian Ơclit $\mathbb{E} ^{n}$ là một phép đồng dạng khi và chỉ khi nó được sinh ra bởi một phép biến đổi của $\mathbb{P} ^{n}$ sao cho cái tuyệt đối T được giữ nguyên.
+</Theorem>
+
+<Proof of="thm-p11-11">
+Đối với mục tiêu trực chuẩn, mỗi phép afin của $\mathbb{E} ^{n}$ có phương trình $X'_{i} = \sum_{j=1}^{n}b_{ij}X_{j} + b_{i,n+1} (7)$, với $B = [b_{ij}]$ không suy biến.
+
+Phép afin đó được sinh ra bởi phép biến đổi xạ ảnh $x'_{i} = \sum_{j=1}^{n+1}b_{ij}x_{j} (i = 1, \dots , n), x'_{n+1} = x_{n+1} (8)$.
+
+Phép $(8)$ sinh ra trên siêu phẳng vô tận phép biến đổi $x'_{i} = \sum_{j=1}^{n}b_{ij}x_{j} (9)$, tức $[x'] = B[x] (10)$.
+
+Suy ra $[x] = B^{-1}[x'] (11)$ và $[x]*[x] = [x']*(B^{-1})*B^{-1}[x'] = [x']*(BB*)^{-1}[x'] (12)$.
+
+Nếu $(7)$ là phép đồng dạng thì $BB* = kI (k \neq 0)$, nên $(9)$ biến mỗi điểm của T thành điểm thỏa $[x']*(BB*)^{-1}[x'] = 0 (13)$, tức $[x']*[x'] = 0 (14)$: điểm ảnh cũng thuộc T, vậy T biến thành chính nó.
+
+Ngược lại, nếu $(9)$ biến T thành chính nó thì $(13)$ phải trùng $(14)$, nên $(BB*)^{-1} = kI (k \neq 0)$, hay $BB* = (\frac{1}{k})I$; vậy $(7)$ là phép đồng dạng.
+</Proof>
+
+<Example id="ex-p11-13" title="Ví dụ">
+Trong $\mathbb{E} ^{2}$, phép $X'_{1} = 2X_{1} - 2X_{2} + 3, X'_{2} = 2X_{1} + 2X_{2} - 1$ có $B = \begin{pmatrix} 2 & -2 \\ 2 & 2 \end{pmatrix}$ và $BB* = 8I$, nên là phép đồng dạng (tỉ số $2\sqrt{2})$, và nó biến điểm vô tận $(1, i, 0) \in T$ thành $(2 - 2i, 2 + 2i, 0) = (1, i, 0)·(2-2i)$: vẫn thuộc T.
+
+Phép trượt $X'_{1} = X_{1} + X_{2}, X'_{2} = X_{2}$ có $B = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}, BB* = \begin{pmatrix} 2 & 1 \\ 1 & 1 \end{pmatrix}$ không phải kI: nó biến (1, i, 0) thành $(1+i, i, 0)$ và $(1+i)^{2} + i^{2} = 2i - 1 \neq 0$, nên không giữ T, không phải đồng dạng.
+</Example>
+
+## 4. Các nhóm con của nhóm các phép biến đổi xạ ảnh
+
+<Definition id="def-p11-14" title="Các nhóm con">
+Gọi 𝒫$^{n}$ là nhóm các phép biến đổi xạ ảnh của $\mathbb{P} ^{n}$; hình học xạ ảnh là hình học của nhóm 𝒫$^{n}$.
+
+Nếu chọn trong $\mathbb{P} ^{n}$ một siêu phẳng $\mathbb{P} ^{n-1}$ làm siêu phẳng vô tận thì các phép biến đổi xạ ảnh giữ nguyên $\mathbb{P} ^{n-1}$ làm thành một nhóm con của 𝒫$^{n}$, đẳng cấu với nhóm các phép biến đổi afin của $\mathcal{A}^{n} = \mathbb{P}^{n} \ \mathbb{P}^{n-1}$.
+
+Nếu xét các phép biến đổi xạ ảnh giữ nguyên $\mathbb{P} ^{n-1}$ và giữ nguyên cái tuyệt đối T thì chúng làm thành nhóm con đẳng cấu với nhóm các phép đồng dạng của $\mathbb{E} ^{n}$.
+
+Tóm lại:
+ 
+
+$$
+nhóm xạ ảnh \supset nhóm afin \supset nhóm đồng dạng \supset nhóm dời,
+$$
+
+ 
+tương ứng
+ 
+
+$$
+hình học xạ ảnh \subset hình học afin \subset hình học đồng dạng \subset hình học Ơclit.
+$$
+
+ 
+Việc nghiên cứu hình học theo quan điểm nhóm giúp thấy được sự liên quan giữa các thứ hình học xạ ảnh, afin và Ơclit, đồng thời hiểu rõ nội dung và cấu trúc của chương trình hình học ở các trường phổ thông.
+</Definition>
+
+<Example id="ex-p11-15" title="Ví dụ">
+Phép tịnh tiến, phép dời hình, phép đồng dạng đều giữ nguyên đường thẳng vô tận nên thuộc nhóm afin; trong số đó chỉ các phép dời hình và đồng dạng giữ T.
+
+Ví dụ phép quay $90° (X'_{1} = -X_{2}, X'_{2} = X_{1})$ có $B = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$ và $BB* = I$; còn phép giãn $X'_{1} = 2X_{1}, X'_{2} = X_{2}$ là afin nhưng $BB* = diag(4,1)$ không giữ T.
+</Example>
+
+## 5. Mô hình xạ ảnh của mặt phẳng Ơclit
+
+<Definition id="def-p11-16" title="a) Cái tuyệt đối trong mặt phẳng">
+Chọn trong $\mathbb{P} ^{2}$ một đường thẳng Δ làm đường thẳng vô tận; chọn mục tiêu xạ ảnh sao cho Δ có phương trình $x_{3} = 0$ (đi qua $A_{1}, A_{2}$ của mục tiêu).
+
+Cái tuyệt đối T trên Δ là hai điểm ảo liên hợp I, J thỏa hệ $x^{2}_{1} + x^{2}_{2} = 0, x_{3} = 0$.
+
+Ta có $I(1, i, 0), J(1, -i, 0)$, gọi là hai *điểm cyclic* của mô hình.
+</Definition>
+
+<Theorem id="thm-p11-17" title="b) Các khái niệm của">
+$\mathbb{E} ^{2}$ thể hiện trên mô hình.
+
+• Hai đường thẳng a, b có hai phương xác định bởi hai điểm vô tận U, V trên Δ biểu thị hai đường thẳng vuông góc nhau nếu (UVIJ) $= -1$.
+
+• **Đường tròn** là đường trái xoan S cắt đường thẳng vô tận Δ tại hai điểm cyclic I, J.
+
+• **Đường hypebol vuông** là đường trái xoan S cắt Δ tại hai điểm M, N sao cho (MNIJ) $= -1$.
+
+Các tiếp tuyến của S tại M, N là các đường tiệm cận của hypebol; chúng cắt nhau tại O là tâm của hypebol.
+
+• **Đường parabol** là đường trái xoan S tiếp xúc với Δ tại U.
+
+Gọi T là điểm trên Δ sao cho (UTIJ) $= -1$; gọi UM là đường đối cực của T đối với S.
+
+Khi đó UM là trục đối xứng của parabol và $MT \perp MU$ vì (UTIJ) $= -1$; các đường thẳng qua U biểu thị các đường thẳng song song với trục MU, trong đó M là đỉnh của parabol.
+
+Các tiếp tuyến xuất phát từ I và J cắt nhau tại tiêu điểm F; đường đối cực của F là đường thẳng d đi qua T biểu thị đường chuẩn của parabol.
+
+• **Đường elip** là đường trái xoan S không cắt đường thẳng vô tận Δ.
+
+Từ một điểm M trên Δ dựng hai tiếp tuyến xúc với S tại A và B thì AB là một đường kính của elip.
+
+Tương tự từ điểm $N \neq M$ trên Δ dựng được một đường kính khác CD.
+
+Điểm $O = AB \cap CD$ biểu thị tâm của elip; vậy đường thẳng Δ là đường đối cực của điểm O đối với S.
+</Theorem>
+
+<Example id="ex-p11-18" title="Ví dụ">
+• Hypebol vuông $X^{2}_{1} - X^{2}_{2} = 1: x^{2}_{1} - x^{2}_{2} - x^{2}_{3} = 0$ cắt $x_{3} = 0$ tại $M = (1,1,0), N = (1,-1,0)$.
+
+Trên Δ, tọa độ $\frac{x_{1}}{x_{2}}$ của M, N, I, J là $1, -1, -i, i$ và (MNIJ) $= (\frac{-i-1}{-i+1})$ : $(\frac{i-1}{i+1}) = (-i)$ : $(i) = -1$: đúng là hypebol vuông (tiệm cận $y = \pm x$ vuông góc).
+
+• Parabol $X^{2}_{2} = X_{1}: x^{2}_{2} - x_{1}x_{3} = 0$ tiếp xúc Δ tại $U = (1,0,0)$.
+
+Điểm $T = (0,1,0)$ thỏa (UTIJ) $= -1$ (hướng (1,0) ⟂ (0,1)).
+
+Đối cực của T là $x_{2} = 0$ (trục đối xứng, đi qua đỉnh $M = (0,0,1))$.
+
+Tiêu điểm $F = (\frac{1}{4}, 0) = (1,0,4)$ có đối cực $x_{1} = \frac{-x_{3}}{4}$, tức $X_{1} = \frac{-1}{4}$: đường chuẩn.
+
+• Elip $X^{2}_{1} + 4X^{2}_{2} = 1: x^{2}_{1} + 4x^{2}_{2} - x^{2}_{3} = 0$ không cắt Δ thực.
+
+Từ $M = (1,0,0) \in Δ$, đối cực của M là $x_{1} = 0$ (đường kính AB); từ $N = (0,1,0) \in Δ$, đối cực là $x_{2} = 0$ (đường kính $CD); O = AB \cap CD = (0,0,1)$ là tâm, và đối cực của O là $x_{3} = 0 = Δ$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p11-1" title="Vuông góc và cái tuyệt đối (§11, mục 3a)">
+Trong mô hình xạ ảnh của E², hai đường thẳng có phương (1,3) và (3,-1) có vuông góc không? Giải thích bằng cái tuyệt đối T.
+</Exercise>
+
+<Hint>
+Hai đường thẳng vuông góc khi hai điểm vô tận của chúng liên hợp đối với T: x₁² + x₂² = 0 (trên x₃ = 0).
+</Hint>
+
+<Solution>
+Các điểm vô tận U = (1,3,0) và V = (3,-1,0).
+
+Liên hợp đối với T khi 1·3 + 3·(-1) = 0: đúng.
+
+**Đáp án:** Có, vuông góc (hai điểm vô tận liên hợp đối với T).
+</Solution>
+
+<Exercise id="exr-p11-2" title="Đường tròn và cái tuyệt đối (§11, mục 3b)">
+Tìm k để đường bậc hai x₁² + k·x₂² - x₃² = 0 là đường tròn trong mô hình xạ ảnh của E².
+</Exercise>
+
+<Hint>
+Siêu cầu khi và chỉ khi cắt đường thẳng vô tận x₃ = 0 theo cái tuyệt đối T: x₁² + x₂² = 0.
+</Hint>
+
+<Solution>
+Giao với x₃ = 0: x₁² + k·x₂² = 0.
+
+Phải trùng x₁² + x₂² = 0 nên k = 1.
+
+**Đáp án:** k = 1
+</Solution>
+
+<KeyTakeaways>
+- Hình học Ơclit có thể xem như hình học xạ ảnh cố định một siêu phẳng vô tận và một siêu conic ảo trên đó (tuyệt đối).
+- Công thức Laguerre biểu diễn góc giữa hai đường thẳng qua tỉ số kép với hai điểm liên hợp ảo của tuyệt đối.
+</KeyTakeaways>

@@ -1,0 +1,356 @@
+---
+id: toa-do-xa-anh-va-muc-tieu-xa-anh
+title: "Tọa độ Xạ ảnh và Mục tiêu Xạ ảnh"
+description: "Hệ tọa độ thuần nhất, mục tiêu xạ ảnh gồm n+2 điểm và công thức đổi mục tiêu."
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - "mục tiêu xạ ảnh"
+  - "tọa độ thuần nhất"
+  - "đổi mục tiêu"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '174-181'
+    sections: '§2'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Vectơ đại diện cho một điểm
+
+<Definition id="def-p2-1" title="Định nghĩa">
+Gọi $\mathbb{P} ^{n}$ là không gian xạ ảnh liên kết với $V ^{n+1}$ qua song ánh π.
+
+Trong $V ^{n+1}$, mỗi vectơ $\vec{a} \neq \vec{0}$ sinh ra một không gian con một chiều, và qua π không gian này ứng với một điểm A duy nhất của $\mathbb{P} ^{n}$.
+
+Ta nói *vectơ* $\vec{a}$ *đại diện cho điểm* A.
+
+Hai vectơ $\vec{a}$ và $\vec{b}$ cùng đại diện cho một điểm khi và chỉ khi $\vec{a} = k\vec{b}$ với k là số thực khác 0; như vậy hai vectơ cộng tuyến của $V ^{n+1}$ cùng đại diện cho một điểm của $\mathbb{P} ^{n}$.
+</Definition>
+
+<Example id="ex-p2-2" title="Ví dụ">
+Trong $\R^{3}, \vec{a} = (1,2,3)$ và $\vec{b} = (-2,-4,-6) = -2\vec{a}$ cùng đại diện cho một điểm của $\mathbb{P} ^{2}$; còn $\vec{c} = (1,2,4)$ không cộng tuyến với $\vec{a}$ nên đại diện cho điểm khác.
+</Example>
+
+## 2. Hệ điểm độc lập
+
+<Definition id="def-p2-3" title="Định nghĩa">
+Hệ gồm r điểm $M_{1}, M_{2}, \dots , M_{r}$ của $\mathbb{P} ^{n}$ gọi là *độc lập* nếu trong $V ^{n+1}$ liên kết với $\mathbb{P} ^{n}$, r vectơ đại diện cho r điểm ấy độc lập tuyến tính.
+
+Nếu có r điểm độc lập thì bất cứ hệ r vectơ nào đại diện cho chúng cũng độc lập tuyến tính, nên r điểm đó xác định một (r−1)-phẳng xạ ảnh.
+
+Muốn xác định một m-phẳng xạ ảnh phải biết $m+1$ điểm độc lập thuộc phẳng đó.
+
+Trong $\mathbb{P} ^{n}$, muốn có r điểm độc lập thì $r \le n+1$; do đó mọi hệ nhiều hơn $n+1$ điểm đều không độc lập.
+</Definition>
+
+<Example id="ex-p2-4" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$, ba điểm (1,0,0), (0,1,0), (0,0,1) độc lập (định thức bằng 1), nên xác định một 2-phẳng, tức chính $\mathbb{P} ^{2}$.
+
+Ba điểm (1,0,0), (0,1,0), (1,1,0) không độc lập vì $(1,1,0) = (1,0,0) + (0,1,0)$; chúng cùng thuộc một đường thẳng xạ ảnh.
+</Example>
+
+## 3. Tọa độ xạ ảnh của một điểm
+
+<Definition id="def-p2-5" title="Định nghĩa">
+Cho $\mathbb{P} ^{n}$ liên kết với $V ^{n+1}$.
+
+Chọn trong $V ^{n+1}$ một cơ sở $ε = {\vect{e_{1}}, \vect{e_{2}}, \dots , \vect{e_{n+1}}}$.
+
+Gọi X là điểm tùy ý của $\mathbb{P} ^{n}$ và $\vec{x}$ là vectơ đại diện cho X.
+
+Nếu $(x_{1}, x_{2}, \dots , x_{n+1})$ là tọa độ của $\vec{x}$ đối với cơ sở ε thì ta cũng gọi đó là *tọa độ xạ ảnh* của điểm X ứng với cơ sở ε.
+
+Khi đó ta kí hiệu $X = (x_{1}, x_{2}, \dots , x_{n+1})$ hoặc $X(x_{1}, x_{2}, \dots , x_{n+1})$.
+</Definition>
+
+<Theorem id="thm-p2-6" title="Tính chất">
+a) Nếu $(x_{1}, \dots , x_{n+1})$ là tọa độ xạ ảnh của một điểm thì các x$_{i}$ không đồng thời bằng 0, vì vectơ đại diện cho một điểm phải khác $\vec{0}$.
+
+b) Một bộ số có thứ tự gồm $n+1$ số $(x_{1}, \dots , x_{n+1})$ trong đó ít nhất một số khác 0 xác định một điểm X duy nhất của $\mathbb{P} ^{n}$; điểm X này nhận bộ số đó làm tọa độ xạ ảnh ứng với cơ sở đã cho.
+
+c) Nếu $(x_{1}, \dots , x_{n+1})$ là tọa độ xạ ảnh của điểm X thì mọi bộ số có dạng $(kx_{1}, \dots , kx_{n+1})$ với $k \neq 0$ đều là tọa độ của điểm X đó.
+</Theorem>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Các tính chất trên là đặc biệt của tọa độ xạ ảnh.
+
+Chẳng hạn: trong $\mathbb{P} ^{2}$ bộ số $(0,0,0)$ không là tọa độ của điểm xạ ảnh nào, nhưng trong $\mathcal{A} ^{3}$ hoặc $\mathbb{E} ^{3}$ bộ số đó là tọa độ của điểm gốc mục tiêu.
+
+Trong $\mathbb{P} ^{2}$ hai bộ số $(1,0,-2)$ và $(-1,0,2)$ là tọa độ của cùng một điểm xạ ảnh, còn trong $\mathcal{A} ^{3}$ hoặc $\mathbb{E} ^{3}$ chúng là tọa độ của hai điểm hoàn toàn khác nhau.
+</Remark>
+
+<Example id="ex-p2-7" title="Ví dụ">
+Trong $\mathbb{P} ^{2}$ đối với cơ sở chính tắc, điểm $X(2,4,6)$ cũng có tọa độ $(1,2,3)$ và $(-1,-2,-3)$.
+
+Nếu $x_{3} \neq 0$ ta có thể chuẩn hóa $X = (\frac{x_{1}}{x_{3}}, \frac{x_{2}}{x_{3}}, 1)$; chẳng hạn $(2,4,6) = (\frac{1}{3}, \frac{2}{3}, 1)·6$ cho $X = (\frac{1}{3}, \frac{2}{3}, 1)$.
+
+Điểm $(3,-1,0)$ có $x_{3} = 0$ nên không chuẩn hóa được theo cách này.
+</Example>
+
+## 4. Mục tiêu xạ ảnh
+
+Giả sử không gian xạ ảnh $\mathbb{P} ^{n}$ liên kết với $V ^{n+1}$.
+
+Gọi $ε = {\vect{e_{1}}, \vect{e_{2}}, \dots , \vect{e_{n+1}}}$ là một cơ sở cho trước của $V ^{n+1}$.
+
+Khi đó trong $\mathbb{P} ^{n}$, tọa độ xạ ảnh của mỗi điểm đều được xác định đối với cơ sở ε.
+
+Gọi A$_{i}$ là các điểm nhận các vectơ $\vect{e_{i}} (i = 1, \dots , n+1)$ làm vectơ đại diện.
+
+Tọa độ xạ ảnh của các điểm A$_{i}$ là:
+ 
+
+$$
+A_{1} = (1,0, \dots ,0,0); A_{2} = (0,1, \dots ,0,0); \dots ; A_{n} = (0,0, \dots ,1,0); A_{n+1} = (0,0, \dots ,0,1).
+$$
+
+ 
+Gọi E là điểm có vectơ đại diện $\vec{e} = \vect{e_{1}} + \vect{e_{2}} + \dots + \vect{e_{n+1}}$.
+
+Như vậy E có tọa độ xạ ảnh $(1, 1, \dots , 1)$.
+
+<Definition id="def-p2-8" title="a) Định nghĩa">
+Tập hợp gồm $n+2$ điểm ${A_{1}, A_{2}, \dots , A_{n+1}; E}$ được xây dựng như trên là một *mục tiêu xạ ảnh* của $\mathbb{P} ^{n}$ ứng với cơ sở ε trong $V ^{n+1}$.
+
+Kí hiệu mục tiêu xạ ảnh đó là \{A$_{i}$; E\} với $i = 1, 2, \dots , n+1$.
+
+Các điểm A$_{i}$ là các *đỉnh* của mục tiêu và điểm E là *điểm đơn vị*.
+
+Nếu một điểm X thuộc $\mathbb{P} ^{n}$ có tọa độ $(x_{1}, x_{2}, \dots , x_{n+1})$ đối với cơ sở ε, và mục tiêu xạ ảnh \{A$_{i}$; E\} được xây dựng cũng ứng với cơ sở ε đó, thì ta nói $(x_{1}, \dots , x_{n+1})$ là *tọa độ xạ ảnh* của điểm X đối với mục tiêu xạ ảnh \{A$_{i}$; E\}.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Trong $n+2$ điểm ${A_{1}, A_{2}, \dots , A_{n+1}; E}$ của một mục tiêu xạ ảnh trong $\mathbb{P} ^{n}$, bất cứ $n+1$ điểm nào cũng độc lập.
+</Remark>
+
+<Example id="ex-p2-9" title="Thí dụ">
+Trên đường thẳng xạ ảnh $\mathbb{P} ^{1}$, mục tiêu xạ ảnh là một bộ ba điểm phân biệt thẳng hàng ${A_{1}, A_{2}; E}$ với $A_{1} = (1,0), A_{2} = (0,1), E = (1,1)$; một điểm X bất kì xác định bởi tọa độ $X = (x_{1}, x_{2})$.
+
+Trong mặt phẳng xạ ảnh $\mathbb{P} ^{2}$, mục tiêu xạ ảnh là bộ bốn điểm trong đó bất cứ ba điểm nào cũng không thẳng hàng: ${A_{1}, A_{2}, A_{3}; E}$ với $A_{1} = (1,0,0), A_{2} = (0,1,0), A_{3} = (0,0,1), E = (1,1,1)$; điểm X xác định bởi $X = (x_{1}, x_{2}, x_{3})$.
+
+Ví dụ số: trong $\mathbb{P} ^{2}$, điểm $X = (2,3,5)$ có $x_{3} \neq 0$ nên cũng viết $X = (\frac{2}{5}, \frac{3}{5}, 1)$.
+
+Ba điểm $A_{1}, A_{2}, E$ không thẳng hàng vì định thức của (1,0,0), (0,1,0), (1,1,1) bằng $1 \neq 0$.
+</Example>
+
+## 5. Mối liên hệ giữa mục tiêu xạ ảnh của Pn và cơ sở tương ứng ε trong Vn+1
+
+<Theorem id="thm-p2-10" title="Định lí">
+Gọi $\mathbb{P} ^{n}$ là không gian xạ ảnh liên kết với $V ^{n+1}$.
+
+Khi đó:
+
+a) Trong $V ^{n+1}$ các cơ sở vị tự với nhau xác định một và chỉ một mục tiêu xạ ảnh tương ứng trong $\mathbb{P} ^{n}$.
+
+b) Trong $\mathbb{P} ^{n}$ với một mục tiêu xạ ảnh ${A_{i}; E} (i = 1, \dots , n+1)$ cho trước (hoặc $n+2$ điểm $A_{1}, \dots , A_{n+1}, E$ sao cho bất kì $n+1$ điểm nào trong chúng đều độc lập), ta tìm được trong $V ^{n+1}$ một lớp duy nhất các cơ sở vị tự với nhau nhận \{A$_{i}$; E\} làm mục tiêu xạ ảnh tương ứng.
+</Theorem>
+
+<Proof of="thm-p2-10">
+a) Với một cơ sở ε cho trước ta xác định được một mục tiêu xạ ảnh \{A$_{i}$; E\}.
+
+Nếu chọn cơ sở khác $ε' = {k\vect{e_{1}}, \dots , k\vect{e_{n+1}}}$ với $k \neq 0$ thì mục tiêu xạ ảnh tương ứng với $ε'$ hoàn toàn trùng với mục tiêu ứng với ε; khi k thay đổi ta được lớp các cơ sở vị tự với ε.
+
+Hai cơ sở $ε_{1}, ε_{2}$ không vị tự với nhau thì ứng với hai mục tiêu xạ ảnh khác nhau.
+
+b) Trong $\mathbb{P} ^{n}$ cho mục tiêu \{A$_{i}$; E\}.
+
+Trong $V ^{n+1}$ có các vectơ $\vect{e'_{i}}$ đại diện cho A$_{i}$ và $\vect{e'}$ đại diện cho E.
+
+Vì $n+1$ điểm A$_{i}$ độc lập nên $\vect{e'_{1}}, \dots , \vect{e'_{n+1}}$ độc lập tuyến tính, tạo thành một cơ sở, và $\vect{e'} = t_{1}\vect{e'_{1}} + \dots + t_{n+1}\vect{e'_{n+1}}$.
+
+Vì E cùng n điểm A$_{i}$ nào đó là $n+1$ điểm độc lập nên mọi $t_{i} \neq 0$ (nếu $t_{i} = 0$ thì $\vect{e'}$ biểu thị tuyến tính qua n vectơ còn lại, trái với giả thiết).
+
+Đặt $\vect{e_{i}} = t_{i}\vect{e'_{i}}$ thì $\vec{e} = \vect{e_{1}} + \dots + \vect{e_{n+1}} = \vect{e'}$, nên cơ sở \{$\vect{e_{i}}$\} sinh ra mục tiêu \{A$_{i}$; E\}.
+
+Tính duy nhất: nếu \{$\vect{a_{i}}$\} cũng sinh ra mục tiêu ấy thì $\vect{a_{i}} = k_{i}\vect{e_{i}} (k_{i} \neq 0)$ và $\vec{a} = \sum_{i=1}^{n+1}\vect{a_{i}} = k\vec{e} = \sum_{i=1}^{n+1}k\vect{e_{i}}, so$ sánh hệ số được $k_{i} = k$ với mọi i; vậy các cơ sở vị tự với nhau.
+</Proof>
+
+<Example id="ex-p2-12" title="Ví dụ">
+Trong $\R ^{3}$, cơ sở chính tắc $ε = {(1,0,0), (0,1,0), (0,0,1)}$ xác định mục tiêu $A_{1} = (1,0,0), A_{2} = (0,1,0), A_{3} = (0,0,1), E = (1,1,1)$.
+
+Cơ sở $ε' = {(2,0,0), (0,2,0), (0,0,2)} = 2ε$ (vị tự) cho cùng mục tiêu.
+
+Còn cơ sở \{(1,0,0), (0,2,0), (0,0,1)\} không vị tự với ε và cho điểm đơn vị là $E = (1,2,1)$ (đối với ε), tức một mục tiêu khác.
+</Example>
+
+## 6. Các m-phẳng tọa độ
+
+<Definition id="def-p2-13" title="a) Định nghĩa">
+Qua $m+1$ đỉnh A$_{i}$ của mục tiêu xạ ảnh \{A$_{i}$; E\} với $0 < m < n$ ta có một m-phẳng xạ ảnh, gọi là *m-phẳng tọa độ*.
+</Definition>
+
+<Theorem id="thm-p2-14" title="b) Phương trình">
+Viết phương trình của m-phẳng tọa độ $\mathbb{P} ^{m}$ đi qua $m+1$ đỉnh sau: $A_{n-m+1}, A_{n-m+2}, \dots , A_{n}, A_{n+1}$.
+
+Điểm $X \in \mathbb{P}^{m}$ khi và chỉ khi vectơ $\vec{x}$ đại diện cho nó thuộc không gian vectơ $V ^{m+1}$ có cơ sở ${\vect{e_{n-m+1}}, \dots , \vect{e_{n}}, \vect{e_{n+1}}}$, tức là $\vec{x} = 0\vect{e_{1}} + \dots + 0\vect{e_{n-m}} + x_{n-m+1}\vect{e_{n-m+1}} + \dots + x_{n+1}\vect{e_{n+1}}$.
+
+Vậy
+ 
+
+$$
+X \in \mathbb{P}^{m} \iff x_{i} = 0 với i = 1, 2, \dots , n-m. (4)
+$$
+
+ 
+Phương trình tổng quát của m-phẳng tọa độ $\mathbb{P} ^{m}$ là hệ gồm $n-m$ phương trình $(4)$ nói trên.
+</Theorem>
+
+<Example id="ex-p2-15" title="Thí dụ">
+Trong $\mathbb{P} ^{2}$ với mục tiêu ${A_{1}, A_{2}, A_{3}; E}$: đường thẳng $A_{1}A_{2}$ có phương trình $x_{3} = 0$; đường thẳng $A_{2}A_{3}$ có phương trình $x_{1} = 0$; đường thẳng $A_{3}A_{1}$ có phương trình $x_{2} = 0$.
+
+Trong $\mathbb{P} ^{3}$ với mục tiêu ${A_{1}, A_{2}, A_{3}, A_{4}; E}$: mặt phẳng $A_{1}A_{2}A_{3}$ có phương trình $x_{4} = 0$; mặt phẳng $A_{2}A_{3}A_{4}$ có phương trình $x_{1} = 0$; mặt phẳng $A_{3}A_{4}A_{1}$ có phương trình $x_{2} = 0$.
+
+Đường thẳng $A_{1}A_{2}$ có phương trình
+ 
+
+$$
+\begin{cases} x_{3} = 0 \\ x_{4} = 0 \end{cases}
+$$
+
+ 
+và đường thẳng $A_{2}A_{3}$ có phương trình
+ 
+
+$$
+\begin{cases} x_{1} = 0 \\ x_{4} = 0. \end{cases}
+$$
+</Example>
+
+## 7. Công thức đổi mục tiêu xạ ảnh
+
+Trong $\mathbb{P} ^{n}$ cho hai mục tiêu xạ ảnh \{A$_{i}$; E\} và ${A'_{i}; E'}$ lần lượt ứng với hai cơ sở $ε = {\vect{e_{i}}}$ và $ε' = {\vect{e'_{i}}}$ của $V ^{n+1}$.
+
+Giả sử $(x_{1}, \dots , x_{n+1})$ và $(x'_{1}, \dots , x'_{n+1})$ lần lượt là tọa độ của một điểm X đối với mục tiêu \{A$_{i}$; E\} và ${A'_{i}; E'}$.
+
+Để tìm liên hệ giữa các tọa độ này, ta tìm liên hệ giữa tọa độ của vectơ $\vec{x}$ đại diện cho X đối với ε và $ε'$.
+
+Trong $V ^{n+1}$ ta có:
+
+<Theorem id="thm-p2-16" title="Công thức đổi mục tiêu xạ ảnh">
+$$
+[x] = C*[x'], hay [x'] = (C*)^{-1}[x],
+$$
+
+ 
+trong đó C là ma trận chuyển từ cơ sở ε sang cơ sở $ε', C*$ là ma trận chuyển vị của C, còn [x] và $[x']$ là ma trận cột tọa độ của cùng một điểm đối với mục tiêu thứ nhất và mục tiêu thứ hai.
+
+C cũng được gọi là *ma trận chuyển từ mục tiêu* \{A$_{i}$; E\} *sang mục tiêu* ${A'_{i}; E'}$.
+
+Như vậy khi chuyển từ mục tiêu này sang mục tiêu khác, các tọa độ cũ và mới liên hệ với nhau bằng một phép biến đổi tuyến tính thuần nhất có ma trận vuông cấp $n+1$ không suy biến.
+</Theorem>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Ma trận C trong công thức đổi mục tiêu xạ ảnh không xác định một cách duy nhất, mà xác định sai khác một số tỉ lệ khác 0: nếu C là ma trận chuyển của hai mục tiêu xạ ảnh thì $kC (k \neq 0)$ cũng là ma trận chuyển của chúng.
+
+Nếu biết tọa độ các đỉnh $A'_{i}$ và điểm đơn vị $E'$ của mục tiêu ${A'_{i}; E'}$ đối với mục tiêu \{A$_{i}$; E\} thì ma trận chuyển C được xác định.
+
+Ngược lại, nếu cho C là ma trận vuông cấp $n+1$ không suy biến thì xác định được mục tiêu ${A'_{i}; E'}$ sao cho ma trận chuyển từ \{A$_{i}$; E\} sang ${A'_{i}; E'}$ chính là C.
+</Remark>
+
+<Example id="ex-p2-17" title="Thí dụ">
+Trong $\mathbb{P} ^{2}$, lập công thức đổi mục tiêu xạ ảnh đối với hai mục tiêu ${A_{1}, A_{2}, A_{3}; E}$ và ${A'_{1}, A'_{2}, A'_{3}; E'}$, biết tọa độ các đỉnh và điểm đơn vị của mục tiêu thứ hai đối với mục tiêu thứ nhất là:
+ 
+
+$$
+\begin{cases} A'_{1} = (0,1,1) \\ A'_{2} = (2,0,1) \\ A'_{3} = (1,1,0) \\ E' = (1,1,1). \end{cases}
+$$
+
+ 
+
+*Giải.*
+
+Gọi $\vect{e'_{1}}$, $\vect{e'_{2}}$, $\vect{e'_{3}}$, $\vect{e'}$ là các vectơ đại diện cho $A'_{1}, A'_{2}, A'_{3}, E'$.
+
+Vì $\vect{e'} = \vect{e'_{1}} + \vect{e'_{2}} + \vect{e'_{3}}$ nên tìm α, β, γ sao cho $(1,1,1) = \alpha (0,1,1) + \beta (2,0,1) + \gamma (1,1,0)$, tức là
+ 
+
+$$
+\begin{cases} 1 = 2 \beta + \gamma \\ 1 = \alpha + \gamma \\ 1 = \alpha + \beta . \end{cases}
+$$
+
+ 
+
+Giải hệ được  
+
+$$
+\begin{cases} \beta = \frac{1}{3} \\ \gamma = \frac{1}{3} \\ \alpha = \frac{2}{3}. \end{cases}
+$$
+
+ Do đó
+ 
+
+$$
+\begin{cases} \vect{e'_{1}} = (0, \frac{2}{3}, \frac{2}{3}) \\ \vect{e'_{2}} = (\frac{2}{3}, 0, \frac{1}{3}) \\ \vect{e'_{3}} = (\frac{1}{3}, \frac{1}{3}, 0). \end{cases}
+$$
+
+ 
+
+Ma trận chuyển C có các hàng là ba vectơ trên.
+
+Vì C xác định sai khác một số tỉ lệ khác 0 nên lấy $3C = \begin{pmatrix} 0 & 2 & 2 \\ 2 & 0 & 1 \\ 1 & 1 & 0 \end{pmatrix}$ và chuyển vị $(3C)* = \begin{pmatrix} 0 & 2 & 1 \\ 2 & 0 & 1 \\ 2 & 1 & 0 \end{pmatrix}$.
+
+Công thức đổi mục tiêu xạ ảnh đối với hai mục tiêu ${A_{1}, A_{2}, A_{3}; E}$ và ${A'_{1}, A'_{2}, A'_{3}; E'}$ là $(ρ \neq 0)$:
+ 
+
+$$
+\begin{cases} ρx_{1} = 2x'_{2} + x'_{3} \\ ρx_{2} = 2x'_{1} + x'_{3} \\ ρx_{3} = 2x'_{1} + x'_{2}. \end{cases}
+$$
+
+ 
+
+Kiểm tra: điểm $A'_{1}$ có tọa độ mới $(1,0,0)$, thay vào được $(ρx_{1}, ρx_{2}, ρx_{3}) = (0, 2, 2) ~ (0,1,1)$ đúng bằng $A'_{1} = (0,1,1)$ đối với mục tiêu thứ nhất.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-p2-1" title="Vectơ đại diện và tọa độ xạ ảnh (§2, mục 1, 3)">
+Trong P², những bộ số nào sau đây biểu diễn cùng một điểm: (1,-2,3), (-1,2,-3), (2,-4,6), (1,2,3)?
+</Exercise>
+
+<Hint>
+Hai bộ biểu diễn cùng điểm khi bộ này bằng k lần bộ kia (k  $ neq$  0).
+</Hint>
+
+<Solution>
+(-1,2,-3) = -1·(1,-2,3) và (2,-4,6) = 2·(1,-2,3).
+
+(1,2,3) không tỉ lệ với (1,-2,3).
+
+**Đáp án:** Ba bộ đầu: (1,-2,3), (-1,2,-3), (2,-4,6)
+</Solution>
+
+<Exercise id="exr-p2-2" title="Hệ điểm độc lập và mặt phẳng trong P³ (§2, mục 2; §3)">
+Trong P³ cho A(1,0,0,0), B(0,1,0,0), C(0,0,1,1). Chứng minh A, B, C độc lập, viết phương trình mặt phẳng ABC và kiểm tra D(2,3,5,5), E(1,1,1,0) có thuộc mặt phẳng đó không.
+</Exercise>
+
+<Hint>
+Ba điểm độc lập khi ma trận tọa độ có hạng 3; mặt phẳng: tìm [u] thỏa [u]·A = [u]·B = [u]·C = 0.
+</Hint>
+
+<Solution>
+Ma trận [[1,0,0,0],[0,1,0,0],[0,0,1,1]] có hạng 3 nên A, B, C độc lập.
+
+[u] = (u₁,u₂,u₃,u₄) với u₁ = 0, u₂ = 0, u₃ + u₄ = 0: chọn [0,0,1,-1], mặt phẳng x₃ - x₄ = 0.
+
+D: 5 - 5 = 0 (thuộc); E: 1 - 0 = 1  $ neq$  0 (không thuộc).
+
+**Đáp án:** Mặt phẳng x₃ - x₄ = 0; D thuộc, E không thuộc
+</Solution>
+
+<KeyTakeaways>
+- Tọa độ xạ ảnh được xác định sai khác một thừa số tỷ lệ khác 0 (tọa độ thuần nhất).
+- Một mục tiêu xạ ảnh trong không gian n chiều gồm n+2 điểm ở vị trí tổng quát (không có n+1 điểm nào nằm trên cùng một siêu phẳng).
+</KeyTakeaways>

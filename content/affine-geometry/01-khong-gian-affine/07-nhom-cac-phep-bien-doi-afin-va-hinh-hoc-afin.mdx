@@ -1,0 +1,148 @@
+---
+id: nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin
+title: "Nhóm các Phép Biến đổi Affine và Hình học Affine"
+description: "Cấu trúc nhóm của các phép biến đổi affine, quan điểm Erlangen của Klein và các bất biến affine."
+estimatedMinutes: 45
+level: advanced
+prerequisites: []
+tags:
+  - "nhóm affine"
+  - "quan điểm Klein"
+  - "bất biến affine"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '59-65'
+    sections: '§7'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Các định nghĩa
+
+<Definition id="def-s7-1" title="a) Không gian hình học">
+Là một tập hợp M khác rỗng, mỗi phần tử gọi là một *điểm*.
+
+Mỗi tập hợp con H của M gọi là một *hình*.
+
+Một song ánh $f: M \to M$ của M lên chính nó gọi là một *phép biến đổi*; tập hợp các phép biến đổi của M làm thành một *nhóm* đối với phép toán lấy tích các song ánh.
+</Definition>
+
+<Definition id="def-s7-2" title="b) Nhóm các phép biến đổi">
+Một tập hợp F không rỗng gồm những phép biến đổi của M gọi là một *nhóm các phép biến đổi* nếu có hai điều kiện: $(i) f, g \in F$ thì $g∘f \in F; (ii) f \in F$ thì $f^{-1} \in F$.
+
+Khi đó F chứa phép đồng nhất $e = Id_{M} (e = f∘f^{-1})$, và tích có tính chất kết hợp.
+</Definition>
+
+<Definition id="def-s7-3" title="c) Tương đương">
+Cho F là nhóm biến đổi của M, hai hình H$_{1}$, H$_{2}$ gọi là *tương đương đối với nhóm F* nếu có phép biến đổi $f \in F$ để $f(H_{1}) = H_{2}$.
+</Definition>
+
+Từ định nghĩa suy ra ba tính chất của quan hệ tương đương: mọi hình tương đương với chính nó (dùng e); H$_{1}$ ~ H$_{2}$ thì H$_{2}$ ~ H$_{1}$ (dùng *f*$^{-1}$); H$_{1}$ ~ H$_{2}$, H$_{2}$ ~ H$_{3}$ thì H$_{1}$ ~ H$_{3}$ (dùng g∘*f*).
+
+Do đó tập các hình của M chia thành các *lớp F-tương đương*.
+
+**Thí dụ 1.**
+
+Tập *𝒜* tất cả các phép afin của $\mathcal{A}$ là một nhóm biến đổi, gọi là *nhóm afin* của $\mathcal{A}$.
+
+**Thí dụ 2.**
+
+Tập các phép tịnh tiến của $\mathcal{A}$ là một nhóm; còn tập các phép vị tự không lập thành nhóm vì tích hai phép vị tự có thể không phải là phép vị tự.
+
+<Example id="ex-s7-4" title="Ví dụ">
+$t_{u}∘t_{v} = t_{u+v}$ và $(t_{v})^{-1} = t_{-v}$ nên tịnh tiến thỏa (i), (ii).
+
+Trong $\mathcal{A} ^{2}$, hai tam giác ABC và A′B′C′ bất kì luôn tương đương afin vì có duy nhất phép afin biến $(A,B,C)$ thành $(A',B',C')$.
+
+Chẳng hạn A(0,0), B(1,0), C(0,1) và A′(0,0), B′(2,0), C′(1,3): phép afin là $f(x,y) = (2x + y, 3y)$; kiểm tra $f(B) = (2,0), f(C) = (1,3).$
+</Example>
+
+## 2. Các bất biến đối với nhóm các phép biến đổi afin
+
+<Definition id="def-s7-5" title="a) Định nghĩa">
+Một tính chất của hình H gọi là *bất biến đối với nhóm F* nếu nó không thay đổi khi dùng một phép biến đổi $f \in F$ biến H thành hình khác; tức là mọi hình H$_{1}$ tương đương với H đối với F đều có tính chất đó.
+
+Các tính chất bất biến đối với nhóm afin *𝒜* gọi là *tính chất afin* (*bất biến afin*).
+</Definition>
+
+<Definition id="def-s7-6" title="b) Các tính chất afin">
+Tính chất độc lập hay không độc lập của một hệ điểm là tính chất afin (phép afin biến hệ điểm độc lập thành hệ điểm độc lập).
+
+Tính chất song song, cắt nhau hay chéo nhau của hai cái phẳng cũng là tính chất afin (nếu α song song với β thì *f*(α) song song với *f*(β)).
+
+Các khái niệm xây dựng từ các bất biến afin gọi là *khái niệm afin*.
+
+*Thí dụ.*
+
+Tam giác, đường trung tuyến của tam giác, hình bình hành, m-phẳng, tỉ số đơn của ba điểm thẳng hàng là những khái niệm afin; còn hình vuông, tam giác đều, hình lập phương, đường tròn không phải là những khái niệm afin vì các hình này thay đổi qua phép biến đổi afin.
+</Definition>
+
+<Example id="ex-s7-7" title="Ví dụ">
+Với $f(x,y) = (2x + y, 3y)$: hai đường thẳng song song $y = 0$ và $y = 1$ biến thành $y' = 0$ và $y' = 3$, vẫn song song (bất biến afin).
+
+Trung điểm $(½,0)$ của AB biến thành $(1,0)$ là trung điểm của A′B′ (bảo tồn tỉ số đơn).
+
+Nhưng độ dài $AB = 1$ biến thành $A'B' = 2$, và góc vuông BAC biến thành góc giữa $(2,0)$ và $(1,3)$ không vuông, nên độ dài và góc không phải bất biến afin.
+</Example>
+
+## 3. Hình học afin
+
+<Definition id="def-s7-8" title="a) Hình học của một nhóm các phép biến đổi">
+Môn học nghiên cứu mọi bất biến đối với nhóm F các phép biến đổi của không gian M gọi là *hình học của nhóm F trên không gian M*.
+
+Nếu $F' \subset F$ là nhóm con thì mọi bất biến của nhóm F đều là bất biến của nhóm con F′, nên hình học của nhóm F là một bộ phận của hình học của nhóm F′; hình học của nhóm con F′ phong phú hơn.
+</Definition>
+
+<Definition id="def-s7-9" title="b) Hình học afin">
+Áp dụng vào không gian afin $\mathcal{A} ^{n}$ với nhóm afin *𝒜*$^{n}$: hai hình H$_{1}$, H$_{2}$ của $\mathcal{A} ^{n}$ tương đương đối với *𝒜*$^{n}$ gọi là *tương đương afin*.
+
+Mọi bất biến của nhóm afin là các *bất biến afin*; hình học của nhóm *𝒜*$^{n}$ trên $\mathcal{A} ^{n}$ gọi là *hình học afin n chiều*.
+
+Trong đó: mục tiêu afin là hệ $n+1$ điểm độc lập; đơn hình m chiều xác định bởi $m+1$ điểm độc lập là mở rộng của tứ diện trong không gian 3 chiều; hình hộp m chiều là mở rộng của hình hộp trong không gian 3 chiều.
+</Definition>
+
+<Remark title="Chú ý">
+Chú ý.
+
+Các khái niệm liên quan đến độ dài đoạn thẳng và độ lớn của góc (đường cao của tam giác, đường trung trực của đoạn thẳng, đường phân giác của một góc, hình tứ diện đều, hình cầu,…) không phải là khái niệm afin nên không được nghiên cứu trong hình học afin.
+
+Tuy nhiên: hình vuông tương đương afin với một hình bình hành nào đó, tứ diện đều tương đương afin với một tứ diện bất kì, hình lập phương tương đương afin với một hình hộp xiên bất kì.
+
+Nhận ra tính chất afin của một hình giúp xác định bài toán nào thuộc hình học afin và dùng công cụ phù hợp.
+</Remark>
+
+<Example id="ex-s7-10" title="Ví dụ">
+Với $f(x,y) = (2x + y, 3y)$, hình vuông đơn vị (0,0), (1,0), (1,1), (0,1) biến thành (0,0), (2,0), (3,3), (1,3), một hình bình hành (vì $(2,0) + (1,3) = (3,3) + (0,0))$.
+
+Vậy hình vuông tương đương afin với hình bình hành này, và mọi chứng minh chỉ dùng tính chất afin (song song, trung điểm, tỉ số đơn) của hình vuông đều đúng cho hình bình hành bất kì.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-s7-1" title="Nhóm afin và bất biến afin (§7)">
+Phép afin f của A²: x' = 2x + y, y' = x + y. Với A(0,0), B(1,1), C(3,3), so sánh tỉ số đơn (CAB) và độ dài AB với (C'A'B') và A'B'. Kết luận gì?
+</Exercise>
+
+<Hint>
+Tính ảnh A', B', C' rồi so sánh.
+</Hint>
+
+<Solution>
+A' = (0,0), B' = (3,2), C' = (9,6).
+
+(CAB) = 3/2 vì CA = -3·(1,1), CB = -2·(1,1); C'A' = (-9,-6), C'B' = (-6,-4) cho (C'A'B') = 3/2.
+
+AB = √2 còn A'B' = √13.
+
+**Đáp án:** Tỉ số đơn được bảo toàn (= 3/2) nên là bất biến afin; độ dài thay đổi (√2 thành √13) nên không phải bất biến afin.
+</Solution>
+
+<KeyTakeaways>
+- Tập hợp các phép biến đổi affine của một không gian affine lập thành một nhóm đối với phép hợp thành.
+- Theo quan điểm Klein, hình học affine là khoa học nghiên cứu các tính chất bất biến đối với nhóm affine.
+</KeyTakeaways>

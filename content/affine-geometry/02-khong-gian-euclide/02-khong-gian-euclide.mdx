@@ -1,0 +1,102 @@
+---
+id: khong-gian-euclide
+title: "Không gian Ơclit"
+description: "Định nghĩa không gian Ơclit thông qua không gian vectơ Euclid nền, khoảng cách giữa hai điểm."
+estimatedMinutes: 45
+level: basic
+prerequisites: []
+tags:
+  - "không gian Ơclit"
+  - "tích vô hướng"
+  - "khoảng cách"
+sources:
+  - source: gt-hhcc-nmh-2004
+    pages: '88-95'
+    sections: '§2'
+status: published
+version: 1.0.0
+authoring:
+  aiAssisted: true
+  tools:
+    - Antigravity
+  draftedAt: '2026-11-03'
+---
+
+## 1. Định nghĩa
+
+<Definition id="def-e2-1" title="Định nghĩa">
+*Không gian Ơclit* là một loại không gian afin liên kết với không gian vectơ Ơclit hữu hạn chiều.
+
+Không gian Ơclit thường kí hiệu là $\mathbb{E}$; không gian vectơ Ơclit liên kết kí hiệu là $V _{E}$ hoặc **Ē**.
+
+Không gian Ơclit gọi là *n chiều*, kí hiệu $\mathbb{E} ^{n}$, nếu không gian vectơ Ơclit liên kết có số chiều bằng n.
+</Definition>
+
+## 2. Các thí dụ
+
+a) Không gian Ơclit ba chiều thông thường được học trong chương trình toán ở bậc phổ thông được kí hiệu là $\mathbb{E} ^{3}$.
+
+Trong không gian này, mặt phẳng Ơclit là không gian Ơclit hai chiều và được kí hiệu là $\mathbb{E} ^{2}$.
+
+Các không gian vectơ **Ē**$^{3}$ và **Ē**$^{2}$ là không gian các vectơ tự do ba chiều và hai chiều.
+
+Tích vô hướng trong **Ē**$^{3}$ và **Ē**$^{2}$ được định nghĩa như sau: $\vec{a}·\vec{b} = |\vec{a}||\vec{b}|cos(\vec{a},\vec{b})$, trong đó $|\vec{a}|, |\vec{b}|$ là độ dài các vectơ $\vec{a}$, $\vec{b}$ còn $(\vec{a},\vec{b})$ là góc giữa hai vectơ $\vec{a}$, $\vec{b}$.
+
+b) Trong mô hình số thực $V ^{n}$, nếu định nghĩa tích vô hướng của $\vec{a} = (a_{1}, \dots ,a_{n})$ và $\vec{b} = (b_{1}, \dots ,b_{n})$ là $a_{1}b_{1} + \dots + a_{n}b_{n}$ thì mô hình đó trở thành không gian vectơ Ơclit n chiều, và không gian afin liên kết là không gian $\mathbb{E} ^{n}$.
+
+c) Nếu $\mathbb{E} ^{n}$ là không gian Ơclit thì mỗi phẳng α của nó cũng là một không gian Ơclit liên kết với ᾱ$_{E}$, mà tích vô hướng trong ᾱ$_{E}$ được cảm sinh bởi tích vô hướng của **Ē**$^{n}$.
+
+<Remark title="Chú ý">
+Chú ý.
+
+Theo định nghĩa, không gian Ơclit là một không gian afin nên có các khái niệm và tính chất afin.
+
+Ngoài ra còn có các khái niệm vuông góc của các phẳng, độ dài các đoạn thẳng, độ lớn của góc,… mà không gian afin không có; chúng liên quan đến tích vô hướng.
+</Remark>
+
+<Example id="ex-e2-2" title="Ví dụ">
+Mặt phẳng $\alpha : z = 0$ trong $\mathbb{E}^{3} = \R^{3}$ có phương $\overline{\alpha} = {(x,y,0)}$.
+
+Tích vô hướng cảm sinh: $(1,1,0)·(1,-1,0) = 1 - 1 = 0$, nên trong α hai vectơ này vuông góc; $|(1,1,0)| = \sqrt{2}. \alpha$ là $\mathbb{E} ^{2}$.
+</Example>
+
+## Bài tập vận dụng và củng cố
+
+<Exercise id="exr-e2-1" title="Không gian Ơclit Eⁿ và phẳng trong Eⁿ (§2)">
+Trong E³ (tích vô hướng chuẩn), phẳng  $ alpha$ : x + y + z = 0 có là không gian Ơclit không? Cho biết số chiều và một cơ sở của không gian vectơ liên kết.
+</Exercise>
+
+<Hint>
+Phẳng  $ alpha$  của Eⁿ cũng là không gian Ơclit với tích vô hướng cảm sinh từ không gian vectơ liên kết.
+</Hint>
+
+<Solution>
+Không gian vectơ liên kết ᾱ = \{u : u₁ + u₂ + u₃ = 0\} là không gian con 2 chiều của R³.
+
+Cơ sở: (1,-1,0), (0,1,-1); tích vô hướng cảm sinh từ R³ làm  $ alpha$  thành không gian Ơclit.
+
+**Đáp án:** Có, là không gian Ơclit hai chiều với cơ sở (1,-1,0), (0,1,-1)
+</Solution>
+
+<Exercise id="exr-e2-2" title="Tích vô hướng tổng quát (§1, §2)">
+Trên R² xét a·b = a₁b₁ + 2a₂b₂. Chứng minh a·a  $ ge$  0 với dấu "=" khi và chỉ khi a = 0; với a = (1,1), b = (2,-1) tính a·b, |a| và cho biết a  $ perp$  b không (theo tích vô hướng này).
+</Exercise>
+
+<Hint>
+Kiểm tra 4 tiên đề (đối xứng, tuyến tính, dương xác định); a  $ perp$  b khi a·b = 0.
+</Hint>
+
+<Solution>
+a·a = a₁² + 2a₂²  $ ge$  0 và bằng 0 khi a₁ = a₂ = 0.
+
+a·b = 1·2 + 2·1·(-1) = 0; |a| = √(1 + 2) = √3.
+
+a·b = 0 nên a  $ perp$  b (theo tích vô hướng chuẩn thì a·b = 2 - 1 = 1  $ neq$  0).
+
+**Đáp án:** a·b = 0, |a| = √3, a  $ perp$  b theo tích vô hướng đã cho
+</Solution>
+
+<KeyTakeaways>
+- Không gian Ơclit là không gian affine mà không gian vectơ liên kết được trang bị tích vô hướng xác định dương.
+- Khoảng cách giữa hai điểm được định nghĩa bằng độ dài của vectơ nối hai điểm đó.
+</KeyTakeaways>
