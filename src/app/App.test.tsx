@@ -47,18 +47,18 @@ describe('App routing smoke test', () => {
     expect(
       screen.getByText(/Nền tảng tổng hợp lý thuyết, định nghĩa, định lý/i),
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Khám phá môn học/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Bắt đầu hành trình/i })).toBeInTheDocument();
 
     // 2. Ô tìm kiếm bài học
     expect(
       screen.getByRole('searchbox', { name: /Tìm kiếm môn học hoặc bài học/i }),
     ).toBeInTheDocument();
 
-    // 3. Khu vực môn học
-    expect(
-      screen.getByRole('heading', { name: /KHÔNG GIAN KHÁM PHÁ TRI THỨC/i }),
-    ).toBeInTheDocument();
+    // 3. Khối tiếp tục bài học gần nhất
+    expect(screen.getByRole('region', { name: /Tiếp tục bài học gần nhất/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Đọc tiếp bài học/i })).toBeInTheDocument();
+
+    // 4. Khu vực môn học
+    expect(screen.getByRole('heading', { name: /Các học phần hiện có/i })).toBeInTheDocument();
 
     // 4. Khu vực Thư viện tri thức (6 trụ cột)
     expect(screen.getByRole('heading', { name: /THƯ VIỆN TRI THỨC/i })).toBeInTheDocument();
