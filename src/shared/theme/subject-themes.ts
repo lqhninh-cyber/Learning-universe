@@ -27,8 +27,8 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
   },
   'affine-geometry': {
     id: 'affine-geometry',
-    name: 'Hình học Affine',
-    shortName: 'HH Affine',
+    name: 'Hình học Affine và hình học Euclide',
+    shortName: 'HHAVE',
     hue: 175,
     description: 'Tông Teal / Emerald thể hiện không gian hình học, trực quan và biến đổi.',
   },

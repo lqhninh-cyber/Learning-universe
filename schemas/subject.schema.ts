@@ -22,6 +22,13 @@ export const subjectSchema = z.strictObject({
       references: z.array(slugSchema),
     })
     .default({ primary: null, references: [] }),
+  curriculum: z
+    .strictObject({
+      chapterCount: z.number().int().positive(),
+      lessonCount: z.number().int().positive(),
+      totalMinutes: z.number().int().positive().optional(),
+    })
+    .optional(),
 });
 
 export type Subject = z.infer<typeof subjectSchema>;

@@ -79,7 +79,7 @@ export function RootLayout() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
                   >
-                    Hình học Affine
+                    Hình học Affine và hình học Euclide
                   </Link>
                 </nav>
               </Drawer>
@@ -118,7 +118,7 @@ export function RootLayout() {
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
                 className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
               >
-                Hình học Affine
+                Hình học Affine và hình học Euclide
               </Link>
             </nav>
           </div>
@@ -233,7 +233,7 @@ export function RootLayout() {
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
                 className="text-vn-muted hover:text-vn-primary transition-colors"
               >
-                Hình học Affine
+                Hình học Affine và hình học Euclide
               </Link>
             </nav>
           </div>

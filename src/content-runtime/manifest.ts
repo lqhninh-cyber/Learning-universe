@@ -169,9 +169,9 @@ export function getSubjectStats(subject: ManifestSubject): SubjectStats {
   }
 
   return {
-    chapterCount: subject.chapters.length,
-    lessonCount,
-    totalMinutes,
+    chapterCount: subject.curriculum?.chapterCount ?? subject.chapters.length,
+    lessonCount: subject.curriculum?.lessonCount ?? lessonCount,
+    totalMinutes: subject.curriculum?.totalMinutes ?? totalMinutes,
     tags: [...tagSet],
     firstLesson,
   };

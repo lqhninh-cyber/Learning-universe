@@ -1,5 +1,5 @@
 import type { ManifestChapter } from '@schemas/index';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
@@ -13,7 +13,7 @@ import {
 import { ROUTES } from '@/shared/config/routes';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
-import { Button, Card } from '@/shared/ui';
+import { Badge, Button, Card } from '@/shared/ui';
 
 export function SubjectOverviewPage() {
   const { subjectSlug } = useParams<{ subjectSlug: string }>();
@@ -116,6 +116,43 @@ export function SubjectOverviewPage() {
   return (
     <FadeIn className="mx-auto max-w-5xl space-y-8">
       <SubjectHero subject={subject} />
+
+      {/* Khối Phòng Lab tương tác chuyên sâu cho Hình học Affine và hình học Euclide */}
+      {subject.slug === 'hinh-hoc-affine' && (
+        <Card className="border-subject-200/90 bg-gradient-to-br from-subject-50/50 via-white to-stone-50/70 p-6 sm:p-8 shadow-xs">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="subject">
+                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Phòng Lab Tương tác &amp; Ôn luyện</span>
+                </Badge>
+                <Badge variant="neutral">61 Bài tập · 47 Trắc nghiệm · Thi thử thích ứng</Badge>
+              </div>
+              <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                Phòng Lab &amp; Ôn tập tương tác Hình học cao cấp
+              </h2>
+              <p className="max-w-2xl text-sm leading-relaxed text-stone-600">
+                Toàn bộ tài liệu bài giảng 3 chương (Không gian afin, Không gian Ơclit, Không gian xạ ảnh) tích hợp cùng hệ thống 61 bài tập có gợi ý và giải chi tiết từng bước, 47 câu trắc nghiệm nhanh, bộ luyện tính toán tự sinh số liệu và chế độ thi thử thông minh.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <Button asChild variant="subject" size="lg" className="shadow-xs">
+                <a
+                  href="/interactive/affine-geometry.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2"
+                >
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  <span>Mở phòng Lab &amp; Ôn tập tương tác</span>
+                  <ExternalLink className="h-4 w-4 opacity-80" aria-hidden="true" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {subject.chapters.length > 0 ? (
         <>

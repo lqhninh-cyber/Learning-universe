@@ -66,3 +66,13 @@ sources:
     publisher: 'Annual Edition 2020 (https://abstract.pugetsound.edu)'
     edition: 'Annual Edition 2020'
     language: 'en'
+
+  - id: gt-hhcc-nmh-2004
+    type: textbook
+    title: 'Giáo trình Hình học cao cấp (Không gian Afin, Không gian Ơclit, Không gian Xạ ảnh)'
+    authors:
+      - 'Nguyễn Mộng Hy'
+    year: 2004
+    publisher: 'NXB Giáo dục'
+    language: 'vi'
+

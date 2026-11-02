@@ -1,5 +1,15 @@
 import type { ManifestSubject } from '@schemas/index';
-import { BookOpen, Clock, Compass, Layers, PlayCircle, Sigma, UserCheck } from 'lucide-react';
+import {
+  BookOpen,
+  Clock,
+  Compass,
+  ExternalLink,
+  Layers,
+  PlayCircle,
+  Sigma,
+  Sparkles,
+  UserCheck,
+} from 'lucide-react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjectStats } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
@@ -75,8 +85,8 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
             </span>
           </div>
 
-          {ctaLocation && (
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            {ctaLocation && (
               <Button asChild variant="subject" size="md">
                 <Link
                   to={ROUTES.lesson(
@@ -93,8 +103,27 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
                   </span>
                 </Link>
               </Button>
-            </div>
-          )}
+            )}
+
+            {subject.slug === 'hinh-hoc-affine' && (
+              <Button
+                asChild
+                variant="outline"
+                size="md"
+                className="border-subject-300 text-subject-700 hover:bg-subject-50 gap-1.5"
+              >
+                <a
+                  href="/interactive/affine-geometry.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Sparkles className="text-subject-600 h-4 w-4" aria-hidden="true" />
+                  <span>Mở phòng Lab &amp; Ôn tập tương tác</span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
+                </a>
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="lg:col-span-4">

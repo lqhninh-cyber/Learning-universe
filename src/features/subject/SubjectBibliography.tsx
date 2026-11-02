@@ -26,7 +26,9 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
   const pdfHref =
     subject.slug === 'cau-truc-dai-so' || subject.sources.primary === 'gt-ctds-hvk-2026'
       ? '/docs/Giao_trinh_Cau_truc_dai_so.pdf'
-      : null;
+      : subject.slug === 'hinh-hoc-affine' || subject.sources.primary === 'gt-hhcc-nmh-2004'
+        ? '/docs/Hinhhoccaccap.pdf'
+        : null;
 
   return (
     <section aria-label="Giáo trình và tài liệu tham khảo môn học" className="pt-2">
