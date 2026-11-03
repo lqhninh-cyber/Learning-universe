@@ -17,6 +17,7 @@ import {
   LazyBarycenter,
   LazyDraggablePoint,
   LazyParallelogram,
+  LazyRiemannDarbouxSumDemo,
   LazySequenceEpsilonDemo,
   LazySupremumEpsilonDemo,
   LazyTaylorPolynomialDemo,
@@ -71,6 +72,7 @@ export const mdxComponents: MDXComponents = {
   SequenceEpsilonDemo: LazySequenceEpsilonDemo,
   UniformContinuityDemo: LazyUniformContinuityDemo,
   TaylorPolynomialDemo: LazyTaylorPolynomialDemo,
+  RiemannDarbouxSumDemo: LazyRiemannDarbouxSumDemo,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
   table: (props: ComponentPropsWithoutRef<'table'>) => (

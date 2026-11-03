@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T16:14:50.226Z",
+  "updatedAt": "2026-11-03T16:31:14.014Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1782,6 +1782,88 @@
         "ex-gthmb-c5-b5-bai-8-dinh-ly-darboux": "5.5.9",
         "ex-gthmb-c5-b5-bai-15-chung-minh-e-la-so-vo-ti": "5.5.10",
         "ex-gthmb-c5-b5-bai-18-danh-gia-dao-ham-cap-mot": "5.5.11"
+      }
+    },
+    "phan-hoach-tong-darboux-va-khai-niem-tich-phan-riemann": {
+      "path": "content/single-variable-calculus/06-phep-tinh-tich-phan/01-phan-hoach-tong-darboux-va-khai-niem-tich-phan-riemann.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "ca6dc3669f14935f155f91ff761b688e944c2cae0458f9d1a3722e51167321e5",
+      "numberedBlocks": {
+        "def-gthmb-c6-b1-phan-hoach": "6.1.1",
+        "def-gthmb-c6-b1-do-min-phan-hoach": "6.1.2",
+        "def-gthmb-c6-b1-tong-darboux": "6.1.3",
+        "thm-gthmb-c6-b1-tinh-chat-tong-darboux": "6.1.4",
+        "def-gthmb-c6-b1-tich-phan-riemann": "6.1.5",
+        "exm-gthmb-c6-b1-ham-hang-kha-tich": "6.1.1",
+        "cex-gthmb-c6-b1-ham-dirichlet-khong-kha-tich": "6.1.2",
+        "thm-gthmb-c6-b1-tieu-chuan-kha-tich-riemann": "6.1.6",
+        "thm-gthmb-c6-b1-cac-lop-ham-kha-tich": "6.1.7"
+      }
+    },
+    "tong-riemann-tinh-chat-co-ban-va-dinh-ly-co-ban-cua-giai-tich": {
+      "path": "content/single-variable-calculus/06-phep-tinh-tich-phan/02-tong-riemann-tinh-chat-co-ban-va-dinh-ly-co-ban-cua-giai-tich.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "e9fafd2bf29b5518157d121bc0e84510d6e9f1932a1a970ee7b1ef44fa9b6562",
+      "numberedBlocks": {
+        "def-gthmb-c6-b2-tong-riemann": "6.2.1",
+        "thm-gthmb-c6-b2-gioi-han-tong-riemann": "6.2.2",
+        "exm-gthmb-c6-b2-tinh-tich-phan-bang-tong-riemann": "6.2.1",
+        "thm-gthmb-c6-b2-tinh-chat-co-ban": "6.2.3",
+        "thm-gthmb-c6-b2-tich-phan-ham-hop-va-tri-tuyet-doi": "6.2.4",
+        "thm-gthmb-c6-b2-dinh-ly-gia-tri-trung-binh-tich-phan": "6.2.5",
+        "def-gthmb-c6-b2-ham-tich-phan-can-bien-thien": "6.2.6",
+        "thm-gthmb-c6-b2-tinh-lien-tuc-va-kha-vi-cua-f": "6.2.7",
+        "thm-gthmb-c6-b2-cong-thuc-newton-leibniz": "6.2.8"
+      }
+    },
+    "tich-phan-suy-rong-voi-can-vo-han": {
+      "path": "content/single-variable-calculus/06-phep-tinh-tich-phan/03-tich-phan-suy-rong-voi-can-vo-han.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "f87a0052814e31cc4b9801db51a70728176bde79a8a95402e2b2923d2625fd9e",
+      "numberedBlocks": {
+        "def-gthmb-c6-b3-dinh-nghia-tich-phan-suy-rong-vo-han": "6.3.1",
+        "exm-gthmb-c6-b3-tinh-tich-phan-arctan": "6.3.1",
+        "thm-gthmb-c6-b3-tich-phan-mau-p": "6.3.2",
+        "thm-gthmb-c6-b3-so-sanh-bat-dang-thuc": "6.3.3",
+        "thm-gthmb-c6-b3-so-sanh-gioi-han": "6.3.4",
+        "exm-gthmb-c6-b3-ap-dung-so-sanh": "6.3.2",
+        "thm-gthmb-c6-b3-tieu-chuan-cauchy": "6.3.5",
+        "thm-gthmb-c6-b3-hoi-tu-tuyet-doi-keo-theo-hoi-tu": "6.3.6",
+        "def-gthmb-c6-b3-phan-loai-hoi-tu-tuyet-doi-ban-hoi-tu": "6.3.7",
+        "exm-gthmb-c6-b3-tich-phan-dirichlet-ban-hoi-tu": "6.3.3"
+      }
+    },
+    "tich-phan-suy-rong-cua-ham-khong-bi-chan": {
+      "path": "content/single-variable-calculus/06-phep-tinh-tich-phan/04-tich-phan-suy-rong-cua-ham-khong-bi-chan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "430faf6fa7e9136b38a6c8410beb4ccbdc949dcf12401a0a37dfc6b469cc16a8",
+      "numberedBlocks": {
+        "def-gthmb-c6-b4-diem-bat-thuong-va-tich-phan-loai-2": "6.4.1",
+        "exm-gthmb-c6-b4-tinh-tich-phan-arcsin": "6.4.1",
+        "thm-gthmb-c6-b4-tich-phan-mau-loai-2": "6.4.2",
+        "thm-gthmb-c6-b4-so-sanh-bat-dang-thuc-loai-2": "6.4.3",
+        "thm-gthmb-c6-b4-so-sanh-gioi-han-loai-2": "6.4.4",
+        "thm-gthmb-c6-b4-hoi-tu-tuyet-doi-loai-2": "6.4.5",
+        "exm-gthmb-c6-b4-tich-phan-phuc-hop": "6.4.2"
+      }
+    },
+    "he-thong-bai-tap-chuong-6-va-loi-giai-chuan": {
+      "path": "content/single-variable-calculus/06-phep-tinh-tich-phan/05-he-thong-bai-tap-chuong-6-va-loi-giai-chuan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "5b4b09ff0a909050b0017312956ac177efcd2af58e3ae3ecd945293c8be3a3a7",
+      "numberedBlocks": {
+        "ex-gthmb-c6-b5-bai-1-tinh-tich-phan-can-vo-han": "6.5.1",
+        "ex-gthmb-c6-b5-bai-2-tinh-tich-phan-ham-khong-bi-chan": "6.5.2",
+        "ex-gthmb-c6-b5-bai-3-khao-sat-hoi-tu-loai-1": "6.5.3",
+        "ex-gthmb-c6-b5-bai-4-khao-sat-hoi-tu-loai-2": "6.5.4",
+        "ex-gthmb-c6-b5-bai-5-bien-luan-tham-so-p": "6.5.5",
+        "ex-gthmb-c6-b5-de-thi-mau-cau-4": "6.5.6",
+        "ex-gthmb-c6-b5-bai-8-ham-gamma-euler": "6.5.7"
       }
     }
   }

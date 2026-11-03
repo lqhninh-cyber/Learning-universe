@@ -1,0 +1,475 @@
+---
+id: he-thong-bai-tap-chuong-6-va-loi-giai-chuan
+title: 'Hệ thống bài tập Chương 6 và lời giải chuẩn'
+description: 'Tuyển tập toàn diện 8 bài tập cuối Chương 6 giáo trình Giải tích hàm một biến và câu hỏi tích phân trong đề thi mẫu: tính trực tiếp nguyên hàm, khảo sát hội tụ tích phân suy rộng loại 1 và loại 2, biện luận tham số p và hàm Gamma Euler.'
+estimatedMinutes: 65
+level: advanced
+prerequisites:
+  - phan-hoach-tong-darboux-va-khai-niem-tich-phan-riemann
+  - tong-riemann-tinh-chat-co-ban-va-dinh-ly-co-ban-cua-giai-tich
+  - tich-phan-suy-rong-voi-can-vo-han
+  - tich-phan-suy-rong-cua-ham-khong-bi-chan
+tags:
+  - bài tập tích phân suy rộng
+  - tích phân từng phần
+  - đổi biến tích phân
+  - tiêu chuẩn so sánh
+  - biện luận tham số p
+  - đề thi giải tích
+  - hàm Gamma Euler
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '75-76'
+    sections: 'Bài tập cuối Chương 6'
+    note: 'Toàn bộ 8 bài tập cuối Chương 6 Phép tính tích phân'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Tổng quan hệ thống bài tập Chương 6">
+Chương 6 "Phép tính tích phân" là chuyên đề trọng tâm hàng đầu trong đề thi kết thúc học phần Giải tích hàm một biến (MATH1403). Các câu hỏi thường chiếm từ 2.0 đến 3.0 điểm trong cấu trúc đề thi chuẩn.
+
+Hệ thống bài tập dưới đây bao quát trọn vẹn 8 bài tập cuối chương của giáo trình GV. Trần Trí Dũng (2022) cùng câu hỏi tích phân trong Đề thi mẫu kết thúc học phần:
+- **Dạng 1:** Tính trực tiếp tích phân suy rộng bằng nguyên hàm, đổi biến và tích phân từng phần (Bài 1, Bài 2).
+- **Dạng 2:** Khảo sát sự hội tụ của tích phân suy rộng cận vô hạn loại 1 (Bài 3a-d).
+- **Dạng 3:** Khảo sát sự hội tụ của tích phân suy rộng hàm không bị chặn loại 2 (Bài 4a-e).
+- **Dạng 4:** Biện luận giá trị tham số $p$ để tích phân suy rộng hội tụ (Bài 5a, 5b và Bài 7).
+- **Dạng 5:** Phân tích câu hỏi tích phân kinh điển trong Đề thi mẫu kết thúc học phần.
+- **Chuyên đề nâng cao (*):** Khảo sát hàm Gamma Euler $\Gamma(p)$ và đẳng thức $\Gamma(n) = (n - 1)!$ (Bài 8*).
+</Note>
+
+## Dạng 1: Tính trực tiếp Tích phân Suy rộng
+
+<Exercise
+  id="ex-gthmb-c6-b5-bai-1-tinh-tich-phan-can-vo-han"
+  title="Bài 1: Tính các tích phân suy rộng cận vô hạn bằng nguyên hàm"
+  source="gt-gthmb-ttd-2022"
+  page="75"
+  original="Bài tập 1 (câu a đến d)"
+>
+Tính các tích phân suy rộng sau:
+1. $I_1 = \int_3^{+\infty} \frac{dx}{x^2 - 3x + 2}$
+2. $I_2 = \int_0^{+\infty} x e^{-x} dx$
+3. $I_3 = \int_0^{+\infty} e^{-ax} \cos x dx \quad (a > 0)$
+4. $I_4 = \int_0^{+\infty} \frac{\arctan x}{(1+x^2)^{3/2}} dx$
+</Exercise>
+
+<Solution>
+1. **Câu a: $I_1 = \int_3^{+\infty} \frac{dx}{(x - 1)(x - 2)}$:**
+   Phân tích thành phân thức đơn giản: $\frac{1}{(x-1)(x-2)} = \frac{1}{x-2} - \frac{1}{x-1}$.
+   Với $c > 3$:
+   $$
+   \int_3^c \left(\frac{1}{x-2} - \frac{1}{x-1}\right) dx = \left[ \ln\left|\frac{x-2}{x-1}\right| \right]_3^c = \ln\left(\frac{c-2}{c-1}\right) - \ln\left(\frac{1}{2}\right).
+   $$
+   Khi $c \to +\infty$, $\lim_{c \to +\infty} \frac{c-2}{c-1} = 1 \implies \ln(1) = 0$.
+   Do đó:
+   $$
+   I_1 = 0 - \ln\left(\frac{1}{2}\right) = \ln 2.
+   $$
+
+2. **Câu b: $I_2 = \int_0^{+\infty} x e^{-x} dx$:**
+   Sử dụng phương pháp tích phân từng phần: đặt $u = x \implies du = dx$; $dv = e^{-x} dx \implies v = -e^{-x}$.
+   Với $c > 0$:
+   $$
+   \int_0^c x e^{-x} dx = \big[ -x e^{-x} \big]_0^c + \int_0^c e^{-x} dx = -c e^{-c} - e^{-c} + 1.
+   $$
+   Theo quy tắc L'Hôpital hoặc giới hạn cơ bản: $\lim_{c \to +\infty} c e^{-c} = \lim_{c \to +\infty} \frac{c}{e^c} = 0$, và $\lim_{c \to +\infty} e^{-c} = 0$.
+   Vậy:
+   $$
+   I_2 = \lim_{c \to +\infty} (1 - c e^{-c} - e^{-c}) = 1.
+   $$
+
+3. **Câu c: $I_3 = \int_0^{+\infty} e^{-ax} \cos x dx$ ($a > 0$):**
+   Ta tìm nguyên hàm của $e^{-ax} \cos x$ bằng tích phân từng phần hai lần:
+   $$
+   \int e^{-ax} \cos x dx = \frac{e^{-ax}(-a\cos x + \sin x)}{a^2 + 1}.
+   $$
+   Với mỗi $c > 0$:
+   $$
+   \int_0^c e^{-ax} \cos x dx = \left[ \frac{e^{-ax}(-a\cos x + \sin x)}{a^2 + 1} \right]_0^c = \frac{e^{-ac}(-a\cos c + \sin c)}{a^2 + 1} - \frac{-a}{a^2 + 1}.
+   $$
+   Vì $a > 0$, khi $c \to +\infty$ ta có $e^{-ac} \to 0$, trong khi hàm lượng giác $-a\cos c + \sin c$ bị chặn bởi $\sqrt{a^2 + 1}$.
+   Theo nguyên lý kẹp, số hạng thứ nhất triệt tiêu về $0$. Do đó:
+   $$
+   I_3 = 0 - \left(-\frac{a}{a^2 + 1}\right) = \frac{a}{a^2 + 1}.
+   $$
+
+4. **Câu d: $I_4 = \int_0^{+\infty} \frac{\arctan x}{(1+x^2)^{3/2}} dx$:**
+   Đặt tích phân từng phần: $u = \arctan x \implies du = \frac{dx}{1+x^2}$; $dv = \frac{dx}{(1+x^2)^{3/2}} \implies v = \frac{x}{\sqrt{1+x^2}}$ (do $\int (1+x^2)^{-3/2} x dx$ sau đổi biến).
+   $$
+   \int \frac{\arctan x}{(1+x^2)^{3/2}} dx = \frac{x \arctan x}{\sqrt{1+x^2}} - \int \frac{x dx}{(1+x^2)^{3/2}} = \frac{x \arctan x + 1}{\sqrt{1+x^2}}.
+   $$
+   Tại cận $0$: $\frac{0 + 1}{\sqrt{1}} = 1$.
+   Khi $c \to +\infty$: $\frac{c \arctan c}{\sqrt{1+c^2}} = \frac{c}{\sqrt{1+c^2}} \arctan c \to 1 \cdot \frac{\pi}{2} = \frac{\pi}{2}$, và $\frac{1}{\sqrt{1+c^2}} \to 0$.
+   Vậy:
+   $$
+   I_4 = \frac{\pi}{2} - 1.
+   $$
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c6-b5-bai-2-tinh-tich-phan-ham-khong-bi-chan"
+  title="Bài 2: Tính các tích phân suy rộng loại 2 (hàm không bị chặn)"
+  source="gt-gthmb-ttd-2022"
+  page="75"
+  original="Bài tập 2 (câu a đến d)"
+>
+Tính các tích phân suy rộng sau trên đoạn $[0; 1]$:
+1. $J_1 = \int_0^1 \frac{x+1}{\sqrt{x}} dx$
+2. $J_2 = \int_0^1 \ln x dx$
+3. $J_3 = \int_0^1 \frac{dx}{(2-x)\sqrt{1-x}}$
+4. $J_4 = \int_0^1 x \ln^2 x dx$
+</Exercise>
+
+<Solution>
+1. **Câu a: $J_1 = \int_0^1 \frac{x+1}{\sqrt{x}} dx$ (Điểm bất thường tại $x = 0$):**
+   Tách hàm dưới dấu tích phân: $\frac{x+1}{\sqrt{x}} = x^{1/2} + x^{-1/2}$.
+   $$
+   J_1 = \lim_{c \to 0^+} \int_c^1 (x^{1/2} + x^{-1/2}) dx = \lim_{c \to 0^+} \left[ \frac{2}{3} x^{3/2} + 2 x^{1/2} \right]_c^1 = \left(\frac{2}{3} + 2\right) - \lim_{c \to 0^+} \left(\frac{2}{3} c^{3/2} + 2 c^{1/2}\right) = \frac{8}{3} - 0 = \frac{8}{3}.
+   $$
+
+2. **Câu b: $J_2 = \int_0^1 \ln x dx$ (Điểm bất thường tại $x = 0$):**
+   Tích phân từng phần: $u = \ln x, dv = dx \implies v = x$.
+   $$
+   \int \ln x dx = x \ln x - x.
+   $$
+   $$
+   J_2 = \lim_{c \to 0^+} \big[ x \ln x - x \big]_c^1 = (0 - 1) - \lim_{c \to 0^+} (c \ln c - c).
+   $$
+   Theo giới hạn cơ bản (Ví dụ 5.4.3), $\lim_{c \to 0^+} c \ln c = 0$.
+   Vậy:
+   $$
+   J_2 = -1 - 0 = -1.
+   $$
+
+3. **Câu c: $J_3 = \int_0^1 \frac{dx}{(2-x)\sqrt{1-x}}$ (Điểm bất thường tại $x = 1$):**
+   Thực hiện phép đổi biến: Đặt $t = \sqrt{1-x} \implies x = 1 - t^2 \implies dx = -2t dt$.
+   Khi $x = 0 \implies t = 1$; khi $x \to 1^- \implies t \to 0^+$.
+   Mẫu số: $(2 - x)\sqrt{1-x} = (2 - (1 - t^2)) t = (1 + t^2)t$.
+   $$
+   J_3 = \int_1^0 \frac{-2t dt}{(1 + t^2)t} = \int_0^1 \frac{2 dt}{1 + t^2} = 2 \big[ \arctan t \big]_0^1 = 2\left(\frac{\pi}{4} - 0\right) = \frac{\pi}{2}.
+   $$
+
+4. **Câu d: $J_4 = \int_0^1 x \ln^2 x dx$ (Điểm bất thường tại $x = 0$):**
+   Tích phân từng phần: đặt $u = \ln^2 x \implies du = \frac{2\ln x}{x} dx$; $dv = x dx \implies v = \frac{x^2}{2}$.
+   $$
+   \int x \ln^2 x dx = \frac{x^2}{2} \ln^2 x - \int x \ln x dx.
+   $$
+   Lại tích phân từng phần $\int x \ln x dx = \frac{x^2}{2} \ln x - \frac{x^2}{4}$. Do đó:
+   $$
+   \int x \ln^2 x dx = \frac{x^2}{2} \ln^2 x - \frac{x^2}{2} \ln x + \frac{x^2}{4}.
+   $$
+   Tại $x = 1$, giá trị bằng $\frac{1}{4}$.
+   Tại $c \to 0^+$, vì $\lim_{c \to 0^+} c^\alpha \ln^\beta c = 0$ với mọi $\alpha > 0$, các số hạng $c^2 \ln^2 c$ và $c^2 \ln c$ đều triệt tiêu về $0$.
+   Vậy:
+   $$
+   J_4 = \frac{1}{4} - 0 = \frac{1}{4}.
+   $$
+</Solution>
+
+## Dạng 2: Khảo sát sự Hội tụ của Tích phân Loại 1 (Cận vô hạn)
+
+<Exercise
+  id="ex-gthmb-c6-b5-bai-3-khao-sat-hoi-tu-loai-1"
+  title="Bài 3: Khảo sát sự hội tụ của 4 tích phân suy rộng cận vô hạn"
+  source="gt-gthmb-ttd-2022"
+  page="75"
+  original="Bài tập 3 (câu a đến d)"
+>
+Xét sự hội tụ của các tích phân sau:
+1. $K_1 = \int_1^{+\infty} \frac{x+1}{\sqrt[3]{x^7 - 3x + 2}} dx$
+2. $K_2 = \int_1^{+\infty} \left(1 - \cos \frac{2}{x}\right) dx$
+3. $K_3 = \int_1^{+\infty} \frac{1}{x} \left(e^{1/x} - \cos \frac{1}{x}\right) dx$
+4. $K_4 = \int_1^{+\infty} \frac{\ln(x+1)}{x^2} dx$
+</Exercise>
+
+<Solution>
+1. **Câu a:** Khi $x \to +\infty$:
+   $$
+   f(x) = \frac{x+1}{\sqrt[3]{x^7 - 3x + 2}} \sim \frac{x}{\sqrt[3]{x^7}} = \frac{x}{x^{7/3}} = \frac{1}{x^{4/3}}.
+   $$
+   Chọn hàm so sánh $g(x) = \frac{1}{x^{4/3}}$. Ta có $\lim_{x \to +\infty} \frac{f(x)}{g(x)} = 1$.
+   Vì tích phân mẫu $\int_1^{+\infty} \frac{dx}{x^{4/3}}$ hội tụ (do $p = \frac{4}{3} > 1$), tích phân $K_1$ **hội tụ**.
+
+2. **Câu b:** Đặt $t = \frac{2}{x}$. Khi $x \to +\infty$ thì $t \to 0$.
+   Áp dụng tương đương vô cùng bé: $1 - \cos t \sim \frac{t^2}{2} = \frac{1}{2}\left(\frac{2}{x}\right)^2 = \frac{2}{x^2}$.
+   Do đó:
+   $$
+   \lim_{x \to +\infty} \frac{1 - \cos(2/x)}{1/x^2} = 2 \in (0; +\infty).
+   $$
+   Vì tích phân mẫu $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ ($p = 2 > 1$), tích phân $K_2$ **hội tụ**.
+
+3. **Câu c:** Đặt $t = \frac{1}{x} \to 0$ khi $x \to +\infty$.
+   Sử dụng khai triển Maclaurin của $e^t$ và $\cos t$:
+   $$
+   e^t = 1 + t + o(t), \quad \cos t = 1 - \frac{t^2}{2} + o(t^2) \implies e^t - \cos t = t + o(t) \sim t = \frac{1}{x}.
+   $$
+   Do đó hàm dưới dấu tích phân thỏa mãn:
+   $$
+   f(x) = \frac{1}{x}\left(e^{1/x} - \cos \frac{1}{x}\right) \sim \frac{1}{x} \cdot \frac{1}{x} = \frac{1}{x^2}.
+   $$
+   Vì $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ ($p = 2 > 1$), tích phân $K_3$ **hội tụ**.
+
+4. **Câu d:** Với $x \ge 1$, ta có bất đẳng thức đánh giá tăng trưởng: với bất kỳ $\varepsilon > 0$, $\ln(x+1) \le C x^\varepsilon$.
+   Chọn $\varepsilon = \frac{1}{2}$, ta xét giới hạn so sánh với $g(x) = \frac{1}{x^{3/2}}$:
+   $$
+   \lim_{x \to +\infty} \frac{\frac{\ln(x+1)}{x^2}}{\frac{1}{x^{3/2}}} = \lim_{x \to +\infty} \frac{\ln(x+1)}{\sqrt{x}} \overset{\text{L'H}}{=} \lim_{x \to +\infty} \frac{\frac{1}{x+1}}{\frac{1}{2\sqrt{x}}} = \lim_{x \to +\infty} \frac{2\sqrt{x}}{x+1} = 0.
+   $$
+   Theo Tiêu chuẩn so sánh giới hạn (trường hợp $k = 0$), vì $\int_1^{+\infty} \frac{dx}{x^{3/2}}$ hội tụ ($p = \frac{3}{2} > 1$), nên tích phân $K_4$ **hội tụ**.
+</Solution>
+
+## Dạng 3: Khảo sát sự Hội tụ của Tích phân Loại 2 và Phức hợp
+
+<Exercise
+  id="ex-gthmb-c6-b5-bai-4-khao-sat-hoi-tu-loai-2"
+  title="Bài 4: Khảo sát sự hội tụ của 5 tích phân suy rộng loại 2 và phức hợp"
+  source="gt-gthmb-ttd-2022"
+  page="75"
+  original="Bài tập 4 (câu a đến e)"
+>
+Xét sự hội tụ của các tích phân sau:
+1. $L_1 = \int_0^1 \frac{x}{\sin^2 x} dx$
+2. $L_2 = \int_0^1 \frac{x^3}{\sqrt{1 - x^4}} dx$
+3. $L_3 = \int_0^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx$
+4. $L_4 = \int_0^{+\infty} \frac{1 - \cos x}{x^2} dx$
+5. $L_5 = \int_0^{\pi/2} \frac{\ln(\sin x)}{\sqrt{x}} dx$
+</Exercise>
+
+<Solution>
+1. **Câu a: Điểm bất thường tại $x = 0$:**
+   Khi $x \to 0^+$, ta có $\sin x \sim x \implies \sin^2 x \sim x^2$.
+   Do đó:
+   $$
+   f(x) = \frac{x}{\sin^2 x} \sim \frac{x}{x^2} = \frac{1}{x}.
+   $$
+   Vì tích phân mẫu loại 2 $\int_0^1 \frac{dx}{x}$ phân kỳ ($p = 1 \ge 1$), tích phân $L_1$ **phân kỳ**.
+
+2. **Câu b: Điểm bất thường tại $x = 1$:**
+   Phân tích mẫu số khi $x \to 1^-$:
+   $$
+   1 - x^4 = (1 - x)(1 + x)(1 + x^2) \sim (1 - x) \cdot 2 \cdot 2 = 4(1 - x).
+   $$
+   Suy ra:
+   $$
+   f(x) = \frac{x^3}{\sqrt{1 - x^4}} \sim \frac{1}{\sqrt{4(1 - x)}} = \frac{1}{2(1 - x)^{1/2}}.
+   $$
+   Vì tích phân mẫu loại 2 $\int_0^1 \frac{dx}{(1 - x)^{1/2}}$ hội tụ ($p = \frac{1}{2} < 1$), tích phân $L_2$ **hội tụ**.
+
+3. **Câu c: Tích phân phức hợp (Kỳ dị tại $0$ và cận $+\infty$):**
+   Tách tích phân: $L_3 = \int_0^1 \frac{e^{-x}}{\sqrt{x}} dx + \int_1^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx = A + B$.
+   - Tại $0$: Khi $x \to 0^+$, $\frac{e^{-x}}{\sqrt{x}} \sim \frac{1}{x^{1/2}}$. Tích phân mẫu hội tụ vì $p = 1/2 < 1 \implies A$ hội tụ.
+   - Tại $+\infty$: Với $x \ge 1$, $\frac{e^{-x}}{\sqrt{x}} \le e^{-x}$. Tích phân $\int_1^{+\infty} e^{-x} dx$ hội tụ $\implies B$ hội tụ.
+   Vậy $L_3$ **hội tụ**.
+
+4. **Câu d: Tích phân tại $0$ và $+\infty$:**
+   Tách tích phân: $L_4 = \int_0^1 \frac{1 - \cos x}{x^2} dx + \int_1^{+\infty} \frac{1 - \cos x}{x^2} dx$.
+   - Tại $x \to 0^+$: Ta có $1 - \cos x \sim \frac{x^2}{2} \implies \lim_{x \to 0^+} \frac{1 - \cos x}{x^2} = \frac{1}{2}$.
+     Hàm số có giới hạn hữu hạn tại $0$, do đó điểm $0$ không phải là điểm bất thường (hàm số liên tục và bị chặn trên $[0; 1]$). Tích phân trên $[0; 1]$ là tích phân Riemann xác định thông thường!
+   - Tại cận $+\infty$: $\left|\frac{1 - \cos x}{x^2}\right| \le \frac{2}{x^2}$. Vì $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ ($p = 2 > 1$), tích phân trên $[1; +\infty)$ hội tụ.
+   Vậy $L_4$ **hội tụ**.
+
+5. **Câu e: Điểm bất thường tại $x = 0$:**
+   Khi $x \to 0^+$, $\sin x \sim x \implies \ln(\sin x) = \ln\left(x \cdot \frac{\sin x}{x}\right) = \ln x + \ln\left(\frac{\sin x}{x}\right) \sim \ln x$.
+   Do đó $f(x) \sim \frac{\ln x}{\sqrt{x}}$.
+   Xét tích phân $\int_0^{\pi/2} \frac{\ln x}{\sqrt{x}} dx$ bằng tích phân từng phần:
+   $$
+   \int x^{-1/2} \ln x dx = 2\sqrt{x} \ln x - 4\sqrt{x}.
+   $$
+   Khi $c \to 0^+$, $\lim_{c \to 0^+} \sqrt{c} \ln c = 0$.
+   Giới hạn hữu hạn, do đó tích phân $L_5$ **hội tụ**.
+</Solution>
+
+## Dạng 4: Biện luận Tham số $p$ để Tích phân Suy rộng Hội tụ
+
+<Exercise
+  id="ex-gthmb-c6-b5-bai-5-bien-luan-tham-so-p"
+  title="Bài 5: Tìm tham số thực p để tích phân suy rộng hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="76"
+  original="Bài tập 5"
+>
+Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các tích phân sau hội tụ:
+1. $M_1 = \int_0^{+\infty} \frac{x^p}{1 + x} dx$
+2. $M_2 = \int_0^{+\infty} \frac{\ln(1 + x)}{x^p} dx$
+</Exercise>
+
+<Solution>
+1. **Khảo sát $M_1 = \int_0^{+\infty} \frac{x^p}{1 + x} dx$:**
+   Tích phân có hai vị trí nhạy cảm: điểm $0$ và cận $+\infty$. Ta tách tích phân tại $1$:
+   $$
+   M_1 = \int_0^1 \frac{x^p}{1 + x} dx + \int_1^{+\infty} \frac{x^p}{1 + x} dx = I_1 + I_2.
+   $$
+   - **Xét $I_1$ trên $(0; 1]$ (Điểm kỳ dị tại $0$):**
+     Khi $x \to 0^+$, $1 + x \sim 1 \implies \frac{x^p}{1+x} \sim x^p = \frac{1}{x^{-p}}$.
+     Theo tiêu chuẩn tích phân loại 2, $I_1$ hội tụ khi và chỉ khi:
+     $$
+     -p < 1 \iff p > -1.
+     $$
+   - **Xét $I_2$ trên $[1; +\infty)$ (Cận vô hạn):**
+     Khi $x \to +\infty$, $1 + x \sim x \implies \frac{x^p}{1+x} \sim \frac{x^p}{x} = \frac{1}{x^{1-p}}$.
+     Theo tiêu chuẩn tích phân loại 1, $I_2$ hội tụ khi và chỉ khi:
+     $$
+     1 - p > 1 \iff p < 0.
+     $$
+   Kết hợp cả hai điều kiện để $M_1$ hội tụ:
+   $$
+   -1 < p < 0.
+   $$
+
+2. **Khảo sát $M_2 = \int_0^{+\infty} \frac{\ln(1 + x)}{x^p} dx$:**
+   Tách tích phân tại $1$: $M_2 = \int_0^1 \frac{\ln(1+x)}{x^p} dx + \int_1^{+\infty} \frac{\ln(1+x)}{x^p} dx = J_1 + J_2$.
+   - **Xét $J_1$ trên $(0; 1]$ (Điểm kỳ dị tại $0$):**
+     Khi $x \to 0^+$, $\ln(1+x) \sim x \implies \frac{\ln(1+x)}{x^p} \sim \frac{x}{x^p} = \frac{1}{x^{p-1}}$.
+     Tích phân loại 2 này hội tụ khi và chỉ khi:
+     $$
+     p - 1 < 1 \iff p < 2.
+     $$
+   - **Xét $J_2$ trên $[1; +\infty)$ (Cận vô hạn):**
+     Khi $x \to +\infty$, hàm $\ln(1+x)$ tăng chậm hơn bất kỳ hàm lũy thừa dương nào.
+     - Nếu $p \le 1$, thì với $x \ge e$: $\frac{\ln(1+x)}{x^p} \ge \frac{\ln x}{x} \ge \frac{1}{x}$, mà $\int_e^{+\infty} \frac{dx}{x}$ phân kỳ nên $J_2$ phân kỳ.
+     - Nếu $p > 1$, chọn số $\delta > 0$ sao cho $p - \delta > 1$. Vì $\lim_{x \to +\infty} \frac{\ln(1+x)}{x^\delta} = 0$, tồn tại $C > 0$ sao cho $\frac{\ln(1+x)}{x^p} \le \frac{C}{x^{p-\delta}}$. Do $p - \delta > 1$, tích phân $J_2$ hội tụ.
+     Vậy $J_2$ hội tụ khi và chỉ khi $p > 1$.
+   Kết hợp cả hai điều kiện để $M_2$ hội tụ:
+   $$
+   1 < p < 2.
+   $$
+</Solution>
+
+## Dạng 5: Phân tích Câu hỏi Tích phân trong Đề thi Mẫu
+
+<Exercise
+  id="ex-gthmb-c6-b5-de-thi-mau-cau-4"
+  title="Câu 4 Đề thi Mẫu Kết thúc Học phần: Tính tích phân từng phần và biện luận hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="88"
+  original="Đề thi kết thúc học phần mẫu — Câu 4"
+>
+1. Tính tích phân suy rộng:
+   $$
+   I = \int_0^1 x \ln x dx.
+   $$
+2. Tìm tất cả các giá trị của $p \in \mathbb{R}$ sao cho tích phân sau hội tụ:
+   $$
+   J = \int_0^{+\infty} \frac{e^{-x}}{x^p} dx.
+   $$
+</Exercise>
+
+<Solution>
+1. **Tính tích phân $I = \int_0^1 x \ln x dx$:**
+   Hàm số $f(x) = x \ln x$ có điểm bất thường tại $x = 0$ (do $\ln x \to -\infty$).
+   Áp dụng phương pháp tích phân từng phần:
+   - Đặt $u = \ln x \implies du = \frac{1}{x} dx$.
+   - Đặt $dv = x dx \implies v = \frac{x^2}{2}$.
+   
+   Ta tìm nguyên hàm:
+   $$
+   \int x \ln x dx = \frac{x^2}{2} \ln x - \int \frac{x^2}{2} \cdot \frac{1}{x} dx = \frac{x^2}{2} \ln x - \frac{1}{2} \int x dx = \frac{x^2}{2} \ln x - \frac{x^2}{4}.
+   $$
+   Với mỗi $c \in (0; 1)$:
+   $$
+   \int_c^1 x \ln x dx = \left( \frac{1^2}{2} \ln 1 - \frac{1^2}{4} \right) - \left( \frac{c^2}{2} \ln c - \frac{c^2}{4} \right) = -\frac{1}{4} - \frac{c^2}{2} \ln c + \frac{c^2}{4}.
+   $$
+   Áp dụng quy tắc L'Hôpital hoặc giới hạn cơ bản:
+   $$
+   \lim_{c \to 0^+} c^2 \ln c = \lim_{c \to 0^+} \frac{\ln c}{\frac{1}{c^2}} \overset{\text{L'H}}{=} \lim_{c \to 0^+} \frac{\frac{1}{c}}{-\frac{2}{c^3}} = \lim_{c \to 0^+} \left(-\frac{c^2}{2}\right) = 0.
+   $$
+   Do đó:
+   $$
+   I = \lim_{c \to 0^+} \left( -\frac{1}{4} - \frac{c^2}{2} \ln c + \frac{c^2}{4} \right) = -\frac{1}{4} - 0 + 0 = -\frac{1}{4}.
+   $$
+
+2. **Tìm $p \in \mathbb{R}$ để $J = \int_0^{+\infty} \frac{e^{-x}}{x^p} dx$ hội tụ:**
+   Hàm số $f(x) = \frac{e^{-x}}{x^p}$ xác định và liên tục trên $(0; +\infty)$.
+   Tích phân có hai điểm cần khảo sát: điểm $0$ và cận $+\infty$. Phân tách tích phân tại $1$:
+   $$
+   J = \int_0^1 \frac{e^{-x}}{x^p} dx + \int_1^{+\infty} \frac{e^{-x}}{x^p} dx = J_1 + J_2.
+   $$
+   - **Xét $J_1 = \int_0^1 \frac{e^{-x}}{x^p} dx$ (Khảo sát tại $x = 0$):**
+     Khi $x \to 0^+$, ta có $\lim_{x \to 0^+} e^{-x} = 1$. Do đó:
+     $$
+     \frac{e^{-x}}{x^p} \sim \frac{1}{x^p}.
+     $$
+     Tích phân mẫu loại 2 $\int_0^1 \frac{dx}{x^p}$ hội tụ khi và chỉ khi:
+     $$
+     p < 1.
+     $$
+   - **Xét $J_2 = \int_1^{+\infty} \frac{e^{-x}}{x^p} dx$ (Khảo sát tại $+\infty$):**
+     Hàm mũ giảm rất nhanh ra vô cực. Ta so sánh với tích phân hội tụ $\int_1^{+\infty} \frac{dx}{x^2}$:
+     $$
+     \lim_{x \to +\infty} \frac{\frac{e^{-x}}{x^p}}{\frac{1}{x^2}} = \lim_{x \to +\infty} \frac{x^{2-p}}{e^x} = 0 \quad (\forall p \in \mathbb{R}).
+     $$
+     Theo Tiêu chuẩn so sánh giới hạn (trường hợp $k = 0$), vì $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ, nên $J_2$ **luôn luôn hội tụ với mọi giá trị $p \in \mathbb{R}$**.
+   
+   Kết luận: Tích phân $J$ hội tụ khi và chỉ khi:
+   $$
+   p < 1.
+   $$
+</Solution>
+
+## Chuyên đề Nâng cao: Hàm Gamma Euler (Bài 8*)
+
+Hàm Gamma Euler $\Gamma(p)$ là một trong những hàm đặc biệt quan trọng nhất của toán học giải tích, là sự thác triển liên tục của phép tính giai thừa $n!$ trên tập số thực (<Cite source="gt-gthmb-ttd-2022" page="76" note="Bài tập 8*" />).
+
+<Exercise
+  id="ex-gthmb-c6-b5-bai-8-ham-gamma-euler"
+  title="Bài 8*: Khảo sát sự hội tụ của tích phân Euler và công thức Gamma(n) = (n - 1)!"
+  source="gt-gthmb-ttd-2022"
+  page="76"
+  original="Bài tập 8*"
+>
+1. Chứng minh rằng tích phân suy rộng $\int_0^{+\infty} x^{p-1} e^{-x} dx$ hội tụ khi và chỉ khi $p > 0$.
+2. Đặt $\Gamma(p) = \int_0^{+\infty} x^{p-1} e^{-x} dx$ với $p > 0$. Chứng minh rằng $\Gamma(n) = (n - 1)!$ với mọi $n \in \mathbb{N}^*$.
+</Exercise>
+
+<Solution>
+1. **Chứng minh sự hội tụ khi và chỉ khi $p > 0$:**
+   Tách tích phân tại $1$:
+   $$
+   \Gamma(p) = \int_0^1 x^{p-1} e^{-x} dx + \int_1^{+\infty} x^{p-1} e^{-x} dx = H_1 + H_2.
+   $$
+   - Tại $0$: Khi $x \to 0^+$, $e^{-x} \to 1 \implies x^{p-1} e^{-x} \sim x^{p-1} = \frac{1}{x^{1-p}}$.
+     Tích phân mẫu loại 2 này hội tụ khi và chỉ khi:
+     $$
+     1 - p < 1 \iff p > 0.
+     $$
+   - Tại $+\infty$: Vì $\lim_{x \to +\infty} \frac{x^{p-1} e^{-x}}{1/x^2} = \lim_{x \to +\infty} \frac{x^{p+1}}{e^x} = 0$ với mọi $p$, nên $H_2$ luôn hội tụ với mọi $p \in \mathbb{R}$.
+   Vậy tích phân hội tụ khi và chỉ khi $p > 0$.
+
+2. **Chứng minh $\Gamma(n) = (n - 1)!$:**
+   - Trước hết với $p = 1$:
+     $$
+     \Gamma(1) = \int_0^{+\infty} x^0 e^{-x} dx = \int_0^{+\infty} e^{-x} dx = \big[ -e^{-x} \big]_0^{+\infty} = 0 - (-1) = 1.
+     $$
+   - Với mọi $p > 0$, ta thiết lập hệ thức truy hồi bằng tích phân từng phần:
+     Đặt $u = x^p \implies du = p x^{p-1} dx$; $dv = e^{-x} dx \implies v = -e^{-x}$.
+     $$
+     \Gamma(p + 1) = \int_0^{+\infty} x^p e^{-x} dx = \big[ -x^p e^{-x} \big]_0^{+\infty} + p \int_0^{+\infty} x^{p-1} e^{-x} dx.
+     $$
+     Vì $\lim_{x \to +\infty} x^p e^{-x} = 0$ và $\lim_{x \to 0^+} x^p e^{-x} = 0$ (do $p > 0$), số hạng ngoài dấu tích phân triệt tiêu hoàn toàn. Do đó ta thu được phương trình hàm cơ bản:
+     $$
+     \Gamma(p + 1) = p \Gamma(p).
+     $$
+   - Áp dụng liên tiếp cho số nguyên dương $n \in \mathbb{N}^*$:
+     $$
+     \Gamma(n) = (n - 1)\Gamma(n - 1) = (n - 1)(n - 2)\Gamma(n - 2) = \dots = (n - 1)(n - 2)\dots 1 \cdot \Gamma(1) = (n - 1)! \cdot 1 = (n - 1)!.
+     $$
+   Chứng minh hoàn tất.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Phương pháp tính trực tiếp:** Sử dụng bảng nguyên hàm kết hợp biến đổi L'Hôpital khi khử giới hạn vô định tại các cận tiệm cận ($x e^{-x} \to 0, x \ln x \to 0$).
+- **Khảo sát hội tụ loại 1:** So sánh tương đương khi $x \to +\infty$ với tích phân mẫu $\frac{1}{x^p}$ ($p > 1$ hội tụ).
+- **Khảo sát hội tụ loại 2:** Tìm bậc kỳ dị tại điểm bất thường $a$ hoặc $b$, so sánh với $\frac{1}{(x-a)^p}$ ($p < 1$ hội tụ).
+- **Phân tách tích phân:** Nếu tích phân có cả điểm kỳ dị tại $0$ và cận $+\infty$, luôn tách tại $x = 1$. Tích phân hội tụ khi và chỉ khi cả hai thành phần đều thỏa mãn điều kiện độc lập.
+- **Hàm Gamma Euler:** $\Gamma(p) = \int_0^{+\infty} x^{p-1} e^{-x} dx$ hội tụ với $p > 0$, thỏa mãn $\Gamma(p+1) = p\Gamma(p)$ và mở rộng khái niệm giai thừa $\Gamma(n) = (n-1)!$.
+</KeyTakeaways>

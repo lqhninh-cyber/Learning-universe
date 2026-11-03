@@ -1,0 +1,309 @@
+---
+id: tong-riemann-tinh-chat-co-ban-va-dinh-ly-co-ban-cua-giai-tich
+title: 'Tổng Riemann, tính chất cơ bản và định lý cơ bản của Giải tích'
+description: 'Khái niệm tổng Riemann, tính toán tích phân bằng giới hạn tổng tích phân, các tính chất đại số và thứ tự của tích phân xác định, định lý giá trị trung bình tích phân và công thức Newton-Leibniz.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - phan-hoach-tong-darboux-va-khai-niem-tich-phan-riemann
+  - khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc
+tags:
+  - tổng Riemann
+  - tính chất tích phân
+  - định lý giá trị trung bình tích phân
+  - hàm tích phân biến thiên
+  - công thức Newton-Leibniz
+  - nguyên hàm
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '66-69'
+    sections: 'Mục 6.1.2 - 6.1.4'
+    note: 'Tổng Riemann, tính chất tích phân xác định, định lý trung bình và công thức Newton-Leibniz'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu định nghĩa Tổng Riemann và phân hoạch đánh dấu:** Vận dụng công thức $S(P, f) = \sum_{i=1}^n f(t_i)\Delta x_i$ và tính tích phân bằng định nghĩa giới hạn $\lim_{\mu(P) \to 0} S(P, f)$.
+2. **Nắm vững hệ thống tính chất của tích phân xác định:** Thành thạo tính tuyến tính, tính cộng tính trên các đoạn liên tiếp, tính bảo toàn thứ tự và bất đẳng thức tam giác $|\int_a^b f| \le \int_a^b |f|$.
+3. **Vận dụng Định lý giá trị trung bình cho tích phân:** Hiểu bản chất giá trị trung bình của hàm số và xác định điểm trung gian $c \in [a; b]$ sao cho $\int_a^b f(x)dx = (b - a)f(c)$.
+4. **Làm chủ Định lý cơ bản của Giải tích (Newton-Leibniz):** Chứng minh tính khả vi của hàm tích phân cận biến thiên $F(x) = \int_a^x f(t)dt$ và vận dụng công thức $\int_a^b f(x)dx = G(b) - G(a)$ để tính toán tích phân qua nguyên hàm.
+</Note>
+
+## 1. Phân hoạch Đánh dấu và Tổng Riemann
+
+Khác với tổng Darboux sử dụng giá trị cực trị địa phương $M_i$ và $m_i$ trên từng đoạn con, tổng Riemann cho phép chọn điểm lấy mẫu tùy ý bên trong mỗi khoảng chia (<Cite source="gt-gthmb-ttd-2022" page="66" note="Mục 6.1.2" />).
+
+<Definition
+  id="def-gthmb-c6-b2-tong-riemann"
+  title="Phân hoạch đánh dấu và Tổng Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="66"
+  original="Mục 6.1.2"
+>
+Cho hàm số $f: [a; b] \to \mathbb{R}$ bị chặn và phân hoạch $P = \{x_1, x_2, \dots, x_{n+1}\}$ của đoạn $[a; b]$.
+Nếu trên mỗi đoạn con $[x_i; x_{i+1}]$ ($i = 1, \dots, n$), ta chọn một điểm đại diện:
+$$
+t_i \in [x_i; x_{i+1}],
+$$
+thì tập hợp $\{P, (t_i)_{i=1}^n\}$ được gọi là một **phân hoạch đã được đánh dấu**.
+Tổng đại số:
+$$
+S(P, f) = \sum_{i=1}^n f(t_i)(x_{i+1} - x_i)
+$$
+được gọi là **tổng Riemann** của hàm số $f$ ứng với phân hoạch đánh dấu $P$.
+Vì $m_i(f) \le f(t_i) \le M_i(f)$ với mọi $i$, tổng Riemann luôn bị kẹp giữa hai tổng Darboux:
+$$
+L(P, f) \le S(P, f) \le U(P, f).
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c6-b2-gioi-han-tong-riemann"
+  title="Đặc trưng Tích phân Riemann qua giới hạn Tổng Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="67"
+  original="Định lý 6.1.7"
+>
+Hàm số $f \in \mathcal{R}([a; b])$ khi và chỉ khi tồn tại một số thực $I$ thỏa mãn điều kiện sau:
+Với mọi $\varepsilon > 0$, tồn tại $\delta > 0$ sao cho với mọi phân hoạch $P$ có độ mịn $\mu(P) < \delta$ và với mọi cách chọn điểm đánh dấu $t_i \in [x_i; x_{i+1}]$, ta đều có:
+$$
+|S(P, f) - I| < \varepsilon.
+$$
+Khi đó ta viết:
+$$
+\lim_{\mu(P) \to 0} S(P, f) = \int_a^b f(x) dx = I.
+$$
+</Theorem>
+
+<Example
+  id="exm-gthmb-c6-b2-tinh-tich-phan-bang-tong-riemann"
+  title="Tính tích phân của hàm f(x) = x trên [0; 1] bằng giới hạn tổng Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="67"
+  original="Ví dụ 6.1.8"
+>
+Tính tích phân $\int_0^1 x dx$ bằng định nghĩa tổng Riemann.
+
+**Lời giải:**
+Vì $f(x) = x$ liên tục trên $[0; 1]$ nên $f \in \mathcal{R}([0; 1])$.
+Ta chia đều đoạn $[0; 1]$ thành $n$ đoạn bằng nhau bởi các điểm chia:
+$$
+0 < \frac{1}{n} < \frac{2}{n} < \dots < \frac{n-1}{n} < 1.
+$$
+Khi đó $\Delta x_i = \frac{1}{n}$ và độ mịn $\mu(P) = \frac{1}{n} \to 0$ khi $n \to +\infty$.
+Chọn điểm đánh dấu là mút phải của mỗi đoạn con: $t_i = \frac{i}{n} \in \left[\frac{i-1}{n}; \frac{i}{n}\right]$.
+Tổng Riemann tương ứng là:
+$$
+S(P, f) = \sum_{i=1}^n f(t_i)(x_{i+1} - x_i) = \sum_{i=1}^n \frac{i}{n} \cdot \frac{1}{n} = \frac{1}{n^2} \sum_{i=1}^n i = \frac{1}{n^2} \cdot \frac{n(n+1)}{2} = \frac{n+1}{2n}.
+$$
+Lấy giới hạn khi $\mu(P) = \frac{1}{n} \to 0$ ($n \to +\infty$):
+$$
+\int_0^1 x dx = \lim_{n \to +\infty} S(P, f) = \lim_{n \to +\infty} \frac{n+1}{2n} = \frac{1}{2}.
+$$
+</Example>
+
+## 2. Các Tính chất Cơ bản của Tích phân Xác định
+
+<Theorem
+  id="thm-gthmb-c6-b2-tinh-chat-co-ban"
+  title="Tính tuyến tính, cộng tính đoạn và bảo toàn thứ tự"
+  source="gt-gthmb-ttd-2022"
+  page="67"
+  original="Định lý 6.1.9"
+>
+Cho các hàm số $f, g \in \mathcal{R}([a; b])$. Khi đó:
+1. **Tính tuyến tính:** Với mọi hằng số $c_1, c_2 \in \mathbb{R}$, hàm số $c_1 f + c_2 g \in \mathcal{R}([a; b])$ và:
+   $$
+   \int_a^b [c_1 f(x) + c_2 g(x)] dx = c_1 \int_a^b f(x) dx + c_2 \int_a^b g(x) dx.
+   $$
+2. **Tính cộng tính trên các đoạn liên tiếp:** Với mọi $c \in (a; b)$, hàm số $f$ khả tích trên $[a; c]$ và $[c; b]$, đồng thời:
+   $$
+   \int_a^b f(x) dx = \int_a^c f(x) dx + \int_c^b f(x) dx.
+   $$
+3. **Bảo toàn thứ tự:** Nếu $f(x) \le g(x)$ với mọi $x \in [a; b]$, thì:
+   $$
+   \int_a^b f(x) dx \le \int_a^b g(x) dx.
+   $$
+   Đặc biệt, nếu $f(x) \ge 0$ trên $[a; b]$ thì $\int_a^b f(x) dx \ge 0$.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c6-b2-tich-phan-ham-hop-va-tri-tuyet-doi"
+  title="Khả tích của hàm hợp và hàm trị tuyệt đối"
+  source="gt-gthmb-ttd-2022"
+  page="68"
+  original="Định lý 6.1.10"
+>
+1. Giả sử $f: [a; b] \to [c; d]$ khả tích trên $[a; b]$, và $g: [c; d] \to \mathbb{R}$ **liên tục** trên $[c; d]$. Khi đó hàm hợp $g \circ f$ khả tích trên $[a; b]$.
+2. Đặc biệt, nếu $f, g \in \mathcal{R}([a; b])$ thì tích $f \cdot g$ và trị tuyệt đối $|f|$ đều khả tích trên $[a; b]$, hơn nữa ta có bất đẳng thức tam giác tích phân:
+   $$
+   \left| \int_a^b f(x) dx \right| \le \int_a^b |f(x)| dx.
+   $$
+</Theorem>
+
+<Remark
+  id="rem-gthmb-c6-b2-dieu-kien-ham-hop"
+  title="Lưu ý về tính liên tục của hàm ngoài trong hàm hợp"
+  source="gt-gthmb-ttd-2022"
+  page="68"
+  original="Nhận xét 6.1.11"
+>
+Trong Định lý 6.1.10, điều kiện $g$ liên tục là **bắt buộc**. Nếu chỉ giả thiết $g$ khả tích Riemann trên $[c; d]$ thì hàm hợp $g \circ f$ chưa chắc khả tích Riemann trên $[a; b]$ (ví dụ kinh điển hàm Riemann Thomae hợp với hàm chỉ thị).
+</Remark>
+
+## 3. Định lý Giá trị Trung bình cho Tích phân
+
+Định lý giá trị trung bình khẳng định rằng tích phân của một hàm số bằng diện tích một hình chữ nhật có chiều cao bằng một giá trị trung gian của hàm số (<Cite source="gt-gthmb-ttd-2022" page="68" note="Định lý 6.1.12" />).
+
+<Theorem
+  id="thm-gthmb-c6-b2-dinh-ly-gia-tri-trung-binh-tich-phan"
+  title="Định lý Giá trị Trung bình cho Tích phân"
+  source="gt-gthmb-ttd-2022"
+  page="68"
+  original="Định lý 6.1.12"
+>
+Cho các hàm số $f, g \in \mathcal{R}([a; b])$, với $m \le f(x) \le M$ và hàm trọng số $g(x) \ge 0$ với mọi $x \in [a; b]$.
+1. Tồn tại một số thực $\mu \in [m; M]$ sao cho:
+   $$
+   \int_a^b f(x)g(x) dx = \mu \int_a^b g(x) dx.
+   $$
+2. Nếu có thêm điều kiện $f$ **liên tục** trên $[a; b]$, thì theo Định lý giá trị trung gian Bolzano-Cauchy, tồn tại điểm $c \in [a; b]$ sao cho $f(c) = \mu$, tức là:
+   $$
+   \int_a^b f(x)g(x) dx = f(c) \int_a^b g(x) dx.
+   $$
+3. Đặc biệt khi chọn trọng số $g(x) = 1$, nếu $f$ liên tục trên $[a; b]$ thì tồn tại $c \in [a; b]$ sao cho:
+   $$
+   \int_a^b f(x) dx = (b - a) f(c) \iff f(c) = \frac{1}{b - a} \int_a^b f(x) dx.
+   $$
+   Giá trị $f(c)$ được gọi là **giá trị trung bình** của hàm số $f$ trên đoạn $[a; b]$.
+</Theorem>
+
+<Proof>
+Vì $m \le f(x) \le M$ và $g(x) \ge 0$, nhân hai vế với $g(x)$ ta có:
+$$
+m g(x) \le f(x)g(x) \le M g(x), \quad \forall x \in [a; b].
+$$
+Lấy tích phân xác định ba vế (theo tính bảo toàn thứ tự):
+$$
+m \int_a^b g(x) dx \le \int_a^b f(x)g(x) dx \le M \int_a^b g(x) dx.
+$$
+- Nếu $\int_a^b g(x) dx = 0$ thì do hai vế kẹp bằng $0$, ta có $\int_a^b f(x)g(x) dx = 0$, đẳng thức đúng với mọi $\mu \in [m; M]$.
+- Nếu $\int_a^b g(x) dx > 0$, chia cả ba vế cho $\int_a^b g(x) dx$, ta được:
+  $$
+  m \le \frac{\int_a^b f(x)g(x) dx}{\int_a^b g(x) dx} \le M.
+  $$
+  Đặt $\mu = \frac{\int_a^b f(x)g(x) dx}{\int_a^b g(x) dx} \in [m; M]$, ta thu được khẳng định 1.
+- Khi $f$ liên tục trên đoạn $[a; b]$, theo Định lý giá trị trung gian, $f$ nhận mọi giá trị trung gian giữa $m$ và $M$. Vì $\mu \in [m; M]$, tồn tại $c \in [a; b]$ sao cho $f(c) = \mu$.
+</Proof>
+
+## 4. Hàm Tích phân Cận biến thiên và Định lý Cơ bản của Giải tích
+
+Cầu nối kỳ diệu liên kết phép tính vi phân (đạo hàm) và phép tính tích phân (diện tích Riemann) chính là hàm tích phân cận biến thiên (<Cite source="gt-gthmb-ttd-2022" page="68" note="Định lý 6.1.13" />).
+
+<Definition
+  id="def-gthmb-c6-b2-ham-tich-phan-can-bien-thien"
+  title="Hàm tích phân với cận trên biến thiên"
+  source="gt-gthmb-ttd-2022"
+  page="68"
+  original="Mục 6.1.4"
+>
+Cho hàm số $f \in \mathcal{R}([a; b])$. Với mỗi $x \in [a; b]$, hàm số $f$ khả tích trên đoạn con $[a; x]$.
+Ta xác định hàm số $F: [a; b] \to \mathbb{R}$ bởi công thức:
+$$
+F(x) = \int_a^x f(t) dt.
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c6-b2-tinh-lien-tuc-va-kha-vi-cua-f"
+  title="Tính liên tục và khả vi của hàm tích phân cận trên"
+  source="gt-gthmb-ttd-2022"
+  page="68"
+  original="Định lý 6.1.13"
+>
+1. Nếu $f$ khả tích trên $[a; b]$, thì hàm số $F(x) = \int_a^x f(t) dt$ **liên tục** trên $[a; b]$.
+2. Nếu $f$ **liên tục** trên $[a; b]$, thì hàm số $F(x)$ **khả vi** trên $[a; b]$ và đạo hàm của nó chính là hàm số dưới dấu tích phân:
+   $$
+   F'(x) = \frac{d}{dx} \left( \int_a^x f(t) dt \right) = f(x), \quad \forall x \in [a; b].
+   $$
+</Theorem>
+
+<Proof>
+1. Vì $f \in \mathcal{R}([a; b])$, $f$ bị chặn, tức tồn tại $M > 0$ sao cho $|f(t)| \le M, \forall t \in [a; b]$.
+   Với mọi $x, x+h \in [a; b]$:
+   $$
+   |F(x+h) - F(x)| = \left| \int_a^{x+h} f(t) dt - \int_a^x f(t) dt \right| = \left| \int_x^{x+h} f(t) dt \right| \le \int_x^{x+h} |f(t)| dt \le M |h|.
+   $$
+   Khi $h \to 0$, $M|h| \to 0$, do đó $\lim_{h \to 0} [F(x+h) - F(x)] = 0$, nghĩa là $F$ liên tục tại $x$.
+
+2. Xét tỉ số số gia của $F$ tại điểm $x \in [a; b]$ với số gia $h \ne 0$:
+   $$
+   \frac{F(x+h) - F(x)}{h} = \frac{1}{h} \int_x^{x+h} f(t) dt.
+   $$
+   Lưu ý rằng $f(x) = \frac{1}{h} \int_x^{x+h} f(x) dt$. Do đó:
+   $$
+   \left| \frac{F(x+h) - F(x)}{h} - f(x) \right| = \left| \frac{1}{h} \int_x^{x+h} [f(t) - f(x)] dt \right| \le \frac{1}{|h|} \left| \int_x^{x+h} |f(t) - f(x)| dt \right|.
+   $$
+   Vì $f$ liên tục tại $x$, với mọi $\varepsilon > 0$, tồn tại $\delta > 0$ sao cho khi $|t - x| < \delta$ thì $|f(t) - f(x)| < \varepsilon$.
+   Do đó, khi $0 < |h| < \delta$, mọi điểm $t$ nằm giữa $x$ và $x+h$ đều thỏa mãn $|t - x| < \delta$, kéo theo:
+   $$
+   \left| \frac{F(x+h) - F(x)}{h} - f(x) \right| \le \frac{1}{|h|} \cdot \varepsilon |h| = \varepsilon.
+   $$
+   Điều này chứng minh $\lim_{h \to 0} \frac{F(x+h) - F(x)}{h} = f(x)$, hay $F'(x) = f(x)$.
+</Proof>
+
+## 5. Công thức Newton-Leibniz
+
+Kết quả nền tảng cho phép tính tích phân Riemann thông qua bảng nguyên hàm sơ cấp được gọi là Công thức Newton-Leibniz (<Cite source="gt-gthmb-ttd-2022" page="69" note="Định lý 6.1.14" />).
+
+<Theorem
+  id="thm-gthmb-c6-b2-cong-thuc-newton-leibniz"
+  title="Công thức Newton-Leibniz (Định lý Cơ bản của Giải tích)"
+  source="gt-gthmb-ttd-2022"
+  page="69"
+  original="Định lý 6.1.14"
+>
+1. Nếu $f$ liên tục trên $[a; b]$, thì hàm số $F(x) = \int_a^x f(t) dt$ là một nguyên hàm của $f$ trên $[a; b]$. Hơn nữa, nếu $G$ là một **nguyên hàm bất kỳ** của $f$ trên $[a; b]$ (tức $G'(x) = f(x)$), thì:
+   $$
+   \int_a^b f(x) dx = G(b) - G(a) = \big[ G(x) \big]_a^b.
+   $$
+2. Tổng quát hơn, nếu $f$ khả tích trên $[a; b]$ và $f$ có một nguyên hàm $F$ nào đó trên $[a; b]$, thì công thức $\int_a^b f(x) dx = F(b) - F(a)$ vẫn hoàn toàn đúng.
+</Theorem>
+
+<Proof>
+Theo Định lý 6.1.13, vì $f$ liên tục trên $[a; b]$ nên hàm $F(x) = \int_a^x f(t) dt$ là một nguyên hàm của $f$.
+Nếu $G(x)$ là một nguyên hàm tùy ý của $f$ trên $[a; b]$, thì $(G - F)'(x) = G'(x) - F'(x) = f(x) - f(x) = 0, \forall x \in [a; b]$.
+Theo Hệ quả 5.3.7 (Định lý Lagrange về hàm hằng), hiệu $G(x) - F(x)$ là một hằng số $C$:
+$$
+G(x) = F(x) + C = \int_a^x f(t) dt + C.
+$$
+Thay $x = a$:
+$$
+G(a) = \int_a^a f(t) dt + C = 0 + C \implies C = G(a).
+$$
+Thay $x = b$:
+$$
+G(b) = \int_a^b f(t) dt + G(a) \iff \int_a^b f(t) dt = G(b) - G(a).
+$$
+</Proof>
+
+---
+
+<KeyTakeaways>
+- **Tổng Riemann:** $S(P, f) = \sum_{i=1}^n f(t_i)\Delta x_i$. Khi độ mịn $\mu(P) \to 0$, $S(P, f)$ hội tụ về giá trị tích phân Riemann $\int_a^b f(x)dx$ độc lập với cách chọn mẫu $t_i$.
+- **Hệ thống tính chất:** Tích phân có tính tuyến tính, tính cộng tính đoạn và bảo toàn thứ tự $f \le g \implies \int f \le \int g$.
+- **Định lý giá trị trung bình:** Với $f$ liên tục, luôn tồn tại $c \in [a; b]$ sao cho $\int_a^b f(x)dx = (b - a)f(c)$.
+- **Hàm tích phân cận trên:** $F(x) = \int_a^x f(t)dt$ luôn liên tục khi $f$ khả tích, và khả vi với $F'(x) = f(x)$ khi $f$ liên tục.
+- **Công thức Newton-Leibniz:** $\int_a^b f(x)dx = G(b) - G(a)$, quy tụ toàn bộ kỹ thuật tính tích phân về bài toán tìm nguyên hàm.
+</KeyTakeaways>

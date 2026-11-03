@@ -103,6 +103,7 @@ export const WHITELISTED_MDX_COMPONENTS = new Set<string>([
   'SequenceEpsilonDemo',
   'UniformContinuityDemo',
   'TaylorPolynomialDemo',
+  'RiemannDarbouxSumDemo',
 ]);
 
 const FORBIDDEN_HTML_TAGS = new Set<string>([

@@ -1,0 +1,237 @@
+---
+id: tich-phan-suy-rong-cua-ham-khong-bi-chan
+title: 'Tích phân suy rộng của hàm không bị chặn'
+description: 'Khảo sát tích phân suy rộng loại 2 với hàm số không bị chặn tại điểm bất thường, điều kiện hội tụ của tích phân mẫu 1/(x-a)^p, các tiêu chuẩn so sánh bất đẳng thức, giới hạn và kỹ thuật phân tách miền tích phân phức hợp.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - tich-phan-suy-rong-voi-can-vo-han
+  - diem-gioi-han-diem-co-lap-va-lan-can
+tags:
+  - tích phân suy rộng
+  - hàm không bị chặn
+  - tích phân loại 2
+  - điểm bất thường
+  - tiêu chuẩn so sánh
+  - tích phân mẫu p < 1
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '72-74'
+    sections: 'Mục 6.2.2'
+    note: 'Định nghĩa tích phân suy rộng hàm không bị chặn, tích phân mẫu 1/(x-a)^p và các định lý so sánh 6.2.13 - 6.2.15'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của Điểm bất thường (Singular point):** Nhận diện điểm kỳ dị mà tại đó hàm số tiến tới vô cực ($\pm\infty$) và định nghĩa tích phân suy rộng loại 2 qua giới hạn một phía $\lim_{c \to b^-} \int_a^c f(x)dx$.
+2. **Làm chủ tích phân mẫu loại 2:** Ghi nhớ và chứng minh định lý nền tảng: $\int_a^b \frac{dx}{(x - a)^p}$ và $\int_a^b \frac{dx}{(b - x)^p}$ **hội tụ khi và chỉ khi $p < 1$** (ngược lại với tích phân loại 1).
+3. **Vận dụng các tiêu chuẩn so sánh:** Sử dụng tiêu chuẩn so sánh bất đẳng thức và giới hạn để khử các điểm kỳ dị đại số và lượng giác ($\sin x \sim x, \sqrt{1-x^2} \sim \sqrt{2(1-x)}$).
+4. **Thành thạo kỹ thuật phân tách tích phân phức hợp:** Xử lý các bài toán tích phân có nhiều điểm bất thường bên trong khoảng hoặc tích phân vừa có cận vô hạn vừa có điểm bất thường tại gốc tọa độ.
+</Note>
+
+## 1. Khái niệm Điểm Bất thường và Tích phân Suy rộng Loại 2
+
+Khi một hàm số không bị chặn trên lân cận của một đầu mút của khoảng lấy tích phân, định nghĩa tích phân Riemann cổ điển không còn áp dụng được trực tiếp. Ta mở rộng khái niệm tích phân thông qua giới hạn (<Cite source="gt-gthmb-ttd-2022" page="72" note="Mục 6.2.2" />).
+
+<Definition
+  id="def-gthmb-c6-b4-diem-bat-thuong-va-tich-phan-loai-2"
+  title="Điểm bất thường và Tích phân suy rộng loại 2"
+  source="gt-gthmb-ttd-2022"
+  page="72"
+  original="Định nghĩa 6.2.9"
+>
+Ký hiệu $\mathcal{R}_{\text{loc}}([a; b))$ là tập hợp các hàm số $f$ xác định trên nửa khoảng $[a; b)$ và khả tích Riemann trên mọi đoạn con kín $[a; c]$ với mọi $a \le c < b$.
+Nếu hàm số $f$ không bị chặn trên mọi khoảng $[c; b)$ ($a \le c < b$), ta gọi $b$ là **điểm bất thường (điểm kỳ dị)** của hàm số $f$.
+
+Giới hạn (nếu có) của hàm số $F(c) = \int_a^c f(x) dx$ khi $c \to b^-$ được gọi là **tích phân suy rộng** của hàm số $f$ trên $[a; b)$, ký hiệu là $\int_a^b f(x) dx$:
+$$
+\int_a^b f(x) dx = \lim_{c \to b^-} \int_a^c f(x) dx.
+$$
+- Nếu giới hạn hữu hạn, ta nói tích phân suy rộng **hội tụ**.
+- Ngược lại, ta nói tích phân suy rộng **phân kỳ**.
+
+Hoàn toàn tương tự, nếu điểm bất thường là đầu mút trái $a$ (tức $f$ không bị chặn khi $x \to a^+$), ta định nghĩa:
+$$
+\int_a^b f(x) dx = \lim_{c \to a^+} \int_c^b f(x) dx.
+$$
+</Definition>
+
+<Remark
+  id="rem-gthmb-c6-b4-su-trung-nhau-khi-ham-bi-chan"
+  title="Tính tương thích với Tích phân Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="73"
+  original="Nhận xét 6.2.10"
+>
+Nếu hàm số $f$ bị chặn và khả tích Riemann trên đoạn $[a; b]$, thì $f$ cũng khả tích theo nghĩa suy rộng trên $[a; b)$, và **giá trị của tích phân suy rộng hoàn toàn trùng khớp với tích phân Riemann xác định**.
+Thật vậy, gọi $M = \sup_{a \le x \le b} |f(x)|$, ta có:
+$$
+\left| \int_a^b f(x) dx - \int_a^c f(x) dx \right| = \left| \int_c^b f(x) dx \right| \le \int_c^b |f(x)| dx \le M(b - c).
+$$
+Khi $c \to b^-$, $M(b - c) \to 0$, do đó $\lim_{c \to b^-} \int_a^c f(x) dx = \int_a^b f(x) dx$.
+</Remark>
+
+<Example
+  id="exm-gthmb-c6-b4-tinh-tich-phan-arcsin"
+  title="Tính tích phân suy rộng có điểm bất thường tại mút x = 1"
+  source="gt-gthmb-ttd-2022"
+  page="73"
+  original="Ví dụ 6.2.11"
+>
+Tính tích phân suy rộng $I = \int_0^1 \frac{dx}{\sqrt{1 - x^2}}$.
+
+**Lời giải:**
+Hàm số $f(x) = \frac{1}{\sqrt{1-x^2}}$ xác định và liên tục trên $[0; 1)$, nhưng khi $x \to 1^-$ thì $f(x) \to +\infty$. Do đó $x = 1$ là điểm bất thường.
+Áp dụng định nghĩa:
+$$
+\int_0^1 \frac{dx}{\sqrt{1 - x^2}} = \lim_{c \to 1^-} \int_0^c \frac{dx}{\sqrt{1 - x^2}} = \lim_{c \to 1^-} \big[ \arcsin x \big]_0^c = \lim_{c \to 1^-} \arcsin c = \arcsin 1 = \frac{\pi}{2}.
+$$
+Tích phân hội tụ và có giá trị bằng $\frac{\pi}{2}$.
+</Example>
+
+## 2. Tích phân Mẫu Cốt lõi Loại 2
+
+Tích phân mẫu đóng vai trò quy chuẩn để khảo sát mọi điểm kỳ dị đại số (<Cite source="gt-gthmb-ttd-2022" page="73" note="Ví dụ 6.2.12" />).
+
+<Theorem
+  id="thm-gthmb-c6-b4-tich-phan-mau-loai-2"
+  title="Điều kiện hội tụ của tích phân mẫu 1 / (x - a)^p và 1 / (b - x)^p"
+  source="gt-gthmb-ttd-2022"
+  page="73"
+  original="Ví dụ 6.2.12"
+>
+Cho $b > a$ và $p \in \mathbb{R}$. Khi đó các tích phân suy rộng:
+$$
+\int_a^b \frac{dx}{(x - a)^p} \quad \text{và} \quad \int_a^b \frac{dx}{(b - x)^p}
+$$
+**hội tụ khi và chỉ khi $p < 1$**, và **phân kỳ khi $p \ge 1$**.
+</Theorem>
+
+<Proof>
+Xét tích phân thứ nhất có điểm bất thường tại $a$: $F(c) = \int_c^b \frac{dx}{(x - a)^p}$ với $a < c < b$:
+- **Trường hợp 1: $p = 1$.**
+  $$
+  F(c) = \int_c^b \frac{dx}{x - a} = \big[ \ln(x - a) \big]_c^b = \ln(b - a) - \ln(c - a).
+  $$
+  Khi $c \to a^+$, $\ln(c - a) \to -\infty$, do đó $\lim_{c \to a^+} F(c) = +\infty$ ($\text{Phân kỳ}$).
+- **Trường hợp 2: $p \ne 1$.**
+  $$
+  F(c) = \int_c^b (x - a)^{-p} dx = \left[ \frac{(x - a)^{1-p}}{1 - p} \right]_c^b = \frac{(b - a)^{1-p} - (c - a)^{1-p}}{1 - p}.
+  $$
+  - Nếu $p < 1$, số mũ $1 - p > 0$, do đó khi $c \to a^+$ thì $(c - a)^{1-p} \to 0$. Giới hạn là:
+    $$
+    \lim_{c \to a^+} F(c) = \frac{(b - a)^{1-p}}{1 - p} < +\infty \quad (\text{Hội tụ}).
+    $$
+  - Nếu $p > 1$, số mũ $1 - p < 0$, do đó khi $c \to a^+$ thì $(c - a)^{1-p} = \frac{1}{(c - a)^{p-1}} \to +\infty$ ($\text{Phân kỳ}$).
+
+Tương tự cho tích phân với điểm bất thường tại $b$: $\int_a^b \frac{dx}{(b - x)^p}$.
+</Proof>
+
+<Note title="Quy tắc ghi nhớ đối chiếu hai loại tích phân mẫu">
+- **Loại 1 (Cận vô hạn $\int_a^{+\infty} \frac{dx}{x^p}$):** Cần mẫu số tăng đủ nhanh ra xa để diện tích hữu hạn $\implies \mathbf{p > 1}$.
+- **Loại 2 (Cận bất thường $\int_a^b \frac{dx}{(x - a)^p}$):** Cần hàm số không tăng quá gắt tại điểm kỳ dị $\implies \mathbf{p < 1}$.
+</Note>
+
+## 3. Các Tiêu chuẩn So sánh cho Hàm không âm tại Điểm Bất thường
+
+<Theorem
+  id="thm-gthmb-c6-b4-so-sanh-bat-dang-thuc-loai-2"
+  title="Tiêu chuẩn So sánh Bất đẳng thức cho Tích phân loại 2"
+  source="gt-gthmb-ttd-2022"
+  page="74"
+  original="Định lý 6.2.13"
+>
+Giả sử $f, g \in \mathcal{R}_{\text{loc}}([a; b))$ thỏa mãn:
+$$
+0 \le f(x) \le g(x), \quad \forall x \in [a; b).
+$$
+1. Nếu $\int_a^b g(x) dx$ **hội tụ**, thì $\int_a^b f(x) dx$ **hội tụ**.
+2. Nếu $\int_a^b f(x) dx$ **phân kỳ**, thì $\int_a^b g(x) dx$ **phân kỳ**.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c6-b4-so-sanh-gioi-han-loai-2"
+  title="Tiêu chuẩn So sánh Giới hạn tại Điểm Bất thường"
+  source="gt-gthmb-ttd-2022"
+  page="74"
+  original="Định lý 6.2.14"
+>
+Giả sử $f, g \in \mathcal{R}_{\text{loc}}([a; b))$ với $f(x) \ge 0, g(x) > 0$ trên $[a; b)$ và tồn tại giới hạn:
+$$
+\lim_{x \to b^-} \frac{f(x)}{g(x)} = k \quad (0 \le k \le +\infty).
+$$
+1. Nếu $0 < k < +\infty$: $\int_a^b f(x) dx$ và $\int_a^b g(x) dx$ **cùng hội tụ hoặc cùng phân kỳ**.
+2. Nếu $k = 0$: $\int_a^b g(x) dx$ hội tụ kéo theo $\int_a^b f(x) dx$ hội tụ.
+3. Nếu $k = +\infty$: $\int_a^b g(x) dx$ phân kỳ kéo theo $\int_a^b f(x) dx$ phân kỳ.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c6-b4-hoi-tu-tuyet-doi-loai-2"
+  title="Hội tụ tuyệt đối của Tích phân Loại 2"
+  source="gt-gthmb-ttd-2022"
+  page="74"
+  original="Định lý 6.2.15"
+>
+Giả sử $f \in \mathcal{R}_{\text{loc}}([a; b))$. Nếu $\int_a^b |f(x)| dx$ hội tụ thì tích phân $\int_a^b f(x) dx$ hội tụ.
+</Theorem>
+
+## 4. Phương pháp Tách Tích phân Phức hợp
+
+Khi một bài toán tích phân có nhiều điểm bất thường hoặc đồng thời chứa cả điểm bất thường hữu hạn lẫn cận vô cực, ta bắt buộc phải phân tách miền tích phân thành từng đoạn độc lập (<Cite source="gt-gthmb-ttd-2022" page="75" note="Mục 6.2" />).
+
+<Example
+  id="exm-gthmb-c6-b4-tich-phan-phuc-hop"
+  title="Khảo sát tích phân vừa có điểm kỳ dị vừa có cận vô hạn"
+  source="gt-gthmb-ttd-2022"
+  page="75"
+  original="Bài tập 4c"
+>
+Khảo sát sự hội tụ của tích phân $I = \int_0^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx$.
+
+**Lời giải:**
+Hàm số dưới dấu tích phân $f(x) = \frac{e^{-x}}{\sqrt{x}}$ có hai vấn đề:
+1. Tại $x = 0$: $\lim_{x \to 0^+} \frac{e^{-x}}{\sqrt{x}} = +\infty$ (điểm bất thường loại 2).
+2. Tại cận $+\infty$: Miền lấy tích phân vô hạn (loại 1).
+
+Ta tách miền lấy tích phân tại điểm $1$:
+$$
+I = \int_0^1 \frac{e^{-x}}{\sqrt{x}} dx + \int_1^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx = I_1 + I_2.
+$$
+
+- **Khảo sát $I_1 = \int_0^1 \frac{e^{-x}}{\sqrt{x}} dx$ (tại điểm $x = 0$):**
+  Khi $x \to 0^+$, ta có $e^{-x} \to 1$, do đó:
+  $$
+  f(x) = \frac{e^{-x}}{\sqrt{x}} \sim \frac{1}{\sqrt{x}} = \frac{1}{x^{1/2}}.
+  $$
+  Vì tích phân mẫu $\int_0^1 \frac{dx}{x^{1/2}}$ hội tụ (do $p = \frac{1}{2} < 1$), theo tiêu chuẩn so sánh giới hạn, $I_1$ **hội tụ**.
+
+- **Khảo sát $I_2 = \int_1^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx$ (tại cận $+\infty$):**
+  Với mọi $x \ge 1$, ta có $\sqrt{x} \ge 1 \implies \frac{e^{-x}}{\sqrt{x}} \le e^{-x}$.
+  Xét tích phân $\int_1^{+\infty} e^{-x} dx$:
+  $$
+  \int_1^{+\infty} e^{-x} dx = \lim_{c \to +\infty} \big[ -e^{-x} \big]_1^c = \lim_{c \to +\infty} (e^{-1} - e^{-c}) = \frac{1}{e} < +\infty \quad (\text{Hội tụ}).
+  $$
+  Theo tiêu chuẩn so sánh bất đẳng thức, $I_2$ **hội tụ**.
+
+Vì cả hai tích phân thành phần $I_1$ và $I_2$ đều hội tụ độc lập, tích phân ban đầu $I$ **hội tụ**.
+</Example>
+
+---
+
+<KeyTakeaways>
+- **Định nghĩa tích phân loại 2:** Dùng giới hạn một phía $\int_a^b f(x)dx = \lim_{c \to b^-} \int_a^c f(x)dx$ để tiếp cận điểm bất thường.
+- **Tích phân mẫu loại 2:** $\int_a^b \frac{dx}{(x - a)^p}$ hội tụ khi và chỉ khi $\mathbf{p < 1}$. (Ngược lại với loại 1: $p > 1$).
+- **Tiêu chuẩn so sánh:** Tương đương tiệm cận $f(x) \sim \frac{C}{(b - x)^p}$ khi $x \to b^-$ giúp xác định tính hội tụ nhanh chóng.
+- **Nguyên tắc phân tách:** Mỗi tích phân suy rộng chỉ được phép chứa duy nhất một điểm kỳ dị (hoặc một cận vô cực). Nếu có nhiều điểm kỳ dị, phải chia nhỏ miền tích phân thành các khoảng đơn điểm.
+</KeyTakeaways>

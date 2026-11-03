@@ -1,0 +1,311 @@
+---
+id: tich-phan-suy-rong-voi-can-vo-han
+title: 'Tích phân suy rộng với cận vô hạn'
+description: 'Khảo sát tích phân suy rộng loại 1 trên khoảng vô hạn [a; +inf), điều kiện hội tụ và phân kỳ, tích phân mẫu p-series, các tiêu chuẩn so sánh bất đẳng thức và giới hạn, cùng khái niệm hội tụ tuyệt đối và bán hội tụ.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - tong-riemann-tinh-chat-co-ban-va-dinh-ly-co-ban-cua-giai-tich
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+tags:
+  - tích phân suy rộng
+  - cận vô hạn
+  - tích phân loại 1
+  - tiêu chuẩn so sánh
+  - hội tụ tuyệt đối
+  - bán hội tụ
+  - tích phân Dirichlet
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '69-72'
+    sections: 'Mục 6.2.1'
+    note: 'Định nghĩa tích phân suy rộng cận vô hạn, tích phân mẫu 1/x^p, các tiêu chuẩn so sánh và tính hội tụ tuyệt đối'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu định nghĩa tích phân suy rộng cận vô hạn:** Nắm vững cấu trúc giới hạn $\int_a^{+\infty} f(x)dx = \lim_{c \to +\infty} \int_a^c f(x)dx$ và các mở rộng trên $(-\infty; a]$, $(-\infty; +\infty)$.
+2. **Làm chủ tích phân mẫu $p$-series:** Chứng minh định lý then chốt $\int_a^{+\infty} \frac{dx}{x^p}$ hội tụ khi và chỉ khi $p > 1$ ($a > 0$).
+3. **Vận dụng các tiêu chuẩn so sánh cho hàm không âm:** Thành thạo tiêu chuẩn so sánh bất đẳng thức ($0 \le f \le g$) và tiêu chuẩn so sánh giới hạn $\lim_{x \to +\infty} \frac{f(x)}{g(x)} = k$ để khảo sát sự hội tụ nhanh chóng.
+4. **Phân biệt rạch ròi Hội tụ tuyệt đối và Bán hội tụ:** Nắm vững tiêu chuẩn Cauchy, chứng minh $\int |f|$ hội tụ kéo theo $\int f$ hội tụ, và phân tích ví dụ kinh điển tích phân Dirichlet $\int_1^{+\infty} \frac{\sin x}{x} dx$ bán hội tụ.
+</Note>
+
+## 1. Khái niệm Tích phân Suy rộng với Cận vô hạn (Loại 1)
+
+Tích phân Riemann cổ điển chỉ áp dụng trên đoạn đóng hữu hạn $[a; b]$. Khi mở rộng miền lấy tích phân ra vô tận (như $[a; +\infty)$, $(-\infty; b]$ hoặc $(-\infty; +\infty)$), ta tiếp cận qua giới hạn của các tích phân hữu hạn (<Cite source="gt-gthmb-ttd-2022" page="69" note="Mục 6.2.1" />).
+
+<Definition
+  id="def-gthmb-c6-b3-dinh-nghia-tich-phan-suy-rong-vo-han"
+  title="Tích phân suy rộng trên khoảng nửa vô hạn [a; +inf)"
+  source="gt-gthmb-ttd-2022"
+  page="69"
+  original="Định nghĩa 6.2.1"
+>
+Ký hiệu $\mathcal{R}_{\text{loc}}([a; +\infty))$ là tập hợp các hàm số $f$ xác định trên $[a; +\infty)$ và khả tích Riemann trên mọi đoạn con hữu hạn $[a; c]$ với $c \ge a$.
+Khi đó hàm số:
+$$
+F(c) = \int_a^c f(x) dx
+$$
+xác định với mọi $c \in [a; +\infty)$.
+
+Giới hạn (nếu có) của hàm số $F(c)$ khi $c \to +\infty$ được gọi là **tích phân suy rộng** của hàm số $f$ trên $[a; +\infty)$, ký hiệu là $\int_a^{+\infty} f(x) dx$:
+$$
+\int_a^{+\infty} f(x) dx = \lim_{c \to +\infty} \int_a^c f(x) dx.
+$$
+- Nếu giới hạn $\lim_{c \to +\infty} \int_a^c f(x) dx$ tồn tại và hữu hạn ($= I \in \mathbb{R}$), ta nói tích phân suy rộng $\int_a^{+\infty} f(x) dx$ **hội tụ** (hoặc $f$ khả tích trên $[a; +\infty)$) và có giá trị bằng $I$.
+- Ngược lại (giới hạn bằng $\pm\infty$ hoặc dao động không tồn tại), ta nói tích phân suy rộng **phân kỳ**.
+</Definition>
+
+<Remark
+  id="rem-gthmb-c6-b3-mo-rong-can-am-vo-cung"
+  title="Mở rộng trên (-inf; a] và toàn trục số (-inf; +inf)"
+  source="gt-gthmb-ttd-2022"
+  page="70"
+  original="Mục 6.2.1"
+>
+1. Tích phân suy rộng trên $(-\infty; a]$ được định nghĩa bởi:
+   $$
+   \int_{-\infty}^a f(x) dx = \lim_{c \to -\infty} \int_c^a f(x) dx.
+   $$
+2. Tích phân suy rộng trên toàn trục số $(-\infty; +\infty)$ được xác định thông qua một điểm chia $a \in \mathbb{R}$ tùy ý:
+   $$
+   \int_{-\infty}^{+\infty} f(x) dx = \int_{-\infty}^a f(x) dx + \int_a^{+\infty} f(x) dx.
+   $$
+   Tích phân $\int_{-\infty}^{+\infty} f(x) dx$ được gọi là hội tụ **khi và chỉ khi cả hai tích phân thành phần ở vế phải đều hội tụ độc lập**.
+</Remark>
+
+<Example
+  id="exm-gthmb-c6-b3-tinh-tich-phan-arctan"
+  title="Tính trực tiếp tích phân suy rộng bằng nguyên hàm"
+  source="gt-gthmb-ttd-2022"
+  page="70"
+  original="Ví dụ 6.2.2"
+>
+Tính tích phân suy rộng $\int_0^{+\infty} \frac{dx}{1 + x^2}$.
+
+**Lời giải:**
+Với mỗi $c > 0$, hàm số $f(x) = \frac{1}{1+x^2}$ liên tục trên $[0; c]$. Áp dụng công thức Newton-Leibniz:
+$$
+\int_0^c \frac{dx}{1 + x^2} = \big[ \arctan x \big]_0^c = \arctan c - \arctan 0 = \arctan c.
+$$
+Lấy giới hạn khi $c \to +\infty$:
+$$
+\int_0^{+\infty} \frac{dx}{1 + x^2} = \lim_{c \to +\infty} \arctan c = \frac{\pi}{2}.
+$$
+Vậy tích phân suy rộng hội tụ và có giá trị bằng $\frac{\pi}{2}$.
+</Example>
+
+## 2. Tích phân Mẫu Cốt lõi ($p$-Series Integral)
+
+Tích phân của hàm lũy thừa $\frac{1}{x^p}$ là thước đo chuẩn mực nhất để so sánh sự hội tụ của mọi tích phân suy rộng cận vô hạn (<Cite source="gt-gthmb-ttd-2022" page="70" note="Ví dụ 6.2.3" />).
+
+<Theorem
+  id="thm-gthmb-c6-b3-tich-phan-mau-p"
+  title="Điều kiện hội tụ của tích phân mẫu 1 / x^p trên [a; +inf)"
+  source="gt-gthmb-ttd-2022"
+  page="70"
+  original="Ví dụ 6.2.3"
+>
+Cho số thực $a > 0$ và tham số $p \in \mathbb{R}$. Khi đó tích phân suy rộng:
+$$
+\int_a^{+\infty} \frac{dx}{x^p}
+$$
+**hội tụ khi và chỉ khi $p > 1$**, và **phân kỳ khi $p \le 1$**.
+Cụ thể, khi $p > 1$, giá trị của tích phân là:
+$$
+\int_a^{+\infty} \frac{dx}{x^p} = \frac{a^{1-p}}{p - 1} = \frac{1}{(p - 1)a^{p-1}}.
+$$
+</Theorem>
+
+<Proof>
+Xét hàm số $F(c) = \int_a^c \frac{dx}{x^p}$ với $c > a > 0$:
+- **Trường hợp 1: $p = 1$.**
+  $$
+  F(c) = \int_a^c \frac{dx}{x} = \big[ \ln x \big]_a^c = \ln c - \ln a.
+  $$
+  Khi $c \to +\infty$, $\lim_{c \to +\infty} (\ln c - \ln a) = +\infty$. Vậy tích phân phân kỳ.
+- **Trường hợp 2: $p \ne 1$.**
+  $$
+  F(c) = \int_a^c x^{-p} dx = \left[ \frac{x^{1-p}}{1 - p} \right]_a^c = \frac{c^{1-p} - a^{1-p}}{1 - p}.
+  $$
+  - Nếu $p > 1$, thì số mũ $1 - p < 0$, dẫn đến $\lim_{c \to +\infty} c^{1-p} = \lim_{c \to +\infty} \frac{1}{c^{p-1}} = 0$. Do đó:
+    $$
+    \lim_{c \to +\infty} F(c) = \frac{0 - a^{1-p}}{1 - p} = \frac{a^{1-p}}{p - 1} < +\infty \quad (\text{Hội tụ}).
+    $$
+  - Nếu $p < 1$, thì số mũ $1 - p > 0$, dẫn đến $\lim_{c \to +\infty} c^{1-p} = +\infty$. Do đó $\lim_{c \to +\infty} F(c) = +\infty$ ($\text{Phân kỳ}$).
+
+Tóm lại, tích phân hội tụ khi và chỉ khi $p > 1$.
+</Proof>
+
+## 3. Các Tiêu chuẩn So sánh cho Hàm không âm ($f(x) \ge 0$)
+
+Khi $f(x) \ge 0$ với mọi $x \ge a$, hàm số $F(c) = \int_a^c f(x) dx$ là hàm đơn điệu tăng theo biến $c$.
+Do đó, theo Nguyên lý Weierstrass về sự hội tụ đơn điệu, **tích phân $\int_a^{+\infty} f(x) dx$ hội tụ khi và chỉ khi hàm $F(c)$ bị chặn trên** (<Cite source="gt-gthmb-ttd-2022" page="70" note="Mục 6.2.1" />).
+
+Từ nhận xét then chốt này, ta thiết lập được hai định lý so sánh kinh điển:
+
+<Theorem
+  id="thm-gthmb-c6-b3-so-sanh-bat-dang-thuc"
+  title="Tiêu chuẩn So sánh Bất đẳng thức"
+  source="gt-gthmb-ttd-2022"
+  page="71"
+  original="Định lý 6.2.4"
+>
+Giả sử $f, g \in \mathcal{R}_{\text{loc}}([a; +\infty))$ thỏa mãn:
+$$
+0 \le f(x) \le g(x), \quad \forall x \in [a; +\infty).
+$$
+Khi đó:
+1. Nếu tích phân lớn $\int_a^{+\infty} g(x) dx$ **hội tụ**, thì tích phân nhỏ $\int_a^{+\infty} f(x) dx$ cũng **hội tụ**.
+2. Nếu tích phân nhỏ $\int_a^{+\infty} f(x) dx$ **phân kỳ**, thì tích phân lớn $\int_a^{+\infty} g(x) dx$ cũng **phân kỳ**.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c6-b3-so-sanh-gioi-han"
+  title="Tiêu chuẩn So sánh Giới hạn"
+  source="gt-gthmb-ttd-2022"
+  page="71"
+  original="Định lý 6.2.5"
+>
+Giả sử $f, g \in \mathcal{R}_{\text{loc}}([a; +\infty))$ với $f(x) \ge 0$ và $g(x) > 0$ trên $[a; +\infty)$, và tồn tại giới hạn:
+$$
+\lim_{x \to +\infty} \frac{f(x)}{g(x)} = k \quad (0 \le k \le +\infty).
+$$
+1. **Trường hợp $0 < k < +\infty$ ($f$ và $g$ cùng bậc tiệm cận):**
+   Hai tích phân $\int_a^{+\infty} f(x) dx$ và $\int_a^{+\infty} g(x) dx$ **cùng hội tụ hoặc cùng phân kỳ**.
+2. **Trường hợp $k = 0$ ($f$ là vô cùng bé bậc cao hơn $g$):**
+   Nếu $\int_a^{+\infty} g(x) dx$ hội tụ thì $\int_a^{+\infty} f(x) dx$ hội tụ.
+3. **Trường hợp $k = +\infty$ ($f$ tăng nhanh hơn $g$):**
+   Nếu $\int_a^{+\infty} g(x) dx$ phân kỳ thì $\int_a^{+\infty} f(x) dx$ phân kỳ.
+</Theorem>
+
+<Example
+  id="exm-gthmb-c6-b3-ap-dung-so-sanh"
+  title="Khảo sát sự hội tụ của tích phân bằng hàm tương đương"
+  source="gt-gthmb-ttd-2022"
+  page="71"
+  original="Ví dụ 6.2.6"
+>
+Xét sự hội tụ của hai tích phân suy rộng:
+1. $I_1 = \int_1^{+\infty} \frac{\sqrt{x}}{1 + x^2} dx$.
+2. $I_2 = \int_1^{+\infty} \left(\frac{\pi}{2} - \arctan x\right) dx$.
+
+**Lời giải:**
+1. Khi $x \to +\infty$, ta có:
+   $$
+   f(x) = \frac{\sqrt{x}}{1 + x^2} \sim \frac{\sqrt{x}}{x^2} = \frac{1}{x^{3/2}}.
+   $$
+   Chọn hàm so sánh $g(x) = \frac{1}{x^{3/2}}$. Ta có:
+   $$
+   \lim_{x \to +\infty} \frac{f(x)}{g(x)} = \lim_{x \to +\infty} \frac{x^2}{1 + x^2} = 1 \in (0; +\infty).
+   $$
+   Vì tích phân mẫu $\int_1^{+\infty} \frac{dx}{x^{3/2}}$ hội tụ (do $p = \frac{3}{2} > 1$), theo Tiêu chuẩn so sánh giới hạn, tích phân $I_1$ **hội tụ**.
+
+2. Đặt $f(x) = \frac{\pi}{2} - \arctan x = \arctan\left(\frac{1}{x}\right)$.
+   Khi $x \to +\infty$, áp dụng khai triển Maclaurin của $\arctan t$ tại $t = \frac{1}{x} \to 0$:
+   $$
+   \arctan\left(\frac{1}{x}\right) \sim \frac{1}{x}.
+   $$
+   Do đó $\lim_{x \to +\infty} \frac{f(x)}{1/x} = 1$.
+   Vì tích phân mẫu $\int_1^{+\infty} \frac{dx}{x}$ phân kỳ (do $p = 1$), tích phân $I_2$ **phân kỳ**.
+</Example>
+
+## 4. Trường hợp Hàm có Dấu tùy ý: Tiêu chuẩn Cauchy và Tính Bán hội tụ
+
+Khi hàm số đổi dấu liên tục hoặc dao động (như các hàm lượng giác $\sin x, \cos x$), ta không thể dùng tính đơn điệu của hàm nguyên mà phải sử dụng Tiêu chuẩn Cauchy (<Cite source="gt-gthmb-ttd-2022" page="71" note="Định lý 6.2.7" />).
+
+<Theorem
+  id="thm-gthmb-c6-b3-tieu-chuan-cauchy"
+  title="Tiêu chuẩn Cauchy cho Tích phân Suy rộng"
+  source="gt-gthmb-ttd-2022"
+  page="71"
+  original="Định lý 6.2.7"
+>
+Tích phân suy rộng $\int_a^{+\infty} f(x) dx$ hội tụ khi và chỉ khi:
+Với mọi $\varepsilon > 0$, tồn tại một số thực $A > a$ sao cho với mọi $c_2 > c_1 > A$, ta luôn có:
+$$
+\left| \int_{c_1}^{c_2} f(x) dx \right| < \varepsilon.
+$$
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c6-b3-hoi-tu-tuyet-doi-keo-theo-hoi-tu"
+  title="Hội tụ tuyệt đối kéo theo Hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="71"
+  original="Định lý 6.2.8"
+>
+Nếu tích phân $\int_a^{+\infty} |f(x)| dx$ hội tụ, thì tích phân $\int_a^{+\infty} f(x) dx$ cũng hội tụ.
+</Theorem>
+
+<Proof>
+Với mọi $c_2 > c_1 > a$, theo bất đẳng thức tam giác tích phân:
+$$
+\left| \int_{c_1}^{c_2} f(x) dx \right| \le \int_{c_1}^{c_2} |f(x)| dx.
+$$
+Vì $\int_a^{+\infty} |f(x)| dx$ hội tụ, theo Tiêu chuẩn Cauchy, với mọi $\varepsilon > 0$, tồn tại $A > 0$ sao cho với mọi $c_2 > c_1 > A$ thì $\int_{c_1}^{c_2} |f(x)| dx < \varepsilon$.
+Từ đó $\left| \int_{c_1}^{c_2} f(x) dx \right| < \varepsilon$. Theo Tiêu chuẩn Cauchy, $\int_a^{+\infty} f(x) dx$ hội tụ.
+</Proof>
+
+<Definition
+  id="def-gthmb-c6-b3-phan-loai-hoi-tu-tuyet-doi-ban-hoi-tu"
+  title="Định nghĩa Hội tụ Tuyệt đối và Bán hội tụ (Conditionally Convergent)"
+  source="gt-gthmb-ttd-2022"
+  page="72"
+  original="Mục 6.2.1"
+>
+Cho hàm số $f \in \mathcal{R}_{\text{loc}}([a; +\infty))$:
+1. Nếu $\int_a^{+\infty} |f(x)| dx$ hội tụ, ta nói tích phân $\int_a^{+\infty} f(x) dx$ **hội tụ tuyệt đối**.
+2. Nếu $\int_a^{+\infty} f(x) dx$ hội tụ nhưng $\int_a^{+\infty} |f(x)| dx$ phân kỳ, ta nói tích phân $\int_a^{+\infty} f(x) dx$ **bán hội tụ (hội tụ có điều kiện)**.
+</Definition>
+
+<Example
+  id="exm-gthmb-c6-b3-tich-phan-dirichlet-ban-hoi-tu"
+  title="Tích phân Dirichlet kinh điển bán hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="76"
+  original="Bài tập 6"
+>
+Chứng minh rằng tích phân $I = \int_1^{+\infty} \frac{\sin x}{x} dx$ hội tụ, nhưng không hội tụ tuyệt đối (bán hội tụ).
+
+**Lời giải:**
+1. **Chứng minh $I$ hội tụ bằng phương pháp tích phân từng phần:**
+   Với mọi $c > 1$, đặt $u = \frac{1}{x} \implies du = -\frac{1}{x^2} dx$, và $dv = \sin x dx \implies v = -\cos x$:
+   $$
+   \int_1^c \frac{\sin x}{x} dx = \left[ -\frac{\cos x}{x} \right]_1^c - \int_1^c \frac{\cos x}{x^2} dx = \cos 1 - \frac{\cos c}{c} - \int_1^c \frac{\cos x}{x^2} dx.
+   $$
+   Khi $c \to +\infty$:
+   - $\lim_{c \to +\infty} \frac{\cos c}{c} = 0$ (do $|\cos c| \le 1$).
+   - Xét tích phân $\int_1^{+\infty} \frac{\cos x}{x^2} dx$: Vì $\left|\frac{\cos x}{x^2}\right| \le \frac{1}{x^2}$ và $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ ($p = 2 > 1$), nên theo tiêu chuẩn so sánh, $\int_1^{+\infty} \frac{\cos x}{x^2} dx$ hội tụ tuyệt đối.
+   Do đó giới hạn khi $c \to +\infty$ tồn tại hữu hạn, nghĩa là $\int_1^{+\infty} \frac{\sin x}{x} dx$ **hội tụ**.
+
+2. **Chứng minh phân kỳ tuyệt đối:**
+   Xét $\int_1^{+\infty} \frac{|\sin x|}{x} dx$. Áp dụng bất đẳng thức $|\sin x| \ge \sin^2 x = \frac{1 - \cos 2x}{2}$:
+   $$
+   \int_1^c \frac{|\sin x|}{x} dx \ge \frac{1}{2} \int_1^c \frac{1}{x} dx - \frac{1}{2} \int_1^c \frac{\cos 2x}{x} dx.
+   $$
+   Tương tự như trên, $\int_1^{+\infty} \frac{\cos 2x}{x} dx$ hội tụ nhờ tích phân từng phần.
+   Mặt khác, $\int_1^c \frac{1}{x} dx = \ln c \to +\infty$ khi $c \to +\infty$.
+   Do đó $\int_1^{+\infty} \frac{|\sin x|}{x} dx = +\infty$ ($\text{Phân kỳ}$).
+   **Kết luận:** Tích phân $\int_1^{+\infty} \frac{\sin x}{x} dx$ **bán hội tụ**.
+</Example>
+
+---
+
+<KeyTakeaways>
+- **Định nghĩa tích phân loại 1:** $\int_a^{+\infty} f(x)dx = \lim_{c \to +\infty} \int_a^c f(x)dx$. Hội tụ khi giới hạn hữu hạn.
+- **Tích phân mẫu chuẩn:** $\int_a^{+\infty} \frac{dx}{x^p}$ hội tụ $\iff p > 1$.
+- **Tiêu chuẩn so sánh:** Với hàm không âm, dùng bất đẳng thức $0 \le f \le g$ hoặc tỉ số tiệm cận $\lim \frac{f}{g} = k \in (0; +\infty)$ để chuyển về tích phân mẫu $\frac{1}{x^p}$.
+- **Hội tụ tuyệt đối và Bán hội tụ:** $\int |f|$ hội tụ $\implies \int f$ hội tụ. Ví dụ mẫu mực $\int_1^{+\infty} \frac{\sin x}{x} dx$ bán hội tụ (hội tụ nhờ triệt tiêu dao động nhưng diện tích tuyệt đối phân kỳ logarit).
+</KeyTakeaways>

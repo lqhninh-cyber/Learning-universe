@@ -6,6 +6,7 @@ export { AffinePlane, type AffinePlaneProps } from './AffinePlane';
 export { Barycenter, type BarycenterProps } from './Barycenter';
 export { DraggablePoint, type DraggablePointProps, type PointTone } from './DraggablePoint';
 export { Parallelogram, type ParallelogramProps } from './Parallelogram';
+export { RiemannDarbouxSumDemo, type RiemannDarbouxSumDemoProps } from './RiemannDarbouxSumDemo';
 export { SequenceEpsilonDemo, type SequenceEpsilonDemoProps } from './SequenceEpsilonDemo';
 export { SupremumEpsilonDemo, type SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
 export { TaylorPolynomialDemo, type TaylorPolynomialDemoProps } from './TaylorPolynomialDemo';

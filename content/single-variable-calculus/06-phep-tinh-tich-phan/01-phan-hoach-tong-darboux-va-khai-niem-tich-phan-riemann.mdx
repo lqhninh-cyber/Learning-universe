@@ -1,0 +1,324 @@
+---
+id: phan-hoach-tong-darboux-va-khai-niem-tich-phan-riemann
+title: 'Phân hoạch, tổng Darboux và khái niệm tích phân Riemann'
+description: 'Khảo sát lý thuyết diện tích giải tích: phân hoạch đoạn đóng, độ mịn, tổng Darboux trên/dưới, định nghĩa tích phân Riemann, tiêu chuẩn khả tích epsilon và các lớp hàm đơn điệu, liên tục khả tích.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - can-tren-can-duoi-supremum-infimum-va-tien-de-day-du
+  - ham-so-lien-tuc-deu-va-dinh-ly-cantor
+tags:
+  - phân hoạch
+  - tổng Darboux
+  - tích phân Riemann
+  - tiêu chuẩn khả tích
+  - hàm Dirichlet
+  - tính liên tục đều
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '64-66'
+    sections: 'Mục 6.1.1'
+    note: 'Phân hoạch đoạn, tổng Darboux trên/dưới, định nghĩa tích phân Riemann và Tiêu chuẩn 6.1.5'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất giải tích của phép phân hoạch:** Nắm vững cấu trúc phân hoạch đoạn đóng $[a; b]$, độ mịn $\mu(P)$ và tính chất của phân hoạch làm mịn $P \subset Q$.
+2. **Làm chủ tổng Darboux trên và tổng Darboux dưới:** Thiết lập công thức $U(P, f)$ và $L(P, f)$ qua supremum/infimum và chứng minh bất đẳng thức nền tảng $L(P, f) \le U(Q, f)$ cho mọi cặp phân hoạch.
+3. **Định nghĩa chuẩn xác Tích phân Riemann:** Nhận diện điều kiện khả tích $\sup_P L(P, f) = \inf_P U(P, f)$, phân tích vì sao hàm hằng khả tích còn hàm Dirichlet thì không.
+4. **Chứng minh Tiêu chuẩn khả tích Riemann:** Vận dụng tiêu chuẩn $U(P, f) - L(P, f) < \varepsilon$ để chứng minh mọi hàm liên tục hoặc đơn điệu trên đoạn đóng đều khả tích Riemann.
+</Note>
+
+## 1. Khái niệm Phân hoạch của Đoạn đóng
+
+Để đo diện tích hình thang cong giới hạn bởi đồ thị hàm số $f$ trên đoạn $[a; b]$, phương pháp cổ điển của Eudoxus - Archimedes và giải tích hiện đại của Riemann bắt đầu bằng việc chia nhỏ đoạn $[a; b]$ thành các đoạn con hữu hạn (<Cite source="gt-gthmb-ttd-2022" page="64" note="Định nghĩa 6.1.1" />).
+
+<Definition
+  id="def-gthmb-c6-b1-phan-hoach"
+  title="Phân hoạch của đoạn đóng và Phân hoạch mịn hơn"
+  source="gt-gthmb-ttd-2022"
+  page="64"
+  original="Định nghĩa 6.1.1"
+>
+Một **phân hoạch** $P$ của đoạn đóng $[a; b]$ là một tập con hữu hạn các điểm:
+$$
+P = \{x_1, x_2, \dots, x_{n+1}\} \subset [a; b]
+$$
+sao cho:
+$$
+a = x_1 < x_2 < \dots < x_{n+1} = b.
+$$
+Tập hợp tất cả các phân hoạch khả dĩ của đoạn $[a; b]$ được ký hiệu là $\mathcal{P}_{[a; b]}$ (hoặc viết đơn giản là $\mathcal{P}$).
+
+Cho hai phân hoạch $P, Q \in \mathcal{P}$. Ta nói phân hoạch **$Q$ mịn hơn phân hoạch $P$** nếu:
+$$
+P \subset Q,
+$$
+nghĩa là $Q$ thu được từ $P$ bằng cách bổ sung thêm một số điểm chia mới vào $[a; b]$.
+</Definition>
+
+<Definition
+  id="def-gthmb-c6-b1-do-min-phan-hoach"
+  title="Độ mịn (Đường kính) của phân hoạch"
+  source="gt-gthmb-ttd-2022"
+  page="66"
+  original="Mục 6.1.2"
+>
+Độ dài lớn nhất trong số các đoạn con $[x_i; x_{i+1}]$ được gọi là **độ mịn (hoặc đường kính)** của phân hoạch $P$, ký hiệu là $\mu(P)$:
+$$
+\mu(P) = \max_{1 \le i \le n} (x_{i+1} - x_i).
+$$
+Khi chia đều đoạn $[a; b]$ thành $n$ đoạn con có độ dài bằng nhau $\Delta x = \frac{b - a}{n}$, ta có $\mu(P) = \frac{b - a}{n}$. Khi $n \to +\infty$ thì $\mu(P) \to 0$.
+</Definition>
+
+## 2. Tổng Darboux trên và Tổng Darboux dưới
+
+Giả sử $f: [a; b] \to \mathbb{R}$ là một hàm số bị chặn. Với mỗi phân hoạch $P = \{x_1, x_2, \dots, x_{n+1}\}$ của $[a; b]$, trên mỗi đoạn con $[x_i; x_{i+1}]$ ($i = 1, \dots, n$), ta đặt (<Cite source="gt-gthmb-ttd-2022" page="64" note="Định nghĩa 6.1.1" />):
+$$
+M_i(f) = \sup \{f(x) : x \in [x_i; x_{i+1}]\}, \quad m_i(f) = \inf \{f(x) : x \in [x_i; x_{i+1}]\}.
+$$
+
+<Definition
+  id="def-gthmb-c6-b1-tong-darboux"
+  title="Tổng Darboux trên và Tổng Darboux dưới"
+  source="gt-gthmb-ttd-2022"
+  page="64"
+  original="Định nghĩa 6.1.1"
+>
+1. **Tổng Darboux trên** của hàm số $f$ ứng với phân hoạch $P$ là tổng diện tích các hình chữ nhật ngoại tiếp:
+   $$
+   U(P, f) = \sum_{i=1}^n M_i(f)(x_{i+1} - x_i).
+   $$
+2. **Tổng Darboux dưới** của hàm số $f$ ứng với phân hoạch $P$ là tổng diện tích các hình chữ nhật nội tiếp:
+   $$
+   L(P, f) = \sum_{i=1}^n m_i(f)(x_{i+1} - x_i).
+   $$
+Nếu đặt $M = \sup \{|f(x)| : x \in [a; b]\}$, ta luôn có đánh giá bị chặn hiển nhiên:
+$$
+-M(b - a) \le L(P, f) \le U(P, f) \le M(b - a).
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c6-b1-tinh-chat-tong-darboux"
+  title="Các tính chất cơ bản của tổng Darboux"
+  source="gt-gthmb-ttd-2022"
+  page="65"
+  original="Định lý 6.1.2"
+>
+Cho $f: [a; b] \to \mathbb{R}$ bị chặn và $P, Q \in \mathcal{P}$. Khi đó:
+1. Nếu $P \subset Q$ ($Q$ mịn hơn $P$) thì:
+   $$
+   L(P, f) \le L(Q, f) \le U(Q, f) \le U(P, f).
+   $$
+2. Với mọi cặp phân hoạch $P, Q$ bất kỳ (không nhất thiết bao hàm nhau):
+   $$
+   L(P, f) \le U(Q, f).
+   $$
+3. Cận trên đúng của các tổng dưới không vượt quá cận dưới đúng của các tổng trên:
+   $$
+   \sup_{P \in \mathcal{P}} L(P, f) \le \inf_{Q \in \mathcal{P}} U(Q, f).
+   $$
+</Theorem>
+
+<Proof>
+1. Giả sử $Q$ thu được từ $P$ bằng cách thêm 1 điểm chia $x^* \in (x_k; x_{k+1})$.
+   Trên đoạn con $[x_k; x_{k+1}]$, ta có:
+   $$
+   M_k' = \sup_{[x_k; x^*]} f \le M_k, \quad M_k'' = \sup_{[x^*; x_{k+1}]} f \le M_k.
+   $$
+   Do đó:
+   $$
+   M_k'(x^* - x_k) + M_k''(x_{k+1} - x^*) \le M_k(x^* - x_k) + M_k(x_{k+1} - x^*) = M_k(x_{k+1} - x_k).
+   $$
+   Cộng các đoạn con còn lại không đổi, ta suy ra $U(Q, f) \le U(P, f)$. Hoàn toàn tương tự, $L(P, f) \le L(Q, f)$. Bằng quy nạp, bất đẳng thức đúng khi thêm hữu hạn điểm bất kỳ.
+2. Vì $P, Q \in \mathcal{P}$, tập hợp $P \cup Q$ cũng là một phân hoạch mịn hơn cả $P$ lẫn $Q$. Áp dụng mệnh đề 1:
+   $$
+   L(P, f) \le L(P \cup Q, f) \le U(P \cup Q, f) \le U(Q, f).
+   $$
+3. Cố định $Q$, từ $L(P, f) \le U(Q, f)$ với mọi $P \in \mathcal{P}$, lấy supremum theo $P$ ta được $\sup_{P} L(P, f) \le U(Q, f)$.
+   Lại lấy infimum theo $Q \in \mathcal{P}$, ta thu được:
+   $$
+   \sup_{P \in \mathcal{P}} L(P, f) \le \inf_{Q \in \mathcal{P}} U(Q, f).
+   $$
+</Proof>
+
+## 3. Khái niệm Tích phân Riemann
+
+Khi độ mịn của phân hoạch càng nhỏ, tổng Darboux trên ép dần từ trên xuống và tổng Darboux dưới ép dần từ dưới lên (<Cite source="gt-gthmb-ttd-2022" page="65" note="Định nghĩa 6.1.3" />).
+
+<Definition
+  id="def-gthmb-c6-b1-tich-phan-riemann"
+  title="Hàm khả tích Riemann và Định nghĩa Tích phân xác định"
+  source="gt-gthmb-ttd-2022"
+  page="65"
+  original="Định nghĩa 6.1.3"
+>
+Cho hàm số $f: [a; b] \to \mathbb{R}$ bị chặn. Ta nói $f$ **khả tích Riemann trên $[a; b]$**, ký hiệu là:
+$$
+f \in \mathcal{R}([a; b]),
+$$
+nếu cận dưới đúng của các tổng Darboux trên bằng cận trên đúng của các tổng Darboux dưới:
+$$
+\inf_{P \in \mathcal{P}} U(P, f) = \sup_{P \in \mathcal{P}} L(P, f) = I.
+$$
+Khi đó, giá trị chung $I$ được gọi là **tích phân Riemann** (hay tích phân xác định) của hàm số $f$ trên đoạn $[a; b]$, ký hiệu là:
+$$
+\int_a^b f(x) dx = \inf_{P \in \mathcal{P}} U(P, f) = \sup_{P \in \mathcal{P}} L(P, f).
+$$
+</Definition>
+
+<Example
+  id="exm-gthmb-c6-b1-ham-hang-kha-tich"
+  title="Hàm hằng luôn khả tích Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="65"
+  original="Ví dụ 6.1.4a"
+>
+Xét hàm hằng $f(x) = C$ trên đoạn $[a; b]$.
+Với mọi phân hoạch $P$, trên mỗi đoạn con $[x_i; x_{i+1}]$ ta đều có $M_i(f) = m_i(f) = C$.
+Do đó:
+$$
+U(P, f) = \sum_{i=1}^n C (x_{i+1} - x_i) = C(b - a), \quad L(P, f) = \sum_{i=1}^n C (x_{i+1} - x_i) = C(b - a).
+$$
+Vì $U(P, f) = L(P, f) = C(b - a)$ với mọi phân hoạch $P$, ta có $\inf_P U(P) = \sup_P L(P) = C(b - a)$.
+Vậy $f \in \mathcal{R}([a; b])$ và:
+$$
+\int_a^b C dx = C(b - a).
+$$
+</Example>
+
+<Counterexample
+  id="cex-gthmb-c6-b1-ham-dirichlet-khong-kha-tich"
+  title="Hàm Dirichlet không khả tích Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="65"
+  original="Ví dụ 6.1.4b"
+>
+Xét hàm số Dirichlet $D(x) = \begin{cases} 1, & x \in \mathbb{Q} \\ 0, & x \notin \mathbb{Q} \end{cases}$ trên đoạn $[a; b]$ với $a < b$.
+Vì giữa hai số thực bất kỳ luôn tồn tại cả số hữu tỉ lẫn số vô tỉ, trên mọi đoạn con $[x_i; x_{i+1}]$ ta luôn có:
+$$
+M_i(D) = \sup_{x \in [x_i; x_{i+1}]} D(x) = 1, \quad m_i(D) = \inf_{x \in [x_i; x_{i+1}]} D(x) = 0.
+$$
+Do đó với mọi phân hoạch $P \in \mathcal{P}$:
+$$
+U(P, D) = \sum_{i=1}^n 1 \cdot (x_{i+1} - x_i) = b - a, \quad L(P, D) = \sum_{i=1}^n 0 \cdot (x_{i+1} - x_i) = 0.
+$$
+Suy ra:
+$$
+\inf_{P \in \mathcal{P}} U(P, D) = b - a \ne 0 = \sup_{P \in \mathcal{P}} L(P, D).
+$$
+Vì hai cận không trùng nhau, hàm Dirichlet **không khả tích Riemann trên bất kỳ đoạn $[a; b]$ nào**.
+</Counterexample>
+
+## 4. Tiêu chuẩn Khả tích Riemann ($\varepsilon$-Criterion)
+
+Trong thực hành giải tích, để kiểm tra một hàm số có khả tích hay không mà không cần tìm trước giá trị tích phân $I$, ta sử dụng tiêu chuẩn sai số Darboux (<Cite source="gt-gthmb-ttd-2022" page="65" note="Định lý 6.1.5" />).
+
+<Theorem
+  id="thm-gthmb-c6-b1-tieu-chuan-kha-tich-riemann"
+  title="Tiêu chuẩn Khả tích Riemann"
+  source="gt-gthmb-ttd-2022"
+  page="65"
+  original="Định lý 6.1.5"
+>
+Cho hàm số $f: [a; b] \to \mathbb{R}$ bị chặn. Khi đó:
+$$
+f \in \mathcal{R}([a; b]) \iff \forall \varepsilon > 0, \; \exists P \in \mathcal{P} \text{ sao cho } U(P, f) - L(P, f) < \varepsilon.
+$$
+</Theorem>
+
+<Proof>
+- **Chiều thuận ($\implies$):** Giả sử $f \in \mathcal{R}([a; b])$. Đặt $I = \inf_P U(P, f) = \sup_P L(P, f)$.
+  Với mọi $\varepsilon > 0$, theo đặc trưng của supremum và infimum:
+  - Tồn tại phân hoạch $P_1$ sao cho $L(P_1, f) > I - \frac{\varepsilon}{2}$.
+  - Tồn tại phân hoạch $P_2$ sao cho $U(P_2, f) < I + \frac{\varepsilon}{2}$.
+  
+  Đặt $P = P_1 \cup P_2$. Vì $P$ mịn hơn cả $P_1$ và $P_2$, ta có:
+  $$
+  I - \frac{\varepsilon}{2} < L(P_1, f) \le L(P, f) \le U(P, f) \le U(P_2, f) < I + \frac{\varepsilon}{2}.
+  $$
+  Từ đó suy ra:
+  $$
+  U(P, f) - L(P, f) < \left(I + \frac{\varepsilon}{2}\right) - \left(I - \frac{\varepsilon}{2}\right) = \varepsilon.
+  $$
+
+- **Chiều đảo ($\impliedby$):** Giả sử với mọi $\varepsilon > 0$, tồn tại phân hoạch $P$ thỏa mãn $U(P, f) - L(P, f) < \varepsilon$.
+  Ta luôn có chuỗi bất đẳng thức kẹp:
+  $$
+  L(P, f) \le \sup_{Q} L(Q, f) \le \inf_{Q} U(Q, f) \le U(P, f) < L(P, f) + \varepsilon.
+  $$
+  Suy ra:
+  $$
+  0 \le \inf_{Q} U(Q, f) - \sup_{Q} L(Q, f) \le U(P, f) - L(P, f) < \varepsilon.
+  $$
+  Vì bất đẳng thức trên đúng với mọi $\varepsilon > 0$ tùy ý, ta bắt buộc phải có:
+  $$
+  \inf_{Q \in \mathcal{P}} U(Q, f) = \sup_{Q \in \mathcal{P}} L(Q, f) \implies f \in \mathcal{R}([a; b]).
+  $$
+</Proof>
+
+## 5. Các Lớp Hàm Khả tích Riemann Cốt lõi
+
+Nhờ Tiêu chuẩn Khả tích 6.1.5, ta dễ dàng chứng minh hai lớp hàm quan trọng nhất trong giải tích sơ cấp đều khả tích (<Cite source="gt-gthmb-ttd-2022" page="66" note="Định lý 6.1.6" />):
+
+<Theorem
+  id="thm-gthmb-c6-b1-cac-lop-ham-kha-tich"
+  title="Tính khả tích của Hàm Đơn điệu và Hàm Liên tục"
+  source="gt-gthmb-ttd-2022"
+  page="66"
+  original="Định lý 6.1.6"
+>
+1. **Hàm đơn điệu:** Nếu $f$ đơn điệu (tăng hoặc giảm) trên $[a; b]$ thì $f \in \mathcal{R}([a; b])$.
+2. **Hàm liên tục:** Nếu $f$ liên tục trên $[a; b]$ thì $f \in \mathcal{R}([a; b])$.
+</Theorem>
+
+<Proof>
+1. **Trường hợp $f$ đơn điệu tăng trên $[a; b]$:**
+   Nếu $f(a) = f(b)$ thì $f$ là hàm hằng nên khả tích. Giả sử $f(b) > f(a)$.
+   Với mọi $\varepsilon > 0$, ta chọn số nguyên dương $n$ đủ lớn sao cho $\Delta x = \frac{b - a}{n} < \frac{\varepsilon}{f(b) - f(a)}$.
+   Chia đều $[a; b]$ thành $n$ đoạn bằng nhau bởi phân hoạch $P = \{x_1, \dots, x_{n+1}\}$.
+   Vì $f$ tăng, trên mỗi $[x_i; x_{i+1}]$ ta có $M_i(f) = f(x_{i+1})$ và $m_i(f) = f(x_i)$. Khi đó tổng sai số triệt tiêu vi sai dạng kính thiên văn:
+   $$
+   U(P, f) - L(P, f) = \sum_{i=1}^n [f(x_{i+1}) - f(x_i)] \frac{b - a}{n} = \frac{b - a}{n} [f(b) - f(a)] < \varepsilon.
+   $$
+   Theo Tiêu chuẩn 6.1.5, $f \in \mathcal{R}([a; b])$.
+
+2. **Trường hợp $f$ liên tục trên $[a; b]$:**
+   Theo **Định lý Cantor (Bài 4.4)**, hàm số $f$ liên tục trên đoạn đóng $[a; b]$ thì **liên tục đều** trên $[a; b]$.
+   Do đó, với mọi $\varepsilon > 0$, tồn tại $\delta > 0$ sao cho với mọi $x, y \in [a; b]$ thỏa $|x - y| < \delta$, ta có $|f(x) - f(y)| < \frac{\varepsilon}{b - a}$.
+   Chọn phân hoạch $P$ bất kỳ có độ mịn $\mu(P) < \delta$. Theo Định lý Weierstrass, $f$ đạt GTLN và GTNN trên $[x_i; x_{i+1}]$, tức tồn tại $u_i, v_i \in [x_i; x_{i+1}]$ sao cho $M_i(f) = f(u_i)$ và $m_i(f) = f(v_i)$.
+   Vì $|u_i - v_i| \le x_{i+1} - x_i \le \mu(P) < \delta$, ta có $M_i(f) - m_i(f) < \frac{\varepsilon}{b - a}$.
+   Từ đó:
+   $$
+   U(P, f) - L(P, f) = \sum_{i=1}^n [M_i(f) - m_i(f)] (x_{i+1} - x_i) < \frac{\varepsilon}{b - a} \sum_{i=1}^n (x_{i+1} - x_i) = \varepsilon.
+   $$
+   Vậy $f \in \mathcal{R}([a; b])$.
+</Proof>
+
+## 6. Mô phỏng trực quan: Tổng Darboux và Tích phân Riemann
+
+Trải nghiệm sự co hẹp của hình chữ nhật tổng trên $U(P)$ và tổng dưới $L(P)$ khi tăng số phân hoạch $n$ từ $2$ đến $40$:
+
+<RiemannDarbouxSumDemo />
+
+---
+
+<KeyTakeaways>
+- **Phân hoạch và độ mịn:** Phân hoạch $P$ chia nhỏ đoạn $[a; b]$ thành các đoạn con có độ mịn $\mu(P) = \max \Delta x_i$. Phân hoạch mịn hơn ($P \subset Q$) làm tổng dưới tăng lên và tổng trên giảm xuống.
+- **Bất đẳng thức Darboux:** Với mọi phân hoạch $P, Q$, luôn có $L(P, f) \le \sup L \le \inf U \le U(Q, f)$.
+- **Định nghĩa Tích phân Riemann:** Hàm số bị chặn $f$ khả tích khi $\sup_P L(P, f) = \inf_P U(P, f) = \int_a^b f(x)dx$.
+- **Tiêu chuẩn khả tích:** $f \in \mathcal{R}([a; b]) \iff \forall \varepsilon > 0, \exists P: U(P, f) - L(P, f) < \varepsilon$.
+- **Hai lớp hàm khả tích cơ bản:** Mọi hàm đơn điệu trên $[a; b]$ và mọi hàm liên tục trên $[a; b]$ đều khả tích Riemann.
+</KeyTakeaways>

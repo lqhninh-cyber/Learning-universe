@@ -7,6 +7,7 @@ import type { AffinePlaneProps } from './AffinePlane';
 import type { BarycenterProps } from './Barycenter';
 import type { DraggablePointProps } from './DraggablePoint';
 import type { ParallelogramProps } from './Parallelogram';
+import type { RiemannDarbouxSumDemoProps } from './RiemannDarbouxSumDemo';
 import type { SequenceEpsilonDemoProps } from './SequenceEpsilonDemo';
 import type { SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
 import type { TaylorPolynomialDemoProps } from './TaylorPolynomialDemo';
@@ -44,6 +45,9 @@ const UniformContinuityDemoInner = lazy(() =>
 );
 const TaylorPolynomialDemoInner = lazy(() =>
   import('./TaylorPolynomialDemo').then((m) => ({ default: m.TaylorPolynomialDemo })),
+);
+const RiemannDarbouxSumDemoInner = lazy(() =>
+  import('./RiemannDarbouxSumDemo').then((m) => ({ default: m.RiemannDarbouxSumDemo })),
 );
 
 function FigureFallback({ height = 340 }: { readonly height?: number }) {
@@ -150,6 +154,14 @@ export function LazyTaylorPolynomialDemo(props: TaylorPolynomialDemoProps) {
   return (
     <Suspense fallback={<FigureFallback height={280} />}>
       <TaylorPolynomialDemoInner {...props} />
+    </Suspense>
+  );
+}
+
+export function LazyRiemannDarbouxSumDemo(props: RiemannDarbouxSumDemoProps) {
+  return (
+    <Suspense fallback={<FigureFallback height={280} />}>
+      <RiemannDarbouxSumDemoInner {...props} />
     </Suspense>
   );
 }
