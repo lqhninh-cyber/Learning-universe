@@ -19,6 +19,7 @@ import {
   LazyParallelogram,
   LazySequenceEpsilonDemo,
   LazySupremumEpsilonDemo,
+  LazyUniformContinuityDemo,
   LazyVectorArrow,
 } from './figure-kit/LazyFigureKit';
 
@@ -67,6 +68,7 @@ export const mdxComponents: MDXComponents = {
   AffineMapDemo: LazyAffineMapDemo,
   SupremumEpsilonDemo: LazySupremumEpsilonDemo,
   SequenceEpsilonDemo: LazySequenceEpsilonDemo,
+  UniformContinuityDemo: LazyUniformContinuityDemo,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
   table: (props: ComponentPropsWithoutRef<'table'>) => (

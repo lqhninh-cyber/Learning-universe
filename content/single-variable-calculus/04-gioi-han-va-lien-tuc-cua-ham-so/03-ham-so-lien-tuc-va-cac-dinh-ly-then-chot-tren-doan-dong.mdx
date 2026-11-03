@@ -1,0 +1,255 @@
+---
+id: ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong
+title: 'Hàm số liên tục và các định lý then chốt trên đoạn đóng'
+description: 'Khái niệm liên tục tại một điểm và trên tập hợp, đặc trưng dãy số, tính liên tục của hàm sơ cấp, định lý giá trị cực biên Weierstrass và định lý giá trị trung gian Bolzano-Cauchy.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - diem-gioi-han-diem-co-lap-va-lan-can
+  - gioi-han-cua-ham-so-va-gioi-han-mot-phia
+  - day-con-dinh-ly-bolzano-weierstrass-va-tieu-chuan-cauchy
+tags:
+  - hàm số liên tục
+  - điểm gián đoạn
+  - hàm sơ cấp
+  - định lý Weierstrass
+  - định lý Bolzano-Cauchy
+  - định lý giá trị trung gian
+  - nghiệm phương trình
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '45-47'
+    sections: 'Mục 4.4.1, 4.4.2'
+    note: 'Định nghĩa tính liên tục, đặc trưng dãy số, đại số hàm liên tục, định lý Weierstrass trên đoạn và định lý giá trị trung gian'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của tính liên tục:** Nắm vững định nghĩa liên tục bằng $\varepsilon - \delta$ và lân cận; hiểu vì sao hàm số tự động liên tục tại mọi điểm cô lập của tập xác định.
+2. **Sử dụng đặc trưng Heine cho tính liên tục:** Chuyển đổi linh hoạt giữa tính liên tục của hàm và tính hội tụ của dãy ảnh $f(x_n) \to f(a)$.
+3. **Làm chủ tính liên tục của các hàm số sơ cấp:** Nắm vững định lý liên tục của hàm hợp, hàm tổng/hiệu/tích/thương và định lý nền tảng: mọi hàm sơ cấp đều liên tục trên tập xác định.
+4. **Vận dụng Định lý giá trị cực biên Weierstrass:** Hiểu sâu sắc tính chất bị chặn và sự tồn tại chắc chắn của $\max$ và $\min$ của hàm liên tục trên đoạn compact $[a; b]$.
+5. **Thành thạo Định lý giá trị trung gian Bolzano-Cauchy:** Vận dụng hệ quả đổi dấu $f(a)f(b) < 0$ để chứng minh phương trình có nghiệm, xác định tập ảnh $f([a; b]) = [m; M]$ và chứng minh các đa thức bậc lẻ luôn có nghiệm thực.
+</Note>
+
+## 1. Khái niệm Hàm số liên tục
+
+Về mặt hình học trực quan, đồ thị của một hàm số liên tục là một đường liền nét không bị đứt đoạn hay nhảy vọt. Trong ngôn ngữ giải tích chuẩn mực, tính liên tục được định nghĩa thông qua sự bảo toàn lân cận (<Cite source="gt-gthmb-ttd-2022" page="45" note="Mục 4.4.1" />).
+
+<Definition
+  id="def-gthmb-c4-b3-dinh-nghia-lien-tuc"
+  title="Hàm số liên tục tại một điểm và trên tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="45"
+  original="Định nghĩa 4.4.1"
+>
+Cho hàm số $f: X \to Y$ và $a \in X$.
+1. Hàm số $f$ được gọi là **liên tục tại điểm $a$** nếu với mọi số thực $\varepsilon > 0$, tồn tại $\delta > 0$ sao cho với mọi $x \in X$:
+$$
+|x - a| < \delta \implies |f(x) - f(a)| < \varepsilon.
+$$
+2. Hàm số $f$ được gọi là **liên tục trên tập $X$** nếu $f$ liên tục tại mọi điểm $a \in X$.
+3. Nếu $f$ không liên tục tại $a$, ta nói $a$ là một **điểm gián đoạn** của hàm số $f$.
+</Definition>
+
+<Remark
+  id="rem-gthmb-c4-b3-tinh-lien-tuc-tai-diem-co-lap"
+  title="Tính liên tục tại điểm cô lập và điểm giới hạn"
+  source="gt-gthmb-ttd-2022"
+  page="45"
+  original="Nhận xét 4.4.2"
+>
+1. **Tại điểm cô lập:** Nếu $a \in X$ là một điểm cô lập của tập xác định $X$, thì hàm số $f$ **luôn luôn liên tục tại $a$**.
+   *Thật vậy:* Theo định nghĩa điểm cô lập, tồn tại $\delta > 0$ sao cho $(a - \delta, a + \delta) \cap X = \{a\}$. Khi đó, với mọi $x \in X$ thỏa mãn $|x - a| < \delta$, ta bắt buộc phải có $x = a$, dẫn đến:
+   $$
+   |f(x) - f(a)| = |f(a) - f(a)| = 0 < \varepsilon.
+   $$
+   Điều này đúng với mọi $\varepsilon > 0$ mà không cần bất kỳ điều kiện bổ sung nào!
+2. **Tại điểm giới hạn:** Nếu $a \in X$ là một điểm giới hạn của $X$, thì:
+   $$
+   f \text{ liên tục tại } a \iff \lim_{x \to a} f(x) = f(a).
+   $$
+   Nói cách khác, giá trị giới hạn khi $x$ tiến về $a$ phải trùng khớp hoàn toàn với giá trị thực tế của hàm tại $a$.
+</Remark>
+
+## 2. Đặc trưng Dãy số và Đại số các Hàm liên tục
+
+<Theorem
+  id="thm-gthmb-c4-b3-dac-trung-day-so-lien-tuc"
+  title="Đặc trưng tính liên tục qua dãy số"
+  source="gt-gthmb-ttd-2022"
+  page="45"
+  original="Định lý 4.4.4"
+>
+Hàm số $f: X \to Y$ liên tục tại $a \in X$ khi và chỉ khi ứng với mọi dãy số $(x_n) \subset X$, nếu $\lim_{n \to \infty} x_n = a$ thì:
+$$
+\lim_{n \to \infty} f(x_n) = f(a).
+$$
+</Theorem>
+
+<Proof>
+- **Chiều thuận $(\implies)$:** Giả sử $f$ liên tục tại $a$. Cho $\varepsilon > 0$ tùy ý, tồn tại $\delta > 0$ sao cho với mọi $x \in X$, nếu $|x - a| < \delta$ thì $|f(x) - f(a)| < \varepsilon$.
+  Lấy dãy $(x_n) \subset X$ có $\lim x_n = a$. Tồn tại $N \in \mathbb{N}$ sao cho $|x_n - a| < \delta$ với mọi $n \ge N$. Suy ra $|f(x_n) - f(a)| < \varepsilon$ với mọi $n \ge N$. Do đó $\lim f(x_n) = f(a)$.
+- **Chiều đảo $(\impliedby)$:** Giả sử phản chứng $f$ không liên tục tại $a$. Phủ định định nghĩa liên tục:
+  $$
+  \exists \varepsilon_0 > 0, \forall \delta > 0, \exists x_\delta \in X: |x_\delta - a| < \delta \text{ và } |f(x_\delta) - f(a)| \ge \varepsilon_0.
+  $$
+  Với mỗi $n \in \mathbb{N}$, chọn $\delta = \frac{1}{n}$, ta tìm được phần tử $x_n \in X$ sao cho $|x_n - a| < \frac{1}{n}$ và $|f(x_n) - f(a)| \ge \varepsilon_0$.
+  Dãy $(x_n)$ hội tụ về $a$, nhưng dãy ảnh $(f(x_n))$ không hội tụ về $f(a)$ (vì khoảng cách luôn $\ge \varepsilon_0$). Mâu thuẫn này chứng tỏ $f$ phải liên tục tại $a$.
+</Proof>
+
+<Theorem
+  id="thm-gthmb-c4-b3-dai-so-ham-lien-tuc"
+  title="Đại số các hàm liên tục và tính liên tục của hàm hợp"
+  source="gt-gthmb-ttd-2022"
+  page="46"
+  original="Định lý 4.4.5"
+>
+1. Nếu $f$ và $g$ liên tục tại $a \in X$ thì các hàm số $|f|$, $f \pm g$, $f \cdot g$ cũng liên tục tại $a$. Nếu $g(a) \ne 0$ thì thương $\frac{f}{g}$ cũng liên tục tại $a$.
+2. **Tính liên tục của hàm hợp:** Cho $f: X \to Y$ và $g: Y \to Z$. Nếu $f$ liên tục tại $a \in X$ và $g$ liên tục tại $f(a) \in Y$ thì hàm hợp $(g \circ f)$ liên tục tại $a$:
+$$
+\lim_{x \to a} g(f(x)) = g\left(\lim_{x \to a} f(x)\right) = g(f(a)).
+$$
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c4-b3-tinh-lien-tuc-ham-so-cap"
+  title="Tính liên tục của mọi hàm số sơ cấp"
+  source="gt-gthmb-ttd-2022"
+  page="46"
+  original="Định lý 4.4.7"
+>
+Mọi hàm số sơ cấp (các hàm đa thức, phân thức hữu tỉ, hàm lũy thừa $x^\alpha$, hàm mũ $a^x$, hàm logarit $\log_a x$, các hàm lượng giác $\sin, \cos, \tan, \cot$ và các hàm lượng giác ngược) đều liên tục trên toàn bộ tập xác định của chúng.
+</Theorem>
+
+## 3. Các định lý then chốt của Hàm liên tục trên đoạn đóng $[a; b]$
+
+Khi một hàm số liên tục được xét trên một **tập compact** (trong $\mathbb{R}$, đó là một đoạn đóng và bị chặn $[a; b]$), nó thừa hưởng những tính chất giải tích cực kỳ mạnh mẽ (<Cite source="gt-gthmb-ttd-2022" page="46-47" note="Mục 4.4.2" />).
+
+<Definition
+  id="def-gthmb-c4-b3-lien-tuc-tren-doan"
+  title="Hàm số liên tục trên đoạn đóng"
+  source="gt-gthmb-ttd-2022"
+  page="46"
+  original="Định nghĩa 4.4.8"
+>
+Hàm số $f$ được gọi là **liên tục trên đoạn $[a; b]$** nếu nó liên tục tại mọi điểm $x \in (a; b)$, đồng thời liên tục bên phải tại điểm đầu mút $a$ ($\lim_{x \to a^+} f(x) = f(a)$) và liên tục bên trái tại điểm đầu mút $b$ ($\lim_{x \to b^-} f(x) = f(b)$).
+</Definition>
+
+### 3.1. Định lý giá trị cực biên Weierstrass (Extreme Value Theorem)
+
+<Theorem
+  id="thm-gthmb-c4-b3-dinh-ly-weierstrass-tren-doan"
+  title="Định lý giá trị cực biên Weierstrass"
+  source="gt-gthmb-ttd-2022"
+  page="46"
+  original="Định lý 4.4.9"
+>
+Cho hàm số $f$ liên tục trên đoạn đóng $[a; b]$. Khi đó:
+1. Hàm số $f$ bị chặn trên $[a; b]$, tức là tồn tại $m, M \in \mathbb{R}$ sao cho $m \le f(x) \le M$ với mọi $x \in [a; b]$.
+2. Hàm số $f$ đạt giá trị lớn nhất (GTLN) và giá trị nhỏ nhất (GTNN) trên $[a; b]$. Nói cách khác, tồn tại $x_*, x^* \in [a; b]$ sao cho:
+$$
+f(x_*) = \min_{x \in [a; b]} f(x), \quad f(x^*) = \max_{x \in [a; b]} f(x).
+$$
+</Theorem>
+
+<Proof>
+1. **Chứng minh $f$ bị chặn:** Giả sử phản chứng $f$ không bị chặn trên $[a; b]$.
+   Với mỗi số tự nhiên $n \in \mathbb{N}$, tồn tại $x_n \in [a; b]$ sao cho $|f(x_n)| \ge n$.
+   Dãy số $(x_n)$ bị chặn trong $[a; b]$. Theo **Định lý Bolzano-Weierstrass**, $(x_n)$ chứa một dãy con $(x_{n_k})$ hội tụ về một điểm $x_0$. Vì $[a; b]$ là tập đóng nên $x_0 \in [a; b]$.
+   Vì $f$ liên tục tại $x_0$, theo đặc trưng dãy số, ta có $\lim_{k \to \infty} f(x_{n_k}) = f(x_0) \in \mathbb{R}$.
+   Mặt khác, ta luôn có $|f(x_{n_k})| \ge n_k \ge k \to +\infty$, dẫn đến $|f(x_0)| = +\infty$, điều này vô lý! Vậy $f$ phải bị chặn trên $[a; b]$.
+
+2. **Chứng minh $f$ đạt giá trị lớn nhất:**
+   Vì $f([a; b])$ bị chặn trên, theo Tiên đề Supremum, tồn tại $M = \sup_{x \in [a; b]} f(x) < +\infty$.
+   Theo tính chất của Supremum, tồn tại một dãy $(x_n) \subset [a; b]$ sao cho $\lim f(x_n) = M$.
+   Theo Bolzano-Weierstrass, $(x_n)$ có dãy con $(x_{n_k})$ hội tụ về $x^* \in [a; b]$.
+   Do $f$ liên tục tại $x^*$, ta có:
+   $$
+   f(x^*) = \lim_{k \to \infty} f(x_{n_k}) = M.
+   $$
+   Vậy $f$ đạt giá trị lớn nhất tại điểm $x^* \in [a; b]$. Chứng minh cho GTNN được thực hiện hoàn toàn đối ngẫu.
+</Proof>
+
+---
+
+### 3.2. Định lý giá trị trung gian Bolzano-Cauchy (Intermediate Value Theorem)
+
+<Theorem
+  id="thm-gthmb-c4-b3-dinh-ly-gia-tri-trung-gian"
+  title="Định lý giá trị trung gian Bolzano-Cauchy"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Định lý 4.4.10"
+>
+Cho hàm số $f$ liên tục trên đoạn $[a; b]$. Nếu $u$ là một số thực nằm giữa $f(a)$ và $f(b)$ (tức $f(a) < u < f(b)$ hoặc $f(a) > u > f(b)$) thì luôn tồn tại ít nhất một điểm $c \in (a; b)$ sao cho:
+$$
+f(c) = u.
+$$
+</Theorem>
+
+<Corollary
+  id="cor-gthmb-c4-b3-he-qua-doi-dau-nghiem-phuong-trinh"
+  title="Hệ quả đổi dấu và sự tồn tại nghiệm của phương trình"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Hệ quả 4.4.11"
+>
+Cho hàm số $f$ liên tục trên đoạn $[a; b]$. Nếu $f(a)$ và $f(b)$ trái dấu nhau ($f(a)f(b) < 0$) thì phương trình $f(x) = 0$ có ít nhất một nghiệm thuộc khoảng mở $(a; b)$.
+</Corollary>
+
+<Corollary
+  id="cor-gthmb-c4-b3-tap-anh-doan-dong"
+  title="Tập ảnh của một đoạn là một đoạn"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Hệ quả 4.4.12"
+>
+Nếu hàm số $f$ liên tục trên đoạn $[a; b]$ thì tập giá trị của nó cũng là một đoạn đóng:
+$$
+f([a; b]) = [m; M],
+$$
+trong đó $m = \min_{[a; b]} f(x)$ và $M = \max_{[a; b]} f(x)$.
+</Corollary>
+
+<Example
+  id="exm-gthmb-c4-b3-su-ton-tai-can-bac-n"
+  title="Chứng minh sự tồn tại căn bậc n của số thực dương"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Ví dụ 4.4.13"
+>
+Cho $n \in \mathbb{N}$ và $a > 0$. Chứng minh tồn tại duy nhất một số thực $b > 0$ sao cho $b^n = a$.
+</Example>
+
+<Proof>
+Xét hàm số $f(x) = x^n$ trên đoạn $[0, 1 + a]$.
+- Hàm số $f(x)$ là hàm lũy thừa nên liên tục trên $[0, 1 + a]$.
+- Ta có $f(0) = 0 < a$.
+- Mặt khác, theo bất đẳng thức Bernoulli hoặc khai triển nhị thức:
+$$
+f(1 + a) = (1 + a)^n \ge 1 + na > a.
+$$
+Do đó $f(0) < a < f(1 + a)$. Theo Định lý giá trị trung gian Bolzano-Cauchy, tồn tại $b \in (0, 1 + a)$ sao cho $f(b) = b^n = a$.
+Hơn nữa, vì hàm số $f(x) = x^n$ đồng biến ngặt trên $[0, +\infty)$, giá trị $b > 0$ này là duy nhất. Ta ký hiệu $b = \sqrt[n]{a}$.
+</Proof>
+
+---
+
+<KeyTakeaways>
+- **Điểm cô lập vs. Điểm giới hạn:** Hàm số luôn liên tục tại mọi điểm cô lập của miền xác định; tại điểm giới hạn, liên tục $\iff \lim_{x \to a} f(x) = f(a)$.
+- **Hàm sơ cấp:** Luôn liên tục trên toàn bộ tập xác định.
+- **Định lý Weierstrass trên đoạn $[a; b]$:** Đảm bảo hàm liên tục luôn bị chặn và luôn đạt được cả GTLN và GTNN.
+- **Định lý Bolzano-Cauchy:** Đảm bảo đồ thị hàm liên tục không nhảy cóc; đi từ dưới lên trên bắt buộc phải cắt qua mọi mức giá trị trung gian.
+</KeyTakeaways>

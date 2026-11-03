@@ -1,0 +1,221 @@
+---
+id: diem-gioi-han-diem-co-lap-va-lan-can
+title: 'Điểm giới hạn, điểm cô lập và lân cận'
+description: 'Khái niệm lân cận, lân cận thủng trên tập số thực mở rộng, định nghĩa điểm giới hạn, tiêu chuẩn dãy số tương đương và điểm cô lập của tập hợp.'
+estimatedMinutes: 35
+level: basic
+prerequisites:
+  - he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r
+  - can-tren-can-duoi-supremum-infimum-va-tien-de-day-du
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+tags:
+  - lân cận
+  - lân cận thủng
+  - điểm giới hạn
+  - điểm cô lập
+  - tiêu chuẩn dãy số
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '39-40'
+    sections: 'Mục 4.1.1, 4.1.2, 4.1.3, 4.1.4'
+    note: 'Lân cận, lân cận thủng, điểm giới hạn, đặc trưng dãy số và điểm cô lập'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu rõ cấu trúc lân cận trên tập số thực mở rộng:** Nắm vững định nghĩa lân cận hữu hạn $(a - r, a + r)$ và lân cận ở vô cực $(m, +\infty), (-\infty, M)$; phân biệt lân cận đầy đủ và lân cận thủng.
+2. **Làm chủ định nghĩa điểm giới hạn:** Diễn giải chính xác điều kiện điểm giới hạn thông qua việc mọi lân cận thủng đều chứa phần tử của tập hợp; hiểu vì sao điểm giới hạn không nhất thiết phải thuộc vào tập hợp.
+3. **Vận dụng đặc trưng dãy số của điểm giới hạn:** Chứng minh một điểm là điểm giới hạn bằng cách xây dựng một dãy số khác $a$ hội tụ về $a$.
+4. **Phân biệt rạch ròi điểm giới hạn và điểm cô lập:** Nắm vững định nghĩa điểm cô lập và chứng minh các điểm rời rạc (như trong $\mathbb{Z}$ hoặc tập $\{1/n\}$) là điểm cô lập.
+</Note>
+
+## 1. Khái niệm Lân cận và Lân cận thủng
+
+Để nghiên cứu giới hạn và tính liên tục của hàm số khi biến số $x$ tiến dần về một giá trị $a$ (hữu hạn hoặc vô cực), công cụ hình học trực quan và tổng quát nhất trong giải tích là khái niệm **lân cận** (<Cite source="gt-gthmb-ttd-2022" page="39" note="Mục 4.1.1" />).
+
+<Definition
+  id="def-gthmb-c4-b1-lan-can"
+  title="Lân cận và lân cận thủng"
+  source="gt-gthmb-ttd-2022"
+  page="39"
+  original="Định nghĩa 4.1.1"
+>
+Cho $a \in \bar{\mathbb{R}} = [-\infty, +\infty]$.
+1. Khi $a \in \mathbb{R}$ (hữu hạn): Các khoảng mở đối xứng:
+$$
+V = (a - r, a + r) \quad \text{với } r > 0
+$$
+được gọi là một **lân cận** của điểm $a$. Số $r > 0$ được gọi là bán kính của lân cận.
+2. Khi $a = +\infty$: Các khoảng mở vô tận:
+$$
+V = (m, +\infty) \quad \text{với } m \in \mathbb{R}
+$$
+được gọi là một **lân cận** của $+\infty$.
+3. Khi $a = -\infty$: Các khoảng mở vô tận:
+$$
+V = (-\infty, M) \quad \text{với } M \in \mathbb{R}
+$$
+được gọi là một **lân cận** của $-\infty$.
+
+Nếu $V$ là một lân cận của $a$ thì tập hợp bỏ đi chính điểm $a$:
+$$
+V^* = V \setminus \{a\}
+$$
+được gọi là một **lân cận thủng** (deleted neighborhood) của $a$.
+
+Tập hợp tất cả các lân cận của $a$ được ký hiệu là $\mathcal{N}_a$, và tập hợp tất cả các lân cận thủng của $a$ được ký hiệu là $\mathcal{N}^*_a$.
+</Definition>
+
+<Remark
+  id="rem-gthmb-c4-b1-dac-trung-lan-can"
+  title="Đặc trưng khoảng cách của lân cận"
+  source="gt-gthmb-ttd-2022"
+  page="39"
+  original="Nhận xét 4.1.2"
+>
+1. Với $a \in \mathbb{R}$ và lân cận $V = (a - r, a + r)$:
+$$
+x \in V \iff |x - a| < r,
+$$
+$$
+x \in V \setminus \{a\} \iff 0 < |x - a| < r.
+$$
+2. Khi $a = +\infty$ hoặc $a = -\infty$, do bản thân $+\infty$ và $-\infty$ không phải là các số thực (không thuộc $\mathbb{R}$), ta luôn có:
+$$
+\mathcal{N}_{+\infty} = \mathcal{N}^*_{+\infty}, \quad \mathcal{N}_{-\infty} = \mathcal{N}^*_{-\infty}.
+$$
+</Remark>
+
+## 2. Điểm giới hạn (Limit Point)
+
+Một điểm $a$ được gọi là điểm giới hạn của tập hợp $E$ nếu ta có thể "tiếp cận" $a$ gần bao nhiêu tùy ý bằng các điểm khác của $E$ (<Cite source="gt-gthmb-ttd-2022" page="40" note="Mục 4.1.2" />).
+
+<Definition
+  id="def-gthmb-c4-b1-diem-gioi-han"
+  title="Điểm giới hạn của tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Định nghĩa 4.1.3"
+>
+Cho $a \in \bar{\mathbb{R}}$ và tập con $E \subset \mathbb{R}$. Ta nói $a$ là một **điểm giới hạn** (hoặc *điểm tụ*) của $E$ nếu mọi lân cận thủng của $a$ đều chứa ít nhất một phần tử của $E$:
+$$
+\forall V \in \mathcal{N}_a \implies (V \setminus \{a\}) \cap E \ne \emptyset.
+$$
+Tập hợp tất cả các điểm giới hạn của $E$ được ký hiệu là $E'$ (hoặc $\mathrm{Der}(E)$).
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c4-b1-dac-trung-day-so-diem-gioi-han"
+  title="Đặc trưng điểm giới hạn qua dãy số"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Định lý 4.1.4"
+>
+Cho $a \in \bar{\mathbb{R}}$ và $E \subset \mathbb{R}$. Khi đó $a$ là điểm giới hạn của $E$ khi và chỉ khi tồn tại một dãy số $(x_n) \subset E$ sao cho:
+$$
+x_n \ne a, \quad \forall n \in \mathbb{N} \quad \text{và} \quad \lim_{n \to \infty} x_n = a.
+$$
+</Theorem>
+
+<Proof>
+- **Chiều thuận $(\implies)$:** Giả sử $a$ là điểm giới hạn của $E$.
+  - Nếu $a \in \mathbb{R}$: Với mỗi $n \in \mathbb{N}$, xét lân cận $V_n = \left(a - \frac{1}{n}, a + \frac{1}{n}\right)$. Vì $a$ là điểm giới hạn của $E$, nên $(V_n \setminus \{a\}) \cap E \ne \emptyset$. Ta chọn một phần tử $x_n \in (V_n \setminus \{a\}) \cap E$. Khi đó $x_n \in E, x_n \ne a$ và $0 < |x_n - a| < \frac{1}{n}$. Vì $\lim \frac{1}{n} = 0$, theo nguyên lý kẹp ta có $\lim x_n = a$.
+  - Nếu $a = +\infty$: Với mỗi $n \in \mathbb{N}$, xét lân cận $V_n = (n, +\infty)$. Luôn tồn tại $x_n \in E$ sao cho $x_n > n$. Rõ ràng $\lim x_n = +\infty$.
+  - Nếu $a = -\infty$: Tương tự, chọn $x_n \in E$ sao cho $x_n < -n$, suy ra $\lim x_n = -\infty$.
+
+- **Chiều đảo $(\impliedby)$:** Giả sử tồn tại dãy $(x_n) \subset E \setminus \{a\}$ với $\lim x_n = a$.
+  Với mọi lân cận $V$ của $a$, theo định nghĩa giới hạn dãy số, tồn tại $N \in \mathbb{N}$ sao cho $x_n \in V$ với mọi $n \ge N$. Vì $x_n \ne a$ và $x_n \in E$, ta có $x_N \in (V \setminus \{a\}) \cap E$. Do đó $(V \setminus \{a\}) \cap E \ne \emptyset$. Vậy $a$ là điểm giới hạn của $E$.
+</Proof>
+
+<Example
+  id="exm-gthmb-c4-b1-diem-gioi-han-nghich-dao"
+  title="Điểm giới hạn không thuộc tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Ví dụ 4.1.5"
+>
+Cho tập hợp $E = \left\{\frac{1}{n} : n \in \mathbb{N}\right\} = \left\{1, \frac{1}{2}, \frac{1}{3}, \dots\right\}$.
+
+Số $0$ là điểm giới hạn duy nhất của $E$ vì:
+1. Dãy số $x_n = \frac{1}{n}$ thuộc $E$, với $x_n \ne 0$ với mọi $n$, và $\lim_{n \to \infty} x_n = 0$.
+2. Chú ý rằng $0 \notin E$. Điều này cho thấy điểm giới hạn của một tập hợp không nhất thiết phải là phần tử của tập hợp đó.
+</Example>
+
+## 3. Điểm cô lập (Isolated Point)
+
+<Definition
+  id="def-gthmb-c4-b1-diem-co-lap"
+  title="Điểm cô lập của tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Định nghĩa 4.1.6"
+>
+Cho $E \subset \mathbb{R}$ và $a \in E$. Ta nói $a$ là một **điểm cô lập** của $E$ nếu tồn tại một lân cận $V \in \mathcal{N}_a$ sao cho trong lân cận đó không có phần tử nào khác của $E$ ngoài chính $a$:
+$$
+(V \setminus \{a\}) \cap E = \emptyset \iff V \cap E = \{a\}.
+$$
+</Definition>
+
+<Remark
+  id="rem-gthmb-c4-b1-phan-loai-phan-tu"
+  title="Mối quan hệ giữa điểm giới hạn và điểm cô lập"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Nhận xét 4.1.6"
+>
+Với mỗi phần tử $a \in E$:
+- $a$ là điểm giới hạn của $E \iff$ mọi lân cận của $a$ đều chứa vô số điểm của $E$.
+- $a$ là điểm cô lập của $E \iff$ tồn tại một khoảng quanh $a$ hoàn toàn không chứa điểm nào khác của $E$.
+
+Hai khái niệm này loại trừ lẫn nhau đối với các phần tử của $E$: mọi điểm $a \in E$ hoặc là điểm giới hạn của $E$, hoặc là điểm cô lập của $E$.
+</Remark>
+
+<Example
+  id="exm-gthmb-c4-b1-tap-so-nguyen-toan-diem-co-lap"
+  title="Tập số nguyên là tập các điểm cô lập"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Ví dụ 4.1.7"
+>
+Với mọi số nguyên $a \in \mathbb{Z} \subset \mathbb{R}$, ta chọn bán kính $r = \frac{1}{2}$. Khi đó:
+$$
+\left(a - \frac{1}{2}, a + \frac{1}{2}\right) \cap \mathbb{Z} = \{a\}.
+$$
+Do đó mọi điểm $a \in \mathbb{Z}$ đều là điểm cô lập của $\mathbb{Z}$. Tập $\mathbb{Z}$ không có bất kỳ điểm giới hạn hữu hạn nào trong $\mathbb{R}$ (chỉ có điểm giới hạn ở vô cực là $\pm\infty$).
+</Example>
+
+## 4. Khái niệm Hàm số và Miền xác định
+
+<Definition
+  id="def-gthmb-c4-b1-dinh-nghia-ham-so"
+  title="Hàm số thực"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Định nghĩa 4.1.8"
+>
+Một ánh xạ $f: X \to Y$ với $X, Y \subset \mathbb{R}$ được gọi là một **hàm số thực** (hàm một biến).
+- Tập $X$ được gọi là **tập xác định** (domain), ký hiệu là $D_f$.
+- Tập ảnh $f(X) = \{f(x) : x \in X\}$ được gọi là **tập giá trị** (range), ký hiệu là $R_f$.
+
+Trong lý thuyết giới hạn hàm số $\lim_{x \to a} f(x)$, ta luôn giả thiết điểm $a$ là một **điểm giới hạn của tập xác định $X$**, để đảm bảo ta luôn có thể tiến biến số $x$ đến $a$ mà không bị "rời khỏi" miền xác định của hàm.
+</Definition>
+
+---
+
+<KeyTakeaways>
+- **Lân cận:** Là khoảng đối xứng $(a - r, a + r)$ khi $a \in \mathbb{R}$, hoặc tia vô tận $(m, +\infty)$, $(-\infty, M)$ khi $a = \pm\infty$.
+- **Lân cận thủng:** $V^* = V \setminus \{a\}$, dùng để nghiên cứu hành vi gần $a$ mà không phụ thuộc vào giá trị tại chính $a$.
+- **Điểm giới hạn:** Mọi lân cận thủng đều cắt $E$. Tương đương với việc tồn tại dãy $x_n \in E \setminus \{a\}$ hội tụ về $a$. Điểm giới hạn có thể không thuộc $E$.
+- **Điểm cô lập:** Thuộc $E$ nhưng đứng cách biệt, tồn tại lân cận chỉ chứa duy nhất chính nó.
+</KeyTakeaways>

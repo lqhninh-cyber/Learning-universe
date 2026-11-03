@@ -8,4 +8,5 @@ export { DraggablePoint, type DraggablePointProps, type PointTone } from './Drag
 export { Parallelogram, type ParallelogramProps } from './Parallelogram';
 export { SequenceEpsilonDemo, type SequenceEpsilonDemoProps } from './SequenceEpsilonDemo';
 export { SupremumEpsilonDemo, type SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
+export { UniformContinuityDemo, type UniformContinuityDemoProps } from './UniformContinuityDemo';
 export { VectorArrow, type VectorArrowProps, type VectorTone } from './VectorArrow';

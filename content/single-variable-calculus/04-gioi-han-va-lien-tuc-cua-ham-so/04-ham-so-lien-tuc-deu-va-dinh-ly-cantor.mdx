@@ -1,0 +1,297 @@
+---
+id: ham-so-lien-tuc-deu-va-dinh-ly-cantor
+title: 'Hàm số liên tục đều và định lý Cantor'
+description: 'Định nghĩa hàm số liên tục đều trên tập hợp, so sánh trực quan với liên tục tại từng điểm, đặc trưng dãy số, kỹ thuật phản chứng, định lý Cantor trên đoạn đóng và điều kiện Lipschitz.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - diem-gioi-han-diem-co-lap-va-lan-can
+  - gioi-han-cua-ham-so-va-gioi-han-mot-phia
+  - ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong
+tags:
+  - hàm số liên tục đều
+  - định lý Cantor
+  - đặc trưng dãy số
+  - phản chứng liên tục đều
+  - điều kiện Lipschitz
+  - hàm co
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '47-49'
+    sections: 'Mục 4.4.3'
+    note: 'Định nghĩa liên tục đều, đặc trưng dãy số, ví dụ hàm tuyến tính và hàm bậc hai, định lý Cantor và điều kiện Lipschitz'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Phân biệt rõ ràng giữa "Liên tục tại từng điểm" và "Liên tục đều":** Hiểu được vì sao trong tính liên tục thông thường $\delta = \delta(x_0, \varepsilon)$ phụ thuộc vào vị trí điểm, trong khi liên tục đều yêu cầu một $\delta = \delta(\varepsilon)$ phổ quát dùng chung cho toàn miền.
+2. **Làm chủ đặc trưng dãy số của tính liên tục đều:** Sử dụng thành thạo điều kiện $|x_n - x'_n| \to 0 \implies |f(x_n) - f(x'_n)| \to 0$.
+3. **Thành thạo kỹ thuật phản chứng tìm 2 dãy số:** Biết cách chứng minh các hàm kinh điển như $f(x) = x^2$ trên $\mathbb{R}$, $f(x) = \frac{1}{x}$ trên $(0, 1]$, $f(x) = \sin(x^2)$ không liên tục đều.
+4. **Hiểu sâu sắc Định lý Cantor:** Nắm vững định lý "Mọi hàm liên tục trên đoạn đóng $[a; b]$ đều liên tục đều trên $[a; b]$" và ý nghĩa của tính compact.
+5. **Vận dụng điều kiện Lipschitz và hàm co:** Chứng minh tính liên tục đều thông qua chặn đạo hàm (Lipschitz) và nguyên lý điểm bất động Banach cho hàm co.
+</Note>
+
+## 1. Khái niệm Hàm số liên tục đều
+
+Khi nghiên cứu tính liên tục của hàm số $f$ trên tập hợp $X$, định nghĩa thông thường đòi hỏi: tại *mỗi điểm cố định* $a \in X$, với sai số $\varepsilon > 0$, ta tìm được một bán kính lân cận $\delta > 0$. Số $\delta$ này phụ thuộc đồng thời vào cả $\varepsilon$ và vị trí của điểm $a$: $\delta = \delta(a, \varepsilon)$. 
+
+Tuy nhiên, nếu đồ thị hàm số ngày càng dốc đứng, khi điểm $a$ dịch chuyển ra xa, giá trị $\delta(a, \varepsilon)$ có thể bị thu hẹp dần và tiến về $0$. Khái niệm **liên tục đều** đặt ra yêu cầu khắt khe hơn: phải tồn tại một số $\delta > 0$ **dùng chung cho toàn bộ tập $X$**, hoàn toàn độc lập với vị trí điểm (<Cite source="gt-gthmb-ttd-2022" page="47" note="Định nghĩa 4.4.14" />).
+
+<Definition
+  id="def-gthmb-c4-b4-dinh-nghia-lien-tuc-deu"
+  title="Hàm số liên tục đều trên tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Định nghĩa 4.4.14"
+>
+Cho hàm số $f: X \to Y$. Hàm số $f$ được gọi là **liên tục đều trên tập $X$** nếu với mọi số thực $\varepsilon > 0$, luôn tồn tại một số thực $\delta > 0$ sao cho với mọi cặp điểm $x, x' \in X$:
+$$
+|x - x'| < \delta \implies |f(x) - f(x')| < \varepsilon.
+$$
+</Definition>
+
+<Remark
+  id="rem-gthmb-c4-b4-so-sanh-lien-tuc-va-lien-tuc-deu"
+  title="So sánh thứ tự lượng từ giữa liên tục và liên tục đều"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Mục 4.4.3"
+>
+Sự khác biệt căn bản nằm ở vị trí của lượng từ $\forall x$:
+- **$f$ liên tục trên $X$:**
+$$
+\forall x \in X, \quad \forall \varepsilon > 0, \quad \exists \delta > 0, \quad \forall x' \in X : |x - x'| < \delta \implies |f(x) - f(x')| < \varepsilon.
+$$
+($\delta$ được chọn sau khi đã biết cả điểm $x$ và $\varepsilon$).
+- **$f$ liên tục đều trên $X$:**
+$$
+\forall \varepsilon > 0, \quad \exists \delta > 0, \quad \forall x, x' \in X : |x - x'| < \delta \implies |f(x) - f(x')| < \varepsilon.
+$$
+($\delta$ được chọn trước, chỉ phụ thuộc vào $\varepsilon$, sau đó áp dụng đồng thời cho mọi cặp điểm $x, x' \in X$).
+
+Từ định nghĩa, ta thấy ngay: **Liên tục đều $\implies$ Liên tục**, nhưng chiều ngược lại nói chung **không đúng**.
+</Remark>
+
+### Mô phỏng trực quan tương tác
+
+Hãy thử nghiệm với widget dưới đây để quan sát sự thu hẹp của $\delta$ khi điểm $x_0$ tăng dần trên đồ thị parabol $f(x) = x^2$:
+
+<UniformContinuityDemo />
+
+## 2. Đặc trưng Dãy số và Kỹ thuật Phản chứng
+
+Để kiểm tra hoặc bác bỏ tính liên tục đều một cách chặt chẽ, ta có tiêu chuẩn tương đương thông qua hai dãy điểm (<Cite source="gt-gthmb-ttd-2022" page="47" note="Định lý 4.4.15" />).
+
+<Theorem
+  id="thm-gthmb-c4-b4-dac-trung-day-so-lien-tuc-deu"
+  title="Đặc trưng tính liên tục đều qua dãy số"
+  source="gt-gthmb-ttd-2022"
+  page="47"
+  original="Định lý 4.4.15"
+>
+Hàm số $f: X \to Y$ liên tục đều trên $X$ khi và chỉ khi với mọi cặp dãy số $(x_n)$ và $(x'_n)$ trong $X$, nếu khoảng cách giữa chúng tiến về $0$ thì khoảng cách giữa các giá trị hàm tương ứng cũng phải tiến về $0$:
+$$
+\lim_{n \to \infty} |x_n - x'_n| = 0 \implies \lim_{n \to \infty} |f(x_n) - f(x'_n)| = 0.
+$$
+</Theorem>
+
+<Proof>
+Lập luận hoàn toàn tương tự như việc chứng minh Định lý Heine:
+- Nếu $f$ liên tục đều: Với $\varepsilon > 0$, lấy $\delta > 0$ tương ứng. Khi $|x_n - x'_n| \to 0$, tồn tại $N$ sao cho $|x_n - x'_n| < \delta$ với mọi $n \ge N$, dẫn đến $|f(x_n) - f(x'_n)| < \varepsilon$.
+- Nếu $f$ không liên tục đều: Phủ định định nghĩa, tồn tại $\varepsilon_0 > 0$ sao cho với mỗi $\delta_n = \frac{1}{n}$, tồn tại cặp điểm $x_n, x'_n \in X$ có khoảng cách $|x_n - x'_n| < \frac{1}{n} \to 0$ nhưng $|f(x_n) - f(x'_n)| \ge \varepsilon_0$. Điều này cho thấy mệnh đề dãy số bị vi phạm.
+</Proof>
+
+<Corollary
+  id="cor-gthmb-c4-b4-tieu-chuan-phan-chung-lien-tuc-deu"
+  title="Quy tắc phản chứng chứng minh hàm không liên tục đều"
+  source="gt-gthmb-ttd-2022"
+  page="48"
+  original="Ví dụ 4.4.16"
+>
+Để chứng minh hàm số $f$ **không liên tục đều** trên $X$, ta chỉ cần chỉ ra:
+1. Hai dãy số $(x_n)$ và $(x'_n)$ thuộc $X$.
+2. Khoảng cách $\lim_{n \to \infty} |x_n - x'_n| = 0$.
+3. Khoảng cách ảnh $|f(x_n) - f(x'_n)| \ge \varepsilon_0 > 0$ với mọi $n$ (hoặc giới hạn của hiệu khác $0$).
+</Corollary>
+
+---
+
+### Các ví dụ mẫu mực
+
+<Example
+  id="exm-gthmb-c4-b4-ham-tuyen-tinh-lien-tuc-deu"
+  title="Hàm bậc nhất liên tục đều trên toàn trục số thực"
+  source="gt-gthmb-ttd-2022"
+  page="48"
+  original="Ví dụ 4.4.16a"
+>
+Chứng minh rằng hàm số $f(x) = 2x + 1$ liên tục đều trên $\mathbb{R}$.
+</Example>
+
+<Proof>
+Lấy $\varepsilon > 0$ tùy ý. Ta xét hiệu:
+$$
+|f(x) - f(x')| = |(2x + 1) - (2x' + 1)| = 2|x - x'|.
+$$
+Do đó ta chỉ cần chọn $\delta = \frac{\varepsilon}{2} > 0$. Khi đó với mọi $x, x' \in \mathbb{R}$, nếu $|x - x'| < \delta$, ta có:
+$$
+|f(x) - f(x')| = 2|x - x'| < 2 \cdot \frac{\varepsilon}{2} = \varepsilon.
+$$
+Vì $\delta = \frac{\varepsilon}{2}$ chỉ phụ thuộc vào $\varepsilon$, hàm số $f(x) = 2x + 1$ liên tục đều trên $\mathbb{R}$.
+</Proof>
+
+<Example
+  id="exm-gthmb-c4-b4-ham-bac-hai-khong-lien-tuc-deu"
+  title="Hàm f(x) = x^2 liên tục nhưng không liên tục đều trên R"
+  source="gt-gthmb-ttd-2022"
+  page="48"
+  original="Ví dụ 4.4.16b"
+>
+Chứng minh rằng hàm số $f(x) = x^2$ không liên tục đều trên $\mathbb{R}$.
+</Example>
+
+<Proof>
+Xét hai dãy số thực:
+$$
+x_n = n \quad \text{và} \quad x'_n = n + \frac{1}{n}.
+$$
+Rõ ràng $x_n, x'_n \in \mathbb{R}$ với mọi $n \in \mathbb{N}$. Khoảng cách giữa chúng là:
+$$
+|x_n - x'_n| = \left|n - \left(n + \frac{1}{n}\right)\right| = \frac{1}{n} \to 0 \quad \text{khi } n \to \infty.
+$$
+Tuy nhiên, hiệu giá trị hàm tương ứng là:
+$$
+|f(x_n) - f(x'_n)| = \left|n^2 - \left(n + \frac{1}{n}\right)^2\right| = \left|n^2 - n^2 - 2 - \frac{1}{n^2}\right| = 2 + \frac{1}{n^2} > 2, \quad \forall n \ge 1.
+$$
+Vì khoảng cách giá trị hàm luôn lớn hơn $\varepsilon_0 = 2$, theo Định lý 4.4.15, hàm số $f(x) = x^2$ không liên tục đều trên $\mathbb{R}$.
+</Proof>
+
+<Example
+  id="exm-gthmb-c4-b4-ham-nghich-dao-khong-lien-tuc-deu"
+  title="Hàm f(x) = 1/x không liên tục đều trên khoảng (0, 1]"
+  source="gt-gthmb-ttd-2022"
+  page="50"
+  original="Bài tập 15c"
+>
+Chứng minh rằng hàm số $f(x) = \frac{1}{x}$ không liên tục đều trên khoảng $(0, 1]$.
+</Example>
+
+<Proof>
+Chọn hai dãy số $x_n = \frac{1}{n}$ và $x'_n = \frac{1}{2n}$ thuộc khoảng $(0, 1]$.
+- Khoảng cách giữa hai điểm: $|x_n - x'_n| = \frac{1}{n} - \frac{1}{2n} = \frac{1}{2n} \to 0$ khi $n \to \infty$.
+- Hiệu giá trị hàm:
+$$
+|f(x_n) - f(x'_n)| = |n - 2n| = n \ge 1, \quad \forall n \ge 1.
+$$
+Khoảng cách ảnh tiến ra vô cực chứ không tiến về $0$. Vậy $f(x) = \frac{1}{x}$ không liên tục đều trên $(0, 1]$.
+</Proof>
+
+## 3. Định lý Cantor (Cantor's Theorem)
+
+Định lý Cantor là một trong những định lý kinh điển và đẹp nhất của giải tích cổ điển: nó khẳng định trên một **đoạn đóng và bị chặn**, sự phân biệt giữa "liên tục" và "liên tục đều" hoàn toàn biến mất (<Cite source="gt-gthmb-ttd-2022" page="48" note="Định lý 4.4.17" />).
+
+<Theorem
+  id="thm-gthmb-c4-b4-dinh-ly-cantor"
+  title="Định lý Cantor về tính liên tục đều trên đoạn đóng"
+  source="gt-gthmb-ttd-2022"
+  page="48"
+  original="Định lý 4.4.17"
+>
+Nếu hàm số $f$ liên tục trên đoạn đóng $[a; b]$ thì $f$ liên tục đều trên đoạn $[a; b]$.
+</Theorem>
+
+<Proof>
+Ta chứng minh bằng phương pháp phản chứng.
+Giả sử $f$ không liên tục đều trên $[a; b]$. Khi đó tồn tại $\varepsilon_0 > 0$ sao cho với mỗi số tự nhiên $n \in \mathbb{N}$ (chọn $\delta = \frac{1}{n}$), luôn tồn tại hai điểm $x_n, x'_n \in [a; b]$ thỏa mãn:
+$$
+|x_n - x'_n| < \frac{1}{n} \quad \text{và} \quad |f(x_n) - f(x'_n)| \ge \varepsilon_0.
+$$
+Vì dãy $(x_n)$ bị chặn trong đoạn đóng $[a; b]$, theo **Định lý Bolzano-Weierstrass**, dãy $(x_n)$ có một dãy con $(x_{n_k})$ hội tụ về một điểm $c \in [a; b]$.
+Ta xét dãy con tương ứng $(x'_{n_k})$:
+$$
+|x'_{n_k} - c| = |(x'_{n_k} - x_{n_k}) + (x_{n_k} - c)| \le |x'_{n_k} - x_{n_k}| + |x_{n_k} - c| < \frac{1}{n_k} + |x_{n_k} - c|.
+$$
+Khi $k \to \infty$, cả hai số hạng bên vế phải đều tiến về $0$. Do đó dãy con $(x'_{n_k})$ cũng hội tụ về cùng điểm $c$.
+
+Vì hàm số $f$ liên tục tại điểm $c \in [a; b]$, theo đặc trưng dãy số:
+$$
+\lim_{k \to \infty} f(x_{n_k}) = f(c) \quad \text{và} \quad \lim_{k \to \infty} f(x'_{n_k}) = f(c).
+$$
+Suy ra:
+$$
+\lim_{k \to \infty} |f(x_{n_k}) - f(x'_{n_k})| = |f(c) - f(c)| = 0.
+$$
+Điều này mâu thuẫn hoàn toàn với bất đẳng thức $|f(x_{n_k}) - f(x'_{n_k})| \ge \varepsilon_0 > 0$ với mọi $k$.
+Mâu thuẫn này chứng tỏ giả thiết phản chứng là sai. Vậy $f$ phải liên tục đều trên $[a; b]$.
+</Proof>
+
+## 4. Điều kiện Lipschitz và Hàm co
+
+Một công cụ vô cùng hiệu quả để nhận biết tính liên tục đều mà không cần dùng đến định nghĩa $\varepsilon - \delta$ là **điều kiện Lipschitz** (<Cite source="gt-gthmb-ttd-2022" page="51" note="Bài tập 18" />).
+
+<Definition
+  id="def-gthmb-c4-b4-dieu-kien-lipschitz"
+  title="Hàm số Lipschitz và Hàm co"
+  source="gt-gthmb-ttd-2022"
+  page="51"
+  original="Bài tập 18"
+>
+Cho hàm số $f: X \to Y$.
+1. Hàm số $f$ được gọi là thỏa mãn **điều kiện Lipschitz** trên $X$ nếu tồn tại hằng số $M > 0$ sao cho:
+$$
+|f(x) - f(x')| \le M |x - x'|, \quad \forall x, x' \in X.
+$$
+2. Nếu tồn tại hằng số $0 < M < 1$ thỏa mãn bất đẳng thức trên, hàm số $f$ được gọi là một **hàm co** (contraction mapping).
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c4-b4-lipschitz-keo-theo-lien-tuc-deu"
+  title="Hàm Lipschitz thì liên tục đều"
+  source="gt-gthmb-ttd-2022"
+  page="51"
+  original="Bài tập 18a"
+>
+Mọi hàm số thỏa mãn điều kiện Lipschitz trên $X$ đều liên tục đều trên $X$.
+</Theorem>
+
+<Proof>
+Lấy $\varepsilon > 0$ tùy ý. Ta chọn $\delta = \frac{\varepsilon}{M} > 0$. Khi đó với mọi $x, x' \in X$, nếu $|x - x'| < \delta$, ta có:
+$$
+|f(x) - f(x')| \le M |x - x'| < M \cdot \frac{\varepsilon}{M} = \varepsilon.
+$$
+Do đó $f$ liên tục đều trên $X$.
+</Proof>
+
+<Theorem
+  id="thm-gthmb-c4-b4-nguyen-ly-anh-xa-co-banach"
+  title="Nguyên lý điểm bất động Banach cho hàm co trên đoạn đóng"
+  source="gt-gthmb-ttd-2022"
+  page="51"
+  original="Bài tập 18b"
+>
+Nếu hàm số $f: [a; b] \to [a; b]$ là một hàm co trên đoạn $[a; b]$ (với hệ số co $0 < M < 1$) thì phương trình:
+$$
+f(x) = x
+$$
+có **duy nhất một nghiệm** trong đoạn $[a; b]$ (nghiệm này được gọi là điểm bất động của $f$).
+</Theorem>
+
+---
+
+<KeyTakeaways>
+- **Liên tục đều:** Đòi hỏi $\delta = \delta(\varepsilon)$ phải áp dụng được đồng loạt cho mọi cặp điểm trên toàn miền $X$.
+- **Đặc trưng dãy số:** Liên tục đều $\iff$ mọi cặp dãy có $|x_n - x'_n| \to 0$ đều cho $|f(x_n) - f(x'_n)| \to 0$.
+- **Định lý Cantor:** Liên tục trên đoạn compact $[a; b] \implies$ Tự động liên tục đều trên $[a; b]$.
+- **Điều kiện Lipschitz:** $|f(x) - f(x')| \le M|x - x'| \implies$ Liên tục đều. Nếu $M < 1$, hàm là hàm co và có duy nhất điểm bất động.
+</KeyTakeaways>

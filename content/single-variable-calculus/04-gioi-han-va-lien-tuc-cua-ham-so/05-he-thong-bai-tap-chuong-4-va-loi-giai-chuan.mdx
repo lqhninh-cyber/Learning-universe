@@ -1,0 +1,444 @@
+---
+id: he-thong-bai-tap-chuong-4-va-loi-giai-chuan
+title: 'Hệ thống bài tập Chương 4 và lời giải chuẩn'
+description: 'Hệ thống bài tập trọng tâm Chương 4 bám sát đề thi: xác định điểm giới hạn và điểm cô lập, tính giới hạn và chứng minh không tồn tại giới hạn, xét tính liên tục của hàm số và hàm Dirichlet, định lý giá trị trung gian, chứng minh liên tục đều và phản chứng không liên tục đều, phân loại bài tập nâng cao.'
+estimatedMinutes: 55
+level: intermediate
+prerequisites:
+  - diem-gioi-han-diem-co-lap-va-lan-can
+  - gioi-han-cua-ham-so-va-gioi-han-mot-phia
+  - ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong
+  - ham-so-lien-tuc-deu-va-dinh-ly-cantor
+tags:
+  - bài tập chương 4
+  - lời giải chi tiết
+  - điểm giới hạn
+  - tính giới hạn
+  - hàm Dirichlet
+  - giá trị trung gian
+  - hàm liên tục đều
+  - bài tập nâng cao
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '49-51'
+    sections: 'Bài tập cuối chương 4'
+    note: 'Hệ thống bài tập tự luận và hướng dẫn giải chi tiết Chương 4'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Thành thạo dạng bài phân loại topo của tập hợp:** Xác định chính xác tập điểm giới hạn $E'$ và các điểm cô lập của tập số hữu tỉ $\mathbb{Q}$ và các tập hợp rời rạc.
+2. **Làm chủ kỹ thuật chứng minh không tồn tại giới hạn:** Sử dụng tiêu chuẩn Heine chọn 2 dãy số trích xuất khéo léo để bác bỏ giới hạn của các hàm dao động ($\cos(1/x)$, $\frac{1}{x}\sin(1/x)$, $\frac{[x]}{x}$).
+3. **Khảo sát tính liên tục của hàm chia nhánh:** Xử lý trơn tru các hàm số liên quan đến số hữu tỉ, số vô tỉ (hàm kiểu Dirichlet) và hàm chứa phần nguyên $[x]$.
+4. **Vận dụng Định lý Bolzano-Cauchy giải phương trình:** Thiết lập hàm phụ $g(x) = f(x) - x$ hoặc xét dấu ở hai đầu mút để chứng minh sự tồn tại nghiệm thực cho đa thức bậc lẻ và bài toán điểm bất động.
+5. **Thành thạo chứng minh hoặc bác bỏ tính liên tục đều:** Vận dụng định nghĩa $\varepsilon - \delta$, định lý Cantor, điều kiện Lipschitz hoặc tìm cặp dãy vi phạm.
+6. **Tiếp cận bài tập nâng cao có dấu (*):** Nắm vững tính liên tục của hàm $\max(f, g)$, tiêu chuẩn mở rộng giới hạn ở mút khoảng và hàm liên tục đều trên hợp của hai tập.
+</Note>
+
+## 1. Dạng 1: Điểm giới hạn và Điểm cô lập của tập hợp
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt1a"
+  title="Bài tập 4.1a: Tập điểm giới hạn của tập số hữu tỉ Q"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 1a"
+>
+Chứng minh rằng mọi số thực $a \in \mathbb{R}$ đều là điểm giới hạn của tập các số hữu tỉ $\mathbb{Q}$ (tức là $\mathbb{Q}' = \mathbb{R}$).
+</Exercise>
+
+<Hint>
+Vận dụng tính trù mật của tập số hữu tỉ $\mathbb{Q}$ trong $\mathbb{R}$: giữa hai số thực bất kỳ luôn tồn tại ít nhất một số hữu tỉ.
+</Hint>
+
+<Solution>
+Lấy số thực $a \in \mathbb{R}$ tùy ý.
+Xét lân cận thủng bất kỳ của $a$ có dạng $V^* = (a - r, a + r) \setminus \{a\}$ với $r > 0$.
+Khoảng mở $(a, a + r)$ là một khoảng thực khác rỗng. Theo **Tính chất trù mật của $\mathbb{Q}$ trong $\mathbb{R}$** (Định lý 2.2.8 ở Chương 2), luôn tồn tại một số hữu tỉ $q \in \mathbb{Q}$ sao cho:
+$$
+a < q < a + r.
+$$
+Rõ ràng $q \ne a$ và $q \in (a - r, a + r) \cap \mathbb{Q}$, điều này chứng tỏ:
+$$
+\big((a - r, a + r) \setminus \{a\}\big) \cap \mathbb{Q} \ne \emptyset.
+$$
+Theo định nghĩa điểm giới hạn (Định nghĩa 4.1.3), $a$ là một điểm giới hạn của $\mathbb{Q}$.
+Vì $a \in \mathbb{R}$ được chọn tùy ý, ta kết luận $\mathbb{Q}' = \mathbb{R}$.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt1b"
+  title="Bài tập 4.1b: Xác định các điểm cô lập của tập hợp rời rạc"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 1b"
+>
+Cho tập hợp $E = \left\{x = \frac{1}{n} : n \in \mathbb{N}\right\}$. Tìm tất cả các điểm cô lập của $E$.
+</Exercise>
+
+<Solution>
+Xét phần tử bất kỳ $x_n = \frac{1}{n} \in E$ (với $n \in \mathbb{N}$).
+- Nếu $n = 1$: $x_1 = 1$. Điểm gần nhất trong $E$ là $x_2 = \frac{1}{2}$. Chọn bán kính $r = \frac{1}{4}$, ta có:
+$$
+(1 - r, 1 + r) \cap E = \left(\frac{3}{4}, \frac{5}{4}\right) \cap E = \{1\}.
+$$
+- Nếu $n \ge 2$: Hai điểm lân cận gần nhất của $x_n = \frac{1}{n}$ trong $E$ là $x_{n+1} = \frac{1}{n+1}$ và $x_{n-1} = \frac{1}{n-1}$.
+  Khoảng cách từ $\frac{1}{n}$ đến $\frac{1}{n+1}$ là:
+  $$
+  d_n = \frac{1}{n} - \frac{1}{n+1} = \frac{1}{n(n+1)} > 0.
+  $$
+  Chọn bán kính $r_n = \frac{1}{2n(n+1)} > 0$. Khi đó khoảng $\left(\frac{1}{n} - r_n, \frac{1}{n} + r_n\right)$ không chứa bất kỳ số hạng nào khác của $E$ ngoài $\frac{1}{n}$.
+  Do đó:
+  $$
+  \left(\frac{1}{n} - r_n, \frac{1}{n} + r_n\right) \cap E = \left\{\frac{1}{n}\right\}.
+  $$
+Vậy **mọi phần tử** của $E$ đều là điểm cô lập của $E$.
+Tập các điểm cô lập của $E$ chính là toàn bộ tập $E$. Điểm $0$ là điểm giới hạn duy nhất của $E$ nhưng $0 \notin E$.
+</Solution>
+
+---
+
+## 2. Dạng 2: Tính giới hạn hàm số và Chứng minh không tồn tại giới hạn
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt3b"
+  title="Bài tập 4.3b: Giới hạn hàm số chứa logarit và hàm mũ ở vô cực"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 3b"
+>
+Tính các giới hạn sau:
+$$
+\lim_{x \to +\infty} \frac{\ln(1 + e^x)}{x} \quad \text{và} \quad \lim_{x \to -\infty} \frac{\ln(1 + e^x)}{x}.
+$$
+</Exercise>
+
+<Solution>
+1. **Khi $x \to +\infty$:**
+   Ta biến đổi biểu thức trong logarit bằng cách đưa $e^x$ ra ngoài:
+   $$
+   1 + e^x = e^x \left(e^{-x} + 1\right).
+   $$
+   Do đó:
+   $$
+   \ln(1 + e^x) = \ln\left(e^x (1 + e^{-x})\right) = \ln(e^x) + \ln(1 + e^{-x}) = x + \ln(1 + e^{-x}).
+   $$
+   Chia cho $x > 0$:
+   $$
+   \frac{\ln(1 + e^x)}{x} = 1 + \frac{\ln(1 + e^{-x})}{x}.
+   $$
+   Khi $x \to +\infty$, ta có $e^{-x} \to 0 \implies \ln(1 + e^{-x}) \to \ln 1 = 0$. Vì mẫu số $x \to +\infty$, ta có:
+   $$
+   \lim_{x \to +\infty} \frac{\ln(1 + e^x)}{x} = 1 + 0 = 1.
+   $$
+
+2. **Khi $x \to -\infty$:**
+   Khi $x \to -\infty$, ta có $e^x \to 0$, do đó tử số $\ln(1 + e^x) \to \ln 1 = 0$.
+   Mẫu số $x \to -\infty$. Áp dụng quy tắc chia cho vô cực:
+   $$
+   \lim_{x \to -\infty} \frac{\ln(1 + e^x)}{x} = \frac{0}{-\infty} = 0.
+   $$
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt4a"
+  title="Bài tập 4.4a: Chứng minh hàm dao động cos(1/x) không có giới hạn tại 0"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 4a"
+>
+Chứng minh rằng không tồn tại giới hạn $\lim_{x \to 0} \cos \frac{1}{x}$.
+</Exercise>
+
+<Solution>
+Ta sử dụng tiêu chuẩn Heine (Hệ quả 4.1.12).
+Xét hai dãy số thực trong $\mathbb{R} \setminus \{0\}$:
+$$
+x_n = \frac{1}{2n\pi} \implies \lim_{n \to \infty} x_n = 0,
+$$
+$$
+x'_n = \frac{1}{(2n + 1)\pi} \implies \lim_{n \to \infty} x'_n = 0.
+$$
+Giá trị của hàm số tại các điểm trong hai dãy lần lượt là:
+$$
+f(x_n) = \cos(2n\pi) = 1 \implies \lim_{n \to \infty} f(x_n) = 1,
+$$
+$$
+f(x'_n) = \cos\big((2n + 1)\pi\big) = -1 \implies \lim_{n \to \infty} f(x'_n) = -1.
+$$
+Vì hai dãy cùng tiến về $0$ nhưng dãy ảnh tiến về hai giá trị khác nhau ($1 \ne -1$), nên giới hạn $\lim_{x \to 0} \cos \frac{1}{x}$ **không tồn tại**.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt4b"
+  title="Bài tập 4.4b: Chứng minh không tồn tại giới hạn của [x]/x tại 0"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 4b"
+>
+Chứng minh rằng không tồn tại giới hạn $\lim_{x \to 0} \frac{[x]}{x}$.
+</Exercise>
+
+<Solution>
+Ta xét hai giới hạn một phía của hàm số khi $x \to 0$:
+- **Giới hạn phải ($x \to 0^+$):** Với mọi $x \in (0, 1)$, ta có $[x] = 0$. Do đó:
+$$
+\lim_{x \to 0^+} \frac{[x]}{x} = \lim_{x \to 0^+} \frac{0}{x} = 0.
+$$
+- **Giới hạn trái ($x \to 0^-$):** Với mọi $x \in (-1, 0)$, ta có $[x] = -1$. Do đó:
+$$
+\lim_{x \to 0^-} \frac{[x]}{x} = \lim_{x \to 0^-} \frac{-1}{x} = +\infty.
+$$
+Vì giới hạn trái và giới hạn phải không bằng nhau (giới hạn trái thậm chí tiến ra vô cực), nên giới hạn $\lim_{x \to 0} \frac{[x]}{x}$ **không tồn tại**.
+</Solution>
+
+---
+
+## 3. Dạng 3: Xét tính liên tục của hàm số và hàm Dirichlet
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt6"
+  title="Bài tập 4.6: Tính liên tục của hàm phần nguyên f(x) = [x] sin(pi x)"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 6"
+>
+Chứng minh rằng hàm số $f(x) = [x] \sin(\pi x)$ liên tục trên toàn bộ $\mathbb{R}$.
+</Exercise>
+
+<Solution>
+Ta phân tích tính liên tục trên hai tập hợp rời nhau của $\mathbb{R}$:
+1. **Khi $x_0 \notin \mathbb{Z}$ (không phải là số nguyên):**
+   Tồn tại số nguyên $k \in \mathbb{Z}$ sao cho $x_0 \in (k, k+1)$.
+   Trên khoảng mở $(k, k+1)$, hàm phần nguyên là hàm hằng $[x] = k$.
+   Do đó trên khoảng $(k, k+1)$, ta có $f(x) = k \sin(\pi x)$, đây là một hàm sơ cấp liên tục. Vậy $f$ liên tục tại mọi điểm $x_0 \notin \mathbb{Z}$.
+
+2. **Khi $x_0 = k \in \mathbb{Z}$ (là một số nguyên):**
+   Ta có giá trị thực tế của hàm tại điểm nguyên $k$ là:
+   $$
+   f(k) = [k] \sin(k\pi) = k \cdot 0 = 0.
+   $$
+   Xét các giới hạn một phía khi $x \to k$:
+   - Khi $x \to k^+$: với $x \in (k, k+1)$, $[x] = k$. Ta có:
+     $$
+     \lim_{x \to k^+} f(x) = \lim_{x \to k^+} [k \sin(\pi x)] = k \sin(k\pi) = 0.
+     $$
+   - Khi $x \to k^-$: với $x \in (k-1, k)$, $[x] = k - 1$. Ta có:
+     $$
+     \lim_{x \to k^-} f(x) = \lim_{x \to k^-} [(k - 1) \sin(\pi x)] = (k - 1) \sin(k\pi) = (k - 1) \cdot 0 = 0.
+     $$
+   Do $\lim_{x \to k^+} f(x) = \lim_{x \to k^-} f(x) = 0 = f(k)$, hàm số $f(x)$ liên tục tại mọi điểm nguyên $k \in \mathbb{Z}$.
+
+Kết hợp cả hai trường hợp, hàm số $f(x) = [x] \sin(\pi x)$ liên tục trên toàn bộ $\mathbb{R}$.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt7b"
+  title="Bài tập 4.7b: Hàm số dạng Dirichlet f(x) = x khi x hữu tỉ, 0 khi x vô tỉ"
+  source="gt-gthmb-ttd-2022"
+  page="49"
+  original="Bài 7b"
+>
+Xét tính liên tục của hàm số:
+$$
+f(x) = \begin{cases} x & \text{nếu } x \in \mathbb{Q} \\ 0 & \text{nếu } x \notin \mathbb{Q} \end{cases}
+$$
+</Exercise>
+
+<Solution>
+1. **Tại điểm $x_0 = 0$:**
+   Ta có $f(0) = 0$. Với mọi $x \in \mathbb{R}$, ta có đánh giá:
+   $$
+   |f(x) - f(0)| = |f(x)| \le |x|.
+   $$
+   Với $\varepsilon > 0$ tùy ý, ta chọn $\delta = \varepsilon > 0$. Khi đó:
+   $$
+   |x - 0| < \delta \implies |f(x) - f(0)| \le |x| < \varepsilon.
+   $$
+   Do đó hàm số $f$ **liên tục tại điểm $x = 0$**.
+
+2. **Tại điểm $x_0 \ne 0$:**
+   - Dùng tính trù mật của $\mathbb{Q}$, tồn tại dãy số hữu tỉ $(q_n) \subset \mathbb{Q}$ sao cho $\lim q_n = x_0$. Khi đó:
+     $$
+     \lim_{n \to \infty} f(q_n) = \lim_{n \to \infty} q_n = x_0.
+     $$
+   - Dùng tính trù mật của tập số vô tỉ $\mathbb{R} \setminus \mathbb{Q}$, tồn tại dãy số vô tỉ $(r_n) \subset \mathbb{R} \setminus \mathbb{Q}$ sao cho $\lim r_n = x_0$. Khi đó:
+     $$
+     \lim_{n \to \infty} f(r_n) = \lim_{n \to \infty} 0 = 0.
+     $$
+   Vì $x_0 \ne 0$, hai dãy ảnh tiến về hai giá trị khác nhau ($x_0 \ne 0$). Theo định lý Heine, không tồn tại giới hạn $\lim_{x \to x_0} f(x)$. Do đó hàm số **gián đoạn tại mọi điểm $x_0 \ne 0$**.
+
+**Kết luận:** Hàm số $f(x)$ liên tục tại duy nhất điểm $x = 0$ và gián đoạn tại mọi điểm còn lại trên $\mathbb{R}$.
+</Solution>
+
+---
+
+## 4. Dạng 4: Ứng dụng Định lý giá trị trung gian Bolzano-Cauchy
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt12"
+  title="Bài tập 4.12: Mọi đa thức bậc lẻ đều có ít nhất một nghiệm thực"
+  source="gt-gthmb-ttd-2022"
+  page="50"
+  original="Bài 12"
+>
+Chứng minh rằng mọi đa thức hệ số thực bậc lẻ:
+$$
+P(x) = a_{2n+1} x^{2n+1} + a_{2n} x^{2n} + \dots + a_1 x + a_0 \quad (a_{2n+1} \ne 0)
+$$
+đều có ít nhất một nghiệm thực.
+</Exercise>
+
+<Solution>
+Không mất tính tổng quát, giả sử hệ số cao nhất $a_{2n+1} > 0$ (nếu âm, ta xét $-P(x)$).
+Hàm đa thức $P(x)$ là hàm sơ cấp nên liên tục trên toàn bộ $\mathbb{R}$.
+Ta phân tích đặt lũy thừa bậc cao nhất ra ngoài:
+$$
+P(x) = a_{2n+1} x^{2n+1} \left(1 + \frac{a_{2n}}{a_{2n+1} x} + \dots + \frac{a_0}{a_{2n+1} x^{2n+1}}\right).
+$$
+Khi $x \to \pm\infty$, biểu thức trong ngoặc đơn đều tiến về $1 > 0$. Do số mũ $2n + 1$ là số lẻ:
+$$
+\lim_{x \to +\infty} P(x) = +\infty \implies \exists b > 0 \text{ sao cho } P(b) > 0,
+$$
+$$
+\lim_{x \to -\infty} P(x) = -\infty \implies \exists a < 0 \text{ sao cho } P(a) < 0.
+$$
+Hàm số $P(x)$ liên tục trên đoạn $[a; b]$ và thỏa mãn $P(a) P(b) < 0$.
+Theo **Hệ quả của Định lý Bolzano-Cauchy (Hệ quả 4.4.11)**, tồn tại ít nhất một số thực $c \in (a; b)$ sao cho $P(c) = 0$.
+Vậy mọi đa thức bậc lẻ đều có ít nhất một nghiệm thực.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt13a"
+  title="Bài tập 4.13a: Bài toán điểm bất động trên đoạn [a; b]"
+  source="gt-gthmb-ttd-2022"
+  page="50"
+  original="Bài 13a"
+>
+Cho hàm số $f: [a; b] \to [a; b]$ liên tục trên đoạn $[a; b]$. Chứng minh rằng phương trình $f(x) = x$ có ít nhất một nghiệm trong đoạn $[a; b]$.
+</Exercise>
+
+<Solution>
+Xét hàm phụ $g(x) = f(x) - x$ trên đoạn $[a; b]$.
+- Vì $f(x)$ liên tục và hàm $y = x$ liên tục, nên $g(x)$ là hàm liên tục trên $[a; b]$.
+- Ta xét giá trị của $g$ tại hai đầu mút:
+  - Tại $x = a$: Vì $f(a) \in [a; b]$ nên $f(a) \ge a \implies g(a) = f(a) - a \ge 0$.
+  - Tại $x = b$: Vì $f(b) \in [a; b]$ nên $f(b) \le b \implies g(b) = f(b) - b \le 0$.
+- Phân tích:
+  - Nếu $g(a) = 0$ thì $x = a$ là nghiệm của $f(x) = x$.
+  - Nếu $g(b) = 0$ thì $x = b$ là nghiệm của $f(x) = x$.
+  - Nếu $g(a) > 0$ và $g(b) < 0$ thì $g(a) g(b) < 0$. Theo Định lý giá trị trung gian Bolzano-Cauchy, tồn tại $c \in (a; b)$ sao cho $g(c) = 0 \iff f(c) = c$.
+Trong mọi trường hợp, phương trình $f(x) = x$ luôn có ít nhất một nghiệm thuộc $[a; b]$.
+</Solution>
+
+---
+
+## 5. Dạng 5: Chứng minh Hàm liên tục đều và Kỹ thuật Phản chứng
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt14d"
+  title="Bài tập 4.14d: Chứng minh hàm f(x) = căn(x) liên tục đều trên [0; +vô cực)"
+  source="gt-gthmb-ttd-2022"
+  page="50"
+  original="Bài 14d"
+>
+Chứng minh rằng hàm số $f(x) = \sqrt{x}$ liên tục đều trên $[0; +\infty)$.
+</Exercise>
+
+<Solution>
+Ta sử dụng bất đẳng thức đại số căn thức: với mọi $u, v \ge 0$, ta luôn có:
+$$
+|\sqrt{u} - \sqrt{v}| \le \sqrt{|u - v|}.
+$$
+Thật vậy, không mất tính tổng quát giả sử $u \ge v \ge 0$. Ta cần chứng minh $\sqrt{u} - \sqrt{v} \le \sqrt{u - v}$. Bình phương hai vế:
+$$
+u - 2\sqrt{uv} + v \le u - v \iff 2v \le 2\sqrt{uv} \iff \sqrt{v} \le \sqrt{u} \quad (\text{đúng do } u \ge v).
+$$
+Bây giờ, lấy $\varepsilon > 0$ tùy ý. Ta chọn $\delta = \varepsilon^2 > 0$.
+Khi đó với mọi $x, x' \in [0; +\infty)$, nếu $|x - x'| < \delta$, ta có:
+$$
+|f(x) - f(x')| = |\sqrt{x} - \sqrt{x'}| \le \sqrt{|x - x'|} < \sqrt{\delta} = \sqrt{\varepsilon^2} = \varepsilon.
+$$
+Vì $\delta = \varepsilon^2$ chỉ phụ thuộc duy nhất vào $\varepsilon$ mà không phụ thuộc vào vị trí của $x$ hay $x'$, nên hàm số $f(x) = \sqrt{x}$ liên tục đều trên $[0; +\infty)$.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt15b"
+  title="Bài tập 4.15b: Chứng minh f(x) = sin(x^2) không liên tục đều trên R"
+  source="gt-gthmb-ttd-2022"
+  page="50"
+  original="Bài 15b"
+>
+Chứng minh rằng hàm số $f(x) = \sin(x^2)$ không liên tục đều trên $\mathbb{R}$.
+</Exercise>
+
+<Solution>
+Ta chọn hai dãy số thực trong $\mathbb{R}$:
+$$
+x_n = \sqrt{2n\pi + \frac{\pi}{2}}, \quad x'_n = \sqrt{2n\pi}.
+$$
+1. **Xét khoảng cách giữa hai điểm khi $n \to \infty$:**
+$$
+|x_n - x'_n| = \sqrt{2n\pi + \frac{\pi}{2}} - \sqrt{2n\pi} = \frac{\left(2n\pi + \frac{\pi}{2}\right) - 2n\pi}{\sqrt{2n\pi + \frac{\pi}{2}} + \sqrt{2n\pi}} = \frac{\frac{\pi}{2}}{\sqrt{2n\pi + \frac{\pi}{2}} + \sqrt{2n\pi}}.
+$$
+Khi $n \to \infty$, mẫu số tiến ra $+\infty$, do đó $\lim_{n \to \infty} |x_n - x'_n| = 0$.
+2. **Xét hiệu giá trị hàm tương ứng:**
+$$
+f(x_n) = \sin\left(2n\pi + \frac{\pi}{2}\right) = 1, \quad f(x'_n) = \sin(2n\pi) = 0.
+$$
+Do đó:
+$$
+|f(x_n) - f(x'_n)| = |1 - 0| = 1, \quad \forall n \in \mathbb{N}.
+$$
+Chọn $\varepsilon_0 = 1$. Vì khoảng cách hai điểm tiến về $0$ nhưng hiệu giá trị hàm luôn bằng $1$, theo Định lý 4.4.15, hàm số $f(x) = \sin(x^2)$ **không liên tục đều** trên $\mathbb{R}$.
+</Solution>
+
+---
+
+## 6. Chuyên đề nâng cao có dấu (*)
+
+<Exercise
+  id="exr-gthmb-c4-b5-bt11"
+  title="Bài tập 4.11*: Tính liên tục của hàm max(f, g) và min(f, g)"
+  source="gt-gthmb-ttd-2022"
+  page="50"
+  original="Bài 11"
+>
+Cho các hàm số $f, g$ xác định và liên tục trên $X$. Chứng minh rằng các hàm số $M(x) = \max(f(x), g(x))$ và $m(x) = \min(f(x), g(x))$ cũng liên tục trên $X$.
+</Exercise>
+
+<Solution>
+Ta sử dụng các đồng nhất thức giải tích kinh điển sau: với mọi số thực $u, v \in \mathbb{R}$:
+$$
+\max(u, v) = \frac{u + v + |u - v|}{2}, \quad \min(u, v) = \frac{u + v - |u - v|}{2}.
+$$
+Áp dụng cho hai hàm số $f(x)$ và $g(x)$:
+$$
+M(x) = \frac{f(x) + g(x) + |f(x) - g(x)|}{2}, \quad m(x) = \frac{f(x) + g(x) - |f(x) - g(x)|}{2}.
+$$
+Theo Định lý 4.4.5:
+1. Tổng $f(x) + g(x)$ và hiệu $f(x) - g(x)$ là các hàm liên tục trên $X$.
+2. Giá trị tuyệt đối $|f(x) - g(x)|$ là hàm liên tục trên $X$.
+3. Tổng, hiệu và phép nhân với hằng số $\frac{1}{2}$ bảo toàn tính liên tục.
+Do đó $M(x)$ và $m(x)$ là các hàm số liên tục trên $X$.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Phương pháp Heine:** Để chứng minh không tồn tại giới hạn hoặc không liên tục đều, luôn tìm hai dãy số thông minh.
+- **Tính trù mật của $\mathbb{Q}$ và $\mathbb{R} \setminus \mathbb{Q}$:** Là chìa khóa giải quyết các bài toán về điểm giới hạn và hàm Dirichlet.
+- **Hệ quả Bolzano-Cauchy:** Xét hàm phụ $g(x) = f(x) - x$ để tìm điểm bất động; dùng giới hạn ở vô cực để chứng minh đa thức bậc lẻ có nghiệm.
+- **Đồng nhất thức giải tích:** $\max(f, g) = \frac{f + g + |f - g|}{2}$ giúp chứng minh tính liên tục một cách ngắn gọn, chuẩn xác.
+</KeyTakeaways>

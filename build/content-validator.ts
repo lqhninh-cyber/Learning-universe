@@ -101,6 +101,7 @@ export const WHITELISTED_MDX_COMPONENTS = new Set<string>([
   'AffineMapDemo',
   'SupremumEpsilonDemo',
   'SequenceEpsilonDemo',
+  'UniformContinuityDemo',
 ]);
 
 const FORBIDDEN_HTML_TAGS = new Set<string>([

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T13:35:59.071Z",
+  "updatedAt": "2026-11-03T13:53:01.581Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1608,6 +1608,95 @@
         "exr-gthmb-c3-b5-bt19b": "3.5.9",
         "exr-gthmb-c3-b5-bt13": "3.5.10",
         "exr-gthmb-c3-b5-bt14b": "3.5.11"
+      }
+    },
+    "diem-gioi-han-diem-co-lap-va-lan-can": {
+      "path": "content/single-variable-calculus/04-gioi-han-va-lien-tuc-cua-ham-so/01-diem-gioi-han-diem-co-lap-va-lan-can.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "7b1054287f316c39f43665bd5c1b75dc162c54ca207fefd808f181469d8dc08c",
+      "numberedBlocks": {
+        "def-gthmb-c4-b1-lan-can": "4.1.1",
+        "def-gthmb-c4-b1-diem-gioi-han": "4.1.2",
+        "thm-gthmb-c4-b1-dac-trung-day-so-diem-gioi-han": "4.1.3",
+        "exm-gthmb-c4-b1-diem-gioi-han-nghich-dao": "4.1.1",
+        "def-gthmb-c4-b1-diem-co-lap": "4.1.4",
+        "exm-gthmb-c4-b1-tap-so-nguyen-toan-diem-co-lap": "4.1.2",
+        "def-gthmb-c4-b1-dinh-nghia-ham-so": "4.1.5"
+      }
+    },
+    "gioi-han-cua-ham-so-va-gioi-han-mot-phia": {
+      "path": "content/single-variable-calculus/04-gioi-han-va-lien-tuc-cua-ham-so/02-gioi-han-cua-ham-so-va-gioi-han-mot-phia.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "4edf92507ecea025cad67ad74bb3e416b2294a0f58029aa36ed4e9a21cf241b7",
+      "numberedBlocks": {
+        "def-gthmb-c4-b2-dinh-nghia-chung-gioi-han": "4.2.1",
+        "thm-gthmb-c4-b2-dac-trung-heine": "4.2.2",
+        "cor-gthmb-c4-b2-tieu-chuan-bac-bo-gioi-han": "4.2.3",
+        "exm-gthmb-c4-b2-khong-ton-tai-gioi-han-sin-x": "4.2.1",
+        "thm-gthmb-c4-b2-tinh-chat-co-ban": "4.2.4",
+        "thm-gthmb-c4-b2-gioi-han-ham-hop": "4.2.5",
+        "thm-gthmb-c4-b2-tieu-chuan-cauchy-ham-so": "4.2.6",
+        "def-gthmb-c4-b2-gioi-han-mot-phia": "4.2.7",
+        "thm-gthmb-c4-b2-moi-lien-he-gioi-han-mot-phia": "4.2.8",
+        "exm-gthmb-c4-b2-ham-phan-nguyen": "4.2.2"
+      }
+    },
+    "ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong": {
+      "path": "content/single-variable-calculus/04-gioi-han-va-lien-tuc-cua-ham-so/03-ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "757909331c680669970c1391f331033b8b4cdc128515cc672d61fae6a82ea78f",
+      "numberedBlocks": {
+        "def-gthmb-c4-b3-dinh-nghia-lien-tuc": "4.3.1",
+        "thm-gthmb-c4-b3-dac-trung-day-so-lien-tuc": "4.3.2",
+        "thm-gthmb-c4-b3-dai-so-ham-lien-tuc": "4.3.3",
+        "thm-gthmb-c4-b3-tinh-lien-tuc-ham-so-cap": "4.3.4",
+        "def-gthmb-c4-b3-lien-tuc-tren-doan": "4.3.5",
+        "thm-gthmb-c4-b3-dinh-ly-weierstrass-tren-doan": "4.3.6",
+        "thm-gthmb-c4-b3-dinh-ly-gia-tri-trung-gian": "4.3.7",
+        "cor-gthmb-c4-b3-he-qua-doi-dau-nghiem-phuong-trinh": "4.3.8",
+        "cor-gthmb-c4-b3-tap-anh-doan-dong": "4.3.9",
+        "exm-gthmb-c4-b3-su-ton-tai-can-bac-n": "4.3.1"
+      }
+    },
+    "ham-so-lien-tuc-deu-va-dinh-ly-cantor": {
+      "path": "content/single-variable-calculus/04-gioi-han-va-lien-tuc-cua-ham-so/04-ham-so-lien-tuc-deu-va-dinh-ly-cantor.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "bf74fc7f38f3943d254d532035f7dc488eae76febdcba9243a8c3cd822f6b166",
+      "numberedBlocks": {
+        "def-gthmb-c4-b4-dinh-nghia-lien-tuc-deu": "4.4.1",
+        "thm-gthmb-c4-b4-dac-trung-day-so-lien-tuc-deu": "4.4.2",
+        "cor-gthmb-c4-b4-tieu-chuan-phan-chung-lien-tuc-deu": "4.4.3",
+        "exm-gthmb-c4-b4-ham-tuyen-tinh-lien-tuc-deu": "4.4.1",
+        "exm-gthmb-c4-b4-ham-bac-hai-khong-lien-tuc-deu": "4.4.2",
+        "exm-gthmb-c4-b4-ham-nghich-dao-khong-lien-tuc-deu": "4.4.3",
+        "thm-gthmb-c4-b4-dinh-ly-cantor": "4.4.4",
+        "def-gthmb-c4-b4-dieu-kien-lipschitz": "4.4.5",
+        "thm-gthmb-c4-b4-lipschitz-keo-theo-lien-tuc-deu": "4.4.6",
+        "thm-gthmb-c4-b4-nguyen-ly-anh-xa-co-banach": "4.4.7"
+      }
+    },
+    "he-thong-bai-tap-chuong-4-va-loi-giai-chuan": {
+      "path": "content/single-variable-calculus/04-gioi-han-va-lien-tuc-cua-ham-so/05-he-thong-bai-tap-chuong-4-va-loi-giai-chuan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "22ba3cc94833ecabca34030abd931e4d4637e618a69c810bc5e85dd009d3940c",
+      "numberedBlocks": {
+        "exr-gthmb-c4-b5-bt1a": "4.5.1",
+        "exr-gthmb-c4-b5-bt1b": "4.5.2",
+        "exr-gthmb-c4-b5-bt3b": "4.5.3",
+        "exr-gthmb-c4-b5-bt4a": "4.5.4",
+        "exr-gthmb-c4-b5-bt4b": "4.5.5",
+        "exr-gthmb-c4-b5-bt6": "4.5.6",
+        "exr-gthmb-c4-b5-bt7b": "4.5.7",
+        "exr-gthmb-c4-b5-bt12": "4.5.8",
+        "exr-gthmb-c4-b5-bt13a": "4.5.9",
+        "exr-gthmb-c4-b5-bt14d": "4.5.10",
+        "exr-gthmb-c4-b5-bt15b": "4.5.11",
+        "exr-gthmb-c4-b5-bt11": "4.5.12"
       }
     }
   }

@@ -1,0 +1,257 @@
+---
+id: gioi-han-cua-ham-so-va-gioi-han-mot-phia
+title: 'Giới hạn của hàm số và giới hạn một phía'
+description: 'Định nghĩa giới hạn bằng ngôn ngữ lân cận và epsilon - delta, đặc trưng Heine qua dãy số, tiêu chuẩn Cauchy cho hàm số, các luật số học và giới hạn một phía.'
+estimatedMinutes: 45
+level: basic
+prerequisites:
+  - diem-gioi-han-diem-co-lap-va-lan-can
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+  - cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep
+tags:
+  - giới hạn hàm số
+  - epsilon delta
+  - đặc trưng Heine
+  - tiêu chuẩn Cauchy
+  - giới hạn một phía
+  - hàm phần nguyên
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '40-44'
+    sections: 'Mục 4.1.5, 4.2, 4.3'
+    note: 'Định nghĩa giới hạn tổng quát, ngôn ngữ bất đẳng thức, Heine, tính chất, tiêu chuẩn Cauchy và giới hạn một phía'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Nắm vững định nghĩa giải tích chuẩn mực của giới hạn hàm số:** Hiểu bản chất định nghĩa bằng ngôn ngữ lân cận và thành thạo cách viết điều kiện $\varepsilon - \delta$ cho cả 9 trường hợp hữu hạn và vô cực.
+2. **Làm chủ đặc trưng Heine qua dãy số:** Vận dụng nguyên lý cầu nối giữa giới hạn hàm số và dãy số để chứng minh một hàm số không có giới hạn bằng hai dãy trích xuất.
+3. **Hiểu các tính chất đại số và Tiêu chuẩn Cauchy của hàm số:** Vận dụng luật số học, giới hạn kẹp, tính bị chặn địa phương và tiêu chuẩn Cauchy để kiểm tra sự tồn tại của giới hạn.
+4. **Thành thạo giới hạn một phía (trái/phải):** Nắm vững điều kiện cần và đủ để hàm số có giới hạn thông qua sự bằng nhau của giới hạn trái và giới hạn phải, giải quyết các hàm chia nhánh và hàm phần nguyên $[x]$.
+</Note>
+
+## 1. Định nghĩa giải tích của Giới hạn hàm số
+
+Khác với dãy số chỉ có biến $n \in \mathbb{N}$ tiến ra $+\infty$, đối với hàm số $f: X \to Y$, biến số $x$ có thể tiến tới một số thực $a \in \mathbb{R}$ hoặc tiến ra $+\infty, -\infty$ (<Cite source="gt-gthmb-ttd-2022" page="40-41" note="Mục 4.1.5" />).
+
+<Definition
+  id="def-gthmb-c4-b2-dinh-nghia-chung-gioi-han"
+  title="Định nghĩa chung về giới hạn hàm số (Ngôn ngữ lân cận)"
+  source="gt-gthmb-ttd-2022"
+  page="40"
+  original="Định nghĩa 4.1.9"
+>
+Cho hàm số $f: X \to Y$ và $a, b \in \bar{\mathbb{R}}$. Giả sử $a$ là một điểm giới hạn của tập xác định $X$.
+
+Ta nói $f(x)$ tiến về $b$ khi $x$ tiến về $a$ (hay $b$ là giới hạn của $f(x)$ khi $x$ dần tới $a$), ký hiệu là:
+$$
+\lim_{x \to a} f(x) = b \quad \text{hoặc} \quad f(x) \to b \text{ khi } x \to a,
+$$
+nếu với mọi lân cận $V$ của $b$, đều tồn tại một lân cận thủng $U^*$ của $a$ sao cho ảnh của $X \cap U^*$ nằm trọn trong $V$:
+$$
+\lim_{x \to a} f(x) = b \iff \forall V \in \mathcal{N}_b, \exists U \in \mathcal{N}^*_a : f(X \cap U) \subset V.
+$$
+</Definition>
+
+### Chuyển đổi sang ngôn ngữ bất đẳng thức ($\varepsilon - \delta$)
+
+Vì mỗi $a$ và $b$ đều có 3 khả năng (hữu hạn thuộc $\mathbb{R}$, $+\infty$, $-\infty$), ta có đúng $3 \times 3 = 9$ trường hợp cụ thể (<Cite source="gt-gthmb-ttd-2022" page="41" note="Nhận xét 4.1.10" />):
+
+| Trường hợp | Ký hiệu | Mệnh đề logic tương đương ($\varepsilon - \delta$) |
+| :--- | :--- | :--- |
+| **Hữu hạn $\to$ Hữu hạn** | $\lim_{x \to a} f(x) = b$ | $\forall \varepsilon > 0, \exists \delta > 0, \forall x \in X: 0 < \|x - a\| < \delta \implies \|f(x) - b\| < \varepsilon$ |
+| **Vô cực $\to$ Hữu hạn** | $\lim_{x \to +\infty} f(x) = b$ | $\forall \varepsilon > 0, \exists M > 0, \forall x \in X: x > M \implies \|f(x) - b\| < \varepsilon$ |
+| **Âm vô cực $\to$ Hữu hạn** | $\lim_{x \to -\infty} f(x) = b$ | $\forall \varepsilon > 0, \exists M > 0, \forall x \in X: x < -M \implies \|f(x) - b\| < \varepsilon$ |
+| **Hữu hạn $\to$ Dương vô cực**| $\lim_{x \to a} f(x) = +\infty$ | $\forall M > 0, \exists \delta > 0, \forall x \in X: 0 < \|x - a\| < \delta \implies f(x) > M$ |
+| **Hữu hạn $\to$ Âm vô cực** | $\lim_{x \to a} f(x) = -\infty$ | $\forall M > 0, \exists \delta > 0, \forall x \in X: 0 < \|x - a\| < \delta \implies f(x) < -M$ |
+| **Dương vô cực $\to$ Dương vô cực** | $\lim_{x \to +\infty} f(x) = +\infty$ | $\forall M > 0, \exists K > 0, \forall x \in X: x > K \implies f(x) > M$ |
+| **Dương vô cực $\to$ Âm vô cực** | $\lim_{x \to +\infty} f(x) = -\infty$ | $\forall M > 0, \exists K > 0, \forall x \in X: x > K \implies f(x) < -M$ |
+| **Âm vô cực $\to$ Dương vô cực** | $\lim_{x \to -\infty} f(x) = +\infty$ | $\forall M > 0, \exists K > 0, \forall x \in X: x < -K \implies f(x) > M$ |
+| **Âm vô cực $\to$ Âm vô cực** | $\lim_{x \to -\infty} f(x) = -\infty$ | $\forall M > 0, \exists K > 0, \forall x \in X: x < -K \implies f(x) < -M$ |
+
+## 2. Đặc trưng Heine qua dãy số
+
+Mối liên hệ giữa giới hạn của hàm số và giới hạn của dãy số là cây cầu nối cốt lõi trong giải tích hàm một biến (<Cite source="gt-gthmb-ttd-2022" page="41" note="Định lý 4.1.11" />).
+
+<Theorem
+  id="thm-gthmb-c4-b2-dac-trung-heine"
+  title="Định lý Heine (Đặc trưng giới hạn hàm qua dãy số)"
+  source="gt-gthmb-ttd-2022"
+  page="41"
+  original="Định lý 4.1.11"
+>
+Cho hàm số $f: X \to Y$ và $a, b \in \bar{\mathbb{R}}$, với $a$ là điểm giới hạn của $X$. Khi đó:
+$$
+\lim_{x \to a} f(x) = b \iff \forall (x_n) \subset X \setminus \{a\}, \lim_{n \to \infty} x_n = a \implies \lim_{n \to \infty} f(x_n) = b.
+$$
+</Theorem>
+
+<Proof>
+- **Chiều thuận $(\implies)$:** Giả sử $\lim_{x \to a} f(x) = b$. Với mọi lân cận $V \in \mathcal{N}_b$, tồn tại $U \in \mathcal{N}^*_a$ sao cho $f(X \cap U) \subset V$.
+  Xét dãy số $(x_n) \subset X \setminus \{a\}$ với $\lim x_n = a$. Theo định nghĩa giới hạn dãy, tồn tại $N \in \mathbb{N}$ sao cho $x_n \in U$ với mọi $n \ge N$. Do đó $f(x_n) \in V$ với mọi $n \ge N$. Vậy $\lim f(x_n) = b$.
+- **Chiều đảo $(\impliedby)$:** Giả sử phản chứng rằng $f(x)$ không tiến về $b$. Khi đó tồn tại $V \in \mathcal{N}_b$ sao cho với mọi lân cận thủng $U$ của $a$, $f(X \cap U) \not\subset V$.
+  Lấy lần lượt các lân cận thủng $U_n = \left(a - \frac{1}{n}, a + \frac{1}{n}\right) \setminus \{a\}$ (nếu $a$ hữu hạn). Ta luôn tìm được $x_n \in X \cap U_n$ sao cho $f(x_n) \notin V$. Dãy $(x_n)$ thỏa mãn $x_n \ne a$ và $\lim x_n = a$, nhưng $(f(x_n))$ không hội tụ về $b$, mâu thuẫn trực tiếp với giả thiết.
+</Proof>
+
+<Corollary
+  id="cor-gthmb-c4-b2-tieu-chuan-bac-bo-gioi-han"
+  title="Tiêu chuẩn bác bỏ sự tồn tại của giới hạn"
+  source="gt-gthmb-ttd-2022"
+  page="42"
+  original="Hệ quả 4.1.12"
+>
+Nếu tồn tại hai dãy số $(x_n)$ và $(x'_n)$ trong $X \setminus \{a\}$ cùng tiến về $a$ nhưng hai dãy giá trị tương ứng $(f(x_n))$ và $(f(x'_n))$ hội tụ về hai giới hạn khác nhau (hoặc phân kỳ), thì hàm số $f(x)$ **không có giới hạn** khi $x \to a$.
+</Corollary>
+
+<Example
+  id="exm-gthmb-c4-b2-khong-ton-tai-gioi-han-sin-x"
+  title="Chứng minh hàm dao động sin(x) không có giới hạn ở vô cực"
+  source="gt-gthmb-ttd-2022"
+  page="42"
+  original="Ví dụ 4.1.13"
+>
+Hàm số $f(x) = \sin x$ không có giới hạn khi $x \to +\infty$.
+
+Thật vậy, xét hai dãy số:
+$$
+x_n = 2n\pi \implies \lim_{n \to \infty} x_n = +\infty \quad \text{và} \quad f(x_n) = \sin(2n\pi) = 0 \to 0,
+$$
+$$
+x'_n = \frac{\pi}{2} + 2n\pi \implies \lim_{n \to \infty} x'_n = +\infty \quad \text{và} \quad f(x'_n) = \sin\left(\frac{\pi}{2} + 2n\pi\right) = 1 \to 1.
+$$
+Vì $0 \ne 1$, theo Hệ quả 4.1.12, hàm số không có giới hạn khi $x \to +\infty$.
+</Example>
+
+## 3. Các tính chất cơ bản của Giới hạn hàm số
+
+Nhờ Định lý Heine, mọi tính chất giới hạn của dãy số đều được chuyển giao sang hàm số (<Cite source="gt-gthmb-ttd-2022" page="42-43" note="Định lý 4.2.1, 4.2.2" />):
+
+<Theorem
+  id="thm-gthmb-c4-b2-tinh-chat-co-ban"
+  title="Các tính chất đại số và thứ tự của giới hạn hàm số"
+  source="gt-gthmb-ttd-2022"
+  page="42"
+  original="Định lý 4.2.1"
+>
+Cho các hàm số $f, g, h: X \to Y$ và $a$ là điểm giới hạn của $X$.
+1. **Tính duy nhất:** Nếu giới hạn tồn tại thì nó là duy nhất.
+2. **Tính bị chặn địa phương:** Nếu $\lim_{x \to a} f(x) = b \in \mathbb{R}$ hữu hạn thì tồn tại lân cận thủng $U^*$ của $a$ sao cho $f(x)$ bị chặn trên $U^* \cap X$.
+3. **Bảo toàn thứ tự:** Nếu $f(x) \le g(x)$ trên một lân cận thủng của $a$ và $\lim_{x \to a} f(x) = b_1, \lim_{x \to a} g(x) = b_2$ thì $b_1 \le b_2$.
+4. **Nguyên lý kẹp:** Nếu $f(x) \le g(x) \le h(x)$ trên một lân cận thủng của $a$ và $\lim_{x \to a} f(x) = \lim_{x \to a} h(x) = b$ thì $\lim_{x \to a} g(x) = b$.
+5. **Luật số học:**
+$$
+\lim_{x \to a} [f(x) \pm g(x)] = b_1 \pm b_2, \quad \lim_{x \to a} [f(x)g(x)] = b_1 b_2.
+$$
+Nếu $b_2 \ne 0$ và $g(x) \ne 0$ quanh $a$ thì $\lim_{x \to a} \frac{f(x)}{g(x)} = \frac{b_1}{b_2}$.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c4-b2-gioi-han-ham-hop"
+  title="Giới hạn của hàm hợp"
+  source="gt-gthmb-ttd-2022"
+  page="43"
+  original="Định lý 4.2.2"
+>
+Cho $f: X \to Y$ và $g: Y \to Z$. Giả sử $\lim_{x \to a} f(x) = b$ và tồn tại lân cận thủng $U^*$ của $a$ sao cho $f(x) \ne b$ với mọi $x \in U^* \cap X$.
+Nếu $\lim_{y \to b} g(y) = c$ thì:
+$$
+\lim_{x \to a} (g \circ f)(x) = \lim_{x \to a} g(f(x)) = c.
+$$
+</Theorem>
+
+## 4. Tiêu chuẩn Cauchy cho hàm số
+
+<Theorem
+  id="thm-gthmb-c4-b2-tieu-chuan-cauchy-ham-so"
+  title="Tiêu chuẩn Cauchy cho sự tồn tại giới hạn hàm số"
+  source="gt-gthmb-ttd-2022"
+  page="43"
+  original="Định lý 4.2.3"
+>
+Cho hàm số $f: X \to Y$ và điểm giới hạn $a \in \mathbb{R}$. Hàm số $f(x)$ có giới hạn hữu hạn khi $x \to a$ khi và chỉ khi:
+$$
+\forall \varepsilon > 0, \exists \delta > 0, \forall x, x' \in X: 0 < |x - a| < \delta \text{ và } 0 < |x' - a| < \delta \implies |f(x) - f(x')| < \varepsilon.
+$$
+</Theorem>
+
+<Proof>
+- $(\implies)$: Giả sử $\lim_{x \to a} f(x) = b$. Với mọi $\varepsilon > 0$, tồn tại $\delta > 0$ sao cho với mọi $x \in X$ thỏa mãn $0 < |x - a| < \delta$, ta có $|f(x) - b| < \frac{\varepsilon}{2}$. Khi đó nếu cả $x, x'$ đều nằm trong khoảng này:
+$$
+|f(x) - f(x')| \le |f(x) - b| + |b - f(x')| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+$$
+- $(\impliedby)$: Dùng Định lý Heine và Tiêu chuẩn Cauchy cho dãy số để chứng minh mọi dãy $(f(x_n))$ đều là dãy Cauchy, do đó cùng hội tụ về một số thực $b$.
+</Proof>
+
+## 5. Giới hạn một phía (One-sided Limits)
+
+Khi nghiên cứu tại các mút của khoảng (như mút của đoạn $[a; b]$) hoặc các hàm số gián đoạn chia nhánh, ta cần phân biệt hướng tiếp cận từ bên trái hoặc bên phải (<Cite source="gt-gthmb-ttd-2022" page="44" note="Mục 4.3" />).
+
+<Definition
+  id="def-gthmb-c4-b2-gioi-han-mot-phia"
+  title="Giới hạn trái và Giới hạn phải"
+  source="gt-gthmb-ttd-2022"
+  page="44"
+  original="Định nghĩa 4.3.3"
+>
+Cho hàm số $f: X \to Y$.
+1. **Giới hạn bên trái:** Số $b \in \mathbb{R}$ được gọi là giới hạn trái của $f(x)$ khi $x$ dần về $a$, ký hiệu $\lim_{x \to a^-} f(x) = b$, nếu:
+$$
+\forall \varepsilon > 0, \exists \delta > 0, \forall x \in X: 0 < a - x < \delta \implies |f(x) - b| < \varepsilon.
+$$
+2. **Giới hạn bên phải:** Số $b \in \mathbb{R}$ được gọi là giới hạn phải của $f(x)$ khi $x$ dần về $a$, ký hiệu $\lim_{x \to a^+} f(x) = b$, nếu:
+$$
+\forall \varepsilon > 0, \exists \delta > 0, \forall x \in X: 0 < x - a < \delta \implies |f(x) - b| < \varepsilon.
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c4-b2-moi-lien-he-gioi-han-mot-phia"
+  title="Mối liên hệ giữa giới hạn hai phía và một phía"
+  source="gt-gthmb-ttd-2022"
+  page="44"
+  original="Định lý 4.3.5"
+>
+Cho hàm số $f: X \to Y$ và $a$ là điểm giới hạn hai phía của $X$. Khi đó:
+$$
+\lim_{x \to a} f(x) = b \iff \lim_{x \to a^-} f(x) = \lim_{x \to a^+} f(x) = b.
+$$
+</Theorem>
+
+<Example
+  id="exm-gthmb-c4-b2-ham-phan-nguyen"
+  title="Giới hạn một phía của hàm phần nguyên [x] tại x = 0"
+  source="gt-gthmb-ttd-2022"
+  page="44"
+  original="Ví dụ 4.3.6"
+>
+Xét hàm số phần nguyên $f(x) = [x]$.
+- Khi $x \to 0^-$: Với mọi $x \in (-1, 0)$, ta có $[x] = -1$. Do đó:
+$$
+\lim_{x \to 0^-} [x] = -1.
+$$
+- Khi $x \to 0^+$: Với mọi $x \in (0, 1)$, ta có $[x] = 0$. Do đó:
+$$
+\lim_{x \to 0^+} [x] = 0.
+$$
+Vì $\lim_{x \to 0^-} [x] = -1 \ne 0 = \lim_{x \to 0^+} [x]$, ta kết luận **không tồn tại** giới hạn hai phía $\lim_{x \to 0} [x]$.
+</Example>
+
+---
+
+<KeyTakeaways>
+- **Định nghĩa $\varepsilon - \delta$:** Biến đổi chính xác điều kiện lân cận sang ngôn ngữ bất đẳng thức khoảng cách.
+- **Định lý Heine:** $\lim_{x \to a} f(x) = b \iff$ mọi dãy $x_n \to a$ đều kéo theo $f(x_n) \to b$. Là vũ khí phản chứng đắc lực.
+- **Tiêu chuẩn Cauchy:** Cho phép xác nhận hàm số có giới hạn hữu hạn nội tại mà không cần suy đoán giá trị $b$.
+- **Giới hạn một phía:** Giới hạn hai phía tồn tại $\iff$ giới hạn trái và giới hạn phải cùng tồn tại và bằng nhau.
+</KeyTakeaways>
