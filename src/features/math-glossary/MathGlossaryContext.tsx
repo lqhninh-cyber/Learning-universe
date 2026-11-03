@@ -1,27 +1,19 @@
-import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useRef, useState } from 'react';
 import type { MathGlossaryEntry } from '@/data/math-glossary';
 import { useLearningStore } from '@/features/learning';
 import { MathGlossaryContext } from './context';
 
 export interface MathGlossaryProviderProps {
   readonly children: ReactNode;
-  /** Tùy chọn đặt lại danh sách từ đã xuất hiện khi đổi bài học. */
-  readonly resetKey?: string;
 }
 
-export function MathGlossaryProvider({ children, resetKey }: MathGlossaryProviderProps) {
+export function MathGlossaryProvider({ children }: MathGlossaryProviderProps) {
   const isEnabled = useLearningStore((state) => state.glossaryAnnotationsEnabled);
   const [activeEntry, setActiveEntry] = useState<MathGlossaryEntry | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [isPinned, setIsPinned] = useState(false);
 
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const seenTermIdsRef = useRef<Set<string>>(new Set());
-
-  // Đặt lại các thuật ngữ đã ghi nhận khi đổi bài học
-  useEffect(() => {
-    seenTermIdsRef.current.clear();
-  }, [resetKey]);
 
   const cancelHide = useCallback(() => {
     if (hideTimeoutRef.current) {
@@ -40,10 +32,12 @@ export function MathGlossaryProvider({ children, resetKey }: MathGlossaryProvide
   const showPopover = useCallback(
     (entry: MathGlossaryEntry, rect: DOMRect) => {
       cancelHide();
-      setActiveEntry(entry);
-      setAnchorRect(rect);
+      if (!isPinned) {
+        setActiveEntry(entry);
+        setAnchorRect(rect);
+      }
     },
-    [cancelHide],
+    [cancelHide, isPinned],
   );
 
   const hidePopover = useCallback(
@@ -60,27 +54,21 @@ export function MathGlossaryProvider({ children, resetKey }: MathGlossaryProvide
     [cancelHide, isPinned],
   );
 
-  const togglePin = useCallback(
+  const togglePopover = useCallback(
     (entry: MathGlossaryEntry, rect: DOMRect) => {
       cancelHide();
-      if (activeEntry?.id === entry.id && isPinned) {
+      // Nếu đang mở popover cho chính term này: nhấp lại sẽ đóng (toggle)
+      if (activeEntry?.id === entry.id) {
         closePopover();
       } else {
+        // Mở popover và ghim (pinned)
         setActiveEntry(entry);
         setAnchorRect(rect);
         setIsPinned(true);
       }
     },
-    [activeEntry?.id, isPinned, cancelHide, closePopover],
+    [activeEntry?.id, cancelHide, closePopover],
   );
-
-  const claimFirstOccurrence = useCallback((termId: string): boolean => {
-    if (seenTermIdsRef.current.has(termId)) {
-      return false;
-    }
-    seenTermIdsRef.current.add(termId);
-    return true;
-  }, []);
 
   return (
     <MathGlossaryContext.Provider
@@ -92,9 +80,8 @@ export function MathGlossaryProvider({ children, resetKey }: MathGlossaryProvide
         showPopover,
         hidePopover,
         cancelHide,
-        togglePin,
+        togglePopover,
         closePopover,
-        claimFirstOccurrence,
       }}
     >
       {children}

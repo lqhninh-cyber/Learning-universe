@@ -9,9 +9,8 @@ export interface MathGlossaryContextValue {
   readonly showPopover: (entry: MathGlossaryEntry, rect: DOMRect) => void;
   readonly hidePopover: (delayMs?: number) => void;
   readonly cancelHide: () => void;
-  readonly togglePin: (entry: MathGlossaryEntry, rect: DOMRect) => void;
+  readonly togglePopover: (entry: MathGlossaryEntry, rect: DOMRect) => void;
   readonly closePopover: () => void;
-  readonly claimFirstOccurrence: (termId: string) => boolean;
 }
 
 export const MathGlossaryContext = createContext<MathGlossaryContextValue | null>(null);

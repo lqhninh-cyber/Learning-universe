@@ -34,13 +34,12 @@ function computeCoords(anchorRect: DOMRect | null): { top: number; left: number 
 }
 
 export function MathGlossaryPopover() {
-  const { activeEntry, anchorRect, isPinned, cancelHide, hidePopover, closePopover } =
-    useMathGlossary();
+  const { activeEntry, anchorRect, cancelHide, hidePopover, closePopover } = useMathGlossary();
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const coords = useMemo(() => computeCoords(anchorRect), [anchorRect]);
 
-  // Đóng popover khi nhấn phím Escape hoặc click bên ngoài (khi pinned)
+  // Đóng popover khi nhấn phím Escape hoặc click bên ngoài
   useEffect(() => {
     if (!activeEntry) {
       return;
@@ -53,21 +52,26 @@ export function MathGlossaryPopover() {
     };
 
     const handlePointerDownOutside = (e: PointerEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
-        closePopover();
+      const target = e.target as Element | null;
+      // Nếu click vào chính popover thì không đóng
+      if (popoverRef.current && popoverRef.current.contains(target as Node)) {
+        return;
       }
+      // Nếu click vào một term trigger thì không đóng ở đây (để onClick của trigger tự thực hiện toggle)
+      if (target?.closest?.('.lu-glossary-term')) {
+        return;
+      }
+      closePopover();
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    if (isPinned) {
-      window.addEventListener('pointerdown', handlePointerDownOutside);
-    }
+    window.addEventListener('pointerdown', handlePointerDownOutside);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('pointerdown', handlePointerDownOutside);
     };
-  }, [activeEntry, isPinned, closePopover]);
+  }, [activeEntry, closePopover]);
 
   if (!activeEntry || !coords || typeof document === 'undefined') {
     return null;
@@ -91,7 +95,7 @@ export function MathGlossaryPopover() {
       }}
       className="animate-in fade-in zoom-in-95 z-50 rounded-xl border border-[#D8D0C0] bg-[#F0ECE4] p-4 text-[#1C1917] shadow-xl backdrop-blur-xs transition-all duration-150"
     >
-      {/* Header: Ký hiệu + Tên thuật ngữ */}
+      {/* Header: Ký hiệu + Tên thuật ngữ + Nút đóng [✕] */}
       <div className="flex items-start justify-between gap-2.5 border-b border-[#D8D0C0] pb-2.5">
         <div className="min-w-0 flex-1 space-y-0.5">
           <div className="flex items-center gap-2">
@@ -106,19 +110,19 @@ export function MathGlossaryPopover() {
         </div>
 
         <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <div className="rounded-md border border-[#D0C8B8] bg-[#E8E0D2] px-2 py-0.5 text-center shadow-2xs">
-            <KatexMath math={activeEntry.symbol} className="font-serif text-sm text-stone-900" />
-          </div>
-          {isPinned && (
+          <div className="flex items-center gap-1.5">
+            <div className="rounded-md border border-[#D0C8B8] bg-[#E8E0D2] px-2 py-0.5 text-center shadow-2xs">
+              <KatexMath math={activeEntry.symbol} className="font-serif text-sm text-stone-900" />
+            </div>
             <button
               type="button"
               onClick={closePopover}
               aria-label="Đóng chú thích"
-              className="rounded p-0.5 text-stone-500 hover:bg-stone-300/40 hover:text-stone-800"
+              className="rounded-md p-1 text-stone-500 transition-colors hover:bg-stone-300/40 hover:text-stone-800"
             >
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
-          )}
+          </div>
         </div>
       </div>
 

@@ -74,31 +74,36 @@ export function extractLatexFromKatexNode(node: unknown): string | null {
 
 /**
  * Khớp chuỗi LaTeX với một mục thuật ngữ trong từ điển.
+ * Hỗ trợ khớp chính xác, chuẩn hóa khoảng trắng (như [G : H] -> [G:H]), và các ký hiệu trong biểu thức.
  */
 export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
   if (!tex) {
     return null;
   }
   const cleanTex = tex.trim();
+  const normalizedTex = cleanTex.replace(/\s+/g, '');
   const allEntries = getAllGlossaryEntries();
 
-  // 1. Khớp chính xác hoàn toàn (symbol hoặc pattern)
+  // 1. Khớp chính xác hoàn toàn (có khoảng trắng hoặc sau chuẩn hóa khoảng trắng)
   for (const entry of allEntries) {
-    if (entry.symbol.trim() === cleanTex) {
+    if (entry.symbol.trim() === cleanTex || entry.symbol.replace(/\s+/g, '') === normalizedTex) {
       return entry;
     }
     for (const p of entry.patterns) {
-      if (p.trim() === cleanTex) {
+      if (p.trim() === cleanTex || p.replace(/\s+/g, '') === normalizedTex) {
         return entry;
       }
     }
   }
 
-  // 2. Khớp các ký hiệu toán đặc trưng xuất hiện trong công thức (ví dụ \cong, \unlhd)
+  // 2. Khớp các ký hiệu toán đặc trưng xuất hiện trong công thức (ví dụ \cong, \unlhd, [G:H], V_4)
   const SPECIAL_MATH_SYMBOLS = [
     '\\cong',
     '\\unlhd',
     '\\triangleleft',
+    '[G:H]',
+    'V_4',
+    'V4',
     '\\ker',
     '\\operatorname{im}',
     '\\mathrm{Im}',
@@ -106,14 +111,22 @@ export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
     '\\mathbb{A}^n',
     '\\mathbb{E}^n',
     '\\mathbb{P}^n',
-    'V_4',
+    '\\operatorname{Frac}',
+    'S_n',
+    'A_n',
+    'D_{2n}',
   ];
 
   for (const sym of SPECIAL_MATH_SYMBOLS) {
-    if (cleanTex.includes(sym)) {
-      const match = allEntries.find(
-        (e) => e.symbol.includes(sym) || e.patterns.some((p) => p.includes(sym)),
-      );
+    const normSym = sym.replace(/\s+/g, '');
+    if (normalizedTex.includes(normSym)) {
+      const match = allEntries.find((e) => {
+        const eSymNorm = e.symbol.replace(/\s+/g, '');
+        return (
+          eSymNorm.includes(normSym) ||
+          e.patterns.some((p) => p.replace(/\s+/g, '').includes(normSym))
+        );
+      });
       if (match) {
         return match;
       }
@@ -124,13 +137,9 @@ export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
 }
 
 /**
- * Đệ quy bóc tách chuỗi văn bản và chèn MathGlossaryTerm cho các thuật ngữ xuất hiện lần đầu.
+ * Đệ quy bóc tách chuỗi văn bản và chèn MathGlossaryTerm cố định cho các thuật ngữ xuất hiện.
  */
-export function annotateTextString(
-  text: string,
-  claimFirstOccurrence: (termId: string) => boolean,
-  keyPrefix = 'glossary-term',
-): ReactNode[] {
+export function annotateTextString(text: string, keyPrefix = 'glossary-term'): ReactNode[] {
   if (!text || typeof text !== 'string') {
     return [text];
   }
@@ -168,23 +177,18 @@ export function annotateTextString(
   const results: ReactNode[] = [];
 
   if (before) {
-    results.push(...annotateTextString(before, claimFirstOccurrence, `${keyPrefix}-b`));
+    results.push(...annotateTextString(before, `${keyPrefix}-b`));
   }
 
-  // Kiểm tra xem thuật ngữ này đã xuất hiện lần đầu trong bài chưa
-  const isFirst = claimFirstOccurrence(matcher.entry.id);
-  if (isFirst) {
-    results.push(
-      <MathGlossaryTerm key={`${keyPrefix}-${matcher.entry.id}-${index}`} entry={matcher.entry}>
-        {matchedText}
-      </MathGlossaryTerm>,
-    );
-  } else {
-    results.push(matchedText);
-  }
+  // Luôn bọc thuật ngữ trong MathGlossaryTerm để duy trì tương tác bền vững
+  results.push(
+    <MathGlossaryTerm key={`${keyPrefix}-${matcher.entry.id}-${index}`} entry={matcher.entry}>
+      {matchedText}
+    </MathGlossaryTerm>,
+  );
 
   if (after) {
-    results.push(...annotateTextString(after, claimFirstOccurrence, `${keyPrefix}-a`));
+    results.push(...annotateTextString(after, `${keyPrefix}-a`));
   }
 
   return results;
@@ -192,14 +196,12 @@ export function annotateTextString(
 
 /**
  * Quét và chú thích đệ quy trong danh sách React children của một đoạn văn/danh sách.
+ * Ký hiệu và thuật ngữ luôn được duy trì bọc trong MathGlossaryTerm.
  */
-export function annotateChildren(
-  children: ReactNode,
-  claimFirstOccurrence: (termId: string) => boolean,
-): ReactNode {
+export function annotateChildren(children: ReactNode): ReactNode {
   return Children.map(children, (child, idx) => {
     if (typeof child === 'string') {
-      const annotated = annotateTextString(child, claimFirstOccurrence, `p-${idx}`);
+      const annotated = annotateTextString(child, `p-${idx}`);
       return annotated.length === 1 ? annotated[0] : <>{annotated}</>;
     }
 
@@ -217,7 +219,7 @@ export function annotateChildren(
       const tex = extractLatexFromKatexNode(element);
       if (tex) {
         const entry = matchLatexToGlossary(tex);
-        if (entry && claimFirstOccurrence(entry.id)) {
+        if (entry) {
           return (
             <MathGlossaryTerm key={`katex-${entry.id}-${idx}`} entry={entry}>
               {element}
@@ -228,7 +230,7 @@ export function annotateChildren(
       return element;
     }
 
-    // Không đệ quy vào các thẻ không phù hợp (link, button, code)
+    // Không đệ quy vào các thẻ không phù hợp (link, button, code, pre)
     if (
       element.type === 'a' ||
       element.type === 'button' ||
@@ -241,7 +243,7 @@ export function annotateChildren(
     // Nếu có children bên trong, tiếp tục đệ quy xử lý
     if (element.props.children) {
       return cloneElement(element, {
-        children: annotateChildren(element.props.children, claimFirstOccurrence),
+        children: annotateChildren(element.props.children),
       });
     }
 

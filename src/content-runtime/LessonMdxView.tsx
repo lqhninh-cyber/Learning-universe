@@ -28,7 +28,7 @@ interface LessonMdxArticleProps {
 }
 
 function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
-  const { isEnabled, claimFirstOccurrence } = useMathGlossary();
+  const { isEnabled } = useMathGlossary();
 
   const activeComponents = useMemo<MDXComponents>(() => {
     if (!isEnabled) {
@@ -38,14 +38,14 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
     return {
       ...mdxComponents,
       p: (props: ComponentPropsWithoutRef<'p'>) => (
-        <p {...props}>{annotateChildren(props.children, claimFirstOccurrence)}</p>
+        <p {...props}>{annotateChildren(props.children)}</p>
       ),
       li: (props: ComponentPropsWithoutRef<'li'>) => (
-        <li {...props}>{annotateChildren(props.children, claimFirstOccurrence)}</li>
+        <li {...props}>{annotateChildren(props.children)}</li>
       ),
       td: (props: ComponentPropsWithoutRef<'td'>) => (
         <td className="border border-stone-200 px-3 py-2" {...props}>
-          {annotateChildren(props.children, claimFirstOccurrence)}
+          {annotateChildren(props.children)}
         </td>
       ),
       span: (props: ComponentPropsWithoutRef<'span'>) => {
@@ -54,7 +54,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
           const tex = extractLatexFromKatexNode(props);
           if (tex) {
             const entry = matchLatexToGlossary(tex);
-            if (entry && claimFirstOccurrence(entry.id)) {
+            if (entry) {
               return (
                 <MathGlossaryTerm entry={entry}>
                   <span {...props} />
@@ -66,7 +66,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
         return <span {...props} />;
       },
     };
-  }, [isEnabled, claimFirstOccurrence]);
+  }, [isEnabled]);
 
   return (
     <>
@@ -91,11 +91,7 @@ export function LessonMdxView({
   return (
     <TooltipProvider>
       <LessonProvider lessonMeta={lessonMeta} bibliography={bibliography}>
-        <MathGlossaryProvider
-          resetKey={
-            lessonMeta ? `${lessonMeta.chapterNumber}.${lessonMeta.lessonNumber}` : undefined
-          }
-        >
+        <MathGlossaryProvider>
           <LessonMdxArticle Content={Content} className={className} />
         </MathGlossaryProvider>
       </LessonProvider>

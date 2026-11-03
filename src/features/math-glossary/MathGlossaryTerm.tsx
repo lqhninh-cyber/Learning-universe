@@ -11,7 +11,7 @@ export interface MathGlossaryTermProps {
 }
 
 export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTermProps) {
-  const { isEnabled, showPopover, hidePopover, togglePin } = useMathGlossary();
+  const { isEnabled, showPopover, hidePopover, togglePopover } = useMathGlossary();
   const spanRef = useRef<HTMLSpanElement>(null);
 
   if (!isEnabled) {
@@ -31,7 +31,7 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
   const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
     if (spanRef.current) {
-      togglePin(entry, spanRef.current.getBoundingClientRect());
+      togglePopover(entry, spanRef.current.getBoundingClientRect());
     }
   };
 
@@ -40,7 +40,7 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
       e.preventDefault();
       e.stopPropagation();
       if (spanRef.current) {
-        togglePin(entry, spanRef.current.getBoundingClientRect());
+        togglePopover(entry, spanRef.current.getBoundingClientRect());
       }
     }
   };
@@ -57,9 +57,10 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={cn(
-        'lu-glossary-term border-b-1.5 inline cursor-help rounded-xs border-dotted border-amber-800/70',
-        'hover:border-solid hover:border-amber-900 hover:bg-amber-100/40',
-        'focus-visible:ring-1.5 focus-visible:ring-amber-700/60 focus-visible:outline-hidden',
+        'lu-glossary-term inline cursor-pointer rounded-xs select-text',
+        'border-b-[1.5px] border-dotted border-[var(--text-muted,#807060)]',
+        'hover:border-solid hover:border-[var(--accent-verandah,#5A6830)] hover:bg-[rgba(90,104,48,0.08)]',
+        'focus-visible:ring-1.5 focus-visible:ring-[var(--accent-verandah,#5A6830)] focus-visible:outline-hidden',
         'transition-colors duration-150',
         className,
       )}

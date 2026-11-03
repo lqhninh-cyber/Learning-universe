@@ -1,3 +1,5 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { getLessonBySlug } from '@/content-runtime';
 import {
@@ -7,6 +9,9 @@ import {
   searchGlossary,
 } from '@/data/math-glossary';
 import { annotateTextString, matchLatexToGlossary } from './annotator';
+import { MathGlossaryProvider } from './MathGlossaryContext';
+import { MathGlossaryPopover } from './MathGlossaryPopover';
+import { MathGlossaryTerm } from './MathGlossaryTerm';
 
 describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () => {
   it('chứa ít nhất 30 thuật ngữ và ký hiệu chuẩn mực', () => {
@@ -86,29 +91,101 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
 });
 
 describe('Bộ nhận diện thuật ngữ tự động (Auto-Annotator)', () => {
-  it('khớp chính xác chuỗi TeX với mục từ điển tương ứng', () => {
+  it('khớp chính xác chuỗi TeX với mục từ điển tương ứng kể cả có khoảng trắng và trong công thức', () => {
     expect(matchLatexToGlossary('V_4')?.id).toBe('v4');
     expect(matchLatexToGlossary('\\cong')?.id).toBe('dang-cau');
     expect(matchLatexToGlossary('G \\cong H')?.id).toBe('dang-cau');
     expect(matchLatexToGlossary('H \\unlhd G')?.id).toBe('nhom-con-chuan-tac');
     expect(matchLatexToGlossary('\\ker \\varphi')?.id).toBe('hat-nhan');
     expect(matchLatexToGlossary('\\mathbb{A}^n')?.id).toBe('khong-gian-afin');
+    expect(matchLatexToGlossary('[G:H]')?.id).toBe('dinh-ly-lagrange');
+    expect(matchLatexToGlossary('[G : H]')?.id).toBe('dinh-ly-lagrange');
+    expect(matchLatexToGlossary('|G| = [G:H] \\cdot |H|')?.id).toBe('dinh-ly-lagrange');
   });
 
-  it('bóc tách chuỗi văn bản và chỉ chú thích lần đầu xuất hiện của mỗi thuật ngữ', () => {
-    const seen = new Set<string>();
-    const claim = (id: string) => {
-      if (seen.has(id)) return false;
-      seen.add(id);
-      return true;
-    };
+  it('bóc tách chuỗi văn bản và chèn MathGlossaryTerm cố định không bị mất', () => {
+    const text = 'Xét nhóm bốn Klein trong đại số trừu tượng.';
+    const nodes = annotateTextString(text);
 
-    const text =
-      'Trong bài này ta nghiên cứu nhóm bốn Klein. Sau đó nhóm bốn Klein tiếp tục xuất hiện.';
-    const nodes = annotateTextString(text, claim);
-
-    // Cụm "nhóm bốn Klein" đầu tiên được bọc MathGlossaryTerm, cụm thứ 2 là chuỗi thường
     expect(nodes.length).toBeGreaterThan(1);
-    expect(seen.has('v4')).toBe(true);
+  });
+});
+
+describe('Hành vi tương tác Popover & Toggle bền vững', () => {
+  it('cho phép nhấp mở, nhấp lại để đóng (toggle) và nhấp lại nhiều lần không mất tương tác', () => {
+    const entry = getGlossaryEntryById('v4')!;
+
+    render(
+      <MemoryRouter>
+        <MathGlossaryProvider>
+          <div>
+            <MathGlossaryTerm entry={entry}>V_4</MathGlossaryTerm>
+            <MathGlossaryPopover />
+          </div>
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    const trigger = screen.getByRole('button', { name: /Chú thích thuật ngữ: Nhóm bốn Klein/i });
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveClass('lu-glossary-term');
+
+    // 1. Nhấp lần 1: Mở Popover
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('Klein four-group')).toBeInTheDocument();
+
+    // 2. Nhấp lần 2 vào chính ký hiệu đó: Đóng Popover (Toggle)
+    fireEvent.click(trigger);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    // Ký hiệu V_4 vẫn còn nguyên là button trigger với class lu-glossary-term
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveClass('lu-glossary-term');
+
+    // 3. Nhấp lần 3: Mở lại Popover thành công
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    // 4. Bấm phím Escape: Đóng Popover
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    // 5. Nhấp lần 4: Mở lại tiếp tục bình thường
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    // 6. Nhấp nút [X] trong popover: Đóng popover
+    const closeBtn = screen.getByRole('button', { name: /Đóng chú thích/i });
+    fireEvent.click(closeBtn);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('đóng Popover khi click ra ngoài vùng trigger và popover', () => {
+    const entry = getGlossaryEntryById('v4')!;
+
+    render(
+      <MemoryRouter>
+        <MathGlossaryProvider>
+          <div>
+            <div data-testid="outside-area">Vùng bên ngoài</div>
+            <MathGlossaryTerm entry={entry}>V_4</MathGlossaryTerm>
+            <MathGlossaryPopover />
+          </div>
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    const trigger = screen.getByRole('button', { name: /Chú thích thuật ngữ: Nhóm bốn Klein/i });
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    // Click ra ngoài
+    const outside = screen.getByTestId('outside-area');
+    fireEvent.pointerDown(outside);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    // Trigger vẫn tồn tại sẵn sàng cho lần click tiếp theo
+    expect(trigger).toBeInTheDocument();
   });
 });
