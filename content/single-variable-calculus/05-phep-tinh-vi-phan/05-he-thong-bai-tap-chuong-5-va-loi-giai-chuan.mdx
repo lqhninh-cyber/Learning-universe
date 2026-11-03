@@ -1,0 +1,579 @@
+---
+id: he-thong-bai-tap-chuong-5-va-loi-giai-chuan
+title: 'Hệ thống bài tập Chương 5 và lời giải chuẩn'
+description: 'Tuyển tập 18 bài tập cuối Chương 5 giáo trình Giải tích hàm một biến: xét tính khả vi của hàm chia nhánh, đạo hàm cấp cao Leibniz và Maclaurin, ứng dụng định lý giá trị trung bình, khử giới hạn vô định L’Hôpital và các chuyên đề nâng cao Darboux, số e vô tỉ.'
+estimatedMinutes: 60
+level: advanced
+prerequisites:
+  - khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc
+  - dao-ham-cap-cao-cong-thuc-leibniz-va-cac-lop-ham
+  - cac-dinh-ly-gia-tri-trung-binh
+  - quy-tac-lhopital-va-khai-trien-taylor-maclaurin
+tags:
+  - bài tập đạo hàm
+  - tính khả vi
+  - quy tắc Leibniz
+  - định lý Darboux
+  - quy tắc L'Hôpital
+  - định lý Lagrange
+  - số e vô tỉ
+  - đề thi giải tích
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '60-63'
+    sections: 'Bài tập cuối Chương 5'
+    note: 'Toàn bộ 18 bài tập cuối Chương 5 Phép tính vi phân'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Tổng quan hệ thống bài tập Chương 5">
+Chương 5 "Phép tính vi phân" là một trong những phần chiếm tỉ trọng điểm số cao nhất trong đề thi kết thúc học phần Giải tích hàm một biến (MATH1403).
+
+Hệ thống bài tập dưới đây bao quát toàn bộ 18 bài tập cuối chương trong giáo trình của GV. Trần Trí Dũng (2022), được phân loại thành 4 dạng toán trọng tâm và 1 chuyên đề nâng cao dành cho điểm tuyệt đối:
+- **Dạng 1:** Xét tính khả vi của hàm phân nhánh và phân loại lớp hàm $C^1, C^\infty$ (Bài 1, 2, 3).
+- **Dạng 2:** Đạo hàm cấp cao, công thức Leibniz và kỹ thuật Maclaurin (Bài 16).
+- **Dạng 3:** Ứng dụng các định lý giá trị trung bình Lagrange và Cauchy chứng minh tính chất giải tích & bất đẳng thức (Bài 4, 5, 6, 9, 10, 11, 12, 13).
+- **Dạng 4:** Khử trọn vẹn các dạng vô định bằng quy tắc L'Hôpital (Bài 14a-h).
+- **Chuyên đề nâng cao:** Định lý Darboux, tính vô tỉ của số $e$ và các bài toán giải tích sâu sắc (Bài 7*, 8*, 15*, 17*, 18*).
+</Note>
+
+## Dạng 1: Khảo sát tính khả vi và phân loại không gian hàm
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-1-tinh-kha-vi-cac-ham"
+  title="Bài 1: Xét tính khả vi của các hàm số chia nhánh và chứa trị tuyệt đối"
+  source="gt-gthmb-ttd-2022"
+  page="60"
+  original="Bài tập 1 (trang 60-61)"
+>
+Xét tính khả vi trên tập xác định của các hàm số sau:
+1. $y = |\sin x|$
+2. $y = x|x|$
+3. $y = |\pi - x| \sin x$
+4. $y = \begin{cases} x^2, & x \le 0 \\ e^{-1/x}, & x > 0 \end{cases}$
+5. $y = \begin{cases} x^2, & x \in \mathbb{Q} \\ -x^2, & x \notin \mathbb{Q} \end{cases}$
+6. $y = \begin{cases} x^2, & x \in \mathbb{Z} \\ 0, & x \notin \mathbb{Z} \end{cases}$
+</Exercise>
+
+<Solution>
+1. **$y = |\sin x|$:**
+   - Tại mọi $x \ne k\pi$ ($k \in \mathbb{Z}$), $\sin x \ne 0$ nên hàm số khả vi và $y' = (\cos x) \operatorname{sgn}(\sin x)$.
+   - Tại $x_0 = k\pi$, ta xét giới hạn tỉ số số gia khi $h \to 0$:
+     $$
+     \frac{|\sin(k\pi + h)| - 0}{h} = \frac{|\sin h|}{h}.
+     $$
+     Giới hạn phải khi $h \to 0^+$ bằng $1$; giới hạn trái khi $h \to 0^-$ bằng $-1$.
+     Vì $1 \ne -1$, hàm số **không khả vi tại mọi điểm $x = k\pi$ ($k \in \mathbb{Z}$)**.
+
+2. **$y = x|x|$:**
+   - Khi $x > 0$: $y = x^2 \implies y'(x) = 2x$.
+   - Khi $x < 0$: $y = -x^2 \implies y'(x) = -2x$.
+   - Tại $x = 0$:
+     $$
+     \lim_{x \to 0} \frac{x|x| - 0}{x - 0} = \lim_{x \to 0} |x| = 0.
+     $$
+     Do đó $y'(0) = 0$. Hàm số **khả vi trên toàn bộ $\mathbb{R}$** và $y'(x) = 2|x|$.
+
+3. **$y = |\pi - x| \sin x$:**
+   - Với mọi $x \ne \pi$, hàm số hiển nhiên khả vi.
+   - Tại $x = \pi$: Xét tỉ số số gia khi $x \to \pi$:
+     $$
+     \lim_{x \to \pi} \frac{|\pi - x| \sin x - 0}{x - \pi} = \lim_{x \to \pi} \frac{|\pi - x|}{x - \pi} \sin x.
+     $$
+     Đặt $t = x - \pi \to 0$, biểu thức trở thành $\lim_{t \to 0} \frac{|t|}{t} \sin(\pi + t) = \lim_{t \to 0} \frac{|t|}{t} (-\sin t) = \lim_{t \to 0} \left(-\frac{|t|}{t} \cdot t \cdot \frac{\sin t}{t}\right) = \lim_{t \to 0} \big(-|t|\big) = 0$.
+     Vì giới hạn tồn tại hữu hạn và bằng $0$, hàm số **khả vi tại $x = \pi$ với $y'(\pi) = 0$**, và do đó khả vi trên toàn bộ $\mathbb{R}$!
+
+4. **$y = \begin{cases} x^2, & x \le 0 \\ e^{-1/x}, & x > 0 \end{cases}$:**
+   - Trên $(-\infty; 0)$ và $(0; +\infty)$, hàm số khả vi sơ cấp.
+   - Tại $x = 0$:
+     - Đạo hàm trái: $y'_-(0) = \lim_{x \to 0^-} \frac{x^2 - 0}{x} = 0$.
+     - Đạo hàm phải: $y'_+(0) = \lim_{x \to 0^+} \frac{e^{-1/x}}{x} = \lim_{t \to +\infty} t e^{-t} = 0$.
+     Vì $y'_-(0) = y'_+(0) = 0$, hàm số **khả vi trên toàn $\mathbb{R}$** và $y'(0) = 0$.
+
+5. **$y = \begin{cases} x^2, & x \in \mathbb{Q} \\ -x^2, & x \notin \mathbb{Q} \end{cases}$:**
+   - Tại mọi $x \ne 0$, trong bất kỳ lân cận nào của $x$ cũng chứa cả số hữu tỉ lẫn số vô tỉ, khiến giá trị hàm dao động giữa $x^2$ và $-x^2 \ne x^2$. Do đó hàm gián đoạn tại mọi $x \ne 0$, kéo theo **không khả vi tại mọi $x \ne 0$**.
+   - Tại $x = 0$: Xét tỉ số số gia:
+     $$
+     \left| \frac{y(x) - y(0)}{x - 0} \right| = \frac{|y(x)|}{|x|} = \frac{x^2}{|x|} = |x|.
+     $$
+     Khi $x \to 0$, $|x| \to 0$. Theo định lý kẹp, $\lim_{x \to 0} \frac{y(x) - 0}{x} = 0$.
+     Vậy hàm số **khả vi tại duy nhất điểm $x = 0$** (với $y'(0) = 0$).
+
+6. **$y = \begin{cases} x^2, & x \in \mathbb{Z} \\ 0, & x \notin \mathbb{Z} \end{cases}$:**
+   - Tại các điểm nguyên $x = k \in \mathbb{Z} \setminus \{0\}$, hàm gián đoạn nên không khả vi.
+   - Tại $x = 0$: Với mọi $x \in (-1; 1) \setminus \{0\}$, $x \notin \mathbb{Z}$ nên $y(x) = 0$. Do đó:
+     $$
+     y'(0) = \lim_{x \to 0} \frac{0 - 0}{x} = 0.
+     $$
+   - Tại các điểm $x \notin \mathbb{Z}$: Luôn tồn tại lân cận mở không chứa số nguyên nào, nên $y(t) = 0$ (hàm hằng) trên lân cận đó $\implies y'(x) = 0$.
+   - Kết luận: Hàm số **khả vi trên tập $\mathbb{R} \setminus (\mathbb{Z} \setminus \{0\})$**.
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-2-ham-x2-sin-1-tren-x"
+  title="Bài 2: Hàm khả vi nhưng đạo hàm gián đoạn (f không thuộc C^1)"
+  source="gt-gthmb-ttd-2022"
+  page="61"
+  original="Bài tập 2"
+>
+Cho hàm số $f: \mathbb{R} \to \mathbb{R}$ xác định bởi:
+$$
+f(x) = \begin{cases} x^2 \sin \frac{1}{x}, & x \ne 0 \\ 0, & x = 0 \end{cases}
+$$
+Chứng tỏ rằng $f$ khả vi trên $\mathbb{R}$. Hàm $f$ có thuộc lớp $C^1(\mathbb{R})$ không?
+</Exercise>
+
+<Solution>
+1. **Xét tính khả vi của $f$ trên $\mathbb{R}$:**
+   - Với mọi $x \ne 0$, hàm số là tích của các hàm khả vi nên khả vi theo quy tắc đạo hàm:
+     $$
+     f'(x) = 2x \sin \frac{1}{x} + x^2 \left(-\frac{1}{x^2} \cos \frac{1}{x}\right) = 2x \sin \frac{1}{x} - \cos \frac{1}{x}.
+     $$
+   - Tại $x = 0$, ta tính đạo hàm theo định nghĩa:
+     $$
+     f'(0) = \lim_{x \to 0} \frac{f(x) - f(0)}{x - 0} = \lim_{x \to 0} \frac{x^2 \sin \frac{1}{x}}{x} = \lim_{x \to 0} x \sin \frac{1}{x}.
+     $$
+     Vì $\left| x \sin \frac{1}{x} \right| \le |x| \to 0$ khi $x \to 0$, theo nguyên lý kẹp ta có $f'(0) = 0$.
+   - Vậy $f$ khả vi tại mọi điểm trên $\mathbb{R}$, với hàm đạo hàm:
+     $$
+     f'(x) = \begin{cases} 2x \sin \frac{1}{x} - \cos \frac{1}{x}, & x \ne 0 \\ 0, & x = 0 \end{cases}
+     $$
+
+2. **Khảo sát $f$ có thuộc $C^1(\mathbb{R})$ hay không:**
+   Để $f \in C^1(\mathbb{R})$, hàm đạo hàm $f'$ phải liên tục tại mọi điểm trên $\mathbb{R}$, đặc biệt là tại $x = 0$.
+   Ta xét giới hạn của $f'(x)$ khi $x \to 0$:
+   $$
+   \lim_{x \to 0} f'(x) = \lim_{x \to 0} \left(2x \sin \frac{1}{x} - \cos \frac{1}{x}\right).
+   $$
+   Vì $\lim_{x \to 0} 2x \sin \frac{1}{x} = 0$, nhưng $\lim_{x \to 0} \cos \frac{1}{x}$ không tồn tại (dao động tuần hoàn trong $[-1; 1]$ khi chọn hai dãy $x_n = \frac{1}{2n\pi} \to 0$ và $y_n = \frac{1}{(2n+1)\pi} \to 0$).
+   Do đó, $\lim_{x \to 0} f'(x)$ **không tồn tại**, kéo theo $f'$ gián đoạn tại $x = 0$.
+   **Kết luận:** Hàm số $f$ **không thuộc lớp $C^1(\mathbb{R})$**.
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-3-ham-e-mu-tru-1-tren-x2"
+  title="Bài 3: Hàm phẳng trơn vô hạn C^infinity nhưng triệt tiêu mọi đạo hàm"
+  source="gt-gthmb-ttd-2022"
+  page="61"
+  original="Bài tập 3"
+>
+Cho hàm số $f: \mathbb{R} \to \mathbb{R}$ xác định bởi:
+$$
+f(x) = \begin{cases} e^{-1/x^2}, & x \ne 0 \\ 0, & x = 0 \end{cases}
+$$
+Chứng minh rằng $f \in C^\infty(\mathbb{R})$.
+</Exercise>
+
+<Solution>
+- Với mọi $x \ne 0$, hàm số là hợp của các hàm khả vi vô hạn nên $f$ có đạo hàm mọi cấp trên $\mathbb{R} \setminus \{0\}$. Bằng quy nạp, với mọi $n \ge 1$ và $x \ne 0$, ta có:
+  $$
+  f^{(n)}(x) = P_n\left(\frac{1}{x}\right) e^{-1/x^2},
+  $$
+  với $P_n$ là một đa thức đại số bậc $3n$.
+
+- Ta chứng minh bằng quy nạp toán học rằng $f^{(n)}(0) = 0$ với mọi $n \ge 0$:
+  + Với $n = 0$: $f(0) = 0$ (đúng theo giả thiết).
+  + Giả sử mệnh đề đúng đến $n - 1$, tức $f^{(n-1)}(0) = 0$. Ta tính đạo hàm cấp $n$ tại $0$:
+    $$
+    f^{(n)}(0) = \lim_{x \to 0} \frac{f^{(n-1)}(x) - f^{(n-1)}(0)}{x - 0} = \lim_{x \to 0} \frac{P_{n-1}\left(\frac{1}{x}\right) e^{-1/x^2}}{x}.
+    $$
+    Đổi biến $t = \frac{1}{x}$, khi $x \to 0$ thì $t \to \pm\infty$. Giới hạn trở thành:
+    $$
+    \lim_{t \to \pm\infty} t P_{n-1}(t) e^{-t^2} = \lim_{t \to \pm\infty} \frac{Q(t)}{e^{t^2}},
+    $$
+    trong đó $Q(t) = t P_{n-1}(t)$ là đa thức của $t$.
+    Vì hàm mũ tăng nhanh hơn bất kỳ đa thức nào khi $t \to \pm\infty$ (áp dụng L'Hôpital hoặc khai triển), ta có:
+    $$
+    \lim_{t \to \pm\infty} \frac{Q(t)}{e^{t^2}} = 0 \implies f^{(n)}(0) = 0.
+    $$
+- Hơn nữa, vì $\lim_{x \to 0} f^{(n)}(x) = \lim_{x \to 0} P_n(1/x)e^{-1/x^2} = 0 = f^{(n)}(0)$, hàm đạo hàm cấp $n$ liên tục tại $x = 0$ với mọi $n$.
+Vậy $f \in C^\infty(\mathbb{R})$.
+</Solution>
+
+## Dạng 2: Đạo hàm cấp cao và Khai triển Maclaurin
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-16-maclaurin-dao-ham-cap-9"
+  title="Bài 16: Viết khai triển Maclaurin đến cấp 10 và tính f^(9)(0)"
+  source="gt-gthmb-ttd-2022"
+  page="63"
+  original="Bài tập 16 (trang 63)"
+>
+Viết khai triển Maclaurin của các hàm số sau đến cấp 10, từ đó tính đạo hàm cấp 9 tại điểm $0$ ($f^{(9)}(0)$):
+1. $f(x) = x^2 \sin x$
+2. $f(x) = (x + x^3) e^x$
+</Exercise>
+
+<Solution>
+1. **Với hàm $f(x) = x^2 \sin x$:**
+   - Khai triển Maclaurin của $\sin x$ đến cấp 9:
+     $$
+     \sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^9}{9!} + o(x^9).
+     $$
+   - Nhân hai vế với $x^2$:
+     $$
+     f(x) = x^2 \sin x = x^3 - \frac{x^5}{6} + \frac{x^7}{120} - \frac{x^9}{5040} + o(x^{10}).
+     $$
+   - Theo định nghĩa khai triển Maclaurin, hệ số của $x^9$ bằng $\frac{f^{(9)}(0)}{9!}$. Do đó:
+     $$
+     \frac{f^{(9)}(0)}{9!} = -\frac{1}{7!} \iff f^{(9)}(0) = -\frac{9!}{7!} = -(9 \times 8) = -72.
+     $$
+
+2. **Với hàm $f(x) = (x + x^3) e^x$:**
+   - Khai triển Maclaurin của $e^x$ đến cấp 9:
+     $$
+     e^x = \sum_{k=0}^9 \frac{x^k}{k!} + o(x^9).
+     $$
+   - Nhân với $(x + x^3) = x e^x + x^3 e^x$:
+     $$
+     x e^x = \sum_{k=0}^9 \frac{x^{k+1}}{k!} + o(x^{10}) = x + x^2 + \frac{x^3}{2!} + \dots + \frac{x^9}{8!} + \frac{x^{10}}{9!} + o(x^{10}),
+     $$
+     $$
+     x^3 e^x = \sum_{k=0}^7 \frac{x^{k+3}}{k!} + o(x^{10}) = x^3 + x^4 + \dots + \frac{x^9}{6!} + \frac{x^{10}}{7!} + o(x^{10}).
+     $$
+   - Hệ số của $x^9$ trong khai triển của $f(x)$ là tổng hệ số từ hai thành phần:
+     $$
+     a_9 = \frac{1}{8!} + \frac{1}{6!} = \frac{1 + 56}{8!} = \frac{57}{8!}.
+     $$
+   - Do $a_9 = \frac{f^{(9)}(0)}{9!}$, ta suy ra:
+     $$
+     f^{(9)}(0) = 9! \times \frac{57}{8!} = 9 \times 57 = 513.
+     $$
+</Solution>
+
+## Dạng 3: Ứng dụng Định lý Giá trị trung bình Lagrange và Cauchy
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-4-dieu-kien-holder-suy-bien"
+  title="Bài 4: Điều kiện co lũy thừa alpha > 1 kéo theo hàm hằng"
+  source="gt-gthmb-ttd-2022"
+  page="61"
+  original="Bài tập 4"
+>
+Cho hàm số $f: \mathbb{R} \to \mathbb{R}$ thỏa mãn:
+$$
+|f(x) - f(y)| \le M |x - y|^\alpha, \quad \forall x, y \in \mathbb{R},
+$$
+trong đó $M > 0$ và $\alpha > 1$ là các hằng số. Chứng minh rằng $f$ là hàm hằng trên $\mathbb{R}$.
+</Exercise>
+
+<Solution>
+Cố định điểm $y \in \mathbb{R}$ tùy ý. Với mọi $x \ne y$, chia hai vế bất đẳng thức cho $|x - y| > 0$:
+$$
+\left| \frac{f(x) - f(y)}{x - y} \right| \le M |x - y|^{\alpha - 1}.
+$$
+Vì $\alpha > 1$, số mũ $\alpha - 1 > 0$. Cho $x \to y$, ta có $|x - y|^{\alpha - 1} \to 0$, do đó:
+$$
+\lim_{x \to y} \left| \frac{f(x) - f(y)}{x - y} \right| = 0 \iff f'(y) = \lim_{x \to y} \frac{f(x) - f(y)}{x - y} = 0.
+$$
+Vì $y$ được chọn tùy ý trên $\mathbb{R}$, ta có $f'(y) = 0$ với mọi $y \in \mathbb{R}$.
+Vì $\mathbb{R}$ là một khoảng liên thông, theo Hệ quả 5.3.7 của Định lý Lagrange, $f$ là hàm hằng trên $\mathbb{R}$.
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-12-dao-ham-bi-chan-keo-theo-lien-tuc-deu"
+  title="Bài 12: Đạo hàm bị chặn kéo theo tính liên tục đều"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 12"
+>
+Cho hàm số $f$ khả vi trên khoảng mở $(a; b)$ và hàm đạo hàm $f'$ bị chặn trên $(a; b)$. Chứng minh rằng $f$ liên tục đều trên $(a; b)$.
+</Exercise>
+
+<Solution>
+Vì $f'$ bị chặn trên $(a; b)$, tồn tại hằng số $M > 0$ sao cho:
+$$
+|f'(t)| \le M, \quad \forall t \in (a; b).
+$$
+Lấy hai điểm $x, y \in (a; b)$ bất kỳ với $x < y$. Hàm số $f$ liên tục trên $[x; y]$ và khả vi trên $(x; y)$.
+Theo Định lý Giá trị trung bình Lagrange, tồn tại $c \in (x; y) \subset (a; b)$ sao cho:
+$$
+f(x) - f(y) = f'(c)(x - y).
+$$
+Lấy giá trị tuyệt đối hai vế:
+$$
+|f(x) - f(y)| = |f'(c)| |x - y| \le M |x - y|.
+$$
+Bất đẳng thức này chứng tỏ $f$ thỏa mãn điều kiện Lipschitz trên $(a; b)$ với hằng số $M$.
+Với mọi $\varepsilon > 0$ cho trước, ta chọn $\delta = \frac{\varepsilon}{M} > 0$.
+Khi đó với mọi $x, y \in (a; b)$ thỏa mãn $|x - y| < \delta$, ta luôn có:
+$$
+|f(x) - f(y)| \le M |x - y| < M \cdot \frac{\varepsilon}{M} = \varepsilon.
+$$
+Theo định nghĩa, hàm số $f$ liên tục đều trên khoảng $(a; b)$.
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-11-f-khong-bi-chan-thi-f-phay-khong-bi-chan"
+  title="Bài 11: Mối liên hệ bị chặn giữa hàm số và đạo hàm"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 11"
+>
+Cho hàm số $f$ khả vi trên khoảng hữu hạn $(a; b)$ và $f$ không bị chặn trên $(a; b)$. Chứng minh rằng đạo hàm $f'$ cũng không bị chặn trên $(a; b)$.
+</Exercise>
+
+<Solution>
+Ta chứng minh bằng phương pháp phản chứng.
+Giả sử ngược lại rằng $f'$ bị chặn trên $(a; b)$, tức là tồn tại $M > 0$ sao cho $|f'(x)| \le M$ với mọi $x \in (a; b)$.
+Cố định một điểm $x_0 \in (a; b)$.
+Với mọi điểm $x \in (a; b)$, áp dụng Định lý Lagrange trên đoạn nối $x$ và $x_0$, tồn tại $c$ nằm giữa $x$ và $x_0$ sao cho:
+$$
+f(x) - f(x_0) = f'(c)(x - x_0).
+$$
+Suy ra:
+$$
+|f(x)| = |f(x_0) + f'(c)(x - x_0)| \le |f(x_0)| + |f'(c)| |x - x_0| \le |f(x_0)| + M(b - a).
+$$
+Vì $|f(x_0)| + M(b - a)$ là một hằng số hữu hạn không phụ thuộc vào $x$, điều này chứng tỏ $f$ bị chặn trên $(a; b)$.
+Điều này mâu thuẫn trực tiếp với giả thiết $f$ không bị chặn trên $(a; b)$.
+Vậy đạo hàm $f'$ bắt buộc phải không bị chặn trên $(a; b)$.
+</Solution>
+
+## Dạng 4: Khử dạng vô định bằng Quy tắc L'Hôpital (Trọn bộ Bài 14)
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-14-tron-bo-lhopital"
+  title="Bài 14: Tính toàn bộ 8 giới hạn vô định bằng Quy tắc L'Hôpital"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 14 (câu a đến h)"
+>
+Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
+1. $\lim_{x \to 1} \frac{x^a - 1}{x^b - 1} \quad (b \ne 0)$
+2. $\lim_{x \to 0} \frac{x - \sin x}{\tan x - x}$
+3. $\lim_{x \to 0} \frac{\ln(e+x) - 1}{e^x - e^{-x}}$
+4. $\lim_{x \to 0} \left(\frac{1}{x^2} - \frac{1}{\sin^2 x}\right)$
+5. $\lim_{x \to 0} \left(\frac{1}{x} - \frac{1}{\arcsin x}\right)$
+6. $\lim_{x \to +\infty} x \ln\left(\frac{2\arctan x}{\pi}\right)$
+7. $\lim_{x \to 0^+} x^x$
+8. $\lim_{x \to (\pi/2)^-} (\tan x)^{\cos x}$
+</Exercise>
+
+<Solution>
+1. **Câu a: Dạng $\frac{0}{0}$:**
+   $$
+   \lim_{x \to 1} \frac{x^a - 1}{x^b - 1} \overset{\text{L'H}}{=} \lim_{x \to 1} \frac{a x^{a-1}}{b x^{b-1}} = \frac{a \cdot 1}{b \cdot 1} = \frac{a}{b}.
+   $$
+
+2. **Câu b: Dạng $\frac{0}{0}$ (Áp dụng L'Hôpital liên tiếp):**
+   $$
+   \lim_{x \to 0} \frac{x - \sin x}{\tan x - x} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{1 - \cos x}{\frac{1}{\cos^2 x} - 1} = \lim_{x \to 0} \frac{1 - \cos x}{\frac{1 - \cos^2 x}{\cos^2 x}} = \lim_{x \to 0} \frac{(1 - \cos x)\cos^2 x}{(1 - \cos x)(1 + \cos x)} = \lim_{x \to 0} \frac{\cos^2 x}{1 + \cos x} = \frac{1}{2}.
+   $$
+
+3. **Câu c: Dạng $\frac{0}{0}$:**
+   $$
+   \lim_{x \to 0} \frac{\ln(e+x) - 1}{e^x - e^{-x}} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{\frac{1}{e+x}}{e^x + e^{-x}} = \frac{\frac{1}{e}}{1 + 1} = \frac{1}{2e}.
+   $$
+
+4. **Câu d: Dạng $\infty - \infty$ quy về $\frac{0}{0}$:**
+   $$
+   \lim_{x \to 0} \left(\frac{1}{x^2} - \frac{1}{\sin^2 x}\right) = \lim_{x \to 0} \frac{\sin^2 x - x^2}{x^2 \sin^2 x} = \lim_{x \to 0} \frac{\sin^2 x - x^2}{x^4} \quad (\text{do } \lim_{x \to 0} \frac{\sin x}{x} = 1).
+   $$
+   Áp dụng L'Hôpital:
+   $$
+   \lim_{x \to 0} \frac{2\sin x \cos x - 2x}{4x^3} = \lim_{x \to 0} \frac{\sin 2x - 2x}{4x^3} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{2\cos 2x - 2}{12x^2} = \lim_{x \to 0} \frac{-2(1 - \cos 2x)}{12x^2} = \lim_{x \to 0} \frac{-4\sin^2 x}{12x^2} = -\frac{1}{3}.
+   $$
+
+5. **Câu e: Dạng $\infty - \infty$:**
+   $$
+   L = \lim_{x \to 0} \frac{\arcsin x - x}{x \arcsin x} = \lim_{x \to 0} \frac{\arcsin x - x}{x^2}.
+   $$
+   Áp dụng L'Hôpital:
+   $$
+   L \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{\frac{1}{\sqrt{1-x^2}} - 1}{2x} = \lim_{x \to 0} \frac{1 - \sqrt{1-x^2}}{2x \sqrt{1-x^2}} = \lim_{x \to 0} \frac{x^2}{2x \sqrt{1-x^2}(1 + \sqrt{1-x^2})} = \lim_{x \to 0} \frac{x}{2(1 + 1)} = 0.
+   $$
+
+6. **Câu f: Dạng $\infty \cdot 0$:**
+   $$
+   \lim_{x \to +\infty} x \ln\left(\frac{2\arctan x}{\pi}\right) = \lim_{x \to +\infty} \frac{\ln\left(\frac{2\arctan x}{\pi}\right)}{\frac{1}{x}}.
+   $$
+   Áp dụng L'Hôpital:
+   $$
+   \lim_{x \to +\infty} \frac{\frac{1}{\frac{2\arctan x}{\pi}} \cdot \frac{2}{\pi(1+x^2)}}{-\frac{1}{x^2}} = \lim_{x \to +\infty} \frac{1}{\arctan x} \cdot \left(-\frac{x^2}{1+x^2}\right) = \frac{1}{\frac{\pi}{2}} \cdot (-1) = -\frac{2}{\pi}.
+   $$
+
+7. **Câu g: Dạng $0^0$:**
+   Đặt $y = x^x \implies \ln y = x \ln x = \frac{\ln x}{1/x}$.
+   Theo Ví dụ 5.4.3: $\lim_{x \to 0^+} x \ln x = 0$.
+   Do đó:
+   $$
+   \lim_{x \to 0^+} x^x = e^{\lim_{x \to 0^+} x \ln x} = e^0 = 1.
+   $$
+
+8. **Câu h: Dạng $\infty^0$:**
+   Đặt $y = (\tan x)^{\cos x} \implies \ln y = \cos x \ln(\tan x) = \frac{\ln(\tan x)}{\frac{1}{\cos x}} = \frac{\ln(\tan x)}{\sec x}$.
+   Khi $x \to (\pi/2)^-$, đây là dạng $\frac{\infty}{\infty}$. Áp dụng L'Hôpital:
+   $$
+   \lim_{x \to (\pi/2)^-} \frac{\frac{1+\tan^2 x}{\tan x}}{\sec x \tan x} = \lim_{x \to (\pi/2)^-} \frac{\sec^2 x}{\sec x \tan^2 x} = \lim_{x \to (\pi/2)^-} \frac{\sec x}{\tan^2 x} = \lim_{x \to (\pi/2)^-} \frac{\cos x}{\sin^2 x} = \frac{0}{1} = 0.
+   $$
+   Suy ra:
+   $$
+   \lim_{x \to (\pi/2)^-} (\tan x)^{\cos x} = e^0 = 1.
+   $$
+</Solution>
+
+## Chuyên đề nâng cao ôn thi điểm 9-10 (Starred Exercises)
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-8-dinh-ly-darboux"
+  title="Bài 8*: Định lý Darboux về giá trị trung gian của hàm đạo hàm"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 8*"
+>
+Cho hàm số $f$ khả vi trên $[a; b]$. Giả sử $f'(a) < m < f'(b)$.
+Chứng minh rằng tồn tại ít nhất một điểm $c \in (a; b)$ sao cho $f'(c) = m$.
+</Exercise>
+
+<Solution>
+Xét hàm số phụ trợ $g: [a; b] \to \mathbb{R}$ định nghĩa bởi:
+$$
+g(x) = f(x) - m(x - a).
+$$
+Vì $f$ khả vi trên $[a; b]$, hàm $g$ khả vi (và do đó liên tục) trên $[a; b]$ với đạo hàm:
+$$
+g'(x) = f'(x) - m.
+$$
+Theo Định lý Weierstrass, hàm số liên tục $g$ đạt giá trị nhỏ nhất tại một điểm $c \in [a; b]$:
+$$
+g(c) = \min_{x \in [a; b]} g(x).
+$$
+Ta khảo sát đạo hàm của $g$ tại hai đầu mút:
+- Tại $a$: $g'(a) = f'(a) - m < 0$. Vì đạo hàm âm, tỉ số $\frac{g(x) - g(a)}{x - a} < 0$ khi $x > a$ đủ gần $a$. Suy ra $g(x) < g(a)$ với các điểm $x$ gần $a$, do đó $g$ không thể đạt giá trị nhỏ nhất tại $a$ ($c \ne a$).
+- Tại $b$: $g'(b) = f'(b) - m > 0$. Vì đạo hàm dương, với $x < b$ đủ gần $b$ ta có $\frac{g(x) - g(b)}{x - b} > 0 \implies g(x) < g(b)$. Do đó $g$ không thể đạt giá trị nhỏ nhất tại $b$ ($c \ne b$).
+
+Vì $c \in [a; b]$ mà $c \ne a$ và $c \ne b$, ta bắt buộc có $c \in (a; b)$.
+Do $c$ là điểm cực tiểu trong khoảng mở $(a; b)$ và $g$ khả vi tại $c$, theo Định lý Fermat ta có:
+$$
+g'(c) = 0 \iff f'(c) - m = 0 \iff f'(c) = m.
+$$
+Định lý Darboux được chứng minh trọn vẹn. Kết quả này khẳng định: **Dù đạo hàm $f'$ có thể gián đoạn, nó luôn có tính chất giá trị trung gian (không bao giờ có điểm gián đoạn loại 1)**.
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-15-chung-minh-e-la-so-vo-ti"
+  title="Bài 15*: Chứng minh số e là số vô tỉ bằng khai triển Maclaurin"
+  source="gt-gthmb-ttd-2022"
+  page="63"
+  original="Bài tập 15*"
+>
+Dùng khai triển Maclaurin của hàm số $e^x$, chứng minh rằng $e$ là một số vô tỉ.
+</Exercise>
+
+<Solution>
+Ta chứng minh bằng phản chứng. Giả sử $e$ là một số hữu tỉ, nghĩa là tồn tại hai số nguyên dương $p, q \in \mathbb{N}^*$ sao cho:
+$$
+e = \frac{p}{q}.
+$$
+Xét khai triển Maclaurin của $e^x$ tại $x = 1$ đến cấp $q$ với phần dư dạng Lagrange:
+$$
+e = 1 + 1 + \frac{1}{2!} + \frac{1}{3!} + \dots + \frac{1}{q!} + \frac{e^\theta}{(q+1)!}, \quad \text{với } 0 < \theta < 1.
+$$
+Nhân cả hai vế của đẳng thức với $q!$:
+$$
+q! e = q! \left(1 + 1 + \frac{1}{2!} + \dots + \frac{1}{q!}\right) + \frac{e^\theta}{q+1}.
+$$
+Ta phân tích tính nguyên của từng số hạng:
+1. Vế trái: $q! e = q! \cdot \frac{p}{q} = (q - 1)! p$, là một số nguyên dương.
+2. Số hạng đa thức:
+   $$
+   A = q! \left(1 + 1 + \frac{1}{2!} + \dots + \frac{1}{q!}\right) = q! + q! + \frac{q!}{2!} + \dots + \frac{q!}{q!}.
+   $$
+   Vì với mọi $k \le q$, $k!$ luôn là ước của $q!$, nên $A$ là tổng các số nguyên, tức $A \in \mathbb{Z}^+$.
+3. Suy ra số hạng phần dư:
+   $$
+   R = \frac{e^\theta}{q+1} = q! e - A \in \mathbb{Z}.
+   $$
+
+Mặt khác, vì $0 < \theta < 1$ và hàm số $t \mapsto e^t$ đồng biến ngặt, ta có $1 < e^\theta < e^1 < 3$. Do đó:
+$$
+0 < \frac{e^\theta}{q+1} < \frac{3}{q+1}.
+$$
+- Nếu $q \ge 3$, thì $\frac{3}{q+1} \le \frac{3}{4} < 1$, dẫn tới $0 < R < 1$.
+- Nếu $q = 1$ hoặc $q = 2$: Ta biết $2 < e < 3$, nên $e$ không thể là số nguyên ($q \ne 1$); nếu $q = 2$ thì $e = p/2 \implies 4 < 2e = p < 6 \implies p = 5 \implies e = 2.5$, nhưng ta biết $e > 2.7$, vô lý.
+
+Do đó ta luôn có $0 < R < 1$. Một số nằm ngặt giữa $0$ và $1$ không thể là số nguyên ($R \notin \mathbb{Z}$).
+Mâu thuẫn này chứng tỏ giả thiết phản chứng là sai.
+**Kết luận:** Số $e$ là một số vô tỉ.
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b5-bai-18-danh-gia-dao-ham-cap-mot"
+  title="Bài 18*: Đánh giá cận trên của đạo hàm cấp 1 qua đạo hàm cấp 2"
+  source="gt-gthmb-ttd-2022"
+  page="63"
+  original="Bài tập 18*"
+>
+Cho $f \in C^2([0; 1])$ thỏa mãn $f(0) = f(1) = 0$ và $|f''(x)| \le M$ với mọi $x \in (0; 1)$.
+Chứng minh rằng:
+$$
+|f'(x)| \le \frac{M}{2}, \quad \forall x \in [0; 1].
+$$
+</Exercise>
+
+<Solution>
+Lấy điểm $x \in (0; 1)$ tùy ý.
+Viết khai triển Taylor đến cấp 2 với phần dư Lagrange cho hàm số $f$ quanh điểm $x$:
+1. Tại điểm $0$:
+   $$
+   f(0) = f(x) + f'(x)(0 - x) + \frac{f''(c_1)}{2}(0 - x)^2, \quad \text{với } c_1 \in (0; x).
+   $$
+   Vì $f(0) = 0$, ta có:
+   $$
+   0 = f(x) - x f'(x) + \frac{x^2}{2} f''(c_1) \implies f(x) = x f'(x) - \frac{x^2}{2} f''(c_1). \quad (1)
+   $$
+
+2. Tại điểm $1$:
+   $$
+   f(1) = f(x) + f'(x)(1 - x) + \frac{f''(c_2)}{2}(1 - x)^2, \quad \text{với } c_2 \in (x; 1).
+   $$
+   Vì $f(1) = 0$, ta có:
+   $$
+   0 = f(x) + (1 - x) f'(x) + \frac{(1 - x)^2}{2} f''(c_2) \implies f(x) = -(1 - x) f'(x) - \frac{(1 - x)^2}{2} f''(c_2). \quad (2)
+   $$
+
+Trừ phương trình (1) cho phương trình (2):
+$$
+0 = f'(x) - \frac{x^2}{2} f''(c_1) + \frac{(1 - x)^2}{2} f''(c_2),
+$$
+suy ra:
+$$
+f'(x) = \frac{x^2}{2} f''(c_1) - \frac{(1 - x)^2}{2} f''(c_2).
+$$
+Lấy giá trị tuyệt đối hai vế và sử dụng bất đẳng thức tam giác kết hợp với $|f''(t)| \le M$:
+$$
+|f'(x)| \le \frac{x^2}{2} |f''(c_1)| + \frac{(1 - x)^2}{2} |f''(c_2)| \le \frac{M}{2} \big[ x^2 + (1 - x)^2 \big].
+$$
+Nhận xét rằng hàm số $g(x) = x^2 + (1 - x)^2 = 2x^2 - 2x + 1$ là một parabol có bề lõm hướng lên trên đoạn $[0; 1]$.
+Giá trị lớn nhất của $g(x)$ trên $[0; 1]$ đạt tại hai đầu mút $x = 0$ hoặc $x = 1$:
+$$
+g(0) = 1, \quad g(1) = 1, \quad g(1/2) = 1/2.
+$$
+Do đó $x^2 + (1 - x)^2 \le 1$ với mọi $x \in [0; 1]$.
+Thay vào đánh giá trên:
+$$
+|f'(x)| \le \frac{M}{2} \cdot 1 = \frac{M}{2}, \quad \forall x \in (0; 1).
+$$
+Vì $f \in C^2([0; 1])$, đạo hàm $f'$ liên tục trên $[0; 1]$, nên bất đẳng thức cũng đúng tại hai đầu mút $x = 0$ và $x = 1$.
+Ta có điều phải chứng minh.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Khảo sát tính khả vi tại điểm nối:** Luôn kiểm tra định nghĩa giới hạn số gia hai phía. Chú ý ví dụ mẫu mực $f(x) = x^2 \sin(1/x)$ khả vi nhưng đạo hàm gián đoạn dao động ($f \notin C^1$).
+- **Đạo hàm cấp cao qua Maclaurin:** Tính $f^{(n)}(0)$ bằng cách khai triển Maclaurin của $f(x)$ và đồng nhất hệ số $a_n = \frac{f^{(n)}(0)}{n!}$, giúp tránh việc lấy đạo hàm phức tạp nhiều lần.
+- **Định lý giá trị trung bình:** Định lý Lagrange chuyển hiệu giá trị $f(b) - f(a)$ thành tích $f'(c)(b - a)$, là vũ khí chủ lực chứng minh các bất đẳng thức giải tích và tính liên tục đều.
+- **Khử dạng vô định:** Nắm vững biến đổi quy tắc L'Hôpital cho $0/0, \infty/\infty, 0 \cdot \infty, \infty - \infty, 0^0, \infty^0, 1^\infty$.
+- **Định lý Darboux:** Khẳng định đạo hàm luôn có tính chất giá trị trung gian như hàm liên tục (không có bước nhảy loại 1).
+</KeyTakeaways>

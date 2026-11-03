@@ -1,0 +1,482 @@
+---
+id: cac-dinh-ly-gia-tri-trung-binh
+title: 'Các định lý giá trị trung bình'
+description: 'Khảo sát cực trị địa phương và các định lý giá trị trung bình then chốt: định lý Fermat, Rolle, Cauchy, Lagrange và các hệ quả về tính đơn điệu, hàm hằng cùng ứng dụng chứng minh bất đẳng thức.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc
+  - ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong
+tags:
+  - định lý giá trị trung bình
+  - định lý Fermat
+  - định lý Rolle
+  - định lý Lagrange
+  - định lý Cauchy
+  - tính đơn điệu
+  - hàm hằng
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '54-56'
+    sections: 'Mục 5.3'
+    note: 'Định nghĩa cực trị địa phương, Định lý Fermat, Rolle, Cauchy, Lagrange và Hệ quả 5.3.7'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của cực trị địa phương và Định lý Fermat:** Nắm vững điều kiện cần để hàm khả vi đạt cực trị tại một điểm trong ($f'(x_0) = 0$) và phân tích sâu sắc các phản ví dụ hai chiều.
+2. **Chứng minh và vận dụng Định lý Rolle:** Vận dụng nguyên lý Weierstrass về sự tồn tại giá trị lớn nhất / nhỏ nhất để chứng minh sự tồn tại điểm có tiếp tuyến nằm ngang $f'(c) = 0$.
+3. **Làm chủ Định lý giá trị trung bình Cauchy và Lagrange:** Hiểu ý nghĩa hình học của công thức số gia hữu hạn $\frac{f(b)-f(a)}{b-a} = f'(c)$ và kỹ thuật xây dựng hàm phụ trợ trong giải tích.
+4. **Vận dụng các hệ quả then chốt:** Chứng minh tính đơn điệu của hàm số ($f' \ge 0 \iff$ hàm tăng), tính chất hàm hằng ($f' = 0 \iff$ hàm hằng) và kỹ thuật chứng minh bất đẳng thức giải tích giải tích cổ điển.
+</Note>
+
+## 1. Cực trị địa phương và Định lý Fermat
+
+Trong giải tích toán học, các điểm cực trị địa phương đóng vai trò quyết định trong việc khảo sát hình dáng đồ thị và các bài toán tối ưu hóa (<Cite source="gt-gthmb-ttd-2022" page="54" note="Định nghĩa 5.3.1" />).
+
+<Definition
+  id="def-gthmb-c5-b3-cuc-tri-dia-phuong"
+  title="Cực đại, Cực tiểu và Cực trị địa phương"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Định nghĩa 5.3.1"
+>
+Cho hàm số $f: D \to \mathbb{R}$ với $D \subset \mathbb{R}$ và điểm $x_0 \in D$.
+1. Hàm số $f$ được gọi là **đạt cực đại địa phương** tại $x_0$ nếu tồn tại một lân cận mở $U = (x_0 - r; x_0 + r) \subset D$ của $x_0$ ($r > 0$) sao cho:
+   $$
+   f(x) \le f(x_0), \quad \forall x \in U.
+   $$
+2. Hàm số $f$ được gọi là **đạt cực tiểu địa phương** tại $x_0$ nếu tồn tại một lân cận mở $U = (x_0 - r; x_0 + r) \subset D$ của $x_0$ ($r > 0$) sao cho:
+   $$
+   f(x) \ge f(x_0), \quad \forall x \in U.
+   $$
+Hàm số đạt cực đại hoặc cực tiểu tại $x_0$ được gọi chung là **đạt cực trị địa phương** tại $x_0$.
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c5-b3-dinh-ly-fermat"
+  title="Định lý Fermat về điều kiện cần của cực trị"
+  source="gt-gthmb-ttd-2022"
+  page="55"
+  original="Định lý 5.3.2"
+>
+Nếu hàm số $f$ đạt cực trị địa phương tại điểm $x_0$ và $f$ khả vi tại $x_0$, thì:
+$$
+f'(x_0) = 0.
+$$
+</Theorem>
+
+<Proof>
+Không mất tính tổng quát, giả sử hàm số $f$ đạt cực đại địa phương tại điểm $x_0$.
+
+Theo định nghĩa, tồn tại một bán kính $r > 0$ sao cho lân cận $U = (x_0 - r; x_0 + r) \subset D$ thỏa mãn:
+$$
+f(x) \le f(x_0), \quad \forall x \in (x_0 - r; x_0 + r).
+$$
+Xét tỉ số số gia $\frac{f(x) - f(x_0)}{x - x_0}$:
+1. Khi $x \in (x_0; x_0 + r)$, ta có $x - x_0 > 0$ và $f(x) - f(x_0) \le 0$, suy ra:
+   $$
+   \frac{f(x) - f(x_0)}{x - x_0} \le 0.
+   $$
+   Do $f$ khả vi tại $x_0$, đạo hàm phải tồn tại và thỏa mãn tính bảo toàn dấu qua giới hạn:
+   $$
+   f'(x_0) = \lim_{x \to x_0^+} \frac{f(x) - f(x_0)}{x - x_0} \le 0.
+   $$
+2. Khi $x \in (x_0 - r; x_0)$, ta có $x - x_0 < 0$ và $f(x) - f(x_0) \le 0$, suy ra:
+   $$
+   \frac{f(x) - f(x_0)}{x - x_0} \ge 0.
+   $$
+   Do $f$ khả vi tại $x_0$, đạo hàm trái tồn tại và thỏa mãn:
+   $$
+   f'(x_0) = \lim_{x \to x_0^-} \frac{f(x) - f(x_0)}{x - x_0} \ge 0.
+   $$
+
+Từ $f'(x_0) \le 0$ và $f'(x_0) \ge 0$, ta bắt buộc phải có $f'(x_0) = 0$.
+
+Trường hợp $f$ đạt cực tiểu địa phương được chứng minh hoàn toàn tương tự (hoặc xét hàm đối $-f$).
+</Proof>
+
+<Counterexample
+  id="cex-gthmb-c5-b3-fermat-chieu-nguoc-lai"
+  title="Hai phản ví dụ kinh điển về giới hạn của Định lý Fermat"
+  source="gt-gthmb-ttd-2022"
+  page="55"
+  original="Nhận xét 5.3.3"
+>
+Định lý Fermat chỉ là **điều kiện cần**, không phải là điều kiện đủ; và định lý chỉ áp dụng khi hàm số **đã có đạo hàm**:
+
+1. **Đạo hàm triệt tiêu nhưng không phải cực trị:**
+   Xét hàm số $f(x) = x^3$ trên $\mathbb{R}$. Ta có $f'(x) = 3x^2$, do đó $f'(0) = 0$.
+   Tuy nhiên, với mọi $x > 0$ thì $f(x) = x^3 > 0 = f(0)$, còn với mọi $x < 0$ thì $f(x) = x^3 < 0 = f(0)$.
+   Do đó, trong bất kỳ lân cận nào của $0$, hàm số đều đổi dấu quanh $f(0)$, nghĩa là $x = 0$ không phải là điểm cực trị của $f$.
+
+2. **Hàm đạt cực trị nhưng không khả vi:**
+   Xét hàm số $f(x) = -|x|$ trên $\mathbb{R}$.
+   Với mọi $x \in \mathbb{R}$, ta có $f(x) \le 0 = f(0)$, nên $x = 0$ là điểm cực đại toàn cục (và do đó là cực đại địa phương).
+   Tuy nhiên, như đã chứng minh ở Bài 5.1, hàm số $f$ không khả vi tại $x = 0$ vì đạo hàm trái bằng $1$ và đạo hàm phải bằng $-1$.
+</Counterexample>
+
+## 2. Định lý Rolle
+
+Định lý Rolle khẳng định rằng nếu một hàm số khả vi có giá trị bằng nhau tại hai đầu mút của một đoạn kín, thì đồ thị của nó phải có ít nhất một tiếp tuyến nằm ngang bên trong khoảng mở (<Cite source="gt-gthmb-ttd-2022" page="55" note="Định lý 5.3.4" />).
+
+<Theorem
+  id="thm-gthmb-c5-b3-dinh-ly-rolle"
+  title="Định lý Rolle"
+  source="gt-gthmb-ttd-2022"
+  page="55"
+  original="Định lý 5.3.4"
+>
+Cho hàm số $f: [a; b] \to \mathbb{R}$ thỏa mãn 3 điều kiện:
+1. $f$ liên tục trên đoạn kín $[a; b]$;
+2. $f$ khả vi trên khoảng mở $(a; b)$;
+3. $f(a) = f(b)$.
+
+Khi đó, tồn tại ít nhất một điểm $c \in (a; b)$ sao cho:
+$$
+f'(c) = 0.
+$$
+</Theorem>
+
+<Proof>
+Vì $f$ liên tục trên đoạn kín $[a; b]$, theo **Định lý Weierstrass (Định lý giá trị cực trị)**, hàm số $f$ đạt giá trị lớn nhất $M$ và giá trị nhỏ nhất $m$ trên đoạn $[a; b]$:
+$$
+M = \max_{x \in [a; b]} f(x), \quad m = \min_{x \in [a; b]} f(x).
+$$
+
+Ta phân tích thành hai trường hợp:
+- **Trường hợp 1: $M = m$.**
+  Khi đó $f(x) = M$ với mọi $x \in [a; b]$, tức $f$ là hàm hằng trên $[a; b]$. Do đó $f'(x) = 0$ với mọi $x \in (a; b)$. Ta có thể chọn bất kỳ điểm $c \in (a; b)$ nào.
+
+- **Trường hợp 2: $M \ne m$.**
+  Vì $f(a) = f(b)$, ít nhất một trong hai giá trị $M$ hoặc $m$ phải khác giá trị ở hai đầu mút $f(a)$.
+  Không mất tính tổng quát, giả sử $M \ne f(a) = f(b)$.
+  Khi đó điểm đạt giá trị lớn nhất $c$ không thể trùng với $a$ hay $b$, nghĩa là tồn tại $c \in (a; b)$ sao cho:
+  $$
+  f(c) = M = \max_{x \in [a; b]} f(x).
+  $$
+  Vì $c \in (a; b)$, tồn tại một lân cận mở của $c$ nằm hoàn toàn trong $[a; b]$ mà tại đó $f(x) \le f(c)$. Do đó $f$ đạt cực đại địa phương tại điểm trong $c$.
+  Theo giả thiết, $f$ khả vi trên $(a; b)$ nên $f$ khả vi tại $c$. Áp dụng Định lý Fermat, ta suy ra:
+  $$
+  f'(c) = 0.
+  $$
+
+Chứng minh hoàn tất.
+</Proof>
+
+## 3. Định lý Giá trị trung bình Cauchy
+
+Định lý Cauchy là dạng tổng quát hóa mạnh mẽ nhất của các định lý giá trị trung bình, làm cầu nối trực tiếp để chứng minh Định lý Lagrange và Quy tắc L'Hôpital (<Cite source="gt-gthmb-ttd-2022" page="56" note="Định lý 5.3.5" />).
+
+<Theorem
+  id="thm-gthmb-c5-b3-dinh-ly-cauchy"
+  title="Định lý Giá trị trung bình Cauchy"
+  source="gt-gthmb-ttd-2022"
+  page="56"
+  original="Định lý 5.3.5"
+>
+Cho hai hàm số $f, g: [a; b] \to \mathbb{R}$ thỏa mãn:
+1. $f$ và $g$ liên tục trên đoạn kín $[a; b]$;
+2. $f$ và $g$ khả vi trên khoảng mở $(a; b)$;
+3. $g'(x) \ne 0$ với mọi $x \in (a; b)$.
+
+Khi đó $g(b) \ne g(a)$, và tồn tại ít nhất một điểm $c \in (a; b)$ sao cho:
+$$
+\frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(c)}{g'(c)}.
+$$
+</Theorem>
+
+<Proof>
+Trước hết, ta kiểm tra $g(b) \ne g(a)$. Thật vậy, nếu $g(b) = g(a)$ thì hàm $g$ thỏa mãn mọi giả thiết của Định lý Rolle trên $[a; b]$, dẫn đến tồn tại $c_0 \in (a; b)$ sao cho $g'(c_0) = 0$, mâu thuẫn trực tiếp với điều kiện $g'(x) \ne 0, \forall x \in (a; b)$.
+
+Bây giờ, ta xây dựng hàm phụ trợ $h: [a; b] \to \mathbb{R}$ định nghĩa bởi:
+$$
+h(x) = f(x) - f(a) - \frac{f(b) - f(a)}{g(b) - g(a)} \big[g(x) - g(a)\big].
+$$
+Hàm số $h$ có các tính chất:
+1. $h$ liên tục trên $[a; b]$ vì là tổ hợp tuyến tính của các hàm liên tục $f(x)$ và $g(x)$.
+2. $h$ khả vi trên $(a; b)$ với đạo hàm:
+   $$
+   h'(x) = f'(x) - \frac{f(b) - f(a)}{g(b) - g(a)} g'(x).
+   $$
+3. Tại hai đầu mút:
+   - $h(a) = f(a) - f(a) - \frac{f(b) - f(a)}{g(b) - g(a)} [g(a) - g(a)] = 0$.
+   - $h(b) = f(b) - f(a) - \frac{f(b) - f(a)}{g(b) - g(a)} [g(b) - g(a)] = 0$.
+   Do đó $h(a) = h(b) = 0$.
+
+Áp dụng Định lý Rolle cho hàm số $h$ trên đoạn $[a; b]$, tồn tại $c \in (a; b)$ sao cho:
+$$
+h'(c) = 0 \iff f'(c) - \frac{f(b) - f(a)}{g(b) - g(a)} g'(c) = 0.
+$$
+Vì $g'(c) \ne 0$, chia hai vế cho $g'(c)$ ta thu được đẳng thức cần chứng minh:
+$$
+\frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(c)}{g'(c)}.
+$$
+</Proof>
+
+## 4. Định lý Giá trị trung bình Lagrange (Công thức số gia hữu hạn)
+
+Khi chọn $g(x) = x$ trong Định lý Cauchy, ta thu được Định lý Lagrange — một trong những kết quả ứng dụng nhiều nhất của toàn bộ giải tích thực (<Cite source="gt-gthmb-ttd-2022" page="56" note="Định lý 5.3.6" />).
+
+<Theorem
+  id="thm-gthmb-c5-b3-dinh-ly-lagrange"
+  title="Định lý Giá trị trung bình Lagrange"
+  source="gt-gthmb-ttd-2022"
+  page="56"
+  original="Định lý 5.3.6"
+>
+Cho hàm số $f: [a; b] \to \mathbb{R}$ liên tục trên đoạn kín $[a; b]$ và khả vi trên khoảng mở $(a; b)$.
+Khi đó tồn tại ít nhất một điểm $c \in (a; b)$ sao cho:
+$$
+\frac{f(b) - f(a)}{b - a} = f'(c),
+$$
+hay viết dưới dạng công thức số gia hữu hạn:
+$$
+f(b) - f(a) = f'(c)(b - a).
+$$
+</Theorem>
+
+<Proof>
+Xét hàm số $g(x) = x$ trên $[a; b]$. Khi đó:
+- $g$ liên tục trên $[a; b]$ và khả vi trên $(a; b)$;
+- $g'(x) = 1 \ne 0$ với mọi $x \in (a; b)$;
+- $g(b) - g(a) = b - a$.
+
+Áp dụng Định lý Cauchy cho cặp hàm $f$ và $g$, tồn tại $c \in (a; b)$ sao cho:
+$$
+\frac{f(b) - f(a)}{b - a} = \frac{f'(c)}{g'(c)} = \frac{f'(c)}{1} = f'(c).
+$$
+</Proof>
+
+<Remark
+  id="rem-gthmb-c5-b3-y-nghia-hinh-hoc-lagrange"
+  title="Ý nghĩa hình học của Định lý Lagrange"
+  source="gt-gthmb-ttd-2022"
+  page="56"
+  original="Mục 5.3.4"
+>
+Tỉ số $\frac{f(b) - f(a)}{b - a}$ chính là hệ số góc của đường cát tuyến nối hai điểm mút $A(a; f(a))$ và $B(b; f(b))$ trên đồ thị.
+Định lý Lagrange khẳng định: Trên cung đồ thị trơn nối $A$ và $B$, luôn tồn tại ít nhất một điểm trung gian $C(c; f(c))$ mà tại đó **tiếp tuyến của đồ thị song song với đường cát tuyến $AB$**.
+</Remark>
+
+## 5. Các hệ quả then chốt: Tính đơn điệu và Hàm hằng
+
+Một ứng dụng tối thượng của Định lý Lagrange là liên kết dấu của đạo hàm (tính chất địa phương) với dáng điệu toàn cục của hàm số trên một khoảng (<Cite source="gt-gthmb-ttd-2022" page="56" note="Hệ quả 5.3.7" />).
+
+<Corollary
+  id="cor-gthmb-c5-b3-tinh-don-dieu-va-ham-hang"
+  title="Dấu đạo hàm, Tính đơn điệu và Hàm hằng"
+  source="gt-gthmb-ttd-2022"
+  page="56"
+  original="Hệ quả 5.3.7"
+>
+Cho hàm số $f$ khả vi trên khoảng mở $(a; b)$. Khi đó:
+1. $f$ là hàm số **tăng (đồng biến)** trên $(a; b)$ khi và chỉ khi:
+   $$
+   f'(x) \ge 0, \quad \forall x \in (a; b).
+   $$
+2. $f$ là hàm số **giảm (nghịch biến)** trên $(a; b)$ khi và chỉ khi:
+   $$
+   f'(x) \le 0, \quad \forall x \in (a; b).
+   $$
+3. $f$ là **hàm hằng** trên $(a; b)$ khi và chỉ khi:
+   $$
+   f'(x) = 0, \quad \forall x \in (a; b).
+   $$
+</Corollary>
+
+<Proof>
+Ta chứng minh mệnh đề 1 theo hai chiều:
+
+- **Chiều thuận ($\implies$):** Giả sử $f$ tăng trên $(a; b)$. Lấy điểm $x_0 \in (a; b)$ tùy ý.
+  Với mọi $x \in (a; b)$ sao cho $x > x_0$, do $f$ tăng nên $f(x) \ge f(x_0)$.
+  Do đó tỉ số số gia thỏa mãn:
+  $$
+  \frac{f(x) - f(x_0)}{x - x_0} \ge 0.
+  $$
+  Lấy giới hạn khi $x \to x_0^+$, ta suy ra:
+  $$
+  f'(x_0) = \lim_{x \to x_0^+} \frac{f(x) - f(x_0)}{x - x_0} \ge 0.
+  $$
+  Vì $x_0$ được chọn tùy ý trong $(a; b)$, ta kết luận $f'(x) \ge 0$ với mọi $x \in (a; b)$.
+
+- **Chiều đảo ($\impliedby$):** Giả sử $f'(x) \ge 0$ với mọi $x \in (a; b)$.
+  Xét hai điểm bất kỳ $x_1, x_2 \in (a; b)$ thỏa mãn $x_1 < x_2$.
+  Hàm số $f$ liên tục trên $[x_1; x_2]$ và khả vi trên $(x_1; x_2)$.
+  Theo Định lý Lagrange, tồn tại điểm $c \in (x_1; x_2)$ sao cho:
+  $$
+  f(x_2) - f(x_1) = f'(c)(x_2 - x_1).
+  $$
+  Vì $c \in (a; b)$, theo giả thiết ta có $f'(c) \ge 0$. Kết hợp với $x_2 - x_1 > 0$, ta thu được:
+  $$
+  f(x_2) - f(x_1) \ge 0 \iff f(x_1) \le f(x_2).
+  $$
+  Vậy $f$ là hàm số tăng trên $(a; b)$.
+
+Mệnh đề 2 được chứng minh tương tự bằng cách đổi dấu bất đẳng thức (hoặc xét $-f$).
+
+Mệnh đề 3:
+- Nếu $f(x) = C$ (hằng số) thì hiển nhiên $f'(x) = 0, \forall x$.
+- Ngược lại, nếu $f'(x) = 0, \forall x \in (a; b)$, thì với mọi $x_1 < x_2$ trong $(a; b)$, áp dụng Lagrange ta có $f(x_2) - f(x_1) = f'(c)(x_2 - x_1) = 0 \cdot (x_2 - x_1) = 0$, nghĩa là $f(x_1) = f(x_2)$. Vậy $f$ không đổi trên $(a; b)$.
+</Proof>
+
+<Remark
+  id="rem-gthmb-c5-b3-mien-lien-thong"
+  title="Điều kiện liên thông của miền xác định trong định lý hàm hằng"
+  source="gt-gthmb-ttd-2022"
+  page="61"
+  original="Bài tập 5"
+>
+Kết luận "nếu $f'(x) = 0$ trên $D$ thì $f$ là hàm hằng" **chỉ đúng khi tập $D$ là một khoảng (tập liên thông)**.
+Nếu $D$ là hợp của các khoảng rời rạc (chẳng hạn $D = (-\infty; 0) \cup (0; +\infty)$), thì một hàm số có $f'(x) = 0$ trên $D$ có thể nhận các giá trị hằng khác nhau trên từng khoảng thành phần!
+Ví dụ hàm dấu $f(x) = \frac{x}{|x|} = \begin{cases} 1, & x > 0 \\ -1, & x < 0 \end{cases}$ có đạo hàm $f'(x) = 0$ tại mọi $x \ne 0$, nhưng $f$ không phải là hàm hằng trên $\mathbb{R} \setminus \{0\}$.
+</Remark>
+
+## 6. Ứng dụng Định lý Lagrange chứng minh Bất đẳng thức
+
+Một kỹ thuật chuẩn mực trong các kỳ thi học phần là sử dụng Định lý Lagrange trên đoạn $[x; y]$ để đánh giá độ chênh lệch $|f(x) - f(y)|$ qua chặn trên của đạo hàm $|f'|$.
+
+<Example
+  id="ex-gthmb-c5-b3-lagrange-bdt-sin-arctan"
+  title="Chứng minh tính co (Lipschitz) của hàm sin và arctan"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 10a, 10b"
+>
+Chứng minh rằng với mọi $x, y \in \mathbb{R}$:
+1. $|\sin x - \sin y| \le |x - y|$.
+2. $|\arctan x - \arctan y| \le |x - y|$.
+
+**Lời giải:**
+1. Nếu $x = y$, bất đẳng thức hiển nhiên đúng ($0 \le 0$).
+   Nếu $x \ne y$, không mất tính tổng quát giả sử $x < y$. Hàm số $f(t) = \sin t$ liên tục trên $[x; y]$ và khả vi trên $(x; y)$.
+   Theo Định lý Lagrange, tồn tại $c \in (x; y)$ sao cho:
+   $$
+   \sin y - \sin x = f'(c)(y - x) = (\cos c)(y - x).
+   $$
+   Lấy giá trị tuyệt đối hai vế và lưu ý rằng $|\cos c| \le 1$ với mọi $c$:
+   $$
+   |\sin y - \sin x| = |\cos c| \cdot |y - x| \le 1 \cdot |x - y| = |x - y|.
+   $$
+
+2. Xét hàm số $g(t) = \arctan t$. Với $x < y$, hàm $g$ liên tục trên $[x; y]$ và khả vi trên $(x; y)$.
+   Theo Định lý Lagrange, tồn tại $c \in (x; y)$ sao cho:
+   $$
+   \arctan y - \arctan x = g'(c)(y - x) = \frac{1}{1 + c^2}(y - x).
+   $$
+   Vì $c^2 \ge 0$, ta có $\frac{1}{1 + c^2} \le 1$ với mọi $c \in \mathbb{R}$. Do đó:
+   $$
+   |\arctan y - \arctan x| = \frac{1}{1 + c^2} |x - y| \le |x - y|.
+   $$
+</Example>
+
+<Example
+  id="ex-gthmb-c5-b3-lagrange-bdt-mu"
+  title="Chứng minh bất đẳng thức hàm mũ e^x > ex với x > 1"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 10d"
+>
+Chứng minh rằng $e^x > ex$ với mọi $x > 1$.
+
+**Lời giải:**
+Xét hàm số $f(t) = e^t$ trên đoạn $[1; x]$ với $x > 1$.
+Hàm số $f$ liên tục trên $[1; x]$ và khả vi trên $(1; x)$. Theo Định lý Lagrange, tồn tại điểm $c \in (1; x)$ sao cho:
+$$
+e^x - e^1 = f'(c)(x - 1) = e^c (x - 1).
+$$
+Vì $c > 1$ và hàm số $t \mapsto e^t$ đồng biến ngặt trên $\mathbb{R}$, ta có $e^c > e^1 = e$.
+Do $x - 1 > 0$, nhân hai vế với $x - 1$ ta được:
+$$
+e^x - e = e^c (x - 1) > e(x - 1) = ex - e.
+$$
+Cộng $e$ vào hai vế, ta suy ra:
+$$
+e^x > ex, \quad \forall x > 1.
+$$
+</Example>
+
+## 7. Bài tập tự luyện có hướng dẫn
+
+<Exercise
+  id="ex-gthmb-c5-b3-luyen-tap-1-dieu-kien-nghiem-dao-ham"
+  title="Tồn tại nghiệm của đạo hàm qua phương trình liên tục"
+  source="gt-gthmb-ttd-2022"
+  page="61"
+  original="Bài tập 6, 9"
+>
+Cho hai hàm số $f, g$ khả vi trên $\mathbb{R}$ sao cho $f(a) = g(a)$ và $f(x) \le g(x)$ với mọi $x \in \mathbb{R}$.
+Chứng minh rằng $f'(a) = g'(a)$.
+</Exercise>
+
+<Solution>
+Xét hàm số hiệu $h(x) = g(x) - f(x)$ trên $\mathbb{R}$.
+Vì $f$ và $g$ khả vi trên $\mathbb{R}$, hàm số $h$ cũng khả vi trên $\mathbb{R}$ và:
+$$
+h'(x) = g'(x) - f'(x).
+$$
+Theo giả thiết:
+- $h(a) = g(a) - f(a) = 0$.
+- $h(x) = g(x) - f(x) \ge 0$ với mọi $x \in \mathbb{R}$.
+
+Do đó $h(x) \ge h(a)$ với mọi $x \in \mathbb{R}$, nghĩa là hàm số $h$ đạt giá trị nhỏ nhất toàn cục (và do đó là cực tiểu địa phương) tại điểm $x = a$.
+Theo Định lý Fermat (Định lý 5.3.2), đạo hàm của $h$ tại điểm cực tiểu $a$ phải bằng $0$:
+$$
+h'(a) = 0 \iff g'(a) - f'(a) = 0 \iff f'(a) = g'(a).
+$$
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b3-luyen-tap-2-bdt-logarit"
+  title="Bất đẳng thức kép của logarit tự nhiên"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 10c"
+>
+Áp dụng Định lý Lagrange, chứng minh rằng với mọi $x > 0$:
+$$
+\frac{x}{1+x} < \ln(1+x) < x.
+$$
+</Exercise>
+
+<Solution>
+Xét hàm số $f(t) = \ln(1+t)$ trên đoạn $[0; x]$ với $x > 0$.
+Hàm số $f$ liên tục trên $[0; x]$ và khả vi trên $(0; x)$ với đạo hàm $f'(t) = \frac{1}{1+t}$.
+Theo Định lý Lagrange, tồn tại số $c \in (0; x)$ sao cho:
+$$
+\frac{f(x) - f(0)}{x - 0} = f'(c) \iff \frac{\ln(1+x) - 0}{x} = \frac{1}{1+c}.
+$$
+Vì $0 < c < x$, ta có:
+$$
+1 < 1 + c < 1 + x \implies \frac{1}{1+x} < \frac{1}{1+c} < 1.
+$$
+Thay $\frac{1}{1+c} = \frac{\ln(1+x)}{x}$ vào dãy bất đẳng thức trên:
+$$
+\frac{1}{1+x} < \frac{\ln(1+x)}{x} < 1.
+$$
+Vì $x > 0$, nhân ba vế với $x$ ta thu được bất đẳng thức kép cần chứng minh:
+$$
+\frac{x}{1+x} < \ln(1+x) < x.
+$$
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Định lý Fermat:** Nếu $f$ đạt cực trị địa phương tại $x_0$ và khả vi tại đó thì $f'(x_0) = 0$. Đây là điều kiện cần, không phải điều kiện đủ.
+- **Định lý Rolle:** $f$ liên tục trên $[a; b]$, khả vi trên $(a; b)$ và $f(a) = f(b) \implies \exists c \in (a; b): f'(c) = 0$.
+- **Định lý Lagrange & Cauchy:** $f(b) - f(a) = f'(c)(b - a)$, tiếp tuyến tại $c$ song song với cát tuyến nối hai mút.
+- **Dấu đạo hàm và tính đơn điệu:** $f' \ge 0 \iff$ hàm tăng; $f' \le 0 \iff$ hàm giảm; $f' = 0$ trên một khoảng liên thông $\iff$ hàm hằng.
+- **Ứng dụng giải tích:** Định lý Lagrange là công cụ mạnh nhất để chứng minh các bất đẳng thức giải tích và đánh giá tính liên tục Lipschitz.
+</KeyTakeaways>

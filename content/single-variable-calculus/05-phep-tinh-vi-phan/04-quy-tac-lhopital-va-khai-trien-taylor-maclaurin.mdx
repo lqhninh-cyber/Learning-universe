@@ -1,0 +1,362 @@
+---
+id: quy-tac-lhopital-va-khai-trien-taylor-maclaurin
+title: "Quy tắc L'Hôpital và khai triển Taylor - Maclaurin"
+description: "Khử các dạng vô định bằng quy tắc L'Hôpital, thiết lập công thức khai triển Taylor với phần dư Peano và Lagrange, bảng khai triển Maclaurin của 5 hàm sơ cấp và mô phỏng trực quan đa thức Taylor."
+estimatedMinutes: 50
+level: advanced
+prerequisites:
+  - cac-dinh-ly-gia-tri-trung-binh
+  - dao-ham-cap-cao-cong-thuc-leibniz-va-cac-lop-ham
+tags:
+  - quy tắc L'Hôpital
+  - khai triển Taylor
+  - khai triển Maclaurin
+  - phần dư Peano
+  - phần dư Lagrange
+  - xấp xỉ đa thức
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '56-60'
+    sections: 'Mục 5.4, 5.5'
+    note: "Quy tắc L'Hôpital (5.4), Khai triển Taylor phần dư Peano (5.5.1), phần dư Lagrange (5.5.2) và bảng Maclaurin các hàm sơ cấp"
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất và vận dụng Quy tắc L'Hôpital:** Khử chính xác các dạng vô định kinh điển $\frac{0}{0}$ và $\frac{\infty}{\infty}$, phân biệt các trường hợp được phép dùng liên tiếp và nhận biết giới hạn khi quy tắc không áp dụng được.
+2. **Làm chủ công thức khai triển Taylor:** Phân biệt ý nghĩa của Đa thức Taylor $T_n(x)$, phần dư Peano $o((x - x_0)^n)$ (cho đánh giá tiệm cận và giới hạn) và phần dư Lagrange (cho ước lượng sai số định lượng toàn cục).
+3. **Hiểu sâu sắc các bước chứng minh:** Chứng minh công thức phần dư Peano bằng quy tắc L'Hôpital và chứng minh công thức phần dư Lagrange bằng cách áp dụng Định lý Cauchy liên tiếp.
+4. **Ghi nhớ bảng khai triển Maclaurin của 5 hàm sơ cấp:** Thuần thục khai triển của $e^x, \ln(1+x), \sin x, \cos x$ và $(1+x)^\alpha$ để tính giới hạn và xấp xỉ đa thức bậc cao.
+</Note>
+
+## 1. Quy tắc L'Hôpital
+
+Quy tắc L'Hôpital là công cụ vi phân mạnh mẽ cho phép chuyển giới hạn dạng vô định của tỉ số hai hàm số về giới hạn của tỉ số các đạo hàm tương ứng (<Cite source="gt-gthmb-ttd-2022" page="56" note="Định lý 5.4.1" />).
+
+<Theorem
+  id="thm-gthmb-c5-b4-quy-tac-lhopital"
+  title="Quy tắc L'Hôpital cho dạng vô định 0/0 và vô cùng / vô cùng"
+  source="gt-gthmb-ttd-2022"
+  page="57"
+  original="Định lý 5.4.1"
+>
+Cho $f, g$ là các hàm số xác định và khả vi trên một lân cận thủng $U$ của điểm $c$ (trong đó $c$ có thể là số hữu hạn $x_0, x_0^+, x_0^-$, hoặc vô cực $+\infty, -\infty$) sao cho:
+$$
+\lim_{x \to c} f(x) = \lim_{x \to c} g(x) = b, \quad \text{với } b = 0, +\infty \text{ hoặc } -\infty.
+$$
+Giả sử thêm rằng $g'(x) \ne 0$ với mọi $x \in U$. Nếu giới hạn của tỉ số đạo hàm tồn tại:
+$$
+\lim_{x \to c} \frac{f'(x)}{g'(x)} = L \quad (L \in \mathbb{R} \cup \{+\infty, -\infty\}),
+$$
+thì giới hạn của tỉ số ban đầu cũng tồn tại và bằng $L$:
+$$
+\lim_{x \to c} \frac{f(x)}{g(x)} = \lim_{x \to c} \frac{f'(x)}{g'(x)} = L.
+$$
+</Theorem>
+
+<Remark
+  id="rem-gthmb-c5-b4-lhopital-lien-tiep-va-canh-bao"
+  title="Lưu ý quan trọng khi sử dụng Quy tắc L'Hôpital"
+  source="gt-gthmb-ttd-2022"
+  page="57"
+  original="Nhận xét 5.4.2"
+>
+1. **Áp dụng liên tiếp:** Nếu tỉ số $\frac{f'(x)}{g'(x)}$ vẫn tiếp tục có dạng vô định $\frac{0}{0}$ hoặc $\frac{\infty}{\infty}$ và các đạo hàm cấp cao thỏa mãn điều kiện của định lý, ta có thể áp dụng L'Hôpital lần thứ hai, thứ ba:
+   $$
+   \lim_{x \to c} \frac{f(x)}{g(x)} = \lim_{x \to c} \frac{f'(x)}{g'(x)} = \lim_{x \to c} \frac{f''(x)}{g''(x)} = \dots
+   $$
+2. **Chỉ là điều kiện đủ:** Nếu giới hạn của tỉ số đạo hàm $\lim_{x \to c} \frac{f'(x)}{g'(x)}$ không tồn tại (dao động), ta **chưa thể kết luận gì** về giới hạn ban đầu $\lim_{x \to c} \frac{f(x)}{g(x)}$.
+</Remark>
+
+<Example
+  id="ex-gthmb-c5-b4-ap-dung-lhopital"
+  title="Tính giới hạn bằng Quy tắc L'Hôpital"
+  source="gt-gthmb-ttd-2022"
+  page="57"
+  original="Ví dụ 5.4.3"
+>
+1. **Dạng $\frac{0}{0}$:**
+   $$
+   \lim_{x \to 0} \frac{e^x - e^{-x}}{\sin x} \overset{\text{L'Hôpital}}{=} \lim_{x \to 0} \frac{e^x + e^{-x}}{\cos x} = \frac{1 + 1}{1} = 2.
+   $$
+2. **Dạng $0 \cdot \infty$ chuyển về $\frac{\infty}{\infty}$:**
+   Tính $\lim_{x \to 0^+} x \ln x$. Ta biến đổi về dạng thương $\frac{\ln x}{1/x}$:
+   $$
+   \lim_{x \to 0^+} x \ln x = \lim_{x \to 0^+} \frac{\ln x}{\frac{1}{x}} \overset{\text{L'Hôpital}}{=} \lim_{x \to 0^+} \frac{\frac{1}{x}}{-\frac{1}{x^2}} = \lim_{x \to 0^+} (-x) = 0.
+   $$
+</Example>
+
+<Counterexample
+  id="cex-gthmb-c5-b4-lhopital-that-bai"
+  title="Trường hợp L'Hôpital dao động nhưng giới hạn gốc vẫn tồn tại"
+  source="gt-gthmb-ttd-2022"
+  page="57"
+  original="Ví dụ 5.4.4"
+>
+Xét hai hàm số $f(x) = x + \sin x$ và $g(x) = x$ khi $x \to +\infty$.
+Rõ ràng $\lim_{x \to +\infty} f(x) = +\infty$ và $\lim_{x \to +\infty} g(x) = +\infty$ (dạng $\frac{\infty}{\infty}$).
+Tuy nhiên, xét tỉ số đạo hàm:
+$$
+\frac{f'(x)}{g'(x)} = \frac{1 + \cos x}{1} = 1 + \cos x.
+$$
+Khi $x \to +\infty$, $\cos x$ dao động liên tục trong khoảng $[-1; 1]$, do đó giới hạn $\lim_{x \to +\infty} \frac{f'(x)}{g'(x)}$ **không tồn tại**.
+Nếu vội vàng áp dụng L'Hôpital, ta sẽ rơi vào bế tắc.
+Tuy nhiên, giới hạn gốc hoàn toàn tồn tại và được tính dễ dàng bằng nguyên lý kẹp:
+$$
+\lim_{x \to +\infty} \frac{f(x)}{g(x)} = \lim_{x \to +\infty} \left(1 + \frac{\sin x}{x}\right) = 1 + 0 = 1.
+$$
+</Counterexample>
+
+## 2. Khai triển Taylor với Phần dư Peano
+
+Khi nghiên cứu tính chất tiệm cận của hàm số quanh điểm $x_0$, ta xấp xỉ hàm số bằng một đa thức đại số bậc $n$. Phần dư Peano cung cấp bậc vô cùng bé của sai số (<Cite source="gt-gthmb-ttd-2022" page="58" note="Định lý 5.5.1" />).
+
+<Definition
+  id="def-gthmb-c5-b4-da-thuc-taylor"
+  title="Đa thức Taylor bậc n"
+  source="gt-gthmb-ttd-2022"
+  page="58"
+  original="Mục 5.5.1"
+>
+Cho hàm số $f$ có đạo hàm đến cấp $n$ tại điểm $x_0$. **Đa thức Taylor bậc $n$** của $f$ tại $x_0$, ký hiệu là $T_n(x)$ (hoặc $T_{n, x_0}^f(x)$), được xác định bởi:
+$$
+T_n(x) = f(x_0) + f'(x_0)(x - x_0) + \frac{f''(x_0)}{2!}(x - x_0)^2 + \dots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n = \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x - x_0)^k.
+$$
+Đa thức này có tính chất đặc trưng: $T_n^{(k)}(x_0) = f^{(k)}(x_0)$ với mọi $k = 0, 1, \dots, n$.
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c5-b4-taylor-peano"
+  title="Khai triển Taylor với phần dư Peano"
+  source="gt-gthmb-ttd-2022"
+  page="58"
+  original="Định lý 5.5.1"
+>
+Cho hàm số $f$ khả vi đến cấp $n - 1$ trên một lân cận $U$ của $x_0$ và tồn tại đạo hàm cấp $n$ tại $x_0$ ($f^{(n)}(x_0)$ tồn tại).
+Khi đó, ta có công thức khai triển Taylor bậc $n$ với **phần dư Peano**:
+$$
+f(x) = T_n(x) + o\big((x - x_0)^n\big) \quad \text{khi } x \to x_0,
+$$
+nghĩa là:
+$$
+f(x) = f(x_0) + f'(x_0)(x - x_0) + \frac{f''(x_0)}{2!}(x - x_0)^2 + \dots + \frac{f^{(n)}(x_0)}{n!}(x - x_0)^n + o\big((x - x_0)^n\big),
+$$
+trong đó biểu thức phần dư Peano $o((x - x_0)^n)$ thỏa mãn:
+$$
+\lim_{x \to x_0} \frac{f(x) - T_n(x)}{(x - x_0)^n} = 0.
+$$
+</Theorem>
+
+<Proof>
+Đặt $R_n(x) = f(x) - T_n(x)$. Ta cần chứng minh:
+$$
+L = \lim_{x \to x_0} \frac{f(x) - T_n(x)}{(x - x_0)^n} = 0.
+$$
+Nhận xét rằng tại $x = x_0$, $f^{(k)}(x_0) - T_n^{(k)}(x_0) = 0$ với mọi $k = 0, 1, \dots, n-1$.
+Do đó, tỉ số giới hạn có dạng vô định $\frac{0}{0}$.
+Áp dụng Quy tắc L'Hôpital liên tiếp $n - 1$ lần cho tử số và mẫu số:
+$$
+\lim_{x \to x_0} \frac{f(x) - T_n(x)}{(x - x_0)^n} = \lim_{x \to x_0} \frac{f'(x) - T_n'(x)}{n(x - x_0)^{n-1}} = \dots = \lim_{x \to x_0} \frac{f^{(n-1)}(x) - T_n^{(n-1)}(x)}{n! (x - x_0)}.
+$$
+Lưu ý rằng theo định nghĩa của đa thức $T_n(x)$, đạo hàm cấp $n-1$ của $T_n$ là:
+$$
+T_n^{(n-1)}(x) = f^{(n-1)}(x_0) + f^{(n)}(x_0)(x - x_0).
+$$
+Thay vào biểu thức giới hạn:
+$$
+L = \lim_{x \to x_0} \frac{f^{(n-1)}(x) - f^{(n-1)}(x_0) - f^{(n)}(x_0)(x - x_0)}{n!(x - x_0)} = \frac{1}{n!} \left[ \lim_{x \to x_0} \frac{f^{(n-1)}(x) - f^{(n-1)}(x_0)}{x - x_0} - f^{(n)}(x_0) \right].
+$$
+Theo chính định nghĩa của đạo hàm cấp $n$:
+$$
+\lim_{x \to x_0} \frac{f^{(n-1)}(x) - f^{(n-1)}(x_0)}{x - x_0} = f^{(n)}(x_0).
+$$
+Do đó:
+$$
+L = \frac{1}{n!} \big[ f^{(n)}(x_0) - f^{(n)}(x_0) \big] = 0.
+$$
+Chứng minh hoàn tất.
+</Proof>
+
+## 3. Khai triển Taylor với Phần dư Lagrange
+
+Khi cần đánh giá sai số định lượng cụ thể giữa giá trị thực tế $f(x)$ và giá trị xấp xỉ $T_n(x)$ trên cả một khoảng cách xa điểm $x_0$, ta sử dụng công thức phần dư Lagrange (<Cite source="gt-gthmb-ttd-2022" page="58" note="Định lý 5.5.2" />).
+
+<Theorem
+  id="thm-gthmb-c5-b4-taylor-lagrange"
+  title="Khai triển Taylor với phần dư Lagrange"
+  source="gt-gthmb-ttd-2022"
+  page="58"
+  original="Định lý 5.5.2"
+>
+Cho hàm số $f$ khả vi đến cấp $n + 1$ trên một lân cận mở $U$ của $x_0$.
+Khi đó với mọi $x \in U$, luôn tồn tại một điểm $c$ nằm giữa $x$ và $x_0$ (nghĩa là $c = x_0 + \theta(x - x_0)$ với $0 < \theta < 1$) sao cho:
+$$
+f(x) = T_n(x) + \frac{f^{(n+1)}(c)}{(n+1)!} (x - x_0)^{n+1}.
+$$
+Biểu thức $R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!} (x - x_0)^{n+1}$ được gọi là **phần dư dạng Lagrange**.
+</Theorem>
+
+<Proof>
+Lấy điểm $x \in U$ tùy ý với $x \ne x_0$. Đặt:
+$$
+u(t) = f(t) - T_n(t), \quad v(t) = (t - x_0)^{n+1}.
+$$
+Với mỗi số nguyên $k \in \{0, 1, \dots, n\}$, ta có:
+$$
+u^{(k)}(x_0) = 0, \quad v^{(k)}(x_0) = 0, \quad \text{và } v^{(k)}(t) \ne 0 \text{ khi } t \ne x_0.
+$$
+
+Áp dụng Định lý Giá trị trung bình Cauchy cho cặp hàm $u, v$ trên khoảng $I_1$ giữa $x_0$ và $x$, tồn tại điểm $x_1 \in I_1$ sao cho:
+$$
+\frac{u(x)}{v(x)} = \frac{u(x) - u(x_0)}{v(x) - v(x_0)} = \frac{u'(x_1)}{v'(x_1)}.
+$$
+Tiếp tục áp dụng Định lý Cauchy cho $u', v'$ trên khoảng $I_2$ giữa $x_0$ và $x_1$, tồn tại điểm $x_2 \in I_2 \subset I_1$ sao cho:
+$$
+\frac{u'(x_1)}{v'(x_1)} = \frac{u'(x_1) - u'(x_0)}{v'(x_1) - v'(x_0)} = \frac{u''(x_2)}{v''(x_2)}.
+$$
+Lặp lại liên tiếp quá trình áp dụng Định lý Cauchy $n+1$ lần, cuối cùng ta tìm được một điểm $x_{n+1}$ nằm giữa $x_0$ và $x$ sao cho:
+$$
+\frac{u(x)}{v(x)} = \frac{u'(x_1)}{v'(x_1)} = \dots = \frac{u^{(n+1)}(x_{n+1})}{v^{(n+1)}(x_{n+1})}.
+$$
+Lưu ý rằng:
+- $v(t) = (t - x_0)^{n+1} \implies v^{(n+1)}(t) = (n+1)!$.
+- Vì $T_n(t)$ là đa thức bậc $n$, đạo hàm cấp $n+1$ của nó đồng nhất bằng $0$, suy ra $u^{(n+1)}(t) = f^{(n+1)}(t)$.
+
+Đặt $c = x_{n+1}$, ta thu được:
+$$
+\frac{f(x) - T_n(x)}{(x - x_0)^{n+1}} = \frac{f^{(n+1)}(c)}{(n+1)!} \iff f(x) = T_n(x) + \frac{f^{(n+1)}(c)}{(n+1)!} (x - x_0)^{n+1}.
+$$
+Định lý được chứng minh.
+</Proof>
+
+## 4. Khai triển Maclaurin của 5 Hàm số Sơ cấp Chuẩn
+
+Khi chọn tâm khai triển $x_0 = 0$, công thức Taylor được gọi là **khai triển Maclaurin** (<Cite source="gt-gthmb-ttd-2022" page="59" note="Mục 5.5" />).
+
+Dưới đây là 5 khai triển Maclaurin kinh điển cần ghi nhớ chuẩn xác:
+
+### 1. Hàm mũ $e^x$ ($x \in \mathbb{R}$)
+$$
+e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots + \frac{x^n}{n!} + o(x^n) = \sum_{k=0}^n \frac{x^k}{k!} + \frac{e^{\theta x}}{(n+1)!} x^{n+1} \quad (0 < \theta < 1).
+$$
+
+### 2. Hàm logarit tự nhiên $\ln(1+x)$ ($x > -1$)
+$$
+\ln(1+x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \dots + (-1)^{n-1} \frac{x^n}{n} + o(x^n) = \sum_{k=1}^n \frac{(-1)^{k-1} x^k}{k} + \frac{(-1)^n x^{n+1}}{(n+1)(1+\theta x)^{n+1}}.
+$$
+
+### 3. Hàm lượng giác $\sin x$ ($x \in \mathbb{R}$)
+Vì $\sin x$ là hàm lẻ, các lũy thừa chẵn bị triệt tiêu:
+$$
+\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots + (-1)^n \frac{x^{2n+1}}{(2n+1)!} + o(x^{2n+2}).
+$$
+
+### 4. Hàm lượng giác $\cos x$ ($x \in \mathbb{R}$)
+Vì $\cos x$ là hàm chẵn, các lũy thừa lẻ bị triệt tiêu:
+$$
+\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \dots + (-1)^n \frac{x^{2n}}{(2n)!} + o(x^{2n+1}).
+$$
+
+### 5. Hàm nhị thức suy rộng $(1+x)^\alpha$ ($x > -1, \alpha \in \mathbb{R}$)
+$$
+(1+x)^\alpha = 1 + \alpha x + \frac{\alpha(\alpha-1)}{2!} x^2 + \dots + \binom{\alpha}{n} x^n + o(x^n),
+$$
+với ký hiệu nhị thức suy rộng:
+$$
+\binom{\alpha}{0} = 1, \quad \binom{\alpha}{k} = \frac{\alpha(\alpha-1)\dots(\alpha-k+1)}{k!}.
+$$
+
+## 5. Mô phỏng trực quan: Đa thức Taylor ôm sát đồ thị hàm số
+
+Khám phá trực tiếp sự hội tụ của đa thức Taylor bậc $n$ ($n = 1, \dots, 7$) về hàm số gốc quanh điểm $x_0 = 0$:
+
+<TaylorPolynomialDemo />
+
+## 6. Bài tập tự luyện có hướng dẫn
+
+<Exercise
+  id="ex-gthmb-c5-b4-luyen-tap-1-tinh-gioi-han-taylor"
+  title="Tính giới hạn vô định bằng khai triển Maclaurin"
+  source="gt-gthmb-ttd-2022"
+  page="62"
+  original="Bài tập 14b"
+>
+Tính giới hạn sau bằng khai triển Maclaurin hoặc quy tắc L'Hôpital:
+$$
+\lim_{x \to 0} \frac{x - \sin x}{\tan x - x}.
+$$
+</Exercise>
+
+<Solution>
+Ta sử dụng khai triển Maclaurin đến cấp 3 cho các hàm số ở tử số và mẫu số khi $x \to 0$:
+1. Khai triển $\sin x$:
+   $$
+   \sin x = x - \frac{x^3}{6} + o(x^3) \implies x - \sin x = \frac{x^3}{6} + o(x^3).
+   $$
+2. Khai triển $\tan x$:
+   Vì $\tan 0 = 0$, $\tan' x = 1 + \tan^2 x$, $\tan'' x = 2\tan x(1+\tan^2 x)$, $\tan''' x = 2(1+\tan^2 x)^2 + 4\tan^2 x(1+\tan^2 x)$.
+   Tại $x = 0$: $\tan 0 = 0$, $\tan' 0 = 1$, $\tan'' 0 = 0$, $\tan''' 0 = 2$.
+   Do đó:
+   $$
+   \tan x = x + \frac{2}{3!} x^3 + o(x^3) = x + \frac{x^3}{3} + o(x^3) \implies \tan x - x = \frac{x^3}{3} + o(x^3).
+   $$
+
+Thay vào biểu thức giới hạn:
+$$
+\lim_{x \to 0} \frac{x - \sin x}{\tan x - x} = \lim_{x \to 0} \frac{\frac{x^3}{6} + o(x^3)}{\frac{x^3}{3} + o(x^3)} = \lim_{x \to 0} \frac{\frac{1}{6} + o(1)}{\frac{1}{3} + o(1)} = \frac{1/6}{1/3} = \frac{1}{2}.
+$$
+</Solution>
+
+<Exercise
+  id="ex-gthmb-c5-b4-luyen-tap-2-tinh-dao-ham-cap-cao-qua-maclaurin"
+  title="Xác định hệ số đa thức và tính đạo hàm cấp 9 tại gốc tọa độ"
+  source="gt-gthmb-ttd-2022"
+  page="63"
+  original="Bài tập 16a"
+>
+Viết khai triển Maclaurin của hàm số $f(x) = x^2 \sin x$ đến cấp 10. Từ đó hãy suy ra giá trị đạo hàm cấp 9 tại điểm $0$: $f^{(9)}(0)$.
+</Exercise>
+
+<Solution>
+Ta biết khai triển Maclaurin của hàm $\sin x$ đến cấp 9 là:
+$$
+\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^9}{9!} + o(x^9).
+$$
+Nhân cả hai vế với $x^2$:
+$$
+f(x) = x^2 \sin x = x^3 - \frac{x^5}{3!} + \frac{x^7}{5!} - \frac{x^9}{7!} + \frac{x^{11}}{9!} + o(x^{11}).
+$$
+Khai triển Maclaurin đến cấp 10 của $f(x)$ là:
+$$
+f(x) = x^3 - \frac{x^5}{6} + \frac{x^7}{120} - \frac{x^9}{5040} + o(x^{10}).
+$$
+Mặt khác, theo định nghĩa của đa thức Maclaurin:
+$$
+f(x) = \sum_{k=0}^{10} \frac{f^{(k)}(0)}{k!} x^k + o(x^{10}).
+$$
+Đồng nhất hệ số của $x^9$ ở hai cách viết:
+$$
+\frac{f^{(9)}(0)}{9!} = -\frac{1}{7!} \iff f^{(9)}(0) = -\frac{9!}{7!} = -(9 \times 8) = -72.
+$$
+Vậy $f^{(9)}(0) = -72$.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Quy tắc L'Hôpital:** Áp dụng cho dạng vô định $\frac{0}{0}$ và $\frac{\infty}{\infty}$ khi $\lim \frac{f'}{g'}$ tồn tại. Chú ý L'Hôpital chỉ là điều kiện đủ; nếu đạo hàm dao động cần quay lại nguyên lý kẹp hoặc khai triển Taylor.
+- **Khai triển Taylor phần dư Peano:** $f(x) = T_n(x) + o((x - x_0)^n)$, công cụ tối ưu để tính giới hạn và khử triệt để dạng vô định địa phương quanh $x_0$.
+- **Khai triển Taylor phần dư Lagrange:** $R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}(x - x_0)^{n+1}$, cho phép ước lượng sai số định lượng cụ thể khi xấp xỉ hàm số trên một khoảng.
+- **Bảng Maclaurin 5 hàm sơ cấp:** Ghi nhớ chính xác khai triển của $e^x, \ln(1+x), \sin x, \cos x, (1+x)^\alpha$ là chìa khóa giải nhanh các bài toán tiệm cận và đạo hàm cấp cao tại $0$.
+</KeyTakeaways>

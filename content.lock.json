@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T13:53:01.581Z",
+  "updatedAt": "2026-11-03T16:14:50.226Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1697,6 +1697,91 @@
         "exr-gthmb-c4-b5-bt14d": "4.5.10",
         "exr-gthmb-c4-b5-bt15b": "4.5.11",
         "exr-gthmb-c4-b5-bt11": "4.5.12"
+      }
+    },
+    "khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc": {
+      "path": "content/single-variable-calculus/05-phep-tinh-vi-phan/01-khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "4f51a73fa3c927f852fed13d75fcefd82372832cbc1b0916334dc595029fbc1c",
+      "numberedBlocks": {
+        "def-gthmb-c5-b1-dinh-nghia-dao-ham": "5.1.1",
+        "thm-gthmb-c5-b1-kha-vi-keo-theo-lien-tuc": "5.1.2",
+        "cex-gthmb-c5-b1-lien-tuc-chua-chac-kha-vi": "5.1.1",
+        "def-gthmb-c5-b1-vi-phan": "5.1.3",
+        "thm-gthmb-c5-b1-quy-tac-dai-so": "5.1.4",
+        "thm-gthmb-c5-b1-dao-ham-ham-hop": "5.1.5",
+        "thm-gthmb-c5-b1-dao-ham-ham-nguoc": "5.1.6",
+        "prp-gthmb-c5-b1-dao-ham-luong-giac-nguoc": "5.1.7",
+        "exm-gthmb-c5-b1-tinh-dao-ham-arcsin": "5.1.2"
+      }
+    },
+    "dao-ham-cap-cao-cong-thuc-leibniz-va-cac-lop-ham": {
+      "path": "content/single-variable-calculus/05-phep-tinh-vi-phan/02-dao-ham-cap-cao-cong-thuc-leibniz-va-cac-lop-ham.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "9c571ac5d77eb6fb1eb2c5f0e263bdb1d1875b0d38ef14799fcbb704877d1c09",
+      "numberedBlocks": {
+        "def-gthmb-c5-b2-dinh-nghia-dao-ham-cap-cao": "5.2.1",
+        "exm-gthmb-c5-b2-chung-minh-dao-ham-sin": "5.2.1",
+        "thm-gthmb-c5-b2-cong-thuc-leibniz": "5.2.2",
+        "exm-gthmb-c5-b2-ap-dung-leibniz": "5.2.2",
+        "def-gthmb-c5-b2-cac-lop-ham-tron": "5.2.3",
+        "exm-gthmb-c5-b2-ham-tron-cauchy": "5.2.3"
+      }
+    },
+    "cac-dinh-ly-gia-tri-trung-binh": {
+      "path": "content/single-variable-calculus/05-phep-tinh-vi-phan/03-cac-dinh-ly-gia-tri-trung-binh.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "fed90c1d7f32a51bd8f1e7398051cce5875743c98d750e496e77834dcf3b9545",
+      "numberedBlocks": {
+        "def-gthmb-c5-b3-cuc-tri-dia-phuong": "5.3.1",
+        "thm-gthmb-c5-b3-dinh-ly-fermat": "5.3.2",
+        "cex-gthmb-c5-b3-fermat-chieu-nguoc-lai": "5.3.1",
+        "thm-gthmb-c5-b3-dinh-ly-rolle": "5.3.3",
+        "thm-gthmb-c5-b3-dinh-ly-cauchy": "5.3.4",
+        "thm-gthmb-c5-b3-dinh-ly-lagrange": "5.3.5",
+        "cor-gthmb-c5-b3-tinh-don-dieu-va-ham-hang": "5.3.6",
+        "ex-gthmb-c5-b3-lagrange-bdt-sin-arctan": "5.3.2",
+        "ex-gthmb-c5-b3-lagrange-bdt-mu": "5.3.3",
+        "ex-gthmb-c5-b3-luyen-tap-1-dieu-kien-nghiem-dao-ham": "5.3.1",
+        "ex-gthmb-c5-b3-luyen-tap-2-bdt-logarit": "5.3.2"
+      }
+    },
+    "quy-tac-lhopital-va-khai-trien-taylor-maclaurin": {
+      "path": "content/single-variable-calculus/05-phep-tinh-vi-phan/04-quy-tac-lhopital-va-khai-trien-taylor-maclaurin.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "4d5ff2439a6b307f62dfca4946a3ed0977a5d95bcb2b523f92a9aef50f2d8dc4",
+      "numberedBlocks": {
+        "thm-gthmb-c5-b4-quy-tac-lhopital": "5.4.1",
+        "ex-gthmb-c5-b4-ap-dung-lhopital": "5.4.1",
+        "cex-gthmb-c5-b4-lhopital-that-bai": "5.4.2",
+        "def-gthmb-c5-b4-da-thuc-taylor": "5.4.2",
+        "thm-gthmb-c5-b4-taylor-peano": "5.4.3",
+        "thm-gthmb-c5-b4-taylor-lagrange": "5.4.4",
+        "ex-gthmb-c5-b4-luyen-tap-1-tinh-gioi-han-taylor": "5.4.1",
+        "ex-gthmb-c5-b4-luyen-tap-2-tinh-dao-ham-cap-cao-qua-maclaurin": "5.4.2"
+      }
+    },
+    "he-thong-bai-tap-chuong-5-va-loi-giai-chuan": {
+      "path": "content/single-variable-calculus/05-phep-tinh-vi-phan/05-he-thong-bai-tap-chuong-5-va-loi-giai-chuan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "aeeb35379d046790b9cd6b89b3c45f8df065b51fb85e66b78235c92872b78105",
+      "numberedBlocks": {
+        "ex-gthmb-c5-b5-bai-1-tinh-kha-vi-cac-ham": "5.5.1",
+        "ex-gthmb-c5-b5-bai-2-ham-x2-sin-1-tren-x": "5.5.2",
+        "ex-gthmb-c5-b5-bai-3-ham-e-mu-tru-1-tren-x2": "5.5.3",
+        "ex-gthmb-c5-b5-bai-16-maclaurin-dao-ham-cap-9": "5.5.4",
+        "ex-gthmb-c5-b5-bai-4-dieu-kien-holder-suy-bien": "5.5.5",
+        "ex-gthmb-c5-b5-bai-12-dao-ham-bi-chan-keo-theo-lien-tuc-deu": "5.5.6",
+        "ex-gthmb-c5-b5-bai-11-f-khong-bi-chan-thi-f-phay-khong-bi-chan": "5.5.7",
+        "ex-gthmb-c5-b5-bai-14-tron-bo-lhopital": "5.5.8",
+        "ex-gthmb-c5-b5-bai-8-dinh-ly-darboux": "5.5.9",
+        "ex-gthmb-c5-b5-bai-15-chung-minh-e-la-so-vo-ti": "5.5.10",
+        "ex-gthmb-c5-b5-bai-18-danh-gia-dao-ham-cap-mot": "5.5.11"
       }
     }
   }

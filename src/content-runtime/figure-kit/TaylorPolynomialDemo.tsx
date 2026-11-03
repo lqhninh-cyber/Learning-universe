@@ -25,28 +25,25 @@ export function TaylorPolynomialDemo({
   };
 
   // Tính giá trị đa thức Taylor Tn(x) tại điểm x
-  const evalTaylor = useCallback(
-    (x: number, funcType: 'sin' | 'exp', n: number): number => {
-      if (funcType === 'sin') {
-        // sin(x) = x - x^3/3! + x^5/5! - x^7/7!
-        let sum = 0;
-        for (let k = 0; 2 * k + 1 <= n; k += 1) {
-          const power = 2 * k + 1;
-          const sign = k % 2 === 0 ? 1 : -1;
-          sum += (sign * Math.pow(x, power)) / factorial(power);
-        }
-        return sum;
-      } else {
-        // e^x = 1 + x + x^2/2! + ... + x^n/n!
-        let sum = 0;
-        for (let k = 0; k <= n; k += 1) {
-          sum += Math.pow(x, k) / factorial(k);
-        }
-        return sum;
+  const evalTaylor = useCallback((x: number, funcType: 'sin' | 'exp', n: number): number => {
+    if (funcType === 'sin') {
+      // sin(x) = x - x^3/3! + x^5/5! - x^7/7!
+      let sum = 0;
+      for (let k = 0; 2 * k + 1 <= n; k += 1) {
+        const power = 2 * k + 1;
+        const sign = k % 2 === 0 ? 1 : -1;
+        sum += (sign * Math.pow(x, power)) / factorial(power);
       }
-    },
-    [],
-  );
+      return sum;
+    } else {
+      // e^x = 1 + x + x^2/2! + ... + x^n/n!
+      let sum = 0;
+      for (let k = 0; k <= n; k += 1) {
+        sum += Math.pow(x, k) / factorial(k);
+      }
+      return sum;
+    }
+  }, []);
 
   // Tính giá trị hàm gốc f(x)
   const evalOriginal = useCallback((x: number, funcType: 'sin' | 'exp'): number => {
@@ -191,9 +188,13 @@ export function TaylorPolynomialDemo({
         </div>
 
         {/* Chọn bậc n */}
-        <div className="flex flex-1 min-w-[240px] items-center gap-3">
-          <label htmlFor={sliderId} className="text-xs font-semibold text-stone-700 whitespace-nowrap">
-            Bậc đa thức Taylor n = <span className="font-mono text-amber-700 font-bold">{order}</span>:
+        <div className="flex min-w-[240px] flex-1 items-center gap-3">
+          <label
+            htmlFor={sliderId}
+            className="text-xs font-semibold whitespace-nowrap text-stone-700"
+          >
+            Bậc đa thức Taylor n ={' '}
+            <span className="font-mono font-bold text-amber-700">{order}</span>:
           </label>
           <input
             id={sliderId}
@@ -212,7 +213,9 @@ export function TaylorPolynomialDemo({
                 type="button"
                 onClick={() => setOrder(preset)}
                 className={`rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors ${
-                  order === preset ? 'bg-amber-600 text-white' : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                  order === preset
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
                 }`}
               >
                 n={preset}
@@ -251,7 +254,13 @@ export function TaylorPolynomialDemo({
           <path d={originalCurvePath} fill="none" stroke="#38bdf8" strokeWidth="2.5" />
 
           {/* Đồ thị đa thức Taylor Tn(x) */}
-          <path d={taylorCurvePath} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="5 3" />
+          <path
+            d={taylorCurvePath}
+            fill="none"
+            stroke="#f59e0b"
+            strokeWidth="2.5"
+            strokeDasharray="5 3"
+          />
 
           {/* Điểm khảo sát x */}
           {inspectX >= xMin && inspectX <= xMax && (
@@ -266,9 +275,23 @@ export function TaylorPolynomialDemo({
                 strokeWidth="2"
               />
               {/* Điểm thực f(x) */}
-              <circle cx={inspectSvgX} cy={actualSvgY} r="4.5" fill="#38bdf8" stroke="#ffffff" strokeWidth="1.5" />
+              <circle
+                cx={inspectSvgX}
+                cy={actualSvgY}
+                r="4.5"
+                fill="#38bdf8"
+                stroke="#ffffff"
+                strokeWidth="1.5"
+              />
               {/* Điểm xấp xỉ Tn(x) */}
-              <circle cx={inspectSvgX} cy={approxSvgY} r="4.5" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" />
+              <circle
+                cx={inspectSvgX}
+                cy={approxSvgY}
+                r="4.5"
+                fill="#f59e0b"
+                stroke="#ffffff"
+                strokeWidth="1.5"
+              />
             </>
           )}
 
@@ -284,7 +307,15 @@ export function TaylorPolynomialDemo({
             <text x="24" y="3.5" fill="#38bdf8" fontSize="10" fontWeight="bold">
               Hàm gốc: {isSin ? 'y = sin(x)' : 'y = eˣ'}
             </text>
-            <line x1="140" y1="0" x2="158" y2="0" stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="4 2" />
+            <line
+              x1="140"
+              y1="0"
+              x2="158"
+              y2="0"
+              stroke="#f59e0b"
+              strokeWidth="2.5"
+              strokeDasharray="4 2"
+            />
             <text x="164" y="3.5" fill="#f59e0b" fontSize="10" fontWeight="bold">
               Đa thức Taylor T_{order}(x)
             </text>
@@ -295,22 +326,32 @@ export function TaylorPolynomialDemo({
       {/* Thông số tính toán và công thức */}
       <footer className="mt-4 grid grid-cols-1 gap-3 rounded-lg border border-stone-200 bg-stone-50 p-3 sm:grid-cols-3">
         <div className="flex flex-col">
-          <span className="text-[11px] font-medium text-stone-500">Khai triển Maclaurin bậc {order}:</span>
-          <span className="font-mono text-xs font-bold text-amber-800 break-words">
+          <span className="text-[11px] font-medium text-stone-500">
+            Khai triển Maclaurin bậc {order}:
+          </span>
+          <span className="font-mono text-xs font-bold break-words text-amber-800">
             {formulaText}
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[11px] font-medium text-stone-500">Tại điểm kiểm tra x = {inspectX.toFixed(1)}:</span>
+          <span className="text-[11px] font-medium text-stone-500">
+            Tại điểm kiểm tra x = {inspectX.toFixed(1)}:
+          </span>
           <span className="font-mono text-xs text-stone-700">
             f(x) = {actualY.toFixed(4)} | T_{order}(x) = {approxY.toFixed(4)}
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[11px] font-medium text-stone-500">Sai số phần dư |R_{order}(x)|:</span>
+          <span className="text-[11px] font-medium text-stone-500">
+            Sai số phần dư |R_{order}(x)|:
+          </span>
           <span
             className={`font-mono text-xs font-bold ${
-              absError < 0.01 ? 'text-emerald-700' : absError < 0.2 ? 'text-amber-700' : 'text-rose-700'
+              absError < 0.01
+                ? 'text-emerald-700'
+                : absError < 0.2
+                  ? 'text-amber-700'
+                  : 'text-rose-700'
             }`}
           >
             {absError.toFixed(6)} {absError < 0.001 ? '(Rất chính xác!)' : ''}
