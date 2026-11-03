@@ -1,13 +1,20 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { getSubjectBySlug, getSubjects } from '@/content-runtime';
+import { getChapter1LessonModule } from '@/data/courses/giao-duc-hoc/chapter-1';
 import {
   EDUCATIONAL_PRINCIPLES,
   GIAO_DUC_HOC_SUBJECT,
   PEDAGOGICAL_CASE_STUDIES,
   PEDAGOGY_DOCUMENTS,
 } from '@/data/courses/giao-duc-hoc/course';
-import { CaseStudyBox, LegalQuoteCard, PrincipleMatrix } from '@/features/pedagogy';
+import {
+  CaseStudyBox,
+  LegalQuoteCard,
+  PrincipleMatrix,
+  ScholarQuote,
+  TeacherStandardsMatrix,
+} from '@/features/pedagogy';
 
 describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
   describe('Cấu trúc học phần Giáo dục học (course.ts)', () => {
@@ -19,10 +26,10 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(gdh).toBeDefined();
       expect(gdh?.title).toBe('Giáo dục học');
       expect(gdh?.curriculum?.chapterCount).toBe(6);
-      expect(gdh?.curriculum?.lessonCount).toBe(17);
+      expect(gdh?.curriculum?.lessonCount).toBe(18);
     });
 
-    it('đảm bảo tất cả 17 bài học có đầy đủ estimatedMinutes và status published', () => {
+    it('đảm bảo tất cả 18 bài học có đầy đủ estimatedMinutes và status published', () => {
       let totalLessons = 0;
       for (const chapter of GIAO_DUC_HOC_SUBJECT.chapters) {
         for (const lesson of chapter.lessons) {
@@ -33,7 +40,16 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
           expect(lesson.title).toBeTruthy();
         }
       }
-      expect(totalLessons).toBe(17);
+      expect(totalLessons).toBe(18);
+    });
+
+    it('Chương 1 có đủ 4 bài học chi tiết theo chuẩn CLO 1, CLO 2, CLO 3', () => {
+      const ch1 = GIAO_DUC_HOC_SUBJECT.chapters[0]!;
+      expect(ch1.lessons.length).toBe(4);
+      expect(ch1.lessons[0]!.slug).toBe('hoat-dong-su-pham-cua-nguoi-giao-vien');
+      expect(ch1.lessons[1]!.slug).toBe('nhan-cach-va-chuan-nghe-nghiep-giao-vien-pho-thong');
+      expect(ch1.lessons[2]!.slug).toBe('ren-luyen-de-tro-thanh-nguoi-giao-vien-hieu-qua');
+      expect(ch1.lessons[3]!.slug).toBe('tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1');
     });
 
     it('tích hợp đủ 13 tài liệu học phần và văn bản pháp quy', () => {
@@ -48,6 +64,65 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
     it('chứa đủ 6 nguyên tắc giáo dục và bộ tình huống sư phạm thực tế', () => {
       expect(EDUCATIONAL_PRINCIPLES.length).toBe(6);
       expect(PEDAGOGICAL_CASE_STUDIES.length).toBeGreaterThanOrEqual(3);
+    });
+  });
+
+  describe('Component ScholarQuote', () => {
+    it('hiển thị danh ngôn của Comenius với tác giả và bối cảnh lịch sử', () => {
+      render(
+        <ScholarQuote
+          quote="Người giáo viên là người chuyển giao ngọn đuốc của nền văn minh..."
+          author="Jan Amos Comenius"
+          title="Ông tổ của nền Sư phạm Cận đại"
+          source="Didactica Magna, 1657"
+          historicalContext="Comenius khẳng định nghề dạy học là sứ mệnh thiêng liêng."
+        />,
+      );
+
+      expect(
+        screen.getByText(/Người giáo viên là người chuyển giao ngọn đuốc của nền văn minh/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText('Jan Amos Comenius')).toBeInTheDocument();
+      expect(screen.getByText('Ông tổ của nền Sư phạm Cận đại')).toBeInTheDocument();
+      expect(screen.getByText('Didactica Magna, 1657')).toBeInTheDocument();
+    });
+  });
+
+  describe('Component TeacherStandardsMatrix (Thông tư 20/2018)', () => {
+    it('hiển thị 5 tiêu chuẩn chuẩn nghề nghiệp và hỗ trợ chuyển tab', () => {
+      render(<TeacherStandardsMatrix />);
+
+      expect(screen.getByText('Ma trận Chuẩn nghề nghiệp Giáo viên phổ thông')).toBeInTheDocument();
+      expect(screen.getByText(/Tiêu chuẩn 1: Phẩm chất nhà giáo/i)).toBeInTheDocument();
+
+      // Bấm tab Tiêu chuẩn 2
+      const tab2 = screen.getByRole('button', { name: /Tiêu chuẩn 2/i });
+      fireEvent.click(tab2);
+
+      expect(
+        screen.getByText(/Tiêu chuẩn 2: Phát triển chuyên môn, nghiệp vụ/i),
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe('Dispatcher getChapter1LessonModule', () => {
+    it('nạp đầy đủ 4 bài học chi tiết của Chương 1', () => {
+      const b1 = getChapter1LessonModule('gdh-c1-b1-hoat-dong-su-pham-cua-nguoi-giao-vien');
+      const b2 = getChapter1LessonModule(
+        'gdh-c1-b2-nhan-cach-va-chuan-nghe-nghiep-giao-vien-pho-thong',
+      );
+      const b3 = getChapter1LessonModule(
+        'gdh-c1-b3-ren-luyen-de-tro-thanh-nguoi-giao-vien-hieu-qua',
+      );
+      const b4 = getChapter1LessonModule(
+        'gdh-c1-b4-tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1',
+      );
+
+      expect(b1).toBeDefined();
+      expect(b1?.lessonMeta.headings.length).toBeGreaterThan(0);
+      expect(b2).toBeDefined();
+      expect(b3).toBeDefined();
+      expect(b4).toBeDefined();
     });
   });
 

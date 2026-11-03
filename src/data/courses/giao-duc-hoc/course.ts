@@ -1,6 +1,7 @@
 import type { ManifestSubject } from '@schemas/index';
 import type { CompiledLessonModule } from '@/content-runtime/loader';
 import { createElement, type FC } from 'react';
+import { getChapter1LessonModule } from './chapter-1';
 
 // ============================================================================
 // 1. DANH MỤC 13 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
@@ -493,8 +494,8 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
   },
   curriculum: {
     chapterCount: 6,
-    lessonCount: 17,
-    totalMinutes: 680,
+    lessonCount: 18,
+    totalMinutes: 720,
   },
   chapters: [
     // ------------------------------------------------------------------------
@@ -505,9 +506,13 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
       slug: 'hoat-dong-su-pham-va-nguoi-giao-vien-pho-thong',
       title: 'Chương 1: Hoạt động sư phạm và Người giáo viên phổ thông',
       description:
-        'Bản chất nghề dạy học, 5 đặc điểm lao động sư phạm, chuẩn nghề nghiệp giáo viên phổ thông theo Thông tư 20 và con đường phát triển chuyên môn.',
+        'Bản chất nghề dạy học, vai trò của người thầy, 5 đặc điểm lao động sư phạm, chuẩn nghề nghiệp giáo viên theo Thông tư 20, kế hoạch rèn luyện 4 năm và tình huống sư phạm thực hành.',
       number: 1,
-      objectives: [],
+      objectives: [
+        'CLO 1: Nhận thức đúng đắn về tác phong sư phạm và chuẩn mực đạo đức nhà giáo',
+        'CLO 2: Phân tích sâu sắc 5 đặc điểm lao động sư phạm và 5 tiêu chuẩn chuẩn nghề nghiệp giáo viên',
+        'CLO 3: Xây dựng phương hướng và kế hoạch rèn luyện bản thân trong 4 năm đại học',
+      ],
       lessons: [
         {
           id: 'gdh-c1-b1-hoat-dong-su-pham-cua-nguoi-giao-vien',
@@ -515,16 +520,16 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           title: 'Bài 1.1: Hoạt động sư phạm của người giáo viên',
           number: 1,
           description:
-            'Bản chất, chức năng xã hội, 5 đặc điểm cốt lõi của lao động sư phạm và sản phẩm nhân cách phi vật chất mang tính cá biệt hóa.',
+            'Nguồn gốc thuật ngữ Hán - Việt, chức năng xã hội, 5 đặc điểm cốt lõi của lao động sư phạm và luận điểm then chốt: Nhân cách người thầy là công cụ lao động chủ yếu.',
           level: 'basic',
           estimatedMinutes: 35,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Hoạt động sư phạm', 'Lao động sư phạm', 'Đặc điểm nghề giáo'],
+          tags: ['Hoạt động sư phạm', 'Lao động sư phạm', 'Đặc điểm nghề giáo', 'CLO 2'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c1-b1.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-1.ts',
         },
         {
           id: 'gdh-c1-b2-nhan-cach-va-chuan-nghe-nghiep-giao-vien-pho-thong',
@@ -532,33 +537,64 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           title: 'Bài 1.2: Nhân cách & Chuẩn nghề nghiệp giáo viên phổ thông',
           number: 2,
           description:
-            'Cấu trúc nhân cách người thầy (Phẩm chất & Năng lực) và phân tích 5 tiêu chuẩn, 15 tiêu chí chuẩn nghề nghiệp theo Thông tư 20/2018/TT-BGDĐT.',
+            'Cấu trúc nhân cách người thầy (Phẩm chất & Năng lực) và ma trận 5 Tiêu chuẩn, 15 Tiêu chí Chuẩn nghề nghiệp theo Thông tư 20/2018/TT-BGDĐT.',
           level: 'basic',
           estimatedMinutes: 40,
           prerequisites: [],
           sources: [{ source: 'thong-tu-20-2018' }],
           aliases: [],
-          tags: ['Chuẩn nghề nghiệp', 'Thông tư 20', 'Phẩm chất nhà giáo', 'Năng lực sư phạm'],
+          tags: [
+            'Chuẩn nghề nghiệp',
+            'Thông tư 20',
+            'Phẩm chất nhà giáo',
+            'Năng lực sư phạm',
+            'CLO 1',
+            'CLO 2',
+          ],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c1-b2.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-1.ts',
         },
         {
-          id: 'gdh-c1-b3-phat-trien-nghe-nghiep-giao-vien',
-          slug: 'phat-trien-nghe-nghiep-giao-vien',
-          title: 'Bài 1.3: Phát triển nghề nghiệp giáo viên',
+          id: 'gdh-c1-b3-ren-luyen-de-tro-thanh-nguoi-giao-vien-hieu-qua',
+          slug: 'ren-luyen-de-tro-thanh-nguoi-giao-vien-hieu-qua',
+          title: 'Bài 1.3: Rèn luyện để trở thành người giáo viên hiệu quả',
           number: 3,
           description:
-            'Con đường phát triển nghề nghiệp: sinh hoạt tổ chuyên môn theo nghiên cứu bài học (Lesson Study), tự học và nghiên cứu khoa học sư phạm ứng dụng.',
+            'Bản chất tự giáo dục và thực hành thiết kế Kế hoạch học tập, rèn luyện cá nhân trong 4 năm đại học đối chiếu 15 tiêu chí TT20.',
           level: 'intermediate',
-          estimatedMinutes: 35,
+          estimatedMinutes: 40,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Nghiên cứu bài học', 'Phát triển chuyên môn', 'Tổ chuyên môn'],
+          tags: ['Tự giáo dục', 'Kế hoạch 4 năm', 'Rèn luyện cá nhân', 'CLO 1', 'CLO 3'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c1-b3.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-1.ts',
+        },
+        {
+          id: 'gdh-c1-b4-tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1',
+          slug: 'tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1',
+          title: 'Bài 1.4: Tình huống sư phạm & Đề cương tự luận ôn tập Chương 1',
+          number: 4,
+          description:
+            'Giải quyết 2 tình huống sư phạm thực hành về công cụ lao động và văn hóa mạng xã hội; đề cương 3 câu hỏi tự luận kinh điển ôn thi.',
+          level: 'advanced',
+          estimatedMinutes: 45,
+          prerequisites: [],
+          sources: [{ source: 'gt-gdh-hcmue-2024' }, { source: 'thong-tu-20-2018' }],
+          aliases: [],
+          tags: [
+            'Tình huống sư phạm',
+            'Đề cương ôn tập',
+            'Câu hỏi tự luận',
+            'CLO 1',
+            'CLO 2',
+            'CLO 3',
+          ],
+          status: 'published',
+          version: '1.0.0',
+          file: '/src/data/courses/giao-duc-hoc/chapter-1.ts',
         },
       ],
     },
@@ -886,6 +922,12 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
  * Trả về module bài học cho các bài thuộc học phần Giáo dục học.
  */
 export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule | null {
+  // Ưu tiên nạp module chuyên sâu của Chương 1 nếu có
+  const ch1Module = getChapter1LessonModule(lessonId);
+  if (ch1Module) {
+    return ch1Module;
+  }
+
   const lessonItem = GIAO_DUC_HOC_SUBJECT.chapters
     .flatMap((ch) => ch.lessons)
     .find((l) => l.id === lessonId);
