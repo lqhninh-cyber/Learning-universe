@@ -1,0 +1,306 @@
+﻿---
+id: ung-dung-cua-su-hoi-tu-deu
+title: 'Ứng dụng của sự hội tụ đều: Tính liên tục, tích phân và đạo hàm từng số hạng'
+description: 'Khảo sát các hệ quả sâu sắc của sự hội tụ đều: bảo toàn tính liên tục của hàm tổng, hoán đổi giới hạn, phép lấy tích phân và đạo hàm từng số hạng, cùng ứng dụng tính tổng chuỗi hàm kinh điển.'
+estimatedMinutes: 50
+level: advanced
+prerequisites:
+  - chuoi-ham-su-hoi-tu-diem-va-su-hoi-tu-deu
+  - phan-hoach-tong-darboux-va-khai-niem-tich-phan-riemann
+  - khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc
+tags:
+  - hội tụ đều
+  - tính liên tục
+  - tích phân từng số hạng
+  - đạo hàm từng số hạng
+  - hoán đổi giới hạn
+  - chuỗi lũy thừa
+  - công thức Leibniz
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '82-84'
+    sections: 'Mục 7.2.2'
+    note: 'Định lý 7.2.7 (Tính liên tục), Định lý 7.2.8 (Tích phân từng số hạng), Định lý 7.2.9 (Đạo hàm từng số hạng), Bài tập 10'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu lý do vì sao sự hội tụ đều là điều kiện thiết yếu:** Nắm vững vì sao phép hội tụ từng điểm không đủ để bảo toàn các cấu trúc giải tích tốt (tính liên tục, tính khả vi, tính khả tích).
+2. **Chứng minh và vận dụng Định lý về tính liên tục:** Sử dụng kỹ thuật chia $\varepsilon/3$ để chứng minh hàm tổng của chuỗi các hàm liên tục hội tụ đều là một hàm liên tục.
+3. **Thực hiện phép tích phân từng số hạng:** Hoán đổi hợp lệ dấu tích phân và dấu tổng vô hạn trên đoạn đóng: $\int_a^b \sum f_n(x) dx = \sum \int_a^b f_n(x) dx$.
+4. **Làm chủ quy tắc đạo hàm từng số hạng:** Nắm chắc điều kiện then chốt là chuỗi các đạo hàm $\sum f_n'(x)$ phải hội tụ đều, và áp dụng tính tổng các chuỗi hàm phức tạp.
+</Note>
+
+## 1. Bản chất Giải tích của Phép Đổi Thứ tự Giới hạn
+
+Trong giải tích hàm, câu hỏi trung tâm khi nghiên cứu chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ là: **Khi nào ta có thể hoán đổi hai toán tử giới hạn vô hạn?**
+Cụ thể:
+1. Khi nào $\lim_{x \to x_0} \sum_{n=1}^\infty f_n(x) = \sum_{n=1}^\infty \lim_{x \to x_0} f_n(x)$? (Tính liên tục của hàm tổng)
+2. Khi nào $\int_a^b \left( \sum_{n=1}^\infty f_n(x) \right) dx = \sum_{n=1}^\infty \int_a^b f_n(x) dx$? (Tích phân từng số hạng)
+3. Khi nào $\left( \sum_{n=1}^\infty f_n(x) \right)' = \sum_{n=1}^\infty f_n'(x)$? (Đạo hàm từng số hạng)
+
+Nếu chuỗi chỉ hội tụ từng điểm, cả ba câu hỏi trên nhìn chung đều nhận câu trả lời **phủ định**. **Sự hội tụ đều** chính là điều kiện đủ mạnh mẽ và chuẩn mực nhất để đảm bảo các phép hoán đổi này hoàn toàn hợp lệ (<Cite source="gt-gthmb-ttd-2022" page="82" note="Mục 7.2.2" />).
+
+## 2. Tính Liên tục của Hàm Tổng
+
+<Theorem
+  id="thm-gthmb-c7-b4-tinh-lien-tuc-ham-tong"
+  title="Tính liên tục của hàm tổng"
+>
+Cho chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ hội tụ đều về hàm số $f(x)$ trên miền $D \subset \mathbb{R}$.
+Nếu với mọi $n \in \mathbb{N}^*$, các hàm số thành phần $f_n(x)$ đều liên tục trên $D$, thì hàm tổng $f(x)$ cũng **liên tục trên $D$**.
+
+Đặc biệt, với mọi $x_0 \in D$, ta có quyền hoán đổi giới hạn:
+$$
+\lim_{x \to x_0} \sum_{n=1}^\infty f_n(x) = \sum_{n=1}^\infty \lim_{x \to x_0} f_n(x) = \sum_{n=1}^\infty f_n(x_0) = f(x_0)
+$$
+</Theorem>
+
+<Proof>
+Lấy điểm $x_0 \in D$ bất kỳ và số thực $\varepsilon > 0$.
+Xét hiệu sai phân $|f(x) - f(x_0)|$. Bằng cách chèn tổng riêng thứ $n$ là $S_n(x) = \sum_{k=1}^n f_k(x)$ vào giữa, ta có:
+$$
+\begin{aligned}
+|f(x) - f(x_0)| &= |[f(x) - S_n(x)] + [S_n(x) - S_n(x_0)] + [S_n(x_0) - f(x_0)]| \\
+&\le |f(x) - S_n(x)| + |S_n(x) - S_n(x_0)| + |S_n(x_0) - f(x_0)|
+\end{aligned}
+$$
+1. Vì chuỗi hàm $\sum f_n(x)$ hội tụ đều về $f(x)$ trên $D$, ứng với $\frac{\varepsilon}{3} > 0$, tồn tại chỉ số $N \in \mathbb{N}^*$ sao cho:
+   $$
+   \forall n \ge N, \; \forall t \in D \implies |f(t) - S_n(t)| < \frac{\varepsilon}{3}
+   $$
+   Cố định một chỉ số $n \ge N$. Khi đó ta có:
+   $$
+   |f(x) - S_n(x)| < \frac{\varepsilon}{3} \quad \text{và} \quad |S_n(x_0) - f(x_0)| < \frac{\varepsilon}{3}
+   $$
+2. Vì mỗi hàm $f_k(x)$ liên tục tại $x_0$, tổng hữu hạn $S_n(x) = \sum_{k=1}^n f_k(x)$ cũng là một hàm liên tục tại $x_0$.
+   Do đó, ứng với $\frac{\varepsilon}{3} > 0$, tồn tại $\delta > 0$ sao cho với mọi $x \in D$ thỏa mãn $|x - x_0| < \delta$:
+   $$
+   |S_n(x) - S_n(x_0)| < \frac{\varepsilon}{3}
+   $$
+3. Kết hợp cả ba đánh giá trên, với mọi $x \in D$ thỏa mãn $|x - x_0| < \delta$:
+   $$
+   |f(x) - f(x_0)| < \frac{\varepsilon}{3} + \frac{\varepsilon}{3} + \frac{\varepsilon}{3} = \varepsilon
+   $$
+Vậy hàm tổng $f(x)$ liên tục tại điểm $x_0$. Vì $x_0$ tùy ý, $f(x)$ liên tục trên toàn bộ $D$.
+</Proof>
+
+<Counterexample
+  id="counter-gthmb-c7-b4-gian-doan-khi-khong-hoi-tu-deu"
+  title="Hàm tổng bị gián đoạn khi chuỗi không hội tụ đều"
+>
+Xét chuỗi hàm $\sum_{n=1}^\infty \left[ x^{n-1} - x^n \right]$ trên đoạn $[0; 1]$.
+Mỗi số hạng $f_n(x) = x^{n-1} - x^n$ là một đa thức liên tục trên $[0; 1]$.
+Tổng riêng thứ $n$ là một tổng lồng nhau:
+$$
+S_n(x) = (1 - x) + (x - x^2) + \dots + (x^{n-1} - x^n) = 1 - x^n
+$$
+Tìm hàm tổng $f(x) = \lim_{n \to \infty} S_n(x)$:
+- Nếu $x \in [0; 1)$: $\lim_{n \to \infty} x^n = 0 \implies f(x) = 1$.
+- Nếu $x = 1$: $S_n(1) = 1 - 1 = 0 \implies f(1) = 0$.
+
+Như vậy hàm tổng là:
+$$
+f(x) = \begin{cases}
+1 & \text{khi } 0 \le x < 1 \\
+0 & \text{khi } x = 1
+\end{cases}
+$$
+Hàm tổng $f(x)$ bị **gián đoạn tại $x = 1$**, mặc dù mọi hàm thành phần $f_n(x)$ đều liên tục. Nguyên nhân là vì chuỗi hàm này không hội tụ đều trên $[0; 1]$.
+</Counterexample>
+
+## 3. Phép Lấy Tích phân Từng Số hạng
+
+<Theorem
+  id="thm-gthmb-c7-b4-tich-phan-tung-so-hang"
+  title="Tích phân từng số hạng của chuỗi hàm"
+>
+Cho chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ hội tụ đều về hàm số $f(x)$ trên đoạn đóng $[a; b]$.
+Nếu với mọi $n \in \mathbb{N}^*$, các hàm số $f_n(x)$ đều khả tích Riemann trên $[a; b]$, thì hàm tổng $f(x)$ cũng khả tích Riemann trên $[a; b]$, và ta có công thức:
+$$
+\int_a^b f(x) dx = \int_a^b \left( \sum_{n=1}^\infty f_n(x) \right) dx = \sum_{n=1}^\infty \int_a^b f_n(x) dx
+$$
+</Theorem>
+
+<Proof>
+1. Tính khả tích của $f$: Do $\sum f_n(x) \rightrightarrows f(x)$ trên $[a; b]$, dãy tổng riêng $(S_n)$ hội tụ đều về $f$. Vì mỗi $S_n$ khả tích, giới hạn đều của dãy hàm khả tích cũng là một hàm khả tích Riemann trên $[a; b]$.
+2. Chứng minh hoán đổi: Xét sai số giữa tích phân của hàm tổng và tổng các tích phân hữu hạn:
+   $$
+   \left| \int_a^b f(x) dx - \sum_{k=1}^n \int_a^b f_k(x) dx \right| = \left| \int_a^b [f(x) - S_n(x)] dx \right| \le \int_a^b |f(x) - S_n(x)| dx
+   $$
+   Đặt $M_n = \sup_{x \in [a; b]} |f(x) - S_n(x)|$. Khi đó:
+   $$
+   \int_a^b |f(x) - S_n(x)| dx \le \int_a^b M_n dx = M_n (b - a)
+   $$
+   Vì chuỗi hàm hội tụ đều về $f$ trên $[a; b]$, ta có $\lim_{n \to \infty} M_n = 0$.
+   Do đó:
+   $$
+   \lim_{n \to \infty} \left| \int_a^b f(x) dx - \sum_{k=1}^n \int_a^b f_k(x) dx \right| = 0
+   $$
+   Điều này chứng minh $\sum_{n=1}^\infty \int_a^b f_n(x) dx$ hội tụ và có tổng bằng $\int_a^b f(x) dx$.
+</Proof>
+
+## 4. Phép Lấy Đạo hàm Từng Số hạng
+
+Đối với đạo hàm, điều kiện đòi hỏi khắt khe hơn: sự hội tụ đều của chuỗi gốc $\sum f_n$ **không đủ** để suy ra có thể lấy đạo hàm từng số hạng. Ngược lại, điều kiện bắt buộc là **chuỗi các đạo hàm $\sum f_n'$ phải hội tụ đều** (<Cite source="gt-gthmb-ttd-2022" page="83" note="Định lý 7.2.9" />).
+
+<Theorem
+  id="thm-gthmb-c7-b4-dao-ham-tung-so-hang"
+  title="Đạo hàm từng số hạng của chuỗi hàm"
+>
+Giả sử $(f_n(x))_{n=1}^\infty$ là một dãy các hàm số khả vi trên đoạn $[a; b]$ thỏa mãn hai điều kiện sau:
+1. Tồn tại ít nhất một điểm $x_0 \in [a; b]$ sao cho chuỗi số $\sum_{n=1}^\infty f_n(x_0)$ **hội tụ**.
+2. Chuỗi các đạo hàm $\sum_{n=1}^\infty f_n'(x)$ **hội tụ đều** về một hàm số $g(x)$ trên đoạn $[a; b]$.
+
+Khi đó:
+- Chuỗi hàm gốc $\sum_{n=1}^\infty f_n(x)$ hội tụ đều về một hàm số $f(x)$ khả vi trên $[a; b]$.
+- Hàm tổng $f(x)$ có đạo hàm thỏa mãn $f'(x) = g(x)$ với mọi $x \in [a; b]$, tức là:
+  $$
+  \left( \sum_{n=1}^\infty f_n(x) \right)' = \sum_{n=1}^\infty f_n'(x)
+  $$
+</Theorem>
+
+<Proof>
+Với mỗi $n \ge 1$ và $x \in [a; b]$, theo công thức Newton - Leibniz:
+$$
+f_n(x) = f_n(x_0) + \int_{x_0}^x f_n'(t) dt
+$$
+Lấy tổng từ $n = 1$ đến $m$:
+$$
+S_m(x) = S_m(x_0) + \int_{x_0}^x \left( \sum_{n=1}^m f_n'(t) \right) dt
+$$
+Vì chuỗi $\sum f_n'(t)$ hội tụ đều về $g(t)$ trên $[a; b]$, áp dụng Định lý 7.2.8 về tích phân từng số hạng, khi cho $m \to \infty$:
+$$
+\lim_{m \to \infty} \int_{x_0}^x \left( \sum_{n=1}^m f_n'(t) \right) dt = \int_{x_0}^x g(t) dt
+$$
+Đồng thời, theo giả thiết (1), chuỗi số $\sum f_n(x_0)$ hội tụ về $S(x_0)$.
+Do đó, với mọi $x \in [a; b]$, chuỗi gốc $\sum f_n(x)$ hội tụ về:
+$$
+f(x) = f(x_0) + \int_{x_0}^x g(t) dt
+$$
+Vì mỗi $f_n'(t)$ liên tục (hoặc khả tích) và chuỗi đạo hàm hội tụ đều, hàm $g(t)$ liên tục trên $[a; b]$.
+Theo Định lý cơ bản của phép tính vi tích phân (Bài 6.2), hàm số tích phân theo cận trên $\int_{x_0}^x g(t) dt$ khả vi trên $[a; b]$ và có đạo hàm chính bằng $g(x)$.
+Do đó $f'(x) = g(x) = \sum_{n=1}^\infty f_n'(x)$.
+</Proof>
+
+## 5. Ứng dụng Tính Tổng Chuỗi qua Đạo hàm và Tích phân
+
+Bằng cách áp dụng các định lý đạo hàm và tích phân từng số hạng cho chuỗi cấp số nhân cơ bản $\sum_{n=0}^\infty x^n = \frac{1}{1-x}$ ($|x| < 1$), ta có thể tính tổng của rất nhiều chuỗi hàm và chuỗi số phức tạp (<Cite source="gt-gthmb-ttd-2022" page="86" note="Bài tập 10" />).
+
+### 5.1. Dùng Đạo hàm từng Số hạng Tính Tổng $\sum n x^n$
+
+<Example
+  id="ex-gthmb-c7-b4-dao-ham-cap-so-nhan"
+  title="Tính tổng chuỗi x + 2x^2 + 3x^3 + ..."
+>
+Tính tổng $S(x) = \sum_{n=1}^\infty n x^n$ với $|x| < 1$.
+
+**Lời giải:**
+Với mọi $x \in (-1; 1)$, ta có chuỗi cấp số nhân:
+$$
+\sum_{n=0}^\infty x^n = \frac{1}{1 - x}
+$$
+Chuỗi này hội tụ đều trên mọi đoạn con đóng $[-c; c] \subset (-1; 1)$ ($0 < c < 1$).
+Chuỗi các đạo hàm:
+$$
+\sum_{n=1}^\infty n x^{n-1}
+$$
+cũng hội tụ đều trên $[-c; c]$. Áp dụng Định lý 7.2.9:
+$$
+\sum_{n=1}^\infty n x^{n-1} = \left( \sum_{n=0}^\infty x^n \right)' = \left( \frac{1}{1 - x} \right)' = \frac{1}{(1 - x)^2}
+$$
+Nhân cả hai vế với $x$, ta nhận được công thức:
+$$
+S(x) = \sum_{n=1}^\infty n x^n = \frac{x}{(1 - x)^2}, \quad \forall |x| < 1
+$$
+Ví dụ, khi $x = \frac{1}{2}$, ta tính được tổng của chuỗi số:
+$$
+\sum_{n=1}^\infty \frac{n}{2^n} = \frac{1/2}{(1 - 1/2)^2} = \frac{1/2}{1/4} = 2
+$$
+</Example>
+
+### 5.2. Dùng Tích phân từng Số hạng Khai triển $\ln(1+x)$ và Công thức Leibniz cho $\pi$
+
+<Example
+  id="ex-gthmb-c7-b4-tich-phan-khai-trien-leibniz"
+  title="Khai triển chuỗi arctan và công thức số pi của Leibniz"
+>
+1. Với mọi $t \in (-1; 1)$, ta có cấp số nhân:
+   $$
+   \frac{1}{1 + t^2} = \sum_{n=0}^\infty (-1)^n t^{2n} = 1 - t^2 + t^4 - t^6 + \dots
+   $$
+2. Lấy tích phân từng số hạng từ $0$ đến $x$ (với $|x| < 1$):
+   $$
+   \arctan(x) = \int_0^x \frac{1}{1 + t^2} dt = \sum_{n=0}^\infty (-1)^n \int_0^x t^{2n} dt = \sum_{n=0}^\infty \frac{(-1)^n x^{2n+1}}{2n + 1}
+   $$
+   Tức là:
+   $$
+   \arctan(x) = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \dots
+   $$
+3. Theo Định lý Abel về tính liên tục tại mút khoảng, chuỗi này hội tụ tại $x = 1$. Thay $x = 1$, ta thu được **công thức Leibniz kinh điển tính số $\pi$**:
+   $$
+   \frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \dots = \sum_{n=0}^\infty \frac{(-1)^n}{2n + 1}
+   $$
+</Example>
+
+## 6. Bài tập Áp dụng
+
+<Exercise
+  id="exer-gthmb-c7-b4-tinh-tong-tich-phan-phan-thuc"
+  title="Tính tổng chuỗi phân thức tích hai số tự nhiên"
+>
+Dùng phương pháp đạo hàm hoặc tích phân từng số hạng, hãy tính tổng của chuỗi hàm sau trên khoảng $(-1; 1)$:
+$$
+f(x) = \frac{x}{1 \cdot 2} + \frac{x^2}{2 \cdot 3} + \frac{x^3}{3 \cdot 4} + \dots = \sum_{n=1}^\infty \frac{x^n}{n(n+1)}
+$$
+</Exercise>
+
+<Solution>
+Ta thấy đạo hàm cấp một của hàm số là:
+$$
+f'(x) = \sum_{n=1}^\infty \frac{n x^{n-1}}{n(n+1)} = \sum_{n=1}^\infty \frac{x^{n-1}}{n+1}
+$$
+Nhân hai vế với $x^2$:
+$$
+x^2 f'(x) = \sum_{n=1}^\infty \frac{x^{n+1}}{n+1} = \frac{x^2}{2} + \frac{x^3}{3} + \dots
+$$
+Lấy đạo hàm hai vế theo $x$:
+$$
+[x^2 f'(x)]' = \sum_{n=1}^\infty x^n = \frac{x}{1 - x} = \frac{1}{1 - x} - 1
+$$
+Lấy tích phân từ $0$ đến $x$:
+$$
+x^2 f'(x) = \int_0^x \left( \frac{1}{1 - t} - 1 \right) dt = -\ln(1 - x) - x
+$$
+Chia cho $x^2$ (với $x \neq 0$):
+$$
+f'(x) = -\frac{\ln(1 - x)}{x^2} - \frac{1}{x}
+$$
+Lấy tích phân từng phần tìm $f(x)$ với điều kiện $f(0) = 0$:
+$$
+f(x) = \int_0^x f'(t) dt = \begin{cases}
+1 + \dfrac{1 - x}{x} \ln(1 - x) & \text{khi } x \neq 0 \\
+0 & \text{khi } x = 0
+\end{cases}
+$$
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Tính liên tục của hàm tổng:** Nếu các hàm thành phần $f_n(x)$ liên tục và chuỗi hàm $\sum f_n(x)$ hội tụ đều thì hàm tổng $f(x)$ liên tục. Cho phép hoán đổi $\lim_{x \to x_0} \sum f_n(x) = \sum f_n(x_0)$.
+- **Tích phân từng số hạng:** Nếu chuỗi hàm liên tục hội tụ đều trên đoạn đóng $[a; b]$, ta có quyền hoán đổi tích phân và tổng vô hạn: $\int_a^b \sum f_n(x) dx = \sum \int_a^b f_n(x) dx$.
+- **Đạo hàm từng số hạng:** Để có $\left(\sum f_n(x)\right)' = \sum f_n'(x)$, điều kiện bắt buộc là chuỗi các đạo hàm $\sum f_n'(x)$ phải hội tụ đều trên đoạn đang xét.
+- **Tính tổng chuỗi lũy thừa:** Kết hợp đạo hàm và tích phân từng số hạng từ cấp số nhân cơ bản $\sum x^n = \frac{1}{1-x}$ để tìm tổng của các chuỗi chứa $n, n^2$ hoặc $\frac{1}{n}, \frac{1}{n(n+1)}$ ở hệ số.
+</KeyTakeaways>

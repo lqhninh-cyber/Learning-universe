@@ -124,7 +124,8 @@ export function WeierstrassMTestDemo({
         <div>
           <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">{title}</h4>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Minh họa định lý Weierstrass: Nếu |f_n(x)| ≤ a_n với chuỗi số ∑ a_n hội tụ thì chuỗi hàm ∑ f_n(x) hội tụ đều.
+            Minh họa định lý Weierstrass: Nếu |f_n(x)| ≤ a_n với chuỗi số ∑ a_n hội tụ thì chuỗi hàm
+            ∑ f_n(x) hội tụ đều.
           </p>
         </div>
 
@@ -160,7 +161,9 @@ export function WeierstrassMTestDemo({
         <div>
           <div className="flex items-center justify-between font-medium text-slate-700 dark:text-slate-300">
             <label htmlFor={sliderId}>Số số hạng tổng riêng N:</label>
-            <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">N = {N}</span>
+            <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">
+              N = {N}
+            </span>
           </div>
           <input
             id={sliderId}
@@ -187,8 +190,8 @@ export function WeierstrassMTestDemo({
               onClick={() => setViewMode('sum')}
               className={`rounded px-2 py-1 text-xs ${
                 viewMode === 'sum'
-                  ? 'bg-blue-600 text-white font-medium shadow-xs'
-                  : 'bg-white text-slate-600 border border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600'
+                  ? 'bg-blue-600 font-medium text-white shadow-xs'
+                  : 'border border-slate-200 bg-white text-slate-600 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300'
               }`}
             >
               Tổng riêng S_N(x)
@@ -198,8 +201,8 @@ export function WeierstrassMTestDemo({
               onClick={() => setViewMode('term')}
               className={`rounded px-2 py-1 text-xs ${
                 viewMode === 'term'
-                  ? 'bg-indigo-600 text-white font-medium shadow-xs'
-                  : 'bg-white text-slate-600 border border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600'
+                  ? 'bg-indigo-600 font-medium text-white shadow-xs'
+                  : 'border border-slate-200 bg-white text-slate-600 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300'
               }`}
             >
               Dải bao chặn |f_k(x)| ≤ a_k
@@ -256,15 +259,33 @@ export function WeierstrassMTestDemo({
           />
 
           {/* Vạch chia trục Ox */}
-          <line x1={toSvgX(-Math.PI)} y1={yZeroSvg - 3} x2={toSvgX(-Math.PI)} y2={yZeroSvg + 3} stroke="#94a3b8" />
+          <line
+            x1={toSvgX(-Math.PI)}
+            y1={yZeroSvg - 3}
+            x2={toSvgX(-Math.PI)}
+            y2={yZeroSvg + 3}
+            stroke="#94a3b8"
+          />
           <text x={toSvgX(-Math.PI) - 8} y={yZeroSvg + 15} fontSize={10} fill="#64748b">
             -π
           </text>
-          <line x1={toSvgX(0)} y1={yZeroSvg - 3} x2={toSvgX(0)} y2={yZeroSvg + 3} stroke="#94a3b8" />
+          <line
+            x1={toSvgX(0)}
+            y1={yZeroSvg - 3}
+            x2={toSvgX(0)}
+            y2={yZeroSvg + 3}
+            stroke="#94a3b8"
+          />
           <text x={toSvgX(0) - 4} y={yZeroSvg + 15} fontSize={10} fill="#64748b">
             0
           </text>
-          <line x1={toSvgX(Math.PI)} y1={yZeroSvg - 3} x2={toSvgX(Math.PI)} y2={yZeroSvg + 3} stroke="#94a3b8" />
+          <line
+            x1={toSvgX(Math.PI)}
+            y1={yZeroSvg - 3}
+            x2={toSvgX(Math.PI)}
+            y2={yZeroSvg + 3}
+            stroke="#94a3b8"
+          />
           <text x={toSvgX(Math.PI) - 4} y={yZeroSvg + 15} fontSize={10} fill="#64748b">
             π
           </text>
@@ -290,7 +311,13 @@ export function WeierstrassMTestDemo({
                 strokeWidth={1.2}
                 strokeDasharray="4 3"
               />
-              <text x={toSvgX(xMax) - 75} y={yUpperSvg - 4} fontSize={10} fill="#d97706" fontWeight="bold">
+              <text
+                x={toSvgX(xMax) - 75}
+                y={yUpperSvg - 4}
+                fontSize={10}
+                fill="#d97706"
+                fontWeight="bold"
+              >
                 y = a_{inspectK} = {(1 / (inspectK * inspectK)).toFixed(3)}
               </text>
 
@@ -304,7 +331,13 @@ export function WeierstrassMTestDemo({
                 strokeWidth={1.2}
                 strokeDasharray="4 3"
               />
-              <text x={toSvgX(xMax) - 80} y={yLowerSvg + 12} fontSize={10} fill="#d97706" fontWeight="bold">
+              <text
+                x={toSvgX(xMax) - 80}
+                y={yLowerSvg + 12}
+                fontSize={10}
+                fill="#d97706"
+                fontWeight="bold"
+              >
                 y = -a_{inspectK} = {(-1 / (inspectK * inspectK)).toFixed(3)}
               </text>
 
@@ -326,26 +359,36 @@ export function WeierstrassMTestDemo({
       {/* Thống kê định lượng */}
       <div className="mt-4 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
         <div className="rounded border border-blue-200 bg-blue-50/60 p-2 dark:border-blue-900 dark:bg-blue-950/40">
-          <span className="text-[11px] font-medium text-blue-800 dark:text-blue-300">Tổng riêng số hạng</span>
-          <div className="font-mono text-sm font-bold text-blue-700 dark:text-blue-400">N = {N} số hạng</div>
+          <span className="text-[11px] font-medium text-blue-800 dark:text-blue-300">
+            Tổng riêng số hạng
+          </span>
+          <div className="font-mono text-sm font-bold text-blue-700 dark:text-blue-400">
+            N = {N} số hạng
+          </div>
         </div>
 
         <div className="rounded border border-amber-200 bg-amber-50/60 p-2 dark:border-amber-900 dark:bg-amber-950/40">
-          <span className="text-[11px] font-medium text-amber-800 dark:text-amber-300">Tổng chuỗi trội ∑ a_k</span>
+          <span className="text-[11px] font-medium text-amber-800 dark:text-amber-300">
+            Tổng chuỗi trội ∑ a_k
+          </span>
           <div className="font-mono text-sm font-bold text-amber-700 dark:text-amber-400">
             {sumMajorant.toFixed(4)}
           </div>
         </div>
 
         <div className="rounded border border-emerald-200 bg-emerald-50/60 p-2 dark:border-emerald-900 dark:bg-emerald-950/40">
-          <span className="text-[11px] font-medium text-emerald-800 dark:text-emerald-300">Tổng toàn phần ∑ 1/k²</span>
+          <span className="text-[11px] font-medium text-emerald-800 dark:text-emerald-300">
+            Tổng toàn phần ∑ 1/k²
+          </span>
           <div className="font-mono text-sm font-bold text-emerald-700 dark:text-emerald-400">
             π²/6 ≈ 1.6449
           </div>
         </div>
 
         <div className="rounded border border-purple-200 bg-purple-50/60 p-2 dark:border-purple-900 dark:bg-purple-950/40">
-          <span className="text-[11px] font-medium text-purple-800 dark:text-purple-300">Chặn sai số đều sup |R_N|</span>
+          <span className="text-[11px] font-medium text-purple-800 dark:text-purple-300">
+            Chặn sai số đều sup |R_N|
+          </span>
           <div className="font-mono text-sm font-bold text-purple-700 dark:text-purple-400">
             ≤ {remainderBound.toFixed(4)}
           </div>

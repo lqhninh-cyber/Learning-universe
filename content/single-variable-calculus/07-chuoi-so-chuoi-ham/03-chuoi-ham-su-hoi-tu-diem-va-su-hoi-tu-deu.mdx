@@ -1,0 +1,272 @@
+﻿---
+id: chuoi-ham-su-hoi-tu-diem-va-su-hoi-tu-deu
+title: 'Chuỗi hàm, sự hội tụ điểm và sự hội tụ đều'
+description: 'Khảo sát chuỗi hàm số thực: miền hội tụ, phân biệt hội tụ điểm và hội tụ đều, đặc trưng qua chuẩn supremum, tiêu chuẩn Cauchy và dấu hiệu Weierstrass M-test kèm mô phỏng dải bao trực quan.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - khai-niem-chuoi-so-chuoi-so-duong-va-tieu-chuan-cauchy
+  - cac-dau-hieu-hoi-tu-cua-chuoi-so
+  - ham-so-lien-tuc-deu-va-dinh-ly-cantor
+tags:
+  - chuỗi hàm
+  - miền hội tụ
+  - hội tụ điểm
+  - hội tụ đều
+  - chuẩn supremum
+  - tiêu chuẩn Cauchy
+  - dấu hiệu Weierstrass
+  - dải bao hội tụ
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '80-82'
+    sections: 'Mục 7.2.1'
+    note: 'Định nghĩa chuỗi hàm, tổng riêng Sn(x), hội tụ điểm, hội tụ đều, Định lý 7.2.1 (Tiêu chuẩn Cauchy), Định lý 7.2.2 (Weierstrass M-test), Ví dụ 7.2.3, 7.2.4, 7.2.5, 7.2.6'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của chuỗi hàm:** Nắm vững cấu trúc biểu diễn dãy hàm qua tổng riêng $S_n(x)$ và xác định chính xác miền hội tụ $D$.
+2. **Phân biệt rạch ròi hội tụ từng điểm và hội tụ đều:** Nhận diện sự khác biệt cốt lõi về sự phụ thuộc của chỉ số $N$ vào biến $x$ ($N(x, \varepsilon)$ so với $N(\varepsilon)$).
+3. **Làm chủ đặc trưng supremum:** Vận dụng công thức $\lim_{n \to \infty} \sup_{x \in D} |S_n(x) - S(x)| = 0$ để kiểm tra hoặc bác bỏ tính hội tụ đều.
+4. **Vận dụng thuần thục tiêu chuẩn Weierstrass M-test:** Đánh giá chặn trên độc lập với $x$ qua chuỗi số trội $\sum a_n$ để khẳng định sự hội tụ đều trên toàn tập xác định.
+</Note>
+
+## 1. Khái niệm Chuỗi hàm và Miền hội tụ
+
+Khi thay các số hạng hằng số $a_n$ của chuỗi số bằng các hàm số $f_n(x)$ cùng xác định trên một tập hợp $X \subset \mathbb{R}$, ta nhận được khái niệm **chuỗi hàm** (<Cite source="gt-gthmb-ttd-2022" page="80" note="Mục 7.2.1" />).
+
+<Definition
+  id="def-gthmb-c7-b3-chuoi-ham"
+  title="Chuỗi hàm, tổng riêng và miền hội tụ"
+>
+Cho dãy các hàm số thực $(f_n(x))_{n=1}^\infty$ cùng xác định trên tập hợp $X \subset \mathbb{R}$. Ta gọi biểu thức:
+$$
+f_1(x) + f_2(x) + \dots + f_n(x) + \dots = \sum_{n=1}^\infty f_n(x)
+$$
+là một **chuỗi hàm** trên tập $X$.
+
+Với mỗi $x \in X$, tổng hữu hạn:
+$$
+S_n(x) = f_1(x) + f_2(x) + \dots + f_n(x) = \sum_{k=1}^n f_k(x)
+$$
+được gọi là **tổng riêng thứ $n$** của chuỗi hàm trên $X$.
+
+- Nếu tại điểm $x_0 \in X$, chuỗi số $\sum_{n=1}^\infty f_n(x_0)$ hội tụ, ta gọi $x_0$ là một **điểm hội tụ** của chuỗi hàm. Ngược lại, nếu chuỗi số đó phân kỳ, ta gọi $x_0$ là một **điểm phân kỳ**.
+- Tập hợp tất cả các điểm hội tụ của chuỗi hàm được gọi là **miền hội tụ** $D$ của chuỗi hàm:
+  $$
+  D = \left\{ x \in X \;\middle|\; \sum_{n=1}^\infty f_n(x) \text{ hội tụ} \right\}
+  $$
+</Definition>
+
+<Example
+  id="ex-gthmb-c7-b3-tim-mien-hoi-tu"
+  title="Tìm miền hội tụ của chuỗi hàm"
+>
+Tìm miền hội tụ của chuỗi hàm $\sum_{n=1}^\infty \frac{1}{2^n x^n}$ với $x \neq 0$.
+
+**Lời giải:**
+Với mỗi $x \neq 0$ cố định, ta có chuỗi cấp số nhân với công bội $q(x) = \frac{1}{2x}$:
+$$
+\sum_{n=1}^\infty \left(\frac{1}{2x}\right)^n
+$$
+Chuỗi cấp số nhân hội tụ khi và chỉ khi:
+$$
+|q(x)| < 1 \iff \left| \frac{1}{2x} \right| < 1 \iff |x| > \frac{1}{2} \iff x \in \left(-\infty; -\frac{1}{2}\right) \cup \left(\frac{1}{2}; +\infty\right)
+$$
+Vậy miền hội tụ của chuỗi hàm là $D = (-\infty; -1/2) \cup (1/2; +\infty)$.
+</Example>
+
+## 2. Sự Hội tụ Từng điểm và Sự Hội tụ Đều
+
+Trên miền hội tụ $D$, mỗi giá trị $x \in D$ cho tương ứng với một số thực duy nhất $S(x) = \lim_{n \to \infty} S_n(x)$. Hàm số $S: D \to \mathbb{R}$ được gọi là **hàm tổng** của chuỗi hàm (<Cite source="gt-gthmb-ttd-2022" page="81" note="Mục 7.2.1" />).
+
+<Definition
+  id="def-gthmb-c7-b3-hoi-tu-diem"
+  title="Sự hội tụ từng điểm (Pointwise Convergence)"
+>
+Ta nói chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ **hội tụ từng điểm** về hàm tổng $S(x)$ trên miền $D$, ký hiệu $\sum_{n=1}^\infty f_n(x) = S(x)$, nếu:
+$$
+\forall x \in D, \; \forall \varepsilon > 0, \; \exists N \in \mathbb{N}^*, \; \forall n \ge N \implies |S_n(x) - S(x)| < \varepsilon
+$$
+</Definition>
+
+<Warning>
+Trong định nghĩa hội tụ từng điểm, chỉ số $N$ phụ thuộc vào **cả hai yếu tố**: độ chính xác $\varepsilon$ và vị trí điểm $x$, tức $N = N(x, \varepsilon)$. Khi điểm $x$ tiến gần tới biên của miền xác định, $N$ có thể tăng nhanh tới vô cùng. Điều này dẫn tới hiện tượng hàm tổng $S(x)$ có thể bị gián đoạn dù mọi hàm thành phần $f_n(x)$ đều liên tục.
+</Warning>
+
+Để khắc phục nhược điểm này, giải tích hiện đại đưa ra khái niệm **hội tụ đều**, trong đó chỉ số $N$ dùng chung cho toàn bộ tập hợp $D$.
+
+<Definition
+  id="def-gthmb-c7-b3-hoi-tu-deu"
+  title="Sự hội tụ đều (Uniform Convergence)"
+>
+Ta nói chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ **hội tụ đều** về hàm số $S(x)$ trên tập hợp $D$, ký hiệu:
+$$
+\sum_{n=1}^\infty f_n(x) \rightrightarrows S(x), \quad \forall x \in D
+$$
+nếu:
+$$
+\forall \varepsilon > 0, \; \exists N \in \mathbb{N}^*, \; \forall n \ge N, \; \forall x \in D \implies |S_n(x) - S(x)| < \varepsilon
+$$
+</Definition>
+
+### Đặc trưng Tương đương qua Chuẩn Cực đại (Supremum Norm)
+
+<Proposition
+  id="prop-gthmb-c7-b3-dac-trung-supremum"
+  title="Đặc trưng hội tụ đều qua supremum sai số"
+>
+Chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ hội tụ đều về $S(x)$ trên $D$ khi và chỉ khi:
+$$
+\lim_{n \to \infty} \sup_{x \in D} |S_n(x) - S(x)| = 0
+$$
+</Proposition>
+
+<Example
+  id="ex-gthmb-c7-b3-phan-biet-hoi-tu-deu"
+  title="Phân tích chuỗi lũy thừa hội tụ điểm nhưng không hội tụ đều"
+>
+Xét chuỗi lũy thừa $\sum_{n=1}^\infty x^n$ trên khoảng $[0; 1)$.
+- Với mỗi $x \in [0; 1)$, chuỗi là cấp số nhân có tổng $S(x) = \frac{x}{1-x}$. Do đó chuỗi hội tụ từng điểm về $S(x)$ trên $[0; 1)$.
+- Tổng riêng thứ $n$ là $S_n(x) = \frac{x(1-x^n)}{1-x}$. Sai số tại điểm $x$ là:
+  $$
+  |S(x) - S_n(x)| = \frac{x^{n+1}}{1-x}
+  $$
+- Xét trên đoạn $[0; c]$ với $0 < c < 1$: ta có $|S(x) - S_n(x)| \le \frac{c^{n+1}}{1-c}$. Vì $\lim_{n \to \infty} \frac{c^{n+1}}{1-c} = 0$, chuỗi **hội tụ đều** trên $[0; c]$.
+- Tuy nhiên, trên toàn khoảng $[0; 1)$: khi $x \to 1^-$, ta có $\lim_{x \to 1^-} \frac{x^{n+1}}{1-x} = +\infty$.
+  Do đó $\sup_{x \in [0; 1)} |S_n(x) - S(x)| = +\infty \not\to 0$.
+  Vậy chuỗi **không hội tụ đều** trên $[0; 1)$.
+</Example>
+
+## 3. Tiêu chuẩn Cauchy cho Sự Hội tụ Đều
+
+Tương tự như chuỗi số, ta có tiêu chuẩn Cauchy để kiểm tra tính hội tụ đều mà không cần biết trước hàm tổng $S(x)$ (<Cite source="gt-gthmb-ttd-2022" page="82" note="Định lý 7.2.1" />).
+
+<Theorem
+  id="thm-gthmb-c7-b3-cauchy-hoi-tu-deu"
+  title="Tiêu chuẩn Cauchy cho sự hội tụ đều"
+>
+Chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ hội tụ đều về hàm $S(x)$ trên $D$ khi và chỉ khi: với mọi $\varepsilon > 0$, tồn tại chỉ số $N \in \mathbb{N}^*$ sao cho với mọi $n \ge N$, mọi $p \in \mathbb{N}^*$ và mọi $x \in D$, ta đều có:
+$$
+|S_{n+p}(x) - S_n(x)| = |f_{n+1}(x) + f_{n+2}(x) + \dots + f_{n+p}(x)| < \varepsilon
+$$
+</Theorem>
+
+## 4. Dấu hiệu Weierstrass M-test (Weierstrass Majorant Criterion)
+
+Trong thực hành giải tích, đây là công cụ mạnh mẽ và tiện lợi nhất để chứng minh một chuỗi hàm hội tụ đều: tìm một chuỗi số dương hội tụ chặn trên độ lớn của các hàm thành phần (<Cite source="gt-gthmb-ttd-2022" page="82" note="Định lý 7.2.2" />).
+
+<Theorem
+  id="thm-gthmb-c7-b3-weierstrass-m-test"
+  title="Dấu hiệu Weierstrass M-test"
+>
+Giả sử dãy hàm $(f_n(x))$ thỏa mãn điều kiện:
+$$
+|f_n(x)| \le a_n, \quad \forall n \in \mathbb{N}^*, \; \forall x \in D
+$$
+trong đó $(a_n)$ là một dãy số thực không âm độc lập với $x$.
+
+Nếu chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ thì chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ **hội tụ đều** (và hội tụ tuyệt đối tại mọi điểm) trên $D$.
+</Theorem>
+
+<Proof>
+Với mọi $n \in \mathbb{N}^*$, mọi $p \in \mathbb{N}^*$ và mọi $x \in D$, áp dụng bất đẳng thức tam giác:
+$$
+|S_{n+p}(x) - S_n(x)| = \left| \sum_{k=n+1}^{n+p} f_k(x) \right| \le \sum_{k=n+1}^{n+p} |f_k(x)| \le \sum_{k=n+1}^{n+p} a_k
+$$
+Vì chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ nên theo tiêu chuẩn Cauchy cho chuỗi số:
+$$
+\forall \varepsilon > 0, \; \exists N \in \mathbb{N}^*, \; \forall n \ge N, \; \forall p \ge 1 \implies \sum_{k=n+1}^{n+p} a_k < \varepsilon
+$$
+Kết hợp lại, với mọi $n \ge N$, mọi $p \ge 1$ và mọi $x \in D$, ta có:
+$$
+|S_{n+p}(x) - S_n(x)| \le \sum_{k=n+1}^{n+p} a_k < \varepsilon
+$$
+Theo Định lý 7.2.1 (Tiêu chuẩn Cauchy cho sự hội tụ đều), chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ hội tụ đều trên $D$.
+</Proof>
+
+<Example
+  id="ex-gthmb-c7-b3-vi-du-weierstrass-cos"
+  title="Chuỗi lượng giác hội tụ đều trên toàn trục số thực"
+>
+Xét chuỗi hàm $\sum_{n=1}^\infty \frac{\cos(nx)}{n^2}$ trên $\mathbb{R}$.
+Với mọi $n \in \mathbb{N}^*$ và mọi $x \in \mathbb{R}$, ta có đánh giá:
+$$
+\left| \frac{\cos(nx)}{n^2} \right| \le \frac{1}{n^2}
+$$
+Vì chuỗi số $\sum_{n=1}^\infty \frac{1}{n^2}$ là chuỗi Riemann với $p = 2 > 1$ nên hội tụ.
+Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty \frac{\cos(nx)}{n^2}$ hội tụ đều trên toàn bộ $\mathbb{R}$.
+</Example>
+
+<Example
+  id="ex-gthmb-c7-b3-weierstrass-tim-cuc-tri"
+  title="Tìm giá trị cực đại để thiết lập chuỗi số trội"
+>
+Chứng minh chuỗi hàm $\sum_{n=1}^\infty x^3 e^{-nx}$ hội tụ đều trên nửa khoảng $[0; +\infty)$.
+
+**Lời giải:**
+Xét hàm số $g_n(x) = x^3 e^{-nx}$ trên $[0; +\infty)$. Ta tìm giá trị lớn nhất của $g_n(x)$:
+- Đạo hàm: $g_n'(x) = 3x^2 e^{-nx} - n x^3 e^{-nx} = x^2 (3 - nx) e^{-nx}$.
+- $g_n'(x) = 0 \iff x = 0$ hoặc $x = \frac{3}{n}$.
+- Bảng biến thiên cho thấy $g_n(x)$ đạt giá trị lớn nhất tại $x = \frac{3}{n}$:
+  $$
+  M_n = \sup_{x \ge 0} |g_n(x)| = g_n\left(\frac{3}{n}\right) = \left(\frac{3}{n}\right)^3 e^{-3} = \frac{27 e^{-3}}{n^3}
+  $$
+- Xét chuỗi số $\sum_{n=1}^\infty M_n = 27 e^{-3} \sum_{n=1}^\infty \frac{1}{n^3}$.
+  Vì chuỗi Riemann $\sum \frac{1}{n^3}$ hội tụ ($p = 3 > 1$), chuỗi số $\sum M_n$ hội tụ.
+- Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty x^3 e^{-nx}$ **hội tụ đều** trên $[0; +\infty)$.
+</Example>
+
+## 5. Mô phỏng Trực quan: Dấu hiệu Weierstrass M-test
+
+Mô phỏng dưới đây minh họa trực quan nguyên lý chặn trên của tiêu chuẩn Weierstrass. Dải bao biên độ $\pm \sum_{k=1}^N a_k$ co hẹp và ép chặt tổng riêng $S_N(x)$ tiến đều về hàm tổng $S(x)$ trên toàn miền hiển thị:
+
+<WeierstrassMTestDemo />
+
+## 6. Bài tập Áp dụng
+
+<Exercise
+  id="exer-gthmb-c7-b3-can-bac-bon"
+  title="Chứng minh chuỗi hàm hội tụ đều trên R"
+>
+Chứng minh chuỗi hàm sau hội tụ đều trên $\mathbb{R}$:
+$$
+\sum_{n=1}^\infty \frac{\sin(nx)}{\sqrt[4]{x^4 + n^5}}
+$$
+</Exercise>
+
+<Solution>
+Với mọi $x \in \mathbb{R}$ và mọi $n \in \mathbb{N}^*$, ta có $x^4 \ge 0$, do đó $x^4 + n^5 \ge n^5$.
+Từ đó suy ra mẫu số:
+$$
+\sqrt[4]{x^4 + n^5} \ge \sqrt[4]{n^5} = n^{5/4}
+$$
+Kết hợp với $|\sin(nx)| \le 1$, ta có đánh giá độc lập với biến $x$:
+$$
+\left| \frac{\sin(nx)}{\sqrt[4]{x^4 + n^5}} \right| \le \frac{1}{n^{5/4}}, \quad \forall x \in \mathbb{R}, \; \forall n \ge 1
+$$
+Xét chuỗi số $\sum_{n=1}^\infty \frac{1}{n^{5/4}}$. Đây là chuỗi Riemann với $p = \frac{5}{4} = 1.25 > 1$ nên hội tụ.
+Theo dấu hiệu Weierstrass M-test, chuỗi hàm đã cho **hội tụ đều** trên $\mathbb{R}$.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Chuỗi hàm và miền hội tụ:** Miền hội tụ $D$ là tập hợp tất cả các giá trị $x$ sao cho chuỗi số tương ứng $\sum f_n(x)$ hội tụ.
+- **Hội tụ điểm:** $N = N(x, \varepsilon)$ phụ thuộc vào từng điểm $x$. Không đảm bảo bảo toàn tính liên tục của hàm tổng.
+- **Hội tụ đều:** $N = N(\varepsilon)$ dùng chung cho toàn bộ tập $D$. Tương đương với $\lim_{n \to \infty} \sup_{x \in D} |S_n(x) - S(x)| = 0$.
+- **Dấu hiệu Weierstrass M-test:** Nếu $|f_n(x)| \le a_n$ với mọi $x \in D$ và chuỗi số $\sum a_n$ hội tụ thì chuỗi hàm $\sum f_n(x)$ hội tụ đều trên $D$.
+- **Kỹ thuật tìm dãy trội $a_n$:** Sử dụng bất đẳng thức lượng giác $|\sin u| \le 1$, $|\cos u| \le 1$, bất đẳng thức AM-GM, hoặc khảo sát đạo hàm tìm GTLN của $|f_n(x)|$ trên miền $D$.
+</KeyTakeaways>

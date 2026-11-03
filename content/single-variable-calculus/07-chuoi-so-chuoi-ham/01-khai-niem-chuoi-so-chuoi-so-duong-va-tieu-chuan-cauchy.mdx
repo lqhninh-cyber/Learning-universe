@@ -1,0 +1,392 @@
+﻿---
+id: khai-niem-chuoi-so-chuoi-so-duong-va-tieu-chuan-cauchy
+title: 'Khái niệm chuỗi số, chuỗi số dương và tiêu chuẩn Cauchy'
+description: 'Xây dựng nền tảng lý thuyết chuỗi số thực: khái niệm chuỗi, dãy tổng riêng, điều kiện cần hội tụ, phản ví dụ chuỗi điều hòa, tiêu chuẩn Cauchy, chuỗi cấp số nhân và đặc trưng chuỗi số dương.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+  - day-con-dinh-ly-bolzano-weierstrass-va-tieu-chuan-cauchy
+tags:
+  - chuỗi số
+  - tổng riêng
+  - điều kiện cần hội tụ
+  - chuỗi điều hòa
+  - tiêu chuẩn Cauchy
+  - cấp số nhân
+  - chuỗi số dương
+  - hội tụ tuyệt đối
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '77-79'
+    sections: 'Mục 7.1.1'
+    note: 'Định nghĩa 7.1.1, Nhận xét 7.1.2, Định lý 7.1.3, Ví dụ 7.1.4, Định lý 7.1.5, Định lý 7.1.6, Định lý 7.1.7'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất giải tích của chuỗi số:** Nắm vững cấu trúc biểu diễn tổng vô hạn thông qua giới hạn của dãy tổng riêng $(S_n)$.
+2. **Nắm vững điều kiện cần để chuỗi hội tụ:** Hiểu rõ tại sao $\lim a_n = 0$ là điều kiện bắt buộc nhưng chưa đủ, và phân tích sâu sắc phản ví dụ kinh điển của chuỗi điều hòa.
+3. **Làm chủ tiêu chuẩn Cauchy cho chuỗi số:** Vận dụng tiêu chuẩn Cauchy để kiểm tra tính hội tụ khi không biết trước tổng $S$, và phân biệt chuỗi hội tụ tuyệt đối với bán hội tụ.
+4. **Khai thác đặc trưng của chuỗi số dương:** Nhận diện tính chất đơn điệu tăng của dãy tổng riêng và mối liên hệ với tính bị chặn trên.
+</Note>
+
+## 1. Khái niệm Chuỗi số và Dãy tổng riêng
+
+Trong đại số sơ cấp, chúng ta chỉ thao tác với các phép cộng hữu hạn số hạng. Tuy nhiên, trong giải tích toán học, việc cộng vô hạn số hạng là công cụ nền tảng để xấp xỉ hàm số, giải phương trình vi phân và biểu diễn số thực (<Cite source="gt-gthmb-ttd-2022" page="77" note="Định nghĩa 7.1.1" />).
+
+<Definition
+  id="def-gthmb-c7-b1-chuoi-so"
+  title="Chuỗi số và dãy tổng riêng"
+>
+Cho dãy số thực $(a_n)_{n=1}^\infty$. Ta gọi biểu thức hình thức:
+$$
+a_1 + a_2 + \dots + a_n + \dots = \sum_{n=1}^\infty a_n
+$$
+là một **chuỗi số thực**, trong đó $a_n$ được gọi là **số hạng tổng quát** của chuỗi.
+
+Với mỗi số nguyên dương $n \in \mathbb{N}^*$, tổng hữu hạn:
+$$
+S_n = a_1 + a_2 + \dots + a_n = \sum_{k=1}^n a_k
+$$
+được gọi là **tổng riêng thứ $n$** của chuỗi số.
+
+- Nếu dãy các tổng riêng $(S_n)$ hội tụ về một số thực $S \in \mathbb{R}$ khi $n \to \infty$, ta nói chuỗi số $\sum_{n=1}^\infty a_n$ **hội tụ** về $S$, viết là:
+  $$
+  \sum_{n=1}^\infty a_n = S = \lim_{n \to \infty} S_n
+  $$
+  Số thực $S$ khi đó được gọi là **tổng của chuỗi số**.
+- Nếu giới hạn $\lim_{n \to \infty} S_n$ không tồn tại hoặc bằng $\pm\infty$, ta nói chuỗi số $\sum_{n=1}^\infty a_n$ **phân kỳ**.
+</Definition>
+
+<Remark>
+Bản chất của một chuỗi số không phải là việc "thực hiện vô hạn phép cộng", mà là **giới hạn của một dãy số đặc biệt** - dãy các tổng riêng $(S_n)$. Mọi khái niệm và định lý về giới hạn của dãy số đều có thể áp dụng trực tiếp cho chuỗi số.
+</Remark>
+
+## 2. Các Tính chất Đại số Cơ bản
+
+Từ định nghĩa tổng của chuỗi số qua giới hạn dãy số, ta suy ra các tính chất đại số quan trọng sau (<Cite source="gt-gthmb-ttd-2022" page="77" note="Nhận xét 7.1.2" />):
+
+<Theorem
+  id="thm-gthmb-c7-b1-tinh-chat-dai-so"
+  title="Tính chất tuyến tính và phần dư của chuỗi số"
+>
+Cho hai chuỗi số hội tụ $\sum_{n=1}^\infty a_n = A$ và $\sum_{n=1}^\infty b_n = B$, cùng các số thực $\alpha, \beta \in \mathbb{R}$.
+
+1. **Tính tuyến tính:** Chuỗi $\sum_{n=1}^\infty (\alpha a_n + \beta b_n)$ hội tụ và:
+   $$
+   \sum_{n=1}^\infty (\alpha a_n + \beta b_n) = \alpha A + \beta B
+   $$
+2. **Phần dư của chuỗi hội tụ:** Với mỗi $n \in \mathbb{N}^*$, chuỗi $R_n = \sum_{k=n+1}^\infty a_k$ được gọi là **phần dư thứ $n$** của chuỗi. Khi đó $S_n + R_n = S$ và:
+   $$
+   \lim_{n \to \infty} R_n = 0
+   $$
+3. **Tính độc lập với hữu hạn số hạng đầu:** Việc thay đổi, thêm vào hoặc bớt đi một số hữu hạn số hạng đầu tiên không làm thay đổi tính hội tụ hay phân kỳ của chuỗi số (mặc dù có thể làm thay đổi tổng của chuỗi).
+</Theorem>
+
+<Proof>
+1. Xét tổng riêng thứ $n$ của chuỗi tổ hợp tuyến tính:
+   $$
+   T_n = \sum_{k=1}^n (\alpha a_k + \beta b_k) = \alpha \sum_{k=1}^n a_k + \beta \sum_{k=1}^n b_k = \alpha S_n^{(a)} + \beta S_n^{(b)}
+   $$
+   Lấy giới hạn khi $n \to \infty$, áp dụng định lý giới hạn tổng và tích số của dãy số hội tụ:
+   $$
+   \lim_{n \to \infty} T_n = \alpha \lim_{n \to \infty} S_n^{(a)} + \beta \lim_{n \to \infty} S_n^{(b)} = \alpha A + \beta B
+   $$
+2. Ta có $R_n = S - S_n$. Do $\lim_{n \to \infty} S_n = S$, suy ra $\lim_{n \to \infty} R_n = \lim_{n \to \infty} (S - S_n) = S - S = 0$.
+3. Giả sử ta thay thế $m$ số hạng đầu tiên bằng các số khác. Khi $n > m$, tổng riêng mới $S_n'$ sai khác tổng riêng cũ $S_n$ một hằng số cố định $C = S_m' - S_m$. Do đó $(S_n')$ hội tụ khi và chỉ khi $(S_n)$ hội tụ.
+</Proof>
+
+## 3. Điều kiện cần để Chuỗi số Hội tụ
+
+Làm thế nào để nhận biết một chuỗi số chắc chắn phân kỳ một cách nhanh chóng? Định lý sau cung cấp điều kiện cần căn bản nhất (<Cite source="gt-gthmb-ttd-2022" page="78" note="Định lý 7.1.3" />).
+
+<Theorem
+  id="thm-gthmb-c7-b1-dieu-kien-can"
+  title="Điều kiện cần để chuỗi số hội tụ"
+>
+Nếu chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ thì:
+$$
+\lim_{n \to \infty} a_n = 0
+$$
+Nói cách khác, theo mệnh đề phản đảo: nếu $\lim_{n \to \infty} a_n \neq 0$ (hoặc không tồn tại giới hạn) thì chuỗi số $\sum_{n=1}^\infty a_n$ chắc chắn **phân kỳ**.
+</Theorem>
+
+<Proof>
+Gọi $S_n = \sum_{k=1}^n a_k$ là tổng riêng thứ $n$. Vì chuỗi $\sum_{n=1}^\infty a_n$ hội tụ nên tồn tại số thực $S = \lim_{n \to \infty} S_n$.
+Khi $n \to \infty$, ta cũng có $\lim_{n \to \infty} S_{n-1} = S$.
+Mặt khác, với mọi $n \ge 2$, ta có hệ thức:
+$$
+a_n = S_n - S_{n-1}
+$$
+Lấy giới hạn hai vế khi $n \to \infty$:
+$$
+\lim_{n \to \infty} a_n = \lim_{n \to \infty} (S_n - S_{n-1}) = \lim_{n \to \infty} S_n - \lim_{n \to \infty} S_{n-1} = S - S = 0
+$$
+Chứng minh hoàn tất.
+</Proof>
+
+<Warning>
+**Sai lầm phổ biến cần tuyệt đối tránh:** Chiều ngược lại của định lý trên **hoàn toàn không đúng**. Nghĩa là điều kiện $\lim_{n \to \infty} a_n = 0$ **không đủ** để kết luận chuỗi $\sum a_n$ hội tụ. Minh chứng kinh điển nhất chính là chuỗi điều hòa dưới đây.
+</Warning>
+
+<Counterexample
+  id="counter-gthmb-c7-b1-chuoi-dieu-hoa"
+  title="Chuỗi điều hòa phân kỳ dù số hạng tổng quát tiến về 0"
+>
+Xét **chuỗi điều hòa** (Harmonic series):
+$$
+\sum_{n=1}^\infty \frac{1}{n} = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \dots + \frac{1}{n} + \dots
+$$
+Ở đây, số hạng tổng quát $a_n = \frac{1}{n} \to 0$ khi $n \to \infty$. Tuy nhiên, chuỗi này **phân kỳ ra $+\infty$**.
+
+**Chứng minh (Phương pháp nhóm số hạng của Nicole Oresme, khoảng năm 1350):**
+Xét các tổng riêng với chỉ số là lũy thừa của 2, tức $n = 2^k$ ($k \in \mathbb{N}^*$):
+$$
+\begin{aligned}
+S_{2^k} &= 1 + \frac{1}{2} + \left(\frac{1}{3} + \frac{1}{4}\right) + \left(\frac{1}{5} + \frac{1}{6} + \frac{1}{7} + \frac{1}{8}\right) + \dots + \left(\frac{1}{2^{k-1}+1} + \dots + \frac{1}{2^k}\right) \\
+&> 1 + \frac{1}{2} + \left(\frac{1}{4} + \frac{1}{4}\right) + \left(\frac{1}{8} + \frac{1}{8} + \frac{1}{8} + \frac{1}{8}\right) + \dots + \underbrace{\left(\frac{1}{2^k} + \dots + \frac{1}{2^k}\right)}_{2^{k-1} \text{ số hạng}} \\
+&= 1 + \frac{1}{2} + 2 \cdot \frac{1}{4} + 4 \cdot \frac{1}{8} + \dots + 2^{k-1} \cdot \frac{1}{2^k} \\
+&= 1 + \frac{1}{2} + \frac{1}{2} + \frac{1}{2} + \dots + \frac{1}{2} = 1 + \frac{k}{2}
+\end{aligned}
+$$
+Khi $k \to \infty$, ta thấy $1 + \frac{k}{2} \to +\infty$, do đó $S_{2^k} \to +\infty$.
+Vì $(S_n)$ là dãy số dương tăng ngặt và có một dãy con $(S_{2^k})$ tiến ra $+\infty$, ta kết luận $\lim_{n \to \infty} S_n = +\infty$. Chuỗi điều hòa phân kỳ.
+</Counterexample>
+
+## 4. Hai Lớp Chuỗi Cơ bản Tính được Tổng
+
+### 4.1. Chuỗi Cấp số Nhân (Geometric Series)
+
+<Example
+  id="ex-gthmb-c7-b1-cap-so-nhan"
+  title="Khảo sát chuỗi cấp số nhân"
+>
+Xét chuỗi cấp số nhân với công bội $q \in \mathbb{R}$:
+$$
+\sum_{n=1}^\infty q^n = q + q^2 + q^3 + \dots + q^n + \dots
+$$
+Tổng riêng thứ $n$ là:
+$$
+S_n = \sum_{k=1}^n q^k = \begin{cases}
+\dfrac{q(1 - q^n)}{1 - q} & \text{khi } q \neq 1 \\
+n & \text{khi } q = 1
+\end{cases}
+$$
+- Nếu $|q| < 1$: Khi đó $\lim_{n \to \infty} q^n = 0$, suy ra:
+  $$
+  \lim_{n \to \infty} S_n = \lim_{n \to \infty} \frac{q(1 - q^n)}{1 - q} = \frac{q}{1 - q}
+  $$
+  Vậy chuỗi hội tụ và có tổng là $S = \frac{q}{1 - q}$ (nếu tính từ $n=0$ thì tổng là $\frac{1}{1-q}$).
+- Nếu $|q| \ge 1$: Khi đó $a_n = q^n$ không tiến về 0 khi $n \to \infty$. Theo Định lý 7.1.3 (điều kiện cần), chuỗi chắc chắn phân kỳ.
+</Example>
+
+### 4.2. Chuỗi Sai phân Lồng nhau (Telescoping Series)
+
+<Example
+  id="ex-gthmb-c7-b1-chuoi-sai-phan"
+  title="Tính tổng chuỗi sai phân lồng nhau"
+>
+Xét chuỗi số $\sum_{n=1}^\infty \frac{1}{n(n+1)}$. Ta phân tích số hạng tổng quát thành hiệu hai phân thức:
+$$
+a_n = \frac{1}{n(n+1)} = \frac{1}{n} - \frac{1}{n+1}
+$$
+Khi đó tổng riêng thứ $n$ là một tổng triệt tiêu liên tiếp:
+$$
+S_n = \left(1 - \frac{1}{2}\right) + \left(\frac{1}{2} - \frac{1}{3}\right) + \dots + \left(\frac{1}{n} - \frac{1}{n+1}\right) = 1 - \frac{1}{n+1}
+$$
+Lấy giới hạn khi $n \to \infty$:
+$$
+\lim_{n \to \infty} S_n = \lim_{n \to \infty} \left(1 - \frac{1}{n+1}\right) = 1
+$$
+Vậy chuỗi hội tụ và có tổng $\sum_{n=1}^\infty \frac{1}{n(n+1)} = 1$.
+</Example>
+
+## 5. Tiêu chuẩn Cauchy cho Chuỗi số
+
+Trong thực tế, hầu hết các chuỗi số không thể viết tổng riêng $S_n$ dưới dạng công thức tường minh để tìm giới hạn trực tiếp. Khi đó, **Tiêu chuẩn Cauchy** cho phép xác định tính hội tụ của chuỗi chỉ dựa trên quan hệ giữa các số hạng mà không cần biết trước tổng $S$ (<Cite source="gt-gthmb-ttd-2022" page="78" note="Định lý 7.1.5" />).
+
+<Theorem
+  id="thm-gthmb-c7-b1-tieu-chuan-cauchy"
+  title="Tiêu chuẩn Cauchy cho chuỗi số"
+>
+Chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ khi và chỉ khi: với mọi $\varepsilon > 0$, tồn tại chỉ số $N \in \mathbb{N}^*$ sao cho với mọi $n \ge N$ và mọi số nguyên dương $p \in \mathbb{N}^*$, ta đều có:
+$$
+|S_{n+p} - S_n| = |a_{n+1} + a_{n+2} + \dots + a_{n+p}| < \varepsilon
+$$
+</Theorem>
+
+<Proof>
+Chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ khi và chỉ khi dãy tổng riêng $(S_n)$ hội tụ trong $\mathbb{R}$.
+Theo nguyên lý Cauchy cho dãy số thực (tính đầy đủ của $\mathbb{R}$), dãy $(S_n)$ hội tụ khi và chỉ khi nó là dãy Cauchy, tức:
+$$
+\forall \varepsilon > 0, \; \exists N \in \mathbb{N}^*, \; \forall m, n \ge N \implies |S_m - S_n| < \varepsilon
+$$
+Đặt $m = n + p$ với $p \in \mathbb{N}^*$, ta có:
+$$
+|S_{n+p} - S_n| = \left|\sum_{k=n+1}^{n+p} a_k\right| = |a_{n+1} + a_{n+2} + \dots + a_{n+p}| < \varepsilon
+$$
+Định lý được chứng minh hoàn tất.
+</Proof>
+
+<Example
+  id="ex-gthmb-c7-b1-ap-dung-cauchy"
+  title="Vận dụng tiêu chuẩn Cauchy chứng minh chuỗi hội tụ"
+>
+Chứng minh chuỗi số $\sum_{n=1}^\infty \frac{\sin(n)}{2^n}$ hội tụ.
+
+**Lời giải:**
+Với mọi $n, p \in \mathbb{N}^*$, ta ước lượng tổng đoạn:
+$$
+\left|\sum_{k=n+1}^{n+p} \frac{\sin(k)}{2^k}\right| \le \sum_{k=n+1}^{n+p} \frac{|\sin(k)|}{2^k} \le \sum_{k=n+1}^{n+p} \frac{1}{2^k}
+$$
+Tổng cấp số nhân hữu hạn ở vế phải là:
+$$
+\sum_{k=n+1}^{n+p} \frac{1}{2^k} = \frac{1}{2^{n+1}} \cdot \frac{1 - (1/2)^p}{1 - 1/2} < \frac{1}{2^{n+1}} \cdot 2 = \frac{1}{2^n}
+$$
+Với mọi $\varepsilon > 0$, chọn $N \in \mathbb{N}^*$ sao cho $\frac{1}{2^N} < \varepsilon$ (tức $N > \log_2(1/\varepsilon)$).
+Khi đó, với mọi $n \ge N$ và mọi $p \ge 1$, ta có:
+$$
+\left|\sum_{k=n+1}^{n+p} \frac{\sin(k)}{2^k}\right| < \frac{1}{2^n} \le \frac{1}{2^N} < \varepsilon
+$$
+Theo tiêu chuẩn Cauchy, chuỗi $\sum_{n=1}^\infty \frac{\sin(n)}{2^n}$ hội tụ.
+</Example>
+
+## 6. Hội tụ Tuyệt đối và Bán hội tụ
+
+<Theorem
+  id="thm-gthmb-c7-b1-hoi-tu-tuyet-doi-keo-theo-hoi-tu"
+  title="Hội tụ tuyệt đối kéo theo hội tụ"
+>
+Nếu chuỗi các giá trị tuyệt đối $\sum_{n=1}^\infty |a_n|$ hội tụ thì chuỗi số $\sum_{n=1}^\infty a_n$ chắc chắn hội tụ.
+</Theorem>
+
+<Proof>
+Theo bất đẳng thức tam giác:
+$$
+|a_{n+1} + a_{n+2} + \dots + a_{n+p}| \le |a_{n+1}| + |a_{n+2}| + \dots + |a_{n+p}|
+$$
+Vì $\sum_{n=1}^\infty |a_n|$ hội tụ nên theo tiêu chuẩn Cauchy, với mọi $\varepsilon > 0$, tồn tại $N$ sao cho với mọi $n \ge N, p \ge 1$:
+$$
+|a_{n+1}| + |a_{n+2}| + \dots + |a_{n+p}| < \varepsilon
+$$
+Do đó $|a_{n+1} + \dots + a_{n+p}| < \varepsilon$. Theo tiêu chuẩn Cauchy, chuỗi $\sum a_n$ hội tụ.
+</Proof>
+
+<Definition
+  id="def-gthmb-c7-b1-phan-loai-hoi-tu"
+  title="Chuỗi hội tụ tuyệt đối và Bán hội tụ"
+>
+Cho chuỗi số thực $\sum_{n=1}^\infty a_n$:
+1. Nếu chuỗi $\sum_{n=1}^\infty |a_n|$ hội tụ, ta nói chuỗi $\sum_{n=1}^\infty a_n$ **hội tụ tuyệt đối** (absolutely convergent).
+2. Nếu chuỗi $\sum_{n=1}^\infty a_n$ hội tụ nhưng chuỗi $\sum_{n=1}^\infty |a_n|$ phân kỳ, ta nói chuỗi $\sum_{n=1}^\infty a_n$ **bán hội tụ** hay **hội tụ có điều kiện** (conditionally convergent).
+</Definition>
+
+<Example
+  id="ex-gthmb-c7-b1-vi-du-ban-hoi-tu"
+  title="Minh họa chuỗi bán hội tụ"
+>
+Chuỗi đan dấu $\sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dots$ hội tụ (về $\ln 2$, theo định lý Leibniz ở Bài 7.2).
+Tuy nhiên, chuỗi các giá trị tuyệt đối của nó chính là chuỗi điều hòa $\sum_{n=1}^\infty \frac{1}{n}$, vốn phân kỳ.
+Do đó, $\sum_{n=1}^\infty \frac{(-1)^{n-1}}{n}$ là một chuỗi **bán hội tụ**.
+</Example>
+
+## 7. Chuỗi số có các Số hạng không âm (Chuỗi số dương)
+
+Chuỗi số dương là lớp chuỗi có vai trò then chốt vì mọi chuỗi khác đều có thể quy về so sánh với chuỗi số dương thông qua hội tụ tuyệt đối (<Cite source="gt-gthmb-ttd-2022" page="79" note="Định lý 7.1.7" />).
+
+<Theorem
+  id="thm-gthmb-c7-b1-chuoi-so-duong-bi-chan"
+  title="Đặc trưng hội tụ của chuỗi số dương"
+>
+Cho chuỗi số $\sum_{n=1}^\infty a_n$ với $a_n \ge 0$ với mọi $n \in \mathbb{N}^*$.
+Chuỗi $\sum_{n=1}^\infty a_n$ hội tụ khi và chỉ khi dãy các tổng riêng $(S_n)$ bị **chặn trên**.
+
+Khi đó:
+$$
+\sum_{n=1}^\infty a_n = \sup_{n \in \mathbb{N}^*} S_n
+$$
+</Theorem>
+
+<Proof>
+Vì $a_n \ge 0$ với mọi $n \in \mathbb{N}^*$, ta có:
+$$
+S_{n+1} = S_n + a_{n+1} \ge S_n, \quad \forall n \ge 1
+$$
+Do đó dãy tổng riêng $(S_n)$ là một dãy số **đơn điệu tăng**.
+Theo Định lý Weierstrass về tính hội tụ của dãy đơn điệu: một dãy tăng hội tụ khi và chỉ khi nó bị chặn trên. Giới hạn của nó chính là $\sup_{n \ge 1} S_n$.
+Nếu dãy không bị chặn trên, hiển nhiên $\lim_{n \to \infty} S_n = +\infty$ (chuỗi phân kỳ).
+</Proof>
+
+## 8. Bài tập Củng cố
+
+<Exercise
+  id="exer-gthmb-c7-b1-tinh-tong-phan-thuc"
+  title="Tính tổng chuỗi phân thức ba thừa số ở mẫu"
+>
+Tính tổng của chuỗi số sau:
+$$
+S = \sum_{n=1}^\infty \frac{1}{n(n+1)(n+2)}
+$$
+</Exercise>
+
+<Solution>
+Ta tách số hạng tổng quát thành hiệu các phân thức đơn giản:
+$$
+a_n = \frac{1}{n(n+1)(n+2)} = \frac{1}{2} \left[ \frac{1}{n(n+1)} - \frac{1}{(n+1)(n+2)} \right]
+$$
+Đặt $u_n = \frac{1}{n(n+1)}$. Khi đó $a_n = \frac{1}{2}(u_n - u_{n+1})$.
+Tổng riêng thứ $n$ là:
+$$
+S_n = \sum_{k=1}^n a_k = \frac{1}{2} \sum_{k=1}^n (u_k - u_{k+1}) = \frac{1}{2} (u_1 - u_{n+1})
+$$
+Vì $u_1 = \frac{1}{1 \cdot 2} = \frac{1}{2}$ và $u_{n+1} = \frac{1}{(n+1)(n+2)}$, ta có:
+$$
+S_n = \frac{1}{2} \left( \frac{1}{2} - \frac{1}{(n+1)(n+2)} \right) = \frac{1}{4} - \frac{1}{2(n+1)(n+2)}
+$$
+Lấy giới hạn khi $n \to \infty$:
+$$
+S = \lim_{n \to \infty} S_n = \frac{1}{4}
+$$
+Vậy chuỗi hội tụ và có tổng bằng $\frac{1}{4}$.
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c7-b1-dieu-kien-can-phan-ky"
+  title="Dùng điều kiện cần kiểm tra tính phân kỳ"
+>
+Xét tính hội tụ hoặc phân kỳ của chuỗi số:
+$$
+\sum_{n=1}^\infty \left(\frac{n+1}{n+2}\right)^n
+$$
+</Exercise>
+
+<Solution>
+Ta kiểm tra giới hạn của số hạng tổng quát $a_n = \left(\frac{n+1}{n+2}\right)^n$:
+$$
+\lim_{n \to \infty} a_n = \lim_{n \to \infty} \left( 1 - \frac{1}{n+2} \right)^n = \lim_{n \to \infty} \left[ \left(1 - \frac{1}{n+2}\right)^{-(n+2)} \right]^{-\frac{n}{n+2}} = e^{-1} = \frac{1}{e}
+$$
+Vì $\lim_{n \to \infty} a_n = \frac{1}{e} \neq 0$, theo Định lý 7.1.3 (điều kiện cần), chuỗi số đã cho **phân kỳ**.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Định nghĩa chuỗi số:** Chuỗi $\sum_{n=1}^\infty a_n$ hội tụ về $S$ khi và chỉ khi dãy tổng riêng $S_n = \sum_{k=1}^n a_k$ có giới hạn hữu hạn $S$.
+- **Điều kiện cần $\lim a_n = 0$:** Nếu chuỗi hội tụ thì $a_n \to 0$. Tuy nhiên chiều ngược lại không đúng (minh chứng bởi chuỗi điều hòa $\sum 1/n$ phân kỳ).
+- **Chuỗi cấp số nhân:** $\sum_{n=1}^\infty q^n$ hội tụ khi $|q| < 1$ với tổng $\frac{q}{1-q}$, và phân kỳ khi $|q| \ge 1$.
+- **Tiêu chuẩn Cauchy:** $\sum a_n$ hội tụ $\iff \forall \varepsilon > 0, \exists N, \forall n \ge N, \forall p \ge 1 \implies |a_{n+1} + \dots + a_{n+p}| < \varepsilon$.
+- **Hội tụ tuyệt đối và bán hội tụ:** $\sum |a_n|$ hội tụ kéo theo $\sum a_n$ hội tụ. Nếu $\sum a_n$ hội tụ nhưng $\sum |a_n|$ phân kỳ thì chuỗi bán hội tụ.
+- **Chuỗi số dương:** Vì $S_n$ tăng ngặt nên chuỗi số dương hội tụ khi và chỉ khi dãy $(S_n)$ bị chặn trên.
+</KeyTakeaways>

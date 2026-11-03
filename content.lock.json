@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T16:31:14.014Z",
+  "updatedAt": "2026-11-03T16:55:50.709Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1864,6 +1864,98 @@
         "ex-gthmb-c6-b5-bai-5-bien-luan-tham-so-p": "6.5.5",
         "ex-gthmb-c6-b5-de-thi-mau-cau-4": "6.5.6",
         "ex-gthmb-c6-b5-bai-8-ham-gamma-euler": "6.5.7"
+      }
+    },
+    "khai-niem-chuoi-so-chuoi-so-duong-va-tieu-chuan-cauchy": {
+      "path": "content/single-variable-calculus/07-chuoi-so-chuoi-ham/01-khai-niem-chuoi-so-chuoi-so-duong-va-tieu-chuan-cauchy.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "b15fe16457453f2d38a382ca3e82dd60cc4bfd4610ec972e0703e972d194aeed",
+      "numberedBlocks": {
+        "def-gthmb-c7-b1-chuoi-so": "7.1.1",
+        "thm-gthmb-c7-b1-tinh-chat-dai-so": "7.1.2",
+        "thm-gthmb-c7-b1-dieu-kien-can": "7.1.3",
+        "counter-gthmb-c7-b1-chuoi-dieu-hoa": "7.1.1",
+        "ex-gthmb-c7-b1-cap-so-nhan": "7.1.2",
+        "ex-gthmb-c7-b1-chuoi-sai-phan": "7.1.3",
+        "thm-gthmb-c7-b1-tieu-chuan-cauchy": "7.1.4",
+        "ex-gthmb-c7-b1-ap-dung-cauchy": "7.1.4",
+        "thm-gthmb-c7-b1-hoi-tu-tuyet-doi-keo-theo-hoi-tu": "7.1.5",
+        "def-gthmb-c7-b1-phan-loai-hoi-tu": "7.1.6",
+        "ex-gthmb-c7-b1-vi-du-ban-hoi-tu": "7.1.5",
+        "thm-gthmb-c7-b1-chuoi-so-duong-bi-chan": "7.1.7",
+        "exer-gthmb-c7-b1-tinh-tong-phan-thuc": "7.1.1",
+        "exer-gthmb-c7-b1-dieu-kien-can-phan-ky": "7.1.2"
+      }
+    },
+    "cac-dau-hieu-hoi-tu-cua-chuoi-so": {
+      "path": "content/single-variable-calculus/07-chuoi-so-chuoi-ham/02-cac-dau-hieu-hoi-tu-cua-chuoi-so.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "1ce31b75c16752f41889926ed8bd74cf32cc3d08875f1cd43a766e920457ce2d",
+      "numberedBlocks": {
+        "thm-gthmb-c7-b2-so-sanh-truc-tiep": "7.2.1",
+        "thm-gthmb-c7-b2-so-sanh-gioi-han": "7.2.2",
+        "thm-gthmb-c7-b2-dau-hieu-tich-phan": "7.2.3",
+        "ex-gthmb-c7-b2-chuoi-riemann": "7.2.1",
+        "thm-gthmb-c7-b2-dalembert": "7.2.4",
+        "thm-gthmb-c7-b2-can-cauchy": "7.2.5",
+        "ex-gthmb-c7-b2-minh-hoa-dalembert-cauchy": "7.2.2",
+        "def-gthmb-c7-b2-chuoi-dan-dau": "7.2.6",
+        "thm-gthmb-c7-b2-leibniz": "7.2.7",
+        "ex-gthmb-c7-b2-ap-dung-leibniz": "7.2.3",
+        "exer-gthmb-c7-b2-so-sanh-luong-giac": "7.2.1",
+        "exer-gthmb-c7-b2-chuoi-giai-thua-kep": "7.2.2"
+      }
+    },
+    "chuoi-ham-su-hoi-tu-diem-va-su-hoi-tu-deu": {
+      "path": "content/single-variable-calculus/07-chuoi-so-chuoi-ham/03-chuoi-ham-su-hoi-tu-diem-va-su-hoi-tu-deu.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "934c1cba7fa2f9e30efa530cf65633c9916db245fb8b7e7b88dccc5214393b35",
+      "numberedBlocks": {
+        "def-gthmb-c7-b3-chuoi-ham": "7.3.1",
+        "ex-gthmb-c7-b3-tim-mien-hoi-tu": "7.3.1",
+        "def-gthmb-c7-b3-hoi-tu-diem": "7.3.2",
+        "def-gthmb-c7-b3-hoi-tu-deu": "7.3.3",
+        "prop-gthmb-c7-b3-dac-trung-supremum": "7.3.4",
+        "ex-gthmb-c7-b3-phan-biet-hoi-tu-deu": "7.3.2",
+        "thm-gthmb-c7-b3-cauchy-hoi-tu-deu": "7.3.5",
+        "thm-gthmb-c7-b3-weierstrass-m-test": "7.3.6",
+        "ex-gthmb-c7-b3-vi-du-weierstrass-cos": "7.3.3",
+        "ex-gthmb-c7-b3-weierstrass-tim-cuc-tri": "7.3.4",
+        "exer-gthmb-c7-b3-can-bac-bon": "7.3.1"
+      }
+    },
+    "ung-dung-cua-su-hoi-tu-deu": {
+      "path": "content/single-variable-calculus/07-chuoi-so-chuoi-ham/04-ung-dung-cua-su-hoi-tu-deu.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "eed6260bd21bdbf778bc845f902337f2afad0de7b67c3b31bb603bae53e7faa3",
+      "numberedBlocks": {
+        "thm-gthmb-c7-b4-tinh-lien-tuc-ham-tong": "7.4.1",
+        "counter-gthmb-c7-b4-gian-doan-khi-khong-hoi-tu-deu": "7.4.1",
+        "thm-gthmb-c7-b4-tich-phan-tung-so-hang": "7.4.2",
+        "thm-gthmb-c7-b4-dao-ham-tung-so-hang": "7.4.3",
+        "ex-gthmb-c7-b4-dao-ham-cap-so-nhan": "7.4.2",
+        "ex-gthmb-c7-b4-tich-phan-khai-trien-leibniz": "7.4.3",
+        "exer-gthmb-c7-b4-tinh-tong-tich-phan-phan-thuc": "7.4.1"
+      }
+    },
+    "he-thong-bai-tap-chuong-7-va-loi-giai-chuan": {
+      "path": "content/single-variable-calculus/07-chuoi-so-chuoi-ham/05-he-thong-bai-tap-chuong-7-va-loi-giai-chuan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "77bcd78c9afc800975e3e7eff10fbf81bb995a45e9b80287798b3b269cfbc572",
+      "numberedBlocks": {
+        "exer-gthmb-c7-b5-bai-1-tinh-tong": "7.5.1",
+        "exer-gthmb-c7-b5-bai-2-va-3-tinh-chat": "7.5.2",
+        "exer-gthmb-c7-b5-bai-4-bo-de-kronecker": "7.5.3",
+        "exer-gthmb-c7-b5-bai-5-va-6-chuoi-duong": "7.5.4",
+        "exer-gthmb-c7-b5-bai-7-chuoi-dan-dau": "7.5.5",
+        "exer-gthmb-c7-b5-bai-8-mien-hoi-tu": "7.5.6",
+        "exer-gthmb-c7-b5-bai-9-weierstrass": "7.5.7",
+        "exer-gthmb-c7-b5-de-thi-ket-thuc-hoc-phan": "7.5.8"
       }
     }
   }

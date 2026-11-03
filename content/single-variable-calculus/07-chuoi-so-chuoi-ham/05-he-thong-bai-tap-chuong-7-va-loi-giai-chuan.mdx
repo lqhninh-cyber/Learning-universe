@@ -1,0 +1,406 @@
+﻿---
+id: he-thong-bai-tap-chuong-7-va-loi-giai-chuan
+title: 'Hệ thống bài tập Chương 7 và lời giải chuẩn'
+description: 'Tuyển tập trọn vẹn bài tập cuối Chương 7 giáo trình GV. Trần Trí Dũng kèm bài toán thi kết thúc học phần: tính tổng chuỗi, so sánh, D’Alembert, Cauchy, Leibniz, miền hội tụ và Weierstrass M-test.'
+estimatedMinutes: 60
+level: advanced
+prerequisites:
+  - khai-niem-chuoi-so-chuoi-so-duong-va-tieu-chuan-cauchy
+  - cac-dau-hieu-hoi-tu-cua-chuoi-so
+  - chuoi-ham-su-hoi-tu-diem-va-su-hoi-tu-deu
+  - ung-dung-cua-su-hoi-tu-deu
+tags:
+  - bài tập chuỗi số
+  - bài tập chuỗi hàm
+  - tính tổng chuỗi
+  - miền hội tụ
+  - bán hội tụ
+  - tiêu chuẩn Weierstrass
+  - đề thi học phần
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '84-86'
+    sections: 'Bài tập cuối Chương 7'
+    note: 'Bài 1 đến Bài 10 (trang 84-86) và Đề thi kết thúc học phần môn Giải tích hàm một biến'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Thành thạo kỹ năng tính tổng chuỗi số:** Vận dụng cấp số nhân, sai phân lồng nhau và phương pháp đạo hàm / tích phân từng số hạng.
+2. **Khảo sát trọn vẹn sự hội tụ của chuỗi số dương:** Linh hoạt lựa chọn tiêu chuẩn tối ưu giữa So sánh tương đương, D'Alembert, căn số Cauchy và tích phân suy rộng.
+3. **Phân loại chính xác chuỗi đan dấu:** Xác định rõ miền hội tụ tuyệt đối, bán hội tụ và phân kỳ đối với chuỗi phụ thuộc tham số.
+4. **Giải quyết triệt để bài toán chuỗi hàm trong đề thi:** Tìm miền hội tụ tổng quát và sử dụng đánh giá bất đẳng thức (AM-GM, Cauchy-Schwarz) để chứng minh hội tụ đều bằng tiêu chuẩn Weierstrass M-test.
+</Note>
+
+## Dạng 1: Tính Tổng của Chuỗi Số (Bài 1 Giáo trình)
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-1-tinh-tong"
+  title="Tính tổng các chuỗi số cơ bản"
+>
+Tìm tổng của các chuỗi số sau:
+1. $S_a = \sum_{n=1}^\infty \frac{(-1)^{n-1}}{2^{n-1}}$
+2. $S_b = \sum_{n=1}^\infty \frac{2^n + 3^n}{6^n}$
+3. $S_c = \sum_{n=1}^\infty \frac{2n - 1}{2^n}$
+4. $S_d = \sum_{n=1}^\infty \frac{1}{n(n+1)(n+2)}$
+</Exercise>
+
+<Solution>
+**1. Câu a:**
+Chuỗi số có dạng:
+$$
+S_a = 1 - \frac{1}{2} + \frac{1}{4} - \frac{1}{8} + \dots = \sum_{n=1}^\infty \left(-\frac{1}{2}\right)^{n-1}
+$$
+Đây là chuỗi cấp số nhân lùi vô hạn với số hạng đầu $u_1 = 1$ và công bội $q = -\frac{1}{2}$ thỏa mãn $|q| < 1$.
+Tổng của chuỗi là:
+$$
+S_a = \frac{u_1}{1 - q} = \frac{1}{1 - \left(-\frac{1}{2}\right)} = \frac{1}{3/2} = \frac{2}{3}
+$$
+
+**2. Câu b:**
+Tách số hạng tổng quát thành hai phân số:
+$$
+a_n = \frac{2^n + 3^n}{6^n} = \left(\frac{2}{6}\right)^n + \left(\frac{3}{6}\right)^n = \left(\frac{1}{3}\right)^n + \left(\frac{1}{2}\right)^n
+$$
+Vì hai chuỗi cấp số nhân $\sum (1/3)^n$ và $\sum (1/2)^n$ đều hội tụ, ta có:
+$$
+S_b = \sum_{n=1}^\infty \left(\frac{1}{3}\right)^n + \sum_{n=1}^\infty \left(\frac{1}{2}\right)^n = \frac{1/3}{1 - 1/3} + \frac{1/2}{1 - 1/2} = \frac{1/3}{2/3} + \frac{1/2}{1/2} = \frac{1}{2} + 1 = \frac{3}{2}
+$$
+
+**3. Câu c:**
+Xét tổng riêng thứ $n$: $T_n = \sum_{k=1}^n \frac{2k - 1}{2^k} = \frac{1}{2} + \frac{3}{4} + \frac{5}{8} + \dots + \frac{2n - 1}{2^n}$.
+Nhân hai vế với $\frac{1}{2}$:
+$$
+\frac{1}{2} T_n = \frac{1}{4} + \frac{3}{8} + \dots + \frac{2n - 3}{2^n} + \frac{2n - 1}{2^{n+1}}
+$$
+Trừ vế theo vế:
+$$
+\frac{1}{2} T_n = \frac{1}{2} + \left[ \frac{2}{4} + \frac{2}{8} + \dots + \frac{2}{2^n} \right] - \frac{2n - 1}{2^{n+1}} = \frac{1}{2} + 2 \sum_{k=2}^n \frac{1}{2^k} - \frac{2n - 1}{2^{n+1}}
+$$
+Ta có $\sum_{k=2}^n \frac{1}{2^k} = \frac{1}{4} \cdot \frac{1 - (1/2)^{n-1}}{1 - 1/2} = \frac{1}{2} \left(1 - \frac{1}{2^{n-1}}\right)$. Do đó:
+$$
+\frac{1}{2} T_n = \frac{1}{2} + 1 - \frac{1}{2^{n-1}} - \frac{2n - 1}{2^{n+1}} = \frac{3}{2} - \frac{2n + 3}{2^{n+1}}
+$$
+Nhân 2 hai vế: $T_n = 3 - \frac{2n + 3}{2^n}$. Vì $\lim_{n \to \infty} \frac{2n + 3}{2^n} = 0$, ta kết luận:
+$$
+S_c = \lim_{n \to \infty} T_n = 3
+$$
+
+**4. Câu d:**
+Phân tích thành hiệu phân thức lồng nhau:
+$$
+\frac{1}{n(n+1)(n+2)} = \frac{1}{2} \left[ \frac{1}{n(n+1)} - \frac{1}{(n+1)(n+2)} \right]
+$$
+Tổng triệt tiêu liên tiếp cho ta:
+$$
+S_d = \frac{1}{2} \cdot \frac{1}{1 \cdot 2} = \frac{1}{4}
+$$
+</Solution>
+
+## Dạng 2: Tính chất của Chuỗi Hội tụ (Bài 2, 3, 4 Giáo trình)
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-2-va-3-tinh-chat"
+  title="Bất đẳng thức tích và bình phương của chuỗi hội tụ"
+>
+1. Chứng minh rằng nếu các chuỗi số $\sum_{n=1}^\infty a_n^2$ và $\sum_{n=1}^\infty b_n^2$ hội tụ thì các chuỗi $\sum_{n=1}^\infty |a_n b_n|$ và $\sum_{n=1}^\infty \frac{|a_n|}{n}$ cũng hội tụ.
+2. Chứng minh rằng nếu chuỗi số dương $\sum_{n=1}^\infty a_n$ hội tụ thì chuỗi $\sum_{n=1}^\infty a_n^2$ cũng hội tụ. Chiều ngược lại có đúng không?
+</Exercise>
+
+<Solution>
+**1. Câu 1:**
+- Áp dụng bất đẳng thức AM-GM: với mọi $n \in \mathbb{N}^*$:
+  $$
+  |a_n b_n| \le \frac{1}{2} \left( a_n^2 + b_n^2 \right)
+  $$
+  Vì $\sum a_n^2$ và $\sum b_n^2$ hội tụ, chuỗi tổng $\frac{1}{2} \sum (a_n^2 + b_n^2)$ hội tụ. Theo dấu hiệu so sánh trực tiếp, chuỗi $\sum_{n=1}^\infty |a_n b_n|$ hội tụ.
+- Đối với chuỗi $\sum_{n=1}^\infty \frac{|a_n|}{n}$, ta chọn $b_n = \frac{1}{n}$.
+  Vì chuỗi Riemann $\sum b_n^2 = \sum \frac{1}{n^2}$ hội tụ ($p = 2 > 1$) và $\sum a_n^2$ hội tụ, theo kết quả vừa chứng minh ở trên, chuỗi $\sum_{n=1}^\infty |a_n| \cdot \frac{1}{n} = \sum_{n=1}^\infty \frac{|a_n|}{n}$ chắc chắn hội tụ.
+
+**2. Câu 2:**
+- Vì chuỗi số $\sum a_n$ hội tụ, theo điều kiện cần, ta có $\lim_{n \to \infty} a_n = 0$.
+  Do đó tồn tại chỉ số $N \in \mathbb{N}^*$ sao cho với mọi $n \ge N$, ta có $0 \le a_n < 1$.
+  Khi đó $a_n^2 \le a_n$ với mọi $n \ge N$.
+  Theo dấu hiệu so sánh trực tiếp, chuỗi $\sum_{n=1}^\infty a_n^2$ hội tụ.
+- **Chiều ngược lại không đúng:** Phản ví dụ là chuỗi $a_n = \frac{1}{n}$.
+  Chuỗi bình phương $\sum_{n=1}^\infty a_n^2 = \sum_{n=1}^\infty \frac{1}{n^2}$ hội tụ (chuỗi Riemann với $p = 2$), nhưng chuỗi gốc $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \frac{1}{n}$ lại là chuỗi điều hòa phân kỳ.
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-4-bo-de-kronecker"
+  title="Dãy dương giảm hội tụ kéo theo lim(n * a_n) = 0"
+>
+Cho $(a_n)$ là dãy các số thực dương giảm và tiến về 0 sao cho chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ. Chứng minh rằng:
+$$
+\lim_{n \to \infty} n a_n = 0
+$$
+</Exercise>
+
+<Solution>
+Vì chuỗi $\sum a_n$ hội tụ, theo tiêu chuẩn Cauchy: với mọi $\varepsilon > 0$, tồn tại chỉ số $N \in \mathbb{N}^*$ sao cho với mọi $m > n \ge N$:
+$$
+\sum_{k=n+1}^m a_k < \frac{\varepsilon}{2}
+$$
+1. Chọn $m = 2n$ với $n \ge N$. Vì dãy $(a_n)$ là dãy giảm, ta có $a_k \ge a_{2n}$ với mọi $k \in \{n+1, \dots, 2n\}$. Do đó:
+   $$
+   n a_{2n} \le \sum_{k=n+1}^{2n} a_k < \frac{\varepsilon}{2} \implies 2n a_{2n} < \varepsilon
+   $$
+   Điều này chứng minh $\lim_{n \to \infty} 2n a_{2n} = 0$.
+2. Đối với chỉ số lẻ $2n+1$, vì $(a_n)$ giảm nên $a_{2n+1} \le a_{2n}$, suy ra:
+   $$
+   (2n + 1) a_{2n+1} \le \frac{2n + 1}{2n} \cdot (2n a_{2n}) \to 1 \cdot 0 = 0
+   $$
+Vì cả hai dãy con chỉ số chẵn $(2n a_{2n})$ và chỉ số lẻ $((2n+1) a_{2n+1})$ đều tiến về 0, ta kết luận $\lim_{n \to \infty} n a_n = 0$.
+</Solution>
+
+## Dạng 3: Tiêu chuẩn Hội tụ của Chuỗi Số Dương (Bài 5, 6 Giáo trình)
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-5-va-6-chuoi-duong"
+  title="Xét sự hội tụ bằng các dấu hiệu D'Alembert, Cauchy, Tích phân"
+>
+Xét tính hội tụ của các chuỗi số sau:
+1. $\sum_{n=1}^\infty (\sqrt{n^2 + n} - n)$
+2. $\sum_{n=1}^\infty \arctan\left(\frac{n^2 - 1}{n^3 + 1}\right)$
+3. $\sum_{n=1}^\infty \frac{2^n n!}{n^n}$
+4. $\sum_{n=1}^\infty \left(\frac{n-1}{n+1}\right)^{n(n-1)}$
+5. $\sum_{n=1}^\infty \frac{(n+1)^{n^2}}{3^n n^{n^2}}$
+6. $\sum_{n=2}^\infty \frac{1}{n(\ln n)^p}$ ($p \in \mathbb{R}$)
+7. $\sum_{n=1}^\infty \frac{1}{\ln(n!)}$
+</Exercise>
+
+<Solution>
+**1. Câu 1:**
+Nhân liên hợp số hạng tổng quát:
+$$
+a_n = \sqrt{n^2 + n} - n = \frac{(n^2 + n) - n^2}{\sqrt{n^2 + n} + n} = \frac{n}{n\sqrt{1 + 1/n} + n} = \frac{1}{\sqrt{1 + 1/n} + 1}
+$$
+Lấy giới hạn: $\lim_{n \to \infty} a_n = \frac{1}{1 + 1} = \frac{1}{2} \neq 0$.
+Vì $\lim a_n \neq 0$, theo điều kiện cần, chuỗi số **phân kỳ**.
+
+**2. Câu 2:**
+Khi $n \to \infty$, phân thức $\frac{n^2 - 1}{n^3 + 1} \sim \frac{1}{n} \to 0$.
+Sử dụng xấp xỉ tương đương $\arctan u \sim u$ khi $u \to 0$:
+$$
+a_n = \arctan\left(\frac{n^2 - 1}{n^3 + 1}\right) \sim \frac{1}{n}
+$$
+Vì chuỗi điều hòa $\sum \frac{1}{n}$ phân kỳ, theo dấu hiệu so sánh giới hạn, chuỗi đã cho **phân kỳ**.
+
+**3. Câu 3:**
+Áp dụng dấu hiệu D'Alembert cho $a_n = \frac{2^n n!}{n^n} > 0$:
+$$
+\frac{a_{n+1}}{a_n} = \frac{2^{n+1}(n+1)!}{(n+1)^{n+1}} \cdot \frac{n^n}{2^n n!} = 2 \cdot (n+1) \cdot \frac{n^n}{(n+1)^{n+1}} = 2 \left(\frac{n}{n+1}\right)^n = \frac{2}{\left(1 + \frac{1}{n}\right)^n}
+$$
+Giới hạn: $D = \lim_{n \to \infty} \frac{a_{n+1}}{a_n} = \frac{2}{e}$.
+Vì $e \approx 2.71828 > 2$, ta có $D = \frac{2}{e} < 1$.
+Theo dấu hiệu D'Alembert, chuỗi số **hội tụ**.
+
+**4. Câu 4:**
+Áp dụng dấu hiệu căn số Cauchy:
+$$
+C = \lim_{n \to \infty} \sqrt[n]{a_n} = \lim_{n \to \infty} \left( \frac{n - 1}{n + 1} \right)^{n - 1} = \lim_{n \to \infty} \left( 1 - \frac{2}{n + 1} \right)^{n - 1}
+$$
+Biến đổi số e:
+$$
+C = \lim_{n \to \infty} \left[ \left( 1 - \frac{2}{n + 1} \right)^{-\frac{n+1}{2}} \right]^{-\frac{2(n-1)}{n+1}} = e^{-2} = \frac{1}{e^2}
+$$
+Vì $C = \frac{1}{e^2} < 1$, theo dấu hiệu Cauchy, chuỗi số **hội tụ**.
+
+**5. Câu 5:**
+Áp dụng dấu hiệu căn số Cauchy:
+$$
+C = \lim_{n \to \infty} \sqrt[n]{a_n} = \lim_{n \to \infty} \sqrt[n]{\frac{(n+1)^{n^2}}{3^n n^{n^2}}} = \lim_{n \to \infty} \frac{(n+1)^n}{3 \cdot n^n} = \frac{1}{3} \lim_{n \to \infty} \left( 1 + \frac{1}{n} \right)^n = \frac{e}{3}
+$$
+Vì $e \approx 2.718 < 3$, ta có $C = \frac{e}{3} < 1$. Theo dấu hiệu Cauchy, chuỗi số **hội tụ**.
+
+**6. Câu 6:**
+Xét hàm số $f(x) = \frac{1}{x (\ln x)^p}$ trên $[2; +\infty)$. Hàm số dương và giảm liên tục.
+Tích phân suy rộng:
+$$
+\int_2^{+\infty} \frac{dx}{x (\ln x)^p} = \int_{\ln 2}^{+\infty} \frac{du}{u^p} \quad (\text{đổi biến } u = \ln x)
+$$
+Theo kết quả về tích phân suy rộng Riemann: tích phân này hội tụ khi và chỉ khi $p > 1$.
+Theo dấu hiệu tích phân Maclaurin-Cauchy, chuỗi $\sum_{n=2}^\infty \frac{1}{n(\ln n)^p}$ **hội tụ khi và chỉ khi $p > 1$**, và phân kỳ khi $p \le 1$.
+
+**7. Câu 7:**
+Ta có $n! = 1 \cdot 2 \cdots n < n \cdot n \cdots n = n^n$ với mọi $n \ge 2$.
+Lấy logarit tự nhiên: $\ln(n!) < \ln(n^n) = n \ln n$.
+Nghịch đảo:
+$$
+a_n = \frac{1}{\ln(n!)} > \frac{1}{n \ln n}
+$$
+Từ kết quả câu 6 với $p = 1$, chuỗi số $\sum_{n=2}^\infty \frac{1}{n \ln n}$ phân kỳ.
+Theo dấu hiệu so sánh trực tiếp, chuỗi $\sum_{n=1}^\infty \frac{1}{\ln(n!)}$ **phân kỳ**.
+</Solution>
+
+## Dạng 4: Chuỗi Đan Dấu và Phân loại Hội Tụ (Bài 7 Giáo trình)
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-7-chuoi-dan-dau"
+  title="Xét sự hội tụ tuyệt đối và bán hội tụ của chuỗi đan dấu"
+>
+Khảo sát sự hội tụ (hội tụ tuyệt đối hay bán hội tụ) của các chuỗi đan dấu sau:
+1. $\sum_{n=1}^\infty (-1)^n \frac{n+1}{n^2 + n + 2}$
+2. $\sum_{n=1}^\infty \frac{(-1)^n}{n^p}$ với $p \in \mathbb{R}$
+</Exercise>
+
+<Solution>
+**1. Câu 1:**
+- Xét dãy số hạng dương $a_n = \frac{n+1}{n^2 + n + 2}$. Ta thấy $a_n > 0$ và $\lim_{n \to \infty} a_n = 0$.
+  Xét hàm số $f(x) = \frac{x+1}{x^2 + x + 2}$ trên $[1; +\infty)$:
+  $$
+  f'(x) = \frac{(x^2 + x + 2) - (x + 1)(2x + 1)}{(x^2 + x + 2)^2} = \frac{-x^2 - 2x + 1}{(x^2 + x + 2)^2} < 0, \quad \forall x \ge 1
+  $$
+  Do đó dãy $(a_n)$ giảm ngặt. Theo dấu hiệu Leibniz, chuỗi đan dấu $\sum (-1)^n a_n$ **hội tụ**.
+- Xét chuỗi các giá trị tuyệt đối $\sum a_n = \sum \frac{n+1}{n^2 + n + 2}$.
+  Vì $a_n \sim \frac{1}{n}$ khi $n \to \infty$ và chuỗi điều hòa $\sum \frac{1}{n}$ phân kỳ, theo dấu hiệu so sánh giới hạn, chuỗi $\sum |a_n|$ phân kỳ.
+- **Kết luận:** Chuỗi số đã cho **bán hội tụ** (hội tụ có điều kiện).
+
+**2. Câu 2:**
+- Nếu $p \le 0$: khi $n \to \infty$, $|a_n| = \frac{1}{n^p} = n^{-p} \ge 1 \not\to 0$. Chuỗi phân kỳ theo điều kiện cần.
+- Nếu $p > 1$: chuỗi giá trị tuyệt đối $\sum \frac{1}{n^p}$ hội tụ (chuỗi Riemann). Do đó chuỗi **hội tụ tuyệt đối**.
+- Nếu $0 < p \le 1$: dãy $a_n = \frac{1}{n^p}$ giảm và tiến về 0, nên chuỗi hội tụ theo dấu hiệu Leibniz. Tuy nhiên chuỗi trị tuyệt đối $\sum \frac{1}{n^p}$ phân kỳ. Do đó chuỗi **bán hội tụ**.
+</Solution>
+
+## Dạng 5: Miền Hội Tụ của Chuỗi Hàm (Bài 8 Giáo trình)
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-8-mien-hoi-tu"
+  title="Tìm miền hội tụ của chuỗi hàm"
+>
+Tìm miền hội tụ, hội tụ tuyệt đối và bán hội tụ của chuỗi hàm:
+$$
+\sum_{n=2}^\infty \frac{(-1)^n}{2n - 1} \left( \frac{1 - x}{1 + x} \right)^n, \quad (x \neq -1)
+$$
+</Exercise>
+
+<Solution>
+Đặt biến phụ $u = \frac{1 - x}{1 + x}$. Chuỗi hàm trở thành chuỗi lũy thừa theo biến $u$:
+$$
+\sum_{n=2}^\infty \frac{(-1)^n}{2n - 1} u^n = \sum_{n=2}^\infty c_n u^n, \quad \text{với } c_n = \frac{(-1)^n}{2n - 1}
+$$
+1. Bán kính hội tụ:
+   $$
+   R = \lim_{n \to \infty} \left| \frac{c_n}{c_{n+1}} \right| = \lim_{n \to \infty} \frac{2n + 1}{2n - 1} = 1
+   $$
+   Do đó chuỗi hội tụ tuyệt đối khi $|u| < 1$.
+2. Xét tại các mút $u = \pm 1$:
+   - Khi $u = 1$: chuỗi trở thành $\sum_{n=2}^\infty \frac{(-1)^n}{2n - 1}$. Đây là chuỗi đan dấu thỏa mãn điều kiện Leibniz nên hội tụ (bán hội tụ vì $\sum \frac{1}{2n-1}$ phân kỳ).
+   - Khi $u = -1$: chuỗi trở thành $\sum_{n=2}^\infty \frac{(-1)^n (-1)^n}{2n - 1} = \sum_{n=2}^\infty \frac{1}{2n - 1}$. Chuỗi này cùng bản chất với chuỗi điều hòa nên phân kỳ.
+   - Như vậy, chuỗi hội tụ khi và chỉ khi:
+     $$
+     -1 < u \le 1
+     $$
+3. Trở lại biến $x$ ban đầu với $u = \frac{1 - x}{1 + x}$:
+   $$
+   \begin{cases}
+   \dfrac{1 - x}{1 + x} > -1 \\[2ex]
+   \dfrac{1 - x}{1 + x} \le 1
+   \end{cases} \iff \begin{cases}
+   \dfrac{1 - x + 1 + x}{1 + x} > 0 \\[2ex]
+   \dfrac{1 - x - (1 + x)}{1 + x} \le 0
+   \end{cases} \iff \begin{cases}
+   \dfrac{2}{1 + x} > 0 \\[2ex]
+   \dfrac{-2x}{1 + x} \le 0
+   \end{cases}
+   $$
+   - Từ bất phương trình đầu: $1 + x > 0 \iff x > -1$.
+   - Khi $1 + x > 0$, bất phương trình thứ hai tương đương $-2x \le 0 \iff x \ge 0$.
+   - Giao hai điều kiện: $x \ge 0$.
+4. **Kết luận:**
+   - Miền hội tụ của chuỗi hàm là $D = [0; +\infty)$.
+   - Miền hội tụ tuyệt đối là $(0; +\infty)$ (ứng với $|u| < 1 \iff x > 0$).
+   - Điểm bán hội tụ duy nhất là $x = 0$ (ứng với $u = 1$).
+</Solution>
+
+## Dạng 6: Tiêu chuẩn Weierstrass M-test Chứng minh Hội tụ Đều (Bài 9 Giáo trình)
+
+<Exercise
+  id="exer-gthmb-c7-b5-bai-9-weierstrass"
+  title="Dùng dấu hiệu Weierstrass chứng minh hội tụ đều"
+>
+Chứng minh các chuỗi hàm sau hội tụ đều trên miền đã cho:
+1. $\sum_{n=1}^\infty \frac{1}{x^2 + n^3}$ trên $\mathbb{R}$.
+2. $\sum_{n=1}^\infty \frac{x}{1 + x^2 n^4}$ trên $[0; +\infty)$.
+</Exercise>
+
+<Solution>
+**1. Câu 1:**
+Với mọi $x \in \mathbb{R}$ và mọi $n \in \mathbb{N}^*$, ta có $x^2 \ge 0 \implies x^2 + n^3 \ge n^3$.
+Do đó:
+$$
+\left| \frac{1}{x^2 + n^3} \right| \le \frac{1}{n^3}, \quad \forall x \in \mathbb{R}, \; \forall n \ge 1
+$$
+Chuỗi số $\sum_{n=1}^\infty \frac{1}{n^3}$ là chuỗi Riemann với $p = 3 > 1$ nên hội tụ.
+Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty \frac{1}{x^2 + n^3}$ **hội tụ đều** trên toàn bộ $\mathbb{R}$.
+
+**2. Câu 2:**
+Với $x \ge 0$ và $n \ge 1$, áp dụng bất đẳng thức AM-GM cho mẫu số:
+$$
+1 + x^2 n^4 \ge 2 \sqrt{1 \cdot (x^2 n^4)} = 2 x n^2
+$$
+Do đó, với mọi $x > 0$:
+$$
+\left| \frac{x}{1 + x^2 n^4} \right| \le \frac{x}{2 x n^2} = \frac{1}{2n^2}
+$$
+Bất đẳng thức này hiển nhiên cũng đúng tại $x = 0$ vì khi đó vế trái bằng 0 còn vế phải là $\frac{1}{2n^2} > 0$.
+Chuỗi số $\sum_{n=1}^\infty \frac{1}{2n^2} = \frac{1}{2} \sum_{n=1}^\infty \frac{1}{n^2}$ hội tụ.
+Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty \frac{x}{1 + x^2 n^4}$ **hội tụ đều** trên $[0; +\infty)$.
+</Solution>
+
+## Dạng 7: Bài Toán Thi Kết Thúc Học Phần Mẫu
+
+<Exercise
+  id="exer-gthmb-c7-b5-de-thi-ket-thuc-hoc-phan"
+  title="Câu 5 Đề thi học phần: Miền hội tụ và Chứng minh hội tụ đều"
+>
+Cho chuỗi hàm:
+$$
+\sum_{n=1}^\infty \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n
+$$
+1. Tìm miền hội tụ của chuỗi hàm trên $\mathbb{R}$.
+2. Chứng minh rằng chuỗi hàm hội tụ đều trên toàn bộ trục số thực $\mathbb{R}$.
+</Exercise>
+
+<Solution>
+**1. Tìm miền hội tụ:**
+Xét biểu thức $u(x) = \frac{x}{1 + x^2}$ trên $\mathbb{R}$.
+Theo bất đẳng thức đại số: $(|x| - 1)^2 \ge 0 \iff x^2 + 1 \ge 2|x|$.
+Chia cả hai vế cho $1 + x^2 > 0$:
+$$
+\frac{2|x|}{1 + x^2} \le 1 \iff |u(x)| = \left| \frac{x}{1 + x^2} \right| \le \frac{1}{2}, \quad \forall x \in \mathbb{R}
+$$
+(Dấu đẳng thức xảy ra khi $|x| = 1 \iff x = \pm 1$).
+Xét chuỗi lũy thừa $\sum_{n=1}^\infty \frac{u^n}{n}$. Chuỗi này có bán kính hội tụ $R = 1$.
+Vì $|u(x)| \le \frac{1}{2} < 1$ với mọi $x \in \mathbb{R}$, giá trị $u(x)$ luôn nằm hoàn toàn bên trong khoảng hội tụ $(-1; 1)$.
+Do đó, với mọi $x \in \mathbb{R}$, chuỗi số tương ứng luôn hội tụ tuyệt đối.
+Vậy **miền hội tụ của chuỗi hàm là toàn bộ $\mathbb{R}$**.
+
+**2. Chứng minh hội tụ đều trên $\mathbb{R}$:**
+Với mọi $x \in \mathbb{R}$ và mọi $n \in \mathbb{N}^*$, từ đánh giá $|u(x)| \le \frac{1}{2}$, ta có:
+$$
+\left| \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n \right| \le \frac{1}{n} \left( \frac{1}{2} \right)^n \le \left( \frac{1}{2} \right)^n = a_n
+$$
+Chuỗi số $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \left(\frac{1}{2}\right)^n$ là chuỗi cấp số nhân hội tụ có công bội $q = \frac{1}{2} < 1$.
+Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n$ **hội tụ đều trên toàn bộ $\mathbb{R}$**.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Phương pháp tính tổng chuỗi:** Quy về chuỗi cấp số nhân, chuỗi sai phân lồng nhau hoặc đạo hàm/tích phân chuỗi lũy thừa $\sum x^n = \frac{1}{1-x}$.
+- **Lựa chọn tiêu chuẩn chuỗi dương:** Có giai thừa $\implies$ dùng D'Alembert; có lũy thừa bậc $n, n^2 \implies$ dùng căn Cauchy; biểu thức phân thức đa thức $\implies$ dùng tương đương so sánh với chuỗi Riemann $\sum 1/n^p$.
+- **Khảo sát chuỗi đan dấu:** Luôn kiểm tra hai bước độc lập: (1) Hội tụ theo tiêu chuẩn Leibniz ($a_n \downarrow 0$); (2) Hội tụ tuyệt đối bằng cách xét chuỗi $|a_n|$.
+- **Chứng minh hội tụ đều:** Dùng bất đẳng thức đại số (AM-GM: $1 + x^2 \ge 2|x|$) hoặc tìm GTLN để chặn $|f_n(x)| \le a_n$ với $\sum a_n$ hội tụ.
+</KeyTakeaways>

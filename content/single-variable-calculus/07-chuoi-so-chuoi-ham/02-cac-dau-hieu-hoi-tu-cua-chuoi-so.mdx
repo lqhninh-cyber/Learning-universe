@@ -1,0 +1,346 @@
+﻿---
+id: cac-dau-hieu-hoi-tu-cua-chuoi-so
+title: 'Các dấu hiệu hội tụ của chuỗi số'
+description: 'Khảo sát toàn diện các tiêu chuẩn hội tụ: dấu hiệu so sánh trực tiếp và giới hạn, chuỗi Riemann, D’Alembert, căn số Cauchy, tích phân Maclaurin-Cauchy và dấu hiệu Leibniz cho chuỗi đan dấu kèm ước lượng sai số.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - khai-niem-chuoi-so-chuoi-so-duong-va-tieu-chuan-cauchy
+  - tich-phan-suy-rong-voi-can-vo-han
+tags:
+  - dấu hiệu so sánh
+  - chuỗi Riemann
+  - dấu hiệu D'Alembert
+  - dấu hiệu Cauchy
+  - dấu hiệu tích phân
+  - chuỗi đan dấu
+  - dấu hiệu Leibniz
+  - sai số phần dư
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '79-80'
+    sections: 'Mục 7.1.2'
+    note: 'Định lý 7.1.8, Định lý 7.1.9, Định lý 7.1.10, Định lý 7.1.11, Ví dụ 7.1.12, Định lý 7.1.13, Ví dụ 7.1.14, Định lý 7.1.15, Ví dụ 7.1.16'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Làm chủ các tiêu chuẩn so sánh:** Áp dụng thuần thục dấu hiệu so sánh trực tiếp và so sánh giới hạn với các chuỗi mẫu (chuỗi cấp số nhân và chuỗi Riemann $\sum 1/n^p$).
+2. **Khai thác dấu hiệu D'Alembert và căn số Cauchy:** Nhận diện khi nào dùng tỉ số $\lim |a_{n+1}/a_n|$ (chứa giai thừa $n!$, tích số) và khi nào dùng căn bậc $n$ $\lim \sqrt[n]{|a_n|}$ (chứa lũy thừa bậc $n, n^2$).
+3. **Liên kết chuỗi số và tích phân suy rộng:** Sử dụng dấu hiệu tích phân Maclaurin-Cauchy để khảo sát các chuỗi phức tạp như chuỗi Bertrand $\sum \frac{1}{n(\ln n)^p}$.
+4. **Khảo sát chuỗi đan dấu:** Vận dụng định lý Leibniz, phân biệt rạch ròi hội tụ tuyệt đối và bán hội tụ, đồng thời làm chủ công thức ước lượng sai số phần dư $|R_n| \le a_{n+1}$.
+</Note>
+
+## 1. Dấu hiệu So sánh cho Chuỗi số
+
+Phương pháp so sánh là công cụ nền tảng: để khảo sát một chuỗi phức tạp, ta đem so sánh các số hạng của nó với một chuỗi mẫu đã biết rõ tính hội tụ (<Cite source="gt-gthmb-ttd-2022" page="79" note="Định lý 7.1.8 & 7.1.9" />).
+
+### 1.1. Dấu hiệu So sánh Trực tiếp (Direct Comparison Test)
+
+<Theorem
+  id="thm-gthmb-c7-b2-so-sanh-truc-tiep"
+  title="Dấu hiệu so sánh trực tiếp"
+>
+Cho hai dãy số thực $(a_n)$ và $(b_n)$ thỏa mãn $|a_n| \le b_n$ với mọi $n \ge N$ ($N \in \mathbb{N}^*$).
+
+1. Nếu chuỗi $\sum_{n=1}^\infty b_n$ hội tụ thì chuỗi $\sum_{n=1}^\infty a_n$ **hội tụ tuyệt đối** (và do đó hội tụ).
+2. Nếu $a_n \ge b_n \ge 0$ với mọi $n \ge N$ và chuỗi $\sum_{n=1}^\infty b_n$ phân kỳ thì chuỗi $\sum_{n=1}^\infty a_n$ **phân kỳ**.
+</Theorem>
+
+<Proof>
+1. Với mọi $n \ge N$ và mọi $p \ge 1$:
+   $$
+   \sum_{k=n+1}^{n+p} |a_k| \le \sum_{k=n+1}^{n+p} b_k
+   $$
+   Vì $\sum b_n$ hội tụ, theo Tiêu chuẩn Cauchy, vế phải bé hơn $\varepsilon$ khi $n$ đủ lớn. Do đó chuỗi $\sum |a_n|$ hội tụ theo Tiêu chuẩn Cauchy.
+2. Giả sử ngược lại $\sum a_n$ hội tụ. Vì $0 \le b_n \le a_n$, theo phần 1 thì $\sum b_n$ phải hội tụ, mâu thuẫn với giả thiết $\sum b_n$ phân kỳ.
+</Proof>
+
+### 1.2. Dấu hiệu So sánh Giới hạn (Limit Comparison Test)
+
+<Theorem
+  id="thm-gthmb-c7-b2-so-sanh-gioi-han"
+  title="Dấu hiệu so sánh dạng giới hạn"
+>
+Giả sử $a_n > 0$ và $b_n > 0$ với mọi $n \ge N$, và tồn tại giới hạn:
+$$
+\lim_{n \to \infty} \frac{a_n}{b_n} = k \in [0; +\infty]
+$$
+Khi đó:
+1. Nếu $0 < k < +\infty$: Chuỗi $\sum_{n=1}^\infty a_n$ và chuỗi $\sum_{n=1}^\infty b_n$ **cùng hội tụ hoặc cùng phân kỳ**.
+2. Nếu $k = 0$: Nếu $\sum_{n=1}^\infty b_n$ hội tụ thì $\sum_{n=1}^\infty a_n$ hội tụ.
+3. Nếu $k = +\infty$: Nếu $\sum_{n=1}^\infty b_n$ phân kỳ thì $\sum_{n=1}^\infty a_n$ phân kỳ.
+</Theorem>
+
+<Proof>
+1. Khi $0 < k < +\infty$, theo định nghĩa giới hạn, với $\varepsilon = \frac{k}{2} > 0$, tồn tại $N_0$ sao cho với mọi $n \ge N_0$:
+   $$
+   \frac{k}{2} < \frac{a_n}{b_n} < \frac{3k}{2} \iff \frac{k}{2} b_n < a_n < \frac{3k}{2} b_n
+   $$
+   Áp dụng dấu hiệu so sánh trực tiếp: nếu $\sum b_n$ hội tụ thì $\sum a_n$ hội tụ (vì $a_n < \frac{3k}{2} b_n$); nếu $\sum b_n$ phân kỳ thì $\sum a_n$ phân kỳ (vì $a_n > \frac{k}{2} b_n$).
+2. Khi $k = 0$, tồn tại $N_0$ sao cho với mọi $n \ge N_0$, $\frac{a_n}{b_n} < 1 \implies a_n < b_n$. Do đó $\sum b_n$ hội tụ kéo theo $\sum a_n$ hội tụ.
+3. Khi $k = +\infty$, tồn tại $N_0$ sao cho với mọi $n \ge N_0$, $\frac{a_n}{b_n} > 1 \implies a_n > b_n$. Do đó $\sum b_n$ phân kỳ kéo theo $\sum a_n$ phân kỳ.
+</Proof>
+
+## 2. Chuỗi Chuẩn Riemann ($p$-series) và Dấu hiệu Tích phân
+
+Để so sánh hiệu quả, ta cần hệ thống chuỗi chuẩn. Quan trọng nhất là chuỗi Riemann $\sum_{n=1}^\infty \frac{1}{n^p}$, được khảo sát thông qua dấu hiệu tích phân (<Cite source="gt-gthmb-ttd-2022" page="80" note="Định lý 7.1.13 & Ví dụ 7.1.14" />).
+
+<Theorem
+  id="thm-gthmb-c7-b2-dau-hieu-tich-phan"
+  title="Dấu hiệu tích phân Maclaurin - Cauchy"
+>
+Cho hàm số $f: [1; +\infty) \to [0; +\infty)$ là một hàm số **đơn điệu giảm** và liên tục. Khi đó chuỗi số $\sum_{n=1}^\infty f(n)$ hội tụ khi và chỉ khi tích phân suy rộng:
+$$
+\int_1^{+\infty} f(x) dx
+$$
+hội tụ.
+</Theorem>
+
+<Proof>
+Vì $f$ là hàm giảm trên $[1; +\infty)$, với mọi $k \in \mathbb{N}^*$ và mọi $x \in [k; k+1]$, ta có:
+$$
+f(k+1) \le f(x) \le f(k)
+$$
+Lấy tích phân trên đoạn $[k; k+1]$ có độ dài bằng 1:
+$$
+f(k+1) \le \int_k^{k+1} f(x) dx \le f(k)
+$$
+Lấy tổng từ $k = 1$ đến $n - 1$:
+$$
+\sum_{k=1}^{n-1} f(k+1) \le \sum_{k=1}^{n-1} \int_k^{k+1} f(x) dx \le \sum_{k=1}^{n-1} f(k)
+$$
+Tức là:
+$$
+S_n - f(1) \le \int_1^n f(x) dx \le S_{n-1}
+$$
+Đặt $I_n = \int_1^n f(x) dx$. Vì $f(x) \ge 0$, cả hai dãy $(S_n)$ và $(I_n)$ đều là các dãy tăng.
+- Nếu $\int_1^{+\infty} f(x)dx$ hội tụ về $I$, thì $S_n \le f(1) + I_n \le f(1) + I$. Dãy $(S_n)$ tăng và bị chặn trên nên hội tụ.
+- Nếu chuỗi $\sum f(n)$ hội tụ về $S$, thì $I_n \le S$. Dãy $(I_n)$ tăng và bị chặn trên nên tích phân suy rộng hội tụ.
+</Proof>
+
+<Example
+  id="ex-gthmb-c7-b2-chuoi-riemann"
+  title="Khảo sát chuỗi Riemann tổng quát"
+>
+Xét chuỗi Riemann $\sum_{n=1}^\infty \frac{1}{n^p}$ với $p \in \mathbb{R}$.
+
+- Nếu $p \le 0$: khi $n \to \infty$, $\frac{1}{n^p} = n^{-p} \ge 1 \not\to 0$. Chuỗi phân kỳ theo điều kiện cần.
+- Nếu $p > 0$: hàm số $f(x) = \frac{1}{x^p}$ liên tục, dương và đơn điệu giảm trên $[1; +\infty)$. Ta xét tích phân suy rộng:
+  $$
+  \int_1^{+\infty} \frac{1}{x^p} dx = \lim_{B \to +\infty} \int_1^B x^{-p} dx = \begin{cases}
+  \lim\limits_{B \to +\infty} \dfrac{B^{1-p} - 1}{1 - p} = \dfrac{1}{p - 1} & \text{khi } p > 1 \\
+  \lim\limits_{B \to +\infty} \ln B = +\infty & \text{khi } p = 1
+  \end{cases}
+  $$
+**Kết luận:** Chuỗi $\sum_{n=1}^\infty \frac{1}{n^p}$ **hội tụ khi và chỉ khi $p > 1$**, và phân kỳ khi $p \le 1$.
+</Example>
+
+## 3. Dấu hiệu D'Alembert và Dấu hiệu Căn số Cauchy
+
+Khi số hạng tổng quát chứa giai thừa hoặc lũy thừa phụ thuộc biến chỉ số $n$, ta dùng tiêu chuẩn tỉ số hoặc căn số (<Cite source="gt-gthmb-ttd-2022" page="79" note="Định lý 7.1.10 & 7.1.11" />).
+
+### 3.1. Dấu hiệu Tỉ số D'Alembert
+
+<Theorem
+  id="thm-gthmb-c7-b2-dalembert"
+  title="Dấu hiệu D'Alembert"
+>
+Cho chuỗi số thực $\sum_{n=1}^\infty a_n$ với $a_n \neq 0$. Giả sử tồn tại giới hạn:
+$$
+\lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = D
+$$
+Khi đó:
+1. Nếu $D < 1$: Chuỗi $\sum_{n=1}^\infty a_n$ **hội tụ tuyệt đối**.
+2. Nếu $D > 1$: Chuỗi $\sum_{n=1}^\infty a_n$ **phân kỳ** (vì $|a_n| \not\to 0$).
+3. Nếu $D = 1$: Tiêu chuẩn **chưa thể kết luận** (chuỗi có thể hội tụ hoặc phân kỳ).
+</Theorem>
+
+<Proof>
+1. Giả sử $D < 1$. Chọn số $q$ sao cho $D < q < 1$. Đặt $\varepsilon = q - D > 0$. Khi đó tồn tại $N$ sao cho với mọi $n \ge N$:
+   $$
+   \left| \frac{a_{n+1}}{a_n} \right| < q \implies |a_{n+1}| < q |a_n|
+   $$
+   Bằng quy nạp, với mọi $k \ge 1$: $|a_{N+k}| < q^k |a_N|$.
+   Vì chuỗi cấp số nhân $\sum_{k=1}^\infty |a_N| q^k$ hội tụ (do $0 < q < 1$), theo dấu hiệu so sánh trực tiếp, chuỗi $\sum |a_n|$ hội tụ.
+2. Giả sử $D > 1$. Tồn tại $N$ sao cho với mọi $n \ge N$, $\left|\frac{a_{n+1}}{a_n}\right| > 1 \implies |a_{n+1}| > |a_n| > 0$. Dãy $(|a_n|)$ tăng ngặt từ chỉ số $N$ nên không thể tiến về 0. Do đó chuỗi phân kỳ.
+</Proof>
+
+### 3.2. Dấu hiệu Căn số Cauchy
+
+<Theorem
+  id="thm-gthmb-c7-b2-can-cauchy"
+  title="Dấu hiệu căn số Cauchy"
+>
+Cho chuỗi số thực $\sum_{n=1}^\infty a_n$. Giả sử tồn tại giới hạn:
+$$
+\lim_{n \to \infty} \sqrt[n]{|a_n|} = C
+$$
+Khi đó:
+1. Nếu $C < 1$: Chuỗi $\sum_{n=1}^\infty a_n$ **hội tụ tuyệt đối**.
+2. Nếu $C > 1$: Chuỗi $\sum_{n=1}^\infty a_n$ **phân kỳ**.
+3. Nếu $C = 1$: Tiêu chuẩn **chưa thể kết luận**.
+</Theorem>
+
+<Remark>
+Khi $D = 1$ hoặc $C = 1$, tiêu chuẩn D'Alembert và Cauchy hoàn toàn bất lực. Ví dụ với chuỗi $\sum \frac{1}{n}$ (phân kỳ) và $\sum \frac{1}{n^2}$ (hội tụ), cả hai đều có $D = 1$ và $C = 1$. Khi đó bắt buộc phải dùng dấu hiệu so sánh hoặc tích phân.
+</Remark>
+
+<Example
+  id="ex-gthmb-c7-b2-minh-hoa-dalembert-cauchy"
+  title="Áp dụng dấu hiệu D'Alembert và Cauchy"
+>
+1. **Xét chuỗi $\sum_{n=1}^\infty \frac{n!}{n^n}$:**
+   Áp dụng dấu hiệu D'Alembert:
+   $$
+   \frac{a_{n+1}}{a_n} = \frac{(n+1)!}{(n+1)^{n+1}} \cdot \frac{n^n}{n!} = \frac{n+1}{(n+1)^{n+1}} \cdot n^n = \frac{n^n}{(n+1)^n} = \left(\frac{n}{n+1}\right)^n = \frac{1}{\left(1 + \frac{1}{n}\right)^n}
+   $$
+   Lấy giới hạn: $D = \lim_{n \to \infty} \frac{1}{\left(1 + \frac{1}{n}\right)^n} = \frac{1}{e}$. Vì $\frac{1}{e} < 1$, chuỗi **hội tụ tuyệt đối**.
+
+2. **Xét chuỗi $\sum_{n=1}^\infty \frac{n^n}{e^{2n}}$:**
+   Áp dụng dấu hiệu Cauchy:
+   $$
+   C = \lim_{n \to \infty} \sqrt[n]{|a_n|} = \lim_{n \to \infty} \sqrt[n]{\frac{n^n}{e^{2n}}} = \lim_{n \to \infty} \frac{n}{e^2} = +\infty
+   $$
+   Vì $C = +\infty > 1$, chuỗi **phân kỳ**.
+</Example>
+
+## 4. Chuỗi Đan dấu và Dấu hiệu Leibniz
+
+Khi chuỗi không có số hạng dương mà đổi dấu xen kẽ liên tiếp, ta có cấu trúc chuỗi đan dấu (<Cite source="gt-gthmb-ttd-2022" page="80" note="Định lý 7.1.15 & Ví dụ 7.1.16" />).
+
+<Definition
+  id="def-gthmb-c7-b2-chuoi-dan-dau"
+  title="Chuỗi đan dấu"
+>
+Một chuỗi số có dạng:
+$$
+\sum_{n=1}^\infty (-1)^{n-1} a_n = a_1 - a_2 + a_3 - a_4 + \dots \quad (a_n > 0, \; \forall n \in \mathbb{N}^*)
+$$
+được gọi là một **chuỗi đan dấu** (alternating series).
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c7-b2-leibniz"
+  title="Dấu hiệu Leibniz và Ước lượng sai số phần dư"
+>
+Cho chuỗi đan dấu $\sum_{n=1}^\infty (-1)^{n-1} a_n$ thỏa mãn hai điều kiện sau:
+1. Dãy $(a_n)$ là dãy số **đơn điệu giảm**: $a_1 \ge a_2 \ge a_3 \ge \dots \ge a_n \ge a_{n+1} \dots$
+2. Dãy $(a_n)$ **tiến về 0**: $\lim_{n \to \infty} a_n = 0$.
+
+Khi đó:
+- Chuỗi đan dấu $\sum_{n=1}^\infty (-1)^{n-1} a_n$ **hội tụ** về một tổng $S \in \mathbb{R}$.
+- Tổng $S$ bị kẹp giữa hai tổng riêng liên tiếp bất kỳ: $S_{2n} < S < S_{2n+1}$.
+- Phần dư thứ $n$ thỏa mãn **ước lượng sai số Leibniz**:
+  $$
+  |R_n| = |S - S_n| \le a_{n+1}
+  $$
+</Theorem>
+
+<Proof>
+Xét các tổng riêng chỉ số chẵn $S_{2n}$ và chỉ số lẻ $S_{2n+1}$:
+1. Ta có:
+   $$
+   S_{2n+2} = S_{2n} + (a_{2n+1} - a_{2n+2}) \ge S_{2n} \quad (\text{do } a_{2n+1} \ge a_{2n+2})
+   $$
+   Nên $(S_{2n})$ là dãy tăng. Mặt khác:
+   $$
+   S_{2n} = a_1 - (a_2 - a_3) - (a_4 - a_5) - \dots - (a_{2n-2} - a_{2n-1}) - a_{2n} < a_1
+   $$
+   Dãy $(S_{2n})$ tăng và bị chặn trên bởi $a_1$ nên hội tụ về $S \in \mathbb{R}$.
+2. Xét tổng riêng chỉ số lẻ: $S_{2n+1} = S_{2n} + a_{2n+1}$.
+   Lấy giới hạn: $\lim_{n \to \infty} S_{2n+1} = \lim S_{2n} + \lim a_{2n+1} = S + 0 = S$.
+   Vì cả hai dãy con $(S_{2n})$ và $(S_{2n+1})$ cùng hội tụ về $S$, ta suy ra toàn bộ dãy $(S_n)$ hội tụ về $S$.
+3. Ước lượng sai số: phần dư $R_n = (-1)^n (a_{n+1} - a_{n+2} + a_{n+3} - \dots)$.
+   Tổng trong ngoặc cũng là một chuỗi Leibniz có số hạng đầu $a_{n+1}$, nên giá trị của nó thuộc $(0; a_{n+1})$. Do đó $|R_n| \le a_{n+1}$.
+</Proof>
+
+<Example
+  id="ex-gthmb-c7-b2-ap-dung-leibniz"
+  title="Khảo sát chuỗi Leibniz kinh điển"
+>
+Xét chuỗi $\sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dots$
+- Dãy $a_n = \frac{1}{n} > 0$ giảm ngặt và $\lim_{n \to \infty} \frac{1}{n} = 0$.
+- Theo dấu hiệu Leibniz, chuỗi hội tụ.
+- Vì chuỗi giá trị tuyệt đối $\sum \frac{1}{n}$ phân kỳ, chuỗi đã cho **bán hội tụ**.
+- Nếu xấp xỉ tổng $S$ bằng tổng riêng $S_4 = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} = \frac{7}{12} \approx 0.5833$, sai số không vượt quá $a_5 = \frac{1}{5} = 0.2$.
+</Example>
+
+## 5. Bảng Tổng hợp Tiêu chuẩn Hội tụ
+
+| Tiêu chuẩn | Điều kiện áp dụng | Công thức kiểm tra | Kết luận |
+| :--- | :--- | :--- | :--- |
+| **Điều kiện cần** | Mọi chuỗi số | $\lim a_n$ | $\ne 0 \implies$ Phân kỳ |
+| **So sánh trực tiếp** | $0 \le a_n \le b_n$ | Đánh giá bất đẳng thức | $\sum b_n \text{ HT} \implies \sum a_n \text{ HT}$ |
+| **So sánh giới hạn** | $a_n, b_n > 0$ | $k = \lim \frac{a_n}{b_n}$ | $k \in (0; +\infty) \implies$ cùng bản chất |
+| **D'Alembert** | $a_n \neq 0$ (giai thừa, tích) | $D = \lim \left\|\frac{a_{n+1}}{a_n}\right\|$ | $D < 1$: HTTĐ; $D > 1$: Phân kỳ |
+| **Cauchy căn số** | Lũy thừa bậc $n, n^2$ | $C = \lim \sqrt[n]{\|a_n\|}$ | $C < 1$: HTTĐ; $C > 1$: Phân kỳ |
+| **Tích phân** | $f(x) \ge 0$ giảm | $\int_1^{+\infty} f(x)dx$ | Cùng hội tụ hoặc phân kỳ |
+| **Leibniz** | Chuỗi đan dấu $a_n \downarrow 0$ | $a_{n+1} \le a_n, a_n \to 0$ | Chuỗi hội tụ, $\|R_n\| \le a_{n+1}$ |
+
+## 6. Bài tập Áp dụng
+
+<Exercise
+  id="exer-gthmb-c7-b2-so-sanh-luong-giac"
+  title="Xét sự hội tụ bằng dấu hiệu so sánh giới hạn"
+>
+Khảo sát sự hội tụ của chuỗi số:
+$$
+\sum_{n=1}^\infty \frac{1}{n} \sin\left(\frac{\pi}{2\sqrt{n}}\right)
+$$
+</Exercise>
+
+<Solution>
+Khi $n \to \infty$, ta có $\frac{\pi}{2\sqrt{n}} \to 0$. Sử dụng xấp xỉ tương đương $\sin u \sim u$ khi $u \to 0$:
+$$
+a_n = \frac{1}{n} \sin\left(\frac{\pi}{2\sqrt{n}}\right) \sim \frac{1}{n} \cdot \frac{\pi}{2\sqrt{n}} = \frac{\pi}{2 n^{3/2}}
+$$
+Chọn chuỗi so sánh $b_n = \frac{1}{n^{3/2}}$. Ta có $a_n > 0, b_n > 0$ và:
+$$
+\lim_{n \to \infty} \frac{a_n}{b_n} = \lim_{n \to \infty} \frac{\frac{1}{n}\sin\frac{\pi}{2\sqrt{n}}}{\frac{1}{n^{3/2}}} = \frac{\pi}{2} \in (0; +\infty)
+$$
+Vì chuỗi Riemann $\sum_{n=1}^\infty \frac{1}{n^{3/2}}$ hội tụ (do $p = \frac{3}{2} > 1$), theo dấu hiệu so sánh dạng giới hạn, chuỗi đã cho **hội tụ**.
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c7-b2-chuoi-giai-thua-kep"
+  title="Xét sự hội tụ bằng dấu hiệu D'Alembert"
+>
+Khảo sát sự hội tụ của chuỗi số:
+$$
+\sum_{n=1}^\infty \frac{(n!)^2}{(2n)!}
+$$
+</Exercise>
+
+<Solution>
+Số hạng tổng quát $a_n = \frac{(n!)^2}{(2n)!} > 0$. Lập tỉ số:
+$$
+\frac{a_{n+1}}{a_n} = \frac{[(n+1)!]^2}{[2(n+1)]!} \cdot \frac{(2n)!}{(n!)^2} = \frac{(n+1)^2}{(2n+2)(2n+1)} = \frac{(n+1)^2}{2(n+1)(2n+1)} = \frac{n+1}{4n+2}
+$$
+Lấy giới hạn khi $n \to \infty$:
+$$
+D = \lim_{n \to \infty} \frac{a_{n+1}}{a_n} = \lim_{n \to \infty} \frac{n+1}{4n+2} = \frac{1}{4}
+$$
+Vì $D = \frac{1}{4} < 1$, theo dấu hiệu D'Alembert, chuỗi số đã cho **hội tụ tuyệt đối**.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Dấu hiệu so sánh trực tiếp và giới hạn:** So sánh chuỗi khảo sát với chuỗi cấp số nhân $\sum q^n$ ($|q| < 1$) hoặc chuỗi Riemann $\sum 1/n^p$ ($p > 1$).
+- **Dấu hiệu D'Alembert:** Phù hợp với biểu thức chứa giai thừa và tích số; $D < 1$ thì hội tụ, $D > 1$ thì phân kỳ.
+- **Dấu hiệu căn số Cauchy:** Phù hợp với lũy thừa bậc $n$ hoặc $n^2$; $C < 1$ thì hội tụ, $C > 1$ thì phân kỳ.
+- **Khi $D = 1$ hoặc $C = 1$:** Không thể kết luận; cần chuyển sang tiêu chuẩn tích phân hoặc khai triển tiệm cận so sánh.
+- **Dấu hiệu Leibniz cho chuỗi đan dấu:** $\sum (-1)^{n-1} a_n$ hội tụ nếu $a_n \downarrow 0$. Sai số phần dư bị chặn bởi số hạng kế tiếp: $|R_n| \le a_{n+1}$.
+</KeyTakeaways>
