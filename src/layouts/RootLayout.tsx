@@ -1,15 +1,20 @@
 import {
   BookOpenText,
+  Clock,
   Compass,
   GraduationCap,
+  LogIn,
+  LogOut,
   Menu,
   Palette,
   ShieldCheck,
   User,
   UserCheck,
+  Users,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
+import { AuthModal, AuthProvider, PendingNoticeDialog, useAuth } from '@/features/auth';
 import { LoginPromptDialog, useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
 import { Badge, Button, Container, Drawer, KagomeWeaveDivider } from '@/shared/ui';
@@ -18,9 +23,19 @@ export function RootHydrateFallback() {
   return null;
 }
 
-export function RootLayout() {
-  const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
-  const enableLearnerMode = useLearningStore((state) => state.enableLearnerMode);
+function RootLayoutContent() {
+  const {
+    user,
+    isAuthenticated,
+    isAdmin,
+    isPending,
+    isApprovedStudent,
+    openAuthModal,
+    openPendingNotice,
+    signOut,
+  } = useAuth();
+
+  const isStoreAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { pathname, hash } = useLocation();
@@ -34,6 +49,13 @@ export function RootLayout() {
       }
     }
   }, [pathname, hash]);
+
+  const handleSignOut = async () => {
+    signOutLearnerMode();
+    await signOut();
+  };
+
+  const isUserLoggedIn = isAuthenticated || isStoreAuthenticated;
 
   return (
     <div className="bg-vn-bg text-vn-text flex min-h-screen flex-col">
@@ -88,6 +110,52 @@ export function RootLayout() {
                   >
                     Tra cứu thuật ngữ & ký hiệu
                   </Link>
+
+                  {isAdmin && (
+                    <Link
+                      to={ROUTES.adminUsers}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-2 rounded-xl bg-purple-50/70 px-3 py-2.5 text-sm font-semibold text-purple-800 hover:bg-purple-100"
+                    >
+                      <Users className="h-4 w-4" aria-hidden="true" />
+                      <span>Quản lý học viên</span>
+                    </Link>
+                  )}
+
+                  <div className="border-t border-stone-200 pt-3">
+                    {isUserLoggedIn ? (
+                      <div className="space-y-2 px-1">
+                        <div className="text-xs text-stone-500">
+                          Đăng nhập: {user?.fullName || user?.email || 'Học viên'}
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            void handleSignOut();
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className="w-full justify-start text-xs text-rose-700"
+                        >
+                          <LogOut className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                          <span>Đăng xuất</span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="subject"
+                        size="sm"
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          openAuthModal();
+                        }}
+                        className="w-full justify-start text-xs"
+                      >
+                        <LogIn className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+                        <span>Đăng nhập</span>
+                      </Button>
+                    )}
+                  </div>
                 </nav>
               </Drawer>
             </div>
@@ -133,29 +201,73 @@ export function RootLayout() {
               >
                 Thuật ngữ & Ký hiệu
               </Link>
+
+              {isAdmin && (
+                <Link
+                  to={ROUTES.adminUsers}
+                  className="flex items-center gap-1.5 rounded-lg border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-900 transition-colors hover:bg-purple-100"
+                >
+                  <Users className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Quản lý học viên</span>
+                </Link>
+              )}
             </nav>
           </div>
 
-          <nav aria-label="Điều hướng chính" className="flex items-center gap-2">
-            {isAuthenticated ? (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={signOutLearnerMode}
-                title="Nhấn để chuyển về chế độ Khách"
-              >
-                <UserCheck className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
-                <span>Chế độ Học viên</span>
-              </Button>
+          <nav aria-label="Điều hướng tài khoản và tiện ích" className="flex items-center gap-2">
+            {isUserLoggedIn ? (
+              <div className="flex items-center gap-2">
+                {/* Trạng thái Chờ duyệt: Hiển thị badge kèm popover thông báo */}
+                {isPending && (
+                  <button
+                    type="button"
+                    onClick={openPendingNotice}
+                    title="Tài khoản đang chờ phê duyệt. Nhấp để xem chi tiết."
+                    className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-800 transition-colors hover:bg-amber-100"
+                  >
+                    <Clock className="h-3.5 w-3.5 text-amber-700" aria-hidden="true" />
+                    <span>Chờ duyệt</span>
+                  </button>
+                )}
+
+                {/* Trạng thái Đã duyệt: Hiển thị badge Học viên */}
+                {(isApprovedStudent || (!user && isStoreAuthenticated)) && (
+                  <div className="flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800">
+                    <UserCheck className="h-3.5 w-3.5 text-emerald-700" aria-hidden="true" />
+                    <span>Học viên</span>
+                  </div>
+                )}
+
+                {/* Tên người dùng */}
+                <span
+                  className="hidden max-w-[140px] truncate text-xs font-medium text-stone-700 sm:inline-block"
+                  title={user?.fullName || user?.email || 'Học viên'}
+                >
+                  {user?.fullName || user?.email || 'Học viên'}
+                </span>
+
+                {/* Nút Đăng xuất */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => void handleSignOut()}
+                  title="Đăng xuất khỏi phiên học tập"
+                  className="h-8 px-2 text-stone-500 hover:text-stone-800"
+                >
+                  <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span className="hidden sm:inline">Đăng xuất</span>
+                </Button>
+              </div>
             ) : (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => enableLearnerMode()}
-                title="Kích hoạt chế độ Học viên để lưu tiến độ và ghi chú"
+                onClick={openAuthModal}
+                title="Đăng nhập tài khoản Google để kích hoạt đầy đủ quyền hạn học viên"
+                className="gap-1.5"
               >
                 <User className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
-                <span>Chế độ Khách</span>
+                <span>Đăng nhập</span>
               </Button>
             )}
 
@@ -201,6 +313,8 @@ export function RootLayout() {
         </Container>
       </main>
 
+      <AuthModal />
+      <PendingNoticeDialog />
       <LoginPromptDialog />
 
       <footer className="border-vn-border/70 bg-vn-surface/35 border-t">
@@ -264,5 +378,13 @@ export function RootLayout() {
         </Container>
       </footer>
     </div>
+  );
+}
+
+export function RootLayout() {
+  return (
+    <AuthProvider>
+      <RootLayoutContent />
+    </AuthProvider>
   );
 }

@@ -64,6 +64,20 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.adminUsers,
+        lazy: async () => {
+          const { ProtectedRoute } = await import('@/features/auth');
+          const { AdminUsersPage } = await import('@/pages/admin/AdminUsersPage');
+          return {
+            Component: () => (
+              <ProtectedRoute requireAdmin>
+                <AdminUsersPage />
+              </ProtectedRoute>
+            ),
+          };
+        },
+      },
+      {
         path: '/glossary',
         lazy: async () => {
           const { GlossaryPage } = await import('@/pages/glossary/GlossaryPage');

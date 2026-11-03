@@ -1,5 +1,6 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { Bookmark, CheckCircle2, FileEdit, UserCheck, X } from 'lucide-react';
+import { Bookmark, CheckCircle2, Clock, FileEdit, UserCheck, X } from 'lucide-react';
+import { useAuth } from '@/features/auth';
 import { Button } from '@/shared/ui';
 import { type PendingLearningActionType, useLearningStore } from './learning-store';
 
@@ -35,10 +36,11 @@ export function LoginPromptDialog() {
   const pendingAction = useLearningStore((state) => state.pendingPromptAction);
   const enableLearnerMode = useLearningStore((state) => state.enableLearnerMode);
   const dismissPrompt = useLearningStore((state) => state.dismissPrompt);
+  const { user, isPending, openAuthModal } = useAuth();
 
   const open = pendingAction !== null;
   const meta = pendingAction ? ACTION_LABELS[pendingAction.type] : ACTION_LABELS.complete;
-  const IconComponent = meta.Icon;
+  const IconComponent = isPending ? Clock : meta.Icon;
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={(isOpen) => !isOpen && dismissPrompt()}>
@@ -46,7 +48,11 @@ export function LoginPromptDialog() {
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-stone-950/40 backdrop-blur-xs" />
         <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-stone-200 bg-white p-6 shadow-xl focus:outline-none">
           <div className="flex items-start justify-between gap-4">
-            <div className="bg-subject-50 text-subject-600 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                isPending ? 'bg-amber-100 text-amber-700' : 'bg-subject-50 text-subject-600'
+              }`}
+            >
               <IconComponent className="h-5 w-5" aria-hidden="true" />
             </div>
             <DialogPrimitive.Close asChild>
@@ -60,33 +66,72 @@ export function LoginPromptDialog() {
             </DialogPrimitive.Close>
           </div>
 
-          <DialogPrimitive.Title className="mt-4 text-lg font-semibold text-stone-900">
-            {meta.title}
-          </DialogPrimitive.Title>
-          <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-stone-600">
-            {meta.description}
-          </DialogPrimitive.Description>
+          {isPending ? (
+            <>
+              <div className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-800">
+                <Clock className="h-3 w-3" aria-hidden="true" />
+                <span>Tài khoản {user?.email}</span>
+              </div>
+              <DialogPrimitive.Title className="mt-2 text-lg font-semibold text-stone-900">
+                Tài khoản của bạn đang chờ phê duyệt
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-stone-600">
+                Tài khoản của bạn đang chờ phê duyệt. Bạn hiện có thể đọc công khai toàn bộ tài liệu
+                lý thuyết, định lý và bài tập.
+              </DialogPrimitive.Description>
+              <div className="mt-4 rounded-xl border border-amber-200/80 bg-amber-50/50 p-3.5 text-xs leading-relaxed text-amber-900">
+                Tính năng lưu tiến độ, ghi chú cá nhân và bài học yêu thích sẽ được mở khóa tự động
+                ngay khi Ban biên tập duyệt quyền Học viên cho bạn.
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button variant="subject" size="sm" onClick={dismissPrompt}>
+                  Tiếp tục đọc bài học
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <DialogPrimitive.Title className="mt-4 text-lg font-semibold text-stone-900">
+                {meta.title}
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-stone-600">
+                {meta.description}
+              </DialogPrimitive.Description>
 
-          <div className="mt-4 rounded-xl border border-stone-200/80 bg-stone-50 p-3.5 text-xs leading-relaxed text-stone-600">
-            Theo <strong className="font-semibold text-stone-800">Quyết định D1</strong>, khách chưa
-            đăng nhập được đọc toàn bộ lý thuyết, định nghĩa, định lý và chứng minh công khai. Khi
-            kích hoạt chế độ học viên, thao tác vừa chọn sẽ được hoàn tất ngay lập tức.
-          </div>
+              <div className="mt-4 rounded-xl border border-stone-200/80 bg-stone-50 p-3.5 text-xs leading-relaxed text-stone-600">
+                Theo <strong className="font-semibold text-stone-800">Quyết định D1</strong>, khách
+                chưa đăng nhập được đọc toàn bộ lý thuyết, định nghĩa, định lý và chứng minh công
+                khai. Khi đăng nhập hoặc kích hoạt chế độ học viên, thao tác vừa chọn sẽ được hoàn
+                tất ngay lập tức.
+              </div>
 
-          <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button variant="outline" size="sm" onClick={dismissPrompt}>
-              Để sau (Chế độ Khách)
-            </Button>
-            <Button
-              variant="subject"
-              size="sm"
-              onClick={() => enableLearnerMode()}
-              className="gap-1.5"
-            >
-              <UserCheck className="h-4 w-4" aria-hidden="true" />
-              <span>Kích hoạt Chế độ Học viên</span>
-            </Button>
-          </div>
+              <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <Button variant="outline" size="sm" onClick={dismissPrompt}>
+                  Để sau (Chế độ Khách)
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    dismissPrompt();
+                    openAuthModal();
+                  }}
+                  className="text-stone-700"
+                >
+                  Đăng nhập Google
+                </Button>
+                <Button
+                  variant="subject"
+                  size="sm"
+                  onClick={() => enableLearnerMode()}
+                  className="gap-1.5"
+                >
+                  <UserCheck className="h-4 w-4" aria-hidden="true" />
+                  <span>Kích hoạt Chế độ Học viên</span>
+                </Button>
+              </div>
+            </>
+          )}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
