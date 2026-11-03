@@ -60,7 +60,7 @@ function saveLocalMockUsers(users: readonly UserProfile[]): void {
 }
 
 export async function fetchUsersList(): Promise<UserProfile[]> {
-  if (supabase && isSupabaseConfigured) {
+  if (supabase && isSupabaseConfigured && import.meta.env.MODE !== 'test') {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -93,7 +93,7 @@ export async function updateUserStatus(
 ): Promise<UserProfile> {
   const now = new Date().toISOString();
 
-  if (supabase && isSupabaseConfigured) {
+  if (supabase && isSupabaseConfigured && import.meta.env.MODE !== 'test') {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -142,7 +142,7 @@ export async function updateUserStatus(
 export async function updateUserRole(userId: string, newRole: UserRole): Promise<UserProfile> {
   const now = new Date().toISOString();
 
-  if (supabase && isSupabaseConfigured) {
+  if (supabase && isSupabaseConfigured && import.meta.env.MODE !== 'test') {
     try {
       const { data, error } = await supabase
         .from('profiles')

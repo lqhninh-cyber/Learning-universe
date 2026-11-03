@@ -113,7 +113,9 @@ create table if not exists public.user_progress (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles(id) on delete cascade not null,
   lesson_id text not null,
+  completed boolean default true,
   completed_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   constraint unique_user_lesson_progress unique(user_id, lesson_id)
 );
 
@@ -122,6 +124,7 @@ create table if not exists public.user_bookmarks (
   user_id uuid references public.profiles(id) on delete cascade not null,
   lesson_id text not null,
   created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   constraint unique_user_lesson_bookmark unique(user_id, lesson_id)
 );
 
@@ -129,15 +132,35 @@ create table if not exists public.user_notes (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles(id) on delete cascade not null,
   lesson_id text not null,
-  body text not null,
+  content text,
+  body text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint unique_user_lesson_note unique(user_id, lesson_id)
 );
 
+-- Bổ sung cột nếu bảng đã được tạo trước đó với schema khác
+alter table public.user_progress
+  add column if not exists completed boolean default true,
+  add column if not exists completed_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table public.user_notes
+  add column if not exists content text,
+  add column if not exists body text,
+  add column if not exists updated_at timestamptz default now();
+
+alter table public.user_bookmarks
+  add column if not exists updated_at timestamptz default now();
+
 alter table public.user_progress enable row level security;
 alter table public.user_bookmarks enable row level security;
 alter table public.user_notes enable row level security;
+
+-- Dọn dẹp policy cũ nếu có
+drop policy if exists "progress_owner_all" on public.user_progress;
+drop policy if exists "bookmarks_owner_all" on public.user_bookmarks;
+drop policy if exists "notes_owner_all" on public.user_notes;
 
 create policy "progress_owner_all"
 on public.user_progress for all

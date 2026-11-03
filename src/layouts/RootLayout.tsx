@@ -201,16 +201,6 @@ function RootLayoutContent() {
               >
                 Thuật ngữ & Ký hiệu
               </Link>
-
-              {isAdmin && (
-                <Link
-                  to={ROUTES.adminUsers}
-                  className="flex items-center gap-1.5 rounded-lg border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-900 transition-colors hover:bg-purple-100"
-                >
-                  <Users className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Quản lý học viên</span>
-                </Link>
-              )}
             </nav>
           </div>
 
