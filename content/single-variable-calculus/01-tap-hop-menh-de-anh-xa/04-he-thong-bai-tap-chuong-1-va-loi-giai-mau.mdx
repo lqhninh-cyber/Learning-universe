@@ -1,0 +1,436 @@
+---
+id: he-thong-bai-tap-chuong-1-va-loi-giai-mau
+title: 'Hệ thống bài tập Chương 1 và lời giải mẫu'
+description: 'Tuyển tập 9 bài tập cuối Chương 1 từ giáo trình Giải tích hàm một biến với đề bài chuẩn xác, khắc phục toàn bộ lỗi font ký hiệu toán học và trình bày lời giải chi tiết, mẫu mực theo chuẩn lập luận hai chiều bao hàm và suy luận logic.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - tap-hop-va-cac-phep-toan-tren-tap-hop
+  - menh-de-logic-va-cac-luong-tu
+  - anh-xa-don-anh-toan-anh-song-anh
+tags:
+  - bài tập chương 1
+  - lời giải chi tiết
+  - đại số tập hợp
+  - tích Descartes
+  - bảng chân trị
+  - lượng từ
+  - ảnh
+  - nghịch ảnh
+  - đơn ánh
+  - toàn ánh
+  - song ánh
+  - ánh xạ hợp
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '7-8'
+    sections: 'Bài tập cuối chương 1'
+    note: 'Hệ thống 9 bài tập tự luận cuối chương 1 kèm hướng dẫn và lời giải chi tiết'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Rèn luyện kỹ năng chứng minh tập hợp:** Vận dụng thành thạo phương pháp chứng minh hai chiều bao hàm ($A \subseteq B$ và $B \subseteq A$) hoặc chuỗi tương đương logic để chứng minh các đẳng thức đại số tập hợp phức tạp.
+2. **Khảo sát cấu trúc tích Descartes:** Chứng minh tính phân phối của tích Descartes đối với phép giao và phép hợp, nhận diện các trường hợp dấu bằng không xảy ra.
+3. **Phân tích chân trị và mệnh đề logic:** Lập bảng chân trị để kiểm chứng các tương đương logic, nhận diện mệnh đề và phân tích tính đúng sai của các khẳng định toán học chứa lượng từ.
+4. **Vận dụng sâu lý thuyết ánh xạ:** Thiết lập mối quan hệ giữa đơn ánh, toàn ánh với ảnh và nghịch ảnh của tập con, cũng như tính chất của ánh xạ hợp thành và ánh xạ ngược.
+</Note>
+
+## 1. Hướng dẫn phương pháp giải toán Chương 1
+
+Trước khi đi vào lời giải chi tiết cho 9 bài tập, ta tổng kết ba phương pháp chứng minh trụ cột:
+
+1. **Phương pháp hai chiều bao hàm:** Để chứng minh đẳng thức $A = B$:
+   - *Chiều 1 ($A \subseteq B$):* Lấy phần tử bất kỳ $x \in A$, dùng các giả thiết và định nghĩa để chỉ ra $x \in B$.
+   - *Chiều 2 ($B \subseteq A$):* Lấy phần tử bất kỳ $y \in B$, dùng lập luận tương tự để chỉ ra $y \in A$.
+2. **Phương pháp chuỗi tương đương logic:** Lấy $x$ tùy ý và thiết lập chuỗi:
+   $$
+   x \in A \iff P_1(x) \iff P_2(x) \iff \dots \iff x \in B.
+   $$
+   Khi mọi bước đều là tương đương hai chiều, ta kết luận ngay $A = B$.
+3. **Chứng minh đơn ánh và toàn ánh:**
+   - Để chứng minh $f$ đơn ánh: Giả sử $f(x) = f(x')$, biến đổi suy ra $x = x'$.
+   - Để chứng minh $f$ toàn ánh: Với mỗi $y \in Y$, giải phương trình $y = f(x)$ tìm nghiệm $x \in X$.
+
+---
+
+## 2. Hệ thống 9 bài tập cuối Chương 1 và Lời giải chi tiết
+
+<Exercise id="exr-gthmb-c1-bt1" title="Bài tập 1.1: Chứng minh các tính chất đại số cơ bản của phép toán tập hợp">
+Chứng minh các tính chất đã nêu ở Mục 1.1.3 của giáo trình:
+1. **Tính phân phối:**
+   $$
+   A \cup (B \cap C) = (A \cup B) \cap (A \cup C),
+   $$
+   $$
+   A \cap (B \cup C) = (A \cap B) \cup (A \cap C).
+   $$
+2. **Luật đối ngẫu De Morgan:**
+   $$
+   \left( \bigcup_{i \in I} A_i \right)^c = \bigcap_{i \in I} A_i^c, \quad \left( \bigcap_{i \in I} A_i \right)^c = \bigcup_{i \in I} A_i^c.
+   $$
+</Exercise>
+
+<Solution>
+1. **Chứng minh $A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$:**
+   Lấy phần tử $x$ bất kỳ thuộc không gian toàn thể $X$. Ta có chuỗi tương đương:
+   $$
+   \begin{aligned}
+   x \in A \cap (B \cup C) &\iff (x \in A) \wedge (x \in B \cup C) \\
+   &\iff (x \in A) \wedge ((x \in B) \vee (x \in C)) \\
+   &\iff ((x \in A) \wedge (x \in B)) \vee ((x \in A) \wedge (x \in C)) \\
+   &\iff (x \in A \cap B) \vee (x \in A \cap C) \\
+   &\iff x \in (A \cap B) \cup (A \cap C).
+   \end{aligned}
+   $$
+   Vì chuỗi tương đương đúng với mọi $x$, ta suy ra đẳng thức cần chứng minh. Đẳng thức phân phối của $\cup$ đối với $\cap$ được chứng minh hoàn toàn tương tự.
+
+2. **Chứng minh luật De Morgan cho họ tùy ý:**
+   - Với đẳng thức thứ nhất:
+     $$
+     x \in \left( \bigcup_{i \in I} A_i \right)^c \iff x \notin \bigcup_{i \in I} A_i \iff \forall i \in I, \, x \notin A_i \iff \forall i \in I, \, x \in A_i^c \iff x \in \bigcap_{i \in I} A_i^c.
+     $$
+   - Với đẳng thức thứ hai:
+     $$
+     x \in \left( \bigcap_{i \in I} A_i \right)^c \iff x \notin \bigcap_{i \in I} A_i \iff \exists i \in I, \, x \notin A_i \iff \exists i \in I, \, x \in A_i^c \iff x \in \bigcup_{i \in I} A_i^c.
+     $$
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt2" title="Bài tập 1.2: Các đẳng thức và quan hệ trên tập hợp">
+Cho các tập hợp $A, B, C$ là các tập con của một tập hợp toàn thể $X$. Chứng minh:
+1. $A \cap (B \setminus A) = \emptyset$.
+2. $A \cup (B \setminus A) = A \cup B$.
+3. $(A \cap B) \cup (A \setminus B) = A$.
+4. $A \setminus (B \setminus C) = (A \setminus B) \cup (A \cap C)$.
+5. $A^c \cap B^c = B^c$ và $B \subseteq A$ khi và chỉ khi $A = B$.
+</Exercise>
+
+<Solution>
+1. **Chứng minh $A \cap (B \setminus A) = \emptyset$:**
+   Ta có $B \setminus A = B \cap A^c$. Do đó:
+   $$
+   A \cap (B \setminus A) = A \cap (B \cap A^c) = (A \cap A^c) \cap B = \emptyset \cap B = \emptyset.
+   $$
+
+2. **Chứng minh $A \cup (B \setminus A) = A \cup B$:**
+   Sử dụng tính phân phối:
+   $$
+   A \cup (B \setminus A) = A \cup (B \cap A^c) = (A \cup B) \cap (A \cup A^c) = (A \cup B) \cap X = A \cup B.
+   $$
+
+3. **Chứng minh $(A \cap B) \cup (A \setminus B) = A$:**
+   Vì $A \setminus B = A \cap B^c$, ta áp dụng tính phân phối:
+   $$
+   (A \cap B) \cup (A \cap B^c) = A \cap (B \cup B^c) = A \cap X = A.
+   $$
+
+4. **Chứng minh $A \setminus (B \setminus C) = (A \setminus B) \cup (A \cap C)$:**
+   Ta biến đổi vế trái:
+   $$
+   \begin{aligned}
+   A \setminus (B \setminus C) &= A \cap (B \cap C^c)^c \\
+   &= A \cap (B^c \cup (C^c)^c) \quad (\text{Luật De Morgan}) \\
+   &= A \cap (B^c \cup C) \\
+   &= (A \cap B^c) \cup (A \cap C) \\
+   &= (A \setminus B) \cup (A \cap C).
+   \end{aligned}
+   $$
+
+5. **Chứng minh $A^c \cap B^c = B^c$ và $B \subseteq A \iff A = B$:**
+   - Theo luật De Morgan, $A^c \cap B^c = (A \cup B)^c$.
+     Do đó $(A \cup B)^c = B^c \iff A \cup B = B \iff A \subseteq B$.
+   - Kết hợp với giả thiết $B \subseteq A$, ta có đồng thời $A \subseteq B$ và $B \subseteq A$, điều này tương đương với $A = B$.
+   - Ngược lại, nếu $A = B$ thì hiển nhiên $B \subseteq A$ và $A^c \cap B^c = A^c \cap A^c = A^c = B^c$.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt3" title="Bài tập 1.3: Tính chất phân phối của tích Descartes">
+Cho $A, B$ là các tập con của $X$ và $C, D$ là các tập con của $Y$. Chứng minh:
+1. $(A \times C) \cap (B \times D) = (A \cap B) \times (C \cap D)$.
+2. $(A \times C) \cup (A \times D) = A \times (C \cup D)$.
+3. $(A \times C) \cup (B \times D) \subseteq (A \cup B) \times (C \cup D)$. Hãy đưa ra một ví dụ chỉ ra rằng đẳng thức không nhất thiết xảy ra.
+</Exercise>
+
+<Solution>
+1. **Chứng minh $(A \times C) \cap (B \times D) = (A \cap B) \times (C \cap D)$:**
+   Lấy cặp $(x, y) \in X \times Y$ bất kỳ:
+   $$
+   \begin{aligned}
+   (x, y) \in (A \times C) \cap (B \times D) &\iff (x, y) \in A \times C \text{ và } (x, y) \in B \times D \\
+   &\iff (x \in A \wedge y \in C) \wedge (x \in B \wedge y \in D) \\
+   &\iff (x \in A \wedge x \in B) \wedge (y \in C \wedge y \in D) \\
+   &\iff (x \in A \cap B) \wedge (y \in C \cap D) \\
+   &\iff (x, y) \in (A \cap B) \times (C \cap D).
+   \end{aligned}
+   $$
+
+2. **Chứng minh $(A \times C) \cup (A \times D) = A \times (C \cup D)$:**
+   Lấy cặp $(x, y) \in X \times Y$ bất kỳ:
+   $$
+   \begin{aligned}
+   (x, y) \in (A \times C) \cup (A \times D) &\iff (x \in A \wedge y \in C) \vee (x \in A \wedge y \in D) \\
+   &\iff x \in A \wedge (y \in C \vee y \in D) \\
+   &\iff x \in A \wedge y \in (C \cup D) \\
+   &\iff (x, y) \in A \times (C \cup D).
+   \end{aligned}
+   $$
+
+3. **Chứng minh bao hàm $(A \times C) \cup (B \times D) \subseteq (A \cup B) \times (C \cup D)$ và phản ví dụ:**
+   - *Chứng minh bao hàm:*
+     Lấy $(x, y) \in (A \times C) \cup (B \times D)$. Khi đó:
+     - Hoặc $(x, y) \in A \times C \implies x \in A \subseteq A \cup B$ và $y \in C \subseteq C \cup D \implies (x, y) \in (A \cup B) \times (C \cup D)$.
+     - Hoặc $(x, y) \in B \times D \implies x \in B \subseteq A \cup B$ và $y \in D \subseteq C \cup D \implies (x, y) \in (A \cup B) \times (C \cup D)$.
+     Trong cả hai trường hợp đều có $(x, y) \in (A \cup B) \times (C \cup D)$. Vậy phép bao hàm được chứng minh.
+   - *Phản ví dụ đẳng thức không xảy ra:*
+     Chọn $A = \{1\}, B = \{2\}$ và $C = \{3\}, D = \{4\}$.
+     Khi đó:
+     - $A \times C = \{(1, 3)\}$, $B \times D = \{(2, 4)\}$.
+       Vế trái: $(A \times C) \cup (B \times D) = \{(1, 3), (2, 4)\}$.
+     - $A \cup B = \{1, 2\}$, $C \cup D = \{3, 4\}$.
+       Vế phải: $(A \cup B) \times (C \cup D) = \{(1, 3), (1, 4), (2, 3), (2, 4)\}$.
+     Rõ ràng cặp $(1, 4)$ thuộc vế phải nhưng không thuộc vế trái. Do đó đẳng thức không xảy ra!
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt4" title="Bài tập 1.4: Lập bảng chân trị chứng minh Mệnh đề 1.2.2">
+Bằng cách lập bảng giá trị logic $0$ và $1$, hãy chứng minh các quy tắc tương đương trong Mệnh đề 1.2.2:
+1. $p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p} \equiv \bar{p} \vee q$.
+2. $\overline{p \wedge q} \equiv \bar{p} \vee \bar{q}$ và $\overline{p \vee q} \equiv \bar{p} \wedge \bar{q}$.
+3. $\overline{p \Rightarrow q} \equiv p \wedge \bar{q}$.
+</Exercise>
+
+<Solution>
+Ta lập bảng chân trị tổng hợp cho tất cả các mệnh đề cần kiểm tra:
+
+| $p$ | $q$ | $\bar{p}$ | $\bar{q}$ | $p \Rightarrow q$ | $\bar{q} \Rightarrow \bar{p}$ | $\bar{p} \vee q$ | $\overline{p \wedge q}$ | $\bar{p} \vee \bar{q}$ | $\overline{p \Rightarrow q}$ | $p \wedge \bar{q}$ |
+| :-: | :-: | :-------: | :-------: | :---------------: | :---------------------------: | :--------------: | :---------------------: | :--------------------: | :---------------------------: | :-----------------: |
+|  1  |  1  |     0     |     0     |         1         |               1               |        1         |            0            |           0            |               0               |          0          |
+|  1  |  0  |     0     |     1     |         0         |               0               |        0         |            1            |           1            |               1               |          1          |
+|  0  |  1  |     1     |     0     |         1         |               1               |        1         |            1            |           1            |               0               |          0          |
+|  0  |  0  |     1     |     1     |         1         |               1               |        1         |            1            |           1            |               0               |          0          |
+
+Từ bảng chân trị:
+- Cột $p \Rightarrow q$, $\bar{q} \Rightarrow \bar{p}$ và $\bar{p} \vee q$ hoàn toàn trùng nhau $(1, 0, 1, 1)$, chứng minh mục 1.
+- Cột $\overline{p \wedge q}$ và $\bar{p} \vee \bar{q}$ hoàn toàn trùng nhau $(0, 1, 1, 1)$, chứng minh luật De Morgan thứ nhất.
+- Cột $\overline{p \Rightarrow q}$ và $p \wedge \bar{q}$ hoàn toàn trùng nhau $(0, 1, 0, 0)$, chứng minh mục 3.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt5" title="Bài tập 1.5: Phát biểu và xét chân trị của các mệnh đề cụ thể">
+Xét hai mệnh đề trong Ví dụ 1.2.1:
+- $p$: "$17$ là số nguyên tố" ($p \equiv 1$).
+- $q$: "$\sqrt{2}$ là số hữu tỉ" ($q \equiv 0$).
+
+Hãy phát biểu và xác định chân trị của các mệnh đề sau:
+1. $p \vee q$.
+2. $p \wedge q$.
+3. $p \Rightarrow q$.
+4. $\bar{p}$.
+5. $\bar{p} \Rightarrow q$.
+6. $p \iff q$.
+</Exercise>
+
+<Solution>
+Vì $p \equiv 1$ và $q \equiv 0$:
+
+1. **Mệnh đề $p \vee q$:** "$17$ là số nguyên tố hoặc $\sqrt{2}$ là số hữu tỉ".
+   Vì $p$ đúng nên tuyển $p \vee q \equiv 1$ (**Đúng**).
+2. **Mệnh đề $p \wedge q$:** "$17$ là số nguyên tố và $\sqrt{2}$ là số hữu tỉ".
+   Vì $q$ sai nên hội $p \wedge q \equiv 0$ (**Sai**).
+3. **Mệnh đề $p \Rightarrow q$:** "Nếu $17$ là số nguyên tố thì $\sqrt{2}$ là số hữu tỉ".
+   Tiền đề đúng nhưng hệ luận sai ($1 \Rightarrow 0$), do đó $p \Rightarrow q \equiv 0$ (**Sai**).
+4. **Mệnh đề $\bar{p}$:** "$17$ không phải là số nguyên tố".
+   Vì $p$ đúng nên phủ định $\bar{p} \equiv 0$ (**Sai**).
+5. **Mệnh đề $\bar{p} \Rightarrow q$:** "Nếu $17$ không phải là số nguyên tố thì $\sqrt{2}$ là số hữu tỉ".
+   Tiền đề $\bar{p}$ sai ($0 \Rightarrow 0$), do đó mệnh đề kéo theo $\bar{p} \Rightarrow q \equiv 1$ (**Đúng**).
+6. **Mệnh đề $p \iff q$:** "$17$ là số nguyên tố khi và chỉ khi $\sqrt{2}$ là số hữu tỉ".
+   Hai mệnh đề có chân trị khác nhau ($1$ và $0$), do đó $p \iff q \equiv 0$ (**Sai**).
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt6" title="Bài tập 1.6: Nhận diện mệnh đề và phân tích chân trị">
+Trong các phát biểu dưới đây, phát biểu nào là mệnh đề? Hãy nêu tính đúng, sai của từng mệnh đề:
+1. $\forall k \in \mathbb{Z}: k^2 - k \ge 0$.
+2. $\forall z \in \mathbb{Z}, \, \exists r \in \mathbb{Q}: z^2 - rz + r \ge 1$.
+3. Tồn tại một hành tinh có khối lượng lớn hơn Trái Đất.
+4. Tất cả các con chó có đôi cánh đều có bộ lông màu trắng.
+5. Với mọi số nguyên không âm $x, y, z$, nếu $x^{2015} + y^{2015} = z^{2015}$ thì $x + y \ge z$.
+</Exercise>
+
+<Solution>
+Tất cả 5 phát biểu trên đều là các mệnh đề toán học hoặc logic xác định:
+
+1. **Khẳng định (1):** $\forall k \in \mathbb{Z}: k^2 - k \ge 0$.
+   - *Phân tích:* $k^2 - k = k(k - 1)$. Với mọi số nguyên $k$, tích của hai số nguyên liên tiếp luôn là số không âm (nếu $k \ge 1$ thì $k, k-1 \ge 0$; nếu $k \le 0$ thì $k, k-1 \le 0$).
+   - *Kết luận:* Đây là mệnh đề **ĐÚNG**.
+
+2. **Khẳng định (2):** $\forall z \in \mathbb{Z}, \, \exists r \in \mathbb{Q}: z^2 - rz + r \ge 1$.
+   - *Phân tích:* Ta cần tìm $r \in \mathbb{Q}$ sao cho $r(1 - z) \ge 1 - z^2 = (1 - z)(1 + z)$.
+     - Nếu $z = 1$: Bất đẳng thức trở thành $1^2 - 0 \ge 1 \iff 1 \ge 1$, luôn đúng với mọi $r \in \mathbb{Q}$ (chẳng hạn chọn $r = 0$).
+     - Nếu $z \neq 1$: Ta có thể chọn ngay $r = 0 \in \mathbb{Q}$, khi đó bất đẳng thức trở thành $z^2 \ge 1$. Vì $z \in \mathbb{Z}$ và $z \neq 0$ (với $z=0$, chọn $r = 1 \implies 0 - 0 + 1 \ge 1$ đúng), do đó luôn tìm được $r$.
+   - *Kết luận:* Đây là mệnh đề **ĐÚNG**.
+
+3. **Khẳng định (3):** "Tồn tại một hành tinh có khối lượng lớn hơn Trái Đất".
+   - *Phân tích:* Trong hệ Mặt Trời, Sao Mộc (Jupiter) có khối lượng gấp hơn 317 lần Trái Đất.
+   - *Kết luận:* Đây là mệnh đề **ĐÚNG**.
+
+4. **Khẳng định (4):** "Tất cả các con chó có đôi cánh đều có bộ lông màu trắng".
+   - *Phân tích:* Mệnh đề có dạng $\forall x \in A: P(x)$, trong đó $A$ là tập hợp tất cả các con chó có đôi cánh. Vì trong thế giới thực tập $A = \emptyset$, điều kiện tiền đề sai với mọi đối tượng, nên theo quy tắc chân lý chân không, mệnh đề kéo theo luôn nhận chân trị đúng!
+   - *Kết luận:* Đây là mệnh đề **ĐÚNG**.
+
+5. **Khẳng định (5):** Với mọi số nguyên không âm $x, y, z$, nếu $x^{2015} + y^{2015} = z^{2015}$ thì $x + y \ge z$.
+   - *Phân tích:*
+     - Nếu $z = 0$, do $x, y \ge 0$ nên $x = y = 0$, bất đẳng thức $0 + 0 \ge 0$ đúng.
+     - Nếu $z > 0$: Giả sử phản chứng $x + y < z$. Khi đó do $x, y \ge 0$:
+       $$
+       z^{2015} = (x + y)^{2015} = x^{2015} + y^{2015} + \sum_{k=1}^{2014} \binom{2015}{k} x^k y^{2015-k} \ge x^{2015} + y^{2015}.
+       $$
+       Nếu $x, y > 0$, ta có $(x + y)^{2015} > x^{2015} + y^{2015} = z^{2015} \implies x + y > z$, mâu thuẫn. Nếu một trong hai số bằng $0$ (chẳng hạn $x = 0$), thì $y^{2015} = z^{2015} \implies y = z \implies x + y = z \ge z$.
+   - *Kết luận:* Đây là mệnh đề **ĐÚNG**.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt7" title="Bài tập 1.7: Tính chất của ánh xạ đối với ảnh và nghịch ảnh của giao, hợp">
+Cho ánh xạ $f: X \to Y$. Giả sử $A_1, A_2 \subseteq X$ và $B_1, B_2 \subseteq Y$. Chứng minh:
+1. $f^{-1}(B_1 \cup B_2) = f^{-1}(B_1) \cup f^{-1}(B_2)$ và $f^{-1}(B_1 \cap B_2) = f^{-1}(B_1) \cap f^{-1}(B_2)$.
+2. $f(A_1 \cup A_2) = f(A_1) \cup f(A_2)$ và $f(A_1 \cap A_2) \subseteq f(A_1) \cap f(A_2)$.
+3. Nếu $f$ là đơn ánh thì $f(A_1 \cap A_2) = f(A_1) \cap f(A_2)$.
+</Exercise>
+
+<Solution>
+1. **Nghịch ảnh bảo toàn phép hợp và giao:**
+   - Với phép hợp:
+     $$
+     x \in f^{-1}(B_1 \cup B_2) \iff f(x) \in B_1 \cup B_2 \iff (f(x) \in B_1) \vee (f(x) \in B_2) \iff x \in f^{-1}(B_1) \cup f^{-1}(B_2).
+     $$
+   - Với phép giao:
+     $$
+     x \in f^{-1}(B_1 \cap B_2) \iff f(x) \in B_1 \cap B_2 \iff (f(x) \in B_1) \wedge (f(x) \in B_2) \iff x \in f^{-1}(B_1) \cap f^{-1}(B_2).
+     $$
+
+2. **Ảnh bảo toàn phép hợp và bảo toàn bao hàm đối với phép giao:**
+   - *Với phép hợp:* Lấy $y \in f(A_1 \cup A_2) \iff \exists x \in A_1 \cup A_2$ sao cho $y = f(x)$.
+     Điều này tương đương với $(\exists x \in A_1: y = f(x)) \vee (\exists x \in A_2: y = f(x)) \iff y \in f(A_1) \cup f(A_2)$.
+   - *Với phép giao:* Lấy $y \in f(A_1 \cap A_2) \implies \exists x \in A_1 \cap A_2$ sao cho $y = f(x)$.
+     Vì $x \in A_1 \implies y \in f(A_1)$, và $x \in A_2 \implies y \in f(A_2)$.
+     Do đó $y \in f(A_1) \cap f(A_2)$, suy ra $f(A_1 \cap A_2) \subseteq f(A_1) \cap f(A_2)$.
+
+3. **Khi $f$ là đơn ánh thì $f(A_1 \cap A_2) = f(A_1) \cap f(A_2)$:**
+   Ta chỉ cần chứng minh chiều ngược lại: $f(A_1) \cap f(A_2) \subseteq f(A_1 \cap A_2)$.
+   Lấy $y \in f(A_1) \cap f(A_2)$. Khi đó tồn tại $x_1 \in A_1$ và $x_2 \in A_2$ sao cho $f(x_1) = y$ và $f(x_2) = y$.
+   Do đó $f(x_1) = f(x_2)$.
+   Vì $f$ là đơn ánh, bắt buộc $x_1 = x_2$.
+   Đặt $x = x_1 = x_2$, ta có $x \in A_1$ và $x \in A_2$, tức là $x \in A_1 \cap A_2$.
+   Suy ra $y = f(x) \in f(A_1 \cap A_2)$.
+   Vậy $f(A_1) \cap f(A_2) \subseteq f(A_1 \cap A_2)$, kết hợp chiều bao hàm ở mục 2 ta được đẳng thức.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt8" title="Bài tập 1.8: Đặc trưng tương đương của đơn ánh và toàn ánh">
+Cho ánh xạ $f: X \to Y$. Chứng minh rằng:
+1. $f$ là đơn ánh khi và chỉ khi với mọi tập con $A \subseteq X$, ta đều có:
+   $$
+   A = f^{-1}(f(A)).
+   $$
+2. $f$ là toàn ánh khi và chỉ khi với mọi tập con $B \subseteq Y$, ta đều có:
+   $$
+   B = f(f^{-1}(B)).
+   $$
+</Exercise>
+
+<Solution>
+1. **Chứng minh đặc trưng của đơn ánh:**
+   Lưu ý rằng bao hàm $A \subseteq f^{-1}(f(A))$ luôn đúng với mọi ánh xạ (vì nếu $x \in A$ thì $f(x) \in f(A)$, suy ra $x \in f^{-1}(f(A))$).
+   - *Chiều thuận ($\implies$):* Giả sử $f$ đơn ánh. Lấy $x \in f^{-1}(f(A)) \implies f(x) \in f(A) \implies \exists a \in A: f(x) = f(a)$.
+     Vì $f$ đơn ánh nên $x = a \in A$. Vậy $f^{-1}(f(A)) \subseteq A \implies A = f^{-1}(f(A))$.
+   - *Chiều đảo ($\impliedby$):* Giả sử $A = f^{-1}(f(A))$ với mọi $A \subseteq X$. Lấy $x_1, x_2 \in X$ sao cho $f(x_1) = f(x_2)$.
+     Chọn tập con $A = \{x_1\}$. Khi đó $f(A) = \{f(x_1)\}$.
+     Do $f(x_2) = f(x_1) \in f(A)$, ta suy ra $x_2 \in f^{-1}(f(A)) = A = \{x_1\}$, nghĩa là $x_2 = x_1$.
+     Vậy $f$ là đơn ánh.
+
+2. **Chứng minh đặc trưng của toàn ánh:**
+   Lưu ý rằng bao hàm $f(f^{-1}(B)) \subseteq B$ luôn đúng với mọi ánh xạ (nếu $y \in f(f^{-1}(B))$ thì $y = f(x)$ với $x \in f^{-1}(B)$, suy ra $y = f(x) \in B$).
+   - *Chiều thuận ($\implies$):* Giả sử $f$ toàn ánh. Lấy $y \in B \subseteq Y$.
+     Vì $f$ toàn ánh nên tồn tại $x \in X$ sao cho $f(x) = y \in B$.
+     Do đó $x \in f^{-1}(B)$, kéo theo $y = f(x) \in f(f^{-1}(B))$.
+     Vậy $B \subseteq f(f^{-1}(B)) \implies B = f(f^{-1}(B))$.
+   - *Chiều đảo ($\impliedby$):* Giả sử $B = f(f^{-1}(B))$ với mọi $B \subseteq Y$.
+     Chọn $B = Y$, ta có $Y = f(f^{-1}(Y))$.
+     Vì $f^{-1}(Y) \subseteq X$, suy ra $Y = f(f^{-1}(Y)) \subseteq f(X) \subseteq Y$, do đó $f(X) = Y$.
+     Vậy $f$ là toàn ánh.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c1-bt9" title="Bài tập 1.9: Tính chất của ánh xạ hợp thành và ánh xạ ngược">
+Cho các ánh xạ $f: X \to Y$ và $g: Y \to Z$. Chứng minh:
+1. Nếu $g \circ f$ là đơn ánh thì $f$ là đơn ánh.
+2. Nếu $g \circ f$ là toàn ánh thì $g$ là toàn ánh.
+3. Nếu $f$ và $g$ là các song ánh thì $g \circ f$ cũng là song ánh. Khi đó các ánh xạ ngược tồn tại và thỏa mãn đẳng thức:
+   $$
+   (g \circ f)^{-1} = f^{-1} \circ g^{-1}.
+   $$
+</Exercise>
+
+<Solution>
+1. **Nếu $g \circ f$ là đơn ánh thì $f$ là đơn ánh:**
+   Giả sử $x_1, x_2 \in X$ sao cho $f(x_1) = f(x_2)$.
+   Tác động ánh xạ $g$ lên hai vế:
+   $$
+   g(f(x_1)) = g(f(x_2)) \iff (g \circ f)(x_1) = (g \circ f)(x_2).
+   $$
+   Vì $g \circ f$ là đơn ánh, suy ra $x_1 = x_2$. Do đó $f$ là đơn ánh.
+
+2. **Nếu $g \circ f$ là toàn ánh thì $g$ là toàn ánh:**
+   Lấy phần tử $z \in Z$ tùy ý.
+   Vì $g \circ f: X \to Z$ là toàn ánh, tồn tại $x \in X$ sao cho $(g \circ f)(x) = z \iff g(f(x)) = z$.
+   Đặt $y = f(x) \in Y$, ta có $g(y) = z$.
+   Như vậy, với mỗi $z \in Z$, luôn tìm được phần tử $y \in Y$ thỏa mãn $g(y) = z$. Do đó $g$ là toàn ánh.
+
+3. **Tính chất song ánh và công thức ánh xạ ngược:**
+   - *Chứng minh $g \circ f$ là song ánh:*
+     - Vì $f, g$ đơn ánh: Giả sử $(g \circ f)(x_1) = (g \circ f)(x_2) \implies g(f(x_1)) = g(f(x_2))$. Do $g$ đơn ánh nên $f(x_1) = f(x_2)$. Do $f$ đơn ánh nên $x_1 = x_2$. Vậy $g \circ f$ đơn ánh.
+     - Vì $f, g$ toàn ánh: Với mọi $z \in Z$, do $g$ toàn ánh nên $\exists y \in Y: z = g(y)$. Do $f$ toàn ánh nên $\exists x \in X: y = f(x)$. Suy ra $z = g(f(x)) = (g \circ f)(x)$. Vậy $g \circ f$ toàn ánh.
+     - Kết luận: $g \circ f$ là song ánh.
+   - *Chứng minh $(g \circ f)^{-1} = f^{-1} \circ g^{-1}$:*
+     Lấy $z \in Z$ và $x \in X$ bất kỳ. Ta có:
+     $$
+     (g \circ f)^{-1}(z) = x \iff (g \circ f)(x) = z \iff g(f(x)) = z.
+     $$
+     Vì $g$ là song ánh nên $g(f(x)) = z \iff f(x) = g^{-1}(z)$.
+     Vì $f$ là song ánh nên $f(x) = g^{-1}(z) \iff x = f^{-1}(g^{-1}(z)) = (f^{-1} \circ g^{-1})(z)$.
+     Vì quan hệ tương đương đúng với mọi cặp $(x, z)$, theo tính duy nhất của ánh xạ ngược ta kết luận:
+     $$
+     (g \circ f)^{-1} = f^{-1} \circ g^{-1}.
+     $$
+</Solution>
+
+---
+
+<KeyTakeaways title="Tổng kết phương pháp giải toán Chương 1">
+- **Chứng minh hai tập bằng nhau:** Sử dụng chuỗi tương đương logic hoặc thiết lập hai chiều bao hàm $A \subseteq B$ và $B \subseteq A$.
+- **Tích Descartes:** Phép nhân Descartes phân phối hoàn toàn đối với phép giao và phép hợp cùng một nhân tử: $A \times (B \cap C) = (A \times B) \cap (A \times C)$. Tuy nhiên, hợp của hai tích khác nhau chỉ là tập con: $(A \times C) \cup (B \times D) \subsetneq (A \cup B) \times (C \cup D)$.
+- **Bảo toàn của ánh xạ:**
+  - Nghịch ảnh $f^{-1}$ luôn bảo toàn giao, hợp, hiệu đối với mọi ánh xạ.
+  - Ảnh $f$ luôn bảo toàn phép hợp, nhưng chỉ bảo toàn phép giao khi $f$ là đơn ánh.
+- **Ánh xạ hợp thành:** $(g \circ f)^{-1} = f^{-1} \circ g^{-1}$ (đảo ngược thứ tự thực hiện khi lấy nghịch đảo).
+</KeyTakeaways>

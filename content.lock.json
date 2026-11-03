@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02T20:19:52.995Z",
+  "updatedAt": "2026-11-03T13:04:27.052Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1389,6 +1389,72 @@
         "ex-p11-18": "3.11.7",
         "exr-p11-1": "3.11.1",
         "exr-p11-2": "3.11.2"
+      }
+    },
+    "tap-hop-va-cac-phep-toan-tren-tap-hop": {
+      "path": "content/single-variable-calculus/01-tap-hop-menh-de-anh-xa/01-tap-hop-va-cac-phep-toan-tren-tap-hop.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "385c6e049085c90c333f72ccacb8ef22613621c98bc15b20f2fbd80825a5b9ff",
+      "numberedBlocks": {
+        "def-gthmb-c1-b1-tap-hop-va-phan-tu": "1.1.1",
+        "def-gthmb-c1-b1-tap-con-va-hai-tap-bang-nhau": "1.1.2",
+        "ex-gthmb-c1-b1-cac-tap-so-co-ban": "1.1.1",
+        "def-gthmb-c1-b1-cac-phep-toan-tap-hop": "1.1.3",
+        "ex-gthmb-c1-b1-minh-hoa-phep-toan": "1.1.2",
+        "prop-gthmb-c1-b1-tinh-chat-dai-so-tap-hop": "1.1.4",
+        "def-gthmb-c1-b1-tich-descartes": "1.1.5",
+        "ex-gthmb-c1-b1-tich-descartes-hinh-hoc": "1.1.3"
+      }
+    },
+    "menh-de-logic-va-cac-luong-tu": {
+      "path": "content/single-variable-calculus/01-tap-hop-menh-de-anh-xa/02-menh-de-logic-va-cac-luong-tu.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "56c76f4b4671ee70492cf666f4efb5187c2e165b2c0788f91ef221f5a5e91d9c",
+      "numberedBlocks": {
+        "def-gthmb-c1-b2-menh-de-va-chan-tri": "1.2.1",
+        "ex-gthmb-c1-b2-vi-du-menh-de": "1.2.1",
+        "def-gthmb-c1-b2-cac-phep-toan-logic": "1.2.2",
+        "prop-gthmb-c1-b2-cac-luat-logic-co-ban": "1.2.3",
+        "def-gthmb-c1-b2-menh-de-phu-thuoc-bien": "1.2.4",
+        "ex-gthmb-c1-b2-thu-tu-luong-tu-trong-giai-tich": "1.2.2"
+      }
+    },
+    "anh-xa-don-anh-toan-anh-song-anh": {
+      "path": "content/single-variable-calculus/01-tap-hop-menh-de-anh-xa/03-anh-xa-don-anh-toan-anh-song-anh.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "cd7146fc9bb878d4a7bcc4ef3be0f0f3c33f610bab630901cbc8d9fae0462fa2",
+      "numberedBlocks": {
+        "def-gthmb-c1-b3-dinh-nghia-anh-xa": "1.3.1",
+        "ex-gthmb-c1-b3-cac-quy-tac-anh-xa": "1.3.1",
+        "def-gthmb-c1-b3-anh-va-nghich-anh": "1.3.2",
+        "ex-gthmb-c1-b3-tinh-anh-nghich-anh": "1.3.2",
+        "prop-gthmb-c1-b3-nghich-anh-bao-toan-hieu": "1.3.3",
+        "def-gthmb-c1-b3-don-toan-song-anh": "1.3.4",
+        "ex-gthmb-c1-b3-phan-loai-3-anh-xa": "1.3.3",
+        "prop-gthmb-c1-b3-dieu-kien-can-va-du-song-anh": "1.3.5",
+        "def-gthmb-c1-b3-anh-xa-nguoc": "1.3.6",
+        "ex-gthmb-c1-b3-tim-anh-xa-nguoc": "1.3.4",
+        "def-gthmb-c1-b3-hop-va-thu-hep": "1.3.7"
+      }
+    },
+    "he-thong-bai-tap-chuong-1-va-loi-giai-mau": {
+      "path": "content/single-variable-calculus/01-tap-hop-menh-de-anh-xa/04-he-thong-bai-tap-chuong-1-va-loi-giai-mau.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "f7fdb37607cc6cc119f0eecc5884c9478b2d0c9b44f4cdc81b8044de72ae0246",
+      "numberedBlocks": {
+        "exr-gthmb-c1-bt1": "1.4.1",
+        "exr-gthmb-c1-bt2": "1.4.2",
+        "exr-gthmb-c1-bt3": "1.4.3",
+        "exr-gthmb-c1-bt4": "1.4.4",
+        "exr-gthmb-c1-bt5": "1.4.5",
+        "exr-gthmb-c1-bt6": "1.4.6",
+        "exr-gthmb-c1-bt7": "1.4.7",
+        "exr-gthmb-c1-bt8": "1.4.8",
+        "exr-gthmb-c1-bt9": "1.4.9"
       }
     }
   }

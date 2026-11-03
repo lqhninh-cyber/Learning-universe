@@ -1,0 +1,274 @@
+---
+id: menh-de-logic-va-cac-luong-tu
+title: 'Mệnh đề logic và các lượng từ'
+description: 'Khái niệm mệnh đề, giá trị logic 1 và 0, các phép toán hội, tuyển, kéo theo, tương đương, phủ định, các quy tắc tương đương logic cốt lõi, mệnh đề phụ thuộc biến và lượng từ với mọi, tồn tại.'
+estimatedMinutes: 35
+level: basic
+prerequisites:
+  - tap-hop-va-cac-phep-toan-tren-tap-hop
+tags:
+  - mệnh đề
+  - chân trị logic
+  - phép hội
+  - phép tuyển
+  - phép kéo theo
+  - tương đương logic
+  - phủ định
+  - lượng từ
+  - với mọi
+  - tồn tại
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '3-5'
+    sections: 'Mục 1.2'
+    note: 'Mệnh đề, phép toán logic cơ bản, mệnh đề phụ thuộc biến và các lượng từ'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Nhận diện chính xác mệnh đề toán học:** Phân biệt câu khẳng định là mệnh đề với các câu cảm thán, nghi vấn; xác định giá trị logic đúng ($1$) hoặc sai ($0$).
+2. **Làm chủ 5 phép toán logic cơ bản:** Thiết lập bảng chân trị cho phép hội ($p \wedge q$), phép tuyển ($p \vee q$), phép suy ra ($p \Rightarrow q$), phép tương đương ($p \iff q$) và phép phủ định ($\bar{p}$).
+3. **Vận dụng các luật tương đương logic cốt lõi:** Áp dụng thành thạo luật phản đảo ($p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p}$), luật De Morgan cho logic và công thức phủ định của mệnh đề kéo theo ($\overline{p \Rightarrow q} \equiv p \wedge \bar{q}$).
+4. **Sử dụng chính xác các lượng từ:** Biểu diễn các phát biểu giải tích bằng lượng từ phổ dụng ($\forall$) và lượng từ tồn tại ($\exists$), phân biệt sự khác nhau khi hoán đổi thứ tự lượng từ và áp dụng quy tắc phủ định mệnh đề nhiều biến.
+</Note>
+
+## 1. Khái niệm mệnh đề và giá trị chân trị logic
+
+Toán học là một hệ thống suy luận diễn dịch chặt chẽ dựa trên các mệnh đề và các quy tắc logic hình thức (<Cite source="gt-gthmb-ttd-2022" page="3" note="Mục 1.2.1" />).
+
+<Definition
+  id="def-gthmb-c1-b2-menh-de-va-chan-tri"
+  title="Khái niệm mệnh đề và chân trị logic"
+  source="gt-gthmb-ttd-2022"
+  page="3"
+  original="Mục 1.2.1"
+>
+Trong toán học, một **mệnh đề** (*proposition/statement*), thường được ký hiệu bởi các chữ cái in thường $p, q, r, \dots$, là một khẳng định có nghĩa chỉ nhận đúng một trong hai giá trị logic: **đúng** (*true*) hoặc **sai** (*false*).
+
+1. Nếu mệnh đề $p$ nhận giá trị đúng, ta viết:
+   $$
+   p \equiv 1 \quad (\text{hoặc } p \equiv \text{Đ}).
+   $$
+2. Nếu mệnh đề $p$ nhận giá trị sai, ta viết:
+   $$
+   p \equiv 0 \quad (\text{hoặc } p \equiv \text{S}).
+   $$
+3. Nếu hai mệnh đề $p$ và $q$ luôn có cùng giá trị logic trong mọi trường hợp, ta nói hai mệnh đề đó **tương đương logic**, ký hiệu là:
+   $$
+   p \equiv q.
+   $$
+</Definition>
+
+<Example id="ex-gthmb-c1-b2-vi-du-menh-de" title="Xác định chân trị của các mệnh đề số học cơ bản">
+Xét hai khẳng định sau (<Cite source="gt-gthmb-ttd-2022" page="3" note="Ví dụ 1.2.1" />):
+- Cho $p$ là khẳng định: "$17$ là số nguyên tố".
+  Khẳng định này đúng vì $17 > 1$ và chỉ có đúng hai ước số dương là $1$ và $17$. Do đó $p \equiv 1$.
+- Cho $q$ là khẳng định: "$\sqrt{2}$ là số hữu tỉ".
+  Khẳng định này sai vì $\sqrt{2}$ là một số vô tỉ nổi tiếng (chứng minh bằng phản chứng kinh điển của Pythagoras). Do đó $q \equiv 0$.
+</Example>
+
+---
+
+## 2. Các phép toán logic cơ bản trên mệnh đề
+
+Từ các mệnh đề đơn, ta có thể xây dựng các mệnh đề phức hợp thông qua các liên từ logic (<Cite source="gt-gthmb-ttd-2022" page="3-4" note="Mục 1.2.2" />).
+
+<Definition
+  id="def-gthmb-c1-b2-cac-phep-toan-logic"
+  title="Năm phép toán logic cơ bản"
+  source="gt-gthmb-ttd-2022"
+  page="3-4"
+  original="Mục 1.2.2"
+>
+Cho các mệnh đề $p$ và $q$.
+
+1. **Phép hội (AND):** Hội của $p$ và $q$, ký hiệu bởi $p \wedge q$ (đọc là: $p$ và $q$), là mệnh đề đúng khi và chỉ khi cả $p$ và $q$ đều đúng:
+   $$
+   p \wedge q \equiv 1 \iff p \equiv q \equiv 1.
+   $$
+
+2. **Phép tuyển (OR):** Tuyển của $p$ và $q$, ký hiệu bởi $p \vee q$ (đọc là: $p$ hoặc $q$), là mệnh đề sai khi và chỉ khi cả $p$ và $q$ đều sai:
+   $$
+   p \vee q \equiv 0 \iff p \equiv q \equiv 0.
+   $$
+
+3. **Phép suy ra (Kéo theo):** Mệnh đề $p$ suy ra $q$, ký hiệu bởi $p \Rightarrow q$ (đọc là: nếu $p$ thì $q$), là mệnh đề sai khi và chỉ khi $p$ đúng và $q$ sai:
+   $$
+   p \Rightarrow q \equiv 0 \iff (p \equiv 1 \text{ và } q \equiv 0).
+   $$
+   Khi đó, ta nói:
+   - $p$ là **điều kiện đủ** để có $q$.
+   - $q$ là **điều kiện cần** để có $p$.
+
+4. **Phép tương đương (Khi và chỉ khi):** Mệnh đề $p$ tương đương $q$, ký hiệu bởi $p \iff q$ (đọc là: $p$ nếu và chỉ nếu $q$), là mệnh đề đúng khi và chỉ khi $p$ và $q$ cùng đúng hoặc cùng sai:
+   $$
+   p \iff q \equiv 1 \iff (p \equiv q).
+   $$
+   Khi đó, $p$ vừa là điều kiện cần vừa là điều kiện đủ để có $q$.
+
+5. **Phép phủ định (NOT):** Phủ định của $p$, ký hiệu bởi $\bar{p}$ (hoặc $\neg p$, đọc là: không $p$), là mệnh đề đúng khi $p$ sai, và sai khi $p$ đúng:
+   $$
+   \bar{p} \equiv 1 \iff p \equiv 0.
+   $$
+</Definition>
+
+<Figure caption="Bảng chân trị logic tổng hợp của 5 phép toán cơ bản">
+| $p$ | $q$ | $\bar{p}$ | $p \wedge q$ | $p \vee q$ | $p \Rightarrow q$ | $p \iff q$ |
+| :-: | :-: | :-------: | :----------: | :--------: | :---------------: | :--------: |
+|  1  |  1  |     0     |      1       |     1      |         1         |     1      |
+|  1  |  0  |     0     |      0       |     1      |       **0**       |     0      |
+|  0  |  1  |     1     |      0       |     1      |       **1**       |     0      |
+|  0  |  0  |     1     |      0       |     0      |       **1**       |     1      |
+</Figure>
+
+<Warning title="Lưu ý đặc biệt về mệnh đề kéo theo">
+Quan sát hai dòng cuối của bảng chân trị trên: Khi tiền đề $p$ sai ($p \equiv 0$), mệnh đề kéo theo $p \Rightarrow q$ **luôn luôn đúng** (chân trị bằng $1$), bất kể kết luận $q$ đúng hay sai! Đây được gọi là chân lý chân không (*vacuously true*). Chẳng hạn: khẳng định "Nếu $1 = 2$ thì Mặt Trời mọc ở hướng Tây" là một mệnh đề đúng về mặt logic hình thức.
+</Warning>
+
+---
+
+## 3. Các quy tắc tương đương logic cốt lõi
+
+Khi phát biểu hay chứng minh các định lý toán học, ta thường xuyên biến đổi các khẳng định phức tạp thành dạng đơn giản hơn dựa trên Mệnh đề 1.2.2 (<Cite source="gt-gthmb-ttd-2022" page="4" note="Mục 1.2.2" />).
+
+<Proposition
+  id="prop-gthmb-c1-b2-cac-luat-logic-co-ban"
+  title="Các quy tắc tương đương logic cơ bản"
+  source="gt-gthmb-ttd-2022"
+  page="4"
+  original="Mệnh đề 1.2.2"
+>
+Cho các mệnh đề $p$ và $q$. Khi đó ta luôn có các tương đương logic sau:
+
+1. **Luật phản đảo và biểu diễn phép suy ra qua phép tuyển:**
+   $$
+   p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p} \equiv \bar{p} \vee q.
+   $$
+2. **Luật đối ngẫu De Morgan trong logic mệnh đề:**
+   $$
+   \overline{p \wedge q} \equiv \bar{p} \vee \bar{q}, \quad \overline{p \vee q} \equiv \bar{p} \wedge \bar{q}.
+   $$
+3. **Phủ định của mệnh đề kéo theo:**
+   $$
+   \overline{p \Rightarrow q} \equiv p \wedge \bar{q}.
+   $$
+</Proposition>
+
+<Proof title="Chứng minh quy tắc tương đương bằng bảng chân trị">
+Ta chứng minh đẳng thức $p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p} \equiv \bar{p} \vee q$ bằng cách lập bảng so sánh từng cột chân trị:
+
+| $p$ | $q$ | $\bar{p}$ | $\bar{q}$ | $p \Rightarrow q$ | $\bar{q} \Rightarrow \bar{p}$ | $\bar{p} \vee q$ |
+| :-: | :-: | :-------: | :-------: | :---------------: | :---------------------------: | :--------------: |
+|  1  |  1  |     0     |     0     |         1         |               1               |        1         |
+|  1  |  0  |     0     |     1     |         0         |               0               |        0         |
+|  0  |  1  |     1     |     0     |         1         |               1               |        1         |
+|  0  |  0  |     1     |     1     |         1         |               1               |        1         |
+
+Ba cột cuối hoàn toàn trùng khớp từng giá trị, suy ra $p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p} \equiv \bar{p} \vee q$.
+
+Tiếp tục lấy phủ định của cả hai vế:
+$$
+\overline{p \Rightarrow q} \equiv \overline{\bar{p} \vee q} \equiv \overline{(\bar{p})} \wedge \bar{q} \equiv p \wedge \bar{q}.
+$$
+Điều này chứng minh trọn vẹn mệnh đề.
+</Proof>
+
+<Remark title="Ý nghĩa phương pháp chứng minh phản đảo và phản chứng">
+- **Chứng minh bằng phản đảo:** Thay vì chứng minh trực tiếp "$p \Rightarrow q$", ta chứng minh mệnh đề tương đương "$\bar{q} \Rightarrow \bar{p}$" (nếu kết luận sai thì giả thiết phải sai).
+- **Phủ định của $p \Rightarrow q$:** Để bác bỏ mệnh đề "$p \Rightarrow q$", ta cần chỉ ra một trường hợp mà $p$ xảy ra nhưng $q$ lại không xảy ra ($p \wedge \bar{q}$). Sai lầm phổ biến là nhầm phủ định thành $p \Rightarrow \bar{q}$.
+</Remark>
+
+---
+
+## 4. Mệnh đề phụ thuộc biến và các lượng từ toán học
+
+Trong Giải tích, các tính chất toán học thường không đứng độc lập mà phụ thuộc vào một phần tử biến thiên $x$ trong tập hợp $X$ (<Cite source="gt-gthmb-ttd-2022" page="4-5" note="Mục 1.2.3" />).
+
+<Definition
+  id="def-gthmb-c1-b2-menh-de-phu-thuoc-bien"
+  title="Mệnh đề phụ thuộc biến và lượng từ toán học"
+  source="gt-gthmb-ttd-2022"
+  page="4-5"
+  original="Mục 1.2.3"
+>
+Cho $X$ là một tập hợp. Một vị từ hay **mệnh đề phụ thuộc biến** $P(x)$ trên $X$ là một khẳng định chứa biến $x$, sao cho với mỗi giá trị cố định $x \in X$, $P(x)$ trở thành một mệnh đề xác định (đúng hoặc sai).
+
+Tập hợp tất cả các phần tử $x \in X$ làm cho $P(x)$ đúng được ký hiệu là:
+$$
+\{x \in X \mid P(x)\} \quad \text{hoặc} \quad \{x \in X : P(x)\}.
+$$
+
+Để lượng hóa mệnh đề $P(x)$, ta sử dụng hai lượng từ toán học cơ bản:
+1. **Lượng từ tồn tại ($\exists$):** Viết là:
+   $$
+   \exists x \in X: P(x) \quad (\text{đọc là: tồn tại } x \in X \text{ sao cho } P(x)).
+   $$
+   Mệnh đề này đúng khi và chỉ khi có ít nhất một phần tử $x \in X$ thỏa mãn $P(x)$.
+2. **Lượng từ phổ dụng hay lượng từ với mọi ($\forall$):** Viết là:
+   $$
+   \forall x \in X: P(x) \quad (\text{đọc là: với mọi } x \in X \text{ đều có } P(x)).
+   $$
+   Mệnh đề này đúng khi và chỉ khi mọi phần tử $x \in X$ đều thỏa mãn $P(x)$.
+</Definition>
+
+### Quy tắc phủ định mệnh đề chứa lượng từ
+
+Giữa hai lượng từ có mối liên hệ đối ngẫu chặt chẽ qua phép phủ định (<Cite source="gt-gthmb-ttd-2022" page="5" note="Mục 1.2.3" />):
+- $\overline{\exists x \in X: P(x)} \iff \forall x \in X: \overline{P(x)}$.
+  (Phủ định của "Có ít nhất một phần tử thỏa mãn $P$" là "Mọi phần tử đều không thỏa mãn $P$").
+- $\overline{\forall x \in X: P(x)} \iff \exists x \in X: \overline{P(x)}$.
+  (Phủ định của "Mọi phần tử đều thỏa mãn $P$" là "Tồn tại ít nhất một phần tử vi phạm $P$").
+
+### Thứ tự của các lượng từ trong mệnh đề nhiều biến
+
+Khi một mệnh đề $P(x, y)$ phụ thuộc vào hai hay nhiều biến, **thứ tự xuất hiện của các lượng từ mang tính quyết định** đối với chân trị của mệnh đề (<Cite source="gt-gthmb-ttd-2022" page="5" note="Ví dụ 1.2.3" />).
+
+<Example id="ex-gthmb-c1-b2-thu-tu-luong-tu-trong-giai-tich" title="Sự khác biệt bản chất khi đổi thứ tự lượng từ">
+Xét điều kiện $P(x, y)$ là đẳng thức $x = y$ với $x, y \in \mathbb{Q}$:
+
+1. Xét mệnh đề:
+   $$
+   (\forall x \in \mathbb{Q})(\exists y \in \mathbb{Q}): x = y.
+   $$
+   Mệnh đề này **ĐÚNG**, vì với mỗi số hữu tỉ $x$ cho trước, ta chỉ cần chọn số hữu tỉ $y = x$ thì đẳng thức luôn thỏa mãn.
+2. Hoán đổi thứ tự hai lượng từ, xét mệnh đề:
+   $$
+   (\exists y \in \mathbb{Q})(\forall x \in \mathbb{Q}): x = y.
+   $$
+   Mệnh đề này **SAI**, vì khẳng định này có nghĩa là tồn tại một số hữu tỉ $y$ duy nhất nào đó bằng với mọi số hữu tỉ $x$. Điều này vô lý vì nếu chọn $x = y + 1$ thì $x \neq y$.
+</Example>
+
+<Note title="Quy tắc phủ định mệnh đề nhiều lượng từ">
+Để phủ định một mệnh đề có nhiều lượng từ lồng nhau, ta thực hiện theo nguyên tắc:
+1. Đổi từng lượng từ $\forall$ thành $\exists$, và đổi từng lượng từ $\exists$ thành $\forall$.
+2. Giữ nguyên tập hợp của từng biến.
+3. Phủ định điều kiện vị từ ràng buộc phía sau.
+
+**Ví dụ:**
+$$
+\overline{\forall x \in X, \, \exists y \in Y: P(x, y)} \iff \exists x \in X, \, \forall y \in Y: \overline{P(x, y)}.
+$$
+Đây là công thức nền tảng sẽ dùng để phủ định định nghĩa giới hạn $\varepsilon-\delta$, tính liên tục đều và sự hội tụ đều trong các chương tiếp theo.
+</Note>
+
+---
+
+<KeyTakeaways title="Tóm tắt trọng tâm bài 1.2">
+- **Chân trị của phép suy ra:** $p \Rightarrow q \equiv 0$ khi và chỉ khi $p \equiv 1$ và $q \equiv 0$. Nếu giả thiết $p$ sai thì mệnh đề kéo theo luôn đúng.
+- **Tương đương logic then chốt:**
+  - $p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p} \equiv \bar{p} \vee q$.
+  - $\overline{p \Rightarrow q} \equiv p \wedge \bar{q}$.
+- **Quy tắc lượng từ:** Thứ tự $(\forall x)(\exists y)$ khác hoàn toàn $(\exists y)(\forall x)$.
+- **Phủ định lượng từ:** Hoán đổi $\forall \leftrightarrow \exists$ và phủ định vị từ bên trong.
+</KeyTakeaways>

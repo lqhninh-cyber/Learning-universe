@@ -1,0 +1,304 @@
+---
+id: anh-xa-don-anh-toan-anh-song-anh
+title: 'Ánh xạ, đơn ánh, toàn ánh và song ánh'
+description: 'Khái niệm ánh xạ, tập xác định, miền giá trị, ảnh và tạo ảnh ngược của tập con, phương pháp chứng minh đơn ánh, toàn ánh, song ánh, ánh xạ ngược của song ánh, phép hợp thành và ánh xạ thu hẹp.'
+estimatedMinutes: 40
+level: basic
+prerequisites:
+  - tap-hop-va-cac-phep-toan-tren-tap-hop
+  - menh-de-logic-va-cac-luong-tu
+tags:
+  - ánh xạ
+  - tập nguồn
+  - tập đích
+  - ảnh
+  - nghịch ảnh
+  - đơn ánh
+  - toàn ánh
+  - song ánh
+  - ánh xạ ngược
+  - ánh xạ hợp
+  - ánh xạ thu hẹp
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '5-7'
+    sections: 'Mục 1.3'
+    note: 'Định nghĩa ánh xạ, ảnh, nghịch ảnh, đơn ánh, toàn ánh, song ánh, ánh xạ ngược và phép hợp thành'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất khái niệm ánh xạ:** Nắm vững cấu trúc bộ ba (tập nguồn, tập đích, quy tắc tương ứng xác định duy nhất) và điều kiện để hai ánh xạ bằng nhau.
+2. **Thao tác thành thạo với ảnh và nghịch ảnh:** Phân biệt ảnh $f(A)$ và tạo ảnh ngược $f^{-1}(B)$ của các tập con; chứng minh tính chất bảo toàn phép toán của nghịch ảnh.
+3. **Phân biệt và chứng minh 3 lớp ánh xạ cốt lõi:**
+   - **Đơn ánh:** Các phần tử khác nhau cho ảnh khác nhau ($x \neq x' \implies f(x) \neq f(x')$).
+   - **Toàn ánh:** Mọi phần tử ở đối miền đều có tạo ảnh ($f(X) = Y$).
+   - **Song ánh:** Vừa là đơn ánh vừa là toàn ánh.
+4. **Xây dựng ánh xạ ngược và phép hợp thành:** Phát biểu tiêu chuẩn tồn tại duy nhất nghiệm $y = f(x)$ của song ánh (Mệnh đề 1.3.5), tìm công thức ánh xạ ngược $f^{-1}$ và thực hiện phép hợp $g \circ f$ theo đúng thứ tự.
+</Note>
+
+## 1. Khái niệm ánh xạ và sự bằng nhau của hai ánh xạ
+
+Ánh xạ là mô hình toán học tổng quát nhất để mô tả sự phụ thuộc hàm giữa các đại lượng (<Cite source="gt-gthmb-ttd-2022" page="5" note="Mục 1.3.1" />).
+
+<Definition
+  id="def-gthmb-c1-b3-dinh-nghia-anh-xa"
+  title="Định nghĩa ánh xạ và hai ánh xạ bằng nhau"
+  source="gt-gthmb-ttd-2022"
+  page="5"
+  original="Mục 1.3.1"
+>
+Một **ánh xạ** (*mapping/function*) $f$ từ tập hợp $X$ vào tập hợp $Y$ là một quy tắc cho tương ứng mỗi phần tử $x \in X$ với **duy nhất** một phần tử $y \in Y$, ký hiệu phần tử đó là $f(x)$.
+
+Ta ký hiệu ánh xạ này là:
+$$
+f: X \to Y \quad \text{hoặc} \quad X \xrightarrow{f} Y, \quad x \mapsto f(x).
+$$
+Trong đó:
+- Tập hợp $X$ được gọi là **tập nguồn** (hay **tập xác định**, *domain*).
+- Tập hợp $Y$ được gọi là **tập đích** (hay **đối miền**, *codomain*).
+- Với mỗi $x \in X$, phần tử $f(x) \in Y$ được gọi là **ảnh** của $x$ qua $f$ (hay giá trị của $f$ tại $x$).
+
+**Hai ánh xạ bằng nhau:** Cho hai ánh xạ $f: X \to Y$ và $g: X \to Y$. Ta nói hai ánh xạ đó là bằng nhau, ký hiệu $f = g$, khi và chỉ khi:
+$$
+f(x) = g(x), \quad \forall x \in X.
+$$
+</Definition>
+
+<Example id="ex-gthmb-c1-b3-cac-quy-tac-anh-xa" title="Nhận diện quy tắc tương ứng là ánh xạ hay không phải ánh xạ">
+Xét các quy tắc sau (<Cite source="gt-gthmb-ttd-2022" page="5-6" note="Ví dụ 1.3.1" />):
+
+1. **Phép bình phương các số tự nhiên:** Quy tắc $f_1: \mathbb{N} \to \mathbb{N}$ xác định bởi $f_1(n) = n^2$ là một ánh xạ từ $\mathbb{N}$ vào $\mathbb{N}$.
+2. **Phép tịnh tiến trên tập số nguyên:** Cho trước số nguyên tố $p$. Quy tắc $f_2: \mathbb{Z} \to \mathbb{Z}$ cho tương ứng mỗi số nguyên $m$ với tổng $p + m$ là một ánh xạ từ $\mathbb{Z}$ vào $\mathbb{Z}$.
+3. **Hàm đếm số ước số dương:** Quy tắc $f_3: \mathbb{N} \to \mathbb{N}$ cho tương ứng mỗi số tự nhiên $n$ với số các ước số nguyên dương của nó là một ánh xạ xác định. Ví dụ: $f_3(1) = 1$, $f_3(2) = 2$, $f_3(6) = 4$ (các ước là $1, 2, 3, 6$).
+4. **Quy tắc không phải ánh xạ:** Quy tắc gán mỗi số tự nhiên $n$ với *các ước số nguyên dương của nó* **không phải là một ánh xạ**, vì một số tự nhiên (như $n = 6$) có nhiều ước số, vi phạm điều kiện tương ứng duy nhất một phần tử của định nghĩa ánh xạ.
+</Example>
+
+---
+
+## 2. Ảnh và tạo ảnh ngược của tập hợp
+
+Trong Giải tích, ta thường xuyên chuyển đổi giữa không gian biến số $X$ và không gian giá trị $Y$ thông qua ảnh và nghịch ảnh của các tập con (<Cite source="gt-gthmb-ttd-2022" page="6" note="Mục 1.3.2" />).
+
+<Definition
+  id="def-gthmb-c1-b3-anh-va-nghich-anh"
+  title="Ảnh và tạo ảnh ngược (nghịch ảnh)"
+  source="gt-gthmb-ttd-2022"
+  page="6"
+  original="Mục 1.3.2"
+>
+Cho ánh xạ $f: X \to Y$. Lấy $A \subseteq X$ và $B \subseteq Y$.
+
+1. **Ảnh của tập con:** Tập hợp tất cả các giá trị của $f(x)$ khi $x$ chạy trong $A$ được gọi là **ảnh** của $A$ qua $f$, ký hiệu $f(A)$:
+   $$
+   f(A) := \{f(x) \mid x \in A\} = \{y \in Y \mid \exists x \in A: y = f(x)\} \subseteq Y.
+   $$
+   Đặc biệt, tập $f(X)$ được gọi là **miền giá trị** hay **tập ảnh toàn miền** của $f$, thường ký hiệu là $\operatorname{im}(f)$.
+
+2. **Nghịch ảnh của tập con:** Tập hợp tất cả các phần tử $x \in X$ có ảnh rơi vào $B$ được gọi là **tạo ảnh ngược** (hay **nghịch ảnh**) của $B$ qua $f$, ký hiệu $f^{-1}(B)$:
+   $$
+   f^{-1}(B) := \{x \in X \mid f(x) \in B\} \subseteq X.
+   $$
+   Nếu $B$ chỉ gồm đúng một phần tử $B = \{b\}$, ta viết vắn tắt là $f^{-1}(b)$ thay cho $f^{-1}(\{b\})$, tức là:
+   $$
+   f^{-1}(b) = \{x \in X \mid f(x) = b\}.
+   $$
+</Definition>
+
+<Warning title="Phân biệt nghịch ảnh và ánh xạ ngược">
+Ký hiệu nghịch ảnh $f^{-1}(B)$ **luôn luôn xác định với mọi ánh xạ** $f: X \to Y$, kể cả khi $f$ không có ánh xạ ngược. Nếu phần tử $b \in Y$ không có phần tử nào ánh xạ tới nó thì $f^{-1}(b) = \emptyset$.
+</Warning>
+
+<Example id="ex-gthmb-c1-b3-tinh-anh-nghich-anh" title="Tính ảnh và nghịch ảnh cụ thể">
+Xét ánh xạ bình phương $f_1: \mathbb{N} \to \mathbb{N}$, $f_1(n) = n^2$ (<Cite source="gt-gthmb-ttd-2022" page="6" note="Ví dụ 1.3.2" />):
+- Cho $A = \{1, 2, 3, 4\} \subseteq \mathbb{N}$. Khi đó:
+  $$
+  f_1(A) = \{1^2, 2^2, 3^2, 4^2\} = \{1, 4, 9, 16\}.
+  $$
+- Cho $B = \{5\} \subseteq \mathbb{N}$. Khi đó:
+  $$
+  f_1^{-1}(B) = \{n \in \mathbb{N} \mid n^2 = 5\} = \emptyset
+  $$
+  (vì không có số tự nhiên nào có bình phương bằng $5$).
+</Example>
+
+<Proposition
+  id="prop-gthmb-c1-b3-nghich-anh-bao-toan-hieu"
+  title="Nghịch ảnh bảo toàn phép lấy hiệu"
+  source="gt-gthmb-ttd-2022"
+  page="6"
+  original="Ví dụ 1.3.3"
+>
+Cho ánh xạ $f: X \to Y$. Với mọi tập con $B, C \subseteq Y$, ta luôn có:
+$$
+f^{-1}(B \setminus C) = f^{-1}(B) \setminus f^{-1}(C).
+$$
+</Proposition>
+
+<Proof title="Chứng minh đẳng thức qua chuỗi tương đương logic">
+Lấy phần tử $x \in X$ bất kỳ. Ta có chuỗi tương đương:
+$$
+\begin{aligned}
+x \in f^{-1}(B \setminus C) &\iff f(x) \in (B \setminus C) \\
+&\iff (f(x) \in B) \wedge (f(x) \notin C) \\
+&\iff (x \in f^{-1}(B)) \wedge (x \notin f^{-1}(C)) \\
+&\iff x \in f^{-1}(B) \setminus f^{-1}(C).
+\end{aligned}
+$$
+Vậy $f^{-1}(B \setminus C) = f^{-1}(B) \setminus f^{-1}(C)$.
+</Proof>
+
+---
+
+## 3. Đơn ánh, toàn ánh và song ánh
+
+Ba khái niệm sau đây mô tả cấu trúc phân bố ảnh của ánh xạ (<Cite source="gt-gthmb-ttd-2022" page="6" note="Mục 1.3.3" />).
+
+<Definition
+  id="def-gthmb-c1-b3-don-toan-song-anh"
+  title="Đơn ánh, toàn ánh và song ánh"
+  source="gt-gthmb-ttd-2022"
+  page="6"
+  original="Mục 1.3.3"
+>
+Cho ánh xạ $f: X \to Y$.
+
+1. **Đơn ánh (*Injective / One-to-one*):** Ánh xạ $f$ được gọi là **đơn ánh** nếu hai phần tử khác nhau bất kỳ của $X$ luôn có ảnh khác nhau trong $Y$:
+   $$
+   \forall x, x' \in X, \quad x \neq x' \implies f(x) \neq f(x').
+   $$
+   Theo luật phản đảo, điều này hoàn toàn tương đương với:
+   $$
+   \forall x, x' \in X, \quad f(x) = f(x') \implies x = x'.
+   $$
+
+2. **Toàn ánh (*Surjective / Onto*):** Ánh xạ $f$ được gọi là **toàn ánh** nếu ảnh toàn miền của $f$ phủ kín toàn bộ tập đích $Y$, tức là:
+   $$
+   f(X) = Y \iff \forall y \in Y, \, \exists x \in X: y = f(x).
+   $$
+   Nói cách khác, phương trình $y = f(x)$ luôn có ít nhất một nghiệm $x \in X$ với mỗi $y \in Y$ cho trước.
+
+3. **Song ánh (*Bijective / One-to-one and onto*):** Ánh xạ $f$ được gọi là **song ánh** nếu nó **vừa là đơn ánh, vừa là toàn ánh**.
+</Definition>
+
+<Example id="ex-gthmb-c1-b3-phan-loai-3-anh-xa" title="Kiểm tra tính đơn ánh, toàn ánh của các ánh xạ mẫu">
+Khảo sát 3 ánh xạ ở Mục 1 (<Cite source="gt-gthmb-ttd-2022" page="6" note="Ví dụ 1.3.4" />):
+
+- **Ánh xạ $f_1: \mathbb{N} \to \mathbb{N}$, $f_1(n) = n^2$:**
+  - *Đơn ánh:* Với $m, n \in \mathbb{N}$, $m^2 = n^2 \implies m = n$ (vì $m, n > 0$). Vậy $f_1$ là đơn ánh.
+  - *Không toàn ánh:* Phần tử $2 \in \mathbb{N}$ không có tạo ảnh (không có số tự nhiên nào có bình phương bằng $2$). Do đó $f_1$ không là toàn ánh.
+- **Ánh xạ $f_2: \mathbb{Z} \to \mathbb{Z}$, $f_2(m) = p + m$:**
+  - Với mọi $k \in \mathbb{Z}$, phương trình $p + m = k \iff m = k - p \in \mathbb{Z}$ luôn có nghiệm duy nhất. Do đó $f_2$ là **song ánh**.
+- **Ánh xạ $f_3: \mathbb{N} \to \mathbb{N}$, $f_3(n) = \text{số ước dương của } n$:**
+  - *Không đơn ánh:* Ta có $f_3(2) = 2$ (ước là $1, 2$) và $f_3(3) = 2$ (ước là $1, 3$). Hai số nguyên khác nhau cho cùng giá trị ảnh.
+  - *Toàn ánh:* Với số tự nhiên $k \ge 1$ bất kỳ, số $2^{k-1}$ có đúng $k$ ước số dương (là $2^0, 2^1, \dots, 2^{k-1}$), nghĩa là $f_3(2^{k-1}) = k$. Do đó $f_3$ là toàn ánh.
+</Example>
+
+---
+
+## 4. Ánh xạ ngược của một song ánh
+
+Khái niệm ánh xạ ngược gắn liền chặt chẽ với điều kiện song ánh (<Cite source="gt-gthmb-ttd-2022" page="6-7" note="Mục 1.3.4" />).
+
+<Proposition
+  id="prop-gthmb-c1-b3-dieu-kien-can-va-du-song-anh"
+  title="Đặc trưng của song ánh"
+  source="gt-gthmb-ttd-2022"
+  page="6-7"
+  original="Mệnh đề 1.3.5"
+>
+Cho ánh xạ $f: X \to Y$. Khi đó hai khẳng định sau đây là tương đương:
+1. $f$ là một song ánh.
+2. Với mọi phần tử $y \in Y$, tồn tại **duy nhất** một phần tử $x \in X$ sao cho:
+   $$
+   y = f(x).
+   $$
+</Proposition>
+
+<Proof title="Chứng minh Mệnh đề 1.3.5">
+- **Chiều thuận (1) $\implies$ (2):**
+  Giả sử $f$ là song ánh. Do $f$ là toàn ánh, với mỗi $y \in Y$ luôn tồn tại ít nhất một phần tử $x \in X$ sao cho $f(x) = y$.
+  Giả sử có thêm phần tử $x' \in X$ thỏa mãn $f(x') = y$. Khi đó $f(x) = f(x')$. Do $f$ là đơn ánh, bắt buộc $x = x'$. Vậy phần tử $x$ là duy nhất.
+- **Chiều đảo (2) $\implies$ (1):**
+  Từ (2), mỗi $y \in Y$ đều có phần tử $x$ tương ứng sao cho $f(x) = y$, do đó $f$ là toàn ánh.
+  Mặt khác, nếu $f(x) = f(x') = y$, theo tính duy nhất của nghiệm đối với phần tử $y$, ta suy ngay ra $x = x'$. Do đó $f$ là đơn ánh.
+  Kết hợp lại, $f$ là song ánh.
+</Proof>
+
+<Definition
+  id="def-gthmb-c1-b3-anh-xa-nguoc"
+  title="Định nghĩa ánh xạ ngược"
+  source="gt-gthmb-ttd-2022"
+  page="7"
+  original="Mục 1.3.4"
+>
+Nếu $f: X \to Y$ là một song ánh thì theo Mệnh đề 1.3.5, tồn tại duy nhất một ánh xạ từ $Y$ vào $X$, ký hiệu là $f^{-1}$, sao cho:
+$$
+f^{-1}: Y \to X, \quad \forall y \in Y, \, \forall x \in X: \quad f^{-1}(y) = x \iff y = f(x).
+$$
+Ánh xạ $f^{-1}$ được gọi là **ánh xạ ngược** (*inverse mapping*) của $f$. Khi đó, bản thân $f^{-1}$ cũng là một song ánh và $(f^{-1})^{-1} = f$.
+</Definition>
+
+<Example id="ex-gthmb-c1-b3-tim-anh-xa-nguoc" title="Xác định công thức ánh xạ ngược">
+Xét song ánh tịnh tiến $f_2: \mathbb{Z} \to \mathbb{Z}$, $f_2(m) = p + m$ (<Cite source="gt-gthmb-ttd-2022" page="7" note="Ví dụ 1.3.6" />):
+Với mọi $k \in \mathbb{Z}$:
+$$
+f_2^{-1}(k) = m \iff k = f_2(m) = p + m \iff m = k - p.
+$$
+Vậy ánh xạ ngược của $f_2$ là $f_2^{-1}: \mathbb{Z} \to \mathbb{Z}$ với $f_2^{-1}(k) = k - p$.
+</Example>
+
+---
+
+## 5. Ánh xạ hợp và ánh xạ thu hẹp
+
+Hai phép toán thông dụng nhất để kết hợp và thu hẹp các ánh xạ trong toán học (<Cite source="gt-gthmb-ttd-2022" page="7" note="Mục 1.3.5" />).
+
+<Definition
+  id="def-gthmb-c1-b3-hop-va-thu-hep"
+  title="Ánh xạ hợp và ánh xạ thu hẹp"
+  source="gt-gthmb-ttd-2022"
+  page="7"
+  original="Mục 1.3.5"
+>
+1. **Ánh xạ hợp (Ánh xạ tích):** Cho hai ánh xạ $f: X \to Y$ và $g: Y \to Z$ (lưu ý: đối miền của $f$ phải trùng với miền xác định của $g$).
+   Ánh xạ hợp của $g$ và $f$, ký hiệu là $g \circ f$, là ánh xạ xác định bởi:
+   $$
+   g \circ f: X \to Z, \quad (g \circ f)(x) := g(f(x)), \quad \forall x \in X.
+   $$
+
+2. **Ánh xạ thu hẹp:** Cho ánh xạ $f: X \to Y$ và $A \subseteq X$. Ánh xạ thu hẹp của $f$ trên tập con $A$, ký hiệu $f|_A$, là ánh xạ:
+   $$
+   f|_A: A \to Y, \quad f|_A(x) := f(x), \quad \forall x \in A.
+   $$
+</Definition>
+
+<Remark title="Tính kết hợp của phép hợp thành">
+Phép hợp thành ánh xạ có **tính kết hợp**: Cho $f: X \to Y$, $g: Y \to Z$, và $h: Z \to W$. Khi đó:
+$$
+h \circ (g \circ f) = (h \circ g) \circ f.
+$$
+Tuy nhiên, phép hợp thành nói chung **không có tính giao hoán** ($g \circ f \neq f \circ g$).
+</Remark>
+
+---
+
+<KeyTakeaways title="Tóm tắt trọng tâm bài 1.3">
+- **Tiêu chuẩn đơn ánh:** $f(x) = f(x') \implies x = x'$.
+- **Tiêu chuẩn toàn ánh:** $\forall y \in Y, \, \exists x \in X: y = f(x)$.
+- **Đặc trưng song ánh:** Mỗi $y \in Y$ có duy nhất một tạo ảnh $x \in X$, khi đó tồn tại ánh xạ ngược $f^{-1}: Y \to X$.
+- **Bảo toàn nghịch ảnh:** Nghịch ảnh $f^{-1}$ luôn bảo toàn giao, hợp, hiệu:
+  $$f^{-1}(B \cap C) = f^{-1}(B) \cap f^{-1}(C), \quad f^{-1}(B \setminus C) = f^{-1}(B) \setminus f^{-1}(C).$$
+- **Thứ tự ánh xạ hợp:** $(g \circ f)(x) = g(f(x))$, thực hiện $f$ trước rồi đến $g$.
+</KeyTakeaways>

@@ -1,0 +1,296 @@
+---
+id: tap-hop-va-cac-phep-toan-tren-tap-hop
+title: 'Tập hợp và các phép toán trên tập hợp'
+description: 'Khái niệm cơ bản về tập hợp, phần tử, quan hệ bao hàm, các phép toán giao, hợp, hiệu, phần bù trong một tập toàn thể, các tính chất đại số, luật đối ngẫu De Morgan và cấu trúc tích Descartes.'
+estimatedMinutes: 30
+level: basic
+prerequisites: []
+tags:
+  - tập hợp
+  - phần tử
+  - tập con
+  - phép giao
+  - phép hợp
+  - phần bù
+  - luật De Morgan
+  - tích Descartes
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '1-3'
+    sections: 'Mục 1.1'
+    note: 'Khái niệm tập hợp, phép toán cơ bản, tính chất đại số và tích Descartes'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất khái niệm tập hợp:** Nắm vững quan hệ thuộc ($\in$), không thuộc ($\notin$), tập rỗng ($\emptyset$), khái niệm tập con ($A \subseteq B$) và quy trình chuẩn mực chứng minh hai tập hợp bằng nhau ($A = B \iff A \subseteq B \text{ và } B \subseteq A$).
+2. **Thực hiện thành thạo các phép toán tập hợp:** Xác định chính xác giao ($A \cap B$), hợp ($A \cup B$), hiệu ($A \setminus B$), phần bù ($A^c = X \setminus A$) và mở rộng cho họ tập hợp tùy ý $\{A_i\}_{i \in I}$.
+3. **Vận dụng các quy luật đại số tập hợp:** Sử dụng tính giao hoán, kết hợp, phân phối và luật đối ngẫu De Morgan để biến đổi, rút gọn các biểu thức tập hợp.
+4. **Làm chủ cấu trúc tích Descartes:** Hiểu rõ định nghĩa cặp có thứ tự, tích Descartes $A \times B$ và tích của $n$ tập hợp $A_1 \times \dots \times A_n$ làm nền tảng cho không gian Euclid $\mathbb{R}^n$.
+</Note>
+
+## 1. Các khái niệm mở đầu về tập hợp
+
+Trong toán học hiện đại, **tập hợp** (*set*) là một khái niệm nguyên thủy nền tảng, được dùng để chỉ một tập hợp hay một lớp các đối tượng xác định nào đó (<Cite source="gt-gthmb-ttd-2022" page="1" note="Mục 1.1.1" />). Chẳng hạn: tập hợp các hành tinh trong Hệ Mặt Trời, tập hợp sinh viên năm thứ nhất ngành Sư phạm Toán học, tập hợp tất cả các số nguyên tố nhỏ hơn $100$.
+
+<Definition
+  id="def-gthmb-c1-b1-tap-hop-va-phan-tu"
+  title="Tập hợp, phần tử và tập rỗng"
+  source="gt-gthmb-ttd-2022"
+  page="1"
+  original="Mục 1.1.1"
+>
+Các tập hợp thường được ký hiệu bởi các chữ cái in hoa $A, B, C, X, Y, \dots$, còn các đối tượng cấu thành tập hợp được gọi là các **phần tử** (*elements*) của tập hợp và thường được ký hiệu bởi các chữ in thường $a, b, c, x, y, \dots$
+
+1. Nếu $a$ là một phần tử của tập hợp $A$, ta viết:
+   $$
+   a \in A \quad (\text{đọc là: } a \text{ thuộc } A).
+   $$
+2. Nếu $a$ không phải là phần tử của tập hợp $A$, ta viết:
+   $$
+   a \notin A \quad (\text{đọc là: } a \text{ không thuộc } A).
+   $$
+3. Tập hợp không chứa bất kỳ phần tử nào được gọi là **tập rỗng** (*empty set*), ký hiệu là $\emptyset$.
+</Definition>
+
+<Definition
+  id="def-gthmb-c1-b1-tap-con-va-hai-tap-bang-nhau"
+  title="Tập con và hai tập hợp bằng nhau"
+  source="gt-gthmb-ttd-2022"
+  page="1"
+  original="Mục 1.1.1"
+>
+Cho hai tập hợp $A$ và $B$.
+
+1. Nếu mọi phần tử của $A$ đều là phần tử của $B$, ta nói $A$ là **tập hợp con** (hay **tập con**) của $B$, ký hiệu là:
+   $$
+   A \subseteq B \quad \text{hoặc} \quad B \supseteq A
+   $$
+   (đọc là: $A$ chứa trong $B$, $A$ bao hàm trong $B$, hoặc $B$ chứa $A$). Bằng ngôn ngữ logic:
+   $$
+   A \subseteq B \iff (\forall x, \, x \in A \implies x \in B).
+   $$
+2. Hai tập hợp $A$ và $B$ được gọi là **bằng nhau**, ký hiệu $A = B$, khi và chỉ khi chúng bao hàm lẫn nhau:
+   $$
+   A = B \iff (A \subseteq B \quad \text{và} \quad B \subseteq A).
+   $$
+3. Nếu $A \subseteq B$ và tồn tại ít nhất một phần tử $b \in B$ sao cho $b \notin A$, ta nói $A$ là **tập con thực sự** (*proper subset*) của $B$, ký hiệu $A \subsetneq B$ (hoặc $A \subset B$).
+</Definition>
+
+<Remark title="Tính chất cơ bản của quan hệ bao hàm">
+Phép toán bao hàm $\subseteq$ có các tính chất hiển nhiên nhưng cực kỳ quan trọng:
+- Với mọi tập hợp $A$: $\emptyset \subseteq A$ và $A \subseteq A$.
+- Tính chất bắc cầu: Nếu $A \subseteq B$ và $B \subseteq C$ thì $A \subseteq C$.
+</Remark>
+
+<Example id="ex-gthmb-c1-b1-cac-tap-so-co-ban" title="Hệ thống các tập hợp số kinh điển trong Giải tích">
+Trong Giải tích, chúng ta thường xuyên làm việc với chuỗi bao hàm của các tập số cơ bản (<Cite source="gt-gthmb-ttd-2022" page="1" note="Ví dụ 1.1.1" />):
+$$
+\mathbb{N} \subsetneq \mathbb{Z} \subsetneq \mathbb{Q} \subsetneq \mathbb{R} \subsetneq \mathbb{C},
+$$
+trong đó:
+- $\mathbb{N} = \{1, 2, 3, \dots\}$: Tập hợp các số tự nhiên (nguyên dương).
+- $\mathbb{Z} = \{0, \pm 1, \pm 2, \dots\}$: Tập hợp các số nguyên.
+- $\mathbb{Q} = \left\{ \frac{m}{n} \;\middle|\; m \in \mathbb{Z}, \, n \in \mathbb{Z}, \, n \neq 0 \right\}$: Tập hợp các số hữu tỉ.
+- $\mathbb{R}$: Tập hợp các số thực (sẽ được tiên đề hóa chi tiết ở Chương 2).
+</Example>
+
+---
+
+## 2. Các phép toán cơ bản trên tập hợp
+
+Từ các tập hợp đã cho, ta có thể xây dựng các tập hợp mới thông qua bốn phép toán cơ bản: giao, hợp, hiệu và phần bù (<Cite source="gt-gthmb-ttd-2022" page="2" note="Mục 1.1.2" />).
+
+<Definition
+  id="def-gthmb-c1-b1-cac-phep-toan-tap-hop"
+  title="Giao, hợp, hiệu và phần bù của các tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="2"
+  original="Mục 1.1.2"
+>
+Cho hai tập hợp $A$ và $B$.
+
+1. **Phép giao:** Giao của hai tập hợp $A$ và $B$, ký hiệu $A \cap B$ (đọc: $A$ giao $B$), là tập hợp gồm tất cả các phần tử thuộc đồng thời cả hai tập hợp:
+   $$
+   A \cap B = \{x \mid x \in A \text{ và } x \in B\}.
+   $$
+   Trong trường hợp $A \cap B = \emptyset$, ta nói $A$ và $B$ là hai **tập hợp rời nhau** (*disjoint sets*).
+
+2. **Phép hợp:** Hợp của hai tập hợp $A$ và $B$, ký hiệu $A \cup B$ (đọc: $A$ hợp $B$), là tập hợp gồm tất cả các phần tử thuộc ít nhất một trong hai tập hợp đó:
+   $$
+   A \cup B = \{x \mid x \in A \text{ hoặc } x \in B\}.
+   $$
+
+3. **Phép lấy hiệu:** Hiệu của hai tập hợp $A$ và $B$, ký hiệu $A \setminus B$ (đọc: $A$ trừ $B$), là tập hợp gồm tất cả các phần tử thuộc $A$ nhưng không thuộc $B$:
+   $$
+   A \setminus B = \{x \mid x \in A \text{ và } x \notin B\}.
+   $$
+
+4. **Phần bù:** Khi tất cả các tập hợp đang xét đều là tập con của một tập hợp toàn thể $X$ (*universal set*), hiệu $X \setminus A$ được gọi là **phần bù** (*complement*) của $A$ trong $X$, ký hiệu là $A^c$ (hoặc $\complement_X A$):
+   $$
+   A^c = X \setminus A = \{x \in X \mid x \notin A\}.
+   $$
+   Khi đó, ta có đẳng thức liên hệ trực tiếp giữa phép hiệu và phần bù:
+   $$
+   A \setminus B = A \cap B^c.
+   $$
+</Definition>
+
+<Note title="Mở rộng cho họ tập hợp tùy ý">
+Tổng quát hơn, xét một họ các tập hợp $\{A_i\}_{i \in I}$ với tập chỉ số $I$ tùy ý (<Cite source="gt-gthmb-ttd-2022" page="2" note="Mục 1.1.2" />):
+- **Hợp của họ tập hợp:**
+  $$
+  \bigcup_{i \in I} A_i = \{x \mid \exists i \in I: x \in A_i\}.
+  $$
+- **Giao của họ tập hợp:**
+  $$
+  \bigcap_{i \in I} A_i = \{x \mid \forall i \in I: x \in A_i\}.
+  $$
+Đặc biệt, khi tập chỉ số là tập các số tự nhiên $I = \mathbb{N}$, ta thường viết:
+$$
+\bigcup_{i=1}^\infty A_i \quad \text{và} \quad \bigcap_{i=1}^\infty A_i.
+$$
+Đây là cấu trúc xuất hiện liên tục trong lý thuyết giới hạn của dãy tập hợp và độ đo Lebesgue.
+</Note>
+
+<Example id="ex-gthmb-c1-b1-minh-hoa-phep-toan" title="Tính toán cụ thể các phép toán trên tập hợp hữu hạn">
+Cho hai tập hợp số nguyên:
+$$
+A = \{1, 3, 4, 6, 8\}, \quad B = \{2, 4, 6, 8, 10\}.
+$$
+Khi đó (<Cite source="gt-gthmb-ttd-2022" page="2" note="Ví dụ 1.1.2" />):
+- $A \cup B = \{1, 2, 3, 4, 6, 8, 10\}$.
+- $A \cap B = \{4, 6, 8\}$.
+- $A \setminus B = \{1, 3\}$ (các phần tử thuộc $A$ nhưng bị loại bỏ nếu nằm trong $B$).
+- $B \setminus A = \{2, 10\}$ (các phần tử thuộc $B$ nhưng không thuộc $A$).
+</Example>
+
+---
+
+## 3. Các tính chất đại số cơ bản và luật đối ngẫu De Morgan
+
+Các phép toán giao và hợp trên tập hợp thỏa mãn các quy luật đại số tương tự như phép cộng và phép nhân của các số, cùng với luật đối ngẫu De Morgan đặc trưng (<Cite source="gt-gthmb-ttd-2022" page="2-3" note="Mục 1.1.3" />).
+
+<Proposition
+  id="prop-gthmb-c1-b1-tinh-chat-dai-so-tap-hop"
+  title="Các tính chất đại số của phép toán tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="2-3"
+  original="Mục 1.1.3"
+>
+Với các tập hợp $A, B, C$ và họ các tập hợp con $\{A_i\}_{i \in I}$ của không gian $X$, ta luôn có:
+
+1. **Tính giao hoán:**
+   $$
+   A \cup B = B \cup A, \quad A \cap B = B \cap A.
+   $$
+2. **Tính kết hợp:**
+   $$
+   (A \cup B) \cup C = A \cup (B \cup C), \quad (A \cap B) \cap C = A \cap (B \cap C).
+   $$
+3. **Tính phân phối:**
+   $$
+   A \cup (B \cap C) = (A \cup B) \cap (A \cup C),
+   $$
+   $$
+   A \cap (B \cup C) = (A \cap B) \cup (A \cap C).
+   $$
+4. **Luật đối ngẫu De Morgan (*De Morgan's Laws*):**
+   $$
+   \left( \bigcup_{i \in I} A_i \right)^c = \bigcap_{i \in I} A_i^c,
+   $$
+   $$
+   \left( \bigcap_{i \in I} A_i \right)^c = \bigcup_{i \in I} A_i^c.
+   $$
+</Proposition>
+
+<Proof title="Chứng minh luật De Morgan cho họ tập hợp tổng quát">
+Ta chứng minh đẳng thức thứ nhất: $\left( \bigcup_{i \in I} A_i \right)^c = \bigcap_{i \in I} A_i^c$ bằng chuỗi tương đương logic chuẩn mực:
+
+Lấy phần tử $x \in X$ tùy ý:
+$$
+\begin{aligned}
+x \in \left( \bigcup_{i \in I} A_i \right)^c &\iff x \notin \bigcup_{i \in I} A_i \\
+&\iff \text{không tồn tại } i \in I \text{ sao cho } x \in A_i \\
+&\iff \forall i \in I, \, x \notin A_i \\
+&\iff \forall i \in I, \, x \in A_i^c \\
+&\iff x \in \bigcap_{i \in I} A_i^c.
+\end{aligned}
+$$
+Vì quan hệ tương đương logic diễn ra hai chiều với mọi $x \in X$, suy ra hai tập hợp bằng nhau. Đẳng thức thứ hai được chứng minh hoàn toàn tương tự.
+</Proof>
+
+<Remark title="Phát biểu bằng lời luật De Morgan">
+Luật De Morgan mang ý nghĩa trực quan rất sâu sắc:
+- **Phần bù của một hợp bằng giao của các phần bù.**
+- **Phần bù của một giao bằng hợp của các phần bù.**
+Trong lý thuyết xác suất và giải tích độ đo, tính chất này cho phép chuyển đổi linh hoạt giữa biến cố "xảy ra ít nhất một" và "tất cả cùng không xảy ra".
+</Remark>
+
+---
+
+## 4. Tích Descartes của các tập hợp
+
+Để nghiên cứu các hàm nhiều biến và không gian nhiều chiều, ta sử dụng khái niệm tích Descartes (<Cite source="gt-gthmb-ttd-2022" page="3" note="Mục 1.1.4" />).
+
+<Definition
+  id="def-gthmb-c1-b1-tich-descartes"
+  title="Tích Descartes của hai và nhiều tập hợp"
+  source="gt-gthmb-ttd-2022"
+  page="3"
+  original="Mục 1.1.4"
+>
+Cho hai tập hợp $A$ và $B$.
+
+1. **Tích Descartes** của $A$ và $B$ theo thứ tự đó, ký hiệu $A \times B$ (đọc: $A$ nhân $B$), là tập hợp gồm tất cả các cặp có thứ tự $(a, b)$ với $a \in A$ và $b \in B$:
+   $$
+   A \times B := \{(a, b) \mid a \in A, \, b \in B\}.
+   $$
+   Trong đó, hai cặp $(a, b)$ và $(a', b')$ bằng nhau khi và chỉ khi $a = a'$ và $b = b'$.
+
+2. **Tổng quát cho $n$ tập hợp:** Tích Descartes của $n$ tập hợp $A_1, A_2, \dots, A_n$ theo thứ tự đó, ký hiệu $A_1 \times A_2 \times \dots \times A_n$, là tập hợp tất cả các bộ có thứ tự $(a_1, a_2, \dots, a_n)$ với $a_k \in A_k$ ($1 \le k \le n$):
+   $$
+   A_1 \times A_2 \times \dots \times A_n := \{(a_1, a_2, \dots, a_n) \mid a_k \in A_k, \, 1 \le k \le n\}.
+   $$
+
+3. Khi tất cả các tập hợp $A_k$ đều bằng nhau ($A_k = A$ với mọi $k$), ta viết vắn tắt:
+   $$
+   \underbrace{A \times A \times \dots \times A}_{n \text{ lần}} = A^n.
+   $$
+</Definition>
+
+<Example id="ex-gthmb-c1-b1-tich-descartes-hinh-hoc" title="Tích Descartes trong hình học và giải tích không gian">
+1. Mặt phẳng tọa độ quen thuộc trong hình học giải tích chính là tích Descartes:
+   $$
+   \mathbb{R}^2 = \mathbb{R} \times \mathbb{R} = \{(x, y) \mid x \in \mathbb{R}, \, y \in \mathbb{R}\}.
+   $$
+2. Không gian số thực $n$ chiều chính là $\mathbb{R}^n = \{(x_1, \dots, x_n) \mid x_i \in \mathbb{R}, \, 1 \le i \le n\}$.
+3. Cho $A = \{1, 2\}$ và $B = \{x, y, z\}$. Khi đó:
+   $$
+   A \times B = \{(1, x), (1, y), (1, z), (2, x), (2, y), (2, z)\}.
+   $$
+   Số phần tử của $A \times B$ là $|A \times B| = |A| \cdot |B| = 2 \cdot 3 = 6$.
+</Example>
+
+---
+
+<KeyTakeaways title="Tóm tắt trọng tâm bài 1.1">
+- **Tập hợp và tập con:** Để chứng minh $A = B$, bắt buộc phải chứng minh hai bao hàm $A \subseteq B$ và $B \subseteq A$.
+- **Các phép toán tập hợp:**
+  - $A \cap B$: phần tử thuộc cả hai tập hợp.
+  - $A \cup B$: phần tử thuộc ít nhất một trong hai tập hợp.
+  - $A \setminus B = A \cap B^c$: phần tử thuộc $A$ nhưng không thuộc $B$.
+- **Luật De Morgan:** $(\bigcup_{i \in I} A_i)^c = \bigcap_{i \in I} A_i^c$ và $(\bigcap_{i \in I} A_i)^c = \bigcup_{i \in I} A_i^c$.
+- **Tích Descartes:** Tập hợp các bộ có thứ tự $A \times B = \{(a, b) \mid a \in A, b \in B\}$.
+</KeyTakeaways>
