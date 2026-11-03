@@ -9,6 +9,7 @@ import type { DraggablePointProps } from './DraggablePoint';
 import type { ParallelogramProps } from './Parallelogram';
 import type { SequenceEpsilonDemoProps } from './SequenceEpsilonDemo';
 import type { SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
+import type { TaylorPolynomialDemoProps } from './TaylorPolynomialDemo';
 import type { UniformContinuityDemoProps } from './UniformContinuityDemo';
 import type { VectorArrowProps } from './VectorArrow';
 
@@ -40,6 +41,9 @@ const SequenceEpsilonDemoInner = lazy(() =>
 );
 const UniformContinuityDemoInner = lazy(() =>
   import('./UniformContinuityDemo').then((m) => ({ default: m.UniformContinuityDemo })),
+);
+const TaylorPolynomialDemoInner = lazy(() =>
+  import('./TaylorPolynomialDemo').then((m) => ({ default: m.TaylorPolynomialDemo })),
 );
 
 function FigureFallback({ height = 340 }: { readonly height?: number }) {
@@ -138,6 +142,14 @@ export function LazyUniformContinuityDemo(props: UniformContinuityDemoProps) {
   return (
     <Suspense fallback={<FigureFallback height={280} />}>
       <UniformContinuityDemoInner {...props} />
+    </Suspense>
+  );
+}
+
+export function LazyTaylorPolynomialDemo(props: TaylorPolynomialDemoProps) {
+  return (
+    <Suspense fallback={<FigureFallback height={280} />}>
+      <TaylorPolynomialDemoInner {...props} />
     </Suspense>
   );
 }

@@ -1,0 +1,237 @@
+---
+id: khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc
+title: 'Khái niệm đạo hàm, vi phân và đạo hàm hàm ngược'
+description: 'Định nghĩa hàm khả vi tại một điểm và trên tập mở, mối liên hệ giữa khả vi và liên tục, vi phân df, quy tắc tính đạo hàm đại số, đạo hàm hàm hợp và đạo hàm của các hàm lượng giác ngược.'
+estimatedMinutes: 40
+level: basic
+prerequisites:
+  - diem-gioi-han-diem-co-lap-va-lan-can
+  - gioi-han-cua-ham-so-va-gioi-han-mot-phia
+  - ham-so-lien-tuc-va-cac-dinh-ly-then-chot-tren-doan-dong
+tags:
+  - đạo hàm
+  - khả vi
+  - vi phân
+  - đạo hàm hàm hợp
+  - đạo hàm hàm ngược
+  - hàm lượng giác ngược
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '52-54'
+    sections: 'Mục 5.1'
+    note: 'Định nghĩa đạo hàm, vi phân, đạo hàm đại số, hàm hợp và đạo hàm hàm ngược'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất giải tích của đạo hàm và vi phân:** Nắm vững định nghĩa đạo hàm qua giới hạn tỉ số số gia và xấp xỉ tuyến tính địa phương bậc nhất $df(x) = f'(x)dx$.
+2. **Phân biệt rạch ròi mối quan hệ Khả vi và Liên tục:** Chứng minh định lý "Khả vi $\implies$ Liên tục" và chỉ ra các phản ví dụ kinh điển (như hàm $f(x) = |x|$) liên tục nhưng không có đạo hàm.
+3. **Thành thạo các quy tắc tính đạo hàm:** Vận dụng chuẩn xác quy tắc đạo hàm của tổng, hiệu, tích, thương và quy tắc dây chuyền cho hàm hợp $(g \circ f)'(x) = g'(f(x)) f'(x)$.
+4. **Làm chủ định lý đạo hàm hàm ngược:** Thiết lập công thức $(f^{-1})'(y) = \frac{1}{f'(x)}$ và tính đạo hàm chuẩn xác của 4 hàm lượng giác ngược $\arcsin x$, $\arccos x$, $\arctan x$ và $\mathrm{arccot}\,x$.
+</Note>
+
+## 1. Khái niệm Đạo hàm và Vi phân
+
+Đạo hàm xuất phát từ bài toán hình học xác định hệ số góc tiếp tuyến của đường cong và bài toán vật lý tìm vận tốc tức thời của chuyển động (<Cite source="gt-gthmb-ttd-2022" page="52" note="Định nghĩa 5.1.1" />).
+
+<Definition
+  id="def-gthmb-c5-b1-dinh-nghia-dao-ham"
+  title="Hàm số khả vi và Đạo hàm tại một điểm"
+  source="gt-gthmb-ttd-2022"
+  page="52"
+  original="Định nghĩa 5.1.1"
+>
+Cho hàm số $f: (a; b) \to \mathbb{R}$ và điểm $x_0 \in (a; b)$.
+Ta nói $f$ **khả vi tại điểm $x_0$** nếu giới hạn của tỉ số số gia sau đây tồn tại và hữu hạn:
+$$
+\lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}.
+$$
+Giá trị hữu hạn của giới hạn đó được gọi là **đạo hàm** của hàm số $f$ tại điểm $x_0$, ký hiệu là $f'(x_0)$ (hoặc $\frac{df}{dx}(x_0)$):
+$$
+f'(x_0) = \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h} = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}.
+$$
+Nếu hàm số $f$ khả vi tại mọi điểm $x_0 \in (a; b)$, ta nói $f$ **khả vi trên khoảng $(a; b)$**.
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c5-b1-kha-vi-keo-theo-lien-tuc"
+  title="Mối liên hệ: Khả vi kéo theo Liên tục"
+  source="gt-gthmb-ttd-2022"
+  page="52"
+  original="Nhận xét 5.1.2(i)"
+>
+Nếu hàm số $f$ khả vi tại điểm $x_0$ thì $f$ liên tục tại điểm $x_0$.
+</Theorem>
+
+<Proof>
+Với mọi $x \ne x_0$, ta phân tích hiệu giá trị:
+$$
+f(x) - f(x_0) = \frac{f(x) - f(x_0)}{x - x_0} \cdot (x - x_0).
+$$
+Lấy giới hạn cả hai vế khi $x \to x_0$:
+$$
+\lim_{x \to x_0} [f(x) - f(x_0)] = \left(\lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}\right) \cdot \lim_{x \to x_0} (x - x_0) = f'(x_0) \cdot 0 = 0.
+$$
+Suy ra $\lim_{x \to x_0} f(x) = f(x_0)$. Theo định nghĩa tính liên tục, $f$ liên tục tại $x_0$.
+</Proof>
+
+<Counterexample
+  id="cex-gthmb-c5-b1-lien-tuc-chua-chac-kha-vi"
+  title="Liên tục nhưng không khả vi: Hàm giá trị tuyệt đối tại gốc tọa độ"
+  source="gt-gthmb-ttd-2022"
+  page="52"
+  original="Nhận xét 5.1.2"
+>
+Chiều ngược lại của Định lý 5.1.2 không đúng.
+
+Xét hàm số $f(x) = |x|$ trên $\mathbb{R}$ tại điểm $x_0 = 0$.
+Hàm số này liên tục tại $x_0 = 0$ (vì $\lim_{x \to 0} |x| = 0 = f(0)$). Tuy nhiên, xét tỉ số số gia:
+$$
+\frac{f(x) - f(0)}{x - 0} = \frac{|x|}{x}.
+$$
+- Giới hạn phải ($x \to 0^+$): $\lim_{x \to 0^+} \frac{x}{x} = 1$.
+- Giới hạn trái ($x \to 0^-$): $\lim_{x \to 0^-} \frac{-x}{x} = -1$.
+Vì $1 \ne -1$, giới hạn hai phía không tồn tại. Do đó $f(x) = |x|$ không khả vi tại $x = 0$ (điểm nhọn trên đồ thị).
+</Counterexample>
+
+### Khái niệm Vi phân (Differential)
+
+<Definition
+  id="def-gthmb-c5-b1-vi-phan"
+  title="Vi phân của hàm số tại một điểm"
+  source="gt-gthmb-ttd-2022"
+  page="52"
+  original="Nhận xét 5.1.2(ii)"
+>
+Giả sử $f$ khả vi tại $x_0$. Khi đó số gia của hàm số có thể biểu diễn dưới dạng:
+$$
+f(x_0 + h) - f(x_0) = h f'(x_0) + h \varphi(h),
+$$
+trong đó $\varphi(h) \to 0$ khi $h \to 0$ (nghĩa là $h\varphi(h) = o(h)$).
+
+Ánh xạ tuyến tính:
+$$
+df(x_0): h \mapsto h f'(x_0)
+$$
+được gọi là **vi phân của $f$ tại $x_0$**, ký hiệu là $df(x_0)(h) = f'(x_0)h$.
+
+Vì hàm đồng nhất $x \mapsto x$ có vi phân là $dx(h) = h$, ta thường viết biểu thức vi phân dưới dạng kinh điển:
+$$
+df(x_0) = f'(x_0) dx \quad \text{hoặc} \quad df = f'(x) dx.
+$$
+</Definition>
+
+<Remark
+  id="rem-gthmb-c5-b1-tinh-dia-phuong"
+  title="Tính chất địa phương của phép tính vi phân"
+  source="gt-gthmb-ttd-2022"
+  page="52"
+  original="Nhận xét 5.1.2(iii)"
+>
+Tính khả vi là một khái niệm có **tính địa phương**: hàm $f$ có khả vi tại $x_0$ hay không hoàn toàn chỉ phụ thuộc vào các giá trị của $f$ trên một lân cận tùy ý của $x_0$. Do đó, ta có thể mở rộng khái niệm khả vi cho các hàm xác định trên một **tập mở $D \subset \mathbb{R}$** bất kỳ.
+</Remark>
+
+## 2. Các quy tắc tính Đạo hàm và Đạo hàm hàm hợp
+
+<Theorem
+  id="thm-gthmb-c5-b1-quy-tac-dai-so"
+  title="Đạo hàm của các phép toán đại số"
+  source="gt-gthmb-ttd-2022"
+  page="53"
+  original="Định lý 5.1.3"
+>
+Cho $f, g: D \to \mathbb{R}$ là các hàm số khả vi trên tập mở $D$. Khi đó các hàm số $f + g$, $kf$ ($k \in \mathbb{R}$), $fg$ và $\frac{f}{g}$ (nếu $g(x) \ne 0$) cũng khả vi trên $D$, và:
+1. $(f + g)'(x) = f'(x) + g'(x)$.
+2. $(kf)'(x) = k f'(x)$.
+3. $(fg)'(x) = f'(x)g(x) + f(x)g'(x)$.
+4. $\left(\frac{f}{g}\right)'(x) = \frac{f'(x)g(x) - f(x)g'(x)}{g^2(x)}$.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c5-b1-dao-ham-ham-hop"
+  title="Quy tắc dây chuyền cho đạo hàm hàm hợp (Chain Rule)"
+  source="gt-gthmb-ttd-2022"
+  page="53"
+  original="Định lý 5.1.4"
+>
+Cho $f: D_1 \to D_2$ và $g: D_2 \to \mathbb{R}$. Giả sử $f$ khả vi tại $x \in D_1$ và $g$ khả vi tại $y = f(x) \in D_2$. Khi đó hàm hợp $(g \circ f)$ khả vi tại $x$ và:
+$$
+(g \circ f)'(x) = g'\big(f(x)\big) \cdot f'(x).
+$$
+</Theorem>
+
+## 3. Đạo hàm của Hàm ngược và Các hàm Lượng giác ngược
+
+<Theorem
+  id="thm-gthmb-c5-b1-dao-ham-ham-nguoc"
+  title="Tính khả vi của hàm ngược"
+  source="gt-gthmb-ttd-2022"
+  page="53"
+  original="Định lý 5.1.5"
+>
+Cho song ánh $f: D \to f(D)$ khả vi tại $x \in D$ với $f'(x) \ne 0$. Nếu hàm ngược $f^{-1}: f(D) \to D$ liên tục tại $y = f(x)$ thì $f^{-1}$ khả vi tại $y$ và:
+$$
+(f^{-1})'(y) = \frac{1}{f'(x)} = \frac{1}{f'\big(f^{-1}(y)\big)}.
+$$
+</Theorem>
+
+<Proof>
+Lấy số gia $k \ne 0$ sao cho $y + k \in f(D)$. Đặt $h = f^{-1}(y + k) - f^{-1}(y) = f^{-1}(y + k) - x$.
+Khi đó $x + h = f^{-1}(y + k) \implies f(x + h) = y + k$, suy ra $k = f(x + h) - f(x)$.
+Vì hàm ngược $f^{-1}$ liên tục tại $y$, khi $k \to 0$ thì $h \to 0$. Hơn nữa vì $f$ là đơn ánh nên $h \ne 0$. Ta có:
+$$
+\lim_{k \to 0} \frac{f^{-1}(y + k) - f^{-1}(y)}{k} = \lim_{h \to 0} \frac{h}{f(x + h) - f(x)} = \lim_{h \to 0} \frac{1}{\frac{f(x + h) - f(x)}{h}} = \frac{1}{f'(x)}.
+$$
+Vì $f'(x) \ne 0$, giới hạn tồn tại hữu hạn và bằng $\frac{1}{f'(x)}$.
+</Proof>
+
+### Ứng dụng: Đạo hàm của các hàm lượng giác ngược
+
+<Proposition
+  id="prp-gthmb-c5-b1-dao-ham-luong-giac-nguoc"
+  title="Bảng đạo hàm 4 hàm lượng giác ngược"
+  source="gt-gthmb-ttd-2022"
+  page="53"
+  original="Mệnh đề 5.1.7"
+>
+1. $(\arcsin x)' = \frac{1}{\sqrt{1 - x^2}}$ với mọi $x \in (-1; 1)$.
+2. $(\arccos x)' = -\frac{1}{\sqrt{1 - x^2}}$ với mọi $x \in (-1; 1)$.
+3. $(\arctan x)' = \frac{1}{1 + x^2}$ với mọi $x \in \mathbb{R}$.
+4. $(\mathrm{arccot}\,x)' = -\frac{1}{1 + x^2}$ với mọi $x \in \mathbb{R}$.
+</Proposition>
+
+<Example
+  id="exm-gthmb-c5-b1-tinh-dao-ham-arcsin"
+  title="Chứng minh công thức đạo hàm arcsin(x)"
+  source="gt-gthmb-ttd-2022"
+  page="53"
+  original="Ví dụ 5.1.6"
+>
+Xét hàm số $f(x) = \sin x$ với $x \in \left(-\frac{\pi}{2}; \frac{\pi}{2}\right)$.
+Hàm ngược là $f^{-1}(y) = \arcsin y$ với $y \in (-1; 1)$.
+Ta có $f'(x) = \cos x > 0$ trên $\left(-\frac{\pi}{2}; \frac{\pi}{2}\right)$. Áp dụng Định lý 5.1.5:
+$$
+(\arcsin y)' = \frac{1}{f'(x)} = \frac{1}{\cos x} = \frac{1}{\sqrt{1 - \sin^2 x}} = \frac{1}{\sqrt{1 - y^2}}.
+$$
+Đổi biến từ $y$ sang $x$, ta thu được $(\arcsin x)' = \frac{1}{\sqrt{1 - x^2}}$ trên khoảng $(-1; 1)$.
+</Example>
+
+---
+
+<KeyTakeaways>
+- **Đạo hàm:** Là giới hạn tỉ số số gia khi $h \to 0$. Khả vi $\implies$ Liên tục. Chiều ngược lại sai ($f(x) = |x|$).
+- **Vi phân:** $df = f'(x)dx$, là phần tuyến tính chính của số gia hàm số.
+- **Quy tắc hàm hợp:** $(g \circ f)'(x) = g'(f(x)) f'(x)$ là xương sống của mọi phép tính vi phân.
+- **Hàm ngược:** $(f^{-1})'(y) = \frac{1}{f'(x)}$ cho phép tính đạo hàm hàm lượng giác ngược thông qua căn bậc hai và đa thức hữu tỉ.
+</KeyTakeaways>

@@ -1,0 +1,220 @@
+---
+id: dao-ham-cap-cao-cong-thuc-leibniz-va-cac-lop-ham
+title: 'Đạo hàm cấp cao, công thức Leibniz và các lớp hàm'
+description: 'Định nghĩa quy nạp đạo hàm cấp cao, công thức đạo hàm cấp n của các hàm sơ cấp, công thức Leibniz cho đạo hàm cấp n của tích và phân loại các không gian hàm C^n, C^\infty.'
+estimatedMinutes: 40
+level: intermediate
+prerequisites:
+  - khai-niem-dao-ham-vi-phan-va-dao-ham-ham-nguoc
+tags:
+  - đạo hàm cấp cao
+  - công thức Leibniz
+  - lớp hàm C^n
+  - lớp hàm C^infinity
+  - đạo hàm cấp n
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '54'
+    sections: 'Mục 5.2'
+    note: 'Đạo hàm cấp cao, bảng đạo hàm cấp n, công thức Leibniz và lớp hàm C^n, C^infinity'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu định nghĩa quy nạp của đạo hàm cấp cao:** Nắm vững cấu trúc lấy đạo hàm liên tiếp $f^{(n+1)} = (f^{(n)})'$ và các quy ước ký hiệu.
+2. **Ghi nhớ và chứng minh đạo hàm cấp $n$ của các hàm số cơ bản:** Thành thạo công thức quy nạp cho hàm mũ $e^x$, lượng giác $\sin x, \cos x$, logarit $\ln x$ và lũy thừa $(1+x)^\alpha$.
+3. **Làm chủ Công thức Leibniz:** Vận dụng công thức nhị thức cho đạo hàm cấp $n$ của tích hai hàm số $(uv)^{(n)} = \sum_{k=0}^n \binom{n}{k} u^{(k)} v^{(n-k)}$.
+4. **Phân biệt cấu trúc các không gian hàm trơn:** Hiểu bản chất các lớp hàm $C^n(D)$ và $C^\infty(D)$, phân tích ví dụ kinh điển hàm trơn nhưng triệt tiêu mọi đạo hàm tại gốc tọa độ.
+</Note>
+
+## 1. Định nghĩa quy nạp Đạo hàm cấp cao
+
+Khi một hàm số $f: D \to \mathbb{R}$ khả vi trên tập mở $D$, bản thân đạo hàm $f': D \to \mathbb{R}$ cũng là một hàm số xác định trên $D$ (<Cite source="gt-gthmb-ttd-2022" page="54" note="Mục 5.2" />).
+
+<Definition
+  id="def-gthmb-c5-b2-dinh-nghia-dao-ham-cap-cao"
+  title="Đạo hàm cấp n của hàm số"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Mục 5.2"
+>
+Cho hàm số $f: D \to \mathbb{R}$ khả vi trên tập mở $D$.
+- Ánh xạ $f': D \to \mathbb{R}, x \mapsto f'(x)$ được gọi là **đạo hàm cấp 1** của $f$.
+- Nếu $f'$ khả vi tại $x \in D$ thì đạo hàm của $f'$ tại $x$ được gọi là **đạo hàm cấp 2** của $f$ tại $x$, ký hiệu là $f''(x) = (f')'(x)$.
+- Bằng quy nạp toán học, nếu đạo hàm cấp $n$ ($f^{(n)}$) đã được xác định và khả vi trên $D$, thì **đạo hàm cấp $n+1$** của $f$ được định nghĩa bởi:
+$$
+f^{(n+1)}(x) = \big(f^{(n)}\big)'(x), \quad \forall x \in D.
+$$
+Ta quy ước $f^{(0)} = f$, $f^{(1)} = f'$, $f^{(2)} = f''$, $f^{(3)} = f'''$.
+</Definition>
+
+## 2. Bảng đạo hàm cấp $n$ của các hàm số sơ cấp
+
+Dưới đây là các công thức đạo hàm cấp $n$ mẫu mực được chứng minh bằng quy nạp toán học (<Cite source="gt-gthmb-ttd-2022" page="54" note="Mục 5.2" />):
+
+| Hàm số $f(x)$ | Miền xác định | Đạo hàm cấp $n$ ($f^{(n)}(x)$) | Phương pháp chứng minh |
+| :--- | :--- | :--- | :--- |
+| **$e^{ax}$** | $\mathbb{R}$ | $a^n e^{ax}$ | Đạo hàm hàm hợp liên tiếp |
+| **$\sin(ax)$** | $\mathbb{R}$ | $a^n \sin\left(ax + n\frac{\pi}{2}\right)$ | Công thức góc phụ: $(\sin x)' = \cos x = \sin(x + \frac{\pi}{2})$ |
+| **$\cos(ax)$** | $\mathbb{R}$ | $a^n \cos\left(ax + n\frac{\pi}{2}\right)$ | Công thức góc phụ: $(\cos x)' = -\sin x = \cos(x + \frac{\pi}{2})$ |
+| **$\ln(ax + b)$** | $ax + b > 0$ | $\frac{(-1)^{n-1}(n-1)! a^n}{(ax + b)^n}$ | Quy nạp số mũ và giai thừa nghịch đảo |
+| **$\frac{1}{ax + b}$** | $x \ne -b/a$ | $\frac{(-1)^n n! a^n}{(ax + b)^{n+1}}$ | Đạo hàm hàm lũy thừa âm $(ax+b)^{-1}$ |
+| **$(1 + x)^\alpha$** | $x > -1$ | $\alpha(\alpha-1)\dots(\alpha-n+1)(1+x)^{\alpha-n}$ | Quy nạp hệ số nhị thức suy rộng |
+
+<Example
+  id="exm-gthmb-c5-b2-chung-minh-dao-ham-sin"
+  title="Chứng minh đạo hàm cấp n của sin(x) bằng quy nạp"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Mục 5.2"
+>
+Chứng minh rằng với mọi $n \in \mathbb{N}$ và mọi $x \in \mathbb{R}$:
+$$
+(\sin x)^{(n)} = \sin\left(x + \frac{n\pi}{2}\right).
+$$
+</Example>
+
+<Proof>
+- Với $n = 1$: Ta có $(\sin x)' = \cos x = \sin\left(x + \frac{\pi}{2}\right)$. Công thức đúng với $n = 1$.
+- Giả sử công thức đúng với $n = k$, tức là:
+$$
+(\sin x)^{(k)} = \sin\left(x + \frac{k\pi}{2}\right).
+$$
+- Lấy đạo hàm tiếp tục:
+$$
+(\sin x)^{(k+1)} = \left[\sin\left(x + \frac{k\pi}{2}\right)\right]' = \cos\left(x + \frac{k\pi}{2}\right) = \sin\left[\left(x + \frac{k\pi}{2}\right) + \frac{\pi}{2}\right] = \sin\left(x + \frac{(k+1)\pi}{2}\right).
+$$
+Vậy theo nguyên lý quy nạp toán học, công thức đúng với mọi $n \in \mathbb{N}$.
+</Proof>
+
+## 3. Công thức Leibniz cho Đạo hàm cấp $n$ của tích
+
+Khi cần tính đạo hàm cấp cao của tích hai hàm số (chẳng hạn $x^2 e^x$ hoặc $x^3 \sin x$), việc tính lần lượt từng cấp rất phức tạp. Nhà toán học Gottfried Wilhelm Leibniz (1646–1716) đã tìm ra công thức tương tự như khai triển nhị thức Newton (<Cite source="gt-gthmb-ttd-2022" page="54" note="Mệnh đề 5.2.1" />).
+
+<Theorem
+  id="thm-gthmb-c5-b2-cong-thuc-leibniz"
+  title="Công thức Leibniz cho đạo hàm cấp n của tích"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Mệnh đề 5.2.1"
+>
+Cho $u, v$ là hai hàm số có đạo hàm đến cấp $n$ trên tập mở $D$. Khi đó tích $uv$ cũng có đạo hàm đến cấp $n$ trên $D$ và:
+$$
+(uv)^{(n)} = \sum_{k=0}^n \binom{n}{k} u^{(k)} v^{(n-k)} = \sum_{k=0}^n \frac{n!}{k!(n-k)!} u^{(k)} v^{(n-k)},
+$$
+với quy ước $u^{(0)} = u$ và $v^{(0)} = v$.
+</Theorem>
+
+<Example
+  id="exm-gthmb-c5-b2-ap-dung-leibniz"
+  title="Tính đạo hàm cấp n của hàm f(x) = x^2 e^x"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Mệnh đề 5.2.1"
+>
+Tìm đạo hàm cấp $n$ ($n \ge 2$) của hàm số $f(x) = x^2 e^x$.
+</Example>
+
+<Proof>
+Đặt $u(x) = x^2$ và $v(x) = e^x$.
+- Các đạo hàm của $u(x)$:
+  $u'(x) = 2x$, $u''(x) = 2$, và $u^{(k)}(x) = 0$ với mọi $k \ge 3$.
+- Các đạo hàm của $v(x)$:
+  $v^{(m)}(x) = e^x$ với mọi $m \ge 0$.
+Áp dụng công thức Leibniz, do các số hạng với $k \ge 3$ đều triệt tiêu:
+$$
+(x^2 e^x)^{(n)} = \binom{n}{0} x^2 (e^x)^{(n)} + \binom{n}{1} (x^2)' (e^x)^{(n-1)} + \binom{n}{2} (x^2)'' (e^x)^{(n-2)}
+$$
+$$
+= 1 \cdot x^2 e^x + n \cdot 2x e^x + \frac{n(n-1)}{2} \cdot 2 e^x = \big[x^2 + 2nx + n(n-1)\big] e^x.
+$$
+</Proof>
+
+## 4. Các lớp hàm trơn $C^n$ và $C^\infty$
+
+Trong giải tích hiện đại và phương trình vi phân, việc phân loại hàm số theo độ trơn (smoothness) đóng vai trò quyết định cấu trúc của các không gian hàm (<Cite source="gt-gthmb-ttd-2022" page="54" note="Mục 5.2" />).
+
+<Definition
+  id="def-gthmb-c5-b2-cac-lop-ham-tron"
+  title="Không gian các lớp hàm C^n và C^\infty"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Mục 5.2"
+>
+Cho tập mở $D \subset \mathbb{R}$.
+1. **Lớp $C^n(D)$ ($n \in \mathbb{N}$):** Hàm số $f$ được gọi là thuộc **lớp $C^n$ trên $D$** (ký hiệu $f \in C^n(D)$) nếu $f$ có đạo hàm đến cấp $n$ trên $D$ và đạo hàm cấp $n$ ($f^{(n)}$) là một hàm **liên tục trên $D$**.
+   - Đặc biệt, $C^0(D)$ là tập hợp tất cả các hàm số liên tục trên $D$.
+   - $C^1(D)$ là tập hợp các hàm khả vi liên tục (đạo hàm cấp 1 liên tục).
+2. **Lớp $C^\infty(D)$:** Hàm số $f$ được gọi là thuộc **lớp $C^\infty$ trên $D$** (hàm trơn vô hạn lần, smooth function) nếu $f$ có đạo hàm mọi cấp trên $D$:
+$$
+C^\infty(D) = \bigcap_{n=0}^\infty C^n(D).
+$$
+</Definition>
+
+<Remark
+  id="rem-gthmb-c5-b2-chuoi-bao-ham-cac-lop-ham"
+  title="Chuỗi bao hàm giảm dần của các không gian hàm"
+  source="gt-gthmb-ttd-2022"
+  page="54"
+  original="Mục 5.2"
+>
+Ta có chuỗi bao hàm ngặt giữa các lớp hàm:
+$$
+C^\infty(D) \subsetneq \dots \subsetneq C^2(D) \subsetneq C^1(D) \subsetneq C^0(D).
+$$
+Hàm số càng thuộc lớp $C^k$ với $k$ càng lớn thì đồ thị càng trơn tru, không có góc nhọn hay biến thiên đột ngột ở các cấp đạo hàm.
+</Remark>
+
+### Ví dụ kinh điển của Cauchy về hàm trơn $C^\infty$
+
+<Example
+  id="exm-gthmb-c5-b2-ham-tron-cauchy"
+  title="Hàm số thuộc C^infty triệt tiêu mọi đạo hàm tại gốc tọa độ"
+  source="gt-gthmb-ttd-2022"
+  page="61"
+  original="Bài tập 3"
+>
+Cho hàm số $f: \mathbb{R} \to \mathbb{R}$ xác định bởi:
+$$
+f(x) = \begin{cases} e^{-1/x^2} & \text{nếu } x \ne 0 \\ 0 & \text{nếu } x = 0 \end{cases}
+$$
+Chứng minh rằng $f \in C^\infty(\mathbb{R})$ và $f^{(n)}(0) = 0$ với mọi $n \in \mathbb{N}$.
+</Example>
+
+<Proof>
+1. Với $x \ne 0$, hàm số là hợp của các hàm sơ cấp nên có đạo hàm mọi cấp. Bằng quy nạp, đạo hàm cấp $n$ có dạng:
+$$
+f^{(n)}(x) = P_n\left(\frac{1}{x}\right) e^{-1/x^2},
+$$
+trong đó $P_n$ là một đa thức.
+2. Tại điểm $x = 0$: Với mọi đa thức $P(u)$, khi $x \to 0$ (đặt $u = 1/x \to \infty$):
+$$
+\lim_{x \to 0} P\left(\frac{1}{x}\right) e^{-1/x^2} = \lim_{u \to \infty} \frac{P(u)}{e^{u^2}} = 0,
+$$
+do hàm số mũ $e^{u^2}$ tăng trưởng nhanh hơn bất kỳ hàm đa thức nào.
+3. Bằng quy nạp, tỉ số số gia tại $0$:
+$$
+f^{(n+1)}(0) = \lim_{x \to 0} \frac{f^{(n)}(x) - f^{(n)}(0)}{x} = \lim_{x \to 0} \frac{P_n(1/x) e^{-1/x^2}}{x} = \lim_{u \to \infty} \frac{u P_n(u)}{e^{u^2}} = 0.
+$$
+Do đó $f^{(n)}(0) = 0$ với mọi $n \in \mathbb{N}$, và $\lim_{x \to 0} f^{(n)}(x) = 0 = f^{(n)}(0)$. Vậy $f \in C^\infty(\mathbb{R})$.
+</Proof>
+
+---
+
+<KeyTakeaways>
+- **Đạo hàm cấp cao:** $f^{(n+1)} = (f^{(n)})'$, được tính toán bằng quy nạp.
+- **Công thức Leibniz:** $(uv)^{(n)} = \sum_{k=0}^n \binom{n}{k} u^{(k)} v^{(n-k)}$ tương tự khai triển nhị thức Newton.
+- **Lớp hàm $C^n$ và $C^\infty$:** Thể hiện cấp độ trơn tru giải tích của hàm số.
+- **Hàm số $e^{-1/x^2}$:** Là phản ví dụ kinh điển trong giải tích thực: hàm trơn vô hạn lần nhưng mọi hệ số Taylor tại $0$ đều bằng $0$.
+</KeyTakeaways>

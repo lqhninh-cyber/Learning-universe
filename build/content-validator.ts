@@ -102,6 +102,7 @@ export const WHITELISTED_MDX_COMPONENTS = new Set<string>([
   'SupremumEpsilonDemo',
   'SequenceEpsilonDemo',
   'UniformContinuityDemo',
+  'TaylorPolynomialDemo',
 ]);
 
 const FORBIDDEN_HTML_TAGS = new Set<string>([
