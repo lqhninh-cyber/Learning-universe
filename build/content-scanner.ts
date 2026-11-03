@@ -483,7 +483,7 @@ function buildManifest(
         .map(({ lesson }) => lesson)
         .filter((lesson) => !publishedOnly || lesson.status === 'published')
         .sort((a, b) => a.number - b.number);
-      if (publishedOnly && kept.length === 0) {
+      if (publishedOnly && kept.length === 0 && lessons.length > 0) {
         continue;
       }
       manifestChapters.push({ ...chapter, lessons: kept });

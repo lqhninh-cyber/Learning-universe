@@ -28,7 +28,10 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
       ? '/docs/Giao_trinh_Cau_truc_dai_so.pdf'
       : subject.slug === 'hinh-hoc-affine' || subject.sources.primary === 'gt-hhcc-nmh-2004'
         ? '/docs/Hinhhoccaccap.pdf'
-        : null;
+        : subject.slug === 'giai-tich-ham-mot-bien' ||
+            subject.sources.primary === 'gt-gthmb-ttd-2022'
+          ? '/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf'
+          : null;
 
   return (
     <section aria-label="Giáo trình và tài liệu tham khảo môn học" className="pt-2">

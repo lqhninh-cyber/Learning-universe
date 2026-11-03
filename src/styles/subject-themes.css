@@ -50,3 +50,19 @@
   --subject-900: oklch(0.325 0.065 175);
   --subject-950: oklch(0.24 0.048 175);
 }
+
+/* Môn 3: Giải tích hàm một biến — Azure / Ocean (sự biến thiên, liên tục) */
+[data-subject='single-variable-calculus'] {
+  --subject-hue: 200;
+  --subject-50: oklch(0.975 0.018 200);
+  --subject-100: oklch(0.942 0.038 200);
+  --subject-200: oklch(0.888 0.068 200);
+  --subject-300: oklch(0.805 0.108 200);
+  --subject-400: oklch(0.705 0.138 200);
+  --subject-500: oklch(0.605 0.145 200);
+  --subject-600: oklch(0.52 0.135 200);
+  --subject-700: oklch(0.44 0.115 200);
+  --subject-800: oklch(0.375 0.09 200);
+  --subject-900: oklch(0.32 0.07 200);
+  --subject-950: oklch(0.235 0.05 200);
+}

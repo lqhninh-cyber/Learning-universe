@@ -12,6 +12,7 @@ import {
   Badge,
   Breadcrumb,
   Button,
+  CalculusCurveMotif,
   Collapsible,
   DefinitionPillarMotif,
   DongSonConcentricMotif,
@@ -114,12 +115,13 @@ describe('Design System & Subject Theming (Giai đoạn 1)', () => {
     expect(container.querySelector('[data-subject="affine-geometry"]')).toBeInTheDocument();
   });
 
-  it('kết xuất đầy đủ 11 component họa tiết di sản với aria-hidden="true" chuẩn accessibility', () => {
+  it('kết xuất đầy đủ 12 component họa tiết di sản với aria-hidden="true" chuẩn accessibility', () => {
     const { container } = render(
       <div>
         <DongSonConcentricMotif data-testid="dong-son" />
         <AlgebraicSymmetryMotif data-testid="algebra-motif" />
         <AffineGridMotif data-testid="affine-motif" />
+        <CalculusCurveMotif data-testid="calculus-motif" />
         <HeritageDivider data-testid="heritage-divider" />
         <KagomeWeaveDivider data-testid="kagome-divider" />
         <TheoryPillarMotif data-testid="theory-motif" />
@@ -132,6 +134,6 @@ describe('Design System & Subject Theming (Giai đoạn 1)', () => {
     );
 
     const hiddenElements = container.querySelectorAll('[aria-hidden="true"]');
-    expect(hiddenElements.length).toBeGreaterThanOrEqual(11);
+    expect(hiddenElements.length).toBeGreaterThanOrEqual(12);
   });
 });

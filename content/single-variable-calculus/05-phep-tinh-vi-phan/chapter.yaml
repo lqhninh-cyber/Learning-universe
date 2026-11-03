@@ -1,0 +1,9 @@
+id: phep-tinh-vi-phan
+number: 5
+title: Phép tính vi phân
+description: "Đạo hàm và vi phân cấp cao, các định lý giá trị trung bình Fermat, Rolle, Lagrange, Cauchy, quy tắc L'Hôpital và khai triển Taylor - Maclaurin."
+objectives:
+  - 'Tính toán đạo hàm, vi phân cấp 1 và cấp cao của hàm số một biến.'
+  - 'Chứng minh và vận dụng các định lý nền tảng: Fermat, Rolle, Lagrange và Cauchy.'
+  - "Khử các dạng vô định bằng quy tắc L'Hôpital."
+  - 'Khai triển hàm số theo công thức Taylor và Maclaurin với phần dư Peano hoặc Lagrange.'

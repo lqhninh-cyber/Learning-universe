@@ -1,0 +1,8 @@
+id: tap-hop-menh-de-anh-xa
+number: 1
+title: Tập hợp - Mệnh đề - Ánh xạ
+description: 'Ánh xạ, đơn ánh, toàn ánh, song ánh và phép dựng ánh xạ ngược.'
+objectives:
+  - 'Nắm vững khái niệm tập hợp, các phép toán mệnh đề và quy tắc logic toán cơ bản.'
+  - 'Phân biệt và chứng minh đơn ánh, toàn ánh, song ánh.'
+  - 'Xác định và tính toán ánh xạ ngược cùng ảnh, nghịch ảnh của tập hợp.'

@@ -1,5 +1,5 @@
 import type { ManifestChapter } from '@schemas/index';
-import { ArrowLeft, ExternalLink, Sparkles } from 'lucide-react';
+import { ArrowLeft, Download, ExternalLink, FileText, Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
@@ -152,6 +152,115 @@ export function SubjectOverviewPage() {
                   <ExternalLink className="h-4 w-4 opacity-80" aria-hidden="true" />
                 </a>
               </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Khối Tài liệu học tập & Đề thi mẫu chuyên sâu cho Giải tích hàm một biến */}
+      {subject.slug === 'giai-tich-ham-mot-bien' && (
+        <Card className="border-subject-200/90 from-subject-50/40 bg-gradient-to-br via-white to-stone-50/70 p-6 shadow-xs sm:p-8">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="subject">
+                  <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Tài liệu học tập &amp; Đề thi mẫu</span>
+                </Badge>
+                <Badge variant="neutral">Học phần MATH1403 · 4 Tín chỉ · Toán học</Badge>
+              </div>
+              <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                Tài liệu học tập &amp; Đề cương ôn thi cuối khóa
+              </h2>
+              <p className="max-w-3xl text-sm leading-relaxed text-stone-600">
+                Tải về giáo trình chính khóa và tài liệu hướng dẫn ôn thi kết thúc học phần Giải
+                tích hàm một biến. Học viên có thể mở đọc trực tiếp trên trình duyệt hoặc tải về máy
+                để phục vụ học tập và ôn luyện đề mẫu.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Tài liệu 1: Giáo trình */}
+              <div className="hover:border-subject-300 flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-5 shadow-2xs transition-all">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-subject-700 text-xs font-bold tracking-wider uppercase">
+                      Giáo trình chính khóa
+                    </span>
+                    <Badge variant="subject">PDF Bản chuẩn</Badge>
+                  </div>
+                  <h3 className="text-base font-bold text-stone-900">
+                    Giáo trình Giải tích hàm một biến (GV. Trần Trí Dũng)
+                  </h3>
+                  <p className="text-xs leading-relaxed text-stone-600">
+                    Nền tảng Giải tích thực từ tiên đề trường R, giới hạn dãy/hàm, tính liên tục,
+                    phép tính vi phân, tích phân Riemann đến lý thuyết chuỗi số và chuỗi hàm.
+                  </p>
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
+                  <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
+                    <a
+                      href="/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Mở xem PDF</span>
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
+                    <a
+                      href="/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf"
+                      download="GTHMB_Tran_Tri_Dung_2022.pdf"
+                    >
+                      <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Tải về máy</span>
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tài liệu 2: Nội dung ôn tập & Đề thi mẫu */}
+              <div className="hover:border-subject-300 flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-5 shadow-2xs transition-all">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold tracking-wider text-amber-700 uppercase">
+                      Tài liệu ôn thi cuối khóa
+                    </span>
+                    <Badge variant="neutral">Trọng tâm &amp; Đề mẫu</Badge>
+                  </div>
+                  <h3 className="text-base font-bold text-stone-900">
+                    Nội dung ôn tập &amp; Đề thi mẫu cuối khóa
+                  </h3>
+                  <p className="text-xs leading-relaxed text-stone-600">
+                    Hệ thống trọng tâm lý thuyết, bài tập ôn thi và 5 câu tự luận đề mẫu học phần
+                    Giải tích hàm một biến (MATH1403).
+                  </p>
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
+                  <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
+                    <a
+                      href="/docs/giai-tich-ham-mot-bien/ND_on_thi_va_de_mau.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Mở xem PDF</span>
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
+                    <a
+                      href="/docs/giai-tich-ham-mot-bien/ND_on_thi_va_de_mau.pdf"
+                      download="ND_on_thi_va_de_mau.pdf"
+                    >
+                      <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Tải về máy</span>
+                    </a>
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </Card>

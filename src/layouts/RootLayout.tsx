@@ -104,6 +104,13 @@ function RootLayoutContent() {
                     Hình học Affine và hình học Euclide
                   </Link>
                   <Link
+                    to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
+                  >
+                    Giải tích hàm một biến
+                  </Link>
+                  <Link
                     to={ROUTES.glossary}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
@@ -194,6 +201,12 @@ function RootLayoutContent() {
                 className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
               >
                 Hình học Affine và hình học Euclide
+              </Link>
+              <Link
+                to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
+                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
+              >
+                Giải tích hàm một biến
               </Link>
               <Link
                 to={ROUTES.glossary}
@@ -363,6 +376,12 @@ function RootLayoutContent() {
                 className="text-vn-muted hover:text-vn-primary transition-colors"
               >
                 Hình học Affine và hình học Euclide
+              </Link>
+              <Link
+                to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
+                className="text-vn-muted hover:text-vn-primary transition-colors"
+              >
+                Giải tích hàm một biến
               </Link>
               <Link
                 to={ROUTES.glossary}

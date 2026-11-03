@@ -1,4 +1,4 @@
-import { BookOpen, Compass, Info, PanelLeft, Search, Sigma } from 'lucide-react';
+import { BookOpen, Compass, Info, PanelLeft, Search, Sigma, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { SUBJECT_THEMES, type SubjectThemeId } from '@/shared/theme/subject-themes';
@@ -24,6 +24,7 @@ const THEME_IDS: readonly SubjectThemeId[] = [
   'default',
   'algebraic-structures',
   'affine-geometry',
+  'single-variable-calculus',
 ] as const;
 
 const SWATCHES = [
@@ -85,6 +86,7 @@ export function DevUiPage() {
                 >
                   {themeId === 'algebraic-structures' && <Sigma className="h-3.5 w-3.5" />}
                   {themeId === 'affine-geometry' && <Compass className="h-3.5 w-3.5" />}
+                  {themeId === 'single-variable-calculus' && <TrendingUp className="h-3.5 w-3.5" />}
                   <span>{meta.name}</span>
                 </Button>
               );

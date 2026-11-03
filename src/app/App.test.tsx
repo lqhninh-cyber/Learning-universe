@@ -22,7 +22,7 @@ describe('App routing smoke test', () => {
     useLearningStore.getState().resetLearningStore();
   });
 
-  it('hiển thị trang chủ Learning Universe với 2 môn học từ manifest tại /', async () => {
+  it('hiển thị trang chủ Learning Universe với các môn học từ manifest tại /', async () => {
     renderWithProviders('/');
 
     expect(
@@ -39,6 +39,12 @@ describe('App routing smoke test', () => {
     });
     expect(affineLinks.length).toBeGreaterThan(0);
     expect(affineLinks[0]).toHaveAttribute('href', '/mon-hoc/hinh-hoc-affine');
+
+    const calculusLinks = screen.getAllByRole('link', {
+      name: 'Giải tích hàm một biến',
+    });
+    expect(calculusLinks.length).toBeGreaterThan(0);
+    expect(calculusLinks[0]).toHaveAttribute('href', '/mon-hoc/giai-tich-ham-mot-bien');
   });
 
   it('hiển thị đầy đủ 7 khu vực của trang chủ theo concept Di sản tri thức & Hình học bản sắc', async () => {

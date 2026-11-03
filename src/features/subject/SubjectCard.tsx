@@ -10,6 +10,7 @@ import {
   AffineGridMotif,
   AlgebraicSymmetryMotif,
   Badge,
+  CalculusCurveMotif,
   Card,
   CardContent,
   CardDescription,
@@ -28,6 +29,9 @@ function SubjectIcon({ slug, icon }: { readonly slug?: string; readonly icon?: s
   }
   if (slug === 'hinh-hoc-affine' || icon === 'compass') {
     return <AffineGridMotif className="h-3.5 w-3.5 text-current" />;
+  }
+  if (slug === 'giai-tich-ham-mot-bien' || icon === 'function') {
+    return <CalculusCurveMotif className="h-3.5 w-3.5 text-current" />;
   }
   if (icon === 'compass') {
     return <Compass className="h-3.5 w-3.5" aria-hidden="true" />;
@@ -72,8 +76,10 @@ export function SubjectCard({ subject }: SubjectCardProps) {
         >
           {subject.slug === 'cau-truc-dai-so' ? (
             <AlgebraicSymmetryMotif className="h-full w-full" />
-          ) : (
+          ) : subject.slug === 'hinh-hoc-affine' ? (
             <AffineGridMotif className="h-full w-full" />
+          ) : (
+            <CalculusCurveMotif className="h-full w-full" />
           )}
         </div>
 

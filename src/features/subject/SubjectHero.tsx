@@ -8,6 +8,7 @@ import {
   PlayCircle,
   Sigma,
   Sparkles,
+  TrendingUp,
   UserCheck,
 } from 'lucide-react';
 import { Link } from 'react-router';
@@ -54,12 +55,14 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
             <Badge variant="subject">
               {subject.theme.icon === 'compass' ? (
                 <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+              ) : subject.theme.icon === 'function' ? (
+                <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
               ) : (
                 <Sigma className="h-3.5 w-3.5" aria-hidden="true" />
               )}
               <span>Học phần chuyên ngành · {subject.shortTitle}</span>
             </Badge>
-            <Badge variant="neutral">Mã môn: {subject.id}</Badge>
+            <Badge variant="neutral">Mã học phần: {subject.shortTitle}</Badge>
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">

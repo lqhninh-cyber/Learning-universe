@@ -1,0 +1,9 @@
+id: gioi-han-va-lien-tuc-cua-ham-so
+number: 4
+title: Giới hạn và Liên tục của hàm số
+description: 'Lân cận, định nghĩa Epsilon-Delta, các định lý giá trị trung gian Bolzano-Cauchy, giá trị lớn nhất/nhỏ nhất Weierstrass và tính liên tục đều.'
+objectives:
+  - 'Sử dụng thành thạo định nghĩa giới hạn hàm số Epsilon - Delta tại một điểm và ở vô cực.'
+  - 'Nắm vững tính liên tục của hàm số và phân loại các điểm gián đoạn.'
+  - 'Vận dụng các định lý Bolzano-Cauchy và Weierstrass về giá trị đạt được trên đoạn đóng.'
+  - 'Hiểu định nghĩa và tiêu chuẩn liên tục đều của hàm số (Định lý Cantor).'

@@ -1,0 +1,9 @@
+id: chuoi-so-chuoi-ham
+number: 7
+title: Chuỗi số - Chuỗi hàm
+description: "Chuỗi số dương, các tiêu chuẩn D'Alembert, Cauchy, chuỗi đan dấu Leibniz, chuỗi hàm hội tụ đều và dấu hiệu Weierstrass M-test."
+objectives:
+  - 'Hiểu khái niệm chuỗi số, tổng riêng và sự hội tụ của chuỗi.'
+  - "Áp dụng các tiêu chuẩn so sánh, D'Alembert và Cauchy cho chuỗi số dương."
+  - 'Khảo sát chuỗi đan dấu với dấu hiệu Leibniz và phân biệt hội tụ tuyệt đối / bán hội tụ.'
+  - 'Nắm vững khái niệm hội tụ đều của chuỗi hàm và tiêu chuẩn Weierstrass M-test.'

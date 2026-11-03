@@ -409,6 +409,34 @@ export function AffineGridMotif({ className }: { readonly className?: string }) 
 }
 
 /**
+ * Biểu tượng Kỷ hà Đường cong Giải tích & Tích phân Riemann (Motif môn Giải tích hàm một biến)
+ * Lấy cảm hứng từ dấu tích phân ∫, hàm số liên tục lượn sóng và các điểm nút giải tích.
+ */
+export function CalculusCurveMotif({ className }: { readonly className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('h-4 w-4 shrink-0', className)}
+      aria-hidden="true"
+    >
+      <path d="M3 20H21" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M4 21V3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path
+        d="M5 16C8 16 9 7 13 8C17 9 17 5 20 4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="5" cy="16" r="1.5" fill="currentColor" />
+      <circle cx="13" cy="8" r="1.5" fill="currentColor" />
+      <circle cx="20" cy="4" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+/**
  * Dải phân cách mộng gỗ kỷ hà mây tre (Heritage Divider)
  * Phân tầng không gian với nút giao hình thoi hoa văn truyền thống.
  */

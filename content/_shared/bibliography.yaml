@@ -76,3 +76,12 @@ sources:
     publisher: 'NXB Giáo dục'
     language: 'vi'
 
+  - id: gt-gthmb-ttd-2022
+    type: textbook
+    title: 'Giáo trình Giải tích hàm một biến'
+    authors:
+      - 'Trần Trí Dũng'
+    year: 2022
+    publisher: 'Bộ môn Giải tích — Tài liệu giảng dạy học phần MATH1403'
+    language: 'vi'
+

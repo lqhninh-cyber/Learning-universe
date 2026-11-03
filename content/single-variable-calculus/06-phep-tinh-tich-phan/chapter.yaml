@@ -1,0 +1,9 @@
+id: phep-tinh-tich-phan
+number: 6
+title: Phép tính tích phân
+description: 'Tổng Darboux, định nghĩa tích phân Riemann, định lý cơ bản của phép tính vi tích phân Newton-Leibniz và lý thuyết tích phân suy rộng.'
+objectives:
+  - 'Tiếp cận tích phân Riemann qua phân hoạch và tổng Darboux trên/dưới.'
+  - 'Nắm vững điều kiện khả tích Riemann và các lớp hàm khả tích.'
+  - 'Vận dụng công thức Newton-Leibniz và các phương pháp tích phân từng phần, đổi biến.'
+  - 'Khảo sát sự hội tụ của tích phân suy rộng loại 1 (khoảng vô hạn) và loại 2 (hàm không bị chặn).'

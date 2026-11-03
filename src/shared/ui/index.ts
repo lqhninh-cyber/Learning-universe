@@ -20,6 +20,7 @@ export { Tooltip, type TooltipProps, TooltipProvider, type TooltipProviderProps 
 export {
   AffineGridMotif,
   AlgebraicSymmetryMotif,
+  CalculusCurveMotif,
   DefinitionPillarMotif,
   DongSonConcentricMotif,
   DongSonDrumVisual,

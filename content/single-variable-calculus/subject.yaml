@@ -1,0 +1,13 @@
+id: single-variable-calculus
+slug: giai-tich-ham-mot-bien
+title: Giải tích hàm một biến
+shortTitle: MATH1403
+description: Hệ thống hóa nền tảng Giải tích thực từ tiên đề hóa trường số thực R, giới hạn dãy số và hàm số, hàm số liên tục và liên tục đều, phép tính vi phân, tích phân Riemann - suy rộng đến lý thuyết chuỗi số và chuỗi hàm.
+order: 3
+status: published
+theme:
+  hue: 200
+  icon: function
+sources:
+  primary: gt-gthmb-ttd-2022
+  references: []

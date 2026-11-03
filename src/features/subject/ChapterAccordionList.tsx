@@ -83,80 +83,87 @@ export function ChapterAccordionList({ subject, chapters }: ChapterAccordionList
               )}
             </header>
 
-            <ul className="divide-y divide-stone-100">
-              {chapter.lessons.map((lesson) => {
-                const isCompleted = Boolean(completedLessons[lesson.id]);
-                const isBookmarked = Boolean(bookmarkedLessons[lesson.id]);
-                const lessonHref = ROUTES.lesson(subject.slug, chapter.slug, lesson.slug);
+            {chapter.lessons.length > 0 ? (
+              <ul className="divide-y divide-stone-100">
+                {chapter.lessons.map((lesson) => {
+                  const isCompleted = Boolean(completedLessons[lesson.id]);
+                  const isBookmarked = Boolean(bookmarkedLessons[lesson.id]);
+                  const lessonHref = ROUTES.lesson(subject.slug, chapter.slug, lesson.slug);
 
-                return (
-                  <li key={lesson.id}>
-                    <Link
-                      to={lessonHref}
-                      className="group hover:bg-subject-50/35 flex flex-col justify-between gap-4 p-5 transition-colors sm:flex-row sm:items-center sm:px-6"
-                    >
-                      <div className="flex items-start gap-3.5">
-                        <div className="mt-0.5 shrink-0">
-                          {isCompleted ? (
-                            <CheckCircle2
-                              className="h-5 w-5 text-emerald-600"
-                              aria-label="Đã hoàn thành"
-                            />
-                          ) : (
-                            <Circle
-                              className="group-hover:text-subject-500 h-5 w-5 text-stone-300 transition-colors"
-                              aria-hidden="true"
-                            />
-                          )}
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-subject-700 font-mono text-xs font-semibold">
-                              Bài {chapter.number}.{lesson.number}
-                            </span>
-                            <h3 className="group-hover:text-subject-700 text-base font-semibold text-stone-900 transition-colors">
-                              {lesson.title}
-                            </h3>
-                            <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
-                            {isBookmarked && (
-                              <Bookmark
-                                className="h-3.5 w-3.5 fill-amber-400 text-amber-500"
-                                aria-label="Đã lưu yêu thích"
+                  return (
+                    <li key={lesson.id}>
+                      <Link
+                        to={lessonHref}
+                        className="group hover:bg-subject-50/35 flex flex-col justify-between gap-4 p-5 transition-colors sm:flex-row sm:items-center sm:px-6"
+                      >
+                        <div className="flex items-start gap-3.5">
+                          <div className="mt-0.5 shrink-0">
+                            {isCompleted ? (
+                              <CheckCircle2
+                                className="h-5 w-5 text-emerald-600"
+                                aria-label="Đã hoàn thành"
+                              />
+                            ) : (
+                              <Circle
+                                className="group-hover:text-subject-500 h-5 w-5 text-stone-300 transition-colors"
+                                aria-hidden="true"
                               />
                             )}
                           </div>
 
-                          <p className="text-sm leading-relaxed text-stone-600">
-                            {lesson.description}
-                          </p>
-
-                          <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-stone-500">
-                            <span className="inline-flex items-center gap-1">
-                              <Clock className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
-                              <span>{lesson.estimatedMinutes} phút</span>
-                            </span>
-                            {lesson.tags.map((tag) => (
-                              <span key={tag} className="text-stone-400">
-                                #{tag}
+                          <div className="space-y-1.5">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-subject-700 font-mono text-xs font-semibold">
+                                Bài {chapter.number}.{lesson.number}
                               </span>
-                            ))}
+                              <h3 className="group-hover:text-subject-700 text-base font-semibold text-stone-900 transition-colors">
+                                {lesson.title}
+                              </h3>
+                              <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
+                              {isBookmarked && (
+                                <Bookmark
+                                  className="h-3.5 w-3.5 fill-amber-400 text-amber-500"
+                                  aria-label="Đã lưu yêu thích"
+                                />
+                              )}
+                            </div>
+
+                            <p className="text-sm leading-relaxed text-stone-600">
+                              {lesson.description}
+                            </p>
+
+                            <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-stone-500">
+                              <span className="inline-flex items-center gap-1">
+                                <Clock className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
+                                <span>{lesson.estimatedMinutes} phút</span>
+                              </span>
+                              {lesson.tags.map((tag) => (
+                                <span key={tag} className="text-stone-400">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="text-subject-700 flex items-center gap-1.5 self-end text-xs font-semibold sm:self-center">
-                        <span>Đọc bài</span>
-                        <ArrowRight
-                          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+                        <div className="text-subject-700 flex items-center gap-1.5 self-end text-xs font-semibold sm:self-center">
+                          <span>Đọc bài</span>
+                          <ArrowRight
+                            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div className="p-5 text-center text-xs text-stone-500 sm:p-6">
+                Chương trình học tập đang được số hóa và chuẩn bị phát hành. Học viên có thể tải và
+                xem trước nội dung trong phần Tài liệu học tập &amp; Đề thi mẫu bên trên.
+              </div>
+            )}
           </section>
         );
       })}

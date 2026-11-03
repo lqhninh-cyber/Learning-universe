@@ -1,0 +1,8 @@
+id: gioi-han-cua-day-so
+number: 3
+title: Giới hạn của dãy số
+description: 'Dãy hội tụ, tính bị chặn, nguyên lý kẹp, định lý đơn điệu Weierstrass và dãy Cauchy.'
+objectives:
+  - 'Nắm vững định nghĩa giới hạn dãy số qua ngôn ngữ Epsilon - N.'
+  - 'Vận dụng các định lý giới hạn, nguyên lý kẹp và định lý Weierstrass cho dãy đơn điệu bị chặn.'
+  - 'Hiểu tiêu chuẩn Cauchy và tính đầy đủ của trường số thực R.'

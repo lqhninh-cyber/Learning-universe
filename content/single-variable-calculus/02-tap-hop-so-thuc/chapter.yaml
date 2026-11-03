@@ -1,0 +1,8 @@
+id: tap-hop-so-thuc
+number: 2
+title: Tập hợp số thực
+description: 'Tiên đề trường số thực R, cận trên, cận dưới, Sup/Inf, nguyên lý Archimedes và tính trù mật.'
+objectives:
+  - 'Hiểu hệ tiên đề trường số thực đầy đủ R.'
+  - 'Vận dụng định nghĩa và tính chất của chặn trên, chặn dưới, Sup và Inf.'
+  - 'Ứng dụng nguyên lý Archimedes và chứng minh tính trù mật của tập số hữu tỉ Q trong R.'
