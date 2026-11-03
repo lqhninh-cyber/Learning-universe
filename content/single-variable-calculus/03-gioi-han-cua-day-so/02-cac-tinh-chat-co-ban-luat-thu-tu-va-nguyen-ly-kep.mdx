@@ -1,0 +1,371 @@
+---
+id: cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep
+title: 'Các tính chất cơ bản, luật thứ tự và nguyên lý kẹp'
+description: 'Tính bị chặn của dãy hội tụ, luật giá trị tuyệt đối, luật bảo toàn thứ tự, nguyên lý kẹp ba dãy, luật số học trong tập số thực mở rộng và 6 giới hạn cơ bản quan trọng.'
+estimatedMinutes: 40
+level: basic
+prerequisites:
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+tags:
+  - dãy hội tụ bị chặn
+  - luật giá trị tuyệt đối
+  - luật thứ tự
+  - nguyên lý kẹp
+  - luật số học
+  - dạng vô định
+  - giới hạn cơ bản
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '26-29, 31'
+    sections: 'Mục 3.2.1, 3.2.2, 3.2.3, 3.2.4, 3.2.6'
+    note: 'Các tính chất cơ bản của dãy hội tụ, luật thứ tự, kẹp và các giới hạn cơ bản'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu mối quan hệ giữa tính hội tụ và tính bị chặn:** Nắm vững định lý "Mọi dãy hội tụ đều bị chặn" và chỉ ra được các phản ví dụ chứng minh chiều ngược lại không đúng.
+2. **Vận dụng các luật giá trị tuyệt đối và luật thứ tự:** Biết cách lấy giới hạn qua bất đẳng thức, nắm rõ quy tắc dấu suy biến từ ngặt thành không ngặt ($\le$).
+3. **Thành thạo Nguyên lý kẹp (Squeeze Theorem):** Vận dụng linh hoạt nguyên lý kẹp ba dãy để tìm giới hạn của các dãy số lượng giác dao động và tổng phân thức.
+4. **Làm chủ luật số học và nhận diện các dạng vô định:** Tính toán thành thạo giới hạn của tổng, hiệu, tích, thương và phân loại chuẩn xác 7 dạng vô định kinh điển.
+5. **Chứng minh và sử dụng bảng 6 giới hạn cơ bản:** Hiểu sâu sắc kỹ thuật chứng minh các giới hạn mẫu mực bằng bất đẳng thức Bernoulli và khai triển nhị thức Newton.
+</Note>
+
+## 1. Dãy hội tụ và tính bị chặn
+
+Một trong những tính chất định tính quan trọng nhất của dãy hội tụ là các số hạng của nó không thể phân tán ra vô tận (<Cite source="gt-gthmb-ttd-2022" page="26" note="Định lý 3.2.1" />).
+
+<Theorem
+  id="thm-gthmb-c3-b2-day-hoi-tu-bi-chan"
+  title="Dãy hội tụ thì bị chặn"
+  source="gt-gthmb-ttd-2022"
+  page="26"
+  original="Định lý 3.2.1"
+>
+Mọi dãy số hội tụ đều là dãy số bị chặn.
+</Theorem>
+
+<Proof>
+Giả sử dãy số $(x_n)$ hội tụ về số thực $a$. Áp dụng định nghĩa giới hạn với $\varepsilon = 1$, tồn tại một số tự nhiên $N \in \mathbb{N}$ sao cho:
+$$
+|x_n - a| < 1, \quad \forall n \ge N.
+$$
+Khi đó, áp dụng bất đẳng thức tam giác cho mọi $n \ge N$:
+$$
+|x_n| = |(x_n - a) + a| \le |x_n - a| + |a| < 1 + |a|.
+$$
+Tập hợp các số hạng đứng trước chỉ số $N$ là $\{x_1, x_2, \dots, x_{N-1}\}$, đây là một tập hợp hữu hạn các số thực nên luôn có phần tử lớn nhất về giá trị tuyệt đối. Đặt:
+$$
+M = \max\{|x_1|, |x_2|, \dots, |x_{N-1}|, 1 + |a|\}.
+$$
+Rõ ràng với mọi số tự nhiên $n \in \mathbb{N}$, ta đều có $|x_n| \le M$. Điều này chứng minh dãy số $(x_n)$ bị chặn.
+</Proof>
+
+<Counterexample
+  id="cex-gthmb-c3-b2-bi-chan-chua-chac-hoi-tu"
+  title="Dãy bị chặn chưa chắc hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="27"
+  original="Nhận xét 3.2.2"
+>
+Chiều ngược lại của Định lý 3.2.1 nói chung không đúng.
+
+Xét dãy số đan dấu $x_n = (-1)^n$:
+$$
+(x_n) = (-1, 1, -1, 1, -1, \dots)
+$$
+Dãy này rõ ràng bị chặn vì $|x_n| = 1 \le 1$ với mọi $n \in \mathbb{N}$. Tuy nhiên, như đã chứng minh ở Bài 3.1 (Ví dụ 3.1.9), dãy số này phân kỳ (không hội tụ về bất kỳ số thực nào).
+</Counterexample>
+
+## 2. Luật giá trị tuyệt đối
+
+<Theorem
+  id="thm-gthmb-c3-b2-luat-gia-tri-tuyet-doi"
+  title="Luật giá trị tuyệt đối"
+  source="gt-gthmb-ttd-2022"
+  page="27"
+  original="Định lý 3.2.3"
+>
+Cho dãy số thực $(x_n)$.
+1. $\lim_{n \to \infty} x_n = 0 \iff \lim_{n \to \infty} |x_n| = 0$.
+2. Nếu $\lim_{n \to \infty} x_n = a$ thì $\lim_{n \to \infty} |x_n| = |a|$.
+</Theorem>
+
+<Proof>
+1. Với khẳng định đầu tiên, theo định nghĩa giới hạn:
+   - $\lim x_n = 0 \iff \forall \varepsilon > 0, \exists N, \forall n \ge N: |x_n - 0| = |x_n| < \varepsilon$.
+   - $\lim |x_n| = 0 \iff \forall \varepsilon > 0, \exists N, \forall n \ge N: ||x_n| - 0| = |x_n| < \varepsilon$.
+   Hai mệnh đề trên hoàn toàn tương đương nhau.
+
+2. Với khẳng định thứ hai, giả sử $\lim x_n = a$. Áp dụng bất đẳng thức tam giác ngược:
+$$
+\big| |x_n| - |a| \big| \le |x_n - a|.
+$$
+Với mọi $\varepsilon > 0$, vì $\lim x_n = a$ nên tồn tại $N \in \mathbb{N}$ sao cho $|x_n - a| < \varepsilon$ với mọi $n \ge N$. Do đó:
+$$
+\big| |x_n| - |a| \big| \le |x_n - a| < \varepsilon, \quad \forall n \ge N.
+$$
+Theo định nghĩa giới hạn, điều này có nghĩa là $\lim |x_n| = |a|$.
+</Proof>
+
+<Remark
+  id="rem-gthmb-c3-b2-dao-luat-gia-tri-tuyet-doi"
+  title="Chiều ngược lại của luật giá trị tuyệt đối"
+  source="gt-gthmb-ttd-2022"
+  page="27"
+  original="Nhận xét 3.2.4"
+>
+Chiều ngược lại của phần 2 nói chung không đúng khi $a \ne 0$. Chẳng hạn, với $x_n = (-1)^n$, ta có $|x_n| = 1 \to 1$ khi $n \to \infty$, nhưng chính dãy $(x_n)$ không có giới hạn.
+</Remark>
+
+## 3. Luật thứ tự và Nguyên lý kẹp
+
+### 3.1. Luật thứ tự
+
+Giới hạn bảo toàn quan hệ thứ tự không ngặt ($\le$) khi chuyển qua giới hạn (<Cite source="gt-gthmb-ttd-2022" page="27" note="Định lý 3.2.5" />).
+
+<Theorem
+  id="thm-gthmb-c3-b2-luat-thu-tu"
+  title="Luật thứ tự cho dãy hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="27"
+  original="Định lý 3.2.5"
+>
+Giả sử $\lim_{n \to \infty} x_n = a$ và $\lim_{n \to \infty} y_n = b$ với $a, b \in \mathbb{R}$.
+1. Nếu $x_n \le y_n$ với mọi $n \ge k$ (với $k \in \mathbb{N}$ cố định) thì $a \le b$.
+2. Với mọi số thực $m < a$, tồn tại số tự nhiên $N_m$ sao cho $m < x_n$ với mọi $n \ge N_m$. Tương tự, với mọi số thực $M > a$, tồn tại số tự nhiên $N_M$ sao cho $x_n < M$ với mọi $n \ge N_M$.
+</Theorem>
+
+<Proof>
+1. Giả sử phản chứng rằng $a > b$. Đặt $\varepsilon = \frac{a - b}{2} > 0$.
+   - Vì $\lim x_n = a$, tồn tại $N_1$ sao cho $a - \varepsilon < x_n < a + \varepsilon$ với mọi $n \ge N_1$.
+   - Vì $\lim y_n = b$, tồn tại $N_2$ sao cho $b - \varepsilon < y_n < b + \varepsilon$ với mọi $n \ge N_2$.
+   Chọn chỉ số $n \ge \max\{k, N_1, N_2\}$, ta có:
+   $$
+   y_n < b + \varepsilon = b + \frac{a - b}{2} = \frac{a + b}{2} = a - \frac{a - b}{2} = a - \varepsilon < x_n.
+   $$
+   Suy ra $y_n < x_n$, mâu thuẫn trực tiếp với giả thiết $x_n \le y_n$. Do đó ta bắt buộc phải có $a \le b$.
+
+2. Cho $m < a$, lấy $\varepsilon = a - m > 0$. Vì $\lim x_n = a$, tồn tại $N_m$ sao cho với mọi $n \ge N_m$:
+   $$
+   a - \varepsilon < x_n < a + \varepsilon \implies m < x_n.
+   $$
+   Khẳng định với $M > a$ được chứng minh hoàn toàn tương tự bằng cách chọn $\varepsilon = M - a > 0$.
+</Proof>
+
+<Warning>
+**Lưu ý về bất đẳng thức ngặt:** Nếu $x_n < y_n$ với mọi $n$ thì khi chuyển qua giới hạn, ta **chỉ có thể kết luận** $\lim x_n \le \lim y_n$, chứ không thể khẳng định ngặt $\lim x_n < \lim y_n$.
+
+*Ví dụ điển hình:* Xét $x_n = 0$ và $y_n = \frac{1}{n}$. Với mọi $n \in \mathbb{N}$, rõ ràng $x_n < y_n$, tuy nhiên:
+$$
+\lim_{n \to \infty} x_n = 0 = \lim_{n \to \infty} y_n.
+$$
+Dấu đẳng thức hoàn toàn có thể xảy ra ở giới hạn.
+</Warning>
+
+### 3.2. Nguyên lý kẹp (Squeeze Theorem)
+
+<Theorem
+  id="thm-gthmb-c3-b2-nguyen-ly-kep"
+  title="Nguyên lý kẹp ba dãy số"
+  source="gt-gthmb-ttd-2022"
+  page="27"
+  original="Định lý 3.2.6"
+>
+Cho ba dãy số thực $(x_n), (y_n)$ và $(z_n)$ thỏa mãn các điều kiện:
+1. $y_n \le x_n \le z_n$ với mọi $n \ge k$ (với $k \in \mathbb{N}$ cho trước).
+2. $\lim_{n \to \infty} y_n = \lim_{n \to \infty} z_n = a$ ($a \in \mathbb{R}$).
+
+Khi đó dãy $(x_n)$ hội tụ và $\lim_{n \to \infty} x_n = a$.
+</Theorem>
+
+<Proof>
+Lấy $\varepsilon > 0$ tùy ý. Do $\lim y_n = a$ và $\lim z_n = a$, tồn tại các số tự nhiên $N_1$ và $N_2$ sao cho:
+$$
+a - \varepsilon < y_n < a + \varepsilon, \quad \forall n \ge N_1,
+$$
+$$
+a - \varepsilon < z_n < a + \varepsilon, \quad \forall n \ge N_2.
+$$
+Đặt $N = \max\{k, N_1, N_2\}$. Khi đó với mọi $n \ge N$, ta kết hợp các bất đẳng thức:
+$$
+a - \varepsilon < y_n \le x_n \le z_n < a + \varepsilon.
+$$
+Suy ra:
+$$
+a - \varepsilon < x_n < a + \varepsilon \iff |x_n - a| < \varepsilon, \quad \forall n \ge N.
+$$
+Theo định nghĩa giới hạn, điều này chứng minh $(x_n)$ hội tụ và $\lim x_n = a$.
+</Proof>
+
+<Example
+  id="exm-gthmb-c3-b2-gioi-han-sin-n-chia-n"
+  title="Chứng minh giới hạn bằng nguyên lý kẹp"
+  source="gt-gthmb-ttd-2022"
+  page="28"
+  original="Ví dụ 3.2.7"
+>
+Chứng minh rằng:
+$$
+\lim_{n \to \infty} \frac{\sin n}{n} = 0.
+$$
+</Example>
+
+<Proof>
+Với mọi số tự nhiên $n \ge 1$, do $-1 \le \sin n \le 1$ nên ta luôn có:
+$$
+-\frac{1}{n} \le \frac{\sin n}{n} \le \frac{1}{n}.
+$$
+Mặt khác, ta biết $\lim_{n \to \infty} \left(-\frac{1}{n}\right) = 0$ và $\lim_{n \to \infty} \frac{1}{n} = 0$. Theo Nguyên lý kẹp, ta suy ra:
+$$
+\lim_{n \to \infty} \frac{\sin n}{n} = 0.
+$$
+</Proof>
+
+## 4. Luật số học và các dạng vô định
+
+### 4.1. Các luật số học cơ bản
+
+<Theorem
+  id="thm-gthmb-c3-b2-luat-so-hoc"
+  title="Luật số học cho dãy hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="28"
+  original="Định lý 3.2.8"
+>
+Giả sử $\lim_{n \to \infty} x_n = a$ và $\lim_{n \to \infty} y_n = b$ với $a, b \in \mathbb{R}$. Khi đó:
+1. $\lim_{n \to \infty} (x_n \pm y_n) = a \pm b$.
+2. $\lim_{n \to \infty} (x_n y_n) = a b$. Đặc biệt: $\lim_{n \to \infty} (c \cdot x_n) = c a$ với hằng số $c \in \mathbb{R}$.
+3. Nếu $b \ne 0$ và $y_n \ne 0$ với mọi $n \in \mathbb{N}$ thì:
+$$
+\lim_{n \to \infty} \frac{x_n}{y_n} = \frac{a}{b}.
+$$
+</Theorem>
+
+### 4.2. Mở rộng trên tập số thực mở rộng $\bar{\mathbb{R}}$ và các dạng vô định
+
+Các quy tắc trên vẫn có thể mở rộng cho các giới hạn vô cực trong $\bar{\mathbb{R}} = [-\infty, +\infty]$ (<Cite source="gt-gthmb-ttd-2022" page="28-29" note="Quy tắc mở rộng" />):
+- $(+\infty) + (+\infty) = +\infty$, $(-\infty) + (-\infty) = -\infty$.
+- $(+\infty) \cdot (+\infty) = +\infty$, $(-\infty) \cdot (-\infty) = +\infty$, $(+\infty) \cdot (-\infty) = -\infty$.
+- Với mọi số thực hữu hạn $x \in \mathbb{R}$:
+  $$
+  x + (+\infty) = +\infty, \quad x + (-\infty) = -\infty, \quad \frac{x}{\pm\infty} = 0.
+  $$
+  Nếu $x > 0$: $x \cdot (+\infty) = +\infty$, $x \cdot (-\infty) = -\infty$.
+  Nếu $x < 0$: $x \cdot (+\infty) = -\infty$, $x \cdot (-\infty) = +\infty$.
+
+<Warning>
+**Bảy dạng vô định (Indeterminate Forms):** Khi gặp các dạng sau, ta **không thể áp dụng trực tiếp** luật số học mà phải tiến hành khử dạng vô định (nhân liên hợp, phân tích nhân tử, dùng nguyên lý kẹp, chia cho bậc cao nhất...):
+1. Dạng hiệu vô cực: $\infty - \infty$.
+2. Dạng tích: $0 \cdot (\pm\infty)$.
+3. Dạng thương vô cực: $\frac{\pm\infty}{\pm\infty}$.
+4. Dạng thương số không: $\frac{0}{0}$.
+5. Dạng lũy thừa: $1^\infty, \quad \infty^0, \quad 0^0$.
+</Warning>
+
+### 4.3. Luật nghịch đảo
+
+<Theorem
+  id="thm-gthmb-c3-b2-luat-nghich-dao"
+  title="Luật nghịch đảo cho giới hạn vô cực"
+  source="gt-gthmb-ttd-2022"
+  page="29"
+  original="Định lý 3.2.9"
+>
+Cho dãy số $(a_n)$.
+1. Nếu $a_n > 0$ với mọi $n \in \mathbb{N}$ và $\lim_{n \to \infty} \frac{1}{a_n} = 0$ thì $\lim_{n \to \infty} a_n = +\infty$.
+2. Nếu $\lim_{n \to \infty} a_n = \pm\infty$ thì $\lim_{n \to \infty} \frac{1}{a_n} = 0$.
+</Theorem>
+
+## 5. Bảng 6 giới hạn cơ bản quan trọng
+
+Trong thực hành tính toán giới hạn, 6 giới hạn cơ bản sau đây đóng vai trò chuẩn mực (<Cite source="gt-gthmb-ttd-2022" page="31" note="Mục 3.2.6" />):
+
+| STT | Giới hạn | Điều kiện tham số | Ý nghĩa & Phương pháp chứng minh |
+| :--- | :--- | :--- | :--- |
+| **1** | $\lim_{n \to \infty} \frac{1}{n^p} = 0$ | $p > 0$ | Lũy thừa nghịch đảo tiến về $0$ (dùng nguyên lý Archimedes). |
+| **2** | $\lim_{n \to \infty} q^n = 0$ | $\|q\| < 1$ | Cấp số nhân lùi vô hạn (chứng minh bằng BĐT Bernoulli). |
+| **3** | $\lim_{n \to \infty} \sqrt[n]{a} = 1$ | $a > 0$ | Căn bậc $n$ của một hằng số dương luôn tiến về $1$. |
+| **4** | $\lim_{n \to \infty} \sqrt[n]{n} = 1$ | $n \in \mathbb{N}$ | Căn bậc $n$ của chính $n$ tiến về $1$ (khai triển nhị thức Newton). |
+| **5** | $\lim_{n \to \infty} \frac{n^p}{a^n} = 0$ | $a > 1, p \in \mathbb{R}$ | Hàm mũ $a^n$ tăng trưởng nhanh hơn bất kỳ hàm đa thức $n^p$. |
+| **6** | $\lim_{n \to \infty} \frac{a^n}{n!} = 0$ | $a \in \mathbb{R}$ | Giai thừa $n!$ tăng trưởng vượt bậc so với hàm mũ $a^n$. |
+
+### Chứng minh chi tiết các giới hạn trọng tâm
+
+<Example
+  id="exm-gthmb-c3-b2-chung-minh-gioi-han-q-mu-n"
+  title="Chứng minh giới hạn cấp số nhân: lim q^n = 0 (|q| < 1)"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Mục 3.2.6"
+>
+Chứng minh rằng nếu $|q| < 1$ thì $\lim_{n \to \infty} q^n = 0$.
+</Example>
+
+<Proof>
+- Nếu $q = 0$: Ta có $q^n = 0$ với mọi $n \ge 1$, giới hạn hiển nhiên bằng $0$.
+- Nếu $0 < |q| < 1$: Đặt $|q| = \frac{1}{1 + h}$ với $h > 0$. Áp dụng bất đẳng thức Bernoulli:
+$$
+(1 + h)^n \ge 1 + nh > nh.
+$$
+Do đó:
+$$
+|q^n| = |q|^n = \frac{1}{(1 + h)^n} < \frac{1}{nh}.
+$$
+Vì $\lim_{n \to \infty} \frac{1}{nh} = \frac{1}{h} \lim_{n \to \infty} \frac{1}{n} = 0$ và $|q^n| > 0$, theo Nguyên lý kẹp ta suy ra $\lim_{n \to \infty} |q^n| = 0$. Theo luật giá trị tuyệt đối, điều này dẫn tới $\lim_{n \to \infty} q^n = 0$.
+</Proof>
+
+<Example
+  id="exm-gthmb-c3-b2-chung-minh-can-bac-n-cua-n"
+  title="Chứng minh giới hạn kinh điển: lim căn bậc n của n bằng 1"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Mục 3.2.6"
+>
+Chứng minh rằng $\lim_{n \to \infty} \sqrt[n]{n} = 1$.
+</Example>
+
+<Proof>
+Với mọi $n \ge 2$, rõ ràng $\sqrt[n]{n} > 1$. Đặt $\sqrt[n]{n} = 1 + h_n$ với $h_n > 0$. Lũy thừa bậc $n$ hai vế và sử dụng khai triển nhị thức Newton:
+$$
+n = (1 + h_n)^n = 1 + n h_n + \frac{n(n-1)}{2} h_n^2 + \dots + h_n^n.
+$$
+Vì tất cả các số hạng trong khai triển đều dương, ta có thể đánh giá chặn dưới bằng số hạng chứa $h_n^2$:
+$$
+n > \frac{n(n-1)}{2} h_n^2.
+$$
+Chia cả hai vế cho $n > 0$, ta được:
+$$
+1 > \frac{n-1}{2} h_n^2 \implies h_n^2 < \frac{2}{n-1}.
+$$
+Do đó:
+$$
+0 < h_n < \sqrt{\frac{2}{n-1}}, \quad \forall n \ge 2.
+$$
+Vì $\lim_{n \to \infty} \sqrt{\frac{2}{n-1}} = 0$, theo Nguyên lý kẹp ta có $\lim_{n \to \infty} h_n = 0$.
+
+Vậy:
+$$
+\lim_{n \to \infty} \sqrt[n]{n} = \lim_{n \to \infty} (1 + h_n) = 1 + 0 = 1.
+$$
+</Proof>
+
+---
+
+<KeyTakeaways>
+- **Hội tụ $\implies$ Bị chặn:** Mọi dãy hội tụ đều bị chặn, nhưng điều ngược lại không đúng (phản ví dụ $((-1)^n)$).
+- **Luật thứ tự và bảo toàn:** Giới hạn bảo toàn bất đẳng thức không ngặt ($\le$). Dấu ngặt ($<$) có thể biến thành dấu bằng ở giới hạn.
+- **Nguyên lý kẹp:** Nếu $y_n \le x_n \le z_n$ và hai đầu cùng tiến về $a$, thì dãy kẹp ở giữa $(x_n)$ bắt buộc phải hội tụ về $a$.
+- **Khử dạng vô định:** Luôn cẩn trọng với 7 dạng vô định, không được tách giới hạn số học một cách vội vàng.
+- **Tốc độ tăng trưởng cốt lõi:** $\ln n \ll n^p \ll a^n \ll n! \ll n^n$.
+</KeyTakeaways>

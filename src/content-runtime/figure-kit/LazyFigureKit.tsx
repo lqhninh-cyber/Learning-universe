@@ -7,6 +7,7 @@ import type { AffinePlaneProps } from './AffinePlane';
 import type { BarycenterProps } from './Barycenter';
 import type { DraggablePointProps } from './DraggablePoint';
 import type { ParallelogramProps } from './Parallelogram';
+import type { SequenceEpsilonDemoProps } from './SequenceEpsilonDemo';
 import type { SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
 import type { VectorArrowProps } from './VectorArrow';
 
@@ -32,6 +33,9 @@ const AffineMapDemoInner = lazy(() =>
 );
 const SupremumEpsilonDemoInner = lazy(() =>
   import('./SupremumEpsilonDemo').then((m) => ({ default: m.SupremumEpsilonDemo })),
+);
+const SequenceEpsilonDemoInner = lazy(() =>
+  import('./SequenceEpsilonDemo').then((m) => ({ default: m.SequenceEpsilonDemo })),
 );
 
 function FigureFallback({ height = 340 }: { readonly height?: number }) {
@@ -114,6 +118,14 @@ export function LazySupremumEpsilonDemo(props: SupremumEpsilonDemoProps) {
   return (
     <Suspense fallback={<FigureFallback height={240} />}>
       <SupremumEpsilonDemoInner {...props} />
+    </Suspense>
+  );
+}
+
+export function LazySequenceEpsilonDemo(props: SequenceEpsilonDemoProps) {
+  return (
+    <Suspense fallback={<FigureFallback height={260} />}>
+      <SequenceEpsilonDemoInner {...props} />
     </Suspense>
   );
 }

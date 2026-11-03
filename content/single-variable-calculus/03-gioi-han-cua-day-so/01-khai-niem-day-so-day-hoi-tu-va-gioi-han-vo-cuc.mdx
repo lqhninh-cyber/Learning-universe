@@ -1,0 +1,255 @@
+---
+id: khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+title: 'Khái niệm dãy số, dãy hội tụ và giới hạn vô cực'
+description: 'Định nghĩa dãy số thực, tính đơn điệu, tính bị chặn, định nghĩa chuẩn mực của dãy hội tụ bằng ngôn ngữ epsilon - N, tính duy nhất của giới hạn, ví dụ chứng minh bằng định nghĩa, dãy phân kỳ và giới hạn vô cực.'
+estimatedMinutes: 35
+level: basic
+prerequisites:
+  - he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r
+  - can-tren-can-duoi-supremum-infimum-va-tien-de-day-du
+  - nguyen-ly-quy-nap-archimedes-va-tinh-tru-mat
+tags:
+  - dãy số
+  - dãy đơn điệu
+  - dãy bị chặn
+  - dãy hội tụ
+  - ngôn ngữ epsilon - N
+  - giới hạn vô cực
+  - dãy phân kỳ
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '24-26'
+    sections: 'Mục 3.1'
+    note: 'Định nghĩa dãy số, tính đơn điệu, bị chặn, hội tụ, tính duy nhất và giới hạn vô cực'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất toán học của dãy số:** Nắm vững định nghĩa dãy số thực là một ánh xạ $x: \mathbb{N} \to \mathbb{R}$, phân biệt rõ tính đơn điệu (tăng, giảm, tăng ngặt, giảm ngặt) và tính bị chặn (chặn trên, chặn dưới, bị chặn).
+2. **Làm chủ ngôn ngữ $\varepsilon - N$:** Phát biểu và diễn giải chính xác định nghĩa giới hạn của dãy số $\lim x_n = a$; hiểu ý nghĩa hình học của dải lân cận đối xứng $(a - \varepsilon, a + \varepsilon)$.
+3. **Thực hiện kỹ thuật chứng minh bằng định nghĩa:** Biết cách đánh giá sai số $|x_n - a| < \varepsilon$ để giải bất phương trình tìm chỉ số ngưỡng $N(\varepsilon)$ phụ thuộc vào $\varepsilon$.
+4. **Nhận diện dãy phân kỳ và giới hạn vô cực:** Chứng minh một dãy số không hội tụ bằng phản chứng (như dãy $(-1)^n$) và vận dụng định nghĩa giới hạn vô cực $\lim x_n = +\infty, -\infty$.
+</Note>
+
+## 1. Khái niệm dãy số thực, tính đơn điệu và tính bị chặn
+
+Dãy số là mô hình rời rạc đơn giản nhất nhưng đóng vai trò nền tảng để xây dựng phép tính vi tích phân (<Cite source="gt-gthmb-ttd-2022" page="24-25" note="Mục 3.1.1, 3.1.2, 3.1.3" />).
+
+<Definition
+  id="def-gthmb-c3-b1-dinh-nghia-day-so"
+  title="Dãy số thực"
+  source="gt-gthmb-ttd-2022"
+  page="24"
+  original="Định nghĩa 3.1.1"
+>
+Một **dãy số thực** là một ánh xạ $x: \mathbb{N} \to \mathbb{R}$.
+
+Ta thường viết giá trị $x(n)$ dưới dạng ký hiệu có chỉ số dưới là $x_n$, và ký hiệu toàn bộ dãy số bởi:
+$$
+(x_n)_{n \in \mathbb{N}}, \quad (x_n)_{n=1}^\infty, \quad \text{hoặc đơn giản là } (x_n).
+$$
+Phần tử $x_n$ được gọi là **số hạng thứ $n$** (hay **số hạng tổng quát**) của dãy số đó.
+</Definition>
+
+<Definition
+  id="def-gthmb-c3-b1-day-don-dieu"
+  title="Dãy số đơn điệu"
+  source="gt-gthmb-ttd-2022"
+  page="24"
+  original="Định nghĩa 3.1.2"
+>
+Cho dãy số $(x_n)$.
+1. Dãy $(x_n)$ được gọi là **dãy số tăng** nếu $x_n \le x_{n+1}$ với mọi $n \in \mathbb{N}$. Dãy được gọi là **tăng ngặt** nếu $x_n < x_{n+1}$ với mọi $n \in \mathbb{N}$.
+2. Dãy $(x_n)$ được gọi là **dãy số giảm** nếu $x_n \ge x_{n+1}$ với mọi $n \in \mathbb{N}$. Dãy được gọi là **giảm ngặt** nếu $x_n > x_{n+1}$ với mọi $n \in \mathbb{N}$.
+3. Dãy số tăng hoặc dãy số giảm được gọi chung là **dãy số đơn điệu** (*monotonic sequence*).
+</Definition>
+
+<Definition
+  id="def-gthmb-c3-b1-day-bi-chan"
+  title="Dãy số bị chặn"
+  source="gt-gthmb-ttd-2022"
+  page="25"
+  original="Định nghĩa 3.1.4"
+>
+Cho dãy số $(x_n)$.
+1. Dãy $(x_n)$ được gọi là **bị chặn trên** nếu tồn tại số thực $M \in \mathbb{R}$ sao cho $x_n \le M$ với mọi $n \in \mathbb{N}$.
+2. Dãy $(x_n)$ được gọi là **bị chặn dưới** nếu tồn tại số thực $m \in \mathbb{R}$ sao cho $x_n \ge m$ với mọi $n \in \mathbb{N}$.
+3. Dãy $(x_n)$ được gọi là **bị chặn** nếu nó vừa bị chặn trên vừa bị chặn dưới, tức là tồn tại hằng số $K > 0$ sao cho:
+   $$
+   |x_n| \le K, \quad \forall n \in \mathbb{N}.
+   $$
+</Definition>
+
+<Example id="ex-gthmb-c3-b1-cac-day-so-mau" title="Phân loại tính đơn điệu và bị chặn của một số dãy cơ bản">
+Khảo sát các dãy số sau (<Cite source="gt-gthmb-ttd-2022" page="24-25" note="Ví dụ 3.1.3, 3.1.5" />):
+- Dãy $x_n = n$: Dãy tăng ngặt, bị chặn dưới bởi $1$ nhưng không bị chặn trên (theo nguyên lý Archimedes).
+- Dãy $x_n = \frac{1}{n}$: Dãy giảm ngặt ($1 > \frac{1}{2} > \frac{1}{3} > \dots$), bị chặn dưới bởi $0$ và bị chặn trên bởi $1$. Do đó là dãy bị chặn.
+- Dãy $x_n = (-1)^n$: Nhận các giá trị dao động $-1, 1, -1, 1, \dots$ Không đơn điệu, nhưng bị chặn vì $|x_n| = 1 \le 1$.
+- Dãy hằng $x_n = c$: Vừa là dãy tăng vừa là dãy giảm, hiển nhiên bị chặn.
+</Example>
+
+---
+
+## 2. Định nghĩa Dãy hội tụ bằng ngôn ngữ Epsilon - N
+
+Khái niệm giới hạn chính thức được Cauchy và Weierstrass chính xác hóa nhằm thoát khỏi các trực giác mập mờ về "vô cùng bé" (<Cite source="gt-gthmb-ttd-2022" page="25-26" note="Mục 3.1.4" />).
+
+<Definition
+  id="def-gthmb-c3-b1-dinh-nghia-gioi-han"
+  title="Định nghĩa giới hạn của dãy số (Ngôn ngữ ε - N)"
+  source="gt-gthmb-ttd-2022"
+  page="25"
+  original="Định nghĩa 3.1.6"
+>
+Dãy số $(x_n)$ được gọi là **hội tụ** (*convergent*) về một số thực $a \in \mathbb{R}$ nếu:
+Với mọi số thực $\varepsilon > 0$, tồn tại một số tự nhiên $N \in \mathbb{N}$ (thường phụ thuộc vào $\varepsilon$, ký hiệu là $N(\varepsilon)$) sao cho với mọi $n \ge N$, ta đều có:
+$$
+|x_n - a| < \varepsilon.
+$$
+Khi đó, $a$ được gọi là **giới hạn** (*limit*) của dãy $(x_n)$, và ta viết:
+$$
+\lim_{n \to \infty} x_n = a, \quad \lim x_n = a, \quad \text{hoặc} \quad x_n \to a \text{ khi } n \to \infty.
+$$
+Một dãy số không hội tụ về bất kỳ số thực nào được gọi là **dãy phân kỳ** (*divergent sequence*).
+</Definition>
+
+<Remark title="Ý nghĩa hình học của ngôn ngữ ε - N">
+Bất đẳng thức $|x_n - a| < \varepsilon$ tương đương với:
+$$
+a - \varepsilon < x_n < a + \varepsilon \iff x_n \in (a - \varepsilon, a + \varepsilon).
+$$
+Như vậy, $\lim x_n = a$ có nghĩa là: Với bất kỳ khoảng lân cận $(a - \varepsilon, a + \varepsilon)$ nào dù nhỏ đến đâu quanh $a$, từ chỉ số $N$ trở đi, **tất cả vô số các số hạng $x_N, x_{N+1}, x_{N+2}, \dots$ đều bị giam hãm bên trong khoảng lân cận đó**. Bên ngoài khoảng lân cận chỉ có tối đa một số hữu hạn (nhiều nhất $N - 1$) số hạng đầu tiên!
+</Remark>
+
+### Mô phỏng trực quan tương tác: Dải băng lân cận trên đồ thị phân tán
+
+Hãy tương tác với đồ thị phân tán của dãy số $x_n = \frac{n - 1}{n + 1}$ dưới đây. Kéo thanh trượt để thu hẹp $\varepsilon$ và quan sát chỉ số ngưỡng $N$ dịch chuyển tương ứng:
+
+<SequenceEpsilonDemo title="Mô phỏng trực quan: Ngôn ngữ ε - N trên đồ thị phân tán của dãy x_n = (n-1)/(n+1)" />
+
+<Proposition
+  id="prop-gthmb-c3-b1-tinh-duy-nhat-gioi-han"
+  title="Tính duy nhất của giới hạn"
+  source="gt-gthmb-ttd-2022"
+  page="25"
+  original="Nhận xét 3.1.7"
+>
+Giới hạn của một dãy số hội tụ là **duy nhất**. Nghĩa là nếu $\lim x_n = a$ và $\lim x_n = b$ thì bắt buộc:
+$$
+a = b.
+$$
+</Proposition>
+
+<Proof title="Chứng minh tính duy nhất bằng phản chứng">
+Giả sử phản chứng rằng $a \neq b$. Khi đó khoảng cách giữa chúng $d = |a - b| > 0$.
+Chọn bán kính lân cận $\varepsilon = \frac{|a - b|}{2} > 0$.
+- Vì $\lim x_n = a$, tồn tại $N_1 \in \mathbb{N}$ sao cho $|x_n - a| < \varepsilon$ với mọi $n \ge N_1$.
+- Vì $\lim x_n = b$, tồn tại $N_2 \in \mathbb{N}$ sao cho $|x_n - b| < \varepsilon$ với mọi $n \ge N_2$.
+Chọn chỉ số $N = \max(N_1, N_2)$. Khi đó với $n \ge N$, áp dụng bất đẳng thức tam giác:
+$$
+|a - b| = |(a - x_n) + (x_n - b)| \le |x_n - a| + |x_n - b| < \varepsilon + \varepsilon = 2\varepsilon = |a - b|.
+$$
+Bất đẳng thức $|a - b| < |a - b|$ là vô lý! Mâu thuẫn này chứng tỏ $a = b$.
+</Proof>
+
+---
+
+## 3. Các ví dụ mẫu chứng minh giới hạn bằng định nghĩa
+
+<Example id="ex-gthmb-c3-b1-chung-minh-lim-1-tren-n" title="Chứng minh lim(1/n) = 0 bằng định nghĩa">
+Chứng minh rằng $\lim_{n \to \infty} \frac{1}{n} = 0$ (<Cite source="gt-gthmb-ttd-2022" page="25" note="Ví dụ 3.1.8" />).
+
+**Lời giải:**
+Cho số thực $\varepsilon > 0$ tùy ý. Ta cần tìm $N \in \mathbb{N}$ sao cho với mọi $n \ge N$:
+$$
+\left|\frac{1}{n} - 0\right| < \varepsilon \iff \frac{1}{n} < \varepsilon \iff n > \frac{1}{\varepsilon}.
+$$
+Theo Nguyên lý Archimedes (Định lý 2.2.7), tập $\mathbb{N}$ không bị chặn trên, do đó luôn tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho:
+$$
+N > \frac{1}{\varepsilon} \quad (\text{ta có thể chọn } N = \left[\frac{1}{\varepsilon}\right] + 1).
+$$
+Khi đó, với mọi $n \ge N$, ta có:
+$$
+n \ge N > \frac{1}{\varepsilon} \implies \frac{1}{n} \le \frac{1}{N} < \varepsilon \implies \left|\frac{1}{n} - 0\right| < \varepsilon.
+$$
+Theo định nghĩa giới hạn, $\lim_{n \to \infty} \frac{1}{n} = 0$.
+</Example>
+
+<Example id="ex-gthmb-c3-b1-chung-minh-phan-ky" title="Chứng minh dãy số ((-1)^n) phân kỳ">
+Chứng minh dãy số $x_n = (-1)^n$ không hội tụ về bất kỳ số thực nào (<Cite source="gt-gthmb-ttd-2022" page="26" note="Ví dụ 3.1.9" />).
+
+**Lời giải:**
+Giả sử phản chứng rằng dãy $x_n = (-1)^n$ hội tụ về một số thực $a \in \mathbb{R}$.
+Khi đó với $\varepsilon = 1 > 0$, tồn tại $N \in \mathbb{N}$ sao cho với mọi $n \ge N$:
+$$
+|(-1)^n - a| < 1.
+$$
+- Lấy số chẵn $n = 2N \ge N$, ta có: $|1 - a| < 1$.
+- Lấy số lẻ $n = 2N + 1 \ge N$, ta có: $|-1 - a| = |1 + a| < 1$.
+Áp dụng bất đẳng thức tam giác cho tổng hai đại lượng:
+$$
+2 = |(1 - a) + (1 + a)| \le |1 - a| + |1 + a| < 1 + 1 = 2.
+$$
+Bất đẳng thức $2 < 2$ là vô lý. Mâu thuẫn này chứng minh dãy $x_n = (-1)^n$ không hội tụ, tức là phân kỳ.
+</Example>
+
+---
+
+## 4. Dãy số có giới hạn vô cực
+
+Một số dãy số không hội tụ về số thực nhưng tăng hoặc giảm không giới hạn (<Cite source="gt-gthmb-ttd-2022" page="26" note="Mục 3.1.5" />).
+
+<Definition
+  id="def-gthmb-c3-b1-gioi-han-vo-cuc"
+  title="Dãy số có giới hạn vô cực (+∞ và -∞)"
+  source="gt-gthmb-ttd-2022"
+  page="26"
+  original="Định nghĩa 3.1.10"
+>
+1. Ta nói dãy số $(x_n)$ có **giới hạn là $+\infty$**, ký hiệu $\lim x_n = +\infty$, nếu:
+   Với mọi số thực $M > 0$, tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho với mọi $n \ge N$:
+   $$
+   x_n > M.
+   $$
+2. Ta nói dãy số $(x_n)$ có **giới hạn là $-\infty$**, ký hiệu $\lim x_n = -\infty$, nếu:
+   Với mọi số thực $M > 0$, tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho với mọi $n \ge N$:
+   $$
+   x_n < -M.
+   $$
+</Definition>
+
+<Example id="ex-gthmb-c3-b1-chung-minh-lim-n-binh" title="Chứng minh lim(n^2) = +∞ bằng định nghĩa">
+Chứng minh rằng $\lim_{n \to \infty} n^2 = +\infty$ (<Cite source="gt-gthmb-ttd-2022" page="26" note="Ví dụ 3.1.11" />).
+
+**Lời giải:**
+Cho số thực $M > 0$ tùy ý. Ta cần tìm $N \in \mathbb{N}$ sao cho:
+$$
+n^2 > M \iff n > \sqrt{M}.
+$$
+Theo Nguyên lý Archimedes, luôn tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho $N > \sqrt{M}$ (chẳng hạn chọn $N = [\sqrt{M}] + 1$).
+Khi đó, với mọi $n \ge N$, ta có:
+$$
+n \ge N > \sqrt{M} \implies n^2 \ge N^2 > M.
+$$
+Theo định nghĩa giới hạn vô cực, $\lim_{n \to \infty} n^2 = +\infty$.
+</Example>
+
+---
+
+<KeyTakeaways title="Tóm tắt trọng tâm bài 3.1">
+- **Định nghĩa hội tụ:** $\lim x_n = a \iff \forall \varepsilon > 0, \exists N \in \mathbb{N}, \forall n \ge N: |x_n - a| < \varepsilon$.
+- **Bản chất của ngưỡng $N$:** Với mọi $\varepsilon > 0$ cho trước, bên ngoài khoảng lân cận $(a - \varepsilon, a + \varepsilon)$ chỉ chứa tối đa hữu hạn số hạng.
+- **Tính duy nhất:** Một dãy số chỉ có tối đa một giới hạn duy nhất.
+- **Giới hạn vô cực:** $\lim x_n = +\infty \iff \forall M > 0, \exists N, \forall n \ge N: x_n > M$.
+</KeyTakeaways>

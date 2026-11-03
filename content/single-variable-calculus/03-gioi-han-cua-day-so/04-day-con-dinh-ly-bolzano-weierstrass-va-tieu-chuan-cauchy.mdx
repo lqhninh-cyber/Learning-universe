@@ -1,0 +1,357 @@
+---
+id: day-con-dinh-ly-bolzano-weierstrass-va-tieu-chuan-cauchy
+title: 'Dãy con, định lý Bolzano-Weierstrass và tiêu chuẩn Cauchy'
+description: 'Định nghĩa dãy con, tính hội tụ của dãy con, định lý Bolzano-Weierstrass cho dãy bị chặn, khái niệm dãy Cauchy và tiêu chuẩn Cauchy tương đương tính đầy đủ của trường số thực R.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+  - cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep
+  - dinh-ly-hoi-tu-don-dieu-weierstrass-va-day-truy-hoi
+tags:
+  - dãy con
+  - giới hạn riêng
+  - định lý Bolzano-Weierstrass
+  - dãy Cauchy
+  - tiêu chuẩn Cauchy
+  - tính đầy đủ
+  - chuỗi điều hòa
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '31-35'
+    sections: 'Mục 3.3.1, 3.3.2'
+    note: 'Dãy con, định lý Bolzano-Weierstrass, dãy Cauchy và tiêu chuẩn Cauchy'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của dãy con và giới hạn riêng:** Nắm vững cấu trúc trích xuất dãy con thông qua dãy chỉ số nguyên tăng ngặt $n_k \ge k$, và cách tìm các giới hạn riêng.
+2. **Vận dụng tiêu chuẩn phân kỳ bằng dãy con:** Chứng minh một dãy số phân kỳ bằng cách tìm hai dãy con hội tụ về hai giới hạn khác nhau hoặc một dãy con tiến ra vô cực.
+3. **Làm chủ Định lý Bolzano-Weierstrass:** Hiểu sâu sắc định lý "Mọi dãy bị chặn đều chứa ít nhất một dãy con hội tụ" và kỹ thuật chứng minh qua dãy con đơn điệu (bổ đề đỉnh).
+4. **Nắm vững khái niệm Dãy Cauchy:** Phát biểu và diễn giải tiêu chuẩn Cauchy bằng ngôn ngữ $\varepsilon - N$, hiểu ý nghĩa kiểm tra sự hội tụ mà không cần đoán trước giới hạn.
+5. **Ứng dụng tiêu chuẩn Cauchy vào chuỗi số:** Chứng minh tính hội tụ của chuỗi $\sum \frac{1}{k^2}$ và tính phân kỳ của chuỗi điều hòa $\sum \frac{1}{k}$.
+</Note>
+
+## 1. Khái niệm dãy con và định lý hội tụ
+
+Khi nghiên cứu hành vi dài hạn của một dãy số, việc trích xuất một dãy vô hạn các phần tử từ dãy ban đầu theo thứ tự chỉ số tăng dần mang lại những công cụ phân tích cực kỳ mạnh mẽ (<Cite source="gt-gthmb-ttd-2022" page="31" note="Định nghĩa 3.3.1" />).
+
+<Definition
+  id="def-gthmb-c3-b4-dinh-nghia-day-con"
+  title="Dãy con và giới hạn riêng"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Định nghĩa 3.3.1"
+>
+Cho dãy số $(a_n)_{n \in \mathbb{N}}$ và một dãy các số tự nhiên $(n_k)_{k \in \mathbb{N}}$ sao cho:
+$$
+1 \le n_1 < n_2 < n_3 < \dots < n_k < n_{k+1} < \dots
+$$
+Khi đó, dãy số $(a_{n_k})_{k \in \mathbb{N}}$ được gọi là một **dãy con** của dãy ban đầu $(a_n)_{n \in \mathbb{N}}$.
+
+Giới hạn (kể cả $\pm\infty$) của một dãy con $(a_{n_k})$ nếu tồn tại được gọi là một **giới hạn riêng** của dãy số $(a_n)$.
+</Definition>
+
+<Remark
+  id="rem-gthmb-c3-b4-bat-dang-thuc-chi-so"
+  title="Bất đẳng thức chỉ số của dãy con"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Nhận xét 3.3.2"
+>
+Bằng quy nạp toán học, ta dễ dàng chứng minh được rằng với mọi $k \in \mathbb{N}$:
+$$
+n_k \ge k.
+$$
+Thật vậy, với $k = 1$ ta có $n_1 \ge 1$. Giả sử $n_k \ge k$, vì $n_{k+1} > n_k$ và cả hai đều là số tự nhiên, suy ra $n_{k+1} \ge n_k + 1 \ge k + 1$.
+</Remark>
+
+<Theorem
+  id="thm-gthmb-c3-b4-dinh-ly-day-con"
+  title="Tính hội tụ của dãy con"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Định lý 3.3.4"
+>
+Dãy số $(a_n)_{n \in \mathbb{N}}$ hội tụ về số thực $a$ khi và chỉ khi mọi dãy con $(a_{n_k})_{k \in \mathbb{N}}$ của nó đều hội tụ về $a$.
+</Theorem>
+
+<Proof>
+- Chiều đảo $(\impliedby)$ là hiển nhiên vì bản thân dãy $(a_n)$ là một dãy con của chính nó (ứng với $n_k = k$).
+- Chiều thuận $(\implies)$: Giả sử $\lim_{n \to \infty} a_n = a$. Cho $\varepsilon > 0$ tùy ý, tồn tại $N \in \mathbb{N}$ sao cho:
+$$
+|a_n - a| < \varepsilon, \quad \forall n \ge N.
+$$
+Xét dãy con bất kỳ $(a_{n_k})$. Theo Nhận xét 3.3.2, với mọi $k \ge N$ ta có $n_k \ge k \ge N$. Do đó:
+$$
+|a_{n_k} - a| < \varepsilon, \quad \forall k \ge N.
+$$
+Điều này chứng tỏ $\lim_{k \to \infty} a_{n_k} = a$.
+</Proof>
+
+<Corollary
+  id="cor-gthmb-c3-b4-tieu-chuan-phan-ky"
+  title="Tiêu chuẩn phân kỳ qua dãy con"
+  source="gt-gthmb-ttd-2022"
+  page="32"
+  original="Hệ quả 3.3.5"
+>
+1. Nếu dãy số $(a_n)$ chứa hai dãy con hội tụ về hai giới hạn khác nhau thì dãy $(a_n)$ phân kỳ.
+2. Nếu dãy số $(a_n)$ chứa một dãy con có giới hạn bằng $\pm\infty$ thì dãy $(a_n)$ không thể hội tụ về bất kỳ số thực hữu hạn nào.
+</Corollary>
+
+<Example
+  id="exm-gthmb-c3-b4-vi-du-phan-ky-day-con"
+  title="Chứng minh tính phân kỳ của dãy đan dấu và lượng giác"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Ví dụ 3.3.3"
+>
+1. Dãy $a_n = (-1)^n$:
+   - Trích dãy con chỉ số chẵn $n_k = 2k$: $a_{2k} = (-1)^{2k} = 1 \implies \lim_{k \to \infty} a_{2k} = 1$.
+   - Trích dãy con chỉ số lẻ $n_k = 2k - 1$: $a_{2k-1} = (-1)^{2k-1} = -1 \implies \lim_{k \to \infty} a_{2k-1} = -1$.
+   Vì $1 \ne -1$, dãy $(a_n)$ phân kỳ.
+
+2. Dãy $x_n = \sin \frac{n\pi}{2}$:
+   - Với $n_k = 4k + 1$: $x_{4k+1} = \sin \left(2k\pi + \frac{\pi}{2}\right) = 1 \to 1$.
+   - Với $n_k = 4k + 3$: $x_{4k+3} = \sin \left(2k\pi + \frac{3\pi}{2}\right) = -1 \to -1$.
+   Hai dãy con có hai giới hạn khác nhau, suy ra dãy $x_n$ phân kỳ.
+</Example>
+
+## 2. Định lý Bolzano-Weierstrass
+
+Để trả lời câu hỏi: *"Một dãy số bất kỳ, dù không hội tụ, liệu có chứa ít nhất một nhánh con hội tụ hay không?"*, trước hết ta có kết quả nền tảng sau (<Cite source="gt-gthmb-ttd-2022" page="32" note="Định lý 3.3.6" />):
+
+<Theorem
+  id="thm-gthmb-c3-b4-ton-tai-day-con-don-dieu"
+  title="Sự tồn tại của dãy con đơn điệu (Bổ đề Đỉnh)"
+  source="gt-gthmb-ttd-2022"
+  page="32"
+  original="Định lý 3.3.6"
+>
+Mọi dãy số thực $(a_n)$ đều chứa ít nhất một dãy con đơn điệu (tăng hoặc giảm).
+</Theorem>
+
+<Proof>
+Ta gọi một chỉ số $n \in \mathbb{N}$ là một "điểm đỉnh" (peak) nếu từ vị trí đó trở đi, không có phần tử nào vượt quá nó:
+$$
+S = \{n \in \mathbb{N} : a_n \ge a_m, \quad \forall m > n\}.
+$$
+Có hai trường hợp xảy ra đối với tập hợp đỉnh $S$:
+
+- **Trường hợp 1: $S$ có vô hạn phần tử.**
+  Khi đó ta liệt kê các phần tử của $S$ theo thứ tự tăng dần: $n_1 < n_2 < n_3 < \dots < n_k < \dots$
+  Vì mỗi $n_k \in S$ và $n_{k+1} > n_k$, theo định nghĩa điểm đỉnh ta có:
+  $$
+  a_{n_k} \ge a_{n_{k+1}}, \quad \forall k \in \mathbb{N}.
+  $$
+  Như vậy dãy con $(a_{n_k})$ là một dãy số giảm.
+
+- **Trường hợp 2: $S$ là tập hữu hạn (hoặc rỗng).**
+  Khi đó tồn tại một số tự nhiên $N \in \mathbb{N}$ lớn hơn tất cả các phần tử trong $S$. Do đó không có chỉ số nào $n \ge N$ thuộc về $S$.
+  - Chọn $n_1 = N$. Vì $n_1 \notin S$, tồn tại $n_2 > n_1$ sao cho $a_{n_2} > a_{n_1}$.
+  - Tiếp tục vì $n_2 > N$, nên $n_2 \notin S$, tồn tại $n_3 > n_2$ sao cho $a_{n_3} > a_{n_2}$.
+  - Bằng quy nạp, ta xây dựng được dãy chỉ số tăng ngặt $n_1 < n_2 < \dots < n_k < \dots$ thỏa mãn:
+  $$
+  a_{n_1} < a_{n_2} < \dots < a_{n_k} < a_{n_{k+1}} < \dots
+  $$
+  Như vậy dãy con $(a_{n_k})$ là một dãy số tăng ngặt.
+
+Trong cả hai trường hợp, ta đều tìm được một dãy con đơn điệu.
+</Proof>
+
+Từ bổ đề đỉnh và Định lý hội tụ đơn điệu Weierstrass, ta suy ra ngay kết quả nền tảng của giải tích thực (<Cite source="gt-gthmb-ttd-2022" page="33" note="Định lý 3.3.7" />):
+
+<Theorem
+  id="thm-gthmb-c3-b4-bolzano-weierstrass"
+  title="Định lý Bolzano-Weierstrass"
+  source="gt-gthmb-ttd-2022"
+  page="33"
+  original="Định lý 3.3.7"
+>
+Mọi dãy số thực bị chặn đều chứa ít nhất một dãy con hội tụ.
+</Theorem>
+
+<Proof>
+Giả sử dãy số $(a_n)$ bị chặn.
+Theo Định lý 3.3.6, dãy $(a_n)$ luôn chứa một dãy con đơn điệu $(a_{n_k})$.
+Vì dãy ban đầu $(a_n)$ bị chặn, nên dãy con $(a_{n_k})$ cũng bị chặn.
+Theo Định lý hội tụ đơn điệu Weierstrass (Định lý 3.2.10), một dãy số đơn điệu và bị chặn thì hội tụ.
+Vậy dãy con $(a_{n_k})$ hội tụ.
+</Proof>
+
+## 3. Dãy Cauchy và Tiêu chuẩn Cauchy
+
+### 3.1. Khái niệm Dãy Cauchy (Dãy cơ bản)
+
+Trong thực tế, khi cần kiểm tra sự hội tụ của một dãy số, ta thường không biết trước giá trị giới hạn $a$ là bao nhiêu để ước lượng $|x_n - a|$. Nhà toán học Pháp Augustin-Louis Cauchy (1789–1857) đã phát minh ra điều kiện nội tại: các phần tử của dãy tự tiến lại gần nhau (<Cite source="gt-gthmb-ttd-2022" page="33" note="Định nghĩa 3.3.8" />).
+
+<Definition
+  id="def-gthmb-c3-b4-dinh-nghia-day-cauchy"
+  title="Dãy Cauchy (Dãy cơ bản)"
+  source="gt-gthmb-ttd-2022"
+  page="33"
+  original="Định nghĩa 3.3.8"
+>
+Dãy số thực $(a_n)$ được gọi là một **dãy Cauchy** nếu với mọi số thực $\varepsilon > 0$, tồn tại một số tự nhiên $N \in \mathbb{N}$ sao cho:
+$$
+\forall m, n \ge N \implies |a_m - a_n| < \varepsilon.
+$$
+Một cách tương đương: với mọi $\varepsilon > 0$, tồn tại $N \in \mathbb{N}$ sao cho với mọi $n \ge N$ và với mọi số tự nhiên $p \in \mathbb{N}$:
+$$
+|a_{n+p} - a_n| < \varepsilon.
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c3-b4-day-cauchy-bi-chan"
+  title="Tính bị chặn của dãy Cauchy"
+  source="gt-gthmb-ttd-2022"
+  page="33"
+  original="Nhận xét 3.3.9"
+>
+Mọi dãy Cauchy đều là dãy số bị chặn.
+</Theorem>
+
+<Proof>
+Cho $(a_n)$ là dãy Cauchy. Chọn $\varepsilon = 1$, tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho $|a_m - a_n| < 1$ với mọi $m, n \ge N$.
+Cố định $m = N$, ta có:
+$$
+|a_n - a_N| < 1, \quad \forall n \ge N \implies |a_n| < |a_N| + 1, \quad \forall n \ge N.
+$$
+Đặt $M = \max\{|a_1|, |a_2|, \dots, |a_{N-1}|, |a_N| + 1\}$. Khi đó rõ ràng $|a_n| \le M$ với mọi $n \in \mathbb{N}$. Vậy dãy $(a_n)$ bị chặn.
+</Proof>
+
+### 3.2. Tiêu chuẩn Cauchy cho sự hội tụ
+
+<Theorem
+  id="thm-gthmb-c3-b4-tieu-chuan-cauchy"
+  title="Tiêu chuẩn Cauchy"
+  source="gt-gthmb-ttd-2022"
+  page="33"
+  original="Định lý 3.3.10"
+>
+Một dãy số thực $(a_n)$ hội tụ khi và chỉ khi nó là một dãy Cauchy.
+</Theorem>
+
+<Proof>
+- **Chiều thuận $(\implies)$:** Giả sử $\lim a_n = a$. Với mọi $\varepsilon > 0$, tồn tại $N \in \mathbb{N}$ sao cho $|a_n - a| < \frac{\varepsilon}{2}$ với mọi $n \ge N$.
+  Khi đó với mọi $m, n \ge N$:
+  $$
+  |a_m - a_n| = |(a_m - a) + (a - a_n)| \le |a_m - a| + |a_n - a| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+  $$
+  Vậy $(a_n)$ là dãy Cauchy.
+
+- **Chiều đảo $(\impliedby)$:** Giả sử $(a_n)$ là dãy Cauchy.
+  1. Theo Định lý 3.3.9, $(a_n)$ bị chặn.
+  2. Theo Định lý Bolzano-Weierstrass (Định lý 3.3.7), $(a_n)$ chứa một dãy con $(a_{n_k})$ hội tụ về một số thực $a$.
+  3. Ta chứng minh toàn bộ dãy $(a_n)$ cũng hội tụ về $a$. Thật vậy, với $\varepsilon > 0$ tùy ý:
+     - Vì $(a_n)$ là dãy Cauchy, tồn tại $N_1$ sao cho $|a_m - a_n| < \frac{\varepsilon}{2}$ với mọi $m, n \ge N_1$.
+     - Vì $\lim_{k \to \infty} a_{n_k} = a$, tồn tại $K$ sao cho $|a_{n_k} - a| < \frac{\varepsilon}{2}$ với mọi $k \ge K$.
+     Chọn một chỉ số $k \ge K$ sao cho $n_k \ge N_1$. Khi đó với mọi $n \ge N_1$:
+     $$
+     |a_n - a| \le |a_n - a_{n_k}| + |a_{n_k} - a| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon.
+     $$
+  Vậy $\lim_{n \to \infty} a_n = a$.
+</Proof>
+
+<Remark
+  id="rem-gthmb-c3-b4-tinh-day-du-cauchy"
+  title="Tính đầy đủ của trường số thực"
+  source="gt-gthmb-ttd-2022"
+  page="35"
+  original="Nhận xét 3.3.12"
+>
+Trong không gian metric tổng quát, một không gian mà trong đó mọi dãy Cauchy đều hội tụ về một điểm thuộc không gian được gọi là một **không gian đầy đủ (complete space)**.
+
+Định lý 3.3.10 khẳng định rằng tập số thực $\mathbb{R}$ với metric thông thường $d(x, y) = |x - y|$ là một không gian đầy đủ. Chú ý rằng tập số hữu tỉ $\mathbb{Q}$ **không đầy đủ**: dãy số hữu tỉ xấp xỉ $\sqrt{2}$ là dãy Cauchy trong $\mathbb{Q}$ nhưng không hội tụ trong $\mathbb{Q}$.
+</Remark>
+
+## 4. Ứng dụng Tiêu chuẩn Cauchy
+
+### 4.1. Khảo sát sự hội tụ của chuỗi $\sum \frac{1}{k^2}$
+
+<Example
+  id="exm-gthmb-c3-b4-chuoi-nghich-dao-binh-phuong"
+  title="Ứng dụng tiêu chuẩn Cauchy chứng minh chuỗi hội tụ"
+  source="gt-gthmb-ttd-2022"
+  page="34"
+  original="Ví dụ 3.3.11"
+>
+Cho dãy tổng riêng $s_n = 1 + \frac{1}{2^2} + \frac{1}{3^2} + \dots + \frac{1}{n^2}$. Dùng tiêu chuẩn Cauchy, chứng minh rằng dãy $(s_n)$ hội tụ.
+</Example>
+
+<Proof>
+Với mọi $n, p \in \mathbb{N}$, ta xét hiệu:
+$$
+|s_{n+p} - s_n| = \frac{1}{(n+1)^2} + \frac{1}{(n+2)^2} + \dots + \frac{1}{(n+p)^2}.
+$$
+Ta làm trội mỗi phân thức bằng phương pháp phân tích sai phân:
+$$
+\frac{1}{k^2} < \frac{1}{(k-1)k} = \frac{1}{k-1} - \frac{1}{k}, \quad \forall k \ge 2.
+$$
+Áp dụng đánh giá này cho từng số hạng:
+$$
+|s_{n+p} - s_n| < \left(\frac{1}{n} - \frac{1}{n+1}\right) + \left(\frac{1}{n+1} - \frac{1}{n+2}\right) + \dots + \left(\frac{1}{n+p-1} - \frac{1}{n+p}\right) = \frac{1}{n} - \frac{1}{n+p} < \frac{1}{n}.
+$$
+Lấy $\varepsilon > 0$ tùy ý. Theo nguyên lý Archimedes, tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho $\frac{1}{N} < \varepsilon$.
+Khi đó với mọi $n \ge N$ và mọi $p \in \mathbb{N}$, ta có:
+$$
+|s_{n+p} - s_n| < \frac{1}{n} \le \frac{1}{N} < \varepsilon.
+$$
+Do đó dãy $(s_n)$ là một dãy Cauchy. Theo Tiêu chuẩn Cauchy, dãy $(s_n)$ hội tụ.
+</Proof>
+
+### 4.2. Chứng minh chuỗi điều hòa phân kỳ
+
+<Example
+  id="exm-gthmb-c3-b4-chuoi-dieu-hoa-phan-ky"
+  title="Dãy điều hòa vi phạm tiêu chuẩn Cauchy"
+  source="gt-gthmb-ttd-2022"
+  page="38"
+  original="Bài tập 19d"
+>
+Chứng minh rằng dãy tổng riêng của chuỗi điều hòa:
+$$
+h_n = 1 + \frac{1}{2} + \frac{1}{3} + \dots + \frac{1}{n}
+$$
+là dãy phân kỳ.
+</Example>
+
+<Proof>
+Ta sẽ chứng minh bằng phản chứng rằng $(h_n)$ không phải là dãy Cauchy.
+Phủ định mệnh đề dãy Cauchy:
+$$
+\exists \varepsilon_0 > 0, \forall N \in \mathbb{N}, \exists n \ge N, \exists p \in \mathbb{N}: |h_{n+p} - h_n| \ge \varepsilon_0.
+$$
+Chọn $\varepsilon_0 = \frac{1}{2}$. Với mỗi $N \in \mathbb{N}$ bất kỳ, ta chọn $n = N$ và $p = n$ (tức là xét số hạng $h_{2n}$):
+$$
+h_{2n} - h_n = \frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{2n}.
+$$
+Tổng này gồm $n$ số hạng, và mỗi số hạng đều lớn hơn hoặc bằng số hạng nhỏ nhất $\frac{1}{2n}$:
+$$
+h_{2n} - h_n \ge \underbrace{\frac{1}{2n} + \frac{1}{2n} + \dots + \frac{1}{2n}}_{n \text{ số hạng}} = n \cdot \frac{1}{2n} = \frac{1}{2} = \varepsilon_0.
+$$
+Bất đẳng thức trên đúng với mọi $n \ge 1$. Do đó dãy $(h_n)$ không thỏa mãn điều kiện Cauchy.
+Theo Tiêu chuẩn Cauchy, dãy số $(h_n)$ bắt buộc phải phân kỳ (tiến ra $+\infty$).
+</Proof>
+
+---
+
+<KeyTakeaways>
+- **Định lý dãy con:** Dãy ban đầu hội tụ về $a \iff$ mọi dãy con đều hội tụ về $a$. Hai nhánh rẽ khác nhau $\implies$ phân kỳ.
+- **Định lý Bolzano-Weierstrass:** Bị chặn $\implies$ luôn trích xuất được ít nhất một dãy con hội tụ.
+- **Tiêu chuẩn Cauchy:** Hội tụ $\iff$ Dãy Cauchy. Cho phép kiểm tra tính hội tụ mà không cần tìm giá trị giới hạn.
+- **Tính đầy đủ:** Tiên đề Supremum $\iff$ Tiêu chuẩn Cauchy $\iff$ Định lý Bolzano-Weierstrass $\iff$ Bổ đề đoạn lồng nhau.
+</KeyTakeaways>

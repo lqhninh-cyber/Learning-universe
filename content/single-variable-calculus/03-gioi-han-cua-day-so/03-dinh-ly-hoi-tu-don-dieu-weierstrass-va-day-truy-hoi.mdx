@@ -1,0 +1,307 @@
+---
+id: dinh-ly-hoi-tu-don-dieu-weierstrass-va-day-truy-hoi
+title: 'Định lý hội tụ đơn điệu Weierstrass và dãy truy hồi'
+description: 'Định lý hội tụ đơn điệu Weierstrass, mối liên hệ với Tiên đề đầy đủ của trường số thực, quy trình 3 bước khảo sát dãy truy hồi, các ví dụ kinh điển và sự xây dựng hằng số Euler e.'
+estimatedMinutes: 45
+level: intermediate
+prerequisites:
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+  - cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep
+tags:
+  - định lý Weierstrass
+  - dãy đơn điệu
+  - dãy bị chặn
+  - dãy truy hồi
+  - số e
+  - giới hạn dãy số
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '29-31'
+    sections: 'Mục 3.2.5, 3.2.6'
+    note: 'Định lý hội tụ đơn điệu Weierstrass, số e và dãy truy hồi'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu bản chất của Định lý hội tụ đơn điệu Weierstrass:** Nắm vững mối liên hệ sâu sắc giữa tính đơn điệu, tính bị chặn và Tiên đề Supremum của trường số thực $\mathbb{R}$.
+2. **Làm chủ quy trình 3 bước giải quyết dãy truy hồi:** Thành thạo các bước chứng minh bị chặn bằng quy nạp, xét dấu biến thiên để chứng minh tính đơn điệu, chuyển qua giới hạn giải phương trình điểm bất động $L = f(L)$.
+3. **Giải quyết chuẩn xác các bài toán dãy truy hồi căn thức và phân thức:** Áp dụng thành thạo cho các mô hình $x_{n+1} = \sqrt{c + x_n}$ và $a_{n+1} = 2 - \frac{1}{a_n}$.
+4. **Hiểu cấu trúc xây dựng số $e$ của Euler:** Chứng minh tính hội tụ của dãy $(1 + 1/n)^n$ bằng bất đẳng thức Bernoulli hoặc nhị thức Newton và định nghĩa hằng số toán học $e \approx 2.71828$.
+</Note>
+
+## 1. Định lý hội tụ đơn điệu Weierstrass
+
+Ta đã biết một dãy số hội tụ thì bắt buộc phải bị chặn, nhưng một dãy số bị chặn nói chung chưa chắc hội tụ (chẳng hạn dãy $(-1)^n$). Nhà toán học Đức Karl Weierstrass (1815–1897) đã phát hiện ra rằng: nếu một dãy số bị chặn có thêm **tính đơn điệu** thì nó chắc chắn hội tụ (<Cite source="gt-gthmb-ttd-2022" page="29" note="Định lý 3.2.10" />).
+
+<Theorem
+  id="thm-gthmb-c3-b3-dinh-ly-weierstrass"
+  title="Định lý hội tụ đơn điệu Weierstrass"
+  source="gt-gthmb-ttd-2022"
+  page="29"
+  original="Định lý 3.2.10"
+>
+Cho dãy số thực $(a_n)$.
+1. Nếu $(a_n)$ là dãy tăng và bị chặn trên thì $(a_n)$ hội tụ và:
+$$
+\lim_{n \to \infty} a_n = \sup_{n \in \mathbb{N}} a_n = \sup\{a_n : n \in \mathbb{N}\}.
+$$
+2. Nếu $(a_n)$ là dãy giảm và bị chặn dưới thì $(a_n)$ hội tụ và:
+$$
+\lim_{n \to \infty} a_n = \inf_{n \in \mathbb{N}} a_n = \inf\{a_n : n \in \mathbb{N}\}.
+$$
+</Theorem>
+
+<Proof>
+Ta chứng minh phần 1; phần 2 được chứng minh hoàn toàn tương tự.
+
+Giả sử $(a_n)$ là một dãy số tăng và bị chặn trên. Đặt tập giá trị của dãy là:
+$$
+E = \{a_n : n \in \mathbb{N}\} \subset \mathbb{R}.
+$$
+Vì $E \ne \emptyset$ (chứa ít nhất phần tử $a_1$) và $E$ bị chặn trên, theo **Tiên đề đầy đủ (Tiên đề Supremum - Tiên đề 12)** của trường số thực $\mathbb{R}$, tập $E$ có cận trên nhỏ nhất hữu hạn. Đặt:
+$$
+a = \sup E = \sup_{n \in \mathbb{N}} a_n.
+$$
+Lấy $\varepsilon > 0$ tùy ý. Theo tính chất đặc trưng của Supremum:
+- Vì $a$ là cận trên của $E$, nên với mọi $n \in \mathbb{N}$, ta có $a_n \le a < a + \varepsilon$.
+- Vì $a - \varepsilon < a$ không còn là cận trên của $E$, nên tồn tại một số hạng $a_N \in E$ sao cho:
+$$
+a - \varepsilon < a_N.
+$$
+Do dãy $(a_n)$ là dãy số tăng, với mọi $n \ge N$ ta có $a_N \le a_n$. Kết hợp lại, ta được:
+$$
+a - \varepsilon < a_N \le a_n \le a < a + \varepsilon, \quad \forall n \ge N.
+$$
+Suy ra:
+$$
+|a_n - a| < \varepsilon, \quad \forall n \ge N.
+$$
+Theo đúng định nghĩa giới hạn dãy số bằng ngôn ngữ $\varepsilon - N$, ta kết luận dãy $(a_n)$ hội tụ và $\lim_{n \to \infty} a_n = a = \sup_{n \in \mathbb{N}} a_n$.
+</Proof>
+
+<Corollary
+  id="cor-gthmb-c3-b3-he-qua-weierstrass"
+  title="Giới hạn của dãy đơn điệu không bị chặn"
+  source="gt-gthmb-ttd-2022"
+  page="30"
+  original="Hệ quả 3.2.11"
+>
+1. Nếu $(a_n)$ là dãy tăng thì hoặc $(a_n)$ hội tụ, hoặc $\lim_{n \to \infty} a_n = +\infty$.
+2. Nếu $(a_n)$ là dãy giảm thì hoặc $(a_n)$ hội tụ, hoặc $\lim_{n \to \infty} a_n = -\infty$.
+</Corollary>
+
+<Proof>
+Xét trường hợp $(a_n)$ là dãy tăng.
+- Nếu $(a_n)$ bị chặn trên, theo Định lý Weierstrass, dãy hội tụ về $\sup_n a_n$.
+- Nếu $(a_n)$ không bị chặn trên, với mọi số thực $M > 0$, tồn tại chỉ số $N \in \mathbb{N}$ sao cho $a_N > M$. Do tính tăng của dãy, với mọi $n \ge N$, ta có $a_n \ge a_N > M$. Theo định nghĩa giới hạn vô cực, ta suy ra $\lim_{n \to \infty} a_n = +\infty$.
+Khẳng định cho dãy giảm được chứng minh hoàn toàn đối ngẫu.
+</Proof>
+
+<Example
+  id="exm-gthmb-c3-b3-tong-phan-thuc-weierstrass"
+  title="Xét sự hội tụ của dãy tổng phân thức"
+  source="gt-gthmb-ttd-2022"
+  page="30"
+  original="Ví dụ 3.2.12"
+>
+Xét sự hội tụ của dãy số $(a_n)$ cho bởi công thức:
+$$
+a_n = \frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{2n}.
+$$
+</Example>
+
+<Proof>
+1. **Xét tính đơn điệu:** Ta lập hiệu giữa hai số hạng liên tiếp:
+$$
+a_{n+1} = \frac{1}{n+2} + \frac{1}{n+3} + \dots + \frac{1}{2n} + \frac{1}{2n+1} + \frac{1}{2n+2}.
+$$
+Trừ vế theo vế cho $a_n$:
+$$
+a_{n+1} - a_n = \frac{1}{2n+1} + \frac{1}{2n+2} - \frac{1}{n+1}.
+$$
+Chú ý rằng $\frac{1}{n+1} = \frac{2}{2n+2}$, do đó:
+$$
+a_{n+1} - a_n = \frac{1}{2n+1} + \frac{1}{2n+2} - \frac{2}{2n+2} = \frac{1}{2n+1} - \frac{1}{2n+2} = \frac{1}{(2n+1)(2n+2)} > 0.
+$$
+Vậy dãy $(a_n)$ là một dãy số tăng ngặt.
+
+2. **Xét tính bị chặn trên:** Tổng $a_n$ có đúng $n$ số hạng, và mỗi số hạng đều nhỏ hơn hoặc bằng số hạng đầu tiên $\frac{1}{n+1}$:
+$$
+a_n = \frac{1}{n+1} + \frac{1}{n+2} + \dots + \frac{1}{2n} < \underbrace{\frac{1}{n+1} + \dots + \frac{1}{n+1}}_{n \text{ số hạng}} = \frac{n}{n+1} < 1.
+$$
+Do đó dãy $(a_n)$ bị chặn trên bởi $1$.
+
+Theo Định lý Weierstrass, dãy số $(a_n)$ tăng và bị chặn trên nên chắc chắn hội tụ về một giới hạn hữu hạn (trong Giải tích nâng cao, ta biết giới hạn này chính là $\ln 2$).
+</Proof>
+
+## 2. Phương pháp khảo sát dãy số truy hồi $x_{n+1} = f(x_n)$
+
+Dãy số cho bởi hệ thức truy hồi $x_1 = c, x_{n+1} = f(x_n)$ là một trong những dạng toán thường gặp nhất trong các kỳ thi đại học và thi học phần Giải tích.
+
+### Quy trình 3 bước chuẩn mực
+
+1. **Bước 1: Khảo sát miền giá trị và tính bị chặn**
+   - Dùng phương pháp quy nạp toán học để chứng minh mọi phần tử $x_n$ đều nằm trong một khoảng ổn định $[a, b]$ (nghĩa là $f([a, b]) \subseteq [a, b]$).
+   - Suy ra dãy $(x_n)$ bị chặn.
+2. **Bước 2: Chứng minh tính đơn điệu**
+   - Xét dấu của hiệu $x_{n+1} - x_n$ hoặc so sánh $x_2$ với $x_1$.
+   - Nếu hàm số $f(x)$ đồng biến trên $[a, b]$, tính đơn điệu của dãy số hoàn toàn phụ thuộc vào dấu của $x_2 - x_1$:
+     - Nếu $x_2 \ge x_1$: dãy $(x_n)$ là dãy tăng.
+     - Nếu $x_2 \le x_1$: dãy $(x_n)$ là dãy giảm.
+   - Chứng minh tổng quát bằng quy nạp: từ $x_k \ge x_{k-1} \implies f(x_k) \ge f(x_{k-1}) \implies x_{k+1} \ge x_k$.
+3. **Bước 3: Suy ra hội tụ và tìm giới hạn**
+   - Áp dụng Định lý Weierstrass suy ra tồn tại giới hạn hữu hạn $L = \lim_{n \to \infty} x_n$.
+   - Chuyển qua giới hạn ở cả hai vế của hệ thức truy hồi:
+   $$
+   \lim_{n \to \infty} x_{n+1} = f\left(\lim_{n \to \infty} x_n\right) \implies L = f(L).
+   $$
+   - Giải phương trình điểm bất động $L = f(L)$ và dùng miền giá trị ở Bước 1 để loại bỏ nghiệm ngoại lai.
+
+---
+
+### Các ví dụ mẫu kinh điển
+
+<Example
+  id="exm-gthmb-c3-b3-day-truy-hoi-can-thuc"
+  title="Dãy truy hồi căn thức: x_1 = căn(2), x_{n+1} = căn(2 + x_n)"
+  source="gt-gthmb-ttd-2022"
+  page="37"
+  original="Bài tập 12a"
+>
+Cho dãy số $(x_n)$ xác định bởi $x_1 = \sqrt{2}$ và $x_{n+1} = \sqrt{2 + x_n}$ với mọi $n \ge 1$. Chứng minh dãy $(x_n)$ hội tụ và tìm giới hạn của nó.
+</Example>
+
+<Proof>
+- **Bước 1: Chứng minh tính bị chặn:** Ta chứng minh bằng quy nạp rằng $0 < x_n < 2$ với mọi $n \ge 1$.
+  - Với $n = 1$: $x_1 = \sqrt{2} \in (0, 2)$, mệnh đề đúng.
+  - Giả sử mệnh đề đúng đến $n = k$, tức là $0 < x_k < 2$. Khi đó:
+  $$
+  2 < 2 + x_k < 4 \implies \sqrt{2} < \sqrt{2 + x_k} < \sqrt{4} = 2 \implies 0 < x_{k+1} < 2.
+  $$
+  Vậy $0 < x_n < 2$ với mọi $n \ge 1$. Dãy $(x_n)$ bị chặn trên bởi $2$.
+
+- **Bước 2: Chứng minh tính tăng:** Ta xét:
+  $$
+  x_{n+1} - x_n = \sqrt{2 + x_n} - x_n = \frac{2 + x_n - x_n^2}{\sqrt{2 + x_n} + x_n} = \frac{(2 - x_n)(1 + x_n)}{\sqrt{2 + x_n} + x_n}.
+  $$
+  Vì $0 < x_n < 2$, ta có $2 - x_n > 0$ và $1 + x_n > 0$, trong khi mẫu số luôn dương. Do đó:
+  $$
+  x_{n+1} - x_n > 0 \implies x_{n+1} > x_n, \quad \forall n \ge 1.
+  $$
+  Vậy $(x_n)$ là dãy số tăng ngặt.
+
+- **Bước 3: Tìm giới hạn:** Vì $(x_n)$ tăng ngặt và bị chặn trên bởi $2$, theo Định lý Weierstrass, tồn tại giới hạn hữu hạn $L = \lim_{n \to \infty} x_n$ với $L \in [\sqrt{2}, 2]$. Chuyển qua giới hạn trong hệ thức truy hồi:
+  $$
+  L = \sqrt{2 + L} \implies L^2 - L - 2 = 0 \iff (L - 2)(L + 1) = 0.
+  $$
+  Vì $L \ge \sqrt{2} > 0$, ta loại nghiệm $L = -1$ và thu được $L = 2$.
+
+Vậy $\lim_{n \to \infty} x_n = 2$.
+</Proof>
+
+<Example
+  id="exm-gthmb-c3-b3-day-truy-hoi-phan-thuc"
+  title="Dãy truy hồi phân thức: a_1 = 2, a_{n+1} = 2 - 1/a_n"
+  source="gt-gthmb-ttd-2022"
+  page="30"
+  original="Ví dụ 3.2.13"
+>
+Cho dãy số $(a_n)$ xác định bởi $a_1 = 2$ và $a_{n+1} = 2 - \frac{1}{a_n}$ với mọi $n \ge 1$. Chứng minh dãy $(a_n)$ hội tụ và tìm giới hạn của nó.
+</Example>
+
+<Proof>
+- **Bước 1: Chứng minh tính bị chặn dưới:** Ta chứng minh bằng quy nạp rằng $a_n > 1$ với mọi $n \ge 1$.
+  - Với $n = 1$: $a_1 = 2 > 1$, đúng.
+  - Giả sử $a_k > 1$. Khi đó $0 < \frac{1}{a_k} < 1$, dẫn đến:
+  $$
+  a_{k+1} = 2 - \frac{1}{a_k} > 2 - 1 = 1.
+  $$
+  Do đó $a_n > 1$ với mọi $n \ge 1$. Dãy bị chặn dưới bởi $1$.
+
+- **Bước 2: Chứng minh tính giảm:**
+  $$
+  a_{n+1} - a_n = 2 - \frac{1}{a_n} - a_n = -\frac{a_n^2 - 2a_n + 1}{a_n} = -\frac{(a_n - 1)^2}{a_n}.
+  $$
+  Vì $a_n > 1$, ta có $(a_n - 1)^2 > 0$ và $a_n > 0$, do đó:
+  $$
+  a_{n+1} - a_n < 0 \implies a_{n+1} < a_n, \quad \forall n \ge 1.
+  $$
+  Vậy $(a_n)$ là một dãy số giảm ngặt.
+
+- **Bước 3: Tìm giới hạn:** Vì $(a_n)$ giảm ngặt và bị chặn dưới bởi $1$, theo Định lý Weierstrass, tồn tại giới hạn $L = \lim_{n \to \infty} a_n$ với $L \ge 1$. Chuyển qua giới hạn hệ thức truy hồi:
+  $$
+  L = 2 - \frac{1}{L} \iff L^2 - 2L + 1 = 0 \iff (L - 1)^2 = 0 \iff L = 1.
+  $$
+Vậy $\lim_{n \to \infty} a_n = 1$.
+</Proof>
+
+## 3. Xây dựng hằng số Euler $e$
+
+Một trong những ứng dụng sâu sắc nhất của Định lý Weierstrass trong lịch sử giải tích là định nghĩa số thực vô tỉ $e$ (<Cite source="gt-gthmb-ttd-2022" page="31" note="Mục 3.2.6" />).
+
+<Theorem
+  id="thm-gthmb-c3-b3-dinh-nghia-so-e"
+  title="Sự tồn tại của hằng số e"
+  source="gt-gthmb-ttd-2022"
+  page="31"
+  original="Mục 3.2.6"
+>
+Dãy số $x_n = \left(1 + \frac{1}{n}\right)^n$ là dãy tăng ngặt và bị chặn trên. Do đó nó hội tụ về một giới hạn hữu hạn, ký hiệu là $e$:
+$$
+e = \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n \approx 2.7182818284...
+$$
+</Theorem>
+
+<Proof>
+1. **Chứng minh $(x_n)$ tăng ngặt:**
+   Ta so sánh tỉ số $\frac{x_n}{x_{n-1}}$ hoặc dùng bất đẳng thức Bernoulli. Xét:
+   $$
+   \frac{x_n}{x_{n-1}} = \frac{\left(1 + \frac{1}{n}\right)^n}{\left(1 + \frac{1}{n-1}\right)^{n-1}} = \left(\frac{n+1}{n}\right)^n \left(\frac{n-1}{n}\right)^{n-1} = \left(\frac{n^2 - 1}{n^2}\right)^n \cdot \frac{n}{n-1} = \left(1 - \frac{1}{n^2}\right)^n \cdot \frac{n}{n-1}.
+   $$
+   Áp dụng bất đẳng thức Bernoulli $(1 + h)^n > 1 + nh$ với $h = -\frac{1}{n^2} > -1$:
+   $$
+   \left(1 - \frac{1}{n^2}\right)^n > 1 - n \cdot \frac{1}{n^2} = 1 - \frac{1}{n} = \frac{n-1}{n}.
+   $$
+   Thay vào tỉ số:
+   $$
+   \frac{x_n}{x_{n-1}} > \frac{n-1}{n} \cdot \frac{n}{n-1} = 1 \implies x_n > x_{n-1}, \quad \forall n \ge 2.
+   $$
+   Vậy dãy $(x_n)$ tăng ngặt.
+
+2. **Chứng minh $(x_n)$ bị chặn trên:**
+   Dùng khai triển nhị thức Newton cho $x_n$:
+   $$
+   x_n = \sum_{k=0}^n \binom{n}{k} \frac{1}{n^k} = 1 + 1 + \sum_{k=2}^n \frac{n(n-1)\dots(n-k+1)}{k! n^k} = 2 + \sum_{k=2}^n \frac{1}{k!} \left(1 - \frac{1}{n}\right)\left(1 - \frac{2}{n}\right)\dots\left(1 - \frac{k-1}{n}\right).
+   $$
+   Vì mỗi nhân tử $\left(1 - \frac{j}{n}\right) < 1$, ta có đánh giá:
+   $$
+   x_n < 2 + \sum_{k=2}^n \frac{1}{k!}.
+   $$
+   Với mọi $k \ge 2$, ta có bất đẳng thức hiển nhiên $k! = 1 \cdot 2 \cdot 3 \dots k \ge 2 \cdot 2 \dots 2 = 2^{k-1}$. Do đó:
+   $$
+   x_n < 2 + \sum_{k=2}^n \frac{1}{2^{k-1}} = 2 + \left(\frac{1}{2} + \frac{1}{4} + \dots + \frac{1}{2^{n-1}}\right) < 2 + 1 = 3.
+   $$
+   Vậy dãy $(x_n)$ bị chặn trên bởi $3$.
+
+Theo Định lý Weierstrass, dãy $(x_n)$ tăng ngặt và bị chặn trên nên hội tụ về một giới hạn nằm trong khoảng $(2, 3)$, ký hiệu là $e$.
+</Proof>
+
+---
+
+<KeyTakeaways>
+- **Định lý hội tụ đơn điệu Weierstrass:** Tăng + Bị chặn trên $\implies$ Hội tụ về $\sup$. Giảm + Bị chặn dưới $\implies$ Hội tụ về $\inf$.
+- **Cơ sở bản chất:** Định lý Weierstrass tương đương với Tiên đề đầy đủ (Tiên đề 12) của tập số thực $\mathbb{R}$.
+- **Quy trình 3 bước dãy truy hồi:** 1) Quy nạp chứng minh bị chặn; 2) Xét hiệu/đạo hàm chứng minh đơn điệu; 3) Chuyển qua giới hạn giải $L = f(L)$.
+- **Hằng số $e$:** Được sinh ra một cách tự nhiên từ giới hạn của dãy $\left(1 + \frac{1}{n}\right)^n$ khi $n \to \infty$.
+</KeyTakeaways>

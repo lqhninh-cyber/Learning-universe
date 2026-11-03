@@ -1,0 +1,459 @@
+---
+id: he-thong-bai-tap-chuong-3-va-loi-giai-chuan
+title: 'Hệ thống bài tập Chương 3 và lời giải chuẩn'
+description: 'Hệ thống bài tập trọng tâm Chương 3 bám sát chuẩn đầu ra ôn thi kết thúc học phần: tìm chỉ số N(epsilon) theo định nghĩa, tính giới hạn đại số và kẹp, khảo sát dãy truy hồi, tiêu chuẩn Cauchy và các bài toán nâng cao có dấu sao.'
+estimatedMinutes: 55
+level: intermediate
+prerequisites:
+  - khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc
+  - cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep
+  - dinh-ly-hoi-tu-don-dieu-weierstrass-va-day-truy-hoi
+  - day-con-dinh-ly-bolzano-weierstrass-va-tieu-chuan-cauchy
+tags:
+  - bài tập chương 3
+  - lời giải chi tiết
+  - tìm N epsilon
+  - tính giới hạn
+  - nguyên lý kẹp
+  - dãy truy hồi
+  - tiêu chuẩn Cauchy
+  - bài tập nâng cao
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '36-38'
+    sections: 'Bài tập cuối chương 3'
+    note: 'Hệ thống bài tập tự luận và hướng dẫn giải chi tiết Chương 3'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Thành thạo kỹ thuật tìm chỉ số $N(\varepsilon)$:** Xử lý trọn vẹn câu hỏi thi tự luận về định nghĩa giới hạn cho các dãy phân thức bậc cao, tích số và tổng sai phân.
+2. **Làm chủ các phương pháp tính giới hạn:** Phân loại và giải quyết nhanh gọn các dạng vô định thông qua nhân lượng liên hợp, nguyên lý kẹp ba dãy, giới hạn hàm mũ và giai thừa.
+3. **Giải hoàn chỉnh bài toán dãy truy hồi:** Thực hiện trơn tru 3 bước chứng minh quy nạp, xét tính đơn điệu và giải phương trình điểm bất động.
+4. **Vận dụng linh hoạt Tiêu chuẩn Cauchy:** Đánh giá sai số $|x_{n+p} - x_n|$ để chứng minh sự hội tụ hoặc phủ định điều kiện Cauchy để chứng minh phân kỳ.
+5. **Tiếp cận các chuyên đề nâng cao (*):** Nắm vững tiêu chuẩn D'Alembert cho dãy số, tính phân kỳ của $(\sin n)$, và cấu trúc tương đương của 4 nguyên lý giải tích lớn.
+</Note>
+
+## 1. Phương pháp luận giải bài tập Chương 3
+
+Để đạt điểm tuyệt đối trong các đề thi học phần Giải tích hàm một biến, sinh viên cần nắm vững 4 kỹ thuật then chốt:
+
+- **Kỹ thuật đánh giá $\varepsilon - N$:** Mục tiêu là biến đổi sai số $|x_n - L|$ về dạng nhỏ hơn một biểu thức đơn giản $g(n)$, rồi giải bất phương trình $g(n) < \varepsilon$ để rút ra $n > h(\varepsilon)$. Khi đó chọn $N = \lfloor h(\varepsilon) \rfloor + 1$.
+- **Kỹ thuật Nguyên lý kẹp:** Khi dãy chứa các thành phần dao động (như $\sin$, $\cos$, $(-1)^n$) hoặc các tổng gồm $n$ phân thức $\sum_{k=1}^n \frac{n}{n^2+k}$, ta làm trội và làm giảm bằng cách thay mẫu số bằng giá trị nhỏ nhất và lớn nhất.
+- **Kỹ thuật dãy co (Contraction):** Nếu $|x_{n+2} - x_{n+1}| \le r |x_{n+1} - x_n|$ với $0 < r < 1$, dãy luôn là dãy Cauchy và do đó hội tụ.
+- **Kỹ thuật trích dãy con:** Khi cần chứng minh một dãy không hội tụ, hãy tìm 2 dãy con hội tụ về 2 giá trị khác nhau.
+
+---
+
+## 2. Dạng 1: Tìm chỉ số $N(\varepsilon)$ theo định nghĩa giới hạn
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt1a"
+  title="Bài tập 3.1a: Tìm N(epsilon) cho dãy phân thức bậc nhất"
+  source="gt-gthmb-ttd-2022"
+  page="36"
+  original="Bài 1a"
+>
+Cho dãy số $x_n = \frac{n-1}{n+1}$. Dãy này có giới hạn $L = 1$. Với $\varepsilon > 0$ cho trước, hãy tìm một số tự nhiên $N$ sao cho với mọi $n \ge N$ ta có $|x_n - 1| < \varepsilon$.
+</Exercise>
+
+<Hint>
+Biến đổi hiệu $|x_n - 1| = \left|\frac{n-1 - (n+1)}{n+1}\right| = \frac{2}{n+1}$, sau đó giải bất phương trình $\frac{2}{n+1} < \varepsilon$.
+</Hint>
+
+<Solution>
+Ta xét hiệu:
+$$
+|x_n - 1| = \left|\frac{n-1}{n+1} - 1\right| = \left|\frac{n - 1 - n - 1}{n+1}\right| = \frac{2}{n+1}.
+$$
+Để $|x_n - 1| < \varepsilon$, ta cần:
+$$
+\frac{2}{n+1} < \varepsilon \iff n+1 > \frac{2}{\varepsilon} \iff n > \frac{2}{\varepsilon} - 1.
+$$
+Do đó, theo Nguyên lý Archimedes, ta chỉ cần chọn:
+$$
+N = \max\left\{1, \left\lfloor \frac{2}{\varepsilon} - 1 \right\rfloor + 1\right\} = \left\lfloor \frac{2}{\varepsilon} \right\rfloor.
+$$
+Khi đó với mọi $n \ge N$, ta chắc chắn có $|x_n - 1| < \varepsilon$.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt1c"
+  title="Bài tập 3.1c: Tìm N(epsilon) cho dãy tổng các số tự nhiên"
+  source="gt-gthmb-ttd-2022"
+  page="36"
+  original="Bài 1c"
+>
+Cho dãy số $x_n = \frac{1 + 2 + \dots + n}{n^2}$. Tìm giới hạn $L$ và xác định $N(\varepsilon)$.
+</Exercise>
+
+<Solution>
+Áp dụng công thức tổng cấp số cộng:
+$$
+1 + 2 + \dots + n = \frac{n(n+1)}{2}.
+$$
+Do đó:
+$$
+x_n = \frac{n(n+1)}{2n^2} = \frac{n+1}{2n} = \frac{1}{2} + \frac{1}{2n}.
+$$
+Dễ thấy giới hạn của dãy là $L = \frac{1}{2}$. Xét sai số:
+$$
+\left|x_n - \frac{1}{2}\right| = \frac{1}{2n}.
+$$
+Để $\left|x_n - \frac{1}{2}\right| < \varepsilon$, ta cần:
+$$
+\frac{1}{2n} < \varepsilon \iff 2n > \frac{1}{\varepsilon} \iff n > \frac{1}{2\varepsilon}.
+$$
+Ta chọn $N = \left\lfloor \frac{1}{2\varepsilon} \right\rfloor + 1$. Khi đó với mọi $n \ge N$, ta có $\left|x_n - \frac{1}{2}\right| < \varepsilon$.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt1d"
+  title="Bài tập 3.1d: Tìm N(epsilon) cho dãy tổng phân thức sai phân"
+  source="gt-gthmb-ttd-2022"
+  page="36"
+  original="Bài 1d"
+>
+Cho dãy số $x_n = \frac{1}{1 \cdot 2} + \frac{1}{2 \cdot 3} + \dots + \frac{1}{n(n+1)}$. Tìm giới hạn $L$ và tìm $N(\varepsilon)$.
+</Exercise>
+
+<Solution>
+Ta khai triển phân tích từng số hạng:
+$$
+\frac{1}{k(k+1)} = \frac{1}{k} - \frac{1}{k+1}.
+$$
+Khi đó tổng rút gọn liên tiếp (telescoping sum):
+$$
+x_n = \left(1 - \frac{1}{2}\right) + \left(\frac{1}{2} - \frac{1}{3}\right) + \dots + \left(\frac{1}{n} - \frac{1}{n+1}\right) = 1 - \frac{1}{n+1}.
+$$
+Giới hạn của dãy là $L = 1$. Ta xét sai số:
+$$
+|x_n - 1| = \frac{1}{n+1} < \frac{1}{n}.
+$$
+Để $|x_n - 1| < \varepsilon$, ta chỉ cần chọn $n > \frac{1}{\varepsilon} - 1$. Do đó chọn $N = \left\lfloor \frac{1}{\varepsilon} \right\rfloor$. Với mọi $n \ge N$, ta có $|x_n - 1| < \varepsilon$.
+</Solution>
+
+---
+
+## 3. Dạng 2: Tính giới hạn bằng phép biến đổi đại số và Nguyên lý kẹp
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt2b"
+  title="Bài tập 3.2b: Nhân lượng liên hợp khử vô định vô cực trừ vô cực"
+  source="gt-gthmb-ttd-2022"
+  page="36"
+  original="Bài 2b"
+>
+Tính giới hạn của dãy số:
+$$
+x_n = \sqrt{n}\left(\sqrt{n+1} - \sqrt{n}\right).
+$$
+</Exercise>
+
+<Solution>
+Biểu thức có dạng vô định $\infty \cdot (\infty - \infty)$. Ta nhân và chia với lượng liên hợp $\sqrt{n+1} + \sqrt{n}$:
+$$
+x_n = \sqrt{n} \cdot \frac{(\sqrt{n+1} - \sqrt{n})(\sqrt{n+1} + \sqrt{n})}{\sqrt{n+1} + \sqrt{n}} = \sqrt{n} \cdot \frac{(n+1) - n}{\sqrt{n+1} + \sqrt{n}} = \frac{\sqrt{n}}{\sqrt{n+1} + \sqrt{n}}.
+$$
+Chia cả tử và mẫu cho $\sqrt{n} > 0$:
+$$
+x_n = \frac{1}{\sqrt{\frac{n+1}{n}} + 1} = \frac{1}{\sqrt{1 + \frac{1}{n}} + 1}.
+$$
+Vì $\lim_{n \to \infty} \frac{1}{n} = 0$, theo luật số học ta có:
+$$
+\lim_{n \to \infty} x_n = \frac{1}{\sqrt{1 + 0} + 1} = \frac{1}{2}.
+$$
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt2c"
+  title="Bài tập 3.2c: Căn bậc n của tổng lũy thừa cùng cơ số"
+  source="gt-gthmb-ttd-2022"
+  page="36"
+  original="Bài 2c"
+>
+Tính giới hạn của dãy số:
+$$
+x_n = \sqrt[n]{3^n + 4^n + 2015^n}.
+$$
+</Exercise>
+
+<Solution>
+Cơ số lớn nhất trong biểu thức là $2015$. Ta đặt $2015$ ra ngoài dấu căn:
+$$
+x_n = \sqrt[n]{2015^n \left[ \left(\frac{3}{2015}\right)^n + \left(\frac{4}{2015}\right)^n + 1 \right]} = 2015 \sqrt[n]{\left(\frac{3}{2015}\right)^n + \left(\frac{4}{2015}\right)^n + 1}.
+$$
+Vì $0 < \frac{3}{2015} < 1$ và $0 < \frac{4}{2015} < 1$, ta có đánh giá kẹp hai phía:
+$$
+1 \le \left(\frac{3}{2015}\right)^n + \left(\frac{4}{2015}\right)^n + 1 \le 1 + 1 + 1 = 3.
+$$
+Lấy căn bậc $n$:
+$$
+2015 \cdot 1 \le x_n \le 2015 \cdot \sqrt[n]{3}.
+$$
+Theo bảng giới hạn cơ bản, $\lim_{n \to \infty} \sqrt[n]{3} = 1$. Do đó:
+$$
+\lim_{n \to \infty} (2015 \cdot 1) = 2015, \quad \lim_{n \to \infty} (2015 \sqrt[n]{3}) = 2015 \cdot 1 = 2015.
+$$
+Theo Nguyên lý kẹp, ta kết luận:
+$$
+\lim_{n \to \infty} x_n = 2015.
+$$
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt2d"
+  title="Bài tập 3.2d: Nguyên lý kẹp cho tổng n phân thức"
+  source="gt-gthmb-ttd-2022"
+  page="36"
+  original="Bài 2d"
+>
+Tính giới hạn của dãy số:
+$$
+x_n = \frac{n}{n^2+1} + \frac{n}{n^2+2} + \dots + \frac{n}{n^2+n}.
+$$
+</Exercise>
+
+<Solution>
+Tổng $x_n$ gồm đúng $n$ số hạng.
+- Mỗi mẫu số đều thỏa mãn: $n^2 + 1 \le n^2 + k \le n^2 + n$ với mọi $1 \le k \le n$.
+- Do đó ta chặn trên bằng cách thay mẫu số bằng giá trị nhỏ nhất $n^2 + 1$:
+$$
+x_n \le \underbrace{\frac{n}{n^2+1} + \frac{n}{n^2+1} + \dots + \frac{n}{n^2+1}}_{n \text{ số hạng}} = \frac{n \cdot n}{n^2+1} = \frac{n^2}{n^2+1}.
+$$
+- Chặn dưới bằng cách thay mẫu số bằng giá trị lớn nhất $n^2 + n$:
+$$
+x_n \ge \underbrace{\frac{n}{n^2+n} + \dots + \frac{n}{n^2+n}}_{n \text{ số hạng}} = \frac{n \cdot n}{n^2+n} = \frac{n^2}{n^2+n}.
+$$
+Ta có bất đẳng thức kẹp:
+$$
+\frac{n^2}{n^2+n} \le x_n \le \frac{n^2}{n^2+1}.
+$$
+Xét giới hạn hai đầu:
+$$
+\lim_{n \to \infty} \frac{n^2}{n^2+n} = \lim_{n \to \infty} \frac{1}{1 + \frac{1}{n}} = 1, \quad \lim_{n \to \infty} \frac{n^2}{n^2+1} = \lim_{n \to \infty} \frac{1}{1 + \frac{1}{n^2}} = 1.
+$$
+Theo Nguyên lý kẹp, ta suy ra $\lim_{n \to \infty} x_n = 1$.
+</Solution>
+
+---
+
+## 4. Dạng 3: Dãy số cho bởi hệ thức truy hồi
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt12b"
+  title="Bài tập 3.12b: Dãy truy hồi tuyến tính bậc nhất"
+  source="gt-gthmb-ttd-2022"
+  page="37"
+  original="Bài 12b"
+>
+Cho dãy số $(x_n)$ xác định bởi $x_1 = 5$ và $x_{n+1} = \frac{x_n}{2} + 2$ với mọi $n \ge 1$. Chứng minh rằng dãy số hội tụ và tìm giới hạn của nó.
+</Exercise>
+
+<Solution>
+- **Bước 1: Chứng minh tính bị chặn dưới:**
+  Ta chứng minh bằng quy nạp rằng $x_n > 4$ với mọi $n \ge 1$.
+  - Với $n = 1$: $x_1 = 5 > 4$, đúng.
+  - Giả sử $x_k > 4$. Khi đó:
+  $$
+  x_{k+1} = \frac{x_k}{2} + 2 > \frac{4}{2} + 2 = 4.
+  $$
+  Vậy $x_n > 4$ với mọi $n \ge 1$.
+
+- **Bước 2: Chứng minh tính giảm:**
+  Xét hiệu:
+  $$
+  x_{n+1} - x_n = \left(\frac{x_n}{2} + 2\right) - x_n = 2 - \frac{x_n}{2} = \frac{4 - x_n}{2}.
+  $$
+  Vì $x_n > 4$ nên $4 - x_n < 0$, suy ra $x_{n+1} - x_n < 0 \implies x_{n+1} < x_n$. Vậy dãy $(x_n)$ giảm ngặt.
+
+- **Bước 3: Tìm giới hạn:**
+  Dãy $(x_n)$ giảm ngặt và bị chặn dưới bởi $4$, theo Định lý Weierstrass, tồn tại $L = \lim_{n \to \infty} x_n$ với $L \ge 4$.
+  Chuyển qua giới hạn:
+  $$
+  L = \frac{L}{2} + 2 \iff \frac{L}{2} = 2 \iff L = 4.
+  $$
+Vậy $\lim_{n \to \infty} x_n = 4$.
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt20"
+  title="Bài tập 3.20*: Dãy co và nguyên lý ánh xạ co cho dãy số"
+  source="gt-gthmb-ttd-2022"
+  page="38"
+  original="Bài 20"
+>
+Cho dãy số $(x_n)$ và số thực $r \in (0, 1)$ thỏa mãn điều kiện co:
+$$
+|x_{n+2} - x_{n+1}| \le r |x_{n+1} - x_n|, \quad \forall n \ge 1.
+$$
+1. Chứng minh rằng $(x_n)$ là một dãy Cauchy và do đó hội tụ.
+2. Áp dụng: Tìm giới hạn của dãy số xác định bởi $x_1 > 0$ và $x_{n+1} = \frac{1}{2 + x_n}$ với mọi $n \ge 1$.
+</Exercise>
+
+<Solution>
+1. **Chứng minh $(x_n)$ là dãy Cauchy:**
+   Áp dụng liên tiếp giả thiết:
+   $$
+   |x_{k+1} - x_k| \le r |x_k - x_{k-1}| \le r^2 |x_{k-1} - x_{k-2}| \le \dots \le r^{k-1} |x_2 - x_1|.
+   $$
+   Với mọi $n, p \in \mathbb{N}$, dùng bất đẳng thức tam giác:
+   $$
+   |x_{n+p} - x_n| \le \sum_{k=n}^{n+p-1} |x_{k+1} - x_k| \le |x_2 - x_1| \sum_{k=n}^{n+p-1} r^{k-1} = |x_2 - x_1| r^{n-1} \frac{1 - r^p}{1 - r} < \frac{|x_2 - x_1|}{1 - r} r^{n-1}.
+   $$
+   Vì $0 < r < 1$, ta có $\lim_{n \to \infty} r^{n-1} = 0$. Do đó với mọi $\varepsilon > 0$, tồn tại $N$ sao cho với mọi $n \ge N$ và mọi $p \in \mathbb{N}$:
+   $$
+   |x_{n+p} - x_n| < \varepsilon.
+   $$
+   Vậy $(x_n)$ là dãy Cauchy, suy ra nó hội tụ.
+
+2. **Áp dụng cho $x_{n+1} = \frac{1}{2 + x_n}$:**
+   Vì $x_1 > 0$, quy nạp dễ thấy $x_n > 0$ với mọi $n$. Hơn nữa $x_n = \frac{1}{2 + x_{n-1}} < \frac{1}{2}$ với mọi $n \ge 2$.
+   Ta xét hiệu:
+   $$
+   |x_{n+2} - x_{n+1}| = \left|\frac{1}{2 + x_{n+1}} - \frac{1}{2 + x_n}\right| = \frac{|x_n - x_{n+1}|}{(2 + x_{n+1})(2 + x_n)}.
+   $$
+   Vì $x_k > 0$, ta có $(2 + x_{n+1})(2 + x_n) > 2 \cdot 2 = 4$. Do đó:
+   $$
+   |x_{n+2} - x_{n+1}| \le \frac{1}{4} |x_{n+1} - x_n|.
+   $$
+   Đây là điều kiện co với $r = \frac{1}{4} < 1$. Theo kết quả phần 1, dãy $(x_n)$ hội tụ về $L \ge 0$. Chuyển qua giới hạn:
+   $$
+   L = \frac{1}{2 + L} \iff L^2 + 2L - 1 = 0 \iff L = -1 \pm \sqrt{2}.
+   $$
+   Vì $L \ge 0$, ta nhận nghiệm $L = \sqrt{2} - 1$.
+</Solution>
+
+---
+
+## 5. Dạng 4: Ứng dụng Tiêu chuẩn Cauchy
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt19b"
+  title="Bài tập 3.19b: Xét tính hội tụ của chuỗi lượng giác bằng tiêu chuẩn Cauchy"
+  source="gt-gthmb-ttd-2022"
+  page="38"
+  original="Bài 19b"
+>
+Dùng tiêu chuẩn Cauchy, xét sự hội tụ của dãy số:
+$$
+x_n = \frac{\sin 1}{1^2} + \frac{\sin 2}{2^2} + \dots + \frac{\sin n}{n^2}.
+$$
+</Exercise>
+
+<Solution>
+Với mọi $n, p \in \mathbb{N}$, ta xét hiệu:
+$$
+|x_{n+p} - x_n| = \left| \sum_{k=n+1}^{n+p} \frac{\sin k}{k^2} \right| \le \sum_{k=n+1}^{n+p} \frac{|\sin k|}{k^2}.
+$$
+Vì $|\sin k| \le 1$ với mọi $k \in \mathbb{N}$, ta có:
+$$
+|x_{n+p} - x_n| \le \sum_{k=n+1}^{n+p} \frac{1}{k^2} < \sum_{k=n+1}^{n+p} \left(\frac{1}{k-1} - \frac{1}{k}\right) = \frac{1}{n} - \frac{1}{n+p} < \frac{1}{n}.
+$$
+Lấy $\varepsilon > 0$ tùy ý. Theo Nguyên lý Archimedes, chọn $N = \left\lfloor \frac{1}{\varepsilon} \right\rfloor + 1$. Khi đó với mọi $n \ge N$ và mọi $p \in \mathbb{N}$:
+$$
+|x_{n+p} - x_n| < \frac{1}{n} \le \frac{1}{N} < \varepsilon.
+$$
+Vậy $(x_n)$ là một dãy Cauchy. Theo Tiêu chuẩn Cauchy, dãy số hội tụ.
+</Solution>
+
+---
+
+## 6. Chuyên đề nâng cao có dấu (*)
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt13"
+  title="Bài tập 3.13*: Tiêu chuẩn tỉ số D'Alembert cho dãy số"
+  source="gt-gthmb-ttd-2022"
+  page="37"
+  original="Bài 13"
+>
+Cho $(x_n)$ là dãy các số thực dương sao cho $\lim_{n \to \infty} \frac{x_{n+1}}{x_n} = s$. Chứng minh rằng:
+1. Nếu $s < 1$ thì $\lim_{n \to \infty} x_n = 0$.
+2. Nếu $s > 1$ thì $\lim_{n \to \infty} x_n = +\infty$.
+</Exercise>
+
+<Solution>
+1. **Trường hợp $s < 1$:**
+   Chọn số thực $q$ sao cho $s < q < 1$. Đặt $\varepsilon = q - s > 0$.
+   Vì $\lim \frac{x_{n+1}}{x_n} = s$, tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho:
+   $$
+   \left|\frac{x_{n+1}}{x_n} - s\right| < \varepsilon \implies \frac{x_{n+1}}{x_n} < s + \varepsilon = q, \quad \forall n \ge N.
+   $$
+   Bằng quy nạp, với mọi $k \ge 1$:
+   $$
+   x_{N+k} < q x_{N+k-1} < q^2 x_{N+k-2} < \dots < q^k x_N.
+   $$
+   Đặt $n = N + k$, ta có $0 < x_n < q^{n-N} x_N = \left(\frac{x_N}{q^N}\right) q^n$.
+   Vì $0 < q < 1$, ta biết $\lim_{n \to \infty} q^n = 0$. Theo Nguyên lý kẹp, ta suy ra $\lim_{n \to \infty} x_n = 0$.
+
+2. **Trường hợp $s > 1$:**
+   Xét dãy nghịch đảo $y_n = \frac{1}{x_n} > 0$. Ta có:
+   $$
+   \lim_{n \to \infty} \frac{y_{n+1}}{y_n} = \lim_{n \to \infty} \frac{x_n}{x_{n+1}} = \frac{1}{s} < 1.
+   $$
+   Theo kết quả phần 1, ta có $\lim_{n \to \infty} y_n = 0$. Áp dụng Luật nghịch đảo (Định lý 3.2.9), ta suy ra:
+   $$
+   \lim_{n \to \infty} x_n = \lim_{n \to \infty} \frac{1}{y_n} = +\infty.
+   $$
+</Solution>
+
+<Exercise
+  id="exr-gthmb-c3-b5-bt14b"
+  title="Bài tập 3.14b*: Chứng minh dãy sin(n) phân kỳ"
+  source="gt-gthmb-ttd-2022"
+  page="37"
+  original="Bài 14b"
+>
+Chứng minh rằng dãy số $x_n = \sin n$ không hội tụ.
+</Exercise>
+
+<Solution>
+Giả sử phản chứng rằng dãy số $(\sin n)$ hội tụ về một số thực $a$.
+Khi đó dãy con $(\sin(n+1))$ cũng hội tụ về $a$.
+Sử dụng công thức biến đổi lượng giác:
+$$
+\sin(n+1) - \sin(n-1) = 2 \cos n \sin 1.
+$$
+Lấy giới hạn hai vế khi $n \to \infty$:
+$$
+\lim_{n \to \infty} [2 \cos n \sin 1] = a - a = 0 \implies \lim_{n \to \infty} \cos n = 0 \quad (\text{do } \sin 1 \ne 0).
+$$
+Mặt khác, ta lại có công thức:
+$$
+\cos(n+1) - \cos(n-1) = -2 \sin n \sin 1.
+$$
+Vì $\lim \cos n = 0$, vế trái tiến về $0 - 0 = 0$. Suy ra:
+$$
+\lim_{n \to \infty} (-2 \sin n \sin 1) = 0 \implies a = \lim_{n \to \infty} \sin n = 0.
+$$
+Tuy nhiên, với mọi $n \in \mathbb{N}$, ta luôn có đẳng thức cơ bản:
+$$
+\sin^2 n + \cos^2 n = 1.
+$$
+Chuyển qua giới hạn:
+$$
+\lim_{n \to \infty} (\sin^2 n + \cos^2 n) = a^2 + 0^2 = 0^2 + 0^2 = 0 \ne 1.
+$$
+Mâu thuẫn này chứng tỏ giả thiết phản chứng là sai. Vậy dãy $(\sin n)$ không hội tụ.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Phương pháp $\varepsilon - N$:** Biến đổi sai số về dạng $g(n)$, giải bất phương trình tìm $N(\varepsilon)$.
+- **Kẹp ba dãy:** Thường áp dụng hiệu quả cho tổng $n$ số hạng và các biểu thức chứa dao động bị chặn.
+- **Dãy co:** Bất đẳng thức $|x_{n+2} - x_{n+1}| \le r |x_{n+1} - x_n|$ với $r < 1$ là bảo chứng cho tính Cauchy và sự hội tụ.
+- **Tiêu chuẩn D'Alembert:** $\lim \frac{x_{n+1}}{x_n} < 1 \implies \lim x_n = 0$; $\lim \frac{x_{n+1}}{x_n} > 1 \implies \lim x_n = +\infty$.
+</KeyTakeaways>

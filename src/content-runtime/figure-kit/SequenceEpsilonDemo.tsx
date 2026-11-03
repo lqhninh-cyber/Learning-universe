@@ -65,17 +65,20 @@ export function SequenceEpsilonDemo({
     <Card className="my-6 overflow-hidden border-stone-200 bg-white p-5 shadow-xs">
       <header className="mb-4">
         <h4 className="text-base font-semibold text-stone-900">{title}</h4>
-        <p className="mt-1 text-sm text-stone-600 leading-relaxed">
-          Định nghĩa giải tích khẳng định: $\lim x_n = a \iff$ với mọi $\varepsilon &gt; 0$, luôn tìm
-          được ngưỡng $N \in \mathbb{N}$ sao cho từ số hạng thứ $N$ trở đi ($n \ge N$), mọi điểm $x_n$
-          đều lọt hoàn toàn vào dải băng $(a - \varepsilon, a + \varepsilon)$.
+        <p className="mt-1 text-sm leading-relaxed text-stone-600">
+          Định nghĩa giải tích khẳng định: khi $\lim x_n = a$, với mọi $\varepsilon &gt; 0$ tùy ý,
+          luôn tìm được chỉ số ngưỡng $N$ sao cho với mọi số hạng thứ $n \ge N$, điểm $x_n$ đều lọt
+          hoàn toàn vào dải băng $(a - \varepsilon, a + \varepsilon)$.
         </p>
       </header>
 
       {/* Điều khiển thanh trượt Epsilon */}
       <div className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-stone-200/80 bg-stone-50/80 p-3.5">
-        <div className="flex flex-1 min-w-[260px] items-center gap-3">
-          <label htmlFor={sliderId} className="text-xs font-semibold text-stone-700 whitespace-nowrap">
+        <div className="flex min-w-[260px] flex-1 items-center gap-3">
+          <label
+            htmlFor={sliderId}
+            className="text-xs font-semibold whitespace-nowrap text-stone-700"
+          >
             Độ rộng dải băng $\varepsilon$:
           </label>
           <input
@@ -93,12 +96,13 @@ export function SequenceEpsilonDemo({
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-mono">
+        <div className="flex items-center gap-2 font-mono text-xs">
           <span className="rounded-md border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-emerald-800">
             Ngưỡng N(ε) = <strong>{thresholdN}</strong>
           </span>
           <span className="rounded-md border border-stone-200 bg-white px-2.5 py-1 text-stone-600">
-            Dãy: $x_n = \frac{'{'}n-1{'}'}{'{'}n+1{'}'}$
+            Dãy: $x_n = \frac{'{'}n-1{'}'}
+            {'{'}n+1{'}'}$
           </span>
         </div>
       </div>
@@ -142,18 +146,10 @@ export function SequenceEpsilonDemo({
           </text>
 
           {/* Nhãn biên dải băng a + eps và a - eps */}
-          <text
-            x={marginX + 6}
-            y={bandTopY + 12}
-            className="fill-amber-700 text-[9px] font-mono"
-          >
+          <text x={marginX + 6} y={bandTopY + 12} className="fill-amber-700 font-mono text-[9px]">
             1 + ε = {(limitA + epsilon).toFixed(2)}
           </text>
-          <text
-            x={marginX + 6}
-            y={bandBottomY - 4}
-            className="fill-amber-700 text-[9px] font-mono"
-          >
+          <text x={marginX + 6} y={bandBottomY - 4} className="fill-amber-700 font-mono text-[9px]">
             1 - ε = {(limitA - epsilon).toFixed(2)}
           </text>
 
@@ -173,7 +169,7 @@ export function SequenceEpsilonDemo({
                 x={toSvgX(thresholdN)}
                 y={marginTop - 8}
                 textAnchor="middle"
-                className="fill-emerald-700 text-[11px] font-bold font-mono"
+                className="fill-emerald-700 font-mono text-[11px] font-bold"
               >
                 N = {thresholdN}
               </text>
@@ -213,7 +209,7 @@ export function SequenceEpsilonDemo({
                 x={toSvgX(nVal)}
                 y={toSvgY(yMin) + 16}
                 textAnchor="middle"
-                className="fill-stone-600 text-[10px] font-mono"
+                className="fill-stone-600 font-mono text-[10px]"
               >
                 {nVal}
               </text>
@@ -235,7 +231,7 @@ export function SequenceEpsilonDemo({
                 x={marginX - 8}
                 y={toSvgY(yVal) + 3}
                 textAnchor="end"
-                className="fill-stone-600 text-[10px] font-mono"
+                className="fill-stone-600 font-mono text-[10px]"
               >
                 {yVal.toFixed(1)}
               </text>
@@ -275,22 +271,23 @@ export function SequenceEpsilonDemo({
       {/* Thông tin đối chiếu logic */}
       <footer className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="rounded-lg border border-amber-200/70 bg-amber-50/60 p-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-700">
+          <span className="text-[11px] font-semibold tracking-wider text-amber-700 uppercase">
             Dải băng (1 - ε, 1 + ε)
           </span>
-          <p className="mt-0.5 text-xs text-stone-800 font-mono">
+          <p className="mt-0.5 font-mono text-xs text-stone-800">
             ({(limitA - epsilon).toFixed(2)}, {(limitA + epsilon).toFixed(2)})
           </p>
         </div>
 
         <div className="rounded-lg border border-emerald-200/70 bg-emerald-50/60 p-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">
+          <span className="text-[11px] font-semibold tracking-wider text-emerald-700 uppercase">
             Số hạng trong dải băng
           </span>
           <p className="mt-0.5 text-xs text-stone-800">
             {thresholdN <= maxN ? (
               <>
-                Từ <strong>n = {thresholdN}</strong> đến <strong>n = {maxN}</strong> (tổng {pointsInside} điểm)
+                Từ <strong>n = {thresholdN}</strong> đến <strong>n = {maxN}</strong> (tổng{' '}
+                {pointsInside} điểm)
               </>
             ) : (
               <>Cần $n \ge {thresholdN}$ (vượt ngoài khung hiển thị)</>
@@ -299,11 +296,12 @@ export function SequenceEpsilonDemo({
         </div>
 
         <div className="rounded-lg border border-stone-200 bg-stone-50 p-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-600">
+          <span className="text-[11px] font-semibold tracking-wider text-stone-600 uppercase">
             Điểm nằm ngoài dải băng
           </span>
-          <p className="mt-0.5 text-xs text-stone-700 leading-snug">
-            Chỉ có hữu hạn <strong>{pointsOutside}</strong> số hạng đầu ($n &lt; {thresholdN}$) nằm ngoài dải băng. Vô số phần tử còn lại đều nằm trong!
+          <p className="mt-0.5 text-xs leading-snug text-stone-700">
+            Chỉ có hữu hạn <strong>{pointsOutside}</strong> số hạng đầu ($n &lt; {thresholdN}$) nằm
+            ngoài dải băng. Vô số phần tử còn lại đều nằm trong!
           </p>
         </div>
       </footer>

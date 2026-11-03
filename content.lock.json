@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T13:16:49.064Z",
+  "updatedAt": "2026-11-03T13:35:59.071Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1520,6 +1520,94 @@
         "exr-gthmb-c2-bt4": "2.4.4",
         "exr-gthmb-c2-bt5": "2.4.5",
         "exr-gthmb-c2-bt6": "2.4.6"
+      }
+    },
+    "khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc": {
+      "path": "content/single-variable-calculus/03-gioi-han-cua-day-so/01-khai-niem-day-so-day-hoi-tu-va-gioi-han-vo-cuc.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "ee7fd11c8e48e518c79c07ddf18345d725a99e8c521fa97e0b823bc1a127ef7a",
+      "numberedBlocks": {
+        "def-gthmb-c3-b1-dinh-nghia-day-so": "3.1.1",
+        "def-gthmb-c3-b1-day-don-dieu": "3.1.2",
+        "def-gthmb-c3-b1-day-bi-chan": "3.1.3",
+        "ex-gthmb-c3-b1-cac-day-so-mau": "3.1.1",
+        "def-gthmb-c3-b1-dinh-nghia-gioi-han": "3.1.4",
+        "prop-gthmb-c3-b1-tinh-duy-nhat-gioi-han": "3.1.5",
+        "ex-gthmb-c3-b1-chung-minh-lim-1-tren-n": "3.1.2",
+        "ex-gthmb-c3-b1-chung-minh-phan-ky": "3.1.3",
+        "def-gthmb-c3-b1-gioi-han-vo-cuc": "3.1.6",
+        "ex-gthmb-c3-b1-chung-minh-lim-n-binh": "3.1.4"
+      }
+    },
+    "cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep": {
+      "path": "content/single-variable-calculus/03-gioi-han-cua-day-so/02-cac-tinh-chat-co-ban-luat-thu-tu-va-nguyen-ly-kep.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "d595137510e7941d9de51b84ba4f6de3d303196c61cbefedb101ac7c615a6c27",
+      "numberedBlocks": {
+        "thm-gthmb-c3-b2-day-hoi-tu-bi-chan": "3.2.1",
+        "cex-gthmb-c3-b2-bi-chan-chua-chac-hoi-tu": "3.2.1",
+        "thm-gthmb-c3-b2-luat-gia-tri-tuyet-doi": "3.2.2",
+        "thm-gthmb-c3-b2-luat-thu-tu": "3.2.3",
+        "thm-gthmb-c3-b2-nguyen-ly-kep": "3.2.4",
+        "exm-gthmb-c3-b2-gioi-han-sin-n-chia-n": "3.2.2",
+        "thm-gthmb-c3-b2-luat-so-hoc": "3.2.5",
+        "thm-gthmb-c3-b2-luat-nghich-dao": "3.2.6",
+        "exm-gthmb-c3-b2-chung-minh-gioi-han-q-mu-n": "3.2.3",
+        "exm-gthmb-c3-b2-chung-minh-can-bac-n-cua-n": "3.2.4"
+      }
+    },
+    "dinh-ly-hoi-tu-don-dieu-weierstrass-va-day-truy-hoi": {
+      "path": "content/single-variable-calculus/03-gioi-han-cua-day-so/03-dinh-ly-hoi-tu-don-dieu-weierstrass-va-day-truy-hoi.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "94e36dd0f7cff09d6b842f526ebb5d615d566845bfd4efed76acf6581cd4ae7d",
+      "numberedBlocks": {
+        "thm-gthmb-c3-b3-dinh-ly-weierstrass": "3.3.1",
+        "cor-gthmb-c3-b3-he-qua-weierstrass": "3.3.2",
+        "exm-gthmb-c3-b3-tong-phan-thuc-weierstrass": "3.3.1",
+        "exm-gthmb-c3-b3-day-truy-hoi-can-thuc": "3.3.2",
+        "exm-gthmb-c3-b3-day-truy-hoi-phan-thuc": "3.3.3",
+        "thm-gthmb-c3-b3-dinh-nghia-so-e": "3.3.3"
+      }
+    },
+    "day-con-dinh-ly-bolzano-weierstrass-va-tieu-chuan-cauchy": {
+      "path": "content/single-variable-calculus/03-gioi-han-cua-day-so/04-day-con-dinh-ly-bolzano-weierstrass-va-tieu-chuan-cauchy.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "a7929630fb114389f3455031bbb791a52ae06849e4b9d4ada97a58ce66b8fac0",
+      "numberedBlocks": {
+        "def-gthmb-c3-b4-dinh-nghia-day-con": "3.4.1",
+        "thm-gthmb-c3-b4-dinh-ly-day-con": "3.4.2",
+        "cor-gthmb-c3-b4-tieu-chuan-phan-ky": "3.4.3",
+        "exm-gthmb-c3-b4-vi-du-phan-ky-day-con": "3.4.1",
+        "thm-gthmb-c3-b4-ton-tai-day-con-don-dieu": "3.4.4",
+        "thm-gthmb-c3-b4-bolzano-weierstrass": "3.4.5",
+        "def-gthmb-c3-b4-dinh-nghia-day-cauchy": "3.4.6",
+        "thm-gthmb-c3-b4-day-cauchy-bi-chan": "3.4.7",
+        "thm-gthmb-c3-b4-tieu-chuan-cauchy": "3.4.8",
+        "exm-gthmb-c3-b4-chuoi-nghich-dao-binh-phuong": "3.4.2",
+        "exm-gthmb-c3-b4-chuoi-dieu-hoa-phan-ky": "3.4.3"
+      }
+    },
+    "he-thong-bai-tap-chuong-3-va-loi-giai-chuan": {
+      "path": "content/single-variable-calculus/03-gioi-han-cua-day-so/05-he-thong-bai-tap-chuong-3-va-loi-giai-chuan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "989d7e46d13014244759a050eea092a4c8ffdbff3e82ea811caf1255935a0a16",
+      "numberedBlocks": {
+        "exr-gthmb-c3-b5-bt1a": "3.5.1",
+        "exr-gthmb-c3-b5-bt1c": "3.5.2",
+        "exr-gthmb-c3-b5-bt1d": "3.5.3",
+        "exr-gthmb-c3-b5-bt2b": "3.5.4",
+        "exr-gthmb-c3-b5-bt2c": "3.5.5",
+        "exr-gthmb-c3-b5-bt2d": "3.5.6",
+        "exr-gthmb-c3-b5-bt12b": "3.5.7",
+        "exr-gthmb-c3-b5-bt20": "3.5.8",
+        "exr-gthmb-c3-b5-bt19b": "3.5.9",
+        "exr-gthmb-c3-b5-bt13": "3.5.10",
+        "exr-gthmb-c3-b5-bt14b": "3.5.11"
       }
     }
   }
