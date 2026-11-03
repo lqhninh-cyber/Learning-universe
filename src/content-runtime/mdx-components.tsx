@@ -23,6 +23,7 @@ import {
   LazyTaylorPolynomialDemo,
   LazyUniformContinuityDemo,
   LazyVectorArrow,
+  LazyWeierstrassMTestDemo,
 } from './figure-kit/LazyFigureKit';
 
 /**
@@ -73,6 +74,7 @@ export const mdxComponents: MDXComponents = {
   UniformContinuityDemo: LazyUniformContinuityDemo,
   TaylorPolynomialDemo: LazyTaylorPolynomialDemo,
   RiemannDarbouxSumDemo: LazyRiemannDarbouxSumDemo,
+  WeierstrassMTestDemo: LazyWeierstrassMTestDemo,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
   table: (props: ComponentPropsWithoutRef<'table'>) => (

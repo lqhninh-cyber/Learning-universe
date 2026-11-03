@@ -12,3 +12,4 @@ export { SupremumEpsilonDemo, type SupremumEpsilonDemoProps } from './SupremumEp
 export { TaylorPolynomialDemo, type TaylorPolynomialDemoProps } from './TaylorPolynomialDemo';
 export { UniformContinuityDemo, type UniformContinuityDemoProps } from './UniformContinuityDemo';
 export { VectorArrow, type VectorArrowProps, type VectorTone } from './VectorArrow';
+export { WeierstrassMTestDemo, type WeierstrassMTestDemoProps } from './WeierstrassMTestDemo';

@@ -13,6 +13,7 @@ import type { SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
 import type { TaylorPolynomialDemoProps } from './TaylorPolynomialDemo';
 import type { UniformContinuityDemoProps } from './UniformContinuityDemo';
 import type { VectorArrowProps } from './VectorArrow';
+import type { WeierstrassMTestDemoProps } from './WeierstrassMTestDemo';
 
 const AffinePlaneInner = lazy(() =>
   import('./AffinePlane').then((m) => ({ default: m.AffinePlane })),
@@ -48,6 +49,9 @@ const TaylorPolynomialDemoInner = lazy(() =>
 );
 const RiemannDarbouxSumDemoInner = lazy(() =>
   import('./RiemannDarbouxSumDemo').then((m) => ({ default: m.RiemannDarbouxSumDemo })),
+);
+const WeierstrassMTestDemoInner = lazy(() =>
+  import('./WeierstrassMTestDemo').then((m) => ({ default: m.WeierstrassMTestDemo })),
 );
 
 function FigureFallback({ height = 340 }: { readonly height?: number }) {
@@ -162,6 +166,14 @@ export function LazyRiemannDarbouxSumDemo(props: RiemannDarbouxSumDemoProps) {
   return (
     <Suspense fallback={<FigureFallback height={280} />}>
       <RiemannDarbouxSumDemoInner {...props} />
+    </Suspense>
+  );
+}
+
+export function LazyWeierstrassMTestDemo(props: WeierstrassMTestDemoProps) {
+  return (
+    <Suspense fallback={<FigureFallback height={280} />}>
+      <WeierstrassMTestDemoInner {...props} />
     </Suspense>
   );
 }
