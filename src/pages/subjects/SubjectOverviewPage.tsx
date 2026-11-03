@@ -11,6 +11,8 @@ import {
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
+import { PEDAGOGY_DOCUMENTS, PEDAGOGICAL_CASE_STUDIES } from '@/data/courses/giao-duc-hoc/course';
+import { CaseStudyBox, LegalQuoteCard, PrincipleMatrix } from '@/features/pedagogy';
 import {
   ChapterAccordionList,
   type LessonLevelFilter,
@@ -19,6 +21,7 @@ import {
   SubjectHero,
 } from '@/features/subject';
 import { ROUTES } from '@/shared/config/routes';
+import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Button, Card } from '@/shared/ui';
@@ -30,6 +33,13 @@ export function SubjectOverviewPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<LessonLevelFilter>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [pedagogyDocFilter, setPedagogyDocFilter] = useState<
+    'all' | 'curriculum' | 'legal' | 'handbook'
+  >('all');
+  const [activePedagogyTab, setActivePedagogyTab] = useState<'principles' | 'cases' | 'legal'>(
+    'principles',
+  );
+  const [activeCaseStudyId, setActiveCaseStudyId] = useState<number>(1);
 
   const stats = useMemo(() => (subject ? getSubjectStats(subject) : null), [subject]);
 
@@ -47,6 +57,11 @@ export function SubjectOverviewPage() {
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
       .map(([tag]) => tag);
   }, [subject]);
+
+  const filteredPedagogyDocs = useMemo(() => {
+    if (pedagogyDocFilter === 'all') return PEDAGOGY_DOCUMENTS;
+    return PEDAGOGY_DOCUMENTS.filter((doc) => doc.category === pedagogyDocFilter);
+  }, [pedagogyDocFilter]);
 
   const filteredChapters = useMemo<readonly ManifestChapter[]>(() => {
     if (!subject) {
@@ -311,6 +326,280 @@ export function SubjectOverviewPage() {
             </div>
           </div>
         </Card>
+      )}
+
+      {/* Khối Tài liệu học phần & Văn bản pháp quy chuyên sâu cho Giáo dục học */}
+      {subject.slug === 'giao-duc-hoc' && (
+        <div className="space-y-6">
+          {/* Banner giới thiệu học phần & 13 tài liệu chính thức */}
+          <Card className="border-teal-200/90 bg-gradient-to-br from-teal-50/40 via-white to-amber-50/40 p-6 shadow-xs sm:p-8">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="subject">
+                    <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>Tài liệu học phần &amp; Văn bản pháp quy</span>
+                  </Badge>
+                  <Badge variant="neutral">Chuẩn HCMUE &amp; CT GDPT 2018 · 13 Tài liệu</Badge>
+                </div>
+                <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                  Hệ thống Tài liệu học tập, Giáo trình &amp; Văn bản quy phạm pháp luật
+                </h2>
+                <p className="max-w-3xl text-sm leading-relaxed text-stone-600">
+                  Toàn bộ tài liệu chính thức của Trường ĐH Sư phạm TP.HCM và hệ thống văn bản pháp
+                  quy của Bộ Giáo dục &amp; Đào tạo được số hóa và chuẩn bị sẵn sàng cho học viên
+                  đọc trực tiếp hoặc tải về máy.
+                </p>
+              </div>
+
+              {/* Bộ lọc 3 danh mục tài liệu */}
+              <div className="flex flex-wrap items-center gap-2 border-b border-stone-200/70 pb-3">
+                <span className="mr-1 text-xs font-bold tracking-wider text-stone-600 uppercase">
+                  Danh mục:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setPedagogyDocFilter('all')}
+                  className={cn(
+                    'rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
+                    pedagogyDocFilter === 'all'
+                      ? 'bg-stone-900 text-white'
+                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200',
+                  )}
+                >
+                  Tất cả ({PEDAGOGY_DOCUMENTS.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPedagogyDocFilter('curriculum')}
+                  className={cn(
+                    'rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
+                    pedagogyDocFilter === 'curriculum'
+                      ? 'bg-amber-800 text-white'
+                      : 'border border-amber-200/70 bg-amber-50 text-amber-900 hover:bg-amber-100',
+                  )}
+                >
+                  Giáo trình &amp; Đề cương (2)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPedagogyDocFilter('legal')}
+                  className={cn(
+                    'rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
+                    pedagogyDocFilter === 'legal'
+                      ? 'bg-teal-800 text-white'
+                      : 'border border-teal-200/70 bg-teal-50 text-teal-900 hover:bg-teal-100',
+                  )}
+                >
+                  Văn bản pháp quy (7)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPedagogyDocFilter('handbook')}
+                  className={cn(
+                    'rounded-lg px-2.5 py-1 text-xs font-semibold transition-all',
+                    pedagogyDocFilter === 'handbook'
+                      ? 'bg-stone-700 text-white'
+                      : 'bg-stone-100 text-stone-800 hover:bg-stone-200',
+                  )}
+                >
+                  Cẩm nang &amp; Nghiên cứu (4)
+                </button>
+              </div>
+
+              {/* Lưới danh sách tài liệu */}
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {filteredPedagogyDocs.map((doc) => (
+                  <div
+                    key={doc.id}
+                    className="flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-4.5 shadow-2xs transition-all hover:border-teal-400/80 hover:shadow-xs"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[11px] font-bold tracking-wider text-teal-800 uppercase">
+                          {doc.categoryLabel}
+                        </span>
+                        <span className="rounded-full bg-amber-100/80 px-2 py-0.5 text-[10px] font-bold text-amber-900">
+                          {doc.badge}
+                        </span>
+                      </div>
+                      <h3 className="line-clamp-2 text-sm font-bold text-stone-900">{doc.title}</h3>
+                      <p className="line-clamp-3 text-xs leading-relaxed text-stone-600">
+                        {doc.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex items-center gap-2 border-t border-stone-100 pt-3 text-xs">
+                      <Button
+                        asChild
+                        variant="subject"
+                        size="sm"
+                        className="h-7 gap-1 px-2.5 text-xs"
+                      >
+                        <a href={doc.path} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                          <span>Xem PDF</span>
+                        </a>
+                      </Button>
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="h-7 gap-1 px-2.5 text-xs text-stone-700"
+                      >
+                        <a href={doc.path} download={doc.filename}>
+                          <Download className="h-3 w-3" aria-hidden="true" />
+                          <span>Tải về</span>
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* Phòng Thực hành & Tra cứu Sư phạm Tương tác */}
+          <Card className="border-teal-200/90 bg-white p-6 shadow-xs sm:p-8">
+            <div className="space-y-6">
+              <div className="flex flex-col gap-3 border-b border-stone-100 pb-4 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-0.5 text-xs font-bold text-teal-800">
+                      <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Không gian Thực hành Sư phạm</span>
+                    </span>
+                    <Badge variant="neutral">Công cụ tương tác</Badge>
+                  </div>
+                  <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                    Tra cứu Nguyên tắc, Tình huống &amp; Pháp quy Sư phạm
+                  </h2>
+                </div>
+
+                {/* Tabs chuyển đổi giữa 3 công cụ */}
+                <div className="flex items-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50 p-1 text-xs font-medium">
+                  <button
+                    type="button"
+                    onClick={() => setActivePedagogyTab('principles')}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 transition-all',
+                      activePedagogyTab === 'principles'
+                        ? 'bg-white font-bold text-teal-900 shadow-2xs'
+                        : 'text-stone-600 hover:text-stone-900',
+                    )}
+                  >
+                    6 Nguyên tắc
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivePedagogyTab('cases')}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 transition-all',
+                      activePedagogyTab === 'cases'
+                        ? 'bg-white font-bold text-teal-900 shadow-2xs'
+                        : 'text-stone-600 hover:text-stone-900',
+                    )}
+                  >
+                    Tình huống thực tế
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivePedagogyTab('legal')}
+                    className={cn(
+                      'rounded-lg px-3 py-1.5 transition-all',
+                      activePedagogyTab === 'legal'
+                        ? 'bg-white font-bold text-teal-900 shadow-2xs'
+                        : 'text-stone-600 hover:text-stone-900',
+                    )}
+                  >
+                    Trích dẫn Pháp quy
+                  </button>
+                </div>
+              </div>
+
+              {/* Tab 1: Ma trận 6 nguyên tắc */}
+              {activePedagogyTab === 'principles' && <PrincipleMatrix />}
+
+              {/* Tab 2: Tình huống thực tế */}
+              {activePedagogyTab === 'cases' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-stone-700 uppercase">
+                      Chọn tình huống mẫu:
+                    </span>
+                    <Link
+                      to="/mon-hoc/giao-duc-hoc/cam-nang-xu-ly-tinh-huong-su-pham-va-de-cuong-on-tap/ngan-hang-20-tinh-huong-su-pham-thuc-te"
+                      className="text-xs font-semibold text-teal-800 hover:underline"
+                    >
+                      Xem toàn bộ 20 tình huống &rarr;
+                    </Link>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {PEDAGOGICAL_CASE_STUDIES.map((c) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => setActiveCaseStudyId(c.id)}
+                        className={cn(
+                          'rounded-xl border px-3 py-1.5 text-xs font-medium transition-all',
+                          activeCaseStudyId === c.id
+                            ? 'border-amber-800 bg-amber-800 text-white shadow-2xs'
+                            : 'border-stone-200 bg-stone-50 text-stone-700 hover:bg-stone-100',
+                        )}
+                      >
+                        Tình huống {c.id}
+                      </button>
+                    ))}
+                  </div>
+
+                  {PEDAGOGICAL_CASE_STUDIES.find((c) => c.id === activeCaseStudyId) && (
+                    <CaseStudyBox
+                      caseStudy={PEDAGOGICAL_CASE_STUDIES.find((c) => c.id === activeCaseStudyId)!}
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Tab 3: Trích dẫn pháp quy */}
+              {activePedagogyTab === 'legal' && (
+                <div className="grid gap-4 md:grid-cols-2">
+                  <LegalQuoteCard
+                    lawTitle="Luật Giáo dục 2019"
+                    article="Khoản 1 Điều 28"
+                    quote="Mục tiêu của giáo dục phổ thông là nhằm phát triển toàn diện cho người học về đạo đức, trí tuệ, thể chất, thẩm mỹ, kỹ năng cơ bản, phát triển năng lực cá nhân, tính năng động và sáng tạo; hình thành nhân cách con người Việt Nam xã hội chủ nghĩa và trách nhiệm công dân."
+                    source="Luật số 43/2019/QH14"
+                    sourceUrl="/docs/giao-duc-hoc/Luat_Giao_duc_2019.pdf"
+                    significance="Định hướng cốt lõi cho mọi kế hoạch dạy học và hoạt động giáo dục trong nhà trường phổ thông."
+                  />
+                  <LegalQuoteCard
+                    lawTitle="Thông tư 20/2018/TT-BGDĐT"
+                    article="Tiêu chuẩn 1: Phẩm chất nhà giáo"
+                    quote="Tuân thủ các quy định và rèn luyện về đạo đức nhà giáo; chia sẻ kinh nghiệm, hỗ trợ đồng nghiệp trong rèn luyện đạo đức và tạo dựng phong cách nhà giáo mẫu mực."
+                    source="Quy định chuẩn nghề nghiệp giáo viên cơ sở GDPT"
+                    sourceUrl="/docs/giao-duc-hoc/Chuan_nghe_nghiep_GV_TT20.pdf"
+                    significance="Tấm gương nhân cách của người thầy là phương tiện trực quan mạnh mẽ nhất trong giáo dục đạo đức học sinh."
+                  />
+                  <LegalQuoteCard
+                    lawTitle="Điều lệ trường trung học (TT 32/2020)"
+                    article="Khoản 2 Điều 29"
+                    quote="Giáo viên chủ nhiệm có quyền: Được dự các giờ học, hoạt động giáo dục khác của học sinh lớp mình chủ nhiệm; được dự các cuộc họp của Hội đồng thi đua khen thưởng và các hội đồng kỷ luật khi giải quyết những vấn đề có liên quan đến học sinh của lớp mình chủ nhiệm."
+                    source="Thông tư số 32/2020/TT-BGDĐT"
+                    sourceUrl="/docs/giao-duc-hoc/Dieu_le_truong_trung_hoc_TT32.pdf"
+                    significance="Căn cứ pháp lý khẳng định vị thế điều phối và quyền hạn của GVCN trong việc bảo vệ quyền lợi chính đáng cho học sinh."
+                  />
+                  <LegalQuoteCard
+                    lawTitle="Chương trình GDPT 2018"
+                    article="5 Phẩm chất chủ yếu"
+                    quote="Yêu nước, Nhân ái, Chăm chỉ, Trung thực, Trách nhiệm. Đây là 5 phẩm chất nền tảng được hình thành và phát triển thông qua các môn học và hoạt động trải nghiệm."
+                    source="Khung Chương trình giáo dục phổ thông tổng thể"
+                    sourceUrl="/docs/giao-duc-hoc/CT_GDPT_2018_Tong_the.pdf"
+                    significance="Kim chỉ nam đánh giá sự tiến bộ về nhân cách của học sinh thay vì chỉ đánh giá điểm số học lực thuần túy."
+                  />
+                </div>
+              )}
+            </div>
+          </Card>
+        </div>
       )}
 
       {subject.chapters.length > 0 ? (

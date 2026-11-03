@@ -7,6 +7,7 @@ import type {
   ManifestLesson,
   ManifestSubject,
 } from '@schemas/index';
+import { GIAO_DUC_HOC_SUBJECT } from '@/data/courses/giao-duc-hoc/course';
 
 export interface LessonLocation {
   readonly subject: ManifestSubject;
@@ -27,21 +28,26 @@ export interface SubjectStats {
   readonly firstLesson: LessonLocation | null;
 }
 
+const ALL_SUBJECTS: readonly ManifestSubject[] = [...manifest.subjects, GIAO_DUC_HOC_SUBJECT];
+
+const COMBINED_MANIFEST: ContentManifest = {
+  ...manifest,
+  subjects: ALL_SUBJECTS,
+};
+
 /** Trả về toàn bộ manifest nội dung hiện tại. */
 export function getManifest(): ContentManifest {
-  return manifest;
+  return COMBINED_MANIFEST;
 }
 
 /** Danh sách các môn học có trong manifest (đã sắp theo `order`). */
 export function getSubjects(): readonly ManifestSubject[] {
-  return manifest.subjects;
+  return ALL_SUBJECTS;
 }
 
 /** Tìm môn học theo `slug` (ví dụ `cau-truc-dai-so`) hoặc `id` (`algebraic-structures`). */
 export function getSubjectBySlug(subjectSlug: string): ManifestSubject | undefined {
-  return manifest.subjects.find(
-    (subject) => subject.slug === subjectSlug || subject.id === subjectSlug,
-  );
+  return ALL_SUBJECTS.find((subject) => subject.slug === subjectSlug || subject.id === subjectSlug);
 }
 
 /** Tìm bài học theo bộ ba slug trên URL: `/mon-hoc/:subjectSlug/:chapterSlug/:lessonSlug`. */
@@ -72,7 +78,7 @@ export function getLessonBySlug(
 
 /** Tìm bài học theo `id` hoặc `aliases` trên toàn hệ thống. */
 export function getLessonById(lessonId: string): LessonLocation | undefined {
-  for (const subject of manifest.subjects) {
+  for (const subject of ALL_SUBJECTS) {
     for (const chapter of subject.chapters) {
       for (const lesson of chapter.lessons) {
         if (lesson.id === lessonId || lesson.aliases.includes(lessonId)) {
@@ -90,7 +96,7 @@ export function getLessonById(lessonId: string): LessonLocation | undefined {
  * 2. Nếu không, khớp `chapter.slug` hoặc `chapter.id` (ví dụ `/bai-hoc/nhom`) và trả về bài đầu tiên của chương.
  */
 export function resolveLessonShortcut(slugOrId: string): LessonLocation | undefined {
-  for (const subject of manifest.subjects) {
+  for (const subject of ALL_SUBJECTS) {
     for (const chapter of subject.chapters) {
       for (const lesson of chapter.lessons) {
         if (
@@ -104,7 +110,7 @@ export function resolveLessonShortcut(slugOrId: string): LessonLocation | undefi
     }
   }
 
-  for (const subject of manifest.subjects) {
+  for (const subject of ALL_SUBJECTS) {
     for (const chapter of subject.chapters) {
       if (chapter.slug === slugOrId || chapter.id === slugOrId) {
         const firstLesson = chapter.lessons[0];

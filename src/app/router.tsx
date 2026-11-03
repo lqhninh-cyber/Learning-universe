@@ -57,6 +57,13 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.courses,
+        lazy: async () => {
+          const { SubjectsListPage } = await import('@/pages/subjects/SubjectsListPage');
+          return { Component: SubjectsListPage };
+        },
+      },
+      {
         path: ROUTES.glossary,
         lazy: async () => {
           const { GlossaryPage } = await import('@/pages/glossary/GlossaryPage');
@@ -116,10 +123,24 @@ export const routes: RouteObject[] = [
         Component: SubjectLayout,
         children: [
           {
+            index: true,
+            lazy: async () => {
+              const { SubjectOverviewPage } = await import('@/pages/subjects/SubjectOverviewPage');
+              return { Component: SubjectOverviewPage };
+            },
+          },
+          {
             path: 'de-thi',
             lazy: async () => {
               const { SubjectExamsPage } = await import('@/pages/exams/SubjectExamsPage');
               return { Component: SubjectExamsPage };
+            },
+          },
+          {
+            path: ':chapterSlug/:lessonSlug',
+            lazy: async () => {
+              const { LessonPage } = await import('@/pages/lesson/LessonPage');
+              return { Component: LessonPage };
             },
           },
         ],

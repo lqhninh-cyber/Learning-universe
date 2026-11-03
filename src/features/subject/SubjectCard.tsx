@@ -1,5 +1,14 @@
 import type { ManifestSubject } from '@schemas/index';
-import { ArrowRight, BookOpen, Clock, Compass, Layers, PlayCircle, Sigma } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  Clock,
+  Compass,
+  GraduationCap,
+  Layers,
+  PlayCircle,
+  Sigma,
+} from 'lucide-react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjectStats } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
@@ -24,6 +33,9 @@ export interface SubjectCardProps {
 }
 
 function SubjectIcon({ slug, icon }: { readonly slug?: string; readonly icon?: string }) {
+  if (slug === 'giao-duc-hoc' || icon === 'graduation-cap') {
+    return <GraduationCap className="h-3.5 w-3.5 text-current" />;
+  }
   if (slug === 'cau-truc-dai-so' || icon === 'sigma') {
     return <AlgebraicSymmetryMotif className="h-3.5 w-3.5 text-current" />;
   }
@@ -78,8 +90,10 @@ export function SubjectCard({ subject }: SubjectCardProps) {
             <AlgebraicSymmetryMotif className="h-full w-full" />
           ) : subject.slug === 'hinh-hoc-affine' ? (
             <AffineGridMotif className="h-full w-full" />
-          ) : (
+          ) : subject.slug === 'giai-tich-ham-mot-bien' ? (
             <CalculusCurveMotif className="h-full w-full" />
+          ) : (
+            <GraduationCap className="h-full w-full text-current" />
           )}
         </div>
 

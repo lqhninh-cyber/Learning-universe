@@ -5,6 +5,7 @@ import {
   Clock,
   Compass,
   ExternalLink,
+  GraduationCap,
   Layers,
   PlayCircle,
   Sigma,
@@ -54,7 +55,9 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
         <div className="space-y-4 lg:col-span-8">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="subject">
-              {subject.theme.icon === 'compass' ? (
+              {subject.theme.icon === 'graduation-cap' ? (
+                <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+              ) : subject.theme.icon === 'compass' ? (
                 <Compass className="h-3.5 w-3.5" aria-hidden="true" />
               ) : subject.theme.icon === 'function' ? (
                 <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />

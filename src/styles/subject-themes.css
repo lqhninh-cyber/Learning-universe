@@ -66,3 +66,20 @@
   --subject-900: oklch(0.32 0.07 200);
   --subject-950: oklch(0.235 0.05 200);
 }
+
+/* Môn 4: Giáo dục học — Slate Teal (xanh học giả) & Terracotta (vàng đất nung) */
+[data-subject='giao-duc-hoc'],
+[data-subject='pedagogy'] {
+  --subject-hue: 190;
+  --subject-50: oklch(0.975 0.016 190);
+  --subject-100: oklch(0.945 0.034 190);
+  --subject-200: oklch(0.89 0.062 190);
+  --subject-300: oklch(0.81 0.098 190);
+  --subject-400: oklch(0.71 0.124 190);
+  --subject-500: oklch(0.605 0.13 190);
+  --subject-600: oklch(0.515 0.12 190);
+  --subject-700: oklch(0.435 0.1 190);
+  --subject-800: oklch(0.37 0.08 190);
+  --subject-900: oklch(0.315 0.06 190);
+  --subject-950: oklch(0.235 0.042 190);
+}

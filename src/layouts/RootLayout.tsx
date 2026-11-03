@@ -1,5 +1,6 @@
 import {
   BookOpenText,
+  ChevronDown,
   Clock,
   Compass,
   GraduationCap,
@@ -12,7 +13,7 @@ import {
   UserCheck,
   Users,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import { AuthModal, AuthProvider, PendingNoticeDialog, useAuth } from '@/features/auth';
 import { LoginPromptDialog, useLearningStore } from '@/features/learning';
@@ -38,7 +39,19 @@ function RootLayoutContent() {
   const isStoreAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMathMenuOpen, setIsMathMenuOpen] = useState(false);
+  const mathMenuRef = useRef<HTMLDivElement>(null);
   const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (mathMenuRef.current && !mathMenuRef.current.contains(event.target as Node)) {
+        setIsMathMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
@@ -74,49 +87,85 @@ function RootLayoutContent() {
                   </Button>
                 }
               >
-                <nav aria-label="Menu điều hướng di động" className="space-y-2">
-                  <Link
-                    to={ROUTES.home}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
-                  >
-                    Trang chủ
-                  </Link>
-                  <Link
-                    to={ROUTES.subjects}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
-                  >
-                    Tất cả môn học
-                  </Link>
-                  <Link
-                    to={ROUTES.subjectOverview('cau-truc-dai-so')}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
-                  >
-                    Cấu trúc đại số
-                  </Link>
-                  <Link
-                    to={ROUTES.subjectOverview('hinh-hoc-affine')}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
-                  >
-                    Hình học Affine và hình học Euclide
-                  </Link>
-                  <Link
-                    to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
-                  >
-                    Giải tích hàm một biến
-                  </Link>
-                  <Link
-                    to={ROUTES.glossary}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2.5 text-sm font-medium"
-                  >
-                    Tra cứu thuật ngữ & ký hiệu
-                  </Link>
+                <nav aria-label="Menu điều hướng di động" className="space-y-3">
+                  <div className="space-y-1">
+                    <Link
+                      to={ROUTES.home}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2 text-sm font-medium"
+                    >
+                      Trang chủ
+                    </Link>
+                    <Link
+                      to={ROUTES.subjects}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2 text-sm font-medium"
+                    >
+                      Tất cả môn học
+                    </Link>
+                  </div>
+
+                  {/* Phân tầng Khối 1: Toán học */}
+                  <div className="border-t border-stone-200/80 pt-2.5">
+                    <div className="px-3 pb-1 text-[11px] font-bold tracking-wider text-amber-900/80 uppercase">
+                      Khối 1: Toán học
+                    </div>
+                    <div className="space-y-0.5">
+                      <Link
+                        to={ROUTES.subjectOverview('cau-truc-dai-so')}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2 text-sm font-medium"
+                      >
+                        Cấu trúc đại số
+                      </Link>
+                      <Link
+                        to={ROUTES.subjectOverview('hinh-hoc-affine')}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2 text-sm font-medium"
+                      >
+                        Hình học Affine và Euclide
+                      </Link>
+                      <Link
+                        to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2 text-sm font-medium"
+                      >
+                        Giải tích hàm một biến
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Phân tầng Khối 2: Khoa học Giáo dục & Nghiệp vụ Sư phạm */}
+                  <div className="border-t border-stone-200/80 pt-2.5">
+                    <div className="flex items-center justify-between px-3 pb-1">
+                      <span className="text-[11px] font-bold tracking-wider text-teal-800 uppercase">
+                        Khối 2: Khoa học GD &amp; Sư phạm
+                      </span>
+                      <span className="rounded bg-teal-100 px-1.5 py-0.5 text-[10px] font-bold text-teal-800">
+                        Mới
+                      </span>
+                    </div>
+                    <div className="space-y-0.5">
+                      <Link
+                        to={ROUTES.subjectOverview('giao-duc-hoc')}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-teal-900 hover:bg-teal-50"
+                      >
+                        <span>Giáo dục học</span>
+                        <span className="text-xs text-teal-700">EDUT1401</span>
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-stone-200/80 pt-2.5">
+                    <Link
+                      to={ROUTES.glossary}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-vn-text hover:bg-vn-surface block rounded-xl px-3 py-2 text-sm font-medium"
+                    >
+                      Tra cứu thuật ngữ &amp; ký hiệu
+                    </Link>
+                  </div>
 
                   {isAdmin && (
                     <Link
@@ -179,40 +228,98 @@ function RootLayoutContent() {
                 variant="neutral"
                 className="border-vn-border bg-vn-surface/60 text-vn-primary hidden font-medium sm:inline-flex"
               >
-                Toán học
+                Toán &amp; Sư phạm
               </Badge>
             </div>
 
-            <nav aria-label="Liên kết môn học" className="hidden items-center gap-4 md:flex">
+            <nav
+              aria-label="Liên kết môn học"
+              className="hidden items-center gap-2 md:flex lg:gap-3"
+            >
               <Link
                 to={ROUTES.subjects}
-                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
+                className="text-vn-muted hover:text-vn-text rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors"
               >
                 Môn học
               </Link>
-              <Link
-                to={ROUTES.subjectOverview('cau-truc-dai-so')}
-                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
+
+              {/* Khối 1: Toán học (Dropdown Menu) */}
+              <div
+                ref={mathMenuRef}
+                className="relative"
+                onMouseEnter={() => setIsMathMenuOpen(true)}
+                onMouseLeave={() => setIsMathMenuOpen(false)}
               >
-                Cấu trúc đại số
-              </Link>
+                <button
+                  type="button"
+                  onClick={() => setIsMathMenuOpen((prev) => !prev)}
+                  className="text-vn-muted hover:text-vn-text inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors"
+                  aria-expanded={isMathMenuOpen}
+                  aria-haspopup="true"
+                >
+                  <span>Khối Toán học</span>
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform duration-200 ${isMathMenuOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {isMathMenuOpen && (
+                  <div className="border-vn-border bg-vn-bg absolute left-0 z-50 mt-1 w-64 rounded-2xl border p-2 shadow-lg backdrop-blur-md">
+                    <div className="px-2.5 py-1.5 text-[10px] font-bold tracking-wider text-amber-900/70 uppercase">
+                      Chương trình Toán học cao cấp
+                    </div>
+                    <Link
+                      to={ROUTES.subjectOverview('cau-truc-dai-so')}
+                      onClick={() => setIsMathMenuOpen(false)}
+                      className="hover:bg-vn-surface text-vn-text block rounded-xl px-2.5 py-2 text-xs font-medium transition-colors"
+                    >
+                      <div className="font-semibold">Cấu trúc đại số</div>
+                      <div className="text-vn-muted text-[11px]">
+                        Nhóm, Vành, Trường &amp; Tiên đề
+                      </div>
+                    </Link>
+                    <Link
+                      to={ROUTES.subjectOverview('hinh-hoc-affine')}
+                      onClick={() => setIsMathMenuOpen(false)}
+                      className="hover:bg-vn-surface text-vn-text block rounded-xl px-2.5 py-2 text-xs font-medium transition-colors"
+                    >
+                      <div className="font-semibold">Hình học Affine &amp; Euclide</div>
+                      <div className="text-vn-muted text-[11px]">
+                        Không gian Affine, Ánh xạ Affine
+                      </div>
+                    </Link>
+                    <Link
+                      to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
+                      onClick={() => setIsMathMenuOpen(false)}
+                      className="hover:bg-vn-surface text-vn-text block rounded-xl px-2.5 py-2 text-xs font-medium transition-colors"
+                    >
+                      <div className="font-semibold">Giải tích hàm một biến</div>
+                      <div className="text-vn-muted text-[11px]">
+                        Số thực, Giới hạn, Vi phân, Tích phân &amp; Chuỗi
+                      </div>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Khối 2: Khoa học Giáo dục & Nghiệp vụ Sư phạm */}
               <Link
-                to={ROUTES.subjectOverview('hinh-hoc-affine')}
-                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
+                to={ROUTES.subjectOverview('giao-duc-hoc')}
+                className="group flex items-center gap-1.5 rounded-lg border border-teal-200/80 bg-teal-50/70 px-2.5 py-1 text-sm font-semibold text-teal-900 transition-colors hover:border-teal-300 hover:bg-teal-100/80"
               >
-                Hình học Affine và hình học Euclide
+                <span className="h-1.5 w-1.5 rounded-full bg-teal-600 transition-transform group-hover:scale-125" />
+                <span>Giáo dục học</span>
+                <span className="py-0.2 rounded bg-teal-700/10 px-1.5 text-[10px] font-bold text-teal-800">
+                  Sư phạm
+                </span>
               </Link>
-              <Link
-                to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
-                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
-              >
-                Giải tích hàm một biến
-              </Link>
+
               <Link
                 to={ROUTES.glossary}
-                className="text-vn-muted hover:text-vn-text text-sm font-medium transition-colors"
+                className="text-vn-muted hover:text-vn-text rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors"
               >
-                Thuật ngữ & Ký hiệu
+                Thuật ngữ &amp; Ký hiệu
               </Link>
             </nav>
           </div>
@@ -340,12 +447,13 @@ function RootLayoutContent() {
               <div className="flex items-center gap-2">
                 <GraduationCap className="text-vn-primary h-5 w-5" aria-hidden="true" />
                 <span className="text-vn-text font-bold">Learning Universe</span>
-                <span className="text-vn-muted text-xs">· Toán học</span>
+                <span className="text-vn-muted text-xs">· Toán học &amp; Sư phạm</span>
               </div>
               <p className="text-vn-muted max-w-xl text-xs leading-relaxed">
                 Nền tảng học tập Toán học đại học đương đại lấy cảm hứng từ cấu trúc Thư viện đình
-                làng & Di sản tri thức Việt Nam. 100% nội dung học thuật chuẩn mực, nguồn mở và phi
-                lợi nhuận.
+                làng &amp; Di sản tri thức Việt Nam. Đồng hành cùng sinh viên Sư phạm Toán học với
+                các học phần chuyên ngành và Khoa học Giáo dục. 100% nội dung học thuật chuẩn mực,
+                nguồn mở và phi lợi nhuận.
               </p>
             </div>
 
@@ -375,7 +483,7 @@ function RootLayoutContent() {
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
                 className="text-vn-muted hover:text-vn-primary transition-colors"
               >
-                Hình học Affine và hình học Euclide
+                Hình học Affine &amp; Euclide
               </Link>
               <Link
                 to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
@@ -384,10 +492,16 @@ function RootLayoutContent() {
                 Giải tích hàm một biến
               </Link>
               <Link
+                to={ROUTES.subjectOverview('giao-duc-hoc')}
+                className="font-semibold text-teal-800 transition-colors hover:text-teal-950"
+              >
+                Giáo dục học
+              </Link>
+              <Link
                 to={ROUTES.glossary}
                 className="text-vn-muted hover:text-vn-primary transition-colors"
               >
-                Tra cứu thuật ngữ & ký hiệu
+                Tra cứu thuật ngữ &amp; ký hiệu
               </Link>
             </nav>
           </div>

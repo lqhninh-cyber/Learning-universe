@@ -31,7 +31,9 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
         : subject.slug === 'giai-tich-ham-mot-bien' ||
             subject.sources.primary === 'gt-gthmb-ttd-2022'
           ? '/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf'
-          : null;
+          : subject.slug === 'giao-duc-hoc' || subject.sources.primary === 'gt-gdh-hcmue-2024'
+            ? '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf'
+            : null;
 
   return (
     <section aria-label="Giáo trình và tài liệu tham khảo môn học" className="pt-2">

@@ -1,7 +1,11 @@
 import { createContext, useContext } from 'react';
 
 export type SubjectThemeId =
-  'default' | 'algebraic-structures' | 'affine-geometry' | 'single-variable-calculus';
+  | 'default'
+  | 'algebraic-structures'
+  | 'affine-geometry'
+  | 'single-variable-calculus'
+  | 'giao-duc-hoc';
 
 export interface SubjectThemeMeta {
   readonly id: SubjectThemeId;
@@ -41,6 +45,14 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
     description:
       'Tông Azure / Ocean thể hiện sự biến thiên liên tục, giới hạn và phép tính vi tích phân.',
   },
+  'giao-duc-hoc': {
+    id: 'giao-duc-hoc',
+    name: 'Giáo dục học',
+    shortName: 'EDUT1401',
+    hue: 190,
+    description:
+      'Tông Slate Teal (xanh học giả) và Terracotta (vàng đất nung) thể hiện lý luận nhân cách, chuẩn nghề nghiệp và nghiệp vụ sư phạm.',
+  },
 } as const;
 
 export const SubjectThemeContext = createContext<SubjectThemeId>('default');
@@ -53,6 +65,8 @@ const SLUG_TO_THEME_ID: Readonly<Record<string, SubjectThemeId>> = {
   'hinh-hoc-affine': 'affine-geometry',
   'single-variable-calculus': 'single-variable-calculus',
   'giai-tich-ham-mot-bien': 'single-variable-calculus',
+  'giao-duc-hoc': 'giao-duc-hoc',
+  pedagogy: 'giao-duc-hoc',
 };
 
 export function isSubjectThemeId(value: string): value is SubjectThemeId {

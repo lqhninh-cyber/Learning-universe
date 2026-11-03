@@ -4,7 +4,9 @@
 export const ROUTES = {
   home: '/',
   subjects: '/mon-hoc',
+  courses: '/courses',
   subjectOverview: (subjectSlug: string) => `/mon-hoc/${subjectSlug}`,
+  courseOverview: (courseSlug: string) => `/courses/${courseSlug}`,
   subjectExams: (subjectSlug: string) => `/mon-hoc/${subjectSlug}/de-thi`,
   coursesExams: (subjectSlug: string) => `/courses/${subjectSlug}/de-thi`,
   lesson: (subjectSlug: string, chapterSlug: string, lessonSlug: string) =>
