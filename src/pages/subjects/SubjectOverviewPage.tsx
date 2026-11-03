@@ -1,5 +1,13 @@
 import type { ManifestChapter } from '@schemas/index';
-import { ArrowLeft, BookOpen, Download, ExternalLink, FileText, Sparkles } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookOpen,
+  Download,
+  ExternalLink,
+  FileText,
+  GraduationCap,
+  Sparkles,
+} from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
@@ -179,7 +187,7 @@ export function SubjectOverviewPage() {
               </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {/* Tài liệu 1: Giáo trình */}
               <div className="hover:border-subject-300 flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-5 shadow-2xs transition-all">
                 <div className="space-y-2">
@@ -264,6 +272,39 @@ export function SubjectOverviewPage() {
                       <Download className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Tải về máy</span>
                     </a>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tài liệu 3: Ngân hàng Đề thi & Lời giải thực chiến */}
+              <div className="border-subject-300 from-subject-50/50 hover:border-subject-400 flex flex-col justify-between rounded-2xl border bg-gradient-to-br via-white to-amber-50/30 p-5 shadow-2xs transition-all">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-subject-800 text-xs font-bold tracking-wider uppercase">
+                      Ngân hàng Đề thi Thực chiến
+                    </span>
+                    <Badge variant="subject">6 Bộ đề · 41 Bài</Badge>
+                  </div>
+                  <h3 className="text-base font-bold text-stone-900">
+                    Đề thi Kết thúc Học phần qua các năm (2018 – 2026)
+                  </h3>
+                  <p className="text-xs leading-relaxed text-stone-600">
+                    Kho 6 bộ đề thi chính thức kèm biểu điểm chi tiết, gợi ý định lý trọng tâm và
+                    toàn bộ lời giải thực chiến từng bước được số hóa 100% bằng KaTeX.
+                  </p>
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
+                  <Button
+                    asChild
+                    variant="subject"
+                    size="sm"
+                    className="w-full gap-1.5 text-xs font-semibold sm:w-auto"
+                  >
+                    <Link to={ROUTES.subjectExams(subject.slug)}>
+                      <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Vào luyện đề thi &amp; Xem lời giải</span>
+                    </Link>
                   </Button>
                 </div>
               </div>

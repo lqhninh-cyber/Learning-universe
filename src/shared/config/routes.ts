@@ -5,6 +5,8 @@ export const ROUTES = {
   home: '/',
   subjects: '/mon-hoc',
   subjectOverview: (subjectSlug: string) => `/mon-hoc/${subjectSlug}`,
+  subjectExams: (subjectSlug: string) => `/mon-hoc/${subjectSlug}/de-thi`,
+  coursesExams: (subjectSlug: string) => `/courses/${subjectSlug}/de-thi`,
   lesson: (subjectSlug: string, chapterSlug: string, lessonSlug: string) =>
     `/mon-hoc/${subjectSlug}/${chapterSlug}/${lessonSlug}`,
   lessonShortcut: (lessonOrChapterSlug: string) => `/bai-hoc/${lessonOrChapterSlug}`,

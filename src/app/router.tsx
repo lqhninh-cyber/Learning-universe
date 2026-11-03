@@ -96,10 +96,30 @@ export const routes: RouteObject[] = [
             },
           },
           {
+            path: 'de-thi',
+            lazy: async () => {
+              const { SubjectExamsPage } = await import('@/pages/exams/SubjectExamsPage');
+              return { Component: SubjectExamsPage };
+            },
+          },
+          {
             path: ':chapterSlug/:lessonSlug',
             lazy: async () => {
               const { LessonPage } = await import('@/pages/lesson/LessonPage');
               return { Component: LessonPage };
+            },
+          },
+        ],
+      },
+      {
+        path: '/courses/:subjectSlug',
+        Component: SubjectLayout,
+        children: [
+          {
+            path: 'de-thi',
+            lazy: async () => {
+              const { SubjectExamsPage } = await import('@/pages/exams/SubjectExamsPage');
+              return { Component: SubjectExamsPage };
             },
           },
         ],
