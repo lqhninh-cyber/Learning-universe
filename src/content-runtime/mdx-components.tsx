@@ -17,6 +17,7 @@ import {
   LazyBarycenter,
   LazyDraggablePoint,
   LazyParallelogram,
+  LazySupremumEpsilonDemo,
   LazyVectorArrow,
 } from './figure-kit/LazyFigureKit';
 
@@ -63,6 +64,7 @@ export const mdxComponents: MDXComponents = {
   Parallelogram: LazyParallelogram,
   Barycenter: LazyBarycenter,
   AffineMapDemo: LazyAffineMapDemo,
+  SupremumEpsilonDemo: LazySupremumEpsilonDemo,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
   table: (props: ComponentPropsWithoutRef<'table'>) => (

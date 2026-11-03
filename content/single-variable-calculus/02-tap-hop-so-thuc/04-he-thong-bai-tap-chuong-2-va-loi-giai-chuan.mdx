@@ -1,0 +1,404 @@
+---
+id: he-thong-bai-tap-chuong-2-va-loi-giai-chuan
+title: 'Hệ thống bài tập Chương 2 và lời giải chuẩn'
+description: 'Hệ thống bài tập trọng tâm Chương 2 bám sát chuẩn đầu ra ôn thi kết thúc học phần: chứng minh đẳng thức và bất đẳng thức từ hệ tiên đề, tính chất sup và inf, dạng bài tập tìm min/max/inf/sup của tập hợp, phương pháp quy nạp toán học, bất đẳng thức Cauchy-Schwarz, chứng minh số vô tỉ và phân loại bài tập nâng cao.'
+estimatedMinutes: 50
+level: intermediate
+prerequisites:
+  - he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r
+  - can-tren-can-duoi-supremum-infimum-va-tien-de-day-du
+  - nguyen-ly-quy-nap-archimedes-va-tinh-tru-mat
+tags:
+  - bài tập chương 2
+  - lời giải chi tiết
+  - tiên đề trường
+  - supremum
+  - infimum
+  - tìm sup inf
+  - quy nạp toán học
+  - bất đẳng thức Cauchy-Schwarz
+  - số vô tỉ
+  - phần nguyên
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '22-23'
+    sections: 'Bài tập cuối chương 2'
+    note: 'Hệ thống bài tập tự luận Chương 2 kèm hướng dẫn và lời giải chi tiết'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Làm chủ kỹ năng chứng minh tiên đề:** Vận dụng chuẩn xác 9 tiên đề đại số và 2 tiên đề thứ tự để chứng minh các biến đổi dấu và tính chất bất đẳng thức trên $\mathbb{R}$.
+2. **Thành thạo dạng bài thi xác định biên của tập hợp:** Tìm và chứng minh chặt chẽ $\min, \max, \inf, \sup$ của các tập hợp số thực (tập rời rạc, tập hữu tỉ, hàm lượng giác) bằng định nghĩa và đặc trưng $\varepsilon$.
+3. **Ứng dụng quy nạp toán học và bất đẳng thức:** Chứng minh các công thức tổng lũy thừa, tích số và bất đẳng thức Cauchy-Schwarz bằng quy nạp.
+4. **Nhận diện và chứng minh số vô tỉ:** Vận dụng tính chia hết và phương pháp phản chứng để chứng minh các số vô tỉ căn thức ($\sqrt{3}, \sqrt{2} + \sqrt{3}$) và logarit ($\log_2 3$).
+5. **Tiếp cận bài tập mở rộng có dấu (*):** Nắm vững hướng tư duy cho bất đẳng thức AM-GM và phép dựng căn bậc $n$ bằng Tiên đề Supremum.
+</Note>
+
+## 1. Phương pháp luận giải bài tập Chương 2
+
+Các dạng bài tập của Chương 2 xuất hiện dày đặc trong đề thi học phần Giải tích hàm một biến. Dưới đây là các kỹ thuật then chốt:
+
+- **Dạng bài tìm $\sup$ và $\inf$:**
+  1. *Dự đoán giá trị $a$:* Xét giới hạn của các phần tử biên khi tham số tiến ra vô cùng hoặc tính giá trị tại các điểm cực biên.
+  2. *Chứng minh $a$ là cận trên:* Chỉ ra $x \le a$ với mọi $x \in E$.
+  3. *Chứng minh $a$ là cận trên nhỏ nhất:*
+     - Nếu $a \in E$: Kết luận ngay $a = \max E = \sup E$.
+     - Nếu $a \notin E$: Dùng đặc trưng $\varepsilon$ (Mệnh đề 2.1.20), với mỗi $\varepsilon > 0$, chọn phần tử $x_\varepsilon \in E$ (thường bằng nguyên lý Archimedes) sao cho $x_\varepsilon > a - \varepsilon$.
+- **Dạng bài chứng minh số vô tỉ:** Giả sử phản chứng $x = \frac{m}{n}$ với $m, n \in \mathbb{Z}, n > 0, \gcd(m, n) = 1$, biến đổi đưa về tính chẵn lẻ hoặc tính chia hết của số nguyên để suy ra mâu thuẫn.
+
+---
+
+## 2. Nhóm bài tập nền tảng bám sát đề cương thi
+
+<Exercise id="exr-gthmb-c2-bt1" title="Bài tập 2.1: Chứng minh các hệ quả đại số từ 9 tiên đề">
+Sử dụng các Tiên đề từ 1 đến 9 của trường số thực $\mathbb{R}$, hãy chứng minh rằng với mọi $x, y \in \mathbb{R}$:
+1. $-x = (-1)x$.
+2. $-(-x) = x$.
+3. $(-1)(-1) = 1$.
+4. $(-x)(-y) = xy$.
+5. Trong Tiên đề 7, giải thích tại sao ta bắt buộc phải có điều kiện $1 \neq 0$.
+</Exercise>
+
+<Solution>
+1. **Chứng minh $-x = (-1)x$:**
+   Ta xét tổng $(-1)x + x$:
+   $$
+   (-1)x + x = (-1)x + 1 \cdot x = (-1 + 1)x = 0 \cdot x = 0.
+   $$
+   Theo Tiên đề 4, phần tử đối của $x$ là duy nhất. Vì $(-1)x$ cộng với $x$ bằng $0$, nên $(-1)x$ chính là phần tử đối của $x$, tức là $-x = (-1)x$.
+
+2. **Chứng minh $-(-x) = x$:**
+   Theo định nghĩa phần tử đối (Tiên đề 4), số đối của $-x$ là số khi cộng với $-x$ cho kết quả bằng $0$.
+   Mặt khác ta có $x + (-x) = 0$.
+   Do tính duy nhất của phần tử đối của $-x$, suy ra $-(-x) = x$.
+
+3. **Chứng minh $(-1)(-1) = 1$:**
+   Áp dụng kết quả câu 1 cho $x = -1$:
+   $$
+   (-1)(-1) = -(-1).
+   $$
+   Theo kết quả câu 2, $-(-1) = 1$. Do đó $(-1)(-1) = 1$.
+
+4. **Chứng minh $(-x)(-y) = xy$:**
+   Sử dụng câu 1, tính kết hợp và giao hoán của phép nhân:
+   $$
+   (-x)(-y) = [(-1)x][(-1)y] = [(-1)(-1)](xy) = 1 \cdot (xy) = xy.
+   $$
+
+5. **Giải thích điều kiện $1 \neq 0$ trong Tiên đề 7:**
+   Nếu $1 = 0$, thì với bất kỳ số thực $x \in \mathbb{R}$ nào, ta có:
+   $$
+   x = 1 \cdot x = 0 \cdot x = 0.
+   $$
+   Khi đó toàn bộ trường $\mathbb{R}$ sẽ chỉ gồm duy nhất một phần tử là $\{0\}$. Trường suy biến này không có ý nghĩa toán học và không thể xây dựng bất kỳ phép tính giải tích nào. Do đó điều kiện $1 \neq 0$ là tối quan trọng để trường có ít nhất hai phần tử phân biệt.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c2-bt2" title="Bài tập 2.2: Các tính chất của quan hệ thứ tự và bất đẳng thức">
+Chứng minh các khẳng định sau từ các tiên đề thứ tự:
+1. Nếu $a \le c$ và $b \le d$ thì $a + b \le c + d$.
+2. Nếu $0 \le a \le c$ và $0 \le b \le d$ thì $ab \le cd$.
+3. Với $a, b \ge 0$, chứng minh rằng: $a \le b \iff a^2 \le b^2$.
+4. Với $a, b > 0$, chứng minh rằng: $a < b \iff b^{-1} < a^{-1}$ (tức là $0 < a < b \iff 0 < \frac{1}{b} < \frac{1}{a}$).
+</Exercise>
+
+<Solution>
+1. **Chứng minh $a + b \le c + d$:**
+   - Từ $a \le c$, cộng $b$ vào cả hai vế (Tiên đề 10): $a + b \le c + b$.
+   - Từ $b \le d$, cộng $c$ vào cả hai vế (Tiên đề 10): $c + b \le c + d$.
+   - Áp dụng tính chất bắc cầu: $a + b \le c + d$.
+
+2. **Chứng minh $ab \le cd$ khi các số không âm:**
+   - Vì $a \le c$ và $b \ge 0$, nhân $b$ vào hai vế: $ab \le cb$.
+   - Vì $b \le d$ và $c \ge 0$, nhân $c$ vào hai vế: $cb \le cd$.
+   - Theo tính bắc cầu suy ra $ab \le cd$.
+
+3. **Chứng minh $a \le b \iff a^2 \le b^2$ (với $a, b \ge 0$):**
+   - Ta có hằng đẳng thức: $b^2 - a^2 = (b - a)(b + a)$.
+   - Nếu $a = b = 0$, hiển nhiên $0 \le 0 \iff 0 \le 0$.
+   - Nếu $a + b > 0$: Vì $b + a > 0$, dấu của $b^2 - a^2$ trùng hoàn toàn với dấu của $b - a$.
+     Do đó $b^2 - a^2 \ge 0 \iff b - a \ge 0 \iff a \le b$.
+
+4. **Chứng minh $0 < a < b \iff 0 < \frac{1}{b} < \frac{1}{a}$:**
+   - Vì $a > 0$ và $b > 0$, tích $ab > 0$. Do đó phần tử nghịch đảo $(ab)^{-1} = a^{-1}b^{-1} > 0$.
+   - Nhân số dương $a^{-1}b^{-1}$ vào hai vế của bất đẳng thức $a < b$:
+     $$
+     a(a^{-1}b^{-1}) < b(a^{-1}b^{-1}) \iff b^{-1} < a^{-1} \iff \frac{1}{b} < \frac{1}{a}.
+     $$
+   - Ngược lại, nhân $ab > 0$ vào hai vế của $\frac{1}{b} < \frac{1}{a}$ ta thu lại $a < b$.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c2-bt3" title="Bài tập 2.3: Tính chất bao hàm và đại số của Sup và Inf">
+Cho $A$ và $B$ là các tập con khác rỗng và bị chặn của $\mathbb{R}$.
+1. Chứng minh rằng nếu $A \subseteq B$ thì:
+   $$
+   \inf B \le \inf A \le \sup A \le \sup B.
+   $$
+2. Gọi $F$ là tập hợp tất cả các cận trên của tập con khác rỗng bị chặn trên $E \subset \mathbb{R}$. Chứng minh rằng:
+   $$
+   \inf F = \sup E.
+   $$
+3. Với số thực $r \in \mathbb{R}$, đặt $rA = \{ra \mid a \in A\}$. Chứng minh:
+   - Nếu $r \ge 0$ thì $\sup(rA) = r \sup A$ và $\inf(rA) = r \inf A$.
+   - Nếu $r < 0$ thì $\sup(rA) = r \inf A$ và $\inf(rA) = r \sup A$.
+4. Đặt $A + B = \{a + b \mid a \in A, b \in B\}$. Chứng minh:
+   $$
+   \sup(A + B) = \sup A + \sup B \quad \text{và} \quad \inf(A + B) = \inf A + \inf B.
+   $$
+</Exercise>
+
+<Solution>
+1. **Chứng minh khi $A \subseteq B$:**
+   - Với mọi $x \in A$, do $A \subseteq B$ nên $x \in B$.
+   - Vì $\sup B$ là cận trên của $B$, nên $x \le \sup B$ với mọi $x \in A$.
+     Do đó $\sup B$ là một cận trên của $A$. Theo định nghĩa cận trên nhỏ nhất, $\sup A \le \sup B$.
+   - Tương tự, $\inf B \le x$ với mọi $x \in A$, suy ra $\inf B$ là một cận dưới của $A \implies \inf B \le \inf A$.
+   - Vì $A \neq \emptyset$, lấy $x_0 \in A$ thì $\inf A \le x_0 \le \sup A$.
+   - Kết hợp lại: $\inf B \le \inf A \le \sup A \le \sup B$.
+
+2. **Chứng minh $\inf F = \sup E$:**
+   - Đặt $a = \sup E$. Theo định nghĩa, $a$ là một cận trên của $E$, do đó $a \in F$.
+   - Mặt khác, nếu $M \in F$ thì $M$ là một cận trên của $E$. Theo tính nhỏ nhất của supremum, ta có $a \le M$.
+   - Như vậy $a \in F$ và $a \le M$ với mọi $M \in F$. Do đó $a$ chính là phần tử nhỏ nhất của $F$:
+     $$
+     \inf F = \min F = a = \sup E.
+     $$
+
+3. **Tính chất phép nhân vô hướng $rA$:**
+   - *Trường hợp $r = 0$:* $0A = \{0\} \implies \sup(0A) = 0 = 0 \cdot \sup A$.
+   - *Trường hợp $r > 0$:*
+     Với mọi $x \in A$, $x \le \sup A \implies rx \le r \sup A$. Vậy $r \sup A$ là cận trên của $rA$.
+     Với $\varepsilon > 0$, xét $\varepsilon' = \frac{\varepsilon}{r} > 0$. Tồn tại $x \in A$ sao cho $x > \sup A - \varepsilon'$.
+     Nhân $r$: $rx > r \sup A - \varepsilon$. Theo đặc trưng $\varepsilon$, suy ra $\sup(rA) = r \sup A$.
+   - *Trường hợp $r < 0$:*
+     Đặt $r = -k$ với $k > 0$. Ta có $rx = -kx$.
+     Vì $\inf A \le x \le \sup A$, nhân với số âm $r < 0$ sẽ đảo chiều bất đẳng thức:
+     $$
+     r \sup A \le rx \le r \inf A.
+     $$
+     Do đó $r \inf A$ là cận trên của $rA$. Áp dụng tương tự ta được $\sup(rA) = r \inf A$ và $\inf(rA) = r \sup A$.
+
+4. **Chứng minh $\sup(A + B) = \sup A + \sup B$:**
+   - *Cận trên:* Với mọi $a \in A, b \in B$, ta có $a \le \sup A$ và $b \le \sup B$.
+     Cộng lại: $a + b \le \sup A + \sup B$. Vậy $\sup A + \sup B$ là một cận trên của $A + B$.
+     Do đó $\sup(A + B) \le \sup A + \sup B$.
+   - *Đặc trưng $\varepsilon$:* Cho $\varepsilon > 0$ tùy ý.
+     Áp dụng đặc trưng $\varepsilon$ cho $A$ với $\frac{\varepsilon}{2} > 0$: tồn tại $a_0 \in A$ sao cho $a_0 > \sup A - \frac{\varepsilon}{2}$.
+     Áp dụng cho $B$ với $\frac{\varepsilon}{2} > 0$: tồn tại $b_0 \in B$ sao cho $b_0 > \sup B - \frac{\varepsilon}{2}$.
+     Cộng lại: $a_0 + b_0 > (\sup A + \sup B) - \varepsilon$.
+     Vì $a_0 + b_0 \in A + B$, theo đặc trưng $\varepsilon$ ta suy ra $\sup(A + B) = \sup A + \sup B$.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c2-bt4" title="Bài tập 2.4: Xác định min, max, inf, sup của 6 tập hợp kinh điển">
+Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
+1. $A_1 = \{\sin x \mid x \in \mathbb{R}\}$.
+2. $A_2 = \left\{2 - \frac{1}{n} \;\middle|\; n \in \mathbb{N}\right\}$.
+3. $A_3 = \{x \in \mathbb{Q} \mid x^2 - 1 < 0\}$.
+4. $A_4 = \left\{2 + \frac{(-1)^n}{n} \;\middle|\; n \in \mathbb{N}\right\}$.
+5. $A_5 = \left\{\frac{m}{2^n + 1} \;\middle|\; m, n \in \mathbb{N}\right\}$.
+6. $A_6 = \left\{x = a + \frac{1}{a} \;\middle|\; a \in \mathbb{Q}^c, a > 0\right\}$.
+</Exercise>
+
+<Solution>
+1. **Tập $A_1 = \{\sin x \mid x \in \mathbb{R}\}$:**
+   Vì $-1 \le \sin x \le 1$ với mọi $x \in \mathbb{R}$, và $\sin(-\frac{\pi}{2}) = -1 \in A_1$, $\sin(\frac{\pi}{2}) = 1 \in A_1$.
+   Do đó:
+   $$
+   \min A_1 = \inf A_1 = -1, \quad \max A_1 = \sup A_1 = 1.
+   $$
+
+2. **Tập $A_2 = \{2 - \frac{1}{n} \mid n \in \mathbb{N}\} = \{1, \frac{3}{2}, \frac{5}{3}, \frac{7}{4}, \dots\}$:**
+   - Dãy tăng ngặt: với $n = 1$, $x_1 = 2 - 1 = 1$. Với mọi $n \ge 1$, $2 - \frac{1}{n} \ge 1$. Vì $1 \in A_2$ nên:
+     $$
+     \min A_2 = \inf A_2 = 1.
+     $$
+   - Với mọi $n \in \mathbb{N}$, $\frac{1}{n} > 0 \implies 2 - \frac{1}{n} < 2$. Do đó $2$ là một cận trên. Vì không có $n \in \mathbb{N}$ nào để $2 - \frac{1}{n} = 2$, nên $A_2$ **không có $\max$**.
+   - Chứng minh $\sup A_2 = 2$: Với mọi $\varepsilon > 0$, theo Archimedes tồn tại $n \in \mathbb{N}$ sao cho $\frac{1}{n} < \varepsilon \iff 2 - \frac{1}{n} > 2 - \varepsilon$.
+     Vậy:
+     $$
+     \sup A_2 = 2, \quad \text{không tồn tại } \max A_2.
+     $$
+
+3. **Tập $A_3 = \{x \in \mathbb{Q} \mid x^2 - 1 < 0\} = (-1, 1) \cap \mathbb{Q}$:**
+   - Tập này bị chặn dưới bởi $-1$ và bị chặn trên bởi $1$.
+   - Vì $-1, 1 \notin A_3$ nên $A_3$ **không có $\min$ và không có $\max$**.
+   - Do tính trù mật của $\mathbb{Q}$ trong $\mathbb{R}$, trong mọi khoảng $(-1, -1 + \varepsilon)$ và $(1 - \varepsilon, 1)$ luôn tồn tại số hữu tỉ. Do đó:
+     $$
+     \inf A_3 = -1, \quad \sup A_3 = 1.
+     $$
+
+4. **Tập $A_4 = \{2 + \frac{(-1)^n}{n} \mid n \in \mathbb{N}\} = \{1, 2 + \frac{1}{2}, 2 - \frac{1}{3}, 2 + \frac{1}{4}, \dots\}$:**
+   - Các phần tử với $n$ lẻ: $2 - \frac{1}{n}$ tăng dần từ $2 - 1 = 1$ lên $2$.
+     Phần tử nhỏ nhất đạt được tại $n = 1$: $x_1 = 1$. Do đó:
+     $$
+     \min A_4 = \inf A_4 = 1.
+     $$
+   - Các phần tử với $n$ chẵn: $2 + \frac{1}{n}$ giảm dần từ $2 + \frac{1}{2} = 2.5$ về $2$.
+     Phần tử lớn nhất đạt được tại $n = 2$: $x_2 = 2.5 = \frac{5}{2}$. Do đó:
+     $$
+     \max A_4 = \sup A_4 = \frac{5}{2}.
+     $$
+
+5. **Tập $A_5 = \{\frac{m}{2^n + 1} \mid m, n \in \mathbb{N}\}$:**
+   - Vì $m \ge 1$ và $2^n + 1 > 0$, mọi phần tử đều dương. Cố định $m = 1$, cho $n \to +\infty$ thì $\frac{1}{2^n + 1} \to 0$. Do đó $\inf A_5 = 0$. Vì $0 \notin A_5$ (do $m \ge 1$), nên **không có $\min$**.
+   - Cố định $n = 1$, cho $m \to +\infty$ thì $\frac{m}{3} \to +\infty$. Tập $A_5$ không bị chặn trên, do đó:
+     $$
+     \sup A_5 = +\infty, \quad \inf A_5 = 0, \quad \text{không có } \max, \min.
+     $$
+
+6. **Tập $A_6 = \{a + \frac{1}{a} \mid a \in \mathbb{Q}^c, a > 0\}$:**
+   - Theo bất đẳng thức Cauchy: $a + \frac{1}{a} \ge 2\sqrt{a \cdot \frac{1}{a}} = 2$.
+   - Dấu bằng xảy ra khi $a = 1$. Tuy nhiên $1 \in \mathbb{Q}$, trong khi điều kiện đề bài là $a \in \mathbb{Q}^c$ (số vô tỉ).
+   - Vì $a \neq 1$, ta luôn có $a + \frac{1}{a} > 2$. Do đó $A_6$ **không có $\min$**.
+   - Ta chứng minh $\inf A_6 = 2$: Chọn dãy số vô tỉ $a_k = 1 + \frac{\sqrt{2}}{k} \in \mathbb{Q}^c$ với $k \in \mathbb{N}$. Khi $k \to +\infty$, $a_k \to 1$ nên $a_k + \frac{1}{a_k} \to 2$.
+     Vậy:
+     $$
+     \inf A_6 = 2, \quad \sup A_6 = +\infty, \quad \text{không có } \min, \max.
+     $$
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c2-bt5" title="Bài tập 2.5: Quy nạp toán học và Bất đẳng thức Cauchy-Schwarz">
+1. Dùng quy nạp toán học chứng minh đẳng thức:
+   $$
+   \prod_{i=2}^n \left(1 - \frac{1}{i^2}\right) = \frac{n + 1}{2n}, \quad \forall n \ge 2.
+   $$
+2. Giả sử $r \in \mathbb{R}$ sao cho $r + \frac{1}{r} \in \mathbb{Z}$. Chứng minh bằng quy nạp mạnh rằng:
+   $$
+   r^n + \frac{1}{r^n} \in \mathbb{Z}, \quad \forall n \in \mathbb{N}.
+   $$
+3. **Chứng minh Bất đẳng thức Cauchy-Schwarz:** Cho hai bộ số thực $a_1, \dots, a_n$ và $b_1, \dots, b_n$. Chứng minh:
+   $$
+   \left(\sum_{k=1}^n a_k^2\right) \left(\sum_{k=1}^n b_k^2\right) \ge \left(\sum_{k=1}^n a_k b_k\right)^2.
+   $$
+</Exercise>
+
+<Solution>
+1. **Chứng minh $\prod_{i=2}^n (1 - \frac{1}{i^2}) = \frac{n+1}{2n}$:**
+   - Ta có $1 - \frac{1}{i^2} = \frac{i^2 - 1}{i^2} = \frac{(i - 1)(i + 1)}{i^2}$.
+   - Với $n = 2$: Vế trái là $1 - \frac{1}{4} = \frac{3}{4}$. Vế phải là $\frac{2 + 1}{2 \cdot 2} = \frac{3}{4}$ (Đúng).
+   - Giả sử đẳng thức đúng cho $n = k \ge 2$: $\prod_{i=2}^k (1 - \frac{1}{i^2}) = \frac{k+1}{2k}$.
+   - Với $n = k + 1$:
+     $$
+     \prod_{i=2}^{k+1} \left(1 - \frac{1}{i^2}\right) = \left[\prod_{i=2}^k \left(1 - \frac{1}{i^2}\right)\right] \cdot \left(1 - \frac{1}{(k+1)^2}\right) = \frac{k+1}{2k} \cdot \frac{k(k+2)}{(k+1)^2} = \frac{k+2}{2(k+1)}.
+     $$
+     Đẳng thức đúng với $k + 1$. Theo quy nạp, công thức đúng với mọi $n \ge 2$.
+
+2. **Chứng minh $r^n + \frac{1}{r^n} \in \mathbb{Z}$:**
+   - Với $n = 1$: $r + \frac{1}{r} \in \mathbb{Z}$ theo giả thiết.
+   - Với $n = 2$: $r^2 + \frac{1}{r^2} = (r + \frac{1}{r})^2 - 2 \in \mathbb{Z}$ (vì bình phương của số nguyên trừ đi $2$ là số nguyên).
+   - Giả sử khẳng định đúng cho mọi $k \le n$ ($n \ge 2$), tức là $r^k + \frac{1}{r^k} \in \mathbb{Z}$.
+   - Xét $k = n + 1$: Ta khai triển đồng nhất thức:
+     $$
+     \left(r^n + \frac{1}{r^n}\right)\left(r + \frac{1}{r}\right) = r^{n+1} + \frac{1}{r^{n-1}} + r^{n-1} + \frac{1}{r^{n+1}} = \left(r^{n+1} + \frac{1}{r^{n+1}}\right) + \left(r^{n-1} + \frac{1}{r^{n-1}}\right).
+     $$
+     Suy ra:
+     $$
+     r^{n+1} + \frac{1}{r^{n+1}} = \left(r^n + \frac{1}{r^n}\right)\left(r + \frac{1}{r}\right) - \left(r^{n-1} + \frac{1}{r^{n-1}}\right).
+     $$
+     Theo giả thiết quy nạp, $r^n + \frac{1}{r^n} \in \mathbb{Z}$, $r + \frac{1}{r} \in \mathbb{Z}$, và $r^{n-1} + \frac{1}{r^{n-1}} \in \mathbb{Z}$. Do đó hiệu của chúng cũng là một số nguyên.
+     Theo nguyên lý quy nạp mạnh, khẳng định đúng với mọi $n \in \mathbb{N}$.
+
+3. **Chứng minh Bất đẳng thức Cauchy-Schwarz:**
+   - Xét tam thức bậc hai theo biến thực $t \in \mathbb{R}$:
+     $$
+     P(t) = \sum_{k=1}^n (a_k t - b_k)^2 \ge 0, \quad \forall t \in \mathbb{R}.
+     $$
+   - Khai triển $P(t)$:
+     $$
+     P(t) = \left(\sum_{k=1}^n a_k^2\right) t^2 - 2\left(\sum_{k=1}^n a_k b_k\right) t + \left(\sum_{k=1}^n b_k^2\right) = A t^2 - 2B t + C \ge 0.
+     $$
+   - Nếu $A = \sum a_k^2 = 0$ thì mọi $a_k = 0$, bất đẳng thức trở thành $0 \ge 0$ (hiển nhiên đúng).
+   - Nếu $A > 0$: Vì tam thức bậc hai $P(t) \ge 0$ với mọi $t \in \mathbb{R}$, biệt thức thu gọn $\Delta' \le 0$:
+     $$
+     \Delta' = B^2 - AC \le 0 \iff B^2 \le AC \iff \left(\sum_{k=1}^n a_k b_k\right)^2 \le \left(\sum_{k=1}^n a_k^2\right)\left(\sum_{k=1}^n b_k^2\right).
+     $$
+     Bất đẳng thức được chứng minh.
+</Solution>
+
+---
+
+<Exercise id="exr-gthmb-c2-bt6" title="Bài tập 2.6: Chứng minh các số vô tỉ kinh điển">
+Chứng minh rằng các số sau đây đều là số vô tỉ:
+1. $\sqrt{3}$.
+2. $\sqrt{2} + \sqrt{3}$.
+3. $\log_2 3$.
+</Exercise>
+
+<Solution>
+1. **Chứng minh $\sqrt{3} \in \mathbb{Q}^c$:**
+   Giả sử phản chứng $\sqrt{3} = \frac{m}{n}$ với $m, n \in \mathbb{N}, \gcd(m, n) = 1$.
+   Bình phương hai vế: $3 = \frac{m^2}{n^2} \implies m^2 = 3n^2$.
+   - Suy ra $m^2$ chia hết cho $3$, do $3$ là số nguyên tố nên $m$ chia hết cho $3$, tức là $m = 3k$ ($k \in \mathbb{N}$).
+   - Thay vào: $(3k)^2 = 3n^2 \iff 9k^2 = 3n^2 \iff n^2 = 3k^2$.
+   - Suy ra $n^2$ chia hết cho $3 \implies n$ chia hết cho $3$.
+   Như vậy $3$ là ước chung của $m$ và $n$, mâu thuẫn với $\gcd(m, n) = 1$. Vậy $\sqrt{3}$ là số vô tỉ.
+
+2. **Chứng minh $\sqrt{2} + \sqrt{3} \in \mathbb{Q}^c$:**
+   Đặt $x = \sqrt{2} + \sqrt{3}$. Giả sử phản chứng $x \in \mathbb{Q}$.
+   Vì $\sqrt{2}, \sqrt{3} > 0$ nên $x > 0$. Bình phương hai vế:
+   $$
+   x^2 = (\sqrt{2} + \sqrt{3})^2 = 2 + 2\sqrt{6} + 3 = 5 + 2\sqrt{6} \implies \sqrt{6} = \frac{x^2 - 5}{2}.
+   $$
+   Vì $x \in \mathbb{Q}$, biểu thức $\frac{x^2 - 5}{2}$ là một số hữu tỉ. Điều này đòi hỏi $\sqrt{6} \in \mathbb{Q}$.
+   Tuy nhiên, chứng minh hoàn toàn tương tự câu 1, $\sqrt{6}$ là số vô tỉ (vì $m^2 = 6n^2 \implies 6 \mid m \implies 36k^2 = 6n^2 \implies 6 \mid n$).
+   Mâu thuẫn này chứng tỏ $\sqrt{2} + \sqrt{3}$ phải là số vô tỉ.
+
+3. **Chứng minh $\log_2 3 \in \mathbb{Q}^c$:**
+   Giả sử phản chứng $\log_2 3 \in \mathbb{Q}$.
+   Vì $3 > 1$ và $2 > 1$ nên $\log_2 3 > 0$. Do đó tồn tại các số nguyên dương $m, n \in \mathbb{N}$ sao cho:
+   $$
+   \log_2 3 = \frac{m}{n}.
+   $$
+   Theo định nghĩa logarit:
+   $$
+   2^{m/n} = 3 \iff (2^{m/n})^n = 3^n \iff 2^m = 3^n.
+   $$
+   Quan sát hai vế của phương trình:
+   - Vế trái $2^m$ là tích của các thừa số $2$, nên $2^m$ là một **số chẵn** (vì $m \ge 1$).
+   - Vế phải $3^n$ là tích của các thừa số lẻ $3$, nên $3^n$ là một **số lẻ**.
+   Một số chẵn không thể bằng một số lẻ ($2^m \neq 3^n$).
+   Mâu thuẫn này chứng minh $\log_2 3$ là số vô tỉ.
+</Solution>
+
+---
+
+## 3. Phân loại bài tập mở rộng nâng cao (*)
+
+Đối với sinh viên hướng tới điểm tuyệt đối và rèn luyện tư duy nghiên cứu, dưới đây là phương pháp tiếp cận cho 3 bài toán lớn có dấu (*):
+
+<Note title="Định hướng giải các bài toán nâng cao (*)">
+- **Bài 13b* (Bất đẳng thức AM-GM bằng quy nạp Cauchy):**
+  1. Chứng minh cho $n = 2$: $(\sqrt{a_1} - \sqrt{a_2})^2 \ge 0 \implies \frac{a_1 + a_2}{2} \ge \sqrt{a_1 a_2}$.
+  2. Quy nạp bước nhảy $2^k$: Áp dụng liên tiếp cho các cặp để chứng minh đúng với mọi lũy thừa bậc hai $n = 2^k$.
+  3. Quy nạp lùi từ $n$ về $n - 1$: Nếu đúng cho $n$, đặt $a_n = \frac{a_1 + \dots + a_{n-1}}{n-1}$ (trung bình cộng của $n-1$ số đầu), áp dụng AM-GM cho $n$ số để suy ra bất đẳng thức đúng cho $n-1$ số.
+- **Bài 17* (Dựng căn bậc $n$ của số thực dương bằng Tiên đề Supremum):**
+  Đặt $E = \{x \in \mathbb{R} \mid x \ge 0 \text{ và } x^n \le a\}$. Tập $E$ khác rỗng (chứa $0$) và bị chặn trên bởi $\max(1, a)$. Theo Tiên đề Supremum, tồn tại $b = \sup E$. Dùng bất đẳng thức Bernoulli hoặc khai triển nhị thức để bác bỏ $b^n < a$ và $b^n > a$, từ đó suy ra duy nhất $b^n = a$.
+</Note>
+
+---
+
+<KeyTakeaways title="Tóm tắt phương pháp giải bài tập Chương 2">
+- **Tìm $\sup, \inf$:** Phải kiểm tra 2 bước: chặn trên/dưới và đặc trưng $\varepsilon$ (hoặc chỉ ra phần tử thuộc tập hợp để kết luận $\max/\min$).
+- **Đại số tập hợp:** Luôn khai thác tính chất bảo toàn thứ tự: $A \subseteq B \implies \inf B \le \inf A \le \sup A \le \sup B$.
+- **Quy nạp toán học:** Chú ý kỹ thuật quy nạp mạnh khi số hạng thứ $n+1$ phụ thuộc vào nhiều số hạng trước (như bài toán $r^n + \frac{1}{r^n}$).
+- **Chứng minh số vô tỉ:** Phương pháp phản chứng kết hợp tính chẵn lẻ hoặc định lý cơ bản của số học (tính duy nhất của phân tích thừa số nguyên tố).
+</KeyTakeaways>

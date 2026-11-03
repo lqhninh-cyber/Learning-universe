@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T13:04:27.052Z",
+  "updatedAt": "2026-11-03T13:16:49.064Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1455,6 +1455,71 @@
         "exr-gthmb-c1-bt7": "1.4.7",
         "exr-gthmb-c1-bt8": "1.4.8",
         "exr-gthmb-c1-bt9": "1.4.9"
+      }
+    },
+    "he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r": {
+      "path": "content/single-variable-calculus/02-tap-hop-so-thuc/01-he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "2f631e4152b7a3a90dac6cf8723b346d3aa19a0033c6dbdbafd996ea8f85c9ae",
+      "numberedBlocks": {
+        "def-gthmb-c2-b1-tien-de-dai-so": "2.1.1",
+        "prop-gthmb-c2-b1-tinh-chat-dai-so-co-ban": "2.1.2",
+        "def-gthmb-c2-b1-tien-de-thu-tu": "2.1.3",
+        "thm-gthmb-c2-b1-luat-tam-phan": "2.1.4",
+        "cor-gthmb-c2-b1-quy-tac-bat-dang-thuc": "2.1.5",
+        "ex-gthmb-c2-b1-chung-minh-0-nho-hon-1": "2.1.1",
+        "def-gthmb-c2-b1-khoang-so-thuc": "2.1.6",
+        "def-gthmb-c2-b1-gia-tri-tuyet-doi": "2.1.7",
+        "prop-gthmb-c2-b1-tinh-chat-gia-tri-tuyet-doi": "2.1.8"
+      }
+    },
+    "can-tren-can-duoi-supremum-infimum-va-tien-de-day-du": {
+      "path": "content/single-variable-calculus/02-tap-hop-so-thuc/02-can-tren-can-duoi-supremum-infimum-va-tien-de-day-du.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "866c1ef27fdcf636940a101a9f00e516f4b8ab7835e595e19d82737d5d9aa910",
+      "numberedBlocks": {
+        "def-gthmb-c2-b2-tap-bi-chan": "2.2.1",
+        "def-gthmb-c2-b2-max-min": "2.2.2",
+        "def-gthmb-c2-b2-supremum-infimum": "2.2.3",
+        "ex-gthmb-c2-b2-vi-du-sup-inf": "2.2.1",
+        "prop-gthmb-c2-b2-dac-trung-epsilon-sup-inf": "2.2.4",
+        "thm-gthmb-c2-b2-tien-de-day-du": "2.2.5",
+        "thm-gthmb-c2-b2-dinh-ly-infimum": "2.2.6"
+      }
+    },
+    "nguyen-ly-quy-nap-archimedes-va-tinh-tru-mat": {
+      "path": "content/single-variable-calculus/02-tap-hop-so-thuc/03-nguyen-ly-quy-nap-archimedes-va-tinh-tru-mat.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "2df3c63304d8fa07e548df107c5d9f0b543d1d635923ceb3778d71cb6a51ec62",
+      "numberedBlocks": {
+        "thm-gthmb-c2-b3-nguyen-ly-thu-tu-tot": "2.3.1",
+        "thm-gthmb-c2-b3-nguyen-ly-quy-nap": "2.3.2",
+        "ex-gthmb-c2-b3-bat-dang-thuc-bernoulli": "2.3.1",
+        "thm-gthmb-c2-b3-tap-n-khong-bi-chan": "2.3.3",
+        "thm-gthmb-c2-b3-nguyen-ly-archimedes": "2.3.4",
+        "cor-gthmb-c2-b3-he-qua-archimedes": "2.3.5",
+        "prop-gthmb-c2-b3-ton-tai-can-hai": "2.3.6",
+        "prop-gthmb-c2-b3-can-hai-la-vo-ti": "2.3.7",
+        "def-gthmb-c2-b3-dinh-nghia-tru-mat": "2.3.8",
+        "thm-gthmb-c2-b3-tinh-tru-mat-cua-q": "2.3.9",
+        "thm-gthmb-c2-b3-tinh-tru-mat-cua-vo-ti": "2.3.10"
+      }
+    },
+    "he-thong-bai-tap-chuong-2-va-loi-giai-chuan": {
+      "path": "content/single-variable-calculus/02-tap-hop-so-thuc/04-he-thong-bai-tap-chuong-2-va-loi-giai-chuan.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "13d0b50882ac0ba557c6338a2dbc883d704feee7b63605f69ddee21e03d02f66",
+      "numberedBlocks": {
+        "exr-gthmb-c2-bt1": "2.4.1",
+        "exr-gthmb-c2-bt2": "2.4.2",
+        "exr-gthmb-c2-bt3": "2.4.3",
+        "exr-gthmb-c2-bt4": "2.4.4",
+        "exr-gthmb-c2-bt5": "2.4.5",
+        "exr-gthmb-c2-bt6": "2.4.6"
       }
     }
   }

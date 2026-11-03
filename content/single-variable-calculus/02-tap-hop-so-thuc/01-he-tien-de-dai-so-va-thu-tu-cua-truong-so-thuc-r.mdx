@@ -1,0 +1,281 @@
+---
+id: he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r
+title: 'Hệ tiên đề đại số và thứ tự của trường số thực R'
+description: 'Hệ thống 9 tiên đề đại số, 2 tiên đề thứ tự, trật tự toàn phần trên R, chứng minh các định lý đại số cơ bản, định lý 0 < 1, các tính chất bất đẳng thức và định nghĩa giá trị tuyệt đối.'
+estimatedMinutes: 35
+level: basic
+prerequisites:
+  - tap-hop-va-cac-phep-toan-tren-tap-hop
+  - menh-de-logic-va-cac-luong-tu
+tags:
+  - số thực
+  - tiên đề đại số
+  - tiên đề thứ tự
+  - trường sắp thứ tự
+  - bất đẳng thức
+  - giá trị tuyệt đối
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '9-14'
+    sections: 'Mục 2.1.1, 2.1.2'
+    note: 'Hệ tiên đề đại số, tiên đề thứ tự, định lý và giá trị tuyệt đối'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu phương pháp tiên đề hóa trường số thực:** Nắm vững cấu trúc đại số của $\mathbb{R}$ thông qua 9 tiên đề trường (4 tiên đề phép cộng, 4 tiên đề phép nhân, 1 tiên đề phân phối).
+2. **Chứng minh các quy tắc đại số từ hệ tiên đề:** Rèn luyện phương pháp suy diễn hình thức để chứng minh tính duy nhất của phần tử không ($0$), đơn vị ($1$), quy tắc nhân với không ($0 \cdot x = 0$) và quy tắc dấu $(-x = (-1)x, (-x)(-y) = xy$).
+3. **Làm chủ cấu trúc trường sắp thứ tự:** Phát biểu chính xác 2 tiên đề thứ tự (Tiên đề 10 & 11), luật tam phân (Định lý 2.1.5) và chứng minh định lý kinh điển $0 < 1$.
+4. **Vận dụng các tính chất của giá trị tuyệt đối:** Nắm vững định nghĩa $|x|$, bất đẳng thức tam giác và mối liên hệ tương đương với các khoảng lân cận đối xứng $|x - a| < \varepsilon$.
+</Note>
+
+## 1. Phương pháp tiếp cận tiên đề hóa tập hợp số thực
+
+Trong lịch sử toán học, tập hợp các số thực $\mathbb{R}$ có thể được xây dựng tường minh từ tập số hữu tỉ $\mathbb{Q}$ thông qua *lát cắt Dedekind* hoặc *dãy Cauchy* các số hữu tỉ. Tuy nhiên, trong Giải tích hiện đại, phương pháp hiệu quả và trang nhã nhất là **tiên đề hóa**: ta coi $\mathbb{R}$ là một tập hợp mang hai phép toán hai ngôi (phép cộng $+$, phép nhân $\cdot$) và một quan hệ thứ tự ($\le$) thỏa mãn 12 tiên đề cốt lõi (<Cite source="gt-gthmb-ttd-2022" page="9" note="Mục 2.1" />).
+
+---
+
+## 2. Hệ 9 tiên đề đại số của trường số thực
+
+Tập hợp $\mathbb{R}$ cùng với phép cộng $(+)$ và phép nhân $(\cdot)$ lập thành một **trường đại số** (*field*), thỏa mãn 9 tiên đề sau (<Cite source="gt-gthmb-ttd-2022" page="9-10" note="Mục 2.1.1" />):
+
+<Definition
+  id="def-gthmb-c2-b1-tien-de-dai-so"
+  title="9 Tiên đề đại số của trường số thực"
+  source="gt-gthmb-ttd-2022"
+  page="9-10"
+  original="Mục 2.1.1"
+>
+Cho tập hợp $\mathbb{R}$ với hai phép toán cộng $+: \mathbb{R} \times \mathbb{R} \to \mathbb{R}$ và nhân $\cdot: \mathbb{R} \times \mathbb{R} \to \mathbb{R}$.
+
+**Nhóm I: Các tiên đề của phép cộng (+)**
+1. **Giao hoán:** $\forall x, y \in \mathbb{R}: x + y = y + x$.
+2. **Kết hợp:** $\forall x, y, z \in \mathbb{R}: (x + y) + z = x + (y + z)$.
+3. **Phần tử đơn vị cộng (Phần tử không):** Tồn tại phần tử $0 \in \mathbb{R}$ sao cho:
+   $$
+   0 + x = x, \quad \forall x \in \mathbb{R}.
+   $$
+4. **Phần tử đối:** Với mỗi $x \in \mathbb{R}$, tồn tại phần tử đối ký hiệu là $-x \in \mathbb{R}$ sao cho:
+   $$
+   x + (-x) = 0.
+   $$
+
+**Nhóm II: Các tiên đề của phép nhân ($\cdot$)**
+5. **Giao hoán:** $\forall x, y \in \mathbb{R}: xy = yx$.
+6. **Kết hợp:** $\forall x, y, z \in \mathbb{R}: (xy)z = x(yz)$.
+7. **Phần tử đơn vị nhân:** Tồn tại phần tử $1 \in \mathbb{R}$ với **$1 \neq 0$** sao cho:
+   $$
+   1 \cdot x = x, \quad \forall x \in \mathbb{R}.
+   $$
+8. **Phần tử nghịch đảo:** Với mỗi $x \in \mathbb{R}$ mà $x \neq 0$, tồn tại phần tử nghịch đảo ký hiệu là $x^{-1}$ (hoặc $\frac{1}{x}$) sao cho:
+   $$
+   x \cdot x^{-1} = 1.
+   $$
+
+**Nhóm III: Tính phân phối**
+9. **Phân phối của phép nhân đối với phép cộng:**
+   $$
+   x(y + z) = xy + xz, \quad \forall x, y, z \in \mathbb{R}.
+   $$
+</Definition>
+
+<Remark title="Tính duy nhất của phần tử đơn vị và nghịch đảo">
+Từ 9 tiên đề trên, ta chứng minh được ngay:
+- Phần tử $0$ và phần tử $1$ là **duy nhất**: Nếu có $0'$ thỏa mãn $0' + x = x$ thì $0 = 0' + 0 = 0 + 0' = 0'$.
+- Phần tử đối $-x$ và phần tử nghịch đảo $x^{-1}$ (khi $x \neq 0$) là **xác định duy nhất** với mỗi $x$.
+- Phép trừ được định nghĩa qua phép cộng: $x - y := x + (-y)$. Phép chia được định nghĩa qua phép nhân: $\frac{x}{y} := x \cdot y^{-1}$ (với $y \neq 0$).
+</Remark>
+
+<Proposition
+  id="prop-gthmb-c2-b1-tinh-chat-dai-so-co-ban"
+  title="Các hệ quả đại số cơ bản"
+  source="gt-gthmb-ttd-2022"
+  page="10"
+  original="Mệnh đề 2.1.3"
+>
+Từ 9 tiên đề đại số, với mọi $x, y \in \mathbb{R}$, ta luôn có:
+1. $0 \cdot x = x \cdot 0 = 0$.
+2. Nếu $xy = 0$ thì $x = 0$ hoặc $y = 0$.
+3. $-x = (-1)x$.
+4. $-(-x) = x$.
+5. $(-x)y = -(xy) = x(-y)$ và $(-x)(-y) = xy$.
+</Proposition>
+
+<Proof title="Chứng minh quy tắc 0 · x = 0 và quy tắc dấu">
+- Để chứng minh $0 \cdot x = 0$: Theo Tiên đề 3 ta có $0 + 0 = 0$. Nhân cả hai vế với $x$ và dùng tính phân phối:
+  $$
+  0 \cdot x = (0 + 0) \cdot x = 0 \cdot x + 0 \cdot x.
+  $$
+  Cộng phần tử đối $-(0 \cdot x)$ vào cả hai vế:
+  $$
+  0 = 0 \cdot x + (-(0 \cdot x)) = (0 \cdot x + 0 \cdot x) + (-(0 \cdot x)) = 0 \cdot x + (0 \cdot x + (-(0 \cdot x))) = 0 \cdot x + 0 = 0 \cdot x.
+  $$
+- Để chứng minh $-x = (-1)x$: Ta kiểm tra xem $(-1)x + x$ có bằng $0$ hay không:
+  $$
+  (-1)x + x = (-1)x + 1 \cdot x = (-1 + 1)x = 0 \cdot x = 0.
+  $$
+  Do phần tử đối của $x$ là duy nhất, bắt buộc $-x = (-1)x$.
+- Từ đó: $(-x)(-y) = [(-1)x][(-1)y] = [(-1)(-1)](xy) = 1(xy) = xy$.
+</Proof>
+
+---
+
+## 3. Các tiên đề thứ tự và trật tự toàn phần trên $\mathbb{R}$
+
+Ngoài cấu trúc đại số, trên tập số thực $\mathbb{R}$ còn có quan hệ thứ tự toàn phần $\le$ tương thích chặt chẽ với phép cộng và phép nhân (<Cite source="gt-gthmb-ttd-2022" page="10-12" note="Mục 2.1.2" />).
+
+<Definition
+  id="def-gthmb-c2-b1-tien-de-thu-tu"
+  title="Hai tiên đề thứ tự của trường số thực"
+  source="gt-gthmb-ttd-2022"
+  page="10"
+  original="Mục 2.1.2"
+>
+Trên $\mathbb{R}$ có quan hệ thứ tự $\le$ (thỏa mãn tính phản xạ, phản đối xứng và bắc cầu) cùng hai tiên đề tương thích:
+
+10. **Tương thích với phép cộng:**
+    $$
+    x \le y \implies x + z \le y + z, \quad \forall z \in \mathbb{R}.
+    $$
+11. **Tương thích với phép nhân số không âm:**
+    $$
+    (0 \le x \quad \text{và} \quad 0 \le y) \implies 0 \le xy.
+    $$
+
+Ta quy ước viết $x < y$ nếu $x \le y$ và $x \neq y$. Khi $x > 0$, ta gọi $x$ là **số thực dương**; khi $x < 0$, ta gọi $x$ là **số thực âm**.
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c2-b1-luat-tam-phan"
+  title="Luật tam phân và tính trật tự toàn phần"
+  source="gt-gthmb-ttd-2022"
+  page="11"
+  original="Định lý 2.1.5"
+>
+Với mọi cặp số thực $x, y \in \mathbb{R}$, **chỉ có duy nhất một trong ba khả năng** sau đây xảy ra:
+$$
+x < y, \quad x = y, \quad \text{hoặc} \quad y < x.
+$$
+Do đó, $\mathbb{R}$ là một **trường sắp thứ tự toàn phần**.
+</Theorem>
+
+<Corollary
+  id="cor-gthmb-c2-b1-quy-tac-bat-dang-thuc"
+  title="Các quy tắc bất đẳng thức cơ bản"
+  source="gt-gthmb-ttd-2022"
+  page="11"
+  original="Hệ quả 2.1.6"
+>
+Cho $x, y, z \in \mathbb{R}$. Khi đó:
+1. $x < y \iff x + z < y + z$.
+2. $x < y \iff -y < -x$.
+3. Nếu $0 < z$ thì: $x < y \iff xz < yz$ (nhân với số dương giữ nguyên chiều).
+4. Nếu $z < 0$ thì: $x < y \iff xz > yz$ (nhân với số âm đảo chiều bất đẳng thức).
+5. Nếu $x \neq 0$ thì $x^2 > 0$.
+</Corollary>
+
+<Example id="ex-gthmb-c2-b1-chung-minh-0-nho-hon-1" title="Chứng minh chặt chẽ định lý 0 < 1">
+Chứng minh rằng trong trường số thực $\mathbb{R}$, ta luôn có $0 < 1$ (<Cite source="gt-gthmb-ttd-2022" page="12" note="Ví dụ 2.1.7" />).
+
+**Chứng minh:**
+Theo Tiên đề 7, ta có $1 \neq 0$. Do đó theo Luật tam phân (Định lý 2.1.5), chỉ có hai khả năng: hoặc $0 < 1$, hoặc $1 < 0$.
+- Giả sử phản chứng rằng $1 < 0$.
+- Nhân cả hai vế với số âm $1$ (theo Hệ quả 2.1.6, nhân số âm sẽ đảo chiều bất đẳng thức):
+  $$
+  1 \cdot 1 > 0 \cdot 1 \implies 1 > 0 \iff 0 < 1.
+  $$
+  Điều này dẫn đến mâu thuẫn trực tiếp với giả thiết phản chứng $1 < 0$.
+- Vậy khả năng $1 < 0$ không thể xảy ra. Bắt buộc phải có $0 < 1$.
+</Example>
+
+---
+
+## 4. Định nghĩa khoảng số và giá trị tuyệt đối
+
+<Definition
+  id="def-gthmb-c2-b1-khoang-so-thuc"
+  title="Các loại khoảng số thực"
+  source="gt-gthmb-ttd-2022"
+  page="12-13"
+  original="Định nghĩa 2.1.9"
+>
+Cho $a, b \in \mathbb{R}$ với $a \le b$.
+- **Khoảng mở:** $(a, b) = \{x \in \mathbb{R} \mid a < x < b\}$.
+- **Đoạn (khoảng đóng):** $[a, b] = \{x \in \mathbb{R} \mid a \le x \le b\}$.
+- **Nửa khoảng:** $[a, b) = \{x \in \mathbb{R} \mid a \le x < b\}$ và $(a, b] = \{x \in \mathbb{R} \mid a < x \le b\}$.
+- **Khoảng vô hạn:** $(a, +\infty) = \{x \in \mathbb{R} \mid x > a\}$, $(-\infty, b) = \{x \in \mathbb{R} \mid x < b\}$, và $(-\infty, +\infty) = \mathbb{R}$.
+</Definition>
+
+<Definition
+  id="def-gthmb-c2-b1-gia-tri-tuyet-doi"
+  title="Giá trị tuyệt đối của một số thực"
+  source="gt-gthmb-ttd-2022"
+  page="13"
+  original="Định nghĩa 2.1.12"
+>
+Với mỗi số thực $x \in \mathbb{R}$, **giá trị tuyệt đối** (*absolute value*) của $x$, ký hiệu là $|x|$, được định nghĩa bởi:
+$$
+|x| := \begin{cases}
+x & \text{nếu } x \ge 0, \\
+-x & \text{nếu } x < 0.
+\end{cases}
+$$
+Ý nghĩa hình học: $|x|$ chính là khoảng cách từ điểm biểu diễn số $x$ đến gốc tọa độ $0$ trên trục số thực; và $|x - y|$ là khoảng cách Euclid giữa hai điểm $x$ và $y$.
+</Definition>
+
+<Proposition
+  id="prop-gthmb-c2-b1-tinh-chat-gia-tri-tuyet-doi"
+  title="Các tính chất và bất đẳng thức tam giác của giá trị tuyệt đối"
+  source="gt-gthmb-ttd-2022"
+  page="13-14"
+  original="Mệnh đề 2.1.13"
+>
+Với mọi số thực $x, y \in \mathbb{R}$, ta luôn có:
+1. $|x| \ge 0$ và $|x| = 0 \iff x = 0$.
+2. $|-x| = |x|$ và $-|x| \le x \le |x|$.
+3. $|xy| = |x| \cdot |y|$. Nếu $y \neq 0$ thì $\left|\frac{x}{y}\right| = \frac{|x|}{|y|}$.
+4. **Bất đẳng thức tam giác:**
+   $$
+   |x + y| \le |x| + |y|.
+   $$
+5. **Bất đẳng thức tam giác đảo:**
+   $$
+   |x - y| \ge ||x| - |y||.
+   $$
+6. **Mối liên hệ với khoảng đối xứng:** Với $\varepsilon > 0$:
+   $$
+   |x - a| < \varepsilon \iff a - \varepsilon < x < a + \varepsilon \iff x \in (a - \varepsilon, a + \varepsilon).
+   $$
+</Proposition>
+
+<Proof title="Chứng minh bất đẳng thức tam giác">
+Từ tính chất $-|x| \le x \le |x|$ và $-|y| \le y \le |y|$, cộng từng vế của hai bất đẳng thức:
+$$
+-(|x| + |y|) \le x + y \le |x| + |y|.
+$$
+Theo tính chất khoảng đối xứng, điều này tương đương với:
+$$
+|x + y| \le |x| + |y|.
+$$
+Để chứng minh bất đẳng thức đảo: $|x| = |(x - y) + y| \le |x - y| + |y| \implies |x| - |y| \le |x - y|$. Đổi vai trò $x$ và $y$ ta được $|y| - |x| \le |y - x| = |x - y| \implies -(|x| - |y|) \le |x - y|$. Từ đó suy ra $||x| - |y|| \le |x - y|$.
+</Proof>
+
+---
+
+<KeyTakeaways title="Tóm tắt trọng tâm bài 2.1">
+- **Trường số thực $\mathbb{R}$:** Thỏa mãn 9 tiên đề đại số; phần tử $0$, $1$ và phần tử đối, nghịch đảo là xác định duy nhất.
+- **Tiên đề thứ tự & Luật tam phân:** Với hai số thực bất kỳ, luôn có đúng một trong ba trường hợp $x < y$, $x = y$, $x > y$.
+- **Định lý $0 < 1$:** Hệ quả trực tiếp từ luật tam phân và tính chất bình phương số khác không luôn dương.
+- **Giá trị tuyệt đối & Bất đẳng thức tam giác:** $|x + y| \le |x| + |y|$ và $|x - a| < \varepsilon \iff a - \varepsilon < x < a + \varepsilon$.
+</KeyTakeaways>

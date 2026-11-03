@@ -6,4 +6,5 @@ export { AffinePlane, type AffinePlaneProps } from './AffinePlane';
 export { Barycenter, type BarycenterProps } from './Barycenter';
 export { DraggablePoint, type DraggablePointProps, type PointTone } from './DraggablePoint';
 export { Parallelogram, type ParallelogramProps } from './Parallelogram';
+export { SupremumEpsilonDemo, type SupremumEpsilonDemoProps } from './SupremumEpsilonDemo';
 export { VectorArrow, type VectorArrowProps, type VectorTone } from './VectorArrow';

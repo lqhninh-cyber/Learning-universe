@@ -1,0 +1,324 @@
+---
+id: nguyen-ly-quy-nap-archimedes-va-tinh-tru-mat
+title: 'Nguyên lý Quy nạp, Nguyên lý Archimedes và tính trù mật'
+description: 'Nguyên lý sắp thứ tự tốt trên N, nguyên lý quy nạp toán học, bất đẳng thức Bernoulli, nguyên lý Archimedes, sự tồn tại căn bậc hai của 2 và tính trù mật của tập số hữu tỉ Q và tập số vô tỉ Q^c trong R.'
+estimatedMinutes: 40
+level: basic
+prerequisites:
+  - he-tien-de-dai-so-va-thu-tu-cua-truong-so-thuc-r
+  - can-tren-can-duoi-supremum-infimum-va-tien-de-day-du
+tags:
+  - nguyên lý thứ tự tốt
+  - quy nạp toán học
+  - bất đẳng thức Bernoulli
+  - nguyên lý Archimedes
+  - số vô tỉ
+  - tính trù mật
+  - số hữu tỉ
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '17-21'
+    sections: 'Mục 2.2.1, 2.2.2'
+    note: 'Quy nạp toán học, nguyên lý Archimedes, số vô tỉ và tính trù mật của Q và Q^c'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-03'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu bài học">
+Sau khi hoàn thành bài học này, bạn có thể:
+
+1. **Hiểu sâu sắc các nguyên lý trên tập số tự nhiên $\mathbb{N}$:** Nắm vững mối quan hệ giữa Nguyên lý sắp thứ tự tốt và Nguyên lý quy nạp toán học; vận dụng thành thạo quy nạp để chứng minh đẳng thức và bất đẳng thức Bernoulli.
+2. **Làm chủ Nguyên lý Archimedes:** Chứng minh tập số tự nhiên $\mathbb{N}$ không bị chặn trên trong $\mathbb{R}$, từ đó phát biểu và vận dụng nguyên lý Archimedes ($\forall a > 0, b \in \mathbb{R}, \exists n \in \mathbb{N}: na > b$).
+3. **Hiểu bản chất của phép lấy phần nguyên:** Chứng minh sự tồn tại duy nhất của số nguyên $[x]$ kẹp giữa $x - 1 < [x] \le x$ làm cơ sở cho giải tích xấp xỉ.
+4. **Nắm vững tính trù mật của $\mathbb{Q}$ và $\mathbb{Q}^c$ trong $\mathbb{R}$:** Chứng minh giữa hai số thực phân biệt bất kỳ luôn tìm được ít nhất một số hữu tỉ và một số vô tỉ, xây dựng bức tranh vi mô đan xen dày đặc của trường số thực.
+</Note>
+
+## 1. Các nguyên lý cơ bản trên tập số tự nhiên $\mathbb{N}$
+
+Tập hợp các số tự nhiên $\mathbb{N} = \{1, 2, 3, \dots\}$ được trang bị một cấu trúc thứ tự đặc biệt là nền tảng cho mọi phương pháp quy nạp trong toán học (<Cite source="gt-gthmb-ttd-2022" page="17-18" note="Mục 2.2.1" />).
+
+<Theorem
+  id="thm-gthmb-c2-b3-nguyen-ly-thu-tu-tot"
+  title="Nguyên lý sắp thứ tự tốt (Well-ordering Principle)"
+  source="gt-gthmb-ttd-2022"
+  page="17"
+  original="Định lý 2.2.1"
+>
+**Mọi tập con khác rỗng của tập số tự nhiên $\mathbb{N}$ đều có phần tử nhỏ nhất.**
+$$
+(\emptyset \neq E \subseteq \mathbb{N}) \implies \exists m \in E: m \le x, \quad \forall x \in E.
+$$
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c2-b3-nguyen-ly-quy-nap"
+  title="Nguyên lý quy nạp toán học"
+  source="gt-gthmb-ttd-2022"
+  page="17"
+  original="Định lý 2.2.2"
+>
+Cho $E$ là một tập con của $\mathbb{N}$ thỏa mãn hai tính chất:
+1. $1 \in E$.
+2. Với mọi số tự nhiên $n$, nếu $n \in E$ thì $n + 1 \in E$.
+
+Khi đó, **$E = \mathbb{N}$**.
+</Theorem>
+
+<Proof title="Chứng minh Nguyên lý quy nạp từ Nguyên lý sắp thứ tự tốt">
+Giả sử phản chứng rằng $E \neq \mathbb{N}$. Khi đó tập phần bù $E^c = \mathbb{N} \setminus E$ là một tập con **khác rỗng** của $\mathbb{N}$.
+Theo Nguyên lý sắp thứ tự tốt (Định lý 2.2.1), tập $E^c$ có phần tử nhỏ nhất, ký hiệu là $m_0 \in E^c$.
+- Vì theo giả thiết (1), $1 \in E$, nên $1 \notin E^c$. Do đó phần tử nhỏ nhất $m_0 > 1$, kéo theo $m_0 \ge 2$.
+- Vì $m_0 \ge 2$, ta xét số tự nhiên liền trước $n_0 = m_0 - 1 \in \mathbb{N}$.
+  Rõ ràng $n_0 < m_0$. Vì $m_0$ là số *nhỏ nhất* trong $E^c$, bắt buộc số nhỏ hơn nó $n_0$ không thể nằm trong $E^c$, tức là $n_0 \in E$.
+- Nhưng theo giả thiết (2), vì $n_0 \in E$ nên $n_0 + 1 \in E \iff (m_0 - 1) + 1 = m_0 \in E$.
+  Điều này mâu thuẫn trực tiếp với việc $m_0 \in E^c$.
+Vậy giả thiết phản chứng là sai. Ta phải có $E = \mathbb{N}$.
+</Proof>
+
+<Example id="ex-gthmb-c2-b3-bat-dang-thuc-bernoulli" title="Chứng minh Bất đẳng thức Bernoulli bằng quy nạp">
+Chứng minh rằng với mọi số thực $x > -1$ và mọi số tự nhiên $n \in \mathbb{N}$ (<Cite source="gt-gthmb-ttd-2022" page="18" note="Ví dụ 2.2.4" />):
+$$
+(1 + x)^n \ge 1 + nx.
+$$
+
+**Chứng minh:**
+- Với $n = 1$: Vế trái là $(1 + x)^1 = 1 + x$, vế phải là $1 + 1 \cdot x = 1 + x$. Bất đẳng thức trở thành đẳng thức $1 + x \ge 1 + x$ (Đúng).
+- Giả sử bất đẳng thức đúng cho số tự nhiên $k \ge 1$, tức là:
+  $$
+  (1 + x)^k \ge 1 + kx.
+  $$
+- Ta cần chứng minh bất đẳng thức đúng cho $k + 1$: $(1 + x)^{k+1} \ge 1 + (k + 1)x$.
+  Thật vậy, vì $x > -1$ nên $1 + x > 0$. Nhân cả hai vế của giả thiết quy nạp với số dương $(1 + x)$:
+  $$
+  (1 + x)^{k+1} = (1 + x)^k(1 + x) \ge (1 + kx)(1 + x) = 1 + x + kx + kx^2 = 1 + (k + 1)x + kx^2.
+  $$
+  Vì $k \ge 1$ và $x^2 \ge 0$, ta có $kx^2 \ge 0$. Do đó:
+  $$
+  1 + (k + 1)x + kx^2 \ge 1 + (k + 1)x.
+  $$
+  Suy ra $(1 + x)^{k+1} \ge 1 + (k + 1)x$.
+- Theo nguyên lý quy nạp, bất đẳng thức Bernoulli đúng với mọi $n \in \mathbb{N}$.
+</Example>
+
+---
+
+## 2. Nguyên lý Archimedes
+
+Nguyên lý Archimedes là công cụ nền tảng cho phép "kéo dãn" các khoảng số thực cực nhỏ lên độ dài tùy ý bằng các bội số nguyên (<Cite source="gt-gthmb-ttd-2022" page="18-19" note="Mục 2.2.1" />).
+
+<Theorem
+  id="thm-gthmb-c2-b3-tap-n-khong-bi-chan"
+  title="Tập số tự nhiên N không bị chặn trên trong R"
+  source="gt-gthmb-ttd-2022"
+  page="18"
+  original="Định lý 2.2.6"
+>
+**Tập các số tự nhiên $\mathbb{N}$ không bị chặn trên trong $\mathbb{R}$.**
+</Theorem>
+
+<Proof title="Chứng minh Định lý 2.2.6 bằng Tiên đề Supremum">
+Giả sử phản chứng rằng $\mathbb{N}$ bị chặn trên trong $\mathbb{R}$.
+Vì $\mathbb{N} \neq \emptyset$, theo Tiên đề đầy đủ 12 (Nguyên lý Supremum), tồn tại số thực:
+$$
+a = \sup \mathbb{N} \in \mathbb{R}.
+$$
+- Áp dụng đặc trưng $\varepsilon$ của Supremum (Mệnh đề 2.1.20) với $\varepsilon = 1 > 0$:
+  Tồn tại một số tự nhiên $n_0 \in \mathbb{N}$ sao cho:
+  $$
+  n_0 > a - 1 \iff n_0 + 1 > a.
+  $$
+- Nhưng vì $n_0 \in \mathbb{N}$ nên $n_0 + 1$ cũng là một số tự nhiên ($n_0 + 1 \in \mathbb{N}$).
+  Điều này dẫn đến $n_0 + 1 > a = \sup \mathbb{N}$, mâu thuẫn trực tiếp với việc $a$ là cận trên của $\mathbb{N}$!
+Vậy giả thiết phản chứng là sai. Tập $\mathbb{N}$ không thể bị chặn trên trong $\mathbb{R}$.
+</Proof>
+
+<Theorem
+  id="thm-gthmb-c2-b3-nguyen-ly-archimedes"
+  title="Nguyên lý Archimedes (Archimedean Property)"
+  source="gt-gthmb-ttd-2022"
+  page="19"
+  original="Định lý 2.2.7"
+>
+**Với mọi số thực $a > 0$ và mọi số thực $b \in \mathbb{R}$, luôn tồn tại một số tự nhiên $n \in \mathbb{N}$ sao cho:**
+$$
+na > b.
+$$
+</Theorem>
+
+<Proof title="Chứng minh Nguyên lý Archimedes">
+Vì $a > 0$, ta xét thương số $\frac{b}{a} \in \mathbb{R}$.
+Theo Định lý 2.2.6, tập $\mathbb{N}$ không bị chặn trên bởi số thực $\frac{b}{a}$. Do đó tồn tại một số tự nhiên $n \in \mathbb{N}$ sao cho:
+$$
+n > \frac{b}{a}.
+$$
+Nhân cả hai vế với số dương $a > 0$, ta được ngay $na > b$.
+</Proof>
+
+<Corollary
+  id="cor-gthmb-c2-b3-he-qua-archimedes"
+  title="Các hệ quả kinh điển của Nguyên lý Archimedes"
+  source="gt-gthmb-ttd-2022"
+  page="19-20"
+  original="Hệ quả Archimedes & Bài tập 14"
+>
+1. **Dãy phân số tiến về 0:** Với mọi số thực $\varepsilon > 0$, luôn tồn tại $n \in \mathbb{N}$ sao cho:
+   $$
+   \frac{1}{n} < \varepsilon.
+   $$
+   (Áp dụng Archimedes với $a = \varepsilon, b = 1$).
+2. **Sự tồn tại của phần nguyên:** Với mọi số thực $x \in \mathbb{R}$, tồn tại **duy nhất** một số nguyên $k \in \mathbb{Z}$ sao cho:
+   $$
+   k \le x < k + 1 \quad (\text{hoặc tương đương } x - 1 < k \le x).
+   $$
+   Số nguyên $k$ này được gọi là **phần nguyên** (*integer part / floor*) của $x$, ký hiệu là $[x]$ hoặc $\lfloor x \rfloor$.
+</Corollary>
+
+---
+
+## 3. Sự tồn tại số vô tỉ và sự thiếu hụt của trường số hữu tỉ $\mathbb{Q}$
+
+Trường số hữu tỉ $\mathbb{Q}$ tuy trù mật nhưng không có tính đầy đủ vì không chứa các căn số bậc hai (<Cite source="gt-gthmb-ttd-2022" page="19-20" note="Mục 2.2.2" />).
+
+<Proposition
+  id="prop-gthmb-c2-b3-ton-tai-can-hai"
+  title="Sự tồn tại của căn bậc hai của 2 trong R"
+  source="gt-gthmb-ttd-2022"
+  page="19"
+  original="Mệnh đề 2.2.9"
+>
+Tồn tại duy nhất một số thực dương $x > 0$ sao cho:
+$$
+x^2 = 2.
+$$
+Số thực đó được ký hiệu là $\sqrt{2}$.
+</Proposition>
+
+<Proof title="Ý tưởng chứng minh bằng Nguyên lý Supremum">
+Xét tập hợp $E = \{t \in \mathbb{R} \mid t > 0 \text{ và } t^2 < 2\}$.
+- $E \neq \emptyset$ vì $1 \in E$. $E$ bị chặn trên bởi $2$ (vì nếu $t > 2$ thì $t^2 > 4 > 2 \implies t \notin E$).
+- Theo Tiên đề Supremum, tồn tại $x = \sup E \in \mathbb{R}$.
+- Dùng luật tam phân: chứng minh rằng cả hai khả năng $x^2 > 2$ và $x^2 < 2$ đều dẫn tới mâu thuẫn bằng cách chọn số tự nhiên $n$ thích hợp theo Archimedes sao cho $(x - \frac{1}{n})^2 > 2$ hoặc $(x + \frac{1}{n})^2 < 2$. Do đó bắt buộc $x^2 = 2$.
+</Proof>
+
+<Proposition
+  id="prop-gthmb-c2-b3-can-hai-la-vo-ti"
+  title="Số căn bậc hai của 2 là số vô tỉ"
+  source="gt-gthmb-ttd-2022"
+  page="20"
+  original="Mệnh đề 2.2.10"
+>
+$\sqrt{2}$ **không phải là số hữu tỉ**, tức là $\sqrt{2} \in \mathbb{Q}^c = \mathbb{R} \setminus \mathbb{Q}$.
+</Proposition>
+
+<Proof title="Chứng minh bằng phản chứng kinh điển">
+Giả sử phản chứng rằng $\sqrt{2} \in \mathbb{Q}$. Khi đó tồn tại hai số nguyên dương $m, n \in \mathbb{N}$ nguyên tố cùng nhau ($\gcd(m, n) = 1$) sao cho:
+$$
+\sqrt{2} = \frac{m}{n}.
+$$
+Bình phương hai vế: $2 = \frac{m^2}{n^2} \iff m^2 = 2n^2$.
+- Vì $m^2$ chia hết cho $2$ nên $m$ phải là số chẵn, tức là $m = 2k$ với $k \in \mathbb{N}$.
+- Thay vào phương trình: $(2k)^2 = 2n^2 \iff 4k^2 = 2n^2 \iff n^2 = 2k^2$.
+- Lập luận tương tự, $n^2$ chia hết cho $2$ nên $n$ cũng phải là số chẵn.
+Như vậy cả $m$ và $n$ đều là số chẵn, tức là đều chia hết cho $2$, mâu thuẫn với giả thiết $\gcd(m, n) = 1$.
+Vậy $\sqrt{2}$ bắt buộc phải là số vô tỉ.
+</Proof>
+
+---
+
+## 4. Tính trù mật của $\mathbb{Q}$ và $\mathbb{Q}^c$ trong $\mathbb{R}$
+
+Tính trù mật phản ánh một bức tranh vi mô kỳ diệu: các số hữu tỉ và vô tỉ đan cài xen kẽ nhau vô tận ở bất kỳ khoảng cách nào (<Cite source="gt-gthmb-ttd-2022" page="20-21" note="Mục 2.2.2" />).
+
+<Definition
+  id="def-gthmb-c2-b3-dinh-nghia-tru-mat"
+  title="Khái niệm tập con trù mật"
+  source="gt-gthmb-ttd-2022"
+  page="20"
+  original="Định nghĩa trù mật"
+>
+Một tập con $S \subseteq \mathbb{R}$ được gọi là **trù mật** (*dense*) trong $\mathbb{R}$ nếu giữa hai số thực phân biệt bất kỳ luôn chứa ít nhất một phần tử của $S$:
+$$
+\forall a, b \in \mathbb{R} \text{ với } a < b, \quad \exists s \in S: a < s < b.
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c2-b3-tinh-tru-mat-cua-q"
+  title="Tính trù mật của tập số hữu tỉ Q trong R"
+  source="gt-gthmb-ttd-2022"
+  page="20"
+  original="Định lý 2.2.11"
+>
+**Tập hợp các số hữu tỉ $\mathbb{Q}$ là trù mật trong $\mathbb{R}$.**
+Nói cách khác, giữa hai số thực bất kỳ luôn tồn tại ít nhất một số hữu tỉ.
+</Theorem>
+
+<Proof title="Chứng minh Định lý 2.2.11">
+Cho $a, b \in \mathbb{R}$ với $a < b \iff b - a > 0$.
+- Áp dụng Hệ quả của Nguyên lý Archimedes cho số dương $b - a$, tồn tại một số tự nhiên $n \in \mathbb{N}$ sao cho:
+  $$
+  \frac{1}{n} < b - a \iff na + 1 < nb.
+  $$
+- Tiếp tục áp dụng tính chất phần nguyên cho số thực $na$: Tồn tại duy nhất số nguyên $m = [na] + 1 \in \mathbb{Z}$ sao cho:
+  $$
+  na < m \le na + 1.
+  $$
+- Kết hợp hai bất đẳng thức trên:
+  $$
+  na < m \le na + 1 < nb \implies na < m < nb.
+  $$
+- Chia tất cả các vế cho số dương $n > 0$:
+  $$
+  a < \frac{m}{n} < b.
+  $$
+Vì $m \in \mathbb{Z}$ và $n \in \mathbb{N}$, số $r = \frac{m}{n}$ chính là một số hữu tỉ ($r \in \mathbb{Q}$). Định lý được chứng minh.
+</Proof>
+
+<Theorem
+  id="thm-gthmb-c2-b3-tinh-tru-mat-cua-vo-ti"
+  title="Tính trù mật của tập số vô tỉ trong R"
+  source="gt-gthmb-ttd-2022"
+  page="21"
+  original="Định lý 2.2.12"
+>
+**Tập hợp các số vô tỉ $\mathbb{Q}^c = \mathbb{R} \setminus \mathbb{Q}$ là trù mật trong $\mathbb{R}$.**
+Nói cách khác, giữa hai số thực bất kỳ luôn tồn tại ít nhất một số vô tỉ.
+</Theorem>
+
+<Proof title="Chứng minh Định lý 2.2.12">
+Lấy $a, b \in \mathbb{R}$ bất kỳ với $a < b$.
+- Chia hai vế cho số vô tỉ dương $\sqrt{2} > 0$, ta được:
+  $$
+  \frac{a}{\sqrt{2}} < \frac{b}{\sqrt{2}}.
+  $$
+- Theo Định lý 2.2.11, tồn tại một số hữu tỉ khác không $r \in \mathbb{Q} \setminus \{0\}$ nằm giữa hai số thực trên:
+  $$
+  \frac{a}{\sqrt{2}} < r < \frac{b}{\sqrt{2}}.
+  $$
+- Nhân lại với $\sqrt{2} > 0$:
+  $$
+  a < r\sqrt{2} < b.
+  $$
+- Đặt $s = r\sqrt{2}$. Vì $r \in \mathbb{Q}$ ($r \neq 0$) và $\sqrt{2} \in \mathbb{Q}^c$, tích của một số hữu tỉ khác không với một số vô tỉ bắt buộc phải là một **số vô tỉ** (nếu $r\sqrt{2} = q \in \mathbb{Q}$ thì $\sqrt{2} = \frac{q}{r} \in \mathbb{Q}$, vô lý).
+Vậy $s \in \mathbb{Q}^c$ và $a < s < b$.
+</Proof>
+
+---
+
+<KeyTakeaways title="Tóm tắt trọng tâm bài 2.3">
+- **Nguyên lý Archimedes:** $\mathbb{N}$ không bị chặn trên trong $\mathbb{R}$. Với mọi $a > 0$ và $b \in \mathbb{R}$, luôn có $na > b$.
+- **Phần nguyên:** Mọi số thực đều được kẹp duy nhất bởi $[x] \le x < [x] + 1$.
+- **Sự tồn tại của $\sqrt{2}$:** Là số thực dương duy nhất có bình phương bằng $2$, và $\sqrt{2}$ là số vô tỉ.
+- **Tính trù mật hai lớp:**
+  - $\forall a < b, \exists r \in \mathbb{Q}: a < r < b$.
+  - $\forall a < b, \exists s \in \mathbb{Q}^c: a < s < b$.
+- Hệ quả là giữa hai số thực bất kỳ luôn có vô số số hữu tỉ và vô số số vô tỉ.
+</KeyTakeaways>

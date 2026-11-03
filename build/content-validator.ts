@@ -99,6 +99,7 @@ export const WHITELISTED_MDX_COMPONENTS = new Set<string>([
   'Parallelogram',
   'Barycenter',
   'AffineMapDemo',
+  'SupremumEpsilonDemo',
 ]);
 
 const FORBIDDEN_HTML_TAGS = new Set<string>([
