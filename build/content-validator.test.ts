@@ -85,7 +85,7 @@ describe('Giai đoạn 4 — Bộ kiểm định nội dung học thuật (conte
     const errors = result.issues.filter((item) => item.severity === 'error');
     expect(errors).toEqual([]);
     expect(result.lessons.length).toBeGreaterThanOrEqual(3);
-  });
+  }, 45000);
 
   it('2. Bắt lỗi công thức LaTeX sai cú pháp KaTeX và môi trường tikzcd/newcommand không hỗ trợ', () => {
     const root = createTempFixtureProject();

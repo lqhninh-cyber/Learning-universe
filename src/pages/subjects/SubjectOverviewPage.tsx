@@ -1,5 +1,5 @@
 import type { ManifestChapter } from '@schemas/index';
-import { ArrowLeft, Download, ExternalLink, FileText, Sparkles } from 'lucide-react';
+import { ArrowLeft, BookOpen, Download, ExternalLink, FileText, Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
@@ -241,6 +241,12 @@ export function SubjectOverviewPage() {
 
                 <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
                   <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
+                    <Link to="/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi">
+                      <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Vào học chuyên đề</span>
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
                     <a
                       href="/docs/giai-tich-ham-mot-bien/ND_on_thi_va_de_mau.pdf"
                       target="_blank"

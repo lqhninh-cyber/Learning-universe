@@ -1,5 +1,5 @@
 import type { ManifestChapter, ManifestSubject } from '@schemas/index';
-import { ArrowRight, Bookmark, CheckCircle2, Circle, Clock, Target } from 'lucide-react';
+import { ArrowRight, Award, Bookmark, CheckCircle2, Circle, Clock, Target } from 'lucide-react';
 import { Link } from 'react-router';
 import { useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
@@ -33,8 +33,41 @@ export function ChapterAccordionList({ subject, chapters }: ChapterAccordionList
     );
   }
 
+  const isAllChaptersCompleted =
+    chapters.length > 0 &&
+    chapters.every(
+      (chapter) =>
+        chapter.lessons.length > 0 &&
+        chapter.lessons.every((lesson) => Boolean(completedLessons[lesson.id])),
+    );
+
   return (
     <div className="space-y-6" aria-label="Danh sách chương và bài học">
+      {isAllChaptersCompleted && (
+        <Card className="border-emerald-200 bg-emerald-50/70 p-4 text-emerald-900 shadow-2xs">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+              <Award className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="approved">
+                  <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+                  <span>Đã hoàn thành toàn bộ khóa học</span>
+                </Badge>
+                <span className="text-xs font-semibold text-emerald-800">
+                  Chúc mừng bạn đã hoàn thành trọn vẹn tất cả {chapters.length} chương!
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-emerald-700">
+                Toàn bộ các bài học lý thuyết và đề thi mẫu đã được tích xanh và đồng bộ lên tài
+                khoản cá nhân.
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {chapters.map((chapter) => {
         const completedInChapter = chapter.lessons.filter((lesson) =>
           Boolean(completedLessons[lesson.id]),

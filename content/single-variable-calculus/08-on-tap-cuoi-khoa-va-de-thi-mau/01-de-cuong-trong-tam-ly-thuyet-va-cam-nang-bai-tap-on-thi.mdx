@@ -1,0 +1,335 @@
+---
+id: de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi
+title: 'Đề cương trọng tâm lý thuyết và cẩm nang bài tập ôn thi'
+description: 'Hệ thống hóa toàn diện yêu cầu lý thuyết và kỹ năng giải toán 6 chương trọng tâm (Chương 2 đến 7) cùng bảng tra cứu bài tập chuẩn ôn thi kết thúc học phần Giải tích hàm một biến MATH1403.'
+estimatedMinutes: 60
+level: advanced
+prerequisites:
+  - he-thong-bai-tap-chuong-2-va-loi-giai-chuan
+  - he-thong-bai-tap-chuong-3-va-loi-giai-chuan
+  - he-thong-bai-tap-chuong-4-va-loi-giai-chuan
+  - he-thong-bai-tap-chuong-5-va-loi-giai-chuan
+  - he-thong-bai-tap-chuong-6-va-loi-giai-chuan
+  - he-thong-bai-tap-chuong-7-va-loi-giai-chuan
+tags:
+  - đề cương ôn thi
+  - trọng tâm lý thuyết
+  - cẩm nang bài tập
+  - MATH1403
+  - sup inf
+  - giới hạn
+  - vi phân
+  - tích phân
+  - chuỗi số
+  - chuỗi hàm
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '1-90'
+    sections: 'Tài liệu ND ôn thi và giáo trình chính khóa'
+    note: 'Đề cương trọng tâm ôn tập kết thúc học phần MATH1403'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-04'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Mục tiêu chuyên đề">
+Chuyên đề này đóng vai trò là "kim chỉ nam" cho kỳ thi kết thúc học phần **Giải tích hàm một biến (MATH1403)**:
+
+1. **Tổng hợp cấu trúc 6 chương trọng tâm:** Hệ thống hóa toàn bộ định nghĩa, định lý then chốt và các tiêu chuẩn kiểm tra từ Chương 2 đến Chương 7.
+2. **Làm rõ các đặc trưng tương đương giải tích:** Phân tích sâu sắc ngôn ngữ $\varepsilon - \delta$, $\varepsilon - N$, đặc trưng dãy số Heine, tiêu chuẩn Cauchy và dấu hiệu Weierstrass.
+3. **Cẩm nang bài tập chuẩn không dấu sao (*):** Định hướng các bài tập tự luận kinh điển cuối mỗi chương cần thuần thục trước khi bước vào phòng thi.
+4. **Chuẩn hóa phương pháp lập luận:** Rèn luyện văn phong chứng minh giải tích thực chuẩn mực, chặt chẽ và không bỏ sót các trường hợp biên.
+</Note>
+
+## 1. Tổng quan Cấu trúc Đề thi Kết thúc Học phần MATH1403
+
+Đề thi kết thúc học phần Giải tích hàm một biến có thời lượng **90 phút**, gồm **5 câu hỏi tự luận** lớn (mỗi câu từ 1.5 đến 2.5 điểm) bao phủ các nội dung trọng tâm từ Chương 2 đến Chương 7:
+
+- **Câu 1:** Giới hạn dãy số (nguyên lý kẹp, dãy truy hồi) và giới hạn hàm số dạng vô định (quy tắc L'Hôpital, khai triển Maclaurin).
+- **Câu 2:** Tính liên tục và liên tục đều (Định lý giá trị trung gian Bolzano-Cauchy, chứng minh hoặc bác bỏ tính liên tục đều bằng 2 dãy số).
+- **Câu 3:** Phép tính vi phân (xét tính khả vi của hàm chia nhánh/Dirichlet, ứng dụng định lý Lagrange, Taylor với phần dư Lagrange).
+- **Câu 4:** Tích phân suy rộng (tính giá trị tích phân từng phần, đổi biến; khảo sát sự hội tụ theo tham số $p$).
+- **Câu 5:** Chuỗi hàm (tìm miền hội tụ $D$; chứng minh sự hội tụ đều bằng tiêu chuẩn Weierstrass M-test).
+
+---
+
+## 2. Chương 2: Tập hợp Số thực $\mathbb{R}$
+
+### 2.1. Yêu cầu Lý thuyết Trọng tâm
+
+<Definition
+  id="def-gthmb-c8-b1-sup-inf"
+  title="Cận trên, Cận dưới, Supremum và Infimum"
+>
+Cho tập hợp con $A \subset \mathbb{R}$ khác rỗng:
+1. $M \in \mathbb{R}$ là **cận trên** của $A$ nếu $x \le M$ với mọi $x \in A$. Khi có cận trên, $A$ được gọi là **bị chặn trên**.
+2. $m \in \mathbb{R}$ là **cận dưới** của $A$ nếu $x \ge m$ với mọi $x \in A$. Khi có cận dưới, $A$ được gọi là **bị chặn dưới**.
+3. Cận trên nhỏ nhất của $A$ (nếu có) được gọi là **supremum** của $A$, ký hiệu $\sup A$.
+4. Cận dưới lớn nhất của $A$ (nếu có) được gọi là **infimum** của $A$, ký hiệu $\inf A$.
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c8-b1-dac-trung-epsilon-sup-inf"
+  title="Đặc trưng tương đương qua ngôn ngữ epsilon của Sup và Inf"
+>
+1. Số $M = \sup A$ khi và chỉ khi thỏa mãn đồng thời hai điều kiện:
+   - $\forall x \in A \implies x \le M$.
+   - $\forall \varepsilon > 0, \; \exists x \in A \implies x > M - \varepsilon$.
+2. Số $m = \inf A$ khi và chỉ khi thỏa mãn đồng thời hai điều kiện:
+   - $\forall x \in A \implies x \ge m$.
+   - $\forall \varepsilon > 0, \; \exists x \in A \implies x < m + \varepsilon$.
+</Theorem>
+
+<Remark>
+**Nguyên lý Supremum (Tiên đề Đầy đủ):** Mọi tập con khác rỗng của $\mathbb{R}$ bị chặn trên đều có supremum thuộc $\mathbb{R}$. Tương tự, mọi tập con khác rỗng bị chặn dưới đều có infimum thuộc $\mathbb{R}$.
+</Remark>
+
+### 2.2. Các Nguyên lý Nền tảng và Tính Trù mật
+
+- **Nguyên lý Quy nạp Toán học:** Nếu tập con $S \subset \mathbb{N}^*$ chứa 1 và có tính chất $k \in S \implies k + 1 \in S$ thì $S = \mathbb{N}^*$.
+- **Nguyên lý Archimedes:** Với mọi số thực $x \in \mathbb{R}$, luôn tồn tại một số nguyên dương $n \in \mathbb{N}^*$ sao cho $n > x$.
+- **Tính trù mật của $\mathbb{Q}$ và $\mathbb{R} \setminus \mathbb{Q}$:**
+  Giữa hai số thực tùy ý $a < b$, luôn tồn tại ít nhất một số hữu tỉ $r \in \mathbb{Q}$ và ít nhất một số vô tỉ $\alpha \in \mathbb{R} \setminus \mathbb{Q}$ thỏa mãn:
+  $$
+  a < r < b \quad \text{và} \quad a < \alpha < b
+  $$
+
+---
+
+## 3. Chương 3: Giới hạn của Dãy số
+
+### 3.1. Ngôn ngữ $\varepsilon - N$ và Giới hạn Vô cực
+
+<Definition
+  id="def-gthmb-c8-b1-gioi-han-day-so"
+  title="Định nghĩa Dãy hội tụ và Giới hạn Vô cực"
+>
+1. Dãy số $(x_n)$ **hội tụ về $a \in \mathbb{R}$**, ký hiệu $\lim_{n \to \infty} x_n = a$, nếu:
+   $$
+   \forall \varepsilon > 0, \; \exists N \in \mathbb{N}^*, \; \forall n \ge N \implies |x_n - a| < \varepsilon
+   $$
+2. Dãy số $(x_n)$ **tiến ra $+\infty$**, ký hiệu $\lim_{n \to \infty} x_n = +\infty$, nếu:
+   $$
+   \forall M > 0, \; \exists N \in \mathbb{N}^*, \; \forall n \ge N \implies x_n > M
+   $$
+</Definition>
+
+### 3.2. Ba Trụ cột Kiểm tra Tính Hội tụ
+
+<Theorem
+  id="thm-gthmb-c8-b1-nguyen-ly-kep"
+  title="Nguyên lý kẹp (Squeeze Theorem)"
+>
+Nếu tồn tại $N_0 \in \mathbb{N}^*$ sao cho với mọi $n \ge N_0$:
+$$
+y_n \le x_n \le z_n
+$$
+và $\lim_{n \to \infty} y_n = \lim_{n \to \infty} z_n = a$ thì $\lim_{n \to \infty} x_n = a$.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c8-b1-weierstrass-day-don-dieu"
+  title="Định lý Hội tụ Đơn điệu Weierstrass"
+>
+- Mọi dãy số thực đơn điệu tăng và bị chặn trên đều hội tụ về $a = \sup_{n \ge 1} x_n$.
+- Mọi dãy số thực đơn điệu giảm và bị chặn dưới đều hội tụ về $b = \inf_{n \ge 1} x_n$.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c8-b1-cauchy-day-so"
+  title="Tiêu chuẩn Cauchy cho Dãy số"
+>
+Dãy số thực $(x_n)$ hội tụ khi và chỉ khi nó là dãy Cauchy:
+$$
+\forall \varepsilon > 0, \; \exists N \in \mathbb{N}^*, \; \forall m, n \ge N \implies |x_m - x_n| < \varepsilon
+$$
+</Theorem>
+
+<Remark>
+**Định lý Bolzano - Weierstrass:** Mọi dãy số thực bị chặn đều trích ra được ít nhất một dãy con hội tụ.
+</Remark>
+
+---
+
+## 4. Chương 4: Giới hạn và Tính Liên tục của Hàm số
+
+### 4.1. Lân cận, Điểm giới hạn và Ba Ngôn ngữ Giới hạn
+
+- **Điểm giới hạn:** Điểm $a$ là điểm giới hạn của tập $E$ nếu mọi lân cận thủng $V_\delta^*(a) = (a - \delta; a + \delta) \setminus \{a\}$ đều chứa ít nhất một phần tử của $E$.
+- **Đặc trưng dãy số:** $a$ là điểm giới hạn của $E$ khi và chỉ khi tồn tại dãy $(x_n) \subset E \setminus \{a\}$ sao cho $\lim x_n = a$.
+- **Ba ngôn ngữ tương đương:**
+  1. *Ngôn ngữ lân cận:* $\forall V(L), \exists V^*(a): f(V^*(a) \cap D) \subset V(L)$.
+  2. *Ngôn ngữ bất đẳng thức ($\varepsilon - \delta$):* $\forall \varepsilon > 0, \exists \delta > 0, \forall x \in D, 0 < |x - a| < \delta \implies |f(x) - L| < \varepsilon$.
+  3. *Ngôn ngữ dãy số Heine:* Với mọi dãy $(x_n) \subset D \setminus \{a\}$ có $\lim x_n = a$ thì $\lim f(x_n) = L$.
+
+### 4.2. Tính Liên tục và Hai Định lý Toàn cục trên Đoạn đóng
+
+<Theorem
+  id="thm-gthmb-c8-b1-dinh-ly-gia-tri-trung-gian"
+  title="Định lý Giá trị Trung gian Bolzano - Cauchy"
+>
+Nếu hàm số $f: [a; b] \to \mathbb{R}$ liên tục trên đoạn đóng $[a; b]$ và $f(a) \cdot f(b) < 0$ thì tồn tại ít nhất một điểm $c \in (a; b)$ sao cho:
+$$
+f(c) = 0
+$$
+Tổng quát: Với mọi số $\gamma$ nằm giữa $f(a)$ và $f(b)$, luôn tồn tại $c \in [a; b]$ để $f(c) = \gamma$.
+</Theorem>
+
+<Theorem
+  id="thm-gthmb-c8-b1-weierstrass-cuc-bien"
+  title="Định lý Cực biên Weierstrass"
+>
+Nếu hàm số $f$ liên tục trên đoạn đóng $[a; b]$ thì $f$ bị chặn trên $[a; b]$ và đạt giá trị lớn nhất (GTLN) cùng giá trị nhỏ nhất (GTNN) trên đoạn đó.
+</Theorem>
+
+### 4.3. Hàm Liên tục Đều và Phương pháp Bác bỏ bằng Hai Dãy
+
+<Definition
+  id="def-gthmb-c8-b1-lien-tuc-deu"
+  title="Hàm số Liên tục Đều (Uniform Continuity)"
+>
+Hàm số $f: D \to \mathbb{R}$ được gọi là **liên tục đều trên $D$** nếu:
+$$
+\forall \varepsilon > 0, \; \exists \delta > 0, \; \forall x, x' \in D, \; |x - x'| < \delta \implies |f(x) - f(x')| < \varepsilon
+$$
+</Definition>
+
+<Theorem
+  id="thm-gthmb-c8-b1-phu-dinh-lien-tuc-deu"
+  title="Đặc trưng phủ định tính liên tục đều bằng hai dãy số"
+>
+Hàm số $f$ **không liên tục đều** trên $D$ khi và chỉ khi: tồn tại số thực $\varepsilon_0 > 0$ và hai dãy số $(x_n), (x_n') \subset D$ thỏa mãn:
+$$
+\lim_{n \to \infty} |x_n - x_n'| = 0 \quad \text{nhưng} \quad |f(x_n) - f(x_n')| \ge \varepsilon_0, \quad \forall n \in \mathbb{N}^*
+$$
+</Theorem>
+
+---
+
+## 5. Chương 5: Phép tính Vi phân
+
+### 5.1. Định nghĩa Khả vi, Vi phân và Lớp Hàm
+
+- Hàm $f$ khả vi tại $x_0 \in (a; b)$ nếu tồn tại hữu hạn $f'(x_0) = \lim_{x \to x_0} \frac{f(x) - f(x_0)}{x - x_0}$.
+- Vi phân: $df(x_0) = f'(x_0)dx$. Khả vi kéo theo liên tục (nhưng liên tục không kéo theo khả vi, ví dụ $|x|$ tại $0$).
+- **Lớp $C^n(D)$:** Tập hợp các hàm có đạo hàm đến cấp $n$ liên tục trên $D$. Lớp $C^\infty(D) = \bigcap_{n=1}^\infty C^n(D)$ là lớp hàm khả vi vô hạn.
+
+### 5.2. Các Định lý Giá trị Trung bình Cốt lõi
+
+- **Định lý Fermat:** Nếu $f$ đạt cực trị địa phương tại $c \in (a; b)$ và $f$ khả vi tại $c$ thì $f'(c) = 0$.
+- **Định lý Rolle:** $f \in C([a; b])$, khả vi trên $(a; b)$ và $f(a) = f(b) \implies \exists c \in (a; b): f'(c) = 0$.
+- **Định lý Lagrange:** $f \in C([a; b])$, khả vi trên $(a; b) \implies \exists c \in (a; b): f(b) - f(a) = f'(c)(b - a)$.
+- **Định lý Cauchy:** $f, g \in C([a; b])$, khả vi trên $(a; b)$ và $g'(x) \neq 0 \implies \exists c \in (a; b): \frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(c)}{g'(c)}$.
+
+### 5.3. Khai triển Taylor và Bảng Maclaurin 5 Hàm Sơ cấp
+
+<Theorem
+  id="thm-gthmb-c8-b1-cong-thuc-taylor"
+  title="Công thức Taylor với Phần dư Peano và Lagrange"
+>
+Cho $f \in C^n((a; b))$ có đạo hàm cấp $n+1$ trên $(a; b)$ và $x_0 \in (a; b)$:
+$$
+f(x) = \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x - x_0)^k + R_n(x)
+$$
+1. **Phần dư Peano:** $R_n(x) = o((x - x_0)^n)$ khi $x \to x_0$ (thích hợp cho tính giới hạn dạng vô định).
+2. **Phần dư Lagrange:** Tồn tại $\xi$ nằm giữa $x$ và $x_0$ sao cho:
+   $$
+   R_n(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!} (x - x_0)^{n+1}
+   $$
+   (thích hợp cho việc đánh giá sai số xấp xỉ và chứng minh giới hạn đạo hàm khi $x \to +\infty$).
+</Theorem>
+
+**Bảng Khai triển Maclaurin ($x_0 = 0$) cần thuộc lòng:**
+1. $e^x = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots + \frac{x^n}{n!} + o(x^n)$
+2. $\sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \dots + (-1)^k \frac{x^{2k+1}}{(2k+1)!} + o(x^{2k+2})$
+3. $\cos x = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \dots + (-1)^k \frac{x^{2k}}{(2k)!} + o(x^{2k+1})$
+4. $\ln(1 + x) = x - \frac{x^2}{2} + \frac{x^3}{3} - \dots + (-1)^{n-1} \frac{x^n}{n} + o(x^n)$
+5. $(1 + x)^\alpha = 1 + \alpha x + \frac{\alpha(\alpha - 1)}{2!} x^2 + \dots + \frac{\alpha(\alpha - 1)\dots(\alpha - n + 1)}{n!} x^n + o(x^n)$
+
+---
+
+## 6. Chương 6: Phép tính Tích phân
+
+### 6.1. Tích phân Riemann Đoạn đóng
+
+- Phân hoạch $P = \{x_1, \dots, x_{n+1}\}$ của $[a; b]$. Tổng Darboux trên $U(P, f) = \sum M_i \Delta x_i$ và dưới $L(P, f) = \sum m_i \Delta x_i$.
+- Hàm bị chặn $f$ khả tích Riemann khi và chỉ khi:
+  $$
+  \sup_P L(P, f) = \inf_P U(P, f) = \int_a^b f(x) dx
+  $$
+- **Tiêu chuẩn khả tích:** $\forall \varepsilon > 0, \exists P: U(P, f) - L(P, f) < \varepsilon$.
+- Mọi hàm đơn điệu trên $[a; b]$ và mọi hàm liên tục trên $[a; b]$ đều khả tích Riemann.
+
+### 6.2. Tích phân Suy rộng
+
+<Theorem
+  id="thm-gthmb-c8-b1-tich-phan-chuan-riemann"
+  title="Hai Tích phân Mẫu Chuẩn Riemann"
+>
+1. **Cận vô hạn:** $\int_1^{+\infty} \frac{dx}{x^p}$ **hội tụ khi và chỉ khi $p > 1$**, và phân kỳ khi $p \le 1$.
+2. **Kỳ dị tại cận 0:** $\int_0^1 \frac{dx}{x^p}$ **hội tụ khi và chỉ khi $p < 1$**, và phân kỳ khi $p \ge 1$.
+</Theorem>
+
+- **Dấu hiệu so sánh dạng giới hạn:** Nếu $f(x) \sim g(x)$ tại điểm kỳ dị thì $\int f(x)dx$ và $\int g(x)dx$ cùng tính chất hội tụ.
+- **Hội tụ tuyệt đối:** $\int |f(x)|dx$ hội tụ $\implies \int f(x)dx$ hội tụ.
+
+---
+
+## 7. Chương 7: Chuỗi số và Chuỗi hàm
+
+### 7.1. Chuỗi Số và Dấu hiệu Hội tụ
+
+1. **Điều kiện cần:** $\sum a_n$ hội tụ $\implies \lim a_n = 0$. (Phản ví dụ chuỗi điều hòa $\sum 1/n$ phân kỳ).
+2. **Tiêu chuẩn Cauchy:** $\forall \varepsilon > 0, \exists N, \forall n \ge N, \forall p \ge 1 \implies |\sum_{k=n+1}^{n+p} a_k| < \varepsilon$.
+3. **Chuỗi số dương:** $(S_n)$ tăng, hội tụ khi và chỉ khi bị chặn trên.
+   - *So sánh tương đương:* $a_n \sim b_n \implies$ cùng hội tụ hoặc phân kỳ.
+   - *D'Alembert:* $D = \lim |\frac{a_{n+1}}{a_n}| < 1$ (hội tụ), $> 1$ (phân kỳ).
+   - *Cauchy căn số:* $C = \lim \sqrt[n]{|a_n|} < 1$ (hội tụ), $> 1$ (phân kỳ).
+   - *Tích phân:* $\sum f(n)$ cùng tính chất với $\int_1^{+\infty} f(x)dx$.
+4. **Chuỗi đan dấu Leibniz:** $\sum (-1)^{n-1} a_n$ ($a_n \downarrow 0$) hội tụ, sai số $|R_n| \le a_{n+1}$.
+
+### 7.2. Chuỗi Hàm và Tiêu chuẩn Weierstrass M-test
+
+- **Hội tụ điểm:** $\forall x \in D, \forall \varepsilon > 0, \exists N(x, \varepsilon)$.
+- **Hội tụ đều:** $\forall \varepsilon > 0, \exists N(\varepsilon), \forall x \in D$. Tương đương với $\lim_{n \to \infty} \sup_{x \in D} |S_n(x) - S(x)| = 0$.
+
+<Theorem
+  id="thm-gthmb-c8-b1-weierstrass-m-test"
+  title="Dấu hiệu Weierstrass M-test về sự hội tụ đều"
+>
+Nếu tồn tại dãy số dương $(a_n)$ độc lập với $x$ sao cho:
+$$
+|f_n(x)| \le a_n, \quad \forall n \in \mathbb{N}^*, \; \forall x \in D
+$$
+và chuỗi số $\sum_{n=1}^\infty a_n$ hội tụ, thì chuỗi hàm $\sum_{n=1}^\infty f_n(x)$ **hội tụ đều** trên $D$.
+</Theorem>
+
+---
+
+## 8. Cẩm nang Bảng Tra cứu Bài tập Chuẩn Cuối mỗi Chương
+
+Dưới đây là danh mục các bài tập cốt lõi (không có dấu `*`) trong giáo trình của GV. Trần Trí Dũng (năm 2022) mà sinh viên bắt buộc phải tự giải trọn vẹn:
+
+| Chương | Nội dung trọng tâm | Danh mục bài tập chuẩn (không dấu *) | Kỹ thuật cốt lõi cần nhớ |
+| :---: | :--- | :--- | :--- |
+| **Chương 2** | Số thực $\mathbb{R}$ | **Bài 1, 2, 3, 5** (trang 19-20) | Dùng đặc trưng $\varepsilon$ tìm $\sup/\inf$; Quy nạp chứng minh BĐT; Dùng tính trù mật của $\mathbb{Q}$. |
+| **Chương 3** | Giới hạn dãy số | **Bài 1, 2, 3, 4** (trang 31-32) | Định nghĩa $\varepsilon - N$; Nguyên lý kẹp tổng hữu hạn; Dãy đơn điệu bị chặn $x_{n+1} = f(x_n)$. |
+| **Chương 4** | Giới hạn & Liên tục | **Bài 1, 2, 3, 4, 5, 7, 8, 9** (trang 46-48) | Giới hạn một phía; Bác bỏ liên tục đều bằng 2 dãy; Nghiệm PT bằng Bolzano-Cauchy; Điểm bất động $f(c) = c$. |
+| **Chương 5** | Phép tính vi phân | **Bài 1, 2, 3, 4, 5, 6, 7** (trang 62-63) | Tính khả vi hàm chia nhánh; Áp dụng Lagrange cho $f(b)-f(a)$; Khai triển Taylor đánh giá giới hạn. |
+| **Chương 6** | Phép tính tích phân | **Bài 1, 2, 3, 4** (trang 75-76) | Tích phân Riemann từng phần; Đổi biến tích phân suy rộng; So sánh với tích phân chuẩn $1/x^p$. |
+| **Chương 7** | Chuỗi số & Chuỗi hàm | **Bài 1, 2, 3, 5, 6, 7, 8, 9, 10** (trang 84-86) | Tính tổng chuỗi cấp số nhân/lồng nhau; D'Alembert/Cauchy; Bán hội tụ Leibniz; Weierstrass M-test. |
+
+---
+
+<KeyTakeaways>
+- **Phương pháp học ôn thi:** Nắm chắc cây logic: Tiên đề $\mathbb{R} \to$ Giới hạn dãy $\to$ Liên tục $\to$ Khả vi $\to$ Khả tích $\to$ Chuỗi hàm.
+- **Hai công cụ phân tích bất bại:** Ngôn ngữ $\varepsilon$ (chứng minh tính chất địa phương) và Nguyên lý kẹp / Dấu hiệu so sánh (chứng minh tính chất định lượng).
+- **Quy tắc làm bài thi tự luận:** Luôn nêu rõ điều kiện áp dụng định lý (tính liên tục trên đoạn đóng, tập mở, tính hội tụ của chuỗi số trội), tránh kết luận đốt cháy giai đoạn.
+</KeyTakeaways>

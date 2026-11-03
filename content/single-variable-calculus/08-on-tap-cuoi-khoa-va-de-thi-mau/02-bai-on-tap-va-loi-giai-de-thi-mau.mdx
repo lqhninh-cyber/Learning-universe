@@ -1,0 +1,533 @@
+---
+id: bai-on-tap-va-loi-giai-de-thi-mau
+title: 'Bài ôn tập và lời giải chuẩn đề thi mẫu'
+description: 'Đề thi mẫu kết thúc học phần Giải tích hàm một biến (MATH1403) kèm lời giải phân tích chi tiết, đầy đủ chứng minh chuẩn mực cho trọn vẹn 5 câu hỏi tự luận theo barem chấm điểm.'
+estimatedMinutes: 60
+level: advanced
+prerequisites:
+  - de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi
+tags:
+  - đề thi mẫu
+  - lời giải chi tiết
+  - giải tích hàm một biến
+  - MATH1403
+  - nguyên lý kẹp
+  - khai triển Maclaurin
+  - định lý giá trị trung gian
+  - liên tục đều
+  - hàm khả vi
+  - Taylor Lagrange
+  - tích phân suy rộng
+  - chuỗi hàm
+sources:
+  - source: gt-gthmb-ttd-2022
+    pages: '1-2'
+    sections: 'Tài liệu ND ôn thi và đề mẫu'
+    note: 'Đề thi mẫu kết thúc học phần MATH1403'
+status: published
+version: 0.1.0
+authoring:
+  aiAssisted: true
+  tools:
+    - 'Learning Universe Authoring Standard'
+  draftedAt: '2026-11-04'
+review:
+  reviewer: null
+  reviewedAt: null
+---
+
+<Note title="Cấu trúc Đề thi Mẫu Kết thúc Học phần MATH1403">
+Đề thi gồm **5 câu hỏi tự luận** toàn diện, kiểm tra năng lực tư duy giải tích, kỹ năng đánh giá giới hạn, khả năng vận dụng các định lý giá trị trung bình và phân tích chuỗi hàm. Mỗi câu hỏi dưới đây đều có khung ẩn/hiện lời giải chi tiết từng bước.
+</Note>
+
+## Câu 1: Giới hạn Dãy số và Giới hạn Hàm số dạng Vô định
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-1a-gioi-han-day-kep"
+  title="Câu 1a: Giới hạn tổng n số hạng bằng Nguyên lý kẹp"
+>
+Tính giới hạn của dãy số sau:
+$$
+\lim_{n \to \infty} \left( \frac{n^2}{n^3 + 1} + \frac{n^2}{n^3 + 2} + \dots + \frac{n^2}{n^3 + n} \right)
+$$
+</Exercise>
+
+<Solution>
+Đặt tổng riêng của $n$ số hạng là $S_n$:
+$$
+S_n = \sum_{k=1}^n \frac{n^2}{n^3 + k} = \frac{n^2}{n^3 + 1} + \frac{n^2}{n^3 + 2} + \dots + \frac{n^2}{n^3 + n}
+$$
+Tổng $S_n$ gồm đúng $n$ số hạng dương. Vì mẫu số tăng dần từ $n^3 + 1$ đến $n^3 + n$, ta có đánh giá chặn trên và chặn dưới cho mỗi số hạng:
+$$
+\frac{n^2}{n^3 + n} \le \frac{n^2}{n^3 + k} \le \frac{n^2}{n^3 + 1}, \quad \forall k \in \{1, 2, \dots, n\}
+$$
+Lấy tổng cả $n$ bất đẳng thức trên:
+$$
+\sum_{k=1}^n \frac{n^2}{n^3 + n} \le S_n \le \sum_{k=1}^n \frac{n^2}{n^3 + 1}
+$$
+Tức là:
+$$
+\frac{n \cdot n^2}{n^3 + n} \le S_n \le \frac{n \cdot n^2}{n^3 + 1} \iff \frac{n^3}{n^3 + n} \le S_n \le \frac{n^3}{n^3 + 1}
+$$
+Ta tìm giới hạn của hai dãy số ở hai vế kẹp khi $n \to \infty$:
+- Dãy bên trái:
+  $$
+  \lim_{n \to \infty} \frac{n^3}{n^3 + n} = \lim_{n \to \infty} \frac{1}{1 + \frac{1}{n^2}} = 1
+  $$
+- Dãy bên phải:
+  $$
+  \lim_{n \to \infty} \frac{n^3}{n^3 + 1} = \lim_{n \to \infty} \frac{1}{1 + \frac{1}{n^3}} = 1
+  $$
+Vì cả hai giới hạn kẹp đều bằng 1, theo **Nguyên lý kẹp (Squeeze Theorem)**, ta kết luận:
+$$
+\lim_{n \to \infty} S_n = \lim_{n \to \infty} \left( \frac{n^2}{n^3 + 1} + \frac{n^2}{n^3 + 2} + \dots + \frac{n^2}{n^3 + n} \right) = 1
+$$
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-1b-gioi-han-maclaurin"
+  title="Câu 1b: Giới hạn hàm số dạng vô định qua Khai triển Maclaurin"
+>
+Tính giới hạn sau:
+$$
+L = \lim_{x \to 0} \left[ \frac{1}{\tan(\sin x)} - \frac{1}{x} \right]
+$$
+</Exercise>
+
+<Solution>
+Biểu thức có dạng vô định $\infty - \infty$ khi $x \to 0$. Ta thực hiện quy đồng mẫu số:
+$$
+\frac{1}{\tan(\sin x)} - \frac{1}{x} = \frac{x - \tan(\sin x)}{x \tan(\sin x)}
+$$
+**Bước 1: Ước lượng mẫu số khi $x \to 0$:**
+Khi $x \to 0$, ta có $\sin x \to 0$, do đó $\tan(\sin x) \sim \sin x \sim x$.
+Suy ra mẫu số tương đương bậc 2:
+$$
+x \tan(\sin x) \sim x \cdot x = x^2, \quad \text{khi } x \to 0
+$$
+
+**Bước 2: Khai triển Maclaurin của tử số đến cấp 3:**
+Sử dụng các khai triển Maclaurin cơ bản khi $u \to 0$:
+$$
+\sin x = x - \frac{x^3}{6} + o(x^3)
+$$
+$$
+\tan u = u + \frac{u^3}{3} + o(u^3)
+$$
+Thay $u = \sin x = x - \frac{x^3}{6} + o(x^3)$ vào khai triển của hàm $\tan u$:
+$$
+\begin{aligned}
+\tan(\sin x) &= \left( x - \frac{x^3}{6} + o(x^3) \right) + \frac{1}{3} \left( x - \frac{x^3}{6} + o(x^3) \right)^3 + o(x^3) \\
+&= x - \frac{x^3}{6} + \frac{1}{3} x^3 + o(x^3) \\
+&= x + \left( \frac{1}{3} - \frac{1}{6} \right) x^3 + o(x^3) \\
+&= x + \frac{x^3}{6} + o(x^3)
+\end{aligned}
+$$
+Từ đó, tử số là:
+$$
+x - \tan(\sin x) = x - \left( x + \frac{x^3}{6} + o(x^3) \right) = -\frac{x^3}{6} + o(x^3)
+$$
+
+**Bước 3: Tính giới hạn:**
+Thay tử số và mẫu số vào biểu thức giới hạn:
+$$
+L = \lim_{x \to 0} \frac{-\frac{x^3}{6} + o(x^3)}{x^2} = \lim_{x \to 0} \left( -\frac{x}{6} + o(x) \right) = 0
+$$
+Vậy $L = 0$.
+</Solution>
+
+---
+
+## Câu 2: Tính Liên tục và Tính Liên tục Đều
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-2a-dinh-ly-gia-tri-trung-gian"
+  title="Câu 2a: Sự tồn tại nghiệm của phương trình f(x) = cos(x)"
+>
+Cho hàm số liên tục $f: [0; \pi/2] \to [0; 1]$. Chứng minh rằng phương trình:
+$$
+f(x) = \cos x
+$$
+có ít nhất một nghiệm trong đoạn $[0; \pi/2]$.
+</Exercise>
+
+<Solution>
+Xét hàm số phụ $g: [0; \pi/2] \to \mathbb{R}$ xác định bởi:
+$$
+g(x) = f(x) - \cos x
+$$
+1. **Tính liên tục:** Vì hàm số $f(x)$ liên tục trên đoạn $[0; \pi/2]$ theo giả thiết và hàm $\cos x$ liên tục trên toàn bộ $\mathbb{R}$, hàm hiệu $g(x)$ liên tục trên đoạn đóng $[0; \pi/2]$.
+2. **Xét giá trị tại hai đầu mút đoạn:**
+   - Tại $x = 0$:
+     $$
+     g(0) = f(0) - \cos 0 = f(0) - 1
+     $$
+     Vì tập giá trị của $f$ là $[0; 1]$, ta có $0 \le f(0) \le 1$. Do đó:
+     $$
+     g(0) = f(0) - 1 \le 0
+     $$
+   - Tại $x = \pi/2$:
+     $$
+     g\left(\frac{\pi}{2}\right) = f\left(\frac{\pi}{2}\right) - \cos\left(\frac{\pi}{2}\right) = f\left(\frac{\pi}{2}\right) - 0 = f\left(\frac{\pi}{2}\right)
+     $$
+     Vì $f(x) \in [0; 1]$ với mọi $x$, ta có:
+     $$
+     g\left(\frac{\pi}{2}\right) = f\left(\frac{\pi}{2}\right) \ge 0
+     $$
+3. **Biện luận các trường hợp:**
+   - Nếu $g(0) = 0$, khi đó $x = 0 \in [0; \pi/2]$ chính là một nghiệm của phương trình $f(x) = \cos x$.
+   - Nếu $g(\pi/2) = 0$, khi đó $x = \pi/2 \in [0; \pi/2]$ chính là một nghiệm của phương trình.
+   - Nếu $g(0) < 0$ và $g(\pi/2) > 0$: hàm số $g$ liên tục trên $[0; \pi/2]$ và đổi dấu ở hai đầu mút ($g(0) \cdot g(\pi/2) < 0$).
+     Theo **Định lý Giá trị Trung gian Bolzano - Cauchy**, tồn tại ít nhất một điểm $c \in (0; \pi/2)$ sao cho:
+     $$
+     g(c) = 0 \iff f(c) = \cos c
+     $$
+Trong mọi trường hợp, phương trình $f(x) = \cos x$ luôn có ít nhất một nghiệm trong đoạn $[0; \pi/2]$.
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-2b-bac-bo-lien-tuc-deu"
+  title="Câu 2b: Bác bỏ tính liên tục đều của đa thức bậc 3 trên R"
+>
+Chứng minh rằng hàm số sau không liên tục đều trên toàn trục số thực $\mathbb{R}$:
+$$
+f(x) = x^3 + x^2 + x
+$$
+</Exercise>
+
+<Solution>
+Để chứng minh $f(x)$ không liên tục đều trên $\mathbb{R}$, ta áp dụng **đặc trưng phủ định bằng hai dãy số**:
+Ta cần tìm số thực $\varepsilon_0 > 0$ và hai dãy số $(x_n), (x_n') \subset \mathbb{R}$ sao cho:
+$$
+\lim_{n \to \infty} |x_n' - x_n| = 0 \quad \text{nhưng} \quad |f(x_n') - f(x_n)| \ge \varepsilon_0, \quad \forall n \in \mathbb{N}^*
+$$
+
+**Bước 1: Chọn hai dãy số thích hợp:**
+Với mỗi số nguyên dương $n \in \mathbb{N}^*$, ta chọn:
+$$
+x_n = n \quad \text{và} \quad x_n' = n + \frac{1}{n}
+$$
+Rõ ràng $x_n, x_n' \in \mathbb{R}$ với mọi $n \ge 1$. Khoảng cách giữa hai dãy là:
+$$
+|x_n' - x_n| = \left| \left(n + \frac{1}{n}\right) - n \right| = \frac{1}{n} \longrightarrow 0 \quad \text{khi } n \to \infty
+$$
+
+**Bước 2: Đánh giá độ lệch giá trị hàm số $|f(x_n') - f(x_n)|$:**
+Ta tính hiệu giá trị:
+$$
+f(x_n') - f(x_n) = \left[ (x_n')^3 - x_n^3 \right] + \left[ (x_n')^2 - x_n^2 \right] + \left[ x_n' - x_n \right]
+$$
+Tính riêng từng số hạng:
+1. $(x_n')^3 - x_n^3 = \left(n + \frac{1}{n}\right)^3 - n^3 = n^3 + 3n^2 \cdot \frac{1}{n} + 3n \cdot \frac{1}{n^2} + \frac{1}{n^3} - n^3 = 3n + \frac{3}{n} + \frac{1}{n^3}$
+2. $(x_n')^2 - x_n^2 = \left(n + \frac{1}{n}\right)^2 - n^2 = 2 + \frac{1}{n^2}$
+3. $x_n' - x_n = \frac{1}{n}$
+
+Cộng lại:
+$$
+f(x_n') - f(x_n) = 3n + 2 + \frac{4}{n} + \frac{1}{n^2} + \frac{1}{n^3}
+$$
+Vì $n \ge 1$, ta có đánh giá:
+$$
+|f(x_n') - f(x_n)| = 3n + 2 + \frac{4}{n} + \frac{1}{n^2} + \frac{1}{n^3} > 3n \ge 3
+$$
+
+**Bước 3: Kết luận:**
+Chọn hằng số $\varepsilon_0 = 1 > 0$. Ta thấy:
+- $\lim_{n \to \infty} |x_n' - x_n| = \lim_{n \to \infty} \frac{1}{n} = 0$.
+- Nhưng $|f(x_n') - f(x_n)| > 3 \ge \varepsilon_0$ với mọi $n \ge 1$.
+Theo đặc trưng phủ định, hàm số $f(x) = x^3 + x^2 + x$ **không liên tục đều trên $\mathbb{R}$**.
+</Solution>
+
+---
+
+## Câu 3: Phép tính Vi phân và Khai triển Taylor
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-3a-kha-vi-dirichlet"
+  title="Câu 3a: Xét tính khả vi của hàm Dirichlet bậc ba"
+>
+Xét tính khả vi của hàm số $f: \mathbb{R} \to \mathbb{R}$ xác định bởi:
+$$
+f(x) = \begin{cases}
+x^3 & \text{nếu } x \in \mathbb{Q} \\
+-x^3 & \text{nếu } x \in \mathbb{R} \setminus \mathbb{Q}
+\end{cases}
+$$
+</Exercise>
+
+<Solution>
+**Trường hợp 1: Xét tại điểm $x_0 \neq 0$:**
+Do tính trù mật của tập số hữu tỉ $\mathbb{Q}$ và tập số vô tỉ $\mathbb{R} \setminus \mathbb{Q}$ trong $\mathbb{R}$:
+- Luôn tồn tại một dãy số hữu tỉ $(q_n) \subset \mathbb{Q}$ sao cho $q_n \to x_0$. Khi đó:
+  $$
+  \lim_{n \to \infty} f(q_n) = \lim_{n \to \infty} q_n^3 = x_0^3
+  $$
+- Đồng thời luôn tồn tại một dãy số vô tỉ $(r_n) \subset \mathbb{R} \setminus \mathbb{Q}$ sao cho $r_n \to x_0$. Khi đó:
+  $$
+  \lim_{n \to \infty} f(r_n) = \lim_{n \to \infty} (-r_n^3) = -x_0^3
+  $$
+Vì $x_0 \neq 0$, ta có $x_0^3 \neq -x_0^3$. Hai dãy con tiến tới cùng điểm $x_0$ nhưng cho hai giới hạn hàm khác nhau, nên không tồn tại giới hạn $\lim_{x \to x_0} f(x)$.
+Do đó hàm số $f(x)$ **bị gián đoạn tại mọi điểm $x_0 \neq 0$**.
+Vì một hàm số khả vi tại một điểm bắt buộc phải liên tục tại điểm đó, ta kết luận $f$ **không khả vi tại mọi điểm $x_0 \neq 0$**.
+
+**Trường hợp 2: Xét tại điểm $x_0 = 0$:**
+Tại $x = 0 \in \mathbb{Q}$, ta có giá trị $f(0) = 0^3 = 0$.
+Xét tỉ số vi phân khi $x \to 0$ ($x \neq 0$):
+$$
+\frac{f(x) - f(0)}{x - 0} = \frac{f(x)}{x}
+$$
+Đánh giá độ lớn của tỉ số này với mọi $x \neq 0$:
+$$
+\left| \frac{f(x)}{x} \right| = \frac{|f(x)|}{|x|} = \frac{|x|^3}{|x|} = x^2
+$$
+Lấy giới hạn khi $x \to 0$:
+$$
+\lim_{x \to 0} \left| \frac{f(x) - f(0)}{x - 0} \right| = \lim_{x \to 0} x^2 = 0
+$$
+Theo nguyên lý kẹp, ta suy ra:
+$$
+\lim_{x \to 0} \frac{f(x) - f(0)}{x - 0} = 0
+$$
+Theo định nghĩa đạo hàm, hàm số $f$ **khả vi tại điểm $x_0 = 0$** và có đạo hàm:
+$$
+f'(0) = 0
+$$
+
+**Kết luận chung:** Hàm số $f(x)$ chỉ khả vi tại duy nhất một điểm $x = 0$ với $f'(0) = 0$, và không khả vi tại mọi $x \neq 0$.
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-3b-taylor-dao-ham-vo-cuc"
+  title="Câu 3b: Giới hạn của đạo hàm cấp một khi x tiến ra vô cực"
+>
+Cho hàm số $f \in C^2(\mathbb{R})$. Giả sử tồn tại số thực $a \in \mathbb{R}$ sao cho:
+$$
+\lim_{x \to +\infty} f(x) = a \quad \text{và} \quad \lim_{x \to +\infty} f''(x) = 0
+$$
+Chứng minh rằng:
+$$
+\lim_{x \to +\infty} f'(x) = 0
+$$
+</Exercise>
+
+<Solution>
+Lấy số thực $h > 0$ cố định bất kỳ.
+Vì $f \in C^2(\mathbb{R})$, hàm số $f$ khả vi liên tục đến cấp 2 trên $\mathbb{R}$.
+Áp dụng **Công thức khai triển Taylor cấp 1 với phần dư dạng Lagrange** cho hàm số $f$ tại điểm $x$ với độ dời $h$:
+$$
+f(x + h) = f(x) + h f'(x) + \frac{h^2}{2} f''(\xi_x)
+$$
+trong đó điểm $\xi_x$ nằm trong khoảng mở $(x; x + h)$, tức $x < \xi_x < x + h$.
+
+Từ hệ thức trên, ta rút $f'(x)$ ra:
+$$
+h f'(x) = f(x + h) - f(x) - \frac{h^2}{2} f''(\xi_x)
+$$
+Chia cả hai vế cho $h > 0$:
+$$
+f'(x) = \frac{f(x + h) - f(x)}{h} - \frac{h}{2} f''(\xi_x)
+$$
+Lấy giá trị tuyệt đối và áp dụng bất đẳng thức tam giác:
+$$
+|f'(x)| \le \frac{|f(x + h) - f(x)|}{h} + \frac{h}{2} |f''(\xi_x)|
+$$
+
+Xét giới hạn khi $x \to +\infty$:
+1. Theo giả thiết $\lim_{x \to +\infty} f(x) = a$, ta có:
+   $$
+   \lim_{x \to +\infty} [f(x + h) - f(x)] = a - a = 0
+   $$
+2. Vì $\xi_x > x$, khi $x \to +\infty$ thì $\xi_x \to +\infty$.
+   Theo giả thiết $\lim_{t \to +\infty} f''(t) = 0$, ta có:
+   $$
+   \lim_{x \to +\infty} f''(\xi_x) = 0
+   $$
+Lấy giới hạn trên ($\limsup$) hai vế khi $x \to +\infty$:
+$$
+0 \le \limsup_{x \to +\infty} |f'(x)| \le \frac{0}{h} + \frac{h}{2} \cdot 0 = 0
+$$
+Vì bất đẳng thức trên đúng với mọi $h > 0$, ta suy ra:
+$$
+\lim_{x \to +\infty} |f'(x)| = 0 \iff \lim_{x \to +\infty} f'(x) = 0
+$$
+Định lý được chứng minh hoàn tất.
+</Solution>
+
+---
+
+## Câu 4: Phép tính Tích phân Suy rộng
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-4a-tinh-tich-phan-suy-rong"
+  title="Câu 4a: Tính tích phân suy rộng có điểm kỳ dị tại 0"
+>
+Tính tích phân suy rộng sau:
+$$
+I = \int_0^1 x \ln x \, dx
+$$
+</Exercise>
+
+<Solution>
+Hàm số dưới dấu tích phân $f(x) = x \ln x$ không xác định tại $x = 0$. Đây là tích phân suy rộng loại 2 với điểm kỳ dị tại cận dưới $x = 0^+$.
+Theo định nghĩa tích phân suy rộng:
+$$
+I = \lim_{c \to 0^+} \int_c^1 x \ln x \, dx
+$$
+Ta tìm nguyên hàm bằng phương pháp tích phân từng phần:
+Đặt:
+$$
+\begin{cases}
+u = \ln x \\[1ex]
+dv = x dx
+\end{cases} \implies \begin{cases}
+du = \dfrac{dx}{x} \\[2ex]
+v = \dfrac{x^2}{2}
+\end{cases}
+$$
+Công thức tích phân từng phần cho ta:
+$$
+\int x \ln x \, dx = \frac{x^2}{2} \ln x - \int \frac{x^2}{2} \cdot \frac{dx}{x} = \frac{x^2}{2} \ln x - \frac{1}{2} \int x dx = \frac{x^2}{2} \ln x - \frac{x^2}{4}
+$$
+Áp dụng cận từ $c$ đến 1 ($0 < c < 1$):
+$$
+\begin{aligned}
+\int_c^1 x \ln x \, dx &= \left[ \frac{x^2}{2} \ln x - \frac{x^2}{4} \right]_c^1 \\
+&= \left( \frac{1^2}{2} \ln 1 - \frac{1^2}{4} \right) - \left( \frac{c^2}{2} \ln c - \frac{c^2}{4} \right) \\
+&= \left( 0 - \frac{1}{4} \right) - \frac{c^2}{2} \ln c + \frac{c^2}{4} \\
+&= -\frac{1}{4} - \frac{c^2 \ln c}{2} + \frac{c^2}{4}
+\end{aligned}
+$$
+Tìm giới hạn khi $c \to 0^+$:
+- Ta biết giới hạn cơ bản: $\lim_{c \to 0^+} c^2 \ln c = 0$ (áp dụng quy tắc L'Hôpital: $\lim_{c \to 0^+} \frac{\ln c}{1/c^2} = \lim_{c \to 0^+} \frac{1/c}{-2/c^3} = \lim_{c \to 0^+} \left(-\frac{c^2}{2}\right) = 0$).
+- $\lim_{c \to 0^+} \frac{c^2}{4} = 0$.
+
+Do đó:
+$$
+I = \lim_{c \to 0^+} \left( -\frac{1}{4} - \frac{c^2 \ln c}{2} + \frac{c^2}{4} \right) = -\frac{1}{4} - 0 + 0 = -\frac{1}{4}
+$$
+Vậy tích phân suy rộng hội tụ và có giá trị $I = -\frac{1}{4}$.
+</Solution>
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-4b-khao-sat-tham-so-p"
+  title="Câu 4b: Tìm tham số p để tích phân suy rộng hội tụ"
+>
+Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho tích phân suy rộng sau hội tụ:
+$$
+J = \int_0^{+\infty} \frac{e^{-x}}{x^p} \, dx
+$$
+</Exercise>
+
+<Solution>
+Hàm số dưới dấu tích phân $f(x) = \frac{e^{-x}}{x^p}$ là hàm số dương trên $(0; +\infty)$.
+Tích phân có hai điểm kỳ dị tiềm năng: tại $x = 0^+$ (khi $p > 0$) và tại $+\infty$.
+Ta chia tích phân thành hai tích phân thành phần tại điểm $x = 1$:
+$$
+J = \int_0^1 \frac{e^{-x}}{x^p} \, dx + \int_1^{+\infty} \frac{e^{-x}}{x^p} \, dx = J_1 + J_2
+$$
+Tích phân $J$ hội tụ khi và chỉ khi cả $J_1$ và $J_2$ đều hội tụ.
+
+**1. Khảo sát $J_1 = \int_0^1 \frac{e^{-x}}{x^p} \, dx$ (Kỳ dị tại 0):**
+Khi $x \to 0^+$, ta có $\lim_{x \to 0^+} e^{-x} = 1$. Do đó:
+$$
+\frac{e^{-x}}{x^p} \sim \frac{1}{x^p}, \quad \text{khi } x \to 0^+
+$$
+Theo tiêu chuẩn tích phân suy rộng chuẩn Riemann tại điểm 0:
+Tích phân $\int_0^1 \frac{dx}{x^p}$ hội tụ khi và chỉ khi:
+$$
+p < 1
+$$
+Theo **Dấu hiệu so sánh dạng giới hạn**, tích phân $J_1$ **hội tụ khi và chỉ khi $p < 1$** (phân kỳ khi $p \ge 1$).
+
+**2. Khảo sát $J_2 = \int_1^{+\infty} \frac{e^{-x}}{x^p} \, dx$ (Kỳ dị tại $+\infty$):**
+Với tham số $p \in \mathbb{R}$ bất kỳ, ta xét giới hạn:
+$$
+\lim_{x \to +\infty} x^2 \cdot \frac{e^{-x}}{x^p} = \lim_{x \to +\infty} \frac{x^{2-p}}{e^x} = 0
+$$
+(Vì hàm mũ $e^x$ tăng nhanh hơn bất kỳ hàm lũy thừa $x^{2-p}$ nào khi $x \to +\infty$).
+Theo định nghĩa giới hạn, tồn tại điểm $x_0 \ge 1$ sao cho với mọi $x \ge x_0$:
+$$
+x^2 \cdot \frac{e^{-x}}{x^p} \le 1 \iff 0 < \frac{e^{-x}}{x^p} \le \frac{1}{x^2}
+$$
+Vì tích phân suy rộng chuẩn $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ (chuỗi Riemann với số mũ $2 > 1$), theo **Dấu hiệu so sánh trực tiếp**, tích phân $J_2$ **hội tụ với mọi giá trị $p \in \mathbb{R}$**.
+
+**Kết luận:**
+Tích phân $J = J_1 + J_2$ hội tụ khi và chỉ khi:
+$$
+p < 1
+$$
+(Đây chính là hàm Gamma mở rộng $\Gamma(1 - p)$).
+</Solution>
+
+---
+
+## Câu 5: Miền Hội tụ và Hội tụ Đều của Chuỗi Hàm
+
+<Exercise
+  id="exer-gthmb-c8-b2-cau-5-chuoi-ham-de-thi"
+  title="Câu 5: Khảo sát miền hội tụ và chứng minh chuỗi hàm hội tụ đều"
+>
+Cho chuỗi hàm:
+$$
+\sum_{n=1}^\infty \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n
+$$
+1. Tìm miền hội tụ $D$ của chuỗi hàm.
+2. Chứng minh rằng chuỗi hàm hội tụ đều trên toàn bộ miền hội tụ $D$.
+</Exercise>
+
+<Solution>
+**1. Tìm miền hội tụ $D$:**
+Đặt biến phụ $t = \frac{x}{1 + x^2}$ với $x \in \mathbb{R}$.
+- Với mọi $x \in \mathbb{R}$, áp dụng bất đẳng thức đại số $(|x| - 1)^2 \ge 0$:
+  $$
+  x^2 + 1 \ge 2|x|
+  $$
+  Vì $1 + x^2 > 0$, chia cả hai vế cho $1 + x^2$:
+  $$
+  \frac{2|x|}{1 + x^2} \le 1 \iff |t| = \left| \frac{x}{1 + x^2} \right| \le \frac{1}{2}, \quad \forall x \in \mathbb{R}
+  $$
+  (Dấu đẳng thức đạt được khi $|x| = 1 \iff x = \pm 1$).
+- Chuỗi hàm được đưa về chuỗi lũy thừa theo biến $t$:
+  $$
+  \sum_{n=1}^\infty \frac{1}{n} t^n
+  $$
+  Bán kính hội tụ của chuỗi lũy thừa này là:
+  $$
+  R = \lim_{n \to \infty} \left| \frac{c_n}{c_{n+1}} \right| = \lim_{n \to \infty} \frac{n + 1}{n} = 1
+  $$
+  Do đó chuỗi lũy thừa hội tụ tuyệt đối với mọi $t \in (-1; 1)$.
+- Vì $|t| \le \frac{1}{2}$ với mọi $x \in \mathbb{R}$, giá trị của $t$ luôn nằm hoàn toàn bên trong khoảng hội tụ $(-1; 1)$:
+  $$
+  t \in \left[ -\frac{1}{2}; \frac{1}{2} \right] \subset (-1; 1)
+  $$
+- Do đó, với mọi $x \in \mathbb{R}$, chuỗi số $\sum_{n=1}^\infty \frac{1}{n} \left(\frac{x}{1+x^2}\right)^n$ luôn hội tụ tuyệt đối.
+- **Kết luận:** Miền hội tụ của chuỗi hàm là toàn bộ trục số thực:
+  $$
+  D = \mathbb{R}
+  $$
+
+**2. Chứng minh chuỗi hàm hội tụ đều trên toàn bộ $\mathbb{R}$:**
+Ta sử dụng **Dấu hiệu Weierstrass (M-test)** về sự hội tụ đều của chuỗi hàm:
+- Với mọi $x \in \mathbb{R}$ và mọi số nguyên dương $n \in \mathbb{N}^*$, từ đánh giá $|t| \le \frac{1}{2}$, ta ước lượng độ lớn của từng số hạng:
+  $$
+  \left| f_n(x) \right| = \left| \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n \right| = \frac{1}{n} \left| \frac{x}{1 + x^2} \right|^n \le \frac{1}{n} \left( \frac{1}{2} \right)^n
+  $$
+- Vì $n \ge 1$, ta có $\frac{1}{n} \le 1$. Do đó:
+  $$
+  \left| f_n(x) \right| \le \left( \frac{1}{2} \right)^n = a_n, \quad \forall x \in \mathbb{R}, \; \forall n \in \mathbb{N}^*
+  $$
+- Xét chuỗi số dương $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \left(\frac{1}{2}\right)^n$:
+  Đây là một chuỗi cấp số nhân với công bội $q = \frac{1}{2}$. Vì $|q| = \frac{1}{2} < 1$, chuỗi số này hội tụ (có tổng bằng $\frac{1/2}{1 - 1/2} = 1$).
+- Dãy số trội $(a_n)$ hoàn toàn độc lập với biến $x$.
+
+Theo **Dấu hiệu Weierstrass (Định lý 7.2.2)**, chuỗi hàm $\sum_{n=1}^\infty \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n$ **hội tụ đều trên toàn bộ $\mathbb{R}$**.
+</Solution>
+
+---
+
+<KeyTakeaways>
+- **Kỹ năng thi tự luận:** Luôn mở đầu bằng việc kiểm tra tập xác định, tính liên tục và các điều kiện giả thiết của định lý áp dụng.
+- **Dạng vô định và Maclaurin:** Khi gặp dạng $\infty - \infty$ hoặc $0/0$ chứa các hàm lượng giác hợp, quy đồng và dùng khai triển Maclaurin đến cấp cần thiết giúp triệt tiêu tử số nhanh và chính xác hơn quy tắc L'Hôpital nhiều lần.
+- **Bác bỏ tính liên tục đều:** Luôn chọn hai dãy $(x_n), (x_n')$ sao cho $|x_n - x_n'| \to 0$ nhưng hiệu giá trị hàm bị chặn dưới bởi một hằng số dương $\varepsilon_0 > 0$.
+- **Chứng minh hội tụ đều chuỗi hàm:** Dấu hiệu Weierstrass M-test kết hợp các bất đẳng thức đại số cổ điển (AM-GM: $1 + x^2 \ge 2|x|$) là phương pháp ngắn gọn và chuẩn mực nhất.
+</KeyTakeaways>

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T16:55:50.709Z",
+  "updatedAt": "2026-11-03T17:17:02.995Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1956,6 +1956,44 @@
         "exer-gthmb-c7-b5-bai-8-mien-hoi-tu": "7.5.6",
         "exer-gthmb-c7-b5-bai-9-weierstrass": "7.5.7",
         "exer-gthmb-c7-b5-de-thi-ket-thuc-hoc-phan": "7.5.8"
+      }
+    },
+    "de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi": {
+      "path": "content/single-variable-calculus/08-on-tap-cuoi-khoa-va-de-thi-mau/01-de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "97eb111ef928b4a8478f1c4e5f6bcf237c1786a788f4dfb0f296242f40b422f5",
+      "numberedBlocks": {
+        "def-gthmb-c8-b1-sup-inf": "8.1.1",
+        "thm-gthmb-c8-b1-dac-trung-epsilon-sup-inf": "8.1.2",
+        "def-gthmb-c8-b1-gioi-han-day-so": "8.1.3",
+        "thm-gthmb-c8-b1-nguyen-ly-kep": "8.1.4",
+        "thm-gthmb-c8-b1-weierstrass-day-don-dieu": "8.1.5",
+        "thm-gthmb-c8-b1-cauchy-day-so": "8.1.6",
+        "thm-gthmb-c8-b1-dinh-ly-gia-tri-trung-gian": "8.1.7",
+        "thm-gthmb-c8-b1-weierstrass-cuc-bien": "8.1.8",
+        "def-gthmb-c8-b1-lien-tuc-deu": "8.1.9",
+        "thm-gthmb-c8-b1-phu-dinh-lien-tuc-deu": "8.1.10",
+        "thm-gthmb-c8-b1-cong-thuc-taylor": "8.1.11",
+        "thm-gthmb-c8-b1-tich-phan-chuan-riemann": "8.1.12",
+        "thm-gthmb-c8-b1-weierstrass-m-test": "8.1.13"
+      }
+    },
+    "bai-on-tap-va-loi-giai-de-thi-mau": {
+      "path": "content/single-variable-calculus/08-on-tap-cuoi-khoa-va-de-thi-mau/02-bai-on-tap-va-loi-giai-de-thi-mau.mdx",
+      "status": "published",
+      "version": "0.1.0",
+      "sha256": "26c23fd5a3da04c3e8ce5d3a0267373f5b3e43597831088be18187ae3ba357d4",
+      "numberedBlocks": {
+        "exer-gthmb-c8-b2-cau-1a-gioi-han-day-kep": "8.2.1",
+        "exer-gthmb-c8-b2-cau-1b-gioi-han-maclaurin": "8.2.2",
+        "exer-gthmb-c8-b2-cau-2a-dinh-ly-gia-tri-trung-gian": "8.2.3",
+        "exer-gthmb-c8-b2-cau-2b-bac-bo-lien-tuc-deu": "8.2.4",
+        "exer-gthmb-c8-b2-cau-3a-kha-vi-dirichlet": "8.2.5",
+        "exer-gthmb-c8-b2-cau-3b-taylor-dao-ham-vo-cuc": "8.2.6",
+        "exer-gthmb-c8-b2-cau-4a-tinh-tich-phan-suy-rong": "8.2.7",
+        "exer-gthmb-c8-b2-cau-4b-khao-sat-tham-so-p": "8.2.8",
+        "exer-gthmb-c8-b2-cau-5-chuoi-ham-de-thi": "8.2.9"
       }
     }
   }

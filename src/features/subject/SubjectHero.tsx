@@ -1,6 +1,7 @@
 import type { ManifestSubject } from '@schemas/index';
 import {
   BookOpen,
+  CheckCircle2,
   Clock,
   Compass,
   ExternalLink,
@@ -149,6 +150,14 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
                   </strong>{' '}
                   bài học trong môn {subject.title}.
                 </p>
+                {completedCount === stats.lessonCount && stats.lessonCount > 0 && (
+                  <div className="flex items-center gap-1.5 pt-1">
+                    <Badge variant="approved" className="w-full justify-center py-1">
+                      <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Đã hoàn thành toàn bộ khóa học</span>
+                    </Badge>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-3" aria-label="Chế độ khách">
