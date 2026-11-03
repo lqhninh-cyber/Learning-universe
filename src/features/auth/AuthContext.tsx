@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useLearningStore } from '@/features/learning';
 import { isSupabaseConfigured, supabase } from '@/services/supabase/client';
+import { fetchUserLearningData } from '@/services/supabase/learning-sync';
 import { AuthContext } from './auth-context-def';
 import { DEMO_PENDING_STUDENT } from './mock-users';
 import type { AuthContextValue, UserProfile } from './types';
@@ -44,7 +45,14 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
   // Đồng bộ với learningStore: chỉ khi là Học viên đã duyệt mới kích hoạt lưu tiến độ
   useEffect(() => {
     if (user && user.status === 'approved') {
-      useLearningStore.getState().enableLearnerMode(user.fullName || user.email || undefined);
+      useLearningStore
+        .getState()
+        .enableLearnerMode(user.fullName || user.email || undefined, user.id);
+      void fetchUserLearningData(user.id).then((cloudData) => {
+        if (cloudData) {
+          useLearningStore.getState().mergeCloudLearningData(cloudData);
+        }
+      });
     } else {
       useLearningStore.getState().signOutLearnerMode();
     }

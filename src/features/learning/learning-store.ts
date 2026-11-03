@@ -1,5 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import {
+  syncBookmarkToSupabase,
+  syncNoteToSupabase,
+  syncProgressToSupabase,
+} from '@/services/supabase/learning-sync';
 
 export type PendingLearningActionType = 'complete' | 'bookmark' | 'note';
 
@@ -22,6 +27,7 @@ export interface LastVisitedEntry {
 export interface LearningState {
   /** Trạng thái đã đăng nhập / kích hoạt hồ sơ học viên (mặc định `false` = Guest theo D1). */
   readonly isAuthenticated: boolean;
+  readonly currentUserId: string | null;
   readonly learnerName: string;
   /** Bản đồ `lessonId -> completedAt (ISO)`. */
   readonly completedLessons: Readonly<Record<string, string>>;
@@ -48,7 +54,12 @@ export interface LearningState {
   requestNoteAccess: (lessonId: string) => boolean;
   setOpenNoteLessonId: (lessonId: string | null) => void;
   saveLessonNote: (lessonId: string, body: string) => boolean;
-  enableLearnerMode: (learnerName?: string) => void;
+  enableLearnerMode: (learnerName?: string, userId?: string) => void;
+  mergeCloudLearningData: (data: {
+    readonly completedLessons?: Record<string, string>;
+    readonly bookmarkedLessons?: Record<string, string>;
+    readonly lessonNotes?: Record<string, LessonNoteEntry>;
+  }) => void;
   signOutLearnerMode: () => void;
   dismissPrompt: () => void;
   resetLearningStore: () => void;
@@ -56,6 +67,7 @@ export interface LearningState {
 
 const INITIAL_DATA = {
   isAuthenticated: false,
+  currentUserId: null as string | null,
   learnerName: 'Sinh viên Sư phạm Toán',
   completedLessons: {} as Readonly<Record<string, string>>,
   bookmarkedLessons: {} as Readonly<Record<string, string>>,
@@ -95,12 +107,17 @@ export const useLearningStore = create<LearningState>()(
         }
 
         const next = { ...state.completedLessons };
+        const willBeCompleted = !next[lessonId];
         if (next[lessonId]) {
           delete next[lessonId];
         } else {
           next[lessonId] = new Date().toISOString();
         }
         set({ completedLessons: next });
+
+        if (state.currentUserId) {
+          void syncProgressToSupabase(state.currentUserId, lessonId, willBeCompleted);
+        }
         return true;
       },
 
@@ -112,12 +129,17 @@ export const useLearningStore = create<LearningState>()(
         }
 
         const next = { ...state.bookmarkedLessons };
+        const willBeBookmarked = !next[lessonId];
         if (next[lessonId]) {
           delete next[lessonId];
         } else {
           next[lessonId] = new Date().toISOString();
         }
         set({ bookmarkedLessons: next });
+
+        if (state.currentUserId) {
+          void syncBookmarkToSupabase(state.currentUserId, lessonId, willBeBookmarked);
+        }
         return true;
       },
 
@@ -160,10 +182,14 @@ export const useLearningStore = create<LearningState>()(
           };
         }
         set({ lessonNotes: next });
+
+        if (state.currentUserId) {
+          void syncNoteToSupabase(state.currentUserId, lessonId, body);
+        }
         return true;
       },
 
-      enableLearnerMode: (learnerName) => {
+      enableLearnerMode: (learnerName, userId) => {
         const state = get();
         const pending = state.pendingPromptAction;
         const now = new Date().toISOString();
@@ -182,17 +208,42 @@ export const useLearningStore = create<LearningState>()(
 
         set({
           isAuthenticated: true,
+          currentUserId: userId ?? state.currentUserId,
           learnerName: learnerName?.trim() || state.learnerName,
           completedLessons,
           bookmarkedLessons,
           openNoteLessonId,
           pendingPromptAction: null,
         });
+
+        if (userId && pending?.type === 'complete') {
+          void syncProgressToSupabase(userId, pending.lessonId, true);
+        } else if (userId && pending?.type === 'bookmark') {
+          void syncBookmarkToSupabase(userId, pending.lessonId, true);
+        }
+      },
+
+      mergeCloudLearningData: (cloudData) => {
+        set((state) => ({
+          completedLessons: {
+            ...state.completedLessons,
+            ...(cloudData.completedLessons ?? {}),
+          },
+          bookmarkedLessons: {
+            ...state.bookmarkedLessons,
+            ...(cloudData.bookmarkedLessons ?? {}),
+          },
+          lessonNotes: {
+            ...state.lessonNotes,
+            ...(cloudData.lessonNotes ?? {}),
+          },
+        }));
       },
 
       signOutLearnerMode: () => {
         set({
           isAuthenticated: false,
+          currentUserId: null,
           pendingPromptAction: null,
         });
       },
@@ -209,6 +260,7 @@ export const useLearningStore = create<LearningState>()(
       name: 'learning-universe-progress-v1',
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
+        currentUserId: state.currentUserId,
         learnerName: state.learnerName,
         completedLessons: state.completedLessons,
         bookmarkedLessons: state.bookmarkedLessons,

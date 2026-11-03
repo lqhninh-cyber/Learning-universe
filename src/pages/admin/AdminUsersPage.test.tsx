@@ -16,9 +16,9 @@ describe('Trang Quản lý & Phê duyệt Học viên (/admin/users)', () => {
     expect(
       screen.getByRole('heading', { name: 'Phê duyệt & Quản lý Học viên' }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Tổng tài khoản')).toBeInTheDocument();
-    expect(screen.getByText('Chờ phê duyệt')).toBeInTheDocument();
-    expect(screen.getByText('Đã phê duyệt')).toBeInTheDocument();
+    expect(screen.getByText('Tổng số học viên')).toBeInTheDocument();
+    expect(screen.getByText('Đang chờ duyệt')).toBeInTheDocument();
+    expect(screen.getByText('Đã duyệt')).toBeInTheDocument();
     expect(screen.getByText('Từ chối / Đã khóa')).toBeInTheDocument();
 
     // Chờ danh sách nạp xong

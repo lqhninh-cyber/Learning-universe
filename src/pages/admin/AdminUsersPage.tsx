@@ -177,7 +177,7 @@ export function AdminUsersPage() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Card className="border-stone-200/90 bg-white p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-stone-500">Tổng tài khoản</span>
+            <span className="text-xs font-medium text-stone-500">Tổng số học viên</span>
             <Users className="h-4 w-4 text-stone-400" aria-hidden="true" />
           </div>
           <div className="mt-2 text-2xl font-bold text-stone-900">{counts.all}</div>
@@ -185,7 +185,7 @@ export function AdminUsersPage() {
 
         <Card className="border-amber-200 bg-amber-50/50 p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-amber-800">Chờ phê duyệt</span>
+            <span className="text-xs font-medium text-amber-800">Đang chờ duyệt</span>
             <Clock className="h-4 w-4 text-amber-600" aria-hidden="true" />
           </div>
           <div className="mt-2 text-2xl font-bold text-amber-900">{counts.pending}</div>
@@ -193,7 +193,7 @@ export function AdminUsersPage() {
 
         <Card className="border-emerald-200 bg-emerald-50/50 p-4 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-emerald-800">Đã phê duyệt</span>
+            <span className="text-xs font-medium text-emerald-800">Đã duyệt</span>
             <UserCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
           </div>
           <div className="mt-2 text-2xl font-bold text-emerald-900">{counts.approved}</div>

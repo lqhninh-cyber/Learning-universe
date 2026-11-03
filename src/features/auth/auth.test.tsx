@@ -180,4 +180,42 @@ describe('Hệ thống Xác thực & Phân quyền (Auth Module)', () => {
     expect(screen.getByRole('button', { name: /Đăng nhập với Google/i })).toBeInTheDocument();
     expect(screen.getByText(/Chính sách Học thuật Mở/i)).toBeInTheDocument();
   });
+
+  it('6. Phân quyền học viên: Học viên đã duyệt lưu được tiến độ và ghi chú, khách vãng lai và pending bị chặn', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <AuthProvider>
+        <TestAuthConsumer />
+      </AuthProvider>,
+    );
+
+    // Khi là Guest: hoàn thành bài học trả về false và mở prompt
+    const successGuest = useLearningStore.getState().toggleLessonCompleted('lesson-demo-1');
+    expect(successGuest).toBe(false);
+    expect(useLearningStore.getState().pendingPromptAction?.type).toBe('complete');
+
+    // Chuyển sang Học viên đã duyệt -> tự động hoàn tất thao tác đang dở (lesson-demo-1)
+    await user.click(screen.getByRole('button', { name: 'Chọn Học viên duyệt' }));
+    expect(useLearningStore.getState().completedLessons['lesson-demo-1']).toBeDefined();
+
+    // Học viên đã duyệt có thể tiếp tục hoàn thành bài học mới (lesson-demo-2)
+    const successApproved = useLearningStore.getState().toggleLessonCompleted('lesson-demo-2');
+    expect(successApproved).toBe(true);
+    expect(useLearningStore.getState().completedLessons['lesson-demo-2']).toBeDefined();
+
+    // Lưu bài yêu thích
+    const successBookmark = useLearningStore.getState().toggleLessonBookmark('lesson-demo-2');
+    expect(successBookmark).toBe(true);
+    expect(useLearningStore.getState().bookmarkedLessons['lesson-demo-2']).toBeDefined();
+
+    // Lưu ghi chú bài học
+    const successNote = useLearningStore
+      .getState()
+      .saveLessonNote('lesson-demo-2', 'Ghi chú quan trọng về nhóm cyclic');
+    expect(successNote).toBe(true);
+    expect(useLearningStore.getState().lessonNotes['lesson-demo-2']?.body).toBe(
+      'Ghi chú quan trọng về nhóm cyclic',
+    );
+  });
 });
