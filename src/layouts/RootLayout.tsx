@@ -217,7 +217,19 @@ function RootLayoutContent() {
           <nav aria-label="Điều hướng tài khoản và tiện ích" className="flex items-center gap-2">
             {isUserLoggedIn ? (
               <div className="flex items-center gap-2">
-                {/* Trạng thái Chờ duyệt: Hiển thị badge kèm popover thông báo */}
+                {/* Khi là Quản trị viên (Admin): Hiển thị nút liên kết trực tiếp đến trang /admin/users */}
+                {isAdmin && (
+                  <Link
+                    to={ROUTES.adminUsers}
+                    className="flex items-center gap-1.5 rounded-lg border border-purple-300 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-900 shadow-2xs transition-colors hover:bg-purple-100"
+                    title="Truy cập Trang quản lý và xét duyệt học viên"
+                  >
+                    <Users className="h-3.5 w-3.5 text-purple-700" aria-hidden="true" />
+                    <span>Quản lý học viên</span>
+                  </Link>
+                )}
+
+                {/* Huy hiệu Chờ duyệt: Chỉ hiển thị khi KHÔNG PHẢI Admin VÀ status === 'pending' */}
                 {isPending && (
                   <button
                     type="button"
@@ -230,8 +242,8 @@ function RootLayoutContent() {
                   </button>
                 )}
 
-                {/* Trạng thái Đã duyệt: Hiển thị badge Học viên */}
-                {(isApprovedStudent || (!user && isStoreAuthenticated)) && (
+                {/* Trạng thái Đã duyệt: Hiển thị badge Học viên khi đã duyệt và không phải Admin */}
+                {!isAdmin && (isApprovedStudent || (!user && isStoreAuthenticated)) && (
                   <div className="flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800">
                     <UserCheck className="h-3.5 w-3.5 text-emerald-700" aria-hidden="true" />
                     <span>Học viên</span>

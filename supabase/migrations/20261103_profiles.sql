@@ -77,6 +77,12 @@ for each row execute function public.handle_new_user();
 -- 4. Kích hoạt Row Level Security (RLS)
 alter table public.profiles enable row level security;
 
+-- Xóa các chính sách cũ nếu có để tránh đệ quy RLS
+drop policy if exists "profiles_select_own_or_admin" on public.profiles;
+drop policy if exists "profiles_select_public" on public.profiles;
+drop policy if exists "profiles_user_update_self" on public.profiles;
+drop policy if exists "profiles_admin_update" on public.profiles;
+
 -- Chính sách xem hồ sơ:
 -- - Người dùng đã xác thực hoặc khách công khai được đọc thông tin cơ bản
 create policy "profiles_select_public"

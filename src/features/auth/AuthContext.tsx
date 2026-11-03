@@ -4,7 +4,7 @@ import { isSupabaseConfigured, supabase } from '@/services/supabase/client';
 import { fetchUserLearningData } from '@/services/supabase/learning-sync';
 import { AuthContext } from './auth-context-def';
 import { DEMO_PENDING_STUDENT } from './mock-users';
-import type { AuthContextValue, UserProfile } from './types';
+import type { AuthContextValue, UserProfile, UserRole, UserStatus } from './types';
 
 const AUTH_STORAGE_KEY = 'learning_universe_current_user_v1';
 
@@ -42,9 +42,9 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isPendingNoticeOpen, setIsPendingNoticeOpen] = useState<boolean>(false);
 
-  // Đồng bộ với learningStore: chỉ khi là Học viên đã duyệt mới kích hoạt lưu tiến độ
+  // Đồng bộ với learningStore: chỉ khi là Học viên đã duyệt hoặc Admin mới kích hoạt lưu tiến độ
   useEffect(() => {
-    if (user && user.status === 'approved') {
+    if (user && (user.role === 'admin' || user.status === 'approved')) {
       useLearningStore
         .getState()
         .enableLearnerMode(user.fullName || user.email || undefined, user.id);
@@ -67,32 +67,42 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       return;
     }
 
-    async function fetchSupabaseProfile(userId: string, email: string | null) {
+    async function loadProfileFromSupabase(
+      userId: string,
+      userEmail: string | null,
+    ): Promise<UserProfile | null> {
       if (!supabase) return null;
       try {
-        const { data, error } = await supabase
+        const { data: profile, error } = await supabase
           .from('profiles')
-          .select('*')
+          .select('role, status, full_name, avatar_url')
           .eq('id', userId)
-          .maybeSingle();
+          .single();
 
         if (error) {
-          console.warn('[Learning Universe] Lỗi truy vấn profile:', error.message);
+          console.warn('[Learning Universe] Lỗi truy vấn profile từ Supabase:', error.message);
           return null;
         }
 
-        if (data) {
+        if (profile) {
+          const role: UserRole = profile.role === 'admin' ? 'admin' : 'student';
+          const status: UserStatus =
+            role === 'admin'
+              ? 'approved'
+              : profile.status === 'approved' || profile.status === 'rejected'
+                ? profile.status
+                : 'pending';
+
           return {
-            id: data.id,
-            email: data.email ?? email,
-            fullName: data.full_name,
-            avatarUrl: data.avatar_url,
-            role: data.role === 'admin' ? 'admin' : 'student',
-            status:
-              data.status === 'approved' || data.status === 'rejected' ? data.status : 'pending',
-            createdAt: data.created_at,
-            updatedAt: data.updated_at,
-          } as UserProfile;
+            id: userId,
+            email: userEmail,
+            fullName: profile.full_name,
+            avatarUrl: profile.avatar_url,
+            role,
+            status,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
         }
       } catch (err) {
         console.warn('[Learning Universe] Ngoại lệ khi lấy profile Supabase:', err);
@@ -100,32 +110,73 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       return null;
     }
 
+    const syncUserSession = async (sessionUser: {
+      id: string;
+      email?: string | null;
+      user_metadata?: Record<string, unknown>;
+      app_metadata?: Record<string, unknown>;
+      created_at?: string;
+    }) => {
+      const profile = await loadProfileFromSupabase(sessionUser.id, sessionUser.email ?? null);
+      if (!isMounted) return;
+
+      if (profile) {
+        // Cập nhật state chính xác theo dữ liệu từ database profiles
+        setUser({
+          ...profile,
+          email: sessionUser.email ?? profile.email,
+          fullName:
+            profile.fullName ||
+            (sessionUser.user_metadata?.full_name as string) ||
+            (sessionUser.user_metadata?.name as string) ||
+            sessionUser.email?.split('@')[0] ||
+            'Học viên',
+          avatarUrl: profile.avatarUrl || (sessionUser.user_metadata?.avatar_url as string) || null,
+        });
+      } else {
+        // Tuyệt đối không hardcode pending nếu database/metadata đã là admin hoặc approved
+        setUser((prev) => {
+          if (
+            prev &&
+            prev.id === sessionUser.id &&
+            (prev.role === 'admin' || prev.status === 'approved')
+          ) {
+            return prev;
+          }
+
+          const metaRole =
+            (sessionUser.app_metadata?.role as string) ||
+            (sessionUser.user_metadata?.role as string);
+          const metaStatus =
+            (sessionUser.app_metadata?.status as string) ||
+            (sessionUser.user_metadata?.status as string);
+          const isAdmin = metaRole === 'admin';
+
+          return {
+            id: sessionUser.id,
+            email: sessionUser.email ?? null,
+            fullName:
+              (sessionUser.user_metadata?.full_name as string) ||
+              (sessionUser.user_metadata?.name as string) ||
+              sessionUser.email?.split('@')[0] ||
+              prev?.fullName ||
+              'Người dùng',
+            avatarUrl: (sessionUser.user_metadata?.avatar_url as string) || prev?.avatarUrl || null,
+            role: isAdmin ? 'admin' : 'student',
+            status: isAdmin ? 'approved' : metaStatus === 'approved' ? 'approved' : 'pending',
+            createdAt: sessionUser.created_at ?? new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+        });
+      }
+    };
+
     supabase.auth
       .getSession()
       .then(async ({ data: { session } }) => {
         if (!isMounted) return;
         if (session?.user) {
-          const profile = await fetchSupabaseProfile(session.user.id, session.user.email ?? null);
-          if (isMounted) {
-            if (profile) {
-              setUser(profile);
-            } else {
-              setUser({
-                id: session.user.id,
-                email: session.user.email ?? null,
-                fullName:
-                  session.user.user_metadata?.full_name ??
-                  session.user.user_metadata?.name ??
-                  session.user.email?.split('@')[0] ??
-                  'Người dùng',
-                avatarUrl: session.user.user_metadata?.avatar_url ?? null,
-                role: 'student',
-                status: 'pending',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-              });
-            }
-          }
+          await syncUserSession(session.user);
         }
       })
       .catch((err) => {
@@ -140,27 +191,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (!isMounted) return;
       if (session?.user) {
-        const profile = await fetchSupabaseProfile(session.user.id, session.user.email ?? null);
-        if (isMounted) {
-          if (profile) {
-            setUser(profile);
-          } else {
-            setUser({
-              id: session.user.id,
-              email: session.user.email ?? null,
-              fullName:
-                session.user.user_metadata?.full_name ??
-                session.user.user_metadata?.name ??
-                session.user.email?.split('@')[0] ??
-                'Người dùng',
-              avatarUrl: session.user.user_metadata?.avatar_url ?? null,
-              role: 'student',
-              status: 'pending',
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            });
-          }
-        }
+        await syncUserSession(session.user);
       } else {
         if (isMounted) setUser(null);
       }
@@ -211,15 +242,20 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
     setUser(profile);
   }, []);
 
+  const isAdmin = Boolean(user && user.role === 'admin');
+  const isApprovedStudent = Boolean(user && (user.role === 'admin' || user.status === 'approved'));
+  const isPending = Boolean(user && user.role !== 'admin' && user.status === 'pending');
+  const isRejected = Boolean(user && user.role !== 'admin' && user.status === 'rejected');
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       isLoading,
       isAuthenticated: Boolean(user),
-      isApprovedStudent: Boolean(user && user.status === 'approved'),
-      isAdmin: Boolean(user && user.role === 'admin'),
-      isPending: Boolean(user && user.status === 'pending'),
-      isRejected: Boolean(user && user.status === 'rejected'),
+      isApprovedStudent,
+      isAdmin,
+      isPending,
+      isRejected,
       isMockMode: !isSupabaseConfigured,
       isAuthModalOpen,
       isPendingNoticeOpen,
@@ -234,6 +270,10 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
     [
       user,
       isLoading,
+      isApprovedStudent,
+      isAdmin,
+      isPending,
+      isRejected,
       isAuthModalOpen,
       isPendingNoticeOpen,
       openAuthModal,

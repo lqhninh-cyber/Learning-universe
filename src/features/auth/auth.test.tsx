@@ -163,6 +163,7 @@ describe('Hệ thống Xác thực & Phân quyền (Auth Module)', () => {
     // Thiết lập vai trò Admin
     await user.click(screen.getByRole('button', { name: 'Chọn Admin' }));
     expect(screen.getByTestId('is-admin')).toHaveTextContent('yes');
+    expect(screen.getByTestId('is-pending')).toHaveTextContent('no');
   });
 
   it('5. Hộp thoại Đăng nhập (AuthModal) mở và hiển thị đầy đủ thông tin học thuật', async () => {
