@@ -99,9 +99,9 @@ export function LegalQuoteCard({
       </div>
 
       {/* Nội dung trích dẫn nguyên văn pháp quy */}
-      <blockquote className="relative my-4 pl-4 text-sm leading-relaxed text-stone-800 sm:text-base">
+      <blockquote className="relative my-4 pl-4 text-[15.5px] leading-relaxed text-stone-800 italic sm:text-[16.5px]">
         <div className="absolute top-0 bottom-0 left-0 w-1 rounded-full bg-amber-700/70" />
-        <p className="font-serif italic">“{quote}”</p>
+        <p className="font-serif">“{quote}”</p>
       </blockquote>
 
       {/* Ý nghĩa sư phạm & Vận dụng */}

@@ -45,7 +45,7 @@ export function ScholarQuote({
         </div>
 
         {/* Thân danh ngôn */}
-        <blockquote className="border-l-4 border-amber-800/70 pl-4 font-serif text-base leading-relaxed text-stone-900 italic sm:text-lg sm:leading-loose">
+        <blockquote className="border-l-4 border-amber-800/70 pl-4 font-serif text-[15.5px] leading-relaxed text-stone-900 italic sm:text-[16.5px]">
           "{quote}"
         </blockquote>
 

@@ -16,9 +16,12 @@ import {
   LessonPrevNextNav,
   LessonSidebar,
   LessonToc,
+  ReadingControlsToolbar,
+  type ReadingFontSize,
   SourcePanel,
 } from '@/features/lesson-reader';
 import { ROUTES } from '@/shared/config/routes';
+import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Breadcrumb, Button, Card, Drawer, Skeleton } from '@/shared/ui';
 
@@ -62,6 +65,71 @@ export function LessonPage() {
     }
     return false;
   });
+
+  const [fontSize, setFontSize] = useState<ReadingFontSize>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('lu_reading_font_size');
+        if (saved === 'sm' || saved === 'base' || saved === 'lg') {
+          return saved;
+        }
+      } catch {
+        // Ignore storage errors
+      }
+    }
+    return 'base';
+  });
+
+  const [isFocusMode, setIsFocusMode] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem('lu_focus_mode') === 'true';
+      } catch {
+        // Ignore storage errors
+      }
+    }
+    return false;
+  });
+
+  const handleFontSizeChange = (size: ReadingFontSize) => {
+    setFontSize(size);
+    try {
+      localStorage.setItem('lu_reading_font_size', size);
+    } catch {
+      // Ignore storage errors
+    }
+  };
+
+  const handleToggleFocusMode = () => {
+    setIsFocusMode((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('lu_focus_mode', String(next));
+      } catch {
+        // Ignore storage errors
+      }
+      return next;
+    });
+  };
+
+  // Hỗ trợ phím Esc để thoát nhanh Chế độ đọc tập trung
+  useEffect(() => {
+    if (!isFocusMode) {
+      return;
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsFocusMode(false);
+        try {
+          localStorage.setItem('lu_focus_mode', 'false');
+        } catch {
+          // Ignore
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFocusMode]);
 
   const handleToggleSidebarCollapse = () => {
     setIsSidebarCollapsed((prev) => {
@@ -146,7 +214,7 @@ export function LessonPage() {
 
       <div className="flex flex-col justify-between gap-4 border-b border-[var(--bg-muted)] pb-4 lg:flex-row lg:items-center">
         <div className="flex items-center gap-3">
-          {isSidebarCollapsed && (
+          {!isFocusMode && isSidebarCollapsed && (
             <Button
               variant="outline"
               size="sm"
@@ -173,56 +241,68 @@ export function LessonPage() {
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Thanh công cụ đọc nhanh (Reading Controls Toolbar) */}
+          <ReadingControlsToolbar
+            fontSize={fontSize}
+            onFontSizeChange={handleFontSizeChange}
+            isFocusMode={isFocusMode}
+            onToggleFocusMode={handleToggleFocusMode}
+          />
+
           {/* Nút mở danh sách bài học trên mobile & tablet (< lg) */}
-          <div className="lg:hidden">
-            <Drawer
-              open={isSidebarDrawerOpen}
-              onOpenChange={setIsSidebarDrawerOpen}
-              side="left"
-              title={`Chương & Bài học — ${subject.title}`}
-              trigger={
-                <Button variant="outline" size="sm">
-                  <PanelLeft className="h-4 w-4" aria-hidden="true" />
-                  <span>Danh sách bài học</span>
-                </Button>
-              }
-            >
-              <LessonSidebar
-                subject={subject}
-                activeLessonId={lesson.id}
-                onSelectLesson={() => setIsSidebarDrawerOpen(false)}
-              />
-            </Drawer>
-          </div>
+          {!isFocusMode && (
+            <div className="lg:hidden">
+              <Drawer
+                open={isSidebarDrawerOpen}
+                onOpenChange={setIsSidebarDrawerOpen}
+                side="left"
+                title={`Chương & Bài học — ${subject.title}`}
+                trigger={
+                  <Button variant="outline" size="sm">
+                    <PanelLeft className="h-4 w-4" aria-hidden="true" />
+                    <span>Danh sách bài học</span>
+                  </Button>
+                }
+              >
+                <LessonSidebar
+                  subject={subject}
+                  activeLessonId={lesson.id}
+                  onSelectLesson={() => setIsSidebarDrawerOpen(false)}
+                />
+              </Drawer>
+            </div>
+          )}
 
           {/* Nút mở mục lục bài học trên mobile, tablet & laptop vừa (< xl) */}
-          <div className="xl:hidden">
-            <Drawer
-              open={isTocDrawerOpen}
-              onOpenChange={setIsTocDrawerOpen}
-              side="right"
-              title="Mục lục & Định lý trong bài"
-              trigger={
-                <Button variant="outline" size="sm">
-                  <ListTree className="h-4 w-4" aria-hidden="true" />
-                  <span>Mục lục bài</span>
-                </Button>
-              }
-            >
-              <LessonToc
-                lessonMeta={compiled?.lessonMeta ?? null}
-                onSelectAnchor={() => setIsTocDrawerOpen(false)}
-              />
-            </Drawer>
-          </div>
+          {!isFocusMode && (
+            <div className="xl:hidden">
+              <Drawer
+                open={isTocDrawerOpen}
+                onOpenChange={setIsTocDrawerOpen}
+                side="right"
+                title="Mục lục & Định lý trong bài"
+                trigger={
+                  <Button variant="outline" size="sm">
+                    <ListTree className="h-4 w-4" aria-hidden="true" />
+                    <span>Mục lục bài</span>
+                  </Button>
+                }
+              >
+                <LessonToc
+                  lessonMeta={compiled?.lessonMeta ?? null}
+                  onSelectAnchor={() => setIsTocDrawerOpen(false)}
+                />
+              </Drawer>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content (max 920px) | TOC (230px) */}
+      {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content (max 920px - 1000px) | TOC (230px) */}
       <div className="flex items-start justify-center gap-6 lg:gap-8">
         {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) */}
-        {!isSidebarCollapsed && (
+        {!isFocusMode && !isSidebarCollapsed && (
           <aside
             className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto border-r border-stone-200/80 pr-4 pb-6 lg:block"
             aria-label="Danh mục điều hướng bài học"
@@ -236,8 +316,32 @@ export function LessonPage() {
         )}
 
         {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
-        <main className="mx-auto max-w-[920px] min-w-0 flex-1 px-4 py-6 sm:px-8 lg:px-12">
-          <article className="rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] p-6 shadow-xs sm:p-8 lg:p-10">
+        <main
+          className={cn(
+            'mx-auto min-w-0 flex-1 px-4 py-6 transition-all duration-200 sm:px-8 lg:px-12',
+            isFocusMode ? 'max-w-[1000px]' : 'max-w-[920px]',
+          )}
+        >
+          {isFocusMode && (
+            <div className="mb-4 flex items-center justify-between rounded-xl border border-amber-800/25 bg-amber-50/70 px-4 py-2 text-xs text-amber-950 shadow-2xs">
+              <span className="font-medium">
+                📖 Đang bật <strong>Chế độ đọc tập trung</strong> (đã ẩn thanh điều hướng và mục lục
+                hai bên).
+              </span>
+              <button
+                type="button"
+                onClick={handleToggleFocusMode}
+                className="cursor-pointer font-semibold text-amber-900 underline hover:text-amber-950"
+              >
+                Thoát tập trung (Esc)
+              </button>
+            </div>
+          )}
+
+          <article
+            data-reading-size={fontSize}
+            className="rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] p-6 shadow-xs sm:p-8 lg:p-10"
+          >
             <header className="space-y-4 border-b border-[var(--bg-muted)] pb-6">
               {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
               <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
@@ -359,13 +463,15 @@ export function LessonPage() {
         </main>
 
         {/* CỘT PHẢI (Mục lục bài học - Table of Contents / On this page) */}
-        <aside
-          className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[230px] shrink-0 overflow-y-auto pl-2 xl:block"
-          role="complementary"
-          aria-label="Cột biên tập lề và mục lục"
-        >
-          <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
-        </aside>
+        {!isFocusMode && (
+          <aside
+            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[230px] shrink-0 overflow-y-auto pl-2 xl:block"
+            role="complementary"
+            aria-label="Cột biên tập lề và mục lục"
+          >
+            <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
+          </aside>
+        )}
       </div>
     </FadeIn>
   );

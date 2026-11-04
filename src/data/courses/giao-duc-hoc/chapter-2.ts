@@ -425,17 +425,33 @@ export const Lesson2_1View: FC = () => {
         { className: 'overflow-x-auto rounded-xl border border-stone-200' },
         createElement(
           'table',
-          { className: 'w-full text-left text-xs sm:text-sm' },
+          { className: 'w-full text-left text-[15px] text-stone-800' },
           createElement(
             'thead',
             { className: 'bg-[#faf8f2] text-stone-900 font-bold border-b border-stone-200' },
             createElement(
               'tr',
               null,
-              createElement('th', { className: 'p-3' }, 'Chức năng xã hội'),
-              createElement('th', { className: 'p-3' }, 'Mục tiêu trọng tâm'),
-              createElement('th', { className: 'p-3' }, 'Sản phẩm trực tiếp'),
-              createElement('th', { className: 'p-3' }, 'Ý nghĩa thời đại'),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Chức năng xã hội',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Mục tiêu trọng tâm',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Sản phẩm trực tiếp',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Ý nghĩa thời đại',
+              ),
             ),
           ),
           createElement(
@@ -443,53 +459,69 @@ export const Lesson2_1View: FC = () => {
             { className: 'divide-y divide-stone-100 text-stone-700' },
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Kinh tế - sản xuất',
               ),
-              createElement('td', { className: 'p-3' }, 'Tái sản xuất sức lao động'),
-              createElement('td', { className: 'p-3' }, 'Đội ngũ lao động có tay nghề và tri thức'),
+              createElement('td', { className: 'py-3 px-4' }, 'Tái sản xuất sức lao động'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
+                'Đội ngũ lao động có tay nghề và tri thức',
+              ),
+              createElement(
+                'td',
+                { className: 'py-3 px-4' },
                 'Động lực phát triển kinh tế tri thức và công nghiệp hóa',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Chính trị - xã hội',
               ),
-              createElement('td', { className: 'p-3' }, 'Củng cố thể chế, bình đẳng hóa cơ hội'),
-              createElement('td', { className: 'p-3' }, 'Công dân gương mẫu, thượng tôn pháp luật'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
+                'Củng cố thể chế, bình đẳng hóa cơ hội',
+              ),
+              createElement(
+                'td',
+                { className: 'py-3 px-4' },
+                'Công dân gương mẫu, thượng tôn pháp luật',
+              ),
+              createElement(
+                'td',
+                { className: 'py-3 px-4' },
                 'Xây dựng nhà nước pháp quyền xã hội chủ nghĩa',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Tư tưởng - văn hóa',
               ),
-              createElement('td', { className: 'p-3' }, 'Bồi dưỡng tâm hồn và nhân sinh quan'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
+                'Bồi dưỡng tâm hồn và nhân sinh quan',
+              ),
+              createElement(
+                'td',
+                { className: 'py-3 px-4' },
                 'Con người phát triển toàn diện (Đức - Trí - Thể - Mỹ)',
               ),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
                 'Xây dựng nền văn hóa Việt Nam tiên tiến, đậm đà bản sắc',
               ),
             ),

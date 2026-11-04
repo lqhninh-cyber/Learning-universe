@@ -78,22 +78,25 @@ export const mdxComponents: MDXComponents = {
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
   table: (props: ComponentPropsWithoutRef<'table'>) => (
-    <div className="my-4 overflow-x-auto">
-      <table className="w-full border-collapse text-sm text-stone-800" {...props} />
+    <div className="my-6 overflow-x-auto rounded-xl border border-stone-200/90 bg-white shadow-2xs">
+      <table className="w-full border-collapse text-left text-[15px] text-stone-800" {...props} />
     </div>
   ),
   th: (props: ComponentPropsWithoutRef<'th'>) => (
     <th
-      className="border border-stone-200 bg-stone-100/80 px-3 py-2 font-semibold text-stone-900"
+      className="border-b border-stone-200 bg-[#faf8f2] px-4 py-3 font-semibold text-stone-900"
       {...props}
     />
   ),
   td: (props: ComponentPropsWithoutRef<'td'>) => (
-    <td className="border border-stone-200 px-3 py-2" {...props} />
+    <td
+      className="border-t border-stone-200 px-4 py-3 text-[15px] leading-relaxed text-stone-800"
+      {...props}
+    />
   ),
   blockquote: (props: ComponentPropsWithoutRef<'blockquote'>) => (
     <blockquote
-      className="my-4 border-l-3 border-stone-300 pl-4 text-stone-600 italic"
+      className="my-6 rounded-r-lg border-l-4 border-amber-800/70 bg-[#faf8f2]/50 py-2 pr-4 pl-4 font-serif text-[15.5px] leading-relaxed text-stone-800 italic"
       {...props}
     />
   ),

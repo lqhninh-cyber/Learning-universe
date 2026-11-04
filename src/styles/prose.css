@@ -2,17 +2,38 @@
  * Quy tắc typography cho nội dung học thuật (.lu-prose).
  * Triển khai theo giải phẫu học chữ Quốc ngữ Donny Trương và nguyên lý Edward Tufte:
  * - Font serif Crimson Pro cho văn bản dài học thuật.
- * - Độ rộng cột tối ưu thị giác: 65ch (trong khoảng 60ch - 68ch).
- * - Chiều cao dòng line-height: 1.7 giúp dấu thanh điệu tiếng Việt thông thoáng, không chạm hàng.
- * - Khoảng cách phân đoạn rõ ràng, đường kẻ hairline phân tách tinh tế.
+ * - Cỡ chữ cơ bản: 16.5px, line-height 1.75, màu text-stone-800 tương phản cao trên nền giấy Dó.
+ * - Hỗ trợ Reading Controls Toolbar: A- (15px), A (16.5px), A+ (18.5px).
+ * - Heading 2 (H2) & Heading 3 (H3) chuẩn phong cách học giả.
+ * - Bảng so sánh (table) & trích dẫn (blockquote) tối ưu trải nghiệm đọc.
  */
+
+:root {
+  --lu-reading-size: 16.5px;
+  --lu-reading-line-height: 1.75;
+}
+
+[data-reading-size='sm'] {
+  --lu-reading-size: 15px;
+  --lu-reading-line-height: 1.7;
+}
+
+[data-reading-size='base'] {
+  --lu-reading-size: 16.5px;
+  --lu-reading-line-height: 1.75;
+}
+
+[data-reading-size='lg'] {
+  --lu-reading-size: 18.5px;
+  --lu-reading-line-height: 1.85;
+}
 
 .lu-prose {
   font-family: var(--font-serif);
   max-width: 100%;
-  color: var(--text-primary);
-  font-size: 1.0625rem;
-  line-height: 1.75;
+  color: #292524; /* text-stone-800 */
+  font-size: var(--lu-reading-size, 16.5px);
+  line-height: var(--lu-reading-line-height, 1.75);
 }
 
 .lu-prose > * + * {
@@ -21,16 +42,15 @@
 
 .lu-prose p {
   text-wrap: pretty;
-  font-size: 1.0625rem;
-  line-height: 1.75;
+  font-size: var(--lu-reading-size, 16.5px);
+  line-height: var(--lu-reading-line-height, 1.75);
+  color: #292524; /* text-stone-800 */
 }
 
 .lu-prose h1,
-.lu-prose h2,
-.lu-prose h3,
 .lu-prose h4 {
   font-family: var(--font-sans);
-  color: var(--text-primary);
+  color: #1c1917; /* text-stone-900 */
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.35;
@@ -39,27 +59,83 @@
     'ccmp' 1;
 }
 
+/* Heading 2: text-2xl font-serif font-bold text-stone-900 tracking-tight mt-8 mb-4 */
 .lu-prose h2 {
-  margin-top: 2.25em;
-  margin-bottom: 0.75em;
-  font-size: 1.375rem;
+  font-family: var(--font-serif);
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700;
+  color: #1c1917; /* text-stone-900 */
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  margin-top: 2rem; /* mt-8 */
+  margin-bottom: 1rem; /* mb-4 */
   border-bottom: 1px solid var(--bg-muted);
   padding-bottom: 0.35rem;
 }
 
+/* Heading 3: text-lg font-serif font-semibold text-stone-900 mt-6 mb-3 */
 .lu-prose h3 {
-  margin-top: 1.75em;
-  margin-bottom: 0.5em;
-  font-size: 1.15rem;
+  font-family: var(--font-serif);
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600;
+  color: #1c1917; /* text-stone-900 */
+  line-height: 1.4;
+  margin-top: 1.5rem; /* mt-6 */
+  margin-bottom: 0.75rem; /* mb-3 */
 }
 
 .lu-prose strong {
-  color: var(--text-primary);
+  color: #1c1917; /* text-stone-900 */
   font-weight: 600;
 }
 
 .lu-prose em {
   font-style: italic;
+}
+
+/* Trích dẫn danh ngôn & đóng khung pháp quy: text-[15.5px] italic leading-relaxed */
+.lu-prose blockquote {
+  font-size: 15.5px;
+  font-style: italic;
+  line-height: 1.75;
+  color: #292524; /* text-stone-800 */
+  border-left: 4px solid rgba(146, 64, 14, 0.7); /* amber-800/70 */
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  background-color: rgba(250, 248, 242, 0.5);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+/* Bảng so sánh (Comparison Tables): Cỡ chữ 15px, padding py-3 px-4 */
+.lu-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  color: #292524;
+  margin: 1.5rem 0;
+}
+
+.lu-prose th {
+  border-bottom: 1.5px solid #d6d3d1;
+  background-color: #faf8f2;
+  padding: 0.75rem 1rem; /* py-3 px-4 */
+  font-weight: 600;
+  color: #1c1917; /* text-stone-900 */
+  text-align: left;
+}
+
+.lu-prose td {
+  border-top: 1px solid #e7e5e4;
+  padding: 0.75rem 1rem; /* py-3 px-4 */
+  font-size: 15px;
+  line-height: 1.6;
+  color: #292524;
+}
+
+.lu-prose tr:nth-child(even) td {
+  background-color: rgba(250, 248, 242, 0.45);
 }
 
 .lu-prose code {
@@ -99,6 +175,12 @@
 
 .lu-prose ol {
   list-style-type: decimal;
+}
+
+.lu-prose li {
+  font-size: var(--lu-reading-size, 16.5px);
+  line-height: var(--lu-reading-line-height, 1.75);
+  color: #292524;
 }
 
 .lu-prose li + li {

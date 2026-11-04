@@ -509,18 +509,26 @@ export const Lesson4_2View: FC = () => {
         { className: 'overflow-x-auto rounded-xl border border-stone-200' },
         createElement(
           'table',
-          { className: 'w-full text-left text-xs sm:text-sm' },
+          { className: 'w-full text-left text-[15px] text-stone-800' },
           createElement(
             'thead',
             { className: 'bg-[#faf8f2] text-stone-900 font-bold border-b border-stone-200' },
             createElement(
               'tr',
               null,
-              createElement('th', { className: 'p-3' }, 'Khía cạnh so sánh'),
-              createElement('th', { className: 'p-3 text-rose-800' }, 'Trừng phạt tiêu cực'),
               createElement(
                 'th',
-                { className: 'p-3 text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Khía cạnh so sánh',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-rose-800' },
+                'Trừng phạt tiêu cực',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Kỷ luật tích cực (Hệ quả logic)',
               ),
             ),
@@ -530,61 +538,69 @@ export const Lesson4_2View: FC = () => {
             { className: 'divide-y divide-stone-100 text-stone-700' },
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
-              createElement('td', { className: 'p-3 font-semibold' }, 'Mục đích'),
+              { className: 'hover:bg-stone-50/80 transition-colors' },
+              createElement('td', { className: 'py-3 px-4 font-semibold' }, 'Mục đích'),
               createElement(
                 'td',
-                { className: 'p-3 text-rose-700' },
+                { className: 'py-3 px-4 text-rose-700' },
                 'Bắt học sinh phải trả giá, chịu đau đớn, nhục nhã',
               ),
               createElement(
                 'td',
-                { className: 'p-3 text-teal-900' },
+                { className: 'py-3 px-4 text-teal-900' },
                 'Dạy học sinh kỹ năng giải quyết vấn đề và chịu trách nhiệm',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
-              createElement('td', { className: 'p-3 font-semibold' }, 'Thái độ của giáo viên'),
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 text-rose-700' },
+                { className: 'py-3 px-4 font-semibold' },
+                'Thái độ của giáo viên',
+              ),
+              createElement(
+                'td',
+                { className: 'py-3 px-4 text-rose-700' },
                 'Giận dữ, mỉa mai, công kích cá nhân, áp đặt',
               ),
               createElement(
                 'td',
-                { className: 'p-3 text-teal-900' },
+                { className: 'py-3 px-4 text-teal-900' },
                 'Điềm tĩnh, tôn trọng, đồng cảm, lắng nghe',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
-              createElement('td', { className: 'p-3 font-semibold' }, 'Mối liên hệ với vi phạm'),
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 text-rose-700' },
+                { className: 'py-3 px-4 font-semibold' },
+                'Mối liên hệ với vi phạm',
+              ),
+              createElement(
+                'td',
+                { className: 'py-3 px-4 text-rose-700' },
                 'Tùy tiện (ví dụ: vẽ bẩn lên bàn thì phạt chép phạt 100 lần)',
               ),
               createElement(
                 'td',
-                { className: 'p-3 text-teal-900' },
+                { className: 'py-3 px-4 text-teal-900' },
                 'Có liên quan trực tiếp (vẽ bẩn bàn thì phải ở lại lau sạch bàn)',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
-              createElement('td', { className: 'p-3 font-semibold' }, 'Kết quả lâu dài'),
+              { className: 'hover:bg-stone-50/80 transition-colors' },
+              createElement('td', { className: 'py-3 px-4 font-semibold' }, 'Kết quả lâu dài'),
               createElement(
                 'td',
-                { className: 'p-3 text-rose-700' },
+                { className: 'py-3 px-4 text-rose-700' },
                 'Học sinh sinh lòng oán hận, chống đối ngầm hoặc tự ti buông xuôi',
               ),
               createElement(
                 'td',
-                { className: 'p-3 text-teal-900' },
+                { className: 'py-3 px-4 text-teal-900' },
                 'Học sinh hiểu ra bản chất sai phạm và tự giác điều chỉnh hành vi',
               ),
             ),
@@ -604,7 +620,7 @@ export const Lesson4_2View: FC = () => {
         ),
         createElement(
           'div',
-          { className: 'grid gap-3 sm:grid-cols-2 lg:grid-cols-4' },
+          { className: 'grid grid-cols-1 md:grid-cols-2 gap-4' },
           [
             {
               target: '1. Tìm sự chú ý',
@@ -632,18 +648,30 @@ export const Lesson4_2View: FC = () => {
           ].map((item, i) =>
             createElement(
               Card,
-              { key: i, className: 'p-3.5 rounded-xl border-stone-200 bg-[#faf8f2]' },
-              createElement('div', { className: 'font-bold text-xs text-amber-950' }, item.target),
+              {
+                key: i,
+                className:
+                  'p-4 sm:p-5 rounded-xl border border-stone-200/90 bg-[#faf8f2] shadow-2xs',
+              },
               createElement(
                 'div',
-                { className: 'mt-1 text-[11px] text-stone-500' },
-                createElement('strong', null, 'Biểu hiện: '),
+                { className: 'text-base font-semibold text-amber-950' },
+                item.target,
+              ),
+              createElement(
+                'div',
+                { className: 'mt-2 text-[14.5px] leading-relaxed text-stone-600' },
+                createElement(
+                  'strong',
+                  { className: 'font-semibold text-stone-700' },
+                  'Biểu hiện: ',
+                ),
                 item.signal,
               ),
               createElement(
                 'div',
-                { className: 'mt-1 text-[11px] text-teal-900' },
-                createElement('strong', null, 'Ứng xử: '),
+                { className: 'mt-2 text-[14.5px] leading-relaxed text-teal-900' },
+                createElement('strong', { className: 'font-semibold text-teal-950' }, 'Ứng xử: '),
                 item.reaction,
               ),
             ),
@@ -1292,16 +1320,28 @@ export const Lesson4_4View: FC = () => {
         { className: 'overflow-x-auto rounded-xl border border-stone-200' },
         createElement(
           'table',
-          { className: 'w-full text-left text-xs sm:text-sm' },
+          { className: 'w-full text-left text-[15px] text-stone-800' },
           createElement(
             'thead',
             { className: 'bg-[#faf8f2] text-stone-900 font-bold border-b border-stone-200' },
             createElement(
               'tr',
               null,
-              createElement('th', { className: 'p-3' }, 'Tiêu chí đánh giá'),
-              createElement('th', { className: 'p-3' }, 'Điểm tối đa'),
-              createElement('th', { className: 'p-3' }, 'Yêu cầu đạt mức Tốt (Điểm tối đa)'),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Tiêu chí đánh giá',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Điểm tối đa',
+              ),
+              createElement(
+                'th',
+                { className: 'py-3 px-4 font-semibold text-stone-900' },
+                'Yêu cầu đạt mức Tốt (Điểm tối đa)',
+              ),
             ),
           ),
           createElement(
@@ -1309,61 +1349,61 @@ export const Lesson4_4View: FC = () => {
             { className: 'divide-y divide-stone-100 text-stone-700' },
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Tiêu chí 1: Xác định vấn đề cần giải quyết',
               ),
-              createElement('td', { className: 'p-3 font-bold text-amber-900' }, '1.0 điểm'),
+              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '1.0 điểm'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
                 'Xác định đầy đủ, chính xác, làm nổi bật được mâu thuẫn bản chất của tình huống.',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Tiêu chí 2: Phân tích nguyên nhân',
               ),
-              createElement('td', { className: 'p-3 font-bold text-amber-900' }, '2.0 điểm'),
+              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '2.0 điểm'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
                 'Các nguyên nhân được phân tích rõ ràng, toàn diện, có cơ sở khoa học Tâm lý học và Giáo dục học thuyết phục.',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Tiêu chí 3: Phương án giải quyết',
               ),
-              createElement('td', { className: 'p-3 font-bold text-amber-900' }, '5.0 điểm'),
+              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '5.0 điểm'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
                 'Phương án giải quyết phù hợp, giải quyết triệt để vấn đề, có tính khả thi cao, tuân thủ đúng quy định pháp quy và chuẩn nghề nghiệp giáo viên.',
               ),
             ),
             createElement(
               'tr',
-              { className: 'hover:bg-stone-50' },
+              { className: 'hover:bg-stone-50/80 transition-colors' },
               createElement(
                 'td',
-                { className: 'p-3 font-semibold text-teal-900' },
+                { className: 'py-3 px-4 font-semibold text-teal-900' },
                 'Tiêu chí 4: Bài học sư phạm rút ra',
               ),
-              createElement('td', { className: 'p-3 font-bold text-amber-900' }, '2.0 điểm'),
+              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '2.0 điểm'),
               createElement(
                 'td',
-                { className: 'p-3' },
+                { className: 'py-3 px-4' },
                 'Bài học sư phạm rút ra sâu sắc, thuyết phục và có tính ứng dụng cao cho bản thân sinh viên sư phạm.',
               ),
             ),

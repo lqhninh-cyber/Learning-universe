@@ -44,7 +44,10 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
         <li {...props}>{annotateChildren(props.children)}</li>
       ),
       td: (props: ComponentPropsWithoutRef<'td'>) => (
-        <td className="border border-stone-200 px-3 py-2" {...props}>
+        <td
+          className="border-t border-stone-200 px-4 py-3 text-[15px] leading-relaxed text-stone-800"
+          {...props}
+        >
           {annotateChildren(props.children)}
         </td>
       ),
