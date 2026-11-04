@@ -17,9 +17,9 @@ const FONT_SIZES: readonly {
   readonly label: string;
   readonly title: string;
 }[] = [
-  { id: 'sm', label: 'A-', title: 'Cỡ chữ nhỏ (15px)' },
-  { id: 'base', label: 'A', title: 'Cỡ chữ chuẩn (16.5px)' },
-  { id: 'lg', label: 'A+', title: 'Cỡ chữ lớn (18.5px)' },
+  { id: 'sm', label: 'A-', title: 'Cỡ chữ nhỏ (16px)' },
+  { id: 'base', label: 'A', title: 'Cỡ chữ chuẩn (17.5px - 18px)' },
+  { id: 'lg', label: 'A+', title: 'Cỡ chữ lớn (19.5px - 20px)' },
 ];
 
 /**

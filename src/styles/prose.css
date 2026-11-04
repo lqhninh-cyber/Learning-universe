@@ -9,74 +9,107 @@
  */
 
 :root {
-  --lu-reading-size: 16.5px;
-  --lu-reading-line-height: 1.75;
+  --lu-reading-size: 17.5px;
+  --lu-reading-line-height: 1.8;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --lu-reading-size: 18px;
+    --lu-reading-line-height: 1.8;
+  }
 }
 
 [data-reading-size='sm'] {
-  --lu-reading-size: 15px;
-  --lu-reading-line-height: 1.7;
-}
-
-[data-reading-size='base'] {
-  --lu-reading-size: 16.5px;
+  --lu-reading-size: 16px;
   --lu-reading-line-height: 1.75;
 }
 
+[data-reading-size='base'] {
+  --lu-reading-size: 17.5px;
+  --lu-reading-line-height: 1.8;
+}
+
+@media (min-width: 1024px) {
+  [data-reading-size='base'] {
+    --lu-reading-size: 18px;
+    --lu-reading-line-height: 1.8;
+  }
+}
+
 [data-reading-size='lg'] {
-  --lu-reading-size: 18.5px;
+  --lu-reading-size: 19.5px;
   --lu-reading-line-height: 1.85;
 }
 
-.lu-prose {
+@media (min-width: 1024px) {
+  [data-reading-size='lg'] {
+    --lu-reading-size: 20px;
+    --lu-reading-line-height: 1.85;
+  }
+}
+
+.lu-prose,
+.lesson-content {
   font-family: var(--font-serif);
   max-width: 100%;
   color: #292524; /* text-stone-800 */
-  font-size: var(--lu-reading-size, 16.5px);
-  line-height: var(--lu-reading-line-height, 1.75);
+  font-size: var(--lu-reading-size, 17.5px);
+  line-height: var(--lu-reading-line-height, 1.8);
 }
 
-.lu-prose > * + * {
+.lu-prose > * + *,
+.lesson-content > * + * {
   margin-top: 1.35em;
 }
 
-.lu-prose p {
+.lu-prose p,
+.lesson-content p {
   text-wrap: pretty;
-  font-size: var(--lu-reading-size, 16.5px);
-  line-height: var(--lu-reading-line-height, 1.75);
+  font-size: var(--lu-reading-size, 17.5px);
+  line-height: var(--lu-reading-line-height, 1.8);
   color: #292524; /* text-stone-800 */
 }
 
+/* Tiêu đề bài học (H1): text-3xl lg:text-4xl font-serif font-bold text-stone-900 tracking-tight mb-6 */
 .lu-prose h1,
-.lu-prose h4 {
-  font-family: var(--font-sans);
+.lesson-content h1 {
+  font-family: var(--font-serif);
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
   color: #1c1917; /* text-stone-900 */
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.35;
-  font-feature-settings:
-    'case' 1,
-    'ccmp' 1;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 1.5rem; /* mb-6 */
 }
 
-/* Heading 2: text-2xl font-serif font-bold text-stone-900 tracking-tight mt-8 mb-4 */
-.lu-prose h2 {
+@media (min-width: 1024px) {
+  .lu-prose h1,
+  .lesson-content h1 {
+    font-size: 2.25rem; /* text-4xl */
+  }
+}
+
+/* Tiêu đề mục lớn (H2): text-2xl font-serif font-bold text-stone-900 mt-10 mb-4 pb-2 border-b border-stone-200/60 */
+.lu-prose h2,
+.lesson-content h2 {
   font-family: var(--font-serif);
   font-size: 1.5rem; /* text-2xl */
   font-weight: 700;
   color: #1c1917; /* text-stone-900 */
   letter-spacing: -0.015em;
   line-height: 1.35;
-  margin-top: 2rem; /* mt-8 */
+  margin-top: 2.5rem; /* mt-10 */
   margin-bottom: 1rem; /* mb-4 */
-  border-bottom: 1px solid var(--bg-muted);
-  padding-bottom: 0.35rem;
+  padding-bottom: 0.5rem; /* pb-2 */
+  border-bottom: 1px solid rgba(231, 229, 228, 0.6); /* border-stone-200/60 */
 }
 
-/* Heading 3: text-lg font-serif font-semibold text-stone-900 mt-6 mb-3 */
-.lu-prose h3 {
+/* Tiêu đề mục con (H3): text-xl font-serif font-semibold text-stone-900 mt-6 mb-3 */
+.lu-prose h3,
+.lesson-content h3 {
   font-family: var(--font-serif);
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.25rem; /* text-xl */
   font-weight: 600;
   color: #1c1917; /* text-stone-900 */
   line-height: 1.4;
@@ -84,17 +117,32 @@
   margin-bottom: 0.75rem; /* mb-3 */
 }
 
-.lu-prose strong {
+.lu-prose h4,
+.lesson-content h4 {
+  font-family: var(--font-sans);
+  color: #1c1917; /* text-stone-900 */
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.lu-prose strong,
+.lesson-content strong {
   color: #1c1917; /* text-stone-900 */
   font-weight: 600;
 }
 
-.lu-prose em {
+.lu-prose em,
+.lesson-content em {
   font-style: italic;
 }
 
 /* Trích dẫn danh ngôn & đóng khung pháp quy: text-[15.5px] italic leading-relaxed */
-.lu-prose blockquote {
+.lu-prose blockquote,
+.lesson-content blockquote {
   font-size: 15.5px;
   font-style: italic;
   line-height: 1.75;
@@ -109,7 +157,8 @@
 }
 
 /* Bảng so sánh (Comparison Tables): Cỡ chữ 15px, padding py-3 px-4 */
-.lu-prose table {
+.lu-prose table,
+.lesson-content table {
   width: 100%;
   border-collapse: collapse;
   font-size: 15px;
@@ -117,7 +166,8 @@
   margin: 1.5rem 0;
 }
 
-.lu-prose th {
+.lu-prose th,
+.lesson-content th {
   border-bottom: 1.5px solid #d6d3d1;
   background-color: #faf8f2;
   padding: 0.75rem 1rem; /* py-3 px-4 */
@@ -126,7 +176,8 @@
   text-align: left;
 }
 
-.lu-prose td {
+.lu-prose td,
+.lesson-content td {
   border-top: 1px solid #e7e5e4;
   padding: 0.75rem 1rem; /* py-3 px-4 */
   font-size: 15px;
@@ -134,11 +185,13 @@
   color: #292524;
 }
 
-.lu-prose tr:nth-child(even) td {
+.lu-prose tr:nth-child(even) td,
+.lesson-content tr:nth-child(even) td {
   background-color: rgba(250, 248, 242, 0.45);
 }
 
-.lu-prose code {
+.lu-prose code,
+.lesson-content code {
   border-radius: 0.25rem;
   background-color: var(--bg-surface);
   border: 1px solid var(--bg-muted);
@@ -148,7 +201,8 @@
   color: var(--accent-primary);
 }
 
-.lu-prose pre {
+.lu-prose pre,
+.lesson-content pre {
   border-radius: 0.5rem;
   background-color: #292824;
   border: 1px solid var(--bg-muted);
@@ -156,7 +210,8 @@
   overflow-x: auto;
 }
 
-.lu-prose pre code {
+.lu-prose pre code,
+.lesson-content pre code {
   background-color: transparent;
   border: none;
   padding: 0;
@@ -165,33 +220,51 @@
 }
 
 .lu-prose ul,
-.lu-prose ol {
+.lesson-content ul,
+.lu-prose ol,
+.lesson-content ol {
   padding-left: 1.5rem;
 }
 
-.lu-prose ul {
+.lu-prose ul,
+.lesson-content ul {
   list-style-type: disc;
 }
 
-.lu-prose ol {
+.lu-prose ol,
+.lesson-content ol {
   list-style-type: decimal;
 }
 
-.lu-prose li {
-  font-size: var(--lu-reading-size, 16.5px);
-  line-height: var(--lu-reading-line-height, 1.75);
-  color: #292524;
+/* Chữ trong danh sách liệt kê (ol, ul): text-[17.5px] leading-relaxed */
+.lu-prose li,
+.lesson-content li {
+  font-size: var(--lu-reading-size, 17.5px);
+  line-height: var(--lu-reading-line-height, 1.8);
+  color: #292524; /* text-stone-800 */
 }
 
-.lu-prose li + li {
-  margin-top: 0.375rem;
+.lu-prose li + li,
+.lesson-content li + li {
+  margin-top: 0.45rem;
 }
 
+/* ==========================================================================
+   TINH CHỈNH ĐỘ NỔI BẬT VÀ PHÓNG ĐẠI CÔNG THỨC TOÁN (KaTeX Scaling)
+   ========================================================================== */
+
+.lesson-content .katex,
+.lu-prose .katex {
+  font-size: 1.12em !important;
+  letter-spacing: 0.02em;
+}
+
+.lesson-content .katex-display,
 .lu-prose .katex-display {
-  margin: 1.35rem 0;
+  margin: 1.5rem 0 !important;
+  padding: 0.75rem 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.35rem 0;
 }
 
 .lu-glossary-term {

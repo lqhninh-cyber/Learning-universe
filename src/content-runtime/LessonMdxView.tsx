@@ -73,7 +73,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
 
   return (
     <>
-      <article className={cn('lu-prose max-w-none', className)}>
+      <article className={cn('lu-prose lesson-content max-w-none', className)}>
         <Content components={activeComponents} />
       </article>
       <MathGlossaryPopover />

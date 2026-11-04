@@ -413,7 +413,7 @@ export function LessonPage() {
           <article
             data-reading-size={fontSize}
             className={cn(
-              'rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] shadow-xs transition-all duration-300',
+              'lesson-content rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] shadow-xs transition-all duration-300',
               isFocusMode ? 'p-8 shadow-sm sm:p-12 lg:p-14' : 'p-6 sm:p-8 lg:p-10',
             )}
           >
@@ -442,11 +442,11 @@ export function LessonPage() {
                 </div>
               </aside>
 
-              <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl lg:text-4xl">
+              <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-stone-900 lg:text-4xl">
                 {lesson.title}
               </h1>
 
-              <p className="text-base leading-relaxed text-[var(--text-secondary)] sm:text-[17px]">
+              <p className="text-[17px] leading-[1.8] text-stone-700 sm:text-[17.5px] lg:text-[18px]">
                 {lesson.description}
               </p>
 
