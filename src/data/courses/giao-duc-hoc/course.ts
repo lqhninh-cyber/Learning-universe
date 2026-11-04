@@ -9,19 +9,21 @@ import { getChapter5LessonModule } from './chapter-5';
 import { getChapter6LessonModule, PEDAGOGICAL_20_CASE_STUDIES } from './chapter-6';
 
 // ============================================================================
-// 1. DANH MỤC 13 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
+// 1. DANH MỤC 14 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
 // ============================================================================
 
 export interface PedagogyDocument {
   readonly id: string;
   readonly title: string;
-  readonly category: 'curriculum' | 'legal' | 'handbook';
+  readonly category: 'curriculum' | 'legal' | 'handbook' | string;
   readonly categoryLabel: string;
   readonly path: string;
+  readonly url?: string;
   readonly filename: string;
   readonly description: string;
   readonly badge: string;
   readonly pages?: string;
+  readonly size?: string;
 }
 
 export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
@@ -128,6 +130,19 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     description:
       'Cập nhật sửa đổi, bổ sung một số nội dung trong Chương trình GDPT 2018 nhằm tối ưu hóa thời lượng và tích hợp hoạt động giáo dục.',
     badge: 'Thông tư 17/2025',
+  },
+  {
+    id: 'doc-chien-luoc-phat-trien-gd',
+    title: 'Chiến lược phát triển giáo dục Việt Nam',
+    category: 'legal',
+    categoryLabel: 'Văn bản pháp quy',
+    path: '/docs/giao-duc-hoc/Chien_luoc_phat_trien_giao_duc.pdf',
+    url: '/docs/giao-duc-hoc/Chien_luoc_phat_trien_giao_duc.pdf',
+    filename: 'Chien_luoc_phat_trien_giao_duc.pdf',
+    size: '1.1 MB',
+    description:
+      'Định hướng chiến lược, mục tiêu và giải pháp đổi mới căn bản, toàn diện giáo dục và đào tạo giai đoạn mới.',
+    badge: 'Chiến lược GD',
   },
 
   // Nhóm 3: Cẩm nang Sư phạm & Công cụ Nghiên cứu

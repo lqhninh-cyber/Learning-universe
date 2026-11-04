@@ -112,13 +112,43 @@ export function LessonPage() {
     });
   };
 
-  // Hỗ trợ phím Esc để thoát nhanh Chế độ đọc tập trung
+  // Đồng bộ data-focus-mode lên document.body để ẩn Header và chuyển layout mượt mà
   useEffect(() => {
-    if (!isFocusMode) {
-      return;
+    if (typeof document === 'undefined') return;
+    if (isFocusMode) {
+      document.body.setAttribute('data-focus-mode', 'true');
+    } else {
+      document.body.removeAttribute('data-focus-mode');
     }
+    return () => {
+      document.body.removeAttribute('data-focus-mode');
+    };
+  }, [isFocusMode]);
+
+  // Hỗ trợ phím F để bật/tắt Focus Mode và phím Esc để thoát chế độ tập trung
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      // Phím F / f: Bật/tắt Focus Mode (không kèm Ctrl / Meta / Alt để không cản trở Ctrl+F)
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        handleToggleFocusMode();
+        return;
+      }
+
+      // Phím Escape: Thoát Focus Mode khi đang kích hoạt
+      if (e.key === 'Escape' && isFocusMode) {
+        e.preventDefault();
         setIsFocusMode(false);
         try {
           localStorage.setItem('lu_focus_mode', 'false');
@@ -127,6 +157,7 @@ export function LessonPage() {
         }
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFocusMode]);
@@ -207,12 +238,43 @@ export function LessonPage() {
   const { subject, chapter, lesson } = location;
 
   return (
-    <FadeIn className="mx-auto w-full max-w-[1600px] space-y-6 px-4 pb-16 sm:px-6 lg:px-8">
+    <FadeIn
+      className={cn(
+        'mx-auto w-full pb-16 transition-all duration-300',
+        isFocusMode
+          ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
+          : 'max-w-[1600px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
+      )}
+    >
+      {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
+      {isFocusMode && (
+        <button
+          type="button"
+          onClick={handleToggleFocusMode}
+          className="fixed top-4 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-stone-300/90 bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-stone-800 shadow-md backdrop-blur-md transition-all duration-200 hover:border-amber-700 hover:bg-amber-50 hover:text-amber-950 hover:shadow-lg"
+          title="Thoát chế độ đọc tập trung (Phím Esc hoặc F)"
+          aria-label="Thoát chế độ tập trung"
+        >
+          <span className="font-bold text-amber-900" aria-hidden="true">
+            ✕
+          </span>
+          <span>Thoát chế độ tập trung</span>
+          <kbd className="ml-1 rounded border border-stone-300/70 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] text-stone-600">
+            Esc
+          </kbd>
+        </button>
+      )}
+
       {import.meta.env.DEV && (
         <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
       )}
 
-      <div className="flex flex-col justify-between gap-4 border-b border-[var(--bg-muted)] pb-4 lg:flex-row lg:items-center">
+      <div
+        className={cn(
+          'flex flex-col justify-between gap-4 border-b border-[var(--bg-muted)] pb-4 transition-all duration-300 lg:flex-row lg:items-center',
+          isFocusMode && 'border-transparent pb-1',
+        )}
+      >
         <div className="flex items-center gap-3">
           {!isFocusMode && isSidebarCollapsed && (
             <Button
@@ -299,12 +361,12 @@ export function LessonPage() {
         </div>
       </div>
 
-      {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content (max 920px - 1000px) | TOC (230px) */}
-      <div className="flex items-start justify-center gap-6 lg:gap-8">
-        {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) */}
+      {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content | TOC (230px) */}
+      <div className="flex items-start justify-center gap-6 transition-all duration-300 lg:gap-8">
+        {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) - Tạm ẩn trong Focus Mode */}
         {!isFocusMode && !isSidebarCollapsed && (
           <aside
-            className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto border-r border-stone-200/80 pr-4 pb-6 lg:block"
+            className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto border-r border-stone-200/80 pr-4 pb-6 transition-all duration-300 lg:block"
             aria-label="Danh mục điều hướng bài học"
           >
             <LessonSidebar
@@ -315,18 +377,28 @@ export function LessonPage() {
           </aside>
         )}
 
-        {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
+        {/* CỘT GIỮA (Nội dung bài học - Main Content Reader: Căn giữa hoàn hảo, max-w-[880px] mx-auto px-6 py-10) */}
         <main
           className={cn(
-            'mx-auto min-w-0 flex-1 px-4 py-6 transition-all duration-200 sm:px-8 lg:px-12',
-            isFocusMode ? 'max-w-[1000px]' : 'max-w-[920px]',
+            'mx-auto min-w-0 flex-1 transition-all duration-300',
+            isFocusMode ? 'max-w-[880px] px-6 py-10' : 'max-w-[920px] px-4 py-6 sm:px-8 lg:px-12',
           )}
         >
           {isFocusMode && (
-            <div className="mb-4 flex items-center justify-between rounded-xl border border-amber-800/25 bg-amber-50/70 px-4 py-2 text-xs text-amber-950 shadow-2xs">
-              <span className="font-medium">
-                📖 Đang bật <strong>Chế độ đọc tập trung</strong> (đã ẩn thanh điều hướng và mục lục
-                hai bên).
+            <div className="mb-6 flex items-center justify-between rounded-xl border border-amber-800/25 bg-amber-50/80 px-4 py-2.5 text-xs text-amber-950 shadow-2xs">
+              <span className="flex items-center gap-2 font-medium">
+                <span aria-hidden="true">📖</span>
+                <span>
+                  Đang bật <strong>Chế độ đọc tập trung</strong> (Nhấn phím{' '}
+                  <kbd className="rounded border border-amber-300 bg-amber-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-amber-900">
+                    F
+                  </kbd>{' '}
+                  hoặc{' '}
+                  <kbd className="rounded border border-amber-300 bg-amber-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-amber-900">
+                    Esc
+                  </kbd>{' '}
+                  để thoát).
+                </span>
               </span>
               <button
                 type="button"
@@ -340,7 +412,10 @@ export function LessonPage() {
 
           <article
             data-reading-size={fontSize}
-            className="rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] p-6 shadow-xs sm:p-8 lg:p-10"
+            className={cn(
+              'rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] shadow-xs transition-all duration-300',
+              isFocusMode ? 'p-8 shadow-sm sm:p-12 lg:p-14' : 'p-6 sm:p-8 lg:p-10',
+            )}
           >
             <header className="space-y-4 border-b border-[var(--bg-muted)] pb-6">
               {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
@@ -465,7 +540,7 @@ export function LessonPage() {
         {/* CỘT PHẢI (Mục lục bài học - Table of Contents / On this page) */}
         {!isFocusMode && (
           <aside
-            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[230px] shrink-0 overflow-y-auto pl-2 xl:block"
+            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[230px] shrink-0 overflow-y-auto pl-2 transition-all duration-300 xl:block"
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >

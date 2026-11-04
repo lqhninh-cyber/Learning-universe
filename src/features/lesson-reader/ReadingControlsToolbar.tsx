@@ -81,8 +81,8 @@ export const ReadingControlsToolbar: FC<ReadingControlsToolbarProps> = ({
         aria-pressed={isFocusMode}
         title={
           isFocusMode
-            ? 'Thoát chế độ tập trung (Esc)'
-            : 'Bật chế độ tập trung (Tạm ẩn 2 thanh bên để đọc chuyên sâu)'
+            ? 'Thoát chế độ tập trung (Phím Esc hoặc F)'
+            : 'Chế độ tập trung (Phím F - Mở rộng tối đa & Tạm ẩn 2 thanh bên)'
         }
         aria-label={isFocusMode ? 'Thoát chế độ tập trung' : 'Bật chế độ tập trung'}
         className={cn(
@@ -96,11 +96,18 @@ export const ReadingControlsToolbar: FC<ReadingControlsToolbarProps> = ({
           <>
             <Minimize2 className="h-3.5 w-3.5 shrink-0 text-amber-800" aria-hidden="true" />
             <span>Thoát tập trung</span>
+            <kbd className="py-0.2 ml-0.5 rounded border border-amber-300 bg-amber-200/60 px-1 font-mono text-[9px] font-bold text-amber-900">
+              Esc
+            </kbd>
           </>
         ) : (
           <>
             <Maximize2 className="h-3.5 w-3.5 shrink-0 text-stone-500" aria-hidden="true" />
-            <span className="hidden sm:inline">Tập trung</span>
+            <span className="hidden sm:inline">Chế độ tập trung</span>
+            <span className="sm:hidden">Tập trung</span>
+            <kbd className="py-0.2 hidden rounded border border-stone-200 bg-stone-100 px-1 font-mono text-[9px] text-stone-500 sm:inline">
+              F
+            </kbd>
           </>
         )}
       </button>

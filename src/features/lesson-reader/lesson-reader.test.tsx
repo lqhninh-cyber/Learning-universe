@@ -56,7 +56,8 @@ describe('Thanh công cụ đọc nhanh (ReadingControlsToolbar)', () => {
     const focusBtn = screen.getByRole('button', { name: /Bật chế độ tập trung/i });
     expect(focusBtn).toBeInTheDocument();
     expect(focusBtn).toHaveAttribute('aria-pressed', 'false');
-    expect(screen.getByText('Tập trung')).toBeInTheDocument();
+    expect(screen.getByText('Chế độ tập trung')).toBeInTheDocument();
+    expect(screen.getByText('F')).toBeInTheDocument();
 
     fireEvent.click(focusBtn);
     expect(handleToggleFocus).toHaveBeenCalledTimes(1);
@@ -75,6 +76,7 @@ describe('Thanh công cụ đọc nhanh (ReadingControlsToolbar)', () => {
     expect(exitFocusBtn).toBeInTheDocument();
     expect(exitFocusBtn).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText('Thoát tập trung')).toBeInTheDocument();
+    expect(screen.getByText('Esc')).toBeInTheDocument();
 
     fireEvent.click(exitFocusBtn);
     expect(handleToggleFocus).toHaveBeenCalledTimes(2);

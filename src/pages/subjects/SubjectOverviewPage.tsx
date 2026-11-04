@@ -79,6 +79,14 @@ export function SubjectOverviewPage() {
     return PEDAGOGY_DOCUMENTS.filter((doc) => doc.category === pedagogyDocFilter);
   }, [pedagogyDocFilter]);
 
+  const pedagogyCategoryCounts = useMemo(() => {
+    return {
+      curriculum: PEDAGOGY_DOCUMENTS.filter((d) => d.category === 'curriculum').length,
+      legal: PEDAGOGY_DOCUMENTS.filter((d) => d.category === 'legal').length,
+      handbook: PEDAGOGY_DOCUMENTS.filter((d) => d.category === 'handbook').length,
+    };
+  }, []);
+
   const hasFilter =
     searchQuery.trim().length > 0 || selectedLevel !== 'all' || selectedTag !== null;
 
@@ -270,7 +278,7 @@ export function SubjectOverviewPage() {
                     isActive ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-700',
                   )}
                 >
-                  {tab.badge}
+                  {typeof tab.badge === 'number' ? `(${tab.badge})` : tab.badge}
                 </span>
               )}
             </button>
@@ -371,7 +379,7 @@ export function SubjectOverviewPage() {
                         : 'border border-amber-200/70 bg-amber-50 text-amber-900 hover:bg-amber-100',
                     )}
                   >
-                    Giáo trình &amp; Đề cương (2)
+                    Giáo trình &amp; Đề cương ({pedagogyCategoryCounts.curriculum})
                   </button>
                   <button
                     type="button"
@@ -383,7 +391,7 @@ export function SubjectOverviewPage() {
                         : 'border border-teal-200/70 bg-teal-50 text-teal-900 hover:bg-teal-100',
                     )}
                   >
-                    Văn bản pháp quy (7)
+                    Văn bản pháp quy ({pedagogyCategoryCounts.legal})
                   </button>
                   <button
                     type="button"
@@ -395,11 +403,11 @@ export function SubjectOverviewPage() {
                         : 'bg-stone-100 text-stone-800 hover:bg-stone-200',
                     )}
                   >
-                    Cẩm nang &amp; Nghiên cứu (4)
+                    Cẩm nang &amp; Nghiên cứu ({pedagogyCategoryCounts.handbook})
                   </button>
                 </div>
 
-                {/* Lưới danh sách 13 tài liệu */}
+                {/* Lưới danh sách 14 tài liệu */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredPedagogyDocs.map((doc) => (
                     <div
@@ -411,9 +419,16 @@ export function SubjectOverviewPage() {
                           <span className="text-[11px] font-bold tracking-wider text-teal-800 uppercase">
                             {doc.categoryLabel}
                           </span>
-                          <span className="rounded-full bg-amber-100/80 px-2 py-0.5 text-[10px] font-bold text-amber-900">
-                            {doc.badge}
-                          </span>
+                          <div className="flex items-center gap-1.5">
+                            {doc.size && (
+                              <span className="rounded border border-stone-200/80 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium text-stone-600">
+                                {doc.size}
+                              </span>
+                            )}
+                            <span className="rounded-full bg-amber-100/80 px-2 py-0.5 text-[10px] font-bold text-amber-900">
+                              {doc.badge}
+                            </span>
+                          </div>
                         </div>
                         <h3 className="line-clamp-2 text-sm font-bold text-stone-900">
                           {doc.title}
@@ -430,7 +445,7 @@ export function SubjectOverviewPage() {
                           size="sm"
                           className="h-7 gap-1 px-2.5 text-xs"
                         >
-                          <a href={doc.path} target="_blank" rel="noopener noreferrer">
+                          <a href={doc.url || doc.path} target="_blank" rel="noopener noreferrer">
                             <ExternalLink className="h-3 w-3" aria-hidden="true" />
                             <span>Xem PDF</span>
                           </a>
@@ -441,7 +456,7 @@ export function SubjectOverviewPage() {
                           size="sm"
                           className="h-7 gap-1 px-2.5 text-xs text-stone-700"
                         >
-                          <a href={doc.path} download={doc.filename}>
+                          <a href={doc.url || doc.path} download={doc.filename}>
                             <Download className="h-3 w-3" aria-hidden="true" />
                             <span>Tải về</span>
                           </a>
