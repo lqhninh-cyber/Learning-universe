@@ -1,5 +1,5 @@
 import type { ManifestSubject } from '@schemas/index';
-import { CheckCircle2, Circle, Layers } from 'lucide-react';
+import { CheckCircle2, Circle, Layers, PanelLeftClose } from 'lucide-react';
 import { Link } from 'react-router';
 import { useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
@@ -9,6 +9,7 @@ export interface LessonSidebarProps {
   readonly subject: ManifestSubject;
   readonly activeLessonId: string;
   readonly onSelectLesson?: () => void;
+  readonly onToggleCollapse?: () => void;
   readonly className?: string;
 }
 
@@ -16,6 +17,7 @@ export function LessonSidebar({
   subject,
   activeLessonId,
   onSelectLesson,
+  onToggleCollapse,
   className,
 }: LessonSidebarProps) {
   const completedLessons = useLearningStore((state) => state.completedLessons);
@@ -23,16 +25,29 @@ export function LessonSidebar({
   return (
     <nav
       aria-label={`Danh sách bài học môn ${subject.title}`}
-      className={cn('space-y-5', className)}
+      className={cn('space-y-4', className)}
     >
       <div className="flex items-center justify-between border-b border-stone-200/80 pb-3">
         <Link
           to={ROUTES.subjectOverview(subject.slug)}
-          className="text-subject-700 hover:text-subject-900 inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase"
+          className="text-subject-700 hover:text-subject-900 inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase transition-colors"
         >
-          <Layers className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{subject.title}</span>
+          <Layers className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="max-w-[155px] truncate">{subject.title}</span>
         </Link>
+
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            title="Thu gọn sidebar (Chế độ đọc tập trung)"
+            aria-label="Thu gọn sidebar"
+            className="flex cursor-pointer items-center gap-1 rounded-md border border-stone-200/70 bg-stone-50/80 px-2 py-1 text-[11px] font-medium text-stone-600 shadow-2xs transition-colors hover:bg-stone-100 hover:text-stone-900"
+          >
+            <PanelLeftClose className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+            <span>Thu gọn</span>
+          </button>
+        )}
       </div>
 
       <div className="space-y-4">

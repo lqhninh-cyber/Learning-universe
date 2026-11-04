@@ -117,3 +117,23 @@
     padding: 0.1em 0.12em 0 0;
   }
 }
+
+/* Thanh cuộn tinh tế cho thanh bên bài học & mục lục (Custom subtle scrollbar) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(168, 162, 158, 0.4);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 113, 108, 0.7);
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 162, 158, 0.4) transparent;
+}

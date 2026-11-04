@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Layers, ListTree, PanelLeft } from 'lucide-react';
+import { ArrowLeft, Clock, Layers, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
@@ -52,6 +52,28 @@ export function LessonPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isSidebarDrawerOpen, setIsSidebarDrawerOpen] = useState(false);
   const [isTocDrawerOpen, setIsTocDrawerOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem('lu_sidebar_collapsed') === 'true';
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  const handleToggleSidebarCollapse = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('lu_sidebar_collapsed', String(next));
+      } catch {
+        // Ignore storage errors
+      }
+      return next;
+    });
+  };
 
   const isNotesOpen = Boolean(lessonId && openNoteLessonId === lessonId);
   const handleToggleNotes = () => {
@@ -117,75 +139,104 @@ export function LessonPage() {
   const { subject, chapter, lesson } = location;
 
   return (
-    <FadeIn className="space-y-6 pb-16">
+    <FadeIn className="mx-auto w-full max-w-[1600px] space-y-6 px-4 pb-16 sm:px-6 lg:px-8">
       {import.meta.env.DEV && (
         <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
       )}
 
       <div className="flex flex-col justify-between gap-4 border-b border-[var(--bg-muted)] pb-4 lg:flex-row lg:items-center">
-        <Breadcrumb
-          items={[
-            { label: 'Trang chủ', href: ROUTES.home },
-            { label: subject.title, href: ROUTES.subjectOverview(subject.slug) },
-            {
-              label: `Chương ${chapter.number}: ${chapter.title}`,
-              href: ROUTES.subjectOverview(subject.slug),
-            },
-            { label: `Bài ${chapter.number}.${lesson.number}: ${lesson.title}` },
-          ]}
-        />
+        <div className="flex items-center gap-3">
+          {isSidebarCollapsed && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleToggleSidebarCollapse}
+              className="hidden items-center gap-1.5 border-stone-300 bg-stone-50/90 text-xs text-stone-700 shadow-2xs transition-colors hover:text-stone-900 lg:inline-flex"
+              title="Mở lại danh sách bài học (Thanh bên)"
+              aria-label="Mở lại danh sách bài học"
+            >
+              <PanelLeftOpen className="text-subject-700 h-4 w-4" aria-hidden="true" />
+              <span>Hiện danh mục bài</span>
+            </Button>
+          )}
 
-        <div className="flex items-center gap-2 lg:hidden">
-          <Drawer
-            open={isSidebarDrawerOpen}
-            onOpenChange={setIsSidebarDrawerOpen}
-            side="left"
-            title={`Chương & Bài học — ${subject.title}`}
-            trigger={
-              <Button variant="outline" size="sm">
-                <PanelLeft className="h-4 w-4" aria-hidden="true" />
-                <span>Danh sách bài học</span>
-              </Button>
-            }
+          <Breadcrumb
+            items={[
+              { label: 'Trang chủ', href: ROUTES.home },
+              { label: subject.title, href: ROUTES.subjectOverview(subject.slug) },
+              {
+                label: `Chương ${chapter.number}: ${chapter.title}`,
+                href: ROUTES.subjectOverview(subject.slug),
+              },
+              { label: `Bài ${chapter.number}.${lesson.number}: ${lesson.title}` },
+            ]}
+          />
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* Nút mở danh sách bài học trên mobile & tablet (< lg) */}
+          <div className="lg:hidden">
+            <Drawer
+              open={isSidebarDrawerOpen}
+              onOpenChange={setIsSidebarDrawerOpen}
+              side="left"
+              title={`Chương & Bài học — ${subject.title}`}
+              trigger={
+                <Button variant="outline" size="sm">
+                  <PanelLeft className="h-4 w-4" aria-hidden="true" />
+                  <span>Danh sách bài học</span>
+                </Button>
+              }
+            >
+              <LessonSidebar
+                subject={subject}
+                activeLessonId={lesson.id}
+                onSelectLesson={() => setIsSidebarDrawerOpen(false)}
+              />
+            </Drawer>
+          </div>
+
+          {/* Nút mở mục lục bài học trên mobile, tablet & laptop vừa (< xl) */}
+          <div className="xl:hidden">
+            <Drawer
+              open={isTocDrawerOpen}
+              onOpenChange={setIsTocDrawerOpen}
+              side="right"
+              title="Mục lục & Định lý trong bài"
+              trigger={
+                <Button variant="outline" size="sm">
+                  <ListTree className="h-4 w-4" aria-hidden="true" />
+                  <span>Mục lục bài</span>
+                </Button>
+              }
+            >
+              <LessonToc
+                lessonMeta={compiled?.lessonMeta ?? null}
+                onSelectAnchor={() => setIsTocDrawerOpen(false)}
+              />
+            </Drawer>
+          </div>
+        </div>
+      </div>
+
+      {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content (max 920px) | TOC (230px) */}
+      <div className="flex items-start justify-center gap-6 lg:gap-8">
+        {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) */}
+        {!isSidebarCollapsed && (
+          <aside
+            className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto border-r border-stone-200/80 pr-4 pb-6 lg:block"
+            aria-label="Danh mục điều hướng bài học"
           >
             <LessonSidebar
               subject={subject}
               activeLessonId={lesson.id}
-              onSelectLesson={() => setIsSidebarDrawerOpen(false)}
+              onToggleCollapse={handleToggleSidebarCollapse}
             />
-          </Drawer>
+          </aside>
+        )}
 
-          <Drawer
-            open={isTocDrawerOpen}
-            onOpenChange={setIsTocDrawerOpen}
-            side="right"
-            title="Mục lục & Định lý trong bài"
-            trigger={
-              <Button variant="outline" size="sm">
-                <ListTree className="h-4 w-4" aria-hidden="true" />
-                <span>Mục lục bài</span>
-              </Button>
-            }
-          >
-            <LessonToc
-              lessonMeta={compiled?.lessonMeta ?? null}
-              onSelectAnchor={() => setIsTocDrawerOpen(false)}
-            />
-          </Drawer>
-        </div>
-      </div>
-
-      {/* Bố cục 3 cột Edward Tufte Layout: Nav (240px) | Content (minmax(0, 65ch)) | Marginalia (minmax(240px, 280px)) */}
-      <div className="grid gap-8 lg:grid-cols-[240px_minmax(0,65ch)_minmax(240px,280px)] lg:justify-center">
-        {/* Cột 1: Danh mục điều hướng bài học cố định */}
-        <aside className="hidden lg:block lg:w-[240px]" aria-label="Danh mục điều hướng bài học">
-          <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
-            <LessonSidebar subject={subject} activeLessonId={lesson.id} />
-          </div>
-        </aside>
-
-        {/* Cột 2: Cột văn bản chính */}
-        <main className="min-w-0">
+        {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
+        <main className="mx-auto max-w-[920px] min-w-0 flex-1 px-4 py-6 sm:px-8 lg:px-12">
           <article className="rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] p-6 shadow-xs sm:p-8 lg:p-10">
             <header className="space-y-4 border-b border-[var(--bg-muted)] pb-6">
               {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
@@ -212,11 +263,11 @@ export function LessonPage() {
                 </div>
               </aside>
 
-              <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl">
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl lg:text-4xl">
                 {lesson.title}
               </h1>
 
-              <p className="text-base leading-relaxed text-[var(--text-secondary)]">
+              <p className="text-base leading-relaxed text-[var(--text-secondary)] sm:text-[17px]">
                 {lesson.description}
               </p>
 
@@ -307,15 +358,13 @@ export function LessonPage() {
           </article>
         </main>
 
-        {/* Cột 3: Cột biên tập lề (Marginalia / TOC / Ghi chú ngữ cảnh) */}
+        {/* CỘT PHẢI (Mục lục bài học - Table of Contents / On this page) */}
         <aside
-          className="hidden lg:block lg:w-[280px]"
+          className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[230px] shrink-0 overflow-y-auto pl-2 xl:block"
           role="complementary"
           aria-label="Cột biên tập lề và mục lục"
         >
-          <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pl-2">
-            <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
-          </div>
+          <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
         </aside>
       </div>
     </FadeIn>

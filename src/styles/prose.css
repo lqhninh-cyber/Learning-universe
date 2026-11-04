@@ -9,10 +9,10 @@
 
 .lu-prose {
   font-family: var(--font-serif);
-  max-width: 65ch;
+  max-width: 100%;
   color: var(--text-primary);
   font-size: 1.0625rem;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .lu-prose > * + * {
@@ -21,6 +21,8 @@
 
 .lu-prose p {
   text-wrap: pretty;
+  font-size: 1.0625rem;
+  line-height: 1.75;
 }
 
 .lu-prose h1,

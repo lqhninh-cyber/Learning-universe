@@ -74,7 +74,7 @@ function RootLayoutContent() {
   return (
     <div className="bg-vn-bg text-vn-text flex min-h-screen flex-col">
       <header className="border-vn-border/70 bg-vn-bg/90 sticky top-0 z-30 border-b backdrop-blur-md">
-        <Container className="flex h-16 items-center justify-between gap-4">
+        <Container size="wide" className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3 md:gap-6">
             <div className="md:hidden">
               <Drawer
@@ -495,8 +495,8 @@ function RootLayoutContent() {
         </Container>
       </header>
 
-      <main className="flex-1 py-10 sm:py-12">
-        <Container>
+      <main className="flex-1 py-8 sm:py-10">
+        <Container size="wide">
           <Outlet />
         </Container>
       </main>
@@ -507,7 +507,7 @@ function RootLayoutContent() {
 
       <footer className="border-vn-border/70 bg-vn-surface/35 border-t">
         <KagomeWeaveDivider />
-        <Container className="space-y-6 py-8">
+        <Container size="wide" className="space-y-6 py-8">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
