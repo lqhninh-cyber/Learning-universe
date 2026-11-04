@@ -38,6 +38,13 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
 
 export const routes: RouteObject[] = [
   {
+    path: ROUTES.uiPreview,
+    lazy: async () => {
+      const { UiPreviewPage } = await import('@/pages/ui-preview/UiPreviewPage');
+      return { Component: UiPreviewPage };
+    },
+  },
+  {
     path: ROUTES.home,
     Component: RootLayout,
     HydrateFallback: RootHydrateFallback,

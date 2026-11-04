@@ -10,6 +10,7 @@ import {
   Menu,
   Palette,
   ShieldCheck,
+  Sparkles,
   User,
   UserCheck,
   Users,
@@ -175,14 +176,24 @@ function RootLayoutContent() {
                   </div>
 
                   {isAdmin && (
-                    <Link
-                      to={ROUTES.adminUsers}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-2 rounded-xl bg-purple-50/70 px-3 py-2.5 text-sm font-semibold text-purple-800 hover:bg-purple-100"
-                    >
-                      <Users className="h-4 w-4" aria-hidden="true" />
-                      <span>Quản lý học viên</span>
-                    </Link>
+                    <>
+                      <Link
+                        to={ROUTES.adminUsers}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-2 rounded-xl bg-purple-50/70 px-3 py-2.5 text-sm font-semibold text-purple-800 hover:bg-purple-100"
+                      >
+                        <Users className="h-4 w-4" aria-hidden="true" />
+                        <span>Quản lý học viên</span>
+                      </Link>
+                      <Link
+                        to={ROUTES.uiPreview}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-2 rounded-xl bg-amber-50/70 px-3 py-2.5 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+                      >
+                        <Sparkles className="h-4 w-4 text-amber-700" aria-hidden="true" />
+                        <span>Thử nghiệm UI V2 (/ui-preview)</span>
+                      </Link>
+                    </>
                   )}
 
                   <div className="border-t border-stone-200 pt-3">
@@ -393,16 +404,26 @@ function RootLayoutContent() {
           <nav aria-label="Điều hướng tài khoản và tiện ích" className="flex items-center gap-2">
             {isUserLoggedIn ? (
               <div className="flex items-center gap-2">
-                {/* Khi là Quản trị viên (Admin): Hiển thị nút liên kết trực tiếp đến trang /admin/users */}
+                {/* Khi là Quản trị viên (Admin): Hiển thị nút liên kết trực tiếp đến trang /admin/users và /ui-preview */}
                 {isAdmin && (
-                  <Link
-                    to={ROUTES.adminUsers}
-                    className="flex items-center gap-1.5 rounded-lg border border-purple-300 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-900 shadow-2xs transition-colors hover:bg-purple-100"
-                    title="Truy cập Trang quản lý và xét duyệt học viên"
-                  >
-                    <Users className="h-3.5 w-3.5 text-purple-700" aria-hidden="true" />
-                    <span>Quản lý học viên</span>
-                  </Link>
+                  <>
+                    <Link
+                      to={ROUTES.adminUsers}
+                      className="flex items-center gap-1.5 rounded-lg border border-purple-300 bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-900 shadow-2xs transition-colors hover:bg-purple-100"
+                      title="Truy cập Trang quản lý và xét duyệt học viên"
+                    >
+                      <Users className="h-3.5 w-3.5 text-purple-700" aria-hidden="true" />
+                      <span>Quản lý học viên</span>
+                    </Link>
+                    <Link
+                      to={ROUTES.uiPreview}
+                      className="flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-900 shadow-2xs transition-colors hover:bg-amber-100"
+                      title="Thử nghiệm giao diện UI/UX mới (V2 Prototype)"
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-amber-700" aria-hidden="true" />
+                      <span>UI V2</span>
+                    </Link>
+                  </>
                 )}
 
                 {/* Huy hiệu Chờ duyệt: Chỉ hiển thị khi KHÔNG PHẢI Admin VÀ status === 'pending' */}
@@ -568,6 +589,12 @@ function RootLayoutContent() {
                 className="text-vn-muted hover:text-vn-primary transition-colors"
               >
                 Tra cứu thuật ngữ &amp; ký hiệu
+              </Link>
+              <Link
+                to={ROUTES.uiPreview}
+                className="font-semibold text-amber-800 transition-colors hover:text-amber-950"
+              >
+                Thử nghiệm UI V2
               </Link>
             </nav>
           </div>

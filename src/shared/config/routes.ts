@@ -32,4 +32,5 @@ export const ROUTES = {
   devMdx: '/dev/mdx',
   devPreview: '/dev/preview',
   devFigures: '/dev/figures',
+  uiPreview: '/ui-preview',
 } as const;
