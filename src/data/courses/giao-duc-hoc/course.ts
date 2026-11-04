@@ -2,6 +2,8 @@ import type { ManifestSubject } from '@schemas/index';
 import type { CompiledLessonModule } from '@/content-runtime/loader';
 import { createElement, type FC } from 'react';
 import { getChapter1LessonModule } from './chapter-1';
+import { getChapter2LessonModule } from './chapter-2';
+import { getChapter3LessonModule } from './chapter-3';
 
 // ============================================================================
 // 1. DANH MỤC 13 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
@@ -609,7 +611,11 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
       description:
         'Các chức năng xã hội của giáo dục, biện chứng 4 yếu tố hình thành nhân cách và hệ thống mục đích, nguyên lý giáo dục theo Luật Giáo dục 2019.',
       number: 2,
-      objectives: [],
+      objectives: [
+        'CLO 2: Phân tích bản chất hiện tượng xã hội của giáo dục và 3 chức năng xã hội nền tảng',
+        'CLO 2: Luận giải mối quan hệ biện chứng giữa 4 yếu tố hình thành và phát triển nhân cách',
+        'CLO 1: Vận dụng 3 nguyên lý giáo dục và mục tiêu GDPT (Luật GD 2019) vào hoạt động sư phạm',
+      ],
       lessons: [
         {
           id: 'gdh-c2-b1-ban-chat-va-cac-chuc-nang-xa-hoi-cua-giao-duc',
@@ -623,10 +629,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Bản chất giáo dục', 'Chức năng xã hội', 'Tính lịch sử'],
+          tags: ['Bản chất giáo dục', 'Chức năng xã hội', 'Tính lịch sử', 'CLO 2'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c2-b1.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-2.ts',
         },
         {
           id: 'gdh-c2-b2-giao-duc-va-su-phat-trien-nhan-cach',
@@ -640,10 +646,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Phát triển nhân cách', 'Vai trò chủ đạo', 'Di truyền', 'Môi trường'],
+          tags: ['Phát triển nhân cách', 'Vai trò chủ đạo', 'Di truyền', 'Môi trường', 'CLO 2'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c2-b2.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-2.ts',
         },
         {
           id: 'gdh-c2-b3-giao-duc-hoc-la-mot-khoa-hoc-muc-dich-va-nguyen-ly-giao-duc',
@@ -657,10 +663,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           prerequisites: [],
           sources: [{ source: 'luat-giao-duc-2019' }],
           aliases: [],
-          tags: ['Khoa học Giáo dục', 'Luật Giáo dục 2019', 'Nguyên lý giáo dục'],
+          tags: ['Khoa học Giáo dục', 'Luật Giáo dục 2019', 'Nguyên lý giáo dục', 'CLO 1', 'CLO 2'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c2-b3.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-2.ts',
         },
       ],
     },
@@ -675,7 +681,11 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
       description:
         'Cơ cấu tổ chức trường phổ thông theo Điều lệ TT32, hệ thống 6 nguyên tắc giáo dục toàn diện và ma trận phương pháp giáo dục phẩm chất - năng lực.',
       number: 3,
-      objectives: [],
+      objectives: [
+        'CLO 2: Nắm vững cơ cấu tổ chức trường trung học (TT 32/2020) và cấu trúc hoạt động giáo dục',
+        'CLO 1: Thực thi thành thạo hệ thống 6 nguyên tắc giáo dục học sinh phổ thông',
+        'CLO 1: Vận dụng ma trận 5 phẩm chất, 10 năng lực (CT GDPT 2018) và phương pháp kỷ luật tích cực',
+      ],
       lessons: [
         {
           id: 'gdh-c3-b1-co-cau-to-chuc-truong-pho-thong-va-khai-niem-hoat-dong-giao-duc',
@@ -689,10 +699,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           prerequisites: [],
           sources: [{ source: 'thong-tu-32-2020' }],
           aliases: [],
-          tags: ['Điều lệ trường học', 'Thông tư 32', 'Cơ cấu tổ chức', 'HĐGD'],
+          tags: ['Điều lệ trường học', 'Thông tư 32', 'Cơ cấu tổ chức', 'HĐGD', 'CLO 2'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c3-b1.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-3.ts',
         },
         {
           id: 'gdh-c3-b2-he-thong-6-nguyen-tac-giao-duc-hoc-sinh-pho-thong',
@@ -706,10 +716,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Nguyên tắc giáo dục', '6 Nguyên tắc', 'Thực hành sư phạm'],
+          tags: ['Nguyên tắc giáo dục', '6 Nguyên tắc', 'Thực hành sư phạm', 'CLO 1'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c3-b2.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-3.ts',
         },
         {
           id: 'gdh-c3-b3-muc-tieu-pham-chat-nang-luc-va-phuong-phap-giao-duc',
@@ -723,10 +733,16 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           prerequisites: [],
           sources: [{ source: 'chuong-trinh-gdpt-2018' }],
           aliases: [],
-          tags: ['5 Phẩm chất 10 Năng lực', 'Phương pháp giáo dục', 'Kỷ luật tích cực'],
+          tags: [
+            '5 Phẩm chất 10 Năng lực',
+            'Phương pháp giáo dục',
+            'Kỷ luật tích cực',
+            'CLO 1',
+            'CLO 2',
+          ],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c3-b3.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-3.ts',
         },
       ],
     },
@@ -922,10 +938,20 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
  * Trả về module bài học cho các bài thuộc học phần Giáo dục học.
  */
 export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule | null {
-  // Ưu tiên nạp module chuyên sâu của Chương 1 nếu có
+  // Ưu tiên nạp module chuyên sâu của Chương 1, 2, 3 nếu có
   const ch1Module = getChapter1LessonModule(lessonId);
   if (ch1Module) {
     return ch1Module;
+  }
+
+  const ch2Module = getChapter2LessonModule(lessonId);
+  if (ch2Module) {
+    return ch2Module;
+  }
+
+  const ch3Module = getChapter3LessonModule(lessonId);
+  if (ch3Module) {
+    return ch3Module;
   }
 
   const lessonItem = GIAO_DUC_HOC_SUBJECT.chapters

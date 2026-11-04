@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { getSubjectBySlug, getSubjects } from '@/content-runtime';
 import { getChapter1LessonModule } from '@/data/courses/giao-duc-hoc/chapter-1';
+import { getChapter2LessonModule } from '@/data/courses/giao-duc-hoc/chapter-2';
+import { getChapter3LessonModule } from '@/data/courses/giao-duc-hoc/chapter-3';
 import {
   EDUCATIONAL_PRINCIPLES,
   GIAO_DUC_HOC_SUBJECT,
@@ -123,6 +125,44 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b2).toBeDefined();
       expect(b3).toBeDefined();
       expect(b4).toBeDefined();
+    });
+  });
+
+  describe('Dispatcher getChapter2LessonModule', () => {
+    it('nạp đầy đủ 3 bài học chi tiết của Chương 2', () => {
+      const b1 = getChapter2LessonModule('gdh-c2-b1-ban-chat-va-cac-chuc-nang-xa-hoi-cua-giao-duc');
+      const b2 = getChapter2LessonModule('gdh-c2-b2-giao-duc-va-su-phat-trien-nhan-cach');
+      const b3 = getChapter2LessonModule(
+        'gdh-c2-b3-giao-duc-hoc-la-mot-khoa-hoc-muc-dich-va-nguyen-ly-giao-duc',
+      );
+
+      expect(b1).toBeDefined();
+      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b2).toBeDefined();
+      expect(b2?.lessonMeta.headings.length).toBe(3);
+      expect(b3).toBeDefined();
+      expect(b3?.lessonMeta.headings.length).toBe(4);
+    });
+  });
+
+  describe('Dispatcher getChapter3LessonModule', () => {
+    it('nạp đầy đủ 3 bài học chi tiết của Chương 3', () => {
+      const b1 = getChapter3LessonModule(
+        'gdh-c3-b1-co-cau-to-chuc-truong-pho-thong-va-khai-niem-hoat-dong-giao-duc',
+      );
+      const b2 = getChapter3LessonModule(
+        'gdh-c3-b2-he-thong-6-nguyen-tac-giao-duc-hoc-sinh-pho-thong',
+      );
+      const b3 = getChapter3LessonModule(
+        'gdh-c3-b3-muc-tieu-pham-chat-nang-luc-va-phuong-phap-giao-duc',
+      );
+
+      expect(b1).toBeDefined();
+      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b2).toBeDefined();
+      expect(b2?.lessonMeta.headings.length).toBe(2);
+      expect(b3).toBeDefined();
+      expect(b3?.lessonMeta.headings.length).toBe(4);
     });
   });
 
