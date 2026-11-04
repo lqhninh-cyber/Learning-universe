@@ -68,14 +68,21 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(ch1.lessons[3]!.slug).toBe('tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1');
     });
 
-    it('tích hợp đủ 14 tài liệu học phần và văn bản pháp quy', () => {
-      expect(PEDAGOGY_DOCUMENTS.length).toBe(14);
+    it('tích hợp đủ 19 tài liệu học phần, văn bản pháp quy và cẩm nang hoạt động trải nghiệm', () => {
+      expect(PEDAGOGY_DOCUMENTS.length).toBe(19);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'gt-gdh-hcmue')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'luat-giao-duc-2019')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'chuan-nghe-nghiep-gv-tt20')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'dieu-le-truong-trung-hoc-tt32')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'tt17-sua-doi-ctgdpt')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-chien-luoc-phat-trien-gd')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtnhn-thcs-modun-4')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtnhn-thpt-modun-4')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtn-thcs-modun-2')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-phuong-thuc-to-chuc-hdtn')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-quy-trinh-thiet-ke-chu-de-hdtn')).toBe(
+        true,
+      );
     });
 
     it('chứa đủ 6 nguyên tắc giáo dục và bộ tình huống sư phạm thực tế', () => {

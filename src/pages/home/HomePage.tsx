@@ -262,7 +262,7 @@ export function HomePage() {
               </span>
               <span className="h-3 w-px bg-stone-300" aria-hidden="true" />
               <span className="font-medium">
-                Tài liệu: <strong className="text-teal-900">14 tệp PDF</strong>
+                Tài liệu: <strong className="text-teal-900">19 tệp PDF</strong>
               </span>
               <span className="h-3 w-px bg-stone-300" aria-hidden="true" />
               <span className="font-mono text-[11px] font-bold text-emerald-800">
@@ -554,8 +554,8 @@ export function HomePage() {
                 </div>
 
                 <p className="mt-2 text-xs leading-relaxed text-stone-600">
-                  Chuẩn HCMUE &amp; CT GDPT 2018 · 14 tài liệu pháp quy · Rubric A.1.2 &amp; A.1.9 ·
-                  20 tình huống sư phạm.
+                  Chuẩn HCMUE &amp; CT GDPT 2018 · 19 tài liệu pháp quy &amp; cẩm nang · Rubric
+                  A.1.2 &amp; A.1.9 · 20 tình huống sư phạm.
                 </p>
 
                 <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs">
@@ -564,7 +564,7 @@ export function HomePage() {
                     <span className="text-[10px] text-teal-700">Lý thuyết &amp; Thực hành</span>
                   </div>
                   <div className="rounded-xl border border-teal-100 bg-teal-50/60 p-2">
-                    <span className="block font-bold text-teal-950">14 Tệp PDF</span>
+                    <span className="block font-bold text-teal-950">19 Tệp PDF</span>
                     <span className="text-[10px] text-teal-700">Giáo trình &amp; Pháp quy</span>
                   </div>
                 </div>

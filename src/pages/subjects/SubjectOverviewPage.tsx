@@ -76,14 +76,20 @@ export function SubjectOverviewPage() {
 
   const filteredPedagogyDocs = useMemo(() => {
     if (pedagogyDocFilter === 'all') return PEDAGOGY_DOCUMENTS;
-    return PEDAGOGY_DOCUMENTS.filter((doc) => doc.category === pedagogyDocFilter);
+    return PEDAGOGY_DOCUMENTS.filter(
+      (doc) =>
+        doc.category === pedagogyDocFilter ||
+        (pedagogyDocFilter === 'handbook' && doc.category === 'Cẩm nang & Nghiên cứu'),
+    );
   }, [pedagogyDocFilter]);
 
   const pedagogyCategoryCounts = useMemo(() => {
     return {
       curriculum: PEDAGOGY_DOCUMENTS.filter((d) => d.category === 'curriculum').length,
       legal: PEDAGOGY_DOCUMENTS.filter((d) => d.category === 'legal').length,
-      handbook: PEDAGOGY_DOCUMENTS.filter((d) => d.category === 'handbook').length,
+      handbook: PEDAGOGY_DOCUMENTS.filter(
+        (d) => d.category === 'handbook' || d.category === 'Cẩm nang & Nghiên cứu',
+      ).length,
     };
   }, []);
 
@@ -330,7 +336,7 @@ export function SubjectOverviewPage() {
           ========================================================================= */}
       {activeTab === 'documents' && (
         <div className="space-y-6">
-          {/* A. Dành cho môn Giáo dục học: 13 Tài liệu HCMUE & Pháp quy */}
+          {/* A. Dành cho môn Giáo dục học: 19 Tài liệu HCMUE & Pháp quy */}
           {subject.slug === 'giao-duc-hoc' && (
             <Card className="border-teal-200/90 bg-gradient-to-br from-teal-50/40 via-white to-amber-50/30 p-6 shadow-xs sm:p-8">
               <div className="space-y-6">
@@ -409,7 +415,7 @@ export function SubjectOverviewPage() {
                   </button>
                 </div>
 
-                {/* Lưới danh sách 14 tài liệu */}
+                {/* Lưới danh sách 19 tài liệu */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredPedagogyDocs.map((doc) => (
                     <div

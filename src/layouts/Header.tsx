@@ -485,7 +485,7 @@ export const Header: FC<HeaderProps> = ({ className }) => {
                               </p>
                               <div className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-teal-800">
                                 <span className="rounded bg-teal-100 px-1.5 py-0.5">
-                                  14 tệp tài liệu
+                                  19 tệp tài liệu
                                 </span>
                                 <span className="rounded bg-teal-100 px-1.5 py-0.5">
                                   Rubric A.1.2 &amp; A.1.9

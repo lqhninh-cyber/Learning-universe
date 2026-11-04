@@ -9,7 +9,7 @@ import { getChapter5LessonModule } from './chapter-5';
 import { getChapter6LessonModule, PEDAGOGICAL_20_CASE_STUDIES } from './chapter-6';
 
 // ============================================================================
-// 1. DANH MỤC 14 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
+// 1. DANH MỤC 19 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
 // ============================================================================
 
 export interface PedagogyDocument {
@@ -189,6 +189,69 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     description:
       'Quy trình nghiên cứu khoa học sư phạm ứng dụng trong nhà trường phổ thông: xác định vấn đề, thiết kế tác động, đo lường và phân tích dữ liệu.',
     badge: 'NCKH Ứng dụng',
+  },
+  {
+    id: 'doc-hdtnhn-thcs-modun-4',
+    title: 'Tài liệu Mô-đun 4 HĐTN, HN cấp THCS',
+    category: 'handbook',
+    categoryLabel: 'Cẩm nang & Nghiên cứu',
+    path: '/docs/giao-duc-hoc/HDTNHN_THCS_Modun_4.pdf',
+    url: '/docs/giao-duc-hoc/HDTNHN_THCS_Modun_4.pdf',
+    filename: 'HDTNHN_THCS_Modun_4.pdf',
+    size: '2.5 MB',
+    description:
+      'Tài liệu tập huấn Bộ GD&ĐT: Xây dựng kế hoạch dạy học và giáo dục phát triển phẩm chất, năng lực cấp THCS.',
+    badge: 'Mô-đun 4 THCS',
+  },
+  {
+    id: 'doc-hdtnhn-thpt-modun-4',
+    title: 'Tài liệu Mô-đun 4 HĐTN, HN cấp THPT',
+    category: 'handbook',
+    categoryLabel: 'Cẩm nang & Nghiên cứu',
+    path: '/docs/giao-duc-hoc/HDTNHN_THPT_Modun_4.pdf',
+    url: '/docs/giao-duc-hoc/HDTNHN_THPT_Modun_4.pdf',
+    filename: 'HDTNHN_THPT_Modun_4.pdf',
+    size: '2.5 MB',
+    description:
+      'Tài liệu tập huấn Bộ GD&ĐT: Xây dựng kế hoạch hoạt động trải nghiệm, hướng nghiệp cấp THPT.',
+    badge: 'Mô-đun 4 THPT',
+  },
+  {
+    id: 'doc-hdtn-thcs-modun-2',
+    title: 'Tài liệu Mô-đun 2 HĐTN cấp THCS',
+    category: 'handbook',
+    categoryLabel: 'Cẩm nang & Nghiên cứu',
+    path: '/docs/giao-duc-hoc/HDTN_THCS_Modun_2.pdf',
+    url: '/docs/giao-duc-hoc/HDTN_THCS_Modun_2.pdf',
+    filename: 'HDTN_THCS_Modun_2.pdf',
+    size: '2.2 MB',
+    description:
+      'Sử dụng phương pháp dạy học và giáo dục phát triển phẩm chất, năng lực học sinh trong HĐTN cấp THCS.',
+    badge: 'Mô-đun 2 THCS',
+  },
+  {
+    id: 'doc-phuong-thuc-to-chuc-hdtn',
+    title: 'Phương thức tổ chức Hoạt động trải nghiệm',
+    category: 'handbook',
+    categoryLabel: 'Cẩm nang & Nghiên cứu',
+    path: '/docs/giao-duc-hoc/Phuong_thuc_to_chuc_HDTN.pdf',
+    url: '/docs/giao-duc-hoc/Phuong_thuc_to_chuc_HDTN.pdf',
+    filename: 'Phuong_thuc_to_chuc_HDTN.pdf',
+    size: '745 KB',
+    description: 'Hệ thống hóa các phương thức tổ chức HĐTN thực tế trong nhà trường phổ thông.',
+    badge: 'Phương thức HĐTN',
+  },
+  {
+    id: 'doc-quy-trinh-thiet-ke-chu-de-hdtn',
+    title: 'Quy trình thiết kế kế hoạch chủ đề tổ chức HĐTN',
+    category: 'handbook',
+    categoryLabel: 'Cẩm nang & Nghiên cứu',
+    path: '/docs/giao-duc-hoc/Quy_trinh_thiet_ke_chu_de_HDTN.pdf',
+    url: '/docs/giao-duc-hoc/Quy_trinh_thiet_ke_chu_de_HDTN.pdf',
+    filename: 'Quy_trinh_thiet_ke_chu_de_HDTN.pdf',
+    size: '646 KB',
+    description: 'Hướng dẫn từng bước thiết kế chủ đề HĐTN phục vụ làm bài tập thực hành A.1.9.',
+    badge: 'Kế hoạch HĐTN',
   },
 ];
 
