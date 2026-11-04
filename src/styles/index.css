@@ -8,6 +8,40 @@
 @import './subject-themes.css';
 @import './prose.css';
 
+/* ==========================================================================
+   KHÔI PHỤC CHUẨN HIỂN THỊ FONT METRICS TỰ NHIÊN CỦA KATEX (Anti-collision)
+   Cách ly hoàn toàn KaTeX khỏi line-height và letter-spacing của văn bản thường
+   ========================================================================== */
+
+.katex {
+  line-height: 1.2 !important;
+  letter-spacing: normal !important;
+  white-space: nowrap;
+  font-size: 1.15em;
+}
+
+.katex * {
+  line-height: 1.2 !important;
+  letter-spacing: normal !important;
+}
+
+.katex .mfrac {
+  padding: 0.15em 0 !important;
+}
+
+.katex .mfrac .frac-line {
+  border-bottom-width: 0.05em !important;
+  margin: 0.12em 0 !important;
+}
+
+.katex-display {
+  line-height: normal !important;
+  margin: 1.25rem 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
+
 :root {
   /* Critical Regionalism & Siza Limestone Tokens */
   --bg-canvas: #f0ece4; /* Đá vôi sáng / Giấy dó - triệt tiêu hiện tượng lóa mắt halation của nền #FFFFFF */
