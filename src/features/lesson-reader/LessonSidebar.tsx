@@ -68,7 +68,7 @@ export function LessonSidebar({
                       onClick={onSelectLesson}
                       aria-current={isActive ? 'page' : undefined}
                       className={cn(
-                        'flex items-start gap-2.5 rounded-xl px-3 py-2 text-xs leading-snug transition-colors',
+                        'flex items-start gap-2.5 rounded-xl px-3 py-2 text-[14.5px] leading-normal transition-colors',
                         isActive
                           ? 'bg-subject-100/80 text-subject-950 font-semibold'
                           : 'text-stone-700 hover:bg-stone-100/80 hover:text-stone-900',
@@ -89,7 +89,7 @@ export function LessonSidebar({
                         />
                       )}
                       <span>
-                        <span className="text-subject-700 font-mono text-[11px]">
+                        <span className="text-subject-700 font-mono text-xs font-semibold">
                           {chapter.number}.{lesson.number}
                         </span>{' '}
                         {lesson.title}

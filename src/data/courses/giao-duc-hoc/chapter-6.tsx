@@ -1062,6 +1062,66 @@ export const PEDAGOGICAL_20_CASE_STUDIES: readonly ExtendedCaseStudy[] = [
 // 1. COMPONENT BÀI 6.1: NGÂN HÀNG 20 TÌNH HUỐNG SƯ PHẠM THỰC TẾ & CẨM NANG 5 BƯỚC
 // ============================================================================
 
+interface ScientificStep {
+  readonly stepNumber: string;
+  readonly title: string;
+  readonly actionBadge: string;
+  readonly points: readonly string[];
+}
+
+const SCIENTIFIC_5_STEPS: readonly ScientificStep[] = [
+  {
+    stepNumber: '01',
+    title: 'Bước 1: Tiếp nhận & Định dạng tình huống',
+    actionBadge: 'Thu thập thông tin & Giữ bình tĩnh',
+    points: [
+      'Áp dụng nguyên tắc "Dừng 5 giây": Tuyệt đối kiềm chế cảm xúc nóng giận tức thời, giữ thái độ điềm tĩnh, không phản ứng bộc phát trước mặt tập thể lớp.',
+      'Thu thập dữ liệu khách quan đa chiều: Lắng nghe thông tin từ các học sinh trong cuộc, ban cán sự lớp và các nhân chứng xung quanh mà không vội vàng quy kết.',
+      'Đánh giá mức độ khẩn cấp: Xác định tình huống có tiềm ẩn nguy cơ tổn thương thể chất, tinh thần hoặc vi phạm pháp luật cần can thiệp y tế/an ninh ngay hay không.',
+    ],
+  },
+  {
+    stepNumber: '02',
+    title: 'Bước 2: Xác định Vấn đề Cốt lõi & Động cơ Hành vi',
+    actionBadge: 'Giải mã tâm lý & Hoàn cảnh',
+    points: [
+      'Phân tích đặc điểm tâm lý lứa tuổi: Nhận diện các biến động tâm sinh lý lứa tuổi dậy thì/vị thành niên (nhu cầu khẳng định bản thân, tính bốc đồng, sĩ diện với bạn bè).',
+      'Tìm hiểu hoàn cảnh gia đình & môi trường sống: Nắm bắt các biến cố gia đình (bố mẹ ly hôn, áp lực kỳ vọng, thiếu vắng sự quan tâm) hoặc tác động tiêu cực từ mạng xã hội.',
+      'Giải mã mục đích ẩn sau hành vi sai lệch (theo Thuyết Kỷ luật tích cực của Jane Nelsen): Nhận biết học sinh gây rối nhằm tìm kiếm sự chú ý, tranh giành quyền lực, trả đũa hay cảm giác bất lực tự ti; tuyệt đối không chụp mũ hay quy kết cảm tính.',
+    ],
+  },
+  {
+    stepNumber: '03',
+    title: 'Bước 3: Đề xuất & Lựa chọn Phương án Giáo dục Tối ưu',
+    actionBadge: 'Đối chiếu nguyên tắc & Kỷ luật tích cực',
+    points: [
+      'Đối chiếu hệ thống 6 nguyên tắc giáo dục học: Đảm bảo tính mục đích, tính tập thể, tôn trọng nhân cách kết hợp yêu cầu hợp lý và cá biệt hóa sư phạm.',
+      'Ưu tiên giải pháp kỷ luật tích cực và công lý phục hồi: Tập trung vào sửa chữa sai lầm, bồi hoàn tổn thất và giúp học sinh tự nhận thức thay vì áp dụng hình phạt trừng phạt làm nhục danh dự.',
+      'Bảo mật đời tư và giữ gìn lòng tự trọng cho học sinh: Lựa chọn hình thức tác động cá nhân kín đáo, tránh bêu tên phê bình trước toàn trường hoặc trước tập thể lớp khi chưa cần thiết.',
+    ],
+  },
+  {
+    stepNumber: '04',
+    title: 'Bước 4: Thực thi Kế hoạch Can thiệp Sư phạm',
+    actionBadge: 'Lắng nghe thấu cảm & Phối hợp đồng bộ',
+    points: [
+      'Tổ chức buổi gặp gỡ riêng tại không gian phù hợp: Chọn phòng tư vấn tâm lý học đường hoặc văn phòng yên tĩnh; tạo bầu không khí an toàn, tin cậy để học sinh mở lòng.',
+      'Kỹ năng giao tiếp và lắng nghe tích cực: Lắng nghe học sinh giãi bày bằng sự thấu cảm, đặt câu hỏi gợi mở để học sinh tự nhận diện đúng - sai và tự đưa ra giải pháp khắc phục.',
+      'Phối hợp đồng bộ 4 lực lượng giáo dục: Kết nối chặt chẽ giữa Giáo viên chủ nhiệm – Phụ huynh học sinh – Ban Giám hiệu – Đoàn/Đội để cùng thống nhất biện pháp nâng đỡ, đồng hành.',
+    ],
+  },
+  {
+    stepNumber: '05',
+    title: 'Bước 5: Đánh giá Hiệu quả & Rút ra Bài học Nghề nghiệp',
+    actionBadge: 'Giám sát tiến bộ & Hoàn thiện sư phạm',
+    points: [
+      'Theo dõi sự chuyển biến hành vi lâu dài: Ghi chép tiến trình thay đổi vào sổ nhật ký chủ nhiệm; không "đóng đinh" định kiến quá khứ lên học sinh.',
+      'Động viên và công nhận kịp thời: Khích lệ ngay cả những chuyển biến tiến bộ nhỏ nhất, trao cho học sinh cơ hội sửa sai và lập công chuộc tội thông qua các nhiệm vụ tập thể.',
+      'Rút ra bài học kinh nghiệm cho bản thân: Đúc kết bài học về nghệ thuật ứng xử sư phạm, quản lý cảm xúc người thầy và nâng cao năng lực chủ nhiệm lớp.',
+    ],
+  },
+];
+
 export const Lesson6_1View: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedCaseId, setExpandedCaseId] = useState<number | null>(1);
@@ -1105,7 +1165,7 @@ export const Lesson6_1View: FC = () => {
           Bài 6.1: Ngân hàng 20 Tình huống Sư phạm Thực tế & Cẩm nang Xử lý 5 Bước
         </h1>
 
-        <p className="mt-2 text-sm leading-relaxed text-stone-700 sm:text-base">
+        <p className="mt-3 mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
           Tài liệu thực chiến bám sát Giáo trình Giáo dục học HCMUE và Bộ tiêu chí Rubric đánh giá
           A.1.2. Hệ thống hóa quy trình khoa học 5 bước giải quyết xung đột học đường cùng tuyển tập
           20 tình huống điển hình tại trường trung học kèm giải pháp tối ưu và bẫy sai lầm cần
@@ -1127,72 +1187,50 @@ export const Lesson6_1View: FC = () => {
           </h2>
         </div>
 
-        <p className="text-[16.5px] leading-[1.8] text-stone-800 sm:text-[17px]">
+        <p className="mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
           Xử lý tình huống sư phạm không phải là hành động phản xạ cảm tính nhất thời, mà là một quy
           trình giải quyết vấn đề có phương pháp luận khoa học, dựa trên nền tảng tâm lý học lứa
           tuổi, lý luận giáo dục và chuẩn mực pháp luật học đường:
         </p>
 
-        <div className="grid gap-4 md:grid-cols-5">
-          {/* Bước 1 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
-              B1
-            </div>
-            <h3 className="mt-2 text-base font-bold text-stone-900">Tiếp nhận & Định dạng</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
-              Thu thập thông tin đa chiều. Thực hiện nguyên tắc "Dừng 5 giây" kiềm chế giận dữ. Đánh
-              giá mức độ khẩn cấp (có nguy cơ tổn thương thể chất/tinh thần không).
-            </p>
-          </div>
+        {/* Bố cục Tiến trình dọc (Vertical Stepper) */}
+        <div className="mx-auto my-8 w-full max-w-4xl space-y-6">
+          {SCIENTIFIC_5_STEPS.map((step) => (
+            <div
+              key={step.stepNumber}
+              className="scientific-stepper-card flex items-start gap-5 rounded-2xl border border-stone-200/90 bg-white/80 p-6 shadow-sm transition-all hover:border-amber-800/30 hover:shadow-md"
+            >
+              {/* Cột mốc bước (Step Badge) */}
+              <div
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-amber-800/20 bg-amber-800/10 font-serif text-lg font-bold text-amber-900"
+                aria-hidden="true"
+              >
+                {step.stepNumber}
+              </div>
 
-          {/* Bước 2 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
-              B2
-            </div>
-            <h3 className="mt-2 text-base font-bold text-stone-900">Xác định Vấn đề Cốt lõi</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
-              Phân tích tâm lý lứa tuổi dậy thì/vị thành niên, hoàn cảnh gia đình, dư luận lớp học.
-              Tìm hiểu động cơ ẩn sau hành vi theo Jane Nelsen. Tuyệt đối không quy kết cảm tính.
-            </p>
-          </div>
+              {/* Nội dung chi tiết bước */}
+              <div className="min-w-0 flex-1">
+                <div className="mb-2 flex flex-wrap items-center gap-3">
+                  <h3 className="font-serif text-xl font-bold text-stone-900">{step.title}</h3>
+                  <span className="rounded-full border border-teal-200 bg-teal-50 px-2.5 py-0.5 text-xs font-semibold text-teal-800">
+                    {step.actionBadge}
+                  </span>
+                </div>
 
-          {/* Bước 3 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
-              B3
+                <ul className="space-y-2 pt-1">
+                  {step.points.map((pt, pIdx) => (
+                    <li
+                      key={pIdx}
+                      className="flex items-start gap-2.5 text-[18px] leading-[1.8] font-normal text-stone-800"
+                    >
+                      <span className="mt-1 font-bold text-amber-800 select-none">•</span>
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <h3 className="mt-2 text-base font-bold text-stone-900">Đề xuất & Chọn Phương án</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
-              Đối chiếu hệ thống 6 nguyên tắc giáo dục. Ưu tiên kỷ luật tích cực, tìm giải pháp phục
-              hồi. Tôn trọng nhân cách và bảo mật đời tư của học sinh.
-            </p>
-          </div>
-
-          {/* Bước 4 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
-              B4
-            </div>
-            <h3 className="mt-2 text-base font-bold text-stone-900">Thực thi Can thiệp</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
-              Gặp gỡ riêng tại không gian yên tĩnh. Lắng nghe tích cực bằng sự thấu cảm. Phối hợp
-              đồng bộ 4 lực lượng: GVCN – Phụ huynh – Ban Giám hiệu – Đoàn/Đội.
-            </p>
-          </div>
-
-          {/* Bước 5 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
-              B5
-            </div>
-            <h3 className="mt-2 text-base font-bold text-stone-900">Đánh giá & Bài học</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
-              Theo dõi chuyển biến hành vi lâu dài qua sổ nhật ký chủ nhiệm. Ghi nhận sự tiến bộ dù
-              nhỏ nhất. Rút ra bài học kinh nghiệm về quản lý lớp học tự quản.
-            </p>
-          </div>
+          ))}
         </div>
 
         <ScholarQuote

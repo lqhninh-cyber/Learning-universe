@@ -58,10 +58,10 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
   }
 
   return (
-    <nav aria-label="Mục lục bài học" className={cn('space-y-6 text-xs', className)}>
+    <nav aria-label="Mục lục bài học" className={cn('space-y-6 text-[14.5px]', className)}>
       {headings.length > 0 && (
         <div className="space-y-2.5">
-          <div className="flex items-center gap-1.5 font-semibold tracking-wide text-stone-700 uppercase">
+          <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-stone-700 uppercase">
             <ListTree className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
             <span>Mục lục bài học</span>
           </div>
@@ -77,7 +77,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                     href={`#${heading.id}`}
                     onClick={() => handleAnchorClick(heading.id)}
                     className={cn(
-                      'block rounded-md px-2 py-1 leading-snug transition-all',
+                      'block rounded-md px-2.5 py-1 text-[14.5px] leading-normal transition-all',
                       isActive
                         ? 'bg-subject-100/90 text-subject-950 border-subject-600 border-l-2 font-semibold shadow-2xs'
                         : 'text-stone-600 hover:bg-stone-100/70 hover:text-stone-900',
@@ -94,7 +94,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
 
       {blocks.length > 0 && (
         <div className="space-y-2.5">
-          <div className="flex items-center gap-1.5 font-semibold tracking-wide text-stone-700 uppercase">
+          <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-stone-700 uppercase">
             <BookMarked className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
             <span>Định nghĩa & Định lý ({blocks.length})</span>
           </div>
@@ -107,7 +107,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                     href={`#${block.anchorId}`}
                     onClick={() => handleAnchorClick(block.anchorId)}
                     className={cn(
-                      'group block rounded-lg border px-2.5 py-1.5 transition-all',
+                      'group block rounded-lg border px-2.5 py-1.5 text-[14.5px] leading-normal transition-all',
                       isActive
                         ? 'border-subject-400 bg-subject-100/90 text-subject-950 font-semibold shadow-xs'
                         : 'hover:border-subject-200 hover:bg-subject-50/50 border-stone-200/70 bg-stone-50/70 text-stone-700',
@@ -124,9 +124,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                       {block.label}
                     </span>
                     {block.title && (
-                      <span className="block truncate text-[11px] text-stone-500">
-                        {block.title}
-                      </span>
+                      <span className="block truncate text-xs text-stone-500">{block.title}</span>
                     )}
                   </a>
                 </li>

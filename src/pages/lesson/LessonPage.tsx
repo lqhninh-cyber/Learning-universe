@@ -447,7 +447,7 @@ export function LessonPage() {
                 {lesson.title}
               </h1>
 
-              <p className="text-[17px] leading-[1.8] text-stone-700 sm:text-[17.5px] lg:text-[18px]">
+              <p className="mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
                 {lesson.description}
               </p>
 

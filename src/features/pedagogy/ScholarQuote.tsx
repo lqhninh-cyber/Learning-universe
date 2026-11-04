@@ -45,15 +45,15 @@ export function ScholarQuote({
         </div>
 
         {/* Thân danh ngôn */}
-        <blockquote className="border-l-4 border-amber-800/70 pl-4 font-serif text-[15.5px] leading-relaxed text-stone-900 italic sm:text-[16.5px]">
+        <blockquote className="border-l-4 border-amber-800/70 pl-4 font-serif text-[18px] leading-relaxed text-stone-800 italic">
           "{quote}"
         </blockquote>
 
         {/* Tác giả & Tác phẩm */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-amber-900/10 pt-3 text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-amber-900/10 pt-3">
           <div>
-            <div className="font-bold text-stone-900 sm:text-sm">{author}</div>
-            {title && <div className="text-stone-600">{title}</div>}
+            <div className="mt-2 text-base font-semibold text-stone-900 not-italic">{author}</div>
+            {title && <div className="text-sm text-stone-600 not-italic">{title}</div>}
           </div>
 
           {source && (
