@@ -4,6 +4,8 @@ import { createElement, type FC } from 'react';
 import { getChapter1LessonModule } from './chapter-1';
 import { getChapter2LessonModule } from './chapter-2';
 import { getChapter3LessonModule } from './chapter-3';
+import { getChapter4LessonModule } from './chapter-4';
+import { getChapter5LessonModule } from './chapter-5';
 
 // ============================================================================
 // 1. DANH MỤC 13 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
@@ -496,8 +498,8 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
   },
   curriculum: {
     chapterCount: 6,
-    lessonCount: 18,
-    totalMinutes: 720,
+    lessonCount: 20,
+    totalMinutes: 840,
   },
   chapters: [
     // ------------------------------------------------------------------------
@@ -755,9 +757,13 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
       slug: 'cong-tac-cua-nguoi-giao-vien-chu-nhiem-lop',
       title: 'Chương 4: Công tác của Người giáo viên chủ nhiệm lớp',
       description:
-        'Vị trí, 4 chức năng cốt lõi của GVCN, nghệ thuật xây dựng tập thể học sinh tự quản và biện pháp phối hợp các lực lượng giáo dục trong và ngoài nhà trường.',
+        'Vị trí, 4 chức năng cốt lõi của GVCN, nghệ thuật xây dựng tập thể học sinh tự quản, phương pháp kỷ luật tích cực và thực hành xử lý tình huống theo Rubric A.1.2.',
       number: 4,
-      objectives: [],
+      objectives: [
+        'CLO 1: Nắm vững vị trí, 4 chức năng nòng cốt và quyền hạn nhiệm vụ của GVCN (TT 32/2020)',
+        'CLO 2: Vận dụng 3 giai đoạn xây dựng tập thể (Makarenko) và phương pháp kỷ luật tích cực (Jane Nelsen)',
+        'CLO 3: Thực hành thiết kế kế hoạch chủ nhiệm, kịch bản họp phụ huynh và xử lý tình huống theo Rubric A.1.2',
+      ],
       lessons: [
         {
           id: 'gdh-c4-b1-vi-tri-chuc-nang-va-nhiem-vu-cua-gvcn',
@@ -765,50 +771,97 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           title: 'Bài 4.1: Vị trí, Chức năng và Nhiệm vụ của GVCN',
           number: 1,
           description:
-            '4 chức năng nòng cốt của GVCN; quyền hạn và nhiệm vụ của GVCN theo Điều lệ trường phổ thông Thông tư 32/2020/TT-BGDĐT.',
+            'Vị trí vai trò hạt nhân của GVCN; 4 chức năng nòng cốt theo HCMUE; nhiệm vụ, quyền hạn theo Thông tư 32/2020/TT-BGDĐT.',
           level: 'basic',
           estimatedMinutes: 35,
           prerequisites: [],
           sources: [{ source: 'thong-tu-32-2020' }],
           aliases: [],
-          tags: ['GVCN', 'Chức năng GVCN', 'Quyền hạn nhiệm vụ'],
+          tags: [
+            'GVCN',
+            'Chức năng GVCN',
+            'Quyền hạn nhiệm vụ',
+            'Thông tư 32/2020',
+            'CLO 1',
+            'CLO 2',
+          ],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c4-b1.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-4.ts',
         },
         {
-          id: 'gdh-c4-b2-xay-dung-va-phat-trien-tap-the-hoc-sinh',
-          slug: 'xay-dung-va-phat-trien-tap-the-hoc-sinh',
-          title: 'Bài 4.2: Xây dựng và Phát triển tập thể học sinh',
+          id: 'gdh-c4-b2-noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop',
+          slug: 'noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop',
+          title: 'Bài 4.2: Nội dung và Phương pháp giáo dục của GVCN lớp',
           number: 2,
           description:
-            'Quy trình xây dựng tập thể học sinh: lập kế hoạch chủ nhiệm, bồi dưỡng ban cán sự lớp tự quản, xây dựng dư luận tập thể tích cực và phát huy truyền thống.',
+            'Lý luận 3 giai đoạn xây dựng tập thể học sinh theo Makarenko; phương pháp Kỷ luật tích cực theo Jane Nelsen; kỹ thuật nhận diện 4 mục tiêu sai lệch.',
           level: 'intermediate',
           estimatedMinutes: 45,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Tập thể học sinh', 'Kế hoạch chủ nhiệm', 'Ban cán sự lớp'],
+          tags: [
+            'Tập thể học sinh',
+            'Kỷ luật tích cực',
+            'Makarenko',
+            'Jane Nelsen',
+            'CLO 1',
+            'CLO 2',
+          ],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c4-b2.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-4.ts',
         },
         {
-          id: 'gdh-c4-b3-phoi-hop-cac-luc-luong-giao-duc-va-bien-phap-tam-ly-giao-tiep',
-          slug: 'phoi-hop-cac-luc-luong-giao-duc-va-bien-phap-tam-ly-giao-tiep',
-          title: 'Bài 4.3: Phối hợp các lực lượng giáo dục & Biện pháp tâm lý - giao tiếp',
+          id: 'gdh-c4-b3-yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem',
+          slug: 'yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem',
+          title:
+            'Bài 4.3: Yêu cầu về phẩm chất, năng lực của GVCN & Thiết kế hoạt động chủ nhiệm trọng tâm',
           number: 3,
           description:
-            'Mô hình liên kết Nhà trường - Gia đình (CMHS) - Xã hội; kỹ năng giao tiếp sư phạm, xử lý học sinh cá biệt và hỗ trợ học sinh có hoàn cảnh đặc biệt.',
+            'Phẩm chất đạo đức và năng lực của GVCN; hướng dẫn thiết kế 3 hoạt động thực tế: Kế hoạch chủ nhiệm tháng, Kịch bản họp cha mẹ học sinh và Tiết sinh hoạt lớp tự quản.',
           level: 'advanced',
           estimatedMinutes: 45,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Phối hợp giáo dục', 'Học sinh cá biệt', 'Giao tiếp sư phạm'],
+          tags: [
+            'Phẩm chất GVCN',
+            'Kế hoạch tháng',
+            'Họp phụ huynh',
+            'Sinh hoạt lớp',
+            'CLO 1',
+            'CLO 3',
+          ],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c4-b3.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-4.ts',
+        },
+        {
+          id: 'gdh-c4-b4-thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12',
+          slug: 'thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12',
+          title: 'Bài 4.4: Thực hành xử lý tình huống sư phạm theo Rubric A.1.2',
+          number: 4,
+          description:
+            'Quy trình khoa học 5 bước xử lý tình huống giáo dục HCMUE; Bảng tiêu chí Rubric đánh giá A.1.2; giải quyết 2 tình huống sư phạm kinh điển: học sinh cá biệt và bạo lực học đường mạng xã hội.',
+          level: 'advanced',
+          estimatedMinutes: 50,
+          prerequisites: [],
+          sources: [{ source: 'gt-gdh-hcmue-2024' }],
+          aliases: [],
+          tags: [
+            'Tình huống sư phạm',
+            'Rubric A.1.2',
+            'Học sinh cá biệt',
+            'Bạo lực mạng',
+            'CLO 1',
+            'CLO 2',
+            'CLO 3',
+          ],
+          status: 'published',
+          version: '1.0.0',
+          file: '/src/data/courses/giao-duc-hoc/chapter-4.ts',
         },
       ],
     },
@@ -821,60 +874,95 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
       slug: 'to-chuc-hoat-dong-trai-nghiem-o-truong-pho-thong',
       title: 'Chương 5: Tổ chức Hoạt động trải nghiệm ở trường phổ thông',
       description:
-        'Bản chất, 4 mạch nội dung của Hoạt động trải nghiệm theo CT GDPT 2018, các hình thức tổ chức phong phú và quy trình 6 bước thiết kế chủ đề trải nghiệm.',
+        'Bản chất hoạt động giáo dục bắt buộc theo CT GDPT 2018, 4 mạch nội dung, 4 loại hình tổ chức, quy trình 6 bước thiết kế chủ đề và thực hành theo Rubric A.1.9.',
       number: 5,
-      objectives: [],
+      objectives: [
+        'CLO 1: Hiểu rõ bản chất hoạt động trải nghiệm bắt buộc (105 tiết/năm) và chu trình Kolb',
+        'CLO 2: Nắm vững 4 mạch nội dung và 4 loại hình tổ chức hoạt động trải nghiệm trường phổ thông',
+        'CLO 3: Thành thạo quy trình 6 bước thiết kế chủ đề HĐTN và thực hành theo Rubric A.1.9',
+      ],
       lessons: [
         {
-          id: 'gdh-c5-b1-ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem',
-          slug: 'ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem',
-          title: 'Bài 5.1: Bản chất, Mục tiêu và Nội dung Hoạt động trải nghiệm',
+          id: 'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
+          slug: 'khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
+          title: 'Bài 5.1: Khái niệm, Bản chất và Mục tiêu của Hoạt động trải nghiệm',
           number: 1,
           description:
-            'Đặc trưng hoạt động giáo dục bắt buộc; mục tiêu cấp học THCS/THPT; phân tích 4 mạch nội dung: Hoạt động hướng vào bản thân, hướng đến xã hội, hướng đến tự nhiên và hướng nghiệp.',
+            'Định vị hoạt động giáo dục bắt buộc theo CT GDPT 2018 (105 tiết/năm); Chu trình 4 bước học tập qua trải nghiệm David Kolb; mục tiêu phân tầng 3 cấp học.',
           level: 'basic',
           estimatedMinutes: 40,
           prerequisites: [],
           sources: [{ source: 'chuong-trinh-gdpt-2018' }],
           aliases: [],
-          tags: ['Hoạt động trải nghiệm', '4 Mạch nội dung', 'Hướng nghiệp'],
+          tags: ['HĐTN', 'CT GDPT 2018', 'Chu trình Kolb', 'Mục tiêu 3 cấp học', 'CLO 1', 'CLO 2'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c5-b1.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-5.ts',
         },
         {
-          id: 'gdh-c5-b2-hinh-thuc-va-phuong-phap-to-chuc-hoat-dong-trai-nghiem',
-          slug: 'hinh-thuc-va-phuong-phap-to-chuc-hoat-dong-trai-nghiem',
-          title: 'Bài 5.2: Hình thức và Phương pháp tổ chức Hoạt động trải nghiệm',
+          id: 'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
+          slug: 'noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
+          title: 'Bài 5.2: Nội dung và Phương thức tổ chức Hoạt động trải nghiệm',
           number: 2,
           description:
-            '4 hình thức tổ chức cốt lõi: Sinh hoạt dưới cờ, Sinh hoạt lớp, Hoạt động giáo dục theo chủ đề và Câu lạc bộ; phương pháp diễn đàn, dự án, trò chơi và tham quan thực tế.',
-          level: 'intermediate',
+            'Bốn mạch nội dung xuyên suốt và 4 loại hình tổ chức cơ bản trong nhà trường phổ thông (Sinh hoạt dưới cờ, Sinh hoạt lớp, HĐGD theo chủ đề, CLB).',
+          level: 'basic',
           estimatedMinutes: 45,
           prerequisites: [],
           sources: [{ source: 'chuong-trinh-gdpt-2018' }],
           aliases: [],
-          tags: ['Sinh hoạt dưới cờ', 'Sinh hoạt lớp', 'Phương pháp trải nghiệm'],
+          tags: [
+            '4 Mạch nội dung',
+            '4 Loại hình tổ chức',
+            'Sinh hoạt dưới cờ',
+            'Sinh hoạt lớp',
+            'CLO 1',
+            'CLO 2',
+          ],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c5-b2.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-5.ts',
         },
         {
-          id: 'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-hoat-dong-trai-nghiem-va-danh-gia',
-          slug: 'quy-trinh-thiet-ke-ke-hoach-hoat-dong-trai-nghiem-va-danh-gia',
-          title: 'Bài 5.3: Quy trình Thiết kế Kế hoạch hoạt động trải nghiệm & Đánh giá',
+          id: 'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
+          slug: 'quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
+          title: 'Bài 5.3: Quy trình thiết kế kế hoạch chủ đề HĐTN và Tiến trình 4 bước tổ chức',
           number: 3,
           description:
-            'Quy trình 6 bước thiết kế kế hoạch giáo dục chủ đề trải nghiệm; các công cụ đánh giá năng lực: rubric, hồ sơ học tập (portfolio), bảng kiểm và đánh giá đồng đẳng.',
-          level: 'advanced',
+            'Quy trình 6 bước thiết kế kế hoạch giáo dục chủ đề HĐTN theo chuẩn HCMUE; cấu trúc tiến trình 4 bước tổ chức hoạt động cụ thể.',
+          level: 'intermediate',
           estimatedMinutes: 45,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
           aliases: [],
-          tags: ['Kế hoạch bài dạy', 'Rubric đánh giá', 'Quy trình 6 bước'],
+          tags: ['Quy trình 6 bước', 'Tiến trình 4 bước', 'Thiết kế chủ đề', 'CLO 1', 'CLO 3'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c5-b3.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-5.ts',
+        },
+        {
+          id: 'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
+          slug: 'danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
+          title: 'Bài 5.4: Đánh giá kết quả HĐTN & Thực hành xây dựng Kế hoạch theo Rubric A.1.9',
+          number: 4,
+          description:
+            'Bảng tiêu chí Rubric đánh giá bài tập thực hành HĐTN A.1.9 (20%); Kế hoạch bài dạy chủ đề "Xây dựng tình bạn đẹp — Phòng chống bạo lực học đường" chuẩn mức Tốt.',
+          level: 'advanced',
+          estimatedMinutes: 50,
+          prerequisites: [],
+          sources: [{ source: 'gt-gdh-hcmue-2024' }],
+          aliases: [],
+          tags: [
+            'Rubric A.1.9',
+            'Kế hoạch bài dạy mẫu',
+            'Bạo lực học đường',
+            'Tình bạn đẹp',
+            'CLO 1',
+            'CLO 3',
+          ],
+          status: 'published',
+          version: '1.0.0',
+          file: '/src/data/courses/giao-duc-hoc/chapter-5.ts',
         },
       ],
     },
@@ -938,7 +1026,7 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
  * Trả về module bài học cho các bài thuộc học phần Giáo dục học.
  */
 export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule | null {
-  // Ưu tiên nạp module chuyên sâu của Chương 1, 2, 3 nếu có
+  // Ưu tiên nạp module chuyên sâu của Chương 1, 2, 3, 4, 5 nếu có
   const ch1Module = getChapter1LessonModule(lessonId);
   if (ch1Module) {
     return ch1Module;
@@ -952,6 +1040,16 @@ export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule 
   const ch3Module = getChapter3LessonModule(lessonId);
   if (ch3Module) {
     return ch3Module;
+  }
+
+  const ch4Module = getChapter4LessonModule(lessonId);
+  if (ch4Module) {
+    return ch4Module;
+  }
+
+  const ch5Module = getChapter5LessonModule(lessonId);
+  if (ch5Module) {
+    return ch5Module;
   }
 
   const lessonItem = GIAO_DUC_HOC_SUBJECT.chapters

@@ -4,6 +4,8 @@ import { getSubjectBySlug, getSubjects } from '@/content-runtime';
 import { getChapter1LessonModule } from '@/data/courses/giao-duc-hoc/chapter-1';
 import { getChapter2LessonModule } from '@/data/courses/giao-duc-hoc/chapter-2';
 import { getChapter3LessonModule } from '@/data/courses/giao-duc-hoc/chapter-3';
+import { getChapter4LessonModule } from '@/data/courses/giao-duc-hoc/chapter-4';
+import { getChapter5LessonModule } from '@/data/courses/giao-duc-hoc/chapter-5';
 import {
   EDUCATIONAL_PRINCIPLES,
   GIAO_DUC_HOC_SUBJECT,
@@ -28,10 +30,10 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(gdh).toBeDefined();
       expect(gdh?.title).toBe('Giáo dục học');
       expect(gdh?.curriculum?.chapterCount).toBe(6);
-      expect(gdh?.curriculum?.lessonCount).toBe(18);
+      expect(gdh?.curriculum?.lessonCount).toBe(20);
     });
 
-    it('đảm bảo tất cả 18 bài học có đầy đủ estimatedMinutes và status published', () => {
+    it('đảm bảo tất cả 20 bài học có đầy đủ estimatedMinutes và status published', () => {
       let totalLessons = 0;
       for (const chapter of GIAO_DUC_HOC_SUBJECT.chapters) {
         for (const lesson of chapter.lessons) {
@@ -42,7 +44,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
           expect(lesson.title).toBeTruthy();
         }
       }
-      expect(totalLessons).toBe(18);
+      expect(totalLessons).toBe(20);
     });
 
     it('Chương 1 có đủ 4 bài học chi tiết theo chuẩn CLO 1, CLO 2, CLO 3', () => {
@@ -163,6 +165,54 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b2?.lessonMeta.headings.length).toBe(2);
       expect(b3).toBeDefined();
       expect(b3?.lessonMeta.headings.length).toBe(4);
+    });
+  });
+
+  describe('Dispatcher getChapter4LessonModule', () => {
+    it('nạp đầy đủ 4 bài học chi tiết của Chương 4', () => {
+      const b1 = getChapter4LessonModule('gdh-c4-b1-vi-tri-chuc-nang-va-nhiem-vu-cua-gvcn');
+      const b2 = getChapter4LessonModule('gdh-c4-b2-noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop');
+      const b3 = getChapter4LessonModule(
+        'gdh-c4-b3-yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem',
+      );
+      const b4 = getChapter4LessonModule(
+        'gdh-c4-b4-thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12',
+      );
+
+      expect(b1).toBeDefined();
+      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b2).toBeDefined();
+      expect(b2?.lessonMeta.headings.length).toBe(2);
+      expect(b3).toBeDefined();
+      expect(b3?.lessonMeta.headings.length).toBe(2);
+      expect(b4).toBeDefined();
+      expect(b4?.lessonMeta.headings.length).toBe(3);
+    });
+  });
+
+  describe('Dispatcher getChapter5LessonModule', () => {
+    it('nạp đầy đủ 4 bài học chi tiết của Chương 5', () => {
+      const b1 = getChapter5LessonModule(
+        'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
+      );
+      const b2 = getChapter5LessonModule(
+        'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
+      );
+      const b3 = getChapter5LessonModule(
+        'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
+      );
+      const b4 = getChapter5LessonModule(
+        'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
+      );
+
+      expect(b1).toBeDefined();
+      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b2).toBeDefined();
+      expect(b2?.lessonMeta.headings.length).toBe(2);
+      expect(b3).toBeDefined();
+      expect(b3?.lessonMeta.headings.length).toBe(2);
+      expect(b4).toBeDefined();
+      expect(b4?.lessonMeta.headings.length).toBe(2);
     });
   });
 
