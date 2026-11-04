@@ -2,10 +2,11 @@ import type { CompiledLessonModule } from '@/content-runtime/loader';
 import {
   CaseStudyBox,
   LegalQuoteCard,
+  PersonalDevelopmentPlan,
   ScholarQuote,
   TeacherStandardsMatrix,
 } from '@/features/pedagogy';
-import { Badge, Button, Card } from '@/shared/ui';
+import { Badge, Card } from '@/shared/ui';
 import {
   Award,
   BookOpen,
@@ -25,7 +26,7 @@ import {
   UserCheck,
   Users,
 } from 'lucide-react';
-import { createElement, useState, type ChangeEvent, type FC } from 'react';
+import { createElement, useState, type FC } from 'react';
 import type { PedagogicalCaseStudy } from './course';
 
 // ============================================================================
@@ -663,25 +664,6 @@ export const Lesson1_2View: FC = () => {
 // ============================================================================
 
 export const Lesson1_3View: FC = () => {
-  // Trạng thái cho mẫu Kế hoạch học tập và rèn luyện cá nhân 4 năm đại học
-  const [selectedYear, setSelectedYear] = useState<number>(1);
-  const [goalsText, setGoalsText] = useState('');
-  const [selectedCriteria, setSelectedCriteria] = useState<number[]>([1, 2, 3, 14]);
-  const [savedPlan, setSavedPlan] = useState(false);
-
-  const toggleCriterion = (cId: number) => {
-    if (selectedCriteria.includes(cId)) {
-      setSelectedCriteria(selectedCriteria.filter((id) => id !== cId));
-    } else {
-      setSelectedCriteria([...selectedCriteria, cId]);
-    }
-  };
-
-  const handleSavePlan = () => {
-    setSavedPlan(true);
-    setTimeout(() => setSavedPlan(false), 2500);
-  };
-
   return createElement(
     'div',
     { className: 'space-y-8 text-stone-800 leading-relaxed' },
@@ -928,128 +910,7 @@ export const Lesson1_3View: FC = () => {
         'Bám sát yêu cầu đánh giá tự học buổi 2 của Đề cương học phần (TS. Lê Thị Thu Liễu), sinh viên hãy hoàn thiện bản kế hoạch rèn luyện cá nhân dưới đây:',
       ),
 
-      createElement(
-        Card,
-        { className: 'p-5 rounded-2xl border-indigo-200/90 bg-indigo-50/30 space-y-4 shadow-xs' },
-        createElement(
-          'div',
-          {
-            className:
-              'flex flex-wrap items-center justify-between gap-2 border-b border-indigo-100 pb-3',
-          },
-          createElement(
-            'div',
-            { className: 'font-serif font-bold text-base text-stone-900' },
-            'Bản Kế hoạch Học tập & Rèn luyện Nghề nghiệp Sư phạm',
-          ),
-          createElement(
-            'div',
-            { className: 'flex items-center gap-1.5' },
-            [1, 2, 3, 4].map((year) =>
-              createElement(
-                'button',
-                {
-                  key: `year-btn-${year}`,
-                  type: 'button',
-                  onClick: () => setSelectedYear(year),
-                  className: `px-2.5 py-1 text-xs font-semibold rounded-lg border transition-all ${
-                    selectedYear === year
-                      ? 'bg-indigo-700 text-white border-indigo-700'
-                      : 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
-                  }`,
-                },
-                `Năm ${year}`,
-              ),
-            ),
-          ),
-        ),
-
-        // Chọn các tiêu chí Thông tư 20 cần tập trung
-        createElement(
-          'div',
-          { className: 'space-y-2' },
-          createElement(
-            'label',
-            { className: 'text-xs font-bold text-stone-700 uppercase block' },
-            '🎯 Chọn các tiêu chí TT20 trọng tâm cần rèn luyện trong Năm ' + selectedYear + ':',
-          ),
-          createElement(
-            'div',
-            { className: 'grid gap-2 sm:grid-cols-3' },
-            [
-              { id: 1, name: '1. Đạo đức nhà giáo' },
-              { id: 2, name: '2. Phong cách nhà giáo' },
-              { id: 3, name: '3. Phát triển chuyên môn' },
-              { id: 4, name: '4. Kế hoạch dạy học' },
-              { id: 5, name: '5. Phương pháp dạy học' },
-              { id: 6, name: '6. Kiểm tra đánh giá' },
-              { id: 7, name: '7. Tư vấn hỗ trợ HS' },
-              { id: 8, name: '8. Văn hóa nhà trường' },
-              { id: 10, name: '10. An toàn trường học' },
-              { id: 11, name: '11. Hợp tác cha mẹ HS' },
-              { id: 13, name: '13. Sử dụng ngoại ngữ' },
-              { id: 14, name: '14. Ứng dụng CNTT' },
-            ].map((c) => {
-              const isChecked = selectedCriteria.includes(c.id);
-              return createElement(
-                'button',
-                {
-                  key: `crit-check-${c.id}`,
-                  type: 'button',
-                  onClick: () => toggleCriterion(c.id),
-                  className: `flex items-center gap-2 p-2 rounded-lg border text-left text-xs transition-colors ${
-                    isChecked
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-950 font-medium'
-                      : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'
-                  }`,
-                },
-                createElement('input', {
-                  type: 'checkbox',
-                  checked: isChecked,
-                  onChange: () => {},
-                  className: 'rounded text-indigo-600',
-                }),
-                createElement('span', null, c.name),
-              );
-            }),
-          ),
-        ),
-
-        // Nhập mục tiêu hành động cụ thể
-        createElement(
-          'div',
-          { className: 'space-y-1.5' },
-          createElement(
-            'label',
-            { className: 'text-xs font-bold text-stone-700 uppercase block' },
-            '✍️ Mục tiêu & Hành động cụ thể (GPA, Chứng chỉ ngoại ngữ, Kỹ năng mềm, NCKH):',
-          ),
-          createElement('textarea', {
-            rows: 4,
-            value: goalsText,
-            onChange: (e: ChangeEvent<HTMLTextAreaElement>) => setGoalsText(e.target.value),
-            placeholder: `Ví dụ cho Năm ${selectedYear}: \n- Đạt điểm rèn luyện xuất sắc, GPA chuyên ngành Toán >= 3.2\n- Thi đạt chứng chỉ IELTS 6.0 hoặc B1\n- Tham gia chiến dịch Mùa hè xanh, rèn luyện nói trước đám đông\n- Tự học thành thạo phần mềm vẽ hình GeoGebra`,
-            className:
-              'w-full rounded-xl border border-stone-200 bg-white p-3 text-xs leading-relaxed text-stone-800 placeholder:text-stone-400 focus:border-indigo-600 focus:outline-none',
-          }),
-        ),
-
-        createElement(
-          'div',
-          { className: 'flex justify-end' },
-          createElement(
-            Button,
-            {
-              variant: 'subject',
-              size: 'sm',
-              onClick: handleSavePlan,
-              className: 'text-xs gap-1.5',
-            },
-            createElement(CheckCircle2, { className: 'h-3.5 w-3.5' }),
-            savedPlan ? '✓ Đã ghi nhận kế hoạch' : 'Lưu bản kế hoạch cá nhân',
-          ),
-        ),
-      ),
+      createElement(PersonalDevelopmentPlan),
     ),
   );
 };

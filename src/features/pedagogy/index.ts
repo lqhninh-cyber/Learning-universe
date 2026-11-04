@@ -9,3 +9,12 @@ export {
   type TeacherStandard,
   type TeacherCriterion,
 } from './TeacherStandardsMatrix';
+export { PersonalDevelopmentPlan } from './PersonalDevelopmentPlan';
+export {
+  SAMPLE_TEMPLATES,
+  TT20_CRITERIA,
+  type YearPlanData,
+  type PlanStorageMap,
+  type SampleYearTemplate,
+  type TT20CriterionItem,
+} from './personal-plan-data';

@@ -34,7 +34,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'curriculum',
     categoryLabel: 'Giáo trình chuẩn',
     path: '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf',
+    url: '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf',
     filename: 'Giao_trinh_GDH_HCMUE.pdf',
+    size: '84.3 MB',
     description:
       'Giáo trình chuẩn mực của Trường ĐH Sư phạm TP.HCM. Hệ thống hóa đầy đủ lý luận giáo dục, lao động sư phạm, nguyên tắc giáo dục, nghiệp vụ chủ nhiệm và hoạt động trải nghiệm.',
     badge: 'HCMUE Official',
@@ -46,7 +48,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'curriculum',
     categoryLabel: 'Đề cương học phần',
     path: '/docs/giao-duc-hoc/Gioi_thieu_hoc_phan_GDH.pdf',
+    url: '/docs/giao-duc-hoc/Gioi_thieu_hoc_phan_GDH.pdf',
     filename: 'Gioi_thieu_hoc_phan_GDH.pdf',
+    size: '871 KB',
     description:
       'Mục tiêu, chuẩn đầu ra (CLO), ma trận kiểm tra đánh giá, đề cương chi tiết 3 tín chỉ học phần Giáo dục học (EDUT1401 / EDUC1001).',
     badge: '3 Tín chỉ',
@@ -60,7 +64,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/Luat_Giao_duc_2019.pdf',
+    url: '/docs/giao-duc-hoc/Luat_Giao_duc_2019.pdf',
     filename: 'Luat_Giao_duc_2019.pdf',
+    size: '5.1 MB',
     description:
       'Đạo luật nền tảng quy định mục tiêu, tính chất, nguyên lý giáo dục (Điều 3); mục tiêu giáo dục phổ thông (Điều 28); quyền và nghĩa vụ nhà giáo (Điều 69-70).',
     badge: 'Luật số 43/2019',
@@ -71,7 +77,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/Luat_Nha_giao.pdf',
+    url: '/docs/giao-duc-hoc/Luat_Nha_giao.pdf',
     filename: 'Luat_Nha_giao.pdf',
+    size: '888 KB',
     description:
       'Cập nhật định hướng chính sách mới nhất về vị thế pháp lý, quyền tự chủ nghề nghiệp, chế độ đãi ngộ và đạo đức nghề nghiệp của nhà giáo.',
     badge: 'Dự thảo Quốc hội',
@@ -82,7 +90,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/CT_GDPT_2018_Tong_the.pdf',
+    url: '/docs/giao-duc-hoc/CT_GDPT_2018_Tong_the.pdf',
     filename: 'CT_GDPT_2018_Tong_the.pdf',
+    size: '563 KB',
     description:
       'Khung chương trình giáo dục phổ thông mới chuyển từ trang bị kiến thức sang phát triển toàn diện 5 phẩm chất chủ yếu và 10 năng lực cốt lõi.',
     badge: 'CT GDPT 2018',
@@ -93,7 +103,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/CT_Hoat_dong_trai_nghiem.pdf',
+    url: '/docs/giao-duc-hoc/CT_Hoat_dong_trai_nghiem.pdf',
     filename: 'CT_Hoat_dong_trai_nghiem.pdf',
+    size: '465 KB',
     description:
       'Quy chuẩn chương trình bắt buộc cấp THCS & THPT: 4 mạch nội dung (Bản thân, Xã hội, Tự nhiên, Hướng nghiệp) và 4 hình thức tổ chức chủ đạo.',
     badge: 'HĐTN & Hướng nghiệp',
@@ -104,7 +116,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/Dieu_le_truong_trung_hoc_TT32.pdf',
+    url: '/docs/giao-duc-hoc/Dieu_le_truong_trung_hoc_TT32.pdf',
     filename: 'Dieu_le_truong_trung_hoc_TT32.pdf',
+    size: '13.3 MB',
     description:
       'Quy định cơ cấu tổ chức trường phổ thông, nhiệm vụ và quyền hạn của giáo viên (Điều 27, 29), quyền hạn đặc thù của giáo viên chủ nhiệm và khen thưởng - kỷ luật học sinh (Điều 38).',
     badge: 'Thông tư 32/2020',
@@ -115,7 +129,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/Chuan_nghe_nghiep_GV_TT20.pdf',
+    url: '/docs/giao-duc-hoc/Chuan_nghe_nghiep_GV_TT20.pdf',
     filename: 'Chuan_nghe_nghiep_GV_TT20.pdf',
+    size: '11.8 MB',
     description:
       'Hệ thống 5 tiêu chuẩn và 15 tiêu chí đánh giá năng lực nghề nghiệp giáo viên cơ sở giáo dục phổ thông (Phẩm chất nhà giáo, Phát triển chuyên môn, Xây dựng môi trường, Phối hợp, Ngoại ngữ & Tin học).',
     badge: 'Thông tư 20/2018',
@@ -126,7 +142,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
     path: '/docs/giao-duc-hoc/TT17_Sua_doi_CTGDPT.pdf',
+    url: '/docs/giao-duc-hoc/TT17_Sua_doi_CTGDPT.pdf',
     filename: 'TT17_Sua_doi_CTGDPT.pdf',
+    size: '8.2 MB',
     description:
       'Cập nhật sửa đổi, bổ sung một số nội dung trong Chương trình GDPT 2018 nhằm tối ưu hóa thời lượng và tích hợp hoạt động giáo dục.',
     badge: 'Thông tư 17/2025',
@@ -152,7 +170,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'handbook',
     categoryLabel: 'Nghiệp vụ thực hành',
     path: '/docs/giao-duc-hoc/Ky_luat_tich_cuc.pdf',
+    url: '/docs/giao-duc-hoc/Ky_luat_tich_cuc.pdf',
     filename: 'Ky_luat_tich_cuc.pdf',
+    size: '233 KB',
     description:
       'Hệ thống các giải pháp thay thế hình phạt trừng phạt thân thể và bạo lực tinh thần, chuyển đổi hành vi dựa trên sự tôn trọng, thấu cảm và trách nhiệm.',
     badge: 'Kỷ luật tích cực',
@@ -163,7 +183,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'handbook',
     categoryLabel: 'Công cụ đánh giá',
     path: '/docs/giao-duc-hoc/Thang_Bloom.pdf',
+    url: '/docs/giao-duc-hoc/Thang_Bloom.pdf',
     filename: 'Thang_Bloom.pdf',
+    size: '326 KB',
     description:
       '6 cấp độ nhận thức của Bloom (Nhận biết, Thông hiểu, Vận dụng, Phân tích, Đánh giá, Sáng tạo) ứng dụng thiết kế mục tiêu bài học và câu hỏi phản tư.',
     badge: 'Bloom Taxonomy',
@@ -174,7 +196,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'handbook',
     categoryLabel: 'Tư vấn hướng nghiệp',
     path: '/docs/giao-duc-hoc/Tra_cuu_nghe_ILO.pdf',
+    url: '/docs/giao-duc-hoc/Tra_cuu_nghe_ILO.pdf',
     filename: 'Tra_cuu_nghe_ILO.pdf',
+    size: '1.5 MB',
     description:
       'Bản đồ các nhóm ngành nghề chuẩn quốc tế phục vụ công tác tư vấn giáo dục hướng nghiệp trong Chương trình Hoạt động trải nghiệm.',
     badge: 'Tiêu chuẩn ILO',
@@ -185,7 +209,9 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     category: 'handbook',
     categoryLabel: 'Nghiên cứu khoa học',
     path: '/docs/giao-duc-hoc/Nghien_cuu_su_pham_bo_tro.pdf',
+    url: '/docs/giao-duc-hoc/Nghien_cuu_su_pham_bo_tro.pdf',
     filename: 'Nghien_cuu_su_pham_bo_tro.pdf',
+    size: '276 KB',
     description:
       'Quy trình nghiên cứu khoa học sư phạm ứng dụng trong nhà trường phổ thông: xác định vấn đề, thiết kế tác động, đo lường và phân tích dữ liệu.',
     badge: 'NCKH Ứng dụng',
@@ -254,6 +280,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     badge: 'Kế hoạch HĐTN',
   },
 ];
+
+export const documents = PEDAGOGY_DOCUMENTS;
 
 // ============================================================================
 // 2. MA TRẬN 6 NGUYÊN TẮC GIÁO DỤC HỌC SINH PHỔ THÔNG

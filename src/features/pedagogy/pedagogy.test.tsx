@@ -27,10 +27,13 @@ import {
 import {
   CaseStudyBox,
   LegalQuoteCard,
+  PersonalDevelopmentPlan,
   PrincipleMatrix,
   ScholarQuote,
   TeacherStandardsMatrix,
 } from '@/features/pedagogy';
+import { SourcePanel } from '@/features/lesson-reader';
+import type { ManifestLesson } from '@schemas/index';
 
 describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
   describe('Cấu trúc học phần Giáo dục học (course.ts)', () => {
@@ -467,6 +470,127 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       fireEvent.click(q1CorrectBtn);
       expect(screen.getByText(/Chính xác!/i)).toBeInTheDocument();
       expect(screen.getByText(/Theo Giáo trình HCMUE/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Component PersonalDevelopmentPlan (Kế hoạch rèn luyện cá nhân Bài 1.3)', () => {
+    it('kết xuất đầy đủ tiêu đề, chú thích Buổi 2 CLO 3, các nút năm học và nút xuất bản', () => {
+      render(<PersonalDevelopmentPlan />);
+
+      expect(
+        screen.getByText(/Bản Kế hoạch Học tập & Rèn luyện Nghề nghiệp Sư phạm/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Bài tập tự học cá nhân theo yêu cầu Buổi 2 — Đề cương TS. Lê Thị Thu Liễu \(CLO 3\)/i,
+        ),
+      ).toBeInTheDocument();
+
+      // Kiểm tra 4 nút năm học
+      expect(screen.getByRole('button', { name: 'Năm 1' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Năm 2' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Năm 3' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Năm 4' })).toBeInTheDocument();
+
+      // Kiểm tra các nút hành động
+      expect(screen.getByRole('button', { name: /Xuất bản in \/ Lưu PDF/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Tải bản thảo \(\.txt\)/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Lưu bản kế hoạch cá nhân/i })).toBeInTheDocument();
+    });
+
+    it('cho phép mở accordion kế hoạch mẫu và điền mẫu tham khảo vào ô soạn thảo', () => {
+      render(<PersonalDevelopmentPlan />);
+
+      // Mở accordion mẫu tham khảo
+      const toggleSampleBtn = screen.getByText(
+        /Xem Kế hoạch Mẫu Tham khảo \(Ngành Sư phạm Toán\)/i,
+      );
+      fireEvent.click(toggleSampleBtn);
+
+      expect(screen.getByText(/Năm 1: Thích ứng & Xây dựng Nền tảng Sư phạm/i)).toBeInTheDocument();
+
+      // Nhấn nút điền mẫu Năm 1
+      const loadTemplateBtn = screen.getByRole('button', {
+        name: /Điền nội dung mẫu vào bài làm \(Năm 1\)/i,
+      });
+      fireEvent.click(loadTemplateBtn);
+
+      // Kiểm tra nội dung mẫu đã được nạp
+      expect(screen.getByDisplayValue(/Đạt GPA các học phần Toán đại cương/i)).toBeInTheDocument();
+      expect(screen.getByText(/✓ Đã điền nội dung mẫu cho Năm 1!/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('SourcePanel ánh xạ tài liệu sư phạm (Document Reference Card)', () => {
+    it('ánh xạ mã nguồn gt-gdh-hcmue-2024 thành thẻ tài liệu PDF tương tác có link đọc và tải về', () => {
+      const mockPedagogyLesson: ManifestLesson = {
+        id: 'gdh-c1-b1',
+        slug: 'hoat-dong-su-pham',
+        number: 1,
+        file: '/src/data/courses/giao-duc-hoc/chapter-1.ts',
+        title: 'Hoạt động sư phạm',
+        description: 'Mô tả bài học',
+        estimatedMinutes: 35,
+        level: 'basic',
+        prerequisites: [],
+        tags: [],
+        sources: [
+          {
+            source: 'gt-gdh-hcmue-2024',
+            sections: 'Chương 1: Hoạt động sư phạm',
+            pages: '15-28',
+          },
+        ],
+        status: 'published',
+        version: '1.0.0',
+        aliases: [],
+      };
+
+      render(<SourcePanel lesson={mockPedagogyLesson} />);
+
+      // Kiểm tra tên tài liệu chuẩn
+      expect(screen.getByText('Giáo trình Giáo dục học HCMUE (Chính thức)')).toBeInTheDocument();
+      expect(screen.getByText('HCMUE Official')).toBeInTheDocument();
+      expect(screen.getByText('84.3 MB')).toBeInTheDocument();
+      expect(screen.getByText('Chương 1: Hoạt động sư phạm')).toBeInTheDocument();
+      expect(screen.getByText('Trang 15-28')).toBeInTheDocument();
+
+      // Kiểm tra 2 nút hành động
+      const readLink = screen.getByRole('link', { name: /Đọc tài liệu \(PDF\)/i });
+      expect(readLink).toHaveAttribute('href', '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf');
+      expect(readLink).toHaveAttribute('target', '_blank');
+
+      const downloadLink = screen.getByRole('link', { name: /Tải về/i });
+      expect(downloadLink).toHaveAttribute('href', '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf');
+      expect(downloadLink).toHaveAttribute('download', 'Giao_trinh_GDH_HCMUE.pdf');
+    });
+
+    it('ánh xạ mã nguồn tt20-2018 và tt32-2020 sang văn bản quy phạm pháp luật tương ứng', () => {
+      const mockMultiSourceLesson: ManifestLesson = {
+        id: 'gdh-c1-b2',
+        slug: 'chuan-nghe-nghiep',
+        number: 2,
+        file: '/src/data/courses/giao-duc-hoc/chapter-1.ts',
+        title: 'Chuẩn nghề nghiệp',
+        description: 'Mô tả bài học',
+        estimatedMinutes: 40,
+        level: 'basic',
+        prerequisites: [],
+        tags: [],
+        sources: [{ source: 'tt20-2018' }, { source: 'tt32-2020' }],
+        status: 'published',
+        version: '1.0.0',
+        aliases: [],
+      };
+
+      render(<SourcePanel lesson={mockMultiSourceLesson} />);
+
+      expect(
+        screen.getByText('Chuẩn nghề nghiệp giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT)'),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('Điều lệ trường trung học (Thông tư 32/2020/TT-BGDĐT)'),
+      ).toBeInTheDocument();
     });
   });
 });
