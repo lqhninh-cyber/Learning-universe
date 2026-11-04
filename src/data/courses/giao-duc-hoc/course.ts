@@ -6,6 +6,7 @@ import { getChapter2LessonModule } from './chapter-2';
 import { getChapter3LessonModule } from './chapter-3';
 import { getChapter4LessonModule } from './chapter-4';
 import { getChapter5LessonModule } from './chapter-5';
+import { getChapter6LessonModule, PEDAGOGICAL_20_CASE_STUDIES } from './chapter-6';
 
 // ============================================================================
 // 1. DANH MỤC 13 TÀI LIỆU HỌC PHẦN & VĂN BẢN PHÁP QUY SƯ PHẠM
@@ -313,162 +314,8 @@ export interface PedagogicalCaseStudy {
   readonly coreLesson: string;
 }
 
-export const PEDAGOGICAL_CASE_STUDIES: readonly PedagogicalCaseStudy[] = [
-  {
-    id: 1,
-    title: 'Học sinh cá biệt ngang nhiên không ghi bài và thách thức giáo viên trên lớp',
-    context:
-      'Trong giờ dạy, giáo viên phát hiện em H. (học sinh cá biệt nổi tiếng của lớp) ngồi quay xuống bàn dưới trêu chọc bạn bè và không hề mở vở chép bài. Khi giáo viên bước tới nhắc nhở nhẹ nhàng, H. ngửa người ra sau và nói lớn tiếng trước cả lớp: "Môn này chán òm, em không thích học nên không ghi đấy, cô làm gì được em nào?"',
-    question:
-      'Nếu là giáo viên bộ môn trong tình huống này, thầy/cô sẽ xử lý như thế nào để vừa giữ nghiêm kỷ cương lớp học, vừa không làm bùng phát xung đột căng thẳng với học sinh?',
-    principlesApplied: [
-      'Nguyên tắc tôn trọng nhân cách kết hợp với yêu cầu cao đối với học sinh',
-      'Nguyên tắc giáo dục trong tập thể và bằng tập thể',
-      'Nguyên tắc kiềm chế cảm xúc sư phạm & biến đổi tình huống',
-    ],
-    solutionSteps: [
-      {
-        step: 1,
-        title: 'Giữ bình tĩnh tuyệt đối & Không rơi vào bẫy đối đầu tay đôi',
-        content:
-          'Giáo viên hít thở sâu, giữ nét mặt điềm tĩnh, không nổi giận mắng mỏ hay đôi co to tiếng với học sinh trước mặt cả lớp, vì đây là hành vi học sinh đang muốn kích động để thể hiện bản thân.',
-      },
-      {
-        step: 2,
-        title: 'Ổn định không khí lớp học & Đặt ranh giới rõ ràng',
-        content:
-          'Nói rõ ràng, dứt khoát với âm lượng vừa phải: "Ý kiến về việc thích hay không thích môn học là cảm xúc cá nhân của em, cô ghi nhận. Tuy nhiên, quy định chung của lớp học là mọi học sinh đều phải có vở ghi và giữ trật tự để không ảnh hưởng đến các bạn khác. Bây giờ là thời gian của cả lớp, cô và em sẽ trao đổi riêng về vấn đề này sau giờ học." Sau đó tiếp tục bài giảng ngay.',
-      },
-      {
-        step: 3,
-        title: 'Gặp gỡ riêng sau giờ học & Lắng nghe nguyên nhân thực sự',
-        content:
-          'Cuối buổi, mời H. ở lại văn phòng hoặc góc yên tĩnh. Không vội vàng kết tội mà đặt câu hỏi gợi mở: "Hôm nay điều gì khiến em cảm thấy môn học chán và có phản ứng gay gắt như vậy?". Lắng nghe để hiểu H. đang bị hổng kiến thức căn bản, buồn bực chuyện gia đình hay muốn gây chú ý.',
-      },
-      {
-        step: 4,
-        title: 'Phân tích hành vi & Đưa ra yêu cầu sửa đổi cụ thể',
-        content:
-          'Chỉ rõ cho H. thấy hành vi thách thức giáo viên trước lớp là sai quy định và ảnh hưởng đến danh dự của chính em. Đề nghị em mượn vở bạn ghi lại bài hôm nay và hỗ trợ em giải tỏa khó khăn trong môn học.',
-      },
-      {
-        step: 5,
-        title: 'Phối hợp với GVCN và theo dõi sự tiến bộ',
-        content:
-          'Trao đổi với GVCN để nắm rõ thêm bối cảnh gia đình. Trong các tiết học sau, chủ động quan sát, đặt những câu hỏi vừa sức và kịp thời khen ngợi khi H. có biểu hiện hợp tác tích cực.',
-      },
-    ],
-    pitfallsToAvoid: [
-      'Tức giận xông vào tát hoặc đuổi ngay học sinh ra khỏi lớp (vi phạm Điều lệ trường học).',
-      'Đôi co tranh cãi tay đôi làm cả lớp gián đoạn việc học và biến mình thành trò cười.',
-      'Bỏ qua xem như không có gì xảy ra khiến kỷ cương lớp học bị sụp đổ.',
-    ],
-    coreLesson:
-      'Sự bình tĩnh và điềm đạm của người thầy trước sự khiêu khích chính là sức mạnh sư phạm tối cao.',
-  },
-  {
-    id: 2,
-    title: 'Phát hiện học sinh trong lớp có biểu hiện yêu sớm và sa sút học tập',
-    context:
-      'GVCN lớp 10 nhận thấy hai học sinh T. (nam) và M. (nữ) thường xuyên đi học cùng nhau, ngồi cạnh nhau thì lơ đãng, thì thầm to nhỏ. Điểm kiểm tra giữa kỳ của cả hai em đều tụt dốc thảm hại. Một số bạn trong lớp bắt đầu xì xào bàn tán về việc hai bạn đang "cặp kè" yêu nhau. Phụ huynh của em M. gọi điện cho GVCN trong trạng thái hoảng hốt và yêu cầu chuyển chỗ ngay lập tức.',
-    question:
-      'Với vai trò là Giáo viên chủ nhiệm lớp, thầy/cô sẽ xử lý tình huống này như thế nào để bảo vệ tình bạn trong sáng tuổi học trò và giúp hai em tập trung học tập?',
-    principlesApplied: [
-      'Nguyên tắc phù hợp đặc điểm tâm sinh lý lứa tuổi',
-      'Nguyên tắc tôn trọng nhân cách kết hợp yêu cầu cao',
-      'Nguyên tắc phối hợp Nhà trường và Gia đình',
-    ],
-    solutionSteps: [
-      {
-        step: 1,
-        title: 'Thấu hiểu và tôn trọng quy luật tâm sinh lý lứa tuổi',
-        content:
-          'Nhận thức rằng rung cảm giới tính ở tuổi 15-16 là hoàn toàn tự nhiên; không coi đây là "tội lỗi" hay sự đồi bại đạo đức. Tuyệt đối không đưa sự việc ra bêu rếu trước tập thể lớp hay trước cờ.',
-      },
-      {
-        step: 2,
-        title: 'Trấn an phụ huynh học sinh',
-        content:
-          'Trao đổi với phụ huynh em M., khuyên cha mẹ bình tĩnh, không nên mắng nhiếc hay cấm đoán tiêu cực kẻo tạo phản ứng chống đối hoặc bỏ nhà đi; giải thích rằng nhà trường và gia đình sẽ cùng đồng hành hỗ trợ các em.',
-      },
-      {
-        step: 3,
-        title: 'Gặp gỡ riêng từng em với thái độ chân thành, tin cậy',
-        content:
-          'Trò chuyện riêng với từng em. Khéo léo phân tích: Tình cảm tuổi học trò rất đẹp nếu nó là động lực để cùng nhau phấn đấu. Nhưng việc điểm số sa sút hiện tại đang chứng minh điều ngược lại, khiến phụ huynh lo lắng và bạn bè bàn tán.',
-      },
-      {
-        step: 4,
-        title: 'Điều chỉnh vị trí ngồi tinh tế & Đặt ra giao ước',
-        content:
-          'Trong đợt đổi chỗ định kỳ của lớp, sắp xếp hai em ngồi ở hai bàn khác nhau nhưng vẫn trong cùng tổ để tránh cảm giác bị kỳ thị hay trừng phạt. Đặt ra "giao ước thi đua" giữa hai em về việc phục hồi điểm số học kỳ.',
-      },
-      {
-        step: 5,
-        title: 'Tổ chức sinh hoạt chuyên đề giáo dục giới tính cho cả lớp',
-        content:
-          'Lồng ghép vào tiết sinh hoạt lớp chủ đề "Tình bạn trong sáng và tình yêu tuổi học trò", giúp cả lớp trang bị nhận thức đúng đắn và kỹ năng bảo vệ bản thân.',
-      },
-    ],
-    pitfallsToAvoid: [
-      'Đọc tin nhắn riêng tư hoặc công khai chuyện tình cảm của các em trước lớp.',
-      'Cấm đoán cực đoan khiến các em chuyển sang hẹn hò lén lút nguy hiểm hơn.',
-    ],
-    coreLesson:
-      'Giáo dục giới tính tuổi dậy thì đòi hỏi sự khéo léo như người chèo đò qua dòng nước xoáy: phải xuôi theo dòng chảy tự nhiên nhưng định hướng đúng đích đến.',
-  },
-  {
-    id: 3,
-    title: 'Học sinh bị nghi ngờ lấy trộm tiền của bạn cùng lớp',
-    context:
-      'Trong giờ ra chơi, em A. chạy lên khóc nức nở báo với giáo viên là mình để quên 500.000 đồng trong cặp và vừa bị mất. Một số học sinh trong lớp chỉ điểm em B. (một học sinh có hoàn cảnh kinh tế khó khăn) vừa đi ngang qua bàn của A. lúc vắng người. Cả lớp bắt đầu dồn ánh mắt nghi ngờ và xa lánh B.',
-    question:
-      'Là GVCN, thầy/cô sẽ giải quyết tình huống nhạy cảm này như thế nào để tìm ra sự thật mà không làm tổn thương lòng tự trọng của học sinh bị nghi ngờ?',
-    principlesApplied: [
-      'Nguyên tắc tôn trọng nhân cách kết hợp yêu cầu cao',
-      'Nguyên tắc giáo dục trong tập thể và bằng tập thể (bảo vệ dư luận lành mạnh)',
-      'Nguyên tắc khách quan, công bằng và bảo vệ quyền trẻ em',
-    ],
-    solutionSteps: [
-      {
-        step: 1,
-        title: 'Bảo toàn hiện trường & Tuyệt đối không khám xét tùy tiện',
-        content:
-          'Nhắc nhở cả lớp giữ trật tự, tuyệt đối không ai được tự ý lục cặp hay lục người của bạn khác (vi phạm nghiêm trọng quyền tự do thân thể). Yêu cầu các em không bàn tán, phán xét khi chưa có bằng chứng xác thực.',
-      },
-      {
-        step: 2,
-        title: 'Xác minh kỹ lưỡng với học sinh bị mất tiền',
-        content:
-          'Gặp riêng em A. để hỏi kỹ: Em mang tiền từ nhà lúc nào, để ở ngăn nào, có chắc chắn không bị rơi ở căng tin hay trên đường đi học không? Cùng em rà soát lại các nơi em đã đi qua.',
-      },
-      {
-        step: 3,
-        title: 'Nói chuyện riêng tế nhị với học sinh bị nghi ngờ',
-        content:
-          'Mời em B. vào phòng riêng trao đổi nhẹ nhàng: "Cô/thầy biết hiện tại có bạn hiểu nhầm em, nhưng thầy/cô tin rằng em là người trung thực. Em có thể kể lại giờ ra chơi em đã làm những gì không?". Giúp em cảm nhận được sự bảo vệ và tin tưởng từ người thầy.',
-      },
-      {
-        step: 4,
-        title: 'Tạo cơ hội tự giác sửa sai (nếu thực sự có việc lấy trộm)',
-        content:
-          'Nếu có chứng cứ gián tiếp chỉ ra B. có liên quan, tạo cơ hội cho em tự nguyện sửa sai mà không bị bêu tên: Đưa ra thông điệp trước lớp rằng "Ai nhặt được hoặc lỡ cầm nhầm hãy để lại vào hòm thư góp ý của lớp trong ngày hôm nay, mọi chuyện sẽ coi như hiểu lầm và được giải quyết êm đẹp".',
-      },
-      {
-        step: 5,
-        title: 'Khôi phục danh dự và tâm lý cho học sinh',
-        content:
-          'Khi tìm ra sự thật (hoặc tiền rơi ở chỗ khác), công khai minh oan dứt khoát trước lớp để bảo vệ danh dự cho em B., đồng thời giáo dục cả lớp bài học về sự cẩn thận giữ gìn tài sản cá nhân và không nghi kỵ bạn bè.',
-      },
-    ],
-    pitfallsToAvoid: [
-      'Tự ý khám xét cặp sách, quần áo của học sinh trước tập thể.',
-      'Vội vàng quy chụp học sinh nghèo là kẻ trộm gây chấn thương tâm lý suốt đời cho đứa trẻ.',
-    ],
-    coreLesson:
-      'Mất một số tiền có thể bù đắp được, nhưng để mất lòng tự trọng và niềm tin của một đứa trẻ thì không gì có thể hàn gắn nổi.',
-  },
-];
+export const PEDAGOGICAL_CASE_STUDIES: readonly PedagogicalCaseStudy[] =
+  PEDAGOGICAL_20_CASE_STUDIES;
 
 // ============================================================================
 // 4. CẤU TRÚC HỌC PHẦN GIÁO DỤC HỌC (5 CHƯƠNG + 1 CHUYÊN ĐỀ = 17 BÀI)
@@ -990,11 +837,11 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           estimatedMinutes: 50,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
-          aliases: [],
+          aliases: ['6-1', 'bai-6-1', 'c6-b1', 'tinh-huong-su-pham'],
           tags: ['Tình huống sư phạm', 'Thực hành sư phạm', 'Quy trình 5 bước'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c6-b1.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-6.tsx',
         },
         {
           id: 'gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
@@ -1007,11 +854,11 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           estimatedMinutes: 45,
           prerequisites: [],
           sources: [{ source: 'gt-gdh-hcmue-2024' }],
-          aliases: [],
+          aliases: ['6-2', 'bai-6-2', 'c6-b2', 'de-cuong-on-tap'],
           tags: ['Đề cương ôn thi', 'Câu hỏi tự luận', 'Barem điểm'],
           status: 'published',
           version: '1.0.0',
-          file: '/src/data/courses/giao-duc-hoc/c6-b2.tsx',
+          file: '/src/data/courses/giao-duc-hoc/chapter-6.tsx',
         },
       ],
     },
@@ -1026,7 +873,7 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
  * Trả về module bài học cho các bài thuộc học phần Giáo dục học.
  */
 export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule | null {
-  // Ưu tiên nạp module chuyên sâu của Chương 1, 2, 3, 4, 5 nếu có
+  // Ưu tiên nạp module chuyên sâu của Chương 1, 2, 3, 4, 5, 6 nếu có
   const ch1Module = getChapter1LessonModule(lessonId);
   if (ch1Module) {
     return ch1Module;
@@ -1050,6 +897,11 @@ export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule 
   const ch5Module = getChapter5LessonModule(lessonId);
   if (ch5Module) {
     return ch5Module;
+  }
+
+  const ch6Module = getChapter6LessonModule(lessonId);
+  if (ch6Module) {
+    return ch6Module;
   }
 
   const lessonItem = GIAO_DUC_HOC_SUBJECT.chapters

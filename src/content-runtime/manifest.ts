@@ -62,13 +62,34 @@ export function getLessonBySlug(
   }
 
   const chapter = subject.chapters.find(
-    (item) => item.slug === chapterSlug || item.id === chapterSlug,
+    (item) =>
+      item.slug === chapterSlug ||
+      item.id === chapterSlug ||
+      (item.number === 6 &&
+        (chapterSlug === 'chuong-6' || chapterSlug === 'chuyen-de-6' || chapterSlug === '6')),
   );
   if (!chapter) {
     return undefined;
   }
 
-  const lesson = chapter.lessons.find((item) => item.slug === lessonSlug || item.id === lessonSlug);
+  const lesson = chapter.lessons.find(
+    (item) =>
+      item.slug === lessonSlug ||
+      item.id === lessonSlug ||
+      item.aliases?.includes(lessonSlug) ||
+      (item.number === 1 &&
+        (lessonSlug === '6-1' ||
+          lessonSlug === 'bai-6-1' ||
+          lessonSlug === 'c6-b1' ||
+          lessonSlug === 'bai-1' ||
+          lessonSlug === '1')) ||
+      (item.number === 2 &&
+        (lessonSlug === '6-2' ||
+          lessonSlug === 'bai-6-2' ||
+          lessonSlug === 'c6-b2' ||
+          lessonSlug === 'bai-2' ||
+          lessonSlug === '2')),
+  );
   if (!lesson) {
     return undefined;
   }

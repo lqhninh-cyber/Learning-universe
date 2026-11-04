@@ -1,14 +1,26 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { getSubjectBySlug, getSubjects } from '@/content-runtime';
+import {
+  getLessonBySlug,
+  getSubjectBySlug,
+  getSubjects,
+  resolveLessonShortcut,
+} from '@/content-runtime';
 import { getChapter1LessonModule } from '@/data/courses/giao-duc-hoc/chapter-1';
 import { getChapter2LessonModule } from '@/data/courses/giao-duc-hoc/chapter-2';
 import { getChapter3LessonModule } from '@/data/courses/giao-duc-hoc/chapter-3';
 import { getChapter4LessonModule } from '@/data/courses/giao-duc-hoc/chapter-4';
 import { getChapter5LessonModule } from '@/data/courses/giao-duc-hoc/chapter-5';
 import {
+  ESSAY_EXAM_QUESTIONS,
+  getChapter6LessonModule,
+  PEDAGOGICAL_20_CASE_STUDIES,
+  QUIZ_20_QUESTIONS,
+} from '@/data/courses/giao-duc-hoc/chapter-6';
+import {
   EDUCATIONAL_PRINCIPLES,
   GIAO_DUC_HOC_SUBJECT,
+  getPedagogyLessonModule,
   PEDAGOGICAL_CASE_STUDIES,
   PEDAGOGY_DOCUMENTS,
 } from '@/data/courses/giao-duc-hoc/course';
@@ -298,6 +310,155 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
 
       // Sẽ lọc ra các nguyên tắc liên quan đến nhân cách
       expect(screen.getByText(/Nguyên tắc tôn trọng nhân cách/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Chương 6 - Cẩm nang Xử lý Tình huống sư phạm & Đề cương Ôn tập', () => {
+    it('chứa đủ 20 tình huống sư phạm thực tế, 10 câu hỏi tự luận, 20 câu trắc nghiệm', () => {
+      expect(PEDAGOGICAL_20_CASE_STUDIES.length).toBe(20);
+      expect(ESSAY_EXAM_QUESTIONS.length).toBe(10);
+      expect(QUIZ_20_QUESTIONS.length).toBe(20);
+
+      const categories = new Set(PEDAGOGICAL_20_CASE_STUDIES.map((c) => c.category));
+      expect(categories.has('insubordination')).toBe(true);
+      expect(categories.has('romance')).toBe(true);
+      expect(categories.has('bullying')).toBe(true);
+      expect(categories.has('integrity')).toBe(true);
+      expect(categories.has('parent')).toBe(true);
+
+      // Mỗi tình huống có đủ cấu trúc 4 phần
+      for (const item of PEDAGOGICAL_20_CASE_STUDIES) {
+        expect(item.id).toBeGreaterThan(0);
+        expect(item.title).toBeTruthy();
+        expect(item.context).toBeTruthy();
+        expect(item.question).toBeTruthy();
+        expect(item.principlesApplied.length).toBeGreaterThanOrEqual(1);
+        expect(item.solutionSteps.length).toBeGreaterThanOrEqual(4);
+        expect(item.pitfallsToAvoid.length).toBeGreaterThanOrEqual(1);
+        expect(item.coreLesson).toBeTruthy();
+      }
+    });
+
+    it('nạp đúng module cho Bài 6.1 qua slug chính, shortcut aliases và getPedagogyLessonModule', () => {
+      const aliases = [
+        'gdh-c6-b1-ngan-hang-20-tinh-huong-su-pham-thuc-te',
+        'ngan-hang-20-tinh-huong-su-pham-thuc-te',
+        '6-1',
+        'bai-6-1',
+        'c6-b1',
+        'tinh-huong-su-pham',
+      ];
+
+      for (const slug of aliases) {
+        const mod = getChapter6LessonModule(slug);
+        expect(mod).toBeDefined();
+        expect(mod?.frontmatter.title).toContain('Ngân hàng 20 tình huống sư phạm');
+        expect(mod?.lessonMeta.headings.length).toBeGreaterThanOrEqual(2);
+      }
+
+      const viaMain = getPedagogyLessonModule('gdh-c6-b1-ngan-hang-20-tinh-huong-su-pham-thuc-te');
+      expect(viaMain).toBeDefined();
+      expect(viaMain?.frontmatter.title).toContain('Ngân hàng 20 tình huống sư phạm');
+    });
+
+    it('nạp đúng module cho Bài 6.2 qua slug chính, shortcut aliases và getPedagogyLessonModule', () => {
+      const aliases = [
+        'gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
+        'de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
+        '6-2',
+        'bai-6-2',
+        'c6-b2',
+        'de-cuong-on-tap',
+      ];
+
+      for (const slug of aliases) {
+        const mod = getChapter6LessonModule(slug);
+        expect(mod).toBeDefined();
+        expect(mod?.frontmatter.title).toContain('Đề cương câu hỏi ôn thi tự luận');
+        expect(mod?.lessonMeta.headings.length).toBeGreaterThanOrEqual(2);
+      }
+
+      const viaMain = getPedagogyLessonModule(
+        'gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
+      );
+      expect(viaMain).toBeDefined();
+      expect(viaMain?.frontmatter.title).toContain('Đề cương câu hỏi ôn thi tự luận');
+    });
+
+    it('hỗ trợ giải quyết đường dẫn qua resolveLessonShortcut và getLessonBySlug', () => {
+      const resolved6_1 = resolveLessonShortcut('6-1');
+      expect(resolved6_1).toBeDefined();
+      expect(resolved6_1?.lesson.title).toContain('Ngân hàng 20 tình huống');
+
+      const resolved6_2 = resolveLessonShortcut('6-2');
+      expect(resolved6_2).toBeDefined();
+      expect(resolved6_2?.lesson.title).toContain('Đề cương câu hỏi ôn thi');
+
+      const bySlug6_1 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-1');
+      expect(bySlug6_1).toBeDefined();
+      expect(bySlug6_1?.lesson.title).toContain('Ngân hàng 20 tình huống');
+
+      const bySlug6_2 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-2');
+      expect(bySlug6_2).toBeDefined();
+      expect(bySlug6_2?.lesson.title).toContain('Đề cương câu hỏi ôn thi');
+    });
+
+    it('render Lesson6_1View và tương tác chọn bộ lọc tình huống và xem gợi ý', () => {
+      const mod = getChapter6LessonModule('6-1');
+      expect(mod).toBeDefined();
+      const Component = mod!.default;
+      render(<Component />);
+
+      expect(
+        screen.getByText(/Quy trình Khoa học 5 Bước Xử lý Tình huống Sư phạm/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Ngân hàng 20 Tình huống Sư phạm Thực tế & Phương án Chuẩn/i),
+      ).toBeInTheDocument();
+
+      // Lọc danh mục: Nhóm 1: Chống đối & Kỷ cương
+      const filterBtn = screen.getByRole('button', { name: /Chống đối & Kỷ cương/i });
+      fireEvent.click(filterBtn);
+      expect(
+        screen.getByText(/Học sinh công khai cãi lại và bất hợp tác trong giờ học/i),
+      ).toBeInTheDocument();
+
+      // Tình huống 1 đã mở mặc định, kiểm tra nội dung
+      expect(screen.getByText(/Bối cảnh tình huống thực tế/i)).toBeInTheDocument();
+      expect(screen.getByText(/Phương án xử lý tối ưu theo chuẩn Sư phạm/i)).toBeInTheDocument();
+      expect(screen.getByText(/Bẫy sư phạm cần tránh/i)).toBeInTheDocument();
+    });
+
+    it('render Lesson6_2View và tương tác mở dàn ý tự luận và làm trắc nghiệm', () => {
+      const mod = getChapter6LessonModule('6-2');
+      expect(mod).toBeDefined();
+      const Component = mod!.default;
+      render(<Component />);
+
+      expect(
+        screen.getByText(/Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Tuyển tập 10 Câu hỏi Tự luận Kinh điển & Barem Điểm Chi tiết/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Bộ 20 Câu hỏi Trắc nghiệm Khách quan Ôn tập Cuối kỳ/i),
+      ).toBeInTheDocument();
+
+      // Câu 1 tự luận mở mặc định, kiểm tra đề bài chi tiết và gợi ý Sư phạm Toán
+      expect(screen.getByText(/Đề bài chi tiết:/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Phân tích 5 đặc điểm của lao động sư phạm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText(/Gợi ý liên hệ Bộ môn Sư phạm Toán/i)).toBeInTheDocument();
+
+      // Kiểm tra trắc nghiệm câu 1
+      const q1CorrectBtn = screen.getByRole('button', {
+        name: /Nhân cách của người thầy giáo/i,
+      });
+      fireEvent.click(q1CorrectBtn);
+      expect(screen.getByText(/Chính xác!/i)).toBeInTheDocument();
+      expect(screen.getByText(/Theo Giáo trình HCMUE/i)).toBeInTheDocument();
     });
   });
 });
