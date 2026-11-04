@@ -243,7 +243,7 @@ export function LessonPage() {
         'mx-auto w-full pb-16 transition-all duration-300',
         isFocusMode
           ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
-          : 'max-w-[1600px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
+          : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
       )}
     >
       {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}

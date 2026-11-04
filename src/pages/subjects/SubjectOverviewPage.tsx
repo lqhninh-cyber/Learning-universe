@@ -340,7 +340,9 @@ export function SubjectOverviewPage() {
                       <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Tài liệu học phần &amp; Văn bản pháp quy</span>
                     </Badge>
-                    <Badge variant="neutral">Chuẩn HCMUE &amp; CT GDPT 2018 · 13 Tài liệu</Badge>
+                    <Badge variant="neutral">
+                      Chuẩn HCMUE &amp; CT GDPT 2018 · {PEDAGOGY_DOCUMENTS.length} Tài liệu
+                    </Badge>
                   </div>
                   <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
                     Hệ thống Tài liệu học tập, Giáo trình &amp; Văn bản quy phạm pháp luật

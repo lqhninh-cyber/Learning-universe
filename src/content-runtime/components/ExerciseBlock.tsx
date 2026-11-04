@@ -34,7 +34,7 @@ export function Exercise({
     <section
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className="my-6 scroll-mt-24 rounded-2xl border border-[var(--bg-muted)] bg-[#FAF8F5] p-5 shadow-2xs sm:p-6"
+      className="my-6 scroll-mt-24 rounded-xl border border-[var(--bg-muted)] bg-[#FAF8F5] p-6 shadow-2xs lg:p-7"
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
@@ -45,7 +45,9 @@ export function Exercise({
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[var(--text-primary)]">{children}</div>
+      <div className="space-y-3 text-[16.5px] leading-relaxed text-[var(--text-primary)]">
+        {children}
+      </div>
     </section>
   );
 }

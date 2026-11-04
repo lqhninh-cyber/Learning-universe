@@ -41,7 +41,7 @@ function BaseExampleBlock({
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
       className={cn(
-        'my-6 scroll-mt-24 rounded-2xl border p-5 transition-colors sm:p-6',
+        'my-6 scroll-mt-24 rounded-xl border p-6 transition-colors lg:p-7',
         isCounterexample
           ? 'border-amber-200/90 bg-amber-50/35'
           : 'border-[var(--bg-muted)] bg-[#FAF8F5]',
@@ -59,7 +59,9 @@ function BaseExampleBlock({
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[var(--text-primary)]">{children}</div>
+      <div className="space-y-3 text-[16.5px] leading-relaxed text-[var(--text-primary)]">
+        {children}
+      </div>
     </section>
   );
 }

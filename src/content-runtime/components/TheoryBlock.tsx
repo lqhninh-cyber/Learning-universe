@@ -105,7 +105,7 @@ function BaseTheoryBlock({
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
       className={cn(
-        'my-6 scroll-mt-24 rounded-2xl border p-5 shadow-2xs transition-colors sm:p-6',
+        'my-6 scroll-mt-24 rounded-xl border p-6 shadow-2xs transition-colors lg:p-7',
         isDefinition
           ? 'border-l-4 border-[var(--bg-muted)] border-l-[var(--accent-primary)] bg-[#FAF8F5]'
           : 'border-l-4 border-[var(--bg-muted)] border-l-[var(--accent-wood)] bg-[#FAF8F5]',
@@ -120,7 +120,9 @@ function BaseTheoryBlock({
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[var(--text-primary)]">{children}</div>
+      <div className="space-y-3 text-[16.5px] leading-relaxed text-[var(--text-primary)]">
+        {children}
+      </div>
     </section>
   );
 }
