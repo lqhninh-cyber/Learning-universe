@@ -27,7 +27,7 @@ describe('App routing smoke test', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /Không gian học tập & Khám phá Toán học/i,
+        name: /Không gian học tập & Khám phá/i,
       }),
     ).toBeInTheDocument();
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
@@ -66,7 +66,9 @@ describe('App routing smoke test', () => {
     expect(screen.getByRole('link', { name: /Đọc tiếp bài học/i })).toBeInTheDocument();
 
     // 4. Khu vực môn học
-    expect(screen.getByRole('heading', { name: /Các học phần hiện có/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Chọn không gian học tập|Các học phần hiện có/i }),
+    ).toBeInTheDocument();
 
     // 4. Khu vực Thư viện tri thức (6 trụ cột)
     expect(screen.getByRole('heading', { name: /THƯ VIỆN TRI THỨC/i })).toBeInTheDocument();

@@ -4,8 +4,10 @@ import {
   CheckCircle2,
   Compass,
   FileText,
+  GraduationCap,
   Network,
   PlayCircle,
+  Sigma,
   Sparkles,
   User,
   UserCheck,
@@ -14,7 +16,6 @@ import { Link } from 'react-router';
 import { getLessonById, getSubjects } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
 import { SearchBar } from '@/features/search';
-import { SubjectCard } from '@/features/subject';
 import { isSupabaseConfigured } from '@/services/supabase/client';
 import { ROUTES } from '@/shared/config/routes';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -67,21 +68,26 @@ export function HomePage() {
       >
         <div className="mx-auto flex max-w-3xl flex-col items-center space-y-6">
           {/* Huy hiệu danh mục học thuật */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--bg-muted)] bg-[var(--bg-surface)] px-4 py-1 text-xs font-semibold tracking-wider text-[var(--accent-primary)] uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)]" />
-            <span>CHÀO MỪNG BẠN ĐẾN VỚI LEARNING UNIVERSE</span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--bg-muted)] bg-[var(--bg-surface)] px-4 py-1 text-xs font-semibold tracking-wider text-[var(--accent-primary)] uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)]" />
+              <span>CHÀO MỪNG BẠN ĐẾN VỚI LEARNING UNIVERSE</span>
+            </div>
+            <span className="rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-bold text-teal-800">
+              Toán học &amp; Khoa học Giáo dục
+            </span>
           </div>
 
           {/* Tiêu đề cấp 1 H1 (Font có chân Crimson Pro) và Đoạn mô tả học thuật */}
           <div className="space-y-4">
             <h1 className="font-serif text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-4xl lg:text-5xl">
-              Không gian học tập & Khám phá Toán học
+              Không gian Học tập &amp; Khám phá Tri thức Đại học
             </h1>
 
             <p className="mx-auto max-w-2xl text-base leading-relaxed text-[var(--text-secondary)] sm:text-lg">
-              Nơi lưu trữ và chia sẻ hệ thống bài giảng, định lý, chứng minh chặt chẽ cùng các
-              chuyên đề bài tập chuyên sâu, đồng hành cùng bạn trên hành trình chinh phục Toán học
-              cao cấp.
+              Nơi lưu trữ và chia sẻ hệ thống bài giảng, định lý, chứng minh toán học chặt chẽ cùng
+              các học phần Khoa học Giáo dục và Nghiệp vụ Sư phạm chuẩn mực, đồng hành cùng bạn trên
+              hành trình đại học.
             </p>
           </div>
 
@@ -135,36 +141,236 @@ export function HomePage() {
       <HeritageDivider className="opacity-70" />
 
       {/* =========================================================================
-          KHU VỰC 3: CÁC HỌC PHẦN HIỆN CÓ (SUBJECT CATALOG)
+          KHU VỰC 3: CHỌN KHÔNG GIAN HỌC TẬP (DUAL-PORTAL LAYOUT)
           ========================================================================= */}
       <section
         id="khong-gian-mon-hoc"
-        aria-label="Các học phần hiện có"
+        aria-label="Chọn không gian học tập"
         className="scroll-mt-20 space-y-6"
       >
         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
           <div>
+            <div className="flex items-center gap-2 text-xs font-semibold tracking-wider text-[var(--accent-wood)] uppercase">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-wood)]" />
+              <span>Trục tri thức tích hợp</span>
+            </div>
             <h2 className="font-serif text-2xl font-bold tracking-tight text-[var(--text-primary)] sm:text-3xl">
-              Các học phần hiện có
+              Chọn không gian học tập
             </h2>
             <p className="text-sm text-[var(--text-secondary)] sm:text-base">
-              Mỗi học phần là một không gian học tập chuyên biệt với hệ thống bài giảng, định lý và
-              bài tập có hướng dẫn.
+              Khám phá hai không gian học thuật chuyên biệt dành cho sinh viên Sư phạm Toán: Hệ
+              thống Toán học cao cấp và Khoa học Giáo dục hiện đại.
             </p>
           </div>
           <Link
-            to={ROUTES.subjects}
+            to={ROUTES.courses}
             className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--accent-primary)] underline underline-offset-4 transition-colors hover:text-[var(--text-primary)]"
           >
-            <span>Xem tất cả môn học ({subjects.length})</span>
+            <span>Xem tất cả học phần ({subjects.length})</span>
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {subjects.map((subject) => (
-            <SubjectCard key={subject.id} subject={subject} />
-          ))}
+        {/* Dual-Portal Grid: 2 Khối lớn đặt song song trên Desktop */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* KHỐI 1: KHỐI TOÁN HỌC */}
+          <Card className="flex flex-col justify-between rounded-3xl border border-amber-200/90 bg-gradient-to-br from-amber-50/50 via-white to-stone-50/60 p-6 shadow-xs transition-all hover:border-amber-300 hover:shadow-sm sm:p-8">
+            <div className="space-y-6">
+              {/* Header Khối Toán */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/80 bg-amber-100/70 px-3 py-1 text-xs font-bold tracking-wide text-amber-900 uppercase">
+                    <Sigma className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>Khối Toán học</span>
+                  </span>
+                  <span className="rounded-full bg-amber-100/80 px-2.5 py-0.5 text-xs font-semibold text-amber-900">
+                    3 học phần
+                  </span>
+                </div>
+                <h3 className="font-serif text-2xl font-bold tracking-tight text-stone-900">
+                  Khối Toán học Cao cấp
+                </h3>
+                <p className="text-sm leading-relaxed text-stone-600">
+                  Hệ thống bài giảng, định lý, chứng minh chặt chẽ, trực quan hóa tương tác và ngân
+                  hàng đề thi tự luận chuyên sâu.
+                </p>
+              </div>
+
+              {/* Danh sách 3 môn học Toán học */}
+              <div className="space-y-2.5">
+                <Link
+                  to={ROUTES.subjectOverview('cau-truc-dai-so')}
+                  aria-label="Cấu trúc đại số"
+                  className="group flex items-start justify-between rounded-2xl border border-stone-200/80 bg-white/90 p-4 shadow-2xs transition-all hover:border-amber-300 hover:bg-amber-50/30"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif text-base font-bold text-stone-900 group-hover:text-amber-900">
+                        Cấu trúc đại số
+                      </span>
+                      <span className="rounded bg-amber-100/70 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                        Đại số
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-600">
+                      Nhóm, Vành, Trường &amp; Tiên đề đại số trừu tượng · 39 bài học
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="mt-1 h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-800"
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                <Link
+                  to={ROUTES.subjectOverview('hinh-hoc-affine')}
+                  aria-label="Hình học Affine và hình học Euclide"
+                  className="group flex items-start justify-between rounded-2xl border border-stone-200/80 bg-white/90 p-4 shadow-2xs transition-all hover:border-amber-300 hover:bg-amber-50/30"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif text-base font-bold text-stone-900 group-hover:text-amber-900">
+                        Hình học Affine và hình học Euclide
+                      </span>
+                      <span className="rounded bg-amber-100/70 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                        Hình học
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-600">
+                      Không gian Affine, Ánh xạ Affine &amp; Phòng Lab 2D tương tác · 23 bài học
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="mt-1 h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-800"
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                <Link
+                  to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
+                  aria-label="Giải tích hàm một biến"
+                  className="group flex items-start justify-between rounded-2xl border border-stone-200/80 bg-white/90 p-4 shadow-2xs transition-all hover:border-amber-300 hover:bg-amber-50/30"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif text-base font-bold text-stone-900 group-hover:text-amber-900">
+                        Giải tích hàm một biến
+                      </span>
+                      <span className="rounded bg-amber-100/70 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
+                        Giải tích
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-600">
+                      Giới hạn, Vi phân, Tích phân &amp; Ngân hàng 6 bộ đề thi · 41 bài học
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="mt-1 h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-1 group-hover:text-amber-800"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </div>
+            </div>
+
+            {/* Nút hành động Khối Toán */}
+            <div className="mt-6 flex items-center justify-between border-t border-amber-200/60 pt-4">
+              <span className="text-xs font-medium text-stone-500">
+                Toán giải tích, hình học &amp; đại số
+              </span>
+              <Button
+                asChild
+                variant="subject"
+                size="sm"
+                className="gap-1.5 bg-amber-900 text-white hover:bg-amber-950"
+              >
+                <Link to={ROUTES.subjectOverview('cau-truc-dai-so')}>
+                  <span>Khám phá Khối Toán học</span>
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+          </Card>
+
+          {/* KHỐI 2: KHỐI KHOA HỌC GIÁO DỤC & NGHIỆP VỤ SƯ PHẠM */}
+          <Card className="flex flex-col justify-between rounded-3xl border border-teal-200/90 bg-gradient-to-br from-teal-50/50 via-white to-amber-50/30 p-6 shadow-xs transition-all hover:border-teal-300 hover:shadow-sm sm:p-8">
+            <div className="space-y-6">
+              {/* Header Khối Sư phạm */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-300/80 bg-teal-100/70 px-3 py-1 text-xs font-bold tracking-wide text-teal-900 uppercase">
+                    <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>Khoa học GD &amp; Sư phạm</span>
+                  </span>
+                  <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-semibold text-teal-800">
+                    1 học phần cốt lõi
+                  </span>
+                </div>
+                <h3 className="font-serif text-2xl font-bold tracking-tight text-teal-950">
+                  Khối Sư phạm &amp; Nghiệp vụ Giáo dục
+                </h3>
+                <p className="text-sm leading-relaxed text-stone-600">
+                  Hệ thống lý luận giáo dục nhân cách, văn bản pháp quy, chuẩn nghề nghiệp giáo
+                  viên, nghiệp vụ chủ nhiệm và tổ chức hoạt động trải nghiệm.
+                </p>
+              </div>
+
+              {/* Danh sách môn học Sư phạm */}
+              <div className="space-y-2.5">
+                <Link
+                  to={ROUTES.subjectOverview('giao-duc-hoc')}
+                  aria-label="Giáo dục học"
+                  className="group flex items-start justify-between rounded-2xl border border-teal-200/80 bg-white/90 p-4 shadow-2xs transition-all hover:border-teal-400 hover:bg-teal-50/40"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-serif text-base font-bold text-stone-900 group-hover:text-teal-900">
+                        Giáo dục học
+                      </span>
+                      <span className="rounded bg-teal-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-teal-800">
+                        EDUT1401
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-600">
+                      Chuẩn HCMUE &amp; CT GDPT 2018 · 13 tài liệu pháp quy · Rubric A.1.2 &amp;
+                      A.1.9 · 20 bài học
+                    </p>
+                  </div>
+                  <ArrowRight
+                    className="mt-1 h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-1 group-hover:text-teal-800"
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                {/* Card thông báo mở rộng các môn nghiệp vụ tiếp theo */}
+                <div className="rounded-2xl border border-dashed border-teal-200/90 bg-teal-50/40 p-4 text-xs text-teal-950">
+                  <div className="flex items-center gap-1.5 font-bold text-teal-900">
+                    <Sparkles className="h-3.5 w-3.5 text-teal-700" aria-hidden="true" />
+                    <span>Đang mở rộng trong lộ trình đào tạo</span>
+                  </div>
+                  <p className="mt-1.5 leading-relaxed text-stone-600">
+                    Các học phần Phương pháp Dạy học Toán và Tâm lý học Sư phạm đang được đội ngũ sư
+                    phạm chuẩn bị biên soạn theo quy chuẩn CT GDPT 2018.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Nút hành động Khối Sư phạm */}
+            <div className="mt-6 flex items-center justify-between border-t border-teal-200/60 pt-4">
+              <span className="text-xs font-medium text-stone-500">ĐH Sư phạm TP.HCM (HCMUE)</span>
+              <Button
+                asChild
+                variant="subject"
+                size="sm"
+                className="gap-1.5 bg-teal-800 text-white hover:bg-teal-900"
+              >
+                <Link to={ROUTES.subjectOverview('giao-duc-hoc')}>
+                  <span>Khám phá Khối Sư phạm</span>
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
+          </Card>
         </div>
       </section>
 

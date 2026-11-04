@@ -73,7 +73,7 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
             {subject.title}
           </h1>
 
-          <p className="max-w-2xl text-base leading-relaxed text-stone-600">
+          <p className="line-clamp-2 max-w-2xl text-base leading-relaxed text-stone-600">
             {subject.description}
           </p>
 
