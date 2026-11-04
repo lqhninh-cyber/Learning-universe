@@ -414,6 +414,7 @@ export function LessonPage() {
             data-reading-size={fontSize}
             className={cn(
               'lesson-content rounded-2xl border border-[var(--bg-muted)] bg-[var(--bg-canvas)] shadow-xs transition-all duration-300',
+              fontSize === 'lg' && 'reader-scale-lg',
               isFocusMode ? 'p-8 shadow-sm sm:p-12 lg:p-14' : 'p-6 sm:p-8 lg:p-10',
             )}
           >
@@ -547,6 +548,17 @@ export function LessonPage() {
             <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
           </aside>
         )}
+      </div>
+
+      {/* Floating Quick Reading Controls Toolbar ở góc dưới phải màn hình */}
+      <div className="fixed right-6 bottom-6 z-40 hidden md:block print:hidden">
+        <ReadingControlsToolbar
+          fontSize={fontSize}
+          onFontSizeChange={handleFontSizeChange}
+          isFocusMode={isFocusMode}
+          onToggleFocusMode={handleToggleFocusMode}
+          className="border-stone-300/90 bg-white/95 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-md"
+        />
       </div>
     </FadeIn>
   );

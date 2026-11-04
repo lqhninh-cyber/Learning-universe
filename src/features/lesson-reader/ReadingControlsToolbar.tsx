@@ -18,8 +18,8 @@ const FONT_SIZES: readonly {
   readonly title: string;
 }[] = [
   { id: 'sm', label: 'A-', title: 'Cỡ chữ nhỏ (16px)' },
-  { id: 'base', label: 'A', title: 'Cỡ chữ chuẩn (17.5px - 18px)' },
-  { id: 'lg', label: 'A+', title: 'Cỡ chữ lớn (19.5px - 20px)' },
+  { id: 'base', label: 'A', title: 'Cỡ chữ chuẩn (18px - mặc định)' },
+  { id: 'lg', label: 'A+', title: 'Cỡ chữ lớn (20px - màn hình Dell 24" / Laptop)' },
 ];
 
 /**

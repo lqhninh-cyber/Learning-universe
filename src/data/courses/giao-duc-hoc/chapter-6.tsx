@@ -1121,13 +1121,13 @@ export const Lesson6_1View: FC = () => {
           <Scale className="h-5 w-5 text-amber-800" />
           <h2
             id="1-quy-trinh-khoa-hoc-5-buoc"
-            className="font-serif text-xl font-bold text-stone-900"
+            className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
           >
             Phần I: Quy trình Khoa học 5 Bước Xử lý Tình huống Sư phạm (HCMUE)
           </h2>
         </div>
 
-        <p className="text-sm text-stone-700">
+        <p className="text-[16.5px] leading-[1.8] text-stone-800 sm:text-[17px]">
           Xử lý tình huống sư phạm không phải là hành động phản xạ cảm tính nhất thời, mà là một quy
           trình giải quyết vấn đề có phương pháp luận khoa học, dựa trên nền tảng tâm lý học lứa
           tuổi, lý luận giáo dục và chuẩn mực pháp luật học đường:
@@ -1135,60 +1135,60 @@ export const Lesson6_1View: FC = () => {
 
         <div className="grid gap-4 md:grid-cols-5">
           {/* Bước 1 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-800 text-xs font-bold text-white">
+          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
               B1
             </div>
-            <h3 className="mt-2 text-sm font-bold text-stone-900">Tiếp nhận & Định dạng</h3>
-            <p className="mt-1 text-xs text-stone-600">
+            <h3 className="mt-2 text-base font-bold text-stone-900">Tiếp nhận & Định dạng</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
               Thu thập thông tin đa chiều. Thực hiện nguyên tắc "Dừng 5 giây" kiềm chế giận dữ. Đánh
               giá mức độ khẩn cấp (có nguy cơ tổn thương thể chất/tinh thần không).
             </p>
           </div>
 
           {/* Bước 2 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-800 text-xs font-bold text-white">
+          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
               B2
             </div>
-            <h3 className="mt-2 text-sm font-bold text-stone-900">Xác định Vấn đề Cốt lõi</h3>
-            <p className="mt-1 text-xs text-stone-600">
+            <h3 className="mt-2 text-base font-bold text-stone-900">Xác định Vấn đề Cốt lõi</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
               Phân tích tâm lý lứa tuổi dậy thì/vị thành niên, hoàn cảnh gia đình, dư luận lớp học.
               Tìm hiểu động cơ ẩn sau hành vi theo Jane Nelsen. Tuyệt đối không quy kết cảm tính.
             </p>
           </div>
 
           {/* Bước 3 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-800 text-xs font-bold text-white">
+          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
               B3
             </div>
-            <h3 className="mt-2 text-sm font-bold text-stone-900">Đề xuất & Chọn Phương án</h3>
-            <p className="mt-1 text-xs text-stone-600">
+            <h3 className="mt-2 text-base font-bold text-stone-900">Đề xuất & Chọn Phương án</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
               Đối chiếu hệ thống 6 nguyên tắc giáo dục. Ưu tiên kỷ luật tích cực, tìm giải pháp phục
               hồi. Tôn trọng nhân cách và bảo mật đời tư của học sinh.
             </p>
           </div>
 
           {/* Bước 4 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-800 text-xs font-bold text-white">
+          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
               B4
             </div>
-            <h3 className="mt-2 text-sm font-bold text-stone-900">Thực thi Can thiệp</h3>
-            <p className="mt-1 text-xs text-stone-600">
+            <h3 className="mt-2 text-base font-bold text-stone-900">Thực thi Can thiệp</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
               Gặp gỡ riêng tại không gian yên tĩnh. Lắng nghe tích cực bằng sự thấu cảm. Phối hợp
               đồng bộ 4 lực lượng: GVCN – Phụ huynh – Ban Giám hiệu – Đoàn/Đội.
             </p>
           </div>
 
           {/* Bước 5 */}
-          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-800 text-xs font-bold text-white">
+          <div className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-xs sm:p-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-800 text-sm font-bold text-white shadow-2xs">
               B5
             </div>
-            <h3 className="mt-2 text-sm font-bold text-stone-900">Đánh giá & Bài học</h3>
-            <p className="mt-1 text-xs text-stone-600">
+            <h3 className="mt-2 text-base font-bold text-stone-900">Đánh giá & Bài học</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-stone-700 sm:text-[15px]">
               Theo dõi chuyển biến hành vi lâu dài qua sổ nhật ký chủ nhiệm. Ghi nhận sự tiến bộ dù
               nhỏ nhất. Rút ra bài học kinh nghiệm về quản lý lớp học tự quản.
             </p>
@@ -1224,10 +1224,10 @@ export const Lesson6_1View: FC = () => {
           <button
             type="button"
             onClick={() => setSelectedCategory('all')}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'all'
                 ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
             }`}
           >
             Tất cả 20 Tình huống
@@ -1235,10 +1235,10 @@ export const Lesson6_1View: FC = () => {
           <button
             type="button"
             onClick={() => setSelectedCategory('insubordination')}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'insubordination'
                 ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
             }`}
           >
             Nhóm 1: Chống đối & Kỷ cương (TH 1 - 4)
@@ -1246,10 +1246,10 @@ export const Lesson6_1View: FC = () => {
           <button
             type="button"
             onClick={() => setSelectedCategory('romance')}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'romance'
                 ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
             }`}
           >
             Nhóm 2: Tình bạn & Tình yêu (TH 5 - 8)
@@ -1257,10 +1257,10 @@ export const Lesson6_1View: FC = () => {
           <button
             type="button"
             onClick={() => setSelectedCategory('bullying')}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'bullying'
                 ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
             }`}
           >
             Nhóm 3: Bạo lực & Bắt nạt (TH 9 - 12)
@@ -1268,10 +1268,10 @@ export const Lesson6_1View: FC = () => {
           <button
             type="button"
             onClick={() => setSelectedCategory('integrity')}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'integrity'
                 ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
             }`}
           >
             Nhóm 4: Trung thực & Thi cử (TH 13 - 16)
@@ -1279,10 +1279,10 @@ export const Lesson6_1View: FC = () => {
           <button
             type="button"
             onClick={() => setSelectedCategory('parent')}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+            className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'parent'
                 ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
             }`}
           >
             Nhóm 5: Phối hợp Phụ huynh (TH 17 - 20)
@@ -1290,71 +1290,77 @@ export const Lesson6_1View: FC = () => {
         </div>
 
         {/* Danh sách thẻ tình huống sư phạm */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           {filteredCases.map((cs) => {
             const isExpanded = expandedCaseId === cs.id;
             return (
               <div
                 key={cs.id}
                 id={`tinh-huong-${cs.id}`}
-                className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs transition-all hover:border-amber-700/30"
+                className="pedagogy-case-card overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs transition-all hover:border-amber-700/30"
               >
                 {/* Header thanh tiêu đề có thể click mở/gập */}
                 <button
                   type="button"
                   onClick={() => handleToggleCase(cs.id)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-stone-50 sm:p-5"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-stone-50 sm:p-6"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-xs font-bold text-white shadow-2xs">
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-sm font-bold text-white shadow-2xs">
                       {cs.id}
                     </span>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-semibold text-amber-900 uppercase">
+                      <div className="mb-1 flex items-center gap-2">
+                        <span className="text-xs font-semibold text-amber-900 uppercase sm:text-sm">
                           {cs.categoryName}
                         </span>
-                        <span className="text-[11px] text-stone-400">· {cs.targetGrade}</span>
+                        <span className="text-xs font-medium text-stone-500 sm:text-sm">
+                          · {cs.targetGrade}
+                        </span>
                       </div>
-                      <h3 className="text-sm font-bold text-stone-900 sm:text-base">{cs.title}</h3>
+                      <h3 className="text-base leading-snug font-bold text-stone-900 sm:text-lg">
+                        {cs.title}
+                      </h3>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="hidden text-xs font-medium text-stone-500 sm:inline">
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="hidden text-sm font-medium text-stone-600 sm:inline">
                       {isExpanded ? 'Thu gọn' : 'Xem phân tích'}
                     </span>
                     {isExpanded ? (
                       <ChevronUp className="h-5 w-5 text-amber-800" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-stone-400" />
+                      <ChevronDown className="h-5 w-5 text-stone-500" />
                     )}
                   </div>
                 </button>
 
                 {/* Nội dung chi tiết tình huống khi mở */}
                 {isExpanded && (
-                  <div className="space-y-5 border-t border-stone-100 bg-[#fcfbf9]/60 p-5 sm:p-6">
+                  <div className="space-y-5 border-t border-stone-100 bg-[#fcfbf9]/70 p-5 sm:p-7">
                     {/* Bối cảnh thực tế */}
-                    <div className="rounded-xl border border-amber-800/15 bg-white p-4 text-sm leading-relaxed text-stone-800 shadow-2xs">
-                      <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase">
+                    <div className="rounded-xl border border-amber-800/15 bg-white p-5 text-stone-800 shadow-2xs">
+                      <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase sm:text-sm">
                         <BookOpen className="h-4 w-4" />
                         <span>Bối cảnh tình huống thực tế</span>
                       </div>
-                      <p className="mt-2 leading-relaxed text-stone-700">{cs.context}</p>
+                      <p className="mt-2 text-[16px] leading-relaxed text-stone-800 sm:text-[16.5px]">
+                        {cs.context}
+                      </p>
                     </div>
 
                     {/* Câu hỏi sư phạm */}
-                    <div className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50/50 p-3.5 text-xs font-medium text-amber-950 sm:text-sm">
-                      <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-800" />
-                      <p className="font-semibold">{cs.question}</p>
+                    <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50/60 p-4 text-[16px] leading-relaxed font-semibold text-amber-950 sm:text-[16.5px]">
+                      <HelpCircle className="mt-1 h-5 w-5 shrink-0 text-amber-800" />
+                      <p>{cs.question}</p>
                     </div>
 
                     {/* Khung phản tư cá nhân */}
-                    <div className="space-y-2 rounded-xl border border-stone-200 bg-white p-4">
+                    <div className="space-y-3 rounded-xl border border-stone-200 bg-white p-5">
                       <label
                         htmlFor={`reflect-${cs.id}`}
-                        className="block text-xs font-semibold text-stone-700"
+                        className="block text-sm font-bold text-stone-900 sm:text-[15px]"
                       >
                         ✍️ Phản tư cá nhân: Thầy/Cô sẽ xử lý tình huống này theo những bước nào
                         trước khi xem phương án chuẩn?
@@ -1367,13 +1373,13 @@ export const Lesson6_1View: FC = () => {
                           setReflections((prev) => ({ ...prev, [cs.id]: e.target.value }))
                         }
                         placeholder="Nhập suy nghĩ, bước can thiệp hoặc nguyên tắc của bạn..."
-                        className="w-full rounded-lg border border-stone-200 bg-stone-50/60 p-2.5 text-xs text-stone-800 placeholder:text-stone-400 focus:border-amber-700 focus:bg-white focus:outline-none"
+                        className="w-full rounded-lg border border-stone-200 bg-stone-50/60 p-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:border-amber-700 focus:bg-white focus:outline-none sm:text-[15.5px]"
                       />
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-stone-500">
+                        <span className="text-xs text-stone-600 sm:text-sm">
                           {savedStatus[cs.id] ? (
                             <span className="inline-flex items-center gap-1 font-semibold text-emerald-600">
-                              <CheckCircle2 className="h-3.5 w-3.5" /> Đã lưu phản tư thành công!
+                              <CheckCircle2 className="h-4 w-4" /> Đã lưu phản tư thành công!
                             </span>
                           ) : (
                             'Ghi lại phản tư giúp rèn luyện năng lực giải quyết vấn đề sư phạm'
@@ -1383,7 +1389,7 @@ export const Lesson6_1View: FC = () => {
                           size="sm"
                           variant="outline"
                           onClick={() => handleSaveReflection(cs.id)}
-                          className="h-7 text-xs"
+                          className="h-8 text-xs sm:text-sm"
                         >
                           Lưu phản tư
                         </Button>
@@ -1392,14 +1398,14 @@ export const Lesson6_1View: FC = () => {
 
                     {/* Nguyên tắc GDH áp dụng */}
                     <div className="space-y-2">
-                      <span className="text-xs font-bold tracking-wide text-stone-800 uppercase">
+                      <span className="text-xs font-bold tracking-wider text-stone-900 uppercase sm:text-sm">
                         📌 Nguyên tắc Giáo dục học vận dụng:
                       </span>
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="flex flex-wrap gap-2">
                         {cs.principlesApplied.map((p, idx) => (
                           <span
                             key={idx}
-                            className="rounded-lg border border-amber-200/60 bg-amber-100/70 px-2.5 py-1 text-xs font-medium text-amber-900"
+                            className="rounded-lg border border-amber-200/80 bg-amber-100/80 px-3 py-1 text-xs font-medium text-amber-950 sm:text-sm"
                           >
                             {p}
                           </span>
@@ -1409,35 +1415,37 @@ export const Lesson6_1View: FC = () => {
 
                     {/* Phương án xử lý tối ưu 4 bước chuẩn */}
                     <div className="space-y-3">
-                      <div className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-emerald-900 uppercase">
+                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-emerald-950 uppercase sm:text-sm">
                         <CheckCircle2 className="h-4 w-4 text-emerald-700" />
                         <span>Phương án xử lý tối ưu theo chuẩn Sư phạm:</span>
                       </div>
-                      <div className="grid gap-2.5 sm:grid-cols-2">
+                      <div className="grid gap-3 sm:grid-cols-2">
                         {cs.solutionSteps.map((step) => (
                           <div
                             key={step.step}
-                            className="rounded-xl border border-stone-200/80 bg-white p-3.5 text-xs shadow-2xs"
+                            className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-2xs"
                           >
-                            <div className="flex items-center gap-1.5 font-bold text-stone-900">
-                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[11px] font-bold text-emerald-800">
+                            <div className="flex items-center gap-2 text-sm font-bold text-stone-900 sm:text-base">
+                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800">
                                 {step.step}
                               </span>
                               <span>{step.title}</span>
                             </div>
-                            <p className="mt-1.5 leading-relaxed text-stone-600">{step.content}</p>
+                            <p className="mt-2 text-[15px] leading-relaxed text-stone-800 sm:text-[15.5px]">
+                              {step.content}
+                            </p>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     {/* Bẫy sư phạm cần tránh */}
-                    <div className="rounded-xl border border-rose-200 bg-rose-50/50 p-4 text-xs text-rose-900">
-                      <div className="flex items-center gap-1.5 font-bold tracking-wider text-rose-800 uppercase">
+                    <div className="rounded-xl border border-rose-200 bg-rose-50/60 p-4 text-rose-950 sm:p-5">
+                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-rose-900 uppercase sm:text-sm">
                         <AlertTriangle className="h-4 w-4 text-rose-600" />
                         <span>Bẫy sư phạm cần tránh tuyệt đối:</span>
                       </div>
-                      <ul className="mt-2 list-disc space-y-1 pl-4 text-rose-800">
+                      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-rose-900 sm:text-[15.5px]">
                         {cs.pitfallsToAvoid.map((pitfall, pIdx) => (
                           <li key={pIdx}>{pitfall}</li>
                         ))}
@@ -1445,7 +1453,7 @@ export const Lesson6_1View: FC = () => {
                     </div>
 
                     {/* Bài học sư phạm cốt lõi */}
-                    <div className="rounded-xl border border-amber-800/20 bg-amber-50/70 p-3.5 text-xs font-medium text-amber-950">
+                    <div className="rounded-xl border border-amber-800/20 bg-amber-50/80 p-4 text-sm leading-relaxed font-medium text-amber-950 sm:text-[16px]">
                       <span className="font-bold text-amber-900">💡 Bài học cốt lõi: </span>
                       {cs.coreLesson}
                     </div>
@@ -2153,38 +2161,41 @@ export const Lesson6_2View: FC = () => {
       <section className="space-y-4">
         <div className="flex items-center gap-2 border-b border-amber-900/15 pb-2">
           <FileText className="h-5 w-5 text-amber-800" />
-          <h2 id="1-ma-tran-de-thi" className="font-serif text-xl font-bold text-stone-900">
+          <h2
+            id="1-ma-tran-de-thi"
+            className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
+          >
             Phần I: Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao
           </h2>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2">
           {/* Cấu trúc ma trận */}
-          <div className="space-y-3 rounded-xl border border-stone-200/90 bg-white p-5 shadow-xs">
-            <h3 className="flex items-center gap-1.5 text-sm font-bold tracking-wide text-stone-900 uppercase">
+          <div className="space-y-3 rounded-xl border border-stone-200/90 bg-white p-5 shadow-xs sm:p-6">
+            <h3 className="flex items-center gap-2 text-base font-bold tracking-wide text-stone-900 uppercase">
               <Calendar className="h-4 w-4 text-amber-800" />
               Cấu trúc Đề thi Tự luận Chuẩn (90 phút)
             </h3>
-            <ul className="space-y-2 text-xs text-stone-700">
-              <li className="flex items-start gap-2">
+            <ul className="space-y-3 text-[16px] leading-relaxed text-stone-800 sm:text-[16.5px]">
+              <li className="flex items-start gap-2.5">
                 <span className="shrink-0 font-bold text-amber-900">Câu 1 (2.0 đ):</span>
                 <span>
                   Lý luận giáo dục nền tảng: Lao động sư phạm / 3 Chức năng / 4 Yếu tố nhân cách
                   (Chương 1 - 2).
                 </span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <span className="shrink-0 font-bold text-amber-900">Câu 2 (2.0 đ):</span>
                 <span>
                   Văn bản pháp quy: Luật Giáo dục 2019 / Thông tư 20 Chuẩn nghề nghiệp / Điều lệ TT
                   32.
                 </span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <span className="shrink-0 font-bold text-amber-900">Câu 3 (2.5 đ):</span>
                 <span>Nguyên tắc giáo dục & Nghiệp vụ GVCN / Kỷ luật tích cực (Chương 3 - 4).</span>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2.5">
                 <span className="shrink-0 font-bold text-amber-900">Câu 4 (3.5 đ):</span>
                 <span>
                   Hoạt động trải nghiệm theo CT 2018 (Chương 5) hoặc Xử lý tình huống sư phạm thực
@@ -2195,37 +2206,38 @@ export const Lesson6_2View: FC = () => {
           </div>
 
           {/* Tiêu chí vàng đạt điểm 9-10 */}
-          <div className="space-y-3 rounded-xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] to-amber-50/40 p-5 shadow-xs">
-            <h3 className="flex items-center gap-1.5 text-sm font-bold tracking-wide text-amber-950 uppercase">
+          <div className="space-y-3 rounded-xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] to-amber-50/40 p-5 shadow-xs sm:p-6">
+            <h3 className="flex items-center gap-2 text-base font-bold tracking-wide text-amber-950 uppercase">
               <Sparkles className="h-4 w-4 text-amber-800" />
               Tiêu chuẩn Vàng Đạt Điểm 9 - 10
             </h3>
-            <ul className="space-y-2 text-xs text-stone-700">
-              <li className="flex items-start gap-2">
-                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-800 text-[10px] font-bold text-white">
+            <ul className="space-y-3 text-[16px] leading-relaxed text-stone-800 sm:text-[16.5px]">
+              <li className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-800 text-xs font-bold text-white">
                   1
                 </span>
                 <span>
-                  <strong>Cấu trúc 3 phần chặt chẽ:</strong> Đặt vấn đề (khái niệm), Giải quyết vấn
-                  đề (luận điểm + dẫn chứng) và Kết luận (ý nghĩa sư phạm).
+                  <strong className="text-stone-900">Cấu trúc 3 phần chặt chẽ:</strong> Đặt vấn đề
+                  (khái niệm), Giải quyết vấn đề (luận điểm + dẫn chứng) và Kết luận (ý nghĩa sư
+                  phạm).
                 </span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-800 text-[10px] font-bold text-white">
+              <li className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-800 text-xs font-bold text-white">
                   2
                 </span>
                 <span>
-                  <strong>Trích dẫn pháp lý chính xác:</strong> Nêu rõ số hiệu Thông tư (TT 20/2018,
-                  TT 32/2020), điều khoản Luật Giáo dục 2019.
+                  <strong className="text-stone-900">Trích dẫn pháp lý chính xác:</strong> Nêu rõ số
+                  hiệu Thông tư (TT 20/2018, TT 32/2020), điều khoản Luật Giáo dục 2019.
                 </span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-800 text-[10px] font-bold text-white">
+              <li className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-800 text-xs font-bold text-white">
                   3
                 </span>
                 <span>
-                  <strong>Liên hệ chuyên môn Sư phạm Toán:</strong> Đưa ví dụ cụ thể về dạy học Toán
-                  tích hợp, mô hình hóa và tư duy logic.
+                  <strong className="text-stone-900">Liên hệ chuyên môn Sư phạm Toán:</strong> Đưa
+                  ví dụ cụ thể về dạy học Toán tích hợp, mô hình hóa và tư duy logic.
                 </span>
               </li>
             </ul>
@@ -2240,14 +2252,17 @@ export const Lesson6_2View: FC = () => {
         <div className="flex flex-col gap-2 border-b border-amber-900/15 pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-amber-800" />
-            <h2 id="2-10-cau-hoi-tu-luan" className="font-serif text-xl font-bold text-stone-900">
+            <h2
+              id="2-10-cau-hoi-tu-luan"
+              className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
+            >
               Phần II: Tuyển tập 10 Câu hỏi Tự luận Kinh điển & Barem Điểm Chi tiết
             </h2>
           </div>
           <Badge variant="subject">Barem chuẩn 10.0 Điểm</Badge>
         </div>
 
-        <div className="space-y-4">
+        <div className="essay-accordion space-y-4">
           {ESSAY_EXAM_QUESTIONS.map((q) => {
             const isExpanded = expandedQuestionId === q.id;
             return (
@@ -2260,47 +2275,53 @@ export const Lesson6_2View: FC = () => {
                 <button
                   type="button"
                   onClick={() => handleToggleQuestion(q.id)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-3 p-4 text-left transition-colors hover:bg-stone-50 sm:p-5"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-stone-50 sm:p-6"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-xs font-bold text-white shadow-2xs">
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-sm font-bold text-white shadow-2xs">
                       C{q.id}
                     </span>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-semibold text-amber-900 uppercase">
+                      <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                        <span className="text-xs font-semibold tracking-wide text-amber-900 uppercase sm:text-sm">
                           {q.chapterOrigin}
                         </span>
-                        <span className="py-0.2 rounded bg-amber-100 px-1.5 text-[10px] font-bold text-amber-900">
+                        <span className="rounded-md bg-amber-100/90 px-2.5 py-1 text-xs font-medium text-amber-900 sm:text-sm">
                           {q.points} Điểm
                         </span>
-                        <span className="text-[11px] text-stone-400">· {q.clos}</span>
+                        <span className="text-xs font-medium text-stone-600 sm:text-sm">
+                          · {q.clos}
+                        </span>
                       </div>
-                      <h3 className="text-sm font-bold text-stone-900 sm:text-base">{q.title}</h3>
+                      <h3 className="essay-title font-serif text-lg leading-snug font-bold tracking-tight text-stone-900 sm:text-[19px]">
+                        {q.title}
+                      </h3>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="hidden text-xs font-medium text-stone-500 sm:inline">
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="hidden text-sm font-medium text-stone-600 sm:inline">
                       {isExpanded ? 'Thu gọn' : 'Xem dàn ý & Barem'}
                     </span>
                     {isExpanded ? (
                       <ChevronUp className="h-5 w-5 text-amber-800" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-stone-400" />
+                      <ChevronDown className="h-5 w-5 text-stone-500" />
                     )}
                   </div>
                 </button>
 
                 {/* Nội dung dàn ý & Barem chi tiết */}
                 {isExpanded && (
-                  <div className="space-y-4 border-t border-stone-100 bg-[#fcfbf9]/60 p-5 sm:p-6">
+                  <div className="space-y-5 border-t border-stone-100 bg-[#fcfbf9]/70 p-5 sm:p-7">
                     {/* Đề bài chi tiết */}
-                    <div className="rounded-xl border border-amber-800/15 bg-white p-4 text-xs leading-relaxed font-semibold text-stone-900 shadow-2xs sm:text-sm">
-                      <span className="mb-1 block text-xs font-bold text-amber-800 uppercase">
+                    <div className="rounded-xl border border-amber-800/20 bg-white p-5 shadow-2xs">
+                      <span className="mb-2 block text-xs font-bold tracking-wider text-amber-900 uppercase sm:text-sm">
                         Đề bài chi tiết:
                       </span>
-                      {q.questionText}
+                      <p className="text-[16.5px] leading-relaxed font-medium text-stone-800">
+                        {q.questionText}
+                      </p>
                     </div>
 
                     {/* Các phần dàn ý kèm phân bổ điểm */}
@@ -2308,21 +2329,24 @@ export const Lesson6_2View: FC = () => {
                       {q.outlineSections.map((sec, sIdx) => (
                         <div
                           key={sIdx}
-                          className="space-y-2.5 rounded-xl border border-stone-200 bg-white p-4 shadow-2xs"
+                          className="space-y-3 rounded-xl border border-stone-200 bg-white p-5 shadow-2xs"
                         >
-                          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-2">
-                            <h4 className="text-xs font-bold text-stone-900 sm:text-sm">
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-3">
+                            <h4 className="text-[17px] leading-snug font-bold text-stone-900">
                               {sec.sectionTitle}
                             </h4>
-                            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
+                            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900 sm:text-sm">
                               {sec.pointsAllocation}
                             </span>
                           </div>
-                          <ul className="space-y-2 text-xs text-stone-700">
+                          <ul className="space-y-3">
                             {sec.contentItems.map((item, iIdx) => (
-                              <li key={iIdx} className="flex items-start gap-2">
-                                <span className="mt-0.5 font-bold text-amber-800">•</span>
-                                <span className="leading-relaxed">{item}</span>
+                              <li
+                                key={iIdx}
+                                className="essay-content-item flex items-start gap-3 text-[17.5px] leading-[1.8] text-stone-900"
+                              >
+                                <span className="mt-1 font-bold text-amber-800 select-none">•</span>
+                                <span className="leading-[1.8]">{item}</span>
                               </li>
                             ))}
                           </ul>
@@ -2332,7 +2356,7 @@ export const Lesson6_2View: FC = () => {
 
                     {/* Ví dụ liên hệ Sư phạm Toán (nếu có) */}
                     {q.teachingMathContext && (
-                      <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3.5 text-xs font-medium text-teal-950">
+                      <div className="rounded-xl border border-teal-200/90 bg-teal-50/70 p-4 text-[16px] leading-relaxed font-normal text-teal-950 shadow-2xs">
                         <span className="font-bold text-teal-900">
                           📐 Gợi ý liên hệ Bộ môn Sư phạm Toán:{' '}
                         </span>
@@ -2354,20 +2378,23 @@ export const Lesson6_2View: FC = () => {
         <div className="flex flex-col gap-2 border-b border-amber-900/15 pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-amber-800" />
-            <h2 id="3-trac-nghiem-on-tap" className="font-serif text-xl font-bold text-stone-900">
+            <h2
+              id="3-trac-nghiem-on-tap"
+              className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
+            >
               Phần III: Bộ 20 Câu hỏi Trắc nghiệm Khách quan Ôn tập Cuối kỳ
             </h2>
           </div>
           <Badge variant="neutral">Tự kiểm tra Nhanh</Badge>
         </div>
 
-        <p className="text-sm text-stone-700">
+        <p className="text-[16.5px] leading-[1.8] text-stone-800 sm:text-[17px]">
           Chọn đáp án bạn cho là chính xác nhất. Hệ thống sẽ hiển thị phản hồi ngay lập tức cùng cơ
           sở lý luận trích dẫn từ Giáo trình chuẩn HCMUE và các văn bản quy phạm pháp luật:
         </p>
 
         {/* Danh sách 20 câu trắc nghiệm */}
-        <div className="space-y-4">
+        <div className="quiz-container space-y-6">
           {QUIZ_20_QUESTIONS.map((q) => {
             const selectedOpt = userAnswers[q.id];
             const isAnswered = selectedOpt !== undefined;
@@ -2376,29 +2403,32 @@ export const Lesson6_2View: FC = () => {
             return (
               <div
                 key={q.id}
-                className="space-y-3 rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs"
+                className="quiz-card space-y-4 rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs"
               >
-                <div className="flex items-start gap-2.5">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-stone-100 text-xs font-bold text-stone-700">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-sm font-bold text-white shadow-2xs">
                     {q.id}
                   </span>
-                  <p className="text-sm leading-snug font-bold text-stone-900">{q.question}</p>
+                  <p className="quiz-question-title mb-4 text-lg leading-snug font-semibold text-stone-900 sm:text-[19px]">
+                    {q.question}
+                  </p>
                 </div>
 
-                <div className="grid gap-2 pt-1 sm:grid-cols-2">
+                <div className="grid gap-3 pt-1 sm:grid-cols-2">
                   {q.options.map((opt, optIdx) => {
                     const isSelected = selectedOpt === optIdx;
                     let btnStyle =
-                      'border-stone-200 bg-stone-50/60 text-stone-800 hover:bg-stone-100';
+                      'border-stone-200 bg-stone-50/70 text-stone-800 hover:border-amber-700/40 hover:bg-stone-100';
 
                     if (isAnswered) {
                       if (optIdx === q.correctIndex) {
                         btnStyle =
-                          'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold';
+                          'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold ring-1 ring-emerald-500/30';
                       } else if (isSelected) {
-                        btnStyle = 'border-rose-400 bg-rose-50 text-rose-950';
+                        btnStyle =
+                          'border-rose-400 bg-rose-50 text-rose-950 ring-1 ring-rose-400/30';
                       } else {
-                        btnStyle = 'border-stone-100 bg-stone-50/40 text-stone-400';
+                        btnStyle = 'border-stone-100 bg-stone-50/40 text-stone-400 opacity-60';
                       }
                     }
 
@@ -2407,12 +2437,12 @@ export const Lesson6_2View: FC = () => {
                         key={optIdx}
                         type="button"
                         onClick={() => handleSelectQuizOption(q.id, optIdx)}
-                        className={`flex cursor-pointer items-start gap-2 rounded-xl border p-3 text-left text-xs transition-all ${btnStyle}`}
+                        className={`quiz-option-button flex cursor-pointer items-start gap-3 rounded-xl border px-5 py-3.5 text-left text-[16px] font-normal transition-all sm:text-[16.5px] ${btnStyle}`}
                       >
-                        <span className="shrink-0 font-bold">
+                        <span className="quiz-option-letter shrink-0 text-base font-bold text-stone-900">
                           {String.fromCharCode(65 + optIdx)}.
                         </span>
-                        <span className="leading-snug">{opt.substring(3)}</span>
+                        <span className="leading-relaxed text-stone-800">{opt.substring(3)}</span>
                       </button>
                     );
                   })}
@@ -2421,29 +2451,29 @@ export const Lesson6_2View: FC = () => {
                 {/* Khung giải thích khi đã chọn */}
                 {isAnswered && (
                   <div
-                    className={`rounded-xl border p-3 text-xs leading-relaxed ${
+                    className={`quiz-explanation rounded-xl border p-4 text-[16px] leading-relaxed ${
                       isCorrect
-                        ? 'border-emerald-200 bg-emerald-50/60 text-emerald-900'
-                        : 'border-rose-200 bg-rose-50/60 text-rose-900'
+                        ? 'border-emerald-300 bg-emerald-50/80 text-emerald-950'
+                        : 'border-rose-300 bg-rose-50/80 text-rose-950'
                     }`}
                   >
-                    <div className="mb-1 flex items-center gap-1.5 font-bold">
+                    <div className="mb-2 flex items-center gap-2 text-[16.5px] font-bold">
                       {isCorrect ? (
                         <>
-                          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                          <span>Chính xác!</span>
+                          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+                          <span className="text-emerald-900">Chính xác!</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="h-4 w-4 text-rose-600" />
-                          <span>
+                          <XCircle className="h-5 w-5 shrink-0 text-rose-600" />
+                          <span className="text-rose-900">
                             Chưa chính xác! Đáp án đúng là{' '}
                             {String.fromCharCode(65 + q.correctIndex)}
                           </span>
                         </>
                       )}
                     </div>
-                    <p className="text-[11px] text-stone-700">{q.explanation}</p>
+                    <p className="text-[16px] leading-relaxed text-stone-800">{q.explanation}</p>
                   </div>
                 )}
               </div>
@@ -2452,18 +2482,20 @@ export const Lesson6_2View: FC = () => {
         </div>
 
         {/* Bảng tổng kết kết quả làm trắc nghiệm */}
-        <div className="space-y-3 rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] to-amber-50/50 p-6 text-center">
-          <h3 className="text-base font-bold text-stone-900">Kết quả Tự kiểm tra Trắc nghiệm</h3>
-          <p className="text-xs text-stone-600">
+        <div className="space-y-4 rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] to-amber-50/50 p-6 text-center shadow-xs sm:p-8">
+          <h3 className="font-serif text-xl font-bold text-stone-900 sm:text-2xl">
+            Kết quả Tự kiểm tra Trắc nghiệm
+          </h3>
+          <p className="text-base text-stone-700">
             Bạn đã trả lời {Object.keys(userAnswers).length} / {QUIZ_20_QUESTIONS.length} câu hỏi.
           </p>
-          <div className="flex items-baseline justify-center gap-1 font-serif text-3xl font-bold text-amber-900">
+          <div className="flex items-baseline justify-center gap-1 font-serif text-4xl font-bold text-amber-900 sm:text-5xl">
             <span>{calculateQuizScore()}</span>
-            <span className="font-sans text-base font-normal text-stone-400">
+            <span className="font-sans text-lg font-normal text-stone-600">
               / {QUIZ_20_QUESTIONS.length} câu đúng
             </span>
           </div>
-          <p className="text-xs text-stone-500">
+          <p className="text-sm font-medium text-stone-600">
             (Đạt {Math.round((calculateQuizScore() / QUIZ_20_QUESTIONS.length) * 100)}% yêu cầu lý
             thuyết học phần)
           </p>

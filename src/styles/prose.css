@@ -37,13 +37,15 @@
   }
 }
 
-[data-reading-size='lg'] {
+[data-reading-size='lg'],
+.reader-scale-lg {
   --lu-reading-size: 19.5px;
   --lu-reading-line-height: 1.85;
 }
 
 @media (min-width: 1024px) {
-  [data-reading-size='lg'] {
+  [data-reading-size='lg'],
+  .reader-scale-lg {
     --lu-reading-size: 20px;
     --lu-reading-line-height: 1.85;
   }
@@ -315,4 +317,60 @@ body[data-focus-mode='true'] header.sticky:focus-within {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
+}
+
+/* ==========================================================================
+   BỘ ĐIỀU CHỈNH CỠ CHỮ TOÀN BỘ TRANG ĐỌC (GLOBAL FONT SIZE SCALER +15%)
+   Tương thích màn hình 24" Dell U2424H và Laptop 16" khi bật A+ (data-reading-size="lg")
+   ========================================================================== */
+
+[data-reading-size='lg'] .quiz-container,
+.reader-scale-lg .quiz-container {
+  font-size: 1.12em;
+}
+
+[data-reading-size='lg'] .quiz-question-title,
+.reader-scale-lg .quiz-question-title {
+  font-size: 1.25rem !important;
+  line-height: 1.45 !important;
+}
+
+[data-reading-size='lg'] .quiz-option-button,
+.reader-scale-lg .quiz-option-button {
+  font-size: 1.12em !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+[data-reading-size='lg'] .quiz-option-letter,
+.reader-scale-lg .quiz-option-letter {
+  font-size: 1.2em !important;
+}
+
+[data-reading-size='lg'] .quiz-explanation,
+.reader-scale-lg .quiz-explanation {
+  font-size: 1.12em !important;
+  line-height: 1.8 !important;
+}
+
+[data-reading-size='lg'] .essay-accordion,
+.reader-scale-lg .essay-accordion {
+  font-size: 1.1em;
+}
+
+[data-reading-size='lg'] .essay-title,
+.reader-scale-lg .essay-title {
+  font-size: 1.35rem !important;
+  line-height: 1.4 !important;
+}
+
+[data-reading-size='lg'] .essay-content-item,
+.reader-scale-lg .essay-content-item {
+  font-size: 1.22rem !important;
+  line-height: 1.85 !important;
+}
+
+[data-reading-size='lg'] .pedagogy-case-card,
+.reader-scale-lg .pedagogy-case-card {
+  font-size: 1.08em;
 }
