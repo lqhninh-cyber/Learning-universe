@@ -6,6 +6,7 @@ import { Counterexample, Example } from './components/ExampleBlock';
 import { Exercise, Hint, Solution } from './components/ExerciseBlock';
 import { Figure } from './components/Figure';
 import { KeyTakeaways } from './components/KeyTakeaways';
+import { Chapter7KnowledgeMap } from './components/Chapter7KnowledgeMap';
 import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
@@ -60,6 +61,7 @@ export const mdxComponents: MDXComponents = {
   Ref,
   Figure,
   KeyTakeaways,
+  Chapter7KnowledgeMap,
   MermaidChart,
   Mermaid: MermaidChart,
 
@@ -118,7 +120,15 @@ export const mdxComponents: MDXComponents = {
           typeof childProps.children === 'string'
             ? childProps.children
             : String(childProps.children ?? '');
-        return <MermaidChart chart={code.trim()} />;
+        const trimmed = code.trim();
+        if (
+          trimmed.includes('IdeanCacLoai') ||
+          trimmed.includes('Khái niệm và Phép toán Iđêan') ||
+          trimmed.includes('Iđêan trái: rI ⊆ I')
+        ) {
+          return <Chapter7KnowledgeMap />;
+        }
+        return <MermaidChart chart={trimmed} />;
       }
     }
     return (

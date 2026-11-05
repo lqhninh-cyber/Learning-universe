@@ -11,6 +11,10 @@ export {
 } from './components/ExerciseBlock';
 export { Figure, type FigureProps } from './components/Figure';
 export { KeyTakeaways, type KeyTakeawaysProps } from './components/KeyTakeaways';
+export {
+  Chapter7KnowledgeMap,
+  type Chapter7KnowledgeMapProps,
+} from './components/Chapter7KnowledgeMap';
 export { MermaidChart, type MermaidChartProps } from './components/MermaidChart';
 export { Proof, type ProofProps } from './components/Proof';
 export { Ref, type RefProps } from './components/Ref';

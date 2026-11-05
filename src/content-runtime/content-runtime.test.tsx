@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import type { BibliographyEntry } from '@schemas/index';
 import {
+  Chapter7KnowledgeMap,
   Cite,
   Definition,
   getLessonById,
@@ -136,31 +137,35 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.getByText('[Tác giả kiểm thử, 2000, tr. 10]')).toBeInTheDocument();
   });
 
-  it('kết xuất sơ đồ tư duy MermaidChart và hỗ trợ bật/tắt xem mã nguồn sơ đồ', async () => {
-    const user = userEvent.setup();
+  it('kết xuất khung Bản đồ tri thức chuẩn mực, không còn nút xem mã nguồn và không còn khối text thô', () => {
     const mermaidCode = `flowchart TD
       A["Vành"] --> B["Miền nguyên"]
       B --> C["Trường"]`;
 
-    render(<MermaidChart chart={mermaidCode} title="Sơ đồ kiểm thử" />);
+    render(<MermaidChart chart={mermaidCode} />);
 
-    // Kiểm tra đã kết xuất khung sơ đồ tư duy với tiêu đề
+    // Kiểm tra đã kết xuất khung Bản đồ tri thức với tiêu đề mặc định
     expect(screen.getByTestId('mermaid-chart')).toBeInTheDocument();
-    expect(screen.getByText('Sơ đồ kiểm thử')).toBeInTheDocument();
+    expect(screen.getByText('Bản đồ tri thức')).toBeInTheDocument();
 
-    // Bấm nút chuyển sang xem mã nguồn
-    const toggleBtn = screen.getByRole('button', { name: /Xem mã nguồn sơ đồ/i });
-    await user.click(toggleBtn);
-
-    expect(screen.getByText('Ẩn mã sơ đồ')).toBeInTheDocument();
-    expect(screen.getByText(/flowchart TD/)).toBeInTheDocument();
-
-    // Bấm lại để quay về chế độ xem sơ đồ
-    await user.click(screen.getByRole('button', { name: /Ẩn mã sơ đồ/i }));
-    expect(screen.getByText('Xem mã nguồn sơ đồ')).toBeInTheDocument();
+    // Không còn nút chuyển đổi xem mã nguồn
+    expect(screen.queryByRole('button', { name: /Xem mã nguồn/i })).toBeNull();
+    // Không còn hộp đen pre code hiển thị cú pháp thô
+    expect(screen.queryByText(/flowchart TD/)).toBeNull();
   });
 
-  it('nạp và kết xuất thành công bài tổng kết Chương 6 và Chương 7 chứa sơ đồ tư duy Mermaid', async () => {
+  it('kết xuất thành công Bản đồ tri thức native Chương 7 (Chapter7KnowledgeMap) với 4 khối cấu trúc', () => {
+    render(<Chapter7KnowledgeMap />);
+
+    expect(screen.getByTestId('chapter7-knowledge-map')).toBeInTheDocument();
+    expect(screen.getByText('1. Khái niệm & Phép toán Iđêan')).toBeInTheDocument();
+    expect(screen.getByText('2. Vành thương & Tính toán')).toBeInTheDocument();
+    expect(screen.getByText('3. Phân loại Iđêan (R giao hoán có 1)')).toBeInTheDocument();
+    expect(screen.getByText('4. Các Định lý Sâu sắc')).toBeInTheDocument();
+    expect(screen.getByText('Chương 7 · Cấu trúc đại số')).toBeInTheDocument();
+  });
+
+  it('nạp và kết xuất thành công bài tổng kết Chương 6 (Mermaid) và Chương 7 (Native Knowledge Map)', async () => {
     // 1. Kiểm tra Bài tổng kết Chương 6
     const moduleC6 = await loadLessonModule('bai-tap-va-tong-ket-chuong-6');
     expect(moduleC6).toBeDefined();
@@ -175,6 +180,6 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     const { container: containerC7 } = render(
       <LessonMdxView Content={moduleC7.default} lessonMeta={moduleC7.lessonMeta} />,
     );
-    expect(containerC7.querySelector('[data-testid="mermaid-chart"]')).not.toBeNull();
+    expect(containerC7.querySelector('[data-testid="chapter7-knowledge-map"]')).not.toBeNull();
   });
 });
