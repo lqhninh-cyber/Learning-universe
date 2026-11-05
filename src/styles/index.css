@@ -10,36 +10,25 @@
 
 /* ==========================================================================
    BẢO TOÀN FONT METRICS TỰ NHIÊN CHO CÔNG THỨC TOÁN (KaTeX Reset)
-   Cách ly hoàn toàn KaTeX khỏi line-height và letter-spacing của văn bản thường
+   Thiết lập an toàn cho KaTeX - Không can thiệp vào các thẻ định vị vlist con
    ========================================================================== */
 
 .katex {
-  line-height: 1.15 !important;
-  letter-spacing: normal !important;
-  white-space: nowrap;
   font-size: 1.15em;
-}
-
-.katex * {
-  line-height: 1.15 !important;
+  text-rendering: auto;
   letter-spacing: normal !important;
 }
 
-.katex .mfrac {
-  padding: 0.18em 0 !important;
-}
-
+/* Chỉ đệm thanh phân số vừa phải, không ép line-height lên toàn bộ cây DOM */
 .katex .mfrac .frac-line {
-  border-bottom-width: 0.06em !important;
-  margin: 0.12em 0 !important;
+  border-bottom-width: 0.05em !important;
 }
 
 .katex-display {
-  line-height: normal !important;
-  margin: 1.5rem 0 !important;
-  padding: 0.5rem 0;
+  margin: 1.25rem 0 !important;
   overflow-x: auto;
   overflow-y: hidden;
+  padding: 0.5rem 0;
 }
 
 :root {
