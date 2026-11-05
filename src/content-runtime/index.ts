@@ -16,6 +16,10 @@ export {
   type Chapter0KnowledgeMapProps,
 } from './components/Chapter0KnowledgeMap';
 export {
+  Chapter6KnowledgeMap,
+  type Chapter6KnowledgeMapProps,
+} from './components/Chapter6KnowledgeMap';
+export {
   Chapter7KnowledgeMap,
   type Chapter7KnowledgeMapProps,
 } from './components/Chapter7KnowledgeMap';

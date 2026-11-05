@@ -18,17 +18,12 @@ export function Chapter0KnowledgeMap({
         className,
       )}
     >
-      {/* Khung tiêu đề học thuật trang nhã */}
+      {/* Khung tiêu đề học thuật duy nhất: "Bản đồ tri thức" */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-stone-200/90 pb-4">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-800/10 text-sm text-indigo-900">
-              🧭
-            </span>
-            <h3 className="font-serif text-lg font-bold tracking-tight text-stone-900 sm:text-xl">
-              {title}
-            </h3>
-          </div>
+          <h3 className="font-serif text-lg font-bold tracking-tight text-stone-900 sm:text-xl">
+            {title}
+          </h3>
           <p className="mt-1 text-xs text-stone-600 sm:text-[13.5px]">
             Lưới mạng lưới khái niệm đa tầng: Từ Quan hệ tương đương, Cơ chế phân hoạch đến Phép
             toán cảm sinh và Cấu trúc thương

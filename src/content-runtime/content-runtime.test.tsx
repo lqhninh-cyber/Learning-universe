@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { BibliographyEntry } from '@schemas/index';
 import {
   Chapter0KnowledgeMap,
+  Chapter6KnowledgeMap,
   Chapter7KnowledgeMap,
   Cite,
   Definition,
@@ -166,6 +167,17 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.getByText(/Chương 0 · Ngôn ngữ & Công cụ Đại số/i)).toBeInTheDocument();
   });
 
+  it('kết xuất thành công Bản đồ tri thức native Chương 6 (Chapter6KnowledgeMap) với 4 tầng logic', () => {
+    render(<Chapter6KnowledgeMap />);
+
+    expect(screen.getByTestId('chapter6-knowledge-map')).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 1 · NỀN TẢNG HAI PHÉP TOÁN/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 2 · VÀNH TỔNG QUÁT \(RING\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 3 · THANG BẬC PHÂN HÓA CẤU TRÚC/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 4 · ĐỈNH CAO CẤU TRÚC — TRƯỜNG \(FIELD\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chương 6 · Vành & các Cấu trúc/i)).toBeInTheDocument();
+  });
+
   it('kết xuất thành công Bản đồ tri thức native Chương 7 (Chapter7KnowledgeMap) với 4 khối cấu trúc', () => {
     render(<Chapter7KnowledgeMap />);
 
@@ -186,13 +198,13 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     );
     expect(containerC0.querySelector('[data-testid="chapter0-knowledge-map"]')).not.toBeNull();
 
-    // 2. Kiểm tra Bài tổng kết Chương 6 (Mermaid)
+    // 2. Kiểm tra Bài tổng kết Chương 6 (Native Knowledge Map)
     const moduleC6 = await loadLessonModule('bai-tap-va-tong-ket-chuong-6');
     expect(moduleC6).toBeDefined();
     const { container: containerC6 } = render(
       <LessonMdxView Content={moduleC6.default} lessonMeta={moduleC6.lessonMeta} />,
     );
-    expect(containerC6.querySelector('[data-testid="mermaid-chart"]')).not.toBeNull();
+    expect(containerC6.querySelector('[data-testid="chapter6-knowledge-map"]')).not.toBeNull();
 
     // 3. Kiểm tra Bài tổng kết Chương 7 (Native Knowledge Map)
     const moduleC7 = await loadLessonModule('bai-tap-va-tong-ket-chuong-7');

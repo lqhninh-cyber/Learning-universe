@@ -7,6 +7,7 @@ import { Exercise, Hint, Solution } from './components/ExerciseBlock';
 import { Figure } from './components/Figure';
 import { KeyTakeaways } from './components/KeyTakeaways';
 import { Chapter0KnowledgeMap } from './components/Chapter0KnowledgeMap';
+import { Chapter6KnowledgeMap } from './components/Chapter6KnowledgeMap';
 import { Chapter7KnowledgeMap } from './components/Chapter7KnowledgeMap';
 import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
@@ -63,6 +64,7 @@ export const mdxComponents: MDXComponents = {
   Figure,
   KeyTakeaways,
   Chapter0KnowledgeMap,
+  Chapter6KnowledgeMap,
   Chapter7KnowledgeMap,
   MermaidChart,
   Mermaid: MermaidChart,
@@ -129,6 +131,13 @@ export const mdxComponents: MDXComponents = {
           trimmed.includes('Tiêu chuẩn xác định tốt')
         ) {
           return <Chapter0KnowledgeMap />;
+        }
+        if (
+          trimmed.includes('HỆ THỐNG HAI PHÉP TOÁN') ||
+          trimmed.includes('Nhóm cộng Abel (R, +)') ||
+          (trimmed.includes('VÀNH TỔNG QUÁT') && trimmed.includes('TRƯỜNG (Field)'))
+        ) {
+          return <Chapter6KnowledgeMap />;
         }
         if (
           trimmed.includes('IdeanCacLoai') ||

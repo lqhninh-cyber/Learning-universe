@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { Chapter0KnowledgeMap } from './Chapter0KnowledgeMap';
+import { Chapter6KnowledgeMap } from './Chapter6KnowledgeMap';
 import { Chapter7KnowledgeMap } from './Chapter7KnowledgeMap';
 
 export interface MermaidChartProps {
@@ -17,12 +18,17 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
     chart.includes('Công cụ số học trên Z') ||
     chart.includes('Tiêu chuẩn xác định tốt');
 
+  const isChapter6 =
+    chart.includes('HỆ THỐNG HAI PHÉP TOÁN') ||
+    chart.includes('Nhóm cộng Abel (R, +)') ||
+    (chart.includes('VÀNH TỔNG QUÁT') && chart.includes('TRƯỜNG (Field)'));
+
   const isChapter7 =
     chart.includes('IdeanCacLoai') ||
     chart.includes('Khái niệm và Phép toán Iđêan') ||
     chart.includes('Iđêan trái: rI ⊆ I');
 
-  const isNativeMap = isChapter0 || isChapter7;
+  const isNativeMap = isChapter0 || isChapter6 || isChapter7;
 
   const [svgHtml, setSvgHtml] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +96,10 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
     return <Chapter0KnowledgeMap className={className} title={title} />;
   }
 
+  if (isChapter6) {
+    return <Chapter6KnowledgeMap className={className} title={title} />;
+  }
+
   if (isChapter7) {
     return <Chapter7KnowledgeMap className={className} title={title} />;
   }
@@ -103,10 +113,7 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
       )}
     >
       {/* Khung tiêu đề học thuật duy nhất: "Bản đồ tri thức" */}
-      <div className="flex items-center gap-2 border-b border-stone-200/80 bg-white/70 px-5 py-3">
-        <span className="flex h-6 w-6 items-center justify-center rounded-md bg-amber-800/10 text-xs text-amber-900">
-          📊
-        </span>
+      <div className="border-b border-stone-200/80 bg-white/70 px-5 py-3">
         <span className="font-serif text-[15px] font-semibold text-stone-900">{title}</span>
       </div>
 
