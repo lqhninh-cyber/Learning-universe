@@ -12,6 +12,10 @@ export {
 export { Figure, type FigureProps } from './components/Figure';
 export { KeyTakeaways, type KeyTakeawaysProps } from './components/KeyTakeaways';
 export {
+  Chapter0KnowledgeMap,
+  type Chapter0KnowledgeMapProps,
+} from './components/Chapter0KnowledgeMap';
+export {
   Chapter7KnowledgeMap,
   type Chapter7KnowledgeMapProps,
 } from './components/Chapter7KnowledgeMap';

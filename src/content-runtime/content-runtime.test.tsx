@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import type { BibliographyEntry } from '@schemas/index';
 import {
+  Chapter0KnowledgeMap,
   Chapter7KnowledgeMap,
   Cite,
   Definition,
@@ -154,6 +155,17 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.queryByText(/flowchart TD/)).toBeNull();
   });
 
+  it('kết xuất thành công Bản đồ tri thức native Chương 0 (Chapter0KnowledgeMap) với 4 tầng khái niệm', () => {
+    render(<Chapter0KnowledgeMap />);
+
+    expect(screen.getByTestId('chapter0-knowledge-map')).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 1 · ĐỐI TƯỢNG & QUAN HỆ CƠ SỞ/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 2 · CƠ CHẾ PHÂN HOẠCH & TẬP THƯƠNG/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 3 · TRỌNG TÂM ĐẠI SỐ: TÍNH XÁC ĐỊNH TỐT/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 4 · HAI NHÁNH PHÂN CẤP KẾT QUẢ/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chương 0 · Ngôn ngữ & Công cụ Đại số/i)).toBeInTheDocument();
+  });
+
   it('kết xuất thành công Bản đồ tri thức native Chương 7 (Chapter7KnowledgeMap) với 4 khối cấu trúc', () => {
     render(<Chapter7KnowledgeMap />);
 
@@ -165,8 +177,16 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.getByText('Chương 7 · Cấu trúc đại số')).toBeInTheDocument();
   });
 
-  it('nạp và kết xuất thành công bài tổng kết Chương 6 (Mermaid) và Chương 7 (Native Knowledge Map)', async () => {
-    // 1. Kiểm tra Bài tổng kết Chương 6
+  it('nạp và kết xuất thành công bài tổng kết Chương 0, Chương 6 và Chương 7', async () => {
+    // 1. Kiểm tra Bài tổng kết Chương 0 (Native Knowledge Map)
+    const moduleC0 = await loadLessonModule('bai-tap-va-tong-ket-chuong-0');
+    expect(moduleC0).toBeDefined();
+    const { container: containerC0 } = render(
+      <LessonMdxView Content={moduleC0.default} lessonMeta={moduleC0.lessonMeta} />,
+    );
+    expect(containerC0.querySelector('[data-testid="chapter0-knowledge-map"]')).not.toBeNull();
+
+    // 2. Kiểm tra Bài tổng kết Chương 6 (Mermaid)
     const moduleC6 = await loadLessonModule('bai-tap-va-tong-ket-chuong-6');
     expect(moduleC6).toBeDefined();
     const { container: containerC6 } = render(
@@ -174,7 +194,7 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     );
     expect(containerC6.querySelector('[data-testid="mermaid-chart"]')).not.toBeNull();
 
-    // 2. Kiểm tra Bài tổng kết Chương 7
+    // 3. Kiểm tra Bài tổng kết Chương 7 (Native Knowledge Map)
     const moduleC7 = await loadLessonModule('bai-tap-va-tong-ket-chuong-7');
     expect(moduleC7).toBeDefined();
     const { container: containerC7 } = render(

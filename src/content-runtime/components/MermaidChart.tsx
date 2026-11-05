@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
+import { Chapter0KnowledgeMap } from './Chapter0KnowledgeMap';
 import { Chapter7KnowledgeMap } from './Chapter7KnowledgeMap';
 
 export interface MermaidChartProps {
@@ -11,22 +12,29 @@ export interface MermaidChartProps {
 const isTestOrSsr = typeof window === 'undefined' || import.meta.env.MODE === 'test';
 
 export function MermaidChart({ chart, className, title = 'Bản đồ tri thức' }: MermaidChartProps) {
+  const isChapter0 =
+    chart.includes('Tập hợp gốc X') ||
+    chart.includes('Công cụ số học trên Z') ||
+    chart.includes('Tiêu chuẩn xác định tốt');
+
   const isChapter7 =
     chart.includes('IdeanCacLoai') ||
     chart.includes('Khái niệm và Phép toán Iđêan') ||
     chart.includes('Iđêan trái: rI ⊆ I');
 
+  const isNativeMap = isChapter0 || isChapter7;
+
   const [svgHtml, setSvgHtml] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(!isTestOrSsr && !isChapter7);
+  const [isLoading, setIsLoading] = useState<boolean>(!isTestOrSsr && !isNativeMap);
   const rawId = useId();
   const safeId = `mermaid-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   useEffect(() => {
     let isMounted = true;
 
-    // Trong môi trường kiểm thử jsdom (Vitest), SSR hoặc sơ đồ Chương 7, bỏ qua render SVG DOM
-    if (isTestOrSsr || isChapter7) {
+    // Trong môi trường kiểm thử jsdom (Vitest), SSR hoặc sơ đồ Native Map, bỏ qua render SVG DOM
+    if (isTestOrSsr || isNativeMap) {
       return;
     }
 
@@ -76,7 +84,11 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
         el.remove();
       }
     };
-  }, [chart, isChapter7, safeId]);
+  }, [chart, isNativeMap, safeId]);
+
+  if (isChapter0) {
+    return <Chapter0KnowledgeMap className={className} title={title} />;
+  }
 
   if (isChapter7) {
     return <Chapter7KnowledgeMap className={className} title={title} />;
