@@ -300,19 +300,35 @@ export function SubjectExamsPage() {
             <div className="mt-8 rounded-2xl border border-stone-200/80 bg-white p-5 text-center shadow-2xs sm:p-6">
               <h3 className="text-sm font-bold text-stone-800">Cần ôn lại nền tảng lý thuyết?</h3>
               <p className="mt-1 text-xs text-stone-600">
-                Xem lại 7 chương bài học hoặc đề cương trọng tâm và 5 câu tự luận đề mẫu học phần.
+                {subjectSlug === 'cau-truc-dai-so'
+                  ? 'Xem lại 10 chương bài học hoặc đề cương trọng tâm CLO và bộ câu hỏi tự luận kinh điển của học phần.'
+                  : 'Xem lại 7 chương bài học hoặc đề cương trọng tâm và 5 câu tự luận đề mẫu học phần.'}
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-3">
                 <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
                   <Link to={ROUTES.subjectOverview(subject.slug)}>
                     <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Tổng quan môn học &amp; 7 Chương</span>
+                    <span>
+                      {subjectSlug === 'cau-truc-dai-so'
+                        ? 'Tổng quan môn học & 10 Chương'
+                        : 'Tổng quan môn học & 7 Chương'}
+                    </span>
                   </Link>
                 </Button>
                 <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
-                  <Link to="/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi">
+                  <Link
+                    to={
+                      subjectSlug === 'cau-truc-dai-so'
+                        ? '/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/bai-tap-chuong-9-va-tong-ket-hoc-phan'
+                        : '/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi'
+                    }
+                  >
                     <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Đề cương trọng tâm &amp; Đề mẫu</span>
+                    <span>
+                      {subjectSlug === 'cau-truc-dai-so'
+                        ? 'Tổng kết học phần & Đề cương CLO'
+                        : 'Đề cương trọng tâm & Đề mẫu'}
+                    </span>
                   </Link>
                 </Button>
               </div>

@@ -195,6 +195,13 @@ export function SubjectOverviewPage() {
         badge: '6 bộ đề',
         icon: GraduationCap,
       });
+    } else if (subject.slug === 'cau-truc-dai-so') {
+      tabs.push({
+        id: 'specialized',
+        label: 'Đề thi & Đề cương ôn tập',
+        badge: 'Đề thi 90p',
+        icon: GraduationCap,
+      });
     } else if (subject.slug === 'hinh-hoc-affine') {
       tabs.push({
         id: 'specialized',
@@ -960,7 +967,87 @@ export function SubjectOverviewPage() {
             </Card>
           )}
 
-          {/* 3.3 Dành cho môn Hình học Affine: Phòng Lab tương tác */}
+          {/* 3.3 Dành cho môn Cấu trúc đại số: Ngân hàng Đề thi & Đề cương ôn tập */}
+          {subject.slug === 'cau-truc-dai-so' && (
+            <Card className="border-subject-200/90 from-subject-50/50 bg-gradient-to-br via-white to-amber-50/30 p-6 shadow-xs sm:p-8">
+              <div className="space-y-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="subject">
+                        <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+                        <span>Kho Đề thi Tự luận &amp; Đề cương Chuẩn Sư phạm</span>
+                      </Badge>
+                      <Badge variant="neutral">
+                        2 Bộ đề 90p · 10 Câu hỏi tự luận lớn · Barem 0.25đ · KaTeX 100%
+                      </Badge>
+                    </div>
+                    <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                      Ngân hàng Đề thi Kết thúc Học phần &amp; Đề cương Trọng tâm CLO
+                    </h2>
+                    <p className="max-w-3xl text-sm leading-relaxed text-stone-600">
+                      Kho đề thi chính thức chuẩn chương trình đào tạo Sư phạm Toán học (HCMUE),
+                      tích hợp gợi ý định lý cốt lõi, lời giải chi tiết từng bước, barem chấm điểm
+                      0.25đ và phân tích bẫy thi thường gặp cho từng bài toán.
+                    </p>
+                  </div>
+                  <Button asChild variant="subject" size="lg" className="shrink-0 shadow-xs">
+                    <Link to={ROUTES.subjectExams(subject.slug)}>
+                      <span>Vào phòng Luyện đề &amp; Xem đáp án</span>
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </Button>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs">
+                    <div className="flex items-center justify-between text-xs font-bold text-amber-800">
+                      <span>NĂM HỌC 2025 - 2026</span>
+                      <Badge variant="subject">HK1 · 90 phút</Badge>
+                    </div>
+                    <h3 className="mt-2 text-sm font-bold text-stone-900">
+                      Đề thi Chính thức Học kỳ 1 (2025 – 2026)
+                    </h3>
+                    <p className="mt-1 text-xs text-stone-500">
+                      5 câu tự luận: Quan hệ tương đương &amp; phép toán cảm sinh, Cấp phần tử &amp;
+                      cyclic, Lớp kề S₃ &amp; Lagrange, Đồng cấu &amp; Đẳng cấu 1, Vành thương
+                      ℚ[x]/⟨f⟩
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs">
+                    <div className="flex items-center justify-between text-xs font-bold text-amber-800">
+                      <span>NĂM HỌC 2024 - 2025</span>
+                      <Badge variant="neutral">HK1 · 90 phút</Badge>
+                    </div>
+                    <h3 className="mt-2 text-sm font-bold text-stone-900">
+                      Đề thi Chính thức Học kỳ 1 (2024 – 2025)
+                    </h3>
+                    <p className="mt-1 text-xs text-stone-500">
+                      5 câu tự luận: Bảng Cayley &amp; Nhóm cấp 4, Phân loại nhóm cấp 2p, Tự đẳng
+                      cấu Aut(ℤₙ), I-đê-an nguyên tố &amp; cực đại, Trường các thương
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs">
+                    <div className="flex items-center justify-between text-xs font-bold text-amber-800">
+                      <span>ĐỀ CƯƠNG TRỌNG TÂM</span>
+                      <Badge variant="neutral">5 Module · CLO</Badge>
+                    </div>
+                    <h3 className="mt-2 text-sm font-bold text-stone-900">
+                      Cẩm nang Ôn thi &amp; Phân tích Bẫy thi
+                    </h3>
+                    <p className="mt-1 text-xs text-stone-500">
+                      Khung kiến thức chuẩn đầu ra CLO 1–5, 10 công thức vương miện và phương pháp
+                      chứng minh tự luận chuẩn mực
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* 3.4 Dành cho môn Hình học Affine: Phòng Lab tương tác */}
           {subject.slug === 'hinh-hoc-affine' && (
             <Card className="border-subject-200/90 from-subject-50/50 bg-gradient-to-br via-white to-stone-50/70 p-6 shadow-xs sm:p-8">
               <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">

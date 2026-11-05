@@ -3,7 +3,11 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import type { BibliographyEntry } from '@schemas/index';
 import {
+  CayleyTable,
   Chapter0KnowledgeMap,
+  Chapter1KnowledgeMap,
+  Chapter3KnowledgeMap,
+  Chapter5KnowledgeMap,
   Chapter6KnowledgeMap,
   Chapter7KnowledgeMap,
   Cite,
@@ -167,6 +171,45 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.getByText(/Chương 0 · Ngôn ngữ & Công cụ Đại số/i)).toBeInTheDocument();
   });
 
+  it('kết xuất thành công Bản đồ tri thức native Chương 1 (Chapter1KnowledgeMap) với 4 tầng tiên đề và các họ nhóm', () => {
+    render(<Chapter1KnowledgeMap />);
+
+    expect(screen.getByTestId('chapter1-knowledge-map')).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 1 · THANG BẬC TIÊN ĐỀ MỘT PHÉP TOÁN/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 2 · BỐN HỌ NHÓM MẪU MỰC KINH ĐIỂN/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 3 · CÁC KẾT QUẢ ĐẠI SỐ CĂN BẢN/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 4 · PHÂN LOẠI CẤU TRÚC NHÓM CẤP NHỎ/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chương 1 · Nhóm & các Ví dụ Cơ bản/i)).toBeInTheDocument();
+  });
+
+  it('kết xuất thành công Bản đồ tri thức native Chương 3 (Chapter3KnowledgeMap) với 4 tầng lớp kề và Lagrange', () => {
+    render(<Chapter3KnowledgeMap />);
+
+    expect(screen.getByTestId('chapter3-knowledge-map')).toBeInTheDocument();
+    expect(
+      screen.getByText(/TẦNG 1 · QUAN HỆ TƯƠNG ĐƯƠNG & KHÁI NIỆM LỚP KỀ/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/TẦNG 2 · PHÂN HOẠCH RỜI NHAU & ĐẲNG THẾ TUYỆT ĐỐI/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 3 · ĐỊNH LÝ LAGRANGE — TRỤ CỘT ĐỊNH LƯỢNG/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 4 · HAI ĐỈNH CAO ỨNG DỤNG SỐ HỌC/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chương 3 · Lớp kề & Định lý Lagrange/i)).toBeInTheDocument();
+  });
+
+  it('kết xuất thành công Bản đồ tri thức native Chương 5 (Chapter5KnowledgeMap) với 4 tầng đồng cấu và đẳng cấu', () => {
+    render(<Chapter5KnowledgeMap />);
+
+    expect(screen.getByTestId('chapter5-knowledge-map')).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 1 · ĐỒNG CẤU NHÓM & HAI TRỤ CỘT KER/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 2 · NGUYÊN LÝ PHÂN TÍCH QUA NHÓM THƯƠNG/i)).toBeInTheDocument();
+    expect(screen.getByText(/TẦNG 3 · BỘ BA ĐỊNH LÝ ĐẲNG CẤU KINH ĐIỂN/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/TẦNG 4 · ĐỊNH LÝ TƯƠNG ỨNG & ĐỊNH LÝ NHÚNG CAYLEY/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Chương 5 · Đồng cấu Nhóm & Đẳng cấu/i)).toBeInTheDocument();
+  });
+
   it('kết xuất thành công Bản đồ tri thức native Chương 6 (Chapter6KnowledgeMap) với 4 tầng logic', () => {
     render(<Chapter6KnowledgeMap />);
 
@@ -189,7 +232,20 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.getByText('Chương 7 · Cấu trúc đại số')).toBeInTheDocument();
   });
 
-  it('nạp và kết xuất thành công bài tổng kết Chương 0, Chương 6 và Chương 7', async () => {
+  it('kết xuất thành công bảng Cayley chuẩn hóa với container bo tròn và nổi bật phần tử đơn vị', () => {
+    const { container } = render(
+      <CayleyTable preset="v4" caption="Bảng Cayley Nhóm bốn Klein V₄" />,
+    );
+
+    expect(container.querySelector('[data-testid="cayley-table"]')).not.toBeNull();
+    expect(screen.getByText('Bảng Cayley Nhóm bốn Klein V₄')).toBeInTheDocument();
+    // Kiểm tra class bo góc và viền chuẩn container
+    expect(
+      container.querySelector('.overflow-x-auto.rounded-xl.border.border-stone-200\\/90'),
+    ).not.toBeNull();
+  });
+
+  it('nạp và kết xuất thành công bài tổng kết các Chương 0, 1, 3, 5, 6, 7', async () => {
     // 1. Kiểm tra Bài tổng kết Chương 0 (Native Knowledge Map)
     const moduleC0 = await loadLessonModule('bai-tap-va-tong-ket-chuong-0');
     expect(moduleC0).toBeDefined();
@@ -198,7 +254,31 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     );
     expect(containerC0.querySelector('[data-testid="chapter0-knowledge-map"]')).not.toBeNull();
 
-    // 2. Kiểm tra Bài tổng kết Chương 6 (Native Knowledge Map)
+    // 2. Kiểm tra Bài tổng kết Chương 1 (Native Knowledge Map)
+    const moduleC1 = await loadLessonModule('bai-tap-va-tong-ket-chuong-1');
+    expect(moduleC1).toBeDefined();
+    const { container: containerC1 } = render(
+      <LessonMdxView Content={moduleC1.default} lessonMeta={moduleC1.lessonMeta} />,
+    );
+    expect(containerC1.querySelector('[data-testid="chapter1-knowledge-map"]')).not.toBeNull();
+
+    // 3. Kiểm tra Bài tổng kết Chương 3 (Native Knowledge Map)
+    const moduleC3 = await loadLessonModule('bai-tap-va-tong-ket-chuong-3');
+    expect(moduleC3).toBeDefined();
+    const { container: containerC3 } = render(
+      <LessonMdxView Content={moduleC3.default} lessonMeta={moduleC3.lessonMeta} />,
+    );
+    expect(containerC3.querySelector('[data-testid="chapter3-knowledge-map"]')).not.toBeNull();
+
+    // 4. Kiểm tra Bài tổng kết Chương 5 (Native Knowledge Map)
+    const moduleC5 = await loadLessonModule('bai-tap-chuong-5-va-tong-ket-phan-nhom');
+    expect(moduleC5).toBeDefined();
+    const { container: containerC5 } = render(
+      <LessonMdxView Content={moduleC5.default} lessonMeta={moduleC5.lessonMeta} />,
+    );
+    expect(containerC5.querySelector('[data-testid="chapter5-knowledge-map"]')).not.toBeNull();
+
+    // 5. Kiểm tra Bài tổng kết Chương 6 (Native Knowledge Map)
     const moduleC6 = await loadLessonModule('bai-tap-va-tong-ket-chuong-6');
     expect(moduleC6).toBeDefined();
     const { container: containerC6 } = render(
@@ -206,7 +286,7 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     );
     expect(containerC6.querySelector('[data-testid="chapter6-knowledge-map"]')).not.toBeNull();
 
-    // 3. Kiểm tra Bài tổng kết Chương 7 (Native Knowledge Map)
+    // 6. Kiểm tra Bài tổng kết Chương 7 (Native Knowledge Map)
     const moduleC7 = await loadLessonModule('bai-tap-va-tong-ket-chuong-7');
     expect(moduleC7).toBeDefined();
     const { container: containerC7 } = render(

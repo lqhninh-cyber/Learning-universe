@@ -186,17 +186,21 @@ $$\\lim_{n \\to \\infty} \\frac{n^2 + 1}{2n^2 + 3} = \\frac{1}{2}$$`}
 
       // Kiểm tra 5 tiêu đề câu hỏi lớn
       expect(
-        screen.getByText(/Quan hệ tương đương, Lớp tương đương và Cấu trúc Nhóm/i),
+        screen.getByText(
+          /Quan hệ tương đương, Lớp tương đương và Phép toán cảm sinh trên Tập thương/i,
+        ),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Nhóm con, Cấp của phần tử, Nhóm Cyclic và Phân loại Nhóm cấp 2p/i),
-      ).toBeInTheDocument();
-      expect(screen.getByText(/Lớp kề, Định lý Lagrange và Ứng dụng Số học/i)).toBeInTheDocument();
-      expect(
-        screen.getByText(/Nhóm con Chuẩn tắc, Nhóm thương và Định lý Đẳng cấu thứ nhất/i),
+        screen.getByText(/Cấp của Phần tử, Phần tử sinh và Cấu trúc Nhóm con của Nhóm Cyclic/i),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Vành, Trường, I-đê-an và Tiêu chuẩn Bất khả quy Eisenstein/i),
+        screen.getByText(/Lớp kề trong Nhóm Hoán vị S_3, Định lý Lagrange và Ứng dụng/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Đồng cấu Nhóm, Tiêu chuẩn Đơn cấu và Định lý Đẳng cấu thứ nhất/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Tiêu chuẩn Eisenstein, Vành thương và Tìm Phần tử Nghịch đảo/i),
       ).toBeInTheDocument();
     });
   });

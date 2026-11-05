@@ -1,6 +1,9 @@
 import { useEffect, useId, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { Chapter0KnowledgeMap } from './Chapter0KnowledgeMap';
+import { Chapter1KnowledgeMap } from './Chapter1KnowledgeMap';
+import { Chapter3KnowledgeMap } from './Chapter3KnowledgeMap';
+import { Chapter5KnowledgeMap } from './Chapter5KnowledgeMap';
 import { Chapter6KnowledgeMap } from './Chapter6KnowledgeMap';
 import { Chapter7KnowledgeMap } from './Chapter7KnowledgeMap';
 
@@ -18,6 +21,20 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
     chart.includes('Công cụ số học trên Z') ||
     chart.includes('Tiêu chuẩn xác định tốt');
 
+  const isChapter1 =
+    chart.includes('Nửa nhóm (Semigroup)') &&
+    chart.includes('Vị nhóm (Monoid)') &&
+    chart.includes('Nhóm (Group)');
+
+  const isChapter3 =
+    chart.includes('Lớp kề trái gH') &&
+    (chart.includes('Định lý Lagrange') || chart.includes('Phân hoạch: G = ⨆ gᵢH'));
+
+  const isChapter5 =
+    chart.includes('Định lý Đẳng cấu I') ||
+    chart.includes('Định lý Đẳng cấu II') ||
+    (chart.includes('Đồng cấu nhóm') && chart.includes('Định lý Đẳng cấu'));
+
   const isChapter6 =
     chart.includes('HỆ THỐNG HAI PHÉP TOÁN') ||
     chart.includes('Nhóm cộng Abel (R, +)') ||
@@ -28,7 +45,8 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
     chart.includes('Khái niệm và Phép toán Iđêan') ||
     chart.includes('Iđêan trái: rI ⊆ I');
 
-  const isNativeMap = isChapter0 || isChapter6 || isChapter7;
+  const isNativeMap =
+    isChapter0 || isChapter1 || isChapter3 || isChapter5 || isChapter6 || isChapter7;
 
   const [svgHtml, setSvgHtml] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -94,6 +112,18 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
 
   if (isChapter0) {
     return <Chapter0KnowledgeMap className={className} title={title} />;
+  }
+
+  if (isChapter1) {
+    return <Chapter1KnowledgeMap className={className} title={title} />;
+  }
+
+  if (isChapter3) {
+    return <Chapter3KnowledgeMap className={className} title={title} />;
+  }
+
+  if (isChapter5) {
+    return <Chapter5KnowledgeMap className={className} title={title} />;
   }
 
   if (isChapter6) {

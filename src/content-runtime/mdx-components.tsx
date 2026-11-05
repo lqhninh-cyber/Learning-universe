@@ -7,8 +7,12 @@ import { Exercise, Hint, Solution } from './components/ExerciseBlock';
 import { Figure } from './components/Figure';
 import { KeyTakeaways } from './components/KeyTakeaways';
 import { Chapter0KnowledgeMap } from './components/Chapter0KnowledgeMap';
+import { Chapter1KnowledgeMap } from './components/Chapter1KnowledgeMap';
+import { Chapter3KnowledgeMap } from './components/Chapter3KnowledgeMap';
+import { Chapter5KnowledgeMap } from './components/Chapter5KnowledgeMap';
 import { Chapter6KnowledgeMap } from './components/Chapter6KnowledgeMap';
 import { Chapter7KnowledgeMap } from './components/Chapter7KnowledgeMap';
+import { CayleyTable } from './components/CayleyTable';
 import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
@@ -64,8 +68,12 @@ export const mdxComponents: MDXComponents = {
   Figure,
   KeyTakeaways,
   Chapter0KnowledgeMap,
+  Chapter1KnowledgeMap,
+  Chapter3KnowledgeMap,
+  Chapter5KnowledgeMap,
   Chapter6KnowledgeMap,
   Chapter7KnowledgeMap,
+  CayleyTable,
   MermaidChart,
   Mermaid: MermaidChart,
 
@@ -85,21 +93,21 @@ export const mdxComponents: MDXComponents = {
   RiemannDarbouxSumDemo: LazyRiemannDarbouxSumDemo,
   WeierstrassMTestDemo: LazyWeierstrassMTestDemo,
 
-  // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học
+  // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học (chuẩn hóa bảng Cayley và bảng học thuật)
   table: (props: ComponentPropsWithoutRef<'table'>) => (
-    <div className="my-6 overflow-x-auto rounded-xl border border-stone-200/90 bg-white shadow-2xs">
-      <table className="w-full border-collapse text-left text-[15px] text-stone-800" {...props} />
+    <div className="my-6 overflow-x-auto rounded-xl border border-stone-200/90 bg-white/70 p-4 shadow-sm">
+      <table className="w-full border-collapse text-center text-[15px] text-stone-800" {...props} />
     </div>
   ),
   th: (props: ComponentPropsWithoutRef<'th'>) => (
     <th
-      className="border-b border-stone-200 bg-[#faf8f2] px-4 py-3 font-semibold text-stone-900"
+      className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900"
       {...props}
     />
   ),
   td: (props: ComponentPropsWithoutRef<'td'>) => (
     <td
-      className="border-t border-stone-200 px-4 py-3 text-[15px] leading-relaxed text-stone-800"
+      className="border border-stone-200/80 px-4 py-2.5 text-center text-[15px] leading-relaxed text-stone-800"
       {...props}
     />
   ),
@@ -131,6 +139,26 @@ export const mdxComponents: MDXComponents = {
           trimmed.includes('Tiêu chuẩn xác định tốt')
         ) {
           return <Chapter0KnowledgeMap />;
+        }
+        if (
+          trimmed.includes('Nửa nhóm (Semigroup)') &&
+          trimmed.includes('Vị nhóm (Monoid)') &&
+          trimmed.includes('Nhóm (Group)')
+        ) {
+          return <Chapter1KnowledgeMap />;
+        }
+        if (
+          trimmed.includes('Lớp kề trái gH') &&
+          (trimmed.includes('Định lý Lagrange') || trimmed.includes('Phân hoạch: G = ⨆ gᵢH'))
+        ) {
+          return <Chapter3KnowledgeMap />;
+        }
+        if (
+          trimmed.includes('Định lý Đẳng cấu I') ||
+          trimmed.includes('Định lý Đẳng cấu II') ||
+          (trimmed.includes('Đồng cấu nhóm') && trimmed.includes('Định lý Đẳng cấu'))
+        ) {
+          return <Chapter5KnowledgeMap />;
         }
         if (
           trimmed.includes('HỆ THỐNG HAI PHÉP TOÁN') ||

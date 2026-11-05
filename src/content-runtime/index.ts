@@ -16,6 +16,18 @@ export {
   type Chapter0KnowledgeMapProps,
 } from './components/Chapter0KnowledgeMap';
 export {
+  Chapter1KnowledgeMap,
+  type Chapter1KnowledgeMapProps,
+} from './components/Chapter1KnowledgeMap';
+export {
+  Chapter3KnowledgeMap,
+  type Chapter3KnowledgeMapProps,
+} from './components/Chapter3KnowledgeMap';
+export {
+  Chapter5KnowledgeMap,
+  type Chapter5KnowledgeMapProps,
+} from './components/Chapter5KnowledgeMap';
+export {
   Chapter6KnowledgeMap,
   type Chapter6KnowledgeMapProps,
 } from './components/Chapter6KnowledgeMap';
@@ -23,6 +35,7 @@ export {
   Chapter7KnowledgeMap,
   type Chapter7KnowledgeMapProps,
 } from './components/Chapter7KnowledgeMap';
+export { CayleyTable, type CayleyTableProps } from './components/CayleyTable';
 export { MermaidChart, type MermaidChartProps } from './components/MermaidChart';
 export { Proof, type ProofProps } from './components/Proof';
 export { Ref, type RefProps } from './components/Ref';
