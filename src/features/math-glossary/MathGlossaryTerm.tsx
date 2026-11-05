@@ -52,15 +52,12 @@ export function MathGlossaryTerm({
       if (found) return found;
     }
     if (initialEntry) {
-      // Tự động phân giải các mục xung đột nếu ngữ cảnh môn học khác biệt
+      // Tự động phân giải các mục xung đột nếu là ID chung chưa phân định môn
       if (
         effectiveCourseId &&
-        initialEntry.subject !== effectiveCourseId &&
-        initialEntry.courseId !== effectiveCourseId &&
-        (initialEntry.id.includes('lagrange') ||
-          initialEntry.id.includes('fermat') ||
-          initialEntry.id.includes('cauchy') ||
-          initialEntry.id === 'dinh-ly-lagrange')
+        (initialEntry.id === 'dinh-ly-lagrange' ||
+          initialEntry.id === 'dinh-ly-fermat' ||
+          initialEntry.id === 'dinh-ly-cauchy')
       ) {
         const refined = findGlossaryEntry(
           initialEntry.term || initialEntry.nameVi || initialEntry.name || initialEntry.id,

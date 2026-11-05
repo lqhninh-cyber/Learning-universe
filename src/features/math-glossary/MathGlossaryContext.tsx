@@ -51,11 +51,9 @@ export function MathGlossaryProvider({
     (entry: MathGlossaryEntry): MathGlossaryEntry => {
       if (!effectiveCourseId) return entry;
       if (
-        (entry.id.includes('lagrange') ||
-          entry.id.includes('fermat') ||
-          entry.id.includes('cauchy')) &&
-        entry.subject !== effectiveCourseId &&
-        entry.courseId !== effectiveCourseId
+        entry.id === 'dinh-ly-lagrange' ||
+        entry.id === 'dinh-ly-fermat' ||
+        entry.id === 'dinh-ly-cauchy'
       ) {
         const refined = findGlossaryEntry(
           entry.term || entry.nameVi || entry.name || entry.id,

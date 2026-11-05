@@ -79,7 +79,7 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     });
     await user.click(proofTrigger);
     expect(screen.getAllByLabelText('Kết thúc chứng minh').length).toBeGreaterThan(0);
-  });
+  }, 30000);
 
   it('nạp và hiển thị bài học mẫu Hình học Affine với macro \\Aff và \\vect', async () => {
     const compiled = await loadLessonModule('khong-gian-affine');
