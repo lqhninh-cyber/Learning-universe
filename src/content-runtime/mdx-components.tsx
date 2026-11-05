@@ -1,11 +1,12 @@
 import type { MDXComponents } from 'mdx/types';
-import type { ComponentPropsWithoutRef } from 'react';
+import { type ComponentPropsWithoutRef, isValidElement } from 'react';
 import { Note, Remark, Warning } from './components/CalloutBlock';
 import { Cite } from './components/Cite';
 import { Counterexample, Example } from './components/ExampleBlock';
 import { Exercise, Hint, Solution } from './components/ExerciseBlock';
 import { Figure } from './components/Figure';
 import { KeyTakeaways } from './components/KeyTakeaways';
+import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
 import { Corollary, Definition, Lemma, Proposition, Theorem } from './components/TheoryBlock';
@@ -59,6 +60,8 @@ export const mdxComponents: MDXComponents = {
   Ref,
   Figure,
   KeyTakeaways,
+  MermaidChart,
+  Mermaid: MermaidChart,
 
   // 7. Figure Kit 2D tương tác cho Hình học Affine (nạp lười qua React.lazy)
   AffinePlane: LazyAffinePlane,
@@ -103,4 +106,26 @@ export const mdxComponents: MDXComponents = {
   hr: (props: ComponentPropsWithoutRef<'hr'>) => (
     <hr className="my-8 border-stone-200" {...props} />
   ),
+  pre: (props: ComponentPropsWithoutRef<'pre'>) => {
+    const child = props.children;
+    if (isValidElement<{ className?: string; children?: unknown }>(child)) {
+      const childProps = child.props;
+      if (
+        typeof childProps.className === 'string' &&
+        childProps.className.includes('language-mermaid')
+      ) {
+        const code =
+          typeof childProps.children === 'string'
+            ? childProps.children
+            : String(childProps.children ?? '');
+        return <MermaidChart chart={code.trim()} />;
+      }
+    }
+    return (
+      <pre
+        className="my-6 overflow-x-auto rounded-xl border border-stone-800 bg-[#1c1917] p-4 text-[14px] text-stone-100"
+        {...props}
+      />
+    );
+  },
 };

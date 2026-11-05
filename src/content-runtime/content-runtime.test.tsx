@@ -12,6 +12,7 @@ import {
   LessonMdxView,
   LessonProvider,
   loadLessonModule,
+  MermaidChart,
 } from '@/content-runtime';
 import { TooltipProvider } from '@/shared/ui';
 
@@ -133,5 +134,47 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
       screen.getByText('Định nghĩa 1.1 · Tác giả kiểm thử (2000) · tr. 10'),
     ).toBeInTheDocument();
     expect(screen.getByText('[Tác giả kiểm thử, 2000, tr. 10]')).toBeInTheDocument();
+  });
+
+  it('kết xuất sơ đồ tư duy MermaidChart và hỗ trợ bật/tắt xem mã nguồn sơ đồ', async () => {
+    const user = userEvent.setup();
+    const mermaidCode = `flowchart TD
+      A["Vành"] --> B["Miền nguyên"]
+      B --> C["Trường"]`;
+
+    render(<MermaidChart chart={mermaidCode} title="Sơ đồ kiểm thử" />);
+
+    // Kiểm tra đã kết xuất khung sơ đồ tư duy với tiêu đề
+    expect(screen.getByTestId('mermaid-chart')).toBeInTheDocument();
+    expect(screen.getByText('Sơ đồ kiểm thử')).toBeInTheDocument();
+
+    // Bấm nút chuyển sang xem mã nguồn
+    const toggleBtn = screen.getByRole('button', { name: /Xem mã nguồn sơ đồ/i });
+    await user.click(toggleBtn);
+
+    expect(screen.getByText('Ẩn mã sơ đồ')).toBeInTheDocument();
+    expect(screen.getByText(/flowchart TD/)).toBeInTheDocument();
+
+    // Bấm lại để quay về chế độ xem sơ đồ
+    await user.click(screen.getByRole('button', { name: /Ẩn mã sơ đồ/i }));
+    expect(screen.getByText('Xem mã nguồn sơ đồ')).toBeInTheDocument();
+  });
+
+  it('nạp và kết xuất thành công bài tổng kết Chương 6 và Chương 7 chứa sơ đồ tư duy Mermaid', async () => {
+    // 1. Kiểm tra Bài tổng kết Chương 6
+    const moduleC6 = await loadLessonModule('bai-tap-va-tong-ket-chuong-6');
+    expect(moduleC6).toBeDefined();
+    const { container: containerC6 } = render(
+      <LessonMdxView Content={moduleC6.default} lessonMeta={moduleC6.lessonMeta} />,
+    );
+    expect(containerC6.querySelector('[data-testid="mermaid-chart"]')).not.toBeNull();
+
+    // 2. Kiểm tra Bài tổng kết Chương 7
+    const moduleC7 = await loadLessonModule('bai-tap-va-tong-ket-chuong-7');
+    expect(moduleC7).toBeDefined();
+    const { container: containerC7 } = render(
+      <LessonMdxView Content={moduleC7.default} lessonMeta={moduleC7.lessonMeta} />,
+    );
+    expect(containerC7.querySelector('[data-testid="mermaid-chart"]')).not.toBeNull();
   });
 });

@@ -86,6 +86,10 @@ export default defineConfig({
               name: 'vendor-mafs',
               test: /node_modules[\\/](mafs|@use-gesture|use-resize-observer)[\\/]/,
             },
+            {
+              name: 'vendor-mermaid',
+              test: /node_modules[\\/]mermaid[\\/]/,
+            },
           ],
         },
       },
