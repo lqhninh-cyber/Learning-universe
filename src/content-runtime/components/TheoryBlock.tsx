@@ -120,7 +120,7 @@ function BaseTheoryBlock({
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[16.5px] leading-relaxed text-[var(--text-primary)]">
+      <div className="space-y-3 text-[17px] leading-[1.8] text-[var(--text-primary)] lg:text-[17.5px]">
         {children}
       </div>
     </section>

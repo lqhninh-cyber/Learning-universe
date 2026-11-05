@@ -112,6 +112,20 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
               </Button>
             )}
 
+            {(subject.slug === 'cau-truc-dai-so' || subject.slug === 'giai-tich-ham-mot-bien') && (
+              <Button
+                asChild
+                variant="outline"
+                size="md"
+                className="border-subject-300 text-subject-700 hover:bg-subject-50 gap-1.5"
+              >
+                <Link to={ROUTES.subjectExams(subject.slug)}>
+                  <BookOpen className="text-subject-600 h-4 w-4" aria-hidden="true" />
+                  <span>Ngân hàng Đề thi &amp; Lời giải</span>
+                </Link>
+              </Button>
+            )}
+
             {subject.slug === 'hinh-hoc-affine' && (
               <Button
                 asChild

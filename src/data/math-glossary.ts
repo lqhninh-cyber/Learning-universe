@@ -62,6 +62,18 @@ export function getGlossaryEntryById(
   id: string,
   currentCourseId?: string,
 ): MathGlossaryEntry | undefined {
+  if (id === 'nhom-con-chuan-tac') {
+    return GLOSSARY_MAP.get('ctds-nhom-con-chuan-tac') || GLOSSARY_MAP.get('nhom-con-chuan-tac');
+  }
+  if (id === 'dinh-ly-dang-cau-1' || id === 'dang-cau-1') {
+    return GLOSSARY_MAP.get('ctds-dinh-ly-dang-cau-1');
+  }
+  if (id === 'tieu-chuan-eisenstein') {
+    return GLOSSARY_MAP.get('ctds-tieu-chuan-eisenstein');
+  }
+  if (id === 'dinh-ly-euler') {
+    return GLOSSARY_MAP.get('ctds-dinh-ly-euler');
+  }
   if (id === 'dinh-ly-lagrange') {
     return currentCourseId === 'giai-tich-ham-mot-bien'
       ? GLOSSARY_MAP.get('gthmb-dinh-ly-lagrange')

@@ -289,6 +289,45 @@
   overflow-y: hidden;
 }
 
+/* ==========================================================================
+   BẢNG PHÉP TOÁN CAYLEY & ĐẠI SỐ (Cayley Tables & Operations)
+   ========================================================================== */
+
+.cayley-table-wrapper,
+.lesson-content .cayley-table-wrapper,
+.lu-prose .cayley-table-wrapper {
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(250, 248, 242, 0.75);
+  border: 1px solid rgba(214, 208, 196, 0.85);
+  margin: 1.5rem 0;
+}
+
+.lesson-content table.cayley-table,
+.lu-prose table.cayley-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.lesson-content table.cayley-table th,
+.lesson-content table.cayley-table td,
+.lu-prose table.cayley-table th,
+.lu-prose table.cayley-table td {
+  text-align: center;
+  padding: 0.65rem 1rem;
+  font-size: 1.05em;
+}
+
+.lesson-content table.cayley-table th,
+.lu-prose table.cayley-table th,
+.lesson-content table.cayley-table tr td:first-child,
+.lu-prose table.cayley-table tr td:first-child {
+  background-color: rgba(245, 242, 235, 0.85);
+  font-weight: 600;
+  color: #1c1917;
+}
+
 .lu-glossary-term {
   border-bottom: 1.5px dotted var(--text-muted, #807060);
   cursor: pointer;

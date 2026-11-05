@@ -168,5 +168,36 @@ $$\\lim_{n \\to \\infty} \\frac{n^2 + 1}{2n^2 + 3} = \\frac{1}{2}$$`}
           .length,
       ).toBeGreaterThan(0);
     });
+
+    it('hiển thị đầy đủ 5 câu hỏi tự luận lớn cho học phần Cấu trúc đại số tại /mon-hoc/cau-truc-dai-so/de-thi', () => {
+      render(
+        <MemoryRouter initialEntries={['/mon-hoc/cau-truc-dai-so/de-thi']}>
+          <Routes>
+            <Route path="/mon-hoc/:subjectSlug/de-thi" element={<SubjectExamsPage />} />
+          </Routes>
+        </MemoryRouter>,
+      );
+
+      expect(
+        screen.getByRole('heading', {
+          name: /Đề thi Kết thúc Học phần Cấu trúc Đại số — Năm học 2025-2026/i,
+        }),
+      ).toBeInTheDocument();
+
+      // Kiểm tra 5 tiêu đề câu hỏi lớn
+      expect(
+        screen.getByText(/Quan hệ tương đương, Lớp tương đương và Cấu trúc Nhóm/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Nhóm con, Cấp của phần tử, Nhóm Cyclic và Phân loại Nhóm cấp 2p/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/Lớp kề, Định lý Lagrange và Ứng dụng Số học/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Nhóm con Chuẩn tắc, Nhóm thương và Định lý Đẳng cấu thứ nhất/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Vành, Trường, I-đê-an và Tiêu chuẩn Bất khả quy Eisenstein/i),
+      ).toBeInTheDocument();
+    });
   });
 });

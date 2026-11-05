@@ -541,7 +541,7 @@ export function LessonPage() {
         {/* CỘT PHẢI (Mục lục bài học - Table of Contents / On this page) */}
         {!isFocusMode && (
           <aside
-            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[230px] shrink-0 overflow-y-auto pl-2 transition-all duration-300 xl:block"
+            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[260px] shrink-0 overflow-y-auto pl-2 transition-all duration-300 xl:block"
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >

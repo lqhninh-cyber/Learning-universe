@@ -1,5 +1,6 @@
 import type { LessonMeta } from '@schemas/index';
-import { BookMarked, ListTree } from 'lucide-react';
+import { BookMarked, ChevronRight, ListTree } from 'lucide-react';
+import type { MouseEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 
@@ -13,6 +14,10 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
   const headings = useMemo(() => lessonMeta?.headings ?? [], [lessonMeta?.headings]);
   const blocks = useMemo(() => lessonMeta?.blocks ?? [], [lessonMeta?.blocks]);
   const [activeId, setActiveId] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'toc' | 'theorems'>('toc');
+
+  const hasHeadings = headings.length > 0;
+  const hasBlocks = blocks.length > 0;
 
   useEffect(() => {
     const allIds = [...headings.map((h) => h.id), ...blocks.map((b) => b.anchorId)];
@@ -48,24 +53,83 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
     };
   }, [headings, blocks]);
 
-  const handleAnchorClick = (id: string) => {
+  const handleAnchorClick = (e: MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
     setActiveId(id);
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (typeof window !== 'undefined' && window.history?.pushState) {
+          window.history.pushState(null, '', `#${id}`);
+        }
+      }
+    }
     onSelectAnchor?.();
   };
 
-  if (headings.length === 0 && blocks.length === 0) {
+  if (!hasHeadings && !hasBlocks) {
     return null;
   }
 
   return (
-    <nav aria-label="Mục lục bài học" className={cn('space-y-6 text-[14.5px]', className)}>
-      {headings.length > 0 && (
-        <div className="space-y-2.5">
-          <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-stone-700 uppercase">
-            <ListTree className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
-            <span>Mục lục bài học</span>
-          </div>
-          <ul className="space-y-1.5 border-l border-stone-200 pl-2">
+    <nav
+      aria-label="Mục lục bài học"
+      className={cn(
+        'rounded-2xl border border-stone-200/90 bg-white/95 p-3 shadow-xs backdrop-blur-xs transition-all duration-200',
+        className,
+      )}
+    >
+      {/* Thanh tab chuyển đổi Mục lục / Định nghĩa & Định lý */}
+      {hasHeadings && hasBlocks && (
+        <div
+          className="mb-3.5 flex items-center rounded-xl border border-stone-200/70 bg-stone-100/80 p-1"
+          role="tablist"
+          aria-label="Tùy chọn mục lục bài học"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'toc'}
+            onClick={() => setActiveTab('toc')}
+            className={cn(
+              'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-all',
+              activeTab === 'toc'
+                ? 'bg-white text-stone-900 shadow-2xs'
+                : 'text-stone-600 hover:bg-white/60 hover:text-stone-900',
+            )}
+          >
+            <span aria-hidden="true">📑</span>
+            <span>Mục lục</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'theorems'}
+            onClick={() => setActiveTab('theorems')}
+            className={cn(
+              'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-all',
+              activeTab === 'theorems'
+                ? 'bg-white text-stone-900 shadow-2xs'
+                : 'text-stone-600 hover:bg-white/60 hover:text-stone-900',
+            )}
+          >
+            <span aria-hidden="true">🔖</span>
+            <span className="truncate">Định lý ({blocks.length})</span>
+          </button>
+        </div>
+      )}
+
+      {/* TAB 1: Danh sách đề mục H1, H2, H3 */}
+      {(activeTab === 'toc' || !hasBlocks) && hasHeadings && (
+        <div className="space-y-2">
+          {!hasBlocks && (
+            <div className="flex items-center gap-1.5 px-1 py-1 text-xs font-semibold tracking-wide text-stone-700 uppercase">
+              <ListTree className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
+              <span>Mục lục bài học</span>
+            </div>
+          )}
+          <ul className="custom-scrollbar max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto pr-1 text-[14px]">
             {headings.map((heading) => {
               const isActive = activeId === heading.id;
               return (
@@ -75,15 +139,24 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                 >
                   <a
                     href={`#${heading.id}`}
-                    onClick={() => handleAnchorClick(heading.id)}
+                    onClick={(e) => handleAnchorClick(e, heading.id)}
                     className={cn(
-                      'block rounded-md px-2.5 py-1 text-[14.5px] leading-normal transition-all',
+                      'group flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[14px] leading-snug transition-all',
                       isActive
-                        ? 'bg-subject-100/90 text-subject-950 border-subject-600 border-l-2 font-semibold shadow-2xs'
-                        : 'text-stone-600 hover:bg-stone-100/70 hover:text-stone-900',
+                        ? 'border-subject-600/80 bg-subject-100/90 text-subject-950 border-l-2 font-semibold shadow-2xs'
+                        : 'text-stone-600 hover:bg-stone-100/80 hover:text-stone-900',
                     )}
                   >
-                    {heading.text}
+                    <ChevronRight
+                      className={cn(
+                        'mt-0.5 h-3 w-3 shrink-0 transition-transform',
+                        isActive
+                          ? 'text-subject-700 translate-x-0.5'
+                          : 'text-stone-400 group-hover:text-stone-600',
+                      )}
+                      aria-hidden="true"
+                    />
+                    <span className="flex-1">{heading.text}</span>
                   </a>
                 </li>
               );
@@ -92,25 +165,28 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
         </div>
       )}
 
-      {blocks.length > 0 && (
-        <div className="space-y-2.5">
-          <div className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-stone-700 uppercase">
-            <BookMarked className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
-            <span>Định nghĩa & Định lý ({blocks.length})</span>
-          </div>
-          <ul className="space-y-1.5">
+      {/* TAB 2: Danh sách Định nghĩa, Định lý, Hệ quả, Ví dụ */}
+      {(activeTab === 'theorems' || !hasHeadings) && hasBlocks && (
+        <div className="space-y-2">
+          {!hasHeadings && (
+            <div className="flex items-center gap-1.5 px-1 py-1 text-xs font-semibold tracking-wide text-stone-700 uppercase">
+              <BookMarked className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
+              <span>Định nghĩa & Định lý ({blocks.length})</span>
+            </div>
+          )}
+          <ul className="custom-scrollbar max-h-[calc(100vh-12rem)] space-y-1.5 overflow-y-auto pr-1 text-[14px]">
             {blocks.map((block) => {
               const isActive = activeId === block.anchorId;
               return (
                 <li key={block.anchorId}>
                   <a
                     href={`#${block.anchorId}`}
-                    onClick={() => handleAnchorClick(block.anchorId)}
+                    onClick={(e) => handleAnchorClick(e, block.anchorId)}
                     className={cn(
-                      'group block rounded-lg border px-2.5 py-1.5 text-[14.5px] leading-normal transition-all',
+                      'group block rounded-lg border px-2.5 py-1.5 text-[14px] leading-snug transition-all',
                       isActive
-                        ? 'border-subject-400 bg-subject-100/90 text-subject-950 font-semibold shadow-xs'
-                        : 'hover:border-subject-200 hover:bg-subject-50/50 border-stone-200/70 bg-stone-50/70 text-stone-700',
+                        ? 'border-subject-400 bg-subject-100/90 text-subject-950 font-semibold shadow-2xs'
+                        : 'hover:border-subject-200 hover:bg-subject-50/60 border-stone-200/70 bg-stone-50/60 text-stone-700',
                     )}
                   >
                     <span

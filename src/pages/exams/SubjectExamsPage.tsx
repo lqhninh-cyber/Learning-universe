@@ -13,6 +13,7 @@ import {
 import { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { getSubjectBySlug } from '@/content-runtime';
+import { CTDS_EXAM_PAPERS } from '@/data/courses/cau-truc-dai-so/exams';
 import { GTHMB_EXAM_PAPERS } from '@/data/courses/giai-tich-ham-mot-bien/exams';
 import { ExamImageModal } from '@/features/exams/ExamImageModal';
 import { ExamProblemCard } from '@/features/exams/ExamProblemCard';
@@ -27,10 +28,13 @@ export function SubjectExamsPage() {
   const subject = getSubjectBySlug(subjectSlug);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Danh sách đề thi theo môn học hiện tại (hiện tại hỗ trợ Giải tích hàm một biến)
+  // Danh sách đề thi theo môn học hiện tại (hỗ trợ Giải tích hàm một biến và Cấu trúc đại số)
   const examPapers = useMemo(() => {
     if (subjectSlug === 'giai-tich-ham-mot-bien') {
       return GTHMB_EXAM_PAPERS;
+    }
+    if (subjectSlug === 'cau-truc-dai-so') {
+      return CTDS_EXAM_PAPERS;
     }
     return [];
   }, [subjectSlug]);

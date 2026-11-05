@@ -107,6 +107,23 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
     expect(cauchyAlg?.formula).toBe(
       'p \\mid |G| \\implies \\exists g \\in G: \\operatorname{ord}(g) = p',
     );
+
+    // 4. Các thuật ngữ chuẩn mới cho CTĐS
+    const eulerAlg = findGlossaryEntry('định lý Euler', 'cau-truc-dai-so');
+    expect(eulerAlg?.id).toBe('ctds-dinh-ly-euler');
+    expect(eulerAlg?.formula).toContain('a^{\\varphi(n)} \\equiv 1');
+
+    const normalSubgrp = findGlossaryEntry('nhóm con chuẩn tắc', 'cau-truc-dai-so');
+    expect(normalSubgrp?.id).toBe('ctds-nhom-con-chuan-tac');
+    expect(normalSubgrp?.formula).toContain('gHg^{-1} = H');
+
+    const isoFirst = findGlossaryEntry('định lý đẳng cấu thứ nhất', 'cau-truc-dai-so');
+    expect(isoFirst?.id).toBe('ctds-dinh-ly-dang-cau-1');
+    expect(isoFirst?.formula).toContain('G/\\ker \\varphi \\cong \\operatorname{Im} \\varphi');
+
+    const eisenstein = findGlossaryEntry('tiêu chuẩn Eisenstein', 'cau-truc-dai-so');
+    expect(eisenstein?.id).toBe('ctds-tieu-chuan-eisenstein');
+    expect(eisenstein?.formula).toContain('p \\mid a_i');
   });
 
   it('tìm kiếm tiếng Việt không phân biệt dấu thanh', () => {
@@ -149,7 +166,7 @@ describe('Bộ nhận diện thuật ngữ tự động (Auto-Annotator)', () =>
     expect(matchLatexToGlossary('V_4')?.id).toBe('v4');
     expect(matchLatexToGlossary('\\cong')?.id).toBe('dang-cau');
     expect(matchLatexToGlossary('G \\cong H')?.id).toBe('dang-cau');
-    expect(matchLatexToGlossary('H \\unlhd G')?.id).toBe('nhom-con-chuan-tac');
+    expect(matchLatexToGlossary('H \\unlhd G')?.id).toBe('ctds-nhom-con-chuan-tac');
     expect(matchLatexToGlossary('\\ker \\varphi')?.id).toBe('hat-nhan');
     expect(matchLatexToGlossary('\\mathbb{A}^n')?.id).toBe('khong-gian-afin');
     expect(matchLatexToGlossary('[G:H]')?.id).toBe('ctds-dinh-ly-lagrange');
@@ -322,6 +339,47 @@ describe('Hành vi tương tác Popover & Toggle bền vững', () => {
     expect(trigger).toHaveTextContent('Định lý Lagrange trong nhóm');
 
     fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('CẤU TRÚC ĐẠI SỐ')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveTextContent(/\[G\s*:\s*H\]/);
+  });
+
+  it('TermLink trong ngữ cảnh route Cấu trúc đại số ưu tiên 100% định nghĩa đại số', () => {
+    render(
+      <MemoryRouter initialEntries={['/mon-hoc/cau-truc-dai-so/de-thi']}>
+        <MathGlossaryProvider courseId="cau-truc-dai-so">
+          <div>
+            <TermLink term="Định lý Lagrange">Định lý Lagrange</TermLink>
+            <TermLink term="Định lý Fermat">Định lý Fermat</TermLink>
+            <TermLink term="Định lý Euler">Định lý Euler</TermLink>
+            <TermLink term="Nhóm con chuẩn tắc">Nhóm con chuẩn tắc</TermLink>
+            <MathGlossaryPopover />
+          </div>
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    const lagrangeTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý Lagrange trong Lý thuyết Nhóm/i,
+    });
+    expect(lagrangeTrigger).toBeInTheDocument();
+
+    const fermatTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý nhỏ Fermat/i,
+    });
+    expect(fermatTrigger).toBeInTheDocument();
+
+    const eulerTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý Euler trong Số học & Lý thuyết Nhóm/i,
+    });
+    expect(eulerTrigger).toBeInTheDocument();
+
+    const normalTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Nhóm con chuẩn tắc/i,
+    });
+    expect(normalTrigger).toBeInTheDocument();
+
+    fireEvent.click(lagrangeTrigger);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(screen.getByText('CẤU TRÚC ĐẠI SỐ')).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveTextContent(/\[G\s*:\s*H\]/);
