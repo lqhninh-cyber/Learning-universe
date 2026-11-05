@@ -57,6 +57,14 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
 
     expect(screen.getByText('Không gian Affine')).toBeInTheDocument();
     expect(screen.queryByText('Nhóm bốn Klein')).not.toBeInTheDocument();
+
+    // Nhấn tab Giải tích hàm một biến
+    const calculusTab = screen.getByRole('button', { name: /Giải tích hàm một biến/i });
+    fireEvent.click(calculusTab);
+
+    expect(screen.getByText('Định lý giá trị trung bình Lagrange')).toBeInTheDocument();
+    expect(screen.queryByText('Nhóm bốn Klein')).not.toBeInTheDocument();
+    expect(screen.queryByText('Không gian Affine')).not.toBeInTheDocument();
   });
 
   it('hiển thị thông báo khi không tìm thấy kết quả phù hợp', () => {

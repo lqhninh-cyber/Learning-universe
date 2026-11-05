@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { MathText } from '@/features/exams/MathText';
+import { MathGlossaryPopover, MathGlossaryProvider } from '@/features/math-glossary';
 import { SubjectExamsPage } from '@/pages/exams/SubjectExamsPage';
 
 describe('Hệ thống Ngân hàng Đề thi & Lời giải thực chiến', () => {
@@ -38,6 +39,29 @@ $$\\lim_{n \\to \\infty} \\frac{n^2 + 1}{2n^2 + 3} = \\frac{1}{2}$$`}
 
       expect(screen.getByText(/Điều kiện 1: Tập hợp bị chặn trên/i)).toBeInTheDocument();
       expect(screen.getByText(/Điều kiện 2: Tập hợp khác rỗng/i)).toBeInTheDocument();
+    });
+
+    it('MathText tự động nhận diện và chú thích ứng dụng định lý Lagrange trong ngữ cảnh Giải tích', () => {
+      render(
+        <MemoryRouter>
+          <MathGlossaryProvider courseId="giai-tich-ham-mot-bien">
+            <div>
+              <MathText text="Bài toán yêu cầu **ứng dụng định lý Lagrange** để đánh giá sai số." />
+              <MathGlossaryPopover />
+            </div>
+          </MathGlossaryProvider>
+        </MemoryRouter>,
+      );
+
+      const trigger = screen.getByRole('button', {
+        name: /Chú thích thuật ngữ: Định lý giá trị trung bình Lagrange/i,
+      });
+      expect(trigger).toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByText('GIẢI TÍCH HÀM MỘT BIẾN')).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toHaveTextContent(/f\(b\)\s*-\s*f\(a\)/);
     });
   });
 

@@ -28,6 +28,10 @@ export function GlossaryPage() {
     () => allEntries.filter((e) => e.subject === 'hinh-hoc-affine').length,
     [allEntries],
   );
+  const calculusCount = useMemo(
+    () => allEntries.filter((e) => e.subject === 'giai-tich-ham-mot-bien').length,
+    [allEntries],
+  );
 
   const filteredEntries = useMemo(() => {
     return searchGlossary({
@@ -133,6 +137,17 @@ export function GlossaryPage() {
               >
                 Hình học Affine ({affineCount})
               </button>
+              <button
+                type="button"
+                onClick={() => setSubjectFilter('giai-tich-ham-mot-bien')}
+                className={`rounded-lg px-3 py-1.5 font-medium transition-colors ${
+                  subjectFilter === 'giai-tich-ham-mot-bien'
+                    ? 'bg-[var(--bg-canvas)] text-[var(--text-primary)] shadow-2xs'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                }`}
+              >
+                Giải tích hàm một biến ({calculusCount})
+              </button>
             </div>
           </div>
 
@@ -175,7 +190,12 @@ export function GlossaryPage() {
                         />
                       </div>
                       <Badge variant={isAlgebra ? 'subject' : 'neutral'}>
-                        {isAlgebra ? 'Cấu trúc đại số' : 'Hình học Affine'}
+                        {entry.courseName ||
+                          (entry.subject === 'cau-truc-dai-so'
+                            ? 'Cấu trúc đại số'
+                            : entry.subject === 'giai-tich-ham-mot-bien'
+                              ? 'Giải tích hàm một biến'
+                              : 'Hình học Affine')}
                       </Badge>
                     </div>
 

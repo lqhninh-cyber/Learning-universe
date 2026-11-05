@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { getLessonBySlug } from '@/content-runtime';
 import {
+  findGlossaryEntry,
   getAllGlossaryEntries,
   getGlossaryEntryById,
   MATH_GLOSSARY,
@@ -12,6 +13,7 @@ import { annotateTextString, matchLatexToGlossary } from './annotator';
 import { MathGlossaryProvider } from './MathGlossaryContext';
 import { MathGlossaryPopover } from './MathGlossaryPopover';
 import { MathGlossaryTerm } from './MathGlossaryTerm';
+import { TermLink } from './TermLink';
 
 describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () => {
   it('chứa ít nhất 30 thuật ngữ và ký hiệu chuẩn mực', () => {
@@ -21,7 +23,7 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
   it('mọi mục thuật ngữ đều có đầy đủ trường thông tin bắt buộc', () => {
     for (const item of MATH_GLOSSARY) {
       expect(item.id).toBeTruthy();
-      expect(item.subject).toMatch(/^(cau-truc-dai-so|hinh-hoc-affine)$/);
+      expect(item.subject).toMatch(/^(cau-truc-dai-so|hinh-hoc-affine|giai-tich-ham-mot-bien)$/);
       expect(item.patterns.length).toBeGreaterThan(0);
       expect(item.symbol).toBeTruthy();
       expect(item.nameVi).toBeTruthy();
@@ -58,6 +60,47 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
     const affine = getGlossaryEntryById('khong-gian-afin');
     expect(affine).toBeDefined();
     expect(affine?.nameVi).toBe('Không gian Affine');
+
+    const lagrangeGthmb = getGlossaryEntryById('gthmb-dinh-ly-lagrange');
+    expect(lagrangeGthmb).toBeDefined();
+    expect(lagrangeGthmb?.nameVi).toBe('Định lý giá trị trung bình Lagrange');
+
+    const lagrangeCtds = getGlossaryEntryById('ctds-dinh-ly-lagrange');
+    expect(lagrangeCtds).toBeDefined();
+    expect(lagrangeCtds?.nameVi).toBe('Định lý Lagrange trong Lý thuyết Nhóm');
+  });
+
+  it('phân tách Định lý Lagrange, Fermat và Cauchy theo ngữ cảnh môn học rõ ràng', () => {
+    // 1. Phân tách Định lý Lagrange
+    const calculusLagrange = findGlossaryEntry('định lý Lagrange', 'giai-tich-ham-mot-bien');
+    expect(calculusLagrange?.id).toBe('gthmb-dinh-ly-lagrange');
+    expect(calculusLagrange?.formula).toBe("f(b) - f(a) = f'(c)(b - a)");
+    expect(calculusLagrange?.courseName).toBe('GIẢI TÍCH HÀM MỘT BIẾN');
+
+    const algebraLagrange = findGlossaryEntry('định lý Lagrange', 'cau-truc-dai-so');
+    expect(algebraLagrange?.id).toBe('ctds-dinh-ly-lagrange');
+    expect(algebraLagrange?.formula).toBe('|G| = [G : H] \\cdot |H|');
+    expect(algebraLagrange?.courseName).toBe('CẤU TRÚC ĐẠI SỐ');
+
+    // 2. Phân tách Định lý Fermat
+    const fermatCalc = findGlossaryEntry('định lý Fermat', 'giai-tich-ham-mot-bien');
+    expect(fermatCalc?.id).toBe('gthmb-dinh-ly-fermat');
+    expect(fermatCalc?.formula).toBe("f'(x_0) = 0");
+
+    const fermatAlg = findGlossaryEntry('định lý Fermat', 'cau-truc-dai-so');
+    expect(fermatAlg?.id).toBe('ctds-dinh-ly-fermat');
+    expect(fermatAlg?.formula).toBe('a^{p-1} \\equiv 1 \\pmod p');
+
+    // 3. Phân tách Định lý Cauchy
+    const cauchyCalc = findGlossaryEntry('định lý Cauchy', 'giai-tich-ham-mot-bien');
+    expect(cauchyCalc?.id).toBe('gthmb-dinh-ly-cauchy');
+    expect(cauchyCalc?.formula).toBe("\\frac{f(b) - f(a)}{g(b) - g(a)} = \\frac{f'(c)}{g'(c)}");
+
+    const cauchyAlg = findGlossaryEntry('định lý Cauchy', 'cau-truc-dai-so');
+    expect(cauchyAlg?.id).toBe('ctds-dinh-ly-cauchy');
+    expect(cauchyAlg?.formula).toBe(
+      'p \\mid |G| \\implies \\exists g \\in G: \\operatorname{ord}(g) = p',
+    );
   });
 
   it('tìm kiếm tiếng Việt không phân biệt dấu thanh', () => {
@@ -69,6 +112,9 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
 
     const affineResults = searchGlossary({ query: 'khong gian afin' });
     expect(affineResults.some((r) => r.id === 'khong-gian-afin')).toBe(true);
+
+    const calculusResults = searchGlossary({ query: 'gia tri trung binh lagrange' });
+    expect(calculusResults.some((r) => r.id === 'gthmb-dinh-ly-lagrange')).toBe(true);
   });
 
   it('tìm kiếm theo ký hiệu TeX', () => {
@@ -83,10 +129,12 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
     const all = getAllGlossaryEntries();
     const algebraOnly = searchGlossary({ subject: 'cau-truc-dai-so' });
     const affineOnly = searchGlossary({ subject: 'hinh-hoc-affine' });
+    const calculusOnly = searchGlossary({ subject: 'giai-tich-ham-mot-bien' });
 
-    expect(algebraOnly.length + affineOnly.length).toBe(all.length);
+    expect(algebraOnly.length + affineOnly.length + calculusOnly.length).toBe(all.length);
     expect(algebraOnly.every((e) => e.subject === 'cau-truc-dai-so')).toBe(true);
     expect(affineOnly.every((e) => e.subject === 'hinh-hoc-affine')).toBe(true);
+    expect(calculusOnly.every((e) => e.subject === 'giai-tich-ham-mot-bien')).toBe(true);
   });
 });
 
@@ -98,14 +146,22 @@ describe('Bộ nhận diện thuật ngữ tự động (Auto-Annotator)', () =>
     expect(matchLatexToGlossary('H \\unlhd G')?.id).toBe('nhom-con-chuan-tac');
     expect(matchLatexToGlossary('\\ker \\varphi')?.id).toBe('hat-nhan');
     expect(matchLatexToGlossary('\\mathbb{A}^n')?.id).toBe('khong-gian-afin');
-    expect(matchLatexToGlossary('[G:H]')?.id).toBe('dinh-ly-lagrange');
-    expect(matchLatexToGlossary('[G : H]')?.id).toBe('dinh-ly-lagrange');
-    expect(matchLatexToGlossary('|G| = [G:H] \\cdot |H|')?.id).toBe('dinh-ly-lagrange');
+    expect(matchLatexToGlossary('[G:H]')?.id).toBe('ctds-dinh-ly-lagrange');
+    expect(matchLatexToGlossary('[G : H]')?.id).toBe('ctds-dinh-ly-lagrange');
+    expect(matchLatexToGlossary('|G| = [G:H] \\cdot |H|')?.id).toBe('ctds-dinh-ly-lagrange');
+    expect(matchLatexToGlossary("f(b) - f(a) = f'(c)(b - a)")?.id).toBe('gthmb-dinh-ly-lagrange');
   });
 
   it('bóc tách chuỗi văn bản và chèn MathGlossaryTerm cố định không bị mất', () => {
     const text = 'Xét nhóm bốn Klein trong đại số trừu tượng.';
     const nodes = annotateTextString(text);
+
+    expect(nodes.length).toBeGreaterThan(1);
+  });
+
+  it('nhận diện đúng "ứng dụng định lý Lagrange" cho Giải tích khi có ngữ cảnh môn', () => {
+    const text = 'Trong bài thi MATH1403 có phần ứng dụng định lý Lagrange.';
+    const nodes = annotateTextString(text, 'test', 'giai-tich-ham-mot-bien');
 
     expect(nodes.length).toBeGreaterThan(1);
   });
@@ -187,5 +243,30 @@ describe('Hành vi tương tác Popover & Toggle bền vững', () => {
 
     // Trigger vẫn tồn tại sẵn sàng cho lần click tiếp theo
     expect(trigger).toBeInTheDocument();
+  });
+
+  it('TermLink tự động chọn bản ghi Giải tích hàm một biến và hiển thị công thức f(b)-f(a) cùng nhãn môn chuẩn', () => {
+    render(
+      <MemoryRouter initialEntries={['/mon-hoc/giai-tich-ham-mot-bien/de-thi']}>
+        <MathGlossaryProvider courseId="giai-tich-ham-mot-bien">
+          <div>
+            <TermLink term="định lý Lagrange">ứng dụng định lý Lagrange</TermLink>
+            <MathGlossaryPopover />
+          </div>
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    const trigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý giá trị trung bình Lagrange/i,
+    });
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveTextContent('ứng dụng định lý Lagrange');
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('GIẢI TÍCH HÀM MỘT BIẾN')).toBeInTheDocument();
+    expect(screen.getByText("Lagrange's Mean Value Theorem (MVT)")).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveTextContent(/f\(b\)\s*-\s*f\(a\)/);
   });
 });

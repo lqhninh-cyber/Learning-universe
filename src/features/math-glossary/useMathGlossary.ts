@@ -1,10 +1,20 @@
 import { useContext } from 'react';
 import { MathGlossaryContext, type MathGlossaryContextValue } from './context';
 
+const DEFAULT_GLOSSARY_CONTEXT: MathGlossaryContextValue = {
+  isEnabled: true,
+  activeEntry: null,
+  anchorRect: null,
+  isPinned: false,
+  currentCourseId: undefined,
+  showPopover: () => {},
+  hidePopover: () => {},
+  cancelHide: () => {},
+  togglePopover: () => {},
+  closePopover: () => {},
+};
+
 export function useMathGlossary(): MathGlossaryContextValue {
   const ctx = useContext(MathGlossaryContext);
-  if (!ctx) {
-    throw new Error('useMathGlossary must be used within a MathGlossaryProvider');
-  }
-  return ctx;
+  return ctx ?? DEFAULT_GLOSSARY_CONTEXT;
 }

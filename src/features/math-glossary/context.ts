@@ -6,6 +6,7 @@ export interface MathGlossaryContextValue {
   readonly activeEntry: MathGlossaryEntry | null;
   readonly anchorRect: DOMRect | null;
   readonly isPinned: boolean;
+  readonly currentCourseId?: string;
   readonly showPopover: (entry: MathGlossaryEntry, rect: DOMRect) => void;
   readonly hidePopover: (delayMs?: number) => void;
   readonly cancelHide: () => void;

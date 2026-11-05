@@ -1,10 +1,15 @@
 import { type ReactNode, useMemo } from 'react';
+import { detectCourseIdFromPath } from '@/data/math-glossary';
+import { annotateTextString } from '@/features/math-glossary/annotator';
 import { KatexMath } from '@/features/math-glossary/KatexMath';
+import { useMathGlossary } from '@/features/math-glossary/useMathGlossary';
 import { cn } from '@/shared/lib/cn';
 
 export interface MathTextProps {
   readonly text: string;
   readonly className?: string;
+  readonly currentCourseId?: string;
+  readonly courseId?: string;
 }
 
 /**
@@ -15,8 +20,19 @@ export interface MathTextProps {
  * - Italic: *...*
  * - Inline code: `...`
  * - Unordered / Ordered list items: - , * , 1. , a)
+ * - Tự động nhận diện thuật ngữ tra cứu nhanh (Quick Glossary Popover) theo môn học
  */
-export function MathText({ text, className }: MathTextProps) {
+export function MathText({ text, className, currentCourseId, courseId }: MathTextProps) {
+  const glossaryCtx = useMathGlossary();
+  const effectiveCourseId = useMemo(() => {
+    if (currentCourseId || courseId) return currentCourseId || courseId;
+    if (glossaryCtx.currentCourseId) return glossaryCtx.currentCourseId;
+    if (typeof window !== 'undefined') {
+      return detectCourseIdFromPath(window.location?.pathname);
+    }
+    return undefined;
+  }, [currentCourseId, courseId, glossaryCtx.currentCourseId]);
+
   const renderedContent = useMemo(() => {
     if (!text) return null;
 
@@ -55,7 +71,7 @@ export function MathText({ text, className }: MathTextProps) {
               const cleanLine = line.replace(/^\s*[-*+]\s+/, '');
               return (
                 <li key={`li-${blockIdx}-${lineIdx}`} className="leading-relaxed">
-                  {renderInlineTokens(cleanLine, `ul-${blockIdx}-${lineIdx}`)}
+                  {renderInlineTokens(cleanLine, `ul-${blockIdx}-${lineIdx}`, effectiveCourseId)}
                 </li>
               );
             })}
@@ -75,7 +91,7 @@ export function MathText({ text, className }: MathTextProps) {
               const cleanLine = line.replace(/^\s*(\d+\.|[a-z]\))\s+/, '');
               return (
                 <li key={`ol-${blockIdx}-${lineIdx}`} className="leading-relaxed">
-                  {renderInlineTokens(cleanLine, `ol-${blockIdx}-${lineIdx}`)}
+                  {renderInlineTokens(cleanLine, `ol-${blockIdx}-${lineIdx}`, effectiveCourseId)}
                 </li>
               );
             })}
@@ -107,7 +123,11 @@ export function MathText({ text, className }: MathTextProps) {
               <span key={`seg-${blockIdx}-${segIdx}`}>
                 {subLines.map((subLine, subIdx) => (
                   <span key={`line-${blockIdx}-${segIdx}-${subIdx}`}>
-                    {renderInlineTokens(subLine, `txt-${blockIdx}-${segIdx}-${subIdx}`)}
+                    {renderInlineTokens(
+                      subLine,
+                      `txt-${blockIdx}-${segIdx}-${subIdx}`,
+                      effectiveCourseId,
+                    )}
                     {subIdx < subLines.length - 1 && <br />}
                   </span>
                 ))}
@@ -117,7 +137,7 @@ export function MathText({ text, className }: MathTextProps) {
         </div>
       );
     });
-  }, [text]);
+  }, [text, effectiveCourseId]);
 
   return <div className={cn('text-sm leading-relaxed', className)}>{renderedContent}</div>;
 }
@@ -125,7 +145,7 @@ export function MathText({ text, className }: MathTextProps) {
 /**
  * Phân tích các token nội dòng: KaTeX inline, In đậm, In nghiêng, Code
  */
-function renderInlineTokens(line: string, keyPrefix: string): ReactNode[] {
+function renderInlineTokens(line: string, keyPrefix: string, courseId?: string): ReactNode[] {
   if (!line) return [];
 
   // Regex tách token:
@@ -151,7 +171,7 @@ function renderInlineTokens(line: string, keyPrefix: string): ReactNode[] {
       const inner = part.slice(2, -2);
       return (
         <strong key={key} className="font-semibold text-stone-900">
-          {renderInlineTokens(inner, `${key}-b`)}
+          {renderInlineTokens(inner, `${key}-b`, courseId)}
         </strong>
       );
     }
@@ -161,7 +181,7 @@ function renderInlineTokens(line: string, keyPrefix: string): ReactNode[] {
       const inner = part.slice(1, -1);
       return (
         <em key={key} className="text-stone-800 italic">
-          {renderInlineTokens(inner, `${key}-i`)}
+          {renderInlineTokens(inner, `${key}-i`, courseId)}
         </em>
       );
     }
@@ -179,7 +199,8 @@ function renderInlineTokens(line: string, keyPrefix: string): ReactNode[] {
       );
     }
 
-    // Văn bản bình thường
-    return <span key={key}>{part}</span>;
+    // Văn bản bình thường: Tự động nhận diện và chú thích thuật ngữ tra cứu nhanh
+    const annotated = annotateTextString(part, key, courseId);
+    return <span key={key}>{annotated}</span>;
   });
 }

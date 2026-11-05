@@ -20,6 +20,7 @@ export interface LessonMdxViewProps {
   readonly lessonMeta?: LessonMeta | null;
   readonly bibliography?: readonly BibliographyEntry[];
   readonly className?: string;
+  readonly courseId?: string;
 }
 
 interface LessonMdxArticleProps {
@@ -28,7 +29,7 @@ interface LessonMdxArticleProps {
 }
 
 function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
-  const { isEnabled } = useMathGlossary();
+  const { isEnabled, currentCourseId } = useMathGlossary();
 
   const activeComponents = useMemo<MDXComponents>(() => {
     if (!isEnabled) {
@@ -38,17 +39,17 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
     return {
       ...mdxComponents,
       p: (props: ComponentPropsWithoutRef<'p'>) => (
-        <p {...props}>{annotateChildren(props.children)}</p>
+        <p {...props}>{annotateChildren(props.children, currentCourseId)}</p>
       ),
       li: (props: ComponentPropsWithoutRef<'li'>) => (
-        <li {...props}>{annotateChildren(props.children)}</li>
+        <li {...props}>{annotateChildren(props.children, currentCourseId)}</li>
       ),
       td: (props: ComponentPropsWithoutRef<'td'>) => (
         <td
           className="border-t border-stone-200 px-4 py-3 text-[15px] leading-relaxed text-stone-800"
           {...props}
         >
-          {annotateChildren(props.children)}
+          {annotateChildren(props.children, currentCourseId)}
         </td>
       ),
       span: (props: ComponentPropsWithoutRef<'span'>) => {
@@ -56,10 +57,10 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
         if (typeof props.className === 'string' && props.className.includes('katex')) {
           const tex = extractLatexFromKatexNode(props);
           if (tex) {
-            const entry = matchLatexToGlossary(tex);
+            const entry = matchLatexToGlossary(tex, currentCourseId);
             if (entry) {
               return (
-                <MathGlossaryTerm entry={entry}>
+                <MathGlossaryTerm entry={entry} currentCourseId={currentCourseId}>
                   <span {...props} />
                 </MathGlossaryTerm>
               );
@@ -69,7 +70,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
         return <span {...props} />;
       },
     };
-  }, [isEnabled]);
+  }, [isEnabled, currentCourseId]);
 
   return (
     <>
@@ -90,11 +91,12 @@ export function LessonMdxView({
   lessonMeta = null,
   bibliography,
   className,
+  courseId,
 }: LessonMdxViewProps) {
   return (
     <TooltipProvider>
       <LessonProvider lessonMeta={lessonMeta} bibliography={bibliography}>
-        <MathGlossaryProvider>
+        <MathGlossaryProvider courseId={courseId}>
           <LessonMdxArticle Content={Content} className={className} />
         </MathGlossaryProvider>
       </LessonProvider>

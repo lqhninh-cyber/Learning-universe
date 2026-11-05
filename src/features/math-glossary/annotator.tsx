@@ -75,8 +75,12 @@ export function extractLatexFromKatexNode(node: unknown): string | null {
 /**
  * Khớp chuỗi LaTeX với một mục thuật ngữ trong từ điển.
  * Hỗ trợ khớp chính xác, chuẩn hóa khoảng trắng (như [G : H] -> [G:H]), và các ký hiệu trong biểu thức.
+ * Ưu tiên trả về bản ghi phù hợp với môn học hiện tại (currentCourseId).
  */
-export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
+export function matchLatexToGlossary(
+  tex: string,
+  currentCourseId?: string,
+): MathGlossaryEntry | null {
   if (!tex) {
     return null;
   }
@@ -85,15 +89,30 @@ export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
   const allEntries = getAllGlossaryEntries();
 
   // 1. Khớp chính xác hoàn toàn (có khoảng trắng hoặc sau chuẩn hóa khoảng trắng)
+  const exactCandidates: MathGlossaryEntry[] = [];
   for (const entry of allEntries) {
-    if (entry.symbol.trim() === cleanTex || entry.symbol.replace(/\s+/g, '') === normalizedTex) {
-      return entry;
+    const symbolClean = (entry.formula || entry.symbol).trim();
+    const symbolNorm = symbolClean.replace(/\s+/g, '');
+    if (symbolClean === cleanTex || symbolNorm === normalizedTex) {
+      exactCandidates.push(entry);
+      continue;
     }
     for (const p of entry.patterns) {
       if (p.trim() === cleanTex || p.replace(/\s+/g, '') === normalizedTex) {
-        return entry;
+        exactCandidates.push(entry);
+        break;
       }
     }
+  }
+
+  if (exactCandidates.length > 0) {
+    if (currentCourseId) {
+      const matchCourse = exactCandidates.find(
+        (e) => e.subject === currentCourseId || e.courseId === currentCourseId,
+      );
+      if (matchCourse) return matchCourse;
+    }
+    return exactCandidates[0] ?? null;
   }
 
   // 2. Khớp các ký hiệu toán đặc trưng xuất hiện trong công thức (ví dụ \cong, \unlhd, [G:H], V_4)
@@ -120,15 +139,21 @@ export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
   for (const sym of SPECIAL_MATH_SYMBOLS) {
     const normSym = sym.replace(/\s+/g, '');
     if (normalizedTex.includes(normSym)) {
-      const match = allEntries.find((e) => {
-        const eSymNorm = e.symbol.replace(/\s+/g, '');
+      const matches = allEntries.filter((e) => {
+        const eSymNorm = (e.formula || e.symbol).replace(/\s+/g, '');
         return (
           eSymNorm.includes(normSym) ||
           e.patterns.some((p) => p.replace(/\s+/g, '').includes(normSym))
         );
       });
-      if (match) {
-        return match;
+      if (matches.length > 0) {
+        if (currentCourseId) {
+          const courseMatch = matches.find(
+            (e) => e.subject === currentCourseId || e.courseId === currentCourseId,
+          );
+          if (courseMatch) return courseMatch;
+        }
+        return matches[0] ?? null;
       }
     }
   }
@@ -138,8 +163,13 @@ export function matchLatexToGlossary(tex: string): MathGlossaryEntry | null {
 
 /**
  * Đệ quy bóc tách chuỗi văn bản và chèn MathGlossaryTerm cố định cho các thuật ngữ xuất hiện.
+ * Tự động ưu tiên khớp thuật ngữ của môn học hiện tại (currentCourseId).
  */
-export function annotateTextString(text: string, keyPrefix = 'glossary-term'): ReactNode[] {
+export function annotateTextString(
+  text: string,
+  keyPrefix = 'glossary-term',
+  currentCourseId?: string,
+): ReactNode[] {
   if (!text || typeof text !== 'string') {
     return [text];
   }
@@ -155,7 +185,26 @@ export function annotateTextString(text: string, keyPrefix = 'glossary-term'): R
   for (const matcher of TEXT_MATCHERS) {
     const match = text.match(matcher.regex);
     if (match && typeof match.index === 'number') {
-      if (!earliestMatch || match.index < earliestMatch.index) {
+      const isCurrentCourse =
+        Boolean(currentCourseId) &&
+        (matcher.entry.subject === currentCourseId || matcher.entry.courseId === currentCourseId);
+
+      const earliestIsCurrentCourse =
+        Boolean(currentCourseId) &&
+        Boolean(earliestMatch) &&
+        (earliestMatch!.matcher.entry.subject === currentCourseId ||
+          earliestMatch!.matcher.entry.courseId === currentCourseId);
+
+      const isBetter =
+        !earliestMatch ||
+        match.index < earliestMatch.index ||
+        (match.index === earliestMatch.index && match[0].length > earliestMatch.length) ||
+        (match.index === earliestMatch.index &&
+          match[0].length === earliestMatch.length &&
+          isCurrentCourse &&
+          !earliestIsCurrentCourse);
+
+      if (isBetter) {
         earliestMatch = {
           matcher,
           index: match.index,
@@ -177,18 +226,22 @@ export function annotateTextString(text: string, keyPrefix = 'glossary-term'): R
   const results: ReactNode[] = [];
 
   if (before) {
-    results.push(...annotateTextString(before, `${keyPrefix}-b`));
+    results.push(...annotateTextString(before, `${keyPrefix}-b`, currentCourseId));
   }
 
   // Luôn bọc thuật ngữ trong MathGlossaryTerm để duy trì tương tác bền vững
   results.push(
-    <MathGlossaryTerm key={`${keyPrefix}-${matcher.entry.id}-${index}`} entry={matcher.entry}>
+    <MathGlossaryTerm
+      key={`${keyPrefix}-${matcher.entry.id}-${index}`}
+      entry={matcher.entry}
+      currentCourseId={currentCourseId}
+    >
       {matchedText}
     </MathGlossaryTerm>,
   );
 
   if (after) {
-    results.push(...annotateTextString(after, `${keyPrefix}-a`));
+    results.push(...annotateTextString(after, `${keyPrefix}-a`, currentCourseId));
   }
 
   return results;
@@ -196,12 +249,12 @@ export function annotateTextString(text: string, keyPrefix = 'glossary-term'): R
 
 /**
  * Quét và chú thích đệ quy trong danh sách React children của một đoạn văn/danh sách.
- * Ký hiệu và thuật ngữ luôn được duy trì bọc trong MathGlossaryTerm.
+ * Ký hiệu và thuật ngữ luôn được duy trì bọc trong MathGlossaryTerm với ngữ cảnh môn học.
  */
-export function annotateChildren(children: ReactNode): ReactNode {
+export function annotateChildren(children: ReactNode, currentCourseId?: string): ReactNode {
   return Children.map(children, (child, idx) => {
     if (typeof child === 'string') {
-      const annotated = annotateTextString(child, `p-${idx}`);
+      const annotated = annotateTextString(child, `p-${idx}`, currentCourseId);
       return annotated.length === 1 ? annotated[0] : <>{annotated}</>;
     }
 
@@ -218,10 +271,14 @@ export function annotateChildren(children: ReactNode): ReactNode {
     if (typeof element.props.className === 'string' && element.props.className.includes('katex')) {
       const tex = extractLatexFromKatexNode(element);
       if (tex) {
-        const entry = matchLatexToGlossary(tex);
+        const entry = matchLatexToGlossary(tex, currentCourseId);
         if (entry) {
           return (
-            <MathGlossaryTerm key={`katex-${entry.id}-${idx}`} entry={entry}>
+            <MathGlossaryTerm
+              key={`katex-${entry.id}-${idx}`}
+              entry={entry}
+              currentCourseId={currentCourseId}
+            >
               {element}
             </MathGlossaryTerm>
           );
@@ -243,7 +300,7 @@ export function annotateChildren(children: ReactNode): ReactNode {
     // Nếu có children bên trong, tiếp tục đệ quy xử lý
     if (element.props.children) {
       return cloneElement(element, {
-        children: annotateChildren(element.props.children),
+        children: annotateChildren(element.props.children, currentCourseId),
       });
     }
 

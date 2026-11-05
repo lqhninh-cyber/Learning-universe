@@ -1,26 +1,86 @@
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
-import { useRef } from 'react';
-import type { MathGlossaryEntry } from '@/data/math-glossary';
+import { useMemo, useRef } from 'react';
+import {
+  detectCourseIdFromPath,
+  findGlossaryEntry,
+  type MathGlossaryEntry,
+} from '@/data/math-glossary';
 import { cn } from '@/shared/lib/cn';
 import { useMathGlossary } from './useMathGlossary';
 
 export interface MathGlossaryTermProps {
-  readonly entry: MathGlossaryEntry;
-  readonly children: ReactNode;
+  readonly entry?: MathGlossaryEntry;
+  readonly term?: string;
+  readonly currentCourseId?: string;
+  readonly courseId?: string;
+  readonly children?: ReactNode;
   readonly className?: string;
 }
 
-export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTermProps) {
-  const { isEnabled, showPopover, hidePopover, togglePopover } = useMathGlossary();
+export function MathGlossaryTerm({
+  entry: initialEntry,
+  term,
+  currentCourseId,
+  courseId,
+  children,
+  className,
+}: MathGlossaryTermProps) {
+  const {
+    isEnabled,
+    showPopover,
+    hidePopover,
+    togglePopover,
+    currentCourseId: ctxCourseId,
+  } = useMathGlossary();
   const spanRef = useRef<HTMLSpanElement>(null);
 
+  const effectiveCourseId = useMemo(() => {
+    if (currentCourseId || courseId) return currentCourseId || courseId;
+    if (ctxCourseId) return ctxCourseId;
+    if (typeof window !== 'undefined') {
+      return detectCourseIdFromPath(window.location?.pathname);
+    }
+    return undefined;
+  }, [currentCourseId, courseId, ctxCourseId]);
+
+  const resolvedEntry = useMemo(() => {
+    if (term) {
+      const found = findGlossaryEntry(term, effectiveCourseId);
+      if (found) return found;
+    }
+    if (initialEntry) {
+      // Tự động phân giải các mục xung đột nếu ngữ cảnh môn học khác biệt
+      if (
+        effectiveCourseId &&
+        initialEntry.subject !== effectiveCourseId &&
+        initialEntry.courseId !== effectiveCourseId &&
+        (initialEntry.id.includes('lagrange') ||
+          initialEntry.id.includes('fermat') ||
+          initialEntry.id.includes('cauchy') ||
+          initialEntry.id === 'dinh-ly-lagrange')
+      ) {
+        const refined = findGlossaryEntry(
+          initialEntry.term || initialEntry.nameVi || initialEntry.name || initialEntry.id,
+          effectiveCourseId,
+        );
+        if (refined) return refined;
+      }
+      return initialEntry;
+    }
+    return undefined;
+  }, [term, initialEntry, effectiveCourseId]);
+
+  if (!resolvedEntry) {
+    return <>{children || term}</>;
+  }
+
   if (!isEnabled) {
-    return <>{children}</>;
+    return <>{children || resolvedEntry.nameVi || term}</>;
   }
 
   const handleMouseEnter = () => {
     if (spanRef.current) {
-      showPopover(entry, spanRef.current.getBoundingClientRect());
+      showPopover(resolvedEntry, spanRef.current.getBoundingClientRect());
     }
   };
 
@@ -31,7 +91,7 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
   const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
     if (spanRef.current) {
-      togglePopover(entry, spanRef.current.getBoundingClientRect());
+      togglePopover(resolvedEntry, spanRef.current.getBoundingClientRect());
     }
   };
 
@@ -40,7 +100,7 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
       e.preventDefault();
       e.stopPropagation();
       if (spanRef.current) {
-        togglePopover(entry, spanRef.current.getBoundingClientRect());
+        togglePopover(resolvedEntry, spanRef.current.getBoundingClientRect());
       }
     }
   };
@@ -51,7 +111,7 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
       tabIndex={0}
       role="button"
       aria-haspopup="dialog"
-      aria-label={`Chú thích thuật ngữ: ${entry.nameVi}`}
+      aria-label={`Chú thích thuật ngữ: ${resolvedEntry.name || resolvedEntry.nameVi}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
@@ -65,7 +125,7 @@ export function MathGlossaryTerm({ entry, children, className }: MathGlossaryTer
         className,
       )}
     >
-      {children}
+      {children || resolvedEntry.name || resolvedEntry.nameVi || term}
     </span>
   );
 }

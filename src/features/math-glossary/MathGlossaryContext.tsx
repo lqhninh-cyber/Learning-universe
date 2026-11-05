@@ -1,17 +1,35 @@
-import { type ReactNode, useCallback, useRef, useState } from 'react';
-import type { MathGlossaryEntry } from '@/data/math-glossary';
+import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  detectCourseIdFromPath,
+  findGlossaryEntry,
+  type MathGlossaryEntry,
+} from '@/data/math-glossary';
 import { useLearningStore } from '@/features/learning';
 import { MathGlossaryContext } from './context';
 
 export interface MathGlossaryProviderProps {
   readonly children: ReactNode;
+  readonly courseId?: string;
+  readonly currentCourseId?: string;
 }
 
-export function MathGlossaryProvider({ children }: MathGlossaryProviderProps) {
+export function MathGlossaryProvider({
+  children,
+  courseId,
+  currentCourseId: propCourseId,
+}: MathGlossaryProviderProps) {
   const isEnabled = useLearningStore((state) => state.glossaryAnnotationsEnabled);
   const [activeEntry, setActiveEntry] = useState<MathGlossaryEntry | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const [isPinned, setIsPinned] = useState(false);
+
+  const effectiveCourseId = useMemo(() => {
+    if (propCourseId || courseId) return propCourseId || courseId;
+    if (typeof window !== 'undefined') {
+      return detectCourseIdFromPath(window.location?.pathname);
+    }
+    return undefined;
+  }, [propCourseId, courseId]);
 
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -29,15 +47,36 @@ export function MathGlossaryProvider({ children }: MathGlossaryProviderProps) {
     setIsPinned(false);
   }, [cancelHide]);
 
+  const resolveEntryWithContext = useCallback(
+    (entry: MathGlossaryEntry): MathGlossaryEntry => {
+      if (!effectiveCourseId) return entry;
+      if (
+        (entry.id.includes('lagrange') ||
+          entry.id.includes('fermat') ||
+          entry.id.includes('cauchy')) &&
+        entry.subject !== effectiveCourseId &&
+        entry.courseId !== effectiveCourseId
+      ) {
+        const refined = findGlossaryEntry(
+          entry.term || entry.nameVi || entry.name || entry.id,
+          effectiveCourseId,
+        );
+        if (refined) return refined;
+      }
+      return entry;
+    },
+    [effectiveCourseId],
+  );
+
   const showPopover = useCallback(
     (entry: MathGlossaryEntry, rect: DOMRect) => {
       cancelHide();
       if (!isPinned) {
-        setActiveEntry(entry);
+        setActiveEntry(resolveEntryWithContext(entry));
         setAnchorRect(rect);
       }
     },
-    [cancelHide, isPinned],
+    [cancelHide, isPinned, resolveEntryWithContext],
   );
 
   const hidePopover = useCallback(
@@ -57,17 +96,18 @@ export function MathGlossaryProvider({ children }: MathGlossaryProviderProps) {
   const togglePopover = useCallback(
     (entry: MathGlossaryEntry, rect: DOMRect) => {
       cancelHide();
+      const resolved = resolveEntryWithContext(entry);
       // Nếu đang mở popover cho chính term này: nhấp lại sẽ đóng (toggle)
-      if (activeEntry?.id === entry.id) {
+      if (activeEntry?.id === resolved.id) {
         closePopover();
       } else {
         // Mở popover và ghim (pinned)
-        setActiveEntry(entry);
+        setActiveEntry(resolved);
         setAnchorRect(rect);
         setIsPinned(true);
       }
     },
-    [activeEntry?.id, cancelHide, closePopover],
+    [activeEntry?.id, cancelHide, closePopover, resolveEntryWithContext],
   );
 
   return (
@@ -77,6 +117,7 @@ export function MathGlossaryProvider({ children }: MathGlossaryProviderProps) {
         activeEntry,
         anchorRect,
         isPinned,
+        currentCourseId: effectiveCourseId,
         showPopover,
         hidePopover,
         cancelHide,

@@ -78,13 +78,25 @@ export function MathGlossaryPopover() {
   }
 
   const subjectLabel =
-    activeEntry.subject === 'cau-truc-dai-so' ? 'Cấu trúc đại số' : 'Hình học Affine';
+    activeEntry.courseName ||
+    (activeEntry.subject === 'giai-tich-ham-mot-bien' ||
+    activeEntry.courseId === 'giai-tich-ham-mot-bien'
+      ? 'GIẢI TÍCH HÀM MỘT BIẾN'
+      : activeEntry.subject === 'cau-truc-dai-so' || activeEntry.courseId === 'cau-truc-dai-so'
+        ? 'CẤU TRÚC ĐẠI SỐ'
+        : 'HÌNH HỌC AFFINE');
+
+  const displayName = activeEntry.name || activeEntry.nameVi;
+  const displayEnglish = activeEntry.englishName || activeEntry.nameEn;
+  const displayFormula = activeEntry.formula || activeEntry.symbol;
+  const displaySummary = activeEntry.summary || activeEntry.brief;
+  const displayLessonUrl = activeEntry.lessonUrl || activeEntry.relatedLesson;
 
   return createPortal(
     <div
       ref={popoverRef}
       role="dialog"
-      aria-label={`Chú thích thuật ngữ: ${activeEntry.nameVi}`}
+      aria-label={`Chú thích thuật ngữ: ${displayName}`}
       onMouseEnter={cancelHide}
       onMouseLeave={() => hidePopover(180)}
       style={{
@@ -99,20 +111,20 @@ export function MathGlossaryPopover() {
       <div className="flex items-start justify-between gap-2.5 border-b border-[#D8D0C0] pb-2.5">
         <div className="min-w-0 flex-1 space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold tracking-wider text-stone-500 uppercase">
+            <span className="text-[10px] font-semibold tracking-wider text-amber-900 uppercase">
               {subjectLabel}
             </span>
           </div>
           <h3 className="font-serif text-base leading-snug font-bold text-stone-900">
-            {activeEntry.nameVi}
+            {displayName}
           </h3>
-          <p className="text-[11px] text-stone-600 italic">{activeEntry.nameEn}</p>
+          <p className="text-[11px] text-stone-600 italic">{displayEnglish}</p>
         </div>
 
         <div className="flex shrink-0 flex-col items-end gap-1.5">
           <div className="flex items-center gap-1.5">
             <div className="rounded-md border border-[#D0C8B8] bg-[#E8E0D2] px-2 py-0.5 text-center shadow-2xs">
-              <KatexMath math={activeEntry.symbol} className="font-serif text-sm text-stone-900" />
+              <KatexMath math={displayFormula} className="font-serif text-sm text-stone-900" />
             </div>
             <button
               type="button"
@@ -128,7 +140,7 @@ export function MathGlossaryPopover() {
 
       {/* Nội dung định nghĩa tóm tắt */}
       <div className="space-y-2 py-2.5 text-xs leading-relaxed text-stone-800">
-        <p>{activeEntry.brief}</p>
+        <p>{displaySummary}</p>
 
         {/* Khối trực giác / bản chất */}
         <div className="space-y-1 rounded-lg border border-[#D0C8B8] bg-[#E8E0D2]/70 p-2.5 text-[11px] leading-relaxed text-stone-700">
@@ -143,7 +155,7 @@ export function MathGlossaryPopover() {
       {/* Footer: Nút xem bài học gốc */}
       <div className="mt-1 flex items-center justify-between border-t border-[#D8D0C0] pt-2">
         <Link
-          to={activeEntry.relatedLesson}
+          to={displayLessonUrl}
           onClick={closePopover}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-900 underline underline-offset-4 transition-colors hover:text-amber-700"
         >
