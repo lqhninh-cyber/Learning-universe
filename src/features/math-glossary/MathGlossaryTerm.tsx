@@ -11,6 +11,7 @@ import { useMathGlossary } from './useMathGlossary';
 export interface MathGlossaryTermProps {
   readonly entry?: MathGlossaryEntry;
   readonly term?: string;
+  readonly scope?: string;
   readonly currentCourseId?: string;
   readonly courseId?: string;
   readonly children?: ReactNode;
@@ -20,6 +21,7 @@ export interface MathGlossaryTermProps {
 export function MathGlossaryTerm({
   entry: initialEntry,
   term,
+  scope,
   currentCourseId,
   courseId,
   children,
@@ -35,13 +37,14 @@ export function MathGlossaryTerm({
   const spanRef = useRef<HTMLSpanElement>(null);
 
   const effectiveCourseId = useMemo(() => {
+    if (scope) return scope;
     if (currentCourseId || courseId) return currentCourseId || courseId;
     if (ctxCourseId) return ctxCourseId;
     if (typeof window !== 'undefined') {
       return detectCourseIdFromPath(window.location?.pathname);
     }
     return undefined;
-  }, [currentCourseId, courseId, ctxCourseId]);
+  }, [scope, currentCourseId, courseId, ctxCourseId]);
 
   const resolvedEntry = useMemo(() => {
     if (term) {

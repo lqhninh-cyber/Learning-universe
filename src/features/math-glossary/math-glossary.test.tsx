@@ -82,6 +82,12 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
     expect(algebraLagrange?.formula).toBe('|G| = [G : H] \\cdot |H|');
     expect(algebraLagrange?.courseName).toBe('CẤU TRÚC ĐẠI SỐ');
 
+    // 1b. Thuật ngữ phần dư Lagrange độc lập
+    const lagrangeRemainder = findGlossaryEntry('phần dư Lagrange', 'giai-tich-ham-mot-bien');
+    expect(lagrangeRemainder?.id).toBe('gthmb-phan-du-lagrange');
+    expect(lagrangeRemainder?.name).toBe('Phần dư dạng Lagrange trong Khai triển Taylor');
+    expect(lagrangeRemainder?.formula).toContain('R_n(x)');
+
     // 2. Phân tách Định lý Fermat
     const fermatCalc = findGlossaryEntry('định lý Fermat', 'giai-tich-ham-mot-bien');
     expect(fermatCalc?.id).toBe('gthmb-dinh-ly-fermat');
@@ -164,6 +170,31 @@ describe('Bộ nhận diện thuật ngữ tự động (Auto-Annotator)', () =>
     const nodes = annotateTextString(text, 'test', 'giai-tich-ham-mot-bien');
 
     expect(nodes.length).toBeGreaterThan(1);
+  });
+
+  it('ưu tiên so khớp dài nhất (Longest Match First): "phần dư Lagrange" khớp với phần dư dạng Lagrange thay vì định lý Lagrange', () => {
+    const text = 'Tính phần dư Lagrange trong bài khai triển Taylor.';
+    const nodes = annotateTextString(text, 'lmf-test', 'giai-tich-ham-mot-bien');
+
+    render(
+      <MemoryRouter>
+        <MathGlossaryProvider courseId="giai-tich-ham-mot-bien">
+          <div>{nodes}</div>
+          <MathGlossaryPopover />
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    const trigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Phần dư dạng Lagrange trong Khai triển Taylor/i,
+    });
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveTextContent('phần dư Lagrange');
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('GIẢI TÍCH HÀM MỘT BIẾN')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveTextContent(/R_n\(x\)/);
   });
 });
 
@@ -268,5 +299,31 @@ describe('Hành vi tương tác Popover & Toggle bền vững', () => {
     expect(screen.getByText('GIẢI TÍCH HÀM MỘT BIẾN')).toBeInTheDocument();
     expect(screen.getByText("Lagrange's Mean Value Theorem (MVT)")).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveTextContent(/f\(b\)\s*-\s*f\(a\)/);
+  });
+
+  it('TermLink cho phép dùng scope để dẫn chiếu thuật ngữ từ môn khác bất chấp ngữ cảnh', () => {
+    render(
+      <MemoryRouter initialEntries={['/mon-hoc/giai-tich-ham-mot-bien/de-thi']}>
+        <MathGlossaryProvider courseId="giai-tich-ham-mot-bien">
+          <div>
+            <TermLink term="định lý Lagrange" scope="cau-truc-dai-so">
+              Định lý Lagrange trong nhóm
+            </TermLink>
+            <MathGlossaryPopover />
+          </div>
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    const trigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý Lagrange trong Lý thuyết Nhóm/i,
+    });
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveTextContent('Định lý Lagrange trong nhóm');
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('CẤU TRÚC ĐẠI SỐ')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveTextContent(/\[G\s*:\s*H\]/);
   });
 });

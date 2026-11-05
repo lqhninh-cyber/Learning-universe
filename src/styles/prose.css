@@ -252,12 +252,12 @@
 }
 
 /* ==========================================================================
-   TINH CHỈNH ĐỘ NỔI BẬT VÀ PHÓNG ĐẠI CÔNG THỨC TOÁN (KaTeX Scaling & Reset)
+   BẢO TOÀN FONT METRICS TỰ NHIÊN CHO CÔNG THỨC TOÁN (KaTeX Reset)
    ========================================================================== */
 
 .lesson-content .katex,
 .lu-prose .katex {
-  line-height: 1.2 !important;
+  line-height: 1.15 !important;
   letter-spacing: normal !important;
   white-space: nowrap;
   font-size: 1.15em;
@@ -265,25 +265,25 @@
 
 .lesson-content .katex *,
 .lu-prose .katex * {
-  line-height: 1.2 !important;
+  line-height: 1.15 !important;
   letter-spacing: normal !important;
 }
 
 .lesson-content .katex .mfrac,
 .lu-prose .katex .mfrac {
-  padding: 0.15em 0 !important;
+  padding: 0.18em 0 !important;
 }
 
 .lesson-content .katex .mfrac .frac-line,
 .lu-prose .katex .mfrac .frac-line {
-  border-bottom-width: 0.05em !important;
+  border-bottom-width: 0.06em !important;
   margin: 0.12em 0 !important;
 }
 
 .lesson-content .katex-display,
 .lu-prose .katex-display {
   line-height: normal !important;
-  margin: 1.25rem 0 !important;
+  margin: 1.5rem 0 !important;
   padding: 0.5rem 0;
   overflow-x: auto;
   overflow-y: hidden;
