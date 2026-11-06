@@ -171,7 +171,7 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: /Danh mục học phần Toán học/i,
+        name: /Danh mục Học phần/i,
       }),
     ).toBeInTheDocument();
 

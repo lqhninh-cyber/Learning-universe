@@ -13,7 +13,7 @@ import { Link } from 'react-router';
 import { getLessonById, getSubjectStats } from '@/content-runtime';
 import { getCourseCinematicAsset } from '@/data/cinematicAssets';
 import { useLearningStore } from '@/features/learning';
-import { COURSE_DIRECT_PDF_LINKS, EXTERNAL_LINKS, ROUTES } from '@/shared/config/routes';
+import { COURSE_DIRECT_PDF_LINKS, ROUTES } from '@/shared/config/routes';
 
 export interface SubjectHeroProps {
   readonly subject: ManifestSubject;
@@ -39,7 +39,7 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
 
   const resumeLocation = lastVisited ? getLessonById(lastVisited.lessonId) : undefined;
   const ctaLocation = resumeLocation ?? stats.firstLesson;
-  const directPdfUrl = COURSE_DIRECT_PDF_LINKS[subject.slug] ?? EXTERNAL_LINKS.googleDriveDocs;
+  const directPdfUrl = COURSE_DIRECT_PDF_LINKS[subject.slug];
 
   const hasDedicatedExamPage =
     subject.slug === 'cau-truc-dai-so' || subject.slug === 'giai-tich-ham-mot-bien';
@@ -154,7 +154,7 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
                 >
                   <FileText className="h-4 w-4 text-amber-300" aria-hidden="true" />
-                  <span>Giáo trình PDF (Drive)</span>
+                  <span>Đọc giáo trình PDF</span>
                   <ExternalLink className="h-3.5 w-3.5 opacity-75" aria-hidden="true" />
                 </a>
               )}

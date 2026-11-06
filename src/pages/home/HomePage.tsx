@@ -1,15 +1,11 @@
 import {
   ArrowDown,
   ArrowRight,
-  ArrowUpRight,
   BookMarked,
-  BookOpen,
-  Clock,
+  ChevronRight,
   Compass,
   Layers,
-  Play,
   Search,
-  User,
 } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
 import { Link } from 'react-router';
@@ -22,13 +18,12 @@ import {
 } from '@/data/cinematicAssets';
 import { useLearningStore } from '@/features/learning';
 import { SearchBar } from '@/features/search';
-import { isSupabaseConfigured } from '@/services/supabase/client';
-import { EXTERNAL_LINKS, ROUTES } from '@/shared/config/routes';
+import { ROUTES } from '@/shared/config/routes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
-import { Button, ProgressRing } from '@/shared/ui';
+import { Button, HeritageDivider, ProgressRing } from '@/shared/ui';
 
 type HubBranchFilter = 'all' | AcademicBranch;
 
@@ -39,18 +34,15 @@ export function HomePage() {
   const prefersReducedMotion = useReducedMotion();
   const svgMaskId = useId().replace(/:/g, '');
 
-  const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
-  const learnerName = useLearningStore((state) => state.learnerName);
   const completedLessons = useLearningStore((state) => state.completedLessons);
   const lastVisitedGlobal = useLearningStore((state) => state.lastVisitedGlobal);
-  const enableLearnerMode = useLearningStore((state) => state.enableLearnerMode);
 
   const [activeBranch, setActiveBranch] = useState<HubBranchFilter>('all');
   const [hubQuery, setHubQuery] = useState('');
   const [hoveredCourseSlug, setHoveredCourseSlug] = useState<string>('cau-truc-dai-so');
   const [scrollBlindsProgress, setScrollBlindsProgress] = useState(0);
 
-  // Hiệu ứng chuyển cảnh màn trập SVG Mask / Horizontal Blinds 60fps khi cuộn từ Screen 1 sang Screen 2
+  // Hiệu ứng chuyển cảnh màn trập SVG Mask / Horizontal Blinds 60fps khi cuộn
   useEffect(() => {
     if (prefersReducedMotion || typeof window === 'undefined') {
       return;
@@ -105,6 +97,13 @@ export function HomePage() {
   });
 
   const activeHubAsset = getCourseCinematicAsset(hoveredCourseSlug);
+
+  // Định dạng tiêu đề bài học gần nhất (tránh lặp "Bài X.Y" nếu tiêu đề gốc đã có)
+  const recentLessonTitle = activeRecentLesson
+    ? activeRecentLesson.lesson.title.startsWith('Bài ')
+      ? activeRecentLesson.lesson.title
+      : `Bài ${activeRecentLesson.chapter.number}.${activeRecentLesson.lesson.number}: ${activeRecentLesson.lesson.title}`
+    : '';
 
   return (
     <FadeIn className="bg-[#FAF7F2] text-stone-900">
@@ -388,10 +387,10 @@ export function HomePage() {
                   onFocus={() => setHoveredCourseSlug(subject.slug)}
                   aria-label={`Học phần ${subject.title}`}
                   className={cn(
-                    'group flex flex-col justify-between rounded-2xl border p-5 backdrop-blur-md transition-all duration-300 sm:p-6',
+                    'group flex flex-col justify-between rounded-3xl border p-5 backdrop-blur-md transition-all duration-300 sm:p-6',
                     isHovered
                       ? 'border-stone-400 bg-[#FDFBF7]/95 shadow-sm'
-                      : 'border-stone-300/75 bg-[#FDFBF7]/80 hover:border-stone-400 hover:bg-[#FDFBF7]/95',
+                      : 'border-stone-200/80 bg-[#FDFBF7]/80 hover:border-stone-400 hover:bg-[#FDFBF7]/95',
                   )}
                 >
                   <div className="space-y-2.5">
@@ -450,167 +449,149 @@ export function HomePage() {
       </section>
 
       {/* =========================================================================
-          CONTINUE EXPLORING & SHORTCUTS
+          PHÂN CẢNH "TIẾP TỤC HỌC TẬP" THEO PHONG CÁCH APPLE STORE
           ========================================================================= */}
       <section
-        aria-label="Tiếp tục khám phá và lối tắt học thuật"
-        className="mx-auto max-w-[1440px] space-y-10 border-t border-stone-300/70 px-6 pt-14 pb-8 sm:px-12 lg:px-16"
+        aria-label="Tiếp tục học tập"
+        className="mx-auto max-w-[1440px] space-y-10 border-t border-stone-300/60 px-6 pt-16 pb-8 sm:px-12 lg:px-16"
       >
-        <div className="space-y-1.5">
-          <h2 className="font-serif text-3xl font-normal tracking-tight text-stone-950 sm:text-4xl">
-            Tiếp Tục Học Dở &amp; Lối Tắt Học Thuật
-          </h2>
+        {/* Tiêu đề phân cảnh tối giản */}
+        <div className="space-y-2">
+          <h2 className="font-serif text-3xl text-stone-900 md:text-4xl">Tiếp tục học tập</h2>
+          <p className="max-w-2xl text-sm text-stone-600 sm:text-base">
+            Quay lại bài học đang đọc dở và các công cụ học tập trọng tâm.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* WIDGET TỐI GIẢN: TIẾP TỤC HỌC DỞ (7 Cột) */}
+        {/* Bố cục hàng 3 thẻ Apple Store (Apple-Style Card Row) */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {/* THẺ 1 — BÀI HỌC GẦN NHẤT (Recent Lesson) */}
           {activeRecentLesson && (
             <div
               role="region"
               aria-label="Tiếp tục học dở"
-              className="flex flex-col justify-between border-t border-b border-stone-300/70 bg-[#FDFBF7]/70 py-6 sm:px-6 lg:col-span-7"
+              className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8"
             >
               <div className="space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold tracking-wider text-[#9A3412] uppercase">
-                    <Play className="h-3 w-3" aria-hidden="true" />
-                    <span>Tiếp tục học dở</span>
-                  </span>
-                  <span className="font-mono text-xs text-stone-500">
-                    {activeRecentLesson.subject.title} · Chương {activeRecentLesson.chapter.number}
-                  </span>
-                </div>
+                <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+                  GẦN ĐÂY
+                </span>
 
-                <div className="flex items-start justify-between gap-5 pt-1">
-                  <div className="space-y-1.5">
-                    <h3 className="font-serif text-xl font-bold text-stone-950 sm:text-2xl">
-                      {activeRecentLesson.lesson.title}
-                    </h3>
-                    <p className="line-clamp-2 max-w-xl text-sm leading-relaxed text-stone-600">
-                      {activeRecentLesson.lesson.description}
-                    </p>
-                  </div>
+                <h3 className="font-serif text-xl leading-snug font-bold text-stone-900 sm:text-2xl">
+                  {recentLessonTitle}
+                </h3>
 
-                  <div className="shrink-0">
-                    <ProgressRing
-                      value={progressPercent > 0 ? progressPercent : 25}
-                      size={52}
-                      strokeWidth={4}
-                    />
-                  </div>
-                </div>
+                <p className="line-clamp-2 text-sm leading-relaxed text-stone-600">
+                  {activeRecentLesson.lesson.description}
+                </p>
               </div>
 
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-stone-200/70 pt-4">
-                <div className="flex items-center gap-4 text-xs text-stone-600">
-                  <span className="inline-flex items-center gap-1.5 font-medium text-stone-800">
-                    <span>Tiến độ:</span>
-                    <strong className="font-mono text-[#9A3412]">
-                      {progressPercent > 0 ? `${progressPercent}%` : '25%'}
-                    </strong>
-                    <span>
-                      ({completedCount}/{totalLessonCount} bài)
-                    </span>
-                  </span>
-                  <span className="hidden h-3 w-px bg-stone-300 sm:inline" aria-hidden="true" />
-                  <span className="hidden items-center gap-1 sm:inline-flex">
-                    <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>{Math.max(5, activeRecentLesson.lesson.estimatedMinutes)} phút đọc</span>
-                  </span>
+              <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
+                <div className="flex items-center gap-3">
+                  <ProgressRing
+                    value={progressPercent > 0 ? progressPercent : 25}
+                    size={40}
+                    strokeWidth={3.5}
+                  />
+                  <div>
+                    <p className="text-xs font-semibold text-stone-900">
+                      {activeRecentLesson.subject.title}
+                    </p>
+                    <p className="font-mono text-[11px] text-stone-500">
+                      Hoàn thành {progressPercent > 0 ? `${progressPercent}%` : '25%'} (
+                      {completedCount}/{totalLessonCount} bài)
+                    </p>
+                  </div>
                 </div>
 
-                <Button
-                  asChild
-                  variant="subject"
-                  size="sm"
-                  className="gap-2 rounded-full bg-stone-900 px-5 py-2.5 text-xs font-semibold text-[#FAF7F2] hover:bg-[#9A3412]"
+                <Link
+                  to={ROUTES.lesson(
+                    activeRecentLesson.subject.slug,
+                    activeRecentLesson.chapter.slug,
+                    activeRecentLesson.lesson.slug,
+                  )}
+                  aria-label="Tiếp tục học"
+                  title="Tiếp tục học bài này"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
                 >
-                  <Link
-                    to={ROUTES.lesson(
-                      activeRecentLesson.subject.slug,
-                      activeRecentLesson.chapter.slug,
-                      activeRecentLesson.lesson.slug,
-                    )}
-                  >
-                    <span>Tiếp tục học</span>
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </Link>
-                </Button>
+                  <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                </Link>
               </div>
             </div>
           )}
 
-          {/* CỤM LỐI TẮT NHANH (5 Cột): Ngân hàng Thuật ngữ & Kho Tài liệu Giáo trình */}
-          <div className="flex flex-col justify-between divide-y divide-stone-300/60 border-t border-b border-stone-300/70 lg:col-span-5">
-            <Link
-              to={ROUTES.glossary}
-              className="group flex items-start justify-between gap-4 py-4 transition-colors hover:bg-[#FDFBF7]"
-            >
-              <div className="flex items-start gap-3.5">
-                <BookMarked className="mt-1 h-4 w-4 shrink-0 text-[#9A3412]" aria-hidden="true" />
-                <div className="space-y-1">
-                  <h3 className="font-serif text-base font-bold text-stone-950 group-hover:text-[#9A3412]">
-                    Ngân hàng Thuật ngữ (Glossary)
-                  </h3>
-                  <p className="text-xs leading-relaxed text-stone-600">
-                    Tra cứu hệ thống định nghĩa, ký hiệu KaTeX và thuật ngữ toán học Việt – Anh.
-                  </p>
-                </div>
-              </div>
-              <ArrowUpRight
-                className="h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#9A3412]"
-                aria-hidden="true"
-              />
-            </Link>
+          {/* THẺ 2 — TRA CỨU THUẬT NGỮ (Glossary) */}
+          <div className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
+            <div className="space-y-4">
+              <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+                TRA CỨU HỌC THUẬT
+              </span>
 
-            <a
-              href={EXTERNAL_LINKS.googleDriveDocs}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-start justify-between gap-4 py-4 transition-colors hover:bg-[#FDFBF7]"
-            >
-              <div className="flex items-start gap-3.5">
-                <BookOpen className="mt-1 h-4 w-4 shrink-0 text-indigo-950" aria-hidden="true" />
-                <div className="space-y-1">
-                  <h3 className="font-serif text-base font-bold text-stone-950 group-hover:text-indigo-950">
-                    Kho Tài liệu Giáo trình
-                  </h3>
-                  <p className="text-xs leading-relaxed text-stone-600">
-                    Truy cập trực tiếp giáo trình chính, đề cương học phần và văn bản pháp quy trên
-                    Google Drive.
-                  </p>
-                </div>
-              </div>
-              <ArrowUpRight
-                className="h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-indigo-950"
-                aria-hidden="true"
-              />
-            </a>
+              <h3 className="font-serif text-xl leading-snug font-bold text-stone-900 sm:text-2xl">
+                Ngân hàng Thuật ngữ &amp; Ký hiệu Toán
+              </h3>
 
-            <div className="flex items-center justify-between py-3.5 text-xs text-stone-700">
-              <div className="flex items-center gap-2">
-                <User className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
-                <span>
-                  {isAuthenticated
-                    ? `Đang đồng bộ: ${learnerName || 'Học viên'}`
-                    : 'Trải nghiệm tự do ở Chế độ Khách'}
-                </span>
-              </div>
-              {!isAuthenticated ? (
-                <button
-                  type="button"
-                  onClick={() => enableLearnerMode()}
-                  className="cursor-pointer font-semibold text-[#9A3412] hover:underline"
-                >
-                  Kích hoạt Học viên
-                </button>
-              ) : (
-                <span className="font-mono text-[11px] text-stone-500">
-                  {isSupabaseConfigured ? 'Supabase Cloud' : 'Lưu cục bộ'}
-                </span>
-              )}
+              <p className="text-sm leading-relaxed text-stone-600">
+                Hệ thống khái niệm, công thức KaTeX, nhóm, vành, không gian véc-tơ và thuật ngữ sư
+                phạm.
+              </p>
+            </div>
+
+            <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
+              <span className="text-xs font-medium text-stone-500">
+                Từ điển Toán học Việt – Anh
+              </span>
+
+              <Link
+                to="/glossary"
+                aria-label="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
+                title="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
+              >
+                <ChevronRight className="h-5 w-5" aria-hidden="true" />
+              </Link>
             </div>
           </div>
+
+          {/* THẺ 3 — PHÒNG LAB KHÔNG GIAN 3D (Interactive Lab) */}
+          <div className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
+            <div className="space-y-4">
+              <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+                MÔ PHỎNG TRỰC QUAN
+              </span>
+
+              <h3 className="font-serif text-xl leading-snug font-bold text-stone-900 sm:text-2xl">
+                Phòng Lab Hình học Không gian
+              </h3>
+
+              <p className="text-sm leading-relaxed text-stone-600">
+                Không gian mô phỏng tương tác 3D các phép biến đổi Affine và hệ tọa độ trực giác.
+              </p>
+            </div>
+
+            <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
+              <span className="text-xs font-medium text-stone-500">Mô phỏng trực quan 2D / 3D</span>
+
+              <a
+                href="/interactive/affine-geometry.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Mở Phòng Lab Hình học Không gian"
+                title="Mở Phòng Lab Hình học Không gian"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
+              >
+                <ChevronRight className="h-5 w-5" aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Chân phân cảnh: Họa tiết kỷ hà truyền thống Việt Nam chìm mờ & Trạng thái trung tính */}
+        <div className="space-y-4 pt-6 text-center">
+          <HeritageDivider className="opacity-30" />
+          <p className="text-xs text-stone-500">
+            ● Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt · Bản phát hành 2026
+          </p>
         </div>
       </section>
     </FadeIn>

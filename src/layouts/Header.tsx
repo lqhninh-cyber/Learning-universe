@@ -234,9 +234,7 @@ export const Header: FC<HeaderProps> = ({ className }) => {
                   <div className="border-t border-stone-200 pt-3">
                     {isUserLoggedIn ? (
                       <div className="space-y-2 px-1">
-                        <div className="text-xs text-stone-500">
-                          Đăng nhập: {user?.fullName || user?.email || 'Học viên'}
-                        </div>
+                        <div className="text-xs text-stone-500">Trạng thái: Đã đăng nhập</div>
                         <Button
                           variant="outline"
                           size="sm"
@@ -561,12 +559,6 @@ export const Header: FC<HeaderProps> = ({ className }) => {
             {/* Khối Đăng nhập / Đăng xuất */}
             {isUserLoggedIn ? (
               <div className="flex items-center gap-2">
-                <span
-                  className="hidden max-w-[120px] truncate text-xs font-semibold text-stone-700 lg:inline-block"
-                  title={user?.fullName || user?.email || 'Học viên'}
-                >
-                  {user?.fullName || user?.email || 'Học viên'}
-                </span>
                 <Button
                   variant="ghost"
                   size="sm"

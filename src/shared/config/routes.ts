@@ -36,10 +36,10 @@ export const ROUTES = {
 } as const;
 
 /**
- * Thư mục Google Drive chính thức lưu trữ toàn bộ tài liệu & giáo trình môn học.
+ * Liên kết mặc định tới tệp PDF giáo trình chính thức (không bao giờ trỏ vào thư mục Drive chung).
  */
 export const GOOGLE_DRIVE_DOCS_URL =
-  'https://drive.google.com/drive/folders/1uHHOAep9ZRI5BKcOnJeTRpxwsHek8rZ1?usp=drive_link';
+  'https://drive.google.com/file/d/1Jc3J6XZd7HKHOCsJu9w6C84FIsCNS3iM/view?usp=drive_link';
 
 /**
  * Liên kết xem trực tiếp tệp PDF giáo trình chính và tài liệu ôn tập trên Google Drive.

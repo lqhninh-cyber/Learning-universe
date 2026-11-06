@@ -80,15 +80,25 @@ describe('App routing smoke test', () => {
     expect(enterCourseLinks.length).toBe(4);
     expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
 
-    // 3. Screen 3 — Continue Exploring & Shortcuts
+    // 3. Phân cảnh "Tiếp tục học tập" theo phong cách Apple Store (3 thẻ + Ẩn danh + Không lộ link Drive tổng)
+    expect(screen.getByRole('heading', { name: /Tiếp tục học tập/i })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Tiếp tục học/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Ngân hàng Thuật ngữ \(Glossary\)/i })).toHaveAttribute(
+    expect(
+      screen.getByRole('link', { name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i }),
+    ).toHaveAttribute('href', '/glossary');
+    expect(screen.getByRole('link', { name: /Mở Phòng Lab Hình học Không gian/i })).toHaveAttribute(
       'href',
-      '/thuat-ngu',
+      '/interactive/affine-geometry.html',
     );
-    expect(screen.getByRole('link', { name: /Kho Tài liệu Giáo trình/i })).toBeInTheDocument();
-    expect(screen.getByText(/Trải nghiệm tự do ở Chế độ Khách/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt/i),
+    ).toBeInTheDocument();
+
+    // Đảm bảo không còn lộ dữ liệu cá nhân hoặc link thư mục Drive tổng
+    expect(screen.queryByText(/Đang đồng bộ:/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Supabase Cloud/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Kho Tài liệu Giáo trình/i)).not.toBeInTheDocument();
   });
 
   it('hiển thị Cinematic Course Cover tràn viền tại /courses/cau-truc-dai-so', async () => {
@@ -100,8 +110,23 @@ describe('App routing smoke test', () => {
     expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
     expect(screen.getAllByText('10 chương · 39 bài học').length).toBeGreaterThan(0);
     expect(screen.getByRole('link', { name: /Tiếp tục học: Bài/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Giáo trình PDF \(Drive\)/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Đọc giáo trình PDF/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Ngân hàng Đề thi & Lời giải/i })).toBeInTheDocument();
+  });
+
+  it('hiển thị trang Danh mục Học phần (/courses) đồng bộ phong cách Apple Card', async () => {
+    renderWithProviders('/courses');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Danh mục Học phần' }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Tất cả' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Toán học' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Khoa học Giáo dục' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Vào học phần Cấu trúc đại số/i })).toHaveAttribute(
+      'href',
+      '/courses/cau-truc-dai-so',
+    );
   });
 
   it('hiển thị trang 404 tiếng Việt khi truy cập đường dẫn không tồn tại', async () => {
