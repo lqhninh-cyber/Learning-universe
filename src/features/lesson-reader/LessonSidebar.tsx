@@ -25,7 +25,7 @@ export function LessonSidebar({
   return (
     <nav
       aria-label={`Danh sách bài học môn ${subject.title}`}
-      className={cn('space-y-4', className)}
+      className={cn('space-y-4 bg-[#F5F1EB] text-stone-800', className)}
     >
       <div className="flex items-center justify-between border-b border-stone-200/80 pb-3">
         <Link

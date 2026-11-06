@@ -8,7 +8,6 @@ import {
   LessonMdxView,
   loadLessonModule,
 } from '@/content-runtime';
-import { ReadingSpine } from '@/features/courses';
 import { useLearningStore } from '@/features/learning';
 import {
   DevEditorialBar,
@@ -241,15 +240,12 @@ export function LessonPage() {
   return (
     <FadeIn
       className={cn(
-        'mx-auto w-full pb-16 transition-all duration-300',
+        'mx-auto w-full bg-[#FAF7F2] pb-16 text-stone-900 transition-all duration-300',
         isFocusMode
           ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
           : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
       )}
     >
-      {/* Trục Tọa Độ Đọc & Chuỗi Chỉ Báo Tiến Trình (Minimal Reading Spine) */}
-      <ReadingSpine />
-
       {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
       {isFocusMode && (
         <button
@@ -370,7 +366,7 @@ export function LessonPage() {
         {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) - Tạm ẩn trong Focus Mode */}
         {!isFocusMode && !isSidebarCollapsed && (
           <aside
-            className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto border-r border-stone-200/50 pr-4 pb-6 transition-all duration-300 lg:block"
+            className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto rounded-2xl border-r border-stone-200/70 bg-[#F5F1EB] p-4 pb-6 text-stone-800 transition-all duration-300 lg:block"
             aria-label="Danh mục điều hướng bài học"
           >
             <LessonSidebar
@@ -420,9 +416,9 @@ export function LessonPage() {
             data-reading-article
             data-reading-size={fontSize}
             className={cn(
-              'lesson-content rounded-2xl border border-stone-200/50 bg-[#FDFBF7] shadow-2xs transition-all duration-300',
+              'lesson-content rounded-3xl border border-stone-200/80 bg-white text-stone-900 shadow-sm transition-all duration-300',
               fontSize === 'lg' && 'reader-scale-lg',
-              isFocusMode ? 'p-8 shadow-xs sm:p-12 lg:p-14' : 'p-6 sm:p-8 lg:p-10',
+              isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
             )}
           >
             <header className="space-y-4 border-b border-stone-200/50 pb-6">
@@ -454,7 +450,7 @@ export function LessonPage() {
                 {lesson.title}
               </h1>
 
-              <p className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800 dark:text-stone-200">
+              <p className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
                 {lesson.description}
               </p>
 
@@ -549,7 +545,7 @@ export function LessonPage() {
         {!isFocusMode && (
           <aside
             data-sidenotes-column
-            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[260px] shrink-0 overflow-y-auto border-l border-stone-200/50 pl-4 transition-all duration-300 xl:block dark:border-stone-800/50"
+            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[260px] shrink-0 overflow-y-auto pl-2 transition-all duration-300 xl:block"
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >

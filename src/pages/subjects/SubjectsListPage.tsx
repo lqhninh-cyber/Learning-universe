@@ -22,7 +22,7 @@ export function SubjectsListPage() {
   });
 
   return (
-    <FadeIn className="mx-auto max-w-5xl space-y-8">
+    <FadeIn className="mx-auto max-w-5xl space-y-8 bg-[#FAF7F2] text-stone-900">
       {/* Tiêu đề đầu trang & Đoạn dẫn cô đọng */}
       <div className="space-y-4">
         <Breadcrumb
@@ -30,10 +30,10 @@ export function SubjectsListPage() {
         />
 
         <div className="space-y-2">
-          <h1 className="font-serif text-3xl font-bold tracking-tight text-stone-900 sm:text-5xl">
+          <h1 className="font-serif text-3xl font-bold tracking-tight text-stone-900 sm:text-5xl dark:text-stone-100">
             Danh mục Học phần
           </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-stone-600">
+          <p className="max-w-2xl text-base leading-relaxed text-stone-700">
             Chương trình đào tạo đại học chuẩn mực gồm các học phần Toán học nền tảng và Khoa học
             Giáo dục dành cho sinh viên Sư phạm Toán học.
           </p>

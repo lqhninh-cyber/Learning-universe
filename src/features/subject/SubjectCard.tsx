@@ -16,7 +16,7 @@ export function SubjectCard({ subject }: SubjectCardProps) {
   return (
     <article
       aria-label={`Học phần ${subject.title}`}
-      className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+      className="group flex flex-col justify-between rounded-3xl border border-stone-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
     >
       {/* Phía trên: Tag mã học phần + Tiêu đề môn học đậm lớn + 2 dòng mô tả súc tích */}
       <div className="space-y-3">

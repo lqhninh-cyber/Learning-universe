@@ -5,6 +5,7 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import 'katex/dist/katex.min.css';
 @import 'tailwindcss';
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 @import './tokens.css';
 @import './subject-themes.css';
 @import './prose.css';
@@ -108,10 +109,12 @@
 }
 
 @layer base {
-  html {
+  html,
+  body,
+  #root {
     font-family: var(--font-sans);
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
+    background-color: #faf7f2;
+    color: #1c1917;
   }
 
   /* Donny Trương Orthography: chống đè dấu thanh điệu và dấu phụ chữ Quốc ngữ khi viết hoa */

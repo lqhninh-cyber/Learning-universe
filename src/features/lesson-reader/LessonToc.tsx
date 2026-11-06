@@ -112,7 +112,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
     <nav
       aria-label="Mục lục bài học"
       className={cn(
-        'rounded-2xl border border-stone-200/90 bg-white/95 p-3 shadow-xs backdrop-blur-xs transition-all duration-200',
+        'rounded-2xl border border-stone-200/70 bg-white/80 p-3 shadow-xs backdrop-blur transition-all duration-200',
         className,
       )}
     >

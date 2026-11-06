@@ -116,10 +116,8 @@ export const Header: FC<HeaderProps> = ({ className }) => {
       <header
         ref={capsuleRef}
         className={cn(
-          'lu-site-header fixed top-4 left-1/2 z-40 flex h-14 w-[94%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full border px-6 shadow-[0_10px_35px_rgba(0,0,0,0.05)] backdrop-blur-xl transition-all duration-300 md:top-5 md:h-15 print:hidden',
-          isScrolled
-            ? 'border-stone-300/80 bg-[#FAF7F2]/95'
-            : 'border-stone-200/75 bg-[#FAF7F2]/85',
+          'lu-site-header fixed top-4 left-1/2 z-40 flex h-14 w-[94%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full border border-stone-200/80 bg-[#FAF7F2]/85 px-6 text-stone-900 shadow-sm backdrop-blur-xl transition-all duration-300 md:top-5 md:h-15 print:hidden',
+          isScrolled && 'border-stone-300/80 bg-[#FAF7F2]/95',
           className,
         )}
       >
@@ -136,10 +134,10 @@ export const Header: FC<HeaderProps> = ({ className }) => {
           <Link
             to={ROUTES.home}
             className={cn(
-              'rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
+              'rounded-full px-3.5 py-1.5 text-xs font-medium text-stone-900 transition-all',
               pathname === ROUTES.home
-                ? 'bg-stone-200/60 text-stone-900'
-                : 'text-stone-600 hover:bg-stone-200/40 hover:text-stone-900',
+                ? 'bg-stone-200/70 font-semibold text-stone-900'
+                : 'text-stone-900/85 hover:bg-stone-200/40 hover:text-stone-900',
             )}
           >
             Trang chủ
@@ -155,16 +153,16 @@ export const Header: FC<HeaderProps> = ({ className }) => {
             aria-expanded={isMegaMenuOpen}
             aria-haspopup="true"
             className={cn(
-              'inline-flex cursor-pointer items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
+              'inline-flex cursor-pointer items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-medium text-stone-900 transition-all',
               isLearningSpaceActive
-                ? 'bg-stone-200/60 text-stone-900'
-                : 'text-stone-600 hover:bg-stone-200/40 hover:text-stone-900',
+                ? 'bg-stone-200/70 font-semibold text-stone-900'
+                : 'text-stone-900/85 hover:bg-stone-200/40 hover:text-stone-900',
             )}
           >
             <span>Không gian học tập</span>
             <ChevronDown
               className={cn(
-                'h-3 w-3 text-stone-500 transition-transform duration-200',
+                'h-3 w-3 text-stone-600 transition-transform duration-200',
                 isMegaMenuOpen && 'rotate-180',
               )}
               aria-hidden="true"
@@ -174,10 +172,10 @@ export const Header: FC<HeaderProps> = ({ className }) => {
           <Link
             to={ROUTES.courses}
             className={cn(
-              'rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
+              'rounded-full px-3.5 py-1.5 text-xs font-medium text-stone-900 transition-all',
               isCoursesActive
-                ? 'bg-stone-200/60 text-stone-900'
-                : 'text-stone-600 hover:bg-stone-200/40 hover:text-stone-900',
+                ? 'bg-stone-200/70 font-semibold text-stone-900'
+                : 'text-stone-900/85 hover:bg-stone-200/40 hover:text-stone-900',
             )}
           >
             Tất cả môn học
@@ -186,10 +184,10 @@ export const Header: FC<HeaderProps> = ({ className }) => {
           <Link
             to="/glossary"
             className={cn(
-              'rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
+              'rounded-full px-3.5 py-1.5 text-xs font-medium text-stone-900 transition-all',
               isGlossaryActive
-                ? 'bg-stone-200/60 text-stone-900'
-                : 'text-stone-600 hover:bg-stone-200/40 hover:text-stone-900',
+                ? 'bg-stone-200/70 font-semibold text-stone-900'
+                : 'text-stone-900/85 hover:bg-stone-200/40 hover:text-stone-900',
             )}
           >
             Thuật ngữ

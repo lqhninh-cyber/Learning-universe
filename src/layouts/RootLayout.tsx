@@ -28,7 +28,7 @@ function RootLayoutContent() {
   }, [pathname, hash]);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#FAF7F2] text-[#23211E] dark:bg-[#12151A] dark:text-[#E2DDD5]">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#FAF7F2] text-stone-900">
       {/* 0. TACTILE DO PAPER GRAIN SVG NOISE OVERLAY */}
       <PaperGrain />
 
