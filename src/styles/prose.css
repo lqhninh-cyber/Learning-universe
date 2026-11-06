@@ -359,8 +359,9 @@
    ========================================================================== */
 
 /* Khi Focus Mode kích hoạt: Tự động ẩn thanh điều hướng Header chính trên cùng */
-body[data-focus-mode='true'] header.sticky {
-  transform: translateY(-100%);
+body[data-focus-mode='true'] header.sticky,
+body[data-focus-mode='true'] header.lu-site-header {
+  transform: translateY(-140%);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -369,7 +370,8 @@ body[data-focus-mode='true'] header.sticky {
 }
 
 /* Vùng cảm ứng mép trên 18px để rê chuột lên sát mép trên thì Header trượt xuống êm ái */
-body[data-focus-mode='true'] header.sticky::before {
+body[data-focus-mode='true'] header.sticky::before,
+body[data-focus-mode='true'] header.lu-site-header::before {
   content: '';
   position: fixed;
   top: 0;
@@ -381,7 +383,9 @@ body[data-focus-mode='true'] header.sticky::before {
 }
 
 body[data-focus-mode='true'] header.sticky:hover,
-body[data-focus-mode='true'] header.sticky:focus-within {
+body[data-focus-mode='true'] header.sticky:focus-within,
+body[data-focus-mode='true'] header.lu-site-header:hover,
+body[data-focus-mode='true'] header.lu-site-header:focus-within {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;

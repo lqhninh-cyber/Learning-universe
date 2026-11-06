@@ -30,6 +30,11 @@ describe('App routing smoke test', () => {
         name: /LEARNING UNIVERSE/i,
       }),
     ).toBeInTheDocument();
+    // Floating Capsule Island Header: Wordmark LEARNING UNIVERSE, nút Tìm kiếm ⌘K và Avatar tối giản
+    expect(screen.getByRole('button', { name: /Mở tìm kiếm nhanh/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Tài khoản và cài đặt giao diện/i }),
+    ).toBeInTheDocument();
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
     expect(algebraLinks.length).toBeGreaterThan(0);
     expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');

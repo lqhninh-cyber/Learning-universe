@@ -181,7 +181,7 @@ export function HomePage() {
         </div>
 
         {/* Nội dung chính của The Opening */}
-        <div className="relative z-20 mx-auto flex h-full max-w-[1440px] flex-col justify-between px-6 py-8 sm:px-12 sm:py-10 lg:px-20 lg:py-12">
+        <div className="relative z-20 mx-auto flex h-full max-w-[1440px] flex-col justify-between px-6 pt-24 pb-8 sm:px-12 sm:pt-28 sm:pb-10 lg:px-20 lg:pb-12">
           {/* Góc trên: Định danh Học viện */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-300/60 pb-4">
             <div className="flex items-center gap-2.5">

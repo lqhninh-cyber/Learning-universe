@@ -43,7 +43,7 @@ function RootLayoutContent() {
           </Container>
         </main>
       ) : (
-        <main className="flex-1 pt-6 pb-12 sm:pt-8">
+        <main className="flex-1 pt-24 pb-12 sm:pt-28">
           <Container size="wide">
             <Outlet />
           </Container>

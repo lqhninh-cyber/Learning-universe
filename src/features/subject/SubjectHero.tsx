@@ -72,7 +72,7 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
       </div>
 
       {/* BỐ CỤC NỘI DUNG HERO MÔN HỌC */}
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-1 flex-col justify-between px-6 pt-8 pb-16 sm:px-10 lg:px-12 lg:pt-10 lg:pb-20">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-1 flex-col justify-between px-6 pt-24 pb-16 sm:px-10 sm:pt-28 lg:px-12 lg:pb-20">
         {/* PHÍA TRÊN: Breadcrumb thanh mảnh màu trắng sáng & Badge mã môn học */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/15 pb-4">
           <nav aria-label="Breadcrumb" className="text-xs font-medium text-white/80">
