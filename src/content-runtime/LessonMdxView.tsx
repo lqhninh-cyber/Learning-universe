@@ -11,6 +11,7 @@ import {
 } from '@/features/math-glossary';
 import { extractLatexFromKatexNode } from '@/features/math-glossary/annotator';
 import { cn } from '@/shared/lib/cn';
+import { SidenoteProvider } from '@/shared/components/Sidenote';
 import { TooltipProvider } from '@/shared/ui';
 import { LessonProvider } from './LessonContext';
 import { mdxComponents } from './mdx-components';
@@ -144,7 +145,9 @@ export function LessonMdxView({
     <TooltipProvider>
       <LessonProvider lessonMeta={lessonMeta} bibliography={bibliography}>
         <MathGlossaryProvider courseId={courseId}>
-          <LessonMdxArticle Content={Content} className={className} />
+          <SidenoteProvider>
+            <LessonMdxArticle Content={Content} className={className} />
+          </SidenoteProvider>
         </MathGlossaryProvider>
       </LessonProvider>
     </TooltipProvider>

@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types';
 import { type ComponentPropsWithoutRef, isValidElement } from 'react';
+import { Sidenote } from '@/shared/components/Sidenote';
 import { Note, Remark, Warning } from './components/CalloutBlock';
 import { Cite } from './components/Cite';
 import { Counterexample, Example } from './components/ExampleBlock';
@@ -66,6 +67,7 @@ export const mdxComponents: MDXComponents = {
   Cite,
   Ref,
   Figure,
+  Sidenote,
   KeyTakeaways,
   Chapter0KnowledgeMap,
   Chapter1KnowledgeMap,

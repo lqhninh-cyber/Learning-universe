@@ -40,6 +40,13 @@ export { MermaidChart, type MermaidChartProps } from './components/MermaidChart'
 export { Proof, type ProofProps } from './components/Proof';
 export { Ref, type RefProps } from './components/Ref';
 export {
+  Sidenote,
+  SidenoteProvider,
+  type SidenoteProps,
+  type SidenoteType,
+  useSidenoteContext,
+} from '@/shared/components/Sidenote';
+export {
   Corollary,
   Definition,
   Lemma,

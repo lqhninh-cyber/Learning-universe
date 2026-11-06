@@ -448,3 +448,20 @@ body[data-focus-mode='true'] header.lu-site-header:focus-within {
 .reader-scale-lg .scientific-stepper-card {
   font-size: 1.08em;
 }
+
+/* ============================================================================
+   CHÚ GIẢI LỀ HỌC THUẬT (ACADEMIC MARGINALIA & SIDENOTES - TUFTE / DISTILL STANDARD)
+   ============================================================================ */
+.academic-sidenote-wrapper {
+  font-family: inherit;
+}
+
+@media (min-width: 1024px) {
+  .sidenote-academic {
+    float: right;
+    clear: right;
+    font-family: var(--font-serif);
+    text-align: left;
+    user-select: text;
+  }
+}
