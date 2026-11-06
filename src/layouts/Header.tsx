@@ -16,6 +16,7 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { useAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
+import { ReadingProgressBar } from '@/features/lesson-reader/ReadingProgressBar';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { Button, Drawer } from '@/shared/ui';
@@ -41,8 +42,6 @@ export const Header: FC<HeaderProps> = ({ className }) => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
 
   const megaMenuRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
@@ -55,35 +54,8 @@ export const Header: FC<HeaderProps> = ({ className }) => {
     setIsMobileMenuOpen(false);
   }
 
-  // Tự động ẩn thanh điều hướng khi cuộn xuống quá 120px và hiện lại khi cuộn lên
-  useEffect(() => {
-    const handleScroll = () => {
-      if (typeof window === 'undefined') return;
-      const currentScrollY = window.scrollY;
-
-      // Kiểm tra xem đang ở Focus mode hay không
-      const isFocusMode = document.body.getAttribute('data-focus-mode') === 'true';
-      if (isFocusMode) {
-        setIsVisible(false);
-        return;
-      }
-
-      if (currentScrollY > 120) {
-        if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 8) {
-          setIsVisible(false);
-          setIsMegaMenuOpen(false);
-        } else if (lastScrollY - currentScrollY > 8) {
-          setIsVisible(true);
-        }
-      } else {
-        setIsVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  // Thanh điều hướng luôn dính trên cùng (sticky) với nền kính mờ; nội dung bài đọc lướt qua phía sau.
+  // Ở Chế độ tập trung, việc ẩn Header do CSS `body[data-focus-mode='true'] header.sticky` đảm nhận.
 
   // Đóng Mega menu khi nhấp bên ngoài
   useEffect(() => {
@@ -106,14 +78,13 @@ export const Header: FC<HeaderProps> = ({ className }) => {
   return (
     <header
       className={cn(
-        'fixed top-3.5 left-1/2 z-40 w-[92%] max-w-6xl -translate-x-1/2 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-4 sm:w-[94%]',
-        isVisible ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-28 opacity-0',
+        'lu-site-header sticky top-0 z-40 w-full border-b border-stone-200/60 bg-[#FDFBF7]/85 backdrop-blur-md transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] supports-[backdrop-filter]:bg-[#FDFBF7]/75 print:hidden',
         className,
       )}
     >
       <div
         ref={megaMenuRef}
-        className="relative rounded-2xl border border-stone-200/80 bg-[#fbf9f5]/85 px-3.5 py-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.06)] backdrop-blur-md transition-all duration-300 sm:px-5"
+        className="relative mx-auto w-full max-w-6xl px-4 py-2.5 sm:px-6"
       >
         <div className="flex items-center justify-between gap-4">
           {/* Logo & Brand Identity */}
@@ -624,6 +595,9 @@ export const Header: FC<HeaderProps> = ({ className }) => {
           </div>
         </div>
       </div>
+
+      {/* Thanh chỉ báo tiến độ đọc bài (2px) nằm sát mép dưới Header kính mờ — chỉ hiện trên trang bài học */}
+      <ReadingProgressBar key={pathname} className="absolute inset-x-0 -bottom-px" />
     </header>
   );
 };

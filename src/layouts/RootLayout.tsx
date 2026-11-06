@@ -26,11 +26,11 @@ function RootLayoutContent() {
 
   return (
     <div className="bg-vn-bg text-vn-text flex min-h-screen flex-col">
-      {/* 1. FLOATING NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
+      {/* 1. STICKY FROSTED NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
       <Header />
 
       {/* 2. MAIN OUTLET CONTAINER */}
-      <main className="flex-1 pt-20 pb-12 sm:pt-24">
+      <main className="flex-1 pt-6 pb-12 sm:pt-8">
         <Container size="wide">
           <Outlet />
         </Container>
