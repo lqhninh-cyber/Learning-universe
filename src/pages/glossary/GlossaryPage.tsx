@@ -1,6 +1,6 @@
 import { ArrowRight, BookOpen, Lightbulb, Search, X } from 'lucide-react';
 import { useId, useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import {
   getAllGlossaryEntries,
   KatexMath,
@@ -15,7 +15,14 @@ type SubjectFilter = 'all' | MathGlossarySubject;
 
 export function GlossaryPage() {
   const searchInputId = useId();
-  const [query, setQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const urlQuery = searchParams.get('q') ?? '';
+  const [query, setQuery] = useState(urlQuery);
+  const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
+  if (urlQuery !== prevUrlQuery) {
+    setPrevUrlQuery(urlQuery);
+    setQuery(urlQuery);
+  }
   const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>('all');
 
   const allEntries = useMemo(() => getAllGlossaryEntries(), []);

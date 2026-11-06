@@ -9,10 +9,10 @@ import {
   SlidersHorizontal,
   User,
   Users,
-  X,
 } from 'lucide-react';
 import { type FC, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
+import { CommandPalette } from '@/components/search/CommandPalette';
 import { useAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import { ReadingProgressBar } from '@/features/lesson-reader/ReadingProgressBar';
@@ -77,14 +77,10 @@ export const Header: FC<HeaderProps> = ({ className }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Phím tắt ⌘K / Ctrl+K mở hộp thoại tìm kiếm nhanh và Escape để đóng
+  // Đóng menu thả nổi khi nhấn phím Escape
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault();
-        setIsSearchOpen((prev) => !prev);
-      } else if (event.key === 'Escape') {
-        setIsSearchOpen(false);
+      if (event.key === 'Escape') {
         setIsMegaMenuOpen(false);
         setIsAccountMenuOpen(false);
       }
@@ -562,36 +558,8 @@ export const Header: FC<HeaderProps> = ({ className }) => {
       {/* Thanh chỉ báo tiến độ đọc bài (2px) trên đỉnh trình duyệt — chỉ hiện trên trang bài học */}
       <ReadingProgressBar key={pathname} className="fixed inset-x-0 top-0 z-50" />
 
-      {/* Hộp thoại Tìm kiếm nhanh (Command Palette ⌘K) */}
-      {isSearchOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Tìm kiếm nhanh học phần và bài học"
-          className="fixed inset-0 z-50 flex items-start justify-center bg-stone-950/35 px-4 pt-24 backdrop-blur-xs"
-          onClick={() => setIsSearchOpen(false)}
-        >
-          <div
-            className="w-full max-w-xl rounded-3xl border border-stone-200/90 bg-[#FAF7F2] p-5 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-3 flex items-center justify-between">
-              <span className="font-mono text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
-                Tìm kiếm nhanh · ⌘K
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsSearchOpen(false)}
-                aria-label="Đóng hộp thoại tìm kiếm"
-                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-stone-200/60 hover:text-stone-900"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-            <SearchBar className="w-full" />
-          </div>
-        </div>
-      )}
+      {/* Hộp thoại Tìm kiếm Học thuật Nhanh (Command Palette ⌘K / Ctrl+K) */}
+      <CommandPalette open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </>
   );
 };

@@ -117,6 +117,14 @@ export const routes: RouteObject[] = [
             },
           },
           {
+            path: 'lessons/:lessonSlug',
+            lazy: async () => {
+              const { LessonShortcutRedirectPage } =
+                await import('@/pages/lesson/LessonShortcutRedirectPage');
+              return { Component: LessonShortcutRedirectPage };
+            },
+          },
+          {
             path: ':chapterSlug/:lessonSlug',
             lazy: async () => {
               const { LessonPage } = await import('@/pages/lesson/LessonPage');
@@ -141,6 +149,14 @@ export const routes: RouteObject[] = [
             lazy: async () => {
               const { SubjectExamsPage } = await import('@/pages/exams/SubjectExamsPage');
               return { Component: SubjectExamsPage };
+            },
+          },
+          {
+            path: 'lessons/:lessonSlug',
+            lazy: async () => {
+              const { LessonShortcutRedirectPage } =
+                await import('@/pages/lesson/LessonShortcutRedirectPage');
+              return { Component: LessonShortcutRedirectPage };
             },
           },
           {
