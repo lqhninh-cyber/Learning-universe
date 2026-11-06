@@ -7,6 +7,8 @@ export interface LessonViewProps {
   readonly title?: ReactNode;
   /** Đoạn văn mở đầu (Lead paragraph) được tự động áp dụng Drop Cap (`academic-dropcap`). */
   readonly lead?: string;
+  /** Thanh thông tin kiến thức tiên quyết (tùy chọn). */
+  readonly prerequisites?: ReactNode;
   /** Nội dung chính của bài học. */
   readonly children: ReactNode;
   /** Nội dung cột mục lục / chú giải lề bên phải. */
@@ -19,13 +21,14 @@ export interface LessonViewProps {
 /**
  * Chuẩn hóa bố cục trang bài đọc (LessonView — Hệ màu Giấy Dó `#FAF7F2`):
  * - Toàn bộ không gian đọc nằm trên nền giấy Dó `#FAF7F2` (`text-stone-900`).
- * - Sidebar chương bài bên trái (nếu mở): `bg-[#F5F1EB] border-r border-stone-200/70 text-stone-800`.
+ * - Sidebar chương bài bên trái (nếu mở): `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-2 custom-scrollbar scrollbar-thin bg-[#F5F1EB] border-r border-stone-200/70 text-stone-800`.
  * - Khung bài học chính: `bg-white border border-stone-200/80 rounded-3xl p-8 md:p-12 shadow-sm`.
- * - Cột mục lục / chú giải bên phải: `bg-white/80 backdrop-blur border border-stone-200/70 rounded-2xl`.
+ * - Cột mục lục / chú giải bên phải: `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pl-2 custom-scrollbar scrollbar-thin bg-white/80 backdrop-blur border border-stone-200/70 rounded-2xl`.
  */
 export const LessonView: FC<LessonViewProps> = ({
   title,
   lead,
+  prerequisites,
   children,
   marginalia,
   sidebar,
@@ -46,7 +49,7 @@ export const LessonView: FC<LessonViewProps> = ({
         {sidebar && (
           <aside
             aria-label="Danh mục chương bài"
-            className="border-r border-stone-200/70 bg-[#F5F1EB] p-4 text-stone-800 lg:col-span-3"
+            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-stone-200/70 bg-[#F5F1EB] p-4 pr-2 text-stone-800 lg:col-span-3"
           >
             {sidebar}
           </aside>
@@ -81,6 +84,8 @@ export const LessonView: FC<LessonViewProps> = ({
             </p>
           )}
 
+          {prerequisites && <div className="clear-both mb-6">{prerequisites}</div>}
+
           {children}
         </div>
 
@@ -90,7 +95,7 @@ export const LessonView: FC<LessonViewProps> = ({
           data-testid="scholar-sidenotes-column"
           aria-label="Cột chú giải lề học thuật"
           className={cn(
-            'relative h-fit rounded-2xl border border-stone-200/70 bg-white/80 p-4 pl-4 text-stone-800 backdrop-blur',
+            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border border-stone-200/70 bg-white/80 p-4 pl-2 text-stone-800 backdrop-blur',
             sidebar ? 'lg:col-span-3' : 'lg:col-span-4',
           )}
         >

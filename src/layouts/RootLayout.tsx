@@ -28,7 +28,7 @@ function RootLayoutContent() {
   }, [pathname, hash]);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#FAF7F2] text-stone-900">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-[#FAF7F2] text-stone-900">
       {/* 0. TACTILE DO PAPER GRAIN SVG NOISE OVERLAY */}
       <PaperGrain />
 
@@ -37,11 +37,11 @@ function RootLayoutContent() {
 
       {/* 2. MAIN OUTLET CONTAINER */}
       {isHomePage ? (
-        <main className="flex-1 overflow-x-hidden pb-16">
+        <main className="flex-1 overflow-x-clip pb-16">
           <Outlet />
         </main>
       ) : isCourseDetailPage ? (
-        <main className="flex-1 overflow-x-hidden pb-12">
+        <main className="flex-1 overflow-x-clip pb-12">
           <Container size="wide">
             <Outlet />
           </Container>

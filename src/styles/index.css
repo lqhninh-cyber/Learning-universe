@@ -177,3 +177,7 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(168, 162, 158, 0.4) transparent;
 }
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+}

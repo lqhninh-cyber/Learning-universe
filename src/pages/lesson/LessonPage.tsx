@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Layers, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
+import { ArrowLeft, Clock, Layers, Link2, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
@@ -366,7 +366,7 @@ export function LessonPage() {
         {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) - Tạm ẩn trong Focus Mode */}
         {!isFocusMode && !isSidebarCollapsed && (
           <aside
-            className="custom-scrollbar sticky top-20 hidden h-[calc(100vh-5.5rem)] w-[280px] shrink-0 overflow-y-auto rounded-2xl border-r border-stone-200/70 bg-[#F5F1EB] p-4 pb-6 text-stone-800 transition-all duration-300 lg:block"
+            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-stone-200/70 bg-[#F5F1EB] p-4 pr-2 pb-6 text-stone-800 transition-all duration-300 lg:block"
             aria-label="Danh mục điều hướng bài học"
           >
             <LessonSidebar
@@ -455,31 +455,39 @@ export function LessonPage() {
               </p>
 
               {lesson.prerequisites.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-stone-600">
-                  <span className="font-medium text-stone-700">Kiến thức tiên quyết:</span>
-                  {lesson.prerequisites.map((prereqId) => {
-                    const prereq = getLessonById(prereqId);
-                    if (!prereq) {
+                <div className="clear-both mt-4 flex flex-wrap items-center gap-2.5 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-stone-800 md:text-sm">
+                  <div className="flex shrink-0 items-center gap-1.5 font-semibold text-amber-950">
+                    <Link2 className="h-4 w-4 text-amber-800" aria-hidden="true" />
+                    <span>Kiến thức tiên quyết:</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {lesson.prerequisites.map((prereqId) => {
+                      const prereq = getLessonById(prereqId);
+                      if (!prereq) {
+                        return (
+                          <Badge key={prereqId} variant="neutral">
+                            {prereqId}
+                          </Badge>
+                        );
+                      }
                       return (
-                        <Badge key={prereqId} variant="neutral">
-                          {prereqId}
-                        </Badge>
+                        <Link
+                          key={prereqId}
+                          to={ROUTES.lesson(
+                            prereq.subject.slug,
+                            prereq.chapter.slug,
+                            prereq.lesson.slug,
+                          )}
+                          className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-white/90 px-2.5 py-1 text-xs font-semibold text-amber-950 shadow-2xs transition-colors hover:border-amber-600/40 hover:bg-white hover:text-amber-900"
+                        >
+                          <span>
+                            Bài {prereq.chapter.number}.{prereq.lesson.number}:{' '}
+                            {prereq.lesson.title}
+                          </span>
+                        </Link>
                       );
-                    }
-                    return (
-                      <Link
-                        key={prereqId}
-                        to={ROUTES.lesson(
-                          prereq.subject.slug,
-                          prereq.chapter.slug,
-                          prereq.lesson.slug,
-                        )}
-                        className="text-subject-700 decoration-subject-300 hover:text-subject-900 font-medium underline underline-offset-4"
-                      >
-                        Bài {prereq.chapter.number}.{prereq.lesson.number}: {prereq.lesson.title}
-                      </Link>
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -545,7 +553,7 @@ export function LessonPage() {
         {!isFocusMode && (
           <aside
             data-sidenotes-column
-            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[260px] shrink-0 overflow-y-auto pl-2 transition-all duration-300 xl:block"
+            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[260px] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block"
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >

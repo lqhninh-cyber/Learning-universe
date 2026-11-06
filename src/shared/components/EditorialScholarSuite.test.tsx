@@ -1,8 +1,10 @@
+import type { LessonMeta, ManifestLesson } from '@schemas/index';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { LessonProvider } from '@/content-runtime';
 import { Proof } from '@/content-runtime/components/Proof';
 import { LessonView, ReadingSpine } from '@/features/courses';
+import { SourcePanel } from '@/features/lesson-reader';
 import { AcademicPopover } from './AcademicPopover';
 import { PaperGrain } from './PaperGrain';
 import { Sidenote } from './Sidenote';
@@ -24,12 +26,14 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     expect(feTurbulence).toHaveAttribute('stitchTiles', 'stitch');
   });
 
-  it('kết xuất bố cục bài đọc LessonView chuẩn nền giấy Dó #FAF7F2, khung trắng bg-white rounded-3xl và mục lục bg-white/80', () => {
+  it('kết xuất bố cục bài đọc LessonView với 2 thanh điều hướng sticky, khung trắng bg-white rounded-3xl và mục lục bg-white/80', () => {
     render(
       <LessonView
         title="Định lý Lagrange và Cấp của Phần tử"
         lead="Trong lý thuyết nhóm hữu hạn, Định lý Lagrange thiết lập mối liên hệ nền tảng giữa cấp của nhóm con và cấp của toàn bộ nhóm."
+        sidebar={<div>Menu chương bài học</div>}
         marginalia={<div>Mục lục chuyên khảo</div>}
+        prerequisites={<div data-testid="horizontal-prereqs">Kiến thức tiên quyết</div>}
       >
         <p id="doan-1">
           Nội dung định lý chính kèm chú giải lề
@@ -45,6 +49,12 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     expect(grid.className).toContain('text-stone-900');
     expect(grid.className).toContain('lg:grid-cols-12');
 
+    const sidebar = screen.getByLabelText('Danh mục chương bài');
+    expect(sidebar.className).toContain('sticky');
+    expect(sidebar.className).toContain('top-24');
+    expect(sidebar.className).toContain('self-start');
+    expect(sidebar.className).toContain('scrollbar-thin');
+
     const mainCol = screen.getByTestId('scholar-main-column');
     expect(mainCol.className).toContain('bg-white');
     expect(mainCol.className).toContain('rounded-3xl');
@@ -55,6 +65,13 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     expect(sidenotesCol.className).toContain('bg-white/80');
     expect(sidenotesCol.className).toContain('backdrop-blur');
     expect(sidenotesCol.className).toContain('rounded-2xl');
+    expect(sidenotesCol.className).toContain('sticky');
+    expect(sidenotesCol.className).toContain('top-24');
+    expect(sidenotesCol.className).toContain('self-start');
+    expect(sidenotesCol.className).toContain('scrollbar-thin');
+
+    const prereqs = screen.getByTestId('horizontal-prereqs');
+    expect(prereqs).toBeInTheDocument();
 
     const leadParagraph = screen.getByTestId('scholar-lead-paragraph');
     expect(leadParagraph.className).toContain('academic-dropcap');
@@ -122,5 +139,71 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
 
     const lozengeSvg = container.querySelector('[data-qed-glyph="vietnamese-lozenge"]');
     expect(lozengeSvg).not.toBeNull();
+  });
+
+  it('SourcePanel chuẩn hóa thông tin giáo trình TS. Huỳnh Việt Khánh, nút mở PDF Drive và lưới micro-cards đối chiếu', () => {
+    const mockLesson: ManifestLesson = {
+      id: 'bai-lagrange-test',
+      slug: 'dinh-ly-lagrange',
+      number: 2,
+      file: '/content/algebraic-structures/03-cac-dinh-ly-ve-nhom/02-dinh-ly-lagrange-va-ung-dung-so-hoc.mdx',
+      title: 'Định lý Lagrange',
+      description: 'Mô tả bài học',
+      estimatedMinutes: 45,
+      level: 'intermediate',
+      prerequisites: [],
+      tags: [],
+      sources: [
+        {
+          source: 'gt-ctds-hvk-2026',
+          pages: '59–63',
+          sections: 'Chương 3, §3.2',
+        },
+      ],
+      status: 'published',
+      version: '1.0.0',
+      aliases: [],
+    };
+
+    const mockMeta: LessonMeta = {
+      chapterNumber: 3,
+      lessonNumber: 2,
+      headings: [],
+      blocks: [
+        {
+          name: 'Theorem',
+          id: 'thm-lagrange',
+          anchorId: 'thm-lagrange',
+          number: '3.2.1',
+          label: 'Định lý 3.2.1',
+          title: 'Định lý Lagrange',
+          original: 'Định lý 3.7',
+          source: 'gt-ctds-hvk-2026',
+          page: '59',
+        },
+      ],
+    };
+
+    render(<SourcePanel lesson={mockLesson} lessonMeta={mockMeta} />);
+
+    // Kiểm tra tên chuẩn hóa ngắn gọn
+    const titles = screen.getAllByText('Giáo trình Cấu trúc đại số - TS. Huỳnh Việt Khánh');
+    expect(titles.length).toBeGreaterThan(0);
+
+    // Kiểm tra nút Đọc giáo trình PDF
+    const pdfButton = screen.getByRole('link', {
+      name: /Đọc giáo trình PDF \(Trang 59–63\)/i,
+    });
+    expect(pdfButton).toBeInTheDocument();
+    expect(pdfButton).toHaveAttribute(
+      'href',
+      'https://drive.google.com/file/d/17drWozpQN-4jt4si1hhCHoXslUFkYtKm/view',
+    );
+    expect(pdfButton).toHaveAttribute('target', '_blank');
+
+    // Kiểm tra micro-card đối chiếu
+    expect(screen.getByText('ĐL 3.2.1 · Lagrange')).toBeInTheDocument();
+    expect(screen.getByText('Gốc: ĐL 3.7')).toBeInTheDocument();
+    expect(screen.getByText('tr. 59')).toBeInTheDocument();
   });
 });
