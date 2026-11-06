@@ -1,8 +1,7 @@
 import { BookOpen } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { NUMBERED_BLOCKS } from '@schemas/blocks';
-import { cn } from '@/shared/lib/cn';
-import { Badge, Tooltip } from '@/shared/ui';
+import { Tooltip } from '@/shared/ui';
 import { useLessonContext } from '../lesson-context';
 
 export type TheoryKind = 'Definition' | 'Theorem' | 'Lemma' | 'Proposition' | 'Corollary';
@@ -98,29 +97,30 @@ function BaseTheoryBlock({
   const spec = NUMBERED_BLOCKS[kind];
   const resolvedAnchor = anchorId ?? id;
   const headingLabel = number ? `${spec.label} ${number}` : spec.label;
-  const isDefinition = kind === 'Definition';
 
   return (
     <section
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className={cn(
-        'my-6 scroll-mt-24 rounded-xl border p-6 shadow-2xs transition-colors lg:p-7',
-        isDefinition
-          ? 'border-l-4 border-[var(--bg-muted)] border-l-[var(--accent-primary)] bg-[#FAF8F5]'
-          : 'border-l-4 border-[var(--bg-muted)] border-l-[var(--accent-wood)] bg-[#FAF8F5]',
-      )}
+      className="my-4 scroll-mt-24 rounded-xl border border-stone-200 bg-white/40 p-5 transition-colors lg:p-6"
     >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Badge variant="subject" className="font-semibold tracking-tight">
+      <header className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/50 pb-2.5">
+        <div className="flex flex-wrap items-baseline gap-2.5">
+          <span className="font-serif text-sm font-bold tracking-wider text-stone-900 uppercase">
             {headingLabel}
-          </Badge>
-          {title && <h4 className="text-base font-semibold text-[var(--text-primary)]">{title}</h4>}
+          </span>
+          {title && (
+            <>
+              <span className="text-stone-400" aria-hidden="true">
+                ·
+              </span>
+              <h4 className="font-serif text-base font-bold text-stone-900">{title}</h4>
+            </>
+          )}
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[17px] leading-[1.8] text-[var(--text-primary)] lg:text-[17.5px]">
+      <div className="space-y-3 text-[17px] leading-[1.8] text-stone-800 lg:text-[17.5px]">
         {children}
       </div>
     </section>

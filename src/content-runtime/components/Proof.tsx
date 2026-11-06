@@ -25,14 +25,14 @@ export function Proof({ of, ofLabel, ofAnchor, title, defaultOpen = false, child
   return (
     <div className="my-4" data-proof-of={resolvedAnchor}>
       <Collapsible
-        title={<span className="font-semibold text-[var(--text-primary)]">{headerTitle}</span>}
+        title={<span className="font-serif font-semibold text-stone-900">{headerTitle}</span>}
         defaultOpen={defaultOpen}
-        className="border-[var(--bg-muted)] bg-[var(--bg-surface)]/25"
-        contentClassName="bg-[#FAF8F5] text-base text-[var(--text-primary)]"
+        className="border-stone-200/80 bg-white/40"
+        contentClassName="bg-[#FDFBF7]/70 text-base text-stone-800"
       >
         <div className="space-y-3">{children}</div>
         <div
-          className="mt-3 flex justify-end text-sm font-semibold text-[var(--accent-primary)] select-none"
+          className="mt-3 flex justify-end text-sm font-semibold text-stone-700 select-none"
           aria-label="Kết thúc chứng minh"
         >
           <span title="Điều phải chứng minh">∎</span>

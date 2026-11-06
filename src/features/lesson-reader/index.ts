@@ -9,4 +9,5 @@ export {
   type ReadingControlsToolbarProps,
   type ReadingFontSize,
 } from './ReadingControlsToolbar';
+export { ReadingProgressBar, type ReadingProgressBarProps } from './ReadingProgressBar';
 export { SourcePanel, type SourcePanelProps } from './SourcePanel';

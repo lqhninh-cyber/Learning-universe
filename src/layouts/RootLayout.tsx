@@ -4,7 +4,7 @@ import { Link, Outlet, useLocation } from 'react-router';
 import { AuthModal, AuthProvider, PendingNoticeDialog } from '@/features/auth';
 import { LoginPromptDialog } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
-import { Container, KagomeWeaveDivider } from '@/shared/ui';
+import { Container } from '@/shared/ui';
 import { Header } from './Header';
 
 export function RootHydrateFallback() {
@@ -25,7 +25,7 @@ function RootLayoutContent() {
   }, [pathname, hash]);
 
   return (
-    <div className="bg-vn-bg text-vn-text flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[#FAF7F2] text-stone-900">
       {/* 1. STICKY FROSTED NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
       <Header />
 
@@ -41,22 +41,20 @@ function RootLayoutContent() {
       <PendingNoticeDialog />
       <LoginPromptDialog />
 
-      {/* 4. FOOTER DI SẢN TRI THỨC */}
-      <footer className="border-vn-border/70 bg-vn-surface/35 border-t">
-        <KagomeWeaveDivider />
+      {/* 4. MINIMALIST SCHOLARLY FOOTER */}
+      <footer className="border-t border-stone-200/70 bg-[#FDFBF7]/90">
         <Container size="wide" className="space-y-6 py-8">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <GraduationCap className="text-vn-primary h-5 w-5" aria-hidden="true" />
-                <span className="text-vn-text font-bold">Learning Universe</span>
-                <span className="text-vn-muted text-xs">· Toán học &amp; Sư phạm</span>
+                <GraduationCap className="h-5 w-5 text-[#9A3412]" aria-hidden="true" />
+                <span className="font-serif font-bold text-stone-950">Learning Universe</span>
+                <span className="text-xs text-stone-500">· Toán học &amp; Sư phạm</span>
               </div>
-              <p className="text-vn-muted max-w-xl text-xs leading-relaxed">
-                Nền tảng học tập Toán học đại học đương đại lấy cảm hứng từ cấu trúc Thư viện đình
-                làng &amp; Di sản tri thức Việt Nam. Đồng hành cùng sinh viên Sư phạm Toán học với
-                các học phần chuyên ngành và Khoa học Giáo dục. 100% nội dung học thuật chuẩn mực,
-                nguồn mở và phi lợi nhuận.
+              <p className="max-w-xl text-xs leading-relaxed text-stone-600">
+                Học viện Tri thức Toán học &amp; Khoa học Giáo dục. Đồng hành cùng sinh viên Sư phạm
+                Toán học với các học phần chuyên ngành và Nghiệp vụ Sư phạm chuẩn mực. 100% nội dung
+                học thuật nguồn mở và phi lợi nhuận.
               </p>
             </div>
 
@@ -66,58 +64,52 @@ function RootLayoutContent() {
             >
               <Link
                 to={ROUTES.home}
-                className="text-vn-muted hover:text-vn-primary transition-colors"
+                className="text-stone-600 transition-colors hover:text-[#9A3412]"
               >
                 Trang chủ
               </Link>
               <Link
                 to={ROUTES.courses}
-                className="text-vn-muted hover:text-vn-primary transition-colors"
+                className="text-stone-600 transition-colors hover:text-[#9A3412]"
               >
                 Tất cả môn học
               </Link>
               <Link
                 to={ROUTES.subjectOverview('cau-truc-dai-so')}
-                className="text-vn-muted hover:text-vn-primary transition-colors"
+                className="text-stone-600 transition-colors hover:text-[#9A3412]"
               >
                 Cấu trúc đại số
               </Link>
               <Link
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
-                className="text-vn-muted hover:text-vn-primary transition-colors"
+                className="text-stone-600 transition-colors hover:text-[#9A3412]"
               >
                 Hình học Affine &amp; Euclide
               </Link>
               <Link
                 to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
-                className="text-vn-muted hover:text-vn-primary transition-colors"
+                className="text-stone-600 transition-colors hover:text-[#9A3412]"
               >
                 Giải tích hàm một biến
               </Link>
               <Link
                 to={ROUTES.subjectOverview('giao-duc-hoc')}
-                className="font-semibold text-teal-800 transition-colors hover:text-teal-950"
+                className="font-semibold text-indigo-950 transition-colors hover:text-[#9A3412]"
               >
                 Giáo dục học
               </Link>
               <Link
                 to={ROUTES.glossary}
-                className="text-vn-muted hover:text-vn-primary transition-colors"
+                className="text-stone-600 transition-colors hover:text-[#9A3412]"
               >
-                Tra cứu thuật ngữ &amp; ký hiệu
-              </Link>
-              <Link
-                to={ROUTES.uiPreview}
-                className="font-semibold text-amber-800 transition-colors hover:text-amber-950"
-              >
-                Thử nghiệm UI V2
+                Ngân hàng Thuật ngữ
               </Link>
             </nav>
           </div>
 
-          <div className="border-vn-border/50 text-vn-muted flex flex-col items-center justify-between gap-2 border-t pt-4 text-[11px] sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-2 border-t border-stone-200/60 pt-4 text-[11px] text-stone-500 sm:flex-row">
             <p>© {new Date().getFullYear()} Learning Universe. Bảo lưu bản quyền học thuật.</p>
-            <p>Không gian tri thức mở · Chuẩn mực & Khách quan</p>
+            <p>Không gian tri thức mở · Chuẩn mực &amp; Khách quan</p>
           </div>
         </Container>
       </footer>

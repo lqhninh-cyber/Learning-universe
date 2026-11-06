@@ -27,7 +27,7 @@ describe('App routing smoke test', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /Không gian học tập & Khám phá/i,
+        name: /Nơi vẻ đẹp Toán học giao hòa cùng Nghệ thuật Sư phạm/i,
       }),
     ).toBeInTheDocument();
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
@@ -47,55 +47,50 @@ describe('App routing smoke test', () => {
     expect(calculusLinks[0]).toHaveAttribute('href', '/mon-hoc/giai-tich-ham-mot-bien');
   });
 
-  it('hiển thị đầy đủ 7 khu vực của trang chủ theo concept Di sản tri thức & Hình học bản sắc', async () => {
+  it('hiển thị đầy đủ 4 Scene của trang chủ theo phong cách Cinematic Contemporary Editorial', async () => {
     renderWithProviders('/');
 
-    // 1. Eyebrow & Hero Section
-    expect(await screen.findByText('CHÀO MỪNG BẠN ĐẾN VỚI LEARNING UNIVERSE')).toBeInTheDocument();
+    // 1. Scene 01: The Opening (Hero Mở Màn)
     expect(
-      screen.getByText(/Nơi lưu trữ và chia sẻ hệ thống bài giảng, định lý/i),
+      await screen.findByText('HỌC VIỆN TRI THỨC TOÁN HỌC & KHOA HỌC GIÁO DỤC'),
     ).toBeInTheDocument();
-
-    // 2. Ô tìm kiếm bài học
+    expect(
+      screen.getByRole('heading', {
+        name: /Nơi vẻ đẹp Toán học giao hòa cùng Nghệ thuật Sư phạm/i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Khám phá Không gian Tri thức/i })).toHaveAttribute(
+      'href',
+      '#khong-gian-mon-hoc',
+    );
     expect(
       screen.getByRole('searchbox', { name: /Tìm kiếm môn học hoặc bài học/i }),
     ).toBeInTheDocument();
 
-    // 3. Khối tiếp tục bài học gần nhất
-    expect(screen.getByRole('region', { name: /Tiếp tục bài học gần nhất/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Đọc tiếp bài học/i })).toBeInTheDocument();
-
-    // 4. Khu vực môn học
+    // 2. Scene 02: Two Worlds (Hai Cổng Không Gian Tri Thức)
     expect(
-      screen.getByRole('heading', { name: /Chọn không gian học tập|Các học phần hiện có/i }),
+      screen.getByRole('heading', { name: /Hai Cổng Không Gian Tri Thức/i }),
     ).toBeInTheDocument();
+    expect(screen.getByText('Cấu trúc • Không gian • Biến thiên')).toBeInTheDocument();
+    expect(screen.getByText('Con người • Phương pháp • Nghệ thuật Dạy học')).toBeInTheDocument();
 
-    // 4. Khu vực Thư viện tri thức (6 trụ cột)
-    expect(screen.getByRole('heading', { name: /THƯ VIỆN TRI THỨC/i })).toBeInTheDocument();
-    expect(screen.getByText('Lý thuyết')).toBeInTheDocument();
-    expect(screen.getByText('Định nghĩa')).toBeInTheDocument();
-    expect(screen.getByText('Định lý & Bổ đề')).toBeInTheDocument();
-    expect(screen.getByText('Chứng minh')).toBeInTheDocument();
-    expect(screen.getByText('Ví dụ minh họa')).toBeInTheDocument();
-    expect(screen.getByText('Bài tập & Lời giải')).toBeInTheDocument();
+    // 3. Scene 03: Course Collection (Bộ Sưu Tập Học Phần So Le)
+    expect(screen.getByRole('heading', { name: /Bộ Sưu Tập Học Phần So Le/i })).toBeInTheDocument();
+    expect(screen.getByText(/Portrait · 3:4/i)).toBeInTheDocument();
+    expect(screen.getByText(/Panorama · 16:9/i)).toBeInTheDocument();
+    expect(screen.getByText(/Phòng Lab mô phỏng 3D & Mafs/i)).toBeInTheDocument();
+    expect(screen.getByText(/Broadsheet Edition/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: /Vào học phần/i }).length).toBe(4);
 
-    // 5. Khu vực Bản đồ tri thức
-    expect(
-      screen.getByRole('heading', { name: /KẾT NỐI NHỮNG MIỀN TRI THỨC/i }),
-    ).toBeInTheDocument();
-
-    // 6. Khu vực Hành trình học tập
-    expect(
-      screen.getByRole('heading', { name: /HÀNH TRÌNH CHINH PHỤC TRI THỨC/i }),
-    ).toBeInTheDocument();
+    // 4. Scene 04: Continue Exploring & Minimalist Footer
+    expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Tiếp tục học/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Ngân hàng Thuật ngữ \(Glossary\)/i })).toHaveAttribute(
+      'href',
+      '/thuat-ngu',
+    );
+    expect(screen.getByRole('link', { name: /Kho Tài liệu Giáo trình/i })).toBeInTheDocument();
     expect(screen.getByText(/Trải nghiệm tự do ở Chế độ Khách/i)).toBeInTheDocument();
-
-    // 7. Footer đồng bộ bản sắc
-    expect(
-      screen.getByText(
-        /Nền tảng học tập Toán học đại học đương đại lấy cảm hứng từ cấu trúc Thư viện đình làng/i,
-      ),
-    ).toBeInTheDocument();
   });
 
   it('hiển thị trang 404 tiếng Việt khi truy cập đường dẫn không tồn tại', async () => {

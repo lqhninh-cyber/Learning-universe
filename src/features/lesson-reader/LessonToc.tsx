@@ -49,8 +49,43 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
 
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof window.IntersectionObserver === 'function') {
+      const visibleIds = new Set<string>();
+      observer = new window.IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const targetId = entry.target.id;
+            if (!targetId) continue;
+            if (entry.isIntersecting) {
+              visibleIds.add(targetId);
+            } else {
+              visibleIds.delete(targetId);
+            }
+          }
+          const firstVisible = allIds.find((id) => visibleIds.has(id));
+          if (firstVisible) {
+            setActiveId(firstVisible);
+          }
+        },
+        {
+          rootMargin: '-80px 0px -65% 0px',
+          threshold: [0, 1],
+        },
+      );
+
+      for (const id of allIds) {
+        const element = document.getElementById(id);
+        if (element) {
+          observer.observe(element);
+        }
+      }
+    }
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      observer?.disconnect();
     };
   }, [headings, blocks]);
 
@@ -140,11 +175,12 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                 >
                   <a
                     href={`#${heading.id}`}
+                    aria-current={isActive ? 'location' : undefined}
                     onClick={(e) => handleAnchorClick(e, heading.id)}
                     className={cn(
                       'group flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[14px] leading-snug transition-all',
                       isActive
-                        ? 'border-subject-600/80 bg-subject-100/90 text-subject-950 border-l-2 font-semibold shadow-2xs'
+                        ? 'bg-stone-200/60 font-medium text-stone-900'
                         : 'text-stone-600 hover:bg-stone-100/80 hover:text-stone-900',
                     )}
                   >
@@ -152,7 +188,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                       className={cn(
                         'mt-0.5 h-3 w-3 shrink-0 transition-transform',
                         isActive
-                          ? 'text-subject-700 translate-x-0.5'
+                          ? 'translate-x-0.5 text-stone-900'
                           : 'text-stone-400 group-hover:text-stone-600',
                       )}
                       aria-hidden="true"
@@ -184,12 +220,13 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                 <li key={block.anchorId}>
                   <a
                     href={`#${block.anchorId}`}
+                    aria-current={isActive ? 'location' : undefined}
                     onClick={(e) => handleAnchorClick(e, block.anchorId)}
                     className={cn(
                       'group block rounded-lg border px-2.5 py-1.5 text-[14px] leading-snug transition-all',
                       isActive
-                        ? 'border-subject-400 bg-subject-100/90 text-subject-950 font-semibold shadow-2xs'
-                        : 'hover:border-subject-200 hover:bg-subject-50/60 border-stone-200/70 bg-stone-50/60 text-stone-700',
+                        ? 'border-stone-300 bg-stone-200/60 font-medium text-stone-900'
+                        : 'border-stone-200/70 bg-stone-50/60 text-stone-700 hover:border-stone-300 hover:bg-stone-100/70',
                     )}
                   >
                     <span

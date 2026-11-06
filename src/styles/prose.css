@@ -288,7 +288,14 @@
   margin: 1.25rem 0 !important;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  transition: background-color 200ms ease;
+}
+
+.lesson-content .katex-display:hover,
+.lu-prose .katex-display:hover {
+  background-color: rgba(245, 245, 244, 0.4);
 }
 
 /* ==========================================================================

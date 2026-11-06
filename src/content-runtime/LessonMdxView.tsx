@@ -1,5 +1,5 @@
 import type { MDXComponents } from 'mdx/types';
-import { type ComponentPropsWithoutRef, type ComponentType, useMemo } from 'react';
+import { type ComponentPropsWithoutRef, type ComponentType, useMemo, useState } from 'react';
 import type { BibliographyEntry, LessonMeta } from '@schemas/index';
 import {
   annotateChildren,
@@ -14,6 +14,48 @@ import { cn } from '@/shared/lib/cn';
 import { TooltipProvider } from '@/shared/ui';
 import { LessonProvider } from './LessonContext';
 import { mdxComponents } from './mdx-components';
+
+function KatexDisplayBlock({
+  tex,
+  spanProps,
+}: {
+  readonly tex: string | null;
+  readonly spanProps: ComponentPropsWithoutRef<'span'>;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (!tex) return;
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(tex);
+      }
+      setCopied(true);
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => setCopied(false), 1800);
+      }
+    } catch {
+      // Bỏ qua nếu môi trường không hỗ trợ Clipboard API
+    }
+  };
+
+  return (
+    <span className="group/katex relative my-2 block rounded-xl px-3 py-1 transition-colors duration-200 hover:bg-stone-100/40">
+      <span {...spanProps} />
+      {tex && (
+        <button
+          type="button"
+          onClick={handleCopy}
+          aria-label="Sao chép LaTeX"
+          title="Sao chép mã nguồn LaTeX"
+          className="absolute top-2 right-2 z-10 inline-flex cursor-pointer items-center gap-1 rounded-md border border-stone-200/80 bg-[#FDFBF7]/95 px-2 py-0.5 font-mono text-[11px] font-medium text-stone-600 opacity-0 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/katex:opacity-100 hover:border-stone-300 hover:text-stone-900 focus-visible:opacity-100"
+        >
+          <span>{copied ? 'Đã chép!' : 'Sao chép LaTeX'}</span>
+        </button>
+      )}
+    </span>
+  );
+}
 
 export interface LessonMdxViewProps {
   readonly Content: ComponentType<{ components?: MDXComponents }>;
@@ -53,9 +95,14 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
         </td>
       ),
       span: (props: ComponentPropsWithoutRef<'span'>) => {
-        // Nếu thẻ span chứa công thức KaTeX
+        if (typeof props.className === 'string' && props.className.includes('katex-display')) {
+          const tex = extractLatexFromKatexNode({ props });
+          return <KatexDisplayBlock tex={tex} spanProps={props} />;
+        }
+
+        // Nếu thẻ span chứa công thức KaTeX nội dòng
         if (typeof props.className === 'string' && props.className.includes('katex')) {
-          const tex = extractLatexFromKatexNode(props);
+          const tex = extractLatexFromKatexNode({ props });
           if (tex) {
             const entry = matchLatexToGlossary(tex, currentCourseId);
             if (entry) {

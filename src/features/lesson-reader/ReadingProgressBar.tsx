@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 
 /** Bộ chọn khung bài đọc chính dùng để đo độ sâu cuộn trang. */
-export const READING_ARTICLE_SELECTOR = '[data-reading-article]';
+const READING_ARTICLE_SELECTOR = '[data-reading-article]';
 
 export interface ReadingProgressBarProps {
   readonly className?: string;
@@ -14,7 +14,7 @@ export interface ReadingProgressBarProps {
  * Tính tỉ lệ đã đọc (0 → 1) của một phần tử theo vị trí cuộn hiện tại của cửa sổ.
  * Trả về `null` khi không tìm thấy phần tử (không phải trang bài học).
  */
-export function computeReadingProgress(target: Element | null): number | null {
+function computeReadingProgress(target: Element | null): number | null {
   if (!target || typeof window === 'undefined') {
     return null;
   }
