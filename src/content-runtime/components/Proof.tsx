@@ -32,10 +32,38 @@ export function Proof({ of, ofLabel, ofAnchor, title, defaultOpen = false, child
       >
         <div className="space-y-3">{children}</div>
         <div
-          className="mt-3 flex justify-end text-sm font-semibold text-stone-700 select-none"
+          className="mt-3 flex items-center justify-end text-sm font-semibold text-stone-700 select-none dark:text-stone-300"
           aria-label="Kết thúc chứng minh"
+          title="Điều phải chứng minh (Q.E.D.)"
         >
-          <span title="Điều phải chứng minh">∎</span>
+          <span className="font-mono text-[10px] tracking-[0.18em] text-stone-500 uppercase dark:text-stone-400">
+            Q.E.D.
+          </span>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            data-qed-glyph="vietnamese-lozenge"
+            className="ml-2 inline-block h-4 w-4 align-middle text-stone-700 dark:text-stone-300"
+          >
+            {/* Khung thoi kỷ hà ngoài (Hoa văn khắc gỗ / bia tiến sĩ Việt Nam) */}
+            <path
+              d="M12 2L22 12L12 22L2 12L12 2Z"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinejoin="round"
+            />
+            {/* Khung thoi lồng bên trong */}
+            <path
+              d="M12 5.5L18.5 12L12 18.5L5.5 12L12 5.5Z"
+              stroke="currentColor"
+              strokeWidth="1.1"
+              strokeOpacity="0.65"
+            />
+            {/* Nhân thoi đặc trung tâm */}
+            <path d="M12 9L15 12L12 15L9 12L12 9Z" fill="currentColor" />
+          </svg>
         </div>
       </Collapsible>
     </div>

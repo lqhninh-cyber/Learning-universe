@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import { AuthModal, AuthProvider, PendingNoticeDialog } from '@/features/auth';
 import { LoginPromptDialog } from '@/features/learning';
+import { PaperGrain } from '@/shared/components/PaperGrain';
 import { ROUTES } from '@/shared/config/routes';
 import { Container } from '@/shared/ui';
 import { Header } from './Header';
@@ -27,7 +28,10 @@ function RootLayoutContent() {
   }, [pathname, hash]);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#FAF7F2] text-stone-900">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#FAF7F2] text-[#23211E] dark:bg-[#12151A] dark:text-[#E2DDD5]">
+      {/* 0. TACTILE DO PAPER GRAIN SVG NOISE OVERLAY */}
+      <PaperGrain />
+
       {/* 1. STICKY FROSTED NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
       <Header />
 

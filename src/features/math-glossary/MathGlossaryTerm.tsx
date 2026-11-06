@@ -110,6 +110,7 @@ export function MathGlossaryTerm({
       ref={spanRef}
       tabIndex={0}
       role="button"
+      data-academic-term={resolvedEntry.id}
       aria-haspopup="dialog"
       aria-label={`Chú thích thuật ngữ: ${resolvedEntry.name || resolvedEntry.nameVi}`}
       onMouseEnter={handleMouseEnter}

@@ -1,7 +1,8 @@
-import { ArrowRight, Lightbulb, X } from 'lucide-react';
-import { useEffect, useMemo, useRef } from 'react';
+import { ArrowRight, Lightbulb, Pin, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
+import { cn } from '@/shared/lib/cn';
 import { KatexMath } from './KatexMath';
 import { useMathGlossary } from './useMathGlossary';
 
@@ -36,10 +37,11 @@ function computeCoords(anchorRect: DOMRect | null): { top: number; left: number 
 export function MathGlossaryPopover() {
   const { activeEntry, anchorRect, cancelHide, hidePopover, closePopover } = useMathGlossary();
   const popoverRef = useRef<HTMLDivElement>(null);
+  const [isPinned, setIsPinned] = useState(false);
 
   const coords = useMemo(() => computeCoords(anchorRect), [anchorRect]);
 
-  // Đóng popover khi nhấn phím Escape hoặc click bên ngoài
+  // Đóng popover khi nhấn phím Escape hoặc click bên ngoài (nếu chưa ghim)
   useEffect(() => {
     if (!activeEntry) {
       return;
@@ -47,17 +49,19 @@ export function MathGlossaryPopover() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        setIsPinned(false);
         closePopover();
       }
     };
 
     const handlePointerDownOutside = (e: PointerEvent) => {
+      if (isPinned) {
+        return;
+      }
       const target = e.target as Element | null;
-      // Nếu click vào chính popover thì không đóng
       if (popoverRef.current && popoverRef.current.contains(target as Node)) {
         return;
       }
-      // Nếu click vào một term trigger thì không đóng ở đây (để onClick của trigger tự thực hiện toggle)
       if (target?.closest?.('.lu-glossary-term')) {
         return;
       }
@@ -71,7 +75,7 @@ export function MathGlossaryPopover() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('pointerdown', handlePointerDownOutside);
     };
-  }, [activeEntry, closePopover]);
+  }, [activeEntry, closePopover, isPinned]);
 
   if (!activeEntry || !coords || typeof document === 'undefined') {
     return null;
@@ -98,39 +102,72 @@ export function MathGlossaryPopover() {
       role="dialog"
       aria-label={`Chú thích thuật ngữ: ${displayName}`}
       onMouseEnter={cancelHide}
-      onMouseLeave={() => hidePopover(180)}
+      onMouseLeave={() => {
+        if (!isPinned) {
+          hidePopover(180);
+        }
+      }}
       style={{
         position: 'fixed',
         top: `${coords.top}px`,
         left: `${coords.left}px`,
         width: `${Math.min(POPOVER_WIDTH, window.innerWidth - 32)}px`,
       }}
-      className="animate-in fade-in zoom-in-95 z-50 rounded-xl border border-[#D8D0C0] bg-[#F0ECE4] p-4 text-[#1C1917] shadow-xl backdrop-blur-xs transition-all duration-150"
+      className="animate-in fade-in zoom-in-95 z-50 w-80 rounded-2xl border border-stone-200/80 bg-[#FAF7F2]/95 p-4 text-xs text-stone-800 shadow-2xl backdrop-blur-xl transition-all duration-150 dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200"
     >
-      {/* Header: Ký hiệu + Tên thuật ngữ + Nút đóng [✕] */}
-      <div className="flex items-start justify-between gap-2.5 border-b border-[#D8D0C0] pb-2.5">
+      {/* Header: Ký hiệu + Tên thuật ngữ + Nút Ghim (Pin) & Đóng [✕] */}
+      <div className="flex items-start justify-between gap-2.5 border-b border-stone-200/80 pb-2.5 dark:border-stone-700/80">
         <div className="min-w-0 flex-1 space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold tracking-wider text-amber-900 uppercase">
+            <span className="text-[10px] font-semibold tracking-wider text-[#9E3D24] uppercase dark:text-[#E09F5A]">
               {subjectLabel}
             </span>
           </div>
-          <h3 className="font-serif text-base leading-snug font-bold text-stone-900">
+          <h3 className="font-serif text-base leading-snug font-bold text-stone-900 dark:text-stone-100">
             {displayName}
           </h3>
-          <p className="text-[11px] text-stone-600 italic">{displayEnglish}</p>
+          <p className="text-[11px] text-stone-600 italic dark:text-stone-400">{displayEnglish}</p>
         </div>
 
         <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <div className="flex items-center gap-1.5">
-            <div className="rounded-md border border-[#D0C8B8] bg-[#E8E0D2] px-2 py-0.5 text-center shadow-2xs">
-              <KatexMath math={displayFormula} className="font-serif text-sm text-stone-900" />
+          <div className="flex items-center gap-1">
+            <div className="rounded-md border border-[#D0C8B8] bg-[#E8E0D2] px-2 py-0.5 text-center shadow-2xs dark:border-stone-700 dark:bg-stone-800">
+              <KatexMath
+                math={displayFormula}
+                className="font-serif text-sm text-stone-900 dark:text-stone-100"
+              />
             </div>
             <button
               type="button"
-              onClick={closePopover}
+              onClick={() => {
+                setIsPinned((prev) => {
+                  const next = !prev;
+                  if (next) {
+                    cancelHide();
+                  }
+                  return next;
+                });
+              }}
+              aria-pressed={isPinned}
+              aria-label={isPinned ? 'Bỏ ghim chú thích' : 'Ghim chú thích cố định'}
+              title={isPinned ? 'Bỏ ghim chú thích' : 'Ghim chú thích cố định để đối chiếu'}
+              className={cn(
+                'cursor-pointer rounded-md p-1 transition-colors',
+                isPinned
+                  ? 'bg-[#9E3D24] text-white dark:bg-[#E09F5A] dark:text-stone-950'
+                  : 'text-stone-500 hover:bg-stone-300/40 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-800',
+              )}
+            >
+              <Pin className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsPinned(false);
+                closePopover();
+              }}
               aria-label="Đóng chú thích"
-              className="rounded-md p-1 text-stone-500 transition-colors hover:bg-stone-300/40 hover:text-stone-800"
+              className="cursor-pointer rounded-md p-1 text-stone-500 transition-colors hover:bg-stone-300/40 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-800"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>

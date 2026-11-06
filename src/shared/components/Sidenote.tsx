@@ -5,6 +5,7 @@ import {
   type ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useId,
   useRef,
   useState,
@@ -14,6 +15,10 @@ import { cn } from '@/shared/lib/cn';
 export type SidenoteType = 'history' | 'caution' | 'pedagogy' | 'figure' | 'note';
 
 export interface SidenoteProps {
+  /** Mã định danh chú giải lề (tùy chọn) */
+  readonly id?: string;
+  /** ID phần tử neo trong bài học để tự động tính toán tọa độ Y ngang hàng trên Desktop (tùy chọn) */
+  readonly anchor?: string;
   /**
    * Phân loại chú giải học thuật (Edward Tufte / Distill standard):
    * - 'history': Bối cảnh lịch sử toán học & nhân vật (màu mực than chì / xám đá `border-stone-400`)
@@ -123,6 +128,8 @@ export function useSidenoteContext() {
  * - Mobile / Tablet (< lg): Badge số mũ nhỏ gọn [1], [2], nhấn mở Collapsible Callout nổi mờ ngay bên dưới dòng văn bản.
  */
 export const Sidenote: FC<SidenoteProps> = ({
+  id,
+  anchor,
   type = 'note',
   number,
   title,
@@ -137,6 +144,31 @@ export const Sidenote: FC<SidenoteProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [anchorOffsetY, setAnchorOffsetY] = useState<number | null>(null);
+  const wrapperRef = useRef<HTMLSpanElement>(null);
+
+  // Tự động tính toán tọa độ Y tương đối để nằm ngang hàng với đoạn văn bản/định lý được neo (`anchor`)
+  useEffect(() => {
+    if (!anchor || typeof document === 'undefined') {
+      return;
+    }
+
+    const updatePosition = () => {
+      const targetEl =
+        document.getElementById(anchor) ?? document.querySelector(`[data-anchor="${anchor}"]`);
+      const parentCol = wrapperRef.current?.closest('[data-sidenotes-column]');
+
+      if (targetEl && parentCol) {
+        const targetRect = targetEl.getBoundingClientRect();
+        const colRect = parentCol.getBoundingClientRect();
+        setAnchorOffsetY(Math.max(0, Math.round(targetRect.top - colRect.top)));
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, [anchor]);
 
   const style = SIDENOTE_STYLES[type] ?? SIDENOTE_STYLES.note;
   const TypeIcon = style.Icon;
@@ -144,6 +176,9 @@ export const Sidenote: FC<SidenoteProps> = ({
 
   return (
     <span
+      ref={wrapperRef}
+      id={id}
+      data-sidenote-anchor={anchor}
       className={cn('academic-sidenote-wrapper group/sidenote relative inline', className)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -228,8 +263,9 @@ export const Sidenote: FC<SidenoteProps> = ({
       <span
         role="note"
         aria-label={`Chú giải ${displayNumber ? `số ${displayNumber}` : ''}: ${label}`}
+        style={anchorOffsetY !== null ? { marginTop: `${anchorOffsetY}px` } : undefined}
         className={cn(
-          'sidenote-academic float-right clear-right my-1 mb-4 ml-5 hidden w-[230px] rounded-r-xl border-y border-r border-stone-200/60 bg-[#FAF7F2]/90 p-3 shadow-2xs backdrop-blur-xs transition-all duration-200 lg:block xl:w-[250px] dark:border-stone-800/60 dark:bg-stone-900/60',
+          'sidenote-academic float-right clear-right my-1 mb-4 ml-5 hidden w-[230px] rounded-r-xl border-y border-r border-stone-200/60 bg-[#FAF7F2]/90 p-3 font-serif text-xs leading-relaxed text-stone-600 shadow-2xs backdrop-blur-xs transition-all duration-200 md:text-sm lg:block xl:w-[250px] dark:border-stone-800/60 dark:bg-stone-900/60 dark:text-stone-400',
           style.borderClass,
           isHovered &&
             'bg-[#FAF7F2] shadow-xs ring-1 ring-stone-400/60 dark:bg-stone-900/90 dark:ring-stone-500/60',

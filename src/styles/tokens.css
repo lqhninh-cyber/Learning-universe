@@ -1,0 +1,107 @@
+/* ============================================================================
+   HỆ HÒA SẮC LƯỠNG DIỆN "BẠCH DÓ & MỰC NHO" (EDITORIAL SCHOLAR SUITE TOKENS)
+   ============================================================================ */
+
+:root,
+[data-theme='light'],
+[data-theme='bach-do'] {
+  /* LIGHT MODE ("Bạch Dó") */
+  --bg-canvas: #faf7f2; /* Sắc giấy Dó ấm */
+  --bg-surface: #f4efea; /* Nền bề mặt thẻ / panel */
+  --bg-muted: rgba(40, 35, 30, 0.08); /* Viền kẻ hairline */
+  --border-hairline: rgba(40, 35, 30, 0.08);
+  --text-primary: #23211e; /* Than chì mực nho */
+  --text-secondary: #6b645c; /* Màu phụ / chú giải */
+  --text-muted: #6b645c;
+  --accent-primary: #9e3d24; /* Đỏ đất nung / chu sa */
+  --accent-verandah: #5a6830; /* Rêu xanh hiên nhà */
+  --accent-wood: #9e7a5a; /* Gỗ mộc đòn tay */
+  --accent-interactive: #9e3d24;
+
+  /* Scholar Suite aliases */
+  --scholar-bg: #faf7f2;
+  --scholar-surface: #f4efea;
+  --scholar-text: #23211e;
+  --scholar-muted: #6b645c;
+  --scholar-accent: #9e3d24;
+  --scholar-hairline: rgba(40, 35, 30, 0.08);
+}
+
+.dark,
+[data-theme='dark'],
+[data-theme='muc-nho'] {
+  /* DARK MODE ("Mực Nho") */
+  --bg-canvas: #12151a; /* Chàm đen mực nho */
+  --bg-surface: #1a2026; /* Phiến đá rêu trầm */
+  --bg-muted: rgba(240, 235, 225, 0.08); /* Viền kẻ hairline sáng dịu */
+  --border-hairline: rgba(240, 235, 225, 0.08);
+  --text-primary: #e2ddd5; /* Ngà sáng dịu mắt */
+  --text-secondary: #9a948b; /* Màu phụ / chú giải */
+  --text-muted: #9a948b;
+  --accent-primary: #e09f5a; /* Hổ phách ấm */
+  --accent-verandah: #7d8f4e;
+  --accent-wood: #c49e78;
+  --accent-interactive: #e09f5a;
+
+  /* Scholar Suite aliases */
+  --scholar-bg: #12151a;
+  --scholar-surface: #1a2026;
+  --scholar-text: #e2ddd5;
+  --scholar-muted: #9a948b;
+  --scholar-accent: #e09f5a;
+  --scholar-hairline: rgba(240, 235, 225, 0.08);
+}
+
+/* Hiệu ứng chuyển đổi theme mượt mà giữa "Bạch Dó" và "Mực Nho" */
+html,
+body,
+.scholar-theme-surface {
+  transition:
+    background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.8s ease;
+}
+
+/* Nghệ thuật Chữ Khởi Đầu (Academic Drop Caps) */
+.academic-dropcap {
+  font-family: var(--font-serif);
+  float: left;
+  font-size: 3rem; /* text-5xl */
+  padding-right: 0.75rem; /* pr-3 */
+  padding-top: 0.25rem; /* pt-1 */
+  font-weight: 400; /* font-normal */
+  color: #1c1917; /* text-stone-900 */
+  line-height: 1; /* leading-none */
+}
+
+@media (min-width: 768px) {
+  .academic-dropcap {
+    font-size: 3.75rem; /* md:text-6xl */
+  }
+}
+
+.dark .academic-dropcap,
+[data-theme='dark'] .academic-dropcap {
+  color: #f5f5f4; /* dark:text-stone-100 */
+}
+
+.academic-dropcap-paragraph::first-letter {
+  font-family: var(--font-serif);
+  float: left;
+  font-size: 3rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  font-weight: 400;
+  color: #1c1917;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .academic-dropcap-paragraph::first-letter {
+    font-size: 3.75rem;
+  }
+}
+
+.dark .academic-dropcap-paragraph::first-letter,
+[data-theme='dark'] .academic-dropcap-paragraph::first-letter {
+  color: #f5f5f4;
+}

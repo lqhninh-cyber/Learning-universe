@@ -1,5 +1,6 @@
 import type { MDXComponents } from 'mdx/types';
 import { type ComponentPropsWithoutRef, isValidElement } from 'react';
+import { AcademicPopover } from '@/shared/components/AcademicPopover';
 import { Sidenote } from '@/shared/components/Sidenote';
 import { Note, Remark, Warning } from './components/CalloutBlock';
 import { Cite } from './components/Cite';
@@ -68,6 +69,8 @@ export const mdxComponents: MDXComponents = {
   Ref,
   Figure,
   Sidenote,
+  AcademicPopover,
+  AcademicTerm: AcademicPopover,
   KeyTakeaways,
   Chapter0KnowledgeMap,
   Chapter1KnowledgeMap,

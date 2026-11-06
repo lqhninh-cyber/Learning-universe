@@ -8,6 +8,7 @@ import {
   LessonMdxView,
   loadLessonModule,
 } from '@/content-runtime';
+import { ReadingSpine } from '@/features/courses';
 import { useLearningStore } from '@/features/learning';
 import {
   DevEditorialBar,
@@ -246,6 +247,9 @@ export function LessonPage() {
           : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
       )}
     >
+      {/* Trục Tọa Độ Đọc & Chuỗi Chỉ Báo Tiến Trình (Minimal Reading Spine) */}
+      <ReadingSpine />
+
       {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
       {isFocusMode && (
         <button
@@ -450,7 +454,7 @@ export function LessonPage() {
                 {lesson.title}
               </h1>
 
-              <p className="mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
+              <p className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800 dark:text-stone-200">
                 {lesson.description}
               </p>
 
@@ -541,10 +545,11 @@ export function LessonPage() {
           </article>
         </main>
 
-        {/* CỘT PHẢI (Mục lục bài học - Table of Contents / On this page) */}
+        {/* CỘT PHẢI (Mục lục bài học & Cột chú giải lề - Sidenotes Column) */}
         {!isFocusMode && (
           <aside
-            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[260px] shrink-0 overflow-y-auto pl-2 transition-all duration-300 xl:block"
+            data-sidenotes-column
+            className="custom-scrollbar sticky top-20 hidden h-fit max-h-[calc(100vh-6rem)] w-[260px] shrink-0 overflow-y-auto border-l border-stone-200/50 pl-4 transition-all duration-300 xl:block dark:border-stone-800/50"
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >
