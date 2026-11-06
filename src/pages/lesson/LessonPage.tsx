@@ -437,7 +437,7 @@ export function LessonPage() {
                 <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text-muted)]">
                   <span className="inline-flex items-center gap-1.5">
                     <Clock className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
-                    <span>Thời lượng đọc: ~{lesson.estimatedMinutes} phút</span>
+                    <span>Thời lượng đọc: {Math.max(5, lesson.estimatedMinutes)} phút</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <Layers className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />

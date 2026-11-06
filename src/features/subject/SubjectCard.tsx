@@ -2,7 +2,6 @@ import type { ManifestSubject } from '@schemas/index';
 import {
   ArrowRight,
   BookOpen,
-  Clock,
   Compass,
   GraduationCap,
   Layers,
@@ -125,20 +124,12 @@ export function SubjectCard({ subject }: SubjectCardProps) {
 
           <CardContent className="space-y-4">
             <div className="text-vn-muted flex flex-wrap items-center gap-4 text-xs">
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex items-center gap-1.5 font-medium">
                 <Layers className="text-vn-accent h-3.5 w-3.5" aria-hidden="true" />
-                <span>{stats.chapterCount} chương</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <BookOpen className="text-vn-accent h-3.5 w-3.5" aria-hidden="true" />
-                <span>{stats.lessonCount} bài học</span>
-              </span>
-              {stats.totalMinutes > 0 && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock className="text-vn-accent h-3.5 w-3.5" aria-hidden="true" />
-                  <span>~{stats.totalMinutes} phút</span>
+                <span>
+                  {stats.chapterCount} chương · {stats.lessonCount} bài học
                 </span>
-              )}
+              </span>
             </div>
 
             {stats.tags.length > 0 && (

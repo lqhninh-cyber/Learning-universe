@@ -251,11 +251,11 @@ export function SubjectOverviewPage() {
   };
 
   return (
-    <FadeIn className="mx-auto max-w-5xl space-y-6">
+    <FadeIn className="mx-auto max-w-5xl space-y-8">
       {/* =========================================================================
-          KHU VỰC 1: COMPACT COURSE HERO (TIỀN SẢNH MÔN HỌC TINH GỌN)
+          KHU VỰC 1: CINEMATIC COURSE HERO TRÀN VIỀN (FULL-BLEED 100VW)
           ========================================================================= */}
-      <SubjectHero subject={subject} />
+      <SubjectHero subject={subject} onSelectSpecializedTab={() => setActiveTab('specialized')} />
 
       {/* =========================================================================
           KHU VỰC 2: THANH TAB ĐIỀU HƯỚNG WORKSPACE (COURSE WORKSPACE TABS)

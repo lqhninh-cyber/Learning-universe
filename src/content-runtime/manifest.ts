@@ -185,7 +185,11 @@ export function getSubjectStats(subject: ManifestSubject): SubjectStats {
   for (const chapter of subject.chapters) {
     for (const lesson of chapter.lessons) {
       lessonCount += 1;
-      totalMinutes += lesson.estimatedMinutes;
+      const safeLessonMinutes =
+        typeof lesson.estimatedMinutes === 'number' && Number.isFinite(lesson.estimatedMinutes)
+          ? Math.max(0, Math.abs(lesson.estimatedMinutes))
+          : 0;
+      totalMinutes += safeLessonMinutes;
       for (const tag of lesson.tags) {
         tagSet.add(tag);
       }
@@ -195,10 +199,16 @@ export function getSubjectStats(subject: ManifestSubject): SubjectStats {
     }
   }
 
+  const rawMinutes = subject.curriculum?.totalMinutes ?? totalMinutes;
+  const safeTotalMinutes =
+    typeof rawMinutes === 'number' && Number.isFinite(rawMinutes)
+      ? Math.max(0, Math.abs(rawMinutes))
+      : 0;
+
   return {
     chapterCount: subject.curriculum?.chapterCount ?? subject.chapters.length,
     lessonCount: subject.curriculum?.lessonCount ?? lessonCount,
-    totalMinutes: subject.curriculum?.totalMinutes ?? totalMinutes,
+    totalMinutes: safeTotalMinutes,
     tags: [...tagSet],
     firstLesson,
   };

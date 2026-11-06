@@ -14,6 +14,7 @@ export function RootHydrateFallback() {
 function RootLayoutContent() {
   const { pathname, hash } = useLocation();
   const isHomePage = pathname === ROUTES.home;
+  const isCourseDetailPage = /^\/(mon-hoc|courses)\/[^/]+\/?$/.test(pathname);
 
   useEffect(() => {
     if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
@@ -26,7 +27,7 @@ function RootLayoutContent() {
   }, [pathname, hash]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#FAF7F2] text-stone-900">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#FAF7F2] text-stone-900">
       {/* 1. STICKY FROSTED NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
       <Header />
 
@@ -34,6 +35,12 @@ function RootLayoutContent() {
       {isHomePage ? (
         <main className="flex-1 overflow-x-hidden pb-16">
           <Outlet />
+        </main>
+      ) : isCourseDetailPage ? (
+        <main className="flex-1 overflow-x-hidden pb-12">
+          <Container size="wide">
+            <Outlet />
+          </Container>
         </main>
       ) : (
         <main className="flex-1 pt-6 pb-12 sm:pt-8">

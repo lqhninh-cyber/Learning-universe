@@ -132,8 +132,8 @@ export const routes: RouteObject[] = [
           {
             index: true,
             lazy: async () => {
-              const { SubjectOverviewPage } = await import('@/pages/subjects/SubjectOverviewPage');
-              return { Component: SubjectOverviewPage };
+              const { CourseDetailPage } = await import('@/pages/courses/CourseDetailPage');
+              return { Component: CourseDetailPage };
             },
           },
           {

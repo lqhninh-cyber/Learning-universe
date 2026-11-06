@@ -6,11 +6,9 @@ import {
   BookOpen,
   Clock,
   Compass,
-  FileText,
   Layers,
   Play,
   Search,
-  Sparkles,
   User,
 } from 'lucide-react';
 import { useEffect, useId, useState } from 'react';
@@ -25,7 +23,7 @@ import {
 import { useLearningStore } from '@/features/learning';
 import { SearchBar } from '@/features/search';
 import { isSupabaseConfigured } from '@/services/supabase/client';
-import { COURSE_DIRECT_PDF_LINKS, EXTERNAL_LINKS, ROUTES } from '@/shared/config/routes';
+import { EXTERNAL_LINKS, ROUTES } from '@/shared/config/routes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
@@ -35,11 +33,6 @@ import { Button, ProgressRing } from '@/shared/ui';
 type HubBranchFilter = 'all' | AcademicBranch;
 
 const HORIZONTAL_BLIND_INDICES = [0, 1, 2, 3, 4, 5, 6, 7] as const;
-
-function formatDurationHours(totalMinutes: number): string {
-  const hours = Math.max(1, Math.round((totalMinutes / 60) * 10) / 10);
-  return `${hours} giờ học`;
-}
 
 export function HomePage() {
   const subjects = getSubjects();
@@ -98,14 +91,14 @@ export function HomePage() {
   const progressPercent =
     totalLessonCount > 0 ? Math.round((completedCount / totalLessonCount) * 100) : 0;
 
-  // Lọc danh sách học phần trong Screen 2 — Interactive Course Hub
+  // Lọc danh sách học phần trong Không gian Học phần
   const filteredSubjects = subjects.filter((subject) => {
     const asset = getCourseCinematicAsset(subject.slug);
     if (activeBranch !== 'all' && asset.branch !== activeBranch) {
       return false;
     }
     if (hubQuery.trim().length > 0) {
-      const searchable = `${subject.title} ${asset.courseCode} ${asset.categoryLabel} ${asset.conciseDescription} ${asset.vietnameseLandmark}`;
+      const searchable = `${subject.title} ${asset.courseCode} ${asset.categoryLabel} ${asset.conciseDescription}`;
       return matchesVietnameseQuery(searchable, hubQuery);
     }
     return true;
@@ -116,13 +109,13 @@ export function HomePage() {
   return (
     <FadeIn className="bg-[#FAF7F2] text-stone-900">
       {/* =========================================================================
-          SCREEN 1 — THE OPENING (100vw x 100vh Full-bleed Vietnamese Architectural Hero)
+          THE OPENING (100vw x 100vh Full-bleed Architectural Hero)
           ========================================================================= */}
       <section
-        aria-label="Screen 1: Không gian Mở màn Học thuật Việt Nam"
+        aria-label="Không gian Mở màn Học thuật"
         className="relative h-screen min-h-screen w-screen overflow-hidden bg-[#FAF7F2]"
       >
-        {/* Định nghĩa SVG Mask Horizontal Blinds (Codrops / GSAP Section Transition) */}
+        {/* Định nghĩa SVG Mask Horizontal Blinds */}
         <svg className="pointer-events-none absolute h-0 w-0" aria-hidden="true">
           <defs>
             <mask id={`hero-blinds-${svgMaskId}`} maskContentUnits="objectBoundingBox">
@@ -145,7 +138,7 @@ export function HomePage() {
           </defs>
         </svg>
 
-        {/* Nền kiến trúc học thuật Việt Nam (Khuê Văn Các / Văn Miếu) với hòa sắc Giấy Dó */}
+        {/* Nền kiến trúc học thuật với hòa sắc Giấy Dó */}
         <div
           className="pointer-events-none absolute inset-0 transition-transform duration-700 ease-out will-change-transform"
           style={{
@@ -162,7 +155,6 @@ export function HomePage() {
             loading="eager"
             className="h-full w-full object-cover object-center opacity-40 mix-blend-multiply"
           />
-          {/* Lớp lọc hòa sắc học thuật (Academic Tint Overlay) */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#FAF7F2] via-[#FAF7F2]/40 to-[#FAF7F2]/50" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#FAF7F2_100%)] opacity-75" />
         </div>
@@ -189,9 +181,9 @@ export function HomePage() {
           })}
         </div>
 
-        {/* Nội dung chính của Screen 1 — The Opening */}
+        {/* Nội dung chính của The Opening */}
         <div className="relative z-20 mx-auto flex h-full max-w-[1440px] flex-col justify-between px-6 py-8 sm:px-12 sm:py-10 lg:px-20 lg:py-12">
-          {/* Góc trên: Micro-typography kỹ thuật & Định danh Học viện */}
+          {/* Góc trên: Định danh Học viện */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-300/60 pb-4">
             <div className="flex items-center gap-2.5">
               <span className="h-2 w-2 rounded-full bg-[#9A3412]" aria-hidden="true" />
@@ -201,17 +193,11 @@ export function HomePage() {
             </div>
             <div className="hidden items-center gap-4 font-mono text-[11px] text-stone-600 md:flex">
               <span>HỌC VIỆN TRI THỨC TOÁN HỌC &amp; KHOA HỌC GIÁO DỤC</span>
-              <span className="h-3 w-px bg-stone-300" aria-hidden="true" />
-              <span>{HOMEPAGE_OPENING_ASSET.vietnameseLandmark}</span>
             </div>
           </div>
 
-          {/* Trung tâm nửa trên màn hình: Đại tự thái Monumental Typography */}
+          {/* Trung tâm màn hình: Đại tự Monumental Typography */}
           <div className="my-auto max-w-5xl space-y-6 py-6">
-            <p className="font-mono text-xs font-semibold tracking-[0.22em] text-[#9A3412] uppercase">
-              SCREEN 01 · VIETNAMESE ACADEMIC HERITAGE
-            </p>
-
             <h1 className="font-serif text-6xl leading-[0.9] font-normal tracking-tight text-stone-900 md:text-8xl lg:text-[7.5rem]">
               LEARNING UNIVERSE
             </h1>
@@ -252,24 +238,20 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Góc dưới: Tọa độ, nhãn thông số & Chỉ báo cuộn trang */}
+          {/* Góc dưới: Thông số học phần & Chỉ báo cuộn trang */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-t border-stone-300/60 pt-4 font-mono text-[11px] text-stone-700">
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-semibold text-stone-900">
                 04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026
               </span>
-              <span className="hidden h-3 w-px bg-stone-300 sm:inline" aria-hidden="true" />
-              <span className="hidden text-stone-600 sm:inline">
-                {HOMEPAGE_OPENING_ASSET.coordinates}
-              </span>
             </div>
 
             <a
               href="#khong-gian-mon-hoc"
-              aria-label="Cuộn xuống Cổng lựa chọn môn học"
+              aria-label="Cuộn xuống Không gian Học phần"
               className="group inline-flex items-center gap-2 font-sans text-xs font-medium text-stone-700 transition-colors hover:text-stone-950"
             >
-              <span>Cuộn xuống Cổng Học Phần</span>
+              <span>Cuộn xuống Không gian Học phần</span>
               <span className="flex h-6 w-6 animate-pulse items-center justify-center rounded-full border border-stone-400/80">
                 <ArrowDown className="h-3 w-3" aria-hidden="true" />
               </span>
@@ -279,14 +261,14 @@ export function HomePage() {
       </section>
 
       {/* =========================================================================
-          SCREEN 2 — INTERACTIVE COURSE HUB (Cổng Lựa Chọn Môn Học Mở Rộng)
+          FULL-VIEWPORT COURSE SELECTOR (Không gian Học phần)
           ========================================================================= */}
       <section
         id="khong-gian-mon-hoc"
-        aria-label="Screen 2: Cổng lựa chọn môn học"
-        className="relative min-h-screen w-full overflow-hidden border-t border-stone-300/60 py-16 sm:py-24"
+        aria-label="Không gian Học phần"
+        className="relative flex h-screen min-h-screen flex-col justify-center overflow-hidden border-t border-stone-300/60 px-6 lg:px-16"
       >
-        {/* Lớp nền cảnh quan Việt Nam chuyển mượt khi người dùng hover vào từng môn học */}
+        {/* Lớp nền cảnh quan chuyển mượt khi người dùng di chuột vào từng học phần */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
           {Object.values(COURSE_CINEMATIC_ASSETS).map((asset) => {
             const isSelected = asset.slug === activeHubAsset.slug;
@@ -298,7 +280,7 @@ export function HomePage() {
                 loading="lazy"
                 className={cn(
                   'absolute inset-0 h-full w-full object-cover object-center mix-blend-multiply transition-opacity duration-700 ease-out',
-                  isSelected ? 'opacity-20' : 'opacity-0',
+                  isSelected ? 'opacity-25' : 'opacity-0',
                 )}
               />
             );
@@ -306,45 +288,33 @@ export function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#FAF7F2]/85 to-[#FAF7F2]" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1440px] space-y-10 px-6 sm:px-12 lg:px-20">
-          {/* Header của Interactive Course Hub & Thanh tìm kiếm bài học toàn cục */}
-          <div className="grid grid-cols-1 gap-8 border-b border-stone-300/70 pb-8 lg:grid-cols-12 lg:items-end">
-            <div className="space-y-3 lg:col-span-7">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="font-mono text-xs font-bold tracking-[0.2em] text-[#9A3412] uppercase">
-                  SCREEN 02 · INTERACTIVE COURSE HUB
-                </span>
-                <span className="h-3 w-px bg-stone-300" aria-hidden="true" />
-                <span className="font-mono text-xs text-stone-600">
-                  Cảnh quan hiện tại: {activeHubAsset.vietnameseLandmark}
-                </span>
-              </div>
-
+        <div className="relative z-10 mx-auto w-full max-w-[1440px] space-y-6">
+          {/* Tiêu đề "Không gian Học phần" & Thanh tìm kiếm toàn cục */}
+          <div className="flex flex-col justify-between gap-4 border-b border-stone-300/70 pb-5 lg:flex-row lg:items-end">
+            <div className="space-y-1.5">
               <h2 className="font-serif text-3xl font-normal tracking-tight text-stone-950 sm:text-5xl">
-                Cổng Lựa Chọn Học Phần
+                Không gian Học phần
               </h2>
-              <p className="max-w-2xl text-sm leading-relaxed text-stone-700 sm:text-base">
-                Tra cứu bao quát và truy cập trực tiếp vào từng môn học. Di chuột lên từng học phần
-                để cảm nhận không gian cảnh quan đặc trưng hoặc bấm chọn để mở trang môn học chuyên
-                sâu.
+              <p className="max-w-xl text-sm text-stone-600">
+                Lựa chọn học phần để truy cập lộ trình bài giảng, giáo trình PDF và ngân hàng đề
+                thi.
               </p>
             </div>
 
-            {/* Ô tìm kiếm bài học & khái niệm toàn cục (SearchBar) */}
-            <div className="w-full lg:col-span-5">
+            <div className="w-full lg:max-w-md">
               <SearchBar className="w-full" />
             </div>
           </div>
 
-          {/* Thanh bộ lọc phân nhánh: Tất cả học phần | Toán học | Khoa học Giáo dục + Lọc nhanh tên môn */}
-          <div className="flex flex-col justify-between gap-4 border-b border-stone-300/50 pb-6 md:flex-row md:items-center">
+          {/* Bộ lọc: Tất cả | Toán học | Khoa học Giáo dục cùng ô tìm kiếm nhanh */}
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
             <div
               role="tablist"
               aria-label="Bộ lọc phân nhánh học phần"
               className="flex flex-wrap items-center gap-2"
             >
               {[
-                { id: 'all' as const, label: 'Tất cả học phần', count: subjects.length },
+                { id: 'all' as const, label: 'Tất cả', count: subjects.length },
                 {
                   id: 'math' as const,
                   label: 'Toán học',
@@ -368,7 +338,7 @@ export function HomePage() {
                     aria-selected={isActive}
                     onClick={() => setActiveBranch(tab.id)}
                     className={cn(
-                      'cursor-pointer rounded-full px-4 py-2 text-xs font-semibold transition-all',
+                      'cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
                       isActive
                         ? 'bg-stone-900 text-[#FAF7F2] shadow-2xs'
                         : 'border border-stone-300/80 bg-[#FDFBF7]/90 text-stone-700 hover:border-stone-400 hover:text-stone-950',
@@ -388,8 +358,7 @@ export function HomePage() {
               })}
             </div>
 
-            {/* Ô lọc nhanh học phần khi mở rộng lên 10-20 môn */}
-            <div className="relative w-full md:w-72">
+            <div className="relative w-full sm:w-64">
               <Search
                 className="pointer-events-none absolute top-1/2 left-3.5 h-3.5 w-3.5 -translate-y-1/2 text-stone-400"
                 aria-hidden="true"
@@ -398,204 +367,96 @@ export function HomePage() {
                 type="text"
                 value={hubQuery}
                 onChange={(e) => setHubQuery(e.target.value)}
-                placeholder="Lọc nhanh mã hoặc tên môn học..."
+                placeholder="Tìm nhanh mã hoặc tên môn..."
                 aria-label="Lọc nhanh danh sách môn học"
                 className="w-full rounded-full border border-stone-300/80 bg-[#FDFBF7]/90 py-1.5 pr-4 pl-9 text-xs text-stone-800 placeholder:text-stone-400 focus:border-stone-500 focus:outline-none"
               />
             </div>
           </div>
 
-          {/* Bố cục Danh mục Học phần Tương tác (Interactive Course Hub List & Preview) */}
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            {/* CỘT TRÁI (8 Cột): Danh sách học phần mở rộng với đường hairline thanh lịch */}
-            <div className="divide-y divide-stone-300/60 border-t border-b border-stone-300/60 lg:col-span-8">
-              {filteredSubjects.map((subject, index) => {
-                const stats = getSubjectStats(subject);
-                const asset = getCourseCinematicAsset(subject.slug);
-                const pdfUrl =
-                  COURSE_DIRECT_PDF_LINKS[subject.slug] ?? EXTERNAL_LINKS.googleDriveDocs;
-                const isHovered = hoveredCourseSlug === subject.slug;
+          {/* Danh sách môn học dạng lưới thẻ tương tác tối giản */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-5">
+            {filteredSubjects.map((subject) => {
+              const stats = getSubjectStats(subject);
+              const asset = getCourseCinematicAsset(subject.slug);
+              const isHovered = hoveredCourseSlug === subject.slug;
 
-                return (
-                  <article
-                    key={subject.id}
-                    onMouseEnter={() => setHoveredCourseSlug(subject.slug)}
-                    onFocus={() => setHoveredCourseSlug(subject.slug)}
-                    aria-label={`Học phần ${subject.title}`}
-                    className={cn(
-                      'group py-7 transition-colors duration-300 sm:px-4',
-                      isHovered ? 'bg-[#FDFBF7]/90' : 'hover:bg-[#FDFBF7]/60',
-                    )}
-                  >
-                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                      <div className="space-y-2.5">
-                        {/* 1. Mã học phần & Phân loại */}
-                        <div className="flex flex-wrap items-center gap-2.5">
-                          <span className="font-mono text-xs font-bold text-stone-400">
-                            0{index + 1}
-                          </span>
-                          <span
-                            className={cn(
-                              'rounded-md px-2.5 py-0.5 font-mono text-xs font-bold',
-                              asset.branch === 'pedagogy'
-                                ? 'bg-indigo-950/10 text-indigo-950'
-                                : 'bg-[#9A3412]/10 text-[#9A3412]',
-                            )}
-                          >
-                            {asset.categoryLabel}
-                          </span>
-                          <span className="font-mono text-[11px] text-stone-500">
-                            {asset.vietnameseLandmark}
-                          </span>
-                        </div>
-
-                        {/* 2. Tên chính thức của môn học */}
-                        <h3 className="font-serif text-2xl font-bold tracking-tight text-stone-950 transition-colors group-hover:text-[#9A3412] sm:text-3xl">
-                          <Link
-                            to={ROUTES.subjectOverview(subject.slug)}
-                            aria-label={subject.title}
-                          >
-                            {subject.title}
-                          </Link>
-                        </h3>
-
-                        {/* 3. Mô tả cơ bản, cô đọng đúng trọng tâm chuyên môn */}
-                        <p className="max-w-2xl text-sm leading-relaxed text-stone-700">
-                          {asset.conciseDescription}
-                        </p>
-                      </div>
-
-                      {/* Nút vào thẳng trang riêng của môn học */}
-                      <div className="flex shrink-0 items-center gap-2.5 pt-1">
-                        <Button
-                          asChild
-                          variant="subject"
-                          size="sm"
-                          className="gap-1.5 rounded-full bg-stone-900 px-5 py-2 text-xs font-semibold text-[#FAF7F2] hover:bg-[#9A3412]"
-                        >
-                          <Link to={ROUTES.subjectOverview(subject.slug)}>
-                            <span>Vào học phần</span>
-                            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                          </Link>
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* 4. Thông số thực tế & Liên kết trực tiếp */}
-                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-2 text-xs text-stone-600">
-                      <div className="flex flex-wrap items-center gap-4">
-                        <span className="inline-flex items-center gap-1.5 font-medium text-stone-800">
-                          <Layers className="h-3.5 w-3.5 text-[#9A3412]" aria-hidden="true" />
-                          <span>
-                            {stats.chapterCount} chương · {stats.lessonCount} bài học
-                          </span>
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                          <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>{formatDurationHours(stats.totalMinutes)}</span>
-                        </span>
-                        {subject.slug === 'hinh-hoc-affine' && (
-                          <a
-                            href="/interactive/affine-geometry.html"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 font-semibold text-[#9A3412] hover:underline"
-                          >
-                            <Sparkles className="h-3 w-3" aria-hidden="true" />
-                            <span>Phòng Lab tương tác 2D/3D</span>
-                          </a>
+              return (
+                <article
+                  key={subject.id}
+                  onMouseEnter={() => setHoveredCourseSlug(subject.slug)}
+                  onFocus={() => setHoveredCourseSlug(subject.slug)}
+                  aria-label={`Học phần ${subject.title}`}
+                  className={cn(
+                    'group flex flex-col justify-between rounded-2xl border p-5 backdrop-blur-md transition-all duration-300 sm:p-6',
+                    isHovered
+                      ? 'border-stone-400 bg-[#FDFBF7]/95 shadow-sm'
+                      : 'border-stone-300/75 bg-[#FDFBF7]/80 hover:border-stone-400 hover:bg-[#FDFBF7]/95',
+                  )}
+                >
+                  <div className="space-y-2.5">
+                    {/* Mã môn & số chương/bài học */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span
+                        className={cn(
+                          'rounded-md px-2.5 py-0.5 font-mono text-xs font-bold',
+                          asset.branch === 'pedagogy'
+                            ? 'bg-indigo-950/10 text-indigo-950'
+                            : 'bg-[#9A3412]/10 text-[#9A3412]',
                         )}
-                      </div>
-
-                      <div className="flex items-center gap-4">
-                        <a
-                          href={pdfUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 font-medium text-stone-600 hover:text-stone-950"
-                        >
-                          <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Giáo trình PDF (Drive)</span>
-                        </a>
-                        <Link
-                          to={ROUTES.courseOverview(subject.slug)}
-                          className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-stone-700 hover:text-[#9A3412]"
-                        >
-                          <span>/courses/{subject.slug}</span>
-                          <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-
-            {/* CỘT PHẢI (4 Cột): Khung Nhìn Cảnh Quan Việt Nam Tương Ứng Khi Rê Chuột */}
-            <aside
-              aria-label="Khung cảnh quan học phần đang chọn"
-              className="sticky top-24 hidden space-y-4 lg:col-span-4 lg:block"
-            >
-              <div className="overflow-hidden rounded-2xl border border-stone-300/80 bg-[#FDFBF7] shadow-xs">
-                <div className="relative aspect-video w-full overflow-hidden bg-stone-200">
-                  <img
-                    src={activeHubAsset.remoteSrc}
-                    alt={activeHubAsset.alt}
-                    className="h-full w-full object-cover object-center transition-all duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-stone-950/20 to-transparent" />
-                  <div className="absolute right-4 bottom-3 left-4 flex items-end justify-between text-[#FAF7F2]">
-                    <div>
-                      <span className="font-mono text-[10px] tracking-widest text-amber-200 uppercase">
-                        {activeHubAsset.categoryLabel}
+                      >
+                        {asset.categoryLabel}
                       </span>
-                      <p className="font-serif text-lg font-bold">{activeHubAsset.title}</p>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-stone-600">
+                        <Layers className="h-3.5 w-3.5 text-[#9A3412]" aria-hidden="true" />
+                        <span>
+                          {stats.chapterCount} chương · {stats.lessonCount} bài học
+                        </span>
+                      </span>
                     </div>
-                    <span className="font-mono text-[10px] text-stone-200">
-                      {activeHubAsset.coordinates}
-                    </span>
-                  </div>
-                </div>
 
-                <div className="space-y-3 p-5">
-                  <div className="space-y-1">
-                    <span className="font-mono text-[10px] font-bold tracking-wider text-[#9A3412] uppercase">
-                      CẢNH QUAN VIỆT NAM ĐẠI DIỆN
-                    </span>
-                    <p className="font-serif text-sm font-bold text-stone-900">
-                      {activeHubAsset.vietnameseLandmark}
+                    {/* Tên môn học */}
+                    <h3 className="font-serif text-2xl font-bold tracking-tight text-stone-950 transition-colors group-hover:text-[#9A3412]">
+                      <Link to={ROUTES.subjectOverview(subject.slug)} aria-label={subject.title}>
+                        {subject.title}
+                      </Link>
+                    </h3>
+
+                    {/* 1 dòng mô tả bản chất môn học */}
+                    <p className="line-clamp-1 text-sm text-stone-600">
+                      {asset.conciseDescription}
                     </p>
                   </div>
-                  <p className="text-xs leading-relaxed text-stone-600">
-                    {activeHubAsset.visualMetaphor}
-                  </p>
-                  <div className="border-t border-stone-200/80 pt-3">
-                    <Link
-                      to={ROUTES.subjectOverview(activeHubAsset.slug)}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#9A3412] hover:underline"
+
+                  {/* Nút "Vào học phần" dẫn thẳng đến /courses/:slug */}
+                  <div className="mt-4 flex items-center justify-end border-t border-stone-200/70 pt-3.5">
+                    <Button
+                      asChild
+                      variant="subject"
+                      size="sm"
+                      className="gap-1.5 rounded-full bg-stone-900 px-5 py-2 text-xs font-semibold text-[#FAF7F2] hover:bg-[#9A3412]"
                     >
-                      <span>Mở không gian {activeHubAsset.title}</span>
-                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </Link>
+                      <Link to={ROUTES.courseOverview(subject.slug)}>
+                        <span>Vào học phần</span>
+                        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      </Link>
+                    </Button>
                   </div>
-                </div>
-              </div>
-            </aside>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          SCREEN 3 — CONTINUE EXPLORING & MINIMALIST FOOTER
+          CONTINUE EXPLORING & SHORTCUTS
           ========================================================================= */}
       <section
-        aria-label="Screen 3: Tiếp tục khám phá và lối tắt học thuật"
-        className="mx-auto max-w-[1440px] space-y-12 border-t border-stone-300/70 px-6 pt-16 pb-8 sm:px-12 lg:px-20"
+        aria-label="Tiếp tục khám phá và lối tắt học thuật"
+        className="mx-auto max-w-[1440px] space-y-10 border-t border-stone-300/70 px-6 pt-14 pb-8 sm:px-12 lg:px-16"
       >
-        <div className="space-y-2">
-          <p className="font-mono text-xs font-bold tracking-[0.2em] text-[#9A3412] uppercase">
-            SCREEN 03 · CONTINUE EXPLORING
-          </p>
+        <div className="space-y-1.5">
           <h2 className="font-serif text-3xl font-normal tracking-tight text-stone-950 sm:text-4xl">
             Tiếp Tục Học Dở &amp; Lối Tắt Học Thuật
           </h2>
@@ -654,7 +515,7 @@ export function HomePage() {
                   <span className="hidden h-3 w-px bg-stone-300 sm:inline" aria-hidden="true" />
                   <span className="hidden items-center gap-1 sm:inline-flex">
                     <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>~{activeRecentLesson.lesson.estimatedMinutes} phút đọc</span>
+                    <span>{Math.max(5, activeRecentLesson.lesson.estimatedMinutes)} phút đọc</span>
                   </span>
                 </div>
 

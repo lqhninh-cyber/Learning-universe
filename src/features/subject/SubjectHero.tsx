@@ -2,7 +2,6 @@ import type { ManifestSubject } from '@schemas/index';
 import {
   BookOpen,
   CheckCircle2,
-  Clock,
   ExternalLink,
   FileText,
   Layers,
@@ -10,26 +9,20 @@ import {
   Sparkles,
   UserCheck,
 } from 'lucide-react';
-import { useId } from 'react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjectStats } from '@/content-runtime';
 import { getCourseCinematicAsset } from '@/data/cinematicAssets';
 import { useLearningStore } from '@/features/learning';
-import { COURSE_DIRECT_PDF_LINKS, ROUTES } from '@/shared/config/routes';
-import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
-import { Badge, Breadcrumb, Button, ProgressRing } from '@/shared/ui';
+import { COURSE_DIRECT_PDF_LINKS, EXTERNAL_LINKS, ROUTES } from '@/shared/config/routes';
 
 export interface SubjectHeroProps {
   readonly subject: ManifestSubject;
+  readonly onSelectSpecializedTab?: () => void;
 }
 
-const COURSE_BLIND_SLATS = [0, 1, 2, 3, 4, 5, 6] as const;
-
-export function SubjectHero({ subject }: SubjectHeroProps) {
+export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProps) {
   const stats = getSubjectStats(subject);
   const cinematicAsset = getCourseCinematicAsset(subject.slug);
-  const prefersReducedMotion = useReducedMotion();
-  const maskId = useId().replace(/:/g, '');
 
   const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const completedLessons = useLearningStore((state) => state.completedLessons);
@@ -46,244 +39,241 @@ export function SubjectHero({ subject }: SubjectHeroProps) {
 
   const resumeLocation = lastVisited ? getLessonById(lastVisited.lessonId) : undefined;
   const ctaLocation = resumeLocation ?? stats.firstLesson;
-  const directPdfUrl = COURSE_DIRECT_PDF_LINKS[subject.slug];
+  const directPdfUrl = COURSE_DIRECT_PDF_LINKS[subject.slug] ?? EXTERNAL_LINKS.googleDriveDocs;
+
+  const hasDedicatedExamPage =
+    subject.slug === 'cau-truc-dai-so' || subject.slug === 'giai-tich-ham-mot-bien';
+
+  // Thông số cho vòng tròn tiến độ tối giản trên nền kính tối
+  const ringSize = 64;
+  const strokeWidth = 4;
+  const radius = (ringSize - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
 
   return (
-    <div className="space-y-5">
-      <Breadcrumb
-        items={[
-          { label: 'Trang chủ', href: ROUTES.home },
-          { label: 'Môn học', href: ROUTES.subjects },
-          { label: subject.title },
-        ]}
-      />
+    <section
+      aria-label={`Không gian học phần ${subject.title}`}
+      className="relative right-1/2 left-1/2 -mr-[50vw] -ml-[50vw] flex min-h-[82vh] w-screen flex-col justify-between overflow-hidden bg-stone-950 lg:h-[88vh]"
+    >
+      {/* NỀN PHONG CẢNH / DI SẢN VIỆT NAM ĐẠI DIỆN CHO MÔN HỌC */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <img
+          src={cinematicAsset.remoteSrc}
+          alt={cinematicAsset.alt}
+          loading="eager"
+          className="h-full w-full object-cover object-center"
+        />
+        {/* Lớp phủ tối dịu tăng độ tương phản cho chữ trắng sắc nét */}
+        <div className="absolute inset-0 bg-stone-950/45" />
+        {/* Gradient chuyển tiếp mượt xuống nền giấy Dó #FAF7F2 ở chân Hero */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#FAF7F2] via-stone-900/50 to-stone-900/70" />
+        <div className="absolute inset-x-0 top-0 h-[84%] bg-gradient-to-b from-stone-950/60 via-stone-950/45 to-transparent" />
+      </div>
 
-      {/* CINEMATIC COURSE COVER VỚI SVG MASK (HORIZONTAL BLINDS) & CẢNH QUAN VIỆT NAM */}
-      <section
-        aria-label={`Không gian học phần ${subject.title}`}
-        className="relative overflow-hidden rounded-3xl border border-stone-300/80 bg-[#FAF7F2] px-6 py-10 shadow-xs sm:px-10 sm:py-12 lg:px-14 lg:py-14"
-      >
-        {/* Định nghĩa SVG Mask Horizontal Blinds hé lộ cảnh quan Việt Nam đặc trưng của môn học */}
-        <svg className="pointer-events-none absolute h-0 w-0" aria-hidden="true">
-          <defs>
-            <mask id={`course-cover-blinds-${maskId}`} maskContentUnits="objectBoundingBox">
-              {COURSE_BLIND_SLATS.map((idx) => {
-                const sliceHeight = 1 / COURSE_BLIND_SLATS.length;
-                return (
-                  <rect
-                    key={idx}
-                    x="0"
-                    y={idx * sliceHeight}
-                    width="1"
-                    height={sliceHeight - 0.004}
-                    fill="white"
-                  />
-                );
-              })}
-            </mask>
-          </defs>
-        </svg>
+      {/* BỐ CỤC NỘI DUNG HERO MÔN HỌC */}
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-1 flex-col justify-between px-6 pt-8 pb-16 sm:px-10 lg:px-12 lg:pt-10 lg:pb-20">
+        {/* PHÍA TRÊN: Breadcrumb thanh mảnh màu trắng sáng & Badge mã môn học */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/15 pb-4">
+          <nav aria-label="Breadcrumb" className="text-xs font-medium text-white/80">
+            <ol className="flex flex-wrap items-center gap-2">
+              <li>
+                <Link to={ROUTES.home} className="transition-colors hover:text-white">
+                  Trang chủ
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-white/40">
+                /
+              </li>
+              <li>
+                <Link to={ROUTES.subjects} className="transition-colors hover:text-white">
+                  Môn học
+                </Link>
+              </li>
+              <li aria-hidden="true" className="text-white/40">
+                /
+              </li>
+              <li aria-current="page" className="font-semibold text-white">
+                {subject.title}
+              </li>
+            </ol>
+          </nav>
 
-        {/* Lớp nền cảnh quan Việt Nam đặc trưng của môn học */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            maskImage: prefersReducedMotion ? undefined : `url(#course-cover-blinds-${maskId})`,
-            WebkitMaskImage: prefersReducedMotion
-              ? undefined
-              : `url(#course-cover-blinds-${maskId})`,
-          }}
-          aria-hidden="true"
-        >
-          <img
-            src={cinematicAsset.remoteSrc}
-            alt={cinematicAsset.alt}
-            loading="eager"
-            className="h-full w-full object-cover object-center opacity-35 mix-blend-multiply"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#FAF7F2] via-[#FAF7F2]/65 to-[#FAF7F2]/45" />
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-3.5 py-1 font-mono text-xs font-semibold tracking-wider text-amber-200 uppercase backdrop-blur-md">
+              {cinematicAsset.categoryLabel}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-stone-950/45 px-3.5 py-1 text-xs font-medium text-stone-200 backdrop-blur-md">
+              <Layers className="h-3.5 w-3.5 text-amber-300" aria-hidden="true" />
+              <span>
+                {stats.chapterCount} chương · {stats.lessonCount} bài học
+              </span>
+            </span>
+          </div>
         </div>
 
-        <div className="relative z-10 grid gap-8 lg:grid-cols-12 lg:items-end">
-          {/* CỘT TRÁI (8 Cột): 4 Thông tin cốt lõi cô đọng của học phần */}
-          <div className="space-y-5 lg:col-span-8">
-            {/* 1. Mã học phần & Phân loại */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-md border border-stone-300/90 bg-[#FDFBF7]/90 px-3 py-1 font-mono text-xs font-bold tracking-wider text-[#9A3412] uppercase backdrop-blur-xs">
-                {cinematicAsset.categoryLabel}
-              </span>
-              <span className="font-mono text-xs text-stone-600">
-                {cinematicAsset.vietnameseLandmark}
-              </span>
+        {/* PHẦN CHÍNH: Tiêu đề Serif lớn, Mô tả 2 dòng, Cụm CTA & Vòng tròn tiến độ */}
+        <div className="my-auto grid gap-8 py-6 lg:grid-cols-12 lg:items-end">
+          {/* CỘT TRÁI (8 Cột): Typography & Primary Actions */}
+          <div className="lg:col-span-8">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-400/10 px-3 py-1 font-mono text-xs font-medium tracking-wider text-amber-200 uppercase backdrop-blur-xs">
+              <span>{cinematicAsset.categoryLabel}</span>
             </div>
 
-            {/* 2. Tên chính thức của môn học */}
-            <h1 className="font-serif text-4xl leading-[1.08] font-bold tracking-tight text-stone-950 sm:text-5xl">
+            <h1 className="font-serif text-5xl leading-tight tracking-tight text-white md:text-7xl">
               {subject.title}
             </h1>
 
-            {/* 3. Mô tả cơ bản, cô đọng đúng trọng tâm chuyên môn */}
-            <p className="max-w-2xl text-base leading-relaxed text-stone-800">
+            <p className="mt-4 line-clamp-2 max-w-2xl text-base font-light text-stone-200 md:text-lg">
               {cinematicAsset.conciseDescription}
             </p>
 
-            {/* 4. Thông số thực tế: Số chương, Số bài học, Thời lượng */}
-            <div className="flex flex-wrap items-center gap-5 border-t border-stone-300/60 pt-4 text-sm text-stone-700">
-              <span className="inline-flex items-center gap-1.5 font-semibold text-stone-900">
-                <Layers className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
-                <span>{stats.chapterCount} chương</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 font-semibold text-stone-900">
-                <BookOpen className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
-                <span>{stats.lessonCount} bài học</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 font-medium text-stone-700">
-                <Clock className="h-4 w-4 text-stone-500" aria-hidden="true" />
-                <span>~{stats.totalMinutes} phút</span>
-              </span>
-            </div>
-
-            {/* Cụm nút hành động chính */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* Cụm hành động chính (Primary CTA) */}
+            <div className="mt-7 flex flex-wrap items-center gap-3.5">
               {ctaLocation && (
-                <Button
-                  asChild
-                  variant="subject"
-                  size="md"
-                  className="rounded-full bg-stone-900 px-6 text-[#FAF7F2] hover:bg-[#9A3412]"
+                <Link
+                  to={ROUTES.lesson(
+                    ctaLocation.subject.slug,
+                    ctaLocation.chapter.slug,
+                    ctaLocation.lesson.slug,
+                  )}
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#FAF7F2] px-6 py-3.5 text-sm font-semibold text-stone-950 shadow-md transition-all hover:bg-amber-300"
                 >
-                  <Link
-                    to={ROUTES.lesson(
-                      ctaLocation.subject.slug,
-                      ctaLocation.chapter.slug,
-                      ctaLocation.lesson.slug,
-                    )}
-                  >
-                    <PlayCircle className="h-4 w-4" aria-hidden="true" />
-                    <span>
-                      {resumeLocation ? 'Tiếp tục học' : 'Bắt đầu học'}: Bài{' '}
-                      {ctaLocation.chapter.number}.{ctaLocation.lesson.number} —{' '}
-                      {ctaLocation.lesson.title}
-                    </span>
-                  </Link>
-                </Button>
+                  <PlayCircle className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
+                  <span>
+                    Tiếp tục học: Bài {ctaLocation.chapter.number}.{ctaLocation.lesson.number}
+                  </span>
+                </Link>
               )}
 
               {directPdfUrl && (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="md"
-                  className="gap-1.5 rounded-full border-stone-300 bg-[#FDFBF7]/90 text-stone-800 backdrop-blur-xs hover:bg-white"
+                <a
+                  href={directPdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
                 >
-                  <a href={directPdfUrl} target="_blank" rel="noopener noreferrer">
-                    <FileText className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
-                    <span>Giáo trình PDF (Drive)</span>
-                    <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
-                  </a>
-                </Button>
+                  <FileText className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                  <span>Giáo trình PDF (Drive)</span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-75" aria-hidden="true" />
+                </a>
               )}
 
-              {(subject.slug === 'cau-truc-dai-so' ||
-                subject.slug === 'giai-tich-ham-mot-bien') && (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="md"
-                  className="gap-1.5 rounded-full border-stone-300 bg-[#FDFBF7]/90 text-stone-800 backdrop-blur-xs hover:bg-white"
+              {hasDedicatedExamPage ? (
+                <Link
+                  to={ROUTES.subjectExams(subject.slug)}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
                 >
-                  <Link to={ROUTES.subjectExams(subject.slug)}>
-                    <BookOpen className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
-                    <span>Ngân hàng Đề thi &amp; Lời giải</span>
-                  </Link>
-                </Button>
-              )}
-
-              {subject.slug === 'hinh-hoc-affine' && (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="md"
-                  className="gap-1.5 rounded-full border-stone-300 bg-[#FDFBF7]/90 text-stone-800 backdrop-blur-xs hover:bg-white"
+                  <BookOpen className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                  <span>Ngân hàng Đề thi &amp; Lời giải</span>
+                </Link>
+              ) : subject.slug === 'hinh-hoc-affine' ? (
+                <a
+                  href="/interactive/affine-geometry.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
                 >
-                  <a
-                    href="/interactive/affine-geometry.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Sparkles className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
-                    <span>Mở phòng Lab &amp; Ôn tập tương tác</span>
-                    <ExternalLink className="h-3.5 w-3.5 opacity-70" aria-hidden="true" />
-                  </a>
-                </Button>
+                  <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                  <span>Ngân hàng Đề thi &amp; Phòng Lab</span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-75" aria-hidden="true" />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onSelectSpecializedTab}
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
+                >
+                  <BookOpen className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                  <span>Ngân hàng Đề thi &amp; Lời giải</span>
+                </button>
               )}
             </div>
           </div>
 
-          {/* CỘT PHẢI (4 Cột): Khung Tiến độ Học tập Tối giản */}
-          <div className="lg:col-span-4">
-            <div className="rounded-2xl border border-stone-300/80 bg-[#FDFBF7]/90 p-5 backdrop-blur-md">
-              {isAuthenticated ? (
-                <div className="space-y-3" aria-label="Tiến độ học tập môn học">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-mono text-xs font-bold tracking-wider text-[#9A3412] uppercase">
-                        Tiến độ học tập
-                      </p>
-                      <p className="mt-1 font-serif text-3xl font-bold text-stone-950">
-                        {progressPercent}%
-                      </p>
-                    </div>
-                    <ProgressRing value={progressPercent} size={52} strokeWidth={4.5} />
-                  </div>
-                  <p className="text-xs leading-relaxed text-stone-700">
-                    Đã hoàn thành{' '}
-                    <strong className="font-semibold text-stone-950">
-                      {completedCount}/{stats.lessonCount}
-                    </strong>{' '}
-                    bài học trong môn {subject.title}.
+          {/* CỘT PHẢI (4 Cột): Vòng tròn tiến độ hoàn thành (%) tối giản, thanh lịch */}
+          <div className="flex lg:col-span-4 lg:justify-end">
+            <div
+              aria-label={isAuthenticated ? 'Tiến độ học tập môn học' : 'Chế độ khách'}
+              className="w-full rounded-2xl border border-white/20 bg-stone-950/55 p-5 text-white shadow-lg backdrop-blur-md sm:max-w-xs"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="font-mono text-[11px] font-semibold tracking-wider text-amber-200 uppercase">
+                    Tiến độ hoàn thành
                   </p>
-                  {completedCount === stats.lessonCount && stats.lessonCount > 0 && (
-                    <div className="flex items-center gap-1.5 pt-1">
-                      <Badge variant="approved" className="w-full justify-center py-1">
-                        <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>Đã hoàn thành toàn bộ khóa học</span>
-                      </Badge>
-                    </div>
-                  )}
+                  <p className="mt-1 font-serif text-3xl font-normal text-white">
+                    {progressPercent}%
+                  </p>
+                  <p className="mt-1 text-xs text-stone-300">
+                    {completedCount}/{stats.lessonCount} bài học
+                  </p>
                 </div>
-              ) : (
-                <div className="space-y-3" aria-label="Chế độ khách">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-mono text-xs font-bold tracking-wider text-stone-700 uppercase">
-                        Tiến độ học phần
-                      </p>
-                      <p className="mt-1 font-serif text-xl font-bold text-stone-950">
-                        {progressPercent}%
-                      </p>
-                    </div>
-                    <ProgressRing value={progressPercent} size={46} strokeWidth={4} />
-                  </div>
-                  <p className="text-xs leading-relaxed text-stone-600">
-                    Đang xem ở chế độ Khách. Bật theo dõi tiến độ để lưu bài đã học và ghi chú cá
-                    nhân.
-                  </p>
-                  <Button
-                    variant="subjectOutline"
-                    size="sm"
-                    onClick={() => enableLearnerMode()}
-                    className="w-full rounded-full"
+
+                {/* Vòng tròn tiến độ tối giản */}
+                <div className="relative flex items-center justify-center">
+                  <svg
+                    width={ringSize}
+                    height={ringSize}
+                    viewBox={`0 0 ${ringSize} ${ringSize}`}
+                    className="-rotate-90 transform"
+                    role="progressbar"
+                    aria-valuenow={progressPercent}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`Tiến độ hoàn thành: ${progressPercent}%`}
                   >
-                    <UserCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                    <circle
+                      cx={ringSize / 2}
+                      cy={ringSize / 2}
+                      r={radius}
+                      fill="transparent"
+                      stroke="rgba(255,255,255,0.18)"
+                      strokeWidth={strokeWidth}
+                    />
+                    <circle
+                      cx={ringSize / 2}
+                      cy={ringSize / 2}
+                      r={radius}
+                      fill="transparent"
+                      stroke="#FCD34D"
+                      strokeWidth={strokeWidth}
+                      strokeDasharray={circumference}
+                      strokeDashoffset={strokeDashoffset}
+                      strokeLinecap="round"
+                      className="transition-all duration-500 ease-out"
+                    />
+                  </svg>
+                  <span className="absolute font-mono text-xs font-semibold text-amber-200">
+                    {progressPercent}%
+                  </span>
+                </div>
+              </div>
+
+              {isAuthenticated ? (
+                completedCount === stats.lessonCount &&
+                stats.lessonCount > 0 && (
+                  <div className="mt-3 flex items-center gap-1.5 border-t border-white/15 pt-3 text-xs font-medium text-emerald-300">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    <span>Đã hoàn thành toàn bộ học phần</span>
+                  </div>
+                )
+              ) : (
+                <div className="mt-3 border-t border-white/15 pt-3">
+                  <button
+                    type="button"
+                    onClick={() => enableLearnerMode()}
+                    className="inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-white/20"
+                  >
+                    <UserCheck className="h-3.5 w-3.5 text-amber-300" aria-hidden="true" />
                     <span>Bật theo dõi tiến độ học tập</span>
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

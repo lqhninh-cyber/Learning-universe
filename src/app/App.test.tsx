@@ -47,7 +47,7 @@ describe('App routing smoke test', () => {
     expect(calculusLinks[0]).toHaveAttribute('href', '/mon-hoc/giai-tich-ham-mot-bien');
   });
 
-  it('hiển thị đầy đủ 3 Screen của trang chủ Cinematic Việt Nam & Interactive Course Hub', async () => {
+  it('hiển thị đầy đủ 3 Screen của trang chủ Cinematic & Không gian Học phần', async () => {
     renderWithProviders('/');
 
     // 1. Screen 1 — The Opening (Full-bleed 100vw x 100vh + Horizontal Blinds Mask)
@@ -60,9 +60,14 @@ describe('App routing smoke test', () => {
       '#khong-gian-mon-hoc',
     );
 
-    // 2. Screen 2 — Interactive Course Hub (Bộ lọc phân nhánh & Tìm kiếm nhanh)
-    expect(screen.getByRole('heading', { name: /Cổng Lựa Chọn Học Phần/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /Tất cả học phần/i })).toBeInTheDocument();
+    // Đảm bảo không lộ các nhãn nội bộ
+    expect(screen.queryByText(/SCREEN 01/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/SCREEN 02/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Cảnh quan hiện tại/i)).not.toBeInTheDocument();
+
+    // 2. Screen 2 — Không gian Học phần (Bộ lọc phân nhánh & Tìm kiếm nhanh)
+    expect(screen.getByRole('heading', { name: /Không gian Học phần/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Tất cả/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Toán học/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Khoa học Giáo dục/i })).toBeInTheDocument();
     expect(
@@ -70,9 +75,12 @@ describe('App routing smoke test', () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
     expect(screen.getAllByText('EDUT1401 · Khoa học Giáo dục').length).toBeGreaterThan(0);
-    expect(screen.getAllByRole('link', { name: /Vào học phần/i }).length).toBe(4);
 
-    // 3. Screen 3 — Continue Exploring & Minimalist Footer
+    const enterCourseLinks = screen.getAllByRole('link', { name: /Vào học phần/i });
+    expect(enterCourseLinks.length).toBe(4);
+    expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
+
+    // 3. Screen 3 — Continue Exploring & Shortcuts
     expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Tiếp tục học/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Ngân hàng Thuật ngữ \(Glossary\)/i })).toHaveAttribute(
@@ -81,6 +89,19 @@ describe('App routing smoke test', () => {
     );
     expect(screen.getByRole('link', { name: /Kho Tài liệu Giáo trình/i })).toBeInTheDocument();
     expect(screen.getByText(/Trải nghiệm tự do ở Chế độ Khách/i)).toBeInTheDocument();
+  });
+
+  it('hiển thị Cinematic Course Cover tràn viền tại /courses/cau-truc-dai-so', async () => {
+    renderWithProviders('/courses/cau-truc-dai-so');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Cấu trúc đại số' }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('10 chương · 39 bài học').length).toBeGreaterThan(0);
+    expect(screen.getByRole('link', { name: /Tiếp tục học: Bài/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Giáo trình PDF \(Drive\)/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Ngân hàng Đề thi & Lời giải/i })).toBeInTheDocument();
   });
 
   it('hiển thị trang 404 tiếng Việt khi truy cập đường dẫn không tồn tại', async () => {
