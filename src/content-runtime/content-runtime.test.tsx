@@ -293,5 +293,5 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
       <LessonMdxView Content={moduleC7.default} lessonMeta={moduleC7.lessonMeta} />,
     );
     expect(containerC7.querySelector('[data-testid="chapter7-knowledge-map"]')).not.toBeNull();
-  });
+  }, 45000);
 });

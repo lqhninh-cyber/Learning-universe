@@ -18,6 +18,10 @@ const KATEX_MACROS = {
   '\\id': '\\operatorname{id}',
   '\\ker': '\\operatorname{ker}',
   '\\im': '\\operatorname{im}',
+  '\\hom': '\\operatorname{Hom}',
+  '\\Hom': '\\operatorname{Hom}',
+  '\\aut': '\\operatorname{Aut}',
+  '\\Aut': '\\operatorname{Aut}',
   '\\vect': '\\overrightarrow{#1}',
 };
 

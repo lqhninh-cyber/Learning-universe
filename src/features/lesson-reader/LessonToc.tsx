@@ -2,6 +2,7 @@ import type { LessonMeta } from '@schemas/index';
 import { BookMarked, ChevronRight, ListTree } from 'lucide-react';
 import type { MouseEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+import { MathRenderer } from '@/content-runtime';
 import { cn } from '@/shared/lib/cn';
 
 export interface LessonTocProps {
@@ -156,7 +157,9 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                       )}
                       aria-hidden="true"
                     />
-                    <span className="flex-1">{heading.text}</span>
+                    <span className="flex-1">
+                      <MathRenderer content={heading.text} inline />
+                    </span>
                   </a>
                 </li>
               );
@@ -197,10 +200,12 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                           : 'text-subject-800 group-hover:text-subject-950 font-semibold',
                       )}
                     >
-                      {block.label}
+                      <MathRenderer content={block.label} inline />
                     </span>
                     {block.title && (
-                      <span className="block truncate text-xs text-stone-500">{block.title}</span>
+                      <span className="block truncate text-xs text-stone-500">
+                        <MathRenderer content={block.title} inline />
+                      </span>
                     )}
                   </a>
                 </li>

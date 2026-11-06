@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T17:17:02.995Z",
+  "updatedAt": "2026-11-06T05:26:17.849Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -178,7 +178,7 @@
       "path": "content/algebraic-structures/02-nhom-con-va-nhom-cyclic/02-cap-cua-phan-tu-va-nhom-cyclic.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "5adf5307eb9f89fd9268808fb4f7cdf052672b1f2fe43df094dc15dfeea99fef",
+      "sha256": "a393b1277f819ad34d620e5fae06414313e6fc20ac591e6774c7f8cf10714f33",
       "numberedBlocks": {
         "def-c2-b2-cap-cua-phan-tu": "2.2.1",
         "thm-c2-b2-dinh-ly-cap-va-mo-hinh-cyclic": "2.2.2",

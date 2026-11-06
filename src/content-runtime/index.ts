@@ -48,6 +48,7 @@ export {
   type TheoryBlockProps,
   type TheoryKind,
 } from './components/TheoryBlock';
+export { MathRenderer, type MathRendererProps } from './components/MathRenderer';
 export { useLessonContext, type LessonContextValue } from './lesson-context';
 export { LessonProvider, type LessonProviderProps } from './LessonContext';
 export { LessonMdxView, type LessonMdxViewProps } from './LessonMdxView';

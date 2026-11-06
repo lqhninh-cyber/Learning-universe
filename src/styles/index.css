@@ -17,11 +17,23 @@
   font-size: 1.15em;
   text-rendering: auto;
   letter-spacing: normal !important;
+  white-space: normal;
 }
 
-/* Chỉ đệm thanh phân số vừa phải, không ép line-height lên toàn bộ cây DOM */
+/* Đệm an toàn thanh phân số, không chạm chữ ở mẫu số hay tử số */
 .katex .mfrac .frac-line {
-  border-bottom-width: 0.05em !important;
+  border-bottom-width: 0.06em !important;
+  margin-top: 0.08em;
+  margin-bottom: 0.08em;
+}
+
+/* Bảo tồn vị trí tự nhiên của chỉ số trên và dưới, không bị đè bẹp khi đi cùng nhau (c_1^k, x_1^2) */
+.katex .msupsub {
+  text-align: left;
+}
+
+.katex .vlist-t {
+  border-collapse: separate;
 }
 
 .katex-display {

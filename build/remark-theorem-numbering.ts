@@ -34,6 +34,9 @@ function extractNodeText(node: unknown): string {
     return '';
   }
   const typed = node as { type?: string; value?: unknown; children?: unknown[] };
+  if (typed.type === 'inlineMath' && typeof typed.value === 'string') {
+    return `$${typed.value}$`;
+  }
   if (typeof typed.value === 'string') {
     return typed.value;
   }
