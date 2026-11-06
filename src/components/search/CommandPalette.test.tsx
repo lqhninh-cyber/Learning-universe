@@ -34,7 +34,7 @@ describe('CommandPalette', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(
-        'Tìm kiếm bài học, định lý, công thức (Lagrange, nhóm con, Affine)...',
+        'Tìm kiếm định lý, công thức, bài học (Lagrange, Affine, Nhóm con)...',
       ),
     ).toBeInTheDocument();
     expect(document.body.classList.contains('overflow-hidden')).toBe(true);
@@ -67,7 +67,7 @@ describe('CommandPalette', () => {
     );
 
     const input = screen.getByPlaceholderText(
-      'Tìm kiếm bài học, định lý, công thức (Lagrange, nhóm con, Affine)...',
+      'Tìm kiếm định lý, công thức, bài học (Lagrange, Affine, Nhóm con)...',
     );
 
     // Gõ từ khóa "Lagrange" (khớp Định lý & Công thức, Bài học, Thuật ngữ)
@@ -90,7 +90,7 @@ describe('CommandPalette', () => {
     );
 
     const input = screen.getByPlaceholderText(
-      'Tìm kiếm bài học, định lý, công thức (Lagrange, nhóm con, Affine)...',
+      'Tìm kiếm định lý, công thức, bài học (Lagrange, Affine, Nhóm con)...',
     );
 
     // Mặc định mục đầu tiên (Định lý Lagrange) được chọn, nhấn ArrowDown sang Không gian Affine
@@ -111,7 +111,7 @@ describe('CommandPalette', () => {
     );
 
     const input = screen.getByPlaceholderText(
-      'Tìm kiếm bài học, định lý, công thức (Lagrange, nhóm con, Affine)...',
+      'Tìm kiếm định lý, công thức, bài học (Lagrange, Affine, Nhóm con)...',
     );
 
     fireEvent.change(input, { target: { value: 'zzzz-tu-khoa-khong-ton-tai-9999' } });

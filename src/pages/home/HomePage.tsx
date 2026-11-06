@@ -470,7 +470,7 @@ export function HomePage() {
             <div
               role="region"
               aria-label="Tiếp tục học dở"
-              className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8"
+              className="group flex flex-col justify-between rounded-[28px] border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8"
             >
               <div className="space-y-4">
                 <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
@@ -521,7 +521,7 @@ export function HomePage() {
           )}
 
           {/* THẺ 2 — TRA CỨU THUẬT NGỮ (Glossary) */}
-          <div className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
+          <div className="group flex flex-col justify-between rounded-[28px] border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
             <div className="space-y-4">
               <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
                 TRA CỨU HỌC THUẬT
@@ -532,8 +532,7 @@ export function HomePage() {
               </h3>
 
               <p className="text-sm leading-relaxed text-stone-600">
-                Hệ thống khái niệm, công thức KaTeX, nhóm, vành, không gian véc-tơ và thuật ngữ sư
-                phạm.
+                Hệ thống định nghĩa, công thức KaTeX và thuật ngữ đối chiếu.
               </p>
             </div>
 
@@ -553,8 +552,8 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* THẺ 3 — PHÒNG LAB KHÔNG GIAN 3D (Interactive Lab) */}
-          <div className="group flex flex-col justify-between rounded-3xl border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
+          {/* THẺ 3 — PHÒNG LAB MÔ PHỎNG (Interactive Lab) */}
+          <div className="group flex flex-col justify-between rounded-[28px] border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
             <div className="space-y-4">
               <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
                 MÔ PHỎNG TRỰC QUAN
@@ -565,7 +564,7 @@ export function HomePage() {
               </h3>
 
               <p className="text-sm leading-relaxed text-stone-600">
-                Không gian mô phỏng tương tác 3D các phép biến đổi Affine và hệ tọa độ trực giác.
+                Mô phỏng tương tác 3D các phép biến đổi Affine và không gian véc-tơ.
               </p>
             </div>
 
