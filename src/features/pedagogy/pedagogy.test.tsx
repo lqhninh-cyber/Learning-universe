@@ -32,6 +32,7 @@ import {
   ScholarQuote,
   TeacherStandardsMatrix,
 } from '@/features/pedagogy';
+import { GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
 import { SourcePanel } from '@/features/lesson-reader';
 import type { ManifestLesson } from '@schemas/index';
 
@@ -557,11 +558,11 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
 
       // Kiểm tra 2 nút hành động
       const readLink = screen.getByRole('link', { name: /Đọc tài liệu \(PDF\)/i });
-      expect(readLink).toHaveAttribute('href', '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf');
+      expect(readLink).toHaveAttribute('href', GOOGLE_DRIVE_DOCS_URL);
       expect(readLink).toHaveAttribute('target', '_blank');
 
       const downloadLink = screen.getByRole('link', { name: /Tải về/i });
-      expect(downloadLink).toHaveAttribute('href', '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf');
+      expect(downloadLink).toHaveAttribute('href', GOOGLE_DRIVE_DOCS_URL);
       expect(downloadLink).toHaveAttribute('download', 'Giao_trinh_GDH_HCMUE.pdf');
     });
 

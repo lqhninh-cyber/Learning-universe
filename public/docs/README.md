@@ -1,7 +1,8 @@
-# Tài liệu PDF (Giáo trình & Tài liệu tham khảo)
+# Kho Tài liệu & Giáo trình Trực tuyến (Google Drive)
 
-Thư mục này chứa các tệp PDF phục vụ tính năng đọc giáo trình trực tiếp trên trình duyệt.
+Toàn bộ các tệp giáo trình dung lượng lớn, tài liệu tham khảo và văn bản quy phạm pháp luật của các môn học đã được chuyển sang lưu trữ tập trung tại Google Drive chính thức:
 
-- Đường dẫn tệp giáo trình chính Cấu trúc đại số:
-  `/docs/Giao_trinh_Cau_truc_dai_so.pdf`
-  (Tương ứng với tệp: `public/docs/Giao_trinh_Cau_truc_dai_so.pdf`)
+**Liên kết chính thức:**
+[Thư mục Google Drive Học liệu Learning Universe](https://drive.google.com/drive/folders/1uHHOAep9ZRI5BKcOnJeTRpxwsHek8rZ1?usp=drive_link)
+
+Thư mục này chỉ giữ lại cấu trúc thư mục để đảm bảo khả năng tương thích và quy chuẩn quản lý mã nguồn.

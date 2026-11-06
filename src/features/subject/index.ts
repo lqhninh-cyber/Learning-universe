@@ -1,4 +1,5 @@
 export { ChapterAccordionList, type ChapterAccordionListProps } from './ChapterAccordionList';
+export { DocumentCard, type DocumentCardProps } from './DocumentCard';
 export { SubjectBibliography, type SubjectBibliographyProps } from './SubjectBibliography';
 export { SubjectCard, type SubjectCardProps } from './SubjectCard';
 export {

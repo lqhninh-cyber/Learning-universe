@@ -7,6 +7,7 @@ import {
   Download,
   ExternalLink,
   FileText,
+  FolderOpen,
   GraduationCap,
   Layers,
   Scale,
@@ -21,12 +22,13 @@ import { PEDAGOGY_DOCUMENTS, PEDAGOGICAL_CASE_STUDIES } from '@/data/courses/gia
 import { CaseStudyBox, LegalQuoteCard, PrincipleMatrix } from '@/features/pedagogy';
 import {
   ChapterAccordionList,
+  DocumentCard,
   type LessonLevelFilter,
   SubjectBibliography,
   SubjectFilterBar,
   SubjectHero,
 } from '@/features/subject';
-import { ROUTES } from '@/shared/config/routes';
+import { GOOGLE_DRIVE_DOCS_URL, ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -343,6 +345,46 @@ export function SubjectOverviewPage() {
           ========================================================================= */}
       {activeTab === 'documents' && (
         <div className="space-y-6">
+          {/* Thanh Banner Kho Tài liệu & Giáo trình Trực tuyến (Google Drive) */}
+          <div className="rounded-2xl border border-amber-300/80 bg-gradient-to-r from-amber-500/10 via-amber-50/70 to-teal-50/50 p-5 shadow-xs transition-all hover:border-amber-400">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3.5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-300/70 bg-amber-100 text-amber-900 shadow-2xs">
+                  <FolderOpen className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="font-serif text-base font-bold text-stone-900 sm:text-lg">
+                      Kho Tài liệu &amp; Giáo trình Trực tuyến (Google Drive)
+                    </h3>
+                    <Badge
+                      variant="subject"
+                      className="border-amber-300 bg-amber-100 text-xs font-bold text-amber-900"
+                    >
+                      Google Drive
+                    </Badge>
+                  </div>
+                  <p className="max-w-2xl text-xs leading-relaxed text-stone-600 sm:text-sm">
+                    Toàn bộ giáo trình đại học, đề cương học phần, văn bản quy phạm pháp luật và tài
+                    liệu tham khảo được lưu trữ và đồng bộ hóa trực tuyến trên Google Drive chính
+                    thức.
+                  </p>
+                </div>
+              </div>
+              <Button
+                asChild
+                variant="subject"
+                size="md"
+                className="shrink-0 gap-2 bg-amber-800 font-medium text-white shadow-xs hover:bg-amber-900"
+              >
+                <a href={GOOGLE_DRIVE_DOCS_URL} target="_blank" rel="noopener noreferrer">
+                  <span>📂 Mở Toàn bộ Thư mục Tài liệu</span>
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </Button>
+            </div>
+          </div>
+
           {/* A. Dành cho môn Giáo dục học: 19 Tài liệu HCMUE & Pháp quy */}
           {subject.slug === 'giao-duc-hoc' && (
             <Card className="border-teal-200/90 bg-gradient-to-br from-teal-50/40 via-white to-amber-50/30 p-6 shadow-xs sm:p-8">
@@ -422,62 +464,20 @@ export function SubjectOverviewPage() {
                   </button>
                 </div>
 
-                {/* Lưới danh sách 19 tài liệu */}
+                {/* Lưới danh sách 19 tài liệu qua component DocumentCard */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {filteredPedagogyDocs.map((doc) => (
-                    <div
+                    <DocumentCard
                       key={doc.id}
-                      className="flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-4.5 shadow-2xs transition-all hover:border-teal-400/80 hover:shadow-xs"
-                    >
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-1">
-                          <span className="text-[11px] font-bold tracking-wider text-teal-800 uppercase">
-                            {doc.categoryLabel}
-                          </span>
-                          <div className="flex items-center gap-1.5">
-                            {doc.size && (
-                              <span className="rounded border border-stone-200/80 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium text-stone-600">
-                                {doc.size}
-                              </span>
-                            )}
-                            <span className="rounded-full bg-amber-100/80 px-2 py-0.5 text-[10px] font-bold text-amber-900">
-                              {doc.badge}
-                            </span>
-                          </div>
-                        </div>
-                        <h3 className="line-clamp-2 text-sm font-bold text-stone-900">
-                          {doc.title}
-                        </h3>
-                        <p className="line-clamp-3 text-xs leading-relaxed text-stone-600">
-                          {doc.description}
-                        </p>
-                      </div>
-
-                      <div className="mt-4 flex items-center gap-2 border-t border-stone-100 pt-3 text-xs">
-                        <Button
-                          asChild
-                          variant="subject"
-                          size="sm"
-                          className="h-7 gap-1 px-2.5 text-xs"
-                        >
-                          <a href={doc.url || doc.path} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="h-3 w-3" aria-hidden="true" />
-                            <span>Xem PDF</span>
-                          </a>
-                        </Button>
-                        <Button
-                          asChild
-                          variant="outline"
-                          size="sm"
-                          className="h-7 gap-1 px-2.5 text-xs text-stone-700"
-                        >
-                          <a href={doc.url || doc.path} download={doc.filename}>
-                            <Download className="h-3 w-3" aria-hidden="true" />
-                            <span>Tải về</span>
-                          </a>
-                        </Button>
-                      </div>
-                    </div>
+                      id={doc.id}
+                      title={doc.title}
+                      categoryLabel={doc.categoryLabel}
+                      size={doc.size}
+                      badge={doc.badge}
+                      description={doc.description}
+                      url={doc.url || GOOGLE_DRIVE_DOCS_URL}
+                      filename={doc.filename}
+                    />
                   ))}
                 </div>
               </div>
@@ -528,20 +528,13 @@ export function SubjectOverviewPage() {
 
                     <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
                       <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
-                        <a
-                          href="/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                        <a href={GOOGLE_DRIVE_DOCS_URL} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Mở xem PDF</span>
+                          <span>Mở xem trên Drive</span>
                         </a>
                       </Button>
                       <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
-                        <a
-                          href="/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf"
-                          download="GTHMB_Tran_Tri_Dung_2022.pdf"
-                        >
+                        <a href={GOOGLE_DRIVE_DOCS_URL} target="_blank" rel="noopener noreferrer">
                           <Download className="h-3.5 w-3.5" aria-hidden="true" />
                           <span>Tải về máy</span>
                         </a>
@@ -575,13 +568,9 @@ export function SubjectOverviewPage() {
                         </Link>
                       </Button>
                       <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
-                        <a
-                          href="/docs/giai-tich-ham-mot-bien/ND_on_thi_va_de_mau.pdf"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
+                        <a href={GOOGLE_DRIVE_DOCS_URL} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Mở xem PDF</span>
+                          <span>Mở xem trên Drive</span>
                         </a>
                       </Button>
                     </div>

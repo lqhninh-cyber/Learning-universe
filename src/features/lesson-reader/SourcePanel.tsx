@@ -163,7 +163,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
 
                   // 1. Nếu tìm thấy tài liệu sư phạm chuẩn (Pedagogy Document Reference Card)
                   if (pedagogyDoc) {
-                    const docHref = pedagogyDoc.path || pedagogyDoc.url || '#';
+                    const docHref = pedagogyDoc.url || pedagogyDoc.path || '#';
                     const isTextbook =
                       pedagogyDoc.category === 'curriculum' ||
                       pedagogyDoc.id.startsWith('gt-') ||
@@ -221,6 +221,8 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                             </a>
                             <a
                               href={docHref}
+                              target="_blank"
+                              rel="noopener noreferrer"
                               download={pedagogyDoc.filename}
                               className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white px-3.5 py-2 text-xs font-semibold text-stone-700 shadow-2xs transition-colors hover:bg-stone-50"
                             >

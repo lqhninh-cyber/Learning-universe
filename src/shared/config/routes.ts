@@ -34,3 +34,13 @@ export const ROUTES = {
   devFigures: '/dev/figures',
   uiPreview: '/ui-preview',
 } as const;
+
+/**
+ * Thư mục Google Drive chính thức lưu trữ toàn bộ tài liệu & giáo trình môn học.
+ */
+export const GOOGLE_DRIVE_DOCS_URL =
+  'https://drive.google.com/drive/folders/1uHHOAep9ZRI5BKcOnJeTRpxwsHek8rZ1?usp=drive_link';
+
+export const EXTERNAL_LINKS = {
+  googleDriveDocs: GOOGLE_DRIVE_DOCS_URL,
+} as const;

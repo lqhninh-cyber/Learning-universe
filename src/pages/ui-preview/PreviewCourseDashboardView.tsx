@@ -12,6 +12,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { type FC, useMemo, useState } from 'react';
+import { GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { type PreviewCourseSlug, type VisualDirection, VISUAL_DIRECTIONS } from './types';
 
@@ -953,10 +954,11 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                         TP.HCM.
                       </p>
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
-                        <span className="text-stone-400">PDF · 3.2 MB</span>
+                        <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href="/docs/giai-tich-ham-mot-bien/giai-tich-1.pdf"
+                          href={GOOGLE_DRIVE_DOCS_URL}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="font-bold text-amber-900 hover:underline"
                         >
                           Xem PDF
@@ -974,10 +976,11 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                         Trọng tâm lý thuyết và cẩm nang giải toán 6 chương cốt lõi.
                       </p>
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
-                        <span className="text-stone-400">PDF · 1.4 MB</span>
+                        <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href="/docs/giai-tich-ham-mot-bien/ND-on-thi-va-de-mau.pdf"
+                          href={GOOGLE_DRIVE_DOCS_URL}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="font-bold text-amber-900 hover:underline"
                         >
                           Xem PDF
@@ -998,10 +1001,11 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                         Hệ thống hóa đầy đủ lao động sư phạm, nguyên tắc và công tác GVCN lớp.
                       </p>
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
-                        <span className="text-stone-400">PDF · 4.8 MB</span>
+                        <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href="/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf"
+                          href={GOOGLE_DRIVE_DOCS_URL}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="font-bold text-teal-900 hover:underline"
                         >
                           Xem PDF
@@ -1019,10 +1023,11 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                         Định hướng chiến lược, mục tiêu đổi mới căn bản toàn diện giáo dục đào tạo.
                       </p>
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
-                        <span className="text-stone-400">PDF · 1.1 MB</span>
+                        <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href="/docs/giao-duc-hoc/Chien_luoc_phat_trien_giao_duc.pdf"
+                          href={GOOGLE_DRIVE_DOCS_URL}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="font-bold text-teal-900 hover:underline"
                         >
                           Xem PDF
@@ -1041,10 +1046,11 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                         thông.
                       </p>
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
-                        <span className="text-stone-400">PDF · 1.2 MB</span>
+                        <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href="/docs/giao-duc-hoc/Chuan_nghe_nghiep_GV_TT20.pdf"
+                          href={GOOGLE_DRIVE_DOCS_URL}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="font-bold text-teal-900 hover:underline"
                         >
                           Xem PDF

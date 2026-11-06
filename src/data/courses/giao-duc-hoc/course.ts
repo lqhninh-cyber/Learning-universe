@@ -1,6 +1,7 @@
 import type { ManifestSubject } from '@schemas/index';
 import type { CompiledLessonModule } from '@/content-runtime/loader';
 import { createElement, type FC } from 'react';
+import { GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
 import { getChapter1LessonModule } from './chapter-1';
 import { getChapter2LessonModule } from './chapter-2';
 import { getChapter3LessonModule } from './chapter-3';
@@ -33,8 +34,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Giáo trình Giáo dục học HCMUE (Chính thức)',
     category: 'curriculum',
     categoryLabel: 'Giáo trình chuẩn',
-    path: '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf',
-    url: '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Giao_trinh_GDH_HCMUE.pdf',
     size: '84.3 MB',
     description:
@@ -47,8 +48,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Giới thiệu học phần & Đề cương GDH',
     category: 'curriculum',
     categoryLabel: 'Đề cương học phần',
-    path: '/docs/giao-duc-hoc/Gioi_thieu_hoc_phan_GDH.pdf',
-    url: '/docs/giao-duc-hoc/Gioi_thieu_hoc_phan_GDH.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Gioi_thieu_hoc_phan_GDH.pdf',
     size: '871 KB',
     description:
@@ -63,8 +64,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/Luat_Giao_duc_2019.pdf',
-    url: '/docs/giao-duc-hoc/Luat_Giao_duc_2019.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Luat_Giao_duc_2019.pdf',
     size: '5.1 MB',
     description:
@@ -76,8 +77,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Dự thảo Luật Nhà giáo',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/Luat_Nha_giao.pdf',
-    url: '/docs/giao-duc-hoc/Luat_Nha_giao.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Luat_Nha_giao.pdf',
     size: '888 KB',
     description:
@@ -89,8 +90,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Khung Chương trình GDPT 2018 (Tổng thể)',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/CT_GDPT_2018_Tong_the.pdf',
-    url: '/docs/giao-duc-hoc/CT_GDPT_2018_Tong_the.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'CT_GDPT_2018_Tong_the.pdf',
     size: '563 KB',
     description:
@@ -102,8 +103,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Chương trình Hoạt động trải nghiệm 2018',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/CT_Hoat_dong_trai_nghiem.pdf',
-    url: '/docs/giao-duc-hoc/CT_Hoat_dong_trai_nghiem.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'CT_Hoat_dong_trai_nghiem.pdf',
     size: '465 KB',
     description:
@@ -115,8 +116,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Điều lệ trường trung học (Thông tư 32/2020/TT-BGDĐT)',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/Dieu_le_truong_trung_hoc_TT32.pdf',
-    url: '/docs/giao-duc-hoc/Dieu_le_truong_trung_hoc_TT32.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Dieu_le_truong_trung_hoc_TT32.pdf',
     size: '13.3 MB',
     description:
@@ -128,8 +129,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Chuẩn nghề nghiệp giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT)',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/Chuan_nghe_nghiep_GV_TT20.pdf',
-    url: '/docs/giao-duc-hoc/Chuan_nghe_nghiep_GV_TT20.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Chuan_nghe_nghiep_GV_TT20.pdf',
     size: '11.8 MB',
     description:
@@ -141,8 +142,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Thông tư 17/2025 Sửa đổi CT GDPT',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/TT17_Sua_doi_CTGDPT.pdf',
-    url: '/docs/giao-duc-hoc/TT17_Sua_doi_CTGDPT.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'TT17_Sua_doi_CTGDPT.pdf',
     size: '8.2 MB',
     description:
@@ -154,8 +155,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Chiến lược phát triển giáo dục Việt Nam',
     category: 'legal',
     categoryLabel: 'Văn bản pháp quy',
-    path: '/docs/giao-duc-hoc/Chien_luoc_phat_trien_giao_duc.pdf',
-    url: '/docs/giao-duc-hoc/Chien_luoc_phat_trien_giao_duc.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Chien_luoc_phat_trien_giao_duc.pdf',
     size: '1.1 MB',
     description:
@@ -169,8 +170,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Cẩm nang Phương pháp Kỷ luật tích cực',
     category: 'handbook',
     categoryLabel: 'Nghiệp vụ thực hành',
-    path: '/docs/giao-duc-hoc/Ky_luat_tich_cuc.pdf',
-    url: '/docs/giao-duc-hoc/Ky_luat_tich_cuc.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Ky_luat_tich_cuc.pdf',
     size: '233 KB',
     description:
@@ -182,8 +183,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Thang đo nhận thức Bloom trong sư phạm',
     category: 'handbook',
     categoryLabel: 'Công cụ đánh giá',
-    path: '/docs/giao-duc-hoc/Thang_Bloom.pdf',
-    url: '/docs/giao-duc-hoc/Thang_Bloom.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Thang_Bloom.pdf',
     size: '326 KB',
     description:
@@ -195,8 +196,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Sách tra cứu nghề nghiệp (Phân loại ILO)',
     category: 'handbook',
     categoryLabel: 'Tư vấn hướng nghiệp',
-    path: '/docs/giao-duc-hoc/Tra_cuu_nghe_ILO.pdf',
-    url: '/docs/giao-duc-hoc/Tra_cuu_nghe_ILO.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Tra_cuu_nghe_ILO.pdf',
     size: '1.5 MB',
     description:
@@ -208,8 +209,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Tài liệu Nghiên cứu sư phạm bổ trợ',
     category: 'handbook',
     categoryLabel: 'Nghiên cứu khoa học',
-    path: '/docs/giao-duc-hoc/Nghien_cuu_su_pham_bo_tro.pdf',
-    url: '/docs/giao-duc-hoc/Nghien_cuu_su_pham_bo_tro.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Nghien_cuu_su_pham_bo_tro.pdf',
     size: '276 KB',
     description:
@@ -221,8 +222,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Tài liệu Mô-đun 4 HĐTN, HN cấp THCS',
     category: 'handbook',
     categoryLabel: 'Cẩm nang & Nghiên cứu',
-    path: '/docs/giao-duc-hoc/HDTNHN_THCS_Modun_4.pdf',
-    url: '/docs/giao-duc-hoc/HDTNHN_THCS_Modun_4.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'HDTNHN_THCS_Modun_4.pdf',
     size: '2.5 MB',
     description:
@@ -234,8 +235,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Tài liệu Mô-đun 4 HĐTN, HN cấp THPT',
     category: 'handbook',
     categoryLabel: 'Cẩm nang & Nghiên cứu',
-    path: '/docs/giao-duc-hoc/HDTNHN_THPT_Modun_4.pdf',
-    url: '/docs/giao-duc-hoc/HDTNHN_THPT_Modun_4.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'HDTNHN_THPT_Modun_4.pdf',
     size: '2.5 MB',
     description:
@@ -247,8 +248,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Tài liệu Mô-đun 2 HĐTN cấp THCS',
     category: 'handbook',
     categoryLabel: 'Cẩm nang & Nghiên cứu',
-    path: '/docs/giao-duc-hoc/HDTN_THCS_Modun_2.pdf',
-    url: '/docs/giao-duc-hoc/HDTN_THCS_Modun_2.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'HDTN_THCS_Modun_2.pdf',
     size: '2.2 MB',
     description:
@@ -260,8 +261,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Phương thức tổ chức Hoạt động trải nghiệm',
     category: 'handbook',
     categoryLabel: 'Cẩm nang & Nghiên cứu',
-    path: '/docs/giao-duc-hoc/Phuong_thuc_to_chuc_HDTN.pdf',
-    url: '/docs/giao-duc-hoc/Phuong_thuc_to_chuc_HDTN.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Phuong_thuc_to_chuc_HDTN.pdf',
     size: '745 KB',
     description: 'Hệ thống hóa các phương thức tổ chức HĐTN thực tế trong nhà trường phổ thông.',
@@ -272,8 +273,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Quy trình thiết kế kế hoạch chủ đề tổ chức HĐTN',
     category: 'handbook',
     categoryLabel: 'Cẩm nang & Nghiên cứu',
-    path: '/docs/giao-duc-hoc/Quy_trinh_thiet_ke_chu_de_HDTN.pdf',
-    url: '/docs/giao-duc-hoc/Quy_trinh_thiet_ke_chu_de_HDTN.pdf',
+    path: GOOGLE_DRIVE_DOCS_URL,
+    url: GOOGLE_DRIVE_DOCS_URL,
     filename: 'Quy_trinh_thiet_ke_chu_de_HDTN.pdf',
     size: '646 KB',
     description: 'Hướng dẫn từng bước thiết kế chủ đề HĐTN phục vụ làm bài tập thực hành A.1.9.',

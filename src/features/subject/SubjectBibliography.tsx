@@ -1,6 +1,7 @@
 import type { BibliographyEntry, ManifestSubject } from '@schemas/index';
 import { BookOpenCheck, FileText, Library } from 'lucide-react';
 import { getBibliographyEntry } from '@/content-runtime';
+import { GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
 import { Badge, Button, Card } from '@/shared/ui';
 
 export interface SubjectBibliographyProps {
@@ -23,17 +24,7 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
   }));
 
   const hasSources = Boolean(subject.sources.primary) || subject.sources.references.length > 0;
-  const pdfHref =
-    subject.slug === 'cau-truc-dai-so' || subject.sources.primary === 'gt-ctds-hvk-2026'
-      ? '/docs/Giao_trinh_Cau_truc_dai_so.pdf'
-      : subject.slug === 'hinh-hoc-affine' || subject.sources.primary === 'gt-hhcc-nmh-2004'
-        ? '/docs/Hinhhoccaccap.pdf'
-        : subject.slug === 'giai-tich-ham-mot-bien' ||
-            subject.sources.primary === 'gt-gthmb-ttd-2022'
-          ? '/docs/giai-tich-ham-mot-bien/GTHMB_Tran_Tri_Dung_2022.pdf'
-          : subject.slug === 'giao-duc-hoc' || subject.sources.primary === 'gt-gdh-hcmue-2024'
-            ? '/docs/giao-duc-hoc/Giao_trinh_GDH_HCMUE.pdf'
-            : null;
+  const pdfHref = hasSources ? GOOGLE_DRIVE_DOCS_URL : null;
 
   return (
     <section aria-label="Giáo trình và tài liệu tham khảo môn học" className="pt-2">
