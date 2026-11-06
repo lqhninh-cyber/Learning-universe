@@ -27,7 +27,7 @@ describe('App routing smoke test', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /Nơi vẻ đẹp Toán học giao hòa cùng Nghệ thuật Sư phạm/i,
+        name: /LEARNING UNIVERSE/i,
       }),
     ).toBeInTheDocument();
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
@@ -47,42 +47,32 @@ describe('App routing smoke test', () => {
     expect(calculusLinks[0]).toHaveAttribute('href', '/mon-hoc/giai-tich-ham-mot-bien');
   });
 
-  it('hiển thị đầy đủ 4 Scene của trang chủ theo phong cách Cinematic Contemporary Editorial', async () => {
+  it('hiển thị đầy đủ 3 Screen của trang chủ Cinematic Việt Nam & Interactive Course Hub', async () => {
     renderWithProviders('/');
 
-    // 1. Scene 01: The Opening (Hero Mở Màn)
-    expect(
-      await screen.findByText('HỌC VIỆN TRI THỨC TOÁN HỌC & KHOA HỌC GIÁO DỤC'),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', {
-        name: /Nơi vẻ đẹp Toán học giao hòa cùng Nghệ thuật Sư phạm/i,
-      }),
-    ).toBeInTheDocument();
+    // 1. Screen 1 — The Opening (Full-bleed 100vw x 100vh + Horizontal Blinds Mask)
+    expect(await screen.findByRole('heading', { name: /LEARNING UNIVERSE/i })).toBeInTheDocument();
+    expect(screen.getByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).toBeInTheDocument();
+    expect(screen.getByText(/04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026/i)).toBeInTheDocument();
+    expect(screen.getByTestId('horizontal-blinds-mask')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Khám phá Không gian Tri thức/i })).toHaveAttribute(
       'href',
       '#khong-gian-mon-hoc',
     );
+
+    // 2. Screen 2 — Interactive Course Hub (Bộ lọc phân nhánh & Tìm kiếm nhanh)
+    expect(screen.getByRole('heading', { name: /Cổng Lựa Chọn Học Phần/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Tất cả học phần/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Toán học/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /Khoa học Giáo dục/i })).toBeInTheDocument();
     expect(
       screen.getByRole('searchbox', { name: /Tìm kiếm môn học hoặc bài học/i }),
     ).toBeInTheDocument();
-
-    // 2. Scene 02: Two Worlds (Hai Cổng Không Gian Tri Thức)
-    expect(
-      screen.getByRole('heading', { name: /Hai Cổng Không Gian Tri Thức/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Cấu trúc • Không gian • Biến thiên')).toBeInTheDocument();
-    expect(screen.getByText('Con người • Phương pháp • Nghệ thuật Dạy học')).toBeInTheDocument();
-
-    // 3. Scene 03: Course Collection (Bộ Sưu Tập Học Phần So Le)
-    expect(screen.getByRole('heading', { name: /Bộ Sưu Tập Học Phần So Le/i })).toBeInTheDocument();
-    expect(screen.getByText(/Portrait · 3:4/i)).toBeInTheDocument();
-    expect(screen.getByText(/Panorama · 16:9/i)).toBeInTheDocument();
-    expect(screen.getByText(/Phòng Lab mô phỏng 3D & Mafs/i)).toBeInTheDocument();
-    expect(screen.getByText(/Broadsheet Edition/i)).toBeInTheDocument();
+    expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('EDUT1401 · Khoa học Giáo dục').length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /Vào học phần/i }).length).toBe(4);
 
-    // 4. Scene 04: Continue Exploring & Minimalist Footer
+    // 3. Screen 3 — Continue Exploring & Minimalist Footer
     expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Tiếp tục học/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Ngân hàng Thuật ngữ \(Glossary\)/i })).toHaveAttribute(

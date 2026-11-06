@@ -13,6 +13,7 @@ export function RootHydrateFallback() {
 
 function RootLayoutContent() {
   const { pathname, hash } = useLocation();
+  const isHomePage = pathname === ROUTES.home;
 
   useEffect(() => {
     if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
@@ -30,11 +31,17 @@ function RootLayoutContent() {
       <Header />
 
       {/* 2. MAIN OUTLET CONTAINER */}
-      <main className="flex-1 pt-6 pb-12 sm:pt-8">
-        <Container size="wide">
+      {isHomePage ? (
+        <main className="flex-1 overflow-x-hidden pb-16">
           <Outlet />
-        </Container>
-      </main>
+        </main>
+      ) : (
+        <main className="flex-1 pt-6 pb-12 sm:pt-8">
+          <Container size="wide">
+            <Outlet />
+          </Container>
+        </main>
+      )}
 
       {/* 3. AUTH & NOTIFICATION MODALS */}
       <AuthModal />
