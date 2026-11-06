@@ -12,7 +12,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { type FC, useMemo, useState } from 'react';
-import { GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
+import { EXTERNAL_LINKS, GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { type PreviewCourseSlug, type VisualDirection, VISUAL_DIRECTIONS } from './types';
 
@@ -956,7 +956,7 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
                         <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href={GOOGLE_DRIVE_DOCS_URL}
+                          href={EXTERNAL_LINKS.giaiTichHamMotBienPdf}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-bold text-amber-900 hover:underline"
@@ -978,7 +978,7 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
                         <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href={GOOGLE_DRIVE_DOCS_URL}
+                          href={EXTERNAL_LINKS.giaiTichDeCuongPdf}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-bold text-amber-900 hover:underline"
@@ -1003,7 +1003,7 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                       <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-2 text-xs">
                         <span className="text-stone-400">PDF · Google Drive</span>
                         <a
-                          href={GOOGLE_DRIVE_DOCS_URL}
+                          href={EXTERNAL_LINKS.giaoDucHocPdf}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="font-bold text-teal-900 hover:underline"

@@ -34,8 +34,8 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
     title: 'Giáo trình Giáo dục học HCMUE (Chính thức)',
     category: 'curriculum',
     categoryLabel: 'Giáo trình chuẩn',
-    path: GOOGLE_DRIVE_DOCS_URL,
-    url: GOOGLE_DRIVE_DOCS_URL,
+    path: 'https://drive.google.com/file/d/1Jc3J6XZd7HKHOCsJu9w6C84FIsCNS3iM/view?usp=drive_link',
+    url: 'https://drive.google.com/file/d/1Jc3J6XZd7HKHOCsJu9w6C84FIsCNS3iM/view?usp=drive_link',
     filename: 'Giao_trinh_GDH_HCMUE.pdf',
     size: '84.3 MB',
     description:

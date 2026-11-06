@@ -1,7 +1,7 @@
 import type { BibliographyEntry, ManifestSubject } from '@schemas/index';
 import { BookOpenCheck, FileText, Library } from 'lucide-react';
 import { getBibliographyEntry } from '@/content-runtime';
-import { GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
+import { COURSE_DIRECT_PDF_LINKS, GOOGLE_DRIVE_DOCS_URL } from '@/shared/config/routes';
 import { Badge, Button, Card } from '@/shared/ui';
 
 export interface SubjectBibliographyProps {
@@ -24,7 +24,8 @@ export function SubjectBibliography({ subject, bibliographyOverride }: SubjectBi
   }));
 
   const hasSources = Boolean(subject.sources.primary) || subject.sources.references.length > 0;
-  const pdfHref = hasSources ? GOOGLE_DRIVE_DOCS_URL : null;
+  const directPdfUrl = COURSE_DIRECT_PDF_LINKS[subject.slug];
+  const pdfHref = directPdfUrl || (hasSources ? GOOGLE_DRIVE_DOCS_URL : null);
 
   return (
     <section aria-label="Giáo trình và tài liệu tham khảo môn học" className="pt-2">
