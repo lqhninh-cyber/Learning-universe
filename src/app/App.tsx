@@ -7,7 +7,7 @@ const router = createAppRouter();
 
 export function App() {
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-stone-900">
+    <div className="min-h-screen bg-[#EAF0F1] text-[#29383D]">
       <MotionProvider>
         <TooltipProvider>
           <RouterProvider router={router} />

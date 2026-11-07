@@ -19,11 +19,11 @@ export interface LessonViewProps {
 }
 
 /**
- * Chuẩn hóa bố cục trang bài đọc (LessonView — Hệ màu Giấy Dó `#FAF7F2`):
- * - Toàn bộ không gian đọc nằm trên nền giấy Dó `#FAF7F2` (`text-stone-900`).
- * - Sidebar chương bài bên trái (nếu mở): `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-2 custom-scrollbar scrollbar-thin bg-[#F5F1EB] border-r border-stone-200/70 text-stone-800`.
- * - Khung bài học chính: `bg-white border border-stone-200/80 rounded-3xl p-8 md:p-12 shadow-sm`.
- * - Cột mục lục / chú giải bên phải: `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pl-2 custom-scrollbar scrollbar-thin bg-white/80 backdrop-blur border border-stone-200/70 rounded-2xl`.
+ * Chuẩn hóa bố cục trang bài đọc (LessonView — Hệ màu "Mist Blue & Sage"):
+ * - Toàn bộ không gian đọc nằm trên nền #EAF0F1 (`text-[#29383D]`).
+ * - Sidebar chương bài bên trái (nếu mở): `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-2 custom-scrollbar scrollbar-thin bg-[#E1E9EA] border-r border-[#CFDADB] text-[#29383D]`.
+ * - Khung bài học chính: `bg-[#F7FAFA] border border-[#CFDADB] rounded-3xl p-8 md:p-12 shadow-sm text-[#29383D]`.
+ * - Cột mục lục / chú giải bên phải: `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pl-2 custom-scrollbar scrollbar-thin bg-[#E1E9EA]/80 backdrop-blur border border-[#CFDADB] rounded-2xl text-[#29383D]`.
  */
 export const LessonView: FC<LessonViewProps> = ({
   title,
@@ -42,29 +42,29 @@ export const LessonView: FC<LessonViewProps> = ({
       <div
         data-testid="asymmetric-scholar-grid"
         className={cn(
-          'relative mx-auto max-w-7xl bg-[#FAF7F2] px-6 text-stone-900 lg:grid lg:grid-cols-12 lg:gap-12',
+          'relative mx-auto max-w-7xl bg-[#EAF0F1] px-6 text-[#29383D] lg:grid lg:grid-cols-12 lg:gap-12',
           className,
         )}
       >
         {sidebar && (
           <aside
             aria-label="Danh mục chương bài"
-            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-stone-200/70 bg-[#F5F1EB] p-4 pr-2 text-stone-800 lg:col-span-3"
+            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-[#CFDADB] bg-[#E1E9EA] p-4 pr-2 text-[#29383D] lg:col-span-3"
           >
             {sidebar}
           </aside>
         )}
 
-        {/* Khung bài học chính: Nền trắng sạch bg-white border border-stone-200/80 rounded-3xl p-8 md:p-12 shadow-sm */}
+        {/* Khung bài học chính: Nền sáng sạch bg-[#F7FAFA] border border-[#CFDADB] rounded-3xl p-8 md:p-12 shadow-sm */}
         <div
           data-testid="scholar-main-column"
           className={cn(
-            'max-w-[70ch] min-w-0 rounded-3xl border border-stone-200/80 bg-white p-8 text-stone-900 shadow-sm md:p-12',
+            'max-w-[70ch] min-w-0 rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-8 text-[#29383D] shadow-sm md:p-12',
             sidebar ? 'lg:col-span-6' : 'lg:col-span-8',
           )}
         >
           {title && (
-            <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-stone-900 lg:text-4xl">
+            <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-[#29383D] lg:text-4xl">
               {title}
             </h1>
           )}
@@ -72,11 +72,11 @@ export const LessonView: FC<LessonViewProps> = ({
           {lead && (
             <p
               data-testid="scholar-lead-paragraph"
-              className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800"
+              className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-[#29383D]"
             >
               <span
                 aria-hidden="true"
-                className="float-left pt-1 pr-3 font-serif text-5xl leading-none font-normal text-stone-900 md:text-6xl"
+                className="float-left pt-1 pr-3 font-serif text-5xl leading-none font-normal text-[#29383D] md:text-6xl"
               >
                 {firstChar}
               </span>
@@ -89,13 +89,13 @@ export const LessonView: FC<LessonViewProps> = ({
           {children}
         </div>
 
-        {/* Cột mục lục & chú giải bên phải: Thẻ nền trắng ngà mờ bg-white/80 backdrop-blur border border-stone-200/70 rounded-2xl */}
+        {/* Cột mục lục & chú giải bên phải: Thẻ nền mờ bg-[#E1E9EA]/80 backdrop-blur border border-[#CFDADB] rounded-2xl */}
         <aside
           data-sidenotes-column
           data-testid="scholar-sidenotes-column"
           aria-label="Cột chú giải lề học thuật"
           className={cn(
-            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border border-stone-200/70 bg-white/80 p-4 pl-2 text-stone-800 backdrop-blur',
+            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/80 p-4 pl-2 text-[#29383D] backdrop-blur',
             sidebar ? 'lg:col-span-3' : 'lg:col-span-4',
           )}
         >

@@ -16,26 +16,26 @@ export function SubjectCard({ subject }: SubjectCardProps) {
   return (
     <article
       aria-label={`Học phần ${subject.title}`}
-      className="group flex flex-col justify-between rounded-3xl border border-stone-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+      className="group flex flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#71889A] hover:shadow-md"
     >
       {/* Phía trên: Tag mã học phần + Tiêu đề môn học đậm lớn + 2 dòng mô tả súc tích */}
       <div className="space-y-3">
-        <span className="block font-mono text-xs font-semibold tracking-wider text-stone-500 uppercase">
+        <span className="block font-mono text-xs font-semibold tracking-wider text-[#55676B] uppercase">
           {asset.categoryLabel}
         </span>
 
-        <h2 className="font-serif text-2xl leading-snug font-bold text-stone-900 transition-colors group-hover:text-[#9A3412] sm:text-3xl">
+        <h2 className="font-serif text-2xl leading-snug font-bold text-[#29383D] transition-colors group-hover:text-[#3F6570] sm:text-3xl">
           <Link to={ROUTES.courseOverview(subject.slug)}>{subject.title}</Link>
         </h2>
 
-        <p className="line-clamp-2 text-sm leading-relaxed text-stone-600">
+        <p className="line-clamp-2 text-sm leading-relaxed text-[#55676B]">
           {asset.conciseDescription}
         </p>
       </div>
 
-      {/* Phía dưới: Số chương/bài và Nút tròn mũi tên > màu đen ở góc phải dẫn thẳng vào /courses/:slug */}
-      <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
-        <span className="text-xs font-semibold text-stone-700">
+      {/* Phía dưới: Số chương/bài và Nút tròn mũi tên > ở góc phải dẫn thẳng vào /courses/:slug */}
+      <div className="mt-8 flex items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
+        <span className="text-xs font-semibold text-[#55676B]">
           {stats.chapterCount} chương · {stats.lessonCount} bài học
         </span>
 
@@ -43,7 +43,7 @@ export function SubjectCard({ subject }: SubjectCardProps) {
           to={ROUTES.courseOverview(subject.slug)}
           aria-label={`Vào học phần ${subject.title}`}
           title={`Vào học phần ${subject.title}`}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#3F6570] text-white transition-all hover:scale-105 hover:bg-[#345761]"
         >
           <ChevronRight className="h-5 w-5" aria-hidden="true" />
         </Link>

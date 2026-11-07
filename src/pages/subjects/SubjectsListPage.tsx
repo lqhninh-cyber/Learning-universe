@@ -22,7 +22,7 @@ export function SubjectsListPage() {
   });
 
   return (
-    <FadeIn className="mx-auto max-w-5xl space-y-8 bg-[#FAF7F2] text-stone-900">
+    <FadeIn className="mx-auto max-w-5xl space-y-8 bg-[#EAF0F1] text-[#29383D]">
       {/* Tiêu đề đầu trang & Đoạn dẫn cô đọng */}
       <div className="space-y-4">
         <Breadcrumb
@@ -30,10 +30,10 @@ export function SubjectsListPage() {
         />
 
         <div className="space-y-2">
-          <h1 className="font-serif text-3xl font-bold tracking-tight text-stone-900 sm:text-5xl dark:text-stone-100">
+          <h1 className="font-serif text-3xl font-bold tracking-tight text-[#29383D] sm:text-5xl dark:text-stone-100">
             Danh mục Học phần
           </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-stone-700">
+          <p className="max-w-2xl text-base leading-relaxed text-[#55676B]">
             Chương trình đào tạo đại học chuẩn mực gồm các học phần Toán học nền tảng và Khoa học
             Giáo dục dành cho sinh viên Sư phạm Toán học.
           </p>
@@ -41,7 +41,7 @@ export function SubjectsListPage() {
       </div>
 
       {/* Thanh bộ lọc tối giản: Tất cả | Toán học | Khoa học Giáo dục cùng ô tìm kiếm */}
-      <div className="flex flex-col justify-between gap-4 border-b border-stone-200/80 pb-5 sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-4 border-b border-[#CFDADB] pb-5 sm:flex-row sm:items-center">
         <div
           role="tablist"
           aria-label="Bộ lọc danh mục học phần"
@@ -63,8 +63,8 @@ export function SubjectsListPage() {
                 className={cn(
                   'cursor-pointer rounded-full px-4 py-2 text-xs font-semibold transition-all',
                   isActive
-                    ? 'bg-stone-900 text-[#FAF7F2] shadow-2xs'
-                    : 'border border-stone-300/80 bg-[#FAF7F2] text-stone-700 hover:border-stone-400 hover:text-stone-950',
+                    ? 'bg-[#3F6570] text-[#F7FAFA] shadow-2xs'
+                    : 'border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] hover:border-[#71889A] hover:text-[#29383D]',
                 )}
               >
                 {tab.label}

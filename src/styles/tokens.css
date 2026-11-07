@@ -1,30 +1,54 @@
 /* ============================================================================
-   HỆ HÒA SẮC LƯỠNG DIỆN "BẠCH DÓ & MỰC NHO" (EDITORIAL SCHOLAR SUITE TOKENS)
+   HỆ HÒA SẮC "MIST BLUE & SAGE" (DESIGN SYSTEM CORE TOKENS)
    ============================================================================ */
 
 :root,
 [data-theme='light'],
+[data-theme='mist-blue-sage'],
 [data-theme='bach-do'] {
-  /* LIGHT MODE ("Bạch Dó") */
-  --bg-canvas: #faf7f2; /* Sắc giấy Dó ấm */
-  --bg-surface: #f4efea; /* Nền bề mặt thẻ / panel */
-  --bg-muted: rgba(40, 35, 30, 0.08); /* Viền kẻ hairline */
-  --border-hairline: rgba(40, 35, 30, 0.08);
-  --text-primary: #23211e; /* Than chì mực nho */
-  --text-secondary: #6b645c; /* Màu phụ / chú giải */
-  --text-muted: #6b645c;
-  --accent-primary: #9e3d24; /* Đỏ đất nung / chu sa */
-  --accent-verandah: #5a6830; /* Rêu xanh hiên nhà */
-  --accent-wood: #9e7a5a; /* Gỗ mộc đòn tay */
-  --accent-interactive: #9e3d24;
+  /* LIGHT MODE ("Mist Blue & Sage") */
+  --bg-main: #eaf0f1;
+  --surface-primary: #f7fafa;
+  --surface-secondary: #e1e9ea;
+  --surface-tertiary: #d7e1e2;
+  --primary: #3f6570;
+  --primary-hover: #345761;
+  --secondary: #5e786d;
+  --accent: #92714f;
+  --text-primary: #29383d;
+  --text-secondary: #55676b;
+  --border-subtle: #cfdadb;
+
+  /* Semantic Colors */
+  --success: #4f7967;
+  --warning: #987343;
+  --danger: #a65d59;
+  --info: #527b8a;
+
+  /* Subject Accents */
+  --math-accent: #71889a;
+  --math-light: #e5edf1;
+  --edu-accent: #718c7e;
+  --edu-light: #e8efeb;
+
+  /* Scholar Suite & Backward-compatible aliases */
+  --bg-canvas: #eaf0f1;
+  --bg-surface: #f7fafa;
+  --bg-muted: #cfdadb;
+  --border-hairline: #cfdadb;
+  --text-muted: #55676b;
+  --accent-primary: #3f6570;
+  --accent-verandah: #5e786d;
+  --accent-wood: #92714f;
+  --accent-interactive: #3f6570;
 
   /* Scholar Suite aliases */
-  --scholar-bg: #faf7f2;
-  --scholar-surface: #f4efea;
-  --scholar-text: #23211e;
-  --scholar-muted: #6b645c;
-  --scholar-accent: #9e3d24;
-  --scholar-hairline: rgba(40, 35, 30, 0.08);
+  --scholar-bg: #eaf0f1;
+  --scholar-surface: #f7fafa;
+  --scholar-text: #29383d;
+  --scholar-muted: #55676b;
+  --scholar-accent: #3f6570;
+  --scholar-hairline: #cfdadb;
 }
 
 .dark,

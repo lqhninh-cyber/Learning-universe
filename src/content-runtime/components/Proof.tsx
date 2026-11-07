@@ -27,8 +27,8 @@ export function Proof({ of, ofLabel, ofAnchor, title, defaultOpen = false, child
       <Collapsible
         title={<span className="font-serif font-semibold text-stone-900">{headerTitle}</span>}
         defaultOpen={defaultOpen}
-        className="border-stone-200/80 bg-white/40"
-        contentClassName="bg-[#FDFBF7]/70 text-base text-stone-800"
+        className="border-[#CFDADB] bg-white/40"
+        contentClassName="bg-[#F7FAFA]/80 text-base text-[#29383D]"
       >
         <div className="space-y-3">{children}</div>
         <div

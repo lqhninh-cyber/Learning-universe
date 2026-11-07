@@ -273,15 +273,15 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                     return (
                       <div
                         key={`${ref.source}-${index}`}
-                        className="rounded-2xl border border-stone-200/90 bg-white/90 p-5 shadow-sm transition-all hover:shadow-md"
+                        className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
                       >
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                           <div className="flex min-w-0 items-start gap-4">
                             <div
                               className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-2xs ${
                                 isBook
-                                  ? 'border-amber-200/80 bg-amber-50/90 text-amber-800'
-                                  : 'border-stone-200/80 bg-stone-100/90 text-stone-600'
+                                  ? 'border-[#71889A]/30 bg-[#E5EDF1] text-[#3F6570]'
+                                  : 'border-[#CFDADB] bg-[#E1E9EA] text-[#55676B]'
                               }`}
                             >
                               {isBook ? (
@@ -292,12 +292,12 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                             </div>
 
                             <div className="min-w-0 flex-1">
-                              <h4 className="font-serif text-lg leading-snug font-bold text-stone-900">
+                              <h4 className="font-serif text-lg leading-snug font-bold text-[#29383D]">
                                 {isHvkAlgebra
                                   ? 'Giáo trình Cấu trúc đại số - TS. Huỳnh Việt Khánh'
                                   : entry.title}
                               </h4>
-                              <p className="mt-1 text-[14.5px] text-stone-600">
+                              <p className="mt-1 text-[14.5px] text-[#55676B]">
                                 {isHvkAlgebra
                                   ? 'Giáo trình Cấu trúc đại số - TS. Huỳnh Việt Khánh'
                                   : `${entry.authors.join(', ')} (${entry.year}) · ${entry.publisher}${entry.edition ? ` · ${entry.edition}` : ''}`}
@@ -311,7 +311,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                                 href={directPdfUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 rounded-lg bg-stone-900 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-colors hover:bg-stone-800"
+                                className="inline-flex items-center gap-2 rounded-lg bg-[#3F6570] px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-colors hover:bg-[#345761]"
                               >
                                 <span>
                                   {ref.pages
@@ -324,21 +324,21 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                           )}
                         </div>
 
-                        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-3.5">
+                        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-3.5">
                           <div className="flex flex-wrap items-center gap-2">
                             <Badge variant="subject">{SOURCE_TYPE_LABELS[entry.type]}</Badge>
                             {ref.sections && (
-                              <span className="rounded-lg border border-stone-200/80 bg-stone-100/90 px-3 py-1 text-xs font-semibold text-stone-800">
+                              <span className="rounded-lg border border-[#CFDADB] bg-[#E1E9EA] px-3 py-1 text-xs font-semibold text-[#29383D]">
                                 {ref.sections}
                               </span>
                             )}
                             {ref.pages && (
-                              <span className="rounded-lg border border-stone-200/80 bg-stone-100/90 px-3 py-1 text-xs font-semibold text-stone-700">
+                              <span className="rounded-lg border border-[#CFDADB] bg-[#E1E9EA] px-3 py-1 text-xs font-semibold text-[#55676B]">
                                 Trang {ref.pages}
                               </span>
                             )}
                             {ref.note && (
-                              <span className="text-xs text-stone-500 italic">{ref.note}</span>
+                              <span className="text-xs text-[#55676B] italic">{ref.note}</span>
                             )}
                           </div>
                         </div>
@@ -444,28 +444,28 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                       key={block.anchorId}
                       href={`#${block.anchorId}`}
                       title={`${block.label}${block.title ? ` — ${block.title}` : ''} (${block.original ? `Số hiệu gốc: ${block.original}` : 'Đối chiếu'})`}
-                      className="group relative flex flex-col justify-between rounded-xl border border-stone-200/80 bg-white/70 p-2.5 text-xs shadow-2xs transition-all duration-200 hover:z-20 hover:scale-105 hover:border-stone-400 hover:bg-white hover:shadow-xl"
+                      className="group relative flex flex-col justify-between rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-2.5 text-xs shadow-2xs transition-all duration-200 hover:z-20 hover:scale-105 hover:border-[#71889A] hover:bg-white hover:shadow-xl"
                     >
                       <div>
                         {/* Dòng 1: Tên ngắn gọn + Icon liên kết */}
                         <div className="flex items-start justify-between gap-1.5">
-                          <span className="line-clamp-1 font-semibold text-stone-900 group-hover:text-[#9A3412]">
+                          <span className="line-clamp-1 font-semibold text-[#29383D] group-hover:text-[#3F6570]">
                             {shortLabel}
                             {shortTitle ? ` · ${shortTitle}` : ''}
                           </span>
                           <ExternalLink
-                            className="h-3 w-3 shrink-0 text-stone-400 transition-colors group-hover:text-stone-700"
+                            className="h-3 w-3 shrink-0 text-[#55676B] transition-colors group-hover:text-[#29383D]"
                             aria-hidden="true"
                           />
                         </div>
 
                         {/* Dòng 2: Số hiệu gốc nổi bật */}
-                        <div className="mt-1 flex flex-wrap items-center gap-1 font-mono text-[11px] font-medium text-amber-900">
-                          <span className="rounded bg-amber-100/70 px-1.5 py-0.5">
+                        <div className="mt-1 flex flex-wrap items-center gap-1 font-mono text-[11px] font-medium text-[#3F6570]">
+                          <span className="rounded bg-[#E5EDF1] px-1.5 py-0.5">
                             {block.original ? `Gốc: ${shortOriginal}` : 'Đối chiếu'}
                           </span>
                           {block.page && (
-                            <span className="rounded bg-stone-100 px-1 py-0.5 text-stone-600">
+                            <span className="rounded bg-[#E1E9EA] px-1 py-0.5 text-[#55676B]">
                               tr. {block.page}
                             </span>
                           )}
@@ -473,12 +473,12 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                       </div>
 
                       {/* Chi tiết khi Hover: Tên đầy đủ và Nguồn sách gốc */}
-                      <div className="mt-2 space-y-0.5 border-t border-stone-100 pt-1 text-[11px] text-stone-600">
-                        <p className="line-clamp-1 font-medium text-stone-800 group-hover:line-clamp-none">
+                      <div className="mt-2 space-y-0.5 border-t border-[#CFDADB] pt-1 text-[11px] text-[#55676B]">
+                        <p className="line-clamp-1 font-medium text-[#29383D] group-hover:line-clamp-none">
                           {block.label}
                           {block.title ? `: ${block.title}` : ''}
                         </p>
-                        <p className="line-clamp-1 text-[10.5px] text-stone-500 group-hover:line-clamp-none">
+                        <p className="line-clamp-1 text-[10.5px] text-[#55676B] group-hover:line-clamp-none">
                           {block.original ? (
                             <span>Số hiệu gốc: {block.original}</span>
                           ) : (

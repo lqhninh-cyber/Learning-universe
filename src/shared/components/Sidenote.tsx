@@ -209,7 +209,7 @@ export const Sidenote: FC<SidenoteProps> = ({
             role="region"
             aria-label={`Nội dung chú giải ${displayNumber ? `số ${displayNumber}` : ''}`}
             className={cn(
-              'my-3 block w-full rounded-xl border border-stone-200/80 bg-[#FAF7F2]/95 p-3.5 text-left shadow-sm backdrop-blur-md transition-all dark:border-stone-700/80 dark:bg-stone-900/95',
+              'my-3 block w-full rounded-xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-3.5 text-left shadow-sm backdrop-blur-md transition-all dark:border-stone-700/80 dark:bg-stone-900/95',
               style.borderClass,
             )}
           >
@@ -265,10 +265,10 @@ export const Sidenote: FC<SidenoteProps> = ({
         aria-label={`Chú giải ${displayNumber ? `số ${displayNumber}` : ''}: ${label}`}
         style={anchorOffsetY !== null ? { marginTop: `${anchorOffsetY}px` } : undefined}
         className={cn(
-          'sidenote-academic float-right clear-right my-1 mb-4 ml-5 hidden w-[230px] rounded-r-xl border-y border-r border-stone-200/60 bg-[#FAF7F2]/90 p-3 font-serif text-xs leading-relaxed text-stone-600 shadow-2xs backdrop-blur-xs transition-all duration-200 md:text-sm lg:block xl:w-[250px] dark:border-stone-800/60 dark:bg-stone-900/60 dark:text-stone-400',
+          'sidenote-academic float-right clear-right my-1 mb-4 ml-5 hidden w-[230px] rounded-r-xl border-y border-r border-[#CFDADB] bg-[#F7FAFA]/90 p-3 font-serif text-xs leading-relaxed text-stone-600 shadow-2xs backdrop-blur-xs transition-all duration-200 md:text-sm lg:block xl:w-[250px] dark:border-stone-800/60 dark:bg-stone-900/60 dark:text-stone-400',
           style.borderClass,
           isHovered &&
-            'bg-[#FAF7F2] shadow-xs ring-1 ring-stone-400/60 dark:bg-stone-900/90 dark:ring-stone-500/60',
+            'bg-[#F7FAFA] shadow-xs ring-1 ring-stone-400/60 dark:bg-stone-900/90 dark:ring-stone-500/60',
         )}
       >
         <span className="mb-1.5 flex items-center justify-between gap-1.5 border-b border-stone-200/50 pb-1 font-mono text-[11px] font-semibold tracking-wider text-stone-500 uppercase dark:border-stone-800/60 dark:text-stone-400">

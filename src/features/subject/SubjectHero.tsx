@@ -66,8 +66,8 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
         />
         {/* Lớp phủ tối dịu tăng độ tương phản cho chữ trắng sắc nét */}
         <div className="absolute inset-0 bg-stone-950/45" />
-        {/* Gradient chuyển tiếp mượt xuống nền giấy Dó #FAF7F2 ở chân Hero */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FAF7F2] via-stone-900/50 to-stone-900/70" />
+        {/* Gradient chuyển tiếp mượt xuống nền canvas #EAF0F1 ở chân Hero */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#EAF0F1] via-stone-900/50 to-stone-900/70" />
         <div className="absolute inset-x-0 top-0 h-[84%] bg-gradient-to-b from-stone-950/60 via-stone-950/45 to-transparent" />
       </div>
 
@@ -137,9 +137,9 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
                     ctaLocation.chapter.slug,
                     ctaLocation.lesson.slug,
                   )}
-                  className="inline-flex items-center gap-2.5 rounded-full bg-[#FAF7F2] px-6 py-3.5 text-sm font-semibold text-stone-950 shadow-md transition-all hover:bg-amber-300"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#F7FAFA] px-6 py-3.5 text-sm font-semibold text-stone-950 shadow-md transition-all hover:bg-white"
                 >
-                  <PlayCircle className="h-4 w-4 text-[#9A3412]" aria-hidden="true" />
+                  <PlayCircle className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
                   <span>
                     Tiếp tục học: Bài {ctaLocation.chapter.number}.{ctaLocation.lesson.number}
                   </span>

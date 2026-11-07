@@ -106,13 +106,13 @@ export function HomePage() {
     : '';
 
   return (
-    <FadeIn className="bg-[#FAF7F2] text-stone-900">
+    <FadeIn className="bg-[#EAF0F1] text-[#29383D]">
       {/* =========================================================================
           THE OPENING (100vw x 100vh Full-bleed Architectural Hero)
           ========================================================================= */}
       <section
         aria-label="Không gian Mở màn Học thuật"
-        className="relative h-screen min-h-screen w-screen overflow-hidden bg-[#FAF7F2]"
+        className="relative h-screen min-h-screen w-screen overflow-hidden bg-[#EAF0F1]"
       >
         {/* Định nghĩa SVG Mask Horizontal Blinds */}
         <svg className="pointer-events-none absolute h-0 w-0" aria-hidden="true">
@@ -137,7 +137,7 @@ export function HomePage() {
           </defs>
         </svg>
 
-        {/* Nền kiến trúc học thuật với hòa sắc Giấy Dó */}
+        {/* Nền kiến trúc học thuật với hòa sắc Mist Blue */}
         <div
           className="pointer-events-none absolute inset-0 transition-transform duration-700 ease-out will-change-transform"
           style={{
@@ -154,8 +154,8 @@ export function HomePage() {
             loading="eager"
             className="h-full w-full object-cover object-center opacity-40 mix-blend-multiply"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#FAF7F2] via-[#FAF7F2]/40 to-[#FAF7F2]/50" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#FAF7F2_100%)] opacity-75" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#EAF0F1] via-[#EAF0F1]/40 to-[#EAF0F1]/50" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#EAF0F1_100%)] opacity-75" />
         </div>
 
         {/* Hiệu ứng màn trập phân dải ngang (Horizontal Blinds Overlay) khi cuộn */}
@@ -171,7 +171,7 @@ export function HomePage() {
             return (
               <div
                 key={idx}
-                className="w-full flex-1 origin-bottom border-b border-stone-300/25 bg-[#FAF7F2]/90 transition-transform duration-150 ease-out will-change-transform"
+                className="w-full flex-1 origin-bottom border-b border-[#CFDADB] bg-[#EAF0F1]/90 transition-transform duration-150 ease-out will-change-transform"
                 style={{
                   transform: `scaleY(${slatScale})`,
                 }}
@@ -183,29 +183,29 @@ export function HomePage() {
         {/* Nội dung chính của The Opening */}
         <div className="relative z-20 mx-auto flex h-full max-w-[1440px] flex-col justify-between px-6 pt-24 pb-8 sm:px-12 sm:pt-28 sm:pb-10 lg:px-20 lg:pb-12">
           {/* Góc trên: Định danh Học viện */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-300/60 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#CFDADB] pb-4">
             <div className="flex items-center gap-2.5">
-              <span className="h-2 w-2 rounded-full bg-[#9A3412]" aria-hidden="true" />
-              <span className="font-mono text-[11px] font-semibold tracking-[0.2em] text-stone-800 uppercase">
+              <span className="h-2 w-2 rounded-full bg-[#3F6570]" aria-hidden="true" />
+              <span className="font-mono text-[11px] font-semibold tracking-[0.2em] text-[#29383D] uppercase">
                 TOÁN HỌC &amp; KHOA HỌC GIÁO DỤC · HCMUE
               </span>
             </div>
-            <div className="hidden items-center gap-4 font-mono text-[11px] text-stone-600 md:flex">
+            <div className="hidden items-center gap-4 font-mono text-[11px] text-[#55676B] md:flex">
               <span>HỌC VIỆN TRI THỨC TOÁN HỌC &amp; KHOA HỌC GIÁO DỤC</span>
             </div>
           </div>
 
           {/* Trung tâm màn hình: Đại tự Monumental Typography */}
           <div className="my-auto max-w-5xl space-y-6 py-6">
-            <h1 className="font-serif text-6xl leading-[0.9] font-normal tracking-tight text-stone-900 md:text-8xl lg:text-[7.5rem]">
+            <h1 className="font-serif text-6xl leading-[0.9] font-normal tracking-tight text-[#29383D] md:text-8xl lg:text-[7.5rem]">
               LEARNING UNIVERSE
             </h1>
 
-            <p className="max-w-2xl font-serif text-2xl leading-snug font-medium text-stone-800 sm:text-3xl">
+            <p className="max-w-2xl font-serif text-2xl leading-snug font-medium text-[#29383D] sm:text-3xl">
               Nơi vẻ đẹp Toán học giao hòa cùng Nghệ thuật Sư phạm.
             </p>
 
-            <p className="max-w-xl text-sm leading-relaxed text-stone-700 sm:text-base">
+            <p className="max-w-xl text-sm leading-relaxed text-[#55676B] sm:text-base">
               Hệ thống bài giảng, định lý, chứng minh toán học chặt chẽ cùng các học phần Khoa học
               Giáo dục và Nghiệp vụ Sư phạm chuẩn mực dành cho sinh viên Sư phạm Toán học.
             </p>
@@ -215,7 +215,7 @@ export function HomePage() {
                 asChild
                 variant="subject"
                 size="md"
-                className="group gap-2.5 rounded-full bg-stone-900 px-7 py-3.5 text-sm font-semibold text-[#FAF7F2] shadow-xs transition-all duration-300 hover:bg-[#9A3412]"
+                className="group gap-2.5 rounded-full bg-[#3F6570] px-7 py-3.5 text-sm font-semibold text-[#F7FAFA] shadow-xs transition-all duration-300 hover:bg-[#345761]"
               >
                 <a href="#khong-gian-mon-hoc">
                   <Compass className="h-4 w-4" aria-hidden="true" />
@@ -229,18 +229,18 @@ export function HomePage() {
 
               <Link
                 to={ROUTES.glossary}
-                className="inline-flex items-center gap-2 rounded-full border border-stone-300/90 bg-[#FAF7F2]/80 px-5 py-3 text-xs font-semibold tracking-wider text-stone-800 uppercase backdrop-blur-md transition-colors hover:border-stone-500 hover:bg-white"
+                className="inline-flex items-center gap-2 rounded-full border border-[#CFDADB] bg-[#F7FAFA]/80 px-5 py-3 text-xs font-semibold tracking-wider text-[#29383D] uppercase backdrop-blur-md transition-colors hover:border-[#71889A] hover:bg-white"
               >
-                <BookMarked className="h-3.5 w-3.5 text-[#9A3412]" aria-hidden="true" />
+                <BookMarked className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
                 <span>Tra cứu Thuật ngữ KaTeX</span>
               </Link>
             </div>
           </div>
 
           {/* Góc dưới: Thông số học phần & Chỉ báo cuộn trang */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-stone-300/60 pt-4 font-mono text-[11px] text-stone-700">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#CFDADB] pt-4 font-mono text-[11px] text-[#55676B]">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="font-semibold text-stone-900">
+              <span className="font-semibold text-[#29383D]">
                 04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026
               </span>
             </div>
@@ -248,10 +248,10 @@ export function HomePage() {
             <a
               href="#khong-gian-mon-hoc"
               aria-label="Cuộn xuống Không gian Học phần"
-              className="group inline-flex items-center gap-2 font-sans text-xs font-medium text-stone-700 transition-colors hover:text-stone-950"
+              className="group inline-flex items-center gap-2 font-sans text-xs font-medium text-[#55676B] transition-colors hover:text-[#29383D]"
             >
               <span>Cuộn xuống Không gian Học phần</span>
-              <span className="flex h-6 w-6 animate-pulse items-center justify-center rounded-full border border-stone-400/80">
+              <span className="flex h-6 w-6 animate-pulse items-center justify-center rounded-full border border-[#CFDADB]">
                 <ArrowDown className="h-3 w-3" aria-hidden="true" />
               </span>
             </a>
@@ -265,7 +265,7 @@ export function HomePage() {
       <section
         id="khong-gian-mon-hoc"
         aria-label="Không gian Học phần"
-        className="relative flex h-screen min-h-screen flex-col justify-center overflow-hidden border-t border-stone-300/60 px-6 lg:px-16"
+        className="relative flex h-screen min-h-screen flex-col justify-center overflow-hidden border-t border-[#CFDADB] px-6 lg:px-16"
       >
         {/* Lớp nền cảnh quan chuyển mượt khi người dùng di chuột vào từng học phần */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -284,17 +284,17 @@ export function HomePage() {
               />
             );
           })}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#FAF7F2] via-[#FAF7F2]/85 to-[#FAF7F2]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#EAF0F1] via-[#EAF0F1]/85 to-[#EAF0F1]" />
         </div>
 
         <div className="relative z-10 mx-auto w-full max-w-[1440px] space-y-6">
           {/* Tiêu đề "Không gian Học phần" & Thanh tìm kiếm toàn cục */}
-          <div className="flex flex-col justify-between gap-4 border-b border-stone-300/70 pb-5 lg:flex-row lg:items-end">
+          <div className="flex flex-col justify-between gap-4 border-b border-[#CFDADB] pb-5 lg:flex-row lg:items-end">
             <div className="space-y-1.5">
-              <h2 className="font-serif text-3xl font-normal tracking-tight text-stone-950 sm:text-5xl">
+              <h2 className="font-serif text-3xl font-normal tracking-tight text-[#29383D] sm:text-5xl">
                 Không gian Học phần
               </h2>
-              <p className="max-w-xl text-sm text-stone-600">
+              <p className="max-w-xl text-sm text-[#55676B]">
                 Lựa chọn học phần để truy cập lộ trình bài giảng, giáo trình PDF và ngân hàng đề
                 thi.
               </p>
@@ -339,15 +339,15 @@ export function HomePage() {
                     className={cn(
                       'cursor-pointer rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
                       isActive
-                        ? 'bg-stone-900 text-[#FAF7F2] shadow-2xs'
-                        : 'border border-stone-300/80 bg-[#FDFBF7]/90 text-stone-700 hover:border-stone-400 hover:text-stone-950',
+                        ? 'bg-[#3F6570] text-[#F7FAFA] shadow-2xs'
+                        : 'border border-[#CFDADB] bg-[#F7FAFA]/90 text-[#55676B] hover:border-[#71889A] hover:text-[#29383D]',
                     )}
                   >
                     <span>{tab.label}</span>
                     <span
                       className={cn(
                         'ml-1.5 font-mono text-[11px]',
-                        isActive ? 'text-stone-300' : 'text-stone-500',
+                        isActive ? 'text-[#E1E9EA]' : 'text-[#55676B]',
                       )}
                     >
                       ({tab.count})
@@ -359,7 +359,7 @@ export function HomePage() {
 
             <div className="relative w-full sm:w-64">
               <Search
-                className="pointer-events-none absolute top-1/2 left-3.5 h-3.5 w-3.5 -translate-y-1/2 text-stone-400"
+                className="pointer-events-none absolute top-1/2 left-3.5 h-3.5 w-3.5 -translate-y-1/2 text-[#55676B]"
                 aria-hidden="true"
               />
               <input
@@ -368,7 +368,7 @@ export function HomePage() {
                 onChange={(e) => setHubQuery(e.target.value)}
                 placeholder="Tìm nhanh mã hoặc tên môn..."
                 aria-label="Lọc nhanh danh sách môn học"
-                className="w-full rounded-full border border-stone-300/80 bg-[#FDFBF7]/90 py-1.5 pr-4 pl-9 text-xs text-stone-800 placeholder:text-stone-400 focus:border-stone-500 focus:outline-none"
+                className="w-full rounded-full border border-[#CFDADB] bg-[#F7FAFA]/90 py-1.5 pr-4 pl-9 text-xs text-[#29383D] placeholder:text-[#55676B]/60 focus:border-[#3F6570] focus:outline-none"
               />
             </div>
           </div>
@@ -389,8 +389,8 @@ export function HomePage() {
                   className={cn(
                     'group flex flex-col justify-between rounded-3xl border p-5 backdrop-blur-md transition-all duration-300 sm:p-6',
                     isHovered
-                      ? 'border-stone-400 bg-[#FDFBF7]/95 shadow-sm'
-                      : 'border-stone-200/80 bg-[#FDFBF7]/80 hover:border-stone-400 hover:bg-[#FDFBF7]/95',
+                      ? 'border-[#71889A] bg-[#F7FAFA] shadow-sm'
+                      : 'border-[#CFDADB] bg-[#F7FAFA]/85 hover:border-[#71889A] hover:bg-[#F7FAFA]',
                   )}
                 >
                   <div className="space-y-2.5">
@@ -400,14 +400,14 @@ export function HomePage() {
                         className={cn(
                           'rounded-md px-2.5 py-0.5 font-mono text-xs font-bold',
                           asset.branch === 'pedagogy'
-                            ? 'bg-indigo-950/10 text-indigo-950'
-                            : 'bg-[#9A3412]/10 text-[#9A3412]',
+                            ? 'bg-[#E8EFEB] text-[#5E786D]'
+                            : 'bg-[#E5EDF1] text-[#3F6570]',
                         )}
                       >
                         {asset.categoryLabel}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-stone-600">
-                        <Layers className="h-3.5 w-3.5 text-[#9A3412]" aria-hidden="true" />
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-[#55676B]">
+                        <Layers className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
                         <span>
                           {stats.chapterCount} chương · {stats.lessonCount} bài học
                         </span>
@@ -415,25 +415,25 @@ export function HomePage() {
                     </div>
 
                     {/* Tên môn học */}
-                    <h3 className="font-serif text-2xl font-bold tracking-tight text-stone-950 transition-colors group-hover:text-[#9A3412]">
+                    <h3 className="font-serif text-2xl font-bold tracking-tight text-[#29383D] transition-colors group-hover:text-[#3F6570]">
                       <Link to={ROUTES.subjectOverview(subject.slug)} aria-label={subject.title}>
                         {subject.title}
                       </Link>
                     </h3>
 
                     {/* 1 dòng mô tả bản chất môn học */}
-                    <p className="line-clamp-1 text-sm text-stone-600">
+                    <p className="line-clamp-1 text-sm text-[#55676B]">
                       {asset.conciseDescription}
                     </p>
                   </div>
 
                   {/* Nút "Vào học phần" dẫn thẳng đến /courses/:slug */}
-                  <div className="mt-4 flex items-center justify-end border-t border-stone-200/70 pt-3.5">
+                  <div className="mt-4 flex items-center justify-end border-t border-[#CFDADB] pt-3.5">
                     <Button
                       asChild
                       variant="subject"
                       size="sm"
-                      className="gap-1.5 rounded-full bg-stone-900 px-5 py-2 text-xs font-semibold text-[#FAF7F2] hover:bg-[#9A3412]"
+                      className="gap-1.5 rounded-full bg-[#3F6570] px-5 py-2 text-xs font-semibold text-[#F7FAFA] hover:bg-[#345761]"
                     >
                       <Link to={ROUTES.courseOverview(subject.slug)}>
                         <span>Vào học phần</span>
@@ -453,12 +453,12 @@ export function HomePage() {
           ========================================================================= */}
       <section
         aria-label="Tiếp tục học tập"
-        className="mx-auto max-w-[1440px] space-y-10 border-t border-stone-300/60 px-6 pt-16 pb-8 sm:px-12 lg:px-16"
+        className="mx-auto max-w-[1440px] space-y-10 border-t border-[#CFDADB] px-6 pt-16 pb-8 sm:px-12 lg:px-16"
       >
         {/* Tiêu đề phân cảnh tối giản */}
         <div className="space-y-2">
-          <h2 className="font-serif text-3xl text-stone-900 md:text-4xl">Tiếp tục học tập</h2>
-          <p className="max-w-2xl text-sm text-stone-600 sm:text-base">
+          <h2 className="font-serif text-3xl text-[#29383D] md:text-4xl">Tiếp tục học tập</h2>
+          <p className="max-w-2xl text-sm text-[#55676B] sm:text-base">
             Quay lại bài học đang đọc dở và các công cụ học tập trọng tâm.
           </p>
         </div>
@@ -470,23 +470,23 @@ export function HomePage() {
             <div
               role="region"
               aria-label="Tiếp tục học dở"
-              className="group flex flex-col justify-between rounded-[28px] border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8"
+              className="group flex flex-col justify-between rounded-[28px] border border-[#CFDADB] bg-[#F7FAFA] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8"
             >
               <div className="space-y-4">
-                <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+                <span className="block text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
                   GẦN ĐÂY
                 </span>
 
-                <h3 className="font-serif text-xl leading-snug font-bold text-stone-900 sm:text-2xl">
+                <h3 className="font-serif text-xl leading-snug font-bold text-[#29383D] sm:text-2xl">
                   {recentLessonTitle}
                 </h3>
 
-                <p className="line-clamp-2 text-sm leading-relaxed text-stone-600">
+                <p className="line-clamp-2 text-sm leading-relaxed text-[#55676B]">
                   {activeRecentLesson.lesson.description}
                 </p>
               </div>
 
-              <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
+              <div className="mt-8 flex items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
                 <div className="flex items-center gap-3">
                   <ProgressRing
                     value={progressPercent > 0 ? progressPercent : 25}
@@ -494,10 +494,10 @@ export function HomePage() {
                     strokeWidth={3.5}
                   />
                   <div>
-                    <p className="text-xs font-semibold text-stone-900">
+                    <p className="text-xs font-semibold text-[#29383D]">
                       {activeRecentLesson.subject.title}
                     </p>
-                    <p className="font-mono text-[11px] text-stone-500">
+                    <p className="font-mono text-[11px] text-[#55676B]">
                       Hoàn thành {progressPercent > 0 ? `${progressPercent}%` : '25%'} (
                       {completedCount}/{totalLessonCount} bài)
                     </p>
@@ -512,7 +512,7 @@ export function HomePage() {
                   )}
                   aria-label="Tiếp tục học"
                   title="Tiếp tục học bài này"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#3F6570] text-white transition-all hover:scale-105 hover:bg-[#345761]"
                 >
                   <ChevronRight className="h-5 w-5" aria-hidden="true" />
                 </Link>
@@ -521,23 +521,23 @@ export function HomePage() {
           )}
 
           {/* THẺ 2 — TRA CỨU THUẬT NGỮ (Glossary) */}
-          <div className="group flex flex-col justify-between rounded-[28px] border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
+          <div className="group flex flex-col justify-between rounded-[28px] border border-[#CFDADB] bg-[#F7FAFA] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
             <div className="space-y-4">
-              <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+              <span className="block text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
                 TRA CỨU HỌC THUẬT
               </span>
 
-              <h3 className="font-serif text-xl leading-snug font-bold text-stone-900 sm:text-2xl">
+              <h3 className="font-serif text-xl leading-snug font-bold text-[#29383D] sm:text-2xl">
                 Ngân hàng Thuật ngữ &amp; Ký hiệu Toán
               </h3>
 
-              <p className="text-sm leading-relaxed text-stone-600">
+              <p className="text-sm leading-relaxed text-[#55676B]">
                 Hệ thống định nghĩa, công thức KaTeX và thuật ngữ đối chiếu.
               </p>
             </div>
 
-            <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
-              <span className="text-xs font-medium text-stone-500">
+            <div className="mt-8 flex items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
+              <span className="text-xs font-medium text-[#55676B]">
                 Từ điển Toán học Việt – Anh
               </span>
 
@@ -545,7 +545,7 @@ export function HomePage() {
                 to="/glossary"
                 aria-label="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
                 title="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#3F6570] text-white transition-all hover:scale-105 hover:bg-[#345761]"
               >
                 <ChevronRight className="h-5 w-5" aria-hidden="true" />
               </Link>
@@ -553,23 +553,23 @@ export function HomePage() {
           </div>
 
           {/* THẺ 3 — PHÒNG LAB MÔ PHỎNG (Interactive Lab) */}
-          <div className="group flex flex-col justify-between rounded-[28px] border border-stone-200/70 bg-[#FAF7F2] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
+          <div className="group flex flex-col justify-between rounded-[28px] border border-[#CFDADB] bg-[#F7FAFA] p-7 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md sm:p-8">
             <div className="space-y-4">
-              <span className="block text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+              <span className="block text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
                 MÔ PHỎNG TRỰC QUAN
               </span>
 
-              <h3 className="font-serif text-xl leading-snug font-bold text-stone-900 sm:text-2xl">
+              <h3 className="font-serif text-xl leading-snug font-bold text-[#29383D] sm:text-2xl">
                 Phòng Lab Hình học Không gian
               </h3>
 
-              <p className="text-sm leading-relaxed text-stone-600">
+              <p className="text-sm leading-relaxed text-[#55676B]">
                 Mô phỏng tương tác 3D các phép biến đổi Affine và không gian véc-tơ.
               </p>
             </div>
 
-            <div className="mt-8 flex items-center justify-between gap-4 border-t border-stone-200/70 pt-5">
-              <span className="text-xs font-medium text-stone-500">Mô phỏng trực quan 2D / 3D</span>
+            <div className="mt-8 flex items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
+              <span className="text-xs font-medium text-[#55676B]">Mô phỏng trực quan 2D / 3D</span>
 
               <a
                 href="/interactive/affine-geometry.html"
@@ -577,7 +577,7 @@ export function HomePage() {
                 rel="noopener noreferrer"
                 aria-label="Mở Phòng Lab Hình học Không gian"
                 title="Mở Phòng Lab Hình học Không gian"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white transition-transform hover:scale-105"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#3F6570] text-white transition-all hover:scale-105 hover:bg-[#345761]"
               >
                 <ChevronRight className="h-5 w-5" aria-hidden="true" />
               </a>
@@ -588,7 +588,7 @@ export function HomePage() {
         {/* Chân phân cảnh: Họa tiết kỷ hà truyền thống Việt Nam chìm mờ & Trạng thái trung tính */}
         <div className="space-y-4 pt-6 text-center">
           <HeritageDivider className="opacity-30" />
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-[#55676B]">
             ● Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt · Bản phát hành 2026
           </p>
         </div>

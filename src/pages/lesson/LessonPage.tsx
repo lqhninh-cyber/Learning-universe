@@ -240,7 +240,7 @@ export function LessonPage() {
   return (
     <FadeIn
       className={cn(
-        'mx-auto w-full bg-[#FAF7F2] pb-16 text-stone-900 transition-all duration-300',
+        'mx-auto w-full bg-[#EAF0F1] pb-16 text-[#29383D] transition-all duration-300',
         isFocusMode
           ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
           : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
@@ -271,7 +271,7 @@ export function LessonPage() {
 
       <div
         className={cn(
-          'flex flex-col justify-between gap-4 border-b border-stone-200/50 pb-4 transition-all duration-300 lg:flex-row lg:items-center',
+          'flex flex-col justify-between gap-4 border-b border-[#CFDADB] pb-4 transition-all duration-300 lg:flex-row lg:items-center',
           isFocusMode && 'border-transparent pb-1',
         )}
       >
@@ -366,7 +366,7 @@ export function LessonPage() {
         {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) - Tạm ẩn trong Focus Mode */}
         {!isFocusMode && !isSidebarCollapsed && (
           <aside
-            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-stone-200/70 bg-[#F5F1EB] p-4 pr-2 pb-6 text-stone-800 transition-all duration-300 lg:block"
+            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-[#CFDADB] bg-[#E1E9EA] p-4 pr-2 pb-6 text-[#29383D] transition-all duration-300 lg:block"
             aria-label="Danh mục điều hướng bài học"
           >
             <LessonSidebar
@@ -387,16 +387,16 @@ export function LessonPage() {
           )}
         >
           {isFocusMode && (
-            <div className="mb-6 flex items-center justify-between rounded-xl border border-stone-200/80 bg-[#FDFBF7] px-4 py-2.5 text-xs text-stone-800 shadow-2xs">
+            <div className="mb-6 flex items-center justify-between rounded-xl border border-[#CFDADB] bg-[#F7FAFA] px-4 py-2.5 text-xs text-[#29383D] shadow-2xs">
               <span className="flex items-center gap-2 font-medium">
                 <span aria-hidden="true">📖</span>
                 <span>
                   Đang bật <strong>Chế độ đọc tập trung</strong> (Nhấn phím{' '}
-                  <kbd className="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-stone-800">
+                  <kbd className="rounded border border-[#CFDADB] bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#29383D]">
                     F
                   </kbd>{' '}
                   hoặc{' '}
-                  <kbd className="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-stone-800">
+                  <kbd className="rounded border border-[#CFDADB] bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#29383D]">
                     Esc
                   </kbd>{' '}
                   để thoát).
@@ -405,7 +405,7 @@ export function LessonPage() {
               <button
                 type="button"
                 onClick={handleToggleFocusMode}
-                className="cursor-pointer font-semibold text-stone-900 underline hover:text-[#9A3412]"
+                className="cursor-pointer font-semibold text-[#29383D] underline hover:text-[#3F6570]"
               >
                 Thoát tập trung (Esc)
               </button>
@@ -416,12 +416,12 @@ export function LessonPage() {
             data-reading-article
             data-reading-size={fontSize}
             className={cn(
-              'lesson-content rounded-3xl border border-stone-200/80 bg-white text-stone-900 shadow-sm transition-all duration-300',
+              'lesson-content rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] shadow-sm transition-all duration-300',
               fontSize === 'lg' && 'reader-scale-lg',
               isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
             )}
           >
-            <header className="space-y-4 border-b border-stone-200/50 pb-6">
+            <header className="space-y-4 border-b border-[#CFDADB] pb-6">
               {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
               <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
@@ -446,18 +446,18 @@ export function LessonPage() {
                 </div>
               </aside>
 
-              <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-stone-900 lg:text-4xl">
+              <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-[#29383D] lg:text-4xl">
                 {lesson.title}
               </h1>
 
-              <p className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
+              <p className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-[#29383D]">
                 {lesson.description}
               </p>
 
               {lesson.prerequisites.length > 0 && (
-                <div className="clear-both mt-4 flex flex-wrap items-center gap-2.5 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-stone-800 md:text-sm">
-                  <div className="flex shrink-0 items-center gap-1.5 font-semibold text-amber-950">
-                    <Link2 className="h-4 w-4 text-amber-800" aria-hidden="true" />
+                <div className="clear-both mt-4 flex flex-wrap items-center gap-2.5 rounded-xl border border-[#71889A]/30 bg-[#E5EDF1] p-3 text-xs text-[#29383D] md:text-sm">
+                  <div className="flex shrink-0 items-center gap-1.5 font-semibold text-[#29383D]">
+                    <Link2 className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
                     <span>Kiến thức tiên quyết:</span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -478,7 +478,7 @@ export function LessonPage() {
                             prereq.chapter.slug,
                             prereq.lesson.slug,
                           )}
-                          className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-white/90 px-2.5 py-1 text-xs font-semibold text-amber-950 shadow-2xs transition-colors hover:border-amber-600/40 hover:bg-white hover:text-amber-900"
+                          className="inline-flex items-center gap-1 rounded-lg border border-[#CFDADB] bg-white/90 px-2.5 py-1 text-xs font-semibold text-[#29383D] shadow-2xs transition-colors hover:border-[#71889A] hover:bg-white hover:text-[#3F6570]"
                         >
                           <span>
                             Bài {prereq.chapter.number}.{prereq.lesson.number}:{' '}
@@ -532,7 +532,7 @@ export function LessonPage() {
 
             <SourcePanel lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
 
-            <footer className="mt-10 border-t border-stone-200/50 pt-6">
+            <footer className="mt-10 border-t border-[#CFDADB] pt-6">
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <p className="text-xs text-[var(--text-muted)]">
                   Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.

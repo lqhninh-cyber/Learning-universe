@@ -49,7 +49,7 @@ function KatexDisplayBlock({
           onClick={handleCopy}
           aria-label="Sao chép LaTeX"
           title="Sao chép mã nguồn LaTeX"
-          className="absolute top-2 right-2 z-10 inline-flex cursor-pointer items-center gap-1 rounded-md border border-stone-200/80 bg-[#FDFBF7]/95 px-2 py-0.5 font-mono text-[11px] font-medium text-stone-600 opacity-0 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/katex:opacity-100 hover:border-stone-300 hover:text-stone-900 focus-visible:opacity-100"
+          className="absolute top-2 right-2 z-10 inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#CFDADB] bg-[#F7FAFA]/95 px-2 py-0.5 font-mono text-[11px] font-medium text-[#55676B] opacity-0 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/katex:opacity-100 hover:border-[#71889A] hover:text-[#29383D] focus-visible:opacity-100"
         >
           <span>{copied ? 'Đã chép!' : 'Sao chép LaTeX'}</span>
         </button>

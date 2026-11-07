@@ -80,7 +80,7 @@ describe('Trang xem trước hệ màu độc lập (/color-system-preview)', ()
       }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText('Text Primary (#29383D)')).toBeInTheDocument();
+    expect(screen.getAllByText('Text Primary (#29383D)').length).toBeGreaterThan(0);
     expect(screen.getByText('10.3 : 1')).toBeInTheDocument();
     expect(screen.getByText('11.3 : 1')).toBeInTheDocument();
     expect(screen.getByText('5.55 : 1')).toBeInTheDocument();

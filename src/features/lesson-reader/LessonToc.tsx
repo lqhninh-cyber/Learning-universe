@@ -112,14 +112,14 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
     <nav
       aria-label="Mục lục bài học"
       className={cn(
-        'rounded-2xl border border-stone-200/70 bg-white/80 p-3 shadow-xs backdrop-blur transition-all duration-200',
+        'rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/80 p-3 shadow-xs backdrop-blur transition-all duration-200',
         className,
       )}
     >
       {/* Thanh tab chuyển đổi Mục lục / Định nghĩa & Định lý */}
       {hasHeadings && hasBlocks && (
         <div
-          className="mb-3.5 flex items-center rounded-xl border border-stone-200/70 bg-stone-100/80 p-1"
+          className="mb-3.5 flex items-center rounded-xl border border-[#CFDADB] bg-[#E1E9EA] p-1"
           role="tablist"
           aria-label="Tùy chọn mục lục bài học"
         >
@@ -131,8 +131,8 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
             className={cn(
               'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-all',
               activeTab === 'toc'
-                ? 'bg-white text-stone-900 shadow-2xs'
-                : 'text-stone-600 hover:bg-white/60 hover:text-stone-900',
+                ? 'bg-[#F7FAFA] text-[#29383D] shadow-2xs'
+                : 'text-[#55676B] hover:bg-white/60 hover:text-[#29383D]',
             )}
           >
             <span aria-hidden="true">📑</span>
@@ -146,8 +146,8 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
             className={cn(
               'flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-all',
               activeTab === 'theorems'
-                ? 'bg-white text-stone-900 shadow-2xs'
-                : 'text-stone-600 hover:bg-white/60 hover:text-stone-900',
+                ? 'bg-[#F7FAFA] text-[#29383D] shadow-2xs'
+                : 'text-[#55676B] hover:bg-white/60 hover:text-[#29383D]',
             )}
           >
             <span aria-hidden="true">🔖</span>
@@ -160,7 +160,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
       {(activeTab === 'toc' || !hasBlocks) && hasHeadings && (
         <div className="space-y-2">
           {!hasBlocks && (
-            <div className="flex items-center gap-1.5 px-1 py-1 text-xs font-semibold tracking-wide text-stone-700 uppercase">
+            <div className="flex items-center gap-1.5 px-1 py-1 text-xs font-semibold tracking-wide text-[#29383D] uppercase">
               <ListTree className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
               <span>Mục lục bài học</span>
             </div>
@@ -180,16 +180,16 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                     className={cn(
                       'group flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[14px] leading-snug transition-all',
                       isActive
-                        ? 'bg-stone-200/60 font-medium text-stone-900'
-                        : 'text-stone-600 hover:bg-stone-100/80 hover:text-stone-900',
+                        ? 'bg-[#D7E1E2] font-medium text-[#29383D]'
+                        : 'text-[#55676B] hover:bg-white/60 hover:text-[#29383D]',
                     )}
                   >
                     <ChevronRight
                       className={cn(
                         'mt-0.5 h-3 w-3 shrink-0 transition-transform',
                         isActive
-                          ? 'translate-x-0.5 text-stone-900'
-                          : 'text-stone-400 group-hover:text-stone-600',
+                          ? 'translate-x-0.5 text-[#29383D]'
+                          : 'text-[#55676B]/60 group-hover:text-[#29383D]',
                       )}
                       aria-hidden="true"
                     />
@@ -208,7 +208,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
       {(activeTab === 'theorems' || !hasHeadings) && hasBlocks && (
         <div className="space-y-2">
           {!hasHeadings && (
-            <div className="flex items-center gap-1.5 px-1 py-1 text-xs font-semibold tracking-wide text-stone-700 uppercase">
+            <div className="flex items-center gap-1.5 px-1 py-1 text-xs font-semibold tracking-wide text-[#29383D] uppercase">
               <BookMarked className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
               <span>Định nghĩa & Định lý ({blocks.length})</span>
             </div>
@@ -225,8 +225,8 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                     className={cn(
                       'group block rounded-lg border px-2.5 py-1.5 text-[14px] leading-snug transition-all',
                       isActive
-                        ? 'border-stone-300 bg-stone-200/60 font-medium text-stone-900'
-                        : 'border-stone-200/70 bg-stone-50/60 text-stone-700 hover:border-stone-300 hover:bg-stone-100/70',
+                        ? 'border-[#71889A] bg-[#D7E1E2] font-medium text-[#29383D]'
+                        : 'border-[#CFDADB] bg-[#F7FAFA]/80 text-[#55676B] hover:border-[#71889A] hover:bg-[#F7FAFA]',
                     )}
                   >
                     <span
@@ -240,7 +240,7 @@ export function LessonToc({ lessonMeta, onSelectAnchor, className }: LessonTocPr
                       <MathRenderer content={block.label} inline />
                     </span>
                     {block.title && (
-                      <span className="block truncate text-xs text-stone-500">
+                      <span className="block truncate text-xs text-[#55676B]">
                         <MathRenderer content={block.title} inline />
                       </span>
                     )}

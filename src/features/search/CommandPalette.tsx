@@ -611,12 +611,12 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
       onClick={() => onOpenChange(false)}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-stone-200/80 bg-[#FAF7F2]/95 shadow-2xl backdrop-blur-2xl"
+        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 shadow-2xl backdrop-blur-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         {/* Thanh nhập liệu tìm kiếm (Search Input Header) */}
-        <div className="flex items-center gap-3 border-b border-stone-200/80 px-5 py-4">
-          <Search className="h-5 w-5 shrink-0 text-stone-500" aria-hidden="true" />
+        <div className="flex items-center gap-3 border-b border-[#CFDADB] px-5 py-4">
+          <Search className="h-5 w-5 shrink-0 text-[#55676B]" aria-hidden="true" />
           <label htmlFor={inputId} className="sr-only">
             Tìm kiếm định lý, công thức, bài học và thuật ngữ
           </label>
@@ -636,7 +636,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
             }}
             onKeyDown={handleInputKeyDown}
             placeholder="Tìm kiếm định lý, công thức, bài học (Lagrange, Affine, Nhóm con)..."
-            className="w-full bg-transparent font-sans text-sm text-stone-900 placeholder:text-stone-400 focus:outline-none md:text-base"
+            className="w-full bg-transparent font-sans text-sm text-[#29383D] placeholder:text-[#55676B]/60 focus:outline-none md:text-base"
           />
 
           {query.length > 0 && (
@@ -647,7 +647,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                 setActiveIndex(0);
                 inputRef.current?.focus();
               }}
-              className="shrink-0 cursor-pointer rounded-full px-2 py-0.5 text-xs font-medium text-stone-500 transition-colors hover:bg-stone-200/60 hover:text-stone-900"
+              className="shrink-0 cursor-pointer rounded-full px-2 py-0.5 text-xs font-medium text-[#55676B] transition-colors hover:bg-[#E1E9EA] hover:text-[#29383D]"
             >
               Xóa
             </button>
@@ -657,7 +657,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
             type="button"
             onClick={() => onOpenChange(false)}
             aria-label="Đóng hộp thoại tìm kiếm (ESC)"
-            className="shrink-0 cursor-pointer rounded-md border border-stone-300/80 bg-stone-200/60 px-2 py-1 font-mono text-[10px] font-semibold tracking-wider text-stone-600 uppercase transition-colors hover:bg-stone-300/70 hover:text-stone-900"
+            className="shrink-0 cursor-pointer rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2 py-1 font-mono text-[10px] font-semibold tracking-wider text-[#55676B] uppercase transition-colors hover:bg-[#D7E1E2] hover:text-[#29383D]"
           >
             ESC
           </button>
@@ -699,8 +699,8 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                             className={cn(
                               'group flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl px-3.5 py-2.5 text-left transition-colors',
                               isSelected
-                                ? 'bg-stone-900 text-[#FAF7F2]'
-                                : 'text-stone-800 hover:bg-stone-200/60',
+                                ? 'bg-[#3F6570] text-white'
+                                : 'text-[#29383D] hover:bg-[#E1E9EA]/60',
                             )}
                           >
                             <div className="min-w-0 flex-1 space-y-1">
@@ -708,7 +708,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                                 <span
                                   className={cn(
                                     'font-serif text-sm font-semibold md:text-[15px]',
-                                    isSelected ? 'text-[#FAF7F2]' : 'text-stone-900',
+                                    isSelected ? 'text-white' : 'text-[#29383D]',
                                   )}
                                 >
                                   {item.title}
@@ -720,7 +720,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                                       'rounded-full px-2 py-0.5 font-mono text-[10px] font-medium',
                                       isSelected
                                         ? 'bg-white/15 text-stone-200'
-                                        : 'bg-stone-200/80 text-stone-600',
+                                        : 'bg-[#E1E9EA] text-[#55676B]',
                                     )}
                                   >
                                     {item.badge}
@@ -734,8 +734,8 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                                   className={cn(
                                     'inline-flex max-w-full items-center overflow-x-auto rounded-lg border px-2.5 py-0.5 text-xs',
                                     isSelected
-                                      ? 'border-white/20 bg-white/10 text-stone-100'
-                                      : 'border-stone-300/70 bg-[#F3EFE6] text-stone-900',
+                                      ? 'border-white/20 bg-white/10 text-white'
+                                      : 'border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
                                   )}
                                 >
                                   <KatexMath math={item.formula} />
@@ -745,7 +745,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                               <p
                                 className={cn(
                                   'line-clamp-1 text-xs',
-                                  isSelected ? 'text-stone-300' : 'text-stone-500',
+                                  isSelected ? 'text-white/80' : 'text-[#55676B]',
                                 )}
                               >
                                 {item.subtitle}
@@ -754,13 +754,10 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
 
                             <div className="flex shrink-0 items-center gap-1.5">
                               {isSelected ? (
-                                <CornerDownLeft
-                                  className="h-4 w-4 text-stone-300"
-                                  aria-hidden="true"
-                                />
+                                <CornerDownLeft className="h-4 w-4 text-white" aria-hidden="true" />
                               ) : (
                                 <ArrowRight
-                                  className="h-4 w-4 text-stone-400 opacity-0 transition-opacity group-hover:opacity-100"
+                                  className="h-4 w-4 text-[#55676B] opacity-0 transition-opacity group-hover:opacity-100"
                                   aria-hidden="true"
                                 />
                               )}
@@ -775,10 +772,10 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
             </div>
           ) : (
             <div className="px-6 py-12 text-center">
-              <p className="font-serif text-base font-medium text-stone-800">
+              <p className="font-serif text-base font-medium text-[#29383D]">
                 Không tìm thấy nội dung phù hợp cho từ khóa này
               </p>
-              <p className="mt-1.5 text-xs text-stone-500">
+              <p className="mt-1.5 text-xs text-[#55676B]">
                 Hãy thử tìm bằng tên định lý (Lagrange, Cauchy, Chasles), tên bài học hoặc ký hiệu
                 Toán học.
               </p>
@@ -787,7 +784,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         </div>
 
         {/* Chân hộp thoại: Hướng dẫn điều hướng bàn phím */}
-        <div className="flex items-center justify-between border-t border-stone-200/80 bg-[#F4EFE6]/80 px-5 py-2.5 text-[11px] text-stone-500">
+        <div className="flex items-center justify-between border-t border-[#CFDADB] bg-[#E1E9EA]/80 px-5 py-2.5 text-[11px] text-[#55676B]">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1">
               <kbd className="rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-700">

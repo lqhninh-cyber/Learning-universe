@@ -46,18 +46,18 @@
 }
 
 :root {
-  /* Hệ hòa sắc "Bạch Dó & Mực Nho" (Editorial Scholar Suite) */
-  --bg-canvas: #faf7f2; /* Sắc giấy Dó ấm */
-  --bg-surface: #f4efea; /* Nền bề mặt thẻ/panel */
-  --bg-muted: rgba(40, 35, 30, 0.08); /* Viền kẻ hairline */
-  --border-hairline: rgba(40, 35, 30, 0.08);
-  --text-primary: #23211e; /* Than chì mực nho */
-  --text-secondary: #6b645c; /* Màu phụ / chú giải */
-  --text-muted: #6b645c; /* Màu phụ / chú giải */
-  --accent-primary: #9e3d24; /* Đỏ đất nung / chu sa */
-  --accent-verandah: #5a6830; /* Rêu xanh hiên nhà - ghi chú mở rộng / ứng dụng */
-  --accent-wood: #9e7a5a; /* Gỗ mộc đòn tay - bổ đề / mệnh đề */
-  --accent-interactive: #9e3d24; /* Màu nhấn tương tác */
+  /* Hệ hòa sắc "Mist Blue & Sage" */
+  --bg-canvas: #eaf0f1;
+  --bg-surface: #f7fafa;
+  --bg-muted: #cfdadb;
+  --border-hairline: #cfdadb;
+  --text-primary: #29383d;
+  --text-secondary: #55676b;
+  --text-muted: #55676b;
+  --accent-primary: #3f6570;
+  --accent-verandah: #5e786d;
+  --accent-wood: #92714f;
+  --accent-interactive: #3f6570;
 
   /* Typography tokens */
   --font-serif: 'Crimson Pro', Georgia, Cambria, 'Times New Roman', serif;
@@ -113,8 +113,8 @@
   body,
   #root {
     font-family: var(--font-sans);
-    background-color: #faf7f2;
-    color: #1c1917;
+    background-color: #eaf0f1;
+    color: #29383d;
   }
 
   /* Donny Trương Orthography: chống đè dấu thanh điệu và dấu phụ chữ Quốc ngữ khi viết hoa */

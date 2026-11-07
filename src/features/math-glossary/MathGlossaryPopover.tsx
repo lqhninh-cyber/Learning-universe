@@ -113,28 +113,28 @@ export function MathGlossaryPopover() {
         left: `${coords.left}px`,
         width: `${Math.min(POPOVER_WIDTH, window.innerWidth - 32)}px`,
       }}
-      className="animate-in fade-in zoom-in-95 z-50 w-80 rounded-2xl border border-stone-200/80 bg-[#FAF7F2]/95 p-4 text-xs text-stone-800 shadow-2xl backdrop-blur-xl transition-all duration-150 dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200"
+      className="animate-in fade-in zoom-in-95 z-50 w-80 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-4 text-xs text-[#29383D] shadow-2xl backdrop-blur-xl transition-all duration-150 dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200"
     >
       {/* Header: Ký hiệu + Tên thuật ngữ + Nút Ghim (Pin) & Đóng [✕] */}
-      <div className="flex items-start justify-between gap-2.5 border-b border-stone-200/80 pb-2.5 dark:border-stone-700/80">
+      <div className="flex items-start justify-between gap-2.5 border-b border-[#CFDADB] pb-2.5 dark:border-stone-700/80">
         <div className="min-w-0 flex-1 space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold tracking-wider text-[#9E3D24] uppercase dark:text-[#E09F5A]">
+            <span className="text-[10px] font-semibold tracking-wider text-[#3F6570] uppercase dark:text-[#E09F5A]">
               {subjectLabel}
             </span>
           </div>
-          <h3 className="font-serif text-base leading-snug font-bold text-stone-900 dark:text-stone-100">
+          <h3 className="font-serif text-base leading-snug font-bold text-[#29383D] dark:text-stone-100">
             {displayName}
           </h3>
-          <p className="text-[11px] text-stone-600 italic dark:text-stone-400">{displayEnglish}</p>
+          <p className="text-[11px] text-[#55676B] italic dark:text-stone-400">{displayEnglish}</p>
         </div>
 
         <div className="flex shrink-0 flex-col items-end gap-1.5">
           <div className="flex items-center gap-1">
-            <div className="rounded-md border border-[#D0C8B8] bg-[#E8E0D2] px-2 py-0.5 text-center shadow-2xs dark:border-stone-700 dark:bg-stone-800">
+            <div className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2 py-0.5 text-center shadow-2xs dark:border-stone-700 dark:bg-stone-800">
               <KatexMath
                 math={displayFormula}
-                className="font-serif text-sm text-stone-900 dark:text-stone-100"
+                className="font-serif text-sm text-[#29383D] dark:text-stone-100"
               />
             </div>
             <button
@@ -154,8 +154,8 @@ export function MathGlossaryPopover() {
               className={cn(
                 'cursor-pointer rounded-md p-1 transition-colors',
                 isPinned
-                  ? 'bg-[#9E3D24] text-white dark:bg-[#E09F5A] dark:text-stone-950'
-                  : 'text-stone-500 hover:bg-stone-300/40 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-800',
+                  ? 'bg-[#3F6570] text-white dark:bg-[#E09F5A] dark:text-stone-950'
+                  : 'text-stone-500 hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800',
               )}
             >
               <Pin className="h-3.5 w-3.5" aria-hidden="true" />
@@ -167,7 +167,7 @@ export function MathGlossaryPopover() {
                 closePopover();
               }}
               aria-label="Đóng chú thích"
-              className="cursor-pointer rounded-md p-1 text-stone-500 transition-colors hover:bg-stone-300/40 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-800"
+              className="cursor-pointer rounded-md p-1 text-stone-500 transition-colors hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -176,13 +176,13 @@ export function MathGlossaryPopover() {
       </div>
 
       {/* Nội dung định nghĩa tóm tắt */}
-      <div className="space-y-2 py-2.5 text-xs leading-relaxed text-stone-800">
+      <div className="space-y-2 py-2.5 text-xs leading-relaxed text-[#29383D]">
         <p>{displaySummary}</p>
 
         {/* Khối trực giác / bản chất */}
-        <div className="space-y-1 rounded-lg border border-[#D0C8B8] bg-[#E8E0D2]/70 p-2.5 text-[11px] leading-relaxed text-stone-700">
-          <div className="flex items-center gap-1.5 font-semibold text-amber-900">
-            <Lightbulb className="h-3.5 w-3.5 shrink-0 text-amber-700" aria-hidden="true" />
+        <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-[#E1E9EA]/70 p-2.5 text-[11px] leading-relaxed text-[#29383D]">
+          <div className="flex items-center gap-1.5 font-semibold text-[#3F6570]">
+            <Lightbulb className="h-3.5 w-3.5 shrink-0 text-[#3F6570]" aria-hidden="true" />
             <span>Trực quan & Bản chất:</span>
           </div>
           <p>{activeEntry.intuition}</p>

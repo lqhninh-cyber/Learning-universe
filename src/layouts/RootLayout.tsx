@@ -28,7 +28,7 @@ function RootLayoutContent() {
   }, [pathname, hash]);
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-clip bg-[#FAF7F2] text-stone-900">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-[#EAF0F1] text-[#29383D]">
       {/* 0. TACTILE DO PAPER GRAIN SVG NOISE OVERLAY */}
       <PaperGrain />
 
@@ -60,16 +60,16 @@ function RootLayoutContent() {
       <LoginPromptDialog />
 
       {/* 4. MINIMALIST SCHOLARLY FOOTER */}
-      <footer className="border-t border-stone-200/70 bg-[#FDFBF7]/90">
+      <footer className="border-t border-[#CFDADB] bg-[#F7FAFA]/90 text-[#29383D]">
         <Container size="wide" className="space-y-6 py-8">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <GraduationCap className="h-5 w-5 text-[#9A3412]" aria-hidden="true" />
-                <span className="font-serif font-bold text-stone-950">Learning Universe</span>
-                <span className="text-xs text-stone-500">· Toán học &amp; Sư phạm</span>
+                <GraduationCap className="h-5 w-5 text-[#3F6570]" aria-hidden="true" />
+                <span className="font-serif font-bold text-[#29383D]">Learning Universe</span>
+                <span className="text-xs text-[#55676B]">· Toán học &amp; Sư phạm</span>
               </div>
-              <p className="max-w-xl text-xs leading-relaxed text-stone-600">
+              <p className="max-w-xl text-xs leading-relaxed text-[#55676B]">
                 Học viện Tri thức Toán học &amp; Khoa học Giáo dục. Đồng hành cùng sinh viên Sư phạm
                 Toán học với các học phần chuyên ngành và Nghiệp vụ Sư phạm chuẩn mực. 100% nội dung
                 học thuật nguồn mở và phi lợi nhuận.
@@ -82,50 +82,50 @@ function RootLayoutContent() {
             >
               <Link
                 to={ROUTES.home}
-                className="text-stone-600 transition-colors hover:text-[#9A3412]"
+                className="text-[#55676B] transition-colors hover:text-[#3F6570]"
               >
                 Trang chủ
               </Link>
               <Link
                 to={ROUTES.courses}
-                className="text-stone-600 transition-colors hover:text-[#9A3412]"
+                className="text-[#55676B] transition-colors hover:text-[#3F6570]"
               >
                 Tất cả môn học
               </Link>
               <Link
                 to={ROUTES.subjectOverview('cau-truc-dai-so')}
-                className="text-stone-600 transition-colors hover:text-[#9A3412]"
+                className="text-[#55676B] transition-colors hover:text-[#3F6570]"
               >
                 Cấu trúc đại số
               </Link>
               <Link
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
-                className="text-stone-600 transition-colors hover:text-[#9A3412]"
+                className="text-[#55676B] transition-colors hover:text-[#3F6570]"
               >
                 Hình học Affine &amp; Euclide
               </Link>
               <Link
                 to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
-                className="text-stone-600 transition-colors hover:text-[#9A3412]"
+                className="text-[#55676B] transition-colors hover:text-[#3F6570]"
               >
                 Giải tích hàm một biến
               </Link>
               <Link
                 to={ROUTES.subjectOverview('giao-duc-hoc')}
-                className="font-semibold text-indigo-950 transition-colors hover:text-[#9A3412]"
+                className="font-semibold text-[#5E786D] transition-colors hover:text-[#3F6570]"
               >
                 Giáo dục học
               </Link>
               <Link
                 to={ROUTES.glossary}
-                className="text-stone-600 transition-colors hover:text-[#9A3412]"
+                className="text-[#55676B] transition-colors hover:text-[#3F6570]"
               >
                 Ngân hàng Thuật ngữ
               </Link>
             </nav>
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-2 border-t border-stone-200/60 pt-4 text-[11px] text-stone-500 sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-2 border-t border-[#CFDADB] pt-4 text-[11px] text-[#55676B] sm:flex-row">
             <p>© {new Date().getFullYear()} Learning Universe. Bảo lưu bản quyền học thuật.</p>
             <p>Không gian tri thức mở · Chuẩn mực &amp; Khách quan</p>
           </div>
