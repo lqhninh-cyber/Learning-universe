@@ -45,6 +45,14 @@ export const routes: RouteObject[] = [
     },
   },
   {
+    path: ROUTES.colorSystemPreview,
+    lazy: async () => {
+      const { ColorSystemPreviewPage } =
+        await import('@/pages/color-system-preview/ColorSystemPreviewPage');
+      return { Component: ColorSystemPreviewPage };
+    },
+  },
+  {
     path: ROUTES.home,
     Component: RootLayout,
     HydrateFallback: RootHydrateFallback,

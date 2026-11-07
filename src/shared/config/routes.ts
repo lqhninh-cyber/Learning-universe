@@ -33,6 +33,7 @@ export const ROUTES = {
   devPreview: '/dev/preview',
   devFigures: '/dev/figures',
   uiPreview: '/ui-preview',
+  colorSystemPreview: '/color-system-preview',
 } as const;
 
 /**

@@ -101,7 +101,46 @@ body,
   }
 }
 
-.dark .academic-dropcap-paragraph::first-letter,
-[data-theme='dark'] .academic-dropcap-paragraph::first-letter {
-  color: #f5f5f4;
+/* ============================================================================
+   BẢNG MÀU "MIST BLUE & SAGE" (DESIGN SYSTEM EXPERIMENTAL TOKENS)
+   ============================================================================ */
+
+[data-theme='mist-blue-sage'],
+.theme-mist-blue-sage {
+  /* Biến CSS chuẩn cho bảng màu "Mist Blue & Sage" */
+  --bg-main: #eaf0f1;
+  --surface-primary: #f7fafa;
+  --surface-secondary: #e1e9ea;
+  --surface-tertiary: #d7e1e2;
+  --primary: #3f6570;
+  --primary-hover: #345761;
+  --secondary: #5e786d;
+  --accent: #92714f;
+  --text-primary: #29383d;
+  --text-secondary: #55676b;
+  --border-subtle: #cfdadb;
+
+  /* Semantic Colors */
+  --success: #4f7967;
+  --warning: #987343;
+  --danger: #a65d59;
+  --info: #527b8a;
+
+  /* Subject Accents */
+  --math-accent: #71889a;
+  --math-light: #e5edf1;
+  --edu-accent: #718c7e;
+  --edu-light: #e8efeb;
+
+  /* Ánh xạ tương thích cho các component học thuật dùng biến hệ thống */
+  --bg-canvas: var(--bg-main);
+  --bg-surface: var(--surface-primary);
+  --border-hairline: var(--border-subtle);
+  --accent-primary: var(--primary);
+  --accent-interactive: var(--primary);
+}
+
+.theme-mist-blue-sage {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
 }
