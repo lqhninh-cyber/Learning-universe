@@ -159,3 +159,24 @@ span.academic-dropcap {
   background-color: var(--bg-main);
   color: var(--text-primary);
 }
+
+/* ============================================================================
+   HỆ HÒA SẮC "HOA SEN & BÁC HỒ" / "LOTUS & HERITAGE" (HOMEPAGE DESIGN TOKENS)
+   Lấy cảm hứng từ đầm sen ngát hương và nghệ thuật truyền thống Việt Nam
+   ============================================================================ */
+
+:root,
+[data-theme='lotus-heritage'],
+.theme-lotus-heritage {
+  --lotus-bg: #f5f4ef; /* Trắng ngà sương sớm, ấm áp, chống chói lóa */
+  --lotus-surface-primary: #faf9f6; /* Trắng hoa huệ / ngà sen thanh khiết */
+  --lotus-surface-secondary: #ebece6; /* Màu sỏi hồ sen trầm lắng */
+  --lotus-pink: #b85d6f; /* Hồng sen đằm thắm */
+  --lotus-pink-hover: #9e495a;
+  --lotus-leaf: #365e4e; /* Xanh lá sen sẫm trang nhã */
+  --lotus-leaf-hover: #2b4c3e;
+  --lotus-stamen-gold: #c89738; /* Vàng nhụy sen / hổ phách ấm */
+  --lotus-text-primary: #262b28; /* Mực Tàu ấm, tương phản sắc nét trên nền ngà */
+  --lotus-text-secondary: #58635e; /* Màu tro xanh nhẹ nhàng */
+  --lotus-border: #d9dfd9; /* Viền men gốm sứ mỏng nhẹ */
+}

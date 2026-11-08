@@ -387,19 +387,19 @@ export function HeritageArtShowcase() {
       data-testid="heritage-art-showcase"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative mx-auto flex w-full max-w-2xl flex-col rounded-3xl border border-[#CFDADB] bg-[#F7FAFA]/85 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#3F6570]/40 sm:p-6"
+      className="relative mx-auto flex w-full max-w-2xl flex-col rounded-3xl border border-[#D9DFD9] bg-[#FAF9F6]/85 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40 sm:p-6"
     >
       {/* Top Header Bar */}
-      <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#CFDADB]/60 pb-3">
+      <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#D9DFD9]/60 pb-3">
         <div className="flex items-center gap-2">
-          <Landmark className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-semibold tracking-widest text-[#3F6570] uppercase">
+          <Landmark className="h-3.5 w-3.5 text-[#B85D6F]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-semibold tracking-widest text-[#B85D6F] uppercase">
             DI SẢN HỌC THUẬT &amp; NGHỆ THUẬT
           </span>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <span className="font-mono text-[11px] font-medium text-[#55676B]">
+          <span className="font-mono text-[11px] font-medium text-[#58635E]">
             {formattedIndex} / {formattedTotal}
           </span>
 
@@ -414,8 +414,8 @@ export function HeritageArtShowcase() {
                 className={cn(
                   'h-1.5 rounded-full transition-all duration-300',
                   idx === currentIndex
-                    ? 'w-5 bg-[#3F6570]'
-                    : 'w-1.5 bg-[#CFDADB] hover:bg-[#5E786D]',
+                    ? 'w-5 bg-[#B85D6F]'
+                    : 'w-1.5 bg-[#D9DFD9] hover:bg-[#365E4E]',
                 )}
               />
             ))}
@@ -427,7 +427,7 @@ export function HeritageArtShowcase() {
               type="button"
               onClick={handlePrev}
               aria-label="Tác phẩm trước"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -435,7 +435,7 @@ export function HeritageArtShowcase() {
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
               aria-label={isPaused ? 'Tiếp tục trình chiếu tác phẩm' : 'Tạm dừng trình chiếu'}
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               {isPaused ? (
                 <Play className="h-3 w-3" aria-hidden="true" />
@@ -447,7 +447,7 @@ export function HeritageArtShowcase() {
               type="button"
               onClick={handleNext}
               aria-label="Tác phẩm tiếp theo"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -458,15 +458,15 @@ export function HeritageArtShowcase() {
       {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực (Hoàn toàn sạch sẽ, không che ảnh) */}
       <div
         data-testid="heritage-art-frame"
-        className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#CFDADB]/60 bg-[#E1E9EA]/30 p-2 shadow-inner md:h-[340px]"
+        className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#D9DFD9]/60 bg-[#EBECE6]/30 p-2 shadow-inner md:h-[340px]"
       >
         {imageError ? (
-          <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[#55676B]">
-            <Compass className="h-8 w-8 text-[#3F6570] opacity-50" aria-hidden="true" />
-            <p className="mt-2 font-serif text-sm font-semibold text-[#29383D]">
+          <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[#58635E]">
+            <Compass className="h-8 w-8 text-[#365E4E] opacity-50" aria-hidden="true" />
+            <p className="mt-2 font-serif text-sm font-semibold text-[#262B28]">
               {currentArtwork.title}
             </p>
-            <p className="mt-1 font-mono text-xs text-[#55676B]">{currentArtwork.caption}</p>
+            <p className="mt-1 font-mono text-xs text-[#58635E]">{currentArtwork.caption}</p>
           </div>
         ) : (
           <img
@@ -489,22 +489,22 @@ export function HeritageArtShowcase() {
         )}
       >
         <div>
-          <h3 className="font-serif text-base font-bold text-[#29383D] sm:text-lg">
+          <h3 className="font-serif text-base font-bold text-[#262B28] sm:text-lg">
             {currentArtwork.title}
           </h3>
 
           {/* Bố cục hàng Metadata: [Tên tác giả / Nghệ nhân] · [Thời kỳ - Địa danh] · [Nút: Lược sử tác phẩm] */}
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-mono text-xs font-semibold text-[#3F6570]">
+            <span className="font-mono text-xs font-semibold text-[#365E4E]">
               {currentArtwork.artistOrOrigin}
             </span>
-            <span className="text-[#55676B]" aria-hidden="true">
+            <span className="text-[#58635E]" aria-hidden="true">
               ·
             </span>
-            <span className="inline-flex items-center rounded-md border border-[#CFDADB]/60 bg-[#E1E9EA] px-2 py-0.5 font-mono text-[11px] text-[#55676B]">
+            <span className="inline-flex items-center rounded-md border border-[#D9DFD9]/60 bg-[#EBECE6] px-2 py-0.5 font-mono text-[11px] text-[#58635E]">
               {currentArtwork.yearOrEra}
             </span>
-            <span className="text-[#55676B]" aria-hidden="true">
+            <span className="text-[#58635E]" aria-hidden="true">
               ·
             </span>
             <button
@@ -512,16 +512,16 @@ export function HeritageArtShowcase() {
               onClick={() => setIsMetadataOpen((prev) => !prev)}
               aria-expanded={isMetadataOpen}
               data-testid="archival-metadata-trigger"
-              className="cursor-pointer rounded-md border border-[#CFDADB] bg-[#F7FAFA]/90 px-2.5 py-1 font-mono text-[11px] text-[#3F6570] transition-colors hover:bg-[#E1E9EA]"
+              className="cursor-pointer rounded-md border border-[#D9DFD9] bg-[#FAF9F6]/90 px-2.5 py-1 font-mono text-[11px] text-[#365E4E] transition-colors hover:bg-[#EBECE6]"
             >
               [Lược sử tác phẩm]
             </button>
           </div>
         </div>
 
-        <p className="mt-2 font-serif text-xs text-[#718C7E] italic">{currentArtwork.caption}</p>
+        <p className="mt-2 font-serif text-xs text-[#365E4E] italic">{currentArtwork.caption}</p>
 
-        <p className="mt-2 text-xs leading-relaxed text-[#55676B]">
+        <p className="mt-2 text-xs leading-relaxed text-[#58635E]">
           {currentArtwork.academicSignificance}
         </p>
 
@@ -531,10 +531,10 @@ export function HeritageArtShowcase() {
             data-testid="archival-metadata-popover"
             role="region"
             aria-label={`Hồ sơ văn khố: ${currentArtwork.title}`}
-            className="mt-4 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/90 p-4 text-xs shadow-xs"
+            className="mt-4 rounded-2xl border border-[#D9DFD9] bg-[#F5F4EF]/90 p-4 text-xs shadow-xs"
           >
-            <div className="mb-3 flex items-center justify-between border-b border-[#CFDADB] pb-2">
-              <div className="flex items-center gap-2 font-mono text-[10px] font-semibold tracking-wider text-[#3F6570] uppercase">
+            <div className="mb-3 flex items-center justify-between border-b border-[#D9DFD9] pb-2">
+              <div className="flex items-center gap-2 font-mono text-[10px] font-semibold tracking-wider text-[#365E4E] uppercase">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>HỒ SƠ LƯỢC SỬ &amp; VĂN KHỐ TÁC PHẨM</span>
               </div>
@@ -542,7 +542,7 @@ export function HeritageArtShowcase() {
                 type="button"
                 onClick={() => setIsMetadataOpen(false)}
                 aria-label="Đóng lược sử tác phẩm"
-                className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] hover:text-[#29383D]"
+                className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:text-[#262B28]"
               >
                 <X className="h-3 w-3" aria-hidden="true" />
               </button>
@@ -550,42 +550,42 @@ export function HeritageArtShowcase() {
 
             <dl className="space-y-2 text-xs leading-relaxed">
               <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#3F6570] sm:col-span-4">
+                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
                   Tác phẩm:
                 </dt>
-                <dd className="font-serif font-medium text-[#29383D] sm:col-span-8">
+                <dd className="font-serif font-medium text-[#262B28] sm:col-span-8">
                   {currentArtwork.originalTitle}
                 </dd>
               </div>
 
               <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#3F6570] sm:col-span-4">
+                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
                   Niên đại &amp; Thời kỳ:
                 </dt>
-                <dd className="text-[#29383D] sm:col-span-8">{currentArtwork.eraAndPeriod}</dd>
+                <dd className="text-[#262B28] sm:col-span-8">{currentArtwork.eraAndPeriod}</dd>
               </div>
 
               <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#3F6570] sm:col-span-4">
+                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
                   Chất liệu &amp; Kỹ thuật:
                 </dt>
-                <dd className="text-[#55676B] sm:col-span-8">
+                <dd className="text-[#58635E] sm:col-span-8">
                   {currentArtwork.materialAndTechnique}
                 </dd>
               </div>
 
               <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#3F6570] sm:col-span-4">
+                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
                   Nơi lưu trữ gốc:
                 </dt>
-                <dd className="text-[#29383D] sm:col-span-8">{currentArtwork.archivalLocation}</dd>
+                <dd className="text-[#262B28] sm:col-span-8">{currentArtwork.archivalLocation}</dd>
               </div>
 
-              <div className="grid grid-cols-1 gap-0.5 border-t border-[#CFDADB]/70 pt-2 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#92714F] sm:col-span-4">
+              <div className="grid grid-cols-1 gap-0.5 border-t border-[#D9DFD9]/70 pt-2 sm:grid-cols-12 sm:gap-2">
+                <dt className="font-mono text-[11px] font-semibold text-[#C89738] sm:col-span-4">
                   Giá trị học thuật cốt lõi:
                 </dt>
-                <dd className="text-[#29383D] sm:col-span-8">{currentArtwork.coreAcademicValue}</dd>
+                <dd className="text-[#262B28] sm:col-span-8">{currentArtwork.coreAcademicValue}</dd>
               </div>
             </dl>
           </div>

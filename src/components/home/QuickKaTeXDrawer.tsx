@@ -283,25 +283,25 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
         data-testid="quick-katex-backdrop"
         onClick={onClose}
         aria-hidden="true"
-        className="fixed inset-0 bg-[#29383D]/35 backdrop-blur-xs transition-opacity duration-300"
+        className="fixed inset-0 bg-[#262B28]/35 backdrop-blur-xs transition-opacity duration-300"
       />
 
       {/* Ngăn kéo trượt từ mép phải */}
       <aside
         data-testid="quick-katex-drawer-panel"
-        className="fixed top-0 right-0 z-50 flex h-full w-[420px] max-w-[92vw] translate-x-0 flex-col border-l border-[#CFDADB] bg-[#F7FAFA] shadow-2xl transition-transform duration-300 ease-out"
+        className="fixed top-0 right-0 z-50 flex h-full w-[420px] max-w-[92vw] translate-x-0 flex-col border-l border-[#D9DFD9] bg-[#FAF9F6] shadow-2xl transition-transform duration-300 ease-out"
       >
         {/* Header ngăn kéo */}
-        <div className="space-y-3.5 border-b border-[#CFDADB] bg-[#EAF0F1]/70 p-5">
+        <div className="space-y-3.5 border-b border-[#D9DFD9] bg-[#F5F4EF]/70 p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <span className="font-mono text-[10px] font-semibold tracking-widest text-[#3F6570] uppercase">
+              <span className="font-mono text-[10px] font-semibold tracking-widest text-[#B85D6F] uppercase">
                 QUICK KATEX LEXICON · SHIFT + K
               </span>
-              <h2 className="mt-0.5 font-serif text-lg font-semibold text-[#29383D]">
+              <h2 className="mt-0.5 font-serif text-lg font-semibold text-[#262B28]">
                 Tra cứu Thuật ngữ &amp; Ký hiệu KaTeX
               </h2>
-              <p className="mt-0.5 text-xs text-[#55676B]">
+              <p className="mt-0.5 text-xs text-[#58635E]">
                 Hệ thống ký hiệu Toán học và cú pháp mã nguồn trực quan.
               </p>
             </div>
@@ -310,7 +310,7 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
               type="button"
               onClick={onClose}
               aria-label="Đóng (Esc)"
-              className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1.5 font-mono text-[11px] font-medium text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] px-2.5 py-1.5 font-mono text-[11px] font-medium text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               <span>Đóng (Esc)</span>
               <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -323,7 +323,7 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
               Tìm kiếm ký hiệu hoặc mã LaTeX
             </label>
             <Search
-              className="pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#55676B]"
+              className="pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#58635E]"
               aria-hidden="true"
             />
             <input
@@ -333,14 +333,14 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Tìm tên thuật ngữ, \ker, \lim, \forall..."
-              className="w-full rounded-xl border border-[#CFDADB] bg-white py-2 pr-8 pl-9 text-xs text-[#29383D] outline-none placeholder:text-[#55676B]/70 focus:border-[#3F6570]"
+              className="w-full rounded-xl border border-[#D9DFD9] bg-white py-2 pr-8 pl-9 text-xs text-[#262B28] outline-none placeholder:text-[#58635E]/70 focus:border-[#365E4E]"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
                 aria-label="Xóa từ khóa tra cứu KaTeX"
-                className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-0.5 text-[#55676B] hover:text-[#29383D]"
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-0.5 text-[#58635E] hover:text-[#262B28]"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -365,8 +365,8 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
                   className={cn(
                     'cursor-pointer rounded-lg px-2.5 py-1 font-mono text-[11px] font-medium transition-colors',
                     isSelected
-                      ? 'bg-[#3F6570] text-white shadow-2xs'
-                      : 'border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] hover:border-[#3F6570]/50 hover:text-[#29383D]',
+                      ? 'bg-[#365E4E] text-white shadow-2xs'
+                      : 'border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#365E4E]/50 hover:text-[#262B28]',
                   )}
                 >
                   {tab.label}
@@ -379,11 +379,11 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
         {/* Thân ngăn kéo (Scrollable Body) */}
         <div className="flex-1 space-y-2.5 overflow-y-auto p-4">
           {filteredItems.length === 0 ? (
-            <div className="rounded-2xl border border-[#CFDADB] bg-white p-8 text-center">
-              <p className="font-serif text-sm font-semibold text-[#29383D]">
+            <div className="rounded-2xl border border-[#D9DFD9] bg-white p-8 text-center">
+              <p className="font-serif text-sm font-semibold text-[#262B28]">
                 Không tìm thấy ký hiệu phù hợp.
               </p>
-              <p className="mt-1 text-xs text-[#55676B]">
+              <p className="mt-1 text-xs text-[#58635E]">
                 Hãy thử tìm bằng từ khóa khác hoặc chuyển sang tab &ldquo;Tất cả&rdquo;.
               </p>
             </div>
@@ -394,22 +394,22 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
                 <div
                   key={item.id}
                   data-testid="katex-drawer-item"
-                  className="flex flex-col justify-between gap-2.5 rounded-xl border border-[#CFDADB]/60 bg-white p-3 transition-colors hover:border-[#3F6570]"
+                  className="flex flex-col justify-between gap-2.5 rounded-xl border border-[#D9DFD9]/60 bg-white p-3 transition-colors hover:border-[#365E4E]"
                 >
                   {/* Hàng trên: Cột trái (KaTeX + Tên Việt - Anh) & Cột phải (Nút Chép mã) */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1 space-y-1">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="rounded bg-[#E1E9EA] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#3F6570]">
+                        <span className="rounded bg-[#EBECE6] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#365E4E]">
                           {item.categoryLabel}
                         </span>
-                        <h3 className="font-serif text-xs font-bold text-[#29383D]">
+                        <h3 className="font-serif text-xs font-bold text-[#262B28]">
                           {item.nameVi}
                         </h3>
-                        <span className="text-[11px] text-[#55676B] italic">({item.nameEn})</span>
+                        <span className="text-[11px] text-[#58635E] italic">({item.nameEn})</span>
                       </div>
 
-                      <div className="overflow-x-auto rounded-lg bg-[#F7FAFA] px-2.5 py-1.5 text-sm text-[#29383D]">
+                      <div className="overflow-x-auto rounded-lg bg-[#FAF9F6] px-2.5 py-1.5 text-sm text-[#262B28]">
                         <KatexMath math={item.formula} />
                       </div>
                     </div>
@@ -421,8 +421,8 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
                       className={cn(
                         'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border px-2.5 py-1 font-mono text-[11px] font-medium transition-colors',
                         isCopied
-                          ? 'border-[#5E786D] bg-[#5E786D] text-white'
-                          : 'border-[#CFDADB] bg-[#F7FAFA] text-[#3F6570] hover:bg-[#E1E9EA]',
+                          ? 'border-[#365E4E] bg-[#365E4E] text-white'
+                          : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#365E4E] hover:bg-[#EBECE6]',
                       )}
                     >
                       {isCopied ? (
@@ -440,11 +440,11 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
                   </div>
 
                   {/* Hàng dưới: Mã nguồn LaTeX gốc & Tóm tắt nghĩa */}
-                  <div className="flex flex-col gap-1 border-t border-[#CFDADB]/40 pt-2">
-                    <code className="overflow-x-auto rounded bg-[#EAF0F1]/80 px-2 py-1 font-mono text-[11px] text-[#3F6570]">
+                  <div className="flex flex-col gap-1 border-t border-[#D9DFD9]/40 pt-2">
+                    <code className="overflow-x-auto rounded bg-[#F5F4EF]/80 px-2 py-1 font-mono text-[11px] text-[#365E4E]">
                       {item.latexCode}
                     </code>
-                    <p className="text-[11px] leading-relaxed text-[#55676B]">{item.brief}</p>
+                    <p className="text-[11px] leading-relaxed text-[#58635E]">{item.brief}</p>
                   </div>
                 </div>
               );
@@ -453,11 +453,11 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
         </div>
 
         {/* Footer ngăn kéo */}
-        <div className="border-t border-[#CFDADB] bg-[#EAF0F1]/80 p-4">
+        <div className="border-t border-[#D9DFD9] bg-[#F5F4EF]/80 p-4">
           <Link
             to="/glossary"
             onClick={onClose}
-            className="inline-flex w-full items-center justify-between rounded-xl border border-[#CFDADB] bg-[#F7FAFA] px-4 py-2.5 text-xs font-semibold text-[#29383D] transition-colors hover:border-[#3F6570] hover:bg-[#3F6570] hover:text-white"
+            className="inline-flex w-full items-center justify-between rounded-xl border border-[#D9DFD9] bg-[#FAF9F6] px-4 py-2.5 text-xs font-semibold text-[#262B28] transition-colors hover:border-[#365E4E] hover:bg-[#365E4E] hover:text-white"
           >
             <span>Mở toàn bộ Từ điển Thuật ngữ KaTeX</span>
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

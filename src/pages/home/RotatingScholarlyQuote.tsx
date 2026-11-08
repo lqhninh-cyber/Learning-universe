@@ -167,19 +167,19 @@ export function RotatingScholarlyQuote() {
       aria-label="Danh ngôn học thuật kinh điển"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="group relative rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/90 p-5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-[#3F6570]/40"
+      className="group relative rounded-2xl border border-[#D9DFD9] bg-[#FAF9F6]/90 p-5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40"
     >
       {/* Header: Phân loại & Điều khiển luân phiên */}
-      <div className="flex items-center justify-between gap-3 border-b border-[#CFDADB]/60 pb-3">
+      <div className="flex items-center justify-between gap-3 border-b border-[#D9DFD9]/60 pb-3">
         <div className="flex items-center gap-2">
-          <Quote className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#3F6570] uppercase">
+          <Quote className="h-3.5 w-3.5 text-[#B85D6F]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#B85D6F] uppercase">
             DANH NGÔN HỌC THUẬT
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[11px] font-medium text-[#55676B]">
+          <span className="font-mono text-[11px] font-medium text-[#58635E]">
             {formattedIndex} / {formattedTotal}
           </span>
           <div className="flex items-center gap-1">
@@ -187,7 +187,7 @@ export function RotatingScholarlyQuote() {
               type="button"
               onClick={handlePrev}
               aria-label="Câu danh ngôn trước"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -195,7 +195,7 @@ export function RotatingScholarlyQuote() {
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
               aria-label={isPaused ? 'Tiếp tục tự động chuyển câu' : 'Tạm dừng tự động chuyển câu'}
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               {isPaused ? (
                 <Play className="h-3 w-3" aria-hidden="true" />
@@ -207,7 +207,7 @@ export function RotatingScholarlyQuote() {
               type="button"
               onClick={handleNext}
               aria-label="Câu danh ngôn tiếp theo"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D]"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
             >
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -222,11 +222,11 @@ export function RotatingScholarlyQuote() {
           isFading ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <p className="mb-3 font-serif text-sm leading-relaxed text-[#29383D] italic md:text-base">
+        <p className="mb-3 font-serif text-sm leading-relaxed text-[#262B28] italic md:text-base">
           &ldquo;{currentQuote.content}&rdquo;
         </p>
-        <div className="mt-2 flex w-full items-center justify-end border-t border-[#CFDADB]/40 pt-2">
-          <footer className="text-right font-mono text-xs text-[#3F6570]">
+        <div className="mt-2 flex w-full items-center justify-end border-t border-[#D9DFD9]/40 pt-2">
+          <footer className="text-right font-mono text-xs text-[#365E4E]">
             — {currentQuote.author}
             {currentQuote.roleOrEra ? ` · ${currentQuote.roleOrEra}` : ''}
           </footer>

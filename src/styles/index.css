@@ -95,6 +95,19 @@
   --color-vn-border: var(--bg-muted);
   --color-vn-border-soft: #e5dfc8;
 
+  /* Hệ hòa sắc Hoa Sen & Bác Hồ (Lotus & Heritage Tokens) */
+  --color-lotus-bg: #f5f4ef;
+  --color-lotus-surface-primary: #faf9f6;
+  --color-lotus-surface-secondary: #ebece6;
+  --color-lotus-pink: #b85d6f;
+  --color-lotus-pink-hover: #9e495a;
+  --color-lotus-leaf: #365e4e;
+  --color-lotus-leaf-hover: #2b4c3e;
+  --color-lotus-stamen-gold: #c89738;
+  --color-lotus-text-primary: #262b28;
+  --color-lotus-text-secondary: #58635e;
+  --color-lotus-border: #d9dfd9;
+
   --color-subject-50: var(--subject-50);
   --color-subject-100: var(--subject-100);
   --color-subject-200: var(--subject-200);

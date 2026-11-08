@@ -103,7 +103,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       // Nhãn thời gian & địa danh đã được chuyển ra ngoài khung tranh xuống hàng metadata
       const metaBadge = container.querySelector(
-        '.inline-flex.items-center.rounded-md.bg-\\[\\#E1E9EA\\]',
+        '.inline-flex.items-center.rounded-md.bg-\\[\\#EBECE6\\], .inline-flex.items-center.rounded-md.bg-\\[\\#E1E9EA\\]',
       );
       expect(metaBadge).toBeInTheDocument();
       expect(metaBadge?.textContent).toContain(HERITAGE_ARTWORKS[0]!.yearOrEra);
@@ -199,7 +199,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       });
     });
 
-    it('kích hoạt hiệu ứng hoa nở (Active Floral Bloom) khi cuộn tới trạm', () => {
+    it('kích hoạt hiệu ứng hoa sen bung nở (Authentic Lotus Bloom) khi cuộn tới trạm', () => {
       // Khi pageScrollProgress = 0.35 (chạm tới trạm thứ 2: threshold 0.32)
       render(
         <KnowledgeThread
@@ -215,25 +215,32 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const bloomGroup = station2.querySelector('[data-testid="floral-bloom-group"]');
       expect(bloomGroup).toBeInTheDocument();
       expect(bloomGroup?.getAttribute('transform')).toContain('scale(1)');
-      expect(bloomGroup?.getAttribute('transform')).toContain('rotate(20)');
       expect(bloomGroup?.getAttribute('opacity')).toBe('1');
 
-      // Có cánh hoa xanh xô thơm (#718C7E) và nhụy hổ phách (#92714F)
-      const innerPetals = station2.querySelectorAll('path[fill="#718C7E"]');
-      expect(innerPetals.length).toBe(6);
+      // 6 cánh hoa lớn lớp ngoài xòe rộng với gradient lotusOuterPetal
+      const outerPetals = station2.querySelectorAll('path[fill="url(#lotusOuterPetal)"]');
+      expect(outerPetals.length).toBe(6);
 
-      const core = station2.querySelector('circle[fill="#92714F"]');
+      // 4 cánh hoa nhỏ lớp trong ôm nhẹ với gradient lotusInnerPetal
+      const innerPetals = station2.querySelectorAll('path[fill="url(#lotusInnerPetal)"]');
+      expect(innerPetals.length).toBe(4);
+
+      // Tâm đài sen tròn màu vàng nhụy (lotusCore) với 5 chấm li ti biểu trưng hạt sen
+      const core = station2.querySelector('circle[fill="url(#lotusCore)"]');
       expect(core).toBeInTheDocument();
+
+      const seeds = station2.querySelectorAll('circle[fill="#5A4010"]');
+      expect(seeds.length).toBe(5);
 
       // Có vòng phát xung animate-ping khi đang bung nở
       const pingRing = station2.querySelector('.animate-ping');
       expect(pingRing).toBeInTheDocument();
 
-      // Kiểm tra trạm 1 (threshold 0.02) đã chuyển sang trạng thái Settled Bloom
+      // Kiểm tra trạm 1 (threshold 0.02) đã chuyển sang trạng thái Settled Bloom (opacity-45 scale-95)
       const station1 = screen.getByTestId('knowledge-thread-station-0.02');
       const settledBloom1 = station1.querySelector('[data-testid="floral-bloom-group"]');
-      expect(settledBloom1?.getAttribute('transform')).toContain('scale(0.9)');
-      expect(settledBloom1?.getAttribute('opacity')).toBe('0.35');
+      expect(settledBloom1?.getAttribute('transform')).toContain('scale(0.95)');
+      expect(settledBloom1?.getAttribute('opacity')).toBe('0.45');
     });
 
     it('hỗ trợ chế độ giảm chuyển động prefers-reduced-motion', () => {

@@ -145,11 +145,11 @@ export function ArchivalIndexView({
   return (
     <div data-testid="archival-index-view" className="space-y-6">
       {/* Thanh công cụ lọc nhanh Văn khố: Tìm theo chương, bài, mã bài hoặc CLO */}
-      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-4 shadow-2xs lg:flex-row lg:items-center">
+      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-[#D9DFD9] bg-[#FAF9F6] p-4 shadow-2xs lg:flex-row lg:items-center">
         <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Filter
-              className="pointer-events-none absolute top-1/2 left-3.5 h-3.5 w-3.5 -translate-y-1/2 text-[#55676B]"
+              className="pointer-events-none absolute top-1/2 left-3.5 h-3.5 w-3.5 -translate-y-1/2 text-[#58635E]"
               aria-hidden="true"
             />
             <input
@@ -158,14 +158,14 @@ export function ArchivalIndexView({
               onChange={(e) => setArchivalFilter(e.target.value)}
               placeholder="Lọc nhanh mục lục văn khố theo tên chương, tên bài, mã bài hoặc chuẩn CLO (VD: CLO6, Lagrange, Nhóm)..."
               aria-label="Lọc nhanh mục lục văn khố"
-              className="h-9 w-full rounded-xl border border-[#CFDADB] bg-white pr-8 pl-9 text-xs text-[#29383D] outline-none placeholder:text-[#55676B]/75 focus:border-[#3F6570]"
+              className="h-9 w-full rounded-xl border border-[#D9DFD9] bg-white pr-8 pl-9 text-xs text-[#262B28] outline-none placeholder:text-[#58635E]/75 focus:border-[#365E4E]"
             />
             {archivalFilter && (
               <button
                 type="button"
                 onClick={() => setArchivalFilter('')}
                 aria-label="Xóa bộ lọc văn khố"
-                className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-0.5 text-[#55676B] hover:text-[#29383D]"
+                className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded p-0.5 text-[#58635E] hover:text-[#262B28]"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -174,7 +174,7 @@ export function ArchivalIndexView({
 
           {/* Bộ lọc nhanh theo Chuẩn đầu ra CLO */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="font-mono text-[10px] font-semibold text-[#55676B] uppercase">
+            <span className="font-mono text-[10px] font-semibold text-[#58635E] uppercase">
               CLO:
             </span>
             {(['ALL', 'CLO1', 'CLO3', 'CLO4', 'CLO6', 'CLO8', 'CLO9'] as const).map((clo) => (
@@ -185,8 +185,8 @@ export function ArchivalIndexView({
                 className={cn(
                   'cursor-pointer rounded-md px-2 py-1 font-mono text-[10px] font-semibold transition-colors',
                   selectedClo === clo
-                    ? 'bg-[#3F6570] text-white'
-                    : 'border border-[#CFDADB] bg-white text-[#55676B] hover:text-[#29383D]',
+                    ? 'bg-[#365E4E] text-white'
+                    : 'border border-[#D9DFD9] bg-white text-[#58635E] hover:text-[#262B28]',
                 )}
               >
                 {clo === 'ALL' ? 'Tất cả' : clo}
@@ -200,7 +200,7 @@ export function ArchivalIndexView({
           <button
             type="button"
             onClick={expandAll}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-white px-2.5 py-1.5 font-mono text-[11px] font-medium text-[#3F6570] transition-colors hover:bg-[#E1E9EA]/60"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#D9DFD9] bg-white px-2.5 py-1.5 font-mono text-[11px] font-medium text-[#365E4E] transition-colors hover:bg-[#EBECE6]/60"
           >
             <ChevronsUpDown className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Mở rộng tất cả</span>
@@ -208,7 +208,7 @@ export function ArchivalIndexView({
           <button
             type="button"
             onClick={collapseAll}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-white px-2.5 py-1.5 font-mono text-[11px] font-medium text-[#55676B] transition-colors hover:bg-[#E1E9EA]/60 hover:text-[#29383D]"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#D9DFD9] bg-white px-2.5 py-1.5 font-mono text-[11px] font-medium text-[#58635E] transition-colors hover:bg-[#EBECE6]/60 hover:text-[#262B28]"
           >
             <ChevronsDownUp className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Thu gọn tất cả</span>
@@ -218,8 +218,8 @@ export function ArchivalIndexView({
 
       {/* Danh sách 4 Học phần dạng Collapsible Academic Modules */}
       {filteredModules.length === 0 ? (
-        <div className="rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-12 text-center">
-          <p className="font-serif text-base font-semibold text-[#29383D]">
+        <div className="rounded-3xl border border-[#D9DFD9] bg-[#FAF9F6] p-12 text-center">
+          <p className="font-serif text-base font-semibold text-[#262B28]">
             Không tìm thấy bài học nào khớp với tiêu chí lọc văn khố hiện tại.
           </p>
           <button
@@ -228,7 +228,7 @@ export function ArchivalIndexView({
               setArchivalFilter('');
               setSelectedClo('ALL');
             }}
-            className="mt-3 cursor-pointer rounded-xl bg-[#3F6570] px-4 py-2 text-xs font-medium text-white hover:bg-[#345761]"
+            className="mt-3 cursor-pointer rounded-xl bg-[#365E4E] px-4 py-2 text-xs font-medium text-white hover:bg-[#2B4C3E]"
           >
             Đặt lại bộ lọc văn khố
           </button>
@@ -245,17 +245,17 @@ export function ArchivalIndexView({
                 key={subject.id}
                 data-testid={`archival-module-${asset.courseCode}`}
                 aria-label={`${asset.courseCode}: ${subject.title}`}
-                className="overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs"
+                className="overflow-hidden rounded-2xl border border-[#D9DFD9] bg-[#FAF9F6] shadow-2xs"
               >
                 {/* Header Học phần (Collapsible Module Header) */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#CFDADB] bg-[#E1E9EA]/55 px-5 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#D9DFD9] bg-[#EBECE6]/55 px-5 py-4">
                   <button
                     type="button"
                     onClick={() => toggleSubjectCollapse(subject.slug)}
                     aria-expanded={!isCollapsed}
                     className="flex flex-1 cursor-pointer items-center gap-3 text-left"
                   >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[#CFDADB] bg-[#F7FAFA] text-[#3F6570]">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#365E4E]">
                       {isCollapsed ? (
                         <ChevronRight className="h-4 w-4" aria-hidden="true" />
                       ) : (
@@ -267,22 +267,22 @@ export function ArchivalIndexView({
                       <span
                         className={cn(
                           'rounded-md px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider',
-                          isPedagogy ? 'bg-[#5E786D] text-white' : 'bg-[#3F6570] text-white',
+                          isPedagogy ? 'bg-[#365E4E] text-white' : 'bg-[#B85D6F] text-white',
                         )}
                       >
                         {asset.courseCode}
                       </span>
-                      <h3 className="font-serif text-lg font-bold text-[#29383D] sm:text-xl">
+                      <h3 className="font-serif text-lg font-bold text-[#262B28] sm:text-xl">
                         {subject.title}
                       </h3>
-                      <span className="font-mono text-xs text-[#55676B]">({summaryLabel})</span>
+                      <span className="font-mono text-xs text-[#58635E]">({summaryLabel})</span>
                     </div>
                   </button>
 
                   <div className="flex items-center gap-2">
                     <Link
                       to={ROUTES.courseOverview(subject.slug)}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-3 py-1.5 font-mono text-[11px] font-semibold text-[#3F6570] transition-colors hover:border-[#3F6570] hover:bg-[#3F6570] hover:text-white"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] px-3 py-1.5 font-mono text-[11px] font-semibold text-[#365E4E] transition-colors hover:border-[#365E4E] hover:bg-[#365E4E] hover:text-white"
                     >
                       <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Vào học phần</span>
@@ -292,19 +292,19 @@ export function ArchivalIndexView({
 
                 {/* Cây mục lục Chương & Dòng dữ liệu Bài học (Data Rows) */}
                 {!isCollapsed && (
-                  <div className="divide-y divide-[#CFDADB]/70">
+                  <div className="divide-y divide-[#D9DFD9]/70">
                     {chapters.map(({ chapter, lessons }) => (
                       <div key={chapter.id} className="p-4 sm:px-6">
                         <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-2">
-                          <h4 className="font-mono text-xs font-bold tracking-wide text-[#3F6570] uppercase">
+                          <h4 className="font-mono text-xs font-bold tracking-wide text-[#365E4E] uppercase">
                             Chương {String(chapter.number).padStart(2, '0')}: {chapter.title}
                           </h4>
-                          <span className="font-mono text-[11px] text-[#55676B]">
+                          <span className="font-mono text-[11px] text-[#58635E]">
                             {lessons.length} bài giảng
                           </span>
                         </div>
 
-                        <div className="divide-y divide-[#CFDADB]/50 overflow-hidden rounded-xl border border-[#CFDADB]/70 bg-white">
+                        <div className="divide-y divide-[#D9DFD9]/50 overflow-hidden rounded-xl border border-[#D9DFD9]/70 bg-white">
                           {lessons.map((lesson) => {
                             const lessonCode = getLessonArchivalCode(
                               asset.courseCode,
@@ -325,27 +325,27 @@ export function ArchivalIndexView({
                               <div
                                 key={lesson.id}
                                 data-testid="archival-lesson-row"
-                                className="flex flex-col justify-between gap-2 px-4 py-2.5 transition-colors hover:bg-[#E1E9EA]/50 sm:flex-row sm:items-center"
+                                className="flex flex-col justify-between gap-2 px-4 py-2.5 transition-colors hover:bg-[#EBECE6]/50 sm:flex-row sm:items-center"
                               >
                                 <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-2.5">
-                                  <span className="shrink-0 font-mono text-xs font-semibold text-[#3F6570]">
+                                  <span className="shrink-0 font-mono text-xs font-semibold text-[#365E4E]">
                                     [{lessonCode}]
                                   </span>
-                                  <span className="text-[#CFDADB]" aria-hidden="true">
+                                  <span className="text-[#D9DFD9]" aria-hidden="true">
                                     ·
                                   </span>
                                   <Link
                                     to={lessonHref}
-                                    className="font-serif text-sm font-medium text-[#29383D] transition-colors hover:text-[#3F6570] hover:underline"
+                                    className="font-serif text-sm font-medium text-[#262B28] transition-colors hover:text-[#365E4E] hover:underline"
                                   >
                                     {fullLessonTitle}
                                   </Link>
                                 </div>
 
                                 <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
-                                  <span className="inline-flex items-center gap-1 rounded bg-[#EAF0F1] px-2 py-0.5 font-mono text-[11px] text-[#55676B]">
+                                  <span className="inline-flex items-center gap-1 rounded bg-[#F5F4EF] px-2 py-0.5 font-mono text-[11px] text-[#58635E]">
                                     <FileText
-                                      className="h-3 w-3 text-[#718C7E]"
+                                      className="h-3 w-3 text-[#365E4E]"
                                       aria-hidden="true"
                                     />
                                     <span>{cloAndPages}</span>
@@ -354,7 +354,7 @@ export function ArchivalIndexView({
                                   <Link
                                     to={lessonHref}
                                     aria-label={`Đọc bài ${fullLessonTitle}`}
-                                    className="inline-flex items-center gap-1 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#29383D] transition-colors hover:border-[#3F6570] hover:bg-[#3F6570] hover:text-white"
+                                    className="inline-flex items-center gap-1 rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#262B28] transition-colors hover:border-[#365E4E] hover:bg-[#365E4E] hover:text-white"
                                   >
                                     <span>Đọc bài</span>
                                     <ArrowRight className="h-3 w-3" aria-hidden="true" />
