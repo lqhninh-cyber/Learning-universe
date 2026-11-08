@@ -15,10 +15,10 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         'border-t transition-colors duration-200',
         isDarkLesson
           ? 'border-[#2A323A] bg-[#16191D] text-[#E2E8F0]'
-          : 'border-[#CFDADB] bg-[#F7FAFA]/90 text-[#29383D]',
+          : 'border-[#1F332A]/50 bg-gradient-to-b from-[#14221C] via-[#0E1814] to-[#0B120F] text-[#FAF9F6]',
       )}
     >
-      <Container size="wide" className="py-6 md:py-7">
+      <Container size="wide" className="py-5 md:py-6">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
           {/* Mobile Center Logo */}
           <div className="flex justify-center md:hidden">
@@ -31,7 +31,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <span
                 className={cn(
                   'font-serif text-base font-semibold transition-colors',
-                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#FAF9F6]',
                 )}
               >
                 Learning Universe
@@ -40,7 +40,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             <blockquote
               className={cn(
                 'font-serif text-xs leading-relaxed italic transition-colors md:text-sm',
-                isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#55676B]',
+                isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#D1DCD6]',
               )}
             >
               “Chúng ta phải học, phải cố gắng học nhiều. Không chịu khó học thì không tiến bộ được.
@@ -52,7 +52,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <cite
                 className={cn(
                   'text-right font-mono text-xs font-medium not-italic transition-colors',
-                  isDarkLesson ? 'text-[#C89738]' : 'text-[#3F6570]',
+                  isDarkLesson ? 'text-[#C89738]' : 'text-[#C89738]',
                 )}
               >
                 — Chủ tịch Hồ Chí Minh
@@ -68,7 +68,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
           {/* Right Column: Flat Single-Row Navigation Links */}
           <nav
             aria-label="Điều hướng chân trang"
-            className="flex flex-row items-center justify-center gap-5 md:justify-end md:gap-6"
+            className="flex flex-row items-center justify-center gap-3 md:justify-end md:gap-4"
           >
             <Link
               to={ROUTES.home}
@@ -76,29 +76,35 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
                 'text-xs font-medium whitespace-nowrap transition-colors md:text-sm',
                 isDarkLesson
                   ? 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                  : 'text-[#55676B] hover:text-[#365E4E]',
+                  : 'text-[#9EAEA6] hover:text-[#FAF9F6]',
               )}
             >
               Trang chủ
             </Link>
+            <span className="text-[#365E4E]" aria-hidden="true">
+              ·
+            </span>
             <Link
               to={ROUTES.courses}
               className={cn(
                 'text-xs font-medium whitespace-nowrap transition-colors md:text-sm',
                 isDarkLesson
                   ? 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                  : 'text-[#55676B] hover:text-[#365E4E]',
+                  : 'text-[#9EAEA6] hover:text-[#FAF9F6]',
               )}
             >
               Tất cả môn học
             </Link>
+            <span className="text-[#365E4E]" aria-hidden="true">
+              ·
+            </span>
             <Link
               to={ROUTES.glossary}
               className={cn(
                 'text-xs font-medium whitespace-nowrap transition-colors md:text-sm',
                 isDarkLesson
                   ? 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                  : 'text-[#55676B] hover:text-[#365E4E]',
+                  : 'text-[#9EAEA6] hover:text-[#FAF9F6]',
               )}
             >
               Thuật ngữ
@@ -110,7 +116,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         <div
           className={cn(
             'mt-4 flex flex-col items-center justify-between gap-2 border-t pt-3 text-xs transition-colors sm:flex-row',
-            isDarkLesson ? 'border-[#2A323A] text-[#64748B]' : 'border-[#CFDADB]/60 text-[#55676B]',
+            isDarkLesson ? 'border-[#2A323A] text-[#64748B]' : 'border-[#1F332A]/50 text-[#58635E]',
           )}
         >
           <p>Learning Universe. Bản quyền mở.</p>

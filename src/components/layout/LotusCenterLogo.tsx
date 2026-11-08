@@ -1,4 +1,3 @@
-import { useState, type MouseEvent } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 
@@ -10,49 +9,20 @@ export interface LotusCenterLogoProps {
  * Biểu tượng Bông sen hồ sương (Artistic 3D-on-2D Lotus Center Logo)
  *
  * Tác phẩm biểu trưng điêu khắc 3D trên mặt phẳng 2D:
- * - Góc nhìn phối cảnh nghiêng 35°–40° từ trên xuống (Isometric 3D-on-2D view).
- * - Phiến lá sen làm bệ đỡ vững chãi với gân lá chạm khắc và bóng đổ trên mặt hồ sương.
+ * - Góc nhìn phối cảnh nghiêng 35° tự nhiên từ trên xuống (Isometric 3D-on-2D view).
+ * - Phiến lá sen tròn xanh thẫm làm bệ đỡ vững chãi với gân lá chạm khắc và bóng đổ trên mặt hồ.
  * - Bóng cá chép bơi ngầm mini màu cam đất (#D49A58 / #C45A38) uốn lượn dưới phiến lá.
- * - Đài sen 3D nghiêng ở trung tâm hé lộ các lỗ hạt sen ngọc bích và vành nhụy hoa vàng óng tỏa tia.
- * - Đóa sen nhiều tầng cánh nở rộ ôm lấy đài hoa: sắc hồng đằm (#B85D6F), lòng cánh chuyển ngà sứ (#FDEEF1) với viền bắt sáng.
- * - Hiệu ứng tương tác: Nhịp thở ánh sáng 4s (breathing glow) và Parallax Tilt 3D theo chuột (tự tắt khi bật prefers-reduced-motion).
+ * - Đài sen 3D nghiêng ở trung tâm hé lộ các lỗ hạt sen ngọc bích và vành nhụy hoa vàng óng nổi hạt.
+ * - Đóa sen nhiều tầng cánh phớt hồng vươn cao ôm lấy đài hoa: sắc hồng đằm (#B85D6F), lòng cánh chuyển ngà sứ với viền bắt sáng.
+ * - Hiệu ứng nhịp thở ánh sáng 4s (breathing glow) co giãn nhịp nhàng.
  */
 export function LotusCenterLogo({ className }: LotusCenterLogoProps) {
   const prefersReducedMotion = useReducedMotion();
-  const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-
-  const handleMouseMove = (event: MouseEvent<HTMLDivElement>) => {
-    if (prefersReducedMotion) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    const normX = (event.clientX - rect.left) / rect.width - 0.5;
-    const normY = (event.clientY - rect.top) / rect.height - 0.5;
-    setTilt({
-      x: Number((-normY * 14).toFixed(1)),
-      y: Number((normX * 14).toFixed(1)),
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
 
   return (
     <div
       data-testid="lotus-center-logo"
-      className={cn(
-        'group relative flex cursor-pointer items-center justify-center select-none',
-        className,
-      )}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transform: prefersReducedMotion
-          ? undefined
-          : `perspective(500px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-        transition: 'transform 0.18s cubic-bezier(0.2, 0, 0, 1)',
-        willChange: prefersReducedMotion ? undefined : 'transform',
-      }}
+      className={cn('group relative flex items-center justify-center select-none', className)}
       aria-label="Biểu trưng Bông sen hồ sương"
     >
       <svg

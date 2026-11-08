@@ -8,24 +8,31 @@ export interface GrandLotusLakeProps {
 }
 
 /**
- * ĐẠI CẢNH "HỒ SEN TRI THỨC" (GRAND LOTUS LAKE — LIVING LOTUS PANORAMA)
+ * ĐẠI CẢNH "HỒ SEN TRI THỨC" (THE LIVING GRAND LOTUS LAKE — FULL-VIEWPORT BOTANICAL REALISM)
  *
- * Tiêu chuẩn thiết kế & Thực vật học (Botanical Realism & Flowing Water):
- * 1. Khung hình mặt hồ cố định 100%, không bị xê dịch hay nghiêng phối cảnh theo chuột.
+ * Tiêu chuẩn thiết kế & Thực vật học (Botanical Realism & Cinematic Pond):
+ * 1. Khung hình mặt hồ cố định 100%, không bị xê dịch hay nghiêng phối cảnh theo chuột (Zero mouse tilt).
  * 2. Đáy tranh hòa sắc mượt mà trực tiếp xuống nền chân trang (Footer), không có thanh chữ/badge nhân tạo.
- * 3. Không gian hồ nước thuần khiết: Đường dẫn tri thức kết thúc ở vùng chuyển tiếp phía trên.
- * 4. Dòng nước sống động:
- *    - Dải màu nước loang tự nhiên từ ngà sương sớm (#F5F4EF) sang xanh ngọc bích rêu sâu (#21382E -> #16261F).
+ * 3. Không gian hồ nước thuần khiết: Đường dẫn tri thức (Knowledge Thread) kết thúc trọn vẹn ở vùng chuyển tiếp phía trên.
+ * 4. Dòng nước sống động & Đa tầng không gian có chiều sâu lớn:
+ *    - Nền: Gradient mềm mại từ ngà sương sớm #F5F4EF xuống xanh ngọc bích rêu sâu và sẫm tối #0B120F / #14221C ở đáy hồ.
  *    - Không có mảng đầm elip đen nhân tạo.
+ *    - Làn sương mai mờ dải mỏng lướt là là sát mặt nước di chuyển cực chậm (CSS drift).
  *    - Các dải sóng mờ (ambient wave currents) lượn sóng ngang chậm rãi chu kỳ 10 - 14s.
  *    - Gợn nước phản chiếu ánh sáng lấp lánh nhẹ nhàng trên mặt hồ.
- * 5. Bông sen tự nhiên & uyển chuyển (Organic Swaying Lotus):
- *    - Cánh hoa uốn lượn tự nhiên, xếp so le dày dặn, không đối xứng máy móc.
- *    - Gradient cánh: hồng sen thắm (#9E384D) ở chân cánh -> hồng phấn (#DF7B8F) -> trắng ngà (#FAF0F2) ở đầu cánh; viền hứng sáng mềm.
- *    - Gương sen nghiêng nhẹ tự nhiên 32°, vành 36 sợi nhụy vàng rủ nhẹ.
- *    - Thân sen mảnh mai uốn cong chữ S có độ đàn hồi.
- *    - Dao động đung đưa theo gió êm dịu chu kỳ lệch pha 6 - 8s bằng CSS keyframes.
- * 6. Tối ưu hiệu năng: Tự động tạm dừng animation khi ngoài viewport và tuân thủ prefers-reduced-motion.
+ * 5. Thảm thực vật học chân thực (Botanical Realism):
+ *    - Bông sen lớn trung tâm: 100% cấu trúc thực vật học với các tầng cánh dày so le, cong tự nhiên, chuyển sắc mượt từ gốc hồng thắm (#9E384D) sang phớt hồng (#DF7B8F) và ngọn trắng ngà (#FAF0F2); viền hứng sáng mềm.
+ *    - Một nụ sen phụ hé mở uốn lượn nép bên cuống cong thanh thoát.
+ *    - Đài sen đã tàn (seedpod) nghiêng phối cảnh 35° tự nhiên bên phải, lộ rõ hạt sen xanh ngọc bích và nhị vàng rủ.
+ *    - Các tán lá sen khổng lồ nhấp nhô lượn sóng tự nhiên với hệ gân chân vịt chi tiết và đọng giọt sương hình cầu 3D lấp lánh.
+ * 6. Đàn cá chép dưới nước (4 chú cá chép sắc cam, vàng óng #D49A58 / #C45A38):
+ *    - Bơi lội mềm mại dưới tầng nước bán trong suốt theo hàm sin tự nhiên (sinusoidal motion).
+ *    - Độ mờ vừa phải (opacity 0.45 - 0.65) chìm dưới sắc nước tạo cảm giác đa tầng sâu thẳm.
+ * 7. Hoạt cảnh sóng & gió tự nhiên:
+ *    - Cánh hoa, thân sen, nụ sen và đài sen tàn đung đưa nhẹ nhàng lệch pha theo gió (chu kỳ dao động chậm 7 - 10s bằng CSS keyframes mượt mà).
+ *    - Gợn nước đồng tâm nhẹ lan tỏa từ gốc hoa.
+ *    - Once-only Bloom: Khi người dùng lần đầu cuộn đến, hoa sen hé nở nhẹ nhàng (scale 0.9 -> 1.0 trong 2s) đúng một lần duy nhất, sau đó giữ nguyên trạng thái tĩnh và chỉ đung đưa tự nhiên.
+ * 8. Tối ưu hiệu năng: Tự động tạm dừng animation khi ngoài viewport (IntersectionObserver) và tuân thủ prefers-reduced-motion.
  */
 export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollProgress = 0 }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -53,40 +60,40 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
     return () => observer.disconnect();
   }, []);
 
-  // 2. Hoạt cảnh hé nở nhẹ nhàng đúng 1 lần duy nhất khi lần đầu xuất hiện
+  // 2. Hoạt cảnh hé nở nhẹ nhàng đúng 1 lần duy nhất khi lần đầu xuất hiện (scale 0.9 -> 1.0 trong 2s)
   useEffect(() => {
     if (isVisible && !hasBloomed) {
       const timer = setTimeout(() => {
         setHasBloomed(true);
-      }, 2400);
+      }, 2000);
       return () => clearTimeout(timer);
     }
     return undefined;
   }, [isVisible, hasBloomed]);
 
-  // 3. Parallax nhẹ nhàng khi cuộn trang (không nghiêng góc nhìn)
+  // 3. Parallax nhẹ nhàng khi cuộn trang
   const clampedProgress = Math.max(0, Math.min(1, pageScrollProgress));
   const midParallaxY = prefersReducedMotion
     ? 0
-    : Number(((clampedProgress - 0.85) * 16).toFixed(1));
-  const fgParallaxY = prefersReducedMotion ? 0 : Number(((clampedProgress - 0.85) * 24).toFixed(1));
+    : Number(((clampedProgress - 0.85) * 14).toFixed(1));
+  const fgParallaxY = prefersReducedMotion ? 0 : Number(((clampedProgress - 0.85) * 22).toFixed(1));
 
-  // Tọa độ tâm điểm của bông sen chính trong đại cảnh (1440 x 560)
-  const flowerCenterX = 760;
-  const flowerCenterY = 285;
+  // Tọa độ tâm điểm của bông sen chính trong đại cảnh (1440 x 580)
+  const flowerCenterX = 730;
+  const flowerCenterY = 280;
 
   return (
     <section
       ref={containerRef}
       aria-label="Đại cảnh Hồ Sen Tri Thức"
       className={cn(
-        'relative w-full overflow-hidden border-t border-[#D9DFD9]/60 bg-[#16261F] select-none',
+        'relative w-full overflow-hidden border-t border-[#D9DFD9]/60 bg-[#0B120F] select-none',
         className,
       )}
     >
-      <div className="relative h-[440px] w-full sm:h-[500px] lg:h-[560px]">
+      <div className="relative h-[460px] w-full sm:h-[520px] lg:h-[580px]">
         <svg
-          viewBox="0 0 1440 560"
+          viewBox="0 0 1440 580"
           preserveAspectRatio="xMidYMid slice"
           className="h-full w-full"
           aria-label="Đại cảnh Hồ Sen Tri Thức sống động"
@@ -97,40 +104,27 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 1. DẢI CHUYỂN SẮC NƯỚC HỒ HỮU CƠ & ÁNH SÁNG ĐIỆN ẢNH
                 =================================================================== */}
 
-            {/* Dải chuyển sắc loang tự nhiên: ngà sương sớm (#F5F4EF) -> xanh ngọc bích rêu sâu (#21382E -> #16261F) */}
+            {/* Dải chuyển sắc loang tự nhiên: ngà sương sớm (#F5F4EF) -> xanh ngọc bích rêu sâu (#21382E) -> sẫm tối (#0B120F / #14221C) ở đáy hồ */}
             <linearGradient id={`lake-water-depth_${uniqueId}`} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#F5F4EF" stopOpacity="1" />
-              <stop offset="14%" stopColor="#8DA89B" stopOpacity="0.85" />
-              <stop offset="35%" stopColor="#436C59" stopOpacity="0.92" />
-              <stop offset="60%" stopColor="#2E4F41" stopOpacity="0.98" />
-              <stop offset="82%" stopColor="#21382E" stopOpacity="1" />
-              <stop offset="94%" stopColor="#16261F" stopOpacity="1" />
-              <stop offset="100%" stopColor="#16261F" stopOpacity="1" />
-            </linearGradient>
-
-            {/* Dải hòa sắc đáy tranh mượt mà trực tiếp xuống nền chân trang Footer (#F7FAFA) */}
-            <linearGradient
-              id={`lake-to-footer-blend_${uniqueId}`}
-              x1="0%"
-              y1="0%"
-              x2="0%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#16261F" stopOpacity="0" />
-              <stop offset="65%" stopColor="#F7FAFA" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#F7FAFA" stopOpacity="0.85" />
+              <stop offset="14%" stopColor="#8DA89B" stopOpacity="0.88" />
+              <stop offset="34%" stopColor="#436C59" stopOpacity="0.94" />
+              <stop offset="58%" stopColor="#2E4F41" stopOpacity="0.98" />
+              <stop offset="78%" stopColor="#21382E" stopOpacity="1" />
+              <stop offset="90%" stopColor="#14221C" stopOpacity="1" />
+              <stop offset="100%" stopColor="#0B120F" stopOpacity="1" />
             </linearGradient>
 
             {/* Vệt nắng mai xiên chếch từ góc trên bên phải (Volumetric Morning Backlight) */}
-            <radialGradient id={`morning-sunbeam_${uniqueId}`} cx="85%" cy="12%" r="65%">
+            <radialGradient id={`morning-sunbeam_${uniqueId}`} cx="85%" cy="10%" r="70%">
               <stop offset="0%" stopColor="#FFF9E6" stopOpacity="0.55" />
-              <stop offset="30%" stopColor="#FCE39E" stopOpacity="0.22" />
-              <stop offset="68%" stopColor="#F5F4EF" stopOpacity="0.06" />
+              <stop offset="30%" stopColor="#FCE39E" stopOpacity="0.2" />
+              <stop offset="68%" stopColor="#F5F4EF" stopOpacity="0.05" />
               <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
             </radialGradient>
 
             {/* ===================================================================
-                2. DẢI SẮC THỰC VẬT HỌC CHO BÔNG SEN & GƯƠNG SEN
+                2. DẢI SẮC THỰC VẬT HỌC CHO BÔNG SEN, NỤ SEN & ĐÀI SEN TÀN
                 =================================================================== */}
 
             {/* Cánh sen lớp ngoài: Hồng thắm chân cánh -> Hồng phấn -> Trắng ngà đầu cánh */}
@@ -151,7 +145,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
               <stop offset="100%" stopColor="#FAF0F2" />
             </linearGradient>
 
-            {/* Cánh sen lớp trong ôm đài: Chân thắm đậm, lòng cánh ấm */}
+            {/* Cánh sen lớp trong ôm đài hoa */}
             <linearGradient id={`lotus-inner-grad_${uniqueId}`} x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="#7A2234" />
               <stop offset="35%" stopColor="#B85D6F" />
@@ -232,21 +226,21 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
               <stop offset="100%" stopColor="#1B3229" stopOpacity="0.8" />
             </radialGradient>
 
-            {/* Sắc chuyển cá chép bơi ngầm */}
+            {/* Sắc chuyển cá chép bơi ngầm (#C45A38 / #D49A58 / #E6B87A) */}
             <linearGradient id={`carp-body_${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="60%">
-              <stop offset="0%" stopColor="#C45A38" stopOpacity="0.88" />
-              <stop offset="50%" stopColor="#D49A58" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#E6B87A" stopOpacity="0.62" />
+              <stop offset="0%" stopColor="#C45A38" stopOpacity="0.92" />
+              <stop offset="50%" stopColor="#D49A58" stopOpacity="0.84" />
+              <stop offset="100%" stopColor="#E6B87A" stopOpacity="0.68" />
             </linearGradient>
 
             <linearGradient id={`carp-fin-grad_${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#E6B87A" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#D49A58" stopOpacity="0.25" />
+              <stop offset="0%" stopColor="#E6B87A" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#D49A58" stopOpacity="0.3" />
             </linearGradient>
 
             {/* Bộ lọc sương mai mềm và vầng sáng đốm phấn hoa */}
             <filter id={`mist-soft-blur_${uniqueId}`} x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="9" />
+              <feGaussianBlur stdDeviation="11" />
             </filter>
 
             <filter id={`pollen-glow_${uniqueId}`} x="-50%" y="-50%" width="200%" height="200%">
@@ -258,14 +252,14 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
             </filter>
 
             {/* ===================================================================
-                3. HỆ THỐNG KEYFRAMES CHUYỂN ĐỘNG TỰ NHIÊN (6 - 8s & 10 - 14s)
+                3. HỆ THỐNG KEYFRAMES CHUYỂN ĐỘNG TỰ NHIÊN (7 - 10s & 10 - 14s)
                 =================================================================== */}
             <style>{`
-              /* 1. Hoạt ảnh hoa hé nở đúng một lần duy nhất */
+              /* 1. Hoạt cảnh hoa hé nở nhẹ nhàng (scale 0.9 -> 1.0 trong 2s) đúng một lần duy nhất */
               @keyframes lotus-entrance-bloom_${uniqueId} {
                 0% {
-                  transform: scale(0.93) translateY(10px);
-                  opacity: 0.85;
+                  transform: scale(0.9) translateY(14px);
+                  opacity: 0.82;
                 }
                 100% {
                   transform: scale(1) translateY(0);
@@ -273,63 +267,77 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 }
               }
 
-              /* 2. Bông sen và thân cây đung đưa rất nhẹ nhàng theo gió (chu kỳ 7.2s lệch pha, không giật) */
+              /* 2. Bông sen và thân cây đung đưa rất nhẹ nhàng theo gió (chu kỳ chậm 8.5s lệch pha) */
               @keyframes lotus-breeze-sway_${uniqueId} {
                 0%, 100% {
                   transform: rotate(0deg);
                 }
                 38% {
-                  transform: rotate(1.25deg);
+                  transform: rotate(1.2deg);
                 }
                 72% {
-                  transform: rotate(-0.95deg);
+                  transform: rotate(-0.9deg);
                 }
               }
 
-              /* 3. Cánh sen tầng ngoài trái dao động độc lập (chu kỳ 6.4s) */
+              /* 3. Cánh sen tầng ngoài trái dao động độc lập (chu kỳ 7.2s) */
               @keyframes petal-flutter-left_${uniqueId} {
                 0%, 100% { transform: rotate(0deg) scale(1); }
-                50% { transform: rotate(1.5deg) scale(1.01); }
+                50% { transform: rotate(1.4deg) scale(1.008); }
               }
 
-              /* 4. Cánh sen tầng ngoài phải dao động độc lập (chu kỳ 7.8s) */
+              /* 4. Cánh sen tầng ngoài phải dao động độc lập (chu kỳ 9.0s) */
               @keyframes petal-flutter-right_${uniqueId} {
                 0%, 100% { transform: rotate(0deg) scale(1); }
-                50% { transform: rotate(-1.3deg) scale(1.01); }
+                50% { transform: rotate(-1.2deg) scale(1.008); }
               }
 
-              /* 5. Cánh sen tầng giữa vươn nhịp thở tự nhiên (chu kỳ 6.0s) */
+              /* 5. Cánh sen tầng giữa vươn nhịp thở tự nhiên (chu kỳ 7.8s) */
               @keyframes petal-flutter-mid_${uniqueId} {
                 0%, 100% { transform: rotate(0deg); }
-                50% { transform: rotate(0.9deg); }
+                50% { transform: rotate(0.85deg); }
               }
 
-              /* 6. Dòng nước chuyển động: Các dải sóng mờ lượn sóng ngang chậm rãi chu kỳ 10 - 14s */
+              /* 6. Nụ sen phụ uốn lượn đung đưa nhẹ (chu kỳ 8.0s) */
+              @keyframes lotus-bud-sway_${uniqueId} {
+                0%, 100% { transform: rotate(0deg); }
+                42% { transform: rotate(-1.4deg); }
+                78% { transform: rotate(1deg); }
+              }
+
+              /* 7. Đài sen đã tàn nghiêng phối cảnh 35° đung đưa nhẹ (chu kỳ 7.5s) */
+              @keyframes seedpod-sway_${uniqueId} {
+                0%, 100% { transform: rotate(0deg); }
+                40% { transform: rotate(1.3deg); }
+                75% { transform: rotate(-0.9deg); }
+              }
+
+              /* 8. Dòng nước chuyển động: Các dải sóng mờ lượn sóng ngang chậm rãi chu kỳ 10 - 14s */
               @keyframes water-current-drift-1_${uniqueId} {
                 0% { transform: translateX(0); }
-                50% { transform: translateX(-70px); }
+                50% { transform: translateX(-65px); }
                 100% { transform: translateX(0); }
               }
 
               @keyframes water-current-drift-2_${uniqueId} {
-                0% { transform: translateX(-50px); }
-                50% { transform: translateX(40px); }
-                100% { transform: translateX(-50px); }
+                0% { transform: translateX(-45px); }
+                50% { transform: translateX(35px); }
+                100% { transform: translateX(-45px); }
               }
 
               @keyframes water-current-drift-3_${uniqueId} {
-                0% { transform: translateX(20px); }
-                50% { transform: translateX(-45px); }
-                100% { transform: translateX(20px); }
+                0% { transform: translateX(25px); }
+                50% { transform: translateX(-40px); }
+                100% { transform: translateX(25px); }
               }
 
-              /* 7. Gợn nước phản chiếu ánh sáng lấp lánh nhẹ nhàng trên mặt hồ (chu kỳ 5s) */
+              /* 9. Gợn nước phản chiếu ánh sáng lấp lánh nhẹ nhàng trên mặt hồ (chu kỳ 5.5s) */
               @keyframes water-shimmer_${uniqueId} {
                 0%, 100% { opacity: 0.18; transform: scaleX(0.96); }
                 50% { opacity: 0.52; transform: scaleX(1.05); }
               }
 
-              /* 8. Sóng nước đồng tâm lan tỏa quanh cuống sen */
+              /* 10. Sóng nước đồng tâm lan tỏa quanh cuống sen (chu kỳ 6.5s) */
               @keyframes water-ripple-radiate_${uniqueId} {
                 0% {
                   r: 10px;
@@ -341,26 +349,26 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                   stroke-width: 1px;
                 }
                 100% {
-                  r: 130px;
+                  r: 135px;
                   opacity: 0;
                   stroke-width: 0.25px;
                 }
               }
 
-              /* 9. Lá sen bập bềnh nhẹ trên mặt hồ (chu kỳ 6.8s) */
+              /* 11. Lá sen khổng lồ bập bềnh nhấp nhô lượn sóng tự nhiên (chu kỳ 8.2s) */
               @keyframes leaf-pad-bob_${uniqueId} {
                 0%, 100% { transform: translateY(0px) rotate(0deg); }
-                50% { transform: translateY(4px) rotate(0.7deg); }
+                50% { transform: translateY(4.2px) rotate(0.8deg); }
               }
 
-              /* 10. Làn sương mai lướt ngang chậm rãi */
+              /* 12. Làn sương mai hậu cảnh lướt cực chậm sát mặt nước */
               @keyframes morning-mist-drift_${uniqueId} {
-                0% { transform: translateX(-40px); opacity: 0.22; }
+                0% { transform: translateX(-45px); opacity: 0.22; }
                 50% { transform: translateX(45px); opacity: 0.42; }
-                100% { transform: translateX(-40px); opacity: 0.22; }
+                100% { transform: translateX(-45px); opacity: 0.22; }
               }
 
-              /* 11. Cá chép bơi lội mềm mại dưới nước theo hàm sin */
+              /* 13. Đàn cá chép bơi lội mềm mại dưới nước theo hàm sin tự nhiên */
               @keyframes carp-swim-path-1_${uniqueId} {
                 0% { transform: translate(0, 0) rotate(0deg); }
                 25% { transform: translate(45px, -12px) rotate(3deg); }
@@ -371,8 +379,8 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
 
               @keyframes carp-swim-path-2_${uniqueId} {
                 0% { transform: translate(0, 0) rotate(0deg); }
-                30% { transform: translate(-40px, 10px) rotate(-3deg); }
-                65% { transform: translate(-80px, -7px) rotate(2.5deg); }
+                30% { transform: translate(-42px, 11px) rotate(-3deg); }
+                65% { transform: translate(-82px, -8px) rotate(2.5deg); }
                 100% { transform: translate(0, 0) rotate(0deg); }
               }
 
@@ -381,7 +389,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 50% { transform: rotate(8deg); }
               }
 
-              /* 12. Đốm phấn hoa lơ lửng */
+              /* 14. Đốm phấn hoa lơ lửng */
               @keyframes pollen-spore-float_${uniqueId} {
                 0% { transform: translate(0, 0); opacity: 0.3; }
                 50% { transform: translate(14px, -20px); opacity: 0.9; }
@@ -390,11 +398,11 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
 
               /* Gán các class animation */
               .anim-lotus-flower_${uniqueId} {
-                transform-origin: ${flowerCenterX}px ${flowerCenterY + 140}px;
+                transform-origin: ${flowerCenterX}px ${flowerCenterY + 145}px;
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `lotus-breeze-sway_${uniqueId} 7.2s ease-in-out infinite`
+                    : `lotus-breeze-sway_${uniqueId} 8.5s ease-in-out infinite`
                 };
               }
 
@@ -403,7 +411,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `petal-flutter-left_${uniqueId} 6.4s ease-in-out infinite`
+                    : `petal-flutter-left_${uniqueId} 7.2s ease-in-out infinite`
                 };
               }
 
@@ -412,7 +420,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `petal-flutter-right_${uniqueId} 7.8s ease-in-out 1.2s infinite`
+                    : `petal-flutter-right_${uniqueId} 9.0s ease-in-out 1.2s infinite`
                 };
               }
 
@@ -421,7 +429,25 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `petal-flutter-mid_${uniqueId} 6.0s ease-in-out 0.6s infinite`
+                    : `petal-flutter-mid_${uniqueId} 7.8s ease-in-out 0.6s infinite`
+                };
+              }
+
+              .anim-bud-sway_${uniqueId} {
+                transform-origin: 0px 100px;
+                animation: ${
+                  prefersReducedMotion || !isVisible
+                    ? 'none'
+                    : `lotus-bud-sway_${uniqueId} 8.0s ease-in-out 2s infinite`
+                };
+              }
+
+              .anim-seedpod-sway_${uniqueId} {
+                transform-origin: 0px 135px;
+                animation: ${
+                  prefersReducedMotion || !isVisible
+                    ? 'none'
+                    : `seedpod-sway_${uniqueId} 7.5s ease-in-out 1.5s infinite`
                 };
               }
 
@@ -453,7 +479,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `water-shimmer_${uniqueId} 5.2s ease-in-out infinite`
+                    : `water-shimmer_${uniqueId} 5.5s ease-in-out infinite`
                 };
               }
 
@@ -461,7 +487,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `water-ripple-radiate_${uniqueId} 6.2s ease-out infinite`
+                    : `water-ripple-radiate_${uniqueId} 6.5s ease-out infinite`
                 };
               }
 
@@ -469,7 +495,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `water-ripple-radiate_${uniqueId} 6.2s ease-out 2.1s infinite`
+                    : `water-ripple-radiate_${uniqueId} 6.5s ease-out 2.2s infinite`
                 };
               }
 
@@ -477,16 +503,16 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `water-ripple-radiate_${uniqueId} 6.2s ease-out 4.2s infinite`
+                    : `water-ripple-radiate_${uniqueId} 6.5s ease-out 4.4s infinite`
                 };
               }
 
               .anim-leaf-bob_${uniqueId} {
-                transform-origin: 320px 390px;
+                transform-origin: 280px 390px;
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `leaf-pad-bob_${uniqueId} 6.8s ease-in-out infinite`
+                    : `leaf-pad-bob_${uniqueId} 8.2s ease-in-out infinite`
                 };
               }
 
@@ -494,7 +520,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                 animation: ${
                   prefersReducedMotion || !isVisible
                     ? 'none'
-                    : `morning-mist-drift_${uniqueId} 24s ease-in-out infinite`
+                    : `morning-mist-drift_${uniqueId} 28s ease-in-out infinite`
                 };
               }
 
@@ -546,19 +572,11 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
               (Neo cố định 100%, không bị xê dịch hay nghiêng phối cảnh)
               =================================================================== */}
           <g>
-            {/* Mặt nước hồ sen chuyển sắc hữu cơ (#F5F4EF -> #21382E -> #16261F) */}
-            <rect width="1440" height="560" fill={`url(#lake-water-depth_${uniqueId})`} />
-
-            {/* Dải hòa sắc mượt mà trực tiếp xuống nền chân trang Footer */}
-            <rect
-              y="450"
-              width="1440"
-              height="110"
-              fill={`url(#lake-to-footer-blend_${uniqueId})`}
-            />
+            {/* Mặt nước hồ sen chuyển sắc hữu cơ (#F5F4EF -> #21382E -> #0B120F) */}
+            <rect width="1440" height="580" fill={`url(#lake-water-depth_${uniqueId})`} />
 
             {/* Nắng mai rọi xiên dịu dàng từ góc cao (Cinematic Morning Backlight) */}
-            <rect width="1440" height="560" fill={`url(#morning-sunbeam_${uniqueId})`} />
+            <rect width="1440" height="580" fill={`url(#morning-sunbeam_${uniqueId})`} />
 
             {/* HIỆU ỨNG DÒNG NƯỚC CHUYỂN ĐỘNG: Các dải sóng mờ (ambient wave currents) lượn sóng ngang chu kỳ 10 - 14s */}
             <g fill="none">
@@ -610,63 +628,83 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
               <ellipse cx="540" cy="420" rx="34" ry="1.3" />
             </g>
 
-            {/* Làn sương mai đa tầng lướt ngang chậm rãi */}
+            {/* LÀN SƯƠNG MAI HẬU CẢNH: Lướt cực chậm sát mặt nước */}
             <g
               className={`anim-mist-drift_${uniqueId}`}
               filter={`url(#mist-soft-blur_${uniqueId})`}
             >
-              <ellipse cx="380" cy="200" rx="320" ry="26" fill="#FFFFFF" opacity="0.28" />
-              <ellipse cx="960" cy="235" rx="360" ry="30" fill="#FDEEF1" opacity="0.25" />
-              <ellipse cx="700" cy="340" rx="420" ry="34" fill="#FAF9F6" opacity="0.26" />
+              <ellipse cx="380" cy="210" rx="340" ry="26" fill="#FFFFFF" opacity="0.26" />
+              <ellipse cx="980" cy="245" rx="380" ry="30" fill="#FDEEF1" opacity="0.24" />
+              <ellipse cx="700" cy="350" rx="440" ry="34" fill="#FAF9F6" opacity="0.25" />
             </g>
           </g>
 
           {/* ===================================================================
-              5. TẦNG CÁ CHÉP BƠI NGẦM DƯỚI NƯỚC (SUBMERGED SWIMMING CARP)
-              (3 chú cá chép bơi lội mềm mại dưới tầng nước bán trong suốt)
+              5. TẦNG CÁ CHÉP BƠI NGẦM DƯỚI NƯỚC (UNDERWATER CARPS - 4 CHÚ CÁ CHÉP)
+              (Sắc cam, vàng óng #D49A58 / #C45A38, bơi lội mềm mại theo hàm sin)
               =================================================================== */}
-          <g opacity="0.55">
-            {/* Chú cá 1: Thân hổ phách uốn lượn dưới phiến lá trái */}
-            <g transform="translate(480, 400)" className={`anim-carp-1_${uniqueId}`}>
+          <g opacity="0.58">
+            {/* Chú cá 1 (Cá lớn): Bơi uốn lượn dưới tán lá trái */}
+            <g transform="translate(440, 420)" className={`anim-carp-1_${uniqueId}`}>
               <path
-                d="M -35 0 C -24 -12, 18 -14, 40 0 C 18 14, -24 12, -35 0 Z"
+                d="M -38 0 C -26 -13, 20 -15, 44 0 C 20 15, -26 13, -38 0 Z"
                 fill={`url(#carp-body_${uniqueId})`}
               />
-              <path d="M 5 -4 C 18 -18, 30 -12, 18 -2 Z" fill={`url(#carp-fin-grad_${uniqueId})`} />
-              <path d="M 5 4 C 18 18, 30 12, 18 2 Z" fill={`url(#carp-fin-grad_${uniqueId})`} />
-              <g transform="translate(-35, 0)" className={`anim-tail_${uniqueId}`}>
+              <path d="M 6 -5 C 20 -20, 32 -13, 20 -2 Z" fill={`url(#carp-fin-grad_${uniqueId})`} />
+              <path d="M 6 5 C 20 20, 32 13, 20 2 Z" fill={`url(#carp-fin-grad_${uniqueId})`} />
+              <g transform="translate(-38, 0)" className={`anim-tail_${uniqueId}`}>
                 <path
-                  d="M 0 0 C -15 -14, -28 -2, -38 -10 C -30 4, -30 10, -38 16 C -25 8, -15 14, 0 0 Z"
+                  d="M 0 0 C -16 -15, -30 -2, -40 -11 C -32 4, -32 11, -40 18 C -27 9, -16 15, 0 0 Z"
                   fill={`url(#carp-body_${uniqueId})`}
                 />
               </g>
             </g>
 
             {/* Chú cá 2: Sắc cam đất bơi nhẹ gần chân hoa sen */}
-            <g transform="translate(1020, 420)" className={`anim-carp-2_${uniqueId}`}>
+            <g transform="translate(980, 430)" className={`anim-carp-2_${uniqueId}`}>
               <path
-                d="M -30 0 C -20 -10, 16 -11, 35 0 C 16 11, -20 10, -30 0 Z"
+                d="M -32 0 C -22 -11, 18 -12, 38 0 C 18 12, -22 11, -32 0 Z"
                 fill={`url(#carp-body_${uniqueId})`}
               />
-              <g transform="translate(-30, 0)" className={`anim-tail_${uniqueId}`}>
+              <path d="M 5 -4 C 16 -16, 26 -10, 16 -2 Z" fill={`url(#carp-fin-grad_${uniqueId})`} />
+              <path d="M 5 4 C 16 16, 26 10, 16 2 Z" fill={`url(#carp-fin-grad_${uniqueId})`} />
+              <g transform="translate(-32, 0)" className={`anim-tail_${uniqueId}`}>
                 <path
-                  d="M 0 0 C -12 -11, -22 0, -30 -7 C -24 3, -24 7, -30 13 C -20 6, -12 11, 0 0 Z"
+                  d="M 0 0 C -13 -12, -24 0, -32 -8 C -26 3, -26 8, -32 14 C -22 7, -13 12, 0 0 Z"
                   fill={`url(#carp-body_${uniqueId})`}
                 />
               </g>
             </g>
 
-            {/* Chú cá 3: Cá nhỏ ở tầng sâu xa hơn */}
+            {/* Chú cá 3: Cá nhỏ ở tầng nước sâu hơn */}
             <g
-              transform="translate(720, 470) scale(0.65)"
+              transform="translate(700, 490) scale(0.68)"
               opacity="0.6"
               className={`anim-carp-1_${uniqueId}`}
             >
               <path
-                d="M -25 0 C -16 -8, 14 -9, 28 0 C 14 9, -16 8, -25 0 Z"
+                d="M -26 0 C -17 -9, 15 -10, 30 0 C 15 10, -17 9, -26 0 Z"
                 fill={`url(#carp-body_${uniqueId})`}
               />
-              <g transform="translate(-25, 0)" className={`anim-tail_${uniqueId}`}>
+              <g transform="translate(-26, 0)" className={`anim-tail_${uniqueId}`}>
+                <path
+                  d="M 0 0 C -11 -10, -20 0, -27 -7 C -22 3, -22 7, -27 12 C -18 6, -11 10, 0 0 Z"
+                  fill={`url(#carp-body_${uniqueId})`}
+                />
+              </g>
+            </g>
+
+            {/* Chú cá 4: Cá con lượn nhẹ gần đài sen tàn */}
+            <g
+              transform="translate(1160, 470) scale(0.58)"
+              opacity="0.52"
+              className={`anim-carp-2_${uniqueId}`}
+            >
+              <path
+                d="M -24 0 C -16 -8, 14 -9, 28 0 C 14 9, -16 8, -24 0 Z"
+                fill={`url(#carp-body_${uniqueId})`}
+              />
+              <g transform="translate(-24, 0)" className={`anim-tail_${uniqueId}`}>
                 <path
                   d="M 0 0 C -10 -9, -18 0, -25 -6 C -20 3, -20 6, -25 11 C -16 5, -10 9, 0 0 Z"
                   fill={`url(#carp-body_${uniqueId})`}
@@ -676,8 +714,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
           </g>
 
           {/* ===================================================================
-              6. TẦNG TRUNG CẢNH: BÔNG SEN CHÍNH, GƯƠNG SEN, NỤ SEN & SÓNG NƯỚC
-              (Không gian hồ nước thuần khiết, không bị đường dẫn cắt ngang)
+              6. TẦNG TRUNG CẢNH: BÔNG SEN CHÍNH, NỤ SEN PHỤ, ĐÀI SEN TÀN (SEEDPOD)
               =================================================================== */}
           <g transform={`translate(0, ${midParallaxY})`}>
             {/* Vòng sóng nước đồng tâm lan tỏa tự nhiên quanh gốc cuống sen */}
@@ -725,10 +762,13 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
               <ellipse cx="0" cy="-22" rx="42" ry="26" fill="#C89738" />
             </g>
 
-            {/* Nụ sen phụ e ấp đa tầng xoắn ốc (xanh ngọc ở gốc, hồng thắm ở chóp) */}
-            <g transform={`translate(${flowerCenterX + 250}, ${flowerCenterY + 45})`}>
+            {/* A. NỤ SEN PHỤ HÉ MỞ UỐN LƯỢN NÉP BÊN PHẢI HOA CHÍNH */}
+            <g
+              transform={`translate(${flowerCenterX + 160}, ${flowerCenterY + 45})`}
+              className={`anim-bud-sway_${uniqueId}`}
+            >
               <path
-                d="M 0 100 C -8 65, 14 32, 0 0"
+                d="M 0 100 C -8 65, 12 32, 0 0"
                 stroke={`url(#stem-cylinder-grad_${uniqueId})`}
                 strokeWidth="3.8"
                 strokeLinecap="round"
@@ -751,13 +791,100 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
               <path d="M 0 -45 C -4 -52, -2 -60, 0 -62 C 2 -60, 4 -52, 0 -45 Z" fill="#9E384D" />
             </g>
 
-            {/* BÔNG SEN CHÍNH ĐANG NỞ RỘ (THE CENTRAL LIVING LOTUS)
-                Đung đưa rất nhẹ nhàng theo nhịp gió thoảng (chu kỳ lệch pha 6 - 8s) */}
+            {/* B. ĐÀI SEN ĐÃ TÀN (SEEDPOD) NGHIÊNG PHỐI CẢNH 35° TỰ NHIÊN BÊN PHẢI */}
+            <g
+              transform={`translate(${flowerCenterX + 320}, ${flowerCenterY + 60})`}
+              className={`anim-seedpod-sway_${uniqueId}`}
+            >
+              {/* Cuống đài sen tàn vươn cao uốn cong */}
+              <path
+                d="M 0 135 C -12 90, 14 45, 0 0"
+                stroke={`url(#stem-cylinder-grad_${uniqueId})`}
+                strokeWidth="4.6"
+                strokeLinecap="round"
+                fill="none"
+              />
+              <circle cx="2.5" cy="95" r="0.8" fill="#1B3229" />
+              <circle cx="-2" cy="55" r="0.8" fill="#1B3229" />
+              <circle cx="2" cy="25" r="0.75" fill="#1B3229" />
+
+              {/* Khối đài sen nón cụt nghiêng 35° để lộ hạt sen xanh ngọc bích */}
+              <g transform="rotate(35)">
+                {/* Thân nón cụt đổ bóng 3D */}
+                <path
+                  d="M -28 0 C -26 24, 26 24, 28 0 C 24 -8, -24 -8, -28 0 Z"
+                  fill={`url(#receptacle-cone-grad_${uniqueId})`}
+                  stroke="#254337"
+                  strokeWidth="0.9"
+                />
+
+                {/* Mặt đài sen phối cảnh nghiêng để lộ các hốc hạt */}
+                <ellipse
+                  cx="0"
+                  cy="-4"
+                  rx="30"
+                  ry="15"
+                  fill={`url(#receptacle-surface-grad_${uniqueId})`}
+                  stroke="#8DBFA6"
+                  strokeWidth="1.3"
+                />
+
+                {/* Các hạt sen xanh ngọc bích non nhô lên khỏi hốc hạt */}
+                {[
+                  { x: 0, y: -4, r: 2.7 },
+                  { x: -13, y: -7, r: 2.2 },
+                  { x: 13, y: -7, r: 2.2 },
+                  { x: -8, y: 1, r: 2.3 },
+                  { x: 8, y: 1, r: 2.3 },
+                  { x: -17, y: 0, r: 1.9 },
+                  { x: 17, y: 0, r: 1.9 },
+                  { x: -5, y: -10, r: 2.0 },
+                  { x: 5, y: -10, r: 2.0 },
+                  { x: 21, y: -5, r: 1.7 },
+                  { x: -21, y: -5, r: 1.7 },
+                  { x: 0, y: 5, r: 2.1 },
+                  { x: 0, y: -11, r: 1.9 },
+                ].map((pit, idx) => (
+                  <g key={`mature-seed-pit-${idx}`}>
+                    <circle cx={pit.x} cy={pit.y} r={pit.r} fill="#1B3229" />
+                    <circle cx={pit.x} cy={pit.y} r={pit.r * 0.7} fill="#A8D4BC" />
+                    <circle cx={pit.x} cy={pit.y} r={pit.r * 0.28} fill="#14221C" />
+                  </g>
+                ))}
+
+                {/* Vành nhụy vàng đã rụng bao phấn rủ nhẹ xuống chân đài sen */}
+                {Array.from({ length: 24 }).map((_, idx) => {
+                  const angle = (idx * 15 * Math.PI) / 180;
+                  const rx = 31;
+                  const ry = 16;
+                  const x1 = Math.cos(angle) * rx;
+                  const y1 = Math.sin(angle) * ry - 4;
+                  const x2 = Math.cos(angle) * (rx + 4);
+                  const y2 = Math.sin(angle) * (ry + 8) - 2;
+                  return (
+                    <line
+                      key={`withered-filament-${idx}`}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke="#C89738"
+                      strokeWidth="0.9"
+                      strokeOpacity="0.75"
+                      strokeLinecap="round"
+                    />
+                  );
+                })}
+              </g>
+            </g>
+
+            {/* C. BÔNG SEN LỚN TRUNG TÂM (CENTRAL LIVING LOTUS)
+                Đạt 100% cấu trúc thực vật học, đung đưa rất nhẹ nhàng theo gió (chu kỳ 8.5s) */}
             <g
               className={`anim-lotus-flower_${uniqueId}`}
               style={{
                 animationName: hasBloomed ? undefined : `lotus-entrance-bloom_${uniqueId}`,
-                animationDuration: '2.4s',
+                animationDuration: '2.0s',
                 animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                 animationFillMode: 'forwards',
               }}
@@ -787,9 +914,8 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
 
               {/* Vòm cánh sen đa tầng so le dày dặn & Gương sen nhụy hoa */}
               <g transform={`translate(${flowerCenterX}, ${flowerCenterY})`}>
-                {/* 6A. TẦNG CÁNH SAU CÙNG (DEEP BACK PETALS — TẠO ĐỘ DÀY ĐẶN CHO ĐÓA HOA) */}
+                {/* TẦNG CÁNH SAU CÙNG (DEEP BACK PETALS — TẠO ĐỘ DÀY ĐẶN CHO ĐÓA HOA) */}
                 <g opacity="0.95">
-                  {/* Cánh sau bên trái */}
                   <path
                     d="M 0 0 C -42 -40, -102 -75, -96 -138 C -65 -132, -28 -75, 0 0 Z"
                     fill={`url(#lotus-outer-grad_${uniqueId})`}
@@ -797,7 +923,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeWidth="0.7"
                     strokeOpacity="0.65"
                   />
-                  {/* Cánh sau bên phải */}
                   <path
                     d="M 0 0 C 38 -45, 108 -70, 104 -142 C 72 -132, 30 -75, 0 0 Z"
                     fill={`url(#lotus-outer-grad_${uniqueId})`}
@@ -805,7 +930,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeWidth="0.7"
                     strokeOpacity="0.65"
                   />
-                  {/* Cánh sau vươn cao trung tâm */}
                   <path
                     d="M 0 0 C -22 -65, -20 -145, 0 -185 C 20 -145, 22 -65, 0 0 Z"
                     fill={`url(#lotus-mid-grad_${uniqueId})`}
@@ -813,7 +937,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeWidth="0.75"
                     strokeOpacity="0.7"
                   />
-                  {/* Viền sáng đỉnh cánh sau */}
                   <path
                     d="M -10 -155 C -3 -178, 0 -185, 0 -185 C 0 -185, 3 -178, 10 -155"
                     stroke="#FFFFFF"
@@ -824,7 +947,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                   />
                 </g>
 
-                {/* 6B. TẦNG CÁNH NGOÀI BÈ RỘNG, BẤT ĐỐI XỨNG TỰ NHIÊN */}
+                {/* TẦNG CÁNH NGOÀI BÈ RỘNG, BẤT ĐỐI XỨNG TỰ NHIÊN */}
                 <g className={`anim-petal-left_${uniqueId}`}>
                   <path
                     d="M 0 0 C -52 -18, -128 -38, -130 -98 C -102 -116, -48 -70, 0 0 Z"
@@ -833,7 +956,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeWidth="0.8"
                     strokeOpacity="0.7"
                   />
-                  {/* Gân cánh sen mảnh */}
                   <path
                     d="M 0 0 C -38 -22, -82 -50, -126 -97"
                     stroke="#B85D6F"
@@ -841,7 +963,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeOpacity="0.45"
                     fill="none"
                   />
-                  {/* Viền cánh hứng sáng mềm mại */}
                   <path
                     d="M -130 -98 C -102 -116, -48 -70, 0 0"
                     stroke="#FFF5F7"
@@ -875,7 +996,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                   />
                 </g>
 
-                {/* 6C. TẦNG CÁNH GIỮA (VƯƠN CAO KIÊU HÃNH, ÔM NHẸ) */}
+                {/* TẦNG CÁNH GIỮA (VƯƠN CAO KIÊU HÃNH, ÔM NHẸ) */}
                 <g className={`anim-petal-mid_${uniqueId}`}>
                   <path
                     d="M 0 0 C -46 -34, -84 -86, -68 -144 C -40 -124, -16 -68, 0 0 Z"
@@ -961,10 +1082,9 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                   strokeWidth="0.75"
                 />
 
-                {/* 6D. GƯƠNG SEN & NHỤY HOA BOTANICAL THỰC VẬT CHÂN THỰC
+                {/* GƯƠNG SEN & NHỤY HOA BOTANICAL THỰC VẬT CHÂN THỰC
                     (Gương sen nghiêng 32° tự nhiên + 13 lỗ hạt Fibonacci + 36 sợi nhị vàng rủ nhẹ) */}
                 <g transform="translate(0, -36) rotate(-6)">
-                  {/* Thân nón gương sen đổ bóng tự nhiên */}
                   <path
                     d="M -30 0 C -28 24, 28 24, 30 0 C 26 -10, -26 -10, -30 0 Z"
                     fill={`url(#receptacle-cone-grad_${uniqueId})`}
@@ -972,7 +1092,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeWidth="0.8"
                   />
 
-                  {/* Mặt gương sen hình elip nghiêng nhìn từ trên xuống */}
                   <ellipse
                     cx="0"
                     cy="-4"
@@ -983,7 +1102,6 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
                     strokeWidth="1.3"
                   />
 
-                  {/* 13 Lỗ hạt sen xoắn Fibonacci tự nhiên & Hạt sen ngọc bích non với đầu nhụy */}
                   {[
                     { x: 0, y: -4, r: 2.8 },
                     { x: -14, y: -7, r: 2.3 },
@@ -1045,67 +1163,67 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className, pageScrollP
           </g>
 
           {/* ===================================================================
-              7. TẦNG TIỀN CẢNH: PHIẾN LÁ SEN UỐN LƯỢN & GIỌT SƯƠNG MAI NỔI KHỐI 3D
+              7. TẦNG TIỀN CẢNH: CÁC TÁN LÁ SEN KHỔNG LỒ & GIỌT SƯƠNG MAI 3D LẤP LÁNH
               =================================================================== */}
           <g transform={`translate(0, ${fgParallaxY})`}>
-            {/* Phiến lá sen lớn bên trái với gân lá chân vịt (Peltate Leaf) */}
-            <g className={`anim-leaf-bob_${uniqueId}`} transform="translate(320, 390)">
+            {/* Tán lá sen khổng lồ bên trái với gân lá chân vịt (Peltate Leaf) */}
+            <g className={`anim-leaf-bob_${uniqueId}`} transform="translate(280, 400)">
               <path
-                d="M 0 0 C -75 -28, -165 18, -145 72 C -122 120, -38 135, 52 125 C 135 112, 155 48, 105 12 C 65 -16, 28 -10, 0 0 Z"
+                d="M 0 0 C -85 -32, -185 20, -162 82 C -136 136, -42 152, 60 140 C 152 126, 175 54, 118 14 C 74 -18, 32 -11, 0 0 Z"
                 fill={`url(#leaf-pad-grad_${uniqueId})`}
                 stroke="#5E8A75"
-                strokeWidth="1.3"
+                strokeWidth="1.4"
               />
 
               {/* Rãnh khuyết hình chữ V (Sinus) nối tới rốn lá */}
-              <path d="M 0 0 L -28 -14" stroke="#1B3229" strokeWidth="2" strokeLinecap="round" />
-              <circle cx="0" cy="0" r="5" fill="#5E8A75" />
-              <circle cx="0" cy="0" r="2.5" fill="#254337" />
+              <path d="M 0 0 L -32 -16" stroke="#1B3229" strokeWidth="2.2" strokeLinecap="round" />
+              <circle cx="0" cy="0" r="5.5" fill="#5E8A75" />
+              <circle cx="0" cy="0" r="2.8" fill="#254337" />
 
-              {/* Hệ gân lá chân vịt tỏa tròn (Radiating Palmate Veins) */}
-              <g stroke="#6C9A84" strokeWidth="1" strokeOpacity="0.65" fill="none">
-                <path d="M 0 0 C -38 16, -92 30, -136 60" />
-                <path d="M 0 0 C -28 38, -60 82, -88 114" />
-                <path d="M 0 0 C 12 42, 28 86, 42 120" />
-                <path d="M 0 0 C 48 26, 92 48, 128 76" />
-                <path d="M 0 0 C 38 -6, 76 -6, 96 14" />
+              {/* Hệ gân lá chân vịt tỏa tròn sắc nét (Radiating Palmate Veins) */}
+              <g stroke="#6C9A84" strokeWidth="1.1" strokeOpacity="0.65" fill="none">
+                <path d="M 0 0 C -42 18, -104 34, -152 68" />
+                <path d="M 0 0 C -32 42, -68 92, -100 128" />
+                <path d="M 0 0 C 14 46, 32 96, 48 135" />
+                <path d="M 0 0 C 54 30, 104 54, 144 85" />
+                <path d="M 0 0 C 42 -7, 85 -7, 108 16" />
               </g>
 
               {/* 3 Giọt sương mai hình cầu nổi khối 3D đọng trên phiến lá */}
-              <g transform="translate(-48, 48)">
-                <ellipse cx="2" cy="2" rx="6.5" ry="4.2" fill="#12241D" opacity="0.45" />
-                <circle cx="0" cy="0" r="6" fill={`url(#dew-drop-grad_${uniqueId})`} />
-                <circle cx="-2" cy="-2" r="1.6" fill="#FFFFFF" />
+              <g transform="translate(-54, 54)">
+                <ellipse cx="2.2" cy="2.2" rx="7.2" ry="4.6" fill="#0B120F" opacity="0.45" />
+                <circle cx="0" cy="0" r="6.6" fill={`url(#dew-drop-grad_${uniqueId})`} />
+                <circle cx="-2.2" cy="-2.2" r="1.8" fill="#FFFFFF" />
               </g>
 
-              <g transform="translate(42, 70)">
-                <ellipse cx="1.5" cy="1.5" rx="4" ry="2.5" fill="#12241D" opacity="0.4" />
-                <circle cx="0" cy="0" r="3.6" fill={`url(#dew-drop-grad_${uniqueId})`} />
-                <circle cx="-1.1" cy="-1.1" r="1" fill="#FFFFFF" />
+              <g transform="translate(48, 78)">
+                <ellipse cx="1.6" cy="1.6" rx="4.4" ry="2.8" fill="#0B120F" opacity="0.4" />
+                <circle cx="0" cy="0" r="4" fill={`url(#dew-drop-grad_${uniqueId})`} />
+                <circle cx="-1.2" cy="-1.2" r="1.1" fill="#FFFFFF" />
               </g>
 
-              <g transform="translate(-18, 85)">
-                <ellipse cx="1.2" cy="1.2" rx="3" ry="1.8" fill="#12241D" opacity="0.4" />
-                <circle cx="0" cy="0" r="2.8" fill={`url(#dew-drop-grad_${uniqueId})`} />
-                <circle cx="-0.8" cy="-0.8" r="0.8" fill="#FFFFFF" />
+              <g transform="translate(-20, 95)">
+                <ellipse cx="1.3" cy="1.3" rx="3.3" ry="2" fill="#0B120F" opacity="0.4" />
+                <circle cx="0" cy="0" r="3" fill={`url(#dew-drop-grad_${uniqueId})`} />
+                <circle cx="-0.9" cy="-0.9" r="0.85" fill="#FFFFFF" />
               </g>
             </g>
 
-            {/* Phiến lá sen phụ bên phải (Bập bềnh nhẹ) */}
+            {/* Tán lá sen khổng lồ bên phải (Bập bềnh lượn sóng) */}
             <g
-              transform="translate(1180, 410) scale(0.9)"
+              transform="translate(1200, 420) scale(0.95)"
               className={`anim-leaf-bob_${uniqueId}`}
-              opacity="0.88"
+              opacity="0.9"
             >
               <path
-                d="M 0 0 C -55 -20, -120 12, -102 52 C -85 92, -22 102, 38 95 C 98 88, 115 35, 75 9 C 48 -11, 20 -9, 0 0 Z"
+                d="M 0 0 C -62 -22, -135 14, -115 58 C -95 104, -25 115, 42 108 C 110 99, 130 40, 85 10 C 54 -12, 22 -10, 0 0 Z"
                 fill={`url(#leaf-pad-grad_${uniqueId})`}
                 stroke="#5E8A75"
-                strokeWidth="1.1"
+                strokeWidth="1.2"
               />
-              <circle cx="0" cy="0" r="4" fill="#5E8A75" />
-              <circle cx="-22" cy="32" r="3.2" fill={`url(#dew-drop-grad_${uniqueId})`} />
-              <circle cx="-23" cy="31" r="0.9" fill="#FFFFFF" />
+              <circle cx="0" cy="0" r="4.5" fill="#5E8A75" />
+              <circle cx="-25" cy="36" r="3.6" fill={`url(#dew-drop-grad_${uniqueId})`} />
+              <circle cx="-26" cy="35" r="1" fill="#FFFFFF" />
             </g>
           </g>
 

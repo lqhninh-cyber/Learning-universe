@@ -13,7 +13,7 @@ describe('Footer Component', () => {
 
     const brand = screen.getByText('Learning Universe');
     expect(brand).toBeInTheDocument();
-    expect(brand).toHaveClass('font-serif', 'text-base', 'font-semibold', 'text-[#29383D]');
+    expect(brand).toHaveClass('font-serif', 'text-base', 'font-semibold', 'text-[#FAF9F6]');
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
 
@@ -32,13 +32,13 @@ describe('Footer Component', () => {
       'italic',
       'text-xs',
       'md:text-sm',
-      'text-[#55676B]',
+      'text-[#D1DCD6]',
       'leading-relaxed',
     );
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#3F6570]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#C89738]', 'not-italic');
   });
 
   it('renders artistic lotus emblem (LotusCenterLogo) for both mobile and desktop', () => {
