@@ -15,7 +15,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         'border-t transition-colors duration-200',
         isDarkLesson
           ? 'border-[#2A323A] bg-[#16191D] text-[#E2E8F0]'
-          : 'border-[#1F332A]/50 bg-gradient-to-b from-[#14221C] via-[#0E1814] to-[#0B120F] text-[#FAF9F6]',
+          : 'border-[#1F332A]/50 bg-gradient-to-b from-[#0A261D] via-[#081F17] to-[#061812] text-[#FAF9F6]',
       )}
     >
       <Container size="wide" className="py-5 md:py-6">
