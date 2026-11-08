@@ -452,6 +452,89 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b3).toBeDefined();
       expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
+
+    it('kết xuất đầy đủ nội dung học thuật Chương 5 (Bài 5.1, Bài 5.2, Bài 5.3) từ Giáo trình HCMUE tr. 83–124', () => {
+      const b1 = getChapter5LessonModule(
+        'gdh-c5-b1-ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem-o-truong-pho-thong',
+      )!;
+      const b2 = getChapter5LessonModule(
+        'gdh-c5-b2-phuong-thuc-va-loai-hinh-to-chuc-hoat-dong-trai-nghiem',
+      )!;
+      const b3 = getChapter5LessonModule(
+        'gdh-c5-b3-danh-gia-ket-qua-dieu-kien-to-chuc-va-quy-trinh-thiet-ke-chu-de-hoat-dong-trai-nghiem',
+      )!;
+
+      const { unmount: unmount1 } = render(<b1.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C5-L1/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Khái niệm và Bản chất của Hoạt động Trải nghiệm ở Trường Phổ thông/i)
+          .length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Chu trình 4 Pha của Phương thức Giáo dục qua Trải nghiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Cấu trúc 3 Năng lực Đặc thù của Hoạt động Trải nghiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Bảng Ma trận 4 Mạch Nội dung Hoạt động Trải nghiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Khắc phục lối tổ chức Hoạt động trải nghiệm hình thức và phát triển 3 năng lực đặc thù/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount1();
+
+      const { unmount: unmount2 } = render(<b2.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C5-L2/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Hệ thống 4 Nhóm Phương thức Tổ chức Hoạt động Trải nghiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Bảng Tổng hợp Quy trình Chi tiết các Phương pháp Trải nghiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Bảng Ma trận 4 Loại hình Tổ chức Hoạt động Trải nghiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Vận dụng phương pháp Sân khấu tương tác \(5 bước\) và loại hình Sinh hoạt dưới cờ/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount2();
+
+      const { unmount: unmount3 } = render(<b3.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C5-L3/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(
+          /Phương pháp Đánh giá Kết quả Hoạt động Trải nghiệm theo Tiếp cận Năng lực/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Bảng Lưới 6 Phương pháp Đánh giá Năng lực trong Hoạt động Trải nghiệm/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Ba Nhóm Điều kiện Bảo đảm Tổ chức Hoạt động Trải nghiệm Thành công/i)
+          .length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Quy trình Thiết kế Kế hoạch Chủ đề Hoạt động Trải nghiệm theo Công văn 5512/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Tài liệu Tham khảo & Học liệu Số Chương 5 \(Google Drive\)/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp và thiết kế chủ đề/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount3();
+    });
   });
 
   describe('Component LegalQuoteCard', () => {

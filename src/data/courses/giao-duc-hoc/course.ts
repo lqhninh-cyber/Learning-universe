@@ -1105,10 +1105,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
         {
           id: 'gdh-c5-b1-ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem-o-truong-pho-thong',
           slug: 'ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem-o-truong-pho-thong',
-          title: 'Bài 5.1: Bản chất, mục tiêu và nội dung hoạt động trải nghiệm ở trường phổ thông',
+          title: 'Bài 5.1: Bản chất, mục tiêu và nội dung hoạt động trải nghiệm',
           number: 1,
           description:
-            'Bản chất phương thức giáo dục qua trải nghiệm; mục tiêu hình thành 3 năng lực đặc thù (Thích ứng với cuộc sống, Thiết kế và tổ chức hoạt động, Định hướng nghề nghiệp) và 4 mạch nội dung chính: Hướng vào bản thân, Hướng đến xã hội, Hướng đến tự nhiên, Hướng nghiệp (Giáo trình HCMUE tr. 83–87).',
+            'Bản chất của hoạt động trải nghiệm theo CT GDPT 2018, sự chuyển dịch từ "hoạt động giáo dục ngoài giờ lên lớp" sang hoạt động giáo dục bắt buộc, 3 nhóm năng lực đặc thù và cấu trúc 4 mạch nội dung cốt lõi từ Tiểu học đến THPT.',
           level: 'basic',
           estimatedMinutes: 40,
           prerequisites: [],
@@ -1122,10 +1122,12 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
             '5-1',
             'bai-5-1',
             'c5-b1',
+            'educ2802-c5-l1',
             'khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
             'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
           ],
           tags: [
+            'EDUC2802-C5-L1',
             'CLO8',
             'HĐTN & Hướng nghiệp',
             '3 Năng lực đặc thù',
@@ -1142,7 +1144,7 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
           title: 'Bài 5.2: Phương thức và loại hình tổ chức hoạt động trải nghiệm',
           number: 2,
           description:
-            '4 nhóm phương thức và quy trình chi tiết: Hội thảo, Diễn đàn, Trò chơi, Sân khấu tương tác (5 bước), Tham quan (3 bước), Tình nguyện (5 bước), Lao động công ích (4 bước), Nghiên cứu khoa học (8 bước), Dự án (5 bước); cùng 4 loại hình: Sinh hoạt dưới cờ, Sinh hoạt lớp, Hoạt động theo chủ đề và Câu lạc bộ (Giáo trình HCMUE tr. 88–110).',
+            'Hệ thống hóa 4 nhóm phương thức tổ chức (Thể nghiệm - tương tác, Khám phá, Cống hiến, Nghiên cứu) kèm các quy trình tổ chức chuẩn hóa, phân tích 4 loại hình tổ chức bắt buộc và tự chọn trong trường phổ thông.',
           level: 'intermediate',
           estimatedMinutes: 50,
           prerequisites: [
@@ -1158,10 +1160,12 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
             '5-2',
             'bai-5-2',
             'c5-b2',
+            'educ2802-c5-l2',
             'noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
             'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
           ],
           tags: [
+            'EDUC2802-C5-L2',
             'CLO8',
             'CLO9',
             '4 Nhóm phương thức',
@@ -1176,11 +1180,10 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
         {
           id: 'gdh-c5-b3-danh-gia-ket-qua-dieu-kien-to-chuc-va-quy-trinh-thiet-ke-chu-de-hoat-dong-trai-nghiem',
           slug: 'danh-gia-ket-qua-dieu-kien-to-chuc-va-quy-trinh-thiet-ke-chu-de-hoat-dong-trai-nghiem',
-          title:
-            'Bài 5.3: Đánh giá kết quả, điều kiện tổ chức và quy trình thiết kế chủ đề hoạt động trải nghiệm',
+          title: 'Bài 5.3: Đánh giá, điều kiện tổ chức và quy trình thiết kế kế hoạch chủ đề HĐTN',
           number: 3,
           description:
-            '6 phương pháp đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp; các điều kiện đảm bảo tổ chức hoạt động và quy trình thiết kế kế hoạch chủ đề HĐTN theo cấu trúc chuẩn của Giáo trình HCMUE & Tài liệu Mô đun 2 (Giáo trình HCMUE tr. 110–124).',
+            'Hệ thống 6 phương pháp đánh giá kết quả trải nghiệm theo tiếp cận năng lực, 3 nhóm điều kiện bảo đảm tổ chức thành công và quy trình chuẩn mực thiết kế kế hoạch chủ đề Hoạt động trải nghiệm theo Công văn 5512.',
           level: 'advanced',
           estimatedMinutes: 50,
           prerequisites: ['gdh-c5-b2-phuong-thuc-va-loai-hinh-to-chuc-hoat-dong-trai-nghiem'],
@@ -1194,16 +1197,19 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
             '5-3',
             'bai-5-3',
             'c5-b3',
+            'educ2802-c5-l3',
             'quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
             'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
             'danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
             'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
           ],
           tags: [
+            'EDUC2802-C5-L3',
             'CLO8',
             'CLO9',
             '6 Phương pháp đánh giá HĐTN',
             'Quy trình thiết kế chủ đề',
+            'Công văn 5512',
             'Mô đun 2 THCS & THPT',
             'Giáo trình tr. 110-124',
           ],
