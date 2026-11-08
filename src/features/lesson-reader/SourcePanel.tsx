@@ -9,7 +9,6 @@ import {
   BookOpen,
   Download,
   ExternalLink,
-  Eye,
   FileSpreadsheet,
   FileText,
 } from 'lucide-react';
@@ -136,12 +135,12 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
   return (
     <section
       aria-label="Nguồn giáo trình và đối chiếu học thuật"
-      className="mt-10 rounded-2xl border border-stone-200/90 bg-stone-50/70 p-5 sm:p-6"
+      className="mt-10 rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/50 p-5 text-[#29383D] sm:p-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <BookMarked className="h-4 w-4 text-teal-800" aria-hidden="true" />
-          <h2 className="text-sm font-semibold tracking-wide text-stone-900 uppercase">
+          <BookMarked className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
+          <h2 className="text-sm font-semibold tracking-wide text-[#29383D] uppercase">
             Nguồn tham khảo & Đối chiếu giáo trình
           </h2>
         </div>
@@ -154,7 +153,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
         <div className="mt-4 space-y-6">
           {lesson.sources.length > 0 && (
             <div className="space-y-3">
-              <p className="text-xs font-medium text-stone-600">
+              <p className="text-xs font-medium text-[#55676B]">
                 Tài liệu tham khảo sử dụng trong bài học:
               </p>
               <div className="mt-4 flex flex-col gap-4">
@@ -173,51 +172,45 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                     return (
                       <div
                         key={`${ref.source}-${index}`}
-                        className="rounded-2xl border border-stone-200/90 bg-white/90 p-5 shadow-sm transition-all hover:shadow-md"
+                        className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
                       >
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                          <div className="flex min-w-0 items-start gap-4">
-                            <div
-                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-2xs ${
-                                isTextbook
-                                  ? 'border-amber-200/80 bg-amber-50/90 text-amber-800'
-                                  : 'border-rose-200/80 bg-rose-50/90 text-rose-600'
-                              }`}
-                            >
+                        {/* Hàng 1 (Header row - flex items-start justify-between gap-4) */}
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                          {/* Cụm bên trái: khung icon vector mảnh, tiêu đề, badge */}
+                          <div className="flex min-w-0 items-center gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#3F6570]">
                               {isTextbook ? (
-                                <BookOpen className="h-6 w-6" aria-hidden="true" />
+                                <BookOpen className="h-5 w-5" aria-hidden="true" />
                               ) : (
-                                <FileText className="h-6 w-6" aria-hidden="true" />
+                                <FileText className="h-5 w-5" aria-hidden="true" />
                               )}
                             </div>
-                            <div className="min-w-0 space-y-1">
-                              <div className="flex flex-wrap items-center gap-2.5">
-                                <h4 className="font-serif text-lg leading-snug font-bold text-stone-900">
-                                  {pedagogyDoc.title}
-                                </h4>
-                                <span className="rounded-full bg-teal-100/90 px-2.5 py-0.5 text-xs font-bold text-teal-900">
+                            <div className="flex min-w-0 flex-wrap items-center gap-2">
+                              <h4 className="font-serif text-base font-semibold text-[#29383D]">
+                                {pedagogyDoc.title}
+                              </h4>
+                              {(pedagogyDoc.badge || pedagogyDoc.categoryLabel) && (
+                                <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
                                   {pedagogyDoc.badge || pedagogyDoc.categoryLabel}
                                 </span>
-                                {pedagogyDoc.size && (
-                                  <span className="rounded-lg border border-stone-200/80 bg-stone-50 px-2 py-0.5 text-xs font-medium text-stone-600">
-                                    {pedagogyDoc.size}
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-[14.5px] leading-relaxed text-stone-600">
-                                {pedagogyDoc.description}
-                              </p>
+                              )}
+                              {pedagogyDoc.size && (
+                                <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                                  {pedagogyDoc.size}
+                                </span>
+                              )}
                             </div>
                           </div>
 
-                          <div className="flex shrink-0 items-center gap-2 self-end sm:self-start">
+                          {/* Cụm bên phải: Nút Đọc tài liệu (PDF) và Nút Tải về */}
+                          <div className="flex shrink-0 items-center gap-2 self-start">
                             <a
                               href={docHref}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-xl border border-teal-600/30 bg-teal-50 px-3.5 py-2 text-xs font-semibold text-teal-800 shadow-2xs transition-colors hover:bg-teal-100"
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#3F6570] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#345761]"
                             >
-                              <Eye className="h-4 w-4" aria-hidden="true" />
+                              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                               <span>Đọc tài liệu (PDF)</span>
                             </a>
                             <a
@@ -225,27 +218,37 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                               target="_blank"
                               rel="noopener noreferrer"
                               download={pedagogyDoc.filename}
-                              className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white px-3.5 py-2 text-xs font-semibold text-stone-700 shadow-2xs transition-colors hover:bg-stone-50"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-white px-3 py-1.5 text-xs font-medium text-[#29383D] transition-colors hover:bg-[#E1E9EA]"
                             >
-                              <Download className="h-4 w-4 text-stone-500" aria-hidden="true" />
+                              <Download className="h-3.5 w-3.5 text-[#55676B]" aria-hidden="true" />
                               <span>Tải về</span>
                             </a>
                           </div>
                         </div>
 
+                        {/* Hàng 2 (Mô tả - mt-3 pt-3 border-t border-[#CFDADB]/60 w-full) */}
+                        {pedagogyDoc.description && (
+                          <div className="mt-3 w-full border-t border-[#CFDADB]/60 pt-3">
+                            <p className="w-full text-xs leading-relaxed text-[#55676B] md:text-sm">
+                              {pedagogyDoc.description}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Hàng 3 (Số trang, chương mục đối chiếu nếu có) */}
                         {(ref.pages || ref.sections || ref.note) && (
-                          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-3.5 text-xs text-stone-600">
+                          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#CFDADB]/40 pt-2.5 text-xs text-[#55676B]">
                             {ref.sections && (
-                              <span className="rounded-lg border border-stone-200/80 bg-stone-100/90 px-3 py-1 font-semibold text-stone-800">
+                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#29383D]">
                                 {ref.sections}
                               </span>
                             )}
                             {ref.pages && (
-                              <span className="rounded-lg border border-stone-200/80 bg-stone-100/90 px-3 py-1 font-semibold text-stone-700">
+                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#55676B]">
                                 Trang {ref.pages}
                               </span>
                             )}
-                            {ref.note && <span className="text-stone-500 italic">{ref.note}</span>}
+                            {ref.note && <span className="text-[#55676B] italic">{ref.note}</span>}
                           </div>
                         )}
                       </div>
@@ -270,78 +273,82 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                       : COURSE_DIRECT_PDF_LINKS[ref.source] ||
                         (entry.id ? COURSE_DIRECT_PDF_LINKS[entry.id] : undefined);
 
+                    const titleText = isHvkAlgebra
+                      ? 'Giáo trình Cấu trúc đại số - TS. Huỳnh Việt Khánh'
+                      : entry.title;
+
+                    const descriptionText = isHvkAlgebra
+                      ? 'Tài liệu học tập chính thức học phần Cấu trúc Đại số — ĐH Sư phạm TP.HCM (HCMUE)'
+                      : `${entry.authors.join(', ')} (${entry.year}) · ${entry.publisher}${entry.edition ? ` · ${entry.edition}` : ''}`;
+
                     return (
                       <div
                         key={`${ref.source}-${index}`}
                         className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
                       >
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                          <div className="flex min-w-0 items-start gap-4">
-                            <div
-                              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-2xs ${
-                                isBook
-                                  ? 'border-[#71889A]/30 bg-[#E5EDF1] text-[#3F6570]'
-                                  : 'border-[#CFDADB] bg-[#E1E9EA] text-[#55676B]'
-                              }`}
-                            >
+                        {/* Hàng 1 (Header row - flex items-start justify-between gap-4) */}
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                          <div className="flex min-w-0 items-center gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#3F6570]">
                               {isBook ? (
-                                <BookOpen className="h-6 w-6" aria-hidden="true" />
+                                <BookOpen className="h-5 w-5" aria-hidden="true" />
                               ) : (
-                                <FileText className="h-6 w-6" aria-hidden="true" />
+                                <FileText className="h-5 w-5" aria-hidden="true" />
                               )}
                             </div>
 
-                            <div className="min-w-0 flex-1">
-                              <h4 className="font-serif text-lg leading-snug font-bold text-[#29383D]">
-                                {isHvkAlgebra
-                                  ? 'Giáo trình Cấu trúc đại số - TS. Huỳnh Việt Khánh'
-                                  : entry.title}
+                            <div className="flex min-w-0 flex-wrap items-center gap-2">
+                              <h4 className="font-serif text-base font-semibold text-[#29383D]">
+                                {titleText}
                               </h4>
-                              <p className="mt-1 text-[14.5px] text-[#55676B]">
-                                {isHvkAlgebra
-                                  ? 'Giáo trình Cấu trúc đại số - TS. Huỳnh Việt Khánh'
-                                  : `${entry.authors.join(', ')} (${entry.year}) · ${entry.publisher}${entry.edition ? ` · ${entry.edition}` : ''}`}
-                              </p>
+                              <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                                {SOURCE_TYPE_LABELS[entry.type]}
+                              </span>
                             </div>
                           </div>
 
                           {directPdfUrl && (
-                            <div className="flex shrink-0 items-center self-end sm:self-start">
+                            <div className="flex shrink-0 items-center gap-2 self-start">
                               <a
                                 href={directPdfUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 rounded-lg bg-[#3F6570] px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-colors hover:bg-[#345761]"
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-[#3F6570] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#345761]"
                               >
+                                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                                 <span>
                                   {ref.pages
                                     ? `Đọc giáo trình PDF (Trang ${ref.pages})`
-                                    : 'Đọc giáo trình PDF'}
+                                    : 'Đọc tài liệu (PDF)'}
                                 </span>
-                                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                               </a>
                             </div>
                           )}
                         </div>
 
-                        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-3.5">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="subject">{SOURCE_TYPE_LABELS[entry.type]}</Badge>
+                        {/* Hàng 2 (Mô tả tác giả / xuất bản - mt-3 pt-3 border-t border-[#CFDADB]/60 w-full) */}
+                        <div className="mt-3 w-full border-t border-[#CFDADB]/60 pt-3">
+                          <p className="w-full text-xs leading-relaxed text-[#55676B] md:text-sm">
+                            {descriptionText}
+                          </p>
+                        </div>
+
+                        {/* Hàng 3 (Số trang, chương mục đối chiếu nếu có) */}
+                        {(ref.pages || ref.sections || ref.note) && (
+                          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#CFDADB]/40 pt-2.5 text-xs text-[#55676B]">
                             {ref.sections && (
-                              <span className="rounded-lg border border-[#CFDADB] bg-[#E1E9EA] px-3 py-1 text-xs font-semibold text-[#29383D]">
+                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#29383D]">
                                 {ref.sections}
                               </span>
                             )}
                             {ref.pages && (
-                              <span className="rounded-lg border border-[#CFDADB] bg-[#E1E9EA] px-3 py-1 text-xs font-semibold text-[#55676B]">
+                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#55676B]">
                                 Trang {ref.pages}
                               </span>
                             )}
-                            {ref.note && (
-                              <span className="text-xs text-[#55676B] italic">{ref.note}</span>
-                            )}
+                            {ref.note && <span className="text-[#55676B] italic">{ref.note}</span>}
                           </div>
-                        </div>
+                        )}
                       </div>
                     );
                   }
@@ -350,38 +357,41 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                   return (
                     <div
                       key={`${ref.source}-${index}`}
-                      className="rounded-2xl border border-stone-200/90 bg-white/90 p-5 shadow-sm transition-all hover:shadow-md"
+                      className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-stone-200/80 bg-stone-100/90 text-stone-600 shadow-2xs">
-                          <FileText className="h-6 w-6" aria-hidden="true" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="font-serif text-lg leading-snug font-bold text-stone-900">
-                            Tài liệu tham khảo
-                          </h4>
-                          <p className="mt-1 font-mono text-xs font-semibold text-stone-800">
-                            Mã nguồn: {ref.source}
-                          </p>
-                          {(ref.pages || ref.sections || ref.note) && (
-                            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-3 text-xs text-stone-600">
-                              {ref.sections && (
-                                <span className="rounded-lg border border-stone-200/80 bg-stone-100/90 px-3 py-1 font-semibold text-stone-800">
-                                  {ref.sections}
-                                </span>
-                              )}
-                              {ref.pages && (
-                                <span className="rounded-lg border border-stone-200/80 bg-stone-100/90 px-3 py-1 font-semibold text-stone-700">
-                                  Trang {ref.pages}
-                                </span>
-                              )}
-                              {ref.note && (
-                                <span className="text-stone-500 italic">{ref.note}</span>
-                              )}
-                            </div>
-                          )}
+                      {/* Hàng 1 (Header row - flex items-start justify-between gap-4) */}
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#55676B]">
+                            <FileText className="h-5 w-5" aria-hidden="true" />
+                          </div>
+                          <div className="flex min-w-0 flex-wrap items-center gap-2">
+                            <h4 className="font-serif text-base font-semibold text-[#29383D]">
+                              Tài liệu tham khảo
+                            </h4>
+                            <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                              Mã nguồn: {ref.source}
+                            </span>
+                          </div>
                         </div>
                       </div>
+
+                      {/* Hàng 2 (Số trang, chương mục đối chiếu nếu có) */}
+                      {(ref.pages || ref.sections || ref.note) && (
+                        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#CFDADB]/60 pt-3 text-xs text-[#55676B]">
+                          {ref.sections && (
+                            <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#29383D]">
+                              {ref.sections}
+                            </span>
+                          )}
+                          {ref.pages && (
+                            <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#55676B]">
+                              Trang {ref.pages}
+                            </span>
+                          )}
+                          {ref.note && <span className="text-[#55676B] italic">{ref.note}</span>}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -391,8 +401,8 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
 
           {blocksWithOriginalOrSource.length > 0 && (
             <div className="space-y-2.5">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-stone-600">
-                <FileSpreadsheet className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+              <div className="flex items-center gap-1.5 text-xs font-medium text-[#55676B]">
+                <FileSpreadsheet className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
                 <span>Bảng đối chiếu số hiệu gốc trong giáo trình:</span>
               </div>
               <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 lg:grid-cols-4">
@@ -495,7 +505,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
           )}
         </div>
       ) : (
-        <p className="mt-2.5 text-xs leading-relaxed text-stone-600">
+        <p className="mt-2.5 text-xs leading-relaxed text-[#55676B]">
           Thông tin giáo trình chính và số trang đối chiếu của bài học sẽ được cập nhật trong giai
           đoạn biên soạn nội dung học thuật.
         </p>
