@@ -182,93 +182,136 @@ span.academic-dropcap {
 }
 
 /* ============================================================================
-   HỆ HÒA SẮC "ĐÊM HỌC GIẢ" (SCHOLARLY SLATE NOIR - SCOPED DARK READING MODE)
+   HỆ HÒA SẮC "ĐÊM HỌC GIẢ" (FULL-VIEWPORT SCOPED DARK READING MODE)
    Chế độ đọc chuyên sâu cách ly tuyệt đối cho bài học:
-   - Canvas: #14171A (than chì ánh đá phiến, giảm chói sáng 85%)
-   - Khối văn bản / Thẻ bài giảng: #1C2024
+   - Nền bao quanh Viewport: #121517
+   - Thanh Header trên cùng: #16191D (viền #2A323A, chữ #E2E8F0, hover #F8FAFC)
+   - Khung thẻ bài viết chính & Sidebar: #181C20 (viền #2A323A)
+   - Khối Metadata / Căn cứ pháp lý & Bảng ma trận: #1C2126 (ô con #14171A)
    - Chữ chính: #E2E8F0
-   - Chữ phụ / Chú giải lề: #94A3B8
-   - Đường kẻ phân cách / Viền: #2D3339
-   - Điểm nhấn / Liên kết: #5E8A75
+   - Tiêu đề H1, H2, KaTeX: #F8FAFC font-serif font-bold
+   - Tiêu đề chương / TOC / Chú giải lề: #94A3B8
+   - Mục chọn Active: #242C33 với viền điểm nhấn #C89738
    TUYỆT ĐỐI KHÔNG can thiệp html, body hay trang chủ.
    ============================================================================ */
 
+.scoped-dark-mode,
 [data-reading-theme='dark'] {
-  --reading-canvas: #14171a;
-  --reading-surface: #1c2024;
+  --reading-canvas: #121517;
+  --reading-surface: #181c20;
   --reading-text: #e2e8f0;
   --reading-text-muted: #94a3b8;
-  --reading-border: #2d3339;
-  --reading-accent: #5e8a75;
+  --reading-border: #2a323a;
+  --reading-accent: #c89738;
 
   /* Ghi đè biến CSS cục bộ trong phạm vi bài đọc */
-  --bg-main: #14171a;
-  --surface-primary: #1c2024;
-  --surface-secondary: #1a1e22;
-  --surface-tertiary: #23292f;
-  --bg-canvas: #14171a;
-  --bg-surface: #1c2024;
-  --border-subtle: #2d3339;
-  --border-hairline: #2d3339;
+  --bg-main: #121517;
+  --surface-primary: #181c20;
+  --surface-secondary: #181c20;
+  --surface-tertiary: #20252b;
+  --bg-canvas: #121517;
+  --bg-surface: #181c20;
+  --border-subtle: #2a323a;
+  --border-hairline: #2a323a;
   --text-primary: #e2e8f0;
   --text-secondary: #94a3b8;
   --text-muted: #94a3b8;
-  --primary: #5e8a75;
-  --primary-hover: #71a88f;
+  --primary: #c89738;
+  --primary-hover: #dfad4d;
   --secondary: #5e8a75;
-  --accent: #5e8a75;
+  --accent: #c89738;
 
   /* Scholar Suite tokens */
-  --scholar-bg: #14171a;
-  --scholar-surface: #1c2024;
+  --scholar-bg: #121517;
+  --scholar-surface: #181c20;
   --scholar-text: #e2e8f0;
   --scholar-muted: #94a3b8;
-  --scholar-accent: #5e8a75;
-  --scholar-hairline: #2d3339;
+  --scholar-accent: #c89738;
+  --scholar-hairline: #2a323a;
 }
 
 /* 1. Typography & Khối văn bản trong Đêm Học Giả */
+.scoped-dark-mode .lu-prose,
+.scoped-dark-mode .lesson-content,
+.scoped-dark-mode .lesson-body,
+.scoped-dark-mode .lu-prose p,
+.scoped-dark-mode .lesson-content p,
+.scoped-dark-mode .lesson-body p,
+.scoped-dark-mode .lu-prose li,
+.scoped-dark-mode .lesson-content li,
+.scoped-dark-mode .lesson-body li,
 [data-reading-theme='dark'] .lu-prose,
 [data-reading-theme='dark'] .lesson-content,
+[data-reading-theme='dark'] .lesson-body,
 [data-reading-theme='dark'] .lu-prose p,
 [data-reading-theme='dark'] .lesson-content p,
+[data-reading-theme='dark'] .lesson-body p,
 [data-reading-theme='dark'] .lu-prose li,
-[data-reading-theme='dark'] .lesson-content li {
-  color: #e2e8f0;
+[data-reading-theme='dark'] .lesson-content li,
+[data-reading-theme='dark'] .lesson-body li {
+  color: #e2e8f0 !important;
+  line-height: 1.8;
 }
 
+.scoped-dark-mode .lu-prose h1,
+.scoped-dark-mode .lesson-content h1,
+.scoped-dark-mode .lu-prose h2,
+.scoped-dark-mode .lesson-content h2,
 [data-reading-theme='dark'] .lu-prose h1,
 [data-reading-theme='dark'] .lesson-content h1,
 [data-reading-theme='dark'] .lu-prose h2,
-[data-reading-theme='dark'] .lesson-content h2,
+[data-reading-theme='dark'] .lesson-content h2 {
+  color: #f8fafc !important;
+  font-family: var(--font-serif) !important;
+  font-weight: 700 !important;
+}
+
+.scoped-dark-mode .lu-prose h3,
+.scoped-dark-mode .lesson-content h3,
+.scoped-dark-mode .lu-prose h4,
+.scoped-dark-mode .lesson-content h4,
+.scoped-dark-mode .lu-prose strong,
+.scoped-dark-mode .lesson-content strong,
 [data-reading-theme='dark'] .lu-prose h3,
 [data-reading-theme='dark'] .lesson-content h3,
 [data-reading-theme='dark'] .lu-prose h4,
 [data-reading-theme='dark'] .lesson-content h4,
 [data-reading-theme='dark'] .lu-prose strong,
 [data-reading-theme='dark'] .lesson-content strong {
-  color: #f1f5f9;
+  color: #f8fafc !important;
 }
 
+.scoped-dark-mode .lu-prose h2,
+.scoped-dark-mode .lesson-content h2,
 [data-reading-theme='dark'] .lu-prose h2,
 [data-reading-theme='dark'] .lesson-content h2 {
-  border-bottom-color: #2d3339;
+  border-bottom-color: #2a323a;
 }
 
+.scoped-dark-mode .academic-dropcap::first-letter,
+.scoped-dark-mode .academic-dropcap-paragraph::first-letter,
+.scoped-dark-mode span.academic-dropcap,
 [data-reading-theme='dark'] .academic-dropcap::first-letter,
 [data-reading-theme='dark'] .academic-dropcap-paragraph::first-letter,
 [data-reading-theme='dark'] span.academic-dropcap {
-  color: #f8fafc;
+  color: #f8fafc !important;
+  font-family: var(--font-serif) !important;
 }
 
+.scoped-dark-mode .lu-prose blockquote,
+.scoped-dark-mode .lesson-content blockquote,
 [data-reading-theme='dark'] .lu-prose blockquote,
 [data-reading-theme='dark'] .lesson-content blockquote {
-  color: #cbd5e1;
-  background-color: rgba(28, 32, 36, 0.7);
-  border-left-color: #5e8a75;
+  color: #cbd5e1 !important;
+  background-color: rgba(24, 28, 32, 0.8) !important;
+  border-left-color: #c89738 !important;
 }
 
 /* 2. KaTeX trong chế độ Đêm Học Giả (#F8FAFC) */
+.scoped-dark-mode .katex,
+.scoped-dark-mode .katex-display,
+.scoped-dark-mode .katex .katex-html,
+.scoped-dark-mode .katex span:not(.frac-line):not(.sqrt-line),
 [data-reading-theme='dark'] .katex,
 [data-reading-theme='dark'] .katex-display,
 [data-reading-theme='dark'] .katex .katex-html,
@@ -276,58 +319,178 @@ span.academic-dropcap {
   color: #f8fafc !important;
 }
 
+.scoped-dark-mode .katex .frac-line,
+.scoped-dark-mode .katex .sqrt-line,
 [data-reading-theme='dark'] .katex .frac-line,
 [data-reading-theme='dark'] .katex .sqrt-line {
   border-color: #f8fafc !important;
 }
 
+.scoped-dark-mode .katex-display:hover,
+.scoped-dark-mode .lu-prose .katex-display:hover,
 [data-reading-theme='dark'] .katex-display:hover,
 [data-reading-theme='dark'] .lu-prose .katex-display:hover {
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* 3. Bảng Ma trận & Bảng so sánh (Comparative Matrix / Tables) */
+/* 3. Bảng Ma trận & Lưu đồ (Comparative Matrix & Flow Charts) */
+.scoped-dark-mode table,
+.scoped-dark-mode .lu-prose table,
+.scoped-dark-mode .lesson-content table,
 [data-reading-theme='dark'] table,
 [data-reading-theme='dark'] .lu-prose table,
 [data-reading-theme='dark'] .lesson-content table {
-  background-color: #1c2024 !important;
+  background-color: #1c2126 !important;
   color: #e2e8f0 !important;
+  border-color: #2a323a !important;
 }
 
+.scoped-dark-mode thead th,
+.scoped-dark-mode table th,
+.scoped-dark-mode .lu-prose th,
+.scoped-dark-mode .lesson-content th,
 [data-reading-theme='dark'] thead th,
 [data-reading-theme='dark'] table th,
 [data-reading-theme='dark'] .lu-prose th,
 [data-reading-theme='dark'] .lesson-content th {
-  background-color: #23292f !important;
-  color: #cbd5e1 !important;
-  border: 1px solid #2d3339 !important;
+  background-color: #242c33 !important;
+  color: #f8fafc !important;
+  border: 1px solid #2a323a !important;
 }
 
+.scoped-dark-mode tbody td,
+.scoped-dark-mode table td,
+.scoped-dark-mode .lu-prose td,
+.scoped-dark-mode .lesson-content td,
 [data-reading-theme='dark'] tbody td,
 [data-reading-theme='dark'] table td,
 [data-reading-theme='dark'] .lu-prose td,
 [data-reading-theme='dark'] .lesson-content td {
-  background-color: #1c2024 !important;
+  background-color: #1c2126 !important;
   color: #e2e8f0 !important;
-  border: 1px solid rgba(45, 51, 57, 0.7) !important;
+  border: 1px solid rgba(42, 50, 58, 0.8) !important;
 }
 
+.scoped-dark-mode tbody tr:nth-child(even) td,
+.scoped-dark-mode table tr:nth-child(even) td,
+.scoped-dark-mode .lu-prose tr:nth-child(even) td,
+.scoped-dark-mode .lesson-content tr:nth-child(even) td,
 [data-reading-theme='dark'] tbody tr:nth-child(even) td,
 [data-reading-theme='dark'] table tr:nth-child(even) td,
 [data-reading-theme='dark'] .lu-prose tr:nth-child(even) td,
 [data-reading-theme='dark'] .lesson-content tr:nth-child(even) td {
-  background-color: #1e2328 !important;
+  background-color: #181c20 !important;
 }
 
+.scoped-dark-mode .cayley-table-wrapper,
 [data-reading-theme='dark'] .cayley-table-wrapper {
-  background-color: #1c2024 !important;
-  border-color: #2d3339 !important;
+  background-color: #1c2126 !important;
+  border-color: #2a323a !important;
 }
 
+.scoped-dark-mode table.cayley-table th,
+.scoped-dark-mode table.cayley-table tr td:first-child,
 [data-reading-theme='dark'] table.cayley-table th,
 [data-reading-theme='dark'] table.cayley-table tr td:first-child {
-  background-color: #23292f !important;
+  background-color: #242c33 !important;
+  color: #f8fafc !important;
+}
+
+/* Khối Theory / Định nghĩa / Định lý / Bổ đề trong dark mode */
+.scoped-dark-mode section[aria-label*='Định nghĩa'],
+.scoped-dark-mode section[aria-label*='Định lý'],
+.scoped-dark-mode section[aria-label*='Bổ đề'],
+.scoped-dark-mode section[aria-label*='Mệnh đề'],
+.scoped-dark-mode section[aria-label*='Hệ quả'],
+[data-reading-theme='dark'] section[aria-label*='Định nghĩa'],
+[data-reading-theme='dark'] section[aria-label*='Định lý'],
+[data-reading-theme='dark'] section[aria-label*='Bổ đề'],
+[data-reading-theme='dark'] section[aria-label*='Mệnh đề'],
+[data-reading-theme='dark'] section[aria-label*='Hệ quả'] {
+  background-color: #1c2126 !important;
+  border-color: #2a323a !important;
+  color: #e2e8f0 !important;
+}
+
+.scoped-dark-mode section[aria-label] header,
+[data-reading-theme='dark'] section[aria-label] header {
+  border-bottom-color: #2a323a !important;
+}
+
+.scoped-dark-mode section[aria-label] header span,
+.scoped-dark-mode section[aria-label] header h4,
+[data-reading-theme='dark'] section[aria-label] header span,
+[data-reading-theme='dark'] section[aria-label] header h4 {
+  color: #f8fafc !important;
+}
+
+/* Khối Chứng minh (Proof) */
+.scoped-dark-mode [data-proof-of] > div,
+[data-reading-theme='dark'] [data-proof-of] > div {
+  border-color: #2a323a !important;
+  background-color: #14171a !important;
+}
+
+.scoped-dark-mode [data-proof-of] [role='region'],
+[data-reading-theme='dark'] [data-proof-of] [role='region'] {
+  background-color: #1c2126 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Breadcrumb in dark mode */
+.scoped-dark-mode nav[aria-label='Breadcrumb'],
+[data-reading-theme='dark'] nav[aria-label='Breadcrumb'] {
+  color: #94a3b8 !important;
+}
+.scoped-dark-mode nav[aria-label='Breadcrumb'] a,
+[data-reading-theme='dark'] nav[aria-label='Breadcrumb'] a {
   color: #cbd5e1 !important;
+}
+.scoped-dark-mode nav[aria-label='Breadcrumb'] a:hover,
+[data-reading-theme='dark'] nav[aria-label='Breadcrumb'] a:hover {
+  color: #f8fafc !important;
+}
+.scoped-dark-mode nav[aria-label='Breadcrumb'] span,
+[data-reading-theme='dark'] nav[aria-label='Breadcrumb'] span {
+  color: #e2e8f0 !important;
+}
+.scoped-dark-mode nav[aria-label='Breadcrumb'] svg,
+[data-reading-theme='dark'] nav[aria-label='Breadcrumb'] svg {
+  color: #64748b !important;
+}
+
+/* Reading Progress Bar */
+.scoped-dark-mode [role='progressbar'] > div,
+[data-reading-theme='dark'] [role='progressbar'] > div {
+  background-color: #c89738 !important;
+}
+
+/* Footer in scoped dark mode */
+.scoped-dark-mode footer,
+[data-reading-theme='dark'] footer {
+  background-color: #16191d !important;
+  border-color: #2a323a !important;
+  color: #e2e8f0 !important;
+}
+.scoped-dark-mode footer blockquote,
+[data-reading-theme='dark'] footer blockquote {
+  color: #94a3b8 !important;
+}
+.scoped-dark-mode footer cite,
+[data-reading-theme='dark'] footer cite {
+  color: #c89738 !important;
+}
+.scoped-dark-mode footer a,
+[data-reading-theme='dark'] footer a {
+  color: #94a3b8 !important;
+}
+.scoped-dark-mode footer a:hover,
+[data-reading-theme='dark'] footer a:hover {
+  color: #f8fafc !important;
+}
+.scoped-dark-mode footer span,
+[data-reading-theme='dark'] footer span {
+  color: #e2e8f0 !important;
 }
 
 /* 4. Hộp Pháp lý & Nghiên cứu tình huống (Legal & Case Study Boxes) */

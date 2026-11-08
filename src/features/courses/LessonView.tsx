@@ -83,7 +83,7 @@ export const LessonView: FC<LessonViewProps> = ({
         data-reading-theme={activeTheme}
         className={cn(
           'relative mx-auto max-w-7xl px-6 transition-colors duration-300 lg:grid lg:grid-cols-12 lg:gap-12',
-          isDark ? 'bg-[#14171A] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
+          isDark ? 'bg-[#121517] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
           className,
         )}
       >
@@ -93,7 +93,7 @@ export const LessonView: FC<LessonViewProps> = ({
             className={cn(
               'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 transition-colors duration-300 lg:col-span-3',
               isDark
-                ? 'border-r border-[#2D3339] bg-[#1A1E22] text-[#E2E8F0]'
+                ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
                 : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
             )}
           >
@@ -101,13 +101,13 @@ export const LessonView: FC<LessonViewProps> = ({
           </aside>
         )}
 
-        {/* Khung bài học chính: Sáng: bg-[#F7FAFA] border-[#CFDADB] | Tối: bg-[#1C2024] border-[#2D3339] */}
+        {/* Khung bài học chính: Sáng: bg-[#F7FAFA] border-[#CFDADB] | Tối: bg-[#181C20] border-[#2A323A] */}
         <div
           data-testid="scholar-main-column"
           className={cn(
             'max-w-[70ch] min-w-0 rounded-3xl p-8 shadow-sm transition-colors duration-300 md:p-12',
             isDark
-              ? 'border border-[#2D3339] bg-[#1C2024] text-[#E2E8F0]'
+              ? 'border border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
               : 'border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
             sidebar ? 'lg:col-span-6' : 'lg:col-span-8',
           )}
@@ -116,7 +116,7 @@ export const LessonView: FC<LessonViewProps> = ({
             <h1
               className={cn(
                 'mb-6 font-serif text-3xl font-bold tracking-tight lg:text-4xl',
-                isDark ? 'text-[#F1F5F9]' : 'text-[#29383D]',
+                isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
               )}
             >
               {title}
@@ -149,7 +149,7 @@ export const LessonView: FC<LessonViewProps> = ({
           {children}
         </div>
 
-        {/* Cột mục lục & chú giải bên phải: Sáng: bg-[#E1E9EA]/80 border-[#CFDADB] | Tối: bg-[#1A1E22] border-[#2D3339] */}
+        {/* Cột mục lục & chú giải bên phải: Sáng: bg-[#E1E9EA]/80 border-[#CFDADB] | Tối: bg-[#181C20] border-[#2A323A] */}
         <aside
           data-sidenotes-column
           data-testid="scholar-sidenotes-column"
@@ -157,7 +157,7 @@ export const LessonView: FC<LessonViewProps> = ({
           className={cn(
             'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pl-2 backdrop-blur transition-colors duration-300',
             isDark
-              ? 'border border-[#2D3339] bg-[#1A1E22] text-[#94A3B8]'
+              ? 'border border-[#2A323A] bg-[#181C20] text-[#94A3B8]'
               : 'border border-[#CFDADB] bg-[#E1E9EA]/80 text-[#29383D]',
             sidebar ? 'lg:col-span-3' : 'lg:col-span-4',
           )}

@@ -208,7 +208,7 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     expect(screen.getByText('tr. 59')).toBeInTheDocument();
   });
 
-  it('kết xuất LessonView ở Chế độ Đêm Học Giả (Dark Reading Mode) với canvas #14171A, card #1C2024 và chú giải #1A1E22', () => {
+  it('kết xuất LessonView ở Chế độ Đêm Học Giả (Dark Reading Mode) với canvas #121517, card #181C20 và chú giải #181C20', () => {
     render(
       <LessonView
         readingTheme="dark"
@@ -223,17 +223,17 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
 
     const grid = screen.getByTestId('asymmetric-scholar-grid');
     expect(grid).toHaveAttribute('data-reading-theme', 'dark');
-    expect(grid.className).toContain('bg-[#14171A]');
+    expect(grid.className).toContain('bg-[#121517]');
     expect(grid.className).toContain('text-[#E2E8F0]');
 
     const mainCol = screen.getByTestId('scholar-main-column');
-    expect(mainCol.className).toContain('bg-[#1C2024]');
-    expect(mainCol.className).toContain('border-[#2D3339]');
+    expect(mainCol.className).toContain('bg-[#181C20]');
+    expect(mainCol.className).toContain('border-[#2A323A]');
     expect(mainCol.className).toContain('text-[#E2E8F0]');
 
     const sidenotesCol = screen.getByTestId('scholar-sidenotes-column');
-    expect(sidenotesCol.className).toContain('bg-[#1A1E22]');
-    expect(sidenotesCol.className).toContain('border-[#2D3339]');
+    expect(sidenotesCol.className).toContain('bg-[#181C20]');
+    expect(sidenotesCol.className).toContain('border-[#2A323A]');
     expect(sidenotesCol.className).toContain('text-[#94A3B8]');
 
     // Đảm bảo html và body không bị gán class 'dark'

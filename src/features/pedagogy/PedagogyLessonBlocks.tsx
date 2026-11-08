@@ -36,19 +36,19 @@ export function PedagogyMetadataBar({
       role="region"
       aria-label="Thông số đối chiếu đề cương và giáo trình"
       className={cn(
-        'rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/70 p-4 text-xs text-[#29383D] shadow-2xs',
+        'rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/70 p-4 text-xs text-[#29383D] shadow-2xs dark:border-[#2A323A] dark:bg-[#1C2126] dark:text-[#E2E8F0] dark:shadow-none',
         className,
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#3F6570]/30 bg-[#3F6570] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wider text-white uppercase">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#3F6570]/30 bg-[#3F6570] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wider text-white uppercase dark:border-[#2A323A] dark:bg-[#242C33] dark:text-[#F8FAFC]">
             <Layers className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{courseCode}</span>
           </span>
 
           {lessonCode && (
-            <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wide text-[#3F6570]">
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wide text-[#3F6570] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]">
               <span>Mã bài: {lessonCode}</span>
             </span>
           )}
@@ -56,35 +56,45 @@ export function PedagogyMetadataBar({
           {clos.map((clo) => (
             <span
               key={clo}
-              className="inline-flex items-center gap-1 rounded-lg border border-[#718C7E]/45 bg-[#E8EFEB] px-2.5 py-1 font-mono text-[11px] font-bold text-[#29383D]"
+              className="inline-flex items-center gap-1 rounded-lg border border-[#718C7E]/45 bg-[#E8EFEB] px-2.5 py-1 font-mono text-[11px] font-bold text-[#29383D] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]"
             >
-              <ShieldCheck className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
+              <ShieldCheck
+                className="h-3.5 w-3.5 text-[#3F6570] dark:text-[#C89738]"
+                aria-hidden="true"
+              />
               <span>{clo}</span>
             </span>
           ))}
 
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-medium text-[#29383D]">
-            <BookOpen className="h-3.5 w-3.5 text-[#718C7E]" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-medium text-[#29383D] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]">
+            <BookOpen
+              className="h-3.5 w-3.5 text-[#718C7E] dark:text-[#C89738]"
+              aria-hidden="true"
+            />
             <span>Giáo trình Giáo dục học HCMUE:</span>
-            <strong className="font-mono font-bold text-[#3F6570]">{textbookPages}</strong>
+            <strong className="font-mono font-bold text-[#3F6570] dark:text-[#F8FAFC]">
+              {textbookPages}
+            </strong>
           </span>
         </div>
 
         {sessionNote && (
-          <span className="font-mono text-[11px] font-medium text-[#55676B]">{sessionNote}</span>
+          <span className="font-mono text-[11px] font-medium text-[#55676B] dark:text-[#94A3B8]">
+            {sessionNote}
+          </span>
         )}
       </div>
 
       {legalRefs && legalRefs.length > 0 && (
-        <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-[#CFDADB] pt-2.5 text-[11px] text-[#55676B]">
-          <span className="inline-flex items-center gap-1 font-semibold text-[#29383D]">
-            <Scale className="h-3.5 w-3.5 text-[#718C7E]" aria-hidden="true" />
+        <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-[#CFDADB] pt-2.5 text-[11px] text-[#55676B] dark:border-[#2A323A] dark:text-[#94A3B8]">
+          <span className="inline-flex items-center gap-1 font-semibold text-[#29383D] dark:text-[#E2E8F0]">
+            <Scale className="h-3.5 w-3.5 text-[#718C7E] dark:text-[#C89738]" aria-hidden="true" />
             <span>Văn bản pháp quy &amp; Học liệu đối chiếu:</span>
           </span>
           {legalRefs.map((ref) => (
             <span
               key={ref}
-              className="rounded-md border border-[#CFDADB] bg-[#F7FAFA] px-2 py-0.5 text-[11px] font-medium text-[#29383D]"
+              className="rounded-md border border-[#CFDADB] bg-[#F7FAFA] px-2 py-0.5 text-[11px] font-medium text-[#29383D] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]"
             >
               {ref}
             </span>
@@ -154,25 +164,31 @@ export function ComparativeTable({
   return (
     <div
       className={cn(
-        'col-span-full clear-both my-6 w-full overflow-x-auto rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs',
+        'col-span-full clear-both my-6 w-full overflow-x-auto rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs dark:border-[#2A323A] dark:bg-[#1C2126] dark:shadow-none',
         className,
       )}
     >
-      <div className="border-b border-[#CFDADB] bg-[#E1E9EA]/65 px-5 py-4">
+      <div className="border-b border-[#CFDADB] bg-[#E1E9EA]/65 px-5 py-4 dark:border-[#2A323A] dark:bg-[#242C33]">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#29383D]">
-            <Table2 className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#29383D] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]">
+            <Table2 className="h-3.5 w-3.5 text-[#3F6570] dark:text-[#C89738]" aria-hidden="true" />
             <span>{badge}</span>
           </span>
         </div>
-        <h3 className="mt-2 font-serif text-base font-bold text-[#29383D] sm:text-lg">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs leading-relaxed text-[#55676B]">{subtitle}</p>}
+        <h3 className="mt-2 font-serif text-base font-bold text-[#29383D] sm:text-lg dark:text-[#F8FAFC]">
+          {title}
+        </h3>
+        {subtitle && (
+          <p className="mt-1 text-xs leading-relaxed text-[#55676B] dark:text-[#94A3B8]">
+            {subtitle}
+          </p>
+        )}
       </div>
 
       <div className="w-full overflow-x-auto">
         <table className="w-full border-collapse text-left text-xs md:text-sm">
           <thead>
-            <tr className="border-b border-[#CFDADB] bg-[#E8EFEB]/80 text-[#29383D]">
+            <tr className="border-b border-[#CFDADB] bg-[#E8EFEB]/80 text-[#29383D] dark:border-[#2A323A] dark:bg-[#20252B] dark:text-[#F8FAFC]">
               {normalizedColumns.map((col, colIndex) => {
                 const isLastCol = colIndex === normalizedColumns.length - 1;
                 return (
@@ -180,8 +196,8 @@ export function ComparativeTable({
                     key={col.key}
                     scope="col"
                     className={cn(
-                      'border-b border-[#CFDADB] p-3.5 font-serif text-xs font-bold tracking-wide text-[#29383D] uppercase',
-                      !isLastCol && 'border-r border-[#CFDADB]/60',
+                      'border-b border-[#CFDADB] p-3.5 font-serif text-xs font-bold tracking-wide text-[#29383D] uppercase dark:border-[#2A323A] dark:text-[#F8FAFC]',
+                      !isLastCol && 'border-r border-[#CFDADB]/60 dark:border-[#2A323A]/60',
                       getColumnWidthClass(col, colIndex),
                     )}
                   >
@@ -195,7 +211,7 @@ export function ComparativeTable({
             {rows.map((row, rowIndex) => (
               <tr
                 key={`row-${rowIndex}`}
-                className="transition-colors odd:bg-[#F7FAFA] even:bg-[#EAF0F1]/45 hover:bg-[#E8EFEB]/45"
+                className="transition-colors odd:bg-[#F7FAFA] even:bg-[#EAF0F1]/45 hover:bg-[#E8EFEB]/45 dark:odd:bg-[#1C2126] dark:even:bg-[#181C20] dark:hover:bg-[#242C33]/60"
               >
                 {normalizedColumns.map((col, colIndex) => {
                   const cellContent = isTupleRow(row) ? row[colIndex] : row[col.key];
@@ -206,16 +222,16 @@ export function ComparativeTable({
                     <td
                       key={`${rowIndex}-${col.key}`}
                       className={cn(
-                        'border-b border-[#CFDADB]/60 p-3.5 align-top leading-relaxed',
-                        !isLastCol && 'border-r border-[#CFDADB]/60',
+                        'border-b border-[#CFDADB]/60 p-3.5 align-top leading-relaxed dark:border-[#2A323A]/60',
+                        !isLastCol && 'border-r border-[#CFDADB]/60 dark:border-[#2A323A]/60',
                         getColumnWidthClass(col, colIndex),
                         colIndex === 0 || col.highlight
-                          ? 'font-medium text-[#29383D]'
+                          ? 'font-medium text-[#29383D] dark:text-[#F8FAFC]'
                           : isCenteredCountCol
-                            ? 'text-center text-[#55676B]'
+                            ? 'text-center text-[#55676B] dark:text-[#CBD5E1]'
                             : colIndex === 2 && isCriteriaCountMatrix
-                              ? 'leading-relaxed text-[#29383D]'
-                              : 'leading-relaxed text-[#29383D]',
+                              ? 'leading-relaxed text-[#29383D] dark:text-[#E2E8F0]'
+                              : 'leading-relaxed text-[#29383D] dark:text-[#E2E8F0]',
                       )}
                     >
                       {cellContent}
@@ -229,7 +245,7 @@ export function ComparativeTable({
       </div>
 
       {footerNote && (
-        <div className="border-t border-[#CFDADB] bg-[#E1E9EA]/45 px-5 py-2.5 text-[11px] text-[#55676B] italic">
+        <div className="border-t border-[#CFDADB] bg-[#E1E9EA]/45 px-5 py-2.5 text-[11px] text-[#55676B] italic dark:border-[#2A323A] dark:bg-[#20252B]/60 dark:text-[#94A3B8]">
           {footerNote}
         </div>
       )}
@@ -277,17 +293,26 @@ export function NumberedProcessFlow({
   return (
     <div
       className={cn(
-        'col-span-full clear-both my-6 w-full rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs sm:p-6',
+        'col-span-full clear-both my-6 w-full rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs sm:p-6 dark:border-[#2A323A] dark:bg-[#1C2126] dark:shadow-none',
         className,
       )}
     >
-      <div className="border-b border-[#CFDADB] pb-4">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#29383D]">
-          <ListChecks className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
+      <div className="border-b border-[#CFDADB] pb-4 dark:border-[#2A323A]">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#29383D] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]">
+          <ListChecks
+            className="h-3.5 w-3.5 text-[#3F6570] dark:text-[#C89738]"
+            aria-hidden="true"
+          />
           <span>{badge}</span>
         </span>
-        <h3 className="mt-2 font-serif text-base font-bold text-[#29383D] sm:text-lg">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs leading-relaxed text-[#55676B]">{subtitle}</p>}
+        <h3 className="mt-2 font-serif text-base font-bold text-[#29383D] sm:text-lg dark:text-[#F8FAFC]">
+          {title}
+        </h3>
+        {subtitle && (
+          <p className="mt-1 text-xs leading-relaxed text-[#55676B] dark:text-[#94A3B8]">
+            {subtitle}
+          </p>
+        )}
       </div>
 
       <div className={cn('mt-4 grid gap-3.5', gridColsClass)}>
@@ -300,21 +325,23 @@ export function NumberedProcessFlow({
           return (
             <div
               key={`process-step-${stepNum}-${step.title}`}
-              className="flex flex-col justify-between rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/55 p-4 transition-colors hover:border-[#718C7E]"
+              className="flex flex-col justify-between rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/55 p-4 transition-colors hover:border-[#718C7E] dark:border-[#2A323A] dark:bg-[#14171A] dark:hover:border-[#C89738]"
             >
               <div>
                 <div className="flex items-start gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#718C7E]/40 bg-[#E8EFEB] font-serif text-sm font-bold text-[#3F6570]">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#718C7E]/40 bg-[#E8EFEB] font-serif text-sm font-bold text-[#3F6570] dark:border-[#2A323A] dark:bg-[#242C33] dark:text-[#F8FAFC]">
                     {stepNum}
                   </span>
                   <div className="min-w-0 flex-1">
                     {step.badge && (
-                      <span className="mb-1 inline-block rounded border border-[#718C7E]/35 bg-[#E8EFEB] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#3F6570]">
+                      <span className="mb-1 inline-block rounded border border-[#718C7E]/35 bg-[#E8EFEB] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#3F6570] dark:border-[#2A323A] dark:bg-[#20252B] dark:text-[#C89738]">
                         {step.badge}
                       </span>
                     )}
-                    <h4 className="font-serif text-sm font-bold text-[#29383D]">{step.title}</h4>
-                    <p className="mt-1.5 text-xs leading-relaxed text-[#55676B]">
+                    <h4 className="font-serif text-sm font-bold text-[#29383D] dark:text-[#F8FAFC]">
+                      {step.title}
+                    </h4>
+                    <p className="mt-1.5 text-xs leading-relaxed text-[#55676B] dark:text-[#CBD5E1]">
                       {step.description}
                     </p>
                   </div>
@@ -322,16 +349,20 @@ export function NumberedProcessFlow({
               </div>
 
               {(step.keyAction || step.deliverable) && (
-                <div className="mt-3 space-y-1 border-t border-[#CFDADB] pt-2.5 text-[11px]">
+                <div className="mt-3 space-y-1 border-t border-[#CFDADB] pt-2.5 text-[11px] dark:border-[#2A323A]">
                   {step.keyAction && (
-                    <p className="text-[#29383D]">
-                      <strong className="text-[#3F6570]">Thao tác trọng tâm: </strong>
+                    <p className="text-[#29383D] dark:text-[#E2E8F0]">
+                      <strong className="text-[#3F6570] dark:text-[#C89738]">
+                        Thao tác trọng tâm:{' '}
+                      </strong>
                       <span>{step.keyAction}</span>
                     </p>
                   )}
                   {step.deliverable && (
-                    <p className="text-[#55676B]">
-                      <strong className="text-[#29383D]">Sản phẩm / Minh chứng: </strong>
+                    <p className="text-[#55676B] dark:text-[#CBD5E1]">
+                      <strong className="text-[#29383D] dark:text-[#F8FAFC]">
+                        Sản phẩm / Minh chứng:{' '}
+                      </strong>
                       <span>{step.deliverable}</span>
                     </p>
                   )}

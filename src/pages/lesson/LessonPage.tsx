@@ -296,7 +296,7 @@ export function LessonPage() {
       data-reading-theme={readingTheme}
       className={cn(
         'mx-auto w-full pb-16 transition-all duration-300',
-        readingTheme === 'dark' ? 'bg-[#14171A] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
+        readingTheme === 'dark' ? 'bg-[#121517] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
         isFocusMode
           ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
           : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
@@ -328,7 +328,7 @@ export function LessonPage() {
       <div
         className={cn(
           'flex flex-col justify-between gap-4 border-b pb-4 transition-all duration-300 lg:flex-row lg:items-center',
-          readingTheme === 'dark' ? 'border-[#2D3339]' : 'border-[#CFDADB]',
+          readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
           isFocusMode && 'border-transparent pb-1',
         )}
       >
@@ -338,11 +338,22 @@ export function LessonPage() {
               variant="outline"
               size="sm"
               onClick={handleToggleSidebarCollapse}
-              className="hidden items-center gap-1.5 border-stone-300 bg-stone-50/90 text-xs text-stone-700 shadow-2xs transition-colors hover:text-stone-900 lg:inline-flex"
+              className={cn(
+                'hidden items-center gap-1.5 text-xs shadow-2xs transition-colors lg:inline-flex',
+                readingTheme === 'dark'
+                  ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0] hover:bg-[#242C33]'
+                  : 'border-stone-300 bg-stone-50/90 text-stone-700 hover:text-stone-900',
+              )}
               title="Mở lại danh sách bài học (Thanh bên)"
               aria-label="Mở lại danh sách bài học"
             >
-              <PanelLeftOpen className="text-subject-700 h-4 w-4" aria-hidden="true" />
+              <PanelLeftOpen
+                className={cn(
+                  'h-4 w-4',
+                  readingTheme === 'dark' ? 'text-[#C89738]' : 'text-subject-700',
+                )}
+                aria-hidden="true"
+              />
               <span>Hiện danh mục bài</span>
             </Button>
           )}
@@ -399,6 +410,7 @@ export function LessonPage() {
                 <LessonSidebar
                   subject={subject}
                   activeLessonId={lesson.id}
+                  readingTheme={readingTheme}
                   onSelectLesson={() => setIsSidebarDrawerOpen(false)}
                 />
               </Drawer>
@@ -422,6 +434,7 @@ export function LessonPage() {
               >
                 <LessonToc
                   lessonMeta={compiled?.lessonMeta ?? null}
+                  readingTheme={readingTheme}
                   onSelectAnchor={() => setIsTocDrawerOpen(false)}
                 />
               </Drawer>
@@ -438,7 +451,7 @@ export function LessonPage() {
             className={cn(
               'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block',
               readingTheme === 'dark'
-                ? 'border-r border-[#2D3339] bg-[#1A1E22] text-[#E2E8F0]'
+                ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
                 : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
             )}
             aria-label="Danh mục điều hướng bài học"
@@ -446,6 +459,7 @@ export function LessonPage() {
             <LessonSidebar
               subject={subject}
               activeLessonId={lesson.id}
+              readingTheme={readingTheme}
               onToggleCollapse={handleToggleSidebarCollapse}
             />
           </aside>
@@ -461,16 +475,43 @@ export function LessonPage() {
           )}
         >
           {isFocusMode && (
-            <div className="mb-6 flex items-center justify-between rounded-xl border border-[#CFDADB] bg-[#F7FAFA] px-4 py-2.5 text-xs text-[#29383D] shadow-2xs">
+            <div
+              className={cn(
+                'mb-6 flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs shadow-2xs',
+                readingTheme === 'dark'
+                  ? 'border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
+                  : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
+              )}
+            >
               <span className="flex items-center gap-2 font-medium">
-                <BookOpen className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
+                <BookOpen
+                  className={cn(
+                    'h-3.5 w-3.5',
+                    readingTheme === 'dark' ? 'text-[#C89738]' : 'text-[#3F6570]',
+                  )}
+                  aria-hidden="true"
+                />
                 <span>
                   Đang bật <strong>Chế độ đọc tập trung</strong> (Nhấn phím{' '}
-                  <kbd className="rounded border border-[#CFDADB] bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#29383D]">
+                  <kbd
+                    className={cn(
+                      'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
+                      readingTheme === 'dark'
+                        ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
+                        : 'border-[#CFDADB] bg-stone-100 text-[#29383D]',
+                    )}
+                  >
                     F
                   </kbd>{' '}
                   hoặc{' '}
-                  <kbd className="rounded border border-[#CFDADB] bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#29383D]">
+                  <kbd
+                    className={cn(
+                      'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
+                      readingTheme === 'dark'
+                        ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
+                        : 'border-[#CFDADB] bg-stone-100 text-[#29383D]',
+                    )}
+                  >
                     Esc
                   </kbd>{' '}
                   để thoát).
@@ -479,7 +520,12 @@ export function LessonPage() {
               <button
                 type="button"
                 onClick={handleToggleFocusMode}
-                className="cursor-pointer font-semibold text-[#29383D] underline hover:text-[#3F6570]"
+                className={cn(
+                  'cursor-pointer font-semibold underline',
+                  readingTheme === 'dark'
+                    ? 'text-[#C89738] hover:text-[#DFAD4D]'
+                    : 'text-[#29383D] hover:text-[#3F6570]',
+                )}
               >
                 Thoát tập trung (Esc)
               </button>
@@ -491,10 +537,10 @@ export function LessonPage() {
             data-reading-theme={readingTheme}
             data-reading-size={fontSize}
             className={cn(
-              'lesson-content rounded-3xl border shadow-sm transition-all duration-300',
+              'lesson-content transition-all duration-300',
               readingTheme === 'dark'
-                ? 'border-[#2D3339] bg-[#1C2024] text-[#E2E8F0]'
-                : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
+                ? 'rounded-2xl border border-[#2A323A] bg-[#181C20] text-[#E2E8F0] shadow-none'
+                : 'rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] shadow-sm',
               fontSize === 'lg' && 'reader-scale-lg',
               isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
             )}
@@ -502,25 +548,43 @@ export function LessonPage() {
             <header
               className={cn(
                 'space-y-4 border-b pb-6',
-                readingTheme === 'dark' ? 'border-[#2D3339]' : 'border-[#CFDADB]',
+                readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
               )}
             >
               {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
               <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="subject">
+                  <Badge
+                    variant="subject"
+                    className={cn(
+                      readingTheme === 'dark' &&
+                        'border border-[#2A323A] bg-[#20252B] text-[#CBD5E1]',
+                    )}
+                  >
                     {/^Thực hành/i.test(lesson.title)
                       ? `Khối Thực hành · Thực hành ${lesson.number}`
                       : `Chương ${chapter.number} · Bài ${chapter.number}.${lesson.number}`}
                   </Badge>
-                  <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
+                  <Badge
+                    variant="neutral"
+                    className={cn(
+                      readingTheme === 'dark' &&
+                        'border border-[#2A323A] bg-[#20252B] text-[#CBD5E1]',
+                    )}
+                  >
+                    {LEVEL_LABELS[lesson.level]}
+                  </Badge>
                   {lesson.tags
                     .filter((t) => /^CLO/i.test(t))
                     .map((clo) => (
                       <Badge
                         key={clo}
                         variant="neutral"
-                        className="border-amber-600/30 bg-amber-500/10 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-200"
+                        className={cn(
+                          readingTheme === 'dark'
+                            ? 'border border-[#2A323A] bg-[#20252B] text-[#CBD5E1]'
+                            : 'border-amber-600/30 bg-amber-500/10 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-200',
+                        )}
                       >
                         Chuẩn đầu ra: {clo}
                       </Badge>
@@ -530,13 +594,42 @@ export function LessonPage() {
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text-muted)]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Clock className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
+                <div
+                  className={cn(
+                    'flex flex-wrap items-center gap-4 text-xs',
+                    readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-[var(--text-muted)]',
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1.5',
+                      readingTheme === 'dark' &&
+                        'rounded-lg border border-[#2A323A] bg-[#20252B] px-2.5 py-1 text-[#CBD5E1]',
+                    )}
+                  >
+                    <Clock
+                      className={cn(
+                        'h-3.5 w-3.5',
+                        readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-stone-400',
+                      )}
+                      aria-hidden="true"
+                    />
                     <span>Thời lượng đọc: {Math.max(5, lesson.estimatedMinutes)} phút</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Layers className="h-3.5 w-3.5 text-stone-400" aria-hidden="true" />
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1.5',
+                      readingTheme === 'dark' &&
+                        'rounded-lg border border-[#2A323A] bg-[#20252B] px-2.5 py-1 text-[#CBD5E1]',
+                    )}
+                  >
+                    <Layers
+                      className={cn(
+                        'h-3.5 w-3.5',
+                        readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-stone-400',
+                      )}
+                      aria-hidden="true"
+                    />
                     <span>Phiên bản {lesson.version}</span>
                   </span>
                 </div>
@@ -545,7 +638,7 @@ export function LessonPage() {
               <h1
                 className={cn(
                   'mb-6 font-serif text-3xl font-bold tracking-tight lg:text-4xl',
-                  readingTheme === 'dark' ? 'text-[#F1F5F9]' : 'text-[#29383D]',
+                  readingTheme === 'dark' ? 'text-[#F8FAFC]' : 'text-[#29383D]',
                 )}
               >
                 {lesson.title}
@@ -554,16 +647,34 @@ export function LessonPage() {
               <p
                 className={cn(
                   'academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85]',
-                  readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+                  readingTheme === 'dark' ? 'leading-relaxed text-[#E2E8F0]' : 'text-[#29383D]',
                 )}
               >
                 {lesson.description}
               </p>
 
               {lesson.prerequisites.length > 0 && (
-                <div className="clear-both mt-4 flex flex-wrap items-center gap-2.5 rounded-xl border border-[#71889A]/30 bg-[#E5EDF1] p-3 text-xs text-[#29383D] md:text-sm">
-                  <div className="flex shrink-0 items-center gap-1.5 font-semibold text-[#29383D]">
-                    <Link2 className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
+                <div
+                  className={cn(
+                    'clear-both mt-4 flex flex-wrap items-center gap-2.5 rounded-xl border p-3 text-xs md:text-sm',
+                    readingTheme === 'dark'
+                      ? 'border border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
+                      : 'border border-[#71889A]/30 bg-[#E5EDF1] text-[#29383D]',
+                  )}
+                >
+                  <div
+                    className={cn(
+                      'flex shrink-0 items-center gap-1.5 font-semibold',
+                      readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+                    )}
+                  >
+                    <Link2
+                      className={cn(
+                        'h-4 w-4',
+                        readingTheme === 'dark' ? 'text-[#C89738]' : 'text-[#3F6570]',
+                      )}
+                      aria-hidden="true"
+                    />
                     <span>Kiến thức tiên quyết:</span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -584,7 +695,12 @@ export function LessonPage() {
                             prereq.chapter.slug,
                             prereq.lesson.slug,
                           )}
-                          className="inline-flex items-center gap-1 rounded-lg border border-[#CFDADB] bg-white/90 px-2.5 py-1 text-xs font-semibold text-[#29383D] shadow-2xs transition-colors hover:border-[#71889A] hover:bg-white hover:text-[#3F6570]"
+                          className={cn(
+                            'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs shadow-2xs transition-colors',
+                            readingTheme === 'dark'
+                              ? 'border border-[#2A323A] bg-[#14171A] font-medium text-[#C89738] hover:border-[#C89738] hover:bg-[#20252B]'
+                              : 'border border-[#CFDADB] bg-white/90 font-semibold text-[#29383D] hover:border-[#71889A] hover:bg-white hover:text-[#3F6570]',
+                          )}
                         >
                           <span>
                             Bài {prereq.chapter.number}.{prereq.lesson.number}:{' '}
@@ -597,7 +713,12 @@ export function LessonPage() {
                 </div>
               )}
 
-              <div className="clear-both mt-6 flex flex-wrap items-center gap-2.5 border-t border-stone-200/60 pt-4 dark:border-stone-800/60">
+              <div
+                className={cn(
+                  'clear-both mt-6 flex flex-wrap items-center gap-2.5 border-t pt-4',
+                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-stone-200/60',
+                )}
+              >
                 <LessonActionBar
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
@@ -643,11 +764,16 @@ export function LessonPage() {
             <footer
               className={cn(
                 'mt-10 border-t pt-6',
-                readingTheme === 'dark' ? 'border-[#2D3339]' : 'border-[#CFDADB]',
+                readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
               )}
             >
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <p className="text-xs text-[var(--text-muted)]">
+                <p
+                  className={cn(
+                    'text-xs',
+                    readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-[var(--text-muted)]',
+                  )}
+                >
                   Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.
                 </p>
                 <LessonActionBar
@@ -675,7 +801,7 @@ export function LessonPage() {
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >
-            <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
+            <LessonToc lessonMeta={compiled?.lessonMeta ?? null} readingTheme={readingTheme} />
           </aside>
         )}
       </div>

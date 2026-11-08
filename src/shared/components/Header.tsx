@@ -21,12 +21,13 @@ import { cn } from '@/shared/lib/cn';
 import { Button, Drawer } from '@/shared/ui';
 
 export interface HeaderProps {
+  readonly isDarkLesson?: boolean;
   readonly className?: string;
 }
 
 type ReadingFontScale = 'sm' | 'base' | 'lg';
 
-export const Header: FC<HeaderProps> = ({ className }) => {
+export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, className }) => {
   const { isAuthenticated, isAdmin, openAuthModal, signOut } = useAuth();
 
   const isStoreAuthenticated = useLearningStore((state) => state.isAuthenticated);
@@ -43,6 +44,41 @@ export const Header: FC<HeaderProps> = ({ className }) => {
 
   const capsuleRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
+
+  const isLessonPage =
+    /^\/(mon-hoc|courses)\/[^/]+\/[^/]+\/[^/]+\/?$/.test(pathname) ||
+    /^\/bai-hoc\/[^/]+\/?$/.test(pathname) ||
+    pathname === '/dev/mdx';
+
+  const [readingTheme, setReadingTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') return saved;
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    const handleThemeChange = (e: Event) => {
+      const custom = e as CustomEvent<'light' | 'dark'>;
+      if (custom.detail === 'light' || custom.detail === 'dark') {
+        setReadingTheme(custom.detail);
+      } else {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') {
+          setReadingTheme(saved);
+        }
+      }
+    };
+    window.addEventListener('lu_reading_theme_change', handleThemeChange);
+    return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
+  }, []);
+
+  const isDark = propDarkLesson ?? (isLessonPage && readingTheme === 'dark');
 
   // Đóng các menu thả nổi khi chuyển trang
   const [prevPath, setPrevPath] = useState(pathname);
@@ -116,15 +152,24 @@ export const Header: FC<HeaderProps> = ({ className }) => {
       <header
         ref={capsuleRef}
         className={cn(
-          'lu-site-header fixed top-4 left-1/2 z-40 flex h-14 w-[94%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full border border-[#CFDADB] bg-[#F7FAFA]/85 px-6 text-[#29383D] shadow-sm backdrop-blur-xl transition-all duration-300 md:top-5 md:h-15 print:hidden',
-          isScrolled && 'border-[#CFDADB] bg-[#F7FAFA]/95 shadow-md',
+          'lu-site-header fixed top-4 left-1/2 z-40 flex h-14 w-[94%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full px-6 shadow-sm backdrop-blur-xl transition-all duration-300 md:top-5 md:h-15 print:hidden',
+          isDark
+            ? 'border-b border-[#2A323A] bg-[#16191D]/90 text-[#E2E8F0]'
+            : 'border border-[#CFDADB] bg-[#F7FAFA]/85 text-[#29383D]',
+          isScrolled &&
+            (isDark
+              ? 'border-[#2A323A] bg-[#16191D]/98 shadow-md'
+              : 'border-[#CFDADB] bg-[#F7FAFA]/95 shadow-md'),
           className,
         )}
       >
         {/* 1. CỤM LOGO TỐI GIẢN (Trái) */}
         <Link
           to={ROUTES.home}
-          className="font-serif text-xs font-medium tracking-[0.22em] text-[#29383D] uppercase transition-opacity select-none hover:opacity-75 md:text-sm"
+          className={cn(
+            'font-serif text-xs font-medium tracking-[0.22em] uppercase transition-opacity select-none hover:opacity-75 md:text-sm',
+            isDark ? 'text-[#E2E8F0] hover:text-[#F8FAFC]' : 'text-[#29383D]',
+          )}
         >
           LEARNING UNIVERSE
         </Link>
@@ -136,8 +181,12 @@ export const Header: FC<HeaderProps> = ({ className }) => {
             className={cn(
               'rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
               pathname === ROUTES.home
-                ? 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
-                : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
+                ? isDark
+                  ? 'bg-[#242C33] font-semibold text-[#F8FAFC]'
+                  : 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
+                : isDark
+                  ? 'text-[#E2E8F0] hover:bg-[#20252B] hover:text-[#F8FAFC]'
+                  : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
             )}
           >
             Trang chủ
@@ -155,14 +204,19 @@ export const Header: FC<HeaderProps> = ({ className }) => {
             className={cn(
               'inline-flex cursor-pointer items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
               isLearningSpaceActive
-                ? 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
-                : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
+                ? isDark
+                  ? 'bg-[#242C33] font-semibold text-[#F8FAFC]'
+                  : 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
+                : isDark
+                  ? 'text-[#E2E8F0] hover:bg-[#20252B] hover:text-[#F8FAFC]'
+                  : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
             )}
           >
             <span>Không gian học tập</span>
             <ChevronDown
               className={cn(
-                'h-3 w-3 text-[#55676B] transition-transform duration-200',
+                'h-3 w-3 transition-transform duration-200',
+                isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
                 isMegaMenuOpen && 'rotate-180',
               )}
               aria-hidden="true"
@@ -174,8 +228,12 @@ export const Header: FC<HeaderProps> = ({ className }) => {
             className={cn(
               'rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
               isCoursesActive
-                ? 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
-                : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
+                ? isDark
+                  ? 'bg-[#242C33] font-semibold text-[#F8FAFC]'
+                  : 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
+                : isDark
+                  ? 'text-[#E2E8F0] hover:bg-[#20252B] hover:text-[#F8FAFC]'
+                  : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
             )}
           >
             Tất cả môn học
@@ -186,8 +244,12 @@ export const Header: FC<HeaderProps> = ({ className }) => {
             className={cn(
               'rounded-full px-3.5 py-1.5 text-xs font-medium transition-all',
               isGlossaryActive
-                ? 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
-                : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
+                ? isDark
+                  ? 'bg-[#242C33] font-semibold text-[#F8FAFC]'
+                  : 'bg-[#E1E9EA] font-semibold text-[#3F6570]'
+                : isDark
+                  ? 'text-[#E2E8F0] hover:bg-[#20252B] hover:text-[#F8FAFC]'
+                  : 'text-[#55676B] hover:bg-[#E1E9EA]/60 hover:text-[#29383D]',
             )}
           >
             Thuật ngữ
@@ -205,11 +267,26 @@ export const Header: FC<HeaderProps> = ({ className }) => {
               setIsAccountMenuOpen(false);
             }}
             aria-label="Mở tìm kiếm nhanh"
-            className="hidden cursor-pointer items-center gap-2 rounded-full border border-[#CFDADB] bg-white/70 px-3 py-1.5 text-xs font-medium text-[#55676B] transition-all hover:border-[#71889A] hover:bg-white hover:text-[#29383D] md:inline-flex"
+            className={cn(
+              'hidden cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-all md:inline-flex',
+              isDark
+                ? 'border border-[#2A323A] bg-[#20252B] text-[#E2E8F0] placeholder-[#64748B] hover:bg-[#242C33]'
+                : 'border border-[#CFDADB] bg-white/70 text-[#55676B] hover:border-[#71889A] hover:bg-white hover:text-[#29383D]',
+            )}
           >
-            <Search className="h-3.5 w-3.5 text-[#55676B]" aria-hidden="true" />
-            <span>Tìm kiếm</span>
-            <kbd className="rounded bg-[#E1E9EA] px-1.5 py-0.5 font-mono text-[10px] text-[#55676B]">
+            <Search
+              className={cn('h-3.5 w-3.5', isDark ? 'text-[#94A3B8]' : 'text-[#55676B]')}
+              aria-hidden="true"
+            />
+            <span className={cn(isDark && 'text-[#E2E8F0]')}>Tìm kiếm</span>
+            <kbd
+              className={cn(
+                'rounded px-1.5 py-0.5 font-mono text-[10px]',
+                isDark
+                  ? 'border border-[#2A323A] bg-[#16191D] text-[#94A3B8]'
+                  : 'bg-[#E1E9EA] text-[#55676B]',
+              )}
+            >
               ⌘K
             </kbd>
           </button>
@@ -224,7 +301,12 @@ export const Header: FC<HeaderProps> = ({ className }) => {
               }}
               aria-expanded={isAccountMenuOpen}
               aria-label="Tài khoản và cài đặt giao diện"
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#CFDADB] bg-[#E1E9EA] text-[#29383D] transition-colors hover:bg-[#D7E1E2]"
+              className={cn(
+                'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-colors',
+                isDark
+                  ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0] hover:bg-[#242C33]'
+                  : 'border-[#CFDADB] bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]',
+              )}
             >
               <User className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -234,7 +316,12 @@ export const Header: FC<HeaderProps> = ({ className }) => {
               <div
                 role="menu"
                 aria-label="Menu tài khoản và giao diện"
-                className="absolute top-full right-0 mt-3 w-64 rounded-3xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-4 shadow-2xl backdrop-blur-2xl"
+                className={cn(
+                  'absolute top-full right-0 mt-3 w-64 rounded-3xl p-4 shadow-2xl backdrop-blur-2xl',
+                  isDark
+                    ? 'border border-[#2A323A] bg-[#16191D]/95 text-[#E2E8F0]'
+                    : 'border border-[#CFDADB] bg-[#F7FAFA]/95 text-[#29383D]',
+                )}
               >
                 {/* Mục 1: Thông tin học tập cá nhân */}
                 <div className="space-y-1.5 border-b border-[#CFDADB] pb-3">
@@ -470,46 +557,101 @@ export const Header: FC<HeaderProps> = ({ className }) => {
           <div
             role="region"
             aria-label="Danh mục Không gian học tập"
-            className="absolute top-full left-1/2 mt-3 w-[500px] max-w-[92vw] -translate-x-1/2 rounded-3xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-6 shadow-2xl backdrop-blur-2xl"
+            className={cn(
+              'absolute top-full left-1/2 mt-3 w-[500px] max-w-[92vw] -translate-x-1/2 rounded-3xl p-6 shadow-2xl backdrop-blur-2xl',
+              isDark
+                ? 'border border-[#2A323A] bg-[#16191D]/98 text-[#E2E8F0]'
+                : 'border border-[#CFDADB] bg-[#F7FAFA]/95 text-[#29383D]',
+            )}
           >
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {/* Cột 1: Toán học */}
               <div className="space-y-2.5">
-                <p className="px-2.5 font-mono text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
+                <p
+                  className={cn(
+                    'px-2.5 font-mono text-[11px] font-semibold tracking-wider uppercase',
+                    isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
+                  )}
+                >
                   Toán học
                 </p>
                 <div className="space-y-1">
                   <Link
                     to={ROUTES.courseOverview('cau-truc-dai-so')}
                     onClick={() => setIsMegaMenuOpen(false)}
-                    className="group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-[#E1E9EA]/60"
+                    className={cn(
+                      'group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors',
+                      isDark ? 'hover:bg-[#20252B]' : 'hover:bg-[#E1E9EA]/60',
+                    )}
                   >
-                    <span className="font-serif text-sm font-semibold text-[#29383D]">
+                    <span
+                      className={cn(
+                        'font-serif text-sm font-semibold',
+                        isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                      )}
+                    >
                       Cấu trúc đại số
                     </span>
-                    <span className="font-mono text-[11px] text-[#55676B]">MATH1301</span>
+                    <span
+                      className={cn(
+                        'font-mono text-[11px]',
+                        isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
+                      )}
+                    >
+                      MATH1301
+                    </span>
                   </Link>
 
                   <Link
                     to={ROUTES.courseOverview('hinh-hoc-affine')}
                     onClick={() => setIsMegaMenuOpen(false)}
-                    className="group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-[#E1E9EA]/60"
+                    className={cn(
+                      'group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors',
+                      isDark ? 'hover:bg-[#20252B]' : 'hover:bg-[#E1E9EA]/60',
+                    )}
                   >
-                    <span className="font-serif text-sm font-semibold text-[#29383D]">
+                    <span
+                      className={cn(
+                        'font-serif text-sm font-semibold',
+                        isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                      )}
+                    >
                       Hình học Affine &amp; Euclide
                     </span>
-                    <span className="font-mono text-[11px] text-[#55676B]">MATH1302</span>
+                    <span
+                      className={cn(
+                        'font-mono text-[11px]',
+                        isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
+                      )}
+                    >
+                      MATH1302
+                    </span>
                   </Link>
 
                   <Link
                     to={ROUTES.courseOverview('giai-tich-ham-mot-bien')}
                     onClick={() => setIsMegaMenuOpen(false)}
-                    className="group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-[#E1E9EA]/60"
+                    className={cn(
+                      'group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors',
+                      isDark ? 'hover:bg-[#20252B]' : 'hover:bg-[#E1E9EA]/60',
+                    )}
                   >
-                    <span className="font-serif text-sm font-semibold text-[#29383D]">
+                    <span
+                      className={cn(
+                        'font-serif text-sm font-semibold',
+                        isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                      )}
+                    >
                       Giải tích hàm một biến
                     </span>
-                    <span className="font-mono text-[11px] text-[#55676B]">MATH1303</span>
+                    <span
+                      className={cn(
+                        'font-mono text-[11px]',
+                        isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
+                      )}
+                    >
+                      MATH1303
+                    </span>
                   </Link>
                 </div>
               </div>
@@ -517,28 +659,55 @@ export const Header: FC<HeaderProps> = ({ className }) => {
               {/* Cột 2: Khoa học Giáo dục */}
               <div className="flex flex-col justify-between space-y-2.5">
                 <div className="space-y-2.5">
-                  <p className="px-2.5 font-mono text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
+                  <p
+                    className={cn(
+                      'px-2.5 font-mono text-[11px] font-semibold tracking-wider uppercase',
+                      isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
+                    )}
+                  >
                     Khoa học Giáo dục
                   </p>
                   <div className="space-y-1">
                     <Link
                       to={ROUTES.courseOverview('giao-duc-hoc')}
                       onClick={() => setIsMegaMenuOpen(false)}
-                      className="group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-[#E1E9EA]/60"
+                      className={cn(
+                        'group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors',
+                        isDark ? 'hover:bg-[#20252B]' : 'hover:bg-[#E1E9EA]/60',
+                      )}
                     >
-                      <span className="font-serif text-sm font-semibold text-[#29383D]">
+                      <span
+                        className={cn(
+                          'font-serif text-sm font-semibold',
+                          isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                        )}
+                      >
                         Giáo dục học
                       </span>
-                      <span className="font-mono text-[11px] text-[#55676B]">EDUC2802</span>
+                      <span
+                        className={cn(
+                          'font-mono text-[11px]',
+                          isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
+                        )}
+                      >
+                        EDUC2802
+                      </span>
                     </Link>
                   </div>
                 </div>
 
-                <div className="border-t border-[#CFDADB] pt-3">
+                <div
+                  className={cn('border-t pt-3', isDark ? 'border-[#2A323A]' : 'border-[#CFDADB]')}
+                >
                   <Link
                     to={ROUTES.courses}
                     onClick={() => setIsMegaMenuOpen(false)}
-                    className="inline-flex items-center gap-1.5 px-2.5 text-xs font-medium text-[#3F6570] transition-colors hover:text-[#345761]"
+                    className={cn(
+                      'inline-flex items-center gap-1.5 px-2.5 text-xs font-medium transition-colors',
+                      isDark
+                        ? 'text-[#C89738] hover:text-[#DFAD4D]'
+                        : 'text-[#3F6570] hover:text-[#345761]',
+                    )}
                   >
                     <span>Xem tất cả học phần</span>
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

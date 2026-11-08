@@ -5,7 +5,7 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import 'katex/dist/katex.min.css';
 @import 'tailwindcss';
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, [data-reading-theme="dark"], [data-reading-theme="dark"] *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, [data-reading-theme="dark"], [data-reading-theme="dark"] *, .scoped-dark-mode, .scoped-dark-mode *));
 @import './tokens.css';
 @import './subject-themes.css';
 @import './prose.css';
