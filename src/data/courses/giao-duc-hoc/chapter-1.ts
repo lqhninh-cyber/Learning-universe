@@ -670,6 +670,10 @@ export const Lesson1_2View: FC = () => {
         ' được đánh giá theo 3 mức độ tăng dần: ',
         createElement('strong', null, 'Đạt – Khá – Tốt'),
         '.',
+      ),
+      createElement(
+        'div',
+        { className: 'clear-both w-full' },
         createElement(
           Sidenote,
           { type: 'pedagogy', number: 1 },
@@ -683,9 +687,9 @@ export const Lesson1_2View: FC = () => {
         subtitle: 'Đối chiếu chính xác theo Mục 1.2.2 Giáo trình Giáo dục học HCMUE (Trang 8 – 9).',
         badge: '5 Tiêu chuẩn · 15 Tiêu chí · TT 20/2018',
         columns: [
-          { key: 'standard', header: 'Tiêu chuẩn (Thông tư 20/2018)', widthClass: 'w-1/4' },
-          { key: 'count', header: 'Số lượng', widthClass: 'w-28' },
-          { key: 'criteriaList', header: 'Hệ thống 15 Tiêu chí chi tiết' },
+          { key: 'standard', header: 'Tiêu chuẩn (Thông tư 20/2018)', widthClass: 'w-[22%]' },
+          { key: 'count', header: 'Số lượng', widthClass: 'w-[18%] text-center' },
+          { key: 'criteriaList', header: 'Hệ thống 15 Tiêu chí chi tiết', widthClass: 'w-[60%]' },
         ],
         rows: [
           {

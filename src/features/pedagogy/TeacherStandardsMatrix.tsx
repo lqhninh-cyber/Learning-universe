@@ -294,7 +294,7 @@ export function TeacherStandardsMatrix({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-xs transition-all sm:p-6',
+        'col-span-full clear-both my-6 w-full rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-xs transition-all sm:p-6',
         className,
       )}
     >

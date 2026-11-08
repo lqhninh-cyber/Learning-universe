@@ -137,10 +137,24 @@ export function ComparativeTable({
     (col, index) => (typeof col === 'string' ? { key: String(index), header: col } : col),
   );
 
+  // Nhận diện bảng 3 cột dạng Ma trận Tiêu chuẩn - Số lượng - Tiêu chí chi tiết
+  const isCriteriaCountMatrix =
+    normalizedColumns.length === 3 &&
+    (normalizedColumns[1]?.key === 'count' || /số lượng/i.test(normalizedColumns[1]?.header ?? ''));
+
+  const getColumnWidthClass = (col: ComparativeTableColumn, colIndex: number): string => {
+    if (isCriteriaCountMatrix) {
+      if (colIndex === 0) return 'w-[22%]';
+      if (colIndex === 1) return 'w-[18%] text-center';
+      return 'w-[60%]';
+    }
+    return col.widthClass ?? '';
+  };
+
   return (
     <div
       className={cn(
-        'overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs',
+        'col-span-full clear-both my-6 w-full overflow-x-auto rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs',
         className,
       )}
     >
@@ -155,25 +169,29 @@ export function ComparativeTable({
         {subtitle && <p className="mt-1 text-xs leading-relaxed text-[#55676B]">{subtitle}</p>}
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left text-xs sm:text-sm">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse text-left text-xs md:text-sm">
           <thead>
             <tr className="border-b border-[#CFDADB] bg-[#E8EFEB]/80 text-[#29383D]">
-              {normalizedColumns.map((col) => (
-                <th
-                  key={col.key}
-                  scope="col"
-                  className={cn(
-                    'px-4 py-3 font-serif text-xs font-bold tracking-wide text-[#29383D] uppercase',
-                    col.widthClass,
-                  )}
-                >
-                  {col.header}
-                </th>
-              ))}
+              {normalizedColumns.map((col, colIndex) => {
+                const isLastCol = colIndex === normalizedColumns.length - 1;
+                return (
+                  <th
+                    key={col.key}
+                    scope="col"
+                    className={cn(
+                      'border-b border-[#CFDADB] p-3.5 font-serif text-xs font-bold tracking-wide text-[#29383D] uppercase',
+                      !isLastCol && 'border-r border-[#CFDADB]/60',
+                      getColumnWidthClass(col, colIndex),
+                    )}
+                  >
+                    {col.header}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#CFDADB]">
+          <tbody>
             {rows.map((row, rowIndex) => (
               <tr
                 key={`row-${rowIndex}`}
@@ -181,14 +199,23 @@ export function ComparativeTable({
               >
                 {normalizedColumns.map((col, colIndex) => {
                   const cellContent = isTupleRow(row) ? row[colIndex] : row[col.key];
+                  const isLastCol = colIndex === normalizedColumns.length - 1;
+                  const isCenteredCountCol = isCriteriaCountMatrix && colIndex === 1;
+
                   return (
                     <td
                       key={`${rowIndex}-${col.key}`}
                       className={cn(
-                        'px-4 py-3.5 align-top leading-relaxed',
+                        'border-b border-[#CFDADB]/60 p-3.5 align-top leading-relaxed',
+                        !isLastCol && 'border-r border-[#CFDADB]/60',
+                        getColumnWidthClass(col, colIndex),
                         colIndex === 0 || col.highlight
-                          ? 'font-semibold text-[#29383D]'
-                          : 'text-[#55676B]',
+                          ? 'font-medium text-[#29383D]'
+                          : isCenteredCountCol
+                            ? 'text-center text-[#55676B]'
+                            : colIndex === 2 && isCriteriaCountMatrix
+                              ? 'leading-relaxed text-[#29383D]'
+                              : 'leading-relaxed text-[#29383D]',
                       )}
                     >
                       {cellContent}
@@ -250,7 +277,7 @@ export function NumberedProcessFlow({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs sm:p-6',
+        'col-span-full clear-both my-6 w-full rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs sm:p-6',
         className,
       )}
     >

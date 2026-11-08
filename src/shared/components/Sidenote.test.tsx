@@ -27,7 +27,7 @@ describe('Sidenote (Academic Marginalia - Tufte/Distill Standard)', () => {
     }
   });
 
-  it('áp dụng chuẩn màu viền theo từng loại: history (stone), caution (#9E3D24), pedagogy (indigo), figure (hairline)', () => {
+  it('áp dụng chuẩn màu viền Mist Blue & Sage theo từng loại: caution (#9E3D24), pedagogy (#718C7E), figure (#CFDADB)', () => {
     render(
       <div>
         <Sidenote type="caution" number={1}>
@@ -44,8 +44,8 @@ describe('Sidenote (Academic Marginalia - Tufte/Distill Standard)', () => {
 
     const cautionNotes = screen.getAllByRole('note');
     expect(cautionNotes[0]?.className).toContain('border-[#9E3D24]');
-    expect(cautionNotes[1]?.className).toContain('border-indigo-400');
-    expect(cautionNotes[2]?.className).toContain('border-stone-200/90');
+    expect(cautionNotes[1]?.className).toContain('border-[#718C7E]');
+    expect(cautionNotes[2]?.className).toContain('border-[#CFDADB]');
     expect(screen.getByText('Hình 1.1: Sơ đồ phân hoạch')).toBeInTheDocument();
     expect(screen.getByTestId('micro-diagram')).toBeInTheDocument();
   });
@@ -97,7 +97,7 @@ describe('Sidenote (Academic Marginalia - Tufte/Distill Standard)', () => {
     expect(screen.queryByRole('region')).not.toBeInTheDocument();
   });
 
-  it('trên màn hình lớn (lg:): có class float-right clear-right để định vị thẳng hàng và chống đè', () => {
+  it('trên màn hình lớn (lg:): có class clear-both w-full để không chèn ép bảng biểu và khối nội dung chính', () => {
     render(
       <p>
         Văn bản học thuật <Sidenote number={1}>Nội dung lề 1</Sidenote> và tiếp tục đoạn văn{' '}
@@ -107,11 +107,11 @@ describe('Sidenote (Academic Marginalia - Tufte/Distill Standard)', () => {
 
     const notes = screen.getAllByRole('note');
     expect(notes.length).toBe(2);
-    expect(notes[0]?.className).toContain('float-right');
-    expect(notes[0]?.className).toContain('clear-right');
+    expect(notes[0]?.className).toContain('clear-both');
+    expect(notes[0]?.className).toContain('w-full');
     expect(notes[0]?.className).toContain('sidenote-academic');
-    expect(notes[1]?.className).toContain('float-right');
-    expect(notes[1]?.className).toContain('clear-right');
+    expect(notes[1]?.className).toContain('clear-both');
+    expect(notes[1]?.className).toContain('w-full');
   });
 
   it('đồng bộ trạng thái hover giữa số mũ trong dòng và khối chú giải lề', () => {

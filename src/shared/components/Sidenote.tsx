@@ -52,42 +52,37 @@ const SIDENOTE_STYLES: Record<SidenoteType, SidenoteStyleDef> = {
   history: {
     label: 'Lịch sử',
     Icon: History,
-    borderClass: 'border-l-2 border-stone-400 dark:border-stone-500',
-    textClass: 'text-stone-600 dark:text-stone-400',
-    badgeClass:
-      'border-stone-400/50 bg-stone-200/70 text-stone-800 dark:bg-stone-800 dark:text-stone-300 dark:border-stone-700',
+    borderClass: 'border-l-2 border-[#718C7E]',
+    textClass: 'text-[#29383D]',
+    badgeClass: 'border-[#CFDADB] bg-[#EAF0F1] text-[#29383D]',
   },
   caution: {
     label: 'Lưu ý',
     Icon: AlertTriangle,
-    borderClass: 'border-l-2 border-[#9E3D24] dark:border-[#E09F5A]',
-    textClass: 'text-[#9E3D24] dark:text-[#E09F5A]',
-    badgeClass:
-      'border-[#9E3D24]/40 bg-[#9E3D24]/10 text-[#9E3D24] dark:bg-[#E09F5A]/15 dark:text-[#E09F5A] dark:border-[#E09F5A]/40',
+    borderClass: 'border-l-2 border-[#9E3D24]',
+    textClass: 'text-[#29383D]',
+    badgeClass: 'border-[#9E3D24]/40 bg-[#9E3D24]/10 text-[#9E3D24]',
   },
   pedagogy: {
     label: 'Sư phạm',
     Icon: GraduationCap,
-    borderClass: 'border-l-2 border-indigo-400 dark:border-indigo-500',
-    textClass: 'text-indigo-900 dark:text-indigo-300',
-    badgeClass:
-      'border-indigo-300/60 bg-indigo-50 text-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800/60',
+    borderClass: 'border-l-2 border-[#718C7E]',
+    textClass: 'text-[#29383D]',
+    badgeClass: 'border-[#718C7E]/40 bg-[#E8EFEB] text-[#3F6570]',
   },
   figure: {
     label: 'Minh họa',
     Icon: ImageIcon,
-    borderClass: 'border-l border-stone-200/90 dark:border-stone-700/80',
-    textClass: 'text-stone-600 dark:text-stone-400',
-    badgeClass:
-      'border-stone-300/80 bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:border-stone-700',
+    borderClass: 'border-l-2 border-[#CFDADB]',
+    textClass: 'text-[#29383D]',
+    badgeClass: 'border-[#CFDADB] bg-[#EAF0F1] text-[#29383D]',
   },
   note: {
     label: 'Chú giải',
     Icon: Info,
-    borderClass: 'border-l-2 border-stone-400 dark:border-stone-500',
-    textClass: 'text-stone-600 dark:text-stone-400',
-    badgeClass:
-      'border-stone-300/80 bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300 dark:border-stone-700',
+    borderClass: 'border-l-2 border-[#718C7E]',
+    textClass: 'text-[#29383D]',
+    badgeClass: 'border-[#CFDADB] bg-[#EAF0F1] text-[#29383D]',
   },
 };
 
@@ -209,30 +204,34 @@ export const Sidenote: FC<SidenoteProps> = ({
             role="region"
             aria-label={`Nội dung chú giải ${displayNumber ? `số ${displayNumber}` : ''}`}
             className={cn(
-              'my-3 block w-full rounded-xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-3.5 text-left shadow-sm backdrop-blur-md transition-all dark:border-stone-700/80 dark:bg-stone-900/95',
+              'clear-both my-3 mb-4 block w-full rounded-xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-4 text-left text-xs leading-relaxed text-[#29383D] shadow-2xs transition-all md:text-sm',
               style.borderClass,
             )}
           >
-            <span className="mb-1.5 flex items-center justify-between gap-2 border-b border-stone-200/50 pb-1.5 dark:border-stone-800/60">
-              <span className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-stone-600 uppercase dark:text-stone-300">
-                <TypeIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="mb-1 flex items-center justify-between gap-2 font-mono text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
+              <span className="flex items-center gap-1.5">
+                <TypeIcon
+                  className="h-3.5 w-3.5 shrink-0 text-current"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
+                {displayNumber && <span>[{displayNumber}]</span>}
                 <span>{label}</span>
-                {displayNumber && <span className="opacity-70">[{displayNumber}]</span>}
               </span>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="cursor-pointer rounded p-0.5 text-xs text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
+                className="cursor-pointer rounded p-0.5 text-xs text-[#55676B] hover:text-[#29383D]"
                 aria-label="Đóng chú giải"
               >
                 ✕
               </button>
             </span>
-            <span className={cn('block font-serif text-[13px] leading-relaxed', style.textClass)}>
+            <span className={cn('block text-xs leading-relaxed md:text-sm', style.textClass)}>
               {children}
             </span>
             {caption && (
-              <span className="mt-2 block border-t border-stone-200/50 pt-1.5 font-serif text-[12px] text-stone-500 italic dark:border-stone-700/50 dark:text-stone-400">
+              <span className="mt-2 block border-t border-[#CFDADB] pt-1.5 font-serif text-[12px] text-[#55676B] italic">
                 {caption}
               </span>
             )}
@@ -248,8 +247,8 @@ export const Sidenote: FC<SidenoteProps> = ({
         className={cn(
           'hidden items-center justify-center rounded-full border px-1 py-0.5 align-super font-mono text-[10px] leading-none font-bold transition-colors duration-150 select-none lg:inline-flex',
           isHovered
-            ? 'border-stone-900 bg-stone-900 text-white shadow-2xs dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900'
-            : 'border-stone-300/80 bg-stone-100 text-stone-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300',
+            ? 'border-[#3F6570] bg-[#3F6570] text-white shadow-2xs'
+            : 'border-[#CFDADB] bg-[#EAF0F1] text-[#3F6570]',
         )}
         title={`Chú giải [${displayNumber}]: ${label}`}
       >
@@ -257,36 +256,40 @@ export const Sidenote: FC<SidenoteProps> = ({
       </sup>
 
       {/* ===================================================================
-          3. KHỐI CHÚ GIẢI LỀ HỌC THUẬT DESKTOP (lg:):
-          Định vị lề thẳng hàng với vị trí gọi thẻ & Tự động chống đè (Collision Stagger)
+          3. KHỐI CHÚ GIẢI HỌC THUẬT DESKTOP (lg: — Định dạng Inline Callout Full-Width):
+          Tuyệt đối không float hay co kéo độ rộng của bảng biểu và khối nội dung chính
           =================================================================== */}
       <span
         role="note"
         aria-label={`Chú giải ${displayNumber ? `số ${displayNumber}` : ''}: ${label}`}
         style={anchorOffsetY !== null ? { marginTop: `${anchorOffsetY}px` } : undefined}
         className={cn(
-          'sidenote-academic float-right clear-right my-1 mb-4 ml-5 hidden w-[230px] rounded-r-xl border-y border-r border-[#CFDADB] bg-[#F7FAFA]/90 p-3 font-serif text-xs leading-relaxed text-stone-600 shadow-2xs backdrop-blur-xs transition-all duration-200 md:text-sm lg:block xl:w-[250px] dark:border-stone-800/60 dark:bg-stone-900/60 dark:text-stone-400',
+          'sidenote-academic clear-both mt-3 mb-4 hidden w-full rounded-xl border border-[#CFDADB]/70 bg-[#E8EFEB]/60 p-4 text-xs leading-relaxed text-[#29383D] transition-all duration-200 md:text-sm lg:block',
           style.borderClass,
-          isHovered &&
-            'bg-[#F7FAFA] shadow-xs ring-1 ring-stone-400/60 dark:bg-stone-900/90 dark:ring-stone-500/60',
+          isHovered && 'bg-[#E8EFEB]/90 shadow-xs ring-1 ring-[#718C7E]/50',
         )}
       >
-        <span className="mb-1.5 flex items-center justify-between gap-1.5 border-b border-stone-200/50 pb-1 font-mono text-[11px] font-semibold tracking-wider text-stone-500 uppercase dark:border-stone-800/60 dark:text-stone-400">
+        <span className="mb-1 flex items-center justify-between gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#55676B] uppercase">
           <span className="flex items-center gap-1.5">
-            <TypeIcon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <TypeIcon
+              className="h-3.5 w-3.5 shrink-0 text-current"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+            {displayNumber && <span>[{displayNumber}]</span>}
             <span>{label}</span>
           </span>
           {displayNumber && (
-            <span className="py-0.2 rounded bg-stone-200/60 px-1 font-mono text-[10px] text-stone-600 dark:bg-stone-800 dark:text-stone-300">
+            <span className="rounded bg-[#EAF0F1] px-1.5 py-0.5 font-mono text-[10px] text-[#3F6570]">
               [{displayNumber}]
             </span>
           )}
         </span>
-        <span className={cn('block font-serif text-[13px] leading-relaxed', style.textClass)}>
+        <span className={cn('block text-xs leading-relaxed md:text-sm', style.textClass)}>
           {children}
         </span>
         {caption && (
-          <span className="mt-2 block border-t border-stone-200/50 pt-1.5 font-serif text-[12px] text-stone-500 italic dark:border-stone-700/50 dark:text-stone-400">
+          <span className="mt-2 block border-t border-[#CFDADB] pt-1.5 font-serif text-[12px] text-[#55676B] italic">
             {caption}
           </span>
         )}

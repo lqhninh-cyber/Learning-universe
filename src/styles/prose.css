@@ -158,13 +158,14 @@
   border-radius: 0 0.5rem 0.5rem 0;
 }
 
-/* Bảng so sánh (Comparison Tables): Cỡ chữ 15px, padding py-3 px-4 */
+/* Bảng so sánh (Comparison Tables): Cỡ chữ 15px, padding py-3 px-4, full-width không bị Sidenote chèn ép */
 .lu-prose table,
 .lesson-content table {
+  clear: both;
   width: 100%;
   border-collapse: collapse;
   font-size: 15px;
-  color: #292524;
+  color: #29383d;
   margin: 1.5rem 0;
 }
 
@@ -450,7 +451,8 @@ body[data-focus-mode='true'] header.lu-site-header:focus-within {
 }
 
 /* ============================================================================
-   CHÚ GIẢI LỀ HỌC THUẬT (ACADEMIC MARGINALIA & SIDENOTES - TUFTE / DISTILL STANDARD)
+   CHÚ GIẢI HỌC THUẬT (ACADEMIC CALLOUT SIDENOTES - MIST BLUE & SAGE STANDARD)
+   Tuyệt đối không dùng float: right làm co hẹp chiều ngang bảng biểu và văn bản
    ============================================================================ */
 .academic-sidenote-wrapper {
   font-family: inherit;
@@ -458,8 +460,10 @@ body[data-focus-mode='true'] header.lu-site-header:focus-within {
 
 @media (min-width: 1024px) {
   .sidenote-academic {
-    float: right;
-    clear: right;
+    display: block;
+    width: 100%;
+    clear: both;
+    float: none;
     font-family: var(--font-serif);
     text-align: left;
     user-select: text;
