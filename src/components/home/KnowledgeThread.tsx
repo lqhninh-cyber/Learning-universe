@@ -16,7 +16,7 @@ export const KNOWLEDGE_THREAD_STATIONS: readonly KnowledgeThreadStation[] = [
   { cx: 720, cy: 140, threshold: 0.02, name: 'Khởi đầu Hero' },
   { cx: 1120, cy: 860, threshold: 0.32, name: 'Spatial Subject Gallery' },
   { cx: 320, cy: 1640, threshold: 0.68, name: 'My Learning Orbit' },
-  { cx: 720, cy: 2380, threshold: 0.92, name: 'Chân trang Tri thức' },
+  { cx: 720, cy: 2320, threshold: 0.92, name: 'Vùng chuyển tiếp Tri thức' },
 ] as const;
 
 export const THREAD_PATH_LENGTH = 2400;
@@ -245,7 +245,7 @@ export function KnowledgeThread({
 
         {/* Đường dẫn nền tĩnh mảnh sắc viền gốm sứ */}
         <path
-          d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2380"
+          d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2320"
           stroke="#D9DFD9"
           strokeWidth="1.2"
           strokeDasharray="4 6"
@@ -254,7 +254,7 @@ export function KnowledgeThread({
         {/* Đường dẫn động vẽ theo thao tác cuộn trang */}
         <path
           ref={threadPathRef}
-          d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2380"
+          d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2320"
           stroke="#B85D6F"
           strokeWidth="1.75"
           strokeOpacity="0.65"
