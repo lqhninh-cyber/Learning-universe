@@ -295,10 +295,18 @@ export function LessonPage() {
               { label: 'Trang chủ', href: ROUTES.home },
               { label: subject.title, href: ROUTES.subjectOverview(subject.slug) },
               {
-                label: `Chương ${chapter.number}: ${chapter.title}`,
+                label:
+                  chapter.title.startsWith('Chương ') || chapter.title.startsWith('Chuyên đề ')
+                    ? chapter.title
+                    : `Chương ${chapter.number}: ${chapter.title}`,
                 href: ROUTES.subjectOverview(subject.slug),
               },
-              { label: `Bài ${chapter.number}.${lesson.number}: ${lesson.title}` },
+              {
+                label:
+                  lesson.title.startsWith('Bài ') || lesson.title.startsWith('Chuyên đề ')
+                    ? lesson.title
+                    : `Bài ${chapter.number}.${lesson.number}: ${lesson.title}`,
+              },
             ]}
           />
         </div>
@@ -429,6 +437,17 @@ export function LessonPage() {
                     Chương {chapter.number} · Bài {chapter.number}.{lesson.number}
                   </Badge>
                   <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
+                  {lesson.tags
+                    .filter((t) => /^CLO/i.test(t))
+                    .map((clo) => (
+                      <Badge
+                        key={clo}
+                        variant="neutral"
+                        className="border-amber-600/30 bg-amber-500/10 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-200"
+                      >
+                        Chuẩn đầu ra: {clo}
+                      </Badge>
+                    ))}
                   {lesson.status !== 'published' && (
                     <Badge variant={lesson.status}>Bản {lesson.status}</Badge>
                   )}
@@ -491,7 +510,7 @@ export function LessonPage() {
                 </div>
               )}
 
-              <div className="pt-2">
+              <div className="clear-both mt-6 flex flex-wrap items-center gap-2.5 border-t border-stone-200/60 pt-4 dark:border-stone-800/60">
                 <LessonActionBar
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
@@ -560,17 +579,6 @@ export function LessonPage() {
             <LessonToc lessonMeta={compiled?.lessonMeta ?? null} />
           </aside>
         )}
-      </div>
-
-      {/* Floating Quick Reading Controls Toolbar ở góc dưới phải màn hình */}
-      <div className="fixed right-6 bottom-6 z-40 hidden md:block print:hidden">
-        <ReadingControlsToolbar
-          fontSize={fontSize}
-          onFontSizeChange={handleFontSizeChange}
-          isFocusMode={isFocusMode}
-          onToggleFocusMode={handleToggleFocusMode}
-          className="border-stone-300/90 bg-white/95 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-md"
-        />
       </div>
     </FadeIn>
   );

@@ -86,7 +86,9 @@ body,
 }
 
 /* Nghệ thuật Chữ Khởi Đầu (Academic Drop Caps) */
-.academic-dropcap {
+.academic-dropcap::first-letter,
+.academic-dropcap-paragraph::first-letter,
+span.academic-dropcap {
   font-family: var(--font-serif);
   float: left;
   font-size: 3rem; /* text-5xl */
@@ -98,31 +100,20 @@ body,
 }
 
 @media (min-width: 768px) {
-  .academic-dropcap {
+  .academic-dropcap::first-letter,
+  .academic-dropcap-paragraph::first-letter,
+  span.academic-dropcap {
     font-size: 3.75rem; /* md:text-6xl */
   }
 }
 
-.dark .academic-dropcap,
-[data-theme='dark'] .academic-dropcap {
+.dark .academic-dropcap::first-letter,
+.dark .academic-dropcap-paragraph::first-letter,
+.dark span.academic-dropcap,
+[data-theme='dark'] .academic-dropcap::first-letter,
+[data-theme='dark'] .academic-dropcap-paragraph::first-letter,
+[data-theme='dark'] span.academic-dropcap {
   color: #f5f5f4; /* dark:text-stone-100 */
-}
-
-.academic-dropcap-paragraph::first-letter {
-  font-family: var(--font-serif);
-  float: left;
-  font-size: 3rem;
-  padding-right: 0.75rem;
-  padding-top: 0.25rem;
-  font-weight: 400;
-  color: #1c1917;
-  line-height: 1;
-}
-
-@media (min-width: 768px) {
-  .academic-dropcap-paragraph::first-letter {
-    font-size: 3.75rem;
-  }
 }
 
 /* ============================================================================

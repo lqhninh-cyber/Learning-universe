@@ -14,13 +14,11 @@ import {
   CheckCircle2,
   Compass,
   FileText,
-  GraduationCap,
   Heart,
   HelpCircle,
   Layers,
   Lightbulb,
   Scale,
-  ShieldAlert,
   Sparkles,
   Target,
   UserCheck,
@@ -37,46 +35,6 @@ export const Lesson1_1View: FC = () => {
   return createElement(
     'div',
     { className: 'space-y-8 text-stone-800 leading-relaxed' },
-
-    // Khung Tiêu đề & Chuẩn đầu ra CLO 2
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 1: Hoạt động sư phạm và Người giáo viên phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 2',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 1.1: Hoạt động sư phạm của người giáo viên',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Khám phá nguồn gốc bản chất của nghề dạy học, vai trò lịch sử - xã hội vĩ đại của người thầy và phân tích chuyên sâu 5 đặc điểm độc nhất vô nhị của lao động sư phạm theo Giáo trình Giáo dục học HCMUE.',
-      ),
-    ),
 
     // PHẦN I: NGUỒN GỐC THUẬT NGỮ VÀ ĐỊNH NGHĨA
     createElement(
@@ -449,46 +407,6 @@ export const Lesson1_2View: FC = () => {
     'div',
     { className: 'space-y-8 text-stone-800 leading-relaxed' },
 
-    // Khung Tiêu đề & Chuẩn đầu ra CLO 1, CLO 2
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-teal-800/20 bg-gradient-to-br from-[#f8fbfb] via-[#f3f9f9] to-teal-50/50 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-teal-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-900',
-          },
-          createElement(Award, { className: 'h-4 w-4 text-teal-800' }),
-          'Chương 1: Hoạt động sư phạm và Người giáo viên phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-bold text-teal-900' },
-          'Chuẩn đầu ra: CLO 1 & CLO 2',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 1.2: Nhân cách và Chuẩn nghề nghiệp của người giáo viên phổ thông',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Phân tích cấu trúc nhân cách người thầy (Phẩm chất & Năng lực) và làm chủ hệ thống 5 Tiêu chuẩn - 15 Tiêu chí Chuẩn nghề nghiệp giáo viên cơ sở GDPT theo Thông tư 20/2018/TT-BGDĐT.',
-      ),
-    ),
-
     // PHẦN I: CẤU TRÚC NHÂN CÁCH NGƯỜI THẦY
     createElement(
       'section',
@@ -667,48 +585,6 @@ export const Lesson1_3View: FC = () => {
   return createElement(
     'div',
     { className: 'space-y-8 text-stone-800 leading-relaxed' },
-
-    // Khung Tiêu đề & Chuẩn đầu ra CLO 1, CLO 3
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-indigo-800/20 bg-gradient-to-br from-[#f8f9fc] via-[#f3f5fa] to-indigo-50/50 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-indigo-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-900',
-          },
-          createElement(Compass, { className: 'h-4 w-4 text-indigo-800' }),
-          'Chương 1: Hoạt động sư phạm và Người giáo viên phổ thông',
-        ),
-        createElement(
-          'span',
-          {
-            className: 'rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-bold text-indigo-900',
-          },
-          'Chuẩn đầu ra: CLO 1 & CLO 3',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 1.3: Rèn luyện để trở thành người giáo viên hiệu quả',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Nắm vững bản chất của quá trình tự giáo dục nhân cách người thầy và thực hành thiết kế “Kế hoạch học tập và rèn luyện cá nhân trong 4 năm đại học” đối chiếu với 15 tiêu chí Chuẩn nghề nghiệp giáo viên.',
-      ),
-    ),
 
     // PHẦN I: BẢN CHẤT TỰ GIÁO DỤC
     createElement(
@@ -1031,46 +907,6 @@ export const Lesson1_4View: FC = () => {
   return createElement(
     'div',
     { className: 'space-y-8 text-stone-800 leading-relaxed' },
-
-    // Khung Tiêu đề & Chuẩn đầu ra CLO 1, CLO 2, CLO 3
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-rose-800/20 bg-gradient-to-br from-[#fcf8f8] via-[#faf3f3] to-rose-50/50 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-rose-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-900',
-          },
-          createElement(ShieldAlert, { className: 'h-4 w-4 text-rose-800' }),
-          'Chương 1: Hoạt động sư phạm và Người giáo viên phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-bold text-rose-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 2, CLO 3',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 1.4: Tình huống sư phạm & Đề cương tự luận ôn tập Chương 1',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Vận dụng lý luận lao động sư phạm và Chuẩn nghề nghiệp GV để giải quyết 2 ca tình huống sư phạm thực chiến, đồng thời ôn luyện 3 câu hỏi tự luận kinh điển phục vụ bài kiểm tra giữa kỳ A1.10.',
-      ),
-    ),
 
     // PHẦN I: 2 TÌNH HUỐNG SƯ PHẠM THỰC HÀNH
     createElement(
