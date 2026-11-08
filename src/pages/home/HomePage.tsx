@@ -26,10 +26,111 @@ import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
+import { ArchivalIndexView } from './ArchivalIndexView';
 import { HeritageArtShowcase } from './HeritageArtShowcase';
+import { QuickKaTeXDrawer } from './QuickKaTeXDrawer';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
+import {
+  getInitialHomepageViewMode,
+  type HomepageViewMode,
+  saveHomepageViewMode,
+  ViewModeToggle,
+} from './ViewModeToggle';
 
 type HubBranchFilter = 'all' | AcademicBranch;
+
+/**
+ * Chữ ký chìm nhận diện môn học (Watermark Signature) ở góc dưới bên phải mỗi thẻ môn học
+ * tại chế độ Bản đồ Không gian (Atlas Mode).
+ */
+function SubjectWatermarkSignature({ slug }: { readonly slug: string }) {
+  if (slug === 'cau-truc-dai-so') {
+    // Cấu trúc đại số: Biểu đồ lưới nhóm Cayley & ký hiệu đồng cấu
+    return (
+      <svg
+        data-testid={`subject-watermark-${slug}`}
+        viewBox="0 0 160 160"
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+      >
+        <g stroke="#29383D" strokeWidth="2.5" fill="none">
+          <rect x="20" y="20" width="90" height="90" rx="6" />
+          <line x1="50" y1="20" x2="50" y2="110" />
+          <line x1="80" y1="20" x2="80" y2="110" />
+          <line x1="20" y1="50" x2="110" y2="50" />
+          <line x1="20" y1="80" x2="110" y2="80" />
+          <circle cx="126" cy="126" r="22" />
+          <path d="M 96 126 L 150 126" />
+        </g>
+        <text x="24" y="148" fill="#29383D" fontSize="22" fontFamily="serif" fontWeight="bold">
+          G / ker φ ≅ Im φ
+        </text>
+      </svg>
+    );
+  }
+
+  if (slug === 'hinh-hoc-affine') {
+    // Hình học Affine: Hệ trục tọa độ không gian affine 3 chiều
+    return (
+      <svg
+        data-testid={`subject-watermark-${slug}`}
+        viewBox="0 0 160 160"
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+      >
+        <g stroke="#29383D" strokeWidth="3" fill="none">
+          <line x1="75" y1="95" x2="75" y2="15" />
+          <line x1="75" y1="95" x2="148" y2="120" />
+          <line x1="75" y1="95" x2="18" y2="138" />
+          <polygon points="75,35 130,114 35,126" strokeWidth="2" />
+          <circle cx="75" cy="95" r="5" fill="#29383D" />
+        </g>
+      </svg>
+    );
+  }
+
+  if (slug === 'giai-tich-ham-mot-bien') {
+    // Giải tích 1: Ký hiệu tích phân cong vút ∫ và đường cong phân bố hàm liên tục
+    return (
+      <svg
+        data-testid={`subject-watermark-${slug}`}
+        viewBox="0 0 160 160"
+        aria-hidden="true"
+        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+      >
+        <path
+          d="M 55 138 C 68 138, 72 115, 76 80 C 80 45, 84 22, 98 22"
+          stroke="#29383D"
+          strokeWidth="5"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 15 120 C 45 115, 65 45, 95 60 C 120 72, 135 35, 152 28"
+          stroke="#29383D"
+          strokeWidth="2.5"
+          fill="none"
+        />
+      </svg>
+    );
+  }
+
+  // Giáo dục học: Sơ đồ 3 vòng tròn giao thoa (Nhà trường - Gia đình - Xã hội)
+  return (
+    <svg
+      data-testid={`subject-watermark-${slug}`}
+      viewBox="0 0 160 160"
+      aria-hidden="true"
+      className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+    >
+      <g stroke="#29383D" strokeWidth="3" fill="none">
+        <circle cx="80" cy="56" r="38" />
+        <circle cx="56" cy="100" r="38" />
+        <circle cx="104" cy="100" r="38" />
+      </g>
+    </svg>
+  );
+}
 
 /**
  * Minh họa hình học không gian độc bản (Custom Spatial SVG Artwork)
