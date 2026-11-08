@@ -75,7 +75,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
       expect(screen.getByText(/DI SẢN HỌC THUẬT & NGHỆ THUẬT/i)).toBeInTheDocument();
-      expect(screen.getByText(/01 \/ 10/i)).toBeInTheDocument();
+      expect(screen.getByText(/01 \/ 15/i)).toBeInTheDocument();
 
       // Tác phẩm 1: Thầy đồ Cóc
       expect(screen.getByRole('heading', { name: /Thầy đồ Cóc/i })).toBeInTheDocument();
@@ -146,8 +146,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(artwork2Button).toBeInTheDocument();
     });
 
-    it('chứa toàn bộ 10 tác phẩm di sản đích thực theo yêu cầu', () => {
-      expect(HERITAGE_ARTWORKS).toHaveLength(10);
+    it('chứa toàn bộ 15 tác phẩm di sản đích thực theo yêu cầu', () => {
+      expect(HERITAGE_ARTWORKS).toHaveLength(15);
       const ids = HERITAGE_ARTWORKS.map((a) => a.id);
       expect(ids).toEqual([
         'thay-do-coc',
@@ -160,7 +160,22 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         'euclid-elements-1482',
         'nguoi-chiem-tinh',
         'de-divina-proportione',
+        'ban-do-hong-duc',
+        'tuong-quan-am-but-thap',
+        'copernicus-1543',
+        'kepler-1596',
+        'chua-mot-cot-1049',
       ]);
+
+      const ngocLu = HERITAGE_ARTWORKS.find((a) => a.id === 'trong-dong-ngoc-lu');
+      expect(ngocLu).toBeDefined();
+      expect(ngocLu?.imageSrc).toContain('Ngoc_Lu.jpg');
+      expect(ngocLu?.imageSrc).not.toContain('.svg');
+    });
+
+    it('hiển thị bộ đếm tác phẩm dạng 01 / 15', () => {
+      render(<HeritageArtShowcase />);
+      expect(screen.getByText('01 / 15')).toBeInTheDocument();
     });
   });
 

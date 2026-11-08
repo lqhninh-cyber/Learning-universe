@@ -29,7 +29,7 @@ export interface HeritageArtwork {
 }
 
 /**
- * 10 Kiệt tác nghệ thuật & tư liệu lịch sử đích thực đại diện cho
+ * 15 Kiệt tác nghệ thuật & tư liệu lịch sử đích thực đại diện cho
  * sự giao hòa giữa Toán học, Hình học, Triết học và Nghệ thuật Sư phạm.
  */
 export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
@@ -74,7 +74,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'melencolia-i',
-    title: 'Melencolia I',
+    title: 'Bản khắc đồng "Melencolia I"',
     originalTitle: 'Melencolia I (Meisterstiche — Bản khắc bậc thầy số I)',
     artistOrOrigin: 'Albrecht Dürer',
     yearOrEra: '1514 · Nuremberg, Đức',
@@ -93,7 +93,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'truong-hoc-athena',
-    title: 'Trường học Athena (Scuola di Atene)',
+    title: 'Bích họa "Trường học Athena" (Scuola di Atene)',
     originalTitle: 'La Scuola di Atene (Trường học Athena — Bích họa Phục hưng)',
     artistOrOrigin: 'Raphael (Raffaello Sanzio)',
     yearOrEra: '1509 – 1511 · Vatican',
@@ -114,7 +114,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'nguoi-vitruvius',
-    title: "Người Vitruvius (L'Uomo Vitruviano)",
+    title: 'Bản vẽ "Người Vitruvius" (L\'Uomo Vitruviano)',
     originalTitle:
       "Le proporzioni del corpo umano secondo Vitruvio (L'Uomo Vitruviano — Người Vitruvius)",
     artistOrOrigin: 'Leonardo da Vinci',
@@ -138,13 +138,13 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     id: 'bia-tien-si',
     title: '82 Bia Tiến sĩ Văn Miếu Thăng Long',
     originalTitle: '82 Bia Tiến sĩ Văn Miếu – Quốc Tử Giám (Thạch bi đề danh tiến sĩ khoa thị)',
-    artistOrOrigin: 'Triều Lê - Mạc - Lê Trung Hưng',
+    artistOrOrigin: 'Triều Lê – Mạc – Lê Trung Hưng',
     yearOrEra: '1484 – 1780 · Hà Nội, Việt Nam',
     eraAndPeriod: '1484 – 1780 · Hà Nội, Việt Nam',
     materialAndTechnique:
       'Đá xanh nguyên khối đục đẽo thủ công, khắc chữ Hán chân phương tinh xảo, dựng trên lưng rùa đá (quy phụ thạch bi) tượng trưng cho sự trường tồn vĩnh cửu.',
     archivalLocation: 'Vườn bia Văn Miếu – Quốc Tử Giám, Hà Nội (Di sản Tư liệu Thế giới UNESCO)',
-    caption: 'Triều Lê - Mạc - Lê Trung Hưng · Hiền tài là nguyên khí của quốc gia',
+    caption: 'Triều Lê – Mạc – Lê Trung Hưng · Hiền tài là nguyên khí của quốc gia',
     academicSignificance:
       'Hệ thống 82 bia đá ghi danh các khoa thi tiến sĩ từ năm 1442 đến 1779. Nổi bật là bài văn bia năm 1442 do Thân Nhân Trung soạn thảo với lời răn bất hủ khẳng định vai trò sống còn của giáo dục và tri thức đối với sự hưng thịnh của quốc gia.',
     coreAcademicValue:
@@ -155,20 +155,20 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   {
     id: 'trong-dong-ngoc-lu',
     title: 'Mặt Trống đồng Ngọc Lũ',
-    originalTitle: 'Mặt Trống đồng Ngọc Lũ (Bảo vật Quốc gia số 1 — Văn hóa Đông Sơn)',
+    originalTitle: 'Mặt Trống đồng Ngọc Lũ I (Bảo vật Quốc gia Đợt 1 — Văn hóa Đông Sơn)',
     artistOrOrigin: 'Cư dân Việt cổ (Bảo vật Quốc gia)',
     yearOrEra: 'Thế kỷ II – III TCN · Văn hóa Đông Sơn',
     eraAndPeriod: 'Thế kỷ II – III TCN · Văn hóa Đông Sơn',
     materialAndTechnique:
-      'Đúc đồng bằng khuôn nhiều mang (khuôn sáp chảy kết hợp đất sét chịu nhiệt); chạm khắc chìm hoa văn hình học và biểu tượng nhân sinh cực kỳ tinh vi.',
+      'Đúc đồng bằng khuôn nhiều mang (khuôn sáp chảy kết hợp đất sét chịu nhiệt); chạm khắc chìm hoa văn hình học và biểu tượng nhân sinh cực kỳ tinh vi; sắc độ patina xanh xám rêu phong tự nhiên.',
     archivalLocation: 'Bảo tàng Lịch sử Quốc gia Việt Nam (Hà Nội, Bảo vật Quốc gia Đợt 1)',
     caption: 'Văn hóa Đông Sơn · Đỉnh cao kỹ thuật luyện kim và đối xứng hình học cổ xưa',
     academicSignificance:
       'Mặt trống đồng thể hiện đỉnh cao của nghệ thuật đối xứng tâm hình học với ngôi sao 14 cánh ở trung tâm và 16 vành hoa văn đồng tâm chứa hình chim lạc, hươu sao, nhà sàn và vũ điệu lễ hội, phản ánh hệ thống lịch pháp và tri thức toán học sơ khai.',
     coreAcademicValue:
       'Đỉnh cao kỹ thuật luyện kim đúc đồng, nghệ thuật đối xứng tâm hình học và hệ thống biểu tượng lịch pháp thiên văn cổ xưa.',
-    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Trong_Dong_Ngoc_Lu.svg',
-    alt: 'Hoa văn hình học đối xứng tâm trên Mặt Trống đồng Ngọc Lũ Văn hóa Đông Sơn',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Ngoc_Lu.jpg',
+    alt: 'Ảnh chụp hiện vật bảo tàng Mặt Trống đồng Ngọc Lũ I tại Bảo tàng Lịch sử Quốc gia',
   },
   {
     id: 'euclid-elements-1482',
@@ -191,7 +191,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'nguoi-chiem-tinh',
-    title: 'Người Chiêm tinh (The Astronomer)',
+    title: 'Bức họa "Người Chiêm tinh" (The Astronomer)',
     originalTitle: 'De astronoom (Người Chiêm tinh / Nhà thiên văn học)',
     artistOrOrigin: 'Johannes Vermeer',
     yearOrEra: '1668 · Delft, Hà Lan',
@@ -227,6 +227,103 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     imageSrc:
       'https://upload.wikimedia.org/wikipedia/commons/3/36/De_divina_proportione_-_Icosaedron_Elevatum_Solidum.jpg',
     alt: 'Minh họa khối đa diện đều Icosaedron Elevatum Solidum của Leonardo da Vinci trong De Divina Proportione',
+  },
+  {
+    id: 'ban-do-hong-duc',
+    title: 'Bản đồ Hồng Đức (Hồng Đức bản đồ, 1490)',
+    originalTitle:
+      'Hồng Đức bản đồ sách (洪德版圖冊 — Bản đồ Thăng Long kinh thành & 13 thừa tuyên)',
+    artistOrOrigin: 'Triều đình Lê sơ (Bộ Lễ & Hàn lâm viện)',
+    yearOrEra: '1490 · Triều Lê Thánh Tông, Đại Việt',
+    eraAndPeriod: '1490 · Thăng Long, Đại Việt (Niên hiệu Hồng Đức thứ 21)',
+    materialAndTechnique:
+      'Bản đồ trắc địa vẽ trên lụa và mộc bản in trên giấy dó thủ công, sử dụng hệ thống ký hiệu tọa độ địa lý và phương vị cổ truyền.',
+    archivalLocation: 'Viện Nghiên cứu Hán Nôm (Hà Nội) & Thư viện Viễn Đông Bác Cổ (EFEO)',
+    caption: 'Triều Lê Thánh Tông (1490) · Cột mốc trắc địa và xác lập chủ quyền lãnh thổ Đại Việt',
+    academicSignificance:
+      'Bộ bản đồ địa lý hành chính và trắc lượng đầu tiên trong lịch sử dân tộc. Bộ bản đồ tổng hợp địa giới kinh thành Thăng Long và 13 thừa tuyên, ghi nhận sông núi, đường sá, hải đảo và đồn lũy, khẳng định chủ quyền lãnh thổ bất khả xâm phạm và tư duy tổ chức không gian quốc gia tiến bộ thời Lê sơ.',
+    coreAcademicValue:
+      'Bộ bản đồ địa lý hành chính và trắc địa đầu tiên trong lịch sử Việt Nam, xác lập toàn vẹn chủ quyền lãnh thổ và thể hiện tư duy quản trị quốc gia khoa học thời Lê sơ.',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/6/68/B%E1%BA%A3n_%C4%91%E1%BB%93_kinh_th%C3%A0nh_Th%C4%83ng_Long%2C_theo_H%E1%BB%93ng_%C4%90%E1%BB%A9c_b%E1%BA%A3n_%C4%91%E1%BB%93_s%C3%A1ch_%E6%B4%AA%E5%BE%B7%E7%89%88%E5%9C%96%E5%86%8A_%281490%29.jpg',
+    alt: 'Bản đồ kinh thành Thăng Long trong bộ Hồng Đức bản đồ sách năm 1490 triều Lê Thánh Tông',
+  },
+  {
+    id: 'tuong-quan-am-but-thap',
+    title: 'Tượng Quan Âm thiên thủ thiên nhãn (Chùa Bút Tháp)',
+    originalTitle:
+      'Tượng Quan Âm nghìn mắt nghìn tay (Bảo vật Quốc gia — Diên Phúc Tự / Chùa Bút Tháp)',
+    artistOrOrigin: 'Trương Thọ Nam (Bảo vật Quốc gia)',
+    yearOrEra: '1656 · Bắc Ninh, Việt Nam',
+    eraAndPeriod: '1656 · Bút Tháp, Thuận Thành, Bắc Ninh (Thời Lê Trung Hưng)',
+    materialAndTechnique:
+      'Gỗ mít đục chạm thủ công truyền thống, thếp vàng và phủ sơn son ta nhiều lớp; cao 3.7 m với 42 cánh tay lớn và 952 cánh tay nhỏ tạo quầng hào quang nan quạt.',
+    archivalLocation: 'Chùa Bút Tháp (Xã Đình Tổ, Thị xã Thuận Thành, Tỉnh Bắc Ninh)',
+    caption: 'Trương Thọ Nam (1656) · Đỉnh cao điêu khắc gỗ và cấu trúc hình học tỏa tròn đối xứng',
+    academicSignificance:
+      'Kiệt tác điêu khắc gỗ cổ truyền hoàn mỹ bậc nhất lịch sử mỹ thuật Việt Nam. Tượng đài kết hợp 42 cánh tay tạo thế ấn và 952 cánh tay phụ gắn trong một quầng nan quạt elip đồng tâm tỏa rộng, đạt tới sự cân đối hình học tuyệt đối về trọng tâm, tỷ lệ và nhịp điệu không gian 3 chiều.',
+    coreAcademicValue:
+      'Đỉnh cao nghệ thuật điêu khắc gỗ cổ truyền Việt Nam; kết cấu nan quạt với 952 cánh tay phụ tạo nên cấu trúc hình học tỏa tròn đối xứng hoàn mỹ trong không gian 3 chiều.',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/7/76/La_statue_de_Quan_Am_dans_la_pagode_But_Thap.jpg',
+    alt: 'Tượng Quan Âm thiên thủ thiên nhãn tại Chùa Bút Tháp Bắc Ninh do Trương Thọ Nam tạc năm 1656',
+  },
+  {
+    id: 'copernicus-1543',
+    title: 'Về chuyển động quay của các thiên thể (Copernicus, 1543)',
+    originalTitle: 'De revolutionibus orbium coelestium (Về sự vận hành của các thiên cầu)',
+    artistOrOrigin: 'Nicolaus Copernicus',
+    yearOrEra: '1543 · Nuremberg, Đức',
+    eraAndPeriod: '1543 · Nuremberg, Đức (Nhà in Johannes Petreius)',
+    materialAndTechnique:
+      'Bản in mộc bản khắc gỗ (Woodcut) kết hợp chữ chì di động trên giấy sợi bông, trình bày sơ đồ quỹ đạo các thiên cầu đồng tâm đặt Mặt Trời tại tâm điểm.',
+    archivalLocation: 'Thư viện Đại học Jagiellonian (Kraków, Ba Lan) & Thư viện Quốc gia Ba Lan',
+    caption: 'Nicolaus Copernicus (1543) · Khởi đầu Cách mạng Khoa học và thuyết nhật tâm vũ trụ',
+    academicSignificance:
+      'Công trình mang tính bước ngoặt phá vỡ vũ trụ quan địa tâm Ptolemy ngàn năm. Copernicus sử dụng mô hình hình học các đường tròn đồng tâm chứng minh Mặt Trời là trung tâm của hệ hành tinh, mở đường cho cuộc Cách mạng Khoa học và phương pháp suy luận toán học hiện đại.',
+    coreAcademicValue:
+      'Mốc son khởi đầu cuộc Cách mạng Khoa học; dùng cấu trúc quỹ đạo hình học để thiết lập thuyết nhật tâm, giải phóng tư duy nhân loại khỏi định kiến vũ trụ quan trung cổ.',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/5/5d/Copernican_heliocentrism_diagram.jpg',
+    alt: 'Sơ đồ quỹ đạo hệ nhật tâm trong tác phẩm De revolutionibus orbium coelestium của Nicolaus Copernicus năm 1543',
+  },
+  {
+    id: 'kepler-1596',
+    title: 'Mysterium Cosmographicum (Johannes Kepler, 1596)',
+    originalTitle:
+      'Mysterium Cosmographicum (Bí mật Vũ trụ học — Mô hình 5 khối đa diện đều Platon)',
+    artistOrOrigin: 'Johannes Kepler',
+    yearOrEra: '1596 · Tübingen, Đức',
+    eraAndPeriod: '1596 · Tübingen, Đức (Nhà in Georg Gruppenbach)',
+    materialAndTechnique:
+      'Bản khắc đồng (Copperplate engraving) lồng ghép 5 khối đa diện đều Platon vào các mặt cầu quỹ đạo hành tinh.',
+    archivalLocation: 'Thư viện Đại học Tübingen (Đức) & Bảo tàng Lịch sử Khoa học Oxford (Anh)',
+    caption: 'Johannes Kepler (1596) · Giao thoa giữa hình học thuần túy và quỹ đạo thiên văn học',
+    academicSignificance:
+      'Tác phẩm đầu tiên công khai bảo vệ hệ nhật tâm Copernic. Kepler đã dùng 5 khối đa diện đều Platon (tứ diện, lập phương, bát diện, mười hai mặt, hai mươi mặt đều) lồng ghép giữa 6 quỹ đạo hành tinh để giải mã tỷ lệ khoảng cách hình học của vũ trụ.',
+    coreAcademicValue:
+      'Sự giao thoa tuyệt đối giữa thiên văn học và hình học thuần túy; mô hình lồng ghép 5 khối đa diện đều Platon kinh điển để giải mã tỷ lệ khoảng cách giữa các quỹ đạo hành tinh.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Kepler-solar-system-1.png',
+    alt: 'Mô hình 5 khối đa diện đều Platon lồng ghép trong Mysterium Cosmographicum của Johannes Kepler năm 1596',
+  },
+  {
+    id: 'chua-mot-cot-1049',
+    title: 'Kiến trúc Chùa Một Cột (Diên Hựu Tự, 1049)',
+    originalTitle: 'Diên Hựu Tự — Liên Hoa Đài (Chùa Một Cột thời Lý)',
+    artistOrOrigin: 'Triều Lý Thái Tông',
+    yearOrEra: '1049 · Thăng Long – Hà Nội',
+    eraAndPeriod: '1049 · Thăng Long – Hà Nội (Triều Lý Thái Tông)',
+    materialAndTechnique:
+      'Cột đá nguyên khối tròn đường kính 1.2 m, đỡ đài sen gỗ vuông sơn son tám mái cong, vươn lên giữa hồ sen Linh Chiểu hình vuông.',
+    archivalLocation: 'Khu di tích Chùa Một Cột (Phố Chùa Một Cột, Đội Cấn, Ba Đình, Hà Nội)',
+    caption:
+      'Triều Lý Thái Tông (1049) · Đài sen vuông trên cột tròn — Triết lý không gian trời tròn đất vuông',
+    academicSignificance:
+      'Đỉnh cao kiến trúc cổ truyền độc bản của văn minh Đại Việt thời Lý. Cấu trúc đài sen hình vuông đặt trên một cột đá tròn vươn lên từ hồ nước vuông thể hiện sâu sắc triết lý vũ trụ luận "trời tròn đất vuông", sự thăng bằng tĩnh tại và vẻ đẹp hình học kiến trúc tôn giáo thuần Việt.',
+    coreAcademicValue:
+      'Đỉnh cao kiến trúc cổ truyền độc bản; đài sen hình vuông đặt trên một cột đá tròn vươn lên giữa hồ Linh Chiểu, phản chiếu triết lý trời tròn đất vuông và sự cân bằng không gian tuyệt đối.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Chua_Mot_Cot.jpg',
+    alt: 'Kiến trúc Chùa Một Cột Liên Hoa Đài thời Lý tại Thăng Long Hà Nội',
   },
 ] as const;
 
