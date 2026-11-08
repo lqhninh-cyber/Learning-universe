@@ -730,7 +730,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
 
       const resolved6_2 = resolveLessonShortcut('6-2');
       expect(resolved6_2).toBeDefined();
-      expect(resolved6_2?.lesson.title).toContain('Lập kế hoạch giáo dục lớp chủ nhiệm');
+      expect(resolved6_2?.lesson.title).toContain('kế hoạch chủ nhiệm');
 
       const resolved6_3 = resolveLessonShortcut('6-3');
       expect(resolved6_3).toBeDefined();
@@ -742,7 +742,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
 
       const bySlug6_2 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-2');
       expect(bySlug6_2).toBeDefined();
-      expect(bySlug6_2?.lesson.title).toContain('Lập kế hoạch giáo dục lớp chủ nhiệm');
+      expect(bySlug6_2?.lesson.title).toContain('kế hoạch chủ nhiệm');
 
       const bySlug6_3 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-3');
       expect(bySlug6_3).toBeDefined();
@@ -805,6 +805,124 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       fireEvent.click(q1CorrectBtn);
       expect(screen.getByText(/Chính xác!/i)).toBeInTheDocument();
       expect(screen.getByText(/Theo Giáo trình HCMUE/i)).toBeInTheDocument();
+    });
+
+    it('nạp và kết xuất đầy đủ 3 Khối Thực hành Nghiệp vụ Sư phạm theo chuẩn EDUC2802 (CLO6, CLO8, CLO9)', () => {
+      // 1. Thực hành 1: EDUC2802-PRACTICE-01
+      const mod1 = getChapter6LessonModule('educ2802-practice-01');
+      expect(mod1).toBeDefined();
+      const Comp1 = mod1!.default;
+      const { unmount: unmount1 } = render(<Comp1 />);
+      expect(screen.getByText(/Mã bài: EDUC2802-PRACTICE-01/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/CLO6/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText(/Giáo trình HCMUE \(Trang 65 – 66\)/i)).toBeInTheDocument();
+      // Action bar
+      expect(
+        screen.getAllByRole('button', { name: /Đánh dấu hoàn thành/i }).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByRole('button', { name: /Lưu bài/i }).length).toBeGreaterThanOrEqual(1);
+      // 2 Tình huống mẫu phát triển toàn diện
+      expect(
+        screen.getByText(/Mẫu 1: Xử lý Tranh luận Điểm số Công khai giữa Giờ học/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Mẫu 2: Xử lý Vấn nạn Cô lập và Tẩy chay Học sinh Nghèo/i),
+      ).toBeInTheDocument();
+      expect(screen.getAllByText(/Đối thoại sư phạm mẫu:/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getByText(/Giáo viên \(nói với âm lượng vừa phải, đĩnh đạc\):/i),
+      ).toBeInTheDocument();
+      unmount1();
+
+      // 2. Thực hành 2: EDUC2802-PRACTICE-02
+      const mod2 = getChapter6LessonModule('educ2802-practice-02');
+      expect(mod2).toBeDefined();
+      const Comp2 = mod2!.default;
+      const { unmount: unmount2 } = render(<Comp2 />);
+      expect(screen.getByText(/Mã bài: EDUC2802-PRACTICE-02/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/CLO8/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText(/Chương 4 Giáo trình HCMUE \(Trang 70 – 82\)/i)).toBeInTheDocument();
+      // 6 Phần Kế hoạch giáo dục lớp chủ nhiệm
+      expect(
+        screen.getByText(/Cấu trúc Bản Kế hoạch Giáo dục Lớp Chủ nhiệm \(Khung 6 Phần Chuẩn\)/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Phân tích bối cảnh và đặc điểm tình hình lớp học/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Mục tiêu và các chỉ tiêu phấn đấu trong năm học/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Nội dung giáo dục toàn diện theo các mặt hoạt động/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/Hệ thống các biện pháp thực hiện khoa học/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Phân công lực lượng giáo dục và tiến độ thời gian theo tháng/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Tiêu chí đánh giá, giám sát và cơ chế điều chỉnh kế hoạch/i),
+      ).toBeInTheDocument();
+      // Kịch bản tiết Sinh hoạt lớp 45 phút
+      expect(screen.getByText(/Kịch bản Chi tiết Tiết Sinh hoạt Lớp/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Hai Phần Chuẩn: 15p Hành chính \+ 30p Trải nghiệm/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Lớp trưởng điều hành & Các tổ trưởng báo cáo sơ kết thi đua tuần/i),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/Hoạt động 1: Khởi động — Trò chơi tương tác/i)).toBeInTheDocument();
+      unmount2();
+
+      // 3. Thực hành 3: EDUC2802-PRACTICE-03
+      const mod3 = getChapter6LessonModule('educ2802-practice-03');
+      expect(mod3).toBeDefined();
+      const Comp3 = mod3!.default;
+      const { unmount: unmount3 } = render(<Comp3 />);
+      expect(screen.getByText(/Mã bài: EDUC2802-PRACTICE-03/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/CLO9/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getByText(/Chương 5 Giáo trình HCMUE \(Trang 116 – 124\) & Mô đun 2/i),
+      ).toBeInTheDocument();
+      // Khung Công văn 5512 & Mô đun 2
+      expect(
+        screen.getByText(
+          /1\. Tích hợp Tài liệu Mô đun 2: Đặc thù Thiết kế Chủ đề HĐTN, HN cấp THCS và THPT/i,
+        ),
+      ).toBeInTheDocument();
+      // Kế hoạch mẫu 3 tiết
+      expect(
+        screen.getByText(/Chủ đề: Khám phá bản thân và xu hướng nghề nghiệp trong kỷ nguyên số/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Hoạt động 1: Khởi động \/ Khám phá — Trò chơi "Ai là ai trong thế giới số\?"/i,
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Hoạt động 2: Hình thành kiến thức \/ Kết nối trải nghiệm — Giải mã "ADN nghề nghiệp"/i,
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Hoạt động 3: Luyện tập \/ Thực hành trải nghiệm — Xây dựng "Bản đồ hướng nghiệp 4\.0"/i,
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Hoạt động 4: Vận dụng \/ Mở rộng — Thiết lập "Hộ chiếu nghề nghiệp 3 năm THPT"/i,
+        ),
+      ).toBeInTheDocument();
+      // Rubric đánh giá
+      expect(
+        screen.getByText(
+          /2\. Tiến trình 4 Hoạt động Trải nghiệm & Bảng Rubric Đánh giá Thực hành 3/i,
+        ),
+      ).toBeInTheDocument();
+      expect(screen.getAllByText(/Chưa đạt/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Đạt/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Tốt/i).length).toBeGreaterThanOrEqual(1);
+      unmount3();
     });
   });
 
