@@ -27,6 +27,7 @@ import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
 import { ArchivalIndexView } from './ArchivalIndexView';
+import { GrandLotusLake } from './GrandLotusLake';
 import { HeritageArtShowcase } from './HeritageArtShowcase';
 import { KnowledgeThread } from './KnowledgeThread';
 import { QuickKaTeXDrawer } from './QuickKaTeXDrawer';
@@ -1450,6 +1451,9 @@ export function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Đại cảnh Hồ Sen Tri Thức chuyển tiếp chân trang (Grand Lotus Lake Panorama) */}
+      <GrandLotusLake />
 
       {/* Ngăn kéo Tra cứu Thuật ngữ & Ký hiệu KaTeX (Quick KaTeX Drawer) */}
       <QuickKaTeXDrawer isOpen={isKaTeXDrawerOpen} onClose={() => setIsKaTeXDrawerOpen(false)} />

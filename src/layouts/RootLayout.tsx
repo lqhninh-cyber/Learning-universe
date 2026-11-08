@@ -37,7 +37,7 @@ function RootLayoutContent() {
 
       {/* 2. MAIN OUTLET CONTAINER */}
       {isHomePage ? (
-        <main className="flex-1 overflow-x-clip pb-16">
+        <main className="flex-1 overflow-x-clip">
           <Outlet />
         </main>
       ) : isCourseDetailPage ? (
