@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import { type FC, type ReactNode, useEffect, useState } from 'react';
 import { SidenoteProvider } from '@/shared/components/Sidenote';
 import { cn } from '@/shared/lib/cn';
 
@@ -15,15 +15,19 @@ export interface LessonViewProps {
   readonly marginalia?: ReactNode;
   /** Nội dung thanh điều hướng chương bài bên trái (nếu mở). */
   readonly sidebar?: ReactNode;
+  /** Chế độ đọc chuyên sâu ('light' | 'dark'). Mặc định đọc từ localStorage hoặc light. */
+  readonly readingTheme?: 'light' | 'dark';
+  /** Callback chuyển đổi chế độ đọc (tùy chọn). */
+  readonly onToggleReadingTheme?: () => void;
   readonly className?: string;
 }
 
 /**
- * Chuẩn hóa bố cục trang bài đọc (LessonView — Hệ màu "Mist Blue & Sage"):
- * - Toàn bộ không gian đọc nằm trên nền #EAF0F1 (`text-[#29383D]`).
- * - Sidebar chương bài bên trái (nếu mở): `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-2 custom-scrollbar scrollbar-thin bg-[#E1E9EA] border-r border-[#CFDADB] text-[#29383D]`.
- * - Khung bài học chính: `bg-[#F7FAFA] border border-[#CFDADB] rounded-3xl p-8 md:p-12 shadow-sm text-[#29383D]`.
- * - Cột mục lục / chú giải bên phải: `sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pl-2 custom-scrollbar scrollbar-thin bg-[#E1E9EA]/80 backdrop-blur border border-[#CFDADB] rounded-2xl text-[#29383D]`.
+ * Chuẩn hóa bố cục trang bài đọc (LessonView — Hệ màu "Mist Blue & Sage" và Chế độ "Đêm Học Giả"):
+ * - Toàn bộ không gian đọc nằm trên nền #EAF0F1 (`text-[#29383D]`), chuyển sang #14171A (`text-[#E2E8F0]`) khi ở chế độ Đêm Học Giả.
+ * - Sidebar chương bài bên trái (nếu mở): nền #E1E9EA viền #CFDADB (khi tối: nền #1A1E22 viền #2D3339).
+ * - Khung bài học chính: nền #F7FAFA viền #CFDADB (khi tối: nền #1C2024 viền #2D3339 text-[#E2E8F0]).
+ * - Cột mục lục / chú giải bên phải: nền #E1E9EA/80 viền #CFDADB (khi tối: nền #1A1E22 viền #2D3339 text-[#94A3B8]).
  */
 export const LessonView: FC<LessonViewProps> = ({
   title,
@@ -32,8 +36,43 @@ export const LessonView: FC<LessonViewProps> = ({
   children,
   marginalia,
   sidebar,
+  readingTheme: propTheme,
   className,
 }) => {
+  const [internalTheme, setInternalTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') return saved;
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    if (propTheme) {
+      return;
+    }
+    const handleThemeChange = (e: Event) => {
+      const custom = e as CustomEvent<'light' | 'dark'>;
+      if (custom.detail === 'light' || custom.detail === 'dark') {
+        setInternalTheme(custom.detail);
+      } else {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') {
+          setInternalTheme(saved);
+        }
+      }
+    };
+    window.addEventListener('lu_reading_theme_change', handleThemeChange);
+    return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
+  }, [propTheme]);
+
+  const activeTheme = propTheme ?? internalTheme;
+  const isDark = activeTheme === 'dark';
+
   const firstChar = lead ? lead.trim().charAt(0) : '';
   const restLead = lead ? lead.trim().slice(1) : '';
 
@@ -41,30 +80,45 @@ export const LessonView: FC<LessonViewProps> = ({
     <SidenoteProvider>
       <div
         data-testid="asymmetric-scholar-grid"
+        data-reading-theme={activeTheme}
         className={cn(
-          'relative mx-auto max-w-7xl bg-[#EAF0F1] px-6 text-[#29383D] lg:grid lg:grid-cols-12 lg:gap-12',
+          'relative mx-auto max-w-7xl px-6 transition-colors duration-300 lg:grid lg:grid-cols-12 lg:gap-12',
+          isDark ? 'bg-[#14171A] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
           className,
         )}
       >
         {sidebar && (
           <aside
             aria-label="Danh mục chương bài"
-            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-[#CFDADB] bg-[#E1E9EA] p-4 pr-2 text-[#29383D] lg:col-span-3"
+            className={cn(
+              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 transition-colors duration-300 lg:col-span-3',
+              isDark
+                ? 'border-r border-[#2D3339] bg-[#1A1E22] text-[#E2E8F0]'
+                : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
+            )}
           >
             {sidebar}
           </aside>
         )}
 
-        {/* Khung bài học chính: Nền sáng sạch bg-[#F7FAFA] border border-[#CFDADB] rounded-3xl p-8 md:p-12 shadow-sm */}
+        {/* Khung bài học chính: Sáng: bg-[#F7FAFA] border-[#CFDADB] | Tối: bg-[#1C2024] border-[#2D3339] */}
         <div
           data-testid="scholar-main-column"
           className={cn(
-            'max-w-[70ch] min-w-0 rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-8 text-[#29383D] shadow-sm md:p-12',
+            'max-w-[70ch] min-w-0 rounded-3xl p-8 shadow-sm transition-colors duration-300 md:p-12',
+            isDark
+              ? 'border border-[#2D3339] bg-[#1C2024] text-[#E2E8F0]'
+              : 'border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
             sidebar ? 'lg:col-span-6' : 'lg:col-span-8',
           )}
         >
           {title && (
-            <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-[#29383D] lg:text-4xl">
+            <h1
+              className={cn(
+                'mb-6 font-serif text-3xl font-bold tracking-tight lg:text-4xl',
+                isDark ? 'text-[#F1F5F9]' : 'text-[#29383D]',
+              )}
+            >
               {title}
             </h1>
           )}
@@ -72,11 +126,17 @@ export const LessonView: FC<LessonViewProps> = ({
           {lead && (
             <p
               data-testid="scholar-lead-paragraph"
-              className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-[#29383D]"
+              className={cn(
+                'academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85]',
+                isDark ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+              )}
             >
               <span
                 aria-hidden="true"
-                className="float-left pt-1 pr-3 font-serif text-5xl leading-none font-normal text-[#29383D] md:text-6xl"
+                className={cn(
+                  'float-left pt-1 pr-3 font-serif text-5xl leading-none font-normal md:text-6xl',
+                  isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                )}
               >
                 {firstChar}
               </span>
@@ -89,13 +149,16 @@ export const LessonView: FC<LessonViewProps> = ({
           {children}
         </div>
 
-        {/* Cột mục lục & chú giải bên phải: Thẻ nền mờ bg-[#E1E9EA]/80 backdrop-blur border border-[#CFDADB] rounded-2xl */}
+        {/* Cột mục lục & chú giải bên phải: Sáng: bg-[#E1E9EA]/80 border-[#CFDADB] | Tối: bg-[#1A1E22] border-[#2D3339] */}
         <aside
           data-sidenotes-column
           data-testid="scholar-sidenotes-column"
           aria-label="Cột chú giải lề học thuật"
           className={cn(
-            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/80 p-4 pl-2 text-[#29383D] backdrop-blur',
+            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pl-2 backdrop-blur transition-colors duration-300',
+            isDark
+              ? 'border border-[#2D3339] bg-[#1A1E22] text-[#94A3B8]'
+              : 'border border-[#CFDADB] bg-[#E1E9EA]/80 text-[#29383D]',
             sidebar ? 'lg:col-span-3' : 'lg:col-span-4',
           )}
         >

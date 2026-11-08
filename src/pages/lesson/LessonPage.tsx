@@ -100,6 +100,51 @@ export function LessonPage() {
     return false;
   });
 
+  const [readingTheme, setReadingTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') {
+          return saved;
+        }
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+    }
+    return 'light';
+  });
+
+  const handleToggleReadingTheme = () => {
+    setReadingTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      try {
+        localStorage.setItem('lu_reading_theme', next);
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: next }));
+      }
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handleThemeChange = (e: Event) => {
+      const custom = e as CustomEvent<'light' | 'dark'>;
+      if (custom.detail === 'light' || custom.detail === 'dark') {
+        setReadingTheme(custom.detail);
+      } else {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') {
+          setReadingTheme(saved);
+        }
+      }
+    };
+    window.addEventListener('lu_reading_theme_change', handleThemeChange);
+    return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
+  }, []);
+
   const handleFontSizeChange = (size: ReadingFontSize) => {
     setFontSize(size);
     try {
@@ -248,8 +293,10 @@ export function LessonPage() {
 
   return (
     <FadeIn
+      data-reading-theme={readingTheme}
       className={cn(
-        'mx-auto w-full bg-[#EAF0F1] pb-16 text-[#29383D] transition-all duration-300',
+        'mx-auto w-full pb-16 transition-all duration-300',
+        readingTheme === 'dark' ? 'bg-[#14171A] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
         isFocusMode
           ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
           : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
@@ -280,7 +327,8 @@ export function LessonPage() {
 
       <div
         className={cn(
-          'flex flex-col justify-between gap-4 border-b border-[#CFDADB] pb-4 transition-all duration-300 lg:flex-row lg:items-center',
+          'flex flex-col justify-between gap-4 border-b pb-4 transition-all duration-300 lg:flex-row lg:items-center',
+          readingTheme === 'dark' ? 'border-[#2D3339]' : 'border-[#CFDADB]',
           isFocusMode && 'border-transparent pb-1',
         )}
       >
@@ -387,7 +435,12 @@ export function LessonPage() {
         {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) - Tạm ẩn trong Focus Mode */}
         {!isFocusMode && !isSidebarCollapsed && (
           <aside
-            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl border-r border-[#CFDADB] bg-[#E1E9EA] p-4 pr-2 pb-6 text-[#29383D] transition-all duration-300 lg:block"
+            className={cn(
+              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block',
+              readingTheme === 'dark'
+                ? 'border-r border-[#2D3339] bg-[#1A1E22] text-[#E2E8F0]'
+                : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
+            )}
             aria-label="Danh mục điều hướng bài học"
           >
             <LessonSidebar
@@ -435,14 +488,23 @@ export function LessonPage() {
 
           <article
             data-reading-article
+            data-reading-theme={readingTheme}
             data-reading-size={fontSize}
             className={cn(
-              'lesson-content rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] shadow-sm transition-all duration-300',
+              'lesson-content rounded-3xl border shadow-sm transition-all duration-300',
+              readingTheme === 'dark'
+                ? 'border-[#2D3339] bg-[#1C2024] text-[#E2E8F0]'
+                : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
               fontSize === 'lg' && 'reader-scale-lg',
               isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
             )}
           >
-            <header className="space-y-4 border-b border-[#CFDADB] pb-6">
+            <header
+              className={cn(
+                'space-y-4 border-b pb-6',
+                readingTheme === 'dark' ? 'border-[#2D3339]' : 'border-[#CFDADB]',
+              )}
+            >
               {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
               <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
@@ -480,11 +542,21 @@ export function LessonPage() {
                 </div>
               </aside>
 
-              <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-[#29383D] lg:text-4xl">
+              <h1
+                className={cn(
+                  'mb-6 font-serif text-3xl font-bold tracking-tight lg:text-4xl',
+                  readingTheme === 'dark' ? 'text-[#F1F5F9]' : 'text-[#29383D]',
+                )}
+              >
                 {lesson.title}
               </h1>
 
-              <p className="academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85] text-[#29383D]">
+              <p
+                className={cn(
+                  'academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85]',
+                  readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+                )}
+              >
                 {lesson.description}
               </p>
 
@@ -530,6 +602,8 @@ export function LessonPage() {
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
                   onToggleNotes={handleToggleNotes}
+                  readingTheme={readingTheme}
+                  onToggleReadingTheme={handleToggleReadingTheme}
                 />
               </div>
             </header>
@@ -566,7 +640,12 @@ export function LessonPage() {
 
             <SourcePanel lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
 
-            <footer className="mt-10 border-t border-[#CFDADB] pt-6">
+            <footer
+              className={cn(
+                'mt-10 border-t pt-6',
+                readingTheme === 'dark' ? 'border-[#2D3339]' : 'border-[#CFDADB]',
+              )}
+            >
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <p className="text-xs text-[var(--text-muted)]">
                   Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.
@@ -575,6 +654,8 @@ export function LessonPage() {
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
                   onToggleNotes={handleToggleNotes}
+                  readingTheme={readingTheme}
+                  onToggleReadingTheme={handleToggleReadingTheme}
                 />
               </div>
 
@@ -587,7 +668,10 @@ export function LessonPage() {
         {!isFocusMode && (
           <aside
             data-sidenotes-column
-            className="custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[260px] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block"
+            className={cn(
+              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[260px] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block',
+              readingTheme === 'dark' ? 'text-[#94A3B8]' : '',
+            )}
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"
           >

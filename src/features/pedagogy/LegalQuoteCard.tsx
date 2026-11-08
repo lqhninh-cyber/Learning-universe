@@ -49,6 +49,8 @@ export function LegalQuoteCard({
 
   return (
     <div
+      data-legal-box
+      data-testid="legal-quote-card"
       className={cn(
         'relative overflow-hidden rounded-2xl border border-l-2 border-[#CFDADB] border-l-[#718C7E] bg-[#E8EFEB] p-5 shadow-xs transition-all hover:border-[#718C7E] sm:p-6',
         className,

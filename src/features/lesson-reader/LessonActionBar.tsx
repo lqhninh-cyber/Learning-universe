@@ -1,4 +1,5 @@
-import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit } from 'lucide-react';
+import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit, Moon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useLearningStore } from '@/features/learning';
 import { cn } from '@/shared/lib/cn';
 
@@ -6,6 +7,8 @@ export interface LessonActionBarProps {
   readonly lessonId: string;
   readonly isNotesOpen: boolean;
   readonly onToggleNotes: () => void;
+  readonly readingTheme?: 'light' | 'dark';
+  readonly onToggleReadingTheme?: () => void;
   readonly className?: string;
 }
 
@@ -13,6 +16,8 @@ export function LessonActionBar({
   lessonId,
   isNotesOpen,
   onToggleNotes,
+  readingTheme: propTheme,
+  onToggleReadingTheme,
   className,
 }: LessonActionBarProps) {
   const isCompleted = useLearningStore((state) => Boolean(state.completedLessons[lessonId]));
@@ -24,14 +29,69 @@ export function LessonActionBar({
   const toggleGlossaryAnnotations = useLearningStore((state) => state.toggleGlossaryAnnotations);
   const requestNoteAccess = useLearningStore((state) => state.requestNoteAccess);
 
+  const [internalTheme, setInternalTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') return saved;
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    if (propTheme) {
+      return;
+    }
+    const handleThemeChange = (e: Event) => {
+      const custom = e as CustomEvent<'light' | 'dark'>;
+      if (custom.detail === 'light' || custom.detail === 'dark') {
+        setInternalTheme(custom.detail);
+      } else {
+        const saved = localStorage.getItem('lu_reading_theme');
+        if (saved === 'dark' || saved === 'light') {
+          setInternalTheme(saved);
+        }
+      }
+    };
+    window.addEventListener('lu_reading_theme_change', handleThemeChange);
+    return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
+  }, [propTheme]);
+
+  const activeTheme = propTheme ?? internalTheme;
+  const isDark = activeTheme === 'dark';
+
+  const handleToggleReadingTheme = () => {
+    if (onToggleReadingTheme) {
+      onToggleReadingTheme();
+      return;
+    }
+    const next = activeTheme === 'dark' ? 'light' : 'dark';
+    try {
+      localStorage.setItem('lu_reading_theme', next);
+    } catch {
+      // Bỏ qua lỗi storage
+    }
+    setInternalTheme(next);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: next }));
+    }
+  };
+
   const handleNoteClick = () => {
     if (requestNoteAccess(lessonId)) {
       onToggleNotes();
     }
   };
 
-  const buttonBaseClass =
-    'whitespace-nowrap px-3.5 py-1.5 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] text-xs font-medium text-[#29383D] flex items-center gap-2 hover:bg-[#E1E9EA] transition-colors cursor-pointer shadow-2xs';
+  const buttonBaseClass = cn(
+    'whitespace-nowrap px-3.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer shadow-2xs',
+    isDark
+      ? 'border-[#2D3339] bg-[#1C2024] text-[#E2E8F0] hover:bg-[#23292F] hover:text-white'
+      : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] hover:bg-[#E1E9EA]',
+  );
 
   return (
     <div
@@ -47,11 +107,16 @@ export function LessonActionBar({
         className={cn(
           buttonBaseClass,
           isCompleted &&
-            'border-[#3F6570] bg-[#3F6570] text-white hover:bg-[#345761] dark:border-[#3F6570] dark:bg-[#3F6570] dark:text-white',
+            (isDark
+              ? 'border-[#5E8A75] bg-[#5E8A75] text-white hover:bg-[#4d7362]'
+              : 'border-[#3F6570] bg-[#3F6570] text-white hover:bg-[#345761]'),
         )}
       >
         <CheckCircle2
-          className={cn('h-4 w-4 shrink-0', isCompleted ? 'text-white' : 'text-[#3F6570]')}
+          className={cn(
+            'h-4 w-4 shrink-0',
+            isCompleted ? 'text-white' : isDark ? 'text-[#5E8A75]' : 'text-[#3F6570]',
+          )}
           aria-hidden="true"
         />
         <span>{isCompleted ? 'Đã hoàn thành' : 'Đánh dấu hoàn thành'}</span>
@@ -86,11 +151,16 @@ export function LessonActionBar({
         className={cn(
           buttonBaseClass,
           (isNotesOpen || hasNote) &&
-            'border-[#3F6570] bg-[#3F6570]/10 text-[#3F6570] hover:bg-[#3F6570]/20 dark:border-[#3F6570] dark:bg-[#3F6570]/20 dark:text-teal-300',
+            (isDark
+              ? 'border-[#5E8A75] bg-[#5E8A75]/20 text-emerald-300 hover:bg-[#5E8A75]/30'
+              : 'border-[#3F6570] bg-[#3F6570]/10 text-[#3F6570] hover:bg-[#3F6570]/20'),
         )}
       >
         <FileEdit
-          className={cn('h-4 w-4 shrink-0', hasNote ? 'text-[#3F6570]' : 'text-stone-400')}
+          className={cn(
+            'h-4 w-4 shrink-0',
+            hasNote ? (isDark ? 'text-emerald-300' : 'text-[#3F6570]') : 'text-stone-400',
+          )}
           aria-hidden="true"
         />
         <span>{hasNote ? 'Ghi chú (Đã có)' : 'Ghi chú'}</span>
@@ -109,17 +179,47 @@ export function LessonActionBar({
         className={cn(
           buttonBaseClass,
           glossaryAnnotationsEnabled &&
-            'border-[#5E786D] bg-[#5E786D]/10 text-[#5E786D] hover:bg-[#5E786D]/20 dark:border-[#5E786D] dark:bg-[#5E786D]/20 dark:text-emerald-300',
+            (isDark
+              ? 'border-[#5E8A75] bg-[#5E8A75]/20 text-[#5E8A75] hover:bg-[#5E8A75]/30'
+              : 'border-[#5E786D] bg-[#5E786D]/10 text-[#5E786D] hover:bg-[#5E786D]/20'),
         )}
       >
         <BookOpenCheck
           className={cn(
             'h-4 w-4 shrink-0',
-            glossaryAnnotationsEnabled ? 'text-[#5E786D]' : 'text-stone-400',
+            glossaryAnnotationsEnabled
+              ? isDark
+                ? 'text-[#5E8A75]'
+                : 'text-[#5E786D]'
+              : 'text-stone-400',
           )}
           aria-hidden="true"
         />
         <span>{glossaryAnnotationsEnabled ? 'Thuật ngữ: Bật' : 'Thuật ngữ: Tắt'}</span>
+      </button>
+
+      {/* Nút chuyển đổi Chế độ đọc: Sáng / Tối */}
+      <button
+        type="button"
+        onClick={handleToggleReadingTheme}
+        aria-pressed={isDark}
+        aria-label={`Chế độ đọc: ${isDark ? 'Tối' : 'Sáng'}`}
+        title="Chế độ đọc: Sáng / Tối"
+        data-testid="reading-theme-toggle"
+        className={cn(
+          'flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-xs whitespace-nowrap shadow-2xs transition-colors',
+          isDark
+            ? 'border-[#2D3339] bg-[#1C2024] text-[#94A3B8] hover:border-[#5E8A75] hover:text-[#E2E8F0]'
+            : 'border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] hover:bg-[#E1E9EA] hover:text-[#29383D]',
+        )}
+      >
+        {isDark ? (
+          <Moon className="h-3.5 w-3.5 shrink-0 text-[#5E8A75]" aria-hidden="true" />
+        ) : (
+          <Sun className="h-3.5 w-3.5 shrink-0 text-[#92714F]" aria-hidden="true" />
+        )}
+        <span>Chế độ đọc: {isDark ? 'Tối' : 'Sáng'}</span>
+        <span className="sr-only"> (Sáng / Tối)</span>
       </button>
     </div>
   );

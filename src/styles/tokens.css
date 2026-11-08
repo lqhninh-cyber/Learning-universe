@@ -180,3 +180,252 @@ span.academic-dropcap {
   --lotus-text-secondary: #58635e; /* Màu tro xanh nhẹ nhàng */
   --lotus-border: #d9dfd9; /* Viền men gốm sứ mỏng nhẹ */
 }
+
+/* ============================================================================
+   HỆ HÒA SẮC "ĐÊM HỌC GIẢ" (SCHOLARLY SLATE NOIR - SCOPED DARK READING MODE)
+   Chế độ đọc chuyên sâu cách ly tuyệt đối cho bài học:
+   - Canvas: #14171A (than chì ánh đá phiến, giảm chói sáng 85%)
+   - Khối văn bản / Thẻ bài giảng: #1C2024
+   - Chữ chính: #E2E8F0
+   - Chữ phụ / Chú giải lề: #94A3B8
+   - Đường kẻ phân cách / Viền: #2D3339
+   - Điểm nhấn / Liên kết: #5E8A75
+   TUYỆT ĐỐI KHÔNG can thiệp html, body hay trang chủ.
+   ============================================================================ */
+
+[data-reading-theme='dark'] {
+  --reading-canvas: #14171a;
+  --reading-surface: #1c2024;
+  --reading-text: #e2e8f0;
+  --reading-text-muted: #94a3b8;
+  --reading-border: #2d3339;
+  --reading-accent: #5e8a75;
+
+  /* Ghi đè biến CSS cục bộ trong phạm vi bài đọc */
+  --bg-main: #14171a;
+  --surface-primary: #1c2024;
+  --surface-secondary: #1a1e22;
+  --surface-tertiary: #23292f;
+  --bg-canvas: #14171a;
+  --bg-surface: #1c2024;
+  --border-subtle: #2d3339;
+  --border-hairline: #2d3339;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #94a3b8;
+  --primary: #5e8a75;
+  --primary-hover: #71a88f;
+  --secondary: #5e8a75;
+  --accent: #5e8a75;
+
+  /* Scholar Suite tokens */
+  --scholar-bg: #14171a;
+  --scholar-surface: #1c2024;
+  --scholar-text: #e2e8f0;
+  --scholar-muted: #94a3b8;
+  --scholar-accent: #5e8a75;
+  --scholar-hairline: #2d3339;
+}
+
+/* 1. Typography & Khối văn bản trong Đêm Học Giả */
+[data-reading-theme='dark'] .lu-prose,
+[data-reading-theme='dark'] .lesson-content,
+[data-reading-theme='dark'] .lu-prose p,
+[data-reading-theme='dark'] .lesson-content p,
+[data-reading-theme='dark'] .lu-prose li,
+[data-reading-theme='dark'] .lesson-content li {
+  color: #e2e8f0;
+}
+
+[data-reading-theme='dark'] .lu-prose h1,
+[data-reading-theme='dark'] .lesson-content h1,
+[data-reading-theme='dark'] .lu-prose h2,
+[data-reading-theme='dark'] .lesson-content h2,
+[data-reading-theme='dark'] .lu-prose h3,
+[data-reading-theme='dark'] .lesson-content h3,
+[data-reading-theme='dark'] .lu-prose h4,
+[data-reading-theme='dark'] .lesson-content h4,
+[data-reading-theme='dark'] .lu-prose strong,
+[data-reading-theme='dark'] .lesson-content strong {
+  color: #f1f5f9;
+}
+
+[data-reading-theme='dark'] .lu-prose h2,
+[data-reading-theme='dark'] .lesson-content h2 {
+  border-bottom-color: #2d3339;
+}
+
+[data-reading-theme='dark'] .academic-dropcap::first-letter,
+[data-reading-theme='dark'] .academic-dropcap-paragraph::first-letter,
+[data-reading-theme='dark'] span.academic-dropcap {
+  color: #f8fafc;
+}
+
+[data-reading-theme='dark'] .lu-prose blockquote,
+[data-reading-theme='dark'] .lesson-content blockquote {
+  color: #cbd5e1;
+  background-color: rgba(28, 32, 36, 0.7);
+  border-left-color: #5e8a75;
+}
+
+/* 2. KaTeX trong chế độ Đêm Học Giả (#F8FAFC) */
+[data-reading-theme='dark'] .katex,
+[data-reading-theme='dark'] .katex-display,
+[data-reading-theme='dark'] .katex .katex-html,
+[data-reading-theme='dark'] .katex span:not(.frac-line):not(.sqrt-line) {
+  color: #f8fafc !important;
+}
+
+[data-reading-theme='dark'] .katex .frac-line,
+[data-reading-theme='dark'] .katex .sqrt-line {
+  border-color: #f8fafc !important;
+}
+
+[data-reading-theme='dark'] .katex-display:hover,
+[data-reading-theme='dark'] .lu-prose .katex-display:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* 3. Bảng Ma trận & Bảng so sánh (Comparative Matrix / Tables) */
+[data-reading-theme='dark'] table,
+[data-reading-theme='dark'] .lu-prose table,
+[data-reading-theme='dark'] .lesson-content table {
+  background-color: #1c2024 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-reading-theme='dark'] thead th,
+[data-reading-theme='dark'] table th,
+[data-reading-theme='dark'] .lu-prose th,
+[data-reading-theme='dark'] .lesson-content th {
+  background-color: #23292f !important;
+  color: #cbd5e1 !important;
+  border: 1px solid #2d3339 !important;
+}
+
+[data-reading-theme='dark'] tbody td,
+[data-reading-theme='dark'] table td,
+[data-reading-theme='dark'] .lu-prose td,
+[data-reading-theme='dark'] .lesson-content td {
+  background-color: #1c2024 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(45, 51, 57, 0.7) !important;
+}
+
+[data-reading-theme='dark'] tbody tr:nth-child(even) td,
+[data-reading-theme='dark'] table tr:nth-child(even) td,
+[data-reading-theme='dark'] .lu-prose tr:nth-child(even) td,
+[data-reading-theme='dark'] .lesson-content tr:nth-child(even) td {
+  background-color: #1e2328 !important;
+}
+
+[data-reading-theme='dark'] .cayley-table-wrapper {
+  background-color: #1c2024 !important;
+  border-color: #2d3339 !important;
+}
+
+[data-reading-theme='dark'] table.cayley-table th,
+[data-reading-theme='dark'] table.cayley-table tr td:first-child {
+  background-color: #23292f !important;
+  color: #cbd5e1 !important;
+}
+
+/* 4. Hộp Pháp lý & Nghiên cứu tình huống (Legal & Case Study Boxes) */
+[data-reading-theme='dark'] [data-legal-box],
+[data-reading-theme='dark'] [data-case-study-box],
+[data-reading-theme='dark'] .legal-reference-box {
+  background-color: #18201d !important;
+  border-color: #2d3339 !important;
+  border-left-width: 2px !important;
+  border-left-style: solid !important;
+  border-left-color: #5e8a75 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-reading-theme='dark'] [data-legal-box] h3,
+[data-reading-theme='dark'] [data-legal-box] .legal-title,
+[data-reading-theme='dark'] [data-case-study-box] h3,
+[data-reading-theme='dark'] [data-case-study-box] .case-title {
+  font-family: var(--font-mono) !important;
+  color: #5e8a75 !important;
+}
+
+[data-reading-theme='dark'] [data-legal-box] blockquote,
+[data-reading-theme='dark'] [data-case-study-box] blockquote {
+  background-color: rgba(28, 32, 36, 0.5) !important;
+  color: #e2e8f0 !important;
+  border-left-color: #5e8a75 !important;
+}
+
+[data-reading-theme='dark'] [data-case-study-box] textarea {
+  background-color: #14171a !important;
+  border-color: #2d3339 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-reading-theme='dark'] [data-case-study-box] textarea::placeholder {
+  color: #55676b !important;
+}
+
+/* 5. Thẻ Chú thích lề (Sidenote / Annotation) */
+[data-reading-theme='dark'] [data-sidenote],
+[data-reading-theme='dark'] .sidenote-academic,
+[data-reading-theme='dark'] .academic-sidenote-mobile span[role='region'],
+[data-reading-theme='dark'] aside[data-sidenotes-column] {
+  background-color: #1a1e22 !important;
+  border-color: #2d3339 !important;
+  color: #94a3b8 !important;
+}
+
+[data-reading-theme='dark'] [data-sidenote] span,
+[data-reading-theme='dark'] .sidenote-academic span,
+[data-reading-theme='dark'] .academic-sidenote-mobile span[role='region'] span {
+  color: #94a3b8;
+}
+
+[data-reading-theme='dark'] [data-sidenote] span.font-mono,
+[data-reading-theme='dark'] .sidenote-academic span.font-mono,
+[data-reading-theme='dark'] .academic-sidenote-mobile span[role='region'] span.font-mono {
+  color: #5e8a75 !important;
+}
+
+[data-reading-theme='dark'] .academic-sidenote-wrapper sup,
+[data-reading-theme='dark'] .academic-sidenote-mobile button {
+  background-color: #1a1e22 !important;
+  border-color: #2d3339 !important;
+  color: #5e8a75 !important;
+}
+
+/* 6. Code & Links */
+[data-reading-theme='dark'] .lu-prose code,
+[data-reading-theme='dark'] .lesson-content code {
+  background-color: #14171a;
+  border-color: #2d3339;
+  color: #5e8a75;
+}
+
+[data-reading-theme='dark'] .lu-prose pre,
+[data-reading-theme='dark'] .lesson-content pre {
+  background-color: #14171a;
+  border-color: #2d3339;
+}
+
+[data-reading-theme='dark'] a:not([class*='bg-']),
+[data-reading-theme='dark'] .lu-prose a,
+[data-reading-theme='dark'] .lesson-content a {
+  color: #5e8a75;
+}
+
+[data-reading-theme='dark'] a:not([class*='bg-']):hover,
+[data-reading-theme='dark'] .lu-prose a:hover,
+[data-reading-theme='dark'] .lesson-content a:hover {
+  color: #71a88f;
+}
+
+/* 7. Đường viền hairline */
+[data-reading-theme='dark'] hr,
+[data-reading-theme='dark'] header.border-b,
+[data-reading-theme='dark'] div.border-t,
+[data-reading-theme='dark'] div.border-b {
+  border-color: #2d3339;
+}

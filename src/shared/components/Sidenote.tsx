@@ -201,6 +201,7 @@ export const Sidenote: FC<SidenoteProps> = ({
         {/* Panel nổi mờ (Collapsible Callout) ngay bên dưới dòng văn bản hiện tại */}
         {isOpen && (
           <span
+            data-sidenote
             role="region"
             aria-label={`Nội dung chú giải ${displayNumber ? `số ${displayNumber}` : ''}`}
             className={cn(
@@ -260,6 +261,7 @@ export const Sidenote: FC<SidenoteProps> = ({
           Tuyệt đối không float hay co kéo độ rộng của bảng biểu và khối nội dung chính
           =================================================================== */}
       <span
+        data-sidenote
         role="note"
         aria-label={`Chú giải ${displayNumber ? `số ${displayNumber}` : ''}: ${label}`}
         style={anchorOffsetY !== null ? { marginTop: `${anchorOffsetY}px` } : undefined}

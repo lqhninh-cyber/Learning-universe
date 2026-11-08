@@ -43,6 +43,8 @@ export function CaseStudyBox({
 
   return (
     <div
+      data-case-study-box
+      data-testid="case-study-box"
       className={cn(
         'col-span-full clear-both my-6 w-full rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-xs transition-all hover:border-[#718C7E] sm:p-6',
         className,

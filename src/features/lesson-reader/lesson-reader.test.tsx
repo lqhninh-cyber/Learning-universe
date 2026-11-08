@@ -164,3 +164,41 @@ describe('Bộ kết xuất Toán học MathRenderer & Mục lục bài học Le
     expect(katexTheorems.length).toBeGreaterThan(0);
   });
 });
+
+describe('Thanh tác vụ bài học LessonActionBar & Chế độ Đọc Chuyên sâu (Dark Reading Mode)', () => {
+  it('xuất LessonActionBar từ module index', () => {
+    expect(lessonReaderExports.LessonActionBar).toBeDefined();
+  });
+
+  it('kết xuất nút Chế độ đọc: Sáng / Tối và cho phép chuyển đổi lưu vào localStorage lu_reading_theme', () => {
+    localStorage.clear();
+    const handleToggleNotes = vi.fn();
+
+    render(
+      <lessonReaderExports.LessonActionBar
+        lessonId="lesson-1"
+        isNotesOpen={false}
+        onToggleNotes={handleToggleNotes}
+      />,
+    );
+
+    const toggleBtn = screen.getByRole('button', { name: /Chế độ đọc: Sáng/i });
+    expect(toggleBtn).toBeInTheDocument();
+    expect(toggleBtn).toHaveClass('font-mono', 'text-xs', 'border-[#CFDADB]', 'text-[#55676B]');
+    expect(toggleBtn).toHaveAttribute('aria-pressed', 'false');
+
+    // Nhấn chuyển sang Chế độ đọc Tối
+    fireEvent.click(toggleBtn);
+
+    expect(localStorage.getItem('lu_reading_theme')).toBe('dark');
+    expect(screen.getByRole('button', { name: /Chế độ đọc: Tối/i })).toBeInTheDocument();
+    expect(toggleBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(toggleBtn).toHaveClass('border-[#2D3339]', 'bg-[#1C2024]', 'text-[#94A3B8]');
+
+    // Nhấn quay lại Chế độ đọc Sáng
+    fireEvent.click(toggleBtn);
+    expect(localStorage.getItem('lu_reading_theme')).toBe('light');
+    expect(screen.getByRole('button', { name: /Chế độ đọc: Sáng/i })).toBeInTheDocument();
+    expect(toggleBtn).toHaveAttribute('aria-pressed', 'false');
+  });
+});
