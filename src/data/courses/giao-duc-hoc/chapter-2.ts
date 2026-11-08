@@ -8,8 +8,17 @@ import {
   ScholarQuote,
 } from '@/features/pedagogy';
 import { Sidenote } from '@/shared/components/Sidenote';
-import { BookOpen, Compass, HelpCircle, Layers, Scale, Sparkles, Target } from 'lucide-react';
-import { createElement, type FC } from 'react';
+import {
+  BookOpen,
+  Compass,
+  GraduationCap,
+  HelpCircle,
+  Layers,
+  Scale,
+  Sparkles,
+  Target,
+} from 'lucide-react';
+import { createElement, useState, type FC } from 'react';
 import type { PedagogicalCaseStudy } from './course';
 
 // ============================================================================
@@ -19,54 +28,55 @@ import type { PedagogicalCaseStudy } from './course';
 export const Lesson2_1View: FC = () => {
   const caseStudy2_1: PedagogicalCaseStudy = {
     id: 201,
-    title: 'Quan niệm định kiến "Cha mẹ sinh con trời sinh tính" và buông xuôi học sinh yếu',
+    title:
+      'Phụ huynh học sinh lớp 8 phó mặc buôn bán bận rộn, khoán trắng cho nhà trường và cho rằng số phận quy định',
     context:
-      'Em H. (lớp 10) có học lực môn Toán yếu và hay ngủ gật trong giờ học. Hoàn cảnh gia đình em phức tạp, bố mẹ đi làm ăn xa, em ở với bà ngoại già yếu. Trong buổi họp giao ban, một giáo viên bộ môn nhận xét: "Em H. vốn không có năng khiếu bẩm sinh về Toán, hoàn cảnh gia đình lại như vậy, có dạy thế nào cũng không thay đổi được đâu, cứ để em ấy ngồi yên không quậy phá là được rồi."',
+      'Một phụ huynh học sinh lớp 8 đến gặp giáo viên chủ nhiệm với tâm lý phó mặc: "Gia đình tôi buôn bán bận rộn, gửi gắm cháu hoàn toàn cho nhà trường, thầy cô dạy bảo sao cho nên người, học dở hay hư hỏng là do số phận cháu nó quy định rồi".',
     question:
-      'Vận dụng lý luận về vai trò chủ đạo của giáo dục đối với sự phát triển nhân cách trong mối quan hệ biện chứng với Bẩm sinh – di truyền, Môi trường và Hoạt động cá nhân (Giáo trình HCMUE tr. 17–20), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
+      'Vận dụng lý luận về bản chất hiện tượng giáo dục, 3 quan điểm phát triển nhân cách và vai trò chủ đạo của giáo dục trong mối quan hệ với di truyền, môi trường gia đình và hoạt động cá nhân (Giáo trình HCMUE tr. 13–20), anh/chị hãy xử lý tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Vai trò chủ đạo của giáo dục đối với sự phát triển nhân cách (Giáo trình tr. 17–20)',
-      'Mối quan hệ biện chứng giữa 4 yếu tố: Bẩm sinh – di truyền, Môi trường, Giáo dục, Hoạt động cá nhân',
-      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí',
+      'Nguyên lý giáo dục: Giáo dục nhà trường kết hợp với giáo dục gia đình và giáo dục xã hội (Điều 3, Luật Giáo dục 2019)',
+      'Quan điểm Duy vật Biện chứng: Giáo dục giữ VAI TRÒ CHỦ ĐẠO trong mối tương tác với di truyền (tiền đề vật chất), môi trường (điều kiện) và hoạt động cá nhân (quyết định trực tiếp)',
+      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lý',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Giáo viên bộ môn đang mắc sai lầm nhận thức khi tuyệt đối hóa yếu tố bẩm sinh – di truyền và hoàn cảnh môi trường gia đình, từ đó phủ nhận vai trò chủ đạo của giáo dục nhà trường và buông xuôi trách nhiệm đối với học sinh H.',
+          'Phụ huynh có quan niệm sai lệch mang tính "thuyết tiền định" (cho rằng số phận, bẩm sinh đã an bài tính cách và học lực) kết hợp với tâm lý khoán trắng cho nhà trường (thuyết duy cảm, xem giáo dục là vạn năng một chiều).',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo Giáo trình HCMUE',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Theo Giáo trình HCMUE (tr. 17–20), bẩm sinh – di truyền chỉ là tiền đề vật chất chứ không định sẵn nhân cách hay học lực; môi trường gia đình khó khăn có thể được bù đắp và cải biến nhờ sự can thiệp có mục đích của giáo dục nhà trường. Em H. ngủ gật có thể do thiếu sự quan tâm sinh hoạt ở nhà và mất gốc kiến thức.',
+          'Mâu thuẫn giữa yêu cầu phối hợp đồng bộ ba môi trường giáo dục (Nhà trường – Gia đình – Xã hội) và sự buông lỏng trách nhiệm đồng hành từ phía gia đình; nguy cơ học sinh thiếu điểm tựa tình cảm và buông xuôi nỗ lực cá nhân.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết phương án)',
         content:
-          'Phương án 1: Đồng tình bỏ mặc em H. miễn là em không gây mất trật tự (vi phạm đạo đức nghề nghiệp và Luật Giáo dục). Phương án 2: Trao đổi thuyết phục đồng nghiệp, tìm hiểu lịch sinh hoạt của em H. và thiết kế lộ trình phụ đạo vừa sức kết hợp đôi bạn cùng tiến.',
+          'Tránh chỉ trích phụ huynh gay gắt (gây tâm lý tự ái, đối kháng). Chọn giải pháp đàm thoại sư phạm: Giải thích khoa học về vai trò nền tảng của gia đình, chia sẻ tiến bộ cụ thể của học sinh tại lớp để củng cố niềm tin, và thống nhất kênh liên lạc định kỳ tiện lợi nhất cho lịch buôn bán.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh cơ sở khoa học)',
         content:
-          'Phối hợp với GVCN thăm hỏi bà ngoại và em H., sắp xếp bạn học khá ngồi cạnh hỗ trợ, giao các bài tập Toán cơ bản vừa sức để em H. từng bước lấy lại cảm giác thành công và hứng thú học tập.',
+          'Căn cứ nguyên lý giáo dục "kết hợp nhà trường, gia đình và xã hội" và luận điểm khoa học: giáo dục giữ vai trò chủ đạo nhưng cần sự hợp tác của môi trường gia đình để khích lệ, phát huy tính tích cực hoạt động của học sinh (nhân tố quyết định trực tiếp).',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Theo dõi sự tiến bộ của em H. qua từng tuần, kịp thời khen ngợi những nỗ lực nhỏ nhất để kích hoạt yếu tố "Hoạt động cá nhân và tự giáo dục" — yếu tố quyết định trực tiếp sự phát triển nhân cách.',
+          'Giáo viên không chỉ giáo dục học sinh mà còn phải là nhà tham vấn, tuyên truyền giáo dục thuyết phục phụ huynh đồng hành.',
       },
     ],
     pitfallsToAvoid: [
-      'Tuyệt đối hóa yếu tố di truyền ("Thuyết định mệnh do di truyền") hoặc hoàn cảnh xuất thân ("Thuyết định mệnh do môi trường").',
-      'Kỳ vọng giáo dục vạn năng một chiều mà không khơi dậy tính tích cực hoạt động tự giác của chính học sinh.',
+      'Chỉ trích gay gắt hoặc đổ lỗi hoàn toàn cho hoàn cảnh buôn bán bận rộn của phụ huynh.',
+      'Đồng tình buông xuôi, chấp nhận quan niệm số phận định đoạt việc học của học sinh.',
     ],
     coreLesson:
-      'Giáo dục giữ vai trò chủ đạo vì nó không chỉ định hướng sự phát triển nhân cách mà còn có khả năng bù đắp những thiếu hụt do hoàn cảnh môi trường và điều chỉnh những lệch lạc hành vi của người học.',
+      'Giáo viên không chỉ dạy học sinh mà còn giữ sứ mệnh tham vấn, thuyết phục gia đình cùng đồng hành, bởi giáo dục nhà trường chỉ phát huy tối đa vai trò chủ đạo khi có sự hợp tác bền chặt từ nền tảng gia đình.',
   };
 
   return createElement(
@@ -76,19 +86,20 @@ export const Lesson2_1View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C2-L1',
       clos: ['CLO1', 'CLO3'],
-      textbookPages: 'Tr. 13–20 (Chương 2, Mục 2.1)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 13 – 20)',
       legalRefs: [
-        'Luật Giáo dục 2019 (Điều 2, Điều 5)',
-        'Giáo trình Giáo dục học HCMUE (Chương 2)',
+        'Luật Giáo dục 2019 (Điều 3, Điều 5)',
+        'Giáo trình Giáo dục học HCMUE (Chương 2, Mục 2.1)',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 2',
+      sessionNote: 'Mục 2.1 · Trang 13 – 20',
     }),
 
-    // PHẦN I: BẢN CHẤT HIỆN TƯỢNG XÃ HỘI ĐẶC BIỆT & 4 TÍNH CHẤT CƠ BẢN (TR. 13–15)
+    // PHẦN I: BẢN CHẤT CỦA HIỆN TƯỢNG GIÁO DỤC (TRANG 13 – 14)
     createElement(
       'section',
-      { id: '1-ban-chat-va-4-tinh-chat', className: 'space-y-4' },
+      { id: '1-ban-chat-hien-tuong-giao-duc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -99,73 +110,100 @@ export const Lesson2_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Bản chất của hiện tượng giáo dục và 4 tính chất cơ bản (Tr. 13–15)',
+          '1. Bản chất của Hiện tượng Giáo dục: Cơ chế Di sản Xã hội (Trang 13 – 14)',
+        ),
+      ),
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-4',
+        },
+        createElement(
+          'div',
+          { className: 'flex flex-wrap items-center justify-between gap-2' },
+          createElement(
+            'span',
+            {
+              className:
+                'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+            },
+            'Hiện tượng Xã hội Đặc biệt · Cơ chế Di sản Xã hội',
+          ),
+          createElement(
+            'span',
+            { className: 'font-mono text-xs text-[#55676B]' },
+            'Giáo trình HCMUE · Trang 13 – 14',
+          ),
+        ),
+        createElement(
+          'div',
+          { className: 'grid gap-4 md:grid-cols-3' },
+          createElement(
+            'div',
+            {
+              className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-2',
+            },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#29383D]' },
+              'Cơ chế di sản xã hội',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Giáo dục là hiện tượng xã hội đặc biệt chỉ có ở xã hội loài người, xuất phát từ nhu cầu tất yếu của sự tiến bộ xã hội nhằm truyền đạt và lĩnh hội kinh nghiệm lịch sử - xã hội tích lũy qua các thế hệ.',
+            ),
+          ),
+          createElement(
+            'div',
+            {
+              className: 'rounded-xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-4 space-y-2',
+            },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#29383D]' },
+              'Tái sản xuất văn hóa',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Không có giáo dục thì không thể có sự chuyển giao tinh hoa văn hóa, văn minh, đạo đức; con người không thể tồn tại và phát triển với tư cách là con người xã hội.',
+            ),
+          ),
+          createElement(
+            'div',
+            {
+              className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-2',
+            },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#29383D]' },
+              'Chức năng trọng yếu',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Hình thành và phát triển toàn diện nhân cách con người, chuyển hóa các giá trị văn hóa nhân loại tích lũy từ bên ngoài thành phẩm chất và năng lực bên trong của mỗi cá nhân.',
+            ),
+          ),
         ),
       ),
       createElement(
         'p',
         null,
-        'Để xã hội loài người tồn tại và phát triển, thế hệ đi trước tất yếu phải truyền lại cho thế hệ đi sau những kinh nghiệm lịch sử – xã hội đã tích lũy được qua lao động và đấu tranh sinh tồn. Theo Giáo trình Giáo dục học HCMUE (tr. 13–14), ',
-        createElement(
-          'strong',
-          null,
-          'bản chất của giáo dục là quá trình truyền thụ và lĩnh hội có ý thức những kinh nghiệm lịch sử – xã hội từ thế hệ trước cho thế hệ sau',
-        ),
-        ' nhằm chuẩn bị cho thế hệ trẻ tham gia vào đời sống xã hội và lao động sản xuất.',
+        'Khác với bản năng sinh học truyền thụ qua di truyền ở loài vật, thế hệ trẻ loài người chỉ có thể trở thành con người xã hội thực thụ thông qua việc lĩnh hội kho tàng kinh nghiệm lịch sử – xã hội do các thế hệ tiền bối truyền lại.',
         createElement(
           Sidenote,
-          { type: 'pedagogy', number: 1 },
-          'Khác với hành vi bắt chước bản năng ở động vật, giáo dục chỉ có ở xã hội loài người: thế hệ sau không chỉ tiếp nhận mà còn chọn lọc, cải tạo và làm giàu thêm kho tàng văn hóa nhân loại.',
+          { type: 'history', number: 1 },
+          'Triết học duy vật lịch sử khẳng định: Con người là tổng hòa các quan hệ xã hội. Thông qua giáo dục, di sản văn hóa xã hội được tái sản xuất liên tục từ thế hệ này sang thế hệ khác.',
         ),
       ),
-
-      createElement(NumberedProcessFlow, {
-        title: '4 Thành phần Kinh nghiệm Lịch sử – Xã hội và 4 Tính chất Cơ bản của Giáo dục',
-        subtitle:
-          'Cấu trúc nội dung truyền thụ – lĩnh hội và các tính chất quy định sự vận động của giáo dục trong xã hội (Giáo trình HCMUE tr. 13–15).',
-        badge: 'Bản chất & 4 Tính chất Giáo dục',
-        columns: 2,
-        steps: [
-          {
-            number: 1,
-            title: 'Tính phổ biến và vĩnh hằng của giáo dục',
-            description:
-              'Giáo dục xuất hiện cùng với sự ra đời của xã hội loài người, tồn tại ở mọi cộng đồng và chỉ mất đi khi xã hội loài người không còn tồn tại.',
-            keyAction:
-              'Thành phần kinh nghiệm 1: Hệ thống tri thức khoa học về tự nhiên, xã hội, tư duy và cách thức hoạt động.',
-          },
-          {
-            number: 2,
-            title: 'Tính nhân văn của giáo dục',
-            description:
-              'Giáo dục luôn hướng tới con người, vì sự phát triển hoàn thiện nhân cách con người, tôn vinh các giá trị Chân – Thiện – Mỹ.',
-            keyAction:
-              'Thành phần kinh nghiệm 2: Hệ thống kỹ năng, kỹ xảo thực hiện các phương thức hoạt động đã biết.',
-          },
-          {
-            number: 3,
-            title: 'Tính lịch sử – xã hội (và tính giai cấp)',
-            description:
-              'Ở mỗi giai đoạn lịch sử, mỗi chế độ chính trị – kinh tế khác nhau, giáo dục có mục đích, nội dung, phương pháp và mô hình tổ chức tương ứng.',
-            keyAction:
-              'Thành phần kinh nghiệm 3: Kinh nghiệm hoạt động sáng tạo giúp giải quyết các vấn đề mới của thời đại.',
-          },
-          {
-            number: 4,
-            title: 'Tính dân tộc và tính thời đại',
-            description:
-              'Giáo dục bảo tồn bản sắc văn hóa dân tộc đồng thời tiếp thu tinh hoa văn minh nhân loại và xu thế phát triển của thời đại.',
-            keyAction:
-              'Thành phần kinh nghiệm 4: Hệ thống các chuẩn mực thái độ, giá trị đạo đức, cảm xúc đối với thế giới và con người.',
-          },
-        ],
-      }),
     ),
 
-    // PHẦN II: 3 CHỨC NĂNG XÃ HỘI CỦA GIÁO DỤC (TR. 15–17)
+    // PHẦN II: BẢNG MA TRẬN 4 TÍNH CHẤT CƠ BẢN CỦA GIÁO DỤC (TRANG 14 – 15)
     createElement(
       'section',
-      { id: '2-ba-chuc-nang-xa-hoi', className: 'space-y-4' },
+      { id: '2-bon-tinh-chat-co-ban', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -176,57 +214,69 @@ export const Lesson2_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Ba chức năng xã hội của giáo dục (Giáo trình HCMUE tr. 15–17)',
+          '2. Bảng Ma trận 4 Tính chất Cơ bản của Giáo dục (Giáo trình HCMUE Trang 14 – 15)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Với tư cách là một thiết chế xã hội trọng yếu, giáo dục tác động toàn diện đến sự phát triển của xã hội thông qua ',
-        createElement('strong', null, '3 chức năng xã hội cơ bản'),
-        ' có quan hệ mật thiết với nhau:',
+        'Sự vận động và phát triển của giáo dục trong lịch sử nhân loại bị chi phối bởi ',
+        createElement('strong', null, '4 tính chất cơ bản'),
+        ' phản ánh nguồn gốc, quy luật và bản chất xã hội của nó:',
+        createElement(
+          Sidenote,
+          { type: 'caution', number: 2 },
+          'Cảnh báo giáo điều: Tuyệt đối không sao chép nguyên bản mô hình giáo dục của quốc gia này áp đặt cơ học cho quốc gia khác, hoặc của giai đoạn lịch sử này cho giai đoạn lịch sử khác.',
+        ),
       ),
       createElement(ComparativeTable, {
-        title: 'Bảng Ma trận 3 Chức năng Xã hội của Giáo dục (Giáo trình HCMUE tr. 15–17)',
+        title: 'Bảng Ma trận 4 Tính chất Cơ bản của Giáo dục (Giáo trình HCMUE Trang 14 – 15)',
         subtitle:
-          'Phân tích nội dung tác động và yêu cầu thực tiễn của từng chức năng xã hội trong bối cảnh đổi mới giáo dục hiện nay.',
-        badge: '3 Chức năng Xã hội',
+          'Hệ thống các quy luật khách quan chi phối sự tồn tại, vận động và đổi mới của hiện tượng giáo dục.',
+        badge: '4 Tính chất Cơ bản của Giáo dục',
         columns: [
-          { key: 'func', header: 'Chức năng xã hội', widthClass: 'w-1/4' },
-          { key: 'content', header: 'Bản chất & Biểu hiện tác động' },
-          { key: 'requirement', header: 'Yêu cầu đối với nền giáo dục Việt Nam hiện đại' },
+          { key: 'property', header: 'Tính chất cơ bản', widthClass: 'w-1/4' },
+          { key: 'essence', header: 'Bản chất lý luận (Giáo trình HCMUE)' },
+          { key: 'manifestation', header: 'Biểu hiện thực tiễn & Ý nghĩa phương pháp luận' },
         ],
         rows: [
           {
-            func: '1. Chức năng kinh tế – sản xuất',
-            content:
-              'Giáo dục tái sản xuất sức lao động xã hội có trình độ chuyên môn, kỹ thuật và năng suất cao; biến khoa học công nghệ thành lực lượng sản xuất trực tiếp thúc đẩy tăng trưởng kinh tế.',
-            requirement:
-              'Đào tạo gắn với nhu cầu thị trường lao động, chú trọng giáo dục STEM, hướng nghiệp phân luồng và phát triển năng lực giải quyết vấn đề.',
+            property: '1. Tính phổ biến và vĩnh hằng',
+            essence:
+              'Giáo dục xuất hiện cùng với sự xuất hiện của xã hội loài người và chỉ mất đi khi xã hội loài người mất đi; tồn tại trong mọi thời kỳ, mọi chế độ kinh tế - xã hội.',
+            manifestation:
+              'Chừng nào xã hội loài người còn tồn tại và phát triển thì chừng đó giáo dục còn tồn tại như một nhu cầu sinh tồn và tiến hóa tất yếu.',
           },
           {
-            func: '2. Chức năng chính trị – tư tưởng (xã hội)',
-            content:
-              'Tuyên truyền, bồi dưỡng hệ tư tưởng chính trị, pháp luật, ý thức công dân; góp phần thay đổi cơ cấu xã hội, nâng cao tính dịch chuyển xã hội và đảm bảo công bằng xã hội.',
-            requirement:
-              'Giáo dục lý tưởng độc lập dân tộc gắn với chủ nghĩa xã hội, nâng cao dân trí, hỗ trợ học sinh vùng khó khăn và thực hiện bình đẳng cơ hội học tập.',
+            property: '2. Tính nhân văn',
+            essence:
+              'Phản ánh các giá trị chung vì con người, hướng con người tới chân - thiện - mỹ, bảo tồn bản sắc văn hóa dân tộc và hòa nhập với văn minh nhân loại.',
+            manifestation:
+              'Tôn trọng phẩm giá, phát triển toàn diện tiềm năng của từng cá nhân; loại trừ bạo lực, kỳ thị và áp đặt độc đoán trong giáo dục.',
           },
           {
-            func: '3. Chức năng văn hóa – xã hội',
-            content:
-              'Bảo tồn, chọn lọc và truyền bá các giá trị văn hóa dân tộc và nhân loại từ thế hệ trước sang thế hệ sau; nâng cao trình độ văn hóa, lối sống văn minh và sáng tạo giá trị văn hóa mới.',
-            requirement:
-              'Xây dựng văn hóa học đường lành mạnh, phát triển xã hội học tập, giữ gìn bản sắc văn hóa Việt Nam trong quá trình hội nhập quốc tế.',
+            property: '3. Tính xã hội - lịch sử',
+            essence:
+              'Giáo dục chịu sự quy định của trình độ phát triển kinh tế, quan hệ sản xuất và kiến trúc thượng tầng xã hội trong từng giai đoạn; giáo dục biến đổi theo sự biến đổi lịch sử, không nhất thành bất biến.',
+            manifestation:
+              'Mục đích, nội dung, phương pháp giáo dục luôn vận động để đáp ứng yêu cầu của thời đại mới (như chuyển dịch từ truyền thụ kiến thức sang phát triển phẩm chất, năng lực).',
+          },
+          {
+            property: '4. Tính giai cấp',
+            essence:
+              'Trong xã hội có giai cấp đối kháng, giáo dục là công cụ duy trì sự thống trị và truyền bá tư tưởng của giai cấp cầm quyền; trong xã hội XHCN, giáo dục mang tính dân chủ, nhân đạo, phục vụ quyền lợi của toàn thể nhân dân lao động.',
+            manifestation:
+              'Đảm bảo công bằng trong cơ hội tiếp cận giáo dục chất lượng cao cho mọi tầng lớp nhân dân, đặc biệt là vùng sâu, vùng xa và nhóm yếu thế.',
           },
         ],
-        footerNote: 'Nguồn: Giáo trình Giáo dục học HCMUE, Chương 2, Mục 2.1.3, tr. 15–17.',
+        footerNote: 'Nguồn đối chiếu: Giáo trình Giáo dục học HCMUE (Chương 2, Trang 14 – 15).',
       }),
     ),
 
-    // PHẦN III: VAI TRÒ CHỦ ĐẠO CỦA GIÁO DỤC ĐỐI VỚI SỰ PHÁT TRIỂN CÁ NHÂN (TR. 17–20)
+    // PHẦN III: 3 CHỨC NĂNG XÃ HỘI CỦA GIÁO DỤC (TRANG 15 – 17)
     createElement(
       'section',
-      { id: '3-vai-tro-chu-dao-cua-giao-duc', className: 'space-y-4' },
+      { id: '3-ba-chuc-nang-xa-hoi', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -237,96 +287,211 @@ export const Lesson2_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Vai trò chủ đạo của giáo dục đối với sự phát triển cá nhân (Giáo trình HCMUE tr. 17–20)',
+          '3. Ba Chức năng Xã hội của Giáo dục (Phân tích Hệ thống, Trang 15 – 17)',
+        ),
+      ),
+      createElement(
+        'p',
+        null,
+        'Với tư cách là một thiết chế vĩ mô, giáo dục giữ vai trò động lực thúc đẩy sự phát triển toàn diện của xã hội qua ',
+        createElement('strong', null, '3 chức năng xã hội cơ bản'),
+        ':',
+      ),
+      createElement(NumberedProcessFlow, {
+        title: 'Hệ thống 3 Chức năng Xã hội Vĩ mô của Giáo dục',
+        subtitle:
+          'Phân tích cơ chế tác động của giáo dục đối với kinh tế, chính trị và văn hóa xã hội (Giáo trình HCMUE Trang 15 – 17).',
+        badge: '3 Chức năng Xã hội Vĩ mô',
+        columns: 1,
+        steps: [
+          {
+            number: 1,
+            title: '01. Chức năng Kinh tế - Sản xuất',
+            description:
+              'Đào tạo nguồn nhân lực chất lượng cao, tái sản xuất sức lao động xã hội tinh xảo hơn để thay thế sức lao động cũ. Nguồn vốn nhân lực (Human Capital) là nguồn vốn quan trọng nhất, giữ vai trò chủ thể quyết định hiệu quả của các nguồn vốn tài nguyên, vốn vật chất và khoa học công nghệ.',
+            keyAction:
+              'Đào tạo nhân lực đáp ứng nhu cầu phát triển kinh tế tri thức và công nghiệp hóa, hiện đại hóa.',
+            deliverable:
+              'Đội ngũ lao động có tay nghề cao, tác phong công nghiệp và năng lực đổi mới sáng tạo.',
+          },
+          {
+            number: 2,
+            title: '02. Chức năng Chính trị - Tư tưởng',
+            description:
+              'Truyền bá đường lối, chủ trương, thế giới quan và hệ tư tưởng của giai cấp lãnh đạo; đào tạo công dân có trách nhiệm bảo vệ và xây dựng chế độ xã hội; nâng cao tính cố kết và đồng thuận xã hội.',
+            keyAction:
+              'Giáo dục lòng yêu nước, lý tưởng độc lập dân tộc gắn liền với chủ nghĩa xã hội và ý thức thượng tôn pháp luật.',
+            deliverable:
+              'Thế hệ công dân trung thành với Tổ quốc, có bản lĩnh chính trị và trách nhiệm xã hội cao.',
+          },
+          {
+            number: 3,
+            title: '03. Chức năng Văn hóa - Xã hội',
+            description:
+              'Nâng cao dân trí, bảo tồn và phát triển văn hóa dân tộc; tiếp thu tinh hoa văn hóa nhân loại; tác động lành mạnh hóa cấu trúc xã hội, thu hẹp khoảng cách giai tầng, tạo sự bình đẳng xã hội.',
+            keyAction:
+              'Xây dựng xã hội học tập, văn hóa học đường văn minh và thúc đẩy dịch chuyển xã hội tích cực.',
+            deliverable:
+              'Nền tảng dân trí vững chắc, bản sắc văn hóa dân tộc được bảo tồn và phát huy trong hội nhập.',
+          },
+        ],
+      }),
+      createElement(LegalReferenceBox, {
+        lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
+        article: 'Điều 3. Tính chất, nguyên lý giáo dục',
+        quote:
+          'Nền giáo dục Việt Nam là nền giáo dục xã hội chủ nghĩa có tính nhân dân, dân tộc, khoa học, hiện đại, lấy chủ nghĩa Mác - Lênin và tư tưởng Hồ Chí Minh làm nền tảng.',
+        source: 'Luật Giáo dục 2019 (Giáo trình HCMUE Trang 16 – 17)',
+        significance:
+          'Khẳng định bản chất chính trị – tư tưởng và định hướng xã hội chủ nghĩa nhất quán của toàn bộ hệ thống giáo dục quốc dân Việt Nam.',
+      }),
+    ),
+
+    // PHẦN IV: BẢNG SO SÁNH 3 QUAN ĐIỂM VỀ SỰ PHÁT TRIỂN NHÂN CÁCH (TRANG 17 – 20)
+    createElement(
+      'section',
+      { id: '4-ba-quan-diem-phat-trien-nhan-cach', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '4. Bảng So sánh 3 Quan điểm & Vai trò Chủ đạo của Giáo dục (Trang 17 – 20)',
         ),
       ),
       createElement(ScholarQuote, {
         quote: 'Hiền dữ phải đâu là tính sẵn, phần nhiều do giáo dục mà nên.',
         author: 'Chủ tịch Hồ Chí Minh (1890 – 1969)',
         title: 'Anh hùng giải phóng dân tộc · Danh nhân văn hóa thế giới',
-        source: 'Nhật ký trong tù (1943) — Giáo trình Giáo dục học HCMUE tr. 19',
+        source: 'Nhật ký trong tù (1943) — Giáo trình Giáo dục học HCMUE Trang 19',
         historicalContext:
-          'Luận điểm bác bỏ quan niệm định mệnh duy tâm về bẩm sinh, khẳng định sức mạnh cải biến và định hướng chủ đạo của giáo dục đối với sự hình thành nhân cách con người.',
+          'Bác khẳng định tính linh hoạt, khả biến của nhân cách con người và nhấn mạnh vai trò quyết định của công tác giáo dục trong việc cải tạo con người.',
       }),
-      createElement(
-        'p',
-        null,
-        'Sự hình thành và phát triển nhân cách cá nhân chịu sự tác động tổng hợp của ',
-        createElement('strong', null, '4 yếu tố'),
-        ': (1) Bẩm sinh – di truyền; (2) Môi trường sống; (3) Giáo dục; và (4) Hoạt động cá nhân. Trong hệ thống đó, ',
-        createElement('strong', null, 'Giáo dục giữ vai trò chủ đạo'),
-        '.',
-        createElement(
-          Sidenote,
-          { type: 'caution', number: 2 },
-          'Bẫy sư phạm: Tuyệt đối không đồng nhất "vai trò chủ đạo của giáo dục" với "vai trò quyết định trực tiếp của hoạt động cá nhân". Mọi tác động giáo dục chỉ phát huy hiệu quả khi thông qua sự tự giác hoạt động và tự giáo dục của học sinh.',
-        ),
-      ),
-
       createElement(ComparativeTable, {
         title:
-          'Bảng Đối sánh Mối quan hệ Biện chứng giữa 4 Yếu tố đối với Sự phát triển Nhân cách (Tr. 17–20)',
+          'Bảng So sánh 3 Quan điểm Triết học – Giáo dục học về Sự Phát triển Nhân cách (Trang 17 – 19)',
         subtitle:
-          'Định vị chính xác vai trò của từng yếu tố và kết luận sư phạm tương ứng theo Giáo trình Giáo dục học HCMUE.',
-        badge: '4 Yếu tố Phát triển Nhân cách',
+          'Phân tích sự khác biệt bản chất giữa các học thuyết và xác lập quan điểm duy vật biện chứng khoa học.',
+        badge: '3 Quan điểm Phát triển Nhân cách',
         columns: [
-          { key: 'factor', header: 'Yếu tố tác động', widthClass: 'w-1/5' },
-          { key: 'role', header: 'Vai trò định vị chuẩn', widthClass: 'w-1/5' },
-          { key: 'mechanism', header: 'Cơ chế tác động đến sự phát triển cá nhân' },
-          { key: 'pedagogy', header: 'Kết luận sư phạm đối với người giáo viên' },
+          { key: 'theory', header: 'Học thuyết / Quan điểm', widthClass: 'w-1/4' },
+          { key: 'essence', header: 'Luận điểm cốt lõi' },
+          { key: 'critique', header: 'Đánh giá khoa học & Hệ quả sư phạm' },
         ],
         rows: [
           {
-            factor: '1. Bẩm sinh – Di truyền',
-            role: 'Tiền đề vật chất (Điều kiện cần)',
-            mechanism:
-              'Tạo ra sức sống tự nhiên và những tư chất giải phẫu – sinh lí làm tiền đề cho sự phát triển; không quy định sẵn nhân cách hay giới hạn trình độ phát triển.',
-            pedagogy:
-              'Phát hiện sớm tư chất, năng khiếu của học sinh để bồi dưỡng; không định kiến trước những hạn chế bẩm sinh của người học.',
+            theory: 'Thuyết Tiền định (Duy tâm / Sinh vật hóa)',
+            essence:
+              'Tuyệt đối hóa yếu tố bẩm sinh - di truyền, xem môi trường và giáo dục là vô nghĩa; nhân cách đã được an bài từ trước khi đứa trẻ chào đời.',
+            critique:
+              'Quan điểm sai lầm, duy tâm; dẫn đến thái độ buông xuôi, bất lực trong sư phạm, phân biệt đối xử và phủ nhận tiềm năng vươn lên của học sinh.',
           },
           {
-            factor: '2. Môi trường (Tự nhiên & Xã hội)',
-            role: 'Điều kiện, phương tiện phát triển',
-            mechanism:
-              'Môi trường xã hội (gia đình, cộng đồng, văn hóa, truyền thông) cung cấp nội dung, điều kiện cho sự giao lưu; tuy nhiên tác động của môi trường thường mang tính tự phát.',
-            pedagogy:
-              'Gắn giáo dục nhà trường với thực tiễn xã hội; giúp học sinh có "sức đề kháng" trước các ảnh hưởng tiêu cực từ môi trường và mạng xã hội.',
+            theory: 'Thuyết Duy cảm (Duy vật máy móc / Xã hội hóa cực đoan)',
+            essence:
+              'Tuyệt đối hóa vai trò môi trường và giáo dục, xem trẻ em như "tờ giấy trắng", coi giáo dục là vạn năng, có thể nhào nặn ra bất kỳ mẫu người nào.',
+            critique:
+              'Quan điểm sai lầm, máy móc; bỏ qua tư chất tiền đề bẩm sinh và phủ nhận tính chủ thể tích cực tự giáo dục của cá nhân học sinh.',
           },
           {
-            factor: '3. Giáo dục (Nhà trường)',
-            role: 'Vai trò CHỦ ĐẠO',
-            mechanism:
-              'Định hướng mục tiêu phát triển; tổ chức có kế hoạch, phương pháp khoa học; phát huy tối đa tư chất di truyền, cải biến ảnh hưởng môi trường và uốn nắn các phẩm chất lệch lạc.',
-            pedagogy:
-              'Không ngừng nâng cao chất lượng dạy học – giáo dục, cá biệt hóa tác động sư phạm và phối hợp Nhà trường – Gia đình – Xã hội.',
-          },
-          {
-            factor: '4. Hoạt động cá nhân (và giao tiếp)',
-            role: 'Vai trò QUYẾT ĐỊNH TRỰC TIẾP',
-            mechanism:
-              'Thông qua hoạt động và giao tiếp tự giác, cá nhân chuyển hóa các yêu cầu, giá trị xã hội từ bên ngoài vào bên trong thành phẩm chất và năng lực của chính mình (tự giáo dục).',
-            pedagogy:
-              'Tổ chức đa dạng các hoạt động học tập, trải nghiệm sáng tạo để phát huy tính tích cực, tự chủ và năng lực tự giáo dục của học sinh.',
+            theory: 'Quan điểm Duy vật Biện chứng (Mác - Lênin & HCMUE)',
+            essence:
+              'Giáo dục không phải là vạn năng nhưng giữ VAI TRÒ CHỦ ĐẠO trong mối tương tác với di truyền (tiền đề vật chất), môi trường (điều kiện) và hoạt động cá nhân (yếu tố quyết định trực tiếp).',
+            critique:
+              'Quan điểm khoa học, biện chứng; định hướng cho người giáo viên không ngừng sáng tạo, kiên trì cảm hóa và khơi dậy động lực tự hoàn thiện của học sinh.',
           },
         ],
-        footerNote: 'Nguồn: Giáo trình Giáo dục học HCMUE, Chương 2, Mục 2.1.4, tr. 17–20.',
+        footerNote: 'Nguồn đối chiếu: Giáo trình Giáo dục học HCMUE (Chương 2, Trang 17 – 20).',
       }),
 
-      createElement(LegalReferenceBox, {
-        lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
-        article: 'Điều 5. Yêu cầu về nội dung, phương pháp giáo dục',
-        quote:
-          'Nội dung giáo dục phải bảo đảm tính cơ bản, toàn diện, thiết thực, hiện đại, có hệ thống và được cập nhật thường xuyên; coi trọng giáo dục tư tưởng, phẩm chất đạo đức và ý thức công dân; kế thừa và phát huy truyền thống tốt đẹp, bản sắc văn hóa dân tộc, tiếp thu tinh hoa văn hóa nhân loại; phù hợp với sự phát triển về thể chất, trí tuệ, tâm sinh lý lứa tuổi và khả năng của người học.',
-        source: 'Luật số 43/2019/QH14 (Giáo trình HCMUE tr. 19–20)',
-        significance:
-          'Khẳng định nguyên tắc phát huy vai trò chủ đạo của giáo dục phải luôn gắn liền với việc tôn trọng khả năng cá nhân và phát huy tính tích cực của người học.',
-      }),
+      // Cơ chế vai trò chủ đạo của giáo dục
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-4',
+        },
+        createElement(
+          'h4',
+          { className: 'font-serif text-lg font-bold text-[#29383D]' },
+          'Phân tích Cơ chế Vai trò Chủ đạo của Giáo dục đối với Sự Phát triển Nhân cách',
+        ),
+        createElement(
+          'p',
+          { className: 'text-sm text-[#55676B]' },
+          'Giáo trình Giáo dục học HCMUE (Trang 18 – 20) chỉ rõ vai trò chủ đạo của giáo dục được thực hiện qua 4 cơ chế tác động cốt lõi sau:',
+        ),
+        createElement(
+          'div',
+          { className: 'grid gap-3 md:grid-cols-2' },
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-1.5' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '1. Định hướng và dẫn dắt sự phát triển',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D]' },
+              'Định hướng và tổ chức dẫn dắt quá trình hình thành nhân cách theo mục tiêu định trước; giáo dục luôn đi trước đón đầu sự phát triển, kéo theo sự phát triển tâm lý của học sinh.',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-1.5' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '2. Can thiệp, điều chỉnh yếu tố di truyền',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D]' },
+              'Can thiệp, điều chỉnh các yếu tố bẩm sinh – di truyền: bù trừ cho các khiếm khuyết cơ thể (giáo dục đặc biệt) và phát hiện, phát triển những tư chất bẩm sinh trở thành tài năng thực sự.',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-1.5' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '3. Cải tạo và lành mạnh hóa môi trường sống',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D]' },
+              'Cải tạo và lành mạnh hóa môi trường sống xung quanh học sinh; xây dựng không gian văn hóa học đường tích cực và trang bị cho học sinh "bộ lọc", "sức đề kháng" trước ảnh hưởng tiêu cực của xã hội.',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-1.5' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '4. Tổ chức hoạt động kích hoạt tính chủ thể',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D]' },
+              'Tổ chức các loại hình hoạt động và giao lưu đa dạng, phong phú để kích hoạt tính chủ thể tự ý thức, tự rèn luyện và tự giáo dục của học sinh (nhân tố quyết định trực tiếp).',
+            ),
+          ),
+        ),
+      ),
     ),
 
-    // PHẦN IV: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN V: KHUNG TÌNH HUỐNG THỰC HÀNH 5 BƯỚC (CASE STUDY 201)
     createElement(
       'section',
-      { id: '4-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '5-tinh-huong-thuc-hanh', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -337,10 +502,10 @@ export const Lesson2_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '4. Tình huống Thực hành 5 Bước: Vai trò chủ đạo của giáo dục đối với sự phát triển nhân cách',
+          '5. Khung Tình huống Thực hành 5 Bước: Vai trò Chủ đạo của Giáo dục (Mục 3.3.6 HCMUE)',
         ),
       ),
-      createElement(CaseStudyBox, { caseStudy: caseStudy2_1, defaultOpenSolution: false }),
+      createElement(CaseStudyBox, { caseStudy: caseStudy2_1, defaultOpenSolution: true }),
     ),
   );
 };
@@ -355,52 +520,52 @@ export const Lesson2_2View: FC = () => {
     title:
       'Đổi mới phương pháp giáo dục nhưng tách rời các thành tố cấu trúc của quá trình sư phạm',
     context:
-      'Một nhóm sinh viên kiến tập sư phạm thiết kế hoạt động giáo dục chuyên đề "Tư duy tài chính thông minh" cho học sinh lớp 7. Nhóm thiết kế trò chơi rất sôi động (Phương pháp/Hình thức), nhưng cuối buổi học sinh chỉ nhớ phần thưởng trò chơi mà không rút ra được bài học gì về cách lập kế hoạch chi tiêu cá nhân (Mục tiêu & Kết quả), cũng không có phiếu đánh giá mức độ nhận thức của học sinh.',
+      'Một nhóm sinh viên kiến tập sư phạm thiết kế hoạt động giáo dục chuyên đề "Tư duy tài chính thông minh" cho học sinh lớp 7. Nhóm thiết kế trò chơi rất sôi động (Phương pháp/Hình thức), nhưng cuối buổi học sinh chỉ nhớ phần thưởng trò chơi mà không rút ra được bài học gì về cách lập kế hoạch chi tiêu cá nhân (Mục tiêu & Kết quả), cũng không có công cụ đánh giá mức độ nhận thức của học sinh.',
     question:
-      'Vận dụng lý luận về đối tượng nghiên cứu của Giáo dục học và tính hệ thống của 7 thành tố cấu trúc quá trình giáo dục (Giáo trình HCMUE tr. 21–23), anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
+      'Vận dụng lý luận về tính chỉnh thể hệ thống của 7 thành tố cấu trúc hoạt động giáo dục (Giáo trình HCMUE tr. 20–24), anh/chị hãy phân tích và xử lý tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Cấu trúc hệ thống 7 thành tố của quá trình giáo dục tổng thể (Giáo trình tr. 21–22)',
+      'Tính chỉnh thể hệ thống của 7 thành tố trong quá trình giáo dục tổng thể (Giáo trình tr. 21–22)',
       'Nguyên tắc đảm bảo tính mục đích trong hoạt động giáo dục',
-      'Phương pháp nghiên cứu thực tiễn (Tổng kết kinh nghiệm & Nghiên cứu sản phẩm hoạt động)',
+      'Mối quan hệ biện chứng giữa Mục tiêu, Nội dung, Phương pháp và Đánh giá kết quả',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Hoạt động giáo dục rơi vào tình trạng "vui chơi hình thức": thành tố Phương pháp và Hình thức tổ chức bị tách rời khỏi thành tố Mục đích/Mục tiêu, Nội dung cốt lõi và Đánh giá kết quả giáo dục.',
+          'Hoạt động giáo dục rơi vào bệnh hình thức bề nổi: thành tố Phương pháp/Hình thức tổ chức (trò chơi vui nhộn) bị tách rời hoàn toàn khỏi thành tố Mục đích, Nội dung giáo dục và khâu Đánh giá kết quả.',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo cấu trúc 7 thành tố',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Theo Giáo trình HCMUE (tr. 21–22), quá trình giáo dục là một hệ thống toàn vẹn gồm 7 thành tố có quan hệ hữu cơ. Khi sinh viên chỉ đầu tư vào trò chơi bề nổi mà không neo chặt vào Mục tiêu cần đạt và bước Kết luận – Đánh giá, quá trình chuyển hóa nhận thức ở học sinh (Người được giáo dục) không diễn ra trọn vẹn.',
+          'Mâu thuẫn giữa sự hào hứng bên ngoài của học sinh và sự trống rỗng về năng lực thực chất sau giờ học; vi phạm nguyên lý 7 thành tố cấu trúc phải tạo thành một hệ thống đồng bộ.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết phương án)',
         content:
-          'Phương án 1: Bỏ hẳn trò chơi, chuyển sang đọc chép lý thuyết (làm mất hứng thú). Phương án 2: Cải tiến cấu trúc kế hoạch theo đúng mối liên hệ giữa 7 thành tố: xác định rõ mục tiêu đầu ra, lồng ghép nội dung chi tiêu vào luật chơi và bổ sung phiếu phản tư – đánh giá cuối hoạt động.',
+          'Tránh quay lại cách dạy thuyết giảng khô khan. Chọn giải pháp tái cấu trúc bài học: Giữ lại hoạt động tương tác nhưng neo chặt mỗi thử thách của trò chơi vào một tình huống chi tiêu thực tế, đồng thời bổ sung phiếu phản tư tài chính ở cuối buổi.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh cơ sở khoa học)',
         content:
-          'Hướng dẫn nhóm sinh viên điều chỉnh kịch bản: sau mỗi vòng chơi, giáo viên (Nhà giáo dục) đặt câu hỏi thảo luận để học sinh (Người được giáo dục) tự rút ra quy tắc tài chính và lập bảng kế hoạch tiết kiệm tuần (Kết quả giáo dục).',
+          'Theo Giáo trình HCMUE (tr. 21–22), 7 thành tố cấu trúc có mối quan hệ biện chứng chặt chẽ: Mục tiêu giữ vai trò dẫn đường, Nội dung là chất liệu, Phương pháp là con đường, và Kết quả phản ánh sự chuyển hóa bên trong của học sinh.',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Sử dụng phương pháp nghiên cứu sản phẩm hoạt động (phiếu kế hoạch chi tiêu của học sinh) và phương pháp quan sát sư phạm để kiểm chứng mức độ đạt mục tiêu của chuyên đề.',
+          'Mọi sự đổi mới phương pháp và hình thức tổ chức giáo dục chỉ thực sự có giá trị khi phục vụ trực tiếp cho việc hiện thực hóa mục tiêu phẩm chất, năng lực và được kiểm chứng qua sự chuyển biến thực chất của người học.',
       },
     ],
     pitfallsToAvoid: [
-      'Tuyệt đối hóa một thành tố đơn lẻ (chỉ chạy theo phương pháp/trò chơi bắt mắt) mà làm đứt gãy mối liên hệ với mục tiêu và nội dung giáo dục.',
-      'Bỏ qua khâu kiểm tra, đánh giá và phản hồi kết quả giáo dục cuối hoạt động.',
+      'Chạy theo trò chơi giải trí đơn thuần biến giờ giáo dục thành giờ hoạt náo vô mục đích.',
+      'Bỏ qua khâu đánh giá và phản tư kết quả giáo dục.',
     ],
     coreLesson:
-      'Quá trình giáo dục là một chỉnh thể hệ thống gồm 7 thành tố; trong đó Mục tiêu giữ vai trò định hướng, Nội dung là chất liệu, Phương pháp – Hình thức là con đường, và sự tương tác giữa Nhà giáo dục với Người được giáo dục quyết định Kết quả giáo dục.',
+      'Quá trình giáo dục là một hệ thống toàn vẹn gồm 7 thành tố; bất kỳ sự đứt gãy nào giữa phương pháp với mục tiêu và đánh giá đều dẫn đến sự hình thức hóa giáo dục.',
   };
 
   return createElement(
@@ -410,125 +575,198 @@ export const Lesson2_2View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C2-L2',
       clos: ['CLO1', 'CLO3'],
-      textbookPages: 'Tr. 20–24 (Chương 2, Mục 2.2)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 20 – 24)',
       legalRefs: [
-        'Giáo trình Giáo dục học HCMUE (Tr. 20–24)',
+        'Giáo trình Giáo dục học HCMUE (Mục 2.2, Trang 20 – 24)',
         'Tài liệu Phương pháp nghiên cứu khoa học Giáo dục học',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 2',
+      sessionNote: 'Mục 2.2 · Trang 20 – 24',
     }),
 
-    // PHẦN I: LỊCH SỬ HÌNH THÀNH & ĐỐI TƯỢNG NGHIÊN CỨU — 7 THÀNH TỐ (TR. 20–22)
+    // PHẦN I: TIẾN TRÌNH LỊCH SỬ HÌNH THÀNH GIÁO DỤC HỌC (TRANG 20 – 21)
     createElement(
       'section',
-      { id: '1-doi-tuong-va-7-thanh-to', className: 'space-y-4' },
+      { id: '1-tien-trinh-lich-su-giao-duc-hoc', className: 'space-y-4' },
       createElement(
         'div',
         {
           className:
             'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(BookOpen, { className: 'h-5 w-5 text-[#3F6570]' }),
         createElement(
           'h3',
           null,
-          '1. Lịch sử hình thành, đối tượng nghiên cứu và 7 thành tố của quá trình giáo dục (Tr. 20–22)',
+          '1. Tiến trình Lịch sử Hình thành Giáo dục học thành Khoa học Độc lập (Trang 20 – 21)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Các tư tưởng giáo dục ban đầu nằm trong lòng Triết học (Khổng Tử ở phương Đông; Socrates, Plato, Aristotle ở phương Tây). Đến thế kỷ XVII, với sự ra đời của tác phẩm ',
-        createElement('em', null, 'Didactica Magna (Đại lý luận dạy học, 1632)'),
-        ' của nhà giáo dục học Tiệp Khắc ',
-        createElement('strong', null, 'J. A. Cômenxki (1592–1670)'),
-        ', Giáo dục học chính thức tách ra trở thành một ngành khoa học độc lập.',
-        createElement(
-          Sidenote,
-          { type: 'history', number: 1 },
-          'J. A. Cômenxki là người đầu tiên xây dựng hệ thống lý luận về "Chế độ lớp – bài", năm học, kỳ nghỉ và các nguyên tắc dạy học trực quan mà các trường phổ thông trên toàn thế giới vẫn đang kế thừa.',
-        ),
+        'Khoa học Giáo dục học không xuất hiện ngẫu nhiên mà là kết quả của một tiến trình lịch sử lâu dài, đúc kết từ kinh nghiệm thực tiễn và tư tưởng triết học nhân loại qua 4 giai đoạn lớn:',
       ),
-      createElement(
-        'p',
-        null,
-        'Theo Giáo trình Giáo dục học HCMUE (tr. 21–22), ',
-        createElement(
-          'strong',
-          null,
-          'đối tượng nghiên cứu của Giáo dục học là hoạt động giáo dục tổng thể (quá trình sư phạm tổng thể)',
-        ),
-        ' được tổ chức có mục đích trong nhà trường và xã hội. Quá trình này vận hành như một hệ thống toàn vẹn gồm ',
-        createElement('strong', null, '7 thành tố cấu trúc cơ bản'),
-        ':',
-      ),
-
       createElement(NumberedProcessFlow, {
-        title: 'Hệ thống 7 Thành tố Cấu trúc của Quá trình Giáo dục Tổng thể',
+        title: 'Bốn Giai đoạn Lịch sử Đưa Giáo dục học Trở thành Khoa học Độc lập',
         subtitle:
-          'Mô hình cấu trúc hệ thống của hoạt động giáo dục tổng thể thuộc đối tượng nghiên cứu của Giáo dục học (Giáo trình HCMUE tr. 21–22).',
-        badge: '7 Thành tố Quá trình Giáo dục',
-        columns: 2,
+          'Từ kinh nghiệm dân gian, triết học cổ đại đến mốc son thời kỳ Phục Hưng của J. A. Cômenxki (Giáo trình HCMUE Trang 20 – 21).',
+        badge: 'Tiến trình Lịch sử Giáo dục học',
+        columns: 1,
         steps: [
           {
             number: 1,
-            title: 'Mục đích và mục tiêu giáo dục',
+            title: 'Giai đoạn tích lũy kinh nghiệm tự phát',
             description:
-              'Dự kiến trước kết quả cần đạt về phẩm chất và năng lực nhân cách người học; giữ vai trò định hướng toàn bộ quá trình giáo dục.',
-            keyAction: 'Trả lời câu hỏi: Giáo dục nhằm đào tạo ra mẫu người như thế nào?',
+              'Các kinh nghiệm dạy dỗ, nuôi dưỡng trẻ em được đúc kết tự phát trong văn hóa dân gian qua các câu ca dao, tục ngữ, truyện cổ tích và truyền miệng trong cộng đồng.',
+            keyAction: 'Đúc kết kinh nghiệm giáo dục tự nhiên gắn liền với đời sống lao động.',
+            deliverable:
+              'Kho tàng tri thức dân gian về đạo lý làm người và kinh nghiệm ứng xử trong gia đình.',
           },
           {
             number: 2,
-            title: 'Nội dung giáo dục',
+            title: 'Giai đoạn tích hợp trong triết học cổ đại',
             description:
-              'Hệ thống tri thức khoa học, kỹ năng, chuẩn mực đạo đức, giá trị văn hóa và kinh nghiệm hoạt động sáng tạo được chọn lọc đưa vào chương trình.',
-            keyAction: 'Trả lời câu hỏi: Dạy và giáo dục cho người học những gì?',
+              'Các tư tưởng giáo dục bắt đầu được khái quát hóa nhưng vẫn nằm trong lòng các học thuyết triết học và tôn giáo (như tư tưởng của Khổng Tử ở phương Đông; Socrates, Plato, Aristotle ở Hy Lạp cổ đại).',
+            keyAction: 'Gắn mục đích giáo dục với lý tưởng đạo đức và trật tự nhà nước lý tưởng.',
+            deliverable:
+              'Các tư tưởng triết học giáo dục sơ khai về bồi dưỡng người quân tử, công dân hiền triết.',
           },
           {
             number: 3,
-            title: 'Phương pháp và phương tiện giáo dục',
+            title: 'Bước ngoặt thời kỳ Phục Hưng: Trở thành khoa học độc lập',
             description:
-              'Hệ thống cách thức hoạt động phối hợp giữa nhà giáo dục và người được giáo dục cùng các công cụ vật chất, công nghệ hỗ trợ.',
-            keyAction: 'Trả lời câu hỏi: Giáo dục bằng cách nào và bằng phương tiện gì?',
+              'Đầu thế kỷ XVII, với sự ra đời của kiệt tác "Didactica Magna" (Phép giảng dạy vĩ đại, 1632) của nhà giáo dục học Jan Amos Cômenxki (1592 – 1670), Giáo dục học chính thức tách khỏi triết học để trở thành một khoa học độc lập.',
+            keyAction:
+              'Xây dựng hệ thống lý luận dạy học khoa học, chế độ lớp – bài, niên chế năm học và nguyên tắc dạy học trực quan.',
+            deliverable:
+              'Đặt nền móng khoa học vững chắc cho toàn bộ hệ thống trường học cận – hiện đại.',
           },
           {
             number: 4,
-            title: 'Hình thức tổ chức giáo dục',
+            title: 'Giai đoạn phát triển và hoàn thiện phương pháp luận',
             description:
-              'Cách thức sắp xếp không gian, thời gian và quy mô tổ chức hoạt động (lớp – bài, hoạt động câu lạc bộ, tham quan, dự án, sinh hoạt tập thể).',
+              'Sự đóng góp to lớn của các đại biểu kiệt xuất: John Locke, J. J. Rousseau, Pestalozzi, Diesterweg, Usinsky; và phát triển đỉnh cao trên nền tảng phương pháp luận duy vật biện chứng Mác - Lênin.',
             keyAction:
-              'Trả lời câu hỏi: Tổ chức hoạt động giáo dục trong không gian, thời gian nào?',
-          },
-          {
-            number: 5,
-            title: 'Nhà giáo dục (Giáo viên & các lực lượng giáo dục)',
-            description:
-              'Chủ thể giữ vai trò tổ chức, định hướng, dẫn dắt, cố vấn và điều khiển quá trình sư phạm bằng chuyên môn và nhân cách mẫu mực.',
-            keyAction: 'Giữ vai trò chủ đạo trong việc thiết kế và điều phối hoạt động giáo dục.',
-          },
-          {
-            number: 6,
-            title: 'Người được giáo dục (Học sinh)',
-            description:
-              'Vừa là đối tượng tiếp nhận tác động sư phạm, vừa là chủ thể tự giác nhận thức, trải nghiệm và tự giáo dục để hoàn thiện nhân cách.',
-            keyAction: 'Giữ vai trò chủ động, tích cực quyết định trực tiếp kết quả rèn luyện.',
-          },
-          {
-            number: 7,
-            title: 'Kết quả giáo dục (Đầu ra & Kiểm tra đánh giá)',
-            description:
-              'Mức độ hình thành phẩm chất và năng lực thực tế ở người học so với mục tiêu đề ra; cung cấp thông tin phản hồi để điều chỉnh toàn hệ thống.',
-            keyAction: 'Đánh giá thường xuyên và định kỳ vì sự tiến bộ của học sinh.',
+              'Vận dụng quan điểm lịch sử – cụ thể, thực tiễn và toàn diện vào nghiên cứu con người.',
+            deliverable:
+              'Hệ thống lý luận Giáo dục học hiện đại với tính khoa học, cách mạng và nhân văn sâu sắc.',
           },
         ],
       }),
     ),
 
-    // PHẦN II: NHIỆM VỤ & 3 NHÓM PHƯƠNG PHÁP NGHIÊN CỨU GIÁO DỤC HỌC (TR. 22–24)
+    // PHẦN II: ĐỐI TƯỢNG NGHIÊN CỨU & BẢNG LƯỚI 7 THÀNH TỐ (TRANG 21 – 22)
     createElement(
       'section',
-      { id: '2-nhiem-vu-va-phuong-phap-nghien-cuu', className: 'space-y-4' },
+      { id: '2-doi-tuong-va-7-thanh-to', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Layers, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Đối tượng Nghiên cứu & Hệ thống 7 Thành tố Cấu trúc (Trang 21 – 22)',
+        ),
+      ),
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-3',
+        },
+        createElement(
+          'span',
+          {
+            className:
+              'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+          },
+          'Đối tượng Nghiên cứu của Giáo dục học',
+        ),
+        createElement(
+          'p',
+          { className: 'text-base font-serif font-bold text-[#29383D]' },
+          'Theo Giáo trình Giáo dục học HCMUE (Trang 21), đối tượng nghiên cứu của Giáo dục học là hoạt động giáo dục tổng thể (quá trình hình thành và phát triển toàn diện nhân cách con người được tổ chức có mục đích, có kế hoạch tại nhà trường và các thiết chế xã hội).',
+        ),
+      ),
+      createElement(
+        'p',
+        null,
+        'Hoạt động giáo dục tổng thể vận hành như một hệ thống cấu trúc hoàn chỉnh bao gồm ',
+        createElement('strong', null, '7 thành tố cơ bản'),
+        ':',
+        createElement(
+          Sidenote,
+          { type: 'pedagogy', number: 1 },
+          'Mối quan hệ biện chứng: 7 thành tố tạo thành một hệ thống chỉnh thể; khi một thành tố thay đổi (ví dụ: đổi mới mục tiêu sang phát triển năng lực) thì tất cả các thành tố còn lại (nội dung, phương pháp, đánh giá) đều phải thay đổi tương ứng.',
+        ),
+      ),
+      createElement(ComparativeTable, {
+        title:
+          'Bảng Lưới 7 Thành tố Cấu trúc của Hoạt động Giáo dục (Giáo trình HCMUE Trang 21 – 22)',
+        subtitle:
+          'Khung hệ thống toàn vẹn về các thành tố cấu thành quá trình sư phạm tổng thể trong nhà trường.',
+        badge: '7 Thành tố Hoạt động Giáo dục',
+        columns: [
+          { key: 'component', header: 'Thành tố cấu trúc', widthClass: 'w-1/4' },
+          { key: 'role', header: 'Vị trí & Bản chất thành tố' },
+          { key: 'function', header: 'Chức năng vận hành trong hệ thống' },
+        ],
+        rows: [
+          {
+            component: '01. Chủ thể giáo dục',
+            role: 'Nhà giáo dục (giáo viên)',
+            function:
+              'Giữ vai trò chủ đạo, định hướng tổ chức, điều khiển, cố vấn và khích lệ toàn bộ hoạt động học tập, rèn luyện của học sinh.',
+          },
+          {
+            component: '02. Đối tượng giáo dục',
+            role: 'Người được giáo dục (học sinh)',
+            function:
+              'Vừa là đối tượng tiếp nhận tác động sư phạm, vừa là chủ thể tích cực, độc lập, có ý thức tự giáo dục để hoàn thiện nhân cách.',
+          },
+          {
+            component: '03. Mục đích giáo dục',
+            role: 'Mô hình nhân cách tương lai',
+            function:
+              'Mô hình dự kiến về nhân cách mà xã hội yêu cầu; giữ vai trò dẫn đường, định hướng cho toàn bộ các thành tố còn lại trong hệ thống.',
+          },
+          {
+            component: '04. Nội dung giáo dục',
+            role: 'Chất liệu giáo dục được gia công sư phạm',
+            function:
+              'Hệ thống tri thức, kỹ năng, thái độ, giá trị đạo đức và kinh nghiệm hoạt động sáng tạo được tinh lọc đưa vào chương trình.',
+          },
+          {
+            component: '05. Phương pháp & Phương tiện',
+            role: 'Con đường và công cụ phối hợp',
+            function:
+              'Cách thức, công cụ hoạt động phối hợp tương tác hai chiều giữa thầy và trò cùng các phương tiện công nghệ, học liệu hỗ trợ.',
+          },
+          {
+            component: '06. Kết quả giáo dục',
+            role: 'Sản phẩm chuyển hóa thực tế',
+            function:
+              'Mức độ chuyển biến phẩm chất, năng lực thực tế của học sinh so với mục tiêu đề ra; là căn cứ kiểm định hiệu quả của cả hệ thống.',
+          },
+          {
+            component: '07. Môi trường & Điều kiện',
+            role: 'Không gian và bối cảnh sinh tồn',
+            function:
+              'Không gian tự nhiên, xã hội bên ngoài và điều kiện cơ sở vật chất, văn hóa học đường bên trong tác động trực tiếp lên quá trình giáo dục.',
+          },
+        ],
+        footerNote: 'Nguồn đối chiếu: Giáo trình Giáo dục học HCMUE (Chương 2, Trang 21 – 22).',
+      }),
+    ),
+
+    // PHẦN III: 3 NHÓM PHƯƠNG PHÁP NGHIÊN CỨU GIÁO DỤC HỌC (TRANG 22 – 24)
+    createElement(
+      'section',
+      { id: '3-ba-nhom-phuong-phap-nghien-cuu', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -539,68 +777,61 @@ export const Lesson2_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Nhiệm vụ và 3 nhóm phương pháp nghiên cứu Giáo dục học (Giáo trình HCMUE tr. 22–24)',
+          '3. Ba Nhóm Phương pháp Nghiên cứu Giáo dục học (Giáo trình HCMUE Trang 22 – 24)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Để phát hiện bản chất và quy luật của quá trình giáo dục, Giáo dục học sử dụng hệ thống phương pháp luận duy vật biện chứng kết hợp với ',
-        createElement('strong', null, '3 nhóm phương pháp nghiên cứu khoa học cụ thể'),
-        ' (Giáo trình HCMUE tr. 23–24):',
+        'Nghiên cứu khoa học Giáo dục học đòi hỏi sự kết hợp đồng bộ giữa lý luận, thực tiễn và công cụ toán học thông qua ',
+        createElement('strong', null, '3 nhóm phương pháp nghiên cứu cốt lõi'),
+        ':',
       ),
-
-      createElement(ComparativeTable, {
-        title: 'Bảng Phân loại 3 Nhóm Phương pháp Nghiên cứu Khoa học Giáo dục học (Tr. 23–24)',
+      createElement(NumberedProcessFlow, {
+        title: 'Hệ thống 3 Nhóm Phương pháp Nghiên cứu Sư phạm',
         subtitle:
-          'Hệ thống các phương pháp thu thập, phân tích và xử lí dữ liệu trong nghiên cứu Giáo dục học.',
+          'Hệ phương pháp thu thập, phân tích và xử lý dữ liệu khoa học trong nghiên cứu Giáo dục học (Trang 22 – 24).',
         badge: '3 Nhóm Phương pháp Nghiên cứu',
-        columns: [
-          { key: 'group', header: 'Nhóm phương pháp', widthClass: 'w-1/4' },
-          { key: 'methods', header: 'Các phương pháp thành phần' },
-          { key: 'purpose', header: 'Mục đích & Yêu cầu vận dụng trong nghiên cứu sư phạm' },
+        columns: 1,
+        steps: [
+          {
+            number: 1,
+            title: '01. Nhóm phương pháp nghiên cứu lý luận',
+            description:
+              'Phân tích, tổng hợp, phân loại, hệ thống hóa các tài liệu khoa học, văn bản nghị quyết, công trình nghiên cứu trong và ngoài nước để xây dựng luận cứ lý thuyết, khung khái niệm và giả thuyết khoa học.',
+            keyAction:
+              'Đọc, phân tích, tổng hợp tài liệu chuyên khảo và văn bản quy phạm pháp luật giáo dục.',
+            deliverable:
+              'Khung cơ sở lý luận và hệ thống giả thuyết khoa học của đề tài nghiên cứu.',
+          },
+          {
+            number: 2,
+            title: '02. Nhóm phương pháp nghiên cứu thực tiễn',
+            description:
+              'Gồm các phương pháp tác động và khảo sát trực tiếp: (1) Quan sát sư phạm; (2) Điều tra giáo dục (phỏng vấn, phiếu hỏi Anket); (3) Tổng kết kinh nghiệm giáo dục & lấy ý kiến chuyên gia; (4) Thực nghiệm sư phạm (so sánh đối chứng lớp thực nghiệm và lớp đối chứng); (5) Nghiên cứu sản phẩm hoạt động học tập.',
+            keyAction:
+              'Khảo sát thực trạng, tiến hành thực nghiệm sư phạm và đo lường sản phẩm học tập.',
+            deliverable:
+              'Hệ thống số liệu thực tiễn và bằng chứng kiểm nghiệm tính khả thi của giải pháp sư phạm.',
+          },
+          {
+            number: 3,
+            title: '03. Nhóm phương pháp thống kê toán học',
+            description:
+              'Xử lý số liệu thực nghiệm, tính toán các tham số thống kê mô tả (điểm trung bình, độ lệch chuẩn), kiểm định giả thuyết thống kê (T-test, ANOVA) bằng phần mềm SPSS hoặc Excel nhằm phát hiện các quy luật khách quan, bảo đảm tính tin cậy của kết quả.',
+            keyAction:
+              'Định lượng hóa số liệu nghiên cứu và kiểm định độ tin cậy, độ giá trị khoa học.',
+            deliverable:
+              'Bảng biểu, biểu đồ thống kê định lượng và kết luận khoa học có sức thuyết phục cao.',
+          },
         ],
-        rows: [
-          {
-            group: '1. Nhóm phương pháp nghiên cứu lý luận',
-            methods:
-              'Phân tích và tổng hợp lý thuyết; Phân loại và hệ thống hóa tài liệu; Mô hình hóa; Nghiên cứu lịch sử giáo dục.',
-            purpose:
-              'Tổng quan cơ sở lý luận từ sách chuyên khảo, văn bản pháp quy, công trình khoa học trong và ngoài nước để xây dựng khung khái niệm và giả thuyết khoa học.',
-          },
-          {
-            group: '2. Nhóm phương pháp nghiên cứu thực tiễn',
-            methods:
-              'Quan sát sư phạm; Điều tra giáo dục (bằng bảng hỏi Anket, phỏng vấn, trắc nghiệm); Tổng kết kinh nghiệm giáo dục; Thực nghiệm sư phạm; Nghiên cứu sản phẩm hoạt động của học sinh; Phương pháp chuyên gia.',
-            purpose:
-              'Khảo sát thực trạng hoạt động dạy học – giáo dục tại trường phổ thông và kiểm chứng tính khả thi, hiệu quả của các biện pháp tác động sư phạm mới.',
-          },
-          {
-            group: '3. Nhóm phương pháp toán học (Thống kê toán học)',
-            methods:
-              'Thống kê mô tả (tần số, tỉ lệ %, điểm trung bình, độ lệch chuẩn); Kiểm định giả thuyết thống kê (T-test, tương quan, phân tích phương sai) và phần mềm xử lí dữ liệu.',
-            purpose:
-              'Định lượng hóa kết quả điều tra và thực nghiệm sư phạm, đảm bảo tính khách quan, độ tin cậy và giá trị khoa học của các kết luận nghiên cứu.',
-          },
-        ],
-        footerNote: 'Nguồn: Giáo trình Giáo dục học HCMUE, Chương 2, Mục 2.2.3, tr. 23–24.',
-      }),
-
-      createElement(LegalReferenceBox, {
-        lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
-        article: 'Điều 18. Hoạt động khoa học và công nghệ trong giáo dục',
-        quote:
-          'Nhà nước tạo điều kiện cho cơ sở giáo dục tổ chức nghiên cứu, ứng dụng, phổ biến tiến bộ khoa học và công nghệ; kết hợp đào tạo với nghiên cứu khoa học và sản xuất nhằm nâng cao chất lượng giáo dục.',
-        source: 'Luật số 43/2019/QH14',
-        significance:
-          'Khuyến khích giảng viên, giáo viên phổ thông và sinh viên sư phạm thực hiện nghiên cứu khoa học giáo dục và nghiên cứu khoa học sư phạm ứng dụng.',
       }),
     ),
 
-    // PHẦN III: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN IV: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI (CASE STUDY 202)
     createElement(
       'section',
-      { id: '3-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '4-tinh-huong-thuc-hanh', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -611,7 +842,7 @@ export const Lesson2_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Tình huống Thực hành 5 Bước: Tính hệ thống của 7 thành tố quá trình giáo dục',
+          '4. Tình huống Thực hành 5 Bước: Vận dụng 7 Thành tố Quá trình Giáo dục',
         ),
       ),
       createElement(CaseStudyBox, { caseStudy: caseStudy2_2, defaultOpenSolution: false }),
@@ -624,56 +855,58 @@ export const Lesson2_2View: FC = () => {
 // ============================================================================
 
 export const Lesson2_3View: FC = () => {
+  const [openEssayId, setOpenEssayId] = useState<number | null>(1);
+
   const caseStudy2_3: PedagogicalCaseStudy = {
     id: 203,
     title: 'Dạy học nặng về luyện giải đề mẹo mực, tách rời thực hành và đời sống thực tiễn',
     context:
       'Tại lớp 11A, thầy T. khi dạy chủ đề Cấp số nhân và Hàm số mũ chỉ tập trung cho học sinh chép các công thức giải nhanh để khoanh trắc nghiệm. Khi một học sinh hỏi: "Thưa thầy, kiến thức này ứng dụng như thế nào trong tính lãi suất ngân hàng hay sự tăng trưởng quần thể sinh học ạ?", thầy T. gạt đi: "Các em không cần quan tâm thực tế làm gì cho mất thời gian, cứ thuộc lòng công thức bấm máy tính để thi đạt điểm cao là được."',
     question:
-      'Đối chiếu với Mục đích giáo dục và Nguyên lí giáo dục Việt Nam theo Điều 2, Điều 3 Luật Giáo dục 2019 (Giáo trình HCMUE tr. 25–30), anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
+      'Đối chiếu với Mục đích giáo dục và Nguyên lý giáo dục Việt Nam theo Điều 3, Điều 5, Điều 28 Luật Giáo dục 2019 (Giáo trình HCMUE tr. 25–30), anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Nguyên lí giáo dục Việt Nam (Điều 3 Luật Giáo dục 2019): Học đi đôi với hành, lý luận gắn liền với thực tiễn',
-      'Mục đích giáo dục cấp độ cá nhân: Phát triển phẩm chất và năng lực vận dụng kiến thức vào thực tiễn (CT GDPT 2018)',
+      'Nguyên lý giáo dục Việt Nam (Điều 3, Luật Giáo dục 2019): Học đi đôi với hành, lý luận gắn liền với thực tiễn',
+      'Mục đích giáo dục cá nhân: Phát triển toàn diện phẩm chất và năng lực (Chương trình GDPT 2018)',
       'Nguyên tắc hoạt động giáo dục gắn với đời sống, với thực tiễn xã hội',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Thầy T. đang dạy học theo lối ứng thí máy móc, vi phạm trực tiếp nguyên lí "Học đi đôi với hành, lý luận gắn liền với thực tiễn" và làm triệt tiêu hứng thú khám phá khoa học của học sinh.',
+          'Thầy T. đang áp dụng lối dạy học ứng thí thực dụng cực đoan, biến môn Toán thành kỹ xảo bấm máy tính mẹo mực, phớt lờ câu hỏi liên hệ thực tế chính đáng của học sinh.',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo Luật Giáo dục 2019',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Theo Điều 3 Luật Giáo dục 2019 và Giáo trình HCMUE (tr. 28–30), mục đích của giáo dục phổ thông hiện đại không phải là nhồi nhét mẹo làm bài mà là hình thành năng lực giải quyết vấn đề thực tiễn. Câu hỏi của học sinh về lãi suất kép và tăng trưởng sinh học chính là cơ hội quý giá để kết nối Toán học với đời sống.',
+          'Vi phạm trực tiếp nguyên lý "Học đi đôi với hành, lý luận gắn liền với thực tiễn"; làm mất đi ý nghĩa thực tiễn sống động của toán học và triệt tiêu hứng thú tìm tòi khoa học của người học.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết phương án)',
         content:
-          'Phương án 1: Tiếp tục phớt lờ câu hỏi ứng dụng để chạy kịp tiến độ luyện đề (sai lệch nguyên lí giáo dục). Phương án 2: Biểu dương câu hỏi của học sinh và thiết kế bài toán thực tiễn về lãi suất ngân hàng / mô hình tăng trưởng để học sinh tự thiết lập công thức từ bản chất toán học.',
+          'Tránh phớt lờ câu hỏi của học sinh. Chọn phương án tối ưu: Biểu dương câu hỏi mang tính phát hiện của học sinh; dành 10 phút xây dựng bài toán mô hình hóa lãi suất ngân hàng và tăng trưởng sinh học từ cấp số nhân; giao bài tập thực hành ứng dụng về nhà.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh cơ sở khoa học)',
         content:
-          'Giáo viên khen ngợi tư duy liên hệ thực tế của học sinh, dành 10 phút hướng dẫn cả lớp giải bài toán lãi kép thực tế và giao dự án nhỏ tìm hiểu ứng dụng hàm số mũ trong đời sống.',
+          'Theo Giáo trình HCMUE (tr. 28–30), thực tiễn là cơ sở, động lực và thước đo của nhận thức. Khi lý luận toán học gắn với bài toán thực tiễn, học sinh không chỉ hiểu sâu bản chất kiến thức mà còn hình thành năng lực mô hình hóa toán học.',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Đánh giá năng lực mô hình hóa toán học của học sinh qua sản phẩm dự án; điều chỉnh kế hoạch bài dạy của tổ chuyên môn theo đúng tinh thần Chương trình GDPT 2018.',
+          'Chuyển từ dạy học nhồi nhét mẹo làm bài sang dạy học phát triển năng lực đòi hỏi người thầy phải biến tri thức sách vở thành công cụ giải quyết vấn đề thực tế cuộc sống cho học sinh.',
       },
     ],
     pitfallsToAvoid: [
-      'Biến giờ học thành giờ luyện mẹo bấm máy tính tách rời bản chất khoa học và ứng dụng thực tiễn.',
-      'Dập tắt sự tò mò, câu hỏi liên hệ thực tế của học sinh vì áp lực điểm số ngắn hạn.',
+      'Biến giờ dạy học thành giờ luyện mẹo bấm máy tính tách rời bản chất khoa học.',
+      'Dập tắt tính tò mò, sáng tạo của học sinh vì áp lực điểm số thi cử ngắn hạn.',
     ],
     coreLesson:
-      'Thực hiện nguyên lí "Học đi đôi với hành, lý luận gắn liền với thực tiễn" là con đường tất yếu để chuyển hóa tri thức sách vở thành năng lực hành động sống động của người học.',
+      'Thực hiện nguyên lý "Học đi đôi với hành, lý luận gắn liền với thực tiễn" là con đường tất yếu để chuyển hóa tri thức lý thuyết thành năng lực sống động của học sinh.',
   };
 
   return createElement(
@@ -683,19 +916,20 @@ export const Lesson2_3View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C2-L3',
       clos: ['CLO1', 'CLO3'],
-      textbookPages: 'Tr. 25–30 (Chương 2, Mục 2.3)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 25 – 30)',
       legalRefs: [
-        'Luật Giáo dục 2019 (Điều 2, Điều 3, Điều 29)',
-        'Chương trình GDPT 2018 Tổng thể (TT 32/2018/TT-BGDĐT)',
+        'Luật Giáo dục 2019 (Điều 2, Điều 3, Điều 5, Điều 28)',
+        'Chương trình GDPT 2018 Tổng thể (TT 32/2018)',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 2',
+      sessionNote: 'Mục 2.3 · Trang 25 – 30',
     }),
 
-    // PHẦN I: MỤC ĐÍCH GIÁO DỤC VIỆT NAM Ở 2 CẤP ĐỘ (TR. 25–28)
+    // PHẦN I: MỤC ĐÍCH GIÁO DỤC TRÊN BÌNH DIỆN XÃ HỘI & CÁ NHÂN (TRANG 25 – 28)
     createElement(
       'section',
-      { id: '1-muc-dich-giao-duc-viet-nam', className: 'space-y-4' },
+      { id: '1-muc-dich-giao-duc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -706,86 +940,115 @@ export const Lesson2_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Mục đích giáo dục Việt Nam trên bình diện xã hội (vĩ mô) và cá nhân (Tr. 25–28)',
+          '1. Mục đích Giáo dục trên Bình diện Xã hội và Cá nhân (Trang 25 – 28)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Theo Giáo trình Giáo dục học HCMUE (tr. 25), ',
-        createElement('strong', null, 'mục đích giáo dục'),
-        ' là mô hình dự kiến về nhân cách con người (sản phẩm của giáo dục) đáp ứng yêu cầu phát triển của xã hội trong một giai đoạn lịch sử nhất định. Ở Việt Nam, mục đích giáo dục được xác định thống nhất trên ',
-        createElement(
-          'strong',
-          null,
-          'hai bình diện: bình diện xã hội (vĩ mô) và bình diện cá nhân (nhân cách người học)',
-        ),
-        '.',
-        createElement(
-          Sidenote,
-          { type: 'pedagogy', number: 1 },
-          'Phân biệt thuật ngữ (Giáo trình tr. 25): "Mục đích giáo dục" mang tính chiến lược, khái quát lâu dài ở tầm quốc gia; còn "Mục tiêu giáo dục" là sự cụ thể hóa mục đích giáo dục vào từng cấp học, môn học, bài học và có thể đo lường, đánh giá được.',
-        ),
+        'Mục đích giáo dục là phạm trù cơ bản định hướng cho toàn bộ chiến lược phát triển con người của một quốc gia. Theo Giáo trình Giáo dục học HCMUE (Trang 25 – 28), mục đích giáo dục Việt Nam được xác lập hài hòa trên ',
+        createElement('strong', null, 'hai bình diện: xã hội (vĩ mô) và cá nhân (vi mô)'),
+        ':',
       ),
-
-      createElement(LegalReferenceBox, {
-        lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
-        article: 'Điều 2 (Mục tiêu giáo dục) & Điều 29 (Mục tiêu của giáo dục phổ thông)',
-        quote:
-          'Điều 2: Mục tiêu giáo dục nhằm phát triển toàn diện con người Việt Nam có đạo đức, tri thức, văn hóa, sức khỏe, thẩm mỹ và nghề nghiệp; có phẩm chất, năng lực và ý thức công dân; có lòng yêu nước, tinh thần dân tộc, trung thành với lý tưởng độc lập dân tộc và chủ nghĩa xã hội; phát huy tiềm năng, khả năng sáng tạo của mỗi cá nhân; nâng cao dân trí, phát triển nguồn nhân lực, bồi dưỡng nhân tài, đáp ứng yêu cầu của sự nghiệp xây dựng, bảo vệ Tổ quốc và hội nhập quốc tế.',
-        source: 'Luật Giáo dục số 43/2019/QH14 (Giáo trình HCMUE tr. 26–27)',
-        significance:
-          'Xác lập chuẩn mực pháp lý cao nhất về mục đích giáo dục tổng quát và mục tiêu giáo dục phổ thông Việt Nam.',
-      }),
-
       createElement(ComparativeTable, {
-        title:
-          'Bảng Hệ thống hóa Mục đích Giáo dục Việt Nam ở Hai Cấp độ (Giáo trình HCMUE tr. 26–28)',
+        title: 'Bảng Hệ thống hóa Mục đích Giáo dục Việt Nam trên Bình diện Xã hội & Cá nhân',
         subtitle:
-          'Sự thống nhất giữa mục tiêu chiến lược phát triển quốc gia và mục tiêu phát triển nhân cách người học.',
+          'Sự kết hợp biện chứng giữa 3 mục tiêu vĩ mô quốc gia và mô hình nhân cách toàn diện của người học (Trang 25 – 28).',
         badge: 'Mục đích Giáo dục Việt Nam',
         columns: [
-          { key: 'level', header: 'Bình diện / Cấp độ', widthClass: 'w-1/4' },
-          { key: 'pillar', header: 'Trụ cột cốt lõi', widthClass: 'w-1/4' },
-          {
-            key: 'description',
-            header: 'Nội dung học thuật & Yêu cầu thực hiện (Giáo trình tr. 26–28)',
-          },
+          { key: 'dimension', header: 'Bình diện xác lập', widthClass: 'w-1/4' },
+          { key: 'pillar', header: 'Hệ thống mục tiêu thành phần', widthClass: 'w-1/4' },
+          { key: 'content', header: 'Nội dung cốt lõi & Yêu cầu thực thi (Giáo trình HCMUE)' },
         ],
         rows: [
           {
-            level: 'Cấp độ Vĩ mô (Bình diện Xã hội)',
+            dimension: 'Bình diện Xã hội (Vĩ mô)',
             pillar: '1. Nâng cao dân trí',
-            description:
-              'Phổ cập giáo dục, nâng cao trình độ học vấn, hiểu biết pháp luật, khoa học và văn hóa chung cho toàn dân; tạo nền tảng dân chủ và văn minh xã hội.',
+            content:
+              'Phổ cập giáo dục, nâng cao trình độ học vấn, dân trí pháp luật và khoa học; tạo dựng nền tảng văn hóa dân tộc vững chắc cho toàn thể nhân dân.',
           },
           {
-            level: 'Cấp độ Vĩ mô (Bình diện Xã hội)',
+            dimension: 'Bình diện Xã hội (Vĩ mô)',
             pillar: '2. Đào tạo nhân lực',
-            description:
-              'Xây dựng đội ngũ lao động có trình độ chuyên môn, kỹ năng nghề nghiệp, tác phong công nghiệp và đạo đức nghề nghiệp phục vụ công nghiệp hóa, hiện đại hóa.',
+            content:
+              'Đào tạo nguồn vốn lao động có tay nghề, phẩm chất đạo đức nghề nghiệp, năng lực sáng tạo và khả năng thích ứng linh hoạt với cuộc Cách mạng công nghiệp 4.0.',
           },
           {
-            level: 'Cấp độ Vĩ mô (Bình diện Xã hội)',
+            dimension: 'Bình diện Xã hội (Vĩ mô)',
             pillar: '3. Bồi dưỡng nhân tài',
-            description:
-              'Phát hiện sớm, ươm mầm và phát triển những cá nhân có năng khiếu, trí tuệ xuất sắc và năng lực sáng tạo đột phá trở thành lực lượng tinh hoa dẫn dắt sự phát triển đất nước.',
+            content:
+              'Phát hiện sớm tư chất, đào tạo nhân tài khoa học công nghệ mũi nhọn theo thang phát triển 4 tầng: Khiếu → Năng lực → Tài năng → Thiên tài.',
           },
           {
-            level: 'Cấp độ Cá nhân (Nhân cách người học)',
-            pillar: '5 Phẩm chất & 10 Năng lực cốt lõi',
-            description:
-              'Phát triển hài hòa Đức – Trí – Thể – Mỹ; hình thành 5 phẩm chất chủ yếu (Yêu nước, Nhân ái, Chăm chỉ, Trung thực, Trách nhiệm) và 10 năng lực cốt lõi (3 năng lực chung + 7 năng lực đặc thù) theo CT GDPT 2018.',
+            dimension: 'Bình diện Cá nhân (Vi mô)',
+            pillar: '5 Phẩm chất & 10 Năng lực (CT 2018)',
+            content:
+              'Phát triển toàn diện nhân cách hài hòa Đức - Trí - Thể - Mỹ: 5 phẩm chất chủ yếu (Yêu nước, Nhân ái, Chăm chỉ, Trung thực, Trách nhiệm), 3 năng lực chung và 7 năng lực đặc thù.',
           },
         ],
-        footerNote: 'Nguồn: Giáo trình Giáo dục học HCMUE, Chương 2, Mục 2.3.1, tr. 25–28.',
+        footerNote: 'Nguồn đối chiếu: Giáo trình Giáo dục học HCMUE (Chương 2, Trang 25 – 28).',
       }),
     ),
 
-    // PHẦN II: NGUYÊN LÍ GIÁO DỤC VIỆT NAM THEO ĐIỀU 3 LUẬT GIÁO DỤC 2019 (TR. 28–30)
+    // PHẦN II: PHÂN KỲ MỤC TIÊU GIÁO DỤC PHỔ THÔNG (ĐIỀU 28, LUẬT GD 2019)
     createElement(
       'section',
-      { id: '2-nguyen-li-giao-duc-viet-nam', className: 'space-y-4' },
+      { id: '2-phan-ky-muc-tieu-gdpt', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(GraduationCap, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Phân kỳ Mục tiêu Giáo dục Phổ thông theo 2 Giai đoạn (Điều 28, Luật Giáo dục 2019)',
+        ),
+      ),
+      createElement(
+        'p',
+        null,
+        'Luật Giáo dục 2019 và Chương trình GDPT 2018 phân kỳ rõ ràng hệ thống giáo dục phổ thông thành ',
+        createElement('strong', null, 'hai giai đoạn giáo dục tiếp nối có mục tiêu riêng biệt'),
+        ':',
+      ),
+      createElement(NumberedProcessFlow, {
+        title: 'Mục tiêu Giáo dục Phổ thông theo 2 Giai đoạn Chiến lược',
+        subtitle:
+          'Đối chiếu quy chuẩn Điều 28 Luật Giáo dục 2019 và Chương trình GDPT 2018 (Giáo trình HCMUE Trang 27 – 28).',
+        badge: 'Giai đoạn Giáo dục Cơ bản & Định hướng Nghề nghiệp',
+        columns: 1,
+        steps: [
+          {
+            number: 1,
+            title: 'Giai đoạn Giáo dục Cơ bản (Từ Lớp 1 đến Lớp 9)',
+            description:
+              'Gồm 2 cấp học: (1) Cấp Tiểu học (5 năm): Hình thành những cơ sở ban đầu cho sự phát triển đúng đắn và lâu dài về đạo đức, trí tuệ, thể chất, thẩm mỹ; rèn luyện nền nếp học tập, tình yêu gia đình và cộng đồng. (2) Cấp THCS (4 năm): Củng cố, phát triển kết quả giáo dục tiểu học; hoàn thiện hệ thống tri thức phổ thông nền tảng; hình thành hiểu biết ban đầu về kỹ thuật và định hướng phân luồng nghề nghiệp sau THCS.',
+            keyAction:
+              'Trang bị học vấn phổ thông nền tảng vững chắc và chuẩn bị tâm thế phân luồng.',
+            deliverable:
+              'Học sinh có đầy đủ năng lực học vấn cốt lõi để bước vào THPT hoặc học nghề.',
+          },
+          {
+            number: 2,
+            title: 'Giai đoạn Giáo dục Định hướng Nghề nghiệp (Từ Lớp 10 đến Lớp 12)',
+            description:
+              'Cấp Trung học phổ thông (3 năm): Hoàn thiện học vấn phổ thông toàn diện; tổ chức dạy học phân hóa sâu theo nhóm môn lựa chọn và chuyên đề học tập dựa trên năng lực, sở trường của học sinh; trang bị năng lực tự học suốt đời, kỹ năng định hướng nghề nghiệp và thích ứng với môi trường làm việc trong tương lai.',
+            keyAction:
+              'Tổ chức dạy học phân hóa theo nguyện vọng, định hướng nghề nghiệp và bồi dưỡng năng khiếu chuyên sâu.',
+            deliverable:
+              'Học sinh có phẩm chất, năng lực định hướng rõ ràng cho con đường học lên đại học, cao đẳng hoặc tham gia thị trường lao động.',
+          },
+        ],
+      }),
+    ),
+
+    // PHẦN III: BẢNG MA TRẬN 3 NỘI DUNG NGUYÊN LÍ GIÁO DỤC VIỆT NAM (TRANG 28 – 30)
+    createElement(
+      'section',
+      { id: '3-nguyen-li-giao-duc-viet-nam', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -796,84 +1059,156 @@ export const Lesson2_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Nguyên lí giáo dục Việt Nam và 3 nội dung cốt lõi (Giáo trình HCMUE tr. 28–30)',
+          '3. Bảng Ma trận 3 Nội dung Nguyên lí Giáo dục Việt Nam (Giáo trình HCMUE Trang 28 – 30)',
         ),
-      ),
-      createElement(
-        'p',
-        null,
-        'Theo Giáo trình Giáo dục học HCMUE (tr. 28), ',
-        createElement('strong', null, 'nguyên lí giáo dục'),
-        ' là những luận điểm khái quát nhất có tính quy luật của lý luận giáo dục, được xác lập trên cơ sở pháp lý để chỉ đạo toàn bộ phương hướng tổ chức hoạt động giáo dục trong phạm vi cả nước.',
       ),
       createElement(LegalReferenceBox, {
         lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
-        article: 'Khoản 2 Điều 3. Tính chất, nguyên lý giáo dục',
+        article: 'Điều 5. Yêu cầu về nội dung, phương pháp giáo dục & Điều 3 Khoản 2',
         quote:
           'Hoạt động giáo dục được thực hiện theo nguyên lý học đi đôi với hành, lý luận gắn liền với thực tiễn, giáo dục nhà trường kết hợp với giáo dục gia đình và giáo dục xã hội.',
-        source: 'Luật Giáo dục số 43/2019/QH14 (Giáo trình HCMUE tr. 28)',
+        source: 'Luật Giáo dục 2019 (Giáo trình HCMUE Trang 28 – 29)',
         significance:
-          'Là kim chỉ nam bắt buộc cho việc xây dựng chương trình, biên soạn sách giáo khoa, đổi mới phương pháp dạy học và tổ chức hoạt động giáo dục.',
+          'Nguyên lý giáo dục là kim chỉ nam bất biến chỉ đạo mọi phương thức dạy học, biên soạn học liệu và xây dựng môi trường giáo dục ở Việt Nam.',
       }),
-
-      createElement(NumberedProcessFlow, {
-        title: 'Phân tích 3 Nội dung Cốt lõi của Nguyên lí Giáo dục Việt Nam',
+      createElement(ComparativeTable, {
+        title:
+          'Bảng Phân tích Sâu sắc 3 Nội dung Cốt lõi của Nguyên lí Giáo dục Việt Nam (Trang 28 – 30)',
         subtitle:
-          'Ba phương diện thống nhất quy định con đường hình thành phẩm chất và năng lực người học (Giáo trình HCMUE tr. 28–30).',
-        badge: '3 Nội dung Nguyên lí Giáo dục',
-        columns: 1,
-        steps: [
+          'Lý giải bản chất khoa học, yêu cầu hành động và bài học sư phạm đối với người giáo viên.',
+        badge: '3 Trụ cột Nguyên lí Giáo dục',
+        columns: [
+          { key: 'principle', header: 'Trụ cột nguyên lí', widthClass: 'w-1/4' },
+          { key: 'essence', header: 'Bản chất khoa học (Giáo trình HCMUE)' },
+          { key: 'practice', header: 'Yêu cầu hành động thực tế đối với người giáo viên' },
+        ],
+        rows: [
           {
-            number: 1,
-            title: 'Học đi đôi với hành',
-            description:
-              'Học tập lĩnh hội tri thức lý thuyết phải luôn gắn chặt với rèn luyện kỹ năng thực hành, vận dụng. "Học" soi sáng cho "Hành" khỏi mò mẫm; "Hành" kiểm nghiệm, củng cố và làm sâu sắc thêm điều đã "Học".',
-            keyAction:
-              'Tăng cường thí nghiệm, thực hành, giải quyết bài toán thực tế và trải nghiệm sáng tạo trong từng môn học.',
-            deliverable: 'Khắc phục triệt để lối dạy học từ chương, học vẹt, đọc chép thụ động.',
+            principle: '01. Học đi đôi với hành',
+            essence:
+              'Lý luận phải đi kèm luyện tập, rèn luyện kỹ năng; biến tri thức sách vở thành thói quen hành vi và năng lực giải quyết vấn đề thực tế cuộc sống; "học" soi sáng cho "hành", "hành" kiểm nghiệm và làm sâu sắc "học".',
+            practice:
+              'Tăng cường thí nghiệm thực hành, ứng dụng phần mềm mô phỏng (GeoGebra, Desmos trong Toán), giải quyết các bài toán thực tế thay vì chỉ dạy mẹo làm bài thi.',
           },
           {
-            number: 2,
-            title: 'Lý luận gắn liền với thực tiễn',
-            description:
-              'Mọi nội dung giáo dục trong nhà trường phải bắt nguồn từ thực tiễn đời sống kinh tế – văn hóa – xã hội của đất nước và hướng tới phục vụ sự phát triển của thực tiễn đó.',
-            keyAction:
-              'Đưa các vấn đề thực tiễn địa phương, sản xuất, bảo vệ môi trường và định hướng nghề nghiệp vào bài giảng.',
-            deliverable:
-              'Giúp học sinh hiểu rõ ý nghĩa thực tiễn của tri thức khoa học và phát triển năng lực thích ứng cuộc sống.',
+            principle: '02. Lí luận gắn liền với thực tiễn',
+            essence:
+              'Thực tiễn là cơ sở, động lực và thước đo chân lý của lý luận; giáo dục phải khai thác chất liệu thực tiễn và phục vụ trực tiếp sự phát triển kinh tế - xã hội địa phương.',
+            practice:
+              'Tổ chức dạy học gắn với đời sống văn hóa, kinh tế của cộng đồng; đưa các chủ đề STEM, bảo vệ môi trường, tài chính cá nhân vào kế hoạch bài dạy.',
           },
           {
-            number: 3,
-            title: 'Giáo dục nhà trường kết hợp với giáo dục gia đình và giáo dục xã hội',
-            description:
-              'Sự hình thành nhân cách học sinh diễn ra trong nhiều môi trường. Giáo dục nhà trường giữ vai trò chủ đạo, định hướng sư phạm để thống nhất mục tiêu, nội dung và phương pháp với gia đình và cộng đồng xã hội.',
-            keyAction:
-              'Xây dựng cơ chế phối hợp thường xuyên, đồng thuận giữa Giáo viên chủ nhiệm – Cha mẹ học sinh – Đoàn thể và địa phương.',
-            deliverable:
-              'Tạo lập môi trường giáo dục đồng bộ, lành mạnh, khép kín các khoảng trống quản lí học sinh.',
+            principle: '03. Giáo dục nhà trường kết hợp giáo dục gia đình và giáo dục xã hội',
+            essence:
+              'Nhà trường giữ vai trò chủ đạo, gia đình giữ vai trò nền tảng, xã hội giữ vai trò phối hợp tích cực; tạo nên một môi trường đồng thuận thống nhất không có xung đột giáo dục.',
+            practice:
+              'Chủ động kết nối với cha mẹ học sinh qua sổ liên lạc điện tử, họp phụ huynh đối thoại; phối hợp chặt chẽ với Đoàn, Đội và chính quyền địa phương.',
           },
         ],
+        footerNote: 'Nguồn đối chiếu: Giáo trình Giáo dục học HCMUE (Chương 2, Trang 28 – 30).',
       }),
     ),
 
-    // PHẦN III: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN IV: CÂU HỎI TỰ LUẬN ÔN TẬP CHƯƠNG 2 & TÌNH HUỐNG 5 BƯỚC
     createElement(
       'section',
-      { id: '3-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '4-on-tap-va-tinh-huong', className: 'space-y-5' },
       createElement(
         'div',
         {
           className:
             'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(Sparkles, { className: 'h-5 w-5 text-[#3F6570]' }),
         createElement(
           'h3',
           null,
-          '3. Tình huống Thực hành 5 Bước: Vận dụng Nguyên lí giáo dục vào dạy học ở trường phổ thông',
+          '4. Tình huống Thực hành 5 Bước & Đề cương Tự luận Trọng tâm Chương 2',
         ),
       ),
       createElement(CaseStudyBox, { caseStudy: caseStudy2_3, defaultOpenSolution: false }),
+
+      createElement(
+        'div',
+        { className: 'space-y-3 pt-2' },
+        [
+          {
+            id: 1,
+            question:
+              'Câu 1: Phân tích 4 tính chất cơ bản của giáo dục và 3 chức năng xã hội vĩ mô. Vì sao nói Nguồn vốn nhân lực (Human Capital) là nguồn vốn quan trọng nhất?',
+            outline: [
+              'Khái niệm giáo dục là hiện tượng xã hội đặc biệt và cơ chế di sản xã hội (Giáo trình tr. 13–14).',
+              'Phân tích 4 tính chất: Phổ biến & vĩnh hằng, Nhân văn, Xã hội - lịch sử, Giai cấp (tr. 14–15).',
+              'Phân tích 3 chức năng xã hội: Kinh tế - sản xuất, Chính trị - tư tưởng, Văn hóa - xã hội (tr. 15–17).',
+              'Chứng minh Human Capital là quan trọng nhất: con người có tri thức và kỹ năng là chủ thể duy nhất sáng tạo, vận hành và phát huy hiệu quả của nguồn vốn vật chất, tài nguyên và công nghệ.',
+            ],
+          },
+          {
+            id: 2,
+            question:
+              'Câu 2: Phân tích vai trò chủ đạo của giáo dục đối với sự phát triển cá nhân trong mối quan hệ với Di truyền, Môi trường và Hoạt động cá nhân. Rút ra kết luận sư phạm.',
+            outline: [
+              'So sánh 3 quan điểm: Thuyết tiền định, Thuyết duy cảm và Quan điểm duy vật biện chứng (tr. 17–19).',
+              'Làm rõ vai trò của 4 yếu tố: Di truyền (tiền đề vật chất), Môi trường (điều kiện), Giáo dục (vai trò chủ đạo), Hoạt động cá nhân (quyết định trực tiếp).',
+              'Phân tích 4 cơ chế vai trò chủ đạo của giáo dục: định hướng, can thiệp di truyền, cải tạo môi trường, tổ chức hoạt động kích hoạt tính chủ thể (tr. 18–20).',
+              'Rút ra kết luận sư phạm đối với thái độ và phương pháp giáo dục của giáo viên phổ thông.',
+            ],
+          },
+          {
+            id: 3,
+            question:
+              'Câu 3: Trình bày cấu trúc 7 thành tố của quá trình giáo dục và phân tích 3 nội dung Nguyên lý giáo dục Việt Nam theo Luật Giáo dục 2019.',
+            outline: [
+              'Đối tượng nghiên cứu của Giáo dục học là hoạt động giáo dục tổng thể (tr. 21).',
+              'Cấu trúc và mối quan hệ biện chứng của 7 thành tố: Chủ thể, Đối tượng, Mục đích, Nội dung, Phương pháp & Phương tiện, Kết quả, Môi trường (tr. 21–22).',
+              'Phân tích 3 nội dung Nguyên lý giáo dục theo Điều 3, Điều 5 Luật Giáo dục 2019: Học đi đôi với hành; Lý luận gắn liền với thực tiễn; Nhà trường kết hợp gia đình và xã hội (tr. 28–30).',
+              'Liên hệ thực tiễn dạy học môn chuyên ngành ở trường trung học hiện nay.',
+            ],
+          },
+        ].map((item) =>
+          createElement(
+            'div',
+            {
+              key: item.id,
+              className:
+                'overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs',
+            },
+            createElement(
+              'button',
+              {
+                type: 'button',
+                onClick: () => setOpenEssayId(openEssayId === item.id ? null : item.id),
+                className:
+                  'flex w-full items-center justify-between p-4 text-left font-serif text-sm font-bold text-[#29383D] transition-colors hover:bg-[#E1E9EA]/50 sm:text-base',
+              },
+              createElement('span', null, item.question),
+              createElement(
+                'span',
+                { className: 'ml-3 shrink-0 font-mono text-xs text-[#3F6570]' },
+                openEssayId === item.id ? 'Thu gọn' : 'Xem dàn ý',
+              ),
+            ),
+            openEssayId === item.id &&
+              createElement(
+                'div',
+                {
+                  className:
+                    'border-t border-[#CFDADB] bg-[#EAF0F1]/50 p-4 text-xs leading-relaxed text-[#29383D] sm:text-sm',
+                },
+                createElement(
+                  'p',
+                  { className: 'mb-2 font-semibold text-[#3F6570]' },
+                  'Dàn ý trọng tâm theo Giáo trình Giáo dục học HCMUE:',
+                ),
+                createElement(
+                  'ul',
+                  { className: 'list-disc space-y-1.5 pl-5 text-[#55676B]' },
+                  item.outline.map((point, idx) => createElement('li', { key: idx }, point)),
+                ),
+              ),
+          ),
+        ),
+      ),
     ),
   );
 };
@@ -892,13 +1227,15 @@ export function getChapter2LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 2.1: Giáo dục là một hiện tượng xã hội đặc biệt',
         description:
-          'Bản chất truyền thụ – lĩnh hội kinh nghiệm lịch sử – xã hội; 4 tính chất cơ bản; 3 chức năng xã hội và vai trò chủ đạo của giáo dục đối với sự phát triển cá nhân (Giáo trình HCMUE tr. 13–20).',
+          'Khảo sát bản chất cơ chế di sản xã hội của giáo dục, 4 tính chất cơ bản chi phối sự vận động lịch sử, 3 chức năng xã hội vĩ mô và phân tích vai trò chủ đạo của giáo dục đối với sự hình thành, phát triển nhân cách cá nhân.',
         level: 'basic',
         tags: [
+          'EDUC2802-C2-L1',
           'CLO1',
           'CLO3',
           'Hiện tượng xã hội đặc biệt',
           '3 Chức năng xã hội',
+          'Vai trò chủ đạo',
           'Giáo trình tr. 13-20',
         ],
       },
@@ -907,23 +1244,28 @@ export function getChapter2LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 1,
         headings: [
           {
-            id: '1-ban-chat-va-4-tinh-chat',
-            text: '1. Bản chất của hiện tượng giáo dục và 4 tính chất cơ bản (Tr. 13–15)',
+            id: '1-ban-chat-hien-tuong-giao-duc',
+            text: '1. Bản chất của Hiện tượng Giáo dục: Cơ chế Di sản Xã hội (Trang 13 – 14)',
             depth: 2,
           },
           {
-            id: '2-ba-chuc-nang-xa-hoi',
-            text: '2. Ba chức năng xã hội của giáo dục (Tr. 15–17)',
+            id: '2-bon-tinh-chat-co-ban',
+            text: '2. Bảng Ma trận 4 Tính chất Cơ bản của Giáo dục (Trang 14 – 15)',
             depth: 2,
           },
           {
-            id: '3-vai-tro-chu-dao-cua-giao-duc',
-            text: '3. Vai trò chủ đạo của giáo dục đối với sự phát triển cá nhân (Tr. 17–20)',
+            id: '3-ba-chuc-nang-xa-hoi',
+            text: '3. Ba Chức năng Xã hội của Giáo dục (Trang 15 – 17)',
             depth: 2,
           },
           {
-            id: '4-tinh-huong-thuc-hanh',
-            text: '4. Tình huống Thực hành 5 Bước: Vai trò chủ đạo của giáo dục',
+            id: '4-ba-quan-diem-phat-trien-nhan-cach',
+            text: '4. Bảng So sánh 3 Quan điểm & Vai trò Chủ đạo của Giáo dục (Trang 17 – 20)',
+            depth: 2,
+          },
+          {
+            id: '5-tinh-huong-thuc-hanh',
+            text: '5. Khung Tình huống Thực hành 5 Bước: Vai trò Chủ đạo của Giáo dục',
             depth: 2,
           },
         ],
@@ -941,27 +1283,40 @@ export function getChapter2LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 2.2: Giáo dục học là một khoa học về giáo dục con người',
         description:
-          'Lịch sử hình thành; đối tượng nghiên cứu là hoạt động giáo dục tổng thể và 7 thành tố; nhiệm vụ và 3 nhóm phương pháp nghiên cứu (Giáo trình HCMUE tr. 20–24).',
+          'Khái quát tiến trình lịch sử đưa Giáo dục học trở thành khoa học độc lập từ mốc son J. A. Cômenxki, bóc tách cấu trúc 7 thành tố của hoạt động giáo dục tổng thể, xác lập các nhiệm vụ nghiên cứu và 3 nhóm phương pháp nghiên cứu sư phạm.',
         level: 'intermediate',
-        tags: ['CLO1', 'CLO3', 'Khoa học Giáo dục học', '7 Thành tố', 'Giáo trình tr. 20-24'],
+        tags: [
+          'EDUC2802-C2-L2',
+          'CLO1',
+          'CLO3',
+          'Khoa học Giáo dục học',
+          '7 Thành tố',
+          'Phương pháp nghiên cứu',
+          'Giáo trình tr. 20-24',
+        ],
       },
       lessonMeta: {
         chapterNumber: 2,
         lessonNumber: 2,
         headings: [
           {
-            id: '1-doi-tuong-va-7-thanh-to',
-            text: '1. Lịch sử hình thành, đối tượng nghiên cứu và 7 thành tố (Tr. 20–22)',
+            id: '1-tien-trinh-lich-su-giao-duc-hoc',
+            text: '1. Tiến trình Lịch sử Hình thành Giáo dục học (Trang 20 – 21)',
             depth: 2,
           },
           {
-            id: '2-nhiem-vu-va-phuong-phap-nghien-cuu',
-            text: '2. Nhiệm vụ và 3 nhóm phương pháp nghiên cứu Giáo dục học (Tr. 22–24)',
+            id: '2-doi-tuong-va-7-thanh-to',
+            text: '2. Đối tượng Nghiên cứu & Hệ thống 7 Thành tố Cấu trúc (Trang 21 – 22)',
             depth: 2,
           },
           {
-            id: '3-tinh-huong-thuc-hanh',
-            text: '3. Tình huống Thực hành 5 Bước: Tính hệ thống của 7 thành tố',
+            id: '3-ba-nhom-phuong-phap-nghien-cuu',
+            text: '3. Ba Nhóm Phương pháp Nghiên cứu Giáo dục học (Trang 22 – 24)',
+            depth: 2,
+          },
+          {
+            id: '4-tinh-huong-thuc-hanh',
+            text: '4. Tình huống Thực hành 5 Bước: Vận dụng 7 Thành tố Quá trình Giáo dục',
             depth: 2,
           },
         ],
@@ -979,27 +1334,40 @@ export function getChapter2LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 2.3: Mục đích và nguyên lí giáo dục Việt Nam',
         description:
-          'Mục đích vĩ mô (Dân trí – Nhân lực – Nhân tài) và cá nhân (Phẩm chất & Năng lực theo Luật GD 2019 và CT GDPT 2018); 3 nội dung Nguyên lí giáo dục (Giáo trình HCMUE tr. 25–30).',
+          'Phân tích mục đích giáo dục trên bình diện xã hội (3 mục tiêu: Dân trí - Nhân lực - Nhân tài) và bình diện cá nhân (5 phẩm chất, 10 năng lực), mục tiêu phân kỳ giáo dục phổ thông, cùng 3 nội dung bất biến của Nguyên lý giáo dục Việt Nam.',
         level: 'basic',
-        tags: ['CLO1', 'CLO3', 'Mục đích giáo dục', 'Nguyên lí giáo dục', 'Giáo trình tr. 25-30'],
+        tags: [
+          'EDUC2802-C2-L3',
+          'CLO1',
+          'CLO3',
+          'Mục đích giáo dục',
+          'Nguyên lí giáo dục',
+          'Luật Giáo dục 2019',
+          'Giáo trình tr. 25-30',
+        ],
       },
       lessonMeta: {
         chapterNumber: 2,
         lessonNumber: 3,
         headings: [
           {
-            id: '1-muc-dich-giao-duc-viet-nam',
-            text: '1. Mục đích giáo dục Việt Nam ở bình diện xã hội và cá nhân (Tr. 25–28)',
+            id: '1-muc-dich-giao-duc',
+            text: '1. Mục đích Giáo dục trên Bình diện Xã hội và Cá nhân (Trang 25 – 28)',
             depth: 2,
           },
           {
-            id: '2-nguyen-li-giao-duc-viet-nam',
-            text: '2. Nguyên lí giáo dục Việt Nam và 3 nội dung cốt lõi (Tr. 28–30)',
+            id: '2-phan-ky-muc-tieu-gdpt',
+            text: '2. Phân kỳ Mục tiêu Giáo dục Phổ thông theo 2 Giai đoạn (Trang 27 – 28)',
             depth: 2,
           },
           {
-            id: '3-tinh-huong-thuc-hanh',
-            text: '3. Tình huống Thực hành 5 Bước: Vận dụng Nguyên lí giáo dục',
+            id: '3-nguyen-li-giao-duc-viet-nam',
+            text: '3. Bảng Ma trận 3 Nội dung Nguyên lí Giáo dục Việt Nam (Trang 28 – 30)',
+            depth: 2,
+          },
+          {
+            id: '4-on-tap-va-tinh-huong',
+            text: '4. Tình huống Thực hành 5 Bước & Đề cương Tự luận Chương 2',
             depth: 2,
           },
         ],

@@ -213,6 +213,50 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b3).toBeDefined();
       expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
+
+    it('kết xuất đầy đủ nội dung học thuật Chương 2 (Bài 2.1, Bài 2.2, Bài 2.3) từ Giáo trình HCMUE tr. 13–30', () => {
+      const b1 = getChapter2LessonModule('gdh-c2-b1-giao-duc-la-mot-hien-tuong-xa-hoi-dac-biet')!;
+      const b2 = getChapter2LessonModule(
+        'gdh-c2-b2-giao-duc-hoc-la-mot-khoa-hoc-ve-giao-duc-con-nguoi',
+      )!;
+      const b3 = getChapter2LessonModule('gdh-c2-b3-muc-dich-va-nguyen-li-giao-duc-viet-nam')!;
+
+      const { unmount: unmount1 } = render(<b1.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C2-L1/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Cơ chế di sản xã hội/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/1\. Tính phổ biến và vĩnh hằng/i).length).toBeGreaterThanOrEqual(
+        1,
+      );
+      expect(
+        screen.getAllByText(/01\. Chức năng Kinh tế - Sản xuất/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Nguồn vốn nhân lực \(Human Capital\)/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/VAI TRÒ CHỦ ĐẠO/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText(/Gia đình tôi buôn bán bận rộn/i)).toBeInTheDocument();
+      unmount1();
+
+      const { unmount: unmount2 } = render(<b2.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C2-L2/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Didactica Magna/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/01\. Chủ thể giáo dục/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/01\. Nhóm phương pháp nghiên cứu lý luận/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText(/Đổi mới phương pháp giáo dục nhưng tách rời/i)).toBeInTheDocument();
+      unmount2();
+
+      const { unmount: unmount3 } = render(<b3.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C2-L3/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/1\. Nâng cao dân trí/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Giai đoạn Giáo dục Cơ bản/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/01\. Học đi đôi với hành/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getByText(/Tại lớp 11A, thầy T\. khi dạy chủ đề Cấp số nhân/i),
+      ).toBeInTheDocument();
+      unmount3();
+    });
   });
 
   describe('Dispatcher getChapter3LessonModule', () => {
