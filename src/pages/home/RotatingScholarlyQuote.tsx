@@ -222,15 +222,15 @@ export function RotatingScholarlyQuote() {
           isFading ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <p className="font-serif text-sm leading-relaxed text-[#29383D] italic sm:text-[15px]">
+        <p className="mb-3 font-serif text-sm leading-relaxed text-[#29383D] italic md:text-base">
           &ldquo;{currentQuote.content}&rdquo;
         </p>
-        <footer className="mt-2.5 flex flex-wrap items-center gap-1.5 font-mono text-xs">
-          <span className="font-semibold text-[#3F6570]">— {currentQuote.author}</span>
-          {currentQuote.roleOrEra && (
-            <span className="text-[#55676B]">· {currentQuote.roleOrEra}</span>
-          )}
-        </footer>
+        <div className="mt-2 flex w-full items-center justify-end border-t border-[#CFDADB]/40 pt-2">
+          <footer className="text-right font-mono text-xs text-[#3F6570]">
+            — {currentQuote.author}
+            {currentQuote.roleOrEra ? ` · ${currentQuote.roleOrEra}` : ''}
+          </footer>
+        </div>
       </blockquote>
     </aside>
   );

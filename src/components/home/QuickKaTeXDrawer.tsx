@@ -129,7 +129,8 @@ export const CURATED_KATEX_ITEMS: readonly QuickKaTeXItem[] = [
     categoryLabel: 'Logic',
     nameVi: 'Lượng từ Định nghĩa Giới hạn Cauchy',
     nameEn: 'Epsilon-Delta Quantifiers',
-    formula: '\\forall \\varepsilon > 0,\\; \\exists \\delta > 0 : 0 < |x - x_0| < \\delta \\implies |f(x) - L| < \\varepsilon',
+    formula:
+      '\\forall \\varepsilon > 0,\\; \\exists \\delta > 0 : 0 < |x - x_0| < \\delta \\implies |f(x) - L| < \\varepsilon',
     latexCode: '\\forall \\varepsilon > 0, \\exists \\delta > 0',
     brief: 'Mệnh đề lượng từ phổ dụng và tồn tại trong ngôn ngữ giải tích chặt chẽ.',
   },
@@ -149,7 +150,8 @@ export const CURATED_KATEX_ITEMS: readonly QuickKaTeXItem[] = [
     categoryLabel: 'Logic',
     nameVi: 'Song ánh (Đơn ánh & Toàn ánh)',
     nameEn: 'Bijective Mapping',
-    formula: 'f : A \\xrightarrow{\\sim} B \\iff \\forall y \\in B,\\; \\exists! x \\in A : f(x) = y',
+    formula:
+      'f : A \\xrightarrow{\\sim} B \\iff \\forall y \\in B,\\; \\exists! x \\in A : f(x) = y',
     latexCode: '\\forall y \\in B, \\exists! x \\in A : f(x) = y',
     brief: 'Ánh xạ một-một và lên trên, đảm bảo sự tồn tại ánh xạ ngược.',
   },
@@ -408,7 +410,7 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
                       </div>
 
                       <div className="overflow-x-auto rounded-lg bg-[#F7FAFA] px-2.5 py-1.5 text-sm text-[#29383D]">
-                        <KatexMath tex={item.formula} />
+                        <KatexMath math={item.formula} />
                       </div>
                     </div>
 

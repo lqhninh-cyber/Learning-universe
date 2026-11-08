@@ -1,9 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
+import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { HERITAGE_ARTWORKS, HeritageArtShowcase } from '@/pages/home/HeritageArtShowcase';
+import { HomePage } from '@/pages/home/HomePage';
+import { QuickKaTeXDrawer } from '@/pages/home/QuickKaTeXDrawer';
 import { RotatingScholarlyQuote, SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
+import { ViewModeToggle } from '@/pages/home/ViewModeToggle';
+import { getSubjects } from '@/content-runtime';
 
-describe('Home Editorial Components: RotatingScholarlyQuote & HeritageArtShowcase', () => {
+describe('Home Editorial Components & Scholarly Upgrades', () => {
   describe('RotatingScholarlyQuote Component', () => {
     it('hiển thị danh ngôn học thuật đầu tiên với đầy đủ nội dung, tác giả và bộ đếm', () => {
       render(<RotatingScholarlyQuote />);
@@ -17,13 +23,27 @@ describe('Home Editorial Components: RotatingScholarlyQuote & HeritageArtShowcas
       expect(screen.getByText(new RegExp(SCHOLARLY_QUOTES[0]!.content, 'i'))).toBeInTheDocument();
     });
 
+    it('cụm tác giả được căn phải với định dạng "— [Tên Tác Giả] · [Chức danh / Xuất xứ]"', () => {
+      const { container } = render(<RotatingScholarlyQuote />);
+
+      // Khối bọc tác giả căn phải với border-t
+      const authorContainer = container.querySelector(
+        '.w-full.flex.justify-end.items-center.mt-2.pt-2',
+      );
+      expect(authorContainer).toBeInTheDocument();
+
+      const authorFooter = container.querySelector('footer.text-right.font-mono.text-xs');
+      expect(authorFooter).toBeInTheDocument();
+      expect(authorFooter?.textContent).toContain(`— ${SCHOLARLY_QUOTES[0]!.author}`);
+      expect(authorFooter?.textContent).toContain(`· ${SCHOLARLY_QUOTES[0]!.roleOrEra}`);
+    });
+
     it('có thể chuyển câu danh ngôn khi bấm nút điều khiển', () => {
       render(<RotatingScholarlyQuote />);
 
       const nextButton = screen.getByRole('button', { name: /Câu danh ngôn tiếp theo/i });
       fireEvent.click(nextButton);
 
-      // Nút điều khiển hoạt động ổn định
       expect(nextButton).toBeInTheDocument();
     });
 
@@ -54,14 +74,60 @@ describe('Home Editorial Components: RotatingScholarlyQuote & HeritageArtShowcas
 
       expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
       expect(screen.getByText(/DI SẢN HỌC THUẬT & NGHỆ THUẬT/i)).toBeInTheDocument();
-      expect(screen.getByText(/01 \/ 05/i)).toBeInTheDocument();
+      expect(screen.getByText(/01 \/ 10/i)).toBeInTheDocument();
 
       // Tác phẩm 1: Thầy đồ Cóc
-      expect(screen.getByText(new RegExp(HERITAGE_ARTWORKS[0]!.title, 'i'))).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Thầy đồ Cóc/i })).toBeInTheDocument();
       expect(
         screen.getAllByText(new RegExp(HERITAGE_ARTWORKS[0]!.artistOrOrigin, 'i')).length,
       ).toBeGreaterThan(0);
       expect(screen.getByAltText(HERITAGE_ARTWORKS[0]!.alt)).toBeInTheDocument();
+    });
+
+    it('khung tranh sử dụng object-contain và chiều cao cố định để không bị xén ảnh', () => {
+      const { container } = render(<HeritageArtShowcase />);
+
+      const frame = screen.getByTestId('heritage-art-frame');
+      expect(frame.className).toContain('h-[300px]');
+      expect(frame.className).toContain('md:h-[340px]');
+
+      const img = container.querySelector('img');
+      expect(img?.className).toContain('object-contain');
+    });
+
+    it('Khuê Văn Các sử dụng ảnh kiến trúc đích thực, không nhầm ảnh skyline đô thị', () => {
+      const khueVanCac = HERITAGE_ARTWORKS.find((a) => a.id === 'khue-van-cac');
+      expect(khueVanCac).toBeDefined();
+      expect(khueVanCac?.imageSrc).toContain('Khu%C3%AA_v%C4%83n_c%C3%A1c.jpg');
+      expect(khueVanCac?.imageSrc).not.toContain('unsplash');
+    });
+
+    it('kích hoạt kính lúp khảo sát 2x khi di chuột vào khung tranh', () => {
+      render(<HeritageArtShowcase />);
+
+      const frame = screen.getByTestId('heritage-art-frame');
+      expect(screen.queryByTestId('archival-zoom-lens')).not.toBeInTheDocument();
+
+      fireEvent.mouseEnter(frame);
+      expect(screen.getByTestId('archival-zoom-lens')).toBeInTheDocument();
+
+      fireEvent.mouseLeave(frame);
+      expect(screen.queryByTestId('archival-zoom-lens')).not.toBeInTheDocument();
+    });
+
+    it('bấm [Lược sử tác phẩm] mở rộng hồ sơ văn khố với đầy đủ thông số', () => {
+      render(<HeritageArtShowcase />);
+
+      const trigger = screen.getByTestId('archival-metadata-trigger');
+      expect(screen.queryByTestId('archival-metadata-popover')).not.toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.getByTestId('archival-metadata-popover')).toBeInTheDocument();
+      expect(screen.getByText(/HỒ SƠ LƯỢC SỬ & VĂN KHỐ TÁC PHẨM/i)).toBeInTheDocument();
+      expect(screen.getByText(/Niên đại & Thời kỳ/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chất liệu & Kỹ thuật/i)).toBeInTheDocument();
+      expect(screen.getByText(/Nơi lưu trữ gốc/i)).toBeInTheDocument();
+      expect(screen.getByText(/Giá trị học thuật cốt lõi/i)).toBeInTheDocument();
     });
 
     it('có thể chuyển đổi tác phẩm khi bấm nút lật trang hoặc nút chọn', () => {
@@ -79,14 +145,131 @@ describe('Home Editorial Components: RotatingScholarlyQuote & HeritageArtShowcas
       expect(artwork2Button).toBeInTheDocument();
     });
 
-    it('chứa toàn bộ 5 tác phẩm di sản đích thực theo yêu cầu', () => {
-      expect(HERITAGE_ARTWORKS).toHaveLength(5);
+    it('chứa toàn bộ 10 tác phẩm di sản đích thực theo yêu cầu', () => {
+      expect(HERITAGE_ARTWORKS).toHaveLength(10);
       const ids = HERITAGE_ARTWORKS.map((a) => a.id);
-      expect(ids).toContain('thay-do-coc');
-      expect(ids).toContain('khue-van-cac');
-      expect(ids).toContain('melencolia-i');
-      expect(ids).toContain('truong-hoc-athena');
-      expect(ids).toContain('nguoi-vitruvius');
+      expect(ids).toEqual([
+        'thay-do-coc',
+        'khue-van-cac',
+        'melencolia-i',
+        'truong-hoc-athena',
+        'nguoi-vitruvius',
+        'bia-tien-si',
+        'trong-dong-ngoc-lu',
+        'euclid-elements-1482',
+        'nguoi-chiem-tinh',
+        'de-divina-proportione',
+      ]);
+    });
+  });
+
+  describe('QuickKaTeXDrawer Component', () => {
+    it('hiển thị bảng tra cứu KaTeX, các tab phân loại và ô tìm kiếm khi mở', () => {
+      render(
+        <MemoryRouter>
+          <QuickKaTeXDrawer isOpen={true} onClose={() => {}} />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
+      expect(screen.getByText(/Tra cứu Thuật ngữ & Ký hiệu KaTeX/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/Tìm tên thuật ngữ/i)).toBeInTheDocument();
+
+      // Các tab phân loại
+      expect(screen.getByRole('tab', { name: /Tất cả/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Đại số/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Hình học/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Giải tích/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Logic/i })).toBeInTheDocument();
+
+      // Nút đóng
+      expect(screen.getByRole('button', { name: /Đóng \(Esc\)/i })).toBeInTheDocument();
+    });
+
+    it('có thể lọc ký hiệu theo từ khóa tìm kiếm', () => {
+      render(
+        <MemoryRouter>
+          <QuickKaTeXDrawer isOpen={true} onClose={() => {}} />
+        </MemoryRouter>,
+      );
+
+      const searchInput = screen.getByPlaceholderText(/Tìm tên thuật ngữ/i);
+      fireEvent.change(searchInput, { target: { value: 'Newton' } });
+
+      expect(screen.getByText(/Công thức Newton – Leibniz/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Định lý Đẳng cấu thứ nhất/i)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('ViewModeToggle & ArchivalIndexView Components', () => {
+    it('ViewModeToggle cho phép chuyển đổi giữa Atlas và Archival Index', () => {
+      let currentMode = 'atlas';
+      const handleModeChange = (next: string) => {
+        currentMode = next;
+      };
+
+      const { rerender } = render(<ViewModeToggle mode="atlas" onChange={handleModeChange} />);
+
+      const archivalBtn = screen.getByRole('button', {
+        name: /Văn khố Thư mục/i,
+      });
+      fireEvent.click(archivalBtn);
+      expect(currentMode).toBe('archival');
+
+      rerender(<ViewModeToggle mode="archival" onChange={handleModeChange} />);
+      const atlasBtn = screen.getByRole('button', {
+        name: /Bản đồ Không gian/i,
+      });
+      fireEvent.click(atlasBtn);
+      expect(currentMode).toBe('atlas');
+    });
+
+    it('ArchivalIndexView hiển thị 4 học phần chuyên khảo và cây thư mục', () => {
+      const subjects = getSubjects();
+      render(
+        <MemoryRouter>
+          <ArchivalIndexView subjects={subjects} activeBranch="all" externalQuery="" />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('archival-index-view')).toBeInTheDocument();
+      expect(screen.getAllByText(/MATH1301/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/MATH1302/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/MATH1303/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/EDUC2802/i).length).toBeGreaterThan(0);
+
+      // Có các bộ lọc CLO
+      expect(screen.getByRole('button', { name: /CLO1/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /CLO6/i })).toBeInTheDocument();
+    });
+  });
+
+  describe('HomePage Integration with Scholarly Upgrades', () => {
+    it('hiển thị đầy đủ chế độ Atlas với SubjectWatermarkSignature và mở KaTeX Drawer khi tương tác', () => {
+      render(
+        <MemoryRouter>
+          <HomePage />
+        </MemoryRouter>,
+      );
+
+      // Hero
+      expect(screen.getByText(/Đi một ngày đàng/i)).toBeInTheDocument();
+      expect(screen.getByText(/học một sàng khôn/i)).toBeInTheDocument();
+
+      // Dấu ấn chìm môn học trong chế độ Atlas
+      expect(screen.getByTestId('subject-watermark-cau-truc-dai-so')).toBeInTheDocument();
+      expect(screen.getByTestId('subject-watermark-hinh-hoc-affine')).toBeInTheDocument();
+      expect(screen.getByTestId('subject-watermark-giai-tich-ham-mot-bien')).toBeInTheDocument();
+      expect(screen.getByTestId('subject-watermark-giao-duc-hoc')).toBeInTheDocument();
+
+      // Nút ViewModeToggle
+      expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
+
+      // Bấm vào CTA Tra cứu thuật ngữ KaTeX mở Drawer
+      const katexTrigger = screen.getByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i });
+      fireEvent.click(katexTrigger);
+
+      expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
   });
 });

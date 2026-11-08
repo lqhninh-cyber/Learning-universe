@@ -29,9 +29,7 @@ function getLessonArchivalCode(
   chapter: ManifestChapter,
   lesson: ManifestLesson,
 ): string {
-  const explicitTag = lesson.tags.find((t) =>
-    /^(MATH1301|MATH1302|MATH1303|EDUC2802)-/i.test(t),
-  );
+  const explicitTag = lesson.tags.find((t) => /^(MATH1301|MATH1302|MATH1303|EDUC2802)-/i.test(t));
   if (explicitTag) {
     return explicitTag.toUpperCase();
   }
@@ -138,10 +136,7 @@ export function ArchivalIndexView({
           subject,
           asset,
           chapters: filteredChapters,
-          totalMatchedLessons: filteredChapters.reduce(
-            (sum, item) => sum + item.lessons.length,
-            0,
-          ),
+          totalMatchedLessons: filteredChapters.reduce((sum, item) => sum + item.lessons.length, 0),
         };
       })
       .filter((mod) => mod.totalMatchedLessons > 0);
@@ -272,9 +267,7 @@ export function ArchivalIndexView({
                       <span
                         className={cn(
                           'rounded-md px-2.5 py-0.5 font-mono text-xs font-bold tracking-wider',
-                          isPedagogy
-                            ? 'bg-[#5E786D] text-white'
-                            : 'bg-[#3F6570] text-white',
+                          isPedagogy ? 'bg-[#5E786D] text-white' : 'bg-[#3F6570] text-white',
                         )}
                       >
                         {asset.courseCode}
@@ -351,7 +344,10 @@ export function ArchivalIndexView({
 
                                 <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
                                   <span className="inline-flex items-center gap-1 rounded bg-[#EAF0F1] px-2 py-0.5 font-mono text-[11px] text-[#55676B]">
-                                    <FileText className="h-3 w-3 text-[#718C7E]" aria-hidden="true" />
+                                    <FileText
+                                      className="h-3 w-3 text-[#718C7E]"
+                                      aria-hidden="true"
+                                    />
                                     <span>{cloAndPages}</span>
                                   </span>
 

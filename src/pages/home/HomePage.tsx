@@ -612,6 +612,13 @@ export function HomePage() {
   const [hubQuery, setHubQuery] = useState('');
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const [pageScrollProgress, setPageScrollProgress] = useState(0);
+  const [viewMode, setViewMode] = useState<HomepageViewMode>(() => getInitialHomepageViewMode());
+  const [isKaTeXDrawerOpen, setIsKaTeXDrawerOpen] = useState(false);
+
+  const handleViewModeChange = (nextMode: HomepageViewMode) => {
+    setViewMode(nextMode);
+    saveHomepageViewMode(nextMode);
+  };
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -680,6 +687,14 @@ export function HomePage() {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
+        (event.key === 'K' || event.key === 'k') &&
+        event.shiftKey &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        event.preventDefault();
+        setIsKaTeXDrawerOpen((prev) => !prev);
+      } else if (
         event.key === '/' &&
         document.activeElement?.tagName !== 'INPUT' &&
         document.activeElement?.tagName !== 'TEXTAREA'
@@ -688,6 +703,7 @@ export function HomePage() {
         searchInputRef.current?.focus();
       } else if (event.key === 'Escape') {
         setIsSearchDropdownOpen(false);
+        setIsKaTeXDrawerOpen(false);
       }
     };
 
@@ -930,6 +946,10 @@ export function HomePage() {
 
               <Link
                 to="/glossary"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setIsKaTeXDrawerOpen(true);
+                }}
                 className="inline-flex items-center gap-2 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] px-6 py-3 text-sm font-medium text-[#29383D] transition-all duration-200 hover:bg-[#E1E9EA]"
               >
                 <BookMarked className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
@@ -990,8 +1010,11 @@ export function HomePage() {
               </p>
             </div>
 
-            {/* Thanh công cụ tối giản: Các tab phân loại + DUY NHẤT 01 ô tìm kiếm thông minh */}
+            {/* Thanh công cụ: Chuyển đổi View Mode + Tabs phân loại + DUY NHẤT 01 ô tìm kiếm thông minh */}
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto">
+              {/* Segmented Pill Switch: Atlas Mode vs Archival Index Mode */}
+              <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
+
               {/* Các tab phân loại: [Tất cả], [Toán học], [Khoa học Giáo dục] */}
               <div
                 role="tablist"
@@ -1165,355 +1188,377 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* SPATIAL SUBJECT GALLERY BẤT ĐỐI XỨNG (Asymmetric 12-Column Architectural Grid) */}
-          {filteredSubjects.length === 0 ? (
-            <div className="rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-12 text-center">
-              <p className="font-serif text-lg font-semibold text-[#29383D]">
-                Không tìm thấy học phần phù hợp với bộ lọc hiện tại.
-              </p>
-              <p className="mt-1 text-sm text-[#55676B]">
-                Hãy thử xóa từ khóa tìm kiếm hoặc chuyển sang phân nhánh &ldquo;Tất cả&rdquo;.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveBranch('all');
-                  setHubQuery('');
-                }}
-                className="mt-4 cursor-pointer rounded-xl bg-[#3F6570] px-5 py-2.5 text-xs font-medium text-white transition-colors hover:bg-[#345761]"
-              >
-                Khôi phục bộ lọc
-              </button>
-            </div>
+          {/* Chế độ Văn khố Thư mục (Archival Index View) hoặc Bản đồ Không gian (Spatial Subject Gallery) */}
+          {viewMode === 'archival' ? (
+            <ArchivalIndexView
+              subjects={subjects}
+              activeBranch={activeBranch}
+              externalQuery={hubQuery}
+            />
           ) : (
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-              {filteredSubjects.map((subject, idx) => {
-                const asset = getCourseCinematicAsset(subject.slug);
-                const stats = getSubjectStats(subject);
-                const isPedagogy = asset.branch === 'pedagogy';
+            <>
+              {/* SPATIAL SUBJECT GALLERY BẤT ĐỐI XỨNG (Asymmetric 12-Column Architectural Grid) */}
+              {filteredSubjects.length === 0 ? (
+                <div className="rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-12 text-center">
+                  <p className="font-serif text-lg font-semibold text-[#29383D]">
+                    Không tìm thấy học phần phù hợp với bộ lọc hiện tại.
+                  </p>
+                  <p className="mt-1 text-sm text-[#55676B]">
+                    Hãy thử xóa từ khóa tìm kiếm hoặc chuyển sang phân nhánh &ldquo;Tất cả&rdquo;.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveBranch('all');
+                      setHubQuery('');
+                    }}
+                    className="mt-4 cursor-pointer rounded-xl bg-[#3F6570] px-5 py-2.5 text-xs font-medium text-white transition-colors hover:bg-[#345761]"
+                  >
+                    Khôi phục bộ lọc
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                  {filteredSubjects.map((subject, idx) => {
+                    const asset = getCourseCinematicAsset(subject.slug);
+                    const stats = getSubjectStats(subject);
+                    const isPedagogy = asset.branch === 'pedagogy';
 
-                // Bố cục bất đối xứng (Asymmetric Spatial Proportions):
-                // Hàng 1: 01 (7 cột) + 02 (5 cột) | Hàng 2: 03 (5 cột) + 04 (7 cột)
-                const colSpanClass =
-                  subject.slug === 'cau-truc-dai-so' || subject.slug === 'giao-duc-hoc'
-                    ? 'lg:col-span-7'
-                    : 'lg:col-span-5';
+                    // Bố cục bất đối xứng (Asymmetric Spatial Proportions):
+                    // Hàng 1: 01 (7 cột) + 02 (5 cột) | Hàng 2: 03 (5 cột) + 04 (7 cột)
+                    const colSpanClass =
+                      subject.slug === 'cau-truc-dai-so' || subject.slug === 'giao-duc-hoc'
+                        ? 'lg:col-span-7'
+                        : 'lg:col-span-5';
 
-                const galleryIndex = String(idx + 1).padStart(2, '0');
+                    const galleryIndex = String(idx + 1).padStart(2, '0');
 
-                return (
-                  <FadeIn key={subject.id} delay={idx * 60} className={colSpanClass}>
-                    <article
-                      style={{ viewTransitionName: `subject-card-${subject.slug}` }}
-                      className={cn(
-                        'group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-all duration-500 sm:p-8',
-                        isPedagogy
-                          ? 'hover:border-[#5E786D] hover:bg-[#ECF2EE]'
-                          : 'hover:border-[#3F6570] hover:bg-[#E9F1F2]',
-                      )}
-                    >
-                      {/* Hàng 1: Định danh số thứ tự, Mã học phần & Phân nhánh */}
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2.5">
-                          <span className="font-mono text-xs font-bold text-[#92714F]">
-                            {galleryIndex}.
-                          </span>
-                          <span
+                    return (
+                      <FadeIn key={subject.id} delay={idx * 60} className={colSpanClass}>
+                        <article
+                          style={{ viewTransitionName: `subject-card-${subject.slug}` }}
+                          className={cn(
+                            'group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-all duration-500 sm:p-8',
+                            isPedagogy
+                              ? 'hover:border-[#5E786D] hover:bg-[#ECF2EE]'
+                              : 'hover:border-[#3F6570] hover:bg-[#E9F1F2]',
+                          )}
+                        >
+                          {/* Dấu ấn chìm SVG môn học độc bản */}
+                          <SubjectWatermarkSignature slug={subject.slug} />
+                          {/* Hàng 1: Định danh số thứ tự, Mã học phần & Phân nhánh */}
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex items-center gap-2.5">
+                              <span className="font-mono text-xs font-bold text-[#92714F]">
+                                {galleryIndex}.
+                              </span>
+                              <span
+                                className={cn(
+                                  'rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider transition-transform duration-300 group-hover:translate-x-0.5',
+                                  isPedagogy
+                                    ? 'border-[#5E786D]/30 bg-[#E1E9EA] text-[#5E786D]'
+                                    : 'border-[#3F6570]/30 bg-[#E1E9EA] text-[#3F6570]',
+                                )}
+                              >
+                                {asset.categoryLabel}
+                              </span>
+                            </div>
+
+                            <span className="font-mono text-[11px] text-[#55676B]">
+                              {stats.chapterCount} chương · {stats.lessonCount} bài giảng
+                            </span>
+                          </div>
+
+                          {/* Hàng 2: Khung đồ họa hình học không gian riêng biệt (Bespoke SVG Artwork) */}
+                          <div
                             className={cn(
-                              'rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider transition-transform duration-300 group-hover:translate-x-0.5',
-                              isPedagogy
-                                ? 'border-[#5E786D]/30 bg-[#E1E9EA] text-[#5E786D]'
-                                : 'border-[#3F6570]/30 bg-[#E1E9EA] text-[#3F6570]',
+                              'my-6 overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/75 transition-colors duration-500 group-hover:border-[#3F6570]/40',
+                              subject.slug === 'cau-truc-dai-so' || subject.slug === 'giao-duc-hoc'
+                                ? 'h-52 sm:h-56'
+                                : 'h-48 sm:h-52',
                             )}
                           >
-                            {asset.categoryLabel}
-                          </span>
-                        </div>
+                            <SubjectSpatialArtwork slug={subject.slug} branch={asset.branch} />
+                          </div>
 
-                        <span className="font-mono text-[11px] text-[#55676B]">
-                          {stats.chapterCount} chương · {stats.lessonCount} bài giảng
-                        </span>
-                      </div>
+                          {/* Hàng 3: Tiêu đề môn học, Mô tả chuyên môn & Nút hành động đồng nhất */}
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#29383D] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
+                                <Link
+                                  to={ROUTES.subjectOverview(subject.slug)}
+                                  className="transition-colors hover:text-[#3F6570]"
+                                >
+                                  {subject.title}
+                                </Link>
+                              </h3>
+                              <p className="line-clamp-3 text-sm leading-relaxed text-[#55676B]">
+                                {asset.conciseDescription}
+                              </p>
+                            </div>
 
-                      {/* Hàng 2: Khung đồ họa hình học không gian riêng biệt (Bespoke SVG Artwork) */}
-                      <div
-                        className={cn(
-                          'my-6 overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/75 transition-colors duration-500 group-hover:border-[#3F6570]/40',
-                          subject.slug === 'cau-truc-dai-so' || subject.slug === 'giao-duc-hoc'
-                            ? 'h-52 sm:h-56'
-                            : 'h-48 sm:h-52',
-                        )}
-                      >
-                        <SubjectSpatialArtwork slug={subject.slug} branch={asset.branch} />
-                      </div>
+                            {/* Chân thẻ: Ẩn dụ thị giác & Nút [Vào học phần →] */}
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-4">
+                              <span className="line-clamp-1 font-mono text-[11px] text-[#55676B]">
+                                {asset.visualMetaphor}
+                              </span>
 
-                      {/* Hàng 3: Tiêu đề môn học, Mô tả chuyên môn & Nút hành động đồng nhất */}
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <h3 className="font-serif text-2xl font-bold tracking-tight text-[#29383D] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
-                            <Link
-                              to={ROUTES.subjectOverview(subject.slug)}
-                              className="transition-colors hover:text-[#3F6570]"
-                            >
-                              {subject.title}
-                            </Link>
-                          </h3>
-                          <p className="line-clamp-3 text-sm leading-relaxed text-[#55676B]">
-                            {asset.conciseDescription}
-                          </p>
-                        </div>
-
-                        {/* Chân thẻ: Ẩn dụ thị giác & Nút [Vào học phần →] */}
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-4">
-                          <span className="line-clamp-1 font-mono text-[11px] text-[#55676B]">
-                            {asset.visualMetaphor}
-                          </span>
-
-                          <Link
-                            to={ROUTES.courseOverview(subject.slug)}
-                            aria-label={`Vào học phần ${subject.title}`}
-                            className={cn(
-                              'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold text-white transition-all duration-200',
-                              isPedagogy
-                                ? 'bg-[#5E786D] hover:bg-[#4E665C]'
-                                : 'bg-[#3F6570] hover:bg-[#345761]',
-                            )}
-                          >
-                            <span>Vào học phần</span>
-                            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                          </Link>
-                        </div>
-                      </div>
-                    </article>
-                  </FadeIn>
-                );
-              })}
-            </div>
+                              <Link
+                                to={ROUTES.courseOverview(subject.slug)}
+                                aria-label={`Vào học phần ${subject.title}`}
+                                className={cn(
+                                  'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold text-white transition-all duration-200',
+                                  isPedagogy
+                                    ? 'bg-[#5E786D] hover:bg-[#4E665C]'
+                                    : 'bg-[#3F6570] hover:bg-[#345761]',
+                                )}
+                              >
+                                <span>Vào học phần</span>
+                                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                              </Link>
+                            </div>
+                          </div>
+                        </article>
+                      </FadeIn>
+                    );
+                  })}
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
 
       {/* =====================================================================
-          SECTION 3: CONTINUE LEARNING — MY LEARNING ORBIT (BỐ CỤC BẤT ĐỐI XỨNG 65% : 35%)
-          ===================================================================== */}
-      <section
-        aria-label="Không gian Tiếp tục học tập"
-        className="relative z-20 border-t border-[#CFDADB] bg-[#E1E9EA]/45 py-20 sm:py-24"
-      >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Header khu vực My Learning Orbit */}
-          <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#3F6570] uppercase">
-                <Sparkles className="h-3.5 w-3.5 text-[#92714F]" aria-hidden="true" />
-                <span>MY LEARNING ORBIT · QUỸ ĐẠO HỌC TẬP CÁ NHÂN</span>
+      SECTION 3: CONTINUE LEARNING — MY LEARNING ORBIT (CHỈ HIỂN THỊ Ở CHẾ ĐỘ ATLAS)
+      ===================================================================== */}
+      {viewMode === 'atlas' && (
+        <section
+          aria-label="Không gian Tiếp tục học tập"
+          className="relative z-20 border-t border-[#CFDADB] bg-[#E1E9EA]/45 py-20 sm:py-24"
+        >
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            {/* Header khu vực My Learning Orbit */}
+            <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#3F6570] uppercase">
+                  <Sparkles className="h-3.5 w-3.5 text-[#92714F]" aria-hidden="true" />
+                  <span>MY LEARNING ORBIT · QUỸ ĐẠO HỌC TẬP CÁ NHÂN</span>
+                </div>
+                <h2 className="font-serif text-3xl font-bold tracking-tight text-[#29383D] sm:text-4xl">
+                  Tiếp tục học tập
+                </h2>
               </div>
-              <h2 className="font-serif text-3xl font-bold tracking-tight text-[#29383D] sm:text-4xl">
-                Tiếp tục học tập
-              </h2>
+              <p className="font-mono text-xs text-[#55676B]">
+                Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt của bạn.
+              </p>
             </div>
-            <p className="font-mono text-xs text-[#55676B]">
-              Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt của bạn.
-            </p>
-          </div>
 
-          {/* Bố cục phân cấp bất đối xứng 65% (8 cột) : 35% (4 cột) */}
-          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
-            {/* VÙNG CHÍNH (65% — lg:col-span-8 — HERO PROGRESS CARD) */}
-            <div
-              role="region"
-              aria-label="Tiếp tục học dở"
-              className="flex flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-sm sm:p-8 lg:col-span-8"
-            >
-              {activeRecentLesson ? (
-                <>
-                  <div className="space-y-6">
-                    {/* Hàng trạng thái & Tiến độ phần trăm */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#CFDADB] pb-5">
-                      <div className="flex flex-wrap items-center gap-2.5">
-                        <span className="rounded-lg bg-[#E1E9EA] px-3 py-1 font-mono text-xs font-semibold text-[#3F6570]">
-                          {getCourseCinematicAsset(activeRecentLesson.subject.slug).courseCode}
-                        </span>
-                        <span className="text-xs font-medium text-[#55676B]">
-                          {activeRecentLesson.subject.title} · Chương{' '}
-                          {activeRecentLesson.chapter.number}
-                        </span>
+            {/* Bố cục phân cấp bất đối xứng 65% (8 cột) : 35% (4 cột) */}
+            <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
+              {/* VÙNG CHÍNH (65% — lg:col-span-8 — HERO PROGRESS CARD) */}
+              <div
+                role="region"
+                aria-label="Tiếp tục học dở"
+                className="flex flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-sm sm:p-8 lg:col-span-8"
+              >
+                {activeRecentLesson ? (
+                  <>
+                    <div className="space-y-6">
+                      {/* Hàng trạng thái & Tiến độ phần trăm */}
+                      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#CFDADB] pb-5">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          <span className="rounded-lg bg-[#E1E9EA] px-3 py-1 font-mono text-xs font-semibold text-[#3F6570]">
+                            {getCourseCinematicAsset(activeRecentLesson.subject.slug).courseCode}
+                          </span>
+                          <span className="text-xs font-medium text-[#55676B]">
+                            {activeRecentLesson.subject.title} · Chương{' '}
+                            {activeRecentLesson.chapter.number}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <ProgressRing value={displayOrbitPercent} size={44} strokeWidth={4} />
+                          <div>
+                            <p className="font-mono text-sm font-bold text-[#29383D]">
+                              Tiến trình: {displayOrbitPercent}%
+                            </p>
+                            <p className="text-[11px] text-[#55676B]">
+                              {completedCount > 0
+                                ? `Đã hoàn thành ${completedCount}/${totalLessonCount} bài`
+                                : 'Đang đọc dở trên trình duyệt'}
+                            </p>
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        <ProgressRing value={displayOrbitPercent} size={44} strokeWidth={4} />
-                        <div>
-                          <p className="font-mono text-sm font-bold text-[#29383D]">
-                            Tiến trình: {displayOrbitPercent}%
-                          </p>
-                          <p className="text-[11px] text-[#55676B]">
-                            {completedCount > 0
-                              ? `Đã hoàn thành ${completedCount}/${totalLessonCount} bài`
-                              : 'Đang đọc dở trên trình duyệt'}
-                          </p>
+                      {/* Tiêu đề bài học đang đọc dở & Trích đoạn ngắn nội dung */}
+                      <div className="space-y-3">
+                        <p className="font-mono text-xs tracking-wider text-[#92714F] uppercase">
+                          BÀI HỌC ĐANG ĐỌC DỞ
+                        </p>
+                        <h3 className="font-serif text-2xl leading-snug font-bold text-[#29383D] sm:text-3xl">
+                          {activeRecentLesson.lesson.title.startsWith('Bài')
+                            ? activeRecentLesson.lesson.title
+                            : `Bài ${activeRecentLesson.chapter.number}.${activeRecentLesson.lesson.number}: ${activeRecentLesson.lesson.title}`}
+                        </h3>
+                        <p className="text-sm leading-relaxed text-[#55676B] sm:text-base">
+                          {activeRecentLesson.lesson.description}
+                        </p>
+                      </div>
+
+                      {/* Thanh tiến độ trực quan */}
+                      <div className="space-y-2 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-medium text-[#29383D]">
+                            Trạng thái đọc bài &amp; ghi chú học thuật
+                          </span>
+                          <span className="font-mono font-semibold text-[#3F6570]">
+                            {displayOrbitPercent}% hoàn thành
+                          </span>
+                        </div>
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-[#CFDADB]">
+                          <div
+                            className="h-full rounded-full bg-[#3F6570] transition-all duration-500"
+                            style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
+                          />
                         </div>
                       </div>
                     </div>
 
-                    {/* Tiêu đề bài học đang đọc dở & Trích đoạn ngắn nội dung */}
-                    <div className="space-y-3">
-                      <p className="font-mono text-xs tracking-wider text-[#92714F] uppercase">
-                        BÀI HỌC ĐANG ĐỌC DỞ
-                      </p>
-                      <h3 className="font-serif text-2xl leading-snug font-bold text-[#29383D] sm:text-3xl">
-                        {activeRecentLesson.lesson.title.startsWith('Bài')
-                          ? activeRecentLesson.lesson.title
-                          : `Bài ${activeRecentLesson.chapter.number}.${activeRecentLesson.lesson.number}: ${activeRecentLesson.lesson.title}`}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-[#55676B] sm:text-base">
-                        {activeRecentLesson.lesson.description}
-                      </p>
-                    </div>
-
-                    {/* Thanh tiến độ trực quan */}
-                    <div className="space-y-2 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-medium text-[#29383D]">
-                          Trạng thái đọc bài &amp; ghi chú học thuật
-                        </span>
-                        <span className="font-mono font-semibold text-[#3F6570]">
-                          {displayOrbitPercent}% hoàn thành
-                        </span>
+                    {/* Nút chính nổi bật: [Tiếp tục đọc ngay] */}
+                    <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
+                      <div className="text-xs text-[#55676B]">
+                        Thời lượng ước tính:{' '}
+                        <strong className="text-[#29383D]">
+                          {activeRecentLesson.lesson.estimatedMinutes} phút đọc sâu
+                        </strong>
                       </div>
-                      <div className="h-2 w-full overflow-hidden rounded-full bg-[#CFDADB]">
-                        <div
-                          className="h-full rounded-full bg-[#3F6570] transition-all duration-500"
-                          style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
-                        />
-                      </div>
+
+                      <Link
+                        to={ROUTES.lesson(
+                          activeRecentLesson.subject.slug,
+                          activeRecentLesson.chapter.slug,
+                          activeRecentLesson.lesson.slug,
+                        )}
+                        className="inline-flex items-center gap-2.5 rounded-xl bg-[#3F6570] px-6 py-3 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#345761]"
+                      >
+                        <span>Tiếp tục đọc ngay</span>
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </Link>
                     </div>
-                  </div>
-
-                  {/* Nút chính nổi bật: [Tiếp tục đọc ngay] */}
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
-                    <div className="text-xs text-[#55676B]">
-                      Thời lượng ước tính:{' '}
-                      <strong className="text-[#29383D]">
-                        {activeRecentLesson.lesson.estimatedMinutes} phút đọc sâu
-                      </strong>
-                    </div>
-
-                    <Link
-                      to={ROUTES.lesson(
-                        activeRecentLesson.subject.slug,
-                        activeRecentLesson.chapter.slug,
-                        activeRecentLesson.lesson.slug,
-                      )}
-                      className="inline-flex items-center gap-2.5 rounded-xl bg-[#3F6570] px-6 py-3 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#345761]"
-                    >
-                      <span>Tiếp tục đọc ngay</span>
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-                  </div>
-                </>
-              ) : null}
-            </div>
-
-            {/* CỘT PHỤ BÊN CẠNH (35% — lg:col-span-4 — 2 THẺ TIỆN ÍCH XẾP CHỒNG) */}
-            <div className="flex flex-col justify-between gap-6 lg:col-span-4">
-              {/* Tiện ích 1: Ngân hàng Thuật ngữ KaTeX */}
-              <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-colors hover:border-[#3F6570]">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-lg bg-[#E1E9EA] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#3F6570]">
-                      UTILITY 01 · KATEX LEXICON
-                    </span>
-                    <BookMarked className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
-                  </div>
-
-                  <h3 className="font-serif text-xl font-bold text-[#29383D]">
-                    Ngân hàng Thuật ngữ KaTeX
-                  </h3>
-
-                  <p className="text-xs leading-relaxed text-[#55676B]">
-                    Tra cứu tức thời hệ thống ký hiệu đại số, tiên đề hình học, định lý giải tích và
-                    thuật ngữ khoa học giáo dục chuẩn mực.
-                  </p>
-
-                  {/* Bảng ký hiệu minh họa gọn gàng */}
-                  <div className="grid grid-cols-3 gap-2 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-2.5 text-center font-mono text-xs text-[#29383D]">
-                    <span className="rounded-lg bg-[#F7FAFA] py-1">G / ker φ</span>
-                    <span className="rounded-lg bg-[#F7FAFA] py-1">∀ε &gt; 0, ∃δ</span>
-                    <span className="rounded-lg bg-[#F7FAFA] py-1">CLO1–9</span>
-                  </div>
-                </div>
-
-                <div className="mt-5 border-t border-[#CFDADB] pt-4">
-                  <Link
-                    to="/glossary"
-                    aria-label="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
-                    className="inline-flex w-full items-center justify-between rounded-xl border border-[#CFDADB] bg-[#E1E9EA]/70 px-4 py-2.5 text-xs font-semibold text-[#29383D] transition-colors hover:bg-[#3F6570] hover:text-white"
-                  >
-                    <span>Mở Ngân hàng Thuật ngữ &amp; Ký hiệu Toán</span>
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                </div>
+                  </>
+                ) : null}
               </div>
 
-              {/* Tiện ích 2: Phòng Lab Hình học 3D */}
-              <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-colors hover:border-[#3F6570]">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-lg bg-[#E1E9EA] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#5E786D]">
-                      UTILITY 02 · SPATIAL LAB
-                    </span>
-                    <Compass className="h-4 w-4 text-[#5E786D]" aria-hidden="true" />
+              {/* CỘT PHỤ BÊN CẠNH (35% — lg:col-span-4 — 2 THẺ TIỆN ÍCH XẾP CHỒNG) */}
+              <div className="flex flex-col justify-between gap-6 lg:col-span-4">
+                {/* Tiện ích 1: Ngân hàng Thuật ngữ KaTeX */}
+                <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-colors hover:border-[#3F6570]">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-lg bg-[#E1E9EA] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#3F6570]">
+                        UTILITY 01 · KATEX LEXICON
+                      </span>
+                      <BookMarked className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
+                    </div>
+
+                    <h3 className="font-serif text-xl font-bold text-[#29383D]">
+                      Ngân hàng Thuật ngữ KaTeX
+                    </h3>
+
+                    <p className="text-xs leading-relaxed text-[#55676B]">
+                      Tra cứu tức thời hệ thống ký hiệu đại số, tiên đề hình học, định lý giải tích
+                      và thuật ngữ khoa học giáo dục chuẩn mực.
+                    </p>
+
+                    {/* Bảng ký hiệu minh họa gọn gàng */}
+                    <div className="grid grid-cols-3 gap-2 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-2.5 text-center font-mono text-xs text-[#29383D]">
+                      <span className="rounded-lg bg-[#F7FAFA] py-1">G / ker φ</span>
+                      <span className="rounded-lg bg-[#F7FAFA] py-1">∀ε &gt; 0, ∃δ</span>
+                      <span className="rounded-lg bg-[#F7FAFA] py-1">CLO1–9</span>
+                    </div>
                   </div>
 
-                  <h3 className="font-serif text-xl font-bold text-[#29383D]">
-                    Phòng Lab Hình học 3D
-                  </h3>
-
-                  <p className="text-xs leading-relaxed text-[#55676B]">
-                    Cửa sổ mô phỏng trực quan không gian Affine, phép biến đổi đẳng cự và hình học
-                    phối cảnh đa chiều.
-                  </p>
-
-                  {/* Cửa sổ preview trực quan dẫn vào không gian mô phỏng */}
-                  <div className="overflow-hidden rounded-xl border border-[#CFDADB] bg-[#EAF0F1] p-2">
-                    <svg viewBox="0 0 280 76" className="h-16 w-full" aria-hidden="true">
-                      <line x1="16" y1="62" x2="264" y2="62" stroke="#CFDADB" strokeWidth="1" />
-                      <polygon
-                        points="76,54 132,14 204,24 148,64"
-                        fill="#F7FAFA"
-                        stroke="#3F6570"
-                        strokeWidth="1.3"
-                      />
-                      <polygon
-                        points="108,18 184,12 196,58 120,64"
-                        fill="#E1E9EA"
-                        fillOpacity="0.65"
-                        stroke="#5E786D"
-                        strokeWidth="1.2"
-                      />
-                      <circle cx="140" cy="38" r="3.5" fill="#92714F" />
-                      <text x="14" y="20" fill="#55676B" fontSize="8.5" fontFamily="monospace">
-                        3D AFFINE VIEWPORT
-                      </text>
-                    </svg>
+                  <div className="mt-5 border-t border-[#CFDADB] pt-4">
+                    <Link
+                      to="/glossary"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setIsKaTeXDrawerOpen(true);
+                      }}
+                      aria-label="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
+                      className="inline-flex w-full items-center justify-between rounded-xl border border-[#CFDADB] bg-[#E1E9EA]/70 px-4 py-2.5 text-xs font-semibold text-[#29383D] transition-colors hover:bg-[#3F6570] hover:text-white"
+                    >
+                      <span>Mở Ngân hàng Thuật ngữ &amp; Ký hiệu Toán</span>
+                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
                   </div>
                 </div>
 
-                <div className="mt-5 border-t border-[#CFDADB] pt-4">
-                  <a
-                    href="/interactive/affine-geometry.html"
-                    aria-label="Mở Phòng Lab Hình học Không gian"
-                    className="inline-flex w-full items-center justify-between rounded-xl border border-[#CFDADB] bg-[#E1E9EA]/70 px-4 py-2.5 text-xs font-semibold text-[#29383D] transition-colors hover:bg-[#3F6570] hover:text-white"
-                  >
-                    <span>Mở Phòng Lab Hình học Không gian</span>
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </a>
+                {/* Tiện ích 2: Phòng Lab Hình học 3D */}
+                <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-colors hover:border-[#3F6570]">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-lg bg-[#E1E9EA] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#5E786D]">
+                        UTILITY 02 · SPATIAL LAB
+                      </span>
+                      <Compass className="h-4 w-4 text-[#5E786D]" aria-hidden="true" />
+                    </div>
+
+                    <h3 className="font-serif text-xl font-bold text-[#29383D]">
+                      Phòng Lab Hình học 3D
+                    </h3>
+
+                    <p className="text-xs leading-relaxed text-[#55676B]">
+                      Cửa sổ mô phỏng trực quan không gian Affine, phép biến đổi đẳng cự và hình học
+                      phối cảnh đa chiều.
+                    </p>
+
+                    {/* Cửa sổ preview trực quan dẫn vào không gian mô phỏng */}
+                    <div className="overflow-hidden rounded-xl border border-[#CFDADB] bg-[#EAF0F1] p-2">
+                      <svg viewBox="0 0 280 76" className="h-16 w-full" aria-hidden="true">
+                        <line x1="16" y1="62" x2="264" y2="62" stroke="#CFDADB" strokeWidth="1" />
+                        <polygon
+                          points="76,54 132,14 204,24 148,64"
+                          fill="#F7FAFA"
+                          stroke="#3F6570"
+                          strokeWidth="1.3"
+                        />
+                        <polygon
+                          points="108,18 184,12 196,58 120,64"
+                          fill="#E1E9EA"
+                          fillOpacity="0.65"
+                          stroke="#5E786D"
+                          strokeWidth="1.2"
+                        />
+                        <circle cx="140" cy="38" r="3.5" fill="#92714F" />
+                        <text x="14" y="20" fill="#55676B" fontSize="8.5" fontFamily="monospace">
+                          3D AFFINE VIEWPORT
+                        </text>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 border-t border-[#CFDADB] pt-4">
+                    <a
+                      href="/interactive/affine-geometry.html"
+                      aria-label="Mở Phòng Lab Hình học Không gian"
+                      className="inline-flex w-full items-center justify-between rounded-xl border border-[#CFDADB] bg-[#E1E9EA]/70 px-4 py-2.5 text-xs font-semibold text-[#29383D] transition-colors hover:bg-[#3F6570] hover:text-white"
+                    >
+                      <span>Mở Phòng Lab Hình học Không gian</span>
+                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Ngăn kéo Tra cứu Thuật ngữ & Ký hiệu KaTeX (Quick KaTeX Drawer) */}
+      <QuickKaTeXDrawer isOpen={isKaTeXDrawerOpen} onClose={() => setIsKaTeXDrawerOpen(false)} />
     </div>
   );
 }
