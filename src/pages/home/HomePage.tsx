@@ -1453,7 +1453,7 @@ export function HomePage() {
       )}
 
       {/* Đại cảnh Hồ Sen Tri Thức chuyển tiếp chân trang (Grand Lotus Lake Panorama) */}
-      <GrandLotusLake />
+      <GrandLotusLake pageScrollProgress={pageScrollProgress} />
 
       {/* Ngăn kéo Tra cứu Thuật ngữ & Ký hiệu KaTeX (Quick KaTeX Drawer) */}
       <QuickKaTeXDrawer isOpen={isKaTeXDrawerOpen} onClose={() => setIsKaTeXDrawerOpen(false)} />
