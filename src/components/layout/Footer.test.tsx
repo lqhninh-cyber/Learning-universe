@@ -38,10 +38,10 @@ describe('Footer Component', () => {
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-[11px]', 'text-[#3F6570]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#3F6570]', 'not-italic');
   });
 
-  it('renders center monogram logo for both mobile and desktop', () => {
+  it('renders artistic lotus emblem (LotusCenterLogo) for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />
@@ -54,21 +54,18 @@ describe('Footer Component', () => {
     const desktopLogoWrapper = container.querySelector('.hidden.md\\:flex');
     expect(desktopLogoWrapper).toBeInTheDocument();
 
-    const logoBoxes = container.querySelectorAll('.w-10.h-10');
-    expect(logoBoxes.length).toBeGreaterThanOrEqual(2);
-    logoBoxes.forEach((box) => {
-      expect(box).toHaveClass(
-        'rounded-xl',
-        'border',
-        'border-[#CFDADB]',
-        'bg-[#E1E9EA]/50',
-        'text-[#3F6570]',
-      );
-      expect(box.querySelector('svg')).toBeInTheDocument();
+    const lotusLogos = screen.getAllByTestId('lotus-center-logo');
+    expect(lotusLogos.length).toBeGreaterThanOrEqual(2);
+    lotusLogos.forEach((logo) => {
+      expect(logo.querySelector('svg')).toBeInTheDocument();
+      expect(logo).toHaveAttribute('aria-label', 'Biểu trưng Bông sen hồ sương');
     });
+
+    // Cũ monogram vuông không còn tồn tại
+    expect(container.querySelectorAll('.w-10.h-10').length).toBe(0);
   });
 
-  it('renders exactly 3 simplified navigation links and removes individual subject links', () => {
+  it('renders exactly 3 simplified navigation links in a single horizontal row', () => {
     render(
       <MemoryRouter>
         <Footer />
@@ -77,6 +74,7 @@ describe('Footer Component', () => {
 
     const nav = screen.getByRole('navigation', { name: /Điều hướng chân trang/i });
     expect(nav).toBeInTheDocument();
+    expect(nav).toHaveClass('flex-row', 'items-center');
 
     const homeLink = screen.getByRole('link', { name: 'Trang chủ' });
     expect(homeLink).toHaveAttribute('href', '/');
@@ -103,7 +101,7 @@ describe('Footer Component', () => {
     );
 
     expect(screen.getByText('Learning Universe. Bản quyền mở.')).toBeInTheDocument();
-    expect(screen.getByText('Không gian tri thức mở')).toBeInTheDocument();
+    expect(screen.getByText('-Không gian tri thức mở-')).toBeInTheDocument();
     expect(screen.queryByText(/Bảo lưu bản quyền học thuật/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Chuẩn mực & Khách quan/i)).not.toBeInTheDocument();
   });
