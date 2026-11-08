@@ -32,54 +32,55 @@ import type { PedagogicalCaseStudy } from './course';
 export const Lesson1_1View: FC = () => {
   const caseStudy1_1: PedagogicalCaseStudy = {
     id: 101,
-    title: 'Giáo viên dạy giỏi chuyên môn nhưng nóng nảy, xúc phạm học sinh trên lớp',
+    title:
+      'Học sinh lớp 10 có học lực khá chống đối ngầm, không ghi bài và xúi giục bạn bè làm mất trật tự',
     context:
-      'Thầy V. là giáo viên dạy môn Toán có chuyên môn vững vàng, nhiều học sinh đạt điểm cao trong các kỳ thi. Tuy nhiên, trên lớp thầy rất nóng tính và khắt khe. Khi học sinh không làm được bài hoặc hỏi lại kiến thức cơ bản, thầy thường đập bàn và mắng học sinh là "chậm hiểu", "đầu óc để đi đâu". Nhiều học sinh sợ hãi không dám hỏi bài, dần nảy sinh tâm lý tự ti và chán ghét môn Toán.',
+      'Trong giờ học Toán lớp 10, một học sinh có học lực khá nhưng thường xuyên chống đối ngầm, không ghi bài và xúi giục các bạn xung quanh làm mất trật tự khi giáo viên đang giảng giải.',
     question:
-      'Vận dụng đặc điểm "Nhân cách người giáo viên là công cụ lao động sư phạm chủ yếu" (Giáo trình HCMUE tr. 5–6) và quy định về nhiệm vụ, quyền hạn của giáo viên theo Luật Giáo dục 2019, anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
+      'Vận dụng đặc điểm công cụ nhân cách của hoạt động sư phạm (Giáo trình HCMUE tr. 1–7) và quy trình 5 bước xử lý tình huống giáo dục theo Mục 3.3.6 Giáo trình HCMUE, anh/chị hãy đề xuất phương án xử lý tối ưu.',
     principlesApplied: [
-      'Đặc điểm công cụ lao động sư phạm: Nhân cách người giáo viên (Giáo trình tr. 5–6)',
-      'Điều 69, 72 Luật Giáo dục 2019 & Điều 27, 31 Thông tư 32/2020/TT-BGDĐT',
-      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí',
+      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lý',
+      'Đặc điểm công cụ lao động sư phạm: CÔNG CỤ QUAN TRỌNG NHẤT LÀ NHÂN CÁCH NGƯỜI THẦY (dùng nhân cách tác động trực tiếp vào nhân cách)',
+      'Luật Giáo dục 2019 & Điều lệ trường THCS, THPT (Thông tư 32/2020/TT-BGDĐT)',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Mâu thuẫn cốt lõi nằm ở sự bất cân xứng giữa năng lực chuyên môn bộ môn (cao) và tác phong ứng xử sư phạm (thiếu chuẩn mực) của thầy V., dẫn đến làm tổn thương tâm lí người học và triệt tiêu động lực học tập.',
+          'Học sinh có năng lực (học lực khá) nhưng có nhu cầu khẳng định mình sai lệch; hành vi chống đối ngầm, không ghi bài và xúi giục bạn bè làm mất trật tự diễn ra giữa tập thể lớp khi giáo viên đang giảng bài.',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân khách quan, chủ quan',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Xét theo 5 đặc điểm hoạt động sư phạm, công cụ lao động đặc trưng nhất của người thầy chính là nhân cách của bản thân. Hành vi đập bàn, mắng học sinh vi phạm quy định "tôn trọng nhân cách, không xúc phạm danh dự người học" tại Điều 69, 72 Luật Giáo dục 2019.',
+          'Mâu thuẫn giữa nhu cầu tự thể hiện của học sinh và kỷ luật trật tự lớp học; cần giữ thể diện cho học sinh trước tập thể và giữ vững uy tín sư phạm của giáo viên.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết & Chọn tối ưu)',
         content:
-          'Phương án 1: Giữ nguyên cách dạy nghiêm khắc để ép điểm số (loại vì phản sư phạm). Phương án 2: Điều chỉnh kỹ năng quản trị cảm xúc, phân hóa câu hỏi vừa sức và thiết lập quy tắc đối thoại tôn trọng trong giờ Toán (lựa chọn tối ưu).',
+          'Tránh mắng mỏ, đuổi học sinh ra khỏi lớp (phương án sai lầm gây đối kháng). Chọn phương án tối ưu: Dừng lại nhắc nhở chung bằng ánh mắt/ngữ điệu điềm tĩnh, giao bài tập nâng cao thách thức tư duy tại chỗ cho học sinh đó, và gặp riêng sau giờ học để đàm thoại chân tình.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh khoa học)',
         content:
-          'Thầy V. chủ động thay đổi bầu không khí lớp học, cởi mở lắng nghe khó khăn nhận thức của học sinh, hướng dẫn từng bước cho học sinh trung bình – yếu và tuyệt đối không dùng ngôn từ miệt thị.',
+          'Vận dụng nguyên tắc "Tôn trọng nhân cách kết hợp yêu cầu hợp lý" và đặc điểm công cụ nhân cách mẫu mực của người thầy: giao nhiệm vụ vừa sức – nâng cao giúp chuyển hóa năng lượng dư thừa và nhu cầu tự khẳng định của học sinh khá sang hoạt động nhận thức tích cực.',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Theo dõi mức độ chủ động phát biểu của học sinh trong các tiết học tiếp theo; tự phản tư định kỳ về phong cách giao tiếp sư phạm theo Tiêu chuẩn 1 của Thông tư 20/2018/TT-BGDĐT.',
+          'Uy tín sư phạm không đến từ quyền lực áp đặt mà đến từ sự thấu hiểu tâm lý và nghệ thuật ứng xử khéo léo.',
       },
     ],
     pitfallsToAvoid: [
-      'Biện minh rằng "vì muốn học sinh giỏi nên mới mắng nặng lời" để hợp thức hóa hành vi thiếu kiềm chế cảm xúc.',
-      'Tách rời nhiệm vụ giảng dạy kiến thức khỏi nhiệm vụ giáo dục và bảo vệ nhân phẩm người học.',
+      'Nóng giận quát mắng, xúc phạm hoặc đuổi học sinh ra khỏi lớp ngay trong tiết học.',
+      'Bỏ mặc hành vi chống đối ngầm khiến kỷ cương lớp học bị phá vỡ.',
     ],
     coreLesson:
-      'Trong hoạt động sư phạm, tri thức chuyên môn mới là điều kiện cần; nhân cách mẫu mực và lòng bao dung của người thầy mới là công cụ lao động quyết định chạm tới tâm hồn người học.',
+      'Uy tín sư phạm không đến từ quyền lực áp đặt mà đến từ sự thấu hiểu tâm lý và nghệ thuật ứng xử khéo léo bằng chính nhân cách mẫu mực của người thầy.',
   };
 
   return createElement(
@@ -89,20 +90,21 @@ export const Lesson1_1View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C1-L1',
       clos: ['CLO1', 'CLO2'],
-      textbookPages: 'Tr. 1–7 (Chương 1, Mục 1.1)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 1 – 7)',
       legalRefs: [
         'Luật Giáo dục 2019 (Điều 66, 69, 70, 72)',
-        'Điều lệ trường Tiểu học (TT 28/2020)',
-        'Điều lệ trường Trung học (TT 32/2020)',
+        'Điều lệ trường Tiểu học 2020 (TT 28/2020)',
+        'Điều lệ trường THCS, THPT 2020 (TT 32/2020)',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 1',
+      sessionNote: 'Mục 1.1 · Trang 1 – 7',
     }),
 
-    // PHẦN I: VAI TRÒ VÀ CHỨC NĂNG CỦA NGƯỜI GIÁO VIÊN
+    // PHẦN I: KHÁI NIỆM & NGUỒN GỐC SƯ PHẠM (DEFINITION CARD)
     createElement(
       'section',
-      { id: '1-vai-tro-chuc-nang', className: 'space-y-4' },
+      { id: '1-khai-niem-nguon-goc-su-pham', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -110,39 +112,129 @@ export const Lesson1_1View: FC = () => {
             'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
         createElement(BookOpen, { className: 'h-5 w-5 text-[#3F6570]' }),
-        createElement('h3', null, '1. Vai trò và chức năng của người giáo viên (Tr. 1–2)'),
+        createElement('h3', null, '1. Khái niệm & Nguồn gốc Sư phạm (Mục 1.1, Trang 1 – 2)'),
+      ),
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-4',
+        },
+        createElement(
+          'div',
+          { className: 'flex flex-wrap items-center justify-between gap-2' },
+          createElement(
+            'span',
+            {
+              className:
+                'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+            },
+            'Định nghĩa & Chiết tự Hán - Việt',
+          ),
+          createElement(
+            'span',
+            { className: 'font-mono text-xs text-[#55676B]' },
+            'Giáo trình HCMUE · Trang 1',
+          ),
+        ),
+        createElement(
+          'div',
+          { className: 'grid gap-4 md:grid-cols-2' },
+          createElement(
+            'div',
+            {
+              className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-2',
+            },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#29383D]' },
+              'Phân tích chiết tự "Sư phạm"',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Theo Hán - Việt, ',
+              createElement('strong', { className: 'text-[#3F6570]' }, '"Sư"'),
+              ' là người thầy, ',
+              createElement('strong', { className: 'text-[#3F6570]' }, '"Phạm"'),
+              ' là khuôn thước, mẫu mực. Nghĩa thông thường chỉ người thầy mẫu mực làm gương sáng; nghĩa khoa học là khoa học giáo dục con người.',
+            ),
+          ),
+          createElement(
+            'div',
+            {
+              className: 'rounded-xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-4 space-y-2',
+            },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#29383D]' },
+              'Định nghĩa khoa học về Hoạt động sư phạm',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              createElement('strong', null, 'Hoạt động sư phạm'),
+              ' là hoạt động được tổ chức có mục đích, có kế hoạch khoa học hướng vào việc hình thành và phát triển toàn diện nhân cách con người nhằm đào tạo nguồn nhân lực cho xã hội.',
+            ),
+          ),
+        ),
+      ),
+    ),
+
+    // PHẦN II: VAI TRÒ VÀ CHỨC NĂNG CỦA GIÁO VIÊN (NỘI DUNG & SIDENOTES)
+    createElement(
+      'section',
+      { id: '2-vai-tro-va-chuc-nang-giao-vien', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(UserCheck, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '2. Vai trò và Chức năng của Giáo viên (Trang 1 – 2)'),
       ),
       createElement(
         'p',
         null,
-        'Theo Giáo trình Giáo dục học HCMUE (tr. 1–2), ',
-        createElement('strong', { className: 'font-semibold text-[#29383D]' }, 'hoạt động sư phạm'),
-        ' là hoạt động nghề nghiệp chuyên biệt của người giáo viên trong nhà trường phổ thông, được tổ chức một cách khoa học, có mục đích và có kế hoạch nhằm thực hiện hai chức năng thống nhất: ',
-        createElement('strong', null, 'dạy học'),
-        ' và ',
-        createElement('strong', null, 'giáo dục'),
-        ' để hình thành, phát triển toàn diện phẩm chất, năng lực người học.',
+        'Trong tiến trình phát triển của nhân loại, người giáo viên là lực lượng trực tiếp giáo dục, đào tạo thế hệ trẻ; đóng vai trò là ',
+        createElement('strong', { className: 'text-[#3F6570]' }, '"dấu nối"'),
+        ' giữa nền văn hóa xã hội và việc tái sản xuất nền văn hóa đó ở thế hệ trẻ.',
         createElement(
           Sidenote,
           { type: 'history', number: 1 },
-          'J. A. Cômenxki (1592–1670) khẳng định: "Người giáo viên là người chuyển giao ngọn đuốc của nền văn minh, là sợi dây chuyền giữa các thế hệ. Dưới ánh mặt trời này không có chức vụ nào ưu việt cho bằng."',
+          'J. A. Cômenxki coi giáo viên là người "chuyển giao ngọn đuốc của nền văn minh", "sợi dây chuyền giữa các thế hệ".',
         ),
       ),
-      createElement(ScholarQuote, {
-        quote:
-          'Nghề thầy giáo là nghề cao quý nhất trong những nghề cao quý, nghề sáng tạo nhất trong những nghề sáng tạo vì nó đã sáng tạo ra những con người sáng tạo.',
-        author: 'Phạm Văn Đồng (1906 – 2000)',
-        title: 'Cố Thủ tướng Chính phủ nước Cộng hòa Xã hội Chủ nghĩa Việt Nam',
-        source: 'Giáo trình Giáo dục học HCMUE, Chương 1, tr. 2',
-        historicalContext:
-          'Luận điểm khẳng định vị thế xã hội đặc biệt của người giáo viên trong việc đào tạo nguồn nhân lực chất lượng cao và bồi dưỡng nhân cách thế hệ trẻ.',
-      }),
+      createElement(
+        'p',
+        null,
+        'Với sứ mệnh bồi đắp tâm hồn và trí tuệ, người giáo viên được tôn vinh là người ',
+        createElement('strong', { className: 'text-[#3F6570]' }, '"kĩ sư thiết kế tâm hồn"'),
+        ' người học. Người thầy không chỉ truyền đạt tri thức có sẵn mà còn khơi dậy khát vọng khám phá, đánh thức năng lực tự học và tự hoàn thiện nhân cách ở mỗi học sinh.',
+        createElement(
+          Sidenote,
+          { type: 'history', number: 2 },
+          'Nhà sư phạm Đức A. F. Đixtecvec khẳng định: "Người giáo viên bình thường mang chân lí đến cho trò, người giáo viên giỏi biết dạy cho trò đi tìm chân lí".',
+        ),
+      ),
+      createElement(
+        'p',
+        null,
+        'Trong giáo dục nhà trường, giáo viên giữ vai trò là ',
+        createElement('strong', null, 'lực lượng chủ đạo'),
+        ': thực hiện các tác động có mục đích, có chương trình, nội dung và phương pháp khoa học phù hợp với đặc điểm tâm sinh lý lứa tuổi. Trong kỷ nguyên số hiện đại, công nghệ dù tiên tiến đến đâu cũng không thể thay thế nhân cách người thầy.',
+        createElement(
+          Sidenote,
+          { type: 'history', number: 3 },
+          'Thi hào R. Tagore viết: "Giáo dục một người đàn ông được một người đàn ông, giáo dục một người đàn bà được cả một gia đình, giáo dục một người thầy được cả một xã hội".',
+        ),
+      ),
     ),
 
-    // PHẦN II: NHIỆM VỤ VÀ QUYỀN HẠN THEO LUẬT GIÁO DỤC 2019 & ĐIỀU LỆ 2020
+    // PHẦN III: BẢNG MA TRẬN ĐỐI CHIẾU NHIỆM VỤ & QUYỀN HẠN GIÁO VIÊN (3 CỘT)
     createElement(
       'section',
-      { id: '2-nhiem-vu-va-quyen-han', className: 'space-y-4' },
+      { id: '3-nhiem-vu-va-quyen-han', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -153,69 +245,68 @@ export const Lesson1_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Nhiệm vụ và quyền hạn của giáo viên theo Luật Giáo dục 2019 và Điều lệ trường học 2020 (Tr. 2–4)',
+          '3. Bảng Ma trận Đối chiếu Nhiệm vụ & Quyền hạn Giáo viên (Trang 2 – 4)',
         ),
       ),
       createElement(LegalReferenceBox, {
         lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
         article: 'Điều 66, Điều 69 và Điều 70',
         quote:
-          'Nhà giáo làm nhiệm vụ giảng dạy, giáo dục trong cơ sở giáo dục. Nhà giáo có nhiệm vụ: Giảng dạy, giáo dục theo mục tiêu, nguyên lý giáo dục, thực hiện đầy đủ và có chất lượng chương trình giáo dục; Gương mẫu thực hiện nghĩa vụ công dân, điều lệ nhà trường, quy tắc ứng xử của nhà giáo; Giữ gìn phẩm chất, uy tín, danh dự của nhà giáo; tôn trọng, đối xử công bằng với người học, bảo vệ các quyền, lợi ích chính đáng của người học; Học tập, rèn luyện để nâng cao phẩm chất đạo đức, trình độ chính trị, chuyên môn, nghiệp vụ, đổi mới phương pháp giảng dạy, nêu gương tốt cho người học.',
+          'Nhà giáo làm nhiệm vụ giảng dạy, giáo dục trong cơ sở giáo dục. Nhà giáo có nhiệm vụ giảng dạy, giáo dục theo mục tiêu, nguyên lý giáo dục, thực hiện đầy đủ và có chất lượng chương trình giáo dục; gương mẫu thực hiện nghĩa vụ công dân, điều lệ nhà trường, quy tắc ứng xử của nhà giáo; giữ gìn phẩm chất, uy tín, danh dự của nhà giáo; tôn trọng, đối xử công bằng với người học, bảo vệ các quyền, lợi ích chính đáng của người học.',
         source: 'Luật Giáo dục số 43/2019/QH14 (Giáo trình HCMUE tr. 2–3)',
         significance:
-          'Xác lập hành lang pháp lý chuẩn mực về 4 nhóm nhiệm vụ và 5 nhóm quyền của nhà giáo trong toàn bộ hệ thống giáo dục quốc dân.',
+          'Cơ sở pháp lý nền tảng quy định nhiệm vụ, quyền hạn của giáo viên được cụ thể hóa trong Điều lệ trường tiểu học 2020 và Điều lệ trường THCS, THPT 2020.',
       }),
 
       createElement(ComparativeTable, {
         title:
-          'Bảng đối sánh Nhiệm vụ & Quyền hạn của Giáo viên theo Điều lệ trường học năm 2020 (Giáo trình tr. 3–4)',
+          'Bảng Ma trận Đối chiếu Nhiệm vụ & Quyền hạn Giáo viên theo Điều lệ Trường học 2020 (Trang 3 – 4)',
         subtitle:
-          'Đối chiếu quy định pháp quy giữa Điều lệ trường Tiểu học (Thông tư 28/2020/TT-BGDĐT) và Điều lệ trường THCS, THPT (Thông tư 32/2020/TT-BGDĐT).',
-        badge: 'Ma trận Pháp quy · Điều lệ 2020',
+          'Đối sánh quy định pháp lý giữa Cấp Tiểu học (Thông tư 28/2020/TT-BGDĐT) và Cấp Trung học (Thông tư 32/2020/TT-BGDĐT).',
+        badge: 'Ma trận Đối chiếu 3 Cột · Điều lệ 2020',
         columns: [
-          { key: 'criteria', header: 'Tiêu chí đối sánh', widthClass: 'w-1/4' },
-          { key: 'primary', header: 'Giáo viên Tiểu học (TT 28/2020/TT-BGDĐT)' },
-          { key: 'secondary', header: 'Giáo viên THCS & THPT (TT 32/2020/TT-BGDĐT)' },
+          { key: 'criteria', header: 'Tiêu chí so sánh', widthClass: 'w-1/4' },
+          {
+            key: 'primary',
+            header: 'Cấp Tiểu học (Theo Điều lệ trường tiểu học 2020)',
+          },
+          {
+            key: 'secondary',
+            header: 'Cấp Trung học (Theo Điều lệ trường THCS, THPT 2020)',
+          },
         ],
         rows: [
           {
-            criteria: 'Thực hiện chương trình & kế hoạch giáo dục',
+            criteria: 'Nhiệm vụ cốt lõi',
             primary:
-              'Thực hiện chương trình GDPT cấp tiểu học; chủ động xây dựng và thực hiện kế hoạch giáo dục, dạy học tích hợp và phân hóa theo đặc điểm tâm sinh lí học sinh nhỏ tuổi.',
+              'Tự chủ chuyên môn, chịu trách nhiệm kế hoạch giáo dục lớp phụ trách; đánh giá học sinh; tham gia lựa chọn SGK; phối hợp Đội TNTP Hồ Chí Minh, gia đình và cộng đồng.',
             secondary:
-              'Tổ chức hoạt động dạy học, giáo dục theo kế hoạch giáo dục của nhà trường và tổ chuyên môn; kiểm tra, đánh giá học sinh theo quy định của Bộ GD&ĐT (TT 22/2021).',
+              'Tổ chức dạy học và giáo dục theo kế hoạch của tổ chuyên môn/nhà trường; quản lý học sinh trong các hoạt động giáo dục do nhà trường tổ chức; tham gia phổ cập GD THCS; phối hợp Đoàn/Đội.',
           },
           {
-            criteria: 'Đạo đức, tác phong & Bảo vệ quyền lợi học sinh',
+            criteria: 'Quyền hạn chuyên môn',
             primary:
-              'Rèn luyện đạo đức, giữ gìn phẩm chất, danh dự, uy tín nhà giáo; thương yêu, tôn trọng, đối xử bình đẳng với học sinh, bảo vệ quyền và lợi ích hợp pháp của trẻ em.',
+              'Được tự chủ thực hiện nhiệm vụ chuyên môn với sự hỗ trợ của tổ chuyên môn và nhà trường trong việc lựa chọn, điều chỉnh nội dung, phương pháp dạy học và đánh giá học sinh.',
             secondary:
-              'Giữ gìn phẩm chất, danh dự, uy tín của nhà giáo; gương mẫu trước học sinh, thương yêu, tôn trọng, đối xử công bằng với học sinh; kiên quyết phòng chống bạo lực học đường.',
+              'Được tự chủ chuyên môn; hợp đồng thỉnh giảng và nghiên cứu khoa học tại các trường, cơ sở giáo dục khác khi được sự đồng ý của Hiệu trưởng bằng văn bản.',
           },
           {
-            criteria: 'Phối hợp các lực lượng giáo dục',
+            criteria: 'Quyền tự chủ & bảo vệ',
             primary:
-              'Phối hợp chặt chẽ với cha mẹ học sinh, Tổng phụ trách Đội TNTP Hồ Chí Minh và các tổ chức xã hội liên quan để giáo dục và chăm sóc học sinh.',
+              'Được bảo vệ danh dự, nhân phẩm, thân thể; được hưởng lương, phụ cấp ưu đãi theo nghề, được đào tạo, bồi dưỡng nâng cao trình độ chính trị, chuyên môn, nghiệp vụ.',
             secondary:
-              'Phối hợp với giáo viên chủ nhiệm, các giáo viên bộ môn khác, gia đình học sinh, Đoàn TNCS Hồ Chí Minh, Đội TNTP Hồ Chí Minh trong dạy học và hoạt động trải nghiệm, hướng nghiệp.',
-          },
-          {
-            criteria: 'Quyền hạn chuyên môn & Dân chủ',
-            primary:
-              'Được tự chủ thực hiện nhiệm vụ chuyên môn với sự hỗ trợ của tổ chuyên môn và nhà trường; được hưởng lương, phụ cấp, đào tạo nâng chuẩn trình độ.',
-            secondary:
-              'Được tự chủ thực hiện nhiệm vụ chuyên môn (lựa chọn phương pháp, học liệu); được dự giờ, tham gia hội đồng thi đua khen thưởng và kỷ luật khi giải quyết vấn đề liên quan đến học sinh.',
+              'Được tôn trọng, bảo vệ nhân phẩm, danh dự và thân thể; được nghỉ hè và các ngày nghỉ khác theo quy định của pháp luật; được hưởng lương, chế độ phụ cấp và chính sách ưu đãi.',
           },
         ],
         footerNote:
-          'Nguồn đối chiếu: Điều 27, 29, 31 Thông tư 28/2020/TT-BGDĐT và Điều 27, 29, 31 Thông tư 32/2020/TT-BGDĐT (Giáo trình HCMUE tr. 3–4).',
+          'Đối chiếu Giáo trình Giáo dục học HCMUE (Trang 3 – 4): Thông tư 28/2020/TT-BGDĐT và Thông tư 32/2020/TT-BGDĐT.',
       }),
     ),
 
-    // PHẦN III: 5 ĐẶC ĐIỂM CỦA HOẠT ĐỘNG SƯ PHẠM (TR. 4–7)
+    // PHẦN IV: PHÂN TÍCH 5 ĐẶC ĐIỂM HOẠT ĐỘNG SƯ PHẠM (TRANG 4 – 7)
     createElement(
       'section',
-      { id: '3-nam-dac-diem-hoat-dong-su-pham', className: 'space-y-4' },
+      { id: '4-nam-dac-diem-hoat-dong-su-pham', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -226,84 +317,91 @@ export const Lesson1_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Phân tích 5 đặc điểm của hoạt động sư phạm (Giáo trình HCMUE tr. 4–7)',
+          '4. Phân tích 5 Đặc điểm Hoạt động Sư phạm (Giáo trình HCMUE Trang 4 – 7)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Hoạt động sư phạm là một dạng lao động xã hội đặc thù. Tính đặc thù đó được thể hiện tập trung qua 5 thành tố cấu trúc của quá trình lao động sư phạm:',
+        'Hoạt động sư phạm của người giáo viên mang tính đặc thù sâu sắc so với các loại hình lao động xã hội khác, được kết tinh qua ',
+        createElement('strong', null, '5 đặc điểm cốt lõi'),
+        ' về mục đích, đối tượng, công cụ, sản phẩm và môi trường điều kiện:',
         createElement(
           Sidenote,
-          { type: 'caution', number: 2 },
-          'Bẫy sư phạm thực tế: Nhiều giáo viên trẻ chỉ tập trung trau dồi kiến thức môn học mà xem nhẹ việc rèn luyện tác phong, ngôn ngữ và cảm xúc cá nhân — tức làm suy yếu chính "công cụ nhân cách" của mình.',
+          { type: 'caution', number: 4 },
+          'V. A. Xu-khôm-lin-xki cảnh báo: "Người thầy giáo phải lao động từ năm này sang năm khác để thấy được đối tượng sáng tạo của mình... Không có thứ lao động nào mà những sai lầm lại dẫn đến hậu quả nặng nề như lao động của người giáo viên".',
         ),
       ),
+      createElement(ScholarQuote, {
+        quote: 'Nghề dạy học là nghề sáng tạo bậc nhất vì nó sáng tạo ra những con người sáng tạo.',
+        author: 'Phạm Văn Đồng (1906 – 2000)',
+        title: 'Cố Thủ tướng Chính phủ nước Cộng hòa Xã hội Chủ nghĩa Việt Nam',
+        source: 'Giáo trình Giáo dục học HCMUE, Chương 1, Trang 4 – 5',
+        historicalContext:
+          'Khẳng định đặc điểm mục đích cao cả và tính sáng tạo đặc trưng của hoạt động sư phạm trong việc đào tạo con người.',
+      }),
       createElement(NumberedProcessFlow, {
-        title: 'Hệ thống 5 Đặc điểm Đặc trưng của Hoạt động Sư phạm',
+        title: '5 Đặc điểm Cốt lõi Cấu thành Hoạt động Sư phạm',
         subtitle:
-          'Cấu trúc 5 phương diện phân biệt lao động của người giáo viên với các loại hình lao động nghề nghiệp khác trong xã hội (Giáo trình HCMUE tr. 4–7).',
+          'Hệ thống 5 đặc điểm phản ánh bản chất khoa học và nghệ thuật của lao động sư phạm (Giáo trình HCMUE Trang 4 – 7).',
         badge: '5 Đặc điểm Hoạt động Sư phạm',
         columns: 1,
         steps: [
           {
             number: 1,
-            title: 'Mục đích của hoạt động sư phạm',
+            title: '01. Mục đích của hoạt động sư phạm',
             description:
-              'Hướng tới việc hình thành và phát triển toàn diện nhân cách người học (phẩm chất và năng lực) theo yêu cầu của xã hội. Mục đích sư phạm luôn mang tính định hướng tương lai lâu dài.',
+              'Hình thành và phát triển toàn diện nhân cách, sáng tạo ra con người, tái sản xuất sức lao động xã hội. Như Cố Thủ tướng Phạm Văn Đồng khẳng định: "Nghề dạy học là nghề sáng tạo bậc nhất vì nó sáng tạo ra những con người sáng tạo".',
             keyAction:
-              'Chuyển hóa mục đích giáo dục vĩ mô của xã hội thành mục tiêu cụ thể của từng bài học và từng hoạt động giáo dục.',
+              'Định hướng mọi hoạt động dạy học và giáo dục vào việc bồi dưỡng phẩm chất đạo đức và năng lực sáng tạo của người học.',
             deliverable:
-              'Sự trưởng thành về phẩm chất đạo đức, trí tuệ và năng lực hành động của thế hệ trẻ.',
+              'Nguồn nhân lực có nhân cách toàn diện, đáp ứng yêu cầu phát triển của xã hội.',
           },
           {
             number: 2,
-            title: 'Đối tượng của hoạt động sư phạm',
+            title: '02. Đối tượng của hoạt động sư phạm',
             description:
-              'Là con người (học sinh) đang trong quá trình phát triển mạnh mẽ về thể chất và tâm lí – xã hội. Học sinh vừa là khách thể tiếp nhận tác động sư phạm, vừa là chủ thể tự ý thức, tự giáo dục.',
+              'Con người (người học) - thế hệ trẻ đang phát triển nhân cách, có đời sống tâm lý phong phú, vừa là đối tượng chịu tác động sư phạm của nhà giáo dục, vừa là chủ thể tích cực, độc lập, có ý thức tự giáo dục.',
             keyAction:
-              'Tôn trọng tính chủ thể, cá tính sáng tạo và kích hoạt năng lực tự học, tự rèn luyện của học sinh.',
+              'Tôn trọng tính chủ thể, phát huy tính tích cực nhận thức và năng lực tự giáo dục của học sinh.',
             deliverable:
-              'Mối quan hệ tương tác chủ thể – chủ thể dân chủ, tích cực giữa thầy và trò.',
+              'Sự chuyển hóa từ quá trình giáo dục của nhà trường thành quá trình tự giáo dục của người học.',
           },
           {
             number: 3,
-            title: 'Công cụ của hoạt động sư phạm (Công cụ nhân cách)',
+            title: '03. Công cụ của hoạt động sư phạm',
             description:
-              'Ngoài hệ thống tri thức khoa học, phương tiện dạy học và phương pháp sư phạm, công cụ lao động chủ yếu, đặc trưng và quyết định nhất chính là NHÂN CÁCH CỦA NGƯỜI GIÁO VIÊN.',
+              'Tri thức, kỹ năng, phương tiện dạy học, phương pháp sư phạm... và CÔNG CỤ QUAN TRỌNG NHẤT LÀ NHÂN CÁCH NGƯỜI THẦY (dùng nhân cách tác động trực tiếp vào nhân cách).',
             keyAction:
-              'Giáo dục bằng tấm gương sống động về đạo đức, trí tuệ, thái độ công bằng và lòng nhân ái ("Dùng nhân cách để tác động vào nhân cách").',
-            deliverable:
-              'Uy tín sư phạm đích thực và sức cảm hóa sâu sắc đối với tâm hồn học sinh.',
+              'Không ngừng tu dưỡng đạo đức, tác phong mẫu mực và năng lực chuyên môn để giáo dục học sinh bằng chính tấm gương sống động của người thầy.',
+            deliverable: 'Sức cảm hóa sâu sắc từ nhân cách người thầy sang nhân cách người học.',
           },
           {
             number: 4,
-            title: 'Sản phẩm của hoạt động sư phạm',
+            title: '04. Sản phẩm của hoạt động sư phạm',
             description:
-              'Là nhân cách phát triển toàn diện của người học (sản phẩm tinh thần, phi vật chất). Sản phẩm này kết tinh công sức của người thầy, tập thể sư phạm, gia đình, xã hội và chính nỗ lực của học sinh; tuyệt đối không cho phép tạo ra "phế phẩm".',
+              'Nhân cách toàn diện của học sinh - dạng sản phẩm "phi vật chất", khó đo lường trực tiếp, đòi hỏi thời gian lâu dài và tuyệt đối không cho phép tạo ra "phế phẩm" (theo cảnh báo của V. A. Xu-khôm-lin-xki).',
             keyAction:
-              'Kiên trì đồng hành, hỗ trợ cá biệt hóa và đánh giá vì sự tiến bộ của từng học sinh.',
-            deliverable:
-              'Những công dân có phẩm chất tốt đẹp và năng lực thích ứng, sáng tạo trong đời sống.',
+              'Thận trọng, kiên trì, nhân văn trong từng quyết định sư phạm; đánh giá vì sự tiến bộ lâu dài của học sinh.',
+            deliverable: 'Nhân cách phát triển toàn diện về Đức – Trí – Thể – Mỹ của thế hệ trẻ.',
           },
           {
             number: 5,
-            title: 'Môi trường và điều kiện của hoạt động sư phạm',
+            title: '05. Môi trường & Điều kiện của hoạt động sư phạm',
             description:
-              'Diễn ra trong không gian sư phạm chuẩn mực (trong và ngoài nhà trường) nhưng luôn biến đổi linh hoạt về thời gian, không gian và tình huống tâm lí; đòi hỏi lao động trí óc cường độ cao và tính sáng tạo liên tục.',
+              'Môi trường sư phạm được chọn lựa, định hướng có mục đích bao gồm nhà trường, gia đình và cộng đồng xã hội; trong đó các tình huống sư phạm luôn biến đổi đa dạng, đòi hỏi tính linh hoạt và sáng tạo cao.',
             keyAction:
-              'Rèn luyện bản lĩnh sư phạm, năng lực thích ứng và kỹ năng xử lí linh hoạt các tình huống sư phạm phát sinh.',
-            deliverable:
-              'Môi trường giáo dục an toàn, lành mạnh, thân thiện và giàu tính nhân văn.',
+              'Xây dựng môi trường sư phạm an toàn, chuẩn mực và phối hợp chặt chẽ giữa Nhà trường – Gia đình – Xã hội.',
+            deliverable: 'Không gian giáo dục thống nhất, lành mạnh và giàu tính nhân văn.',
           },
         ],
       }),
     ),
 
-    // PHẦN IV: HỘP TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN V: KHUNG TÌNH HUỐNG THỰC HÀNH 5 BƯỚC (CASE STUDY BOX)
     createElement(
       'section',
-      { id: '4-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '5-tinh-huong-thuc-hanh', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -314,10 +412,10 @@ export const Lesson1_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '4. Tình huống Thực hành 5 Bước: Công cụ nhân cách trong hoạt động sư phạm',
+          '5. Khung Tình huống Thực hành 5 Bước (Theo chuẩn Mục 3.3.6 Giáo trình HCMUE)',
         ),
       ),
-      createElement(CaseStudyBox, { caseStudy: caseStudy1_1, defaultOpenSolution: false }),
+      createElement(CaseStudyBox, { caseStudy: caseStudy1_1, defaultOpenSolution: true }),
     ),
   );
 };
@@ -333,42 +431,42 @@ export const Lesson1_2View: FC = () => {
     context:
       'Sau đợt kiểm tra giữa kì, cô K. (giáo viên trẻ mới vào nghề) chụp ảnh phần bài làm có câu trả lời sai ngây ngô của một học sinh trong lớp rồi đăng lên trang mạng xã hội cá nhân ở chế độ công khai kèm lời bình châm biếm. Bài viết nhanh chóng bị học sinh trong trường chia sẻ. Em học sinh có bài kiểm tra bị bạn bè trêu chọc, xấu hổ đến mức khủng hoảng tâm lí và xin nghỉ học.',
     question:
-      'Đối chiếu với yêu cầu về phẩm chất, năng lực nhà giáo (Điều 67 Luật Giáo dục 2019) và Chuẩn nghề nghiệp giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT), anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
+      'Đối chiếu với yêu cầu về phẩm chất, 5 nhóm năng lực cốt lõi (Điều 67 Luật Giáo dục 2019) và Chuẩn nghề nghiệp giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT), anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Tiêu chuẩn 1 (Thông tư 20/2018): Đạo đức nhà giáo (Tiêu chí 1) & Phong cách nhà giáo (Tiêu chí 2)',
-      'Tiêu chuẩn 3 (Thông tư 20/2018): Xây dựng văn hóa nhà trường & Trường học an toàn (Tiêu chí 8, 10)',
+      'Tiêu chuẩn 1 (Thông tư 20/2018): Đạo đức nhà giáo (TC 1) & Phong cách nhà giáo (TC 2)',
+      'Tiêu chuẩn 3 (Thông tư 20/2018): Xây dựng văn hóa nhà trường (TC 8) & Xây dựng trường học an toàn, phòng chống bạo lực học đường (TC 10)',
       'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Cô K. đã vi phạm quy tắc ứng xử và đạo đức nhà giáo trên không gian mạng, xâm phạm quyền riêng tư và danh dự của học sinh, gây khủng hoảng tâm lí học đường nghiêm trọng.',
+          'Cô K. đã công khai bài làm của học sinh kèm lời bình châm biếm lên mạng xã hội, dẫn đến việc học sinh bị trêu chọc, tổn thương danh dự và khủng hoảng tâm lí muốn nghỉ học.',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo Thông tư 20/2018',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Đối chiếu Thông tư 20/2018/TT-BGDĐT, hành vi này vi phạm Tiêu chí 1 (Đạo đức nhà giáo), Tiêu chí 2 (Phong cách nhà giáo) và Tiêu chí 10 (Xây dựng trường học an toàn, phòng chống bạo lực học đường). Nguyên nhân do cô K. thiếu nhận thức về ranh giới bảo mật hồ sơ học tập và chuẩn mực văn hóa số.',
+          'Vi phạm nghiêm trọng Đạo đức nhà giáo (TC 1), Phong cách nhà giáo (TC 2) và Xây dựng trường học an toàn (TC 10) theo Thông tư 20/2018/TT-BGDĐT; cần khôi phục niềm tin, bảo vệ tâm lí học sinh và chấn chỉnh tác phong nghề nghiệp của giáo viên.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết & Chọn tối ưu)',
         content:
-          'Phương án 1: Chỉ xóa bài âm thầm và coi như không có chuyện gì (không giải quyết được tổn thương của học sinh). Phương án 2: Gỡ bài ngay lập tức, trực tiếp xin lỗi học sinh và phụ huynh, đồng thời phối hợp với GVCN ổn định dư luận lớp học (phương án chuẩn mực).',
+          'Loại bỏ phương án chỉ xóa bài âm thầm hoặc đổ lỗi cho mạng xã hội. Chọn phương án tối ưu: Gỡ bài ngay lập tức, trực tiếp gặp gỡ xin lỗi học sinh và phụ huynh, phối hợp với GVCN ổn định tâm lí tập thể lớp và hỗ trợ học tập riêng cho em.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh khoa học)',
         content:
-          'Cô K. gỡ bỏ toàn bộ bài đăng, gặp riêng học sinh và gia đình để nhận lỗi chân thành; phối hợp cùng GVCN tuyên truyền trong lớp về sự tôn trọng lẫn nhau và khích lệ học sinh tự tin quay lại học tập.',
+          'Theo Giáo trình HCMUE (tr. 7–9), tình yêu con người, yêu thương học sinh và tính kỷ luật, gương mẫu là phẩm chất cốt lõi của nhân cách người thầy; đánh giá học sinh (TC 6) và tư vấn hỗ trợ (TC 7) phải vì sự tiến bộ của người học.',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Theo dõi sự hòa nhập và tâm lí của học sinh sau khi trở lại lớp; phụ đạo riêng phần kiến thức em còn hổng; nghiêm túc tự đánh giá và rèn luyện lại chuẩn nghề nghiệp theo Thông tư 20/2018.',
+          'Phong cách và đạo đức nhà giáo phải được giữ gìn nhất quán cả trên bục giảng lẫn trên không gian số; tuyệt đối tôn trọng phẩm giá và quyền riêng tư của học sinh.',
       },
     ],
     pitfallsToAvoid: [
@@ -376,7 +474,7 @@ export const Lesson1_2View: FC = () => {
       'Đổ lỗi cho học sinh hoặc bạn bè bình luận tiêu cực trên mạng xã hội.',
     ],
     coreLesson:
-      'Phong cách nhà giáo (Tiêu chí 2 – Thông tư 20/2018) đòi hỏi sự chuẩn mực nhất quán cả trên bục giảng lẫn trên không gian mạng. Mọi thông tin đánh giá học sinh chỉ được sử dụng vì mục đích hỗ trợ sự tiến bộ của người học.',
+      'Chuẩn nghề nghiệp theo Thông tư 20/2018/TT-BGDĐT đặt Tiêu chuẩn 1 (Phẩm chất nhà giáo) lên vị trí hàng đầu vì đạo đức và phong cách mẫu mực là nền tảng của mọi hoạt động sư phạm.',
   };
 
   return createElement(
@@ -386,16 +484,17 @@ export const Lesson1_2View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
-      clos: ['CLO1', 'CLO2'],
-      textbookPages: 'Tr. 7–9 (Chương 1, Mục 1.2)',
+      lessonCode: 'EDUC2802-C1-L2',
+      clos: ['CLO2'],
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 7 – 9)',
       legalRefs: [
         'Luật Giáo dục 2019 (Điều 67)',
         'Thông tư 20/2018/TT-BGDĐT (5 Tiêu chuẩn · 15 Tiêu chí)',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 1',
+      sessionNote: 'Mục 1.2.1 – 1.2.2 · Trang 7 – 9',
     }),
 
-    // PHẦN I: YÊU CẦU VỀ PHẨM CHẤT & 5 NHÓM NĂNG LỰC NGHỀ NGHIỆP (TR. 7–8)
+    // PHẦN I: CẤU TRÚC PHẨM CHẤT & 5 NHÓM NĂNG LỰC NGHỀ NGHIỆP CỐT LÕI (TRANG 7 – 8)
     createElement(
       'section',
       { id: '1-pham-chat-va-nang-luc', className: 'space-y-4' },
@@ -409,21 +508,7 @@ export const Lesson1_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Yêu cầu về phẩm chất và 5 nhóm năng lực nghề nghiệp của người giáo viên (Tr. 7–8)',
-        ),
-      ),
-      createElement(
-        'p',
-        null,
-        'Nhân cách người giáo viên phổ thông là sự thống nhất biện chứng giữa ',
-        createElement('strong', null, 'Phẩm chất đạo đức (Đức)'),
-        ' và ',
-        createElement('strong', null, 'Năng lực sư phạm (Tài)'),
-        '. Theo Điều 67 Luật Giáo dục 2019 và Giáo trình Giáo dục học HCMUE (tr. 7–8), người giáo viên cần đáp ứng chuẩn trình độ đào tạo và hệ thống phẩm chất, năng lực chuyên biệt:',
-        createElement(
-          Sidenote,
-          { type: 'pedagogy', number: 1 },
-          'Chủ tịch Hồ Chí Minh căn dặn: "Có tài mà không có đức là người vô dụng. Có đức mà không có tài thì làm việc gì cũng khó." Đối với người thầy, đạo đức là cái gốc, năng lực sư phạm là phương tiện hiện thực hóa sứ mệnh giáo dục.',
+          '1. Cấu trúc Phẩm chất & 5 Nhóm Năng lực Nghề nghiệp Cốt lõi (Trang 7 – 8)',
         ),
       ),
       createElement(LegalReferenceBox, {
@@ -431,63 +516,134 @@ export const Lesson1_2View: FC = () => {
         article: 'Điều 67. Tiêu chuẩn của nhà giáo',
         quote:
           'Nhà giáo phải có những tiêu chuẩn sau đây: 1. Có phẩm chất, tư tưởng, đạo đức tốt; 2. Đạt chuẩn trình độ được đào tạo theo quy định; 3. Đủ sức khỏe theo yêu cầu nghề nghiệp; 4. Lý lịch bản thân rõ ràng.',
-        source: 'Luật số 43/2019/QH14 (Giáo trình HCMUE tr. 7)',
+        source: 'Luật số 43/2019/QH14 (Giáo trình HCMUE Trang 7)',
         significance:
-          'Là cơ sở pháp lý để Bộ Giáo dục và Đào tạo cụ thể hóa thành Chuẩn nghề nghiệp giáo viên cơ sở giáo dục phổ thông.',
+          'Cơ sở pháp lý xác định cấu trúc nhân cách nghề nghiệp của người giáo viên phổ thông gồm hai mặt thống nhất: Phẩm chất nghề nghiệp và Năng lực nghề nghiệp.',
       }),
 
+      // Khối Phẩm chất nghề nghiệp
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs space-y-3',
+        },
+        createElement(
+          'div',
+          { className: 'flex items-center justify-between gap-2' },
+          createElement(
+            'h4',
+            { className: 'font-serif text-lg font-bold text-[#29383D]' },
+            'Hệ thống Phẩm chất Nghề nghiệp của Người Giáo viên',
+          ),
+          createElement(
+            'span',
+            {
+              className:
+                'rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+            },
+            'Mục 1.2.1 · Trang 7',
+          ),
+        ),
+        createElement(
+          'div',
+          { className: 'grid gap-3 md:grid-cols-3' },
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '1. Thế giới quan & Lập trường',
+            ),
+            createElement(
+              'p',
+              { className: 'mt-1 text-sm text-[#29383D]' },
+              'Thế giới quan khoa học, lập trường tư tưởng chính trị vững vàng, kiên định với mục tiêu và lý tưởng giáo dục.',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '2. Lòng yêu người, yêu nghề',
+            ),
+            createElement(
+              'p',
+              { className: 'mt-1 text-sm text-[#29383D]' },
+              'Tình yêu con người, yêu nghề dạy học, yêu thương, tôn trọng và bao dung đối với học sinh.',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4' },
+            createElement(
+              'p',
+              { className: 'font-serif text-sm font-bold text-[#3F6570]' },
+              '3. Tác phong & Trách nhiệm',
+            ),
+            createElement(
+              'p',
+              { className: 'mt-1 text-sm text-[#29383D]' },
+              'Tính kỷ luật, gương mẫu, tận tâm, công bằng và tinh thần trách nhiệm cao trong hoạt động sư phạm.',
+            ),
+          ),
+        ),
+      ),
+
       createElement(NumberedProcessFlow, {
-        title: 'Hệ thống 5 Nhóm Năng lực Nghề nghiệp Cốt lõi của Giáo viên Phổ thông',
+        title: '5 Nhóm Năng lực Nghề nghiệp Cốt lõi của Giáo viên Phổ thông',
         subtitle:
-          'Cấu trúc năng lực thực thi hoạt động dạy học và giáo dục theo Giáo trình Giáo dục học HCMUE (tr. 7–8).',
-        badge: '5 Nhóm Năng lực Sư phạm',
+          'Cấu trúc 5 nhóm năng lực thực thi hoạt động sư phạm theo Giáo trình Giáo dục học HCMUE (Mục 1.2.1, Trang 7 – 8).',
+        badge: '5 Nhóm Năng lực Cốt lõi',
         columns: 1,
         steps: [
           {
             number: 1,
-            title: 'Nhóm năng lực tìm hiểu người học và môi trường giáo dục',
+            title: '01. Năng lực tìm hiểu và nắm vững đặc điểm học sinh',
             description:
-              'Năng lực nắm bắt đặc điểm tâm sinh lí lứa tuổi, hoàn cảnh gia đình, trình độ nhận thức, nhu cầu của học sinh và khảo sát điều kiện kinh tế – văn hóa – xã hội của địa phương.',
+              'Xác định nội dung, cách thức tìm hiểu; lập kế hoạch, thu thập và xử lý thông tin về đặc điểm tâm sinh lý, hoàn cảnh, nhu cầu của học sinh; vận dụng các biện pháp tác động sư phạm phù hợp với từng đối tượng.',
             keyAction:
-              'Sử dụng quan sát sư phạm, trò chuyện, nghiên cứu hồ sơ và phối hợp gia đình để thấu hiểu từng học sinh.',
+              'Lập kế hoạch, thu thập thông tin và vận dụng biện pháp giáo dục cá biệt hóa phù hợp.',
           },
           {
             number: 2,
-            title: 'Nhóm năng lực dạy học (Chuyên môn & Nghiệp vụ dạy học)',
+            title: '02. Năng lực tổ chức dạy học và giáo dục',
             description:
-              'Nắm vững kiến thức khoa học bộ môn và Chương trình GDPT 2018; thiết kế kế hoạch bài dạy; vận dụng linh hoạt các phương pháp, kĩ thuật dạy học tích cực và kiểm tra đánh giá vì sự tiến bộ của học sinh.',
+              'Thiết kế kế hoạch dạy học và giáo dục theo hướng phát triển phẩm chất, năng lực; tổ chức thực hiện hiệu quả các phương pháp, hình thức dạy học – giáo dục tích cực; kiểm tra, đánh giá vì sự tiến bộ của học sinh.',
             keyAction:
-              'Tổ chức hoạt động học tập phát triển phẩm chất và năng lực đặc thù môn học cho học sinh.',
+              'Thiết kế kế hoạch, tổ chức thực hiện và kiểm tra đánh giá phát triển phẩm chất, năng lực.',
           },
           {
             number: 3,
-            title: 'Nhóm năng lực giáo dục và công tác chủ nhiệm lớp',
+            title: '03. Năng lực nghiên cứu khoa học sư phạm ứng dụng',
             description:
-              'Năng lực thiết kế và tổ chức các hoạt động giáo dục đạo đức, lối sống, hoạt động trải nghiệm – hướng nghiệp; xây dựng tập thể học sinh tự quản, tư vấn tâm lí và xử lí tình huống sư phạm.',
+              'Phát hiện vấn đề nảy sinh từ thực tiễn lớp học; lập đề cương nghiên cứu; tổ chức thực hiện nghiên cứu khoa học sư phạm ứng dụng; đánh giá, công bố và vận dụng kết quả nghiên cứu để cải tiến chất lượng giáo dục.',
             keyAction:
-              'Quản lí lớp học tích cực, cảm hóa học sinh và điều phối các lực lượng giáo dục trong và ngoài trường.',
+              'Phát hiện vấn đề, lập đề cương, tổ chức nghiên cứu, đánh giá và công bố kết quả.',
           },
           {
             number: 4,
-            title: 'Nhóm năng lực giao tiếp và ứng xử sư phạm',
+            title: '04. Năng lực hoạt động xã hội',
             description:
-              'Sử dụng ngôn ngữ và phi ngôn ngữ chuẩn mực, giàu sức thuyết phục; lắng nghe thấu cảm; thiết lập quan hệ tôn trọng, hợp tác với học sinh, đồng nghiệp và cha mẹ học sinh.',
+              'Phối hợp chặt chẽ các lực lượng giáo dục (nhà trường, gia đình, xã hội); thực hiện công tác tham vấn, tư vấn và hỗ trợ tâm lý học đường; xử lý linh hoạt, chuẩn mực các tình huống sư phạm và xã hội.',
             keyAction:
-              'Giải quyết hài hòa các mâu thuẫn nảy sinh và tạo dựng bầu không khí tâm lí an toàn, dân chủ.',
+              'Phối hợp lực lượng giáo dục, tham vấn tư vấn hỗ trợ học sinh và xử lý tình huống.',
           },
           {
             number: 5,
-            title: 'Nhóm năng lực tự học, nghiên cứu khoa học và phát triển nghề nghiệp',
+            title: '05. Năng lực tự học, tự bồi dưỡng, phát triển bản thân',
             description:
-              'Khả năng tự đánh giá bản thân theo Chuẩn nghề nghiệp, lập kế hoạch tự bồi dưỡng thường xuyên, nghiên cứu khoa học sư phạm ứng dụng, sử dụng ngoại ngữ và công nghệ thông tin.',
+              'Chủ động thích ứng với những thay đổi của chương trình và xã hội; duy trì năng lực học tập suốt đời; ứng dụng hiệu quả công nghệ thông tin (CNTT) và sử dụng ngoại ngữ/tiếng dân tộc trong hoạt động nghề nghiệp.',
             keyAction:
-              'Cập nhật tri thức mới, chia sẻ kinh nghiệm trong cộng đồng học tập chuyên môn (PLC).',
+              'Thích ứng thay đổi, học tập suốt đời, ứng dụng CNTT và ngoại ngữ trong chuyên môn.',
           },
         ],
       }),
     ),
 
-    // PHẦN II: CHUẨN NGHỀ NGHIỆP GIÁO VIÊN PHỔ THÔNG THEO THÔNG TƯ 20/2018 (TR. 8–9)
+    // PHẦN II: BẢNG MA TRẬN 5 TIÊU CHUẨN & 15 TIÊU CHÍ CHUẨN NGHỀ NGHIỆP (THÔNG TƯ 20/2018/TT-BGDĐT)
     createElement(
       'section',
       { id: '2-chuan-nghe-nghiep-tt20', className: 'space-y-4' },
@@ -501,81 +657,70 @@ export const Lesson1_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Chuẩn nghề nghiệp giáo viên phổ thông theo Thông tư 20/2018/TT-BGDĐT (Tr. 8–9)',
+          '2. Bảng Ma trận 5 Tiêu chuẩn & 15 Tiêu chí Chuẩn nghề nghiệp (Thông tư 20/2018/TT-BGDĐT, Trang 8 – 9)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Thông tư số 20/2018/TT-BGDĐT ngày 22/8/2018 của Bộ trưởng Bộ Giáo dục và Đào tạo ban hành Quy định chuẩn nghề nghiệp giáo viên cơ sở giáo dục phổ thông gồm ',
-        createElement('strong', null, '5 tiêu chuẩn và 15 tiêu chí'),
-        ', mỗi tiêu chí được phân chia thành 3 mức độ đánh giá: ',
-        createElement('strong', null, 'Mức Đạt – Mức Khá – Mức Tốt'),
+        'Chuẩn nghề nghiệp giáo viên cơ sở giáo dục phổ thông ban hành kèm theo ',
+        createElement('strong', null, 'Thông tư 20/2018/TT-BGDĐT'),
+        ' bao gồm ',
+        createElement('strong', null, '5 Tiêu chuẩn và 15 Tiêu chí'),
+        ' được đánh giá theo 3 mức độ tăng dần: ',
+        createElement('strong', null, 'Đạt – Khá – Tốt'),
         '.',
         createElement(
           Sidenote,
-          { type: 'pedagogy', number: 2 },
-          'Chu kỳ đánh giá theo Thông tư 20/2018: Giáo viên tự đánh giá theo chu kỳ 01 năm/lần vào cuối năm học; người đứng đầu cơ sở giáo dục phổ thông tổ chức đánh giá giáo viên theo chu kỳ 02 năm/lần.',
+          { type: 'pedagogy', number: 1 },
+          'Mỗi tiêu chí trong 15 tiêu chí của Thông tư 20/2018/TT-BGDĐT đều là căn cứ pháp lý để giáo viên tự đánh giá hàng năm và xây dựng lộ trình phát triển nghề nghiệp liên tục.',
         ),
       ),
 
       createElement(ComparativeTable, {
         title:
-          'Bảng tổng hợp Cấu trúc 5 Tiêu chuẩn – 15 Tiêu chí Chuẩn nghề nghiệp Giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT)',
-        subtitle:
-          'Khung tham chiếu toàn diện về phẩm chất và năng lực nghề nghiệp của giáo viên Tiểu học, THCS và THPT (Giáo trình HCMUE tr. 8–9).',
-        badge: 'Thông tư 20/2018/TT-BGDĐT',
+          'Bảng Ma trận 5 Tiêu chuẩn & 15 Tiêu chí Chuẩn nghề nghiệp Giáo viên Phổ thông (Thông tư 20/2018/TT-BGDĐT)',
+        subtitle: 'Đối chiếu chính xác theo Mục 1.2.2 Giáo trình Giáo dục học HCMUE (Trang 8 – 9).',
+        badge: '5 Tiêu chuẩn · 15 Tiêu chí · TT 20/2018',
         columns: [
-          { key: 'standard', header: 'Tiêu chuẩn (Điều khoản)', widthClass: 'w-1/4' },
-          { key: 'count', header: 'Số tiêu chí', widthClass: 'w-28' },
-          { key: 'criteriaList', header: 'Các tiêu chí thành phần (15 Tiêu chí)' },
-          { key: 'focus', header: 'Trọng tâm đánh giá' },
+          { key: 'standard', header: 'Tiêu chuẩn (Thông tư 20/2018)', widthClass: 'w-1/4' },
+          { key: 'count', header: 'Số lượng', widthClass: 'w-28' },
+          { key: 'criteriaList', header: 'Hệ thống 15 Tiêu chí chi tiết' },
         ],
         rows: [
           {
-            standard: 'Tiêu chuẩn 1: Phẩm chất nhà giáo (Điều 4)',
-            count: '02 tiêu chí',
-            criteriaList: 'Tiêu chí 1: Đạo đức nhà giáo; Tiêu chí 2: Phong cách nhà giáo.',
-            focus:
-              'Tuân thủ quy định đạo đức, lối sống trung thực, tác phong mẫu mực và ứng xử văn hóa.',
+            standard: 'Tiêu chuẩn 1: Phẩm chất nhà giáo',
+            count: '02 tiêu chí (TC 1 – TC 2)',
+            criteriaList: 'TC 1: Đạo đức nhà giáo; TC 2: Phong cách nhà giáo.',
           },
           {
-            standard: 'Tiêu chuẩn 2: Phát triển chuyên môn, nghiệp vụ (Điều 5)',
-            count: '05 tiêu chí',
+            standard: 'Tiêu chuẩn 2: Phát triển chuyên môn, nghiệp vụ',
+            count: '05 tiêu chí (TC 3 – TC 7)',
             criteriaList:
-              'TC 3: Phát triển chuyên môn bản thân; TC 4: Xây dựng kế hoạch dạy học và GD; TC 5: Sử dụng PPDH và GD; TC 6: Kiểm tra, đánh giá; TC 7: Tư vấn và hỗ trợ học sinh.',
-            focus:
-              'Năng lực cốt lõi về dạy học, giáo dục và đánh giá theo hướng phát triển phẩm chất, năng lực học sinh.',
+              'TC 3: Phát triển chuyên môn bản thân; TC 4: Xây dựng kế hoạch dạy học và giáo dục theo hướng phát triển phẩm chất, năng lực học sinh; TC 5: Sử dụng phương pháp dạy học và giáo dục theo hướng phát triển phẩm chất, năng lực học sinh; TC 6: Kiểm tra, đánh giá theo hướng phát triển phẩm chất, năng lực học sinh; TC 7: Tư vấn và hỗ trợ học sinh.',
           },
           {
-            standard: 'Tiêu chuẩn 3: Xây dựng môi trường giáo dục (Điều 6)',
-            count: '03 tiêu chí',
+            standard: 'Tiêu chuẩn 3: Xây dựng môi trường giáo dục',
+            count: '03 tiêu chí (TC 8 – TC 10)',
             criteriaList:
-              'TC 8: Xây dựng văn hóa nhà trường; TC 9: Thực hiện quyền dân chủ trong nhà trường; TC 10: Xây dựng trường học an toàn, phòng chống bạo lực học đường.',
-            focus:
-              'Kiến tạo không gian học đường lành mạnh, dân chủ, an toàn về thể chất và tâm lí cho người học.',
+              'TC 8: Xây dựng văn hóa nhà trường; TC 9: Thực hiện quyền dân chủ trong nhà trường; TC 10: Thực hiện và xây dựng trường học an toàn, phòng chống bạo lực học đường.',
           },
           {
-            standard:
-              'Tiêu chuẩn 4: Phát triển mối quan hệ giữa nhà trường, gia đình và xã hội (Điều 7)',
-            count: '02 tiêu chí',
+            standard: 'Tiêu chuẩn 4: Phát triển mối quan hệ giữa nhà trường, gia đình và xã hội',
+            count: '03 tiêu chí (TC 11 – TC 13)',
             criteriaList:
-              'TC 11: Tạo dựng mối quan hệ hợp tác với cha mẹ hoặc người giám hộ của học sinh; TC 12: Phối hợp giữa nhà trường, gia đình, xã hội để thực hiện HĐGD.',
-            focus:
-              'Kết nối đồng thuận giữa giáo viên với phụ huynh và các lực lượng xã hội trong dạy học và giáo dục đạo đức.',
+              'TC 11: Tạo dựng mối quan hệ hợp tác với cha mẹ hoặc người giám hộ của học sinh và các bên liên quan; TC 12: Phối hợp giữa nhà trường, gia đình, xã hội để thực hiện hoạt động dạy học cho học sinh; TC 13: Phối hợp giữa nhà trường, gia đình, xã hội để thực hiện giáo dục đạo đức, lối sống cho học sinh.',
           },
           {
             standard:
-              'Tiêu chuẩn 5: Sử dụng ngoại ngữ hoặc tiếng dân tộc, ứng dụng CNTT, khai thác và sử dụng thiết bị công nghệ trong dạy học, giáo dục (Điều 8)',
-            count: '03 tiêu chí',
+              'Tiêu chuẩn 5: Sử dụng ngoại ngữ hoặc tiếng dân tộc, ứng dụng CNTT, khai thác và sử dụng thiết bị công nghệ trong dạy học, giáo dục',
+            count: '02 tiêu chí (TC 14 – TC 15)',
             criteriaList:
-              'TC 13: Sử dụng ngoại ngữ hoặc tiếng dân tộc; TC 14: Ứng dụng CNTT, khai thác và sử dụng thiết bị công nghệ; TC 15: Báo cáo, chia sẻ kinh nghiệm (tích hợp trong phát triển chuyên môn).',
-            focus:
-              'Năng lực hội nhập, chuyển đổi số, khai thác thiết bị dạy học hiện đại và lan tỏa kinh nghiệm sư phạm.',
+              'TC 14: Sử dụng ngoại ngữ hoặc tiếng dân tộc; TC 15: Ứng dụng công nghệ thông tin, khai thác và sử dụng thiết bị công nghệ trong dạy học, giáo dục.',
           },
         ],
         footerNote:
-          'Căn cứ: Thông tư số 20/2018/TT-BGDĐT ngày 22/8/2018 của Bộ Giáo dục và Đào tạo (Giáo trình HCMUE tr. 8–9).',
+          'Nguồn đối chiếu: Thông tư số 20/2018/TT-BGDĐT ngày 22/8/2018 của Bộ GD&ĐT & Giáo trình Giáo dục học HCMUE (Trang 8 – 9).',
       }),
 
       createElement(
@@ -599,7 +744,7 @@ export const Lesson1_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Tình huống Thực hành 5 Bước: Đạo đức và phong cách nhà giáo theo Thông tư 20/2018',
+          '3. Tình huống Thực hành 5 Bước: Vận dụng Chuẩn nghề nghiệp Thông tư 20/2018',
         ),
       ),
       createElement(CaseStudyBox, { caseStudy: caseStudy1_2, defaultOpenSolution: false }),
@@ -618,44 +763,44 @@ export const Lesson1_3View: FC = () => {
     id: 103,
     title: 'Giáo viên lâu năm ngại đổi mới phương pháp và từ chối sinh hoạt chuyên môn theo NCBH',
     context:
-      'Tại tổ Toán của trường THPT X., khi tổ trưởng triển khai sinh hoạt chuyên môn theo hướng nghiên cứu bài học (NCBH) và ứng dụng phần mềm mô phỏng hình học động để dạy Chương trình GDPT 2018, thầy M. (giáo viên có 18 năm thâm niên) phản đối: "Tôi dạy bảng phấn truyền thống bao năm nay học sinh vẫn đậu đại học. Mấy cái cộng đồng học tập với công nghệ số chỉ mất thời gian, dành cho giáo viên trẻ mới ra trường thôi."',
+      'Tại tổ Toán của trường THPT X., khi tổ trưởng triển khai sinh hoạt chuyên môn theo hướng nghiên cứu bài học (Lesson Study) và ứng dụng phần mềm mô phỏng hình học động để dạy Chương trình GDPT 2018, thầy M. (giáo viên có 18 năm thâm niên) phản đối: "Tôi dạy bảng phấn truyền thống bao năm nay học sinh vẫn đậu đại học. Mấy cái cộng đồng học tập với công nghệ số chỉ mất thời gian, dành cho giáo viên trẻ mới ra trường thôi."',
     question:
-      'Dưới góc độ lý luận về Phát triển nghề nghiệp giáo viên phổ thông (Giáo trình HCMUE tr. 9–12) và Thông tư 20/2018/TT-BGDĐT, anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
+      'Dưới góc độ lý luận về Phát triển nghề nghiệp giáo viên phổ thông theo OECD (2009), Bautista & Ortega-Ruiz (2015) trong Giáo trình HCMUE (Trang 9 – 12) và Thông tư 20/2018/TT-BGDĐT, anh/chị hãy phân tích và giải quyết tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Bản chất phát triển nghề nghiệp giáo viên là quá trình học tập suốt đời (Giáo trình tr. 9–12)',
-      '5 định hướng hình thức phát triển nghề nghiệp: Sinh hoạt tổ chuyên môn, Cộng đồng học tập chuyên môn (PLC), Ứng dụng CNTT',
-      'Tiêu chí 3 & Tiêu chí 14 của Thông tư 20/2018/TT-BGDĐT',
+      'Định nghĩa phát triển nghề nghiệp của OECD (2009) và tính tất yếu trong kỷ nguyên bùng nổ thông tin (Giáo trình tr. 9–10)',
+      '5 định hướng hình thức phát triển nghề nghiệp: Sinh hoạt tổ chuyên môn (Bautista & Ortega-Ruiz 2015), Hợp tác mentoring, Ứng dụng CNTT & học liệu số',
+      'Tiêu chí 3 & Tiêu chí 15 của Thông tư 20/2018/TT-BGDĐT',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Thầy M. đang có tâm lí bảo thủ kinh nghiệm, hiểu chưa đúng bản chất phát triển nghề nghiệp liên tục và e ngại rào cản công nghệ khi chuyển sang Chương trình GDPT 2018.',
+          'Thầy M. có bề dày kinh nghiệm giải toán nhưng mang tâm lý bảo thủ, chưa nhận thức đúng tính tất yếu của việc phát triển nghề nghiệp liên tục và e ngại công nghệ số.',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Theo Giáo trình HCMUE (tr. 9–10), phát triển nghề nghiệp giáo viên không chỉ dành cho giáo viên mới mà là yêu cầu bắt buộc đối với mọi giáo viên trong suốt sự nghiệp nhằm thích ứng với sự thay đổi của chương trình và người học. Thầy M. có thế mạnh về kinh nghiệm giải toán nhưng thiếu sự hỗ trợ kỹ thuật CNTT.',
+          'Trong kỷ nguyên số, học sinh tiếp nhận tri thức đa kênh; nếu giáo viên ngừng tự đổi mới sẽ đánh mất vai trò chủ đạo. Cần kết nối kinh nghiệm sư phạm của thầy M. với năng lực công nghệ của giáo viên trẻ trong Cộng đồng học tập chuyên môn.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết & Chọn tối ưu)',
         content:
-          'Phương án 1: Phê bình thầy M. trong cuộc họp hội đồng (gây đối kháng). Phương án 2: Tổ trưởng ghi nhận bề dày kinh nghiệm của thầy M., đồng thời ghép cặp hỗ trợ hai chiều giữa thầy M. (cố vấn chiều sâu toán học) và giáo viên trẻ (hỗ trợ thiết kế học liệu số GeoGebra) trong Cộng đồng học tập chuyên môn.',
+          'Tránh phê bình hành chính gây đối kháng. Chọn phương án tối ưu: Ghép cặp hợp tác hai chiều (mentoring đảo chiều) — mời thầy M. cố vấn chiều sâu bản chất toán học cho giáo viên trẻ, đồng thời giáo viên trẻ hỗ trợ thầy M. khai thác học liệu số và mô phỏng tương tác.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh khoa học)',
         content:
-          'Thực hiện mô hình Cộng đồng học tập chuyên môn (PLC) tôn trọng và chia sẻ: mời thầy M. chủ trì phân tích mạch kiến thức bài học minh họa, còn giáo viên trẻ hỗ trợ thao tác kỹ thuật số, giúp thầy M. thấy rõ hiệu quả trực quan của công nghệ đối với sự hứng thú của học sinh.',
+          'Vận dụng quan điểm của OECD (2009) về phát triển nghề nghiệp suốt đời và mô hình Cộng đồng học tập chuyên môn (Bautista & Ortega-Ruiz 2015) thông qua Nghiên cứu bài học (Lesson Study).',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Tổng kết sau đợt sinh hoạt chuyên môn, ghi nhận đóng góp của thầy M. và nhân rộng mô hình kết nối thế hệ giáo viên trong tổ bộ môn.',
+          'Phát triển nghề nghiệp là hành trình liên tục của mọi giáo viên nhằm thích ứng với biến đổi xã hội và nâng cao chất lượng giáo dục.',
       },
     ],
     pitfallsToAvoid: [
@@ -663,7 +808,7 @@ export const Lesson1_3View: FC = () => {
       'Biến sinh hoạt chuyên môn thành buổi thanh tra, bắt lỗi cá nhân thay vì cùng suy ngẫm về việc học của học sinh.',
     ],
     coreLesson:
-      'Phát triển nghề nghiệp giáo viên là hành trình suốt đời. Sự kết hợp giữa bản lĩnh kinh nghiệm và năng lực đổi mới công nghệ trong Cộng đồng học tập chuyên môn (PLC) là chìa khóa nâng cao chất lượng giáo dục.',
+      'Phát triển nghề nghiệp giáo viên (OECD 2009) đòi hỏi sự kết hợp hài hòa giữa tự bồi dưỡng, cộng đồng học tập chuyên môn (Lesson Study), hỗ trợ đồng nghiệp (mentoring) và làm chủ học liệu số.',
   };
 
   return createElement(
@@ -673,19 +818,20 @@ export const Lesson1_3View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
-      clos: ['CLO1', 'CLO2'],
-      textbookPages: 'Tr. 9–12 (Chương 1, Mục 1.3)',
+      lessonCode: 'EDUC2802-C1-L3',
+      clos: ['CLO2'],
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 9 – 12)',
       legalRefs: [
         'Thông tư 20/2018/TT-BGDĐT (Tiêu chuẩn 2 & Tiêu chuẩn 5)',
-        'Luật Giáo dục 2019 (Điều 69, 73)',
+        'OECD (2009) & Bautista, Ortega-Ruiz (2015)',
       ],
-      sessionNote: 'Lý thuyết, Thảo luận & Tự học Chương 1',
+      sessionNote: 'Mục 1.2.3 · Trang 9 – 12',
     }),
 
-    // PHẦN I: KHÁI NIỆM VÀ YÊU CẦU PHÁT TRIỂN NGHỀ NGHIỆP GIÁO VIÊN (TR. 9–10)
+    // PHẦN I: BẢN CHẤT PHÁT TRIỂN NGHỀ NGHIỆP & TÍNH TẤT YẾU (TRANG 9 – 10)
     createElement(
       'section',
-      { id: '1-khai-niem-va-yeu-cau', className: 'space-y-4' },
+      { id: '1-ban-chat-phat-trien-nghe-nghiep', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -696,79 +842,71 @@ export const Lesson1_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Khái niệm và yêu cầu phát triển nghề nghiệp giáo viên phổ thông (Tr. 9–10)',
+          '1. Bản chất Phát triển Nghề nghiệp & Tính tất yếu trong Kỷ nguyên Thông tin (Trang 9 – 10)',
+        ),
+      ),
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-4',
+        },
+        createElement(
+          'div',
+          { className: 'grid gap-4 md:grid-cols-2' },
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-2' },
+            createElement(
+              'span',
+              {
+                className:
+                  'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+              },
+              'Định nghĩa khoa học (OECD 2009)',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              createElement('strong', null, 'Phát triển nghề nghiệp giáo viên'),
+              ' là quá trình tạo ra sự thay đổi trong phẩm chất, năng lực nghề nghiệp thông qua học tập, nghiên cứu và tích lũy kinh nghiệm nhằm thích ứng với những biến đổi xã hội và nâng cao chất lượng giáo dục (',
+              createElement('strong', { className: 'text-[#3F6570]' }, 'OECD 2009'),
+              ').',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-4 space-y-2' },
+            createElement(
+              'span',
+              {
+                className:
+                  'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#F7FAFA] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+              },
+              'Tính tất yếu trong kỷ nguyên số',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Trong thời đại công nghệ số và bùng nổ thông tin, học sinh có khả năng tiếp nhận tri thức đa kênh; nếu người thầy không phát triển liên tục sẽ đánh mất ',
+              createElement('strong', null, 'vai trò chủ đạo'),
+              ' trong hoạt động giáo dục.',
+            ),
+          ),
         ),
       ),
       createElement(
         'p',
         null,
-        'Theo Giáo trình Giáo dục học HCMUE (tr. 9), ',
-        createElement(
-          'strong',
-          { className: 'font-semibold text-[#29383D]' },
-          'phát triển nghề nghiệp giáo viên phổ thông',
-        ),
-        ' là quá trình người giáo viên thường xuyên học tập, bồi dưỡng, tích lũy kinh nghiệm và phản tư thực tiễn nhằm hoàn thiện phẩm chất đạo đức và nâng cao năng lực chuyên môn, nghiệp vụ sư phạm trong suốt cuộc đời hành nghề.',
+        'Quá trình phát triển nghề nghiệp không chỉ diễn ra ở giai đoạn đào tạo tại trường sư phạm mà kéo dài xuyên suốt cuộc đời hành nghề của người giáo viên, gắn liền với việc tự đánh giá và phấn đấu nâng bậc theo Chuẩn nghề nghiệp (từ mức Đạt lên mức Khá và mức Tốt).',
         createElement(
           Sidenote,
           { type: 'history', number: 1 },
-          'Nhà giáo dục học A. F. Đixtecvec (1790–1866) từng khẳng định: "Người giáo viên chỉ có thể giáo dục học sinh chừng nào bản thân mình còn tiếp tục tự học tập và tự giáo dục."',
+          'Theo Bautista & Ortega-Ruiz (2015), phát triển nghề nghiệp hiệu quả nhất khi đặt trong bối cảnh hợp tác của Cộng đồng học tập chuyên môn tại chính nhà trường phổ thông.',
         ),
       ),
-      createElement(LegalReferenceBox, {
-        lawTitle: 'Thông tư số 20/2018/TT-BGDĐT',
-        article: 'Khoản 1 Điều 5 — Tiêu chí 3: Phát triển chuyên môn bản thân',
-        quote:
-          'Mức Đạt: Đạt chuẩn trình độ đào tạo và hoàn thành đầy đủ các khóa đào tạo, bồi dưỡng kiến thức chuyên môn theo quy định; có kế hoạch thường xuyên học tập, bồi dưỡng phát triển chuyên môn bản thân. Mức Khá: Chủ động nghiên cứu, cập nhật kịp thời yêu cầu đổi mới về kiến thức chuyên môn; vận dụng sáng tạo, phù hợp các hình thức, phương pháp và lựa chọn nội dung học tập, bồi dưỡng, nâng cao năng lực chuyên môn của bản thân. Mức Tốt: Hướng dẫn, hỗ trợ đồng nghiệp và chia sẻ kinh nghiệm về phát triển chuyên môn của bản thân nhằm đáp ứng yêu cầu đổi mới giáo dục.',
-        source: 'Thông tư 20/2018/TT-BGDĐT (Giáo trình HCMUE tr. 9–10)',
-        significance:
-          'Xác định rõ lộ trình thăng tiến năng lực tự học và hỗ trợ đồng nghiệp từ mức Đạt lên mức Khá và mức Tốt.',
-      }),
-
-      createElement(ComparativeTable, {
-        title: 'Bảng các Yêu cầu Cốt lõi đối với Phát triển Nghề nghiệp Giáo viên Phổ thông',
-        subtitle:
-          'Bốn yêu cầu định hướng quá trình tự đào tạo và bồi dưỡng liên tục của người giáo viên (Giáo trình HCMUE tr. 9–10).',
-        badge: 'Yêu cầu Phát triển Nghề nghiệp',
-        columns: [
-          { key: 'requirement', header: 'Yêu cầu trọng tâm', widthClass: 'w-1/4' },
-          { key: 'nature', header: 'Bản chất lý luận' },
-          { key: 'practice', header: 'Biểu hiện thực hành của giáo viên / sinh viên sư phạm' },
-        ],
-        rows: [
-          {
-            requirement: '1. Tính tự giác, chủ động và suốt đời',
-            nature:
-              'Biến yêu cầu chuẩn hóa từ bên ngoài của ngành Giáo dục thành nhu cầu tự hoàn thiện nội tại của bản thân.',
-            practice:
-              'Xây dựng kế hoạch phát triển cá nhân hàng năm dựa trên kết quả tự đánh giá 15 tiêu chí Thông tư 20/2018.',
-          },
-          {
-            requirement: '2. Gắn kết chặt chẽ với thực tiễn lớp học',
-            nature:
-              'Mọi hoạt động bồi dưỡng phải xuất phát từ những vướng mắc thực tế trong dạy học và giáo dục học sinh.',
-            practice:
-              'Thực hiện nghiên cứu khoa học sư phạm ứng dụng và nghiên cứu bài học để tháo gỡ khó khăn nhận thức của học sinh.',
-          },
-          {
-            requirement: '3. Tính hợp tác và chia sẻ cộng đồng',
-            nature:
-              'Phát triển nghề nghiệp không diễn ra đơn độc mà thông qua sự tương tác, học hỏi lẫn nhau trong tập thể sư phạm.',
-            practice:
-              'Tham gia tích cực vào tổ chuyên môn và các cộng đồng học tập chuyên môn (PLC) trong và ngoài trường.',
-          },
-          {
-            requirement: '4. Thích ứng với chuyển đổi số và hội nhập',
-            nature:
-              'Làm chủ công nghệ giáo dục hiện đại, học liệu số và ngoại ngữ để mở rộng không gian tri thức.',
-            practice:
-              'Khai thác hiệu quả LMS, phần mềm mô phỏng chuyên ngành (GeoGebra, Desmos) và tài liệu quốc tế.',
-          },
-        ],
-      }),
     ),
 
-    // PHẦN II: 5 ĐỊNH HƯỚNG HÌNH THỨC PHÁT TRIỂN NGHỀ NGHIỆP (TR. 10–12)
+    // PHẦN II: 5 ĐỊNH HƯỚNG HÌNH THỨC PHÁT TRIỂN NGHỀ NGHIỆP (LƯU ĐỒ 5 BƯỚC, TRANG 10 – 12)
     createElement(
       'section',
       { id: '2-nam-dinh-huong-hinh-thuc', className: 'space-y-4' },
@@ -782,75 +920,64 @@ export const Lesson1_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Năm định hướng hình thức phát triển nghề nghiệp giáo viên phổ thông (Giáo trình HCMUE tr. 10–12)',
+          '2. 5 Định hướng Hình thức Phát triển Nghề nghiệp Giáo viên Phổ thông (Trang 10 – 12)',
         ),
-      ),
-      createElement(
-        'p',
-        null,
-        'Giáo trình Giáo dục học HCMUE (tr. 10–12) xác lập ',
-        createElement(
-          'strong',
-          null,
-          '5 định hướng hình thức phát triển nghề nghiệp giáo viên phổ thông',
-        ),
-        ' kết hợp đồng bộ giữa tự bồi dưỡng cá nhân với bồi dưỡng tại nhà trường và trên nền tảng số:',
       ),
       createElement(NumberedProcessFlow, {
-        title: '5 Định hướng Hình thức Phát triển Nghề nghiệp Giáo viên Phổ thông',
+        title: 'Lưu đồ 5 Định hướng Hình thức Phát triển Nghề nghiệp Thực chiến',
         subtitle:
-          'Hệ thống các con đường và phương thức bồi dưỡng năng lực nghề nghiệp theo Giáo trình Giáo dục học HCMUE (tr. 10–12).',
-        badge: '5 Hình thức Phát triển Nghề nghiệp',
+          'Hệ thống 5 định hướng hình thức phát triển nghề nghiệp cho giáo viên phổ thông theo Giáo trình Giáo dục học HCMUE (Mục 1.2.3, Trang 10 – 12).',
+        badge: '5 Định hướng Phát triển Nghề nghiệp',
         columns: 1,
         steps: [
           {
             number: 1,
-            title: 'Tự bồi dưỡng và tự học thường xuyên của cá nhân giáo viên',
+            title: '01. Tự định hướng, tự bồi dưỡng',
             description:
-              'Hình thức nền tảng và bền vững nhất. Giáo viên tự đọc sách chuyên khảo, nghiên cứu chương trình, viết nhật ký phản tư sau giờ dạy và tự đánh giá theo Chuẩn nghề nghiệp.',
+              'Tự đánh giá năng lực bản thân theo Chuẩn nghề nghiệp giáo viên phổ thông, nhận diện chính xác các điểm nghẽn chuyên môn – nghiệp vụ và chủ động xây dựng kế hoạch tự học suốt đời.',
             keyAction:
-              'Xây dựng kế hoạch tự bồi dưỡng cá nhân theo chu kỳ năm học và kiên trì thực hiện.',
-            deliverable: 'Hồ sơ tự học, nhật ký phản tư sư phạm và sản phẩm chuyên môn cá nhân.',
+              'Tự đánh giá năng lực theo chuẩn, nhận diện điểm nghẽn, xây dựng kế hoạch tự học suốt đời.',
+            deliverable: 'Kế hoạch tự bồi dưỡng cá nhân và nhật ký phản tư nghề nghiệp hàng năm.',
           },
           {
             number: 2,
-            title: 'Sinh hoạt chuyên môn tại tổ/nhóm bộ môn ở nhà trường phổ thông',
+            title: '02. Sinh hoạt tổ, nhóm chuyên môn',
             description:
-              'Đổi mới sinh hoạt tổ chuyên môn theo hướng Nghiên cứu bài học (Lesson Study): cùng thiết kế bài học minh họa, dự giờ quan sát việc học của học sinh và suy ngẫm giải pháp cải tiến.',
+              'Xây dựng Cộng đồng học tập chuyên môn (Bautista & Ortega-Ruiz 2015), tổ chức sinh hoạt chuyên đề theo hướng "nghiên cứu bài học" (Lesson Study), cùng thiết kế bài dạy, dự giờ quan sát việc học của học sinh và rút kinh nghiệm.',
             keyAction:
-              'Chuyển trọng tâm dự giờ từ "đánh giá người dạy" sang "phân tích hoạt động học của học sinh".',
+              'Sinh hoạt Cộng đồng học tập chuyên môn (Bautista & Ortega-Ruiz 2015) và Nghiên cứu bài học (Lesson Study).',
             deliverable:
-              'Kế hoạch bài dạy minh họa và biên bản phân tích bài học của tổ chuyên môn.',
+              'Bài học minh họa và văn hóa hợp tác chuyên môn lấy việc học của học sinh làm trung tâm.',
           },
           {
             number: 3,
-            title: 'Tham gia các chương trình tập huấn, bồi dưỡng thường xuyên',
+            title: '03. Tham gia các chương trình tập huấn thường xuyên',
             description:
-              'Tham gia đầy đủ các mô đun bồi dưỡng thường xuyên do Bộ GD&ĐT, Sở GD&ĐT và các trường đại học sư phạm tổ chức (như chuỗi Mô đun 1–9 triển khai Chương trình GDPT 2018).',
+              'Tham gia đầy đủ các khóa bồi dưỡng thường xuyên theo quy định của ngành Giáo dục, tiếp cận trực tiếp các chuyên gia đầu ngành và mở rộng đối thoại chuyên môn liên trường, liên cụm.',
             keyAction:
-              'Học tập nghiêm túc các mô đun bồi dưỡng và chuyển hóa nội dung tập huấn vào thực tiễn giảng dạy tại trường.',
+              'Bồi dưỡng theo quy định ngành, tiếp cận chuyên gia đầu ngành và đối thoại chuyên môn liên trường.',
             deliverable:
-              'Chứng nhận hoàn thành mô đun bồi dưỡng và sản phẩm thực hành ứng dụng tại cơ sở.',
+              'Hoàn thành các mô đun bồi dưỡng thường xuyên và chuyển giao mô hình dạy học mới.',
           },
           {
             number: 4,
-            title: 'Tham gia Cộng đồng học tập chuyên môn (Professional Learning Community – PLC)',
+            title: '04. Hợp tác, chia sẻ và hỗ trợ đồng nghiệp',
             description:
-              'Kết nối với đồng nghiệp cùng môn học hoặc liên môn trong trường, cụm trường và trên toàn quốc để chia sẻ học liệu, thảo luận tình huống sư phạm và hỗ trợ đồng đẳng (Mentoring/Coaching).',
+              'Triển khai mô hình huấn luyện kèm cặp (mentoring) tại cơ sở giáo dục: giáo viên cốt cán, giàu kinh nghiệm đồng hành, tư vấn và hỗ trợ giáo viên mới vào nghề vượt qua bỡ ngỡ thực tiễn.',
             keyAction:
-              'Chủ động đóng góp chuyên đề, chia sẻ sáng kiến kinh nghiệm và học hỏi từ giáo viên cốt cán.',
+              'Thực hiện mô hình huấn luyện kèm cặp (mentoring), giáo viên giàu kinh nghiệm hỗ trợ giáo viên mới.',
             deliverable:
-              'Mạng lưới hợp tác chuyên môn, chuyên đề báo cáo và sáng kiến kinh nghiệm.',
+              'Mạng lưới đồng nghiệp hỗ trợ đồng đẳng và sự trưởng thành vững chắc của đội ngũ kế cận.',
           },
           {
             number: 5,
-            title: 'Ứng dụng công nghệ thông tin, chuyển đổi số và khai thác học liệu số',
+            title: '05. Ứng dụng công nghệ thông tin và học liệu số',
             description:
-              'Sử dụng hệ thống quản lí học tập trực tuyến (LMS/TEMIS), kho học liệu số mở, phần mềm dạy học chuyên ngành để tự bồi dưỡng mọi lúc, mọi nơi và hiện đại hóa phương pháp sư phạm.',
+              'Khai thác hiệu quả kho học liệu số, giáo trình điện tử, phần mềm mô phỏng tương tác (như GeoGebra, Desmos trong dạy học Toán) và tổ chức trao đổi, bồi dưỡng chuyên môn qua các nền tảng trực tuyến.',
             keyAction:
-              'Thiết kế bài giảng điện tử tương tác, học liệu số và tham gia các khóa học trực tuyến mở (MOOCs).',
+              'Khai thác kho học liệu số, giáo trình điện tử, mô phỏng tương tác và trao đổi qua nền tảng trực tuyến.',
             deliverable:
-              'Kho học liệu số bộ môn, hồ sơ năng lực số trên hệ thống TEMIS và bài giảng E-Learning.',
+              'Hệ sinh thái học liệu số bộ môn và năng lực sư phạm số hiện đại (Tiêu chí 15 – TT 20/2018).',
           },
         ],
       }),
@@ -876,7 +1003,7 @@ export const Lesson1_3View: FC = () => {
       createElement(
         'p',
         null,
-        'Vận dụng 5 định hướng phát triển nghề nghiệp (Giáo trình tr. 9–12) và 15 tiêu chí Thông tư 20/2018/TT-BGDĐT, sinh viên thực hành thiết kế bản kế hoạch rèn luyện nghề nghiệp trong 4 năm đại học dưới đây:',
+        'Vận dụng 5 định hướng phát triển nghề nghiệp (Giáo trình HCMUE Trang 9 – 12) và 15 tiêu chí Thông tư 20/2018/TT-BGDĐT, sinh viên thực hành thiết kế bản kế hoạch rèn luyện nghề nghiệp trong 4 năm đại học dưới đây:',
       ),
       createElement(PersonalDevelopmentPlan),
     ),
@@ -907,22 +1034,22 @@ export const Lesson1_3View: FC = () => {
           {
             id: 1,
             question:
-              'Câu 1: Phân tích 5 đặc điểm của hoạt động sư phạm. Vì sao nói trong hoạt động sư phạm, nhân cách của người giáo viên là công cụ lao động chủ yếu nhất?',
+              'Câu 1: Phân tích 5 đặc điểm của hoạt động sư phạm. Vì sao nói trong hoạt động sư phạm, CÔNG CỤ QUAN TRỌNG NHẤT LÀ NHÂN CÁCH NGƯỜI THẦY?',
             outline: [
-              'Khái niệm hoạt động sư phạm và vị trí của người giáo viên theo Luật Giáo dục 2019 (Giáo trình tr. 1–3).',
-              'Phân tích hệ thống 5 đặc điểm: Mục đích, Đối tượng, Công cụ, Sản phẩm, Môi trường (Giáo trình tr. 4–7).',
-              'Chứng minh nhân cách là công cụ chủ yếu: đối tượng là nhân cách đang hình thành của học sinh, do đó chỉ có thể dùng nhân cách mẫu mực để cảm hóa và định hướng nhân cách.',
-              'Rút ra kết luận sư phạm đối với quá trình tu dưỡng đạo đức và tác phong của sinh viên sư phạm.',
+              'Chiết tự thuật ngữ "Sư phạm" (Sư: người thầy; Phạm: khuôn thước, mẫu mực) và định nghĩa khoa học về hoạt động sư phạm (Giáo trình tr. 1–2).',
+              'Phân tích hệ thống 5 đặc điểm: 01. Mục đích (trích dẫn Phạm Văn Đồng), 02. Đối tượng, 03. Công cụ, 04. Sản phẩm (trích dẫn V. A. Xu-khôm-lin-xki), 05. Môi trường & Điều kiện (Giáo trình tr. 4–7).',
+              'Chứng minh nhân cách là công cụ quan trọng nhất: đối tượng của hoạt động sư phạm là nhân cách đang hình thành của học sinh, do đó người thầy phải dùng chính nhân cách mẫu mực của mình để tác động trực tiếp vào nhân cách người học.',
+              'Rút ra kết luận sư phạm đối với quá trình rèn luyện đạo đức và năng lực của sinh viên sư phạm.',
             ],
           },
           {
             id: 2,
             question:
-              'Câu 2: Trình bày cấu trúc Chuẩn nghề nghiệp giáo viên cơ sở giáo dục phổ thông theo Thông tư 20/2018/TT-BGDĐT và ý nghĩa của Chuẩn đối với sự phát triển nghề nghiệp giáo viên.',
+              'Câu 2: Trình bày cấu trúc 5 Tiêu chuẩn – 15 Tiêu chí của Chuẩn nghề nghiệp giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT) và 5 định hướng hình thức phát triển nghề nghiệp.',
             outline: [
-              'Cơ sở pháp lý và mục đích ban hành Thông tư 20/2018/TT-BGDĐT (Giáo trình tr. 8–9).',
-              'Phân tích cấu trúc 5 Tiêu chuẩn – 15 Tiêu chí và 3 mức độ đánh giá (Đạt, Khá, Tốt).',
-              'Làm rõ 5 định hướng hình thức phát triển nghề nghiệp giáo viên phổ thông (Tự bồi dưỡng, Sinh hoạt tổ chuyên môn, Tập huấn thường xuyên, Cộng đồng học tập chuyên môn PLC, Ứng dụng CNTT – Giáo trình tr. 9–12).',
+              'Yêu cầu về phẩm chất và 5 nhóm năng lực cốt lõi theo Điều 67 Luật Giáo dục 2019 (Giáo trình tr. 7–8).',
+              'Hệ thống 5 Tiêu chuẩn và 15 Tiêu chí theo Thông tư 20/2018/TT-BGDĐT (TC 1–2: Phẩm chất; TC 3–7: Chuyên môn nghiệp vụ; TC 8–10: Môi trường GD; TC 11–13: Quan hệ nhà trường, gia đình, xã hội; TC 14–15: Ngoại ngữ & CNTT).',
+              'Bản chất phát triển nghề nghiệp theo OECD (2009) và 5 định hướng hình thức phát triển nghề nghiệp (Tự định hướng tự bồi dưỡng; Sinh hoạt tổ chuyên môn – Bautista & Ortega-Ruiz 2015 / Lesson Study; Tập huấn thường xuyên; Hợp tác mentoring; Ứng dụng CNTT & học liệu số – Giáo trình tr. 9–12).',
               'Liên hệ kế hoạch rèn luyện bản thân của sinh viên ngành Sư phạm Toán học.',
             ],
           },
@@ -988,32 +1115,44 @@ export function getChapter1LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 1.1: Hoạt động sư phạm của người giáo viên',
         description:
-          'Vai trò, chức năng; Nhiệm vụ & quyền hạn theo Luật Giáo dục 2019 và Điều lệ trường học 2020; 5 đặc điểm hoạt động sư phạm (Giáo trình HCMUE tr. 1–7).',
+          'Khảo sát nguồn gốc thuật ngữ Hán - Việt, vai trò then chốt của người giáo viên trong xã hội hiện đại, đối chiếu ma trận nhiệm vụ - quyền hạn theo Luật Giáo dục 2019 và Điều lệ trường học 2020, cùng 5 đặc điểm cốt lõi cấu thành hoạt động sư phạm.',
         level: 'basic',
-        tags: ['CLO1', 'CLO2', 'Hoạt động sư phạm', '5 Đặc điểm HĐSP', 'Giáo trình tr. 1-7'],
+        tags: [
+          'EDUC2802-C1-L1',
+          'CLO1',
+          'CLO2',
+          'Hoạt động sư phạm',
+          '5 Đặc điểm HĐSP',
+          'Giáo trình tr. 1-7',
+        ],
       },
       lessonMeta: {
         chapterNumber: 1,
         lessonNumber: 1,
         headings: [
           {
-            id: '1-vai-tro-chuc-nang',
-            text: '1. Vai trò và chức năng của người giáo viên (Tr. 1–2)',
+            id: '1-khai-niem-nguon-goc-su-pham',
+            text: '1. Khái niệm & Nguồn gốc Sư phạm (Trang 1 – 2)',
             depth: 2,
           },
           {
-            id: '2-nhiem-vu-va-quyen-han',
-            text: '2. Nhiệm vụ và quyền hạn theo Luật GD 2019 & Điều lệ 2020 (Tr. 2–4)',
+            id: '2-vai-tro-va-chuc-nang-giao-vien',
+            text: '2. Vai trò và Chức năng của Giáo viên (Trang 1 – 2)',
             depth: 2,
           },
           {
-            id: '3-nam-dac-diem-hoat-dong-su-pham',
-            text: '3. Phân tích 5 đặc điểm của hoạt động sư phạm (Tr. 4–7)',
+            id: '3-nhiem-vu-va-quyen-han',
+            text: '3. Bảng Ma trận Đối chiếu Nhiệm vụ & Quyền hạn Giáo viên (Trang 2 – 4)',
             depth: 2,
           },
           {
-            id: '4-tinh-huong-thuc-hanh',
-            text: '4. Tình huống Thực hành 5 Bước: Công cụ nhân cách',
+            id: '4-nam-dac-diem-hoat-dong-su-pham',
+            text: '4. Phân tích 5 Đặc điểm Hoạt động Sư phạm (Trang 4 – 7)',
+            depth: 2,
+          },
+          {
+            id: '5-tinh-huong-thuc-hanh',
+            text: '5. Khung Tình huống Thực hành 5 Bước (Mục 3.3.6)',
             depth: 2,
           },
         ],
@@ -1028,9 +1167,15 @@ export function getChapter1LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 1.2: Nhân cách và Chuẩn nghề nghiệp giáo viên phổ thông',
         description:
-          'Phẩm chất & 5 nhóm năng lực nghề nghiệp theo Điều 67 Luật GD 2019; Chuẩn nghề nghiệp GVPT theo Thông tư 20/2018/TT-BGDĐT gồm 5 tiêu chuẩn, 15 tiêu chí (Giáo trình HCMUE tr. 7–9).',
+          'Phân tích các yêu cầu nền tảng về phẩm chất và 5 nhóm năng lực cốt lõi theo Điều 67 Luật Giáo dục 2019, giải mã chi tiết hệ thống 5 Tiêu chuẩn và 15 Tiêu chí Chuẩn nghề nghiệp giáo viên phổ thông theo Thông tư 20/2018/TT-BGDĐT.',
         level: 'basic',
-        tags: ['CLO1', 'CLO2', 'Nhân cách giáo viên', 'Thông tư 20/2018', 'Giáo trình tr. 7-9'],
+        tags: [
+          'EDUC2802-C1-L2',
+          'CLO2',
+          'Nhân cách giáo viên',
+          'Thông tư 20/2018',
+          'Giáo trình tr. 7-9',
+        ],
       },
       lessonMeta: {
         chapterNumber: 1,
@@ -1038,17 +1183,17 @@ export function getChapter1LessonModule(lessonId: string): CompiledLessonModule 
         headings: [
           {
             id: '1-pham-chat-va-nang-luc',
-            text: '1. Yêu cầu về phẩm chất và 5 nhóm năng lực nghề nghiệp (Tr. 7–8)',
+            text: '1. Cấu trúc Phẩm chất & 5 Nhóm Năng lực Nghề nghiệp Cốt lõi (Trang 7 – 8)',
             depth: 2,
           },
           {
             id: '2-chuan-nghe-nghiep-tt20',
-            text: '2. Chuẩn nghề nghiệp GVPT theo Thông tư 20/2018/TT-BGDĐT (Tr. 8–9)',
+            text: '2. Bảng Ma trận 5 Tiêu chuẩn & 15 Tiêu chí Chuẩn nghề nghiệp (Trang 8 – 9)',
             depth: 2,
           },
           {
             id: '3-tinh-huong-thuc-hanh',
-            text: '3. Tình huống Thực hành 5 Bước: Đạo đức và phong cách nhà giáo',
+            text: '3. Tình huống Thực hành 5 Bước: Vận dụng Chuẩn nghề nghiệp TT 20/2018',
             depth: 2,
           },
         ],
@@ -1067,22 +1212,28 @@ export function getChapter1LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 1.3: Phát triển nghề nghiệp giáo viên phổ thông',
         description:
-          'Khái niệm, yêu cầu và 5 định hướng hình thức phát triển nghề nghiệp: Tự bồi dưỡng, Sinh hoạt tổ chuyên môn, Tập huấn thường xuyên, Cộng đồng học tập chuyên môn, Ứng dụng CNTT và học liệu số (Giáo trình HCMUE tr. 9–12).',
+          'Bản chất của phát triển nghề nghiệp theo định nghĩa của OECD, các yêu cầu tất yếu trong kỷ nguyên bùng nổ thông tin và 5 định hướng hình thức phát triển nghề nghiệp thực chiến cho giáo viên phổ thông.',
         level: 'intermediate',
-        tags: ['CLO1', 'CLO2', 'Phát triển nghề nghiệp', 'PLC', 'Giáo trình tr. 9-12'],
+        tags: [
+          'EDUC2802-C1-L3',
+          'CLO2',
+          'Phát triển nghề nghiệp',
+          'OECD 2009',
+          'Giáo trình tr. 9-12',
+        ],
       },
       lessonMeta: {
         chapterNumber: 1,
         lessonNumber: 3,
         headings: [
           {
-            id: '1-khai-niem-va-yeu-cau',
-            text: '1. Khái niệm và yêu cầu phát triển nghề nghiệp GVPT (Tr. 9–10)',
+            id: '1-ban-chat-phat-trien-nghe-nghiep',
+            text: '1. Bản chất Phát triển Nghề nghiệp & Tính tất yếu (Trang 9 – 10)',
             depth: 2,
           },
           {
             id: '2-nam-dinh-huong-hinh-thuc',
-            text: '2. Năm định hướng hình thức phát triển nghề nghiệp (Tr. 10–12)',
+            text: '2. 5 Định hướng Hình thức Phát triển Nghề nghiệp (Trang 10 – 12)',
             depth: 2,
           },
           {

@@ -250,7 +250,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
     <div class="criteria-grid">
       ${
         criteriaNames.length > 0
-          ? criteriaNames.map((c) => `<div class="criteria-item">☑ ${c}</div>`).join('')
+          ? criteriaNames.map((c) => `<div class="criteria-item">[X] ${c}</div>`).join('')
           : '<div>(Chưa chọn tiêu chí nào)</div>'
       }
     </div>
@@ -287,26 +287,26 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
   };
 
   return (
-    <Card className="space-y-6 rounded-2xl border-indigo-200/90 bg-indigo-50/30 p-5 shadow-xs sm:p-6">
-      {/* 1. Header Khối bài tập & Chú thích chuẩn CLO 3 */}
-      <div className="space-y-2 border-b border-indigo-100 pb-4">
+    <Card className="space-y-6 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 text-[#29383D] shadow-xs sm:p-6">
+      {/* 1. Header Khối bài tập & Chú thích chuẩn CLO */}
+      <div className="space-y-2 border-b border-[#CFDADB] pb-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 text-indigo-800">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] text-[#3F6570]">
               <Calendar className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <h4 className="font-serif text-base font-bold text-stone-900 sm:text-lg">
+              <h4 className="font-serif text-base font-bold text-[#29383D] sm:text-lg">
                 Bản Kế hoạch Học tập &amp; Rèn luyện Nghề nghiệp Sư phạm
               </h4>
-              <p className="text-xs font-medium text-indigo-900/80">
+              <p className="text-xs font-medium text-[#55676B]">
                 Bài tập tự học cá nhân theo yêu cầu Buổi 2 — Đề cương TS. Lê Thị Thu Liễu (CLO 3).
               </p>
             </div>
           </div>
 
           {/* Chọn Năm học 1 - 4 */}
-          <div className="flex items-center gap-1.5 rounded-xl border border-indigo-200/80 bg-white p-1 shadow-2xs">
+          <div className="flex items-center gap-1.5 rounded-xl border border-[#CFDADB] bg-[#EAF0F1] p-1 shadow-2xs">
             {[1, 2, 3, 4].map((year) => {
               const isSelected = selectedYear === year;
               return (
@@ -316,8 +316,8 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
                   onClick={() => setSelectedYear(year)}
                   className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                     isSelected
-                      ? 'bg-indigo-700 text-white shadow-xs'
-                      : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900'
+                      ? 'bg-[#3F6570] text-white shadow-xs'
+                      : 'text-[#55676B] hover:bg-white hover:text-[#29383D]'
                   }`}
                 >
                   Năm {year}
@@ -329,22 +329,25 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       </div>
 
       {/* 2. Thanh Accordion xem Kế hoạch Mẫu tham khảo (Ngành Sư phạm Toán) */}
-      <div className="rounded-xl border border-amber-200/90 bg-amber-50/60 p-3.5 transition-all">
+      <div className="rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-3.5 transition-all">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
             onClick={() => setIsSampleOpen(!isSampleOpen)}
-            className="flex items-center gap-2 text-left text-xs font-bold text-amber-950 transition-colors hover:text-amber-800"
+            className="flex items-center gap-2 text-left text-xs font-bold text-[#29383D] transition-colors hover:text-[#3F6570]"
           >
-            <Sparkles className="h-4 w-4 text-amber-600" aria-hidden="true" />
+            <Sparkles className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
             <span>Xem Kế hoạch Mẫu Tham khảo (Ngành Sư phạm Toán)</span>
-            <Badge variant="neutral" className="border-amber-300/80 bg-white/80 text-[10px]">
+            <Badge
+              variant="neutral"
+              className="border-[#CFDADB] bg-white text-[10px] text-[#55676B]"
+            >
               Lộ trình 4 Năm · Chuẩn TT20
             </Badge>
             {isSampleOpen ? (
-              <ChevronUp className="h-4 w-4 text-amber-700" />
+              <ChevronUp className="h-4 w-4 text-[#3F6570]" />
             ) : (
-              <ChevronDown className="h-4 w-4 text-amber-700" />
+              <ChevronDown className="h-4 w-4 text-[#3F6570]" />
             )}
           </button>
 
@@ -353,16 +356,16 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
             variant="outline"
             size="sm"
             onClick={() => handleLoadTemplate(selectedYear)}
-            className="h-8 gap-1.5 border-amber-300 bg-white text-xs font-semibold text-amber-900 shadow-2xs hover:bg-amber-100"
+            className="h-8 gap-1.5 border-[#CFDADB] bg-white text-xs font-semibold text-[#29383D] shadow-2xs hover:bg-[#F7FAFA]"
           >
-            <Wand2 className="h-3.5 w-3.5 text-amber-600" />
+            <Wand2 className="h-3.5 w-3.5 text-[#3F6570]" />
             <span>Điền nội dung mẫu vào bài làm (Năm {selectedYear})</span>
           </Button>
         </div>
 
         {/* Nội dung chi tiết Accordion Mẫu */}
         {isSampleOpen && (
-          <div className="mt-3.5 space-y-3 border-t border-amber-200/70 pt-3">
+          <div className="mt-3.5 space-y-3 border-t border-[#CFDADB] pt-3">
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
               {[1, 2, 3, 4].map((y) => (
                 <button
@@ -371,8 +374,8 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
                   onClick={() => setSampleYearView(y)}
                   className={`rounded-lg px-2.5 py-1 font-semibold transition-all ${
                     sampleYearView === y
-                      ? 'bg-amber-800 text-white'
-                      : 'bg-white/90 text-stone-700 hover:bg-white'
+                      ? 'bg-[#3F6570] text-white'
+                      : 'bg-white/90 text-[#29383D] hover:bg-white'
                   }`}
                 >
                   Năm {y}: {SAMPLE_TEMPLATES[y]?.badge}
@@ -381,9 +384,9 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
             </div>
 
             {SAMPLE_TEMPLATES[sampleYearView] && (
-              <div className="rounded-xl border border-amber-200/80 bg-white p-3.5 text-xs text-stone-800 shadow-2xs">
+              <div className="rounded-xl border border-[#CFDADB] bg-white p-3.5 text-xs text-[#29383D] shadow-2xs">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h5 className="font-bold text-amber-950">
+                  <h5 className="font-serif font-bold text-[#29383D]">
                     {SAMPLE_TEMPLATES[sampleYearView].title}
                   </h5>
                   <button
@@ -392,17 +395,17 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
                       setSelectedYear(sampleYearView);
                       handleLoadTemplate(sampleYearView);
                     }}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-700 hover:underline"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3F6570] hover:underline"
                   >
                     <span>Áp dụng mẫu này cho Năm {sampleYearView}</span>
                     <Wand2 className="h-3 w-3" />
                   </button>
                 </div>
-                <p className="mt-1 text-[11px] text-stone-600 italic">
+                <p className="mt-1 text-[11px] text-[#55676B] italic">
                   {SAMPLE_TEMPLATES[sampleYearView].subtitle}
                 </p>
 
-                <div className="mt-2.5 rounded-lg bg-stone-50 p-2.5 font-sans text-[11.5px] leading-relaxed whitespace-pre-wrap text-stone-700">
+                <div className="mt-2.5 rounded-lg bg-[#EAF0F1]/60 p-2.5 font-sans text-[11.5px] leading-relaxed whitespace-pre-wrap text-[#29383D]">
                   {SAMPLE_TEMPLATES[sampleYearView].content}
                 </div>
               </div>
@@ -414,11 +417,11 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       {/* 3. Chọn các tiêu chí Thông tư 20/2018 trọng tâm */}
       <div className="space-y-2.5">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <label className="block text-xs font-bold tracking-wider text-stone-800 uppercase">
+          <label className="block text-xs font-bold tracking-wider text-[#29383D] uppercase">
             Chọn các tiêu chí TT20 trọng tâm cần rèn luyện trong Năm {selectedYear}:
           </label>
-          <span className="text-[11px] font-medium text-stone-500">
-            Đã chọn: <strong className="text-indigo-900">{currentPlan.criteria.length} / 15</strong>{' '}
+          <span className="text-[11px] font-medium text-[#55676B]">
+            Đã chọn: <strong className="text-[#3F6570]">{currentPlan.criteria.length} / 15</strong>{' '}
             tiêu chí
           </span>
         </div>
@@ -433,8 +436,8 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
                 onClick={() => toggleCriterion(criterion.id)}
                 className={`flex items-start gap-2.5 rounded-xl border p-2.5 text-left text-xs transition-all ${
                   isChecked
-                    ? 'border-indigo-600 bg-indigo-50/80 font-medium text-indigo-950 shadow-2xs'
-                    : 'border-stone-200 bg-white text-stone-600 hover:border-stone-300 hover:bg-stone-50'
+                    ? 'border-[#3F6570] bg-[#E8EFEB] font-medium text-[#29383D] shadow-2xs'
+                    : 'border-[#CFDADB] bg-white text-[#55676B] hover:border-[#718C7E] hover:bg-[#EAF0F1]/40'
                 }`}
               >
                 <input
@@ -442,11 +445,11 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
                   checked={isChecked}
                   onChange={() => {}}
                   aria-label={criterion.name}
-                  className="mt-0.5 rounded border-stone-300 text-indigo-600 focus:ring-indigo-500"
+                  className="mt-0.5 rounded border-[#CFDADB] text-[#3F6570] focus:ring-[#3F6570]"
                 />
                 <div className="min-w-0">
                   <span className="block leading-snug">{criterion.name}</span>
-                  <span className="block text-[10px] text-stone-600">{criterion.standard}</span>
+                  <span className="block text-[10px] text-[#55676B]">{criterion.standard}</span>
                 </div>
               </button>
             );
@@ -457,30 +460,30 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       {/* 4. Ô nhập Mục tiêu và Hành động cụ thể (Tự động lưu vào LocalStorage) */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <label className="block text-xs font-bold tracking-wider text-stone-800 uppercase">
+          <label className="block text-xs font-bold tracking-wider text-[#29383D] uppercase">
             Mục tiêu &amp; Biện pháp hành động cụ thể (GPA, Ngoại ngữ, Kỹ năng mềm, NCKH):
           </label>
-          <span className="text-[10px] text-stone-500">Tự động lưu vào trình duyệt</span>
+          <span className="text-[10px] text-[#55676B]">Tự động lưu vào trình duyệt</span>
         </div>
         <textarea
           rows={7}
           value={currentPlan.goalsText}
           onChange={handleTextChange}
           placeholder={`Nhập kế hoạch chi tiết cho Năm ${selectedYear}...\n\nVí dụ:\n- Đạt điểm rèn luyện Tốt/Xuất sắc, GPA chuyên ngành Toán >= 3.2\n- Thi đạt chứng chỉ ngoại ngữ B1 / IELTS 5.5+\n- Luyện chữ viết bảng chuẩn mực và tham gia Câu lạc bộ Sư phạm Toán\n- Tự học thành thạo phần mềm GeoGebra 2D/3D và soạn thảo LaTeX`}
-          className="w-full rounded-xl border border-stone-200 bg-white p-3.5 text-xs leading-relaxed text-stone-800 placeholder:text-stone-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 focus:outline-none"
+          className="w-full rounded-xl border border-[#CFDADB] bg-white p-3.5 text-xs leading-relaxed text-[#29383D] placeholder:text-[#55676B] focus:border-[#3F6570] focus:ring-2 focus:ring-[#3F6570]/20 focus:outline-none"
         />
       </div>
 
       {/* 5. Hàng nút hành động: Điền mẫu, Lưu bản kế hoạch, Xuất bản in PDF, Tải TXT */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-indigo-100 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-3">
         <div className="flex items-center gap-2">
           {savedNotification ? (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#4F7967]">
+              <CheckCircle2 className="h-4 w-4 text-[#4F7967]" />
               <span>{savedNotification}</span>
             </span>
           ) : (
-            <span className="text-[11px] text-stone-500">
+            <span className="text-[11px] text-[#55676B]">
               Dữ liệu được lưu trữ tự động trên thiết bị cá nhân của bạn.
             </span>
           )}
@@ -492,9 +495,9 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
             variant="outline"
             size="sm"
             onClick={handleDownloadTxt}
-            className="h-8 gap-1.5 text-xs font-semibold text-stone-700 shadow-2xs hover:bg-stone-100"
+            className="h-8 gap-1.5 border-[#CFDADB] bg-white text-xs font-semibold text-[#29383D] shadow-2xs hover:bg-[#EAF0F1]"
           >
-            <Download className="h-3.5 w-3.5 text-stone-500" />
+            <Download className="h-3.5 w-3.5 text-[#55676B]" />
             <span>Tải bản thảo (.txt)</span>
           </Button>
 
@@ -503,9 +506,9 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
             variant="outline"
             size="sm"
             onClick={handlePrint}
-            className="h-8 gap-1.5 border-indigo-300 bg-white text-xs font-semibold text-indigo-900 shadow-2xs hover:bg-indigo-50"
+            className="h-8 gap-1.5 border-[#3F6570]/40 bg-white text-xs font-semibold text-[#3F6570] shadow-2xs hover:bg-[#E8EFEB]"
           >
-            <Printer className="h-3.5 w-3.5 text-indigo-600" />
+            <Printer className="h-3.5 w-3.5 text-[#3F6570]" />
             <span>Xuất bản in / Lưu PDF</span>
           </Button>
 
@@ -514,7 +517,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
             variant="subject"
             size="sm"
             onClick={handleManualSave}
-            className="h-8 gap-1.5 bg-indigo-700 text-xs font-semibold text-white shadow-2xs hover:bg-indigo-800"
+            className="h-8 gap-1.5 bg-[#3F6570] text-xs font-semibold text-white shadow-2xs hover:bg-[#345761]"
           >
             <CheckCircle2 className="h-3.5 w-3.5" />
             <span>Lưu bản kế hoạch cá nhân</span>

@@ -31,7 +31,7 @@ export function LessonActionBar({
   };
 
   const buttonBaseClass =
-    'whitespace-nowrap px-3.5 py-1.5 rounded-xl border border-stone-200/80 dark:border-stone-800/80 bg-white/80 dark:bg-stone-800/80 text-xs font-medium text-stone-700 dark:text-stone-300 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-stone-700 transition-colors cursor-pointer shadow-2xs';
+    'whitespace-nowrap px-3.5 py-1.5 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] text-xs font-medium text-[#29383D] flex items-center gap-2 hover:bg-[#E1E9EA] transition-colors cursor-pointer shadow-2xs';
 
   return (
     <div

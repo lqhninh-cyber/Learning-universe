@@ -106,9 +106,9 @@ export const TEACHER_STANDARDS_TT20: readonly TeacherStandard[] = [
       {
         id: 6,
         number: 6,
-        name: 'Kiểm tra, đánh giá kết quả học tập và rèn luyện',
+        name: 'Kiểm tra, đánh giá học sinh',
         description:
-          'Sử dụng các hình thức, phương pháp kiểm tra đánh giá theo hướng phát triển năng lực, vì sự tiến bộ của người học.',
+          'Sử dụng các hình thức, phương pháp kiểm tra đánh giá theo hướng phát triển phẩm chất, năng lực và vì sự tiến bộ của học sinh.',
         levels: {
           dat: 'Sử dụng đúng các hình thức kiểm tra đánh giá theo quy định; đánh giá công bằng, khách quan kết quả học tập của học sinh.',
           kha: 'Vận dụng các phương pháp đánh giá quá trình (đánh giá thường xuyên) phong phú; cung cấp phản hồi tích cực giúp học sinh tự sửa sai.',
@@ -133,7 +133,7 @@ export const TEACHER_STANDARDS_TT20: readonly TeacherStandard[] = [
     id: 3,
     title: 'Tiêu chuẩn 3: Xây dựng môi trường giáo dục',
     description:
-      'Xây dựng văn hóa nhà trường lành mạnh, thực hiện quy chế dân chủ, kiến tạo môi trường học đường an toàn, không bạo lực.',
+      'Xây dựng văn hóa nhà trường lành mạnh, thực hiện quyền dân chủ trong nhà trường, kiến tạo môi trường học đường an toàn, phòng chống bạo lực học đường.',
     criteria: [
       {
         id: 8,
@@ -175,76 +175,76 @@ export const TEACHER_STANDARDS_TT20: readonly TeacherStandard[] = [
   },
   {
     id: 4,
-    title: 'Tiêu chuẩn 4: Phát triển mối quan hệ giữa nhà trường, gia đình và xã hội',
+    title: 'Tiêu chuẩn 4: Phát triển mối quan hệ nhà trường, gia đình và xã hội',
     description:
-      'Hợp tác chặt chẽ với cha mẹ học sinh và các tổ chức xã hội nhằm nâng cao hiệu quả giáo dục toàn diện.',
+      'Tạo dựng mối quan hệ hợp tác với cha mẹ học sinh; phối hợp giữa nhà trường, gia đình, xã hội trong dạy học và trong giáo dục đạo đức, lối sống cho học sinh.',
     criteria: [
       {
         id: 11,
         number: 11,
         name: 'Tạo dựng mối quan hệ hợp tác với cha mẹ học sinh',
         description:
-          'Thiết lập kênh liên lạc thường xuyên, tôn trọng và tin cậy với gia đình học sinh.',
+          'Thiết lập kênh liên lạc thường xuyên, tôn trọng và tin cậy với cha mẹ hoặc người giám hộ của học sinh.',
         levels: {
-          dat: 'Thông báo đầy đủ, kịp thời tình hình học tập và rèn luyện của học sinh cho gia đình theo quy định.',
-          kha: 'Tổ chức họp phụ huynh sáng tạo, cởi mở, lắng nghe tâm tư và tạo sự đồng thuận cao với phụ huynh trong định hướng giáo dục con em.',
-          tot: 'Xây dựng mối quan hệ đối tác giáo dục gắn kết; huy động được sự đồng hành tích cực của phụ huynh vào các hoạt động trải nghiệm của lớp.',
+          dat: 'Cung cấp đầy đủ, kịp thời thông tin về tình hình học tập, rèn luyện của học sinh cho cha mẹ hoặc người giám hộ.',
+          kha: 'Chủ động trao đổi, lắng nghe tâm tư và tạo sự đồng thuận với cha mẹ học sinh trong định hướng giáo dục con em.',
+          tot: 'Xây dựng mối quan hệ đối tác giáo dục gắn kết; hỗ trợ đồng nghiệp thiết lập quan hệ hợp tác hiệu quả với gia đình học sinh.',
         },
       },
       {
         id: 12,
         number: 12,
-        name: 'Phối hợp giữa nhà trường, gia đình và xã hội',
+        name: 'Phối hợp gia đình, xã hội trong dạy học',
         description:
-          'Kết nối các nguồn lực xã hội, đoàn thể tại địa phương hỗ trợ hoạt động học tập và giáo dục học sinh.',
+          'Phối hợp giữa nhà trường, gia đình, xã hội để thực hiện hoạt động dạy học cho học sinh.',
         levels: {
-          dat: 'Tham gia các hoạt động phối hợp giáo dục giữa nhà trường với chính quyền địa phương và các đoàn thể (Đoàn, Đội).',
-          kha: 'Chủ động huy động các nguồn lực xã hội hợp pháp để hỗ trợ học sinh có hoàn cảnh khó khăn vươn lên trong học tập.',
-          tot: 'Kết nối hiệu quả với các chuyên gia, cựu học sinh, doanh nghiệp để tổ chức hoạt động trải nghiệm hướng nghiệp đa dạng cho học sinh.',
+          dat: 'Cung cấp thông tin về chương trình, kế hoạch dạy học và hướng dẫn gia đình hỗ trợ học sinh tự học tại nhà.',
+          kha: 'Chủ động phối hợp với gia đình và các tổ chức xã hội để giải quyết những khó khăn trong học tập của học sinh.',
+          tot: 'Kết nối chuyên gia, cơ sở nghiên cứu, doanh nghiệp để tổ chức các dự án học tập và trải nghiệm thực tế cho học sinh.',
+        },
+      },
+      {
+        id: 13,
+        number: 13,
+        name: 'Phối hợp gia đình, xã hội trong giáo dục đạo đức, lối sống',
+        description:
+          'Phối hợp giữa nhà trường, gia đình, xã hội để thực hiện giáo dục đạo đức, lối sống và định hướng nghề nghiệp cho học sinh.',
+        levels: {
+          dat: 'Phối hợp với gia đình và các tổ chức đoàn thể trong việc rèn luyện đạo đức, nền nếp và lối sống văn hóa cho học sinh.',
+          kha: 'Chủ động huy động sự đồng hành của gia đình và cộng đồng trong các hoạt động trải nghiệm, thiện nguyện và hướng nghiệp.',
+          tot: 'Giải quyết thành công các trường hợp học sinh cá biệt nhờ mạng lưới phối hợp chặt chẽ giữa nhà trường – gia đình – xã hội.',
         },
       },
     ],
   },
   {
     id: 5,
-    title: 'Tiêu chuẩn 5: Ngoại ngữ, Tin học & Báo cáo chia sẻ kinh nghiệm',
+    title: 'Tiêu chuẩn 5: Sử dụng ngoại ngữ/tiếng dân tộc và ứng dụng CNTT',
     description:
-      'Sử dụng ngoại ngữ hoặc tiếng dân tộc, ứng dụng CNTT và thiết bị công nghệ hiện đại trong giảng dạy; chia sẻ sáng kiến nghề nghiệp.',
+      'Sử dụng ngoại ngữ hoặc tiếng dân tộc, ứng dụng công nghệ thông tin, khai thác và sử dụng thiết bị công nghệ trong dạy học và giáo dục.',
     criteria: [
-      {
-        id: 13,
-        number: 13,
-        name: 'Sử dụng ngoại ngữ hoặc tiếng dân tộc',
-        description:
-          'Sử dụng được ngoại ngữ hoặc tiếng dân tộc thiểu số phục vụ dạy học và giao tiếp.',
-        levels: {
-          dat: 'Có chứng chỉ hoặc sử dụng được ngoại ngữ bậc 2 (A2) hoặc tiếng dân tộc ở mức giao tiếp đơn giản.',
-          kha: 'Đọc hiểu tài liệu chuyên môn Toán học/sư phạm bằng ngoại ngữ; giao tiếp tốt với học sinh vùng đồng bào dân tộc thiểu số.',
-          tot: 'Ứng dụng ngoại ngữ trong giảng dạy môn học (dạy Toán bằng tiếng Anh); tham gia các diễn đàn học thuật quốc tế.',
-        },
-      },
       {
         id: 14,
         number: 14,
-        name: 'Ứng dụng công nghệ thông tin và thiết bị công nghệ',
+        name: 'Sử dụng ngoại ngữ hoặc tiếng dân tộc',
         description:
-          'Khai thác hiệu quả phần mềm dạy học Toán học (GeoGebra, Desmos) và thiết bị kỹ thuật số.',
+          'Sử dụng được ngoại ngữ (ưu tiên tiếng Anh) hoặc tiếng dân tộc thiểu số trong giao tiếp, nghiên cứu tài liệu và dạy học.',
         levels: {
-          dat: 'Sử dụng thành thạo máy tính, phần mềm trình chiếu (PowerPoint) và các thiết bị nghe nhìn thông thường.',
-          kha: 'Ứng dụng thành thạo các phần mềm mô phỏng toán học chuyên biệt (GeoGebra, Mafs), hệ thống quản lý học tập (LMS, Google Classroom).',
-          tot: 'Thiết kế học liệu số, bài giảng tương tác sáng tạo; hỗ trợ đồng nghiệp chuyển đổi số trong kiểm tra đánh giá và quản lý lớp học.',
+          dat: 'Có thể sử dụng được các từ ngữ, câu đơn giản bằng ngoại ngữ (hoặc tiếng dân tộc) trong giao tiếp và chuyên môn.',
+          kha: 'Trao đổi thông tin đơn giản và đọc hiểu tài liệu chuyên môn Toán học/sư phạm bằng ngoại ngữ.',
+          tot: 'Viết và trình bày đàm thoại tốt bằng ngoại ngữ về các chủ đề chuyên môn, giáo dục hoặc dạy học song ngữ.',
         },
       },
       {
         id: 15,
         number: 15,
-        name: 'Báo cáo và chia sẻ kinh nghiệm nghề nghiệp',
+        name: 'Ứng dụng CNTT, khai thác và sử dụng thiết bị công nghệ',
         description:
-          'Đúc kết kinh nghiệm thực tiễn và chia sẻ với đồng nghiệp qua sinh hoạt chuyên môn.',
+          'Ứng dụng công nghệ thông tin, khai thác và sử dụng hiệu quả thiết bị công nghệ trong dạy học và giáo dục.',
         levels: {
-          dat: 'Tham gia thảo luận, đóng góp ý kiến trong các buổi sinh hoạt tổ chuyên môn và thao giảng.',
-          kha: 'Báo cáo chuyên đề đổi mới phương pháp dạy học hoặc giáo dục đạo đức học sinh ở cấp tổ chuyên môn, nhà trường.',
-          tot: 'Có bài báo khoa học hoặc chuyên đề báo cáo cấp huyện/tỉnh; chủ trì các buổi tập huấn chuyên môn liên trường.',
+          dat: 'Sử dụng được các phần mềm ứng dụng cơ bản và thiết bị công nghệ trong dạy học, giáo dục và quản lý học sinh.',
+          kha: 'Ứng dụng thành thạo phần mềm chuyên ngành (GeoGebra, Desmos, LMS) để thiết kế học liệu số và kiểm tra đánh giá.',
+          tot: 'Cập nhật và sáng tạo các giải pháp công nghệ mới; hướng dẫn, hỗ trợ đồng nghiệp nâng cao năng lực ứng dụng CNTT.',
         },
       },
     ],
@@ -294,26 +294,29 @@ export function TeacherStandardsMatrix({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition-all sm:p-6',
+        'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-xs transition-all sm:p-6',
         className,
       )}
     >
       {/* Header ma trận */}
-      <div className="flex flex-col gap-3 border-b border-stone-100 pb-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 border-b border-[#CFDADB] pb-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-0.5 text-xs font-bold text-teal-800">
-              <Award className="h-3.5 w-3.5 text-teal-800" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 text-xs font-bold text-[#29383D]">
+              <Award className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
               <span>Thông tư 20/2018/TT-BGDĐT</span>
             </span>
-            <Badge variant="neutral" className="text-xs font-medium text-stone-600">
+            <Badge
+              variant="neutral"
+              className="border-[#CFDADB] bg-white text-xs font-medium text-[#55676B]"
+            >
               5 Tiêu chuẩn · 15 Tiêu chí
             </Badge>
           </div>
-          <h3 className="text-lg font-bold text-stone-900 sm:text-xl">
+          <h3 className="font-serif text-lg font-bold text-[#29383D] sm:text-xl">
             Ma trận Chuẩn nghề nghiệp Giáo viên phổ thông
           </h3>
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-[#55676B]">
             Khung đánh giá năng lực nghề nghiệp cốt lõi và lộ trình rèn luyện 3 mức (Đạt - Khá -
             Tốt) cho sinh viên sư phạm.
           </p>
@@ -321,19 +324,19 @@ export function TeacherStandardsMatrix({
 
         {/* Ô tìm kiếm tiêu chí */}
         <div className="relative w-full md:w-64">
-          <Search className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-stone-400" />
+          <Search className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#55676B]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm theo tiêu chí, từ khóa..."
-            className="w-full rounded-xl border border-stone-200 bg-stone-50/70 py-1.5 pr-3 pl-8 text-xs text-stone-800 placeholder:text-stone-400 focus:border-teal-600 focus:bg-white focus:outline-none"
+            className="w-full rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/60 py-1.5 pr-3 pl-8 text-xs text-[#29383D] placeholder:text-[#55676B] focus:border-[#3F6570] focus:bg-white focus:outline-none"
           />
         </div>
       </div>
 
       {/* Tabs chọn 5 tiêu chuẩn */}
-      <div className="mt-4 flex flex-wrap gap-2 border-b border-stone-100 pb-3">
+      <div className="mt-4 flex flex-wrap gap-2 border-b border-[#CFDADB] pb-3">
         {TEACHER_STANDARDS_TT20.map((standard) => {
           const isSelected = standard.id === selectedStandardId;
           return (
@@ -342,7 +345,6 @@ export function TeacherStandardsMatrix({
               type="button"
               onClick={() => {
                 setSelectedStandardId(standard.id);
-                // Mặc định mở tiêu chí đầu tiên của tiêu chuẩn đó
                 if (standard.criteria[0]) {
                   setExpandedCriteria((prev) => ({ ...prev, [standard.criteria[0]!.id]: true }));
                 }
@@ -350,14 +352,14 @@ export function TeacherStandardsMatrix({
               className={cn(
                 'flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all',
                 isSelected
-                  ? 'border-teal-700 bg-teal-800 text-white shadow-2xs'
-                  : 'border-stone-200 bg-stone-50/70 text-stone-700 hover:border-stone-300 hover:bg-stone-100',
+                  ? 'border-[#3F6570] bg-[#3F6570] text-white shadow-2xs'
+                  : 'border-[#CFDADB] bg-[#EAF0F1]/70 text-[#29383D] hover:border-[#718C7E] hover:bg-[#E8EFEB]',
               )}
             >
               <span
                 className={cn(
                   'flex h-5 w-5 items-center justify-center rounded-md text-[11px] font-bold',
-                  isSelected ? 'bg-white/20 text-white' : 'bg-stone-200 text-stone-600',
+                  isSelected ? 'bg-white/20 text-white' : 'bg-[#CFDADB]/70 text-[#29383D]',
                 )}
               >
                 {standard.id}
@@ -369,15 +371,15 @@ export function TeacherStandardsMatrix({
       </div>
 
       {/* Thông tin tiêu chuẩn hiện tại */}
-      <div className="mt-4 rounded-xl border border-teal-200/80 bg-teal-50/50 p-4 text-xs leading-relaxed text-teal-950">
-        <div className="font-bold text-teal-900 sm:text-sm">{activeStandard.title}</div>
-        <p className="mt-1 text-teal-900/90">{activeStandard.description}</p>
+      <div className="mt-4 rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-xs leading-relaxed text-[#29383D]">
+        <div className="font-serif font-bold text-[#29383D] sm:text-sm">{activeStandard.title}</div>
+        <p className="mt-1 text-[#55676B]">{activeStandard.description}</p>
       </div>
 
       {/* Danh sách các tiêu chí (Accordion) */}
       <div className="mt-4 space-y-3">
         {filteredCriteria.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-stone-200 p-8 text-center text-xs text-stone-500">
+          <div className="rounded-xl border border-dashed border-[#CFDADB] p-8 text-center text-xs text-[#55676B]">
             Không tìm thấy tiêu chí phù hợp với từ khóa "{searchQuery}" trong tiêu chuẩn này.
           </div>
         ) : (
@@ -386,71 +388,71 @@ export function TeacherStandardsMatrix({
             return (
               <div
                 key={criterion.id}
-                className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-2xs transition-all hover:border-stone-300"
+                className="overflow-hidden rounded-xl border border-[#CFDADB] bg-white shadow-2xs transition-all hover:border-[#718C7E]"
               >
                 {/* Header Tiêu chí */}
                 <button
                   type="button"
                   onClick={() => toggleCriterion(criterion.id)}
-                  className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-stone-50/70"
+                  className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-[#EAF0F1]/50"
                 >
                   <div className="flex items-start gap-3">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-xs font-bold text-teal-900">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-[#718C7E]/40 bg-[#E8EFEB] font-serif text-xs font-bold text-[#3F6570]">
                       {criterion.number}
                     </span>
                     <div>
-                      <h4 className="text-sm font-bold text-stone-900">
+                      <h4 className="font-serif text-sm font-bold text-[#29383D]">
                         Tiêu chí {criterion.number}: {criterion.name}
                       </h4>
-                      <p className="mt-0.5 text-xs text-stone-500">{criterion.description}</p>
+                      <p className="mt-0.5 text-xs text-[#55676B]">{criterion.description}</p>
                     </div>
                   </div>
 
                   <ChevronDown
                     className={cn(
-                      'h-4 w-4 shrink-0 text-stone-400 transition-transform duration-200',
-                      isExpanded && 'rotate-180 text-teal-700',
+                      'h-4 w-4 shrink-0 text-[#55676B] transition-transform duration-200',
+                      isExpanded && 'rotate-180 text-[#3F6570]',
                     )}
                   />
                 </button>
 
                 {/* Nội dung 3 mức Đạt - Khá - Tốt */}
                 {isExpanded && (
-                  <div className="border-t border-stone-100 bg-stone-50/40 p-4 pt-3">
-                    <div className="mb-2 text-[11px] font-bold tracking-wider text-stone-500 uppercase">
+                  <div className="border-t border-[#CFDADB] bg-[#EAF0F1]/40 p-4 pt-3">
+                    <div className="mb-2 text-[11px] font-bold tracking-wider text-[#55676B] uppercase">
                       3 Mức độ năng lực chuẩn hóa
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-3">
                       {/* Mức Đạt */}
-                      <div className="rounded-xl border border-stone-200 bg-white p-3.5 shadow-2xs">
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-stone-800">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-stone-500" />
+                      <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3.5 shadow-2xs">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#29383D]">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-[#55676B]" />
                           <span>Mức ĐẠT (Cơ bản)</span>
                         </div>
-                        <p className="mt-2 text-xs leading-relaxed text-stone-600">
+                        <p className="mt-2 text-xs leading-relaxed text-[#55676B]">
                           {criterion.levels.dat}
                         </p>
                       </div>
 
                       {/* Mức Khá */}
-                      <div className="rounded-xl border border-teal-200 bg-teal-50/40 p-3.5 shadow-2xs">
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-teal-900">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-teal-700" />
+                      <div className="rounded-xl border border-[#718C7E]/45 bg-[#E8EFEB]/70 p-3.5 shadow-2xs">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#29383D]">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-[#3F6570]" />
                           <span>Mức KHÁ (Thành thạo)</span>
                         </div>
-                        <p className="mt-2 text-xs leading-relaxed text-stone-700">
+                        <p className="mt-2 text-xs leading-relaxed text-[#29383D]">
                           {criterion.levels.kha}
                         </p>
                       </div>
 
                       {/* Mức Tốt */}
-                      <div className="rounded-xl border border-amber-200 bg-amber-50/40 p-3.5 shadow-2xs">
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
-                          <Sparkles className="h-3.5 w-3.5 text-amber-700" />
+                      <div className="rounded-xl border border-[#3F6570]/45 bg-[#E5EDF1]/80 p-3.5 shadow-2xs">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#3F6570]">
+                          <Sparkles className="h-3.5 w-3.5 text-[#3F6570]" />
                           <span>Mức TỐT (Mẫu mực)</span>
                         </div>
-                        <p className="mt-2 text-xs leading-relaxed text-stone-700">
+                        <p className="mt-2 text-xs leading-relaxed text-[#29383D]">
                           {criterion.levels.tot}
                         </p>
                       </div>

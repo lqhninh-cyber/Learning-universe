@@ -5,6 +5,8 @@ import { cn } from '@/shared/lib/cn';
 export interface PedagogyMetadataBarProps {
   /** Mã học phần (mặc định EDUC2802) */
   readonly courseCode?: string;
+  /** Mã định danh bài học (ví dụ: EDUC2802-C1-L1) */
+  readonly lessonCode?: string;
   /** Danh sách chuẩn đầu ra CLO áp dụng cho bài học, ví dụ: ['CLO1', 'CLO2'] */
   readonly clos: readonly string[];
   /** Số trang tương ứng trong Giáo trình Giáo dục học HCMUE, ví dụ: 'Tr. 1–7' */
@@ -18,10 +20,11 @@ export interface PedagogyMetadataBarProps {
 
 /**
  * 1. Thanh Metadata & Đối chiếu Đầu bài (PedagogyMetadataBar)
- * Hiển thị rõ Mã học phần EDUC2802, Chuẩn đầu ra CLO và Số trang tương ứng trong Giáo trình Giáo dục học HCMUE.
+ * Hiển thị rõ Mã học phần EDUC2802, Mã bài học, Chuẩn đầu ra CLO và Số trang tương ứng trong Giáo trình Giáo dục học HCMUE.
  */
 export function PedagogyMetadataBar({
   courseCode = 'EDUC2802',
+  lessonCode,
   clos,
   textbookPages,
   legalRefs,
@@ -43,6 +46,12 @@ export function PedagogyMetadataBar({
             <Layers className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{courseCode}</span>
           </span>
+
+          {lessonCode && (
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wide text-[#3F6570]">
+              <span>Mã bài: {lessonCode}</span>
+            </span>
+          )}
 
           {clos.map((clo) => (
             <span

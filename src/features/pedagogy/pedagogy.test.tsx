@@ -156,6 +156,46 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b3).toBeDefined();
       expect(b3Legacy).toBeDefined();
     });
+
+    it('kết xuất đầy đủ nội dung học thuật Chương 1 (Bài 1.1, Bài 1.2, Bài 1.3) từ Giáo trình HCMUE tr. 1–12', () => {
+      const b1 = getChapter1LessonModule('gdh-c1-b1-hoat-dong-su-pham-cua-nguoi-giao-vien')!;
+      const b2 = getChapter1LessonModule(
+        'gdh-c1-b2-nhan-cach-va-chuan-nghe-nghiep-giao-vien-pho-thong',
+      )!;
+      const b3 = getChapter1LessonModule('gdh-c1-b3-phat-trien-nghe-nghiep-giao-vien-pho-thong')!;
+
+      const { unmount: unmount1 } = render(<b1.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C1-L1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Phân tích chiết tự "Sư phạm"/i)).toBeInTheDocument();
+      expect(screen.getByText(/"kĩ sư thiết kế tâm hồn"/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/CÔNG CỤ QUAN TRỌNG NHẤT LÀ NHÂN CÁCH NGƯỜI THẦY/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getByText(/Trong giờ học Toán lớp 10, một học sinh có học lực khá/i),
+      ).toBeInTheDocument();
+      unmount1();
+
+      const { unmount: unmount2 } = render(<b2.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C1-L2/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/01\. Năng lực tìm hiểu và nắm vững đặc điểm học sinh/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/03\. Năng lực nghiên cứu khoa học sư phạm ứng dụng/i),
+      ).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/TC 13: Phối hợp giữa nhà trường, gia đình, xã hội/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount2();
+
+      const { unmount: unmount3 } = render(<b3.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C1-L3/i)).toBeInTheDocument();
+      expect(screen.getByText(/Định nghĩa khoa học \(OECD 2009\)/i)).toBeInTheDocument();
+      expect(screen.getByText(/01\. Tự định hướng, tự bồi dưỡng/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Bautista & Ortega-Ruiz 2015/i).length).toBeGreaterThanOrEqual(1);
+      unmount3();
+    });
   });
 
   describe('Dispatcher getChapter2LessonModule', () => {

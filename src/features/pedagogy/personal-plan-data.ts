@@ -15,56 +15,68 @@ export interface TT20CriterionItem {
 }
 
 export const TT20_CRITERIA: readonly TT20CriterionItem[] = [
-  { id: 1, name: '1. Đạo đức nhà giáo', standard: 'Tiêu chuẩn 1: Phẩm chất' },
-  { id: 2, name: '2. Phong cách nhà giáo', standard: 'Tiêu chuẩn 1: Phẩm chất' },
+  { id: 1, name: '1. Đạo đức nhà giáo', standard: 'Tiêu chuẩn 1: Phẩm chất nhà giáo' },
+  { id: 2, name: '2. Phong cách nhà giáo', standard: 'Tiêu chuẩn 1: Phẩm chất nhà giáo' },
   {
     id: 3,
     name: '3. Phát triển chuyên môn bản thân',
-    standard: 'Tiêu chuẩn 2: Chuyên môn & Nghiệp vụ',
+    standard: 'Tiêu chuẩn 2: Chuyên môn, nghiệp vụ',
   },
   {
     id: 4,
-    name: '4. Xây dựng kế hoạch dạy học & GD',
-    standard: 'Tiêu chuẩn 2: Chuyên môn & Nghiệp vụ',
+    name: '4. Xây dựng kế hoạch dạy học và giáo dục',
+    standard: 'Tiêu chuẩn 2: Chuyên môn, nghiệp vụ',
   },
   {
     id: 5,
-    name: '5. Sử dụng phương pháp dạy học & GD',
-    standard: 'Tiêu chuẩn 2: Chuyên môn & Nghiệp vụ',
+    name: '5. Sử dụng phương pháp dạy học và giáo dục',
+    standard: 'Tiêu chuẩn 2: Chuyên môn, nghiệp vụ',
   },
   {
     id: 6,
     name: '6. Kiểm tra, đánh giá học sinh',
-    standard: 'Tiêu chuẩn 2: Chuyên môn & Nghiệp vụ',
+    standard: 'Tiêu chuẩn 2: Chuyên môn, nghiệp vụ',
   },
   {
     id: 7,
     name: '7. Tư vấn và hỗ trợ học sinh',
-    standard: 'Tiêu chuẩn 2: Chuyên môn & Nghiệp vụ',
+    standard: 'Tiêu chuẩn 2: Chuyên môn, nghiệp vụ',
   },
   { id: 8, name: '8. Xây dựng văn hóa nhà trường', standard: 'Tiêu chuẩn 3: Môi trường giáo dục' },
-  { id: 9, name: '9. Thực hiện quy chế dân chủ', standard: 'Tiêu chuẩn 3: Môi trường giáo dục' },
+  {
+    id: 9,
+    name: '9. Thực hiện quyền dân chủ trong nhà trường',
+    standard: 'Tiêu chuẩn 3: Môi trường giáo dục',
+  },
   {
     id: 10,
-    name: '10. Thực hiện an toàn trường học',
+    name: '10. Xây dựng trường học an toàn, phòng chống BLHĐ',
     standard: 'Tiêu chuẩn 3: Môi trường giáo dục',
   },
   {
     id: 11,
-    name: '11. Tạo dựng mối quan hệ hợp tác cha mẹ HS',
-    standard: 'Tiêu chuẩn 4: Phối hợp',
+    name: '11. Tạo dựng mối quan hệ hợp tác với cha mẹ HS',
+    standard: 'Tiêu chuẩn 4: Quan hệ nhà trường, gia đình, XH',
   },
-  { id: 12, name: '12. Phối hợp các tổ chức, cá nhân', standard: 'Tiêu chuẩn 4: Phối hợp' },
+  {
+    id: 12,
+    name: '12. Phối hợp gia đình, xã hội trong dạy học',
+    standard: 'Tiêu chuẩn 4: Quan hệ nhà trường, gia đình, XH',
+  },
   {
     id: 13,
-    name: '13. Sử dụng ngoại ngữ hoặc tiếng DT',
-    standard: 'Tiêu chuẩn 5: Ngoại ngữ & CNTT',
+    name: '13. Phối hợp gia đình, XH trong GD đạo đức, lối sống',
+    standard: 'Tiêu chuẩn 4: Quan hệ nhà trường, gia đình, XH',
   },
-  { id: 14, name: '14. Ứng dụng công nghệ thông tin', standard: 'Tiêu chuẩn 5: Ngoại ngữ & CNTT' },
+  {
+    id: 14,
+    name: '14. Sử dụng ngoại ngữ hoặc tiếng dân tộc',
+    standard: 'Tiêu chuẩn 5: Ngoại ngữ/tiếng DT & CNTT',
+  },
   {
     id: 15,
-    name: '15. Học tập nâng cao năng lực nghề nghiệp',
-    standard: 'Tiêu chuẩn 5: Ngoại ngữ & CNTT',
+    name: '15. Ứng dụng CNTT, khai thác thiết bị công nghệ',
+    standard: 'Tiêu chuẩn 5: Ngoại ngữ/tiếng DT & CNTT',
   },
 ];
 
