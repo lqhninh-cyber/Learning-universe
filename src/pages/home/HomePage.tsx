@@ -28,6 +28,7 @@ import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
 import { ArchivalIndexView } from './ArchivalIndexView';
 import { HeritageArtShowcase } from './HeritageArtShowcase';
+import { KnowledgeThread } from './KnowledgeThread';
 import { QuickKaTeXDrawer } from './QuickKaTeXDrawer';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
 import {
@@ -534,16 +535,6 @@ function SubjectSpatialArtwork({
 }
 
 /**
- * Các trạm dừng chính (Knowledge Thread Stations) trên hành trình tri thức
- */
-const KNOWLEDGE_THREAD_STATIONS = [
-  { cx: 720, cy: 220, threshold: 0.02, name: 'Khởi đầu Hero' },
-  { cx: 1120, cy: 860, threshold: 0.32, name: 'Spatial Subject Gallery' },
-  { cx: 320, cy: 1640, threshold: 0.68, name: 'My Learning Orbit' },
-  { cx: 720, cy: 2340, threshold: 0.92, name: 'Chân trang Tri thức' },
-] as const;
-
-/**
  * Tính tọa độ điểm trên đường cong Bézier bậc 3: B(t) = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
  */
 function evaluateCubicBezier(
@@ -761,121 +752,19 @@ export function HomePage() {
     return true;
   });
 
-  // Chiều dài đường dẫn The Knowledge Thread
-  const threadPathLength = 2400;
-  const threadDashOffset = prefersReducedMotion
-    ? 0
-    : Math.round(threadPathLength * (1 - Math.max(0.14, pageScrollProgress)));
-
   return (
     <div className="relative overflow-x-clip bg-[#EAF0F1] text-[#29383D]">
       {/* =====================================================================
           SIGNATURE ELEMENT: THE KNOWLEDGE THREAD (ĐƯỜNG DẪN TRI THỨC XUYÊN SUỐT)
           Kết nối tuần tự: Hero -> Subject Gallery -> My Learning Orbit -> Footer
+          Tích hợp hiệu ứng Hoa nở (Floral Bloom) tại các điểm nút mốc khi cuộn trang
           ===================================================================== */}
-      <div
-        data-testid="the-knowledge-thread"
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 bottom-0 z-10 hidden overflow-hidden lg:block"
-      >
-        <svg
-          viewBox="0 0 1440 2400"
-          preserveAspectRatio="none"
-          className="h-full w-full"
-          fill="none"
-        >
-          <defs>
-            <filter id="thread-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
-            </filter>
-          </defs>
-
-          {/* Đường dẫn nền tĩnh cực mảnh */}
-          <path
-            d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2380"
-            stroke="#CFDADB"
-            strokeWidth="1.2"
-            strokeDasharray="4 6"
-          />
-          {/* Đường dẫn động vẽ theo thao tác cuộn trang */}
-          <path
-            ref={threadPathRef}
-            d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2380"
-            stroke="#3F6570"
-            strokeWidth="1.75"
-            strokeOpacity="0.55"
-            strokeDasharray={threadPathLength}
-            strokeDashoffset={threadDashOffset}
-            style={{
-              transition: prefersReducedMotion ? 'none' : 'stroke-dashoffset 180ms ease-out',
-            }}
-          />
-
-          {/* Glowing Lead Tip tại đầu mút đang di chuyển của The Knowledge Thread */}
-          {!prefersReducedMotion && (
-            <g
-              className="transition-all duration-150 ease-out"
-              style={{
-                filter: 'drop-shadow(0 0 8px rgba(146, 113, 79, 0.75))',
-              }}
-            >
-              {/* Vầng hào quang ngoài */}
-              <circle cx={leadTip.x} cy={leadTip.y} r="14" fill="#92714F" fillOpacity="0.18" />
-              {/* Vầng hào quang giữa */}
-              <circle cx={leadTip.x} cy={leadTip.y} r="7" fill="#92714F" fillOpacity="0.38" />
-              {/* Hạt nhân phát sáng 6px */}
-              <circle
-                cx={leadTip.x}
-                cy={leadTip.y}
-                r="3.5"
-                fill="#92714F"
-                stroke="#F7FAFA"
-                strokeWidth="1.5"
-              />
-            </g>
-          )}
-
-          {/* 4 Điểm nút (Knowledge Thread Stations) phát xung ripple & sáng rực rỡ */}
-          {KNOWLEDGE_THREAD_STATIONS.map((station, idx) => {
-            const isLit = prefersReducedMotion || pageScrollProgress >= station.threshold;
-            const isCurrentLandmark =
-              !prefersReducedMotion &&
-              pageScrollProgress >= station.threshold &&
-              pageScrollProgress < station.threshold + 0.16;
-
-            return (
-              <g key={idx}>
-                {/* Shockwave ripple pulse khi đầu dẫn chạm tới trạm */}
-                {isCurrentLandmark && (
-                  <circle
-                    cx={station.cx}
-                    cy={station.cy}
-                    r="16"
-                    fill="#92714F"
-                    fillOpacity="0.45"
-                    className="animate-ping"
-                  />
-                )}
-                <circle
-                  cx={station.cx}
-                  cy={station.cy}
-                  r={isLit ? 10 : 6}
-                  fill={isLit ? '#92714F' : '#E1E9EA'}
-                  fillOpacity={isLit ? 0.28 : 0.4}
-                />
-                <circle
-                  cx={station.cx}
-                  cy={station.cy}
-                  r="4.5"
-                  fill={isLit ? '#92714F' : '#CFDADB'}
-                  stroke="#F7FAFA"
-                  strokeWidth="1.5"
-                />
-              </g>
-            );
-          })}
-        </svg>
-      </div>
+      <KnowledgeThread
+        pageScrollProgress={pageScrollProgress}
+        leadTip={leadTip}
+        threadPathRef={threadPathRef}
+        prefersReducedMotion={prefersReducedMotion}
+      />
 
       {/* =====================================================================
           SECTION 1: HERO — THE KNOWLEDGE UNIVERSE (BỐ CỤC ĐA LỚP 4 TẦNG)

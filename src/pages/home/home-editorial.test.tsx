@@ -1,13 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
+import { getSubjects } from '@/content-runtime';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { HERITAGE_ARTWORKS, HeritageArtShowcase } from '@/pages/home/HeritageArtShowcase';
 import { HomePage } from '@/pages/home/HomePage';
+import { KnowledgeThread, KNOWLEDGE_THREAD_STATIONS } from '@/pages/home/KnowledgeThread';
 import { QuickKaTeXDrawer } from '@/pages/home/QuickKaTeXDrawer';
 import { RotatingScholarlyQuote, SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
 import { ViewModeToggle } from '@/pages/home/ViewModeToggle';
-import { getSubjects } from '@/content-runtime';
 
 describe('Home Editorial Components & Scholarly Upgrades', () => {
   describe('RotatingScholarlyQuote Component', () => {
@@ -84,15 +85,28 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByAltText(HERITAGE_ARTWORKS[0]!.alt)).toBeInTheDocument();
     });
 
-    it('khung tranh sử dụng object-contain và chiều cao cố định để không bị xén ảnh', () => {
+    it('khung tranh sạch sẽ, chỉ chứa duy nhất ảnh tranh, không có nhãn che hoặc kính lúp', () => {
       const { container } = render(<HeritageArtShowcase />);
 
       const frame = screen.getByTestId('heritage-art-frame');
       expect(frame.className).toContain('h-[300px]');
       expect(frame.className).toContain('md:h-[340px]');
 
-      const img = container.querySelector('img');
-      expect(img?.className).toContain('object-contain');
+      // Khung chứa tranh không còn kính lúp overlay
+      expect(screen.queryByTestId('archival-zoom-lens')).not.toBeInTheDocument();
+      expect(screen.queryByText(/Kính lúp khảo sát/i)).not.toBeInTheDocument();
+
+      // Khung chỉ chứa duy nhất thẻ ảnh img
+      const imgs = frame.querySelectorAll('img');
+      expect(imgs).toHaveLength(1);
+      expect(imgs[0]?.className).toContain('object-contain');
+
+      // Nhãn thời gian & địa danh đã được chuyển ra ngoài khung tranh xuống hàng metadata
+      const metaBadge = container.querySelector(
+        '.inline-flex.items-center.rounded-md.bg-\\[\\#E1E9EA\\]',
+      );
+      expect(metaBadge).toBeInTheDocument();
+      expect(metaBadge?.textContent).toContain(HERITAGE_ARTWORKS[0]!.yearOrEra);
     });
 
     it('Khuê Văn Các sử dụng ảnh kiến trúc đích thực, không nhầm ảnh skyline đô thị', () => {
@@ -100,19 +114,6 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(khueVanCac).toBeDefined();
       expect(khueVanCac?.imageSrc).toContain('Khu%C3%AA_v%C4%83n_c%C3%A1c.jpg');
       expect(khueVanCac?.imageSrc).not.toContain('unsplash');
-    });
-
-    it('kích hoạt kính lúp khảo sát 2x khi di chuột vào khung tranh', () => {
-      render(<HeritageArtShowcase />);
-
-      const frame = screen.getByTestId('heritage-art-frame');
-      expect(screen.queryByTestId('archival-zoom-lens')).not.toBeInTheDocument();
-
-      fireEvent.mouseEnter(frame);
-      expect(screen.getByTestId('archival-zoom-lens')).toBeInTheDocument();
-
-      fireEvent.mouseLeave(frame);
-      expect(screen.queryByTestId('archival-zoom-lens')).not.toBeInTheDocument();
     });
 
     it('bấm [Lược sử tác phẩm] mở rộng hồ sơ văn khố với đầy đủ thông số', () => {
@@ -160,6 +161,78 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         'nguoi-chiem-tinh',
         'de-divina-proportione',
       ]);
+    });
+  });
+
+  describe('KnowledgeThread Component & Floral Bloom Animation', () => {
+    it('hiển thị SVG đường dẫn The Knowledge Thread và các trạm mốc', () => {
+      render(
+        <KnowledgeThread
+          pageScrollProgress={0}
+          leadTip={{ x: 720, y: 140 }}
+          prefersReducedMotion={false}
+        />,
+      );
+
+      expect(screen.getByTestId('the-knowledge-thread')).toBeInTheDocument();
+      expect(KNOWLEDGE_THREAD_STATIONS).toHaveLength(4);
+
+      KNOWLEDGE_THREAD_STATIONS.forEach((station) => {
+        expect(
+          screen.getByTestId(`knowledge-thread-station-${station.threshold}`),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('kích hoạt hiệu ứng hoa nở (Active Floral Bloom) khi cuộn tới trạm', () => {
+      // Khi pageScrollProgress = 0.35 (chạm tới trạm thứ 2: threshold 0.32)
+      render(
+        <KnowledgeThread
+          pageScrollProgress={0.35}
+          leadTip={{ x: 1120, y: 860 }}
+          prefersReducedMotion={false}
+        />,
+      );
+
+      const station2 = screen.getByTestId('knowledge-thread-station-0.32');
+      expect(station2).toBeInTheDocument();
+
+      const bloomGroup = station2.querySelector('[data-testid="floral-bloom-group"]');
+      expect(bloomGroup).toBeInTheDocument();
+      expect(bloomGroup?.getAttribute('transform')).toContain('scale(1)');
+      expect(bloomGroup?.getAttribute('transform')).toContain('rotate(20)');
+      expect(bloomGroup?.getAttribute('opacity')).toBe('1');
+
+      // Có cánh hoa xanh xô thơm (#718C7E) và nhụy hổ phách (#92714F)
+      const innerPetals = station2.querySelectorAll('path[fill="#718C7E"]');
+      expect(innerPetals.length).toBe(6);
+
+      const core = station2.querySelector('circle[fill="#92714F"]');
+      expect(core).toBeInTheDocument();
+
+      // Có vòng phát xung animate-ping khi đang bung nở
+      const pingRing = station2.querySelector('.animate-ping');
+      expect(pingRing).toBeInTheDocument();
+
+      // Kiểm tra trạm 1 (threshold 0.02) đã chuyển sang trạng thái Settled Bloom
+      const station1 = screen.getByTestId('knowledge-thread-station-0.02');
+      const settledBloom1 = station1.querySelector('[data-testid="floral-bloom-group"]');
+      expect(settledBloom1?.getAttribute('transform')).toContain('scale(0.9)');
+      expect(settledBloom1?.getAttribute('opacity')).toBe('0.35');
+    });
+
+    it('hỗ trợ chế độ giảm chuyển động prefers-reduced-motion', () => {
+      render(
+        <KnowledgeThread
+          pageScrollProgress={0.5}
+          leadTip={{ x: 1120, y: 860 }}
+          prefersReducedMotion={true}
+        />,
+      );
+
+      // Ở chế độ reduced motion, trạm đã cuộn qua (station 1, 2) hiển thị tĩnh, không có vòng animate-ping
+      const pingRings = document.querySelectorAll('.animate-ping');
+      expect(pingRings).toHaveLength(0);
     });
   });
 

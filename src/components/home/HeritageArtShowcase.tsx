@@ -7,15 +7,8 @@ import {
   Pause,
   Play,
   X,
-  ZoomIn,
 } from 'lucide-react';
-import {
-  type MouseEvent as ReactMouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 
@@ -248,22 +241,6 @@ export function HeritageArtShowcase() {
   const [imageError, setImageError] = useState(false);
   const [isMetadataOpen, setIsMetadataOpen] = useState(false);
 
-  // Trạng thái Kính lúp khảo sát vi mô (Archival Zoom Lens)
-  const [isLensActive, setIsLensActive] = useState(false);
-  const [lensPosition, setLensPosition] = useState<{
-    x: number;
-    y: number;
-    percentX: number;
-    percentY: number;
-  }>({
-    x: 120,
-    y: 90,
-    percentX: 50,
-    percentY: 50,
-  });
-
-  const frameRef = useRef<HTMLDivElement>(null);
-
   const totalArtworks = HERITAGE_ARTWORKS.length;
   const currentArtwork = HERITAGE_ARTWORKS[currentIndex] ?? HERITAGE_ARTWORKS[0]!;
 
@@ -305,29 +282,6 @@ export function HeritageArtShowcase() {
     };
   }, [handleNext, isMetadataOpen, isPaused]);
 
-  const handleFrameMouseMove = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (!frameRef.current || imageError) {
-      return;
-    }
-    const rect = frameRef.current.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) {
-      return;
-    }
-    const rawX = event.clientX - rect.left;
-    const rawY = event.clientY - rect.top;
-    const clampedX = Math.max(0, Math.min(rect.width, rawX));
-    const clampedY = Math.max(0, Math.min(rect.height, rawY));
-    const percentX = Math.max(0, Math.min(100, (clampedX / rect.width) * 100));
-    const percentY = Math.max(0, Math.min(100, (clampedY / rect.height) * 100));
-
-    setLensPosition({
-      x: clampedX,
-      y: clampedY,
-      percentX,
-      percentY,
-    });
-  };
-
   const formattedIndex = String(currentIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalArtworks).padStart(2, '0');
 
@@ -335,10 +289,7 @@ export function HeritageArtShowcase() {
     <div
       data-testid="heritage-art-showcase"
       onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => {
-        setIsPaused(false);
-        setIsLensActive(false);
-      }}
+      onMouseLeave={() => setIsPaused(false)}
       className="relative mx-auto flex w-full max-w-2xl flex-col rounded-3xl border border-[#CFDADB] bg-[#F7FAFA]/85 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#3F6570]/40 sm:p-6"
     >
       {/* Top Header Bar */}
@@ -407,21 +358,10 @@ export function HeritageArtShowcase() {
         </div>
       </div>
 
-      {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực + Kính lúp khảo sát 2x */}
+      {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực (Hoàn toàn sạch sẽ, không che ảnh) */}
       <div
-        ref={frameRef}
         data-testid="heritage-art-frame"
-        onMouseEnter={() => {
-          if (!imageError) {
-            setIsLensActive(true);
-          }
-        }}
-        onMouseLeave={() => setIsLensActive(false)}
-        onMouseMove={handleFrameMouseMove}
-        className={cn(
-          'relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#CFDADB]/60 bg-[#E1E9EA]/30 p-3 shadow-inner md:h-[340px]',
-          !imageError && 'cursor-crosshair',
-        )}
+        className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#CFDADB]/60 bg-[#E1E9EA]/30 p-2 shadow-inner md:h-[340px]"
       >
         {imageError ? (
           <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[#55676B]">
@@ -442,53 +382,6 @@ export function HeritageArtShowcase() {
             )}
           />
         )}
-
-        {/* Vòng tròn Kính lúp Khảo sát Vi mô 2x (Archival Zoom Lens) */}
-        {isLensActive && !imageError && (
-          <div
-            data-testid="archival-zoom-lens"
-            aria-hidden="true"
-            className="pointer-events-none absolute z-20 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#718C7E] bg-white/20 shadow-xl backdrop-contrast-125"
-            style={{
-              left: `${lensPosition.x}px`,
-              top: `${lensPosition.y}px`,
-              backgroundImage: `url("${currentArtwork.imageSrc}")`,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '220% 220%',
-              backgroundPosition: `${lensPosition.percentX}% ${lensPosition.percentY}%`,
-            }}
-          >
-            {/* Thập tự tâm điểm vi mô */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-3 w-[1px] bg-[#718C7E]/60" />
-              <div className="absolute h-[1px] w-3 bg-[#718C7E]/60" />
-            </div>
-            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded bg-[#29383D]/80 px-1.5 py-0.5 font-mono text-[8px] tracking-wider text-[#F7FAFA]">
-              2.0x
-            </span>
-          </div>
-        )}
-
-        {/* Nhãn chỉ dẫn Kính lúp góc trái trên */}
-        {!imageError && (
-          <div className="pointer-events-none absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB]/60 bg-[#F7FAFA]/85 px-2.5 py-1 text-[10px] font-medium text-[#55676B] backdrop-blur-md">
-            <ZoomIn className="h-3 w-3 text-[#3F6570]" aria-hidden="true" />
-            <span className="font-mono">Kính lúp khảo sát 2x</span>
-          </div>
-        )}
-
-        {/* Lớp bóng mờ nhẹ bên dưới ảnh tạo độ sâu học thuật */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#29383D]/40 via-transparent to-transparent"
-        />
-
-        {/* Thẻ năm tháng / xuất xứ ở góc ảnh */}
-        <div className="pointer-events-none absolute right-3 bottom-3 rounded-lg border border-[#CFDADB]/60 bg-[#F7FAFA]/90 px-2.5 py-1 backdrop-blur-md">
-          <span className="font-mono text-[10px] font-semibold text-[#3F6570]">
-            {currentArtwork.yearOrEra}
-          </span>
-        </div>
       </div>
 
       {/* Thông tin tác phẩm, Chú giải học thuật & Nút [Lược sử tác phẩm] */}
@@ -498,13 +391,24 @@ export function HeritageArtShowcase() {
           isFading ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
           <h3 className="font-serif text-base font-bold text-[#29383D] sm:text-lg">
             {currentArtwork.title}
           </h3>
-          <div className="flex items-center gap-2">
+
+          {/* Bố cục hàng Metadata: [Tên tác giả / Nghệ nhân] · [Thời kỳ - Địa danh] · [Nút: Lược sử tác phẩm] */}
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
             <span className="font-mono text-xs font-semibold text-[#3F6570]">
               {currentArtwork.artistOrOrigin}
+            </span>
+            <span className="text-[#55676B]" aria-hidden="true">
+              ·
+            </span>
+            <span className="inline-flex items-center rounded-md border border-[#CFDADB]/60 bg-[#E1E9EA] px-2 py-0.5 font-mono text-[11px] text-[#55676B]">
+              {currentArtwork.yearOrEra}
+            </span>
+            <span className="text-[#55676B]" aria-hidden="true">
+              ·
             </span>
             <button
               type="button"
@@ -518,7 +422,7 @@ export function HeritageArtShowcase() {
           </div>
         </div>
 
-        <p className="mt-1 font-serif text-xs text-[#718C7E] italic">{currentArtwork.caption}</p>
+        <p className="mt-2 font-serif text-xs text-[#718C7E] italic">{currentArtwork.caption}</p>
 
         <p className="mt-2 text-xs leading-relaxed text-[#55676B]">
           {currentArtwork.academicSignificance}
