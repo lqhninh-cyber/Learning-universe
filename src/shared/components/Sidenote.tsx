@@ -35,7 +35,7 @@ export interface SidenoteProps {
   /** Chú thích hình vẽ (dùng cho type="figure") */
   readonly caption?: ReactNode;
   /** Nội dung chú giải (hỗ trợ văn bản, KaTeX, micro-diagram, v.v.) */
-  readonly children: ReactNode;
+  readonly children?: ReactNode;
   /** Lớp CSS tùy biến */
   readonly className?: string;
 }

@@ -553,12 +553,12 @@ export const ColorSystemPreviewPage: FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full bg-[var(--edu-light)] px-3 py-0.5 font-mono text-xs font-semibold text-[var(--edu-accent)]">
-                      EDUT1401 · KHOA HỌC GIÁO DỤC
+                      EDUC2802 · KHOA HỌC GIÁO DỤC
                     </span>
-                    <span className="text-xs text-[var(--text-secondary)]">Nghiệp vụ Sư phạm</span>
+                    <span className="text-xs text-[var(--text-secondary)]">04 Tín chỉ</span>
                   </div>
                   <h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] transition-colors group-hover:text-[var(--secondary)]">
-                    Giáo dục học &amp; Nghiệp vụ Sư phạm
+                    Giáo dục học
                   </h3>
                   <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                     Trang bị cơ sở lý luận giáo dục học hiện đại, phương pháp chủ nhiệm lớp, thiết
@@ -567,7 +567,7 @@ export const ColorSystemPreviewPage: FC = () => {
                 </div>
                 <div className="mt-8 flex items-center justify-between border-t border-[var(--border-subtle)] pt-4">
                   <span className="text-xs font-semibold text-[var(--text-secondary)]">
-                    6 chương · 20 bài học chuẩn CLOs
+                    5 chương lý thuyết · 3 bài thực hành (CLO1–CLO9)
                   </span>
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--secondary)] text-white shadow-2xs transition-colors hover:bg-[#4E665C]">
                     <ChevronRight className="h-5 w-5" />

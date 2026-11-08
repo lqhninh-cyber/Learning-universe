@@ -33,7 +33,9 @@ export function LessonPrevNextNav({ subjectSlug, lessonId }: LessonPrevNextNavPr
             <span>Bài trước</span>
           </span>
           <span className="group-hover:text-subject-800 mt-2 text-sm font-semibold text-stone-900">
-            Bài {previous.chapter.number}.{previous.lesson.number}: {previous.lesson.title}
+            {/^(?:Bài|Thực hành|Chuyên đề)\s+\d/i.test(previous.lesson.title)
+              ? previous.lesson.title
+              : `Bài ${previous.chapter.number}.${previous.lesson.number}: ${previous.lesson.title}`}
           </span>
         </Link>
       ) : (
@@ -53,7 +55,9 @@ export function LessonPrevNextNav({ subjectSlug, lessonId }: LessonPrevNextNavPr
             />
           </span>
           <span className="group-hover:text-subject-800 mt-2 text-sm font-semibold text-stone-900">
-            Bài {next.chapter.number}.{next.lesson.number}: {next.lesson.title}
+            {/^(?:Bài|Thực hành|Chuyên đề)\s+\d/i.test(next.lesson.title)
+              ? next.lesson.title
+              : `Bài ${next.chapter.number}.${next.lesson.number}: ${next.lesson.title}`}
           </span>
         </Link>
       ) : (

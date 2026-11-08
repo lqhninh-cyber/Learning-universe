@@ -36,7 +36,9 @@ export function SubjectCard({ subject }: SubjectCardProps) {
       {/* Phía dưới: Số chương/bài và Nút tròn mũi tên > ở góc phải dẫn thẳng vào /courses/:slug */}
       <div className="mt-8 flex items-center justify-between gap-4 border-t border-[#CFDADB] pt-5">
         <span className="text-xs font-semibold text-[#55676B]">
-          {stats.chapterCount} chương · {stats.lessonCount} bài học
+          {subject.slug === 'giao-duc-hoc'
+            ? `04 tín chỉ · 5 chương & 3 bài thực hành (${stats.lessonCount} bài học)`
+            : `${stats.chapterCount} chương · ${stats.lessonCount} bài học`}
         </span>
 
         <Link

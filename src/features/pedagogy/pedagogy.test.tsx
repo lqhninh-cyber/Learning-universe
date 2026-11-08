@@ -18,6 +18,8 @@ import {
   QUIZ_20_QUESTIONS,
 } from '@/data/courses/giao-duc-hoc/chapter-6';
 import {
+  EDUC2802_CLOS,
+  EDUC2802_SYLLABUS_META,
   EDUCATIONAL_PRINCIPLES,
   GIAO_DUC_HOC_SUBJECT,
   getPedagogyLessonModule,
@@ -36,19 +38,23 @@ import { SourcePanel } from '@/features/lesson-reader';
 import type { ManifestLesson } from '@schemas/index';
 
 describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
-  describe('Cấu trúc học phần Giáo dục học (course.ts)', () => {
-    it('chứa môn học giao-duc-hoc trong getSubjects() và getSubjectBySlug()', () => {
+  describe('Cấu trúc học phần Giáo dục học EDUC2802 (course.ts)', () => {
+    it('chứa môn học giao-duc-hoc (EDUC2802) trong getSubjects() và getSubjectBySlug()', () => {
       const subjects = getSubjects();
       const gdh = getSubjectBySlug('giao-duc-hoc');
 
       expect(subjects.some((s) => s.id === 'giao-duc-hoc')).toBe(true);
       expect(gdh).toBeDefined();
       expect(gdh?.title).toBe('Giáo dục học');
+      expect(GIAO_DUC_HOC_SUBJECT.shortTitle).toBe('EDUC2802');
+      expect(EDUC2802_SYLLABUS_META.courseCode).toBe('EDUC2802');
+      expect(EDUC2802_SYLLABUS_META.credits).toBe('04 tín chỉ');
+      expect(EDUC2802_CLOS.length).toBe(9);
       expect(gdh?.curriculum?.chapterCount).toBe(6);
-      expect(gdh?.curriculum?.lessonCount).toBe(20);
+      expect(gdh?.curriculum?.lessonCount).toBe(19);
     });
 
-    it('đảm bảo tất cả 20 bài học có đầy đủ estimatedMinutes và status published', () => {
+    it('đảm bảo tất cả 19 bài học (5 chương lý thuyết + 3 bài thực hành) có đầy đủ estimatedMinutes và status published', () => {
       let totalLessons = 0;
       for (const chapter of GIAO_DUC_HOC_SUBJECT.chapters) {
         for (const lesson of chapter.lessons) {
@@ -59,21 +65,21 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
           expect(lesson.title).toBeTruthy();
         }
       }
-      expect(totalLessons).toBe(20);
+      expect(totalLessons).toBe(19);
     });
 
-    it('Chương 1 có đủ 4 bài học chi tiết theo chuẩn CLO 1, CLO 2, CLO 3', () => {
+    it('Chương 1 có đủ 3 bài học chuẩn Giáo trình Giáo dục học HCMUE (Tr. 1–12)', () => {
       const ch1 = GIAO_DUC_HOC_SUBJECT.chapters[0]!;
-      expect(ch1.lessons.length).toBe(4);
+      expect(ch1.lessons.length).toBe(3);
       expect(ch1.lessons[0]!.slug).toBe('hoat-dong-su-pham-cua-nguoi-giao-vien');
       expect(ch1.lessons[1]!.slug).toBe('nhan-cach-va-chuan-nghe-nghiep-giao-vien-pho-thong');
-      expect(ch1.lessons[2]!.slug).toBe('ren-luyen-de-tro-thanh-nguoi-giao-vien-hieu-qua');
-      expect(ch1.lessons[3]!.slug).toBe('tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1');
+      expect(ch1.lessons[2]!.slug).toBe('phat-trien-nghe-nghiep-giao-vien-pho-thong');
     });
 
-    it('tích hợp đủ 19 tài liệu học phần, văn bản pháp quy và cẩm nang hoạt động trải nghiệm', () => {
-      expect(PEDAGOGY_DOCUMENTS.length).toBe(19);
+    it('tích hợp đủ 20 tài liệu học phần, văn bản pháp quy và tài liệu Mô đun 2 THCS/THPT', () => {
+      expect(PEDAGOGY_DOCUMENTS.length).toBe(20);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'gt-gdh-hcmue')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'gioi-thieu-hp-gdh')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'luat-giao-duc-2019')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'chuan-nghe-nghiep-gv-tt20')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'dieu-le-truong-trung-hoc-tt32')).toBe(true);
@@ -82,6 +88,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtnhn-thcs-modun-4')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtnhn-thpt-modun-4')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtn-thcs-modun-2')).toBe(true);
+      expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-hdtn-thpt-modun-2')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-phuong-thuc-to-chuc-hdtn')).toBe(true);
       expect(PEDAGOGY_DOCUMENTS.some((d) => d.id === 'doc-quy-trinh-thiet-ke-chu-de-hdtn')).toBe(
         true,
@@ -133,109 +140,104 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
   });
 
   describe('Dispatcher getChapter1LessonModule', () => {
-    it('nạp đầy đủ 4 bài học chi tiết của Chương 1', () => {
+    it('nạp đầy đủ các bài học chi tiết của Chương 1 (hỗ trợ cả slug mới và legacy)', () => {
       const b1 = getChapter1LessonModule('gdh-c1-b1-hoat-dong-su-pham-cua-nguoi-giao-vien');
       const b2 = getChapter1LessonModule(
         'gdh-c1-b2-nhan-cach-va-chuan-nghe-nghiep-giao-vien-pho-thong',
       );
-      const b3 = getChapter1LessonModule(
+      const b3 = getChapter1LessonModule('gdh-c1-b3-phat-trien-nghe-nghiep-giao-vien-pho-thong');
+      const b3Legacy = getChapter1LessonModule(
         'gdh-c1-b3-ren-luyen-de-tro-thanh-nguoi-giao-vien-hieu-qua',
-      );
-      const b4 = getChapter1LessonModule(
-        'gdh-c1-b4-tinh-huong-su-pham-va-de-cuong-on-tap-chuong-1',
       );
 
       expect(b1).toBeDefined();
       expect(b1?.lessonMeta.headings.length).toBeGreaterThan(0);
       expect(b2).toBeDefined();
       expect(b3).toBeDefined();
-      expect(b4).toBeDefined();
+      expect(b3Legacy).toBeDefined();
     });
   });
 
   describe('Dispatcher getChapter2LessonModule', () => {
     it('nạp đầy đủ 3 bài học chi tiết của Chương 2', () => {
-      const b1 = getChapter2LessonModule('gdh-c2-b1-ban-chat-va-cac-chuc-nang-xa-hoi-cua-giao-duc');
-      const b2 = getChapter2LessonModule('gdh-c2-b2-giao-duc-va-su-phat-trien-nhan-cach');
-      const b3 = getChapter2LessonModule(
-        'gdh-c2-b3-giao-duc-hoc-la-mot-khoa-hoc-muc-dich-va-nguyen-ly-giao-duc',
+      const b1 = getChapter2LessonModule('gdh-c2-b1-giao-duc-la-mot-hien-tuong-xa-hoi-dac-biet');
+      const b2 = getChapter2LessonModule(
+        'gdh-c2-b2-giao-duc-hoc-la-mot-khoa-hoc-ve-giao-duc-con-nguoi',
       );
+      const b3 = getChapter2LessonModule('gdh-c2-b3-muc-dich-va-nguyen-li-giao-duc-viet-nam');
 
       expect(b1).toBeDefined();
-      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b1?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b2).toBeDefined();
-      expect(b2?.lessonMeta.headings.length).toBe(3);
+      expect(b2?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b3).toBeDefined();
-      expect(b3?.lessonMeta.headings.length).toBe(4);
+      expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
   });
 
   describe('Dispatcher getChapter3LessonModule', () => {
-    it('nạp đầy đủ 3 bài học chi tiết của Chương 3', () => {
-      const b1 = getChapter3LessonModule(
-        'gdh-c3-b1-co-cau-to-chuc-truong-pho-thong-va-khai-niem-hoat-dong-giao-duc',
-      );
+    it('nạp đầy đủ 4 bài học chi tiết của Chương 3', () => {
+      const b1 = getChapter3LessonModule('gdh-c3-b1-khai-quat-ve-giao-duc-pho-thong-viet-nam');
       const b2 = getChapter3LessonModule(
-        'gdh-c3-b2-he-thong-6-nguyen-tac-giao-duc-hoc-sinh-pho-thong',
+        'gdh-c3-b2-ban-chat-dac-diem-va-nguyen-tac-cua-hoat-dong-giao-duc',
       );
       const b3 = getChapter3LessonModule(
-        'gdh-c3-b3-muc-tieu-pham-chat-nang-luc-va-phuong-phap-giao-duc',
+        'gdh-c3-b3-cau-truc-thanh-to-phuong-phap-va-danh-gia-ket-qua-hoat-dong-giao-duc',
+      );
+      const b4 = getChapter3LessonModule(
+        'gdh-c3-b4-ki-nang-va-quy-trinh-xu-li-tinh-huong-giao-duc',
       );
 
       expect(b1).toBeDefined();
-      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b1?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b2).toBeDefined();
-      expect(b2?.lessonMeta.headings.length).toBe(2);
+      expect(b2?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b3).toBeDefined();
-      expect(b3?.lessonMeta.headings.length).toBe(4);
+      expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
+      expect(b4).toBeDefined();
+      expect(b4?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
   });
 
   describe('Dispatcher getChapter4LessonModule', () => {
-    it('nạp đầy đủ 4 bài học chi tiết của Chương 4', () => {
-      const b1 = getChapter4LessonModule('gdh-c4-b1-vi-tri-chuc-nang-va-nhiem-vu-cua-gvcn');
-      const b2 = getChapter4LessonModule('gdh-c4-b2-noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop');
-      const b3 = getChapter4LessonModule(
-        'gdh-c4-b3-yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem',
+    it('nạp đầy đủ 3 bài học chi tiết của Chương 4 (và tương thích ngược)', () => {
+      const b1 = getChapter4LessonModule(
+        'gdh-c4-b1-chuc-nang-va-nhiem-vu-cua-nguoi-giao-vien-chu-nhiem-lop',
       );
-      const b4 = getChapter4LessonModule(
-        'gdh-c4-b4-thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12',
+      const b2 = getChapter4LessonModule(
+        'gdh-c4-b2-tim-hieu-hoc-sinh-lap-ke-hoach-va-xay-dung-tap-the-hoc-sinh',
+      );
+      const b3 = getChapter4LessonModule(
+        'gdh-c4-b3-to-chuc-giao-duc-toan-dien-xay-dung-moi-truong-lop-hoc-va-phoi-hop-cac-luc-luong-giao-duc',
       );
 
       expect(b1).toBeDefined();
-      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b1?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b2).toBeDefined();
-      expect(b2?.lessonMeta.headings.length).toBe(2);
+      expect(b2?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b3).toBeDefined();
-      expect(b3?.lessonMeta.headings.length).toBe(2);
-      expect(b4).toBeDefined();
-      expect(b4?.lessonMeta.headings.length).toBe(3);
+      expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
   });
 
   describe('Dispatcher getChapter5LessonModule', () => {
-    it('nạp đầy đủ 4 bài học chi tiết của Chương 5', () => {
+    it('nạp đầy đủ 3 bài học chi tiết của Chương 5 (và tương thích ngược)', () => {
       const b1 = getChapter5LessonModule(
-        'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
+        'gdh-c5-b1-ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem-o-truong-pho-thong',
       );
       const b2 = getChapter5LessonModule(
-        'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
+        'gdh-c5-b2-phuong-thuc-va-loai-hinh-to-chuc-hoat-dong-trai-nghiem',
       );
       const b3 = getChapter5LessonModule(
-        'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
-      );
-      const b4 = getChapter5LessonModule(
-        'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
+        'gdh-c5-b3-danh-gia-ket-qua-dieu-kien-to-chuc-va-quy-trinh-thiet-ke-chu-de-hoat-dong-trai-nghiem',
       );
 
       expect(b1).toBeDefined();
-      expect(b1?.lessonMeta.headings.length).toBe(3);
+      expect(b1?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b2).toBeDefined();
-      expect(b2?.lessonMeta.headings.length).toBe(2);
+      expect(b2?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
       expect(b3).toBeDefined();
-      expect(b3?.lessonMeta.headings.length).toBe(2);
-      expect(b4).toBeDefined();
-      expect(b4?.lessonMeta.headings.length).toBe(2);
+      expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
   });
 
@@ -324,8 +326,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
     });
   });
 
-  describe('Chương 6 - Cẩm nang Xử lý Tình huống sư phạm & Đề cương Ôn tập', () => {
-    it('chứa đủ 20 tình huống sư phạm thực tế, 10 câu hỏi tự luận, 20 câu trắc nghiệm', () => {
+  describe('Chương 6 - Khối Thực hành Nghiệp vụ Sư phạm (3 Bài Thực hành)', () => {
+    it('chứa đủ 20 tình huống sư phạm thực tế (5 bước), 10 câu hỏi tự luận, 20 câu trắc nghiệm', () => {
       expect(PEDAGOGICAL_20_CASE_STUDIES.length).toBe(20);
       expect(ESSAY_EXAM_QUESTIONS.length).toBe(10);
       expect(QUIZ_20_QUESTIONS.length).toBe(20);
@@ -337,21 +339,23 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(categories.has('integrity')).toBe(true);
       expect(categories.has('parent')).toBe(true);
 
-      // Mỗi tình huống có đủ cấu trúc 4 phần
+      // Mỗi tình huống có đủ cấu trúc 5 bước chuẩn Mục 3.3.6 Giáo trình HCMUE
       for (const item of PEDAGOGICAL_20_CASE_STUDIES) {
         expect(item.id).toBeGreaterThan(0);
         expect(item.title).toBeTruthy();
         expect(item.context).toBeTruthy();
         expect(item.question).toBeTruthy();
         expect(item.principlesApplied.length).toBeGreaterThanOrEqual(1);
-        expect(item.solutionSteps.length).toBeGreaterThanOrEqual(4);
+        expect(item.solutionSteps.length).toBe(5);
         expect(item.pitfallsToAvoid.length).toBeGreaterThanOrEqual(1);
         expect(item.coreLesson).toBeTruthy();
       }
     });
 
-    it('nạp đúng module cho Bài 6.1 qua slug chính, shortcut aliases và getPedagogyLessonModule', () => {
+    it('nạp đúng module cho Thực hành 1 (Bài 6.1) qua slug chính, shortcut aliases và getPedagogyLessonModule', () => {
       const aliases = [
+        'gdh-th-b1-phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te',
+        'thuc-hanh-1',
         'gdh-c6-b1-ngan-hang-20-tinh-huong-su-pham-thuc-te',
         'ngan-hang-20-tinh-huong-su-pham-thuc-te',
         '6-1',
@@ -363,17 +367,21 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       for (const slug of aliases) {
         const mod = getChapter6LessonModule(slug);
         expect(mod).toBeDefined();
-        expect(mod?.frontmatter.title).toContain('Ngân hàng 20 tình huống sư phạm');
+        expect(mod?.frontmatter.title).toContain('20 tình huống sư phạm');
         expect(mod?.lessonMeta.headings.length).toBeGreaterThanOrEqual(2);
       }
 
-      const viaMain = getPedagogyLessonModule('gdh-c6-b1-ngan-hang-20-tinh-huong-su-pham-thuc-te');
+      const viaMain = getPedagogyLessonModule(
+        'gdh-th-b1-phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te',
+      );
       expect(viaMain).toBeDefined();
-      expect(viaMain?.frontmatter.title).toContain('Ngân hàng 20 tình huống sư phạm');
+      expect(viaMain?.frontmatter.title).toContain('20 tình huống sư phạm');
     });
 
-    it('nạp đúng module cho Bài 6.2 qua slug chính, shortcut aliases và getPedagogyLessonModule', () => {
+    it('nạp đúng module cho Thực hành 2 (Bài 6.2) qua slug chính, shortcut aliases và getPedagogyLessonModule', () => {
       const aliases = [
+        'gdh-th-b2-lap-ke-hoach-giao-duc-lop-chu-nhiem-va-thiet-ke-tiet-sinh-hoat-lop',
+        'thuc-hanh-2',
         'gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
         'de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
         '6-2',
@@ -385,33 +393,64 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       for (const slug of aliases) {
         const mod = getChapter6LessonModule(slug);
         expect(mod).toBeDefined();
-        expect(mod?.frontmatter.title).toContain('Đề cương câu hỏi ôn thi tự luận');
+        expect(mod?.frontmatter.title).toContain('Thực hành 2');
         expect(mod?.lessonMeta.headings.length).toBeGreaterThanOrEqual(2);
       }
 
       const viaMain = getPedagogyLessonModule(
-        'gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an',
+        'gdh-th-b2-lap-ke-hoach-giao-duc-lop-chu-nhiem-va-thiet-ke-tiet-sinh-hoat-lop',
       );
       expect(viaMain).toBeDefined();
-      expect(viaMain?.frontmatter.title).toContain('Đề cương câu hỏi ôn thi tự luận');
+      expect(viaMain?.frontmatter.title).toContain('Thực hành 2');
     });
 
-    it('hỗ trợ giải quyết đường dẫn qua resolveLessonShortcut và getLessonBySlug', () => {
+    it('nạp đúng module cho Thực hành 3 (Bài 6.3) tích hợp tài liệu Mô đun 2 THCS & THPT', () => {
+      const aliases = [
+        'gdh-th-b3-thiet-ke-ke-hoach-chu-de-hoat-dong-trai-nghiem-huong-nghiep',
+        'thiet-ke-ke-hoach-chu-de-hoat-dong-trai-nghiem-huong-nghiep',
+        'thuc-hanh-3',
+        '6-3',
+        'bai-6-3',
+        'c6-b3',
+      ];
+
+      for (const slug of aliases) {
+        const mod = getChapter6LessonModule(slug);
+        expect(mod).toBeDefined();
+        expect(mod?.frontmatter.title).toContain('Thực hành 3');
+        expect(mod?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
+      }
+
+      const mod63 = getChapter6LessonModule('6-3');
+      const Component63 = mod63!.default;
+      render(<Component63 />);
+      expect(screen.getByText(/Tích hợp Tài liệu Mô đun 2/i)).toBeInTheDocument();
+    });
+
+    it('hỗ trợ giải quyết đường dẫn qua resolveLessonShortcut và getLessonBySlug cho cả 3 bài Thực hành', () => {
       const resolved6_1 = resolveLessonShortcut('6-1');
       expect(resolved6_1).toBeDefined();
-      expect(resolved6_1?.lesson.title).toContain('Ngân hàng 20 tình huống');
+      expect(resolved6_1?.lesson.title).toContain('20 tình huống sư phạm');
 
       const resolved6_2 = resolveLessonShortcut('6-2');
       expect(resolved6_2).toBeDefined();
-      expect(resolved6_2?.lesson.title).toContain('Đề cương câu hỏi ôn thi');
+      expect(resolved6_2?.lesson.title).toContain('Lập kế hoạch giáo dục lớp chủ nhiệm');
+
+      const resolved6_3 = resolveLessonShortcut('6-3');
+      expect(resolved6_3).toBeDefined();
+      expect(resolved6_3?.lesson.title).toContain('Thiết kế kế hoạch chủ đề Hoạt động trải nghiệm');
 
       const bySlug6_1 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-1');
       expect(bySlug6_1).toBeDefined();
-      expect(bySlug6_1?.lesson.title).toContain('Ngân hàng 20 tình huống');
+      expect(bySlug6_1?.lesson.title).toContain('20 tình huống sư phạm');
 
       const bySlug6_2 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-2');
       expect(bySlug6_2).toBeDefined();
-      expect(bySlug6_2?.lesson.title).toContain('Đề cương câu hỏi ôn thi');
+      expect(bySlug6_2?.lesson.title).toContain('Lập kế hoạch giáo dục lớp chủ nhiệm');
+
+      const bySlug6_3 = getLessonBySlug('giao-duc-hoc', 'chuong-6', '6-3');
+      expect(bySlug6_3).toBeDefined();
+      expect(bySlug6_3?.lesson.title).toContain('Thiết kế kế hoạch chủ đề Hoạt động trải nghiệm');
     });
 
     it('render Lesson6_1View và tương tác chọn bộ lọc tình huống và xem gợi ý', () => {
@@ -431,13 +470,13 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       const filterBtn = screen.getByRole('button', { name: /Chống đối & Kỷ cương/i });
       fireEvent.click(filterBtn);
       expect(
-        screen.getByText(/Học sinh công khai cãi lại và bất hợp tác trong giờ học/i),
-      ).toBeInTheDocument();
+        screen.getAllByText(/Học sinh công khai cãi lại và bất hợp tác trong giờ học/i).length,
+      ).toBeGreaterThanOrEqual(1);
 
       // Tình huống 1 đã mở mặc định, kiểm tra nội dung
-      expect(screen.getByText(/Bối cảnh tình huống thực tế/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Bối cảnh tình huống thực tế/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText(/Phương án xử lý tối ưu theo chuẩn Sư phạm/i)).toBeInTheDocument();
-      expect(screen.getByText(/Bẫy sư phạm cần tránh/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Bẫy sư phạm cần tránh/i).length).toBeGreaterThanOrEqual(1);
     });
 
     it('render Lesson6_2View và tương tác mở dàn ý tự luận và làm trắc nghiệm', () => {
@@ -447,7 +486,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       render(<Component />);
 
       expect(
-        screen.getByText(/Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao/i),
+        screen.getByText(/Thực hành Lập Kế hoạch Giáo dục Lớp Chủ nhiệm & Ma trận Đề thi Tự luận/i),
       ).toBeInTheDocument();
       expect(
         screen.getByText(/Tuyển tập 10 Câu hỏi Tự luận Kinh điển & Barem Điểm Chi tiết/i),
@@ -517,7 +556,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
 
       // Kiểm tra nội dung mẫu đã được nạp
       expect(screen.getByDisplayValue(/Đạt GPA các học phần Toán đại cương/i)).toBeInTheDocument();
-      expect(screen.getByText(/✓ Đã điền nội dung mẫu cho Năm 1!/i)).toBeInTheDocument();
+      expect(screen.getByText(/Đã điền nội dung mẫu cho Năm 1!/i)).toBeInTheDocument();
     });
   });
 
@@ -595,7 +634,9 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
         screen.getByText('Chuẩn nghề nghiệp giáo viên phổ thông (Thông tư 20/2018/TT-BGDĐT)'),
       ).toBeInTheDocument();
       expect(
-        screen.getByText('Điều lệ trường trung học (Thông tư 32/2020/TT-BGDĐT)'),
+        screen.getByText(
+          'Điều lệ trường THCS, THPT và trường phổ thông có nhiều cấp học (TT 32/2020)',
+        ),
       ).toBeInTheDocument();
     });
   });

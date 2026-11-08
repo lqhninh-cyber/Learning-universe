@@ -258,9 +258,9 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
 
     return {
       slug: 'giao-duc-hoc',
-      title: 'Giáo dục học đại cương',
-      code: 'EDUT1401',
-      credits: '3 Tín chỉ',
+      title: 'Giáo dục học',
+      code: 'EDUC2802',
+      credits: '04 Tín chỉ',
       badge: 'Khối Khoa học Giáo dục',
       instructor: 'TS. Lê Thị Thu Liễu (Khoa Khoa học Giáo dục, HCMUE)',
       description:

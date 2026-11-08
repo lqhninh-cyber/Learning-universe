@@ -362,12 +362,12 @@ export const FloatingNavbar: FC<FloatingNavbarProps> = ({
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-teal-800">
-                          Học phần EDUT1401
+                          Học phần EDUC2802
                         </span>
-                        <span className="text-[10px] text-stone-500">3 Tín chỉ</span>
+                        <span className="text-[10px] text-stone-500">04 Tín chỉ</span>
                       </div>
                       <h4 className="mt-1 text-xs font-bold text-stone-900 group-hover:text-teal-900">
-                        Giáo dục học đại cương
+                        Giáo dục học
                       </h4>
                       <p className="mt-1 line-clamp-2 text-[10px] text-stone-500">
                         Lao động sư phạm, nguyên tắc giáo dục &amp; công tác GVCN lớp.

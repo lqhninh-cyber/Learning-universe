@@ -193,7 +193,11 @@ export function ChapterAccordionList({
         return (
           <section
             key={chapter.id}
-            aria-label={`Chương ${chapter.number}: ${chapter.title}`}
+            aria-label={
+              /^(Chương|Chuyên đề|Khối)/i.test(chapter.title)
+                ? chapter.title
+                : `Chương ${chapter.number}: ${chapter.title}`
+            }
             className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-2xs transition-all hover:border-stone-300"
           >
             {/* Header Accordion có thể bấm để đóng / mở */}
@@ -206,11 +210,13 @@ export function ChapterAccordionList({
               >
                 <div className="flex min-w-0 items-start gap-3">
                   <div className="mt-0.5 shrink-0">
-                    <Badge variant="subject">Chương {chapter.number}</Badge>
+                    <Badge variant="subject">
+                      {/^Khối/i.test(chapter.title) ? 'Thực hành' : `Chương ${chapter.number}`}
+                    </Badge>
                   </div>
                   <div className="min-w-0 space-y-0.5">
                     <h2 className="text-base font-bold tracking-tight text-stone-900 sm:text-lg">
-                      {chapter.title}
+                      {chapter.title.replace(/^(?:Chương|Chuyên đề)\s+\d+\s*:\s*/i, '')}
                     </h2>
                     <p className="line-clamp-1 text-xs text-stone-500">{chapter.description}</p>
                   </div>
@@ -300,10 +306,15 @@ export function ChapterAccordionList({
                               <div className="space-y-1.5">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span className="text-subject-700 font-mono text-xs font-semibold">
-                                    Bài {chapter.number}.{lesson.number}
+                                    {/^Thực hành/i.test(lesson.title)
+                                      ? `Thực hành ${lesson.number}`
+                                      : `Bài ${chapter.number}.${lesson.number}`}
                                   </span>
                                   <h3 className="group-hover:text-subject-700 text-base font-semibold text-stone-900 transition-colors">
-                                    {lesson.title}
+                                    {lesson.title.replace(
+                                      /^(?:Bài\s+\d+(?:\.\d+)?|Thực hành\s+\d+|Chuyên đề\s+\d+(?:\.\d+)?)\s*:\s*/i,
+                                      '',
+                                    )}
                                   </h3>
                                   <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
                                   {isBookmarked && (

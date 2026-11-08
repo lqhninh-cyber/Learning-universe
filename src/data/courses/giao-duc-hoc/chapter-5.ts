@@ -1,1096 +1,927 @@
 import type { CompiledLessonModule } from '@/content-runtime/loader';
-import { useLearningStore } from '@/features/learning';
-import { LegalQuoteCard, ScholarQuote } from '@/features/pedagogy';
-import { Badge, Button, Card } from '@/shared/ui';
 import {
-  Award,
-  BookOpen,
-  Calendar,
-  CheckCircle2,
-  Compass,
-  FileText,
-  GraduationCap,
-  Layers,
-  Lightbulb,
-  Target,
-} from 'lucide-react';
-import { createElement, useState, type FC } from 'react';
+  CaseStudyBox,
+  ComparativeTable,
+  LegalReferenceBox,
+  NumberedProcessFlow,
+  PedagogyMetadataBar,
+  ScholarQuote,
+} from '@/features/pedagogy';
+import { Sidenote } from '@/shared/components/Sidenote';
+import { BookOpen, Compass, HelpCircle, Layers, Scale, Sparkles, Target } from 'lucide-react';
+import { createElement, type FC } from 'react';
+import type { PedagogicalCaseStudy } from './course';
 
 // ============================================================================
-// COMPONENT TIỆN ÍCH: THẺ TIẾN ĐỘ HOÀN THÀNH BÀI HỌC (SUPABASE SYNC)
-// ============================================================================
-
-interface LessonCompletionCardProps {
-  readonly lessonId: string;
-  readonly lessonTitle: string;
-}
-
-const LessonCompletionCard: FC<LessonCompletionCardProps> = ({ lessonId, lessonTitle }) => {
-  const isCompleted = useLearningStore((state) => Boolean(state.completedLessons[lessonId]));
-  const toggleCompleted = useLearningStore((state) => state.toggleLessonCompleted);
-
-  return createElement(
-    'div',
-    {
-      className:
-        'mt-8 rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs transition-all hover:border-amber-700/30',
-    },
-    createElement(
-      'div',
-      { className: 'flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between' },
-      createElement(
-        'div',
-        { className: 'space-y-1' },
-        createElement(
-          'div',
-          { className: 'flex items-center gap-2' },
-          createElement(CheckCircle2, {
-            className: `h-5 w-5 ${isCompleted ? 'text-emerald-600' : 'text-stone-400'}`,
-          }),
-          createElement(
-            'span',
-            { className: 'text-sm font-bold text-stone-900' },
-            isCompleted ? 'Bạn đã hoàn thành bài học này!' : 'Ghi nhận tiến độ học tập',
-          ),
-        ),
-        createElement(
-          'p',
-          { className: 'text-xs text-stone-500' },
-          isCompleted
-            ? `Tiến độ của bài "${lessonTitle}" đã được đồng bộ với hệ thống học tập của bạn.`
-            : 'Nhấn nút bên cạnh để đánh dấu đã hoàn thành và lưu tiến độ lên hệ thống.',
-        ),
-      ),
-      createElement(
-        Button,
-        {
-          variant: isCompleted ? 'subject' : 'outline',
-          size: 'sm',
-          onClick: () => toggleCompleted(lessonId),
-          className: 'shrink-0',
-        },
-        createElement(CheckCircle2, { className: 'h-4 w-4 mr-1.5' }),
-        isCompleted ? 'Đã hoàn thành' : 'Đánh dấu hoàn thành',
-      ),
-    ),
-  );
-};
-
-// ============================================================================
-// 1. COMPONENT BÀI 5.1: KHÁI NIỆM, BẢN CHẤT VÀ MỤC TIÊU CỦA HĐTN
+// 1. COMPONENT BÀI 5.1: BẢN CHẤT, MỤC TIÊU VÀ NỘI DUNG HOẠT ĐỘNG TRẢI NGHIỆM Ở TRƯỜNG PHỔ THÔNG (TR. 83–87)
 // ============================================================================
 
 export const Lesson5_1View: FC = () => {
+  const caseStudy5_1: PedagogicalCaseStudy = {
+    id: 501,
+    title: 'Khắc phục lối tổ chức Hoạt động trải nghiệm hình thức và phát triển 3 năng lực đặc thù',
+    context:
+      'Tại một trường THPT, khi triển khai Hoạt động trải nghiệm, hướng nghiệp khối 11, một số giáo viên chỉ chiếu slide thuyết giảng một chiều trên bục giảng suốt 45 phút như một tiết dạy học lý thuyết thông thường, học sinh ngồi nghe thụ động và chép bài vào vở mà không có bất kỳ hoạt động thực hành, chiêm nghiệm hay vận dụng nào.',
+    question:
+      'Vận dụng kiến thức về Bản chất phương thức giáo dục qua trải nghiệm, 3 năng lực đặc thù và 4 mạch nội dung của Hoạt động trải nghiệm, hướng nghiệp (Giáo trình Giáo dục học HCMUE tr. 83–87; CT GDPT 2018), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
+    principlesApplied: [
+      'Bản chất phương thức giáo dục qua trải nghiệm (Chu trình học tập qua trải nghiệm của David Kolb & Giáo trình HCMUE tr. 83–84)',
+      'Mục tiêu phát triển 3 năng lực đặc thù của HĐTN, HN (Thông tư 32/2018/TT-BGDĐT & Giáo trình tr. 84–85)',
+      'Nguyên tắc gắn giáo dục với thực tiễn đời sống và phát huy tính chủ thể của học sinh',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Giáo viên đã đồng nhất Hoạt động trải nghiệm, hướng nghiệp với tiết dạy học truyền thụ kiến thức lý thuyết một chiều, làm mất đi bản chất "học qua làm – chiêm nghiệm – khái quát hóa – vận dụng" của hoạt động giáo dục bắt buộc này.',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 5',
+        content:
+          'Theo Giáo trình HCMUE (tr. 83–85), bản chất của HĐTN là đặt học sinh vào các tình huống thực tiễn đa dạng để các em trực tiếp huy động tổng hợp kiến thức, kỹ năng, cảm xúc nhằm tạo ra kinh nghiệm mới và hình thành 3 năng lực đặc thù (Thích ứng với cuộc sống, Thiết kế và tổ chức hoạt động, Định hướng nghề nghiệp).',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: Tiếp tục duy trì hình thức thuyết giảng cho dễ quản lí trật tự lớp học. Phương án 2: Tổ bộ môn/Tổ chủ nhiệm tổ chức sinh hoạt chuyên đề tái cấu trúc kịch bản HĐTN theo chu trình trải nghiệm 4 pha, chuyển học sinh thành chủ thể thiết kế và thực hiện.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'Triển khai Phương án 2: Chuyển tiết giảng lý thuyết thành chuỗi hoạt động trải nghiệm (Khởi động kết nối kinh nghiệm -> Khám phá/Chiêm nghiệm qua xử lí tình huống, thảo luận trạm -> Rèn luyện kỹ năng qua đóng vai/lập kế hoạch -> Vận dụng thực tế ngoài lớp học).',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Dự giờ trao đổi kinh nghiệm giữa các giáo viên trong khối và khảo sát mức độ hứng thú, sản phẩm hoạt động thực tế của học sinh sau mỗi chủ đề.',
+      },
+    ],
+    pitfallsToAvoid: [
+      'Biến tiết Hoạt động trải nghiệm, hướng nghiệp thành tiết đọc – chép lý thuyết khô khan hoặc ngược lại biến thành giờ giải trí tự do không có mục tiêu sư phạm.',
+      'Tách rời hoạt động khỏi việc chiêm nghiệm, phản tư khiến học sinh chỉ "vui chơi xong rồi quên" mà không đúc kết được bài học giá trị.',
+    ],
+    coreLesson:
+      'Trải nghiệm chỉ thực sự trở thành giáo dục khi người học được trực tiếp tham gia hành động, được dẫn dắt chiêm nghiệm cảm xúc – nhận thức và tự mình chuyển hóa thành năng lực hành động mới.',
+  };
+
   return createElement(
     'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
+    { className: 'space-y-8 text-[#29383D] leading-relaxed' },
 
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 5: Tổ chức Hoạt động trải nghiệm ở trường phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 2',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 5.1: Khái niệm, Bản chất và Mục tiêu của Hoạt động trải nghiệm',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Khám phá định vị của Hoạt động trải nghiệm (HĐTN) và Hoạt động trải nghiệm, hướng nghiệp (HĐTN, HN) như một hoạt động giáo dục bắt buộc trong CT GDPT 2018; phân tích bản chất học tập qua trải nghiệm (Experiential Learning) và mục tiêu phân tầng theo từng cấp học.',
-      ),
-    ),
-
-    // SCHOLAR QUOTE: JOHN DEWEY
-    createElement(ScholarQuote, {
-      quote:
-        'Giáo dục không phải là sự chuẩn bị cho cuộc sống; giáo dục chính là cuộc sống. Con người chỉ thực sự học được khi hành động và suy ngẫm về hành động đó (Learning by doing).',
-      author: 'John Dewey',
-      title:
-        'Triết gia và nhà giáo dục học vĩ đại người Mỹ, cha đẻ của thuyết Thực dụng và Giáo dục tiến bộ',
-      source: 'Dân chủ và Giáo dục (Democracy and Education), 1916',
-      historicalContext:
-        'Cơ sở triết học và sư phạm nền tảng của phương pháp học tập qua trải nghiệm trong giáo dục hiện đại.',
+    // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
+    createElement(PedagogyMetadataBar, {
+      courseCode: 'EDUC2802',
+      clos: ['CLO8'],
+      textbookPages: 'Tr. 83–87 (Chương 5, Mục 5.1 – 5.3)',
+      legalRefs: [
+        'Thông tư 32/2018/TT-BGDĐT (Chương trình Hoạt động trải nghiệm và HĐTN, hướng nghiệp)',
+        'Tài liệu bồi dưỡng Mô đun 2 THCS & THPT (BGDĐT)',
+      ],
+      sessionNote: 'Lý thuyết & Thảo luận Chương 5',
     }),
 
-    // PHẦN I: KHÁI NIỆM & VỊ TRÍ PHÁP LÝ
+    // PHẦN I: BẢN CHẤT PHƯƠNG THỨC GIÁO DỤC QUA TRẢI NGHIỆM (TR. 83–84)
     createElement(
       'section',
-      { id: '1-khai-niem-vi-tri-hdtn', className: 'space-y-4' },
+      { id: '1-ban-chat-phuong-thuc-trai-nghiem', className: 'space-y-4' },
       createElement(
         'div',
         {
           className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(BookOpen, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '1. Khái niệm và Vị thế Pháp lý theo Chương trình GDPT 2018'),
+        createElement(Compass, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '1. Khái niệm và bản chất phương thức giáo dục qua trải nghiệm (Giáo trình tr. 83–84)',
+        ),
       ),
-      createElement(LegalQuoteCard, {
-        lawTitle: 'Chương trình Giáo dục phổ thông 2018',
-        article: 'Thông tư số 32/2018/TT-BGDĐT — Chương trình Hoạt động trải nghiệm',
+      createElement(
+        'div',
+        { className: 'text-sm text-[#29383D]' },
+        'Trong Chương trình GDPT 2018 (',
+        createElement('strong', null, 'Giáo trình Giáo dục học HCMUE tr. 83–84'),
+        '), ',
+        createElement('strong', null, 'Hoạt động trải nghiệm'),
+        ' (ở cấp Tiểu học) và ',
+        createElement('strong', null, 'Hoạt động trải nghiệm, hướng nghiệp'),
+        ' (ở cấp THCS và THPT) là hoạt động giáo dục bắt buộc từ lớp 1 đến lớp 12 với thời lượng ',
+        createElement('strong', null, '105 tiết/năm học'),
+        ' (tương đương 3 tiết/tuần).',
+        createElement(
+          Sidenote,
+          {
+            number: 1,
+            type: 'pedagogy',
+            title: 'Định vị pháp lý của HĐTN, HN trong CT GDPT 2018',
+          },
+          'Hoạt động trải nghiệm, hướng nghiệp không phải là hoạt động ngoại khóa tự chọn mà là hoạt động giáo dục bắt buộc do nhà giáo dục định hướng, thiết kế và hướng dẫn thực hiện trong và ngoài nhà trường.',
+        ),
+      ),
+
+      createElement(ScholarQuote, {
+        scholar: 'David A. Kolb (1984)',
+        work: 'Experiential Learning: Experience as the Source of Learning and Development',
         quote:
-          'Hoạt động trải nghiệm (cấp Tiểu học) và Hoạt động trải nghiệm, hướng nghiệp (cấp Trung học cơ sở và cấp Trung học phổ thông) là hoạt động giáo dục bắt buộc do nhà giáo dục định hướng, thiết kế và hướng dẫn thực hiện, tạo cơ hội cho học sinh tiếp cận thực tế, thể nghiệm các cảm xúc tích cực, khai thác những kinh nghiệm đã có và huy động tổng hợp kiến thức, kỹ năng của các môn học để thực hiện những nhiệm vụ được giao hoặc giải quyết những vấn đề của thực tiễn đời sống nhà trường, gia đình, xã hội; qua đó, chuyển hóa những kinh nghiệm đã trải qua thành tri thức mới, hiểu biết mới, kỹ năng mới góp phần phát huy tiềm năng sáng tạo và khả năng thích ứng với cuộc sống, môi trường và nghề nghiệp tương lai.\nThời lượng thực hiện: 105 tiết/năm học cho tất cả các lớp từ lớp 1 đến lớp 12.',
-        source: 'Bộ Giáo dục và Đào tạo, ban hành ngày 26/12/2018',
-        sourceUrl: '/docs/giao-duc-hoc/CT_Hoat_dong_trai_nghiem.pdf',
-        significance:
-          'Khẳng định tính chất bắt buộc độc lập với thời lượng 105 tiết/năm (tương đương 3 tiết/tuần), không phải là hoạt động ngoại khóa tùy chọn.',
+          'Học tập là quá trình mà tri thức và năng lực được kiến tạo thông qua sự chuyển hóa kinh nghiệm.',
+        analysis:
+          'Giáo trình HCMUE (tr. 83–84) khẳng định bản chất của phương thức trải nghiệm là quá trình học sinh trực tiếp tham gia vào các loại hình hoạt động thực tiễn dưới sự định hướng của nhà giáo dục, qua đó chuyển hóa kinh nghiệm cảm tính thành nhận thức lý tính, giá trị sống và năng lực hành động.',
+      }),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          'Chu trình 4 pha của Phương thức Giáo dục qua Trải nghiệm (Giáo trình HCMUE tr. 83–84)',
+        subtitle:
+          'Cơ sở tâm lí – giáo dục học cho việc thiết kế mọi chủ đề Hoạt động trải nghiệm, hướng nghiệp.',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title: 'Pha 1: Trải nghiệm cụ thể (Concrete Experience)',
+            badge: 'Trực tiếp tham gia',
+            description:
+              'Học sinh trực tiếp tham gia vào tình huống, sự kiện, trò chơi, dự án hoặc hoạt động thực tiễn bằng các giác quan, cảm xúc và kinh nghiệm sẵn có.',
+          },
+          {
+            number: 2,
+            title: 'Pha 2: Quan sát phản tỉnh / Chiêm nghiệm (Reflective Observation)',
+            badge: 'Phản tư & Phân tích',
+            description:
+              'Học sinh nhìn nhận lại những gì vừa trải qua, chia sẻ cảm xúc, phân tích các khía cạnh thành công hay vướng mắc dưới câu hỏi dẫn dắt của giáo viên.',
+          },
+          {
+            number: 3,
+            title: 'Pha 3: Khái quát hóa / Trừu tượng hóa (Abstract Conceptualization)',
+            badge: 'Đúc kết quy luật',
+            description:
+              'Từ các quan sát và chiêm nghiệm, học sinh tổng kết thành khái niệm, bài học kinh nghiệm, quy trình hành động hoặc hệ giá trị sống đúng đắn.',
+          },
+          {
+            number: 4,
+            title: 'Pha 4: Thử nghiệm tích cực / Vận dụng mới (Active Experimentation)',
+            badge: 'Hành động thực tiễn',
+            description:
+              'Học sinh đưa những bài học, quy trình vừa đúc kết vào giải quyết các nhiệm vụ mới trong học tập, đời sống gia đình và cộng đồng xã hội.',
+          },
+        ],
       }),
     ),
 
-    // PHẦN II: BẢN CHẤT HỌC TẬP QUA TRẢI NGHIỆM (DAVID KOLB)
+    // PHẦN II: MỤC TIÊU VÀ 3 NĂNG LỰC ĐẶC THÙ CỦA HĐTN, HƯỚNG NGHIỆP (TR. 84–85)
     createElement(
       'section',
-      { id: '2-ban-chat-chu-trinh-kolb', className: 'space-y-4' },
+      { id: '2-muc-tieu-va-3-nang-luc-dac-thu', className: 'space-y-4' },
       createElement(
         'div',
         {
           className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(Compass, { className: 'h-5 w-5 text-amber-800' }),
+        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
         createElement(
           'h3',
           null,
-          '2. Bản chất Giáo dục qua Trải nghiệm: Chu trình 4 Bước của David Kolb',
+          '2. Mục tiêu các cấp học và 3 năng lực đặc thù của Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 84–85)',
         ),
       ),
-      createElement(
-        'p',
-        null,
-        'Trải nghiệm không chỉ đơn giản là tham gia một hoạt động bề nổi. Giá trị giáo dục chỉ thực sự xuất hiện khi học sinh trải qua ',
-        createElement('strong', null, 'chu trình phản tư và khái quát hóa'),
-        ':',
-      ),
-      createElement(
-        'div',
-        { className: 'grid gap-3 sm:grid-cols-2 lg:grid-cols-4' },
-        [
-          {
-            step: 'Bước 1',
-            title: 'Trải nghiệm cụ thể',
-            sub: 'Concrete Experience',
-            desc: 'Học sinh trực tiếp tham gia vào một hoạt động, trò chơi, dự án hoặc tình huống thực tế đời sống.',
-          },
-          {
-            step: 'Bước 2',
-            title: 'Quan sát & Phản tư',
-            sub: 'Reflective Observation',
-            desc: 'Học sinh suy ngẫm, chia sẻ cảm xúc: Điều gì đã xảy ra? Mình cảm thấy thế nào? Tại sao lại như vậy?',
-          },
-          {
-            step: 'Bước 3',
-            title: 'Khái quát hóa tri thức',
-            sub: 'Abstract Conceptualization',
-            desc: 'Rút ra bài học, đúc kết thành nguyên tắc ứng xử, quy tắc đạo đức hoặc giải pháp kỹ thuật mới.',
-          },
-          {
-            step: 'Bước 4',
-            title: 'Thử nghiệm tích cực',
-            sub: 'Active Experimentation',
-            desc: 'Ứng dụng ngay bài học và kỹ năng mới vào các tình huống thực tế của học đường và gia đình.',
-          },
-        ].map((item, idx) =>
-          createElement(
-            Card,
-            { key: idx, className: 'p-4 rounded-xl border-stone-200 bg-[#faf8f2] space-y-1.5' },
-            createElement(
-              'div',
-              { className: 'flex items-center justify-between' },
-              createElement(Badge, { variant: 'subjectSolid' }, item.step),
-              createElement('span', { className: 'text-[10px] text-stone-500 italic' }, item.sub),
-            ),
-            createElement('h4', { className: 'font-bold text-xs text-amber-950' }, item.title),
-            createElement('p', { className: 'text-xs text-stone-600 leading-relaxed' }, item.desc),
-          ),
-        ),
-      ),
+
+      createElement(LegalReferenceBox, {
+        documentTitle:
+          'Thông tư số 32/2018/TT-BGDĐT (Chương trình Hoạt động trải nghiệm và HĐTN, hướng nghiệp)',
+        article:
+          'Mục tiêu chung và Yêu cầu cần đạt về năng lực đặc thù (Giáo trình HCMUE tr. 84–85)',
+        quote:
+          'Hoạt động trải nghiệm và Hoạt động trải nghiệm, hướng nghiệp hình thành, phát triển ở học sinh năng lực thích ứng với cuộc sống, năng lực thiết kế và tổ chức hoạt động, năng lực định hướng nghề nghiệp; đồng thời góp phần hình thành, phát triển các phẩm chất chủ yếu và năng lực chung quy định trong Chương trình tổng thể.',
+        pedagogicalAnalysis:
+          'Mục tiêu HĐTN được thiết kế đồng tâm và phát triển nâng cao dần qua 3 cấp học: Tiểu học tập trung vào thói quen sinh hoạt nền nếp và kỹ năng tự phục vụ; THCS tập trung vào hoàn thiện nhân cách, kỹ năng xã hội và khám phá sở trường nghề nghiệp; THPT tập trung vào phẩm chất công dân, bản lĩnh thích ứng và đưa ra quyết định lựa chọn nghề nghiệp phù hợp.',
+      }),
+
+      createElement(ComparativeTable, {
+        title:
+          'Cấu trúc 3 Năng lực đặc thù của Hoạt động trải nghiệm, hướng nghiệp (Giáo trình HCMUE tr. 85)',
+        subtitle: 'Ba trụ cột năng lực đặc thù được đánh giá xuyên suốt từ lớp 1 đến lớp 12.',
+        headers: [
+          'Năng lực đặc thù',
+          'Các thành tố năng lực cốt lõi',
+          'Biểu hiện hành vi cần đạt ở học sinh',
+        ],
+        rows: [
+          [
+            '1. Năng lực thích ứng với cuộc sống',
+            '(1) Hiểu biết về bản thân và môi trường sống; (2) Kĩ năng điều chỉnh bản thân và đáp ứng với sự thay đổi.',
+            'Nhận diện được điểm mạnh, điểm yếu của bản thân; làm chủ cảm xúc, ứng phó tích cực với áp lực, rủi ro và thích nghi với môi trường học tập, sinh hoạt mới.',
+          ],
+          [
+            '2. Năng lực thiết kế và tổ chức hoạt động',
+            '(1) Kĩ năng lập kế hoạch; (2) Kĩ năng thực hiện kế hoạch và điều chỉnh hoạt động; (3) Kĩ năng đánh giá hoạt động.',
+            'Biết xác định mục tiêu, xây dựng kế hoạch cá nhân/nhóm, hợp tác điều phối nguồn lực để hoàn thành nhiệm vụ và tự đánh giá, rút kinh nghiệm sau hoạt động.',
+          ],
+          [
+            '3. Năng lực định hướng nghề nghiệp',
+            '(1) Hiểu biết về nghề nghiệp; (2) Hiểu biết và rèn luyện phẩm chất, năng lực liên quan đến nghề; (3) Kĩ năng ra quyết định và lập kế hoạch học tập theo định hướng nghề.',
+            'Tìm hiểu thông tin thế giới nghề nghiệp và nhu cầu thị trường lao động; đối chiếu phẩm chất, năng lực bản thân để chọn tổ hợp môn học và ngành nghề tương lai.',
+          ],
+        ],
+      }),
     ),
 
-    // PHẦN III: MỤC TIÊU PHÂN TẦNG THEO CẤP HỌC
+    // PHẦN III: 4 MẠCH NỘI DUNG CHÍNH CỦA HOẠT ĐỘNG TRẢI NGHIỆM, HƯỚNG NGHIỆP (TR. 85–87)
     createElement(
       'section',
-      { id: '3-muc-tieu-phan-tang-cap-hoc', className: 'space-y-4' },
+      { id: '3-bon-mach-noi-dung-hdtn', className: 'space-y-4' },
       createElement(
         'div',
         {
           className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(Target, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '3. Mục tiêu Cốt lõi Phân tầng theo Ba Cấp học'),
+        createElement(Layers, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '3. Bốn mạch nội dung chính của Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 85–87)',
+        ),
+      ),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          '4 Mạch nội dung và các hoạt động thành phần của HĐTN, HN (Giáo trình HCMUE tr. 85–87)',
+        subtitle:
+          'Bốn mạch nội dung triển khai xuyên suốt cả 3 cấp học với tỷ trọng phân bổ phù hợp theo đặc điểm tâm sinh lí lứa tuổi.',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title: 'Mạch 1: Hoạt động hướng vào bản thân',
+            badge: 'Khám phá & Rèn luyện bản thân',
+            description:
+              'Gồm: (a) Hoạt động khám phá bản thân (nhận diện đặc điểm cá nhân, sở thích, giá trị sống); (b) Hoạt động rèn luyện bản thân (tự phục vụ, quản lí thời gian, quản lí tài chính cá nhân, làm chủ cảm xúc và thích ứng).',
+          },
+          {
+            number: 2,
+            title: 'Mạch 2: Hoạt động hướng đến xã hội',
+            badge: 'Gia đình · Nhà trường · Cộng đồng',
+            description:
+              'Gồm: (a) Hoạt động chăm sóc gia đình (xây dựng gia đình hạnh phúc); (b) Hoạt động xây dựng nhà trường (tình bạn, tình thầy trò, văn hóa học đường); (c) Hoạt động xây dựng cộng đồng (thiện nguyện, nhân đạo, giao lưu văn hóa).',
+          },
+          {
+            number: 3,
+            title: 'Mạch 3: Hoạt động hướng đến tự nhiên',
+            badge: 'Cảnh quan & Môi trường',
+            description:
+              'Gồm: (a) Hoạt động tìm hiểu và bảo tồn cảnh quan thiên nhiên, danh lam thắng cảnh địa phương; (b) Hoạt động tìm hiểu và bảo vệ môi trường sinh thái, ứng phó với biến đổi khí hậu.',
+          },
+          {
+            number: 4,
+            title: 'Mạch 4: Hoạt động hướng nghiệp',
+            badge: 'Nghề nghiệp & Định hướng tương lai',
+            description:
+              'Gồm: (a) Hoạt động tìm hiểu nghề nghiệp (ý nghĩa, yêu cầu, an toàn lao động); (b) Hoạt động rèn luyện phẩm chất, năng lực phù hợp với định hướng nghề nghiệp; (c) Hoạt động lựa chọn hướng nghề nghiệp và lập kế hoạch học tập.',
+          },
+        ],
+      }),
+    ),
+
+    // PHẦN IV: CÂU HỎI ÔN TẬP & TÌNH HUỐNG THỰC HÀNH
+    createElement(
+      'section',
+      { id: '4-on-tap-va-tinh-huong-bai-5-1', className: 'space-y-6' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '4. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO8)'),
       ),
       createElement(
         'div',
-        { className: 'grid gap-4 sm:grid-cols-3' },
-        [
-          {
-            level: 'Cấp Tiểu học',
-            target: 'Tự chăm sóc & Hình thành thói quen',
-            content:
-              'Hình thành các thói quen sinh hoạt tích cực, nền nếp tự phục vụ; bước đầu có ý thức tự bảo vệ bản thân, quan tâm và yêu thương người thân trong gia đình.',
-          },
-          {
-            level: 'Cấp Trung học cơ sở',
-            target: 'Tự khẳng định & Thích ứng',
-            content:
-              'Phát triển khả năng tự khẳng định cá tính và giá trị bản thân; hình thành kỹ năng thích ứng với sự biến đổi tâm sinh lý lứa tuổi dậy thì; hiểu biết ban đầu về các ngành nghề để chuẩn bị phân luồng.',
-          },
-          {
-            level: 'Cấp Trung học phổ thông',
-            target: 'Tự chủ & Định hướng nghề nghiệp',
-            content:
-              'Phát triển năng lực tự chủ, phẩm chất trách nhiệm công dân; xác định rõ thiên hướng và năng khiếu bản thân; xây dựng kế hoạch học tập nghề nghiệp tương lai và chuẩn bị gia nhập thị trường lao động.',
-          },
-        ].map((lvl, idx) =>
-          createElement(
-            Card,
-            {
-              key: idx,
-              className: 'p-5 rounded-2xl border-stone-200 bg-white shadow-xs space-y-2',
-            },
-            createElement(
-              'div',
-              { className: 'flex items-center gap-2' },
-              createElement(Badge, { variant: 'subject' }, lvl.level),
-              createElement('h4', { className: 'font-bold text-xs text-teal-900' }, lvl.target),
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs text-stone-600 leading-relaxed' },
-              lvl.content,
-            ),
-          ),
+        { className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 space-y-2' },
+        createElement(
+          'p',
+          { className: 'text-sm font-bold text-[#29383D]' },
+          'Câu hỏi ôn tập (Giáo trình HCMUE tr. 124): Phân tích bản chất của phương thức giáo dục qua trải nghiệm, 3 năng lực đặc thù và 4 mạch nội dung chính của Hoạt động trải nghiệm, hướng nghiệp trong Chương trình GDPT 2018.',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B]' },
+          'Gợi ý trả lời: Làm rõ chu trình trải nghiệm 4 pha, 3 năng lực đặc thù (Thích ứng với cuộc sống; Thiết kế và tổ chức hoạt động; Định hướng nghề nghiệp) và 4 mạch nội dung (Hướng vào bản thân; Hướng đến xã hội; Hướng đến tự nhiên; Hướng nghiệp).',
         ),
       ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy5_1 }),
     ),
-
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem',
-      lessonTitle: 'Bài 5.1: Khái niệm, Bản chất và Mục tiêu của Hoạt động trải nghiệm',
-    }),
   );
 };
 
 // ============================================================================
-// 2. COMPONENT BÀI 5.2: NỘI DUNG VÀ PHƯƠNG THỨC TỔ CHỨC HĐTN
+// 2. COMPONENT BÀI 5.2: PHƯƠNG THỨC VÀ LOẠI HÌNH TỔ CHỨC HOẠT ĐỘNG TRẢI NGHIỆM (TR. 88–110)
 // ============================================================================
 
 export const Lesson5_2View: FC = () => {
-  const [activeTab, setActiveTab] = useState<'4-mach' | '4-loai-hinh'>('4-mach');
+  const caseStudy5_2: PedagogicalCaseStudy = {
+    id: 502,
+    title: 'Vận dụng phương pháp Sân khấu tương tác (5 bước) và loại hình Sinh hoạt dưới cờ',
+    context:
+      'Được phân công phụ trách tiết Sinh hoạt dưới cờ tuần tới với chủ đề "Phòng chống bắt nạt trên không gian mạng", ban đầu nhóm giáo viên dự định đọc một bài diễn văn tuyên truyền dài 30 phút. Tuy nhiên, Hiệu trưởng yêu cầu phải đổi mới theo đúng phương thức Khám phá và Thể nghiệm, tương tác để thu hút toàn bộ 800 học sinh toàn trường.',
+    question:
+      'Vận dụng lý luận về 4 nhóm phương thức (đặc biệt là quy trình 5 bước của Sân khấu tương tác và quy trình Diễn đàn) cùng 4 loại hình tổ chức HĐTN (Giáo trình Giáo dục học HCMUE tr. 88–110), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
+    principlesApplied: [
+      '4 nhóm phương thức tổ chức HĐTN: Phương thức Thể nghiệm, tương tác — Sân khấu tương tác 5 bước (Giáo trình tr. 91–96)',
+      '4 loại hình tổ chức HĐTN: Loại hình Sinh hoạt dưới cờ gồm phần Nghi lễ và phần Sinh hoạt theo chủ đề (Giáo trình tr. 108–109)',
+      'Nguyên tắc phát huy tính tích cực, chủ động, sáng tạo của học sinh',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Cần chuyển đổi hình thức tiết Sinh hoạt dưới cờ từ đọc diễn văn một chiều sang phương thức Thể nghiệm, tương tác (kết hợp Sân khấu tương tác và Diễn đàn) để học sinh toàn trường trực tiếp tham gia giải quyết tình huống.',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 5',
+        content:
+          'Theo Giáo trình HCMUE (tr. 93–95 & tr. 108–109), Sinh hoạt dưới cờ có ưu thế quy mô lớn, tạo hiệu ứng truyền thông mạnh mẽ. Phương pháp Sân khấu tương tác (5 bước) cho phép dừng vở kịch ở nút thắt cao trào để khán giả (học sinh dưới sân trường) thảo luận và lên sân khấu đóng vai thay đổi cái kết.',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: Rút ngắn bài diễn văn xuống 15 phút và chiếu thêm 1 video. Phương án 2: Tổ chức phần Sinh hoạt chủ đề dưới cờ (30 phút sau nghi lễ chào cờ) bằng vở kịch tương tác 5 bước do CLB Kịch của trường biểu diễn.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'Triển khai quy trình 5 bước Sân khấu tương tác (Giáo trình tr. 93–95): (Bước 1) Chuẩn bị kịch bản ngắn về một học sinh bị chế ảnh trêu chọc trên mạng, dừng ở cảnh nhân vật chính khủng hoảng; (Bước 2) Sáng tác/tập luyện với đội kịch nòng cốt; (Bước 3) Biểu diễn phần mở đầu đến nút thắt xung đột; (Bước 4) Người điều phối mời học sinh dưới sân trường thảo luận nhanh và mời 2–3 học sinh lên sân khấu nhập vai người bạn chứng kiến để tháo gỡ nút thắt; (Bước 5) Tổng kết thông điệp ứng xử văn minh trên không gian mạng.',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Chuyển giao nhiệm vụ tiếp nối về cho tiết Sinh hoạt lớp cuối tuần để từng lớp ký cam kết "Lớp học không bạo lực mạng".',
+      },
+    ],
+    pitfallsToAvoid: [
+      'Biến phần Sinh hoạt dưới cờ thành buổi tổng kết phê bình lỗi vi phạm nề nếp nặng nề kéo dài cả tiết học.',
+      'Diễn kịch một chiều từ đầu đến cuối mà không có bước tương tác, đối thoại với học sinh toàn trường.',
+    ],
+    coreLesson:
+      'Sự kết hợp nhuần nhuyễn giữa các loại hình (Sinh hoạt dưới cờ – Sinh hoạt lớp) với quy trình chuẩn của các phương pháp trải nghiệm (Sân khấu tương tác, Diễn đàn) giúp biến sân trường thành không gian giáo dục sống động.',
+  };
 
   return createElement(
     'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
+    { className: 'space-y-8 text-[#29383D] leading-relaxed' },
 
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 5: Tổ chức Hoạt động trải nghiệm ở trường phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 2',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 5.2: Nội dung và Phương thức tổ chức Hoạt động trải nghiệm',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Phân tích chuyên sâu 4 mạch nội dung cốt lõi xuyên suốt từ lớp 1 đến lớp 12 và 4 loại hình tổ chức cơ bản trong nhà trường phổ thông (Sinh hoạt dưới cờ, Sinh hoạt lớp, HĐGD theo chủ đề, Hoạt động CLB) cùng hệ thống phương pháp phong phú.',
-      ),
-    ),
-
-    // PHẦN CHUYỂN ĐỔI: 4 MẠCH NỘI DUNG & 4 LOẠI HÌNH
-    createElement(
-      'div',
-      { className: 'flex flex-wrap gap-2 rounded-xl bg-stone-100 p-1.5 text-xs font-semibold' },
-      createElement(
-        'button',
-        {
-          type: 'button',
-          onClick: () => setActiveTab('4-mach'),
-          className: `flex items-center gap-1.5 rounded-lg px-3.5 py-2 transition-all ${
-            activeTab === '4-mach'
-              ? 'bg-white text-teal-900 shadow-2xs font-bold'
-              : 'text-stone-600 hover:text-stone-900'
-          }`,
-        },
-        createElement(Layers, { className: 'h-4 w-4' }),
-        'Bốn Mạch Nội dung Xuyên suốt',
-      ),
-      createElement(
-        'button',
-        {
-          type: 'button',
-          onClick: () => setActiveTab('4-loai-hinh'),
-          className: `flex items-center gap-1.5 rounded-lg px-3.5 py-2 transition-all ${
-            activeTab === '4-loai-hinh'
-              ? 'bg-white text-teal-900 shadow-2xs font-bold'
-              : 'text-stone-600 hover:text-stone-900'
-          }`,
-        },
-        createElement(Calendar, { className: 'h-4 w-4' }),
-        'Bốn Loại hình Tổ chức Cơ bản',
-      ),
-    ),
-
-    // NỘI DUNG TAB 1: 4 MẠCH NỘI DUNG
-    activeTab === '4-mach' &&
-      createElement(
-        'section',
-        { id: '1-bon-mach-noi-dung', className: 'space-y-4' },
-        createElement(
-          'div',
-          { className: 'grid gap-4 sm:grid-cols-2' },
-          [
-            {
-              title: '1. Hoạt động hướng vào bản thân',
-              sub: 'Khám phá & Rèn luyện cá nhân',
-              desc: 'Giúp học sinh tự nhận thức về điểm mạnh, điểm yếu, sở thích, tính cách; rèn luyện thói quen sinh hoạt khoa học, kỹ năng quản lý thời gian, tự chăm sóc sức khỏe và kiểm soát cảm xúc tiêu cực.',
-            },
-            {
-              title: '2. Hoạt động hướng đến xã hội',
-              sub: 'Gia đình, Nhà trường & Cộng đồng',
-              desc: 'Chăm sóc và gắn kết tình cảm gia đình, hiếu thảo với cha mẹ; xây dựng tình bạn trong sáng, phòng chống bạo lực học đường; tham gia các hoạt động tình nguyện, đền ơn đáp nghĩa và ứng xử văn minh nơi công cộng.',
-            },
-            {
-              title: '3. Hoạt động hướng đến tự nhiên',
-              sub: 'Môi trường sống & Ứng phó thiên tai',
-              desc: 'Tìm hiểu và bảo vệ cảnh quan thiên nhiên quê hương; hình thành ý thức tiết kiệm năng lượng, phân loại rác thải tại nguồn; rèn luyện kỹ năng sinh tồn và thích ứng với biến đổi khí hậu.',
-            },
-            {
-              title: '4. Hoạt động hướng nghiệp',
-              sub: 'Tìm hiểu nghề & Định hướng tương lai',
-              desc: 'Tìm hiểu thế giới nghề nghiệp phong phú và yêu cầu của thị trường lao động; rèn luyện phẩm chất và tác phong của người lao động; đối chiếu sở trường bản thân để lựa chọn ngành học, trường học phù hợp.',
-            },
-          ].map((m, idx) =>
-            createElement(
-              Card,
-              {
-                key: idx,
-                className: 'p-5 rounded-2xl border-stone-200 bg-white shadow-xs space-y-2',
-              },
-              createElement(
-                'div',
-                { className: 'text-xs font-bold text-teal-900 flex items-center justify-between' },
-                createElement('span', null, m.title),
-                createElement(Badge, { variant: 'neutral' }, m.sub),
-              ),
-              createElement('p', { className: 'text-xs text-stone-600 leading-relaxed' }, m.desc),
-            ),
-          ),
-        ),
-      ),
-
-    // NỘI DUNG TAB 2: 4 LOẠI HÌNH TỔ CHỨC
-    activeTab === '4-loai-hinh' &&
-      createElement(
-        'section',
-        { id: '2-bon-loai-hinh-to-chuc', className: 'space-y-4' },
-        createElement(
-          'div',
-          { className: 'grid gap-4 sm:grid-cols-2' },
-          [
-            {
-              type: 'Sinh hoạt dưới cờ',
-              scale: 'Toàn trường / Khối lớp',
-              freq: 'Định kỳ sáng thứ Hai hàng tuần',
-              desc: 'Tổ chức nghi lễ chào cờ trang nghiêm kết hợp hoạt động giáo dục theo chủ đề tuần/tháng. Do học sinh phối hợp Đoàn trường, Đội thiếu niên thiết kế và dẫn dắt (văn nghệ, kịch ngắn, tọa đàm ngắn).',
-            },
-            {
-              type: 'Sinh hoạt lớp',
-              scale: 'Tập thể từng lớp học',
-              freq: 'Tiết cuối tuần',
-              desc: 'Sơ kết thi đua tuần, lắng nghe tâm tư học sinh và triển khai chủ đề trải nghiệm tuần kế tiếp. Do Ban cán sự lớp chủ trì, GVCN đóng vai trò cố vấn chuyên môn.',
-            },
-            {
-              type: 'Hoạt động giáo dục theo chủ đề',
-              scale: 'Quy mô lớp, khối hoặc liên trường',
-              freq: 'Theo kế hoạch năm học',
-              desc: 'Các buổi chuyên đề trải nghiệm sâu (diễn đàn, hội thi, dự án, sân khấu hóa, tọa đàm với chuyên gia tâm lý hoặc doanh nhân) giúp học sinh đào sâu kiến thức và rèn luyện kỹ năng thực tế.',
-            },
-            {
-              type: 'Hoạt động Câu lạc bộ',
-              scale: 'Nhóm học sinh cùng sở thích',
-              freq: 'Sau giờ học hoặc cuối tuần',
-              desc: 'Môi trường rèn luyện tự nguyện: CLB STEM, Nghệ thuật, Thể thao, Truyền thông, Tiếng Anh, Tình nguyện; tạo đất diễn cho từng cá nhân bộc lộ năng khiếu.',
-            },
-          ].map((item, idx) =>
-            createElement(
-              Card,
-              { key: idx, className: 'p-5 rounded-2xl border-stone-200 bg-[#faf8f2] space-y-2' },
-              createElement(
-                'div',
-                { className: 'flex items-center justify-between' },
-                createElement('h4', { className: 'text-xs font-bold text-amber-950' }, item.type),
-                createElement(Badge, { variant: 'subjectSolid' }, item.scale),
-              ),
-              createElement(
-                'div',
-                { className: 'text-[11px] text-amber-800 font-semibold' },
-                'Thời điểm: ',
-                item.freq,
-              ),
-              createElement(
-                'p',
-                { className: 'text-xs text-stone-600 leading-relaxed' },
-                item.desc,
-              ),
-            ),
-          ),
-        ),
-      ),
-
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem',
-      lessonTitle: 'Bài 5.2: Nội dung và Phương thức tổ chức Hoạt động trải nghiệm',
+    // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
+    createElement(PedagogyMetadataBar, {
+      courseCode: 'EDUC2802',
+      clos: ['CLO8', 'CLO9'],
+      textbookPages: 'Tr. 88–110 (Chương 5, Mục 5.4 – 5.5)',
+      legalRefs: [
+        'Thông tư 32/2018/TT-BGDĐT (Phương thức và Loại hình tổ chức HĐTN, HN)',
+        'Tài liệu Phương thức tổ chức HĐTN & Mô đun 2 THCS, THPT',
+      ],
+      sessionNote: 'Lý thuyết, Thảo luận & Thực hành 3',
     }),
-  );
-};
 
-// ============================================================================
-// 3. COMPONENT BÀI 5.3: QUY TRÌNH THIẾT KẾ KẾ HOẠCH & TIẾN TRÌNH 4 BƯỚC
-// ============================================================================
-
-export const Lesson5_3View: FC = () => {
-  return createElement(
-    'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
-
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 5: Tổ chức Hoạt động trải nghiệm ở trường phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 3',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 5.3: Quy trình thiết kế kế hoạch chủ đề HĐTN và Tiến trình 4 bước tổ chức',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Nắm vững quy trình thiết kế kế hoạch giáo dục chủ đề HĐTN qua 6 bước bài bản theo Giáo trình HCMUE; làm chủ chuỗi tiến trình 4 bước tổ chức một hoạt động cụ thể: Chuyển giao nhiệm vụ -> Thực hiện nhiệm vụ -> Báo cáo, thảo luận -> Đánh giá, kết luận.',
-      ),
-    ),
-
-    // PHẦN I: QUY TRÌNH 6 BƯỚC THIẾT KẾ KẾ HOẠCH CHỦ ĐỀ
+    // PHẦN I: 4 NHÓM PHƯƠNG THỨC VÀ QUY TRÌNH CÁC PHƯƠNG PHÁP TỔ CHỨC HĐTN (TR. 88–107)
     createElement(
       'section',
-      { id: '1-quy-trinh-6-buoc-thiet-ke-hdtn', className: 'space-y-4' },
+      { id: '1-bon-nhom-phuong-thuc-to-chuc-hdtn', className: 'space-y-4' },
       createElement(
         'div',
         {
           className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(FileText, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '1. Quy trình 6 Bước Thiết kế Kế hoạch Chủ đề HĐTN (HCMUE)'),
-      ),
-      createElement(
-        'div',
-        { className: 'grid gap-3 sm:grid-cols-2 lg:grid-cols-3' },
-        [
-          {
-            step: 'Bước 1',
-            title: 'Xác định chủ đề & mục tiêu',
-            desc: 'Chọn tên chủ đề hấp dẫn, phù hợp lứa tuổi; xác định rõ phẩm chất và năng lực cần đạt theo chuẩn CT GDPT 2018.',
-          },
-          {
-            step: 'Bước 2',
-            title: 'Thiết kế nội dung hoạt động',
-            desc: 'Lựa chọn các nội dung trải nghiệm vừa sức, hấp dẫn, gắn liền với thực tiễn đời sống của học sinh.',
-          },
-          {
-            step: 'Bước 3',
-            title: 'Lựa chọn hình thức, phương pháp',
-            desc: 'Quyết định hình thức (sân khấu hóa, diễn đàn, trò chơi) và phương tiện học liệu (video, bảng phụ, phiếu khảo sát).',
-          },
-          {
-            step: 'Bước 4',
-            title: 'Chuẩn bị điều kiện tổ chức',
-            desc: 'Phân công nhiệm vụ học sinh, chuẩn bị địa điểm, thiết bị âm thanh, kịch bản dẫn chương trình và kinh phí dự trù.',
-          },
-          {
-            step: 'Bước 5',
-            title: 'Thiết kế tiến trình chi tiết',
-            desc: 'Xây dựng chuỗi hoạt động rõ ràng: Khởi động -> Khám phá -> Luyện tập/Thực hành -> Vận dụng thực tế.',
-          },
-          {
-            step: 'Bước 6',
-            title: 'Thiết kế công cụ đánh giá',
-            desc: 'Xây dựng Rubric tiêu chí đánh giá, bảng kiểm quan sát (checklist) hoặc phiếu phản tư tự đánh giá.',
-          },
-        ].map((item, idx) =>
-          createElement(
-            Card,
-            {
-              key: idx,
-              className: 'p-4 rounded-xl border-stone-200 bg-white shadow-xs space-y-1.5',
-            },
-            createElement(
-              'div',
-              { className: 'flex items-center gap-2' },
-              createElement(Badge, { variant: 'subjectSolid' }, item.step),
-              createElement('h4', { className: 'text-xs font-bold text-stone-900' }, item.title),
-            ),
-            createElement('p', { className: 'text-xs text-stone-600 leading-relaxed' }, item.desc),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN II: TIẾN TRÌNH 4 BƯỚC TỔ CHỨC HOẠT ĐỘNG
-    createElement(
-      'section',
-      { id: '2-tien-trinh-4-buoc-to-chuc', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Compass, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '2. Chuỗi Tiến trình 4 Bước Tổ chức Một Hoạt động Cụ thể'),
-      ),
-      createElement(
-        'div',
-        { className: 'space-y-3' },
-        [
-          {
-            num: '1',
-            name: 'Chuyển giao nhiệm vụ trải nghiệm',
-            detail:
-              'Giáo viên giao nhiệm vụ rõ ràng, sinh động, hấp dẫn; nêu rõ sản phẩm cần đạt được (bản vẽ, bài thuyết trình, tiểu phẩm), cách thức làm việc cá nhân/nhóm và thời gian thực hiện.',
-          },
-          {
-            num: '2',
-            name: 'Thực hiện nhiệm vụ',
-            detail:
-              'Học sinh tích cực bắt tay vào hoạt động; giáo viên theo dõi bao quát, quan sát phát hiện khó khăn, can thiệp hỗ trợ kịp thời mà không làm thay học sinh.',
-          },
-          {
-            num: '3',
-            name: 'Báo cáo và thảo luận',
-            detail:
-              'Các nhóm cử đại diện báo cáo kết quả; tạo cơ hội cho các nhóm khác đặt câu hỏi phản biện, tranh luận đa chiều; giáo viên lắng nghe và gợi mở câu hỏi phản tư.',
-          },
-          {
-            num: '4',
-            name: 'Nhận xét, đánh giá và kết luận',
-            detail:
-              'Giáo viên chính xác hóa các nội dung thảo luận, tổng kết bài học, củng cố cảm xúc tích cực và định hướng hành động vận dụng vào đời sống hàng ngày của học sinh.',
-          },
-        ].map((step, idx) =>
-          createElement(
-            Card,
-            {
-              key: idx,
-              className: 'p-4 rounded-xl border-stone-200 bg-[#faf8f2] flex items-start gap-3',
-            },
-            createElement(
-              'div',
-              {
-                className:
-                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-800 text-white font-bold text-xs',
-              },
-              step.num,
-            ),
-            createElement(
-              'div',
-              { className: 'space-y-1' },
-              createElement(
-                'h4',
-                { className: 'font-bold text-xs sm:text-sm text-teal-950' },
-                step.name,
-              ),
-              createElement(
-                'p',
-                { className: 'text-xs text-stone-600 leading-relaxed' },
-                step.detail,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc',
-      lessonTitle: 'Bài 5.3: Quy trình thiết kế kế hoạch chủ đề HĐTN và Tiến trình 4 bước tổ chức',
-    }),
-  );
-};
-
-// ============================================================================
-// 4. COMPONENT BÀI 5.4: ĐÁNH GIÁ KẾT QUẢ & THỰC HÀNH KẾ HOẠCH THEO RUBRIC A.1.9
-// ============================================================================
-
-export const Lesson5_4View: FC = () => {
-  return createElement(
-    'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
-
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 5: Tổ chức Hoạt động trải nghiệm ở trường phổ thông',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 3 (Đánh giá quá trình A.1.9 - 20%)',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 5.4: Đánh giá kết quả HĐTN & Thực hành xây dựng Kế hoạch theo Rubric A.1.9',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Nghiên cứu nguyên văn Bảng tiêu chí Rubric đánh giá bài tập thực hành HĐTN A.1.9 (Thang điểm 10) gồm 2 phần: Xây dựng kế hoạch (5.0 điểm) và Tổ chức thực hành (5.0 điểm); tham khảo Kế hoạch bài dạy mẫu chủ đề "Xây dựng tình bạn đẹp — Phòng chống bạo lực học đường" đạt chuẩn mức Tốt.',
-      ),
-    ),
-
-    // PHẦN I: NGUYÊN VĂN BẢNG RUBRIC A.1.9
-    createElement(
-      'section',
-      { id: '1-bang-rubric-a19', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Award, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '1. Bảng Tiêu chí Rubric Đánh giá Thực hành HĐTN (A.1.9 - 20%)'),
-      ),
-      createElement(
-        'div',
-        { className: 'overflow-x-auto rounded-xl border border-stone-200' },
-        createElement(
-          'table',
-          { className: 'w-full text-left text-[15px] text-stone-800' },
-          createElement(
-            'thead',
-            { className: 'bg-[#faf8f2] text-stone-900 font-bold border-b border-stone-200' },
-            createElement(
-              'tr',
-              null,
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-stone-900' },
-                'Phần & Tiêu chí đánh giá',
-              ),
-              createElement('th', { className: 'py-3 px-4 font-semibold text-stone-900' }, 'Điểm'),
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-stone-900' },
-                'Yêu cầu đạt mức Tốt (Điểm tối đa)',
-              ),
-            ),
-          ),
-          createElement(
-            'tbody',
-            { className: 'divide-y divide-stone-100 text-stone-700' },
-            createElement(
-              'tr',
-              { className: 'bg-stone-50 font-bold text-amber-950' },
-              createElement(
-                'td',
-                { colSpan: 3, className: 'py-2.5 px-4' },
-                'PHẦN A: XÂY DỰNG KẾ HOẠCH TỔ CHỨC HĐTN THEO CHỦ ĐỀ (5.0 ĐIỂM)',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 1: Mục tiêu năng lực & phẩm chất',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '2.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Nêu đầy đủ và chính xác các mục tiêu năng lực chung, năng lực đặc thù và phẩm chất chủ yếu theo CT GDPT 2018.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 2: Nội dung giáo dục',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '1.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Liệt kê đầy đủ, phù hợp các nội dung giáo dục thiết thực, gắn liền với mạch chủ đề và lứa tuổi.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 3: Thiết kế chuỗi hoạt động',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '3.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Mỗi hoạt động có rõ ràng mục tiêu, nội dung, sản phẩm dự kiến, cách thức tổ chức và phương tiện học liệu logic.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 4: Phương pháp & Công cụ đánh giá',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '1.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Lựa chọn phương pháp và thiết kế công cụ đánh giá (rubric, bảng kiểm, phiếu phản tư) khoa học, khả thi.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'bg-stone-50 font-bold text-amber-950' },
-              createElement(
-                'td',
-                { colSpan: 3, className: 'py-2.5 px-4' },
-                'PHẦN B: TỔ CHỨC THỰC HÀNH HĐTN THEO CHỦ ĐỀ (5.0 ĐIỂM)',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 5: Kỹ năng tổ chức hoạt động',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '3.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Kỹ năng chuyển giao nhiệm vụ rõ ràng; theo dõi hỗ trợ linh hoạt; tổng hợp đánh giá kết quả sâu sắc.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 6: Thiết bị & Trình chiếu trực quan',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '1.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Sử dụng thiết bị, đạo cụ, slide trình chiếu trực quan, thẩm mỹ, sáng tạo và cuốn hút học sinh.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Tiêu chí 7: Tác phong sư phạm & Ngôn ngữ',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '1.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Trang phục chỉnh tề; ngôn ngữ giao tiếp chuẩn mực, ấm áp, truyền cảm hứng và luôn tôn trọng người học.',
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN II: KẾ HOẠCH BÀI DẠY MẪU CHUẨN RUBRIC
-    createElement(
-      'section',
-      { id: '2-ke-hoach-mau-rubric-a19', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Lightbulb, { className: 'h-5 w-5 text-amber-800' }),
+        createElement(Sparkles, { className: 'h-5 w-5 text-[#3F6570]' }),
         createElement(
           'h3',
           null,
-          '2. Kế hoạch Hoạt động Trải nghiệm Mẫu: "Xây dựng Tình bạn Đẹp — Phòng chống Bạo lực Học đường"',
+          '1. Hệ thống 4 nhóm phương thức và quy trình các phương pháp tổ chức HĐTN (Giáo trình tr. 88–107)',
         ),
       ),
       createElement(
-        Card,
-        {
-          className:
-            'p-6 rounded-2xl border-stone-200 bg-white shadow-xs space-y-4 text-xs sm:text-sm text-stone-700',
-        },
+        'div',
+        { className: 'text-sm text-[#29383D]' },
+        'Theo Chương trình GDPT 2018 và ',
+        createElement('strong', null, 'Giáo trình Giáo dục học HCMUE (tr. 88–107)'),
+        ', hoạt động trải nghiệm, hướng nghiệp được tổ chức thông qua ',
+        createElement('strong', null, '4 nhóm phương thức chủ đạo'),
+        ', mỗi nhóm bao gồm các phương pháp tổ chức có quy trình bước thực hiện rất chặt chẽ.',
         createElement(
-          'div',
-          { className: 'border-b border-stone-100 pb-3' },
-          createElement(
-            'div',
-            { className: 'text-xs font-bold uppercase text-amber-800' },
-            'Mô-đun Chủ đề Lớp 10 — Thời lượng: 2 Tiết (90 phút)',
-          ),
-          createElement(
-            'h4',
-            { className: 'text-base font-serif font-bold text-stone-900 mt-1' },
-            'Kế hoạch Tổ chức Chủ đề: "XÂY DỰNG TÌNH BẠN ĐẸP — NÓI KHÔNG VỚI BẠO LỰC HỌC ĐƯỜNG"',
-          ),
-        ),
-        createElement(
-          'div',
-          { className: 'space-y-2' },
-          createElement(
-            'h5',
-            { className: 'font-bold text-teal-900 text-xs uppercase' },
-            'I. Mục tiêu cần đạt',
-          ),
-          createElement(
-            'ul',
-            { className: 'list-disc pl-5 space-y-1 text-xs text-stone-600' },
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Phẩm chất:'),
-              ' Bồi dưỡng lòng Nhân ái (thấu hiểu, chia sẻ) và tinh thần Trách nhiệm (bảo vệ bạn bè, bảo vệ môi trường trường học an toàn).',
-            ),
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Năng lực chung:'),
-              ' Giao tiếp và hợp tác (làm việc nhóm, lắng nghe không phán xét); Giải quyết vấn đề (xử lý tình huống xung đột bạn bè).',
-            ),
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Năng lực đặc thù:'),
-              ' Thích ứng với môi trường sống và thiết lập các mối quan hệ xã hội lành mạnh.',
-            ),
-          ),
-        ),
-        createElement(
-          'div',
-          { className: 'space-y-2' },
-          createElement(
-            'h5',
-            { className: 'font-bold text-teal-900 text-xs uppercase' },
-            'II. Chuỗi 4 Hoạt động chi tiết',
-          ),
-          createElement(
-            'div',
-            { className: 'space-y-2 text-xs' },
-            createElement(
-              'div',
-              { className: 'p-3 rounded-xl bg-stone-50 border border-stone-200' },
-              createElement(
-                'span',
-                { className: 'font-bold text-amber-900' },
-                'Hoạt động 1: Khởi động (10 phút) — Trò chơi "Cùng chung một con thuyền": ',
-              ),
-              'Các nhóm 6 bạn cùng đứng trên một tấm bạt nhỏ, mỗi vòng gấp đôi bạt lại; học sinh phải ôm chặt nhau tìm cách cùng đứng vững, cảm nhận ý nghĩa của sự đùm bọc, tương trợ bạn bè.',
-            ),
-            createElement(
-              'div',
-              { className: 'p-3 rounded-xl bg-stone-50 border border-stone-200' },
-              createElement(
-                'span',
-                { className: 'font-bold text-amber-900' },
-                'Hoạt động 2: Khám phá (25 phút) — Diễn đàn "Những tổn thương thầm kín": ',
-              ),
-              'Xem video ngắn phóng sự về bạo lực mạng và cô lập bạn bè; thảo luận theo 4 trạm: Dấu hiệu nhận diện, Nỗi đau của nạn nhân, Trách nhiệm của người chứng kiến và Pháp luật về bạo lực học đường.',
-            ),
-            createElement(
-              'div',
-              { className: 'p-3 rounded-xl bg-stone-50 border border-stone-200' },
-              createElement(
-                'span',
-                { className: 'font-bold text-amber-900' },
-                'Hoạt động 3: Luyện tập (35 phút) — Đóng vai xử lý tình huống xung đột: ',
-              ),
-              'Mỗi tổ bốc thăm 1 tình huống (bị cô lập, bị nói xấu trên mạng, bị chặn đường xin tiền) và thực hành giải quyết theo quy tắc 3K (Không im lặng - Không trả thù - Kịp thời tìm kiếm trợ giúp từ thầy cô).',
-            ),
-            createElement(
-              'div',
-              { className: 'p-3 rounded-xl bg-stone-50 border border-stone-200' },
-              createElement(
-                'span',
-                { className: 'font-bold text-amber-900' },
-                'Hoạt động 4: Vận dụng (20 phút) — Cây cam kết tình bạn: ',
-              ),
-              'Mỗi học sinh viết một lời chúc hoặc một lời xin lỗi chân thành lên chiếc lá giấy dán lên "Cây Tình Bạn Lớp 10A" đặt ở cuối lớp.',
-            ),
-          ),
-        ),
-        createElement(
-          'div',
-          { className: 'space-y-2' },
-          createElement(
-            'h5',
-            { className: 'font-bold text-teal-900 text-xs uppercase' },
-            'III. Công cụ Đánh giá',
-          ),
-          createElement(
-            'p',
-            { className: 'text-xs text-stone-600' },
-            'Sử dụng Bảng kiểm quan sát (Checklist) mức độ tham gia thảo luận và Phiếu tự đánh giá cảm xúc cá nhân sau hoạt động.',
-          ),
+          Sidenote,
+          {
+            number: 1,
+            type: 'pedagogy',
+            title: 'Ghi nhớ số bước quy trình của các phương pháp trọng tâm (Tr. 88–107)',
+          },
+          'Khi làm bài thi hoặc thiết kế chủ đề, cần nắm chắc quy trình chuẩn trong Giáo trình HCMUE: Tham quan (3 bước); Lao động công ích (4 bước); Sân khấu tương tác (5 bước); Tình nguyện (5 bước); Dự án (5 bước); Nghiên cứu khoa học (8 bước).',
         ),
       ),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          '4 Nhóm phương thức tổ chức Hoạt động trải nghiệm, hướng nghiệp (Giáo trình HCMUE tr. 88–107)',
+        subtitle:
+          'Phân loại đầy đủ các phương pháp và quy trình từng bước theo đúng Mục 5.4 Giáo trình Giáo dục học HCMUE.',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title: 'Nhóm 1: Phương thức Khám phá (Tr. 88–91)',
+            badge: 'Thực địa · Thực tế',
+            description:
+              'Là phương thức tổ chức cho học sinh trải nghiệm thế giới tự nhiên, thực tế cuộc sống và công việc. Phương pháp điển hình: Tổ chức tham quan, dã ngoại theo Quy trình 3 bước: Bước 1: Chuẩn bị tham quan -> Bước 2: Tiến hành tham quan -> Bước 3: Tổng kết, đánh giá sau tham quan.',
+          },
+          {
+            number: 2,
+            title: 'Nhóm 2: Phương thức Thể nghiệm, tương tác (Tr. 91–96)',
+            badge: 'Diễn đàn · Trò chơi · Sân khấu',
+            description:
+              'Tạo cơ hội cho học sinh giao lưu, tác nghiệp và thể hiện ý tưởng. Gồm: (a) Tổ chức Hội thảo, Diễn đàn; (b) Tổ chức Trò chơi; (c) Tổ chức Sân khấu tương tác theo Quy trình 5 bước: Bước 1: Chuẩn bị -> Bước 2: Sáng tác vở diễn -> Bước 3: Biểu diễn mở đầu -> Bước 4: Tương tác với khán giả giải quyết vấn đề -> Bước 5: Tổng kết, đánh giá.',
+          },
+          {
+            number: 3,
+            title: 'Nhóm 3: Phương thức Cống hiến (Tr. 96–101)',
+            badge: 'Tình nguyện · Lao động công ích',
+            description:
+              'Mang lại giá trị xã hội thực tế qua sự đóng góp của học sinh. Gồm: (a) Hoạt động tình nguyện, nhân đạo theo Quy trình 5 bước (Khảo sát nhu cầu -> Lập kế hoạch -> Chuẩn bị -> Thực hiện tình nguyện -> Đánh giá, tổng kết); (b) Hoạt động lao động công ích theo Quy trình 4 bước (Xác định nhiệm vụ -> Chuẩn bị -> Tổ chức lao động -> Kiểm tra, đánh giá).',
+          },
+          {
+            number: 4,
+            title: 'Nhóm 4: Phương thức Nghiên cứu (Tr. 101–107)',
+            badge: 'NCKH 8 bước · Dự án 5 bước',
+            description:
+              'Gồm: (a) Tổ chức Nghiên cứu khoa học của học sinh theo Quy trình 8 bước (Xác định đề tài -> Xây dựng đề cương -> Thu thập thông tin -> Xử lí dữ liệu -> Viết báo cáo -> Trình bày kết quả -> Đánh giá -> Công bố/ứng dụng); (b) Tổ chức Dự án học tập/trải nghiệm theo Quy trình 5 bước (Xác định chủ đề -> Lập kế hoạch -> Thực hiện dự án -> Giới thiệu sản phẩm -> Đánh giá dự án).',
+          },
+        ],
+      }),
+
+      createElement(ComparativeTable, {
+        title:
+          'Bảng tổng hợp Quy trình các phương pháp tổ chức HĐTN cụ thể (Giáo trình HCMUE tr. 88–107)',
+        subtitle: 'Đối chiếu mục đích sư phạm và chuỗi các bước tổ chức của từng phương pháp.',
+        headers: [
+          'Tên phương pháp tổ chức',
+          'Thuộc nhóm phương thức',
+          'Quy trình chuẩn trong Giáo trình HCMUE (Tr. 88–107)',
+        ],
+        rows: [
+          [
+            '1. Tổ chức Hội thảo & Diễn đàn (Tr. 91–93)',
+            'Thể nghiệm, tương tác',
+            'Xác định chủ đề tranh biện/thảo luận -> Chuẩn bị nội dung và khách mời/điều phối viên -> Tổ chức trình bày tham luận & đối thoại mở -> Tổng kết thông điệp.',
+          ],
+          [
+            '2. Tổ chức Sân khấu tương tác (Tr. 93–95)',
+            'Thể nghiệm, tương tác',
+            'Quy trình 5 bước: (1) Chuẩn bị -> (2) Sáng tác vở diễn có tình huống mở -> (3) Biểu diễn phần đầu -> (4) Tương tác khán giả nhập vai tháo gỡ -> (5) Tổng kết, đánh giá.',
+          ],
+          [
+            '3. Tổ chức Tham quan, dã ngoại (Tr. 88–91)',
+            'Khám phá',
+            'Quy trình 3 bước: (1) Chuẩn bị (mục tiêu, địa điểm, an toàn, phiếu thu hoạch) -> (2) Tiến hành tham quan, trải nghiệm tại hiện trường -> (3) Tổng kết, báo cáo sản phẩm.',
+          ],
+          [
+            '4. Hoạt động Tình nguyện (Tr. 96–99)',
+            'Cống hiến',
+            'Quy trình 5 bước: (1) Khảo sát, xác định đối tượng -> (2) Lập kế hoạch tình nguyện -> (3) Chuẩn bị nguồn lực -> (4) Tổ chức thực hiện -> (5) Đánh giá và rút kinh nghiệm.',
+          ],
+          [
+            '5. Lao động công ích (Tr. 99–101)',
+            'Cống hiến',
+            'Quy trình 4 bước: (1) Xác định mục tiêu, nhiệm vụ lao động -> (2) Chuẩn bị dụng cụ, phân công -> (3) Tổ chức lao động an toàn, kỷ luật -> (4) Nghiệm thu, đánh giá.',
+          ],
+          [
+            '6. Nghiên cứu khoa học & Dự án (Tr. 101–107)',
+            'Nghiên cứu',
+            'NCKH (8 bước): Chọn đề tài -> Đề cương -> Thu thập -> Xử lí -> Viết báo cáo -> Báo cáo -> Đánh giá -> Ứng dụng. Dự án (5 bước): Chọn chủ đề -> Lập kế hoạch -> Thực hiện -> Trình bày sản phẩm -> Đánh giá.',
+          ],
+        ],
+      }),
     ),
 
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19',
-      lessonTitle: 'Bài 5.4: Đánh giá kết quả HĐTN & Thực hành xây dựng Kế hoạch theo Rubric A.1.9',
-    }),
+    // PHẦN II: 4 LOẠI HÌNH TỔ CHỨC HOẠT ĐỘNG TRẢI NGHIỆM, HƯỚNG NGHIỆP (TR. 108–110)
+    createElement(
+      'section',
+      { id: '2-bon-loai-hinh-to-chuc-hdtn', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(BookOpen, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Bốn loại hình tổ chức Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 108–110)',
+        ),
+      ),
+
+      createElement(ComparativeTable, {
+        title:
+          'Bảng đối sánh 4 Loại hình tổ chức Hoạt động trải nghiệm, hướng nghiệp (Giáo trình HCMUE tr. 108–110)',
+        subtitle:
+          'Ba loại hình bắt buộc định kỳ hàng tuần/tháng và một loại hình tự chọn theo sở thích, năng khiếu.',
+        headers: [
+          'Loại hình tổ chức',
+          'Tính chất & Quy mô',
+          'Cấu trúc nội dung và Yêu cầu sư phạm (Tr. 108–110)',
+        ],
+        rows: [
+          [
+            '1. Sinh hoạt dưới cờ',
+            'Bắt buộc (1 tiết/tuần) · Quy mô toàn trường hoặc khối lớp',
+            'Gồm 2 phần: (1) Phần Nghi lễ hành chính (chào cờ, tổng kết ngắn gọn, trang nghiêm); (2) Phần Sinh hoạt theo chủ đề (diễn đàn, sân khấu hóa, giao lưu gương người tốt việc tốt).',
+          ],
+          [
+            '2. Sinh hoạt lớp',
+            'Bắt buộc (1 tiết/tuần) · Quy mô lớp học',
+            'Gồm 2 phần: (1) Sơ kết công tác tuần và triển khai kế hoạch tuần mới do Ban cán sự tự quản điều hành; (2) Sinh hoạt theo chủ đề trải nghiệm gắn với mạch nội dung tháng.',
+          ],
+          [
+            '3. Hoạt động giáo dục theo chủ đề',
+            'Bắt buộc · Quy mô lớp hoặc khối lớp (Thường xuyên & Định kỳ)',
+            'Tổ chức thường xuyên (1 tiết/tuần tại lớp) hoặc định kỳ theo quy mô lớn (tham quan, hội trại, dự án trải nghiệm nghề nghiệp) nhằm giải quyết trọn vẹn yêu cầu cần đạt của chủ đề.',
+          ],
+          [
+            '4. Hoạt động câu lạc bộ (CLB)',
+            'Tự chọn (Ngoài giờ chính khóa) · Nhóm học sinh cùng sở thích',
+            'Tổ chức theo nguyên tắc tự nguyện (CLB học thuật, STEM, nghệ thuật, thể thao, thiện nguyện) nhằm phát triển sâu năng khiếu cá nhân và định hướng nghề nghiệp chuyên biệt.',
+          ],
+        ],
+      }),
+
+      createElement(LegalReferenceBox, {
+        documentTitle: 'Thông tư số 32/2018/TT-BGDĐT & Tài liệu Bồi dưỡng Mô đun 2 THCS/THPT',
+        article: 'Quy định về tổ chức 4 loại hình Hoạt động trải nghiệm, hướng nghiệp',
+        quote:
+          'Hoạt động trải nghiệm và Hoạt động trải nghiệm, hướng nghiệp được tổ chức trong và ngoài lớp học, trong và ngoài trường học; theo quy mô nhóm, lớp học, khối lớp hoặc quy mô trường; với bốn loại hình hoạt động chủ yếu là Sinh hoạt dưới cờ, Sinh hoạt lớp, Hoạt động giáo dục theo chủ đề và Hoạt động câu lạc bộ.',
+        pedagogicalAnalysis:
+          'Ba loại hình đầu (Sinh hoạt dưới cờ, Hoạt động giáo dục theo chủ đề, Sinh hoạt lớp) kết nối với nhau thành một chu trình khép kín trong tuần: Phát động chủ đề ở giờ Chào cờ đầu tuần -> Khám phá, rèn luyện chuyên sâu ở tiết Chủ đề giữa tuần -> Phản hồi, đúc kết và cam kết hành động ở tiết Sinh hoạt lớp cuối tuần.',
+      }),
+    ),
+
+    // PHẦN III: CÂU HỎI ÔN TẬP & TÌNH HUỐNG THỰC HÀNH
+    createElement(
+      'section',
+      { id: '3-on-tap-va-tinh-huong-bai-5-2', className: 'space-y-6' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO8, CLO9)'),
+      ),
+      createElement(
+        'div',
+        { className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 space-y-2' },
+        createElement(
+          'p',
+          { className: 'text-sm font-bold text-[#29383D]' },
+          'Câu hỏi ôn tập (Giáo trình HCMUE tr. 124): Trình bày 4 nhóm phương thức (kèm quy trình các phương pháp cụ thể) và 4 loại hình tổ chức Hoạt động trải nghiệm, hướng nghiệp ở trường phổ thông.',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B]' },
+          'Gợi ý trả lời: Hệ thống hóa 4 phương thức (Khám phá, Thể nghiệm – tương tác, Cống hiến, Nghiên cứu) cùng số bước quy trình của từng phương pháp và phân tích mối liên hệ giữa 4 loại hình tổ chức.',
+        ),
+      ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy5_2 }),
+    ),
   );
 };
 
 // ============================================================================
-// 5. DISPATCHER TRÌNH NẠP BÀI HỌC CHƯƠNG 5 (GETCHAPTER5LESSONMODULE)
+// 3. COMPONENT BÀI 5.3: ĐÁNH GIÁ KẾT QUẢ, ĐIỀU KIỆN TỔ CHỨC VÀ QUY TRÌNH THIẾT KẾ CHỦ ĐỀ HĐTN (TR. 110–124)
+// ============================================================================
+
+export const Lesson5_3View: FC = () => {
+  const caseStudy5_3: PedagogicalCaseStudy = {
+    id: 503,
+    title:
+      'Đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp và thiết kế chủ đề theo tiến trình chuẩn',
+    context:
+      'Cuối học kỳ I, khi thực hiện đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp cho học sinh lớp 10, một giáo viên chỉ dùng một bài kiểm tra viết trên giấy trong 45 phút để xếp loại "Đạt" hoặc "Chưa đạt", hoàn toàn bỏ qua quá trình tham gia hoạt động của học sinh trong suốt học kỳ cũng như không thu thập ý kiến tự đánh giá, đánh giá đồng đẳng và phản hồi từ gia đình.',
+    question:
+      'Vận dụng lý luận về 6 phương pháp đánh giá kết quả HĐTN và quy trình thiết kế chủ đề HĐTN (Giáo trình Giáo dục học HCMUE tr. 110–124; Thông tư 22/2021/TT-BGDĐT), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
+    principlesApplied: [
+      'Mục đích, nội dung và 6 phương pháp đánh giá kết quả HĐTN, HN (Giáo trình tr. 110–114)',
+      'Thông tư 22/2021/TT-BGDĐT (Đánh giá bằng nhận xét Đạt/Chưa đạt kết hợp đánh giá thường xuyên và định kỳ)',
+      'Quy trình thiết kế kế hoạch chủ đề HĐTN (Giáo trình tr. 116–124)',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Giáo viên đã đánh giá sai lệch bản chất của Hoạt động trải nghiệm, hướng nghiệp khi chỉ dùng một bài kiểm tra lý thuyết trên giấy thay vì đánh giá năng lực hành động và sự trưởng thành qua quá trình trải nghiệm thực tế.',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 5',
+        content:
+          'Theo Giáo trình HCMUE (tr. 110–114), đánh giá HĐTN phải kết hợp đa dạng 6 phương pháp (Tự đánh giá, Đánh giá đồng đẳng, Quan sát, Đánh giá qua hồ sơ/sản phẩm, Khảo sát, Phỏng vấn) và tổng hợp từ nhiều chủ thể (GV, HS, CMHS, cộng đồng).',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: Giữ nguyên kết quả bài kiểm tra giấy để kịp tiến độ vào điểm. Phương án 2: Kết hợp bài thu hoạch với việc rà soát hồ sơ sản phẩm hoạt động cả học kỳ, phiếu tự đánh giá và đánh giá đồng đẳng của tổ học tập.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'Áp dụng Phương án 2: Sử dụng Bảng kiểm (Checklist) và Thang đo (Rubric) để đánh giá dựa trên minh chứng thực tế: (1) Mức độ tham gia các chủ đề tháng; (2) Sản phẩm dự án/hồ sơ học tập; (3) Kết quả tự đánh giá của cá nhân và nhận xét của nhóm bạn.',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Công bố tiêu chí đánh giá ngay từ đầu mỗi chủ đề ở học kỳ II để học sinh chủ động lưu giữ minh chứng trải nghiệm và tự điều chỉnh hành vi.',
+      },
+    ],
+    pitfallsToAvoid: [
+      'Đánh giá HĐTN như một môn học văn hóa thuần túy lý thuyết bằng bài thi viết học thuộc lòng.',
+      'Thiết kế chủ đề HĐTN mà không xác định rõ sản phẩm đầu ra và công cụ đánh giá tương ứng với từng hoạt động.',
+    ],
+    coreLesson:
+      'Đánh giá trong Hoạt động trải nghiệm, hướng nghiệp là đánh giá vì sự tiến bộ của người học thông qua minh chứng hành động, sản phẩm thực tiễn và sự phản tư của chính học sinh.',
+  };
+
+  return createElement(
+    'div',
+    { className: 'space-y-8 text-[#29383D] leading-relaxed' },
+
+    // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
+    createElement(PedagogyMetadataBar, {
+      courseCode: 'EDUC2802',
+      clos: ['CLO8', 'CLO9'],
+      textbookPages: 'Tr. 110–124 (Chương 5, Mục 5.6 – 5.8)',
+      legalRefs: [
+        'Thông tư 27/2020/TT-BGDĐT & Thông tư 22/2021/TT-BGDĐT',
+        'Tài liệu Quy trình thiết kế chủ đề HĐTN & Mô đun 2 THCS, THPT',
+      ],
+      sessionNote: 'Lý thuyết, Thảo luận & Thực hành 3',
+    }),
+
+    // PHẦN I: 6 PHƯƠNG PHÁP ĐÁNH GIÁ KẾT QUẢ HOẠT ĐỘNG TRẢI NGHIỆM (TR. 110–114)
+    createElement(
+      'section',
+      { id: '1-sau-phuong-phap-danh-gia-hdtn', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Scale, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '1. Sáu phương pháp đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 110–114)',
+        ),
+      ),
+      createElement(
+        'div',
+        { className: 'text-sm text-[#29383D]' },
+        'Theo ',
+        createElement('strong', null, 'Giáo trình Giáo dục học HCMUE (tr. 110–114)'),
+        ', đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp phải bảo đảm tính toàn diện, khách quan, kết hợp đánh giá quá trình với đánh giá tổng kết thông qua ',
+        createElement('strong', null, '6 phương pháp đánh giá chủ yếu'),
+        '.',
+        createElement(
+          Sidenote,
+          {
+            number: 1,
+            type: 'pedagogy',
+            title: 'Cơ chế xếp loại kết quả HĐTN, HN',
+          },
+          'Kết quả đánh giá HĐTN được tổng hợp thành 2 mức: "Đạt" và "Chưa đạt" (ở cấp THCS, THPT theo Thông tư 22/2021) hoặc "Hoàn thành tốt", "Hoàn thành", "Chưa hoàn thành" (ở cấp Tiểu học theo Thông tư 27/2020) và được ghi vào Học bạ.',
+        ),
+      ),
+
+      createElement(ComparativeTable, {
+        title:
+          'Hệ thống 6 Phương pháp đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp (Giáo trình HCMUE tr. 111–114)',
+        subtitle:
+          'Phối hợp đa phương pháp và đa công cụ để thu thập minh chứng xác thực về 3 năng lực đặc thù của học sinh.',
+        headers: [
+          'Phương pháp đánh giá',
+          'Bản chất và Cách thức tiến hành',
+          'Công cụ & Minh chứng đánh giá đi kèm',
+        ],
+        rows: [
+          [
+            '1. Phương pháp tự đánh giá (Self-assessment)',
+            'Học sinh tự đối chiếu hành vi, thái độ và kết quả thực hiện nhiệm vụ của bản thân với mục tiêu/tiêu chí của chủ đề để tự nhận xét điểm mạnh và hạn chế.',
+            'Phiếu tự đánh giá cá nhân, nhật ký trải nghiệm, bảng kiểm tự quan sát sau mỗi chủ đề.',
+          ],
+          [
+            '2. Đánh giá đồng đẳng (Peer-assessment)',
+            'Các thành viên trong tổ, nhóm học sinh nhận xét, góp ý chéo cho nhau về tinh thần hợp tác, trách nhiệm và mức độ đóng góp vào nhiệm vụ chung.',
+            'Phiếu đánh giá đồng đẳng trong nhóm, biên bản họp tổ/nhóm, phiếu bình bầu tích cực.',
+          ],
+          [
+            '3. Phương pháp quan sát sư phạm',
+            'Giáo viên, phụ huynh hoặc người hướng dẫn quan sát trực tiếp cử chỉ, lời nói, thái độ và hành động thực tế của học sinh trong suốt quá trình tham gia hoạt động.',
+            'Sổ theo dõi của GV, bảng kiểm quan sát (Checklist), thang đo mức độ tham gia (Rating scale), ảnh/video tư liệu.',
+          ],
+          [
+            '4. Đánh giá qua hồ sơ và sản phẩm hoạt động',
+            'Phân tích chất lượng các sản phẩm vật chất hoặc tinh thần do cá nhân/nhóm học sinh tạo ra trong và sau quá trình trải nghiệm.',
+            'Hồ sơ học tập (Portfolio), kế hoạch cá nhân, báo cáo thu hoạch, poster, mô hình STEM, sản phẩm thiện nguyện, Rubric chấm sản phẩm.',
+          ],
+          [
+            '5. Phương pháp khảo sát (Điều tra bảng hỏi)',
+            'Thu thập thông tin diện rộng về nhận thức, thái độ, hứng thú và nhu cầu của học sinh hoặc ý kiến phản hồi của cha mẹ học sinh, cộng đồng.',
+            'Phiếu khảo sát trước và sau hoạt động, phiếu xin ý kiến nhận xét của gia đình và địa phương.',
+          ],
+          [
+            '6. Phương pháp phỏng vấn / Vấn đáp nhanh',
+            'Trao đổi, đặt câu hỏi trực tiếp với cá nhân hoặc nhóm học sinh để làm rõ mức độ hiểu biết, cảm xúc chiêm nghiệm và dự định vận dụng của các em.',
+            'Hệ thống câu hỏi phỏng vấn bán cấu trúc, câu hỏi phản tư (Debriefing questions) cuối hoạt động.',
+          ],
+        ],
+      }),
+    ),
+
+    // PHẦN II: ĐIỀU KIỆN TỔ CHỨC VÀ QUY TRÌNH THIẾT KẾ CHỦ ĐỀ HĐTN (TR. 114–124)
+    createElement(
+      'section',
+      { id: '2-dieu-kien-va-quy-trinh-thiet-ke-chu-de-hdtn', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Điều kiện tổ chức và Quy trình thiết kế chủ đề Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 114–124)',
+        ),
+      ),
+
+      createElement(LegalReferenceBox, {
+        documentTitle: 'Giáo trình Giáo dục học HCMUE (Tr. 114–116) & Thông tư 32/2018/TT-BGDĐT',
+        article: 'Điều kiện thực hiện chương trình Hoạt động trải nghiệm, hướng nghiệp',
+        quote:
+          'Để tổ chức hiệu quả Hoạt động trải nghiệm, hướng nghiệp cần bảo đảm đồng bộ 3 nhóm điều kiện: (1) Đội ngũ nhân sự thực hiện (Ban giám hiệu, GVCN, GV bộ môn, Tổng phụ trách Đội, Bí thư Đoàn trường, chuyên gia/nghệ nhân ngoài trường); (2) Cơ sở vật chất, thiết bị và nguồn kinh phí; (3) Không gian tổ chức trong và ngoài nhà trường an toàn, sư phạm.',
+        pedagogicalAnalysis:
+          'Khi thiết kế kế hoạch chủ đề HĐTN (Mục 5.8 Giáo trình tr. 116–124 và Tài liệu bồi dưỡng Mô đun 2 THCS/THPT), giáo viên phải tuân thủ quy trình khoa học từ xác định chủ đề, mục tiêu đến chuỗi hoạt động theo tiến trình trải nghiệm.',
+      }),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          'Quy trình thiết kế kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp (Giáo trình HCMUE tr. 116–124)',
+        subtitle:
+          'Quy trình chuẩn áp dụng cho việc soạn Kế hoạch giáo dục chủ đề HĐTN ở cấp THCS & THPT (phục vụ trực tiếp Bài Thực hành 3).',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title: 'Bước 1: Xác định tên chủ đề và thời lượng thực hiện',
+            badge: 'Định danh chủ đề',
+            description:
+              'Căn cứ vào 4 mạch nội dung trong Chương trình HĐTN, HN của từng khối lớp, đặc điểm học sinh và điều kiện thực tế địa phương để đặt tên chủ đề ngắn gọn, giàu sức gợi và xác định số tiết.',
+          },
+          {
+            number: 2,
+            title: 'Bước 2: Xác định mục tiêu (Yêu cầu cần đạt) của chủ đề',
+            badge: 'Năng lực & Phẩm chất',
+            description:
+              'Viết mục tiêu bằng động từ hành động đo lường được theo 3 nhóm: (a) Năng lực đặc thù HĐTN; (b) Năng lực chung; (c) Phẩm chất chủ yếu.',
+          },
+          {
+            number: 3,
+            title: 'Bước 3: Chuẩn bị thiết bị giáo dục, học liệu và điều kiện thực hiện',
+            badge: 'Chuẩn bị của GV & HS',
+            description:
+              'Liệt kê cụ thể sự chuẩn bị của Giáo viên (kịch bản, phiếu học tập, công cụ đánh giá, phương án an toàn) và sự chuẩn bị trước của Học sinh (sưu tầm tư liệu, dụng cụ, tâm thế).',
+          },
+          {
+            number: 4,
+            title: 'Bước 4: Thiết kế chuỗi các hoạt động cụ thể theo tiến trình trải nghiệm',
+            badge: 'Khởi động -> Khám phá -> Luyện tập -> Vận dụng',
+            description:
+              'Thiết kế từng hoạt động theo cấu trúc 4 thành phần: (1) Mục tiêu hoạt động; (2) Nội dung hoạt động; (3) Sản phẩm cần đạt; (4) Tổ chức thực hiện (Chuyển giao nhiệm vụ -> Thực hiện -> Báo cáo, thảo luận -> Kết luận, nhận định).',
+          },
+          {
+            number: 5,
+            title: 'Bước 5: Thiết kế phương án và công cụ kiểm tra, đánh giá chủ đề',
+            badge: 'Bảng kiểm & Rubric',
+            description:
+              'Xây dựng tiêu chí đánh giá quá trình và sản phẩm (Phiếu tự đánh giá, Phiếu đánh giá đồng đẳng, Rubric đánh giá của giáo viên) gắn chặt với mục tiêu đã đề ra ở Bước 2.',
+          },
+          {
+            number: 6,
+            title: 'Bước 6: Rà soát, hoàn thiện kế hoạch và rút kinh nghiệm sau tổ chức',
+            badge: 'Hoàn thiện hồ sơ',
+            description:
+              'Kiểm tra tính khả thi về phân bố thời gian, tính liên thông giữa Sinh hoạt dưới cờ – Chủ đề – Sinh hoạt lớp và dự kiến các tình huống sư phạm phát sinh.',
+          },
+        ],
+      }),
+    ),
+
+    // PHẦN III: CÂU HỎI ÔN TẬP & TÌNH HUỐNG THỰC HÀNH
+    createElement(
+      'section',
+      { id: '3-on-tap-va-tinh-huong-bai-5-3', className: 'space-y-6' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO8, CLO9)'),
+      ),
+      createElement(
+        'div',
+        { className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 space-y-2' },
+        createElement(
+          'p',
+          { className: 'text-sm font-bold text-[#29383D]' },
+          'Câu hỏi ôn tập (Giáo trình HCMUE tr. 124): Phân tích 6 phương pháp đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp và trình bày quy trình thiết kế kế hoạch tổ chức một chủ đề Hoạt động trải nghiệm ở trường phổ thông.',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B]' },
+          'Gợi ý trả lời: Trình bày 6 phương pháp đánh giá (Tự đánh giá, Đồng đẳng, Quan sát, Hồ sơ/sản phẩm, Khảo sát, Phỏng vấn) và 6 bước thiết kế kế hoạch chủ đề HĐTN theo tiến trình trải nghiệm.',
+        ),
+      ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy5_3 }),
+    ),
+  );
+};
+
+// Bí danh tương thích ngược
+export const Lesson5_4View: FC = Lesson5_3View;
+
+// ============================================================================
+// 4. DISPATCHER TRÌNH NẠP BÀI HỌC CHƯƠNG 5 (GETCHAPTER5LESSONMODULE)
 // ============================================================================
 
 export function getChapter5LessonModule(lessonId: string): CompiledLessonModule | null {
-  if (lessonId === 'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem') {
+  if (
+    lessonId ===
+      'gdh-c5-b1-ban-chat-muc-tieu-va-noi-dung-hoat-dong-trai-nghiem-o-truong-pho-thong' ||
+    lessonId === 'gdh-c5-b1-khai-niem-ban-chat-va-muc-tieu-hoat-dong-trai-nghiem'
+  ) {
     return {
       default: Lesson5_1View,
       frontmatter: {
-        title: 'Bài 5.1: Khái niệm, Bản chất và Mục tiêu của Hoạt động trải nghiệm',
+        title: 'Bài 5.1: Bản chất, mục tiêu và nội dung hoạt động trải nghiệm ở trường phổ thông',
         description:
-          'Định vị hoạt động giáo dục bắt buộc theo CT GDPT 2018 (105 tiết/năm); Chu trình 4 bước học tập qua trải nghiệm David Kolb; mục tiêu phân tầng 3 cấp học.',
+          'Bản chất phương thức giáo dục qua trải nghiệm; mục tiêu hình thành 3 năng lực đặc thù (Thích ứng với cuộc sống, Thiết kế và tổ chức hoạt động, Định hướng nghề nghiệp) và 4 mạch nội dung chính: Hướng vào bản thân, Hướng đến xã hội, Hướng đến tự nhiên, Hướng nghiệp (Giáo trình HCMUE tr. 83–87).',
         level: 'basic',
-        tags: ['HĐTN', 'CT GDPT 2018', 'Chu trình Kolb', 'Mục tiêu 3 cấp học', 'CLO 1', 'CLO 2'],
+        tags: [
+          'CLO8',
+          'HĐTN & Hướng nghiệp',
+          '3 Năng lực đặc thù',
+          '4 Mạch nội dung',
+          'Giáo trình tr. 83-87',
+        ],
       },
       lessonMeta: {
         chapterNumber: 5,
         lessonNumber: 1,
         headings: [
           {
-            id: '1-khai-niem-vi-tri-hdtn',
-            text: '1. Khái niệm và Vị thế Pháp lý theo Chương trình GDPT 2018',
+            id: '1-ban-chat-phuong-thuc-trai-nghiem',
+            text: '1. Khái niệm và bản chất phương thức giáo dục qua trải nghiệm (Giáo trình tr. 83–84)',
             depth: 2,
           },
           {
-            id: '2-ban-chat-chu-trinh-kolb',
-            text: '2. Bản chất Giáo dục qua Trải nghiệm: Chu trình 4 Bước của David Kolb',
+            id: '2-muc-tieu-va-3-nang-luc-dac-thu',
+            text: '2. Mục tiêu các cấp học và 3 năng lực đặc thù của Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 84–85)',
             depth: 2,
           },
           {
-            id: '3-muc-tieu-phan-tang-cap-hoc',
-            text: '3. Mục tiêu Cốt lõi Phân tầng theo Ba Cấp học',
+            id: '3-bon-mach-noi-dung-hdtn',
+            text: '3. Bốn mạch nội dung chính của Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 85–87)',
+            depth: 2,
+          },
+          {
+            id: '4-on-tap-va-tinh-huong-bai-5-1',
+            text: '4. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO8)',
             depth: 2,
           },
         ],
@@ -1099,21 +930,24 @@ export function getChapter5LessonModule(lessonId: string): CompiledLessonModule 
     };
   }
 
-  if (lessonId === 'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem') {
+  if (
+    lessonId === 'gdh-c5-b2-phuong-thuc-va-loai-hinh-to-chuc-hoat-dong-trai-nghiem' ||
+    lessonId === 'gdh-c5-b2-noi-dung-va-phuong-thuc-to-chuc-hoat-dong-trai-nghiem'
+  ) {
     return {
       default: Lesson5_2View,
       frontmatter: {
-        title: 'Bài 5.2: Nội dung và Phương thức tổ chức Hoạt động trải nghiệm',
+        title: 'Bài 5.2: Phương thức và loại hình tổ chức hoạt động trải nghiệm',
         description:
-          'Bốn mạch nội dung xuyên suốt và 4 loại hình tổ chức cơ bản trong nhà trường phổ thông (Sinh hoạt dưới cờ, Sinh hoạt lớp, HĐGD theo chủ đề, CLB).',
-        level: 'basic',
+          '4 nhóm phương thức và quy trình chi tiết: Hội thảo, Diễn đàn, Trò chơi, Sân khấu tương tác (5 bước), Tham quan (3 bước), Tình nguyện (5 bước), Lao động công ích (4 bước), Nghiên cứu khoa học (8 bước), Dự án (5 bước); cùng 4 loại hình: Sinh hoạt dưới cờ, Sinh hoạt lớp, Hoạt động theo chủ đề và Câu lạc bộ (Giáo trình HCMUE tr. 88–110).',
+        level: 'intermediate',
         tags: [
-          '4 Mạch nội dung',
-          '4 Loại hình tổ chức',
-          'Sinh hoạt dưới cờ',
-          'Sinh hoạt lớp',
-          'CLO 1',
-          'CLO 2',
+          'CLO8',
+          'CLO9',
+          '4 Nhóm phương thức',
+          '4 Loại hình HĐTN',
+          'Sân khấu tương tác',
+          'Giáo trình tr. 88-110',
         ],
       },
       lessonMeta: {
@@ -1121,13 +955,18 @@ export function getChapter5LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 2,
         headings: [
           {
-            id: '1-bon-mach-noi-dung',
-            text: 'Bốn Mạch Nội dung Xuyên suốt',
+            id: '1-bon-nhom-phuong-thuc-to-chuc-hdtn',
+            text: '1. Hệ thống 4 nhóm phương thức và quy trình các phương pháp tổ chức HĐTN (Giáo trình tr. 88–107)',
             depth: 2,
           },
           {
-            id: '2-bon-loai-hinh-to-chuc',
-            text: 'Bốn Loại hình Tổ chức Cơ bản',
+            id: '2-bon-loai-hinh-to-chuc-hdtn',
+            text: '2. Bốn loại hình tổ chức Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 108–110)',
+            depth: 2,
+          },
+          {
+            id: '3-on-tap-va-tinh-huong-bai-5-2',
+            text: '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO8, CLO9)',
             depth: 2,
           },
         ],
@@ -1136,65 +975,46 @@ export function getChapter5LessonModule(lessonId: string): CompiledLessonModule 
     };
   }
 
-  if (lessonId === 'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc') {
+  if (
+    lessonId ===
+      'gdh-c5-b3-danh-gia-ket-qua-dieu-kien-to-chuc-va-quy-trinh-thiet-ke-chu-de-hoat-dong-trai-nghiem' ||
+    lessonId === 'gdh-c5-b3-quy-trinh-thiet-ke-ke-hoach-chu-de-hdtn-va-tien-trinh-4-buoc' ||
+    lessonId === 'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19'
+  ) {
     return {
       default: Lesson5_3View,
       frontmatter: {
-        title: 'Bài 5.3: Quy trình thiết kế kế hoạch chủ đề HĐTN và Tiến trình 4 bước tổ chức',
+        title:
+          'Bài 5.3: Đánh giá kết quả, điều kiện tổ chức và quy trình thiết kế chủ đề hoạt động trải nghiệm',
         description:
-          'Quy trình 6 bước thiết kế kế hoạch giáo dục chủ đề HĐTN theo chuẩn HCMUE; cấu trúc tiến trình 4 bước tổ chức hoạt động cụ thể.',
-        level: 'intermediate',
-        tags: ['Quy trình 6 bước', 'Tiến trình 4 bước', 'Thiết kế chủ đề', 'CLO 1', 'CLO 3'],
+          '6 phương pháp đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp; các điều kiện đảm bảo tổ chức hoạt động và quy trình thiết kế kế hoạch chủ đề HĐTN theo cấu trúc chuẩn của Giáo trình HCMUE & Tài liệu Mô đun 2 (Giáo trình HCMUE tr. 110–124).',
+        level: 'advanced',
+        tags: [
+          'CLO8',
+          'CLO9',
+          '6 Phương pháp đánh giá HĐTN',
+          'Quy trình thiết kế chủ đề',
+          'Mô đun 2 THCS & THPT',
+          'Giáo trình tr. 110-124',
+        ],
       },
       lessonMeta: {
         chapterNumber: 5,
         lessonNumber: 3,
         headings: [
           {
-            id: '1-quy-trinh-6-buoc-thiet-ke-hdtn',
-            text: '1. Quy trình 6 Bước Thiết kế Kế hoạch Chủ đề HĐTN (HCMUE)',
+            id: '1-sau-phuong-phap-danh-gia-hdtn',
+            text: '1. Sáu phương pháp đánh giá kết quả Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 110–114)',
             depth: 2,
           },
           {
-            id: '2-tien-trinh-4-buoc-to-chuc',
-            text: '2. Chuỗi Tiến trình 4 Bước Tổ chức Một Hoạt động Cụ thể',
-            depth: 2,
-          },
-        ],
-        blocks: [],
-      },
-    };
-  }
-
-  if (lessonId === 'gdh-c5-b4-danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19') {
-    return {
-      default: Lesson5_4View,
-      frontmatter: {
-        title: 'Bài 5.4: Đánh giá kết quả HĐTN & Thực hành xây dựng Kế hoạch theo Rubric A.1.9',
-        description:
-          'Bảng tiêu chí Rubric đánh giá bài tập thực hành HĐTN A.1.9 (20%); Kế hoạch bài dạy chủ đề "Xây dựng tình bạn đẹp — Phòng chống bạo lực học đường" chuẩn mức Tốt.',
-        level: 'advanced',
-        tags: [
-          'Rubric A.1.9',
-          'Kế hoạch bài dạy mẫu',
-          'Bạo lực học đường',
-          'Tình bạn đẹp',
-          'CLO 1',
-          'CLO 3',
-        ],
-      },
-      lessonMeta: {
-        chapterNumber: 5,
-        lessonNumber: 4,
-        headings: [
-          {
-            id: '1-bang-rubric-a19',
-            text: '1. Bảng Tiêu chí Rubric Đánh giá Thực hành HĐTN (A.1.9 - 20%)',
+            id: '2-dieu-kien-va-quy-trinh-thiet-ke-chu-de-hdtn',
+            text: '2. Điều kiện tổ chức và Quy trình thiết kế chủ đề Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 114–124)',
             depth: 2,
           },
           {
-            id: '2-ke-hoach-mau-rubric-a19',
-            text: '2. Kế hoạch Hoạt động Trải nghiệm Mẫu: "Xây dựng Tình bạn Đẹp — Phòng chống Bạo lực Học đường"',
+            id: '3-on-tap-va-tinh-huong-bai-5-3',
+            text: '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO8, CLO9)',
             depth: 2,
           },
         ],

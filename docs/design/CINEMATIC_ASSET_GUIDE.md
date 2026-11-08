@@ -15,7 +15,7 @@ Toàn bộ ảnh nền mở màn (Hero Cover) trên Trang chủ và từng Trang
    - **Cấu trúc đại số (`MATH1301`):** _Kiến trúc cổng vòm & hành lang đối xứng Cố đô Huế_ — ẩn dụ cho tính đối xứng trục, nhóm phép biến hình và trật tự tiên đề.
    - **Hình học Affine & Euclide (`MATH1302`):** _Vịnh Hạ Long & Tràng An (Ninh Bình)_ — ẩn dụ cho phối cảnh không gian đa chiều, phép chiếu song song và mặt phẳng phản chiếu đẳng cự.
    - **Giải tích hàm một biến (`MATH1303`):** _Ruộng bậc thang Mù Cang Chải (Tây Bắc)_ — ẩn dụ cho đường cong liên tục, các lát cắt tích phân Riemann và độ dốc tiếp tuyến.
-   - **Giáo dục học (`EDUT1401`):** _Không gian giảng đường & hành lang kiến trúc Đông Dương (Quốc Học Huế / HCMUE)_ — biểu trưng cho môi trường sư phạm nhân văn, ấm áp.
+   - **Giáo dục học (`EDUC2802`):** _Không gian giảng đường & hành lang kiến trúc Đông Dương (Quốc Học Huế / HCMUE)_ — biểu trưng cho môi trường sư phạm nhân văn, ấm áp.
 
 ---
 
@@ -29,7 +29,7 @@ Mọi đường dẫn ảnh nội bộ (`localSrc` trong `/public/images/scenes/
 | `cau-truc-dai-so`        | `MATH1301`  | `math`                | Kiến trúc đối xứng Cố đô Huế           | `/images/scenes/vn-hue-symmetry-algebra.jpg`           |
 | `hinh-hoc-affine`        | `MATH1302`  | `math`                | Vịnh Hạ Long & Tràng An – Ninh Bình    | `/images/scenes/vn-ha-long-trang-an-affine.jpg`        |
 | `giai-tich-ham-mot-bien` | `MATH1303`  | `math`                | Ruộng bậc thang Mù Cang Chải           | `/images/scenes/vn-mu-cang-chai-terraces-calculus.jpg` |
-| `giao-duc-hoc`           | `EDUT1401`  | `pedagogy`            | Giảng đường Quốc Học Huế & HCMUE       | `/images/scenes/vn-indochine-campus-pedagogy.jpg`      |
+| `giao-duc-hoc`           | `EDUC2802`  | `pedagogy`            | Giảng đường Quốc Học Huế & HCMUE       | `/images/scenes/vn-indochine-campus-pedagogy.jpg`      |
 
 ---
 

@@ -10,7 +10,7 @@ export type AcademicBranch = 'math' | 'pedagogy';
 export interface CinematicSceneAsset {
   readonly id: string;
   readonly slug: string;
-  /** Mã học phần chính thức, ví dụ: MATH1301, EDUT1401 */
+  /** Mã học phần chính thức, ví dụ: MATH1301, EDUC2802 */
   readonly courseCode: string;
   /** Phân nhánh học thuật dùng cho bộ lọc trên Course Hub */
   readonly branch: AcademicBranch;
@@ -107,12 +107,12 @@ export const COURSE_CINEMATIC_ASSETS: Readonly<Record<string, CinematicSceneAsse
   'giao-duc-hoc': {
     id: 'giao-duc-hoc',
     slug: 'giao-duc-hoc',
-    courseCode: 'EDUT1401',
+    courseCode: 'EDUC2802',
     branch: 'pedagogy',
-    categoryLabel: 'EDUT1401 · Khoa học Giáo dục',
+    categoryLabel: 'EDUC2802 · Khoa học Giáo dục',
     title: 'Giáo dục học',
     conciseDescription:
-      'Nghiên cứu bản chất quá trình giáo dục, sự hình thành và phát triển nhân cách học sinh, hệ thống nguyên tắc, phương pháp giáo dục, công tác chủ nhiệm lớp và giải quyết tình huống sư phạm.',
+      'Nghiên cứu hoạt động sư phạm và nhân cách người giáo viên, những vấn đề chung của giáo dục học, lý luận hoạt động giáo dục ở nhà trường phổ thông, công tác giáo viên chủ nhiệm lớp và tổ chức hoạt động trải nghiệm, hướng nghiệp.',
     vietnameseLandmark: 'Hành lang Kiến trúc Học đường Đông Dương · Quốc Học Huế & HCMUE',
     visualMetaphor: 'Không gian giảng đường ngập nắng ấm áp, nhân văn và truyền thống sư phạm',
     localSrc: '/images/scenes/vn-indochine-campus-pedagogy.jpg',

@@ -1,4 +1,13 @@
-import { ArrowLeft, Clock, Layers, Link2, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookOpen,
+  Clock,
+  Layers,
+  Link2,
+  ListTree,
+  PanelLeft,
+  PanelLeftOpen,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
@@ -296,14 +305,18 @@ export function LessonPage() {
               { label: subject.title, href: ROUTES.subjectOverview(subject.slug) },
               {
                 label:
-                  chapter.title.startsWith('Chương ') || chapter.title.startsWith('Chuyên đề ')
+                  chapter.title.startsWith('Chương ') ||
+                  chapter.title.startsWith('Chuyên đề ') ||
+                  chapter.title.startsWith('Khối ')
                     ? chapter.title
                     : `Chương ${chapter.number}: ${chapter.title}`,
                 href: ROUTES.subjectOverview(subject.slug),
               },
               {
                 label:
-                  lesson.title.startsWith('Bài ') || lesson.title.startsWith('Chuyên đề ')
+                  lesson.title.startsWith('Bài ') ||
+                  lesson.title.startsWith('Thực hành ') ||
+                  lesson.title.startsWith('Chuyên đề ')
                     ? lesson.title
                     : `Bài ${chapter.number}.${lesson.number}: ${lesson.title}`,
               },
@@ -397,7 +410,7 @@ export function LessonPage() {
           {isFocusMode && (
             <div className="mb-6 flex items-center justify-between rounded-xl border border-[#CFDADB] bg-[#F7FAFA] px-4 py-2.5 text-xs text-[#29383D] shadow-2xs">
               <span className="flex items-center gap-2 font-medium">
-                <span aria-hidden="true">📖</span>
+                <BookOpen className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
                 <span>
                   Đang bật <strong>Chế độ đọc tập trung</strong> (Nhấn phím{' '}
                   <kbd className="rounded border border-[#CFDADB] bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#29383D]">
@@ -434,7 +447,9 @@ export function LessonPage() {
               <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="subject">
-                    Chương {chapter.number} · Bài {chapter.number}.{lesson.number}
+                    {/^Thực hành/i.test(lesson.title)
+                      ? `Khối Thực hành · Thực hành ${lesson.number}`
+                      : `Chương ${chapter.number} · Bài ${chapter.number}.${lesson.number}`}
                   </Badge>
                   <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
                   {lesson.tags

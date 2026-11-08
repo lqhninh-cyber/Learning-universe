@@ -1,1466 +1,867 @@
 import type { CompiledLessonModule } from '@/content-runtime/loader';
-import { useLearningStore } from '@/features/learning';
-import { CaseStudyBox, LegalQuoteCard, ScholarQuote } from '@/features/pedagogy';
-import { Badge, Button, Card } from '@/shared/ui';
 import {
-  Award,
-  Calendar,
-  CheckCircle2,
-  Clock,
+  CaseStudyBox,
+  ComparativeTable,
+  LegalReferenceBox,
+  NumberedProcessFlow,
+  PedagogyMetadataBar,
+  ScholarQuote,
+} from '@/features/pedagogy';
+import { Sidenote } from '@/shared/components/Sidenote';
+import {
+  BookOpen,
   Compass,
-  FileText,
-  GraduationCap,
-  Heart,
   HelpCircle,
   Layers,
-  Lightbulb,
-  MessageSquare,
   Scale,
   ShieldCheck,
-  Sparkles,
   Target,
   Users,
 } from 'lucide-react';
-import { createElement, useState, type FC } from 'react';
+import { createElement, type FC } from 'react';
 import type { PedagogicalCaseStudy } from './course';
 
 // ============================================================================
-// COMPONENT TIỆN ÍCH: THẺ TIẾN ĐỘ HOÀN THÀNH BÀI HỌC (SUPABASE SYNC)
-// ============================================================================
-
-interface LessonCompletionCardProps {
-  readonly lessonId: string;
-  readonly lessonTitle: string;
-}
-
-const LessonCompletionCard: FC<LessonCompletionCardProps> = ({ lessonId, lessonTitle }) => {
-  const isCompleted = useLearningStore((state) => Boolean(state.completedLessons[lessonId]));
-  const toggleCompleted = useLearningStore((state) => state.toggleLessonCompleted);
-
-  return createElement(
-    'div',
-    {
-      className:
-        'mt-8 rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs transition-all hover:border-amber-700/30',
-    },
-    createElement(
-      'div',
-      { className: 'flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between' },
-      createElement(
-        'div',
-        { className: 'space-y-1' },
-        createElement(
-          'div',
-          { className: 'flex items-center gap-2' },
-          createElement(CheckCircle2, {
-            className: `h-5 w-5 ${isCompleted ? 'text-emerald-600' : 'text-stone-400'}`,
-          }),
-          createElement(
-            'span',
-            { className: 'text-sm font-bold text-stone-900' },
-            isCompleted ? 'Bạn đã hoàn thành bài học này!' : 'Ghi nhận tiến độ học tập',
-          ),
-        ),
-        createElement(
-          'p',
-          { className: 'text-xs text-stone-500' },
-          isCompleted
-            ? `Tiến độ của bài "${lessonTitle}" đã được đồng bộ với hệ thống học tập của bạn.`
-            : 'Nhấn nút bên cạnh để đánh dấu đã hoàn thành và lưu tiến độ lên hệ thống.',
-        ),
-      ),
-      createElement(
-        Button,
-        {
-          variant: isCompleted ? 'subject' : 'outline',
-          size: 'sm',
-          onClick: () => toggleCompleted(lessonId),
-          className: 'shrink-0',
-        },
-        createElement(CheckCircle2, { className: 'h-4 w-4 mr-1.5' }),
-        isCompleted ? 'Đã hoàn thành' : 'Đánh dấu hoàn thành',
-      ),
-    ),
-  );
-};
-
-// ============================================================================
-// 1. COMPONENT BÀI 4.1: VỊ TRÍ, CHỨC NĂNG VÀ NHIỆM VỤ CỦA GVCN
+// 1. COMPONENT BÀI 4.1: CHỨC NĂNG VÀ NHIỆM VỤ CỦA NGƯỜI GIÁO VIÊN CHỦ NHIỆM LỚP (TR. 67–69)
 // ============================================================================
 
 export const Lesson4_1View: FC = () => {
-  const [activeFuncTab, setActiveFuncTab] = useState<number>(1);
+  const caseStudy4_1: PedagogicalCaseStudy = {
+    id: 401,
+    title: 'Phát huy chức năng cố vấn tự quản và quyền hạn của GVCN theo Điều lệ trường học 2020',
+    context:
+      'Trong học kỳ I, giáo viên chủ nhiệm lớp 10B vì muốn lớp đạt danh hiệu Tiên tiến xuất sắc nên đã tự mình làm thay toàn bộ công việc của Ban cán sự lớp: từ phân công trực nhật, ghi sổ đầu bài, thu quỹ lớp đến điều hành tiết Sinh hoạt lớp. Hậu quả là đội ngũ cán bộ lớp trở nên thụ động, ỷ lại; mỗi khi vắng mặt GVCN là lớp học mất trật tự và không ai đứng ra nhắc nhở.',
+    question:
+      'Vận dụng lý luận về 4 chức năng và hệ thống nhiệm vụ, quyền hạn của người giáo viên chủ nhiệm lớp (Giáo trình Giáo dục học HCMUE tr. 67–69; Điều lệ trường trung học TT 32/2020/TT-BGDĐT), anh/chị hãy phân tích sai lầm trên và xử lí tình huống theo quy trình 5 bước.',
+    principlesApplied: [
+      '4 chức năng của GVCN: Đặc biệt là Chức năng cố vấn cho hoạt động tự quản của tập thể học sinh (Giáo trình tr. 67–68)',
+      'Điều 29 và Điều 31 Thông tư 32/2020/TT-BGDĐT (Nhiệm vụ và quyền hạn của GVCN lớp)',
+      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí và giáo dục trong tập thể',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Giáo viên chủ nhiệm đã rơi vào khuynh hướng "bao biện, làm thay", đánh đồng chức năng quản lí với việc làm thay học sinh, làm triệt tiêu năng lực tự quản của Ban cán sự và tập thể lớp 10B.',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 4',
+        content:
+          'Theo Giáo trình HCMUE (tr. 67–68), chức năng cốt lõi của GVCN không phải là cai quản hành chính mà là cố vấn, hướng dẫn để học sinh chuyển từ đối tượng quản lí sang chủ thể tự quản. Khi GVCN ôm đồm mọi việc, cán bộ lớp không có cơ hội rèn luyện kỹ năng tổ chức và mất uy tín trước các bạn.',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: Thay toàn bộ Ban cán sự lớp mới vì cho rằng các em yếu kém (sai lầm vì nguyên nhân xuất phát từ cách quản lí của GVCN). Phương án 2: Tổ chức họp Ban cán sự lớp, phân권 rõ ràng gắn với bồi dưỡng kỹ năng điều hành và chuyển vai trò của GVCN sang vị trí cố vấn.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'GVCN lựa chọn Phương án 2: (1) Thiết lập bảng phân công nhiệm vụ cụ thể cho Lớp trưởng, các Lớp phó và Tổ trưởng; (2) Hướng dẫn Ban cán sự chuẩn bị nội dung và trực tiếp điều hành tiết Sinh hoạt lớp cuối tuần; (3) GVCN ngồi dự với tư cách cố vấn, chỉ can thiệp hoặc định hướng khi có vấn đề vượt quá khả năng giải quyết của học sinh.',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Sau mỗi tuần, GVCN họp ngắn 10 phút với Ban cán sự để rút kinh nghiệm, biểu dương sự chủ động của các em trước lớp nhằm củng cố uy tín cho đội ngũ tự quản.',
+      },
+    ],
+    pitfallsToAvoid: [
+      'Bao biện, làm thay mọi việc của học sinh vì tâm lý thiếu tin tưởng vào năng lực của các em.',
+      'Ngược lại, buông lỏng hoàn toàn ("khoán trắng" cho lớp trưởng) mà không có sự kiểm tra, cố vấn sư phạm.',
+    ],
+    coreLesson:
+      'Người giáo viên chủ nhiệm giỏi không phải là người làm thay học sinh mọi việc, mà là nhà cố vấn biết trao quyền và bồi dưỡng để tập thể học sinh tự vận hành một cách dân chủ, kỉ cương.',
+  };
 
   return createElement(
     'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
+    { className: 'space-y-8 text-[#29383D] leading-relaxed' },
 
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 4: Công tác của Người giáo viên chủ nhiệm lớp',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 2',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 4.1: Vị trí, Chức năng và Nhiệm vụ của Giáo viên chủ nhiệm (GVCN)',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Làm rõ vị thế hạt nhân của người GVCN — linh hồn của lớp học, nhà quản lý sư phạm vi mô, cố vấn phát triển nhân cách; phân tích 4 chức năng nòng cốt theo Giáo trình HCMUE và quy chuẩn pháp lý nhiệm vụ, quyền hạn theo Thông tư 32/2020/TT-BGDĐT.',
-      ),
-    ),
-
-    // SCHOLAR QUOTE
-    createElement(ScholarQuote, {
-      quote:
-        'Nhà giáo dục không phải là người đứng ngoài quan sát mà là người tổ chức đời sống của trẻ, thổi vào đời sống ấy ngọn lửa của lý tưởng cao đẹp và tình yêu thương.',
-      author: 'Anton Semyonovich Makarenko',
-      title: 'Bậc thầy lý luận và thực hành sư phạm tập thể',
-      source: 'Kỷ luật và đạo đức trong trường học, 1938',
-      historicalContext:
-        'Khẳng định vai trò dẫn dắt tối cao của giáo viên chủ nhiệm trong việc kiến tạo môi trường phát triển nhân cách học sinh.',
+    // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
+    createElement(PedagogyMetadataBar, {
+      courseCode: 'EDUC2802',
+      clos: ['CLO6'],
+      textbookPages: 'Tr. 67–69 (Chương 4, Mục 4.1)',
+      legalRefs: [
+        'Thông tư 28/2020/TT-BGDĐT (Điều lệ trường Tiểu học — Điều 27, 29)',
+        'Thông tư 32/2020/TT-BGDĐT (Điều lệ trường THCS, THPT — Điều 29, 31)',
+        'Luật Giáo dục 2019 (Điều 69, 70)',
+      ],
+      sessionNote: 'Lý thuyết & Thảo luận Chương 4',
     }),
 
-    // PHẦN I: VỊ TRÍ, VAI TRÒ CỦA GVCN
+    // PHẦN I: 4 CHỨC NĂNG CỐT LÕI CỦA NGƯỜI GIÁO VIÊN CHỦ NHIỆM LỚP (TR. 67–68)
     createElement(
       'section',
-      { id: '1-vi-tri-vai-tro-gvcn', className: 'space-y-4' },
+      { id: '1-bon-chuc-nang-cua-gvcn', className: 'space-y-4' },
       createElement(
         'div',
         {
           className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
-        createElement(Users, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '1. Vị trí và Vai trò của Giáo viên Chủ nhiệm trong Nhà trường'),
-      ),
-      createElement(
-        'p',
-        null,
-        'Ở trường phổ thông, GVCN là người được Hiệu trưởng phân công thay mặt nhà trường trực tiếp chịu trách nhiệm quản lý, tổ chức và giáo dục toàn diện học sinh của một lớp học:',
-      ),
-      createElement(
-        'div',
-        { className: 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4' },
-        [
-          {
-            title: 'Linh hồn của lớp',
-            desc: 'Người định hình văn hóa, phong cách, nề nếp và truyền cảm hứng gắn kết mọi thành viên trong tập thể lớp.',
-          },
-          {
-            title: 'Nhà quản lý vi mô',
-            desc: 'Điều hành, lập kế hoạch, phân công cán sự và giám sát mọi mặt học tập, rèn luyện của 40-45 học sinh.',
-          },
-          {
-            title: 'Cố vấn nhân cách',
-            desc: 'Thấu hiểu tâm lý lứa tuổi, lắng nghe tâm tư, tư vấn định hướng giá trị sống và nghề nghiệp tương lai.',
-          },
-          {
-            title: 'Hạt nhân kết nối',
-            desc: 'Cầu nối liên kết hữu cơ giữa Nhà trường, Giáo viên bộ môn, Đoàn - Đội, Gia đình và Xã hội.',
-          },
-        ].map((item, idx) =>
-          createElement(
-            Card,
-            { key: idx, className: 'p-4 rounded-xl border-stone-200 bg-[#faf8f2]' },
-            createElement(
-              'div',
-              { className: 'font-bold text-xs text-amber-900 flex items-center gap-1.5' },
-              createElement(Sparkles, { className: 'h-3.5 w-3.5 text-amber-700' }),
-              createElement('span', null, item.title),
-            ),
-            createElement(
-              'p',
-              { className: 'mt-2 text-xs leading-relaxed text-stone-600' },
-              item.desc,
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN II: 4 CHỨC NĂNG NÒNG CỐT
-    createElement(
-      'section',
-      { id: '2-bon-chuc-nang-nong-cot', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Layers, { className: 'h-5 w-5 text-amber-800' }),
-        createElement('h3', null, '2. Bốn Chức năng Nòng cốt của Người Giáo viên Chủ nhiệm'),
-      ),
-      createElement(
-        'div',
-        { className: 'grid grid-cols-2 gap-2 sm:grid-cols-4' },
-        [
-          { id: 1, label: '1. Quản lý & Giáo dục', desc: 'Giáo dục toàn diện' },
-          { id: 2, label: '2. Cố vấn tự quản', desc: 'Phát huy tính chủ động' },
-          { id: 3, label: '3. Cầu nối nội bộ', desc: 'BGH, Đoàn-Đội, GVBM' },
-          { id: 4, label: '4. Phối hợp ngoại vi', desc: 'Gia đình & Xã hội' },
-        ].map((f) =>
-          createElement(
-            'button',
-            {
-              key: f.id,
-              type: 'button',
-              onClick: () => setActiveFuncTab(f.id),
-              className: `p-3 rounded-xl border text-left transition-all ${
-                activeFuncTab === f.id
-                  ? 'border-amber-800 bg-amber-50/80 font-bold text-amber-950 shadow-2xs ring-1 ring-amber-800'
-                  : 'border-stone-200 bg-white text-stone-600 hover:border-stone-300'
-              }`,
-            },
-            createElement('div', { className: 'text-xs' }, f.label),
-            createElement(
-              'div',
-              { className: 'mt-1 text-[11px] text-stone-500 font-medium' },
-              f.desc,
-            ),
-          ),
-        ),
-      ),
-      createElement(
-        Card,
-        { className: 'p-5 rounded-2xl border-stone-200 bg-white shadow-xs' },
-        activeFuncTab === 1 &&
-          createElement(
-            'div',
-            { className: 'space-y-3' },
-            createElement(
-              'h4',
-              { className: 'font-bold text-sm text-teal-900' },
-              'Chức năng 1: Quản lý và giáo dục toàn diện học sinh một lớp học',
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs sm:text-sm text-stone-700' },
-              'GVCN nắm bắt đặc điểm tâm sinh lý, hoàn cảnh gia đình, năng khiếu và khó khăn của từng học sinh; lập kế hoạch giáo dục toàn diện (học tập, đạo đức, thể chất, thẩm mỹ); theo dõi tiến độ rèn luyện và tổ chức đánh giá, xếp loại khách quan, công bằng theo quy định.',
-            ),
-          ),
-        activeFuncTab === 2 &&
-          createElement(
-            'div',
-            { className: 'space-y-3' },
-            createElement(
-              'h4',
-              { className: 'font-bold text-sm text-teal-900' },
-              'Chức năng 2: Cố vấn cho hoạt động tự quản của tập thể học sinh',
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs sm:text-sm text-stone-700' },
-              'GVCN không bao biện làm thay mà giữ vai trò cố vấn, hướng dẫn ban cán sự lớp tự đề ra kế hoạch, tự điều hành các hoạt động, tự giám sát nề nếp và xử lý các vấn đề nội bộ; qua đó rèn luyện năng lực lãnh đạo, tính tự giác và tinh thần trách nhiệm cho học sinh.',
-            ),
-          ),
-        activeFuncTab === 3 &&
-          createElement(
-            'div',
-            { className: 'space-y-3' },
-            createElement(
-              'h4',
-              { className: 'font-bold text-sm text-teal-900' },
-              'Chức năng 3: Cầu nối giữa tập thể lớp với Ban giám hiệu, các tổ chức đoàn thể và GVBM',
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs sm:text-sm text-stone-700' },
-              'Truyền đạt chính xác các chủ trương của nhà trường, phong trào của Đoàn - Đội đến học sinh; đồng thời phản ánh tâm tư, nguyện vọng của học sinh lên BGH; phối hợp với các giáo viên bộ môn để thống nhất yêu cầu giảng dạy và nắm bắt tình hình học tập từng môn.',
-            ),
-          ),
-        activeFuncTab === 4 &&
-          createElement(
-            'div',
-            { className: 'space-y-3' },
-            createElement(
-              'h4',
-              { className: 'font-bold text-sm text-teal-900' },
-              'Chức năng 4: Phối hợp, liên kết các lực lượng giáo dục ngoài nhà trường',
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs sm:text-sm text-stone-700' },
-              'Chủ trì mối liên hệ với Ban đại diện Cha mẹ học sinh của lớp; định kỳ trao đổi về sự tiến bộ hoặc bất thường của học sinh; phối hợp với chính quyền, công an địa phương và các tổ chức cộng đồng để bảo đảm môi trường giáo dục an toàn, lành mạnh ngoài cổng trường.',
-            ),
-          ),
-      ),
-    ),
-
-    // PHẦN III: NHIỆM VỤ VÀ QUYỀN HẠN THEO TT32/2020
-    createElement(
-      'section',
-      { id: '3-nhiem-vu-quyen-han-tt32', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Scale, { className: 'h-5 w-5 text-amber-800' }),
+        createElement(Compass, { className: 'h-5 w-5 text-[#3F6570]' }),
         createElement(
           'h3',
           null,
-          '3. Nhiệm vụ và Quyền hạn của GVCN theo Điều lệ Trường học (Thông tư 32/2020)',
+          '1. Vị trí và 4 chức năng cốt lõi của người giáo viên chủ nhiệm lớp (Giáo trình tr. 67–68)',
         ),
       ),
-      createElement(LegalQuoteCard, {
-        lawTitle: 'Điều lệ trường trung học cơ sở, trường trung học phổ thông',
-        article: 'Thông tư số 32/2020/TT-BGDĐT (Điều 29, 30)',
-        quote:
-          '1. Giáo viên chủ nhiệm có các nhiệm vụ:\n- Xây dựng kế hoạch các hoạt động giáo dục thể hiện rõ mục tiêu, nội dung, phương pháp giáo dục bảo đảm tính khả thi, phù hợp với đặc điểm học sinh, với hoàn cảnh và điều kiện thực tế;\n- Thực hiện các hoạt động giáo dục theo kế hoạch đã xây dựng;\n- Phối hợp chặt chẽ với cha mẹ học sinh hoặc người giám hộ, giáo viên bộ môn, Đoàn TNCS Hồ Chí Minh, Đội TNTP Hồ Chí Minh, các tổ chức xã hội có liên quan để tổ chức các hoạt động giáo dục và hỗ trợ, giám sát việc học tập, rèn luyện của học sinh;\n- Đánh giá, xếp loại học sinh theo quy định của Bộ GD&ĐT; nhận xét học bạ, lập danh sách học sinh đề nghị khen thưởng, kỷ luật.\n2. Giáo viên chủ nhiệm có các quyền hạn đặc thù:\n- Được dự các giờ học, hoạt động giáo dục khác của học sinh lớp mình chủ nhiệm;\n- Được dự các cuộc họp của Hội đồng khen thưởng và Hội đồng kỷ luật khi giải quyết những vấn đề có liên quan đến học sinh của lớp mình chủ nhiệm;\n- Được giảm định mức tiết dạy theo quy định của Bộ GD&ĐT (được giảm 4 tiết/tuần đối với GVCN cấp THCS và THPT).',
-        source: 'Bộ Giáo dục và Đào tạo, ban hành ngày 15/9/2020',
-        sourceUrl: '/docs/giao-duc-hoc/Dieu_le_truong_trung_hoc_TT32.pdf',
-        significance:
-          'Khung pháp quy chuẩn xác định rõ quyền hạn giám sát chuyên môn, thẩm quyền tham gia đánh giá học sinh và chế độ giảm định mức tiết dạy của người GVCN.',
+      createElement(
+        'div',
+        { className: 'text-sm text-[#29383D]' },
+        'Theo ',
+        createElement('strong', null, 'Giáo trình Giáo dục học HCMUE (tr. 67–68)'),
+        ', giáo viên chủ nhiệm (GVCN) là người thay mặt Hiệu trưởng quản lí toàn diện một lớp học, là linh hồn của tập thể học sinh và là lực lượng nòng cốt điều phối mọi tác động sư phạm đối với lớp mình phụ trách.',
+        createElement(
+          Sidenote,
+          {
+            number: 1,
+            type: 'pedagogy',
+            title: 'Chuyển dịch từ "Người cai quản" sang "Nhà cố vấn tự quản"',
+          },
+          'Trong nhà trường hiện đại theo Chương trình GDPT 2018, GVCN không phải là "người giám thị" giám sát lỗi lầm của học sinh, mà là nhà cố vấn sư phạm giúp học sinh phát triển năng lực tự chủ, tự quản và hợp tác.',
+        ),
+      ),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          'Hệ thống 4 chức năng của người giáo viên chủ nhiệm lớp (Giáo trình HCMUE tr. 67–68)',
+        subtitle:
+          'Bốn chức năng gắn kết hữu cơ, phản ánh vai trò quản lí, cố vấn, đại diện và điều phối của GVCN ở trường phổ thông.',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title: 'Chức năng quản lí – giáo dục toàn diện học sinh lớp chủ nhiệm',
+            badge: 'Chức năng 1',
+            description:
+              'Thay mặt Hiệu trưởng quản lí, theo dõi, tổ chức và đánh giá sự phát triển toàn diện về phẩm chất và năng lực của từng học sinh cũng như toàn bộ tập thể lớp theo mục tiêu cấp học.',
+          },
+          {
+            number: 2,
+            title: 'Chức năng cố vấn cho hoạt động tự quản của tập thể học sinh',
+            badge: 'Chức năng 2',
+            description:
+              'Định hướng, bồi dưỡng đội ngũ cán bộ lớp, cán bộ Đoàn/Đội; hướng dẫn học sinh tự lập kế hoạch, tự tổ chức hoạt động và tự đánh giá, chuyển từ quản lí của thầy sang tự quản của trò.',
+          },
+          {
+            number: 3,
+            title: 'Chức năng cầu nối giữa các lực lượng giáo dục trong nhà trường',
+            badge: 'Chức năng 3',
+            description:
+              'Là cầu nối hai chiều giữa Hiệu trưởng, các giáo viên bộ môn, tổ chức Đoàn Thanh niên, Đội Thiếu niên Tiền phong với tập thể lớp; đồng thời đại diện bảo vệ quyền và lợi ích chính đáng của học sinh.',
+          },
+          {
+            number: 4,
+            title: 'Chức năng phối hợp các lực lượng giáo dục ngoài nhà trường',
+            badge: 'Chức năng 4',
+            description:
+              'Chủ động liên kết, thống nhất yêu cầu và phương pháp giáo dục giữa Nhà trường với Cha mẹ học sinh (Ban đại diện CMHS) và các tổ chức chính trị – xã hội tại địa phương.',
+          },
+        ],
       }),
     ),
 
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c4-b1-vi-tri-chuc-nang-va-nhiem-vu-cua-gvcn',
-      lessonTitle: 'Bài 4.1: Vị trí, Chức năng và Nhiệm vụ của GVCN',
-    }),
+    // PHẦN II: NHIỆM VỤ VÀ QUYỀN HẠN CỦA GVCN THEO ĐIỀU LỆ TRƯỜNG HỌC 2020 (TR. 68–69)
+    createElement(
+      'section',
+      { id: '2-nhiem-vu-va-quyen-han-cua-gvcn', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Scale, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Nhiệm vụ và quyền hạn của GVCN theo Điều lệ trường học 2020 (Giáo trình tr. 68–69)',
+        ),
+      ),
+
+      createElement(LegalReferenceBox, {
+        documentTitle:
+          'Thông tư số 32/2020/TT-BGDĐT (Điều lệ trường THCS, THPT và trường phổ thông có nhiều cấp học)',
+        article: 'Điều 29 (Nhiệm vụ của GVCN) & Điều 31 (Quyền của GVCN)',
+        quote:
+          'Giáo viên chủ nhiệm có nhiệm vụ xây dựng kế hoạch các hoạt động giáo dục thể hiện rõ mục tiêu, nội dung, phương pháp giáo dục bảo đảm tính khả thi, phù hợp với đặc điểm học sinh, với hoàn cảnh và điều kiện thực tế nhằm thúc đẩy sự tiến bộ của cả lớp và của từng học sinh; phối hợp chặt chẽ với cha mẹ học sinh hoặc người giám hộ, giáo viên bộ môn, Đoàn TNCS Hồ Chí Minh, Đội TNTP Hồ Chí Minh và các tổ chức xã hội có liên quan.',
+        pedagogicalAnalysis:
+          'Điều lệ 2020 trao cho GVCN 5 quyền hạn đặc thù tại Khoản 2 Điều 31: (a) Được dự các giờ học, hoạt động giáo dục khác của học sinh lớp mình; (b) Được dự các cuộc họp của hội đồng khen thưởng và hội đồng kỷ luật khi giải quyết những vấn đề có liên quan đến học sinh của lớp mình; (c) Được dự các lớp bồi dưỡng, hội nghị chuyên đề về công tác chủ nhiệm; (d) Được quyền cho phép cá nhân học sinh có lý do chính đáng nghỉ học không quá 03 ngày liên tục; (đ) Được giảm định mức giờ dạy mỗi tuần (04 tiết/tuần ở THCS, THPT; 03 tiết/tuần ở Tiểu học).',
+      }),
+
+      createElement(ComparativeTable, {
+        title:
+          'Bảng đối sánh Nhiệm vụ và Quyền hạn của Giáo viên chủ nhiệm theo Điều lệ trường học 2020',
+        subtitle:
+          'Tổng hợp theo Thông tư 28/2020/TT-BGDĐT (Tiểu học), Thông tư 32/2020/TT-BGDĐT (THCS, THPT) và Giáo trình HCMUE tr. 68–69.',
+        headers: [
+          'Khía cạnh pháp lý – sư phạm',
+          'Nội dung nhiệm vụ trọng tâm của GVCN',
+          'Quyền hạn tương ứng của GVCN',
+        ],
+        rows: [
+          [
+            '1. Tìm hiểu & Quản lí học sinh',
+            'Tìm hiểu, nắm vững hoàn cảnh, đặc điểm tâm sinh lí, phẩm chất, năng lực của từng học sinh trong lớp; lập kế hoạch giáo dục lớp chủ nhiệm khả thi.',
+            'Được dự các giờ học và hoạt động giáo dục khác của học sinh lớp mình chủ nhiệm để quan sát, nắm bắt tình hình thực tế.',
+          ],
+          [
+            '2. Tổ chức hoạt động & Tự quản',
+            'Tổ chức tiết Sinh hoạt lớp, các hoạt động trải nghiệm, hướng nghiệp và bồi dưỡng đội ngũ cán bộ lớp tự quản.',
+            'Được giảm định mức tiết dạy hàng tuần (03 tiết ở Tiểu học; 04 tiết ở THCS và THPT) và được tham dự các lớp bồi dưỡng nghiệp vụ chủ nhiệm.',
+          ],
+          [
+            '3. Đánh giá, Khen thưởng & Kỷ luật',
+            'Phối hợp với giáo viên bộ môn đánh giá kết quả rèn luyện và học tập của học sinh theo Thông tư 27/2020 (Tiểu học) và Thông tư 22/2021 (THCS, THPT).',
+            'Được dự họp Hội đồng khen thưởng và Hội đồng kỷ luật khi giải quyết các vấn đề liên quan đến học sinh lớp mình chủ nhiệm.',
+          ],
+          [
+            '4. Quản lí chuyên cần & Phối hợp gia đình',
+            'Theo dõi chuyên cần, phối hợp thường xuyên với cha mẹ học sinh và các đoàn thể xã hội để hỗ trợ học sinh có hoàn cảnh khó khăn hoặc nguy cơ bỏ học.',
+            'Được quyền cho phép cá nhân học sinh có lý do chính đáng nghỉ học không quá 03 ngày liên tục (trên 03 ngày thuộc thẩm quyền của Hiệu trưởng).',
+          ],
+        ],
+      }),
+    ),
+
+    // PHẦN III: CÂU HỎI ÔN TẬP & TÌNH HUỐNG THỰC HÀNH
+    createElement(
+      'section',
+      { id: '3-on-tap-va-tinh-huong-bai-4-1', className: 'space-y-6' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO6)'),
+      ),
+      createElement(
+        'div',
+        { className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 space-y-2' },
+        createElement(
+          'p',
+          { className: 'text-sm font-bold text-[#29383D]' },
+          'Câu hỏi ôn tập (Giáo trình HCMUE tr. 82): Phân tích 4 chức năng của người giáo viên chủ nhiệm lớp. Tại sao nói chức năng cố vấn cho hoạt động tự quản của tập thể học sinh có ý nghĩa quyết định đối với việc hình thành năng lực tự chủ của học sinh phổ thông?',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B]' },
+          'Gợi ý trả lời: Làm rõ 4 chức năng (Quản lí – giáo dục toàn diện; Cố vấn tự quản; Cầu nối trong trường; Phối hợp ngoài trường). Nhấn mạnh chức năng cố vấn giúp chuyển hóa yêu cầu sư phạm của GVCN thành nhu cầu tự rèn luyện của tập thể học sinh.',
+        ),
+      ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy4_1 }),
+    ),
   );
 };
 
 // ============================================================================
-// 2. COMPONENT BÀI 4.2: NỘI DUNG VÀ PHƯƠNG PHÁP GIÁO DỤC CỦA GVCN LỚP
+// 2. COMPONENT BÀI 4.2: TÌM HIỂU HỌC SINH, LẬP KẾ HOẠCH VÀ XÂY DỰNG TẬP THỂ HỌC SINH (TR. 70–77)
 // ============================================================================
 
 export const Lesson4_2View: FC = () => {
+  const caseStudy4_2: PedagogicalCaseStudy = {
+    id: 402,
+    title:
+      'Xây dựng tập thể học sinh đầu cấp và hóa giải hiện tượng chia bè phái trong lớp chủ nhiệm',
+    context:
+      'Bước vào học kỳ I lớp 10, tập thể lớp 10A4 gồm 42 học sinh đến từ 6 trường THCS khác nhau. Trong 4 tuần đầu, các em chỉ chơi theo nhóm đồng hương trường cũ, thiếu sự gắn kết chung. Khi thảo luận bầu Ban cán sự lớp và phân công chuẩn bị hội trại 26/3, các nhóm bất đồng ý kiến gay gắt và đùn đẩy trách nhiệm cho nhau.',
+    question:
+      'Vận dụng lý luận về Quy trình 6 bước lập kế hoạch chủ nhiệm, 3 giai đoạn phát triển tập thể học sinh và 4 biện pháp xây dựng tập thể vững mạnh (Giáo trình Giáo dục học HCMUE tr. 70–77), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
+    principlesApplied: [
+      'Quy trình 6 bước xây dựng kế hoạch giáo dục lớp chủ nhiệm (Giáo trình tr. 71–73)',
+      '3 giai đoạn phát triển tập thể học sinh của A.S. Makarenko và 4 biện pháp xây dựng tập thể (Giáo trình tr. 73–77)',
+      'Nguyên tắc giáo dục trong tập thể và bằng tập thể',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Lớp 10A4 đang ở Giai đoạn 1 (Giai đoạn tổng hợp sơ bộ: học sinh chưa hiểu nhau, xuất hiện các nhóm tự phát theo trường cũ, chưa có đội ngũ cốt cán đủ uy tín và viễn cảnh chung).',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 4',
+        content:
+          'GVCN sử dụng phiếu khảo sát đầu năm và quan sát thực tế để nắm bắt sở trường, tính cách và nguyện vọng của 42 học sinh (Mục 4.2.1 Giáo trình tr. 70–71), nhận diện những cá nhân tích cực ở mỗi nhóm trường cũ có khả năng làm hạt nhân đoàn kết.',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: GVCN dùng mệnh lệnh hành chính ép buộc các nhóm phải làm theo phân công của giáo viên. Phương án 2: Tổ chức lại sơ đồ chỗ ngồi xen kẽ, kiện toàn Ban cán sự đại diện các nhóm và thiết lập hệ thống viễn cảnh gần – trung bình – xa để gắn kết tập thể.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'Áp dụng 4 biện pháp xây dựng tập thể (Giáo trình tr. 75–77): (1) Tổ chức hoạt động phá băng "Hành trình kết nối 10A4" và xếp tổ học tập đa dạng thành viên; (2) Bầu Ban cán sự lâm thời có đại diện năng nổ từ các nhóm để tạo "cơ quan ngôn luận" chuyển tải yêu cầu của GVCN (chuyển sang Giai đoạn 2); (3) Đặt viễn cảnh gần hấp dẫn là dự án Hội trại với sự phân công theo sở trường (nhóm thiết kế, nhóm ẩm thực, nhóm văn nghệ) thay vì chia theo trường cũ.',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Tổng kết hoạt động Hội trại trong tiết Sinh hoạt lớp, biểu dương tinh thần hợp tác liên nhóm, tiến tới bầu Ban cán sự chính thức và xây dựng truyền thống, dư luận tập thể lành mạnh (hướng tới Giai đoạn 3).',
+      },
+    ],
+    pitfallsToAvoid: [
+      'Nóng vội áp dụng cơ chế tự quản toàn diện ngay từ tuần đầu tiên khi tập thể còn ở Giai đoạn 1 (chưa có hạt nhân cốt cán).',
+      'Bầu Ban cán sự chỉ tập trung vào một nhóm đồng hương khiến các nhóm khác cảm thấy bị phân biệt đối xử.',
+    ],
+    coreLesson:
+      'Xây dựng tập thể học sinh là một quá trình phát triển có tính giai đoạn: GVCN phải đi từ yêu cầu kiên quyết gắn với tìm hiểu học sinh (Giai đoạn 1), qua bồi dưỡng đội ngũ cốt cán (Giai đoạn 2), đến phát huy dư luận tập thể tự quản (Giai đoạn 3).',
+  };
+
   return createElement(
     'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
+    { className: 'space-y-8 text-[#29383D] leading-relaxed' },
 
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 4: Công tác của Người giáo viên chủ nhiệm lớp',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 2',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 4.2: Nội dung và Phương pháp giáo dục của GVCN lớp',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Khám phá quy trình xây dựng tập thể học sinh qua 3 giai đoạn của A.S. Makarenko, kỹ thuật bồi dưỡng cán sự lớp tự quản và thực hành chuyên sâu phương pháp Kỷ luật tích cực (Positive Discipline) của Jane Nelsen thay thế các hình phạt trừng phạt tiêu cực.',
-      ),
-    ),
-
-    // PHẦN I: XÂY DỰNG VÀ PHÁT TRIỂN TẬP THỂ HỌC SINH
-    createElement(
-      'section',
-      { id: '1-xay-dung-tap-the-hoc-sinh', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Users, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '1. Ba Giai đoạn Phát triển Tập thể Học sinh (Lý luận Makarenko)',
-        ),
-      ),
-      createElement(
-        'p',
-        null,
-        'Một lớp học khi mới tập hợp chưa phải là một tập thể thực sự. Tập thể học sinh chỉ hình thành qua quá trình hoạt động chung và phát triển tuần tự qua 3 giai đoạn:',
-      ),
-      createElement(
-        'div',
-        { className: 'grid gap-4 sm:grid-cols-3' },
-        [
-          {
-            stage: 'Giai đoạn 1',
-            name: 'Tập thể mới hình thành',
-            feature:
-              'Học sinh chưa hiểu nhau, chưa có mục tiêu chung và chưa có ban cán sự vững mạnh.',
-            role: 'GVCN đóng vai trò trung tâm, đưa ra các yêu cầu trực tiếp, kiên quyết và tỉ mỉ để xác lập kỷ cương nề nếp ban đầu.',
-          },
-          {
-            stage: 'Giai đoạn 2',
-            name: 'Hình thành hạt nhân tích cực',
-            feature:
-              'Xuất hiện nhóm học sinh tích cực (ban cán sự, tổ trưởng) có uy tín và tự giác hỗ trợ thầy cô.',
-            role: 'GVCN chuyển sang tác động thông qua hạt nhân tự quản; các yêu cầu của lớp do cán sự đề xuất và chỉ đạo thực hiện.',
-          },
-          {
-            stage: 'Giai đoạn 3',
-            name: 'Tập thể phát triển cao',
-            feature:
-              'Dư luận tập thể lành mạnh được xác lập; đa số học sinh tự giác ủng hộ cái đúng, phản đối cái sai.',
-            role: 'Tập thể trở thành công cụ giáo dục mạnh mẽ nhất ("Phương pháp song hành"); GVCN chỉ giữ vai trò cố vấn tinh tế từ xa.',
-          },
-        ].map((item, idx) =>
-          createElement(
-            Card,
-            {
-              key: idx,
-              className: 'p-5 rounded-2xl border-stone-200 bg-white shadow-xs space-y-2',
-            },
-            createElement(
-              'div',
-              { className: 'flex items-center gap-2' },
-              createElement(Badge, { variant: 'subjectSolid' }, item.stage),
-              createElement('h4', { className: 'text-xs font-bold text-stone-900' }, item.name),
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs text-stone-600 leading-relaxed' },
-              createElement('strong', null, 'Đặc điểm: '),
-              item.feature,
-            ),
-            createElement(
-              'p',
-              { className: 'text-xs text-teal-800 leading-relaxed' },
-              createElement('strong', null, 'Vai trò GVCN: '),
-              item.role,
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN II: TIẾP CẬN KỶ LUẬT TÍCH CỰC
-    createElement(
-      'section',
-      { id: '2-ky-luat-tich-cuc-jane-nelsen', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(ShieldCheck, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '2. Phương pháp Kỷ luật Tích cực (Tài liệu Positive Discipline - Jane Nelsen)',
-        ),
-      ),
-      createElement(
-        'p',
-        null,
-        'Kỷ luật tích cực không đồng nghĩa với buông lỏng hay nhu nhược, mà là ',
-        createElement(
-          'strong',
-          null,
-          'sự kết hợp giữa lòng tốt (tôn trọng nhân phẩm) và sự kiên quyết (yêu cầu kỷ cương)',
-        ),
-        ':',
-      ),
-      createElement(
-        'div',
-        { className: 'overflow-x-auto rounded-xl border border-stone-200' },
-        createElement(
-          'table',
-          { className: 'w-full text-left text-[15px] text-stone-800' },
-          createElement(
-            'thead',
-            { className: 'bg-[#faf8f2] text-stone-900 font-bold border-b border-stone-200' },
-            createElement(
-              'tr',
-              null,
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-stone-900' },
-                'Khía cạnh so sánh',
-              ),
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-rose-800' },
-                'Trừng phạt tiêu cực',
-              ),
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-teal-900' },
-                'Kỷ luật tích cực (Hệ quả logic)',
-              ),
-            ),
-          ),
-          createElement(
-            'tbody',
-            { className: 'divide-y divide-stone-100 text-stone-700' },
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement('td', { className: 'py-3 px-4 font-semibold' }, 'Mục đích'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-rose-700' },
-                'Bắt học sinh phải trả giá, chịu đau đớn, nhục nhã',
-              ),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-teal-900' },
-                'Dạy học sinh kỹ năng giải quyết vấn đề và chịu trách nhiệm',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Thái độ của giáo viên',
-              ),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-rose-700' },
-                'Giận dữ, mỉa mai, công kích cá nhân, áp đặt',
-              ),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-teal-900' },
-                'Điềm tĩnh, tôn trọng, đồng cảm, lắng nghe',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold' },
-                'Mối liên hệ với vi phạm',
-              ),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-rose-700' },
-                'Tùy tiện (ví dụ: vẽ bẩn lên bàn thì phạt chép phạt 100 lần)',
-              ),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-teal-900' },
-                'Có liên quan trực tiếp (vẽ bẩn bàn thì phải ở lại lau sạch bàn)',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement('td', { className: 'py-3 px-4 font-semibold' }, 'Kết quả lâu dài'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-rose-700' },
-                'Học sinh sinh lòng oán hận, chống đối ngầm hoặc tự ti buông xuôi',
-              ),
-              createElement(
-                'td',
-                { className: 'py-3 px-4 text-teal-900' },
-                'Học sinh hiểu ra bản chất sai phạm và tự giác điều chỉnh hành vi',
-              ),
-            ),
-          ),
-        ),
-      ),
-
-      // 4 mục tiêu sai lệch đằng sau hành vi học sinh
-      createElement(
-        'div',
-        { className: 'mt-4 space-y-2' },
-        createElement(
-          'h4',
-          { className: 'font-bold text-xs sm:text-sm text-stone-900 flex items-center gap-2' },
-          createElement(HelpCircle, { className: 'h-4 w-4 text-amber-800' }),
-          'Kỹ thuật phát hiện 4 Mục tiêu Sai lệch đằng sau hành vi vi phạm:',
-        ),
-        createElement(
-          'div',
-          { className: 'grid grid-cols-1 md:grid-cols-2 gap-4' },
-          [
-            {
-              target: '1. Tìm sự chú ý',
-              signal: 'Làm hề, nói leo, trêu bạn',
-              reaction:
-                'Phớt lờ lúc đang làm hề; giao việc phụ trách cụ thể để được chú ý tích cực.',
-            },
-            {
-              target: '2. Tranh giành quyền lực',
-              signal: 'Ngang bướng, thách thức, cãi lại',
-              reaction:
-                'Không đôi co tay đôi; cho học sinh quyền lựa chọn trong giới hạn cho phép.',
-            },
-            {
-              target: '3. Trả đũa / Phục thù',
-              signal: 'Phá hoại tài sản, nói xấu, bạo lực',
-              reaction:
-                'Thấu hiểu tổn thương sâu kín; kiên nhẫn hàn gắn niềm tin và chữa lành tâm lý.',
-            },
-            {
-              target: '4. Buông xuôi / Bất lực',
-              signal: 'Ngủ gật, không làm bài, bất cần',
-              reaction: 'Chia nhỏ nhiệm vụ vừa sức; khích lệ từng tiến bộ nhỏ nhất, không chê bai.',
-            },
-          ].map((item, i) =>
-            createElement(
-              Card,
-              {
-                key: i,
-                className:
-                  'p-4 sm:p-5 rounded-xl border border-stone-200/90 bg-[#faf8f2] shadow-2xs',
-              },
-              createElement(
-                'div',
-                { className: 'text-base font-semibold text-amber-950' },
-                item.target,
-              ),
-              createElement(
-                'div',
-                { className: 'mt-2 text-[14.5px] leading-relaxed text-stone-600' },
-                createElement(
-                  'strong',
-                  { className: 'font-semibold text-stone-700' },
-                  'Biểu hiện: ',
-                ),
-                item.signal,
-              ),
-              createElement(
-                'div',
-                { className: 'mt-2 text-[14.5px] leading-relaxed text-teal-900' },
-                createElement('strong', { className: 'font-semibold text-teal-950' }, 'Ứng xử: '),
-                item.reaction,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c4-b2-noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop',
-      lessonTitle: 'Bài 4.2: Nội dung và Phương pháp giáo dục của GVCN lớp',
+    // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
+    createElement(PedagogyMetadataBar, {
+      courseCode: 'EDUC2802',
+      clos: ['CLO6', 'CLO7'],
+      textbookPages: 'Tr. 70–77 (Chương 4, Mục 4.2.1 – 4.2.3)',
+      legalRefs: [
+        'Thông tư 32/2020/TT-BGDĐT (Điều 29 — Kế hoạch giáo dục của GVCN)',
+        'Thông tư 20/2018/TT-BGDĐT (Tiêu chuẩn 3: Xây dựng môi trường giáo dục)',
+      ],
+      sessionNote: 'Lý thuyết, Thảo luận & Thực hành 2',
     }),
+
+    // PHẦN I: NỘI DUNG VÀ CÁCH THỨC TÌM HIỂU, PHÂN LOẠI HỌC SINH (TR. 70–71)
+    createElement(
+      'section',
+      { id: '1-tim-hieu-va-phan-loai-hoc-sinh', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Users, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '1. Tìm hiểu và phân loại học sinh lớp chủ nhiệm (Giáo trình tr. 70–71)',
+        ),
+      ),
+      createElement(
+        'div',
+        { className: 'text-sm text-[#29383D]' },
+        'Theo ',
+        createElement('strong', null, 'Giáo trình Giáo dục học HCMUE (tr. 70–71)'),
+        ', tìm hiểu học sinh là khâu mở đầu tiên quyết của công tác chủ nhiệm lớp. Muốn giáo dục con người về mọi mặt thì trước hết phải hiểu con người về mọi mặt.',
+        createElement(
+          Sidenote,
+          {
+            number: 1,
+            type: 'history',
+            title: 'K.D. Ushinsky về tầm quan trọng của việc hiểu học sinh',
+          },
+          '"Nếu giáo dục học muốn giáo dục con người về mọi mặt thì trước hết nó phải hiểu con người về mọi mặt." Việc phân loại học sinh nhằm mục đích cá biệt hóa tác động hỗ trợ, tuyệt đối không phải để dán nhãn hay kỳ thị.',
+        ),
+      ),
+
+      createElement(ComparativeTable, {
+        title:
+          'Ma trận Nội dung và Phương pháp tìm hiểu học sinh lớp chủ nhiệm (Giáo trình tr. 70–71)',
+        subtitle:
+          'Kết hợp đồng bộ các kênh thu thập thông tin để có bức tranh toàn diện, khách quan về từng học sinh và cả lớp.',
+        headers: [
+          'Nhóm nội dung cần tìm hiểu',
+          'Các chỉ báo thông tin cụ thể',
+          'Phương pháp & Cách thức thu thập',
+        ],
+        rows: [
+          [
+            '1. Hoàn cảnh gia đình & Đời sống xã hội',
+            'Điều kiện kinh tế, cấu trúc gia đình, nghề nghiệp và quan điểm giáo dục của cha mẹ, môi trường cư trú, nhóm bạn bè ngoài trường.',
+            'Nghiên cứu hồ sơ học sinh, phiếu thông tin đầu năm, trao đổi trực tiếp với phụ huynh, thăm gia đình học sinh khi cần thiết.',
+          ],
+          [
+            '2. Đặc điểm thể chất & Tâm sinh lí',
+            'Tình trạng sức khỏe, thị lực, bệnh lí đặc biệt; khí chất, tính cách, hứng thú, nguyện vọng, những khó khăn tâm lí lứa tuổi.',
+            'Quan sát sư phạm trong giờ học và giờ ra chơi, trò chuyện thân mật, phối hợp với nhân viên y tế và bộ phận tư vấn tâm lí học đường.',
+          ],
+          [
+            '3. Phẩm chất đạo đức & Năng lực học tập',
+            'Thái độ học tập, ý thức tổ chức kỷ luật, kết quả học tập các môn, năng khiếu đặc biệt và vị thế của học sinh trong tập thể lớp.',
+            'Phân tích học bạ năm trước, trao đổi với GVCN cũ, GV bộ môn, Ban cán sự lớp và phân tích sản phẩm hoạt động của học sinh.',
+          ],
+        ],
+      }),
+    ),
+
+    // PHẦN II: QUY TRÌNH 6 BƯỚC XÂY DỰNG KẾ HOẠCH GIÁO DỤC LỚP CHỦ NHIỆM (TR. 71–73)
+    createElement(
+      'section',
+      { id: '2-quy-trinh-6-buoc-lap-ke-hoach-chu-nhiem', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Quy trình 6 bước xây dựng kế hoạch giáo dục lớp chủ nhiệm (Giáo trình tr. 71–73)',
+        ),
+      ),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          'Quy trình 6 bước xây dựng kế hoạch giáo dục lớp chủ nhiệm (Giáo trình HCMUE tr. 71–73)',
+        subtitle:
+          'Quy trình chuẩn áp dụng cho việc lập kế hoạch năm học, học kỳ, tháng và tuần của giáo viên chủ nhiệm (phục vụ trực tiếp Bài Thực hành 2).',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title: 'Bước 1: Nghiên cứu mục tiêu, kế hoạch năm học của nhà trường và tình hình lớp',
+            badge: 'Khảo sát căn cứ',
+            description:
+              'Nghiên cứu phương hướng nhiệm vụ năm học của trường, kế hoạch của Đoàn/Đội và kết hợp kết quả điều tra đặc điểm (thuận lợi, khó khăn) của lớp chủ nhiệm.',
+          },
+          {
+            number: 2,
+            title: 'Bước 2: Xác định mục tiêu và phương hướng chung của lớp chủ nhiệm',
+            badge: 'Định vị mục tiêu',
+            description:
+              'Xác định rõ các chỉ tiêu phấn đấu về phẩm chất, năng lực học tập, nề nếp chuyên cần, các hoạt động phong trào và danh hiệu tập thể lớp trong năm học.',
+          },
+          {
+            number: 3,
+            title: 'Bước 3: Xác định nội dung, hình thức, biện pháp và lịch trình thực hiện',
+            badge: 'Thiết kế chi tiết',
+            description:
+              'Cụ thể hóa từng mảng công tác (học tập, rèn luyện đạo đức, hoạt động trải nghiệm, phối hợp CMHS) gắn với thời gian (từng tháng/tuần), người phụ trách và nguồn lực.',
+          },
+          {
+            number: 4,
+            title: 'Bước 4: Tổ chức lấy ý kiến đóng góp và thông qua kế hoạch',
+            badge: 'Dân chủ hóa kế hoạch',
+            description:
+              'Đưa bản dự thảo kế hoạch ra thảo luận dân chủ với đội ngũ cán bộ lớp, tập thể học sinh, hội nghị Cha mẹ học sinh đầu năm và trình Ban giám hiệu phê duyệt.',
+          },
+          {
+            number: 5,
+            title: 'Bước 5: Tổ chức triển khai thực hiện kế hoạch',
+            badge: 'Tổ chức hành động',
+            description:
+              'Chuyển hóa kế hoạch năm học thành kế hoạch tháng/tuần; phân công nhiệm vụ rõ ràng cho các tổ, nhóm và hướng dẫn, đôn đốc học sinh thực hiện.',
+          },
+          {
+            number: 6,
+            title: 'Bước 6: Kiểm tra, đánh giá và điều chỉnh kế hoạch',
+            badge: 'Phản hồi & Điều chỉnh',
+            description:
+              'Định kỳ kiểm tra tiến độ trong các tiết Sinh hoạt lớp, đánh giá kết quả đạt được, kịp thời điều chỉnh hoặc bổ sung các biện pháp phù hợp với diễn biến thực tiễn.',
+          },
+        ],
+      }),
+    ),
+
+    // PHẦN III: 3 GIAI ĐOẠN PHÁT TRIỂN VÀ 4 BIỆN PHÁP XÂY DỰNG TẬP THỂ HỌC SINH (TR. 73–77)
+    createElement(
+      'section',
+      { id: '3-xay-dung-tap-the-hoc-sinh', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Layers, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '3. Ba giai đoạn phát triển tập thể và 4 biện pháp xây dựng tập thể học sinh vững mạnh (Giáo trình tr. 73–77)',
+        ),
+      ),
+
+      createElement(ScholarQuote, {
+        scholar: 'A.S. Makarenko (1888–1939)',
+        work: 'Tác động song hành và Quy luật vận động của tập thể học sinh',
+        quote:
+          'Ngừng đặt ra những viễn cảnh mới đối với tập thể cũng có nghĩa là làm ngừng sự sống của tập thể. Tập thể học sinh chỉ thực sự trở thành môi trường giáo dục khi có mục đích chung, cơ quan tự quản có uy tín và dư luận tập thể lành mạnh.',
+        analysis:
+          'Giáo trình HCMUE (tr. 73–77) phân tích sự phát triển của tập thể học sinh qua 3 giai đoạn từ thấp đến cao, đòi hỏi GVCN phải thay đổi linh hoạt phương pháp lãnh đạo tương ứng với từng giai đoạn.',
+      }),
+
+      createElement(ComparativeTable, {
+        title:
+          'Bảng đối sánh 3 Giai đoạn phát triển của tập thể học sinh (Giáo trình HCMUE tr. 74–75)',
+        subtitle:
+          'Sự chuyển hóa biện chứng từ yêu cầu đơn phương của GVCN sang cơ chế tự quản của toàn thể tập thể lớp.',
+        headers: [
+          'Giai đoạn phát triển',
+          'Đặc điểm của tập thể học sinh',
+          'Phương thức tác động chủ đạo của GVCN',
+        ],
+        rows: [
+          [
+            'Giai đoạn 1: Tập thể mới hình thành (Tổng hợp sơ bộ)',
+            'Học sinh chưa hiểu rõ về nhau, còn bỡ ngỡ hoặc tụ tập theo nhóm nhỏ tự phát; chưa có đội ngũ cán bộ lớp đủ năng lực và uy tín.',
+            'GVCN là người trực tiếp đề ra các yêu cầu sư phạm rõ ràng, kiên quyết, dứt khoát; đồng thời tích cực quan sát để phát hiện các hạt nhân tích cực.',
+          ],
+          [
+            'Giai đoạn 2: Hình thành đội ngũ cốt cán (Phân hóa & liên kết)',
+            'Đã xuất hiện đội ngũ cán bộ lớp và nhóm học sinh tích cực ủng hộ yêu cầu của GVCN; tập thể bắt đầu đi vào nề nếp hoạt động.',
+            'GVCN chuyển giao dần quyền điều hành cho Ban cán sự lớp; thông qua đội ngũ cốt cán để đặt ra yêu cầu đối với các thành viên trong lớp.',
+          ],
+          [
+            'Giai đoạn 3: Tập thể phát triển vững mạnh (Tự quản cao)',
+            'Đa số học sinh gắn bó đoàn kết, có dư luận tập thể lành mạnh; mỗi thành viên tự giác đặt ra yêu cầu cao đối với bản thân và bạn bè.',
+            'GVCN đóng vai trò cố vấn sư phạm; phát huy tối đa sức mạnh của dư luận tập thể và truyền thống lớp trong việc tự giáo dục.',
+          ],
+        ],
+      }),
+
+      createElement(NumberedProcessFlow, {
+        title: '4 Biện pháp xây dựng tập thể học sinh vững mạnh (Giáo trình HCMUE tr. 75–77)',
+        subtitle:
+          'Hệ thống biện pháp nghiệp vụ giúp GVCN đưa lớp học tiến nhanh từ Giai đoạn 1 lên Giai đoạn 3.',
+        columns: 2,
+        steps: [
+          {
+            number: 1,
+            title:
+              'Biện pháp 1: Tổ chức các hoạt động chung đa dạng, hấp dẫn và xây dựng hệ thống viễn cảnh',
+            badge: 'Viễn cảnh gần · trung bình · xa',
+            description:
+              'Thiết lập hệ thống viễn cảnh nối tiếp nhau (viễn cảnh gần như buổi dã ngoại tuần tới; viễn cảnh trung bình như hội diễn học kỳ; viễn cảnh xa như mục tiêu tốt nghiệp, hướng nghiệp) để lôi cuốn mọi học sinh cùng hành động.',
+          },
+          {
+            number: 2,
+            title: 'Biện pháp 2: Lựa chọn, kiện toàn và bồi dưỡng đội ngũ cán bộ tự quản của lớp',
+            badge: 'Bồi dưỡng cốt cán',
+            description:
+              'Kết hợp bầu cử dân chủ với định hướng sư phạm để chọn Ban cán sự có năng lực, uy tín; hướng dẫn phương pháp làm việc và thực hiện luân phiên chức vụ để nhiều học sinh được rèn luyện.',
+          },
+          {
+            number: 3,
+            title: 'Biện pháp 3: Xây dựng truyền thống tốt đẹp và dư luận tập thể lành mạnh',
+            badge: 'Dư luận tập thể',
+            description:
+              'Định hướng nhận thức đúng đắn của tập thể trước cái tốt và cái xấu; biến dư luận tập thể thành "bộ lọc đạo đức" khích lệ hành vi tích cực và ngăn chặn hành vi lệch chuẩn.',
+          },
+          {
+            number: 4,
+            title:
+              'Biện pháp 4: Xây dựng bầu không khí tâm lí đoàn kết, thân ái và kỉ luật tự giác',
+            badge: 'Kỷ luật tích cực',
+            description:
+              'Xây dựng bộ nội quy lớp học do chính học sinh tham gia soạn thảo; giải quyết kịp thời các mâu thuẫn nội bộ trên tinh thần tôn trọng, công bằng và nhân ái.',
+          },
+        ],
+      }),
+
+      createElement(LegalReferenceBox, {
+        documentTitle:
+          'Thông tư số 20/2018/TT-BGDĐT (Chuẩn nghề nghiệp giáo viên cơ sở giáo dục phổ thông)',
+        article: 'Tiêu chuẩn 3 (Xây dựng môi trường giáo dục) — Tiêu chí 8 & Tiêu chí 9',
+        quote:
+          'Xây dựng văn hóa nhà trường lành mạnh, thực hiện quyền dân chủ trong nhà trường (Tiêu chí 8): Học sinh được tham gia xây dựng, thực hiện nội quy, quy tắc ứng xử văn hóa của lớp học, trường học; giáo viên lắng nghe và giải quyết thỏa đáng các ý kiến, nguyện vọng chính đáng của học sinh.',
+        pedagogicalAnalysis:
+          'Bốn biện pháp xây dựng tập thể học sinh trong Giáo trình HCMUE (tr. 75–77) chính là công cụ nghiệp vụ trực tiếp để người giáo viên chủ nhiệm đạt mức Khá và Tốt ở Tiêu chuẩn 3 của Chuẩn nghề nghiệp giáo viên phổ thông.',
+      }),
+    ),
+
+    // PHẦN IV: CÂU HỎI ÔN TẬP & TÌNH HUỐNG THỰC HÀNH
+    createElement(
+      'section',
+      { id: '4-on-tap-va-tinh-huong-bai-4-2', className: 'space-y-6' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '4. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO6, CLO7)'),
+      ),
+      createElement(
+        'div',
+        { className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 space-y-2' },
+        createElement(
+          'p',
+          { className: 'text-sm font-bold text-[#29383D]' },
+          'Câu hỏi ôn tập (Giáo trình HCMUE tr. 82): Trình bày quy trình 6 bước xây dựng kế hoạch giáo dục của giáo viên chủ nhiệm lớp và phân tích 3 giai đoạn phát triển tập thể học sinh cùng các biện pháp xây dựng tập thể vững mạnh.',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B]' },
+          'Gợi ý trả lời: Trình bày đầy đủ 6 bước lập kế hoạch chủ nhiệm (tr. 71–73); phân tích đặc điểm 3 giai đoạn phát triển tập thể và 4 biện pháp (hoạt động chung & viễn cảnh; bồi dưỡng cốt cán; dư luận & truyền thống; không khí đoàn kết & kỷ luật tích cực).',
+        ),
+      ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy4_2 }),
+    ),
   );
 };
 
 // ============================================================================
-// 3. COMPONENT BÀI 4.3: YÊU CẦU PHẨM CHẤT, NĂNG LỰC & 3 HOẠT ĐỘNG CHỦ NHIỆM
+// 3. COMPONENT BÀI 4.3: TỔ CHỨC GIÁO DỤC TOÀN DIỆN, MÔI TRƯỜNG LỚP HỌC VÀ PHỐI HỢP CÁC LỰC LƯỢNG GIÁO DỤC (TR. 78–82)
 // ============================================================================
 
 export const Lesson4_3View: FC = () => {
-  const [activePlanTab, setActivePlanTab] = useState<
-    'ke-hoach-thang' | 'hop-phu-huynh' | 'sinh-hoat-lop'
-  >('ke-hoach-thang');
-
-  return createElement(
-    'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
-
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 4: Công tác của Người giáo viên chủ nhiệm lớp',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 3',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 4.3: Yêu cầu về phẩm chất, năng lực của GVCN & Thiết kế hoạt động chủ nhiệm trọng tâm',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Hệ thống hóa các yêu cầu chuẩn mực về phẩm chất đạo đức và năng lực nghiệp vụ sư phạm của người thầy chủ nhiệm; cung cấp cẩm nang hướng dẫn chi tiết thiết kế 3 hoạt động thực tế cốt lõi: Kế hoạch chủ nhiệm tháng, Kịch bản họp cha mẹ học sinh hiện đại và Tiết sinh hoạt lớp tự quản.',
-      ),
-    ),
-
-    // PHẦN I: PHẨM CHẤT VÀ NĂNG LỰC CỦA GVCN
-    createElement(
-      'section',
-      { id: '1-pham-chat-nang-luc-gvcn', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Award, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '1. Yêu cầu về Phẩm chất và Năng lực của Người Giáo viên Chủ nhiệm',
-        ),
-      ),
-      createElement(
-        'div',
-        { className: 'grid gap-4 sm:grid-cols-2' },
-        createElement(
-          Card,
-          { className: 'p-5 rounded-2xl border-stone-200 bg-white shadow-xs space-y-3' },
-          createElement(
-            'div',
-            { className: 'flex items-center gap-2 text-teal-900 font-bold text-sm' },
-            createElement(Heart, { className: 'h-4 w-4 text-teal-700' }),
-            createElement('span', null, 'Phẩm chất Nhà giáo Chủ nhiệm (Đức)'),
-          ),
-          createElement(
-            'ul',
-            { className: 'list-disc pl-5 space-y-2 text-xs text-stone-700' },
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Lòng yêu thương và bao dung sư phạm:'),
-              ' Coi học sinh như con em mình, sẵn sàng thấu hiểu và tha thứ khi các em biết ăn năn sửa sai.',
-            ),
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Sự công bằng và khách quan tuyệt đối:'),
-              ' Không thiên vị học sinh khá giỏi hay kỳ thị học sinh cá biệt, nghèo khó.',
-            ),
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Tính mẫu mực và kiên nhẫn cao độ:'),
-              ' Giữ gìn ngôn phong, tác phong chuẩn mực; kiên trì uốn nắn hành vi không nóng vội bỏ cuộc.',
-            ),
-          ),
-        ),
-        createElement(
-          Card,
-          { className: 'p-5 rounded-2xl border-stone-200 bg-white shadow-xs space-y-3' },
-          createElement(
-            'div',
-            { className: 'flex items-center gap-2 text-amber-900 font-bold text-sm' },
-            createElement(Target, { className: 'h-4 w-4 text-amber-700' }),
-            createElement('span', null, 'Năng lực Nghiệp vụ Chuyên sâu (Tài)'),
-          ),
-          createElement(
-            'ul',
-            { className: 'list-disc pl-5 space-y-2 text-xs text-stone-700' },
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Năng lực thấu hiểu tâm lý học sinh:'),
-              ' Nắm bắt các quy luật phát triển lứa tuổi dậy thì và các biến cố tâm lý học đường.',
-            ),
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Năng lực quản lý và tổ chức tập thể:'),
-              ' Lập kế hoạch khoa học, phân công công việc rõ ràng, phát huy tính tự quản của cán sự lớp.',
-            ),
-            createElement(
-              'li',
-              null,
-              createElement('strong', null, 'Năng lực giao tiếp và tư vấn tâm lý:'),
-              ' Đối thoại khéo léo với phụ huynh, đồng cảm và gỡ rối tâm lý khi học sinh gặp khủng hoảng.',
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN II: THIẾT KẾ 3 HOẠT ĐỘNG CHỦ NHIỆM THỰC TẾ
-    createElement(
-      'section',
-      { id: '2-thiet-ke-3-hoat-dong-chu-nhiem', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Calendar, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '2. Cẩm nang Thiết kế 3 Hoạt động Chủ nhiệm Trọng tâm (Buổi 11 Đề cương)',
-        ),
-      ),
-
-      // Tab chọn hoạt động
-      createElement(
-        'div',
-        { className: 'flex flex-wrap gap-2 rounded-xl bg-stone-100 p-1.5 text-xs font-semibold' },
-        createElement(
-          'button',
-          {
-            type: 'button',
-            onClick: () => setActivePlanTab('ke-hoach-thang'),
-            className: `flex items-center gap-1.5 rounded-lg px-3 py-2 transition-all ${
-              activePlanTab === 'ke-hoach-thang'
-                ? 'bg-white text-teal-900 shadow-2xs font-bold'
-                : 'text-stone-600 hover:text-stone-900'
-            }`,
-          },
-          createElement(Calendar, { className: 'h-4 w-4' }),
-          '1. Kế hoạch chủ nhiệm tháng',
-        ),
-        createElement(
-          'button',
-          {
-            type: 'button',
-            onClick: () => setActivePlanTab('hop-phu-huynh'),
-            className: `flex items-center gap-1.5 rounded-lg px-3 py-2 transition-all ${
-              activePlanTab === 'hop-phu-huynh'
-                ? 'bg-white text-teal-900 shadow-2xs font-bold'
-                : 'text-stone-600 hover:text-stone-900'
-            }`,
-          },
-          createElement(MessageSquare, { className: 'h-4 w-4' }),
-          '2. Kịch bản Họp cha mẹ học sinh',
-        ),
-        createElement(
-          'button',
-          {
-            type: 'button',
-            onClick: () => setActivePlanTab('sinh-hoat-lop'),
-            className: `flex items-center gap-1.5 rounded-lg px-3 py-2 transition-all ${
-              activePlanTab === 'sinh-hoat-lop'
-                ? 'bg-white text-teal-900 shadow-2xs font-bold'
-                : 'text-stone-600 hover:text-stone-900'
-            }`,
-          },
-          createElement(Clock, { className: 'h-4 w-4' }),
-          '3. Tiết sinh hoạt lớp tự quản',
-        ),
-      ),
-
-      // Nội dung theo Tab
-      activePlanTab === 'ke-hoach-thang' &&
-        createElement(
-          Card,
-          { className: 'p-6 rounded-2xl border-stone-200 bg-white shadow-xs space-y-4' },
-          createElement(
-            'div',
-            { className: 'font-bold text-sm text-teal-900 flex items-center gap-2' },
-            createElement(FileText, { className: 'h-4 w-4' }),
-            createElement('span', null, 'Cấu trúc Kế hoạch Chủ nhiệm Lớp trong 1 Tháng'),
-          ),
-          createElement(
-            'div',
-            { className: 'space-y-3 text-xs sm:text-sm text-stone-700' },
-            createElement(
-              'p',
-              null,
-              createElement('strong', null, '1. Mục tiêu trọng tâm của tháng:'),
-              ' Căn cứ vào chủ đề tháng của nhà trường và tình hình thực tế của lớp (ví dụ: "Tháng thi đua học tập tốt chào mừng Ngày Nhà giáo Việt Nam 20/11").',
-            ),
-            createElement(
-              'p',
-              null,
-              createElement('strong', null, '2. Phân bổ công việc chi tiết theo 4 tuần:'),
-            ),
-            createElement(
-              'ul',
-              { className: 'list-disc pl-5 space-y-1.5 text-xs text-stone-600' },
-              createElement(
-                'li',
-                null,
-                'Tuần 1: Ổn định nề nếp, chấn chỉnh hiện tượng đi học muộn và kiểm tra dụng cụ học tập.',
-              ),
-              createElement(
-                'li',
-                null,
-                'Tuần 2: Tổ chức phong trào "Đôi bạn cùng tiến" và rà soát các môn có kết quả kiểm tra yếu.',
-              ),
-              createElement(
-                'li',
-                null,
-                'Tuần 3: Tập luyện văn nghệ, làm bích báo hoặc chuẩn bị quà tri ân thầy cô.',
-              ),
-              createElement(
-                'li',
-                null,
-                'Tuần 4: Đánh giá xếp loại thi đua tháng, khen thưởng các cá nhân/tổ có tiến bộ vượt bậc.',
-              ),
-            ),
-            createElement(
-              'p',
-              null,
-              createElement('strong', null, '3. Phân công trách nhiệm:'),
-              ' Giao việc cụ thể cho Lớp trưởng, Lớp phó, các Tổ trưởng và Bí thư chi đoàn kèm thời hạn báo cáo.',
-            ),
-          ),
-        ),
-
-      activePlanTab === 'hop-phu-huynh' &&
-        createElement(
-          Card,
-          { className: 'p-6 rounded-2xl border-stone-200 bg-white shadow-xs space-y-4' },
-          createElement(
-            'div',
-            { className: 'font-bold text-sm text-teal-900 flex items-center gap-2' },
-            createElement(MessageSquare, { className: 'h-4 w-4' }),
-            createElement('span', null, 'Kịch bản Cuộc họp Cha mẹ Học sinh Hiện đại (5 Bước)'),
-          ),
-          createElement(
-            'div',
-            { className: 'space-y-3 text-xs sm:text-sm text-stone-700' },
-            createElement(
-              'p',
-              { className: 'text-amber-900 font-semibold text-xs' },
-              '★ Nguyên tắc vàng: Tránh biến buổi họp thành "buổi đọc bảng điểm và thu tiền". Hãy biến buổi họp thành ngày hội kết nối tình cảm gia đình - nhà trường.',
-            ),
-            createElement(
-              'ol',
-              { className: 'list-decimal pl-5 space-y-2 text-xs text-stone-600' },
-              createElement(
-                'li',
-                null,
-                createElement('strong', null, 'Bước 1: Chào đón ấm áp:'),
-                ' Chiếu video/hình ảnh học sinh học tập, sinh hoạt; thư tay của học sinh để trên bàn gửi gắm lời cảm ơn cha mẹ.',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement('strong', null, 'Bước 2: Báo cáo tình hình chung:'),
-                ' Nêu những điểm mạnh nổi bật của tập thể; các phương pháp đổi mới dạy học và kiểm tra đánh giá theo CT GDPT 2018.',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement('strong', null, 'Bước 3: Thảo luận chuyên đề:'),
-                ' Chia nhóm phụ huynh cùng thảo luận chủ đề thiết thực (ví dụ: "Đồng hành cùng con tuổi dậy thì", "Quản lý việc sử dụng smartphone hợp lý").',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement('strong', null, 'Bước 4: Trao đổi riêng tế nhị:'),
-                ' Không nêu tên phê bình học sinh kém trước hội trường; gửi phiếu kết quả cá nhân niêm phong và hẹn gặp riêng sau buổi họp.',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement('strong', null, 'Bước 5: Thống nhất kênh liên lạc:'),
-                ' Bầu Ban đại diện CMHS lớp và quy ước nguyên tắc giao tiếp trong nhóm Zalo lớp văn minh, tôn trọng.',
-              ),
-            ),
-          ),
-        ),
-
-      activePlanTab === 'sinh-hoat-lop' &&
-        createElement(
-          Card,
-          { className: 'p-6 rounded-2xl border-stone-200 bg-white shadow-xs space-y-4' },
-          createElement(
-            'div',
-            { className: 'font-bold text-sm text-teal-900 flex items-center gap-2' },
-            createElement(Clock, { className: 'h-4 w-4' }),
-            createElement('span', null, 'Tiến trình 45 phút Tiết Sinh hoạt Lớp Tự quản'),
-          ),
-          createElement(
-            'div',
-            { className: 'space-y-3 text-xs sm:text-sm text-stone-700' },
-            createElement(
-              'ul',
-              { className: 'list-disc pl-5 space-y-2 text-xs text-stone-600' },
-              createElement(
-                'li',
-                null,
-                createElement('strong', null, 'Phần 1: Khởi động & Văn nghệ (5 phút):'),
-                ' Tạo không khí vui tươi, giải tỏa căng thẳng sau tuần học.',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement(
-                  'strong',
-                  null,
-                  'Phần 2: Sơ kết tuần qua do Ban cán sự chủ trì (10 phút):',
-                ),
-                ' Các tổ trưởng báo cáo nhanh; Lớp trưởng tuyên dương cá nhân xuất sắc; đề xuất giải pháp khắc phục tồn tại nhẹ nhàng.',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement(
-                  'strong',
-                  null,
-                  'Phần 3: Sinh hoạt theo Chủ đề trải nghiệm (20 phút):',
-                ),
-                ' Luân phiên các tổ chuẩn bị diễn đàn, trò chơi, tranh biện về một chủ đề giáo dục (Ví dụ: Kỹ năng quản lý thời gian, Văn hóa ứng xử trên mạng).',
-              ),
-              createElement(
-                'li',
-                null,
-                createElement(
-                  'strong',
-                  null,
-                  'Phần 4: GVCN cố vấn và định hướng tuần tới (10 phút):',
-                ),
-                ' Lắng nghe, nhận xét động viên, thống nhất kế hoạch tuần mới và gửi gắm thông điệp sống tích cực.',
-              ),
-            ),
-          ),
-        ),
-    ),
-
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c4-b3-yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem',
-      lessonTitle:
-        'Bài 4.3: Yêu cầu về phẩm chất, năng lực của GVCN & Thiết kế hoạt động chủ nhiệm trọng tâm',
-    }),
-  );
-};
-
-// ============================================================================
-// 4. COMPONENT BÀI 4.4: THỰC HÀNH XỬ LÝ TÌNH HUỐNG SƯ PHẠM THEO RUBRIC A.1.2
-// ============================================================================
-
-export const Lesson4_4View: FC = () => {
-  // Tình huống 1: Học sinh cá biệt thường xuyên trốn tiết, gây rối và không tôn trọng GV bộ môn
-  const caseStudyDisruptiveStudent: PedagogicalCaseStudy = {
-    id: 401,
-    title:
-      'Học sinh cá biệt thường xuyên trốn tiết, gây rối và tỏ thái độ vô lễ với giáo viên bộ môn',
+  const caseStudy4_3: PedagogicalCaseStudy = {
+    id: 403,
+    title: 'Đổi mới cuộc họp Cha mẹ học sinh và tháo gỡ xung đột giữa GV bộ môn với học sinh',
     context:
-      'Em Q. (học sinh lớp 10) gần đây thường xuyên trốn tiết học buổi chiều, hút thuốc lá điện tử trong nhà vệ sinh và trong giờ học môn Sử đã nhiều lần gác chân lên bàn, nói chen ngang làm gián đoạn bài giảng. Khi giáo viên bộ môn nhắc nhở, Q. cười cợt và nói: "Thầy dạy chán òm, em ngồi đây nghe là may lắm rồi!". Giáo viên bộ môn rất bức xúc đã ghi sổ đầu bài loại Yếu và xuống gặp GVCN đề nghị đưa Q. ra Hội đồng kỷ luật đình chỉ học 1 tuần.',
+      'Trước kỳ họp Cha mẹ học sinh sơ kết học kỳ I, một số học sinh lớp 11C phản ánh với GVCN rằng các em rất sợ cuộc họp phụ huynh vì "thầy cô chỉ đọc bảng điểm, phê bình tên từng học sinh yếu kém trước cả lớp khiến bố mẹ về nhà mắng chửi nặng nề". Đồng thời, trong lớp đang có căng thẳng giữa một nhóm học sinh với giáo viên bộ môn Hóa học do các em cho rằng cô chấm điểm quá khắt khe.',
     question:
-      'Vận dụng Quy trình 5 bước giải quyết tình huống giáo dục và tiêu chí Rubric A.1.2, thầy/cô chủ nhiệm sẽ xử lý như thế nào để vừa bảo vệ uy tín đồng nghiệp, vừa giữ vững kỷ cương trường học và giúp em Q. phục thiện?',
+      'Vận dụng lý luận về xây dựng môi trường tâm lí – xã hội an toàn và phối hợp giữa GVCN với Giáo viên bộ môn, Gia đình học sinh (Giáo trình Giáo dục học HCMUE tr. 78–82), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Nguyên tắc tôn trọng nhân cách kết hợp với yêu cầu cao đối với học sinh',
-      'Nguyên tắc kết hợp phù hợp đặc điểm lứa tuổi và cá biệt hóa giáo dục',
-      'Nguyên tắc phối hợp chặt chẽ giữa Nhà trường - Gia đình - Xã hội',
-      'Tiếp cận Kỷ luật tích cực (hậu quả logic thay cho trừng phạt hạ nhục)',
+      'Xây dựng môi trường lớp học an toàn, thân thiện (Môi trường vật chất & Môi trường tâm lí – xã hội, Giáo trình tr. 79–80)',
+      'Phối hợp đồng bộ giữa GVCN với Giáo viên bộ môn và Cha mẹ học sinh (Giáo trình tr. 80–82)',
+      'Nguyên tắc tôn trọng nhân cách học sinh và thống nhất các lực lượng giáo dục',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Tiếp nhận thông tin & Lắng nghe, trấn an đồng nghiệp',
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
         content:
-          'GVCN lắng nghe trọn vẹn sự việc từ giáo viên bộ môn với thái độ đồng cảm, tôn trọng; ghi nhận bức xúc chính đáng và khẳng định trách nhiệm sẽ phối hợp xử lý nghiêm minh, đúng quy chế để bảo vệ uy tín nhà giáo.',
+          'Có hai vấn đề cần giải quyết đồng thời: (1) Tâm lý lo sợ của học sinh trước hình thức họp phụ huynh nặng về phê bình công khai; (2) Sự thiếu thấu hiểu giữa học sinh lớp 11C với giáo viên bộ môn Hóa học.',
       },
       {
         step: 2,
-        title: 'Bước 2: Tìm hiểu nguyên nhân gốc rễ (Tâm lý học & Giáo dục học)',
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 4',
         content:
-          'Gặp riêng Q. tại văn phòng yên tĩnh. Không kết tội vội vã mà tạo không gian tin cậy để tìm hiểu động cơ bên dưới hành vi (Q. đang tìm kiếm sự chú ý do cha mẹ mới ly hôn, thiếu thốn tình cảm và bị hổng kiến thức căn bản nên chán học, muốn gây sự chú ý để khẳng định "bản lĩnh" với bạn bè).',
+          'Theo Giáo trình HCMUE (tr. 80–82), cuộc họp CMHS là diễn đàn đồng hành sư phạm chứ không phải "phiên tòa" phán xét lỗi lầm của trẻ. Về phía môn Hóa học, GVCN cần trao đổi riêng với GV bộ môn để nắm rõ yêu cầu chuyên môn và lắng nghe tâm tư của học sinh để làm cầu nối hòa giải.',
       },
       {
         step: 3,
-        title: 'Bước 3: Chỉ rõ hành vi sai phạm & Áp dụng kỷ luật tích cực',
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
         content:
-          'Phân tích cho Q. nhận thức rõ: Việc xúc phạm thầy cô và trốn tiết là vi phạm nghiêm trọng Điều lệ trường học (Điều 34 TT32). Yêu cầu Q. viết bản kiểm điểm tự nhìn nhận lỗi và trực tiếp đến gặp xin lỗi giáo viên bộ môn một cách chân thành. Áp dụng hệ quả logic: Cam kết không tái phạm, phụ trách chăm sóc bồn hoa của trường sau giờ học để rèn tính kiên nhẫn.',
+          'Phương án 1: Vẫn tổ chức họp phụ huynh theo lối cũ (đọc báo cáo điểm số chung) và phê bình học sinh phàn nàn về GV bộ môn. Phương án 2: Đổi mới kịch bản họp CMHS theo hướng tích cực, bảo mật nhận xét cá nhân và tổ chức cầu nối trao đổi phương pháp học tập môn Hóa học.',
       },
       {
         step: 4,
-        title: 'Bước 4: Phối hợp chặt chẽ với cha mẹ học sinh',
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
         content:
-          'Mời cha mẹ Q. đến trao đổi riêng trên tinh thần đồng hành giúp đỡ con, phân tích nguyên nhân tâm lý và thống nhất chế độ giám sát giờ giấc học tập chặt chẽ giữa gia đình và GVCN.',
+          'Thực hiện đồng bộ: (1) Với GV bộ môn Hóa: GVCN trao đổi chân thành với cô về tâm lý của lớp, mời cô chia sẻ rõ tiêu chí chấm bài và bí quyết học tốt môn Hóa để học sinh hiểu thiện chí của cô; (2) Với cuộc họp CMHS: Cho học sinh viết "Thư gửi bố mẹ" đặt trên bàn; báo cáo chung tập trung vào sự trưởng thành của tập thể; kết quả điểm số và những vấn đề cần khắc phục của từng em được gửi qua phiếu kín riêng cho từng phụ huynh kèm giải pháp tư vấn.',
       },
       {
         step: 5,
-        title: 'Bước 5: Kèm cặp, giao việc có ích và khích lệ sự tiến bộ',
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
         content:
-          'Phân công bạn học giỏi kèm cặp Q. học tập; giao cho Q. làm tổ phó phụ trách thể thao của lớp để chuyển hóa năng lượng thừa vào các hoạt động có ích; GVCN thường xuyên quan sát, khen ngợi kịp thời khi em có chuyển biến tích cực.',
+          'Thu thập phản hồi từ phụ huynh sau cuộc họp và theo dõi sự chuyển biến thái độ học tập môn Hóa của lớp 11C trong các tuần tiếp theo.',
       },
     ],
     pitfallsToAvoid: [
-      'Vội vã đình chỉ học ngay lập tức đẩy học sinh ra đường chơi bời với các phần tử xấu ngoài xã hội.',
-      'Bênh vực học sinh làm mất uy tín và lòng tin của giáo viên bộ môn.',
-      'Sỉ nhục, bêu tên học sinh trước toàn trường dưới cờ gây tổn thương danh dự nặng nề.',
+      'Công khai điểm số thấp và lỗi vi phạm của cá nhân học sinh trước toàn thể phụ huynh gây tổn thương lòng tự trọng của cả học sinh lẫn cha mẹ.',
+      'Bênh vực học sinh một chiều hoặc phê bình ngược lại đồng nghiệp trước mặt học sinh làm suy giảm uy tín của tập thể sư phạm.',
     ],
     coreLesson:
-      'Đằng sau mỗi học sinh cá biệt luôn là một đứa trẻ đang chịu tổn thương tâm lý và khao khát được công nhận. Người thầy giỏi là người biết biến gai nhọn thành hoa thơm.',
-  };
-
-  // Tình huống 2: Bạo lực học đường tinh vi trên mạng xã hội
-  const caseStudyCyberbullying: PedagogicalCaseStudy = {
-    id: 402,
-    title:
-      'Bạo lực học đường tinh vi: Nhóm nữ sinh cô lập, tẩy chay và lập nhóm chat bôi nhọ bạn cùng lớp',
-    context:
-      'Em M. (nữ sinh lớp 11 tính tình hiền lành, học giỏi) gần đây có biểu hiện trầm cảm, thường xuyên khóc một mình trong giờ ra chơi và xin phép nghỉ học nhiều buổi. Phụ huynh em M. hốt hoảng báo với GVCN rằng M. phát hiện một nhóm nữ sinh trong lớp do em L. (lớp phó văn thể) cầm đầu đã lập nhóm chat Facebook kín, lấy ảnh đời tư của M. cắt ghép chế giễu, cô lập M. không cho ai chơi cùng và đe dọa sẽ "chặn đường đánh dằn mặt" nếu M. dám mách thầy cô.',
-    question:
-      'Là GVCN lớp, thầy/cô sẽ giải quyết tình huống bạo lực học đường tâm lý tinh vi này như thế nào theo chuẩn Rubric A.1.2 để bảo vệ an toàn cho em M. và chấm dứt dứt điểm nạn bắt nạt?',
-    principlesApplied: [
-      'Nguyên tắc bảo vệ quyền trẻ em, an toàn thân thể và tinh thần học sinh',
-      'Nguyên tắc giáo dục trong tập thể và bằng tập thể',
-      'Nguyên tắc tôn trọng nhân cách kết hợp với yêu cầu cao',
-      'Quy trình can thiệp và phòng chống bạo lực học đường theo Nghị định 80/2017/NĐ-CP',
-    ],
-    solutionSteps: [
-      {
-        step: 1,
-        title: 'Bước 1: Bảo vệ an toàn tâm lý và trấn an học sinh bị bắt nạt',
-        content:
-          'Gặp gỡ riêng em M. và phụ huynh tại phòng tư vấn tâm lý; khẳng định nhà trường sẽ bảo vệ em an toàn tuyệt đối; hướng dẫn em chụp lại toàn bộ bằng chứng tin nhắn bôi nhọ để xử lý theo quy định.',
-      },
-      {
-        step: 2,
-        title: 'Bước 2: Xác minh tế nhị và bảo mật thông tin',
-        content:
-          'GVCN triệu tập riêng nhóm nữ sinh liên quan (đặc biệt là em L.); tuyệt đối không làm ầm ĩ trước lớp để tránh việc trả thù ngấm ngầm; cho các em xem lại bằng chứng và chỉ rõ hành vi xúc phạm danh dự trên không gian mạng là vi phạm Luật An ninh mạng và Điều lệ trường học.',
-      },
-      {
-        step: 3,
-        title: 'Bước 3: Phân tích trách nhiệm và yêu cầu khắc phục hậu quả',
-        content:
-          'Giúp L. và nhóm bạn nhận thức sâu sắc nỗi đau khổ tâm lý của bạn M.; yêu cầu giải tán ngay nhóm chat, xóa bỏ mọi hình ảnh cắt ghép xúc phạm và trực tiếp xin lỗi M. trước sự chứng kiến của GVCN và phụ huynh hai bên.',
-      },
-      {
-        step: 4,
-        title: 'Bước 4: Tổ chức sinh hoạt chuyên đề giáo dục lòng thấu cảm cho cả lớp',
-        content:
-          'Lồng ghép vào tiết sinh hoạt lớp chuyên đề "Tình bạn đẹp và văn hóa ứng xử trên mạng xã hội", hướng dẫn cả lớp nhận diện các hình thức bạo lực tinh thần, xây dựng dư luận tập thể kiên quyết nói không với cô lập bạn bè.',
-      },
-      {
-        step: 5,
-        title: 'Bước 5: Đồng hành theo dõi dài hạn',
-        content:
-          'Tiếp tục theo dõi mối quan hệ trong lớp qua các tuần tiếp theo; bố trí học sinh thân thiện cùng tổ hỗ trợ M. hòa nhập lại; kịp thời can thiệp nếu có dấu hiệu tái diễn.',
-      },
-    ],
-    pitfallsToAvoid: [
-      'Coi thường coi đây chỉ là "chuyện xích mích trẻ con của con gái" dẫn đến hậu quả học sinh tự tử vì trầm cảm.',
-      'Tổ chức phê bình công khai gay gắt khiến mâu thuẫn âm ỉ bùng phát trả thù ngoài cổng trường.',
-    ],
-    coreLesson:
-      'Vết thương thể xác có thể mau lành, nhưng vết thương tinh thần do bạo lực mạng để lại có thể hủy hoại cả cuộc đời một đứa trẻ. GVCN phải là tấm lá chắn tin cậy nhất của học sinh.',
+      'GVCN là nhạc trưởng kết nối các lực lượng giáo dục: phải bảo vệ danh dự của học sinh và phụ huynh bằng sự tinh tế, đồng thời giữ vững sự thống nhất sư phạm với giáo viên bộ môn.',
   };
 
   return createElement(
     'div',
-    { className: 'space-y-8 text-stone-800 leading-relaxed' },
+    { className: 'space-y-8 text-[#29383D] leading-relaxed' },
 
-    // Header & CLO
-    createElement(
-      'div',
-      {
-        className:
-          'rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs',
-      },
-      createElement(
-        'div',
-        {
-          className:
-            'flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3',
-        },
-        createElement(
-          'span',
-          {
-            className:
-              'inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-900',
-          },
-          createElement(GraduationCap, { className: 'h-4 w-4 text-amber-800' }),
-          'Chương 4: Công tác của Người giáo viên chủ nhiệm lớp',
-        ),
-        createElement(
-          'span',
-          { className: 'rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900' },
-          'Chuẩn đầu ra: CLO 1, CLO 2, CLO 3 (Đánh giá quá trình A.1.2 - 10%)',
-        ),
-      ),
-      createElement(
-        'h2',
-        { className: 'mt-3 font-serif text-2xl font-bold text-stone-900 sm:text-3xl' },
-        'Bài 4.4: Thực hành xử lý tình huống sư phạm theo Rubric A.1.2',
-      ),
-      createElement(
-        'p',
-        { className: 'mt-2 text-sm leading-relaxed text-stone-600 sm:text-base' },
-        'Nắm vững quy trình khoa học 5 bước giải quyết tình huống giáo dục theo chuẩn Giáo trình HCMUE; đối chiếu bảng tiêu chí Rubric đánh giá A.1.2 chính thức và thực hành giải quyết 2 tình huống sư phạm phức tạp: Học sinh cá biệt gây rối vô lễ và Bạo lực học đường mạng xã hội.',
-      ),
-    ),
-
-    // PHẦN I: QUY TRÌNH 5 BƯỚC KHOA HỌC
-    createElement(
-      'section',
-      { id: '1-quy-trinh-5-buoc-xu-ly-tinh-huong', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Compass, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '1. Quy trình 5 Bước Giải quyết Tình huống Giáo dục Khoa học (HCMUE)',
-        ),
-      ),
-      createElement(
-        'div',
-        { className: 'grid gap-3 sm:grid-cols-5' },
-        [
-          {
-            step: '1',
-            title: 'Tiếp nhận & Định dạng',
-            desc: 'Xác định ai, ở đâu, khi nào, mức độ khẩn cấp.',
-          },
-          {
-            step: '2',
-            title: 'Biểu đạt vấn đề',
-            desc: 'Chỉ ra mâu thuẫn bản chất cần giải quyết.',
-          },
-          {
-            step: '3',
-            title: 'Đề xuất giả thuyết',
-            desc: 'Nêu các phương án và chọn giải pháp tối ưu.',
-          },
-          {
-            step: '4',
-            title: 'Chứng minh giải thuyết',
-            desc: 'Căn cứ cơ sở lý luận Tâm lý học và Giáo dục học.',
-          },
-          {
-            step: '5',
-            title: 'Rút ra kết luận',
-            desc: 'Bài học sư phạm và biện pháp rèn luyện bản thân.',
-          },
-        ].map((s) =>
-          createElement(
-            Card,
-            { key: s.step, className: 'p-4 rounded-xl border-stone-200 bg-[#faf8f2] text-center' },
-            createElement(
-              'span',
-              {
-                className:
-                  'inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-800 text-white font-bold text-xs mb-2',
-              },
-              s.step,
-            ),
-            createElement('div', { className: 'font-bold text-xs text-amber-950' }, s.title),
-            createElement('p', { className: 'mt-1.5 text-[11px] text-stone-600' }, s.desc),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN II: NGUYÊN VĂN BẢNG RUBRIC A.1.2
-    createElement(
-      'section',
-      { id: '2-bang-rubric-a12', className: 'space-y-4' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Award, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '2. Bảng Tiêu chí Rubric Đánh giá Bài tập Xử lý Tình huống (A.1.2 - 10%)',
-        ),
-      ),
-      createElement(
-        'div',
-        { className: 'overflow-x-auto rounded-xl border border-stone-200' },
-        createElement(
-          'table',
-          { className: 'w-full text-left text-[15px] text-stone-800' },
-          createElement(
-            'thead',
-            { className: 'bg-[#faf8f2] text-stone-900 font-bold border-b border-stone-200' },
-            createElement(
-              'tr',
-              null,
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-stone-900' },
-                'Tiêu chí đánh giá',
-              ),
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-stone-900' },
-                'Điểm tối đa',
-              ),
-              createElement(
-                'th',
-                { className: 'py-3 px-4 font-semibold text-stone-900' },
-                'Yêu cầu đạt mức Tốt (Điểm tối đa)',
-              ),
-            ),
-          ),
-          createElement(
-            'tbody',
-            { className: 'divide-y divide-stone-100 text-stone-700' },
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold text-teal-900' },
-                'Tiêu chí 1: Xác định vấn đề cần giải quyết',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '1.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Xác định đầy đủ, chính xác, làm nổi bật được mâu thuẫn bản chất của tình huống.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold text-teal-900' },
-                'Tiêu chí 2: Phân tích nguyên nhân',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '2.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Các nguyên nhân được phân tích rõ ràng, toàn diện, có cơ sở khoa học Tâm lý học và Giáo dục học thuyết phục.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold text-teal-900' },
-                'Tiêu chí 3: Phương án giải quyết',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '5.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Phương án giải quyết phù hợp, giải quyết triệt để vấn đề, có tính khả thi cao, tuân thủ đúng quy định pháp quy và chuẩn nghề nghiệp giáo viên.',
-              ),
-            ),
-            createElement(
-              'tr',
-              { className: 'hover:bg-stone-50/80 transition-colors' },
-              createElement(
-                'td',
-                { className: 'py-3 px-4 font-semibold text-teal-900' },
-                'Tiêu chí 4: Bài học sư phạm rút ra',
-              ),
-              createElement('td', { className: 'py-3 px-4 font-bold text-amber-900' }, '2.0 điểm'),
-              createElement(
-                'td',
-                { className: 'py-3 px-4' },
-                'Bài học sư phạm rút ra sâu sắc, thuyết phục và có tính ứng dụng cao cho bản thân sinh viên sư phạm.',
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-
-    // PHẦN III: 2 TÌNH HUỐNG THỰC HÀNH CHUẨN RUBRIC
-    createElement(
-      'section',
-      { id: '3-hai-tinh-huong-thuc-hanh', className: 'space-y-6' },
-      createElement(
-        'div',
-        {
-          className:
-            'flex items-center gap-2 text-amber-900 font-serif font-bold text-xl border-b border-stone-200 pb-2',
-        },
-        createElement(Lightbulb, { className: 'h-5 w-5 text-amber-800' }),
-        createElement(
-          'h3',
-          null,
-          '3. Phòng Nghiệm Sư phạm: 2 Tình huống Điển hình Thực hành theo Rubric A.1.2',
-        ),
-      ),
-      createElement(CaseStudyBox, { caseStudy: caseStudyDisruptiveStudent }),
-      createElement(CaseStudyBox, { caseStudy: caseStudyCyberbullying }),
-    ),
-
-    // NÚT HOÀN THÀNH BÀI HỌC
-    createElement(LessonCompletionCard, {
-      lessonId: 'gdh-c4-b4-thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12',
-      lessonTitle: 'Bài 4.4: Thực hành xử lý tình huống sư phạm theo Rubric A.1.2',
+    // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
+    createElement(PedagogyMetadataBar, {
+      courseCode: 'EDUC2802',
+      clos: ['CLO6', 'CLO7'],
+      textbookPages: 'Tr. 78–82 (Chương 4, Mục 4.2.4 – 4.2.6)',
+      legalRefs: [
+        'Luật Giáo dục 2019 (Điều 89, 90, 91 — Phối hợp Nhà trường, Gia đình và Xã hội)',
+        'Thông tư 20/2018/TT-BGDĐT (Tiêu chuẩn 3 & Tiêu chuẩn 4)',
+        'Thông tư 32/2020/TT-BGDĐT (Điều 29, 44)',
+      ],
+      sessionNote: 'Lý thuyết & Thảo luận Chương 4',
     }),
+
+    // PHẦN I: TỔ CHỨC GIÁO DỤC TOÀN DIỆN VÀ XÂY DỰNG MÔI TRƯỜNG LỚP HỌC (TR. 78–80)
+    createElement(
+      'section',
+      { id: '1-to-chuc-giao-duc-toan-dien-va-moi-truong-lop-hoc', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(ShieldCheck, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '1. Tổ chức giáo dục toàn diện và xây dựng môi trường lớp học an toàn, thân thiện (Giáo trình tr. 78–80)',
+        ),
+      ),
+      createElement(
+        'div',
+        { className: 'text-sm text-[#29383D]' },
+        'Theo ',
+        createElement('strong', null, 'Giáo trình Giáo dục học HCMUE (tr. 78–80)'),
+        ', GVCN tổ chức giáo dục toàn diện thông qua việc thúc đẩy động cơ học tập tích cực, rèn luyện kỹ năng sống, tổ chức hoạt động trải nghiệm và kiến tạo môi trường lớp học hạnh phúc trên cả hai phương diện: ',
+        createElement('strong', null, 'môi trường vật chất'),
+        ' và ',
+        createElement('strong', null, 'môi trường tâm lí – xã hội'),
+        '.',
+        createElement(
+          Sidenote,
+          {
+            number: 1,
+            type: 'caution',
+            title: 'An toàn tâm lí trong lớp học',
+          },
+          'Một lớp học có cơ sở vật chất hiện đại nhưng tồn tại sự chế giễu, cô lập bạn bè hoặc áp lực thành tích nặng nề thì chưa phải là môi trường giáo dục an toàn. An toàn tâm lí là điều kiện tiên quyết để học sinh dám bộc lộ bản thân và sáng tạo.',
+        ),
+      ),
+
+      createElement(ComparativeTable, {
+        title: 'Bảng đối sánh Hai thành tố của Môi trường lớp học (Giáo trình HCMUE tr. 79–80)',
+        subtitle:
+          'Kiến tạo không gian sư phạm xanh – sạch – đẹp về vật chất và dân chủ – tôn trọng – nhân ái về tâm lí xã hội.',
+        headers: [
+          'Thành tố môi trường',
+          'Nội dung và Tiêu chuẩn cốt lõi',
+          'Vai trò & Biện pháp tổ chức của GVCN',
+        ],
+        rows: [
+          [
+            '1. Môi trường vật chất của lớp học',
+            'Không gian phòng học thông thoáng, đủ ánh sáng, bàn ghế đúng quy chuẩn lứa tuổi, góc học tập/thư viện lớp, cây xanh, khẩu hiệu hành động thẩm mỹ và an toàn.',
+            'Hướng dẫn học sinh tự trang trí lớp học xanh – sạch – đẹp, phân công tổ trực nhật duy trì vệ sinh và bảo quản tài sản chung của lớp.',
+          ],
+          [
+            '2. Môi trường tâm lí – xã hội của lớp học',
+            'Hệ thống quan hệ ứng xử thầy – trò và bạn – bạn dựa trên sự tôn trọng, đồng cảm, dân chủ, công bằng; không có bạo lực học đường hay kỳ thị.',
+            'Xây dựng quy tắc ứng xử tích cực, lắng nghe học sinh không phán xét, phát hiện sớm và hóa giải kịp thời các xung đột tâm lí hoặc nguy cơ bắt nạt học đường.',
+          ],
+        ],
+      }),
+    ),
+
+    // PHẦN II: PHỐI HỢP GIỮA GVCN VỚI CÁC LỰC LƯỢNG GIÁO DỤC (TR. 80–82)
+    createElement(
+      'section',
+      { id: '2-phoi-hop-cac-luc-luong-giao-duc', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(BookOpen, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Phối hợp giữa GVCN với Đoàn/Đội, Giáo viên bộ môn và Gia đình học sinh (Giáo trình tr. 80–82)',
+        ),
+      ),
+
+      createElement(NumberedProcessFlow, {
+        title:
+          'Cơ chế phối hợp 3 trục lực lượng giáo dục của Giáo viên chủ nhiệm (Giáo trình HCMUE tr. 80–82)',
+        subtitle:
+          'Đảm bảo sự thống nhất mục tiêu, nội dung và phương pháp tác động tới học sinh lớp chủ nhiệm.',
+        columns: 3,
+        steps: [
+          {
+            number: 1,
+            title: 'Trục 1: Phối hợp với Đoàn TNCS Hồ Chí Minh và Đội TNTP Hồ Chí Minh',
+            badge: 'Tổ chức Đoàn · Đội',
+            description:
+              'Đồng hành cùng Chi đoàn lớp / Chi đội trong việc thiết kế hoạt động phong trào, rèn luyện đoàn viên – đội viên và phát huy vai trò tự quản của BCH Chi đoàn/Chi đội gắn với Ban cán sự lớp.',
+          },
+          {
+            number: 2,
+            title: 'Trục 2: Phối hợp với đội ngũ Giáo viên bộ môn giảng dạy tại lớp',
+            badge: 'Giáo viên bộ môn',
+            description:
+              'Cung cấp thông tin đặc điểm học sinh cho GV bộ môn đầu năm; thường xuyên trao đổi về nề nếp, thái độ học tập từng môn; thống nhất biện pháp phụ đạo học sinh chưa đạt và bồi dưỡng học sinh năng khiếu.',
+          },
+          {
+            number: 3,
+            title: 'Trục 3: Phối hợp với Gia đình học sinh và Ban đại diện CMHS',
+            badge: 'Gia đình & Xã hội',
+            description:
+              'Thiết lập kênh liên lạc hai chiều thường xuyên (sổ liên lạc điện tử, trao đổi cá nhân, họp CMHS đổi mới); tư vấn kiến thức tâm lí – giáo dục gia đình để cha mẹ đồng hành cùng nhà trường.',
+          },
+        ],
+      }),
+
+      createElement(LegalReferenceBox, {
+        documentTitle: 'Luật Giáo dục số 43/2019/QH14 & Thông tư 20/2018/TT-BGDĐT',
+        article: 'Điều 89, 90, 91 Luật Giáo dục 2019 & Tiêu chuẩn 4 Thông tư 20/2018/TT-BGDĐT',
+        quote:
+          'Nhà trường có trách nhiệm chủ động phối hợp với gia đình và xã hội để tổ chức hoặc tham gia các hoạt động giáo dục theo kế hoạch của nhà trường, bảo đảm an toàn cho người dạy và người học; thông báo về kết quả học tập, rèn luyện của người học cho cha mẹ hoặc người giám hộ.',
+        pedagogicalAnalysis:
+          'Tại Tiêu chuẩn 4 (Phát triển mối quan hệ giữa nhà trường, gia đình và xã hội) của Thông tư 20/2018/TT-BGDĐT, GVCN giữ vai trò hạt nhân trong việc tạo dựng mối quan hệ hợp tác tin cậy với cha mẹ học sinh và huy động nguồn lực xã hội hóa hợp pháp phục vụ hoạt động giáo dục.',
+      }),
+    ),
+
+    // PHẦN III: CÂU HỎI ÔN TẬP & TÌNH HUỐNG THỰC HÀNH
+    createElement(
+      'section',
+      { id: '3-on-tap-va-tinh-huong-bai-4-3', className: 'space-y-6' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO6, CLO7)'),
+      ),
+      createElement(
+        'div',
+        { className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 space-y-2' },
+        createElement(
+          'p',
+          { className: 'text-sm font-bold text-[#29383D]' },
+          'Câu hỏi ôn tập (Giáo trình HCMUE tr. 82): Phân tích nội dung xây dựng môi trường lớp học và cơ chế phối hợp giữa giáo viên chủ nhiệm với các lực lượng giáo dục trong và ngoài nhà trường.',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B]' },
+          'Gợi ý trả lời: Làm rõ 2 thành tố môi trường lớp học (vật chất và tâm lí – xã hội) và 3 trục phối hợp lực lượng giáo dục (Đoàn/Đội, Giáo viên bộ môn, Gia đình & cộng đồng).',
+        ),
+      ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy4_3 }),
+    ),
   );
 };
 
+// Bí danh tương thích ngược
+export const Lesson4_4View: FC = Lesson4_3View;
+
 // ============================================================================
-// 5. DISPATCHER TRÌNH NẠP BÀI HỌC CHƯƠNG 4 (GETCHAPTER4LESSONMODULE)
+// 4. DISPATCHER TRÌNH NẠP BÀI HỌC CHƯƠNG 4 (GETCHAPTER4LESSONMODULE)
 // ============================================================================
 
 export function getChapter4LessonModule(lessonId: string): CompiledLessonModule | null {
-  if (lessonId === 'gdh-c4-b1-vi-tri-chuc-nang-va-nhiem-vu-cua-gvcn') {
+  if (
+    lessonId === 'gdh-c4-b1-chuc-nang-va-nhiem-vu-cua-nguoi-giao-vien-chu-nhiem-lop' ||
+    lessonId === 'gdh-c4-b1-vi-tri-chuc-nang-va-nhiem-vu-cua-gvcn'
+  ) {
     return {
       default: Lesson4_1View,
       frontmatter: {
-        title: 'Bài 4.1: Vị trí, Chức năng và Nhiệm vụ của GVCN',
+        title: 'Bài 4.1: Chức năng và nhiệm vụ của người giáo viên chủ nhiệm lớp',
         description:
-          'Vị trí vai trò hạt nhân của GVCN; 4 chức năng nòng cốt theo HCMUE; nhiệm vụ, quyền hạn theo Thông tư 32/2020/TT-BGDĐT.',
+          'Phân tích 4 chức năng cốt lõi của GVCN (Quản lí – giáo dục toàn diện, Cố vấn tự quản, Cầu nối trong trường, Phối hợp ngoài trường) và đối sánh nhiệm vụ, quyền hạn của GVCN theo Điều lệ trường học 2020 (Giáo trình HCMUE tr. 67–69).',
         level: 'basic',
         tags: [
+          'CLO6',
           'GVCN',
-          'Chức năng GVCN',
-          'Quyền hạn nhiệm vụ',
-          'Thông tư 32/2020',
-          'CLO 1',
-          'CLO 2',
+          '4 Chức năng GVCN',
+          'Điều lệ trường học 2020',
+          'Giáo trình tr. 67-69',
         ],
       },
       lessonMeta: {
@@ -1468,18 +869,18 @@ export function getChapter4LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 1,
         headings: [
           {
-            id: '1-vi-tri-vai-tro-gvcn',
-            text: '1. Vị trí và Vai trò của Giáo viên Chủ nhiệm trong Nhà trường',
+            id: '1-bon-chuc-nang-cua-gvcn',
+            text: '1. Vị trí và 4 chức năng cốt lõi của người giáo viên chủ nhiệm lớp (Giáo trình tr. 67–68)',
             depth: 2,
           },
           {
-            id: '2-bon-chuc-nang-nong-cot',
-            text: '2. Bốn Chức năng Nòng cốt của Người Giáo viên Chủ nhiệm',
+            id: '2-nhiem-vu-va-quyen-han-cua-gvcn',
+            text: '2. Nhiệm vụ và quyền hạn của GVCN theo Điều lệ trường học 2020 (Giáo trình tr. 68–69)',
             depth: 2,
           },
           {
-            id: '3-nhiem-vu-quyen-han-tt32',
-            text: '3. Nhiệm vụ và Quyền hạn của GVCN theo Điều lệ Trường học (Thông tư 32/2020)',
+            id: '3-on-tap-va-tinh-huong-bai-4-1',
+            text: '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO6)',
             depth: 2,
           },
         ],
@@ -1488,21 +889,24 @@ export function getChapter4LessonModule(lessonId: string): CompiledLessonModule 
     };
   }
 
-  if (lessonId === 'gdh-c4-b2-noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop') {
+  if (
+    lessonId === 'gdh-c4-b2-tim-hieu-hoc-sinh-lap-ke-hoach-va-xay-dung-tap-the-hoc-sinh' ||
+    lessonId === 'gdh-c4-b2-noi-dung-va-phuong-phap-giao-duc-cua-gvcn-lop'
+  ) {
     return {
       default: Lesson4_2View,
       frontmatter: {
-        title: 'Bài 4.2: Nội dung và Phương pháp giáo dục của GVCN lớp',
+        title: 'Bài 4.2: Tìm hiểu học sinh, lập kế hoạch và xây dựng tập thể học sinh',
         description:
-          'Lý luận 3 giai đoạn xây dựng tập thể học sinh theo Makarenko; phương pháp Kỷ luật tích cực theo Jane Nelsen; kỹ thuật nhận diện 4 mục tiêu sai lệch.',
+          'Nội dung và phương pháp tìm hiểu, phân loại học sinh lớp chủ nhiệm; Quy trình 6 bước xây dựng kế hoạch giáo dục lớp chủ nhiệm; 3 giai đoạn phát triển tập thể học sinh và 4 biện pháp xây dựng tập thể vững mạnh (Giáo trình HCMUE tr. 70–77).',
         level: 'intermediate',
         tags: [
-          'Tập thể học sinh',
-          'Kỷ luật tích cực',
-          'Makarenko',
-          'Jane Nelsen',
-          'CLO 1',
-          'CLO 2',
+          'CLO6',
+          'CLO7',
+          'Quy trình 6 bước GVCN',
+          '3 Giai đoạn tập thể',
+          'Tìm hiểu học sinh',
+          'Giáo trình tr. 70-77',
         ],
       },
       lessonMeta: {
@@ -1510,13 +914,23 @@ export function getChapter4LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 2,
         headings: [
           {
-            id: '1-xay-dung-tap-the-hoc-sinh',
-            text: '1. Ba Giai đoạn Phát triển Tập thể Học sinh (Lý luận Makarenko)',
+            id: '1-tim-hieu-va-phan-loai-hoc-sinh',
+            text: '1. Tìm hiểu và phân loại học sinh lớp chủ nhiệm (Giáo trình tr. 70–71)',
             depth: 2,
           },
           {
-            id: '2-ky-luat-tich-cuc-jane-nelsen',
-            text: '2. Phương pháp Kỷ luật Tích cực (Tài liệu Positive Discipline - Jane Nelsen)',
+            id: '2-quy-trinh-6-buoc-lap-ke-hoach-chu-nhiem',
+            text: '2. Quy trình 6 bước xây dựng kế hoạch giáo dục lớp chủ nhiệm (Giáo trình tr. 71–73)',
+            depth: 2,
+          },
+          {
+            id: '3-xay-dung-tap-the-hoc-sinh',
+            text: '3. Ba giai đoạn phát triển tập thể và 4 biện pháp xây dựng tập thể học sinh vững mạnh (Giáo trình tr. 73–77)',
+            depth: 2,
+          },
+          {
+            id: '4-on-tap-va-tinh-huong-bai-4-2',
+            text: '4. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO6, CLO7)',
             depth: 2,
           },
         ],
@@ -1525,22 +939,27 @@ export function getChapter4LessonModule(lessonId: string): CompiledLessonModule 
     };
   }
 
-  if (lessonId === 'gdh-c4-b3-yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem') {
+  if (
+    lessonId ===
+      'gdh-c4-b3-to-chuc-giao-duc-toan-dien-xay-dung-moi-truong-lop-hoc-va-phoi-hop-cac-luc-luong-giao-duc' ||
+    lessonId === 'gdh-c4-b3-yeu-cau-pham-chat-nang-luc-gvcn-va-thiet-ke-hoat-dong-chu-nhiem' ||
+    lessonId === 'gdh-c4-b4-thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12'
+  ) {
     return {
       default: Lesson4_3View,
       frontmatter: {
         title:
-          'Bài 4.3: Yêu cầu về phẩm chất, năng lực của GVCN & Thiết kế hoạt động chủ nhiệm trọng tâm',
+          'Bài 4.3: Tổ chức giáo dục toàn diện, xây dựng môi trường lớp học và phối hợp các lực lượng giáo dục',
         description:
-          'Phẩm chất đạo đức và năng lực của GVCN; hướng dẫn thiết kế 3 hoạt động thực tế: Kế hoạch chủ nhiệm tháng, Kịch bản họp cha mẹ học sinh và Tiết sinh hoạt lớp tự quản.',
+          'Tổ chức các hoạt động học tập và trải nghiệm toàn diện; xây dựng môi trường lớp học (môi trường vật chất và môi trường tâm lí – xã hội an toàn, thân thiện); phối hợp giữa GVCN với Đoàn/Đội, giáo viên bộ môn và gia đình học sinh (Giáo trình HCMUE tr. 78–82).',
         level: 'advanced',
         tags: [
-          'Phẩm chất GVCN',
-          'Kế hoạch tháng',
-          'Họp phụ huynh',
-          'Sinh hoạt lớp',
-          'CLO 1',
-          'CLO 3',
+          'CLO6',
+          'CLO7',
+          'Giáo dục toàn diện',
+          'Môi trường lớp học',
+          'Phối hợp lực lượng GD',
+          'Giáo trình tr. 78-82',
         ],
       },
       lessonMeta: {
@@ -1548,56 +967,18 @@ export function getChapter4LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 3,
         headings: [
           {
-            id: '1-pham-chat-nang-luc-gvcn',
-            text: '1. Yêu cầu về Phẩm chất và Năng lực của Người Giáo viên Chủ nhiệm',
+            id: '1-to-chuc-giao-duc-toan-dien-va-moi-truong-lop-hoc',
+            text: '1. Tổ chức giáo dục toàn diện và xây dựng môi trường lớp học an toàn, thân thiện (Giáo trình tr. 78–80)',
             depth: 2,
           },
           {
-            id: '2-thiet-ke-3-hoat-dong-chu-nhiem',
-            text: '2. Cẩm nang Thiết kế 3 Hoạt động Chủ nhiệm Trọng tâm (Buổi 11 Đề cương)',
-            depth: 2,
-          },
-        ],
-        blocks: [],
-      },
-    };
-  }
-
-  if (lessonId === 'gdh-c4-b4-thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12') {
-    return {
-      default: Lesson4_4View,
-      frontmatter: {
-        title: 'Bài 4.4: Thực hành xử lý tình huống sư phạm theo Rubric A.1.2',
-        description:
-          'Quy trình khoa học 5 bước xử lý tình huống giáo dục HCMUE; Bảng tiêu chí Rubric đánh giá A.1.2; giải quyết 2 tình huống sư phạm kinh điển: học sinh cá biệt và bạo lực học đường mạng xã hội.',
-        level: 'advanced',
-        tags: [
-          'Tình huống sư phạm',
-          'Rubric A.1.2',
-          'Học sinh cá biệt',
-          'Bạo lực mạng',
-          'CLO 1',
-          'CLO 2',
-          'CLO 3',
-        ],
-      },
-      lessonMeta: {
-        chapterNumber: 4,
-        lessonNumber: 4,
-        headings: [
-          {
-            id: '1-quy-trinh-5-buoc-xu-ly-tinh-huong',
-            text: '1. Quy trình 5 Bước Giải quyết Tình huống Giáo dục Khoa học (HCMUE)',
+            id: '2-phoi-hop-cac-luc-luong-giao-duc',
+            text: '2. Phối hợp giữa GVCN với Đoàn/Đội, Giáo viên bộ môn và Gia đình học sinh (Giáo trình tr. 80–82)',
             depth: 2,
           },
           {
-            id: '2-bang-rubric-a12',
-            text: '2. Bảng Tiêu chí Rubric Đánh giá Bài tập Xử lý Tình huống (A.1.2 - 10%)',
-            depth: 2,
-          },
-          {
-            id: '3-hai-tinh-huong-thuc-hanh',
-            text: '3. Phòng Nghiệm Sư phạm: 2 Tình huống Điển hình Thực hành theo Rubric A.1.2',
+            id: '3-on-tap-va-tinh-huong-bai-4-3',
+            text: '3. Câu hỏi tự luận ôn tập và Tình huống vận dụng (CLO6, CLO7)',
             depth: 2,
           },
         ],

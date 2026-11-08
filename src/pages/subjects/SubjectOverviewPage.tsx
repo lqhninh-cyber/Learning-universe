@@ -17,7 +17,12 @@ import {
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
-import { PEDAGOGY_DOCUMENTS, PEDAGOGICAL_CASE_STUDIES } from '@/data/courses/giao-duc-hoc/course';
+import {
+  EDUC2802_CLOS,
+  EDUC2802_SYLLABUS_META,
+  PEDAGOGY_DOCUMENTS,
+  PEDAGOGICAL_CASE_STUDIES,
+} from '@/data/courses/giao-duc-hoc/course';
 import { CaseStudyBox, LegalQuoteCard, PrincipleMatrix } from '@/features/pedagogy';
 import {
   ChapterAccordionList,
@@ -667,96 +672,109 @@ export function SubjectOverviewPage() {
                   </div>
                 </div>
 
-                {/* Sub-tab 1: Tổng hợp Rubric Đánh giá chính thức A.1.2 & A.1.9 */}
+                {/* Sub-tab 1: Tổng hợp 3 Bài Thực hành Nghiệp vụ Sư phạm (EDUC2802) */}
                 {activePedagogyTab === 'rubrics' && (
                   <div className="space-y-6">
-                    <div className="grid gap-6 lg:grid-cols-2">
-                      {/* Thẻ Rubric A.1.2 */}
-                      <div className="space-y-3 rounded-2xl border border-amber-200/80 bg-amber-50/30 p-5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-bold text-amber-900">
-                            Rubric A.1.2: Xử lý Tình huống Sư phạm
-                          </span>
-                          <Badge variant="subject">10% Điểm quá trình</Badge>
-                        </div>
-                        <p className="text-xs leading-relaxed text-stone-600">
-                          Đánh giá năng lực vận dụng quy trình 5 bước khoa học vào giải quyết các
-                          mâu thuẫn, khủng hoảng giáo dục thực tế tại trường phổ thông.
-                        </p>
-                        <div className="space-y-2 text-xs">
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              1. Nhận diện mâu thuẫn cốt lõi
+                    <div className="grid gap-6 lg:grid-cols-3">
+                      {/* Thẻ Thực hành 1 */}
+                      <div className="flex flex-col justify-between space-y-3 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/60 p-5">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-serif text-sm font-bold text-[#29383D]">
+                              Thực hành 1: 20 Tình huống Sư phạm
                             </span>
-                            <span className="font-bold text-amber-800">1.0 đ</span>
+                            <Badge variant="subject">CLO4, CLO5</Badge>
                           </div>
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              2. Phân tích nguyên nhân tâm lý - GD
-                            </span>
-                            <span className="font-bold text-amber-800">2.0 đ</span>
-                          </div>
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              3. Đề xuất giải pháp khoa học &amp; nhân văn
-                            </span>
-                            <span className="font-bold text-amber-800">5.0 đ</span>
-                          </div>
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              4. Bài học sư phạm phản tư sâu sắc
-                            </span>
-                            <span className="font-bold text-amber-800">2.0 đ</span>
+                          <p className="text-xs leading-relaxed text-[#55676B]">
+                            Phân tích và giải quyết 20 tình huống sư phạm thực tế ở trường phổ thông
+                            theo đúng quy trình 5 bước (Mục 3.3.6 Giáo trình HCMUE tr. 65–66).
+                          </p>
+                          <div className="space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between rounded-lg border border-[#CFDADB] bg-[#F7FAFA] p-2">
+                              <span className="font-medium text-[#29383D]">
+                                Quy trình chuẩn HCMUE
+                              </span>
+                              <span className="font-bold text-[#3F6570]">5 bước xử lí</span>
+                            </div>
+                            <div className="flex items-center justify-between rounded-lg border border-[#CFDADB] bg-[#F7FAFA] p-2">
+                              <span className="font-medium text-[#29383D]">
+                                Ngân hàng tình huống
+                              </span>
+                              <span className="font-bold text-[#3F6570]">20 tình huống</span>
+                            </div>
                           </div>
                         </div>
                         <Button asChild variant="subject" size="sm" className="mt-2 w-full text-xs">
-                          <Link to="/mon-hoc/giao-duc-hoc/cong-tac-cua-nguoi-giao-vien-chu-nhiem-lop/thuc-hanh-xu-ly-tinh-huong-su-pham-theo-rubric-a12">
-                            <span>Vào học chi tiết Bài 4.4 theo Rubric A.1.2</span>
+                          <Link to="/mon-hoc/giao-duc-hoc/khoi-thuc-hanh-nghiep-vu-su-pham/phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te">
+                            <span>Vào học Thực hành 1</span>
                             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                           </Link>
                         </Button>
                       </div>
 
-                      {/* Thẻ Rubric A.1.9 */}
-                      <div className="space-y-3 rounded-2xl border border-teal-200/80 bg-teal-50/30 p-5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-bold text-teal-950">
-                            Rubric A.1.9: Kế hoạch &amp; Tổ chức HĐTN
-                          </span>
-                          <Badge variant="subject">20% Điểm quá trình</Badge>
-                        </div>
-                        <p className="text-xs leading-relaxed text-stone-600">
-                          Đánh giá năng lực thiết kế kế hoạch giáo dục chủ đề theo chu trình David
-                          Kolb và kỹ năng điều hành hoạt động trải nghiệm thực tế.
-                        </p>
-                        <div className="space-y-2 text-xs">
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              Phần A: Thiết kế KHBD chủ đề HĐTN
+                      {/* Thẻ Thực hành 2 */}
+                      <div className="flex flex-col justify-between space-y-3 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/60 p-5">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-serif text-sm font-bold text-[#29383D]">
+                              Thực hành 2: Kế hoạch GVCN &amp; SHL
                             </span>
-                            <span className="font-bold text-teal-800">5.0 đ</span>
+                            <Badge variant="subject">CLO6, CLO7</Badge>
                           </div>
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              Phần B: Kỹ năng điều hành &amp; tương tác
-                            </span>
-                            <span className="font-bold text-teal-800">5.0 đ</span>
-                          </div>
-                          <div className="flex items-center justify-between rounded-lg border border-stone-200/70 bg-white p-2">
-                            <span className="font-medium text-stone-700">
-                              Tiêu chuẩn: CT GDPT 2018 (105 tiết/năm)
-                            </span>
-                            <span className="font-bold text-teal-800">Mức Tốt</span>
+                          <p className="text-xs leading-relaxed text-[#55676B]">
+                            Lập kế hoạch giáo dục lớp chủ nhiệm theo quy trình 6 bước (Giáo trình
+                            tr. 71–73) và thiết kế kịch bản tiết Sinh hoạt lớp tự quản.
+                          </p>
+                          <div className="space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between rounded-lg border border-[#CFDADB] bg-[#F7FAFA] p-2">
+                              <span className="font-medium text-[#29383D]">
+                                Kế hoạch chủ nhiệm lớp
+                              </span>
+                              <span className="font-bold text-[#3F6570]">Quy trình 6 bước</span>
+                            </div>
+                            <div className="flex items-center justify-between rounded-lg border border-[#CFDADB] bg-[#F7FAFA] p-2">
+                              <span className="font-medium text-[#29383D]">Tiết Sinh hoạt lớp</span>
+                              <span className="font-bold text-[#3F6570]">Kịch bản tự quản</span>
+                            </div>
                           </div>
                         </div>
-                        <Button
-                          asChild
-                          variant="subject"
-                          size="sm"
-                          className="mt-2 w-full bg-teal-800 text-xs hover:bg-teal-900"
-                        >
-                          <Link to="/mon-hoc/giao-duc-hoc/to-chuc-hoat-dong-trai-nghiem-o-truong-pho-thong/danh-gia-ket-qua-hdtn-va-thuc-hanh-xay-dung-ke-hoach-rubric-a19">
-                            <span>Vào học chi tiết Bài 5.4 theo Rubric A.1.9</span>
+                        <Button asChild variant="subject" size="sm" className="mt-2 w-full text-xs">
+                          <Link to="/mon-hoc/giao-duc-hoc/khoi-thuc-hanh-nghiep-vu-su-pham/lap-ke-hoach-giao-duc-lop-chu-nhiem-va-thiet-ke-tiet-sinh-hoat-lop">
+                            <span>Vào học Thực hành 2</span>
+                            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                          </Link>
+                        </Button>
+                      </div>
+
+                      {/* Thẻ Thực hành 3 */}
+                      <div className="flex flex-col justify-between space-y-3 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/60 p-5">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-serif text-sm font-bold text-[#29383D]">
+                              Thực hành 3: Kế hoạch Chủ đề HĐTN
+                            </span>
+                            <Badge variant="subject">CLO8, CLO9</Badge>
+                          </div>
+                          <p className="text-xs leading-relaxed text-[#55676B]">
+                            Thiết kế kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp tích hợp
+                            tài liệu bồi dưỡng giáo viên cốt cán Mô đun 2 THCS &amp; THPT.
+                          </p>
+                          <div className="space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between rounded-lg border border-[#CFDADB] bg-[#F7FAFA] p-2">
+                              <span className="font-medium text-[#29383D]">Học liệu đối chiếu</span>
+                              <span className="font-bold text-[#3F6570]">Mô đun 2 THCS/THPT</span>
+                            </div>
+                            <div className="flex items-center justify-between rounded-lg border border-[#CFDADB] bg-[#F7FAFA] p-2">
+                              <span className="font-medium text-[#29383D]">
+                                Chương trình HĐTN 2018
+                              </span>
+                              <span className="font-bold text-[#3F6570]">105 tiết/năm</span>
+                            </div>
+                          </div>
+                        </div>
+                        <Button asChild variant="subject" size="sm" className="mt-2 w-full text-xs">
+                          <Link to="/mon-hoc/giao-duc-hoc/khoi-thuc-hanh-nghiep-vu-su-pham/thiet-ke-ke-hoach-chu-de-hoat-dong-trai-nghiem-huong-nghiep">
+                            <span>Vào học Thực hành 3</span>
                             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                           </Link>
                         </Button>
@@ -776,7 +794,7 @@ export function SubjectOverviewPage() {
                         Chọn tình huống mẫu:
                       </span>
                       <Link
-                        to="/mon-hoc/giao-duc-hoc/cam-nang-xu-ly-tinh-huong-su-pham-va-de-cuong-on-tap/ngan-hang-20-tinh-huong-su-pham-thuc-te"
+                        to="/mon-hoc/giao-duc-hoc/khoi-thuc-hanh-nghiep-vu-su-pham/phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te"
                         className="text-xs font-semibold text-teal-800 hover:underline"
                       >
                         Xem toàn bộ 20 tình huống &rarr;
@@ -1056,67 +1074,144 @@ export function SubjectOverviewPage() {
         <div className="space-y-6">
           <Card className="space-y-6 border-stone-200/90 bg-white p-6 shadow-xs sm:p-8">
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="subject">Đề cương chi tiết học phần</Badge>
                 <Badge variant="neutral">Mã: {subject.shortTitle}</Badge>
+                {subject.slug === 'giao-duc-hoc' && (
+                  <>
+                    <Badge variant="neutral">{EDUC2802_SYLLABUS_META.credits}</Badge>
+                    <Badge variant="neutral">{EDUC2802_SYLLABUS_META.structureSummary}</Badge>
+                  </>
+                )}
               </div>
               <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
                 Mục tiêu Đào tạo &amp; Chuẩn đầu ra Học phần (CLOs)
               </h2>
               <p className="text-sm leading-relaxed text-stone-600">
-                Học phần được thiết kế đáp ứng chuẩn đầu ra của chương trình đào tạo Cử nhân Sư phạm
-                Toán học, kết hợp hài hòa giữa nền tảng học thuật chuyên sâu và năng lực sư phạm
-                thực tiễn.
+                {subject.slug === 'giao-duc-hoc'
+                  ? `Học phần ${EDUC2802_SYLLABUS_META.courseName} (${EDUC2802_SYLLABUS_META.courseCode} — Khóa ${EDUC2802_SYLLABUS_META.cohort}): ${EDUC2802_SYLLABUS_META.credits} gồm ${EDUC2802_SYLLABUS_META.classHours} và ${EDUC2802_SYLLABUS_META.selfStudyHours}, bám sát ${EDUC2802_SYLLABUS_META.textbookTitle}.`
+                  : 'Học phần được thiết kế đáp ứng chuẩn đầu ra của chương trình đào tạo Cử nhân Sư phạm Toán học, kết hợp hài hòa giữa nền tảng học thuật chuyên sâu và năng lực sư phạm thực tiễn.'}
               </p>
             </div>
 
-            {/* Bảng chuẩn đầu ra CLOs phân tầng */}
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4">
-                <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-amber-800 uppercase">
-                  <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                  <span>CLO 1: Phẩm chất &amp; Tác phong</span>
+            {subject.slug === 'giao-duc-hoc' ? (
+              <div className="space-y-4">
+                {/* Thông số Đề cương EDUC2802 */}
+                <div className="grid gap-3 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 text-xs sm:grid-cols-4">
+                  <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3">
+                    <span className="block font-mono text-[11px] font-semibold text-[#55676B] uppercase">
+                      Mã học phần
+                    </span>
+                    <strong className="mt-1 block font-serif text-base font-bold text-[#29383D]">
+                      {EDUC2802_SYLLABUS_META.courseCode} ({EDUC2802_SYLLABUS_META.cohort})
+                    </strong>
+                  </div>
+                  <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3">
+                    <span className="block font-mono text-[11px] font-semibold text-[#55676B] uppercase">
+                      Thời lượng tín chỉ
+                    </span>
+                    <strong className="mt-1 block font-serif text-base font-bold text-[#29383D]">
+                      04 tín chỉ (80 tiết lớp)
+                    </strong>
+                    <span className="text-[11px] text-[#55676B]">40 LT · 20 TL · 20 TH</span>
+                  </div>
+                  <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3">
+                    <span className="block font-mono text-[11px] font-semibold text-[#55676B] uppercase">
+                      Thời lượng tự học
+                    </span>
+                    <strong className="mt-1 block font-serif text-base font-bold text-[#29383D]">
+                      120 giờ tự học
+                    </strong>
+                    <span className="text-[11px] text-[#55676B]">
+                      Nghiên cứu giáo trình &amp; bài tập
+                    </span>
+                  </div>
+                  <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3">
+                    <span className="block font-mono text-[11px] font-semibold text-[#55676B] uppercase">
+                      Cấu trúc học phần
+                    </span>
+                    <strong className="mt-1 block font-serif text-base font-bold text-[#29383D]">
+                      5 Chương &amp; 3 Thực hành
+                    </strong>
+                    <span className="text-[11px] text-[#55676B]">Chuẩn Giáo trình HCMUE</span>
+                  </div>
                 </div>
-                <h3 className="text-sm font-bold text-stone-900">
-                  Ý thức kỷ luật &amp; Chuẩn mực nghề nghiệp
-                </h3>
-                <p className="text-xs leading-relaxed text-stone-600">
-                  {subject.slug === 'giao-duc-hoc'
-                    ? 'Hình thành tác phong sư phạm mẫu mực, lòng yêu nghề và tinh thần trách nhiệm theo Chuẩn nghề nghiệp GVPT (Thông tư 20/2018).'
-                    : 'Rèn luyện tính cẩn trọng, kỷ luật tư duy logic chặt chẽ và niềm say mê nghiên cứu khoa học toán học.'}
-                </p>
-              </div>
 
-              <div className="space-y-2 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4">
-                <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-teal-800 uppercase">
-                  <Layers className="h-4 w-4" aria-hidden="true" />
-                  <span>CLO 2: Kiến thức chuyên môn</span>
+                {/* Hệ thống 9 Chuẩn đầu ra (CLO1 đến CLO9) */}
+                <div className="grid gap-3 md:grid-cols-3">
+                  {EDUC2802_CLOS.map((item) => (
+                    <div
+                      key={item.code}
+                      className="flex flex-col justify-between space-y-2 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-4"
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-bold text-[#3F6570]">
+                            <ShieldCheck
+                              className="h-3.5 w-3.5 text-[#718C7E]"
+                              aria-hidden="true"
+                            />
+                            <span>{item.code}</span>
+                          </span>
+                          <span className="text-[11px] font-semibold text-[#55676B]">
+                            {item.group}
+                          </span>
+                        </div>
+                        <p className="text-xs leading-relaxed text-[#29383D]">{item.description}</p>
+                      </div>
+                      <div className="border-t border-[#CFDADB] pt-2 text-[11px] font-medium text-[#55676B]">
+                        Đáp ứng tại: <strong className="text-[#29383D]">{item.chapters}</strong>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-sm font-bold text-stone-900">
-                  Hệ thống lý thuyết &amp; Bản chất khoa học
-                </h3>
-                <p className="text-xs leading-relaxed text-stone-600">
-                  {subject.slug === 'giao-duc-hoc'
-                    ? 'Nắm vững bản chất xã hội của giáo dục, 6 nguyên tắc giáo dục học sinh và các chức năng nòng cốt của người giáo viên chủ nhiệm.'
-                    : 'Nắm vững các hệ tiên đề, định lý cấu trúc, phương pháp chứng minh và các quy tắc tính toán nền tảng của môn học.'}
-                </p>
               </div>
+            ) : (
+              /* Bảng chuẩn đầu ra CLOs phân tầng cho các môn Toán */
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4">
+                  <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-amber-800 uppercase">
+                    <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+                    <span>CLO 1: Phẩm chất &amp; Tác phong</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-stone-900">
+                    Ý thức kỷ luật &amp; Chuẩn mực nghề nghiệp
+                  </h3>
+                  <p className="text-xs leading-relaxed text-stone-600">
+                    Rèn luyện tính cẩn trọng, kỷ luật tư duy logic chặt chẽ và niềm say mê nghiên
+                    cứu khoa học toán học.
+                  </p>
+                </div>
 
-              <div className="space-y-2 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4">
-                <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-stone-800 uppercase">
-                  <Award className="h-4 w-4" aria-hidden="true" />
-                  <span>CLO 3: Năng lực vận dụng</span>
+                <div className="space-y-2 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4">
+                  <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-teal-800 uppercase">
+                    <Layers className="h-4 w-4" aria-hidden="true" />
+                    <span>CLO 2: Kiến thức chuyên môn</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-stone-900">
+                    Hệ thống lý thuyết &amp; Bản chất khoa học
+                  </h3>
+                  <p className="text-xs leading-relaxed text-stone-600">
+                    Nắm vững các hệ tiên đề, định lý cấu trúc, phương pháp chứng minh và các quy tắc
+                    tính toán nền tảng của môn học.
+                  </p>
                 </div>
-                <h3 className="text-sm font-bold text-stone-900">
-                  Kỹ năng thực hành &amp; Tự rèn luyện
-                </h3>
-                <p className="text-xs leading-relaxed text-stone-600">
-                  {subject.slug === 'giao-duc-hoc'
-                    ? 'Thành thạo quy trình 5 bước xử lý tình huống giáo dục (Rubric A.1.2) và kỹ năng thiết kế, tổ chức Hoạt động trải nghiệm (Rubric A.1.9).'
-                    : 'Vận dụng linh hoạt các định lý vào giải quyết hệ thống bài tập chuyên đề, đề thi tự luận và trực quan hóa mô hình tương tác.'}
-                </p>
+
+                <div className="space-y-2 rounded-2xl border border-stone-200/80 bg-stone-50/50 p-4">
+                  <div className="flex items-center gap-2 text-xs font-bold tracking-wide text-stone-800 uppercase">
+                    <Award className="h-4 w-4" aria-hidden="true" />
+                    <span>CLO 3: Năng lực vận dụng</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-stone-900">
+                    Kỹ năng thực hành &amp; Tự rèn luyện
+                  </h3>
+                  <p className="text-xs leading-relaxed text-stone-600">
+                    Vận dụng linh hoạt các định lý vào giải quyết hệ thống bài tập chuyên đề, đề thi
+                    tự luận và trực quan hóa mô hình tương tác.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Quy chuẩn đánh giá học phần */}
             <div className="space-y-3 rounded-2xl border border-stone-200/80 bg-white p-5">

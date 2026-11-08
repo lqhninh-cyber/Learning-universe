@@ -79,7 +79,7 @@ describe('App routing smoke test', () => {
       screen.getByRole('searchbox', { name: /Tìm kiếm môn học hoặc bài học/i }),
     ).toBeInTheDocument();
     expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('EDUT1401 · Khoa học Giáo dục').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('EDUC2802 · Khoa học Giáo dục').length).toBeGreaterThan(0);
 
     const enterCourseLinks = screen.getAllByRole('link', { name: /Vào học phần/i });
     expect(enterCourseLinks.length).toBe(4);

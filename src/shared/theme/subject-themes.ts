@@ -48,7 +48,7 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
   'giao-duc-hoc': {
     id: 'giao-duc-hoc',
     name: 'Giáo dục học',
-    shortName: 'EDUT1401',
+    shortName: 'EDUC2802',
     hue: 190,
     description:
       'Tông Slate Teal (xanh học giả) và Terracotta (vàng đất nung) thể hiện lý luận nhân cách, chuẩn nghề nghiệp và nghiệp vụ sư phạm.',

@@ -51,56 +51,67 @@ export function LessonSidebar({
       </div>
 
       <div className="space-y-4">
-        {subject.chapters.map((chapter) => (
-          <div key={chapter.id} className="space-y-1.5">
-            <p className="px-2 text-xs font-semibold text-[#55676B]">
-              Chương {chapter.number}: {chapter.title}
-            </p>
-            <ul className="space-y-1">
-              {chapter.lessons.map((lesson) => {
-                const isActive = lesson.id === activeLessonId;
-                const isCompleted = Boolean(completedLessons[lesson.id]);
+        {subject.chapters.map((chapter) => {
+          const formattedChapterHeading = /^(Chương|Chuyên đề|Khối)/i.test(chapter.title)
+            ? chapter.title
+            : `Chương ${chapter.number}: ${chapter.title}`;
 
-                return (
-                  <li key={lesson.id}>
-                    <Link
-                      to={ROUTES.lesson(subject.slug, chapter.slug, lesson.slug)}
-                      onClick={onSelectLesson}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={cn(
-                        'flex items-start gap-2.5 rounded-xl px-3 py-2 text-[14.5px] leading-normal transition-colors',
-                        isActive
-                          ? 'bg-subject-100/80 text-subject-950 font-semibold'
-                          : 'text-[#55676B] hover:bg-[#D7E1E2] hover:text-[#29383D]',
-                      )}
-                    >
-                      {isCompleted ? (
-                        <CheckCircle2
-                          className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600"
-                          aria-label="Đã hoàn thành"
-                        />
-                      ) : (
-                        <Circle
-                          className={cn(
-                            'mt-0.5 h-3.5 w-3.5 shrink-0',
-                            isActive ? 'text-subject-600' : 'text-stone-300',
-                          )}
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span>
-                        <span className="text-subject-700 font-mono text-xs font-semibold">
-                          {chapter.number}.{lesson.number}
-                        </span>{' '}
-                        {lesson.title}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+          return (
+            <div key={chapter.id} className="space-y-1.5">
+              <p className="px-2 text-xs font-semibold text-[#55676B]">{formattedChapterHeading}</p>
+              <ul className="space-y-1">
+                {chapter.lessons.map((lesson) => {
+                  const isActive = lesson.id === activeLessonId;
+                  const isCompleted = Boolean(completedLessons[lesson.id]);
+                  const strippedLessonTitle = lesson.title.replace(
+                    /^(?:Bài\s+\d+(?:\.\d+)?|Thực hành\s+\d+|Chuyên đề\s+\d+(?:\.\d+)?)\s*:\s*/i,
+                    '',
+                  );
+                  const lessonNumberBadge = /^Thực hành/i.test(lesson.title)
+                    ? `TH.${lesson.number}`
+                    : `${chapter.number}.${lesson.number}`;
+
+                  return (
+                    <li key={lesson.id}>
+                      <Link
+                        to={ROUTES.lesson(subject.slug, chapter.slug, lesson.slug)}
+                        onClick={onSelectLesson}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={cn(
+                          'flex items-start gap-2.5 rounded-xl px-3 py-2 text-[14.5px] leading-normal transition-colors',
+                          isActive
+                            ? 'bg-subject-100/80 text-subject-950 font-semibold'
+                            : 'text-[#55676B] hover:bg-[#D7E1E2] hover:text-[#29383D]',
+                        )}
+                      >
+                        {isCompleted ? (
+                          <CheckCircle2
+                            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600"
+                            aria-label="Đã hoàn thành"
+                          />
+                        ) : (
+                          <Circle
+                            className={cn(
+                              'mt-0.5 h-3.5 w-3.5 shrink-0',
+                              isActive ? 'text-subject-600' : 'text-stone-300',
+                            )}
+                            aria-hidden="true"
+                          />
+                        )}
+                        <span>
+                          <span className="text-subject-700 font-mono text-xs font-semibold">
+                            {lessonNumberBadge}
+                          </span>{' '}
+                          {strippedLessonTitle}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </nav>
   );

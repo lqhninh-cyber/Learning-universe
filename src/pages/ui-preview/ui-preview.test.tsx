@@ -70,7 +70,7 @@ describe('Thử nghiệm Redesign UI/UX V2 (/ui-preview)', () => {
     const btnPedagogy = screen.getByRole('radio', { name: /Sư phạm: Giáo dục học/i });
     fireEvent.click(btnPedagogy);
 
-    expect(screen.getByText('Giáo dục học đại cương')).toBeInTheDocument();
+    expect(screen.getAllByText('Giáo dục học').length).toBeGreaterThanOrEqual(1);
     expect(
       screen.getAllByText(/Hoạt động sư phạm và Người giáo viên/i).length,
     ).toBeGreaterThanOrEqual(1);

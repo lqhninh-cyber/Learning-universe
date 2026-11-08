@@ -105,7 +105,7 @@ export const PersonalDevelopmentPlan: FC = () => {
       },
     }));
 
-    setSavedNotification(`✓ Đã điền nội dung mẫu cho Năm ${targetYear}!`);
+    setSavedNotification(`Đã điền nội dung mẫu cho Năm ${targetYear}!`);
     setTimeout(() => setSavedNotification(null), 3000);
   };
 
@@ -113,10 +113,10 @@ export const PersonalDevelopmentPlan: FC = () => {
   const handleManualSave = () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
-      setSavedNotification('✓ Đã lưu bản kế hoạch vào máy (localStorage)');
+      setSavedNotification('Đã lưu bản kế hoạch vào máy (localStorage)');
       setTimeout(() => setSavedNotification(null), 2500);
     } catch {
-      setSavedNotification('⚠️ Không thể lưu vào bộ nhớ trình duyệt');
+      setSavedNotification('Không thể lưu vào bộ nhớ trình duyệt');
       setTimeout(() => setSavedNotification(null), 2500);
     }
   };
@@ -129,11 +129,11 @@ export const PersonalDevelopmentPlan: FC = () => {
     );
 
     const textContent = `TRƯỜNG ĐẠI HỌC SƯ PHẠM TP. HỒ CHÍ MINH
-KHOA TOÁN - TIN HỌC / HỌC PHẦN GIÁO DỤC HỌC (EDUT1401)
+KHOA TOÁN - TIN HỌC / HỌC PHẦN GIÁO DỤC HỌC (EDUC2802)
 ========================================================================
 BẢN KẾ HOẠCH HỌC TẬP VÀ RÈN LUYỆN NGHỀ NGHIỆP SƯ PHẠM
 NĂM HỌC THỨ ${selectedYear} (Đại học Chính quy — Ngành Sư phạm Toán học)
-* Yêu cầu đánh giá tự học Buổi 2 - Đề cương TS. Lê Thị Thu Liễu (CLO 3)
+* Yêu cầu đánh giá tự học Chương 1 - Đề cương Học phần EDUC2802 (CLO1, CLO2)
 * Bám sát 15 tiêu chí Chuẩn nghề nghiệp GVPT (Thông tư 20/2018/TT-BGDĐT)
 ========================================================================
 
@@ -214,7 +214,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       <div class="school-name">TRƯỜNG ĐẠI HỌC SƯ PHẠM TP.HCM</div>
       <div class="sub-school">KHOA TOÁN - TIN HỌC</div>
       <div class="line"></div>
-      <div style="font-size: 10pt; font-style: italic;">Học phần: Giáo dục học (EDUT1401)</div>
+      <div style="font-size: 10pt; font-style: italic;">Học phần: Giáo dục học (EDUC2802)</div>
     </div>
     <div class="right-header">
       <div class="school-name">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
@@ -415,7 +415,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       <div className="space-y-2.5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <label className="block text-xs font-bold tracking-wider text-stone-800 uppercase">
-            🎯 Chọn các tiêu chí TT20 trọng tâm cần rèn luyện trong Năm {selectedYear}:
+            Chọn các tiêu chí TT20 trọng tâm cần rèn luyện trong Năm {selectedYear}:
           </label>
           <span className="text-[11px] font-medium text-stone-500">
             Đã chọn: <strong className="text-indigo-900">{currentPlan.criteria.length} / 15</strong>{' '}
@@ -458,7 +458,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <label className="block text-xs font-bold tracking-wider text-stone-800 uppercase">
-            ✍️ Mục tiêu &amp; Biện pháp hành động cụ thể (GPA, Ngoại ngữ, Kỹ năng mềm, NCKH):
+            Mục tiêu &amp; Biện pháp hành động cụ thể (GPA, Ngoại ngữ, Kỹ năng mềm, NCKH):
           </label>
           <span className="text-[10px] text-stone-500">Tự động lưu vào trình duyệt</span>
         </div>
@@ -506,7 +506,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
             className="h-8 gap-1.5 border-indigo-300 bg-white text-xs font-semibold text-indigo-900 shadow-2xs hover:bg-indigo-50"
           >
             <Printer className="h-3.5 w-3.5 text-indigo-600" />
-            <span>🖨️ Xuất bản in / Lưu PDF</span>
+            <span>Xuất bản in / Lưu PDF</span>
           </Button>
 
           <Button

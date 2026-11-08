@@ -427,10 +427,8 @@ export const Header: FC<HeaderProps> = ({ className }) => {
                     aria-label="Giáo dục học"
                     className="flex items-center justify-between rounded-2xl px-3.5 py-2 text-sm text-[#29383D] transition-colors hover:bg-[#E1E9EA]/50"
                   >
-                    <span className="font-serif font-semibold text-[#29383D]">
-                      Giáo dục học &amp; Nghiệp vụ Sư phạm
-                    </span>
-                    <span className="font-mono text-[11px] text-[#55676B]">EDUT1401</span>
+                    <span className="font-serif font-semibold text-[#29383D]">Giáo dục học</span>
+                    <span className="font-mono text-[11px] text-[#55676B]">EDUC2802</span>
                   </Link>
                 </div>
 
@@ -529,9 +527,9 @@ export const Header: FC<HeaderProps> = ({ className }) => {
                       className="group flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-[#E1E9EA]/60"
                     >
                       <span className="font-serif text-sm font-semibold text-[#29383D]">
-                        Giáo dục học &amp; Nghiệp vụ Sư phạm
+                        Giáo dục học
                       </span>
-                      <span className="font-mono text-[11px] text-[#55676B]">EDUT1401</span>
+                      <span className="font-mono text-[11px] text-[#55676B]">EDUC2802</span>
                     </Link>
                   </div>
                 </div>

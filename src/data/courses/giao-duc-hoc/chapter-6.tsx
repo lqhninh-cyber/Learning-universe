@@ -1,6 +1,13 @@
 import type { CompiledLessonModule } from '@/content-runtime/loader';
-import { useLearningStore } from '@/features/learning';
-import { ScholarQuote } from '@/features/pedagogy';
+import {
+  CaseStudyBox,
+  ComparativeTable,
+  LegalReferenceBox,
+  NumberedProcessFlow,
+  PedagogyMetadataBar,
+  ScholarQuote,
+} from '@/features/pedagogy';
+import { Sidenote } from '@/shared/components/Sidenote';
 import { Badge, Button } from '@/shared/ui';
 import {
   AlertTriangle,
@@ -9,9 +16,10 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Compass,
   FileText,
-  GraduationCap,
   HelpCircle,
+  Layers,
   Scale,
   Sparkles,
   Target,
@@ -19,51 +27,6 @@ import {
 } from 'lucide-react';
 import { useState, type FC } from 'react';
 import type { PedagogicalCaseStudy } from './course';
-
-// ============================================================================
-// COMPONENT TIỆN ÍCH: THẺ TIẾN ĐỘ HOÀN THÀNH BÀI HỌC (SUPABASE SYNC)
-// ============================================================================
-
-interface LessonCompletionCardProps {
-  readonly lessonId: string;
-  readonly lessonTitle: string;
-}
-
-const LessonCompletionCard: FC<LessonCompletionCardProps> = ({ lessonId, lessonTitle }) => {
-  const isCompleted = useLearningStore((state) => Boolean(state.completedLessons[lessonId]));
-  const toggleCompleted = useLearningStore((state) => state.toggleLessonCompleted);
-
-  return (
-    <div className="mt-10 rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs transition-all hover:border-amber-700/30">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <CheckCircle2
-              className={`h-5 w-5 ${isCompleted ? 'text-emerald-600' : 'text-stone-400'}`}
-            />
-            <span className="text-sm font-bold text-stone-900">
-              {isCompleted ? 'Bạn đã hoàn thành bài học này!' : 'Ghi nhận tiến độ học tập'}
-            </span>
-          </div>
-          <p className="text-xs text-stone-500">
-            {isCompleted
-              ? `Tiến độ của bài "${lessonTitle}" đã được đồng bộ với hệ thống học tập của bạn.`
-              : 'Nhấn nút bên cạnh để đánh dấu đã hoàn thành và lưu tiến độ lên hệ thống.'}
-          </p>
-        </div>
-        <Button
-          variant={isCompleted ? 'subject' : 'outline'}
-          size="sm"
-          onClick={() => toggleCompleted(lessonId)}
-          className="shrink-0"
-        >
-          <CheckCircle2 className="mr-1.5 h-4 w-4" />
-          {isCompleted ? 'Đã hoàn thành' : 'Đánh dấu hoàn thành'}
-        </Button>
-      </div>
-    </div>
-  );
-};
 
 // ============================================================================
 // DỮ LIỆU NGÂN HÀNG 20 TÌNH HUỐNG SƯ PHẠM ĐIỂN HÌNH (HCMUE STANDARDS)
@@ -75,7 +38,7 @@ export interface ExtendedCaseStudy extends PedagogicalCaseStudy {
   readonly targetGrade: string;
 }
 
-export const PEDAGOGICAL_20_CASE_STUDIES: readonly ExtendedCaseStudy[] = [
+const BASE_PEDAGOGICAL_20_CASE_STUDIES: readonly ExtendedCaseStudy[] = [
   // --------------------------------------------------------------------------
   // NHÓM 1: CHỐNG ĐỐI, VÔ LỄ & VI PHẠM NỘI QUY (TÌNH HUỐNG 1 - 4)
   // --------------------------------------------------------------------------
@@ -1058,69 +1021,132 @@ export const PEDAGOGICAL_20_CASE_STUDIES: readonly ExtendedCaseStudy[] = [
   },
 ];
 
-// ============================================================================
-// 1. COMPONENT BÀI 6.1: NGÂN HÀNG 20 TÌNH HUỐNG SƯ PHẠM THỰC TẾ & CẨM NANG 5 BƯỚC
-// ============================================================================
+const STEP_5_BY_CASE_ID: Record<number, { readonly title: string; readonly content: string }> = {
+  1: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Trong các tiết Toán tiếp theo, giáo viên gọi H. trả lời các câu hỏi vừa sức để khích lệ sự tự tin, ghi nhận sự thay đổi thái độ hợp tác của em và rút kinh nghiệm về việc phân hóa bài tập trên lớp.',
+  },
+  2: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Định kỳ hàng tuần đối chiếu sổ chuyên cần và trao đổi với phụ huynh em K.; biểu dương em trong giờ Sinh hoạt lớp khi hoàn thành tốt nhiệm vụ kỹ thuật viên của tập thể.',
+  },
+  3: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Theo dõi tâm lý học sinh sau khi gỡ video để tránh việc em bị bạn bè cô lập ngược lại; rút kinh nghiệm toàn trường về quy chế quản lý thiết bị di động trong giờ học.',
+  },
+  4: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Sau 2 tuần đối thoại, GVCN dự giờ thăm lớp và thu thập phản hồi từ cả giáo viên bộ môn Tiếng Anh lẫn Ban cán sự lớp 11A để củng cố bầu không khí hợp tác bền vững.',
+  },
+  5: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Quan sát tinh tế thái độ của T. và M. trong các hoạt động tập thể, khích lệ hai em cùng giúp nhau tiến bộ trong học tập và giữ gìn nét đẹp văn hóa học đường.',
+  },
+  6: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Duy trì lịch gặp định kỳ hàng tuần giữa em N. với chuyên viên tư vấn tâm lý học đường và gia đình cho đến khi em vượt qua khủng hoảng cảm xúc và ổn định nhịp độ học tập.',
+  },
+  7: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Tổ chức hoạt động giao lưu thể thao liên lớp 10A1 – 10A2 để hóa giải hoàn toàn hiềm khích giữa hai nhóm nam sinh và xây dựng tình bạn lành mạnh.',
+  },
+  8: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Giữ thái độ chuẩn mực, công bằng với em H. như mọi học sinh khác trong lớp; đánh giá sự chuyển biến tâm lý của em qua kết quả học tập và hoạt động tập thể.',
+  },
+  9: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Đánh giá mức độ hòa nhập của em Q. qua sự gắn kết trong nhóm học tập và nụ cười của em khi đến trường; tiếp tục bồi dưỡng dư luận tập thể nhân ái trong lớp.',
+  },
+  10: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Theo dõi sát sao không gian mạng của lớp để ngăn chặn tái phát nhóm kín mới; ghi nhận sự tiến bộ của nhóm học sinh vi phạm qua các hoạt động lao động công ích và thiện nguyện.',
+  },
+  11: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Phối hợp lâu dài giữa Nhà trường – Gia đình – Công an phường để giám sát hành vi của nhóm học sinh sau kỷ luật, đồng thời thu hút các em vào các câu lạc bộ thể thao võ thuật chính quy.',
+  },
+  12: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Kiểm tra định kỳ qua kênh thông tin mật với em S. và phụ huynh để bảo đảm hành vi trấn lột đã chấm dứt triệt để; giáo dục kỹ năng quản lý tài chính và tự vệ cho học sinh đầu cấp.',
+  },
+  13: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Đồng hành cùng em V. trong quá trình ôn tập chuẩn bị cho kỳ kiểm tra lại, ghi nhận nỗ lực tự học trung thực của em để phục hồi danh dự cá nhân.',
+  },
+  14: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Sau khi làm sáng tỏ sự việc, tổ chức sinh hoạt lớp rút kinh nghiệm về kỹ năng bảo quản tài sản cá nhân và củng cố niềm tin, sự tôn trọng danh dự lẫn nhau giữa các thành viên.',
+  },
+  15: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Đánh giá công tâm sản phẩm dự án làm lại của nhóm em B., biểu dương nỗ lực tự nghiên cứu của nhóm và hoàn thiện quy định hướng dẫn trích dẫn học thuật ngay từ đầu dự án.',
+  },
+  16: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Theo dõi chuyên cần hàng ngày của em L. qua hệ thống điểm danh thông minh và khích lệ kịp thời khi em duy trì nề nếp đi học đúng giờ, trung thực với cha mẹ.',
+  },
+  17: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Chủ động gửi thông báo kết quả tiến bộ của học sinh trong bài kiểm tra tiếp theo cho phụ huynh, củng cố mối quan hệ hợp tác tôn trọng lẫn nhau giữa gia đình và nhà trường.',
+  },
+  18: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Đánh giá sự thay đổi của cả phụ huynh và em M. sau 1 tháng thực hiện cam kết "15 phút đồng hành mỗi tối", biểu dương sự tiến bộ của em trong kỳ họp CMHS sơ kết học kỳ.',
+  },
+  19: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Phối hợp với cán bộ bảo trợ xã hội phường/xã kiểm tra định kỳ môi trường sống của em H., đảm bảo em được an toàn tuyệt đối và duy trì việc học tập đến khi tốt nghiệp.',
+  },
+  20: {
+    title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+    content:
+      'Theo dõi mối quan hệ giữa hai nam sinh sau hòa giải, phân công hai em cùng tham gia một đội bóng hoặc nhóm học tập để xóa bỏ hoàn toàn khoảng cách giữa hai gia đình.',
+  },
+};
 
-interface ScientificStep {
-  readonly stepNumber: string;
-  readonly title: string;
-  readonly actionBadge: string;
-  readonly points: readonly string[];
-}
+export const PEDAGOGICAL_20_CASE_STUDIES: readonly ExtendedCaseStudy[] =
+  BASE_PEDAGOGICAL_20_CASE_STUDIES.map((cs) => ({
+    ...cs,
+    solutionSteps:
+      cs.solutionSteps.length >= 5
+        ? cs.solutionSteps
+        : [
+            ...cs.solutionSteps,
+            {
+              step: 5,
+              title:
+                STEP_5_BY_CASE_ID[cs.id]?.title ??
+                'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+              content:
+                STEP_5_BY_CASE_ID[cs.id]?.content ??
+                'Theo dõi sự chuyển biến hành vi lâu dài của học sinh, phối hợp với gia đình để động viên kịp thời và đúc kết bài học kinh nghiệm sư phạm.',
+            },
+          ],
+  }));
 
-const SCIENTIFIC_5_STEPS: readonly ScientificStep[] = [
-  {
-    stepNumber: '01',
-    title: 'Bước 1: Tiếp nhận & Định dạng tình huống',
-    actionBadge: 'Thu thập thông tin & Giữ bình tĩnh',
-    points: [
-      'Áp dụng nguyên tắc "Dừng 5 giây": Tuyệt đối kiềm chế cảm xúc nóng giận tức thời, giữ thái độ điềm tĩnh, không phản ứng bộc phát trước mặt tập thể lớp.',
-      'Thu thập dữ liệu khách quan đa chiều: Lắng nghe thông tin từ các học sinh trong cuộc, ban cán sự lớp và các nhân chứng xung quanh mà không vội vàng quy kết.',
-      'Đánh giá mức độ khẩn cấp: Xác định tình huống có tiềm ẩn nguy cơ tổn thương thể chất, tinh thần hoặc vi phạm pháp luật cần can thiệp y tế/an ninh ngay hay không.',
-    ],
-  },
-  {
-    stepNumber: '02',
-    title: 'Bước 2: Xác định Vấn đề Cốt lõi & Động cơ Hành vi',
-    actionBadge: 'Giải mã tâm lý & Hoàn cảnh',
-    points: [
-      'Phân tích đặc điểm tâm lý lứa tuổi: Nhận diện các biến động tâm sinh lý lứa tuổi dậy thì/vị thành niên (nhu cầu khẳng định bản thân, tính bốc đồng, sĩ diện với bạn bè).',
-      'Tìm hiểu hoàn cảnh gia đình & môi trường sống: Nắm bắt các biến cố gia đình (bố mẹ ly hôn, áp lực kỳ vọng, thiếu vắng sự quan tâm) hoặc tác động tiêu cực từ mạng xã hội.',
-      'Giải mã mục đích ẩn sau hành vi sai lệch (theo Thuyết Kỷ luật tích cực của Jane Nelsen): Nhận biết học sinh gây rối nhằm tìm kiếm sự chú ý, tranh giành quyền lực, trả đũa hay cảm giác bất lực tự ti; tuyệt đối không chụp mũ hay quy kết cảm tính.',
-    ],
-  },
-  {
-    stepNumber: '03',
-    title: 'Bước 3: Đề xuất & Lựa chọn Phương án Giáo dục Tối ưu',
-    actionBadge: 'Đối chiếu nguyên tắc & Kỷ luật tích cực',
-    points: [
-      'Đối chiếu hệ thống 6 nguyên tắc giáo dục học: Đảm bảo tính mục đích, tính tập thể, tôn trọng nhân cách kết hợp yêu cầu hợp lý và cá biệt hóa sư phạm.',
-      'Ưu tiên giải pháp kỷ luật tích cực và công lý phục hồi: Tập trung vào sửa chữa sai lầm, bồi hoàn tổn thất và giúp học sinh tự nhận thức thay vì áp dụng hình phạt trừng phạt làm nhục danh dự.',
-      'Bảo mật đời tư và giữ gìn lòng tự trọng cho học sinh: Lựa chọn hình thức tác động cá nhân kín đáo, tránh bêu tên phê bình trước toàn trường hoặc trước tập thể lớp khi chưa cần thiết.',
-    ],
-  },
-  {
-    stepNumber: '04',
-    title: 'Bước 4: Thực thi Kế hoạch Can thiệp Sư phạm',
-    actionBadge: 'Lắng nghe thấu cảm & Phối hợp đồng bộ',
-    points: [
-      'Tổ chức buổi gặp gỡ riêng tại không gian phù hợp: Chọn phòng tư vấn tâm lý học đường hoặc văn phòng yên tĩnh; tạo bầu không khí an toàn, tin cậy để học sinh mở lòng.',
-      'Kỹ năng giao tiếp và lắng nghe tích cực: Lắng nghe học sinh giãi bày bằng sự thấu cảm, đặt câu hỏi gợi mở để học sinh tự nhận diện đúng - sai và tự đưa ra giải pháp khắc phục.',
-      'Phối hợp đồng bộ 4 lực lượng giáo dục: Kết nối chặt chẽ giữa Giáo viên chủ nhiệm – Phụ huynh học sinh – Ban Giám hiệu – Đoàn/Đội để cùng thống nhất biện pháp nâng đỡ, đồng hành.',
-    ],
-  },
-  {
-    stepNumber: '05',
-    title: 'Bước 5: Đánh giá Hiệu quả & Rút ra Bài học Nghề nghiệp',
-    actionBadge: 'Giám sát tiến bộ & Hoàn thiện sư phạm',
-    points: [
-      'Theo dõi sự chuyển biến hành vi lâu dài: Ghi chép tiến trình thay đổi vào sổ nhật ký chủ nhiệm; không "đóng đinh" định kiến quá khứ lên học sinh.',
-      'Động viên và công nhận kịp thời: Khích lệ ngay cả những chuyển biến tiến bộ nhỏ nhất, trao cho học sinh cơ hội sửa sai và lập công chuộc tội thông qua các nhiệm vụ tập thể.',
-      'Rút ra bài học kinh nghiệm cho bản thân: Đúc kết bài học về nghệ thuật ứng xử sư phạm, quản lý cảm xúc người thầy và nâng cao năng lực chủ nhiệm lớp.',
-    ],
-  },
-];
+// ============================================================================
+// 1. COMPONENT THỰC HÀNH 1 (BÀI 6.1): PHÂN TÍCH VÀ GIẢI QUYẾT 20 TÌNH HUỐNG SƯ PHẠM THỰC TẾ THEO QUY TRÌNH 5 BƯỚC
+// ============================================================================
 
 export const Lesson6_1View: FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -1147,96 +1173,131 @@ export const Lesson6_1View: FC = () => {
   };
 
   return (
-    <div className="space-y-8 leading-relaxed text-stone-800">
-      {/* Header & Course Badges */}
-      <div className="rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-amber-900 uppercase">
-            <GraduationCap className="h-4 w-4 text-amber-800" />
-            Chuyên đề 6: Cẩm nang Xử lý Tình huống sư phạm & Đề cương Ôn tập
-          </span>
-          <div className="flex items-center gap-1.5">
-            <Badge variant="subject">CLO 1 · CLO 2 · CLO 3</Badge>
-            <Badge variant="neutral">Rubric A.1.2</Badge>
-          </div>
-        </div>
-
-        <h1 className="mt-4 font-serif text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
-          Bài 6.1: Ngân hàng 20 Tình huống Sư phạm Thực tế & Cẩm nang Xử lý 5 Bước
-        </h1>
-
-        <p className="mt-3 mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
-          Tài liệu thực chiến bám sát Giáo trình Giáo dục học HCMUE và Bộ tiêu chí Rubric đánh giá
-          A.1.2. Hệ thống hóa quy trình khoa học 5 bước giải quyết xung đột học đường cùng tuyển tập
-          20 tình huống điển hình tại trường trung học kèm giải pháp tối ưu và bẫy sai lầm cần
-          tránh.
-        </p>
-      </div>
+    <div className="space-y-8 leading-relaxed text-[#29383D]">
+      {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
+      <PedagogyMetadataBar
+        courseCode="EDUC2802"
+        clos={['CLO4', 'CLO5']}
+        textbookPages="Tr. 65–66 (Chương 3, Mục 3.3.6 — Quy trình 5 bước)"
+        legalRefs={[
+          'Luật Giáo dục 2019 (Điều 69, 70)',
+          'Thông tư 32/2020/TT-BGDĐT (Điều 38 — Khen thưởng và kỷ luật)',
+          'Tài liệu Kỷ luật tích cực (Jane Nelsen)',
+        ]}
+        sessionNote="Thực hành 1 · 20 Tình huống Sư phạm"
+      />
 
       {/* ==================================================================== */}
-      {/* PHẦN I: QUY TRÌNH KHOA HỌC 5 BƯỚC XỬ LÝ TÌNH HUỐNG SƯ PHẠM */}
+      {/* PHẦN I: QUY TRÌNH KHOA HỌC 5 BƯỚC XỬ LÝ TÌNH HUỐNG SƯ PHẠM (MỤC 3.3.6) */}
       {/* ==================================================================== */}
       <section className="space-y-4">
-        <div className="flex items-center gap-2 border-b border-amber-900/15 pb-2">
-          <Scale className="h-5 w-5 text-amber-800" />
-          <h2
-            id="1-quy-trinh-khoa-hoc-5-buoc"
-            className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
-          >
-            Phần I: Quy trình Khoa học 5 Bước Xử lý Tình huống Sư phạm (HCMUE)
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <Scale className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="1-quy-trinh-khoa-hoc-5-buoc">
+            1. Quy trình Khoa học 5 Bước Xử lý Tình huống Sư phạm (Giáo trình HCMUE tr. 65–66)
           </h2>
         </div>
 
-        <p className="mb-6 font-serif text-[18.5px] leading-[1.85] text-stone-800">
-          Xử lý tình huống sư phạm không phải là hành động phản xạ cảm tính nhất thời, mà là một quy
-          trình giải quyết vấn đề có phương pháp luận khoa học, dựa trên nền tảng tâm lý học lứa
-          tuổi, lý luận giáo dục và chuẩn mực pháp luật học đường:
-        </p>
-
-        {/* Bố cục Tiến trình dọc (Vertical Stepper) */}
-        <div className="mx-auto my-8 w-full max-w-4xl space-y-6">
-          {SCIENTIFIC_5_STEPS.map((step) => (
-            <div
-              key={step.stepNumber}
-              className="scientific-stepper-card flex items-start gap-5 rounded-2xl border border-stone-200/90 bg-white/80 p-6 shadow-sm transition-all hover:border-amber-800/30 hover:shadow-md"
-            >
-              {/* Cột mốc bước (Step Badge) */}
-              <div
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-amber-800/20 bg-amber-800/10 font-serif text-lg font-bold text-amber-900"
-                aria-hidden="true"
-              >
-                {step.stepNumber}
-              </div>
-
-              {/* Nội dung chi tiết bước */}
-              <div className="min-w-0 flex-1">
-                <div className="mb-2 flex flex-wrap items-center gap-3">
-                  <h3 className="font-serif text-xl font-bold text-stone-900">{step.title}</h3>
-                  <span className="rounded-full border border-teal-200 bg-teal-50 px-2.5 py-0.5 text-xs font-semibold text-teal-800">
-                    {step.actionBadge}
-                  </span>
-                </div>
-
-                <ul className="space-y-2 pt-1">
-                  {step.points.map((pt, pIdx) => (
-                    <li
-                      key={pIdx}
-                      className="flex items-start gap-2.5 text-[18px] leading-[1.8] font-normal text-stone-800"
-                    >
-                      <span className="mt-1 font-bold text-amber-800 select-none">•</span>
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          ))}
+        <div className="text-sm text-[#29383D]">
+          Theo <strong>Mục 3.3.6 Giáo trình Giáo dục học HCMUE (tr. 65–66)</strong>, xử lí tình
+          huống giáo dục không phải là phản xạ cảm tính nhất thời mà là một quy trình giải quyết vấn
+          đề có phương pháp luận khoa học gồm <strong>5 bước chuẩn mực</strong>.
+          <Sidenote
+            number={1}
+            type="pedagogy"
+            title="Nguyên tắc 'Dừng 5 giây' và Tác động song hành"
+          >
+            Trong mọi tình huống xung đột học đường, sự điềm tĩnh của người thầy ở Bước 1 quyết định
+            80% thành công của các bước tiếp theo. Tuyệt đối không đôi co tay đôi trước tập thể lớp.
+          </Sidenote>
         </div>
+
+        <NumberedProcessFlow
+          title="Quy trình Khoa học 5 Bước Giải quyết Tình huống Giáo dục (Mục 3.3.6 Giáo trình HCMUE)"
+          subtitle="Khung phương pháp luận bắt buộc áp dụng khi phân tích và giải quyết 20 tình huống thực hành dưới đây."
+          columns={1}
+          steps={[
+            {
+              number: 1,
+              title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+              badge: 'Kiềm chế cảm xúc & Bảo đảm an toàn',
+              description:
+                'Giữ bình tĩnh tuyệt đối, ổn định trật tự lớp học, bảo đảm an toàn thể chất và tâm lí cho học sinh; xác định đúng bản chất mâu thuẫn sư phạm cần tháo gỡ.',
+            },
+            {
+              number: 2,
+              title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân đa chiều',
+              badge: 'Giải mã tâm lí & Hoàn cảnh',
+              description:
+                'Tìm hiểu thông tin khách quan từ nhiều phía (học sinh, bạn bè, gia đình); giải mã nguyên nhân tâm sinh lí lứa tuổi và 4 động cơ sai lệch (theo Jane Nelsen).',
+            },
+            {
+              number: 3,
+              title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+              badge: 'Đối chiếu 6 nguyên tắc giáo dục',
+              description:
+                'Hình dung các phương án can thiệp khác nhau dựa trên hệ thống 6 nguyên tắc hoạt động giáo dục và quy định pháp luật (Luật Giáo dục 2019, Điều lệ trường học 2020).',
+            },
+            {
+              number: 4,
+              title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+              badge: 'Lắng nghe thấu cảm & Kỷ luật tích cực',
+              description:
+                'Lựa chọn phương án đảm bảo tính nhân văn, kín đáo, tôn trọng danh dự học sinh; tiến hành trao đổi riêng, dẫn dắt học sinh tự nhận thức và phối hợp các lực lượng giáo dục.',
+            },
+            {
+              number: 5,
+              title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+              badge: 'Đồng hành lâu dài & Phản tư nghề nghiệp',
+              description:
+                'Theo dõi sự chuyển biến hành vi của học sinh sau can thiệp, động viên kịp thời những tiến bộ nhỏ nhất và đúc kết bài học kinh nghiệm nghề nghiệp cho bản thân.',
+            },
+          ]}
+        />
+
+        <ComparativeTable
+          title="Bảng Tiêu chí Rubric Đánh giá Bài tập Thực hành Xử lý Tình huống Sư phạm (EDUC2802)"
+          subtitle="Tiêu chuẩn chấm điểm bài thực hành phân tích tình huống sư phạm theo chuẩn đầu ra CLO4, CLO5."
+          headers={[
+            'Tiêu chí đánh giá',
+            'Trọng số điểm',
+            'Yêu cầu cần đạt ở mức Tốt (8.5 – 10 điểm)',
+          ]}
+          rows={[
+            [
+              'Tiêu chí 1: Nhận diện vấn đề & Nguyên nhân tâm lí',
+              '2.5 điểm',
+              'Xác định chính xác mâu thuẫn sư phạm cốt lõi; phân tích sâu sắc nguyên nhân tâm sinh lí lứa tuổi, hoàn cảnh gia đình và động cơ hành vi của học sinh.',
+            ],
+            [
+              'Tiêu chí 2: Vận dụng nguyên tắc & Căn cứ pháp lý',
+              '2.5 điểm',
+              'Chỉ rõ và phân tích đúng các nguyên tắc giáo dục (trong 6 nguyên tắc HCMUE) và điều khoản pháp lý liên quan (Luật Giáo dục 2019, Thông tư 20/2018, Thông tư 32/2020).',
+            ],
+            [
+              'Tiêu chí 3: Giải quyết theo Quy trình 5 bước',
+              '3.5 điểm',
+              'Trình bày mạch lạc, khả thi và nhân văn cả 5 bước xử lí (xử lí tức thời tại lớp -> gặp riêng lắng nghe -> phối hợp lực lượng -> theo dõi hỗ trợ).',
+            ],
+            [
+              'Tiêu chí 4: Nhận diện bẫy sai lầm & Bài học sư phạm',
+              '1.5 điểm',
+              'Chỉ ra được các bẫy sai lầm giáo viên dễ mắc phải và rút ra thông điệp sư phạm sâu sắc, thuyết phục.',
+            ],
+          ]}
+        />
+
+        <LegalReferenceBox
+          documentTitle="Thông tư số 32/2020/TT-BGDĐT (Điều lệ trường THCS, THPT và trường phổ thông có nhiều cấp học)"
+          article="Điều 38 (Khen thưởng và kỷ luật) & Điều 31 (Quyền của giáo viên)"
+          quote="Học sinh vi phạm khuyết điểm trong quá trình học tập, rèn luyện được giáo dục hoặc xử lý kỷ luật theo các hình thức: Nhắc nhở, hỗ trợ, giúp đỡ trực tiếp để học sinh khắc phục khuyết điểm; Khiển trách, thông báo với cha mẹ học sinh nhằm phối hợp giúp đỡ học sinh khắc phục khuyết điểm; Tạm dừng học ở trường có thời hạn và thực hiện các biện pháp giáo dục khác theo quy định của Bộ Giáo dục và Đào tạo."
+          pedagogicalAnalysis="Thông tư 32/2020 đã bãi bỏ hoàn toàn hình thức phê bình trước toàn trường và đuổi học 1 năm, khẳng định triết lý kỷ luật tích cực: mọi biện pháp xử lí tình huống phải hướng tới hỗ trợ học sinh nhận ra lỗi và tiến bộ, tuyệt đối không xúc phạm danh dự, nhân phẩm hay thân thể người học."
+        />
 
         <ScholarQuote
           quote="Nghệ thuật sư phạm không phải là nghệ thuật áp đặt, mà là nghệ thuật dẫn dắt học sinh tự nhận thức ra chân lý và tự hoàn thiện nhân cách của chính mình."
           author="K.D. Ushinsky"
-          historicalContext="Nhà giáo dục học vĩ đại người Nga"
+          historicalContext="Nhà giáo dục học kinh điển người Nga"
         />
       </section>
 
@@ -1244,14 +1305,14 @@ export const Lesson6_1View: FC = () => {
       {/* PHẦN II: NGÂN HÀNG 20 TÌNH HUỐNG SƯ PHẠM ĐIỂN HÌNH */}
       {/* ==================================================================== */}
       <section className="space-y-6">
-        <div className="flex flex-col gap-2 border-b border-amber-900/15 pb-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-b border-[#CFDADB] pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-amber-800" />
+            <Target className="h-5 w-5 text-[#3F6570]" />
             <h2
               id="2-ngan-hang-20-tinh-huong"
-              className="font-serif text-xl font-bold text-stone-900"
+              className="font-serif text-xl font-bold text-[#29383D]"
             >
-              Phần II: Ngân hàng 20 Tình huống Sư phạm Thực tế & Phương án Chuẩn
+              2. Ngân hàng 20 Tình huống Sư phạm Thực tế & Phương án Chuẩn 5 Bước
             </h2>
           </div>
           <Badge variant="subject">Đầy đủ 20 Tình huống Thực chiến</Badge>
@@ -1264,8 +1325,8 @@ export const Lesson6_1View: FC = () => {
             onClick={() => setSelectedCategory('all')}
             className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'all'
-                ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
+                ? 'bg-[#3F6570] text-white shadow-2xs'
+                : 'bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]'
             }`}
           >
             Tất cả 20 Tình huống
@@ -1275,8 +1336,8 @@ export const Lesson6_1View: FC = () => {
             onClick={() => setSelectedCategory('insubordination')}
             className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'insubordination'
-                ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
+                ? 'bg-[#3F6570] text-white shadow-2xs'
+                : 'bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]'
             }`}
           >
             Nhóm 1: Chống đối & Kỷ cương (TH 1 - 4)
@@ -1286,8 +1347,8 @@ export const Lesson6_1View: FC = () => {
             onClick={() => setSelectedCategory('romance')}
             className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'romance'
-                ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
+                ? 'bg-[#3F6570] text-white shadow-2xs'
+                : 'bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]'
             }`}
           >
             Nhóm 2: Tình bạn & Tình yêu (TH 5 - 8)
@@ -1297,8 +1358,8 @@ export const Lesson6_1View: FC = () => {
             onClick={() => setSelectedCategory('bullying')}
             className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'bullying'
-                ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
+                ? 'bg-[#3F6570] text-white shadow-2xs'
+                : 'bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]'
             }`}
           >
             Nhóm 3: Bạo lực & Bắt nạt (TH 9 - 12)
@@ -1308,8 +1369,8 @@ export const Lesson6_1View: FC = () => {
             onClick={() => setSelectedCategory('integrity')}
             className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'integrity'
-                ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
+                ? 'bg-[#3F6570] text-white shadow-2xs'
+                : 'bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]'
             }`}
           >
             Nhóm 4: Trung thực & Thi cử (TH 13 - 16)
@@ -1319,8 +1380,8 @@ export const Lesson6_1View: FC = () => {
             onClick={() => setSelectedCategory('parent')}
             className={`cursor-pointer rounded-lg px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm ${
               selectedCategory === 'parent'
-                ? 'bg-amber-800 text-white shadow-2xs'
-                : 'bg-stone-100 text-stone-800 hover:bg-stone-200'
+                ? 'bg-[#3F6570] text-white shadow-2xs'
+                : 'bg-[#E1E9EA] text-[#29383D] hover:bg-[#D7E1E2]'
             }`}
           >
             Nhóm 5: Phối hợp Phụ huynh (TH 17 - 20)
@@ -1335,73 +1396,73 @@ export const Lesson6_1View: FC = () => {
               <div
                 key={cs.id}
                 id={`tinh-huong-${cs.id}`}
-                className="pedagogy-case-card overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs transition-all hover:border-amber-700/30"
+                className="pedagogy-case-card overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-xs transition-all hover:border-[#718C7E]"
               >
                 {/* Header thanh tiêu đề có thể click mở/gập */}
                 <button
                   type="button"
                   onClick={() => handleToggleCase(cs.id)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-stone-50 sm:p-6"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-[#EAF0F1]/70 sm:p-6"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-sm font-bold text-white shadow-2xs">
-                      {cs.id}
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3F6570] font-serif text-sm font-bold text-white shadow-2xs">
+                      {String(cs.id).padStart(2, '0')}
                     </span>
                     <div>
                       <div className="mb-1 flex items-center gap-2">
-                        <span className="text-xs font-semibold text-amber-900 uppercase sm:text-sm">
+                        <span className="text-xs font-semibold text-[#3F6570] uppercase sm:text-sm">
                           {cs.categoryName}
                         </span>
-                        <span className="text-xs font-medium text-stone-500 sm:text-sm">
+                        <span className="text-xs font-medium text-[#55676B] sm:text-sm">
                           · {cs.targetGrade}
                         </span>
                       </div>
-                      <h3 className="text-base leading-snug font-bold text-stone-900 sm:text-lg">
+                      <h3 className="text-base leading-snug font-bold text-[#29383D] sm:text-lg">
                         {cs.title}
                       </h3>
                     </div>
                   </div>
 
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="hidden text-sm font-medium text-stone-600 sm:inline">
+                    <span className="hidden text-sm font-medium text-[#55676B] sm:inline">
                       {isExpanded ? 'Thu gọn' : 'Xem phân tích'}
                     </span>
                     {isExpanded ? (
-                      <ChevronUp className="h-5 w-5 text-amber-800" />
+                      <ChevronUp className="h-5 w-5 text-[#3F6570]" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-stone-500" />
+                      <ChevronDown className="h-5 w-5 text-[#55676B]" />
                     )}
                   </div>
                 </button>
 
                 {/* Nội dung chi tiết tình huống khi mở */}
                 {isExpanded && (
-                  <div className="space-y-5 border-t border-stone-100 bg-[#fcfbf9]/70 p-5 sm:p-7">
+                  <div className="space-y-5 border-t border-[#CFDADB] bg-[#EAF0F1]/50 p-5 sm:p-7">
                     {/* Bối cảnh thực tế */}
-                    <div className="rounded-xl border border-amber-800/15 bg-white p-5 text-stone-800 shadow-2xs">
-                      <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase sm:text-sm">
+                    <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5 text-[#29383D] shadow-2xs">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#3F6570] uppercase sm:text-sm">
                         <BookOpen className="h-4 w-4" />
                         <span>Bối cảnh tình huống thực tế</span>
                       </div>
-                      <p className="mt-2 text-[16px] leading-relaxed text-stone-800 sm:text-[16.5px]">
+                      <p className="mt-2 text-[16px] leading-relaxed text-[#29383D] sm:text-[16.5px]">
                         {cs.context}
                       </p>
                     </div>
 
                     {/* Câu hỏi sư phạm */}
-                    <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50/60 p-4 text-[16px] leading-relaxed font-semibold text-amber-950 sm:text-[16.5px]">
-                      <HelpCircle className="mt-1 h-5 w-5 shrink-0 text-amber-800" />
+                    <div className="flex items-start gap-3 rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-[16px] leading-relaxed font-semibold text-[#29383D] sm:text-[16.5px]">
+                      <HelpCircle className="mt-1 h-5 w-5 shrink-0 text-[#3F6570]" />
                       <p>{cs.question}</p>
                     </div>
 
                     {/* Khung phản tư cá nhân */}
-                    <div className="space-y-3 rounded-xl border border-stone-200 bg-white p-5">
+                    <div className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5">
                       <label
                         htmlFor={`reflect-${cs.id}`}
-                        className="block text-sm font-bold text-stone-900 sm:text-[15px]"
+                        className="block text-sm font-bold text-[#29383D] sm:text-[15px]"
                       >
-                        ✍️ Phản tư cá nhân: Thầy/Cô sẽ xử lý tình huống này theo những bước nào
-                        trước khi xem phương án chuẩn?
+                        Phản tư cá nhân: Thầy/Cô sẽ xử lý tình huống này theo quy trình 5 bước như
+                        thế nào trước khi xem phương án chuẩn?
                       </label>
                       <textarea
                         id={`reflect-${cs.id}`}
@@ -1411,16 +1472,16 @@ export const Lesson6_1View: FC = () => {
                           setReflections((prev) => ({ ...prev, [cs.id]: e.target.value }))
                         }
                         placeholder="Nhập suy nghĩ, bước can thiệp hoặc nguyên tắc của bạn..."
-                        className="w-full rounded-lg border border-stone-200 bg-stone-50/60 p-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:border-amber-700 focus:bg-white focus:outline-none sm:text-[15.5px]"
+                        className="w-full rounded-lg border border-[#CFDADB] bg-[#EAF0F1]/60 p-3 text-sm leading-relaxed text-[#29383D] placeholder:text-[#55676B] focus:border-[#3F6570] focus:bg-[#F7FAFA] focus:outline-none sm:text-[15.5px]"
                       />
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-stone-600 sm:text-sm">
+                        <span className="text-xs text-[#55676B] sm:text-sm">
                           {savedStatus[cs.id] ? (
-                            <span className="inline-flex items-center gap-1 font-semibold text-emerald-600">
+                            <span className="inline-flex items-center gap-1 font-semibold text-[#4F7967]">
                               <CheckCircle2 className="h-4 w-4" /> Đã lưu phản tư thành công!
                             </span>
                           ) : (
-                            'Ghi lại phản tư giúp rèn luyện năng lực giải quyết vấn đề sư phạm'
+                            'Ghi lại phản tư giúp rèn luyện năng lực giải quyết vấn đề sư phạm (CLO4, CLO5)'
                           )}
                         </span>
                         <Button
@@ -1436,14 +1497,14 @@ export const Lesson6_1View: FC = () => {
 
                     {/* Nguyên tắc GDH áp dụng */}
                     <div className="space-y-2">
-                      <span className="text-xs font-bold tracking-wider text-stone-900 uppercase sm:text-sm">
-                        📌 Nguyên tắc Giáo dục học vận dụng:
+                      <span className="text-xs font-bold tracking-wider text-[#29383D] uppercase sm:text-sm">
+                        Nguyên tắc Giáo dục học vận dụng:
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {cs.principlesApplied.map((p, idx) => (
                           <span
                             key={idx}
-                            className="rounded-lg border border-amber-200/80 bg-amber-100/80 px-3 py-1 text-xs font-medium text-amber-950 sm:text-sm"
+                            className="rounded-lg border border-[#718C7E]/35 bg-[#E8EFEB] px-3 py-1 text-xs font-medium text-[#29383D] sm:text-sm"
                           >
                             {p}
                           </span>
@@ -1451,25 +1512,25 @@ export const Lesson6_1View: FC = () => {
                       </div>
                     </div>
 
-                    {/* Phương án xử lý tối ưu 4 bước chuẩn */}
+                    {/* Phương án xử lý tối ưu 5 bước chuẩn */}
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-emerald-950 uppercase sm:text-sm">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-700" />
-                        <span>Phương án xử lý tối ưu theo chuẩn Sư phạm:</span>
+                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#3F6570] uppercase sm:text-sm">
+                        <CheckCircle2 className="h-4 w-4 text-[#4F7967]" />
+                        <span>Phương án xử lý tối ưu theo chuẩn Sư phạm (Quy trình 5 bước):</span>
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {cs.solutionSteps.map((step) => (
                           <div
                             key={step.step}
-                            className="rounded-xl border border-stone-200/90 bg-white p-4 shadow-2xs"
+                            className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-4 shadow-2xs"
                           >
-                            <div className="flex items-center gap-2 text-sm font-bold text-stone-900 sm:text-base">
-                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800">
-                                {step.step}
+                            <div className="flex items-center gap-2 text-sm font-bold text-[#29383D] sm:text-base">
+                              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#E8EFEB] font-serif text-xs font-bold text-[#3F6570]">
+                                {String(step.step).padStart(2, '0')}
                               </span>
                               <span>{step.title}</span>
                             </div>
-                            <p className="mt-2 text-[15px] leading-relaxed text-stone-800 sm:text-[15.5px]">
+                            <p className="mt-2 text-[15px] leading-relaxed text-[#29383D] sm:text-[15.5px]">
                               {step.content}
                             </p>
                           </div>
@@ -1478,12 +1539,12 @@ export const Lesson6_1View: FC = () => {
                     </div>
 
                     {/* Bẫy sư phạm cần tránh */}
-                    <div className="rounded-xl border border-rose-200 bg-rose-50/60 p-4 text-rose-950 sm:p-5">
-                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-rose-900 uppercase sm:text-sm">
-                        <AlertTriangle className="h-4 w-4 text-rose-600" />
+                    <div className="rounded-xl border border-[#A65D59]/35 bg-[#A65D59]/8 p-4 text-[#29383D] sm:p-5">
+                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#A65D59] uppercase sm:text-sm">
+                        <AlertTriangle className="h-4 w-4 text-[#A65D59]" />
                         <span>Bẫy sư phạm cần tránh tuyệt đối:</span>
                       </div>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-rose-900 sm:text-[15.5px]">
+                      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-[#29383D] sm:text-[15.5px]">
                         {cs.pitfallsToAvoid.map((pitfall, pIdx) => (
                           <li key={pIdx}>{pitfall}</li>
                         ))}
@@ -1491,8 +1552,8 @@ export const Lesson6_1View: FC = () => {
                     </div>
 
                     {/* Bài học sư phạm cốt lõi */}
-                    <div className="rounded-xl border border-amber-800/20 bg-amber-50/80 p-4 text-sm leading-relaxed font-medium text-amber-950 sm:text-[16px]">
-                      <span className="font-bold text-amber-900">💡 Bài học cốt lõi: </span>
+                    <div className="rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-sm leading-relaxed font-medium text-[#29383D] sm:text-[16px]">
+                      <span className="font-bold text-[#3F6570]">Bài học cốt lõi: </span>
                       {cs.coreLesson}
                     </div>
                   </div>
@@ -1503,11 +1564,16 @@ export const Lesson6_1View: FC = () => {
         </div>
       </section>
 
-      {/* Thẻ hoàn thành bài học */}
-      <LessonCompletionCard
-        lessonId="gdh-c6-b1-ngan-hang-20-tinh-huong-su-pham-thuc-te"
-        lessonTitle="Bài 6.1: Ngân hàng 20 tình huống sư phạm thực tế ở trường phổ thông"
-      />
+      {/* PHẦN III: TÌNH HUỐNG TỔNG HỢP MINH HỌA TRỰC TIẾP QUA CASESTUDYBOX */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <Compass className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="3-tinh-huong-mau-tong-hop">
+            3. Mô hình Mẫu Trình bày Bài làm Xử lý Tình huống Sư phạm 5 Bước
+          </h2>
+        </div>
+        <CaseStudyBox caseStudy={PEDAGOGICAL_20_CASE_STUDIES[0]!} />
+      </section>
     </div>
   );
 };
@@ -2141,12 +2207,64 @@ export const QUIZ_20_QUESTIONS: readonly QuizQuestion[] = [
 ];
 
 // ============================================================================
-// 2. COMPONENT BÀI 6.2: ĐỀ CƯƠNG ÔN TẬP TỰ LUẬN TRỌNG TÂM & BAREM ĐIỂM CHUẨN
+// 2. COMPONENT THỰC HÀNH 2 (BÀI 6.2): LẬP KẾ HOẠCH GIÁO DỤC LỚP CHỦ NHIỆM, THIẾT KẾ TIẾT SINH HOẠT LỚP & ĐỀ CƯƠNG ÔN TẬP
 // ============================================================================
 
 export const Lesson6_2View: FC = () => {
   const [expandedQuestionId, setExpandedQuestionId] = useState<number | null>(1);
   const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
+
+  const caseStudy6_2: PedagogicalCaseStudy = {
+    id: 602,
+    title: 'Đổi mới tiết Sinh hoạt lớp từ "phiên tòa kiểm điểm" sang diễn đàn tự quản theo chủ đề',
+    context:
+      'Tại lớp 10A2, mỗi khi đến tiết Sinh hoạt lớp chiều thứ Sáu, không khí lớp học rất nặng nề vì giáo viên chủ nhiệm dành trọn 40 phút để đọc tên từng học sinh vi phạm nề nếp, trừ điểm thi đua và phạt chép phạt. Học sinh ngồi im chịu trận, Ban cán sự lớp chỉ làm nhiệm vụ "mách lẻo" lỗi của bạn.',
+    question:
+      'Vận dụng quy trình lập kế hoạch chủ nhiệm và kỹ thuật thiết kế tiết Sinh hoạt lớp tự quản (Giáo trình Giáo dục học HCMUE tr. 71–82), anh/chị hãy tái thiết kế tiết Sinh hoạt lớp này theo quy trình 5 bước.',
+    principlesApplied: [
+      'Chức năng cố vấn tự quản và Quy trình 6 bước lập kế hoạch chủ nhiệm (Giáo trình tr. 67–73)',
+      'Loại hình Sinh hoạt lớp trong Chương trình GDPT 2018 (Giáo trình tr. 108–109)',
+      'Nguyên tắc tôn trọng nhân cách học sinh và giáo dục trong tập thể',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Tiết Sinh hoạt lớp đang bị biến tướng thành buổi kiểm điểm hành chính một chiều, làm mất chức năng tự quản của học sinh và không thực hiện được mạch nội dung giáo dục theo chủ đề.',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo lý luận Chương 4 & 5',
+        content:
+          'Theo Giáo trình HCMUE (tr. 71–77 & tr. 108–109), tiết Sinh hoạt lớp chuẩn phải gồm 2 phần cân đối: Phần 1 (15 phút) do Ban cán sự tự quản điều hành sơ kết tuần và lập kế hoạch tuần tới; Phần 2 (25–30 phút) tổ chức sinh hoạt theo chủ đề trải nghiệm hấp dẫn.',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: Giảm thời gian phê bình xuống 25 phút, thời gian còn lại cho học sinh tự học. Phương án 2: Bồi dưỡng Ban cán sự điều hành kịch bản Sinh hoạt lớp 2 phần theo mô hình "3 khen – 1 góp ý xây dựng" kết hợp sinh hoạt chủ đề tháng.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'Triển khai Phương án 2: Hướng dẫn Lớp trưởng và các Tổ trưởng họp trù bị thứ Năm; trong tiết Sinh hoạt lớp, Ban cán sự tuyên dương các gương người tốt việc tốt trước, thảo luận giải pháp khắc phục hạn chế tuần qua, sau đó tổ chức hoạt động chủ đề (hái hoa dân chủ, diễn đàn nhỏ, chúc mừng sinh nhật tháng).',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Sau tiết học, GVCN nhận xét ngắn gọn để khích lệ Ban cán sự và lấy phiếu phản hồi nhanh của học sinh để tiếp tục nâng cao chất lượng tiết Sinh hoạt lớp tuần tiếp theo.',
+      },
+    ],
+    pitfallsToAvoid: [
+      'GVCN độc thoại và phê bình cá nhân gay gắt suốt 45 phút tiết Sinh hoạt lớp.',
+      'Giao trắng tiết Sinh hoạt lớp cho học sinh mà không hướng dẫn kịch bản trước.',
+    ],
+    coreLesson:
+      'Tiết Sinh hoạt lớp phải là giờ học được học sinh mong đợi nhất trong tuần — nơi mỗi thành viên được lắng nghe, được ghi nhận sự tiến bộ và được rèn luyện năng lực tự quản.',
+  };
 
   const handleToggleQuestion = (id: number) => {
     setExpandedQuestionId((prev) => (prev === id ? null : id));
@@ -2167,115 +2285,191 @@ export const Lesson6_2View: FC = () => {
   };
 
   return (
-    <div className="space-y-8 leading-relaxed text-stone-800">
-      {/* Header & Badges */}
-      <div className="rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] via-[#faf8f2] to-amber-50/40 p-6 shadow-xs">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/10 pb-3">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-amber-900 uppercase">
-            <GraduationCap className="h-4 w-4 text-amber-800" />
-            Chuyên đề 6: Cẩm nang Xử lý Tình huống sư phạm & Đề cương Ôn tập
-          </span>
-          <div className="flex items-center gap-1.5">
-            <Badge variant="subject">Thi Kết thúc Học phần</Badge>
-            <Badge variant="neutral">Barem ĐH Sư phạm</Badge>
-          </div>
-        </div>
-
-        <h1 className="mt-4 font-serif text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
-          Bài 6.2: Đề cương Câu hỏi Ôn thi Tự luận Trọng tâm & Barem Điểm Chuẩn
-        </h1>
-
-        <p className="mt-2 text-sm leading-relaxed text-stone-700 sm:text-base">
-          Cẩm nang ôn thi toàn diện phục vụ Đánh giá giữa kỳ A.1.10 và Thi kết thúc học phần A.2.4.
-          Bao gồm ma trận đề thi chuẩn 9 CLOs, hệ thống 10 câu hỏi tự luận kinh điển kèm dàn ý chi
-          tiết từng thang điểm nhỏ và bộ 20 câu hỏi trắc nghiệm tương tác có giải thích cơ sở lý
-          luận.
-        </p>
-      </div>
+    <div className="space-y-8 leading-relaxed text-[#29383D]">
+      {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
+      <PedagogyMetadataBar
+        courseCode="EDUC2802"
+        clos={['CLO6', 'CLO7']}
+        textbookPages="Tr. 70–82 (Chương 4 — Kế hoạch chủ nhiệm & Sinh hoạt lớp)"
+        legalRefs={[
+          'Thông tư 32/2020/TT-BGDĐT (Điều 29, 31)',
+          'Thông tư 20/2018/TT-BGDĐT (Tiêu chuẩn 3 & 4)',
+          'Đề cương chi tiết EDUC2802 (K50–51)',
+        ]}
+        sessionNote="Thực hành 2 & Đề cương Ôn tập Tổng hợp"
+      />
 
       {/* ==================================================================== */}
-      {/* PHẦN I: MA TRẬN ĐỀ THI & HƯỚNG DẪN ÔN TẬP */}
+      {/* PHẦN I: THỰC HÀNH LẬP KẾ HOẠCH CHỦ NHIỆM & THIẾT KẾ TIẾT SINH HOẠT LỚP */}
       {/* ==================================================================== */}
       <section className="space-y-4">
-        <div className="flex items-center gap-2 border-b border-amber-900/15 pb-2">
-          <FileText className="h-5 w-5 text-amber-800" />
-          <h2
-            id="1-ma-tran-de-thi"
-            className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
-          >
-            Phần I: Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <FileText className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="1-ma-tran-de-thi">
+            1. Thực hành Lập Kế hoạch Giáo dục Lớp Chủ nhiệm & Ma trận Đề thi Tự luận
           </h2>
         </div>
 
+        <div className="text-sm text-[#29383D]">
+          Bài Thực hành 2 trang bị cho sinh viên quy trình thực chiến lập{' '}
+          <strong>Kế hoạch giáo dục lớp chủ nhiệm theo 6 bước</strong> (Giáo trình HCMUE tr. 71–73),
+          cấu trúc kịch bản <strong>tiết Sinh hoạt lớp tự quản 45 phút</strong>, đồng thời tích hợp{' '}
+          <strong>Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao</strong> cho toàn học
+          phần <code>EDUC2802</code>.
+          <Sidenote number={1} type="pedagogy" title="Cấu trúc 2 phần của tiết Sinh hoạt lớp">
+            Một kịch bản tiết Sinh hoạt lớp đạt chuẩn luôn kết hợp hài hòa giữa phần Sơ kết – Lập kế
+            hoạch tuần do Ban cán sự tự quản điều hành (15 phút) và phần Sinh hoạt theo chủ đề giáo
+            dục/trải nghiệm (25 phút), khép lại bằng thông điệp cố vấn của GVCN (5 phút).
+          </Sidenote>
+        </div>
+
+        <NumberedProcessFlow
+          title="Cấu trúc 4 Pha Thiết kế Kịch bản Tiết Sinh hoạt Lớp Tự quản (45 phút)"
+          subtitle="Mô hình chuẩn áp dụng cho thực hành công tác chủ nhiệm lớp ở trường THCS và THPT."
+          columns={2}
+          steps={[
+            {
+              number: 1,
+              title: 'Pha 1: Công tác chuẩn bị trước giờ Sinh hoạt lớp (Thứ Năm hàng tuần)',
+              badge: 'Họp trù bị Ban cán sự',
+              description:
+                'GVCN họp nhanh 10 phút với Lớp trưởng, các Lớp phó, Bí thư Chi đoàn và Tổ trưởng để tổng hợp số liệu chuyên cần, học tập, rèn luyện và thống nhất kịch bản điều hành.',
+            },
+            {
+              number: 2,
+              title: 'Pha 2: Sơ kết tuần qua và thảo luận phương hướng tuần tới (15 phút đầu giờ)',
+              badge: 'Học sinh tự quản điều hành',
+              description:
+                'Lớp trưởng điều hành: các Tổ trưởng và Lớp phó báo cáo ưu điểm nổi bật, tuyên dương cá nhân/tổ xuất sắc và góp ý khắc phục hạn chế trên tinh thần kỷ luật tích cực.',
+            },
+            {
+              number: 3,
+              title: 'Pha 3: Sinh hoạt theo chủ đề giáo dục / trải nghiệm tuần (25 phút trọng tâm)',
+              badge: 'Hoạt động trải nghiệm chủ đề',
+              description:
+                'Tổ trực tuần hoặc BCH Chi đoàn tổ chức hoạt động theo chủ đề tháng (diễn đàn mini, xử lí tình huống đạo đức, trò chơi gắn kết tập thể, định hướng nghề nghiệp).',
+            },
+            {
+              number: 4,
+              title: 'Pha 4: Ý kiến cố vấn của GVCN và cam kết hành động (5 phút cuối giờ)',
+              badge: 'Định hướng & Khích lệ',
+              description:
+                'GVCN tổng kết ngắn gọn, ghi nhận nỗ lực tự quản của Ban cán sự, giải đáp kiến nghị của học sinh và truyền cảm hứng cho mục tiêu tuần học mới.',
+            },
+          ]}
+        />
+
+        <ComparativeTable
+          title="Khung Mẫu Kế hoạch Giáo dục Lớp Chủ nhiệm Năm học / Tháng (Giáo trình HCMUE tr. 71–73)"
+          subtitle="Cấu trúc hồ sơ thực hành lập kế hoạch chủ nhiệm đáp ứng chuẩn đầu ra CLO6, CLO7."
+          headers={[
+            'Hạng mục kế hoạch',
+            'Nội dung chi tiết cần trình bày trong hồ sơ',
+            'Chỉ báo kiểm tra & Minh chứng',
+          ]}
+          rows={[
+            [
+              'I. Căn cứ xây dựng kế hoạch',
+              'Căn cứ Kế hoạch năm học của nhà trường, Kế hoạch công tác Đoàn/Đội và đặc điểm tình hình thực tế của lớp chủ nhiệm (sĩ số, cơ cấu học lực, hạnh kiểm, hoàn cảnh đặc biệt).',
+              'Bảng thống kê phân loại học sinh đầu năm và biên bản họp lớp/họp CMHS.',
+            ],
+            [
+              'II. Mục tiêu phấn đấu của lớp',
+              'Chỉ tiêu cụ thể về: (1) Rèn luyện 5 phẩm chất; (2) Kết quả học tập các môn và 10 năng lực; (3) Nề nếp chuyên cần, an toàn học đường; (4) Danh hiệu thi đua tập thể.',
+              'Hệ thống chỉ tiêu định lượng và định tính khả thi, phù hợp đặc điểm lớp.',
+            ],
+            [
+              'III. Nội dung và biện pháp trọng tâm',
+              'Thiết kế biện pháp cho 4 mảng: Xây dựng tập thể tự quản; Tổ chức học tập & phụ đạo/bồi dưỡng; Tổ chức hoạt động trải nghiệm; Phối hợp GV bộ môn, Đoàn/Đội và CMHS.',
+              'Bảng phân công nhiệm vụ Ban cán sự và sơ đồ mạng lưới phối hợp.',
+            ],
+            [
+              'IV. Lịch trình hoạt động theo tháng/tuần',
+              'Ma trận kế hoạch từng tháng (từ tháng 9 đến tháng 5): Chủ đề tháng -> Hoạt động trọng tâm -> Thời gian -> Lực lượng phụ trách -> Điều kiện thực hiện.',
+              'Sổ chủ nhiệm, biên bản tiết Sinh hoạt lớp và sản phẩm hoạt động tháng.',
+            ],
+          ]}
+        />
+
+        <LegalReferenceBox
+          documentTitle="Thông tư số 32/2020/TT-BGDĐT (Điều lệ trường THCS, THPT và trường phổ thông có nhiều cấp học)"
+          article="Điều 29 — Nhiệm vụ lập kế hoạch giáo dục của Giáo viên chủ nhiệm"
+          quote="Giáo viên chủ nhiệm có nhiệm vụ tìm hiểu và nắm vững học sinh trong lớp về mọi mặt để có biện pháp tổ chức giáo dục sát đối tượng, nhằm thúc đẩy sự tiến bộ của cả lớp và của từng học sinh; xây dựng kế hoạch các hoạt động giáo dục thể hiện rõ mục tiêu, nội dung, phương pháp giáo dục bảo đảm tính khả thi."
+          pedagogicalAnalysis="Kế hoạch giáo dục của GVCN không phải là văn bản hành chính đối phó mà là bản thiết kế sư phạm toàn diện, kết nối kế hoạch năm học của nhà trường với nhu cầu phát triển thực tế của từng học sinh trong lớp."
+        />
+
         <div className="grid gap-5 md:grid-cols-2">
           {/* Cấu trúc ma trận */}
-          <div className="space-y-3 rounded-xl border border-stone-200/90 bg-white p-5 shadow-xs sm:p-6">
-            <h3 className="flex items-center gap-2 text-base font-bold tracking-wide text-stone-900 uppercase">
-              <Calendar className="h-4 w-4 text-amber-800" />
+          <div className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-xs sm:p-6">
+            <h3 className="flex items-center gap-2 text-base font-bold tracking-wide text-[#29383D] uppercase">
+              <Calendar className="h-4 w-4 text-[#3F6570]" />
               Cấu trúc Đề thi Tự luận Chuẩn (90 phút)
             </h3>
-            <ul className="space-y-3 text-[16px] leading-relaxed text-stone-800 sm:text-[16.5px]">
+            <ul className="space-y-3 text-[16px] leading-relaxed text-[#29383D] sm:text-[16.5px]">
               <li className="flex items-start gap-2.5">
-                <span className="shrink-0 font-bold text-amber-900">Câu 1 (2.0 đ):</span>
+                <span className="shrink-0 font-bold text-[#3F6570]">Câu 1 (2.0 đ):</span>
                 <span>
-                  Lý luận giáo dục nền tảng: Lao động sư phạm / 3 Chức năng / 4 Yếu tố nhân cách
-                  (Chương 1 - 2).
+                  Lý luận giáo dục nền tảng: Hoạt động sư phạm / 3 Chức năng xã hội / Vai trò chủ
+                  đạo của giáo dục (Chương 1 – 2).
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <span className="shrink-0 font-bold text-amber-900">Câu 2 (2.0 đ):</span>
+                <span className="shrink-0 font-bold text-[#3F6570]">Câu 2 (2.0 đ):</span>
                 <span>
-                  Văn bản pháp quy: Luật Giáo dục 2019 / Thông tư 20 Chuẩn nghề nghiệp / Điều lệ TT
-                  32.
+                  Văn bản pháp quy: Luật Giáo dục 2019 / Thông tư 20/2018 Chuẩn nghề nghiệp / Điều
+                  lệ trường học 2020.
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <span className="shrink-0 font-bold text-amber-900">Câu 3 (2.5 đ):</span>
-                <span>Nguyên tắc giáo dục & Nghiệp vụ GVCN / Kỷ luật tích cực (Chương 3 - 4).</span>
+                <span className="shrink-0 font-bold text-[#3F6570]">Câu 3 (2.5 đ):</span>
+                <span>
+                  Hệ thống 6 nguyên tắc, 3 nhóm phương pháp giáo dục & Nghiệp vụ GVCN (Chương 3 –
+                  4).
+                </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <span className="shrink-0 font-bold text-amber-900">Câu 4 (3.5 đ):</span>
+                <span className="shrink-0 font-bold text-[#3F6570]">Câu 4 (3.5 đ):</span>
                 <span>
-                  Hoạt động trải nghiệm theo CT 2018 (Chương 5) hoặc Xử lý tình huống sư phạm thực
-                  hành theo Rubric A.1.2.
+                  Tổ chức Hoạt động trải nghiệm, hướng nghiệp (Chương 5) hoặc Xử lý tình huống sư
+                  phạm theo quy trình 5 bước.
                 </span>
               </li>
             </ul>
           </div>
 
           {/* Tiêu chí vàng đạt điểm 9-10 */}
-          <div className="space-y-3 rounded-xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] to-amber-50/40 p-5 shadow-xs sm:p-6">
-            <h3 className="flex items-center gap-2 text-base font-bold tracking-wide text-amber-950 uppercase">
-              <Sparkles className="h-4 w-4 text-amber-800" />
-              Tiêu chuẩn Vàng Đạt Điểm 9 - 10
+          <div className="space-y-3 rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-5 shadow-xs sm:p-6">
+            <h3 className="flex items-center gap-2 text-base font-bold tracking-wide text-[#29383D] uppercase">
+              <Sparkles className="h-4 w-4 text-[#3F6570]" />
+              Tiêu chuẩn Vàng Đạt Điểm 9 – 10
             </h3>
-            <ul className="space-y-3 text-[16px] leading-relaxed text-stone-800 sm:text-[16.5px]">
+            <ul className="space-y-3 text-[16px] leading-relaxed text-[#29383D] sm:text-[16.5px]">
               <li className="flex items-start gap-2.5">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-800 text-xs font-bold text-white">
-                  1
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#3F6570] font-serif text-xs font-bold text-white">
+                  01
                 </span>
                 <span>
-                  <strong className="text-stone-900">Cấu trúc 3 phần chặt chẽ:</strong> Đặt vấn đề
+                  <strong className="text-[#29383D]">Cấu trúc 3 phần chặt chẽ:</strong> Đặt vấn đề
                   (khái niệm), Giải quyết vấn đề (luận điểm + dẫn chứng) và Kết luận (ý nghĩa sư
                   phạm).
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-800 text-xs font-bold text-white">
-                  2
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#3F6570] font-serif text-xs font-bold text-white">
+                  02
                 </span>
                 <span>
-                  <strong className="text-stone-900">Trích dẫn pháp lý chính xác:</strong> Nêu rõ số
-                  hiệu Thông tư (TT 20/2018, TT 32/2020), điều khoản Luật Giáo dục 2019.
+                  <strong className="text-[#29383D]">Trích dẫn pháp lý chính xác:</strong> Nêu rõ số
+                  hiệu Thông tư (TT 20/2018, TT 32/2020, TT 22/2021), điều khoản Luật Giáo dục 2019.
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-800 text-xs font-bold text-white">
-                  3
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#3F6570] font-serif text-xs font-bold text-white">
+                  03
                 </span>
                 <span>
-                  <strong className="text-stone-900">Liên hệ chuyên môn Sư phạm Toán:</strong> Đưa
-                  ví dụ cụ thể về dạy học Toán tích hợp, mô hình hóa và tư duy logic.
+                  <strong className="text-[#29383D]">Liên hệ chuyên môn Sư phạm Toán:</strong> Đưa
+                  ví dụ cụ thể về dạy học Toán tích hợp, mô hình hóa và giáo dục nhân cách.
                 </span>
               </li>
             </ul>
@@ -2287,14 +2481,14 @@ export const Lesson6_2View: FC = () => {
       {/* PHẦN II: 10 CÂU HỎI TỰ LUẬN KINH ĐIỂN VÀ BAREM ĐIỂM CHI TIẾT */}
       {/* ==================================================================== */}
       <section className="space-y-6">
-        <div className="flex flex-col gap-2 border-b border-amber-900/15 pb-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-b border-[#CFDADB] pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-amber-800" />
+            <BookOpen className="h-5 w-5 text-[#3F6570]" />
             <h2
               id="2-10-cau-hoi-tu-luan"
-              className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
+              className="font-serif text-xl font-bold text-[#29383D] sm:text-2xl"
             >
-              Phần II: Tuyển tập 10 Câu hỏi Tự luận Kinh điển & Barem Điểm Chi tiết
+              2. Tuyển tập 10 Câu hỏi Tự luận Kinh điển & Barem Điểm Chi tiết
             </h2>
           </div>
           <Badge variant="subject">Barem chuẩn 10.0 Điểm</Badge>
@@ -2307,57 +2501,57 @@ export const Lesson6_2View: FC = () => {
               <div
                 key={q.id}
                 id={`cau-hoi-${q.id}`}
-                className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs transition-all hover:border-amber-700/30"
+                className="overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-xs transition-all hover:border-[#718C7E]"
               >
                 {/* Header thanh câu hỏi */}
                 <button
                   type="button"
                   onClick={() => handleToggleQuestion(q.id)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-stone-50 sm:p-6"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-[#EAF0F1]/70 sm:p-6"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-sm font-bold text-white shadow-2xs">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#3F6570] font-serif text-sm font-bold text-white shadow-2xs">
                       C{q.id}
                     </span>
                     <div>
                       <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                        <span className="text-xs font-semibold tracking-wide text-amber-900 uppercase sm:text-sm">
+                        <span className="text-xs font-semibold tracking-wide text-[#3F6570] uppercase sm:text-sm">
                           {q.chapterOrigin}
                         </span>
-                        <span className="rounded-md bg-amber-100/90 px-2.5 py-1 text-xs font-medium text-amber-900 sm:text-sm">
+                        <span className="rounded-md bg-[#E8EFEB] px-2.5 py-1 text-xs font-medium text-[#3F6570] sm:text-sm">
                           {q.points} Điểm
                         </span>
-                        <span className="text-xs font-medium text-stone-600 sm:text-sm">
+                        <span className="text-xs font-medium text-[#55676B] sm:text-sm">
                           · {q.clos}
                         </span>
                       </div>
-                      <h3 className="essay-title font-serif text-lg leading-snug font-bold tracking-tight text-stone-900 sm:text-[19px]">
+                      <h3 className="essay-title font-serif text-lg leading-snug font-bold tracking-tight text-[#29383D] sm:text-[19px]">
                         {q.title}
                       </h3>
                     </div>
                   </div>
 
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="hidden text-sm font-medium text-stone-600 sm:inline">
+                    <span className="hidden text-sm font-medium text-[#55676B] sm:inline">
                       {isExpanded ? 'Thu gọn' : 'Xem dàn ý & Barem'}
                     </span>
                     {isExpanded ? (
-                      <ChevronUp className="h-5 w-5 text-amber-800" />
+                      <ChevronUp className="h-5 w-5 text-[#3F6570]" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-stone-500" />
+                      <ChevronDown className="h-5 w-5 text-[#55676B]" />
                     )}
                   </div>
                 </button>
 
                 {/* Nội dung dàn ý & Barem chi tiết */}
                 {isExpanded && (
-                  <div className="space-y-5 border-t border-stone-100 bg-[#fcfbf9]/70 p-5 sm:p-7">
+                  <div className="space-y-5 border-t border-[#CFDADB] bg-[#EAF0F1]/50 p-5 sm:p-7">
                     {/* Đề bài chi tiết */}
-                    <div className="rounded-xl border border-amber-800/20 bg-white p-5 shadow-2xs">
-                      <span className="mb-2 block text-xs font-bold tracking-wider text-amber-900 uppercase sm:text-sm">
+                    <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs">
+                      <span className="mb-2 block text-xs font-bold tracking-wider text-[#3F6570] uppercase sm:text-sm">
                         Đề bài chi tiết:
                       </span>
-                      <p className="text-[16.5px] leading-relaxed font-medium text-stone-800">
+                      <p className="text-[16.5px] leading-relaxed font-medium text-[#29383D]">
                         {q.questionText}
                       </p>
                     </div>
@@ -2367,13 +2561,13 @@ export const Lesson6_2View: FC = () => {
                       {q.outlineSections.map((sec, sIdx) => (
                         <div
                           key={sIdx}
-                          className="space-y-3 rounded-xl border border-stone-200 bg-white p-5 shadow-2xs"
+                          className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs"
                         >
-                          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-3">
-                            <h4 className="text-[17px] leading-snug font-bold text-stone-900">
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#CFDADB] pb-3">
+                            <h4 className="text-[17px] leading-snug font-bold text-[#29383D]">
                               {sec.sectionTitle}
                             </h4>
-                            <span className="rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900 sm:text-sm">
+                            <span className="rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-3 py-1 text-xs font-semibold text-[#3F6570] sm:text-sm">
                               {sec.pointsAllocation}
                             </span>
                           </div>
@@ -2381,9 +2575,9 @@ export const Lesson6_2View: FC = () => {
                             {sec.contentItems.map((item, iIdx) => (
                               <li
                                 key={iIdx}
-                                className="essay-content-item flex items-start gap-3 text-[17.5px] leading-[1.8] text-stone-900"
+                                className="essay-content-item flex items-start gap-3 text-[17.5px] leading-[1.8] text-[#29383D]"
                               >
-                                <span className="mt-1 font-bold text-amber-800 select-none">•</span>
+                                <span className="mt-1 font-bold text-[#3F6570] select-none">•</span>
                                 <span className="leading-[1.8]">{item}</span>
                               </li>
                             ))}
@@ -2394,9 +2588,9 @@ export const Lesson6_2View: FC = () => {
 
                     {/* Ví dụ liên hệ Sư phạm Toán (nếu có) */}
                     {q.teachingMathContext && (
-                      <div className="rounded-xl border border-teal-200/90 bg-teal-50/70 p-4 text-[16px] leading-relaxed font-normal text-teal-950 shadow-2xs">
-                        <span className="font-bold text-teal-900">
-                          📐 Gợi ý liên hệ Bộ môn Sư phạm Toán:{' '}
+                      <div className="rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-[16px] leading-relaxed font-normal text-[#29383D] shadow-2xs">
+                        <span className="font-bold text-[#3F6570]">
+                          Gợi ý liên hệ Bộ môn Sư phạm Toán:{' '}
                         </span>
                         {q.teachingMathContext}
                       </div>
@@ -2413,20 +2607,20 @@ export const Lesson6_2View: FC = () => {
       {/* PHẦN III: BỘ 20 CÂU TRẮC NGHIỆM KHÁCH QUAN TƯƠNG TÁC */}
       {/* ==================================================================== */}
       <section className="space-y-6">
-        <div className="flex flex-col gap-2 border-b border-amber-900/15 pb-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-b border-[#CFDADB] pb-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-amber-800" />
+            <CheckCircle2 className="h-5 w-5 text-[#3F6570]" />
             <h2
               id="3-trac-nghiem-on-tap"
-              className="font-serif text-xl font-bold text-stone-900 sm:text-2xl"
+              className="font-serif text-xl font-bold text-[#29383D] sm:text-2xl"
             >
-              Phần III: Bộ 20 Câu hỏi Trắc nghiệm Khách quan Ôn tập Cuối kỳ
+              3. Bộ 20 Câu hỏi Trắc nghiệm Khách quan Ôn tập Cuối kỳ
             </h2>
           </div>
           <Badge variant="neutral">Tự kiểm tra Nhanh</Badge>
         </div>
 
-        <p className="text-[16.5px] leading-[1.8] text-stone-800 sm:text-[17px]">
+        <p className="text-[16.5px] leading-[1.8] text-[#29383D] sm:text-[17px]">
           Chọn đáp án bạn cho là chính xác nhất. Hệ thống sẽ hiển thị phản hồi ngay lập tức cùng cơ
           sở lý luận trích dẫn từ Giáo trình chuẩn HCMUE và các văn bản quy phạm pháp luật:
         </p>
@@ -2441,13 +2635,13 @@ export const Lesson6_2View: FC = () => {
             return (
               <div
                 key={q.id}
-                className="quiz-card space-y-4 rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs"
+                className="quiz-card space-y-4 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs"
               >
                 <div className="flex items-start gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-800 text-sm font-bold text-white shadow-2xs">
-                    {q.id}
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#3F6570] font-serif text-sm font-bold text-white shadow-2xs">
+                    {String(q.id).padStart(2, '0')}
                   </span>
-                  <p className="quiz-question-title mb-4 text-lg leading-snug font-semibold text-stone-900 sm:text-[19px]">
+                  <p className="quiz-question-title mb-4 text-lg leading-snug font-semibold text-[#29383D] sm:text-[19px]">
                     {q.question}
                   </p>
                 </div>
@@ -2456,17 +2650,17 @@ export const Lesson6_2View: FC = () => {
                   {q.options.map((opt, optIdx) => {
                     const isSelected = selectedOpt === optIdx;
                     let btnStyle =
-                      'border-stone-200 bg-stone-50/70 text-stone-800 hover:border-amber-700/40 hover:bg-stone-100';
+                      'border-[#CFDADB] bg-[#EAF0F1]/60 text-[#29383D] hover:border-[#3F6570] hover:bg-[#E1E9EA]';
 
                     if (isAnswered) {
                       if (optIdx === q.correctIndex) {
                         btnStyle =
-                          'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold ring-1 ring-emerald-500/30';
+                          'border-[#4F7967] bg-[#E8EFEB] text-[#29383D] font-semibold ring-1 ring-[#4F7967]/30';
                       } else if (isSelected) {
                         btnStyle =
-                          'border-rose-400 bg-rose-50 text-rose-950 ring-1 ring-rose-400/30';
+                          'border-[#A65D59] bg-[#A65D59]/10 text-[#29383D] ring-1 ring-[#A65D59]/30';
                       } else {
-                        btnStyle = 'border-stone-100 bg-stone-50/40 text-stone-400 opacity-60';
+                        btnStyle = 'border-[#CFDADB]/60 bg-[#EAF0F1]/30 text-[#55676B] opacity-60';
                       }
                     }
 
@@ -2477,10 +2671,10 @@ export const Lesson6_2View: FC = () => {
                         onClick={() => handleSelectQuizOption(q.id, optIdx)}
                         className={`quiz-option-button flex cursor-pointer items-start gap-3 rounded-xl border px-5 py-3.5 text-left text-[16px] font-normal transition-all sm:text-[16.5px] ${btnStyle}`}
                       >
-                        <span className="quiz-option-letter shrink-0 text-base font-bold text-stone-900">
+                        <span className="quiz-option-letter shrink-0 text-base font-bold text-[#29383D]">
                           {String.fromCharCode(65 + optIdx)}.
                         </span>
-                        <span className="leading-relaxed text-stone-800">{opt.substring(3)}</span>
+                        <span className="leading-relaxed text-[#29383D]">{opt.substring(3)}</span>
                       </button>
                     );
                   })}
@@ -2491,27 +2685,27 @@ export const Lesson6_2View: FC = () => {
                   <div
                     className={`quiz-explanation rounded-xl border p-4 text-[16px] leading-relaxed ${
                       isCorrect
-                        ? 'border-emerald-300 bg-emerald-50/80 text-emerald-950'
-                        : 'border-rose-300 bg-rose-50/80 text-rose-950'
+                        ? 'border-[#4F7967]/40 bg-[#E8EFEB] text-[#29383D]'
+                        : 'border-[#A65D59]/40 bg-[#A65D59]/10 text-[#29383D]'
                     }`}
                   >
                     <div className="mb-2 flex items-center gap-2 text-[16.5px] font-bold">
                       {isCorrect ? (
                         <>
-                          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
-                          <span className="text-emerald-900">Chính xác!</span>
+                          <CheckCircle2 className="h-5 w-5 shrink-0 text-[#4F7967]" />
+                          <span className="text-[#4F7967]">Chính xác!</span>
                         </>
                       ) : (
                         <>
-                          <XCircle className="h-5 w-5 shrink-0 text-rose-600" />
-                          <span className="text-rose-900">
+                          <XCircle className="h-5 w-5 shrink-0 text-[#A65D59]" />
+                          <span className="text-[#A65D59]">
                             Chưa chính xác! Đáp án đúng là{' '}
                             {String.fromCharCode(65 + q.correctIndex)}
                           </span>
                         </>
                       )}
                     </div>
-                    <p className="text-[16px] leading-relaxed text-stone-800">{q.explanation}</p>
+                    <p className="text-[16px] leading-relaxed text-[#29383D]">{q.explanation}</p>
                   </div>
                 )}
               </div>
@@ -2520,41 +2714,390 @@ export const Lesson6_2View: FC = () => {
         </div>
 
         {/* Bảng tổng kết kết quả làm trắc nghiệm */}
-        <div className="space-y-4 rounded-2xl border border-amber-800/20 bg-gradient-to-br from-[#fcfbf7] to-amber-50/50 p-6 text-center shadow-xs sm:p-8">
-          <h3 className="font-serif text-xl font-bold text-stone-900 sm:text-2xl">
+        <div className="space-y-4 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 text-center shadow-xs sm:p-8">
+          <h3 className="font-serif text-xl font-bold text-[#29383D] sm:text-2xl">
             Kết quả Tự kiểm tra Trắc nghiệm
           </h3>
-          <p className="text-base text-stone-700">
+          <p className="text-base text-[#55676B]">
             Bạn đã trả lời {Object.keys(userAnswers).length} / {QUIZ_20_QUESTIONS.length} câu hỏi.
           </p>
-          <div className="flex items-baseline justify-center gap-1 font-serif text-4xl font-bold text-amber-900 sm:text-5xl">
+          <div className="flex items-baseline justify-center gap-1 font-serif text-4xl font-bold text-[#3F6570] sm:text-5xl">
             <span>{calculateQuizScore()}</span>
-            <span className="font-sans text-lg font-normal text-stone-600">
+            <span className="font-sans text-lg font-normal text-[#55676B]">
               / {QUIZ_20_QUESTIONS.length} câu đúng
             </span>
           </div>
-          <p className="text-sm font-medium text-stone-600">
+          <p className="text-sm font-medium text-[#55676B]">
             (Đạt {Math.round((calculateQuizScore() / QUIZ_20_QUESTIONS.length) * 100)}% yêu cầu lý
             thuyết học phần)
           </p>
         </div>
       </section>
 
-      {/* Thẻ hoàn thành bài học */}
-      <LessonCompletionCard
-        lessonId="gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an"
-        lessonTitle="Bài 6.2: Đề cương câu hỏi ôn thi tự luận trọng tâm & Dàn ý đáp án"
-      />
+      {/* PHẦN IV: TÌNH HUỐNG THỰC HÀNH CÔNG TÁC CHỦ NHIỆM */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <HelpCircle className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="4-tinh-huong-thuc-hanh-chu-nhiem">
+            4. Tình huống Thực hành Thiết kế Tiết Sinh hoạt Lớp (CLO6, CLO7)
+          </h2>
+        </div>
+        <CaseStudyBox caseStudy={caseStudy6_2} />
+      </section>
     </div>
   );
 };
 
 // ============================================================================
-// 3. EXPORT TRÌNH NẠP MODULE CHƯƠNG 6 (DYNAMIC LOADER)
+// 3. COMPONENT THỰC HÀNH 3 (BÀI 6.3): THIẾT KẾ KẾ HOẠCH CHỦ ĐỀ HOẠT ĐỘNG TRẢI NGHIỆM, HƯỚNG NGHIỆP (MÔ ĐUN 2 THCS & THPT)
+// ============================================================================
+
+export const Lesson6_3View: FC = () => {
+  const caseStudy6_3: PedagogicalCaseStudy = {
+    id: 603,
+    title:
+      'Điều chỉnh kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp khi điều kiện thực tế thay đổi',
+    context:
+      'Tổ giáo viên khối 10 đã thiết kế chủ đề Hoạt động trải nghiệm, hướng nghiệp tháng 3: "Tham quan và tìm hiểu quy trình sản xuất tại Khu Công nghệ cao" (thuộc phương thức Khám phá ngoài nhà trường). Tuy nhiên, sát ngày tổ chức thì thời tiết mưa bão kéo dài và doanh nghiệp thông báo tạm dừng đón đoàn khách tham quan.',
+    question:
+      'Vận dụng quy trình thiết kế chủ đề HĐTN, HN (Giáo trình Giáo dục học HCMUE tr. 116–124 và Tài liệu bồi dưỡng Mô đun 2 THPT), anh/chị hãy xử lí tình huống và điều chỉnh kế hoạch theo quy trình 5 bước.',
+    principlesApplied: [
+      'Quy trình thiết kế và điều kiện tổ chức Hoạt động trải nghiệm, hướng nghiệp (Giáo trình tr. 114–124)',
+      'Linh hoạt chuyển đổi giữa 4 nhóm phương thức tổ chức HĐTN (Khám phá -> Thể nghiệm, tương tác & Nghiên cứu)',
+      'Nguyên tắc đảm bảo tính mục đích và an toàn tuyệt đối cho học sinh',
+    ],
+    solutionSteps: [
+      {
+        step: 1,
+        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        content:
+          'Hoạt động tham quan thực địa ngoài trường không thể diễn ra do yếu tố khách quan (thời tiết và đối tác), đòi hỏi phải kích hoạt phương án dự phòng ngay tại trường mà vẫn giữ nguyên Yêu cầu cần đạt về năng lực định hướng nghề nghiệp.',
+      },
+      {
+        step: 2,
+        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân theo Tài liệu Mô đun 2',
+        content:
+          'Theo Tài liệu Mô đun 2 THPT và Giáo trình HCMUE (tr. 116–124), mục tiêu cốt lõi của chủ đề là giúp học sinh tìm hiểu yêu cầu nghề nghiệp và phẩm chất người lao động thời đại số; hình thức tham quan là phương tiện chứ không phải mục đích duy nhất.',
+      },
+      {
+        step: 3,
+        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        content:
+          'Phương án 1: Hủy bỏ hoàn toàn chủ đề hướng nghiệp tháng 3 và cho học sinh nghỉ. Phương án 2: Chuyển đổi sang hình thức "Diễn đàn Tọa đàm Hướng nghiệp Trực tiếp kết hợp Trực tuyến (Virtual Tour)" ngay tại Hội trường nhà trường.',
+      },
+      {
+        step: 4,
+        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        content:
+          'Thực hiện Phương án 2 theo tiến trình 4 hoạt động: (1) Khởi động: Trò chơi nhận diện xu hướng nghề nghiệp 4.0; (2) Khám phá: Xem video Virtual Tour dây chuyền sản xuất và kết nối giao lưu trực tuyến 30 phút với kỹ sư của Khu Công nghệ cao; (3) Luyện tập: Các nhóm thiết kế Infographic "Hồ sơ năng lực nghề nghiệp tương lai"; (4) Vận dụng: Xây dựng kế hoạch rèn luyện môn học tổ hợp STEM cá nhân.',
+      },
+      {
+        step: 5,
+        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        content:
+          'Đánh giá sản phẩm Infographic của các nhóm bằng Rubric và rút kinh nghiệm luôn xây dựng "Phương án B (Trong nhà trường)" khi thiết kế các chủ đề HĐTN ngoài trường.',
+      },
+    ],
+    pitfallsToAvoid: [
+      'Cố tình tổ chức đi tham quan bất chấp thời tiết mưa bão gây nguy hiểm cho học sinh.',
+      'Khi hủy chuyến tham quan thì biến giờ HĐTN thành giờ tự học trống không có hoạt động thay thế.',
+    ],
+    coreLesson:
+      'Một bản kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp chuyên nghiệp luôn bám chặt vào Yêu cầu cần đạt (Mục tiêu năng lực) và có phương án dự phòng linh hoạt trước mọi biến động của điều kiện thực tế.',
+  };
+
+  return (
+    <div className="space-y-8 leading-relaxed text-[#29383D]">
+      {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
+      <PedagogyMetadataBar
+        courseCode="EDUC2802"
+        clos={['CLO8', 'CLO9']}
+        textbookPages="Tr. 110–124 (Chương 5) · Tài liệu Mô đun 2 THCS & THPT"
+        legalRefs={[
+          'Thông tư 32/2018/TT-BGDĐT (CT HĐTN & HĐTN, HN)',
+          '11.HDTN_tai-lieu-THCS_9.10.20.20-24h.pdf (Mô đun 2 THCS)',
+          '12.HDTN_tai-lieu-THPT_9.10.20-24h.pdf (Mô đun 2 THPT)',
+        ]}
+        sessionNote="Thực hành 3 · Thiết kế Kế hoạch Chủ đề HĐTN, HN"
+      />
+
+      {/* PHẦN I: ĐỐI SÁNH ĐẶC THÙ THIẾT KẾ CHỦ ĐỀ HĐTN CẤP THCS VÀ CẤP THPT (MÔ ĐUN 2) */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <Layers className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="1-doi-sanh-mo-dun-2-thcs-thpt">
+            1. Tích hợp Tài liệu Mô đun 2: Đặc thù Thiết kế Chủ đề HĐTN, HN cấp THCS và THPT
+          </h2>
+        </div>
+
+        <div className="text-sm text-[#29383D]">
+          Dựa trên <strong>Giáo trình Giáo dục học HCMUE (tr. 116–124)</strong> và bộ đôi tài liệu
+          bồi dưỡng giáo viên phổ thông cốt cán{' '}
+          <strong>Mô đun 2 cấp THCS và cấp THPT của Bộ GD&ĐT</strong>, việc thiết kế kế hoạch chủ đề
+          Hoạt động trải nghiệm, hướng nghiệp phải phản ánh rõ sự phân hóa mục tiêu giữa giai đoạn
+          giáo dục cơ bản (THCS) và giai đoạn giáo dục định hướng nghề nghiệp (THPT).
+          <Sidenote
+            number={1}
+            type="pedagogy"
+            title="Điểm cốt lõi của Tài liệu Mô đun 2 THCS & THPT"
+          >
+            Tài liệu Mô đun 2 nhấn mạnh: Mỗi hoạt động trong chủ đề HĐTN phải thể hiện rõ chuỗi tác
+            động sư phạm (Khởi động -&gt; Khám phá/Chiêm nghiệm -&gt; Rèn luyện kỹ năng -&gt; Vận
+            dụng/Mở rộng) và phải chỉ rõ sản phẩm học tập cụ thể có thể quan sát, đánh giá được.
+          </Sidenote>
+        </div>
+
+        <ComparativeTable
+          title="Bảng Đối sánh Thiết kế Chủ đề HĐTN, HN giữa Cấp THCS và Cấp THPT (Tài liệu Mô đun 2 & Giáo trình tr. 84–124)"
+          subtitle="Căn cứ để sinh viên lựa chọn đúng trọng tâm phương thức và sản phẩm khi làm bài tập Thực hành 3."
+          headers={[
+            'Tiêu chí đối sánh',
+            'Cấp THCS (Mô đun 2 THCS — Lớp 6 đến Lớp 9)',
+            'Cấp THPT (Mô đun 2 THPT — Lớp 10 đến Lớp 12)',
+          ]}
+          rows={[
+            [
+              '1. Định vị giai đoạn giáo dục',
+              'Thuộc giai đoạn Giáo dục cơ bản: Tập trung khám phá bản thân ở tuổi dậy thì, rèn luyện kỹ năng giao tiếp xã hội và bước đầu tìm hiểu nghề truyền thống/địa phương.',
+              'Thuộc giai đoạn Giáo dục định hướng nghề nghiệp: Tập trung phát triển bản lĩnh công dân, đánh giá sự phù hợp nghề và ra quyết định chọn ngành, chọn nghề.',
+            ],
+            [
+              '2. Tỷ trọng 4 mạch nội dung',
+              'Hướng vào bản thân (~35%), Hướng đến xã hội (~25%), Hướng đến tự nhiên (~20%), Hướng nghiệp (~20% — tăng mạnh ở lớp 8, 9 để phân luồng sau THCS).',
+              'Hướng vào bản thân (~30%), Hướng đến xã hội (~25%), Hướng đến tự nhiên (~15%), Hướng nghiệp (~30% — trọng tâm xuyên suốt cả 3 khối 10, 11, 12).',
+            ],
+            [
+              '3. Phương thức tổ chức ưu tiên',
+              'Trò chơi trải nghiệm, Sân khấu tương tác, Tham quan dã ngoại, Hoạt động tình nguyện vừa sức và Dự án khám phá thực tiễn.',
+              'Diễn đàn tranh biện, Hội thảo hướng nghiệp, Dự án nghiên cứu khoa học (8 bước), Thực hành trải nghiệm thực tế tại cơ sở sản xuất/trường ĐH/CĐ.',
+            ],
+            [
+              '4. Sản phẩm đánh giá điển hình',
+              'Sổ tay khám phá bản thân, kịch bản đóng vai xử lí tình huống bạn bè, sản phẩm tái chế bảo vệ môi trường, báo cáo thu hoạch tham quan.',
+              'Bản kế hoạch phát triển nghề nghiệp cá nhân, hồ sơ dự án nghiên cứu thị trường lao động, sản phẩm STEM hướng nghiệp, chiến dịch truyền thông cộng đồng.',
+            ],
+          ]}
+        />
+
+        <LegalReferenceBox
+          documentTitle="Tài liệu Bồi dưỡng Mô đun 2 THCS & THPT (Bộ GD&ĐT) & Giáo trình HCMUE (Tr. 116–124)"
+          article="Quy chuẩn cấu trúc một Hoạt động thành phần trong Kế hoạch chủ đề HĐTN, HN"
+          quote="Mỗi hoạt động cụ thể trong kế hoạch tổ chức chủ đề Hoạt động trải nghiệm, hướng nghiệp phải được thiết kế đầy đủ 4 thành phần: (1) Mục tiêu của hoạt động; (2) Nội dung hoạt động; (3) Sản phẩm dự kiến của học sinh; (4) Tổ chức thực hiện gồm 4 bước: Chuyển giao nhiệm vụ -> Học sinh thực hiện trải nghiệm -> Báo cáo, thảo luận và chiêm nghiệm -> Kết luận, nhận định của giáo viên."
+          pedagogicalAnalysis="Việc tuân thủ cấu trúc 4 thành phần và 4 bước tổ chức thực hiện giúp giáo viên kiểm soát chặt chẽ tính khả thi trên lớp, đồng thời chuyển giao vai trò hoạt động thực sự cho học sinh."
+        />
+      </section>
+
+      {/* PHẦN II: QUY TRÌNH CHUẨN & RUBRIC ĐÁNH GIÁ KẾ HOẠCH CHỦ ĐỀ HĐTN */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <Target className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="2-quy-trinh-va-rubric-chu-de-hdtn">
+            2. Tiến trình 4 Hoạt động Trải nghiệm & Bảng Rubric Đánh giá Thực hành 3
+          </h2>
+        </div>
+
+        <NumberedProcessFlow
+          title="Tiến trình 4 Hoạt động Chuẩn trong Thiết kế Chủ đề HĐTN, HN (Giáo trình HCMUE tr. 118–123)"
+          subtitle="Chuỗi tiến trình sư phạm chuyển hóa từ kinh nghiệm ban đầu thành năng lực hành động bền vững."
+          columns={2}
+          steps={[
+            {
+              number: 1,
+              title: 'Hoạt động 1: Khởi động — Kết nối kinh nghiệm (10 – 15% thời lượng)',
+              badge: 'Tạo tâm thế & Huy động kinh nghiệm',
+              description:
+                'Tổ chức trò chơi, tình huống ngắn hoặc câu hỏi gợi mở để huy động vốn kinh nghiệm sẵn có của học sinh và dẫn dắt vào vấn đề trung tâm của chủ đề.',
+            },
+            {
+              number: 2,
+              title: 'Hoạt động 2: Khám phá — Chiêm nghiệm (30 – 35% thời lượng)',
+              badge: 'Phản tư & Nhận thức giá trị mới',
+              description:
+                'Học sinh thảo luận nhóm, phân tích trường hợp điển hình, phỏng vấn hoặc quan sát thực tế để tự rút ra quy trình, khái niệm hoặc thông điệp cốt lõi.',
+            },
+            {
+              number: 3,
+              title: 'Hoạt động 3: Rèn luyện / Luyện tập kỹ năng (35 – 40% thời lượng)',
+              badge: 'Thực hành giải quyết tình huống',
+              description:
+                'Học sinh trực tiếp đóng vai, lập kế hoạch, thực hành kỹ năng trong các tình huống giả định hoặc thực tế tại lớp để hình thành năng lực đặc thù.',
+            },
+            {
+              number: 4,
+              title: 'Hoạt động 4: Vận dụng — Mở rộng (10 – 15% thời lượng & Ngoài giờ học)',
+              badge: 'Cam kết hành động thực tiễn',
+              description:
+                'Giao nhiệm vụ cho học sinh vận dụng kỹ năng đã học vào đời sống thực tế tại gia đình, cộng đồng và ghi nhận kết quả vào hồ sơ trải nghiệm.',
+            },
+          ]}
+        />
+
+        <ComparativeTable
+          title="Bảng Tiêu chí Rubric Đánh giá Bài tập Thực hành 3: Thiết kế Kế hoạch Chủ đề HĐTN, HN"
+          subtitle="Thang đánh giá năng lực thiết kế và tổ chức HĐTN, HN theo chuẩn đầu ra CLO8, CLO9."
+          headers={['Tiêu chí đánh giá', 'Trọng số', 'Mô tả mức chất lượng Tốt (8.5 – 10 điểm)']}
+          rows={[
+            [
+              '1. Xác định Mục tiêu chủ đề (Yêu cầu cần đạt)',
+              '2.0 điểm',
+              'Xác định đúng, đủ và viết bằng động từ đo lường được cho cả 3 nhóm: Năng lực đặc thù HĐTN, Năng lực chung và Phẩm chất chủ yếu.',
+            ],
+            [
+              '2. Chuẩn bị thiết bị, học liệu của GV và HS',
+              '1.5 điểm',
+              'Liệt kê cụ thể, khả thi các học liệu, phiếu trải nghiệm, phương tiện kỹ thuật của GV và nhiệm vụ chuẩn bị trước ở nhà của HS.',
+            ],
+            [
+              '3. Thiết kế chuỗi 4 Hoạt động trải nghiệm',
+              '4.5 điểm',
+              'Đầy đủ 4 hoạt động (Khởi động -> Khám phá -> Rèn luyện -> Vận dụng); mỗi hoạt động có đủ Mục tiêu, Nội dung, Sản phẩm và 4 bước tổ chức thực hiện.',
+            ],
+            [
+              '4. Thiết kế Công cụ kiểm tra, đánh giá',
+              '2.0 điểm',
+              'Có công cụ đánh giá cụ thể (Bảng kiểm hoặc Rubric) kết hợp tự đánh giá của HS, đánh giá đồng đẳng và đánh giá của GV.',
+            ],
+          ]}
+        />
+      </section>
+
+      {/* PHẦN III: HỒ SƠ KẾ HOẠCH CHỦ ĐỀ HĐTN, HN MẪU CHUẨN MỨC TỐT */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <BookOpen className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="3-ke-hoach-chu-de-hdtn-mau">
+            3. Hồ sơ Kế hoạch Chủ đề Hoạt động Trải nghiệm, Hướng nghiệp Mẫu (Chuẩn Mô đun 2)
+          </h2>
+        </div>
+
+        <div className="space-y-5 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs">
+          <div className="border-b border-[#CFDADB] pb-4">
+            <div className="text-xs font-bold tracking-wider text-[#3F6570] uppercase">
+              Kế hoạch Giáo dục Chủ đề Hoạt động Trải nghiệm, Hướng nghiệp · Lớp 10 (Thời lượng: 02
+              tiết)
+            </div>
+            <h3 className="mt-1 font-serif text-xl font-bold text-[#29383D]">
+              Chủ đề: Xây dựng Tình bạn Đẹp và Văn hóa Ứng xử An toàn trên Không gian Mạng
+            </h3>
+            <p className="mt-1 text-xs text-[#55676B]">
+              Mạch nội dung: Hoạt động hướng đến xã hội (Hoạt động xây dựng nhà trường & cộng đồng)
+              · Loại hình: Hoạt động giáo dục theo chủ đề
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/50 p-4">
+              <h4 className="text-xs font-bold tracking-wider text-[#3F6570] uppercase">
+                I. Mục tiêu Chủ đề (Yêu cầu cần đạt)
+              </h4>
+              <ul className="space-y-1.5 text-sm text-[#29383D]">
+                <li>
+                  • <strong>Năng lực thích ứng với cuộc sống:</strong> Nhận diện được các biểu hiện
+                  của bắt nạt học đường và bắt nạt trên không gian mạng; thực hành quy tắc ứng xử an
+                  toàn, văn minh.
+                </li>
+                <li>
+                  • <strong>Năng lực thiết kế và tổ chức hoạt động:</strong> Lập kế hoạch và thực
+                  hiện sản phẩm truyền thông "Lớp học hạnh phúc – Không bạo lực mạng".
+                </li>
+                <li>
+                  • <strong>Phẩm chất:</strong> Nhân ái (thấu cảm, tôn trọng sự khác biệt của bạn
+                  bè) và Trách nhiệm (bảo vệ lẽ phải, không tiếp tay phát tán thông tin xấu độc).
+                </li>
+              </ul>
+            </div>
+
+            <div className="space-y-2 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/50 p-4">
+              <h4 className="text-xs font-bold tracking-wider text-[#3F6570] uppercase">
+                II. Thiết bị Giáo dục và Học liệu
+              </h4>
+              <ul className="space-y-1.5 text-sm text-[#29383D]">
+                <li>
+                  • <strong>Chuẩn bị của Giáo viên:</strong> Bộ thẻ tình huống Sân khấu tương tác,
+                  video phóng sự ngắn (3 phút), giấy A0, bút dạ và Phiếu đánh giá Rubric.
+                </li>
+                <li>
+                  • <strong>Chuẩn bị của Học sinh:</strong> Sưu tầm các câu chuyện thực tế về văn
+                  hóa ứng xử trên mạng xã hội; chuẩn bị vật liệu thiết kế góc thông điệp tình bạn.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold tracking-wider text-[#3F6570] uppercase">
+              III. Tiến trình Tổ chức Chuỗi 4 Hoạt động Trải nghiệm
+            </h4>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="space-y-1.5 rounded-xl border border-[#CFDADB] bg-white p-4">
+                <div className="text-sm font-bold text-[#29383D]">
+                  Hoạt động 1: Khởi động (10 phút) — Trò chơi "Dấu ấn lời nói"
+                </div>
+                <p className="text-xs leading-relaxed text-[#55676B]">
+                  <strong>Sản phẩm:</strong> Chia sẻ cảm nhận của HS về tờ giấy bị vò nhàu.{' '}
+                  <strong>Tổ chức:</strong> HS thực hành vò tờ giấy và cố vuốt phẳng lại, từ đó
+                  chiêm nghiệm rằng những lời nói tổn thương trên mạng dù xóa đi vẫn để lại vết hằn
+                  tâm lí.
+                </p>
+              </div>
+              <div className="space-y-1.5 rounded-xl border border-[#CFDADB] bg-white p-4">
+                <div className="text-sm font-bold text-[#29383D]">
+                  Hoạt động 2: Khám phá – Chiêm nghiệm (25 phút) — Diễn đàn 4 Trạm
+                </div>
+                <p className="text-xs leading-relaxed text-[#55676B]">
+                  <strong>Sản phẩm:</strong> Sơ đồ tư duy 4 trạm của 4 tổ. <strong>Tổ chức:</strong>{' '}
+                  Các nhóm luân chuyển qua 4 trạm: (1) Nhận diện hành vi; (2) Hệ lụy tâm lí & pháp
+                  lý; (3) Trách nhiệm người chứng kiến; (4) Quy tắc ứng xử 5K trên mạng.
+                </p>
+              </div>
+              <div className="space-y-1.5 rounded-xl border border-[#CFDADB] bg-white p-4">
+                <div className="text-sm font-bold text-[#29383D]">
+                  Hoạt động 3: Rèn luyện kỹ năng (35 phút) — Sân khấu tương tác 5 bước
+                </div>
+                <p className="text-xs leading-relaxed text-[#55676B]">
+                  <strong>Sản phẩm:</strong> Phần nhập vai giải quyết tình huống của HS.{' '}
+                  <strong>Tổ chức:</strong> Nhóm kịch biểu diễn tình huống bạn học bị lập nhóm nói
+                  xấu đến nút thắt cao trào; mời các HS dưới lớp lên nhập vai tháo gỡ xung đột.
+                </p>
+              </div>
+              <div className="space-y-1.5 rounded-xl border border-[#CFDADB] bg-white p-4">
+                <div className="text-sm font-bold text-[#29383D]">
+                  Hoạt động 4: Vận dụng – Mở rộng (20 phút) — Chiến dịch "Thông điệp Xanh"
+                </div>
+                <p className="text-xs leading-relaxed text-[#55676B]">
+                  <strong>Sản phẩm:</strong> Bộ quy tắc ứng xử số của lớp 10A và cam kết cá nhân.{' '}
+                  <strong>Tổ chức:</strong> Mỗi HS viết 1 cam kết hành động dán lên Bảng truyền
+                  thông lớp và lan tỏa thông điệp tích cực trong 1 tuần tiếp theo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PHẦN IV: TÌNH HUỐNG THỰC HÀNH THIẾT KẾ & ĐIỀU CHỈNH CHỦ ĐỀ HĐTN */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]">
+          <HelpCircle className="h-5 w-5 text-[#3F6570]" />
+          <h2 id="4-tinh-huong-thuc-hanh-hdtn">
+            4. Tình huống Thực hành Điều chỉnh Kế hoạch Chủ đề HĐTN, HN (CLO8, CLO9)
+          </h2>
+        </div>
+        <CaseStudyBox caseStudy={caseStudy6_3} />
+      </section>
+    </div>
+  );
+};
+
+// ============================================================================
+// 4. EXPORT TRÌNH NẠP MODULE KHỐI THỰC HÀNH (CHƯƠNG 6 DYNAMIC LOADER)
 // ============================================================================
 
 export function getChapter6LessonModule(lessonId: string): CompiledLessonModule | null {
   if (
+    lessonId === 'gdh-th-b1-phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te' ||
+    lessonId === 'phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te' ||
+    lessonId === 'thuc-hanh-1' ||
     lessonId === 'gdh-c6-b1-ngan-hang-20-tinh-huong-su-pham-thuc-te' ||
     lessonId === 'ngan-hang-20-tinh-huong-su-pham-thuc-te' ||
     lessonId === '6-1' ||
@@ -2565,18 +3108,18 @@ export function getChapter6LessonModule(lessonId: string): CompiledLessonModule 
     return {
       default: Lesson6_1View,
       frontmatter: {
-        title: 'Bài 6.1: Ngân hàng 20 tình huống sư phạm thực tế ở trường phổ thông',
+        title:
+          'Thực hành 1: Phân tích và giải quyết 20 tình huống sư phạm thực tế theo quy trình 5 bước (Ngân hàng 20 tình huống sư phạm)',
         description:
-          'Quy trình khoa học 5 bước xử lý tình huống giáo dục và tuyển tập 20 tình huống sư phạm điển hình (chống đối, yêu sớm, bạo lực học đường, mất cắp, mâu thuẫn CMHS) kèm phương án chuẩn.',
+          'Vận dụng hệ thống 6 nguyên tắc hoạt động giáo dục và quy trình 5 bước (Mục 3.3.6 Giáo trình HCMUE tr. 65–66) để phân tích, xử lí 20 tình huống sư phạm điển hình ở trường phổ thông.',
         level: 'advanced',
         tags: [
-          'Tình huống sư phạm',
+          'CLO4',
+          'CLO5',
+          'Thực hành 1',
+          '20 Tình huống sư phạm',
           'Quy trình 5 bước',
-          'Rubric A.1.2',
-          'Kỷ luật tích cực',
-          'CLO 1',
-          'CLO 2',
-          'CLO 3',
+          'Giáo trình tr. 65-66',
         ],
       },
       lessonMeta: {
@@ -2585,12 +3128,17 @@ export function getChapter6LessonModule(lessonId: string): CompiledLessonModule 
         headings: [
           {
             id: '1-quy-trinh-khoa-hoc-5-buoc',
-            text: '1. Quy trình Khoa học 5 Bước Xử lý Tình huống Sư phạm (HCMUE)',
+            text: '1. Quy trình Khoa học 5 Bước Xử lý Tình huống Sư phạm (Giáo trình HCMUE tr. 65–66)',
             depth: 2,
           },
           {
             id: '2-ngan-hang-20-tinh-huong',
-            text: '2. Ngân hàng 20 Tình huống Sư phạm Thực tế & Phương án Chuẩn',
+            text: '2. Ngân hàng 20 Tình huống Sư phạm Thực tế & Phương án Chuẩn 5 Bước',
+            depth: 2,
+          },
+          {
+            id: '3-tinh-huong-mau-tong-hop',
+            text: '3. Mô hình Mẫu Trình bày Bài làm Xử lý Tình huống Sư phạm 5 Bước',
             depth: 2,
           },
         ],
@@ -2600,6 +3148,9 @@ export function getChapter6LessonModule(lessonId: string): CompiledLessonModule 
   }
 
   if (
+    lessonId === 'gdh-th-b2-lap-ke-hoach-giao-duc-lop-chu-nhiem-va-thiet-ke-tiet-sinh-hoat-lop' ||
+    lessonId === 'lap-ke-hoach-giao-duc-lop-chu-nhiem-va-thiet-ke-tiet-sinh-hoat-lop' ||
+    lessonId === 'thuc-hanh-2' ||
     lessonId === 'gdh-c6-b2-de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an' ||
     lessonId === 'de-cuong-cau-hoi-on-thi-tu-luan-trong-tam-va-dan-y-dap-an' ||
     lessonId === '6-2' ||
@@ -2610,18 +3161,18 @@ export function getChapter6LessonModule(lessonId: string): CompiledLessonModule 
     return {
       default: Lesson6_2View,
       frontmatter: {
-        title: 'Bài 6.2: Đề cương câu hỏi ôn thi tự luận trọng tâm & Dàn ý đáp án',
+        title:
+          'Thực hành 2: Lập kế hoạch giáo dục lớp chủ nhiệm và thiết kế tiết Sinh hoạt lớp (Đề cương câu hỏi ôn thi tự luận)',
         description:
-          'Ma trận đề thi tự luận 9 CLOs, hệ thống 10 câu hỏi tự luận kinh điển kèm dàn ý chi tiết từng thang điểm nhỏ và bộ 20 câu hỏi trắc nghiệm tương tác cuối kỳ.',
-        level: 'intermediate',
+          'Thực hành xây dựng kế hoạch giáo dục lớp chủ nhiệm theo quy trình 6 bước (Giáo trình HCMUE tr. 71–73), thiết kế kịch bản tiết Sinh hoạt lớp tự quản và hệ thống 10 câu hỏi tự luận, 20 câu trắc nghiệm ôn tập.',
+        level: 'advanced',
         tags: [
+          'CLO6',
+          'CLO7',
+          'Thực hành 2',
+          'Kế hoạch chủ nhiệm',
+          'Tiết Sinh hoạt lớp',
           'Đề cương ôn thi',
-          'Câu hỏi tự luận',
-          'Barem điểm chuẩn',
-          'Trắc nghiệm cuối kỳ',
-          'CLO 1',
-          'CLO 2',
-          'CLO 3',
         ],
       },
       lessonMeta: {
@@ -2630,7 +3181,7 @@ export function getChapter6LessonModule(lessonId: string): CompiledLessonModule 
         headings: [
           {
             id: '1-ma-tran-de-thi',
-            text: '1. Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao',
+            text: '1. Thực hành Lập Kế hoạch Giáo dục Lớp Chủ nhiệm & Ma trận Đề thi Tự luận',
             depth: 2,
           },
           {
@@ -2641,6 +3192,67 @@ export function getChapter6LessonModule(lessonId: string): CompiledLessonModule 
           {
             id: '3-trac-nghiem-on-tap',
             text: '3. Bộ 20 Câu hỏi Trắc nghiệm Khách quan Ôn tập Cuối kỳ',
+            depth: 2,
+          },
+          {
+            id: '4-tinh-huong-thuc-hanh-chu-nhiem',
+            text: '4. Tình huống Thực hành Thiết kế Tiết Sinh hoạt Lớp (CLO6, CLO7)',
+            depth: 2,
+          },
+        ],
+        blocks: [],
+      },
+    };
+  }
+
+  if (
+    lessonId === 'gdh-th-b3-thiet-ke-ke-hoach-chu-de-hoat-dong-trai-nghiem-huong-nghiep' ||
+    lessonId === 'thiet-ke-ke-hoach-chu-de-hoat-dong-trai-nghiem-huong-nghiep' ||
+    lessonId === 'thuc-hanh-3' ||
+    lessonId === 'thiet-ke-chu-de-hdtn' ||
+    lessonId === '6-3' ||
+    lessonId === 'bai-6-3' ||
+    lessonId === 'c6-b3'
+  ) {
+    return {
+      default: Lesson6_3View,
+      frontmatter: {
+        title:
+          'Thực hành 3: Thiết kế kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp (Tích hợp tài liệu Mô đun 2 THCS & THPT)',
+        description:
+          'Thực hành thiết kế kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp theo quy trình chuẩn Giáo trình HCMUE (tr. 116–124) kết hợp Tài liệu bồi dưỡng giáo viên cốt cán Mô đun 2 cấp THCS & THPT và Rubric đánh giá thực hành.',
+        level: 'advanced',
+        tags: [
+          'CLO8',
+          'CLO9',
+          'Thực hành 3',
+          'Mô đun 2 THCS & THPT',
+          'Kế hoạch chủ đề HĐTN',
+          'Giáo trình tr. 110-124',
+        ],
+      },
+      lessonMeta: {
+        chapterNumber: 6,
+        lessonNumber: 3,
+        headings: [
+          {
+            id: '1-doi-sanh-mo-dun-2-thcs-thpt',
+            text: '1. Tích hợp Tài liệu Mô đun 2: Đặc thù Thiết kế Chủ đề HĐTN, HN cấp THCS và THPT',
+            depth: 2,
+          },
+          {
+            id: '2-quy-trinh-va-rubric-chu-de-hdtn',
+            text: '2. Tiến trình 4 Hoạt động Trải nghiệm & Bảng Rubric Đánh giá Thực hành 3',
+            depth: 2,
+          },
+          {
+            id: '3-ke-hoach-chu-de-hdtn-mau',
+            text: '3. Hồ sơ Kế hoạch Chủ đề Hoạt động Trải nghiệm, Hướng nghiệp Mẫu (Chuẩn Mô đun 2)',
+            depth: 2,
+          },
+          {
+            id: '4-tinh-huong-thuc-hanh-hdtn',
+            text: '4. Tình huống Thực hành Điều chỉnh Kế hoạch Chủ đề HĐTN, HN (CLO8, CLO9)',
             depth: 2,
           },
         ],

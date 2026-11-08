@@ -44,41 +44,41 @@ export function CaseStudyBox({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition-all hover:border-stone-300 sm:p-6',
+        'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-xs transition-all hover:border-[#718C7E] sm:p-6',
         className,
       )}
     >
       {/* Tiêu đề tình huống */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 pb-3.5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#CFDADB] pb-3.5">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-800 text-xs font-bold text-white shadow-2xs">
-            {caseStudy.id}
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#3F6570] font-serif text-xs font-bold text-white shadow-2xs">
+            {String(caseStudy.id).padStart(2, '0')}
           </span>
-          <h3 className="text-base font-bold text-stone-900 sm:text-lg">
+          <h3 className="font-serif text-base font-bold text-[#29383D] sm:text-lg">
             Tình huống {caseStudy.id}: {caseStudy.title}
           </h3>
         </div>
 
         <Badge
           variant="neutral"
-          className="border-amber-200/80 bg-amber-50 text-xs font-medium text-amber-900"
+          className="border-[#718C7E]/40 bg-[#E8EFEB] text-xs font-medium text-[#29383D]"
         >
-          Thực hành Sư phạm
+          Thực hành Sư phạm 5 Bước
         </Badge>
       </div>
 
       {/* Mô tả bối cảnh tình huống */}
-      <div className="mt-4 rounded-xl border border-amber-800/15 bg-gradient-to-br from-[#fcfbf7] to-amber-50/30 p-4 text-sm leading-relaxed text-stone-800">
-        <div className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-amber-900 uppercase">
-          <BookOpen className="h-4 w-4" aria-hidden="true" />
+      <div className="mt-4 rounded-xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-4 text-sm leading-relaxed text-[#29383D]">
+        <div className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#3F6570] uppercase">
+          <BookOpen className="h-4 w-4 text-[#718C7E]" aria-hidden="true" />
           <span>Bối cảnh tình huống thực tế</span>
         </div>
-        <p className="mt-2 leading-relaxed text-stone-700">{caseStudy.context}</p>
+        <p className="mt-2 leading-relaxed text-[#29383D]">{caseStudy.context}</p>
       </div>
 
       {/* Câu hỏi phản tư */}
-      <div className="mt-4 flex items-start gap-2 text-sm font-semibold text-stone-900">
-        <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
+      <div className="mt-4 flex items-start gap-2 text-sm font-semibold text-[#29383D]">
+        <HelpCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#3F6570]" aria-hidden="true" />
         <p>{caseStudy.question}</p>
       </div>
 
@@ -86,10 +86,9 @@ export function CaseStudyBox({
       <div className="mt-3 space-y-2">
         <label
           htmlFor={`reflection-${caseStudy.id}`}
-          className="block text-xs font-medium text-stone-600"
+          className="block text-xs font-medium text-[#55676B]"
         >
-          ✍️ Phản tư cá nhân: Thầy/Cô sẽ xử lý tình huống này như thế nào trước khi xem lời giải
-          mẫu?
+          Phản tư cá nhân: Thầy/Cô sẽ xử lý tình huống này như thế nào trước khi xem lời giải mẫu?
         </label>
         <textarea
           id={`reflection-${caseStudy.id}`}
@@ -97,10 +96,10 @@ export function CaseStudyBox({
           value={reflectionText}
           onChange={(e) => setReflectionText(e.target.value)}
           placeholder="Nhập suy nghĩ, bước xử lý hoặc nguyên tắc mà bạn sẽ áp dụng..."
-          className="w-full rounded-xl border border-stone-200 bg-stone-50/60 p-3 text-xs leading-relaxed text-stone-800 placeholder:text-stone-400 focus:border-amber-700 focus:bg-white focus:outline-none"
+          className="w-full rounded-xl border border-[#CFDADB] bg-white p-3 text-xs leading-relaxed text-[#29383D] placeholder:text-[#55676B]/60 focus:border-[#3F6570] focus:bg-white focus:outline-none"
         />
         <div className="flex items-center justify-between text-xs">
-          <span className="text-stone-400">
+          <span className="text-[#55676B]">
             {reflectionText.length > 0 ? `${reflectionText.length} ký tự` : 'Chưa nhập phản tư'}
           </span>
           <div className="flex items-center gap-2">
@@ -109,9 +108,9 @@ export function CaseStudyBox({
                 variant="outline"
                 size="sm"
                 onClick={handleSaveReflection}
-                className="h-7 text-xs text-stone-600"
+                className="h-7 border-[#CFDADB] text-xs text-[#29383D]"
               >
-                <span>{savedReflection ? '✓ Đã ghi nhận' : 'Lưu phản tư'}</span>
+                <span>{savedReflection ? 'Đã ghi nhận' : 'Lưu phản tư'}</span>
               </Button>
             )}
             <Button
@@ -121,7 +120,7 @@ export function CaseStudyBox({
               className="h-7 gap-1 text-xs"
             >
               <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{showSolution ? 'Thu gọn gợi ý' : '📝 Xem gợi ý xử lý chuẩn'}</span>
+              <span>{showSolution ? 'Thu gọn gợi ý' : 'Xem gợi ý xử lý chuẩn'}</span>
               <ChevronDown
                 className={cn(
                   'h-3.5 w-3.5 transition-transform duration-200',
@@ -136,17 +135,17 @@ export function CaseStudyBox({
 
       {/* Khung Hướng dẫn xử lý chuẩn & Cơ sở lý luận */}
       {showSolution && (
-        <div className="mt-5 space-y-4 rounded-xl border border-stone-200 bg-stone-50/50 p-4.5 sm:p-5">
+        <div className="mt-5 space-y-4 rounded-xl border border-[#CFDADB] bg-[#E1E9EA]/55 p-4.5 sm:p-5">
           {/* Nguyên tắc sư phạm vận dụng */}
           <div>
-            <span className="block text-xs font-bold tracking-wider text-stone-700 uppercase">
-              🎯 Cơ sở lý luận &amp; Nguyên tắc sư phạm áp dụng
+            <span className="block text-xs font-bold tracking-wider text-[#29383D] uppercase">
+              Cơ sở lý luận &amp; Nguyên tắc sư phạm áp dụng
             </span>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {caseStudy.principlesApplied.map((principle, idx) => (
                 <span
                   key={`principle-${idx}`}
-                  className="rounded-md border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-800"
+                  className="rounded-md border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 text-xs font-medium text-[#29383D]"
                 >
                   {principle}
                 </span>
@@ -156,23 +155,23 @@ export function CaseStudyBox({
 
           {/* Quy trình 5 bước xử lý khoa học */}
           <div className="space-y-2.5">
-            <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-stone-700 uppercase">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" aria-hidden="true" />
-              <span>Quy trình 5 bước xử lý khoa học</span>
+            <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#29383D] uppercase">
+              <CheckCircle2 className="h-4 w-4 text-[#4F7967]" aria-hidden="true" />
+              <span>Quy trình 5 bước xử lý khoa học (Mục 3.3.6 Giáo trình HCMUE)</span>
             </span>
 
             <div className="space-y-2">
               {caseStudy.solutionSteps.map((step) => (
                 <div
                   key={`step-${step.step}`}
-                  className="flex items-start gap-3 rounded-lg border border-stone-200/80 bg-white p-3 text-xs leading-relaxed"
+                  className="flex items-start gap-3 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3.5 text-xs leading-relaxed"
                 >
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 font-bold text-amber-900">
-                    {step.step}
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[#E8EFEB] font-serif text-xs font-bold text-[#3F6570]">
+                    {String(step.step).padStart(2, '0')}
                   </span>
                   <div>
-                    <h5 className="font-bold text-stone-900">{step.title}</h5>
-                    <p className="mt-1 text-stone-600">{step.content}</p>
+                    <h5 className="font-bold text-[#29383D]">{step.title}</h5>
+                    <p className="mt-1 text-[#55676B]">{step.content}</p>
                   </div>
                 </div>
               ))}
@@ -181,12 +180,12 @@ export function CaseStudyBox({
 
           {/* Bẫy sư phạm cần tránh */}
           {caseStudy.pitfallsToAvoid.length > 0 && (
-            <div className="rounded-lg border border-rose-200 bg-rose-50/60 p-3 text-xs text-rose-900">
-              <div className="flex items-center gap-1.5 font-bold text-rose-800">
+            <div className="rounded-xl border border-[#A65D59]/35 bg-[#A65D59]/8 p-3.5 text-xs text-[#29383D]">
+              <div className="flex items-center gap-1.5 font-bold text-[#A65D59]">
                 <AlertTriangle className="h-4 w-4" aria-hidden="true" />
-                <span>⚠️ Bẫy sư phạm thường gặp (Tuyệt đối tránh)</span>
+                <span>Bẫy sư phạm thường gặp (Tuyệt đối tránh)</span>
               </div>
-              <ul className="mt-1.5 list-disc space-y-1 pl-5 text-rose-800/90">
+              <ul className="mt-1.5 list-disc space-y-1 pl-5 text-[#29383D]">
                 {caseStudy.pitfallsToAvoid.map((pitfall, pIdx) => (
                   <li key={`pitfall-${pIdx}`}>{pitfall}</li>
                 ))}
@@ -195,10 +194,10 @@ export function CaseStudyBox({
           )}
 
           {/* Bài học cốt lõi */}
-          <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50/70 p-3 text-xs text-amber-950">
-            <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-amber-800" aria-hidden="true" />
+          <div className="flex items-start gap-2 rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-3.5 text-xs text-[#29383D]">
+            <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-[#3F6570]" aria-hidden="true" />
             <div>
-              <span className="font-bold text-amber-900">Bài học cốt lõi: </span>
+              <span className="font-bold text-[#3F6570]">Bài học cốt lõi: </span>
               <span>{caseStudy.coreLesson}</span>
             </div>
           </div>

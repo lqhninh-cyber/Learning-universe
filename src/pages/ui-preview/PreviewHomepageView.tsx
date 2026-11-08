@@ -481,12 +481,12 @@ export const PreviewHomepageView: FC<PreviewHomepageViewProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold tracking-wider text-teal-800 uppercase">
-                    Học phần EDUT1401
+                    Học phần EDUC2802
                   </span>
-                  <span className="font-mono text-xs font-bold text-teal-900">3 Tín chỉ</span>
+                  <span className="font-mono text-xs font-bold text-teal-900">04 Tín chỉ</span>
                 </div>
                 <h4 className="mt-1 text-base font-bold text-stone-900 group-hover:text-teal-950">
-                  Giáo dục học đại cương
+                  Giáo dục học
                 </h4>
                 <p className="mt-1 text-xs leading-relaxed text-stone-600">
                   Bản chất giáo dục, 6 nguyên tắc giáo dục học sinh, nghiệp vụ GVCN và hoạt động

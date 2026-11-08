@@ -65,8 +65,28 @@ export function getLessonBySlug(
     (item) =>
       item.slug === chapterSlug ||
       item.id === chapterSlug ||
+      (item.number === 1 &&
+        (chapterSlug === 'chuong-1' ||
+          chapterSlug === 'hoat-dong-su-pham-va-nguoi-giao-vien-pho-thong')) ||
+      (item.number === 2 &&
+        (chapterSlug === 'chuong-2' ||
+          chapterSlug === 'ban-chat-giao-duc-vai-tro-cua-giao-duc-va-giao-duc-hoc')) ||
+      (item.number === 3 &&
+        (chapterSlug === 'chuong-3' ||
+          chapterSlug === 'nhung-van-de-chung-ve-hoat-dong-giao-duc-o-truong-pho-thong')) ||
+      (item.number === 4 &&
+        (chapterSlug === 'chuong-4' ||
+          chapterSlug === 'cong-tac-cua-nguoi-giao-vien-chu-nhiem-lop')) ||
+      (item.number === 5 &&
+        (chapterSlug === 'chuong-5' ||
+          chapterSlug === 'to-chuc-hoat-dong-trai-nghiem-o-truong-pho-thong')) ||
       (item.number === 6 &&
-        (chapterSlug === 'chuong-6' || chapterSlug === 'chuyen-de-6' || chapterSlug === '6')),
+        (chapterSlug === 'chuong-6' ||
+          chapterSlug === 'chuyen-de-6' ||
+          chapterSlug === 'khoi-thuc-hanh' ||
+          chapterSlug === 'thuc-hanh-nghiep-vu-su-pham' ||
+          chapterSlug === 'cam-nang-xu-ly-tinh-huong-su-pham-va-de-cuong-on-tap' ||
+          chapterSlug === '6')),
   );
   if (!chapter) {
     return undefined;
@@ -81,14 +101,23 @@ export function getLessonBySlug(
         (lessonSlug === '6-1' ||
           lessonSlug === 'bai-6-1' ||
           lessonSlug === 'c6-b1' ||
+          lessonSlug === 'thuc-hanh-1' ||
           lessonSlug === 'bai-1' ||
           lessonSlug === '1')) ||
       (item.number === 2 &&
         (lessonSlug === '6-2' ||
           lessonSlug === 'bai-6-2' ||
           lessonSlug === 'c6-b2' ||
+          lessonSlug === 'thuc-hanh-2' ||
           lessonSlug === 'bai-2' ||
-          lessonSlug === '2')),
+          lessonSlug === '2')) ||
+      (item.number === 3 &&
+        (lessonSlug === '6-3' ||
+          lessonSlug === 'bai-6-3' ||
+          lessonSlug === 'c6-b3' ||
+          lessonSlug === 'thuc-hanh-3' ||
+          lessonSlug === 'bai-3' ||
+          lessonSlug === '3')),
   );
   if (!lesson) {
     return undefined;

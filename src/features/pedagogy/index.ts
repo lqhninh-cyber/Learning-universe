@@ -1,4 +1,4 @@
-export { LegalQuoteCard, type LegalQuoteCardProps } from './LegalQuoteCard';
+export { LegalQuoteCard, LegalReferenceBox, type LegalQuoteCardProps } from './LegalQuoteCard';
 export { CaseStudyBox, type CaseStudyBoxProps } from './CaseStudyBox';
 export { PrincipleMatrix, type PrincipleMatrixProps } from './PrincipleMatrix';
 export { ScholarQuote, type ScholarQuoteProps } from './ScholarQuote';
@@ -18,3 +18,13 @@ export {
   type SampleYearTemplate,
   type TT20CriterionItem,
 } from './personal-plan-data';
+export {
+  PedagogyMetadataBar,
+  type PedagogyMetadataBarProps,
+  ComparativeTable,
+  type ComparativeTableProps,
+  type ComparativeTableColumn,
+  NumberedProcessFlow,
+  type NumberedProcessFlowProps,
+  type ProcessFlowStep,
+} from './PedagogyLessonBlocks';

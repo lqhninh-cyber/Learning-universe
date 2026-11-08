@@ -199,7 +199,7 @@ const COURSE_CODE_BY_SLUG: Readonly<Record<string, string>> = {
   'cau-truc-dai-so': 'MATH1301',
   'hinh-hoc-affine': 'MATH1302',
   'giai-tich-ham-mot-bien': 'MATH1303',
-  'giao-duc-hoc': 'EDUT1401',
+  'giao-duc-hoc': 'EDUC2802',
 };
 
 function buildAllSearchableItems(): readonly CommandResultItem[] {
