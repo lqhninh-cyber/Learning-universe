@@ -117,7 +117,7 @@ export const Header: FC<HeaderProps> = ({ className }) => {
         ref={capsuleRef}
         className={cn(
           'lu-site-header fixed top-4 left-1/2 z-40 flex h-14 w-[94%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full border border-[#CFDADB] bg-[#F7FAFA]/85 px-6 text-[#29383D] shadow-sm backdrop-blur-xl transition-all duration-300 md:top-5 md:h-15 print:hidden',
-          isScrolled && 'border-[#CFDADB] bg-[#F7FAFA]/95',
+          isScrolled && 'border-[#CFDADB] bg-[#F7FAFA]/95 shadow-md',
           className,
         )}
       >

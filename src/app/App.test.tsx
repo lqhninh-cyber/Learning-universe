@@ -52,17 +52,28 @@ describe('App routing smoke test', () => {
     expect(calculusLinks[0]).toHaveAttribute('href', '/mon-hoc/giai-tich-ham-mot-bien');
   });
 
-  it('hiển thị đầy đủ 3 Screen của trang chủ Cinematic & Không gian Học phần', async () => {
+  it('hiển thị đầy đủ kiến trúc trang chủ The Living Atlas (4-Layer Hero, Spatial Subject Gallery, My Learning Orbit & Knowledge Thread)', async () => {
     renderWithProviders('/');
 
-    // 1. Screen 1 — The Opening (Full-bleed 100vw x 100vh + Horizontal Blinds Mask)
+    // 1. Hero Section — THE KNOWLEDGE UNIVERSE (4 Tầng không gian) & The Knowledge Thread
     expect(await screen.findByRole('heading', { name: /LEARNING UNIVERSE/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Tri thức không có biên giới/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/LEARNING UNIVERSE \/ 2026 · A SPACE FOR KNOWLEDGE/i),
+    ).toBeInTheDocument();
     expect(screen.getByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).toBeInTheDocument();
     expect(screen.getByText(/04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026/i)).toBeInTheDocument();
-    expect(screen.getByTestId('horizontal-blinds-mask')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Khám phá Không gian Tri thức/i })).toHaveAttribute(
+    expect(screen.getByTestId('the-knowledge-thread')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-spatial-structure')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Khám phá không gian tri thức/i })).toHaveAttribute(
       'href',
       '#khong-gian-mon-hoc',
+    );
+    expect(screen.getByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i })).toHaveAttribute(
+      'href',
+      '/glossary',
     );
 
     // Đảm bảo không lộ các nhãn nội bộ
@@ -70,14 +81,17 @@ describe('App routing smoke test', () => {
     expect(screen.queryByText(/SCREEN 02/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Cảnh quan hiện tại/i)).not.toBeInTheDocument();
 
-    // 2. Screen 2 — Không gian Học phần (Bộ lọc phân nhánh & Tìm kiếm nhanh)
+    // 2. Spatial Subject Gallery (3 Tabs phân loại & DUY NHẤT 01 ô tìm kiếm thông minh)
     expect(screen.getByRole('heading', { name: /Không gian Học phần/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Tất cả/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Toán học/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Khoa học Giáo dục/i })).toBeInTheDocument();
-    expect(
-      screen.getByRole('searchbox', { name: /Tìm kiếm môn học hoặc bài học/i }),
-    ).toBeInTheDocument();
+
+    const searchboxes = screen.getAllByRole('searchbox', {
+      name: /Tìm kiếm môn học hoặc bài học/i,
+    });
+    expect(searchboxes).toHaveLength(1);
+
     expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
     expect(screen.getAllByText('EDUC2802 · Khoa học Giáo dục').length).toBeGreaterThan(0);
 
@@ -85,10 +99,17 @@ describe('App routing smoke test', () => {
     expect(enterCourseLinks.length).toBe(4);
     expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
 
-    // 3. Phân cảnh "Tiếp tục học tập" theo phong cách Apple Store (3 thẻ + Ẩn danh + Không lộ link Drive tổng)
+    // 3. My Learning Orbit (Bố cục bất đối xứng 65% Hero Progress Card : 35% 2 Thẻ tiện ích)
     expect(screen.getByRole('heading', { name: /Tiếp tục học tập/i })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Tiếp tục học/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', {
+        name: /Bài 1\.1: Hoạt động sư phạm của người giáo viên/i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Tiếp tục đọc ngay/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Ngân hàng Thuật ngữ KaTeX/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Phòng Lab Hình học 3D/i })).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i }),
     ).toHaveAttribute('href', '/glossary');
