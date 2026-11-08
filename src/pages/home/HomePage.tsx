@@ -10,15 +10,7 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import {
-  type FormEvent,
-  type MouseEvent as ReactMouseEvent,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { getLessonById, getSubjects, getSubjectStats } from '@/content-runtime';
 import {
@@ -34,73 +26,10 @@ import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
+import { HeritageArtShowcase } from './HeritageArtShowcase';
+import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
 
 type HubBranchFilter = 'all' | AcademicBranch;
-
-interface HeroNodeMeta {
-  readonly slug: string;
-  readonly code: string;
-  readonly shortTitle: string;
-  readonly subtitle: string;
-  readonly branch: AcademicBranch;
-  /** Tọa độ tương đối trên khung SVG trung tâm (viewBox 0..1000 x 0..640) */
-  readonly cx: number;
-  readonly cy: number;
-  readonly anchorX: number;
-  readonly anchorY: number;
-  readonly formula: string;
-}
-
-const HERO_KNOWLEDGE_NODES: readonly HeroNodeMeta[] = [
-  {
-    slug: 'cau-truc-dai-so',
-    code: 'MATH1301',
-    shortTitle: 'Cấu trúc đại số',
-    subtitle: 'Nhóm · Vành · Trường & Đẳng cấu',
-    branch: 'math',
-    cx: 175,
-    cy: 165,
-    anchorX: 430,
-    anchorY: 270,
-    formula: 'G / ker(φ) ≅ Im(φ)',
-  },
-  {
-    slug: 'hinh-hoc-affine',
-    code: 'MATH1302',
-    shortTitle: 'Hình học Affine & Euclide',
-    subtitle: 'Phẳng con · Tâm tỉ cự & Đẳng cự',
-    branch: 'math',
-    cx: 825,
-    cy: 165,
-    anchorX: 570,
-    anchorY: 270,
-    formula: 'AB + BC = AC',
-  },
-  {
-    slug: 'giai-tich-ham-mot-bien',
-    code: 'MATH1303',
-    shortTitle: 'Giải tích hàm một biến',
-    subtitle: 'Giới hạn · Vi phân & Tích phân Riemann',
-    branch: 'math',
-    cx: 175,
-    cy: 485,
-    anchorX: 430,
-    anchorY: 370,
-    formula: '∫ f(x)dx = F(b) − F(a)',
-  },
-  {
-    slug: 'giao-duc-hoc',
-    code: 'EDUC2802',
-    shortTitle: 'Giáo dục học',
-    subtitle: 'Hoạt động sư phạm · Chủ nhiệm & HĐTN',
-    branch: 'pedagogy',
-    cx: 825,
-    cy: 485,
-    anchorX: 570,
-    anchorY: 370,
-    formula: 'CLO1–CLO9 · HCMUE',
-  },
-] as const;
 
 /**
  * Minh họa hình học không gian độc bản (Custom Spatial SVG Artwork)
@@ -503,6 +432,72 @@ function SubjectSpatialArtwork({
   );
 }
 
+/**
+ * Các trạm dừng chính (Knowledge Thread Stations) trên hành trình tri thức
+ */
+const KNOWLEDGE_THREAD_STATIONS = [
+  { cx: 720, cy: 220, threshold: 0.02, name: 'Khởi đầu Hero' },
+  { cx: 1120, cy: 860, threshold: 0.32, name: 'Spatial Subject Gallery' },
+  { cx: 320, cy: 1640, threshold: 0.68, name: 'My Learning Orbit' },
+  { cx: 720, cy: 2340, threshold: 0.92, name: 'Chân trang Tri thức' },
+] as const;
+
+/**
+ * Tính tọa độ điểm trên đường cong Bézier bậc 3: B(t) = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
+ */
+function evaluateCubicBezier(
+  p0: { x: number; y: number },
+  p1: { x: number; y: number },
+  p2: { x: number; y: number },
+  p3: { x: number; y: number },
+  t: number,
+): { x: number; y: number } {
+  const mt = 1 - t;
+  const mt2 = mt * mt;
+  const mt3 = mt2 * mt;
+  const t2 = t * t;
+  const t3 = t2 * t;
+  return {
+    x: Math.round(mt3 * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t3 * p3.x),
+    y: Math.round(mt3 * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t3 * p3.y),
+  };
+}
+
+/**
+ * Tính tọa độ chính xác của đầu dẫn (Lead Tip) theo tỷ lệ cuộn trang (0..1)
+ */
+function computeThreadTipPoint(progress: number): { x: number; y: number } {
+  const r = Math.max(0, Math.min(1, progress));
+  if (r <= 0.33) {
+    const t = r / 0.33;
+    return evaluateCubicBezier(
+      { x: 720, y: 140 },
+      { x: 720, y: 420 },
+      { x: 1120, y: 560 },
+      { x: 1120, y: 860 },
+      t,
+    );
+  }
+  if (r <= 0.66) {
+    const t = (r - 0.33) / 0.33;
+    return evaluateCubicBezier(
+      { x: 1120, y: 860 },
+      { x: 1120, y: 1160 },
+      { x: 320, y: 1320 },
+      { x: 320, y: 1640 },
+      t,
+    );
+  }
+  const t = (r - 0.66) / 0.34;
+  return evaluateCubicBezier(
+    { x: 320, y: 1640 },
+    { x: 320, y: 1920 },
+    { x: 720, y: 2080 },
+    { x: 720, y: 2380 },
+    t,
+  );
+}
+
 export function HomePage() {
   const subjects = getSubjects();
   const prefersReducedMotion = useReducedMotion();
@@ -515,12 +510,12 @@ export function HomePage() {
   const [activeBranch, setActiveBranch] = useState<HubBranchFilter>('all');
   const [hubQuery, setHubQuery] = useState('');
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
-  const [activeHeroNode, setActiveHeroNode] = useState<string>('cau-truc-dai-so');
-  const [pointerOffset, setPointerOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [pageScrollProgress, setPageScrollProgress] = useState(0);
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const threadPathRef = useRef<SVGPathElement>(null);
+  const [leadTip, setLeadTip] = useState<{ x: number; y: number }>({ x: 720, y: 140 });
 
   // Theo dõi tiến trình cuộn trang cho The Knowledge Thread (Đường dẫn tri thức xuyên suốt)
   useEffect(() => {
@@ -556,6 +551,21 @@ export function HomePage() {
     };
   }, []);
 
+  // Cập nhật vị trí đầu dẫn phát sáng (Glowing Lead Tip) theo vị trí cuộn trang
+  useEffect(() => {
+    const currentRatio = Math.max(0.14, pageScrollProgress);
+    if (threadPathRef.current && typeof threadPathRef.current.getPointAtLength === 'function') {
+      try {
+        const pt = threadPathRef.current.getPointAtLength(currentRatio * 2400);
+        setLeadTip({ x: Math.round(pt.x), y: Math.round(pt.y) });
+        return;
+      } catch {
+        // Dự phòng tính toán giải tích Bézier thuần
+      }
+    }
+    setLeadTip(computeThreadTipPoint(currentRatio));
+  }, [pageScrollProgress]);
+
   // Đóng dropdown tìm kiếm khi click ra ngoài hoặc nhấn phím Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -587,27 +597,6 @@ export function HomePage() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-
-  // Parallax nhẹ theo tọa độ chuột cho cấu trúc không gian tầng 2 của Hero
-  const handleHeroPointerMove = (event: ReactMouseEvent<HTMLElement>) => {
-    if (prefersReducedMotion) {
-      return;
-    }
-    const rect = event.currentTarget.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) {
-      return;
-    }
-    const normX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-    const normY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-    setPointerOffset({
-      x: Math.max(-1, Math.min(1, normX)),
-      y: Math.max(-1, Math.min(1, normY)),
-    });
-  };
-
-  const handleHeroPointerLeave = () => {
-    setPointerOffset({ x: 0, y: 0 });
-  };
 
   // Kết quả tìm kiếm tức thời (môn học + bài học sâu) cho ô tìm kiếm thông minh duy nhất
   const instantSearchResults = useMemo(() => searchContent(hubQuery), [hubQuery]);
@@ -655,9 +644,6 @@ export function HomePage() {
     return true;
   });
 
-  const activeNodeDetail =
-    HERO_KNOWLEDGE_NODES.find((node) => node.slug === activeHeroNode) ?? HERO_KNOWLEDGE_NODES[0]!;
-
   // Chiều dài đường dẫn The Knowledge Thread
   const threadPathLength = 2400;
   const threadDashOffset = prefersReducedMotion
@@ -681,6 +667,12 @@ export function HomePage() {
           className="h-full w-full"
           fill="none"
         >
+          <defs>
+            <filter id="thread-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
+            </filter>
+          </defs>
+
           {/* Đường dẫn nền tĩnh cực mảnh */}
           <path
             d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2380"
@@ -690,6 +682,7 @@ export function HomePage() {
           />
           {/* Đường dẫn động vẽ theo thao tác cuộn trang */}
           <path
+            ref={threadPathRef}
             d="M 720 140 C 720 420, 1120 560, 1120 860 C 1120 1160, 320 1320, 320 1640 C 320 1920, 720 2080, 720 2380"
             stroke="#3F6570"
             strokeWidth="1.75"
@@ -701,28 +694,63 @@ export function HomePage() {
             }}
           />
 
-          {/* 4 Điểm nút (Knowledge Thread Stations) sáng nhẹ khi cuộn qua từng khu vực */}
-          {[
-            { cx: 720, cy: 220, threshold: 0.02 },
-            { cx: 1120, cy: 860, threshold: 0.32 },
-            { cx: 320, cy: 1640, threshold: 0.68 },
-            { cx: 720, cy: 2340, threshold: 0.92 },
-          ].map((station, idx) => {
+          {/* Glowing Lead Tip tại đầu mút đang di chuyển của The Knowledge Thread */}
+          {!prefersReducedMotion && (
+            <g
+              className="transition-all duration-150 ease-out"
+              style={{
+                filter: 'drop-shadow(0 0 8px rgba(146, 113, 79, 0.75))',
+              }}
+            >
+              {/* Vầng hào quang ngoài */}
+              <circle cx={leadTip.x} cy={leadTip.y} r="14" fill="#92714F" fillOpacity="0.18" />
+              {/* Vầng hào quang giữa */}
+              <circle cx={leadTip.x} cy={leadTip.y} r="7" fill="#92714F" fillOpacity="0.38" />
+              {/* Hạt nhân phát sáng 6px */}
+              <circle
+                cx={leadTip.x}
+                cy={leadTip.y}
+                r="3.5"
+                fill="#92714F"
+                stroke="#F7FAFA"
+                strokeWidth="1.5"
+              />
+            </g>
+          )}
+
+          {/* 4 Điểm nút (Knowledge Thread Stations) phát xung ripple & sáng rực rỡ */}
+          {KNOWLEDGE_THREAD_STATIONS.map((station, idx) => {
             const isLit = prefersReducedMotion || pageScrollProgress >= station.threshold;
+            const isCurrentLandmark =
+              !prefersReducedMotion &&
+              pageScrollProgress >= station.threshold &&
+              pageScrollProgress < station.threshold + 0.16;
+
             return (
               <g key={idx}>
+                {/* Shockwave ripple pulse khi đầu dẫn chạm tới trạm */}
+                {isCurrentLandmark && (
+                  <circle
+                    cx={station.cx}
+                    cy={station.cy}
+                    r="16"
+                    fill="#92714F"
+                    fillOpacity="0.45"
+                    className="animate-ping"
+                  />
+                )}
                 <circle
                   cx={station.cx}
                   cy={station.cy}
-                  r={isLit ? 9 : 6}
+                  r={isLit ? 10 : 6}
                   fill={isLit ? '#92714F' : '#E1E9EA'}
-                  fillOpacity={isLit ? 0.22 : 0.4}
+                  fillOpacity={isLit ? 0.28 : 0.4}
                 />
                 <circle
                   cx={station.cx}
                   cy={station.cy}
-                  r="4"
-                  fill={isLit ? '#3F6570' : '#CFDADB'}
+                  r="4.5"
+                  fill={isLit ? '#92714F' : '#CFDADB'}
                   stroke="#F7FAFA"
                   strokeWidth="1.5"
                 />
@@ -737,8 +765,6 @@ export function HomePage() {
           ===================================================================== */}
       <section
         aria-label="Không gian Khởi đầu Learning Universe"
-        onMouseMove={handleHeroPointerMove}
-        onMouseLeave={handleHeroPointerLeave}
         className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden border-b border-[#CFDADB] bg-[#EAF0F1] pt-24 pb-10 md:pt-28 md:pb-12"
       >
         {/* LAYER 1 (Backdrop): Ho Chi Minh City / Vietnam Architectural Skyline ở độ tương phản cực thấp */}
@@ -761,7 +787,7 @@ export function HomePage() {
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#CFDADB_1px,transparent_1px),linear-gradient(to_bottom,#CFDADB_1px,transparent_1px)] bg-[size:4.5rem_4.5rem] opacity-35"
         />
 
-        {/* Container chính của Hero (Kết hợp Layer 4 Foreground Typography & Layer 2 + 3 Spatial Atlas) */}
+        {/* Container chính của Hero (Kết hợp Layer 4 Foreground Typography & Cột Trưng bày Nghệ thuật Di sản) */}
         <div className="relative z-20 mx-auto my-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
           {/* LAYER 4 (Foreground Typography & CTAs — Cột Trái 6/12) */}
           <div className="space-y-6 lg:col-span-6">
@@ -769,21 +795,26 @@ export function HomePage() {
             <div className="inline-flex items-center gap-2.5 rounded-full border border-[#CFDADB] bg-[#F7FAFA]/90 px-3.5 py-1.5 shadow-2xs">
               <span className="h-2 w-2 rounded-full bg-[#3F6570]" aria-hidden="true" />
               <span className="font-mono text-xs tracking-widest text-[#55676B] uppercase">
-                LEARNING UNIVERSE / 2026 · A SPACE FOR KNOWLEDGE
+                LEARNING UNIVERSE
               </span>
             </div>
 
-            {/* Tiêu đề chính (Serif) */}
-            <h1 className="font-serif text-4xl leading-[1.08] font-bold tracking-tight text-[#29383D] sm:text-5xl lg:text-6xl">
-              <span className="sr-only">LEARNING UNIVERSE — </span>
-              <span className="block">Tri thức không</span>{' '}
-              <span className="mt-1 block font-normal text-[#3F6570] italic">có biên giới.</span>
-            </h1>
+            {/* Tiêu đề chính (Serif) & Trích dẫn nguồn gốc */}
+            <div className="space-y-2">
+              <h1 className="font-serif text-4xl leading-[1.12] font-bold tracking-tight text-[#29383D] sm:text-5xl lg:text-6xl">
+                <span className="sr-only">LEARNING UNIVERSE — </span>
+                <span className="block">Đi một ngày đàng,</span>{' '}
+                <span className="mt-1 block font-normal text-[#3F6570] italic">
+                  học một sàng khôn.
+                </span>
+              </h1>
+              <p className="font-serif text-sm text-[#718C7E] italic">— Tục ngữ Việt Nam</p>
+            </div>
 
-            {/* Tagline */}
+            {/* Khẩu hiệu dẫn nhập (Subheading) */}
             <p className="max-w-xl text-base leading-relaxed text-[#55676B] sm:text-lg">
-              Nơi Toán học gặp gỡ Khoa học Giáo dục. Một không gian kết nối tư duy, khám phá và hành
-              trình trở thành người kiến tạo tri thức.
+              Không gian hỗ trợ Toán học và Khoa học Giáo dục, đồng hành cùng người học trên bước
+              đường học tập.
             </p>
 
             {/* Hai nút CTA đồng cấp */}
@@ -805,310 +836,13 @@ export function HomePage() {
               </Link>
             </div>
 
-            {/* Dải thông tin tọa độ nút tri thức đang tương tác */}
-            <div className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/85 p-4 backdrop-blur-md">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="rounded-md bg-[#E1E9EA] px-2 py-0.5 font-mono text-[11px] font-semibold text-[#3F6570]">
-                    {activeNodeDetail.code}
-                  </span>
-                  <span className="font-serif text-sm font-bold text-[#29383D]">
-                    {activeNodeDetail.shortTitle}
-                  </span>
-                </div>
-                <span className="font-mono text-xs text-[#92714F]">{activeNodeDetail.formula}</span>
-              </div>
-              <p className="mt-1.5 text-xs text-[#55676B]">
-                {activeNodeDetail.subtitle} — Di chuyển qua các nút trên cấu trúc không gian để khảo
-                sát mối liên kết giữa 04 học phần cốt lõi.
-              </p>
-            </div>
+            {/* Danh ngôn học thuật xoay vòng (Rotating Scholarly Quotes) */}
+            <RotatingScholarlyQuote />
           </div>
 
-          {/* LAYER 2 (Center Geometric Architecture) & LAYER 3 (4 Điểm kết nối — Cột Phải 6/12) */}
+          {/* Cột Phải (6/12): Khối Trưng bày Tác phẩm Nghệ thuật & Di sản Học thuật Đích thực */}
           <div className="relative lg:col-span-6">
-            <div
-              data-testid="hero-spatial-structure"
-              className="relative mx-auto aspect-[1000/640] w-full max-w-2xl rounded-3xl border border-[#CFDADB] bg-[#F7FAFA]/75 p-3 shadow-sm backdrop-blur-md sm:p-5"
-            >
-              {/* Nhãn góc kiến trúc */}
-              <div className="mb-2 flex items-center justify-between px-2 font-mono text-[10px] tracking-widest text-[#55676B] uppercase">
-                <span>ATLAS PROJECTION · HCMUE</span>
-                <span>10°45′42″N · 106°40′56″E</span>
-              </div>
-
-              {/* Khối SVG Tương tác kết hợp Layer 2 (Cấu trúc hình học trung tâm) & Layer 3 (4 Nút môn học) */}
-              <svg
-                viewBox="0 0 1000 640"
-                className="h-full w-full select-none"
-                role="img"
-                aria-label="Bản đồ cấu trúc không gian tri thức kết nối 4 học phần MATH1301, MATH1302, MATH1303 và EDUC2802"
-              >
-                <defs>
-                  <radialGradient id="atlas-core-glow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#3F6570" stopOpacity="0.16" />
-                    <stop offset="65%" stopColor="#5E786D" stopOpacity="0.06" />
-                    <stop offset="100%" stopColor="#EAF0F1" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-
-                {/* Hào quang kiến trúc dịu nhẹ ở tâm */}
-                <circle cx="500" cy="320" r="250" fill="url(#atlas-core-glow)" />
-
-                {/* Trục chuẩn hình học cố định */}
-                <line
-                  x1="80"
-                  y1="320"
-                  x2="920"
-                  y2="320"
-                  stroke="#CFDADB"
-                  strokeWidth="1"
-                  strokeDasharray="4 6"
-                />
-                <line
-                  x1="500"
-                  y1="40"
-                  x2="500"
-                  y2="600"
-                  stroke="#CFDADB"
-                  strokeWidth="1"
-                  strokeDasharray="4 6"
-                />
-
-                {/* LAYER 2 (Center): Khối kiến trúc hình học trừu tượng dịch chuyển parallax nhẹ */}
-                <g
-                  style={{
-                    transform: prefersReducedMotion
-                      ? undefined
-                      : `translate3d(${pointerOffset.x * 14}px, ${pointerOffset.y * 10}px, 0)`,
-                    transition: prefersReducedMotion ? 'none' : 'transform 220ms ease-out',
-                  }}
-                >
-                  {/* Vòng quỹ đạo kinh tuyến & vĩ tuyến không gian */}
-                  <circle
-                    cx="500"
-                    cy="320"
-                    r="190"
-                    fill="none"
-                    stroke="#CFDADB"
-                    strokeWidth="1.2"
-                  />
-                  <circle
-                    cx="500"
-                    cy="320"
-                    r="138"
-                    fill="none"
-                    stroke="#3F6570"
-                    strokeWidth="1.2"
-                    strokeOpacity="0.4"
-                    strokeDasharray="6 6"
-                  />
-                  <ellipse
-                    cx="500"
-                    cy="320"
-                    rx="185"
-                    ry="78"
-                    fill="none"
-                    stroke="#5E786D"
-                    strokeWidth="1.2"
-                    strokeOpacity="0.45"
-                    transform="rotate(-22 500 320)"
-                  />
-                  <ellipse
-                    cx="500"
-                    cy="320"
-                    rx="185"
-                    ry="78"
-                    fill="none"
-                    stroke="#3F6570"
-                    strokeWidth="1.2"
-                    strokeOpacity="0.45"
-                    transform="rotate(22 500 320)"
-                  />
-
-                  {/* Đa diện kiến trúc trung tâm (Isometric Octahedron / Polyhedral Core) */}
-                  <polygon
-                    points="500,175 630,270 575,425 425,425 370,270"
-                    fill="#F7FAFA"
-                    fillOpacity="0.7"
-                    stroke="#3F6570"
-                    strokeWidth="1.8"
-                  />
-                  <polygon
-                    points="500,210 595,285 550,395 450,395 405,285"
-                    fill="#E1E9EA"
-                    fillOpacity="0.6"
-                    stroke="#5E786D"
-                    strokeWidth="1.4"
-                  />
-
-                  {/* Các đường chéo cấu trúc không gian bên trong khối đa diện */}
-                  <line
-                    x1="500"
-                    y1="175"
-                    x2="500"
-                    y2="465"
-                    stroke="#3F6570"
-                    strokeWidth="1.2"
-                    strokeOpacity="0.55"
-                  />
-                  <line
-                    x1="370"
-                    y1="270"
-                    x2="630"
-                    y2="270"
-                    stroke="#3F6570"
-                    strokeWidth="1.2"
-                    strokeOpacity="0.55"
-                  />
-                  <line
-                    x1="425"
-                    y1="425"
-                    x2="630"
-                    y2="270"
-                    stroke="#92714F"
-                    strokeWidth="1.1"
-                    strokeOpacity="0.5"
-                  />
-                  <line
-                    x1="575"
-                    y1="425"
-                    x2="370"
-                    y2="270"
-                    stroke="#92714F"
-                    strokeWidth="1.1"
-                    strokeOpacity="0.5"
-                  />
-
-                  {/* Hạt nhân trung tâm (The Living Atlas Core) */}
-                  <circle
-                    cx="500"
-                    cy="320"
-                    r="22"
-                    fill="#F7FAFA"
-                    stroke="#3F6570"
-                    strokeWidth="2"
-                  />
-                  <circle cx="500" cy="320" r="7" fill="#92714F" />
-                </g>
-
-                {/* LAYER 3 (4 Điểm kết nối): Đường line SVG hữu cơ & 4 nút môn học */}
-                {HERO_KNOWLEDGE_NODES.map((node) => {
-                  const isActive = activeHeroNode === node.slug;
-                  const nodeColor = node.branch === 'pedagogy' ? '#5E786D' : '#3F6570';
-                  const controlX = (node.cx + node.anchorX) / 2;
-                  const controlY = node.cy;
-
-                  return (
-                    <g
-                      key={node.slug}
-                      onMouseEnter={() => setActiveHeroNode(node.slug)}
-                      onClick={() => void navigate(ROUTES.courseOverview(node.slug))}
-                      className="cursor-pointer"
-                    >
-                      {/* Đường line SVG mảnh kết nối hữu cơ với cấu trúc trung tâm */}
-                      <path
-                        d={`M ${node.anchorX + pointerOffset.x * 10} ${node.anchorY + pointerOffset.y * 8} Q ${controlX} ${controlY} ${node.cx} ${node.cy}`}
-                        fill="none"
-                        stroke={isActive ? '#92714F' : nodeColor}
-                        strokeWidth={isActive ? '2.2' : '1.3'}
-                        strokeDasharray={isActive ? undefined : '4 4'}
-                        strokeOpacity={isActive ? '0.95' : '0.55'}
-                      />
-
-                      {/* Vòng phản hồi quanh điểm nút */}
-                      <circle
-                        cx={node.cx}
-                        cy={node.cy}
-                        r={isActive ? 30 : 22}
-                        fill={isActive ? '#92714F' : nodeColor}
-                        fillOpacity={isActive ? 0.14 : 0.07}
-                      />
-
-                      {/* Thẻ nhãn nút tri thức trên bản đồ SVG */}
-                      <rect
-                        x={node.cx - 125}
-                        y={node.cy - 34}
-                        width="250"
-                        height="68"
-                        rx="14"
-                        fill={isActive ? '#F7FAFA' : '#F7FAFA'}
-                        stroke={isActive ? '#3F6570' : '#CFDADB'}
-                        strokeWidth={isActive ? '1.8' : '1.2'}
-                      />
-
-                      <circle
-                        cx={node.cx - 102}
-                        cy={node.cy - 8}
-                        r="5"
-                        fill={isActive ? '#92714F' : nodeColor}
-                      />
-
-                      <text
-                        x={node.cx - 88}
-                        y={node.cy - 4}
-                        fill="#3F6570"
-                        fontSize="11"
-                        fontFamily="monospace"
-                        fontWeight="bold"
-                      >
-                        {node.code}
-                      </text>
-
-                      <text
-                        x={node.cx - 16}
-                        y={node.cy - 4}
-                        fill="#55676B"
-                        fontSize="10"
-                        fontFamily="monospace"
-                      >
-                        · {node.branch === 'pedagogy' ? 'SƯ PHẠM' : 'TOÁN HỌC'}
-                      </text>
-
-                      <text
-                        x={node.cx - 102}
-                        y={node.cy + 18}
-                        fill="#29383D"
-                        fontSize="13"
-                        fontFamily="serif"
-                        fontWeight="bold"
-                      >
-                        {node.shortTitle}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
-
-              {/* Danh sách nút tương tác hỗ trợ bàn phím & thiết bị di động */}
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {HERO_KNOWLEDGE_NODES.map((node) => {
-                  const isActive = activeHeroNode === node.slug;
-                  return (
-                    <button
-                      key={node.slug}
-                      type="button"
-                      onMouseEnter={() => setActiveHeroNode(node.slug)}
-                      onFocus={() => setActiveHeroNode(node.slug)}
-                      onClick={() => void navigate(ROUTES.courseOverview(node.slug))}
-                      className={cn(
-                        'flex cursor-pointer flex-col items-start rounded-xl border px-3 py-2 text-left transition-all',
-                        isActive
-                          ? 'border-[#3F6570] bg-[#E1E9EA]/80 text-[#29383D]'
-                          : 'border-[#CFDADB] bg-[#F7FAFA]/70 text-[#55676B] hover:border-[#3F6570]/50 hover:text-[#29383D]',
-                      )}
-                    >
-                      <span className="font-mono text-[10px] font-semibold text-[#3F6570]">
-                        {node.code}
-                      </span>
-                      <span className="line-clamp-1 font-serif text-xs font-bold text-[#29383D]">
-                        {node.shortTitle}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <HeritageArtShowcase />
           </div>
         </div>
 
