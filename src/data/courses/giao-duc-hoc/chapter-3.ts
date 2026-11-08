@@ -9,8 +9,17 @@ import {
   ScholarQuote,
 } from '@/features/pedagogy';
 import { Sidenote } from '@/shared/components/Sidenote';
-import { BookOpen, Compass, HelpCircle, Layers, Scale, Sparkles, Target } from 'lucide-react';
-import { createElement, type FC } from 'react';
+import {
+  BookOpen,
+  Compass,
+  GraduationCap,
+  HelpCircle,
+  Layers,
+  Scale,
+  Sparkles,
+  Target,
+} from 'lucide-react';
+import { createElement, useState, type FC } from 'react';
 import type { PedagogicalCaseStudy } from './course';
 
 // ============================================================================
@@ -77,21 +86,22 @@ export const Lesson3_1View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C3-L1',
       clos: ['CLO3', 'CLO4'],
-      textbookPages: 'Tr. 32–39 (Chương 3, Mục 3.1)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 32 – 39)',
       legalRefs: [
-        'Luật Giáo dục 2019 (Điều 6, 9, 28, 29)',
-        'Quyết định 1981/QĐ-TTg',
-        'Thông tư 32/2018/TT-BGDĐT (CT GDPT 2018)',
+        'Luật Giáo dục 2019 (Điều 4, Điều 27, Điều 28)',
+        'Quyết định 1981/QĐ-TTg (Khung cơ cấu HTGDQD)',
+        'Nghị quyết 29-NQ/TW & NQ 88/2014/QH13',
         'Điều lệ trường học 2020 (TT 28/2020 & TT 32/2020)',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 3',
+      sessionNote: 'Mục 3.1 · Trang 32 – 39',
     }),
 
-    // PHẦN I: HỆ THỐNG GIÁO DỤC QUỐC DÂN & CHƯƠNG TRÌNH GDPT 2018 (TR. 32–36)
+    // PHẦN I: KHUNG CƠ CẤU HỆ THỐNG GIÁO DỤC QUỐC DÂN VIỆT NAM (TRANG 32 – 34)
     createElement(
       'section',
-      { id: '1-he-thong-gdqd-va-ctgdpt-2018', className: 'space-y-4' },
+      { id: '1-khung-co-cau-htgdqd', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -102,71 +112,201 @@ export const Lesson3_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Hệ thống giáo dục quốc dân và Chương trình GDPT 2018 (Giáo trình HCMUE tr. 32–36)',
+          '1. Khung Cơ cấu Hệ thống Giáo dục Quốc dân Việt Nam (Trang 32 – 34)',
+        ),
+      ),
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-3',
+        },
+        createElement(
+          'span',
+          {
+            className:
+              'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+          },
+          'Định nghĩa & Khung Pháp lý Nền tảng',
+        ),
+        createElement(
+          'p',
+          { className: 'text-sm text-[#29383D] leading-relaxed' },
+          createElement('strong', null, 'Hệ thống giáo dục quốc dân'),
+          ' là tổng thể các cơ sở giáo dục và đào tạo được phân chia thành các bậc học, cấp học, ngành học theo quy hoạch của Nhà nước nhằm thực hiện mục đích giáo dục. Theo Điều 4 Luật Giáo dục 2019 và Quyết định 1981/QĐ-TTg (2016), hệ thống giáo dục quốc dân Việt Nam được xây dựng theo mô hình ',
+          createElement('strong', { className: 'text-[#3F6570]' }, 'mở, linh hoạt và liên thông'),
+          ' giữa các cấp học và trình độ đào tạo, gồm hai tiểu hệ thống: giáo dục chính quy và giáo dục thường xuyên.',
         ),
       ),
       createElement(
         'p',
         null,
-        'Theo Điều 6 Luật Giáo dục 2019 và Quyết định số 1981/QĐ-TTg phê duyệt Khung cơ cấu hệ thống giáo dục quốc dân Việt Nam (Giáo trình HCMUE tr. 32–34), hệ thống giáo dục quốc dân là hệ thống giáo dục ',
-        createElement('strong', null, 'mở, liên thông'),
-        ' gồm giáo dục chính quy và giáo dục thường xuyên, được chia thành 4 cấp học và trình độ đào tạo: (1) Giáo dục mầm non; (2) Giáo dục phổ thông; (3) Giáo dục nghề nghiệp; (4) Giáo dục đại học.',
+        'Cơ cấu hệ thống giáo dục quốc dân Việt Nam được phân tầng khoa học thành 4 cấp học và trình độ đào tạo liên kết chặt chẽ với nhau:',
         createElement(
           Sidenote,
           { type: 'pedagogy', number: 1 },
-          'Điểm cốt lõi của Chương trình GDPT 2018 (Thông tư 32/2018/TT-BGDĐT): Chuyển từ nền giáo dục nặng về truyền thụ kiến thức ("Học sinh biết được gì?") sang nền giáo dục phát triển toàn diện phẩm chất và năng lực ("Học sinh làm được gì từ những điều đã biết?").',
+          'Nguyên tắc liên thông: Giáo dục thường xuyên thực hiện chương trình tương đương giáo dục phổ thông, đảm bảo quyền học tập suốt đời và chuyển tiếp linh hoạt sang giáo dục nghề nghiệp.',
         ),
       ),
-      createElement(LegalReferenceBox, {
-        lawTitle: 'Luật Giáo dục 2019 & Quyết định 1981/QĐ-TTg',
-        article: 'Điều 28. Cấp học và độ tuổi của giáo dục phổ thông',
-        quote:
-          'Các cấp học và độ tuổi của giáo dục phổ thông được quy định như sau: a) Giáo dục tiểu học được thực hiện trong 05 năm học, từ lớp một đến hết lớp năm (trẻ em vào học lớp một là 06 tuổi); b) Giáo dục trung học cơ sở được thực hiện trong 04 năm học, từ lớp sáu đến hết lớp chín (học sinh vào lớp sáu là 11 tuổi); c) Giáo dục trung học phổ thông được thực hiện trong 03 năm học, từ lớp mười đến hết lớp mười hai (học sinh vào lớp mười là 15 tuổi).',
-        source: 'Luật Giáo dục số 43/2019/QH14 (Giáo trình HCMUE tr. 33–34)',
-        significance:
-          'Quy định khung thời gian 12 năm giáo dục phổ thông, chia thành 2 giai đoạn rõ rệt trong Chương trình GDPT 2018.',
-      }),
-
       createElement(ComparativeTable, {
         title:
-          'Bảng Đối sánh 2 Giai đoạn Giáo dục trong Chương trình GDPT 2018 (Thông tư 32/2018/TT-BGDĐT — Tr. 34–36)',
+          'Bảng Ma trận Phân tầng Cấp học và Trình độ Đào tạo trong Hệ thống Giáo dục Quốc dân (QĐ 1981/QĐ-TTg)',
         subtitle:
-          'Phân định mục tiêu, cấp học và định hướng nội dung giữa Giai đoạn giáo dục cơ bản và Giai đoạn giáo dục định hướng nghề nghiệp.',
-        badge: 'CT GDPT 2018 · Thông tư 32/2018',
+          'Cấu trúc phân tầng các cấp học, độ tuổi và văn bằng chứng chỉ tương ứng theo chuẩn Giáo trình HCMUE (Trang 32 – 34).',
+        badge: 'Khung Cơ cấu QĐ 1981/QĐ-TTg',
         columns: [
-          { key: 'aspect', header: 'Tiêu chí đối sánh', widthClass: 'w-1/4' },
-          { key: 'basicStage', header: 'Giai đoạn Giáo dục Cơ bản (9 năm)' },
-          { key: 'careerStage', header: 'Giai đoạn Giáo dục Định hướng Nghề nghiệp (3 năm)' },
+          { key: 'level', header: 'Phân tầng cấp học', widthClass: 'w-1/4' },
+          { key: 'stages', header: 'Các cấp học & Độ tuổi quy định', widthClass: 'w-1/3' },
+          { key: 'function', header: 'Chức năng đào tạo & Định hướng phát triển' },
         ],
         rows: [
           {
-            aspect: 'Cấp học bao gồm',
-            basicStage: 'Cấp Tiểu học (Lớp 1 – Lớp 5) và Cấp Trung học cơ sở (Lớp 6 – Lớp 9).',
-            careerStage: 'Cấp Trung học phổ thông (Lớp 10 – Lớp 12).',
+            level: 'Cấp 1: Giáo dục mầm non',
+            stages: 'Nhà trẻ (3 tháng – 3 tuổi); Mẫu giáo (3 – 6 tuổi).',
+            function:
+              'Nuôi dưỡng, chăm sóc, giáo dục trẻ em; chuẩn bị tâm lý và thể chất cho trẻ bước vào lớp 1.',
           },
           {
-            aspect: 'Mục tiêu trọng tâm',
-            basicStage:
-              'Bảo đảm trang bị cho học sinh tri thức phổ thông nền tảng, toàn diện; hình thành các phẩm chất chủ yếu và năng lực cốt lõi; chuẩn bị cho việc phân luồng sau THCS.',
-            careerStage:
-              'Giúp học sinh phát triển phẩm chất, năng lực đã hình thành ở giai đoạn cơ bản; hoàn thiện học vấn phổ thông và lựa chọn môn học, chuyên đề phù hợp định hướng nghề nghiệp.',
+            level: 'Cấp 2: Giáo dục phổ thông',
+            stages:
+              'Tiểu học (5 năm, từ lớp 1; 6 tuổi); THCS (4 năm, từ lớp 6; 11 tuổi); THPT (3 năm, từ lớp 10; 15 tuổi).',
+            function:
+              'Trang bị học vấn phổ thông toàn diện; chia thành 2 giai đoạn: Giáo dục cơ bản (Lớp 1 – 9) và Giáo dục định hướng nghề nghiệp (Lớp 10 – 12).',
           },
           {
-            aspect: 'Đặc trưng tích hợp & phân hóa',
-            basicStage:
-              'Tích hợp cao ở các lớp dưới (Tiểu học), phân hóa dần ở các lớp trên (THCS); lồng ghép nội dung hướng nghiệp để học sinh tự nhận thức bản thân.',
-            careerStage:
-              'Phân hóa sâu thông qua hệ thống các môn học bắt buộc (Toán, Ngữ văn, Ngoại ngữ 1, Lịch sử, GDTC, GDQP-AN), môn học lựa chọn và các cụm chuyên đề học tập.',
+            level: 'Cấp 3: Giáo dục nghề nghiệp',
+            stages: 'Sơ cấp (dưới 1 năm); Trung cấp (1 – 2 năm); Cao đẳng (2 – 3 năm).',
+            function:
+              'Đào tạo nhân lực kỹ thuật trực tiếp trong sản xuất, kinh doanh và dịch vụ; tiếp nhận phân luồng học sinh sau THCS và THPT.',
+          },
+          {
+            level: 'Cấp 4: Giáo dục đại học',
+            stages:
+              'Đại học cử nhân/kỹ sư (3 – 5 năm); Thạc sĩ định hướng nghiên cứu/ứng dụng (1 – 2 năm); Tiến sĩ (3 – 4 năm).',
+            function:
+              'Đào tạo nguồn nhân lực trình độ cao, bồi dưỡng nhân tài; nghiên cứu khoa học và phát triển công nghệ phục vụ đất nước.',
           },
         ],
-        footerNote: 'Nguồn: Thông tư 32/2018/TT-BGDĐT và Giáo trình Giáo dục học HCMUE tr. 34–36.',
+        footerNote:
+          'Nguồn đối chiếu: Luật Giáo dục 2019 (Điều 4, Điều 6) & Quyết định 1981/QĐ-TTg của Thủ tướng Chính phủ.',
       }),
     ),
 
-    // PHẦN II: CƠ CẤU TỔ CHỨC BỘ MÁY NHÀ TRƯỜNG PHỔ THÔNG THEO ĐIỀU LỆ 2020 (TR. 36–39)
+    // PHẦN II: VAI TRÒ, MỤC TIÊU VÀ ĐỊNH HƯỚNG ĐỔI MỚI GIÁO DỤC PHỔ THÔNG (TRANG 34 – 36)
     createElement(
       'section',
-      { id: '2-co-cau-to-chuc-nha-truong', className: 'space-y-4' },
+      { id: '2-vai-tro-muc-tieu-doi-moi', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Vai trò, Mục tiêu và Định hướng Đổi mới Giáo dục Phổ thông (Trang 34 – 36)',
+        ),
+      ),
+      createElement(
+        'p',
+        null,
+        'Trong hệ thống giáo dục quốc dân, giáo dục phổ thông giữ ',
+        createElement('strong', null, 'vị trí chiến lược nền tảng'),
+        ': là nền tảng văn hóa của đất nước, đơn vị cơ sở của toàn bộ hệ thống, đặt nền móng vững chắc cho việc phát triển toàn diện nhân cách thế hệ trẻ.',
+      ),
+      createElement(LegalReferenceBox, {
+        lawTitle: 'Luật Giáo dục 2019 (Luật số 43/2019/QH14)',
+        article: 'Điều 27. Mục tiêu của giáo dục phổ thông',
+        quote:
+          'Giáo dục phổ thông nhằm phát triển toàn diện cho người học về đạo đức, trí tuệ, thể chất, thẩm mỹ và các kỹ năng cơ bản, phát triển năng lực cá nhân, tính năng động và sáng tạo; hình thành nhân cách con người Việt Nam xã hội chủ nghĩa và trách nhiệm công dân; chuẩn bị cho người học tiếp tục học chương trình giáo dục đại học, giáo dục nghề nghiệp hoặc tham gia lao động, xây dựng và bảo vệ Tổ quốc.',
+        source: 'Luật Giáo dục số 43/2019/QH14 (Giáo trình HCMUE Trang 34)',
+        significance:
+          'Xác lập mục tiêu bao quát chuyển từ tiếp cận nội dung sang phát triển toàn diện nhân cách công dân.',
+      }),
+      createElement(
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-5 shadow-2xs space-y-2',
+        },
+        createElement(
+          'h4',
+          { className: 'font-serif text-base font-bold text-[#3F6570]' },
+          'Định hướng Đổi mới Căn bản theo Nghị quyết 88/2014/QH13 và Nghị quyết 29-NQ/TW',
+        ),
+        createElement(
+          'p',
+          { className: 'text-sm text-[#29383D] leading-relaxed' },
+          'Nghị quyết số 88/2014/QH13 của Quốc hội xác lập cuộc đổi mới mang tính bước ngoặt: Chuyển căn bản từ nền giáo dục ',
+          createElement('strong', null, '"nặng về truyền thụ kiến thức"'),
+          ' một chiều sang nền giáo dục ',
+          createElement(
+            'strong',
+            { className: 'text-[#3F6570]' },
+            '"phát triển toàn diện cả phẩm chất và năng lực"',
+          ),
+          ', hài hòa đức - trí - thể - mỹ; dạy chữ gắn liền với dạy người và dạy nghề.',
+        ),
+      ),
+    ),
+
+    // PHẦN III: KHUNG KẾ HOẠCH GIÁO DỤC PHỔ THÔNG 2018 (TRANG 34 – 36)
+    createElement(
+      'section',
+      { id: '3-khung-ke-hoach-gdpt-2018', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(GraduationCap, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '3. Khung Kế hoạch Giáo dục Phổ thông 2018 (Thông tư 32/2018/TT-BGDĐT, Trang 34 – 36)',
+        ),
+      ),
+      createElement(NumberedProcessFlow, {
+        title: 'Kế hoạch Phân kỳ 2 Giai đoạn Giáo dục Phổ thông 2018',
+        subtitle:
+          'Quy định chi tiết thời gian thực học 35 tuần/năm và cấu trúc môn học theo Thông tư 32/2018/TT-BGDĐT.',
+        badge: 'Kế hoạch GDPT 2018',
+        columns: 1,
+        steps: [
+          {
+            number: 1,
+            title: 'Giai đoạn Giáo dục cơ bản (Lớp 1 đến Lớp 9)',
+            description:
+              'Thực hiện giáo dục toàn diện, tích hợp cao ở Tiểu học và phân hóa dần ở THCS; bắt buộc chung thống nhất trên toàn quốc; trang bị tri thức nền tảng vững chắc và thực hiện phân luồng sau THCS.',
+            keyAction:
+              'Tổ chức dạy học tích hợp (KHTN, Lịch sử và Địa lí) và hoạt động trải nghiệm bắt buộc.',
+            deliverable:
+              'Học sinh hoàn thành giáo dục cơ bản có đủ năng lực học vấn để vào THPT hoặc học nghề.',
+          },
+          {
+            number: 2,
+            title: 'Giai đoạn Giáo dục định hướng nghề nghiệp (Lớp 10 đến Lớp 12)',
+            description:
+              'Thực hiện giáo dục phân hóa sâu; học sinh học các môn bắt buộc chung (Ngữ văn, Toán, Ngoại ngữ 1, Lịch sử, GDTC, GDQPAN, HĐTN-HN, GD địa phương) và tự chọn 4 môn từ nhóm môn lựa chọn + 3 cụm chuyên đề học tập (35 tiết/năm/môn) phù hợp sở trường và định hướng nghề nghiệp.',
+            keyAction:
+              'Tư vấn hướng nghiệp, sắp xếp các tổ hợp môn lựa chọn và cụm chuyên đề học tập theo nguyện vọng.',
+            deliverable:
+              'Học sinh phát triển năng lực chuyên sâu, sẵn sàng bước vào đại học, cao đẳng hoặc thị trường lao động.',
+          },
+        ],
+      }),
+      createElement(
+        'p',
+        { className: 'text-xs text-[#55676B] italic' },
+        'Quy chuẩn thời gian: Toàn bộ các cấp học phổ thông thực hiện 35 tuần thực học/năm học; các nhà trường chủ động tổ chức dạy 1 buổi/ngày hoặc 2 buổi/ngày nhưng đều phải bảo đảm hoàn thành đầy đủ nội dung bắt buộc chung.',
+      ),
+    ),
+
+    // PHẦN IV: CƠ CẤU TỔ CHỨC BỘ MÁY NHÀ TRƯỜNG PHỔ THÔNG (ĐIỀU LỆ 2020, TRANG 36 – 39)
+    createElement(
+      'section',
+      { id: '4-co-cau-to-chuc-nha-truong', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -177,75 +317,73 @@ export const Lesson3_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Cơ cấu tổ chức bộ máy nhà trường phổ thông theo Điều lệ trường học 2020 (Tr. 36–39)',
+          '4. Cơ cấu Tổ chức Bộ máy Nhà trường Phổ thông theo Điều lệ 2020 (Trang 36 – 39)',
         ),
       ),
-      createElement(
-        'p',
-        null,
-        'Theo Điều lệ trường THCS, trường THPT và trường phổ thông có nhiều cấp học (Thông tư số 32/2020/TT-BGDĐT) và Điều lệ trường Tiểu học (Thông tư số 28/2020/TT-BGDĐT), bộ máy tổ chức của nhà trường phổ thông được vận hành đồng bộ giữa các thiết chế quản trị, chuyên môn và đoàn thể (Giáo trình HCMUE tr. 36–39):',
-      ),
-      createElement(NumberedProcessFlow, {
-        title: 'Cấu trúc 6 Khối Thiết chế trong Bộ máy Tổ chức Nhà trường Phổ thông (Điều lệ 2020)',
+      createElement(ComparativeTable, {
+        title:
+          'Bảng Cơ cấu Tổ chức Bộ máy Nhà trường Phổ thông theo Điều lệ Trường học 2020 (Trang 36 – 39)',
         subtitle:
-          'Hệ thống các thành phần tổ chức và chức năng điều hành trong nhà trường phổ thông (Giáo trình HCMUE tr. 36–39).',
-        badge: 'Điều lệ Trường học 2020',
-        columns: 2,
-        steps: [
+          'Quy định pháp lý về chức năng, thẩm quyền của các khối thiết chế trong nhà trường phổ thông (Thông tư 32/2020/TT-BGDĐT).',
+        badge: 'Cơ cấu Tổ chức Điều lệ 2020',
+        columns: [
+          { key: 'organ', header: 'Khối cơ cấu tổ chức', widthClass: 'w-1/4' },
+          { key: 'composition', header: 'Thành phần nhân sự quy định', widthClass: 'w-1/3' },
+          { key: 'function', header: 'Chức năng, nhiệm vụ và thẩm quyền' },
+        ],
+        rows: [
           {
-            number: 1,
-            title: 'Hội đồng trường (Quản trị nhà trường)',
-            description:
-              'Tổ chức quản trị nhà trường, thực hiện quyền đại diện sở hữu của nhà trường và các bên có lợi ích liên quan; quyết nghị về chiến lược, quy chế tổ chức và giám sát hoạt động của nhà trường.',
-            keyAction:
-              'Gồm Bí thư cấp ủy, Hiệu trưởng, Chủ tịch Công đoàn, Bí thư Đoàn, đại diện tổ chuyên môn và tổ văn phòng.',
+            organ: '1. Bộ máy Lãnh đạo & Quản lý',
+            composition:
+              'Cấp ủy Đảng lãnh đạo toàn diện; Hiệu trưởng (người đứng đầu, nhiệm kỳ 5 năm); các Phó Hiệu trưởng giúp việc.',
+            function:
+              'Hiệu trưởng chịu trách nhiệm cao nhất về tổ chức, quản lý chuyên môn và chất lượng giáo dục toàn diện của nhà trường.',
           },
           {
-            number: 2,
-            title: 'Hiệu trưởng và các Phó Hiệu trưởng (Điều hành)',
-            description:
-              'Hiệu trưởng là người chịu trách nhiệm tổ chức, quản lí và điều hành toàn bộ các hoạt động và chất lượng giáo dục của nhà trường; Phó Hiệu trưởng giúp việc cho Hiệu trưởng.',
-            keyAction: 'Nhiệm kỳ của Hiệu trưởng và Phó Hiệu trưởng là 05 năm.',
+            organ: '2. Hội đồng trường',
+            composition:
+              'Từ 9 đến 13 thành viên: Bí thư cấp ủy, Hiệu trưởng, Chủ tịch Công đoàn, Bí thư Đoàn, đại diện tổ chuyên môn, tổ văn phòng và chính quyền địa phương.',
+            function:
+              'Cơ quan quyền lực quyết định phương hướng hoạt động, chiến lược phát triển, huy động và giám sát việc sử dụng các nguồn lực của nhà trường.',
           },
           {
-            number: 3,
-            title: 'Các Hội đồng trong nhà trường',
-            description:
-              'Bao gồm: Hội đồng thi đua và khen thưởng; Hội đồng kỷ luật học sinh; Hội đồng tư vấn (do Hiệu trưởng thành lập khi cần thiết).',
-            keyAction:
-              'Đảm bảo tính dân chủ, khách quan và đúng quy chế trong khen thưởng, kỷ luật.',
+            organ: '3. Tổ chuyên môn',
+            composition:
+              'Gồm giáo viên bộ môn, viên chức làm công tác thư viện, thiết bị dạy học, tư vấn tâm lý học đường; có Tổ trưởng và Tổ phó.',
+            function:
+              'Sinh hoạt định kỳ ít nhất 2 tuần/lần; thực hiện kế hoạch giáo dục, đổi mới phương pháp, kiểm tra đánh giá và sinh hoạt chuyên môn theo hướng nghiên cứu bài học.',
           },
           {
-            number: 4,
-            title: 'Tổ chuyên môn và Tổ văn phòng',
-            description:
-              'Tổ chuyên môn gồm giáo viên, viên chức làm công tác thư viện, thiết bị, tư vấn học đường; sinh hoạt định kỳ ít nhất 01 lần/02 tuần để thực hiện kế hoạch giáo dục và nghiên cứu bài học.',
-            keyAction:
-              'Tổ chuyên môn là đơn vị trực tiếp quản lí chất lượng chuyên môn của giáo viên.',
+            organ: '4. Tổ văn phòng',
+            composition:
+              'Viên chức làm công tác văn thư, kế toán, thủ quỹ, y tế trường học và nhân viên bảo vệ, phục vụ.',
+            function:
+              'Bảo đảm công tác tài chính, hậu cần, y tế học đường, quản trị hồ sơ và hỗ trợ các hoạt động giáo dục trong nhà trường.',
           },
           {
-            number: 5,
-            title: 'Lớp học và Hệ thống tự quản học sinh',
-            description:
-              'Học sinh được tổ chức theo lớp học. Mỗi lớp có lớp trưởng, các lớp phó do tập thể học sinh bầu hoặc do GVCN chỉ định luân phiên; được chia thành các tổ học sinh.',
-            keyAction:
-              'Sĩ số chuẩn theo Điều lệ: Tiểu học không quá 35 HS/lớp; THCS và THPT không quá 45 HS/lớp.',
+            organ: '5. Các Hội đồng tư vấn',
+            composition:
+              'Hội đồng thi đua khen thưởng; Hội đồng kỷ luật học sinh (thành lập theo vụ việc, có đại diện Ban đại diện CMHS tham gia).',
+            function:
+              'Tham mưu, tư vấn cho Hiệu trưởng ra quyết định khen thưởng hoặc áp dụng biện pháp kỷ luật tích cực đúng quy chế.',
           },
           {
-            number: 6,
-            title: 'Tổ chức Đảng và các Đoàn thể xã hội',
-            description:
-              'Tổ chức Đảng Cộng sản Việt Nam lãnh đạo nhà trường; Công đoàn cơ sở, Đoàn TNCS Hồ Chí Minh, Đội TNTP Hồ Chí Minh và Ban đại diện cha mẹ học sinh phối hợp giáo dục toàn diện.',
-            keyAction: 'Tạo sức mạnh tổng hợp của các lực lượng giáo dục trong nhà trường.',
+            organ: '6. Tổ chức lớp học sinh',
+            composition:
+              'Lớp học là đơn vị cơ sở (Tiểu học: không quá 35 HS; Trung học: không quá 45 HS); có Ban cán sự lớp (nhiệm kỳ không quá 2 học kỳ trong 1 cấp học); các tổ/nhóm.',
+            function:
+              'Thực hiện nền nếp học tập, rèn luyện; phát huy năng lực tự quản, tinh thần hợp tác và xây dựng tập thể lớp vững mạnh.',
           },
         ],
+        footerNote:
+          'Nguồn đối chiếu: Thông tư 28/2020/TT-BGDĐT (Điều lệ Tiểu học) và Thông tư 32/2020/TT-BGDĐT (Điều lệ Trung học).',
       }),
     ),
 
-    // PHẦN III: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN V: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
     createElement(
       'section',
-      { id: '3-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '5-tinh-huong-thuc-hanh', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -256,7 +394,7 @@ export const Lesson3_1View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Tình huống Thực hành 5 Bước: Định hướng nghề nghiệp và chọn tổ hợp môn ở trường THPT',
+          '5. Tình huống Thực hành 5 Bước: Định hướng Nghề nghiệp ở Trường THPT',
         ),
       ),
       createElement(CaseStudyBox, { caseStudy: caseStudy3_1, defaultOpenSolution: false }),
@@ -265,7 +403,7 @@ export const Lesson3_1View: FC = () => {
 };
 
 // ============================================================================
-// 2. COMPONENT BÀI 3.2: BẢN CHẤT, ĐẶC ĐIỂM VÀ NGUYÊN TẮC CỦA HOẠT ĐỘNG GIÁO DỤC (TR. 39–47)
+// 2. COMPONENT BÀI 3.2: BẢN CHẤT, ĐẶC ĐIỂM VÀ NGUYÊN TẮC HOẠT ĐỘNG GIÁO DỤC (TR. 39–47)
 // ============================================================================
 
 export const Lesson3_2View: FC = () => {
@@ -328,16 +466,20 @@ export const Lesson3_2View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
-      clos: ['CLO4', 'CLO5'],
-      textbookPages: 'Tr. 39–47 (Chương 3, Mục 3.2)',
-      legalRefs: ['Giáo trình Giáo dục học HCMUE (Tr. 39–47)', 'Luật Giáo dục 2019 (Điều 3)'],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 3',
+      lessonCode: 'EDUC2802-C3-L2',
+      clos: ['CLO3', 'CLO4'],
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 39 – 47)',
+      legalRefs: [
+        'Giáo trình Giáo dục học HCMUE (Mục 3.2, Trang 39 – 47)',
+        'Luật Giáo dục 2019 (Điều 3)',
+      ],
+      sessionNote: 'Mục 3.2 · Trang 39 – 47',
     }),
 
-    // PHẦN I: BẢN CHẤT VÀ 4 ĐẶC ĐIỂM CỦA HOẠT ĐỘNG GIÁO DỤC (TR. 39–43)
+    // PHẦN I: BẢN CHẤT CỦA HOẠT ĐỘNG GIÁO DỤC (TRANG 39 – 41)
     createElement(
       'section',
-      { id: '1-ban-chat-va-4-dac-diem', className: 'space-y-4' },
+      { id: '1-ban-chat-hoat-dong-giao-duc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -348,107 +490,140 @@ export const Lesson3_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Bản chất và 4 đặc điểm của hoạt động giáo dục ở nhà trường phổ thông (Tr. 39–43)',
+          '1. Bản chất của Hoạt động Giáo dục: Tương tác Biện chứng Hai mặt (Trang 39 – 41)',
         ),
       ),
       createElement(
-        'p',
-        null,
-        'Trong Giáo dục học, khái niệm ',
-        createElement('strong', null, 'hoạt động giáo dục (theo nghĩa hẹp)'),
-        ' dùng để chỉ quá trình tác động có mục đích, có kế hoạch nhằm hình thành thế giới quan, lý tưởng, niềm tin, phẩm chất đạo đức, thái độ và các hành vi, thói quen ứng xử chuẩn mực cho học sinh (phân biệt nhưng thống chặt chẽ với quá trình dạy học).',
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-4',
+        },
         createElement(
-          Sidenote,
-          { type: 'pedagogy', number: 1 },
-          'Bản chất cốt lõi (Giáo trình HCMUE tr. 40): Hoạt động giáo dục là quá trình tổ chức cuộc sống, hoạt động và giao lưu đa dạng cho học sinh, dưới sự định hướng chủ đạo của nhà giáo dục nhằm chuyển hóa các yêu cầu, chuẩn mực xã hội thành phẩm chất và năng lực nhân cách thông qua quá trình tự giáo dục của học sinh.',
+          'span',
+          {
+            className:
+              'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+          },
+          'Bản chất Biện chứng Hai mặt',
+        ),
+        createElement(
+          'p',
+          { className: 'text-sm text-[#29383D] leading-relaxed' },
+          'Theo Giáo trình Giáo dục học HCMUE (Trang 39 – 41), hoạt động giáo dục tổng thể là sự thống nhất hữu cơ, biện chứng giữa hai mặt:',
+        ),
+        createElement(
+          'div',
+          { className: 'grid gap-4 md:grid-cols-2' },
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 space-y-2' },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#3F6570]' },
+              'Vai trò chủ đạo của Nhà giáo dục (Giáo viên)',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Định hướng mục tiêu phát triển nhân cách, thiết kế nội dung, tổ chức môi trường hoạt động và giao lưu, dẫn dắt, kiểm tra, đánh giá và điều chỉnh tác động sư phạm.',
+            ),
+          ),
+          createElement(
+            'div',
+            { className: 'rounded-xl border border-[#CFDADB] bg-[#E8EFEB]/60 p-4 space-y-2' },
+            createElement(
+              'h4',
+              { className: 'font-serif text-base font-bold text-[#3F6570]' },
+              'Tính chủ thể tích cực của Người được giáo dục (Học sinh)',
+            ),
+            createElement(
+              'p',
+              { className: 'text-sm text-[#29383D] leading-relaxed' },
+              'Tiếp nhận, hưởng ứng, tự ý thức và chủ động chuyển hóa các chuẩn mực xã hội thành niềm tin, tình cảm và hành vi thực tiễn thông qua quá trình tự rèn luyện và tự giáo dục.',
+            ),
+          ),
+        ),
+        createElement(
+          'div',
+          {
+            className: 'rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-4 text-xs text-[#55676B]',
+          },
+          createElement('strong', { className: 'text-[#29383D]' }, 'Cơ chế chuyển hóa: '),
+          'Quá trình giáo dục thực chất là quá trình xã hội hóa con người, biến các yêu cầu khách quan của xã hội thành nhu cầu chủ quan bên trong của nhân cách người học.',
         ),
       ),
-      createElement(ComparativeTable, {
-        title:
-          'Sự Thống nhất Biện chứng giữa Vai trò Chủ đạo của Giáo viên và Chủ thể Tự giáo dục của Học sinh (Tr. 40–41)',
-        subtitle:
-          'Quy luật động lực bên trong quyết định hiệu quả của mọi hoạt động giáo dục ở nhà trường phổ thông.',
-        badge: 'Bản chất Hoạt động Giáo dục',
-        columns: [
-          { key: 'dimension', header: 'Phương diện phân tích', widthClass: 'w-1/4' },
-          { key: 'teacherRole', header: 'Vai trò Chủ đạo của Nhà giáo dục (Giáo viên)' },
-          {
-            key: 'studentRole',
-            header: 'Vai trò Chủ thể Tự giáo dục của Người được giáo dục (Học sinh)',
-          },
-        ],
-        rows: [
-          {
-            dimension: 'Vị thế trong quá trình',
-            teacherRole:
-              'Thiết kế mục tiêu, lựa chọn nội dung, tổ chức môi trường hoạt động và định hướng giá trị chuẩn mực.',
-            studentRole:
-              'Trực tiếp tham gia hoạt động, trải nghiệm cảm xúc, lựa chọn giá trị và tự điều chỉnh hành vi của bản thân.',
-          },
-          {
-            dimension: 'Cơ chế chuyển hóa nội tâm',
-            teacherRole:
-              'Đưa các chuẩn mực đạo đức, pháp luật, văn hóa xã hội từ bên ngoài đến với nhận thức của học sinh.',
-            studentRole:
-              'Nội tâm hóa các chuẩn mực xã hội thành niềm tin đạo đức, động cơ và thói quen hành vi bền vững.',
-          },
-          {
-            dimension: 'Tiêu chí thành công',
-            teacherRole:
-              'Chuyển dần từ sự kiểm soát bên ngoài của giáo viên sang năng lực tự quản, tự kiểm soát của học sinh.',
-            studentRole:
-              'Hình thành năng lực tự nhận thức, tự đánh giá và tự rèn luyện suốt đời ("Giáo dục biến thành tự giáo dục").',
-          },
-        ],
-      }),
+    ),
 
+    // PHẦN II: 4 ĐẶC ĐIỂM CỐT LÕI CỦA HOẠT ĐỘNG GIÁO DỤC (TRANG 41 – 43)
+    createElement(
+      'section',
+      { id: '2-bon-dac-diem-hoat-dong-giao-duc', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Layers, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '2. Bốn Đặc điểm Cốt lõi của Hoạt động Giáo dục (Giáo trình HCMUE Trang 41 – 43)',
+        ),
+      ),
       createElement(NumberedProcessFlow, {
-        title: '4 Đặc điểm Đặc trưng của Hoạt động Giáo dục ở Nhà trường Phổ thông (Tr. 41–43)',
+        title: 'Hệ thống 4 Đặc điểm Đặc trưng Chi phối Tiến trình Sư phạm',
         subtitle:
-          'Bốn tính chất đặc thù đòi hỏi người giáo viên phải kiên trì, đồng bộ và linh hoạt khi tổ chức giáo dục học sinh.',
+          'Bốn quy luật vận động đòi hỏi tính bền bỉ, linh hoạt và nghệ thuật đối xử của người giáo viên (Trang 41 – 43).',
         badge: '4 Đặc điểm Hoạt động Giáo dục',
-        columns: 2,
+        columns: 1,
         steps: [
           {
             number: 1,
-            title: 'Diễn ra dưới những tác động phức hợp của nhiều lực lượng',
+            title: '01. Tính mục đích',
             description:
-              'Học sinh cùng lúc chịu tác động từ nhà trường, gia đình, nhóm bạn bè, cộng đồng xã hội và truyền thông mạng xã hội (có cả tác động tích cực tự giác và tác động tiêu cực tự phát).',
+              'Mọi tác động sư phạm đều phải quy tụ về mô hình nhân cách cần đào tạo theo yêu cầu thời đại; mục đích là sợi chỉ đỏ định hướng toàn bộ nội dung, phương pháp và hình thức tổ chức giáo dục.',
             keyAction:
-              'Nhà trường phải giữ vai trò chủ đạo để thống nhất các tác động tích cực và trung hòa, ngăn chặn các ảnh hưởng tiêu cực.',
+              'Quán triệt mục tiêu phát triển phẩm chất, năng lực trong từng hoạt động giáo dục cụ thể.',
+            deliverable:
+              'Đảm bảo hoạt động giáo dục không bị lệch hướng hoặc rơi vào phong trào hình thức.',
           },
           {
             number: 2,
-            title: 'Mang tính lâu dài và liên tục',
+            title: '02. Tính phức hợp, lâu dài và liên tục',
             description:
-              'Sự hình thành niềm tin đạo đức và thói quen hành vi đòi hỏi thời gian rèn luyện bền bỉ, lặp đi lặp lại trong nhiều tình huống thực tiễn và cần đấu tranh khắc phục các thói quen cũ.',
+              'Học sinh chịu tác động đa chiều từ nhà trường, gia đình và xã hội (cả tác động tích cực lẫn lực nhiễu tiêu cực); nhân cách hình thành qua nhiều mâu thuẫn, đòi hỏi tác động bền bỉ, không ngắt quãng; có hiện tượng "giáo dục lại" đối với học sinh cá biệt.',
             keyAction:
-              'Kiên trì, nhẫn nại, không nóng vội đốt cháy giai đoạn và không "đánh trống bỏ dùi".',
+              'Kiên trì đồng hành, không nóng vội; thiết lập sự liên tục giữa các cấp học và môi trường sống.',
+            deliverable:
+              'Niềm tin đạo đức và thói quen hành vi được củng cố vững chắc, có sức đề kháng cao.',
           },
           {
             number: 3,
-            title: 'Mang tính cụ thể và cá biệt hóa cao',
+            title: '03. Tính cá biệt',
             description:
-              'Cùng một tác động giáo dục nhưng mỗi học sinh có hoàn cảnh sống, kinh nghiệm tâm lí, khí chất và lứa tuổi khác nhau sẽ tiếp nhận và phản ứng theo cách rất khác nhau.',
+              'Mỗi học sinh có tâm sinh lý, hoàn cảnh, kinh nghiệm sống riêng biệt nên phản ứng khác nhau trước cùng một tác động sư phạm; cấm kỵ áp đặt rập khuôn, máy móc.',
             keyAction:
-              'Thấu hiểu thế giới nội tâm của từng học sinh để lựa chọn phương thức tác động sát hợp từng cá nhân, từng tình huống.',
+              'Tìm hiểu sâu sắc hoàn cảnh và tâm lý riêng biệt của từng học sinh để cá biệt hóa tác động.',
+            deliverable: 'Phát huy tối đa tiềm năng riêng và lòng tự trọng của mỗi học sinh.',
           },
           {
             number: 4,
-            title: 'Thống nhất chặt chẽ với quá trình dạy học và tự giáo dục',
+            title: '04. Tính thống nhất hệ thống',
             description:
-              '"Dạy chữ" và "Dạy người" thống nhất hữu cơ với nhau; đồng thời hiệu quả giáo dục phụ thuộc trực tiếp vào mức độ thức tỉnh ý thức tự rèn luyện của học sinh.',
+              'Hoạt động giáo dục tổng thể thống nhất giữa hoạt động dạy học (chức năng trội là lĩnh hội tri thức, kỹ năng bộ môn) và hoạt động trải nghiệm, giáo dục ngoài giờ (chức năng trội là lĩnh hội giá trị sống, chuẩn mực xã hội).',
             keyAction:
-              'Tích hợp giáo dục phẩm chất trong từng tiết dạy bộ môn và phát huy cơ chế tự quản của học sinh.',
+              'Dạy chữ gắn liền với dạy người; lồng ghép giá trị đạo đức trong mọi tiết dạy văn hóa.',
+            deliverable: 'Sự phát triển hài hòa, toàn diện về Đức – Trí – Thể – Mỹ của người học.',
           },
         ],
       }),
     ),
 
-    // PHẦN II: HỆ THỐNG 6 NGUYÊN TẮC CỦA HOẠT ĐỘNG GIÁO DỤC (TR. 43–47)
+    // PHẦN III: BẢNG MA TRẬN HỆ THỐNG 6 NGUYÊN TẮC HOẠT ĐỘNG GIÁO DỤC (TRANG 43 – 47)
     createElement(
       'section',
-      { id: '2-sau-nguyen-tac-hoat-dong-giao-duc', className: 'space-y-4' },
+      { id: '3-sau-nguyen-tac-hoat-dong-giao-duc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -459,7 +634,7 @@ export const Lesson3_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Hệ thống 6 nguyên tắc của hoạt động giáo dục (Giáo trình HCMUE tr. 43–47)',
+          '3. Bảng Ma trận Hệ thống 6 Nguyên tắc Hoạt động Giáo dục (Giáo trình HCMUE Trang 43 – 47)',
         ),
       ),
       createElement(ScholarQuote, {
@@ -468,24 +643,75 @@ export const Lesson3_2View: FC = () => {
         author: 'A. S. Makarenko (1888 – 1939)',
         title:
           'Nhà giáo dục học lỗi lạc · Lý luận về Giáo dục Tập thể & Chủ nghĩa Nhân đạo Sư phạm',
-        source: 'Giáo trình Giáo dục học HCMUE, Chương 3, tr. 45',
+        source: 'Giáo trình Giáo dục học HCMUE, Chương 3, Trang 45',
         historicalContext:
           'Luận điểm kinh điển đặt nền móng cho Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí và Nguyên tắc giáo dục trong tập thể và bằng tập thể.',
       }),
-      createElement(
-        'p',
-        null,
-        'Các nguyên tắc của hoạt động giáo dục là một hệ thống toàn vẹn gồm ',
-        createElement('strong', null, '6 nguyên tắc cơ bản'),
-        '. Người giáo viên không được tuyệt đối hóa bất kỳ nguyên tắc đơn lẻ nào mà phải vận dụng phối hợp linh hoạt trong từng tình huống sư phạm:',
-      ),
+      createElement(ComparativeTable, {
+        title: 'Bảng Ma trận Hệ thống 6 Nguyên tắc Chỉ đạo Hoạt động Giáo dục ở Trường Phổ thông',
+        subtitle:
+          'Hệ thống các nguyên tắc mang tính quy luật chỉ đạo toàn bộ hành vi sư phạm của người giáo viên (Trang 43 – 47).',
+        badge: '6 Nguyên tắc Hoạt động Giáo dục',
+        columns: [
+          { key: 'principle', header: 'Hệ thống 6 Nguyên tắc', widthClass: 'w-1/4' },
+          { key: 'essence', header: 'Bản chất lý luận sư phạm' },
+          { key: 'requirement', header: 'Yêu cầu thực thi đối với người giáo viên' },
+        ],
+        rows: [
+          {
+            principle: 'Nguyên tắc 1: Đảm bảo tính mục đích',
+            essence:
+              'Mọi hoạt động giáo dục phải quán triệt và hướng tới mục tiêu phát triển toàn diện phẩm chất và năng lực người học theo yêu cầu của xã hội.',
+            requirement:
+              'Quán triệt mục tiêu chung của hệ thống giáo dục quốc dân đến từng hoạt động cụ thể; kết hợp giữa mục tiêu môn học và mục tiêu hình thành phẩm chất.',
+          },
+          {
+            principle:
+              'Nguyên tắc 2: Gắn với thực tiễn đời sống, phối hợp Nhà trường - Gia đình - Xã hội',
+            essence:
+              'Hoạt động giáo dục phải bắt nguồn từ thực tiễn và phục vụ thực tiễn; thống nhất đồng bộ ba môi trường giáo dục.',
+            requirement:
+              'Nội dung giáo dục phải gần gũi thực tế; học sinh được trải nghiệm giải quyết vấn đề thực tế; nhà trường giữ vai trò chủ đạo liên kết 3 lực lượng.',
+          },
+          {
+            principle: 'Nguyên tắc 3: Giáo dục trong tập thể và bằng tập thể',
+            essence:
+              'Tập thể học sinh vừa là môi trường, vừa là phương tiện giáo dục hữu hiệu; dư luận tập thể lành mạnh giúp điều chỉnh hành vi cá nhân.',
+            requirement:
+              'Xây dựng tập thể lớp đoàn kết, có dư luận lành mạnh; biến tập thể vừa thành môi trường, vừa thành phương tiện tự giáo dục; kết hợp hài hòa lợi ích cá nhân và tập thể.',
+          },
+          {
+            principle: 'Nguyên tắc 4: Tôn trọng nhân cách kết hợp yêu cầu hợp lý đối với học sinh',
+            essence:
+              'Tôn trọng phẩm giá là cơ sở tạo niềm tin; yêu cầu hợp lý là động lực thúc đẩy học sinh vươn lên hoàn thiện nhân cách.',
+            requirement:
+              'Tôn trọng phẩm giá, lắng nghe học sinh, tuyệt đối không xúc phạm thân thể/tinh thần; đồng thời phải đặt ra yêu cầu cao, nghiêm túc, vừa sức để học sinh phấn đấu vươn lên.',
+          },
+          {
+            principle: 'Nguyên tắc 5: Phù hợp đặc điểm lứa tuổi và cá tính học sinh',
+            essence:
+              'Mỗi độ tuổi và mỗi cá nhân có đặc điểm tâm sinh lý, kinh nghiệm sống riêng biệt đòi hỏi tác động sư phạm thích ứng.',
+            requirement:
+              'Nắm vững tâm sinh lý lứa tuổi và hoàn cảnh cá biệt; phối hợp giữa tính vừa sức chung (đại trà) và biện pháp tác động riêng (cá biệt hóa).',
+          },
+          {
+            principle: 'Nguyên tắc 6: Đảm bảo tính hệ thống và tính liên tục',
+            essence:
+              'Nhân cách hình thành qua quá trình tích lũy liên tục; sự gián đoạn hay mâu thuẫn tác động sẽ phá vỡ thành quả giáo dục.',
+            requirement:
+              'Kế hoạch giáo dục nâng dần độ khó theo vòng xoáy ốc; tiến hành liên tục về thời gian, nhất quán về không gian; củng cố thường xuyên thành quả giáo dục.',
+          },
+        ],
+        footerNote:
+          'Nguồn đối chiếu: Giáo trình Giáo dục học HCMUE (Chương 3, Mục 3.2.3, Trang 43 – 47).',
+      }),
       createElement(PrincipleMatrix, { defaultPrincipleId: 1 }),
     ),
 
-    // PHẦN III: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN IV: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
     createElement(
       'section',
-      { id: '3-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '4-tinh-huong-thuc-hanh', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -496,7 +722,7 @@ export const Lesson3_2View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Tình huống Thực hành 5 Bước: Vận dụng 6 nguyên tắc hoạt động giáo dục',
+          '4. Tình huống Thực hành 5 Bước: Vận dụng 6 Nguyên tắc Hoạt động Giáo dục',
         ),
       ),
       createElement(CaseStudyBox, { caseStudy: caseStudy3_2, defaultOpenSolution: false }),
@@ -517,7 +743,7 @@ export const Lesson3_3View: FC = () => {
     question:
       'Vận dụng lý luận về 3 nhóm phương pháp giáo dục (đặc biệt là phương pháp Trách phạt trong nhóm Kích thích – điều chỉnh hành vi) và quy định đánh giá học sinh theo Thông tư 22/2021/TT-BGDĐT (Giáo trình HCMUE tr. 56–65), anh/chị hãy xử lí tình huống theo quy trình 5 bước.',
     principlesApplied: [
-      'Yêu cầu sư phạm khi sử dụng phương pháp Trách phạt (Giáo trình tr. 61–62)',
+      '5 Nguyên tắc vàng khi sử dụng phương pháp Trách phạt (Giáo trình tr. 61–62)',
       'Thông tư 22/2021/TT-BGDĐT: Không dùng điểm số học tập để kỷ luật hành vi đạo đức/chuyên cần',
       'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí',
     ],
@@ -558,7 +784,7 @@ export const Lesson3_3View: FC = () => {
       'Trách phạt học sinh trong lúc giáo viên đang nóng giận hoặc làm nhục học sinh trước mặt tập thể lớp.',
     ],
     coreLesson:
-      'Trong giáo dục hiện đại, khen thưởng là chủ đạo; trách phạt phải được sử dụng hết sức thận trọng, đúng quy chế pháp luật và luôn hướng tới việc khơi dậy ý thức tự sửa chữa của người học.',
+      'Trong giáo dục hiện đại, khen thưởng là chủ đạo; trách phạt phải tuân thủ 5 nguyên tắc vàng, đúng quy chế pháp luật và luôn hướng tới việc khơi dậy ý thức tự sửa chữa của người học.',
   };
 
   return createElement(
@@ -568,20 +794,80 @@ export const Lesson3_3View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C3-L3',
       clos: ['CLO4', 'CLO5'],
-      textbookPages: 'Tr. 47–65 (Chương 3, Mục 3.3.1 – 3.3.5)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 47 – 65)',
       legalRefs: [
         'Chương trình GDPT 2018 (TT 32/2018)',
         'Thông tư 27/2020/TT-BGDĐT (Đánh giá HS Tiểu học)',
         'Thông tư 22/2021/TT-BGDĐT (Đánh giá HS THCS & THPT)',
       ],
-      sessionNote: 'Lý thuyết & Thảo luận Chương 3',
+      sessionNote: 'Mục 3.3.1 – 3.3.5 · Trang 47 – 65',
     }),
 
-    // PHẦN I: MỤC TIÊU 5 PHẨM CHẤT, 10 NĂNG LỰC & KẾ HOẠCH GIÁO DỤC 3 CẤP HỌC (TR. 47–55)
+    // PHẦN I: CẤU TRÚC MỤC TIÊU THEO CT GDPT 2018 (BẢNG 3.1)
     createElement(
       'section',
-      { id: '1-pham-chat-nang-luc-va-ke-hoach-gd', className: 'space-y-4' },
+      { id: '1-cau-truc-muc-tieu-ct2018', className: 'space-y-4' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Target, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement(
+          'h3',
+          null,
+          '1. Cấu trúc Mục tiêu theo Chương trình GDPT 2018: 5 Phẩm chất & 10 Năng lực (Trang 47 – 51)',
+        ),
+      ),
+      createElement(ComparativeTable, {
+        title:
+          'Bảng 3.1: Hệ thống 5 Phẩm chất Chủ yếu và 10 Năng lực Cốt lõi theo Chương trình GDPT 2018 (Trang 48 – 51)',
+        subtitle:
+          'Mô hình chuẩn đầu ra nhân cách người học xuyên suốt từ Lớp 1 đến Lớp 12 trong Giáo trình HCMUE.',
+        badge: 'Bảng 3.1 · CT GDPT 2018',
+        columns: [
+          { key: 'category', header: 'Khối thành tố nhân cách', widthClass: 'w-1/4' },
+          {
+            key: 'components',
+            header: 'Hệ thống các thành phần chuẩn đầu ra',
+            widthClass: 'w-1/3',
+          },
+          { key: 'pathway', header: 'Con đường hình thành & Biểu hiện hành vi' },
+        ],
+        rows: [
+          {
+            category: '5 Phẩm chất chủ yếu',
+            components: '1. Yêu nước; 2. Nhân ái; 3. Chăm chỉ; 4. Trung thực; 5. Trách nhiệm.',
+            pathway:
+              'Hình thành qua nội dung dạy học đạo đức, lối sống, văn hóa học đường, lao động tự phục vụ, công ích và các hoạt động tình nguyện vì cộng đồng.',
+          },
+          {
+            category: '3 Năng lực chung',
+            components:
+              '1. Năng lực tự chủ và tự học; 2. Năng lực giao tiếp và hợp tác; 3. Năng lực giải quyết vấn đề và sáng tạo.',
+            pathway:
+              'Hình thành thông qua mọi môn học và hoạt động giáo dục ở tất cả các cấp học; là năng lực nền tảng cho việc học tập suốt đời.',
+          },
+          {
+            category: '7 Năng lực đặc thù',
+            components:
+              '1. Ngôn ngữ; 2. Tính toán; 3. Khoa học; 4. Công nghệ; 5. Tin học; 6. Thẩm mỹ; 7. Thể chất.',
+            pathway:
+              'Hình thành và phát triển chủ yếu thông qua các môn học và hoạt động giáo dục chuyên biệt tương ứng (Toán, Ngữ văn, KHTN, Tin học, Nghệ thuật, GDTC...).',
+          },
+        ],
+        footerNote:
+          'Nguồn: Chương trình GDPT 2018 Tổng thể & Giáo trình Giáo dục học HCMUE (Trang 48 – 51).',
+      }),
+    ),
+
+    // PHẦN II: KẾ HOẠCH GIÁO DỤC 3 CẤP HỌC (ĐỐI CHIẾU BẢNG 3.2, 3.3, 3.4)
+    createElement(
+      'section',
+      { id: '2-ke-hoach-giao-duc-3-cap-hoc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -592,102 +878,52 @@ export const Lesson3_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '1. Hệ thống 5 phẩm chất, 10 năng lực và Kế hoạch giáo dục Tiểu học, THCS, THPT (Tr. 47–55)',
+          '2. Kế hoạch Giáo dục 3 Cấp học theo Chương trình GDPT 2018 (Trang 51 – 55)',
         ),
       ),
-      createElement(
-        'p',
-        null,
-        'Theo Chương trình GDPT 2018 (Thông tư 32/2018/TT-BGDĐT) và Giáo trình Giáo dục học HCMUE (tr. 47–55), mục tiêu và nội dung hoạt động giáo dục ở nhà trường phổ thông tập trung hình thành và phát triển cho học sinh ',
-        createElement('strong', null, '5 phẩm chất chủ yếu'),
-        ' và ',
-        createElement('strong', null, '10 năng lực cốt lõi'),
-        ' thông qua hệ thống các môn học và hoạt động giáo dục bắt buộc theo từng cấp học.',
-      ),
-
       createElement(ComparativeTable, {
         title:
-          'Bảng Hệ thống 5 Phẩm chất Chủ yếu và 10 Năng lực Cốt lõi theo Chương trình GDPT 2018 (Tr. 48–51)',
+          'Bảng Đối chiếu Kế hoạch Giáo dục 3 Cấp học (Tiểu học, THCS, THPT — Bảng 3.2, 3.3, 3.4 Giáo trình HCMUE)',
         subtitle:
-          'Khung chuẩn đầu ra nhân cách người học xuyên suốt từ lớp 1 đến lớp 12 trong nhà trường phổ thông Việt Nam.',
-        badge: '5 Phẩm chất · 10 Năng lực',
+          'Thời lượng học tập và cơ cấu môn học bắt buộc, môn lựa chọn và hoạt động giáo dục theo từng cấp học.',
+        badge: 'Kế hoạch 3 Cấp học · CT 2018',
         columns: [
-          { key: 'category', header: 'Nhóm cấu trúc nhân cách', widthClass: 'w-1/4' },
-          { key: 'items', header: 'Các thành tố cốt lõi', widthClass: 'w-1/3' },
-          {
-            key: 'indicators',
-            header: 'Biểu hiện và con đường hình thành trong nhà trường (Tr. 48–51)',
-          },
+          { key: 'level', header: 'Cấp học phổ thông', widthClass: 'w-1/5' },
+          { key: 'timeNorm', header: 'Thời lượng & Định mức tiết', widthClass: 'w-1/4' },
+          { key: 'curriculumStructure', header: 'Cơ cấu các môn học và Hoạt động giáo dục' },
         ],
         rows: [
           {
-            category: '5 Phẩm chất chủ yếu',
-            items: '1. Yêu nước; 2. Nhân ái; 3. Chăm chỉ; 4. Trung thực; 5. Trách nhiệm.',
-            indicators:
-              'Hình thành thông qua nội dung giáo dục đạo đức, lối sống, văn hóa học đường, lao động công ích và hoạt động thiện nguyện xã hội.',
+            level: 'Cấp Tiểu học (5 năm)',
+            timeNorm:
+              '1050 tiết/năm (Lớp 4, 5); 875 tiết/năm (Lớp 1, 2); dạy học 2 buổi/ngày (không quá 7 tiết/ngày; 35 phút/tiết).',
+            curriculumStructure:
+              '10 môn học bắt buộc + 01 Hoạt động trải nghiệm (105 tiết/năm): Tiếng Việt, Toán, Đạo đức, Ngoại ngữ 1 (lớp 3–5), Tự nhiên và Xã hội (lớp 1–3), Lịch sử và Địa lí, Khoa học, Tin học và Công nghệ (lớp 3–5), GD thể chất, Nghệ thuật (Âm nhạc, Mĩ thuật).',
           },
           {
-            category: '3 Năng lực chung',
-            items:
-              '1. Năng lực tự chủ và tự học; 2. Năng lực giao tiếp và hợp tác; 3. Năng lực giải quyết vấn đề và sáng tạo.',
-            indicators:
-              'Được hình thành và phát triển thông qua tất cả các môn học và hoạt động giáo dục ở cả 3 cấp Tiểu học, THCS, THPT.',
+            level: 'Cấp THCS (4 năm)',
+            timeNorm:
+              'Khoảng 29 – 29.5 tiết/tuần; mỗi ngày học 1 buổi (không quá 5 tiết/buổi; 45 phút/tiết; khuyến khích 2 buổi/ngày).',
+            curriculumStructure:
+              'Các môn bắt buộc tích hợp: KHTN (140 tiết/năm), Lịch sử và Địa lí (105 tiết/năm), Ngữ văn, Toán, Ngoại ngữ 1, GD công dân, Công nghệ, Tin học, GD thể chất, Nghệ thuật, HĐTN-HN (105 tiết/năm), Nội dung giáo dục địa phương (35 tiết/năm).',
           },
           {
-            category: '7 Năng lực đặc thù',
-            items:
-              '4. Ngôn ngữ; 5. Tính toán; 6. Khoa học; 7. Công nghệ; 8. Tin học; 9. Thẩm mĩ; 10. Thể chất.',
-            indicators:
-              'Được hình thành và phát triển chủ yếu thông qua một số môn học và hoạt động giáo dục chuyên biệt tương ứng.',
-          },
-        ],
-      }),
-
-      createElement(ComparativeTable, {
-        title:
-          'Bảng Kế hoạch Giáo dục 3 Cấp học (Tiểu học, THCS, THPT) theo Chương trình GDPT 2018 (Tr. 51–55)',
-        subtitle:
-          'Cấu trúc các môn học, hoạt động giáo dục bắt buộc và thời lượng tổ chức theo từng cấp học.',
-        badge: 'Kế hoạch Giáo dục 3 Cấp học',
-        columns: [
-          { key: 'gradeLevel', header: 'Cấp học', widthClass: 'w-1/5' },
-          { key: 'schedule', header: 'Thời lượng học tập', widthClass: 'w-1/5' },
-          {
-            key: 'subjectsAndActivities',
-            header: 'Các môn học và hoạt động giáo dục bắt buộc / lựa chọn',
-          },
-        ],
-        rows: [
-          {
-            gradeLevel: 'Cấp Tiểu học (Lớp 1 – Lớp 5)',
-            schedule: 'Dạy học 2 buổi/ngày (mỗi ngày không quá 7 tiết; mỗi tiết 35 phút)',
-            subjectsAndActivities:
-              'Môn học & HĐGD bắt buộc: Tiếng Việt, Toán, Đạo đức, Ngoại ngữ 1 (lớp 3–5), Tự nhiên và Xã hội (lớp 1–3), Lịch sử và Địa lí, Khoa học, Tin học và Công nghệ (lớp 3–5), Giáo dục thể chất, Nghệ thuật (Âm nhạc, Mĩ thuật), Hoạt động trải nghiệm (105 tiết/năm).',
-          },
-          {
-            gradeLevel: 'Cấp THCS (Lớp 6 – Lớp 9)',
-            schedule:
-              'Mỗi ngày học 1 buổi (không quá 5 tiết/buổi; mỗi tiết 45 phút; khuyến khích 2 buổi/ngày)',
-            subjectsAndActivities:
-              'Môn học & HĐGD bắt buộc: Ngữ văn, Toán, Ngoại ngữ 1, Giáo dục công dân, Lịch sử và Địa lí, Khoa học tự nhiên, Công nghệ, Tin học, Giáo dục thể chất, Nghệ thuật, Hoạt động trải nghiệm, hướng nghiệp (105 tiết/năm), Nội dung giáo dục của địa phương (35 tiết/năm).',
-          },
-          {
-            gradeLevel: 'Cấp THPT (Lớp 10 – Lớp 12)',
-            schedule:
-              'Mỗi ngày học 1 buổi (không quá 5 tiết/buổi; mỗi tiết 45 phút; khuyến khích 2 buổi/ngày)',
-            subjectsAndActivities:
-              'Môn học & HĐGD bắt buộc: Ngữ văn, Toán, Ngoại ngữ 1, Lịch sử, Giáo dục thể chất, Giáo dục quốc phòng và an ninh, Hoạt động trải nghiệm, hướng nghiệp (105 tiết/năm), Nội dung giáo dục của địa phương (35 tiết/năm); kèm các môn học lựa chọn và 3 cụm chuyên đề học tập.',
+            level: 'Cấp THPT (3 năm)',
+            timeNorm:
+              'Khoảng 28 – 29 tiết/tuần; tổ chức dạy học phân hóa sâu theo nguyện vọng và năng lực học sinh.',
+            curriculumStructure:
+              'Bắt buộc: Ngữ văn, Toán, Ngoại ngữ 1, Lịch sử, GD thể chất, GDQPAN, HĐTN-HN (105 tiết/năm), GD địa phương (35 tiết/năm); Chọn 4 môn từ 9 môn lựa chọn (Địa lí, KT&PL, Vật lí, Hóa học, Sinh học, Công nghệ, Tin học, Âm nhạc, Mĩ thuật) + 3 cụm chuyên đề (105 tiết/năm).',
           },
         ],
         footerNote:
-          'Nguồn: Chương trình GDPT Tổng thể (TT 32/2018/TT-BGDĐT & TT 13/2022/TT-BGDĐT) — Giáo trình HCMUE tr. 51–55.',
+          'Nguồn: Chương trình GDPT 2018 (Thông tư 32/2018/TT-BGDĐT) & Giáo trình HCMUE Trang 51 – 55.',
       }),
     ),
 
-    // PHẦN II: HỆ THỐNG 3 NHÓM PHƯƠNG PHÁP GIÁO DỤC (TR. 56–62)
+    // PHẦN III: 3 NHÓM PHƯƠNG PHÁP GIÁO DỤC PHỔ THÔNG & LƯU ĐỒ THỰC HIỆN (TRANG 56 – 62)
     createElement(
       'section',
-      { id: '2-ba-nhom-phuong-phap-giao-duc', className: 'space-y-4' },
+      { id: '3-ba-nhom-phuong-phap-giao-duc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -698,66 +934,66 @@ export const Lesson3_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Hệ thống 3 nhóm phương pháp giáo dục ở trường phổ thông (Giáo trình HCMUE tr. 56–62)',
+          '3. Ba Nhóm Phương pháp Giáo dục Phổ thông & Lưu đồ Thực hiện (Trang 56 – 62)',
         ),
       ),
       createElement(
         'p',
         null,
-        'Dựa trên quy luật hình thành nhân cách (tác động đồng bộ vào Nhận thức – Thái độ/Tình cảm – Hành vi/Thói quen), Giáo trình Giáo dục học HCMUE (tr. 56–62) phân loại hệ thống phương pháp giáo dục thành ',
+        'Hệ thống phương pháp giáo dục tác động đồng bộ lên nhận thức, tình cảm và hành vi của học sinh thông qua ',
         createElement('strong', null, '3 nhóm phương pháp chính'),
-        ':',
+        ' kèm quy trình thực hiện chuẩn mực:',
         createElement(
           Sidenote,
           { type: 'caution', number: 1 },
-          'Bẫy sư phạm khi dùng phương pháp Trách phạt (Giáo trình tr. 61–62): Tuyệt đối không trách phạt bằng lao động (vì làm học sinh ghét lao động), không dùng điểm số học tập để phạt hành vi và không xúc phạm danh dự học sinh trước tập thể.',
+          '5 Nguyên tắc vàng khi trách phạt: (1) Mang tính giáo dục, tôn trọng nhân cách; (2) Khách quan, công bằng, để người vi phạm tự nhận lỗi; (3) Tuyệt đối không trách phạt cả tập thể; (4) Không trách phạt thường xuyên gây chai lì tâm lý; (5) Không nhắc lại lỗi cũ sau khi học sinh đã khắc phục.',
         ),
       ),
       createElement(NumberedProcessFlow, {
-        title: '3 Nhóm Phương pháp Giáo dục Học sinh ở Nhà trường Phổ thông',
+        title: '3 Nhóm Phương pháp Giáo dục Phổ thông và Lưu đồ Quy trình Chi tiết',
         subtitle:
-          'Cấu trúc các phương pháp thành phần và cơ chế tác động theo Giáo trình Giáo dục học HCMUE (tr. 56–62).',
-        badge: '3 Nhóm Phương pháp Giáo dục',
+          'Hệ thống các phương pháp giáo dục nhận thức, rèn luyện hành vi và kích thích động cơ (Giáo trình HCMUE Trang 56 – 62).',
+        badge: '3 Nhóm Phương pháp GD',
         columns: 1,
         steps: [
           {
             number: 1,
-            title:
-              'Nhóm phương pháp giáo dục bằng ngôn ngữ (Tác động vào ý thức, nhận thức & tình cảm)',
+            title: 'Nhóm 1: Phương pháp sử dụng ngôn ngữ (Giáo dục nhận thức và tình cảm)',
             description:
-              'Bao gồm: Phương pháp Thuyết trình (Giảng giải, diễn giảng đạo đức – pháp luật) và Phương pháp Đàm thoại (Trò chuyện, thảo luận, tranh luận theo chủ đề). Kèm theo phương pháp Nêu gương sáng.',
+              'Thuyết trình - giảng giải: Trình bày logic, truyền cảm, kết hợp phương tiện trực quan để khơi gợi cảm xúc đạo đức. Đàm thoại: Gồm đàm thoại có chuẩn bị trước (theo hệ thống câu hỏi gợi mở dân chủ) và đàm thoại riêng biệt (tế nhị, chân tình với học sinh cá biệt). Kèm theo phương pháp Nêu gương sáng.',
             keyAction:
-              'Sử dụng lí lẽ khoa học, dẫn chứng thực tế sinh động và đối thoại dân chủ để giúp học sinh phân biệt đúng – sai, hình thành niềm tin đạo đức.',
-            deliverable:
-              'Nâng cao nhận thức chuẩn mực và bồi dưỡng tình cảm đạo đức trong sáng cho học sinh.',
+              'Sử dụng ngôn từ chuẩn mực, dẫn chứng thực tế sống động và đối thoại cởi mở.',
+            deliverable: 'Nâng cao nhận thức đúng – sai và bồi đắp niềm tin đạo đức cho học sinh.',
           },
           {
             number: 2,
             title:
-              'Nhóm phương pháp khám phá – thực hành – trải nghiệm (Tổ chức hoạt động & hình thành hành vi)',
+              'Nhóm 2: Phương pháp khám phá, thực hành, trải nghiệm (Hình thành hành vi và thói quen)',
             description:
-              'Bao gồm 4 phương pháp trọng tâm: (1) Phương pháp Giải quyết vấn đề; (2) Phương pháp Thực hành, rèn luyện (Luyện tập thói quen, Giao việc); (3) Phương pháp Hợp tác nhóm; (4) Phương pháp Dự án.',
+              'Bao gồm 4 phương pháp cốt lõi: (1) Giải quyết vấn đề (Lưu đồ 4 bước: 1. Nhận biết mâu thuẫn -> 2. Lập kế hoạch & đề xuất giả thuyết -> 3. Tổ chức giải quyết -> 4. Kiểm tra, đánh giá); (2) Thực hành: Nắm vững quy tắc -> Thực hành mẫu -> Uốn nắn -> Luyện tập thường xuyên; (3) Hợp tác nhóm (3 bước: Tổ chức giao việc -> Hoạt động tự lực -> Báo cáo tổng kết); (4) Dự án (3 giai đoạn: Chuẩn bị -> Thực hiện -> Báo cáo đánh giá).',
             keyAction:
-              'Đặt học sinh vào các tình huống hoạt động thực tiễn để các em tự khám phá, hợp tác và lặp đi lặp lại các hành vi chuẩn mực.',
-            deliverable: 'Chuyển hóa nhận thức thành kỹ năng sống và thói quen hành vi bền vững.',
+              'Tổ chức cho học sinh tự trải nghiệm, hợp tác và giải quyết các tình huống thực tế.',
+            deliverable:
+              'Kỹ năng hành động, thói quen đạo đức và năng lực sáng tạo trong đời sống.',
           },
           {
             number: 3,
-            title: 'Nhóm phương pháp kích thích và điều chỉnh hành vi hoạt động của học sinh',
+            title: 'Nhóm 3: Phương pháp kích thích và điều chỉnh hoạt động (Củng cố động cơ)',
             description:
-              'Bao gồm 3 phương pháp: (1) Phương pháp Thi đua (kích thích nỗ lực vươn lên lành mạnh); (2) Phương pháp Khen thưởng (biểu dương, khích lệ hành vi tốt); (3) Phương pháp Trách phạt (nhắc nhở, phê bình, kỷ luật tích cực để ngăn chặn hành vi sai lệch).',
+              'Thi đua: Kích thích nhu cầu khẳng định mình; thi đua công khai, khách quan, có ý nghĩa giáo dục. Khen thưởng: Biểu dương kịp thời, khen cả động cơ và sự nỗ lực tiến bộ; tránh khen thưởng chiếu lệ. Trách phạt: Phản đối hành vi sai trái, giúp người vi phạm hối hận sửa chữa (tuân thủ nghiêm ngặt 5 nguyên tắc vàng khi trách phạt).',
             keyAction:
-              'Lấy khen thưởng, khích lệ làm chủ đạo; khi trách phạt phải khách quan, công bằng, đúng mức và tôn trọng nhân phẩm học sinh.',
-            deliverable: 'Củng cố động cơ tích cực và tự giác điều chỉnh các hành vi lệch chuẩn.',
+              'Lấy khen thưởng làm chủ đạo; trách phạt đúng người, đúng mức và tôn trọng nhân phẩm.',
+            deliverable:
+              'Tạo động lực thi đua lành mạnh và tự giác điều chỉnh các hành vi lệch chuẩn.',
           },
         ],
       }),
     ),
 
-    // PHẦN III: ĐÁNH GIÁ KẾT QUẢ HOẠT ĐỘNG GIÁO DỤC THEO TT 27/2020 & TT 22/2021 (TR. 62–65)
+    // PHẦN IV: ĐÁNH GIÁ KẾT QUẢ HOẠT ĐỘNG GIÁO DỤC (TT 27/2020 & TT 22/2021, TRANG 62–65)
     createElement(
       'section',
-      { id: '3-danh-gia-ket-qua-tt27-tt22', className: 'space-y-4' },
+      { id: '4-danh-gia-ket-qua-tt27-tt22', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -768,61 +1004,51 @@ export const Lesson3_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '3. Đánh giá kết quả hoạt động giáo dục theo Thông tư 27/2020 và Thông tư 22/2021 (Tr. 62–65)',
+          '4. Đánh giá Kết quả Hoạt động Giáo dục theo Thông tư 27/2020 và Thông tư 22/2021 (Trang 62–65)',
         ),
       ),
-      createElement(LegalReferenceBox, {
-        lawTitle: 'Thông tư 27/2020/TT-BGDĐT & Thông tư 22/2021/TT-BGDĐT',
-        article: 'Mục đích và nguyên tắc đánh giá học sinh phổ thông',
-        quote:
-          'Đánh giá nhằm xác định mức độ hoàn thành nhiệm vụ rèn luyện và học tập của học sinh theo yêu cầu cần đạt được quy định trong Chương trình giáo dục phổ thông; cung cấp thông tin chính xác, kịp thời để học sinh điều chỉnh hoạt động rèn luyện và học tập, cán bộ quản lý giáo dục và giáo viên điều chỉnh hoạt động dạy học và giáo dục. Đánh giá vì sự tiến bộ của học sinh; coi trọng việc động viên, khuyến khích sự cố gắng trong rèn luyện và học tập của học sinh; không so sánh học sinh với nhau.',
-        source: 'Bộ Giáo dục và Đào tạo (Giáo trình HCMUE tr. 62–65)',
-        significance:
-          'Chuyển đổi căn bản triết lý đánh giá: từ "đánh giá để xếp hạng" sang "đánh giá vì sự tiến bộ của người học".',
-      }),
-
       createElement(ComparativeTable, {
         title:
-          'Bảng Đối sánh Quy định Đánh giá Kết quả Rèn luyện & Giáo dục theo Thông tư 27/2020 và Thông tư 22/2021 (Tr. 63–65)',
+          'Bảng Đối sánh Quy định Đánh giá Kết quả Hoạt động Giáo dục (Thông tư 27/2020 & Thông tư 22/2021)',
         subtitle:
-          'Chuẩn hóa cách thức và mức độ đánh giá phẩm chất, năng lực và kết quả rèn luyện ở cấp Tiểu học và cấp THCS, THPT.',
-        badge: 'Thông tư 27/2020 & Thông tư 22/2021',
+          'Mục đích, nguyên tắc đánh giá vì sự tiến bộ và các mức xếp loại rèn luyện theo chuẩn Giáo trình HCMUE (Trang 62 – 65).',
+        badge: 'Thông tư 27/2020 & TT 22/2021',
         columns: [
-          { key: 'criteria', header: 'Nội dung quy định', widthClass: 'w-1/4' },
+          { key: 'criteria', header: 'Tiêu chí đánh giá', widthClass: 'w-1/4' },
           { key: 'tt27', header: 'Cấp Tiểu học (Thông tư 27/2020/TT-BGDĐT)' },
           { key: 'tt22', header: 'Cấp THCS & THPT (Thông tư 22/2021/TT-BGDĐT)' },
         ],
         rows: [
           {
-            criteria: 'Đối tượng & Phạm vi đánh giá',
-            tt27: 'Đánh giá quá trình học tập, sự tiến bộ và kết quả học tập các môn học, HĐGD; đánh giá sự hình thành và phát triển 5 phẩm chất chủ yếu và 10 năng lực cốt lõi.',
-            tt22: 'Đánh giá kết quả rèn luyện (theo yêu cầu cần đạt về 5 phẩm chất chủ yếu và 3 năng lực chung) và kết quả học tập của học sinh từ lớp 6 đến lớp 12.',
+            criteria: 'Mục đích & Triết lý đánh giá',
+            tt27: 'Đánh giá vì sự tiến bộ của học sinh; coi trọng việc động viên, khuyến khích sự cố gắng; không so sánh học sinh với nhau.',
+            tt22: 'Cung cấp thông tin chính xác, kịp thời để học sinh điều chỉnh hoạt động rèn luyện; giáo viên điều chỉnh phương pháp dạy học và giáo dục.',
           },
           {
-            criteria: 'Các mức đánh giá kết quả rèn luyện / phẩm chất, năng lực',
-            tt27: 'Đánh giá sự hình thành và phát triển phẩm chất, năng lực theo 3 mức: Tốt – Đạt – Cần cố gắng.',
-            tt22: 'Đánh giá kết quả rèn luyện của học sinh trong từng học kỳ và cả năm học theo 4 mức: Tốt – Khá – Đạt – Chưa đạt.',
+            criteria: 'Các mức đánh giá kết quả rèn luyện',
+            tt27: 'Đánh giá sự hình thành phẩm chất, năng lực theo 3 mức: Tốt – Đạt – Cần cố gắng.',
+            tt22: 'Đánh giá kết quả rèn luyện theo 4 mức: Tốt – Khá – Đạt – Chưa đạt trong từng học kỳ và cả năm học.',
           },
           {
-            criteria: 'Đánh giá môn Hoạt động trải nghiệm, hướng nghiệp',
+            criteria: 'Đánh giá Hoạt động trải nghiệm / HĐTN, hướng nghiệp',
             tt27: 'Đánh giá bằng nhận xét theo 2 mức: Hoàn thành tốt (HTT), Hoàn thành (HT) và Chưa hoàn thành (CHT).',
-            tt22: 'Là môn học đánh giá bằng nhận xét (không cho điểm số), xếp loại kết quả theo 2 mức: Đạt (Đ) hoặc Chưa đạt (CĐ).',
+            tt22: 'Môn học đánh giá bằng nhận xét (không cho điểm số), xếp loại 2 mức: Đạt (Đ) hoặc Chưa đạt (CĐ).',
           },
           {
-            criteria: 'Chủ thể tham gia đánh giá',
-            tt27: 'Giáo viên đánh giá, học sinh tự đánh giá và đánh giá đồng đẳng, cha mẹ học sinh tham gia nhận xét phối hợp.',
-            tt22: 'GVCN chủ trì phối hợp với các giáo viên bộ môn, kết hợp tự đánh giá của học sinh, nhận xét của tập thể lớp và gia đình.',
+            criteria: 'Đa dạng hóa công cụ đánh giá',
+            tt27: 'Bảng kiểm (checklist), hồ sơ học tập (portfolio), phiếu tự đánh giá và đánh giá đồng đẳng.',
+            tt22: 'Bảng kiểm, thang đo (rubric), hồ sơ học tập, bài kiểm tra viết, quan sát hành vi, khảo sát sản phẩm dự án.',
           },
         ],
         footerNote:
-          'Nguồn: Thông tư 27/2020/TT-BGDĐT và Thông tư 22/2021/TT-BGDĐT (Giáo trình HCMUE tr. 62–65).',
+          'Nguồn: Thông tư 27/2020/TT-BGDĐT và Thông tư 22/2021/TT-BGDĐT (Giáo trình HCMUE Trang 62 – 65).',
       }),
     ),
 
-    // PHẦN IV: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN V: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
     createElement(
       'section',
-      { id: '4-tinh-huong-thuc-hanh', className: 'space-y-4' },
+      { id: '5-tinh-huong-thuc-hanh', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -833,7 +1059,7 @@ export const Lesson3_3View: FC = () => {
         createElement(
           'h3',
           null,
-          '4. Tình huống Thực hành 5 Bước: Sử dụng phương pháp kích thích – điều chỉnh hành vi và đánh giá đúng quy chế',
+          '5. Tình huống Thực hành 5 Bước: Phương pháp Trách phạt và Quy chế Đánh giá',
         ),
       ),
       createElement(CaseStudyBox, { caseStudy: caseStudy3_3, defaultOpenSolution: false }),
@@ -846,57 +1072,60 @@ export const Lesson3_3View: FC = () => {
 // ============================================================================
 
 export const Lesson3_4View: FC = () => {
+  const [openEssayId, setOpenEssayId] = useState<number | null>(1);
+
   const caseStudy3_4: PedagogicalCaseStudy = {
     id: 304,
     title:
-      'Học sinh đứng lên chất vấn gay gắt về điểm số và thái độ của giáo viên ngay trong giờ học',
+      'Học sinh lớp 11 giật tài liệu vò nát nuốt vào miệng và thách thức giáo viên trong giờ kiểm tra',
     context:
-      'Khi giáo viên vừa trả bài kiểm tra giữa kỳ môn Toán, em D. (lớp 11) đột ngột đứng phắt dậy đập bài kiểm tra xuống bàn và nói lớn trước cả lớp: "Thầy chấm bài không công bằng! Bài của em cách giải ra đáp số giống hệt bạn T., tại sao bạn được 9 điểm còn em chỉ được 6 điểm? Thầy có định kiến với em phải không?". Cả lớp im phăng phắc chờ phản ứng của thầy giáo.',
+      'Trong giờ kiểm tra 1 tiết môn Toán lớp 11, giáo viên phát hiện học sinh N. đang sử dụng tài liệu chép bài. Khi giáo viên bước đến yêu cầu nộp tài liệu, N. giật lại, vò nát mảnh giấy nhét vào miệng nuốt và có thái độ thách thức trước mặt cả lớp: "Thầy không có bằng chứng thì đừng vu khống em!".',
     question:
-      'Vận dụng Quy trình 5 bước giải quyết tình huống giáo dục chuẩn mực (Mục 3.3.6 Giáo trình HCMUE tr. 65–66), anh/chị hãy xử lí tình huống sư phạm trên.',
+      'Vận dụng Quy trình 5 bước giải quyết tình huống giáo dục chuẩn mực theo Mục 3.3.6 Giáo trình HCMUE (tr. 65–66) và Điều 31, Điều 38 Thông tư 32/2020/TT-BGDĐT, anh/chị hãy xử lí tình huống sư phạm trên.',
     principlesApplied: [
-      'Quy trình 5 bước xử lí tình huống giáo dục (Mục 3.3.6 Giáo trình HCMUE tr. 65–66)',
-      'Kĩ năng kiềm chế cảm xúc và làm chủ tình huống bất ngờ trên lớp',
-      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lí',
+      'Quy trình 5 bước giải quyết tình huống giáo dục (Mục 3.3.6 Giáo trình HCMUE tr. 65–66)',
+      'Nguyên tắc tôn trọng nhân cách học sinh kết hợp với yêu cầu hợp lý',
+      'Nguyên tắc đảm bảo tính mục đích trong hoạt động giáo dục',
+      'Điều 31 & Điều 38 Thông tư 32/2020/TT-BGDĐT (Điều lệ trường trung học)',
     ],
     solutionSteps: [
       {
         step: 1,
-        title: 'Bước 1: Nhận diện sự việc và xác định vấn đề cần giải quyết',
+        title: 'Bước 1 (Phân tích dữ kiện)',
         content:
-          'Em D. đang bức xúc về điểm số và có hành vi phản ứng nóng nảy trước tập thể lớp. Vấn đề cần giải quyết ngay là: (1) Giữ bình tĩnh để hạ nhiệt căng thẳng và ổn định giờ học; (2) Giải đáp minh bạch thắc mắc chuyên môn mà không làm tổn thương uy tín của thầy lẫn lòng tự trọng của trò.',
+          'Học sinh N. có hành vi gian lận thi cử nhưng dùng hành động tiêu cực để tiêu hủy bằng chứng; phản ứng thách thức xuất phát từ tâm lý hoảng loạn, sợ bị kỷ luật và nhu cầu tự vệ trước tập thể lớp.',
       },
       {
         step: 2,
-        title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân khách quan, chủ quan',
+        title: 'Bước 2 (Biểu đạt vấn đề)',
         content:
-          'Quan sát nhanh bài làm của em D. và bạn T.: có thể em D. ra đúng đáp số cuối nhưng bị thiếu điều kiện xác định hoặc biến đổi sai bản chất ở bước trung gian; mặt khác tâm lí lứa tuổi THPT rất nhạy cảm với sự công bằng.',
+          'Mâu thuẫn giữa tính nghiêm túc, công bằng của kỳ thi và hành vi chống đối bột phát của học sinh; nguy cơ phá vỡ bầu không khí kiểm tra và tổn hại uy tín sư phạm nếu giáo viên nổi nóng đôi co.',
       },
       {
         step: 3,
-        title: 'Bước 3: Đề xuất các phương án giải quyết khả thi',
+        title: 'Bước 3 (Giả thuyết phương án & Chọn tối ưu)',
         content:
-          'Phương án 1: Quát mắng và đuổi em D. ra khỏi lớp vì thái độ vô lễ (đẩy xung đột lên đỉnh điểm). Phương án 2: Bình tĩnh ghi nhận quyền thắc mắc điểm số của em D., hẹn kiểm tra đối chiếu chi tiết theo barem ngay cuối tiết học và nhắc nhở nhẹ nhàng về cách diễn đạt tôn trọng trên lớp (tối ưu).',
+          'Phương án sai: Quát mắng, lôi học sinh lên phòng giám thị ngay lập tức (làm lớp mất tập trung, đẩy mâu thuẫn lên đỉnh điểm). Phương án tối ưu: Giữ bình tĩnh tuyệt đối; nói nhẹ nhàng nhưng dứt khoát: "Em tiếp tục làm bài của mình, việc đúng sai thầy trò mình sẽ làm việc riêng sau giờ thi"; lập biên bản sự việc bất thường cuối giờ với sự chứng kiến của cán bộ lớp; gặp riêng N. sau giờ kiểm tra để phân tích tâm lý, cho học sinh cơ hội tự nhận lỗi và làm bài kiểm tra lại.',
       },
       {
         step: 4,
-        title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện tác động sư phạm',
+        title: 'Bước 4 (Chứng minh khoa học)',
         content:
-          'Giáo viên điềm tĩnh mỉm cười: "Thầy ghi nhận thắc mắc của D. Mọi điểm số đều dựa trên đáp án chi tiết từng bước, nếu thầy cộng nhầm hoặc sót ý thầy sẵn sàng cộng lại điểm cho em. Bây giờ em ngồi xuống để lớp tiếp tục bài học, cuối giờ thầy trò mình cùng xem lại bài của em và bạn T. nhé."',
+          'Vận dụng nguyên tắc "Tôn trọng nhân cách kết hợp yêu cầu hợp lý" (không dồn học sinh vào chân tường trước tập thể) và nguyên tắc "Đảm bảo tính mục đích" (giáo dục ý thức trung thực quan trọng hơn việc trừng phạt hành vi).',
       },
       {
         step: 5,
-        title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+        title: 'Bước 5 (Kết luận sư phạm)',
         content:
-          'Cuối giờ, thầy phân tích rõ barem từng bước cho em D. thấy chỗ mất điểm (hoặc sửa điểm ngay nếu chấm sót); đồng thời giúp em D. nhận ra cần trao đổi bình tĩnh, lễ phép thay vì đập bàn nóng nảy.',
+          'Trong mọi xung đột sư phạm, sự điềm tĩnh và tôn trọng học sinh là công cụ mạnh nhất giúp hóa giải khủng hoảng tâm lý của học sinh.',
       },
     ],
     pitfallsToAvoid: [
-      'Đôi co tay đôi với học sinh ngay giữa giờ học làm cháy giáo án và mất uy tín sư phạm.',
-      'Từ chối giải thích thắc mắc điểm số của học sinh dưới danh nghĩa "quyền tối thượng của giáo viên".',
+      'Đôi co gay gắt hoặc dùng vũ lực giằng co mảnh giấy với học sinh ngay giữa giờ thi.',
+      'Bêu riếu học sinh trước cả lớp khiến em nảy sinh tâm lý bất cần và chống đối cực đoan.',
     ],
     coreLesson:
-      'Bản lĩnh sư phạm trong Quy trình 5 bước thể hiện rõ nhất ở "khoảng dừng chiến thuật" (Bước 1 & Bước 2): người thầy giữ cái đầu lạnh để hóa giải cơn nóng giận của học trò bằng sự minh bạch và công tâm.',
+      'Bản lĩnh sư phạm trong Quy trình 5 bước thể hiện ở "khoảng dừng chiến thuật": người thầy giữ cái đầu lạnh và trái tim nhân ái để hóa giải cơn bốc đồng của học sinh bằng sự điềm tĩnh và công bằng.',
   };
 
   return createElement(
@@ -906,19 +1135,20 @@ export const Lesson3_4View: FC = () => {
     // 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI
     createElement(PedagogyMetadataBar, {
       courseCode: 'EDUC2802',
+      lessonCode: 'EDUC2802-C3-L4',
       clos: ['CLO4', 'CLO5'],
-      textbookPages: 'Tr. 65–66 (Chương 3, Mục 3.3.6)',
+      textbookPages: 'Giáo trình Giáo dục học HCMUE (Trang 65 – 66)',
       legalRefs: [
-        'Giáo trình Giáo dục học HCMUE (Mục 3.3.6, tr. 65–66)',
-        'Cẩm nang Phương pháp Giáo dục Kỷ luật tích cực',
+        'Giáo trình Giáo dục học HCMUE (Mục 3.3.6, Trang 65 – 66)',
+        'Thông tư 32/2020/TT-BGDĐT (Điều 31, 38)',
       ],
-      sessionNote: 'Lý thuyết & Thực hành Kỹ năng Sư phạm Chương 3',
+      sessionNote: 'Mục 3.3.6 · Trang 65 – 66',
     }),
 
-    // PHẦN I: KHÁI NIỆM & PHÂN LOẠI TÌNH HUỐNG GIÁO DỤC (TR. 65)
+    // PHẦN I: KHÁI NIỆM & ĐẶC TRƯNG TÌNH HUỐNG SƯ PHẠM (TRANG 65)
     createElement(
       'section',
-      { id: '1-khai-niem-tinh-huong-giao-duc', className: 'space-y-4' },
+      { id: '1-khai-niem-va-dac-trung', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -926,66 +1156,39 @@ export const Lesson3_4View: FC = () => {
             'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
         createElement(Sparkles, { className: 'h-5 w-5 text-[#3F6570]' }),
-        createElement(
-          'h3',
-          null,
-          '1. Khái niệm tình huống giáo dục và yêu cầu đối với kĩ năng ứng xử sư phạm (Tr. 65)',
-        ),
+        createElement('h3', null, '1. Khái niệm và Đặc trưng của Tình huống Sư phạm (Trang 65)'),
       ),
       createElement(
-        'p',
-        null,
-        'Theo Giáo trình Giáo dục học HCMUE (tr. 65), ',
-        createElement('strong', null, 'tình huống giáo dục (tình huống sư phạm)'),
-        ' là những sự việc, hoàn cảnh có chứa đựng mâu thuẫn nảy sinh trong quá trình hoạt động giáo dục ở nhà trường phổ thông (giữa yêu cầu giáo dục với trình độ nhận thức, thái độ, hành vi hiện có của học sinh, hoặc giữa các lực lượng giáo dục), đòi hỏi người giáo viên phải kịp thời tìm ra phương án giải quyết hợp lí nhằm mang lại hiệu quả giáo dục nhân cách.',
+        'div',
+        {
+          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-3',
+        },
         createElement(
-          Sidenote,
-          { type: 'pedagogy', number: 1 },
-          'V. A. Xu-khôm-lin-xki từng nhấn mạnh: "Sự khéo léo đối xử sư phạm là chiếc chìa khóa mở cửa tâm hồn học sinh. Không có sự tinh tế tâm lí và lòng trắc ẩn, mọi phương pháp đều trở nên thô bạo."',
+          'span',
+          {
+            className:
+              'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+          },
+          'Định nghĩa Khoa học theo Giáo trình HCMUE',
+        ),
+        createElement(
+          'p',
+          { className: 'text-sm text-[#29383D] leading-relaxed' },
+          createElement('strong', null, 'Tình huống giáo dục (tình huống sư phạm)'),
+          ' là toàn bộ những sự việc, hiện tượng, hoàn cảnh có vấn đề bức xúc nảy sinh trong hoạt động và quan hệ giáo dục, buộc giáo viên phải tư duy khoa học và đưa ra cách giải quyết tối ưu nhằm đưa quan hệ giáo dục vào ổn định và phát triển.',
+        ),
+        createElement(
+          'p',
+          { className: 'text-xs text-[#55676B] leading-relaxed' },
+          'Tính chất: Mang tính nghệ thuật, tính khoa học và sáng tạo cao; phản ánh các mâu thuẫn phức tạp, đa phương giữa học sinh với học sinh, học sinh với giáo viên, hoặc học sinh với gia đình/xã hội.',
         ),
       ),
-
-      createElement(ComparativeTable, {
-        title:
-          'Bảng Phân loại Tình huống Giáo dục và Yêu cầu Kĩ năng Sư phạm (Giáo trình HCMUE tr. 65)',
-        subtitle:
-          'Nhận diện các dạng tình huống thường gặp trong hoạt động sư phạm và yêu cầu tâm lí – đạo đức khi ứng xử.',
-        badge: 'Tình huống Sư phạm',
-        columns: [
-          { key: 'type', header: 'Nhóm tình huống giáo dục', widthClass: 'w-1/4' },
-          { key: 'manifestation', header: 'Biểu hiện thực tiễn tại trường phổ thông' },
-          { key: 'skillRequirement', header: 'Yêu cầu kĩ năng ứng xử của người giáo viên' },
-        ],
-        rows: [
-          {
-            type: '1. Tình huống giữa Giáo viên và Học sinh trên lớp học',
-            manifestation:
-              'Học sinh mất trật tự, ngủ gật, quên làm bài, gian lận kiểm tra, chất vấn gay gắt hoặc có hành vi chống đối.',
-            skillRequirement:
-              'Kiềm chế cảm xúc, xử lí nhanh gọn để không làm gián đoạn tiết học; chuyển việc xử lí sâu sang trao đổi riêng sau giờ học.',
-          },
-          {
-            type: '2. Tình huống trong Tập thể học sinh (Giữa HS với HS)',
-            manifestation:
-              'Mâu thuẫn bè phái, cô lập bạn học, bắt nạt học đường, nói xấu trên mạng xã hội, mất đoàn kết trong thi đua.',
-            skillRequirement:
-              'Khách quan, lắng nghe đa chiều, bảo vệ nạn nhân, phát huy vai trò hòa giải và dư luận lành mạnh của tập thể lớp.',
-          },
-          {
-            type: '3. Tình huống phối hợp Giáo viên – Gia đình – Xã hội',
-            manifestation:
-              'Phụ huynh hiểu lầm phương pháp của giáo viên, bênh con vô lý, hoặc thiếu quan tâm phó mặc con cho nhà trường.',
-            skillRequirement:
-              'Thái độ tôn trọng, cầu thị, dựa trên minh chứng khách quan và luôn đặt lợi ích tốt nhất của học sinh làm điểm chung.',
-          },
-        ],
-      }),
     ),
 
-    // PHẦN II: QUY TRÌNH 5 BƯỚC XỬ LÍ TÌNH HUỐNG GIÁO DỤC CHUẨN MỰC (TR. 65–66)
+    // PHẦN II: QUY TRÌNH 5 BƯỚC GIẢI QUYẾT TÌNH HUỐNG CHUẨN MỰC (TRANG 65 – 66)
     createElement(
       'section',
-      { id: '2-quy-trinh-5-buoc-xu-li-tinh-huong', className: 'space-y-4' },
+      { id: '2-quy-trinh-5-buoc-chuan-muc', className: 'space-y-4' },
       createElement(
         'div',
         {
@@ -996,90 +1199,79 @@ export const Lesson3_4View: FC = () => {
         createElement(
           'h3',
           null,
-          '2. Quy trình 5 bước giải quyết tình huống giáo dục chuẩn mực (Mục 3.3.6 Giáo trình HCMUE tr. 65–66)',
+          '2. Quy trình 5 Bước Giải quyết Tình huống Giáo dục Chuẩn mực (Mục 3.3.6, Trang 65 – 66)',
         ),
       ),
-      createElement(
-        'p',
-        null,
-        'Để tránh phản ứng cảm tính, nóng vội hoặc áp đặt chủ quan, Giáo trình Giáo dục học HCMUE (Mục 3.3.6, tr. 65–66) xác lập ',
-        createElement('strong', null, 'Quy trình 5 bước giải quyết tình huống giáo dục'),
-        ' làm chuẩn mực hành động cho mọi giáo viên phổ thông:',
-      ),
-
       createElement(NumberedProcessFlow, {
-        title:
-          'Lưu đồ Quy trình 5 Bước Giải quyết Tình huống Giáo dục (Mục 3.3.6 Giáo trình HCMUE tr. 65–66)',
+        title: 'Quy trình 5 Bước Giải quyết Tình huống Sư phạm Tối ưu',
         subtitle:
-          'Quy trình chuẩn hóa ứng dụng xuyên suốt trong phân tích tình huống sư phạm và bài thi thực hành học phần EDUC2802.',
+          'Khung thao tác chuẩn mực ứng dụng xuyên suốt trong học phần EDUC2802 (Giáo trình HCMUE Trang 65 – 66).',
         badge: 'Quy trình 5 Bước · Mục 3.3.6',
         columns: 1,
         steps: [
           {
             number: 1,
-            title: 'Bước 1: Nhận diện tình huống và xác định vấn đề cần giải quyết',
+            title: 'Bước 01: Phân tích dữ kiện đã cho và xác định dữ kiện quan trọng, chủ yếu',
             description:
-              'Bình tĩnh quan sát hiện tượng, làm chủ cảm xúc cá nhân; xác định chính xác mâu thuẫn cốt lõi trong tình huống là gì và mục tiêu sư phạm cần đạt được khi giải quyết tình huống đó.',
+              'Nghiên cứu kỹ bối cảnh, đối tượng tham gia, thời gian, không gian; bóc tách nguyên nhân bề nổi và nguyên nhân sâu xa; nhận diện dữ kiện then chốt của sự việc.',
             keyAction:
-              'Trả lời câu hỏi: Chuyện gì đang xảy ra? Vấn đề mấu chốt cần ưu tiên giải quyết ngay và giải quyết lâu dài là gì?',
+              'Lắng nghe đa chiều, kiềm chế cảm xúc tức giận và thu thập đầy đủ thông tin khách quan.',
             deliverable:
-              'Xác định đúng bản chất mâu thuẫn sư phạm, không bị đánh lừa bởi hiện tượng bề ngoài.',
+              'Bản phân tích đúng bản chất sự việc, không bị đánh lừa bởi hiện tượng nhất thời.',
           },
           {
             number: 2,
-            title: 'Bước 2: Thu thập thông tin và phân tích nguyên nhân của tình huống',
+            title: 'Bước 02: Biểu đạt vấn đề cần giải quyết',
             description:
-              'Tìm hiểu đầy đủ thông tin từ nhiều phía (học sinh liên quan, bạn bè, phụ huynh, hoàn cảnh gia đình, đặc điểm tâm sinh lí lứa tuổi) để chỉ rõ nguyên nhân chủ quan và khách quan dẫn đến hành vi của học sinh.',
-            keyAction:
-              'Tuyệt đối không kết luận hay phán xét khi chưa lắng nghe học sinh trình bày lý do.',
-            deliverable: 'Chẩn đoán đúng nguyên nhân gốc rễ về mặt tâm lí và giáo dục.',
+              'Phát biểu chính xác mâu thuẫn trung tâm; xác định rõ mục tiêu cần đạt được sau khi xử lý (giáo dục nhận thức, giải tỏa bức xúc tâm lý hay khôi phục trật tự lớp học).',
+            keyAction: 'Xác định rõ trọng tâm sư phạm cần tháo gỡ cả về ngắn hạn và dài hạn.',
+            deliverable: 'Mục tiêu giáo dục rõ ràng, nhân văn và định hướng tương lai.',
           },
           {
             number: 3,
-            title: 'Bước 3: Đề xuất các phương án giải quyết tình huống',
+            title:
+              'Bước 03: Nêu giả thuyết về các phương án giải quyết và lựa chọn phương án tối ưu',
             description:
-              'Dựa trên hệ thống 6 nguyên tắc hoạt động giáo dục và quy định pháp quy (Luật Giáo dục 2019, Điều lệ trường học 2020, Thông tư 20/2018), liệt kê các phương án xử lí có thể thực hiện và dự báo hệ quả của từng phương án.',
+              'Liệt kê các cách xử lý khả dĩ (bao gồm các phản ứng sai lầm, cảm tính thường gặp); so sánh ưu - nhược điểm của từng cách; chọn ra giải pháp hợp lý và nhân văn nhất.',
             keyAction:
-              'Loại bỏ các phương án cực đoan (trừng phạt xúc phạm nhân phẩm hoặc buông xuôi bỏ mặc).',
+              'Loại bỏ giải pháp tiêu cực (xúc phạm, áp đặt độc đoán) và chọn phương án tối ưu.',
             deliverable:
-              'Các phương án khả thi đảm bảo tính pháp lý, tính khoa học và tính nhân văn.',
+              'Kịch bản xử lý tối ưu, vừa nghiêm khắc về nguyên tắc vừa bao dung về tình cảm.',
           },
           {
             number: 4,
-            title: 'Bước 4: Lựa chọn phương án tối ưu và tổ chức thực hiện',
+            title: 'Bước 04: Chứng minh giả thuyết (Cơ sở khoa học của phương án tối ưu)',
             description:
-              'Chọn phương án mang lại hiệu quả giáo dục cao nhất và tiến hành tác động sư phạm khéo léo (kết hợp xử lí tức thời tại hiện trường để ổn định lớp học và xử lí chiều sâu sau giờ học).',
+              'Vận dụng các nguyên tắc giáo dục (tôn trọng nhân cách, giáo dục trong tập thể, phù hợp lứa tuổi), quy luật tâm sinh lý và chuẩn mực đạo đức sư phạm để biện giải cho phương án đã chọn.',
             keyAction:
-              'Sử dụng ngôn ngữ tôn trọng, khích lệ kết hợp yêu cầu rõ ràng để học sinh tự giác nhận thức và cam kết sửa đổi.',
+              'Hành động khéo léo theo kịch bản tối ưu, tôn trọng lòng tự trọng của học sinh.',
             deliverable:
-              'Hóa giải mâu thuẫn tình huống và giữ vững uy tín sư phạm, bầu không khí tích cực.',
+              'Hóa giải mâu thuẫn, giúp học sinh tự giác nhận ra lỗi lầm và khôi phục trật tự sư phạm.',
           },
           {
             number: 5,
-            title: 'Bước 5: Đánh giá kết quả, theo dõi hỗ trợ và rút kinh nghiệm sư phạm',
+            title: 'Bước 05: Rút ra kết luận sư phạm',
             description:
-              'Kiểm tra sự chuyển biến về thái độ, hành vi của học sinh sau khi giải quyết tình huống; tiếp tục đồng hành hỗ trợ, phối hợp các lực lượng giáo dục và đúc kết bài học kinh nghiệm nghề nghiệp.',
+              'Đúc kết bài học nghiệp vụ cho bản thân và tập thể sư phạm nhằm chủ động phòng ngừa các tình huống tương tự trong tương lai; tiếp tục theo dõi, giúp đỡ học sinh tiến bộ.',
             keyAction:
-              'Ghi nhận sự tiến bộ của học sinh và tự phản tư để nâng cao năng lực ứng xử sư phạm.',
+              'Ghi chép nhật ký phản tư sư phạm và đồng hành hỗ trợ học sinh khắc phục khuyết điểm.',
             deliverable:
-              'Sự trưởng thành bền vững của học sinh và bài học kinh nghiệm sư phạm sâu sắc.',
+              'Sự trưởng thành về đạo đức của học sinh và nâng cao bản lĩnh nghề nghiệp của người thầy.',
           },
         ],
       }),
-
       createElement(LegalReferenceBox, {
         lawTitle: 'Thông tư số 32/2020/TT-BGDĐT (Điều lệ trường trung học)',
-        article:
-          'Điều 31 (Hành vi, ngôn ngữ ứng xử của giáo viên) & Điều 38 (Khen thưởng và kỷ luật)',
+        article: 'Điều 31 (Hành vi, ứng xử của giáo viên) & Điều 38 (Khen thưởng và kỷ luật)',
         quote:
-          'Hành vi, ngôn ngữ ứng xử của giáo viên, nhân viên phải bảo đảm tính sư phạm, đúng mực, có tác dụng giáo dục đối với học sinh. Giáo viên không được xúc phạm danh dự, nhân phẩm; xâm phạm thân thể của học sinh và đồng nghiệp. Học sinh vi phạm khuyết điểm trong quá trình học tập, rèn luyện được giáo dục hoặc xử lý kỷ luật theo các hình thức: Nhắc nhở, hỗ trợ, giúp đỡ trực tiếp để học sinh khắc phục khuyết điểm; Khiển trách, thông báo với cha mẹ học sinh nhằm phối hợp giúp đỡ học sinh khắc phục khuyết điểm; Tạm dừng học ở trường có thời hạn và thực hiện các biện pháp giáo dục khác theo quy định của Bộ GD&ĐT.',
-        source: 'Thông tư số 32/2020/TT-BGDĐT (Giáo trình HCMUE tr. 64–66)',
+          'Giáo viên không được xúc phạm danh dự, nhân phẩm; xâm phạm thân thể của học sinh và đồng nghiệp. Học sinh vi phạm khuyết điểm trong quá trình học tập, rèn luyện được giáo dục hoặc xử lý kỷ luật theo các hình thức: Nhắc nhở, hỗ trợ, giúp đỡ trực tiếp; Khiển trách, thông báo với cha mẹ học sinh nhằm phối hợp giúp đỡ; Tạm dừng học ở trường có thời hạn.',
+        source: 'Thông tư 32/2020/TT-BGDĐT (Giáo trình HCMUE Trang 64–66)',
         significance:
-          'Đặt ra giới hạn pháp lý và chuẩn mực nhân văn bắt buộc khi giáo viên thực hiện Bước 3 và Bước 4 trong quy trình xử lí tình huống giáo dục.',
+          'Hành lang pháp lý bắt buộc yêu cầu người giáo viên tuyệt đối không dùng nhục hình hay hạ nhục học sinh khi xử lí tình huống.',
       }),
     ),
 
-    // PHẦN III: TÌNH HUỐNG THỰC HÀNH 5 BƯỚC CUỐI BÀI
+    // PHẦN III: TÌNH HUỐNG THỰC HÀNH MẪU 5 BƯỚC (ỨNG DỤNG TOÀN DIỆN)
     createElement(
       'section',
       { id: '3-tinh-huong-thuc-hanh', className: 'space-y-4' },
@@ -1090,13 +1282,109 @@ export const Lesson3_4View: FC = () => {
             'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
         },
         createElement(HelpCircle, { className: 'h-5 w-5 text-[#3F6570]' }),
+        createElement('h3', null, '3. Khung Tình huống Thực hành Mẫu 5 Bước: Ứng dụng Toàn diện'),
+      ),
+      createElement(CaseStudyBox, { caseStudy: caseStudy3_4, defaultOpenSolution: true }),
+    ),
+
+    // PHẦN IV: CÂU HỎI TỰ LUẬN ÔN TẬP CHƯƠNG 3
+    createElement(
+      'section',
+      { id: '4-on-tap-va-de-cuong-chuong-3', className: 'space-y-5' },
+      createElement(
+        'div',
+        {
+          className:
+            'flex items-center gap-2 border-b border-[#CFDADB] pb-2 font-serif text-xl font-bold text-[#29383D]',
+        },
+        createElement(Sparkles, { className: 'h-5 w-5 text-[#3F6570]' }),
         createElement(
           'h3',
           null,
-          '3. Tình huống Thực hành 5 Bước: Xử lí tình huống bất ngờ trên lớp học',
+          '4. Đề cương Câu hỏi Tự luận Trọng tâm Chương 3 (Giáo trình HCMUE)',
         ),
       ),
-      createElement(CaseStudyBox, { caseStudy: caseStudy3_4, defaultOpenSolution: false }),
+      createElement(
+        'div',
+        { className: 'space-y-3 pt-2' },
+        [
+          {
+            id: 1,
+            question:
+              'Câu 1: Phân tích 4 đặc điểm của hoạt động giáo dục và làm rõ mối quan hệ biện chứng giữa vai trò chủ đạo của giáo viên và tính chủ thể tự giáo dục của học sinh.',
+            outline: [
+              'Bản chất hai mặt thống nhất biện chứng: giáo viên chủ đạo, học sinh chủ thể tự giáo dục (Giáo trình tr. 39–41).',
+              'Phân tích 4 đặc điểm: Tính mục đích, Tính phức hợp - lâu dài - liên tục, Tính cá biệt, Tính thống nhất hệ thống (tr. 41–43).',
+              'Cơ chế chuyển hóa: Giáo dục biến thành tự giáo dục, biến chuẩn mực xã hội thành nhu cầu nội tâm của học sinh.',
+              'Liên hệ thực tiễn giảng dạy môn Toán ở trường THPT.',
+            ],
+          },
+          {
+            id: 2,
+            question:
+              'Câu 2: Trình bày hệ thống 6 nguyên tắc hoạt động giáo dục. Vì sao nói nguyên tắc "Tôn trọng nhân cách kết hợp với yêu cầu hợp lý" là hòn đá tảng của chủ nghĩa nhân đạo sư phạm?',
+            outline: [
+              'Khái niệm nguyên tắc hoạt động giáo dục và hệ thống 6 nguyên tắc (Giáo trình tr. 43–47).',
+              'Phân tích luận điểm của A. S. Makarenko: "Yêu cầu càng cao bao nhiêu thì càng phải tôn trọng nhân cách bấy nhiêu".',
+              'Hậu quả của việc tách rời: tôn trọng mà không yêu cầu dẫn đến buông lỏng; yêu cầu cao mà không tôn trọng dẫn đến độc đoán, áp đặt.',
+              'Vận dụng giải quyết các bất đồng trong quan hệ thầy - trò hiện nay.',
+            ],
+          },
+          {
+            id: 3,
+            question:
+              'Câu 3: Phân tích 3 nhóm phương pháp giáo dục phổ thông. Nêu rõ 5 nguyên tắc vàng khi vận dụng phương pháp trách phạt đối với học sinh.',
+            outline: [
+              'Cơ sở phân loại: Nhận thức (Nhóm ngôn ngữ) – Hành vi (Nhóm thực hành trải nghiệm) – Động cơ (Nhóm kích thích điều chỉnh) (Giáo trình tr. 56–62).',
+              'Phân tích nội dung và lưu đồ quy trình của từng nhóm phương pháp.',
+              '5 nguyên tắc vàng khi trách phạt: 1. Mang tính giáo dục tôn trọng nhân cách; 2. Khách quan công bằng để HS tự nhận lỗi; 3. Không phạt cả tập thể; 4. Không phạt thường xuyên; 5. Không nhắc lại lỗi cũ sau khi đã sửa chữa (tr. 61–62).',
+              'Đánh giá kết quả rèn luyện học sinh theo Thông tư 22/2021/TT-BGDĐT.',
+            ],
+          },
+        ].map((item) =>
+          createElement(
+            'div',
+            {
+              key: item.id,
+              className:
+                'overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs',
+            },
+            createElement(
+              'button',
+              {
+                type: 'button',
+                onClick: () => setOpenEssayId(openEssayId === item.id ? null : item.id),
+                className:
+                  'flex w-full items-center justify-between p-4 text-left font-serif text-sm font-bold text-[#29383D] transition-colors hover:bg-[#E1E9EA]/50 sm:text-base',
+              },
+              createElement('span', null, item.question),
+              createElement(
+                'span',
+                { className: 'ml-3 shrink-0 font-mono text-xs text-[#3F6570]' },
+                openEssayId === item.id ? 'Thu gọn' : 'Xem dàn ý',
+              ),
+            ),
+            openEssayId === item.id &&
+              createElement(
+                'div',
+                {
+                  className:
+                    'border-t border-[#CFDADB] bg-[#EAF0F1]/50 p-4 text-xs leading-relaxed text-[#29383D] sm:text-sm',
+                },
+                createElement(
+                  'p',
+                  { className: 'mb-2 font-semibold text-[#3F6570]' },
+                  'Dàn ý trọng tâm theo Giáo trình Giáo dục học HCMUE:',
+                ),
+                createElement(
+                  'ul',
+                  { className: 'list-disc space-y-1.5 pl-5 text-[#55676B]' },
+                  item.outline.map((point, idx) => createElement('li', { key: idx }, point)),
+                ),
+              ),
+          ),
+        ),
+      ),
     ),
   );
 };
@@ -1115,9 +1403,10 @@ export function getChapter3LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 3.1: Khái quát về giáo dục phổ thông Việt Nam',
         description:
-          'Hệ thống giáo dục quốc dân theo Luật GD 2019 & QĐ 1981/QĐ-TTg; Chương trình GDPT 2018 theo TT 32/2018; Cơ cấu tổ chức bộ máy nhà trường phổ thông theo Điều lệ 2020 (Giáo trình HCMUE tr. 32–39).',
+          'Khảo sát cấu trúc Hệ thống giáo dục quốc dân theo Luật Giáo dục 2019 và Quyết định 1981/QĐ-TTg, vai trò nền tảng và mục tiêu đổi mới giáo dục phổ thông theo Nghị quyết 29-NQ/TW và Nghị quyết 88/2014/QH13, phân tích kế hoạch giáo dục theo Chương trình GDPT 2018 và cơ cấu bộ máy tổ chức nhà trường phổ thông.',
         level: 'basic',
         tags: [
+          'EDUC2802-C3-L1',
           'CLO3',
           'CLO4',
           'Hệ thống giáo dục quốc dân',
@@ -1130,18 +1419,28 @@ export function getChapter3LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 1,
         headings: [
           {
-            id: '1-he-thong-gdqd-va-ctgdpt-2018',
-            text: '1. Hệ thống giáo dục quốc dân và Chương trình GDPT 2018 (Tr. 32–36)',
+            id: '1-khung-co-cau-htgdqd',
+            text: '1. Khung Cơ cấu Hệ thống Giáo dục Quốc dân Việt Nam (Trang 32 – 34)',
             depth: 2,
           },
           {
-            id: '2-co-cau-to-chuc-nha-truong',
-            text: '2. Cơ cấu tổ chức bộ máy nhà trường phổ thông theo Điều lệ 2020 (Tr. 36–39)',
+            id: '2-vai-tro-muc-tieu-doi-moi',
+            text: '2. Vai trò, Mục tiêu và Định hướng Đổi mới Giáo dục Phổ thông (Trang 34 – 36)',
             depth: 2,
           },
           {
-            id: '3-tinh-huong-thuc-hanh',
-            text: '3. Tình huống Thực hành 5 Bước: Định hướng nghề nghiệp ở trường THPT',
+            id: '3-khung-ke-hoach-gdpt-2018',
+            text: '3. Khung Kế hoạch Giáo dục Phổ thông 2018 (Trang 34 – 36)',
+            depth: 2,
+          },
+          {
+            id: '4-co-cau-to-chuc-nha-truong',
+            text: '4. Cơ cấu Tổ chức Bộ máy Nhà trường Phổ thông theo Điều lệ 2020 (Trang 36 – 39)',
+            depth: 2,
+          },
+          {
+            id: '5-tinh-huong-thuc-hanh',
+            text: '5. Tình huống Thực hành 5 Bước: Định hướng Nghề nghiệp ở Trường THPT',
             depth: 2,
           },
         ],
@@ -1157,29 +1456,42 @@ export function getChapter3LessonModule(lessonId: string): CompiledLessonModule 
     return {
       default: Lesson3_2View,
       frontmatter: {
-        title: 'Bài 3.2: Bản chất, đặc điểm và nguyên tắc của hoạt động giáo dục',
+        title: 'Bài 3.2: Bản chất, đặc điểm và nguyên tắc hoạt động giáo dục',
         description:
-          'Sự thống nhất biện chứng giữa vai trò chủ đạo của GV và chủ thể tự giáo dục của HS; 4 đặc điểm và 6 nguyên tắc hoạt động giáo dục (Giáo trình HCMUE tr. 39–47).',
+          'Khám phá bản chất tương tác biện chứng hai mặt giữa vai trò chủ đạo của giáo viên và tính tích cực tự giáo dục của học sinh; 4 đặc điểm chi phối tiến trình sư phạm và hệ thống 6 nguyên tắc chỉ đạo toàn vẹn hoạt động giáo dục trong trường phổ thông.',
         level: 'intermediate',
-        tags: ['CLO4', 'CLO5', 'Bản chất HĐGD', '6 Nguyên tắc giáo dục', 'Giáo trình tr. 39-47'],
+        tags: [
+          'EDUC2802-C3-L2',
+          'CLO3',
+          'CLO4',
+          'Bản chất HĐGD',
+          '4 Đặc điểm HĐGD',
+          '6 Nguyên tắc giáo dục',
+          'Giáo trình tr. 39-47',
+        ],
       },
       lessonMeta: {
         chapterNumber: 3,
         lessonNumber: 2,
         headings: [
           {
-            id: '1-ban-chat-va-4-dac-diem',
-            text: '1. Bản chất và 4 đặc điểm của hoạt động giáo dục (Tr. 39–43)',
+            id: '1-ban-chat-hoat-dong-giao-duc',
+            text: '1. Bản chất của Hoạt động Giáo dục: Tương tác Biện chứng Hai mặt (Trang 39 – 41)',
             depth: 2,
           },
           {
-            id: '2-sau-nguyen-tac-hoat-dong-giao-duc',
-            text: '2. Hệ thống 6 nguyên tắc của hoạt động giáo dục (Tr. 43–47)',
+            id: '2-bon-dac-diem-hoat-dong-giao-duc',
+            text: '2. Bốn Đặc điểm Cốt lõi của Hoạt động Giáo dục (Trang 41 – 43)',
             depth: 2,
           },
           {
-            id: '3-tinh-huong-thuc-hanh',
-            text: '3. Tình huống Thực hành 5 Bước: Vận dụng 6 nguyên tắc giáo dục',
+            id: '3-sau-nguyen-tac-hoat-dong-giao-duc',
+            text: '3. Bảng Ma trận Hệ thống 6 Nguyên tắc Hoạt động Giáo dục (Trang 43 – 47)',
+            depth: 2,
+          },
+          {
+            id: '4-tinh-huong-thuc-hanh',
+            text: '4. Tình huống Thực hành 5 Bước: Vận dụng 6 Nguyên tắc Hoạt động Giáo dục',
             depth: 2,
           },
         ],
@@ -1195,11 +1507,12 @@ export function getChapter3LessonModule(lessonId: string): CompiledLessonModule 
     return {
       default: Lesson3_3View,
       frontmatter: {
-        title: 'Bài 3.3: Cấu trúc thành tố, phương pháp và đánh giá kết quả hoạt động giáo dục',
+        title: 'Bài 3.3: Cấu trúc thành tố, phương pháp và đánh giá giáo dục',
         description:
-          'Bảng 5 phẩm chất & 10 năng lực; Kế hoạch giáo dục Tiểu học, THCS, THPT; 3 nhóm phương pháp giáo dục và đánh giá theo TT 27/2020, TT 22/2021 (Giáo trình HCMUE tr. 47–65).',
+          'Hệ thống hóa mục tiêu theo 5 phẩm chất và 10 năng lực (CT GDPT 2018), đối chiếu kế hoạch giáo dục 3 cấp học, phân tích 3 nhóm phương pháp giáo dục phổ thông kèm lưu đồ quy trình, và chuẩn hóa phương pháp đánh giá kết quả theo Thông tư 27/2021 và Thông tư 22/2021.',
         level: 'intermediate',
         tags: [
+          'EDUC2802-C3-L3',
           'CLO4',
           'CLO5',
           '5 Phẩm chất 10 Năng lực',
@@ -1212,23 +1525,28 @@ export function getChapter3LessonModule(lessonId: string): CompiledLessonModule 
         lessonNumber: 3,
         headings: [
           {
-            id: '1-pham-chat-nang-luc-va-ke-hoach-gd',
-            text: '1. Hệ thống 5 phẩm chất, 10 năng lực và Kế hoạch giáo dục 3 cấp học (Tr. 47–55)',
+            id: '1-cau-truc-muc-tieu-ct2018',
+            text: '1. Cấu trúc Mục tiêu theo Chương trình GDPT 2018: 5 Phẩm chất & 10 Năng lực (Trang 47 – 51)',
             depth: 2,
           },
           {
-            id: '2-ba-nhom-phuong-phap-giao-duc',
-            text: '2. Hệ thống 3 nhóm phương pháp giáo dục ở trường phổ thông (Tr. 56–62)',
+            id: '2-ke-hoach-giao-duc-3-cap-hoc',
+            text: '2. Kế hoạch Giáo dục 3 Cấp học theo Chương trình GDPT 2018 (Trang 51 – 55)',
             depth: 2,
           },
           {
-            id: '3-danh-gia-ket-qua-tt27-tt22',
-            text: '3. Đánh giá kết quả hoạt động giáo dục theo TT 27/2020 và TT 22/2021 (Tr. 62–65)',
+            id: '3-ba-nhom-phuong-phap-giao-duc',
+            text: '3. Ba Nhóm Phương pháp Giáo dục Phổ thông & Lưu đồ Thực hiện (Trang 56 – 62)',
             depth: 2,
           },
           {
-            id: '4-tinh-huong-thuc-hanh',
-            text: '4. Tình huống Thực hành 5 Bước: Sử dụng phương pháp kích thích – điều chỉnh',
+            id: '4-danh-gia-ket-qua-tt27-tt22',
+            text: '4. Đánh giá Kết quả Hoạt động Giáo dục theo Thông tư 27/2020 và Thông tư 22/2021 (Trang 62–65)',
+            depth: 2,
+          },
+          {
+            id: '5-tinh-huong-thuc-hanh',
+            text: '5. Tình huống Thực hành 5 Bước: Phương pháp Trách phạt và Quy chế Đánh giá',
             depth: 2,
           },
         ],
@@ -1243,27 +1561,40 @@ export function getChapter3LessonModule(lessonId: string): CompiledLessonModule 
       frontmatter: {
         title: 'Bài 3.4: Kĩ năng và quy trình xử lí tình huống giáo dục',
         description:
-          'Khái niệm tình huống sư phạm và Quy trình 5 bước giải quyết tình huống giáo dục chuẩn mực theo Mục 3.3.6 Giáo trình HCMUE (tr. 65–66).',
+          'Nhận diện khái niệm tình huống sư phạm, phân tích các nguyên nhân gây xung đột trong quan hệ giáo dục, chuẩn hóa quy trình 5 bước giải quyết tình huống giáo dục tối ưu và bài tập thực hành tình huống điển hình.',
         level: 'advanced',
-        tags: ['CLO4', 'CLO5', 'Tình huống giáo dục', 'Quy trình 5 bước', 'Giáo trình tr. 65-66'],
+        tags: [
+          'EDUC2802-C3-L4',
+          'CLO4',
+          'CLO5',
+          'Tình huống giáo dục',
+          'Quy trình 5 bước',
+          'Mục 3.3.6',
+          'Giáo trình tr. 65-66',
+        ],
       },
       lessonMeta: {
         chapterNumber: 3,
         lessonNumber: 4,
         headings: [
           {
-            id: '1-khai-niem-tinh-huong-giao-duc',
-            text: '1. Khái niệm tình huống giáo dục và yêu cầu kĩ năng ứng xử (Tr. 65)',
+            id: '1-khai-niem-va-dac-trung',
+            text: '1. Khái niệm và Đặc trưng của Tình huống Sư phạm (Trang 65)',
             depth: 2,
           },
           {
-            id: '2-quy-trinh-5-buoc-xu-li-tinh-huong',
-            text: '2. Quy trình 5 bước giải quyết tình huống giáo dục chuẩn mực (Tr. 65–66)',
+            id: '2-quy-trinh-5-buoc-chuan-muc',
+            text: '2. Quy trình 5 Bước Giải quyết Tình huống Giáo dục Chuẩn mực (Trang 65 – 66)',
             depth: 2,
           },
           {
             id: '3-tinh-huong-thuc-hanh',
-            text: '3. Tình huống Thực hành 5 Bước: Xử lí tình huống bất ngờ trên lớp học',
+            text: '3. Khung Tình huống Thực hành Mẫu 5 Bước: Ứng dụng Toàn diện',
+            depth: 2,
+          },
+          {
+            id: '4-on-tap-va-de-cuong-chuong-3',
+            text: '4. Đề cương Câu hỏi Tự luận Trọng tâm Chương 3',
             depth: 2,
           },
         ],

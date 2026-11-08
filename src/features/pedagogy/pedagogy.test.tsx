@@ -281,6 +281,66 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b4).toBeDefined();
       expect(b4?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
+
+    it('kết xuất đầy đủ nội dung học thuật Chương 3 (Bài 3.1, Bài 3.2, Bài 3.3, Bài 3.4) từ Giáo trình HCMUE tr. 32–66', () => {
+      const b1 = getChapter3LessonModule('gdh-c3-b1-khai-quat-ve-giao-duc-pho-thong-viet-nam')!;
+      const b2 = getChapter3LessonModule(
+        'gdh-c3-b2-ban-chat-dac-diem-va-nguyen-tac-cua-hoat-dong-giao-duc',
+      )!;
+      const b3 = getChapter3LessonModule(
+        'gdh-c3-b3-cau-truc-thanh-to-phuong-phap-va-danh-gia-ket-qua-hoat-dong-giao-duc',
+      )!;
+      const b4 = getChapter3LessonModule(
+        'gdh-c3-b4-ki-nang-va-quy-trinh-xu-li-tinh-huong-giao-duc',
+      )!;
+
+      const { unmount: unmount1 } = render(<b1.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C3-L1/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Khung Cơ cấu Hệ thống Giáo dục Quốc dân/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Giai đoạn Giáo dục cơ bản/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Hội đồng trường/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Tư vấn chọn tổ hợp môn học ở lớp 10/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount1();
+
+      const { unmount: unmount2 } = render(<b2.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C3-L2/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Bản chất Biện chứng Hai mặt/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/01\. Tính mục đích/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/A\. S\. Makarenko/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Giáo viên áp dụng hình phạt tập thể/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount2();
+
+      const { unmount: unmount3 } = render(<b3.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C3-L3/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/5 Phẩm chất chủ yếu/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Bảng 3\.1/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/5 Nguyên tắc vàng khi trách phạt/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Lạm dụng phương pháp trách phạt bằng cách bắt học sinh đứng góc lớp/i)
+          .length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount3();
+
+      const { unmount: unmount4 } = render(<b4.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C3-L4/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Học sinh lớp 11 giật tài liệu vò nát nuốt vào miệng/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Phân tích dữ kiện/i).length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText(/Kết luận sư phạm/i).length).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Đề cương Câu hỏi Tự luận Trọng tâm Chương 3/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount4();
+    });
   });
 
   describe('Dispatcher getChapter4LessonModule', () => {
