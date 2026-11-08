@@ -362,6 +362,75 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(b3).toBeDefined();
       expect(b3?.lessonMeta.headings.length).toBeGreaterThanOrEqual(3);
     });
+
+    it('kết xuất đầy đủ nội dung học thuật Chương 4 (Bài 4.1, Bài 4.2, Bài 4.3) từ Giáo trình HCMUE tr. 67–82', () => {
+      const b1 = getChapter4LessonModule(
+        'gdh-c4-b1-chuc-nang-va-nhiem-vu-cua-nguoi-giao-vien-chu-nhiem-lop',
+      )!;
+      const b2 = getChapter4LessonModule(
+        'gdh-c4-b2-tim-hieu-hoc-sinh-lap-ke-hoach-va-xay-dung-tap-the-hoc-sinh',
+      )!;
+      const b3 = getChapter4LessonModule(
+        'gdh-c4-b3-to-chuc-giao-duc-toan-dien-xay-dung-moi-truong-lop-hoc-va-phoi-hop-cac-luc-luong-giao-duc',
+      )!;
+
+      const { unmount: unmount1 } = render(<b1.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C4-L1/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Vị trí và Khái niệm Giáo viên Chủ nhiệm Lớp/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Bốn Chức năng Cốt lõi của Giáo viên Chủ nhiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Ma trận Đối chiếu Nhiệm vụ GVCN Cấp Tiểu học và Trung học theo Điều lệ 2020/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Xử lý xung đột giữa giáo viên bộ môn và nhóm học sinh/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount1();
+
+      const { unmount: unmount2 } = render(<b2.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C4-L2/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Phương pháp Tìm hiểu Toàn diện Học sinh Lớp Chủ nhiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Lưu đồ 6 Bước Xây dựng Kế hoạch Giáo dục của Lớp Chủ nhiệm/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Bản chất và 3 Giai đoạn Phát triển Tập thể Học sinh/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Bốn Biện pháp Cơ bản Xây dựng và Giáo dục Tập thể Học sinh/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(
+          /Xây dựng tập thể học sinh đầu cấp và hóa giải hiện tượng chia bè phái/i,
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount2();
+
+      const { unmount: unmount3 } = render(<b3.default />);
+      expect(screen.getByText(/Mã bài: EDUC2802-C4-L3/i)).toBeInTheDocument();
+      expect(
+        screen.getAllByText(/Tổ chức Hoạt động Học tập và Hoạt động Trải nghiệm Lớp Chủ nhiệm/i)
+          .length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Xây dựng và Phát triển Môi trường Giáo dục Lớp học An toàn/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Ma trận Phối hợp Các Lực lượng Giáo dục của GVCN/i).length,
+      ).toBeGreaterThanOrEqual(1);
+      expect(
+        screen.getAllByText(/Đổi mới cuộc họp Cha mẹ học sinh và tháo gỡ xung đột giữa GV bộ môn/i)
+          .length,
+      ).toBeGreaterThanOrEqual(1);
+      unmount3();
+    });
   });
 
   describe('Dispatcher getChapter5LessonModule', () => {
