@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { type FC, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
+import { Logo } from '@/components/common/Logo';
 import { useAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import { ReadingProgressBar } from '@/features/lesson-reader/ReadingProgressBar';
@@ -163,15 +164,13 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
           className,
         )}
       >
-        {/* 1. CỤM LOGO TỐI GIẢN (Trái) */}
+        {/* 1. CỤM LOGO (Trái) */}
         <Link
           to={ROUTES.home}
-          className={cn(
-            'font-serif text-xs font-medium tracking-[0.22em] uppercase transition-opacity select-none hover:opacity-75 md:text-sm',
-            isDark ? 'text-[#E2E8F0] hover:text-[#F8FAFC]' : 'text-[#29383D]',
-          )}
+          aria-label="LEARNING UNIVERSE"
+          className="flex shrink-0 cursor-pointer items-center rounded-md transition-transform duration-200 ease-out hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none"
         >
-          LEARNING UNIVERSE
+          <Logo variant="primary" size="md" theme={isDark ? 'dark' : 'light'} />
         </Link>
 
         {/* 2. CỤM ĐIỀU HƯỚNG TRUNG TÂM (Giữa — Desktop) */}

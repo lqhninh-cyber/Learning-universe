@@ -13,7 +13,7 @@ describe('Footer Component', () => {
 
     const brand = screen.getByText('Learning Universe');
     expect(brand).toBeInTheDocument();
-    expect(brand).toHaveClass('font-serif', 'text-base', 'font-bold', 'text-[#F1F5F3]');
+    expect(brand).toHaveClass('font-serif', 'text-base', 'font-bold', 'text-[#F5F2EB]');
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
 
@@ -38,10 +38,10 @@ describe('Footer Component', () => {
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#E5B25D]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#C5A262]', 'not-italic');
   });
 
-  it('renders artistic open book emblem (BookCenterLogo) for both mobile and desktop', () => {
+  it('renders signature Tree of Knowledge logo symbol for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />
@@ -54,11 +54,10 @@ describe('Footer Component', () => {
     const desktopLogoWrapper = container.querySelector('.hidden.md\\:flex');
     expect(desktopLogoWrapper).toBeInTheDocument();
 
-    const bookLogos = screen.getAllByTestId('book-center-logo');
-    expect(bookLogos.length).toBeGreaterThanOrEqual(2);
-    bookLogos.forEach((logo) => {
-      expect(logo.querySelector('svg')).toBeInTheDocument();
-      expect(logo).toHaveAttribute('aria-label', 'Biểu trưng Cuốn sách mở tri thức');
+    const treeLogos = screen.getAllByTestId('tree-of-knowledge-logo');
+    expect(treeLogos.length).toBeGreaterThanOrEqual(2);
+    treeLogos.forEach((logo) => {
+      expect(logo.tagName.toLowerCase()).toBe('svg');
     });
 
     // Cũ monogram vuông không còn tồn tại

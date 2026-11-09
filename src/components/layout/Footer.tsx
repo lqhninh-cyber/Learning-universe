@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { ROUTES } from '@/shared/config/routes';
 import { Container } from '@/shared/ui';
 import { cn } from '@/shared/lib/cn';
-import { BookCenterLogo } from './BookCenterLogo';
+import { Logo } from '@/components/common/Logo';
 
 export interface FooterProps {
   readonly isDarkLesson?: boolean;
@@ -14,7 +14,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
     'transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]',
     'hover:-translate-y-0.5 active:scale-[0.98]',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E5B25D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081a13]',
-    isDarkLesson ? 'text-[#94A3B8] hover:text-[#F8FAFC]' : 'text-[#D1E0D7] hover:text-[#F1F5F3]',
+    isDarkLesson ? 'text-[#94A3B8] hover:text-[#F8FAFC]' : 'text-[#D1E0D7] hover:text-[#F5F2EB]',
   );
 
   return (
@@ -39,7 +39,9 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
           {/* Mobile Center Logo */}
           <div className="flex justify-center md:hidden">
-            <BookCenterLogo />
+            <div className="flex items-center justify-center drop-shadow-[0_0_12px_rgba(197,162,98,0.35)] filter">
+              <Logo variant="symbol" size="lg" theme="dark" />
+            </div>
           </div>
 
           {/* Left Column: Branding & President Ho Chi Minh Quotation (Dàn rộng max-w-xl) */}
@@ -48,7 +50,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <span
                 className={cn(
                   'font-serif text-base font-bold tracking-wide transition-colors md:text-lg',
-                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#F1F5F3]',
+                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#F5F2EB]',
                 )}
               >
                 Learning Universe
@@ -69,7 +71,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <cite
                 className={cn(
                   'mt-1.5 text-right font-mono text-xs font-medium not-italic transition-colors',
-                  isDarkLesson ? 'text-[#C89738]' : 'text-[#E5B25D]',
+                  isDarkLesson ? 'text-[#C89738]' : 'text-[#C5A262]',
                 )}
               >
                 — Chủ tịch Hồ Chí Minh
@@ -77,9 +79,11 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             </div>
           </div>
 
-          {/* Center Column: Luminous Open Book Emblem (Desktop) */}
+          {/* Center Column: Luminous Tree of Knowledge Emblem (Desktop) */}
           <div className="hidden shrink-0 items-center justify-center px-4 md:flex">
-            <BookCenterLogo />
+            <div className="flex items-center justify-center drop-shadow-[0_0_12px_rgba(197,162,98,0.35)] filter">
+              <Logo variant="symbol" size="lg" theme="dark" />
+            </div>
           </div>
 
           {/* Right Column: Flat Single-Row Navigation Links */}
@@ -109,9 +113,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         <div
           className={cn(
             'mt-4 flex flex-col items-center justify-between border-t pt-3 font-mono text-xs transition-colors sm:flex-row',
-            isDarkLesson
-              ? 'border-[#2A323A] text-[#94A3B8]'
-              : 'border-[#2A483B]/70 text-[#D1E0D7]/90',
+            isDarkLesson ? 'border-[#2A323A] text-[#94A3B8]' : 'border-[#2A483B]/70 text-[#A1B5AB]',
           )}
         >
           <p>Learning Universe. Bản quyền mở.</p>
