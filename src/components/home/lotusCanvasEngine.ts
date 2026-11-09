@@ -1,6 +1,6 @@
 /**
- * PROCEDURAL LOTUS CANVAS ENGINE (Thuật toán đồ họa Canvas 2D thủ tục hoa sen tả thực)
- * Tái tạo nguyên vẹn 100% logic toán học và mỹ thuật Canvas từ "Hoa sen.html".
+ * PROCEDURAL LOTUS CANVAS ENGINE (Thuật toán đồ họa Canvas 2D thủ tục hoa sen tả thực - Hoa sen_2.html)
+ * Tái tạo nguyên vẹn 100% logic toán học và mỹ thuật Canvas từ "Hoa sen_2.html" với phân tầng độ sâu quang học.
  */
 
 export const rng = (s: number) => () => {
@@ -52,12 +52,12 @@ export function makePetal(
   const path = () => {
     g.beginPath();
     g.moveTo(0, 0);
-    g.bezierCurveTo(wid * 1.1, -len * 0.12, wid * 1.05, -len * 0.7, wid * 0.12, -len * 0.97);
+    g.bezierCurveTo(wid * 0.85, -len * 0.14, wid * 1.2, -len * 0.6, wid * 0.12, -len * 0.97);
     g.quadraticCurveTo(0, -len * 1.04, -wid * 0.12, -len * 0.97);
-    g.bezierCurveTo(-wid * 1.05, -len * 0.7, -wid * 1.1, -len * 0.12, 0, 0);
+    g.bezierCurveTo(-wid * 1.2, -len * 0.6, -wid * 0.85, -len * 0.14, 0, 0);
   };
 
-  let gr = g.createLinearGradient(0, 0, 0, -len);
+  const gr = g.createLinearGradient(0, 0, 0, -len);
   const STOPS: readonly (readonly [number, number])[] = [
     [0, 0],
     [0.2, 0.1],
@@ -75,27 +75,27 @@ export function makePetal(
   g.clip();
 
   // Đổ bóng ngang: mép cánh sẫm, giữa sáng
-  gr = g.createLinearGradient(-wid, 0, wid, 0);
-  gr.addColorStop(0, 'rgba(160,35,85,.32)');
-  gr.addColorStop(0.28, 'rgba(160,35,85,0)');
-  gr.addColorStop(0.5, 'rgba(255,255,255,.2)');
-  gr.addColorStop(0.72, 'rgba(160,35,85,0)');
-  gr.addColorStop(1, 'rgba(160,35,85,.32)');
-  g.fillStyle = gr;
+  let bg = g.createLinearGradient(-wid, 0, wid, 0);
+  bg.addColorStop(0, 'rgba(160,35,85,.32)');
+  bg.addColorStop(0.28, 'rgba(160,35,85,0)');
+  bg.addColorStop(0.5, 'rgba(255,255,255,.2)');
+  bg.addColorStop(0.72, 'rgba(160,35,85,0)');
+  bg.addColorStop(1, 'rgba(160,35,85,.32)');
+  g.fillStyle = bg;
   g.fillRect(-pad, -len - 6, pad * 2, len + 12);
 
-  // Ửng hồng ở chóp cánh
-  gr = g.createRadialGradient(0, -len * 0.93, 2, 0, -len * 0.93, wid * 1.1);
-  gr.addColorStop(0, rgb(c1, 0.5));
-  gr.addColorStop(1, rgb(c1, 0));
-  g.fillStyle = gr;
+  // Ửng hồng ở chóp
+  bg = g.createRadialGradient(0, -len * 0.93, 2, 0, -len * 0.93, wid * 1.1);
+  bg.addColorStop(0, rgb(c1, 0.5));
+  bg.addColorStop(1, rgb(c1, 0));
+  g.fillStyle = bg;
   g.fillRect(-pad, -len - 6, pad * 2, len + 12);
 
   // Sắc vàng xanh ở gốc cánh
-  gr = g.createRadialGradient(0, -len * 0.03, 1, 0, -len * 0.03, len * 0.32);
-  gr.addColorStop(0, 'rgba(226,232,160,.6)');
-  gr.addColorStop(1, 'rgba(226,232,160,0)');
-  g.fillStyle = gr;
+  bg = g.createRadialGradient(0, -len * 0.03, 1, 0, -len * 0.03, len * 0.32);
+  bg.addColorStop(0, 'rgba(226,232,160,.6)');
+  bg.addColorStop(1, 'rgba(226,232,160,0)');
+  g.fillStyle = bg;
   g.fillRect(-pad, -len - 6, pad * 2, len + 12);
 
   // Gân cánh 2 tầng
@@ -137,26 +137,28 @@ export function makePetal(
   g.strokeStyle = 'rgba(165,40,90,.45)';
   g.stroke();
 
-  // Giọt sương đọng phản quang
+  // Giọt sương đọng
   if (r() < 0.7) {
     const x = (r() - 0.5) * wid * 0.7;
     const y = -len * (0.3 + r() * 0.4);
     const d = 2.2 + r() * 2;
-    gr = g.createRadialGradient(x - d * 0.3, y - d * 0.3, 0.2, x, y, d);
-    gr.addColorStop(0, 'rgba(255,255,255,.75)');
-    gr.addColorStop(0.6, 'rgba(255,255,255,.18)');
-    gr.addColorStop(1, 'rgba(120,30,70,.35)');
+    bg = g.createRadialGradient(x - d * 0.3, y - d * 0.3, 0.2, x, y, d);
+    bg.addColorStop(0, 'rgba(255,255,255,.75)');
+    bg.addColorStop(0.6, 'rgba(255,255,255,.18)');
+    bg.addColorStop(1, 'rgba(120,30,70,.35)');
     g.beginPath();
     g.arc(x, y, d, 0, Math.PI * 2);
-    g.fillStyle = gr;
+    g.fillStyle = bg;
     g.fill();
   }
-
   return { c, pad, len, w: w / q, h: h / q };
 }
 
 export const drawPetal = (ctx: CanvasRenderingContext2D, p: PetalData) => {
+  const ga = ctx.globalAlpha;
+  ctx.globalAlpha = ga * 0.94;
   ctx.drawImage(p.c, -p.pad, -p.len - 4, p.w, p.h);
+  ctx.globalAlpha = ga;
 };
 
 export interface LayerConfig {
@@ -184,7 +186,7 @@ export function stamen(
   ctx.beginPath();
   ctx.moveTo(sx, sy);
   ctx.quadraticCurveTo(Math.sin(aa) * len * 0.45, (sy + ey) / 2 - 4, ex, ey);
-  ctx.strokeStyle = 'rgba(246,230,135,.95)';
+  ctx.strokeStyle = 'rgba(250,222,110,.95)';
   ctx.lineWidth = 1.3;
   ctx.stroke();
 
@@ -195,23 +197,61 @@ export function stamen(
   ctx.ellipse(0, -2, 1.7, 4.4, 0, 0, Math.PI * 2);
   ctx.fillStyle = '#e4a41c';
   ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(0, -8, 1, 2.8, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#f6eebb';
+  ctx.fill();
   ctx.restore();
 }
 
 export function pod(ctx: CanvasRenderingContext2D, t: number) {
   const r = rng(3);
   ctx.save();
-  ctx.translate(0, -78);
+  ctx.translate(0, -52);
 
-  // 52 sợi nhị hoa màu vàng óng phía sau
+  const hg = ctx.createRadialGradient(0, -5, 2, 0, -5, 60);
+  hg.addColorStop(0, 'rgba(255,238,160,.18)');
+  hg.addColorStop(1, 'rgba(255,238,160,0)');
+  ctx.fillStyle = hg;
+  ctx.fillRect(-64, -70, 128, 130);
+
+  // 52 sợi nhụy phía sau
   for (let i = 0; i < 52; i++) {
     stamen(ctx, (i / 51 - 0.5) * 2.7, 36 + r() * 13, t, i, false);
   }
 
-  let g: CanvasGradient = ctx.createLinearGradient(-20, 0, 20, 0);
-  g.addColorStop(0, '#587a24');
-  g.addColorStop(0.45, '#b6cb5a');
-  g.addColorStop(1, '#68892b');
+  // Đoạn nối cuống đài chắc chắn với thân: không để hở chân đài
+  {
+    const ng = ctx.createLinearGradient(-6, 0, 6, 0);
+    ng.addColorStop(0, '#27602f');
+    ng.addColorStop(0.45, '#78b867');
+    ng.addColorStop(1, '#245a2c');
+    ctx.beginPath();
+    ctx.moveTo(-6, 20);
+    ctx.lineTo(-4.2, 58);
+    ctx.lineTo(4.2, 58);
+    ctx.lineTo(6, 20);
+    ctx.closePath();
+    ctx.fillStyle = ng;
+    ctx.fill();
+
+    const vg = ctx.createLinearGradient(0, 20, 0, 58);
+    vg.addColorStop(0, 'rgba(160,160,60,.95)');
+    vg.addColorStop(1, 'rgba(160,160,60,0)');
+    ctx.fillStyle = vg;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(0, 55, 7.5, 3, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#6f9a3e';
+    ctx.fill();
+  }
+
+  // Thân nón gương sen đổ bóng 3D
+  let g = ctx.createLinearGradient(-20, 0, 20, 0);
+  g.addColorStop(0, '#8f9433');
+  g.addColorStop(0.45, '#d9d474');
+  g.addColorStop(1, '#9a9c3a');
   ctx.beginPath();
   ctx.moveTo(-20, -12);
   ctx.bezierCurveTo(-20, 2, -10, 12, -6, 24);
@@ -222,18 +262,18 @@ export function pod(ctx: CanvasRenderingContext2D, t: number) {
   ctx.fill();
 
   g = ctx.createRadialGradient(-5, -15, 2, 0, -12, 22);
-  g.addColorStop(0, '#e0eb92');
-  g.addColorStop(1, '#98b441');
+  g.addColorStop(0, '#f1eba0');
+  g.addColorStop(1, '#c8c352');
   ctx.beginPath();
   ctx.ellipse(0, -12, 20, 7.5, 0, 0, Math.PI * 2);
   ctx.fillStyle = g;
   ctx.fill();
-  ctx.strokeStyle = 'rgba(55,85,18,.65)';
+  ctx.strokeStyle = 'rgba(110,95,25,.6)';
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  // 9 mắt hạt sen hai viền màu xanh lục/vàng
-  const SEED_POSITIONS: readonly (readonly [number, number])[] = [
+  // 15 mắt hạt sen hai viền sắc nét
+  const PITS: readonly (readonly [number, number])[] = [
     [0, -12],
     [-9, -12],
     [9, -12],
@@ -243,19 +283,25 @@ export function pod(ctx: CanvasRenderingContext2D, t: number) {
     [5, -15],
     [-13, -11],
     [13, -11],
+    [0, -8.5],
+    [0, -15.5],
+    [-9, -9.5],
+    [9, -9.5],
+    [-9, -14.5],
+    [9, -14.5],
   ];
-  SEED_POSITIONS.forEach(([x, y]) => {
+  PITS.forEach(([px, py]) => {
     ctx.beginPath();
-    ctx.ellipse(x, y, 3.4, 1.6, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#3f5e17';
+    ctx.ellipse(px, py, 3.4, 1.6, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#6a5c1c';
     ctx.fill();
     ctx.beginPath();
-    ctx.ellipse(x + 0.3, y + 0.3, 2.3, 1, 0, 0, Math.PI * 2);
+    ctx.ellipse(px + 0.3, py + 0.3, 2.3, 1, 0, 0, Math.PI * 2);
     ctx.fillStyle = '#d6e08a';
     ctx.fill();
   });
 
-  // 24 sợi nhị hoa phía trước
+  // 24 sợi nhụy vàng phía trước
   for (let i = 0; i < 24; i++) {
     stamen(ctx, (i / 23 - 0.5) * 3.3, 22 + r() * 9, t, i + 60, true);
   }
@@ -266,19 +312,9 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
   const open = 0.94 + 0.06 * Math.sin(t * 0.35);
   ctx.save();
   ctx.rotate(Math.sin(t * 0.3) * 0.02);
-
-  for (const s of [-1, 0, 1]) {
-    ctx.save();
-    ctx.rotate(s * 0.95);
-    ctx.beginPath();
-    ctx.ellipse(0, -9, 8, 16, 0, 0, Math.PI * 2);
-    ctx.fillStyle = s ? '#5f9a52' : '#6fae5f';
-    ctx.fill();
-    ctx.restore();
-  }
   ctx.beginPath();
   ctx.ellipse(0, 5, 14, 8, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#4f8a46';
+  ctx.fillStyle = '#b9ac52';
   ctx.fill();
 
   layers.forEach((l, li) => {
@@ -288,7 +324,6 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
       g.addColorStop(1, 'rgba(120,30,70,0)');
       ctx.fillStyle = g;
       ctx.fillRect(-90, -140, 180, 170);
-      pod(ctx, t);
     }
     for (let i = 0; i < l.n; i++) {
       const f = l.n > 1 ? (i / (l.n - 1)) * 2 - 1 : 0;
@@ -301,11 +336,15 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
         drawPetal(ctx, petal);
       }
       ctx.restore();
+      if (li === 3 && i === l.n - 1) {
+        pod(ctx, t);
+      }
     }
   });
   ctx.restore();
 }
 
+/* ---------- Lá sen ---------- */
 export function makePad(seed: number, col: readonly [string, string, string]): HTMLCanvasElement {
   const r = rng(seed);
   const c = document.createElement('canvas');
@@ -313,15 +352,23 @@ export function makePad(seed: number, col: readonly [string, string, string]): H
   const g = c.getContext('2d');
   if (!g) return c;
   g.translate(128, 128);
-  const R = 122;
-  const n = 0.28;
+  const R = 120;
+  const n = 0.03;
   const path = () => {
     g.beginPath();
-    g.moveTo(0, 0);
-    g.arc(0, 0, R, n, Math.PI * 2 - n);
+    for (let i = 0; i <= 120; i++) {
+      const a = (i / 120) * 6.2832;
+      const rr = R * (1 + 0.035 * Math.sin(a * 7 + seed) + 0.02 * Math.sin(a * 13 + 1));
+      if (i) {
+        g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+      } else {
+        g.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
+      }
+    }
     g.closePath();
   };
-  let gr = g.createRadialGradient(-30, -30, 10, 0, 0, R);
+
+  const gr = g.createRadialGradient(-30, -30, 10, 0, 0, R);
   gr.addColorStop(0, col[0]);
   gr.addColorStop(0.6, col[1]);
   gr.addColorStop(1, col[2]);
@@ -350,34 +397,47 @@ export function makePad(seed: number, col: readonly [string, string, string]): H
     }
   }
 
-  gr = g.createRadialGradient(-45, -50, 4, -45, -50, 85);
-  gr.addColorStop(0, 'rgba(255,255,255,.17)');
-  gr.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = gr;
+  let bg = g.createRadialGradient(0, 0, 2, 0, 0, 22);
+  bg.addColorStop(0, 'rgba(10,50,28,.55)');
+  bg.addColorStop(1, 'rgba(10,50,28,0)');
+  g.fillStyle = bg;
+  g.fillRect(-30, -30, 60, 60);
+
+  bg = g.createRadialGradient(-45, -50, 4, -45, -50, 85);
+  bg.addColorStop(0, 'rgba(255,255,255,.17)');
+  bg.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = bg;
   g.fillRect(-R, -R, R * 2, R * 2);
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 9; i++) {
     const a = r() * 6.28;
     const d = 25 + r() * 75;
     const x = Math.cos(a) * d;
     const y = Math.sin(a) * d;
-    const b = 3 + r() * 3;
-    gr = g.createRadialGradient(x - b * 0.3, y - b * 0.3, 0.3, x, y, b);
-    gr.addColorStop(0, 'rgba(255,255,255,.8)');
-    gr.addColorStop(0.6, 'rgba(200,255,225,.25)');
-    gr.addColorStop(1, 'rgba(10,60,35,.4)');
+    const b = 2.5 + r() * 4.5;
+    bg = g.createRadialGradient(x - b * 0.3, y - b * 0.3, 0.3, x, y, b);
+    bg.addColorStop(0, 'rgba(255,255,255,.8)');
+    bg.addColorStop(0.6, 'rgba(200,255,225,.25)');
+    bg.addColorStop(1, 'rgba(10,60,35,.4)');
     g.beginPath();
     g.arc(x, y, b, 0, Math.PI * 2);
-    g.fillStyle = gr;
+    g.fillStyle = bg;
     g.fill();
   }
-
   g.restore();
+
   path();
   g.strokeStyle = 'rgba(8,50,28,.65)';
   g.lineWidth = 3;
   g.stroke();
   return c;
+}
+
+export interface PadDewdrop {
+  readonly a: number;
+  readonly k: number;
+  readonly z: number;
+  readonly ph: number;
 }
 
 export interface PadConfig {
@@ -387,18 +447,37 @@ export interface PadConfig {
   readonly rot: number;
   readonly p: number;
   readonly s: number;
+  readonly f?: number; // 1 = tiền cảnh, undefined/0 = hậu cảnh
+  d?: PadDewdrop[];
 }
 
 export const PADS: readonly PadConfig[] = [
-  { x: 0.14, y: 0.3, r: 70, rot: 0.5, p: 0, s: 0 },
-  { x: 0.84, y: 0.26, r: 60, rot: 2.4, p: 1.7, s: 1 },
-  { x: 0.1, y: 0.78, r: 90, rot: 4.0, p: 3, s: 2 },
-  { x: 0.88, y: 0.8, r: 80, rot: 1.2, p: 2, s: 0 },
-  { x: 0.3, y: 0.88, r: 55, rot: 5.2, p: 4, s: 1 },
-  { x: 0.7, y: 0.16, r: 45, rot: 3.3, p: 5, s: 2 },
-  { x: 0.22, y: 0.55, r: 38, rot: 2.0, p: 0.8, s: 1 },
-  { x: 0.8, y: 0.55, r: 42, rot: 0.2, p: 2.6, s: 0 },
+  { x: 0.08, y: 0.24, r: 40, rot: 0.5, p: 0, s: 0 },
+  { x: 0.2, y: 0.12, r: 30, rot: 2.4, p: 1.7, s: 1 },
+  { x: 0.66, y: 0.1, r: 32, rot: 3.3, p: 5, s: 2 },
+  { x: 0.9, y: 0.2, r: 38, rot: 1.2, p: 2, s: 0 },
+  { x: 0.07, y: 0.5, r: 46, rot: 4.0, p: 3, s: 2 },
+  { x: 0.94, y: 0.46, r: 44, rot: 5.2, p: 4, s: 1 },
+  { x: 0.14, y: 0.13, r: 62, rot: 2.0, p: 0.8, s: 1, f: 1 },
+  { x: 0.36, y: 0.2, r: 42, rot: 0.2, p: 2.6, s: 0, f: 1 },
+  { x: 0.66, y: 0.15, r: 34, rot: 3.9, p: 3.4, s: 2, f: 1 },
+  { x: 0.88, y: 0.12, r: 58, rot: 5.8, p: 1.2, s: 0, f: 1 },
 ];
+
+export function initPadsDewdrops(pads: readonly PadConfig[]) {
+  const q = rng(21);
+  pads.forEach((p) => {
+    p.d = [];
+    for (let i = 0; i < 7; i++) {
+      p.d.push({
+        a: q() * 6.283,
+        k: 1.05 + q() * 0.5,
+        z: q(),
+        ph: q() * 6.28,
+      });
+    }
+  });
+}
 
 export function padDraw(
   ctx: CanvasRenderingContext2D,
@@ -407,14 +486,18 @@ export function padDraw(
   W: number,
   H: number,
   S: number,
+  wy: number,
   padSp: readonly HTMLCanvasElement[],
 ) {
+  const yy = p.f ? wy + p.y * H : p.y * H;
+  const dep = 0.55 + 0.9 * Math.min(1, yy / H);
+  const PS = Math.max(S, 0.9);
   const x = p.x * W + Math.sin(t * 0.12 + p.p) * 6;
-  const y = p.y * H + Math.cos(t * 0.1 + p.p) * 4;
-  const r = p.r * S;
+  const y = yy + Math.cos(t * 0.1 + p.p) * 4;
+  const r = p.r * PS * dep;
+
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(p.rot + Math.sin(t * 0.08 + p.p) * 0.04);
   ctx.scale(1, 0.42);
   ctx.beginPath();
   ctx.arc(0, r * 0.14, r * 0.99, 0, Math.PI * 2);
@@ -425,13 +508,36 @@ export function padDraw(
   ctx.strokeStyle = 'rgba(220,255,235,.16)';
   ctx.lineWidth = 1.2;
   ctx.stroke();
+
+  ctx.rotate(Math.sin(p.rot * 2.3) * 0.6 + Math.sin(t * 0.08 + p.p) * 0.04);
   const padCanvas = padSp[p.s];
   if (padCanvas) {
     ctx.drawImage(padCanvas, -r, -r, r * 2, r * 2);
   }
   ctx.restore();
+
+  if (p.d) {
+    p.d.forEach((o) => {
+      const dx = x + Math.cos(o.a) * r * o.k + Math.sin(t * 0.1 + o.ph) * 3;
+      const dy = y + Math.sin(o.a) * r * o.k * 0.42;
+      const rr = (1.5 + o.z * 1.8) * PS * dep;
+      ctx.beginPath();
+      ctx.ellipse(dx, dy + rr * 0.25, rr * 1.05, rr * 0.5, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,30,18,.3)';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(dx, dy, rr, rr * 0.55, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(143,211,110,.9)';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(dx - rr * 0.2, dy - rr * 0.15, rr * 0.45, rr * 0.2, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(235,255,200,.55)';
+      ctx.fill();
+    });
+  }
 }
 
+/* ---------- Nước ---------- */
 export interface GlistenItem {
   readonly x: number;
   readonly y: number;
@@ -472,7 +578,6 @@ export function water(
   ctx.fillRect(0, 0, W, H);
 
   ctx.lineWidth = 1.2;
-  // 18 dải sóng ngang lượn sóng động
   for (let k = 0; k < 18; k++) {
     const y = ((k + 0.5) / 18) * H;
     ctx.beginPath();
@@ -489,7 +594,6 @@ export function water(
     ctx.stroke();
   }
 
-  // 46 đốm sáng lấp lánh ngẫu nhiên
   gl.forEach((o) => {
     const a = Math.pow(Math.max(0, Math.sin(t * 0.35 + o.p)), 6) * 0.55;
     if (a < 0.02) return;
@@ -517,6 +621,7 @@ export function ripples(
   }
 }
 
+/* ---------- Nụ sen ---------- */
 export function bud(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -528,6 +633,7 @@ export function bud(
   const bx = Math.max(70 * S, cx - 215 * S);
   const by = cy - 250 * S;
   const sw = Math.sin(t * 0.3) * 5 * S;
+
   ctx.beginPath();
   ctx.moveTo(bx - 22 * S, cy);
   ctx.quadraticCurveTo(bx - 34 * S, cy - 120 * S, bx + sw, by + 14 * S);
@@ -564,6 +670,7 @@ export function bud(
   ctx.restore();
 }
 
+/* ---------- Cá chép ---------- */
 export interface FishConfig {
   readonly ax: number;
   readonly ay: number;
@@ -633,7 +740,9 @@ export function fishes(ctx: CanvasRenderingContext2D, t: number, W: number, H: n
     const d0 = (((t - fi * 3.7) % per) + per) % per;
     const dd = Math.min(d0, per - d0);
     const nr = Math.exp(-Math.pow(dd / 1.3, 2));
-    const k = S * f.sz * (1 + 0.07 * nr);
+
+    // Công thức kích thước cá BẮT BUỘC có tỉ lệ phối cảnh theo trục dọc
+    const k = S * f.sz * (1 + 0.07 * nr) * (0.6 + (0.8 * y) / H);
     const seg = 7 * k;
     const pts: [number, number, number][] = [];
     let px = x;
@@ -647,14 +756,15 @@ export function fishes(ctx: CanvasRenderingContext2D, t: number, W: number, H: n
       a += Math.sin(t * 3.5 - i * 0.6 + fi * 2) * 0.16 * (0.3 + i / N);
     }
 
+    const h = pts[0];
+    const e = pts[N - 1];
+    const q = pts[2];
+    if (!h || !e || !q) return;
+
     ctx.save();
     ctx.globalAlpha = 0.88 + 0.12 * nr;
     ctx.lineJoin = 'round';
 
-    const e = pts[N - 1];
-    const q = pts[2];
-    const h = pts[0];
-    if (!e || !q || !h) return;
     const ca = Math.cos(e[2]);
     const sa = Math.sin(e[2]);
     const wv = Math.sin(t * 3.5 - N * 0.6 + fi * 2) * 4 * k;
@@ -696,7 +806,7 @@ export function fishes(ctx: CanvasRenderingContext2D, t: number, W: number, H: n
         sx + qn[0] * s * (9 * k + fw),
         sy + qn[1] * s * (9 * k + fw),
         sx - Math.cos(q[2]) * 9 * k + qn[0] * s * 5 * k,
-        sy - Math.sin(q[2]) * 9 * k + qn[1] * s * 5 * k,
+        sy - Math.sin(q[2]) * 9 * k + qn[0] * s * 5 * k,
       );
       ctx.closePath();
       ctx.fillStyle = rgb(f.c, 0.5);
@@ -766,6 +876,7 @@ export function fishes(ctx: CanvasRenderingContext2D, t: number, W: number, H: n
   });
 }
 
+/* ---------- Chuồn chuồn ---------- */
 export function wing(
   ctx: CanvasRenderingContext2D,
   len: number,
@@ -838,7 +949,6 @@ export function drawDF(
     return;
   }
 
-  // Cánh chuồn chuồn
   for (const s of [-1, 1]) {
     ctx.save();
     ctx.scale(s, 1);
@@ -853,7 +963,6 @@ export function drawDF(
     ctx.restore();
   }
 
-  // Đốt thân chuồn chuồn
   for (let i = 0; i < 10; i++) {
     ctx.beginPath();
     ctx.arc(0, 5 + i * 3.3, 2.3 - i * 0.12, 0, Math.PI * 2);
@@ -876,7 +985,6 @@ export function drawDF(
   ctx.fillStyle = '#2f8f6a';
   ctx.fill();
 
-  // Mắt kép
   for (const s of [-1, 1]) {
     ctx.beginPath();
     ctx.arc(s * 3, -9.5, 2.9, 0, Math.PI * 2);
@@ -898,6 +1006,7 @@ export function dragonfly(
   W: number,
   H: number,
   S: number,
+  sh: boolean,
 ) {
   const P = (u: number): [number, number] => [
     cx + Math.sin(u * 0.37) * W * 0.3 + Math.sin(u * 0.9) * 30 * S,
@@ -916,13 +1025,17 @@ export function dragonfly(
   dh = Math.atan2(Math.sin(dh), Math.cos(dh));
   const h = hf + dh * lw;
   const x = fx + (cx - fx) * lw;
-  const y = fy + (cy - 92 * S - fy) * lw;
+  const y = fy + (cy - 72 * S - fy) * lw;
   const hv = Math.sin(t * 5) * 1.2 * S * (1 - lw);
 
-  drawDF(ctx, x + 40 * S * (1 - lw * 0.7), y + 75 * S * (1 - lw * 0.55), h, k * 0.9, t, true, 1);
-  drawDF(ctx, x, y + hv, h, k, t, false, 1 - lw * 0.93);
+  if (sh) {
+    drawDF(ctx, x + 40 * S * (1 - lw * 0.7), y + 75 * S * (1 - lw * 0.55), h, k * 0.9, t, true, 1);
+  } else {
+    drawDF(ctx, x, y + hv, h, k, t, false, 1 - lw * 0.93);
+  }
 }
 
+/* ---------- Cuống sen và lá đứng ---------- */
 export function stem(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -948,7 +1061,7 @@ export function stem(
   ctx.lineWidth = 8 * S;
   ctx.stroke();
 
-  // Gai nhám chấm bi li ti
+  // 30 chấm gai sần tự nhiên
   for (let i = 0; i < 30; i++) {
     const s = 0.05 + (i / 29) * 0.9;
     const m = 1 - s;
@@ -987,6 +1100,7 @@ export function stem(
     ctx.stroke();
   }
 
+  // Khúc ngập dưới nước
   ctx.globalAlpha = 0.2;
   ctx.beginPath();
   ctx.moveTo(cx, wy + 2 * S);
@@ -1008,6 +1122,7 @@ export function standLeaf(
 ) {
   const sw = Math.sin(t * 0.28 + 2) * 4 * S;
   const lx = x + sw;
+
   ctx.save();
   ctx.lineCap = 'round';
   ctx.beginPath();
@@ -1016,7 +1131,6 @@ export function standLeaf(
   ctx.strokeStyle = '#2f6e35';
   ctx.lineWidth = 4.5 * S;
   ctx.stroke();
-
   ctx.strokeStyle = 'rgba(165,220,145,.45)';
   ctx.lineWidth = 1.3 * S;
   ctx.stroke();
@@ -1057,15 +1171,26 @@ export function standLeaf(
     ctx.stroke();
   }
 
-  ctx.beginPath();
-  ctx.ellipse(-r * 0.08, r * 0.02, r * 0.17, r * 0.06, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(215,255,235,.38)';
-  ctx.fill();
+  // 4 giọt sương mai hình cầu nổi 3D đọng trên phiến lá
+  for (let j = 0; j < 4; j++) {
+    const ph = t * 0.12 + j * 1.7;
+    const bx = Math.sin(ph) * r * 0.4;
+    const by = Math.cos(ph * 1.3 + j) * r * 0.1;
+    const b = r * (0.03 + 0.012 * j);
+    ctx.beginPath();
+    ctx.ellipse(bx + b * 0.4, by + b * 0.5, b * 1.1, b * 0.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(5,40,25,.35)';
+    ctx.fill();
+    const bg = ctx.createRadialGradient(bx - b * 0.3, by - b * 0.3, 0.2, bx, by, b);
+    bg.addColorStop(0, 'rgba(255,255,255,.9)');
+    bg.addColorStop(0.5, 'rgba(190,245,215,.3)');
+    bg.addColorStop(1, 'rgba(20,80,50,.55)');
+    ctx.beginPath();
+    ctx.arc(bx, by, b, 0, Math.PI * 2);
+    ctx.fillStyle = bg;
+    ctx.fill();
+  }
 
-  ctx.beginPath();
-  ctx.ellipse(-r * 0.12, 0, r * 0.05, r * 0.018, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,.8)';
-  ctx.fill();
   ctx.restore();
 }
 
@@ -1084,18 +1209,25 @@ export interface LotusCanvasEngine {
 export function createLotusCanvasEngine(): LotusCanvasEngine {
   // Cấu trúc 4 lớp cánh LAY
   const LAY: LayerConfig[] = [
-    { n: 3, sp: 1.25, len: 182, wid: 56, c1: [206, 74, 126], ps: [] },
-    { n: 2, sp: 0.58, len: 172, wid: 54, c1: [222, 98, 146], ps: [] },
-    { n: 2, sp: 1.0, len: 156, wid: 50, c1: [234, 124, 164], ps: [] },
-    { n: 2, sp: 1.2, len: 132, wid: 48, c1: [240, 146, 180], ps: [] },
+    { n: 3, sp: 1.25, len: 166, wid: 54, c1: [206, 74, 126], ps: [] },
+    { n: 2, sp: 0.58, len: 150, wid: 46, c1: [222, 98, 146], ps: [] },
+    { n: 2, sp: 1.0, len: 186, wid: 56, c1: [234, 124, 164], ps: [] },
+    { n: 2, sp: 1.2, len: 124, wid: 46, c1: [240, 146, 180], ps: [] },
   ];
 
   LAY.forEach((l, li) => {
     l.ps = [];
     for (let i = 0; i < l.n; i++) {
       const r = rng(li * 97 + i * 13 + 5);
+      const baseColor = li === 3 || li === 0 ? ([236, 244, 212] as const) : CREAM;
       l.ps.push(
-        makePetal(l.len * (0.94 + r() * 0.1), l.wid * (0.92 + r() * 0.14), l.c1, li * 31 + i + 1),
+        makePetal(
+          l.len * (0.94 + r() * 0.1),
+          l.wid * (0.92 + r() * 0.14),
+          l.c1,
+          li * 31 + i + 1,
+          baseColor,
+        ),
       );
     }
   });
@@ -1114,6 +1246,9 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
     makePad(3, ['#6bbf7a', '#3f9350', '#215f35']),
   ];
 
+  // Khởi tạo các giọt nước đọng trên 10 phiến lá
+  initPadsDewdrops(PADS);
+
   // 46 đốm sáng lấp lánh ngẫu nhiên
   const gl = createGlistens();
 
@@ -1124,25 +1259,21 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       const cy = H * 0.5;
       const wy = cy + 140 * S;
 
-      // 1. Mặt nước & dải sóng & đốm lấp lánh
+      // 1. Mặt nước (water) & Đàn cá (fishes)
       water(ctx, t, cx, cy, W, H, S, gl);
-
-      // 2. Đàn cá chép bơi ngầm
       fishes(ctx, t, W, H, S);
 
-      // 3. Các phiến lá sen bập bềnh
-      PADS.forEach((p) => padDraw(ctx, p, t, W, H, S, padSp));
+      // 2. Lá sen hậu cảnh (pads.forEach(p => { if (!p.f) padDraw(p, t, wy); }))
+      PADS.forEach((p) => {
+        if (!p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
+      });
 
-      // 4. Sóng do cá ngoi mặt nước
+      // 3. Gợn sóng cá, sóng cuống sen & Nụ sen (bud)
       fishRipples(ctx, t, W, H, S);
-
-      // 5. Vòng sóng lan tỏa quanh hoa
       ripples(ctx, cx, wy, t, S);
-
-      // 6. Nụ sen bên trái
       bud(ctx, cx, wy, t, S, BUD);
 
-      // 7. Bóng phản chiếu hoa sen dưới nước
+      // 4. Bóng phản chiếu bông sen dưới nước
       ctx.save();
       ctx.translate(cx, wy + 42 * S);
       ctx.scale(S, -S * 0.3);
@@ -1150,36 +1281,42 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       try {
         ctx.filter = 'blur(2px)';
       } catch {
-        // Fallback if filter not supported
+        // Fallback
       }
       flower(ctx, t, LAY);
       ctx.restore();
       ctx.filter = 'none';
 
-      // 8. Vầng hào quang ấm trung tâm
+      // Vầng hào quang ấm trung tâm
       const gWarm = ctx.createRadialGradient(cx, cy - 80 * S, 10, cx, cy - 80 * S, 260 * S);
       gWarm.addColorStop(0, 'rgba(255,220,230,.2)');
       gWarm.addColorStop(1, 'rgba(255,220,230,0)');
       ctx.fillStyle = gWarm;
       ctx.fillRect(0, 0, W, H);
 
-      // 9. Lá đứng vươn đón nắng
-      standLeaf(ctx, Math.min(W - 70 * S, cx + 255 * S), wy, cy + 10 * S, 56 * S, t, S);
+      // 5. BÓNG CHUỒN CHUỒN: Vẽ bóng đổ trước khi vẽ bông hoa
+      dragonfly(ctx, t, cx, cy, W, H, S, true);
 
-      // 10. Cuống sen chính
+      // 6. Lá sen đứng vươn cao & Cuống sen chính
+      standLeaf(ctx, Math.min(W - 70 * S, cx + 255 * S), wy, cy + 10 * S, 56 * S, t, S);
       stem(ctx, cx, cy, wy, t, S);
 
-      // 11. Đóa sen lớn trung tâm hé mở
+      // 7. BÔNG SEN NỞ CHÍNH
       ctx.save();
       ctx.translate(cx, cy);
       ctx.scale(S, S);
       flower(ctx, t, LAY);
       ctx.restore();
 
-      // 12. Chuồn chuồn bay lượn và đỗ nhẹ
-      dragonfly(ctx, t, cx, cy, W, H, S);
+      // 8. LÁ SEN TIỀN CẢNH (pads.forEach(p => { if (p.f) padDraw(p, t, wy); })) đè lên chân gốc hoa
+      PADS.forEach((p) => {
+        if (p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
+      });
 
-      // 13. 26 hạt bụi sáng / phấn hoa lơ lửng
+      // 9. THÂN VÀ CÁNH CHUỒN CHUỒN: Bay lượn và thỉnh thoảng đỗ trên nụ sen
+      dragonfly(ctx, t, cx, cy, W, H, S, false);
+
+      // 10. 26 hạt phấn hoa bay lơ lửng
       for (let i = 0; i < 26; i++) {
         const f = (t * 0.03 + i / 26) % 1;
         const x = cx + Math.sin(i * 7.1 + t * 0.3) * 150 * S * (0.4 + f);
@@ -1195,7 +1332,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.fill();
       }
 
-      // 14. Vignette mờ ảo ven khung hình
+      // 11. Lớp phủ vignette viền hồ
       const gVignette = ctx.createRadialGradient(
         W / 2,
         H / 2,
