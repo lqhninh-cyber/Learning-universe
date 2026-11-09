@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { NUMBERED_BLOCKS } from '@schemas/blocks';
 import { cn } from '@/shared/lib/cn';
-import { Badge } from '@/shared/ui';
 import { SourceAttributionBadge } from './TheoryBlock';
 
 export interface ExampleBlockProps {
@@ -41,25 +40,31 @@ function BaseExampleBlock({
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
       className={cn(
-        'my-6 scroll-mt-24 rounded-xl border p-6 transition-colors lg:p-7',
+        'my-6 scroll-mt-24 rounded-2xl p-5 shadow-sm transition-colors md:p-6 lg:p-7 dark:shadow-none',
         isCounterexample
-          ? 'border-amber-200/90 bg-amber-50/35'
-          : 'border-[var(--bg-muted)] bg-[#FAF8F5]',
+          ? 'border border-amber-200/90 bg-amber-50/35 dark:border-amber-900/40 dark:bg-amber-950/20'
+          : 'border border-[#E2ECE6] bg-[#F8FAF9] text-zinc-900 dark:border dark:border-[#1E3B2E] dark:bg-[#0E1E17] dark:text-[#E8F1EC]',
       )}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2.5">
-          <Badge
-            variant={isCounterexample ? 'draft' : 'neutral'}
-            className="font-semibold tracking-tight"
+          <span
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors',
+              isCounterexample
+                ? 'border border-amber-200/80 bg-amber-50 text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-300'
+                : 'border border-[#E2ECE6] bg-[#E8F2EC] text-[#1B4332] dark:border dark:border-[#2B5642] dark:bg-[#19382A] dark:text-[#A1D1B7]',
+            )}
           >
             {headingLabel}
-          </Badge>
-          {title && <h4 className="text-base font-semibold text-[var(--text-primary)]">{title}</h4>}
+          </span>
+          {title && (
+            <h4 className="text-base font-semibold text-zinc-900 dark:text-[#E8F1EC]">{title}</h4>
+          )}
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[16.5px] leading-relaxed text-[var(--text-primary)]">
+      <div className="space-y-3 text-[16.5px] leading-relaxed text-zinc-900 dark:text-[#E8F1EC]">
         {children}
       </div>
     </section>

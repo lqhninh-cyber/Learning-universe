@@ -160,15 +160,15 @@ export function PrincipleMatrix({ className, defaultPrincipleId = 1 }: Principle
           </div>
 
           {/* Bẫy sư phạm thường gặp (Cần tránh) */}
-          <div className="space-y-2 rounded-lg border border-rose-200 bg-rose-50/60 p-3 text-xs leading-relaxed text-rose-900">
-            <span className="flex items-center gap-1.5 font-bold tracking-wide text-rose-800 uppercase">
-              <AlertCircle className="h-4 w-4 text-rose-600" />
+          <div className="space-y-2 rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs leading-relaxed text-rose-950 md:p-5 dark:border-[#4D2027] dark:bg-[#201014] dark:text-[#FCD7D7]">
+            <span className="flex items-center gap-2 text-sm font-bold tracking-wide text-red-600 dark:text-[#FF8080]">
+              <AlertCircle className="h-4 w-4 shrink-0 text-red-600 dark:text-[#FF8080]" />
               <span>Bẫy sư phạm thường gặp (Cần tránh)</span>
             </span>
-            <ul className="space-y-1 pl-1 text-rose-900/90">
+            <ul className="space-y-1 pl-1 text-rose-950/95 opacity-95 dark:text-[#F5D5D5]">
               {activePrinciple.commonPitfalls.map((pit, idx) => (
                 <li key={`pit-${idx}`} className="flex items-start gap-2">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-600" />
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-600 dark:bg-[#FF8080]" />
                   <span>{pit}</span>
                 </li>
               ))}
@@ -176,12 +176,12 @@ export function PrincipleMatrix({ className, defaultPrincipleId = 1 }: Principle
           </div>
 
           {/* Tình huống minh họa */}
-          <div className="rounded-lg border border-amber-200/90 bg-amber-50/60 p-3 text-xs leading-relaxed text-amber-950">
-            <div className="flex items-center gap-1.5 font-bold text-amber-900">
-              <Lightbulb className="h-4 w-4" />
+          <div className="rounded-xl border border-amber-200/90 bg-amber-50/60 p-3.5 text-xs leading-relaxed text-amber-950 dark:border-amber-900/40 dark:bg-[#161D18] dark:text-[#E8F1EC]">
+            <div className="flex items-center gap-1.5 font-bold text-amber-900 dark:text-[#C5A262]">
+              <Lightbulb className="h-4 w-4 shrink-0" />
               <span>Ví dụ tình huống thực tế</span>
             </div>
-            <p className="mt-1 text-stone-700">{activePrinciple.caseExample}</p>
+            <p className="mt-1 text-stone-700 dark:text-[#D1E0D7]">{activePrinciple.caseExample}</p>
           </div>
         </div>
       </div>

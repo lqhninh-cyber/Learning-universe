@@ -143,16 +143,19 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
   return (
     <section
       aria-label="Nguồn giáo trình và đối chiếu học thuật"
-      className="mt-10 rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/50 p-5 text-[#29383D] sm:p-6"
+      className="mt-10 rounded-2xl border border-[#CFDADB] bg-[#E1E9EA]/50 p-5 text-[#29383D] transition-colors sm:p-6 dark:border-[#1E3B2D] dark:bg-[#0A1812]/80 dark:text-[#D1E0D7]"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <BookMarked className="h-4 w-4 text-[#3F6570]" aria-hidden="true" />
-          <h2 className="text-sm font-semibold tracking-wide text-[#29383D] uppercase">
-            Nguồn tham khảo & Đối chiếu giáo trình
+          <BookMarked className="h-4 w-4 text-[#3F6570] dark:text-[#A1D1B7]" aria-hidden="true" />
+          <h2 className="font-serif text-base font-bold text-zinc-800 uppercase md:text-lg dark:text-[#D1E0D7]">
+            NGUỒN THAM KHẢO & ĐỐI CHIẾU GIÁO TRÌNH
           </h2>
         </div>
-        <Badge variant="neutral">
+        <Badge
+          variant="neutral"
+          className="dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]"
+        >
           {lesson.sources.length > 0 ? `${lesson.sources.length} nguồn tài liệu` : 'Chưa gắn nguồn'}
         </Badge>
       </div>
@@ -161,7 +164,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
         <div className="mt-4 space-y-6">
           {lesson.sources.length > 0 && (
             <div className="space-y-3">
-              <p className="text-xs font-medium text-[#55676B]">
+              <p className="text-xs font-medium text-zinc-600 dark:text-[#A1B5AB]">
                 Tài liệu tham khảo sử dụng trong bài học:
               </p>
               <div className="mt-4 flex flex-col gap-4">
@@ -180,13 +183,13 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                     return (
                       <div
                         key={`${ref.source}-${index}`}
-                        className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
+                        className="rounded-2xl border border-[#D5E5DC] bg-[#F4F8F5] p-5 text-zinc-900 shadow-sm transition-all hover:shadow-md dark:border-[#1E3B2D] dark:bg-[#0A1812] dark:text-[#F5F2EB]"
                       >
                         {/* Hàng 1 (Header row - flex items-start justify-between gap-4) */}
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                           {/* Cụm bên trái: khung icon vector mảnh, tiêu đề, badge */}
                           <div className="flex min-w-0 items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#3F6570]">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#3F6570] dark:bg-[#142B20] dark:text-[#A1D1B7]">
                               {isTextbook ? (
                                 <BookOpen className="h-5 w-5" aria-hidden="true" />
                               ) : (
@@ -194,16 +197,16 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                               )}
                             </div>
                             <div className="flex min-w-0 flex-wrap items-center gap-2">
-                              <h4 className="font-serif text-base font-semibold text-[#29383D]">
+                              <h4 className="font-serif text-base font-semibold text-zinc-900 dark:text-[#F5F2EB]">
                                 {pedagogyDoc.title}
                               </h4>
                               {(pedagogyDoc.badge || pedagogyDoc.categoryLabel) && (
-                                <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                                <span className="inline-flex items-center rounded-md border border-[#D5E5DC] bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-zinc-600 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#A1B5AB]">
                                   {pedagogyDoc.badge || pedagogyDoc.categoryLabel}
                                 </span>
                               )}
                               {pedagogyDoc.size && (
-                                <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                                <span className="inline-flex items-center rounded-md border border-[#D5E5DC] bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-zinc-600 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#A1B5AB]">
                                   {pedagogyDoc.size}
                                 </span>
                               )}
@@ -216,7 +219,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                               href={docHref}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#3F6570] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#345761]"
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-[#3F6570] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#345761] dark:bg-[#1F4D38] dark:hover:bg-[#286349]"
                             >
                               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                               <span>Đọc tài liệu (PDF)</span>
@@ -226,18 +229,21 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                               target="_blank"
                               rel="noopener noreferrer"
                               download={pedagogyDoc.filename}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-white px-3 py-1.5 text-xs font-medium text-[#29383D] transition-colors hover:bg-[#E1E9EA]"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-[#E1E9EA] dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262] dark:hover:bg-[#1C382B]"
                             >
-                              <Download className="h-3.5 w-3.5 text-[#55676B]" aria-hidden="true" />
+                              <Download
+                                className="h-3.5 w-3.5 text-zinc-600 dark:text-[#C5A262]"
+                                aria-hidden="true"
+                              />
                               <span>Tải về</span>
                             </a>
                           </div>
                         </div>
 
-                        {/* Hàng 2 (Mô tả - mt-3 pt-3 border-t border-[#CFDADB]/60 w-full) */}
+                        {/* Hàng 2 (Mô tả - mt-3 pt-3 border-t border-[#D5E5DC]/60 dark:border-[#1E3B2D] w-full) */}
                         {pedagogyDoc.description && (
-                          <div className="mt-3 w-full border-t border-[#CFDADB]/60 pt-3">
-                            <p className="w-full text-xs leading-relaxed text-[#55676B] md:text-sm">
+                          <div className="mt-3 w-full border-t border-[#D5E5DC]/60 pt-3 dark:border-[#1E3B2D]">
+                            <p className="w-full text-xs leading-relaxed text-zinc-600 md:text-sm dark:text-[#A1B5AB]">
                               {pedagogyDoc.description}
                             </p>
                           </div>
@@ -245,18 +251,22 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
 
                         {/* Hàng 3 (Số trang, chương mục đối chiếu nếu có) */}
                         {(ref.pages || ref.sections || ref.note) && (
-                          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#CFDADB]/40 pt-2.5 text-xs text-[#55676B]">
+                          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#D5E5DC]/40 pt-2.5 text-xs text-zinc-600 dark:border-[#1E3B2D] dark:text-[#A1B5AB]">
                             {ref.sections && (
-                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#29383D]">
+                              <span className="rounded-md border border-zinc-200 bg-white px-2.5 py-0.5 font-semibold text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                                 {ref.sections}
                               </span>
                             )}
                             {ref.pages && (
-                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#55676B]">
+                              <span className="rounded-md border border-zinc-200 bg-white px-2.5 py-0.5 font-semibold text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                                 Trang {ref.pages}
                               </span>
                             )}
-                            {ref.note && <span className="text-[#55676B] italic">{ref.note}</span>}
+                            {ref.note && (
+                              <span className="text-zinc-600 italic dark:text-[#A1B5AB]">
+                                {ref.note}
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>
@@ -292,12 +302,12 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                     return (
                       <div
                         key={`${ref.source}-${index}`}
-                        className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
+                        className="rounded-2xl border border-[#D5E5DC] bg-[#F4F8F5] p-5 text-zinc-900 shadow-sm transition-all hover:shadow-md dark:border-[#1E3B2D] dark:bg-[#0A1812] dark:text-[#F5F2EB]"
                       >
                         {/* Hàng 1 (Header row - flex items-start justify-between gap-4) */}
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                           <div className="flex min-w-0 items-center gap-3">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#3F6570]">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#3F6570] dark:bg-[#142B20] dark:text-[#A1D1B7]">
                               {isBook ? (
                                 <BookOpen className="h-5 w-5" aria-hidden="true" />
                               ) : (
@@ -306,10 +316,10 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                             </div>
 
                             <div className="flex min-w-0 flex-wrap items-center gap-2">
-                              <h4 className="font-serif text-base font-semibold text-[#29383D]">
+                              <h4 className="font-serif text-base font-semibold text-zinc-900 dark:text-[#F5F2EB]">
                                 {titleText}
                               </h4>
-                              <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                              <span className="inline-flex items-center rounded-md border border-[#D5E5DC] bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-zinc-600 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#A1B5AB]">
                                 {SOURCE_TYPE_LABELS[entry.type]}
                               </span>
                             </div>
@@ -321,7 +331,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                                 href={directPdfUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-[#3F6570] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#345761]"
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-[#3F6570] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#345761] dark:bg-[#1F4D38] dark:hover:bg-[#286349]"
                               >
                                 <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                                 <span>
@@ -334,27 +344,31 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                           )}
                         </div>
 
-                        {/* Hàng 2 (Mô tả tác giả / xuất bản - mt-3 pt-3 border-t border-[#CFDADB]/60 w-full) */}
-                        <div className="mt-3 w-full border-t border-[#CFDADB]/60 pt-3">
-                          <p className="w-full text-xs leading-relaxed text-[#55676B] md:text-sm">
+                        {/* Hàng 2 (Mô tả tác giả / xuất bản - mt-3 pt-3 border-t border-[#D5E5DC]/60 dark:border-[#1E3B2D] w-full) */}
+                        <div className="mt-3 w-full border-t border-[#D5E5DC]/60 pt-3 dark:border-[#1E3B2D]">
+                          <p className="w-full text-xs leading-relaxed text-zinc-600 md:text-sm dark:text-[#A1B5AB]">
                             {descriptionText}
                           </p>
                         </div>
 
                         {/* Hàng 3 (Số trang, chương mục đối chiếu nếu có) */}
                         {(ref.pages || ref.sections || ref.note) && (
-                          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#CFDADB]/40 pt-2.5 text-xs text-[#55676B]">
+                          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#D5E5DC]/40 pt-2.5 text-xs text-zinc-600 dark:border-[#1E3B2D] dark:text-[#A1B5AB]">
                             {ref.sections && (
-                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#29383D]">
+                              <span className="rounded-md border border-zinc-200 bg-white px-2.5 py-0.5 font-semibold text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                                 {ref.sections}
                               </span>
                             )}
                             {ref.pages && (
-                              <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#55676B]">
+                              <span className="rounded-md border border-zinc-200 bg-white px-2.5 py-0.5 font-semibold text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                                 Trang {ref.pages}
                               </span>
                             )}
-                            {ref.note && <span className="text-[#55676B] italic">{ref.note}</span>}
+                            {ref.note && (
+                              <span className="text-zinc-600 italic dark:text-[#A1B5AB]">
+                                {ref.note}
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>
@@ -365,19 +379,19 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                   return (
                     <div
                       key={`${ref.source}-${index}`}
-                      className="rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-all hover:shadow-md"
+                      className="rounded-2xl border border-[#D5E5DC] bg-[#F4F8F5] p-5 text-zinc-900 shadow-sm transition-all hover:shadow-md dark:border-[#1E3B2D] dark:bg-[#0A1812] dark:text-[#F5F2EB]"
                     >
                       {/* Hàng 1 (Header row - flex items-start justify-between gap-4) */}
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                         <div className="flex min-w-0 items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#55676B]">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#E1E9EA] text-[#55676B] dark:bg-[#142B20] dark:text-[#A1B5AB]">
                             <FileText className="h-5 w-5" aria-hidden="true" />
                           </div>
                           <div className="flex min-w-0 flex-wrap items-center gap-2">
-                            <h4 className="font-serif text-base font-semibold text-[#29383D]">
+                            <h4 className="font-serif text-base font-semibold text-zinc-900 dark:text-[#F5F2EB]">
                               Tài liệu tham khảo
                             </h4>
-                            <span className="inline-flex items-center rounded-md bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-[#55676B]">
+                            <span className="inline-flex items-center rounded-md border border-[#D5E5DC] bg-[#E1E9EA] px-2 py-0.5 text-[11px] font-medium text-zinc-600 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#A1B5AB]">
                               Mã nguồn: {ref.source}
                             </span>
                           </div>
@@ -386,18 +400,22 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
 
                       {/* Hàng 2 (Số trang, chương mục đối chiếu nếu có) */}
                       {(ref.pages || ref.sections || ref.note) && (
-                        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#CFDADB]/60 pt-3 text-xs text-[#55676B]">
+                        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#D5E5DC]/60 pt-3 text-xs text-zinc-600 dark:border-[#1E3B2D] dark:text-[#A1B5AB]">
                           {ref.sections && (
-                            <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#29383D]">
+                            <span className="rounded-md border border-zinc-200 bg-white px-2.5 py-0.5 font-semibold text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                               {ref.sections}
                             </span>
                           )}
                           {ref.pages && (
-                            <span className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2.5 py-0.5 font-semibold text-[#55676B]">
+                            <span className="rounded-md border border-zinc-200 bg-white px-2.5 py-0.5 font-semibold text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                               Trang {ref.pages}
                             </span>
                           )}
-                          {ref.note && <span className="text-[#55676B] italic">{ref.note}</span>}
+                          {ref.note && (
+                            <span className="text-zinc-600 italic dark:text-[#A1B5AB]">
+                              {ref.note}
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
@@ -409,8 +427,11 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
 
           {blocksWithOriginalOrSource.length > 0 && (
             <div className="space-y-2.5">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-[#55676B]">
-                <FileSpreadsheet className="h-3.5 w-3.5 text-[#3F6570]" aria-hidden="true" />
+              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-600 dark:text-[#A1B5AB]">
+                <FileSpreadsheet
+                  className="h-3.5 w-3.5 text-[#3F6570] dark:text-[#A1D1B7]"
+                  aria-hidden="true"
+                />
                 <span>Bảng đối chiếu số hiệu gốc trong giáo trình:</span>
               </div>
               <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 lg:grid-cols-4">
@@ -462,28 +483,28 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                       key={block.anchorId}
                       href={`#${block.anchorId}`}
                       title={`${block.label}${block.title ? ` — ${block.title}` : ''} (${block.original ? `Số hiệu gốc: ${block.original}` : 'Đối chiếu'})`}
-                      className="group relative flex flex-col justify-between rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-2.5 text-xs shadow-2xs transition-all duration-200 hover:z-20 hover:scale-105 hover:border-[#71889A] hover:bg-white hover:shadow-xl"
+                      className="group relative flex flex-col justify-between rounded-xl border border-[#D5E5DC] bg-[#F4F8F5] p-2.5 text-xs text-zinc-900 shadow-2xs transition-all duration-200 hover:z-20 hover:scale-105 hover:border-[#71889A] hover:bg-white hover:shadow-xl dark:border-[#1E3B2D] dark:bg-[#0A1812] dark:text-[#F5F2EB] dark:hover:border-[#286349] dark:hover:bg-[#142B20]"
                     >
                       <div>
                         {/* Dòng 1: Tên ngắn gọn + Icon liên kết */}
                         <div className="flex items-start justify-between gap-1.5">
-                          <span className="line-clamp-1 font-semibold text-[#29383D] group-hover:text-[#3F6570]">
+                          <span className="line-clamp-1 font-semibold text-zinc-900 group-hover:text-[#3F6570] dark:text-[#F5F2EB] dark:group-hover:text-[#C5A262]">
                             {shortLabel}
                             {shortTitle ? ` · ${shortTitle}` : ''}
                           </span>
                           <ExternalLink
-                            className="h-3 w-3 shrink-0 text-[#55676B] transition-colors group-hover:text-[#29383D]"
+                            className="h-3 w-3 shrink-0 text-zinc-500 transition-colors group-hover:text-zinc-900 dark:text-[#A1B5AB] dark:group-hover:text-[#F5F2EB]"
                             aria-hidden="true"
                           />
                         </div>
 
                         {/* Dòng 2: Số hiệu gốc nổi bật */}
-                        <div className="mt-1 flex flex-wrap items-center gap-1 font-mono text-[11px] font-medium text-[#3F6570]">
-                          <span className="rounded bg-[#E5EDF1] px-1.5 py-0.5">
+                        <div className="mt-1 flex flex-wrap items-center gap-1 font-mono text-[11px] font-medium text-[#3F6570] dark:text-[#C5A262]">
+                          <span className="rounded bg-[#E5EDF1] px-1.5 py-0.5 dark:bg-[#142B20] dark:text-[#C5A262]">
                             {block.original ? `Gốc: ${shortOriginal}` : 'Đối chiếu'}
                           </span>
                           {block.page && (
-                            <span className="rounded bg-[#E1E9EA] px-1 py-0.5 text-[#55676B]">
+                            <span className="rounded border border-zinc-200 bg-white px-1 py-0.5 text-zinc-700 dark:border-[#274E39] dark:bg-[#142B20] dark:text-[#C5A262]">
                               tr. {block.page}
                             </span>
                           )}
@@ -491,12 +512,12 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
                       </div>
 
                       {/* Chi tiết khi Hover: Tên đầy đủ và Nguồn sách gốc */}
-                      <div className="mt-2 space-y-0.5 border-t border-[#CFDADB] pt-1 text-[11px] text-[#55676B]">
-                        <p className="line-clamp-1 font-medium text-[#29383D] group-hover:line-clamp-none">
+                      <div className="mt-2 space-y-0.5 border-t border-[#D5E5DC] pt-1 text-[11px] text-zinc-600 dark:border-[#1E3B2D] dark:text-[#A1B5AB]">
+                        <p className="line-clamp-1 font-medium text-zinc-900 group-hover:line-clamp-none dark:text-[#F5F2EB]">
                           {block.label}
                           {block.title ? `: ${block.title}` : ''}
                         </p>
-                        <p className="line-clamp-1 text-[10.5px] text-[#55676B] group-hover:line-clamp-none">
+                        <p className="line-clamp-1 text-[10.5px] text-zinc-600 group-hover:line-clamp-none dark:text-[#A1B5AB]">
                           {block.original ? (
                             <span>Số hiệu gốc: {block.original}</span>
                           ) : (
@@ -513,7 +534,7 @@ export function SourcePanel({ lesson, lessonMeta, bibliographyOverride }: Source
           )}
         </div>
       ) : (
-        <p className="mt-2.5 text-xs leading-relaxed text-[#55676B]">
+        <p className="mt-2.5 text-xs leading-relaxed text-zinc-600 dark:text-[#A1B5AB]">
           Thông tin giáo trình chính và số trang đối chiếu của bài học sẽ được cập nhật trong giai
           đoạn biên soạn nội dung học thuật.
         </p>

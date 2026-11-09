@@ -56,8 +56,11 @@ export function SourceAttributionBadge({
   }
 
   const badgeNode = (
-    <span className="inline-flex items-center gap-1 rounded-md border border-[var(--bg-muted)] bg-[var(--bg-surface)]/60 px-2 py-0.5 text-xs font-normal text-[var(--text-secondary)]">
-      <BookOpen className="h-3 w-3 text-[var(--text-muted)]" aria-hidden="true" />
+    <span className="inline-flex items-center gap-1 rounded-md border border-[var(--bg-muted)] bg-[var(--bg-surface)]/60 px-2 py-0.5 text-xs font-normal text-[var(--text-secondary)] dark:border-[#1E3B2D] dark:bg-[#142B20] dark:text-[#A1B5AB]">
+      <BookOpen
+        className="h-3 w-3 text-[var(--text-muted)] dark:text-[#C5A262]"
+        aria-hidden="true"
+      />
       <span>{parts.join(' · ')}</span>
     </span>
   );
@@ -102,25 +105,27 @@ function BaseTheoryBlock({
     <section
       id={resolvedAnchor}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className="my-4 scroll-mt-24 rounded-xl border border-stone-200 bg-white/40 p-5 transition-colors lg:p-6"
+      className="my-4 scroll-mt-24 rounded-xl border border-stone-200 bg-white/40 p-5 transition-colors lg:p-6 dark:border-[#1E3B2E] dark:bg-[#0E1E17]/80"
     >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/50 pb-2.5">
+      <header className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/50 pb-2.5 dark:border-[#1E3B2E]">
         <div className="flex flex-wrap items-baseline gap-2.5">
-          <span className="font-serif text-sm font-bold tracking-wider text-stone-900 uppercase">
+          <span className="font-serif text-sm font-bold tracking-wider text-stone-900 uppercase dark:text-[#F5F2EB]">
             {headingLabel}
           </span>
           {title && (
             <>
-              <span className="text-stone-400" aria-hidden="true">
+              <span className="text-stone-400 dark:text-stone-500" aria-hidden="true">
                 ·
               </span>
-              <h4 className="font-serif text-base font-bold text-stone-900">{title}</h4>
+              <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#F5F2EB]">
+                {title}
+              </h4>
             </>
           )}
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[17px] leading-[1.8] text-stone-800 lg:text-[17.5px]">
+      <div className="space-y-3 text-[17px] leading-[1.8] text-stone-800 lg:text-[17.5px] dark:text-[#E8F1EC]">
         {children}
       </div>
     </section>

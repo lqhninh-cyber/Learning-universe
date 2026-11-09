@@ -321,7 +321,11 @@ span.academic-dropcap {
   border-left-color: #c89738 !important;
 }
 
-/* 2. KaTeX trong chế độ Đêm Học Giả (#F8FAFC) */
+/* 2. KaTeX trong chế độ tối: BẮT BUỘC có màu text-[#F5F2EB] (Trắng Giấy Dó) rõ nét, không bị mờ nhạt */
+.dark .katex,
+.dark .katex-display,
+.dark .katex .katex-html,
+.dark .katex span:not(.frac-line):not(.sqrt-line),
 .scoped-dark-mode .katex,
 .scoped-dark-mode .katex-display,
 .scoped-dark-mode .katex .katex-html,
@@ -330,14 +334,16 @@ span.academic-dropcap {
 [data-reading-theme='dark'] .katex-display,
 [data-reading-theme='dark'] .katex .katex-html,
 [data-reading-theme='dark'] .katex span:not(.frac-line):not(.sqrt-line) {
-  color: #f8fafc !important;
+  color: #f5f2eb !important;
 }
 
+.dark .katex .frac-line,
+.dark .katex .sqrt-line,
 .scoped-dark-mode .katex .frac-line,
 .scoped-dark-mode .katex .sqrt-line,
 [data-reading-theme='dark'] .katex .frac-line,
 [data-reading-theme='dark'] .katex .sqrt-line {
-  border-color: #f8fafc !important;
+  border-color: #f5f2eb !important;
 }
 
 .scoped-dark-mode .katex-display:hover,
@@ -629,6 +635,97 @@ span.academic-dropcap {
   background-color: #122018 !important;
   border-color: #1e362a !important;
   color: #e4efe9 !important;
+}
+
+.dark [data-reading-article] .bg-\[\#FAF8F5\]:not([class*='dark:bg-']),
+.dark [data-reading-article] .bg-\[\#FAF9F5\]:not([class*='dark:bg-']),
+.dark [data-reading-article] .bg-\[\#FAF9F6\]:not([class*='dark:bg-']),
+.dark [data-reading-article] .bg-zinc-50:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-\[\#FAF8F5\]:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-\[\#FAF9F5\]:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-\[\#FAF9F6\]:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-zinc-50:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-\[\#FAF8F5\]:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-\[\#FAF9F5\]:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-\[\#FAF9F6\]:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-zinc-50:not([class*='dark:bg-']) {
+  background-color: #0e1e17 !important;
+  border-color: #1e3b2e !important;
+  color: #e8f1ec !important;
+}
+
+/* Khối Ví dụ / Phản ví dụ trong chế độ đọc tối (Unified Botanical Dark Palette) */
+.dark section[aria-label*='Ví dụ'],
+.dark section[aria-label*='Phản ví dụ'],
+.scoped-dark-mode section[aria-label*='Ví dụ'],
+.scoped-dark-mode section[aria-label*='Phản ví dụ'],
+[data-reading-theme='dark'] section[aria-label*='Ví dụ'],
+[data-reading-theme='dark'] section[aria-label*='Phản ví dụ'] {
+  background-color: #0e1e17 !important;
+  border: 1px solid #1e3b2e !important;
+  color: #e8f1ec !important;
+  box-shadow: none !important;
+}
+
+.dark section[aria-label*='Ví dụ'] h4,
+.dark section[aria-label*='Phản ví dụ'] h4,
+.scoped-dark-mode section[aria-label*='Ví dụ'] h4,
+.scoped-dark-mode section[aria-label*='Phản ví dụ'] h4,
+[data-reading-theme='dark'] section[aria-label*='Ví dụ'] h4,
+[data-reading-theme='dark'] section[aria-label*='Phản ví dụ'] h4 {
+  color: #e8f1ec !important;
+}
+
+/* Khối Trọng tâm cần nhớ & Lưu ý quan trọng (Điểm nhấn Vàng Thếp Cổ #C5A262) */
+.dark section[aria-label*='Trọng tâm cần nhớ'],
+.scoped-dark-mode section[aria-label*='Trọng tâm cần nhớ'],
+[data-reading-theme='dark'] section[aria-label*='Trọng tâm cần nhớ'],
+.dark aside[aria-label*='Lưu ý quan trọng'],
+.scoped-dark-mode aside[aria-label*='Lưu ý quan trọng'],
+[data-reading-theme='dark'] aside[aria-label*='Lưu ý quan trọng'] {
+  background-color: #13261d !important;
+  border: 1px solid #284c3a !important;
+  border-left-width: 4px !important;
+  border-left-style: solid !important;
+  border-left-color: #c5a262 !important;
+  color: #e8f2ec !important;
+  box-shadow: none !important;
+}
+
+.dark section[aria-label*='Trọng tâm cần nhớ'] h3,
+.dark aside[aria-label*='Lưu ý quan trọng'] p,
+.scoped-dark-mode section[aria-label*='Trọng tâm cần nhớ'] h3,
+.scoped-dark-mode aside[aria-label*='Lưu ý quan trọng'] p,
+[data-reading-theme='dark'] section[aria-label*='Trọng tâm cần nhớ'] h3,
+[data-reading-theme='dark'] aside[aria-label*='Lưu ý quan trọng'] p {
+  color: #c5a262 !important;
+}
+
+.dark section[aria-label*='Trọng tâm cần nhớ'] p,
+.dark section[aria-label*='Trọng tâm cần nhớ'] li,
+.scoped-dark-mode section[aria-label*='Trọng tâm cần nhớ'] p,
+.scoped-dark-mode section[aria-label*='Trọng tâm cần nhớ'] li,
+[data-reading-theme='dark'] section[aria-label*='Trọng tâm cần nhớ'] p,
+[data-reading-theme='dark'] section[aria-label*='Trọng tâm cần nhớ'] li {
+  color: #e8f2ec !important;
+}
+
+/* Khối Bẫy sư phạm thường gặp (Đỏ Son Tươi WCAG AA) */
+.dark [data-pitfall-box],
+.scoped-dark-mode [data-pitfall-box],
+[data-reading-theme='dark'] [data-pitfall-box] {
+  background-color: #201014 !important;
+  border: 1px solid #4d2027 !important;
+  color: #fcd7d7 !important;
+}
+
+/* Khối Nguồn tham khảo & Đối chiếu giáo trình */
+.dark section[aria-label*='Nguồn giáo trình'],
+.scoped-dark-mode section[aria-label*='Nguồn giáo trình'],
+[data-reading-theme='dark'] section[aria-label*='Nguồn giáo trình'] {
+  background-color: rgba(10, 24, 18, 0.8) !important;
+  border: 1px solid #1e3b2d !important;
+  color: #d1e0d7 !important;
 }
 
 /* 5. Thẻ Chú thích lề (Sidenote / Annotation) */

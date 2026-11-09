@@ -450,12 +450,12 @@ export const Lesson6_1View: FC = () => {
                     </div>
 
                     {/* Bẫy sư phạm cần tránh */}
-                    <div className="rounded-xl border border-[#A65D59]/35 bg-[#A65D59]/8 p-4 text-[#29383D] sm:p-5">
-                      <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#A65D59] uppercase sm:text-sm">
-                        <AlertTriangle className="h-4 w-4 text-[#A65D59]" />
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-950 sm:p-5 dark:border-[#4D2027] dark:bg-[#201014] dark:text-[#FCD7D7]">
+                      <div className="flex items-center gap-2 text-sm font-bold tracking-wide text-red-600 dark:text-[#FF8080]">
+                        <AlertTriangle className="h-4 w-4 shrink-0 text-red-600 dark:text-[#FF8080]" />
                         <span>Bẫy sư phạm cần tránh tuyệt đối:</span>
                       </div>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-[#29383D] sm:text-[15.5px]">
+                      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-rose-950/95 opacity-95 sm:text-[15.5px] dark:text-[#F5D5D5]">
                         {cs.pitfallsToAvoid.map((pitfall, pIdx) => (
                           <li key={pIdx}>{pitfall}</li>
                         ))}
@@ -463,8 +463,10 @@ export const Lesson6_1View: FC = () => {
                     </div>
 
                     {/* Bài học sư phạm cốt lõi */}
-                    <div className="rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-sm leading-relaxed font-medium text-[#29383D] sm:text-[16px]">
-                      <span className="font-bold text-[#3F6570]">Bài học cốt lõi: </span>
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-sm leading-relaxed font-medium text-emerald-950 sm:text-[16px] dark:border-[#224A37] dark:bg-[#10231B] dark:text-[#E4EFE9]">
+                      <span className="font-bold text-emerald-900 dark:text-[#C5A262]">
+                        Bài học cốt lõi:{' '}
+                      </span>
                       {cs.coreLesson}
                     </div>
                   </div>

@@ -25,10 +25,14 @@ export function Proof({ of, ofLabel, ofAnchor, title, defaultOpen = false, child
   return (
     <div className="my-4" data-proof-of={resolvedAnchor}>
       <Collapsible
-        title={<span className="font-serif font-semibold text-stone-900">{headerTitle}</span>}
+        title={
+          <span className="font-serif font-semibold text-stone-900 dark:text-[#F5F2EB]">
+            {headerTitle}
+          </span>
+        }
         defaultOpen={defaultOpen}
-        className="border-[#CFDADB] bg-white/40"
-        contentClassName="bg-[#F7FAFA]/80 text-base text-[#29383D]"
+        className="border-[#CFDADB] bg-white/40 dark:border-[#1E3B2E] dark:bg-[#0E1E17]/60"
+        contentClassName="bg-[#F7FAFA]/80 text-base text-[#29383D] dark:bg-[#0E1E17] dark:text-[#E8F1EC]"
       >
         <div className="space-y-3">{children}</div>
         <div

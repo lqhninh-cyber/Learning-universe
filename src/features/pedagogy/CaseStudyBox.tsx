@@ -157,8 +157,11 @@ export function CaseStudyBox({
 
           {/* Quy trình 5 bước xử lý khoa học */}
           <div className="space-y-2.5">
-            <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#29383D] uppercase">
-              <CheckCircle2 className="h-4 w-4 text-[#4F7967]" aria-hidden="true" />
+            <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#29383D] uppercase dark:text-[#D1E0D7]">
+              <CheckCircle2
+                className="h-4 w-4 text-[#4F7967] dark:text-[#A1D1B7]"
+                aria-hidden="true"
+              />
               <span>Quy trình 5 bước xử lý khoa học (Mục 3.3.6 Giáo trình HCMUE)</span>
             </span>
 
@@ -166,14 +169,14 @@ export function CaseStudyBox({
               {caseStudy.solutionSteps.map((step) => (
                 <div
                   key={`step-${step.step}`}
-                  className="flex items-start gap-3 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3.5 text-xs leading-relaxed"
+                  className="flex items-start gap-3 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3.5 text-xs leading-relaxed dark:border-[#1E362A] dark:bg-[#12241C] dark:text-[#E4EFE9]"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[#E8EFEB] font-serif text-xs font-bold text-[#3F6570]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[#E8EFEB] font-serif text-xs font-bold text-[#3F6570] dark:bg-[#1A382B] dark:text-[#A1D1B7]">
                     {String(step.step).padStart(2, '0')}
                   </span>
                   <div>
-                    <h5 className="font-bold text-[#29383D]">{step.title}</h5>
-                    <p className="mt-1 text-[#55676B]">{step.content}</p>
+                    <h5 className="font-bold text-[#29383D] dark:text-[#E4EFE9]">{step.title}</h5>
+                    <p className="mt-1 text-[#55676B] dark:text-[#A8C4B5]">{step.content}</p>
                   </div>
                 </div>
               ))}
@@ -182,12 +185,12 @@ export function CaseStudyBox({
 
           {/* Bẫy sư phạm cần tránh */}
           {caseStudy.pitfallsToAvoid.length > 0 && (
-            <div className="rounded-xl border border-[#A65D59]/35 bg-[#A65D59]/8 p-3.5 text-xs text-[#29383D]">
-              <div className="flex items-center gap-1.5 font-bold text-[#A65D59]">
-                <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+            <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-950 md:p-5 dark:border-[#4D2027] dark:bg-[#201014] dark:text-[#FCD7D7]">
+              <div className="flex items-center gap-2 text-sm font-bold tracking-wide text-red-600 dark:text-[#FF8080]">
+                <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>Bẫy sư phạm thường gặp (Tuyệt đối tránh)</span>
               </div>
-              <ul className="mt-1.5 list-disc space-y-1 pl-5 text-[#29383D]">
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-xs text-rose-950/95 opacity-95 dark:text-[#F5D5D5]">
                 {caseStudy.pitfallsToAvoid.map((pitfall, pIdx) => (
                   <li key={`pitfall-${pIdx}`}>{pitfall}</li>
                 ))}
@@ -196,10 +199,15 @@ export function CaseStudyBox({
           )}
 
           {/* Bài học cốt lõi */}
-          <div className="flex items-start gap-2 rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-3.5 text-xs text-[#29383D]">
-            <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-[#3F6570]" aria-hidden="true" />
+          <div className="flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-xs text-emerald-950 dark:border-[#224A37] dark:bg-[#10231B] dark:text-[#E4EFE9]">
+            <GraduationCap
+              className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700 dark:text-[#C5A262]"
+              aria-hidden="true"
+            />
             <div>
-              <span className="font-bold text-[#3F6570]">Bài học cốt lõi: </span>
+              <span className="font-bold text-emerald-900 dark:text-[#C5A262]">
+                Bài học cốt lõi:{' '}
+              </span>
               <span>{caseStudy.coreLesson}</span>
             </div>
           </div>
