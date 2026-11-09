@@ -10,13 +10,20 @@ export interface GrandLotusLakeProps {
 /**
  * ĐẠI CẢNH "HỒ SEN TRI THỨC" (THE LIVING GRAND LOTUS LAKE — PROCEDURAL 2D CANVAS ENGINE)
  *
- * Tái tạo trung thực 100% thuật toán đồ họa Canvas 2D thủ tục từ "Hoa sen.html":
- * - Bông sen lớn trung tâm hé mở 4 tầng cánh + nhị hoa + đài sen nghiêng.
- * - Mặt hồ xanh ngọc bích sâu thẳm chuyển sắc hữu cơ với 18 dải sóng ngầm và 46 đốm sáng lấp lánh.
- * - 8 phiến lá sen bập bềnh, lá sen đứng vươn đón nắng, búp sen phụ uốn lượn.
- * - 3 chú cá chép bơi uốn khúc với hệ xương 12 đốt và vây đuôi nhịp nhàng.
- * - Chuồn chuồn bay lượn và đỗ nhẹ nhàng trên nụ sen.
- * - Đốm phấn hoa lơ lửng, gợn nước lan tỏa quanh thân sen và bóng phản chiếu mềm dưới đáy hồ.
+ * Tái tạo hệ sinh thái hồ sen Canvas 2D thủ tục sống động với 10 lớp chiều sâu nghiêm ngặt:
+ * 1. Nước hồ xanh ngọc bích sâu thẳm & đàn cá chép (cá lớn Tancho/Kohaku + bầy cá con minnow).
+ * 2. Phiến lá sen hậu cảnh bập bềnh, gợn sóng cá, sóng cuống sen & sóng nhấp chuột tương tác.
+ * 3. Bóng hoa sen phản chiếu lộn ngược dưới nước (scale(S, -S * 0.28)) với filter blur(3px) và sóng ngang sin(coord * 0.05 + t * 0.8) * 3px.
+ * 4. Cuống sen cong chữ S tự nhiên chịu sức nặng hoa (lệch trái 6-8px rồi về tâm, vuốt thon 9px -> 7px), nụ sen & lá đứng.
+ * 5. Đóa sen nở vòm chén ngọc 3D 5 tầng cánh (cánh sau -> đài sen & nhụy vàng -> cánh tiền cảnh ôm tâm).
+ * 6. Phiến lá sen tiền cảnh góc trái và các phiến lá già bo góc đóng khung đại cảnh.
+ * 7. CHÚ ẾCH NGỒI THIỀN trên lá sen tiền cảnh (x: ~0.16 * W, y: ~0.76 * H), thân ngọc bích #3A8752 bụng trắng ngà #FAF4E0,
+ *    mắt viền vàng kim #E5B25D, nhịp thở chu kỳ 3s (1 + 0.04 * sin(t * 2.5)), chớp mắt mỗi 5s & bật nhổm khi chuột đến gần.
+ * 8. Chuồn chuồn ngọc bay lượn trên không và bóng đổ in trên mặt nước.
+ * 9. BẦY ĐOM ĐÓM PHÁT SÁNG (15 chú đom đóm phát quang sinh học alpha = sin^4, tâm #E2F86B, hào quang 10-14px & phản xạ nước)
+ *    cùng 26 hạt phấn hoa bay lơ lửng.
+ * 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang mượt mà.
+ *
  * - Hỗ trợ High DPI (devicePixelRatio tối đa 2x) và tự động tính lại kích thước.
  * - Quản lý vòng đời với requestAnimationFrame và dọn dẹp triệt để khi unmount.
  * - Tối ưu hiệu năng: Tạm dừng vòng lặp (0% CPU/GPU) khi ngoài viewport (IntersectionObserver).

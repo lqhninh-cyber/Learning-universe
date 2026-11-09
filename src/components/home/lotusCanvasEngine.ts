@@ -1181,19 +1181,17 @@ export function drawFrog(
   W: number,
   H: number,
   S: number,
-  wy: number,
+  _wy: number,
   pointerX?: number | null,
   pointerY?: number | null,
 ) {
-  // Neo trên phiến lá sen tiền cảnh phía trước bên trái (PADS[6])
-  const p = PADS[6];
-  if (!p) return;
-  const yy = wy + (p.y ?? 0.13) * H;
-  const padX = (p.x ?? 0.14) * W + Math.sin(t * 0.12 + p.p) * 6;
-  const padY = yy + Math.cos(t * 0.1 + p.p) * 4;
-
-  const frogX = padX + 5 * S;
-  const frogY = padY - 6 * S;
+  // 1. Vị trí: Ngồi vững chãi trên phiến lá sen to ở góc dưới bên trái (x: ~0.16 * W, y: ~0.76 * H)
+  const frogBaseX = 0.16 * W;
+  const frogBaseY = 0.76 * H;
+  const swayX = Math.sin(t * 0.12 + 0.8) * 5 * S;
+  const swayY = Math.cos(t * 0.1 + 0.8) * 3 * S;
+  const frogX = frogBaseX + swayX;
+  const frogY = frogBaseY + swayY;
 
   let distToCursor = 9999;
   if (pointerX !== null && pointerX !== undefined && pointerY !== null && pointerY !== undefined) {
@@ -1203,11 +1201,11 @@ export function drawFrog(
   const alertFactor = isCursorNear ? Math.pow(1 - distToCursor / 45, 1.5) : 0;
   const alertHop = -alertFactor * 5 * S;
 
-  // Nhịp thở họng/bụng phập phồng nhẹ nhàng: 1 + 0.05 * Math.sin(t * 2.8)
-  const breath = 1 + 0.05 * Math.sin(t * 2.8);
+  // Hoạt cảnh nhịp thở họng phập phồng nhẹ nhàng chu kỳ 3s: 1 + 0.04 * Math.sin(t * 2.5)
+  const breath = 1 + 0.04 * Math.sin(t * 2.5);
 
-  // Chu kỳ chớp mắt ngẫu nhiên sau mỗi 4-6s
-  const blinkCycle = (t % 5.0) / 0.16;
+  // Chớp mắt ngẫu nhiên sau mỗi ~5s
+  const blinkCycle = (t % 5.0) / 0.18;
   const isBlinking = blinkCycle < 1.0 || (isCursorNear && distToCursor < 25 && t % 1.1 < 0.15);
   const blinkAmount = isBlinking ? (blinkCycle < 1.0 ? Math.sin(blinkCycle * Math.PI) : 1) : 0;
 
@@ -1215,27 +1213,27 @@ export function drawFrog(
 
   ctx.save();
   ctx.translate(frogX, frogY + alertHop);
-  // Dáng ngồi hướng mắt nhìn về đóa hoa sen trung tâm (bên phải)
+  // Dáng ngồi xếp đùi tự nhiên, mặt hướng về phía đóa sen nở trung tâm (hướng sang phải)
   ctx.scale(1, 1);
 
-  // 1. Đổ bóng mềm xuống mặt phiến lá sen nơi nó ngồi
+  // Đổ bóng mềm mờ rgba(0, 30, 20, 0.4) xuống mặt phiến lá sen
   ctx.save();
   ctx.scale(1, 0.42);
-  const shadowGrad = ctx.createRadialGradient(0, 0, 2 * fs, 0, 0, 17 * fs);
-  shadowGrad.addColorStop(0, 'rgba(0, 25, 12, 0.42)');
-  shadowGrad.addColorStop(0.7, 'rgba(0, 25, 12, 0.16)');
-  shadowGrad.addColorStop(1, 'rgba(0, 25, 12, 0)');
+  const shadowGrad = ctx.createRadialGradient(0, 0, 2 * fs, 0, 0, 18 * fs);
+  shadowGrad.addColorStop(0, 'rgba(0, 30, 20, 0.4)');
+  shadowGrad.addColorStop(0.68, 'rgba(0, 30, 20, 0.18)');
+  shadowGrad.addColorStop(1, 'rgba(0, 30, 20, 0)');
   ctx.fillStyle = shadowGrad;
   ctx.beginPath();
-  ctx.ellipse(0, 9 * fs, 17 * fs, 10 * fs, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 9 * fs, 18 * fs, 10 * fs, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
-  // 2. Chân sau xếp đùi tự nhiên (Folded hind legs)
+  // Chân sau xếp đùi tự nhiên (Folded hind legs)
   // Đùi trái (phía xa):
   ctx.beginPath();
   ctx.ellipse(-7.5 * fs, 3.5 * fs, 8.5 * fs, 5 * fs, -0.32, 0, Math.PI * 2);
-  ctx.fillStyle = '#2E6E42';
+  ctx.fillStyle = '#26633b';
   ctx.fill();
 
   // Đùi phải (phía gần, nổi khối):
@@ -1251,10 +1249,10 @@ export function drawFrog(
   ctx.beginPath();
   ctx.ellipse(-10 * fs, 7 * fs, 4 * fs, 2 * fs, -0.2, 0, Math.PI * 2);
   ctx.ellipse(10 * fs, 7.5 * fs, 4.5 * fs, 2.2 * fs, 0.2, 0, Math.PI * 2);
-  ctx.fillStyle = '#357C4B';
+  ctx.fillStyle = '#2E6E42';
   ctx.fill();
 
-  // 3. Thân màu xanh ngọc bích hữu cơ #3D8B55 chuyển dần sang bụng trắng kem #FAF4E1
+  // Thân màu xanh ngọc bích #3A8752 chuyển dần sang bụng trắng kem ngà #FAF4E0
   ctx.beginPath();
   ctx.moveTo(-6.5 * fs, 5 * fs);
   ctx.bezierCurveTo(-10.5 * fs, 0, -7.5 * fs, -9.5 * fs, 0, -10.5 * fs);
@@ -1264,9 +1262,9 @@ export function drawFrog(
 
   const bodyGrad = ctx.createLinearGradient(0, -10.5 * fs, 3.5 * fs, 6.5 * fs);
   bodyGrad.addColorStop(0, '#4AA366');
-  bodyGrad.addColorStop(0.3, '#3D8B55');
-  bodyGrad.addColorStop(0.7, '#8FC68A');
-  bodyGrad.addColorStop(1, '#FAF4E1');
+  bodyGrad.addColorStop(0.28, '#3A8752');
+  bodyGrad.addColorStop(0.68, '#8EC68B');
+  bodyGrad.addColorStop(1, '#FAF4E0');
   ctx.fillStyle = bodyGrad;
   ctx.fill();
 
@@ -1278,7 +1276,7 @@ export function drawFrog(
     [1.5 * fs, -5 * fs, 1.2 * fs],
     [3 * fs, -2 * fs, 1.2 * fs],
   ];
-  ctx.fillStyle = '#265C38';
+  ctx.fillStyle = '#205232';
   spots.forEach(([sx, sy, sr]) => {
     if (sx === undefined || sy === undefined || sr === undefined) return;
     ctx.beginPath();
@@ -1286,23 +1284,23 @@ export function drawFrog(
     ctx.fill();
   });
 
-  // 4. Nhịp thở họng/bụng phập phồng nhẹ nhàng: 1 + 0.05 * Math.sin(t * 2.8)
+  // Nhịp thở họng/bụng phập phồng nhẹ nhàng: 1 + 0.04 * Math.sin(t * 2.5)
   ctx.beginPath();
   ctx.ellipse(3 * fs, 1 * fs, 4 * fs * breath, 4.8 * fs * breath, 0.2, 0, Math.PI * 2);
   const throatGrad = ctx.createRadialGradient(3 * fs, 1 * fs, 0, 3 * fs, 1 * fs, 4.5 * fs);
-  throatGrad.addColorStop(0, 'rgba(250, 244, 225, 0.85)');
-  throatGrad.addColorStop(0.75, 'rgba(250, 244, 225, 0.3)');
-  throatGrad.addColorStop(1, 'rgba(250, 244, 225, 0)');
+  throatGrad.addColorStop(0, 'rgba(250, 244, 224, 0.9)');
+  throatGrad.addColorStop(0.75, 'rgba(250, 244, 224, 0.35)');
+  throatGrad.addColorStop(1, 'rgba(250, 244, 224, 0)');
   ctx.fillStyle = throatGrad;
   ctx.fill();
 
-  // 5. Chân trước chống nhẹ
+  // Chân trước chống nhẹ
   ctx.beginPath();
   ctx.moveTo(-3 * fs, 2 * fs);
   ctx.bezierCurveTo(-4 * fs, 5 * fs, -4.5 * fs, 7 * fs, -5 * fs, 8 * fs);
   ctx.moveTo(2 * fs, 2 * fs);
   ctx.bezierCurveTo(2.5 * fs, 5 * fs, 3 * fs, 7 * fs, 4 * fs, 8 * fs);
-  ctx.strokeStyle = '#357C4B';
+  ctx.strokeStyle = '#2E6E42';
   ctx.lineWidth = 1.8 * S;
   ctx.lineCap = 'round';
   ctx.stroke();
@@ -1311,48 +1309,49 @@ export function drawFrog(
   ctx.beginPath();
   ctx.arc(-5 * fs, 8 * fs, 1.2 * S, 0, Math.PI * 2);
   ctx.arc(4 * fs, 8 * fs, 1.2 * S, 0, Math.PI * 2);
-  ctx.fillStyle = '#FAF4E1';
+  ctx.fillStyle = '#FAF4E0';
   ctx.fill();
 
-  // 6. Đôi mắt lồi tròn với viền vàng kim #E5B84A và con ngươi đen nhánh
+  // Hai mắt lồi tròn có viền vàng kim #E5B25D, con ngươi đen óng có chấm phản quang trắng
   // Hốc mắt trái:
   ctx.beginPath();
-  ctx.arc(-3.5 * fs, -10.5 * fs, 2.6 * fs, 0, Math.PI * 2);
-  ctx.fillStyle = '#3D8B55';
+  ctx.arc(-3.5 * fs, -10.5 * fs, 2.7 * fs, 0, Math.PI * 2);
+  ctx.fillStyle = '#3A8752';
   ctx.fill();
 
   // Hốc mắt phải:
   ctx.beginPath();
-  ctx.arc(3.5 * fs, -10.5 * fs, 3.2 * fs, 0, Math.PI * 2);
+  ctx.arc(3.5 * fs, -10.5 * fs, 3.3 * fs, 0, Math.PI * 2);
   ctx.fillStyle = '#4AA366';
   ctx.fill();
 
-  // Tròng mắt vàng kim #E5B84A
+  // Viền vàng kim #E5B25D
   ctx.beginPath();
-  ctx.arc(-3.5 * fs, -10.5 * fs, 2.1 * fs, 0, Math.PI * 2);
-  ctx.fillStyle = '#E5B84A';
+  ctx.arc(-3.5 * fs, -10.5 * fs, 2.2 * fs, 0, Math.PI * 2);
+  ctx.fillStyle = '#E5B25D';
   ctx.fill();
 
   ctx.beginPath();
-  ctx.arc(3.5 * fs, -10.5 * fs, 2.6 * fs, 0, Math.PI * 2);
-  ctx.fillStyle = '#E5B84A';
+  ctx.arc(3.5 * fs, -10.5 * fs, 2.7 * fs, 0, Math.PI * 2);
+  ctx.fillStyle = '#E5B25D';
   ctx.fill();
 
-  // Con ngươi đen nhánh (thu hẹp khi chớp mắt)
+  // Con ngươi đen óng (thu hẹp khi chớp mắt)
   ctx.beginPath();
-  ctx.ellipse(-3.5 * fs, -10.5 * fs, 1.3 * fs, 0.7 * fs * (1 - blinkAmount), 0.2, 0, Math.PI * 2);
-  ctx.fillStyle = '#111111';
+  ctx.ellipse(-3.5 * fs, -10.5 * fs, 1.3 * fs, 0.75 * fs * (1 - blinkAmount), 0.2, 0, Math.PI * 2);
+  ctx.fillStyle = '#0a0a0a';
   ctx.fill();
 
   ctx.beginPath();
-  ctx.ellipse(3.8 * fs, -10.5 * fs, 1.6 * fs, 0.85 * fs * (1 - blinkAmount), 0.15, 0, Math.PI * 2);
-  ctx.fillStyle = '#111111';
+  ctx.ellipse(3.7 * fs, -10.5 * fs, 1.6 * fs, 0.9 * fs * (1 - blinkAmount), 0.15, 0, Math.PI * 2);
+  ctx.fillStyle = '#0a0a0a';
   ctx.fill();
 
-  // Đốm sáng phản chiếu trong mắt
-  if (blinkAmount < 0.5) {
+  // Chấm phản quang trắng
+  if (blinkAmount < 0.4) {
     ctx.beginPath();
-    ctx.arc(4.4 * fs, -11.4 * fs, 0.8 * S, 0, Math.PI * 2);
+    ctx.arc(4.3 * fs, -11.4 * fs, 0.85 * S, 0, Math.PI * 2);
+    ctx.arc(-2.9 * fs, -11.2 * fs, 0.65 * S, 0, Math.PI * 2);
     ctx.fillStyle = '#FFFFFF';
     ctx.fill();
   }
@@ -1360,12 +1359,12 @@ export function drawFrog(
   // Mí mắt khép lại khi chớp mắt
   if (blinkAmount > 0.05) {
     ctx.beginPath();
-    ctx.arc(3.5 * fs, -10.5 * fs - (1 - blinkAmount) * 2 * fs, 2.7 * fs, 0, Math.PI);
-    ctx.fillStyle = '#3D8B55';
+    ctx.arc(3.5 * fs, -10.5 * fs - (1 - blinkAmount) * 2 * fs, 2.8 * fs, 0, Math.PI);
+    ctx.fillStyle = '#3A8752';
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(-3.5 * fs, -10.5 * fs - (1 - blinkAmount) * 1.8 * fs, 2.2 * fs, 0, Math.PI);
-    ctx.fillStyle = '#357C4B';
+    ctx.arc(-3.5 * fs, -10.5 * fs - (1 - blinkAmount) * 1.8 * fs, 2.3 * fs, 0, Math.PI);
+    ctx.fillStyle = '#2E6E42';
     ctx.fill();
   }
 
@@ -1373,7 +1372,7 @@ export function drawFrog(
   ctx.beginPath();
   ctx.moveTo(-1 * fs, -6.5 * fs);
   ctx.bezierCurveTo(2 * fs, -6 * fs, 5 * fs, -6.8 * fs, 7 * fs, -7.5 * fs);
-  ctx.strokeStyle = 'rgba(30, 80, 45, 0.65)';
+  ctx.strokeStyle = 'rgba(25, 70, 38, 0.7)';
   ctx.lineWidth = 0.9 * S;
   ctx.stroke();
 
@@ -1397,18 +1396,19 @@ export interface Firefly {
 export function createFireflies(): Firefly[] {
   const r = rng(42);
   const list: Firefly[] = [];
-  for (let i = 0; i < 16; i++) {
+  const count = 15; // 12-16 chú đom đóm bay quanh đầm sen và đóa hoa chính
+  for (let i = 0; i < count; i++) {
     list.push({
-      baseXRatio: 0.15 + r() * 0.7,
-      baseYRatio: 0.24 + r() * 0.5,
-      rangeX: 30 + r() * 40,
-      rangeY: 20 + r() * 30,
-      speedX: 0.25 + r() * 0.35,
-      speedY: 0.2 + r() * 0.4,
-      pulseSpeed: 1.4 + r() * 1.5,
+      baseXRatio: 0.12 + r() * 0.76,
+      baseYRatio: 0.22 + r() * 0.52,
+      rangeX: 28 + r() * 42,
+      rangeY: 18 + r() * 28,
+      speedX: 0.22 + r() * 0.32,
+      speedY: 0.18 + r() * 0.36,
+      pulseSpeed: 1.3 + r() * 1.4,
       phase: r() * Math.PI * 2,
-      size: 1.5 + r() * 1.0,
-      haloRadius: 8 + r() * 6,
+      size: 1.5, // Tâm sáng: hạt vàng chanh bán kính 1.5px
+      haloRadius: 10 + r() * 4, // Quầng hào quang lan tỏa 10px - 14px
     });
   }
   return list;
@@ -1433,32 +1433,32 @@ export function drawFireflies(
     const haloR = f.haloRadius * S;
     const coreR = f.size * S;
 
-    // 1. Quầng hào quang lan tỏa 8px - 14px với sắc rgba(226, 248, 107, alpha * 0.35) mờ dần về 0
+    // 1. Quầng hào quang: Radial gradient lan tỏa 10px - 14px với sắc rgba(226, 248, 107, alpha * 0.4) mờ dần về 0
     const haloGrad = ctx.createRadialGradient(x, y, 0, x, y, haloR);
-    haloGrad.addColorStop(0, `rgba(226, 248, 107, ${alpha * 0.35})`);
-    haloGrad.addColorStop(0.4, `rgba(226, 248, 107, ${alpha * 0.12})`);
+    haloGrad.addColorStop(0, `rgba(226, 248, 107, ${alpha * 0.4})`);
+    haloGrad.addColorStop(0.45, `rgba(226, 248, 107, ${alpha * 0.14})`);
     haloGrad.addColorStop(1, 'rgba(226, 248, 107, 0)');
     ctx.fillStyle = haloGrad;
     ctx.beginPath();
     ctx.arc(x, y, haloR, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Đốm tâm: Hạt sáng tròn đường kính 1.5px - 2.5px màu vàng chanh ánh lục #E2F86B
+    // 2. Tâm sáng: hạt vàng chanh #E2F86B (bán kính 1.5px)
     ctx.beginPath();
     ctx.arc(x, y, coreR, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(226, 248, 107, ${alpha * 0.95})`;
     ctx.fill();
 
-    // 3. Đốm phản xạ mờ dưới mặt nước (Water reflection)
+    // 3. Đốm phản xạ mờ nhạt tương ứng dưới mặt nước tạo chiều sâu lung linh
     if (y < wy + 80 * S) {
-      const mirrorY = wy + (wy - y) * 0.35 + 18 * S;
+      const mirrorY = wy + (wy - y) * 0.32 + 16 * S;
       const refAlpha = alpha * 0.18;
       const refGrad = ctx.createRadialGradient(x, mirrorY, 0, x, mirrorY, haloR * 0.85);
       refGrad.addColorStop(0, `rgba(226, 248, 107, ${refAlpha})`);
       refGrad.addColorStop(1, 'rgba(226, 248, 107, 0)');
       ctx.fillStyle = refGrad;
       ctx.beginPath();
-      ctx.ellipse(x, mirrorY, haloR * 0.85, haloR * 0.32, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, mirrorY, haloR * 0.85, haloR * 0.3, 0, 0, Math.PI * 2);
       ctx.fill();
     }
   });
@@ -1633,12 +1633,16 @@ export function stem(
   t: number,
   S: number,
 ) {
-  const sw = Math.sin(t * 0.28) * 3 * S;
-  // Điểm điều khiển đường cong chữ S tự nhiên (Organic S-Curve) do sức nặng của bông hoa
+  const sw = Math.sin(t * 0.28) * 2.5 * S;
+  // Đường cong Bezier dáng chữ S mềm mại tự nhiên chịu sức nặng của đóa sen:
+  // P0: Ngọn cuống đỡ đài hoa tại tâm
+  // P1: Điểm uốn lệch nhẹ sang trái 6-8px
+  // P2: Uốn lượn mềm mại trả về tâm
+  // P3: Gốc cuống cắm vào mặt hồ tại tâm
   const P0: readonly [number, number] = [cx, cy + 2 * S];
-  const P1: readonly [number, number] = [cx + (13 + sw) * S, cy + (wy - cy) * 0.32];
-  const P2: readonly [number, number] = [cx - (9 - sw * 0.5) * S, cy + (wy - cy) * 0.68];
-  const P3: readonly [number, number] = [cx - 2 * S, wy + 4 * S];
+  const P1: readonly [number, number] = [cx - (7 * S + sw), cy + (wy - cy) * 0.36];
+  const P2: readonly [number, number] = [cx + (2.5 * S + sw * 0.4), cy + (wy - cy) * 0.72];
+  const P3: readonly [number, number] = [cx, wy + 8 * S];
 
   const N = 24;
   const leftPts: [number, number][] = [];
@@ -1664,8 +1668,10 @@ export function stem(
     const nx = -ty / len;
     const ny = tx / len;
 
-    // Bán kính thuôn nhỏ dần từ gốc cuống (5.4 * S) lên đỉnh cuống (3.4 * S)
-    const r = (3.4 + 2.0 * u) * S;
+    // Vuốt gốc cuống to hơn ngọn cuống: ngọn 7px thon dần đến gốc 9px
+    // u = 0 (ngọn): r = 3.5 * S => đường kính 7px * S
+    // u = 1 (gốc): r = 4.5 * S => đường kính 9px * S
+    const r = (3.5 + 1.0 * u) * S;
     leftPts.push([bx + nx * r, by + ny * r]);
     rightPts.push([bx - nx * r, by - ny * r]);
   }
@@ -1715,7 +1721,7 @@ export function stem(
     const len = Math.hypot(tx, ty) || 1;
     const nx = -ty / len;
     const ny = tx / len;
-    const r = (3.2 + 2.0 * u) * S;
+    const r = (3.5 + 1.0 * u) * S;
     const latOffset = (rPrickle() * 2 - 1) * 0.78 * r;
     const x = cp[0] + nx * latOffset;
     const y = cp[1] + ny * latOffset;
@@ -2062,8 +2068,16 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
     speedMult: 1.0,
   }));
 
-  // Khởi tạo 16 chú đom đóm phát sáng bay lơ lửng
+  // Khởi tạo 15 chú đom đóm phát sáng bay lơ lửng quanh đầm sen
   const fireflies = createFireflies();
+
+  // Offscreen canvas để kết xuất bóng phản chiếu đóa sen biến dạng sóng nước
+  const offReflCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+  if (offReflCanvas) {
+    offReflCanvas.width = 380;
+    offReflCanvas.height = 280;
+  }
+  const offReflCtx = offReflCanvas?.getContext('2d') ?? null;
 
   return {
     render: (ctx, W, H, t) => {
@@ -2072,21 +2086,23 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       const cy = H * 0.5;
       const wy = cy + 140 * S;
 
-      // 1. Mặt nước (water) & Đàn cá (cá lớn + bầy cá con)
+      // =================================================================
+      // THỨ TỰ VẼ 10 LỚP CHUẨN XÁC THEO ĐẶC TẢ
+      // =================================================================
+
+      // 1. Nước hồ & Đàn cá uốn lượn đa tầng (cá lớn + bầy cá con)
       water(ctx, t, cx, cy, W, H, S, gl);
       fishes(ctx, t, W, H, S, fishStates, pointerX, pointerY);
       drawMinnowSchool(ctx, t, W, H, S, pointerX, pointerY);
 
-      // 2. Lá sen hậu cảnh (pads.forEach(p => { if (!p.f) padDraw(p, t, wy); }))
+      // 2. Lá sen hậu cảnh & Vòng sóng cuống sen
       PADS.forEach((p) => {
         if (!p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
       });
-
-      // 3. Gợn sóng cá, sóng cuống sen, sóng nhấp chuột & Nụ sen (bud)
       fishRipples(ctx, t, W, H, S);
       ripples(ctx, cx, wy, t, S);
 
-      // Vẽ các vòng sóng nhấp chuột (Click/Tap Water Ripples) lan tỏa và mờ dần trong 1.2s
+      // Sóng tương tác khi chạm/nhấp chuột
       for (let i = interactiveRipples.length - 1; i >= 0; i--) {
         const rip = interactiveRipples[i];
         if (!rip) continue;
@@ -2110,61 +2126,87 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         }
       }
 
+      // 3. Bóng hoa sen phản chiếu gợn sóng dưới nước (scale(S, -S * 0.28), blur(3px) & sóng ngang)
+      if (offReflCtx && offReflCanvas) {
+        offReflCtx.clearRect(0, 0, 380, 280);
+        offReflCtx.save();
+        offReflCtx.translate(190, 150);
+        flower(offReflCtx, t, LAY);
+        offReflCtx.restore();
+
+        ctx.save();
+        ctx.translate(cx, wy + 8 * S);
+        ctx.scale(S, -S * 0.28);
+        ctx.globalAlpha = 0.24;
+        try {
+          ctx.filter = 'blur(3px)';
+        } catch {
+          // Fallback
+        }
+
+        const stripH = 3;
+        const offW = 380;
+        const offH = 280;
+        for (let sy = 0; sy < offH; sy += stripH) {
+          const waveX = Math.sin((sy - 150) * 0.05 + t * 0.8) * 3;
+          ctx.drawImage(
+            offReflCanvas,
+            0,
+            sy,
+            offW,
+            stripH,
+            -offW / 2 + waveX,
+            sy - 150,
+            offW,
+            stripH,
+          );
+        }
+        ctx.filter = 'none';
+        ctx.restore();
+      } else {
+        ctx.save();
+        ctx.translate(cx, wy + 8 * S);
+        ctx.scale(S, -S * 0.28);
+        ctx.globalAlpha = 0.2;
+        flower(ctx, t, LAY);
+        ctx.restore();
+      }
+
+      // 4. Cuống sen cong chữ S & Nụ sen
+      standLeaf(ctx, Math.min(W - 70 * S, cx + 255 * S), wy, cy + 10 * S, 56 * S, t, S);
+      stem(ctx, cx, cy, wy, t, S);
       bud(ctx, cx, wy, t, S, BUD);
 
-      // 4. Bóng phản chiếu bông sen dưới nước
-      ctx.save();
-      ctx.translate(cx, wy + 42 * S);
-      ctx.scale(S, -S * 0.3);
-      ctx.globalAlpha = 0.2;
-      try {
-        ctx.filter = 'blur(2px)';
-      } catch {
-        // Fallback
-      }
-      flower(ctx, t, LAY);
-      ctx.restore();
-      ctx.filter = 'none';
-
-      // Vầng hào quang ấm trung tâm
+      // 5. Đóa sen nở vòm chén 3D (Cánh sau -> Đài sen & Nhụy vàng -> Cánh tiền cảnh ôm tâm)
       const gWarm = ctx.createRadialGradient(cx, cy - 80 * S, 10, cx, cy - 80 * S, 260 * S);
-      gWarm.addColorStop(0, 'rgba(255,220,230,.2)');
-      gWarm.addColorStop(1, 'rgba(255,220,230,0)');
+      gWarm.addColorStop(0, 'rgba(255, 220, 230, 0.2)');
+      gWarm.addColorStop(1, 'rgba(255, 220, 230, 0)');
       ctx.fillStyle = gWarm;
       ctx.fillRect(0, 0, W, H);
 
-      // 5. BÓNG CHUỒN CHUỒN: Vẽ bóng đổ trước khi vẽ bông hoa
-      dragonfly(ctx, t, cx, cy, W, H, S, true);
-
-      // 6. Lá sen đứng vươn cao & Cuống sen chính cong chữ S tự nhiên
-      standLeaf(ctx, Math.min(W - 70 * S, cx + 255 * S), wy, cy + 10 * S, 56 * S, t, S);
-      stem(ctx, cx, cy, wy, t, S);
-
-      // 7. BÔNG SEN NỞ CHÍNH
       ctx.save();
       ctx.translate(cx, cy);
       ctx.scale(S, S);
       flower(ctx, t, LAY);
       ctx.restore();
 
-      // 8. LÁ SEN TIỀN CẢNH đè lên chân gốc hoa
+      // 6. Phiến lá sen tiền cảnh góc trái (và các phiến lá tiền cảnh)
       PADS.forEach((p) => {
         if (p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
       });
-
-      // 9. BỔ SUNG 2 PHIẾN LÁ SEN GIÀ Ở GÓC TIỀN CẢNH (Corner Framing Pads)
       drawCornerFramingPads(ctx, W, H, S, t, padSp);
 
-      // 10. CHÚ ẾCH NGỒI THIỀN TRÊN PHIẾN LÁ SEN TIỀN CẢNH
+      // 7. CHÚ ẾCH NGỒI THIỀN (vẽ lên trên phiến lá sen)
       drawFrog(ctx, t, W, H, S, wy, pointerX, pointerY);
 
-      // 11. THÂN VÀ CÁNH CHUỒN CHUỒN: Bay lượn và thỉnh thoảng đỗ trên nụ sen
-      dragonfly(ctx, t, cx, cy, W, H, S, false);
+      // 8. Chuồn chuồn bay lượn và bóng đổ in trên nước
+      dragonfly(ctx, t, cx, cy, W, H, S, true); // bóng đổ in trên nước
+      dragonfly(ctx, t, cx, cy, W, H, S, false); // chuồn chuồn bay lượn
 
-      // 12. BẦY ĐOM ĐÓM PHÁT SÁNG BAY LƠ LỬNG
+      // 9. BẦY ĐOM ĐÓM PHÁT SÁNG (vẽ tầng trên cùng)
       drawFireflies(ctx, t, W, H, S, wy, fireflies);
 
-      // 11. 26 hạt phấn hoa bay lơ lửng
+      // 26 hạt phấn hoa bay lơ lửng
       for (let i = 0; i < 26; i++) {
         const f = (t * 0.03 + i / 26) % 1;
         const x = cx + Math.sin(i * 7.1 + t * 0.3) * 150 * S * (0.4 + f);
@@ -2172,15 +2214,22 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         const a = Math.sin(f * Math.PI) * 0.55;
         ctx.beginPath();
         ctx.arc(x, y, (1.2 + (i % 3) * 0.5) * S, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,240,200,${a})`;
+        ctx.fillStyle = `rgba(255, 240, 200, ${a})`;
         ctx.fill();
         ctx.beginPath();
         ctx.arc(x, y, 4 * S, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,240,200,${a * 0.15})`;
+        ctx.fillStyle = `rgba(255, 240, 200, ${a * 0.15})`;
         ctx.fill();
       }
 
-      // 12. Lớp phủ vignette viền hồ
+      // 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang
+      const gTopMist = ctx.createLinearGradient(0, 0, 0, 110 * S);
+      gTopMist.addColorStop(0, 'rgba(245, 244, 239, 0.9)');
+      gTopMist.addColorStop(0.5, 'rgba(245, 244, 239, 0.35)');
+      gTopMist.addColorStop(1, 'rgba(245, 244, 239, 0)');
+      ctx.fillStyle = gTopMist;
+      ctx.fillRect(0, 0, W, 110 * S);
+
       const gVignette = ctx.createRadialGradient(
         W / 2,
         H / 2,
@@ -2189,8 +2238,8 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         H / 2,
         Math.max(W, H) * 0.75,
       );
-      gVignette.addColorStop(0, 'rgba(0,30,20,0)');
-      gVignette.addColorStop(1, 'rgba(0,30,20,.5)');
+      gVignette.addColorStop(0, 'rgba(0, 30, 20, 0)');
+      gVignette.addColorStop(1, 'rgba(0, 30, 20, 0.5)');
       ctx.fillStyle = gVignette;
       ctx.fillRect(0, 0, W, H);
     },
