@@ -634,17 +634,27 @@ export function bud(
   const by = cy - 250 * S;
   const sw = Math.sin(t * 0.3) * 5 * S;
 
+  // Thân nụ sen uốn lượn S-curve tự nhiên, thuôn nhỏ dần từ gốc lên cổ đài
+  ctx.save();
   ctx.beginPath();
   ctx.moveTo(bx - 22 * S, cy);
-  ctx.quadraticCurveTo(bx - 34 * S, cy - 120 * S, bx + sw, by + 14 * S);
+  ctx.bezierCurveTo(
+    bx - 32 * S,
+    cy - (cy - by) * 0.36,
+    bx - 14 * S + sw * 0.5,
+    cy - (cy - by) * 0.72,
+    bx + sw,
+    by + 14 * S,
+  );
   ctx.strokeStyle = '#3c7a38';
-  ctx.lineWidth = 4.5 * S;
+  ctx.lineWidth = 4.8 * S;
   ctx.lineCap = 'round';
   ctx.stroke();
 
   ctx.strokeStyle = 'rgba(160,215,140,.45)';
   ctx.lineWidth = 1.4 * S;
   ctx.stroke();
+  ctx.restore();
 
   ctx.save();
   ctx.translate(bx + sw, by + 14 * S);
@@ -679,6 +689,13 @@ export interface FishConfig {
   readonly sz: number;
   readonly c: readonly [number, number, number];
   readonly p: readonly [number, number, number];
+}
+
+export interface FishRuntimeState {
+  u: number;
+  lastT: number;
+  boostTime: number;
+  speedMult: number;
 }
 
 export const FISH: readonly FishConfig[] = [
@@ -728,12 +745,63 @@ export function fishRipples(
   });
 }
 
-export function fishes(ctx: CanvasRenderingContext2D, t: number, W: number, H: number, S: number) {
+export function fishes(
+  ctx: CanvasRenderingContext2D,
+  t: number,
+  W: number,
+  H: number,
+  S: number,
+  fishStates?: FishRuntimeState[],
+  pointerX?: number | null,
+  pointerY?: number | null,
+) {
   const wd = [0.5, 0.85, 1, 0.95, 0.82, 0.64, 0.48, 0.34, 0.24, 0.17, 0.13, 0.1];
   const N = 12;
 
   FISH.forEach((f, fi) => {
-    const u = t * f.sp + f.ph;
+    let u: number;
+    let speedMult = 1.0;
+
+    if (fishStates) {
+      let state = fishStates[fi];
+      if (!state) {
+        state = { u: f.ph, lastT: t, boostTime: -999, speedMult: 1.0 };
+        fishStates[fi] = state;
+      }
+
+      const dt = state.lastT > 0 ? Math.min(Math.max(t - state.lastT, 0), 0.1) : 0.016;
+      state.lastT = t;
+
+      // Kiểm tra vị trí hiện tại so với con trỏ chuột (phản ứng né tránh khi d < 80 * S)
+      const [currX, currY] = fishPos(f, state.u, W, H);
+      if (
+        pointerX !== null &&
+        pointerX !== undefined &&
+        pointerY !== null &&
+        pointerY !== undefined
+      ) {
+        const dist = Math.hypot(currX - pointerX, currY - pointerY);
+        if (dist < 80 * S && t - state.boostTime > 2.0) {
+          state.boostTime = t;
+        }
+      }
+
+      // Gia tốc bơi mượt mà hình chuông 1.0x -> 1.5x -> 1.0x trong 1.5s
+      const boostAge = t - state.boostTime;
+      if (boostAge >= 0 && boostAge < 1.5) {
+        const progress = boostAge / 1.5;
+        state.speedMult = 1.0 + 0.5 * Math.sin(progress * Math.PI);
+      } else {
+        state.speedMult = 1.0;
+      }
+
+      state.u += dt * f.sp * state.speedMult;
+      u = state.u;
+      speedMult = state.speedMult;
+    } else {
+      u = t * f.sp + f.ph;
+    }
+
     const [x, y] = fishPos(f, u, W, H);
     const [x2, y2] = fishPos(f, u + 0.02, W, H);
     const per = FP[fi] ?? 12;
@@ -749,11 +817,13 @@ export function fishes(ctx: CanvasRenderingContext2D, t: number, W: number, H: n
     let py = y;
     let a = Math.atan2(y2 - y, x2 - x);
 
+    // Khi cá giật mình quẫy đuôi (speedMult > 1), tần số quẫy đuôi tăng nhanh tương ứng
+    const swimFreq = 3.5 * speedMult;
     for (let i = 0; i < N; i++) {
       pts.push([px, py, a]);
       px -= Math.cos(a) * seg;
       py -= Math.sin(a) * seg;
-      a += Math.sin(t * 3.5 - i * 0.6 + fi * 2) * 0.16 * (0.3 + i / N);
+      a += Math.sin(t * swimFreq - i * 0.6 + fi * 2) * 0.16 * (0.3 + i / N);
     }
 
     const h = pts[0];
@@ -1044,50 +1114,107 @@ export function stem(
   t: number,
   S: number,
 ) {
-  const sw = Math.sin(t * 0.3) * 5 * S;
-  const c2 = cx + sw * 0.6;
-  const my = (cy + wy) / 2;
-  const g = ctx.createLinearGradient(cx - 8 * S, 0, cx + 8 * S, 0);
-  g.addColorStop(0, '#27602f');
-  g.addColorStop(0.45, '#78b867');
-  g.addColorStop(1, '#245a2c');
+  const sw = Math.sin(t * 0.28) * 3 * S;
+  // Điểm điều khiển đường cong chữ S tự nhiên (Organic S-Curve) do sức nặng của bông hoa
+  const P0: readonly [number, number] = [cx, cy + 2 * S];
+  const P1: readonly [number, number] = [cx + (13 + sw) * S, cy + (wy - cy) * 0.32];
+  const P2: readonly [number, number] = [cx - (9 - sw * 0.5) * S, cy + (wy - cy) * 0.68];
+  const P3: readonly [number, number] = [cx - 2 * S, wy + 4 * S];
+
+  const N = 24;
+  const leftPts: [number, number][] = [];
+  const rightPts: [number, number][] = [];
+  const centerPts: [number, number][] = [];
+
+  for (let i = 0; i <= N; i++) {
+    const u = i / N;
+    const m = 1 - u;
+    // Điểm nội suy Cubic Bézier
+    const bx =
+      m * m * m * P0[0] + 3 * m * m * u * P1[0] + 3 * m * u * u * P2[0] + u * u * u * P3[0];
+    const by =
+      m * m * m * P0[1] + 3 * m * m * u * P1[1] + 3 * m * u * u * P2[1] + u * u * u * P3[1];
+    centerPts.push([bx, by]);
+
+    // Tiếp tuyến và véc-tơ pháp tuyến
+    const tx =
+      3 * m * m * (P1[0] - P0[0]) + 6 * m * u * (P2[0] - P1[0]) + 3 * u * u * (P3[0] - P2[0]);
+    const ty =
+      3 * m * m * (P1[1] - P0[1]) + 6 * m * u * (P2[1] - P1[1]) + 3 * u * u * (P3[1] - P2[1]);
+    const len = Math.hypot(tx, ty) || 1;
+    const nx = -ty / len;
+    const ny = tx / len;
+
+    // Bán kính thuôn nhỏ dần từ gốc cuống (5.4 * S) lên đỉnh cuống (3.4 * S)
+    const r = (3.4 + 2.0 * u) * S;
+    leftPts.push([bx + nx * r, by + ny * r]);
+    rightPts.push([bx - nx * r, by - ny * r]);
+  }
 
   ctx.save();
-  ctx.lineCap = 'round';
+  // Tô dải thân sen chuyển màu ánh sáng tự nhiên
+  const g = ctx.createLinearGradient(cx - 10 * S, 0, cx + 10 * S, 0);
+  g.addColorStop(0, '#27602f');
+  g.addColorStop(0.42, '#78b867');
+  g.addColorStop(0.72, '#4a873e');
+  g.addColorStop(1, '#245a2c');
+
   ctx.beginPath();
-  ctx.moveTo(cx, cy + 2 * S);
-  ctx.quadraticCurveTo(c2, my, cx, wy + 4 * S);
-  ctx.strokeStyle = g;
-  ctx.lineWidth = 8 * S;
+  const firstLeft = leftPts[0];
+  if (firstLeft) {
+    ctx.moveTo(firstLeft[0], firstLeft[1]);
+  }
+  for (let i = 1; i < leftPts.length; i++) {
+    const p = leftPts[i];
+    if (p) ctx.lineTo(p[0], p[1]);
+  }
+  for (let i = rightPts.length - 1; i >= 0; i--) {
+    const p = rightPts[i];
+    if (p) ctx.lineTo(p[0], p[1]);
+  }
+  ctx.closePath();
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(20, 60, 30, 0.45)';
+  ctx.lineWidth = 0.8 * S;
   ctx.stroke();
 
-  // 30 chấm gai sần tự nhiên
+  // 30 chấm gai sần bám theo đường cong thực tế
   for (let i = 0; i < 30; i++) {
-    const s = 0.05 + (i / 29) * 0.9;
-    const m = 1 - s;
-    const x =
-      m * m * cx +
-      2 * m * s * c2 +
-      s * s * cx +
-      ((i % 2) * 2 - 1) * 3.6 * S +
-      (((i * 37) % 7) - 3) * 0.5 * S;
-    const y = m * m * (cy + 2 * S) + 2 * m * s * my + s * s * (wy + 4 * S);
+    const u = 0.05 + (i / 29) * 0.9;
+    const idx = Math.min(Math.floor(u * N), N - 1);
+    const cp = centerPts[idx];
+    if (!cp) continue;
+    const m = 1 - u;
+    const tx =
+      3 * m * m * (P1[0] - P0[0]) + 6 * m * u * (P2[0] - P1[0]) + 3 * u * u * (P3[0] - P2[0]);
+    const ty =
+      3 * m * m * (P1[1] - P0[1]) + 6 * m * u * (P2[1] - P1[1]) + 3 * u * u * (P3[1] - P2[1]);
+    const len = Math.hypot(tx, ty) || 1;
+    const nx = -ty / len;
+    const ny = tx / len;
+    const r = (3.4 + 2.0 * u) * S;
+    const latOffset = (((i % 2) * 2 - 1) * 0.62 + (((i * 37) % 7) - 3) * 0.08) * r;
+    const x = cp[0] + nx * latOffset;
+    const y = cp[1] + ny * latOffset;
+
     ctx.beginPath();
-    ctx.arc(x, y, 0.9 * S, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(205,240,185,.65)';
+    ctx.arc(x, y, 0.95 * S, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(215,245,190,.75)';
     ctx.fill();
   }
 
-  // Bóng đổ mặt nước
+  // Bóng đổ mặt nước tại gốc cuống
   ctx.beginPath();
-  ctx.ellipse(cx, wy + 2 * S, 13 * S, 4.5 * S, 0, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,30,20,.3)';
+  ctx.ellipse(P3[0], wy + 2 * S, 14 * S, 4.8 * S, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,30,20,.32)';
   ctx.fill();
 
   for (let j = 0; j < 2; j++) {
     ctx.beginPath();
     ctx.ellipse(
-      cx,
+      P3[0],
       wy + 2 * S,
       (12 + j * 7 + Math.sin(t * 0.6 + j) * 1.5) * S,
       (12 + j * 7) * S * 0.3,
@@ -1100,13 +1227,14 @@ export function stem(
     ctx.stroke();
   }
 
-  // Khúc ngập dưới nước
-  ctx.globalAlpha = 0.2;
+  // Khúc ngập dưới nước cong nhẹ tiếp nối
+  ctx.globalAlpha = 0.22;
   ctx.beginPath();
-  ctx.moveTo(cx, wy + 2 * S);
-  ctx.lineTo(cx, wy + 44 * S);
+  ctx.moveTo(P3[0], wy + 2 * S);
+  ctx.quadraticCurveTo(P3[0] + 3 * S, wy + 22 * S, P3[0] + 5 * S, wy + 46 * S);
   ctx.strokeStyle = '#2f6a36';
-  ctx.lineWidth = 7 * S;
+  ctx.lineWidth = 8.5 * S;
+  ctx.lineCap = 'round';
   ctx.stroke();
   ctx.restore();
 }
@@ -1194,6 +1322,134 @@ export function standLeaf(
   ctx.restore();
 }
 
+export interface InteractiveRipple {
+  readonly x: number;
+  readonly y: number;
+  readonly birthTime: number;
+}
+
+/**
+ * Bổ sung 2 phiến lá sen già ở góc tiền cảnh (Corner Framing Pads)
+ * Tạo tiền cảnh đóng khung điện ảnh ở 2 góc đáy, đưa ánh nhìn tập trung vào đóa sen trung tâm
+ */
+export function drawCornerFramingPads(
+  ctx: CanvasRenderingContext2D,
+  W: number,
+  H: number,
+  S: number,
+  t: number,
+  padSp: readonly HTMLCanvasElement[],
+) {
+  const padLeft = padSp[2] ?? padSp[0];
+  const padRight = padSp[1] ?? padSp[0];
+
+  // 1. Lá sen già góc dưới bên trái (Bottom-Left Corner Pad)
+  const lx = 0.03 * W + Math.sin(t * 0.09) * 4;
+  const ly = H + 8 * S + Math.cos(t * 0.08) * 3;
+  const lr = 114 * S;
+
+  ctx.save();
+  ctx.translate(lx, ly);
+  ctx.scale(1.15, 0.44);
+
+  // Bóng đổ đáy lá góc trái
+  ctx.beginPath();
+  ctx.arc(0, lr * 0.16, lr * 0.98, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0, 20, 12, 0.5)';
+  ctx.fill();
+
+  // Viền sáng mép lá
+  ctx.beginPath();
+  ctx.arc(0, 0, lr * 1.04, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(200, 255, 225, 0.22)';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  // Xoay nhẹ tự nhiên
+  ctx.rotate(0.38 + Math.sin(t * 0.07) * 0.02);
+  if (padLeft) {
+    ctx.drawImage(padLeft, -lr, -lr, lr * 2, lr * 2);
+  }
+  ctx.restore();
+
+  // Giọt sương đọng lớn trên phiến lá góc trái
+  const leftDewdrops = [
+    { a: 0.85, k: 0.65, r: 3.2 },
+    { a: 1.25, k: 0.48, r: 2.4 },
+    { a: 0.4, k: 0.72, r: 2.8 },
+  ];
+  leftDewdrops.forEach((d) => {
+    const dx = lx + Math.cos(d.a) * lr * 1.15 * d.k;
+    const dy = ly + Math.sin(d.a) * lr * 0.44 * d.k;
+    const dr = d.r * S;
+    ctx.beginPath();
+    ctx.ellipse(dx, dy + dr * 0.25, dr * 1.05, dr * 0.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,30,18,.35)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(dx, dy, dr, dr * 0.55, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(145,215,115,.92)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(dx - dr * 0.2, dy - dr * 0.15, dr * 0.45, dr * 0.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(240,255,210,.7)';
+    ctx.fill();
+  });
+
+  // 2. Lá sen già góc dưới bên phải (Bottom-Right Corner Pad)
+  const rx = 0.97 * W + Math.cos(t * 0.09) * 4;
+  const ry = H + 10 * S + Math.sin(t * 0.08) * 3;
+  const rr = 120 * S;
+
+  ctx.save();
+  ctx.translate(rx, ry);
+  ctx.scale(1.18, 0.45);
+
+  // Bóng đổ đáy lá góc phải
+  ctx.beginPath();
+  ctx.arc(0, rr * 0.16, rr * 0.98, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0, 20, 12, 0.52)';
+  ctx.fill();
+
+  // Viền sáng mép lá
+  ctx.beginPath();
+  ctx.arc(0, 0, rr * 1.04, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(200, 255, 225, 0.24)';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  // Xoay nhẹ góc phải
+  ctx.rotate(-0.42 + Math.cos(t * 0.06) * 0.02);
+  if (padRight) {
+    ctx.drawImage(padRight, -rr, -rr, rr * 2, rr * 2);
+  }
+  ctx.restore();
+
+  // Giọt sương đọng lớn trên phiến lá góc phải
+  const rightDewdrops = [
+    { a: 2.2, k: 0.6, r: 3.4 },
+    { a: 2.65, k: 0.45, r: 2.6 },
+    { a: 1.8, k: 0.7, r: 2.9 },
+  ];
+  rightDewdrops.forEach((d) => {
+    const dx = rx + Math.cos(d.a) * rr * 1.18 * d.k;
+    const dy = ry + Math.sin(d.a) * rr * 0.45 * d.k;
+    const dr = d.r * S;
+    ctx.beginPath();
+    ctx.ellipse(dx, dy + dr * 0.25, dr * 1.05, dr * 0.5, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,30,18,.35)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(dx, dy, dr, dr * 0.55, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(145,215,115,.92)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(dx - dr * 0.2, dy - dr * 0.15, dr * 0.45, dr * 0.2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(240,255,210,.7)';
+    ctx.fill();
+  });
+}
+
 /**
  * ENGINE FACTORY: Khởi tạo toàn bộ bộ nhớ cache offscreen canvas và các bảng tham số
  */
@@ -1204,6 +1460,8 @@ export interface LotusCanvasEngine {
     height: number,
     timeInSeconds: number,
   ) => void;
+  addRipple: (x: number, y: number, t?: number) => void;
+  setPointer: (x: number | null, y: number | null) => void;
 }
 
 export function createLotusCanvasEngine(): LotusCanvasEngine {
@@ -1252,6 +1510,21 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
   // 46 đốm sáng lấp lánh ngẫu nhiên
   const gl = createGlistens();
 
+  // Mảng sóng nước tương tác khi chạm/nhấp chuột
+  const interactiveRipples: InteractiveRipple[] = [];
+
+  // Tọa độ con trỏ chuột
+  let pointerX: number | null = null;
+  let pointerY: number | null = null;
+
+  // Trạng thái runtime của đàn cá chép
+  const fishStates: FishRuntimeState[] = FISH.map((f) => ({
+    u: f.ph,
+    lastT: 0,
+    boostTime: -999,
+    speedMult: 1.0,
+  }));
+
   return {
     render: (ctx, W, H, t) => {
       const S = Math.min(W, H * 1.1) / 620;
@@ -1259,18 +1532,43 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       const cy = H * 0.5;
       const wy = cy + 140 * S;
 
-      // 1. Mặt nước (water) & Đàn cá (fishes)
+      // 1. Mặt nước (water) & Đàn cá (fishes với phản ứng con trỏ chuột)
       water(ctx, t, cx, cy, W, H, S, gl);
-      fishes(ctx, t, W, H, S);
+      fishes(ctx, t, W, H, S, fishStates, pointerX, pointerY);
 
       // 2. Lá sen hậu cảnh (pads.forEach(p => { if (!p.f) padDraw(p, t, wy); }))
       PADS.forEach((p) => {
         if (!p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
       });
 
-      // 3. Gợn sóng cá, sóng cuống sen & Nụ sen (bud)
+      // 3. Gợn sóng cá, sóng cuống sen, sóng nhấp chuột & Nụ sen (bud)
       fishRipples(ctx, t, W, H, S);
       ripples(ctx, cx, wy, t, S);
+
+      // Vẽ các vòng sóng nhấp chuột (Click/Tap Water Ripples) lan tỏa và mờ dần trong 1.2s
+      for (let i = interactiveRipples.length - 1; i >= 0; i--) {
+        const rip = interactiveRipples[i];
+        if (!rip) continue;
+        const age = t - rip.birthTime;
+        if (age > 1.2 || age < 0) {
+          interactiveRipples.splice(i, 1);
+          continue;
+        }
+        const p = age / 1.2;
+        for (let ring = 0; ring < 3; ring++) {
+          const ringP = p - ring * 0.16;
+          if (ringP <= 0 || ringP > 1) continue;
+          const radX = (12 + ringP * 65) * S;
+          const radY = radX * 0.32;
+          const alpha = (1 - ringP) * 0.45;
+          ctx.beginPath();
+          ctx.ellipse(rip.x, rip.y, radX, radY, 0, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(220, 255, 235, ${alpha})`;
+          ctx.lineWidth = 1.6 * (1 - ringP * 0.4);
+          ctx.stroke();
+        }
+      }
+
       bud(ctx, cx, wy, t, S, BUD);
 
       // 4. Bóng phản chiếu bông sen dưới nước
@@ -1297,7 +1595,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       // 5. BÓNG CHUỒN CHUỒN: Vẽ bóng đổ trước khi vẽ bông hoa
       dragonfly(ctx, t, cx, cy, W, H, S, true);
 
-      // 6. Lá sen đứng vươn cao & Cuống sen chính
+      // 6. Lá sen đứng vươn cao & Cuống sen chính cong chữ S tự nhiên
       standLeaf(ctx, Math.min(W - 70 * S, cx + 255 * S), wy, cy + 10 * S, 56 * S, t, S);
       stem(ctx, cx, cy, wy, t, S);
 
@@ -1308,15 +1606,18 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       flower(ctx, t, LAY);
       ctx.restore();
 
-      // 8. LÁ SEN TIỀN CẢNH (pads.forEach(p => { if (p.f) padDraw(p, t, wy); })) đè lên chân gốc hoa
+      // 8. LÁ SEN TIỀN CẢNH đè lên chân gốc hoa
       PADS.forEach((p) => {
         if (p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
       });
 
-      // 9. THÂN VÀ CÁNH CHUỒN CHUỒN: Bay lượn và thỉnh thoảng đỗ trên nụ sen
+      // 9. BỔ SUNG 2 PHIẾN LÁ SEN GIÀ Ở GÓC TIỀN CẢNH (Corner Framing Pads)
+      drawCornerFramingPads(ctx, W, H, S, t, padSp);
+
+      // 10. THÂN VÀ CÁNH CHUỒN CHUỒN: Bay lượn và thỉnh thoảng đỗ trên nụ sen
       dragonfly(ctx, t, cx, cy, W, H, S, false);
 
-      // 10. 26 hạt phấn hoa bay lơ lửng
+      // 11. 26 hạt phấn hoa bay lơ lửng
       for (let i = 0; i < 26; i++) {
         const f = (t * 0.03 + i / 26) % 1;
         const x = cx + Math.sin(i * 7.1 + t * 0.3) * 150 * S * (0.4 + f);
@@ -1332,7 +1633,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.fill();
       }
 
-      // 11. Lớp phủ vignette viền hồ
+      // 12. Lớp phủ vignette viền hồ
       const gVignette = ctx.createRadialGradient(
         W / 2,
         H / 2,
@@ -1345,6 +1646,19 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       gVignette.addColorStop(1, 'rgba(0,30,20,.5)');
       ctx.fillStyle = gVignette;
       ctx.fillRect(0, 0, W, H);
+    },
+
+    addRipple: (x: number, y: number, t?: number) => {
+      const birth = t !== undefined ? t : performance.now() / 1000;
+      interactiveRipples.push({ x, y, birthTime: birth });
+      if (interactiveRipples.length > 25) {
+        interactiveRipples.shift();
+      }
+    },
+
+    setPointer: (x: number | null, y: number | null) => {
+      pointerX = x;
+      pointerY = y;
     },
   };
 }

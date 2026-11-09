@@ -9,13 +9,30 @@ export interface FooterProps {
 }
 
 export function Footer({ isDarkLesson }: FooterProps = {}) {
+  const footerLinkClass = cn(
+    'min-h-[44px] flex items-center px-3 text-xs font-medium whitespace-nowrap rounded-md md:text-sm',
+    'transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]',
+    'hover:-translate-y-0.5 active:scale-[0.98]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E5B25D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081a13]',
+    isDarkLesson ? 'text-[#94A3B8] hover:text-[#F8FAFC]' : 'text-[#CBD5CE] hover:text-[#F1F5F3]',
+  );
+
   return (
     <footer
+      style={
+        {
+          '--lake-deep': '#081a13',
+          '--lake-text': '#F1F5F3',
+          '--lake-text-muted': '#CBD5CE',
+          '--lake-accent': '#E5B25D',
+          '--lotus-rose': '#D9778D',
+        } as React.CSSProperties
+      }
       className={cn(
         'border-t transition-colors duration-200',
         isDarkLesson
           ? 'border-[#2A323A] bg-[#16191D] text-[#E2E8F0]'
-          : 'border-[#1F332A]/50 bg-gradient-to-b from-[#0A261D] via-[#081F17] to-[#061812] text-[#FAF9F6]',
+          : 'border-[#1F332A]/50 bg-gradient-to-b from-[#0A261D] via-[#081a13] to-[#081a13] text-[#F1F5F3]',
       )}
     >
       <Container size="wide" className="py-5 md:py-6">
@@ -31,7 +48,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <span
                 className={cn(
                   'font-serif text-base font-semibold transition-colors',
-                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#FAF9F6]',
+                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#F1F5F3]',
                 )}
               >
                 Learning Universe
@@ -40,7 +57,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             <blockquote
               className={cn(
                 'font-serif text-xs leading-relaxed italic transition-colors md:text-sm',
-                isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#D1DCD6]',
+                isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#CBD5CE]',
               )}
             >
               “Chúng ta phải học, phải cố gắng học nhiều. Không chịu khó học thì không tiến bộ được.
@@ -52,7 +69,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <cite
                 className={cn(
                   'text-right font-mono text-xs font-medium not-italic transition-colors',
-                  isDarkLesson ? 'text-[#C89738]' : 'text-[#C89738]',
+                  isDarkLesson ? 'text-[#C89738]' : 'text-[#E5B25D]',
                 )}
               >
                 — Chủ tịch Hồ Chí Minh
@@ -68,45 +85,21 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
           {/* Right Column: Flat Single-Row Navigation Links */}
           <nav
             aria-label="Điều hướng chân trang"
-            className="flex flex-row items-center justify-center gap-3 md:justify-end md:gap-4"
+            className="flex flex-row items-center justify-center gap-2 md:justify-end md:gap-3"
           >
-            <Link
-              to={ROUTES.home}
-              className={cn(
-                'text-xs font-medium whitespace-nowrap transition-colors md:text-sm',
-                isDarkLesson
-                  ? 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                  : 'text-[#9EAEA6] hover:text-[#FAF9F6]',
-              )}
-            >
+            <Link to={ROUTES.home} className={footerLinkClass}>
               Trang chủ
             </Link>
-            <span className="text-[#365E4E]" aria-hidden="true">
+            <span className="text-[#365E4E] select-none" aria-hidden="true">
               ·
             </span>
-            <Link
-              to={ROUTES.courses}
-              className={cn(
-                'text-xs font-medium whitespace-nowrap transition-colors md:text-sm',
-                isDarkLesson
-                  ? 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                  : 'text-[#9EAEA6] hover:text-[#FAF9F6]',
-              )}
-            >
+            <Link to={ROUTES.courses} className={footerLinkClass}>
               Tất cả môn học
             </Link>
-            <span className="text-[#365E4E]" aria-hidden="true">
+            <span className="text-[#365E4E] select-none" aria-hidden="true">
               ·
             </span>
-            <Link
-              to={ROUTES.glossary}
-              className={cn(
-                'text-xs font-medium whitespace-nowrap transition-colors md:text-sm',
-                isDarkLesson
-                  ? 'text-[#94A3B8] hover:text-[#F8FAFC]'
-                  : 'text-[#9EAEA6] hover:text-[#FAF9F6]',
-              )}
-            >
+            <Link to={ROUTES.glossary} className={footerLinkClass}>
               Thuật ngữ
             </Link>
           </nav>
@@ -116,7 +109,9 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         <div
           className={cn(
             'mt-4 flex flex-col items-center justify-between gap-2 border-t pt-3 text-xs transition-colors sm:flex-row',
-            isDarkLesson ? 'border-[#2A323A] text-[#64748B]' : 'border-[#1F332A]/50 text-[#58635E]',
+            isDarkLesson
+              ? 'border-[#2A323A] text-[#94A3B8]'
+              : 'border-[#1F332A]/50 font-mono text-xs text-[#D1E0D7] opacity-85',
           )}
         >
           <p>Learning Universe. Bản quyền mở.</p>

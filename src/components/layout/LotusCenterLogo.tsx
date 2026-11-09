@@ -31,6 +31,9 @@ export function LotusCenterLogo({ className }: LotusCenterLogoProps) {
         xmlns="http://www.w3.org/2000/svg"
         className="h-16 w-16 transition-all duration-300 md:h-20 md:w-20"
         aria-hidden="true"
+        style={{
+          filter: 'drop-shadow(0 0 12px rgba(217, 119, 141, 0.45))',
+        }}
       >
         <defs>
           <style>{`
@@ -95,18 +98,18 @@ export function LotusCenterLogo({ className }: LotusCenterLogoProps) {
             <stop offset="100%" stopColor="#E6B87A" stopOpacity="0.55" />
           </linearGradient>
 
-          {/* 4. SẮC CHUYỂN PHIẾN LÁ SEN 3D (BỆ ĐỠ ĐIÊU KHẮC) */}
+          {/* 4. SẮC CHUYỂN PHIẾN LÁ SEN 3D (BỆ ĐỠ ĐIÊU KHẮC NỔI BẬT ĐÓN SÁNG) */}
           <radialGradient id="base-leaf-surface" cx="45%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#4A7562" />
-            <stop offset="55%" stopColor="#365E4E" />
-            <stop offset="85%" stopColor="#254337" />
-            <stop offset="100%" stopColor="#1A3329" />
+            <stop offset="0%" stopColor="#629A83" />
+            <stop offset="35%" stopColor="#4A7B67" />
+            <stop offset="70%" stopColor="#325949" />
+            <stop offset="100%" stopColor="#1E3B2E" />
           </radialGradient>
 
-          {/* Viền dày 3D mép lá sen */}
+          {/* Viền dày 3D mép lá sen đón sáng */}
           <linearGradient id="leaf-3d-rim" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#6C9B86" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#183025" stopOpacity="0.95" />
+            <stop offset="0%" stopColor="#7EBAA1" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#1B382B" stopOpacity="0.95" />
           </linearGradient>
 
           {/* 5. SẮC CHUYỂN ĐÀI SEN 3D NGHIÊNG 35 ĐỘ */}
@@ -217,10 +220,13 @@ export function LotusCenterLogo({ className }: LotusCenterLogoProps) {
         <path
           d="M 18 63 C 20 53.5, 42 49.5, 48 49.5 C 54 49.5, 76 53.5, 78 63 C 75.5 70.5, 54 73.5, 48 73.5 C 42 73.5, 20.5 70.5, 18 63 Z"
           fill="url(#base-leaf-surface)"
-          stroke="#5E8A75"
-          strokeWidth="0.6"
-          strokeOpacity="0.6"
+          stroke="#6EA890"
+          strokeWidth="0.75"
+          strokeOpacity="0.7"
         />
+
+        {/* Vệt phản quang sáng dịu trên tán lá sen đỡ đáy */}
+        <ellipse cx="46" cy="62.5" rx="18" ry="4" fill="#A2D4BE" fillOpacity="0.22" />
 
         {/* Khía khuyết tự nhiên của lá sen */}
         <path

@@ -31,6 +31,13 @@
   --edu-accent: #718c7e;
   --edu-light: #e8efeb;
 
+  /* Lotus Pond & Footer Design Tokens */
+  --lake-deep: #081a13;
+  --lake-text: #f1f5f3;
+  --lake-text-muted: #cbd5ce;
+  --lake-accent: #e5b25d;
+  --lotus-rose: #d9778d;
+
   /* Scholar Suite & Backward-compatible aliases */
   --bg-canvas: #eaf0f1;
   --bg-surface: #f7fafa;
@@ -146,6 +153,13 @@ span.academic-dropcap {
   --math-light: #e5edf1;
   --edu-accent: #718c7e;
   --edu-light: #e8efeb;
+
+  /* Lotus Pond & Footer Design Tokens */
+  --lake-deep: #081a13;
+  --lake-text: #f1f5f3;
+  --lake-text-muted: #cbd5ce;
+  --lake-accent: #e5b25d;
+  --lotus-rose: #d9778d;
 
   /* Ánh xạ tương thích cho các component học thuật dùng biến hệ thống */
   --bg-canvas: var(--bg-main);

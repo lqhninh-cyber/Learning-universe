@@ -135,6 +135,28 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
     };
   }, []);
 
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas || !engineRef.current) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    engineRef.current.addRipple(x, y);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas || !engineRef.current) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    engineRef.current.setPointer(x, y);
+  };
+
+  const handlePointerLeave = () => {
+    engineRef.current?.setPointer(null, null);
+  };
+
   return (
     <section
       ref={containerRef}
@@ -144,11 +166,17 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
         className,
       )}
     >
-      <canvas ref={canvasRef} className="block h-full w-full" />
+      <canvas
+        ref={canvasRef}
+        className="block h-full w-full cursor-pointer touch-pan-y"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+      />
 
-      {/* Mép trên hồ sen (Top blend) */}
+      {/* Mép trên hồ sen (Top edge mist blend) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#F5F4EF] via-[#F5F4EF]/40 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#F5F4EF] via-[#F5F4EF]/35 via-[#F5F4EF]/75 via-25% via-60% to-transparent"
         aria-hidden="true"
       />
 
