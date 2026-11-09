@@ -17,7 +17,7 @@ export const mix = (a: readonly number[], b: readonly number[], t: number): numb
 export const rgb = (c: readonly number[], a = 1): string =>
   `rgba(${c[0] ?? 0},${c[1] ?? 0},${c[2] ?? 0},${a})`;
 
-export const CREAM: readonly [number, number, number] = [255, 250, 236];
+export const CREAM: readonly [number, number, number] = [246, 250, 225];
 
 export interface PetalData {
   readonly c: HTMLCanvasElement;
@@ -36,9 +36,9 @@ export function makePetal(
 ): PetalData {
   const r = rng(seed);
   const q = 2.4;
-  const pad = wid * 1.25;
+  const pad = wid * 1.35;
   const w = Math.ceil(pad * 2 * q);
-  const h = Math.ceil((len + 8) * q);
+  const h = Math.ceil((len * 1.08 + 8) * q);
   const c = document.createElement('canvas');
   c.width = w;
   c.height = h;
@@ -49,23 +49,31 @@ export function makePetal(
   g.scale(q, q);
   g.translate(pad, len + 4);
 
+  // Phom dáng hình chiếc muỗng / lòng thuyền (spoon/boat-shaped):
+  // Đường cong Bezier phình rộng ở phần thân dưới (0.35 * len), uốn thon mượt và vuốt nhọn nhẹ ở chóp cánh
   const path = () => {
     g.beginPath();
     g.moveTo(0, 0);
-    g.bezierCurveTo(wid * 0.85, -len * 0.14, wid * 1.2, -len * 0.6, wid * 0.12, -len * 0.97);
-    g.quadraticCurveTo(0, -len * 1.04, -wid * 0.12, -len * 0.97);
-    g.bezierCurveTo(-wid * 1.2, -len * 0.6, -wid * 0.85, -len * 0.14, 0, 0);
+    // Vòng cung bên phải: phình rộng ở 0.35 * len, uốn thon mượt về chóp
+    g.bezierCurveTo(wid * 0.95, -len * 0.12, wid * 1.25, -len * 0.35, wid * 0.92, -len * 0.65);
+    g.bezierCurveTo(wid * 0.62, -len * 0.86, wid * 0.18, -len * 0.98, 0, -len * 1.03);
+    // Vòng cung bên trái đối xứng
+    g.bezierCurveTo(-wid * 0.18, -len * 0.98, -wid * 0.62, -len * 0.86, -wid * 0.92, -len * 0.65);
+    g.bezierCurveTo(-wid * 1.25, -len * 0.35, -wid * 0.95, -len * 0.12, 0, 0);
+    g.closePath();
   };
 
-  const gr = g.createLinearGradient(0, 0, 0, -len);
-  const STOPS: readonly (readonly [number, number])[] = [
-    [0, 0],
-    [0.2, 0.1],
-    [0.5, 0.42],
-    [0.8, 0.8],
-    [1, 1],
-  ];
-  STOPS.forEach(([p, m]) => gr.addColorStop(p, rgb(mix(c0, c1, m))));
+  // Chuyển sắc 4 tầng tự nhiên theo trục dọc:
+  // - Gốc cánh: Trắng ngà ánh vàng lục nhạt rgba(246, 250, 225, 1)
+  // - Thân cánh dưới: Hồng phấn trong trẻo rgba(248, 195, 214, 0.95)
+  // - Thân cánh trên: Hồng sen dịu rgba(235, 120, 160, 0.95)
+  // - Viền và chóp cánh: Hồng sen thắm rgba(210, 60, 115, 1)
+  const gr = g.createLinearGradient(0, 0, 0, -len * 1.03);
+  gr.addColorStop(0, rgb(c0, 1));
+  gr.addColorStop(0.32, 'rgba(248, 195, 214, 0.95)');
+  gr.addColorStop(0.72, 'rgba(235, 120, 160, 0.95)');
+  gr.addColorStop(1.0, rgb(c1, 1));
+
   path();
   g.fillStyle = gr;
   g.fill();
@@ -74,83 +82,79 @@ export function makePetal(
   path();
   g.clip();
 
-  // Đổ bóng ngang: mép cánh sẫm, giữa sáng
-  let bg = g.createLinearGradient(-wid, 0, wid, 0);
-  bg.addColorStop(0, 'rgba(160,35,85,.32)');
-  bg.addColorStop(0.28, 'rgba(160,35,85,0)');
-  bg.addColorStop(0.5, 'rgba(255,255,255,.2)');
-  bg.addColorStop(0.72, 'rgba(160,35,85,0)');
-  bg.addColorStop(1, 'rgba(160,35,85,.32)');
+  // Đổ bóng lòng máng: Dải gradient ngang tạo cảm giác cánh hoa khum lõm vào trong (mép cánh sáng viền, lòng cánh đậm sắc hơn)
+  const bg = g.createLinearGradient(-wid * 1.25, 0, wid * 1.25, 0);
+  bg.addColorStop(0, 'rgba(255, 255, 255, 0.35)'); // Mép cánh sáng viền
+  bg.addColorStop(0.22, 'rgba(235, 120, 160, 0.05)');
+  bg.addColorStop(0.5, 'rgba(185, 45, 95, 0.28)'); // Lòng cánh đậm sắc hơn (lòng máng trũng)
+  bg.addColorStop(0.78, 'rgba(235, 120, 160, 0.05)');
+  bg.addColorStop(1, 'rgba(255, 255, 255, 0.35)'); // Mép cánh sáng viền
   g.fillStyle = bg;
-  g.fillRect(-pad, -len - 6, pad * 2, len + 12);
+  g.fillRect(-pad, -len * 1.15, pad * 2, len * 1.3);
 
-  // Ửng hồng ở chóp
-  bg = g.createRadialGradient(0, -len * 0.93, 2, 0, -len * 0.93, wid * 1.1);
-  bg.addColorStop(0, rgb(c1, 0.5));
-  bg.addColorStop(1, rgb(c1, 0));
-  g.fillStyle = bg;
-  g.fillRect(-pad, -len - 6, pad * 2, len + 12);
+  // Ửng hồng rực rỡ ở chóp cánh
+  const tipGrad = g.createRadialGradient(0, -len * 0.96, 2, 0, -len * 0.96, wid * 0.95);
+  tipGrad.addColorStop(0, rgb(c1, 0.55));
+  tipGrad.addColorStop(1, rgb(c1, 0));
+  g.fillStyle = tipGrad;
+  g.fillRect(-pad, -len * 1.15, pad * 2, len * 1.3);
 
-  // Sắc vàng xanh ở gốc cánh
-  bg = g.createRadialGradient(0, -len * 0.03, 1, 0, -len * 0.03, len * 0.32);
-  bg.addColorStop(0, 'rgba(226,232,160,.6)');
-  bg.addColorStop(1, 'rgba(226,232,160,0)');
-  g.fillStyle = bg;
-  g.fillRect(-pad, -len - 6, pad * 2, len + 12);
+  // Sắc vàng lục nhạt ở gốc cánh
+  const baseGrad = g.createRadialGradient(0, -len * 0.02, 1, 0, -len * 0.02, len * 0.32);
+  baseGrad.addColorStop(0, 'rgba(246, 250, 225, 0.9)');
+  baseGrad.addColorStop(0.65, 'rgba(246, 250, 225, 0.3)');
+  baseGrad.addColorStop(1, 'rgba(246, 250, 225, 0)');
+  g.fillStyle = baseGrad;
+  g.fillRect(-pad, -len * 1.15, pad * 2, len * 1.3);
 
-  // Gân cánh 2 tầng
-  for (let i = 0; i <= 20; i++) {
-    const t = (i / 20) * 2 - 1;
-    const a = Math.abs(t);
+  // Hệ gân cánh dọc: 24 đường vân mảnh chạy dọc song song từ gốc cánh, uốn lượn theo mép cong và hội tụ mềm về phía đỉnh
+  const veinCount = 24;
+  for (let i = 0; i <= veinCount; i++) {
+    const frac = (i / veinCount) * 2 - 1; // -1 đến 1
+    const aFrac = Math.abs(frac);
     g.beginPath();
-    g.moveTo(t * wid * 0.05, -len * 0.02);
-    g.quadraticCurveTo(
-      t * wid * 0.85,
-      -len * 0.42,
-      t * wid * 0.5 * (1 - a * 0.35),
-      -len * (0.94 - a * 0.22),
-    );
-    g.strokeStyle = `rgba(185,55,105,${0.1 + r() * 0.09})`;
-    g.lineWidth = 0.45 + r() * 0.45;
+    g.moveTo(frac * wid * 0.1, -len * 0.015);
+    const midX = frac * wid * (1.18 - aFrac * 0.15);
+    const midY = -len * 0.38;
+    const endX = frac * wid * 0.12 * (1 - aFrac * 0.4);
+    const endY = -len * (0.98 - aFrac * 0.06);
+
+    g.bezierCurveTo(midX * 0.85, -len * 0.18, midX, midY, endX, endY);
+    const alpha = 0.07 + (1 - aFrac) * 0.09 + r() * 0.04;
+    g.strokeStyle = `rgba(195, 45, 95, ${alpha.toFixed(3)})`;
+    g.lineWidth = 0.42 + (1 - aFrac) * 0.3;
     g.stroke();
   }
-  for (let i = 0; i < 34; i++) {
-    const x0 = (r() - 0.5) * wid * 0.3;
-    const x1 = (r() - 0.5) * wid * 1.6;
-    const y1 = -len * (0.5 + r() * 0.45);
-    g.beginPath();
-    g.moveTo(x0, -len * 0.05);
-    g.quadraticCurveTo(x1 * 0.8, y1 * 0.5, x1, y1);
-    g.strokeStyle = `rgba(190,70,115,${0.04 + r() * 0.04})`;
-    g.lineWidth = 0.4;
-    g.stroke();
-  }
+
   g.restore();
 
+  // Viền sáng mềm mại phản quang
   path();
-  g.lineWidth = 1.5;
-  g.strokeStyle = 'rgba(255,255,255,.3)';
+  g.lineWidth = 1.4;
+  g.strokeStyle = 'rgba(255, 255, 255, 0.4)';
   g.stroke();
 
+  // Đường viền hồng cánh sen thanh mảnh ngoài cùng
   path();
-  g.lineWidth = 0.5;
-  g.strokeStyle = 'rgba(165,40,90,.45)';
+  g.lineWidth = 0.6;
+  g.strokeStyle = 'rgba(190, 45, 95, 0.45)';
   g.stroke();
 
-  // Giọt sương đọng
-  if (r() < 0.7) {
-    const x = (r() - 0.5) * wid * 0.7;
-    const y = -len * (0.3 + r() * 0.4);
+  // Giọt sương đọng tự nhiên
+  if (r() < 0.68) {
+    const x = (r() - 0.5) * wid * 0.65;
+    const y = -len * (0.28 + r() * 0.45);
     const d = 2.2 + r() * 2;
-    bg = g.createRadialGradient(x - d * 0.3, y - d * 0.3, 0.2, x, y, d);
-    bg.addColorStop(0, 'rgba(255,255,255,.75)');
-    bg.addColorStop(0.6, 'rgba(255,255,255,.18)');
-    bg.addColorStop(1, 'rgba(120,30,70,.35)');
+    const dewGrad = g.createRadialGradient(x - d * 0.3, y - d * 0.3, 0.2, x, y, d);
+    dewGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+    dewGrad.addColorStop(0.6, 'rgba(255, 255, 255, 0.22)');
+    dewGrad.addColorStop(1, 'rgba(140, 35, 75, 0.35)');
     g.beginPath();
     g.arc(x, y, d, 0, Math.PI * 2);
-    g.fillStyle = bg;
+    g.fillStyle = dewGrad;
     g.fill();
   }
+
   return { c, pad, len, w: w / q, h: h / q };
 }
 
@@ -179,36 +183,36 @@ export function stamen(
   front: boolean,
 ) {
   const aa = a + Math.sin(t * 0.6 + i) * 0.018;
-  const sx = Math.sin(aa) * (front ? 8 : 7.5);
-  const sy = front ? 0 : -3.5;
+  const sx = Math.sin(aa) * (front ? 7.5 : 7.0);
+  const sy = front ? 0 : -2.5;
   const ex = Math.sin(aa) * len * (front ? 0.72 : 0.88);
-  const ey = front ? -len * 0.42 + 2 : -3.5 - Math.cos(aa) * len * 0.95;
+  const ey = front ? -len * 0.42 + 1.5 : -2.5 - Math.cos(aa) * len * 0.95;
 
   ctx.beginPath();
   ctx.moveTo(sx, sy);
   ctx.quadraticCurveTo(
-    Math.sin(aa) * len * (front ? 0.4 : 0.48),
-    (sy + ey) / 2 - (front ? 1 : 3.5),
+    Math.sin(aa) * len * (front ? 0.38 : 0.46),
+    (sy + ey) / 2 - (front ? 1 : 3),
     ex,
     ey,
   );
-  // Sợi chỉ nhị mảnh màu vàng chanh nhạt #FAEA96
-  ctx.strokeStyle = '#FAEA96';
+  // Sợi nhị vàng tươi #FEE86B
+  ctx.strokeStyle = '#FEE86B';
   ctx.lineWidth = 1.15;
   ctx.stroke();
 
   ctx.save();
   ctx.translate(ex, ey);
   ctx.rotate(aa);
-  // Bao phấn hạt vàng óng #e4a41c
+  // Đầu mang hạt phấn óng ả #E5A520
   ctx.beginPath();
-  ctx.ellipse(0, -2, 1.5, 4.0, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#e4a41c';
+  ctx.ellipse(0, -2, 1.5, 3.8, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#E5A520';
   ctx.fill();
-  // Đầu phấn ngà sáng
+  // Đầu hạt phấn ngà sáng
   ctx.beginPath();
-  ctx.ellipse(0, -6.2, 0.9, 2.0, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#fef3c7';
+  ctx.ellipse(0, -5.8, 0.85, 1.8, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#FFF9C4';
   ctx.fill();
   ctx.restore();
 }
@@ -218,107 +222,109 @@ export function pod(ctx: CanvasRenderingContext2D, t: number) {
   ctx.save();
 
   // 1. Vầng hào quang ấm nhẹ quanh nhị hoa
-  const hg = ctx.createRadialGradient(0, -18, 4, 0, -18, 55);
-  hg.addColorStop(0, 'rgba(255, 238, 160, 0.22)');
-  hg.addColorStop(0.6, 'rgba(255, 238, 160, 0.08)');
-  hg.addColorStop(1, 'rgba(255, 238, 160, 0)');
+  const hg = ctx.createRadialGradient(0, -14, 4, 0, -14, 48);
+  hg.addColorStop(0, 'rgba(254, 232, 107, 0.25)');
+  hg.addColorStop(0.6, 'rgba(254, 232, 107, 0.08)');
+  hg.addColorStop(1, 'rgba(254, 232, 107, 0)');
   ctx.fillStyle = hg;
-  ctx.fillRect(-60, -52, 120, 70);
+  ctx.fillRect(-50, -42, 100, 60);
 
-  // 2. LỚP NHỊ SAU (Back stamens): ~50 sợi chỉ nhị mảnh ôm lấy lưng đài sen
+  // 2. LỚP NHỊ SAU (Back stamens): ~50 sợi mọc dày đặc quanh chân gương sen, uốn cong ôm sát lưng
   const backCount = 50;
   for (let i = 0; i < backCount; i++) {
     const frac = i / (backCount - 1) - 0.5;
-    const a = frac * 2.3 + (r() - 0.5) * 0.1;
-    const len = 34 + r() * 9;
+    const a = frac * 2.2 + (r() - 0.5) * 0.1;
+    const len = 28 + r() * 8;
     stamen(ctx, a, len, t, i, false);
   }
 
-  // 3. THÂN NÓN GƯƠNG SEN (Inverted truncated cone, chiều cao nón 26px từ y = 0 đến y = -26, gắn sát đế hoa)
-  const coneGrad = ctx.createLinearGradient(-21, -26, 21, 0);
-  coneGrad.addColorStop(0, '#75802a');
-  coneGrad.addColorStop(0.22, '#9da33e');
-  coneGrad.addColorStop(0.48, '#d4d86b');
-  coneGrad.addColorStop(0.75, '#a2b03e');
-  coneGrad.addColorStop(1, '#657224');
+  // 3. THÂN NÓN GƯƠNG SEN: Hình nón cụt lùn tự nhiên (chiều cao chỉ 20px từ y = 0 đến y = -20, gắn sát đế hoa)
+  // TUYỆT ĐỐI KHÔNG có ống cuống nối dài nhô lên trên
+  // Màu vàng chanh ngọc bích (#DCE86A -> #B0C440)
+  const coneGrad = ctx.createLinearGradient(-19, -20, 19, 0);
+  coneGrad.addColorStop(0, '#8EA032');
+  coneGrad.addColorStop(0.22, '#B0C440');
+  coneGrad.addColorStop(0.5, '#DCE86A');
+  coneGrad.addColorStop(0.78, '#B0C440');
+  coneGrad.addColorStop(1, '#788828');
 
   ctx.beginPath();
-  ctx.moveTo(-21, -26);
-  ctx.bezierCurveTo(-20, -12, -12, -2, -6.5, 0);
-  ctx.lineTo(6.5, 0);
-  ctx.bezierCurveTo(12, -2, 20, -12, 21, -26);
+  ctx.moveTo(-19, -20);
+  ctx.bezierCurveTo(-18, -10, -11, -2, -6, 0);
+  ctx.lineTo(6, 0);
+  ctx.bezierCurveTo(11, -2, 18, -10, 19, -20);
   ctx.closePath();
   ctx.fillStyle = coneGrad;
   ctx.fill();
 
   // Đổ bóng khối 3D mềm lên thân nón
-  const shadowGrad = ctx.createRadialGradient(-4, -14, 2, 0, -13, 20);
-  shadowGrad.addColorStop(0, 'rgba(255, 255, 200, 0.25)');
-  shadowGrad.addColorStop(0.7, 'rgba(80, 95, 20, 0)');
-  shadowGrad.addColorStop(1, 'rgba(50, 60, 15, 0.45)');
+  const shadowGrad = ctx.createRadialGradient(-3, -11, 2, 0, -10, 16);
+  shadowGrad.addColorStop(0, 'rgba(255, 255, 200, 0.3)');
+  shadowGrad.addColorStop(0.7, 'rgba(120, 140, 30, 0)');
+  shadowGrad.addColorStop(1, 'rgba(60, 75, 18, 0.45)');
   ctx.fillStyle = shadowGrad;
   ctx.fill();
 
-  // 4. MẶT GƯƠNG SEN: Phối cảnh nghiêng tự nhiên ~30°-35° (ellipse rx = 21, ry = 7.8)
-  const topGrad = ctx.createRadialGradient(-4, -28, 2, 0, -26, 21);
-  topGrad.addColorStop(0, '#f5f0a8');
-  topGrad.addColorStop(0.55, '#c8c352');
-  topGrad.addColorStop(0.9, '#98b441');
-  topGrad.addColorStop(1, '#829b35');
+  // 4. MẶT GƯƠNG SEN: Phối cảnh nghiêng 30° tự nhiên (ellipse rx = 19, ry = 7.2)
+  const topGrad = ctx.createRadialGradient(-3, -22, 2, 0, -20, 19);
+  topGrad.addColorStop(0, '#F5FA9E');
+  topGrad.addColorStop(0.52, '#DCE86A');
+  topGrad.addColorStop(0.88, '#B0C440');
+  topGrad.addColorStop(1, '#8FA230');
 
   ctx.beginPath();
-  ctx.ellipse(0, -26, 21, 7.8, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, -20, 19, 7.2, 0, 0, Math.PI * 2);
   ctx.fillStyle = topGrad;
   ctx.fill();
 
-  // Viền vàng xanh tự nhiên sắc nét
-  ctx.strokeStyle = 'rgba(115, 125, 35, 0.65)';
+  // Viền vàng chanh ngọc bích sắc nét
+  ctx.strokeStyle = 'rgba(140, 160, 40, 0.7)';
   ctx.lineWidth = 1;
   ctx.stroke();
 
   // 5. 15 MẮT HẠT SEN (2 viền sắc nét) bố trí hài hòa trên mặt gương sen
   const PITS: readonly (readonly [number, number])[] = [
-    [0, -26],
-    [-9, -26],
-    [9, -26],
-    [-5, -23],
-    [5, -23],
-    [-5, -29],
-    [5, -29],
-    [-13.5, -25.5],
-    [13.5, -25.5],
-    [0, -22.8],
-    [0, -29.2],
-    [-9, -23.5],
-    [9, -23.5],
-    [-9, -28.5],
-    [9, -28.5],
+    [0, -20],
+    [-8, -20],
+    [8, -20],
+    [-4.5, -17.5],
+    [4.5, -17.5],
+    [-4.5, -22.5],
+    [4.5, -22.5],
+    [-12, -19.5],
+    [12, -19.5],
+    [0, -17],
+    [0, -23],
+    [-8, -17.8],
+    [8, -17.8],
+    [-8, -22.2],
+    [8, -22.2],
   ];
 
   PITS.forEach(([px, py]) => {
     // Vòng hốc hạt ngoài
     ctx.beginPath();
-    ctx.ellipse(px, py, 3.2, 1.5, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#635319';
+    ctx.ellipse(px, py, 2.9, 1.4, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#584814';
     ctx.fill();
     // Mầm hạt xanh non ở trong
     ctx.beginPath();
-    ctx.ellipse(px + 0.25, py + 0.25, 2.1, 0.95, 0, 0, Math.PI * 2);
-    ctx.fillStyle = '#dbe58a';
+    ctx.ellipse(px + 0.2, py + 0.2, 1.9, 0.85, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#E2EC82';
     ctx.fill();
     // Chấm tâm nhỏ màu nâu
     ctx.beginPath();
-    ctx.arc(px + 0.25, py + 0.25, 0.45, 0, Math.PI * 2);
-    ctx.fillStyle = '#483810';
+    ctx.arc(px + 0.2, py + 0.2, 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#3E300E';
     ctx.fill();
   });
 
-  // 6. LỚP NHỊ TRƯỚC (Front stamens): ~30 sợi ngắn hơn uốn cong tự nhiên ở chân trước gương sen
-  const frontCount = 30;
+  // 6. LỚP NHỊ TRƯỚC (Front stamens): ~32 sợi ngắn hơn uốn cong ôm sát chân trước gương sen
+  const frontCount = 32;
   for (let i = 0; i < frontCount; i++) {
     const frac = i / (frontCount - 1) - 0.5;
-    const a = frac * 2.7 + (r() - 0.5) * 0.12;
-    const len = 17 + r() * 7;
+    const a = frac * 2.6 + (r() - 0.5) * 0.12;
+    const len = 15 + r() * 6;
     stamen(ctx, a, len, t, i + 60, true);
   }
 
@@ -336,8 +342,11 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
   ctx.fillStyle = '#4c782b';
   ctx.fill();
 
-  // Quy trình phân lớp Z-Index chuẩn thực vật học:
-  // Lớp 1 (Hậu cảnh - Deep Back Petals): layers[0] (5 cánh lớn vươn cao phía sau lưng)
+  // ===================================================================
+  // TRẬT TỰ 5 LỚP CÁNH HOA HÌNH CHÉN NGỌC 3D (5-TIER Z-INDEX):
+  // ===================================================================
+
+  // Lớp 1 (Back Petals - Cánh hậu cảnh): layers[0] (5 cánh hoa vươn cao ở phía sau lưng, đỉnh cánh hơi mở nhẹ ra sau)
   const l0 = layers[0];
   if (l0) {
     for (let i = 0; i < l0.n; i++) {
@@ -347,7 +356,7 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
       ctx.rotate(a);
       let scaleY = 1 - Math.abs(f) * 0.08 + Math.sin(t * 0.45 + i) * 0.01;
       if (Math.abs(f) > 0.1) {
-        scaleY *= 1.06;
+        scaleY *= 1.05;
       }
       ctx.scale(1, scaleY);
       const petal = l0.ps[i];
@@ -356,7 +365,7 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
     }
   }
 
-  // Lớp 2 (Trung cảnh sau - Mid-Back Petals): layers[1] (7 cánh khum vòm lòng chảo)
+  // Lớp 2 (Outer Wing Petals - Cánh mở hai bên): layers[1] (4 cánh mở sang hai bên nâng đỡ phom hoa, khum cong tự nhiên)
   const l1 = layers[1];
   if (l1) {
     for (let i = 0; i < l1.n; i++) {
@@ -372,7 +381,10 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
     }
   }
 
-  // Lớp 3 (Cánh ôm trong - Inner Guard Petals): layers[2] (4 cánh)
+  // Lớp 3 (Deep Core - Tâm sen chìm trong lòng hoa): Gương sen lùn 20px (#DCE86A -> #B0C440) + Nhị sen vàng tươi (#FEE86B, hạt phấn #E5A520)
+  pod(ctx, t);
+
+  // Lớp 4 (Inner Cupping Petals - Cánh khum ôm tâm): layers[2] (4 cánh kích thước vừa, ôm sát quanh đài sen tạo thành lòng chén hoa kín đáo)
   const l2 = layers[2];
   if (l2) {
     for (let i = 0; i < l2.n; i++) {
@@ -380,7 +392,7 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
       const a = f * l2.sp * open + Math.sin(t * 0.52 + i * 1.4 + 2) * 0.016;
       ctx.save();
       ctx.rotate(a);
-      const scaleY = 0.96 + Math.sin(t * 0.4 + i + 2) * 0.01;
+      const scaleY = 0.95 + Math.sin(t * 0.4 + i + 2) * 0.01;
       ctx.scale(1, scaleY);
       const petal = l2.ps[i];
       if (petal) drawPetal(ctx, petal);
@@ -388,10 +400,7 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
     }
   }
 
-  // Lớp đài sen & nhị hoa trung tâm (Back stamens + Pod + Front stamens)
-  pod(ctx, t);
-
-  // Tạo bóng đổ nội bộ (Self-shadowing): Gốc cánh tiền cảnh đổ dải màu bóng mờ vào lòng hoa
+  // Đổ bóng tự nhiên (Self-shadowing): Chân các cánh trước đổ bóng mờ nhẹ vào lòng hoa
   {
     const shadowGrad = ctx.createRadialGradient(0, 0, 3, 0, 2, 26);
     shadowGrad.addColorStop(0, 'rgba(60, 20, 35, 0.32)');
@@ -403,22 +412,41 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
     ctx.fill();
   }
 
-  // Lớp 4 (CÁNH TIỀN CẢNH - FRONT/FOREGROUND PETALS): layers[3] (5 cánh)
-  // Xòe hướng về phía người xem, che phủ 40%-50% chân đài sen và gốc nhị trước
+  // Lớp 5 (Foreground Front Petals - CÁNH TIỀN CẢNH PHÍA TRƯỚC - QUYẾT ĐỊNH ĐỘ TỰ NHIÊN): layers[3] (3 cánh lớn phía trước)
+  // - 1 cánh chính diện hướng thẳng về phía trước, uốn cong khum lòng chảo (foreshortened via scale(1, 0.72)), che khuất 60% chân đài sen và gốc nhị hoa
+  // - 2 cánh phụ chếch sang hai bên ôm đỡ lấy cánh chính
   const l3 = layers[3];
-  if (l3) {
-    for (let i = 0; i < l3.n; i++) {
-      const f = l3.n > 1 ? (i / (l3.n - 1)) * 2 - 1 : 0;
-      const a = f * l3.sp * open + Math.sin(t * 0.55 + i * 1.2 + 3) * 0.016;
+  if (l3 && l3.n >= 3) {
+    // Cánh phụ trái: index 0
+    const petalLeft = l3.ps[0];
+    if (petalLeft) {
       ctx.save();
-      ctx.translate(f * 4.5, 3 + Math.abs(f) * 1.5);
-      ctx.rotate(a);
-      const scaleY = 0.78 + Math.sin(t * 0.45 + i + 3) * 0.015 - Math.abs(f) * 0.03;
-      ctx.scale(1, scaleY);
-      const petal = l3.ps[i];
-      if (petal) {
-        drawPetal(ctx, petal);
-      }
+      ctx.translate(-7, 3);
+      ctx.rotate(-0.38 * open + Math.sin(t * 0.5 + 1) * 0.015);
+      ctx.scale(1, 0.74 + Math.sin(t * 0.45 + 1) * 0.015);
+      drawPetal(ctx, petalLeft);
+      ctx.restore();
+    }
+
+    // Cánh phụ phải: index 2
+    const petalRight = l3.ps[2];
+    if (petalRight) {
+      ctx.save();
+      ctx.translate(7, 3);
+      ctx.rotate(0.38 * open + Math.sin(t * 0.5 + 2) * 0.015);
+      ctx.scale(1, 0.74 + Math.sin(t * 0.45 + 2) * 0.015);
+      drawPetal(ctx, petalRight);
+      ctx.restore();
+    }
+
+    // Cánh chính diện: index 1 (vẽ trên cùng ở chính giữa, che khuất 60% chân đài sen)
+    const petalCenter = l3.ps[1];
+    if (petalCenter) {
+      ctx.save();
+      ctx.translate(0, 3.5);
+      ctx.rotate(Math.sin(t * 0.45) * 0.012);
+      ctx.scale(1, 0.72 + Math.sin(t * 0.45) * 0.012);
+      drawPetal(ctx, petalCenter);
       ctx.restore();
     }
   }
@@ -1550,16 +1578,19 @@ export interface LotusCanvasEngine {
 }
 
 export function createLotusCanvasEngine(): LotusCanvasEngine {
-  // Cấu trúc 4 lớp cánh: Tổng cộng 21 cánh (chuẩn giải phẫu thực vật 18-24 cánh)
-  // Lớp 0 (Hậu cảnh): 5 cánh lớn vươn cao phía sau lưng
-  // Lớp 1 (Trung cảnh sau): 7 cánh xòe rộng khum vòm lòng chảo
-  // Lớp 2 (Cánh ôm trong): 4 cánh ôm sát hai bên đài sen
-  // Lớp 3 (Cánh tiền cảnh): 5 cánh xòe phía trước che 40-50% chân đài sen
+  // ===================================================================
+  // CẤU TRÚC 5 LỚP CÁNH HOA SEN HÌNH CHÉN NGỌC 3D (Z-INDEX RENDERING)
+  // - Lớp 1 (Back Petals): 5 cánh vươn cao phía sau lưng
+  // - Lớp 2 (Outer Wing Petals): 4 cánh mở sang hai bên khum nâng đỡ phom hoa
+  // - Lớp 3 (Deep Core): Gương sen lùn 20px (#DCE86A -> #B0C440) + Nhị sen vàng tươi (#FEE86B)
+  // - Lớp 4 (Inner Cupping Petals): 4 cánh khum ôm tâm đài sen tạo lòng chén
+  // - Lớp 5 (Foreground Front Petals): 3 cánh lớn phía trước (1 chính diện che 60% chân đài + 2 phụ ôm đỡ)
+  // ===================================================================
   const LAY: LayerConfig[] = [
-    { n: 5, sp: 0.82, len: 184, wid: 52, c1: [206, 68, 120], ps: [] },
-    { n: 7, sp: 1.05, len: 162, wid: 50, c1: [224, 95, 145], ps: [] },
-    { n: 4, sp: 0.72, len: 132, wid: 46, c1: [235, 118, 162], ps: [] },
-    { n: 5, sp: 0.62, len: 22, wid: 36, c1: [240, 140, 175], ps: [] },
+    { n: 5, sp: 0.65, len: 186, wid: 52, c1: [210, 60, 115], ps: [] },
+    { n: 4, sp: 1.0, len: 168, wid: 56, c1: [224, 85, 140], ps: [] },
+    { n: 4, sp: 0.62, len: 136, wid: 48, c1: [235, 115, 160], ps: [] },
+    { n: 3, sp: 0.38, len: 22, wid: 44, c1: [242, 135, 172], ps: [] },
   ];
 
   LAY.forEach((l, li) => {
@@ -1567,16 +1598,23 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
     for (let i = 0; i < l.n; i++) {
       const r = rng(li * 97 + i * 13 + 5);
       const baseColor =
-        li === 3 ? ([252, 248, 238] as const) : li === 2 ? ([245, 248, 230] as const) : CREAM;
-      l.ps.push(
-        makePetal(
-          l.len * (0.94 + r() * 0.1),
-          l.wid * (0.92 + r() * 0.14),
-          l.c1,
-          li * 31 + i + 1,
-          baseColor,
-        ),
-      );
+        li === 3 ? ([252, 248, 238] as const) : li === 2 ? ([248, 252, 232] as const) : CREAM;
+
+      let petalLen = l.len * (0.95 + r() * 0.08);
+      let petalWid = l.wid * (0.94 + r() * 0.1);
+
+      // Tinh chỉnh tỷ lệ chuẩn xác cho 3 cánh tiền cảnh: 1 chính diện + 2 cánh phụ ôm đỡ
+      if (li === 3) {
+        if (i === 1) {
+          petalLen = 21;
+          petalWid = 44;
+        } else {
+          petalLen = 25;
+          petalWid = 42;
+        }
+      }
+
+      l.ps.push(makePetal(petalLen, petalWid, l.c1, li * 31 + i + 1, baseColor));
     }
   });
 
