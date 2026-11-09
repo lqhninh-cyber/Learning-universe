@@ -523,21 +523,21 @@ export const Lesson6_1View: FC = () => {
                   {modelCase.detailedFiveSteps.map((step) => (
                     <div
                       key={step.stepNumber}
-                      className="space-y-2 rounded-xl border border-[#CFDADB] bg-white p-4"
+                      className="space-y-2 rounded-xl border border-[#CFDADB] bg-white p-4 dark:border-[#1E362A] dark:bg-[#12241C]"
                     >
-                      <div className="flex items-center gap-2 font-serif text-sm font-bold text-[#3F6570]">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#E8EFEB] text-xs">
+                      <div className="flex items-center gap-2 font-serif text-sm font-bold text-[#3F6570] dark:text-[#C5A262]">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#E8EFEB] text-xs dark:bg-[#1E362A] dark:text-[#C5A262]">
                           0{step.stepNumber}
                         </span>
                         <span>{step.stepTitle}</span>
                       </div>
-                      <ul className="list-disc space-y-1 pl-5 text-xs text-[#29383D]">
+                      <ul className="list-disc space-y-1 pl-5 text-xs text-[#29383D] dark:text-[#A8C4B5]">
                         {step.executionActions.map((action, aIdx) => (
                           <li key={aIdx}>{action}</li>
                         ))}
                       </ul>
                       {step.pedagogicalDialogues && step.pedagogicalDialogues.length > 0 && (
-                        <div className="space-y-1.5 rounded-lg border border-[#718C7E]/30 bg-[#E8EFEB]/60 p-3 text-xs">
+                        <div className="space-y-1.5 rounded-lg border border-[#718C7E]/30 bg-[#E8EFEB]/60 p-3 text-xs dark:border-[#2C4D3B] dark:bg-[#142A20] dark:text-[#D1E0D7]">
                           <span className="font-bold text-[#3F6570]">Đối thoại sư phạm mẫu:</span>
                           {step.pedagogicalDialogues.map((dlg, dIdx) => (
                             <div key={dIdx} className="space-y-0.5">
@@ -1391,13 +1391,19 @@ export const Lesson6_2View: FC = () => {
                   <strong>Nội dung & Cách tiến hành:</strong> {act.contentAndMethod}
                 </p>
                 <div className="grid gap-2 text-xs sm:grid-cols-2">
-                  <div className="rounded-lg border border-[#CFDADB] bg-white p-2.5">
-                    <span className="font-semibold text-[#3F6570]">Hành động của học sinh: </span>
-                    <span className="text-[#55676B]">{act.studentAction}</span>
+                  <div className="rounded-lg border border-[#CFDADB] bg-white p-2.5 dark:border-[#1E362A] dark:bg-[#12241C]">
+                    <span className="font-semibold text-[#3F6570] dark:text-[#C5A262]">
+                      Hành động của học sinh:{' '}
+                    </span>
+                    <span className="text-[#55676B] dark:text-[#A8C4B5]">{act.studentAction}</span>
                   </div>
-                  <div className="rounded-lg border border-[#718C7E]/30 bg-[#E8EFEB]/60 p-2.5">
-                    <span className="font-semibold text-[#718C7E]">Kết quả kỳ vọng: </span>
-                    <span className="text-[#29383D]">{act.expectedOutcome}</span>
+                  <div className="rounded-lg border border-[#718C7E]/30 bg-[#E8EFEB]/60 p-2.5 dark:border-[#2C4D3B] dark:bg-[#142A20]">
+                    <span className="font-semibold text-[#718C7E] dark:text-[#C5A262]">
+                      Kết quả kỳ vọng:{' '}
+                    </span>
+                    <span className="text-[#29383D] dark:text-[#D1E0D7]">
+                      {act.expectedOutcome}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1586,72 +1592,74 @@ export const Lesson6_2View: FC = () => {
             return (
               <div
                 key={item.id}
-                className="overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-xs transition-all hover:border-[#718C7E]"
+                className="overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-xs transition-all hover:border-[#718C7E] dark:border-[#1E362A] dark:bg-[#122018]"
               >
                 <button
                   type="button"
                   onClick={() => handleToggleQuestion(item.id)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-[#EAF0F1]/70 sm:p-6"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-[#EAF0F1]/70 sm:p-6 dark:hover:bg-[#162920]"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#3F6570] font-serif text-sm font-bold text-white shadow-2xs">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#3F6570] font-serif text-sm font-bold text-white shadow-2xs dark:bg-[#2C4D3B]">
                       {item.id}
                     </span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-[#3F6570]">
+                        <span className="font-mono text-xs font-bold text-[#3F6570] dark:text-[#C5A262]">
                           [{item.chapterOrigin}]
                         </span>
-                        <span className="text-xs text-[#55676B]">· {item.clos}</span>
-                        <span className="rounded bg-[#E1E9EA] px-2 py-0.5 text-xs font-bold text-[#29383D]">
+                        <span className="text-xs text-[#55676B] dark:text-[#A8C4B5]">
+                          · {item.clos}
+                        </span>
+                        <span className="rounded bg-[#E1E9EA] px-2 py-0.5 text-xs font-bold text-[#29383D] dark:bg-[#1E362A] dark:text-[#D1E0D7]">
                           {item.points.toFixed(1)} điểm
                         </span>
                       </div>
-                      <h3 className="mt-1 text-base font-bold text-[#29383D] sm:text-lg">
+                      <h3 className="mt-1 text-base font-bold text-[#29383D] sm:text-lg dark:text-[#F1F5F3]">
                         {item.title}
                       </h3>
                     </div>
                   </div>
 
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="hidden text-sm font-medium text-[#55676B] sm:inline">
+                    <span className="hidden text-sm font-medium text-[#55676B] sm:inline dark:text-[#A8C4B5]">
                       {isExpanded ? 'Thu gọn dàn ý' : 'Xem dàn ý chuẩn'}
                     </span>
                     {isExpanded ? (
-                      <ChevronUp className="h-5 w-5 text-[#3F6570]" />
+                      <ChevronUp className="h-5 w-5 text-[#3F6570] dark:text-[#C5A262]" />
                     ) : (
-                      <ChevronDown className="h-5 w-5 text-[#55676B]" />
+                      <ChevronDown className="h-5 w-5 text-[#55676B] dark:text-[#A8C4B5]" />
                     )}
                   </div>
                 </button>
 
                 {isExpanded && (
-                  <div className="space-y-5 border-t border-[#CFDADB] bg-[#EAF0F1]/50 p-5 sm:p-7">
-                    <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs">
-                      <div className="text-xs font-bold text-[#3F6570] uppercase">
+                  <div className="accordion-content mt-3 space-y-5 rounded-xl border border-transparent bg-zinc-50 p-4 text-zinc-800 md:p-5 dark:border dark:border-[#1E362A] dark:bg-[#0E1A14] dark:text-[#D1E0D7]">
+                    <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-2xs dark:border-[#1E362A] dark:bg-[#12241C]">
+                      <div className="text-xs font-bold text-[#3F6570] uppercase dark:text-[#C5A262]">
                         Đề bài chi tiết:
                       </div>
-                      <p className="mt-2 text-[16px] leading-relaxed font-semibold text-[#29383D] sm:text-[17px]">
+                      <p className="mt-2 text-[16px] leading-relaxed font-semibold text-[#29383D] sm:text-[17px] dark:text-[#F1F5F3]">
                         {item.questionText}
                       </p>
                     </div>
 
                     <div className="space-y-4">
-                      <div className="text-xs font-bold tracking-wider text-[#3F6570] uppercase">
+                      <div className="text-xs font-bold tracking-wider text-[#3F6570] uppercase dark:text-[#C5A262]">
                         Dàn ý trả lời & Barem điểm chi tiết:
                       </div>
                       {item.outlineSections.map((sec, sIdx) => (
                         <div
                           key={sIdx}
-                          className="space-y-2 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-4 shadow-2xs"
+                          className="space-y-2 rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-4 shadow-2xs dark:border-[#1E362A] dark:bg-[#12241C]"
                         >
-                          <div className="flex items-center justify-between border-b border-[#CFDADB] pb-2 text-sm font-bold text-[#29383D]">
+                          <div className="flex items-center justify-between border-b border-[#CFDADB] pb-2 text-sm font-bold text-[#29383D] dark:border-[#1E362A] dark:text-[#F1F5F3]">
                             <span>{sec.sectionTitle}</span>
-                            <span className="text-xs font-semibold text-[#3F6570]">
+                            <span className="text-xs font-semibold text-[#3F6570] dark:text-[#C5A262]">
                               {sec.pointsAllocation}
                             </span>
                           </div>
-                          <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-relaxed text-[#29383D] sm:text-[15.5px]">
+                          <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-relaxed text-[#29383D] sm:text-[15.5px] dark:text-[#A8C4B5]">
                             {sec.contentItems.map((ci, cIdx) => (
                               <li key={cIdx}>{ci}</li>
                             ))}
@@ -1661,11 +1669,11 @@ export const Lesson6_2View: FC = () => {
                     </div>
 
                     {item.teachingMathContext && (
-                      <div className="rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-[#29383D]">
-                        <div className="text-xs font-bold text-[#3F6570] uppercase">
+                      <div className="rounded-xl border border-[#718C7E]/40 bg-[#E8EFEB] p-4 text-[#29383D] dark:border-[#2C4D3B] dark:bg-[#142A20] dark:text-[#D1E0D7]">
+                        <div className="text-xs font-bold text-[#3F6570] uppercase dark:text-[#C5A262]">
                           Gợi ý liên hệ Bộ môn Sư phạm Toán (Điểm cộng sáng tạo):
                         </div>
-                        <p className="mt-1 text-[15px] leading-relaxed text-[#29383D] italic">
+                        <p className="mt-1 text-[15px] leading-relaxed text-[#29383D] italic dark:text-[#A8C4B5]">
                           {item.teachingMathContext}
                         </p>
                       </div>
@@ -2031,30 +2039,36 @@ export const Lesson6_3View: FC = () => {
           </div>
 
           {/* I. MỤC TIÊU */}
-          <div className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/50 p-5">
-            <h4 className="font-serif text-sm font-bold tracking-wider text-[#3F6570] uppercase">
+          <div className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/50 p-5 dark:border-[#1E362A] dark:bg-[#0E1A14]">
+            <h4 className="font-serif text-sm font-bold tracking-wider text-[#3F6570] uppercase dark:text-[#C5A262]">
               I. Mục tiêu Chủ đề (Yêu cầu cần đạt)
             </h4>
             <div className="grid gap-3 text-xs md:grid-cols-3">
-              <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-white p-3">
-                <span className="font-bold text-[#3F6570]">1. Năng lực đặc thù HĐTN:</span>
-                <ul className="list-disc space-y-1 pl-4 text-[#29383D]">
+              <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-white p-3 dark:border-[#1E362A] dark:bg-[#12241C]">
+                <span className="font-bold text-[#3F6570] dark:text-[#C5A262]">
+                  1. Năng lực đặc thù HĐTN:
+                </span>
+                <ul className="list-disc space-y-1 pl-4 text-[#29383D] dark:text-[#A8C4B5]">
                   {SAMPLE_5512_EXPERIENTIAL_PLAN.objectives.specificCompetencies.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
                 </ul>
               </div>
-              <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-white p-3">
-                <span className="font-bold text-[#718C7E]">2. Năng lực chung:</span>
-                <ul className="list-disc space-y-1 pl-4 text-[#29383D]">
+              <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-white p-3 dark:border-[#1E362A] dark:bg-[#12241C]">
+                <span className="font-bold text-[#718C7E] dark:text-[#739B88]">
+                  2. Năng lực chung:
+                </span>
+                <ul className="list-disc space-y-1 pl-4 text-[#29383D] dark:text-[#A8C4B5]">
                   {SAMPLE_5512_EXPERIENTIAL_PLAN.objectives.generalCompetencies.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
                 </ul>
               </div>
-              <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-white p-3">
-                <span className="font-bold text-[#987343]">3. Phẩm chất chủ yếu:</span>
-                <ul className="list-disc space-y-1 pl-4 text-[#29383D]">
+              <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-white p-3 dark:border-[#1E362A] dark:bg-[#12241C]">
+                <span className="font-bold text-[#987343] dark:text-[#E2C48D]">
+                  3. Phẩm chất chủ yếu:
+                </span>
+                <ul className="list-disc space-y-1 pl-4 text-[#29383D] dark:text-[#A8C4B5]">
                   {SAMPLE_5512_EXPERIENTIAL_PLAN.objectives.coreQualities.map((c, i) => (
                     <li key={i}>{c}</li>
                   ))}
@@ -2064,14 +2078,16 @@ export const Lesson6_3View: FC = () => {
           </div>
 
           {/* II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU */}
-          <div className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/50 p-5">
-            <h4 className="font-serif text-sm font-bold tracking-wider text-[#3F6570] uppercase">
+          <div className="space-y-3 rounded-xl border border-[#CFDADB] bg-[#EAF0F1]/50 p-5 dark:border-[#1E362A] dark:bg-[#0E1A14]">
+            <h4 className="font-serif text-sm font-bold tracking-wider text-[#3F6570] uppercase dark:text-[#C5A262]">
               II. Thiết bị Dạy học và Học liệu
             </h4>
             <div className="grid gap-3 text-xs sm:grid-cols-2">
-              <div className="rounded-lg border border-[#CFDADB] bg-white p-3">
-                <span className="font-bold text-[#3F6570]">Chuẩn bị của Giáo viên:</span>
-                <ul className="mt-1 list-disc space-y-1 pl-4 text-[#29383D]">
+              <div className="rounded-lg border border-[#CFDADB] bg-white p-3 dark:border-[#1E362A] dark:bg-[#12241C]">
+                <span className="font-bold text-[#3F6570] dark:text-[#C5A262]">
+                  Chuẩn bị của Giáo viên:
+                </span>
+                <ul className="mt-1 list-disc space-y-1 pl-4 text-[#29383D] dark:text-[#A8C4B5]">
                   {SAMPLE_5512_EXPERIENTIAL_PLAN.equipmentAndMaterials.teacherPrep.map(
                     (item, i) => (
                       <li key={i}>{item}</li>
@@ -2079,9 +2095,11 @@ export const Lesson6_3View: FC = () => {
                   )}
                 </ul>
               </div>
-              <div className="rounded-lg border border-[#CFDADB] bg-white p-3">
-                <span className="font-bold text-[#718C7E]">Phương tiện của Học sinh:</span>
-                <ul className="mt-1 list-disc space-y-1 pl-4 text-[#29383D]">
+              <div className="rounded-lg border border-[#CFDADB] bg-white p-3 dark:border-[#1E362A] dark:bg-[#12241C]">
+                <span className="font-bold text-[#718C7E] dark:text-[#739B88]">
+                  Phương tiện của Học sinh:
+                </span>
+                <ul className="mt-1 list-disc space-y-1 pl-4 text-[#29383D] dark:text-[#A8C4B5]">
                   {SAMPLE_5512_EXPERIENTIAL_PLAN.equipmentAndMaterials.studentPrep.map(
                     (item, i) => (
                       <li key={i}>{item}</li>
@@ -2094,20 +2112,20 @@ export const Lesson6_3View: FC = () => {
 
           {/* III. TIẾN TRÌNH TỔ CHỨC 4 HOẠT ĐỘNG TRẢI NGHIỆM */}
           <div className="space-y-4">
-            <h4 className="font-serif text-sm font-bold tracking-wider text-[#3F6570] uppercase">
+            <h4 className="font-serif text-sm font-bold tracking-wider text-[#3F6570] uppercase dark:text-[#C5A262]">
               III. Tiến trình Tổ chức Hoạt động Trải nghiệm (Chu trình 4 Hoạt động CV 5512)
             </h4>
             <div className="space-y-4">
               {SAMPLE_5512_EXPERIENTIAL_PLAN.pedagogicalActivities.map((act) => (
                 <div
                   key={act.activityNumber}
-                  className="space-y-3 rounded-xl border border-[#CFDADB] bg-white p-5 shadow-2xs"
+                  className="space-y-3 rounded-xl border border-[#CFDADB] bg-white p-5 shadow-2xs dark:border-[#1E362A] dark:bg-[#12241C]"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#CFDADB] pb-2">
-                    <h5 className="font-serif text-base font-bold text-[#29383D]">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#CFDADB] pb-2 dark:border-[#1E362A]">
+                    <h5 className="font-serif text-base font-bold text-[#29383D] dark:text-[#F1F5F3]">
                       {act.activityName}
                     </h5>
-                    <span className="rounded-md bg-[#3F6570] px-2.5 py-0.5 font-mono text-xs font-bold text-white">
+                    <span className="rounded-md bg-[#3F6570] px-2.5 py-0.5 font-mono text-xs font-bold text-white dark:bg-[#2C4D3B]">
                       {act.durationText}
                     </span>
                   </div>

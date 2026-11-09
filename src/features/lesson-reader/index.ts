@@ -1,4 +1,8 @@
 export { DevEditorialBar, type DevEditorialBarProps } from './DevEditorialBar';
+export {
+  FloatingReadingController,
+  type FloatingReadingControllerProps,
+} from './FloatingReadingController';
 export { LessonActionBar, type LessonActionBarProps } from './LessonActionBar';
 export { LessonNotesPanel, type LessonNotesPanelProps } from './LessonNotesPanel';
 export { LessonPrevNextNav, type LessonPrevNextNavProps } from './LessonPrevNextNav';

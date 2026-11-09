@@ -64,11 +64,12 @@ function RootLayoutContent() {
 
   return (
     <div
+      id="reading-container"
       data-reading-theme={isDarkLesson ? 'dark' : undefined}
       className={cn(
         'flex min-h-screen flex-col overflow-x-clip transition-colors duration-300',
         isDarkLesson
-          ? 'scoped-dark-mode bg-[#121517] text-[#E2E8F0]'
+          ? 'scoped-dark-mode dark bg-[#121517] text-[#E2E8F0]'
           : 'bg-[#EAF0F1] text-[#29383D]',
       )}
     >

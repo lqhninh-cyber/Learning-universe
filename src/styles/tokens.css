@@ -507,15 +507,85 @@ span.academic-dropcap {
   color: #e2e8f0 !important;
 }
 
-/* 4. Hộp Pháp lý & Nghiên cứu tình huống (Legal & Case Study Boxes) */
+/* 4. Hộp Pháp lý, Callout Nền tảng & Nghiên cứu tình huống */
+.callout-highlight-box,
+[data-legal-box],
+.legal-reference-box {
+  background-color: #f8faf9;
+  color: #27272a;
+  border-left: 4px solid #2e6b4f;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .callout-highlight-box,
+[data-reading-theme='dark'] .callout-highlight-box,
+.scoped-dark-mode .callout-highlight-box,
+.dark [data-legal-box],
 [data-reading-theme='dark'] [data-legal-box],
-[data-reading-theme='dark'] [data-case-study-box],
-[data-reading-theme='dark'] .legal-reference-box {
-  background-color: #18201d !important;
-  border-color: #2d3339 !important;
-  border-left-width: 2px !important;
+.scoped-dark-mode [data-legal-box],
+.dark .legal-reference-box,
+[data-reading-theme='dark'] .legal-reference-box,
+.scoped-dark-mode .legal-reference-box {
+  background-color: #12241c !important;
+  color: #e4efe9 !important;
+  border-left-width: 4px !important;
   border-left-style: solid !important;
-  border-left-color: #5e8a75 !important;
+  border-left-color: #c5a262 !important;
+  border-color: #2c4d3b !important;
+  box-shadow: none !important;
+}
+
+.dark .callout-highlight-box p,
+[data-reading-theme='dark'] .callout-highlight-box p,
+.scoped-dark-mode .callout-highlight-box p,
+.dark .callout-highlight-box span,
+[data-reading-theme='dark'] .callout-highlight-box span,
+.scoped-dark-mode .callout-highlight-box span {
+  color: #e4efe9 !important;
+}
+
+.dark .callout-highlight-box strong,
+[data-reading-theme='dark'] .callout-highlight-box strong,
+.scoped-dark-mode .callout-highlight-box strong {
+  color: #f5f2eb !important;
+}
+
+.dark .callout-highlight-box .tag-badge,
+[data-reading-theme='dark'] .callout-highlight-box .tag-badge,
+.scoped-dark-mode .callout-highlight-box .tag-badge {
+  background-color: #1a382b !important;
+  border-color: rgba(197, 162, 98, 0.4) !important;
+  color: #e2c48d !important;
+}
+
+/* Khung Dàn Ý Câu Hỏi Mở Rộng & Accordion Content */
+.dark .accordion-content,
+[data-reading-theme='dark'] .accordion-content,
+.scoped-dark-mode .accordion-content {
+  background-color: #0e1a14 !important;
+  color: #d1e0d7 !important;
+  border: 1px solid #1e362a !important;
+}
+
+.dark .accordion-content li,
+[data-reading-theme='dark'] .accordion-content li,
+.scoped-dark-mode .accordion-content li,
+.dark .accordion-content .outline-bullet,
+[data-reading-theme='dark'] .accordion-content .outline-bullet,
+.scoped-dark-mode .accordion-content .outline-bullet {
+  color: #a8c4b5 !important;
+}
+
+.dark .accordion-content .hcmue-source,
+[data-reading-theme='dark'] .accordion-content .hcmue-source,
+.scoped-dark-mode .accordion-content .hcmue-source {
+  color: #a8c4b5 !important;
+}
+
+.dark [data-case-study-box],
+[data-reading-theme='dark'] [data-case-study-box] {
+  background-color: #122018 !important;
+  border-color: #1e362a !important;
   color: #e2e8f0 !important;
 }
 
@@ -524,14 +594,14 @@ span.academic-dropcap {
 [data-reading-theme='dark'] [data-case-study-box] h3,
 [data-reading-theme='dark'] [data-case-study-box] .case-title {
   font-family: var(--font-mono) !important;
-  color: #5e8a75 !important;
+  color: #c5a262 !important;
 }
 
 [data-reading-theme='dark'] [data-legal-box] blockquote,
 [data-reading-theme='dark'] [data-case-study-box] blockquote {
   background-color: rgba(28, 32, 36, 0.5) !important;
   color: #e2e8f0 !important;
-  border-left-color: #5e8a75 !important;
+  border-left-color: #c5a262 !important;
 }
 
 [data-reading-theme='dark'] [data-case-study-box] textarea {
@@ -542,6 +612,23 @@ span.academic-dropcap {
 
 [data-reading-theme='dark'] [data-case-study-box] textarea::placeholder {
   color: #55676b !important;
+}
+
+/* Fallback chống chìm chữ trên nền trắng trong chế độ đọc tối */
+.dark [data-reading-article] .bg-white:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-white:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-white:not([class*='dark:bg-']) {
+  background-color: #12241c !important;
+  border-color: #1e362a !important;
+  color: #e4efe9 !important;
+}
+
+.dark [data-reading-article] .bg-\[\#F7FAFA\]:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-\[\#F7FAFA\]:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-\[\#F7FAFA\]:not([class*='dark:bg-']) {
+  background-color: #122018 !important;
+  border-color: #1e362a !important;
+  color: #e4efe9 !important;
 }
 
 /* 5. Thẻ Chú thích lề (Sidenote / Annotation) */

@@ -118,22 +118,31 @@ export const Lesson3_1View: FC = () => {
       createElement(
         'div',
         {
-          className: 'rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-2xs space-y-3',
+          className:
+            'callout-highlight-box my-5 space-y-3 rounded-xl border border-stone-200/90 bg-[#F8FAF9] p-6 text-zinc-800 border-l-4 border-[#2E6B4F] shadow-sm dark:border-[#2C4D3B] dark:bg-[#12241C] dark:text-[#E4EFE9] dark:border-l-4 dark:border-[#C5A262] dark:shadow-none',
         },
         createElement(
           'span',
           {
             className:
-              'inline-flex items-center rounded-md border border-[#718C7E]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#3F6570]',
+              'tag-badge inline-flex items-center rounded-md border border-[#2E6B4F]/30 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-xs font-semibold text-[#2E6B4F] dark:border-[#C5A262]/40 dark:bg-[#1A382B] dark:text-[#E2C48D]',
           },
           'Định nghĩa & Khung Pháp lý Nền tảng',
         ),
         createElement(
           'p',
-          { className: 'text-sm text-[#29383D] leading-relaxed' },
-          createElement('strong', null, 'Hệ thống giáo dục quốc dân'),
+          { className: 'text-sm leading-relaxed text-zinc-800 dark:text-[#E4EFE9]' },
+          createElement(
+            'strong',
+            { className: 'text-zinc-900 dark:text-[#F1F5F3]' },
+            'Hệ thống giáo dục quốc dân',
+          ),
           ' là tổng thể các cơ sở giáo dục và đào tạo được phân chia thành các bậc học, cấp học, ngành học theo quy hoạch của Nhà nước nhằm thực hiện mục đích giáo dục. Theo Điều 4 Luật Giáo dục 2019 và Quyết định 1981/QĐ-TTg (2016), hệ thống giáo dục quốc dân Việt Nam được xây dựng theo mô hình ',
-          createElement('strong', { className: 'text-[#3F6570]' }, 'mở, linh hoạt và liên thông'),
+          createElement(
+            'strong',
+            { className: 'text-[#2E6B4F] dark:text-[#C5A262]' },
+            'mở, linh hoạt và liên thông',
+          ),
           ' giữa các cấp học và trình độ đào tạo, gồm hai tiểu hệ thống: giáo dục chính quy và giáo dục thường xuyên.',
         ),
       ),

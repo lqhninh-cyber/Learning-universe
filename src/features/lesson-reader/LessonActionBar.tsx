@@ -1,4 +1,4 @@
-import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit, Moon, Sun } from 'lucide-react';
+import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLearningStore } from '@/features/learning';
 import { cn } from '@/shared/lib/cn';
@@ -17,7 +17,6 @@ export function LessonActionBar({
   isNotesOpen,
   onToggleNotes,
   readingTheme: propTheme,
-  onToggleReadingTheme,
   className,
 }: LessonActionBarProps) {
   const isCompleted = useLearningStore((state) => Boolean(state.completedLessons[lessonId]));
@@ -62,23 +61,6 @@ export function LessonActionBar({
 
   const activeTheme = propTheme ?? internalTheme;
   const isDark = activeTheme === 'dark';
-
-  const handleToggleReadingTheme = () => {
-    if (onToggleReadingTheme) {
-      onToggleReadingTheme();
-      return;
-    }
-    const next = activeTheme === 'dark' ? 'light' : 'dark';
-    try {
-      localStorage.setItem('lu_reading_theme', next);
-    } catch {
-      // Bỏ qua lỗi storage
-    }
-    setInternalTheme(next);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: next }));
-    }
-  };
 
   const handleNoteClick = () => {
     if (requestNoteAccess(lessonId)) {
@@ -196,30 +178,6 @@ export function LessonActionBar({
           aria-hidden="true"
         />
         <span>{glossaryAnnotationsEnabled ? 'Thuật ngữ: Bật' : 'Thuật ngữ: Tắt'}</span>
-      </button>
-
-      {/* Nút chuyển đổi Chế độ đọc: Sáng / Tối */}
-      <button
-        type="button"
-        onClick={handleToggleReadingTheme}
-        aria-pressed={isDark}
-        aria-label={`Chế độ đọc: ${isDark ? 'Tối' : 'Sáng'}`}
-        title="Chế độ đọc: Sáng / Tối"
-        data-testid="reading-theme-toggle"
-        className={cn(
-          'flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-xs whitespace-nowrap shadow-2xs transition-colors',
-          isDark
-            ? 'border-[#2D3339] bg-[#1C2024] text-[#94A3B8] hover:border-[#5E8A75] hover:text-[#E2E8F0]'
-            : 'border-[#CFDADB] bg-[#F7FAFA] text-[#55676B] hover:bg-[#E1E9EA] hover:text-[#29383D]',
-        )}
-      >
-        {isDark ? (
-          <Moon className="h-3.5 w-3.5 shrink-0 text-[#5E8A75]" aria-hidden="true" />
-        ) : (
-          <Sun className="h-3.5 w-3.5 shrink-0 text-[#92714F]" aria-hidden="true" />
-        )}
-        <span>Chế độ đọc: {isDark ? 'Tối' : 'Sáng'}</span>
-        <span className="sr-only"> (Sáng / Tối)</span>
       </button>
     </div>
   );

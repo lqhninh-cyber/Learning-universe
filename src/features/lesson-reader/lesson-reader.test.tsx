@@ -166,39 +166,46 @@ describe('Bộ kết xuất Toán học MathRenderer & Mục lục bài học Le
 });
 
 describe('Thanh tác vụ bài học LessonActionBar & Chế độ Đọc Chuyên sâu (Dark Reading Mode)', () => {
-  it('xuất LessonActionBar từ module index', () => {
+  it('xuất LessonActionBar và FloatingReadingController từ module index', () => {
     expect(lessonReaderExports.LessonActionBar).toBeDefined();
+    expect(lessonReaderExports.FloatingReadingController).toBeDefined();
   });
 
-  it('kết xuất nút Chế độ đọc: Sáng / Tối và cho phép chuyển đổi lưu vào localStorage lu_reading_theme', () => {
-    localStorage.clear();
-    const handleToggleNotes = vi.fn();
+  it('kết xuất FloatingReadingController dạng Pill Button công thái học và cho phép chuyển đổi chế độ đọc qua click và phím D', () => {
+    const handleToggle = vi.fn();
 
-    render(
-      <lessonReaderExports.LessonActionBar
-        lessonId="lesson-1"
-        isNotesOpen={false}
-        onToggleNotes={handleToggleNotes}
+    const { rerender } = render(
+      <lessonReaderExports.FloatingReadingController
+        readingTheme="light"
+        onToggleReadingTheme={handleToggle}
       />,
     );
 
-    const toggleBtn = screen.getByRole('button', { name: /Chế độ đọc: Sáng/i });
+    // Khi ở Light Mode: icon Moon, nhãn "Chế độ đọc: Tối"
+    const toggleBtn = screen.getByRole('button', { name: /Chế độ đọc: Tối/i });
     expect(toggleBtn).toBeInTheDocument();
-    expect(toggleBtn).toHaveClass('font-mono', 'text-xs', 'border-[#CFDADB]', 'text-[#55676B]');
+    expect(toggleBtn).toHaveClass('rounded-full', 'backdrop-blur-md');
     expect(toggleBtn).toHaveAttribute('aria-pressed', 'false');
 
-    // Nhấn chuyển sang Chế độ đọc Tối
+    // Click nút
     fireEvent.click(toggleBtn);
+    expect(handleToggle).toHaveBeenCalledTimes(1);
 
-    expect(localStorage.getItem('lu_reading_theme')).toBe('dark');
-    expect(screen.getByRole('button', { name: /Chế độ đọc: Tối/i })).toBeInTheDocument();
-    expect(toggleBtn).toHaveAttribute('aria-pressed', 'true');
-    expect(toggleBtn).toHaveClass('border-[#2D3339]', 'bg-[#1C2024]', 'text-[#94A3B8]');
+    // Bấm phím D
+    fireEvent.keyDown(window, { key: 'd' });
+    expect(handleToggle).toHaveBeenCalledTimes(2);
 
-    // Nhấn quay lại Chế độ đọc Sáng
-    fireEvent.click(toggleBtn);
-    expect(localStorage.getItem('lu_reading_theme')).toBe('light');
-    expect(screen.getByRole('button', { name: /Chế độ đọc: Sáng/i })).toBeInTheDocument();
-    expect(toggleBtn).toHaveAttribute('aria-pressed', 'false');
+    // Rerender ở chế độ dark
+    rerender(
+      <lessonReaderExports.FloatingReadingController
+        readingTheme="dark"
+        onToggleReadingTheme={handleToggle}
+      />,
+    );
+
+    // Khi ở Dark Mode: icon Sun, nhãn "Chế độ đọc: Sáng"
+    const darkToggleBtn = screen.getByRole('button', { name: /Chế độ đọc: Sáng/i });
+    expect(darkToggleBtn).toBeInTheDocument();
+    expect(darkToggleBtn).toHaveAttribute('aria-pressed', 'true');
   });
 });
