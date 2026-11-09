@@ -99,7 +99,7 @@ export function CayleyTable({
     <div
       data-testid="cayley-table"
       className={cn(
-        'my-6 overflow-hidden overflow-x-auto rounded-2xl border border-stone-200/90 bg-white/70 p-4 shadow-sm dark:border dark:border-[#1D3629] dark:bg-[#0B1712]',
+        'my-6 overflow-x-auto rounded-xl border border-stone-200/90 bg-white/70 p-4 shadow-sm dark:border dark:border-[#1D3629] dark:bg-[#0B1712]',
         className,
       )}
     >
