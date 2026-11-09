@@ -176,7 +176,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
 
       {/* Mép trên hồ sen (Top edge mist blend) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#F5F4EF] via-[#F5F4EF]/35 via-[#F5F4EF]/75 via-25% via-60% to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#F5F4EF] via-[#F5F4EF]/60 to-transparent md:h-40"
         aria-hidden="true"
       />
 

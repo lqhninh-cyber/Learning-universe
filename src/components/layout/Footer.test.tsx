@@ -13,7 +13,7 @@ describe('Footer Component', () => {
 
     const brand = screen.getByText('Learning Universe');
     expect(brand).toBeInTheDocument();
-    expect(brand).toHaveClass('font-serif', 'text-base', 'font-semibold', 'text-[#F1F5F3]');
+    expect(brand).toHaveClass('font-serif', 'text-base', 'font-bold', 'text-[#F1F5F3]');
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
 
@@ -41,7 +41,7 @@ describe('Footer Component', () => {
     expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#E5B25D]', 'not-italic');
   });
 
-  it('renders artistic lotus emblem (LotusCenterLogo) for both mobile and desktop', () => {
+  it('renders artistic open book emblem (BookCenterLogo) for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />
@@ -54,11 +54,11 @@ describe('Footer Component', () => {
     const desktopLogoWrapper = container.querySelector('.hidden.md\\:flex');
     expect(desktopLogoWrapper).toBeInTheDocument();
 
-    const lotusLogos = screen.getAllByTestId('lotus-center-logo');
-    expect(lotusLogos.length).toBeGreaterThanOrEqual(2);
-    lotusLogos.forEach((logo) => {
+    const bookLogos = screen.getAllByTestId('book-center-logo');
+    expect(bookLogos.length).toBeGreaterThanOrEqual(2);
+    bookLogos.forEach((logo) => {
       expect(logo.querySelector('svg')).toBeInTheDocument();
-      expect(logo).toHaveAttribute('aria-label', 'Biểu trưng Bông sen hồ sương');
+      expect(logo).toHaveAttribute('aria-label', 'Biểu trưng Cuốn sách mở tri thức');
     });
 
     // Cũ monogram vuông không còn tồn tại

@@ -330,7 +330,11 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
       const a = f * l.sp * open + Math.sin(t * 0.5 + i * 1.3 + li) * 0.018;
       ctx.save();
       ctx.rotate(a);
-      ctx.scale(1, 1 - Math.abs(f) * 0.1 + Math.sin(t * 0.45 + i + li) * 0.01);
+      let scaleY = 1 - Math.abs(f) * 0.1 + Math.sin(t * 0.45 + i + li) * 0.01;
+      if (li === 0 && Math.abs(f) > 0.1) {
+        scaleY *= 1.08;
+      }
+      ctx.scale(1, scaleY);
       const petal = l.ps[i];
       if (petal) {
         drawPetal(ctx, petal);
@@ -1467,7 +1471,7 @@ export interface LotusCanvasEngine {
 export function createLotusCanvasEngine(): LotusCanvasEngine {
   // Cấu trúc 4 lớp cánh LAY
   const LAY: LayerConfig[] = [
-    { n: 3, sp: 1.25, len: 166, wid: 54, c1: [206, 74, 126], ps: [] },
+    { n: 3, sp: 0.96, len: 178, wid: 52, c1: [206, 74, 126], ps: [] },
     { n: 2, sp: 0.58, len: 150, wid: 46, c1: [222, 98, 146], ps: [] },
     { n: 2, sp: 1.0, len: 186, wid: 56, c1: [234, 124, 164], ps: [] },
     { n: 2, sp: 1.2, len: 124, wid: 46, c1: [240, 146, 180], ps: [] },
