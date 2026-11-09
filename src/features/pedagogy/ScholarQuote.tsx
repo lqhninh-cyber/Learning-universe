@@ -35,13 +35,13 @@ export function ScholarQuote({
   return (
     <div
       className={cn(
-        'relative my-6 overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-all hover:border-[#718C7E] sm:p-7',
+        'relative my-6 overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-6 shadow-xs transition-all hover:border-[#718C7E] sm:p-7 dark:border-[#1E3A2C] dark:bg-[#0B1A13]',
         className,
       )}
     >
       {/* Họa tiết dấu ngoặc kép chìm nghệ thuật ở góc */}
       <div
-        className="pointer-events-none absolute -right-2 -bottom-3 text-[#718C7E]/10 select-none"
+        className="pointer-events-none absolute -right-2 -bottom-3 text-[#718C7E]/10 opacity-40 select-none dark:text-[#183628]"
         aria-hidden="true"
       >
         <Quote className="h-28 w-28 rotate-180" />
@@ -49,37 +49,45 @@ export function ScholarQuote({
 
       <div className="relative z-10 space-y-4">
         {/* Header danh ngôn */}
-        <div className="flex items-center gap-2 text-xs font-bold tracking-wider text-[#3F6570] uppercase">
-          <Sparkles className="h-3.5 w-3.5 text-[#718C7E]" aria-hidden="true" />
+        <div className="flex items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[#739B88] uppercase dark:text-[#A1D1B7]">
+          <Sparkles className="h-3.5 w-3.5 text-[#739B88] dark:text-[#A1D1B7]" aria-hidden="true" />
           <span>Danh ngôn Danh nhân Giáo dục</span>
         </div>
 
         {/* Thân danh ngôn */}
-        <blockquote className="border-l-2 border-[#718C7E] pl-4 font-serif text-[18px] leading-relaxed text-[#29383D] italic">
+        <blockquote className="border-l-4 border-[#C5A262] py-1 pl-4 font-serif text-base leading-relaxed text-[#29383D] italic md:text-lg dark:text-[#F5F2EB]">
           "{quote}"
         </blockquote>
 
         {/* Tác giả & Tác phẩm */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#CFDADB] pt-3 dark:border-[#1E3A2C]">
           <div>
-            <div className="mt-2 text-base font-semibold text-[#29383D] not-italic">
+            <div className="mt-3 text-sm font-bold tracking-wide text-[#29383D] not-italic dark:text-[#E5C378]">
               {resolvedAuthor}
             </div>
-            {title && <div className="text-sm text-[#55676B] not-italic">{title}</div>}
+            {title && (
+              <div className="mt-0.5 font-serif text-xs text-[#55676B] not-italic dark:text-[#CBD5CE]">
+                {title}
+              </div>
+            )}
           </div>
 
           {resolvedSource && (
-            <div className="rounded-lg border border-[#CFDADB] bg-[#E8EFEB] px-2.5 py-1 text-xs text-[#29383D]">
-              <span className="font-medium text-[#55676B]">Nguồn: </span>
-              <cite className="font-semibold not-italic">{resolvedSource}</cite>
+            <div className="mt-3 inline-block rounded-full border border-[#CFDADB] bg-[#E8EFEB] px-3 py-1.5 text-xs text-[#29383D] dark:border dark:border-[#284E3B] dark:bg-[#163023] dark:text-[#C5DCD0]">
+              <span className="font-medium text-[#55676B] dark:text-[#9FB8AB]">Nguồn: </span>
+              <cite className="font-semibold text-[#29383D] not-italic dark:text-[#C5DCD0]">
+                {resolvedSource}
+              </cite>
             </div>
           )}
         </div>
 
         {/* Bối cảnh học thuật bổ sung */}
         {resolvedContext && (
-          <p className="border-t border-[#CFDADB] pt-2.5 text-xs leading-relaxed text-[#55676B] italic">
-            <strong className="text-[#29383D] not-italic">Bối cảnh &amp; Ý nghĩa:</strong>{' '}
+          <p className="border-t border-[#CFDADB] pt-2.5 text-xs leading-relaxed text-[#55676B] italic dark:border-[#1E3A2C] dark:text-[#D1E0D7]">
+            <strong className="font-bold text-[#29383D] not-italic dark:text-[#F5F2EB]">
+              Bối cảnh &amp; Ý nghĩa:
+            </strong>{' '}
             {resolvedContext}
           </p>
         )}

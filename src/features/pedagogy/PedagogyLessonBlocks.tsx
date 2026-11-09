@@ -164,22 +164,22 @@ export function ComparativeTable({
   return (
     <div
       className={cn(
-        'col-span-full clear-both my-6 w-full overflow-x-auto rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs dark:border-[#2A323A] dark:bg-[#1C2126] dark:shadow-none',
+        'col-span-full clear-both my-6 w-full overflow-hidden overflow-x-auto rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] shadow-2xs dark:border dark:border-[#1D3629] dark:bg-[#0B1712] dark:shadow-none',
         className,
       )}
     >
-      <div className="border-b border-[#CFDADB] bg-[#E1E9EA]/65 px-5 py-4 dark:border-[#2A323A] dark:bg-[#242C33]">
+      <div className="border-b border-[#CFDADB] bg-[#E1E9EA]/65 px-5 py-4 dark:border-[#1F3D2E] dark:bg-[#12241C]">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#29383D] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]">
-            <Table2 className="h-3.5 w-3.5 text-[#3F6570] dark:text-[#C89738]" aria-hidden="true" />
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#718C7E]/40 bg-[#E8EFEB] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-[#29383D] dark:border-[#284E3B] dark:bg-[#163023] dark:text-[#C5DCD0]">
+            <Table2 className="h-3.5 w-3.5 text-[#3F6570] dark:text-[#C5A262]" aria-hidden="true" />
             <span>{badge}</span>
           </span>
         </div>
-        <h3 className="mt-2 font-serif text-base font-bold text-[#29383D] sm:text-lg dark:text-[#F8FAFC]">
+        <h3 className="mt-2 font-serif text-base font-bold text-[#29383D] sm:text-lg dark:text-[#F5F2EB]">
           {title}
         </h3>
         {subtitle && (
-          <p className="mt-1 text-xs leading-relaxed text-[#55676B] dark:text-[#94A3B8]">
+          <p className="mt-1 text-xs leading-relaxed text-[#55676B] dark:text-[#CBD5CE]">
             {subtitle}
           </p>
         )}
@@ -188,7 +188,7 @@ export function ComparativeTable({
       <div className="w-full overflow-x-auto">
         <table className="w-full border-collapse text-left text-xs md:text-sm">
           <thead>
-            <tr className="border-b border-[#CFDADB] bg-[#E8EFEB]/80 text-[#29383D] dark:border-[#2A323A] dark:bg-[#20252B] dark:text-[#F8FAFC]">
+            <tr className="border-b border-[#CFDADB] bg-[#E8EFEB]/80 text-[#29383D] dark:border-b dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]">
               {normalizedColumns.map((col, colIndex) => {
                 const isLastCol = colIndex === normalizedColumns.length - 1;
                 return (
@@ -196,8 +196,8 @@ export function ComparativeTable({
                     key={col.key}
                     scope="col"
                     className={cn(
-                      'border-b border-[#CFDADB] p-3.5 font-serif text-xs font-bold tracking-wide text-[#29383D] uppercase dark:border-[#2A323A] dark:text-[#F8FAFC]',
-                      !isLastCol && 'border-r border-[#CFDADB]/60 dark:border-[#2A323A]/60',
+                      'border-b border-[#CFDADB] p-3.5 font-serif text-xs font-bold tracking-wide text-[#29383D] uppercase dark:border-[#1F3D2E] dark:text-[#C5A262]',
+                      !isLastCol && 'border-r border-[#CFDADB]/60 dark:border-[#1F3D2E]/60',
                       getColumnWidthClass(col, colIndex),
                     )}
                   >
@@ -211,7 +211,7 @@ export function ComparativeTable({
             {rows.map((row, rowIndex) => (
               <tr
                 key={`row-${rowIndex}`}
-                className="transition-colors odd:bg-[#F7FAFA] even:bg-[#EAF0F1]/45 hover:bg-[#E8EFEB]/45 dark:odd:bg-[#1C2126] dark:even:bg-[#181C20] dark:hover:bg-[#242C33]/60"
+                className="transition-colors odd:bg-[#F7FAFA] even:bg-[#EAF0F1]/45 hover:bg-[#E8EFEB]/45 dark:odd:bg-[#0B1712] dark:even:bg-[#0E1E17] hover:dark:bg-[#102219]"
               >
                 {normalizedColumns.map((col, colIndex) => {
                   const cellContent = isTupleRow(row) ? row[colIndex] : row[col.key];
@@ -222,16 +222,16 @@ export function ComparativeTable({
                     <td
                       key={`${rowIndex}-${col.key}`}
                       className={cn(
-                        'border-b border-[#CFDADB]/60 p-3.5 align-top leading-relaxed dark:border-[#2A323A]/60',
-                        !isLastCol && 'border-r border-[#CFDADB]/60 dark:border-[#2A323A]/60',
+                        'border-b border-[#CFDADB]/60 p-3.5 align-top leading-relaxed dark:border-[#152B20]/80 dark:text-[#E8F1EC]',
+                        !isLastCol && 'border-r border-[#CFDADB]/60 dark:border-[#152B20]/80',
                         getColumnWidthClass(col, colIndex),
                         colIndex === 0 || col.highlight
-                          ? 'font-medium text-[#29383D] dark:text-[#F8FAFC]'
+                          ? 'font-medium text-[#29383D] dark:font-mono dark:font-bold dark:text-[#739B88]'
                           : isCenteredCountCol
-                            ? 'text-center text-[#55676B] dark:text-[#CBD5E1]'
+                            ? 'text-center text-[#55676B] dark:text-[#CBD5CE]'
                             : colIndex === 2 && isCriteriaCountMatrix
-                              ? 'leading-relaxed text-[#29383D] dark:text-[#E2E8F0]'
-                              : 'leading-relaxed text-[#29383D] dark:text-[#E2E8F0]',
+                              ? 'leading-relaxed text-[#29383D] dark:text-[#E8F1EC]'
+                              : 'leading-relaxed text-[#29383D] dark:text-[#E8F1EC]',
                       )}
                     >
                       {cellContent}
@@ -245,7 +245,7 @@ export function ComparativeTable({
       </div>
 
       {footerNote && (
-        <div className="border-t border-[#CFDADB] bg-[#E1E9EA]/45 px-5 py-2.5 text-[11px] text-[#55676B] italic dark:border-[#2A323A] dark:bg-[#20252B]/60 dark:text-[#94A3B8]">
+        <div className="border-t border-[#CFDADB] bg-[#E1E9EA]/45 px-5 py-2.5 text-[11px] text-[#55676B] italic dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#CBD5CE]">
           {footerNote}
         </div>
       )}

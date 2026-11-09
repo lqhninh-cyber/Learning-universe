@@ -75,8 +75,9 @@ export function ExamProblemCard({
               size="sm"
               onClick={handleToggleHint}
               className={cn(
-                'h-7 gap-1 px-2.5 text-xs',
-                showHint && 'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100',
+                'h-7 gap-1 px-2.5 text-xs dark:border-[#284E3A] dark:bg-[#13261D] dark:text-[#E5C378] dark:hover:bg-[#1A3327]',
+                showHint &&
+                  'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-[#284E3A] dark:bg-[#1A3327] dark:text-[#E5C378]',
               )}
             >
               <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
@@ -90,7 +91,7 @@ export function ExamProblemCard({
               variant={showSolution ? 'secondary' : 'subject'}
               size="sm"
               onClick={handleToggleSolution}
-              className="h-7 gap-1 px-2.5 text-xs"
+              className="h-7 gap-1 px-2.5 text-xs dark:border dark:border-[#284E3A] dark:bg-[#13261D] dark:text-[#E5C378] dark:hover:bg-[#1A3327]"
             >
               <span>{showSolution ? 'Thu gọn lời giải' : '📝 Lời giải chi tiết'}</span>
               <ChevronDown
@@ -107,19 +108,19 @@ export function ExamProblemCard({
 
       {/* Nội dung đề bài chính */}
       {problem.statement && (
-        <div className="mt-3.5 text-stone-800">
+        <div className="mt-3.5 text-stone-800 dark:text-[#E8F1EC]">
           <MathText text={problem.statement} />
         </div>
       )}
 
       {/* Khung Gợi ý định lý (cấp cao nhất) */}
       {hasRootHint && showHint && (
-        <div className="mt-3 rounded-xl border border-amber-200/90 bg-amber-50/60 p-4 text-xs text-amber-900">
-          <div className="flex items-center gap-1.5 font-bold tracking-wide text-amber-800 uppercase">
+        <div className="mt-3 rounded-xl border border-amber-200/90 bg-amber-50/60 p-4 text-xs text-amber-900 dark:border-[#284E3A] dark:bg-[#0E2218] dark:text-[#D5E2DA]">
+          <div className="flex items-center gap-1.5 font-bold tracking-wide text-amber-800 uppercase dark:text-[#E5C378]">
             <Lightbulb className="h-4 w-4" aria-hidden="true" />
             <span>Gợi ý định lý &amp; Hướng giải</span>
           </div>
-          <div className="mt-2 text-stone-800">
+          <div className="mt-2 text-stone-800 dark:text-[#D5E2DA]">
             <MathText text={problem.hint!} />
           </div>
         </div>

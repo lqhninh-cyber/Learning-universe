@@ -98,21 +98,39 @@ export const mdxComponents: MDXComponents = {
   RiemannDarbouxSumDemo: LazyRiemannDarbouxSumDemo,
   WeierstrassMTestDemo: LazyWeierstrassMTestDemo,
 
-  // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học (chuẩn hóa bảng Cayley và bảng học thuật)
+  // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học (chuẩn hóa bảng công thức và bảng học thuật)
   table: (props: ComponentPropsWithoutRef<'table'>) => (
-    <div className="my-6 overflow-x-auto rounded-xl border border-stone-200/90 bg-white/70 p-4 shadow-sm">
-      <table className="w-full border-collapse text-center text-[15px] text-stone-800" {...props} />
+    <div className="my-6 overflow-hidden overflow-x-auto rounded-2xl border border-stone-200/90 bg-white/70 p-0 shadow-sm dark:border dark:border-[#1D3629] dark:bg-[#0B1712]">
+      <table
+        className="w-full border-collapse text-left text-sm text-stone-800 dark:text-[#E8F1EC]"
+        {...props}
+      />
     </div>
+  ),
+  thead: (props: ComponentPropsWithoutRef<'thead'>) => (
+    <thead
+      className="border-b border-stone-200/80 bg-stone-100/80 font-serif text-xs tracking-wider text-stone-900 uppercase dark:border-b dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]"
+      {...props}
+    />
+  ),
+  tbody: (props: ComponentPropsWithoutRef<'tbody'>) => (
+    <tbody className="divide-y divide-stone-200/60 dark:divide-[#152B20]" {...props} />
+  ),
+  tr: (props: ComponentPropsWithoutRef<'tr'>) => (
+    <tr
+      className="border-b border-stone-200/60 transition-colors hover:bg-stone-50/50 dark:border-b dark:border-[#152B20] dark:text-[#E8F1EC] hover:dark:bg-[#102219]"
+      {...props}
+    />
   ),
   th: (props: ComponentPropsWithoutRef<'th'>) => (
     <th
-      className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900"
+      className="border-b border-stone-200/80 px-4 py-3 text-left font-serif text-xs font-bold tracking-wider text-stone-900 uppercase dark:border-b dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]"
       {...props}
     />
   ),
   td: (props: ComponentPropsWithoutRef<'td'>) => (
     <td
-      className="border border-stone-200/80 px-4 py-2.5 text-center text-[15px] leading-relaxed text-stone-800"
+      className="border-b border-stone-200/60 px-4 py-3 text-left text-sm leading-relaxed text-stone-800 transition-colors dark:border-b dark:border-[#152B20] dark:text-[#E8F1EC] [&_.katex]:text-stone-900 dark:[&_.katex]:text-[#F5F2EB] [&:first-child]:font-mono [&:first-child]:font-bold dark:[&:first-child]:text-[#739B88]"
       {...props}
     />
   ),

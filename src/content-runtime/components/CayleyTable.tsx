@@ -99,25 +99,27 @@ export function CayleyTable({
     <div
       data-testid="cayley-table"
       className={cn(
-        'my-6 overflow-x-auto rounded-xl border border-stone-200/90 bg-white/70 p-4 shadow-sm',
+        'my-6 overflow-hidden overflow-x-auto rounded-2xl border border-stone-200/90 bg-white/70 p-4 shadow-sm dark:border dark:border-[#1D3629] dark:bg-[#0B1712]',
         className,
       )}
     >
       {activeTitle && (
         <div className="mb-3 text-center">
-          <span className="font-serif text-sm font-bold text-stone-900">{activeTitle}</span>
+          <span className="font-serif text-sm font-bold text-stone-900 dark:text-[#F5F2EB]">
+            {activeTitle}
+          </span>
         </div>
       )}
-      <table className="w-full border-collapse text-center text-[15px] text-stone-800">
+      <table className="w-full border-collapse text-center text-[15px] text-stone-800 dark:text-[#E8F1EC]">
         <thead>
           <tr>
-            <th className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900">
+            <th className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900 dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]">
               <KatexMath math={op} />
             </th>
             {activeElements.map((el, idx) => (
               <th
                 key={idx}
-                className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900"
+                className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900 dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]"
               >
                 <KatexMath math={el} />
               </th>
@@ -128,8 +130,11 @@ export function CayleyTable({
           {activeRows.map((row, rIdx) => {
             const rowHeader = activeElements[rIdx] ?? String(rIdx);
             return (
-              <tr key={rIdx} className="transition-colors hover:bg-stone-50/60">
-                <th className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900">
+              <tr
+                key={rIdx}
+                className="transition-colors hover:bg-stone-50/60 dark:border-b dark:border-[#152B20] hover:dark:bg-[#102219]"
+              >
+                <th className="border border-stone-200/80 bg-stone-100/80 px-4 py-2.5 text-center font-serif font-bold text-stone-900 dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]">
                   <KatexMath math={rowHeader} />
                 </th>
                 {row.map((cell, cIdx) => {
@@ -137,10 +142,10 @@ export function CayleyTable({
                   return (
                     <td
                       key={cIdx}
-                      className="border border-stone-200/80 px-4 py-2.5 text-center text-[15px] leading-relaxed text-stone-800"
+                      className="border border-stone-200/80 px-4 py-2.5 text-center text-[15px] leading-relaxed text-stone-800 dark:border-[#152B20] dark:text-[#E8F1EC]"
                     >
                       {isIdentity ? (
-                        <span className="inline-block rounded bg-amber-100/60 px-1.5 py-0.5 font-bold text-amber-900 shadow-2xs">
+                        <span className="inline-block rounded bg-amber-100/60 px-1.5 py-0.5 font-bold text-amber-900 shadow-2xs dark:bg-[#1B3828] dark:text-[#E5C378]">
                           <KatexMath math={cell} />
                         </span>
                       ) : (
