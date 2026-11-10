@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { openWaterTouchIntro } from '@/components/intro';
 import { ROUTES } from '@/shared/config/routes';
 import { Container } from '@/shared/ui';
 import { cn } from '@/shared/lib/cn';
@@ -118,15 +117,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
           )}
         >
           <p>Learning Universe. Bản quyền mở.</p>
-          <button
-            type="button"
-            onClick={openWaterTouchIntro}
-            title="Trải nghiệm lại màn hình mở đầu hoa sen chạm mặt nước"
-            className="cursor-pointer text-[#C5A262] transition-colors hover:text-[#E5C378] hover:underline"
-          >
-            Trải nghiệm lại nghi thức tĩnh tâm 🪷
-          </button>
-          <p>-Không gian tri thức mở-</p>
+          <p>~Không gian tri thức mở~</p>
         </div>
       </Container>
     </footer>

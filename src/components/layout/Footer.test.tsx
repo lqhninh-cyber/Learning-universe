@@ -93,7 +93,7 @@ describe('Footer Component', () => {
     expect(screen.queryByRole('link', { name: 'Ngân hàng Thuật ngữ' })).not.toBeInTheDocument();
   });
 
-  it('renders updated bottom bar metadata', () => {
+  it('renders updated bottom bar metadata without intro replay button', () => {
     render(
       <MemoryRouter>
         <Footer />
@@ -101,7 +101,10 @@ describe('Footer Component', () => {
     );
 
     expect(screen.getByText('Learning Universe. Bản quyền mở.')).toBeInTheDocument();
-    expect(screen.getByText('-Không gian tri thức mở-')).toBeInTheDocument();
+    expect(screen.getByText('~Không gian tri thức mở~')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Trải nghiệm lại nghi thức tĩnh tâm/i }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(/Bảo lưu bản quyền học thuật/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Chuẩn mực & Khách quan/i)).not.toBeInTheDocument();
   });
