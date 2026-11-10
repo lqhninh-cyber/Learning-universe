@@ -2,41 +2,28 @@ import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { EVENT_OPEN_INTRO, INTRO_STORAGE_KEY } from './introEvents';
 
-interface Ripple {
-  x: number;
-  y: number;
-  radius: number;
-  maxRadius: number;
-  alpha: number;
-  speed: number;
-  color: string;
-}
-
 export interface WaterTouchIntroProps {
   readonly onFinish?: () => void;
 }
 
 /**
- * COMPONENT: "CHẠM MẶT NƯỚC" (TOUCH THE WATER) INTRO OVERLAY
+ * COMPONENT: MÀN HÌNH MỞ ĐẦU MẶT TRỜI ĐÔNG SƠN (CINNABAR DONG SON SOLAR CANVAS)
  *
- * Màn hình mở đầu tri thức với hoa sen 9 cánh thuần toán học:
- * - Phương trình cực: r(θ) = R · |cos(9θ / 2)|^0.75
- * - Nét viền vàng thếp cổ #C5A262, chuyển sắc hồng phấn ngọc và trắng giấy dó #F5F2EB.
- * - Sóng nước đồng tâm (Concentric Water Ripples).
- * - Tự động ghi nhớ sessionStorage('lu_intro_seen'), hỗ trợ nút "Bỏ qua", phím tắt Enter/Space/Esc
- *   và chuẩn tiếp cận WCAG (inert background, prefers-reduced-motion).
+ * Nghi thức thị giác văn hóa Việt Nam thuần Canvas 2D:
+ * - TUYỆT ĐỐI KHÔNG CHỮ (Zero Text UI).
+ * - Giai đoạn 1 (0s - 1.2s): Điểm sáng đỏ chu sa (#C23B38) bừng sáng quầng hào quang mềm mại (#A8282B -> #6B171A).
+ * - Giai đoạn 2 (1.2s - 2.8s): 14 tia sáng tam giác nhọn Vàng Thếp (#D4AF37) vươn 360 độ (tọa độ cực)
+ *   cùng 2 vòng tròn đồng tâm kỷ hà mảnh (1px) nét đứt & chấm bi màu vàng son mở rộng theo sóng nước âm vang.
+ * - Giai đoạn 3 (2.8s - 3.5s): Toàn bộ họa tiết mở rộng nhẹ (scale tăng dần) và mờ dần vào Trang chủ.
+ * - Click chuột hoặc chạm bất kỳ đâu / nhấn phím bất kỳ (Enter, Space, Esc) để chuyển trang ngay lập tức.
+ * - Tự động kết thúc sau 3.5 giây.
+ * - Lưu trạng thái vào sessionStorage('lu_intro_seen').
  */
 export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
-  // Kiểm tra prefers-reduced-motion
-  const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   const [isVisible, setIsVisible] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     try {
-      // Dọn dẹp cờ cũ trong localStorage (nếu có) để tránh bị chặn bởi phiên bản trước
+      // Dọn dẹp cờ cũ trong localStorage (nếu có) để tránh bị chặn
       localStorage.removeItem(INTRO_STORAGE_KEY);
       return sessionStorage.getItem(INTRO_STORAGE_KEY) !== 'true';
     } catch {
@@ -44,7 +31,13 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     }
   });
 
-  // Dọn dẹp cờ cũ trong localStorage khi component mount
+  const [isDismissing, setIsDismissing] = useState<boolean>(false);
+  const isDismissingRef = useRef<boolean>(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const autoTimerRef = useRef<number | null>(null);
+  const animFrameRef = useRef<number>(0);
+
+  // Đảm bảo dọn dẹp cờ cũ trong localStorage khi mount
   useEffect(() => {
     try {
       localStorage.removeItem(INTRO_STORAGE_KEY);
@@ -53,21 +46,39 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     }
   }, []);
 
-  const [phase, setPhase] = useState<'idle' | 'blooming' | 'bloomed' | 'dismissing'>(() =>
-    prefersReducedMotion ? 'bloomed' : 'idle',
-  );
-  const [isDismissing, setIsDismissing] = useState<boolean>(false);
-  const [bloomProgress, setBloomProgress] = useState<number>(() => (prefersReducedMotion ? 1 : 0));
+  // Xử lý đóng màn hình mở đầu ngay lập tức
+  const handleDismiss = useCallback(() => {
+    if (isDismissingRef.current) return;
+    isDismissingRef.current = true;
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animFrameRef = useRef<number>(0);
-  const ripplesRef = useRef<Ripple[]>([]);
-  const lastRippleTimeRef = useRef<number>(0);
-  const autoTimeoutRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const enterBtnRef = useRef<HTMLButtonElement>(null);
+    try {
+      sessionStorage.setItem(INTRO_STORAGE_KEY, 'true');
+    } catch {
+      // Bỏ qua lỗi storage
+    }
 
-  // Lắng nghe sự kiện mở lại Intro từ bên ngoài
+    setIsDismissing(true);
+
+    if (autoTimerRef.current) {
+      window.clearTimeout(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+
+    // Thời gian transition out 500ms trước khi gỡ khỏi DOM
+    const timer = window.setTimeout(() => {
+      setIsVisible(false);
+      onFinish?.();
+
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) {
+        mainContent.focus({ preventScroll: true });
+      }
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [onFinish]);
+
+  // Lắng nghe sự kiện mở lại Intro từ bên ngoài (nếu có)
   useEffect(() => {
     const handleReopen = () => {
       try {
@@ -76,452 +87,272 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
       } catch {
         // Bỏ qua lỗi storage
       }
+      isDismissingRef.current = false;
       setIsDismissing(false);
-      setBloomProgress(0);
-      setPhase('idle');
       setIsVisible(true);
-      ripplesRef.current = [];
     };
 
     window.addEventListener(EVENT_OPEN_INTRO, handleReopen);
     return () => window.removeEventListener(EVENT_OPEN_INTRO, handleReopen);
   }, []);
 
-  // Xử lý đóng Intro và lưu cờ
-  const handleDismiss = useCallback(() => {
-    try {
-      sessionStorage.setItem(INTRO_STORAGE_KEY, 'true');
-    } catch {
-      // Bỏ qua lỗi storage
-    }
-
-    setIsDismissing(true);
-    setPhase('dismissing');
-
-    // Chờ hiệu ứng clip-path kết thúc trước khi gỡ khỏi DOM
-    const timer = window.setTimeout(() => {
-      setIsVisible(false);
-      onFinish?.();
-
-      // Trả lại focus cho nội dung chính
-      const mainContent = document.getElementById('main-content');
-      if (mainContent) {
-        mainContent.focus({ preventScroll: true });
-      }
-    }, 750);
-
-    return () => window.clearTimeout(timer);
-  }, [onFinish]);
-
-  // Kích hoạt chuỗi bung nở sen
-  const triggerBloom = useCallback(
-    (clientX?: number, clientY?: number) => {
-      if (phase !== 'idle') return;
-
-      if (autoTimeoutRef.current) {
-        window.clearTimeout(autoTimeoutRef.current);
-        autoTimeoutRef.current = null;
-      }
-
-      const canvas = canvasRef.current;
-      const rect = canvas?.getBoundingClientRect();
-      const originX =
-        clientX !== undefined && rect ? clientX - rect.left : (rect?.width ?? 400) / 2;
-      const originY =
-        clientY !== undefined && rect ? clientY - rect.top : (rect?.height ?? 400) / 2;
-
-      setPhase('blooming');
-      startTimeRef.current = performance.now();
-
-      // Thêm 3 vòng sóng nước dồn dập từ điểm chạm
-      const newRipples: Ripple[] = [
-        {
-          x: originX,
-          y: originY,
-          radius: 10,
-          maxRadius: Math.max(window.innerWidth, window.innerHeight) * 0.65,
-          alpha: 0.7,
-          speed: 180,
-          color: '#C5A262',
-        },
-        {
-          x: originX,
-          y: originY,
-          radius: 5,
-          maxRadius: Math.max(window.innerWidth, window.innerHeight) * 0.55,
-          alpha: 0.5,
-          speed: 140,
-          color: '#739B88',
-        },
-        {
-          x: originX,
-          y: originY,
-          radius: 0,
-          maxRadius: Math.max(window.innerWidth, window.innerHeight) * 0.45,
-          alpha: 0.4,
-          speed: 110,
-          color: '#E5C378',
-        },
-      ];
-      ripplesRef.current.push(...newRipples);
-    },
-    [phase],
-  );
-
-  // Tự động kích hoạt chuỗi bung nở sau 4 giây nếu người dùng không chạm
-  useEffect(() => {
-    if (!isVisible || phase !== 'idle' || prefersReducedMotion) return;
-
-    autoTimeoutRef.current = window.setTimeout(() => {
-      triggerBloom();
-    }, 4000);
-
-    return () => {
-      if (autoTimeoutRef.current) {
-        window.clearTimeout(autoTimeoutRef.current);
-      }
-    };
-  }, [isVisible, phase, prefersReducedMotion, triggerBloom]);
-
-  // Ngăn chặn tương tác bàn phím lọt ra ngoài (Accessibility: inert)
+  // Tự động kết thúc sau 3.5 giây nếu không có tương tác
   useEffect(() => {
     if (!isVisible) return;
 
-    const readingContainer = document.getElementById('reading-container');
-    if (readingContainer) {
-      readingContainer.setAttribute('inert', '');
-    }
+    autoTimerRef.current = window.setTimeout(() => {
+      handleDismiss();
+    }, 3500);
 
     return () => {
-      if (readingContainer) {
-        readingContainer.removeAttribute('inert');
+      if (autoTimerRef.current) {
+        window.clearTimeout(autoTimerRef.current);
+        autoTimerRef.current = null;
       }
     };
-  }, [isVisible]);
+  }, [isVisible, handleDismiss]);
 
-  // Lắng nghe phím Enter, Space, Escape để đóng ngay lập tức
+  // Lắng nghe phím bấm (Enter, Space, Esc) từ window để chuyển trang ngay lập tức
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || isDismissing) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (isDismissingRef.current) return;
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         handleDismiss();
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        if (phase === 'idle') {
-          triggerBloom();
-        } else {
-          handleDismiss();
-        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isVisible, phase, handleDismiss, triggerBloom]);
+  }, [isVisible, isDismissing, handleDismiss]);
 
-  // Render Loop Canvas cho Hoa sen cực & Sóng nước
+  // Vòng lặp vẽ Canvas Mặt Trời Đông Sơn
   useEffect(() => {
     if (!isVisible) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let isMounted = true;
-    let lastTime = performance.now();
+    let width = 0;
+    let height = 0;
 
     const handleResize = () => {
-      if (!canvas) return;
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      width = W;
+      height = H;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      canvas.style.width = `${W}px`;
+      canvas.style.height = `${H}px`;
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
 
-    // Vẽ đóa sen cực 9 cánh theo tiến độ P (0 -> 1)
-    const drawLotus = (cx: number, cy: number, R: number, P: number, timestamp: number) => {
-      if (P <= 0.02) {
-        // Giai đoạn 1: Nụ sen khép tĩnh
-        const breath = 1 + 0.04 * Math.sin(timestamp * 0.003);
-        const budR = 26 * breath;
+    const startTime = performance.now();
 
-        // Quầng sáng thở nhẹ
-        const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, budR * 2.5);
-        halo.addColorStop(0, 'rgba(197, 162, 98, 0.25)');
-        halo.addColorStop(0.5, 'rgba(115, 155, 136, 0.12)');
-        halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = halo;
-        ctx.beginPath();
-        ctx.arc(cx, cy, budR * 2.5, 0, Math.PI * 2);
-        ctx.fill();
+    const render = (now: number) => {
+      const elapsed = (now - startTime) / 1000; // Thời gian trôi qua tính bằng giây
 
-        // 3 Cánh nụ sen chụm
-        ctx.save();
-        ctx.translate(cx, cy);
-
-        // Cánh trái
-        ctx.beginPath();
-        ctx.moveTo(0, -budR);
-        ctx.bezierCurveTo(-budR * 0.7, -budR * 0.4, -budR * 0.7, budR * 0.6, 0, budR * 0.8);
-        ctx.bezierCurveTo(-budR * 0.2, budR * 0.4, -budR * 0.2, -budR * 0.6, 0, -budR);
-        ctx.fillStyle = 'rgba(226, 149, 167, 0.65)';
-        ctx.fill();
-        ctx.strokeStyle = '#C5A262';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        // Cánh phải
-        ctx.beginPath();
-        ctx.moveTo(0, -budR);
-        ctx.bezierCurveTo(budR * 0.7, -budR * 0.4, budR * 0.7, budR * 0.6, 0, budR * 0.8);
-        ctx.bezierCurveTo(budR * 0.2, budR * 0.4, budR * 0.2, -budR * 0.6, 0, -budR);
-        ctx.fillStyle = 'rgba(244, 214, 220, 0.75)';
-        ctx.fill();
-        ctx.strokeStyle = '#E5C378';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        // Cánh giữa đỉnh búp
-        ctx.beginPath();
-        ctx.moveTo(0, -budR * 1.15);
-        ctx.bezierCurveTo(-budR * 0.35, -budR * 0.5, -budR * 0.3, budR * 0.5, 0, budR * 0.7);
-        ctx.bezierCurveTo(budR * 0.3, budR * 0.5, budR * 0.35, -budR * 0.5, 0, -budR * 1.15);
-        ctx.fillStyle = 'rgba(250, 246, 238, 0.9)';
-        ctx.fill();
-        ctx.strokeStyle = '#C5A262';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        ctx.restore();
+      if (elapsed >= 3.5 && !isDismissingRef.current) {
+        handleDismiss();
         return;
       }
 
-      // Giai đoạn 2 & 3: Bung nở theo phương trình cực 9 cánh r(θ) = R · P · |cos(9θ/2)|^0.75
-      ctx.save();
-      ctx.translate(cx, cy);
-
-      // Quầng hào quang sen nở
-      const bloomHalo = ctx.createRadialGradient(0, 0, 0, 0, 0, R * P * 1.35);
-      bloomHalo.addColorStop(0, 'rgba(197, 162, 98, 0.35)');
-      bloomHalo.addColorStop(0.4, 'rgba(226, 149, 167, 0.18)');
-      bloomHalo.addColorStop(0.8, 'rgba(115, 155, 136, 0.08)');
-      bloomHalo.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = bloomHalo;
-      ctx.beginPath();
-      ctx.arc(0, 0, R * P * 1.35, 0, Math.PI * 2);
-      ctx.fill();
-
-      // --- TẦNG 1: 9 CÁNH SEN NGOÀI (Outer 9 Petals) ---
-      const outerPoints = 360;
-      ctx.beginPath();
-      for (let i = 0; i <= outerPoints; i++) {
-        const theta = (i / outerPoints) * Math.PI * 2;
-        // Phương trình cực hoa sen 9 cánh: r = R · P · |cos(4.5 · θ)|^0.75
-        const cosTerm = Math.abs(Math.cos(4.5 * theta));
-        const r = R * P * Math.pow(cosTerm, 0.72);
-        const px = r * Math.cos(theta);
-        const py = r * Math.sin(theta);
-        if (i === 0) {
-          ctx.moveTo(px, py);
-        } else {
-          ctx.lineTo(px, py);
-        }
-      }
-      ctx.closePath();
-
-      // Gradient tô chuyển sắc hoa sen
-      const outerGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, R * P);
-      outerGrad.addColorStop(0, 'rgba(252, 235, 203, 0.95)');
-      outerGrad.addColorStop(0.35, 'rgba(226, 149, 167, 0.85)');
-      outerGrad.addColorStop(0.75, 'rgba(244, 214, 220, 0.7)');
-      outerGrad.addColorStop(1, 'rgba(250, 246, 238, 0.95)');
-      ctx.fillStyle = outerGrad;
-      ctx.fill();
-
-      // Viền mạ vàng thếp cổ #C5A262 siêu mảnh 1.2px
-      ctx.strokeStyle = '#C5A262';
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-
-      // --- TẦNG 2: 9 CÁNH SEN TRONG (Inner 9 Petals, lệch 20 độ = π/9) ---
-      const innerR = R * 0.62;
-      ctx.beginPath();
-      for (let i = 0; i <= outerPoints; i++) {
-        const theta = (i / outerPoints) * Math.PI * 2;
-        const cosTerm = Math.abs(Math.cos(4.5 * (theta - Math.PI / 9)));
-        const r = innerR * P * Math.pow(cosTerm, 0.75);
-        const px = r * Math.cos(theta);
-        const py = r * Math.sin(theta);
-        if (i === 0) {
-          ctx.moveTo(px, py);
-        } else {
-          ctx.lineTo(px, py);
-        }
-      }
-      ctx.closePath();
-
-      const innerGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, innerR * P);
-      innerGrad.addColorStop(0, 'rgba(255, 245, 210, 0.98)');
-      innerGrad.addColorStop(0.45, 'rgba(222, 123, 146, 0.88)');
-      innerGrad.addColorStop(0.85, 'rgba(255, 245, 247, 0.92)');
-      innerGrad.addColorStop(1, 'rgba(255, 255, 255, 0.98)');
-      ctx.fillStyle = innerGrad;
-      ctx.fill();
-
-      ctx.strokeStyle = '#E5C378';
-      ctx.lineWidth = 1.1;
-      ctx.stroke();
-
-      // --- TẦNG 3: ĐÀI SEN VÀNG & NHỤY HOA NGỌC TRI THỨC (Center Core) ---
-      const coreR = Math.max(3, 16 * P);
-      const coreGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, coreR);
-      coreGrad.addColorStop(0, '#FFE8A3');
-      coreGrad.addColorStop(0.7, '#C5A262');
-      coreGrad.addColorStop(1, '#8A6A2F');
-      ctx.fillStyle = coreGrad;
-      ctx.beginPath();
-      ctx.arc(0, 0, coreR, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#E5C378';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      // 9 hạt nhụy sen đối xứng
-      if (P > 0.4) {
-        ctx.fillStyle = '#4A3515';
-        const numSeeds = 9;
-        const seedRingR = coreR * 0.58;
-        for (let s = 0; s < numSeeds; s++) {
-          const sAngle = (s / numSeeds) * Math.PI * 2;
-          const sx = seedRingR * Math.cos(sAngle);
-          const sy = seedRingR * Math.sin(sAngle);
-          ctx.beginPath();
-          ctx.arc(sx, sy, 1.4 * P, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        // Hạt tâm đài
-        ctx.beginPath();
-        ctx.arc(0, 0, 1.8 * P, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.restore();
-    };
-
-    // Render loop chính
-    const render = (timestamp: number) => {
-      if (!isMounted) return;
-
-      const dt = Math.min((timestamp - lastTime) / 1000, 0.1);
-      lastTime = timestamp;
-
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = canvas.width / dpr;
-      const h = canvas.height / dpr;
-
       ctx.save();
       ctx.scale(dpr, dpr);
 
-      // Nền sương mai / nước hồ xanh rêu đêm huyền ảo (#081611)
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#081611';
-      ctx.fillRect(0, 0, w, h);
+      // Nền đen than mộc Đông Sơn (#090D0B)
+      ctx.fillStyle = '#090D0B';
+      ctx.fillRect(0, 0, width, height);
 
-      // Gradient chiều sâu nước hồ
-      const waterGrad = ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, Math.max(w, h));
-      waterGrad.addColorStop(0, 'rgba(10, 38, 29, 0.95)');
-      waterGrad.addColorStop(0.5, 'rgba(8, 22, 17, 0.98)');
-      waterGrad.addColorStop(1, '#050D0A');
-      ctx.fillStyle = waterGrad;
-      ctx.fillRect(0, 0, w, h);
+      const cx = width / 2;
+      const cy = height / 2;
+      const minDim = Math.min(width, height);
+      const baseR = minDim * 0.22;
 
-      // Cập nhật tiến độ bung nở nếu đang ở phase 'blooming'
-      if (phase === 'blooming') {
-        const elapsed = (timestamp - startTimeRef.current) / 1000;
-        const duration = 1.35; // 1.35s cho hoa nở trọn vẹn
-        const t = Math.min(elapsed / duration, 1);
-        // Easing: easeOutCubic
-        const ease = 1 - Math.pow(1 - t, 3);
-        setBloomProgress(ease);
-
-        if (t >= 1) {
-          setPhase('bloomed');
-        }
+      // Giai đoạn 3 (2.8s - 3.5s): Mở rộng nhẹ (scale tăng dần) và mờ dần
+      let currentScale = 1.0;
+      let currentAlpha = 1.0;
+      if (elapsed > 2.8) {
+        const p3 = Math.min(1, (elapsed - 2.8) / 0.7);
+        currentScale = 1.0 + 0.16 * p3;
+        currentAlpha = Math.max(0, 1.0 - 0.45 * p3);
       }
 
-      // Tạo sóng lăn tăn nhẹ ở trạng thái tĩnh
-      if (phase === 'idle' && timestamp - lastRippleTimeRef.current > 2200) {
-        lastRippleTimeRef.current = timestamp;
-        ripplesRef.current.push({
-          x: w / 2,
-          y: h / 2,
-          radius: 12,
-          maxRadius: Math.min(w, h) * 0.45,
-          alpha: 0.35,
-          speed: 65,
-          color: '#739B88',
-        });
-      }
+      ctx.globalAlpha = currentAlpha;
+      ctx.translate(cx, cy);
+      ctx.scale(currentScale, currentScale);
+      ctx.translate(-cx, -cy);
 
-      // Vẽ và cập nhật các vòng sóng nước lan tỏa (Water Ripples)
-      const currentRipples = ripplesRef.current;
-      for (let i = currentRipples.length - 1; i >= 0; i--) {
-        const r = currentRipples[i];
-        if (!r) continue;
-        r.radius += r.speed * dt;
-        const life = r.radius / r.maxRadius;
-        r.alpha = Math.max(0, 0.65 * (1 - life));
+      // --- GIAI ĐOẠN 1 (0s - 1.2s): Điểm sáng đỏ chu sa (#C23B38) & quầng hào quang mềm mại ---
+      const p1 = Math.min(1, elapsed / 1.2);
+      const e1 = p1 * p1 * (3 - 2 * p1); // Smooth easing
 
-        if (r.alpha <= 0.01 || r.radius >= r.maxRadius) {
-          currentRipples.splice(i, 1);
-          continue;
-        }
+      // Quầng hào quang tỏa rộng mềm mại (#A8282B -> #6B171A -> trong suốt)
+      const haloR = baseR * (0.35 + 1.25 * e1);
+      const haloGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, haloR);
+      haloGrad.addColorStop(0, `rgba(194, 59, 56, ${0.85 * e1})`); // Đỏ chu sa #C23B38
+      haloGrad.addColorStop(0.35, `rgba(168, 40, 43, ${0.55 * e1})`); // #A8282B
+      haloGrad.addColorStop(0.7, `rgba(107, 23, 26, ${0.25 * e1})`); // #6B171A
+      haloGrad.addColorStop(1, 'rgba(9, 13, 11, 0)');
 
-        ctx.save();
+      ctx.fillStyle = haloGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, haloR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Tâm hạt nhân sáng đỏ chu sa viền vàng
+      const coreR = baseR * 0.18 * Math.min(1, elapsed / 0.6);
+      if (coreR > 0) {
+        const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+        coreGrad.addColorStop(0, '#FFFDF8');
+        coreGrad.addColorStop(0.35, '#E5C378');
+        coreGrad.addColorStop(0.7, '#C23B38');
+        coreGrad.addColorStop(1, '#6B171A');
+        ctx.fillStyle = coreGrad;
         ctx.beginPath();
-        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = r.color;
-        ctx.globalAlpha = r.alpha;
-        ctx.lineWidth = 1.0;
+        ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // --- GIAI ĐOẠN 2 (1.2s - 2.8s): 14 tia sáng mặt trời hình tam giác nhọn Vàng Thếp (#D4AF37) & 2 vòng kỷ hà ---
+      if (elapsed >= 0.7) {
+        const p2 = Math.min(1, (elapsed - 0.7) / 1.7);
+        const e2 = 1 - Math.pow(1 - p2, 3); // Ease-out cubic
+
+        const numRays = 14;
+        const deltaAngle = (Math.PI * 2) / numRays;
+        const innerR = baseR * 0.22;
+        const outerR = baseR * (0.22 + 0.82 * e2);
+        const halfWidthAngle = deltaAngle * 0.38;
+
+        // Vẽ 14 tia sáng tam giác nhọn vươn đều 360 độ (tọa độ cực: x = r*cos, y = r*sin)
+        for (let i = 0; i < numRays; i++) {
+          const theta = i * deltaAngle - Math.PI / 2;
+          const leftBaseTheta = theta - halfWidthAngle;
+          const rightBaseTheta = theta + halfWidthAngle;
+
+          const x1 = cx + innerR * Math.cos(leftBaseTheta);
+          const y1 = cy + innerR * Math.sin(leftBaseTheta);
+
+          const tipX = cx + outerR * Math.cos(theta);
+          const tipY = cy + outerR * Math.sin(theta);
+
+          const x2 = cx + innerR * Math.cos(rightBaseTheta);
+          const y2 = cy + innerR * Math.sin(rightBaseTheta);
+
+          // Gradient ánh vàng thếp từ gốc ra đỉnh nhọn
+          const rayGrad = ctx.createLinearGradient(
+            cx + innerR * 0.5 * Math.cos(theta),
+            cy + innerR * 0.5 * Math.sin(theta),
+            tipX,
+            tipY,
+          );
+          rayGrad.addColorStop(0, `rgba(229, 195, 120, ${0.95 * e2})`);
+          rayGrad.addColorStop(0.5, `rgba(212, 175, 55, ${0.9 * e2})`); // #D4AF37
+          rayGrad.addColorStop(1, `rgba(197, 162, 98, ${0.45 * e2})`);
+
+          ctx.fillStyle = rayGrad;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(tipX, tipY);
+          ctx.lineTo(x2, y2);
+          ctx.closePath();
+          ctx.fill();
+
+          // Nét viền mảnh vàng thếp cho tia
+          ctx.strokeStyle = `rgba(245, 242, 235, ${0.5 * e2})`;
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+
+          // Họa tiết tam giác con xen kẽ giữa các tia (đặc trưng văn hóa trống đồng Đông Sơn)
+          if (e2 > 0.35) {
+            const midTheta = theta + deltaAngle / 2;
+            const subInnerR = innerR * 1.05;
+            const subOuterR = innerR + (outerR - innerR) * 0.36;
+            const subHalf = deltaAngle * 0.16;
+
+            const subAlpha = Math.min(1, (e2 - 0.35) / 0.65);
+            ctx.fillStyle = `rgba(194, 59, 56, ${0.75 * subAlpha})`;
+            ctx.beginPath();
+            ctx.moveTo(
+              cx + subInnerR * Math.cos(midTheta - subHalf),
+              cy + subInnerR * Math.sin(midTheta - subHalf),
+            );
+            ctx.lineTo(cx + subOuterR * Math.cos(midTheta), cy + subOuterR * Math.sin(midTheta));
+            ctx.lineTo(
+              cx + subInnerR * Math.cos(midTheta + subHalf),
+              cy + subInnerR * Math.sin(midTheta + subHalf),
+            );
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+
+        // Vòng tròn trung tâm ôm lấy gốc 14 tia sáng
+        ctx.strokeStyle = `rgba(212, 175, 55, ${0.9 * e2})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // --- 2 VÒNG TRÒN ĐỒNG TÂM KỶ HÀ MẢNH (1px) NÉT ĐỨT / CHẤM BI MÀU VÀNG SON ---
+        // Vòng 1: Ôm sát đỉnh tia sáng, lan tỏa gợn sóng âm vang
+        const ring1R = outerR * (1.06 + 0.04 * Math.sin(elapsed * 4));
+        ctx.save();
+        ctx.strokeStyle = `rgba(212, 175, 55, ${0.75 * e2})`;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, ring1R, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Chuỗi chấm bi kỷ hà (hạt cườm trống đồng) chạy dọc vòng 1
+        const numDots = 28;
+        ctx.fillStyle = `rgba(229, 195, 120, ${0.85 * e2})`;
+        for (let j = 0; j < numDots; j++) {
+          const dotAngle = (j * (Math.PI * 2)) / numDots + elapsed * 0.12;
+          const dx = cx + ring1R * Math.cos(dotAngle);
+          const dy = cy + ring1R * Math.sin(dotAngle);
+          ctx.beginPath();
+          ctx.arc(dx, dy, 1.25, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Vòng 2: Mở rộng ra ngoài theo hiệu ứng sóng nước âm vang
+        const ring2R = outerR * (1.2 + 0.08 * e2);
+        ctx.strokeStyle = `rgba(194, 59, 56, ${0.65 * e2})`;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 6]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, ring2R, 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
       }
 
-      // Vẽ Đóa sen cực toán học
-      const maxLotusR = Math.min(w, h) * 0.22;
-      drawLotus(w / 2, h / 2, maxLotusR, bloomProgress, timestamp);
-
       ctx.restore();
 
-      animFrameRef.current = requestAnimationFrame(render);
+      if (!isDismissingRef.current) {
+        animFrameRef.current = requestAnimationFrame(render);
+      }
     };
 
     animFrameRef.current = requestAnimationFrame(render);
 
     return () => {
-      isMounted = false;
+      cancelAnimationFrame(animFrameRef.current);
       window.removeEventListener('resize', handleResize);
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-      }
     };
-  }, [isVisible, phase, bloomProgress]);
-
-  // Tự động focus nút "Bước vào" khi hoa đã nở xong
-  useEffect(() => {
-    if (phase === 'bloomed' && enterBtnRef.current) {
-      enterBtnRef.current.focus();
-    }
-  }, [phase]);
+  }, [isVisible, handleDismiss]);
 
   if (!isVisible) {
     return null;
@@ -529,113 +360,22 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
 
   return (
     <aside
-      aria-label="Màn hình tĩnh tâm mở đầu"
       role="dialog"
       aria-modal="true"
-      onClick={(e) => {
-        if (phase === 'idle') {
-          triggerBloom(e.clientX, e.clientY);
-        }
-      }}
+      aria-label="Màn hình mở đầu Mặt Trời Đông Sơn"
+      tabIndex={0}
+      onClick={handleDismiss}
+      onTouchStart={handleDismiss}
+      onKeyDown={handleDismiss}
       className={cn(
-        'fixed inset-0 z-[100] flex flex-col items-center justify-between select-none',
-        'bg-[#081611] text-[#F5F2EB]',
-        'transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]',
-        isDismissing &&
-          'pointer-events-none scale-105 opacity-0 [clip-path:circle(150%_at_center)]',
+        'fixed inset-0 z-[100] flex cursor-pointer items-center justify-center select-none',
+        'bg-[#090D0B]',
+        'transition-all duration-500 ease-out',
+        isDismissing ? 'pointer-events-none scale-105 opacity-0' : 'scale-100 opacity-100',
       )}
-      style={{
-        clipPath: isDismissing ? 'circle(150% at center)' : 'circle(100% at center)',
-        transition: 'clip-path 0.75s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease',
-      }}
     >
-      {/* Nút BỎ QUA nhanh ở góc trên bên phải, khả dụng ngay từ giây 0 */}
-      <div className="fixed top-6 right-6 z-20">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDismiss();
-          }}
-          className="cursor-pointer rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 font-mono text-xs tracking-wider text-[#CBD5CE] backdrop-blur-md transition-all duration-200 hover:border-[#C5A262] hover:bg-black/60 hover:text-[#E5C378]"
-          title="Bỏ qua màn hình mở đầu (Phím Esc)"
-          aria-label="Bỏ qua màn hình mở đầu"
-        >
-          Bỏ qua [Esc]
-        </button>
-      </div>
-
-      {/* Canvas 2D toàn màn hình vẽ Hoa sen cực và Gợn sóng nước */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full cursor-pointer touch-none"
-        aria-hidden="true"
-      />
-
-      {/* Lời tựa đỉnh đầu */}
-      <header className="relative z-10 flex flex-col items-center pt-10 sm:pt-14">
-        <span className="font-mono text-[11px] tracking-[0.25em] text-[#C5A262] uppercase">
-          Learning Universe · Nghi thức khởi tâm
-        </span>
-      </header>
-
-      {/* Khu vực tâm màn hình: Hướng dẫn chạm khi còn ở phase idle */}
-      {phase === 'idle' && (
-        <div className="pointer-events-none relative z-10 -mt-12 flex flex-col items-center space-y-2 text-center">
-          <div className="h-44 w-44" aria-hidden="true" />
-          <p className="animate-pulse font-serif text-sm tracking-wide text-[#CBD5CE]/80">
-            — Chạm nhẹ vào mặt nước để thức tỉnh tri thức —
-          </p>
-        </div>
-      )}
-
-      {/* Chân màn hình: Câu châm ngôn & Nút Bước vào */}
-      <footer className="relative z-10 flex flex-col items-center space-y-6 pb-12 sm:pb-16">
-        {/* Câu danh ngôn in nghiêng trang trọng */}
-        <div
-          className={cn(
-            'max-w-md px-6 text-center transition-all duration-700',
-            phase === 'bloomed' || prefersReducedMotion
-              ? 'translate-y-0 opacity-100'
-              : 'translate-y-3 opacity-0',
-          )}
-        >
-          <blockquote className="font-serif text-base leading-relaxed text-[#F5F2EB] italic sm:text-lg">
-            “Đi một ngày đàng, học một sàng khôn.”
-          </blockquote>
-          <cite className="mt-1.5 block font-mono text-xs text-[#C5A262] not-italic">
-            — Tục ngữ dân gian
-          </cite>
-        </div>
-
-        {/* Nút "Bước vào" */}
-        <div
-          className={cn(
-            'transition-all duration-500',
-            phase === 'bloomed' || prefersReducedMotion
-              ? 'translate-y-0 opacity-100'
-              : 'pointer-events-none translate-y-4 opacity-0',
-          )}
-        >
-          <button
-            ref={enterBtnRef}
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDismiss();
-            }}
-            className="group relative inline-flex cursor-pointer items-center gap-2 overflow-hidden rounded-full border border-[#C5A262] bg-[#0A261D]/80 px-8 py-3 text-sm font-semibold tracking-wide text-[#F5F2EB] shadow-[0_0_20px_rgba(197,162,98,0.25)] backdrop-blur-md transition-all duration-300 hover:border-[#E5C378] hover:bg-[#C5A262] hover:text-[#081611] hover:shadow-[0_0_30px_rgba(197,162,98,0.5)] active:scale-95"
-          >
-            <span>Bước vào không gian học tập</span>
-            <span
-              className="text-[#E5C378] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[#081611]"
-              aria-hidden="true"
-            >
-              →
-            </span>
-          </button>
-        </div>
-      </footer>
+      {/* Canvas nghệ thuật phủ kín màn hình */}
+      <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" aria-hidden="true" />
     </aside>
   );
 };
