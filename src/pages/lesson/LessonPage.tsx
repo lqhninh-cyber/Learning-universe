@@ -1,5 +1,5 @@
 import { ArrowLeft, BookOpen, Link2, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   type CompiledLessonModule,
@@ -19,6 +19,7 @@ import {
   SourcePanel,
 } from '@/features/lesson-reader';
 import { FloatingZenToolbar } from '@/components/reader/FloatingZenToolbar';
+import { FoliageReadingProgress } from '@/components/reader/FoliageReadingProgress';
 import {
   EditorialChapterOpener,
   type ChapterCloItem,
@@ -177,6 +178,7 @@ function LessonPageContent() {
     useReadingSettings();
   const readingTheme = theme;
   const isFocusMode = isZenMode;
+  const articleRef = useRef<HTMLElement>(null);
 
   // Hỗ trợ phím tắt F và Escape bổ trợ cho Zen Mode
   useEffect(() => {
@@ -523,6 +525,7 @@ function LessonPageContent() {
             )}
 
             <article
+              ref={articleRef}
               data-reading-article
               data-reading-theme={readingTheme}
               data-reading-size={fontSize}
@@ -705,6 +708,9 @@ function LessonPageContent() {
             <LessonToc lessonMeta={compiled?.lessonMeta ?? null} readingTheme={readingTheme} />
           </aside>
         </div>
+
+        {/* Vạch tiến độ mầm cây sinh trưởng công thái học */}
+        <FoliageReadingProgress articleContainerRef={articleRef} />
 
         {/* Floating Zen Toolbar ghim nổi công thái học */}
         <FloatingZenToolbar />

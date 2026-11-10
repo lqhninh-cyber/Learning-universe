@@ -15,7 +15,6 @@ import { Link, useLocation } from 'react-router';
 import { Logo } from '@/components/common/Logo';
 import { useAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
-import { ReadingProgressBar } from '@/features/lesson-reader/ReadingProgressBar';
 import { CommandPalette, SearchBar } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
@@ -717,9 +716,6 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
           </div>
         )}
       </header>
-
-      {/* Thanh chỉ báo tiến độ đọc bài (2px) trên đỉnh trình duyệt — chỉ hiện trên trang bài học */}
-      <ReadingProgressBar key={pathname} className="fixed inset-x-0 top-0 z-50" />
 
       {/* Hộp thoại Tìm kiếm Học thuật Tức thì (Command Palette ⌘K / Ctrl+K) */}
       <CommandPalette open={isSearchOpen} onOpenChange={setIsSearchOpen} />
