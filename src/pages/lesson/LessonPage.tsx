@@ -20,16 +20,15 @@ import {
 import { useLearningStore } from '@/features/learning';
 import {
   DevEditorialBar,
-  FloatingReadingController,
   LessonActionBar,
   LessonNotesPanel,
   LessonPrevNextNav,
   LessonSidebar,
   LessonToc,
-  ReadingControlsToolbar,
-  type ReadingFontSize,
   SourcePanel,
 } from '@/features/lesson-reader';
+import { FloatingZenToolbar } from '@/components/reader/FloatingZenToolbar';
+import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -41,7 +40,7 @@ const LEVEL_LABELS: Record<'basic' | 'intermediate' | 'advanced', string> = {
   advanced: 'Nâng cao',
 };
 
-export function LessonPage() {
+function LessonPageContent() {
   const { subjectSlug, chapterSlug, lessonSlug } = useParams<{
     subjectSlug: string;
     chapterSlug: string;
@@ -76,111 +75,12 @@ export function LessonPage() {
     return false;
   });
 
-  const [fontSize, setFontSize] = useState<ReadingFontSize>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('lu_reading_font_size');
-        if (saved === 'sm' || saved === 'base' || saved === 'lg') {
-          return saved;
-        }
-      } catch {
-        // Ignore storage errors
-      }
-    }
-    return 'base';
-  });
+  const { theme, fontSize, isZenMode, toggleZenMode, setZenMode, typographyClasses } =
+    useReadingSettings();
+  const readingTheme = theme;
+  const isFocusMode = isZenMode;
 
-  const [isFocusMode, setIsFocusMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return localStorage.getItem('lu_focus_mode') === 'true';
-      } catch {
-        // Ignore storage errors
-      }
-    }
-    return false;
-  });
-
-  const [readingTheme, setReadingTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
-          return saved;
-        }
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-    }
-    return 'light';
-  });
-
-  const handleToggleReadingTheme = () => {
-    setReadingTheme((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      try {
-        localStorage.setItem('lu_reading_theme', next);
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: next }));
-      }
-      return next;
-    });
-  };
-
-  useEffect(() => {
-    const handleThemeChange = (e: Event) => {
-      const custom = e as CustomEvent<'light' | 'dark'>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
-        setReadingTheme(custom.detail);
-      } else {
-        const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
-          setReadingTheme(saved);
-        }
-      }
-    };
-    window.addEventListener('lu_reading_theme_change', handleThemeChange);
-    return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
-  }, []);
-
-  const handleFontSizeChange = (size: ReadingFontSize) => {
-    setFontSize(size);
-    try {
-      localStorage.setItem('lu_reading_font_size', size);
-    } catch {
-      // Ignore storage errors
-    }
-  };
-
-  const handleToggleFocusMode = () => {
-    setIsFocusMode((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem('lu_focus_mode', String(next));
-      } catch {
-        // Ignore storage errors
-      }
-      return next;
-    });
-  };
-
-  // Đồng bộ data-focus-mode lên document.body để ẩn Header và chuyển layout mượt mà
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    if (isFocusMode) {
-      document.body.setAttribute('data-focus-mode', 'true');
-    } else {
-      document.body.removeAttribute('data-focus-mode');
-    }
-    return () => {
-      document.body.removeAttribute('data-focus-mode');
-    };
-  }, [isFocusMode]);
-
-  // Hỗ trợ phím F để bật/tắt Focus Mode và phím Esc để thoát chế độ tập trung
+  // Hỗ trợ phím tắt F và Escape bổ trợ cho Zen Mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -194,28 +94,22 @@ export function LessonPage() {
         return;
       }
 
-      // Phím F / f: Bật/tắt Focus Mode (không kèm Ctrl / Meta / Alt để không cản trở Ctrl+F)
-      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-        handleToggleFocusMode();
+      if (e.ctrlKey || e.metaKey || e.altKey) {
         return;
       }
 
-      // Phím Escape: Thoát Focus Mode khi đang kích hoạt
-      if (e.key === 'Escape' && isFocusMode) {
+      if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
-        setIsFocusMode(false);
-        try {
-          localStorage.setItem('lu_focus_mode', 'false');
-        } catch {
-          // Ignore
-        }
+        toggleZenMode();
+      } else if (e.key === 'Escape' && isZenMode) {
+        e.preventDefault();
+        setZenMode(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isFocusMode]);
+  }, [toggleZenMode, setZenMode, isZenMode]);
 
   const handleToggleSidebarCollapse = () => {
     setIsSidebarCollapsed((prev) => {
@@ -309,16 +203,16 @@ export function LessonPage() {
         {isFocusMode && (
           <button
             type="button"
-            onClick={handleToggleFocusMode}
-            className="fixed top-4 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-stone-300/90 bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-stone-800 shadow-md backdrop-blur-md transition-all duration-200 hover:border-amber-700 hover:bg-amber-50 hover:text-amber-950 hover:shadow-lg"
-            title="Thoát chế độ đọc tập trung (Phím Esc hoặc F)"
+            onClick={toggleZenMode}
+            className="fixed top-4 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-stone-300/90 bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-stone-800 shadow-md backdrop-blur-md transition-all duration-200 hover:border-amber-700 hover:bg-amber-50 hover:text-amber-950 hover:shadow-lg dark:border-[#2C4D3B] dark:bg-[#13261D] dark:text-[#E2ECE6]"
+            title="Thoát chế độ đọc tập trung (Phím Esc hoặc Z)"
             aria-label="Thoát chế độ tập trung"
           >
-            <span className="font-bold text-amber-900" aria-hidden="true">
+            <span className="font-bold text-[#C5A262]" aria-hidden="true">
               ✕
             </span>
-            <span>Thoát chế độ tập trung</span>
-            <kbd className="ml-1 rounded border border-stone-300/70 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] text-stone-600">
+            <span>Thoát tập trung</span>
+            <kbd className="ml-1 rounded border border-stone-300/70 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] text-stone-600 dark:border-[#284E3A] dark:bg-[#163023] dark:text-[#A1D1B7]">
               Esc
             </kbd>
           </button>
@@ -387,14 +281,6 @@ export function LessonPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {/* Thanh công cụ đọc nhanh (Reading Controls Toolbar) */}
-            <ReadingControlsToolbar
-              fontSize={fontSize}
-              onFontSizeChange={handleFontSizeChange}
-              isFocusMode={isFocusMode}
-              onToggleFocusMode={handleToggleFocusMode}
-            />
-
             {/* Nút mở danh sách bài học trên mobile & tablet (< lg) */}
             {!isFocusMode && (
               <div className="lg:hidden">
@@ -448,11 +334,14 @@ export function LessonPage() {
 
         {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content | TOC (230px) */}
         <div className="flex items-start justify-center gap-6 transition-all duration-300 lg:gap-8">
-          {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) - Tạm ẩn trong Focus Mode */}
-          {!isFocusMode && !isSidebarCollapsed && (
+          {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) */}
+          {!isSidebarCollapsed && (
             <aside
               className={cn(
-                'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[280px] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block',
+                'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block',
+                isZenMode
+                  ? 'pointer-events-none m-0 w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0'
+                  : 'w-[280px] translate-x-0 opacity-100',
                 readingTheme === 'dark'
                   ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
                   : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
@@ -468,12 +357,12 @@ export function LessonPage() {
             </aside>
           )}
 
-          {/* CỘT GIỮA (Nội dung bài học - Main Content Reader: Căn giữa tự nhiên, max-w-3xl / max-w-[780px]) */}
+          {/* CỘT GIỮA (Nội dung bài học - Main Content Reader: Căn giữa tự nhiên, max-w-[720px] khi Zen Mode) */}
           <main
             className={cn(
               'mx-auto min-w-0 flex-1 transition-all duration-300',
-              isFocusMode
-                ? 'max-w-3xl px-6 py-12 sm:py-16'
+              isZenMode
+                ? 'max-w-[720px] px-4 py-8 sm:px-6'
                 : 'max-w-[780px] px-4 py-6 sm:px-6 lg:px-8',
             )}
           >
@@ -495,7 +384,7 @@ export function LessonPage() {
                     aria-hidden="true"
                   />
                   <span>
-                    Đang bật <strong>Chế độ đọc tập trung</strong> (Nhấn phím{' '}
+                    Đang bật <strong>Chế độ đọc tập trung (Zen Mode)</strong> (Nhấn phím{' '}
                     <kbd
                       className={cn(
                         'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
@@ -504,7 +393,7 @@ export function LessonPage() {
                           : 'border-[#CFDADB] bg-stone-100 text-[#29383D]',
                       )}
                     >
-                      F
+                      Z
                     </kbd>{' '}
                     hoặc{' '}
                     <kbd
@@ -522,7 +411,7 @@ export function LessonPage() {
                 </span>
                 <button
                   type="button"
-                  onClick={handleToggleFocusMode}
+                  onClick={toggleZenMode}
                   className={cn(
                     'cursor-pointer font-semibold underline',
                     readingTheme === 'dark'
@@ -541,6 +430,7 @@ export function LessonPage() {
               data-reading-size={fontSize}
               className={cn(
                 'lesson-content transition-all duration-300',
+                typographyClasses,
                 readingTheme === 'dark'
                   ? 'dark rounded-2xl border border-[#2A323A] bg-[#181C20] text-[#E2E8F0] shadow-none'
                   : 'rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] shadow-sm',
@@ -792,28 +682,34 @@ export function LessonPage() {
           </main>
 
           {/* CỘT PHẢI (Mục lục bài học & Cột chú giải lề - Sidenotes Column) */}
-          {!isFocusMode && (
-            <aside
-              data-sidenotes-column
-              className={cn(
-                'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] w-[260px] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block',
-                readingTheme === 'dark' ? 'text-[#94A3B8]' : '',
-              )}
-              role="complementary"
-              aria-label="Cột biên tập lề và mục lục"
-            >
-              <LessonToc lessonMeta={compiled?.lessonMeta ?? null} readingTheme={readingTheme} />
-            </aside>
-          )}
+          <aside
+            data-sidenotes-column
+            className={cn(
+              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block',
+              isZenMode
+                ? 'pointer-events-none m-0 w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
+                : 'w-[260px] translate-x-0 opacity-100',
+              readingTheme === 'dark' ? 'text-[#94A3B8]' : '',
+            )}
+            role="complementary"
+            aria-label="Cột biên tập lề và mục lục"
+          >
+            <LessonToc lessonMeta={compiled?.lessonMeta ?? null} readingTheme={readingTheme} />
+          </aside>
         </div>
 
-        {/* Floating Reading Controller cố định công thái học ở góc dưới màn hình */}
-        <FloatingReadingController
-          readingTheme={readingTheme}
-          onToggleReadingTheme={handleToggleReadingTheme}
-        />
+        {/* Floating Zen Toolbar ghim nổi công thái học */}
+        <FloatingZenToolbar />
       </FadeIn>
     </div>
+  );
+}
+
+export function LessonPage() {
+  return (
+    <ReadingSettingsProvider>
+      <LessonPageContent />
+    </ReadingSettingsProvider>
   );
 }
 

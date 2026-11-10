@@ -1,4 +1,5 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react';
+import { useReadingSettings } from '@/context/ReadingSettingsContext';
 import { SidenoteProvider } from '@/shared/components/Sidenote';
 import { cn } from '@/shared/lib/cn';
 
@@ -70,8 +71,10 @@ export const LessonView: FC<LessonViewProps> = ({
     return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
   }, [propTheme]);
 
-  const activeTheme = propTheme ?? internalTheme;
+  const settings = useReadingSettings();
+  const activeTheme = propTheme ?? settings.theme ?? internalTheme;
   const isDark = activeTheme === 'dark';
+  const isZen = settings.isZenMode;
 
   const firstChar = lead ? lead.trim().charAt(0) : '';
   const restLead = lead ? lead.trim().slice(1) : '';
@@ -91,7 +94,8 @@ export const LessonView: FC<LessonViewProps> = ({
           <aside
             aria-label="Danh mục chương bài"
             className={cn(
-              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 transition-colors duration-300 lg:col-span-3',
+              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 transition-all duration-300 lg:col-span-3',
+              isZen && 'pointer-events-none -translate-x-8 opacity-0 lg:hidden',
               isDark
                 ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
                 : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
@@ -105,11 +109,14 @@ export const LessonView: FC<LessonViewProps> = ({
         <div
           data-testid="scholar-main-column"
           className={cn(
-            'max-w-[70ch] min-w-0 rounded-3xl p-8 shadow-sm transition-colors duration-300 md:p-12',
+            'min-w-0 rounded-3xl p-8 shadow-sm transition-all duration-300 md:p-12',
+            isZen
+              ? 'mx-auto max-w-[720px] lg:col-span-12'
+              : 'max-w-[70ch] ' + (sidebar ? 'lg:col-span-6' : 'lg:col-span-8'),
             isDark
               ? 'border border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
               : 'border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
-            sidebar ? 'lg:col-span-6' : 'lg:col-span-8',
+            settings.typographyClasses,
           )}
         >
           {title && (
@@ -155,7 +162,8 @@ export const LessonView: FC<LessonViewProps> = ({
           data-testid="scholar-sidenotes-column"
           aria-label="Cột chú giải lề học thuật"
           className={cn(
-            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pl-2 backdrop-blur transition-colors duration-300',
+            'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pl-2 backdrop-blur transition-all duration-300',
+            isZen && 'pointer-events-none translate-x-8 opacity-0 lg:hidden',
             isDark
               ? 'border border-[#2A323A] bg-[#181C20] text-[#94A3B8]'
               : 'border border-[#CFDADB] bg-[#E1E9EA]/80 text-[#29383D]',

@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { Footer } from '@/components/layout/Footer';
+import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { AuthModal, AuthProvider, PendingNoticeDialog } from '@/features/auth';
 import { LoginPromptDialog } from '@/features/learning';
 import { PaperGrain } from '@/shared/components/PaperGrain';
@@ -22,35 +23,8 @@ function RootLayoutContent() {
     /^\/bai-hoc\/[^/]+\/?$/.test(pathname) ||
     pathname === '/dev/mdx';
 
-  const [readingTheme, setReadingTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') return saved;
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-    }
-    return 'light';
-  });
-
-  useEffect(() => {
-    const handleThemeChange = (e: Event) => {
-      const custom = e as CustomEvent<'light' | 'dark'>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
-        setReadingTheme(custom.detail);
-      } else {
-        const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
-          setReadingTheme(saved);
-        }
-      }
-    };
-    window.addEventListener('lu_reading_theme_change', handleThemeChange);
-    return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
-  }, []);
-
-  const isDarkLesson = isLessonPage && readingTheme === 'dark';
+  const { theme } = useReadingSettings();
+  const isDarkLesson = isLessonPage && theme === 'dark';
 
   useEffect(() => {
     if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
@@ -112,7 +86,9 @@ function RootLayoutContent() {
 export function RootLayout() {
   return (
     <AuthProvider>
-      <RootLayoutContent />
+      <ReadingSettingsProvider>
+        <RootLayoutContent />
+      </ReadingSettingsProvider>
     </AuthProvider>
   );
 }
