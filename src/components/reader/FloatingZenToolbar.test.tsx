@@ -3,39 +3,87 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
 import { FloatingZenToolbar } from './FloatingZenToolbar';
 
-describe('FloatingZenToolbar Component', () => {
+describe('FloatingZenToolbar Component (Viên thuốc thu gọn & Bung mở công cụ đọc)', () => {
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.classList.remove('dark');
     document.body.removeAttribute('data-zen-mode');
   });
 
-  it('kết xuất đầy đủ 4 khối tương tác: Zen Mode, Font Family, Font Sizing, Theme Toggle', () => {
+  it('mặc định hiển thị ở trạng thái thu gọn thành viên thuốc tròn mini "Aa"', () => {
     render(
       <ReadingSettingsProvider>
         <FloatingZenToolbar />
       </ReadingSettingsProvider>,
     );
 
+    const trigger = screen.getByTestId('zen-toolbar-trigger');
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveTextContent('Aa');
+
+    // Các nút chi tiết chưa hiển thị khi đang thu gọn
+    expect(screen.queryByTestId('zen-mode-toggle')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('reading-theme-toggle')).not.toBeInTheDocument();
+  });
+
+  it('bung mở thanh công cụ với đầy đủ 3 tính năng cốt lõi và nút [✕] khi click vào viên thuốc', () => {
+    render(
+      <ReadingSettingsProvider>
+        <FloatingZenToolbar />
+      </ReadingSettingsProvider>,
+    );
+
+    // Click vào viên thuốc để mở
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
+
     // 1. Zen mode
     const zenBtn = screen.getByTestId('zen-mode-toggle');
     expect(zenBtn).toBeInTheDocument();
     expect(zenBtn).toHaveAttribute('aria-pressed', 'false');
 
-    // 2. Font family
-    const fontBtn = screen.getByTestId('font-family-toggle');
-    expect(fontBtn).toBeInTheDocument();
-    expect(screen.getByText('Serif')).toBeInTheDocument();
+    // 2. Không còn nút đổi Font Serif/Sans
+    expect(screen.queryByTestId('font-family-toggle')).not.toBeInTheDocument();
+    expect(screen.queryByText('Serif')).not.toBeInTheDocument();
+    expect(screen.queryByText('Sans')).not.toBeInTheDocument();
 
-    // 3. Font sizing
+    // 3. Cỡ chữ
     expect(screen.getByTestId('decrease-font-size')).toBeInTheDocument();
     expect(screen.getByText('Vừa')).toBeInTheDocument();
     expect(screen.getByTestId('increase-font-size')).toBeInTheDocument();
 
-    // 4. Theme toggle
+    // 4. Chế độ theme
     const themeBtn = screen.getByTestId('reading-theme-toggle');
     expect(themeBtn).toBeInTheDocument();
     expect(screen.getByText('Tối')).toBeInTheDocument();
+
+    // 5. Nút đóng [✕]
+    const closeBtn = screen.getByTestId('zen-toolbar-close');
+    expect(closeBtn).toBeInTheDocument();
+  });
+
+  it('thu gọn thanh công cụ lại thành viên thuốc khi nhấn nút [✕] hoặc nhấn Escape', () => {
+    render(
+      <ReadingSettingsProvider>
+        <FloatingZenToolbar />
+      </ReadingSettingsProvider>,
+    );
+
+    // Mở toolbar
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
+    expect(screen.getByTestId('zen-mode-toggle')).toBeInTheDocument();
+
+    // Bấm nút [✕] để thu gọn
+    fireEvent.click(screen.getByTestId('zen-toolbar-close'));
+    expect(screen.queryByTestId('zen-mode-toggle')).not.toBeInTheDocument();
+    expect(screen.getByTestId('zen-toolbar-trigger')).toBeInTheDocument();
+
+    // Mở lại và thu gọn bằng phím Escape
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
+    expect(screen.getByTestId('zen-mode-toggle')).toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByTestId('zen-mode-toggle')).not.toBeInTheDocument();
+    expect(screen.getByTestId('zen-toolbar-trigger')).toBeInTheDocument();
   });
 
   it('bật Zen Mode khi bấm nút hoặc nhấn phím Z, active với nền vàng #C5A262', () => {
@@ -45,6 +93,9 @@ describe('FloatingZenToolbar Component', () => {
       </ReadingSettingsProvider>,
     );
 
+    // Mở toolbar
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
+
     const zenBtn = screen.getByTestId('zen-mode-toggle');
 
     // Bấm nút Zen Mode
@@ -52,30 +103,14 @@ describe('FloatingZenToolbar Component', () => {
     expect(zenBtn).toHaveAttribute('aria-pressed', 'true');
     expect(zenBtn).toHaveClass('bg-[#C5A262]');
 
-    // Thoát Zen Mode bằng phím Esc
-    fireEvent.keyDown(window, { key: 'Escape' });
-    expect(zenBtn).toHaveAttribute('aria-pressed', 'false');
+    // Thu gọn lại: viên thuốc có chấm báo hiệu Zen Mode
+    fireEvent.click(screen.getByTestId('zen-toolbar-close'));
+    const trigger = screen.getByTestId('zen-toolbar-trigger');
+    expect(trigger.querySelector('span[title="Đang bật chế độ Zen Mode"]')).toBeInTheDocument();
 
-    // Bật lại bằng phím Z
+    // Bấm phím Z để tắt Zen Mode
     fireEvent.keyDown(window, { key: 'z' });
-    expect(zenBtn).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  it('chuyển đổi Serif / Sans khi bấm nút font', () => {
-    render(
-      <ReadingSettingsProvider>
-        <FloatingZenToolbar />
-      </ReadingSettingsProvider>,
-    );
-
-    const fontBtn = screen.getByTestId('font-family-toggle');
-    expect(screen.getByText('Serif')).toBeInTheDocument();
-
-    fireEvent.click(fontBtn);
-    expect(screen.getByText('Sans')).toBeInTheDocument();
-
-    fireEvent.click(fontBtn);
-    expect(screen.getByText('Serif')).toBeInTheDocument();
+    expect(trigger.querySelector('span[title="Đang bật chế độ Zen Mode"]')).not.toBeInTheDocument();
   });
 
   it('tăng và giảm cỡ chữ khi bấm A+ và A-', () => {
@@ -84,6 +119,9 @@ describe('FloatingZenToolbar Component', () => {
         <FloatingZenToolbar />
       </ReadingSettingsProvider>,
     );
+
+    // Mở toolbar
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
 
     const incBtn = screen.getByTestId('increase-font-size');
     const decBtn = screen.getByTestId('decrease-font-size');
@@ -105,6 +143,9 @@ describe('FloatingZenToolbar Component', () => {
         <FloatingZenToolbar />
       </ReadingSettingsProvider>,
     );
+
+    // Mở toolbar
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
 
     const themeBtn = screen.getByTestId('reading-theme-toggle');
     expect(themeBtn).toHaveAttribute('aria-pressed', 'false');

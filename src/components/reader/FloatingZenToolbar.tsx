@@ -1,5 +1,5 @@
-import { Maximize2, Minimize2, Moon, Sun, Type } from 'lucide-react';
-import { type FC, useEffect } from 'react';
+import { Maximize2, Minimize2, Moon, Sun, X } from 'lucide-react';
+import { type FC, useEffect, useState } from 'react';
 import { FONT_SIZE_LABELS, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { cn } from '@/shared/lib/cn';
 
@@ -9,21 +9,24 @@ export interface FloatingZenToolbarProps {
 
 /**
  * Floating Zen Toolbar (Thanh công cụ đọc chuyên sâu ghim nổi)
- * - Vị trí: Cố định góc dưới bên phải màn hình (fixed bottom-6 right-6 z-50)
- * - Thiết kế: Dạng Pill Bar bo tròn hoàn toàn (rounded-full), kính mờ (backdrop-blur-xl),
- *   viền ngọc bích sẫm (border-zinc-300 dark:border-[#1E3B2E]), đổ bóng sâu (shadow-2xl).
- * - Các tương tác chính:
+ * - Trạng thái thu gọn (Mặc định):
+ *   + Viên thuốc tròn mini (w-11 h-11) tại `fixed bottom-6 right-6 z-50`.
+ *   + Nền kính mờ (backdrop-blur-xl), viền ngọc bích sẫm, biểu tượng chữ Aa trang nhã.
+ *   + Chấm vàng thếp báo hiệu khi đang ở chế độ Zen.
+ * - Trạng thái mở rộng (Khi click vào viên thuốc):
+ *   + Bung mở thanh công cụ hoàn chỉnh với hiệu ứng chuyển tiếp mượt mà.
+ *   + Nút [✕] thu gọn lại hoặc nhấn Escape để đóng.
+ * - 3 tính năng cốt lõi:
  *   1. [Zen Mode]: Bật/tắt chế độ tập trung (Phím tắt Z). Khi active có nền Vàng Thếp #C5A262.
- *   2. [Font Serif / Sans]: Chuyển đổi nhanh kiểu chữ hiển thị rõ nhãn Serif / Sans.
- *   3. [Cỡ chữ A- / A+]: Cụm 2 nút tăng/giảm cỡ chữ kèm nhãn mức hiện tại (Nhỏ / Vừa / Lớn / Đại).
- *   4. [Chế độ Tối / Sáng]: Icon Mặt trăng / Mặt trời chuyển đổi theme tức thì (Phím tắt D).
+ *   2. [Cỡ chữ A- / A+]: Cụm nút tăng/giảm cỡ chữ kèm nhãn mức hiện tại (Nhỏ / Vừa / Lớn / Đại).
+ *   3. [Chế độ Tối / Sáng]: Icon Mặt trăng / Mặt trời chuyển đổi theme tức thì (Phím tắt D).
  */
 export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
   const {
     theme,
     toggleTheme,
-    fontFamily,
-    toggleFontFamily,
     fontSize,
     increaseFontSize,
     decreaseFontSize,
@@ -34,7 +37,7 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
 
   const isDark = theme === 'dark';
 
-  // Lắng nghe phím tắt bàn phím: Z (Zen Mode), D (Theme), Esc (Thoát Zen Mode)
+  // Lắng nghe phím tắt bàn phím: Z (Zen Mode), D (Theme), Esc (Đóng toolbar / Thoát Zen Mode)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -59,23 +62,66 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
       } else if (e.key === 'd' || e.key === 'D') {
         e.preventDefault();
         toggleTheme();
-      } else if (e.key === 'Escape' && isZenMode) {
-        e.preventDefault();
-        setZenMode(false);
+      } else if (e.key === 'Escape') {
+        if (isExpanded) {
+          e.preventDefault();
+          setIsExpanded(false);
+        } else if (isZenMode) {
+          e.preventDefault();
+          setZenMode(false);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleZenMode, toggleTheme, setZenMode, isZenMode]);
+  }, [toggleZenMode, toggleTheme, setZenMode, isZenMode, isExpanded]);
 
+  // Trạng thái thu gọn: Viên thuốc nhỏ gọn tinh tế
+  if (!isExpanded) {
+    return (
+      <button
+        type="button"
+        onClick={() => setIsExpanded(true)}
+        aria-label="Mở thanh công cụ đọc"
+        title="Công cụ đọc bài học"
+        data-testid="zen-toolbar-trigger"
+        className={cn(
+          'fixed right-6 bottom-6 z-50 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full',
+          'border border-zinc-300/90 bg-white/90 shadow-xl backdrop-blur-xl transition-all duration-200 hover:scale-105 active:scale-95',
+          'dark:border-[#1E3B2E] dark:bg-[#081611]/90',
+          'focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:ring-offset-2 focus-visible:outline-none',
+          'select-none print:hidden',
+          className,
+        )}
+      >
+        <span
+          className="font-serif text-[15px] font-bold tracking-tight text-[#2E6B4F] dark:text-[#C5A262]"
+          aria-hidden="true"
+        >
+          Aa
+        </span>
+
+        {/* Chấm vàng thông báo khi đang trong Zen Mode */}
+        {isZenMode && (
+          <span
+            className="absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-[#C5A262] ring-2 ring-white dark:ring-[#081611]"
+            title="Đang bật chế độ Zen Mode"
+            aria-hidden="true"
+          />
+        )}
+      </button>
+    );
+  }
+
+  // Trạng thái mở rộng: Thanh công cụ đọc đầy đủ 3 tính năng cốt lõi
   return (
     <aside
       aria-label="Thanh công cụ đọc chuyên sâu"
       className={cn(
-        'fixed right-4 bottom-6 z-50 flex items-center gap-1.5 rounded-full p-1.5 sm:right-6 md:gap-2 md:p-2',
-        'border border-zinc-300/90 bg-white/90 text-zinc-800 shadow-2xl backdrop-blur-xl transition-all duration-300',
-        'dark:border-[#1E3B2E] dark:bg-[#0B1A13]/95 dark:text-[#E2ECE6]',
+        'fixed right-4 bottom-6 z-50 flex items-center gap-1.5 rounded-full p-1.5 sm:right-6 sm:gap-2 sm:p-2',
+        'border border-zinc-300/90 bg-white/95 text-zinc-800 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out',
+        'dark:border-[#1E3B2E] dark:bg-[#081611]/95 dark:text-[#E2ECE6]',
         'select-none print:hidden',
         className,
       )}
@@ -124,30 +170,7 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
       {/* Đường phân cách */}
       <span className="h-4 w-px bg-zinc-300 dark:bg-[#1E3B2E]" aria-hidden="true" />
 
-      {/* 2. NÚT CHUYỂN FONT: Serif / Sans */}
-      <button
-        type="button"
-        onClick={toggleFontFamily}
-        aria-label={`Kiểu chữ hiện tại: ${fontFamily}. Nhấn để đổi sang ${fontFamily === 'serif' ? 'Sans' : 'Serif'}`}
-        title={`Đổi kiểu chữ (Hiện tại: ${fontFamily === 'serif' ? 'Serif (Học thuật)' : 'Sans (Công thức Toán)'})`}
-        data-testid="font-family-toggle"
-        className={cn(
-          'flex min-h-[38px] cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200',
-          'focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:ring-offset-1 focus-visible:outline-none',
-          'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 active:scale-95 dark:text-[#CBD5CE] dark:hover:bg-[#163023] dark:hover:text-[#F5F2EB]',
-        )}
-      >
-        <Type
-          className="h-3.5 w-3.5 shrink-0 text-[#3F6570] dark:text-[#A1D1B7]"
-          aria-hidden="true"
-        />
-        <span className="font-semibold">{fontFamily === 'serif' ? 'Serif' : 'Sans'}</span>
-      </button>
-
-      {/* Đường phân cách */}
-      <span className="h-4 w-px bg-zinc-300 dark:bg-[#1E3B2E]" aria-hidden="true" />
-
-      {/* 3. CỤM CỠ CHỮ: A- / A+ kèm nhãn hiển thị mức (Nhỏ / Vừa / Lớn / Đại) */}
+      {/* 2. CỤM CỠ CHỮ: A- / A+ kèm nhãn hiển thị mức (Nhỏ / Vừa / Lớn / Đại) */}
       <div
         role="group"
         aria-label="Điều chỉnh cỡ chữ bài đọc"
@@ -201,7 +224,7 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
       {/* Đường phân cách */}
       <span className="h-4 w-px bg-zinc-300 dark:bg-[#1E3B2E]" aria-hidden="true" />
 
-      {/* 4. NÚT CHUYỂN ĐỔI CHẾ ĐỘ TỐI / SÁNG (Phím tắt D) */}
+      {/* 3. NÚT CHUYỂN ĐỔI CHẾ ĐỘ TỐI / SÁNG (Phím tắt D) */}
       <button
         type="button"
         onClick={toggleTheme}
@@ -231,6 +254,26 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
         >
           D
         </kbd>
+      </button>
+
+      {/* Đường phân cách */}
+      <span className="h-4 w-px bg-zinc-300 dark:bg-[#1E3B2E]" aria-hidden="true" />
+
+      {/* 4. NÚT THU GỌN [✕] */}
+      <button
+        type="button"
+        onClick={() => setIsExpanded(false)}
+        aria-label="Thu gọn thanh công cụ đọc"
+        title="Thu gọn"
+        data-testid="zen-toolbar-close"
+        className={cn(
+          'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-zinc-500 transition-all duration-200',
+          'hover:bg-zinc-100 hover:text-zinc-900 active:scale-90',
+          'dark:text-zinc-400 dark:hover:bg-[#163023] dark:hover:text-[#F5F2EB]',
+          'focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none',
+        )}
+      >
+        <X className="h-4 w-4" aria-hidden="true" />
       </button>
     </aside>
   );

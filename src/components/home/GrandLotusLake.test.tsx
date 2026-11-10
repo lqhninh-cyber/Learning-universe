@@ -1,80 +1,56 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GrandLotusLake } from './GrandLotusLake';
-import { ambientSound } from '@/shared/lib/ambientSound';
 
-describe('GrandLotusLake Ambient Themes & Procedural Sound Controller', () => {
+describe('GrandLotusLake Procedural Canvas & Clean Immersive View', () => {
   beforeEach(() => {
-    ambientSound.stop();
-    vi.restoreAllMocks();
+    vi.useFakeTimers();
   });
 
-  it('kết xuất thành phần đại cảnh với nhãn trợ năng và thanh điều khiển', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('kết xuất thành công đại cảnh Hồ Sen Tri Thức với thẻ canvas và không có thanh điều khiển đè lên', () => {
     render(<GrandLotusLake />);
 
     const section = screen.getByRole('region', { name: /Đại cảnh Hồ Sen Tri Thức/i });
     expect(section).toBeInTheDocument();
 
-    const modeButton = screen.getByRole('button', { name: /Chuyển chế độ thời gian cảnh hồ sen/i });
-    expect(modeButton).toBeInTheDocument();
+    // Canvas hiển thị đầy đủ
+    const canvas = section.querySelector('canvas');
+    expect(canvas).toBeInTheDocument();
 
-    const soundButton = screen.getByRole('button', { name: /Bật âm thanh sinh thái/i });
-    expect(soundButton).toBeInTheDocument();
+    // Đã dọn dẹp sạch sẽ: không render bất kỳ nút bấm hoặc điều khiển nổi nào trên canvas
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Tự động/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Âm thanh/i)).not.toBeInTheDocument();
   });
 
-  it('cho phép chuyển đổi chu kỳ chế độ Ngày / Đêm / Tự động (auto -> day -> night -> auto)', () => {
-    render(<GrandLotusLake />);
+  it('tự động áp dụng sắc thái "Sương mai" (day) khi hệ thống ở khung giờ 06:00 - 17:59', () => {
+    // Đặt giờ giả lập là 10:00 sáng
+    vi.setSystemTime(new Date(2026, 10, 10, 10, 0, 0));
 
-    const modeButton = screen.getByRole('button', { name: /Chuyển chế độ thời gian cảnh hồ sen/i });
-
-    // Ban đầu là Tự động
-    expect(modeButton.textContent).toMatch(/Tự động/i);
-
-    // Bấm 1 lần: chuyển sang Sương mai (day)
-    fireEvent.click(modeButton);
-    expect(modeButton.textContent).toMatch(/Sương mai/i);
-
-    // Bấm 2 lần: chuyển sang Nguyệt dạ (night)
-    fireEvent.click(modeButton);
-    expect(modeButton.textContent).toMatch(/Nguyệt dạ/i);
-
-    // Bấm 3 lần: quay lại Tự động (auto)
-    fireEvent.click(modeButton);
-    expect(modeButton.textContent).toMatch(/Tự động/i);
+    const { container } = render(<GrandLotusLake />);
+    const section = container.querySelector('section');
+    expect(section).toHaveClass('bg-[#5B9577]');
   });
 
-  it('bật và tắt âm thanh sinh thái môi trường bằng Web Audio API khi người dùng nhấp nút', () => {
-    const startSpy = vi.spyOn(ambientSound, 'start');
-    const stopSpy = vi.spyOn(ambientSound, 'stop');
+  it('tự động áp dụng sắc thái "Nguyệt dạ" (night) khi hệ thống ở khung giờ tối (>= 18:00)', () => {
+    // Đặt giờ giả lập là 20:30 tối
+    vi.setSystemTime(new Date(2026, 10, 10, 20, 30, 0));
 
-    render(<GrandLotusLake />);
-
-    const soundButton = screen.getByRole('button', { name: /Bật âm thanh sinh thái/i });
-    expect(soundButton.textContent).toMatch(/Âm thanh/i);
-
-    // Nhấp bật âm thanh
-    fireEvent.click(soundButton);
-    expect(startSpy).toHaveBeenCalledTimes(1);
-    expect(soundButton.textContent).toMatch(/Róc rách & Dế đêm/i);
-    expect(screen.getByRole('button', { name: /Tắt âm thanh sinh thái/i })).toBeInTheDocument();
-
-    // Nhấp tắt âm thanh
-    fireEvent.click(soundButton);
-    expect(stopSpy).toHaveBeenCalled();
-    expect(soundButton.textContent).toMatch(/Âm thanh/i);
+    const { container } = render(<GrandLotusLake />);
+    const section = container.querySelector('section');
+    expect(section).toHaveClass('bg-[#040D08]');
   });
 
-  it('dọn dẹp và dừng âm thanh khi component unmount', () => {
-    const stopSpy = vi.spyOn(ambientSound, 'stop');
+  it('tự động áp dụng sắc thái "Nguyệt dạ" (night) khi hệ thống ở khung giờ đêm khuya (< 06:00)', () => {
+    // Đặt giờ giả lập là 02:15 sáng
+    vi.setSystemTime(new Date(2026, 10, 10, 2, 15, 0));
 
-    const { unmount } = render(<GrandLotusLake />);
-    const soundButton = screen.getByRole('button', { name: /Bật âm thanh sinh thái/i });
-
-    fireEvent.click(soundButton);
-    expect(ambientSound.getStatus()).toBe(true);
-
-    unmount();
-    expect(stopSpy).toHaveBeenCalled();
-    expect(ambientSound.getStatus()).toBe(false);
+    const { container } = render(<GrandLotusLake />);
+    const section = container.querySelector('section');
+    expect(section).toHaveClass('bg-[#040D08]');
   });
 });

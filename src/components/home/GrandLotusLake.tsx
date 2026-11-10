@@ -1,11 +1,20 @@
 import { type FC, useEffect, useRef, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
-import { ambientSound } from '@/shared/lib/ambientSound';
 import { createLotusCanvasEngine, type LotusCanvasEngine } from './lotusCanvasEngine';
 
 export interface GrandLotusLakeProps {
   readonly className?: string;
   readonly pageScrollProgress?: number;
+}
+
+/**
+ * Xác định sắc thái hồ sen tự động theo giờ thực tế của hệ thống:
+ * - 06:00 đến 17:59 -> "Sương mai" (day)
+ * - 18:00 đến 05:59 -> "Nguyệt dạ" (night)
+ */
+function getSystemLakeTheme(): 'day' | 'night' {
+  const hour = new Date().getHours();
+  return hour >= 6 && hour < 18 ? 'day' : 'night';
 }
 
 /**
@@ -24,68 +33,33 @@ export interface GrandLotusLakeProps {
  *    cùng 26 hạt phấn hoa bay lơ lửng.
  * 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang mượt mà.
  *
- * Tính năng mở rộng:
- * - Ambient Themes: Tự động phát hiện ngày/đêm theo thời gian thực (06:00 - 17:59 Sương Mai, 18:00 - 05:59 Nguyệt Dạ) hoặc tùy chọn.
- * - Procedural Ambient Sound: Âm thanh suối nước róc rách & tiếng dế đêm bằng Web Audio API (zero external mp3 assets).
+ * Cơ chế hoạt động:
+ * - Thuần hiển thị nghệ thuật Canvas 2D không có bất kỳ nút bấm hay thanh điều khiển đè lên.
+ * - Luôn luôn tự động chuyển đổi sắc thái ngầm giữa "Sương mai" và "Nguyệt dạ" theo giờ hệ thống.
  */
 export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<LotusCanvasEngine | null>(null);
 
-  const [ambientMode, setAmbientMode] = useState<'auto' | 'day' | 'night'>('auto');
-  const [isSoundActive, setIsSoundActive] = useState<boolean>(false);
+  const [lakeTheme, setLakeTheme] = useState<'day' | 'night'>(getSystemLakeTheme);
+  const lakeThemeRef = useRef<'day' | 'night'>(lakeTheme);
 
-  // Xác định ngày/đêm theo đồng hồ thực tế: 06:00 - 17:59 là Ngày (Sương mai), còn lại là Đêm (Nguyệt dạ)
-  const getSystemTheme = (): 'day' | 'night' => {
-    const hour = new Date().getHours();
-    return hour >= 6 && hour < 18 ? 'day' : 'night';
-  };
-
-  const effectiveTheme: 'day' | 'night' = ambientMode === 'auto' ? getSystemTheme() : ambientMode;
-  const effectiveThemeRef = useRef<'day' | 'night'>(effectiveTheme);
-
-  // Đồng bộ theme vào engine và sound generator
+  // Đồng bộ sắc thái vào ref phục vụ render loop Canvas
   useEffect(() => {
-    effectiveThemeRef.current = effectiveTheme;
-    if (isSoundActive) {
-      ambientSound.updateTheme(effectiveTheme);
-    }
-  }, [effectiveTheme, isSoundActive]);
+    lakeThemeRef.current = lakeTheme;
+  }, [lakeTheme]);
 
-  // Tự động ngắt âm thanh khi ẩn tab hoặc rời trang
+  // Luôn chạy tự động ngầm theo giờ thực tế của hệ thống (kiểm tra mỗi 60 giây)
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        ambientSound.stop();
-        setIsSoundActive(false);
-      }
+    const checkTheme = () => {
+      const current = getSystemLakeTheme();
+      setLakeTheme((prev) => (prev !== current ? current : prev));
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      ambientSound.stop();
-    };
+    const timer = window.setInterval(checkTheme, 60000);
+    return () => window.clearInterval(timer);
   }, []);
-
-  const toggleSound = () => {
-    if (isSoundActive) {
-      ambientSound.stop();
-      setIsSoundActive(false);
-    } else {
-      ambientSound.start(effectiveTheme);
-      setIsSoundActive(true);
-    }
-  };
-
-  const cycleAmbientMode = () => {
-    setAmbientMode((prev) => {
-      if (prev === 'auto') return 'day';
-      if (prev === 'day') return 'night';
-      return 'auto';
-    });
-  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -136,7 +110,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       const ctx = canvas.getContext('2d');
       if (!ctx || width <= 0 || height <= 0) return;
       ctx.clearRect(0, 0, width, height);
-      engine.render(ctx, width, height, t, effectiveThemeRef.current);
+      engine.render(ctx, width, height, t, lakeThemeRef.current);
     };
 
     handleResize();
@@ -195,7 +169,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
     };
   }, []);
 
-  // Khi effectiveTheme thay đổi và prefers-reduced-motion đang bật, vẽ lại frame tĩnh
+  // Khi lakeTheme thay đổi và prefers-reduced-motion đang bật, vẽ lại frame tĩnh
   useEffect(() => {
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
@@ -208,10 +182,10 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       const rect = canvas.getBoundingClientRect();
       if (ctx && rect.width > 0 && rect.height > 0) {
         ctx.clearRect(0, 0, rect.width, rect.height);
-        engineRef.current.render(ctx, rect.width, rect.height, 2.0, effectiveThemeRef.current);
+        engineRef.current.render(ctx, rect.width, rect.height, 2.0, lakeThemeRef.current);
       }
     }
-  }, [effectiveTheme]);
+  }, [lakeTheme]);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -241,69 +215,10 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       aria-label="Đại cảnh Hồ Sen Tri Thức"
       className={cn(
         'relative h-[520px] w-full overflow-hidden transition-colors duration-700 select-none md:h-[620px]',
-        effectiveTheme === 'day' ? 'bg-[#5B9577]' : 'bg-[#040D08]',
+        lakeTheme === 'day' ? 'bg-[#5B9577]' : 'bg-[#040D08]',
         className,
       )}
     >
-      {/* Thanh điều khiển sinh thái nổi (Floating Ambient Controller) */}
-      <div className="absolute top-5 right-6 z-20 flex items-center gap-3 rounded-full border border-white/15 bg-black/35 px-3.5 py-1.5 text-xs text-[#E2ECE6] shadow-lg backdrop-blur-md">
-        {/* Nút chuyển chế độ Ngày/Đêm/Tự động */}
-        <button
-          type="button"
-          onClick={cycleAmbientMode}
-          aria-label="Chuyển chế độ thời gian cảnh hồ sen"
-          className="flex items-center gap-1.5 transition-colors hover:text-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A262]"
-        >
-          {ambientMode === 'auto' && (
-            <>
-              <span aria-hidden="true">⏱️</span>
-              <span>Tự động ({effectiveTheme === 'day' ? 'Sương mai' : 'Nguyệt dạ'})</span>
-            </>
-          )}
-          {ambientMode === 'day' && (
-            <>
-              <span aria-hidden="true">☀️</span>
-              <span>Sương mai</span>
-            </>
-          )}
-          {ambientMode === 'night' && (
-            <>
-              <span aria-hidden="true">🌙</span>
-              <span>Nguyệt dạ</span>
-            </>
-          )}
-        </button>
-
-        <span className="h-3 w-px bg-white/20" aria-hidden="true" />
-
-        {/* Nút bật/tắt âm thanh sinh thái */}
-        <button
-          type="button"
-          onClick={toggleSound}
-          aria-label={isSoundActive ? 'Tắt âm thanh sinh thái' : 'Bật âm thanh sinh thái'}
-          className={cn(
-            'flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#C5A262]',
-            isSoundActive ? 'font-medium text-[#C5A262]' : 'text-zinc-300 hover:text-white',
-          )}
-        >
-          {isSoundActive ? (
-            <>
-              <span className="flex h-3 items-end gap-0.5" aria-hidden="true">
-                <span className="inline-block h-2 w-0.5 animate-pulse bg-[#C5A262]" />
-                <span className="inline-block h-3 w-0.5 animate-pulse bg-[#C5A262] delay-75" />
-                <span className="inline-block h-1.5 w-0.5 animate-pulse bg-[#C5A262] delay-150" />
-              </span>
-              <span>Róc rách & Dế đêm</span>
-            </>
-          ) : (
-            <>
-              <span aria-hidden="true">🔇</span>
-              <span>Âm thanh</span>
-            </>
-          )}
-        </button>
-      </div>
-
       <canvas
         ref={canvasRef}
         className="block h-full w-full cursor-pointer touch-pan-y"
@@ -316,7 +231,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       <div
         className={cn(
           'pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b transition-colors duration-700 md:h-40',
-          effectiveTheme === 'day'
+          lakeTheme === 'day'
             ? 'from-[#F5F4EF] via-[#F5F4EF]/60 to-transparent'
             : 'from-[#040D08]/90 via-[#040D08]/50 to-transparent',
         )}
@@ -327,9 +242,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       <div
         className={cn(
           'pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t transition-colors duration-700',
-          effectiveTheme === 'day'
-            ? 'from-[#1D4A37] to-transparent'
-            : 'from-[#040D08] to-transparent',
+          lakeTheme === 'day' ? 'from-[#1D4A37] to-transparent' : 'from-[#040D08] to-transparent',
         )}
         aria-hidden="true"
       />
