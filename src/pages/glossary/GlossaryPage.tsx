@@ -67,7 +67,7 @@ export function GlossaryPage() {
   }, [subjectFilter, query]);
 
   return (
-    <FadeIn className="space-y-8 bg-[#EAF0F1] pb-16 text-[#29383D]">
+    <FadeIn className="space-y-8 bg-[var(--bg-page)] pb-16 text-[var(--text-main)]">
       <Container className="space-y-6">
         <Breadcrumb
           items={[

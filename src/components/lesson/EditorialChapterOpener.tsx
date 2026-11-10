@@ -1,4 +1,4 @@
-import { BookOpen, Clock, Target } from 'lucide-react';
+import { BookOpen, Target } from 'lucide-react';
 import type { FC, ReactNode } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { toRomanNumeral } from './toRomanNumeral';
@@ -12,10 +12,10 @@ export interface ChapterCloItem {
 }
 
 export interface EditorialChapterOpenerProps {
-  /** Mã học phần (ví dụ: EDUC2802, MATH1403, MATH2204) */
-  readonly subjectCode: string;
-  /** Tên học phần (ví dụ: Khoa học Giáo dục, Giải tích hàm một biến, Hình học Afin và Euclide) */
-  readonly subjectName: string;
+  /** Mã học phần (tùy chọn) */
+  readonly subjectCode?: string;
+  /** Tên học phần (tùy chọn) */
+  readonly subjectName?: string;
   /** Số thứ tự chương */
   readonly chapterNumber: number;
   /** Ký tự số La Mã chìm (tự động tính nếu không cung cấp) */
@@ -24,7 +24,7 @@ export interface EditorialChapterOpenerProps {
   readonly title: string;
   /** Tiêu đề phụ / mô tả học thuật trang trọng (in nghiêng) */
   readonly subtitle?: string;
-  /** Thời lượng nghiên cứu ước tính (phút) */
+  /** Thời lượng nghiên cứu ước tính (phút - tùy chọn) */
   readonly estimatedReadingMinutes?: number;
   /** Mức độ phức tạp học thuật */
   readonly difficultyLevel?: ChapterDifficultyLevel;
@@ -79,13 +79,10 @@ const DIFFICULTY_CONFIG: Record<
  * - Tương thích hoàn hảo với Zen Focus Mode và WCAG AA Contrast.
  */
 export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
-  subjectCode,
-  subjectName,
   chapterNumber,
   romanNumeral,
   title,
   subtitle,
-  estimatedReadingMinutes = 15,
   difficultyLevel = 'Trung cấp',
   clos = [],
   curriculumSource,
@@ -95,6 +92,8 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
 }) => {
   const roman = romanNumeral || toRomanNumeral(chapterNumber);
   const diffConfig = DIFFICULTY_CONFIG[difficultyLevel] ?? DIFFICULTY_CONFIG['Trung cấp'];
+  const rawChapter = chapterNumber === 0 ? 'Chương 0' : `Chương ${roman}`;
+  const chapterName = rawChapter.replace(/\s*\(\d+\)$/, '');
 
   return (
     <header
@@ -115,42 +114,29 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
 
       {/* Nội dung lớp nổi (Foreground Content z-10) */}
       <div className="relative z-10 space-y-5">
-        {/* Hàng huy hiệu trên cùng: Mã môn, Chương, Thời lượng và Độ phức tạp */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* Cụm môn học và chương */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-700/20 bg-emerald-700/10 px-3 py-1 font-mono text-xs font-semibold tracking-wider text-emerald-800 uppercase dark:border-[#739B88]/30 dark:bg-[#739B88]/15 dark:text-[#A1D1B7]">
-              {subjectCode} · {subjectName}
-            </span>
+        {/* Hàng huy hiệu tinh gọn: Chỉ gồm Badge Chương và Badge Mức độ */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Badge Chương đã chuẩn hóa */}
+          <span className="inline-flex items-center rounded-full border border-stone-300/80 bg-white/70 px-3 py-1 font-mono text-xs font-semibold text-zinc-700 shadow-2xs dark:border-[#1E3B2D] dark:bg-[#16271E] dark:text-[#E2ECE6]">
+            {chapterName}
+          </span>
 
-            <span className="inline-flex items-center gap-1 rounded-full border border-stone-300/80 bg-white/70 px-3 py-1 font-mono text-xs font-semibold text-zinc-700 dark:border-[#1E3B2D] dark:bg-[#16271E] dark:text-[#E2ECE6]">
-              {chapterNumber > 0 ? `Chương ${roman} (${chapterNumber})` : `Chương ${roman}`}
-            </span>
-          </div>
-
-          {/* Cụm chỉ dấu thời lượng & độ phức tạp */}
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            {estimatedReadingMinutes > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/90 bg-white/80 px-3 py-1 text-xs font-medium text-zinc-700 shadow-2xs backdrop-blur-xs dark:border-[#1E3B2D] dark:bg-[#16271E] dark:text-[#CBD5E1]">
-                <Clock className="h-3.5 w-3.5 text-[var(--gold-text)]" aria-hidden="true" />
-                <span>⏱ {estimatedReadingMinutes} phút nghiên cứu</span>
-              </span>
-            )}
-
+          {/* Badge Mức độ */}
+          {difficultyLevel && (
             <span
               className={cn(
-                'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-2xs backdrop-blur-xs',
+                'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium shadow-2xs backdrop-blur-xs',
                 diffConfig.pill,
                 diffConfig.text,
               )}
             >
               <span
-                className={cn('h-2 w-2 animate-pulse rounded-full', diffConfig.dot)}
+                className={cn('h-1.5 w-1.5 animate-pulse rounded-full', diffConfig.dot)}
                 aria-hidden="true"
               />
               <span>{difficultyLevel}</span>
             </span>
-          </div>
+          )}
         </div>
 
         {/* Tiêu đề & Tiêu đề phụ */}

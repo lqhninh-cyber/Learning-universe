@@ -47,8 +47,13 @@ describe('EditorialChapterOpener Component', () => {
     // Ký tự số La Mã chìm khổng lồ
     expect(screen.getByText('VI')).toBeInTheDocument();
 
-    // Huy hiệu mã môn và tên môn
-    expect(screen.getByText(/EDUC2802 · Khoa học Giáo dục/i)).toBeInTheDocument();
+    // Badge Chương đã chuẩn hóa và Badge Mức độ
+    expect(screen.getByText('Chương VI')).toBeInTheDocument();
+    expect(screen.getByText('Nghiệp vụ thực hành')).toBeInTheDocument();
+
+    // Đã loại bỏ hoàn toàn badge môn và badge thời gian
+    expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/phút nghiên cứu/i)).not.toBeInTheDocument();
 
     // Tiêu đề h1 và phụ đề
     expect(
@@ -63,10 +68,6 @@ describe('EditorialChapterOpener Component', () => {
     expect(screen.getByText('CLO 6.1')).toBeInTheDocument();
     expect(screen.getByText('CLO 6.2')).toBeInTheDocument();
     expect(screen.getByText(/Phân tích bản chất tâm lý học sinh THCS\/THPT/i)).toBeInTheDocument();
-
-    // Chỉ dấu thời lượng và độ phức tạp
-    expect(screen.getByText(/45 phút nghiên cứu/i)).toBeInTheDocument();
-    expect(screen.getByText('Nghiệp vụ thực hành')).toBeInTheDocument();
 
     // Nguồn giáo trình đối chiếu
     expect(screen.getByText(/Giáo trình Giáo dục học HCMUE/i)).toBeInTheDocument();
@@ -93,7 +94,11 @@ describe('EditorialChapterOpener Component', () => {
     );
 
     expect(screen.getByText('I')).toBeInTheDocument();
-    expect(screen.getByText(/MATH1403 · Giải tích hàm một biến/i)).toBeInTheDocument();
+    expect(screen.getByText('Chương I')).toBeInTheDocument();
+    expect(screen.getByText('Nền tảng')).toBeInTheDocument();
+    expect(screen.queryByText(/MATH1403/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/phút nghiên cứu/i)).not.toBeInTheDocument();
+
     expect(
       screen.getByRole('heading', {
         level: 1,
@@ -125,7 +130,11 @@ describe('EditorialChapterOpener Component', () => {
     );
 
     expect(screen.getByText('I')).toBeInTheDocument();
-    expect(screen.getByText(/MATH2204 · Hình học Afin và Euclide/i)).toBeInTheDocument();
+    expect(screen.getByText('Chương I')).toBeInTheDocument();
+    expect(screen.getByText('Chuyên sâu')).toBeInTheDocument();
+    expect(screen.queryByText(/MATH2204/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/phút nghiên cứu/i)).not.toBeInTheDocument();
+
     expect(
       screen.getByRole('heading', {
         level: 1,

@@ -334,7 +334,9 @@ function LessonPageContent() {
           'mx-auto w-full pb-16 transition-all duration-300',
           readingTheme === 'dark'
             ? 'dark bg-[#121517] text-[#E2E8F0]'
-            : 'bg-[#EAF0F1] text-[#29383D]',
+            : readingTheme === 'sepia'
+              ? 'bg-[#F4EEDF] text-[#231F18]'
+              : 'bg-[var(--bg-page)] text-[var(--text-main)]',
           isFocusMode
             ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
             : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
@@ -485,7 +487,9 @@ function LessonPageContent() {
                   : 'w-[280px] translate-x-0 opacity-100',
                 readingTheme === 'dark'
                   ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
-                  : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
+                  : readingTheme === 'sepia'
+                    ? 'border-r border-[#DECDB0] bg-[#FBF8EF] text-[#231F18]'
+                    : 'border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)]',
               )}
               aria-label="Danh mục điều hướng bài học"
             >
@@ -570,13 +574,14 @@ function LessonPageContent() {
               data-reading-article
               data-reading-theme={readingTheme}
               data-reading-size={fontSize}
-              data-space={subject.slug === 'giao-duc-hoc' ? 'education' : 'math'}
               className={cn(
                 'lesson-content transition-all duration-300',
                 typographyClasses,
-                readingTheme === 'dark'
-                  ? 'dark rounded-2xl border border-[#2A323A] bg-[#181C20] text-[#E2E8F0] shadow-none'
-                  : 'rounded-3xl border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] shadow-sm',
+                'rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)] shadow-[var(--shadow-editorial)]',
+                readingTheme === 'dark' &&
+                  'dark border-[#2A323A] bg-[#181C20] text-[#E2E8F0] shadow-none',
+                readingTheme === 'sepia' &&
+                  'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18] shadow-sm',
                 fontSize === 'lg' && 'reader-scale-lg',
                 isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
               )}

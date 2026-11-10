@@ -167,24 +167,6 @@
   color: inherit;
 }
 
-/* ============================================================================
-   PHÂN HÓA SẮC THÁI TRỤ CỘT QUA data-space
-   ============================================================================ */
-
-/* data-space="math": Lưới milimet ngọc bích */
-[data-space='math'],
-.space-math {
-  background-image: radial-gradient(#739b88 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-/* data-space="education": Họa tiết giấy vở chấm thếp ấm áp */
-[data-space='education'],
-.space-education {
-  background-image: radial-gradient(#c5a262 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
 /* Siêu liên kết (Link / <a>) theo chuẩn WCAG tương phản cao */
 .lu-prose a,
 .lesson-content a,
