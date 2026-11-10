@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
+import { WaterTouchIntro } from '@/components/intro';
 import { Footer } from '@/components/layout/Footer';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { AuthModal, AuthProvider, PendingNoticeDialog } from '@/features/auth';
@@ -89,7 +90,10 @@ function RootLayoutContent() {
       <PendingNoticeDialog />
       <LoginPromptDialog />
 
-      {/* 4. MINIMALIST SCHOLARLY FOOTER */}
+      {/* 4. CHẠM MẶT NƯỚC (TOUCH THE WATER) INTRO OVERLAY */}
+      <WaterTouchIntro />
+
+      {/* 5. MINIMALIST SCHOLARLY FOOTER */}
       <Footer isDarkLesson={isDarkLesson} />
     </div>
   );
