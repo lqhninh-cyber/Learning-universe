@@ -1,4 +1,5 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react';
+import type { ReadingTheme } from '@/context/ReadingSettingsContext';
 import { useReadingSettings } from '@/context/ReadingSettingsContext';
 import { SidenoteProvider } from '@/shared/components/Sidenote';
 import { cn } from '@/shared/lib/cn';
@@ -16,8 +17,10 @@ export interface LessonViewProps {
   readonly marginalia?: ReactNode;
   /** Nội dung thanh điều hướng chương bài bên trái (nếu mở). */
   readonly sidebar?: ReactNode;
-  /** Chế độ đọc chuyên sâu ('light' | 'dark'). Mặc định đọc từ localStorage hoặc light. */
-  readonly readingTheme?: 'light' | 'dark';
+  /** Chế độ đọc chuyên sâu ('light' | 'dark' | 'sepia'). Mặc định đọc từ localStorage hoặc light. */
+  readonly readingTheme?: ReadingTheme;
+  /** Không gian học thuật ('math' | 'education') phân hóa họa tiết nền. */
+  readonly space?: 'math' | 'education';
   /** Callback chuyển đổi chế độ đọc (tùy chọn). */
   readonly onToggleReadingTheme?: () => void;
   readonly className?: string;
@@ -38,13 +41,14 @@ export const LessonView: FC<LessonViewProps> = ({
   marginalia,
   sidebar,
   readingTheme: propTheme,
+  space,
   className,
 }) => {
-  const [internalTheme, setInternalTheme] = useState<'light' | 'dark'>(() => {
+  const [internalTheme, setInternalTheme] = useState<ReadingTheme>(() => {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') return saved;
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
       } catch {
         // Bỏ qua lỗi storage
       }
@@ -57,12 +61,12 @@ export const LessonView: FC<LessonViewProps> = ({
       return;
     }
     const handleThemeChange = (e: Event) => {
-      const custom = e as CustomEvent<'light' | 'dark'>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
+      const custom = e as CustomEvent<ReadingTheme>;
+      if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
         setInternalTheme(custom.detail);
       } else {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') {
           setInternalTheme(saved);
         }
       }
@@ -108,6 +112,7 @@ export const LessonView: FC<LessonViewProps> = ({
         {/* Khung bài học chính: Sáng: bg-[#F7FAFA] border-[#CFDADB] | Tối: bg-[#181C20] border-[#2A323A] */}
         <div
           data-testid="scholar-main-column"
+          data-space={space}
           className={cn(
             'min-w-0 rounded-3xl p-8 shadow-sm transition-all duration-300 md:p-12',
             isZen

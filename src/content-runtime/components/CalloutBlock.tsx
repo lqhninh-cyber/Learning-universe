@@ -38,9 +38,9 @@ const CALLOUT_STYLES: Record<
   Warning: {
     defaultTitle: 'Lưu ý quan trọng',
     containerClass:
-      'border-amber-200/90 bg-amber-50/50 dark:border-[#284C3A] dark:bg-[#13261D] dark:text-[#E8F2EC] dark:border-l-4 dark:border-l-[#C5A262]',
-    iconClass: 'text-amber-600 dark:text-[#C5A262]',
-    titleClass: 'text-amber-950 dark:text-[#C5A262]',
+      'border-l-4 border-[var(--cinnabar-text)] bg-[var(--cinnabar-bg)] text-[var(--cinnabar-text)] border-y-transparent border-r-transparent',
+    iconClass: 'text-[var(--cinnabar-text)]',
+    titleClass: 'text-[var(--cinnabar-text)] font-bold',
     Icon: AlertTriangle,
   },
 };

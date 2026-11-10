@@ -5,7 +5,8 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import 'katex/dist/katex.min.css';
 @import 'tailwindcss';
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, [data-reading-theme="dark"], [data-reading-theme="dark"] *, .scoped-dark-mode, .scoped-dark-mode *));
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *, [data-reading-theme="dark"], [data-reading-theme="dark"] *, .scoped-dark-mode, .scoped-dark-mode *));
+@custom-variant sepia (&:where([data-theme="sepia"], [data-theme="sepia"] *, [data-reading-theme="sepia"], [data-reading-theme="sepia"] *));
 @import './tokens.css';
 @import './subject-themes.css';
 @import './prose.css';
@@ -46,18 +47,48 @@
 }
 
 :root {
-  /* Hệ hòa sắc "Mist Blue & Sage" */
+  /* ==========================================================================
+     SEMANTIC DESIGN TOKENS — CHUẨN WCAG & SƠN MÀI DI SẢN (Ý TƯỞNG MÀU)
+     ========================================================================== */
+  /* Nền & Thẻ */
+  --bg-page: #f6f8f5;
+  --bg-surface: #ffffff;
+  --bg-sunken: #eef2ee; /* Bậc lõm cho ô ví dụ, input */
+  --border-subtle: #dfe6e1;
+  --border-control: #739b88; /* Đạt chuẩn tương phản 3:1 cho input/border */
+
+  /* Typography */
+  --text-main: #141c18;
+  --text-muted: #4a5851;
+
+  /* Ba bậc Vàng Thếp */
+  --gold-badge: #e5c378;
+  --gold-line: #c5a262;
+  --gold-text: #8a6a2f; /* Đạt chuẩn WCAG 5:1 trên nền sáng */
+
+  /* Xanh Chàm (Dành riêng cho liên kết & Đồ thị) */
+  --indigo-link: #2e4a6b;
+
+  /* Đỏ Son (Thu hẹp cho Bẫy sư phạm & Dấu triện) */
+  --cinnabar-text: #9e3d3d;
+  --cinnabar-bg: rgba(158, 61, 61, 0.08);
+
+  /* Bóng rêu 2 lớp */
+  --shadow-editorial: 0 1px 2px rgba(18, 36, 28, 0.06), 0 8px 24px rgba(18, 36, 28, 0.06);
+
+  /* Bôi đen văn bản */
+  --selection-bg: #d6e4dc;
+
+  /* Hệ hòa sắc tương thích ngược */
   --bg-canvas: #eaf0f1;
-  --bg-surface: #f7fafa;
   --bg-muted: #cfdadb;
   --border-hairline: #cfdadb;
   --text-primary: #29383d;
   --text-secondary: #55676b;
-  --text-muted: #55676b;
   --accent-primary: #3f6570;
   --accent-verandah: #5e786d;
   --accent-wood: #92714f;
-  --accent-interactive: #3f6570;
+  --accent-interactive: #2e4a6b;
 
   /* Typography tokens */
   --font-serif: 'Crimson Pro', Georgia, Cambria, 'Times New Roman', serif;
@@ -69,6 +100,118 @@
     'Liberation Mono', 'Courier New', monospace;
 }
 
+/* CHẾ ĐỘ TỐI (ĐEN RÊU SƠN MÀI) */
+.dark,
+[data-theme='dark'],
+[data-reading-theme='dark'] {
+  --bg-page: #0e1a15;
+  --bg-surface: #12241c;
+  --bg-sunken: #091510;
+  --border-subtle: #2a4035;
+  --border-control: #3d6151;
+
+  --text-main: #e6ece7;
+  --text-muted: #a7b5ac;
+
+  --gold-badge: #e5c378;
+  --gold-line: #c5a262;
+  --gold-text: #e5c378; /* ~9.6:1 trên nền tối */
+
+  --indigo-link: #9db8de; /* Chàm sáng ~8:1 trên nền tối */
+
+  --cinnabar-text: #e08a8a; /* Đỏ nhạt ~6.3:1 trên nền tối */
+  --cinnabar-bg: rgba(224, 138, 138, 0.12);
+
+  --shadow-editorial: 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
+  --selection-bg: #1b3d2f;
+
+  --bg-canvas: #0e1a15;
+  --border-hairline: #2a4035;
+  --text-primary: #e6ece7;
+  --text-secondary: #a7b5ac;
+  --accent-interactive: #9db8de;
+}
+
+/* CHẾ ĐỘ GIẤY DÓ ẤM (SEPIA/WARM PAPER) */
+[data-theme='sepia'],
+[data-reading-theme='sepia'] {
+  --bg-page: #f4eedf;
+  --bg-surface: #fbf8ef;
+  --bg-sunken: #ede5d1;
+  --border-subtle: #decdb0;
+  --border-control: #a18d68;
+
+  --text-main: #231f18;
+  --text-muted: #5a5242;
+
+  --gold-badge: #e5c378;
+  --gold-line: #c5a262;
+  --gold-text: #73531a;
+  --indigo-link: #244163;
+  --cinnabar-text: #8c2c2c;
+  --cinnabar-bg: rgba(140, 44, 44, 0.08);
+
+  --shadow-editorial: 0 1px 2px rgba(35, 31, 24, 0.06), 0 8px 24px rgba(35, 31, 24, 0.06);
+  --selection-bg: #e8dbc3;
+
+  --bg-canvas: #f4eedf;
+  --border-hairline: #decdb0;
+  --text-primary: #231f18;
+  --text-secondary: #5a5242;
+  --accent-interactive: #244163;
+}
+
+/* Tinh chỉnh bôi đen văn bản */
+::selection {
+  background-color: var(--selection-bg);
+  color: inherit;
+}
+
+/* ============================================================================
+   PHÂN HÓA SẮC THÁI TRỤ CỘT QUA data-space
+   ============================================================================ */
+
+/* data-space="math": Lưới milimet ngọc bích */
+[data-space='math'],
+.space-math {
+  background-image: radial-gradient(#739b88 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* data-space="education": Họa tiết giấy vở chấm thếp ấm áp */
+[data-space='education'],
+.space-education {
+  background-image: radial-gradient(#c5a262 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Siêu liên kết (Link / <a>) theo chuẩn WCAG tương phản cao */
+.lu-prose a,
+.lesson-content a,
+.editorial-link {
+  color: var(--indigo-link);
+  font-weight: 500;
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: opacity 0.15s ease;
+}
+
+.lu-prose a:hover,
+.lesson-content a:hover,
+.editorial-link:hover {
+  opacity: 0.8;
+}
+
+/* Hộp bẫy sư phạm (Pedagogical Traps) */
+.pedagogical-trap,
+.callout-trap {
+  border-left-width: 4px !important;
+  border-left-color: var(--cinnabar-text) !important;
+  background-color: var(--cinnabar-bg) !important;
+  color: var(--cinnabar-text) !important;
+}
+
 @theme {
   --font-sans:
     'Cabin', 'Be Vietnam Pro', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -77,6 +220,27 @@
   --font-mono:
     'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
+
+  /* Semantic Theme Tokens */
+  --color-bg-page: var(--bg-page);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-sunken: var(--bg-sunken);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-control: var(--border-control);
+
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+
+  --color-gold-badge: var(--gold-badge);
+  --color-gold-line: var(--gold-line);
+  --color-gold-text: var(--gold-text);
+
+  --color-indigo-link: var(--indigo-link);
+
+  --color-cinnabar-text: var(--cinnabar-text);
+  --color-cinnabar-bg: var(--cinnabar-bg);
+
+  --shadow-editorial: var(--shadow-editorial);
 
   --color-surface-canvas: var(--bg-canvas);
   --color-surface-card: var(--bg-canvas);
@@ -126,8 +290,8 @@
   body,
   #root {
     font-family: var(--font-sans);
-    background-color: #eaf0f1;
-    color: #29383d;
+    background-color: var(--bg-page);
+    color: var(--text-main);
   }
 
   /* Donny Trương Orthography: chống đè dấu thanh điệu và dấu phụ chữ Quốc ngữ khi viết hoa */

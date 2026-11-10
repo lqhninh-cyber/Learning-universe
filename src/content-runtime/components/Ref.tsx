@@ -20,7 +20,7 @@ export function Ref({ to, label, anchorId, children }: RefProps) {
   return (
     <a
       href={`#${resolvedAnchor}`}
-      className="text-subject-700 decoration-subject-300 hover:text-subject-900 hover:decoration-subject-600 font-medium underline underline-offset-4 transition-colors"
+      className="font-medium text-[var(--indigo-link)] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-80"
     >
       {children ?? resolvedLabel}
     </a>

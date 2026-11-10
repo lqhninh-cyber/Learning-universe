@@ -132,7 +132,7 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {estimatedReadingMinutes > 0 && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/90 bg-white/80 px-3 py-1 text-xs font-medium text-zinc-700 shadow-2xs backdrop-blur-xs dark:border-[#1E3B2D] dark:bg-[#16271E] dark:text-[#CBD5E1]">
-                <Clock className="h-3.5 w-3.5 text-[#C5A262]" aria-hidden="true" />
+                <Clock className="h-3.5 w-3.5 text-[var(--gold-text)]" aria-hidden="true" />
                 <span>⏱ {estimatedReadingMinutes} phút nghiên cứu</span>
               </span>
             )}
@@ -170,7 +170,7 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
         {clos && clos.length > 0 && (
           <div className="space-y-2 pt-1">
             <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-zinc-500 uppercase dark:text-[#8EAA9B]">
-              <Target className="h-3.5 w-3.5 text-[#C5A262]" aria-hidden="true" />
+              <Target className="h-3.5 w-3.5 text-[var(--gold-text)]" aria-hidden="true" />
               <span>Chuẩn đầu ra học phần (Course Learning Outcomes — CLO):</span>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -179,7 +179,7 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
                   key={clo.code}
                   className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#C5A262]/40 bg-[#C5A262]/10 px-3.5 py-1 text-xs text-zinc-800 shadow-2xs transition-colors duration-200 hover:border-[#C5A262]/70 dark:bg-[#16271E] dark:text-[#E2D4BA]"
                 >
-                  <strong className="shrink-0 font-mono font-bold text-[#A87B28] dark:text-[#C5A262]">
+                  <strong className="shrink-0 font-mono font-bold text-[var(--gold-text)]">
                     {clo.code}
                   </strong>
                   <span className="truncate text-zinc-700 dark:text-[#C8D7CE]">
@@ -197,7 +197,7 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
         {/* Nguồn giáo trình đối chiếu (HCMUE / NXB Giáo dục) */}
         {curriculumSource && (
           <div className="flex flex-wrap items-center gap-2 border-t border-[#DCE7E1]/80 pt-3 text-xs text-zinc-600 dark:border-[#1E3B2D]/80 dark:text-[#8EAA9B]">
-            <BookOpen className="h-3.5 w-3.5 shrink-0 text-[#C5A262]" aria-hidden="true" />
+            <BookOpen className="h-3.5 w-3.5 shrink-0 text-[var(--gold-text)]" aria-hidden="true" />
             <span className="font-medium">Giáo trình đối chiếu:</span>
             <span className="font-serif text-zinc-700 italic dark:text-[#A8BEB2]">
               {curriculumSource}

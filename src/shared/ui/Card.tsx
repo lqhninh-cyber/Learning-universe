@@ -10,12 +10,12 @@ export function Card({ className, accent = 'none', interactive = false, ...props
   return (
     <div
       className={cn(
-        'rounded-2xl border border-stone-200/90 bg-white text-stone-900',
+        'rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)] shadow-[var(--shadow-editorial)]',
         accent === 'subjectTop' && 'border-t-subject-500 border-t-4',
         accent === 'subjectLeft' && 'border-l-subject-500 border-l-4',
         accent === 'subjectBorder' && 'border-subject-200/90',
         interactive &&
-          'hover:border-subject-300 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm',
+          'hover:border-subject-300 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md',
         className,
       )}
       {...props}

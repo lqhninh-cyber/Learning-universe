@@ -6,7 +6,29 @@
 [data-theme='light'],
 [data-theme='mist-blue-sage'],
 [data-theme='bach-do'] {
-  /* LIGHT MODE ("Mist Blue & Sage") */
+  /* LIGHT MODE (Semantic Tokens — Chuẩn WCAG & Sơn mài di sản) */
+  --bg-page: #f6f8f5;
+  --bg-surface: #ffffff;
+  --bg-sunken: #eef2ee;
+  --border-subtle: #dfe6e1;
+  --border-control: #739b88;
+
+  --text-main: #141c18;
+  --text-muted: #4a5851;
+
+  --gold-badge: #e5c378;
+  --gold-line: #c5a262;
+  --gold-text: #8a6a2f;
+
+  --indigo-link: #2e4a6b;
+
+  --cinnabar-text: #9e3d3d;
+  --cinnabar-bg: rgba(158, 61, 61, 0.08);
+
+  --shadow-editorial: 0 1px 2px rgba(18, 36, 28, 0.06), 0 8px 24px rgba(18, 36, 28, 0.06);
+  --selection-bg: #d6e4dc;
+
+  /* LIGHT MODE ("Mist Blue & Sage" compatibility) */
   --bg-main: #eaf0f1;
   --surface-primary: #f7fafa;
   --surface-secondary: #e1e9ea;
@@ -60,8 +82,31 @@
 
 .dark,
 [data-theme='dark'],
+[data-reading-theme='dark'],
 [data-theme='muc-nho'] {
-  /* DARK MODE ("Mực Nho") */
+  /* DARK MODE (Semantic Tokens — Đen Rêu Sơn Mài) */
+  --bg-page: #0e1a15;
+  --bg-surface: #12241c;
+  --bg-sunken: #091510;
+  --border-subtle: #2a4035;
+  --border-control: #3d6151;
+
+  --text-main: #e6ece7;
+  --text-muted: #a7b5ac;
+
+  --gold-badge: #e5c378;
+  --gold-line: #c5a262;
+  --gold-text: #e5c378;
+
+  --indigo-link: #9db8de;
+
+  --cinnabar-text: #e08a8a;
+  --cinnabar-bg: rgba(224, 138, 138, 0.12);
+
+  --shadow-editorial: 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
+  --selection-bg: #1b3d2f;
+
+  /* DARK MODE ("Mực Nho" compatibility) */
   --bg-canvas: #12151a; /* Chàm đen mực nho */
   --bg-surface: #1a2026; /* Phiến đá rêu trầm */
   --bg-muted: rgba(240, 235, 225, 0.08); /* Viền kẻ hairline sáng dịu */
@@ -83,7 +128,37 @@
   --scholar-hairline: rgba(240, 235, 225, 0.08);
 }
 
-/* Hiệu ứng chuyển đổi theme mượt mà giữa "Bạch Dó" và "Mực Nho" */
+[data-theme='sepia'],
+[data-reading-theme='sepia'] {
+  /* SEPIA MODE (Semantic Tokens — Giấy Dó Ấm) */
+  --bg-page: #f4eedf;
+  --bg-surface: #fbf8ef;
+  --bg-sunken: #ede5d1;
+  --border-subtle: #decdb0;
+  --border-control: #a18d68;
+
+  --text-main: #231f18;
+  --text-muted: #5a5242;
+
+  --gold-badge: #e5c378;
+  --gold-line: #c5a262;
+  --gold-text: #73531a;
+
+  --indigo-link: #244163;
+
+  --cinnabar-text: #8c2c2c;
+  --cinnabar-bg: rgba(140, 44, 44, 0.08);
+
+  --shadow-editorial: 0 1px 2px rgba(35, 31, 24, 0.06), 0 8px 24px rgba(35, 31, 24, 0.06);
+  --selection-bg: #e8dbc3;
+
+  --bg-canvas: #f4eedf;
+  --bg-muted: #decdb0;
+  --border-hairline: #decdb0;
+  --text-primary: #231f18;
+  --text-secondary: #5a5242;
+  --accent-interactive: #244163;
+}
 html,
 body,
 .scholar-theme-surface {

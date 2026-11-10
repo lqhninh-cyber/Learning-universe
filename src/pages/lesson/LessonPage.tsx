@@ -308,7 +308,7 @@ function LessonPageContent() {
             title="Thoát chế độ đọc tập trung (Phím Esc hoặc Z)"
             aria-label="Thoát chế độ tập trung"
           >
-            <span className="font-bold text-[#C5A262]" aria-hidden="true">
+            <span className="font-bold text-[var(--gold-text)]" aria-hidden="true">
               ✕
             </span>
             <span>Thoát tập trung</span>
@@ -529,6 +529,7 @@ function LessonPageContent() {
               data-reading-article
               data-reading-theme={readingTheme}
               data-reading-size={fontSize}
+              data-space={subject.slug === 'giao-duc-hoc' ? 'education' : 'math'}
               className={cn(
                 'lesson-content transition-all duration-300',
                 typographyClasses,

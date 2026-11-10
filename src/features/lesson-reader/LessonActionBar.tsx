@@ -1,5 +1,6 @@
 import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import type { ReadingTheme } from '@/context/ReadingSettingsContext';
 import { useLearningStore } from '@/features/learning';
 import { cn } from '@/shared/lib/cn';
 
@@ -7,7 +8,7 @@ export interface LessonActionBarProps {
   readonly lessonId: string;
   readonly isNotesOpen: boolean;
   readonly onToggleNotes: () => void;
-  readonly readingTheme?: 'light' | 'dark';
+  readonly readingTheme?: ReadingTheme;
   readonly onToggleReadingTheme?: () => void;
   readonly className?: string;
 }
@@ -28,11 +29,11 @@ export function LessonActionBar({
   const toggleGlossaryAnnotations = useLearningStore((state) => state.toggleGlossaryAnnotations);
   const requestNoteAccess = useLearningStore((state) => state.requestNoteAccess);
 
-  const [internalTheme, setInternalTheme] = useState<'light' | 'dark'>(() => {
+  const [internalTheme, setInternalTheme] = useState<ReadingTheme>(() => {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') return saved;
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
       } catch {
         // Bỏ qua lỗi storage
       }
@@ -45,12 +46,12 @@ export function LessonActionBar({
       return;
     }
     const handleThemeChange = (e: Event) => {
-      const custom = e as CustomEvent<'light' | 'dark'>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
+      const custom = e as CustomEvent<ReadingTheme>;
+      if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
         setInternalTheme(custom.detail);
       } else {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') {
           setInternalTheme(saved);
         }
       }

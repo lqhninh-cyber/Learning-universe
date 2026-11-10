@@ -105,6 +105,12 @@ export const mdxComponents: MDXComponents = {
   MicroAffine3DCanvas,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học (chuẩn hóa bảng công thức và bảng học thuật)
+  a: (props: ComponentPropsWithoutRef<'a'>) => (
+    <a
+      className="font-medium text-[var(--indigo-link)] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-80"
+      {...props}
+    />
+  ),
   table: (props: ComponentPropsWithoutRef<'table'>) => (
     <div className="my-6 overflow-hidden overflow-x-auto rounded-2xl border border-stone-200/90 bg-white/70 p-0 shadow-sm dark:border dark:border-[#1D3629] dark:bg-[#0B1712]">
       <table

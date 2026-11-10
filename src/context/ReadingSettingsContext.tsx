@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { cn } from '@/shared/lib/cn';
 
-export type ReadingTheme = 'light' | 'dark';
+export type ReadingTheme = 'light' | 'dark' | 'sepia';
 export type ReadingFontFamily = 'serif' | 'sans';
 export type ReadingFontSize = 'sm' | 'base' | 'lg' | 'xl';
 
@@ -86,7 +86,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') return saved;
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
       } catch {
         // Ignore storage error
       }
@@ -159,13 +159,18 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     });
   }, []);
 
-  // Đồng bộ class 'dark' trên <html> (document.documentElement)
+  // Đồng bộ class 'dark' và attribute 'data-theme' trên <html> (document.documentElement)
   useEffect(() => {
     if (typeof document === 'undefined') return;
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
+      document.documentElement.removeAttribute('data-theme');
+    } else if (theme === 'sepia') {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'sepia');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.removeAttribute('data-theme');
     }
   }, [theme]);
 
@@ -174,7 +179,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     if (typeof window === 'undefined') return;
     const handler = (e: Event) => {
       const custom = e as CustomEvent<ReadingTheme>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
+      if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
         setThemeState(custom.detail);
       }
     };

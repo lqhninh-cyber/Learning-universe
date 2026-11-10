@@ -51,7 +51,7 @@ export const Logo: FC<LogoProps> = ({
           <span
             className={cn(
               cfg.sub,
-              'mt-1 font-sans font-semibold tracking-[0.22em] text-[#C5A262] uppercase',
+              'mt-1 font-sans font-semibold tracking-[0.22em] text-[var(--gold-text)] uppercase',
             )}
           >
             Universe

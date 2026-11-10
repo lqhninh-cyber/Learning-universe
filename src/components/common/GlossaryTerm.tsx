@@ -209,7 +209,7 @@ export const GlossaryTerm: FC<GlossaryTermProps> = ({ termId, children, classNam
             </h4>
 
             {entry.notation && (
-              <span className="font-mono text-xs font-semibold text-[#C5A262] dark:text-[#E5C378]">
+              <span className="font-mono text-xs font-semibold text-[var(--gold-text)]">
                 {isMathNotation ? (
                   <KatexMath math={cleanMathNotation} />
                 ) : (
@@ -233,7 +233,7 @@ export const GlossaryTerm: FC<GlossaryTermProps> = ({ termId, children, classNam
             <Link
               to={entry.targetUrl}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 text-[11px] font-medium text-[#2B6347] transition-colors hover:text-[#C5A262] dark:text-[#739B88] dark:hover:text-[#E5C378]"
+              className="flex items-center gap-1 text-[11px] font-medium text-[#2B6347] transition-colors hover:text-[var(--gold-text)] dark:text-[#739B88] dark:hover:text-[var(--gold-text)]"
             >
               <span>Xem mục chuyên khảo</span>
               <span aria-hidden="true">→</span>

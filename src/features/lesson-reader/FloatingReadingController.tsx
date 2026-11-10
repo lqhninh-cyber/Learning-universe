@@ -1,9 +1,10 @@
 import { Moon, Sun } from 'lucide-react';
 import { type FC, useEffect } from 'react';
+import type { ReadingTheme } from '@/context/ReadingSettingsContext';
 import { cn } from '@/shared/lib/cn';
 
 export interface FloatingReadingControllerProps {
-  readonly readingTheme: 'light' | 'dark';
+  readonly readingTheme: ReadingTheme;
   readonly onToggleReadingTheme: () => void;
   readonly className?: string;
 }

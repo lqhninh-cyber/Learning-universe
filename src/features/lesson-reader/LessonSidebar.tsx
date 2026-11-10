@@ -2,6 +2,7 @@ import type { ManifestSubject } from '@schemas/index';
 import { CheckCircle2, Circle, Layers, PanelLeftClose } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import type { ReadingTheme } from '@/context/ReadingSettingsContext';
 import { useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
@@ -11,7 +12,7 @@ export interface LessonSidebarProps {
   readonly activeLessonId: string;
   readonly onSelectLesson?: () => void;
   readonly onToggleCollapse?: () => void;
-  readonly readingTheme?: 'light' | 'dark';
+  readonly readingTheme?: ReadingTheme;
   readonly className?: string;
 }
 
@@ -25,11 +26,11 @@ export function LessonSidebar({
 }: LessonSidebarProps) {
   const completedLessons = useLearningStore((state) => state.completedLessons);
 
-  const [internalTheme, setInternalTheme] = useState<'light' | 'dark'>(() => {
+  const [internalTheme, setInternalTheme] = useState<ReadingTheme>(() => {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') return saved;
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
       } catch {
         // Bỏ qua lỗi storage
       }
@@ -40,12 +41,12 @@ export function LessonSidebar({
   useEffect(() => {
     if (propTheme) return;
     const handleThemeChange = (e: Event) => {
-      const custom = e as CustomEvent<'light' | 'dark'>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
+      const custom = e as CustomEvent<ReadingTheme>;
+      if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
         setInternalTheme(custom.detail);
       } else {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') {
           setInternalTheme(saved);
         }
       }

@@ -188,7 +188,7 @@ Sơ đồ không gian tổng thể của Trang chủ:
 
 - **Eyebrow Badge:**
   ```tsx
-  <div className="border-vn-accent/40 bg-vn-surface/80 text-vn-primary inline-flex items-center gap-2 rounded-full border px-4 py-1 text-xs font-semibold tracking-widest uppercase">
+  <div className="border-vn-accent/40 bg-vn-surface/80 text-vn-primary inline-flex items-center gap-2 rounded-full border px-4 py-1 text-xs font-semibold uppercase tracking-widest">
     <span className="bg-vn-secondary h-2 w-2 rounded-full" />
     <span>KHÔNG GIAN TRI THỨC ĐƯƠNG ĐẠI</span>
   </div>
@@ -197,7 +197,7 @@ Sơ đồ không gian tổng thể của Trang chủ:
   Nhằm đáp ứng 100% yêu cầu nội dung mới ("Khai mở tri thức — Kết nối tương lai") đồng thời bảo toàn ca kiểm thử `getByRole('heading', { name: /Không gian học tập Toán học đại học/i })`:
   ```tsx
   <h1 className="space-y-2">
-    <span className="text-vn-accent block text-xs font-semibold tracking-widest uppercase sm:text-sm">
+    <span className="text-vn-accent block text-xs font-semibold uppercase tracking-widest sm:text-sm">
       Không gian học tập Toán học đại học
     </span>
     <span className="text-vn-text block text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">

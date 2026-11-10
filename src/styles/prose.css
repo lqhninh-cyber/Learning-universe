@@ -142,6 +142,22 @@
   font-style: italic;
 }
 
+/* Siêu liên kết (Link / <a>) theo chuẩn WCAG tương phản cao */
+.lu-prose a,
+.lesson-content a {
+  color: var(--indigo-link);
+  font-weight: 500;
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: opacity 0.15s ease;
+}
+
+.lu-prose a:hover,
+.lesson-content a:hover {
+  opacity: 0.8;
+}
+
 /* Trích dẫn danh ngôn & đóng khung pháp quy: text-[15.5px] italic leading-relaxed */
 .lu-prose blockquote,
 .lesson-content blockquote {
