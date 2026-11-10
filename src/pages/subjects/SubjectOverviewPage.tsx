@@ -15,7 +15,7 @@ import {
   Target,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
 import {
   EDUC2802_CLOS,
@@ -49,9 +49,24 @@ interface CourseTabDef {
 
 export function SubjectOverviewPage() {
   const { subjectSlug } = useParams<{ subjectSlug: string }>();
+  const [searchParams] = useSearchParams();
   const subject = subjectSlug ? getSubjectBySlug(subjectSlug) : undefined;
 
-  const [activeTab, setActiveTab] = useState<CourseWorkspaceTab>('roadmap');
+  const urlTab = searchParams.get('tab') as CourseWorkspaceTab | null;
+  const initialTab: CourseWorkspaceTab =
+    urlTab && ['roadmap', 'documents', 'specialized', 'overview'].includes(urlTab)
+      ? urlTab
+      : 'roadmap';
+
+  const [activeTab, setActiveTab] = useState<CourseWorkspaceTab>(initialTab);
+  const [prevUrlTab, setPrevUrlTab] = useState(urlTab);
+  if (urlTab !== prevUrlTab) {
+    setPrevUrlTab(urlTab);
+    if (urlTab && ['roadmap', 'documents', 'specialized', 'overview'].includes(urlTab)) {
+      setActiveTab(urlTab);
+    }
+  }
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<LessonLevelFilter>('all');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);

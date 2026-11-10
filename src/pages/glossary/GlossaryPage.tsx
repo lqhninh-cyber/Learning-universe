@@ -179,22 +179,24 @@ export function GlossaryPage() {
 
         {/* Danh sách thẻ thuật ngữ */}
         {filteredEntries.length > 0 ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredEntries.map((entry) => {
               const isAlgebra = entry.subject === 'cau-truc-dai-so';
               return (
                 <Card
                   key={entry.id}
-                  className="flex flex-col justify-between rounded-2xl border border-[#CFDADB] bg-[#F7FAFA] p-5 shadow-sm transition-shadow hover:shadow-md"
+                  className="group/card flex h-full flex-col justify-between rounded-2xl border border-[#DFE6E1] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-[#1E3B2D]"
                 >
-                  <div className="space-y-3">
+                  <div className="flex-1 space-y-3">
                     {/* Hàng trên: Ký hiệu + Badge môn học */}
                     <div className="flex items-center justify-between gap-3">
-                      <div className="inline-flex min-h-[38px] min-w-[50px] items-center justify-center rounded-lg border border-[#CFDADB] bg-[#E1E9EA] px-3 py-1 shadow-2xs">
-                        <KatexMath
-                          math={entry.symbol}
-                          className="font-serif text-base font-semibold text-[#29383D]"
-                        />
+                      <div className="inline-flex h-12 min-w-[54px] shrink-0 items-center justify-center overflow-visible rounded-xl border border-[#DFE6E1] bg-[#EEF2EE] px-2 shadow-2xs dark:border-[#1E3B2D] dark:bg-[#12241C]">
+                        <div className="flex items-center justify-center leading-none">
+                          <KatexMath
+                            math={entry.symbol}
+                            className="font-serif text-base font-semibold text-[#29383D] dark:text-[#E2E8F0]"
+                          />
+                        </div>
                       </div>
                       <Badge variant={isAlgebra ? 'subject' : 'neutral'}>
                         {entry.courseName ||
@@ -208,39 +210,47 @@ export function GlossaryPage() {
 
                     {/* Tên thuật ngữ */}
                     <div>
-                      <h2 className="font-serif text-lg leading-snug font-bold text-[#29383D]">
+                      <h2 className="font-serif text-lg leading-snug font-bold text-[#29383D] dark:text-[#E6ECE7]">
                         {entry.nameVi}
                       </h2>
-                      <p className="text-xs text-[#55676B] italic">{entry.nameEn}</p>
+                      <p className="text-xs text-[#55676B] italic dark:text-[#A7B5AC]">
+                        {entry.nameEn}
+                      </p>
                     </div>
 
                     {/* Định nghĩa tóm tắt */}
-                    <p className="text-xs leading-relaxed text-[#55676B]">{entry.brief}</p>
+                    <p className="text-xs leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
+                      {entry.brief}
+                    </p>
 
                     {/* Hộp trực quan */}
-                    <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-[#E1E9EA]/60 p-3 text-[11px] leading-relaxed text-[#29383D]">
-                      <div className="flex items-center gap-1.5 font-semibold text-[#3F6570]">
-                        <Lightbulb
-                          className="h-3.5 w-3.5 shrink-0 text-[#3F6570]"
-                          aria-hidden="true"
-                        />
-                        <span>Trực quan & Bản chất:</span>
+                    <div className="space-y-1 rounded-xl border border-[#DFE6E1] bg-[#EEF2EE]/60 p-3 text-[11px] leading-relaxed text-[#29383D] dark:border-[#1E3B2D] dark:bg-[#12241C]/60 dark:text-[#E2E8F0]">
+                      <div className="flex items-center gap-1.5 font-semibold text-[#3F6570] dark:text-[#739B88]">
+                        <Lightbulb className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                        <span>Trực quan &amp; Bản chất:</span>
                       </div>
                       <p>{entry.intuition}</p>
                     </div>
                   </div>
 
-                  {/* Nút hành động */}
-                  <div className="mt-4 border-t border-[#CFDADB] pt-3">
-                    <Button asChild variant="outline" size="sm" className="w-full justify-between">
-                      <Link to={entry.relatedLesson}>
-                        <span className="inline-flex items-center gap-1.5">
-                          <BookOpen className="h-3.5 w-3.5 text-[#55676B]" aria-hidden="true" />
-                          <span>Xem bài giảng gốc</span>
-                        </span>
-                        <ArrowRight className="h-3.5 w-3.5 text-[#55676B]" aria-hidden="true" />
-                      </Link>
-                    </Button>
+                  {/* Nút hành động căn sát đáy card */}
+                  <div className="mt-auto border-t border-[#DFE6E1] pt-3.5 dark:border-[#1E3B2D]">
+                    <Link
+                      to={entry.relatedLesson}
+                      className="group/link flex w-full items-center justify-between rounded-xl border border-[#DFE6E1] bg-white/70 px-3.5 py-2 text-xs font-medium text-[#29383D] transition-all duration-200 hover:border-[#2E4A6B] hover:text-[#2E4A6B] hover:shadow-2xs dark:border-[#1E3B2D] dark:bg-[#16191D]/70 dark:text-[#E2E8F0] dark:hover:border-[#C5A262] dark:hover:text-[#E5C378]"
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        <BookOpen
+                          className="h-3.5 w-3.5 text-[#55676B] transition-colors group-hover/link:text-[#2E4A6B] dark:text-[#A7B5AC] dark:group-hover/link:text-[#E5C378]"
+                          aria-hidden="true"
+                        />
+                        <span>Xem bài giảng gốc</span>
+                      </span>
+                      <ArrowRight
+                        className="h-3.5 w-3.5 text-[#55676B] transition-all duration-200 group-hover/link:translate-x-0.5 group-hover/link:text-[#2E4A6B] dark:text-[#A7B5AC] dark:group-hover/link:text-[#E5C378]"
+                        aria-hidden="true"
+                      />
+                    </Link>
                   </div>
                 </Card>
               );
