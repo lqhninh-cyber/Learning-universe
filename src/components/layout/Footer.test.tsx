@@ -41,7 +41,7 @@ describe('Footer Component', () => {
     expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#C5A262]', 'not-italic');
   });
 
-  it('renders signature Tree of Knowledge logo symbol for both mobile and desktop', () => {
+  it('renders signature logo symbol for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />
@@ -54,10 +54,11 @@ describe('Footer Component', () => {
     const desktopLogoWrapper = container.querySelector('.hidden.md\\:flex');
     expect(desktopLogoWrapper).toBeInTheDocument();
 
-    const treeLogos = screen.getAllByTestId('tree-of-knowledge-logo');
-    expect(treeLogos.length).toBeGreaterThanOrEqual(2);
-    treeLogos.forEach((logo) => {
-      expect(logo.tagName.toLowerCase()).toBe('svg');
+    const logos = screen.getAllByAltText('Learning Universe Logo');
+    expect(logos.length).toBeGreaterThanOrEqual(2);
+    logos.forEach((logo) => {
+      expect(logo.tagName.toLowerCase()).toBe('img');
+      expect(logo).toHaveAttribute('src', '/logo-laxanh.png');
     });
 
     // Cũ monogram vuông không còn tồn tại
