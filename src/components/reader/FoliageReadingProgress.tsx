@@ -314,67 +314,125 @@ export const FoliageReadingProgress: FC<FoliageReadingProgressProps> = ({
           </div>
         )}
 
-        {/* Đóa sen vàng nở khi chạm đáy bài học (>= 98.5%) */}
-        {isComplete && (
-          <div
-            className="absolute bottom-0 z-30 flex -translate-x-1/2 translate-y-1/2 flex-col items-center"
-            style={{ left: '50%' }}
+        {/* Điểm mút kết thúc: Đóa hoa bung nở tại chân trục (Blooming flower at tip) */}
+        <div
+          className="absolute bottom-0 z-30 flex -translate-x-1/2 translate-y-1/2 items-center justify-center"
+          style={{ left: '50%' }}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            data-testid="foliage-bloom-flower"
+            aria-label={
+              isComplete
+                ? 'Đóa hoa tri thức nở rộ — Bấm để cuộn lên đầu trang'
+                : 'Điểm kết thúc bài học'
+            }
+            className="group relative flex cursor-pointer items-center justify-center focus:outline-none"
           >
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              title="Chúc mừng đã hoàn thành bài học! Bấm để cuộn lên đầu trang"
-              className="group relative flex cursor-pointer items-center justify-center focus:outline-none"
+            {/* Quầng hào quang mềm mại (subtle glow) lan tỏa khi chạm mốc 100% */}
+            {isComplete && (
+              <div
+                className="pointer-events-none absolute h-9 w-9 animate-pulse rounded-full bg-[#C5A262]/25 opacity-70 blur-xs transition-opacity duration-700"
+                aria-hidden="true"
+              />
+            )}
+
+            {/* Đóa hoa sen tri thức bung nở (Blooming Lotus Flower) */}
+            <svg
+              viewBox="0 0 32 32"
+              className={cn(
+                'h-7.5 w-7.5 transition-all duration-700 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)]',
+                isComplete
+                  ? 'scale-100 rotate-0 opacity-100 drop-shadow-[0_0_8px_rgba(197,162,98,0.55)]'
+                  : 'scale-75 text-[#739B88] opacity-60',
+              )}
             >
-              {/* Hào quang hoa sen phát sáng */}
-              <div className="absolute h-9 w-9 animate-ping rounded-full bg-[#C5A262]/30 opacity-60 blur-xs" />
+              {/* Đài sen ngọc bích */}
+              <path
+                d="M10 24C12 26 20 26 22 24C21 26.5 11 26.5 10 24Z"
+                fill="#2E6B4F"
+                stroke="#1E3B2E"
+                strokeWidth="1"
+              />
 
-              {/* Đóa sen vàng mini (Golden Lotus) */}
-              <svg
-                viewBox="0 0 32 32"
-                className="h-7 w-7 animate-pulse text-[#C5A262] drop-shadow-[0_0_10px_rgba(197,162,98,0.9)] transition-transform duration-300 group-hover:scale-125"
-              >
-                <path
-                  d="M16 4C14 10 9 14 9 20C9 24 12 27 16 27C20 27 23 24 23 20C23 14 18 10 16 4Z"
-                  fill="#FFFDF0"
-                  stroke="#C5A262"
-                  strokeWidth="1.8"
-                />
-                <path
-                  d="M16 11C11 14 5 17 6 22C7 26 11 27 16 27"
-                  fill="#FAF4E1"
-                  stroke="#C5A262"
-                  strokeWidth="1.5"
-                  opacity="0.95"
-                />
-                <path
-                  d="M16 11C21 14 27 17 26 22C25 26 21 27 16 27"
-                  fill="#FAF4E1"
-                  stroke="#C5A262"
-                  strokeWidth="1.5"
-                  opacity="0.95"
-                />
-                <circle cx="16" cy="19" r="2" fill="#E2B755" />
-              </svg>
+              {/* Tầng cánh ngoài đối xứng (Vàng Thếp Cổ #C5A262) */}
+              <path
+                d={
+                  isComplete
+                    ? 'M16 13C9 13 4 18 5 23C7 26 12 25 16 23'
+                    : 'M16 16C12 17 8 20 9 23C11 25 14 24 16 23'
+                }
+                fill={isComplete ? '#FAF4E1' : '#E2ECE6'}
+                stroke="#C5A262"
+                strokeWidth="1.5"
+                className="transition-all duration-700"
+              />
+              <path
+                d={
+                  isComplete
+                    ? 'M16 13C23 13 28 18 27 23C25 26 20 25 16 23'
+                    : 'M16 16C20 17 24 20 23 23C21 25 18 24 16 23'
+                }
+                fill={isComplete ? '#FAF4E1' : '#E2ECE6'}
+                stroke="#C5A262"
+                strokeWidth="1.5"
+                className="transition-all duration-700"
+              />
 
-              {/* Nhãn "Đắc thụ 100%" */}
-              <div className="absolute top-1/2 left-8 -translate-y-1/2 rounded-full border border-[#C5A262] bg-[#FDFBF7] px-2.5 py-0.5 text-[11px] font-bold whitespace-nowrap text-[#A87B28] shadow-md dark:bg-[#16271E] dark:text-[#C5A262]">
-                Đắc thụ 100% 🪷
-              </div>
-            </button>
-          </div>
-        )}
+              {/* Tầng cánh trung gian bung xòe */}
+              <path
+                d={
+                  isComplete
+                    ? 'M16 9C10 11 6 15 7 21C10 23 15 22 16 23'
+                    : 'M16 13C13 15 11 18 12 21C13 22 15 22 16 23'
+                }
+                fill="#F5F2EB"
+                stroke="#C5A262"
+                strokeWidth="1.6"
+                className="transition-all duration-700"
+              />
+              <path
+                d={
+                  isComplete
+                    ? 'M16 9C22 11 26 15 25 21C22 23 17 22 16 23'
+                    : 'M16 13C19 15 21 18 20 21C19 22 17 22 16 23'
+                }
+                fill="#F5F2EB"
+                stroke="#C5A262"
+                strokeWidth="1.6"
+                className="transition-all duration-700"
+              />
+
+              {/* Cánh hoa chính tâm vươn cao (Trắng Giấy Dó #F5F2EB viền Vàng Thếp #C5A262) */}
+              <path
+                d={
+                  isComplete
+                    ? 'M16 4C13.5 9 10.5 14 10.5 19.5C10.5 23 13.5 24.5 16 24.5C18.5 24.5 21.5 23 21.5 19.5C21.5 14 18.5 9 16 4Z'
+                    : 'M16 9C14.5 12 12.5 16 12.5 20C12.5 22 14.5 23.5 16 23.5C17.5 23.5 19.5 22 19.5 20C19.5 16 17.5 12 16 9Z'
+                }
+                fill="#FFFDF7"
+                stroke="#C5A262"
+                strokeWidth="1.8"
+                className="transition-all duration-700"
+              />
+
+              {/* Nhụy hoa tâm sáng ngọc bích #739B88 */}
+              <circle
+                cx="16"
+                cy="19"
+                r={isComplete ? '2.2' : '1.5'}
+                fill="#739B88"
+                className="transition-all duration-700"
+              />
+              {isComplete && <circle cx="16" cy="19" r="1" fill="#E5B25D" />}
+            </svg>
+          </button>
+        </div>
       </div>
-
-      {/* Gốc cội rễ ở đáy thân cây */}
-      <div
-        className="mt-1 h-2 w-2 rounded-full border border-[#739B88] bg-[#1E3B2E]/60 dark:border-[#A1D1B7]/60 dark:bg-[#1E3B2E]"
-        title="Gốc rễ tri thức"
-        aria-hidden="true"
-      />
     </aside>
   );
 };

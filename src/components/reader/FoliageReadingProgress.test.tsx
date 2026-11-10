@@ -22,7 +22,7 @@ describe('FoliageReadingProgress Component (Vạch tiến độ mầm cây sinh 
     });
   });
 
-  it('kết xuất thành công cấu trúc trục thân cây, hạt mầm khởi nguyên và gốc rễ', () => {
+  it('kết xuất thành công cấu trúc trục thân cây, hạt mầm khởi nguyên và đóa hoa ở chân trục', () => {
     const articleRef = createRef<HTMLElement>();
     render(
       <div>
@@ -39,7 +39,7 @@ describe('FoliageReadingProgress Component (Vạch tiến độ mầm cây sinh 
     });
     expect(nav).toBeInTheDocument();
     expect(screen.getByTitle('Khởi điểm bài học (0%)')).toBeInTheDocument();
-    expect(screen.getByTitle('Gốc rễ tri thức')).toBeInTheDocument();
+    expect(screen.getByTestId('foliage-bloom-flower')).toBeInTheDocument();
   });
 
   it('quét các đề mục H2 & H3 trong bài viết và hiển thị tooltip khi hover', () => {
@@ -121,7 +121,7 @@ describe('FoliageReadingProgress Component (Vạch tiến độ mầm cây sinh 
     expect(scrollToSpy).toHaveBeenCalled();
   });
 
-  it('hiển thị đóa sen vàng Đắc thụ 100% khi bài học hoàn thành', () => {
+  it('bung nở đóa hoa sen tri thức khi bài học hoàn thành và không có tag chữ', () => {
     const articleRef = createRef<HTMLElement>();
     render(
       <div>
@@ -132,10 +132,16 @@ describe('FoliageReadingProgress Component (Vạch tiến độ mầm cây sinh 
       </div>,
     );
 
-    // Khi progress = 0: chưa có nhãn Đắc thụ 100%
-    expect(screen.queryByText(/Đắc thụ 100%/i)).not.toBeInTheDocument();
+    // Tuyệt đối không có tag chữ "Đắc thụ 100%"
+    expect(screen.queryByText(/Đắc thụ/i)).not.toBeInTheDocument();
 
-    // Giả lập article đã cuộn hết tới đáy (top = -1232, bottom = 768, height = 2000)
+    const flowerBtn = screen.getByTestId('foliage-bloom-flower');
+    expect(flowerBtn).toBeInTheDocument();
+
+    // Ban đầu hoa ở trạng thái búp khép kín
+    expect(flowerBtn.querySelector('svg')).toHaveClass('scale-75');
+
+    // Giả lập article đã cuộn hết tới đáy
     if (articleRef.current) {
       vi.spyOn(articleRef.current, 'getBoundingClientRect').mockReturnValue({
         top: -1500,
@@ -153,14 +159,14 @@ describe('FoliageReadingProgress Component (Vạch tiến độ mầm cây sinh 
     // Kích hoạt scroll event
     fireEvent.scroll(window);
 
-    // Bấm hoa sen để cuộn lên đầu trang
-    const lotusBtn = screen.getByTitle(
-      'Chúc mừng đã hoàn thành bài học! Bấm để cuộn lên đầu trang',
-    );
-    expect(lotusBtn).toBeInTheDocument();
-    expect(screen.getByText('Đắc thụ 100% 🪷')).toBeInTheDocument();
+    // Tuyệt đối không có tag chữ "Đắc thụ 100%" hay tooltip chữ nào ở cuối
+    expect(screen.queryByText(/Đắc thụ/i)).not.toBeInTheDocument();
 
-    fireEvent.click(lotusBtn);
+    // Hoa sen đã chuyển sang trạng thái bung nở viên mãn
+    expect(flowerBtn.querySelector('svg')).toHaveClass('scale-100');
+
+    // Bấm đóa hoa để cuộn lên đầu trang
+    fireEvent.click(flowerBtn);
     expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });
