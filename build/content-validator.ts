@@ -91,6 +91,7 @@ export const WHITELISTED_MDX_COMPONENTS = new Set<string>([
   'Ref',
   'Figure',
   'KeyTakeaways',
+  'GlossaryTerm',
   'AffinePlane',
   'DraggablePoint',
   'VectorArrow',

@@ -20,6 +20,7 @@ import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
 import { Corollary, Definition, Lemma, Proposition, Theorem } from './components/TheoryBlock';
 import { EditorialChapterOpener } from '@/components/lesson/EditorialChapterOpener';
+import { GlossaryTerm } from '@/components/common/GlossaryTerm';
 import {
   LazyAffineFrame,
   LazyAffineLine,
@@ -73,6 +74,7 @@ export const mdxComponents: MDXComponents = {
   Sidenote,
   AcademicPopover,
   AcademicTerm: AcademicPopover,
+  GlossaryTerm,
   KeyTakeaways,
   Chapter0KnowledgeMap,
   Chapter1KnowledgeMap,

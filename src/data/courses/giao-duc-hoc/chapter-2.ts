@@ -7,6 +7,7 @@ import {
   PedagogyMetadataBar,
   ScholarQuote,
 } from '@/features/pedagogy';
+import { GlossaryTerm } from '@/components/common/GlossaryTerm';
 import { Sidenote } from '@/shared/components/Sidenote';
 import {
   BookOpen,
@@ -222,7 +223,9 @@ export const Lesson2_1View: FC = () => {
         null,
         'Sự vận động và phát triển của giáo dục trong lịch sử nhân loại bị chi phối bởi ',
         createElement('strong', null, '4 tính chất cơ bản'),
-        ' phản ánh nguồn gốc, quy luật và bản chất xã hội của nó:',
+        ' phản ánh nguồn gốc, quy luật và ',
+        createElement(GlossaryTerm, { termId: 'ban-chat-xa-hoi' }, 'bản chất xã hội'),
+        ' của nó:',
         createElement(
           Sidenote,
           { type: 'caution', number: 2 },
@@ -295,7 +298,13 @@ export const Lesson2_1View: FC = () => {
         null,
         'Với tư cách là một thiết chế vĩ mô, giáo dục giữ vai trò động lực thúc đẩy sự phát triển toàn diện của xã hội qua ',
         createElement('strong', null, '3 chức năng xã hội cơ bản'),
-        ':',
+        ' (tiêu biểu là ',
+        createElement(
+          GlossaryTerm,
+          { termId: 'chuc-nang-kinh-te-san-xuat' },
+          'chức năng kinh tế - sản xuất',
+        ),
+        '):',
       ),
       createElement(NumberedProcessFlow, {
         title: 'Hệ thống 3 Chức năng Xã hội Vĩ mô của Giáo dục',

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-06T05:26:17.849Z",
+  "updatedAt": "2026-11-10T08:38:02.727Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -744,7 +744,7 @@
       "path": "content/affine-geometry/01-khong-gian-affine/03-cac-phang-trong-khong-gian-afin.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "64eb291f9c3095fa1c2020f128a5bce60633ef5423d0cbd3e500f254b674b579",
+      "sha256": "7eec0466f7fd525ab26d24d9ecbe54d2a5423d7fdfea55c777cb316da22d0a33",
       "numberedBlocks": {
         "def-s3-1": "1.3.1",
         "thm-s3-2": "1.3.2",
@@ -1478,7 +1478,7 @@
       "path": "content/single-variable-calculus/02-tap-hop-so-thuc/02-can-tren-can-duoi-supremum-infimum-va-tien-de-day-du.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "866c1ef27fdcf636940a101a9f00e516f4b8ab7835e595e19d82737d5d9aa910",
+      "sha256": "31e2f4cc30ea71ce32a400326a06a822cd405467bee3dcc3688035c9cbce4632",
       "numberedBlocks": {
         "def-gthmb-c2-b2-tap-bi-chan": "2.2.1",
         "def-gthmb-c2-b2-max-min": "2.2.2",
@@ -1562,7 +1562,7 @@
       "path": "content/single-variable-calculus/03-gioi-han-cua-day-so/03-dinh-ly-hoi-tu-don-dieu-weierstrass-va-day-truy-hoi.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "94e36dd0f7cff09d6b842f526ebb5d615d566845bfd4efed76acf6581cd4ae7d",
+      "sha256": "f4cf97b0832c0da82833fb1d74731c9a7f10187ae6afbc9fe77e306ba0264f2b",
       "numberedBlocks": {
         "thm-gthmb-c3-b3-dinh-ly-weierstrass": "3.3.1",
         "cor-gthmb-c3-b3-he-qua-weierstrass": "3.3.2",
