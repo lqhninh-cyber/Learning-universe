@@ -587,7 +587,7 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
             “Đi một ngày đàng, học một sàng khôn.”
           </blockquote>
           <cite className="mt-1.5 block font-mono text-xs text-[#C5A262] not-italic">
-            — Tục ngữ Việt Nam
+            — Tục ngữ dân gian
           </cite>
         </div>
 
