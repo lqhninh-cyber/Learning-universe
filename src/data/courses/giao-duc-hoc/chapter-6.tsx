@@ -17,6 +17,7 @@ import {
   ScholarQuote,
 } from '@/features/pedagogy';
 import { Sidenote } from '@/shared/components/Sidenote';
+import { EditorialChapterOpener } from '@/components/lesson/EditorialChapterOpener';
 import { Badge, Button } from '@/shared/ui';
 import {
   AlertTriangle,
@@ -102,6 +103,31 @@ export const Lesson6_1View: FC = () => {
 
   return (
     <div className="space-y-8 leading-relaxed text-[#29383D]">
+      {/* 0. EDITORIAL CHAPTER OPENER */}
+      <EditorialChapterOpener
+        subjectCode="EDUC2802"
+        subjectName="Khoa học Giáo dục"
+        chapterNumber={6}
+        romanNumeral="VI"
+        title="Thực hành Nghiệp vụ Sư phạm: Xử lý 20 Tình huống Điển hình"
+        subtitle="Hệ thống 5 bước giải quyết xung đột học đường theo Thông tư 32/2020/TT-BGDĐT và Kỷ luật tích cực"
+        estimatedReadingMinutes={45}
+        difficultyLevel="Nghiệp vụ thực hành"
+        clos={[
+          {
+            code: 'CLO 6.1',
+            description:
+              'Phân tích bản chất tâm lý học sinh THCS/THPT trong các tình huống sư phạm',
+          },
+          {
+            code: 'CLO 6.2',
+            description:
+              'Vận dụng quy trình 5 bước và khung pháp quy giáo dục để giải quyết xung đột',
+          },
+        ]}
+        curriculumSource="Bộ tài liệu Nghiệp vụ Sư phạm & Tình huống Giáo dục học HCMUE (K50–51)"
+      />
+
       {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
       <PedagogyMetadataBar
         courseCode="EDUC2802"
@@ -1266,6 +1292,29 @@ export const Lesson6_2View: FC = () => {
 
   return (
     <div className="space-y-8 leading-relaxed text-[#29383D]">
+      {/* 0. EDITORIAL CHAPTER OPENER */}
+      <EditorialChapterOpener
+        subjectCode="EDUC2802"
+        subjectName="Khoa học Giáo dục"
+        chapterNumber={6}
+        romanNumeral="VI"
+        title="Thực hành Nghiệp vụ: Thiết kế Kế hoạch Chủ nhiệm và Tiết Sinh hoạt Lớp"
+        subtitle="Mô hình tổ chức tiết sinh hoạt lớp tự quản dân chủ 2 phần theo Thông tư 32/2020/TT-BGDĐT và Chương trình GDPT 2018"
+        estimatedReadingMinutes={40}
+        difficultyLevel="Nghiệp vụ thực hành"
+        clos={[
+          {
+            code: 'CLO 8.1',
+            description: 'Thiết kế kế hoạch công tác chủ nhiệm toàn diện và phân loại học sinh',
+          },
+          {
+            code: 'CLO 8.2',
+            description: 'Xây dựng kịch bản 45 phút tiết sinh hoạt lớp tự quản phát triển năng lực',
+          },
+        ]}
+        curriculumSource="Đề cương chi tiết học phần EDUC2802 & Giáo trình HCMUE (K50–51)"
+      />
+
       {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
       <PedagogyMetadataBar
         courseCode="EDUC2802"
@@ -1850,6 +1899,30 @@ export const Lesson6_3View: FC = () => {
 
   return (
     <div className="space-y-8 leading-relaxed text-[#29383D]">
+      {/* 0. EDITORIAL CHAPTER OPENER */}
+      <EditorialChapterOpener
+        subjectCode="EDUC2802"
+        subjectName="Khoa học Giáo dục"
+        chapterNumber={6}
+        romanNumeral="VI"
+        title="Thực hành Nghiệp vụ: Thiết kế Kế hoạch Hoạt động Trải nghiệm, Hướng nghiệp"
+        subtitle="Quy chuẩn thiết kế kế hoạch bài dạy theo Công văn 5512/BGDĐT-GDTrH và Mô đun 2 Hoạt động trải nghiệm"
+        estimatedReadingMinutes={50}
+        difficultyLevel="Nghiệp vụ thực hành"
+        clos={[
+          {
+            code: 'CLO 9.1',
+            description: 'Xây dựng mục tiêu và chuỗi 4 hoạt động trải nghiệm theo Công văn 5512',
+          },
+          {
+            code: 'CLO 9.2',
+            description:
+              'Thiết kế công cụ đánh giá năng lực và phương án dự phòng rủi ro hoạt động',
+          },
+        ]}
+        curriculumSource="Tài liệu Bồi dưỡng Mô đun 2 & Công văn 5512/BGDĐT-GDTrH"
+      />
+
       {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
       <PedagogyMetadataBar
         courseCode="EDUC2802"

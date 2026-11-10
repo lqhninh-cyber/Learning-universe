@@ -1,13 +1,4 @@
-import {
-  ArrowLeft,
-  BookOpen,
-  Clock,
-  Layers,
-  Link2,
-  ListTree,
-  PanelLeft,
-  PanelLeftOpen,
-} from 'lucide-react';
+import { ArrowLeft, BookOpen, Link2, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
@@ -28,17 +19,124 @@ import {
   SourcePanel,
 } from '@/features/lesson-reader';
 import { FloatingZenToolbar } from '@/components/reader/FloatingZenToolbar';
+import {
+  EditorialChapterOpener,
+  type ChapterCloItem,
+  type ChapterDifficultyLevel,
+} from '@/components/lesson';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Breadcrumb, Button, Card, Drawer, Skeleton } from '@/shared/ui';
 
-const LEVEL_LABELS: Record<'basic' | 'intermediate' | 'advanced', string> = {
-  basic: 'Cơ bản',
-  intermediate: 'Trung bình',
-  advanced: 'Nâng cao',
-};
+function getSubjectCode(slug: string): string {
+  if (slug === 'giao-duc-hoc') return 'EDUC2802';
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') return 'MATH1403';
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') return 'MATH2204';
+  if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') return 'MATH1301';
+  return 'MATH';
+}
+
+function getCurriculumSource(slug: string): string {
+  if (slug === 'giao-duc-hoc') {
+    return 'Giáo trình Giáo dục học — Trường ĐH Sư phạm TP.HCM (HCMUE, K50–51)';
+  }
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
+    return 'Giáo trình Giải tích hàm một biến — PGS.TS. Trần Trí Dũng (NXB Giáo dục)';
+  }
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
+    return 'Giáo trình Hình học cao cấp — GS. Nguyễn Mộng Hy / TS. Huỳnh Việt Khánh (NXB Giáo dục)';
+  }
+  if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') {
+    return 'Giáo trình Cấu trúc Đại số: Nhóm • Vành • Trường — TS. Huỳnh Việt Khánh (NXB Giáo dục)';
+  }
+  return 'Giáo trình chuẩn Đại học Sư phạm';
+}
+
+function getDifficultyLevel(
+  level: 'basic' | 'intermediate' | 'advanced',
+  slug: string,
+): ChapterDifficultyLevel {
+  if (slug === 'giao-duc-hoc') return 'Nghiệp vụ thực hành';
+  if (level === 'basic') return 'Nền tảng';
+  if (level === 'advanced') return 'Chuyên sâu';
+  return 'Trung cấp';
+}
+
+function getLessonClos(tags: readonly string[], slug: string): readonly ChapterCloItem[] {
+  const cloTags = tags.filter((t) => /^CLO/i.test(t));
+  if (cloTags.length > 0) {
+    return cloTags.map((tag) => {
+      const match = tag.match(/^CLO-?(\d+(?:\.\d+)?)(?:\s*[:-]\s*(.*))?$/i);
+      const code = match ? `CLO ${match[1]}` : tag;
+      const desc = match?.[2] || getCloFallbackDescription(slug);
+      return { code, description: desc };
+    });
+  }
+
+  if (slug === 'giao-duc-hoc') {
+    return [
+      {
+        code: 'CLO 1.1',
+        description:
+          'Phân tích bản chất hiện tượng giáo dục và chuẩn nghề nghiệp giáo viên THCS/THPT',
+      },
+      {
+        code: 'CLO 6.2',
+        description: 'Vận dụng 5 bước xử lý sư phạm và khung pháp quy giáo dục giải quyết xung đột',
+      },
+    ];
+  }
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
+    return [
+      {
+        code: 'CLO 1.2',
+        description:
+          'Kỹ thuật định lượng và chứng minh giới hạn dãy số bằng ngôn ngữ ε–N (Epsilon)',
+      },
+      {
+        code: 'CLO 2.1',
+        description:
+          'Vận dụng tiêu chuẩn hội tụ Cauchy, Weierstrass và tính liên tục phân tích hàm số',
+      },
+    ];
+  }
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
+    return [
+      {
+        code: 'CLO 2.1',
+        description:
+          'Xác định mục tiêu afin, phương và hệ phương trình tham số của m-phẳng trong không gian Afin',
+      },
+      {
+        code: 'CLO 3.2',
+        description:
+          'Vận dụng nhóm các phép biến đổi afin và tính chất bất biến trong nghiên cứu hình học',
+      },
+    ];
+  }
+  return [
+    {
+      code: 'CLO 1.1',
+      description:
+        'Nắm vững hệ thống tiên đề cấu trúc đại số: Nhóm, Vành, Trường và các định lý đẳng cấu',
+    },
+  ];
+}
+
+function getCloFallbackDescription(slug: string): string {
+  if (slug === 'giao-duc-hoc') {
+    return 'Phân tích cơ sở lý luận và nghiệp vụ sư phạm giải quyết tình huống thực tế';
+  }
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
+    return 'Chứng minh giới hạn và phân tích tính chất giải tích bằng ngôn ngữ Epsilon';
+  }
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
+    return 'Khảo sát cấu trúc hình học afin, phương trình m-phẳng và ánh xạ afin';
+  }
+  return 'Phân tích cấu trúc đại số và chứng minh các mệnh đề học thuật';
+}
 
 function LessonPageContent() {
   const { subjectSlug, chapterSlug, lessonSlug } = useParams<{
@@ -438,188 +536,98 @@ function LessonPageContent() {
                 isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
               )}
             >
-              <header
-                className={cn(
-                  'space-y-4 border-b pb-6',
-                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
-                )}
-              >
-                {/* Siêu dữ liệu bài học semantic <aside role="note"> */}
-                <aside role="note" aria-label="Thông tin bài học" className="space-y-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge
-                      variant="subject"
-                      className={cn(
-                        readingTheme === 'dark' &&
-                          'border border-[#2A323A] bg-[#20252B] text-[#CBD5E1]',
-                      )}
-                    >
-                      {/^Thực hành/i.test(lesson.title)
-                        ? `Khối Thực hành · Thực hành ${lesson.number}`
-                        : `Chương ${chapter.number} · Bài ${chapter.number}.${lesson.number}`}
-                    </Badge>
-                    <Badge
-                      variant="neutral"
-                      className={cn(
-                        readingTheme === 'dark' &&
-                          'border border-[#2A323A] bg-[#20252B] text-[#CBD5E1]',
-                      )}
-                    >
-                      {LEVEL_LABELS[lesson.level]}
-                    </Badge>
-                    {lesson.tags
-                      .filter((t) => /^CLO/i.test(t))
-                      .map((clo) => (
-                        <Badge
-                          key={clo}
-                          variant="neutral"
-                          className={cn(
-                            readingTheme === 'dark'
-                              ? 'border border-[#2A323A] bg-[#20252B] text-[#CBD5E1]'
-                              : 'border-amber-600/30 bg-amber-500/10 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-200',
-                          )}
-                        >
-                          Chuẩn đầu ra: {clo}
-                        </Badge>
-                      ))}
-                    {lesson.status !== 'published' && (
-                      <Badge variant={lesson.status}>Bản {lesson.status}</Badge>
-                    )}
-                  </div>
-
-                  <div
-                    className={cn(
-                      'flex flex-wrap items-center gap-4 text-xs',
-                      readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-[var(--text-muted)]',
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        'inline-flex items-center gap-1.5',
-                        readingTheme === 'dark' &&
-                          'rounded-lg border border-[#2A323A] bg-[#20252B] px-2.5 py-1 text-[#CBD5E1]',
-                      )}
-                    >
-                      <Clock
-                        className={cn(
-                          'h-3.5 w-3.5',
-                          readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-stone-400',
-                        )}
-                        aria-hidden="true"
-                      />
-                      <span>Thời lượng đọc: {Math.max(5, lesson.estimatedMinutes)} phút</span>
-                    </span>
-                    <span
-                      className={cn(
-                        'inline-flex items-center gap-1.5',
-                        readingTheme === 'dark' &&
-                          'rounded-lg border border-[#2A323A] bg-[#20252B] px-2.5 py-1 text-[#CBD5E1]',
-                      )}
-                    >
-                      <Layers
-                        className={cn(
-                          'h-3.5 w-3.5',
-                          readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-stone-400',
-                        )}
-                        aria-hidden="true"
-                      />
-                      <span>Phiên bản {lesson.version}</span>
-                    </span>
-                  </div>
-                </aside>
-
-                <h1
-                  className={cn(
-                    'mb-6 font-serif text-3xl font-bold tracking-tight lg:text-4xl',
-                    readingTheme === 'dark' ? 'text-[#F8FAFC]' : 'text-[#29383D]',
-                  )}
-                >
-                  {lesson.title}
-                </h1>
-
-                <p
-                  className={cn(
-                    'academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85]',
-                    readingTheme === 'dark' ? 'leading-relaxed text-[#E2E8F0]' : 'text-[#29383D]',
-                  )}
-                >
-                  {lesson.description}
-                </p>
-
-                {lesson.prerequisites.length > 0 && (
-                  <div
-                    className={cn(
-                      'clear-both mt-4 flex flex-wrap items-center gap-2.5 rounded-xl border p-3 text-xs md:text-sm',
-                      readingTheme === 'dark'
-                        ? 'border border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
-                        : 'border border-[#71889A]/30 bg-[#E5EDF1] text-[#29383D]',
-                    )}
-                  >
+              <EditorialChapterOpener
+                subjectCode={getSubjectCode(subject.slug)}
+                subjectName={subject.title}
+                chapterNumber={chapter.number}
+                title={lesson.title}
+                subtitle={lesson.description}
+                estimatedReadingMinutes={Math.max(5, lesson.estimatedMinutes)}
+                difficultyLevel={getDifficultyLevel(lesson.level, subject.slug)}
+                clos={getLessonClos(lesson.tags, subject.slug)}
+                curriculumSource={getCurriculumSource(subject.slug)}
+                prerequisites={
+                  lesson.prerequisites.length > 0 ? (
                     <div
                       className={cn(
-                        'flex shrink-0 items-center gap-1.5 font-semibold',
-                        readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+                        'clear-both mt-3 flex flex-wrap items-center gap-2.5 rounded-xl border p-3 text-xs md:text-sm',
+                        readingTheme === 'dark'
+                          ? 'border-[#2A323A] bg-[#20252B]/80 text-[#E2E8F0]'
+                          : 'border-[#71889A]/30 bg-[#E5EDF1]/80 text-[#29383D]',
                       )}
                     >
-                      <Link2
+                      <div
                         className={cn(
-                          'h-4 w-4',
-                          readingTheme === 'dark' ? 'text-[#C89738]' : 'text-[#3F6570]',
+                          'flex shrink-0 items-center gap-1.5 font-semibold',
+                          readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#29383D]',
                         )}
-                        aria-hidden="true"
-                      />
-                      <span>Kiến thức tiên quyết:</span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {lesson.prerequisites.map((prereqId) => {
-                        const prereq = getLessonById(prereqId);
-                        if (!prereq) {
+                      >
+                        <Link2
+                          className={cn(
+                            'h-4 w-4',
+                            readingTheme === 'dark' ? 'text-[#C5A262]' : 'text-[#3F6570]',
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span>Kiến thức tiên quyết:</span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {lesson.prerequisites.map((prereqId) => {
+                          const prereq = getLessonById(prereqId);
+                          if (!prereq) {
+                            return (
+                              <Badge key={prereqId} variant="neutral">
+                                {prereqId}
+                              </Badge>
+                            );
+                          }
                           return (
-                            <Badge key={prereqId} variant="neutral">
-                              {prereqId}
-                            </Badge>
+                            <Link
+                              key={prereqId}
+                              to={ROUTES.lesson(
+                                prereq.subject.slug,
+                                prereq.chapter.slug,
+                                prereq.lesson.slug,
+                              )}
+                              className={cn(
+                                'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs shadow-2xs transition-colors',
+                                readingTheme === 'dark'
+                                  ? 'border border-[#2A323A] bg-[#14171A] font-medium text-[#C89738] hover:border-[#C89738] hover:bg-[#20252B]'
+                                  : 'border border-[#CFDADB] bg-white/90 font-semibold text-[#29383D] hover:border-[#71889A] hover:bg-white hover:text-[#3F6570]',
+                              )}
+                            >
+                              <span>
+                                Bài {prereq.chapter.number}.{prereq.lesson.number}:{' '}
+                                {prereq.lesson.title}
+                              </span>
+                            </Link>
                           );
-                        }
-                        return (
-                          <Link
-                            key={prereqId}
-                            to={ROUTES.lesson(
-                              prereq.subject.slug,
-                              prereq.chapter.slug,
-                              prereq.lesson.slug,
-                            )}
-                            className={cn(
-                              'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs shadow-2xs transition-colors',
-                              readingTheme === 'dark'
-                                ? 'border border-[#2A323A] bg-[#14171A] font-medium text-[#C89738] hover:border-[#C89738] hover:bg-[#20252B]'
-                                : 'border border-[#CFDADB] bg-white/90 font-semibold text-[#29383D] hover:border-[#71889A] hover:bg-white hover:text-[#3F6570]',
-                            )}
-                          >
-                            <span>
-                              Bài {prereq.chapter.number}.{prereq.lesson.number}:{' '}
-                              {prereq.lesson.title}
-                            </span>
-                          </Link>
-                        );
-                      })}
+                        })}
+                      </div>
                     </div>
+                  ) : null
+                }
+              >
+                {lesson.status !== 'published' && (
+                  <div className="pt-2">
+                    <Badge variant={lesson.status}>Bản {lesson.status}</Badge>
                   </div>
                 )}
+              </EditorialChapterOpener>
 
-                <div
-                  className={cn(
-                    'clear-both mt-6 flex flex-wrap items-center gap-2.5 border-t pt-4',
-                    readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-stone-200/60',
-                  )}
-                >
-                  <LessonActionBar
-                    lessonId={lesson.id}
-                    isNotesOpen={isNotesOpen}
-                    onToggleNotes={handleToggleNotes}
-                    readingTheme={readingTheme}
-                  />
-                </div>
-              </header>
+              <div
+                className={cn(
+                  'clear-both mb-8 flex flex-wrap items-center gap-2.5 border-b pb-4',
+                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-stone-200/60',
+                )}
+              >
+                <LessonActionBar
+                  lessonId={lesson.id}
+                  isNotesOpen={isNotesOpen}
+                  onToggleNotes={handleToggleNotes}
+                  readingTheme={readingTheme}
+                />
+              </div>
 
               {isAuthenticated && isNotesOpen && (
                 <div className="mt-6">

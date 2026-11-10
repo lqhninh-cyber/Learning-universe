@@ -19,6 +19,7 @@ import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
 import { Corollary, Definition, Lemma, Proposition, Theorem } from './components/TheoryBlock';
+import { EditorialChapterOpener } from '@/components/lesson/EditorialChapterOpener';
 import {
   LazyAffineFrame,
   LazyAffineLine,
@@ -40,6 +41,7 @@ import {
  * Bảng ánh xạ thẻ MDX và 18 Academic Components dùng chung cho mọi bài học.
  */
 export const mdxComponents: MDXComponents = {
+  EditorialChapterOpener,
   // 1. Khối lý thuyết (Bộ đếm `theory`: Chương.Bài.Số)
   Definition,
   Theorem,
