@@ -21,6 +21,7 @@ import { Ref } from './components/Ref';
 import { Corollary, Definition, Lemma, Proposition, Theorem } from './components/TheoryBlock';
 import { EditorialChapterOpener } from '@/components/lesson/EditorialChapterOpener';
 import { GlossaryTerm } from '@/components/common/GlossaryTerm';
+import { MicroAffine3DCanvas } from '@/components/math/MicroAffine3DCanvas';
 import {
   LazyAffineFrame,
   LazyAffineLine,
@@ -101,6 +102,7 @@ export const mdxComponents: MDXComponents = {
   TaylorPolynomialDemo: LazyTaylorPolynomialDemo,
   RiemannDarbouxSumDemo: LazyRiemannDarbouxSumDemo,
   WeierstrassMTestDemo: LazyWeierstrassMTestDemo,
+  MicroAffine3DCanvas,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học (chuẩn hóa bảng công thức và bảng học thuật)
   table: (props: ComponentPropsWithoutRef<'table'>) => (
