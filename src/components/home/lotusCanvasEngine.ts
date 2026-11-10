@@ -673,19 +673,65 @@ export function water(
   H: number,
   S: number,
   gl: readonly GlistenItem[],
+  theme: 'day' | 'night' = 'night',
 ) {
   let g = ctx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, '#22825a');
-  g.addColorStop(0.5, '#17694b');
-  g.addColorStop(1, '#0a4833');
+  if (theme === 'day') {
+    // Sương Mai (Day):
+    // Đỉnh: #E0F2E9 (sắc xanh sương mai nhạt loang vào nền trang chủ)
+    // Giữa: #7DAE96 (nước xanh ngọc bích trong sáng)
+    // Đáy: #2C5E47 (xanh lục bảo trầm ấm)
+    g.addColorStop(0, '#E0F2E9');
+    g.addColorStop(0.5, '#7DAE96');
+    g.addColorStop(1, '#2C5E47');
+  } else {
+    // Nguyệt Dạ (Night):
+    // Đỉnh: #040D08 (sơn mài đen sẫm hòa quyện vào chân trang)
+    // Giữa: #0B2016 (xanh rêu đêm sâu thẳm)
+    // Đáy: #06130E
+    g.addColorStop(0, '#040D08');
+    g.addColorStop(0.5, '#0B2016');
+    g.addColorStop(1, '#06130E');
+  }
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
   g = ctx.createRadialGradient(cx, cy - 120 * S, 10, cx, cy - 120 * S, Math.max(W, H) * 0.6);
-  g.addColorStop(0, 'rgba(190,240,215,.2)');
-  g.addColorStop(1, 'rgba(190,240,215,0)');
+  if (theme === 'day') {
+    g.addColorStop(0, 'rgba(255, 255, 235, 0.25)');
+    g.addColorStop(1, 'rgba(255, 255, 235, 0)');
+  } else {
+    g.addColorStop(0, 'rgba(190, 240, 215, 0.16)');
+    g.addColorStop(1, 'rgba(190, 240, 215, 0)');
+  }
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
+
+  // 3 vệt tia sáng mặt trời xiên nhẹ buổi sớm từ góc trên-trái xuống mặt nước (Day)
+  if (theme === 'day') {
+    ctx.save();
+    for (let i = 0; i < 3; i++) {
+      const rayStart = -W * 0.05 + i * (W * 0.16);
+      const rayWidthTop = 40 * S;
+      const rayWidthBottom = 150 * S;
+      const rayEnd = rayStart + H * 0.65 + Math.sin(t * 0.2 + i) * 15;
+
+      const rg = ctx.createLinearGradient(rayStart, 0, rayEnd, H * 0.85);
+      rg.addColorStop(0, 'rgba(255, 255, 240, 0.12)');
+      rg.addColorStop(0.4, 'rgba(255, 255, 240, 0.08)');
+      rg.addColorStop(1, 'rgba(255, 255, 240, 0)');
+
+      ctx.beginPath();
+      ctx.moveTo(rayStart - rayWidthTop / 2, 0);
+      ctx.lineTo(rayStart + rayWidthTop / 2, 0);
+      ctx.lineTo(rayEnd + rayWidthBottom / 2, H * 0.85);
+      ctx.lineTo(rayEnd - rayWidthBottom / 2, H * 0.85);
+      ctx.closePath();
+      ctx.fillStyle = rg;
+      ctx.fill();
+    }
+    ctx.restore();
+  }
 
   ctx.lineWidth = 1.2;
   for (let k = 0; k < 18; k++) {
@@ -700,7 +746,11 @@ export function water(
         ctx.moveTo(x, yy);
       }
     }
-    ctx.strokeStyle = `rgba(190,255,215,${0.05 + 0.04 * Math.sin(t * 0.4 + k)})`;
+    const waveColor =
+      theme === 'day'
+        ? `rgba(255, 255, 255, ${0.08 + 0.05 * Math.sin(t * 0.4 + k)})`
+        : `rgba(190, 255, 215, ${0.05 + 0.04 * Math.sin(t * 0.4 + k)})`;
+    ctx.strokeStyle = waveColor;
     ctx.stroke();
   }
 
@@ -709,7 +759,8 @@ export function water(
     if (a < 0.02) return;
     ctx.beginPath();
     ctx.ellipse(o.x * W + Math.sin(t * 0.1 + o.p) * 5, o.y * H, o.w * S, 1.1, 0, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(235,255,245,${a})`;
+    ctx.fillStyle =
+      theme === 'day' ? `rgba(255, 255, 240, ${a * 0.8})` : `rgba(235, 255, 245, ${a})`;
     ctx.fill();
   });
 }
@@ -1422,7 +1473,9 @@ export function drawFireflies(
   S: number,
   wy: number,
   fireflies: readonly Firefly[],
+  theme: 'day' | 'night' = 'night',
 ) {
+  if (theme === 'day') return; // Đom đóm chỉ xuất hiện trong màn đêm tĩnh lặng
   ctx.save();
   fireflies.forEach((f) => {
     const x = f.baseXRatio * W + Math.sin(t * f.speedX + f.phase) * f.rangeX * S;
@@ -1596,26 +1649,47 @@ export function dragonfly(
   H: number,
   S: number,
   sh: boolean,
+  theme: 'day' | 'night' = 'night',
+  flightIndex: number = 0,
 ) {
-  const P = (u: number): [number, number] => [
-    cx + Math.sin(u * 0.37) * W * 0.3 + Math.sin(u * 0.9) * 30 * S,
-    cy - 140 * S + Math.sin(u * 0.29 + 1) * H * 0.16 + Math.sin(u * 1.3) * 14 * S,
-  ];
-  const u = t * 0.55;
+  const speed = theme === 'day' ? 0.78 : 0.55;
+  const P = (u: number): [number, number] => {
+    if (flightIndex === 1) {
+      return [
+        cx + Math.cos(u * 0.42 + 2) * W * 0.35 + Math.sin(u * 1.1) * 25 * S,
+        cy - 110 * S + Math.sin(u * 0.35 + 3) * H * 0.18 + Math.cos(u * 1.2) * 12 * S,
+      ];
+    }
+    return [
+      cx + Math.sin(u * 0.37) * W * 0.3 + Math.sin(u * 0.9) * 30 * S,
+      cy - 140 * S + Math.sin(u * 0.29 + 1) * H * 0.16 + Math.sin(u * 1.3) * 14 * S,
+    ];
+  };
+  const u = t * speed + flightIndex * 15.3;
   const [fx, fy] = P(u);
   const [x2, y2] = P(u + 0.05);
   const hf = Math.atan2(y2 - fy, x2 - fx);
-  const k = S * 0.95;
-  const c = t % 44;
+  const k = S * (flightIndex === 0 ? 0.95 : 0.82);
+  const c = (t + flightIndex * 11) % 44;
   const sm = (v: number) => v * v * (3 - 2 * v);
   const lw =
-    c < 24 ? 0 : c < 30 ? sm((c - 24) / 6) : c < 37 ? 1 : c < 42 ? 1 - sm((c - 37) / 5) : 0;
+    flightIndex === 0
+      ? c < 24
+        ? 0
+        : c < 30
+          ? sm((c - 24) / 6)
+          : c < 37
+            ? 1
+            : c < 42
+              ? 1 - sm((c - 37) / 5)
+              : 0
+      : 0;
   let dh = -2.4 - hf;
   dh = Math.atan2(Math.sin(dh), Math.cos(dh));
   const h = hf + dh * lw;
   const x = fx + (cx - fx) * lw;
   const y = fy + (cy - 72 * S - fy) * lw;
-  const hv = Math.sin(t * 5) * 1.2 * S * (1 - lw);
+  const hv = Math.sin(t * (theme === 'day' ? 7 : 5) + flightIndex) * 1.2 * S * (1 - lw);
 
   if (sh) {
     drawDF(ctx, x + 40 * S * (1 - lw * 0.7), y + 75 * S * (1 - lw * 0.55), h, k * 0.9, t, true, 1);
@@ -1987,6 +2061,7 @@ export interface LotusCanvasEngine {
     width: number,
     height: number,
     timeInSeconds: number,
+    theme?: 'day' | 'night',
   ) => void;
   addRipple: (x: number, y: number, t?: number) => void;
   setPointer: (x: number | null, y: number | null) => void;
@@ -2080,7 +2155,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
   const offReflCtx = offReflCanvas?.getContext('2d') ?? null;
 
   return {
-    render: (ctx, W, H, t) => {
+    render: (ctx, W, H, t, theme: 'day' | 'night' = 'night') => {
       const S = Math.min(W, H * 1.1) / 620;
       const cx = W / 2;
       const cy = H * 0.5;
@@ -2091,7 +2166,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       // =================================================================
 
       // 1. Nước hồ & Đàn cá uốn lượn đa tầng (cá lớn + bầy cá con)
-      water(ctx, t, cx, cy, W, H, S, gl);
+      water(ctx, t, cx, cy, W, H, S, gl, theme);
       fishes(ctx, t, W, H, S, fishStates, pointerX, pointerY);
       drawMinnowSchool(ctx, t, W, H, S, pointerX, pointerY);
 
@@ -2137,7 +2212,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.save();
         ctx.translate(cx, wy + 8 * S);
         ctx.scale(S, -S * 0.28);
-        ctx.globalAlpha = 0.24;
+        ctx.globalAlpha = theme === 'day' ? 0.28 : 0.24;
         try {
           ctx.filter = 'blur(3px)';
         } catch {
@@ -2167,8 +2242,25 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.save();
         ctx.translate(cx, wy + 8 * S);
         ctx.scale(S, -S * 0.28);
-        ctx.globalAlpha = 0.2;
+        ctx.globalAlpha = theme === 'day' ? 0.25 : 0.2;
         flower(ctx, t, LAY);
+        ctx.restore();
+      }
+
+      // Ánh trăng / Quầng nguyệt dạ in bóng nước lung linh trong chế độ Nguyệt Dạ
+      if (theme === 'night') {
+        ctx.save();
+        ctx.translate(cx + 80 * S, wy + 30 * S);
+        ctx.scale(S, -S * 0.28);
+        const moonWave = Math.sin(t * 1.1) * 3.5;
+        const moonGrad = ctx.createRadialGradient(moonWave, 0, 2, moonWave, 0, 52);
+        moonGrad.addColorStop(0, 'rgba(235, 245, 255, 0.3)');
+        moonGrad.addColorStop(0.35, 'rgba(200, 230, 255, 0.12)');
+        moonGrad.addColorStop(1, 'rgba(200, 230, 255, 0)');
+        ctx.fillStyle = moonGrad;
+        ctx.beginPath();
+        ctx.arc(moonWave, 0, 52, 0, Math.PI * 2);
+        ctx.fill();
         ctx.restore();
       }
 
@@ -2178,11 +2270,27 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       bud(ctx, cx, wy, t, S, BUD);
 
       // 5. Đóa sen nở vòm chén 3D (Cánh sau -> Đài sen & Nhụy vàng -> Cánh tiền cảnh ôm tâm)
-      const gWarm = ctx.createRadialGradient(cx, cy - 80 * S, 10, cx, cy - 80 * S, 260 * S);
-      gWarm.addColorStop(0, 'rgba(255, 220, 230, 0.2)');
-      gWarm.addColorStop(1, 'rgba(255, 220, 230, 0)');
-      ctx.fillStyle = gWarm;
-      ctx.fillRect(0, 0, W, H);
+      if (theme === 'night') {
+        const gNocturnal = ctx.createRadialGradient(
+          cx,
+          cy - 30 * S,
+          20 * S,
+          cx,
+          cy - 30 * S,
+          200 * S,
+        );
+        gNocturnal.addColorStop(0, 'rgba(180, 235, 215, 0.18)');
+        gNocturnal.addColorStop(0.5, 'rgba(130, 205, 185, 0.08)');
+        gNocturnal.addColorStop(1, 'rgba(6, 19, 14, 0)');
+        ctx.fillStyle = gNocturnal;
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        const gWarm = ctx.createRadialGradient(cx, cy - 80 * S, 10, cx, cy - 80 * S, 260 * S);
+        gWarm.addColorStop(0, 'rgba(255, 242, 220, 0.22)');
+        gWarm.addColorStop(1, 'rgba(255, 242, 220, 0)');
+        ctx.fillStyle = gWarm;
+        ctx.fillRect(0, 0, W, H);
+      }
 
       ctx.save();
       ctx.translate(cx, cy);
@@ -2199,34 +2307,45 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       // 7. CHÚ ẾCH NGỒI THIỀN (vẽ lên trên phiến lá sen)
       drawFrog(ctx, t, W, H, S, wy, pointerX, pointerY);
 
-      // 8. Chuồn chuồn bay lượn và bóng đổ in trên nước
-      dragonfly(ctx, t, cx, cy, W, H, S, true); // bóng đổ in trên nước
-      dragonfly(ctx, t, cx, cy, W, H, S, false); // chuồn chuồn bay lượn
+      // 8. Chuồn chuồn bay lượn và bóng đổ in trên nước (ban ngày có thêm chuồn chuồn lượn nhanh)
+      dragonfly(ctx, t, cx, cy, W, H, S, true, theme, 0); // bóng đổ in trên nước
+      dragonfly(ctx, t, cx, cy, W, H, S, false, theme, 0); // chuồn chuồn bay lượn
+      if (theme === 'day') {
+        dragonfly(ctx, t, cx, cy, W, H, S, true, theme, 1);
+        dragonfly(ctx, t, cx, cy, W, H, S, false, theme, 1);
+      }
 
-      // 9. BẦY ĐOM ĐÓM PHÁT SÁNG (vẽ tầng trên cùng)
-      drawFireflies(ctx, t, W, H, S, wy, fireflies);
+      // 9. BẦY ĐOM ĐÓM PHÁT SÁNG (chỉ hiển thị ban đêm)
+      drawFireflies(ctx, t, W, H, S, wy, fireflies, theme);
 
       // 26 hạt phấn hoa bay lơ lửng
       for (let i = 0; i < 26; i++) {
         const f = (t * 0.03 + i / 26) % 1;
         const x = cx + Math.sin(i * 7.1 + t * 0.3) * 150 * S * (0.4 + f);
         const y = cy - 70 * S - f * 260 * S;
-        const a = Math.sin(f * Math.PI) * 0.55;
+        const a = Math.sin(f * Math.PI) * (theme === 'day' ? 0.65 : 0.45);
         ctx.beginPath();
         ctx.arc(x, y, (1.2 + (i % 3) * 0.5) * S, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 240, 200, ${a})`;
+        ctx.fillStyle = theme === 'day' ? `rgba(255, 230, 160, ${a})` : `rgba(226, 248, 107, ${a})`;
         ctx.fill();
         ctx.beginPath();
         ctx.arc(x, y, 4 * S, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 240, 200, ${a * 0.15})`;
+        ctx.fillStyle =
+          theme === 'day' ? `rgba(255, 230, 160, ${a * 0.2})` : `rgba(226, 248, 107, ${a * 0.15})`;
         ctx.fill();
       }
 
       // 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang
       const gTopMist = ctx.createLinearGradient(0, 0, 0, 110 * S);
-      gTopMist.addColorStop(0, 'rgba(245, 244, 239, 0.9)');
-      gTopMist.addColorStop(0.5, 'rgba(245, 244, 239, 0.35)');
-      gTopMist.addColorStop(1, 'rgba(245, 244, 239, 0)');
+      if (theme === 'day') {
+        gTopMist.addColorStop(0, 'rgba(240, 248, 243, 0.9)');
+        gTopMist.addColorStop(0.5, 'rgba(240, 248, 243, 0.35)');
+        gTopMist.addColorStop(1, 'rgba(240, 248, 243, 0)');
+      } else {
+        gTopMist.addColorStop(0, 'rgba(4, 13, 8, 0.85)');
+        gTopMist.addColorStop(0.5, 'rgba(4, 13, 8, 0.3)');
+        gTopMist.addColorStop(1, 'rgba(4, 13, 8, 0)');
+      }
       ctx.fillStyle = gTopMist;
       ctx.fillRect(0, 0, W, 110 * S);
 
@@ -2238,8 +2357,13 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         H / 2,
         Math.max(W, H) * 0.75,
       );
-      gVignette.addColorStop(0, 'rgba(0, 30, 20, 0)');
-      gVignette.addColorStop(1, 'rgba(0, 30, 20, 0.5)');
+      if (theme === 'day') {
+        gVignette.addColorStop(0, 'rgba(240, 250, 245, 0)');
+        gVignette.addColorStop(1, 'rgba(30, 70, 50, 0.25)');
+      } else {
+        gVignette.addColorStop(0, 'rgba(0, 30, 20, 0)');
+        gVignette.addColorStop(1, 'rgba(0, 20, 14, 0.55)');
+      }
       ctx.fillStyle = gVignette;
       ctx.fillRect(0, 0, W, H);
     },
