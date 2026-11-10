@@ -23,7 +23,7 @@ export interface WaterTouchIntroProps {
  * - Phương trình cực: r(θ) = R · |cos(9θ / 2)|^0.75
  * - Nét viền vàng thếp cổ #C5A262, chuyển sắc hồng phấn ngọc và trắng giấy dó #F5F2EB.
  * - Sóng nước đồng tâm (Concentric Water Ripples).
- * - Tự động ghi nhớ localStorage('lu_intro_seen'), hỗ trợ nút "Bỏ qua", phím tắt Enter/Space/Esc
+ * - Tự động ghi nhớ sessionStorage('lu_intro_seen'), hỗ trợ nút "Bỏ qua", phím tắt Enter/Space/Esc
  *   và chuẩn tiếp cận WCAG (inert background, prefers-reduced-motion).
  */
 export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
@@ -36,11 +36,22 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
   const [isVisible, setIsVisible] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     try {
-      return localStorage.getItem(INTRO_STORAGE_KEY) !== 'true';
+      // Dọn dẹp cờ cũ trong localStorage (nếu có) để tránh bị chặn bởi phiên bản trước
+      localStorage.removeItem(INTRO_STORAGE_KEY);
+      return sessionStorage.getItem(INTRO_STORAGE_KEY) !== 'true';
     } catch {
       return true;
     }
   });
+
+  // Dọn dẹp cờ cũ trong localStorage khi component mount
+  useEffect(() => {
+    try {
+      localStorage.removeItem(INTRO_STORAGE_KEY);
+    } catch {
+      // Bỏ qua lỗi storage
+    }
+  }, []);
 
   const [phase, setPhase] = useState<'idle' | 'blooming' | 'bloomed' | 'dismissing'>(() =>
     prefersReducedMotion ? 'bloomed' : 'idle',
@@ -59,6 +70,12 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
   // Lắng nghe sự kiện mở lại Intro từ bên ngoài
   useEffect(() => {
     const handleReopen = () => {
+      try {
+        sessionStorage.removeItem(INTRO_STORAGE_KEY);
+        localStorage.removeItem(INTRO_STORAGE_KEY);
+      } catch {
+        // Bỏ qua lỗi storage
+      }
       setIsDismissing(false);
       setBloomProgress(0);
       setPhase('idle');
@@ -73,7 +90,7 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
   // Xử lý đóng Intro và lưu cờ
   const handleDismiss = useCallback(() => {
     try {
-      localStorage.setItem(INTRO_STORAGE_KEY, 'true');
+      sessionStorage.setItem(INTRO_STORAGE_KEY, 'true');
     } catch {
       // Bỏ qua lỗi storage
     }

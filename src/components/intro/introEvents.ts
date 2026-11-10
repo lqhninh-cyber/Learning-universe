@@ -7,6 +7,7 @@ export const EVENT_OPEN_INTRO = 'lu_open_intro';
 export function openWaterTouchIntro(): void {
   if (typeof window === 'undefined') return;
   try {
+    sessionStorage.removeItem(INTRO_STORAGE_KEY);
     localStorage.removeItem(INTRO_STORAGE_KEY);
   } catch {
     // Bỏ qua lỗi storage
