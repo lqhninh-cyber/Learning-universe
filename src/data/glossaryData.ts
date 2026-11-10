@@ -62,7 +62,7 @@ export const GLOSSARY_DATA: readonly GlossaryEntry[] = [
     shortDefinition:
       'Bản chất cốt tử khẳng định giáo dục chỉ nảy sinh, tồn tại và phát triển trong đời sống xã hội loài người. Giáo dục phản ánh nhu cầu truyền thụ kinh nghiệm lịch sử - xã hội và biến đổi theo từng hình thái kinh tế - xã hội cụ thể.',
     subject: 'GDH',
-    targetUrl: '/glossary#ban-chat-xa-hoi',
+    targetUrl: '/mon-hoc/giao-duc-hoc',
   },
   {
     id: 'chuc-nang-kinh-te-san-xuat',
@@ -71,7 +71,25 @@ export const GLOSSARY_DATA: readonly GlossaryEntry[] = [
     shortDefinition:
       'Chức năng tái sản xuất sức lao động xã hội và nâng cao năng suất của người học. Giáo dục trực tiếp đào tạo nguồn nhân lực chất lượng cao, biến tri thức thành lực lượng sản xuất trực tiếp.',
     subject: 'GDH',
-    targetUrl: '/glossary#chuc-nang-kinh-te-san-xuat',
+    targetUrl: '/mon-hoc/giao-duc-hoc',
+  },
+  {
+    id: 'chuan-nghe-nghiep-gvpt',
+    term: 'Chuẩn nghề nghiệp giáo viên',
+    notation: 'TT 20/2018/TT-BGDĐT',
+    shortDefinition:
+      'Hệ thống các yêu cầu về phẩm chất và năng lực nghề nghiệp mà giáo viên cơ sở giáo dục phổ thông cần đạt được theo Thông tư số 20/2018/TT-BGDĐT.',
+    subject: 'GDH',
+    targetUrl: '/mon-hoc/giao-duc-hoc',
+  },
+  {
+    id: 'xung-dot-su-pham',
+    term: 'Xung đột sư phạm',
+    notation: 'Pedagogical Conflict',
+    shortDefinition:
+      'Mâu thuẫn nảy sinh giữa thầy và trò hoặc giữa các học sinh trong quá trình giáo dục, đòi hỏi giáo viên phải nhận diện và giải quyết thấu đáo theo 5 bước.',
+    subject: 'GDH',
+    targetUrl: '/mon-hoc/giao-duc-hoc',
   },
 ];
 

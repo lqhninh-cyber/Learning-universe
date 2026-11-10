@@ -6,6 +6,7 @@ export interface KatexMathProps {
   readonly math: string;
   readonly display?: boolean;
   readonly className?: string;
+  readonly altText?: string;
 }
 
 const KATEX_MACROS = {
@@ -25,13 +26,14 @@ const KATEX_MACROS = {
   '\\vect': '\\overrightarrow{#1}',
 };
 
-export function KatexMath({ math, display = false, className }: KatexMathProps) {
+export function KatexMath({ math, display = false, className, altText }: KatexMathProps) {
   const html = useMemo(() => {
     try {
       return katex.renderToString(math, {
         displayMode: display,
         throwOnError: false,
         strict: 'ignore',
+        output: 'htmlAndMathml',
         macros: KATEX_MACROS,
       });
     } catch {
@@ -43,7 +45,9 @@ export function KatexMath({ math, display = false, className }: KatexMathProps) 
     <span
       className={cn('inline-block select-none', className)}
       dangerouslySetInnerHTML={{ __html: html }}
-      aria-label={math}
+      {...(altText ? { 'aria-label': altText } : {})}
     />
   );
 }
+
+export default KatexMath;

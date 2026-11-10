@@ -162,17 +162,30 @@ export const MicroAffine3DCanvas: FC<MicroAffine3DCanvasProps> = ({
     setZoom((prev) => Math.max(MIN_ZOOM, +(prev - 0.15).toFixed(2)));
   }, []);
 
-  // Vòng lặp render Canvas
+  // Vòng lặp render Canvas On-demand & Tối ưu Viewport (0% GPU khi cuộn khỏi màn hình)
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animId: number;
+    let animId = 0;
+    let isIntersecting = true;
+    let isMounted = true;
     const startTime = performance.now();
 
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const render = (now: number) => {
+      if (!isMounted || !isIntersecting) {
+        animId = 0;
+        return;
+      }
+
       const elapsed = now - startTime;
 
       // Cập nhật quán tính khi thả chuột
@@ -201,7 +214,9 @@ export const MicroAffine3DCanvas: FC<MicroAffine3DCanvasProps> = ({
       const canvasHeight = rect.height;
 
       if (width === 0 || canvasHeight === 0) {
-        animId = requestAnimationFrame(render);
+        if (isIntersecting && !prefersReducedMotion) {
+          animId = requestAnimationFrame(render);
+        }
         return;
       }
 
@@ -583,11 +598,42 @@ export const MicroAffine3DCanvas: FC<MicroAffine3DCanvasProps> = ({
       }
 
       ctx.restore();
-      animId = requestAnimationFrame(render);
+
+      if (isIntersecting) {
+        animId = requestAnimationFrame(render);
+      } else {
+        animId = 0;
+      }
     };
 
-    animId = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(animId);
+    // Theo dõi viewport để dừng 100% render loop khi canvas cuộn khỏi màn hình
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (entry) {
+            isIntersecting = entry.isIntersecting;
+            if (isIntersecting && !animId) {
+              animId = requestAnimationFrame(render);
+            } else if (!isIntersecting && animId) {
+              cancelAnimationFrame(animId);
+              animId = 0;
+            }
+          }
+        },
+        { threshold: 0.05 },
+      );
+      observer.observe(container);
+    } else {
+      animId = requestAnimationFrame(render);
+    }
+
+    return () => {
+      isMounted = false;
+      if (animId) cancelAnimationFrame(animId);
+      observer?.disconnect();
+    };
   }, [isDark]);
 
   // Xử lý kéo xoay chuột

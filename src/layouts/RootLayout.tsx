@@ -25,6 +25,7 @@ function RootLayoutContent() {
 
   const { theme } = useReadingSettings();
   const isDarkLesson = isLessonPage && theme === 'dark';
+  const isSepiaLesson = isLessonPage && theme === 'sepia';
 
   useEffect(() => {
     if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
@@ -39,33 +40,44 @@ function RootLayoutContent() {
   return (
     <div
       id="reading-container"
-      data-reading-theme={isDarkLesson ? 'dark' : undefined}
+      data-reading-theme={isLessonPage ? theme : undefined}
+      data-theme={theme}
       className={cn(
         'flex min-h-screen flex-col overflow-x-clip transition-colors duration-300',
         isDarkLesson
           ? 'scoped-dark-mode dark bg-[#121517] text-[#E2E8F0]'
-          : 'bg-[#EAF0F1] text-[#29383D]',
+          : isSepiaLesson
+            ? 'scoped-sepia-mode bg-[#F4EEDF] text-[#231F18]'
+            : 'bg-[var(--bg-page)] text-[var(--text-main)]',
       )}
     >
+      {/* SKIP TO MAIN CONTENT LINK CHO BÀN PHÍM & SCREEN READER (WCAG 2.1 SC 2.4.1) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-xl focus:bg-[var(--bg-surface)] focus:px-4 focus:py-2.5 focus:text-xs focus:font-semibold focus:text-[var(--text-main)] focus:shadow-xl focus:ring-2 focus:ring-[var(--border-control)]"
+      >
+        Chuyển đến nội dung chính
+      </a>
+
       {/* 0. TACTILE DO PAPER GRAIN SVG NOISE OVERLAY */}
       <PaperGrain />
 
       {/* 1. STICKY FROSTED NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
-      <Header isDarkLesson={isDarkLesson} />
+      <Header isDarkLesson={isDarkLesson} readingTheme={isLessonPage ? theme : 'light'} />
 
       {/* 2. MAIN OUTLET CONTAINER */}
       {isHomePage ? (
-        <main className="flex-1 overflow-x-clip">
+        <main id="main-content" className="flex-1 overflow-x-clip">
           <Outlet />
         </main>
       ) : isCourseDetailPage ? (
-        <main className="flex-1 overflow-x-clip pb-12">
+        <main id="main-content" className="flex-1 overflow-x-clip pb-12">
           <Container size="wide">
             <Outlet />
           </Container>
         </main>
       ) : (
-        <main className="flex-1 pt-24 pb-12 sm:pt-28">
+        <main id="main-content" className="flex-1 pt-24 pb-12 sm:pt-28">
           <Container size="wide">
             <Outlet />
           </Container>

@@ -1,7 +1,8 @@
 import { normalizeSearchQuery } from '@/utils/vietnamese-text';
 import rawGlossary from './math-glossary.json';
 
-export type MathGlossarySubject = 'cau-truc-dai-so' | 'hinh-hoc-affine' | 'giai-tich-ham-mot-bien';
+export type MathGlossarySubject =
+  'cau-truc-dai-so' | 'hinh-hoc-affine' | 'giai-tich-ham-mot-bien' | 'giao-duc-hoc';
 
 export interface MathGlossaryEntry {
   readonly id: string;
@@ -24,7 +25,115 @@ export interface MathGlossaryEntry {
   readonly lessonUrl?: string;
 }
 
-export const MATH_GLOSSARY: readonly MathGlossaryEntry[] = rawGlossary as MathGlossaryEntry[];
+export const GDH_GLOSSARY_ENTRIES: readonly MathGlossaryEntry[] = [
+  {
+    id: 'gdh-ban-chat-xa-hoi',
+    slug: 'ban-chat-xa-hoi',
+    term: 'Bản chất xã hội',
+    subject: 'giao-duc-hoc',
+    courseId: 'giao-duc-hoc',
+    courseName: 'Giáo dục học',
+    patterns: ['ban chat xa hoi', 'bản chất xã hội', 'social essence', 'xa hoi hoa'],
+    symbol: '\\text{Social}',
+    formula: '\\text{Edu} \\subset \\text{Society}',
+    nameVi: 'Bản chất xã hội của giáo dục',
+    name: 'Bản chất xã hội',
+    nameEn: 'Social Nature of Education',
+    englishName: 'Social Essence of Education',
+    brief:
+      'Bản chất cốt tử khẳng định giáo dục chỉ nảy sinh, tồn tại và phát triển trong đời sống xã hội loài người. Giáo dục phản ánh nhu cầu truyền thụ kinh nghiệm lịch sử - xã hội.',
+    summary:
+      'Giáo dục chỉ nảy sinh, tồn tại và phát triển trong xã hội loài người nhằm đáp ứng nhu cầu duy trì và phát triển phương thức sản xuất.',
+    intuition:
+      'Không có cá nhân nào trưởng thành người ngoài môi trường xã hội; giáo dục là phương thức tái sinh văn hóa và kinh nghiệm lịch sử của nhân loại.',
+    relatedLesson: '/mon-hoc/giao-duc-hoc',
+    lessonUrl: '/mon-hoc/giao-duc-hoc',
+  },
+  {
+    id: 'gdh-chuc-nang-kinh-te-san-xuat',
+    slug: 'chuc-nang-kinh-te-san-xuat',
+    term: 'Chức năng kinh tế - sản xuất',
+    subject: 'giao-duc-hoc',
+    courseId: 'giao-duc-hoc',
+    courseName: 'Giáo dục học',
+    patterns: [
+      'chuc nang kinh te san xuat',
+      'kinh te san xuat',
+      'chức năng kinh tế',
+      'economic function',
+    ],
+    symbol: '\\text{Econ}',
+    formula: '\\text{Education} \\to \\text{Human Capital}',
+    nameVi: 'Chức năng kinh tế - sản xuất',
+    name: 'Chức năng kinh tế - sản xuất',
+    nameEn: 'Economic-Productive Function',
+    englishName: 'Economic and Productive Function',
+    brief:
+      'Chức năng tái sản xuất sức lao động xã hội và nâng cao năng suất của người học. Giáo dục đào tạo nguồn nhân lực và biến tri thức thành lực lượng sản xuất trực tiếp.',
+    summary:
+      'Giáo dục cung ứng nguồn nhân lực chất lượng cao, thúc đẩy chuyển giao công nghệ và tăng năng suất lao động xã hội.',
+    intuition:
+      'Đầu tư cho giáo dục là đầu tư sinh lợi xã hội cao nhất; đào tạo người học năng lực giải quyết vấn đề thực tiễn của nền kinh tế.',
+    relatedLesson: '/mon-hoc/giao-duc-hoc',
+    lessonUrl: '/mon-hoc/giao-duc-hoc',
+  },
+  {
+    id: 'gdh-chuan-nghe-nghiep-gvpt',
+    slug: 'chuan-nghe-nghiep-gvpt',
+    term: 'Chuẩn nghề nghiệp giáo viên',
+    subject: 'giao-duc-hoc',
+    courseId: 'giao-duc-hoc',
+    courseName: 'Giáo dục học',
+    patterns: [
+      'chuan nghe nghiep',
+      'chuẩn nghề nghiệp giáo viên',
+      'thong tu 20',
+      'professional standards',
+    ],
+    symbol: '\\text{TT20}',
+    formula: '5\\,\\text{TC} \\times 15\\,\\text{TChi}',
+    nameVi: 'Chuẩn nghề nghiệp giáo viên phổ thông',
+    name: 'Chuẩn nghề nghiệp GVPT',
+    nameEn: 'Teacher Professional Standards',
+    englishName: 'Professional Standards for General Education Teachers',
+    brief:
+      'Hệ thống phẩm chất và năng lực nghề nghiệp mà giáo viên phổ thông cần đạt được theo Thông tư số 20/2018/TT-BGDĐT.',
+    summary:
+      'Gồm 5 tiêu chuẩn: Phẩm chất nhà giáo, Phát triển chuyên môn/nghiệp vụ, Xây dựng môi trường giáo dục, Phát triển mối quan hệ nhà trường - gia đình - xã hội, Sử dụng ngoại ngữ và công nghệ.',
+    intuition:
+      'Hệ quy chiếu giúp nhà giáo tự soi, tự rèn và hoạch định lộ trình phát triển năng lực sư phạm suốt đời.',
+    relatedLesson: '/mon-hoc/giao-duc-hoc',
+    lessonUrl: '/mon-hoc/giao-duc-hoc',
+  },
+  {
+    id: 'gdh-xung-dot-su-pham',
+    slug: 'xung-dot-su-pham',
+    term: 'Xung đột sư phạm',
+    subject: 'giao-duc-hoc',
+    courseId: 'giao-duc-hoc',
+    courseName: 'Giáo dục học',
+    patterns: ['xung dot su pham', 'tinh huong su pham', 'an le su pham', 'pedagogical conflict'],
+    symbol: '\\Delta_{\\text{SP}}',
+    formula: '\\text{Issue} \\xrightarrow{\\text{5 steps}} \\text{Resolution}',
+    nameVi: 'Xung đột sư phạm & Án lệ thực hành',
+    name: 'Xung đột sư phạm',
+    nameEn: 'Pedagogical Conflict',
+    englishName: 'Pedagogical Conflict and Resolution',
+    brief:
+      'Mâu thuẫn hoặc tình huống căng thẳng nảy sinh trong giao tiếp sư phạm giữa thầy - trò hoặc giữa các học sinh trong tập thể.',
+    summary:
+      'Xử lý qua 5 bước chuẩn hóa: Kiềm chế cảm xúc, Thu thập thông tin khách quan, Phân tích động cơ, Đưa ra giải pháp mang tính giáo dục, Theo dõi và đánh giá tác động.',
+    intuition:
+      'Biến xung đột thành cơ hội vàng giáo dục phẩm chất và kỹ năng sống cho học sinh bằng tình thương và sự tôn trọng nhân cách.',
+    relatedLesson: '/mon-hoc/giao-duc-hoc',
+    lessonUrl: '/mon-hoc/giao-duc-hoc',
+  },
+];
+
+export const MATH_GLOSSARY: readonly MathGlossaryEntry[] = [
+  ...(rawGlossary as MathGlossaryEntry[]),
+  ...GDH_GLOSSARY_ENTRIES,
+];
 
 const GLOSSARY_MAP = new Map<string, MathGlossaryEntry>(
   MATH_GLOSSARY.map((entry) => [entry.id, entry]),
@@ -39,6 +148,9 @@ export function getAllGlossaryEntries(): readonly MathGlossaryEntry[] {
  */
 export function detectCourseIdFromPath(pathname?: string): string | undefined {
   if (!pathname) return undefined;
+  if (pathname.includes('giao-duc-hoc') || pathname.includes('gdh')) {
+    return 'giao-duc-hoc';
+  }
   if (pathname.includes('giai-tich-ham-mot-bien') || pathname.includes('gthmb')) {
     return 'giai-tich-ham-mot-bien';
   }
@@ -62,6 +174,21 @@ export function getGlossaryEntryById(
   id: string,
   currentCourseId?: string,
 ): MathGlossaryEntry | undefined {
+  if (id === 'ban-chat-xa-hoi') {
+    return GLOSSARY_MAP.get('gdh-ban-chat-xa-hoi') || GLOSSARY_MAP.get('ban-chat-xa-hoi');
+  }
+  if (id === 'chuc-nang-kinh-te-san-xuat') {
+    return (
+      GLOSSARY_MAP.get('gdh-chuc-nang-kinh-te-san-xuat') ||
+      GLOSSARY_MAP.get('chuc-nang-kinh-te-san-xuat')
+    );
+  }
+  if (id === 'chuan-nghe-nghiep-gvpt') {
+    return GLOSSARY_MAP.get('gdh-chuan-nghe-nghiep-gvpt');
+  }
+  if (id === 'xung-dot-su-pham') {
+    return GLOSSARY_MAP.get('gdh-xung-dot-su-pham');
+  }
   if (id === 'nhom-con-chuan-tac') {
     return GLOSSARY_MAP.get('ctds-nhom-con-chuan-tac') || GLOSSARY_MAP.get('nhom-con-chuan-tac');
   }

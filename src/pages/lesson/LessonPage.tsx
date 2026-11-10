@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   type CompiledLessonModule,
+  getAdjacentLessons,
   getLessonById,
   getLessonBySlug,
   LessonMdxView,
@@ -33,8 +34,8 @@ import { Badge, Breadcrumb, Button, Card, Drawer, Skeleton } from '@/shared/ui';
 
 function getSubjectCode(slug: string): string {
   if (slug === 'giao-duc-hoc') return 'EDUC2802';
-  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') return 'MATH1403';
-  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') return 'MATH2204';
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') return 'MATH1303';
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') return 'MATH1302';
   if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') return 'MATH1301';
   return 'MATH';
 }
@@ -262,6 +263,46 @@ function LessonPageContent() {
       cancelled = true;
     };
   }, [lessonId, loadedMap]);
+
+  // Hạng mục 7: Dự đoán nạp trước bài học tiếp theo (Predictive Lesson Prefetching)
+  useEffect(() => {
+    if (!subjectSlug || !lessonId) return;
+    const { next } = getAdjacentLessons(subjectSlug, lessonId);
+    if (!next?.lesson?.id || loadedMap[next.lesson.id]) return;
+
+    let prefetched = false;
+    const triggerPrefetch = () => {
+      if (prefetched) return;
+      prefetched = true;
+      loadLessonModule(next.lesson.id)
+        .then((mod) => {
+          setLoadedMap((prev) =>
+            prev[next.lesson.id] ? prev : { ...prev, [next.lesson.id]: mod },
+          );
+        })
+        .catch(() => {
+          // Bỏ qua lỗi ngầm khi prefetch
+        });
+    };
+
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + window.innerHeight;
+      const totalHeight = document.documentElement.scrollHeight;
+      if (totalHeight > 0 && scrollPos / totalHeight >= 0.6) {
+        triggerPrefetch();
+        window.removeEventListener('scroll', handleScroll);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    if (document.documentElement.scrollHeight <= window.innerHeight * 1.5) {
+      triggerPrefetch();
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [subjectSlug, lessonId, loadedMap]);
 
   if (!location) {
     return (

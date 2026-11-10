@@ -115,18 +115,31 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
 
     handleResize();
 
+    const startLoop = () => {
+      if (animId || !isMounted || prefersReducedMotion) return;
+      const loop = (timestamp: number) => {
+        if (!isMounted || !isIntersecting) {
+          animId = 0;
+          return;
+        }
+        renderFrame(timestamp / 1000);
+        animId = requestAnimationFrame(loop);
+      };
+      animId = requestAnimationFrame(loop);
+    };
+
+    const stopLoop = () => {
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    };
+
     if (prefersReducedMotion) {
       // Nếu giảm chuyển động, chỉ vẽ một khung hình tĩnh hoàn chỉnh (t = 2.0s) duy nhất
       renderFrame(2.0);
     } else {
-      const loop = (timestamp: number) => {
-        if (!isMounted) return;
-        if (isIntersecting) {
-          renderFrame(timestamp / 1000);
-        }
-        animId = requestAnimationFrame(loop);
-      };
-      animId = requestAnimationFrame(loop);
+      startLoop();
     }
 
     // Tối ưu hiệu năng: Dừng animation khi cuộn khỏi màn hình (0% CPU/GPU)
@@ -137,6 +150,11 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
           const entry = entries[0];
           if (entry) {
             isIntersecting = entry.isIntersecting;
+            if (isIntersecting) {
+              startLoop();
+            } else {
+              stopLoop();
+            }
           }
         },
         { threshold: 0.05 },

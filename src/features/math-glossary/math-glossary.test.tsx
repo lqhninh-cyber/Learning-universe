@@ -23,19 +23,27 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
   it('mọi mục thuật ngữ đều có đầy đủ trường thông tin bắt buộc', () => {
     for (const item of MATH_GLOSSARY) {
       expect(item.id).toBeTruthy();
-      expect(item.subject).toMatch(/^(cau-truc-dai-so|hinh-hoc-affine|giai-tich-ham-mot-bien)$/);
+      expect(item.subject).toMatch(
+        /^(cau-truc-dai-so|hinh-hoc-affine|giai-tich-ham-mot-bien|giao-duc-hoc)$/,
+      );
       expect(item.patterns.length).toBeGreaterThan(0);
       expect(item.symbol).toBeTruthy();
       expect(item.nameVi).toBeTruthy();
       expect(item.nameEn).toBeTruthy();
       expect(item.brief).toBeTruthy();
       expect(item.intuition).toBeTruthy();
-      expect(item.relatedLesson).toMatch(/^\/mon-hoc\/[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+$/);
+      if (item.subject !== 'giao-duc-hoc') {
+        expect(item.relatedLesson).toMatch(/^\/mon-hoc\/[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+$/);
+      }
     }
   });
 
   it('mọi liên kết relatedLesson đều trỏ tới bài học thực tế có trong hệ thống', () => {
     for (const item of MATH_GLOSSARY) {
+      if (item.subject === 'giao-duc-hoc') {
+        expect(item.relatedLesson).toMatch(/^\/mon-hoc\/giao-duc-hoc/);
+        continue;
+      }
       const parts = item.relatedLesson.split('/').filter(Boolean);
       // /mon-hoc/:subjectSlug/:chapterSlug/:lessonSlug
       expect(parts.length).toBe(4);
@@ -153,11 +161,15 @@ describe('Cơ sở dữ liệu Thuật ngữ Toán học (Math Glossary)', () =>
     const algebraOnly = searchGlossary({ subject: 'cau-truc-dai-so' });
     const affineOnly = searchGlossary({ subject: 'hinh-hoc-affine' });
     const calculusOnly = searchGlossary({ subject: 'giai-tich-ham-mot-bien' });
+    const gdhOnly = searchGlossary({ subject: 'giao-duc-hoc' });
 
-    expect(algebraOnly.length + affineOnly.length + calculusOnly.length).toBe(all.length);
+    expect(algebraOnly.length + affineOnly.length + calculusOnly.length + gdhOnly.length).toBe(
+      all.length,
+    );
     expect(algebraOnly.every((e) => e.subject === 'cau-truc-dai-so')).toBe(true);
     expect(affineOnly.every((e) => e.subject === 'hinh-hoc-affine')).toBe(true);
     expect(calculusOnly.every((e) => e.subject === 'giai-tich-ham-mot-bien')).toBe(true);
+    expect(gdhOnly.every((e) => e.subject === 'giao-duc-hoc')).toBe(true);
   });
 });
 

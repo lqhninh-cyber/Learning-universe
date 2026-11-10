@@ -28,12 +28,17 @@ import { Button, Drawer } from '@/shared/ui';
 
 export interface HeaderProps {
   readonly isDarkLesson?: boolean;
+  readonly readingTheme?: 'light' | 'dark' | 'sepia';
   readonly className?: string;
 }
 
 type ReadingFontScale = 'sm' | 'base' | 'lg';
 
-export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, className }) => {
+export const Header: FC<HeaderProps> = ({
+  isDarkLesson: propDarkLesson,
+  readingTheme: propReadingTheme,
+  className,
+}) => {
   const { isAuthenticated, isAdmin, openAuthModal, signOut } = useAuth();
 
   const isStoreAuthenticated = useLearningStore((state) => state.isAuthenticated);
@@ -56,11 +61,12 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
     /^\/bai-hoc\/[^/]+\/?$/.test(pathname) ||
     pathname === '/dev/mdx';
 
-  const [readingTheme, setReadingTheme] = useState<'light' | 'dark'>(() => {
+  const [readingTheme, setReadingTheme] = useState<'light' | 'dark' | 'sepia'>(() => {
+    if (propReadingTheme) return propReadingTheme;
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') return saved;
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
       } catch {
         // Bỏ qua lỗi storage
       }
@@ -70,12 +76,12 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
 
   useEffect(() => {
     const handleThemeChange = (e: Event) => {
-      const custom = e as CustomEvent<'light' | 'dark'>;
-      if (custom.detail === 'light' || custom.detail === 'dark') {
+      const custom = e as CustomEvent<'light' | 'dark' | 'sepia'>;
+      if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
         setReadingTheme(custom.detail);
       } else {
         const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light') {
+        if (saved === 'dark' || saved === 'light' || saved === 'sepia') {
           setReadingTheme(saved);
         }
       }
@@ -84,7 +90,9 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
     return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
   }, []);
 
-  const isDark = propDarkLesson ?? (isLessonPage && readingTheme === 'dark');
+  const activeTheme = propReadingTheme ?? (isLessonPage ? readingTheme : 'light');
+  const isDark = propDarkLesson ?? activeTheme === 'dark';
+  const isSepia = activeTheme === 'sepia';
 
   // Đóng các menu thả nổi khi chuyển trang
   const [prevPath, setPrevPath] = useState(pathname);
@@ -161,11 +169,15 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
           'lu-site-header fixed top-4 left-1/2 z-40 flex h-14 w-[94%] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full px-6 shadow-sm backdrop-blur-xl transition-all duration-300 md:top-5 md:h-15 print:hidden',
           isDark
             ? 'border-b border-[#2A323A] bg-[#16191D]/90 text-[#E2E8F0]'
-            : 'border border-[#CFDADB] bg-[#F7FAFA]/85 text-[#29383D]',
+            : isSepia
+              ? 'border border-[#DECDB0] bg-[#FBF8EF]/90 text-[#231F18]'
+              : 'border border-[#CFDADB] bg-[#F7FAFA]/85 text-[#29383D]',
           isScrolled &&
             (isDark
               ? 'border-[#2A323A] bg-[#16191D]/98 shadow-md'
-              : 'border-[#CFDADB] bg-[#F7FAFA]/95 shadow-md'),
+              : isSepia
+                ? 'border-[#DECDB0] bg-[#FBF8EF]/98 shadow-md'
+                : 'border-[#CFDADB] bg-[#F7FAFA]/95 shadow-md'),
           className,
         )}
       >
@@ -324,7 +336,9 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
                   'absolute top-full right-0 mt-3 w-64 rounded-3xl p-4 shadow-2xl backdrop-blur-2xl',
                   isDark
                     ? 'border border-[#2A323A] bg-[#16191D]/95 text-[#E2E8F0]'
-                    : 'border border-[#CFDADB] bg-[#F7FAFA]/95 text-[#29383D]',
+                    : isSepia
+                      ? 'border border-[#DECDB0] bg-[#FBF8EF]/95 text-[#231F18]'
+                      : 'border border-[#CFDADB] bg-[#F7FAFA]/95 text-[#29383D]',
                 )}
               >
                 {/* Mục 1: Thông tin học tập cá nhân */}
@@ -589,7 +603,9 @@ export const Header: FC<HeaderProps> = ({ isDarkLesson: propDarkLesson, classNam
               'absolute top-full left-1/2 mt-3 w-[640px] max-w-[94vw] -translate-x-1/2 rounded-3xl p-6 shadow-2xl backdrop-blur-2xl transition-all',
               isDark
                 ? 'border border-[#2A323A] bg-[#16191D]/98 text-[#E2E8F0]'
-                : 'border border-[#CFDADB] bg-[#F7FAFA]/95 text-[#29383D]',
+                : isSepia
+                  ? 'border border-[#DECDB0] bg-[#FBF8EF]/98 text-[#231F18]'
+                  : 'border border-[#CFDADB] bg-[#F7FAFA]/95 text-[#29383D]',
             )}
           >
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

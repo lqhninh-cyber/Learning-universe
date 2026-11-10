@@ -294,6 +294,12 @@
     color: var(--text-main);
   }
 
+  /* Chuẩn tiếp cận WCAG 2.1 (SC 2.4.7 Focus Visible - Level AA): Vòng viền bàn phím sắc nét */
+  :focus-visible {
+    outline: 2px solid var(--border-control);
+    outline-offset: 2px;
+  }
+
   /* Donny Trương Orthography: chống đè dấu thanh điệu và dấu phụ chữ Quốc ngữ khi viết hoa */
   [class*='uppercase'],
   .small-caps,
