@@ -2,14 +2,14 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { openWaterTouchIntro, WaterTouchIntro } from './index';
 import {
-  computeHypotrochoidPoint,
+  computePoincareControlPoint,
   computePortalTransform,
+  computeRosePetalPoint,
   easeInOutExpo,
   easeInOutQuart,
   easeOutCubic,
   getWindowRadius,
-  ICOSAHEDRON_EDGES,
-  ICOSAHEDRON_VERTICES,
+  POINCARE_BOUNDARY_COUNT,
   renderKhueVanCanvas,
 } from './khueVanCanvas';
 
@@ -195,20 +195,25 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
 });
 
 describe('KhueVanCanvas Math & Portal Choreography', () => {
-  it('tính toán đúng hình học Nhị thập diện đều 3D (12 đỉnh, 30 cạnh) và Hypotrochoid 8 nhánh', () => {
-    expect(ICOSAHEDRON_VERTICES).toHaveLength(12);
-    expect(ICOSAHEDRON_EDGES).toHaveLength(30);
+  it('tính toán đúng cung trắc địa Poincaré 16 điểm (hướng tâm) và cực hoa thị vàng 8 cánh', () => {
+    expect(POINCARE_BOUNDARY_COUNT).toBe(16);
 
-    for (const [x, y, z] of ICOSAHEDRON_VERTICES) {
-      expect(Math.hypot(x, y, z)).toBeCloseTo(1, 5);
-    }
+    const diskR = 100;
+    const p0: readonly [number, number] = [diskR, 0];
+    const step5Angle = (5 * Math.PI * 2) / POINCARE_BOUNDARY_COUNT;
+    const p5: readonly [number, number] = [
+      Math.cos(step5Angle) * diskR,
+      Math.sin(step5Angle) * diskR,
+    ];
 
-    const b = 10;
-    const a = 8 * b;
-    const h = 25;
+    const [ctrlX, ctrlY] = computePoincareControlPoint(p0[0], p0[1], p5[0], p5[1], diskR);
+    const chordMidDist = Math.hypot((p0[0] + p5[0]) * 0.5, (p0[1] + p5[1]) * 0.5);
+    expect(Math.hypot(ctrlX, ctrlY)).toBeLessThan(chordMidDist);
+
+    const amp = 0.18 * diskR;
     for (let k = 0; k < 8; k++) {
-      const [px, py] = computeHypotrochoidPoint(a, b, h, (k * Math.PI) / 4, 0);
-      expect(Math.hypot(px, py)).toBeCloseTo(a - b + h, 4);
+      const [rx, ry] = computeRosePetalPoint(amp, (k * Math.PI) / 4);
+      expect(Math.hypot(rx, ry)).toBeCloseTo(amp, 4);
     }
   });
 
@@ -248,9 +253,12 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     expect(act3End.portalRadius).toBeGreaterThanOrEqual(Math.hypot(w, h));
   });
 
-  it('vẽ Nhị thập diện đều 3D, Hypotrochoid 8 nhánh, Vệt sao băng, Parallax 3 lớp và destination-out ở Hồi III', () => {
+  it('vẽ Đĩa Poincaré Mộng Gỗ, Dựng hình Compa, 16 Tơ Sơn Mài, Sao băng 12 đoạn, Parallax 3 lớp & destination-out', () => {
     const compositeOps: string[] = [];
     const lineWidths: number[] = [];
+    const shadowBlurs: number[] = [];
+    const fillStyles: string[] = [];
+    const strokeStyles: string[] = [];
     const translations: (readonly [number, number])[] = [];
     const fillRectMock = vi.fn();
     const mockGrad = { addColorStop: vi.fn() };
@@ -267,6 +275,7 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       closePath: vi.fn(),
       moveTo: vi.fn(),
       lineTo: vi.fn(),
+      quadraticCurveTo: vi.fn(),
       arc: vi.fn(),
       ellipse: vi.fn(),
       fill: vi.fn(),
@@ -279,10 +288,18 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       setLineDash: vi.fn(),
       createRadialGradient: vi.fn(() => mockGrad),
       lineCap: 'butt',
-      set fillStyle(_v: unknown) {},
-      set strokeStyle(_v: unknown) {},
+      set fillStyle(v: unknown) {
+        if (typeof v === 'string') fillStyles.push(v);
+      },
+      set strokeStyle(v: unknown) {
+        if (typeof v === 'string') strokeStyles.push(v);
+      },
       set lineWidth(w: number) {
         lineWidths.push(w);
+      },
+      set shadowColor(_v: string) {},
+      set shadowBlur(v: number) {
+        shadowBlurs.push(v);
       },
       globalAlpha: 1,
       get globalCompositeOperation() {
@@ -305,18 +322,24 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       parallaxY: -0.5,
     });
 
-    // 3 vòng Hỗn Thiên Nghi + khung Sắc Phong + hạt nhân quang học radialGradient
+    // 3 vòng Hỗn Thiên Nghi, khung Sắc Phong, clip lưới ngoại vi & tơ sơn mài, hạt ngọc shadowBlur = 10
     expect(mockCtx.ellipse).toHaveBeenCalledTimes(3);
     expect(mockCtx.strokeRect).toHaveBeenCalledTimes(2);
-    expect(mockCtx.clip).toHaveBeenCalledTimes(1);
-    expect(mockCtx.createRadialGradient).toHaveBeenCalledTimes(3);
+    expect(mockCtx.clip).toHaveBeenCalledTimes(2);
+    expect(mockCtx.createRadialGradient).toHaveBeenCalledTimes(2);
+    expect(mockCtx.quadraticCurveTo).toHaveBeenCalled();
+    expect(shadowBlurs).toContain(10);
     expect(fillRectMock.mock.calls.length).toBeGreaterThanOrEqual(3);
 
-    // Đường cong Hypotrochoid (0.85), cạnh Icosahedron mặt trước (1.3) & đuôi sao băng (2.5 -> 0.2)
+    // Poincaré (1.2 / 0.85) & sao băng quỹ đạo 12 đoạn (opacity 0.85 -> 0)
+    expect(lineWidths).toContain(1.2);
     expect(lineWidths).toContain(0.85);
-    expect(lineWidths).toContain(1.3);
-    expect(lineWidths).toContain(2.5);
-    expect(lineWidths).toContain(0.2);
+    expect(strokeStyles.some((s) => s.includes('0.850'))).toBe(true);
+
+    // 16 sợi Dòng chảy tơ sơn mài & tô lấp mờ Đĩa Poincaré
+    expect(fillStyles).toContain('rgba(200, 62, 55, 0.04)');
+    expect(fillStyles).toContain('rgba(197, 162, 98, 0.28)');
+    expect(fillStyles).toContain('rgba(200, 62, 55, 0.18)');
 
     // Kiểm tra dịch chuyển Parallax 3 lớp: (-4, 2), (10, -5), và tâm (cx+18, cy-9) = (978, 531)
     expect(translations).toContainEqual([-4, 2]);

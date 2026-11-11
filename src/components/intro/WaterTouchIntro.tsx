@@ -27,9 +27,10 @@ interface DismissTransitionState {
  * Nghi thức thị giác thuần HTML5 Canvas 2D (Zero Text UI):
  * - Bảng màu sáng hoàng cung: giấy dó #FFFDF9 -> #EDE8D8, đỏ chu sa #C83E37,
  *   vàng thếp #C5A262 / #8A6A2F và xanh men ngọc #4E9B58.
- * - Tâm điểm Hỗn Thiên Nghi 3D + Vân tơ Hypotrochoid 8 nhánh (a/b = 8) + Khối Nhị thập diện đều 3D
- *   (Icosahedron 12 đỉnh, 30 cạnh) + Hạt nhân quang học tâm (radialGradient #C83E37 nhịp sin(t * 3)).
- * - Đuôi sao băng chuyển động trên các elip Hỗn Thiên Nghi & vòng Astrolabe lớn + Parallax 3 lớp theo chuột.
+ * - Tâm điểm: Lưới Trắc Địa Đĩa Poincaré 16 điểm (2 tầng xoay ngược tạo mộng gỗ moiré),
+ *   Phép Dựng Hình Compa Euclid (4 đường tròn 0.5*R1 + tia quét + 8 giao điểm ngọc),
+ *   Ấn Tâm Hoa Thị Vàng 8 cánh r = 0.18*R1*cos(4θ) & Hỗn Thiên Nghi 3D.
+ * - Không gian ngoại vi: 16 Dòng Chảy Tơ Sơn Mài, sao băng quỹ đạo 12 đoạn (0.85 -> 0) & Parallax 3 lớp theo chuột.
  * - Kịch bản 7.5s gồm 3 hồi (Trời tròn Đất vuông -> Thiên cầu & 16 sao Khuê -> Cửa sổ thấu quang destination-out).
  * - Click / chạm / phím bất kỳ: Tua nhanh mở rộng cửa sổ tròn trong 0.45s để vào Trang chủ.
  * - Hỗ trợ Retina DPI, ResizeObserver và prefers-reduced-motion (1.5s).

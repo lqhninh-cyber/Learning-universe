@@ -1,22 +1,24 @@
 /**
- * ENGINE ĐỒ HỌA CANVAS 2D: "THIÊN CẦU KHUÊ VĂN CÁC" (PHIÊN BẢN CƠ HỆ TOÁN HỌC 3D & SAO BĂNG)
+ * ENGINE ĐỒ HỌA CANVAS 2D: "THIÊN CẦU KHUÊ VĂN CÁC" (THẤU KÍNH POINCARÉ, COMPA & TƠ SƠN MÀI)
  *
  * - Ánh sáng nền: Vignette góc #E5DEC9 tôn khung Đỏ Chu Sa / Vàng Thếp + Quầng sáng ấm tại tâm rgba(229,195,120,0.22).
- * - Trung tâm (Tâm điểm 3 lớp hình học bên trong cửa sổ R₁):
- *   + Hỗn Thiên Nghi 3D (3 elip nghiêng 30°, 60°, -45° độ nét 1.2px kèm vệt sao băng quỹ đạo).
- *   + Vân Tơ Toán Học Hypotrochoid 8 nhánh (a/b = 8, lineWidth = 0.85, 2 lớp lệch pha Đỏ Chu Sa & Vàng Thếp).
- *   + Khối Nhị Thập Diện Đều 3D (Icosahedron 12 đỉnh, 30 cạnh) xoay 2 trục + góc nghiêng chuột, chiếu phối cảnh 2D,
- *     chấm ngọc đỉnh trước (#C5A262 & #4E9B58) và Hạt Nhân Quang Học Tâm (radialGradient #C83E37 nhịp sin(t * 3)).
- * - Kiến trúc Khuê Văn Các: Đất vuông NÉT KÉP (#C83E37 ngoài & #C5A262 cách 4px) + đường phân giác & chấm vàng tại 8 đỉnh
- *   + 8 nan gỗ tô mờ rgba(200,62,55,0.05) với vạch khóa ngang song tiện cổ truyền ở giữa.
- * - Toàn khung (Full-Viewport Cartography) & Parallax 3 lớp:
- *   + Lớp khung Sắc Phong (-mx*4, -my*4), Lớp thiên văn & chòm sao (mx*10, my*10) kèm vệt sao băng Astrolabe,
- *     Lớp tâm Khuê Văn & Đa diện 3D (mx*18, my*18).
+ * - Trung tâm (bên trong cửa sổ tròn R₁):
+ *   + Hỗn Thiên Nghi 3D (3 elip nghiêng 30°, 60°, -45° kèm sao băng đuôi 12 đoạn).
+ *   + Lớp 1: Lưới Trắc Địa Đĩa Poincaré Mộng Gỗ (16 điểm, dây cung bước 5 & 7 uốn cong trực giao bằng quadraticCurveTo,
+ *     2 tầng xoay ngược chiều #C83E37 & #C5A262 tạo hiệu ứng vạn hoa moiré).
+ *   + Lớp 2: Phép Dựng Hình Compa Euclid (4 đường tròn phụ trợ 0.5*R1 nét đứt #8A6A2F + kim quét ánh sáng +
+ *     8 giao điểm ngọc #4E9B58 & #C83E37 bừng sáng theo nhịp sóng).
+ *   + Lớp 3: Ấn Tâm Hoa Thị Vàng (cực 8 cánh r = 0.18*R1*cos(4θ) viền #C5A262 + hạt ngọc #C83E37 shadowBlur = 10).
+ * - Kiến trúc Khuê Văn Các: Đất vuông NÉT KÉP (#C83E37 ngoài & #C5A262 cách 4px) + 8 nan gỗ khóa ngang song tiện.
+ * - Không gian ngoại vi & Parallax 3 lớp:
+ *   + 16 sợi Dòng Chảy Tơ Sơn Mài nhọn 2 đầu dày 1px ở giữa (#C5A262 & #C83E37), sao băng quỹ đạo 12 đoạn (alpha 0.85 -> 0).
+ *   + Khung Sắc Phong (-mx*4, -my*4), Lớp thiên văn & tơ sơn mài (mx*10, my*10), Lớp Khuê Văn & Poincaré (mx*18, my*18).
  */
 
 export const INTRO_TOTAL_DURATION_S = 7.5;
 export const INTRO_REDUCED_DURATION_S = 1.5;
 export const PORTAL_DISMISS_DURATION_S = 0.45;
+export const POINCARE_BOUNDARY_COUNT = 16;
 
 export interface KhueVanRenderState {
   readonly elapsed: number;
@@ -50,54 +52,6 @@ const COLORS = {
   goldDark: '#8A6A2F',
   jadeLight: '#4E9B58',
 } as const;
-
-const GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2;
-const ICOSAHEDRON_INV_NORM = 1 / Math.hypot(1, GOLDEN_RATIO);
-
-type Vec3 = readonly [number, number, number];
-
-const RAW_ICOSAHEDRON_VERTICES: readonly Vec3[] = [
-  [0, 1, GOLDEN_RATIO],
-  [0, -1, GOLDEN_RATIO],
-  [0, 1, -GOLDEN_RATIO],
-  [0, -1, -GOLDEN_RATIO],
-  [1, GOLDEN_RATIO, 0],
-  [-1, GOLDEN_RATIO, 0],
-  [1, -GOLDEN_RATIO, 0],
-  [-1, -GOLDEN_RATIO, 0],
-  [GOLDEN_RATIO, 0, 1],
-  [GOLDEN_RATIO, 0, -1],
-  [-GOLDEN_RATIO, 0, 1],
-  [-GOLDEN_RATIO, 0, -1],
-];
-
-/** 12 đỉnh chuẩn hóa của khối Nhị thập diện đều (Regular Icosahedron) */
-export const ICOSAHEDRON_VERTICES: readonly Vec3[] = RAW_ICOSAHEDRON_VERTICES.map(([x, y, z]) => [
-  x * ICOSAHEDRON_INV_NORM,
-  y * ICOSAHEDRON_INV_NORM,
-  z * ICOSAHEDRON_INV_NORM,
-]);
-
-/** 30 cạnh nối các cặp đỉnh lân cận của khối Nhị thập diện đều */
-export const ICOSAHEDRON_EDGES: readonly (readonly [number, number])[] = (() => {
-  const edges: [number, number][] = [];
-  for (let i = 0; i < RAW_ICOSAHEDRON_VERTICES.length; i++) {
-    const a = RAW_ICOSAHEDRON_VERTICES[i];
-    if (!a) continue;
-    for (let j = i + 1; j < RAW_ICOSAHEDRON_VERTICES.length; j++) {
-      const b = RAW_ICOSAHEDRON_VERTICES[j];
-      if (!b) continue;
-      const dx = a[0] - b[0];
-      const dy = a[1] - b[1];
-      const dz = a[2] - b[2];
-      const distSq = dx * dx + dy * dy + dz * dz;
-      if (Math.abs(distSq - 4) < 1e-6) {
-        edges.push([i, j]);
-      }
-    }
-  }
-  return edges;
-})();
 
 interface KhueStar {
   readonly radiusFactor: number;
@@ -305,23 +259,44 @@ export function easeInOutExpo(x: number): number {
   return t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2;
 }
 
-/** Tính tọa độ điểm trên đường cong Hypotrochoid tham số */
-export function computeHypotrochoidPoint(
-  a: number,
-  b: number,
-  h: number,
-  t: number,
-  phase: number,
+/** Tính điểm điều khiển hướng tâm cho cung trắc địa (Poincaré geodesic) qua quadraticCurveTo */
+export function computePoincareControlPoint(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  diskRadius: number,
 ): readonly [number, number] {
-  const ratio = (a - b) / b;
-  const x = (a - b) * Math.cos(t) + h * Math.cos(ratio * t + phase);
-  const y = (a - b) * Math.sin(t) - h * Math.sin(ratio * t + phase);
-  return [x, y];
+  const mx = (x1 + x2) * 0.5;
+  const my = (y1 + y2) * 0.5;
+  const midDist = Math.hypot(mx, my);
+  if (midDist < 1e-6 || diskRadius <= 0) {
+    return [0, 0];
+  }
+  const cosHalfTheta = clamp01(midDist / diskRadius);
+  const halfTheta = Math.acos(cosHalfTheta);
+  const apexRadius = diskRadius * Math.tan((Math.PI / 2 - halfTheta) * 0.5);
+  const ctrlDist = Math.max(0, 2 * apexRadius - midDist);
+  const scale = ctrlDist / midDist;
+  return [mx * scale, my * scale];
+}
+
+/** Tính tọa độ điểm cực trên hoa thị vàng 8 cánh r = amplitude * cos(4 * theta) */
+export function computeRosePetalPoint(amplitude: number, theta: number): readonly [number, number] {
+  const r = amplitude * Math.cos(4 * theta);
+  return [r * Math.cos(theta), r * Math.sin(theta)];
+}
+
+/** Tính khoảng cách góc có hướng quanh vòng tròn [0, 2π) từ needle tới targetAngle */
+function angularLagBehindSweep(sweepAngle: number, targetAngle: number): number {
+  const twoPi = Math.PI * 2;
+  const diff = (sweepAngle - targetAngle) % twoPi;
+  return diff >= 0 ? diff : diff + twoPi;
 }
 
 /**
- * Vẽ hạt sáng chuyển động kèm đuôi sao băng (15-20 đoạn cung ngắn):
- * giảm dần alpha từ 0.9 về 0 và giảm lineWidth từ 2.5px về 0.2px.
+ * Vẽ hạt sáng chuyển động kèm đuôi sao băng 12 đoạn ngắn:
+ * giảm dần độ trong suốt opacity từ 0.85 về 0 và thu gọn nét vẽ từ đầu về đuôi.
  */
 function drawCometTrail(
   ctx: CanvasRenderingContext2D,
@@ -343,8 +318,8 @@ function drawCometTrail(
     const t1 = headTheta - direction * s * stepRad;
     const p0 = pointAt(t0);
     const p1 = pointAt(t1);
-    const segAlpha = 0.9 * (1 - s / segments);
-    const segWidth = 0.2 + 2.3 * (segments > 1 ? 1 - s / (segments - 1) : 1);
+    const segAlpha = segments > 1 ? 0.85 * (1 - s / segments) : 0.85;
+    const segWidth = 0.25 + 1.95 * (segments > 1 ? 1 - s / (segments - 1) : 1);
 
     ctx.strokeStyle = `rgba(${trailRgb}, ${segAlpha.toFixed(3)})`;
     ctx.lineWidth = segWidth;
@@ -856,7 +831,7 @@ function drawFullViewportCartographyGrid(
     ctx.stroke();
     ctx.restore();
 
-    // 2 sao băng chuyển động dọc quỹ đạo ngoại vi 1
+    // 2 sao băng chuyển động dọc quỹ đạo ngoại vi 1 (đuôi 12 đoạn mờ dần 0.85 -> 0)
     ctx.save();
     ctx.globalAlpha *= outerRingP;
     for (let k = 0; k < 2; k++) {
@@ -867,7 +842,7 @@ function drawFullViewportCartographyGrid(
         headTheta,
         1,
         0.28,
-        18,
+        12,
         3.0,
         isCinnabar ? COLORS.cinnabar : COLORS.goldBright,
         isCinnabar ? '200, 62, 55' : '197, 162, 98',
@@ -894,7 +869,7 @@ function drawFullViewportCartographyGrid(
     ctx.stroke();
     ctx.restore();
 
-    // 2 sao băng nghịch chiều trên quỹ đạo ngoại vi 2
+    // 2 sao băng nghịch chiều trên quỹ đạo ngoại vi 2 (đuôi 12 đoạn mờ dần 0.85 -> 0)
     ctx.save();
     ctx.globalAlpha *= outerRingP;
     for (let k = 0; k < 2; k++) {
@@ -905,7 +880,7 @@ function drawFullViewportCartographyGrid(
         headTheta,
         -1,
         0.24,
-        18,
+        12,
         2.8,
         isJade ? COLORS.jadeLight : COLORS.goldDark,
         isJade ? '78, 155, 88' : '138, 106, 47',
@@ -915,6 +890,108 @@ function drawFullViewportCartographyGrid(
     ctx.restore();
 
     ctx.restore();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * Dòng Chảy Tơ Sơn Mài: 16 sợi tơ sóng điều hòa (Vàng Thếp & Đỏ Chu Sa)
+ * Uốn lượn mềm mại từ hai bên cánh hướng về tâm, nhọn ở 2 đầu và dày 1px ở giữa.
+ */
+function drawLacquerSilkFilaments(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  r1: number,
+  artTime: number,
+  liveTime: number,
+  borderOffsetX: number,
+  borderOffsetY: number,
+  midOffsetX: number,
+  midOffsetY: number,
+): void {
+  const silkP = easeOutCubic(clamp01((artTime - 0.8) / 1.5));
+  if (silkP <= 0) return;
+
+  const inset = (width >= 768 ? 28 : 16) + 5;
+  const innerW = width - inset * 2;
+  const innerH = height - inset * 2;
+  if (innerW <= 40 || innerH <= 40) return;
+
+  const cx = width / 2 + midOffsetX;
+  const cy = height / 2 + midOffsetY;
+  const outerXSpread = Math.max(r1 * 2.1, width * 0.45);
+  const innerStopR = r1 * 1.62;
+  const halfHeightSpan = height * 0.37;
+  const sampleCount = 26;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(inset + borderOffsetX, inset + borderOffsetY, innerW, innerH);
+  ctx.clip();
+  ctx.globalAlpha *= silkP;
+
+  for (let idx = 0; idx < 16; idx++) {
+    const side: -1 | 1 = idx < 8 ? -1 : 1;
+    const lane = idx % 8;
+    const normLane = (lane - 3.5) / 3.5;
+    const yOuter = cy + normLane * halfHeightSpan;
+    const yInner = cy + normLane * (r1 * 1.15);
+    const xOuter = cx + side * outerXSpread;
+    const xInner = cx + side * innerStopR;
+    const waveFreq = 1.6 + (lane % 3) * 0.35;
+    const waveAmp = (10 + (lane % 4) * 4.5) * (width >= 768 ? 1 : 0.65);
+    const wavePhase = liveTime * (0.75 + (lane % 3) * 0.14) + idx * 0.72;
+
+    const spinePoints: (readonly [number, number])[] = [];
+    for (let s = 0; s <= sampleCount; s++) {
+      const u = s / sampleCount;
+      const uSmooth = u * u * (3 - 2 * u);
+      const px = xOuter + (xInner - xOuter) * u;
+      const baseY = yOuter + (yInner - yOuter) * uSmooth;
+      const envelope = Math.sin(Math.PI * u);
+      const py = baseY + Math.sin(u * Math.PI * waveFreq + wavePhase) * waveAmp * envelope;
+      spinePoints.push([px, py]);
+    }
+
+    const upperSide: (readonly [number, number])[] = [];
+    const lowerSide: (readonly [number, number])[] = [];
+
+    for (let s = 0; s <= sampleCount; s++) {
+      const curr = spinePoints[s];
+      if (!curr) continue;
+      const prev = spinePoints[Math.max(0, s - 1)] ?? curr;
+      const next = spinePoints[Math.min(sampleCount, s + 1)] ?? curr;
+      const dx = next[0] - prev[0];
+      const dy = next[1] - prev[1];
+      const segLen = Math.hypot(dx, dy) || 1;
+      const nx = -dy / segLen;
+      const ny = dx / segLen;
+
+      const u = s / sampleCount;
+      const halfWidth = 0.5 * Math.sin(Math.PI * u);
+      upperSide.push([curr[0] + nx * halfWidth, curr[1] + ny * halfWidth]);
+      lowerSide.push([curr[0] - nx * halfWidth, curr[1] - ny * halfWidth]);
+    }
+
+    const firstUpper = upperSide[0];
+    if (!firstUpper) continue;
+
+    ctx.beginPath();
+    ctx.moveTo(firstUpper[0], firstUpper[1]);
+    for (let s = 1; s < upperSide.length; s++) {
+      const pt = upperSide[s];
+      if (pt) ctx.lineTo(pt[0], pt[1]);
+    }
+    for (let s = lowerSide.length - 1; s >= 0; s--) {
+      const pt = lowerSide[s];
+      if (pt) ctx.lineTo(pt[0], pt[1]);
+    }
+    ctx.closePath();
+
+    ctx.fillStyle = idx % 2 === 0 ? 'rgba(197, 162, 98, 0.28)' : 'rgba(200, 62, 55, 0.18)';
+    ctx.fill();
   }
 
   ctx.restore();
@@ -1088,7 +1165,7 @@ function drawArmillaryCometRings(
     ctx.ellipse(0, 0, majorR, minorR, ring.angle, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Hạt sao băng chuyển động dọc quỹ đạo elip kèm đuôi mờ 18 đoạn
+    // Hạt sao băng chuyển động dọc quỹ đạo elip kèm đuôi mờ 12 đoạn (opacity 0.85 -> 0)
     const orbitTheta = liveTime * ring.orbitRate + ring.phase * 2.1;
     const direction: 1 | -1 = ring.orbitRate >= 0 ? 1 : -1;
     drawCometTrail(
@@ -1096,7 +1173,7 @@ function drawArmillaryCometRings(
       orbitTheta,
       direction,
       0.72,
-      18,
+      12,
       2.7,
       ring.isCinnabar ? COLORS.cinnabar : COLORS.goldBright,
       ring.isCinnabar ? '200, 62, 55' : '197, 162, 98',
@@ -1110,224 +1187,257 @@ function drawArmillaryCometRings(
   ctx.restore();
 }
 
+/** Phác họa 1 tầng lưới trắc địa 16 điểm (nối bước 5 & 7 qua quadraticCurveTo hướng tâm) */
+function drawPoincareLayer(
+  ctx: CanvasRenderingContext2D,
+  diskR: number,
+  rotationRad: number,
+  strokeColor: string,
+  lineWidth: number,
+  layerOpacity: number,
+  fillInterior: boolean,
+): void {
+  const stepAngle = (Math.PI * 2) / POINCARE_BOUNDARY_COUNT;
+  const pts: (readonly [number, number])[] = [];
+  for (let k = 0; k < POINCARE_BOUNDARY_COUNT; k++) {
+    const theta = k * stepAngle;
+    pts.push([Math.cos(theta) * diskR, Math.sin(theta) * diskR]);
+  }
+
+  ctx.save();
+  ctx.rotate(rotationRad);
+
+  // Tô lấp mờ đa giác sao 16 đỉnh trắc địa bước 7 cho tầng chính
+  if (fillInterior) {
+    const startPt = pts[0];
+    if (startPt) {
+      ctx.beginPath();
+      ctx.moveTo(startPt[0], startPt[1]);
+      let currIdx = 0;
+      for (let i = 0; i < POINCARE_BOUNDARY_COUNT; i++) {
+        const nextIdx = (currIdx + 7) % POINCARE_BOUNDARY_COUNT;
+        const p1 = pts[currIdx];
+        const p2 = pts[nextIdx];
+        if (p1 && p2) {
+          const [cxCtrl, cyCtrl] = computePoincareControlPoint(p1[0], p1[1], p2[0], p2[1], diskR);
+          ctx.quadraticCurveTo(cxCtrl, cyCtrl, p2[0], p2[1]);
+        }
+        currIdx = nextIdx;
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(200, 62, 55, 0.04)';
+      ctx.fill('evenodd');
+    }
+  }
+
+  ctx.globalAlpha *= layerOpacity;
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = lineWidth;
+
+  for (const jumpStep of [5, 7] as const) {
+    ctx.beginPath();
+    for (let k = 0; k < POINCARE_BOUNDARY_COUNT; k++) {
+      const p1 = pts[k];
+      const p2 = pts[(k + jumpStep) % POINCARE_BOUNDARY_COUNT];
+      if (!p1 || !p2) continue;
+      const [cxCtrl, cyCtrl] = computePoincareControlPoint(p1[0], p1[1], p2[0], p2[1], diskR);
+      ctx.moveTo(p1[0], p1[1]);
+      ctx.quadraticCurveTo(cxCtrl, cyCtrl, p2[0], p2[1]);
+    }
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
 /**
- * Lớp 2A Trung tâm: Vân Tơ Toán Học (Parametric Hypotrochoid 8 nhánh, a/b = 8)
- * Phối 2 lớp lệch pha nét 0.85px màu Đỏ Chu Sa và Vàng Thếp.
+ * Lớp 1 Trung tâm: Lưới Trắc Địa Đĩa Poincaré (Hyperbolic Mộng Gỗ Lattice)
+ * - 16 điểm biên kết nối bước 5 và bước 7 qua cung cong hướng tâm quadraticCurveTo
+ * - 2 tầng xoay ngược chiều (time * 0.15 & -time * 0.1) tạo hiệu ứng vạn hoa moiré
  */
-function drawHypotrochoidGuilloche(
+function drawPoincareLattice(
   ctx: CanvasRenderingContext2D,
   r1: number,
   artTime: number,
   liveTime: number,
   coreFade: number,
 ): void {
-  const guillocheP = easeOutCubic(clamp01((artTime - 1.35) / 1.15));
-  if (guillocheP <= 0) return;
+  const latticeP = easeOutCubic(clamp01((artTime - 1.25) / 1.1));
+  if (latticeP <= 0) return;
 
-  const b = r1 * 0.088 * guillocheP;
-  const a = 8 * b;
-  const steps = 240;
-  const stepAngle = (Math.PI * 2) / steps;
+  const diskR = r1 * 0.9 * latticeP;
+  ctx.save();
+  ctx.globalAlpha *= coreFade * latticeP;
 
-  const layers = [
-    {
-      h: 2.65 * b,
-      phase: liveTime * 0.36,
-      strokeStyle: 'rgba(200, 62, 55, 0.45)',
-    },
-    {
-      h: 2.25 * b,
-      phase: -liveTime * 0.28 + Math.PI,
-      strokeStyle: 'rgba(197, 162, 98, 0.55)',
-    },
-  ] as const;
+  // Tầng chính: xoay thuận (time * 0.15), nét Đỏ Chu Sa #C83E37 (1.2px, opacity 0.75) + tô lấp mờ 0.04
+  drawPoincareLayer(ctx, diskR, liveTime * 0.15, COLORS.cinnabar, 1.2, 0.75, true);
+
+  // Tầng phụ: xoay nghịch (-time * 0.1), nét Vàng Thếp #C5A262 (0.85px, opacity 0.65)
+  drawPoincareLayer(ctx, diskR, -liveTime * 0.1, COLORS.goldBright, 0.85, 0.65, false);
+
+  ctx.restore();
+}
+
+/**
+ * Lớp 2 Trung tâm: Phép Dựng Hình Compa Euclid & Giao Điểm Ngọc
+ * - 4 đường tròn phụ trợ bán kính 0.5*R1 có tâm chạy trên đường tròn 0.5*R1 (nét đứt #8A6A2F)
+ * - Tia quét bán kính vàng mảnh kèm vệt quạt sáng mờ & 8 giao điểm #4E9B58 / #C83E37 bừng sáng theo nhịp sóng
+ */
+function drawCompassConstruction(
+  ctx: CanvasRenderingContext2D,
+  r1: number,
+  artTime: number,
+  liveTime: number,
+  coreFade: number,
+): void {
+  const compassP = easeOutCubic(clamp01((artTime - 1.55) / 1.1));
+  if (compassP <= 0) return;
+
+  const locusR = r1 * 0.5 * compassP;
+  const circleR = r1 * 0.5 * compassP;
+  const constructionRot = liveTime * 0.18;
+  const sweepAngle = liveTime * 1.35 - Math.PI / 2;
 
   ctx.save();
-  ctx.globalAlpha *= coreFade * guillocheP;
+  ctx.globalAlpha *= coreFade * compassP;
+
+  // 4 đường tròn dựng hình phụ trợ nét đứt siêu mảnh #8A6A2F
+  ctx.save();
+  ctx.setLineDash([3, 4]);
+  ctx.strokeStyle = COLORS.goldDark;
   ctx.lineWidth = 0.85;
+  ctx.globalAlpha *= 0.68;
 
-  for (const layer of layers) {
-    ctx.strokeStyle = layer.strokeStyle;
+  for (let k = 0; k < 4; k++) {
+    const centerTheta = constructionRot + k * (Math.PI / 2);
+    const cxCirc = Math.cos(centerTheta) * locusR;
+    const cyCirc = Math.sin(centerTheta) * locusR;
     ctx.beginPath();
-    for (let i = 0; i <= steps; i++) {
-      const t = i * stepAngle;
-      const [px, py] = computeHypotrochoidPoint(a, b, layer.h, t, layer.phase);
-      if (i === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
-    }
+    ctx.arc(cxCirc, cyCirc, circleR, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Hiệu ứng tia quét Compa: vệt quạt sáng mờ & kim bán kính vàng mảnh
+  const fanSlices = 14;
+  const fanSpan = 0.88;
+  const sliceSpan = fanSpan / fanSlices;
+  const sweepRadius = r1 * 0.91 * compassP;
+
+  for (let s = 0; s < fanSlices; s++) {
+    const a1 = sweepAngle - s * sliceSpan;
+    const a0 = sweepAngle - (s + 1) * sliceSpan;
+    const fanAlpha = 0.15 * (1 - s / fanSlices);
+    ctx.fillStyle = `rgba(197, 162, 98, ${fanAlpha.toFixed(3)})`;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, sweepRadius, a0, a1);
     ctx.closePath();
-    ctx.stroke();
+    ctx.fill();
   }
 
-  ctx.restore();
-}
-
-/** Lớp 2C Trung tâm: Hạt Nhân Quang Học Tâm (radialGradient #C83E37 nhịp theo sin(time * 3)) */
-function drawCentralOpticalCore(
-  ctx: CanvasRenderingContext2D,
-  r1: number,
-  coreReveal: number,
-  liveTime: number,
-): void {
-  if (coreReveal <= 0) return;
-
-  const pulse01 = 0.5 + 0.5 * Math.sin(liveTime * 3);
-  const haloR = Math.max(14, r1 * 0.21) * (0.82 + 0.34 * pulse01) * coreReveal;
-
-  const coreGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, haloR);
-  coreGrad.addColorStop(0, COLORS.cinnabar);
-  coreGrad.addColorStop(0.28, 'rgba(200, 62, 55, 0.42)');
-  coreGrad.addColorStop(1, 'rgba(200, 62, 55, 0)');
-
-  ctx.fillStyle = coreGrad;
+  ctx.strokeStyle = COLORS.goldBright;
+  ctx.lineWidth = 1.15;
   ctx.beginPath();
-  ctx.arc(0, 0, haloR, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(Math.cos(sweepAngle) * sweepRadius, Math.sin(sweepAngle) * sweepRadius);
+  ctx.stroke();
 
-  const beadR = Math.max(2.6, r1 * 0.032) * (0.92 + 0.12 * pulse01) * coreReveal;
-  ctx.fillStyle = COLORS.cinnabar;
-  ctx.beginPath();
-  ctx.arc(0, 0, beadR, 0, Math.PI * 2);
-  ctx.fill();
+  // 8 giao điểm hình học: 4 nút tâm tròn (0.5*R1, Đỏ Chu Sa) & 4 giao điểm Vesica (0.5*sqrt(2)*R1, Xanh Men Ngọc)
+  const vesicaR = locusR * Math.SQRT2;
+  for (let idx = 0; idx < 8; idx++) {
+    const isJade = idx % 2 === 1;
+    const nodeTheta = constructionRot + idx * (Math.PI / 4);
+    const nodeR = isJade ? vesicaR : locusR;
+    const nx = Math.cos(nodeTheta) * nodeR;
+    const ny = Math.sin(nodeTheta) * nodeR;
 
-  ctx.fillStyle = COLORS.paperCenter;
-  ctx.beginPath();
-  ctx.arc(-beadR * 0.28, -beadR * 0.28, beadR * 0.34, 0, Math.PI * 2);
-  ctx.fill();
-}
+    const lag = angularLagBehindSweep(sweepAngle, nodeTheta);
+    const sweepFlare = Math.exp(-lag * 2.4);
+    const wavePulse = 0.5 + 0.5 * Math.sin(liveTime * 3.2 + idx * 0.85);
+    const intensity = Math.min(1, 0.35 + 0.3 * wavePulse + 0.65 * sweepFlare);
 
-/**
- * Lớp 2B & 2C Trung tâm:
- * - Khối Nhị thập diện đều 3D (12 đỉnh, 30 cạnh) bán kính 0.42*R1, xoay quanh trục X/Y & tương tác chuột
- * - Chiếu phối cảnh 2D: cạnh sau (z < 0) nét đứt mờ, cạnh trước (z >= 0) Đỏ Chu Sa / Vàng Đồng sắc nét
- * - Chấm ngọc Vàng Thếp (#C5A262) và Xanh Ngọc (#4E9B58) tại các đỉnh phía trước
- * - Hạt Nhân Quang Học Tâm phát sáng bên trong lồng đa diện.
- */
-function drawIcosahedronAndOpticalCore(
-  ctx: CanvasRenderingContext2D,
-  r1: number,
-  artTime: number,
-  liveTime: number,
-  coreFade: number,
-  tiltX: number,
-  tiltY: number,
-): void {
-  const coreReveal = easeOutCubic(clamp01((artTime - 0.12) / 0.85));
-  const polyReveal = easeOutCubic(clamp01((artTime - 1.65) / 1.1));
-  if (coreReveal <= 0 && polyReveal <= 0) return;
+    const gemR = (2.1 + 1.3 * intensity) * compassP;
+    const haloR = (4.2 + 3.4 * sweepFlare) * compassP;
 
-  ctx.save();
-  ctx.globalAlpha *= coreFade;
-
-  if (polyReveal <= 0) {
-    drawCentralOpticalCore(ctx, r1, coreReveal, liveTime);
-    ctx.restore();
-    return;
-  }
-
-  const polyR = r1 * 0.42 * polyReveal;
-  const angleX = liveTime * 0.6 + tiltX;
-  const angleY = liveTime * 0.9 + tiltY;
-  const cosX = Math.cos(angleX);
-  const sinX = Math.sin(angleX);
-  const cosY = Math.cos(angleY);
-  const sinY = Math.sin(angleY);
-  const focal = Math.max(120, r1 * 2.5);
-
-  const projected = ICOSAHEDRON_VERTICES.map(([vx, vy, vz], idx) => {
-    // Quay quanh trục Y rồi quay quanh trục X
-    const x1 = vx * cosY + vz * sinY;
-    const z1 = -vx * sinY + vz * cosY;
-    const y2 = vy * cosX - z1 * sinX;
-    const z2 = vy * sinX + z1 * cosX;
-
-    const px = x1 * polyR;
-    const py = y2 * polyR;
-    const pz = z2 * polyR;
-    const persp = focal / (focal - pz);
-    return {
-      idx,
-      sx: px * persp,
-      sy: py * persp,
-      z: pz,
-      persp,
-    };
-  });
-
-  const backEdges: { a: (typeof projected)[number]; b: (typeof projected)[number] }[] = [];
-  const frontEdges: {
-    idx: number;
-    midZ: number;
-    a: (typeof projected)[number];
-    b: (typeof projected)[number];
-  }[] = [];
-
-  for (let eIdx = 0; eIdx < ICOSAHEDRON_EDGES.length; eIdx++) {
-    const edge = ICOSAHEDRON_EDGES[eIdx];
-    if (!edge) continue;
-    const a = projected[edge[0]];
-    const b = projected[edge[1]];
-    if (!a || !b) continue;
-    const midZ = (a.z + b.z) * 0.5;
-    if (midZ < 0) {
-      backEdges.push({ a, b });
-    } else {
-      frontEdges.push({ idx: eIdx, midZ, a, b });
-    }
-  }
-
-  // 1. Cạnh phía sau (z < 0): nét đứt mờ rgba(197, 162, 98, 0.25)
-  ctx.save();
-  ctx.setLineDash([3, 3]);
-  ctx.strokeStyle = 'rgba(197, 162, 98, 0.25)';
-  ctx.lineWidth = 0.95;
-  for (const edge of backEdges) {
+    ctx.fillStyle = isJade
+      ? `rgba(78, 155, 88, ${(0.18 + 0.28 * intensity).toFixed(3)})`
+      : `rgba(200, 62, 55, ${(0.18 + 0.28 * intensity).toFixed(3)})`;
     ctx.beginPath();
-    ctx.moveTo(edge.a.sx, edge.a.sy);
-    ctx.lineTo(edge.b.sx, edge.b.sy);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  // 2. Hạt Nhân Quang Học Tâm tỏa sáng ở giữa khối đa diện (z = 0)
-  drawCentralOpticalCore(ctx, r1, coreReveal, liveTime);
-
-  // 3. Cạnh phía trước (z >= 0): nét liền sắc nét #C83E37 & #8A6A2F (lineWidth = 1.3)
-  frontEdges.sort((u, v) => u.midZ - v.midZ);
-  ctx.save();
-  ctx.setLineDash([]);
-  ctx.lineWidth = 1.3;
-  ctx.lineCap = 'round';
-  for (const edge of frontEdges) {
-    ctx.strokeStyle = edge.idx % 2 === 0 ? COLORS.cinnabar : COLORS.goldDark;
-    ctx.beginPath();
-    ctx.moveTo(edge.a.sx, edge.a.sy);
-    ctx.lineTo(edge.b.sx, edge.b.sy);
-    ctx.stroke();
-  }
-
-  // 4. Chấm ngọc tại các đỉnh phía trước (z >= 0) phối Vàng Thếp (#C5A262) & Xanh Ngọc (#4E9B58)
-  const frontVertices = projected.filter((v) => v.z >= 0).sort((u, v) => u.z - v.z);
-  for (const v of frontVertices) {
-    const isGold = v.idx % 2 === 0;
-    const gemR = 2.2 * v.persp * polyReveal;
-
-    ctx.fillStyle = isGold ? 'rgba(197, 162, 98, 0.28)' : 'rgba(78, 155, 88, 0.28)';
-    ctx.beginPath();
-    ctx.arc(v.sx, v.sy, gemR * 2.0, 0, Math.PI * 2);
+    ctx.arc(nx, ny, haloR, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = isGold ? COLORS.goldBright : COLORS.jadeLight;
+    ctx.fillStyle = isJade ? COLORS.jadeLight : COLORS.cinnabar;
     ctx.beginPath();
-    ctx.arc(v.sx, v.sy, gemR, 0, Math.PI * 2);
+    ctx.arc(nx, ny, gemR, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = COLORS.paperCenter;
     ctx.beginPath();
-    ctx.arc(v.sx - gemR * 0.25, v.sy - gemR * 0.25, gemR * 0.36, 0, Math.PI * 2);
+    ctx.arc(nx, ny, gemR * 0.36, 0, Math.PI * 2);
     ctx.fill();
   }
+
   ctx.restore();
+}
+
+/**
+ * Lớp 3 Trung tâm: Ấn Tâm Hoa Thị Vàng
+ * - Đường cong cực 8 cánh r = 0.18 * R1 * cos(4θ) viền Vàng Thếp #C5A262
+ * - Hạt ngọc tâm Đỏ Chu Sa #C83E37 tỏa quầng sáng ấm (shadowBlur = 10)
+ */
+function drawCentralGoldenRosette(
+  ctx: CanvasRenderingContext2D,
+  r1: number,
+  artTime: number,
+  liveTime: number,
+  coreFade: number,
+): void {
+  const sealP = easeOutCubic(clamp01((artTime - 0.12) / 0.9));
+  if (sealP <= 0) return;
+
+  const breath = 0.96 + 0.04 * Math.sin(liveTime * 2.2);
+  const amplitude = 0.18 * r1 * sealP * breath;
+  const steps = 144;
+  const stepTheta = (Math.PI * 2) / steps;
+
+  ctx.save();
+  ctx.globalAlpha *= coreFade;
+
+  // Hoa thị 8 cánh cực sắc nét r = 0.18 * R1 * cos(4θ)
+  ctx.save();
+  ctx.rotate(liveTime * 0.06);
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const theta = i * stepTheta;
+    const [px, py] = computeRosePetalPoint(amplitude, theta);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(197, 162, 98, 0.14)';
+  ctx.fill();
+  ctx.strokeStyle = COLORS.goldBright;
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
+  ctx.restore();
+
+  // Hạt ngọc tâm Đỏ Chu Sa #C83E37 tỏa quầng sáng ấm shadowBlur = 10
+  const jewelR = Math.max(3.6, r1 * 0.048) * sealP;
+  ctx.save();
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = 'rgba(200, 62, 55, 0.72)';
+  ctx.fillStyle = COLORS.cinnabar;
+  ctx.beginPath();
+  ctx.arc(0, 0, jewelR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Điểm phản quang tinh tế trên mặt ngọc
+  ctx.fillStyle = COLORS.paperCenter;
+  ctx.beginPath();
+  ctx.arc(-jewelR * 0.28, -jewelR * 0.28, jewelR * 0.32, 0, Math.PI * 2);
+  ctx.fill();
 
   ctx.restore();
 }
@@ -1338,18 +1448,18 @@ function drawCentralCelestialMechanism(
   r1: number,
   artTime: number,
   liveTime: number,
-  tiltX: number,
-  tiltY: number,
 ): void {
   const coreFade = artTime >= 5.1 ? clamp01(1 - (artTime - 5.1) / 0.3) : 1;
   if (coreFade <= 0.01) return;
 
-  // Hỗn Thiên Nghi 3D kèm vệt sao băng
+  // Hỗn Thiên Nghi 3D kèm vệt sao băng 12 đoạn
   drawArmillaryCometRings(ctx, r1, artTime, liveTime, coreFade);
-  // Lớp 1: Vân tơ Hypotrochoid 8 nhánh đối xứng
-  drawHypotrochoidGuilloche(ctx, r1, artTime, liveTime, coreFade);
-  // Lớp 2 & 3: Khối Nhị thập diện đều 3D & Hạt Nhân Quang Học Tâm
-  drawIcosahedronAndOpticalCore(ctx, r1, artTime, liveTime, coreFade, tiltX, tiltY);
+  // Lớp 1: Lưới Trắc Địa Đĩa Poincaré (2 tầng xoay ngược chiều)
+  drawPoincareLattice(ctx, r1, artTime, liveTime, coreFade);
+  // Lớp 2: Phép Dựng Hình Compa 4 đường tròn & 8 nút ngọc bừng sáng
+  drawCompassConstruction(ctx, r1, artTime, liveTime, coreFade);
+  // Lớp 3: Ấn Tâm Hoa Thị Vàng (r = 0.18*R1*cos(4θ)) & hạt ngọc #C83E37 shadowBlur = 10
+  drawCentralGoldenRosette(ctx, r1, artTime, liveTime, coreFade);
 }
 
 interface AstrolabeCometSpec {
@@ -1428,7 +1538,7 @@ function drawAstrolabeRing(
       headTheta,
       direction,
       cometSpec.arcSpanRad,
-      18,
+      12,
       3.1,
       cometSpec.color,
       cometSpec.trailRgb,
@@ -1589,8 +1699,20 @@ export function renderKhueVanCanvas(
   drawImperialBorderAndFretwork(ctx, width, height, artTime);
   ctx.restore();
 
-  // 2B. LỚP BẢN ĐỒ THIÊN VĂN & CHÒM SAO (mx * 10, my * 10)
+  // 2B. LỚP BẢN ĐỒ THIÊN VĂN, TƠ SƠN MÀI & CHÒM SAO (mx * 10, my * 10)
   drawFullViewportCartographyGrid(
+    ctx,
+    width,
+    height,
+    r1,
+    artTime,
+    liveTime,
+    borderOffsetX,
+    borderOffsetY,
+    midOffsetX,
+    midOffsetY,
+  );
+  drawLacquerSilkFilaments(
     ctx,
     width,
     height,
@@ -1669,7 +1791,7 @@ export function renderKhueVanCanvas(
   );
   ctx.restore();
 
-  // 3B. LỚP TÂM KHUÊ VĂN CÁC & ĐA DIỆN 3D (mx * 18, my * 18 + góc xoay theo chuột)
+  // 3B. LỚP KHUNG KHUÊ VĂN & ĐĨA POINCARÉ TÂM (mx * 18, my * 18)
   ctx.save();
   ctx.translate(cx + coreOffsetX, cy + coreOffsetY);
   ctx.scale(portal.sceneScale, portal.sceneScale);
@@ -1773,8 +1895,8 @@ export function renderKhueVanCanvas(
     }
   }
 
-  // TÂM KHUÊ VĂN CÁC: HỖN THIÊN NGHI + HYPOTROCHOID + NHỊ THẬP DIỆN ĐỀU 3D + HẠT NHÂN QUANG HỌC
-  drawCentralCelestialMechanism(ctx, r1, artTime, liveTime, effMy * 0.45, effMx * 0.45);
+  // TÂM KHUÊ VĂN CÁC: HỖN THIÊN NGHI + ĐĨA POINCARÉ MỘNG GỖ + COMPA + ẤN TÂM HOA THỊ VÀNG
+  drawCentralCelestialMechanism(ctx, r1, artTime, liveTime);
 
   ctx.restore();
 
