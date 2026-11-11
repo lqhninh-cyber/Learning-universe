@@ -14,15 +14,17 @@ import {
   Sparkles,
   Target,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { getSubjectBySlug, getSubjectStats } from '@/content-runtime';
+import { getCourseExamBank } from '@/data/courses/exam-banks';
 import {
   EDUC2802_CLOS,
   EDUC2802_SYLLABUS_META,
   PEDAGOGY_DOCUMENTS,
   PEDAGOGICAL_CASE_STUDIES,
 } from '@/data/courses/giao-duc-hoc/course';
+import { CourseExamBankWorkspace } from '@/features/exams/CourseExamBankWorkspace';
 import { CaseStudyBox, LegalQuoteCard, PrincipleMatrix } from '@/features/pedagogy';
 import {
   ChapterAccordionList,
@@ -40,6 +42,20 @@ import { Badge, Button, Card } from '@/shared/ui';
 
 type CourseWorkspaceTab = 'roadmap' | 'documents' | 'specialized' | 'overview';
 
+function resolveWorkspaceTab(rawTab: string | null): CourseWorkspaceTab | null {
+  if (!rawTab) return null;
+  if (rawTab === 'exams') return 'specialized';
+  if (
+    rawTab === 'roadmap' ||
+    rawTab === 'documents' ||
+    rawTab === 'specialized' ||
+    rawTab === 'overview'
+  ) {
+    return rawTab;
+  }
+  return null;
+}
+
 interface CourseTabDef {
   readonly id: CourseWorkspaceTab;
   readonly label: string;
@@ -51,18 +67,16 @@ export function SubjectOverviewPage() {
   const { subjectSlug } = useParams<{ subjectSlug: string }>();
   const [searchParams] = useSearchParams();
   const subject = subjectSlug ? getSubjectBySlug(subjectSlug) : undefined;
+  const workspaceTabsRef = useRef<HTMLDivElement>(null);
 
-  const urlTab = searchParams.get('tab') as CourseWorkspaceTab | null;
-  const initialTab: CourseWorkspaceTab =
-    urlTab && ['roadmap', 'documents', 'specialized', 'overview'].includes(urlTab)
-      ? urlTab
-      : 'roadmap';
+  const urlTab = resolveWorkspaceTab(searchParams.get('tab'));
+  const initialTab: CourseWorkspaceTab = urlTab ?? 'roadmap';
 
   const [activeTab, setActiveTab] = useState<CourseWorkspaceTab>(initialTab);
   const [prevUrlTab, setPrevUrlTab] = useState(urlTab);
   if (urlTab !== prevUrlTab) {
     setPrevUrlTab(urlTab);
-    if (urlTab && ['roadmap', 'documents', 'specialized', 'overview'].includes(urlTab)) {
+    if (urlTab) {
       setActiveTab(urlTab);
     }
   }
@@ -219,16 +233,16 @@ export function SubjectOverviewPage() {
     } else if (subject.slug === 'cau-truc-dai-so') {
       tabs.push({
         id: 'specialized',
-        label: 'Đề thi & Đề cương ôn tập',
-        badge: 'Đề thi 90p',
+        label: 'Ngân hàng Đề thi & Lời giải',
+        badge: 'MATH1301',
         icon: GraduationCap,
       });
     } else if (subject.slug === 'hinh-hoc-affine') {
       tabs.push({
         id: 'specialized',
-        label: 'Phòng Lab tương tác',
-        badge: 'Lab 2D',
-        icon: Sparkles,
+        label: 'Ngân hàng Đề thi & Lời giải',
+        badge: 'MATH1302',
+        icon: GraduationCap,
       });
     }
 
@@ -241,6 +255,11 @@ export function SubjectOverviewPage() {
 
     return tabs;
   }, [subject, stats]);
+
+  const courseExamBank = useMemo(
+    () => (subject ? getCourseExamBank(subject.slug) : undefined),
+    [subject],
+  );
 
   if (!subject || !stats) {
     return (
@@ -270,17 +289,23 @@ export function SubjectOverviewPage() {
     setSelectedTag(null);
   };
 
+  const handleOpenSpecializedTab = () => {
+    setActiveTab('specialized');
+    workspaceTabsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <FadeIn className="mx-auto max-w-5xl space-y-8">
       {/* =========================================================================
           KHU VỰC 1: CINEMATIC COURSE HERO TRÀN VIỀN (FULL-BLEED 100VW)
           ========================================================================= */}
-      <SubjectHero subject={subject} onSelectSpecializedTab={() => setActiveTab('specialized')} />
+      <SubjectHero subject={subject} onSelectSpecializedTab={handleOpenSpecializedTab} />
 
       {/* =========================================================================
           KHU VỰC 2: THANH TAB ĐIỀU HƯỚNG WORKSPACE (COURSE WORKSPACE TABS)
           ========================================================================= */}
       <div
+        ref={workspaceTabsRef}
         role="tablist"
         aria-label="Các không gian làm việc của môn học"
         className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-stone-200/90 bg-white/90 p-1.5 shadow-2xs backdrop-blur-md sm:gap-2"
@@ -960,110 +985,32 @@ export function SubjectOverviewPage() {
             </Card>
           )}
 
-          {/* 3.3 Dành cho môn Cấu trúc đại số: Ngân hàng Đề thi & Đề cương ôn tập */}
-          {subject.slug === 'cau-truc-dai-so' && (
-            <Card className="border-subject-200/90 from-subject-50/50 bg-gradient-to-br via-white to-amber-50/30 p-6 shadow-xs sm:p-8">
-              <div className="space-y-6">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="subject">
-                        <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>Kho Đề thi Tự luận &amp; Đề cương Chuẩn Sư phạm</span>
-                      </Badge>
-                      <Badge variant="neutral">
-                        2 Bộ đề 90p · 10 Câu hỏi tự luận lớn · Barem 0.25đ · KaTeX 100%
-                      </Badge>
-                    </div>
-                    <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
-                      Ngân hàng Đề thi Kết thúc Học phần &amp; Đề cương Trọng tâm CLO
-                    </h2>
-                    <p className="max-w-3xl text-sm leading-relaxed text-stone-600">
-                      Kho đề thi chính thức chuẩn chương trình đào tạo Sư phạm Toán học (HCMUE),
-                      tích hợp gợi ý định lý cốt lõi, lời giải chi tiết từng bước, barem chấm điểm
-                      0.25đ và phân tích bẫy thi thường gặp cho từng bài toán.
-                    </p>
-                  </div>
-                  <Button asChild variant="subject" size="lg" className="shrink-0 shadow-xs">
-                    <Link to={ROUTES.subjectExams(subject.slug)}>
-                      <span>Vào phòng Luyện đề &amp; Xem đáp án</span>
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-                  </Button>
-                </div>
+          {/* 3.3 & 3.4 Dành cho môn Cấu trúc đại số (MATH1301) & Hình học Affine (MATH1302):
+              Ngân hàng Đề thi & Lời giải chuẩn 3 phân khu */}
+          {courseExamBank && <CourseExamBankWorkspace bank={courseExamBank} />}
 
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs">
-                    <div className="flex items-center justify-between text-xs font-bold text-amber-800">
-                      <span>NĂM HỌC 2025 - 2026</span>
-                      <Badge variant="subject">HK1 · 90 phút</Badge>
-                    </div>
-                    <h3 className="mt-2 text-sm font-bold text-stone-900">
-                      Đề thi Chính thức Học kỳ 1 (2025 – 2026)
-                    </h3>
-                    <p className="mt-1 text-xs text-stone-500">
-                      5 câu tự luận: Quan hệ tương đương &amp; phép toán cảm sinh, Cấp phần tử &amp;
-                      cyclic, Lớp kề S₃ &amp; Lagrange, Đồng cấu &amp; Đẳng cấu 1, Vành thương
-                      ℚ[x]/⟨f⟩
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs">
-                    <div className="flex items-center justify-between text-xs font-bold text-amber-800">
-                      <span>NĂM HỌC 2024 - 2025</span>
-                      <Badge variant="neutral">HK1 · 90 phút</Badge>
-                    </div>
-                    <h3 className="mt-2 text-sm font-bold text-stone-900">
-                      Đề thi Chính thức Học kỳ 1 (2024 – 2025)
-                    </h3>
-                    <p className="mt-1 text-xs text-stone-500">
-                      5 câu tự luận: Bảng Cayley &amp; Nhóm cấp 4, Phân loại nhóm cấp 2p, Tự đẳng
-                      cấu Aut(ℤₙ), I-đê-an nguyên tố &amp; cực đại, Trường các thương
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-2xs">
-                    <div className="flex items-center justify-between text-xs font-bold text-amber-800">
-                      <span>ĐỀ CƯƠNG TRỌNG TÂM</span>
-                      <Badge variant="neutral">5 Module · CLO</Badge>
-                    </div>
-                    <h3 className="mt-2 text-sm font-bold text-stone-900">
-                      Cẩm nang Ôn thi &amp; Phân tích Bẫy thi
-                    </h3>
-                    <p className="mt-1 text-xs text-stone-500">
-                      Khung kiến thức chuẩn đầu ra CLO 1–5, 10 công thức vương miện và phương pháp
-                      chứng minh tự luận chuẩn mực
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* 3.4 Dành cho môn Hình học Affine: Phòng Lab tương tác */}
+          {/* Bổ sung lối vào Phòng Lab 3D cho Hình học Affine & Euclid */}
           {subject.slug === 'hinh-hoc-affine' && (
-            <Card className="border-subject-200/90 from-subject-50/50 bg-gradient-to-br via-white to-stone-50/70 p-6 shadow-xs sm:p-8">
-              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                <div className="space-y-2">
+            <Card className="border-subject-200/90 bg-[var(--bg-surface)] p-5 shadow-xs sm:p-6">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="subject">
                       <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                      <span>Phòng Lab Tương tác &amp; Ôn luyện</span>
+                      <span>Phòng Lab Tương tác Hình học</span>
                     </Badge>
-                    <Badge variant="neutral">61 Bài tập · 47 Trắc nghiệm · Thi thử thích ứng</Badge>
+                    <Badge variant="neutral">61 Bài tập · 47 Trắc nghiệm · Mô phỏng 3D</Badge>
                   </div>
-                  <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                  <h3 className="text-base font-bold text-[var(--text-main)] sm:text-lg">
                     Phòng Lab &amp; Ôn tập tương tác Hình học cao cấp
-                  </h2>
-                  <p className="max-w-2xl text-sm leading-relaxed text-stone-600">
-                    Toàn bộ tài liệu bài giảng 3 chương (Không gian afin, Không gian Ơclit, Không
-                    gian xạ ảnh) tích hợp cùng hệ thống 61 bài tập có gợi ý và giải chi tiết từng
-                    bước, 47 câu trắc nghiệm nhanh, bộ luyện tính toán tự sinh số liệu và chế độ thi
-                    thử thông minh.
+                  </h3>
+                  <p className="max-w-2xl text-xs leading-relaxed text-[var(--text-muted)] sm:text-sm">
+                    Thực hành trực quan 3 chương (Không gian afin, Không gian Ơclit, Không gian xạ
+                    ảnh) cùng bộ sinh đề luyện tập tự động.
                   </p>
                 </div>
                 <div className="shrink-0">
-                  <Button asChild variant="subject" size="lg" className="shadow-xs">
+                  <Button asChild variant="outline" size="md">
                     <a
                       href="/interactive/affine-geometry.html"
                       target="_blank"

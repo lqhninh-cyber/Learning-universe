@@ -1,21 +1,28 @@
 import { CheckCircle2, ChevronDown, HelpCircle, Lightbulb } from 'lucide-react';
 import { useState } from 'react';
-import type { ExamProblem, ExamProblemPart } from '@/data/courses/giai-tich-ham-mot-bien/exams';
+import type {
+  ExamProblem,
+  ExamProblemPart,
+  ExamQuestionPrefix,
+} from '@/data/courses/exam-bank-types';
 import { MathText } from '@/features/exams/MathText';
 import { cn } from '@/shared/lib/cn';
 import { Badge, Button } from '@/shared/ui';
 
 export interface ExamProblemCardProps {
   readonly problem: ExamProblem;
+  readonly questionPrefix?: ExamQuestionPrefix;
   readonly defaultExpandSolution?: boolean;
   readonly defaultExpandHint?: boolean;
 }
 
 export function ExamProblemCard({
   problem,
+  questionPrefix,
   defaultExpandSolution = false,
   defaultExpandHint = false,
 }: ExamProblemCardProps) {
+  const effectivePrefix = problem.labelPrefix ?? questionPrefix ?? 'Bài';
   const [userOverrideSolution, setUserOverrideSolution] = useState<boolean | null>(null);
   const [userOverrideHint, setUserOverrideHint] = useState<boolean | null>(null);
   const [prevDefaultSolution, setPrevDefaultSolution] = useState(defaultExpandSolution);
@@ -49,22 +56,22 @@ export function ExamProblemCard({
   const canToggleSolution = hasRootSolution || hasParts;
 
   return (
-    <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition-all hover:border-stone-300 sm:p-6">
+    <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 text-[var(--text-main)] shadow-xs transition-all duration-200 hover:border-[var(--border-control)] sm:p-6">
       {/* Header bài toán */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 pb-3.5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3.5">
         <div className="flex flex-wrap items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-stone-900 text-xs font-bold text-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-stone-900 text-xs font-bold text-white dark:bg-[var(--accent-primary)] dark:text-stone-950">
             {problem.number}
           </span>
-          <h3 className="text-base font-bold text-stone-900">
+          <h3 className="text-base font-bold text-[var(--text-main)]">
             {problem.title
-              ? `Bài ${problem.number}: ${problem.title}`
-              : `Bài toán ${problem.number}`}
+              ? `${effectivePrefix} ${problem.number}: ${problem.title}`
+              : `${effectivePrefix} ${problem.number}`}
           </h3>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="neutral" className="font-mono text-xs font-semibold text-stone-800">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="neutral" className="font-mono text-xs font-semibold">
             {problem.points.toFixed(1)} điểm
           </Badge>
 
@@ -75,7 +82,7 @@ export function ExamProblemCard({
               size="sm"
               onClick={handleToggleHint}
               className={cn(
-                'h-7 gap-1 px-2.5 text-xs dark:border-[#284E3A] dark:bg-[#13261D] dark:text-[#E5C378] dark:hover:bg-[#1A3327]',
+                'h-8 gap-1 px-2.5 text-xs transition-all duration-200 active:scale-[0.98] dark:border-[#284E3A] dark:bg-[#13261D] dark:text-[#E5C378] dark:hover:bg-[#1A3327]',
                 showHint &&
                   'border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 dark:border-[#284E3A] dark:bg-[#1A3327] dark:text-[#E5C378]',
               )}
@@ -91,7 +98,7 @@ export function ExamProblemCard({
               variant={showSolution ? 'secondary' : 'subject'}
               size="sm"
               onClick={handleToggleSolution}
-              className="h-7 gap-1 px-2.5 text-xs dark:border dark:border-[#284E3A] dark:bg-[#13261D] dark:text-[#E5C378] dark:hover:bg-[#1A3327]"
+              className="h-8 gap-1 px-2.5 text-xs transition-all duration-200 active:scale-[0.98] dark:border dark:border-[#284E3A] dark:bg-[#13261D] dark:text-[#E5C378] dark:hover:bg-[#1A3327]"
             >
               <span>{showSolution ? 'Thu gọn lời giải' : '📝 Lời giải chi tiết'}</span>
               <ChevronDown
@@ -108,7 +115,7 @@ export function ExamProblemCard({
 
       {/* Nội dung đề bài chính */}
       {problem.statement && (
-        <div className="mt-3.5 text-stone-800 dark:text-[#E8F1EC]">
+        <div className="mt-3.5 text-[var(--text-main)]">
           <MathText text={problem.statement} />
         </div>
       )}
@@ -120,7 +127,7 @@ export function ExamProblemCard({
             <Lightbulb className="h-4 w-4" aria-hidden="true" />
             <span>Gợi ý định lý &amp; Hướng giải</span>
           </div>
-          <div className="mt-2 text-stone-800 dark:text-[#D5E2DA]">
+          <div className="mt-2 text-[var(--text-main)] dark:text-[#D5E2DA]">
             <MathText text={problem.hint!} />
           </div>
         </div>
@@ -128,13 +135,18 @@ export function ExamProblemCard({
 
       {/* Khung Lời giải chi tiết (cấp cao nhất) */}
       {hasRootSolution && showSolution && (
-        <div className="border-subject-200/80 from-subject-50/20 mt-4 rounded-xl border bg-gradient-to-b to-white p-4.5 sm:p-5">
-          <div className="text-subject-900 flex items-center justify-between border-b border-stone-200/80 pb-2.5 text-xs font-bold uppercase">
+        <div className="border-subject-200/80 bg-subject-50/25 dark:border-subject-700/60 dark:bg-subject-950/25 mt-4 rounded-xl border p-4.5 sm:p-5">
+          <div className="text-subject-900 dark:text-subject-200 flex items-center justify-between border-b border-[var(--border-subtle)] pb-2.5 text-xs font-bold uppercase">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="text-subject-600 h-4 w-4" aria-hidden="true" />
+              <CheckCircle2
+                className="text-subject-600 dark:text-subject-300 h-4 w-4"
+                aria-hidden="true"
+              />
               <span>Lời giải thực chiến chi tiết</span>
             </span>
-            <span className="font-mono text-stone-500">[{problem.points.toFixed(1)} điểm]</span>
+            <span className="font-mono text-[var(--text-muted)]">
+              [{problem.points.toFixed(1)} điểm]
+            </span>
           </div>
           <div className="mt-3">
             <MathText text={problem.solution!} />
@@ -192,15 +204,15 @@ function ProblemPartItem({ part, defaultOpenSolution, defaultOpenHint }: Problem
   };
 
   return (
-    <div className="rounded-xl border border-stone-200/80 bg-stone-50/40 p-4 transition-colors hover:border-stone-300 sm:p-4.5">
+    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/55 p-4 transition-colors duration-200 hover:border-[var(--border-control)] sm:p-4.5">
       {/* Tiêu đề ý nhỏ & Nút điều khiển */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-100 pb-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-2.5">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-xs font-bold text-stone-900 uppercase">
+          <span className="font-mono text-xs font-bold text-[var(--text-main)] uppercase">
             Ý {part.label}
           </span>
           {part.points !== undefined && (
-            <Badge variant="neutral" className="font-mono text-[11px] text-stone-700">
+            <Badge variant="neutral" className="font-mono text-[11px]">
               {part.points.toFixed(1)} đ
             </Badge>
           )}
@@ -213,8 +225,9 @@ function ProblemPartItem({ part, defaultOpenSolution, defaultOpenHint }: Problem
               size="sm"
               onClick={handleTogglePartHint}
               className={cn(
-                'h-6 gap-1 px-2 text-[11px]',
-                showPartHint && 'border-amber-300 bg-amber-50 text-amber-800',
+                'h-7 gap-1 px-2 text-[11px] transition-all duration-200 active:scale-[0.98]',
+                showPartHint &&
+                  'border-amber-300 bg-amber-50 text-amber-800 dark:border-[#284E3A] dark:bg-[#1A3327] dark:text-[#E5C378]',
               )}
             >
               <Lightbulb className="h-3 w-3" aria-hidden="true" />
@@ -227,8 +240,9 @@ function ProblemPartItem({ part, defaultOpenSolution, defaultOpenHint }: Problem
             size="sm"
             onClick={handleTogglePartSolution}
             className={cn(
-              'h-6 gap-1 px-2 text-[11px]',
-              showPartSolution && 'border-subject-300 bg-subject-50 text-subject-800',
+              'h-7 gap-1 px-2 text-[11px] transition-all duration-200 active:scale-[0.98]',
+              showPartSolution &&
+                'border-subject-300 bg-subject-50 text-subject-800 dark:border-subject-700 dark:bg-subject-950/60 dark:text-subject-200',
             )}
           >
             <span>{showPartSolution ? 'Đóng giải' : '📝 Lời giải'}</span>
@@ -244,18 +258,18 @@ function ProblemPartItem({ part, defaultOpenSolution, defaultOpenHint }: Problem
       </div>
 
       {/* Đề bài ý nhỏ */}
-      <div className="mt-2.5 text-stone-800">
+      <div className="mt-2.5 text-[var(--text-main)]">
         <MathText text={part.statement} />
       </div>
 
       {/* Gợi ý định lý cho ý nhỏ */}
       {part.hint && showPartHint && (
-        <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/70 p-3 text-xs text-amber-900">
-          <div className="flex items-center gap-1 font-semibold text-amber-800">
+        <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/70 p-3 text-xs text-amber-900 dark:border-[#284E3A] dark:bg-[#0E2218] dark:text-[#D5E2DA]">
+          <div className="flex items-center gap-1 font-semibold text-amber-800 dark:text-[#E5C378]">
             <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Gợi ý phương pháp</span>
           </div>
-          <div className="mt-1.5 text-stone-800">
+          <div className="mt-1.5 text-[var(--text-main)] dark:text-[#D5E2DA]">
             <MathText text={part.hint} />
           </div>
         </div>
@@ -263,14 +277,19 @@ function ProblemPartItem({ part, defaultOpenSolution, defaultOpenHint }: Problem
 
       {/* Lời giải chi tiết cho ý nhỏ */}
       {showPartSolution && (
-        <div className="border-subject-200 from-subject-50/15 mt-3 rounded-lg border bg-gradient-to-b to-white p-3.5 sm:p-4">
-          <div className="text-subject-900 flex items-center justify-between border-b border-stone-200/80 pb-2 text-[11px] font-bold uppercase">
+        <div className="border-subject-200 dark:border-subject-700/60 mt-3 rounded-lg border bg-[var(--bg-surface)] p-3.5 sm:p-4">
+          <div className="text-subject-900 dark:text-subject-200 flex items-center justify-between border-b border-[var(--border-subtle)] pb-2 text-[11px] font-bold uppercase">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
+              <CheckCircle2
+                className="text-subject-600 dark:text-subject-300 h-3.5 w-3.5"
+                aria-hidden="true"
+              />
               <span>Chứng minh / Tính toán chi tiết</span>
             </span>
             {part.points !== undefined && (
-              <span className="font-mono text-stone-500">[{part.points.toFixed(1)} đ]</span>
+              <span className="font-mono text-[var(--text-muted)]">
+                [{part.points.toFixed(1)} đ]
+              </span>
             )}
           </div>
           <div className="mt-2.5">

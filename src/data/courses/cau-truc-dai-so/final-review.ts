@@ -38,7 +38,7 @@ export interface FinalReviewSyllabus {
 }
 
 export const CTDS_FINAL_REVIEW_SYLLABUS: FinalReviewSyllabus = {
-  courseCode: 'MATH1302',
+  courseCode: 'MATH1301',
   courseName: 'Cấu trúc Đại số',
   examFormat: 'Tự luận 100% (5 câu hỏi lớn, mỗi câu 2.0 điểm có chia ý a, b kèm barem chi tiết)',
   durationMinutes: 90,

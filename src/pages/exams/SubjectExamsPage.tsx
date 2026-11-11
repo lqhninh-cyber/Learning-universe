@@ -13,10 +13,19 @@ import {
 import { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { getSubjectBySlug } from '@/content-runtime';
+import {
+  MATH1301_EXAM_BANK,
+  MATH1301_MOCK_EXAM_1,
+  MATH1301_OFFICIAL_HK2_PAPER,
+} from '@/data/courses/cau-truc-dai-so/exam-bank';
 import { CTDS_EXAM_PAPERS } from '@/data/courses/cau-truc-dai-so/exams';
 import { GTHMB_EXAM_PAPERS } from '@/data/courses/giai-tich-ham-mot-bien/exams';
+import { MATH1302_EXAM_BANK } from '@/data/courses/hinh-hoc-affine/exam-bank';
+import { HHAVE_EXAM_PAPERS } from '@/data/courses/hinh-hoc-affine/exams';
+import { CourseExamBankWorkspace } from '@/features/exams/CourseExamBankWorkspace';
 import { ExamImageModal } from '@/features/exams/ExamImageModal';
 import { ExamProblemCard } from '@/features/exams/ExamProblemCard';
+import { MatrixAnalysisView } from '@/features/exams/MatrixAnalysisView';
 import { MathGlossaryPopover, MathGlossaryProvider } from '@/features/math-glossary';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
@@ -28,16 +37,30 @@ export function SubjectExamsPage() {
   const subject = getSubjectBySlug(subjectSlug);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Danh sách đề thi theo môn học hiện tại (hỗ trợ Giải tích hàm một biến và Cấu trúc đại số)
+  // Danh sách đề thi theo môn học hiện tại
   const examPapers = useMemo(() => {
     if (subjectSlug === 'giai-tich-ham-mot-bien') {
       return GTHMB_EXAM_PAPERS;
     }
     if (subjectSlug === 'cau-truc-dai-so') {
-      return CTDS_EXAM_PAPERS;
+      return [...CTDS_EXAM_PAPERS, MATH1301_OFFICIAL_HK2_PAPER, MATH1301_MOCK_EXAM_1];
+    }
+    if (subjectSlug === 'hinh-hoc-affine') {
+      return HHAVE_EXAM_PAPERS;
     }
     return [];
   }, [subjectSlug]);
+
+  const courseCodeLabel = useMemo(() => {
+    if (subjectSlug === 'cau-truc-dai-so') return 'MATH1301';
+    if (subjectSlug === 'hinh-hoc-affine') return 'MATH1302';
+    return 'MATH1403';
+  }, [subjectSlug]);
+
+  const totalProblemsAcrossPapers = useMemo(
+    () => examPapers.reduce((sum, paper) => sum + paper.problems.length, 0),
+    [examPapers],
+  );
 
   // Bộ đề được chọn theo query param hoặc mặc định là đề đầu tiên (mới nhất 2025-2026)
   const selectedExamId = searchParams.get('exam') || examPapers[0]?.id || '';
@@ -103,7 +126,7 @@ export function SubjectExamsPage() {
 
             <div className="flex items-center gap-2">
               <Badge variant="subject">Toán học</Badge>
-              <Badge variant="neutral">MATH1403</Badge>
+              <Badge variant="neutral">{courseCodeLabel}</Badge>
             </div>
           </div>
 
@@ -115,7 +138,9 @@ export function SubjectExamsPage() {
                   <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Ngân hàng Đề thi Chính thức &amp; Lời giải Thực chiến</span>
                 </span>
-                <Badge variant="neutral">6 Bộ đề qua các năm · 41 Bài toán tự luận</Badge>
+                <Badge variant="neutral">
+                  {examPapers.length} Bộ đề · {totalProblemsAcrossPapers} Bài toán tự luận
+                </Badge>
               </div>
 
               <h1 className="font-serif text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
@@ -123,15 +148,21 @@ export function SubjectExamsPage() {
               </h1>
 
               <p className="max-w-3xl text-sm leading-relaxed text-stone-600 sm:text-base">
-                Hệ thống hóa toàn bộ các đề thi học kỳ chính thức từ năm 2018 đến 2026. Mỗi bài toán
-                đều có thang điểm chuẩn, gợi ý định lý trọng tâm và lời giải chi tiết từng bước được
-                số hóa 100% bằng KaTeX phục vụ ôn thi đạt điểm tối đa.
+                Hệ thống hóa toàn bộ đề thi chính thức, phân tích ma trận đặc tả và đề ôn tập mẫu.
+                Mỗi bài toán đều có thang điểm chuẩn, gợi ý định lý trọng tâm và lời giải chi tiết
+                từng bước được số hóa 100% bằng KaTeX kèm nút copy LaTeX.
               </p>
             </div>
           </div>
         </div>
 
-        {examPapers.length === 0 ? (
+        {subjectSlug === 'hinh-hoc-affine' ? (
+          <CourseExamBankWorkspace
+            bank={MATH1302_EXAM_BANK}
+            showFullPageLink={false}
+            withGlossaryProvider={false}
+          />
+        ) : examPapers.length === 0 ? (
           <Card className="p-8 text-center">
             <p className="text-base font-medium text-stone-800">
               Ngân hàng đề thi của môn học này đang trong quá trình biên soạn và số hóa.
@@ -227,17 +258,19 @@ export function SubjectExamsPage() {
                     </div>
 
                     {/* Nút Xem ảnh đề gốc & Công cụ điều khiển */}
-                    <div className="flex shrink-0 flex-wrap items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsImageModalOpen(true)}
-                        className="border-subject-300 bg-subject-50/60 text-subject-800 hover:bg-subject-100 gap-1.5 text-xs font-semibold"
-                      >
-                        <ImageIcon className="h-4 w-4" aria-hidden="true" />
-                        <span>Xem ảnh đề gốc</span>
-                      </Button>
-                    </div>
+                    {activePaper.originalImagePath ? (
+                      <div className="flex shrink-0 flex-wrap items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsImageModalOpen(true)}
+                          className="border-subject-300 bg-subject-50/60 text-subject-800 hover:bg-subject-100 gap-1.5 text-xs font-semibold"
+                        >
+                          <ImageIcon className="h-4 w-4" aria-hidden="true" />
+                          <span>Xem ảnh đề gốc</span>
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
 
                   {/* Thanh điều khiển hiển thị hàng loạt */}
@@ -279,20 +312,33 @@ export function SubjectExamsPage() {
                     <ExamProblemCard
                       key={`${activePaper.id}-${problem.id}`}
                       problem={problem}
+                      questionPrefix={activePaper.questionPrefix}
                       defaultExpandSolution={expandAllSolutions}
                       defaultExpandHint={expandAllHints}
                     />
                   ))}
                 </div>
 
-                {/* Modal xem ảnh đề gốc */}
-                <ExamImageModal
-                  open={isImageModalOpen}
-                  onOpenChange={setIsImageModalOpen}
-                  imagePath={activePaper.originalImagePath}
-                  title={activePaper.title}
-                  year={`${activePaper.year} (${activePaper.semester})`}
-                />
+                {/* Modal xem ảnh đề gốc (chỉ dựng khi đề có bản scan) */}
+                {activePaper.originalImagePath ? (
+                  <ExamImageModal
+                    open={isImageModalOpen}
+                    onOpenChange={setIsImageModalOpen}
+                    imagePath={activePaper.originalImagePath}
+                    title={activePaper.title}
+                    year={`${activePaper.year} (${activePaper.semester})`}
+                  />
+                ) : null}
+
+                {/* Phân tích ma trận đặc tả & Checklist ôn tập (MATH1301) */}
+                {subjectSlug === 'cau-truc-dai-so' ? (
+                  <div className="mt-8 border-t border-stone-200/80 pt-8">
+                    <MatrixAnalysisView
+                      subjectSlug="cau-truc-dai-so"
+                      analysis={MATH1301_EXAM_BANK.matrixAnalysis}
+                    />
+                  </div>
+                ) : null}
               </div>
             )}
 

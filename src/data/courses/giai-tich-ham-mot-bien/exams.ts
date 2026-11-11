@@ -1,32 +1,6 @@
-export interface ExamProblemPart {
-  readonly label: string;
-  readonly points?: number;
-  readonly statement: string;
-  readonly hint?: string;
-  readonly solution: string;
-}
+import type { ExamPaper } from '../exam-bank-types';
 
-export interface ExamProblem {
-  readonly id: string;
-  readonly number: number;
-  readonly points: number;
-  readonly title?: string;
-  readonly statement?: string;
-  readonly hint?: string;
-  readonly solution?: string;
-  readonly parts?: readonly ExamProblemPart[];
-}
-
-export interface ExamPaper {
-  readonly id: string;
-  readonly year: string;
-  readonly semester: string;
-  readonly durationMinutes: number;
-  readonly title: string;
-  readonly description: string;
-  readonly originalImagePath: string;
-  readonly problems: readonly ExamProblem[];
-}
+export type { ExamPaper, ExamProblem, ExamProblemPart } from '../exam-bank-types';
 
 export const GTHMB_EXAM_PAPERS: readonly ExamPaper[] = [
   // =========================================================================

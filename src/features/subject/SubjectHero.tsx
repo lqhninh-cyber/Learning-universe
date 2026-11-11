@@ -42,7 +42,9 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
   const directPdfUrl = COURSE_DIRECT_PDF_LINKS[subject.slug];
 
   const hasDedicatedExamPage =
-    subject.slug === 'cau-truc-dai-so' || subject.slug === 'giai-tich-ham-mot-bien';
+    subject.slug === 'cau-truc-dai-so' ||
+    subject.slug === 'hinh-hoc-affine' ||
+    subject.slug === 'giai-tich-ham-mot-bien';
 
   // Thông số cho vòng tròn tiến độ tối giản trên nền kính tối
   const ringSize = 64;
@@ -169,17 +171,6 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
                   <BookOpen className="h-4 w-4 text-amber-300" aria-hidden="true" />
                   <span>Ngân hàng Đề thi &amp; Lời giải</span>
                 </Link>
-              ) : subject.slug === 'hinh-hoc-affine' ? (
-                <a
-                  href="/interactive/affine-geometry.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
-                >
-                  <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
-                  <span>Ngân hàng Đề thi &amp; Phòng Lab</span>
-                  <ExternalLink className="h-3.5 w-3.5 opacity-75" aria-hidden="true" />
-                </a>
               ) : (
                 <button
                   type="button"
@@ -189,6 +180,19 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
                   <BookOpen className="h-4 w-4 text-amber-300" aria-hidden="true" />
                   <span>Ngân hàng Đề thi &amp; Lời giải</span>
                 </button>
+              )}
+
+              {subject.slug === 'hinh-hoc-affine' && (
+                <a
+                  href="/interactive/affine-geometry.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
+                >
+                  <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                  <span>Phòng Lab 3D</span>
+                  <ExternalLink className="h-3.5 w-3.5 opacity-75" aria-hidden="true" />
+                </a>
               )}
             </div>
           </div>
