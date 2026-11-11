@@ -1,12 +1,15 @@
 /**
- * ENGINE ĐỒ HỌA CANVAS 2D: "THIÊN CẦU KHUÊ VĂN CÁC" (PHIÊN BẢN TOÀN CẢNH BẢN ĐỒ THIÊN VĂN HOÀNG CUNG)
+ * ENGINE ĐỒ HỌA CANVAS 2D: "THIÊN CẦU KHUÊ VĂN CÁC" (PHIÊN BẢN TINH XẢO HOÀNG CUNG)
  *
- * - Trung tâm: Hỗn Thiên Nghi 3D (3 vòng elip nghiêng 30°, 60°, -45°) + Mặt Trời Lạc Việt 12 Tia vát khối 3D
- *   + Vòng Bát Giác Tâm & Nhụy Ngọc Đỏ Chu Sa.
+ * - Ánh sáng nền: Vignette góc #E5DEC9 tôn khung Đỏ Chu Sa / Vàng Thếp + Quầng sáng ấm tại tâm rgba(229,195,120,0.22).
+ * - Trung tâm: Hỗn Thiên Nghi 3D (3 elip nghiêng 30°, 60°, -45° + hạt sao vàng chạy quỹ đạo)
+ *   + Mặt Trời Lạc Việt 12 Tia vát khối 3D + 2 vòng hào quang trống đồng (0.38*R1, 0.68*R1)
+ *   + Nhụy tâm kép (#8A6A2F bao quanh hạt ngọc #C83E37 tỏa sáng shadowBlur = 12).
+ * - Kiến trúc Khuê Văn Các: Đất vuông NÉT KÉP (#C83E37 ngoài & #C5A262 cách 4px) + đường phân giác & chấm vàng tại 8 đỉnh
+ *   + 8 nan gỗ tô mờ rgba(200,62,55,0.05) với vạch khóa ngang song tiện cổ truyền ở giữa.
  * - Toàn khung (Full-Viewport Cartography): Khung viền Sắc phong kép + Triện Hồi Văn 4 góc + Vạch thước 40px,
- *   8 trục phương hướng nét đứt, 2 vòng quỹ đạo ngoại vi khổng lồ (0.38 & 0.48), 4 cụm quần tinh hai bên cánh
- *   và 40 hạt bụi vàng li ti trôi nổi.
- * - Hồi III: Cửa sổ thấu quang destination-out mở toang vào Trang chủ.
+ *   8 trục phương hướng, 2 vòng quỹ đạo ngoại vi (0.38 & 0.48) kèm 2 Cung thước đo bán nguyệt 60° (-30°..30°, 150°..210°),
+ *   4 chuỗi chòm sao phân nhánh mở (Open Branched Constellations) & 40 hạt bụi vàng.
  */
 
 export const INTRO_TOTAL_DURATION_S = 7.5;
@@ -14,17 +17,11 @@ export const INTRO_REDUCED_DURATION_S = 1.5;
 export const PORTAL_DISMISS_DURATION_S = 0.45;
 
 export interface KhueVanRenderState {
-  /** Thời gian theo kịch bản (0 -> 7.5s) */
   readonly elapsed: number;
-  /** Tiến trình mở cổng khi người dùng click/phím bỏ qua (0 -> 1, null nếu chạy tự nhiên) */
   readonly dismissProgress: number | null;
-  /** Bán kính cổng thấu quang ở thời điểm bắt đầu bỏ qua (px) */
   readonly dismissStartPortalRadius: number;
-  /** Tỉ lệ phóng đại bối cảnh ở thời điểm bắt đầu bỏ qua */
   readonly dismissStartScale: number;
-  /** Góc xoay bối cảnh ở thời điểm bắt đầu bỏ qua */
   readonly dismissStartRotation: number;
-  /** Chế độ giảm chuyển động */
   readonly prefersReducedMotion: boolean;
 }
 
@@ -38,10 +35,13 @@ const COLORS = {
   paperCenter: '#FFFDF9',
   paperMid: '#F7F4EB',
   paperEdge: '#EDE8D8',
+  paperCornerDeep: '#E5DEC9',
+  warmCenterGlow: 'rgba(229, 195, 120, 0.22)',
   cinnabar: '#C83E37',
   cinnabarLight: '#DF5049',
   cinnabarDark: '#9A2520',
   cinnabarGlow: 'rgba(200, 62, 55, 0.12)',
+  cinnabarNanFill: 'rgba(200, 62, 55, 0.05)',
   goldBright: '#C5A262',
   goldLight: '#DFBE7E',
   goldDark: '#8A6A2F',
@@ -97,92 +97,106 @@ const KHUE_CONSTELLATION_EDGES: readonly (readonly [number, number])[] = [
   [13, 15],
 ];
 
-interface WingStarPoint {
+interface BranchedStarPoint {
   readonly dx: number;
   readonly dy: number;
+  readonly isPrimary: boolean;
   readonly isJade: boolean;
   readonly size: number;
 }
 
-interface WingClusterTemplate {
+interface WingBranchedCluster {
   readonly xSign: -1 | 1;
   readonly ySign: -1 | 1;
-  readonly stars: readonly WingStarPoint[];
+  readonly stars: readonly BranchedStarPoint[];
+  /** Đồ thị cây phân nhánh mở (tuyệt đối không khép kín thành đa giác) */
   readonly edges: readonly (readonly [number, number])[];
 }
 
-// 4 cụm chòm sao đối xứng hai bên cánh (mỗi cụm 5 ngôi sao nối đoạn kỷ hà mảnh)
-const WING_CLUSTERS: readonly WingClusterTemplate[] = [
+// 4 chuỗi nhánh thiên văn mở (Open Branched Constellations: 7 sao/chòm, có sao chính vòng bao + nhánh phụ tự nhiên)
+const WING_BRANCHED_CLUSTERS: readonly WingBranchedCluster[] = [
   {
     xSign: -1,
     ySign: -1,
     stars: [
-      { dx: -44, dy: -22, isJade: false, size: 2.8 },
-      { dx: -10, dy: -36, isJade: true, size: 2.2 },
-      { dx: 18, dy: -8, isJade: false, size: 2.6 },
-      { dx: -16, dy: 24, isJade: true, size: 2.1 },
-      { dx: 36, dy: 28, isJade: false, size: 2.9 },
-    ],
-    edges: [
-      [0, 1],
-      [1, 2],
-      [2, 3],
-      [3, 0],
-      [2, 4],
-    ],
-  },
-  {
-    xSign: -1,
-    ySign: 1,
-    stars: [
-      { dx: -38, dy: 18, isJade: true, size: 2.4 },
-      { dx: -12, dy: -18, isJade: false, size: 2.9 },
-      { dx: 24, dy: -28, isJade: false, size: 2.2 },
-      { dx: 38, dy: 8, isJade: true, size: 2.6 },
-      { dx: -4, dy: 34, isJade: false, size: 2.3 },
+      { dx: -56, dy: -28, isPrimary: false, isJade: true, size: 1.9 },
+      { dx: -26, dy: -16, isPrimary: true, isJade: false, size: 3.3 },
+      { dx: 6, dy: -32, isPrimary: false, isJade: false, size: 2.1 },
+      { dx: 34, dy: -12, isPrimary: true, isJade: false, size: 3.1 },
+      { dx: 62, dy: -26, isPrimary: false, isJade: true, size: 1.8 },
+      { dx: -18, dy: 22, isPrimary: false, isJade: true, size: 2.0 },
+      { dx: 24, dy: 28, isPrimary: false, isJade: false, size: 1.9 },
     ],
     edges: [
       [0, 1],
       [1, 2],
       [2, 3],
       [3, 4],
-      [4, 0],
+      [1, 5],
+      [3, 6],
     ],
   },
   {
-    xSign: 1,
-    ySign: -1,
-    stars: [
-      { dx: 44, dy: -22, isJade: false, size: 2.8 },
-      { dx: 10, dy: -36, isJade: true, size: 2.2 },
-      { dx: -18, dy: -8, isJade: false, size: 2.6 },
-      { dx: 16, dy: 24, isJade: true, size: 2.1 },
-      { dx: -36, dy: 28, isJade: false, size: 2.9 },
-    ],
-    edges: [
-      [0, 1],
-      [1, 2],
-      [2, 3],
-      [3, 0],
-      [2, 4],
-    ],
-  },
-  {
-    xSign: 1,
+    xSign: -1,
     ySign: 1,
     stars: [
-      { dx: 38, dy: 18, isJade: true, size: 2.4 },
-      { dx: 12, dy: -18, isJade: false, size: 2.9 },
-      { dx: -24, dy: -28, isJade: false, size: 2.2 },
-      { dx: -38, dy: 8, isJade: true, size: 2.6 },
-      { dx: 4, dy: 34, isJade: false, size: 2.3 },
+      { dx: -54, dy: 24, isPrimary: false, isJade: false, size: 1.9 },
+      { dx: -22, dy: 8, isPrimary: true, isJade: false, size: 3.3 },
+      { dx: 12, dy: 26, isPrimary: false, isJade: true, size: 2.0 },
+      { dx: 42, dy: 6, isPrimary: true, isJade: false, size: 3.0 },
+      { dx: 64, dy: 22, isPrimary: false, isJade: false, size: 1.8 },
+      { dx: -14, dy: -28, isPrimary: false, isJade: true, size: 2.1 },
+      { dx: 22, dy: -32, isPrimary: false, isJade: false, size: 1.8 },
     ],
     edges: [
       [0, 1],
       [1, 2],
       [2, 3],
       [3, 4],
-      [4, 0],
+      [1, 5],
+      [5, 6],
+    ],
+  },
+  {
+    xSign: 1,
+    ySign: -1,
+    stars: [
+      { dx: 56, dy: -28, isPrimary: false, isJade: true, size: 1.9 },
+      { dx: 26, dy: -16, isPrimary: true, isJade: false, size: 3.3 },
+      { dx: -6, dy: -32, isPrimary: false, isJade: false, size: 2.1 },
+      { dx: -34, dy: -12, isPrimary: true, isJade: false, size: 3.1 },
+      { dx: -62, dy: -26, isPrimary: false, isJade: true, size: 1.8 },
+      { dx: 18, dy: 22, isPrimary: false, isJade: true, size: 2.0 },
+      { dx: -24, dy: 28, isPrimary: false, isJade: false, size: 1.9 },
+    ],
+    edges: [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [1, 5],
+      [3, 6],
+    ],
+  },
+  {
+    xSign: 1,
+    ySign: 1,
+    stars: [
+      { dx: 54, dy: 24, isPrimary: false, isJade: false, size: 1.9 },
+      { dx: 22, dy: 8, isPrimary: true, isJade: false, size: 3.3 },
+      { dx: -12, dy: 26, isPrimary: false, isJade: true, size: 2.0 },
+      { dx: -42, dy: 6, isPrimary: true, isJade: false, size: 3.0 },
+      { dx: -64, dy: 22, isPrimary: false, isJade: false, size: 1.8 },
+      { dx: 14, dy: -28, isPrimary: false, isJade: true, size: 2.1 },
+      { dx: -22, dy: -32, isPrimary: false, isJade: false, size: 1.8 },
+    ],
+    edges: [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [1, 5],
+      [5, 6],
     ],
   },
 ];
@@ -198,7 +212,6 @@ interface DustMote {
   readonly isCinnabar: boolean;
 }
 
-// 40 hạt bụi vàng & chu sa định sẵn theo phân bố chuẩn toàn màn hình (tránh cấp phát bộ nhớ trong vòng lặp 60fps)
 const AMBIENT_DUST: readonly DustMote[] = Array.from({ length: 40 }, (_, i) => {
   const goldenRatio = 0.61803398875;
   const pseudo1 = (i * goldenRatio) % 1;
@@ -237,7 +250,7 @@ export function easeInOutExpo(x: number): number {
   return t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2;
 }
 
-/** Tính bán kính cửa sổ Khuê Văn Các (đã phóng to +20% cho bề thế trên màn hình rộng) */
+/** Tính bán kính cửa sổ Khuê Văn Các (+20% kích thước) */
 export function getWindowRadius(width: number, height: number): number {
   const minDim = Math.min(width, height);
   return Math.max(50, Math.min(152, minDim * 0.162));
@@ -299,8 +312,8 @@ export function computePortalTransform(
   };
 }
 
-/** Vẽ hình vuông xoay góc bất kỳ theo tiến trình phác thảo nét (progressive stroke) */
-function drawProgressiveSquare(
+/** Phác thảo hình vuông đơn theo tiến trình */
+function strokeProgressiveSquarePath(
   ctx: CanvasRenderingContext2D,
   halfSide: number,
   rotationRad: number,
@@ -343,6 +356,82 @@ function drawProgressiveSquare(
   ctx.restore();
 }
 
+/**
+ * Kiến trúc Đất Vuông NÉT KÉP (Octagram):
+ * - Viền ngoài Đỏ Chu Sa #C83E37 (1.5px) song song viền trong Vàng Thếp #C5A262 (0.8px, cách 4px).
+ * - Đường phân giác ngắn & chấm tròn vàng đính tại 8 góc nhọn của ngôi sao 8 đỉnh.
+ */
+function drawDoubleOctagramFrame(
+  ctx: CanvasRenderingContext2D,
+  squareHalf: number,
+  sq1Progress: number,
+  sq2Progress: number,
+): void {
+  // Hình vuông 1 (0°)
+  if (sq1Progress > 0) {
+    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.lineWidth = 1.5;
+    strokeProgressiveSquarePath(ctx, squareHalf, 0, sq1Progress);
+
+    ctx.strokeStyle = COLORS.goldBright;
+    ctx.lineWidth = 0.8;
+    strokeProgressiveSquarePath(ctx, squareHalf - 4, 0, sq1Progress);
+  }
+
+  // Hình vuông 2 (xoay 45°)
+  if (sq2Progress > 0) {
+    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.lineWidth = 1.5;
+    strokeProgressiveSquarePath(ctx, squareHalf, Math.PI / 4, sq2Progress);
+
+    ctx.strokeStyle = COLORS.goldBright;
+    ctx.lineWidth = 0.8;
+    strokeProgressiveSquarePath(ctx, squareHalf - 4, Math.PI / 4, sq2Progress);
+  }
+
+  // Họa tiết 8 đỉnh góc nhọn Octagram: phân giác ngắn + chấm tròn vàng đính ở đỉnh góc
+  const tipProgress = clamp01((sq2Progress - 0.35) / 0.65);
+  if (tipProgress > 0) {
+    const outerCornerR = squareHalf * Math.SQRT2;
+    const bisectorStartR = squareHalf * 1.15;
+    const bisectorEndR = outerCornerR - 6.5;
+    const eTip = easeOutCubic(tipProgress);
+
+    for (let k = 0; k < 8; k++) {
+      const angle = k * (Math.PI / 4);
+      const isSq1 = k % 2 === 1;
+      const localP = isSq1 ? clamp01((sq1Progress - 0.4) / 0.6) : eTip;
+      if (localP <= 0) continue;
+
+      ctx.save();
+      ctx.rotate(angle);
+      ctx.globalAlpha *= localP;
+
+      // Đường phân giác ngắn hướng vào đỉnh tam giác góc
+      ctx.strokeStyle = COLORS.goldDark;
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(bisectorStartR, 0);
+      ctx.lineTo(bisectorStartR + (bisectorEndR - bisectorStartR) * localP, 0);
+      ctx.stroke();
+
+      // Chấm tròn vàng đính ở đỉnh góc
+      ctx.fillStyle = COLORS.goldBright;
+      ctx.beginPath();
+      ctx.arc(outerCornerR - 5.5, 0, 2.3 * localP, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = COLORS.cinnabar;
+      ctx.lineWidth = 0.75;
+      ctx.beginPath();
+      ctx.arc(outerCornerR - 5.5, 0, 3.6 * localP, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  }
+}
+
 /** A. Vẽ Khung Viền Sắc Phong, Triện Góc Hồi Văn & Thước Tọa Độ mỗi 40px */
 function drawImperialBorderAndFretwork(
   ctx: CanvasRenderingContext2D,
@@ -362,22 +451,19 @@ function drawImperialBorderAndFretwork(
   const borderP = easeOutCubic(clamp01((artTime - 0.15) / 1.4));
   if (borderP <= 0) return;
 
-  // Khung chữ nhật viền kép mảnh
   ctx.save();
   ctx.globalAlpha *= borderP;
 
-  // Viền ngoài #C5A262 (1px, opacity 0.6)
   ctx.strokeStyle = 'rgba(197, 162, 98, 0.6)';
   ctx.lineWidth = 1;
   ctx.strokeRect(inset, inset, outerW, outerH);
 
-  // Viền trong #C83E37 (0.75px, opacity 0.4, cách viền ngoài 5px)
   ctx.strokeStyle = 'rgba(200, 62, 55, 0.4)';
   ctx.lineWidth = 0.75;
   ctx.strokeRect(innerInset, innerInset, innerW, innerH);
   ctx.restore();
 
-  // Họa tiết Triện Góc Hồi Văn (~36x36px) tự động phác nét trong Hồi I
+  // 4 góc Triện Hồi Văn (~36x36px) tự phác nét
   const fretP = easeInOutQuart(clamp01((artTime - 0.4) / 1.5));
   const fretSize = width >= 768 ? 36 : 26;
   if (fretP > 0) {
@@ -399,13 +485,11 @@ function drawImperialBorderAndFretwork(
       ctx.lineWidth = 1.35 / scaleRatio;
       ctx.setLineDash([totalFretDash * fretP, totalFretDash]);
 
-      // Hồi văn kỷ hà vuông vức truyền thống 36x36
       ctx.beginPath();
       ctx.moveTo(0, 36);
       ctx.lineTo(0, 0);
       ctx.lineTo(36, 0);
 
-      // Nhánh hồi văn ngang
       ctx.moveTo(8, 0);
       ctx.lineTo(8, 16);
       ctx.lineTo(28, 16);
@@ -413,7 +497,6 @@ function drawImperialBorderAndFretwork(
       ctx.lineTo(15, 7);
       ctx.lineTo(15, 11);
 
-      // Nhánh hồi văn dọc
       ctx.moveTo(0, 8);
       ctx.lineTo(16, 8);
       ctx.lineTo(16, 28);
@@ -422,7 +505,6 @@ function drawImperialBorderAndFretwork(
       ctx.lineTo(11, 15);
       ctx.stroke();
 
-      // Điểm chấm vàng son ở lõi triện góc
       if (fretP > 0.7) {
         ctx.setLineDash([]);
         ctx.fillStyle = COLORS.goldBright;
@@ -435,14 +517,13 @@ function drawImperialBorderAndFretwork(
     }
   }
 
-  // Vạch thước chia tọa độ bản đồ (Map scale ticks) mỗi 40px dọc 4 cạnh
+  // Vạch thước tọa độ mỗi 40px dọc 4 cạnh
   const tickP = easeOutCubic(clamp01((artTime - 0.9) / 1.1));
   if (tickP > 0) {
     ctx.save();
     ctx.globalAlpha *= tickP;
     const marginGuard = fretSize + 10;
 
-    // Cạnh trên & dưới
     let idx = 0;
     for (let x = innerInset + marginGuard; x <= width - innerInset - marginGuard; x += 40) {
       const isMajor = idx % 4 === 0;
@@ -459,7 +540,6 @@ function drawImperialBorderAndFretwork(
       idx++;
     }
 
-    // Cạnh trái & phải
     idx = 0;
     for (let y = innerInset + marginGuard; y <= height - innerInset - marginGuard; y += 40) {
       const isMajor = idx % 4 === 0;
@@ -475,12 +555,107 @@ function drawImperialBorderAndFretwork(
       ctx.stroke();
       idx++;
     }
-
     ctx.restore();
   }
 }
 
-/** B. Vẽ Lưới Trục Kinh Vĩ Tuyến Xuyên Tâm & 2 Vòng Quỹ Đạo Ngoại Vi Khổng Lồ */
+/**
+ * Vẽ Cung Thước Đo Bán Nguyệt Hai Bên (-30°..+30° và 150°..210°)
+ * Cân bằng trọng lượng thị giác với cụm trung tâm trên màn hình rộng
+ */
+function drawLateralAstrolabeArc(
+  ctx: CanvasRenderingContext2D,
+  radius: number,
+  startDeg: number,
+  endDeg: number,
+  revealProgress: number,
+): void {
+  const p = easeOutCubic(revealProgress);
+  if (p <= 0) return;
+
+  const startRad = (startDeg * Math.PI) / 180;
+  const endRad = (endDeg * Math.PI) / 180;
+  const midRad = (startRad + endRad) / 2;
+  const halfSpan = ((endRad - startRad) / 2) * p;
+  const a0 = midRad - halfSpan;
+  const a1 = midRad + halfSpan;
+
+  const bandOffset = 10;
+
+  ctx.save();
+  ctx.globalAlpha *= p;
+
+  // Dải nền vàng nhạt dày dặn giữa 2 cung thước đo
+  ctx.beginPath();
+  ctx.arc(0, 0, radius + bandOffset, a0, a1);
+  ctx.arc(0, 0, radius, a1, a0, true);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(197, 162, 98, 0.08)';
+  ctx.fill();
+
+  // Hai cung viền dày dặn (vàng thếp & đỏ chu sa)
+  ctx.strokeStyle = COLORS.goldBright;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.arc(0, 0, radius + bandOffset, a0, a1);
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(200, 62, 55, 0.75)';
+  ctx.lineWidth = 1.15;
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, a0, a1);
+  ctx.stroke();
+
+  // Hai vạch chặn đầu cung (End brackets)
+  for (const capAngle of [a0, a1]) {
+    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(capAngle) * (radius - 3), Math.sin(capAngle) * (radius - 3));
+    ctx.lineTo(
+      Math.cos(capAngle) * (radius + bandOffset + 3),
+      Math.sin(capAngle) * (radius + bandOffset + 3),
+    );
+    ctx.stroke();
+  }
+
+  // Vạch chia độ rõ nét mỗi 3° và vạch lớn mỗi 15° (-30, -15, 0, 15, 30)
+  const stepDeg = 3;
+  for (let d = startDeg; d <= endDeg; d += stepDeg) {
+    const rad = (d * Math.PI) / 180;
+    if (rad < a0 || rad > a1) continue;
+
+    const isMajor = d % 15 === 0;
+    const isMid = d % 30 === 0 || d === 180 || d === 0;
+
+    const innerTick = radius - (isMajor ? 4 : 0);
+    const outerTick = radius + (isMajor ? bandOffset + 4 : bandOffset * 0.65);
+
+    ctx.strokeStyle = isMid ? COLORS.cinnabar : isMajor ? COLORS.goldDark : COLORS.goldBright;
+    ctx.lineWidth = isMid ? 1.5 : isMajor ? 1.15 : 0.75;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(rad) * innerTick, Math.sin(rad) * innerTick);
+    ctx.lineTo(Math.cos(rad) * outerTick, Math.sin(rad) * outerTick);
+    ctx.stroke();
+
+    if (isMajor) {
+      ctx.fillStyle = isMid ? COLORS.cinnabar : COLORS.goldDark;
+      ctx.beginPath();
+      ctx.arc(
+        Math.cos(rad) * (radius + bandOffset + 7),
+        Math.sin(rad) * (radius + bandOffset + 7),
+        isMid ? 2.4 : 1.7,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+}
+
+/** B. Vẽ Lưới Trục Xuyên Tâm, 2 Vòng Quỹ Đạo Ngoại Vi & 2 Cung Thước Đo Bán Nguyệt */
 function drawFullViewportCartographyGrid(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -497,13 +672,12 @@ function drawFullViewportCartographyGrid(
   const cy = height / 2;
   const maxSpan = Math.hypot(width, height);
 
-  // Clip gọn bên trong khung viền sắc phong để không tràn mép giấy
   ctx.save();
   ctx.beginPath();
   ctx.rect(inset, inset, innerW, innerH);
   ctx.clip();
 
-  // 8 đường trục phương hướng (Ngang, Dọc, 2 Chéo) kéo dài tới tận khung viền ngoài cùng
+  // 8 đường trục phương hướng nét đứt kéo dài chạm tới tận khung viền ngoài cùng
   const axisP = easeOutCubic(clamp01((artTime - 0.5) / 1.5));
   if (axisP > 0) {
     ctx.save();
@@ -534,9 +708,14 @@ function drawFullViewportCartographyGrid(
   if (outerRingP > 0) {
     const orbitTime = Math.max(0, artTime - 2.3);
 
-    // Vòng quỹ đạo ngoại vi 1
+    // Vòng quỹ đạo ngoại vi 1 + 2 cung thước đo bán nguyệt (-30°..+30° & 150°..210°)
     ctx.save();
     ctx.translate(cx, cy);
+
+    // Hai cung thước đo bán nguyệt hai bên giữ ổn định ở hai cánh để cân bằng trọng lượng thị giác
+    drawLateralAstrolabeArc(ctx, rOuter1, -30, 30, outerRingP);
+    drawLateralAstrolabeArc(ctx, rOuter1, 150, 210, outerRingP);
+
     ctx.rotate(orbitTime * 0.025);
     ctx.globalAlpha *= outerRingP;
 
@@ -547,7 +726,6 @@ function drawFullViewportCartographyGrid(
     ctx.arc(0, 0, rOuter1, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Con trỏ thiên văn hình thoi vàng - đỏ xoay chậm trên vòng 1
     ctx.setLineDash([]);
     for (let k = 0; k < 4; k++) {
       const a = k * (Math.PI / 2) + Math.PI / 6;
@@ -579,7 +757,6 @@ function drawFullViewportCartographyGrid(
     ctx.arc(0, 0, rOuter2, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Con trỏ tam giác chỉ hướng trên vòng 2
     ctx.setLineDash([]);
     for (let k = 0; k < 6; k++) {
       const a = k * (Math.PI / 3);
@@ -598,10 +775,10 @@ function drawFullViewportCartographyGrid(
     ctx.restore();
   }
 
-  ctx.restore(); // Kết thúc vùng clip khung viền
+  ctx.restore();
 }
 
-/** C. Vẽ 4 cụm Quần Tinh hai bên cánh & 40 hạt bụi vàng li ti trôi nổi toàn màn hình */
+/** C. Vẽ 4 Chuỗi Nhánh Thiên Văn Mở (Open Branched Constellations) & 40 hạt bụi vàng */
 function drawAmbientStarfieldAndDust(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -612,29 +789,27 @@ function drawAmbientStarfieldAndDust(
 ): void {
   const cx = width / 2;
   const cy = height / 2;
-  const inset = width >= 768 ? 46 : 28;
+  const inset = width >= 768 ? 48 : 28;
 
-  // 1. 4 cụm chòm sao đối xứng ở hai bên cánh (lấp đầy khoảng trống 16:9 ngoài cụm trung tâm)
+  // 1. 4 chuỗi nhánh thiên văn mở hai bên cánh (6-8 sao/cụm, không nối khép kín, có sao chính kèm vòng bao)
   const wingP = easeOutCubic(clamp01((artTime - 2.6) / 1.5));
   if (wingP > 0) {
     const centralGuardR = r1 * 2.85;
     const isWide = width >= height * 1.15;
 
-    for (const cluster of WING_CLUSTERS) {
-      // Định vị tự động vào khoảng trống cánh trái/phải (hoặc trên/dưới trên màn hình dọc)
+    for (const cluster of WING_BRANCHED_CLUSTERS) {
       const anchorX = isWide
-        ? cx + cluster.xSign * Math.max(centralGuardR + 58, width * 0.34)
+        ? cx + cluster.xSign * Math.max(centralGuardR + 68, width * 0.34)
         : cx + cluster.xSign * (width * 0.28);
       const anchorY = isWide
         ? cy + cluster.ySign * (height * 0.25)
         : cy + cluster.ySign * Math.max(centralGuardR + 36, height * 0.34);
 
-      // Bỏ qua nếu cụm rơi sát mép khung viền quá hẹp
       if (
-        anchorX < inset + 20 ||
-        anchorX > width - inset - 20 ||
-        anchorY < inset + 20 ||
-        anchorY > height - inset - 20
+        anchorX < inset + 28 ||
+        anchorX > width - inset - 28 ||
+        anchorY < inset + 24 ||
+        anchorY > height - inset - 24
       ) {
         continue;
       }
@@ -643,6 +818,7 @@ function drawAmbientStarfieldAndDust(
       const pts = cluster.stars.map((s) => ({
         x: anchorX + s.dx * scaleFactor,
         y: anchorY + s.dy * scaleFactor,
+        isPrimary: s.isPrimary,
         isJade: s.isJade,
         size: s.size * scaleFactor,
       }));
@@ -650,8 +826,8 @@ function drawAmbientStarfieldAndDust(
       ctx.save();
       ctx.globalAlpha *= wingP;
 
-      // Đoạn thẳng vàng mảnh 0.75px nối sao trong cụm
-      ctx.strokeStyle = 'rgba(197, 162, 98, 0.55)';
+      // Đường gấp khúc phân nhánh mở bằng nét vàng mảnh 0.75px
+      ctx.strokeStyle = 'rgba(197, 162, 98, 0.58)';
       ctx.lineWidth = 0.75;
       for (let eIdx = 0; eIdx < cluster.edges.length; eIdx++) {
         const edge = cluster.edges[eIdx];
@@ -660,7 +836,7 @@ function drawAmbientStarfieldAndDust(
         const b = pts[edge[1]];
         if (!a || !b) continue;
 
-        const ep = clamp01((wingP - eIdx * 0.1) / 0.55);
+        const ep = clamp01((wingP - eIdx * 0.09) / 0.5);
         if (ep <= 0) continue;
 
         ctx.beginPath();
@@ -669,27 +845,48 @@ function drawAmbientStarfieldAndDust(
         ctx.stroke();
       }
 
-      // Chấm sao Đỏ Chu Sa / Xanh Ngọc
+      // Sao chính rực sáng kèm vòng tròn nhỏ bao quanh & các sao phụ
       for (let sIdx = 0; sIdx < pts.length; sIdx++) {
         const pt = pts[sIdx];
         if (!pt) continue;
-        const sp = easeOutCubic(clamp01((wingP - sIdx * 0.08) / 0.45));
+        const sp = easeOutCubic(clamp01((wingP - sIdx * 0.07) / 0.45));
         if (sp <= 0) continue;
 
-        const twinkle = 0.8 + 0.2 * Math.sin(twinkleTime * 2.2 + sIdx * 1.3 + cluster.xSign);
+        const twinkle = 0.84 + 0.16 * Math.sin(twinkleTime * 2.2 + sIdx * 1.3 + cluster.xSign);
         const rad = pt.size * sp * twinkle;
+
+        if (pt.isPrimary) {
+          // Vòng tròn nhỏ bao quanh sao chính
+          ctx.strokeStyle = 'rgba(197, 162, 98, 0.75)';
+          ctx.lineWidth = 0.85;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad * 2.15, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = COLORS.cinnabarGlow;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad * 2.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.fillStyle = pt.isJade ? COLORS.jadeLight : COLORS.cinnabar;
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, rad, 0, Math.PI * 2);
         ctx.fill();
+
+        if (pt.isPrimary) {
+          ctx.fillStyle = COLORS.paperCenter;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, rad * 0.36, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       ctx.restore();
     }
   }
 
-  // 2. 40 hạt bụi vàng & chu sa li ti (bán kính 1px - 2.5px, opacity lấp lánh theo sin)
+  // 2. 40 hạt bụi vàng & chu sa lấp lánh trôi nổi
   const dustReveal = clamp01(artTime / 1.4);
   if (dustReveal > 0) {
     for (const mote of AMBIENT_DUST) {
@@ -710,10 +907,10 @@ function drawAmbientStarfieldAndDust(
 }
 
 /**
- * LỚP TRUNG TÂM MỚI:
- * 1) Hỗn Thiên Nghi 3D (3 elip nghiêng 30°, 60°, -45° xoay 3D)
- * 2) Mặt Trời Lạc Việt 12 Tia vát khối 3D (6 chính #C83E37 + 6 phụ #8A6A2F)
- * 3) Vòng Bát Giác Tâm & Nhụy Ngọc Đỏ Chu Sa
+ * LỚP TRUNG TÂM TINH XẢO:
+ * 1) Hỗn Thiên Nghi 3D (3 elip nghiêng 30°, 60°, -45° độ nét 1.2px / opacity 0.75 + hạt sao vàng chạy quỹ đạo)
+ * 2) Mặt Trời Lạc Việt 12 Tia vát khối 3D + 2 vòng hào quang trống đồng đan tia (0.38*R1 và 0.68*R1)
+ * 3) Nhụy tâm kép tinh xảo: vòng đồng #8A6A2F mảnh bao quanh hạt ngọc Đỏ Chu Sa #C83E37 tỏa sáng shadowBlur = 12
  */
 function drawArmillaryAndLacVietSunburst(
   ctx: CanvasRenderingContext2D,
@@ -721,57 +918,64 @@ function drawArmillaryAndLacVietSunburst(
   artTime: number,
   liveTime: number,
 ): void {
-  // Tan nhẹ từ 5.1s -> 5.4s nhường không gian cho thấu kính destination-out mở cửa
   const coreFade = artTime >= 5.1 ? clamp01(1 - (artTime - 5.1) / 0.3) : 1;
   if (coreFade <= 0.01) return;
 
-  // --- LỚP 1: HỖN THIÊN NGHI 3D (3 vòng elip kinh-vĩ tuyến nghiêng 30°, 60°, -45°) ---
+  // --- LỚP 1: HỖN THIÊN NGHI 3D (lineWidth = 1.2, opacity 0.75 + hạt sao vàng chạy dọc elip) ---
   const armillaryP = easeOutCubic(clamp01((artTime - 1.55) / 1.1));
   if (armillaryP > 0) {
     const tilts = [
-      { angle: Math.PI / 6, speed: 0.9, phase: 0.2 }, // 30°
-      { angle: Math.PI / 3, speed: -0.75, phase: 1.4 }, // 60°
-      { angle: -Math.PI / 4, speed: 0.65, phase: 2.6 }, // -45°
+      { angle: Math.PI / 6, speed: 0.9, orbitRate: 1.45, phase: 0.2 }, // 30°
+      { angle: Math.PI / 3, speed: -0.75, orbitRate: -1.15, phase: 1.4 }, // 60°
+      { angle: -Math.PI / 4, speed: 0.65, orbitRate: 1.7, phase: 2.6 }, // -45°
     ] as const;
 
     const majorR = r1 * 0.87 * armillaryP;
     ctx.save();
     ctx.globalAlpha *= coreFade * armillaryP;
-    ctx.strokeStyle = 'rgba(197, 162, 98, 0.55)';
-    ctx.lineWidth = 1.15;
 
     for (const ring of tilts) {
-      const minorFactor = Math.max(0.14, Math.abs(Math.cos(liveTime * ring.speed + ring.phase)));
+      const minorFactor = Math.max(0.16, Math.abs(Math.cos(liveTime * ring.speed + ring.phase)));
       const minorR = majorR * minorFactor;
 
+      ctx.strokeStyle = 'rgba(197, 162, 98, 0.75)';
+      ctx.lineWidth = 1.2;
       ctx.beginPath();
       ctx.ellipse(0, 0, majorR, minorR, ring.angle, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Điểm nút kinh-vĩ vàng đậm đánh dấu quỹ đạo 3D
-      const nodeX = Math.cos(ring.angle) * majorR;
-      const nodeY = Math.sin(ring.angle) * majorR;
-      ctx.fillStyle = COLORS.goldDark;
+      // Hạt sao vàng nhỏ chạy dọc theo đường elip như hành tinh chuyển động trên quỹ đạo
+      const orbitTheta = liveTime * ring.orbitRate + ring.phase * 2.1;
+      const lx = Math.cos(orbitTheta) * majorR;
+      const ly = Math.sin(orbitTheta) * minorR;
+      const px = lx * Math.cos(ring.angle) - ly * Math.sin(ring.angle);
+      const py = lx * Math.sin(ring.angle) + ly * Math.cos(ring.angle);
+
+      ctx.fillStyle = COLORS.goldBright;
       ctx.beginPath();
-      ctx.arc(nodeX, nodeY, 1.8, 0, Math.PI * 2);
+      ctx.arc(px, py, 2.7, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = COLORS.paperCenter;
+      ctx.beginPath();
+      ctx.arc(px, py, 1.1, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
   }
 
-  // --- LỚP 2: MẶT TRỜI LẠC VIỆT 12 TIA VÁT KHỐI 3D (6 chính #C83E37 + 6 phụ #8A6A2F) ---
+  // --- LỚP 2: MẶT TRỜI LẠC VIỆT 12 TIA VÁT KHỐI 3D & 2 VÒNG HÀO QUANG ĐAN TIA (0.38*R1 & 0.68*R1) ---
   const sunP = easeInOutQuart(clamp01((artTime - 1.9) / 1.2));
   if (sunP > 0) {
     ctx.save();
     ctx.globalAlpha *= coreFade;
-    // Xoay nhẹ toàn khối la bàn Mặt Trời Lạc Việt
     ctx.rotate(Math.max(0, liveTime - 1.9) * 0.08);
 
     const numPoints = 12;
-    const stepAngle = (Math.PI * 2) / numPoints; // 30° mỗi tia
-    const valleyR = r1 * 0.24 * sunP;
-    const primaryTipR = r1 * 0.86 * sunP; // Chạm sát viền trong cửa tròn
-    const secondaryTipR = r1 * 0.58 * sunP; // Xen kẽ ngắn hơn
+    const stepAngle = (Math.PI * 2) / numPoints;
+    const valleyR = r1 * 0.23 * sunP;
+    const primaryTipR = r1 * 0.86 * sunP;
+    const secondaryTipR = r1 * 0.58 * sunP;
 
     for (let i = 0; i < numPoints; i++) {
       const isPrimary = i % 2 === 0;
@@ -787,7 +991,6 @@ function drawArmillaryAndLacVietSunburst(
       const rightX = Math.cos(rightAngle) * valleyR;
       const rightY = Math.sin(rightAngle) * valleyR;
 
-      // Mặt sáng bên trái (vát khối 3D sáng)
       ctx.fillStyle = isPrimary ? COLORS.cinnabar : COLORS.goldBright;
       ctx.beginPath();
       ctx.moveTo(0, 0);
@@ -796,7 +999,6 @@ function drawArmillaryAndLacVietSunburst(
       ctx.closePath();
       ctx.fill();
 
-      // Mặt tối bên phải (vát khối 3D đậm)
       ctx.fillStyle = isPrimary ? COLORS.cinnabarDark : COLORS.goldDark;
       ctx.beginPath();
       ctx.moveTo(0, 0);
@@ -805,7 +1007,6 @@ function drawArmillaryAndLacVietSunburst(
       ctx.closePath();
       ctx.fill();
 
-      // Đường sống tia sắc sảo
       ctx.strokeStyle = isPrimary ? COLORS.cinnabarLight : COLORS.goldLight;
       ctx.lineWidth = 0.65;
       ctx.beginPath();
@@ -813,16 +1014,29 @@ function drawArmillaryAndLacVietSunburst(
       ctx.lineTo(tipX, tipY);
       ctx.stroke();
     }
+
+    // 2 vòng tròn mảnh Vàng Thếp #C5A262 (0.38 * R1 và 0.68 * R1) đan cắt ngang kết nối 12 tia mặt trời
+    ctx.strokeStyle = COLORS.goldBright;
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    ctx.arc(0, 0, r1 * 0.38 * sunP, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.arc(0, 0, r1 * 0.68 * sunP, 0, Math.PI * 2);
+    ctx.stroke();
+
     ctx.restore();
   }
 
-  // --- LỚP 3: NHỤY NGỌC & VÒNG BÁT GIÁC TÂM ---
+  // --- LỚP 3: NHỤY TÂM KÉP TINH XẢO (Vòng đồng #8A6A2F mảnh bao quanh hạt ngọc #C83E37 tỏa sáng shadowBlur = 12) ---
   const jewelP = easeOutCubic(clamp01((artTime - 0.1) / 0.9));
   if (jewelP > 0) {
     ctx.save();
     ctx.globalAlpha *= coreFade;
 
-    // Vòng bát giác nhỏ viền vàng chính giữa tâm
+    // Vòng bát giác mảnh bên ngoài kết cấu la bàn (không dùng nền trắng dày)
     const octScale = clamp01((artTime - 1.8) / 0.8);
     if (octScale > 0) {
       const octR = r1 * 0.165 * easeOutCubic(octScale);
@@ -835,41 +1049,34 @@ function drawArmillaryAndLacVietSunburst(
         else ctx.lineTo(ox, oy);
       }
       ctx.closePath();
-      ctx.fillStyle = COLORS.paperCenter;
-      ctx.fill();
       ctx.strokeStyle = COLORS.goldBright;
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 0.95;
       ctx.stroke();
     }
 
-    // Hạt ngọc đỏ chu sa phát sáng nhẹ ở chính tâm
-    const pulse = 1 + 0.08 * Math.sin(liveTime * 3.2);
-    const jewelR = Math.max(4.5, r1 * 0.085) * jewelP;
-
-    const haloGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, jewelR * 3.4 * pulse);
-    haloGrad.addColorStop(0, 'rgba(200, 62, 55, 0.3)');
-    haloGrad.addColorStop(0.5, COLORS.cinnabarGlow);
-    haloGrad.addColorStop(1, 'rgba(200, 62, 55, 0)');
-    ctx.fillStyle = haloGrad;
+    // Vòng đồng #8A6A2F mảnh bao quanh hạt ngọc trung tâm
+    const ringCopperR = Math.max(7.5, r1 * 0.12) * jewelP;
+    ctx.strokeStyle = COLORS.goldDark;
+    ctx.lineWidth = 1.0;
     ctx.beginPath();
-    ctx.arc(0, 0, jewelR * 3.4 * pulse, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.arc(0, 0, ringCopperR, 0, Math.PI * 2);
+    ctx.stroke();
 
-    const coreGrad = ctx.createRadialGradient(
-      -jewelR * 0.25,
-      -jewelR * 0.25,
-      jewelR * 0.1,
-      0,
-      0,
-      jewelR,
-    );
-    coreGrad.addColorStop(0, COLORS.paperCenter);
-    coreGrad.addColorStop(0.35, COLORS.cinnabarLight);
-    coreGrad.addColorStop(0.85, COLORS.cinnabar);
-    coreGrad.addColorStop(1, COLORS.cinnabarDark);
-    ctx.fillStyle = coreGrad;
+    // Hạt ngọc Đỏ Chu Sa #C83E37 tỏa sáng nhẹ (shadowBlur = 12)
+    const jewelR = Math.max(4.2, r1 * 0.068) * jewelP;
+    ctx.save();
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = 'rgba(200, 62, 55, 0.72)';
+    ctx.fillStyle = COLORS.cinnabar;
     ctx.beginPath();
     ctx.arc(0, 0, jewelR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Điểm phản quang tinh tế trên mặt ngọc
+    ctx.fillStyle = COLORS.paperCenter;
+    ctx.beginPath();
+    ctx.arc(-jewelR * 0.28, -jewelR * 0.28, jewelR * 0.26, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
@@ -1050,6 +1257,7 @@ export function renderKhueVanCanvas(
   const cy = height / 2;
   const r1 = getWindowRadius(width, height);
   const squareHalf = r1 * 1.28;
+  const rOuter1 = Math.max(width, height) * 0.38;
 
   const artTime = state.prefersReducedMotion ? 4.8 : state.elapsed;
   const liveTime = state.prefersReducedMotion ? 4.8 : state.elapsed;
@@ -1059,21 +1267,29 @@ export function renderKhueVanCanvas(
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
-  // 1. NỀN GIẤY DÓ HOÀNG CUNG (#FFFDF9 -> #F7F4EB -> #EDE8D8)
+  // 1. NỀN GIẤY DÓ HOÀNG CUNG CÓ VIGNETTE TRẦM NHẸ 4 GÓC (#FFFDF9 -> #EDE8D8 -> #E5DEC9)
   const bgRadius = Math.hypot(cx, cy) * 1.05;
   const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, bgRadius);
   bgGrad.addColorStop(0, COLORS.paperCenter);
-  bgGrad.addColorStop(0.55, COLORS.paperMid);
-  bgGrad.addColorStop(1, COLORS.paperEdge);
+  bgGrad.addColorStop(0.45, COLORS.paperMid);
+  bgGrad.addColorStop(0.78, COLORS.paperEdge);
+  bgGrad.addColorStop(1, COLORS.paperCornerDeep);
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, width, height);
 
-  // 2. BỐI CẢNH BẢN ĐỒ THIÊN VĂN TOÀN MÀN HÌNH (lấp đầy khung 16:9)
+  // QUẦNG SÁNG ẤM TẠI TÂM (rgba(229, 195, 120, 0.22) giảm dần về 0 ở bán kính R_outer1)
+  const warmGlowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rOuter1);
+  warmGlowGrad.addColorStop(0, COLORS.warmCenterGlow);
+  warmGlowGrad.addColorStop(1, 'rgba(229, 195, 120, 0)');
+  ctx.fillStyle = warmGlowGrad;
+  ctx.fillRect(0, 0, width, height);
+
+  // 2. BỐI CẢNH BẢN ĐỒ THIÊN VĂN TOÀN MÀN HÌNH
   drawImperialBorderAndFretwork(ctx, width, height, artTime);
   drawFullViewportCartographyGrid(ctx, width, height, r1, artTime);
   drawAmbientStarfieldAndDust(ctx, width, height, r1, artTime, liveTime);
 
-  // 3. CỤM THIÊN CẦU KHUÊ VĂN CÁC TRUNG TÂM (+20% kích thước & biến đổi mở cổng Hồi III)
+  // 3. CỤM THIÊN CẦU KHUÊ VĂN CÁC TRUNG TÂM (+20% kích thước)
   ctx.save();
   ctx.translate(cx, cy);
   ctx.scale(portal.sceneScale, portal.sceneScale);
@@ -1095,11 +1311,10 @@ export function renderKhueVanCanvas(
     }
   }
 
-  // 2 hình vuông lồng nhau xoay lệch 45° (Octagram Đất vuông & Bát phương)
-  ctx.strokeStyle = COLORS.cinnabar;
-  ctx.lineWidth = 1.5;
-  drawProgressiveSquare(ctx, squareHalf, 0, clamp01((artTime - 0.6) / 0.95));
-  drawProgressiveSquare(ctx, squareHalf, Math.PI / 4, clamp01((artTime - 0.95) / 0.95));
+  // Khung Đất Vuông NÉT KÉP (2 hình vuông xoay 45° + phân giác & chấm vàng tại 8 đỉnh)
+  const sq1P = clamp01((artTime - 0.6) / 0.95);
+  const sq2P = clamp01((artTime - 0.95) / 0.95);
+  drawDoubleOctagramFrame(ctx, squareHalf, sq1P, sq2P);
 
   // Vòng tròn "Trời tròn" R₁ viền kép Đỏ Chu Sa & Vàng Đồng
   const circleProgress = easeInOutQuart(clamp01((artTime - 1.1) / 1.1));
@@ -1120,34 +1335,65 @@ export function renderKhueVanCanvas(
     ctx.stroke();
   }
 
-  // 8 thanh nan kép đối xứng Khuê Văn Các kết nối từ R₁ ra khung vuông
+  // 8 Nan Gỗ Khuê Văn: tô nền mờ rgba(200,62,55,0.05) + vạch khóa ngang song tiện cổ truyền ở giữa
   const barsProgress = easeOutCubic(clamp01((artTime - 2.05) / 0.95));
   if (barsProgress > 0) {
-    const currentEndR = r1 + (squareHalf - r1) * barsProgress;
+    const barEndR = squareHalf - 4;
+    const currentEndR = r1 + (barEndR - r1) * barsProgress;
+    const midBarR = (r1 + barEndR) * 0.5;
+    const lockP = clamp01((barsProgress - 0.45) / 0.55);
+
     for (let k = 0; k < 8; k++) {
       ctx.save();
       ctx.rotate(k * (Math.PI / 4));
 
+      // Tô nền mờ giữa 2 thanh nan
+      ctx.fillStyle = COLORS.cinnabarNanFill;
+      ctx.fillRect(r1, -3, Math.max(0, currentEndR - r1), 6);
+
+      // 2 thanh nan song song #C83E37
       ctx.strokeStyle = COLORS.cinnabar;
       ctx.lineWidth = 1.15;
-      for (const offset of [-2.4, 2.4]) {
+      for (const offset of [-3, 3]) {
         ctx.beginPath();
         ctx.moveTo(r1, offset);
         ctx.lineTo(currentEndR, offset);
         ctx.stroke();
       }
 
-      ctx.strokeStyle = 'rgba(138, 106, 47, 0.65)';
-      ctx.lineWidth = 0.7;
+      // Đường tim mảnh ở giữa
+      ctx.strokeStyle = 'rgba(138, 106, 47, 0.55)';
+      ctx.lineWidth = 0.65;
       ctx.beginPath();
       ctx.moveTo(r1, 0);
       ctx.lineTo(currentEndR, 0);
       ctx.stroke();
+
+      // Vạch khóa ngang nhỏ ở giữa (họa tiết song tiện cổ truyền)
+      if (lockP > 0) {
+        ctx.globalAlpha *= lockP;
+        ctx.strokeStyle = COLORS.goldDark;
+        ctx.lineWidth = 1.15;
+        ctx.beginPath();
+        ctx.moveTo(midBarR, -5);
+        ctx.lineTo(midBarR, 5);
+        ctx.stroke();
+
+        ctx.strokeStyle = COLORS.cinnabar;
+        ctx.lineWidth = 0.85;
+        ctx.beginPath();
+        ctx.moveTo(midBarR - 2.8, -3.6);
+        ctx.lineTo(midBarR - 2.8, 3.6);
+        ctx.moveTo(midBarR + 2.8, -3.6);
+        ctx.lineTo(midBarR + 2.8, 3.6);
+        ctx.stroke();
+      }
+
       ctx.restore();
     }
   }
 
-  // TÂM KHUÊ VĂN CÁC 3 LỚP: HỖN THIÊN NGHI 3D + MẶT TRỜI LẠC VIỆT 12 TIA + NHỤY NGỌC BÁT GIÁC
+  // TÂM KHUÊ VĂN CÁC: HỖN THIÊN NGHI 3D + MẶT TRỜI 12 TIA + 2 VÒNG HÀO QUANG TRỐNG ĐỒNG + NHỤY TÂM KÉP
   drawArmillaryAndLacVietSunburst(ctx, r1, artTime, liveTime);
 
   // 3 vòng thước đo thiên văn đồng tâm xoay ngược chiều nhau
@@ -1186,7 +1432,7 @@ export function renderKhueVanCanvas(
     state.prefersReducedMotion ? 0 : liveTime,
   );
 
-  ctx.restore(); // Kết thúc biến đổi trung tâm
+  ctx.restore();
 
   // 4. HỒI III (5.2s - 7.5s): CỬA SỔ THẤU QUANG MỞ VÀO TRANG CHỦ (destination-out)
   if (portal.portalRadius > 0.5) {
