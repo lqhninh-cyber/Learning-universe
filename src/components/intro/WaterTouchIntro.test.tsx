@@ -2,11 +2,14 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { openWaterTouchIntro, WaterTouchIntro } from './index';
 import {
+  computeHypotrochoidPoint,
   computePortalTransform,
   easeInOutExpo,
   easeInOutQuart,
   easeOutCubic,
   getWindowRadius,
+  ICOSAHEDRON_EDGES,
+  ICOSAHEDRON_VERTICES,
   renderKhueVanCanvas,
 } from './khueVanCanvas';
 
@@ -171,9 +174,44 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
 
     expect(screen.getByRole('dialog', { name: /Thiên Cầu Khuê Văn Các/i })).toBeInTheDocument();
   });
+
+  it('gắn và dọn sạch listener mousemove trên window khi unmount', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener');
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
+
+    const { unmount } = render(<WaterTouchIntro />);
+
+    const mouseMoveAdd = addSpy.mock.calls.find(([eventName]) => eventName === 'mousemove');
+    expect(mouseMoveAdd).toBeDefined();
+
+    const registeredHandler = mouseMoveAdd?.[1];
+    unmount();
+
+    const mouseMoveRemove = removeSpy.mock.calls.find(
+      ([eventName, handler]) => eventName === 'mousemove' && handler === registeredHandler,
+    );
+    expect(mouseMoveRemove).toBeDefined();
+  });
 });
 
 describe('KhueVanCanvas Math & Portal Choreography', () => {
+  it('tính toán đúng hình học Nhị thập diện đều 3D (12 đỉnh, 30 cạnh) và Hypotrochoid 8 nhánh', () => {
+    expect(ICOSAHEDRON_VERTICES).toHaveLength(12);
+    expect(ICOSAHEDRON_EDGES).toHaveLength(30);
+
+    for (const [x, y, z] of ICOSAHEDRON_VERTICES) {
+      expect(Math.hypot(x, y, z)).toBeCloseTo(1, 5);
+    }
+
+    const b = 10;
+    const a = 8 * b;
+    const h = 25;
+    for (let k = 0; k < 8; k++) {
+      const [px, py] = computeHypotrochoidPoint(a, b, h, (k * Math.PI) / 4, 0);
+      expect(Math.hypot(px, py)).toBeCloseTo(a - b + h, 4);
+    }
+  });
+
   it('tính toán đúng các hàm nội suy mượt và biến đổi cổng thấu quang qua 3 hồi', () => {
     expect(easeOutCubic(0)).toBe(0);
     expect(easeOutCubic(1)).toBe(1);
@@ -210,9 +248,10 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     expect(act3End.portalRadius).toBeGreaterThanOrEqual(Math.hypot(w, h));
   });
 
-  it('vẽ Hỗn Thiên Nghi 3D, Mặt Trời 12 tia, Khung viền Sắc Phong 16:9 và destination-out ở Hồi III', () => {
+  it('vẽ Nhị thập diện đều 3D, Hypotrochoid 8 nhánh, Vệt sao băng, Parallax 3 lớp và destination-out ở Hồi III', () => {
     const compositeOps: string[] = [];
-    const shadowBlurs: number[] = [];
+    const lineWidths: number[] = [];
+    const translations: (readonly [number, number])[] = [];
     const fillRectMock = vi.fn();
     const mockGrad = { addColorStop: vi.fn() };
     const mockCtx = {
@@ -232,17 +271,18 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       ellipse: vi.fn(),
       fill: vi.fn(),
       stroke: vi.fn(),
-      translate: vi.fn(),
+      translate: vi.fn((x: number, y: number) => {
+        translations.push([x, y]);
+      }),
       scale: vi.fn(),
       rotate: vi.fn(),
       setLineDash: vi.fn(),
       createRadialGradient: vi.fn(() => mockGrad),
+      lineCap: 'butt',
       set fillStyle(_v: unknown) {},
       set strokeStyle(_v: unknown) {},
-      set lineWidth(_v: number) {},
-      set shadowColor(_v: string) {},
-      set shadowBlur(v: number) {
-        shadowBlurs.push(v);
+      set lineWidth(w: number) {
+        lineWidths.push(w);
       },
       globalAlpha: 1,
       get globalCompositeOperation() {
@@ -253,7 +293,7 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       },
     } as unknown as CanvasRenderingContext2D;
 
-    // Kiểm tra Hồi II trên màn hình rộng 1920x1080: 3 vòng elip Hỗn Thiên Nghi, hạt ngọc tâm, ánh sáng xuyên tâm & khung Sắc Phong
+    // Kiểm tra Hồi II trên màn hình 1920x1080 kèm Parallax (mx=1, my=-0.5)
     renderKhueVanCanvas(mockCtx, 1920, 1080, 2, {
       elapsed: 4.2,
       dismissProgress: null,
@@ -261,14 +301,27 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       dismissStartScale: 1,
       dismissStartRotation: 0,
       prefersReducedMotion: false,
+      parallaxX: 1,
+      parallaxY: -0.5,
     });
 
+    // 3 vòng Hỗn Thiên Nghi + khung Sắc Phong + hạt nhân quang học radialGradient
     expect(mockCtx.ellipse).toHaveBeenCalledTimes(3);
     expect(mockCtx.strokeRect).toHaveBeenCalledTimes(2);
     expect(mockCtx.clip).toHaveBeenCalledTimes(1);
-    expect(mockCtx.createRadialGradient).toHaveBeenCalledTimes(2);
-    expect(shadowBlurs).toContain(12);
+    expect(mockCtx.createRadialGradient).toHaveBeenCalledTimes(3);
     expect(fillRectMock.mock.calls.length).toBeGreaterThanOrEqual(3);
+
+    // Đường cong Hypotrochoid (0.85), cạnh Icosahedron mặt trước (1.3) & đuôi sao băng (2.5 -> 0.2)
+    expect(lineWidths).toContain(0.85);
+    expect(lineWidths).toContain(1.3);
+    expect(lineWidths).toContain(2.5);
+    expect(lineWidths).toContain(0.2);
+
+    // Kiểm tra dịch chuyển Parallax 3 lớp: (-4, 2), (10, -5), và tâm (cx+18, cy-9) = (978, 531)
+    expect(translations).toContainEqual([-4, 2]);
+    expect(translations).toContainEqual([10, -5]);
+    expect(translations).toContainEqual([978, 531]);
 
     // Kiểm tra Hồi III: cổng thấu quang destination-out
     renderKhueVanCanvas(mockCtx, 1920, 1080, 2, {

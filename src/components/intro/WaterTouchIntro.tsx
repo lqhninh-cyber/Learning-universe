@@ -26,9 +26,10 @@ interface DismissTransitionState {
  *
  * Nghi thức thị giác thuần HTML5 Canvas 2D (Zero Text UI):
  * - Bảng màu sáng hoàng cung: giấy dó #FFFDF9 -> #EDE8D8, đỏ chu sa #C83E37,
- *   vàng thếp #C5A262 / #8A6A2F và xanh men ngọc #1B3D2F / #4E9B58.
- * - Tâm điểm Hỗn Thiên Nghi 3D + Mặt Trời Lạc Việt 12 tia vát khối 3D + Nhụy ngọc bát giác,
- *   cùng khung viền Sắc Phong kép, triện góc Hồi Văn và bản đồ quần tinh toàn màn hình.
+ *   vàng thếp #C5A262 / #8A6A2F và xanh men ngọc #4E9B58.
+ * - Tâm điểm Hỗn Thiên Nghi 3D + Vân tơ Hypotrochoid 8 nhánh (a/b = 8) + Khối Nhị thập diện đều 3D
+ *   (Icosahedron 12 đỉnh, 30 cạnh) + Hạt nhân quang học tâm (radialGradient #C83E37 nhịp sin(t * 3)).
+ * - Đuôi sao băng chuyển động trên các elip Hỗn Thiên Nghi & vòng Astrolabe lớn + Parallax 3 lớp theo chuột.
  * - Kịch bản 7.5s gồm 3 hồi (Trời tròn Đất vuông -> Thiên cầu & 16 sao Khuê -> Cửa sổ thấu quang destination-out).
  * - Click / chạm / phím bất kỳ: Tua nhanh mở rộng cửa sổ tròn trong 0.45s để vào Trang chủ.
  * - Hỗ trợ Retina DPI, ResizeObserver và prefers-reduced-motion (1.5s).
@@ -64,6 +65,8 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     sceneScale: 1,
     sceneRotation: 0,
   });
+  const mouseTargetRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const mouseCurrentRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const animFrameRef = useRef<number>(0);
   const autoTimerRef = useRef<number | null>(null);
@@ -153,6 +156,8 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
       dismissInfoRef.current = null;
       lastElapsedRef.current = 0;
       lastTransformRef.current = { portalRadius: 0, sceneScale: 1, sceneRotation: 0 };
+      mouseTargetRef.current = { x: 0, y: 0 };
+      mouseCurrentRef.current = { x: 0, y: 0 };
       setIsDismissing(false);
       setIsVisible(true);
     };
@@ -208,6 +213,24 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isVisible, isDismissing, handleDismiss]);
 
+  // Lắng nghe mousemove trên window để tính toán Parallax đa lớp và dọn sạch khi unmount
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const w = Math.max(1, window.innerWidth);
+      const h = Math.max(1, window.innerHeight);
+      const mx = Math.max(-1, Math.min(1, (e.clientX / w) * 2 - 1));
+      const my = Math.max(-1, Math.min(1, (e.clientY / h) * 2 - 1));
+      mouseTargetRef.current = { x: mx, y: my };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [isVisible]);
+
   // Vòng lặp 60FPS vẽ Thiên Cầu Khuê Văn Các & quản lý ResizeObserver + Retina DPR
   useEffect(() => {
     if (!isVisible) return;
@@ -255,10 +278,22 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     window.addEventListener('resize', handleWindowResize);
 
     const timelineStart = performance.now();
+    let prevFrameNow = timelineStart;
     const totalDurationS = prefersReducedMotion ? INTRO_REDUCED_DURATION_S : INTRO_TOTAL_DURATION_S;
 
     const renderFrame = (now: number) => {
       if (finishedRef.current) return;
+
+      const dt = Math.min(0.05, Math.max(0, (now - prevFrameNow) / 1000));
+      prevFrameNow = now;
+
+      if (!prefersReducedMotion) {
+        const lerpAlpha = 1 - Math.exp(-8.5 * dt);
+        mouseCurrentRef.current.x +=
+          (mouseTargetRef.current.x - mouseCurrentRef.current.x) * lerpAlpha;
+        mouseCurrentRef.current.y +=
+          (mouseTargetRef.current.y - mouseCurrentRef.current.y) * lerpAlpha;
+      }
 
       const dismissInfo = dismissInfoRef.current;
       let elapsed = (now - timelineStart) / 1000;
@@ -289,6 +324,8 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
         dismissStartScale: dismissInfo?.startScale ?? 1,
         dismissStartRotation: dismissInfo?.startRotation ?? 0,
         prefersReducedMotion,
+        parallaxX: prefersReducedMotion ? 0 : mouseCurrentRef.current.x,
+        parallaxY: prefersReducedMotion ? 0 : mouseCurrentRef.current.y,
       });
 
       lastTransformRef.current = transform;
