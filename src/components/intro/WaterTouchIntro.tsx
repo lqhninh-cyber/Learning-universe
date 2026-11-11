@@ -27,6 +27,8 @@ interface DismissTransitionState {
  * Nghi thức thị giác thuần HTML5 Canvas 2D (Zero Text UI):
  * - Bảng màu sáng hoàng cung: giấy dó #FFFDF9 -> #EDE8D8, đỏ chu sa #C83E37,
  *   vàng thếp #C5A262 / #8A6A2F và xanh men ngọc #1B3D2F / #4E9B58.
+ * - Tâm điểm Hỗn Thiên Nghi 3D + Mặt Trời Lạc Việt 12 tia vát khối 3D + Nhụy ngọc bát giác,
+ *   cùng khung viền Sắc Phong kép, triện góc Hồi Văn và bản đồ quần tinh toàn màn hình.
  * - Kịch bản 7.5s gồm 3 hồi (Trời tròn Đất vuông -> Thiên cầu & 16 sao Khuê -> Cửa sổ thấu quang destination-out).
  * - Click / chạm / phím bất kỳ: Tua nhanh mở rộng cửa sổ tròn trong 0.45s để vào Trang chủ.
  * - Hỗ trợ Retina DPI, ResizeObserver và prefers-reduced-motion (1.5s).

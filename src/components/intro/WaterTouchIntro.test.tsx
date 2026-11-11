@@ -184,7 +184,8 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     const w = 1440;
     const h = 900;
     const r1 = getWindowRadius(w, h);
-    expect(r1).toBeGreaterThan(42);
+    // Phóng to +20% (minDim * 0.162 = 145.8 trên 1440x900)
+    expect(r1).toBeCloseTo(900 * 0.162, 4);
 
     // Hồi I & II: cửa sổ thấu quang chưa mở (portalRadius = 0)
     const act2 = computePortalTransform(w, h, {
@@ -209,7 +210,7 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     expect(act3End.portalRadius).toBeGreaterThanOrEqual(Math.hypot(w, h));
   });
 
-  it('vẽ đầy đủ 3 hồi trên Canvas 2D và kích hoạt globalCompositeOperation destination-out ở Hồi III', () => {
+  it('vẽ Hỗn Thiên Nghi 3D, Mặt Trời 12 tia, Khung viền Sắc Phong 16:9 và destination-out ở Hồi III', () => {
     const compositeOps: string[] = [];
     const mockGrad = { addColorStop: vi.fn() };
     const mockCtx = {
@@ -218,11 +219,15 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       setTransform: vi.fn(),
       clearRect: vi.fn(),
       fillRect: vi.fn(),
+      strokeRect: vi.fn(),
+      rect: vi.fn(),
+      clip: vi.fn(),
       beginPath: vi.fn(),
       closePath: vi.fn(),
       moveTo: vi.fn(),
       lineTo: vi.fn(),
       arc: vi.fn(),
+      ellipse: vi.fn(),
       fill: vi.fn(),
       stroke: vi.fn(),
       translate: vi.fn(),
@@ -242,7 +247,22 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       },
     } as unknown as CanvasRenderingContext2D;
 
-    renderKhueVanCanvas(mockCtx, 1280, 720, 2, {
+    // Kiểm tra Hồi II trên màn hình rộng 1920x1080: 3 vòng elip Hỗn Thiên Nghi & Khung viền kép
+    renderKhueVanCanvas(mockCtx, 1920, 1080, 2, {
+      elapsed: 4.2,
+      dismissProgress: null,
+      dismissStartPortalRadius: 0,
+      dismissStartScale: 1,
+      dismissStartRotation: 0,
+      prefersReducedMotion: false,
+    });
+
+    expect(mockCtx.ellipse).toHaveBeenCalledTimes(3);
+    expect(mockCtx.strokeRect).toHaveBeenCalledTimes(2);
+    expect(mockCtx.clip).toHaveBeenCalledTimes(1);
+
+    // Kiểm tra Hồi III: cổng thấu quang destination-out
+    renderKhueVanCanvas(mockCtx, 1920, 1080, 2, {
       elapsed: 6.2,
       dismissProgress: null,
       dismissStartPortalRadius: 0,
