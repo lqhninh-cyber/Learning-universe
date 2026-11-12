@@ -337,8 +337,8 @@ function LessonPageContent() {
               ? 'bg-[#F4EEDF] text-[#231F18]'
               : 'bg-[var(--bg-page)] text-[var(--text-main)]',
           isFocusMode
-            ? 'max-w-[1000px] px-4 pt-2 sm:px-6'
-            : 'max-w-[1560px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
+            ? 'max-w-[1040px] px-4 pt-2 sm:px-6'
+            : 'max-w-[1640px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
         )}
       >
         {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
@@ -480,15 +480,15 @@ function LessonPageContent() {
           {!isSidebarCollapsed && (
             <aside
               className={cn(
-                'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block print:hidden',
+                'sticky top-24 hidden max-h-[calc(100vh-7rem)] shrink-0 self-start overflow-y-auto rounded-2xl border p-3.5 shadow-sm transition-all duration-300 lg:block print:hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-track]:bg-transparent',
                 isZenMode
-                  ? 'pointer-events-none m-0 w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0'
+                  ? 'pointer-events-none m-0 w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0 shadow-none'
                   : 'w-[280px] translate-x-0 opacity-100',
                 readingTheme === 'dark'
-                  ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
+                  ? 'border-[#1E3B2E] bg-[#12241C] text-[#ECE8DF]'
                   : readingTheme === 'sepia'
-                    ? 'border-r border-[#DECDB0] bg-[#FBF8EF] text-[#231F18]'
-                    : 'border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)]',
+                    ? 'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18]'
+                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[#18221D]',
               )}
               aria-label="Danh mục điều hướng bài học"
             >
@@ -501,13 +501,13 @@ function LessonPageContent() {
             </aside>
           )}
 
-          {/* CỘT GIỮA (Nội dung bài học - Main Content Reader: Căn giữa tự nhiên, max-w-[720px] khi Zen Mode) */}
+          {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
           <main
             className={cn(
               'mx-auto min-w-0 flex-1 transition-all duration-300',
               isZenMode
-                ? 'max-w-[720px] px-4 py-8 sm:px-6'
-                : 'max-w-[760px] px-4 py-6 sm:px-6 lg:px-8',
+                ? 'max-w-[820px] px-4 py-8 sm:px-6'
+                : 'max-w-[860px] px-4 py-6 sm:px-6 lg:px-8',
             )}
           >
             {isFocusMode && (
@@ -576,9 +576,9 @@ function LessonPageContent() {
               className={cn(
                 'lesson-content transition-all duration-300',
                 typographyClasses,
-                'rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)] shadow-[var(--shadow-editorial)]',
+                'rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[#18221D] shadow-[var(--shadow-editorial)]',
                 readingTheme === 'dark' &&
-                  'dark border-[#2A323A] bg-[#181C20] text-[#E2E8F0] shadow-none',
+                  'dark border-[#2A323A] bg-[#181C20] text-[#ECE8DF] shadow-none',
                 readingTheme === 'sepia' &&
                   'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18] shadow-sm',
                 fontSize === 'lg' && 'reader-scale-lg',
@@ -753,7 +753,7 @@ function LessonPageContent() {
           <aside
             data-sidenotes-column
             className={cn(
-              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block print:hidden',
+              'custom-scrollbar sticky top-24 hidden max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block print:hidden',
               isZenMode
                 ? 'pointer-events-none m-0 w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
                 : 'w-[260px] translate-x-0 opacity-100',

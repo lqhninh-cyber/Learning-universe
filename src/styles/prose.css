@@ -9,55 +9,60 @@
  */
 
 :root {
-  --lu-reading-size: 17.5px;
-  --lu-reading-line-height: 1.85;
+  --lu-reading-size: 18.5px;
+  --lu-reading-line-height: 1.9;
 }
 
 @media (min-width: 1024px) {
   :root {
-    --lu-reading-size: 18px;
-    --lu-reading-line-height: 1.85;
+    --lu-reading-size: 18.5px;
+    --lu-reading-line-height: 1.9;
   }
 }
 
 [data-reading-size='sm'] {
-  --lu-reading-size: 16px;
+  --lu-reading-size: 16.5px;
   --lu-reading-line-height: 1.8;
 }
 
 [data-reading-size='base'] {
-  --lu-reading-size: 17.5px;
-  --lu-reading-line-height: 1.85;
+  --lu-reading-size: 18.5px;
+  --lu-reading-line-height: 1.9;
 }
 
 @media (min-width: 1024px) {
   [data-reading-size='base'] {
-    --lu-reading-size: 18px;
-    --lu-reading-line-height: 1.85;
+    --lu-reading-size: 18.5px;
+    --lu-reading-line-height: 1.9;
   }
 }
 
 [data-reading-size='lg'],
 .reader-scale-lg {
-  --lu-reading-size: 19.5px;
+  --lu-reading-size: 20.5px;
   --lu-reading-line-height: 1.9;
 }
 
 @media (min-width: 1024px) {
   [data-reading-size='lg'],
   .reader-scale-lg {
-    --lu-reading-size: 20px;
+    --lu-reading-size: 20.5px;
     --lu-reading-line-height: 1.9;
   }
+}
+
+[data-reading-size='xl'] {
+  --lu-reading-size: 22px;
+  --lu-reading-line-height: 1.95;
 }
 
 .lu-prose,
 .lesson-content {
   font-family: var(--font-serif);
   max-width: 100%;
-  color: #292524; /* text-stone-800 */
-  font-size: var(--lu-reading-size, 17.5px);
-  line-height: var(--lu-reading-line-height, 1.85);
+  color: #18221d;
+  font-size: var(--lu-reading-size, 18.5px);
+  line-height: var(--lu-reading-line-height, 1.9);
 }
 
 .lu-prose > * + *,
@@ -68,9 +73,15 @@
 .lu-prose p,
 .lesson-content p {
   text-wrap: pretty;
-  font-size: var(--lu-reading-size, 17.5px);
-  line-height: var(--lu-reading-line-height, 1.85);
-  color: #292524; /* text-stone-800 */
+  font-size: var(--lu-reading-size, 18.5px);
+  line-height: var(--lu-reading-line-height, 1.9);
+  color: #18221d;
+  margin-bottom: 1rem;
+}
+
+.lu-prose p:last-child,
+.lesson-content p:last-child {
+  margin-bottom: 0;
 }
 
 /* Tiêu đề bài học (H1): text-3xl lg:text-4xl font-serif font-bold text-stone-900 tracking-tight mb-6 */
@@ -255,12 +266,12 @@
   list-style-type: decimal;
 }
 
-/* Chữ trong danh sách liệt kê (ol, ul): text-[17.5px] leading-relaxed */
+/* Chữ trong danh sách liệt kê (ol, ul): 18.5px leading-[1.9] */
 .lu-prose li,
 .lesson-content li {
-  font-size: var(--lu-reading-size, 17.5px);
-  line-height: var(--lu-reading-line-height, 1.85);
-  color: #292524; /* text-stone-800 */
+  font-size: var(--lu-reading-size, 18.5px);
+  line-height: var(--lu-reading-line-height, 1.9);
+  color: #18221d;
 }
 
 /* Tăng khoảng cách dòng khi đoạn văn / danh sách có chứa công thức KaTeX nội dòng */
@@ -285,7 +296,7 @@
 
 .lesson-content .katex,
 .lu-prose .katex {
-  font-size: 1.15em;
+  font-size: 1.12em !important;
   text-rendering: auto;
   letter-spacing: normal !important;
   white-space: normal;
@@ -312,7 +323,8 @@
 
 .lesson-content .katex-display,
 .lu-prose .katex-display {
-  margin: 0.25rem 0 !important;
+  font-size: 1.18em !important;
+  margin: 1.25em 0 !important;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.25rem 0.5rem;

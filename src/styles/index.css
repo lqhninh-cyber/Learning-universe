@@ -19,7 +19,7 @@
    ========================================================================== */
 
 .katex {
-  font-size: 1.15em;
+  font-size: 1.12em !important;
   text-rendering: auto;
   letter-spacing: normal !important;
   white-space: normal;
@@ -42,7 +42,8 @@
 }
 
 .katex-display {
-  margin: 1.25rem 0 !important;
+  font-size: 1.18em !important;
+  margin: 1.25em 0 !important;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0;

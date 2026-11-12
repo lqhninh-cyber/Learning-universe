@@ -338,8 +338,8 @@ span.academic-dropcap {
 [data-reading-theme='dark'] .lu-prose li,
 [data-reading-theme='dark'] .lesson-content li,
 [data-reading-theme='dark'] .lesson-body li {
-  color: #e2e8f0 !important;
-  line-height: 1.8;
+  color: #ece8df !important;
+  line-height: var(--lu-reading-line-height, 1.9);
 }
 
 .scoped-dark-mode .lu-prose h1,

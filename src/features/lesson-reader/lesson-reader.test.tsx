@@ -1,7 +1,9 @@
 import type { LessonMeta } from '@schemas/index';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
-import { MathRenderer } from '@/content-runtime';
+import { getSubjectBySlug, MathRenderer } from '@/content-runtime';
+import { LessonSidebar } from './LessonSidebar';
 import { LessonToc } from './LessonToc';
 import { ReadingControlsToolbar } from './ReadingControlsToolbar';
 import * as lessonReaderExports from './index';
@@ -207,5 +209,61 @@ describe('Thanh tác vụ bài học LessonActionBar & Chế độ Đọc Chuyê
     const darkToggleBtn = screen.getByRole('button', { name: /Chế độ đọc: Sáng/i });
     expect(darkToggleBtn).toBeInTheDocument();
     expect(darkToggleBtn).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
+describe('Thanh điều hướng bài học bên trái (LessonSidebar)', () => {
+  it('hiển thị tiêu đề môn không cắt cụt, nút thu gọn icon-only và mở mặc định chương chứa bài đang đọc', () => {
+    const subject = getSubjectBySlug('hinh-hoc-affine');
+    expect(subject).toBeDefined();
+    if (!subject) return;
+
+    const firstChapter = subject.chapters[0];
+    const secondChapter = subject.chapters[1];
+    const activeLesson = secondChapter?.lessons[0] ?? firstChapter?.lessons[0];
+    expect(firstChapter).toBeDefined();
+    expect(activeLesson).toBeDefined();
+    if (!firstChapter || !activeLesson) return;
+    const onToggleCollapse = vi.fn();
+
+    render(
+      <MemoryRouter>
+        <LessonSidebar
+          subject={subject}
+          activeLessonId={activeLesson.id}
+          onToggleCollapse={onToggleCollapse}
+        />
+      </MemoryRouter>,
+    );
+
+    // Tiêu đề môn đầy đủ hiển thị bằng line-clamp-2 (không dùng truncate cắt giữa từ)
+    const subjectTitleEl = screen.getByText(subject.title);
+    expect(subjectTitleEl).toHaveClass('line-clamp-2');
+    expect(subjectTitleEl).not.toHaveClass('truncate');
+
+    // Nút thu gọn dạng icon vuông w-8 h-8 kèm tooltip "Thu gọn mục lục"
+    const collapseBtn = screen.getByRole('button', { name: 'Thu gọn mục lục' });
+    expect(collapseBtn).toHaveAttribute('title', 'Thu gọn mục lục');
+    expect(collapseBtn).toHaveClass('h-8', 'w-8');
+    fireEvent.click(collapseBtn);
+    expect(onToggleCollapse).toHaveBeenCalledTimes(1);
+
+    // Chương chứa bài đang học mặc định mở, chương khác mặc định đóng
+    const chapterButtons = screen.getAllByRole('button', { expanded: true });
+    expect(chapterButtons.length).toBe(1);
+
+    // Bài đang học nổi bật với border-l-[3px] và nền xanh rêu nhạt
+    const activeLink = screen.getByRole('link', {
+      current: 'page',
+    });
+    expect(activeLink).toHaveClass('border-l-[3px]', 'border-[#1B3D2F]', 'text-[#1B3D2F]');
+
+    // Bấm vào nút chương đầu tiên để mở rộng accordion chương đó
+    const firstChapterBtn = screen.getByRole('button', {
+      name: new RegExp(firstChapter.title, 'i'),
+    });
+    expect(firstChapterBtn).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(firstChapterBtn);
+    expect(firstChapterBtn).toHaveAttribute('aria-expanded', 'true');
   });
 });

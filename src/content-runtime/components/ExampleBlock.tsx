@@ -86,7 +86,7 @@ function BaseExampleBlock({
           </span>
         </div>
       </summary>
-      <div className="ex-block-body space-y-3 p-5 text-[16.5px] leading-relaxed text-zinc-900 lg:p-6 dark:text-[#E8F1EC]">
+      <div className="ex-block-body space-y-4 p-5 text-[18px] leading-[1.85] text-[#18221D] lg:p-6 dark:text-[#ECE8DF] [&_p]:mb-4 [&_p:last-child]:mb-0">
         {children}
       </div>
     </details>

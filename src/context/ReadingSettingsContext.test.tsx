@@ -80,7 +80,7 @@ describe('ReadingSettingsContext', () => {
     expect(screen.getByTestId('size-label').textContent).toBe('Vừa');
     expect(screen.getByTestId('zen-val').textContent).toBe('false');
     expect(screen.getByTestId('typo-classes').textContent).toContain('font-serif');
-    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[17px]');
+    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[18.5px]');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 
@@ -149,7 +149,7 @@ describe('ReadingSettingsContext', () => {
     });
     expect(screen.getByTestId('size-val').textContent).toBe('lg');
     expect(screen.getByTestId('size-label').textContent).toBe('Lớn');
-    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[19px]');
+    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[20.5px]');
 
     // Lớn -> Đại (xl)
     act(() => {
@@ -157,7 +157,7 @@ describe('ReadingSettingsContext', () => {
     });
     expect(screen.getByTestId('size-val').textContent).toBe('xl');
     expect(screen.getByTestId('size-label').textContent).toBe('Đại');
-    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[21px]');
+    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[22px]');
 
     // Bấm tăng tiếp không vượt quá xl
     act(() => {
@@ -181,7 +181,7 @@ describe('ReadingSettingsContext', () => {
     });
     expect(screen.getByTestId('size-val').textContent).toBe('sm');
     expect(screen.getByTestId('size-label').textContent).toBe('Nhỏ');
-    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[15px]');
+    expect(screen.getByTestId('typo-classes').textContent).toContain('text-[16.5px]');
 
     // Bấm giảm tiếp không vượt quá sm
     act(() => {

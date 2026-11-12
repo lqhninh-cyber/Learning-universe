@@ -41,7 +41,7 @@ function KatexDisplayBlock({
   };
 
   return (
-    <span className="group/katex relative my-4 block overflow-x-auto rounded-xl bg-[var(--bg-subtle)]/60 px-5 py-3.5 transition-colors duration-200">
+    <span className="group/katex relative my-4 block overflow-x-auto rounded-xl bg-[var(--bg-subtle)]/60 px-5 py-1.5 transition-colors duration-200">
       <span {...spanProps} />
       {tex && (
         <button

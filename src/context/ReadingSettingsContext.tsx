@@ -24,10 +24,10 @@ export const FONT_SIZE_LABELS: Record<ReadingFontSize, string> = {
 };
 
 const FONT_SIZE_CLASSES: Record<ReadingFontSize, string> = {
-  sm: 'text-[15px] leading-relaxed',
-  base: 'text-[17px] leading-relaxed',
-  lg: 'text-[19px] leading-relaxed',
-  xl: 'text-[21px] leading-loose',
+  sm: 'text-[16.5px] leading-[1.8]',
+  base: 'text-[18.5px] leading-[1.9]',
+  lg: 'text-[20.5px] leading-[1.9]',
+  xl: 'text-[22px] leading-loose',
 };
 
 export interface ReadingSettingsContextValue {
@@ -67,7 +67,7 @@ const DEFAULT_READING_SETTINGS: ReadingSettingsContextValue = {
   isSkimmingMode: false,
   setSkimmingMode: () => {},
   toggleSkimmingMode: () => {},
-  typographyClasses: 'font-serif text-[17px] leading-relaxed',
+  typographyClasses: 'font-serif text-[18.5px] leading-[1.9]',
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextValue | null>(null);

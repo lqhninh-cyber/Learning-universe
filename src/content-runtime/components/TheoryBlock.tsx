@@ -129,7 +129,7 @@ function BaseTheoryBlock({
           </div>
           <SourceAttributionBadge original={original} source={source} page={page} />
         </header>
-        <div className="semantic-block-body space-y-3 p-5 text-[17px] leading-[1.8] text-stone-800 lg:p-6 lg:text-[17.5px] dark:text-[#E8F1EC]">
+        <div className="semantic-block-body space-y-4 p-5 text-[18px] leading-[1.85] text-[#18221D] lg:p-6 dark:text-[#ECE8DF] [&_p]:mb-4 [&_p:last-child]:mb-0">
           {children}
         </div>
       </section>

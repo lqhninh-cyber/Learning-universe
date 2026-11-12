@@ -255,11 +255,11 @@ export function ChapterAccordionList({
                           {/^Khối/i.test(chapter.title) ? 'Thực hành' : `Chương ${chapter.number}`}
                         </Badge>
                       </div>
-                      <div className="min-w-0 space-y-0.5">
-                        <h2 className="text-base font-bold tracking-tight text-stone-900 sm:text-lg dark:text-[#F8FAFC]">
+                      <div className="min-w-0 space-y-1">
+                        <h2 className="text-xl font-bold tracking-tight text-stone-900 dark:text-[#F8FAFC]">
                           {chapter.title.replace(/^(?:Chương|Chuyên đề)\s+\d+\s*:\s*/i, '')}
                         </h2>
-                        <p className="line-clamp-1 text-xs text-stone-500 dark:text-stone-400">
+                        <p className="line-clamp-1 text-sm text-stone-500 dark:text-stone-400">
                           {chapter.description}
                         </p>
                       </div>
@@ -361,7 +361,7 @@ export function ChapterAccordionList({
                                           ? `Thực hành ${lesson.number}`
                                           : `Bài ${chapter.number}.${lesson.number}`}
                                       </span>
-                                      <h3 className="group-hover:text-subject-700 text-base font-semibold text-stone-900 transition-colors dark:text-[#F8FAFC]">
+                                      <h3 className="group-hover:text-subject-700 text-[17px] leading-snug font-semibold text-stone-900 transition-colors dark:text-[#F8FAFC]">
                                         {lesson.title.replace(
                                           /^(?:Bài\s+\d+(?:\.\d+)?|Thực hành\s+\d+|Chuyên đề\s+\d+(?:\.\d+)?)\s*:\s*/i,
                                           '',
@@ -376,7 +376,7 @@ export function ChapterAccordionList({
                                       )}
                                     </div>
 
-                                    <p className="text-sm leading-relaxed text-stone-600 dark:text-stone-400">
+                                    <p className="text-[15px] leading-relaxed text-stone-600 dark:text-stone-400">
                                       {lesson.description}
                                     </p>
 

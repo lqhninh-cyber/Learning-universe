@@ -151,6 +151,23 @@
   margin-top: 0;
 }
 
+.semantic-block-body,
+.ex-block-body {
+  font-size: 18px;
+  line-height: 1.85;
+}
+
+.semantic-block-body p,
+.ex-block-body p {
+  font-size: 18px;
+  line-height: 1.85;
+}
+
+.semantic-block-body p:not(:last-child),
+.ex-block-body p:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
 /* --- 3. Khối Ví dụ / Phản ví dụ có thể thu gọn (<details class="ex-block">) --- */
 
 details.ex-block[data-kind='ex'] {

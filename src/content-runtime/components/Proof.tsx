@@ -67,7 +67,7 @@ export function Proof({
           </span>
         }
         className="semantic-proof-card border-[#CFDADB] bg-white/40 dark:border-[#1E3B2E] dark:bg-[#0E1E17]/60"
-        contentClassName="bg-[#F7FAFA]/80 text-base text-[#29383D] dark:bg-[#0E1E17] dark:text-[#E8F1EC]"
+        contentClassName="bg-[#F7FAFA]/80 text-[18px] leading-[1.85] text-[#18221D] dark:bg-[#0E1E17] dark:text-[#ECE8DF] [&_p]:mb-4 [&_p:last-child]:mb-0"
       >
         <div className="space-y-3">{children}</div>
         <div
