@@ -129,7 +129,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
                   'h-full transition-all duration-300 first:rounded-l-full last:rounded-r-full',
                   SEGMENT_TONE_CLASSES[segment.tone].bar,
                 )}
-                title={`${segment.label}: ${segment.percentage}%`}
+                title={`${segment.label.replace(/\$/g, '')}: ${segment.percentage}%`}
               />
             ))}
           </div>
@@ -151,7 +151,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
                   <div className="flex items-center justify-between gap-2">
                     <span className="inline-flex items-center gap-2 text-xs font-bold text-[var(--text-main)]">
                       <span className={cn('h-2.5 w-2.5 rounded-full', toneStyle.dot)} />
-                      <span>{segment.label}</span>
+                      <MathText inline text={segment.label} />
                     </span>
                     <span
                       className={cn(
@@ -269,7 +269,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <h4 className="text-sm font-bold text-[var(--text-main)] sm:text-base">
-                    {group.title}
+                    <MathText inline text={group.title} />
                   </h4>
                   {group.description && (
                     <div className="mt-0.5 text-xs text-[var(--text-muted)]">
@@ -277,7 +277,9 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
                     </div>
                   )}
                 </div>
-                <Badge variant="neutral">{group.badge}</Badge>
+                <Badge variant="neutral">
+                  <MathText inline text={group.badge} />
+                </Badge>
               </div>
 
               <div className="grid gap-3 md:grid-cols-2">
@@ -327,7 +329,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
                                   : 'text-[var(--text-main)]',
                               )}
                             >
-                              {item.title}
+                              <MathText inline text={item.title} />
                             </span>
                           </span>
                         </button>

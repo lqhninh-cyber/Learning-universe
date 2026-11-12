@@ -1,6 +1,7 @@
 import { type ReactNode, useId } from 'react';
 import { NUMBERED_BLOCKS } from '@schemas/blocks';
 import { useSkimmableOpen } from '@/context/useSkimmableOpen';
+import { usePrintExpanded } from '@/shared/hooks/usePrintExpanded';
 import { cn } from '@/shared/lib/cn';
 import { SourceAttributionBadge } from './TheoryBlock';
 
@@ -38,13 +39,14 @@ function BaseExampleBlock({
   const isCounterexample = kind === 'Counterexample';
 
   const { isOpen, toggle } = useSkimmableOpen(true);
+  const isPrinting = usePrintExpanded();
 
   return (
     <details
       id={resolvedAnchor}
       data-kind="ex"
       data-counterexample={isCounterexample ? 'true' : undefined}
-      open={isOpen}
+      open={isPrinting || isOpen}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
       className="semantic-block ex-block my-6 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
     >

@@ -6,6 +6,7 @@ import type {
   ExamQuestionPrefix,
 } from '@/data/courses/exam-bank-types';
 import { MathText } from '@/features/exams/MathText';
+import { usePrintExpanded } from '@/shared/hooks/usePrintExpanded';
 import { cn } from '@/shared/lib/cn';
 import { Badge, Button } from '@/shared/ui';
 
@@ -37,8 +38,9 @@ export function ExamProblemCard({
     setUserOverrideHint(null);
   }
 
-  const showSolution = userOverrideSolution ?? defaultExpandSolution;
-  const showHint = userOverrideHint ?? defaultExpandHint;
+  const isPrinting = usePrintExpanded();
+  const showSolution = isPrinting || (userOverrideSolution ?? defaultExpandSolution);
+  const showHint = isPrinting || (userOverrideHint ?? defaultExpandHint);
 
   const handleToggleHint = () => {
     setUserOverrideHint(!showHint);
@@ -67,9 +69,13 @@ export function ExamProblemCard({
             {problem.number}
           </span>
           <h3 className="text-base font-bold text-[var(--text-main)]">
-            {problem.title
-              ? `${effectivePrefix} ${problem.number}: ${problem.title}`
-              : `${effectivePrefix} ${problem.number}`}
+            {problem.title ? (
+              <>
+                {effectivePrefix} {problem.number}: <MathText inline text={problem.title} />
+              </>
+            ) : (
+              `${effectivePrefix} ${problem.number}`
+            )}
           </h3>
         </div>
 
@@ -195,8 +201,9 @@ function ProblemPartItem({ part, defaultOpenSolution, defaultOpenHint }: Problem
     setUserOverridePartHint(null);
   }
 
-  const showPartSolution = userOverridePartSolution ?? defaultOpenSolution;
-  const showPartHint = userOverridePartHint ?? defaultOpenHint;
+  const isPrinting = usePrintExpanded();
+  const showPartSolution = isPrinting || (userOverridePartSolution ?? defaultOpenSolution);
+  const showPartHint = isPrinting || (userOverridePartHint ?? defaultOpenHint);
 
   const handleTogglePartHint = () => {
     setUserOverridePartHint(!showPartHint);

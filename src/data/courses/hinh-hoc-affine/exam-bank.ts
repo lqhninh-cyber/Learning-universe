@@ -86,12 +86,12 @@ export const MATH1302_OFFICIAL_HK1_PAPER: ExamPaper = {
       sheetHeading: 'Bài 3 (3.0 điểm). *(Đề gốc ghi Bài 1)*',
       inlineSheetHeading: false,
       solutionRubric:
-        "Lập bao afin A = af(N), A' = af(N'): 1.0 điểm · Chứng minh chéo nhau hoàn toàn: 2.0 điểm.",
+        "Lập bao afin $A = \\operatorname{af}(N), A' = \\operatorname{af}(N')$: 1.0 điểm · Chứng minh chéo nhau hoàn toàn: 2.0 điểm.",
       statement:
         "Trong không gian afin $A^n$, cho tập hợp $M = \\{A_0, A_1, \\dots, A_m\\}$ gồm $m + 1$ điểm độc lập. Gọi $N$ và $N'$ là hai tập con khác rỗng và không giao nhau của $M$. Chứng minh rằng có hai cái phẳng $A$ và $A'$ chéo nhau hoàn toàn lần lượt chứa $N$ và $N'$.",
-      hint: "Chọn $A = \\text{af}(N)$ và $A' = \\text{af}(N')$. Từ giả thiết $M$ độc lập afin, kiểm tra $\\vec{A} \\cap \\vec{A'} = \\{\\vec{0}\\}$ và $\\overrightarrow{P_0 Q_0} \\notin \\vec{A} + \\vec{A'}$.",
+      hint: "Chọn $A = \\operatorname{af}(N)$ và $A' = \\operatorname{af}(N')$. Từ giả thiết $M$ độc lập afin, kiểm tra $\\vec{A} \\cap \\vec{A'} = \\{\\vec{0}\\}$ và $\\overrightarrow{P_0 Q_0} \\notin \\vec{A} + \\vec{A'}$.",
       solution:
-        "Giả sử $N = \\{P_0, \\dots, P_k\\}$ và $N' = \\{Q_0, \\dots, Q_l\\}$ với $N \\cap N' = \\emptyset$. Vì $N \\cup N' \\subseteq M$ và $M$ độc lập afin nên hệ điểm $\\{P_0, \\dots, P_k, Q_0, \\dots, Q_l\\}$ độc lập afin.\n\nĐặt $A = \\text{af}(N)$ và $A' = \\text{af}(N')$, suy ra $N \\subseteq A, N' \\subseteq A'$.\n\nDo hệ điểm độc lập afin nên hệ vectơ:\n$$\nS = \\{\\overrightarrow{P_0 P_1}, \\dots, \\overrightarrow{P_0 P_k}, \\overrightarrow{Q_0 Q_1}, \\dots, \\overrightarrow{Q_0 Q_l}, \\overrightarrow{P_0 Q_0}\\}\n$$\nđộc lập tuyến tính.\n\nSuy ra $\\vec{A} \\cap \\vec{A'} = \\{\\vec{0}\\}$ và $\\overrightarrow{P_0 Q_0} \\notin \\vec{A} + \\vec{A'} \\implies A \\cap A' = \\emptyset$. Vậy $A$ và $A'$ chéo nhau hoàn toàn.",
+        "Giả sử $N = \\{P_0, \\dots, P_k\\}$ và $N' = \\{Q_0, \\dots, Q_l\\}$ với $N \\cap N' = \\emptyset$. Vì $N \\cup N' \\subseteq M$ và $M$ độc lập afin nên hệ điểm $\\{P_0, \\dots, P_k, Q_0, \\dots, Q_l\\}$ độc lập afin.\n\nĐặt $A = \\operatorname{af}(N)$ và $A' = \\operatorname{af}(N')$, suy ra $N \\subseteq A, N' \\subseteq A'$.\n\nDo hệ điểm độc lập afin nên hệ vectơ:\n$$\nS = \\{\\overrightarrow{P_0 P_1}, \\dots, \\overrightarrow{P_0 P_k}, \\overrightarrow{Q_0 Q_1}, \\dots, \\overrightarrow{Q_0 Q_l}, \\overrightarrow{P_0 Q_0}\\}\n$$\nđộc lập tuyến tính.\n\nSuy ra $\\vec{A} \\cap \\vec{A'} = \\{\\vec{0}\\}$ và $\\overrightarrow{P_0 Q_0} \\notin \\vec{A} + \\vec{A'} \\implies A \\cap A' = \\emptyset$. Vậy $A$ và $A'$ chéo nhau hoàn toàn.",
     },
   ],
 };
@@ -105,7 +105,7 @@ export const MATH1302_MOCK_EXAM_1: ExamPaper = {
   questionPrefix: 'Bài',
   title: 'Đề ôn tập số 1 — Hình học Affine và Euclid',
   description:
-    'Đề biên soạn mô phỏng cấu trúc cố định 3 bài (3.0đ – 4.0đ – 3.0đ): tìm tâm và tiếp diện siêu mặt bậc hai trong A³, hình chiếu, đối xứng, khoảng cách trong E⁴ và cặp phẳng song song trong Aⁿ.',
+    'Đề biên soạn mô phỏng cấu trúc cố định 3 bài (3.0đ – 4.0đ – 3.0đ): tìm tâm và tiếp diện siêu mặt bậc hai trong $A^3$, hình chiếu, đối xứng, khoảng cách trong $E^4$ và cặp phẳng song song trong $A^n$.',
   isMockExam: true,
   mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
   sheetHeader: {
@@ -161,7 +161,7 @@ export const MATH1302_MOCK_EXAM_1: ExamPaper = {
       sheetHeading: 'Bài 2 (4.0 điểm).',
       inlineSheetHeading: true,
       partDelimiter: ')',
-      solutionRubric: "Ý 1: 2.5 điểm (tìm đúng M' 1.5đ, M'' 1.0đ) · Ý 2: 1.5 điểm.",
+      solutionRubric: "Ý 1: 2.5 điểm (tìm đúng $M'$ 1.5đ, $M''$ 1.0đ) · Ý 2: 1.5 điểm.",
       statement:
         'Trong $E^4$ với mục tiêu trực chuẩn, cho $M(1, 2, -1, 3)$ và phẳng $\\alpha$:\n$$\n\\begin{cases} x_1 - x_2 + x_3 + x_4 - 2 = 0 \\\\ x_1 + x_2 - x_3 + x_4 - 4 = 0 \\end{cases}\n$$',
       parts: [
@@ -204,7 +204,7 @@ export const MATH1302_MOCK_EXAM_2: ExamPaper = {
   questionPrefix: 'Bài',
   title: 'Đề ôn tập số 2 — Hình học Affine và Euclid',
   description:
-    'Đề biên soạn mở rộng theo ma trận 3 bài (3.0đ – 4.0đ – 3.0đ): kính liên hợp siêu mặt bậc hai trong A³, hình chiếu vuông góc và khoảng cách trong E⁴, và tính chéo nhau từ hai phẳng chéo nhau hoàn toàn trong Aⁿ.',
+    'Đề biên soạn mở rộng theo ma trận 3 bài (3.0đ – 4.0đ – 3.0đ): kính liên hợp siêu mặt bậc hai trong $A^3$, hình chiếu vuông góc và khoảng cách trong $E^4$, và tính chéo nhau từ hai phẳng chéo nhau hoàn toàn trong $A^n$.',
   isMockExam: true,
   mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
   sheetHeader: {
@@ -299,7 +299,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
     distribution: [
       {
         id: 'hhave-b1-30',
-        label: 'Bài 1: Siêu mặt bậc hai trong A³',
+        label: 'Bài 1: Siêu mặt bậc hai trong $A^3$',
         percentage: 30,
         pointsSummary: '3.0 điểm',
         description:
@@ -308,7 +308,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
       },
       {
         id: 'hhave-b2-40',
-        label: 'Bài 2: Hình học Euclid E⁴ trực chuẩn',
+        label: 'Bài 2: Hình học Euclid $E^4$ trực chuẩn',
         percentage: 40,
         pointsSummary: '4.0 điểm',
         description:
@@ -317,7 +317,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
       },
       {
         id: 'hhave-b3-30',
-        label: 'Bài 3: Chứng minh đại cương Aⁿ',
+        label: 'Bài 3: Chứng minh đại cương $A^n$',
         percentage: 30,
         pointsSummary: '3.0 điểm',
         description:
@@ -352,7 +352,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
         points: '3.0 điểm (30%)',
         topic: 'Chứng minh đại cương trong $A^n$',
         coreSkills:
-          'Vận dụng định nghĩa hệ điểm độc lập afin, bao afin $\\text{af}(N)$ và tiêu chuẩn hai phẳng chéo nhau / chéo nhau hoàn toàn / song song.',
+          'Vận dụng định nghĩa hệ điểm độc lập afin, bao afin $\\operatorname{af}(N)$ và tiêu chuẩn hai phẳng chéo nhau / chéo nhau hoàn toàn / song song.',
         examStrategy:
           "Chuyển điều kiện hình học của phẳng về phương vectơ $\\vec{A}, \\vec{A'}$ và vectơ nối gốc $\\overrightarrow{P_0 Q_0}$ để dùng độc lập tuyến tính.",
       },
@@ -360,8 +360,8 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
     focusChecklists: [
       {
         id: 'hhave-check-b1',
-        title: 'Trọng tâm Bài 1 (3.0đ) — Siêu mặt bậc hai trong A³',
-        badge: 'Bài 1 · A³',
+        title: 'Trọng tâm Bài 1 (3.0đ) — Siêu mặt bậc hai trong $A^3$',
+        badge: 'Bài 1 · $A^3$',
         items: [
           {
             id: 'hhave-item-center-diameter',
@@ -377,12 +377,12 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
       },
       {
         id: 'hhave-check-b2',
-        title: 'Trọng tâm Bài 2 (4.0đ) — Hình học Euclid E⁴ trực chuẩn',
-        badge: 'Bài 2 · E⁴',
+        title: 'Trọng tâm Bài 2 (4.0đ) — Hình học Euclid $E^4$ trực chuẩn',
+        badge: 'Bài 2 · $E^4$',
         items: [
           {
             id: 'hhave-item-ortho-proj',
-            title: 'Tham số hóa phẳng bù trực giao β tìm M′, M′′ và d(M, α)',
+            title: "Tham số hóa phẳng bù trực giao $\\beta$ tìm $M', M''$ và $d(M, \\alpha)$",
             summary:
               "Từ $2$ phương trình của $\\alpha$, đọc ngay cơ sở trực giao $\\vec{n}_1, \\vec{n}_2 \\in \\vec{\\alpha}^\\perp$, viết tham số $\\beta$ đi qua $M$, giải giao điểm $M' = \\beta \\cap \\alpha$, suy ra $M'' = 2M' - M$ và $d(M, \\alpha) = |\\overrightarrow{MM'}|$.",
             keyFormulas: [
@@ -394,8 +394,8 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
       },
       {
         id: 'hhave-check-b3',
-        title: 'Trọng tâm Bài 3 (3.0đ) — Chứng minh đại cương Aⁿ',
-        badge: 'Bài 3 · Aⁿ',
+        title: 'Trọng tâm Bài 3 (3.0đ) — Chứng minh đại cương $A^n$',
+        badge: 'Bài 3 · $A^n$',
         items: [
           {
             id: 'hhave-item-affine-positions',

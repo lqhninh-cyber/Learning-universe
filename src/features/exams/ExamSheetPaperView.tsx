@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import type { ExamPaper, ExamProblem } from '@/data/courses/exam-bank-types';
 import { MathText } from '@/features/exams/MathText';
+import { usePrintExpanded } from '@/shared/hooks/usePrintExpanded';
 import { cn } from '@/shared/lib/cn';
 
 export interface ExamSheetPaperViewProps {
@@ -46,6 +47,8 @@ function getTotalPoints(paper: ExamPaper): string {
  */
 export function ExamSheetPaperView({ paper, className }: ExamSheetPaperViewProps) {
   const [showSolutions, setShowSolutions] = useState(false);
+  const isPrinting = usePrintExpanded();
+  const effectiveShowSolutions = isPrinting || showSolutions;
 
   const delimiterDefault = ')';
 
@@ -220,11 +223,11 @@ export function ExamSheetPaperView({ paper, className }: ExamSheetPaperViewProps
 
           <button
             type="button"
-            aria-expanded={showSolutions}
+            aria-expanded={effectiveShowSolutions}
             onClick={() => setShowSolutions((prev) => !prev)}
-            className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#1B3D2F] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#142F24] sm:text-sm"
+            className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#1B3D2F] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#142F24] sm:text-sm print:hidden"
           >
-            {showSolutions ? (
+            {effectiveShowSolutions ? (
               <>
                 <EyeOff className="h-4 w-4" aria-hidden="true" />
                 <span>Ẩn lời giải chi tiết</span>
@@ -240,7 +243,7 @@ export function ExamSheetPaperView({ paper, className }: ExamSheetPaperViewProps
           </button>
         </div>
 
-        {showSolutions ? (
+        {effectiveShowSolutions ? (
           <div className="mt-6 space-y-6 border-t border-[var(--border-subtle)] pt-6">
             {paper.problems.map((problem) => {
               const headingMd = formatSheetHeadingMarkdown(getProblemHeading(paper, problem));
@@ -263,7 +266,8 @@ export function ExamSheetPaperView({ paper, className }: ExamSheetPaperViewProps
 
                   {problem.solutionRubric ? (
                     <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50/70 px-3 py-2 text-xs font-medium text-[#1B3D2F]">
-                      <strong>Thang điểm tham khảo:</strong> {problem.solutionRubric}
+                      <strong>Thang điểm tham khảo:</strong>{' '}
+                      <MathText inline text={problem.solutionRubric} />
                     </p>
                   ) : null}
 

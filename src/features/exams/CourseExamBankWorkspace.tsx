@@ -160,7 +160,7 @@ function ExamBankWorkspaceContent({
         <div
           role="tablist"
           aria-label="Phân khu Ôn tập"
-          className="grid gap-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-1.5 md:grid-cols-3"
+          className="grid gap-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-1.5 md:grid-cols-3 print:hidden"
         >
           {SECTION_TABS.map((tab, index) => {
             const isActive = activeSection === tab.id;
@@ -262,7 +262,7 @@ function ExamBankWorkspaceContent({
       {activeSection === 'mock' && activeMockPaper && (
         <div className="space-y-4">
           {bank.mockExams.length > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300/80 bg-amber-50/70 px-4 py-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300/80 bg-amber-50/70 px-4 py-3 print:hidden">
               <span className="text-xs font-bold tracking-wide text-amber-950 uppercase">
                 Chọn đề biên soạn thêm để ôn tập
               </span>

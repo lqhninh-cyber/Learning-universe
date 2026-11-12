@@ -480,7 +480,7 @@ function LessonPageContent() {
           {!isSidebarCollapsed && (
             <aside
               className={cn(
-                'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block',
+                'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto rounded-2xl p-4 pr-2 pb-6 transition-all duration-300 lg:block print:hidden',
                 isZenMode
                   ? 'pointer-events-none m-0 w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0'
                   : 'w-[280px] translate-x-0 opacity-100',
@@ -507,7 +507,7 @@ function LessonPageContent() {
               'mx-auto min-w-0 flex-1 transition-all duration-300',
               isZenMode
                 ? 'max-w-[720px] px-4 py-8 sm:px-6'
-                : 'max-w-[780px] px-4 py-6 sm:px-6 lg:px-8',
+                : 'max-w-[760px] px-4 py-6 sm:px-6 lg:px-8',
             )}
           >
             {isFocusMode && (
@@ -723,7 +723,7 @@ function LessonPageContent() {
 
               <footer
                 className={cn(
-                  'mt-10 border-t pt-6',
+                  'mt-10 border-t pt-6 print:hidden',
                   readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
                 )}
               >
@@ -753,7 +753,7 @@ function LessonPageContent() {
           <aside
             data-sidenotes-column
             className={cn(
-              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block',
+              'custom-scrollbar sticky top-24 max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block print:hidden',
               isZenMode
                 ? 'pointer-events-none m-0 w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
                 : 'w-[260px] translate-x-0 opacity-100',

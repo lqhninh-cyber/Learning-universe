@@ -415,7 +415,7 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     await user.click(
       screen.getByRole('tab', { name: /2\.\s*Phân tích cấu trúc & Hướng dẫn ôn tập/i }),
     );
-    expect(screen.getByText(/Bài 3: Chứng minh đại cương Aⁿ/i)).toBeInTheDocument();
+    expect(screen.getByText(/Bài 3: Chứng minh đại cương/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Tham số hóa phẳng bù trực giao/i).length).toBeGreaterThan(0);
 
     // Đề biên soạn thêm để ôn tập (Tab 3)

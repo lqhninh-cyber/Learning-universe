@@ -48,13 +48,13 @@ export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
           label: 'a',
           statement: 'Tìm một nhóm con của nhóm đối xứng $S_3$ có chứa đúng $2$ phần tử.',
           solution:
-            'Xét chuyển trí $\\tau = (1\\ 2) \\in S_3$. Vì $\\tau^2 = id$ và $\\tau^{-1} = (1\\ 2)$, tập hợp:\n$$\nH_1 = \\langle (1\\ 2) \\rangle = \\{id, (1\\ 2)\\}\n$$\nlà một nhóm con của $S_3$ chứa đúng $2$ phần tử (có thể chọn $\\{id, (1\\ 3)\\}$ hoặc $\\{id, (2\\ 3)\\}$).',
+            'Xét chuyển trí $\\tau = (1\\ 2) \\in S_3$. Vì $\\tau^2 = \\operatorname{id}$ và $\\tau^{-1} = (1\\ 2)$, tập hợp:\n$$\nH_1 = \\langle (1\\ 2) \\rangle = \\{\\operatorname{id}, (1\\ 2)\\}\n$$\nlà một nhóm con của $S_3$ chứa đúng $2$ phần tử (có thể chọn $\\{\\operatorname{id}, (1\\ 3)\\}$ hoặc $\\{\\operatorname{id}, (2\\ 3)\\}$).',
         },
         {
           label: 'b',
           statement: 'Tìm một nhóm con của nhóm đối xứng $S_3$ có chứa đúng $3$ phần tử.',
           solution:
-            'Xét xích độ dài $3$ là $\\sigma = (1\\ 2\\ 3) \\in S_3$. Ta có $\\sigma^2 = (1\\ 3\\ 2)$ và $\\sigma^3 = id$. Nhóm thay phiên:\n$$\nA_3 = \\langle (1\\ 2\\ 3) \\rangle = \\{id, (1\\ 2\\ 3), (1\\ 3\\ 2)\\}\n$$\nlà nhóm con của $S_3$ chứa đúng $3$ phần tử.',
+            'Xét xích độ dài $3$ là $\\sigma = (1\\ 2\\ 3) \\in S_3$. Ta có $\\sigma^2 = (1\\ 3\\ 2)$ và $\\sigma^3 = \\operatorname{id}$. Nhóm thay phiên:\n$$\nA_3 = \\langle (1\\ 2\\ 3) \\rangle = \\{\\operatorname{id}, (1\\ 2\\ 3), (1\\ 3\\ 2)\\}\n$$\nlà nhóm con của $S_3$ chứa đúng $3$ phần tử.',
         },
         {
           label: 'c',
@@ -117,7 +117,7 @@ export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
           label: 'b',
           statement: 'Tìm một nhóm con cấp $4$ của nhóm đối xứng $S_4$.',
           solution:
-            'Chọn xích độ dài $4$ là $\\sigma = (1\\ 2\\ 3\\ 4) \\in S_4$. Nhóm con cyclic sinh bởi $\\sigma$ có cấp $4$:\n$$\nH = \\langle (1\\ 2\\ 3\\ 4) \\rangle = \\{id, (1\\ 2\\ 3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4\\ 3\\ 2)\\}\n$$\n*(Hoặc chọn nhóm Klein $V_4 = \\{id, (1\\ 2)(3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4)(2\\ 3)\\}$).*',
+            'Chọn xích độ dài $4$ là $\\sigma = (1\\ 2\\ 3\\ 4) \\in S_4$. Nhóm con cyclic sinh bởi $\\sigma$ có cấp $4$:\n$$\nH = \\langle (1\\ 2\\ 3\\ 4) \\rangle = \\{\\operatorname{id}, (1\\ 2\\ 3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4\\ 3\\ 2)\\}\n$$\n*(Hoặc chọn nhóm Klein $V_4 = \\{\\operatorname{id}, (1\\ 2)(3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4)(2\\ 3)\\}$).*',
         },
       ],
     },
@@ -133,7 +133,7 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
   questionPrefix: 'Câu',
   title: 'Đề ôn tập số 1 — Cấu trúc Đại số',
   description:
-    'Đề biên soạn mô phỏng cấu trúc 90 phút (3.0đ – 3.0đ – 4.0đ): phép thế S₄, nhóm cyclic ℤ₆, nhóm nhân U(10), tâm nhóm Z(G) và đồng cấu nhóm.',
+    'Đề biên soạn mô phỏng cấu trúc 90 phút (3.0đ – 3.0đ – 4.0đ): phép thế $S_4$, nhóm cyclic $\\mathbb{Z}_6$, nhóm nhân $U(10)$, tâm nhóm $Z(G)$ và đồng cấu nhóm.',
   isMockExam: true,
   mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
   sheetHeader: {
@@ -169,7 +169,7 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
           statement:
             'Trong $S_4$, cho $\\sigma = \\begin{pmatrix} 1 & 2 & 3 & 4 \\\\ 3 & 4 & 2 & 1 \\end{pmatrix}$. Phân tích $\\sigma$ thành tích các xích độc lập, xét tính chẵn lẻ và tìm cấp của $\\sigma$.',
           solution:
-            'Ta có $\\sigma = (1\\ 3\\ 2\\ 4)$, độ dài $4 \\implies \\text{ord}(\\sigma) = 4$.\n\nVì $\\sigma = (1\\ 4)(1\\ 2)(1\\ 3)$ (tích của $3$ chuyển trí) nên $\\sigma$ là phép thế lẻ ($\\text{sgn}(\\sigma) = -1$).',
+            'Ta có $\\sigma = (1\\ 3\\ 2\\ 4)$, độ dài $4 \\implies \\operatorname{ord}(\\sigma) = 4$.\n\nVì $\\sigma = (1\\ 4)(1\\ 2)(1\\ 3)$ (tích của $3$ chuyển trí) nên $\\sigma$ là phép thế lẻ ($\\operatorname{sgn}(\\sigma) = -1$).',
         },
         {
           label: 'b',
@@ -183,7 +183,7 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
           statement:
             'Tìm tất cả các phần tử sinh của nhóm nhân $U(10) = \\{\\overline{1}, \\overline{3}, \\overline{7}, \\overline{9}\\}$.',
           solution:
-            'Kiểm tra cấp của từng phần tử trong $U(10)$: $\\text{ord}(\\overline{3}) = \\text{ord}(\\overline{7}) = 4$, $\\text{ord}(\\overline{9}) = 2$, $\\text{ord}(\\overline{1}) = 1$.\n\nVậy các phần tử sinh của $U(10)$ là $\\overline{3}$ và $\\overline{7}$.',
+            'Kiểm tra cấp của từng phần tử trong $U(10)$: $\\operatorname{ord}(\\overline{3}) = \\operatorname{ord}(\\overline{7}) = 4$, $\\operatorname{ord}(\\overline{9}) = 2$, $\\operatorname{ord}(\\overline{1}) = 1$.\n\nVậy các phần tử sinh của $U(10)$ là $\\overline{3}$ và $\\overline{7}$.',
         },
       ],
     },
@@ -205,7 +205,8 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
         },
         {
           label: 'b',
-          statement: 'Trong $S_3$, nhóm con $H = \\{id, (1\\ 2)\\}$ có chuẩn tắc không? Vì sao?',
+          statement:
+            'Trong $S_3$, nhóm con $H = \\{\\operatorname{id}, (1\\ 2)\\}$ có chuẩn tắc không? Vì sao?',
           solution:
             'Không chuẩn tắc vì với $g = (1\\ 3) \\in S_3$, ta có:\n$$\ng(1\\ 2)g^{-1} = (1\\ 3)(1\\ 2)(1\\ 3) = (2\\ 3) \\notin H.\n$$',
         },
@@ -230,15 +231,15 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
         {
           label: 'a',
           statement:
-            "Cho đồng cấu nhóm $f: G \\to G'$. Chứng minh $\\ker f \\trianglelefteq G$ và $\\text{im } f \\le G'$.",
+            "Cho đồng cấu nhóm $f: G \\to G'$. Chứng minh $\\ker f \\trianglelefteq G$ và $\\operatorname{im} f \\le G'$.",
           solution:
-            "Ta có $f(e) = e' \\implies e \\in \\ker f \\neq \\emptyset$. Với $x, y \\in \\ker f$:\n$$\nf(xy^{-1}) = f(x)f(y)^{-1} = e'(e')^{-1} = e' \\implies \\ker f \\le G.\n$$\nVới $g \\in G, u \\in \\ker f$: $f(gug^{-1}) = f(g)e'f(g)^{-1} = e' \\implies \\ker f \\trianglelefteq G$.\n\nTương tự, với $y_1 = f(x_1), y_2 = f(x_2) \\in \\text{im } f$, ta có $f(e) = e' \\in \\text{im } f$ và $f(x_1)f(x_2)^{-1} = f(x_1 x_2^{-1}) \\in \\text{im } f \\implies \\text{im } f \\le G'$.",
+            "Ta có $f(e) = e' \\implies e \\in \\ker f \\neq \\emptyset$. Với $x, y \\in \\ker f$:\n$$\nf(xy^{-1}) = f(x)f(y)^{-1} = e'(e')^{-1} = e' \\implies \\ker f \\le G.\n$$\nVới $g \\in G, u \\in \\ker f$: $f(gug^{-1}) = f(g)e'f(g)^{-1} = e' \\implies \\ker f \\trianglelefteq G$.\n\nTương tự, với $y_1 = f(x_1), y_2 = f(x_2) \\in \\operatorname{im} f$, ta có $f(e) = e' \\in \\operatorname{im} f$ và $f(x_1)f(x_2)^{-1} = f(x_1 x_2^{-1}) \\in \\operatorname{im} f \\implies \\operatorname{im} f \\le G'$.",
         },
         {
           label: 'b',
           statement: 'Tìm tất cả các nhóm con chuẩn tắc của $S_3$.',
           solution:
-            '$S_3$ có đúng $3$ nhóm con chuẩn tắc:\n- $\\{id\\}$\n- $A_3 = \\{id, (1\\ 2\\ 3), (1\\ 3\\ 2)\\}$ (do $[S_3 : A_3] = 2$)\n- $S_3$\n*(Các nhóm con cấp $2$ đều không chuẩn tắc vì không bất biến qua phép liên hợp).*',
+            '$S_3$ có đúng $3$ nhóm con chuẩn tắc:\n- $\\{\\operatorname{id}\\}$\n- $A_3 = \\{\\operatorname{id}, (1\\ 2\\ 3), (1\\ 3\\ 2)\\}$ (do $[S_3 : A_3] = 2$)\n- $S_3$\n*(Các nhóm con cấp $2$ đều không chuẩn tắc vì không bất biến qua phép liên hợp).*',
         },
       ],
     },
@@ -254,7 +255,7 @@ export const MATH1301_MOCK_EXAM_2: ExamPaper = {
   questionPrefix: 'Câu',
   title: 'Đề ôn tập số 2 — Cấu trúc Đại số',
   description:
-    'Đề biên soạn mở rộng bám sát ma trận 40/60: cấp phần tử trong S₃, nhóm con ℤ₈, tính cyclic của U(12), nhóm con có chỉ số 2 và nghịch ảnh chuẩn tắc qua đồng cấu.',
+    'Đề biên soạn mở rộng bám sát ma trận 40/60: cấp phần tử trong $S_3$, nhóm con $\\mathbb{Z}_8$, tính cyclic của $U(12)$, nhóm con có chỉ số 2 và nghịch ảnh chuẩn tắc qua đồng cấu.',
   isMockExam: true,
   mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
   sheetHeader: {
@@ -290,7 +291,7 @@ export const MATH1301_MOCK_EXAM_2: ExamPaper = {
           statement:
             'Tìm tất cả các phần tử có cấp bằng $2$ và các phần tử có cấp bằng $3$ trong nhóm đối xứng $S_3$.',
           solution:
-            'Trong nhóm $S_3 = \\{id, (1\\ 2), (1\\ 3), (2\\ 3), (1\\ 2\\ 3), (1\\ 3\\ 2)\\}$:\n- **Các phần tử cấp $2$:** $(1\\ 2), (1\\ 3), (2\\ 3)$ (do mỗi chuyển trí $\\tau \\neq id$ thỏa $\\tau^2 = id$).\n- **Các phần tử cấp $3$:** $(1\\ 2\\ 3), (1\\ 3\\ 2)$ (do $(1\\ 2\\ 3)^2 = (1\\ 3\\ 2)$, $(1\\ 2\\ 3)^3 = id$ và $(1\\ 3\\ 2)^2 = (1\\ 2\\ 3)$, $(1\\ 3\\ 2)^3 = id$).',
+            'Trong nhóm $S_3 = \\{\\operatorname{id}, (1\\ 2), (1\\ 3), (2\\ 3), (1\\ 2\\ 3), (1\\ 3\\ 2)\\}$:\n- **Các phần tử cấp $2$:** $(1\\ 2), (1\\ 3), (2\\ 3)$ (do mỗi chuyển trí $\\tau \\neq \\operatorname{id}$ thỏa $\\tau^2 = \\operatorname{id}$).\n- **Các phần tử cấp $3$:** $(1\\ 2\\ 3), (1\\ 3\\ 2)$ (do $(1\\ 2\\ 3)^2 = (1\\ 3\\ 2)$, $(1\\ 2\\ 3)^3 = \\operatorname{id}$ và $(1\\ 3\\ 2)^2 = (1\\ 2\\ 3)$, $(1\\ 3\\ 2)^3 = \\operatorname{id}$).',
         },
         {
           label: 'b',
@@ -327,9 +328,9 @@ export const MATH1301_MOCK_EXAM_2: ExamPaper = {
         {
           label: 'b',
           statement:
-            'Trong $S_3$, xét hai nhóm con $H = \\{id, (1\\ 2)\\}$ và $K = \\{id, (1\\ 3)\\}$. Chứng minh rằng tập tích $HK = \\{hk \\mid h \\in H, k \\in K\\}$ không phải là nhóm con của $S_3$.',
+            'Trong $S_3$, xét hai nhóm con $H = \\{\\operatorname{id}, (1\\ 2)\\}$ và $K = \\{\\operatorname{id}, (1\\ 3)\\}$. Chứng minh rằng tập tích $HK = \\{hk \\mid h \\in H, k \\in K\\}$ không phải là nhóm con của $S_3$.',
           solution:
-            'Do $H \\cap K = \\{id\\}$ nên số phần tử của tập tích $HK$ là:\n$$\n|HK| = \\frac{|H|\\cdot|K|}{|H \\cap K|} = \\frac{2 \\cdot 2}{1} = 4.\n$$\nVì $|S_3| = 6$ và $4 \\nmid 6$, theo định lý Lagrange thì $HK$ không thể là nhóm con của $S_3$ *(hoặc trực tiếp thấy $(1\\ 2)(1\\ 3) \\neq (1\\ 3)(1\\ 2)$ nên $HK \\neq KH$)*.',
+            'Do $H \\cap K = \\{\\operatorname{id}\\}$ nên số phần tử của tập tích $HK$ là:\n$$\n|HK| = \\frac{|H|\\cdot|K|}{|H \\cap K|} = \\frac{2 \\cdot 2}{1} = 4.\n$$\nVì $|S_3| = 6$ và $4 \\nmid 6$, theo định lý Lagrange thì $HK$ không thể là nhóm con của $S_3$ *(hoặc trực tiếp thấy $(1\\ 2)(1\\ 3) \\neq (1\\ 3)(1\\ 2)$ nên $HK \\neq KH$)*.',
         },
         {
           label: 'c',
@@ -361,7 +362,7 @@ export const MATH1301_MOCK_EXAM_2: ExamPaper = {
           statement:
             'Trong $S_4$, hãy chỉ ra một nhóm con cấp $4$ KHÔNG chuẩn tắc và một nhóm con cấp $4$ chuẩn tắc.',
           solution:
-            '- **Nhóm con cấp $4$ không chuẩn tắc:** $H_1 = \\langle (1\\ 2\\ 3\\ 4) \\rangle = \\{id, (1\\ 2\\ 3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4\\ 3\\ 2)\\}$, vì liên hợp bởi $(1\\ 2) \\in S_4$ cho $(1\\ 2)(1\\ 2\\ 3\\ 4)(1\\ 2)^{-1} = (1\\ 3\\ 4\\ 2) \\notin H_1$.\n- **Nhóm con cấp $4$ chuẩn tắc:** Nhóm bốn Klein $V_4 = \\{id, (1\\ 2)(3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4)(2\\ 3)\\} \\trianglelefteq S_4$ (bất biến qua mọi phép liên hợp trong $S_4$).',
+            '- **Nhóm con cấp $4$ không chuẩn tắc:** $H_1 = \\langle (1\\ 2\\ 3\\ 4) \\rangle = \\{\\operatorname{id}, (1\\ 2\\ 3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4\\ 3\\ 2)\\}$, vì liên hợp bởi $(1\\ 2) \\in S_4$ cho $(1\\ 2)(1\\ 2\\ 3\\ 4)(1\\ 2)^{-1} = (1\\ 3\\ 4\\ 2) \\notin H_1$.\n- **Nhóm con cấp $4$ chuẩn tắc:** Nhóm bốn Klein $V_4 = \\{\\operatorname{id}, (1\\ 2)(3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4)(2\\ 3)\\} \\trianglelefteq S_4$ (bất biến qua mọi phép liên hợp trong $S_4$).',
         },
       ],
     },
@@ -442,7 +443,7 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
         items: [
           {
             id: 'ctds-sample-zn',
-            title: 'Nhóm cộng modulo n (ℤₙ)',
+            title: 'Nhóm cộng modulo $n$ ($\\mathbb{Z}_n$)',
             summary:
               'Nhóm cyclic cấp $n$ sinh bởi $\\overline{1}$; với mỗi ước $d \\mid n$ có đúng $1$ nhóm con cấp $d$ là $\\langle n/d \\rangle$.',
             keyFormulas: [
@@ -452,7 +453,7 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
           },
           {
             id: 'ctds-sample-un',
-            title: 'Nhóm nhân khả nghịch U(n)',
+            title: 'Nhóm nhân khả nghịch $U(n)$',
             summary:
               'Gồm các lớp $\\overline{k}$ thỏa $\\gcd(k, n) = 1$, cấp nhóm bằng hàm phi Euler $\\varphi(n)$.',
             keyFormulas: [
@@ -461,17 +462,17 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
           },
           {
             id: 'ctds-sample-sn',
-            title: 'Nhóm đối xứng S₃, S₄',
+            title: 'Nhóm đối xứng $S_3, S_4$',
             summary:
               'Phân tích phép thế thành tích các xích độc lập, tính cấp bằng $\\operatorname{lcm}$ độ dài xích, xét chẵn lẻ và nhóm thay phiên $A_n$.',
             keyFormulas: [
-              'A_3 = \\{id, (1\\ 2\\ 3), (1\\ 3\\ 2)\\}',
+              'A_3 = \\{\\operatorname{id}, (1\\ 2\\ 3), (1\\ 3\\ 2)\\}',
               'H = \\langle (1\\ 2\\ 3\\ 4) \\rangle \\le S_4',
             ],
           },
           {
             id: 'ctds-sample-v4',
-            title: 'Nhóm bốn Klein V₄',
+            title: 'Nhóm bốn Klein $V_4$',
             summary:
               'Nhóm Abel cấp $4$ không cyclic: mọi phần tử khác $e$ đều có cấp $2$ ($a^2 = b^2 = c^2 = e$); có đúng $5$ nhóm con.',
             keyFormulas: ['V_4 = \\{e, a, b, c\\}, \\quad ab = c'],
@@ -496,14 +497,14 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
           },
           {
             id: 'ctds-proof-hk',
-            title: 'Tích hai nhóm con HK ≤ G ⇔ HK = KH',
+            title: 'Tích hai nhóm con $HK \\le G \\iff HK = KH$',
             summary:
               'Chứng minh hai chiều dùng phép lấy nghịch đảo $(hk)^{-1} = k^{-1}h^{-1}$ và tiêu chuẩn nhóm con.',
             keyFormulas: ['HK \\le G \\iff HK = KH'],
           },
           {
             id: 'ctds-proof-center',
-            title: 'Tâm nhóm Z(G) ⊴ G',
+            title: 'Tâm nhóm $Z(G) \\trianglelefteq G$',
             summary:
               'Từ $yg = gy$ suy ra $y^{-1}g = gy^{-1}$ để có $xy^{-1} \\in Z(G)$ và $gzg^{-1} = z$.',
             keyFormulas: [
@@ -512,17 +513,17 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
           },
           {
             id: 'ctds-proof-ker',
-            title: 'Hạt nhân ker f ⊴ G',
+            title: 'Hạt nhân $\\ker f \\trianglelefteq G$',
             summary:
               "Với đồng cấu $f: G \\to G'$, chứng minh $e \\in \\ker f$, $xy^{-1} \\in \\ker f$ và $f(gug^{-1}) = f(g)e'f(g)^{-1} = e'$.",
             keyFormulas: ['\\ker f \\trianglelefteq G'],
           },
           {
             id: 'ctds-proof-im',
-            title: "Ảnh đồng cấu im f ≤ G'",
+            title: "Ảnh đồng cấu $\\operatorname{im} f \\le G'$",
             summary:
-              "Chứng minh $e' = f(e) \\in \\text{im } f$ và $f(x_1)f(x_2)^{-1} = f(x_1x_2^{-1}) \\in \\text{im } f$.",
-            keyFormulas: ["\\text{im } f \\le G'"],
+              "Chứng minh $e' = f(e) \\in \\operatorname{im} f$ và $f(x_1)f(x_2)^{-1} = f(x_1x_2^{-1}) \\in \\operatorname{im} f$.",
+            keyFormulas: ["\\operatorname{im} f \\le G'"],
           },
         ],
       },
@@ -535,16 +536,16 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
         items: [
           {
             id: 'ctds-counter-union',
-            title: 'Hợp hai nhóm con không là nhóm con: 2ℤ ∪ 3ℤ',
+            title: 'Hợp hai nhóm con không là nhóm con: $2\\mathbb{Z} \\cup 3\\mathbb{Z}$',
             summary:
               'Trong $(\\mathbb{Z}, +)$, $2 \\in 2\\mathbb{Z}$ và $3 \\in 3\\mathbb{Z}$ nhưng $2 + 3 = 5 \\notin 2\\mathbb{Z} \\cup 3\\mathbb{Z}$.',
             keyFormulas: ['2 + 3 = 5 \\notin 2\\mathbb{Z} \\cup 3\\mathbb{Z}'],
           },
           {
             id: 'ctds-counter-normal',
-            title: 'Nhóm con không chuẩn tắc trong S₃: {id, (1 2)}',
+            title: 'Nhóm con không chuẩn tắc trong $S_3$: $\\{\\operatorname{id}, (1\\;2)\\}$',
             summary:
-              'Liên hợp bởi $g = (1\\ 3) \\in S_3$ cho $(1\\ 3)(1\\ 2)(1\\ 3) = (2\\ 3) \\notin \\{id, (1\\ 2)\\}$.',
+              'Liên hợp bởi $g = (1\\ 3) \\in S_3$ cho $(1\\ 3)(1\\ 2)(1\\ 3) = (2\\ 3) \\notin \\{\\operatorname{id}, (1\\ 2)\\}$.',
             keyFormulas: ['(1\\ 3)(1\\ 2)(1\\ 3)^{-1} = (2\\ 3) \\notin H'],
           },
         ],

@@ -40,7 +40,7 @@ export function InPageSearchNavigator({
       role="region"
       aria-label="Thanh duyệt kết quả tìm kiếm trong trang"
       className={cn(
-        'sticky top-20 z-30 mb-5 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border px-3.5 py-2.5 shadow-sm backdrop-blur-md transition-colors',
+        'sticky top-20 z-30 mb-5 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border px-3.5 py-2.5 shadow-sm backdrop-blur-md transition-colors print:hidden',
         isDark
           ? 'border-[#334155] bg-[#161B22]/95 text-[#E2E8F0]'
           : 'border-amber-300/80 bg-[#FFFDF6]/95 text-[#1C2430]',

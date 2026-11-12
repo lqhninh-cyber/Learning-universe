@@ -1,6 +1,7 @@
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible';
 import { ChevronDown } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
+import { usePrintExpanded } from '@/shared/hooks/usePrintExpanded';
 import { cn } from '@/shared/lib/cn';
 
 export interface CollapsibleProps {
@@ -25,7 +26,8 @@ export function Collapsible({
   contentClassName,
 }: CollapsibleProps) {
   const [internalOpen, setInternalOpen] = useState<boolean>(defaultOpen);
-  const open = controlledOpen ?? internalOpen;
+  const isPrinting = usePrintExpanded();
+  const open = isPrinting || (controlledOpen ?? internalOpen);
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (controlledOpen === undefined) {

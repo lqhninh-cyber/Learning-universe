@@ -1,1 +1,109 @@
 @import './styles/index.css';
+
+/* ==========================================================================
+   CHẾ ĐỘ IN ẤN HỌC THUẬT (ACADEMIC PRINT STYLESHEET — Ctrl + P)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 16mm 18mm;
+  }
+
+  html,
+  body,
+  main,
+  article,
+  [data-theme],
+  [data-reading-theme],
+  .exam-paper-sheet {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  body {
+    font-size: 11pt !important;
+    line-height: 1.65 !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .lu-prose,
+  .lu-prose p,
+  .lu-prose li,
+  .lesson-content,
+  .lesson-content p,
+  .lesson-content li {
+    font-size: 11pt !important;
+    line-height: 1.65 !important;
+    color: #000000 !important;
+  }
+
+  .lu-prose p:has(.katex),
+  .lesson-content p:has(.katex),
+  .lu-prose li:has(.katex),
+  .lesson-content li:has(.katex),
+  .exam-paper-prose p:has(.katex),
+  .exam-paper-prose li:has(.katex) {
+    line-height: 1.85 !important;
+  }
+
+  .katex,
+  .katex * {
+    color: #000000 !important;
+  }
+
+  /* Ẩn toàn bộ thanh điều hướng, thanh công cụ, nút chép LaTeX và footer */
+  header,
+  .lu-site-header,
+  nav,
+  footer,
+  aside,
+  [role='tablist'],
+  [data-inpage-nav='true'],
+  [data-sidenotes-column],
+  [data-testid='lesson-semantic-legend'],
+  [data-print-hidden='true'],
+  button[aria-label*='Sao chép'],
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Tự động hiện toàn bộ nội dung trong khối details/collapsible khi in */
+  details.ex-block,
+  details[data-kind],
+  details.ex-block > *,
+  details[data-kind] > * {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Bảo vệ khối định nghĩa, định lý, ví dụ, chứng minh và công thức khỏi bị cắt đôi giữa trang */
+  [data-kind='def'],
+  [data-kind='thm'],
+  [data-kind='ex'],
+  [data-kind='proof'],
+  .semantic-block,
+  .ex-block,
+  .semantic-proof-block,
+  .katex-display,
+  .group\/katex {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+    color: #000000 !important;
+  }
+}

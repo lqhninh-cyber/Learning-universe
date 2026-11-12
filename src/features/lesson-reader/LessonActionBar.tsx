@@ -80,7 +80,7 @@ export function LessonActionBar({
     <div
       role="toolbar"
       aria-label="Thao tác học tập cá nhân"
-      className={cn('flex flex-wrap items-center gap-2.5', className)}
+      className={cn('flex flex-wrap items-center gap-2.5 print:hidden', className)}
     >
       <button
         type="button"

@@ -77,7 +77,7 @@ export const CTDS_FINAL_REVIEW_SYLLABUS: FinalReviewSyllabus = {
         {
           title: 'Tính xác định tốt của phép toán cảm sinh',
           description:
-            "Khi định nghĩa phép toán trên các lớp $[a] \\star [b] = [a * b]$, bắt buộc phải chứng minh: nếu $[a] = [a']$ và $[b] = [b']$ thì $[a * b] = [a' * b'].",
+            "Khi định nghĩa phép toán trên các lớp $[a] \\star [b] = [a * b]$, bắt buộc phải chứng minh: nếu $[a] = [a']$ và $[b] = [b']$ thì $[a * b] = [a' * b']$.",
           keyFormula: "a \\sim a' \\land b \\sim b' \\implies a * b \\sim a' * b'",
         },
       ],

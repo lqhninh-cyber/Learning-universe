@@ -11,6 +11,8 @@ export interface MathTextProps {
   readonly className?: string;
   readonly currentCourseId?: string;
   readonly courseId?: string;
+  /** Render nội tuyến (`<span>`) không bọc khối `<p>`/`<div>`, phù hợp tiêu đề, badge, bảng phân bố. */
+  readonly inline?: boolean;
 }
 
 export interface KatexDisplayFormulaProps {
@@ -41,7 +43,7 @@ export function KatexDisplayFormula({ math, className }: KatexDisplayFormulaProp
   return (
     <div
       className={cn(
-        'group/katex relative my-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/60 px-3 pt-8 pb-3 transition-colors duration-200 hover:border-[var(--border-control)] sm:px-4',
+        'group/katex relative my-4 overflow-x-auto rounded-xl border border-[var(--border-subtle)]/70 bg-[var(--bg-subtle)]/60 px-5 pt-8 pb-3.5 transition-colors duration-200 hover:border-[var(--border-control)]',
         className,
       )}
     >
@@ -50,7 +52,7 @@ export function KatexDisplayFormula({ math, className }: KatexDisplayFormulaProp
         onClick={handleCopy}
         aria-label={copied ? 'Đã sao chép mã LaTeX' : 'Sao chép LaTeX'}
         title="Sao chép mã nguồn LaTeX"
-        className="absolute top-2 right-2 z-10 inline-flex min-h-[28px] cursor-pointer items-center gap-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[11px] font-medium text-[var(--text-muted)] shadow-2xs transition-all duration-200 hover:border-[var(--border-control)] hover:text-[var(--text-main)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] active:scale-[0.98]"
+        className="absolute top-2 right-2 z-10 inline-flex min-h-[28px] cursor-pointer items-center gap-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[11px] font-medium text-[var(--text-muted)] shadow-2xs transition-all duration-200 hover:border-[var(--border-control)] hover:text-[var(--text-main)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] active:scale-[0.98] print:hidden"
       >
         {copied ? (
           <>
@@ -79,7 +81,13 @@ export function KatexDisplayFormula({ math, className }: KatexDisplayFormulaProp
  * - Bold `**...**`, Italic `*...*`, Inline code `` `...` ``
  * - Danh sách gạch đầu dòng `-`, `*`, danh sách có thứ tự `1.`, `a)`, phân cách `---`
  */
-export function MathText({ text, className, currentCourseId, courseId }: MathTextProps) {
+export function MathText({
+  text,
+  className,
+  currentCourseId,
+  courseId,
+  inline = false,
+}: MathTextProps) {
   const glossaryCtx = useMathGlossary();
   const effectiveCourseId = useMemo(() => {
     if (currentCourseId || courseId) return currentCourseId || courseId;
@@ -90,8 +98,13 @@ export function MathText({ text, className, currentCourseId, courseId }: MathTex
     return undefined;
   }, [currentCourseId, courseId, glossaryCtx.currentCourseId]);
 
+  const inlineNodes = useMemo(() => {
+    if (!inline || !text) return null;
+    return renderInlineTokens(text.trim(), 'inline', effectiveCourseId);
+  }, [inline, text, effectiveCourseId]);
+
   const renderedContent = useMemo(() => {
-    if (!text) return null;
+    if (inline || !text) return null;
 
     const normalized = text.replace(/\r\n/g, '\n').trim();
     const topSegments = normalized.split(/(\$\$[\s\S]*?\$\$)/g);
@@ -113,7 +126,12 @@ export function MathText({ text, className, currentCourseId, courseId }: MathTex
         </div>
       );
     });
-  }, [text, effectiveCourseId]);
+  }, [inline, text, effectiveCourseId]);
+
+  if (inline) {
+    if (!text) return null;
+    return <span className={cn('text-inherit', className)}>{inlineNodes}</span>;
+  }
 
   return (
     <div className={cn('text-sm leading-relaxed text-[var(--text-main)]', className)}>

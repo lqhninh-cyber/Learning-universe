@@ -41,7 +41,7 @@ function KatexDisplayBlock({
   };
 
   return (
-    <span className="group/katex relative my-2 block rounded-xl px-3 py-1 transition-colors duration-200 hover:bg-stone-100/40">
+    <span className="group/katex relative my-4 block overflow-x-auto rounded-xl bg-[var(--bg-subtle)]/60 px-5 py-3.5 transition-colors duration-200">
       <span {...spanProps} />
       {tex && (
         <button
@@ -49,7 +49,7 @@ function KatexDisplayBlock({
           onClick={handleCopy}
           aria-label="Sao chép LaTeX"
           title="Sao chép mã nguồn LaTeX"
-          className="absolute top-2 right-2 z-10 inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#CFDADB] bg-[#F7FAFA]/95 px-2 py-0.5 font-mono text-[11px] font-medium text-[#55676B] opacity-0 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/katex:opacity-100 hover:border-[#71889A] hover:text-[#29383D] focus-visible:opacity-100"
+          className="absolute top-2 right-2 z-10 inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#CFDADB] bg-[#F7FAFA]/95 px-2 py-0.5 font-mono text-[11px] font-medium text-[#55676B] opacity-0 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/katex:opacity-100 hover:border-[#71889A] hover:text-[#29383D] focus-visible:opacity-100 print:hidden"
         >
           <span>{copied ? 'Đã chép!' : 'Sao chép LaTeX'}</span>
         </button>

@@ -172,7 +172,7 @@ export const FoliageReadingProgress: FC<FoliageReadingProgressProps> = ({
     <>
       {/* 1. Thanh tiến độ đọc thích ứng di động (< 1024px) */}
       <div
-        className="pointer-events-none fixed top-0 right-0 left-0 z-50 h-[2.5px] bg-transparent lg:hidden"
+        className="pointer-events-none fixed top-0 right-0 left-0 z-50 h-[2.5px] bg-transparent lg:hidden print:hidden"
         aria-hidden="true"
       >
         <div
@@ -186,7 +186,7 @@ export const FoliageReadingProgress: FC<FoliageReadingProgressProps> = ({
         role="navigation"
         aria-label="Vạch tiến độ mầm cây sinh trưởng"
         className={cn(
-          'pointer-events-auto fixed top-28 bottom-24 left-4 z-30 hidden flex-col items-center transition-all duration-300 select-none lg:flex xl:left-8',
+          'pointer-events-auto fixed top-28 bottom-24 left-4 z-30 hidden flex-col items-center transition-all duration-300 select-none lg:flex xl:left-8 print:hidden',
           className,
         )}
       >
