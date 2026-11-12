@@ -6,7 +6,7 @@ import { Barycenter } from '@/content-runtime/figure-kit';
 export function MidpointBarycenterFigure() {
   return (
     <Barycenter
-      title="Mô hình tương tác: Trung điểm & Tâm tỉ cự hai điểm (OI = ½(OA + OB))"
+      title="Mô hình tương tác: Trung điểm & Tâm tỉ cự hai điểm (OI = 1/2 (OA + OB))"
       pointCount={2}
       showOriginVectors
       height={340}

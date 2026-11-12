@@ -1,6 +1,7 @@
 import katex from 'katex';
 import { useMemo } from 'react';
 import { cn } from '@/shared/lib/cn';
+import { sanitizeKatexInput } from '@/shared/lib/math-sanitize';
 
 export interface KatexMathProps {
   readonly math: string;
@@ -28,8 +29,9 @@ const KATEX_MACROS = {
 
 export function KatexMath({ math, display = false, className, altText }: KatexMathProps) {
   const html = useMemo(() => {
+    const normalizedMath = sanitizeKatexInput(math);
     try {
-      return katex.renderToString(math, {
+      return katex.renderToString(normalizedMath, {
         displayMode: display,
         throwOnError: false,
         strict: 'ignore',
@@ -37,7 +39,7 @@ export function KatexMath({ math, display = false, className, altText }: KatexMa
         macros: KATEX_MACROS,
       });
     } catch {
-      return math;
+      return normalizedMath;
     }
   }, [math, display]);
 
