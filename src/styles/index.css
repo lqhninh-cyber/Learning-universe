@@ -387,42 +387,69 @@
    HERO DIORAMA & HOLOGRAPHIC SHOWCASE ANIMATIONS (60fps GPU-friendly)
    ========================================================================= */
 
-@keyframes lu-orbit-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes lu-star-twinkle {
+@keyframes lu-cloud-drift {
   0%,
   100% {
-    opacity: 0.35;
-    transform: scale(0.92);
+    transform: translate3d(-18px, 0, 0);
   }
   50% {
-    opacity: 0.95;
-    transform: scale(1.12);
+    transform: translate3d(22px, -4px, 0);
   }
 }
 
-.lu-orbit-slow {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: lu-orbit-slow 90s linear infinite;
+@keyframes lu-water-shimmer {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(6px, 0, 0);
+  }
 }
 
-.lu-star-twinkle {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: lu-star-twinkle 4.2s ease-in-out infinite;
+@keyframes lu-beam-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.88;
+  }
+}
+
+@keyframes lu-boat-glide {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(16px, -2px, 0);
+  }
+}
+
+.lu-cloud-drift {
+  animation: lu-cloud-drift 22s ease-in-out infinite;
+}
+
+.lu-water-shimmer {
+  animation: lu-water-shimmer 5.5s ease-in-out infinite;
+}
+
+.lu-beam-pulse {
+  animation: lu-beam-pulse 7s ease-in-out infinite;
+}
+
+.lu-boat-glide {
+  animation: lu-boat-glide 18s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lu-orbit-slow,
-  .lu-star-twinkle {
+  .lu-cloud-drift,
+  .lu-water-shimmer,
+  .lu-beam-pulse,
+  .lu-boat-glide {
     animation: none;
   }
 }

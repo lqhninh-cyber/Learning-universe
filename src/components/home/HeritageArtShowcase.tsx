@@ -329,7 +329,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
 ] as const;
 
 const ROTATION_INTERVAL_MS = 20000;
-const FADE_TRANSITION_MS = 260;
+const SLIDE_TRANSITION_MS = 350;
 
 export interface HeritageArtShowcaseProps {
   readonly atmosphere?: HeroAtmosphere;
@@ -338,14 +338,16 @@ export interface HeritageArtShowcaseProps {
 export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcaseProps) {
   const prefersReducedMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<'next' | 'prev'>('next');
   const [isPaused, setIsPaused] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isMetadataOpen, setIsMetadataOpen] = useState(false);
 
-  const tiltCardRef = useRef<HTMLDivElement>(null);
+  const imgMotionRef = useRef<HTMLImageElement>(null);
   const glareRef = useRef<HTMLDivElement>(null);
-  const tiltRafRef = useRef<number>(0);
+  const motionRafRef = useRef<number>(0);
+  const transitionTimerRef = useRef<number>(0);
 
   const totalArtworks = HERITAGE_ARTWORKS.length;
   const currentArtwork = HERITAGE_ARTWORKS[currentIndex] ?? HERITAGE_ARTWORKS[0]!;
@@ -355,27 +357,33 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
   const thirdArtwork = HERITAGE_ARTWORKS[thirdIndex] ?? HERITAGE_ARTWORKS[0]!;
 
   const goToArtwork = useCallback(
-    (newIndex: number) => {
+    (newIndex: number, direction: 'next' | 'prev' = 'next') => {
       setImageError(false);
+      setSlideDirection(direction);
+      if (transitionTimerRef.current !== 0) {
+        window.clearTimeout(transitionTimerRef.current);
+        transitionTimerRef.current = 0;
+      }
       if (prefersReducedMotion) {
         setCurrentIndex((newIndex + totalArtworks) % totalArtworks);
         return;
       }
-      setIsFading(true);
-      window.setTimeout(() => {
+      setIsTransitioning(true);
+      transitionTimerRef.current = window.setTimeout(() => {
+        transitionTimerRef.current = 0;
         setCurrentIndex((newIndex + totalArtworks) % totalArtworks);
-        setIsFading(false);
-      }, FADE_TRANSITION_MS);
+        setIsTransitioning(false);
+      }, SLIDE_TRANSITION_MS);
     },
     [prefersReducedMotion, totalArtworks],
   );
 
   const handleNext = useCallback(() => {
-    goToArtwork(currentIndex + 1);
+    goToArtwork(currentIndex + 1, 'next');
   }, [currentIndex, goToArtwork]);
 
   const handlePrev = useCallback(() => {
-    goToArtwork(currentIndex - 1);
+    goToArtwork(currentIndex - 1, 'prev');
   }, [currentIndex, goToArtwork]);
 
   // Luân phiên tự động mỗi 20 giây khi không tạm dừng do hover hoặc đang đọc lược sử
@@ -392,48 +400,51 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
     };
   }, [handleNext, isMetadataOpen, isPaused]);
 
-  // Dọn dẹp animation frame khi unmount
+  // Dọn dẹp animation frame & timer khi unmount
   useEffect(() => {
     return () => {
-      if (tiltRafRef.current !== 0) {
-        window.cancelAnimationFrame(tiltRafRef.current);
+      if (motionRafRef.current !== 0) {
+        window.cancelAnimationFrame(motionRafRef.current);
+      }
+      if (transitionTimerRef.current !== 0) {
+        window.clearTimeout(transitionTimerRef.current);
       }
     };
   }, []);
 
-  const handleCardMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (prefersReducedMotion || !tiltCardRef.current) return;
-    const rect = tiltCardRef.current.getBoundingClientRect();
+  // Chuyển động vi sai tinh tế (±4px + scale 1.03) CHỈ áp dụng bên trong lòng khung ảnh
+  const handleImageMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion) return;
+    const rect = event.currentTarget.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
 
     const px = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
     const py = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
-    const rotateY = (px - 0.5) * 16; // tối đa ±8deg
-    const rotateX = (0.5 - py) * 16; // tối đa ±8deg
+    const shiftX = (px - 0.5) * 8;
+    const shiftY = (py - 0.5) * 8;
 
-    if (tiltRafRef.current !== 0) {
-      window.cancelAnimationFrame(tiltRafRef.current);
+    if (motionRafRef.current !== 0) {
+      window.cancelAnimationFrame(motionRafRef.current);
     }
-    tiltRafRef.current = window.requestAnimationFrame(() => {
-      tiltRafRef.current = 0;
-      if (tiltCardRef.current) {
-        tiltCardRef.current.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+    motionRafRef.current = window.requestAnimationFrame(() => {
+      motionRafRef.current = 0;
+      if (imgMotionRef.current) {
+        imgMotionRef.current.style.transform = `translate3d(${shiftX.toFixed(2)}px, ${shiftY.toFixed(2)}px, 0px) scale(1.03)`;
       }
       if (glareRef.current) {
         glareRef.current.style.opacity = '1';
-        glareRef.current.style.background = `radial-gradient(circle 240px at ${(px * 100).toFixed(1)}% ${(py * 100).toFixed(1)}%, rgba(255, 246, 214, 0.34), rgba(229, 184, 105, 0.14) 42%, transparent 72%)`;
+        glareRef.current.style.background = `radial-gradient(circle 220px at ${(px * 100).toFixed(1)}% ${(py * 100).toFixed(1)}%, rgba(255, 248, 224, 0.24), rgba(229, 184, 105, 0.08) 45%, transparent 72%)`;
       }
     });
   };
 
-  const handleCardMouseLeave = () => {
-    setIsPaused(false);
-    if (tiltRafRef.current !== 0) {
-      window.cancelAnimationFrame(tiltRafRef.current);
-      tiltRafRef.current = 0;
+  const handleImageMouseLeave = () => {
+    if (motionRafRef.current !== 0) {
+      window.cancelAnimationFrame(motionRafRef.current);
+      motionRafRef.current = 0;
     }
-    if (tiltCardRef.current) {
-      tiltCardRef.current.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+    if (imgMotionRef.current) {
+      imgMotionRef.current.style.transform = 'translate3d(0px, 0px, 0px) scale(1)';
     }
     if (glareRef.current) {
       glareRef.current.style.opacity = '0';
@@ -446,22 +457,24 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
 
   const ambientGlowStyle =
     atmosphere === 'sunset'
-      ? 'radial-gradient(circle at 50% 45%, rgba(229, 184, 105, 0.42), rgba(200, 62, 55, 0.28) 48%, transparent 75%)'
+      ? 'radial-gradient(circle at 50% 45%, rgba(246, 211, 131, 0.34), rgba(34, 111, 99, 0.28) 48%, transparent 75%)'
       : atmosphere === 'night'
-        ? 'radial-gradient(circle at 50% 45%, rgba(134, 239, 172, 0.26), rgba(212, 175, 55, 0.22) 48%, transparent 75%)'
-        : 'radial-gradient(circle at 50% 45%, rgba(229, 184, 105, 0.34), rgba(200, 62, 55, 0.14) 50%, transparent 75%)';
+        ? 'radial-gradient(circle at 50% 45%, rgba(134, 239, 172, 0.24), rgba(212, 175, 55, 0.2) 48%, transparent 75%)'
+        : 'radial-gradient(circle at 50% 45%, rgba(227, 180, 72, 0.26), rgba(91, 140, 90, 0.16) 50%, transparent 75%)';
 
-  const stackShellTransition = 'transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]';
+  const stackShellTransition = 'transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)]';
+
+  const slideHiddenClass =
+    slideDirection === 'next' ? '-translate-x-5 opacity-0' : 'translate-x-5 opacity-0';
 
   return (
     <div
       data-testid="heritage-art-showcase"
       onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={handleCardMouseLeave}
-      className="relative mx-auto w-full max-w-[780px] pr-5 pb-6 sm:pr-10 sm:pb-7"
-      style={{ perspective: '1200px' }}
+      onMouseLeave={() => setIsPaused(false)}
+      className="relative mx-auto w-full max-w-[780px] pb-6"
     >
-      {/* Quầng sáng trung tâm (Ambient Glow) tiệp theo tác phẩm & khí quyển */}
+      {/* Quầng sáng dịu tiệp theo cảnh quan */}
       <div
         data-testid="heritage-ambient-glow"
         aria-hidden="true"
@@ -469,23 +482,23 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
         style={{ background: ambientGlowStyle }}
       />
 
-      {/* LỚP XẾP CHỒNG 3: Thẻ tác phẩm sâu phía sau (z-10) */}
+      {/* LỚP XẾP CHỒNG 3: Thẻ thẳng góc sâu phía sau (z-10) */}
       <button
         type="button"
-        onClick={() => goToArtwork(thirdIndex)}
+        onClick={() => goToArtwork(thirdIndex, 'next')}
         aria-label={`Chuyển đến tác phẩm kế thứ hai: ${thirdArtwork.title}`}
         data-testid="heritage-stack-card-3"
         className={cn(
-          'absolute inset-x-0 top-0 right-5 bottom-6 left-0 z-10 origin-center cursor-pointer overflow-hidden rounded-3xl border shadow-md sm:right-10 sm:bottom-7',
-          'translate-x-9 translate-y-6 scale-[0.90] rotate-[5deg] opacity-45 hover:opacity-65',
+          'absolute inset-x-0 top-0 bottom-6 z-10 origin-bottom cursor-pointer overflow-hidden rounded-3xl border shadow-md',
+          'translate-y-4 scale-[0.92] opacity-45 hover:opacity-65',
           stackShellTransition,
           isDarkSurface
-            ? 'border-[#D4AF37]/40 bg-[#12201A]/85'
-            : 'border-[#C5A262]/45 bg-[#EFEBE0]/90',
+            ? 'border-[#D4AF37]/35 bg-[#12201A]/85'
+            : 'border-[#5B8C5A]/35 bg-[#EFEBE0]/90',
         )}
       >
-        <div className="flex h-full w-full flex-col justify-between p-6 opacity-55">
-          <div className="h-4 w-32 rounded bg-[#C5A262]/25" />
+        <div className="flex h-full w-full flex-col justify-between p-6 opacity-50">
+          <div className="h-4 w-32 rounded bg-[#C5A262]/20" />
           <div className="my-auto flex h-[320px] items-center justify-center overflow-hidden rounded-xl border border-[#C5A262]/20 bg-black/5">
             <img
               src={thirdArtwork.imageSrc}
@@ -498,19 +511,19 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
         </div>
       </button>
 
-      {/* LỚP XẾP CHỒNG 2: Thẻ tác phẩm kế tiếp ở tầng giữa (z-20) */}
+      {/* LỚP XẾP CHỒNG 2: Thẻ thẳng góc tầng giữa (z-20) */}
       <button
         type="button"
         onClick={handleNext}
         aria-label={`Chuyển sang tác phẩm kế tiếp: ${nextArtwork.title}`}
         data-testid="heritage-stack-card-2"
         className={cn(
-          'absolute inset-x-0 top-0 right-5 bottom-6 left-0 z-20 origin-center cursor-pointer overflow-hidden rounded-3xl border shadow-lg sm:right-10 sm:bottom-7',
-          'translate-x-5 translate-y-3 scale-[0.95] rotate-[2.5deg] opacity-75 hover:opacity-90',
+          'absolute inset-x-0 top-0 bottom-6 z-20 origin-bottom cursor-pointer overflow-hidden rounded-3xl border shadow-lg',
+          'translate-y-2 scale-[0.96] opacity-75 hover:opacity-90',
           stackShellTransition,
           isDarkSurface
-            ? 'border-[#E5B869]/50 bg-[#182720]/90'
-            : 'border-[#C5A262]/55 bg-[#F6F3EA]/95',
+            ? 'border-[#E5B869]/45 bg-[#162721]/90'
+            : 'border-[#5B8C5A]/45 bg-[#F6F3EA]/95',
         )}
       >
         <div className="flex h-full w-full flex-col justify-between p-6 opacity-75">
@@ -532,45 +545,41 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
         </div>
       </button>
 
-      {/* LỚP TIỀN CẢNH (z-30 scale-100): Thẻ tác phẩm đang chọn kèm 3D Tilt & Foil Glare */}
+      {/* LỚP TIỀN CẢNH (z-30): Khung thẻ đứng phẳng 100% (rotate-0), nút bấm cố định dễ thao tác */}
       <div
-        ref={tiltCardRef}
         data-testid="heritage-active-card"
-        onMouseMove={handleCardMouseMove}
         className={cn(
-          'relative z-30 flex w-full scale-100 flex-col overflow-hidden rounded-3xl border p-5 backdrop-blur-xl sm:p-7',
-          'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform',
+          'relative z-30 flex w-full scale-100 rotate-0 flex-col overflow-hidden rounded-3xl border p-5 backdrop-blur-xl transition-colors duration-700 sm:p-7',
           atmosphere === 'sunset' &&
-            'border-[#E5B869]/65 bg-[#2A1820]/82 text-[#FFF9F0] shadow-[0_24px_55px_-16px_rgba(24,8,12,0.65),0_0_0_1px_rgba(243,201,120,0.22)]',
+            'border-[#F6D383]/55 bg-[#182927]/84 text-[#FFF9F0] shadow-[0_24px_55px_-16px_rgba(9,24,22,0.65)]',
           atmosphere === 'night' &&
-            'border-[#D4AF37]/55 bg-[#0D1E17]/84 text-[#F4F1EA] shadow-[0_24px_55px_-16px_rgba(3,10,7,0.75),0_0_0_1px_rgba(134,239,172,0.16)]',
+            'border-[#86EFAC]/45 bg-[#0C1D16]/86 text-[#F4F1EA] shadow-[0_24px_55px_-16px_rgba(3,10,7,0.75)]',
           atmosphere === 'dawn' &&
-            'border-[#C5A262]/65 bg-[#FAF9F6]/90 text-[#262B28] shadow-[0_20px_50px_-14px_rgba(24,34,29,0.18),0_0_0_1px_rgba(197,162,98,0.25)]',
+            'border-[#5B8C5A]/45 bg-[#FAF9F6]/92 text-[#262B28] shadow-[0_20px_50px_-14px_rgba(24,34,29,0.16)]',
         )}
-        style={{ transformStyle: 'preserve-3d' }}
       >
-        {/* Viền ánh kim mạ vàng tinh tế phía trên */}
+        {/* Viền ánh sáng nhẹ phía trên */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#F3C978]/80 to-transparent"
+          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#E3B448]/70 to-transparent"
         />
 
         {/* Top Header Bar */}
         <div
           className={cn(
             'mb-3 flex items-center justify-between gap-2 border-b pb-3',
-            isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]/60',
+            isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]/70',
           )}
         >
           <div className="flex items-center gap-2">
             <Landmark
-              className={cn('h-3.5 w-3.5', isDarkSurface ? 'text-[#F3C978]' : 'text-[#B85D6F]')}
+              className={cn('h-3.5 w-3.5', isDarkSurface ? 'text-[#F6D383]' : 'text-[#2E5D46]')}
               aria-hidden="true"
             />
             <span
               className={cn(
                 'font-mono text-[10px] font-semibold tracking-widest uppercase',
-                isDarkSurface ? 'text-[#F3C978]' : 'text-[#B85D6F]',
+                isDarkSurface ? 'text-[#F6D383]' : 'text-[#2E5D46]',
               )}
             >
               DI SẢN HỌC THUẬT &amp; NGHỆ THUẬT
@@ -581,7 +590,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
             <span
               className={cn(
                 'font-mono text-[11px] font-medium',
-                isDarkSurface ? 'text-[#E6E0D4]/80' : 'text-[#58635E]',
+                isDarkSurface ? 'text-[#E6E0D4]/85' : 'text-[#58635E]',
               )}
             >
               {formattedIndex} / {formattedTotal}
@@ -593,52 +602,52 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 <button
                   key={art.id}
                   type="button"
-                  onClick={() => goToArtwork(idx)}
+                  onClick={() => goToArtwork(idx, idx >= currentIndex ? 'next' : 'prev')}
                   aria-label={`Chuyển đến tác phẩm ${idx + 1}: ${art.title}`}
                   className={cn(
                     'h-1.5 cursor-pointer rounded-full transition-all duration-300',
                     idx === currentIndex
                       ? isDarkSurface
-                        ? 'w-5 bg-[#F3C978]'
-                        : 'w-5 bg-[#B85D6F]'
+                        ? 'w-5 bg-[#F6D383]'
+                        : 'w-5 bg-[#2E5D46]'
                       : isDarkSurface
                         ? 'w-1.5 bg-white/25 hover:bg-[#86EFAC]'
-                        : 'w-1.5 bg-[#D9DFD9] hover:bg-[#365E4E]',
+                        : 'w-1.5 bg-[#D9DFD9] hover:bg-[#5B8C5A]',
                   )}
                 />
               ))}
             </div>
 
-            {/* Nút điều khiển lật trang */}
-            <div className="flex items-center gap-1">
+            {/* Nút điều khiển lật trang (w-8 h-8 rounded-full dễ bấm) */}
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={handlePrev}
                 aria-label="Tác phẩm trước"
                 className={cn(
-                  'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 active:scale-95',
                   isDarkSurface
-                    ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:border-[#F3C978] hover:text-[#F3C978]'
-                    : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#B85D6F] hover:text-[#262B28]',
+                    ? 'border-white/25 bg-white/10 text-[#F4F1EA] hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383]'
+                    : 'border-[#C5CECA] bg-[#FAF9F6] text-[#36493E] hover:border-[#2E5D46] hover:bg-[#EBF2ED] hover:text-[#18221D]',
                 )}
               >
-                <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </button>
               <button
                 type="button"
                 onClick={() => setIsPaused((prev) => !prev)}
                 aria-label={isPaused ? 'Tiếp tục trình chiếu tác phẩm' : 'Tạm dừng trình chiếu'}
                 className={cn(
-                  'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 active:scale-95',
                   isDarkSurface
-                    ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:border-[#F3C978] hover:text-[#F3C978]'
-                    : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#B85D6F] hover:text-[#262B28]',
+                    ? 'border-white/25 bg-white/10 text-[#F4F1EA] hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383]'
+                    : 'border-[#C5CECA] bg-[#FAF9F6] text-[#36493E] hover:border-[#2E5D46] hover:bg-[#EBF2ED] hover:text-[#18221D]',
                 )}
               >
                 {isPaused ? (
-                  <Play className="h-3 w-3" aria-hidden="true" />
+                  <Play className="h-3.5 w-3.5" aria-hidden="true" />
                 ) : (
-                  <Pause className="h-3 w-3" aria-hidden="true" />
+                  <Pause className="h-3.5 w-3.5" aria-hidden="true" />
                 )}
               </button>
               <button
@@ -646,26 +655,28 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 onClick={handleNext}
                 aria-label="Tác phẩm tiếp theo"
                 className={cn(
-                  'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 active:scale-95',
                   isDarkSurface
-                    ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:border-[#F3C978] hover:text-[#F3C978]'
-                    : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#B85D6F] hover:text-[#262B28]',
+                    ? 'border-white/25 bg-white/10 text-[#F4F1EA] hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383]'
+                    : 'border-[#C5CECA] bg-[#FAF9F6] text-[#36493E] hover:border-[#2E5D46] hover:bg-[#EBF2ED] hover:text-[#18221D]',
                 )}
               >
-                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực kèm ánh sáng phản quang lướt theo chuột */}
+        {/* Frame Trưng bày Hình ảnh: Khung ngoài đứng yên, chỉ ảnh bên trong scale(1.03) + vi sai ±4px */}
         <div
           data-testid="heritage-art-frame"
+          onMouseMove={handleImageMouseMove}
+          onMouseLeave={handleImageMouseLeave}
           className={cn(
-            'relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border p-3 shadow-inner md:h-[425px] xl:h-[460px]',
+            'relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border p-3 shadow-inner transition-colors duration-300 md:h-[425px] xl:h-[460px]',
             isDarkSurface
-              ? 'border-[#E5B869]/35 bg-black/25'
-              : 'border-[#C5A262]/45 bg-[#EBECE6]/35',
+              ? 'border-[#E5B869]/35 bg-black/25 hover:border-[#F6D383]/65'
+              : 'border-[#5B8C5A]/35 bg-[#EBECE6]/35 hover:border-[#5B8C5A]/70',
           )}
         >
           {imageError ? (
@@ -676,17 +687,18 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
             </div>
           ) : (
             <img
+              ref={imgMotionRef}
               src={currentArtwork.imageSrc}
               alt={currentArtwork.alt}
               onError={() => setImageError(true)}
               className={cn(
-                'mx-auto h-full w-full object-contain transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] select-none',
-                isFading ? 'scale-[0.98] opacity-0' : 'scale-100 opacity-100',
+                'mx-auto h-full w-full object-contain transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform select-none',
+                isTransitioning ? slideHiddenClass : 'translate-x-0 opacity-100',
               )}
             />
           )}
 
-          {/* Lớp phủ phản quang kim loại (Foil Glare) lướt theo vị trí con trỏ */}
+          {/* Ánh sáng viền dịu bám theo con trỏ bên trong khung ảnh */}
           <div
             ref={glareRef}
             data-testid="heritage-foil-glare"
@@ -695,11 +707,11 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
           />
         </div>
 
-        {/* Thông tin tác phẩm, Chú giải học thuật & Nút [Lược sử tác phẩm] */}
+        {/* Thông tin tác phẩm trượt ngang + mờ dần khi chuyển trang */}
         <div
           className={cn(
-            'mt-4 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-            isFading ? 'opacity-0' : 'opacity-100',
+            'mt-4 transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
+            isTransitioning ? slideHiddenClass : 'translate-x-0 opacity-100',
           )}
         >
           <div>

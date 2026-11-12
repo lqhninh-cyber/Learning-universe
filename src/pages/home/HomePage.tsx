@@ -1,5 +1,4 @@
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUpRight,
   BookMarked,
@@ -719,17 +718,17 @@ export function HomePage() {
     <div className="relative overflow-x-clip bg-[#F5F4EF] text-[#262B28]">
       <div className="relative">
         {/* =====================================================================
-          SECTION 1: HERO — SƠN HÀ 3D PARALLAX DIORAMA, PHYSICS CANVAS & HOLOGRAPHIC SHOWCASE
+          SECTION 1: HERO — CẢNH QUAN VIỆT NAM 3D PARALLAX, PHYSICS CANVAS & DI SẢN
           ===================================================================== */}
         <section
           aria-label="Không gian Khởi đầu Learning Universe"
-          className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden pt-20 pb-8 transition-colors duration-700 md:pt-24 md:pb-10"
+          className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden pt-20 pb-14 transition-colors duration-700 md:pt-24 md:pb-16"
           style={{ background: heroTheme.skyGradient }}
         >
-          {/* LAYER 1: 5-Layer 3D Parallax Sơn Hà Diorama */}
+          {/* LAYER 1: 5-Layer 3D Parallax Cảnh quan Thiên nhiên Việt Nam */}
           <HeroSonHaDiorama atmosphere={atmosphere} />
 
-          {/* LAYER 2: 60fps Particle Physics, Silk Light Ribbons & Click Shockwaves */}
+          {/* LAYER 2: 60fps Particle Physics, Water Ripples & Click Shockwaves */}
           <HeroPhysicsCanvas atmosphere={atmosphere} />
 
           {/* Dải chuyển tiếp mượt xuống không gian Học phần (#F5F4EF) */}
@@ -739,21 +738,39 @@ export function HomePage() {
             style={{ background: heroTheme.bottomEdgeBlend }}
           />
 
-          {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Nghệ Thuật 3D) */}
+          {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Di Sản Cố Định) */}
           <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-center gap-10 pt-2 lg:grid-cols-[1.08fr_0.92fr] lg:pt-4 xl:gap-16">
-            {/* Cột Trái: Khí quyển Thời gian, Ấn Triện Đỏ, Tục Ngữ & Danh Ngôn */}
+            {/* Cột Trái: Bộ chuyển cảnh quan, Ngôi sao Trống Đồng Đông Sơn, Tục Ngữ & Danh Ngôn */}
             <div className="min-w-0 space-y-6">
-              {/* Hàng điều khiển khí quyển + Dòng định danh chuẩn mực */}
+              {/* Hàng điều khiển 3 cảnh quan Việt Nam + Dòng định danh thuần Việt */}
               <div className="flex flex-wrap items-center gap-3">
                 <AtmosphereSwitcher atmosphere={atmosphere} onChange={handleAtmosphereChange} />
 
                 <div
                   className={cn(
-                    'inline-flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 transition-colors duration-700',
+                    'inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 transition-colors duration-700',
                     heroTheme.eyebrowContainerClass,
                   )}
                 >
-                  <span className="h-2 w-2 rounded-full bg-[#C83E37]" aria-hidden="true" />
+                  {/* Họa tiết Ngôi sao 8 cánh Trống Đồng Đông Sơn nét mảnh thuần Việt */}
+                  <svg
+                    data-testid="dong-son-star-motif"
+                    viewBox="0 0 24 24"
+                    className={cn(
+                      'h-3.5 w-3.5 shrink-0 transition-colors duration-700',
+                      heroTheme.eyebrowTextClass,
+                    )}
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.2" />
+                    <path
+                      d="M12 3.5L13.6 9.4L19.5 7.5L14.8 11.4L20.5 12L14.8 12.6L19.5 16.5L13.6 14.6L12 20.5L10.4 14.6L4.5 16.5L9.2 12.6L3.5 12L9.2 11.4L4.5 7.5L10.4 9.4Z"
+                      stroke="currentColor"
+                      strokeWidth="1.1"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                   <span
                     className={cn(
                       'font-mono text-xs tracking-widest uppercase transition-colors duration-700',
@@ -765,68 +782,33 @@ export function HomePage() {
                 </div>
               </div>
 
-              {/* Tiêu đề chính (Serif) kèm Ấn Triện Đỏ Hoàng Gia (#C83E37) & Trích dẫn nguồn gốc */}
-              <div className="flex items-start gap-4 sm:gap-5">
-                <div
-                  data-testid="cinnabar-imperial-seal"
-                  aria-hidden="true"
-                  className="mt-1.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#C83E37]/85 bg-[#C83E37] text-[#FFF8EE] shadow-md ring-1 shadow-[#C83E37]/25 ring-[#F3C978]/50 sm:h-14 sm:w-14"
+              {/* Tiêu đề chính (Serif) căn trái gọn gàng & Trích dẫn nguồn gốc */}
+              <div className="min-w-0 space-y-2">
+                <h1
+                  className={cn(
+                    'font-serif text-[clamp(2.4rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight transition-colors duration-700',
+                    heroTheme.headingTextClass,
+                  )}
                 >
-                  <svg
-                    viewBox="0 0 40 40"
-                    className="h-9 w-9 sm:h-10 sm:w-10"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <rect
-                      x="3"
-                      y="3"
-                      width="34"
-                      height="34"
-                      rx="5"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeOpacity="0.9"
-                    />
-                    <path
-                      d="M11 13h18M20 9v22M13 21h14M12 28c3-3 5-5 8-5s5 2 8 5"
-                      stroke="currentColor"
-                      strokeWidth="2.1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <circle cx="14" cy="17" r="1.4" fill="currentColor" />
-                    <circle cx="26" cy="17" r="1.4" fill="currentColor" />
-                  </svg>
-                </div>
-
-                <div className="min-w-0 space-y-2">
-                  <h1
+                  <span className="sr-only">LEARNING UNIVERSE — </span>
+                  <span className="block">Đi một ngày đàng,</span>{' '}
+                  <span
                     className={cn(
-                      'font-serif text-[clamp(2.4rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight transition-colors duration-700',
-                      heroTheme.headingTextClass,
+                      'mt-1 block font-serif italic transition-all duration-700',
+                      heroTheme.highlightGradientClass,
                     )}
                   >
-                    <span className="sr-only">LEARNING UNIVERSE — </span>
-                    <span className="block">Đi một ngày đàng,</span>{' '}
-                    <span
-                      className={cn(
-                        'mt-1 block font-serif italic transition-all duration-700',
-                        heroTheme.highlightGradientClass,
-                      )}
-                    >
-                      học một sàng khôn.
-                    </span>
-                  </h1>
-                  <p
-                    className={cn(
-                      'font-serif text-sm italic transition-colors duration-700',
-                      heroTheme.proverbAuthorClass,
-                    )}
-                  >
-                    — Tục ngữ Việt Nam
-                  </p>
-                </div>
+                    học một sàng khôn.
+                  </span>
+                </h1>
+                <p
+                  className={cn(
+                    'font-serif text-sm italic transition-colors duration-700',
+                    heroTheme.proverbAuthorClass,
+                  )}
+                >
+                  — Tục ngữ Việt Nam
+                </p>
               </div>
 
               {/* Khẩu hiệu dẫn nhập (Subheading) */}
@@ -873,45 +855,10 @@ export function HomePage() {
               <RotatingScholarlyQuote atmosphere={atmosphere} />
             </div>
 
-            {/* Cột Phải: Bộ Sưu Tập Tranh Xếp Lớp 3D Phản Quang Holographic */}
+            {/* Cột Phải: Bộ Sưu Tập Di Sản Thẳng Góc & Cố Định Khung Tương Tác */}
             <div className="relative min-w-0">
               <HeritageArtShowcase atmosphere={atmosphere} />
             </div>
-          </div>
-
-          {/* Chân trang Hero (Architectural Status Bar) */}
-          <div
-            className={cn(
-              'lu-container-wide relative z-20 mt-8 flex flex-col items-center justify-between gap-3 border-t pt-5 text-xs transition-colors duration-700 sm:flex-row',
-              heroTheme.statusBarBorderClass,
-            )}
-          >
-            <p
-              className={cn(
-                'font-mono text-[11px] tracking-[0.2em] uppercase transition-colors duration-700',
-                heroTheme.statusAccentTextClass,
-              )}
-            >
-              TOÁN HỌC &amp; KHOA HỌC GIÁO DỤC · HCMUE
-            </p>
-            <p
-              className={cn(
-                'font-mono text-[11px] tracking-[0.18em] uppercase transition-colors duration-700',
-                heroTheme.statusMutedTextClass,
-              )}
-            >
-              04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026
-            </p>
-            <a
-              href="#khong-gian-mon-hoc"
-              className={cn(
-                'inline-flex items-center gap-1.5 font-mono text-[11px] tracking-wider uppercase transition-colors duration-700 hover:opacity-80',
-                heroTheme.statusAccentTextClass,
-              )}
-            >
-              <span>Cuộn xuống Không gian Học phần</span>
-              <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
           </div>
         </section>
 

@@ -169,34 +169,34 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
   const isSunset = atmosphere === 'sunset';
 
   const cardSurfaceClass = isNight
-    ? 'border-[#D4AF37]/40 bg-[#0A1913]/75 hover:border-[#86EFAC]/55 shadow-lg shadow-black/25'
+    ? 'border-[#86EFAC]/35 bg-[#0A1913]/78 hover:border-[#86EFAC]/60 shadow-lg shadow-black/25'
     : isSunset
-      ? 'border-[#E5B869]/45 bg-[#2B171E]/65 hover:border-[#F3C978]/70 shadow-lg shadow-[#240F16]/25'
-      : 'border-[#C5A262]/45 bg-[#FFFDF8]/78 hover:border-[#C83E37]/45 shadow-sm';
+      ? 'border-[#F6D383]/45 bg-[#162825]/76 hover:border-[#F6D383]/75 shadow-lg shadow-[#0B1D1B]/30'
+      : 'border-[#5B8C5A]/40 bg-[#FFFDF8]/84 hover:border-[#2E5D46]/55 shadow-sm';
 
   const headerBorderClass = isNight
-    ? 'border-[#D4AF37]/25'
+    ? 'border-[#86EFAC]/20'
     : isSunset
-      ? 'border-[#E5B869]/25'
-      : 'border-[#C5A262]/25';
+      ? 'border-[#F6D383]/25'
+      : 'border-[#5B8C5A]/20';
 
   const accentColorClass = isNight
-    ? 'text-[#E5C378]'
+    ? 'text-[#86EFAC]'
     : isSunset
-      ? 'text-[#F3C978]'
-      : 'text-[#C83E37]';
+      ? 'text-[#F6D383]'
+      : 'text-[#2E5D46]';
 
   const counterTextClass = isNight
     ? 'text-[#D0DDD5]/80'
     : isSunset
-      ? 'text-[#FDEBD3]/80'
+      ? 'text-[#FDEBD3]/85'
       : 'text-[#4A5851]';
 
   const buttonClass = isNight
-    ? 'border-[#D4AF37]/35 bg-[#0F261D]/85 text-[#D0DDD5] hover:border-[#86EFAC]/60 hover:text-[#F4F1EA]'
+    ? 'border-[#86EFAC]/35 bg-[#0F261D]/85 text-[#D0DDD5] hover:border-[#86EFAC]/65 hover:text-[#F4F1EA]'
     : isSunset
-      ? 'border-[#E5B869]/40 bg-[#3B1E28]/80 text-[#FDEBD3] hover:border-[#F3C978] hover:text-white'
-      : 'border-[#C5A262]/40 bg-[#FAF6EC]/90 text-[#4A5851] hover:border-[#C83E37]/50 hover:text-[#18221D]';
+      ? 'border-[#F6D383]/40 bg-[#1E3631]/80 text-[#FDEBD3] hover:border-[#F6D383] hover:text-white'
+      : 'border-[#5B8C5A]/35 bg-[#FAF6EC]/90 text-[#36493E] hover:border-[#2E5D46]/55 hover:text-[#18221D]';
 
   const quoteBodyClass = isNight
     ? 'text-[#F4F1EA]'
@@ -205,16 +205,16 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
       : 'text-[#18221D]';
 
   const footerBorderClass = isNight
-    ? 'border-[#D4AF37]/20'
+    ? 'border-[#86EFAC]/20'
     : isSunset
-      ? 'border-[#E5B869]/20'
-      : 'border-[#C5A262]/25';
+      ? 'border-[#F6D383]/20'
+      : 'border-[#5B8C5A]/20';
 
   const authorTextClass = isNight
-    ? 'text-[#86EFAC]'
+    ? 'text-[#A7F3D0]'
     : isSunset
-      ? 'text-[#F3C978]'
-      : 'text-[#365E4E]';
+      ? 'text-[#F6D383]'
+      : 'text-[#2E5D46]';
 
   return (
     <aside

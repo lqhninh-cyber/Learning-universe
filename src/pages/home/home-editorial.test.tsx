@@ -373,7 +373,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
 
-    it('chuyển đổi khí quyển Thời gian (dawn / sunset / night) và lưu vào localStorage', () => {
+    it('chuyển đổi 3 cảnh quan thiên nhiên Việt Nam (Ruộng Bậc Thang / Vịnh Hạ Long / Hang Sơn Đoòng) và ẩn dải chữ đáy + Hán tự', () => {
       window.localStorage.removeItem(HERO_ATMOSPHERE_STORAGE_KEY);
       render(
         <MemoryRouter>
@@ -381,22 +381,30 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-atmosphere', 'dawn');
+      const diorama = screen.getByTestId('son-ha-diorama');
+      expect(diorama).toHaveAttribute('data-atmosphere', 'dawn');
+      expect(diorama).toHaveAttribute('data-landscape', 'ruong-bac-thang');
       expect(screen.getByTestId('atmosphere-option-dawn')).toHaveAttribute('aria-checked', 'true');
+      expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
+      expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
+      expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG/i)).not.toBeInTheDocument();
 
       fireEvent.click(screen.getByTestId('atmosphere-option-sunset'));
-      expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-atmosphere', 'sunset');
+      expect(diorama).toHaveAttribute('data-atmosphere', 'sunset');
+      expect(diorama).toHaveAttribute('data-landscape', 'vinh-ha-long');
       expect(window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY)).toBe('sunset');
 
       fireEvent.click(screen.getByTestId('atmosphere-option-night'));
-      expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-atmosphere', 'night');
+      expect(diorama).toHaveAttribute('data-atmosphere', 'night');
+      expect(diorama).toHaveAttribute('data-landscape', 'hang-son-doong');
       expect(window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY)).toBe('night');
       window.localStorage.removeItem(HERO_ATMOSPHERE_STORAGE_KEY);
     });
   });
 
   describe('Hero Diorama, Physics Canvas & 3D Stack Components', () => {
-    it('AtmosphereSwitcher phát đúng callback cho từng chế độ thời khắc', () => {
+    it('AtmosphereSwitcher phát đúng callback cho từng cảnh quan thiên nhiên Việt Nam', () => {
       let current: 'dawn' | 'sunset' | 'night' = 'dawn';
       const { rerender } = render(
         <AtmosphereSwitcher
@@ -406,6 +414,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
           }}
         />,
       );
+
+      expect(screen.getByTestId('atmosphere-option-dawn')).toHaveTextContent(/Ruộng Bậc Thang/i);
+      expect(screen.getByTestId('atmosphere-option-sunset')).toHaveTextContent(/Vịnh Hạ Long/i);
+      expect(screen.getByTestId('atmosphere-option-night')).toHaveTextContent(/Hang Sơn Đoòng/i);
 
       fireEvent.click(screen.getByTestId('atmosphere-option-night'));
       expect(current).toBe('night');
@@ -428,9 +440,16 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     });
 
-    it('HeritageArtShowcase hỗ trợ chồng thẻ 3 lớp và tráo thẻ mượt khi bấm vào thẻ kế tiếp', async () => {
+    it('HeritageArtShowcase cố định thẻ thẳng góc (rotate-0), nút bấm h-8 w-8 rounded-full và chuyển tác phẩm mượt', async () => {
       render(<HeritageArtShowcase atmosphere="sunset" />);
 
+      const activeCard = screen.getByTestId('heritage-active-card');
+      expect(activeCard).toHaveClass('rotate-0');
+      expect(screen.getByRole('button', { name: 'Tác phẩm tiếp theo' })).toHaveClass(
+        'h-8',
+        'w-8',
+        'rounded-full',
+      );
       expect(screen.getByTestId('heritage-ambient-glow')).toBeInTheDocument();
       expect(screen.getByTestId('heritage-stack-card-2')).toBeInTheDocument();
       expect(screen.getByTestId('heritage-stack-card-3')).toBeInTheDocument();

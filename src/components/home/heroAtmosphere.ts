@@ -17,9 +17,6 @@ export interface AtmosphereThemeConfig {
   readonly eyebrowTextClass: string;
   readonly primaryCtaClass: string;
   readonly secondaryCtaClass: string;
-  readonly statusBarBorderClass: string;
-  readonly statusAccentTextClass: string;
-  readonly statusMutedTextClass: string;
   readonly bottomEdgeBlend: string;
 }
 
@@ -28,72 +25,63 @@ export const ATMOSPHERE_ORDER: readonly HeroAtmosphere[] = ['dawn', 'sunset', 'n
 export const ATMOSPHERE_THEMES: Readonly<Record<HeroAtmosphere, AtmosphereThemeConfig>> = {
   dawn: {
     id: 'dawn',
-    label: '☀️ Nắng Sớm',
-    shortLabel: 'Nắng Sớm',
-    ariaLabel: 'Chuyển sang khí quyển Nắng Sớm',
+    label: '🌾 Ruộng Bậc Thang',
+    shortLabel: 'Ruộng Bậc Thang',
+    ariaLabel: 'Chuyển sang cảnh quan Ruộng Bậc Thang và Núi Rừng Tây Bắc',
     isDarkSurface: false,
-    skyGradient: 'linear-gradient(180deg, #FBF9F2 0%, #F2ECE1 65%, #E4EFE9 100%)',
+    skyGradient: 'linear-gradient(180deg, #FBF9F2 0%, #EEF4EC 52%, #DCEAD9 100%)',
     headingTextClass: 'text-[#18221D]',
-    subtextClass: 'text-[#3D4E46]',
-    proverbAuthorClass: 'text-[#365E4E]',
+    subtextClass: 'text-[#36493E]',
+    proverbAuthorClass: 'text-[#2E5D46]',
     highlightGradientClass:
-      'bg-gradient-to-r from-[#C83E37] via-[#B85D3B] to-[#C89738] bg-clip-text text-transparent',
-    eyebrowContainerClass: 'border-[#C5A262]/45 bg-[#FFFDF8]/85 shadow-2xs backdrop-blur-md',
-    eyebrowTextClass: 'text-[#365E4E]',
+      'bg-gradient-to-r from-[#2E5D46] via-[#5B8C5A] to-[#C88A1E] bg-clip-text text-transparent',
+    eyebrowContainerClass: 'border-[#5B8C5A]/45 bg-[#FFFDF8]/88 shadow-2xs backdrop-blur-md',
+    eyebrowTextClass: 'text-[#2E5D46]',
     primaryCtaClass:
-      'bg-[#365E4E] text-white shadow-sm hover:bg-[#294A3D] hover:-translate-y-0.5 active:scale-[0.98]',
+      'bg-[#234F3B] text-white shadow-sm hover:bg-[#1A3B2C] hover:-translate-y-0.5 active:scale-[0.98]',
     secondaryCtaClass:
-      'border border-[#C5A262]/50 bg-[#FFFDF8]/85 text-[#18221D] backdrop-blur-md hover:border-[#C83E37]/50 hover:bg-[#F3EFE4] hover:-translate-y-0.5 active:scale-[0.98]',
-    statusBarBorderClass: 'border-[#C5A262]/30',
-    statusAccentTextClass: 'text-[#365E4E]',
-    statusMutedTextClass: 'text-[#4A5851]',
-    bottomEdgeBlend: 'linear-gradient(180deg, rgba(228,239,233,0) 0%, #F5F4EF 100%)',
+      'border border-[#5B8C5A]/45 bg-[#FFFDF8]/88 text-[#18221D] backdrop-blur-md hover:border-[#D49B27] hover:bg-[#F5F2E6] hover:-translate-y-0.5 active:scale-[0.98]',
+    bottomEdgeBlend: 'linear-gradient(180deg, rgba(220,234,217,0) 0%, #F5F4EF 100%)',
   },
   sunset: {
     id: 'sunset',
-    label: '🌇 Hoàng Hôn Chu Sa',
-    shortLabel: 'Hoàng Hôn',
-    ariaLabel: 'Chuyển sang khí quyển Hoàng Hôn Chu Sa',
+    label: '⛵ Vịnh Hạ Long',
+    shortLabel: 'Vịnh Hạ Long',
+    ariaLabel: 'Chuyển sang cảnh quan Vịnh Hạ Long và Biển Cả',
     isDarkSurface: true,
-    skyGradient: 'linear-gradient(180deg, #2A1820 0%, #5E2527 42%, #9E4733 78%, #D98A4E 100%)',
+    skyGradient: 'linear-gradient(180deg, #1E2433 0%, #6E3A3D 38%, #C47A4C 67%, #164E46 100%)',
     headingTextClass: 'text-[#FFF9F0]',
-    subtextClass: 'text-[#FDEBD3]/90',
-    proverbAuthorClass: 'text-[#F3C978]',
+    subtextClass: 'text-[#FDEBD3]/92',
+    proverbAuthorClass: 'text-[#F6D383]',
     highlightGradientClass:
-      'bg-gradient-to-r from-[#F3C978] via-[#FFB36B] to-[#F5E0A3] bg-clip-text text-transparent',
-    eyebrowContainerClass: 'border-[#E5B869]/45 bg-[#2A1820]/60 shadow-sm backdrop-blur-md',
-    eyebrowTextClass: 'text-[#F3C978]',
+      'bg-gradient-to-r from-[#F6D383] via-[#FFB978] to-[#8EE5CE] bg-clip-text text-transparent',
+    eyebrowContainerClass: 'border-[#F6D383]/40 bg-[#1B222D]/65 shadow-sm backdrop-blur-md',
+    eyebrowTextClass: 'text-[#F6D383]',
     primaryCtaClass:
-      'bg-gradient-to-r from-[#C83E37] to-[#D97736] text-[#FFF9F0] shadow-md shadow-[#C83E37]/25 hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.98]',
+      'bg-gradient-to-r from-[#1D6B5F] to-[#2B8C7B] text-[#FFF9F0] shadow-md shadow-[#0C2E29]/35 hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.98]',
     secondaryCtaClass:
-      'border border-[#E5B869]/50 bg-[#2A1820]/55 text-[#FFF9F0] backdrop-blur-md hover:border-[#F3C978] hover:bg-[#3B1E28]/80 hover:-translate-y-0.5 active:scale-[0.98]',
-    statusBarBorderClass: 'border-[#E5B869]/30',
-    statusAccentTextClass: 'text-[#F3C978]',
-    statusMutedTextClass: 'text-[#FFF9F0]/85',
-    bottomEdgeBlend: 'linear-gradient(180deg, rgba(217,138,78,0) 0%, #F5F4EF 100%)',
+      'border border-[#F6D383]/50 bg-[#1B222D]/60 text-[#FFF9F0] backdrop-blur-md hover:border-[#F6D383] hover:bg-[#233238]/85 hover:-translate-y-0.5 active:scale-[0.98]',
+    bottomEdgeBlend: 'linear-gradient(180deg, rgba(22,78,70,0) 0%, #F5F4EF 100%)',
   },
   night: {
     id: 'night',
-    label: '🌙 Đêm Đom Đóm',
-    shortLabel: 'Đêm Đom Đóm',
-    ariaLabel: 'Chuyển sang khí quyển Đêm Đom Đóm',
+    label: '🕳️ Hang Sơn Đoòng',
+    shortLabel: 'Hang Sơn Đoòng',
+    ariaLabel: 'Chuyển sang cảnh quan Hang Sơn Đoòng và Rừng Nguyên Sinh',
     isDarkSurface: true,
-    skyGradient: 'linear-gradient(180deg, #07120E 0%, #0D211A 55%, #153226 100%)',
+    skyGradient: 'linear-gradient(180deg, #060E0B 0%, #0C2018 52%, #133124 100%)',
     headingTextClass: 'text-[#F4F1EA]',
-    subtextClass: 'text-[#D0DDD5]/90',
+    subtextClass: 'text-[#D0DDD5]/92',
     proverbAuthorClass: 'text-[#86EFAC]',
     highlightGradientClass:
-      'bg-gradient-to-r from-[#E5C378] via-[#86EFAC] to-[#F6DE9D] bg-clip-text text-transparent',
-    eyebrowContainerClass: 'border-[#D4AF37]/40 bg-[#0A1A14]/70 shadow-sm backdrop-blur-md',
-    eyebrowTextClass: 'text-[#E5C378]',
+      'bg-gradient-to-r from-[#86EFAC] via-[#E5C378] to-[#A7F3D0] bg-clip-text text-transparent',
+    eyebrowContainerClass: 'border-[#86EFAC]/35 bg-[#091711]/75 shadow-sm backdrop-blur-md',
+    eyebrowTextClass: 'text-[#A7F3D0]',
     primaryCtaClass:
-      'bg-[#1D4E3B] border border-[#86EFAC]/35 text-[#F4F1EA] shadow-md shadow-black/30 hover:bg-[#25634B] hover:-translate-y-0.5 active:scale-[0.98]',
+      'bg-[#1D543D] border border-[#86EFAC]/35 text-[#F4F1EA] shadow-md shadow-black/30 hover:bg-[#266B4F] hover:-translate-y-0.5 active:scale-[0.98]',
     secondaryCtaClass:
-      'border border-[#D4AF37]/45 bg-[#0A1A14]/65 text-[#F4F1EA] backdrop-blur-md hover:border-[#86EFAC]/60 hover:bg-[#112A20]/85 hover:-translate-y-0.5 active:scale-[0.98]',
-    statusBarBorderClass: 'border-[#D4AF37]/25',
-    statusAccentTextClass: 'text-[#86EFAC]',
-    statusMutedTextClass: 'text-[#D0DDD5]/85',
-    bottomEdgeBlend: 'linear-gradient(180deg, rgba(21,50,38,0) 0%, #F5F4EF 100%)',
+      'border border-[#D4AF37]/45 bg-[#091711]/70 text-[#F4F1EA] backdrop-blur-md hover:border-[#86EFAC]/65 hover:bg-[#10291F]/85 hover:-translate-y-0.5 active:scale-[0.98]',
+    bottomEdgeBlend: 'linear-gradient(180deg, rgba(19,49,36,0) 0%, #F5F4EF 100%)',
   },
 };
 

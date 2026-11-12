@@ -36,7 +36,7 @@ interface TrailPoint {
   life: number;
 }
 
-const PARTICLE_COUNT = 70;
+const PARTICLE_COUNT = 120;
 const INTERACTION_RADIUS = 140;
 const MAX_TRAIL_POINTS = 18;
 
@@ -45,7 +45,7 @@ function createParticles(width: number, height: number): Particle[] {
   for (let i = 0; i < PARTICLE_COUNT; i += 1) {
     const baseVx = (Math.random() - 0.5) * 0.28;
     const baseVy = -0.12 - Math.random() * 0.24;
-    const tonePick = i % 7 === 0 ? 'cinnabar' : i % 3 === 0 ? 'firefly' : 'gold';
+    const tonePick = i % 5 === 0 ? 'cinnabar' : i % 2 === 0 ? 'firefly' : 'gold';
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -53,7 +53,7 @@ function createParticles(width: number, height: number): Particle[] {
       vy: baseVy,
       baseVx,
       baseVy,
-      radius: tonePick === 'firefly' ? 1.8 + Math.random() * 1.8 : 1.1 + Math.random() * 1.5,
+      radius: tonePick === 'firefly' ? 1.7 + Math.random() * 1.9 : 1.1 + Math.random() * 1.5,
       alpha: 0.4 + Math.random() * 0.5,
       phase: Math.random() * Math.PI * 2,
       tone: tonePick,
@@ -171,7 +171,7 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
                 freq: 0.0032,
                 speed: 0.55,
                 yBase: height * 0.28,
-                color: 'rgba(212, 175, 55, 0.22)',
+                color: 'rgba(134, 239, 172, 0.2)',
                 width: 1.8,
               },
               {
@@ -179,7 +179,7 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
                 freq: 0.0026,
                 speed: 0.42,
                 yBase: height * 0.46,
-                color: 'rgba(134, 239, 172, 0.18)',
+                color: 'rgba(212, 175, 55, 0.16)',
                 width: 1.5,
               },
               {
@@ -187,34 +187,34 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
                 freq: 0.0038,
                 speed: 0.68,
                 yBase: height * 0.64,
-                color: 'rgba(229, 195, 120, 0.16)',
+                color: 'rgba(167, 243, 208, 0.15)',
                 width: 1.3,
               },
             ]
           : mode === 'sunset'
             ? [
                 {
-                  amp: 24,
-                  freq: 0.0032,
-                  speed: 0.55,
-                  yBase: height * 0.3,
-                  color: 'rgba(243, 201, 120, 0.28)',
-                  width: 2,
-                },
-                {
-                  amp: 34,
-                  freq: 0.0024,
-                  speed: 0.4,
-                  yBase: height * 0.48,
-                  color: 'rgba(200, 62, 55, 0.26)',
-                  width: 1.8,
+                  amp: 18,
+                  freq: 0.0034,
+                  speed: 0.62,
+                  yBase: height * 0.68,
+                  color: 'rgba(246, 208, 122, 0.34)',
+                  width: 1.9,
                 },
                 {
                   amp: 22,
-                  freq: 0.0036,
-                  speed: 0.62,
-                  yBase: height * 0.66,
-                  color: 'rgba(229, 184, 105, 0.2)',
+                  freq: 0.0028,
+                  speed: 0.48,
+                  yBase: height * 0.78,
+                  color: 'rgba(142, 229, 206, 0.24)',
+                  width: 1.6,
+                },
+                {
+                  amp: 16,
+                  freq: 0.004,
+                  speed: 0.72,
+                  yBase: height * 0.87,
+                  color: 'rgba(246, 208, 122, 0.22)',
                   width: 1.4,
                 },
               ]
@@ -222,25 +222,25 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
                 {
                   amp: 22,
                   freq: 0.003,
-                  speed: 0.5,
-                  yBase: height * 0.3,
-                  color: 'rgba(200, 151, 56, 0.22)',
+                  speed: 0.46,
+                  yBase: height * 0.32,
+                  color: 'rgba(227, 180, 72, 0.24)',
                   width: 1.7,
                 },
                 {
                   amp: 28,
                   freq: 0.0024,
-                  speed: 0.38,
-                  yBase: height * 0.48,
-                  color: 'rgba(200, 62, 55, 0.15)',
+                  speed: 0.36,
+                  yBase: height * 0.52,
+                  color: 'rgba(91, 140, 90, 0.18)',
                   width: 1.5,
                 },
                 {
                   amp: 18,
                   freq: 0.0037,
-                  speed: 0.58,
-                  yBase: height * 0.66,
-                  color: 'rgba(197, 162, 98, 0.18)',
+                  speed: 0.52,
+                  yBase: height * 0.7,
+                  color: 'rgba(212, 155, 39, 0.18)',
                   width: 1.2,
                 },
               ];
@@ -275,8 +275,12 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
       // 1. Dải sóng lụa ánh sáng (Silk Light Ribbons)
       drawRibbons(ctx, timeSec, mode);
 
-      // 2. Hạt bụi vàng & đom đóm tương tác chuột (bán kính 140px)
-      for (const p of particles) {
+      // 2. Hạt đom đóm / bụi nước phát sáng / bụi vàng tương tác chuột (bán kính 140px)
+      const activeLimit = mode === 'night' ? particles.length : 72;
+      for (let i = 0; i < activeLimit; i += 1) {
+        const p = particles[i];
+        if (!p) continue;
+
         if (animate) {
           p.phase += 0.032;
 
@@ -317,17 +321,19 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
           fillColor =
             p.tone === 'firefly'
               ? `rgba(134, 239, 172, ${alpha.toFixed(3)})`
-              : `rgba(212, 175, 55, ${alpha.toFixed(3)})`;
+              : p.tone === 'cinnabar'
+                ? `rgba(224, 247, 238, ${(alpha * 0.85).toFixed(3)})`
+                : `rgba(229, 195, 120, ${alpha.toFixed(3)})`;
         } else if (mode === 'sunset') {
           fillColor =
             p.tone === 'cinnabar'
-              ? `rgba(232, 93, 68, ${alpha.toFixed(3)})`
-              : `rgba(243, 201, 120, ${alpha.toFixed(3)})`;
+              ? `rgba(142, 229, 206, ${alpha.toFixed(3)})`
+              : `rgba(246, 208, 122, ${alpha.toFixed(3)})`;
         } else {
           fillColor =
             p.tone === 'cinnabar'
-              ? `rgba(200, 62, 55, ${(alpha * 0.7).toFixed(3)})`
-              : `rgba(200, 151, 56, ${(alpha * 0.85).toFixed(3)})`;
+              ? `rgba(91, 140, 90, ${(alpha * 0.7).toFixed(3)})`
+              : `rgba(212, 155, 39, ${(alpha * 0.85).toFixed(3)})`;
         }
 
         ctx.beginPath();
@@ -335,9 +341,9 @@ export function HeroPhysicsCanvas({ atmosphere, className }: HeroPhysicsCanvasPr
         ctx.fillStyle = fillColor;
         ctx.fill();
 
-        if (mode === 'night' && p.tone === 'firefly') {
+        if (mode === 'night' && (p.tone === 'firefly' || i % 3 === 0)) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius * 3.2, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.radius * 3.1, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(134, 239, 172, ${(alpha * 0.16).toFixed(3)})`;
           ctx.fill();
         }
