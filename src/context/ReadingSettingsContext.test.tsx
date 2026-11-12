@@ -17,6 +17,8 @@ function TestConsumer() {
     decreaseFontSize,
     isZenMode,
     toggleZenMode,
+    isSkimmingMode,
+    toggleSkimmingMode,
     typographyClasses,
   } = useReadingSettings();
 
@@ -46,6 +48,11 @@ function TestConsumer() {
         Toggle Zen
       </button>
 
+      <span data-testid="skim-val">{String(isSkimmingMode)}</span>
+      <button data-testid="skim-btn" onClick={toggleSkimmingMode}>
+        Toggle Skim
+      </button>
+
       <span data-testid="typo-classes">{typographyClasses}</span>
     </div>
   );
@@ -54,8 +61,10 @@ function TestConsumer() {
 describe('ReadingSettingsContext', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     document.documentElement.classList.remove('dark');
     document.body.removeAttribute('data-zen-mode');
+    document.body.removeAttribute('data-skim-mode');
   });
 
   it('khởi tạo với các giá trị mặc định chính xác', () => {
@@ -203,5 +212,32 @@ describe('ReadingSettingsContext', () => {
 
     expect(screen.getByTestId('zen-val').textContent).toBe('false');
     expect(document.body.getAttribute('data-zen-mode')).toBeNull();
+  });
+
+  it('bật/tắt chế độ Đọc lướt định lý và lưu trạng thái vào sessionStorage', () => {
+    render(
+      <ReadingSettingsProvider>
+        <TestConsumer />
+      </ReadingSettingsProvider>,
+    );
+
+    const skimBtn = screen.getByTestId('skim-btn');
+    expect(screen.getByTestId('skim-val').textContent).toBe('false');
+
+    act(() => {
+      fireEvent.click(skimBtn);
+    });
+
+    expect(screen.getByTestId('skim-val').textContent).toBe('true');
+    expect(document.body.getAttribute('data-skim-mode')).toBe('true');
+    expect(sessionStorage.getItem('lu_skim_mode')).toBe('true');
+
+    act(() => {
+      fireEvent.click(skimBtn);
+    });
+
+    expect(screen.getByTestId('skim-val').textContent).toBe('false');
+    expect(document.body.getAttribute('data-skim-mode')).toBeNull();
+    expect(sessionStorage.getItem('lu_skim_mode')).toBe('false');
   });
 });

@@ -10,6 +10,7 @@
 @import './tokens.css';
 @import './subject-themes.css';
 @import './prose.css';
+@import './semantic-blocks.css';
 
 /* ==========================================================================
    BẢO TOÀN FONT METRICS TỰ NHIÊN CHO CÔNG THỨC TOÁN (KaTeX Reset)

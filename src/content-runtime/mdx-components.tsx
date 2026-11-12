@@ -18,7 +18,14 @@ import { CayleyTable } from './components/CayleyTable';
 import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
-import { Corollary, Definition, Lemma, Proposition, Theorem } from './components/TheoryBlock';
+import {
+  Corollary,
+  Definition,
+  Lemma,
+  Property,
+  Proposition,
+  Theorem,
+} from './components/TheoryBlock';
 import { EditorialChapterOpener } from '@/components/lesson/EditorialChapterOpener';
 import { GlossaryTerm } from '@/components/common/GlossaryTerm';
 import { MicroAffine3DCanvas } from '@/components/math/MicroAffine3DCanvas';
@@ -50,6 +57,7 @@ export const mdxComponents: MDXComponents = {
   Lemma,
   Proposition,
   Corollary,
+  Property,
 
   // 2. Khối chứng minh thu gọn
   Proof,

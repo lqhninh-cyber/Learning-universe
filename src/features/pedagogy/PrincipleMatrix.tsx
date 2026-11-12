@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle2, ChevronRight, Compass, Lightbulb, Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
+import { useSkimmableOpen } from '@/context/useSkimmableOpen';
 import { EDUCATIONAL_PRINCIPLES } from '@/data/courses/giao-duc-hoc/course';
 import { cn } from '@/shared/lib/cn';
 import { Badge } from '@/shared/ui';
@@ -14,8 +15,10 @@ export interface PrincipleMatrixProps {
  * Cung cấp cái nhìn toàn diện: Bản chất -> Yêu cầu thực hiện -> Bẫy sư phạm thường gặp -> Tình huống minh họa.
  */
 export function PrincipleMatrix({ className, defaultPrincipleId = 1 }: PrincipleMatrixProps) {
+  const instanceId = useId().replace(/:/g, '');
   const [selectedId, setSelectedId] = useState<number>(defaultPrincipleId);
   const [searchQuery, setSearchQuery] = useState('');
+  const { isOpen: isExampleOpen, toggle: toggleExample } = useSkimmableOpen(true);
 
   const filteredPrinciples = useMemo(() => {
     if (!searchQuery.trim()) return EDUCATIONAL_PRINCIPLES;
@@ -128,7 +131,11 @@ export function PrincipleMatrix({ className, defaultPrincipleId = 1 }: Principle
         </div>
 
         {/* Cột 2: Nội dung chi tiết nguyên tắc đang chọn (Desktop 7 cột) */}
-        <div className="space-y-4 rounded-xl border border-stone-200/90 bg-stone-50/40 p-4.5 sm:p-5 md:col-span-7">
+        <div
+          id={`principle-${instanceId}-${activePrinciple.id}`}
+          data-kind="thm"
+          className="space-y-4 rounded-xl border border-stone-200/90 bg-stone-50/40 p-4.5 sm:p-5 md:col-span-7"
+        >
           {/* Tiêu đề & Bản chất */}
           <div className="border-b border-stone-200/80 pb-3">
             <span className="text-xs font-bold tracking-wider text-teal-800 uppercase">
@@ -175,14 +182,35 @@ export function PrincipleMatrix({ className, defaultPrincipleId = 1 }: Principle
             </ul>
           </div>
 
-          {/* Tình huống minh họa */}
-          <div className="rounded-xl border border-amber-200/90 bg-amber-50/60 p-3.5 text-xs leading-relaxed text-amber-950 dark:border-amber-900/40 dark:bg-[#161D18] dark:text-[#E8F1EC]">
-            <div className="flex items-center gap-1.5 font-bold text-amber-900 dark:text-[#C5A262]">
-              <Lightbulb className="h-4 w-4 shrink-0" />
-              <span>Ví dụ tình huống thực tế</span>
+          {/* Tình huống minh họa (Có thể thu gọn khi Đọc lướt) */}
+          <details
+            id={`principle-ex-${instanceId}-${activePrinciple.id}`}
+            data-kind="ex"
+            open={isExampleOpen}
+            className="semantic-block ex-block overflow-hidden rounded-xl border text-xs leading-relaxed"
+          >
+            <summary
+              onClick={(e) => {
+                e.preventDefault();
+                toggleExample();
+              }}
+              className="semantic-block-header ex-block-summary flex items-center justify-between gap-2 px-3.5 py-2.5 select-none"
+            >
+              <div className="flex items-center gap-1.5 font-bold text-[#1A4E38] dark:text-[#A3E6C3]">
+                <span className="kb-chevron inline-block text-xs font-bold" aria-hidden="true">
+                  ▸
+                </span>
+                <Lightbulb className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>Ví dụ tình huống thực tế</span>
+              </div>
+              <span className="text-[11px] font-medium opacity-75" aria-hidden="true">
+                {isExampleOpen ? 'Thu gọn' : 'Mở rộng'}
+              </span>
+            </summary>
+            <div className="ex-block-body p-3.5">
+              <p className="text-stone-700 dark:text-[#D1E0D7]">{activePrinciple.caseExample}</p>
             </div>
-            <p className="mt-1 text-stone-700 dark:text-[#D1E0D7]">{activePrinciple.caseExample}</p>
-          </div>
+          </details>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { NUMBERED_BLOCKS } from '@schemas/blocks';
+import { useSkimmableOpen } from '@/context/useSkimmableOpen';
 import { cn } from '@/shared/lib/cn';
 import { SourceAttributionBadge } from './TheoryBlock';
 
@@ -30,44 +31,63 @@ function BaseExampleBlock({
   page,
   children,
 }: InternalExampleBlockProps) {
+  const generatedId = useId().replace(/:/g, '');
   const spec = NUMBERED_BLOCKS[kind];
-  const resolvedAnchor = anchorId ?? id;
+  const resolvedAnchor = anchorId ?? id ?? `${spec.slug}-${generatedId}`;
   const headingLabel = number ? `${spec.label} ${number}` : spec.label;
   const isCounterexample = kind === 'Counterexample';
 
+  const { isOpen, toggle } = useSkimmableOpen(true);
+
   return (
-    <section
+    <details
       id={resolvedAnchor}
+      data-kind="ex"
+      data-counterexample={isCounterexample ? 'true' : undefined}
+      open={isOpen}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className={cn(
-        'my-6 scroll-mt-24 rounded-2xl p-5 shadow-sm transition-colors md:p-6 lg:p-7 dark:shadow-none',
-        isCounterexample
-          ? 'border border-amber-200/90 bg-amber-50/35 dark:border-amber-900/40 dark:bg-amber-950/20'
-          : 'border border-[#E2ECE6] bg-[#F8FAF9] text-zinc-900 dark:border dark:border-[#1E3B2E] dark:bg-[#0E1E17] dark:text-[#E8F1EC]',
-      )}
+      className="semantic-block ex-block my-6 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
     >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
+      <summary
+        onClick={(e) => {
+          e.preventDefault();
+          toggle();
+        }}
+        className="semantic-block-header ex-block-summary flex flex-wrap items-center justify-between gap-2 px-5 py-3.5 select-none focus-visible:ring-2 focus-visible:ring-[#25694C] focus-visible:outline-none"
+      >
         <div className="flex flex-wrap items-center gap-2.5">
+          <span className="kb-chevron inline-block text-sm font-bold" aria-hidden="true">
+            ▸
+          </span>
           <span
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-md px-2.5 py-0.5 text-xs font-semibold transition-colors',
-              isCounterexample
-                ? 'border border-amber-200/80 bg-amber-50 text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/40 dark:text-amber-300'
-                : 'border border-[#E2ECE6] bg-[#E8F2EC] text-[#1B4332] dark:border dark:border-[#2B5642] dark:bg-[#19382A] dark:text-[#A1D1B7]',
+              'kb-pill font-serif',
+              isCounterexample &&
+                'border-amber-500/40 bg-amber-100/80 text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/60 dark:text-amber-300',
             )}
           >
             {headingLabel}
           </span>
           {title && (
-            <h4 className="text-base font-semibold text-zinc-900 dark:text-[#E8F1EC]">{title}</h4>
+            <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#E8F1EC]">
+              {title}
+            </h4>
           )}
         </div>
-        <SourceAttributionBadge original={original} source={source} page={page} />
-      </header>
-      <div className="space-y-3 text-[16.5px] leading-relaxed text-zinc-900 dark:text-[#E8F1EC]">
+        <div className="flex items-center gap-2.5">
+          <SourceAttributionBadge original={original} source={source} page={page} />
+          <span
+            className="hidden text-[11px] font-medium text-stone-500 sm:inline dark:text-[#A3E6C3]/80"
+            aria-hidden="true"
+          >
+            {isOpen ? 'Thu gọn' : 'Mở rộng'}
+          </span>
+        </div>
+      </summary>
+      <div className="ex-block-body space-y-3 p-5 text-[16.5px] leading-relaxed text-zinc-900 lg:p-6 dark:text-[#E8F1EC]">
         {children}
       </div>
-    </section>
+    </details>
   );
 }
 

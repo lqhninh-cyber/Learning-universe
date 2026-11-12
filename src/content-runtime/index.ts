@@ -50,6 +50,7 @@ export {
   Corollary,
   Definition,
   Lemma,
+  Property,
   Proposition,
   Theorem,
   type TheoryBlockProps,

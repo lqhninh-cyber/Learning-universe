@@ -8,6 +8,8 @@ export interface CollapsibleProps {
   readonly badge?: ReactNode;
   readonly children: ReactNode;
   readonly defaultOpen?: boolean;
+  readonly open?: boolean;
+  readonly onOpenChange?: (open: boolean) => void;
   readonly className?: string;
   readonly contentClassName?: string;
 }
@@ -17,15 +19,25 @@ export function Collapsible({
   badge,
   children,
   defaultOpen = false,
+  open: controlledOpen,
+  onOpenChange,
   className,
   contentClassName,
 }: CollapsibleProps) {
-  const [open, setOpen] = useState<boolean>(defaultOpen);
+  const [internalOpen, setInternalOpen] = useState<boolean>(defaultOpen);
+  const open = controlledOpen ?? internalOpen;
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (controlledOpen === undefined) {
+      setInternalOpen(nextOpen);
+    }
+    onOpenChange?.(nextOpen);
+  };
 
   return (
     <CollapsiblePrimitive.Root
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       className={cn(
         'rounded-xl border border-stone-200/90 bg-white/60 transition-all duration-300 ease-in-out',
         open && 'border-stone-300',

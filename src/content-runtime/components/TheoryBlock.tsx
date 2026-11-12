@@ -1,10 +1,11 @@
 import { BookOpen } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { NUMBERED_BLOCKS } from '@schemas/blocks';
 import { Tooltip } from '@/shared/ui';
 import { useLessonContext } from '../lesson-context';
 
-export type TheoryKind = 'Definition' | 'Theorem' | 'Lemma' | 'Proposition' | 'Corollary';
+export type TheoryKind =
+  'Definition' | 'Theorem' | 'Lemma' | 'Proposition' | 'Corollary' | 'Property';
 
 export interface TheoryBlockProps {
   readonly id?: string;
@@ -97,21 +98,22 @@ function BaseTheoryBlock({
   page,
   children,
 }: InternalTheoryBlockProps) {
-  const spec = NUMBERED_BLOCKS[kind];
-  const resolvedAnchor = anchorId ?? id;
-  const headingLabel = number ? `${spec.label} ${number}` : spec.label;
+  const generatedId = useId().replace(/:/g, '');
+  const label = kind === 'Property' ? 'Tính chất' : NUMBERED_BLOCKS[kind].label;
+  const semanticKind = kind === 'Definition' ? 'def' : 'thm';
+  const resolvedAnchor = anchorId ?? id ?? `${semanticKind}-${generatedId}`;
+  const headingLabel = number ? `${label} ${number}` : label;
 
   return (
     <section
       id={resolvedAnchor}
+      data-kind={semanticKind}
       aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className="my-4 scroll-mt-24 rounded-xl border border-stone-200 bg-white/40 p-5 transition-colors lg:p-6 dark:border-[#1E3B2E] dark:bg-[#0E1E17]/80"
+      className="semantic-block my-5 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
     >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/50 pb-2.5 dark:border-[#1E3B2E]">
+      <header className="semantic-block-header flex flex-wrap items-center justify-between gap-2 px-5 py-3">
         <div className="flex flex-wrap items-baseline gap-2.5">
-          <span className="font-serif text-sm font-bold tracking-wider text-stone-900 uppercase dark:text-[#F5F2EB]">
-            {headingLabel}
-          </span>
+          <span className="kb-pill font-serif">{headingLabel}</span>
           {title && (
             <>
               <span className="text-stone-400 dark:text-stone-500" aria-hidden="true">
@@ -125,7 +127,7 @@ function BaseTheoryBlock({
         </div>
         <SourceAttributionBadge original={original} source={source} page={page} />
       </header>
-      <div className="space-y-3 text-[17px] leading-[1.8] text-stone-800 lg:text-[17.5px] dark:text-[#E8F1EC]">
+      <div className="semantic-block-body space-y-3 p-5 text-[17px] leading-[1.8] text-stone-800 lg:p-6 lg:text-[17.5px] dark:text-[#E8F1EC]">
         {children}
       </div>
     </section>
@@ -150,4 +152,8 @@ export function Proposition(props: TheoryBlockProps) {
 
 export function Corollary(props: TheoryBlockProps) {
   return <BaseTheoryBlock kind="Corollary" {...props} />;
+}
+
+export function Property(props: TheoryBlockProps) {
+  return <BaseTheoryBlock kind="Property" {...props} />;
 }

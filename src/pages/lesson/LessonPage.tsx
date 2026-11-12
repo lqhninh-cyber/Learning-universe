@@ -23,6 +23,7 @@ import { FloatingZenToolbar } from '@/components/reader/FloatingZenToolbar';
 import { FoliageReadingProgress } from '@/components/reader/FoliageReadingProgress';
 import {
   EditorialChapterOpener,
+  LessonSemanticLegend,
   type ChapterCloItem,
   type ChapterDifficultyLevel,
 } from '@/components/lesson';
@@ -658,7 +659,7 @@ function LessonPageContent() {
 
               <div
                 className={cn(
-                  'clear-both mb-8 flex flex-wrap items-center gap-2.5 border-b pb-4',
+                  'clear-both mb-5 flex flex-wrap items-center gap-2.5 border-b pb-4',
                   readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-stone-200/60',
                 )}
               >
@@ -669,6 +670,8 @@ function LessonPageContent() {
                   readingTheme={readingTheme}
                 />
               </div>
+
+              <LessonSemanticLegend readingTheme={readingTheme} />
 
               {isAuthenticated && isNotesOpen && (
                 <div className="mt-6">

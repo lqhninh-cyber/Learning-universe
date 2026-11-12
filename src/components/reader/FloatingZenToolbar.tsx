@@ -1,4 +1,4 @@
-import { Maximize2, Minimize2, Moon, Sun, X } from 'lucide-react';
+import { BookOpenCheck, Layers, Maximize2, Minimize2, Moon, Sun, X } from 'lucide-react';
 import { type FC, useEffect, useState } from 'react';
 import { FONT_SIZE_LABELS, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { cn } from '@/shared/lib/cn';
@@ -33,6 +33,8 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
     isZenMode,
     toggleZenMode,
     setZenMode,
+    isSkimmingMode,
+    toggleSkimmingMode,
   } = useReadingSettings();
 
   const isDark = theme === 'dark';
@@ -110,23 +112,65 @@ export const FloatingZenToolbar: FC<FloatingZenToolbarProps> = ({ className }) =
             aria-hidden="true"
           />
         )}
+
+        {/* Chấm đỏ chu sa khi đang bật Đọc lướt định lý */}
+        {isSkimmingMode && (
+          <span
+            className="absolute bottom-1.5 left-1.5 h-2 w-2 rounded-full bg-[#9B2C3D] ring-2 ring-white dark:bg-[#F19AA8] dark:ring-[#081611]"
+            title="Đang bật chế độ Đọc lướt định lý"
+            aria-hidden="true"
+          />
+        )}
       </button>
     );
   }
 
-  // Trạng thái mở rộng: Thanh công cụ đọc đầy đủ 3 tính năng cốt lõi
+  // Trạng thái mở rộng: Thanh công cụ đọc đầy đủ tính năng cốt lõi
   return (
     <aside
       aria-label="Thanh công cụ đọc chuyên sâu"
       className={cn(
-        'fixed right-4 bottom-6 z-50 flex items-center gap-1.5 rounded-full p-1.5 sm:right-6 sm:gap-2 sm:p-2',
+        'fixed right-4 bottom-6 z-50 flex max-w-[calc(100vw-2rem)] flex-wrap items-center gap-1.5 rounded-2xl p-1.5 sm:right-6 sm:flex-nowrap sm:gap-2 sm:rounded-full sm:p-2',
         'border border-zinc-300/90 bg-white/95 text-zinc-800 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out',
         'dark:border-[#1E3B2E] dark:bg-[#081611]/95 dark:text-[#E2ECE6]',
         'select-none print:hidden',
         className,
       )}
     >
-      {/* 1. NÚT ZEN MODE: Bật/tắt chế độ tập trung (Phím tắt Z) */}
+      {/* 1. NÚT ĐỌC LƯỚT ĐỊNH LÝ: Ẩn nhanh Ví dụ & Chứng minh */}
+      <button
+        type="button"
+        onClick={toggleSkimmingMode}
+        aria-pressed={isSkimmingMode}
+        aria-label="Đọc lướt định lý (Ẩn Ví dụ & Chứng minh)"
+        title={`Đọc lướt định lý (Ẩn Ví dụ & Chứng minh) · ${isSkimmingMode ? 'Đang bật' : 'Đang tắt'}`}
+        data-testid="skim-mode-toggle"
+        className={cn(
+          'flex min-h-[38px] cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200',
+          'focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:ring-offset-1 focus-visible:outline-none',
+          isSkimmingMode
+            ? 'bg-[#9B2C3D] font-bold text-white shadow-md hover:bg-[#822231] active:scale-95 dark:bg-[#F19AA8] dark:text-[#2B0F15] dark:hover:bg-[#F5B0BC]'
+            : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 active:scale-95 dark:text-[#CBD5CE] dark:hover:bg-[#163023] dark:hover:text-[#F5F2EB]',
+        )}
+      >
+        {isSkimmingMode ? (
+          <BookOpenCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
+        ) : (
+          <Layers
+            className="h-4 w-4 shrink-0 text-[#9B2C3D] dark:text-[#F19AA8]"
+            aria-hidden="true"
+          />
+        )}
+        <span className="font-semibold tracking-wide">
+          <span className="sm:hidden">Đọc lướt</span>
+          <span className="hidden sm:inline">Đọc lướt định lý</span>
+        </span>
+      </button>
+
+      {/* Đường phân cách */}
+      <span className="h-4 w-px bg-zinc-300 dark:bg-[#1E3B2E]" aria-hidden="true" />
+
+      {/* 2. NÚT ZEN MODE: Bật/tắt chế độ tập trung (Phím tắt Z) */}
       <button
         type="button"
         onClick={toggleZenMode}

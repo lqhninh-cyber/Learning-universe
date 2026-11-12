@@ -1,0 +1,246 @@
+/* ============================================================================
+   HỆ THỐNG KHỐI KIẾN THỨC NGỮ NGHĨA (SEMANTIC KNOWLEDGE BLOCKS)
+   Chuẩn hóa 4 loại khối tri thức học thuật cho Light / Dark / Sepia:
+   - data-kind="def"   : Định nghĩa (Royal Indigo #264A8A / Dark #8DB6F2)
+   - data-kind="thm"   : Định lý, Tính chất, Hệ quả, Bổ đề, Mệnh đề (Crimson #9B2C3D / Dark #F19AA8)
+   - data-kind="ex"    : Ví dụ, Phản ví dụ minh họa (Emerald #25694C / Dark #7FD1A6)
+   - data-kind="proof" : Chứng minh (Indented dashed border + CHỨNG MINH uppercase + ∎)
+   ============================================================================ */
+
+:root {
+  --kb-def-accent: #264a8a;
+  --kb-def-bg: rgba(233, 239, 249, 0.36);
+  --kb-def-header-bg: #e9eff9;
+  --kb-def-border: #c5d4ee;
+  --kb-def-pill-bg: #dce6f7;
+  --kb-def-pill-text: #1b3668;
+
+  --kb-thm-accent: #9b2c3d;
+  --kb-thm-bg: rgba(251, 234, 237, 0.36);
+  --kb-thm-header-bg: #fbeaed;
+  --kb-thm-border: #ecc5cc;
+  --kb-thm-pill-bg: #f7d9df;
+  --kb-thm-pill-text: #7a1e2c;
+
+  --kb-ex-accent: #25694c;
+  --kb-ex-bg: #f4faf6;
+  --kb-ex-header-bg: #e8f4ee;
+  --kb-ex-border: #bee0ce;
+  --kb-ex-pill-bg: #d7ede1;
+  --kb-ex-pill-text: #1a4e38;
+
+  --kb-proof-border: var(--border-subtle, #cfdadb);
+  --kb-proof-bg: rgba(247, 250, 250, 0.65);
+  --kb-proof-label: #475569;
+  --kb-proof-target: #334155;
+}
+
+.dark,
+[data-theme='dark'],
+[data-reading-theme='dark'],
+.scoped-dark-mode {
+  --kb-def-accent: #8db6f2;
+  --kb-def-bg: rgba(26, 39, 64, 0.45);
+  --kb-def-header-bg: #1a2740;
+  --kb-def-border: #2b4068;
+  --kb-def-pill-bg: #233659;
+  --kb-def-pill-text: #c2daff;
+
+  --kb-thm-accent: #f19aa8;
+  --kb-thm-bg: rgba(58, 31, 39, 0.45);
+  --kb-thm-header-bg: #3a1f27;
+  --kb-thm-border: #5e303d;
+  --kb-thm-pill-bg: #4e2733;
+  --kb-thm-pill-text: #fad0d7;
+
+  --kb-ex-accent: #7fd1a6;
+  --kb-ex-bg: rgba(14, 30, 23, 0.85);
+  --kb-ex-header-bg: #15302a;
+  --kb-ex-border: #265143;
+  --kb-ex-pill-bg: #1d4238;
+  --kb-ex-pill-text: #a3e6c3;
+
+  --kb-proof-border: #334155;
+  --kb-proof-bg: rgba(14, 30, 23, 0.55);
+  --kb-proof-label: #94a3b8;
+  --kb-proof-target: #cbd5e1;
+}
+
+[data-theme='sepia'],
+[data-reading-theme='sepia'] {
+  --kb-def-accent: #24477a;
+  --kb-def-bg: rgba(231, 236, 238, 0.5);
+  --kb-def-header-bg: #e4e9ec;
+  --kb-def-border: #b9c6d1;
+  --kb-def-pill-bg: #d5e0ea;
+  --kb-def-pill-text: #1b3761;
+
+  --kb-thm-accent: #8b2635;
+  --kb-thm-bg: rgba(246, 229, 226, 0.55);
+  --kb-thm-header-bg: #f3dfdc;
+  --kb-thm-border: #d9b7b3;
+  --kb-thm-pill-bg: #ecd0cc;
+  --kb-thm-pill-text: #6e1a26;
+
+  --kb-ex-accent: #1f5b41;
+  --kb-ex-bg: rgba(232, 240, 229, 0.6);
+  --kb-ex-header-bg: #e0ece0;
+  --kb-ex-border: #b6cebc;
+  --kb-ex-pill-bg: #cee2d2;
+  --kb-ex-pill-text: #174631;
+
+  --kb-proof-border: #b9a47e;
+  --kb-proof-bg: rgba(251, 248, 239, 0.72);
+  --kb-proof-label: #5a5242;
+  --kb-proof-target: #3d3629;
+}
+
+/* --- 1 & 2. Khối Định nghĩa (def) & Định lý / Tính chất / Hệ quả / Bổ đề / Mệnh đề (thm) --- */
+
+.semantic-block[data-kind='def'] {
+  border: 1px solid var(--kb-def-border);
+  border-left: 4px solid var(--kb-def-accent);
+  background-color: var(--kb-def-bg);
+}
+
+.semantic-block[data-kind='def'] > .semantic-block-header {
+  background-color: var(--kb-def-header-bg);
+  border-bottom: 1px solid var(--kb-def-border);
+}
+
+.semantic-block[data-kind='def'] .kb-pill {
+  background-color: var(--kb-def-pill-bg);
+  color: var(--kb-def-pill-text);
+  border: 1px solid var(--kb-def-border);
+}
+
+.semantic-block[data-kind='thm'] {
+  border: 1px solid var(--kb-thm-border);
+  border-left: 4px solid var(--kb-thm-accent);
+  background-color: var(--kb-thm-bg);
+}
+
+.semantic-block[data-kind='thm'] > .semantic-block-header {
+  background-color: var(--kb-thm-header-bg);
+  border-bottom: 1px solid var(--kb-thm-border);
+}
+
+.semantic-block[data-kind='thm'] .kb-pill {
+  background-color: var(--kb-thm-pill-bg);
+  color: var(--kb-thm-pill-text);
+  border: 1px solid var(--kb-thm-border);
+}
+
+.kb-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.18rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Tránh khoảng trống h2/h3 quá lớn nếu tiêu đề markdown nằm ngay đầu khối ngữ nghĩa */
+.semantic-block-body > h3:first-child,
+.semantic-block-body > h4:first-child,
+.ex-block-body > h3:first-child,
+.ex-block-body > h4:first-child {
+  margin-top: 0;
+}
+
+/* --- 3. Khối Ví dụ / Phản ví dụ có thể thu gọn (<details class="ex-block">) --- */
+
+details.ex-block[data-kind='ex'] {
+  border: 1px solid var(--kb-ex-border);
+  border-left: 4px solid var(--kb-ex-accent);
+  background-color: var(--kb-ex-bg);
+}
+
+details.ex-block[data-kind='ex'] > summary.ex-block-summary {
+  background-color: var(--kb-ex-header-bg);
+  list-style: none;
+  cursor: pointer;
+  transition: background-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+details.ex-block[data-kind='ex'][open] > summary.ex-block-summary {
+  border-bottom: 1px solid var(--kb-ex-border);
+}
+
+details.ex-block[data-kind='ex'] > summary.ex-block-summary::-webkit-details-marker {
+  display: none;
+}
+
+details.ex-block[data-kind='ex'] > summary.ex-block-summary::marker {
+  content: '';
+}
+
+details.ex-block[data-kind='ex'] .kb-pill {
+  background-color: var(--kb-ex-pill-bg);
+  color: var(--kb-ex-pill-text);
+  border: 1px solid var(--kb-ex-border);
+}
+
+details.ex-block[data-kind='ex'] .kb-chevron {
+  color: var(--kb-ex-accent);
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+details.ex-block[data-kind='ex'][open] > summary.ex-block-summary .kb-chevron {
+  transform: rotate(90deg);
+}
+
+@keyframes kb-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+details.ex-block[data-kind='ex'][open] > .ex-block-body {
+  animation: kb-reveal 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details.ex-block[data-kind='ex'][open] > .ex-block-body {
+    animation: none;
+  }
+  details.ex-block[data-kind='ex'] .kb-chevron {
+    transition: none;
+  }
+}
+
+/* --- 4. Khối Chứng minh (data-kind="proof") --- */
+
+.semantic-proof-block[data-kind='proof'] {
+  border-left: 3px dashed var(--kb-proof-border);
+  background-color: transparent;
+}
+
+.semantic-proof-block[data-kind='proof'] .semantic-proof-card {
+  background-color: var(--kb-proof-bg);
+  border-color: var(--kb-proof-border);
+}
+
+.semantic-proof-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--kb-proof-label);
+}
+
+.semantic-proof-target {
+  color: var(--kb-proof-target);
+}
+
+.kb-halmos {
+  color: var(--kb-proof-label);
+}

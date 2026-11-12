@@ -6,8 +6,10 @@ import { FloatingZenToolbar } from './FloatingZenToolbar';
 describe('FloatingZenToolbar Component (Viên thuốc thu gọn & Bung mở công cụ đọc)', () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     document.documentElement.classList.remove('dark');
     document.body.removeAttribute('data-zen-mode');
+    document.body.removeAttribute('data-skim-mode');
   });
 
   it('mặc định hiển thị ở trạng thái thu gọn thành viên thuốc tròn mini "Aa"', () => {
@@ -160,5 +162,27 @@ describe('FloatingZenToolbar Component (Viên thuốc thu gọn & Bung mở côn
     fireEvent.keyDown(window, { key: 'd' });
     expect(themeBtn).toHaveAttribute('aria-pressed', 'false');
     expect(screen.getByText('Tối')).toBeInTheDocument();
+  });
+
+  it('bật/tắt chế độ Đọc lướt định lý từ FloatingZenToolbar và lưu sessionStorage', () => {
+    render(
+      <ReadingSettingsProvider>
+        <FloatingZenToolbar />
+      </ReadingSettingsProvider>,
+    );
+
+    fireEvent.click(screen.getByTestId('zen-toolbar-trigger'));
+    const skimBtn = screen.getByTestId('skim-mode-toggle');
+    expect(skimBtn).toHaveAttribute('aria-pressed', 'false');
+
+    fireEvent.click(skimBtn);
+    expect(skimBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(sessionStorage.getItem('lu_skim_mode')).toBe('true');
+
+    fireEvent.click(screen.getByTestId('zen-toolbar-close'));
+    const trigger = screen.getByTestId('zen-toolbar-trigger');
+    expect(
+      trigger.querySelector('span[title="Đang bật chế độ Đọc lướt định lý"]'),
+    ).toBeInTheDocument();
   });
 });
