@@ -107,9 +107,9 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       }
     };
 
-    const renderFrame = (t: number) => {
+    const renderFrame = (t: number, dtSeconds = 1 / 60) => {
       if (!cachedCtx || width <= 0 || height <= 0) return;
-      engine.render(cachedCtx, width, height, t, lakeThemeRef.current);
+      engine.render(cachedCtx, width, height, t, lakeThemeRef.current, dtSeconds);
     };
 
     handleResize();
@@ -128,7 +128,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
         const { dtSeconds } = computeFrameDelta(timestamp, lastTimestampMs);
         lastTimestampMs = timestamp;
         elapsedSec += dtSeconds;
-        renderFrame(elapsedSec);
+        renderFrame(elapsedSec, dtSeconds);
         animId = requestAnimationFrame(loop);
       };
       animId = requestAnimationFrame(loop);

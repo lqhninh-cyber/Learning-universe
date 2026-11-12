@@ -3,6 +3,22 @@ import {
   drawGlowSprite,
   type GlowSpriteCache,
 } from '@/shared/lib/canvasSprites';
+import {
+  buildEcosystemState,
+  drawAnimatedFrog,
+  drawAquaticReeds,
+  drawBoidsMinnows,
+  drawDynamicKoiFishes,
+  drawEnhancedFireflies,
+  drawFallingPetalsAndDewdrops,
+  drawInteractiveRipplesAndBaits,
+  drawLowLyingMist,
+  drawMidgroundBotanicalClusters,
+  drawPerchingDragonflies,
+  makeDewdropSprite,
+  spawnBaitAt,
+  stepEcosystem,
+} from './lotusEcosystem';
 
 /**
  * PROCEDURAL LOTUS CANVAS ENGINE (Thuật toán đồ họa Canvas 2D thủ tục hoa sen tả thực - Hoa sen_2.html)
@@ -462,31 +478,29 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
 
 /* ---------- Lá sen ---------- */
 export function makePad(seed: number, col: readonly [string, string, string]): HTMLCanvasElement {
-  const r = rng(seed);
   const c = document.createElement('canvas');
   c.width = c.height = 256;
   const g = c.getContext('2d');
   if (!g) return c;
   g.translate(128, 128);
-  const R = 120;
-  const n = 0.03;
+  const R = 118;
+  const notchHalf = 0.23; // Rãnh khía chữ V tự nhiên ở mép lá sen
   const path = () => {
     g.beginPath();
-    for (let i = 0; i <= 120; i++) {
-      const a = (i / 120) * 6.2832;
-      const rr = R * (1 + 0.035 * Math.sin(a * 7 + seed) + 0.02 * Math.sin(a * 13 + 1));
-      if (i) {
-        g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
-      } else {
-        g.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
-      }
+    g.moveTo(R * 0.14, 0);
+    const steps = 110;
+    for (let i = 0; i <= steps; i++) {
+      const a = notchHalf + (i / steps) * (Math.PI * 2 - 2 * notchHalf);
+      const wave = 1 + 0.036 * Math.sin(a * 7 + seed) + 0.018 * Math.sin(a * 15 + 1);
+      const rr = R * wave;
+      g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
     }
     g.closePath();
   };
 
-  const gr = g.createRadialGradient(-30, -30, 10, 0, 0, R);
+  const gr = g.createRadialGradient(-26, -26, 10, 0, 0, R);
   gr.addColorStop(0, col[0]);
-  gr.addColorStop(0.6, col[1]);
+  gr.addColorStop(0.62, col[1]);
   gr.addColorStop(1, col[2]);
   path();
   g.fillStyle = gr;
@@ -495,20 +509,28 @@ export function makePad(seed: number, col: readonly [string, string, string]): H
   path();
   g.clip();
 
-  for (let i = 0; i < 28; i++) {
-    const a = n + (i / 27) * (Math.PI * 2 - 2 * n);
+  // Hệ gân lá tỏa tròn từ tâm màu xanh lục nhạt kèm nhánh chẻ nhẹ ở mép
+  const veinCount = 24;
+  for (let i = 0; i < veinCount; i++) {
+    const a = notchHalf + 0.06 + (i / (veinCount - 1)) * (Math.PI * 2 - 2 * notchHalf - 0.12);
     g.beginPath();
-    g.moveTo(0, 0);
-    g.lineTo(Math.cos(a) * R, Math.sin(a) * R);
-    g.strokeStyle = 'rgba(205,245,190,.22)';
-    g.lineWidth = 1.1;
+    g.moveTo(R * 0.08, 0);
+    g.quadraticCurveTo(
+      Math.cos(a + 0.03) * R * 0.5,
+      Math.sin(a + 0.03) * R * 0.5,
+      Math.cos(a) * R * 0.96,
+      Math.sin(a) * R * 0.96,
+    );
+    g.strokeStyle = 'rgba(196, 245, 178, 0.32)';
+    g.lineWidth = 1.15;
     g.stroke();
-    for (const d of [-0.07, 0.07]) {
+
+    for (const d of [-0.075, 0.075]) {
       g.beginPath();
-      g.moveTo(Math.cos(a) * R * 0.45, Math.sin(a) * R * 0.45);
+      g.moveTo(Math.cos(a) * R * 0.52, Math.sin(a) * R * 0.52);
       g.lineTo(Math.cos(a + d) * R * 0.92, Math.sin(a + d) * R * 0.92);
-      g.strokeStyle = 'rgba(205,245,190,.11)';
-      g.lineWidth = 0.6;
+      g.strokeStyle = 'rgba(188, 238, 172, 0.15)';
+      g.lineWidth = 0.65;
       g.stroke();
     }
   }
@@ -524,27 +546,11 @@ export function makePad(seed: number, col: readonly [string, string, string]): H
   bg.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = bg;
   g.fillRect(-R, -R, R * 2, R * 2);
-
-  for (let i = 0; i < 9; i++) {
-    const a = r() * 6.28;
-    const d = 25 + r() * 75;
-    const x = Math.cos(a) * d;
-    const y = Math.sin(a) * d;
-    const b = 2.5 + r() * 4.5;
-    bg = g.createRadialGradient(x - b * 0.3, y - b * 0.3, 0.3, x, y, b);
-    bg.addColorStop(0, 'rgba(255,255,255,.8)');
-    bg.addColorStop(0.6, 'rgba(200,255,225,.25)');
-    bg.addColorStop(1, 'rgba(10,60,35,.4)');
-    g.beginPath();
-    g.arc(x, y, b, 0, Math.PI * 2);
-    g.fillStyle = bg;
-    g.fill();
-  }
   g.restore();
 
   path();
-  g.strokeStyle = 'rgba(8,50,28,.65)';
-  g.lineWidth = 3;
+  g.strokeStyle = 'rgba(8,50,28,.68)';
+  g.lineWidth = 2.8;
   g.stroke();
   return c;
 }
@@ -604,12 +610,14 @@ export function padDraw(
   S: number,
   wy: number,
   padSp: readonly HTMLCanvasElement[],
+  bounceOffset = 0,
+  dewdropSprite: HTMLCanvasElement | null = null,
 ) {
   const yy = p.f ? wy + p.y * H : p.y * H;
   const dep = 0.55 + 0.9 * Math.min(1, yy / H);
   const PS = Math.max(S, 0.9);
   const x = p.x * W + Math.sin(t * 0.12 + p.p) * 6;
-  const y = yy + Math.cos(t * 0.1 + p.p) * 4;
+  const y = yy + Math.cos(t * 0.1 + p.p) * 4 + bounceOffset;
   const r = p.r * PS * dep;
 
   ctx.save();
@@ -631,6 +639,25 @@ export function padDraw(
     ctx.drawImage(padCanvas, -r, -r, r * 2, r * 2);
   }
   ctx.restore();
+
+  // Giọt sương đêm thủy ngân trong suốt lăn nhẹ quanh tâm trên các lá sen lớn
+  if (p.r >= 38) {
+    const dropCount = p.r >= 50 ? 3 : 2;
+    for (let di = 0; di < dropCount; di += 1) {
+      const ph = t * 0.55 + p.p * 1.3 + di * 2.1;
+      const dx = x + Math.sin(ph) * r * (0.24 + di * 0.08);
+      const dy = y + Math.cos(ph * 1.2) * r * 0.1;
+      const dropR = Math.max(2.6, r * (0.068 - di * 0.01));
+      if (dewdropSprite) {
+        ctx.drawImage(dewdropSprite, dx - dropR, dy - dropR, dropR * 2, dropR * 2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(dx, dy, dropR * 0.65, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(235, 255, 245, 0.85)';
+        ctx.fill();
+      }
+    }
+  }
 
   if (p.d) {
     p.d.forEach((o) => {
@@ -819,10 +846,12 @@ export function bud(
   t: number,
   S: number,
   budPetals: readonly PetalData[],
+  tremorY = 0,
+  cursorLeanX = 0,
 ) {
   const bx = Math.max(70 * S, cx - 215 * S);
-  const by = cy - 250 * S;
-  const sw = Math.sin(t * 0.3) * 5 * S;
+  const by = cy - 250 * S + tremorY;
+  const sw = Math.sin(t * 0.3) * 5 * S + cursorLeanX;
 
   // Thân nụ sen uốn lượn S-curve tự nhiên, thuôn nhỏ dần từ gốc lên cổ đài
   ctx.save();
@@ -1562,19 +1591,17 @@ export function wing(
   wid: number,
   rot: number,
   flap: number,
+  palette: 'jade' | 'crimson' = 'jade',
 ) {
   ctx.save();
   ctx.rotate(rot + flap);
-  const g = ctx.createLinearGradient(0, 0, len, 0);
-  g.addColorStop(0, 'rgba(235,250,255,.55)');
-  g.addColorStop(1, 'rgba(200,230,245,.18)');
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.bezierCurveTo(len * 0.3, -wid, len * 0.8, -wid * 0.9, len, 0);
   ctx.bezierCurveTo(len * 0.8, wid * 0.9, len * 0.3, wid * 0.8, 0, 0);
-  ctx.fillStyle = g;
+  ctx.fillStyle = palette === 'crimson' ? 'rgba(255, 232, 214, 0.36)' : 'rgba(220, 246, 255, 0.38)';
   ctx.fill();
-  ctx.strokeStyle = 'rgba(90,140,165,.55)';
+  ctx.strokeStyle = palette === 'crimson' ? 'rgba(195, 118, 92, 0.52)' : 'rgba(90, 145, 168, 0.55)';
   ctx.lineWidth = 0.6;
   ctx.stroke();
 
@@ -1591,7 +1618,7 @@ export function wing(
   }
   ctx.stroke();
 
-  ctx.fillStyle = 'rgba(60,60,60,.7)';
+  ctx.fillStyle = palette === 'crimson' ? 'rgba(130, 52, 36, 0.72)' : 'rgba(60,60,60,.7)';
   ctx.fillRect(len * 0.82, -1.1, len * 0.1, 2.2);
   ctx.restore();
 }
@@ -1605,12 +1632,13 @@ export function drawDF(
   t: number,
   shadow: boolean,
   amp: number,
+  palette: 'jade' | 'crimson' = 'jade',
 ) {
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(h + Math.PI / 2);
   ctx.scale(k, k);
-  const fl = Math.sin(t * 38) * 0.2 * amp;
+  const fl = Math.sin(t * 42) * 0.24 * amp;
 
   if (shadow) {
     ctx.globalAlpha = 0.14;
@@ -1633,25 +1661,27 @@ export function drawDF(
     ctx.scale(s, 1);
     ctx.save();
     ctx.translate(0, 3);
-    wing(ctx, 34, 11, 0.12, -fl);
+    wing(ctx, 34, 11, 0.12, -fl, palette);
     ctx.restore();
     ctx.save();
     ctx.translate(0, -2);
-    wing(ctx, 36, 9, -0.22, fl);
+    wing(ctx, 36, 9, -0.22, fl, palette);
     ctx.restore();
     ctx.restore();
   }
 
+  const segColorA = palette === 'crimson' ? '#c9462d' : '#1f5f8b';
+  const segColorB = palette === 'crimson' ? '#e57643' : '#3b8fc4';
   for (let i = 0; i < 10; i++) {
     ctx.beginPath();
     ctx.arc(0, 5 + i * 3.3, 2.3 - i * 0.12, 0, Math.PI * 2);
-    ctx.fillStyle = i % 2 ? '#1f5f8b' : '#3b8fc4';
+    ctx.fillStyle = i % 2 ? segColorA : segColorB;
     ctx.fill();
   }
 
   ctx.beginPath();
   ctx.ellipse(0, 0, 3.8, 6.2, 0, 0, Math.PI * 2);
-  ctx.fillStyle = '#2f6f5a';
+  ctx.fillStyle = palette === 'crimson' ? '#9e3826' : '#2f6f5a';
   ctx.fill();
 
   ctx.beginPath();
@@ -1661,13 +1691,13 @@ export function drawDF(
 
   ctx.beginPath();
   ctx.arc(0, -8.5, 3.4, 0, Math.PI * 2);
-  ctx.fillStyle = '#2f8f6a';
+  ctx.fillStyle = palette === 'crimson' ? '#c44b2c' : '#2f8f6a';
   ctx.fill();
 
   for (const s of [-1, 1]) {
     ctx.beginPath();
     ctx.arc(s * 3, -9.5, 2.9, 0, Math.PI * 2);
-    ctx.fillStyle = '#3aa0a8';
+    ctx.fillStyle = palette === 'crimson' ? '#d96e3a' : '#3aa0a8';
     ctx.fill();
     ctx.beginPath();
     ctx.arc(s * 3.4 - s * 0.6, -10.4, 0.9, 0, Math.PI * 2);
@@ -1886,8 +1916,10 @@ export function standLeaf(
   r: number,
   t: number,
   S: number,
+  cursorLeanX = 0,
+  dewdropSprite: HTMLCanvasElement | null = null,
 ) {
-  const sw = Math.sin(t * 0.28 + 2) * 4 * S;
+  const sw = Math.sin(t * 0.28 + 2) * 4 * S + cursorLeanX;
   const lx = x + sw;
 
   ctx.save();
@@ -1916,19 +1948,31 @@ export function standLeaf(
   ctx.fillStyle = '#1b5a31';
   ctx.fill();
 
-  const g = ctx.createRadialGradient(-r * 0.25, -r * 0.1, r * 0.1, 0, 0, r);
-  g.addColorStop(0, '#62b977');
-  g.addColorStop(0.7, '#2f8548');
-  g.addColorStop(1, '#1d5c33');
+  // Mép lá uốn lượn hình phễu tự nhiên (zero per-frame gradient allocation)
   ctx.beginPath();
-  ctx.ellipse(0, 0, r, r * 0.38, 0, 0, Math.PI * 2);
-  ctx.fillStyle = g;
+  const rimSteps = 44;
+  for (let i = 0; i <= rimSteps; i++) {
+    const a = (i / rimSteps) * Math.PI * 2;
+    const mod = 1 + 0.048 * Math.sin(a * 6 + 1.1) + 0.024 * Math.cos(a * 11);
+    const px = Math.cos(a) * r * mod;
+    const py = Math.sin(a) * r * 0.38 * mod;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fillStyle = '#2f8548';
   ctx.fill();
   ctx.strokeStyle = 'rgba(8,50,28,.6)';
   ctx.lineWidth = 1.6;
   ctx.stroke();
 
-  ctx.strokeStyle = 'rgba(205,245,190,.24)';
+  // Lòng lá sáng dịu
+  ctx.beginPath();
+  ctx.ellipse(-r * 0.14, -r * 0.04, r * 0.56, r * 0.2, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(110, 198, 128, 0.35)';
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(205,245,190,.28)';
   ctx.lineWidth = 0.9;
   for (let i = 0; i < 20; i++) {
     const a = (i / 20) * 6.283;
@@ -1938,24 +1982,20 @@ export function standLeaf(
     ctx.stroke();
   }
 
-  // 4 giọt sương mai hình cầu nổi 3D đọng trên phiến lá
+  // 4 giọt sương mai hình cầu nổi 3D đọng trên phiến lá dùng sprite đệm sẵn
   for (let j = 0; j < 4; j++) {
-    const ph = t * 0.12 + j * 1.7;
+    const ph = t * 0.25 + j * 1.7;
     const bx = Math.sin(ph) * r * 0.4;
     const by = Math.cos(ph * 1.3 + j) * r * 0.1;
-    const b = r * (0.03 + 0.012 * j);
-    ctx.beginPath();
-    ctx.ellipse(bx + b * 0.4, by + b * 0.5, b * 1.1, b * 0.5, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(5,40,25,.35)';
-    ctx.fill();
-    const bg = ctx.createRadialGradient(bx - b * 0.3, by - b * 0.3, 0.2, bx, by, b);
-    bg.addColorStop(0, 'rgba(255,255,255,.9)');
-    bg.addColorStop(0.5, 'rgba(190,245,215,.3)');
-    bg.addColorStop(1, 'rgba(20,80,50,.55)');
-    ctx.beginPath();
-    ctx.arc(bx, by, b, 0, Math.PI * 2);
-    ctx.fillStyle = bg;
-    ctx.fill();
+    const b = r * (0.045 + 0.014 * j);
+    if (dewdropSprite) {
+      ctx.drawImage(dewdropSprite, bx - b, by - b, b * 2, b * 2);
+    } else {
+      ctx.beginPath();
+      ctx.arc(bx, by, b * 0.65, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(235, 255, 245, 0.85)';
+      ctx.fill();
+    }
   }
 
   ctx.restore();
@@ -2099,6 +2139,7 @@ export interface LotusCanvasEngine {
     height: number,
     timeInSeconds: number,
     theme?: 'day' | 'night',
+    dtSeconds?: number,
   ) => void;
   addRipple: (x: number, y: number, t?: number) => void;
   setPointer: (x: number | null, y: number | null) => void;
@@ -2165,23 +2206,14 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
   // 46 đốm sáng lấp lánh ngẫu nhiên
   const gl = createGlistens();
 
-  // Mảng sóng nước tương tác khi chạm/nhấp chuột
-  const interactiveRipples: InteractiveRipple[] = [];
-
-  // Tọa độ con trỏ chuột
+  // Tọa độ con trỏ chuột & tỷ lệ khung hình hiện tại
   let pointerX: number | null = null;
   let pointerY: number | null = null;
+  let lastScale = 1;
 
-  // Trạng thái runtime của đàn cá chép
-  const fishStates: FishRuntimeState[] = FISH.map((f) => ({
-    u: f.ph,
-    lastT: 0,
-    boostTime: -999,
-    speedMult: 1.0,
-  }));
-
-  // Khởi tạo 15 chú đom đóm phát sáng bay lơ lửng quanh đầm sen
-  const fireflies = createFireflies();
+  // Hệ sinh thái tự chủ 120fps (Koi 8 con đa sắc, boids cá con, ếch nhảy/ộp, 3 chuồn chuồn, 40 đom đóm, sương, mồi click)
+  const ecoState = buildEcosystemState(PADS.length);
+  const dewdropSprite = makeDewdropSprite();
 
   // Offscreen canvas để kết xuất bóng phản chiếu đóa sen biến dạng sóng nước
   const offReflCanvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
@@ -2324,52 +2356,36 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
   };
 
   return {
-    render: (ctx, W, H, t, theme: 'day' | 'night' = 'night') => {
+    render: (ctx, W, H, t, theme: 'day' | 'night' = 'night', dtSeconds = 1 / 60) => {
       const S = Math.min(W, H * 1.1) / 620;
+      lastScale = S;
       const cx = W / 2;
       const cy = H * 0.5;
       const wy = cy + 140 * S;
       const backdrop = getBackdropCache(ctx, W, H, S, cx, cy, theme);
 
+      // Cập nhật toàn bộ mô phỏng hệ sinh thái 120fps chuẩn hóa theo dtSeconds
+      stepEcosystem(ecoState, PADS, W, H, S, wy, t, dtSeconds, pointerX, pointerY, theme);
+
       // =================================================================
-      // THỨ TỰ VẼ 10 LỚP CHUẨN XÁC THEO ĐẶC TẢ
+      // THỨ TỰ VẼ HỆ SINH THÁI ĐA TẦNG 120FPS
       // =================================================================
 
-      // 1. Nước hồ & Đàn cá uốn lượn đa tầng (cá lớn + bầy cá con)
+      // 1. Nước hồ, đàn cá Koi 8 con đa sắc (spine + bóng dưới nước) & đàn cá con Boids
       water(ctx, t, cx, cy, W, H, S, gl, theme, backdrop.waterCached);
-      fishes(ctx, t, W, H, S, fishStates, pointerX, pointerY);
-      drawMinnowSchool(ctx, t, W, H, S, pointerX, pointerY);
+      drawDynamicKoiFishes(ctx, ecoState.koiFishes, t, H, S);
+      drawBoidsMinnows(ctx, ecoState.minnows, t, W, H, S);
 
-      // 2. Lá sen hậu cảnh & Vòng sóng cuống sen
-      PADS.forEach((p) => {
-        if (!p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
+      // 2. Lá sen hậu cảnh (có khía V, gân tỏa tròn, giọt sương lăn), cỏ ven bờ & gợn sóng
+      drawAquaticReeds(ctx, ecoState.reeds, W, wy, t, S, pointerX, pointerY, theme);
+      PADS.forEach((p, idx) => {
+        if (!p.f) {
+          padDraw(ctx, p, t, W, H, S, wy, padSp, ecoState.padBounces[idx] ?? 0, dewdropSprite);
+        }
       });
       fishRipples(ctx, t, W, H, S);
       ripples(ctx, cx, wy, t, S);
-
-      // Sóng tương tác khi chạm/nhấp chuột
-      for (let i = interactiveRipples.length - 1; i >= 0; i--) {
-        const rip = interactiveRipples[i];
-        if (!rip) continue;
-        const age = t - rip.birthTime;
-        if (age > 1.2 || age < 0) {
-          interactiveRipples.splice(i, 1);
-          continue;
-        }
-        const p = age / 1.2;
-        for (let ring = 0; ring < 3; ring++) {
-          const ringP = p - ring * 0.16;
-          if (ringP <= 0 || ringP > 1) continue;
-          const radX = (12 + ringP * 65) * S;
-          const radY = radX * 0.32;
-          const alpha = (1 - ringP) * 0.45;
-          ctx.beginPath();
-          ctx.ellipse(rip.x, rip.y, radX, radY, 0, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(220, 255, 235, ${alpha})`;
-          ctx.lineWidth = 1.6 * (1 - ringP * 0.4);
-          ctx.stroke();
-        }
-      }
+      drawInteractiveRipplesAndBaits(ctx, ecoState, t, S, glowSprites);
 
       // 3. Bóng hoa sen phản chiếu gợn sóng dưới nước (scale(S, -S * 0.28) & sóng ngang GPU-friendly)
       if (offReflCtx && offReflCanvas) {
@@ -2424,12 +2440,56 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.restore();
       }
 
-      // 4. Cuống sen cong chữ S & Nụ sen
-      standLeaf(ctx, Math.min(W - 70 * S, cx + 255 * S), wy, cy + 10 * S, 56 * S, t, S);
-      stem(ctx, cx, cy, wy, t, S);
-      bud(ctx, cx, wy, t, S, BUD);
+      // 4. Hai lớp sương đêm trôi ngang mặt hồ phản chiếu ánh hồng dịu từ hoa sen
+      drawLowLyingMist(ctx, t, W, H, wy, S, glowSprites, theme);
 
-      // 5. Đóa sen nở vòm chén 3D (Cánh sau -> Đài sen & Nhụy vàng -> Cánh tiền cảnh ôm tâm)
+      // 5. Quần thể 2 cụm sen phụ trái/phải + lá sen đứng bên phải + cuống sen & nụ sen chính
+      const calcPointerLean = (anchorX: number) =>
+        pointerX !== null &&
+        pointerY !== null &&
+        pointerY < wy + 24 * S &&
+        Math.abs(anchorX - pointerX) < 110 * S
+          ? (anchorX >= pointerX ? 1 : -1) * (1 - Math.abs(anchorX - pointerX) / (110 * S)) * 10 * S
+          : 0;
+
+      drawMidgroundBotanicalClusters(
+        ctx,
+        t,
+        W,
+        H,
+        wy,
+        S,
+        BUD,
+        pointerX,
+        pointerY,
+        ecoState.perchTremors,
+        dewdropSprite,
+      );
+      const rightLeafX = Math.min(W - 70 * S, cx + 255 * S);
+      standLeaf(
+        ctx,
+        rightLeafX,
+        wy,
+        cy + 10 * S,
+        56 * S,
+        t,
+        S,
+        calcPointerLean(rightLeafX),
+        dewdropSprite,
+      );
+      stem(ctx, cx, cy, wy, t, S);
+      bud(
+        ctx,
+        cx,
+        wy,
+        t,
+        S,
+        BUD,
+        ecoState.perchTremors[0] ?? 0,
+        calcPointerLean(Math.max(70 * S, cx - 215 * S)),
+      );
+
+      // 6. Đóa sen chính nở vòm chén 3D (Cánh sau -> Đài sen & Nhụy vàng -> Cánh tiền cảnh)
       ctx.fillStyle = backdrop.bloomGlowGrad;
       ctx.fillRect(0, 0, W, H);
 
@@ -2439,27 +2499,35 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       flower(ctx, t, LAY);
       ctx.restore();
 
-      // 6. Phiến lá sen tiền cảnh góc trái (và các phiến lá tiền cảnh)
-      PADS.forEach((p) => {
-        if (p.f) padDraw(ctx, p, t, W, H, S, wy, padSp);
+      // 7. Phiến lá sen tiền cảnh góc trái (và các phiến lá tiền cảnh)
+      PADS.forEach((p, idx) => {
+        if (p.f) {
+          padDraw(ctx, p, t, W, H, S, wy, padSp, ecoState.padBounces[idx] ?? 0, dewdropSprite);
+        }
       });
       drawCornerFramingPads(ctx, W, H, S, t, padSp);
 
-      // 7. CHÚ ẾCH NGỒI THIỀN (vẽ lên trên phiến lá sen)
-      drawFrog(ctx, t, W, H, S, wy, pointerX, pointerY);
+      // 8. CHÚ ẾCH XANH HOẠT CẢNH (ộp phồng túi thanh âm 4s & bật nhảy parabol sang lá bên)
+      drawAnimatedFrog(ctx, ecoState, PADS, t, W, H, S, wy, pointerX, pointerY);
 
-      // 8. Chuồn chuồn bay lượn và bóng đổ in trên nước (ban ngày có thêm chuồn chuồn lượn nhanh)
-      dragonfly(ctx, t, cx, cy, W, H, S, true, theme, 0); // bóng đổ in trên nước
-      dragonfly(ctx, t, cx, cy, W, H, S, false, theme, 0); // chuồn chuồn bay lượn
-      if (theme === 'day') {
-        dragonfly(ctx, t, cx, cy, W, H, S, true, theme, 1);
-        dragonfly(ctx, t, cx, cy, W, H, S, false, theme, 1);
-      }
+      // 9. Cánh hoa sen hồng rơi & giọt sương rơi có gia tốc trọng trường
+      drawFallingPetalsAndDewdrops(
+        ctx,
+        ecoState,
+        W,
+        H,
+        t,
+        S,
+        LAY[1]?.ps[0] ?? BUD[2],
+        dewdropSprite,
+      );
 
-      // 9. BẦY ĐOM ĐÓM PHÁT SÁNG (chỉ hiển thị ban đêm)
-      drawFireflies(ctx, t, W, H, S, wy, fireflies, theme, glowSprites);
+      // 10. Đàn 3 Chuồn Chuồn Kim & Chuồn Chuồn Ngô (bay lượn & đậu nghỉ 3-5s trên nụ/gương sen)
+      drawPerchingDragonflies(ctx, ecoState.dragonflies, t, S);
 
-      // 26 hạt phấn hoa bay lơ lửng (sprite hào quang 120fps)
+      // 11. ĐÀN 40 ĐOM ĐÓM PHÁT SÁNG ĐÊM (vệt sáng + phản xạ nước) & 26 hạt phấn hoa
+      drawEnhancedFireflies(ctx, ecoState.fireflies, t, S, wy, glowSprites, theme);
+
       const pollenSprite = theme === 'day' ? glowSprites.gold : glowSprites.firefly;
       for (let i = 0; i < 26; i++) {
         const f = (t * 0.03 + i / 26) % 1;
@@ -2473,7 +2541,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.fill();
       }
 
-      // 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang (đã cache gradient)
+      // 12. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang (đã cache gradient)
       ctx.fillStyle = backdrop.topMistGrad;
       ctx.fillRect(0, 0, W, 110 * S);
 
@@ -2482,11 +2550,10 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
     },
 
     addRipple: (x: number, y: number, t?: number) => {
-      const birth = t !== undefined ? t : performance.now() / 1000;
-      interactiveRipples.push({ x, y, birthTime: birth });
-      if (interactiveRipples.length > 25) {
-        interactiveRipples.shift();
+      if (t !== undefined) {
+        ecoState.elapsedTime = t;
       }
+      spawnBaitAt(ecoState, x, y, lastScale);
     },
 
     setPointer: (x: number | null, y: number | null) => {
