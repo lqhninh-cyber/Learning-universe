@@ -1,0 +1,296 @@
+/* ==========================================================================
+   Inline Interactive 2D SVG Labs (.viz) — Light / Dark / Sepia Compatible
+   ========================================================================== */
+
+:root {
+  --bg-subtle: #eef3f2;
+  --viz-grid: rgba(15, 23, 42, 0.08);
+  --viz-axis: rgba(15, 23, 42, 0.24);
+  --viz-primary: #1d4ed8;
+  --viz-secondary: #0f766e;
+  --viz-accent: #c2410c;
+  --viz-purple: #7e22ce;
+  --viz-simplex: rgba(15, 118, 110, 0.14);
+  --viz-parallelogram: rgba(29, 78, 216, 0.13);
+  --viz-warn-bg: #fef3c7;
+  --viz-warn-border: #d97706;
+  --viz-warn-text: #92400e;
+}
+
+.dark,
+[data-theme='dark'],
+[data-reading-theme='dark'],
+.scoped-dark-mode {
+  --bg-subtle: #17212b;
+  --viz-grid: rgba(226, 232, 240, 0.09);
+  --viz-axis: rgba(226, 232, 240, 0.28);
+  --viz-primary: #60a5fa;
+  --viz-secondary: #2dd4bf;
+  --viz-accent: #fb923c;
+  --viz-purple: #c084fc;
+  --viz-simplex: rgba(45, 212, 191, 0.16);
+  --viz-parallelogram: rgba(96, 165, 250, 0.16);
+  --viz-warn-bg: rgba(146, 64, 14, 0.28);
+  --viz-warn-border: #f59e0b;
+  --viz-warn-text: #fde68a;
+}
+
+[data-theme='sepia'],
+[data-reading-theme='sepia'] {
+  --bg-subtle: #efe5d1;
+  --viz-grid: rgba(74, 58, 40, 0.09);
+  --viz-axis: rgba(74, 58, 40, 0.26);
+  --viz-primary: #274c77;
+  --viz-secondary: #1e6b52;
+  --viz-accent: #b44318;
+  --viz-purple: #6b3fa0;
+  --viz-simplex: rgba(30, 107, 82, 0.14);
+  --viz-parallelogram: rgba(39, 76, 119, 0.14);
+  --viz-warn-bg: #f9ebc7;
+  --viz-warn-border: #b45309;
+  --viz-warn-text: #78350f;
+}
+
+.viz {
+  margin: 1.5rem 0 2rem;
+  border: 1px solid var(--border-subtle, #cbd5e1);
+  border-radius: 0.9rem;
+  background: var(--bg-surface, #ffffff);
+  overflow: hidden;
+  box-shadow: 0 2px 10px -4px rgba(15, 23, 42, 0.08);
+}
+
+.viz-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-subtle, #cbd5e1);
+}
+
+.viz-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.viz-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-main, #0f172a);
+}
+
+.viz-subtitle {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text-muted, #475569);
+}
+
+.viz-stage {
+  position: relative;
+  background: var(--bg-surface, #ffffff);
+  padding: 0.5rem;
+}
+
+.viz-svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: 0.5rem;
+}
+
+.viz-handle {
+  cursor: grab;
+  transition:
+    transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.viz-handle:hover {
+  transform: scale(1.14);
+}
+
+.viz-handle[data-dragging='true'] {
+  cursor: grabbing;
+  transform: scale(1.2);
+}
+
+.viz-handle:focus-visible {
+  outline: 2px solid var(--viz-primary);
+  outline-offset: 2px;
+}
+
+/* Controls strip (.vc) */
+.vc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-subtle, #cbd5e1);
+}
+
+.vc-sliders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.vc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vc-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+}
+
+.vc-value {
+  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: var(--text-muted, #475569);
+}
+
+.vc-range {
+  width: 100%;
+  height: 1.5rem;
+  accent-color: var(--viz-primary);
+  cursor: pointer;
+}
+
+.vc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.viz-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 2.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-subtle, #cbd5e1);
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-main, #0f172a);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.viz-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--viz-primary);
+}
+
+.viz-btn:active {
+  transform: scale(0.98);
+}
+
+.viz-btn:focus-visible {
+  outline: 2px solid var(--viz-primary);
+  outline-offset: 2px;
+}
+
+.viz-btn[data-active='true'] {
+  background: var(--viz-primary);
+  border-color: var(--viz-primary);
+  color: #ffffff;
+}
+
+/* Info / telemetry strip (.vi) */
+.vi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--bg-surface, #ffffff);
+  border-top: 1px solid var(--border-subtle, #cbd5e1);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-main, #0f172a);
+}
+
+.vi-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.vi-metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+}
+
+.vi-metric-label {
+  color: var(--text-muted, #475569);
+  font-weight: 500;
+}
+
+.vi-metric-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.vi-note {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--text-muted, #475569);
+}
+
+.viz-alert {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--viz-warn-border);
+  background: var(--viz-warn-bg);
+  color: var(--viz-warn-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viz-handle,
+  .viz-btn {
+    transition: none;
+  }
+
+  .viz-handle:hover,
+  .viz-handle[data-dragging='true'],
+  .viz-btn:hover,
+  .viz-btn:active {
+    transform: none;
+  }
+}

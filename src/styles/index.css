@@ -11,6 +11,7 @@
 @import './subject-themes.css';
 @import './prose.css';
 @import './semantic-blocks.css';
+@import './viz.css';
 
 /* ==========================================================================
    BẢO TOÀN FONT METRICS TỰ NHIÊN CHO CÔNG THỨC TOÁN (KaTeX Reset)

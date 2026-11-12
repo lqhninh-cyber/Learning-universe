@@ -2,6 +2,7 @@ import { BookOpen } from 'lucide-react';
 import { type ReactNode, useId } from 'react';
 import { NUMBERED_BLOCKS } from '@schemas/blocks';
 import { Tooltip } from '@/shared/ui';
+import { InlineTheoremViz } from '@/components/viz/InlineTheoremViz';
 import { useLessonContext } from '../lesson-context';
 
 export type TheoryKind =
@@ -105,32 +106,35 @@ function BaseTheoryBlock({
   const headingLabel = number ? `${label} ${number}` : label;
 
   return (
-    <section
-      id={resolvedAnchor}
-      data-kind={semanticKind}
-      aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
-      className="semantic-block my-5 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
-    >
-      <header className="semantic-block-header flex flex-wrap items-center justify-between gap-2 px-5 py-3">
-        <div className="flex flex-wrap items-baseline gap-2.5">
-          <span className="kb-pill font-serif">{headingLabel}</span>
-          {title && (
-            <>
-              <span className="text-stone-400 dark:text-stone-500" aria-hidden="true">
-                ·
-              </span>
-              <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#F5F2EB]">
-                {title}
-              </h4>
-            </>
-          )}
+    <>
+      <section
+        id={resolvedAnchor}
+        data-kind={semanticKind}
+        aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
+        className="semantic-block my-5 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
+      >
+        <header className="semantic-block-header flex flex-wrap items-center justify-between gap-2 px-5 py-3">
+          <div className="flex flex-wrap items-baseline gap-2.5">
+            <span className="kb-pill font-serif">{headingLabel}</span>
+            {title && (
+              <>
+                <span className="text-stone-400 dark:text-stone-500" aria-hidden="true">
+                  ·
+                </span>
+                <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#F5F2EB]">
+                  {title}
+                </h4>
+              </>
+            )}
+          </div>
+          <SourceAttributionBadge original={original} source={source} page={page} />
+        </header>
+        <div className="semantic-block-body space-y-3 p-5 text-[17px] leading-[1.8] text-stone-800 lg:p-6 lg:text-[17.5px] dark:text-[#E8F1EC]">
+          {children}
         </div>
-        <SourceAttributionBadge original={original} source={source} page={page} />
-      </header>
-      <div className="semantic-block-body space-y-3 p-5 text-[17px] leading-[1.8] text-stone-800 lg:p-6 lg:text-[17.5px] dark:text-[#E8F1EC]">
-        {children}
-      </div>
-    </section>
+      </section>
+      <InlineTheoremViz blockId={id ?? resolvedAnchor} />
+    </>
   );
 }
 

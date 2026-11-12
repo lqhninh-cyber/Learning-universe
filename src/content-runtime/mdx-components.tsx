@@ -1,5 +1,11 @@
 import type { MDXComponents } from 'mdx/types';
 import { type ComponentPropsWithoutRef, isValidElement } from 'react';
+import {
+  LazyBarycentricViz,
+  LazyDesarguesProjectiveViz,
+  LazyEuclideanDotCrossViz,
+  LazySymmetricGroupCycleViz,
+} from '@/components/viz/lazy';
 import { AcademicPopover } from '@/shared/components/AcademicPopover';
 import { Sidenote } from '@/shared/components/Sidenote';
 import { Note, Remark, Warning } from './components/CalloutBlock';
@@ -111,6 +117,10 @@ export const mdxComponents: MDXComponents = {
   RiemannDarbouxSumDemo: LazyRiemannDarbouxSumDemo,
   WeierstrassMTestDemo: LazyWeierstrassMTestDemo,
   MicroAffine3DCanvas,
+  BarycentricViz: LazyBarycentricViz,
+  EuclideanDotCrossViz: LazyEuclideanDotCrossViz,
+  DesarguesProjectiveViz: LazyDesarguesProjectiveViz,
+  SymmetricGroupCycleViz: LazySymmetricGroupCycleViz,
 
   // 8. Tinh chỉnh các thẻ HTML chuẩn trong bài học (chuẩn hóa bảng công thức và bảng học thuật)
   a: (props: ComponentPropsWithoutRef<'a'>) => (
