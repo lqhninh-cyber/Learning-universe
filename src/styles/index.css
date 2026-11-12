@@ -645,6 +645,134 @@
   animation: lu-bird-flap 0.9s ease-in-out infinite;
 }
 
+@keyframes lu-wave-drift-1 {
+  0%,
+  100% {
+    transform: translate3d(-28px, 0, 0);
+  }
+  50% {
+    transform: translate3d(28px, 2px, 0);
+  }
+}
+
+@keyframes lu-wave-drift-2 {
+  0%,
+  100% {
+    transform: translate3d(26px, 0, 0);
+  }
+  50% {
+    transform: translate3d(-26px, -2px, 0);
+  }
+}
+
+@keyframes lu-wave-drift-3 {
+  0%,
+  100% {
+    transform: translate3d(-18px, 1px, 0);
+  }
+  50% {
+    transform: translate3d(20px, -1px, 0);
+  }
+}
+
+@keyframes lu-foam-float {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translate3d(0, 6px, 0) scale(0.85);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate3d(4px, -10px, 0) scale(1.15);
+  }
+}
+
+@keyframes lu-compass-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lu-reed-sway {
+  0%,
+  100% {
+    transform: rotate(-2.2deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+@keyframes lu-reed-sway-slow {
+  0%,
+  100% {
+    transform: rotate(1.8deg);
+  }
+  50% {
+    transform: rotate(-2.2deg);
+  }
+}
+
+.lu-wave-drift-1 {
+  animation: lu-wave-drift-1 14s ease-in-out infinite;
+}
+
+.lu-wave-drift-2 {
+  animation: lu-wave-drift-2 11s ease-in-out infinite;
+}
+
+.lu-wave-drift-3 {
+  animation: lu-wave-drift-3 18s ease-in-out infinite;
+}
+
+.lu-foam-float {
+  animation: lu-foam-float 5.5s ease-in-out infinite;
+}
+
+.lu-compass-spin {
+  animation: lu-compass-spin 26s linear infinite;
+}
+
+.lu-reed-sway {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: lu-reed-sway 5.8s ease-in-out infinite;
+}
+
+.lu-reed-sway-slow {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: lu-reed-sway-slow 7.4s ease-in-out infinite;
+}
+
+/* Chuyển sắc thích ứng Light / Dark cho các cầu nối chuyển tiếp Trang chủ */
+.lu-lakeshore-sky-wash {
+  background: linear-gradient(
+    180deg,
+    var(--bg-page) 0%,
+    #d8e4dd 28%,
+    #52796f 62%,
+    #1b3b32 86%,
+    #071a14 100%
+  );
+}
+
+.dark .lu-lakeshore-sky-wash,
+[data-theme='dark'] .lu-lakeshore-sky-wash,
+[data-reading-theme='dark'] .lu-lakeshore-sky-wash {
+  background: linear-gradient(
+    180deg,
+    var(--bg-page) 0%,
+    #152e25 32%,
+    #102921 64%,
+    #0a1f18 86%,
+    #071a14 100%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lu-cloud-drift-1,
   .lu-cloud-drift-2,
@@ -661,7 +789,14 @@
   .lu-reflection-sway,
   .lu-flock-glide-1,
   .lu-flock-glide-2,
-  .lu-bird-flap {
+  .lu-bird-flap,
+  .lu-wave-drift-1,
+  .lu-wave-drift-2,
+  .lu-wave-drift-3,
+  .lu-foam-float,
+  .lu-compass-spin,
+  .lu-reed-sway,
+  .lu-reed-sway-slow {
     animation: none;
   }
 }

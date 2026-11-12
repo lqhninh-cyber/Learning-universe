@@ -1131,12 +1131,6 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
           />
         </svg>
       </div>
-
-      {/* Dải hòa sắc êm xuống khu vực tiếp theo */}
-      <div
-        className="absolute inset-x-0 bottom-0 h-24"
-        style={{ background: 'linear-gradient(180deg, rgba(14,41,37,0) 0%, #F5F4EF 100%)' }}
-      />
     </div>
   );
 }

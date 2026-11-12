@@ -392,6 +392,14 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/Ruộng Bậc Thang/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/Hang Sơn Đoòng/i)).not.toBeInTheDocument();
+
+      // Seamless Scroll Storytelling Bridges (Kết nối 1, 2, 3) & Lưới 2 cột cân xứng
+      const shoreline = screen.getByTestId('shoreline-wave-bridge');
+      expect(shoreline).toBeInTheDocument();
+      expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
+      expect(screen.getByTestId('topographic-waterlines')).toBeInTheDocument();
+      expect(screen.getByTestId('golden-compass-spine')).toBeInTheDocument();
+      expect(screen.getByTestId('lakeshore-lotus-transition')).toBeInTheDocument();
     });
   });
 

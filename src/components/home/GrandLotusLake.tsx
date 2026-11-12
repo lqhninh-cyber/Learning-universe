@@ -245,13 +245,13 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
         onPointerLeave={handlePointerLeave}
       />
 
-      {/* Mép trên hồ sen (Top edge mist blend) */}
+      {/* Mép trên hồ sen (Top edge mist blend hòa liền vào Dải Chạng Vạng Bờ Hồ #071A14) */}
       <div
         className={cn(
-          'pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b transition-colors duration-700 md:h-40',
+          'pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b transition-colors duration-700 md:h-36',
           lakeTheme === 'day'
-            ? 'from-[#F5F4EF] via-[#F5F4EF]/60 to-transparent'
-            : 'from-[#040D08]/90 via-[#040D08]/50 to-transparent',
+            ? 'from-[#071A14] via-[#1B3B32]/55 to-transparent'
+            : 'from-[#071A14] via-[#040D08]/75 to-transparent',
         )}
         aria-hidden="true"
       />
