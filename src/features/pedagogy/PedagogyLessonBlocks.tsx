@@ -18,12 +18,35 @@ export interface PedagogyMetadataBarProps {
   readonly className?: string;
 }
 
+function formatDisplayCourseBadge(courseCode: string): string {
+  if (/^EDUC\d+/i.test(courseCode.trim())) {
+    return 'Giáo dục học';
+  }
+  if (/^MATH\d+/i.test(courseCode.trim())) {
+    return 'Toán học';
+  }
+  return courseCode;
+}
+
+function formatDisplayLessonBadge(lessonCode: string): string {
+  const cleaned = lessonCode.replace(/^(MATH|EDUC)\d+-?/i, '');
+  const chapterLessonMatch = cleaned.match(/^C(\d+)-L(\d+)$/i);
+  if (chapterLessonMatch) {
+    return `Chương ${chapterLessonMatch[1]} · Bài ${chapterLessonMatch[2]}`;
+  }
+  const practiceMatch = cleaned.match(/^PRACTICE-(\d+)$/i);
+  if (practiceMatch) {
+    return `Thực hành ${practiceMatch[1]}`;
+  }
+  return cleaned || lessonCode;
+}
+
 /**
  * 1. Thanh Metadata & Đối chiếu Đầu bài (PedagogyMetadataBar)
- * Hiển thị rõ Mã học phần EDUC2802, Mã bài học, Chuẩn đầu ra CLO và Số trang tương ứng trong Giáo trình Giáo dục học HCMUE.
+ * Hiển thị rõ Học phần, Chương/Bài, Chuẩn đầu ra CLO và Số trang tương ứng trong Giáo trình Giáo dục học HCMUE.
  */
 export function PedagogyMetadataBar({
-  courseCode = 'EDUC2802',
+  courseCode = 'Giáo dục học',
   lessonCode,
   clos,
   textbookPages,
@@ -31,6 +54,9 @@ export function PedagogyMetadataBar({
   sessionNote,
   className,
 }: PedagogyMetadataBarProps) {
+  const displayCourseBadge = formatDisplayCourseBadge(courseCode);
+  const displayLessonBadge = lessonCode ? formatDisplayLessonBadge(lessonCode) : undefined;
+
   return (
     <div
       role="region"
@@ -44,12 +70,12 @@ export function PedagogyMetadataBar({
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#3F6570]/30 bg-[#3F6570] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wider text-white uppercase dark:border-[#2A323A] dark:bg-[#242C33] dark:text-[#F8FAFC]">
             <Layers className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{courseCode}</span>
+            <span>{displayCourseBadge}</span>
           </span>
 
-          {lessonCode && (
+          {displayLessonBadge && (
             <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#CFDADB] bg-[#F7FAFA] px-2.5 py-1 font-mono text-[11px] font-bold tracking-wide text-[#3F6570] dark:border-[#2A323A] dark:bg-[#14171A] dark:text-[#CBD5E1]">
-              <span>Mã bài: {lessonCode}</span>
+              <span>{displayLessonBadge}</span>
             </span>
           )}
 

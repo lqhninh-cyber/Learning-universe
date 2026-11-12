@@ -274,7 +274,8 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     expect(tab2).toBeInTheDocument();
     expect(tab3).toBeInTheDocument();
 
-    // Tuyệt đối không có thanh chọn các học kỳ I ảo hay tên tóm tắt câu hỏi tự đặt
+    // Tuyệt đối không có thanh chọn các học kỳ I ảo, mã học phần tự thêm hay tên tóm tắt câu hỏi tự đặt
+    expect(screen.queryByText(/MATH1301/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Chọn đề thi chính thức/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/2024-2025/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Nhóm con của nhóm đối xứng S₃/i)).not.toBeInTheDocument();
@@ -350,6 +351,9 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
 
     const mainTab = await screen.findByRole('tab', { name: /Ngân hàng Đề thi & Lời giải/i });
     await user.click(mainTab);
+
+    // Tuyệt đối không hiển thị mã tự thêm MATH1302 trên giao diện
+    expect(screen.queryByText(/MATH1302/i)).not.toBeInTheDocument();
 
     // Header 2 cột nguyên bản đề 2512MATH18221 và nút Phòng Lab 3D
     expect(screen.getByText('TRƯỜNG ĐẠI HỌC SƯ PHẠM TP.HCM')).toBeInTheDocument();

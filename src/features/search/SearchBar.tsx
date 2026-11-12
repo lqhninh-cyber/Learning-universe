@@ -165,7 +165,7 @@ export function SearchBar({
                               Bài {result.chapter.number}.{result.lesson.number}:{' '}
                               {result.lesson.title}
                             </span>
-                            <Badge variant="neutral">{result.subject.shortTitle}</Badge>
+                            <Badge variant="neutral">{result.subject.title}</Badge>
                           </div>
                           <p className="mt-0.5 line-clamp-1 text-xs text-stone-500">
                             {result.lesson.description}

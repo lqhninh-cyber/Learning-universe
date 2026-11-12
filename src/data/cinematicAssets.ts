@@ -58,7 +58,7 @@ export const COURSE_CINEMATIC_ASSETS: Readonly<Record<string, CinematicSceneAsse
     slug: 'cau-truc-dai-so',
     courseCode: 'MATH1301',
     branch: 'math',
-    categoryLabel: 'MATH1301 · Toán học',
+    categoryLabel: 'Toán học',
     title: 'Cấu trúc đại số',
     conciseDescription:
       'Khảo sát các cấu trúc đại số nền tảng gồm nhóm, vành, miền nguyên, trường, cùng lý thuyết đồng cấu, cấu trúc thương và các định lý đẳng cấu.',
@@ -75,7 +75,7 @@ export const COURSE_CINEMATIC_ASSETS: Readonly<Record<string, CinematicSceneAsse
     slug: 'hinh-hoc-affine',
     courseCode: 'MATH1302',
     branch: 'math',
-    categoryLabel: 'MATH1302 · Toán học',
+    categoryLabel: 'Toán học',
     title: 'Hình học Affine và hình học Euclide',
     conciseDescription:
       'Xây dựng không gian và ánh xạ affine từ không gian véc-tơ, tâm tỉ cự, phẳng con, tỉ số đơn, cùng cấu trúc tích vô hướng và biến đổi đẳng cự trong không gian Euclide.',
@@ -92,7 +92,7 @@ export const COURSE_CINEMATIC_ASSETS: Readonly<Record<string, CinematicSceneAsse
     slug: 'giai-tich-ham-mot-bien',
     courseCode: 'MATH1303',
     branch: 'math',
-    categoryLabel: 'MATH1303 · Toán học',
+    categoryLabel: 'Toán học',
     title: 'Giải tích hàm một biến',
     conciseDescription:
       'Trình bày hệ thống số thực, giới hạn dãy số và hàm số, tính liên tục, phép tính vi phân, tích phân Riemann, tích phân suy rộng và lý thuyết chuỗi trên đường thẳng thực.',
@@ -109,7 +109,7 @@ export const COURSE_CINEMATIC_ASSETS: Readonly<Record<string, CinematicSceneAsse
     slug: 'giao-duc-hoc',
     courseCode: 'EDUC2802',
     branch: 'pedagogy',
-    categoryLabel: 'EDUC2802 · Khoa học Giáo dục',
+    categoryLabel: 'Khoa học Giáo dục',
     title: 'Giáo dục học',
     conciseDescription:
       'Nghiên cứu hoạt động sư phạm và nhân cách người giáo viên, những vấn đề chung của giáo dục học, lý luận hoạt động giáo dục ở nhà trường phổ thông, công tác giáo viên chủ nhiệm lớp và tổ chức hoạt động trải nghiệm, hướng nghiệp.',
@@ -140,7 +140,7 @@ export function getCourseCinematicAsset(slugOrId: string): CinematicSceneAsset {
     slug: slugOrId,
     courseCode: 'MATH1000',
     branch: 'math',
-    categoryLabel: 'MATH1000 · Toán học',
+    categoryLabel: 'Toán học',
     title: slugOrId,
     conciseDescription: 'Học phần chuyên ngành thuộc chương trình đào tạo Sư phạm Toán học.',
     vietnameseLandmark: HOMEPAGE_OPENING_ASSET.vietnameseLandmark,

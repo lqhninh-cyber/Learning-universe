@@ -19,6 +19,6 @@ export const CALCULUS_DOCUMENTS: readonly CourseDocument[] = [
     url: 'https://drive.google.com/file/d/1DPL759PtZj44I7VcCCTjfN2kkRYNZoVK/view?usp=drive_link',
     filename: 'Noi_dung_on_thi_va_de_mau.pdf',
     description:
-      'Hệ thống trọng tâm lý thuyết, bài tập ôn thi và 5 câu tự luận đề mẫu học phần Giải tích hàm một biến (MATH1403).',
+      'Hệ thống trọng tâm lý thuyết, bài tập ôn thi và 5 câu tự luận đề mẫu học phần Giải tích hàm một biến.',
   },
 ];

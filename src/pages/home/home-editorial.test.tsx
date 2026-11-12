@@ -328,10 +328,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
 
       expect(screen.getByTestId('archival-index-view')).toBeInTheDocument();
-      expect(screen.getAllByText(/MATH1301/i).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(/MATH1302/i).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(/MATH1303/i).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(/EDUC2802/i).length).toBeGreaterThan(0);
+      expect(screen.getByTestId('archival-module-cau-truc-dai-so')).toBeInTheDocument();
+      expect(screen.getByTestId('archival-module-hinh-hoc-affine')).toBeInTheDocument();
+      expect(screen.getByTestId('archival-module-giai-tich-ham-mot-bien')).toBeInTheDocument();
+      expect(screen.getByTestId('archival-module-giao-duc-hoc')).toBeInTheDocument();
+      expect(screen.queryByText(/MATH1301|MATH1302|MATH1303|EDUC2802/i)).not.toBeInTheDocument();
 
       // Có các bộ lọc CLO
       expect(screen.getByRole('button', { name: /CLO1/i })).toBeInTheDocument();

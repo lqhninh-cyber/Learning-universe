@@ -481,7 +481,7 @@ export const PreviewHomepageView: FC<PreviewHomepageViewProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold tracking-wider text-teal-800 uppercase">
-                    Học phần EDUC2802
+                    Khoa học Giáo dục
                   </span>
                   <span className="font-mono text-xs font-bold text-teal-900">04 Tín chỉ</span>
                 </div>

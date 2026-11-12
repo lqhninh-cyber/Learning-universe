@@ -606,7 +606,7 @@ export const Lesson5_2View: FC = () => {
         title:
           'Bảng Tổng hợp Quy trình Chi tiết các Phương pháp Trải nghiệm Trọng tâm (Trang 88 – 107)',
         subtitle:
-          'Hệ thống hóa số bước và nội dung từng bước của các phương pháp phục vụ trực tiếp kỳ thi học phần EDUC2802.',
+          'Hệ thống hóa số bước và nội dung từng bước của các phương pháp phục vụ trực tiếp kỳ thi học phần Giáo dục học.',
         badge: 'Quy trình Chuẩn Giáo trình',
         columns: [
           { key: 'method', header: 'Tên phương pháp tổ chức', widthClass: 'w-1/4' },

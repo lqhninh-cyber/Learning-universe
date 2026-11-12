@@ -46,7 +46,7 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(subjects.some((s) => s.id === 'giao-duc-hoc')).toBe(true);
       expect(gdh).toBeDefined();
       expect(gdh?.title).toBe('Giáo dục học');
-      expect(GIAO_DUC_HOC_SUBJECT.shortTitle).toBe('EDUC2802');
+      expect(GIAO_DUC_HOC_SUBJECT.shortTitle).toBe('GDH');
       expect(EDUC2802_SYLLABUS_META.courseCode).toBe('EDUC2802');
       expect(EDUC2802_SYLLABUS_META.credits).toBe('04 tín chỉ');
       expect(EDUC2802_CLOS.length).toBe(9);
@@ -165,7 +165,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       const b3 = getChapter1LessonModule('gdh-c1-b3-phat-trien-nghe-nghiep-giao-vien-pho-thong')!;
 
       const { unmount: unmount1 } = render(<b1.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C1-L1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 1 · Bài 1/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getByText(/Phân tích chiết tự "Sư phạm"/i)).toBeInTheDocument();
       expect(screen.getByText(/"kĩ sư thiết kế tâm hồn"/i)).toBeInTheDocument();
       expect(
@@ -177,7 +178,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount1();
 
       const { unmount: unmount2 } = render(<b2.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C1-L2/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 1 · Bài 2/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getByText(/01\. Năng lực tìm hiểu và nắm vững đặc điểm học sinh/i),
       ).toBeInTheDocument();
@@ -190,7 +192,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount2();
 
       const { unmount: unmount3 } = render(<b3.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C1-L3/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 1 · Bài 3/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getByText(/Định nghĩa khoa học \(OECD 2009\)/i)).toBeInTheDocument();
       expect(screen.getByText(/01\. Tự định hướng, tự bồi dưỡng/i)).toBeInTheDocument();
       expect(screen.getAllByText(/Bautista & Ortega-Ruiz 2015/i).length).toBeGreaterThanOrEqual(1);
@@ -222,7 +225,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       const b3 = getChapter2LessonModule('gdh-c2-b3-muc-dich-va-nguyen-li-giao-duc-viet-nam')!;
 
       const { unmount: unmount1 } = render(<b1.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C2-L1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 2 · Bài 1/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/Cơ chế di sản xã hội/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/1\. Tính phổ biến và vĩnh hằng/i).length).toBeGreaterThanOrEqual(
         1,
@@ -238,7 +242,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount1();
 
       const { unmount: unmount2 } = render(<b2.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C2-L2/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 2 · Bài 2/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/Didactica Magna/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/01\. Chủ thể giáo dục/i).length).toBeGreaterThanOrEqual(1);
       expect(
@@ -248,7 +253,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount2();
 
       const { unmount: unmount3 } = render(<b3.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C2-L3/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 2 · Bài 3/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/1\. Nâng cao dân trí/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/Giai đoạn Giáo dục Cơ bản/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/01\. Học đi đôi với hành/i).length).toBeGreaterThanOrEqual(1);
@@ -295,7 +301,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       )!;
 
       const { unmount: unmount1 } = render(<b1.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C3-L1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 3 · Bài 1/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Khung Cơ cấu Hệ thống Giáo dục Quốc dân/i).length,
       ).toBeGreaterThanOrEqual(1);
@@ -307,7 +314,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount1();
 
       const { unmount: unmount2 } = render(<b2.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C3-L2/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 3 · Bài 2/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/Bản chất Biện chứng Hai mặt/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/01\. Tính mục đích/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/A\. S\. Makarenko/i).length).toBeGreaterThanOrEqual(1);
@@ -317,7 +325,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount2();
 
       const { unmount: unmount3 } = render(<b3.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C3-L3/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 3 · Bài 3/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/5 Phẩm chất chủ yếu/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getAllByText(/Bảng 3\.1/i).length).toBeGreaterThanOrEqual(1);
       expect(
@@ -330,7 +339,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount3();
 
       const { unmount: unmount4 } = render(<b4.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C3-L4/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 3 · Bài 4/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Học sinh lớp 11 giật tài liệu vò nát nuốt vào miệng/i).length,
       ).toBeGreaterThanOrEqual(1);
@@ -375,7 +385,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       )!;
 
       const { unmount: unmount1 } = render(<b1.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C4-L1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 4 · Bài 1/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Vị trí và Khái niệm Giáo viên Chủ nhiệm Lớp/i).length,
       ).toBeGreaterThanOrEqual(1);
@@ -393,7 +404,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount1();
 
       const { unmount: unmount2 } = render(<b2.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C4-L2/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 4 · Bài 2/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Phương pháp Tìm hiểu Toàn diện Học sinh Lớp Chủ nhiệm/i).length,
       ).toBeGreaterThanOrEqual(1);
@@ -414,7 +426,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount2();
 
       const { unmount: unmount3 } = render(<b3.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C4-L3/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 4 · Bài 3/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Tổ chức Hoạt động Học tập và Hoạt động Trải nghiệm Lớp Chủ nhiệm/i)
           .length,
@@ -465,7 +478,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       )!;
 
       const { unmount: unmount1 } = render(<b1.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C5-L1/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 5 · Bài 1/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Khái niệm và Bản chất của Hoạt động Trải nghiệm ở Trường Phổ thông/i)
           .length,
@@ -487,7 +501,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount1();
 
       const { unmount: unmount2 } = render(<b2.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C5-L2/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 5 · Bài 2/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(/Hệ thống 4 Nhóm Phương thức Tổ chức Hoạt động Trải nghiệm/i).length,
       ).toBeGreaterThanOrEqual(1);
@@ -505,7 +520,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       unmount2();
 
       const { unmount: unmount3 } = render(<b3.default />);
-      expect(screen.getByText(/Mã bài: EDUC2802-C5-L3/i)).toBeInTheDocument();
+      expect(screen.getByText(/Chương 5 · Bài 3/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(
         screen.getAllByText(
           /Phương pháp Đánh giá Kết quả Hoạt động Trải nghiệm theo Tiếp cận Năng lực/i,
@@ -813,7 +829,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(mod1).toBeDefined();
       const Comp1 = mod1!.default;
       const { unmount: unmount1 } = render(<Comp1 />);
-      expect(screen.getByText(/Mã bài: EDUC2802-PRACTICE-01/i)).toBeInTheDocument();
+      expect(screen.getByText(/Thực hành 01/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/CLO6/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText(/Giáo trình HCMUE \(Trang 65 – 66\)/i)).toBeInTheDocument();
       // Action bar
@@ -839,7 +856,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(mod2).toBeDefined();
       const Comp2 = mod2!.default;
       const { unmount: unmount2 } = render(<Comp2 />);
-      expect(screen.getByText(/Mã bài: EDUC2802-PRACTICE-02/i)).toBeInTheDocument();
+      expect(screen.getByText(/Thực hành 02/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/CLO8/i).length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText(/Chương 4 Giáo trình HCMUE \(Trang 70 – 82\)/i)).toBeInTheDocument();
       // 6 Phần Kế hoạch giáo dục lớp chủ nhiệm
@@ -878,7 +896,8 @@ describe('Khoa học Giáo dục & Nghiệp vụ Sư phạm (Pedagogy)', () => {
       expect(mod3).toBeDefined();
       const Comp3 = mod3!.default;
       const { unmount: unmount3 } = render(<Comp3 />);
-      expect(screen.getByText(/Mã bài: EDUC2802-PRACTICE-03/i)).toBeInTheDocument();
+      expect(screen.getByText(/Thực hành 03/i)).toBeInTheDocument();
+      expect(screen.queryByText(/EDUC2802/i)).not.toBeInTheDocument();
       expect(screen.getAllByText(/CLO9/i).length).toBeGreaterThanOrEqual(1);
       expect(
         screen.getByText(/Chương 5 Giáo trình HCMUE \(Trang 116 – 124\) & Mô đun 2/i),

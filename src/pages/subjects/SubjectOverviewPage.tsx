@@ -234,14 +234,12 @@ export function SubjectOverviewPage() {
       tabs.push({
         id: 'specialized',
         label: 'Ngân hàng Đề thi & Lời giải',
-        badge: 'MATH1301',
         icon: GraduationCap,
       });
     } else if (subject.slug === 'hinh-hoc-affine') {
       tabs.push({
         id: 'specialized',
         label: 'Ngân hàng Đề thi & Lời giải',
-        badge: 'MATH1302',
         icon: GraduationCap,
       });
     }
@@ -498,7 +496,7 @@ export function SubjectOverviewPage() {
                       <FileText className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Tài liệu học tập &amp; Đề thi mẫu</span>
                     </Badge>
-                    <Badge variant="neutral">Học phần MATH1403 · 4 Tín chỉ · Toán học</Badge>
+                    <Badge variant="neutral">4 Tín chỉ · Toán học</Badge>
                   </div>
                   <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
                     Tài liệu học tập &amp; Đề cương ôn thi cuối khóa
@@ -568,7 +566,7 @@ export function SubjectOverviewPage() {
                       </h3>
                       <p className="text-xs leading-relaxed text-stone-600">
                         Hệ thống trọng tâm lý thuyết, bài tập ôn thi và 5 câu tự luận đề mẫu học
-                        phần Giải tích hàm một biến (MATH1403).
+                        phần Giải tích hàm một biến.
                       </p>
                     </div>
 
@@ -1038,7 +1036,6 @@ export function SubjectOverviewPage() {
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="subject">Đề cương chi tiết học phần</Badge>
-                <Badge variant="neutral">Mã: {subject.shortTitle}</Badge>
                 {subject.slug === 'giao-duc-hoc' && (
                   <>
                     <Badge variant="neutral">{EDUC2802_SYLLABUS_META.credits}</Badge>
@@ -1051,23 +1048,15 @@ export function SubjectOverviewPage() {
               </h2>
               <p className="text-sm leading-relaxed text-stone-600">
                 {subject.slug === 'giao-duc-hoc'
-                  ? `Học phần ${EDUC2802_SYLLABUS_META.courseName} (${EDUC2802_SYLLABUS_META.courseCode} — Khóa ${EDUC2802_SYLLABUS_META.cohort}): ${EDUC2802_SYLLABUS_META.credits} gồm ${EDUC2802_SYLLABUS_META.classHours} và ${EDUC2802_SYLLABUS_META.selfStudyHours}, bám sát ${EDUC2802_SYLLABUS_META.textbookTitle}.`
+                  ? `Học phần ${EDUC2802_SYLLABUS_META.courseName} (Khóa ${EDUC2802_SYLLABUS_META.cohort}): ${EDUC2802_SYLLABUS_META.credits} gồm ${EDUC2802_SYLLABUS_META.classHours} và ${EDUC2802_SYLLABUS_META.selfStudyHours}, bám sát ${EDUC2802_SYLLABUS_META.textbookTitle}.`
                   : 'Học phần được thiết kế đáp ứng chuẩn đầu ra của chương trình đào tạo Cử nhân Sư phạm Toán học, kết hợp hài hòa giữa nền tảng học thuật chuyên sâu và năng lực sư phạm thực tiễn.'}
               </p>
             </div>
 
             {subject.slug === 'giao-duc-hoc' ? (
               <div className="space-y-4">
-                {/* Thông số Đề cương EDUC2802 */}
-                <div className="grid gap-3 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 text-xs sm:grid-cols-4">
-                  <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3">
-                    <span className="block font-mono text-[11px] font-semibold text-[#55676B] uppercase">
-                      Mã học phần
-                    </span>
-                    <strong className="mt-1 block font-serif text-base font-bold text-[#29383D]">
-                      {EDUC2802_SYLLABUS_META.courseCode} ({EDUC2802_SYLLABUS_META.cohort})
-                    </strong>
-                  </div>
+                {/* Thông số Đề cương Giáo dục học */}
+                <div className="grid gap-3 rounded-2xl border border-[#CFDADB] bg-[#EAF0F1]/70 p-4 text-xs sm:grid-cols-3">
                   <div className="rounded-xl border border-[#CFDADB] bg-[#F7FAFA] p-3">
                     <span className="block font-mono text-[11px] font-semibold text-[#55676B] uppercase">
                       Thời lượng tín chỉ

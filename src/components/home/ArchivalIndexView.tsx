@@ -25,15 +25,11 @@ export interface ArchivalIndexViewProps {
 }
 
 function getLessonArchivalCode(
-  courseCode: string,
+  _courseCode: string,
   chapter: ManifestChapter,
   lesson: ManifestLesson,
 ): string {
-  const explicitTag = lesson.tags.find((t) => /^(MATH1301|MATH1302|MATH1303|EDUC2802)-/i.test(t));
-  if (explicitTag) {
-    return explicitTag.toUpperCase();
-  }
-  return `${courseCode}-C${chapter.number}-L${String(lesson.number).padStart(2, '0')}`;
+  return `C${chapter.number}.B${String(lesson.number).padStart(2, '0')}`;
 }
 
 function getLessonCloAndPagesBadge(chapter: ManifestChapter, lesson: ManifestLesson): string {
@@ -118,7 +114,7 @@ export function ArchivalIndexView({
               }
 
               if (combinedQuery.length > 0) {
-                const searchable = `${asset.courseCode} ${subject.title} Chương ${chapter.number} ${chapter.title} ${code} ${lesson.title} ${lesson.description} ${metaBadge} ${lesson.tags.join(' ')}`;
+                const searchable = `${subject.title} ${asset.categoryLabel} Chương ${chapter.number} ${chapter.title} ${code} ${lesson.title} ${lesson.description} ${metaBadge} ${lesson.tags.join(' ')}`;
                 return matchesVietnameseQuery(searchable, combinedQuery);
               }
 
@@ -243,8 +239,8 @@ export function ArchivalIndexView({
             return (
               <section
                 key={subject.id}
-                data-testid={`archival-module-${asset.courseCode}`}
-                aria-label={`${asset.courseCode}: ${subject.title}`}
+                data-testid={`archival-module-${subject.slug}`}
+                aria-label={subject.title}
                 className="overflow-hidden rounded-2xl border border-[#D9DFD9] bg-[#FAF9F6] shadow-2xs"
               >
                 {/* Header Học phần (Collapsible Module Header) */}
@@ -270,7 +266,7 @@ export function ArchivalIndexView({
                           isPedagogy ? 'bg-[#365E4E] text-white' : 'bg-[#B85D6F] text-white',
                         )}
                       >
-                        {asset.courseCode}
+                        {asset.categoryLabel}
                       </span>
                       <h3 className="font-serif text-lg font-bold text-[#262B28] sm:text-xl">
                         {subject.title}

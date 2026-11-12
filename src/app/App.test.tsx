@@ -94,8 +94,9 @@ describe('App routing smoke test', () => {
     });
     expect(searchboxes).toHaveLength(1);
 
-    expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('EDUC2802 · Khoa học Giáo dục').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Toán học').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Khoa học Giáo dục').length).toBeGreaterThan(0);
+    expect(screen.queryByText(/MATH1301|MATH1302|MATH1303|EDUC2802/i)).not.toBeInTheDocument();
 
     const enterCourseLinks = screen.getAllByRole('link', { name: /Vào học phần/i });
     expect(enterCourseLinks.length).toBe(4);
@@ -135,7 +136,8 @@ describe('App routing smoke test', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: 'Cấu trúc đại số' }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText('MATH1301 · Toán học').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Toán học').length).toBeGreaterThan(0);
+    expect(screen.queryByText(/MATH1301/i)).not.toBeInTheDocument();
     expect(screen.getAllByText('10 chương · 39 bài học').length).toBeGreaterThan(0);
     expect(screen.getByRole('link', { name: /Tiếp tục học: Bài/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Đọc giáo trình PDF/i })).toBeInTheDocument();

@@ -195,13 +195,6 @@ const CURATED_THEOREMS: readonly CuratedTheoremItem[] = [
   },
 ];
 
-const COURSE_CODE_BY_SLUG: Readonly<Record<string, string>> = {
-  'cau-truc-dai-so': 'MATH1301',
-  'hinh-hoc-affine': 'MATH1302',
-  'giai-tich-ham-mot-bien': 'MATH1303',
-  'giao-duc-hoc': 'EDUC2802',
-};
-
 function buildAllSearchableItems(): readonly CommandResultItem[] {
   const subjects = getSubjects();
   const glossaryEntries = getAllGlossaryEntries();
@@ -223,7 +216,6 @@ function buildAllSearchableItems(): readonly CommandResultItem[] {
 
   // 2. Nhóm BÀI HỌC & CHƯƠNG
   for (const subject of subjects) {
-    const courseCode = COURSE_CODE_BY_SLUG[subject.slug] ?? subject.slug.toUpperCase();
     for (const chapter of subject.chapters) {
       for (const lesson of chapter.lessons) {
         const chapterLabel = `Chương ${chapter.number}`;
@@ -233,7 +225,7 @@ function buildAllSearchableItems(): readonly CommandResultItem[] {
           category: 'lessons',
           title: lesson.title,
           subtitle: `${chapterLabel}: ${chapter.title} · ${subject.title}`,
-          badge: `${courseCode} · Bài ${lessonNumberLabel}`,
+          badge: `Bài ${lessonNumberLabel}`,
           href: ROUTES.lesson(subject.slug, chapter.slug, lesson.slug),
           keywords: `${lesson.title} ${lesson.description} ${chapter.title} ${subject.title} ${lesson.tags.join(' ')} chuong ${chapter.number} bai ${lessonNumberLabel}`,
         });
@@ -243,15 +235,15 @@ function buildAllSearchableItems(): readonly CommandResultItem[] {
 
   // 3. Nhóm HỌC PHẦN (4 Courses)
   for (const subject of subjects) {
-    const courseCode = COURSE_CODE_BY_SLUG[subject.slug] ?? 'HỌC PHẦN';
+    const branchLabel = subject.slug === 'giao-duc-hoc' ? 'Khoa học Giáo dục' : 'Toán học';
     items.push({
       id: `course-${subject.slug}`,
       category: 'courses',
       title: subject.title,
       subtitle: subject.description,
-      badge: courseCode,
+      badge: branchLabel,
       href: ROUTES.courseOverview(subject.slug),
-      keywords: `${subject.title} ${courseCode} ${subject.description} ${subject.slug} hoc phan mon hoc`,
+      keywords: `${subject.title} ${branchLabel} ${subject.description} ${subject.slug} hoc phan mon hoc`,
     });
   }
 

@@ -362,7 +362,7 @@ export const FloatingNavbar: FC<FloatingNavbarProps> = ({
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-teal-800">
-                          Học phần EDUC2802
+                          Khoa học Giáo dục
                         </span>
                         <span className="text-[10px] text-stone-500">04 Tín chỉ</span>
                       </div>

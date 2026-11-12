@@ -32,14 +32,6 @@ import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Breadcrumb, Button, Card, Drawer, Skeleton } from '@/shared/ui';
 
-function getSubjectCode(slug: string): string {
-  if (slug === 'giao-duc-hoc') return 'EDUC2802';
-  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') return 'MATH1303';
-  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') return 'MATH1302';
-  if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') return 'MATH1301';
-  return 'MATH';
-}
-
 function getCurriculumSource(slug: string): string {
   if (slug === 'giao-duc-hoc') {
     return 'Giáo trình Giáo dục học — Trường ĐH Sư phạm TP.HCM (HCMUE, K50–51)';
@@ -587,7 +579,6 @@ function LessonPageContent() {
               )}
             >
               <EditorialChapterOpener
-                subjectCode={getSubjectCode(subject.slug)}
                 subjectName={subject.title}
                 chapterNumber={chapter.number}
                 title={lesson.title}

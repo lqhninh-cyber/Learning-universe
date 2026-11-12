@@ -40,14 +40,11 @@ export function SubjectCard({ subject }: SubjectCardProps) {
       aria-label={`Học phần ${subject.title}`}
       className="group flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-7 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-8"
     >
-      {/* Phía trên: Huy hiệu tín chỉ + Mã học phần font Mono nổi bật */}
+      {/* Phía trên: Huy hiệu tín chỉ */}
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center rounded-full border border-[#C5A262]/40 bg-[#C5A262]/10 px-3 py-1 text-xs font-semibold text-[#8A6A2F] dark:border-[#C5A262]/30 dark:bg-[#C5A262]/15 dark:text-[#E5C378]">
             {creditsText}
-          </span>
-          <span className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-sunken)] px-2.5 py-1 font-mono text-xs font-bold tracking-wider text-[#3F6570] dark:text-[#739B88]">
-            {asset.courseCode}
           </span>
         </div>
 

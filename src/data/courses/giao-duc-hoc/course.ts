@@ -133,16 +133,16 @@ export const PEDAGOGY_DOCUMENTS: readonly PedagogyDocument[] = [
   },
   {
     id: 'gioi-thieu-hp-gdh',
-    title: 'Đề cương chi tiết học phần Giáo dục học (EDUC2802)',
+    title: 'Đề cương chi tiết học phần Giáo dục học',
     category: 'curriculum',
     categoryLabel: 'Đề cương học phần',
     path: GOOGLE_DRIVE_DOCS_URL,
     url: GOOGLE_DRIVE_DOCS_URL,
-    filename: 'Chi tiết học phần Giáo dục học - EDUC2802 (K50-51).pdf',
+    filename: 'Chi tiết học phần Giáo dục học (K50-51).pdf',
     size: '871 KB',
     description:
-      'Đề cương chi tiết học phần Giáo dục học mã EDUC2802 (K50-51): 04 tín chỉ (80 tiết trên lớp: 40 Lý thuyết, 20 Thảo luận, 20 Thực hành; 120 giờ tự học), hệ thống 9 chuẩn đầu ra (CLO1–CLO9) và ma trận đánh giá học phần.',
-    badge: '04 Tín chỉ · EDUC2802',
+      'Đề cương chi tiết học phần Giáo dục học (K50-51): 04 tín chỉ (80 tiết trên lớp: 40 Lý thuyết, 20 Thảo luận, 20 Thực hành; 120 giờ tự học), hệ thống 9 chuẩn đầu ra (CLO1–CLO9) và ma trận đánh giá học phần.',
+    badge: '04 Tín chỉ · Đề cương',
     pages: 'Đề cương K50–51',
   },
 
@@ -535,9 +535,9 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
   id: 'giao-duc-hoc',
   slug: 'giao-duc-hoc',
   title: 'Giáo dục học',
-  shortTitle: 'EDUC2802',
+  shortTitle: 'GDH',
   description:
-    'Học phần Giáo dục học (EDUC2802 — 04 tín chỉ: 40 tiết Lý thuyết, 20 tiết Thảo luận, 20 tiết Thực hành; 120 giờ tự học) trang bị hệ thống lý luận và nghiệp vụ sư phạm theo Giáo trình Giáo dục học HCMUE: Hoạt động sư phạm & nhân cách người giáo viên, Những vấn đề chung của Giáo dục học, Lý luận hoạt động giáo dục ở trường phổ thông, Công tác giáo viên chủ nhiệm lớp và Tổ chức Hoạt động trải nghiệm, hướng nghiệp.',
+    'Học phần Giáo dục học (04 tín chỉ: 40 tiết Lý thuyết, 20 tiết Thảo luận, 20 tiết Thực hành; 120 giờ tự học) trang bị hệ thống lý luận và nghiệp vụ sư phạm theo Giáo trình Giáo dục học HCMUE: Hoạt động sư phạm & nhân cách người giáo viên, Những vấn đề chung của Giáo dục học, Lý luận hoạt động giáo dục ở trường phổ thông, Công tác giáo viên chủ nhiệm lớp và Tổ chức Hoạt động trải nghiệm, hướng nghiệp.',
   order: 4,
   status: 'published',
   theme: {
@@ -1228,7 +1228,7 @@ export const GIAO_DUC_HOC_SUBJECT: ManifestSubject = {
       slug: 'khoi-thuc-hanh-nghiep-vu-su-pham',
       title: 'Khối Thực hành Nghiệp vụ Sư phạm',
       description:
-        'Hệ thống 3 bài thực hành nghiệp vụ trọng tâm (20 tiết Thực hành & 20 tiết Thảo luận theo Đề cương EDUC2802): Phân tích & giải quyết 20 tình huống sư phạm theo quy trình 5 bước; Lập kế hoạch giáo dục lớp chủ nhiệm & thiết kế tiết Sinh hoạt lớp; Thiết kế kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp tích hợp Mô đun 2 THCS & THPT.',
+        'Hệ thống 3 bài thực hành nghiệp vụ trọng tâm (20 tiết Thực hành & 20 tiết Thảo luận theo Đề cương học phần): Phân tích & giải quyết 20 tình huống sư phạm theo quy trình 5 bước; Lập kế hoạch giáo dục lớp chủ nhiệm & thiết kế tiết Sinh hoạt lớp; Thiết kế kế hoạch chủ đề Hoạt động trải nghiệm, hướng nghiệp tích hợp Mô đun 2 THCS & THPT.',
       number: 6,
       objectives: [
         'CLO6: Thực hành phân tích và giải quyết 20 tình huống sư phạm thực tế ở trường phổ thông theo đúng quy trình 5 bước của Mục 3.3.6 Giáo trình HCMUE (tr. 65–66).',
@@ -1422,7 +1422,7 @@ export function getPedagogyLessonModule(lessonId: string): CompiledLessonModule 
         createElement(
           'div',
           { className: 'flex items-center gap-2 text-xs font-bold text-[#3F6570] uppercase' },
-          createElement('span', null, 'Học phần Giáo dục học · EDUC2802'),
+          createElement('span', null, 'Học phần Giáo dục học · 04 Tín chỉ'),
         ),
         createElement(
           'h2',

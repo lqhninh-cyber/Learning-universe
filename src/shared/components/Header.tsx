@@ -494,7 +494,7 @@ export const Header: FC<HeaderProps> = ({
                       <span className="font-serif font-semibold text-[#29383D]">
                         Cấu trúc đại số
                       </span>
-                      <span className="font-mono text-[11px] text-[#55676B]">MATH1301</span>
+                      <span className="font-mono text-[11px] text-[#55676B]">04 TC</span>
                     </Link>
                     <Link
                       to={ROUTES.subjectOverview('hinh-hoc-affine')}
@@ -505,7 +505,7 @@ export const Header: FC<HeaderProps> = ({
                       <span className="font-serif font-semibold text-[#29383D]">
                         Hình học Affine &amp; Euclide
                       </span>
-                      <span className="font-mono text-[11px] text-[#55676B]">MATH1302</span>
+                      <span className="font-mono text-[11px] text-[#55676B]">03 TC</span>
                     </Link>
                     <Link
                       to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
@@ -516,7 +516,7 @@ export const Header: FC<HeaderProps> = ({
                       <span className="font-serif font-semibold text-[#29383D]">
                         Giải tích hàm một biến
                       </span>
-                      <span className="font-mono text-[11px] text-[#55676B]">MATH1303</span>
+                      <span className="font-mono text-[11px] text-[#55676B]">04 TC</span>
                     </Link>
                   </div>
                 </div>
@@ -534,7 +534,7 @@ export const Header: FC<HeaderProps> = ({
                       className="flex items-center justify-between rounded-2xl px-3.5 py-2 text-sm text-[#29383D] transition-colors hover:bg-[#E1E9EA]/50"
                     >
                       <span className="font-serif font-semibold text-[#29383D]">Giáo dục học</span>
-                      <span className="font-mono text-[11px] text-[#55676B]">EDUC2802</span>
+                      <span className="font-mono text-[11px] text-[#55676B]">04 TC</span>
                     </Link>
                     <Link
                       to="/mon-hoc/giao-duc-hoc/khoi-thuc-hanh-nghiep-vu-su-pham/phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te"
@@ -655,7 +655,7 @@ export const Header: FC<HeaderProps> = ({
                         isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
                       )}
                     >
-                      04 TC · MATH1301
+                      04 TC
                     </span>
                   </Link>
 
@@ -691,7 +691,7 @@ export const Header: FC<HeaderProps> = ({
                         isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
                       )}
                     >
-                      03 TC · MATH1302
+                      03 TC
                     </span>
                   </Link>
 
@@ -727,7 +727,7 @@ export const Header: FC<HeaderProps> = ({
                         isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
                       )}
                     >
-                      04 TC · MATH1303
+                      04 TC
                     </span>
                   </Link>
                 </div>
@@ -781,7 +781,7 @@ export const Header: FC<HeaderProps> = ({
                         isDark ? 'text-[#94A3B8]' : 'text-[#55676B]',
                       )}
                     >
-                      04 TC · EDUC2802
+                      04 TC
                     </span>
                   </Link>
 

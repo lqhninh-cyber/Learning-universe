@@ -524,7 +524,7 @@ export const ColorSystemPreviewPage: FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full bg-[var(--math-light)] px-3 py-0.5 font-mono text-xs font-semibold text-[var(--math-accent)]">
-                      MATH1301 · HỌC PHẦN CỐT LÕI
+                      TOÁN HỌC · HỌC PHẦN CỐT LÕI
                     </span>
                     <span className="text-xs text-[var(--text-secondary)]">
                       Chuyên ngành Sư phạm Toán
@@ -553,7 +553,7 @@ export const ColorSystemPreviewPage: FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full bg-[var(--edu-light)] px-3 py-0.5 font-mono text-xs font-semibold text-[var(--edu-accent)]">
-                      EDUC2802 · KHOA HỌC GIÁO DỤC
+                      KHOA HỌC GIÁO DỤC · 04 TÍN CHỈ
                     </span>
                     <span className="text-xs text-[var(--text-secondary)]">04 Tín chỉ</span>
                   </div>

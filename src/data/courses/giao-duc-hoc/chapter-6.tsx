@@ -196,7 +196,7 @@ export const Lesson6_1View: FC = () => {
         />
 
         <ComparativeTable
-          title="Bảng Tiêu chí Rubric Đánh giá Bài tập Thực hành Xử lý Tình huống Sư phạm (EDUC2802)"
+          title="Bảng Tiêu chí Rubric Đánh giá Bài tập Thực hành Xử lý Tình huống Sư phạm"
           subtitle="Tiêu chuẩn chấm điểm bài thực hành phân tích tình huống sư phạm theo chuẩn đầu ra CLO6."
           badge="Rubric Thực hành 1"
           columns={[
@@ -1312,7 +1312,7 @@ export const Lesson6_2View: FC = () => {
             description: 'Xây dựng kịch bản 45 phút tiết sinh hoạt lớp tự quản phát triển năng lực',
           },
         ]}
-        curriculumSource="Đề cương chi tiết học phần EDUC2802 & Giáo trình HCMUE (K50–51)"
+        curriculumSource="Đề cương chi tiết học phần Giáo dục học & Giáo trình HCMUE (K50–51)"
       />
 
       {/* 1. THANH METADATA & ĐỐI CHIẾU ĐẦU BÀI */}
@@ -1324,7 +1324,7 @@ export const Lesson6_2View: FC = () => {
         legalRefs={[
           'Thông tư 32/2020/TT-BGDĐT (Điều 29, 31)',
           'Thông tư 20/2018/TT-BGDĐT (Tiêu chuẩn 3 & 4)',
-          'Đề cương chi tiết EDUC2802 (K50–51)',
+          'Đề cương chi tiết học phần Giáo dục học (K50–51)',
         ]}
         sessionNote="Thực hành 2 · 6 tiết thực hành · Kế hoạch chủ nhiệm & Sinh hoạt lớp"
       />
@@ -1358,7 +1358,7 @@ export const Lesson6_2View: FC = () => {
           <strong>Kế hoạch giáo dục lớp chủ nhiệm theo 6 bước</strong> (Giáo trình HCMUE tr. 71–73),
           cấu trúc kịch bản <strong>tiết Sinh hoạt lớp tự quản 45 phút</strong>, đồng thời tích hợp{' '}
           <strong>Ma trận Đề thi & Phương pháp Làm bài Tự luận Đạt Điểm Cao</strong> cho toàn học
-          phần <code>EDUC2802</code>.
+          phần Giáo dục học.
           <Sidenote number={1} type="pedagogy" title="Cấu trúc 2 phần của tiết Sinh hoạt lớp">
             Một kịch bản tiết Sinh hoạt lớp đạt chuẩn luôn kết hợp hài hòa giữa phần Sơ kết – Lập kế
             hoạch tuần do Ban cán sự tự quản điều hành (15 phút) và phần Sinh hoạt theo chủ đề giáo

@@ -40,7 +40,7 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
   'single-variable-calculus': {
     id: 'single-variable-calculus',
     name: 'Giải tích hàm một biến',
-    shortName: 'MATH1403',
+    shortName: 'GTHMB',
     hue: 200,
     description:
       'Tông Azure / Ocean thể hiện sự biến thiên liên tục, giới hạn và phép tính vi tích phân.',
@@ -48,7 +48,7 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
   'giao-duc-hoc': {
     id: 'giao-duc-hoc',
     name: 'Giáo dục học',
-    shortName: 'EDUC2802',
+    shortName: 'GDH',
     hue: 190,
     description:
       'Tông Slate Teal (xanh học giả) và Terracotta (vàng đất nung) thể hiện lý luận nhân cách, chuẩn nghề nghiệp và nghiệp vụ sư phạm.',

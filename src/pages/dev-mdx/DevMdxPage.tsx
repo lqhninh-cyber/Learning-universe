@@ -117,7 +117,7 @@ export function DevMdxPage() {
                   onClick={() => setSelectedId(lesson.id)}
                 >
                   <span>
-                    {subject.shortTitle} · Bài {chapter.number}.{lesson.number}
+                    {subject.title} · Bài {chapter.number}.{lesson.number}
                   </span>
                 </Button>
               );

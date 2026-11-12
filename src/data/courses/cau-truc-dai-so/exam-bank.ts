@@ -128,11 +128,10 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
   id: 'ctds-mock-01',
   year: 'Đề ôn tập tự biên soạn',
   semester: 'Đề ôn tập số 1',
-  examCourseCode: 'MATH1301 · Đề mẫu 01',
   allowedMaterials: 'Không dùng tài liệu',
   durationMinutes: 90,
   questionPrefix: 'Câu',
-  title: 'Đề ôn tập số 1 — Cấu trúc Đại số (MATH1301)',
+  title: 'Đề ôn tập số 1 — Cấu trúc Đại số',
   description:
     'Đề biên soạn mô phỏng cấu trúc 90 phút (3.0đ – 3.0đ – 4.0đ): phép thế S₄, nhóm cyclic ℤ₆, nhóm nhân U(10), tâm nhóm Z(G) và đồng cấu nhóm.',
   isMockExam: true,
@@ -145,7 +144,7 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
       '(Gồm có 1 trang)',
     ],
     rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
-    rightSubtitle: 'Tên HP: ĐẠI SỐ (MATH1301)',
+    rightSubtitle: 'Tên HP: ĐẠI SỐ',
     metaRows: [
       'Cấu trúc mô phỏng: 3 câu (3đ – 3đ – 4đ)',
       'Học kỳ II — Năm học 2025 - 2026',
@@ -250,11 +249,10 @@ export const MATH1301_MOCK_EXAM_2: ExamPaper = {
   id: 'ctds-mock-02',
   year: 'Đề ôn tập tự biên soạn',
   semester: 'Đề ôn tập số 2',
-  examCourseCode: 'MATH1301 · Đề mẫu 02',
   allowedMaterials: 'Không dùng tài liệu',
   durationMinutes: 90,
   questionPrefix: 'Câu',
-  title: 'Đề ôn tập số 2 — Cấu trúc Đại số (MATH1301)',
+  title: 'Đề ôn tập số 2 — Cấu trúc Đại số',
   description:
     'Đề biên soạn mở rộng bám sát ma trận 40/60: cấp phần tử trong S₃, nhóm con ℤ₈, tính cyclic của U(12), nhóm con có chỉ số 2 và nghịch ảnh chuẩn tắc qua đồng cấu.',
   isMockExam: true,
@@ -267,7 +265,7 @@ export const MATH1301_MOCK_EXAM_2: ExamPaper = {
       '(Gồm có 1 trang)',
     ],
     rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
-    rightSubtitle: 'Tên HP: ĐẠI SỐ (MATH1301)',
+    rightSubtitle: 'Tên HP: ĐẠI SỐ',
     metaRows: [
       'Cấu trúc mô phỏng: 3 câu (3đ – 3đ – 4đ)',
       'Học kỳ II — Năm học 2025 - 2026',
@@ -379,7 +377,7 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
     'Đề thi chính thức HK2 (2025 - 2026), phân tích cấu trúc 40/60 và bộ đề biên soạn ôn tập',
   officialExams: [MATH1301_OFFICIAL_HK2_PAPER],
   matrixAnalysis: {
-    headline: 'Phân tích cấu trúc & Chiến lược ôn tập MATH1301',
+    headline: 'Phân tích cấu trúc & Chiến lược ôn tập Cấu trúc Đại số',
     summary:
       'Đề thi 2522MATH170401 cân bằng rõ rệt giữa 40% chứng minh định lý nền tảng về nhóm con và 60% tìm cấu trúc tường minh trên các nhóm mẫu hữu hạn ($S_3, S_4, \\mathbb{Z}_n, V_4$).',
     structureSummary: '3 câu tự luận · 90 phút · Tỷ trọng 40% chứng minh – 60% cấu trúc nhóm mẫu',

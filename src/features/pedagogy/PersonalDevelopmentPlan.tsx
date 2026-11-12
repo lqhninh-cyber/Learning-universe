@@ -129,11 +129,11 @@ export const PersonalDevelopmentPlan: FC = () => {
     );
 
     const textContent = `TRƯỜNG ĐẠI HỌC SƯ PHẠM TP. HỒ CHÍ MINH
-KHOA TOÁN - TIN HỌC / HỌC PHẦN GIÁO DỤC HỌC (EDUC2802)
+KHOA TOÁN - TIN HỌC / HỌC PHẦN GIÁO DỤC HỌC
 ========================================================================
 BẢN KẾ HOẠCH HỌC TẬP VÀ RÈN LUYỆN NGHỀ NGHIỆP SƯ PHẠM
 NĂM HỌC THỨ ${selectedYear} (Đại học Chính quy — Ngành Sư phạm Toán học)
-* Yêu cầu đánh giá tự học Chương 1 - Đề cương Học phần EDUC2802 (CLO1, CLO2)
+* Yêu cầu đánh giá tự học Chương 1 - Đề cương Học phần Giáo dục học (CLO1, CLO2)
 * Bám sát 15 tiêu chí Chuẩn nghề nghiệp GVPT (Thông tư 20/2018/TT-BGDĐT)
 ========================================================================
 
@@ -214,7 +214,7 @@ Sinh viên lập kế hoạch: (Ký và ghi rõ họ tên)
       <div class="school-name">TRƯỜNG ĐẠI HỌC SƯ PHẠM TP.HCM</div>
       <div class="sub-school">KHOA TOÁN - TIN HỌC</div>
       <div class="line"></div>
-      <div style="font-size: 10pt; font-style: italic;">Học phần: Giáo dục học (EDUC2802)</div>
+      <div style="font-size: 10pt; font-style: italic;">Học phần: Giáo dục học</div>
     </div>
     <div class="right-header">
       <div class="school-name">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>

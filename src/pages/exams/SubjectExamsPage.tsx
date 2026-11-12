@@ -44,12 +44,6 @@ export function SubjectExamsPage() {
     return [];
   }, [subjectSlug]);
 
-  const courseCodeLabel = useMemo(() => {
-    if (subjectSlug === 'cau-truc-dai-so') return 'MATH1301';
-    if (subjectSlug === 'hinh-hoc-affine') return 'MATH1302';
-    return 'MATH1403';
-  }, [subjectSlug]);
-
   const totalProblemsAcrossPapers = useMemo(
     () => examPapers.reduce((sum, paper) => sum + paper.problems.length, 0),
     [examPapers],
@@ -119,7 +113,6 @@ export function SubjectExamsPage() {
 
             <div className="flex items-center gap-2">
               <Badge className="border-[#1B3D2F] bg-[#1B3D2F] text-white">Toán học</Badge>
-              <Badge variant="neutral">{courseCodeLabel}</Badge>
             </div>
           </div>
 

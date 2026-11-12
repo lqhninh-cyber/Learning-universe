@@ -1214,7 +1214,7 @@ export const Lesson3_4View: FC = () => {
       createElement(NumberedProcessFlow, {
         title: 'Quy trình 5 Bước Giải quyết Tình huống Sư phạm Tối ưu',
         subtitle:
-          'Khung thao tác chuẩn mực ứng dụng xuyên suốt trong học phần EDUC2802 (Giáo trình HCMUE Trang 65 – 66).',
+          'Khung thao tác chuẩn mực ứng dụng xuyên suốt trong học phần Giáo dục học (Giáo trình HCMUE Trang 65 – 66).',
         badge: 'Quy trình 5 Bước · Mục 3.3.6',
         columns: 1,
         steps: [

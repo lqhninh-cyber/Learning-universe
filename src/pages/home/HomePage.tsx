@@ -1053,9 +1053,7 @@ export function HomePage() {
                                             Bài {result.chapter.number}.{result.lesson.number}:{' '}
                                             {result.lesson.title}
                                           </span>
-                                          <Badge variant="neutral">
-                                            {result.subject.shortTitle}
-                                          </Badge>
+                                          <Badge variant="neutral">{result.subject.title}</Badge>
                                         </div>
                                         <p className="mt-0.5 line-clamp-1 text-xs text-[#58635E]">
                                           {result.lesson.description}
@@ -1269,7 +1267,10 @@ export function HomePage() {
                         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#D9DFD9] pb-5">
                           <div className="flex flex-wrap items-center gap-2.5">
                             <span className="rounded-lg bg-[#EBECE6] px-3 py-1 font-mono text-xs font-semibold text-[#365E4E]">
-                              {getCourseCinematicAsset(activeRecentLesson.subject.slug).courseCode}
+                              {
+                                getCourseCinematicAsset(activeRecentLesson.subject.slug)
+                                  .categoryLabel
+                              }
                             </span>
                             <span className="text-xs font-medium text-[#58635E]">
                               {activeRecentLesson.subject.title} · Chương{' '}

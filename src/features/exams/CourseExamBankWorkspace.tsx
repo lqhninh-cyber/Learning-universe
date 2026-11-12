@@ -91,9 +91,6 @@ function ExamBankWorkspaceContent({
                 <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Ngân hàng Đề thi &amp; Lời giải</span>
               </Badge>
-              <Badge variant="neutral" className="font-mono font-semibold">
-                {bank.courseCode} · Mã HP đề thi: {bank.examCourseCode}
-              </Badge>
             </div>
 
             <h2 className="font-serif text-xl font-bold tracking-tight text-[var(--text-main)] sm:text-2xl">

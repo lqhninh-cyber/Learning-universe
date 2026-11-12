@@ -100,11 +100,10 @@ export const MATH1302_MOCK_EXAM_1: ExamPaper = {
   id: 'hhave-mock-01',
   year: 'Đề ôn tập tự biên soạn',
   semester: 'Đề ôn tập số 1',
-  examCourseCode: 'MATH1302 · Đề mẫu 01',
   allowedMaterials: 'Được dùng máy tính cầm tay',
   durationMinutes: 90,
   questionPrefix: 'Bài',
-  title: 'Đề ôn tập số 1 — Hình học Affine và Euclid (MATH1302)',
+  title: 'Đề ôn tập số 1 — Hình học Affine và Euclid',
   description:
     'Đề biên soạn mô phỏng cấu trúc cố định 3 bài (3.0đ – 4.0đ – 3.0đ): tìm tâm và tiếp diện siêu mặt bậc hai trong A³, hình chiếu, đối xứng, khoảng cách trong E⁴ và cặp phẳng song song trong Aⁿ.',
   isMockExam: true,
@@ -117,7 +116,7 @@ export const MATH1302_MOCK_EXAM_1: ExamPaper = {
       '(Gồm có 01 trang)',
     ],
     rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
-    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID (MATH1302)',
+    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID',
     metaRows: [
       'Cấu trúc mô phỏng: 3 bài (3.0đ – 4.0đ – 3.0đ)',
       'Năm học: 2025-2026 — Học kỳ: 1',
@@ -200,11 +199,10 @@ export const MATH1302_MOCK_EXAM_2: ExamPaper = {
   id: 'hhave-mock-02',
   year: 'Đề ôn tập tự biên soạn',
   semester: 'Đề ôn tập số 2',
-  examCourseCode: 'MATH1302 · Đề mẫu 02',
   allowedMaterials: 'Được dùng máy tính cầm tay',
   durationMinutes: 90,
   questionPrefix: 'Bài',
-  title: 'Đề ôn tập số 2 — Hình học Affine và Euclid (MATH1302)',
+  title: 'Đề ôn tập số 2 — Hình học Affine và Euclid',
   description:
     'Đề biên soạn mở rộng theo ma trận 3 bài (3.0đ – 4.0đ – 3.0đ): kính liên hợp siêu mặt bậc hai trong A³, hình chiếu vuông góc và khoảng cách trong E⁴, và tính chéo nhau từ hai phẳng chéo nhau hoàn toàn trong Aⁿ.',
   isMockExam: true,
@@ -217,7 +215,7 @@ export const MATH1302_MOCK_EXAM_2: ExamPaper = {
       '(Gồm có 01 trang)',
     ],
     rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
-    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID (MATH1302)',
+    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID',
     metaRows: [
       'Cấu trúc mô phỏng: 3 bài (3.0đ – 4.0đ – 3.0đ)',
       'Năm học: 2025-2026 — Học kỳ: 1',
@@ -293,7 +291,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
   subtitle: 'Đề thi chính thức HK1 (2025 - 2026), cấu trúc cố định 3 bài và bộ đề biên soạn ôn tập',
   officialExams: [MATH1302_OFFICIAL_HK1_PAPER],
   matrixAnalysis: {
-    headline: 'Phân tích cấu trúc & Chiến lược ôn tập MATH1302',
+    headline: 'Phân tích cấu trúc & Chiến lược ôn tập Hình học Affine và Euclid',
     summary:
       'Đề thi 2512MATH18221 tuân theo cấu trúc cố định 3 bài (3.0đ – 4.0đ – 3.0đ) trong 90 phút, kiểm tra cân bằng giữa hình học giải tích trên $A^3$, tính toán trực chuẩn trong $E^4$ và lập luận tiên đề đại cương trên $A^n$.',
     structureSummary:
