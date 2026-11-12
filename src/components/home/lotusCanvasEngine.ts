@@ -1,3 +1,9 @@
+import {
+  createGlowSpriteCache,
+  drawGlowSprite,
+  type GlowSpriteCache,
+} from '@/shared/lib/canvasSprites';
+
 /**
  * PROCEDURAL LOTUS CANVAS ENGINE (Thuật toán đồ họa Canvas 2D thủ tục hoa sen tả thực - Hoa sen_2.html)
  * Tái tạo nguyên vẹn 100% logic toán học và mỹ thuật Canvas từ "Hoa sen_2.html" với phân tầng độ sâu quang học.
@@ -664,6 +670,12 @@ export function createGlistens(): GlistenItem[] {
   return gl;
 }
 
+export interface LotusCachedWaterGradients {
+  readonly bgGrad: CanvasGradient;
+  readonly centerGrad: CanvasGradient;
+  readonly rayGrads: readonly CanvasGradient[];
+}
+
 export function water(
   ctx: CanvasRenderingContext2D,
   t: number,
@@ -674,37 +686,51 @@ export function water(
   S: number,
   gl: readonly GlistenItem[],
   theme: 'day' | 'night' = 'night',
+  cached?: LotusCachedWaterGradients,
 ) {
-  let g = ctx.createLinearGradient(0, 0, 0, H);
-  if (theme === 'day') {
-    // Sương Mai (Day):
-    // Đỉnh: #E0F2E9 (sắc xanh sương mai nhạt loang vào nền trang chủ)
-    // Giữa: #7DAE96 (nước xanh ngọc bích trong sáng)
-    // Đáy: #2C5E47 (xanh lục bảo trầm ấm)
-    g.addColorStop(0, '#E0F2E9');
-    g.addColorStop(0.5, '#7DAE96');
-    g.addColorStop(1, '#2C5E47');
-  } else {
-    // Nguyệt Dạ (Night):
-    // Đỉnh: #040D08 (sơn mài đen sẫm hòa quyện vào chân trang)
-    // Giữa: #0B2016 (xanh rêu đêm sâu thẳm)
-    // Đáy: #06130E
-    g.addColorStop(0, '#040D08');
-    g.addColorStop(0.5, '#0B2016');
-    g.addColorStop(1, '#06130E');
+  let g = cached?.bgGrad;
+  if (!g) {
+    g = ctx.createLinearGradient(0, 0, 0, H);
+    if (theme === 'day') {
+      // Sương Mai (Day):
+      // Đỉnh: #E0F2E9 (sắc xanh sương mai nhạt loang vào nền trang chủ)
+      // Giữa: #7DAE96 (nước xanh ngọc bích trong sáng)
+      // Đáy: #2C5E47 (xanh lục bảo trầm ấm)
+      g.addColorStop(0, '#E0F2E9');
+      g.addColorStop(0.5, '#7DAE96');
+      g.addColorStop(1, '#2C5E47');
+    } else {
+      // Nguyệt Dạ (Night):
+      // Đỉnh: #040D08 (sơn mài đen sẫm hòa quyện vào chân trang)
+      // Giữa: #0B2016 (xanh rêu đêm sâu thẳm)
+      // Đáy: #06130E
+      g.addColorStop(0, '#040D08');
+      g.addColorStop(0.5, '#0B2016');
+      g.addColorStop(1, '#06130E');
+    }
   }
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
-  g = ctx.createRadialGradient(cx, cy - 120 * S, 10, cx, cy - 120 * S, Math.max(W, H) * 0.6);
-  if (theme === 'day') {
-    g.addColorStop(0, 'rgba(255, 255, 235, 0.25)');
-    g.addColorStop(1, 'rgba(255, 255, 235, 0)');
-  } else {
-    g.addColorStop(0, 'rgba(190, 240, 215, 0.16)');
-    g.addColorStop(1, 'rgba(190, 240, 215, 0)');
+  let centerG = cached?.centerGrad;
+  if (!centerG) {
+    centerG = ctx.createRadialGradient(
+      cx,
+      cy - 120 * S,
+      10,
+      cx,
+      cy - 120 * S,
+      Math.max(W, H) * 0.6,
+    );
+    if (theme === 'day') {
+      centerG.addColorStop(0, 'rgba(255, 255, 235, 0.25)');
+      centerG.addColorStop(1, 'rgba(255, 255, 235, 0)');
+    } else {
+      centerG.addColorStop(0, 'rgba(190, 240, 215, 0.16)');
+      centerG.addColorStop(1, 'rgba(190, 240, 215, 0)');
+    }
   }
-  ctx.fillStyle = g;
+  ctx.fillStyle = centerG;
   ctx.fillRect(0, 0, W, H);
 
   // 3 vệt tia sáng mặt trời xiên nhẹ buổi sớm từ góc trên-trái xuống mặt nước (Day)
@@ -716,10 +742,13 @@ export function water(
       const rayWidthBottom = 150 * S;
       const rayEnd = rayStart + H * 0.65 + Math.sin(t * 0.2 + i) * 15;
 
-      const rg = ctx.createLinearGradient(rayStart, 0, rayEnd, H * 0.85);
-      rg.addColorStop(0, 'rgba(255, 255, 240, 0.12)');
-      rg.addColorStop(0.4, 'rgba(255, 255, 240, 0.08)');
-      rg.addColorStop(1, 'rgba(255, 255, 240, 0)');
+      let rg = cached?.rayGrads[i];
+      if (!rg) {
+        rg = ctx.createLinearGradient(rayStart, 0, rayStart + H * 0.65, H * 0.85);
+        rg.addColorStop(0, 'rgba(255, 255, 240, 0.12)');
+        rg.addColorStop(0.4, 'rgba(255, 255, 240, 0.08)');
+        rg.addColorStop(1, 'rgba(255, 255, 240, 0)');
+      }
 
       ctx.beginPath();
       ctx.moveTo(rayStart - rayWidthTop / 2, 0);
@@ -1474,8 +1503,10 @@ export function drawFireflies(
   wy: number,
   fireflies: readonly Firefly[],
   theme: 'day' | 'night' = 'night',
+  glowSprites?: GlowSpriteCache,
 ) {
   if (theme === 'day') return; // Đom đóm chỉ xuất hiện trong màn đêm tĩnh lặng
+  const fireflySprite = glowSprites?.firefly ?? null;
   ctx.save();
   fireflies.forEach((f) => {
     const x = f.baseXRatio * W + Math.sin(t * f.speedX + f.phase) * f.rangeX * S;
@@ -1486,15 +1517,16 @@ export function drawFireflies(
     const haloR = f.haloRadius * S;
     const coreR = f.size * S;
 
-    // 1. Quầng hào quang: Radial gradient lan tỏa 10px - 14px với sắc rgba(226, 248, 107, alpha * 0.4) mờ dần về 0
-    const haloGrad = ctx.createRadialGradient(x, y, 0, x, y, haloR);
-    haloGrad.addColorStop(0, `rgba(226, 248, 107, ${alpha * 0.4})`);
-    haloGrad.addColorStop(0.45, `rgba(226, 248, 107, ${alpha * 0.14})`);
-    haloGrad.addColorStop(1, 'rgba(226, 248, 107, 0)');
-    ctx.fillStyle = haloGrad;
-    ctx.beginPath();
-    ctx.arc(x, y, haloR, 0, Math.PI * 2);
-    ctx.fill();
+    // 1. Quầng hào quang qua sprite 64x64 đệm sẵn (không tạo createRadialGradient mỗi frame)
+    drawGlowSprite(
+      ctx,
+      fireflySprite,
+      x,
+      y,
+      haloR,
+      alpha * 0.72,
+      `rgba(226, 248, 107, ${(alpha * 0.25).toFixed(3)})`,
+    );
 
     // 2. Tâm sáng: hạt vàng chanh #E2F86B (bán kính 1.5px)
     ctx.beginPath();
@@ -1505,14 +1537,19 @@ export function drawFireflies(
     // 3. Đốm phản xạ mờ nhạt tương ứng dưới mặt nước tạo chiều sâu lung linh
     if (y < wy + 80 * S) {
       const mirrorY = wy + (wy - y) * 0.32 + 16 * S;
-      const refAlpha = alpha * 0.18;
-      const refGrad = ctx.createRadialGradient(x, mirrorY, 0, x, mirrorY, haloR * 0.85);
-      refGrad.addColorStop(0, `rgba(226, 248, 107, ${refAlpha})`);
-      refGrad.addColorStop(1, 'rgba(226, 248, 107, 0)');
-      ctx.fillStyle = refGrad;
-      ctx.beginPath();
-      ctx.ellipse(x, mirrorY, haloR * 0.85, haloR * 0.3, 0, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.save();
+      ctx.translate(x, mirrorY);
+      ctx.scale(1, 0.35);
+      drawGlowSprite(
+        ctx,
+        fireflySprite,
+        0,
+        0,
+        haloR * 0.85,
+        alpha * 0.32,
+        `rgba(226, 248, 107, ${(alpha * 0.14).toFixed(3)})`,
+      );
+      ctx.restore();
     }
   });
   ctx.restore();
@@ -2154,19 +2191,152 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
   }
   const offReflCtx = offReflCanvas?.getContext('2d') ?? null;
 
+  // Bộ sprite phát sáng 64x64px & bộ đệm Gradient nền hồ sen cho render 120fps+ zero-allocation
+  const glowSprites = createGlowSpriteCache();
+  interface BackdropGradientCache {
+    readonly ctx: CanvasRenderingContext2D;
+    readonly width: number;
+    readonly height: number;
+    readonly theme: 'day' | 'night';
+    readonly waterCached: LotusCachedWaterGradients;
+    readonly moonGrad: CanvasGradient;
+    readonly bloomGlowGrad: CanvasGradient;
+    readonly topMistGrad: CanvasGradient;
+    readonly vignetteGrad: CanvasGradient;
+  }
+  let cachedBackdrop: BackdropGradientCache | null = null;
+
+  const getBackdropCache = (
+    ctx: CanvasRenderingContext2D,
+    W: number,
+    H: number,
+    S: number,
+    cx: number,
+    cy: number,
+    theme: 'day' | 'night',
+  ): BackdropGradientCache => {
+    if (
+      cachedBackdrop &&
+      cachedBackdrop.ctx === ctx &&
+      cachedBackdrop.width === W &&
+      cachedBackdrop.height === H &&
+      cachedBackdrop.theme === theme
+    ) {
+      return cachedBackdrop;
+    }
+
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    if (theme === 'day') {
+      bgGrad.addColorStop(0, '#E0F2E9');
+      bgGrad.addColorStop(0.5, '#7DAE96');
+      bgGrad.addColorStop(1, '#2C5E47');
+    } else {
+      bgGrad.addColorStop(0, '#040D08');
+      bgGrad.addColorStop(0.5, '#0B2016');
+      bgGrad.addColorStop(1, '#06130E');
+    }
+
+    const centerGrad = ctx.createRadialGradient(
+      cx,
+      cy - 120 * S,
+      10,
+      cx,
+      cy - 120 * S,
+      Math.max(W, H) * 0.6,
+    );
+    if (theme === 'day') {
+      centerGrad.addColorStop(0, 'rgba(255, 255, 235, 0.25)');
+      centerGrad.addColorStop(1, 'rgba(255, 255, 235, 0)');
+    } else {
+      centerGrad.addColorStop(0, 'rgba(190, 240, 215, 0.16)');
+      centerGrad.addColorStop(1, 'rgba(190, 240, 215, 0)');
+    }
+
+    const rayGrads: CanvasGradient[] = [];
+    if (theme === 'day') {
+      for (let i = 0; i < 3; i += 1) {
+        const rayStart = -W * 0.05 + i * (W * 0.16);
+        const rg = ctx.createLinearGradient(rayStart, 0, rayStart + H * 0.65, H * 0.85);
+        rg.addColorStop(0, 'rgba(255, 255, 240, 0.12)');
+        rg.addColorStop(0.4, 'rgba(255, 255, 240, 0.08)');
+        rg.addColorStop(1, 'rgba(255, 255, 240, 0)');
+        rayGrads.push(rg);
+      }
+    }
+
+    const moonGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, 52);
+    moonGrad.addColorStop(0, 'rgba(235, 245, 255, 0.3)');
+    moonGrad.addColorStop(0.35, 'rgba(200, 230, 255, 0.12)');
+    moonGrad.addColorStop(1, 'rgba(200, 230, 255, 0)');
+
+    const bloomGlowGrad =
+      theme === 'night'
+        ? ctx.createRadialGradient(cx, cy - 30 * S, 20 * S, cx, cy - 30 * S, 200 * S)
+        : ctx.createRadialGradient(cx, cy - 80 * S, 10, cx, cy - 80 * S, 260 * S);
+    if (theme === 'night') {
+      bloomGlowGrad.addColorStop(0, 'rgba(180, 235, 215, 0.18)');
+      bloomGlowGrad.addColorStop(0.5, 'rgba(130, 205, 185, 0.08)');
+      bloomGlowGrad.addColorStop(1, 'rgba(6, 19, 14, 0)');
+    } else {
+      bloomGlowGrad.addColorStop(0, 'rgba(255, 242, 220, 0.22)');
+      bloomGlowGrad.addColorStop(1, 'rgba(255, 242, 220, 0)');
+    }
+
+    const topMistGrad = ctx.createLinearGradient(0, 0, 0, 110 * S);
+    if (theme === 'day') {
+      topMistGrad.addColorStop(0, 'rgba(240, 248, 243, 0.9)');
+      topMistGrad.addColorStop(0.5, 'rgba(240, 248, 243, 0.35)');
+      topMistGrad.addColorStop(1, 'rgba(240, 248, 243, 0)');
+    } else {
+      topMistGrad.addColorStop(0, 'rgba(4, 13, 8, 0.85)');
+      topMistGrad.addColorStop(0.5, 'rgba(4, 13, 8, 0.3)');
+      topMistGrad.addColorStop(1, 'rgba(4, 13, 8, 0)');
+    }
+
+    const vignetteGrad = ctx.createRadialGradient(
+      W / 2,
+      H / 2,
+      Math.min(W, H) * 0.3,
+      W / 2,
+      H / 2,
+      Math.max(W, H) * 0.75,
+    );
+    if (theme === 'day') {
+      vignetteGrad.addColorStop(0, 'rgba(240, 250, 245, 0)');
+      vignetteGrad.addColorStop(1, 'rgba(30, 70, 50, 0.25)');
+    } else {
+      vignetteGrad.addColorStop(0, 'rgba(0, 30, 20, 0)');
+      vignetteGrad.addColorStop(1, 'rgba(0, 20, 14, 0.55)');
+    }
+
+    cachedBackdrop = {
+      ctx,
+      width: W,
+      height: H,
+      theme,
+      waterCached: { bgGrad, centerGrad, rayGrads },
+      moonGrad,
+      bloomGlowGrad,
+      topMistGrad,
+      vignetteGrad,
+    };
+    return cachedBackdrop;
+  };
+
   return {
     render: (ctx, W, H, t, theme: 'day' | 'night' = 'night') => {
       const S = Math.min(W, H * 1.1) / 620;
       const cx = W / 2;
       const cy = H * 0.5;
       const wy = cy + 140 * S;
+      const backdrop = getBackdropCache(ctx, W, H, S, cx, cy, theme);
 
       // =================================================================
       // THỨ TỰ VẼ 10 LỚP CHUẨN XÁC THEO ĐẶC TẢ
       // =================================================================
 
       // 1. Nước hồ & Đàn cá uốn lượn đa tầng (cá lớn + bầy cá con)
-      water(ctx, t, cx, cy, W, H, S, gl, theme);
+      water(ctx, t, cx, cy, W, H, S, gl, theme, backdrop.waterCached);
       fishes(ctx, t, W, H, S, fishStates, pointerX, pointerY);
       drawMinnowSchool(ctx, t, W, H, S, pointerX, pointerY);
 
@@ -2201,7 +2371,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         }
       }
 
-      // 3. Bóng hoa sen phản chiếu gợn sóng dưới nước (scale(S, -S * 0.28), blur(3px) & sóng ngang)
+      // 3. Bóng hoa sen phản chiếu gợn sóng dưới nước (scale(S, -S * 0.28) & sóng ngang GPU-friendly)
       if (offReflCtx && offReflCanvas) {
         offReflCtx.clearRect(0, 0, 380, 280);
         offReflCtx.save();
@@ -2212,18 +2382,13 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.save();
         ctx.translate(cx, wy + 8 * S);
         ctx.scale(S, -S * 0.28);
-        ctx.globalAlpha = theme === 'day' ? 0.28 : 0.24;
-        try {
-          ctx.filter = 'blur(3px)';
-        } catch {
-          // Fallback
-        }
+        ctx.globalAlpha = theme === 'day' ? 0.23 : 0.19;
 
         const stripH = 3;
         const offW = 380;
         const offH = 280;
         for (let sy = 0; sy < offH; sy += stripH) {
-          const waveX = Math.sin((sy - 150) * 0.05 + t * 0.8) * 3;
+          const waveX = Math.sin((sy - 150) * 0.05 + t * 0.8) * 3.5;
           ctx.drawImage(
             offReflCanvas,
             0,
@@ -2236,30 +2401,25 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
             stripH,
           );
         }
-        ctx.filter = 'none';
         ctx.restore();
       } else {
         ctx.save();
         ctx.translate(cx, wy + 8 * S);
         ctx.scale(S, -S * 0.28);
-        ctx.globalAlpha = theme === 'day' ? 0.25 : 0.2;
+        ctx.globalAlpha = theme === 'day' ? 0.23 : 0.19;
         flower(ctx, t, LAY);
         ctx.restore();
       }
 
       // Ánh trăng / Quầng nguyệt dạ in bóng nước lung linh trong chế độ Nguyệt Dạ
       if (theme === 'night') {
-        ctx.save();
-        ctx.translate(cx + 80 * S, wy + 30 * S);
-        ctx.scale(S, -S * 0.28);
         const moonWave = Math.sin(t * 1.1) * 3.5;
-        const moonGrad = ctx.createRadialGradient(moonWave, 0, 2, moonWave, 0, 52);
-        moonGrad.addColorStop(0, 'rgba(235, 245, 255, 0.3)');
-        moonGrad.addColorStop(0.35, 'rgba(200, 230, 255, 0.12)');
-        moonGrad.addColorStop(1, 'rgba(200, 230, 255, 0)');
-        ctx.fillStyle = moonGrad;
+        ctx.save();
+        ctx.translate(cx + 80 * S + moonWave * S, wy + 30 * S);
+        ctx.scale(S, -S * 0.28);
+        ctx.fillStyle = backdrop.moonGrad;
         ctx.beginPath();
-        ctx.arc(moonWave, 0, 52, 0, Math.PI * 2);
+        ctx.arc(0, 0, 52, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
@@ -2270,27 +2430,8 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       bud(ctx, cx, wy, t, S, BUD);
 
       // 5. Đóa sen nở vòm chén 3D (Cánh sau -> Đài sen & Nhụy vàng -> Cánh tiền cảnh ôm tâm)
-      if (theme === 'night') {
-        const gNocturnal = ctx.createRadialGradient(
-          cx,
-          cy - 30 * S,
-          20 * S,
-          cx,
-          cy - 30 * S,
-          200 * S,
-        );
-        gNocturnal.addColorStop(0, 'rgba(180, 235, 215, 0.18)');
-        gNocturnal.addColorStop(0.5, 'rgba(130, 205, 185, 0.08)');
-        gNocturnal.addColorStop(1, 'rgba(6, 19, 14, 0)');
-        ctx.fillStyle = gNocturnal;
-        ctx.fillRect(0, 0, W, H);
-      } else {
-        const gWarm = ctx.createRadialGradient(cx, cy - 80 * S, 10, cx, cy - 80 * S, 260 * S);
-        gWarm.addColorStop(0, 'rgba(255, 242, 220, 0.22)');
-        gWarm.addColorStop(1, 'rgba(255, 242, 220, 0)');
-        ctx.fillStyle = gWarm;
-        ctx.fillRect(0, 0, W, H);
-      }
+      ctx.fillStyle = backdrop.bloomGlowGrad;
+      ctx.fillRect(0, 0, W, H);
 
       ctx.save();
       ctx.translate(cx, cy);
@@ -2316,55 +2457,27 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       }
 
       // 9. BẦY ĐOM ĐÓM PHÁT SÁNG (chỉ hiển thị ban đêm)
-      drawFireflies(ctx, t, W, H, S, wy, fireflies, theme);
+      drawFireflies(ctx, t, W, H, S, wy, fireflies, theme, glowSprites);
 
-      // 26 hạt phấn hoa bay lơ lửng
+      // 26 hạt phấn hoa bay lơ lửng (sprite hào quang 120fps)
+      const pollenSprite = theme === 'day' ? glowSprites.gold : glowSprites.firefly;
       for (let i = 0; i < 26; i++) {
         const f = (t * 0.03 + i / 26) % 1;
         const x = cx + Math.sin(i * 7.1 + t * 0.3) * 150 * S * (0.4 + f);
         const y = cy - 70 * S - f * 260 * S;
         const a = Math.sin(f * Math.PI) * (theme === 'day' ? 0.65 : 0.45);
+        drawGlowSprite(ctx, pollenSprite, x, y, 4.2 * S, a * 0.45);
         ctx.beginPath();
         ctx.arc(x, y, (1.2 + (i % 3) * 0.5) * S, 0, Math.PI * 2);
         ctx.fillStyle = theme === 'day' ? `rgba(255, 230, 160, ${a})` : `rgba(226, 248, 107, ${a})`;
         ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x, y, 4 * S, 0, Math.PI * 2);
-        ctx.fillStyle =
-          theme === 'day' ? `rgba(255, 230, 160, ${a * 0.2})` : `rgba(226, 248, 107, ${a * 0.15})`;
-        ctx.fill();
       }
 
-      // 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang
-      const gTopMist = ctx.createLinearGradient(0, 0, 0, 110 * S);
-      if (theme === 'day') {
-        gTopMist.addColorStop(0, 'rgba(240, 248, 243, 0.9)');
-        gTopMist.addColorStop(0.5, 'rgba(240, 248, 243, 0.35)');
-        gTopMist.addColorStop(1, 'rgba(240, 248, 243, 0)');
-      } else {
-        gTopMist.addColorStop(0, 'rgba(4, 13, 8, 0.85)');
-        gTopMist.addColorStop(0.5, 'rgba(4, 13, 8, 0.3)');
-        gTopMist.addColorStop(1, 'rgba(4, 13, 8, 0)');
-      }
-      ctx.fillStyle = gTopMist;
+      // 10. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang (đã cache gradient)
+      ctx.fillStyle = backdrop.topMistGrad;
       ctx.fillRect(0, 0, W, 110 * S);
 
-      const gVignette = ctx.createRadialGradient(
-        W / 2,
-        H / 2,
-        Math.min(W, H) * 0.3,
-        W / 2,
-        H / 2,
-        Math.max(W, H) * 0.75,
-      );
-      if (theme === 'day') {
-        gVignette.addColorStop(0, 'rgba(240, 250, 245, 0)');
-        gVignette.addColorStop(1, 'rgba(30, 70, 50, 0.25)');
-      } else {
-        gVignette.addColorStop(0, 'rgba(0, 30, 20, 0)');
-        gVignette.addColorStop(1, 'rgba(0, 20, 14, 0.55)');
-      }
-      ctx.fillStyle = gVignette;
+      ctx.fillStyle = backdrop.vignetteGrad;
       ctx.fillRect(0, 0, W, H);
     },
 

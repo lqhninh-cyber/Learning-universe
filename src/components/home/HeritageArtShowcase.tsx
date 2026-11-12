@@ -1,6 +1,7 @@
 import { BookOpen, ChevronLeft, ChevronRight, Landmark, Pause, Play, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
+import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
 export interface HeritageArtwork {
@@ -598,6 +599,18 @@ export function HeritageArtShowcase() {
   const glareRef = useRef<HTMLDivElement>(null);
   const motionRafRef = useRef<number>(0);
   const transitionTimerRef = useRef<number>(0);
+  const parallaxStateRef = useRef({
+    curX: 0,
+    curY: 0,
+    curScale: 1,
+    targetX: 0,
+    targetY: 0,
+    targetScale: 1,
+    px: 0.5,
+    py: 0.5,
+    active: false,
+    lastNow: 0,
+  });
 
   const totalArtworks = HERITAGE_ARTWORKS.length;
   const currentArtwork = HERITAGE_ARTWORKS[currentIndex] ?? HERITAGE_ARTWORKS[0]!;
@@ -662,7 +675,54 @@ export function HeritageArtShowcase() {
     };
   }, []);
 
-  // Chuyển động vi sai tinh tế (±4px + scale 1.03) CHỈ áp dụng bên trong lòng khung ảnh
+  // Chuyển động vi sai tinh tế 120fps+ (±4px + scale 1.03) với exponential damping bên trong khung ảnh
+  const ensureParallaxTick = useCallback(() => {
+    if (motionRafRef.current !== 0) return;
+    parallaxStateRef.current.lastNow = performance.now();
+
+    const step = (now: number) => {
+      const state = parallaxStateRef.current;
+      const { dtSeconds } = computeFrameDelta(now, state.lastNow || now);
+      state.lastNow = now;
+      const damp = frameDampFactor(12, dtSeconds);
+
+      state.curX += (state.targetX - state.curX) * damp;
+      state.curY += (state.targetY - state.curY) * damp;
+      state.curScale += (state.targetScale - state.curScale) * damp;
+
+      if (imgMotionRef.current) {
+        imgMotionRef.current.style.transform = `translate3d(${state.curX.toFixed(2)}px, ${state.curY.toFixed(2)}px, 0px) scale(${state.curScale.toFixed(4)})`;
+      }
+      if (glareRef.current) {
+        if (state.active) {
+          glareRef.current.style.opacity = '1';
+          glareRef.current.style.background = `radial-gradient(circle 220px at ${(state.px * 100).toFixed(1)}% ${(state.py * 100).toFixed(1)}%, rgba(255, 248, 224, 0.24), rgba(229, 184, 105, 0.08) 45%, transparent 72%)`;
+        } else {
+          glareRef.current.style.opacity = '0';
+        }
+      }
+
+      const settled =
+        Math.abs(state.targetX - state.curX) < 0.02 &&
+        Math.abs(state.targetY - state.curY) < 0.02 &&
+        Math.abs(state.targetScale - state.curScale) < 0.0005;
+
+      if (!settled) {
+        motionRafRef.current = window.requestAnimationFrame(step);
+      } else {
+        state.curX = state.targetX;
+        state.curY = state.targetY;
+        state.curScale = state.targetScale;
+        if (imgMotionRef.current) {
+          imgMotionRef.current.style.transform = `translate3d(${state.curX.toFixed(2)}px, ${state.curY.toFixed(2)}px, 0px) scale(${state.curScale.toFixed(4)})`;
+        }
+        motionRafRef.current = 0;
+      }
+    };
+
+    motionRafRef.current = window.requestAnimationFrame(step);
+  }, []);
+
   const handleImageMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (prefersReducedMotion) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -670,35 +730,30 @@ export function HeritageArtShowcase() {
 
     const px = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
     const py = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
-    const shiftX = (px - 0.5) * 8;
-    const shiftY = (py - 0.5) * 8;
-
-    if (motionRafRef.current !== 0) {
-      window.cancelAnimationFrame(motionRafRef.current);
-    }
-    motionRafRef.current = window.requestAnimationFrame(() => {
-      motionRafRef.current = 0;
-      if (imgMotionRef.current) {
-        imgMotionRef.current.style.transform = `translate3d(${shiftX.toFixed(2)}px, ${shiftY.toFixed(2)}px, 0px) scale(1.03)`;
-      }
-      if (glareRef.current) {
-        glareRef.current.style.opacity = '1';
-        glareRef.current.style.background = `radial-gradient(circle 220px at ${(px * 100).toFixed(1)}% ${(py * 100).toFixed(1)}%, rgba(255, 248, 224, 0.24), rgba(229, 184, 105, 0.08) 45%, transparent 72%)`;
-      }
-    });
+    parallaxStateRef.current.targetX = (px - 0.5) * 8;
+    parallaxStateRef.current.targetY = (py - 0.5) * 8;
+    parallaxStateRef.current.targetScale = 1.03;
+    parallaxStateRef.current.px = px;
+    parallaxStateRef.current.py = py;
+    parallaxStateRef.current.active = true;
+    ensureParallaxTick();
   };
 
   const handleImageMouseLeave = () => {
-    if (motionRafRef.current !== 0) {
-      window.cancelAnimationFrame(motionRafRef.current);
-      motionRafRef.current = 0;
-    }
-    if (imgMotionRef.current) {
-      imgMotionRef.current.style.transform = 'translate3d(0px, 0px, 0px) scale(1)';
-    }
+    parallaxStateRef.current.targetX = 0;
+    parallaxStateRef.current.targetY = 0;
+    parallaxStateRef.current.targetScale = 1;
+    parallaxStateRef.current.active = false;
     if (glareRef.current) {
       glareRef.current.style.opacity = '0';
     }
+    if (prefersReducedMotion) {
+      if (imgMotionRef.current) {
+        imgMotionRef.current.style.transform = 'translate3d(0px, 0px, 0px) scale(1)';
+      }
+      return;
+    }
+    ensureParallaxTick();
   };
 
   const formattedIndex = String(currentIndex + 1).padStart(2, '0');
@@ -881,8 +936,9 @@ export function HeritageArtShowcase() {
               alt={currentArtwork.alt}
               referrerPolicy="no-referrer"
               onError={() => setImageError(true)}
+              style={{ backfaceVisibility: 'hidden' }}
               className={cn(
-                'mx-auto h-full w-full object-contain transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform select-none',
+                'mx-auto h-full w-full object-contain transition-opacity duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform select-none',
                 isTransitioning ? slideHiddenClass : 'translate-x-0 opacity-100',
               )}
             />

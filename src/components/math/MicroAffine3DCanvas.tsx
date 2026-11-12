@@ -1,5 +1,6 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { KatexMath } from '@/features/math-glossary/KatexMath';
+import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
 export type Affine3DMode = 'plane-dir' | 'line-intersect' | 'plane-parallel';
@@ -167,7 +168,7 @@ export const MicroAffine3DCanvas: FC<MicroAffine3DCanvasProps> = ({
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = getLowLatency2DContext(canvas, { alpha: true });
     if (!ctx) return;
 
     let animId = 0;
@@ -180,30 +181,35 @@ export const MicroAffine3DCanvas: FC<MicroAffine3DCanvasProps> = ({
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    let lastNowMs = startTime;
+
     const render = (now: number) => {
       if (!isMounted || !isIntersecting) {
         animId = 0;
         return;
       }
 
+      const { dtScale } = computeFrameDelta(now, lastNowMs);
+      lastNowMs = now;
       const elapsed = now - startTime;
 
-      // Cập nhật quán tính khi thả chuột
+      // Cập nhật quán tính khi thả chuột chuẩn hóa theo delta-time 120fps+
       if (!isDraggingRef.current) {
         if (
           Math.abs(velocityRef.current.yaw) > 0.00005 ||
           Math.abs(velocityRef.current.pitch) > 0.00005
         ) {
-          const nextYaw = yawRef.current + velocityRef.current.yaw;
+          const nextYaw = yawRef.current + velocityRef.current.yaw * dtScale;
           const nextPitch = Math.max(
             -PITCH_LIMIT,
-            Math.min(PITCH_LIMIT, pitchRef.current + velocityRef.current.pitch),
+            Math.min(PITCH_LIMIT, pitchRef.current + velocityRef.current.pitch * dtScale),
           );
           setYaw(nextYaw);
           setPitch(nextPitch);
 
-          velocityRef.current.yaw *= 0.92;
-          velocityRef.current.pitch *= 0.92;
+          const decay = Math.pow(0.92, dtScale);
+          velocityRef.current.yaw *= decay;
+          velocityRef.current.pitch *= decay;
         }
       }
 
@@ -615,6 +621,7 @@ export const MicroAffine3DCanvas: FC<MicroAffine3DCanvasProps> = ({
           if (entry) {
             isIntersecting = entry.isIntersecting;
             if (isIntersecting && !animId) {
+              lastNowMs = performance.now();
               animId = requestAnimationFrame(render);
             } else if (!isIntersecting && animId) {
               cancelAnimationFrame(animId);

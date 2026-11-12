@@ -1,3 +1,9 @@
+import {
+  createGlowSpriteCache,
+  drawGlowSprite,
+  type GlowSpriteCache,
+} from '@/shared/lib/canvasSprites';
+
 /**
  * ENGINE ĐỒ HỌA CANVAS 2D: "THIÊN CẦU KHUÊ VĂN CÁC" (THẤU KÍNH POINCARÉ, COMPA & TƠ SƠN MÀI)
  *
@@ -19,6 +25,24 @@ export const INTRO_TOTAL_DURATION_S = 7.5;
 export const INTRO_REDUCED_DURATION_S = 1.5;
 export const PORTAL_DISMISS_DURATION_S = 0.45;
 export const POINCARE_BOUNDARY_COUNT = 16;
+
+interface KhueGradientCache {
+  readonly width: number;
+  readonly height: number;
+  readonly rOuter1: number;
+  readonly bgGrad: CanvasGradient;
+  readonly warmGlowGrad: CanvasGradient;
+}
+
+const khueGradientCache = new WeakMap<CanvasRenderingContext2D, KhueGradientCache>();
+let khueGlowSprites: GlowSpriteCache | null = null;
+
+function getKhueGlowSprites(): GlowSpriteCache {
+  if (!khueGlowSprites) {
+    khueGlowSprites = createGlowSpriteCache();
+  }
+  return khueGlowSprites;
+}
 
 export interface KhueVanRenderState {
   readonly elapsed: number;
@@ -1422,16 +1446,21 @@ function drawCentralGoldenRosette(
   ctx.stroke();
   ctx.restore();
 
-  // Hạt ngọc tâm Đỏ Chu Sa #C83E37 tỏa quầng sáng ấm shadowBlur = 10
+  // Hạt ngọc tâm Đỏ Chu Sa #C83E37 tỏa quầng sáng ấm qua sprite đệm sẵn 120fps (không dùng shadowBlur)
   const jewelR = Math.max(3.6, r1 * 0.048) * sealP;
-  ctx.save();
-  ctx.shadowBlur = 10;
-  ctx.shadowColor = 'rgba(200, 62, 55, 0.72)';
+  drawGlowSprite(
+    ctx,
+    getKhueGlowSprites().cinnabar,
+    0,
+    0,
+    jewelR * 2.8,
+    0.78,
+    'rgba(200, 62, 55, 0.25)',
+  );
   ctx.fillStyle = COLORS.cinnabar;
   ctx.beginPath();
   ctx.arc(0, 0, jewelR, 0, Math.PI * 2);
   ctx.fill();
-  ctx.restore();
 
   // Điểm phản quang tinh tế trên mặt ngọc
   ctx.fillStyle = COLORS.paperCenter;
@@ -1669,29 +1698,38 @@ export function renderKhueVanCanvas(
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
-  // 1. NỀN GIẤY DÓ HOÀNG CUNG CÓ VIGNETTE TRẦM NHẸ 4 GÓC (#FFFDF9 -> #EDE8D8 -> #E5DEC9)
-  const bgRadius = Math.hypot(cx, cy) * 1.05;
-  const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, bgRadius);
-  bgGrad.addColorStop(0, COLORS.paperCenter);
-  bgGrad.addColorStop(0.45, COLORS.paperMid);
-  bgGrad.addColorStop(0.78, COLORS.paperEdge);
-  bgGrad.addColorStop(1, COLORS.paperCornerDeep);
-  ctx.fillStyle = bgGrad;
+  // 1. NỀN GIẤY DÓ HOÀNG CUNG CÓ VIGNETTE TRẦM NHẸ 4 GÓC (#FFFDF9 -> #EDE8D8 -> #E5DEC9) — cache theo kích thước
+  let cachedGrad = khueGradientCache.get(ctx);
+  if (
+    !cachedGrad ||
+    cachedGrad.width !== width ||
+    cachedGrad.height !== height ||
+    cachedGrad.rOuter1 !== rOuter1
+  ) {
+    const bgRadius = Math.hypot(cx, cy) * 1.05;
+    const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, bgRadius);
+    bgGrad.addColorStop(0, COLORS.paperCenter);
+    bgGrad.addColorStop(0.45, COLORS.paperMid);
+    bgGrad.addColorStop(0.78, COLORS.paperEdge);
+    bgGrad.addColorStop(1, COLORS.paperCornerDeep);
+
+    const warmGlowGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, rOuter1);
+    warmGlowGrad.addColorStop(0, COLORS.warmCenterGlow);
+    warmGlowGrad.addColorStop(1, 'rgba(229, 195, 120, 0)');
+
+    cachedGrad = { width, height, rOuter1, bgGrad, warmGlowGrad };
+    khueGradientCache.set(ctx, cachedGrad);
+  }
+
+  ctx.fillStyle = cachedGrad.bgGrad;
   ctx.fillRect(0, 0, width, height);
 
-  // QUẦNG SÁNG ẤM TẠI TÂM (bám theo lớp lõi Parallax)
-  const warmGlowGrad = ctx.createRadialGradient(
-    cx + coreOffsetX,
-    cy + coreOffsetY,
-    0,
-    cx + coreOffsetX,
-    cy + coreOffsetY,
-    rOuter1,
-  );
-  warmGlowGrad.addColorStop(0, COLORS.warmCenterGlow);
-  warmGlowGrad.addColorStop(1, 'rgba(229, 195, 120, 0)');
-  ctx.fillStyle = warmGlowGrad;
-  ctx.fillRect(0, 0, width, height);
+  // QUẦNG SÁNG ẤM TẠI TÂM (bám theo lớp lõi Parallax bằng translate thay vì tạo gradient mới mỗi frame)
+  ctx.save();
+  ctx.translate(cx + coreOffsetX, cy + coreOffsetY);
+  ctx.fillStyle = cachedGrad.warmGlowGrad;
+  ctx.fillRect(-rOuter1, -rOuter1, rOuter1 * 2, rOuter1 * 2);
+  ctx.restore();
 
   // 2A. LỚP KHUNG VIỀN NGOÀI (-mx * 4, -my * 4)
   ctx.save();

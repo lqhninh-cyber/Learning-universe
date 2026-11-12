@@ -116,9 +116,9 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.getByText('Ch.1')).toBeInTheDocument();
     expect(screen.getByText(/Tọa độ Affine/i)).toBeInTheDocument();
 
-    // Kiểm tra hoa 8 cánh xoay theo scrollY * 0.08deg = 24.00deg
+    // Kiểm tra hoa 8 cánh xoay GPU translate3d theo scrollY * 0.08deg = 24.00deg
     const brandSvg = container.querySelector('header svg[aria-hidden="true"]');
-    expect(brandSvg).toHaveStyle({ transform: 'rotate(24.00deg)' });
+    expect(brandSvg).toHaveStyle({ transform: 'translate3d(0px, 0px, 0px) rotate(24.00deg)' });
 
     // Bật Đọc lướt định lý từ Header
     const skimBtn = screen.getByRole('button', { name: /Đọc lướt định lý/i });

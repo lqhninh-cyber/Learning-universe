@@ -1,4 +1,5 @@
 import { type FC, useEffect, useRef, useState } from 'react';
+import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 import { createLotusCanvasEngine, type LotusCanvasEngine } from './lotusCanvasEngine';
 
@@ -84,6 +85,8 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
     }
     const engine = engineRef.current;
 
+    const cachedCtx = getLowLatency2DContext(canvas, { alpha: false });
+
     const handleResize = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
@@ -99,30 +102,33 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
       canvas.style.width = `${W}px`;
       canvas.style.height = `${H}px`;
 
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (cachedCtx) {
+        cachedCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
     };
 
     const renderFrame = (t: number) => {
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx || width <= 0 || height <= 0) return;
-      ctx.clearRect(0, 0, width, height);
-      engine.render(ctx, width, height, t, lakeThemeRef.current);
+      if (!cachedCtx || width <= 0 || height <= 0) return;
+      engine.render(cachedCtx, width, height, t, lakeThemeRef.current);
     };
 
     handleResize();
 
+    let elapsedSec = 0;
+    let lastTimestampMs = performance.now();
+
     const startLoop = () => {
       if (animId || !isMounted || prefersReducedMotion) return;
+      lastTimestampMs = performance.now();
       const loop = (timestamp: number) => {
         if (!isMounted || !isIntersecting) {
           animId = 0;
           return;
         }
-        renderFrame(timestamp / 1000);
+        const { dtSeconds } = computeFrameDelta(timestamp, lastTimestampMs);
+        lastTimestampMs = timestamp;
+        elapsedSec += dtSeconds;
+        renderFrame(elapsedSec);
         animId = requestAnimationFrame(loop);
       };
       animId = requestAnimationFrame(loop);
@@ -196,7 +202,7 @@ export const GrandLotusLake: FC<GrandLotusLakeProps> = ({ className }) => {
 
     if (prefersReducedMotion && canvasRef.current && engineRef.current) {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
+      const ctx = getLowLatency2DContext(canvas, { alpha: false });
       const rect = canvas.getBoundingClientRect();
       if (ctx && rect.width > 0 && rect.height > 0) {
         ctx.clearRect(0, 0, rect.width, rect.height);

@@ -201,7 +201,7 @@ export const Header: FC<HeaderProps> = ({
       const y = window.scrollY || 0;
 
       if (roseRef.current) {
-        roseRef.current.style.transform = `rotate(${(y * 0.08).toFixed(2)}deg)`;
+        roseRef.current.style.transform = `translate3d(0px, 0px, 0px) rotate(${(y * 0.08).toFixed(2)}deg)`;
       }
 
       const nextInLessonScrolled = isLessonPage && y > LESSON_SCROLL_THRESHOLD_PX;
@@ -216,7 +216,7 @@ export const Header: FC<HeaderProps> = ({
 
       if (isLessonPage && progressBarRef.current) {
         const ratio = computePageReadingProgress();
-        progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
+        progressBarRef.current.style.transform = `translate3d(0px, 0px, 0px) scaleX(${ratio.toFixed(4)})`;
       }
     };
 
@@ -678,8 +678,9 @@ export const Header: FC<HeaderProps> = ({
               ref={progressBarRef}
               data-testid="header-reading-progress"
               style={{
-                transform: 'scaleX(0)',
+                transform: 'translate3d(0px, 0px, 0px) scaleX(0)',
                 transformOrigin: 'left center',
+                backfaceVisibility: 'hidden',
                 background: 'linear-gradient(90deg, #C83E37 0%, #C5A262 50%, #25694C 100%)',
               }}
               className="h-full w-full rounded-full will-change-transform"

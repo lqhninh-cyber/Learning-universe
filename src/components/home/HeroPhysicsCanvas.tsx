@@ -1,5 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
+import {
+  computeFrameDelta,
+  createGlowSpriteCache,
+  drawGlowSprite,
+  frameDampFactor,
+  getLowLatency2DContext,
+} from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
 export interface HeroPhysicsCanvasProps {
@@ -427,13 +434,10 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     const canvas = canvasRef.current;
     if (!canvas || typeof window === 'undefined') return;
 
-    let ctx: CanvasRenderingContext2D | null = null;
-    try {
-      ctx = canvas.getContext('2d');
-    } catch {
-      ctx = null;
-    }
+    const ctx = getLowLatency2DContext(canvas, { alpha: true });
     if (!ctx) return;
+
+    const glowSprites = createGlowSpriteCache();
 
     let width = window.innerWidth || 1440;
     let height = window.innerHeight || 900;
@@ -638,6 +642,37 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       }
     };
 
+    const drawShimmeringWaterReflections = (context: CanvasRenderingContext2D, timeSec: number) => {
+      const horizonY = height * WATERLINE_RATIO;
+      const seaSpanY = Math.max(height - horizonY - 18, 90);
+      // Gợn phản chiếu bóng đảo Karst & thuyền buồm cắt lát ngang 120fps thay thế SVG feDisplacementMap
+      const anchors = [
+        { xRatio: 0.16, spanW: 54, tone: 'rgba(13, 34, 31, 0.24)' },
+        { xRatio: 0.56, spanW: 68, tone: 'rgba(16, 40, 36, 0.28)' },
+        { xRatio: 0.77, spanW: 84, tone: 'rgba(12, 30, 27, 0.26)' },
+        { xRatio: 0.9, spanW: 48, tone: 'rgba(20, 44, 39, 0.22)' },
+      ] as const;
+
+      context.lineCap = 'round';
+      for (let a = 0; a < anchors.length; a += 1) {
+        const anchor = anchors[a];
+        if (!anchor) continue;
+        const baseX = width * anchor.xRatio;
+        context.strokeStyle = anchor.tone;
+        for (let row = 0; row < 5; row += 1) {
+          const norm = (row + 0.3) / 5.4;
+          const ry = horizonY + 12 + norm * seaSpanY * 0.58;
+          const waveShift = Math.sin(timeSec * 1.45 + row * 1.1 + a) * (4 + row * 1.5);
+          const halfSpan = anchor.spanW * (1 - norm * 0.42);
+          context.lineWidth = Math.max(1.2, 2.8 - norm * 1.4);
+          context.beginPath();
+          context.moveTo(baseX + waveShift - halfSpan, ry);
+          context.lineTo(baseX + waveShift + halfSpan, ry);
+          context.stroke();
+        }
+      }
+    };
+
     const drawWaterSparkles = (context: CanvasRenderingContext2D, timeSec: number) => {
       const horizonY = height * WATERLINE_RATIO;
       const seaSpanY = Math.max(height - horizonY - 24, 100);
@@ -678,13 +713,14 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
           0.25 + 0.75 * Math.pow(0.5 + 0.5 * Math.sin(timeSec * mote.driftSpeed + mote.phase), 2);
         const radius = mote.radius * (0.85 + 0.35 * glow);
 
-        context.beginPath();
-        context.arc(px, py, radius * 2.4, 0, Math.PI * 2);
-        context.fillStyle =
-          mote.tone === 'emerald'
-            ? `rgba(110, 231, 183, ${(glow * 0.16).toFixed(3)})`
-            : `rgba(253, 230, 138, ${(glow * 0.16).toFixed(3)})`;
-        context.fill();
+        drawGlowSprite(
+          context,
+          glowSprites[mote.tone === 'emerald' ? 'emerald' : 'gold'],
+          px,
+          py,
+          radius * 4.2,
+          glow * 0.42,
+        );
 
         context.beginPath();
         context.arc(px, py, radius, 0, Math.PI * 2);
@@ -699,15 +735,18 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     const drawUnderwaterFishSchools = (
       context: CanvasRenderingContext2D,
       timeSec: number,
+      dtSeconds: number,
+      dtScale: number,
       animate: boolean,
     ) => {
       const horizonY = height * WATERLINE_RATIO;
       const minSeaY = horizonY + 28;
       const maxSeaY = Math.max(height - 26, minSeaY + 40);
+      const schoolLerp = frameDampFactor(1.85, dtSeconds);
 
       for (const school of fishSchools) {
         if (animate) {
-          school.phase += 0.022;
+          school.phase += 0.022 * dtScale;
           const baseDir = school.tone === 'gold' ? 1 : -1;
           let targetVx = baseDir * school.baseSpeed;
           let targetVy = Math.sin(timeSec * 0.75 + school.phase) * 0.24;
@@ -722,10 +761,10 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
             }
           }
 
-          school.vx += (targetVx - school.vx) * 0.03;
-          school.vy += (targetVy - school.vy) * 0.03;
-          school.x += school.vx;
-          school.y += school.vy;
+          school.vx += (targetVx - school.vx) * schoolLerp;
+          school.vy += (targetVy - school.vy) * schoolLerp;
+          school.x += school.vx * dtScale;
+          school.y += school.vy * dtScale;
 
           if (school.x > width + 90) school.x = -90;
           if (school.x < -90) school.x = width + 90;
@@ -774,6 +813,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     const drawLeapingFishAndSplashes = (
       context: CanvasRenderingContext2D,
       timeMs: number,
+      dtScale: number,
       animate: boolean,
     ) => {
       if (!animate) return;
@@ -863,10 +903,10 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       for (let i = splashDroplets.length - 1; i >= 0; i -= 1) {
         const drop = splashDroplets[i];
         if (!drop) continue;
-        drop.vy += 0.14;
-        drop.x += drop.vx;
-        drop.y += drop.vy;
-        drop.alpha -= 0.032;
+        drop.vy += 0.14 * dtScale;
+        drop.x += drop.vx * dtScale;
+        drop.y += drop.vy * dtScale;
+        drop.alpha -= 0.032 * dtScale;
 
         if (drop.alpha <= 0.02) {
           splashDroplets.splice(i, 1);
@@ -883,6 +923,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     const drawAirborneBirdsAndEagles = (
       context: CanvasRenderingContext2D,
       timeSec: number,
+      dtScale: number,
       animate: boolean,
     ) => {
       // 3 đại bàng biển lượn vòng elip chậm trên tầm cao quanh các đỉnh Karst
@@ -907,7 +948,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       // 6 chim hải âu & cò trắng có cánh 2 khớp bay lướt qua vịnh & đan xen nhịp vỗ - lướt
       for (const bird of foregroundBirds) {
         if (animate) {
-          bird.xRatio += bird.vxRatio * 0.016;
+          bird.xRatio += bird.vxRatio * 0.016 * dtScale;
           if (bird.xRatio > 1.06) bird.xRatio = -0.06;
           if (bird.xRatio < -0.06) bird.xRatio = 1.06;
         }
@@ -928,29 +969,31 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       }
     };
 
-    const drawFrame = (timeMs: number, animate: boolean) => {
+    const drawFrame = (timeMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
       const timeSec = timeMs * 0.001;
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
       const sampleTime = animate ? timeSec : 0.45;
+      const particleDamp = frameDampFactor(2.76, dtSeconds);
 
-      // 1. Gợn sóng sine mềm, dải nắng mặt trời, sinh vật phát quang & đàn cá bơi dưới vịnh
+      // 1. Gợn phản chiếu Karst 120fps, sóng sine, dải nắng, sinh vật phát quang & đàn cá bơi dưới vịnh
+      drawShimmeringWaterReflections(ctx, sampleTime);
       drawSineWaterWaves(ctx, sampleTime);
       drawDynamicSunpath(ctx, sampleTime);
       drawBioluminescentPlankton(ctx, sampleTime);
-      drawUnderwaterFishSchools(ctx, sampleTime, animate);
-      drawLeapingFishAndSplashes(ctx, timeMs, animate);
+      drawUnderwaterFishSchools(ctx, sampleTime, dtSeconds, dtScale, animate);
+      drawLeapingFishAndSplashes(ctx, timeMs, dtScale, animate);
 
       // 2. Đốm sáng lấp lánh (water sparkles) & Đàn chim hải âu / cò trắng / đại bàng trên cao
       drawWaterSparkles(ctx, sampleTime);
-      drawAirborneBirdsAndEagles(ctx, sampleTime, animate);
+      drawAirborneBirdsAndEagles(ctx, sampleTime, dtScale, animate);
 
       // 3. Bụi nắng vàng kim & đom đóm lơ lửng tương tác chuột (bán kính 140px)
       for (const p of particles) {
         if (animate) {
-          p.phase += 0.028;
+          p.phase += 0.028 * dtScale;
 
           if (pointer.active) {
             const dx = p.x - pointer.x;
@@ -958,7 +1001,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
             const distSq = dx * dx + dy * dy;
             if (distSq > 0.5 && distSq < INTERACTION_RADIUS * INTERACTION_RADIUS) {
               const dist = Math.sqrt(distSq);
-              const strength = (1 - dist / INTERACTION_RADIUS) * 0.36;
+              const strength = (1 - dist / INTERACTION_RADIUS) * 0.36 * dtScale;
               const nx = dx / dist;
               const ny = dy / dist;
               p.vx += nx * strength - ny * strength * 0.65;
@@ -966,11 +1009,11 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
             }
           }
 
-          p.vx += (p.baseVx - p.vx) * 0.045;
-          p.vy += (p.baseVy - p.vy) * 0.045;
+          p.vx += (p.baseVx - p.vx) * particleDamp;
+          p.vy += (p.baseVy - p.vy) * particleDamp;
 
-          p.x += p.vx;
-          p.y += p.vy;
+          p.x += p.vx * dtScale;
+          p.y += p.vy * dtScale;
 
           if (p.y < -12) p.y = height + 12;
           if (p.y > height + 12) p.y = -12;
@@ -981,6 +1024,10 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
         const pulse = 0.58 + 0.42 * Math.sin(p.phase);
         const alpha = p.alpha * pulse;
 
+        if (p.tone === 'gold') {
+          drawGlowSprite(ctx, glowSprites.gold, p.x, p.y, p.radius * 3.8, alpha * 0.48);
+        }
+
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle =
@@ -988,13 +1035,6 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
             ? `rgba(142, 229, 206, ${(alpha * 0.7).toFixed(3)})`
             : `rgba(255, 213, 132, ${(alpha * 0.88).toFixed(3)})`;
         ctx.fill();
-
-        if (p.tone === 'gold') {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius * 2.8, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(232, 168, 90, ${(alpha * 0.16).toFixed(3)})`;
-          ctx.fill();
-        }
       }
 
       // 4. Vệt sáng & rẽ nước hình chữ V phát quang theo đầu con trỏ trên mặt vịnh
@@ -1003,7 +1043,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
         for (let i = trail.length - 1; i >= 0; i -= 1) {
           const pt = trail[i];
           if (!pt) continue;
-          pt.life -= 0.055;
+          pt.life -= 0.055 * dtScale;
           if (pt.life <= 0) {
             trail.splice(i, 1);
           }
@@ -1049,11 +1089,13 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
 
       // 5. Gợn sóng nước lan tỏa tròn phối cảnh elip (rê chuột trên biển & Click)
       if (animate && ripples.length > 0) {
+        const waterDecay = Math.pow(0.96, dtScale);
+        const airDecay = Math.pow(0.95, dtScale);
         for (let i = ripples.length - 1; i >= 0; i -= 1) {
           const ripple = ripples[i];
           if (!ripple) continue;
-          ripple.radius += ripple.speed;
-          ripple.alpha *= ripple.isWater ? 0.96 : 0.95;
+          ripple.radius += ripple.speed * dtScale;
+          ripple.alpha *= ripple.isWater ? waterDecay : airDecay;
 
           if (ripple.radius >= ripple.maxRadius || ripple.alpha <= 0.015) {
             ripples.splice(i, 1);
@@ -1076,7 +1118,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     };
 
     if (prefersReducedMotion) {
-      drawFrame(0, false);
+      drawFrame(0, 1 / 60, 1, false);
       window.addEventListener('resize', resize, { passive: true });
       return () => {
         window.removeEventListener('resize', resize);
@@ -1084,23 +1126,67 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     }
 
     let rafId = 0;
+    let isDisposed = false;
+    let isIntersecting = true;
+    let elapsedSec = 0;
+    let prevNowMs = performance.now();
+
+    const stopLoop = () => {
+      if (rafId !== 0) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
     const tick = (now: number) => {
-      drawFrame(now, true);
+      if (isDisposed || !isIntersecting) {
+        rafId = 0;
+        return;
+      }
+      const { dtSeconds, dtScale } = computeFrameDelta(now, prevNowMs);
+      prevNowMs = now;
+      elapsedSec += dtSeconds;
+
+      drawFrame(elapsedSec * 1000, dtSeconds, dtScale, true);
       rafId = window.requestAnimationFrame(tick);
     };
+
+    const startLoop = () => {
+      if (isDisposed || !isIntersecting || rafId !== 0) return;
+      prevNowMs = performance.now();
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    let intersectionObserver: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      intersectionObserver = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (!entry) return;
+          isIntersecting = entry.isIntersecting;
+          if (isIntersecting) {
+            startLoop();
+          } else {
+            stopLoop();
+          }
+        },
+        { threshold: 0.02 },
+      );
+      intersectionObserver.observe(canvas);
+    }
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('click', handleClick, { passive: true });
     window.addEventListener('resize', resize, { passive: true });
-    rafId = window.requestAnimationFrame(tick);
+    startLoop();
 
     return () => {
+      isDisposed = true;
+      stopLoop();
+      intersectionObserver?.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleClick);
       window.removeEventListener('resize', resize);
-      if (rafId !== 0) {
-        window.cancelAnimationFrame(rafId);
-      }
       ripples.length = 0;
       trail.length = 0;
       splashDroplets.length = 0;

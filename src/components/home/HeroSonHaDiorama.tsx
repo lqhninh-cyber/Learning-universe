@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
+import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
 export interface HeroSonHaDioramaProps {
@@ -361,7 +362,6 @@ interface JunkBoatProps {
   readonly flipX?: boolean;
   readonly sailGradId: string;
   readonly reflectGradId: string;
-  readonly waterRippleFilterId: string;
   readonly lanternGlowId: string;
   readonly glideClass?: string;
   readonly rockClass?: string;
@@ -382,7 +382,6 @@ function BatWingJunkBoat({
   flipX = false,
   sailGradId,
   reflectGradId,
-  waterRippleFilterId,
   lanternGlowId,
   glideClass,
   rockClass,
@@ -503,11 +502,10 @@ function BatWingJunkBoat({
     >
       <g className={glideClass}>
         <g className={rockClass}>
-          {/* Bóng phản chiếu gợn sóng dưới thuyền + ánh đèn lồng loang mặt nước */}
+          {/* Bóng phản chiếu dưới thuyền (gợn sóng ánh sáng được Canvas 2D vẽ chồng 120fps) */}
           <g
             transform="translate(0, 10) scale(1, -0.45) translate(0, -10)"
-            filter={`url(#${waterRippleFilterId})`}
-            opacity="0.56"
+            opacity="0.48"
             className={swayClass}
           >
             <path
@@ -544,17 +542,18 @@ function BatWingJunkBoat({
 }
 
 /**
- * Cảnh quan Vịnh Hạ Long Hội Họa 60fps:
+ * Cảnh quan Vịnh Hạ Long Hội Họa 120fps+ GPU-Composited:
  * - Bầu trời hoàng hôn đa sắc + 3 lớp mây trôi + Vầng mặt trời vàng/chu sa + 5 luồng tia nắng Volumetric God Rays
- * - Sương mù chân trời làm mềm đường tiếp giáp trời-biển & 3 dải sương luồn quanh chân đảo đá vôi
+ * - Sương mù chân trời mềm & 3 dải sương gradient luồn quanh chân đảo đá vôi (không dùng feTurbulence)
  * - Cụm đảo Karst & Hòn Trống Mái tô đa sắc (#162E2A -> #244740 -> #0D1F1C), viền sáng kim loại & vân phân tầng
- * - Đàn chim chiều vỗ cánh bay lượn + 2 Thuyền buồm cánh dơi lướt sóng kèm đèn lồng vàng & vệt sóng rẽ nước
- * - Bóng đảo phản chiếu gợn sóng bằng feTurbulence + feDisplacementMap
+ * - Đàn chim chữ V bay lượn + 2 Thuyền buồm cánh dơi lướt sóng kèm đèn lồng vàng & vệt sóng rẽ nước
+ * - Parallax 4 tầng chuẩn 120Hz/144Hz/240Hz bằng `translate3d` + exponential delta-time damping + IntersectionObserver
  */
 export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
   const uid = useId().replace(/:/g, '');
   const prefersReducedMotion = useReducedMotion();
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const layer1Ref = useRef<HTMLDivElement>(null);
   const layer2Ref = useRef<HTMLDivElement>(null);
   const layer3Ref = useRef<HTMLDivElement>(null);
@@ -565,6 +564,7 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
       for (const ref of [layer1Ref, layer2Ref, layer3Ref, layer4Ref]) {
         if (ref.current) {
           ref.current.style.transform = 'translate3d(0px, 0px, 0px)';
+          ref.current.style.backfaceVisibility = 'hidden';
         }
       }
     };
@@ -574,11 +574,20 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
       return;
     }
 
+    for (const ref of [layer1Ref, layer2Ref, layer3Ref, layer4Ref]) {
+      if (ref.current) {
+        ref.current.style.backfaceVisibility = 'hidden';
+      }
+    }
+
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
     let rafId = 0;
+    let isVisible = true;
+    let isMounted = true;
+    let prevNow = performance.now();
 
     const handleMouseMove = (event: MouseEvent) => {
       const vw = Math.max(window.innerWidth, 1);
@@ -587,9 +596,18 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
       targetY = (event.clientY / vh - 0.5) * 2;
     };
 
-    const tick = () => {
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
+    const tick = (now: number) => {
+      if (!isMounted || !isVisible) {
+        rafId = 0;
+        return;
+      }
+
+      const { dtSeconds } = computeFrameDelta(now, prevNow);
+      prevNow = now;
+      const smoothFactor = frameDampFactor(12, dtSeconds);
+
+      currentX += (targetX - currentX) * smoothFactor;
+      currentY += (targetY - currentY) * smoothFactor;
 
       if (layer1Ref.current) {
         layer1Ref.current.style.transform = `translate3d(${(-currentX * 8).toFixed(2)}px, ${(-currentY * 6).toFixed(2)}px, 0px)`;
@@ -607,14 +625,45 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
       rafId = window.requestAnimationFrame(tick);
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    rafId = window.requestAnimationFrame(tick);
+    const startLoop = () => {
+      if (rafId !== 0 || !isMounted) return;
+      prevNow = performance.now();
+      rafId = window.requestAnimationFrame(tick);
+    };
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+    const stopLoop = () => {
       if (rafId !== 0) {
         window.cancelAnimationFrame(rafId);
+        rafId = 0;
       }
+    };
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined' && containerRef.current) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (!entry) return;
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            startLoop();
+          } else {
+            stopLoop();
+          }
+        },
+        { threshold: 0.02 },
+      );
+      observer.observe(containerRef.current);
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    startLoop();
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      observer?.disconnect();
+      stopLoop();
     };
   }, [prefersReducedMotion]);
 
@@ -642,8 +691,7 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
   const boatReflectGradId = `hl-boat-reflect-${uid}`;
   const sailGradId = `hl-sail-${uid}`;
   const lanternGlowId = `hl-lantern-glow-${uid}`;
-  const mistBlurId = `hl-mist-blur-${uid}`;
-  const waterRippleFilterId = `hl-water-ripple-${uid}`;
+  const mistSoftGradId = `hl-mist-soft-${uid}`;
 
   const midFarIslandIds: IslandRenderIds = {
     darkRockGradId: midFarRockGradId,
@@ -663,6 +711,7 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
 
   return (
     <div
+      ref={containerRef}
       data-testid="son-ha-diorama"
       data-landscape="vinh-ha-long"
       aria-hidden="true"
@@ -892,9 +941,11 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
               <stop offset="0%" stopColor="#22453B" />
               <stop offset="100%" stopColor="#0E211D" />
             </linearGradient>
-            <filter id={mistBlurId} x="-15%" y="-40%" width="130%" height="180%">
-              <feGaussianBlur stdDeviation="20 6" />
-            </filter>
+            <radialGradient id={mistSoftGradId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#FDEFE0" stopOpacity="0.32" />
+              <stop offset="55%" stopColor="#FFEBD6" stopOpacity="0.16" />
+              <stop offset="100%" stopColor="#FDEFE0" stopOpacity="0" />
+            </radialGradient>
           </defs>
 
           {LAYER2_MID_FAR_ISLANDS.map((island) => (
@@ -909,25 +960,19 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
           ))}
 
           {/* Dải sương mù 1 & 2 luồn ngang lưng chừng & chân đảo trung cảnh xa */}
-          <g
-            filter={`url(#${mistBlurId})`}
-            className={prefersReducedMotion ? undefined : 'lu-mist-drift'}
-          >
-            <ellipse cx="290" cy="482" rx="340" ry="18" fill="#FDEFE0" fillOpacity="0.28" />
-            <ellipse cx="860" cy="496" rx="420" ry="16" fill="#FFEBD6" fillOpacity="0.24" />
-            <ellipse cx="1310" cy="474" rx="340" ry="20" fill="#FDEFE0" fillOpacity="0.26" />
+          <g className={prefersReducedMotion ? undefined : 'lu-mist-drift'}>
+            <ellipse cx="290" cy="482" rx="360" ry="24" fill={`url(#${mistSoftGradId})`} />
+            <ellipse cx="860" cy="496" rx="440" ry="22" fill={`url(#${mistSoftGradId})`} />
+            <ellipse cx="1310" cy="474" rx="360" ry="25" fill={`url(#${mistSoftGradId})`} />
           </g>
-          <g
-            filter={`url(#${mistBlurId})`}
-            className={prefersReducedMotion ? undefined : 'lu-mist-drift-reverse'}
-          >
-            <ellipse cx="520" cy="524" rx="310" ry="14" fill="#FFF3E4" fillOpacity="0.24" />
-            <ellipse cx="1140" cy="526" rx="360" ry="15" fill="#FDE8D2" fillOpacity="0.22" />
+          <g className={prefersReducedMotion ? undefined : 'lu-mist-drift-reverse'}>
+            <ellipse cx="520" cy="524" rx="330" ry="18" fill={`url(#${mistSoftGradId})`} />
+            <ellipse cx="1140" cy="526" rx="380" ry="19" fill={`url(#${mistSoftGradId})`} />
           </g>
         </svg>
       </div>
 
-      {/* TẦNG 3: Mặt biển, Bóng phản chiếu gợn sóng feTurbulence, Đảo Karst gần, Hòn Trống Mái, Sương chân đảo & 2 Thuyền (+mx*26) */}
+      {/* TẦNG 3: Mặt biển, Bóng phản chiếu, Đảo Karst gần, Hòn Trống Mái, Sương chân đảo & 2 Thuyền (+mx*26) */}
       <div
         ref={layer3Ref}
         data-testid="son-ha-layer-3"
@@ -1018,38 +1063,17 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
               <stop offset="50%" stopColor="#E88B38" stopOpacity="0.32" />
               <stop offset="100%" stopColor="#E88B38" stopOpacity="0" />
             </radialGradient>
-
-            {/* Bộ lọc sóng gợn nhẹ feTurbulence + feDisplacementMap cho bóng phản chiếu uốn lượn */}
-            <filter id={waterRippleFilterId} x="-15%" y="-15%" width="130%" height="130%">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.015 0.065"
-                numOctaves="2"
-                seed="5"
-                result="rippleNoise"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="rippleNoise"
-                scale="6.5"
-                xChannelSelector="R"
-                yChannelSelector="G"
-                result="rippled"
-              />
-              <feGaussianBlur in="rippled" stdDeviation="1.4 0.55" />
-            </filter>
           </defs>
 
           {/* Mặt biển ngọc lục bảo + ánh phản quang hoàng hôn dịu */}
           <rect x="-80" y={WATERLINE_Y} width="1760" height="420" fill={`url(#${seaGradId})`} />
           <rect x="-80" y={WATERLINE_Y} width="1760" height="390" fill={`url(#${seaSunSheenId})`} />
 
-          {/* Các đảo Karst trung cảnh gần + bóng phản chiếu gợn sóng */}
+          {/* Các đảo Karst trung cảnh gần + bóng phản chiếu dịu (gợn sóng vẽ trên Canvas 2D 120fps) */}
           {LAYER3_MID_NEAR_ISLANDS.map((island) => (
             <g key={island.id}>
               <g
                 transform={`translate(0, ${island.waterY}) scale(1, -0.45) translate(0, -${island.waterY})`}
-                filter={`url(#${waterRippleFilterId})`}
                 className={prefersReducedMotion ? undefined : 'lu-reflection-sway'}
               >
                 <path d={island.bodyPath} fill={`url(#${reflectGrad535Id})`} />
@@ -1069,7 +1093,6 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
               <g key={rock.id}>
                 <g
                   transform={`translate(0, ${rock.waterY}) scale(1, -0.45) translate(0, -${rock.waterY})`}
-                  filter={`url(#${waterRippleFilterId})`}
                   className={prefersReducedMotion ? undefined : 'lu-reflection-sway'}
                 >
                   <path d={rock.bodyPath} fill={`url(#${reflectGrad548Id})`} />
@@ -1085,12 +1108,9 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
           </g>
 
           {/* Dải sương mù thứ 3 ôm sát chân cụm đảo trung cảnh gần */}
-          <g
-            filter={`url(#${mistBlurId})`}
-            className={prefersReducedMotion ? undefined : 'lu-mist-drift'}
-          >
-            <ellipse cx="320" cy="534" rx="220" ry="11" fill="#FDEFE0" fillOpacity="0.22" />
-            <ellipse cx="1235" cy="534" rx="240" ry="12" fill="#FDEFE0" fillOpacity="0.2" />
+          <g className={prefersReducedMotion ? undefined : 'lu-mist-drift'}>
+            <ellipse cx="320" cy="534" rx="230" ry="15" fill={`url(#${mistSoftGradId})`} />
+            <ellipse cx="1235" cy="534" rx="250" ry="16" fill={`url(#${mistSoftGradId})`} />
           </g>
 
           {/* 2 THUYỀN GỖ BUỒM CÁNH DƠI TRUYỀN THỐNG HẠ LONG */}
@@ -1101,7 +1121,6 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
             scale={0.58}
             sailGradId={sailGradId}
             reflectGradId={boatReflectGradId}
-            waterRippleFilterId={waterRippleFilterId}
             lanternGlowId={lanternGlowId}
             glideClass={prefersReducedMotion ? undefined : 'lu-boat-glide-far'}
             rockClass={prefersReducedMotion ? undefined : 'lu-boat-rock-slow'}
@@ -1116,7 +1135,6 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
             flipX
             sailGradId={sailGradId}
             reflectGradId={boatReflectGradId}
-            waterRippleFilterId={waterRippleFilterId}
             lanternGlowId={lanternGlowId}
             glideClass={prefersReducedMotion ? undefined : 'lu-boat-glide-near'}
             rockClass={prefersReducedMotion ? undefined : 'lu-boat-rock'}

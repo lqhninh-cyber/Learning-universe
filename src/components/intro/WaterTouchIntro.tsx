@@ -1,4 +1,9 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  computeFrameDelta,
+  frameDampFactor,
+  getLowLatency2DContext,
+} from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 import { EVENT_OPEN_INTRO, INTRO_STORAGE_KEY } from './introEvents';
 import {
@@ -240,7 +245,7 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = getLowLatency2DContext(canvas, { alpha: false });
     if (!ctx) return;
 
     let viewportWidth = window.innerWidth;
@@ -285,11 +290,11 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     const renderFrame = (now: number) => {
       if (finishedRef.current) return;
 
-      const dt = Math.min(0.05, Math.max(0, (now - prevFrameNow) / 1000));
+      const { dtSeconds } = computeFrameDelta(now, prevFrameNow);
       prevFrameNow = now;
 
       if (!prefersReducedMotion) {
-        const lerpAlpha = 1 - Math.exp(-8.5 * dt);
+        const lerpAlpha = frameDampFactor(12, dtSeconds);
         mouseCurrentRef.current.x +=
           (mouseTargetRef.current.x - mouseCurrentRef.current.x) * lerpAlpha;
         mouseCurrentRef.current.y +=

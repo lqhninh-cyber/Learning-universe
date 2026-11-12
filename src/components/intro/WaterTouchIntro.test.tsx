@@ -286,6 +286,7 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       scale: vi.fn(),
       rotate: vi.fn(),
       setLineDash: vi.fn(),
+      drawImage: vi.fn(),
       createRadialGradient: vi.fn(() => mockGrad),
       lineCap: 'butt',
       set fillStyle(v: unknown) {
@@ -322,13 +323,17 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
       parallaxY: -0.5,
     });
 
-    // 3 vòng Hỗn Thiên Nghi, khung Sắc Phong, clip lưới ngoại vi & tơ sơn mài, hạt ngọc shadowBlur = 10
+    // 3 vòng Hỗn Thiên Nghi, khung Sắc Phong, clip lưới ngoại vi & tơ sơn mài, hạt ngọc dùng sprite (không shadowBlur)
     expect(mockCtx.ellipse).toHaveBeenCalledTimes(3);
     expect(mockCtx.strokeRect).toHaveBeenCalledTimes(2);
     expect(mockCtx.clip).toHaveBeenCalledTimes(2);
     expect(mockCtx.createRadialGradient).toHaveBeenCalledTimes(2);
     expect(mockCtx.quadraticCurveTo).toHaveBeenCalled();
-    expect(shadowBlurs).toContain(10);
+    expect(shadowBlurs).toHaveLength(0);
+    expect(
+      (mockCtx.drawImage as ReturnType<typeof vi.fn>).mock.calls.length > 0 ||
+        fillStyles.includes('rgba(200, 62, 55, 0.25)'),
+    ).toBe(true);
     expect(fillRectMock.mock.calls.length).toBeGreaterThanOrEqual(3);
 
     // Poincaré (1.2 / 0.85) & sao băng quỹ đạo 12 đoạn (opacity 0.85 -> 0)
@@ -357,5 +362,7 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     });
 
     expect(compositeOps).toContain('destination-out');
+    // Render frame thứ hai cùng kích thước 1920x1080 phải tái sử dụng cache gradient, không tạo lại
+    expect(mockCtx.createRadialGradient).toHaveBeenCalledTimes(2);
   });
 });
