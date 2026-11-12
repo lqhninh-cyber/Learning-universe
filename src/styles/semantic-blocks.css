@@ -244,3 +244,51 @@ details.ex-block[data-kind='ex'][open] > .ex-block-body {
 .kb-halmos {
   color: var(--kb-proof-label);
 }
+
+/* --- 5. Hiệu ứng Flash Highlight & Tô sáng tìm kiếm tại chỗ --- */
+
+@keyframes flash {
+  0% {
+    box-shadow:
+      inset 0 0 0 9999px rgba(255, 224, 138, 0.45),
+      0 0 0 0 rgba(212, 175, 55, 0.72);
+  }
+  25% {
+    box-shadow:
+      inset 0 0 0 9999px rgba(255, 224, 138, 0.36),
+      0 0 0 6px rgba(212, 175, 55, 0.48);
+  }
+  100% {
+    box-shadow:
+      inset 0 0 0 9999px transparent,
+      0 0 0 0 rgba(212, 175, 55, 0);
+  }
+}
+
+.search-flash-highlight {
+  animation: flash 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+  scroll-margin-top: 6rem;
+}
+
+.lu-inpage-mark {
+  background-color: #ffe08a;
+  color: #1c2430;
+  border-radius: 0.25rem;
+  padding: 0 0.2rem;
+  box-decoration-break: clone;
+}
+
+.lu-inpage-mark-active {
+  background-color: #f59e0b;
+  color: #111827;
+  outline: 2px solid #b45309;
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-flash-highlight {
+    animation: none;
+    outline: 2px solid rgba(212, 175, 55, 0.75);
+    outline-offset: 2px;
+  }
+}

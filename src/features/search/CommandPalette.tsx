@@ -3,6 +3,7 @@ import {
   BookMarked,
   BookOpen,
   CornerDownLeft,
+  FileCheck2,
   GraduationCap,
   Search,
   Sigma,
@@ -13,344 +14,33 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { getSubjects, resolveLessonShortcut } from '@/content-runtime';
-import { getAllGlossaryEntries, KatexMath } from '@/features/math-glossary';
-import { ROUTES } from '@/shared/config/routes';
+import type { KnowledgeFilterKey } from '@schemas/search';
+import { KatexMath } from '@/features/math-glossary';
 import { cn } from '@/shared/lib/cn';
-import { matchesVietnameseQuery, normalizeSearchQuery } from '@/utils/vietnamese-text';
+import {
+  ALL_COMMAND_ITEMS,
+  buildSearchNavigationUrl,
+  type CommandCategoryKey,
+  type CommandResultItem,
+  type KnowledgeBadgeKind,
+  POPULAR_SUGGESTIONS,
+  scoreCommandItem,
+} from './search-catalog';
+import { SearchSnippet } from './SearchSnippet';
+
+export type { CommandCategoryKey, CommandResultItem } from './search-catalog';
 
 export interface CommandPaletteProps {
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;
-  /** Cho phép bật/tắt lắng nghe phím tắt toàn cục Ctrl+K / Cmd+K ngay trong component. Mặc định: true */
+  /** Cho phép bật/tắt lắng nghe phím tắt toàn cục Ctrl+K / Cmd+K và phím `/`. Mặc định: true */
   readonly enableGlobalShortcut?: boolean;
 }
-
-export type CommandCategoryKey = 'theorems' | 'lessons' | 'courses' | 'glossary';
-
-export interface CommandResultItem {
-  readonly id: string;
-  readonly category: CommandCategoryKey;
-  readonly title: string;
-  readonly subtitle: string;
-  readonly badge?: string;
-  readonly formula?: string;
-  readonly href: string;
-  readonly keywords: string;
-}
-
-interface CuratedTheoremItem {
-  readonly id: string;
-  readonly title: string;
-  readonly formula: string;
-  readonly courseTitle: string;
-  readonly summary: string;
-  readonly href: string;
-  readonly keywords: string;
-}
-
-const CURATED_THEOREMS: readonly CuratedTheoremItem[] = [
-  {
-    id: 'thm-lagrange-group',
-    title: 'Định lý Lagrange (Lý thuyết Nhóm)',
-    formula: '|G| = [G : H] \\cdot |H|',
-    courseTitle: 'Cấu trúc đại số',
-    summary:
-      'Cấp của mọi nhóm con H và cấp của mọi phần tử đều là ước số của cấp nhóm hữu hạn |G|.',
-    href: '/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc',
-    keywords: 'dinh ly lagrange nhom con chi so lop ke uoc so cap nhom |G| = [G:H]|H|',
-  },
-  {
-    id: 'thm-first-isomorphism',
-    title: 'Định lý Đồng cấu thứ nhất (Đẳng cấu nhóm thương)',
-    formula: 'G / \\ker \\varphi \\cong \\operatorname{Im} \\varphi',
-    courseTitle: 'Cấu trúc đại số',
-    summary:
-      'Hạt nhân ker φ là nhóm con chuẩn tắc của G và nhóm thương G/ker φ đẳng cấu tự nhiên với ảnh Im φ.',
-    href: '/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/phan-tich-qua-nhom-thuong-va-dinh-ly-dang-cau-thu-nhat',
-    keywords:
-      'dinh ly dong cau thu nhat dinh ly dang cau thu nhat first isomorphism theorem ker im nhom thuong',
-  },
-  {
-    id: 'thm-euclid-axiom',
-    title: 'Tiên đề Euclid & Không gian Euclide',
-    formula: '\\langle \\vec{u}, \\vec{v} \\rangle = \\sum_{i=1}^{n} u_i v_i',
-    courseTitle: 'Hình học Affine & Euclide',
-    summary:
-      'Cấu trúc không gian Affine thực trang bị tích vô hướng xác định dương, định hình khoảng cách và góc.',
-    href: '/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide',
-    keywords: 'tien de euclid khong gian euclide oclit tich vo huong song song khoang cach goc',
-  },
-  {
-    id: 'thm-weyl-chasles',
-    title: 'Hệ thức Chasles & Tiên đề Weyl (Không gian Affine)',
-    formula: '\\overrightarrow{AB} + \\overrightarrow{BC} = \\overrightarrow{AC}',
-    courseTitle: 'Hình học Affine & Euclide',
-    summary:
-      'Hai tiên đề nền tảng liên kết tập điểm Affine với không gian vectơ nền thông qua ánh xạ hiệu điểm.',
-    href: '/mon-hoc/hinh-hoc-affine/khong-gian-affine/khong-gian-affine',
-    keywords: 'he thuc chasles quy tac chasles tien de weyl khong gian affine vecto',
-  },
-  {
-    id: 'thm-lagrange-mvt',
-    title: 'Định lý Giá trị Trung bình Lagrange (Giải tích)',
-    formula: "f(b) - f(a) = f'(c)(b - a)",
-    courseTitle: 'Giải tích hàm một biến',
-    summary:
-      'Tồn tại điểm c ∈ (a, b) mà tại đó tiếp tuyến song song với dây cung nối hai đầu mút đồ thị.',
-    href: '/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh',
-    keywords: 'dinh ly lagrange gia tri trung binh dao ham tiep tuyen mvt giai tich',
-  },
-  {
-    id: 'thm-cauchy-mvt',
-    title: 'Định lý Giá trị Trung bình Cauchy',
-    formula: "\\frac{f(b) - f(a)}{g(b) - g(a)} = \\frac{f'(c)}{g'(c)}",
-    courseTitle: 'Giải tích hàm một biến',
-    summary:
-      'Mở rộng định lý Lagrange cho hai hàm khả vi, làm nền tảng chứng minh quy tắc L’Hôpital.',
-    href: '/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh',
-    keywords: 'dinh ly cauchy gia tri trung binh dao ham lhopital',
-  },
-  {
-    id: 'thm-fermat-stationary',
-    title: 'Định lý Fermat về Điểm dừng Cực trị',
-    formula: "f'(x_0) = 0",
-    courseTitle: 'Giải tích hàm một biến',
-    summary: 'Nếu hàm số đạt cực trị địa phương tại x₀ và khả vi tại đó thì đạo hàm triệt tiêu.',
-    href: '/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh',
-    keywords: 'dinh ly fermat diem dung cuc tri dao ham bang 0',
-  },
-  {
-    id: 'thm-fermat-little',
-    title: 'Định lý nhỏ Fermat & Định lý Euler',
-    formula: 'a^{p-1} \\equiv 1 \\pmod p',
-    courseTitle: 'Cấu trúc đại số',
-    summary:
-      'Hệ quả số học trực tiếp từ Định lý Lagrange áp dụng cho nhóm nhân các lớp thặng dư khả nghịch.',
-    href: '/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc',
-    keywords: 'dinh ly nho fermat dinh ly euler phi ham euler dong du modulo',
-  },
-  {
-    id: 'thm-cauchy-group',
-    title: 'Định lý Cauchy cho Nhóm hữu hạn',
-    formula: 'p \\mid |G| \\implies \\exists g \\in G : \\operatorname{ord}(g) = p',
-    courseTitle: 'Cấu trúc đại số',
-    summary:
-      'Nếu số nguyên tố p chia hết cấp nhóm |G| thì luôn tồn tại phần tử có cấp đúng bằng p.',
-    href: '/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4',
-    keywords: 'dinh ly cauchy nhom huu han uoc nguyen to cap phan tu',
-  },
-  {
-    id: 'thm-eisenstein',
-    title: 'Tiêu chuẩn Bất khả quy Eisenstein',
-    formula: 'p \\mid a_i \\; (i < n), \\; p \\nmid a_n, \\; p^2 \\nmid a_0',
-    courseTitle: 'Cấu trúc đại số',
-    summary: 'Điều kiện đủ để một đa thức hệ số nguyên bất khả quy trên trường số hữu tỉ Q.',
-    href: '/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/bai-tap-chuong-9-va-tong-ket-hoc-phan',
-    keywords: 'tieu chuan eisenstein da thuc bat kha quy truong so huu ti',
-  },
-  {
-    id: 'thm-taylor-lagrange',
-    title: 'Khai triển Taylor & Phần dư Lagrange',
-    formula: 'R_n(x) = \\frac{f^{(n+1)}(c)}{(n+1)!}(x - x_0)^{n+1}',
-    courseTitle: 'Giải tích hàm một biến',
-    summary:
-      'Biểu diễn xấp xỉ hàm khả vi bằng đa thức bậc cao và đánh giá sai số qua đạo hàm cấp n+1.',
-    href: '/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/quy-tac-lhopital-va-khai-trien-taylor-maclaurin',
-    keywords: 'khai trien taylor maclaurin phan du lagrange xap xi da thuc',
-  },
-  {
-    id: 'thm-normal-subgroup',
-    title: 'Tiêu chuẩn Nhóm con Chuẩn tắc',
-    formula: 'H \\trianglelefteq G \\iff \\forall g \\in G, \\; gHg^{-1} = H',
-    courseTitle: 'Cấu trúc đại số',
-    summary:
-      'Điều kiện cần và đủ để tập các lớp kề G/H lập thành nhóm thương với phép nhân đại diện.',
-    href: '/mon-hoc/cau-truc-dai-so/nhom-con-chuan-tac-nhom-thuong/phep-lien-hop-va-tieu-chuan-chuan-tac',
-    keywords: 'nhom con chuan tac phep lien hop nhom thuong gHg^-1 = H',
-  },
-  {
-    id: 'thm-barycenter',
-    title: 'Định lý Tâm tỉ cự & Công thức Vector',
-    formula: '\\sum_{i=1}^{k} \\lambda_i \\overrightarrow{GA_i} = \\vec{0}',
-    courseTitle: 'Hình học Affine & Euclide',
-    summary: 'Xác định điểm cân bằng duy nhất G của hệ điểm gắn trọng số khi tổng trọng số khác 0.',
-    href: '/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem',
-    keywords: 'tam ti cu tam ty cu trong tam barycenter he diem affine',
-  },
-  {
-    id: 'thm-projective-duality',
-    title: 'Nguyên tắc Đối ngẫu Xạ ảnh',
-    formula:
-      '\\text{Điểm } \\mathbb{P}^n \\longleftrightarrow \\text{Siêu phẳng } (\\mathbb{P}^n)^*',
-    courseTitle: 'Hình học Affine & Euclide',
-    summary:
-      'Mọi định lý về quan hệ liên thuộc giữa điểm và siêu phẳng trong không gian xạ ảnh đều có định lý đối ngẫu tương ứng.',
-    href: '/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/nguyen-tac-doi-ngau-trong-khong-gian-xa-anh',
-    keywords: 'nguyen tac doi ngau xa anh diem sieu phang tỉ số kép',
-  },
-];
-
-function buildAllSearchableItems(): readonly CommandResultItem[] {
-  const subjects = getSubjects();
-  const glossaryEntries = getAllGlossaryEntries();
-  const items: CommandResultItem[] = [];
-
-  // 1. Nhóm ĐỊNH LÝ & CÔNG THỨC
-  for (const thm of CURATED_THEOREMS) {
-    items.push({
-      id: thm.id,
-      category: 'theorems',
-      title: thm.title,
-      subtitle: `${thm.courseTitle} · ${thm.summary}`,
-      badge: thm.courseTitle,
-      formula: thm.formula,
-      href: thm.href,
-      keywords: `${thm.title} ${thm.formula} ${thm.courseTitle} ${thm.summary} ${thm.keywords}`,
-    });
-  }
-
-  // 2. Nhóm BÀI HỌC & CHƯƠNG
-  for (const subject of subjects) {
-    for (const chapter of subject.chapters) {
-      for (const lesson of chapter.lessons) {
-        const chapterLabel = `Chương ${chapter.number}`;
-        const lessonNumberLabel = `${chapter.number}.${lesson.number}`;
-        items.push({
-          id: `lesson-${subject.slug}-${lesson.id}`,
-          category: 'lessons',
-          title: lesson.title,
-          subtitle: `${chapterLabel}: ${chapter.title} · ${subject.title}`,
-          badge: `Bài ${lessonNumberLabel}`,
-          href: ROUTES.lesson(subject.slug, chapter.slug, lesson.slug),
-          keywords: `${lesson.title} ${lesson.description} ${chapter.title} ${subject.title} ${lesson.tags.join(' ')} chuong ${chapter.number} bai ${lessonNumberLabel}`,
-        });
-      }
-    }
-  }
-
-  // 3. Nhóm HỌC PHẦN (4 Courses)
-  for (const subject of subjects) {
-    const branchLabel = subject.slug === 'giao-duc-hoc' ? 'Khoa học Giáo dục' : 'Toán học';
-    items.push({
-      id: `course-${subject.slug}`,
-      category: 'courses',
-      title: subject.title,
-      subtitle: subject.description,
-      badge: branchLabel,
-      href: ROUTES.courseOverview(subject.slug),
-      keywords: `${subject.title} ${branchLabel} ${subject.description} ${subject.slug} hoc phan mon hoc`,
-    });
-  }
-
-  // 4. Nhóm THUẬT NGỮ (Glossary)
-  for (const entry of glossaryEntries) {
-    const courseLabel =
-      entry.courseName ||
-      (entry.subject === 'cau-truc-dai-so'
-        ? 'Cấu trúc đại số'
-        : entry.subject === 'giai-tich-ham-mot-bien'
-          ? 'Giải tích hàm một biến'
-          : 'Hình học Affine & Euclide');
-
-    items.push({
-      id: `glossary-${entry.id}`,
-      category: 'glossary',
-      title: entry.nameVi,
-      subtitle: `${entry.nameEn} · ${entry.brief}`,
-      badge: courseLabel,
-      formula: entry.symbol,
-      href: `/glossary?q=${encodeURIComponent(entry.nameVi)}`,
-      keywords: `${entry.nameVi} ${entry.nameEn} ${entry.symbol} ${entry.formula ?? ''} ${entry.patterns.join(' ')} ${entry.brief} ${courseLabel}`,
-    });
-  }
-
-  return items;
-}
-
-const ALL_COMMAND_ITEMS: readonly CommandResultItem[] = buildAllSearchableItems();
-
-function resolvePopularSequenceLessonHref(): string {
-  const subjects = getSubjects();
-  const calc = subjects.find((s) => s.slug === 'giai-tich-ham-mot-bien');
-  if (calc) {
-    for (const ch of calc.chapters) {
-      for (const ls of ch.lessons) {
-        if (
-          matchesVietnameseQuery(`${ls.title} ${ls.slug}`, 'gioi han day so') ||
-          matchesVietnameseQuery(`${ls.title} ${ls.slug}`, 'day so')
-        ) {
-          return ROUTES.lesson(calc.slug, ch.slug, ls.slug);
-        }
-      }
-    }
-    const firstChapter = calc.chapters[0];
-    const firstLesson = firstChapter?.lessons[0];
-    if (firstChapter && firstLesson) {
-      return ROUTES.lesson(calc.slug, firstChapter.slug, firstLesson.slug);
-    }
-  }
-  return ROUTES.courseOverview('giai-tich-ham-mot-bien');
-}
-
-function buildPopularSuggestions(): readonly CommandResultItem[] {
-  const pedagogyResolved = resolveLessonShortcut('ngan-hang-20-tinh-huong-su-pham-thuc-te');
-  const pedagogyHref = pedagogyResolved
-    ? ROUTES.lesson(
-        pedagogyResolved.subject.slug,
-        pedagogyResolved.chapter.slug,
-        pedagogyResolved.lesson.slug,
-      )
-    : '/mon-hoc/giao-duc-hoc/cam-nang-xu-ly-tinh-huong-su-pham-va-de-cuong-on-tap/ngan-hang-20-tinh-huong-su-pham-thuc-te';
-
-  return [
-    {
-      id: 'popular-lagrange',
-      category: 'theorems',
-      title: 'Định lý Lagrange',
-      subtitle: 'Cấu trúc đại số · Lớp kề và ứng dụng số học của Định lý Lagrange',
-      badge: 'Định lý & Công thức',
-      formula: '|G| = [G : H] \\cdot |H|',
-      href: '/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc',
-      keywords: 'Định lý Lagrange',
-    },
-    {
-      id: 'popular-affine',
-      category: 'lessons',
-      title: 'Không gian Affine',
-      subtitle: 'Hình học Affine & Euclide · Chương 1: Khái niệm, tiên đề Weyl và hệ thức Chasles',
-      badge: 'Bài học trọng tâm',
-      formula: '\\mathbb{A}^n',
-      href: '/mon-hoc/hinh-hoc-affine/khong-gian-affine/khong-gian-affine',
-      keywords: 'Không gian Affine',
-    },
-    {
-      id: 'popular-sequence-limit',
-      category: 'lessons',
-      title: 'Giới hạn dãy số',
-      subtitle: 'Giải tích hàm một biến · Định nghĩa ε-N, dãy đơn điệu và tiêu chuẩn hội tụ Cauchy',
-      badge: 'Giải tích thực',
-      formula: '\\lim_{n \\to \\infty} x_n = L',
-      href: resolvePopularSequenceLessonHref(),
-      keywords: 'Giới hạn dãy số',
-    },
-    {
-      id: 'popular-pedagogy-20',
-      category: 'lessons',
-      title: '20 tình huống sư phạm',
-      subtitle: 'Giáo dục học · Ngân hàng 20 tình huống sư phạm thực tế & quy trình 5 bước xử lý',
-      badge: 'Thực hành Sư phạm',
-      href: pedagogyHref,
-      keywords: '20 tình huống sư phạm',
-    },
-  ];
-}
-
-const POPULAR_SUGGESTIONS: readonly CommandResultItem[] = buildPopularSuggestions();
 
 const CATEGORY_METADATA: Record<
   CommandCategoryKey,
@@ -360,51 +50,63 @@ const CATEGORY_METADATA: Record<
     label: 'ĐỊNH LÝ & CÔNG THỨC',
     icon: Sigma,
   },
+  glossary: {
+    label: 'THUẬT NGỮ',
+    icon: BookMarked,
+  },
   lessons: {
     label: 'BÀI HỌC & CHƯƠNG',
     icon: BookOpen,
+  },
+  reviews: {
+    label: 'ÔN TẬP & ĐỀ THI',
+    icon: FileCheck2,
   },
   courses: {
     label: 'HỌC PHẦN',
     icon: GraduationCap,
   },
-  glossary: {
-    label: 'THUẬT NGỮ',
-    icon: BookMarked,
+};
+
+const FILTER_PILLS: ReadonlyArray<{
+  readonly key: KnowledgeFilterKey;
+  readonly label: string;
+  readonly activeClass: string;
+}> = [
+  { key: 'all', label: 'Tất cả', activeClass: 'border-[#1B3D2F] bg-[#1B3D2F] text-white' },
+  { key: 'def', label: 'Định nghĩa', activeClass: 'border-[#264A8A] bg-[#264A8A] text-white' },
+  { key: 'thm', label: 'Định lý', activeClass: 'border-[#9E2A2B] bg-[#9E2A2B] text-white' },
+  { key: 'ex', label: 'Ví dụ', activeClass: 'border-[#1B5E43] bg-[#1B5E43] text-white' },
+  { key: 'review', label: 'Ôn tập', activeClass: 'border-[#8A6A2F] bg-[#8A6A2F] text-white' },
+];
+
+const KNOWLEDGE_BADGE_CLASSES: Readonly<
+  Record<KnowledgeBadgeKind, { readonly default: string; readonly selected: string }>
+> = {
+  def: {
+    default: 'border-[#264A8A]/25 bg-[#E9EFF9] text-[#264A8A]',
+    selected: 'border-white/25 bg-white/20 text-white',
+  },
+  thm: {
+    default: 'border-[#9E2A2B]/25 bg-[#FCEEEE] text-[#9E2A2B]',
+    selected: 'border-white/25 bg-white/20 text-white',
+  },
+  ex: {
+    default: 'border-[#1B5E43]/25 bg-[#E8F4EE] text-[#1B5E43]',
+    selected: 'border-white/25 bg-white/20 text-white',
+  },
+  review: {
+    default: 'border-[#8A6A2F]/30 bg-[#FAF3E3] text-[#78571E]',
+    selected: 'border-white/25 bg-white/20 text-white',
   },
 };
 
-function scoreCommandItem(item: CommandResultItem, rawQuery: string): number {
-  const clean = rawQuery.trim();
-  if (!clean) return 0;
-
-  const normQuery = normalizeSearchQuery(clean);
-  const normTitle = normalizeSearchQuery(item.title);
-  const normKeywords = normalizeSearchQuery(item.keywords);
-  const rawFormula = (item.formula ?? '').toLowerCase();
-  const lowerQuery = clean.toLowerCase();
-
-  let score = 0;
-
-  if (normTitle === normQuery) {
-    score += 120;
-  } else if (normTitle.startsWith(normQuery)) {
-    score += 85;
-  } else if (normTitle.includes(normQuery)) {
-    score += 60;
+function isEditableElement(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
   }
-
-  if (rawFormula && rawFormula.includes(lowerQuery)) {
-    score += 70;
-  }
-
-  if (matchesVietnameseQuery(item.keywords, clean)) {
-    score += 35;
-  } else if (normKeywords.includes(normQuery)) {
-    score += 25;
-  }
-
-  return score;
+  const tag = target.tagName;
+  return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
 }
 
 export const CommandPalette: FC<CommandPaletteProps> = ({
@@ -419,6 +121,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
   const { pathname, search } = useLocation();
 
   const [query, setQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<KnowledgeFilterKey>('all');
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Tự động đóng Command Palette khi đường dẫn URL thay đổi
@@ -431,17 +134,18 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     }
   }
 
-  // Đặt lại từ khóa và mục chọn về đầu khi modal mở
+  // Đặt lại từ khóa, bộ lọc và mục chọn về đầu khi modal mở
   const [wasOpen, setWasOpen] = useState(open);
   if (open !== wasOpen) {
     setWasOpen(open);
     if (open) {
       setQuery('');
+      setActiveFilter('all');
       setActiveIndex(0);
     }
   }
 
-  // Lắng nghe sự kiện bàn phím toàn cục: Ctrl+K / Cmd+K để mở/đóng, Esc để đóng
+  // Lắng nghe phím tắt toàn cục: Ctrl/Cmd+K, `/` (khi không đang nhập liệu) và Esc
   useEffect(() => {
     if (!enableGlobalShortcut) return;
 
@@ -449,7 +153,24 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
         onOpenChange(!open);
-      } else if (event.key === 'Escape' && open) {
+        return;
+      }
+
+      if (
+        !open &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey &&
+        event.key === '/' &&
+        !isEditableElement(event.target) &&
+        !isEditableElement(document.activeElement)
+      ) {
+        event.preventDefault();
+        onOpenChange(true);
+        return;
+      }
+
+      if (event.key === 'Escape' && open) {
         event.preventDefault();
         onOpenChange(false);
       }
@@ -478,49 +199,58 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     };
   }, [open]);
 
-  if (!open) {
-    return null;
-  }
-
   const trimmedQuery = query.trim();
   const isQueryEmpty = trimmedQuery.length === 0;
 
-  // Lọc và phân nhóm kết quả theo 4 danh mục học thuật
-  const matchedTheorems: CommandResultItem[] = [];
-  const matchedLessons: CommandResultItem[] = [];
-  const matchedCourses: CommandResultItem[] = [];
-  const matchedGlossary: CommandResultItem[] = [];
+  const { scoredAll, pillCounts } = useMemo(() => {
+    if (isQueryEmpty) {
+      const counts: Record<KnowledgeFilterKey, number> = {
+        all: ALL_COMMAND_ITEMS.length,
+        def: ALL_COMMAND_ITEMS.filter((item) => item.knowledgeKind === 'def').length,
+        thm: ALL_COMMAND_ITEMS.filter((item) => item.knowledgeKind === 'thm').length,
+        ex: ALL_COMMAND_ITEMS.filter((item) => item.knowledgeKind === 'ex').length,
+        review: ALL_COMMAND_ITEMS.filter((item) => item.knowledgeKind === 'review').length,
+      };
+      return { scoredAll: [] as CommandResultItem[], pillCounts: counts };
+    }
 
-  if (!isQueryEmpty) {
-    const scored = ALL_COMMAND_ITEMS.map((item) => ({
+    const ranked = ALL_COMMAND_ITEMS.map((item) => ({
       item,
       score: scoreCommandItem(item, trimmedQuery),
     }))
       .filter((entry) => entry.score > 0)
-      .sort((a, b) => b.score - a.score);
+      .sort((a, b) => b.score - a.score)
+      .map((entry) => entry.item);
 
-    for (const { item } of scored) {
-      if (item.category === 'theorems' && matchedTheorems.length < 4) {
-        matchedTheorems.push(item);
-      } else if (item.category === 'lessons' && matchedLessons.length < 6) {
-        matchedLessons.push(item);
-      } else if (item.category === 'courses' && matchedCourses.length < 4) {
-        matchedCourses.push(item);
-      } else if (item.category === 'glossary' && matchedGlossary.length < 4) {
-        matchedGlossary.push(item);
-      }
-    }
+    const counts: Record<KnowledgeFilterKey, number> = {
+      all: ranked.length,
+      def: ranked.filter((item) => item.knowledgeKind === 'def').length,
+      thm: ranked.filter((item) => item.knowledgeKind === 'thm').length,
+      ex: ranked.filter((item) => item.knowledgeKind === 'ex').length,
+      review: ranked.filter((item) => item.knowledgeKind === 'review').length,
+    };
+
+    return { scoredAll: ranked, pillCounts: counts };
+  }, [isQueryEmpty, trimmedQuery]);
+
+  if (!open) {
+    return null;
   }
 
   const defaultCourses = ALL_COMMAND_ITEMS.filter((item) => item.category === 'courses');
 
-  const groups: ReadonlyArray<{
+  interface DisplayGroup {
     readonly key: string;
     readonly label: string;
     readonly icon: typeof Sigma;
     readonly items: readonly CommandResultItem[];
-  }> = isQueryEmpty
-    ? [
+  }
+
+  let groups: DisplayGroup[] = [];
+
+  if (isQueryEmpty) {
+    if (activeFilter === 'all') {
+      groups = [
         {
           key: 'popular',
           label: 'Gợi ý phổ biến',
@@ -533,43 +263,134 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
           icon: GraduationCap,
           items: defaultCourses,
         },
-      ]
-    : (
-        [
+      ];
+    } else {
+      const kindSamples = ALL_COMMAND_ITEMS.filter(
+        (item) => item.knowledgeKind === activeFilter,
+      ).slice(0, 8);
+      const pillLabel = FILTER_PILLS.find((p) => p.key === activeFilter)?.label ?? 'Kết quả';
+      if (kindSamples.length > 0) {
+        groups = [
           {
-            key: 'theorems',
-            label: CATEGORY_METADATA.theorems.label,
-            icon: CATEGORY_METADATA.theorems.icon,
-            items: matchedTheorems,
+            key: `empty-${activeFilter}`,
+            label: `${pillLabel} tiêu biểu`,
+            icon: Sparkles,
+            items: kindSamples,
           },
-          {
-            key: 'lessons',
-            label: CATEGORY_METADATA.lessons.label,
-            icon: CATEGORY_METADATA.lessons.icon,
-            items: matchedLessons,
-          },
-          {
-            key: 'courses',
-            label: CATEGORY_METADATA.courses.label,
-            icon: CATEGORY_METADATA.courses.icon,
-            items: matchedCourses,
-          },
-          {
-            key: 'glossary',
-            label: CATEGORY_METADATA.glossary.label,
-            icon: CATEGORY_METADATA.glossary.icon,
-            items: matchedGlossary,
-          },
-        ] as const
-      ).filter((group) => group.items.length > 0);
+        ];
+      }
+    }
+  } else if (activeFilter !== 'all') {
+    const filteredItems = scoredAll.filter((item) => item.knowledgeKind === activeFilter);
+    const matchedTheorems: CommandResultItem[] = [];
+    const matchedGlossary: CommandResultItem[] = [];
+    const matchedLessons: CommandResultItem[] = [];
+    const matchedReviews: CommandResultItem[] = [];
+
+    for (const item of filteredItems.slice(0, 18)) {
+      if (item.category === 'theorems') matchedTheorems.push(item);
+      else if (item.category === 'glossary') matchedGlossary.push(item);
+      else if (item.category === 'lessons') matchedLessons.push(item);
+      else if (item.category === 'reviews') matchedReviews.push(item);
+    }
+
+    groups = (
+      [
+        {
+          key: 'theorems',
+          label: CATEGORY_METADATA.theorems.label,
+          icon: CATEGORY_METADATA.theorems.icon,
+          items: matchedTheorems,
+        },
+        {
+          key: 'glossary',
+          label: CATEGORY_METADATA.glossary.label,
+          icon: CATEGORY_METADATA.glossary.icon,
+          items: matchedGlossary,
+        },
+        {
+          key: 'lessons',
+          label: CATEGORY_METADATA.lessons.label,
+          icon: CATEGORY_METADATA.lessons.icon,
+          items: matchedLessons,
+        },
+        {
+          key: 'reviews',
+          label: CATEGORY_METADATA.reviews.label,
+          icon: CATEGORY_METADATA.reviews.icon,
+          items: matchedReviews,
+        },
+      ] as const
+    ).filter((group) => group.items.length > 0);
+  } else {
+    const matchedTheorems: CommandResultItem[] = [];
+    const matchedGlossary: CommandResultItem[] = [];
+    const matchedLessons: CommandResultItem[] = [];
+    const matchedReviews: CommandResultItem[] = [];
+    const matchedCourses: CommandResultItem[] = [];
+
+    for (const item of scoredAll) {
+      if (item.category === 'theorems' && matchedTheorems.length < 5) {
+        matchedTheorems.push(item);
+      } else if (item.category === 'glossary' && matchedGlossary.length < 5) {
+        matchedGlossary.push(item);
+      } else if (item.category === 'lessons' && matchedLessons.length < 6) {
+        matchedLessons.push(item);
+      } else if (item.category === 'reviews' && matchedReviews.length < 4) {
+        matchedReviews.push(item);
+      } else if (item.category === 'courses' && matchedCourses.length < 4) {
+        matchedCourses.push(item);
+      }
+    }
+
+    groups = (
+      [
+        {
+          key: 'theorems',
+          label: CATEGORY_METADATA.theorems.label,
+          icon: CATEGORY_METADATA.theorems.icon,
+          items: matchedTheorems,
+        },
+        {
+          key: 'glossary',
+          label: CATEGORY_METADATA.glossary.label,
+          icon: CATEGORY_METADATA.glossary.icon,
+          items: matchedGlossary,
+        },
+        {
+          key: 'lessons',
+          label: CATEGORY_METADATA.lessons.label,
+          icon: CATEGORY_METADATA.lessons.icon,
+          items: matchedLessons,
+        },
+        {
+          key: 'reviews',
+          label: CATEGORY_METADATA.reviews.label,
+          icon: CATEGORY_METADATA.reviews.icon,
+          items: matchedReviews,
+        },
+        {
+          key: 'courses',
+          label: CATEGORY_METADATA.courses.label,
+          icon: CATEGORY_METADATA.courses.icon,
+          items: matchedCourses,
+        },
+      ] as const
+    ).filter((group) => group.items.length > 0);
+  }
 
   const flatItems: CommandResultItem[] = groups.flatMap((group) => group.items);
   const safeActiveIndex =
     flatItems.length === 0 ? -1 : Math.min(Math.max(0, activeIndex), flatItems.length - 1);
+  const activeOptionId =
+    safeActiveIndex >= 0 && flatItems[safeActiveIndex]
+      ? `cmd-option-${flatItems[safeActiveIndex].id}`
+      : undefined;
 
   const handleSelectItem = (item: CommandResultItem) => {
+    const targetUrl = buildSearchNavigationUrl(item.href, trimmedQuery);
     onOpenChange(false);
-    void navigate(item.href);
+    void navigate(targetUrl);
   };
 
   const handleInputKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
@@ -594,20 +415,22 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     }
   };
 
+  const activeResultCount = isQueryEmpty ? flatItems.length : pillCounts[activeFilter];
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Hộp tìm kiếm học thuật nhanh (Command Palette)"
-      className="fixed inset-0 z-50 flex items-start justify-center bg-stone-900/30 px-4 pt-24 backdrop-blur-sm transition-all"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-stone-900/35 px-4 pt-16 backdrop-blur-sm transition-all sm:pt-20"
       onClick={() => onOpenChange(false)}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 shadow-2xl backdrop-blur-2xl"
+        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-[#CFDADB] bg-[#FAF8F5]/95 shadow-2xl backdrop-blur-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        {/* Thanh nhập liệu tìm kiếm (Search Input Header) */}
-        <div className="flex items-center gap-3 border-b border-[#CFDADB] px-5 py-4">
+        {/* Thanh nhập liệu tìm kiếm */}
+        <div className="flex items-center gap-3 border-b border-[#CFDADB] px-5 py-3.5">
           <Search className="h-5 w-5 shrink-0 text-[#55676B]" aria-hidden="true" />
           <label htmlFor={inputId} className="sr-only">
             Tìm kiếm định lý, công thức, bài học và thuật ngữ
@@ -619,6 +442,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
             role="combobox"
             aria-expanded="true"
             aria-controls={listboxId}
+            aria-activedescendant={activeOptionId}
             aria-autocomplete="list"
             autoFocus
             value={query}
@@ -655,12 +479,61 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
           </button>
         </div>
 
+        {/* Thanh bộ lọc phân loại tri thức & số lượng kết quả */}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#CFDADB] bg-[#F3F5F4] px-4 py-2.5">
+          <div
+            role="tablist"
+            aria-label="Lọc theo phân loại tri thức"
+            className="flex flex-wrap items-center gap-1.5"
+          >
+            {FILTER_PILLS.map((pill) => {
+              const isSelected = activeFilter === pill.key;
+              const count = pillCounts[pill.key];
+              return (
+                <button
+                  key={pill.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    setActiveFilter(pill.key);
+                    setActiveIndex(0);
+                    inputRef.current?.focus();
+                  }}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+                    isSelected
+                      ? pill.activeClass
+                      : 'border-[#CFDADB] bg-white text-[#29383D] hover:bg-[#E7ECEB]',
+                  )}
+                >
+                  <span>{pill.label}</span>
+                  <span
+                    className={cn(
+                      'py-0.2 rounded-full px-1.5 font-mono text-[10px] font-semibold',
+                      isSelected ? 'bg-white/20 text-white' : 'bg-[#E1E9EA] text-[#55676B]',
+                    )}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {!isQueryEmpty && (
+            <span className="shrink-0 font-mono text-[11px] font-semibold text-[#1B3D2F]">
+              {activeResultCount} kết quả
+            </span>
+          )}
+        </div>
+
         {/* Danh sách kết quả tìm kiếm phân nhóm */}
         <div
           id={listboxId}
           role="listbox"
           aria-label="Kết quả tìm kiếm học thuật"
-          className="max-h-[65vh] overflow-y-auto px-3 py-3"
+          className="max-h-[60vh] overflow-y-auto px-3 py-3"
         >
           {flatItems.length > 0 ? (
             <div className="space-y-4">
@@ -679,10 +552,14 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                       {group.items.map((item) => {
                         const itemIndex = flatItems.findIndex((entry) => entry.id === item.id);
                         const isSelected = itemIndex === safeActiveIndex;
+                        const knowledgeBadgeStyle = item.knowledgeKind
+                          ? KNOWLEDGE_BADGE_CLASSES[item.knowledgeKind]
+                          : null;
 
                         return (
                           <button
                             key={item.id}
+                            id={`cmd-option-${item.id}`}
                             type="button"
                             role="option"
                             aria-selected={isSelected}
@@ -696,6 +573,35 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                             )}
                           >
                             <div className="min-w-0 flex-1 space-y-1">
+                              {/* Dòng trên: Huy hiệu phân loại tri thức + Tên môn · Chương · Bài */}
+                              {(item.badgeLabel || item.breadcrumb) && (
+                                <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                                  {item.badgeLabel && knowledgeBadgeStyle && (
+                                    <span
+                                      className={cn(
+                                        'rounded-md border px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider uppercase',
+                                        isSelected
+                                          ? knowledgeBadgeStyle.selected
+                                          : knowledgeBadgeStyle.default,
+                                      )}
+                                    >
+                                      {item.badgeLabel}
+                                    </span>
+                                  )}
+                                  {item.breadcrumb && (
+                                    <span
+                                      className={cn(
+                                        'truncate font-medium',
+                                        isSelected ? 'text-stone-200' : 'text-[#55676B]',
+                                      )}
+                                    >
+                                      {item.breadcrumb}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Tiêu đề chính (giữ nguyên chuỗi liên tục) */}
                               <div className="flex flex-wrap items-center gap-2">
                                 <span
                                   className={cn(
@@ -706,7 +612,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                                   {item.title}
                                 </span>
 
-                                {item.badge && (
+                                {item.badge && item.badge !== item.badgeLabel && (
                                   <span
                                     className={cn(
                                       'rounded-full px-2 py-0.5 font-mono text-[10px] font-medium',
@@ -720,7 +626,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                                 )}
                               </div>
 
-                              {/* Công thức Toán học KaTeX hiển thị trực tiếp cho Định lý & Thuật ngữ */}
+                              {/* Công thức KaTeX nổi bật (nếu có) */}
                               {item.formula && (
                                 <div
                                   className={cn(
@@ -734,14 +640,25 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                                 </div>
                               )}
 
-                              <p
-                                className={cn(
-                                  'line-clamp-1 text-xs',
-                                  isSelected ? 'text-white/80' : 'text-[#55676B]',
-                                )}
-                              >
-                                {item.subtitle}
-                              </p>
+                              {/* Dòng dưới: Snippet tích hợp highlight <mark> + KaTeX inline */}
+                              {!isQueryEmpty ? (
+                                <div className="line-clamp-2">
+                                  <SearchSnippet
+                                    text={item.snippetText ?? item.subtitle}
+                                    query={trimmedQuery}
+                                    className={isSelected ? 'text-stone-100' : 'text-[#55676B]'}
+                                  />
+                                </div>
+                              ) : (
+                                <p
+                                  className={cn(
+                                    'line-clamp-1 text-xs',
+                                    isSelected ? 'text-white/80' : 'text-[#55676B]',
+                                  )}
+                                >
+                                  {item.subtitle}
+                                </p>
+                              )}
                             </div>
 
                             <div className="flex shrink-0 items-center gap-1.5">
@@ -768,8 +685,8 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                 Không tìm thấy nội dung phù hợp cho từ khóa này
               </p>
               <p className="mt-1.5 text-xs text-[#55676B]">
-                Hãy thử tìm bằng tên định lý (Lagrange, Cauchy, Chasles), tên bài học hoặc ký hiệu
-                Toán học.
+                Hãy thử tìm bằng tên định lý (Lagrange, Cauchy, Chasles), ký hiệu Toán học (`S_3`,
+                `ker`, `E^4`), hoặc chuyển sang tab Tất cả.
               </p>
             </div>
           )}
@@ -792,6 +709,12 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                 Enter
               </kbd>
               <span>Mở ngay</span>
+            </span>
+            <span className="hidden items-center gap-1 sm:inline-flex">
+              <kbd className="rounded border border-stone-300 bg-white px-1.5 py-0.5 font-mono text-[10px] text-stone-700">
+                /
+              </kbd>
+              <span>Mở nhanh</span>
             </span>
           </div>
           <span className="hidden font-mono text-[10px] tracking-wider text-stone-500 uppercase sm:inline">

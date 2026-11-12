@@ -7,11 +7,15 @@ import {
   type ContentIssue,
   type ScanResult,
 } from './content-scanner.ts';
+import { extractContentSearchIndex } from './content-block-extractor.ts';
 import { validateContent } from './content-validator.ts';
 import type { ContentDiagnostics, ContentManifest } from '../schemas/manifest.ts';
+import type { VirtualSearchIndex } from '../schemas/search.ts';
 
 export const VIRTUAL_MANIFEST_ID = 'virtual:content-manifest';
 const RESOLVED_MANIFEST_ID = `\0${VIRTUAL_MANIFEST_ID}`;
+export const VIRTUAL_SEARCH_INDEX_ID = 'virtual:search-index';
+const RESOLVED_SEARCH_INDEX_ID = `\0${VIRTUAL_SEARCH_INDEX_ID}`;
 
 export interface ContentPluginOptions {
   /** Thư mục nội dung, tương đối so với gốc dự án. Mặc định: `content`. */
@@ -43,6 +47,13 @@ export function generateManifestModule(
     `export const contentDiagnostics = ${JSON.stringify(diagnostics)};`,
     '',
   ].join('\n');
+}
+
+/**
+ * Sinh mã của module ảo `virtual:search-index` chứa toàn bộ khối tri thức từ các bài MDX.
+ */
+export function generateSearchIndexModule(index: VirtualSearchIndex): string {
+  return `export const searchIndex = ${JSON.stringify(index)};\n`;
 }
 
 function report(logger: Logger, issues: readonly ContentIssue[]): void {
@@ -83,11 +94,17 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
     },
 
     resolveId(id) {
-      return id === VIRTUAL_MANIFEST_ID ? RESOLVED_MANIFEST_ID : null;
+      if (id === VIRTUAL_MANIFEST_ID) {
+        return RESOLVED_MANIFEST_ID;
+      }
+      if (id === VIRTUAL_SEARCH_INDEX_ID) {
+        return RESOLVED_SEARCH_INDEX_ID;
+      }
+      return null;
     },
 
     load(id) {
-      if (id !== RESOLVED_MANIFEST_ID) {
+      if (id !== RESOLVED_MANIFEST_ID && id !== RESOLVED_SEARCH_INDEX_ID) {
         return null;
       }
 
@@ -102,7 +119,7 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
         0,
       );
       if (production && totalLessonsInManifest === 0) {
-        if (logger) {
+        if (logger && id === RESOLVED_MANIFEST_ID) {
           logger.warn(
             '\n[content] Chưa có bài học nào ở trạng thái "published"; giữ các bài học mẫu (draft) trong gói build thử nghiệm.\n',
           );
@@ -112,6 +129,14 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
           contentDir,
           publishedOnly: false,
         });
+      }
+
+      if (id === RESOLVED_SEARCH_INDEX_ID) {
+        const searchIndex = extractContentSearchIndex({
+          projectRoot,
+          manifest: result.manifest,
+        });
+        return generateSearchIndexModule(searchIndex);
       }
 
       if (logger) {
@@ -143,9 +168,11 @@ export function contentPlugin(options: ContentPluginOptions = {}): Plugin {
         ) {
           return;
         }
-        const module = server.moduleGraph.getModuleById(RESOLVED_MANIFEST_ID);
-        if (module) {
-          server.moduleGraph.invalidateModule(module);
+        for (const moduleId of [RESOLVED_MANIFEST_ID, RESOLVED_SEARCH_INDEX_ID]) {
+          const mod = server.moduleGraph.getModuleById(moduleId);
+          if (mod) {
+            server.moduleGraph.invalidateModule(mod);
+          }
         }
         server.ws.send({ type: 'full-reload' });
       };

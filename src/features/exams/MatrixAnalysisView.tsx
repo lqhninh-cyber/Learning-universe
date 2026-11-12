@@ -286,8 +286,9 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
                   return (
                     <div
                       key={item.id}
+                      id={item.id}
                       className={cn(
-                        'flex flex-col justify-between rounded-xl border p-4 transition-all duration-200',
+                        'flex scroll-mt-24 flex-col justify-between rounded-xl border p-4 transition-all duration-200',
                         isChecked
                           ? 'border-emerald-300/90 bg-emerald-50/40 dark:border-emerald-700/60 dark:bg-emerald-950/20'
                           : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]/45 hover:border-[var(--border-control)]',

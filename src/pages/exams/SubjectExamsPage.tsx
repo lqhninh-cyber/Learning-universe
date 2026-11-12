@@ -10,7 +10,7 @@ import {
   ImageIcon,
   Sparkles,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { getSubjectBySlug } from '@/content-runtime';
 import { MATH1301_EXAM_BANK } from '@/data/courses/cau-truc-dai-so/exam-bank';
@@ -20,6 +20,7 @@ import { CourseExamBankWorkspace } from '@/features/exams/CourseExamBankWorkspac
 import { ExamImageModal } from '@/features/exams/ExamImageModal';
 import { ExamProblemCard } from '@/features/exams/ExamProblemCard';
 import { MathGlossaryPopover, MathGlossaryProvider } from '@/features/math-glossary';
+import { InPageSearchNavigator, useInPageSearch } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -70,11 +71,19 @@ export function SubjectExamsPage() {
     setExpandAllHints(false);
   };
 
+  // Tham chiếu vùng nội dung đề thi để tô sáng & nhảy kết quả tìm kiếm tại chỗ
+  const examsContainerRef = useRef<HTMLDivElement>(null);
+
   // Tính tổng điểm của đề hiện tại
   const totalPoints = useMemo(() => {
     if (!activePaper) return 10;
     return activePaper.problems.reduce((sum, p) => sum + p.points, 0);
   }, [activePaper]);
+
+  const inPageSearch = useInPageSearch({
+    containerRef: examsContainerRef,
+    contentReadyKey: `${subjectSlug}:${searchParams.get('section') ?? ''}:${activePaper?.id ?? ''}`,
+  });
 
   if (!subject) {
     return (
@@ -142,215 +151,228 @@ export function SubjectExamsPage() {
           </div>
         </div>
 
-        {subjectSlug === 'hinh-hoc-affine' ? (
-          <CourseExamBankWorkspace
-            bank={MATH1302_EXAM_BANK}
-            showFullPageLink={false}
-            withGlossaryProvider={false}
-          />
-        ) : subjectSlug === 'cau-truc-dai-so' ? (
-          <CourseExamBankWorkspace
-            bank={MATH1301_EXAM_BANK}
-            showFullPageLink={false}
-            withGlossaryProvider={false}
-          />
-        ) : examPapers.length === 0 ? (
-          <Card className="p-8 text-center">
-            <p className="text-base font-medium text-stone-800">
-              Ngân hàng đề thi của môn học này đang trong quá trình biên soạn và số hóa.
-            </p>
-            <p className="mt-1 text-sm text-stone-500">
-              Vui lòng quay lại sau khi dữ liệu đề thi được xuất bản.
-            </p>
-          </Card>
-        ) : (
-          <>
-            {/* Bộ chọn năm thi (Tabs / Dropdown) */}
-            <div className="rounded-2xl border border-stone-200/90 bg-white p-3 shadow-2xs sm:p-4">
-              <div className="mb-2 flex items-center justify-between px-1">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-stone-700 uppercase">
-                  <Calendar className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
-                  <span>Chọn năm thi &amp; Học kỳ</span>
-                </span>
-                <span className="text-xs text-stone-500">
-                  Đang xem: <strong className="text-stone-800">{activePaper?.year}</strong> (
-                  {activePaper?.semester})
-                </span>
-              </div>
+        <InPageSearchNavigator
+          query={inPageSearch.query}
+          totalMatches={inPageSearch.totalMatches}
+          activeIndex={inPageSearch.activeIndex}
+          onPrev={inPageSearch.goToPrev}
+          onNext={inPageSearch.goToNext}
+          onClear={inPageSearch.clearSearch}
+        />
 
-              {/* Desktop / Tablet Tab buttons */}
-              <div className="flex flex-wrap gap-2">
-                {examPapers.map((paper, idx) => {
-                  const isSelected = paper.id === activePaper?.id;
-                  return (
-                    <button
-                      key={paper.id}
-                      type="button"
-                      onClick={() => handleSelectExam(paper.id)}
-                      className={cn(
-                        'flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium transition-all sm:text-sm',
-                        isSelected
-                          ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs'
-                          : 'border-stone-200 bg-stone-50/80 text-stone-700 hover:border-stone-300 hover:bg-stone-100',
-                      )}
-                    >
-                      <span>{paper.year}</span>
-                      <span
+        <div ref={examsContainerRef} className="space-y-6">
+          {subjectSlug === 'hinh-hoc-affine' ? (
+            <CourseExamBankWorkspace
+              bank={MATH1302_EXAM_BANK}
+              showFullPageLink={false}
+              withGlossaryProvider={false}
+            />
+          ) : subjectSlug === 'cau-truc-dai-so' ? (
+            <CourseExamBankWorkspace
+              bank={MATH1301_EXAM_BANK}
+              showFullPageLink={false}
+              withGlossaryProvider={false}
+            />
+          ) : examPapers.length === 0 ? (
+            <Card className="p-8 text-center">
+              <p className="text-base font-medium text-stone-800">
+                Ngân hàng đề thi của môn học này đang trong quá trình biên soạn và số hóa.
+              </p>
+              <p className="mt-1 text-sm text-stone-500">
+                Vui lòng quay lại sau khi dữ liệu đề thi được xuất bản.
+              </p>
+            </Card>
+          ) : (
+            <>
+              {/* Bộ chọn năm thi (Tabs / Dropdown) */}
+              <div className="rounded-2xl border border-stone-200/90 bg-white p-3 shadow-2xs sm:p-4">
+                <div className="mb-2 flex items-center justify-between px-1">
+                  <span className="flex items-center gap-1.5 text-xs font-bold text-stone-700 uppercase">
+                    <Calendar className="h-3.5 w-3.5 text-stone-500" aria-hidden="true" />
+                    <span>Chọn năm thi &amp; Học kỳ</span>
+                  </span>
+                  <span className="text-xs text-stone-500">
+                    Đang xem: <strong className="text-stone-800">{activePaper?.year}</strong> (
+                    {activePaper?.semester})
+                  </span>
+                </div>
+
+                {/* Desktop / Tablet Tab buttons */}
+                <div className="flex flex-wrap gap-2">
+                  {examPapers.map((paper, idx) => {
+                    const isSelected = paper.id === activePaper?.id;
+                    return (
+                      <button
+                        key={paper.id}
+                        type="button"
+                        onClick={() => handleSelectExam(paper.id)}
                         className={cn(
-                          'rounded-md px-1.5 py-0.5 text-[11px] font-semibold',
-                          isSelected ? 'bg-white/20 text-white' : 'bg-stone-200/80 text-stone-600',
+                          'flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium transition-all sm:text-sm',
+                          isSelected
+                            ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs'
+                            : 'border-stone-200 bg-stone-50/80 text-stone-700 hover:border-stone-300 hover:bg-stone-100',
                         )}
                       >
-                        {paper.semester.replace('Học kỳ ', 'HK')}
-                      </span>
-                      {idx === 0 && (
+                        <span>{paper.year}</span>
                         <span
                           className={cn(
-                            'py-0.2 rounded-full px-1.5 text-[10px] font-bold tracking-wider uppercase',
+                            'rounded-md px-1.5 py-0.5 text-[11px] font-semibold',
                             isSelected
-                              ? 'bg-amber-300 text-stone-900'
-                              : 'bg-amber-100 text-amber-800',
+                              ? 'bg-white/20 text-white'
+                              : 'bg-stone-200/80 text-stone-600',
                           )}
                         >
-                          Mới
+                          {paper.semester.replace('Học kỳ ', 'HK')}
                         </span>
-                      )}
-                    </button>
-                  );
-                })}
+                        {idx === 0 && (
+                          <span
+                            className={cn(
+                              'py-0.2 rounded-full px-1.5 text-[10px] font-bold tracking-wider uppercase',
+                              isSelected
+                                ? 'bg-amber-300 text-stone-900'
+                                : 'bg-amber-100 text-amber-800',
+                            )}
+                          >
+                            Mới
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            {/* Chi tiết đề thi đang chọn & Thanh tác vụ */}
-            {activePaper && (
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs sm:p-6">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="subject">{activePaper.year}</Badge>
-                        <Badge variant="neutral">{activePaper.semester}</Badge>
-                        <span className="flex items-center gap-1 text-xs text-stone-500">
-                          <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Thời gian: {activePaper.durationMinutes} phút</span>
-                        </span>
-                        <span className="flex items-center gap-1 text-xs text-stone-500">
-                          <CheckSquare className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Thang điểm: {totalPoints.toFixed(1)} / 10 điểm</span>
-                        </span>
+              {/* Chi tiết đề thi đang chọn & Thanh tác vụ */}
+              {activePaper && (
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs sm:p-6">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge variant="subject">{activePaper.year}</Badge>
+                          <Badge variant="neutral">{activePaper.semester}</Badge>
+                          <span className="flex items-center gap-1 text-xs text-stone-500">
+                            <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                            <span>Thời gian: {activePaper.durationMinutes} phút</span>
+                          </span>
+                          <span className="flex items-center gap-1 text-xs text-stone-500">
+                            <CheckSquare className="h-3.5 w-3.5" aria-hidden="true" />
+                            <span>Thang điểm: {totalPoints.toFixed(1)} / 10 điểm</span>
+                          </span>
+                        </div>
+
+                        <h2 className="text-lg font-bold text-stone-900 sm:text-xl">
+                          {activePaper.title}
+                        </h2>
+
+                        <p className="text-xs leading-relaxed text-stone-600 sm:text-sm">
+                          {activePaper.description}
+                        </p>
                       </div>
 
-                      <h2 className="text-lg font-bold text-stone-900 sm:text-xl">
-                        {activePaper.title}
-                      </h2>
-
-                      <p className="text-xs leading-relaxed text-stone-600 sm:text-sm">
-                        {activePaper.description}
-                      </p>
+                      {/* Nút Xem ảnh đề gốc & Công cụ điều khiển */}
+                      {activePaper.originalImagePath ? (
+                        <div className="flex shrink-0 flex-wrap items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsImageModalOpen(true)}
+                            className="border-subject-300 bg-subject-50/60 text-subject-800 hover:bg-subject-100 gap-1.5 text-xs font-semibold"
+                          >
+                            <ImageIcon className="h-4 w-4" aria-hidden="true" />
+                            <span>Xem ảnh đề gốc</span>
+                          </Button>
+                        </div>
+                      ) : null}
                     </div>
 
-                    {/* Nút Xem ảnh đề gốc & Công cụ điều khiển */}
-                    {activePaper.originalImagePath ? (
-                      <div className="flex shrink-0 flex-wrap items-center gap-2">
+                    {/* Thanh điều khiển hiển thị hàng loạt */}
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-3.5 text-xs text-stone-600">
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <FileText className="h-4 w-4 text-stone-400" aria-hidden="true" />
+                        <span>Danh sách {activePaper.problems.length} câu hỏi tự luận</span>
+                      </span>
+
+                      <div className="flex items-center gap-2">
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
-                          onClick={() => setIsImageModalOpen(true)}
-                          className="border-subject-300 bg-subject-50/60 text-subject-800 hover:bg-subject-100 gap-1.5 text-xs font-semibold"
+                          onClick={() => setExpandAllHints(!expandAllHints)}
+                          className="h-7 text-xs text-amber-700 hover:bg-amber-50"
                         >
-                          <ImageIcon className="h-4 w-4" aria-hidden="true" />
-                          <span>Xem ảnh đề gốc</span>
+                          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                          <span>{expandAllHints ? 'Ẩn tất cả gợi ý' : 'Hiện tất cả gợi ý'}</span>
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setExpandAllSolutions(!expandAllSolutions)}
+                          className="text-subject-700 hover:bg-subject-50 h-7 text-xs"
+                        >
+                          <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                          <span>
+                            {expandAllSolutions ? 'Thu gọn tất cả giải' : 'Mở tất cả lời giải'}
+                          </span>
                         </Button>
                       </div>
-                    ) : null}
-                  </div>
-
-                  {/* Thanh điều khiển hiển thị hàng loạt */}
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-3.5 text-xs text-stone-600">
-                    <span className="flex items-center gap-1.5 font-medium">
-                      <FileText className="h-4 w-4 text-stone-400" aria-hidden="true" />
-                      <span>Danh sách {activePaper.problems.length} câu hỏi tự luận</span>
-                    </span>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setExpandAllHints(!expandAllHints)}
-                        className="h-7 text-xs text-amber-700 hover:bg-amber-50"
-                      >
-                        <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>{expandAllHints ? 'Ẩn tất cả gợi ý' : 'Hiện tất cả gợi ý'}</span>
-                      </Button>
-
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setExpandAllSolutions(!expandAllSolutions)}
-                        className="text-subject-700 hover:bg-subject-50 h-7 text-xs"
-                      >
-                        <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>
-                          {expandAllSolutions ? 'Thu gọn tất cả giải' : 'Mở tất cả lời giải'}
-                        </span>
-                      </Button>
                     </div>
                   </div>
-                </div>
 
-                {/* Danh sách các bài toán của đề thi */}
-                <div className="space-y-4">
-                  {activePaper.problems.map((problem) => (
-                    <ExamProblemCard
-                      key={`${activePaper.id}-${problem.id}`}
-                      problem={problem}
-                      questionPrefix={activePaper.questionPrefix}
-                      defaultExpandSolution={expandAllSolutions}
-                      defaultExpandHint={expandAllHints}
+                  {/* Danh sách các bài toán của đề thi */}
+                  <div className="space-y-4">
+                    {activePaper.problems.map((problem) => (
+                      <ExamProblemCard
+                        key={`${activePaper.id}-${problem.id}`}
+                        problem={problem}
+                        questionPrefix={activePaper.questionPrefix}
+                        defaultExpandSolution={expandAllSolutions}
+                        defaultExpandHint={expandAllHints}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Modal xem ảnh đề gốc (chỉ dựng khi đề có bản scan) */}
+                  {activePaper.originalImagePath ? (
+                    <ExamImageModal
+                      open={isImageModalOpen}
+                      onOpenChange={setIsImageModalOpen}
+                      imagePath={activePaper.originalImagePath}
+                      title={activePaper.title}
+                      year={`${activePaper.year} (${activePaper.semester})`}
                     />
-                  ))}
+                  ) : null}
                 </div>
+              )}
 
-                {/* Modal xem ảnh đề gốc (chỉ dựng khi đề có bản scan) */}
-                {activePaper.originalImagePath ? (
-                  <ExamImageModal
-                    open={isImageModalOpen}
-                    onOpenChange={setIsImageModalOpen}
-                    imagePath={activePaper.originalImagePath}
-                    title={activePaper.title}
-                    year={`${activePaper.year} (${activePaper.semester})`}
-                  />
-                ) : null}
+              {/* Chân trang điều hướng */}
+              <div className="mt-8 rounded-2xl border border-stone-200/80 bg-white p-5 text-center shadow-2xs sm:p-6">
+                <h3 className="text-sm font-bold text-stone-800">Cần ôn lại nền tảng lý thuyết?</h3>
+                <p className="mt-1 text-xs text-stone-600">
+                  Xem lại 7 chương bài học hoặc đề cương trọng tâm và 5 câu tự luận đề mẫu học phần.
+                </p>
+                <div className="mt-4 flex flex-wrap justify-center gap-3">
+                  <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
+                    <Link to={ROUTES.subjectOverview(subject.slug)}>
+                      <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Tổng quan môn học &amp; 7 Chương</span>
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="sm"
+                    className="gap-1.5 bg-[#1B3D2F] text-xs text-white hover:bg-[#142F24]"
+                  >
+                    <Link to="/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi">
+                      <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Đề cương trọng tâm &amp; Đề mẫu</span>
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            )}
-
-            {/* Chân trang điều hướng */}
-            <div className="mt-8 rounded-2xl border border-stone-200/80 bg-white p-5 text-center shadow-2xs sm:p-6">
-              <h3 className="text-sm font-bold text-stone-800">Cần ôn lại nền tảng lý thuyết?</h3>
-              <p className="mt-1 text-xs text-stone-600">
-                Xem lại 7 chương bài học hoặc đề cương trọng tâm và 5 câu tự luận đề mẫu học phần.
-              </p>
-              <div className="mt-4 flex flex-wrap justify-center gap-3">
-                <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
-                  <Link to={ROUTES.subjectOverview(subject.slug)}>
-                    <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Tổng quan môn học &amp; 7 Chương</span>
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className="gap-1.5 bg-[#1B3D2F] text-xs text-white hover:bg-[#142F24]"
-                >
-                  <Link to="/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi">
-                    <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Đề cương trọng tâm &amp; Đề mẫu</span>
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </FadeIn>
       <MathGlossaryPopover />
     </MathGlossaryProvider>

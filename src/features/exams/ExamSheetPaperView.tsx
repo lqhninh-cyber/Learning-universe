@@ -126,7 +126,7 @@ export function ExamSheetPaperView({ paper, className }: ExamSheetPaperViewProps
             const hasInlineStatement = Boolean(problem.inlineSheetHeading && problem.statement);
 
             return (
-              <section key={problem.id} className="space-y-2">
+              <section key={problem.id} id={problem.id} className="scroll-mt-24 space-y-2">
                 {hasInlineStatement && problem.statement ? (
                   <MathText
                     text={`${headingMd} ${problem.statement}`}
@@ -249,7 +249,8 @@ export function ExamSheetPaperView({ paper, className }: ExamSheetPaperViewProps
               return (
                 <div
                   key={`${problem.id}-solution-block`}
-                  className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/35 p-4 sm:p-5"
+                  id={`${problem.id}-solution`}
+                  className="scroll-mt-24 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/35 p-4 sm:p-5"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3">
                     <div className="text-sm font-bold text-[#1B3D2F] sm:text-base">

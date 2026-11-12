@@ -28,6 +28,7 @@ import {
   type ChapterDifficultyLevel,
 } from '@/components/lesson';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
+import { InPageSearchNavigator, useInPageSearch } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -226,6 +227,11 @@ function LessonPageContent() {
   };
 
   const compiled = lessonId ? loadedMap[lessonId] : undefined;
+
+  const inPageSearch = useInPageSearch({
+    containerRef: articleRef,
+    contentReadyKey: lessonId ? `${lessonId}:${compiled ? 'ready' : 'loading'}` : 'none',
+  });
 
   useEffect(() => {
     if (subjectId && lessonId) {
@@ -670,6 +676,16 @@ function LessonPageContent() {
                   readingTheme={readingTheme}
                 />
               </div>
+
+              <InPageSearchNavigator
+                query={inPageSearch.query}
+                totalMatches={inPageSearch.totalMatches}
+                activeIndex={inPageSearch.activeIndex}
+                onPrev={inPageSearch.goToPrev}
+                onNext={inPageSearch.goToNext}
+                onClear={inPageSearch.clearSearch}
+                readingTheme={readingTheme}
+              />
 
               <LessonSemanticLegend readingTheme={readingTheme} />
 

@@ -1,50 +1,63 @@
 import { describe, expect, it } from 'vitest';
 import {
-  matchesVietnameseQuery,
-  normalizeNFC,
+  extractBestExcerpt,
+  findHighlightRanges,
+  normalizeMathAndText,
   normalizeSearchQuery,
-  stripDiacritics,
-  truncateGraphemes,
+  scoreTextMatch,
+  toCompactMathText,
 } from './vietnamese-text';
 
-describe('src/utils/vietnamese-text — Tiện ích xử lý tiếng Việt chuẩn xác', () => {
-  it('normalizeNFC kết hợp ký tự tổ hợp NFD thành ký tự đơn precomposed', () => {
-    // "a" + combining circumflex + combining acute
-    const decomposed = 'a\u0302\u0301';
-    const precomposed = 'ấ';
-    expect(normalizeNFC(decomposed)).toBe(precomposed);
+describe('vietnamese-text utilities', () => {
+  it('chuẩn hóa chữ Quốc ngữ NFD/NFC và giữ hoạt động normalizeSearchQuery', () => {
+    expect(normalizeSearchQuery('Cấu   trúc   ĐẠI SỐ')).toBe('cau truc dai so');
   });
 
-  it('stripDiacritics loại bỏ dấu tiếng Việt chuẩn bao gồm đ/Đ', () => {
-    expect(stripDiacritics('Định lý Đồng hình')).toBe('Dinh ly Dong hinh');
-    expect(stripDiacritics('Cấu trúc Đại số')).toBe('Cau truc Dai so');
-    expect(stripDiacritics('Hình học Affine')).toBe('Hinh hoc Affine');
+  it('chuẩn hóa ký hiệu toán học LaTeX và Unicode chỉ số trên/dưới tương đương nhau', () => {
+    expect(normalizeMathAndText('$S_3$', false)).toBe('s_3');
+    expect(normalizeMathAndText('S₃', false)).toBe('s_3');
+    expect(normalizeMathAndText('$\\mathbb{E}^{4}$', false)).toBe('e^4');
+    expect(normalizeMathAndText('E⁴', false)).toBe('e^4');
+    expect(normalizeMathAndText('$\\mathbb{Z}_4$', false)).toBe('z_4');
+    expect(normalizeMathAndText('\\ker(\\varphi)', false)).toBe('ker(varphi)');
+    expect(toCompactMathText('$\\mathbb{Z}_4$')).toBe('z4');
   });
 
-  it('normalizeSearchQuery chuẩn hóa chữ thường, xóa dấu và khoảng trắng', () => {
-    expect(normalizeSearchQuery('   ĐỒNG CẤU   Nhóm   ')).toBe('dong cau nhom');
-    expect(normalizeSearchQuery('')).toBe('');
+  it('khớp được truy vấn không dấu nhưng ưu tiên kết quả khớp chính xác có dấu lên đầu', () => {
+    const exactAccented = scoreTextMatch(
+      'Siêu phẳng kính và tâm tỉ cự trong không gian',
+      'tâm tỉ cự',
+    );
+    const looseAccented = scoreTextMatch('Tam ti cu (tên biến thể không dấu)', 'tâm tỉ cự');
+
+    expect(exactAccented.matched).toBe(true);
+    expect(looseAccented.matched).toBe(true);
+    expect(exactAccented.exactAccentedBonus).toBeGreaterThan(looseAccented.exactAccentedBonus);
+
+    expect(scoreTextMatch('Nhóm đối xứng $S_3$ và nhóm Klein $V_4$', 'S_3 V_4').matched).toBe(true);
+    expect(scoreTextMatch('Không gian Euclid $\\mathbb{E}^{4}$', 'E^4').matched).toBe(true);
+    expect(scoreTextMatch('Không gian xạ ảnh $\\mathbb{A}^n$', 'A^n').matched).toBe(true);
+    expect(scoreTextMatch('Nhân đồng cấu $\\ker f$', 'ker').matched).toBe(true);
+    expect(scoreTextMatch('Nhóm cyclic $\\mathbb{Z}_4$', 'Z4').matched).toBe(true);
+    expect(scoreTextMatch('Chúc bạn học tốt', 'A^n').matched).toBe(false);
   });
 
-  it('matchesVietnameseQuery tìm kiếm chính xác không phân biệt dấu và hoa thường', () => {
-    const target = 'Định lý Cayley về nhóm con của nhóm hoán vị';
-
-    expect(matchesVietnameseQuery(target, 'cayley')).toBe(true);
-    expect(matchesVietnameseQuery(target, 'nhom hoan vi')).toBe(true);
-    expect(matchesVietnameseQuery(target, 'dinh ly')).toBe(true);
-    expect(matchesVietnameseQuery(target, 'DONG DANG')).toBe(false);
+  it('tìm đúng khoảng tô sáng chữ có dấu ngay cả khi nhập truy vấn không dấu', () => {
+    const text = 'Điểm G là tâm tỉ cự của hệ điểm.';
+    const ranges = findHighlightRanges(text, 'tam ti cu');
+    expect(ranges.length).toBe(1);
+    const [start, end] = ranges[0]!;
+    expect(text.slice(start, end)).toBe('tâm tỉ cự');
   });
 
-  it('truncateGraphemes cắt chuỗi an toàn theo grapheme cluster mà không đứt dấu phụ', () => {
-    const text = 'Không gian Affine và các phép biến đổi';
-
-    expect(truncateGraphemes(text, 10)).toBe('Không gian...');
-    expect(truncateGraphemes(text, 100)).toBe(text);
-    expect(truncateGraphemes('', 5)).toBe('');
-    expect(truncateGraphemes(text, 0)).toBe('');
-
-    // Kiểm tra ký tự phức tạp có dấu thanh kép không bị cắt xén nửa chừng
-    const complex = 'Ấn tượng';
-    expect(truncateGraphemes(complex, 2, '')).toBe('Ấn');
+  it('trích đoạn dài mà không bao giờ cắt đôi cặp $...$ KaTeX', () => {
+    const longText =
+      'Trong hình học affine, ' +
+      'ta xét không gian liên kết với '.repeat(6) +
+      'công thức tâm tỉ cự $\\sum_{i=1}^{n} \\alpha_i \\overrightarrow{MA_i} = \\vec{0}$ với tổng hệ số khác không.';
+    const excerpt = extractBestExcerpt(longText, 'tâm tỉ cự', 140);
+    const unescapedDollars = excerpt.match(/(?<!\\)\$/g) ?? [];
+    expect(unescapedDollars.length % 2).toBe(0);
+    expect(excerpt).toContain('tâm tỉ cự');
   });
 });

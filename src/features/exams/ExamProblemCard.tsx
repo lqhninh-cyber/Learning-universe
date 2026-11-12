@@ -56,7 +56,10 @@ export function ExamProblemCard({
   const canToggleSolution = hasRootSolution || hasParts;
 
   return (
-    <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 text-[var(--text-main)] shadow-xs transition-all duration-200 hover:border-[var(--border-control)] sm:p-6">
+    <div
+      id={problem.id}
+      className="scroll-mt-24 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 text-[var(--text-main)] shadow-xs transition-all duration-200 hover:border-[var(--border-control)] sm:p-6"
+    >
       {/* Header bài toán */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3.5">
         <div className="flex flex-wrap items-center gap-2.5">

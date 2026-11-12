@@ -9,7 +9,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import type { CourseExamBank } from '@/data/courses/exam-bank-types';
 import { ExamSheetPaperView } from '@/features/exams/ExamSheetPaperView';
 import { MatrixAnalysisView } from '@/features/exams/MatrixAnalysisView';
@@ -54,19 +54,48 @@ function ExamBankWorkspaceContent({
   defaultSection = 'official',
   showFullPageLink = true,
 }: Omit<CourseExamBankWorkspaceProps, 'withGlossaryProvider'>) {
-  const [activeSection, setActiveSection] = useState<ExamBankSectionTab>(defaultSection);
-  const [selectedOfficialId, setSelectedOfficialId] = useState<string>(
-    bank.officialExams[0]?.id ?? '',
-  );
-  const [selectedMockId, setSelectedMockId] = useState<string>(bank.mockExams[0]?.id ?? '');
+  const [searchParams] = useSearchParams();
+  const urlSection = searchParams.get('section');
+  const urlExamId = searchParams.get('exam');
 
-  // Đồng bộ đề mặc định khi chuyển giữa MATH1301 và MATH1302
-  const [prevSlug, setPrevSlug] = useState(bank.subjectSlug);
-  if (prevSlug !== bank.subjectSlug) {
-    setPrevSlug(bank.subjectSlug);
-    setActiveSection(defaultSection);
-    setSelectedOfficialId(bank.officialExams[0]?.id ?? '');
-    setSelectedMockId(bank.mockExams[0]?.id ?? '');
+  const resolveInitialSelection = (): {
+    readonly section: ExamBankSectionTab;
+    readonly officialId: string;
+    readonly mockId: string;
+  } => {
+    const defaultOfficial = bank.officialExams[0]?.id ?? '';
+    const defaultMock = bank.mockExams[0]?.id ?? '';
+
+    if (urlExamId) {
+      if (bank.officialExams.some((paper) => paper.id === urlExamId)) {
+        return { section: 'official', officialId: urlExamId, mockId: defaultMock };
+      }
+      if (bank.mockExams.some((paper) => paper.id === urlExamId)) {
+        return { section: 'mock', officialId: defaultOfficial, mockId: urlExamId };
+      }
+    }
+
+    if (urlSection === 'matrix' || urlSection === 'mock' || urlSection === 'official') {
+      return { section: urlSection, officialId: defaultOfficial, mockId: defaultMock };
+    }
+
+    return { section: defaultSection, officialId: defaultOfficial, mockId: defaultMock };
+  };
+
+  const initial = resolveInitialSelection();
+  const [activeSection, setActiveSection] = useState<ExamBankSectionTab>(initial.section);
+  const [selectedOfficialId, setSelectedOfficialId] = useState<string>(initial.officialId);
+  const [selectedMockId, setSelectedMockId] = useState<string>(initial.mockId);
+
+  // Đồng bộ tab & bộ đề khi chuyển môn học hoặc điều hướng qua query `?exam=` / `?section=`
+  const syncKey = `${bank.subjectSlug}:${urlSection ?? ''}:${urlExamId ?? ''}`;
+  const [prevSyncKey, setPrevSyncKey] = useState(syncKey);
+  if (syncKey !== prevSyncKey) {
+    setPrevSyncKey(syncKey);
+    const resolved = resolveInitialSelection();
+    setActiveSection(resolved.section);
+    setSelectedOfficialId(resolved.officialId);
+    setSelectedMockId(resolved.mockId);
   }
 
   const activeOfficialPaper = useMemo(

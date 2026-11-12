@@ -20,6 +20,11 @@ declare module 'virtual:content-manifest' {
   export const contentDiagnostics: import('@schemas/manifest').ContentDiagnostics;
 }
 
+/** Chỉ mục khối tri thức (Định nghĩa / Định lý / Ví dụ) trích xuất lúc build. */
+declare module 'virtual:search-index' {
+  export const searchIndex: import('@schemas/search').VirtualSearchIndex;
+}
+
 /** Mỗi file MDX trong content/ là một bài học. */
 declare module '*.mdx' {
   import type { ComponentType } from 'react';

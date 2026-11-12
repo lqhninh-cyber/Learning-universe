@@ -26,14 +26,7 @@ export function SearchBar({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.key === '/' &&
-        document.activeElement?.tagName !== 'INPUT' &&
-        document.activeElement?.tagName !== 'TEXTAREA'
-      ) {
-        event.preventDefault();
-        inputRef.current?.focus();
-      } else if (event.key === 'Escape') {
+      if (event.key === 'Escape') {
         setIsOpen(false);
       }
     };
