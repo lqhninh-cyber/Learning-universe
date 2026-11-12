@@ -66,12 +66,12 @@ export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClo
       role="region"
       aria-label="Danh mục Không gian học tập"
       className={cn(
-        'absolute top-full left-1/2 mt-3 w-[640px] max-w-[94vw] -translate-x-1/2 rounded-2xl p-6 shadow-2xl backdrop-blur-xl transition-all duration-200',
+        'absolute top-full left-1/2 mt-3 w-[640px] max-w-[94vw] -translate-x-1/2 rounded-3xl p-6 shadow-2xl backdrop-blur-xl transition-all duration-200',
         isDark
-          ? 'border border-[#C5A262]/40 bg-[#12241C]/98 text-[#F7F4EB]'
+          ? 'border border-[#4E9B58]/25 bg-[#11221A]/96 text-[#F7F4EB]'
           : isSepia
-            ? 'border border-[#C5A262]/45 bg-[#FBF7EC]/98 text-[#231F18]'
-            : 'border border-[#C5A262]/45 bg-[#FFFDF9]/98 text-[#142B21] dark:border-[#C5A262]/40 dark:bg-[#12241C]/98 dark:text-[#F7F4EB]',
+            ? 'border border-[#1B3D2F]/16 bg-[#FBF7EC]/98 text-[#231F18]'
+            : 'border border-[#1B3D2F]/14 bg-[#FCFDFC]/96 text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#11221A]/96 dark:text-[#F7F4EB]',
       )}
     >
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

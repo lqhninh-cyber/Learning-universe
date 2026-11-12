@@ -333,25 +333,18 @@ export const Header: FC<HeaderProps> = ({
 
   const navItemClass = (active: boolean) =>
     cn(
-      'relative inline-flex h-[64px] shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-transparent px-2.5 text-[15.5px] font-semibold tracking-tight whitespace-nowrap transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none xl:px-3.5',
+      'relative inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-[15px] font-semibold tracking-tight whitespace-nowrap transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98] xl:px-4',
       active
         ? isDark
-          ? 'bg-[#C83E37]/[0.14] text-[#FFFDF9]'
-          : 'bg-[#C83E37]/[0.07] text-[#142B21] dark:bg-[#C83E37]/[0.14] dark:text-[#FFFDF9]'
+          ? 'bg-[#4E9B58]/20 text-[#86EFAC]'
+          : 'bg-[#1B3D2F]/[0.08] text-[#142B21] dark:bg-[#4E9B58]/20 dark:text-[#86EFAC]'
         : isDark
-          ? 'text-[#D6DFD9] hover:border-[#C5A262]/45 hover:bg-white/[0.04] hover:text-[#FFFDF9]'
-          : 'text-[#3F5148] hover:border-[#C5A262]/50 hover:bg-[#1B3D2F]/[0.04] hover:text-[#1B3D2F] dark:text-[#D6DFD9] dark:hover:text-[#FFFDF9]',
+          ? 'text-[#D6DFD9] hover:bg-white/[0.06] hover:text-[#FFFDF9]'
+          : 'text-[#3F5148] hover:bg-[#1B3D2F]/[0.04] hover:text-[#142B21] dark:text-[#D6DFD9] dark:hover:bg-white/[0.06] dark:hover:text-[#FFFDF9]',
     );
 
   const activeSealDot = (
-    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#C5A262]" aria-hidden="true" />
-  );
-
-  const activeCinnabarRule = (
-    <span
-      className="pointer-events-none absolute inset-x-2.5 bottom-0 h-[2.5px] rounded-full bg-[#C83E37]"
-      aria-hidden="true"
-    />
+    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#388E3C]" aria-hidden="true" />
   );
 
   return (
@@ -359,12 +352,12 @@ export const Header: FC<HeaderProps> = ({
       <header
         ref={mastheadRef}
         className={cn(
-          'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(95vw,1220px)] items-center rounded-2xl border border-[#C5A262]/45 shadow-[0_10px_30px_-12px_rgba(20,43,33,0.14)] ring-1 ring-[#C5A262]/15 backdrop-blur-md transition-colors duration-200 ring-inset print:hidden',
+          'lu-site-header sticky top-3 z-50 mx-auto -mb-[62px] flex h-[62px] w-[min(95vw,1200px)] items-center rounded-full border px-4 shadow-[0_8px_28px_-10px_rgba(20,43,33,0.10)] ring-1 backdrop-blur-md transition-colors duration-200 print:hidden',
           isDark
-            ? 'bg-[#12241C]/95 text-[#F7F4EB]'
+            ? 'border-[#4E9B58]/25 bg-[#11221A]/92 text-[#F7F4EB] ring-[#4E9B58]/10'
             : isSepia
-              ? 'bg-[#FBF7EC]/95 text-[#231F18]'
-              : 'bg-[#FFFDF9]/95 text-[#142B21] dark:bg-[#12241C]/95 dark:text-[#F7F4EB]',
+              ? 'border-[#1B3D2F]/16 bg-[#FBF7EC]/94 text-[#231F18] ring-[#2E7D32]/8'
+              : 'border-[#1B3D2F]/14 bg-[#FCFDFC]/92 text-[#142B21] ring-[#2E7D32]/8 dark:border-[#4E9B58]/25 dark:bg-[#11221A]/92 dark:text-[#F7F4EB] dark:ring-[#4E9B58]/10',
           className,
         )}
       >
@@ -372,21 +365,21 @@ export const Header: FC<HeaderProps> = ({
         <Link
           to={ROUTES.home}
           aria-label="LEARNING UNIVERSE"
-          className="flex h-full shrink-0 cursor-pointer items-center px-4 transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none md:px-5"
+          className="flex h-full shrink-0 cursor-pointer items-center pr-3 pl-1 transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none md:pr-4"
         >
           <EightPetalBrandMark roseRef={roseRef} isDark={isDark} isSepia={isSepia} />
         </Link>
 
-        {/* Vách ngăn mộng gỗ 1 */}
+        {/* Vách ngăn mảnh 1 */}
         <div
-          className="hidden h-8 w-[1px] shrink-0 bg-[var(--border-subtle)] lg:block"
+          className="hidden h-6 w-[1px] shrink-0 bg-[#1B3D2F]/10 lg:block dark:bg-white/10"
           aria-hidden="true"
         />
 
-        {/* NGĂN 2 — ĐIỀU HƯỚNG & ẤN TRIỆN ĐỎ / THANH NGỮ CẢNH BÀI ĐỌC (Giữa) */}
+        {/* NGĂN 2 — ĐIỀU HƯỚNG VIÊN THUỐC / THANH NGỮ CẢNH BÀI ĐỌC (Giữa) */}
         <div
           onMouseLeave={() => setIsLessonMenuHovered(false)}
-          className="relative hidden h-full min-w-0 flex-1 items-center justify-center overflow-hidden px-3 lg:flex xl:px-6"
+          className="relative hidden h-full min-w-0 flex-1 items-center justify-center overflow-hidden px-2 lg:flex xl:px-4"
         >
           {/* Lớp A: Menu điều hướng chính */}
           <nav
@@ -406,7 +399,6 @@ export const Header: FC<HeaderProps> = ({
             >
               {isHomeActive && activeSealDot}
               <span>Trang chủ</span>
-              {isHomeActive && activeCinnabarRule}
             </Link>
 
             <button
@@ -425,12 +417,11 @@ export const Header: FC<HeaderProps> = ({
               <ChevronDown
                 className={cn(
                   'h-3.5 w-3.5 transition-transform duration-200',
-                  isDark ? 'text-[#A7B5AC]' : 'text-[#55676B]',
+                  isDark ? 'text-[#86EFAC]' : 'text-[#55676B]',
                   isMegaMenuOpen && 'rotate-180',
                 )}
                 aria-hidden="true"
               />
-              {isLearningSpaceActive && activeCinnabarRule}
             </button>
 
             <Link
@@ -440,7 +431,6 @@ export const Header: FC<HeaderProps> = ({
             >
               {isCoursesActive && activeSealDot}
               <span>Tất cả môn học</span>
-              {isCoursesActive && activeCinnabarRule}
             </Link>
 
             <Link
@@ -450,7 +440,6 @@ export const Header: FC<HeaderProps> = ({
             >
               {isGlossaryActive && activeSealDot}
               <span>Thuật ngữ</span>
-              {isGlossaryActive && activeCinnabarRule}
             </Link>
 
             {isLessonPage && isScrolledInLesson && isLessonMenuPinned && (
@@ -462,7 +451,7 @@ export const Header: FC<HeaderProps> = ({
                   setIsMegaMenuOpen(false);
                 }}
                 aria-label="Quay lại thanh ngữ cảnh bài đọc"
-                className="ml-1 inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[#C5A262]/45 px-2 py-1 text-xs font-semibold text-[#9A7B3E] transition-colors hover:bg-[#C5A262]/10"
+                className="ml-1 inline-flex cursor-pointer items-center gap-1 rounded-full border border-[#1B3D2F]/18 px-2.5 py-1 text-xs font-semibold text-[#1B3D2F] transition-colors hover:bg-[#1B3D2F]/8 dark:border-[#4E9B58]/35 dark:text-[#86EFAC]"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Bài đọc</span>
@@ -475,7 +464,7 @@ export const Header: FC<HeaderProps> = ({
             data-testid="reading-context-bar"
             aria-hidden={!showReadingContextBar}
             className={cn(
-              'absolute inset-0 flex items-center justify-between gap-2.5 px-3 transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] xl:px-6',
+              'absolute inset-0 flex items-center justify-between gap-2.5 px-2 transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] xl:px-4',
               showReadingContextBar
                 ? 'pointer-events-auto translate-y-0 opacity-100'
                 : 'pointer-events-none translate-y-3 opacity-0',
@@ -484,7 +473,7 @@ export const Header: FC<HeaderProps> = ({
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <span
                 title={chapterTooltipTitle}
-                className="shrink-0 rounded-md border border-[#C5A262]/40 bg-[#C5A262]/12 px-2 py-0.5 font-mono text-[11px] font-bold text-[#9A7B3E] dark:text-[#E5C378]"
+                className="shrink-0 rounded-full border border-[#1B3D2F]/16 bg-[#1B3D2F]/[0.07] px-2.5 py-0.5 font-mono text-[11px] font-bold text-[#1B3D2F] dark:border-[#4E9B58]/30 dark:bg-[#4E9B58]/15 dark:text-[#86EFAC]"
               >
                 {chapterContextBadge}
               </span>
@@ -508,12 +497,12 @@ export const Header: FC<HeaderProps> = ({
                 aria-pressed={isSkimmingMode}
                 title="Đọc lướt định lý (ẩn/hiện nhanh Ví dụ & Chứng minh)"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-xl border px-2.5 text-xs font-semibold whitespace-nowrap transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none active:scale-[0.98]',
+                  'inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-semibold whitespace-nowrap transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98]',
                   isSkimmingMode
-                    ? 'border-[#C83E37] bg-[#C83E37] text-white shadow-xs'
+                    ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs dark:border-[#388E3C] dark:bg-[#388E3C]'
                     : isDark
-                      ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7] hover:border-[#C5A262]/60'
-                      : 'border-[var(--border-subtle)] bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/45 hover:text-[#1B3D2F]',
+                      ? 'border-[#4E9B58]/25 bg-[#182E24] text-[#E6ECE7] hover:border-[#4E9B58]/50'
+                      : 'border-[#1B3D2F]/14 bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/35 hover:text-[#1B3D2F]',
                 )}
               >
                 {isSkimmingMode ? (
@@ -529,10 +518,10 @@ export const Header: FC<HeaderProps> = ({
                 role="group"
                 aria-label="Chỉnh nhanh cỡ chữ bài đọc"
                 className={cn(
-                  'inline-flex h-8 items-center rounded-xl border p-0.5',
+                  'inline-flex h-8 items-center rounded-full border p-0.5',
                   isDark
-                    ? 'border-[#2A4035] bg-[#182E24]'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-page)]',
+                    ? 'border-[#4E9B58]/25 bg-[#182E24]'
+                    : 'border-[#1B3D2F]/14 bg-[var(--bg-page)]',
                 )}
               >
                 <button
@@ -542,7 +531,7 @@ export const Header: FC<HeaderProps> = ({
                   disabled={fontSize === 'sm'}
                   aria-label="Giảm cỡ chữ"
                   className={cn(
-                    'h-7 cursor-pointer rounded-lg px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-35',
+                    'h-7 cursor-pointer rounded-full px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-35',
                     isDark
                       ? 'text-[#E6ECE7] hover:bg-white/10'
                       : 'text-[#142B21] hover:bg-[#1B3D2F]/10',
@@ -550,7 +539,10 @@ export const Header: FC<HeaderProps> = ({
                 >
                   A−
                 </button>
-                <span className="h-3.5 w-[1px] bg-[var(--border-subtle)]" aria-hidden="true" />
+                <span
+                  className="h-3.5 w-[1px] bg-[#1B3D2F]/15 dark:bg-white/15"
+                  aria-hidden="true"
+                />
                 <button
                   type="button"
                   tabIndex={showReadingContextBar ? undefined : -1}
@@ -558,7 +550,7 @@ export const Header: FC<HeaderProps> = ({
                   disabled={fontSize === 'xl'}
                   aria-label="Tăng cỡ chữ"
                   className={cn(
-                    'h-7 cursor-pointer rounded-lg px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-35',
+                    'h-7 cursor-pointer rounded-full px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-35',
                     isDark
                       ? 'text-[#E6ECE7] hover:bg-white/10'
                       : 'text-[#142B21] hover:bg-[#1B3D2F]/10',
@@ -576,10 +568,10 @@ export const Header: FC<HeaderProps> = ({
                 onClick={() => setIsLessonMenuPinned(true)}
                 aria-label="Mở menu điều hướng chính"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-xl border px-2.5 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none',
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-full border px-3 text-xs font-semibold whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none',
                   isDark
-                    ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7] hover:border-[#C5A262]/60'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-page)] text-[#142B21] hover:border-[#C5A262]/65 hover:text-[#1B3D2F]',
+                    ? 'border-[#4E9B58]/25 bg-[#182E24] text-[#E6ECE7] hover:border-[#4E9B58]/50'
+                    : 'border-[#1B3D2F]/14 bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/35 hover:text-[#1B3D2F]',
                 )}
               >
                 <Menu className="h-3.5 w-3.5" aria-hidden="true" />
@@ -589,26 +581,26 @@ export const Header: FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Vách ngăn mộng gỗ 2 */}
+        {/* Vách ngăn mảnh 2 */}
         <div
-          className="hidden h-8 w-[1px] shrink-0 bg-[var(--border-subtle)] lg:block"
+          className="hidden h-6 w-[1px] shrink-0 bg-[#1B3D2F]/10 lg:block dark:bg-white/10"
           aria-hidden="true"
         />
 
         {/* NGĂN 3 — TRỢ LÝ HỌC TẬP & CÔNG CỤ (Phải) */}
-        <div className="ml-auto flex shrink-0 items-center gap-2.5 px-3 md:px-4">
+        <div className="ml-auto flex shrink-0 items-center gap-2.5 pl-3">
           {/* Huy hiệu "Học tiếp" thông minh trên Trang chủ / Danh mục */}
           {quickResume && (
             <Link
               to={quickResume.to}
-              className="hidden items-center gap-1.5 rounded-xl bg-[#1B3D2F] px-3 py-1.5 text-[12.5px] font-semibold whitespace-nowrap text-white transition-colors duration-150 hover:bg-[#25523F] focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none active:scale-[0.98] xl:inline-flex"
+              className="hidden items-center gap-1.5 rounded-full bg-[#1B3D2F] px-4 py-2 text-[12.5px] font-semibold whitespace-nowrap text-white transition-colors duration-150 hover:bg-[#25523F] focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98] xl:inline-flex"
             >
               <Play className="h-3 w-3 fill-current" aria-hidden="true" />
               <span>Học tiếp: {quickResume.label}</span>
             </Link>
           )}
 
-          {/* Ô tìm kiếm mở rộng luân phiên gợi ý */}
+          {/* Ô tìm kiếm viên thuốc luân phiên gợi ý (đảm bảo không chồng badge ⌘K) */}
           <button
             type="button"
             onClick={() => {
@@ -618,29 +610,22 @@ export const Header: FC<HeaderProps> = ({
             }}
             aria-label="Mở tìm kiếm nhanh"
             className={cn(
-              'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-page)] px-3.5 text-left text-[13px] transition-all duration-200 hover:border-[#C5A262]/70 focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
+              'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)] px-4 text-left text-[13px] transition-all duration-200 hover:border-[#1B3D2F]/30 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
               isDark
-                ? 'border-[#2A4035] bg-[#0E1A15] text-[#CBD5CE] hover:bg-[#162920]'
-                : 'text-[#4A5851] hover:bg-white hover:text-[#142B21] dark:border-[#2A4035] dark:bg-[#0E1A15] dark:text-[#CBD5CE]',
+                ? 'border-[#4E9B58]/25 bg-[#0E1A15] text-[#CBD5CE] hover:bg-[#162920]'
+                : 'text-[#4A5851] hover:bg-white hover:text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#0E1A15] dark:text-[#CBD5CE]',
             )}
           >
-            <span className="flex min-w-0 items-center gap-2">
+            <span className="flex min-w-0 flex-1 items-center gap-2">
               <Search
                 className={cn('h-3.5 w-3.5 shrink-0', isDark ? 'text-[#A7B5AC]' : 'text-[#55676B]')}
                 aria-hidden="true"
               />
-              <span key={searchHintIndex} className="truncate font-medium">
+              <span key={searchHintIndex} className="block truncate pr-2 font-medium">
                 {ROTATING_SEARCH_HINTS[searchHintIndex]}
               </span>
             </span>
-            <kbd
-              className={cn(
-                'shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-semibold',
-                isDark
-                  ? 'border border-[#2A4035] bg-[#182E24] text-[#E5C378]'
-                  : 'border border-[var(--border-subtle)] bg-white text-[#55676B] dark:border-[#2A4035] dark:bg-[#182E24] dark:text-[#E5C378]',
-              )}
-            >
+            <kbd className="shrink-0 rounded-full border border-[#1B3D2F]/10 bg-[#1B3D2F]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[var(--text-secondary)] dark:border-white/15 dark:bg-white/10 dark:text-[#A7B5AC]">
               ⌘K
             </kbd>
           </button>
@@ -687,7 +672,7 @@ export const Header: FC<HeaderProps> = ({
         {isLessonPage && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute right-4 bottom-0 left-4 h-[2.5px] overflow-hidden rounded-full bg-[var(--border-subtle)]/35"
+            className="pointer-events-none absolute right-8 bottom-0 left-8 h-[2.5px] overflow-hidden rounded-full bg-[#1B3D2F]/10 dark:bg-white/10"
           >
             <div
               ref={progressBarRef}

@@ -50,10 +50,10 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
         aria-expanded={isOpen}
         aria-label="Tài khoản và cài đặt giao diện"
         className={cn(
-          'flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#C5A262] focus-visible:outline-none active:scale-[0.98]',
+          'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98]',
           isDark
-            ? 'border-[#2A4035] bg-[#182E24] text-[#F7F4EB] hover:border-[#C5A262]/60 hover:bg-[#1E3B2E]'
-            : 'border-[var(--border-subtle)] bg-[var(--bg-page)] text-[#142B21] hover:border-[#C5A262]/70 hover:bg-white dark:border-[#2A4035] dark:bg-[#182E24] dark:text-[#F7F4EB]',
+            ? 'border-[#4E9B58]/25 bg-[#182E24] text-[#F7F4EB] hover:border-[#4E9B58]/50 hover:bg-[#1E3B2E]'
+            : 'border-[#1B3D2F]/14 bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/30 hover:bg-white dark:border-[#4E9B58]/25 dark:bg-[#182E24] dark:text-[#F7F4EB]',
         )}
       >
         <User className="h-4 w-4" aria-hidden="true" />
@@ -64,12 +64,12 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
           role="menu"
           aria-label="Menu tài khoản và giao diện"
           className={cn(
-            'absolute top-full right-0 mt-3 w-64 rounded-2xl p-4 shadow-2xl backdrop-blur-xl',
+            'absolute top-full right-0 mt-3 w-64 rounded-3xl p-4 shadow-2xl backdrop-blur-xl',
             isDark
-              ? 'border border-[#C5A262]/40 bg-[#12241C]/98 text-[#F7F4EB]'
+              ? 'border border-[#4E9B58]/25 bg-[#11221A]/96 text-[#F7F4EB]'
               : isSepia
-                ? 'border border-[#C5A262]/45 bg-[#FBF7EC]/98 text-[#231F18]'
-                : 'border border-[#C5A262]/45 bg-[#FFFDF9]/98 text-[#142B21] dark:border-[#C5A262]/40 dark:bg-[#12241C]/98 dark:text-[#F7F4EB]',
+                ? 'border border-[#1B3D2F]/16 bg-[#FBF7EC]/98 text-[#231F18]'
+                : 'border border-[#1B3D2F]/14 bg-[#FCFDFC]/96 text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#11221A]/96 dark:text-[#F7F4EB]',
           )}
         >
           {/* Mục 1: Thông tin học tập cá nhân */}

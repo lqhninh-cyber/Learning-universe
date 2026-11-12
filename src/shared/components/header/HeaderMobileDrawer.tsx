@@ -73,7 +73,7 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
             <Link
               to={quickResume.to}
               onClick={closeDrawer}
-              className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#1B3D2F] px-3.5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#25523F]"
+              className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#1B3D2F] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#25523F]"
             >
               <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
               <span>Học tiếp: {quickResume.label}</span>
@@ -81,8 +81,8 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
           )}
 
           {isLessonPage && (
-            <div className="space-y-2 rounded-xl border border-[#C5A262]/40 bg-[#FAF7EF] p-3 dark:bg-[#182E24]">
-              <p className="font-mono text-[10px] font-bold tracking-wider text-[#9A7B3E] uppercase">
+            <div className="space-y-2 rounded-2xl border border-[#1B3D2F]/14 bg-[#F5F9F6] p-3 dark:border-[#4E9B58]/25 dark:bg-[#182E24]">
+              <p className="font-mono text-[10px] font-bold tracking-wider text-[#246A3B] uppercase dark:text-[#86EFAC]">
                 Ngữ cảnh bài học
               </p>
               <div className="flex items-center justify-between gap-2">

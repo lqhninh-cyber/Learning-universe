@@ -41,13 +41,19 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     document.documentElement.removeAttribute('data-reading-size');
   });
 
-  it('hiển thị khung 3 ngăn mộng gỗ, thương hiệu hoa 8 cánh và trạng thái Ấn Triện Đỏ cho mục đang chọn', () => {
+  it('hiển thị vỏ viên thuốc bo tròn, logo 8 lá xanh xoáy tâm và trạng thái Active xanh ngọc cho mục đang chọn', () => {
     const { container } = renderHeaderAt('/');
 
     const header = container.querySelector('header.lu-site-header');
     expect(header).toBeInTheDocument();
-    expect(header?.className).toContain('h-[66px]');
+    expect(header?.className).toContain('rounded-full');
+    expect(header?.className).toContain('h-[62px]');
     expect(header?.className).toContain('sticky');
+
+    // Logo 8 lá xanh SVG kèm gradient
+    const brandSvg = container.querySelector('header svg[aria-hidden="true"]');
+    expect(brandSvg?.querySelectorAll('linearGradient').length).toBe(1);
+    expect(brandSvg?.querySelectorAll('g').length).toBe(8);
 
     expect(screen.getByText('LEARNING')).toBeInTheDocument();
     expect(screen.getByText('UNIVERSE')).toBeInTheDocument();
@@ -56,9 +62,10 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.getByRole('link', { name: 'Tất cả môn học' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thuật ngữ' })).toBeInTheDocument();
 
-    // Mục đang chọn trên trang chủ có nền ấm đỏ chu sa và đường gạch chân đáy #C83E37
+    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Xanh Ngọc Nhạt thay vì gạch chân đỏ
     const homeLink = screen.getByRole('link', { name: 'Trang chủ' });
-    expect(homeLink.className).toContain('bg-[#C83E37]');
+    expect(homeLink.className).toContain('rounded-full');
+    expect(homeLink.className).toContain('bg-[#1B3D2F]/[0.08]');
   });
 
   it('hiển thị chip "Học tiếp" từ bài học gần nhất trên Trang chủ và luân phiên gợi ý tìm kiếm mỗi 4 giây', () => {
