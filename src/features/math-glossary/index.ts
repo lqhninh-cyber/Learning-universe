@@ -13,7 +13,12 @@ export {
   matchLatexToGlossary,
 } from './annotator';
 export { MathGlossaryContext, type MathGlossaryContextValue } from './context';
-export { KatexMath } from './KatexMath';
+export {
+  KatexMath,
+  InlineMathText,
+  type KatexMathProps,
+  type InlineMathTextProps,
+} from './KatexMath';
 export { MathGlossaryProvider, type MathGlossaryProviderProps } from './MathGlossaryContext';
 export { MathGlossaryPopover } from './MathGlossaryPopover';
 export { MathGlossaryTerm, type MathGlossaryTermProps } from './MathGlossaryTerm';

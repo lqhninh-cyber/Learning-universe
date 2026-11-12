@@ -3,6 +3,7 @@ import { useId, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import {
   getAllGlossaryEntries,
+  InlineMathText,
   KatexMath,
   type MathGlossarySubject,
   searchGlossary,
@@ -236,9 +237,9 @@ export function GlossaryPage() {
                     </div>
 
                     {/* Định nghĩa tóm tắt */}
-                    <p className="text-[15.5px] leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
-                      {entry.brief}
-                    </p>
+                    <div className="text-[15.5px] leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
+                      <InlineMathText text={entry.brief} />
+                    </div>
 
                     {/* Hộp trực quan */}
                     <div className="space-y-1.5 rounded-xl border border-[#DFE6E1] bg-[#EEF2EE]/60 p-3.5 text-[14.5px] leading-relaxed text-[#29383D] dark:border-[#1E3B2D] dark:bg-[#12241C]/60 dark:text-[#E2E8F0]">
@@ -246,7 +247,9 @@ export function GlossaryPage() {
                         <Lightbulb className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         <span>Trực quan &amp; Bản chất:</span>
                       </div>
-                      <p>{entry.intuition}</p>
+                      <div>
+                        <InlineMathText text={entry.intuition} />
+                      </div>
                     </div>
                   </div>
 

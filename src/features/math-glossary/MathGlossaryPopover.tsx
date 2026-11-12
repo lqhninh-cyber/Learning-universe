@@ -3,35 +3,42 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { cn } from '@/shared/lib/cn';
-import { KatexMath } from './KatexMath';
+import { InlineMathText, KatexMath } from './KatexMath';
 import { useMathGlossary } from './useMathGlossary';
 
-const POPOVER_WIDTH = 340;
-
-function computeCoords(anchorRect: DOMRect | null): { top: number; left: number } | null {
+function computeCoords(
+  anchorRect: DOMRect | null,
+  targetWidth: number,
+  estimatedHeight = 360,
+): { top: number; left: number; width: number } | null {
   if (!anchorRect || typeof window === 'undefined') {
     return null;
   }
 
-  const margin = 8;
+  const margin = 12;
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  const width = Math.min(POPOVER_WIDTH, viewportWidth - 32);
+  const width = Math.min(Math.round(viewportWidth * 0.92), targetWidth);
   let left = anchorRect.left + anchorRect.width / 2 - width / 2;
-  // Chống tràn ngang
-  left = Math.max(16, Math.min(left, viewportWidth - width - 16));
+  // Chống tràn mép trái / phải: giữ margin 12px cách mép viewport
+  left = Math.max(margin, Math.min(left, viewportWidth - width - margin));
 
   // Mặc định hiển thị bên dưới, nếu chạm đáy màn hình thì bật lên trên
-  const estimatedHeight = 260;
-  const spaceBelow = viewportHeight - anchorRect.bottom;
+  const spaceBelow = viewportHeight - anchorRect.bottom - margin;
   const openAbove = spaceBelow < estimatedHeight && anchorRect.top > estimatedHeight;
 
-  const top = openAbove
-    ? Math.max(16, anchorRect.top - estimatedHeight - margin)
-    : anchorRect.bottom + margin;
+  let top: number;
+  if (openAbove) {
+    top = Math.max(margin, anchorRect.top - estimatedHeight - 8);
+  } else {
+    top = anchorRect.bottom + 8;
+    if (top + estimatedHeight > viewportHeight - margin) {
+      top = Math.max(margin, viewportHeight - estimatedHeight - margin);
+    }
+  }
 
-  return { top, left };
+  return { top, left, width };
 }
 
 export function MathGlossaryPopover() {
@@ -39,7 +46,10 @@ export function MathGlossaryPopover() {
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isPinned, setIsPinned] = useState(false);
 
-  const coords = useMemo(() => computeCoords(anchorRect), [anchorRect]);
+  const displayFormula = activeEntry ? activeEntry.formula || activeEntry.symbol : '';
+  const targetWidth = displayFormula && displayFormula.length > 35 ? 460 : 420;
+
+  const coords = useMemo(() => computeCoords(anchorRect, targetWidth), [anchorRect, targetWidth]);
 
   // Đóng popover khi nhấn phím Escape hoặc click bên ngoài (nếu chưa ghim)
   useEffect(() => {
@@ -94,7 +104,6 @@ export function MathGlossaryPopover() {
 
   const displayName = activeEntry.name || activeEntry.nameVi;
   const displayEnglish = activeEntry.englishName || activeEntry.nameEn;
-  const displayFormula = activeEntry.formula || activeEntry.symbol;
   const displaySummary = activeEntry.summary || activeEntry.brief;
   const displayLessonUrl = activeEntry.lessonUrl || activeEntry.relatedLesson;
 
@@ -113,96 +122,114 @@ export function MathGlossaryPopover() {
         position: 'fixed',
         top: `${coords.top}px`,
         left: `${coords.left}px`,
-        width: `${Math.min(POPOVER_WIDTH, window.innerWidth - 32)}px`,
+        width: `${coords.width}px`,
       }}
-      className="animate-in fade-in zoom-in-95 z-50 w-80 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-4 text-xs text-[#29383D] shadow-2xl backdrop-blur-xl transition-all duration-150 dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200"
+      className="animate-in fade-in zoom-in-95 z-50 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-4 text-[#29383D] shadow-2xl backdrop-blur-xl transition-all duration-150 select-text dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200"
     >
-      {/* Header: Ký hiệu + Tên thuật ngữ + Nút Ghim (Pin) & Đóng [✕] */}
-      <div className="flex items-start justify-between gap-2.5 border-b border-[#CFDADB] pb-2.5 dark:border-stone-700/80">
-        <div className="min-w-0 flex-1 space-y-0.5">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-semibold tracking-wider text-[#3F6570] uppercase dark:text-[#E09F5A]">
-              {subjectLabel}
-            </span>
-          </div>
-          <h3 className="font-serif text-base leading-snug font-bold text-[#29383D] dark:text-stone-100">
-            {displayName}
-          </h3>
-          <p className="text-[11px] text-[#55676B] italic dark:text-stone-400">{displayEnglish}</p>
-        </div>
+      {/* Tầng 1: Top Meta Bar */}
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <span className="text-[11px] font-bold tracking-[0.08em] text-[#1B3D2F]/75 uppercase dark:text-[#86EFAC]">
+          {subjectLabel}
+        </span>
 
-        <div className="flex shrink-0 flex-col items-end gap-1.5">
-          <div className="flex items-center gap-1">
-            <div className="rounded-md border border-[#CFDADB] bg-[#E1E9EA] px-2 py-0.5 text-center shadow-2xs dark:border-stone-700 dark:bg-stone-800">
-              <KatexMath
-                math={displayFormula}
-                className="font-serif text-sm text-[#29383D] dark:text-stone-100"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setIsPinned((prev) => {
-                  const next = !prev;
-                  if (next) {
-                    cancelHide();
-                  }
-                  return next;
-                });
-              }}
-              aria-pressed={isPinned}
-              aria-label={isPinned ? 'Bỏ ghim chú thích' : 'Ghim chú thích cố định'}
-              title={isPinned ? 'Bỏ ghim chú thích' : 'Ghim chú thích cố định để đối chiếu'}
-              className={cn(
-                'cursor-pointer rounded-md p-1 transition-colors',
-                isPinned
-                  ? 'bg-[#3F6570] text-white dark:bg-[#E09F5A] dark:text-stone-950'
-                  : 'text-stone-500 hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800',
-              )}
-            >
-              <Pin className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setIsPinned(false);
-                closePopover();
-              }}
-              aria-label="Đóng chú thích"
-              className="cursor-pointer rounded-md p-1 text-stone-500 transition-colors hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800"
-            >
-              <X className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            onClick={() => {
+              setIsPinned((prev) => {
+                const next = !prev;
+                if (next) {
+                  cancelHide();
+                }
+                return next;
+              });
+            }}
+            aria-pressed={isPinned}
+            aria-label={isPinned ? 'Bỏ ghim chú thích' : 'Ghim chú thích cố định'}
+            title={isPinned ? 'Bỏ ghim chú thích' : 'Ghim chú thích cố định để đối chiếu'}
+            className={cn(
+              'flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors',
+              isPinned
+                ? 'bg-[#1B3D2F] text-white dark:bg-[#86EFAC] dark:text-[#091A13]'
+                : 'text-stone-500 hover:bg-black/5 dark:text-stone-400 dark:hover:bg-white/10',
+            )}
+          >
+            <Pin className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIsPinned(false);
+              closePopover();
+            }}
+            aria-label="Đóng chú thích"
+            className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-black/5 dark:text-stone-400 dark:hover:bg-white/10"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       </div>
 
-      {/* Nội dung định nghĩa tóm tắt */}
-      <div className="space-y-2 py-2.5 text-xs leading-relaxed text-[#29383D]">
-        <p>{displaySummary}</p>
+      {/* Tầng 2: Khối Tiêu Đề Toàn Chiều Ngang */}
+      <div className="mb-3 w-full">
+        <h3 className="font-serif text-[18px] leading-[1.3] font-bold text-[var(--text-primary,#29383D)] dark:text-stone-100">
+          {displayName}
+        </h3>
+        {displayEnglish && (
+          <p className="mt-0.5 text-[13px] text-[var(--text-secondary,#55676B)] italic dark:text-stone-400">
+            {displayEnglish}
+          </p>
+        )}
+      </div>
+
+      {/* Tầng 3: Khung Công Thức Trung Tâm Toàn Chiều Ngang */}
+      {displayFormula && (
+        <div className="mb-3.5 flex w-full scrollbar-none items-center justify-center overflow-x-auto rounded-xl border border-[#1B3D2F]/12 bg-[#1B3D2F]/[0.05] px-3.5 py-2.5 dark:border-white/10 dark:bg-white/[0.06]">
+          <KatexMath
+            math={displayFormula}
+            className="font-serif text-[15.5px] text-[#29383D] dark:text-stone-100"
+          />
+        </div>
+      )}
+
+      {/* Thân thẻ cuộn mượt cho định lý dài */}
+      <div className="max-h-[min(60vh,340px)] scrollbar-thin overflow-y-auto pr-1">
+        {/* Nội dung định nghĩa / phát biểu định lý */}
+        <div className="mb-3 text-[14.5px] leading-[1.65] text-[var(--text-primary,#29383D)] dark:text-stone-200">
+          <InlineMathText text={displaySummary} />
+        </div>
 
         {/* Khối trực giác / bản chất */}
-        <div className="space-y-1 rounded-lg border border-[#CFDADB] bg-[#E1E9EA]/70 p-2.5 text-[11px] leading-relaxed text-[#29383D]">
-          <div className="flex items-center gap-1.5 font-semibold text-[#3F6570]">
-            <Lightbulb className="h-3.5 w-3.5 shrink-0 text-[#3F6570]" aria-hidden="true" />
-            <span>Trực quan & Bản chất:</span>
+        {activeEntry.intuition && (
+          <div className="space-y-1 rounded-xl border border-[#25694C]/15 bg-[#E8F4EE]/60 p-3 text-[13.5px] leading-[1.6] text-[var(--text-primary,#29383D)] dark:border-[#25694C]/30 dark:bg-[#15302A]/50 dark:text-stone-200">
+            <div className="flex items-center gap-1.5 font-semibold text-[#1B3D2F] dark:text-[#86EFAC]">
+              <Lightbulb
+                className="h-4 w-4 shrink-0 text-[#1B3D2F] dark:text-[#86EFAC]"
+                aria-hidden="true"
+              />
+              <span>Trực quan &amp; Bản chất:</span>
+            </div>
+            <div>
+              <InlineMathText text={activeEntry.intuition} />
+            </div>
           </div>
-          <p>{activeEntry.intuition}</p>
-        </div>
+        )}
       </div>
 
       {/* Footer: Nút xem bài học gốc */}
-      <div className="mt-1 flex items-center justify-between border-t border-[#D8D0C0] pt-2">
-        <Link
-          to={displayLessonUrl}
-          onClick={closePopover}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-900 underline underline-offset-4 transition-colors hover:text-amber-700"
-        >
-          <span>Xem bài học gốc</span>
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </Link>
-        <span className="text-[10px] text-stone-500">Learning Universe</span>
-      </div>
+      {displayLessonUrl && (
+        <div className="mt-3 flex items-center justify-between border-t border-[#CFDADB] pt-2.5 dark:border-stone-700/80">
+          <Link
+            to={displayLessonUrl}
+            onClick={closePopover}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1B3D2F] underline underline-offset-4 transition-colors hover:text-[#25694C] dark:text-[#86EFAC] dark:hover:text-[#4ADE80]"
+          >
+            <span>Xem bài học gốc</span>
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </Link>
+          <span className="text-[10px] text-stone-500 dark:text-stone-400">Learning Universe</span>
+        </div>
+      )}
     </div>,
     document.body,
   );

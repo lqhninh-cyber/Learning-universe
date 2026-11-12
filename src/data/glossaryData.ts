@@ -51,7 +51,7 @@ export const GLOSSARY_DATA: readonly GlossaryEntry[] = [
     term: 'm-phẳng',
     notation: '$\\alpha = P + V_k$',
     shortDefinition:
-      'Tập hợp các điểm trong không gian afin tạo với điểm gốc các vectơ thuộc một không gian con vectơ $k$ chiều. Khi $k=1$ ta có đường thẳng afin, $k=2$ là mặt phẳng afin.',
+      'Tập hợp các điểm trong không gian afin tạo với điểm gốc các vectơ thuộc một không gian con vectơ $k$ chiều. Khi $k = 1$ ta có đường thẳng afin, $k = 2$ là mặt phẳng afin.',
     subject: 'HHAVE',
     targetUrl: '/glossary#m-phang',
   },

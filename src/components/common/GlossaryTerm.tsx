@@ -1,7 +1,7 @@
 import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { getGlossaryEntry } from '@/data/glossaryData';
-import { KatexMath } from '@/features/math-glossary/KatexMath';
+import { InlineMathText, KatexMath } from '@/features/math-glossary';
 import { cn } from '@/shared/lib/cn';
 
 export interface GlossaryTermProps {
@@ -16,16 +16,7 @@ export interface GlossaryTermProps {
  * Phân tích và kết xuất chuỗi văn bản hỗn hợp có chứa công thức KaTeX nội dòng $...$
  */
 function renderMixedText(text: string): ReactNode {
-  if (!text) return null;
-  const parts = text.split(/(\$[^$]+\$)/g);
-
-  return parts.map((part, index) => {
-    if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
-      const math = part.slice(1, -1);
-      return <KatexMath key={index} math={math} className="inline-block px-0.5" />;
-    }
-    return part;
-  });
+  return <InlineMathText text={text} />;
 }
 
 /**

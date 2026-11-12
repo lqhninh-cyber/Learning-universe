@@ -17,8 +17,8 @@
     "symbol": "V_4",
     "nameVi": "Nhóm bốn Klein",
     "nameEn": "Klein four-group",
-    "brief": "Nhóm cấp 4 nhỏ nhất không cyclic. Gồm 4 phần tử {e, a, b, c}, trong đó mọi phần tử khác đơn vị đều có cấp 2 (x² = e).",
-    "intuition": "Tương đương 4 phép đối xứng của hình chữ nhật phẳng (đứng yên, lật ngang, lật dọc, quay 180°). Đẳng cấu với Z/2Z × Z/2Z.",
+    "brief": "Nhóm cấp $4$ nhỏ nhất không cyclic. Gồm $4$ phần tử $\\{e, a, b, c\\}$, trong đó mọi phần tử khác đơn vị đều có cấp $2$ ($x^2 = e$).",
+    "intuition": "Tương đương $4$ phép đối xứng của hình chữ nhật phẳng (đứng yên, lật ngang, lật dọc, quay $180^\\circ$). Đẳng cấu với $\\mathbb{Z}/2\\mathbb{Z} \\times \\mathbb{Z}/2\\mathbb{Z}$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/cac-ho-nhom-co-ban"
   },
   {
@@ -43,9 +43,9 @@
       "normal subgroup",
       "gHg^{-1} = H"
     ],
-    "summary": "Nhóm con H của G được gọi là chuẩn tắc (ký hiệu H ⊴ G) nếu nó bất biến dưới mọi phép tự đẳng cấu trong (phép liên hợp): gHg⁻¹ = H với mọi g ∈ G.",
-    "brief": "Nhóm con H của G bất biến dưới mọi phép liên hợp: gHg⁻¹ = H với mọi g ∈ G. Lớp kề trái trùng lớp kề phải.",
-    "intuition": "Điều kiện cần và đủ để tập các lớp kề G/H thừa hưởng phép toán của G và tạo thành nhóm thương (lớp kề trái luôn trùng lớp kề phải).",
+    "summary": "Nhóm con $H$ của $G$ được gọi là chuẩn tắc (ký hiệu $H \\trianglelefteq G$) nếu nó bất biến dưới mọi phép tự đẳng cấu trong (phép liên hợp): $gHg^{-1} = H$ với mọi $g \\in G$.",
+    "brief": "Nhóm con $H$ của $G$ bất biến dưới mọi phép liên hợp: $gHg^{-1} = H$ với mọi $g \\in G$. Lớp kề trái trùng lớp kề phải.",
+    "intuition": "Điều kiện cần và đủ để tập các lớp kề $G/H$ thừa hưởng phép toán của $G$ và tạo thành nhóm thương (lớp kề trái luôn trùng lớp kề phải).",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/nhom-con-chuan-tac-nhom-thuong/phep-lien-hop-va-tieu-chuan-chuan-tac",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-con-chuan-tac-nhom-thuong/phep-lien-hop-va-tieu-chuan-chuan-tac"
   },
@@ -56,8 +56,8 @@
     "symbol": "\\ker \\varphi",
     "nameVi": "Hạt nhân đồng cấu",
     "nameEn": "Kernel",
-    "brief": "Tập hợp tất cả phần tử của nhóm nguồn được ánh xạ về phần tử trung hòa của nhóm đích qua đồng cấu φ.",
-    "intuition": "Đo lường mức độ sai khác giữa φ và đơn ánh: φ là đơn ánh khi và chỉ khi hạt nhân chỉ gồm duy nhất phần tử đơn vị {e}.",
+    "brief": "Tập hợp tất cả phần tử của nhóm nguồn được ánh xạ về phần tử trung hòa của nhóm đích qua đồng cấu $\\varphi$.",
+    "intuition": "Đo lường mức độ sai khác giữa $\\varphi$ và đơn ánh: $\\varphi$ là đơn ánh khi và chỉ khi hạt nhân chỉ gồm duy nhất phần tử đơn vị $\\{e\\}$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/dong-cau-nhom-hat-nhan-va-anh"
   },
   {
@@ -73,8 +73,8 @@
     "symbol": "\\operatorname{im} \\varphi",
     "nameVi": "Ảnh của đồng cấu",
     "nameEn": "Image of homomorphism",
-    "brief": "Tập hợp tất cả các giá trị φ(x) trong nhóm đích; luôn lập thành một nhóm con của nhóm đích.",
-    "intuition": "Đo lường phạm vi bao phủ của đồng cấu: φ là toàn ánh khi và chỉ khi ảnh trùng toàn bộ nhóm đích.",
+    "brief": "Tập hợp tất cả các giá trị $\\varphi(x)$ trong nhóm đích; luôn lập thành một nhóm con của nhóm đích.",
+    "intuition": "Đo lường phạm vi bao phủ của đồng cấu: $\\varphi$ là toàn ánh khi và chỉ khi ảnh trùng toàn bộ nhóm đích.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/dong-cau-nhom-hat-nhan-va-anh"
   },
   {
@@ -84,8 +84,8 @@
     "symbol": "\\mathbb{Z}/n\\mathbb{Z}",
     "nameVi": "Nhóm thặng dư modulo n",
     "nameEn": "Integers modulo n",
-    "brief": "Nhóm thương của nhóm số nguyên Z đối với nhóm con nZ, gồm n lớp thặng dư {0̄, 1̄, ..., n-1̄}.",
-    "intuition": "Mô hình số học đồng hồ chu kỳ: khi kim đồng hồ đi hết n đơn vị sẽ quay trở lại mốc 0 ban đầu.",
+    "brief": "Nhóm thương của nhóm số nguyên $\\mathbb{Z}$ đối với nhóm con $n\\mathbb{Z}$, gồm $n$ lớp thặng dư $\\{\\bar{0}, \\bar{1}, \\dots, \\overline{n-1}\\}$.",
+    "intuition": "Mô hình số học đồng hồ chu kỳ: khi kim đồng hồ đi hết $n$ đơn vị sẽ quay trở lại mốc $0$ ban đầu.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-con-chuan-tac-nhom-thuong/cac-nhom-thuong-kinh-dien"
   },
   {
@@ -95,8 +95,8 @@
     "symbol": "S_n",
     "nameVi": "Nhóm đối xứng cấp n",
     "nameEn": "Symmetric group",
-    "brief": "Nhóm tất cả các hoán vị của n phần tử cùng phép hợp thành ánh xạ, có cấp đúng bằng n!.",
-    "intuition": "Đại diện cho mọi khả năng xáo trộn thứ tự n đối tượng; theo Định lý Cayley, mọi nhóm hữu hạn đều nhúng được vào S_n.",
+    "brief": "Nhóm tất cả các hoán vị của $n$ phần tử cùng phép hợp thành ánh xạ, có cấp đúng bằng $n!$.",
+    "intuition": "Đại diện cho mọi khả năng xáo trộn thứ tự $n$ đối tượng; theo Định lý Cayley, mọi nhóm hữu hạn đều nhúng được vào $S_n$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/cac-ho-nhom-co-ban"
   },
   {
@@ -106,7 +106,7 @@
     "symbol": "D_{2n}",
     "nameVi": "Nhóm nhị diện",
     "nameEn": "Dihedral group",
-    "brief": "Nhóm các phép đối xứng bảo toàn đa giác đều n cạnh trong mặt phẳng, gồm n phép quay và n phép đối xứng trục.",
+    "brief": "Nhóm các phép đối xứng bảo toàn đa giác đều $n$ cạnh trong mặt phẳng, gồm $n$ phép quay và $n$ phép đối xứng trục.",
     "intuition": "Minh họa hình học trực quan nhất về tính không giao hoán: phép quay rồi lật khác hoàn toàn với lật rồi mới quay.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/cac-ho-nhom-co-ban"
   },
@@ -128,8 +128,8 @@
     "symbol": "R/I",
     "nameVi": "Vành thương",
     "nameEn": "Quotient ring",
-    "brief": "Vành các lớp kề của vành R theo một iđêan hai phía I, với hai phép cộng và nhân đại diện xác định tốt.",
-    "intuition": "Phép 'thu gọn' vành R bằng cách quy ước mọi phần tử thuộc iđêan I đều tương đương với số 0.",
+    "brief": "Vành các lớp kề của vành $R$ theo một iđêan hai phía $I$, với hai phép cộng và nhân đại diện xác định tốt.",
+    "intuition": "Phép 'thu gọn' vành $R$ bằng cách quy ước mọi phần tử thuộc iđêan $I$ đều tương đương với số $0$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/vanh-thuong-va-tinh-toan-trong-thuong-da-thuc"
   },
   {
@@ -139,7 +139,7 @@
     "symbol": "I \\triangleleft R",
     "nameVi": "Iđêan",
     "nameEn": "Ideal",
-    "brief": "Vành con I của vành R có tính chất 'hút': với mọi r ∈ R và x ∈ I thì rx ∈ I và xr ∈ I.",
+    "brief": "Vành con $I$ của vành $R$ có tính chất 'hút': với mọi $r \\in R$ và $x \\in I$ thì $rx \\in I$ và $xr \\in I$.",
     "intuition": "Đóng vai trò trong lý thuyết vành tương đương nhóm con chuẩn tắc: hạt nhân của đồng cấu vành chính là một iđêan.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/idean-giao-tong-va-idean-sinh"
   },
@@ -150,8 +150,8 @@
     "symbol": "\\mathfrak{p}",
     "nameVi": "Iđêan nguyên tố",
     "nameEn": "Prime ideal",
-    "brief": "Iđêan thực sự P của vành giao hoán R thỏa mãn: nếu ab ∈ P thì a ∈ P hoặc b ∈ P. Tương đương với việc vành thương R/P là một miền nguyên.",
-    "intuition": "Sự tổng quát hóa của số nguyên tố: tích hai số chia hết cho p đòi hỏi ít nhất một thừa số phải chia hết cho p.",
+    "brief": "Iđêan thực sự $P$ của vành giao hoán $R$ thỏa mãn: nếu $ab \\in P$ thì $a \\in P$ hoặc $b \\in P$. Tương đương với việc vành thương $R/P$ là một miền nguyên.",
+    "intuition": "Sự tổng quát hóa của số nguyên tố: tích hai số chia hết cho $p$ đòi hỏi ít nhất một thừa số phải chia hết cho $p$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/idean-nguyen-to-va-idean-cuc-dai"
   },
   {
@@ -161,7 +161,7 @@
     "symbol": "\\mathfrak{m}",
     "nameVi": "Iđêan cực đại",
     "nameEn": "Maximal ideal",
-    "brief": "Iđêan thực sự M của vành R không bị chứa trong bất kỳ iđêan thực sự nào khác. Tương đương với việc vành thương R/M là một trường.",
+    "brief": "Iđêan thực sự $M$ của vành $R$ không bị chứa trong bất kỳ iđêan thực sự nào khác. Tương đương với việc vành thương $R/M$ là một trường.",
     "intuition": "Iđêan lớn nhất có thể trước khi bao trùm toàn bộ vành; triệt tiêu nó sẽ giải phóng cấu trúc đại số mạnh nhất là trường.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/idean-va-vanh-thuong/idean-nguyen-to-va-idean-cuc-dai"
   },
@@ -178,8 +178,8 @@
     "symbol": "\\langle g \\rangle",
     "nameVi": "Nhóm cyclic",
     "nameEn": "Cyclic group",
-    "brief": "Nhóm được sinh bởi duy nhất một phần tử g: mọi phần tử đều có dạng lũy thừa g^k với k ∈ Z.",
-    "intuition": "Cấu trúc nhóm đơn giản và tuần hoàn nhất: nếu hữu hạn cấp n thì đẳng cấu với Z/nZ, nếu vô hạn thì đẳng cấu với Z.",
+    "brief": "Nhóm được sinh bởi duy nhất một phần tử $g$: mọi phần tử đều có dạng lũy thừa $g^k$ với $k \\in \\mathbb{Z}$.",
+    "intuition": "Cấu trúc nhóm đơn giản và tuần hoàn nhất: nếu hữu hạn cấp $n$ thì đẳng cấu với $\\mathbb{Z}/n\\mathbb{Z}$, nếu vô hạn thì đẳng cấu với $\\mathbb{Z}$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/nhom-con-va-nhom-cyclic/cap-cua-phan-tu-va-nhom-cyclic"
   },
   {
@@ -210,9 +210,9 @@
       "f(b) - f(a) = f'(c)(b - a)",
       "f(b)-f(a)=f'(c)(b-a)"
     ],
-    "summary": "Nếu f liên tục trên đoạn [a, b] và khả vi trên khoảng (a, b), thì tồn tại ít nhất một điểm c thuộc (a, b) sao cho hệ số góc tiếp tuyến tại c bằng hệ số góc cát tuyến nối (a, f(a)) và (b, f(b)): f(b) - f(a) = f'(c)(b - a).",
-    "brief": "Nếu f liên tục trên đoạn [a, b] và khả vi trên khoảng (a, b), thì tồn tại ít nhất một điểm c thuộc (a, b) sao cho hệ số góc tiếp tuyến tại c bằng hệ số góc cát tuyến nối (a, f(a)) và (b, f(b)): f(b) - f(a) = f'(c)(b - a).",
-    "intuition": "Tiếp tuyến của đồ thị tại điểm c song song hoàn toàn với cát tuyến nối hai điểm đầu mút (a, f(a)) và (b, f(b)); tốc độ biến thiên tức thời bằng tốc độ biến thiên trung bình.",
+    "summary": "Nếu $f$ liên tục trên đoạn $[a, b]$ và khả vi trên khoảng $(a, b)$, thì tồn tại ít nhất một điểm $c \\in (a, b)$ sao cho hệ số góc tiếp tuyến tại $c$ bằng hệ số góc cát tuyến nối $(a, f(a))$ và $(b, f(b))$: $f(b) - f(a) = f'(c)(b - a)$.",
+    "brief": "Nếu $f$ liên tục trên đoạn $[a, b]$ và khả vi trên khoảng $(a, b)$, thì tồn tại ít nhất một điểm $c \\in (a, b)$ sao cho hệ số góc tiếp tuyến tại $c$ bằng hệ số góc cát tuyến nối $(a, f(a))$ và $(b, f(b))$: $f(b) - f(a) = f'(c)(b - a)$.",
+    "intuition": "Tiếp tuyến của đồ thị tại điểm $c$ song song hoàn toàn với cát tuyến nối hai điểm đầu mút $(a, f(a))$ và $(b, f(b))$; tốc độ biến thiên tức thời bằng tốc độ biến thiên trung bình.",
     "lessonUrl": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh",
     "relatedLesson": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh"
   },
@@ -241,8 +241,8 @@
       "R_n(x)",
       "\\frac{f^{(n+1)}(c)}{(n+1)!}"
     ],
-    "summary": "Trong khai triển Taylor đến cấp n của hàm số f tại lân cận x0, phần dư dạng Lagrange biểu diễn sai số chính xác giữa hàm số và đa thức xấp xỉ Taylor: R_n(x) = [f^(n+1)(c) / (n+1)!] * (x - x0)^(n+1) với c nằm giữa x0 và x.",
-    "brief": "Trong khai triển Taylor đến cấp n của hàm số f tại lân cận x0, phần dư dạng Lagrange biểu diễn sai số chính xác giữa hàm số và đa thức xấp xỉ Taylor: R_n(x) = [f^(n+1)(c) / (n+1)!] * (x - x0)^(n+1) với c nằm giữa x0 và x.",
+    "summary": "Trong khai triển Taylor đến cấp $n$ của hàm số $f$ tại lân cận $x_0$, phần dư dạng Lagrange biểu diễn sai số chính xác giữa hàm số và đa thức xấp xỉ Taylor: $R_n(x) = \\frac{f^{(n+1)}(c)}{(n+1)!}(x - x_0)^{n+1}$ với $c$ nằm giữa $x_0$ và $x$.",
+    "brief": "Trong khai triển Taylor đến cấp $n$ của hàm số $f$ tại lân cận $x_0$, phần dư dạng Lagrange biểu diễn sai số chính xác giữa hàm số và đa thức xấp xỉ Taylor: $R_n(x) = \\frac{f^{(n+1)}(c)}{(n+1)!}(x - x_0)^{n+1}$ với $c$ nằm giữa $x_0$ và $x$.",
     "intuition": "Mở rộng định lý giá trị trung bình Lagrange lên cấp cao, cho phép ước lượng cận trên của sai số khi xấp xỉ hàm số bằng đa thức Taylor.",
     "lessonUrl": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/quy-tac-lhopital-va-khai-trien-taylor-maclaurin",
     "relatedLesson": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/quy-tac-lhopital-va-khai-trien-taylor-maclaurin"
@@ -272,8 +272,8 @@
       "Lagrange theorem",
       "chỉ số nhóm con"
     ],
-    "summary": "Trong nhóm hữu hạn G, cấp của mọi nhóm con H và cấp của mọi phần tử đều là ước số của cấp nhóm |G|.",
-    "brief": "Trong nhóm hữu hạn G, cấp của mọi nhóm con H và cấp của mọi phần tử đều là ước số của cấp nhóm |G|.",
+    "summary": "Trong nhóm hữu hạn $G$, cấp của mọi nhóm con $H$ và cấp của mọi phần tử đều là ước số của cấp nhóm $|G|$.",
+    "brief": "Trong nhóm hữu hạn $G$, cấp của mọi nhóm con $H$ và cấp của mọi phần tử đều là ước số của cấp nhóm $|G|.",
     "intuition": "Phân hoạch tập hợp nhóm thành các lớp kề rời nhau có kích thước bằng nhau tuyệt đối, tương tự việc lát sàn bằng các viên gạch đồng cỡ.",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc"
@@ -302,9 +302,9 @@
       "f'(x_0) = 0",
       "f'(x_0)=0"
     ],
-    "summary": "Nếu hàm số f đạt cực trị địa phương tại x0 và khả vi tại điểm này, thì đạo hàm tại x0 bằng không: f'(x0) = 0.",
-    "brief": "Nếu hàm số f đạt cực trị địa phương tại x0 và khả vi tại điểm này, thì đạo hàm tại x0 bằng không: f'(x0) = 0.",
-    "intuition": "Tại đỉnh đồi hoặc đáy thung lũng của một đường cong trơn nhẵn, tiếp tuyến của đồ thị luôn nằm ngang hoàn toàn (hệ số góc bằng 0).",
+    "summary": "Nếu hàm số $f$ đạt cực trị địa phương tại $x_0$ và khả vi tại điểm này, thì đạo hàm tại $x_0$ bằng không: $f'(x_0) = 0$.",
+    "brief": "Nếu hàm số $f$ đạt cực trị địa phương tại $x_0$ và khả vi tại điểm này, thì đạo hàm tại $x_0$ bằng không: $f'(x_0) = 0$.",
+    "intuition": "Tại đỉnh đồi hoặc đáy thung lũng của một đường cong trơn nhẵn, tiếp tuyến của đồ thị luôn nằm ngang hoàn toàn (hệ số góc bằng $0$).",
     "lessonUrl": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh",
     "relatedLesson": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh"
   },
@@ -332,9 +332,9 @@
       "a^{p-1} \\equiv 1",
       "a^p \\equiv a"
     ],
-    "summary": "Nếu p là số nguyên tố và a không chia hết cho p, thì a^(p-1) đồng dư 1 modulo p. Tổng quát: a^p đồng dư a modulo p với mọi số nguyên a.",
-    "brief": "Nếu p là số nguyên tố và a không chia hết cho p, thì a^(p-1) đồng dư 1 modulo p. Tổng quát: a^p đồng dư a modulo p với mọi số nguyên a.",
-    "intuition": "Là hệ quả trực tiếp từ Định lý Lagrange khi xét cấp của phần tử trong nhóm nhân các phần tử khả nghịch (Z/pZ)* có đúng p - 1 phần tử.",
+    "summary": "Nếu $p$ là số nguyên tố và $a$ không chia hết cho $p$, thì $a^{p-1} \\equiv 1 \\pmod{p}$. Tổng quát: $a^p \\equiv a \\pmod{p}$ với mọi số nguyên $a$.",
+    "brief": "Nếu $p$ là số nguyên tố và $a$ không chia hết cho $p$, thì $a^{p-1} \\equiv 1 \\pmod{p}$. Tổng quát: $a^p \\equiv a \\pmod{p}$ với mọi số nguyên $a$.",
+    "intuition": "Là hệ quả trực tiếp từ Định lý Lagrange khi xét cấp của phần tử trong nhóm nhân các phần tử khả nghịch $(\\mathbb{Z}/p\\mathbb{Z})^\\times$ có đúng $p - 1$ phần tử.",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc"
   },
@@ -360,9 +360,9 @@
       "a^{\\varphi(n)} \\equiv 1",
       "phi hàm Euler"
     ],
-    "summary": "Nếu a và n là hai số nguyên dương nguyên tố cùng nhau (gcd(a, n) = 1), thì a^φ(n) ≡ 1 (mod n), trong đó φ(n) là phi hàm Euler.",
-    "brief": "Nếu a và n là hai số nguyên dương nguyên tố cùng nhau (gcd(a, n) = 1), thì a^φ(n) ≡ 1 (mod n), trong đó φ(n) là phi hàm Euler.",
-    "intuition": "Hệ quả trực tiếp của Định lý Lagrange áp dụng cho nhóm nhân các phần tử khả nghịch U(n) = (Z/nZ)* có cấp đúng bằng phi hàm φ(n).",
+    "summary": "Nếu $a$ và $n$ là hai số nguyên dương nguyên tố cùng nhau ($\\gcd(a, n) = 1$), thì $a^{\\varphi(n)} \\equiv 1 \\pmod{n}$, trong đó $\\varphi(n)$ là phi hàm Euler.",
+    "brief": "Nếu $a$ và $n$ là hai số nguyên dương nguyên tố cùng nhau ($\\gcd(a, n) = 1$), thì $a^{\\varphi(n)} \\equiv 1 \\pmod{n}$, trong đó $\\varphi(n)$ là phi hàm Euler.",
+    "intuition": "Hệ quả trực tiếp của Định lý Lagrange áp dụng cho nhóm nhân các phần tử khả nghịch $U(n) = (\\mathbb{Z}/n\\mathbb{Z})^\\times$ có cấp đúng bằng phi hàm $\\varphi(n)$.",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/dinh-ly-lagrange-va-ung-dung-so-hoc"
   },
@@ -390,9 +390,9 @@
       "Cauchy MVT",
       "\\frac{f'(c)}{g'(c)}"
     ],
-    "summary": "Nếu hai hàm f và g liên tục trên [a, b], khả vi trên (a, b) và g'(x) khác 0 trên (a, b), thì tồn tại c thuộc (a, b) sao cho [f(b) - f(a)] / [g(b) - g(a)] = f'(c) / g'(c).",
-    "brief": "Nếu hai hàm f và g liên tục trên [a, b], khả vi trên (a, b) và g'(x) khác 0 trên (a, b), thì tồn tại c thuộc (a, b) sao cho [f(b) - f(a)] / [g(b) - g(a)] = f'(c) / g'(c).",
-    "intuition": "Sự suy rộng của định lý Lagrange cho hai chuyển động đồng thời: tỉ số vận tốc tức thời tại điểm c bằng tỉ số độ dời toàn phần của hai vật.",
+    "summary": "Nếu hai hàm $f$ và $g$ liên tục trên $[a, b]$, khả vi trên $(a, b)$ và $g'(x) \\neq 0$ trên $(a, b)$, thì tồn tại $c \\in (a, b)$ sao cho $\\frac{f(b) - f(a)}{g(b) - g(a)} = \\frac{f'(c)}{g'(c)}$.",
+    "brief": "Nếu hai hàm $f$ và $g$ liên tục trên $[a, b]$, khả vi trên $(a, b)$ và $g'(x) \\neq 0$ trên $(a, b)$, thì tồn tại $c \\in (a, b)$ sao cho $\\frac{f(b) - f(a)}{g(b) - g(a)} = \\frac{f'(c)}{g'(c)}$.",
+    "intuition": "Sự suy rộng của định lý Lagrange cho hai chuyển động đồng thời: tỉ số vận tốc tức thời tại điểm $c$ bằng tỉ số độ dời toàn phần của hai vật.",
     "lessonUrl": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh",
     "relatedLesson": "/mon-hoc/giai-tich-ham-mot-bien/phep-tinh-vi-phan/cac-dinh-ly-gia-tri-trung-binh"
   },
@@ -419,8 +419,8 @@
       "Cauchy's group theorem",
       "p \\mid |G|"
     ],
-    "summary": "Nếu G là một nhóm hữu hạn và p là một số nguyên tố là ước số của cấp |G|, thì trong G luôn tồn tại ít nhất một phần tử có cấp đúng bằng p.",
-    "brief": "Nếu G là một nhóm hữu hạn và p là một số nguyên tố là ước số của cấp |G|, thì trong G luôn tồn tại ít nhất một phần tử có cấp đúng bằng p.",
+    "summary": "Nếu $G$ là một nhóm hữu hạn và $p$ là một số nguyên tố là ước số của cấp $|G|$, thì trong $G$ luôn tồn tại ít nhất một phần tử có cấp đúng bằng $p$.",
+    "brief": "Nếu $G$ là một nhóm hữu hạn và $p$ là một số nguyên tố là ước số của cấp $|G|$, thì trong $G$ luôn tồn tại ít nhất một phần tử có cấp đúng bằng $p$.",
     "intuition": "Định lý đảo một phần mạnh mẽ của Định lý Lagrange: trong khi một ước số bất kỳ chưa chắc có nhóm con tương ứng, thì với mọi ước nguyên tố, chắc chắn luôn tồn tại phần tử (và nhóm con cyclic) cấp đó.",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4"
@@ -432,8 +432,8 @@
     "symbol": "A_n",
     "nameVi": "Nhóm thay phiên cấp n",
     "nameEn": "Alternating group",
-    "brief": "Nhóm con gồm tất cả các hoán vị chẵn trong nhóm đối xứng S_n, có cấp bằng n!/2.",
-    "intuition": "Nhóm các phép quay bảo toàn khối đa diện đều: A₄ tương ứng khối tứ diện đều, A₅ tương ứng khối 20 mặt đều.",
+    "brief": "Nhóm con gồm tất cả các hoán vị chẵn trong nhóm đối xứng $S_n$, có cấp bằng $n!/2$.",
+    "intuition": "Nhóm các phép quay bảo toàn khối đa diện đều: $A_4$ tương ứng khối tứ diện đều, $A_5$ tương ứng khối 20 mặt đều.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/lop-ke-va-dinh-ly-lagrange/chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4"
   },
   {
@@ -443,8 +443,8 @@
     "symbol": "ab = 0 \\implies a=0 \\lor b=0",
     "nameVi": "Miền nguyên",
     "nameEn": "Integral domain",
-    "brief": "Vành giao hoán có đơn vị khác 0 và không có ước của không (tích hai phần tử khác 0 luôn khác 0).",
-    "intuition": "Không gian đại số cho phép áp dụng luật giản ước: ax = ay với a ≠ 0 suy ra x = y, tương tự tập số nguyên Z.",
+    "brief": "Vành giao hoán có đơn vị khác $0$ và không có ước của không (tích hai phần tử khác $0$ luôn khác $0$).",
+    "intuition": "Không gian đại số cho phép áp dụng luật giản ước: $ax = ay$ với $a \\neq 0$ suy ra $x = y$, tương tự tập số nguyên $\\mathbb{Z}$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/vanh-va-cac-cau-truc/uoc-cua-khong-mien-nguyen-vanh-chia-va-truong"
   },
   {
@@ -459,8 +459,8 @@
     "symbol": "\\operatorname{Frac}(R)",
     "nameVi": "Trường các thương",
     "nameEn": "Field of fractions",
-    "brief": "Trường nhỏ nhất chứa miền nguyên R, xây dựng từ các lớp tương đương của các cặp phân số (a, b) với b ≠ 0.",
-    "intuition": "Mở rộng tự nhiên giống như cách từ tập số nguyên Z xây dựng nên trường số hữu tỉ Q thông qua các phân số a/b.",
+    "brief": "Trường nhỏ nhất chứa miền nguyên $R$, xây dựng từ các lớp tương đương của các cặp phân số $(a, b)$ với $b \\neq 0$.",
+    "intuition": "Mở rộng tự nhiên giống như cách từ tập số nguyên $\\mathbb{Z}$ xây dựng nên trường số hữu tỉ $\\mathbb{Q}$ thông qua các phân số $a/b$.",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/phep-dung-truong-cac-thuong-cua-mien-nguyen"
   },
   {
@@ -485,9 +485,9 @@
       "G/\\ker \\varphi \\cong \\operatorname{Im} \\varphi",
       "G/\\ker \\varphi \\cong \\mathrm{Im} \\varphi"
     ],
-    "summary": "Nếu φ: G → H là một đồng cấu nhóm, thì hạt nhân ker φ là nhóm con chuẩn tắc của G và nhóm thương G/ker φ đẳng cấu tự nhiên với ảnh Im φ.",
-    "brief": "Nếu φ: G → H là một đồng cấu nhóm, thì hạt nhân ker φ là nhóm con chuẩn tắc của G và nhóm thương G/ker φ đẳng cấu tự nhiên với ảnh Im φ.",
-    "intuition": "Định lý phân tích đồng cấu kinh điển: mọi đồng cấu nhóm đều phân rã thành toàn cấu chính tắc G → G/ker φ nối tiếp một đẳng cấu với Im φ.",
+    "summary": "Nếu $\\varphi: G \\to H$ là một đồng cấu nhóm, thì hạt nhân $\\ker \\varphi$ là nhóm con chuẩn tắc của $G$ và nhóm thương $G/\\ker \\varphi$ đẳng cấu tự nhiên với ảnh $\\operatorname{Im} \\varphi$.",
+    "brief": "Nếu $\\varphi: G \\to H$ là một đồng cấu nhóm, thì hạt nhân $\\ker \\varphi$ là nhóm con chuẩn tắc của $G$ và nhóm thương $G/\\ker \\varphi$ đẳng cấu tự nhiên với ảnh $\\operatorname{Im} \\varphi$.",
+    "intuition": "Định lý phân tích đồng cấu kinh điển: mọi đồng cấu nhóm đều phân rã thành toàn cấu chính tắc $G \\to G/\\ker \\varphi$ nối tiếp một đẳng cấu với $\\operatorname{Im} \\varphi$.",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/phan-tich-qua-nhom-thuong-va-dinh-ly-dang-cau-thu-nhat",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/dong-cau-nhom-va-dang-cau/phan-tich-qua-nhom-thuong-va-dinh-ly-dang-cau-thu-nhat"
   },
@@ -513,8 +513,8 @@
       "Eisenstein criterion",
       "bất khả quy Eisenstein"
     ],
-    "summary": "Cho đa thức P(X) = a_n X^n + ... + a_0 thuộc Z[X]. Nếu tồn tại số nguyên tố p sao cho p chia hết a_0, ..., a_{n-1}; p không chia hết a_n; và p^2 không chia hết a_0, thì P(X) bất khả quy trên Q[X].",
-    "brief": "Cho đa thức P(X) = a_n X^n + ... + a_0 thuộc Z[X]. Nếu tồn tại số nguyên tố p sao cho p chia hết a_0, ..., a_{n-1}; p không chia hết a_n; và p^2 không chia hết a_0, thì P(X) bất khả quy trên Q[X].",
+    "summary": "Cho đa thức $P(X) = a_n X^n + \\dots + a_0 \\in \\mathbb{Z}[X]$. Nếu tồn tại số nguyên tố $p$ sao cho $p$ chia hết $a_0, \\dots, a_{n-1}$; $p$ không chia hết $a_n$; và $p^2$ không chia hết $a_0$, thì $P(X)$ bất khả quy trên $\\mathbb{Q}[X]$.",
+    "brief": "Cho đa thức $P(X) = a_n X^n + \\dots + a_0 \\in \\mathbb{Z}[X]$. Nếu tồn tại số nguyên tố $p$ sao cho $p$ chia hết $a_0, \\dots, a_{n-1}$; $p$ không chia hết $a_n$; và $p^2$ không chia hết $a_0$, thì $P(X)$ bất khả quy trên $\\mathbb{Q}[X].",
     "intuition": "Công cụ số học quyền lực kiểm tra tính bất khả quy của đa thức hệ số nguyên mà không cần tìm nghiệm hay thực hiện phép chia đa thức.",
     "lessonUrl": "/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/bai-tap-chuong-9-va-tong-ket-hoc-phan",
     "relatedLesson": "/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/bai-tap-chuong-9-va-tong-ket-hoc-phan"
@@ -550,8 +550,8 @@
     "symbol": "(O; \\vec{e}_1, \\dots, \\vec{e}_n)",
     "nameVi": "Mục tiêu Affine",
     "nameEn": "Affine frame",
-    "brief": "Hệ gồm một điểm gốc O và một cơ sở của không gian vectơ liên kết, cho phép đồng nhất mỗi điểm với một bộ tọa độ số.",
-    "intuition": "Hệ quy chiếu định vị toàn bộ không gian: chọn một mốc neo O và các hướng đo lường cơ sở.",
+    "brief": "Hệ gồm một điểm gốc $O$ và một cơ sở của không gian vectơ liên kết, cho phép đồng nhất mỗi điểm với một bộ tọa độ số.",
+    "intuition": "Hệ quy chiếu định vị toàn bộ không gian: chọn một mốc neo $O$ và các hướng đo lường cơ sở.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin"
   },
   {
@@ -561,7 +561,7 @@
     "symbol": "\\dim \\alpha = n - 1",
     "nameVi": "Siêu phẳng",
     "nameEn": "Hyperplane",
-    "brief": "Phẳng affine có số chiều n - 1 trong không gian affine n chiều; xác định bởi một phương trình tuyến tính bậc nhất.",
+    "brief": "Phẳng affine có số chiều $n - 1$ trong không gian affine $n$ chiều; xác định bởi một phương trình tuyến tính bậc nhất.",
     "intuition": "Bức tường chia đôi không gian: trong 2D là đường thẳng, trong 3D là mặt phẳng.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin"
   },
@@ -572,7 +572,7 @@
     "symbol": "\\sum \\lambda_i \\overrightarrow{GA_i} = \\vec{0}",
     "nameVi": "Tâm tỉ cự",
     "nameEn": "Barycenter",
-    "brief": "Điểm G duy nhất ứng với hệ điểm {Aᵢ} và hệ trọng số {λᵢ} (tổng λᵢ ≠ 0) thỏa mãn tổng λᵢ·GAᵢ = 0.",
+    "brief": "Điểm $G$ duy nhất ứng với hệ điểm $\\{A_i\\}$ và hệ trọng số $\\{\\lambda_i\\}$ (tổng $\\sum \\lambda_i \\neq 0$) thỏa mãn $\\sum \\lambda_i \\overrightarrow{GA_i} = \\vec{0}$.",
     "intuition": "Trọng tâm vật lý của hệ chất điểm có khối lượng: điểm cân bằng của toàn bộ hệ điểm.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem"
   },
@@ -583,7 +583,7 @@
     "symbol": "[A, B] \\subset C",
     "nameVi": "Tập lồi",
     "nameEn": "Convex set",
-    "brief": "Tập hợp các điểm C sao cho với mọi cặp điểm A, B thuộc C thì toàn bộ đoạn thẳng AB đều nằm trong C.",
+    "brief": "Tập hợp các điểm $C$ sao cho với mọi cặp điểm $A, B \\in C$ thì toàn bộ đoạn thẳng $AB$ đều nằm trong $C$.",
     "intuition": "Khối hình học không có góc khuyết hay vết lõm: đứng tại bất kỳ điểm nào bên trong đều nhìn thấy mọi điểm khác.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc"
   },
@@ -610,7 +610,7 @@
     "symbol": "f \\in \\operatorname{Aff}(\\mathbb{A}^n)",
     "nameVi": "Phép biến đổi Affine",
     "nameEn": "Affine transformation",
-    "brief": "Song ánh affine từ một không gian affine vào chính nó; tập hợp các phép biến đổi affine lập thành nhóm Aff(A).",
+    "brief": "Song ánh affine từ một không gian affine vào chính nó; tập hợp các phép biến đổi affine lập thành nhóm $\\operatorname{Aff}(A)$.",
     "intuition": "Tổ hợp các phép quay, tịnh tiến, co giãn theo trục và biến dạng trượt (shear) trong không gian.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin"
   },
@@ -622,7 +622,7 @@
     "nameVi": "Siêu mặt bậc hai",
     "nameEn": "Quadric hypersurface",
     "brief": "Tập hợp các điểm có tọa độ thỏa mãn một phương trình đại số đa thức bậc hai nhiều biến số.",
-    "intuition": "Khái quát hóa đường conic (elip, parabol, hyperbol) và mặt bậc hai (mặt cầu, elipsoid) lên không gian n chiều.",
+    "intuition": "Khái quát hóa đường conic (elip, parabol, hyperbol) và mặt bậc hai (mặt cầu, elipsoid) lên không gian $n$ chiều.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin"
   },
   {
@@ -650,7 +650,7 @@
     "symbol": "\\vec{e}_i \\cdot \\vec{e}_j = \\delta_{ij}",
     "nameVi": "Mục tiêu trực chuẩn",
     "nameEn": "Orthonormal frame",
-    "brief": "Mục tiêu affine có các vectơ cơ sở đôi một vuông góc và đều có độ dài chuẩn bằng 1.",
+    "brief": "Mục tiêu affine có các vectơ cơ sở đôi một vuông góc và đều có độ dài chuẩn bằng $1$.",
     "intuition": "Hệ tọa độ Descartes vuông góc chuẩn mực giúp công thức khoảng cách và tích vô hướng có dạng đơn giản nhất.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan"
   },
@@ -678,7 +678,7 @@
     "symbol": "\\mathbb{P}(V)",
     "nameVi": "Không gian Xạ ảnh",
     "nameEn": "Projective space",
-    "brief": "Tập hợp tất cả các đường thẳng một chiều đi qua gốc tọa độ của một không gian vectơ V.",
+    "brief": "Tập hợp tất cả các đường thẳng một chiều đi qua gốc tọa độ của một không gian vectơ $V$.",
     "intuition": "Không gian affine được bổ sung các 'điểm ở vô tận': hai đường thẳng song song trong không gian affine sẽ cắt nhau tại điểm vô tận xạ ảnh.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh"
   },
@@ -689,7 +689,7 @@
     "symbol": "(x_0 : x_1 : \\dots : x_n)",
     "nameVi": "Tọa độ Xạ ảnh",
     "nameEn": "Homogeneous coordinates",
-    "brief": "Bộ n + 1 số thực không đồng thời bằng 0 xác định một điểm xạ ảnh theo lớp tỉ lệ: (x₀ : ... : xₙ) tương đương (kx₀ : ... : kxₙ).",
+    "brief": "Bộ $n + 1$ số thực không đồng thời bằng $0$ xác định một điểm xạ ảnh theo lớp tỉ lệ: $(x_0 : \\dots : x_n)$ tương đương $(kx_0 : \\dots : kx_n)$.",
     "intuition": "Biểu diễn điểm thông thường và điểm vô tận trên cùng một hệ phương trình đại số thuần nhất đối xứng.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/toa-do-xa-anh-va-muc-tieu-xa-anh"
   },
@@ -700,7 +700,7 @@
     "symbol": "(A, B, C, D)",
     "nameVi": "Tỉ số kép",
     "nameEn": "Cross-ratio",
-    "brief": "Bất biến xạ ảnh cơ bản của bộ 4 điểm thẳng hàng, không đổi qua mọi phép chiếu xạ ảnh.",
+    "brief": "Bất biến xạ ảnh cơ bản của bộ $4$ điểm thẳng hàng, không đổi qua mọi phép chiếu xạ ảnh.",
     "intuition": "Bất biến cốt lõi của phép nhìn phối cảnh và thị giác: tỉ số khoảng cách bị biến dạng khi nhìn nghiêng nhưng tỉ số kép luôn bất biến.",
     "relatedLesson": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/ti-so-kep"
   },

@@ -396,4 +396,69 @@ describe('Hành vi tương tác Popover & Toggle bền vững', () => {
     expect(screen.getByText('CẤU TRÚC ĐẠI SỐ')).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveTextContent(/\[G\s*:\s*H\]/);
   });
+
+  it('tái cấu trúc header thành 3 tầng dọc độc lập, hỗ trợ adaptive sizing và KaTeX nội dòng', () => {
+    render(
+      <MemoryRouter initialEntries={['/mon-hoc/cau-truc-dai-so/de-thi']}>
+        <MathGlossaryProvider courseId="cau-truc-dai-so">
+          <div>
+            <TermLink term="Định lý Lagrange">Định lý Lagrange</TermLink>
+            <TermLink term="Định lý Euler">Định lý Euler</TermLink>
+            <TermLink term="Định lý Cauchy">Định lý Cauchy</TermLink>
+            <MathGlossaryPopover />
+          </div>
+        </MathGlossaryProvider>
+      </MemoryRouter>,
+    );
+
+    // 1. Kiểm tra Định lý Lagrange
+    const lagrangeTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý Lagrange trong Lý thuyết Nhóm/i,
+    });
+    fireEvent.click(lagrangeTrigger);
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+
+    // Tầng 1: Meta Bar có nhãn môn học và cụm nút Pin / Đóng
+    expect(screen.getByText('CẤU TRÚC ĐẠI SỐ')).toBeInTheDocument();
+    const pinBtn = screen.getByRole('button', { name: /Ghim chú thích/i });
+    const closeBtn = screen.getByRole('button', { name: /Đóng chú thích/i });
+    expect(pinBtn).toBeInTheDocument();
+    expect(closeBtn).toBeInTheDocument();
+
+    // Tầng 2: Khối Tiêu đề toàn chiều ngang
+    const title = screen.getByText('Định lý Lagrange trong Lý thuyết Nhóm');
+    expect(title).toBeInTheDocument();
+    expect(title.closest('.w-full')).toBeInTheDocument();
+
+    // Tầng 3: Khung công thức KaTeX trung tâm toàn chiều ngang
+    expect(dialog).toHaveTextContent(/\[G\s*:\s*H\]/);
+
+    // Nội dung định lý & Trực quan có KaTeX nội dòng
+    expect(dialog).toHaveTextContent(/ước số của cấp nhóm/i);
+    expect(dialog).toHaveTextContent(/Trực quan & Bản chất/i);
+
+    // 2. Chuyển sang Định lý Euler
+    const eulerTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý Euler trong Số học & Lý thuyết Nhóm/i,
+    });
+    fireEvent.click(eulerTrigger);
+
+    expect(screen.getByText('Định lý Euler trong Số học & Lý thuyết Nhóm')).toBeInTheDocument();
+    expect(screen.getByText("Euler's Totient Theorem")).toBeInTheDocument();
+    // Khung KaTeX chứa công thức Euler
+    expect(dialog).toHaveTextContent(/\\varphi\(n\)|φ\(n\)|\\equiv/);
+
+    // 3. Chuyển sang Định lý Cauchy (công thức dài 51 ký tự > 35, kích thước thẻ mở rộng)
+    const cauchyTrigger = screen.getByRole('button', {
+      name: /Chú thích thuật ngữ: Định lý Cauchy trong Lý thuyết Nhóm/i,
+    });
+    fireEvent.click(cauchyTrigger);
+
+    expect(screen.getByText('Định lý Cauchy trong Lý thuyết Nhóm')).toBeInTheDocument();
+    expect(screen.getByText("Cauchy's Theorem (Group Theory)")).toBeInTheDocument();
+    expect(dialog).toHaveTextContent(/\\operatorname\{ord\}|ord/);
+    expect(dialog).toHaveTextContent(/Định lý đảo một phần mạnh mẽ của Định lý Lagrange/i);
+  });
 });

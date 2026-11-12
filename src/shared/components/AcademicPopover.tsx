@@ -1,7 +1,7 @@
 import { BookOpen, Lightbulb, Pin, X } from 'lucide-react';
 import { type FC, type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { findGlossaryEntry } from '@/data/math-glossary';
-import { KatexMath } from '@/features/math-glossary';
+import { InlineMathText, KatexMath } from '@/features/math-glossary';
 import { cn } from '@/shared/lib/cn';
 
 export interface AcademicPopoverProps {
@@ -28,8 +28,9 @@ export interface AcademicPopoverProps {
 /**
  * Kỹ thuật Kính Lúp Tri Thức (Transclusion & Gwern-style Academic Popover):
  * - Kích hoạt khi rê chuột (hover) hoặc focus vào thuật ngữ/ký hiệu/mã định lý có `data-academic-term="..."`.
- * - Hiển thị thẻ nổi kính mờ (`backdrop-blur-xl bg-[#F7FAFA]/95 dark:bg-[#1A2026]/95 ... w-80 text-xs`).
- * - Kết xuất trực tiếp định nghĩa tóm tắt và công thức KaTeX.
+ * - Hiển thị thẻ nổi kính mờ (`backdrop-blur-xl bg-[#F7FAFA]/95 dark:bg-[#1A2026]/95 ... w-[min(92vw,420px)] text-xs`).
+ * - Tách bố cục header thành 3 tầng dọc độc lập, loại bỏ xung đột ngang giữa tiêu đề và công thức.
+ * - Kết xuất trực tiếp định nghĩa tóm tắt và công thức KaTeX nội dòng.
  * - Hỗ trợ nút ghim (`Pin`) để giữ cố định thẻ khi đối chiếu chứng minh phức tạp.
  */
 export const AcademicPopover: FC<AcademicPopoverProps> = ({
@@ -106,6 +107,8 @@ export const AcademicPopover: FC<AcademicPopoverProps> = ({
     };
   }, [clearHideTimer]);
 
+  const isFormulaLong = resolvedFormula && resolvedFormula.length > 35;
+
   return (
     <span
       className="relative inline-block"
@@ -136,18 +139,17 @@ export const AcademicPopover: FC<AcademicPopoverProps> = ({
           aria-label={`Kính lúp tri thức: ${resolvedTitle}`}
           onMouseEnter={handleOpen}
           onMouseLeave={handleDelayedClose}
-          className="absolute bottom-full left-1/2 z-50 mb-2.5 block w-80 -translate-x-1/2 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-4 text-left text-xs text-[#29383D] shadow-2xl backdrop-blur-xl transition-all dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200"
+          className={cn(
+            'absolute bottom-full left-1/2 z-50 mb-2.5 block -translate-x-1/2 rounded-2xl border border-[#CFDADB] bg-[#F7FAFA]/95 p-4 text-left text-[#29383D] shadow-2xl backdrop-blur-xl transition-all select-text dark:border-stone-700/80 dark:bg-[#1A2026]/95 dark:text-stone-200',
+            'w-80',
+            isFormulaLong ? 'sm:w-[min(92vw,460px)]' : 'sm:w-[min(92vw,420px)]',
+          )}
         >
-          {/* Header: Nhãn môn học + Tiêu đề + Nút Ghim (Pin) & Đóng */}
-          <span className="flex items-start justify-between gap-2 border-b border-[#CFDADB] pb-2.5 dark:border-stone-700/70">
-            <span className="min-w-0 flex-1 space-y-0.5">
-              <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[#3F6570] uppercase dark:text-[#E09F5A]">
-                <BookOpen className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span>{resolvedCourse}</span>
-              </span>
-              <span className="block font-serif text-sm leading-snug font-bold text-[#29383D] dark:text-stone-100">
-                {resolvedTitle}
-              </span>
+          {/* Tầng 1: Top Meta Bar */}
+          <span className="mb-1.5 flex items-center justify-between gap-2">
+            <span className="inline-flex items-center gap-1 font-mono text-[11px] font-bold tracking-[0.08em] text-[#1B3D2F]/75 uppercase dark:text-[#86EFAC]">
+              <BookOpen className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <span>{resolvedCourse}</span>
             </span>
 
             <span className="flex shrink-0 items-center gap-1">
@@ -165,53 +167,66 @@ export const AcademicPopover: FC<AcademicPopoverProps> = ({
                     : 'Ghim cố định thẻ này khi đọc chứng minh'
                 }
                 className={cn(
-                  'cursor-pointer rounded-lg p-1.5 transition-colors',
+                  'flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors',
                   isPinned
-                    ? 'bg-[#3F6570] text-white dark:bg-[#E09F5A] dark:text-stone-950'
-                    : 'text-stone-500 hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100',
+                    ? 'bg-[#1B3D2F] text-white dark:bg-[#86EFAC] dark:text-[#091A13]'
+                    : 'text-stone-500 hover:bg-black/5 dark:text-stone-400 dark:hover:bg-white/10',
                 )}
               >
                 <Pin className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
 
-              {isPinned && (
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleForceClose();
-                  }}
-                  aria-label="Đóng thẻ tra cứu"
-                  className="cursor-pointer rounded-lg p-1.5 text-stone-500 transition-colors hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100"
-                >
-                  <X className="h-3.5 w-3.5" aria-hidden="true" />
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleForceClose();
+                }}
+                aria-label="Đóng thẻ tra cứu"
+                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-black/5 dark:text-stone-400 dark:hover:bg-white/10"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
             </span>
           </span>
 
-          {/* Khối Công thức Toán học KaTeX */}
+          {/* Tầng 2: Khối Tiêu Đề Toàn Chiều Ngang */}
+          <span className="mb-3 block w-full">
+            <span className="block font-serif text-[18px] leading-[1.3] font-bold text-[var(--text-primary,#29383D)] dark:text-stone-100">
+              {resolvedTitle}
+            </span>
+          </span>
+
+          {/* Tầng 3: Khung Công Thức Trung Tâm Toàn Chiều Ngang */}
           {resolvedFormula && (
-            <span className="my-2.5 flex items-center justify-center overflow-x-auto rounded-xl border border-[#CFDADB] bg-[#E1E9EA] px-3 py-2 text-[#29383D] dark:border-stone-700/80 dark:bg-stone-900/80 dark:text-stone-100">
-              <KatexMath math={resolvedFormula} className="font-serif text-sm" />
+            <span className="mb-3.5 flex w-full scrollbar-none items-center justify-center overflow-x-auto rounded-xl border border-[#1B3D2F]/12 bg-[#1B3D2F]/[0.05] px-3.5 py-2.5 text-[#29383D] dark:border-white/10 dark:bg-white/[0.06] dark:text-stone-100">
+              <KatexMath math={resolvedFormula} className="font-serif text-[15.5px]" />
             </span>
           )}
 
-          {/* Nội dung tóm tắt định nghĩa */}
-          <span className="mt-2 block leading-relaxed text-[#55676B] dark:text-stone-300">
-            {resolvedSummary}
-          </span>
+          {/* Thân thẻ cuộn mượt cho định lý dài */}
+          <span className="block max-h-[min(60vh,340px)] scrollbar-thin overflow-y-auto pr-1">
+            {/* Nội dung tóm tắt định nghĩa */}
+            <span className="mb-3 block text-[14.5px] leading-[1.65] text-[var(--text-primary,#29383D)] dark:text-stone-200">
+              <InlineMathText text={resolvedSummary} />
+            </span>
 
-          {/* Trực giác / Bản chất (nếu có) */}
-          {resolvedIntuition && (
-            <span className="mt-2.5 block rounded-xl border border-[#CFDADB] bg-[#E1E9EA]/80 p-2.5 text-[11px] leading-relaxed text-[#55676B] dark:border-stone-700/70 dark:bg-stone-900/60 dark:text-stone-400">
-              <span className="mb-0.5 flex items-center gap-1 font-semibold text-[#3F6570] dark:text-[#E09F5A]">
-                <Lightbulb className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span>Trực giác học thuật:</span>
+            {/* Trực giác / Bản chất (nếu có) */}
+            {resolvedIntuition && (
+              <span className="block space-y-1 rounded-xl border border-[#25694C]/15 bg-[#E8F4EE]/60 p-3 text-[13.5px] leading-[1.6] text-[var(--text-primary,#29383D)] dark:border-[#25694C]/30 dark:bg-[#15302A]/50 dark:text-stone-200">
+                <span className="flex items-center gap-1.5 font-semibold text-[#1B3D2F] dark:text-[#86EFAC]">
+                  <Lightbulb
+                    className="h-4 w-4 shrink-0 text-[#1B3D2F] dark:text-[#86EFAC]"
+                    aria-hidden="true"
+                  />
+                  <span>Trực quan &amp; Bản chất:</span>
+                </span>
+                <span className="block">
+                  <InlineMathText text={resolvedIntuition} />
+                </span>
               </span>
-              <span className="block">{resolvedIntuition}</span>
-            </span>
-          )}
+            )}
+          </span>
         </span>
       )}
     </span>

@@ -1,5 +1,5 @@
 import katex from 'katex';
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { sanitizeKatexInput } from '@/shared/lib/math-sanitize';
 
@@ -49,6 +49,37 @@ export function KatexMath({ math, display = false, className, altText }: KatexMa
       dangerouslySetInnerHTML={{ __html: html }}
       {...(altText ? { 'aria-label': altText } : {})}
     />
+  );
+}
+
+export interface InlineMathTextProps {
+  readonly text?: string | null;
+  readonly className?: string;
+}
+
+/**
+ * Phân tích và kết xuất chuỗi văn bản hỗn hợp có chứa công thức KaTeX nội dòng $...$ hoặc khối $$...$$
+ */
+export function InlineMathText({ text, className }: InlineMathTextProps): ReactNode {
+  if (!text) return null;
+
+  // Tách chuỗi theo các khối $$...$$ hoặc $...$
+  const parts = text.split(/(\$\$[\s\S]+?\$\$|(?<!\\)\$[^$\n]+?\$)/g);
+
+  return (
+    <span className={className}>
+      {parts.map((part, index) => {
+        if (part.startsWith('$$') && part.endsWith('$$') && part.length > 4) {
+          const math = part.slice(2, -2);
+          return <KatexMath key={index} math={math} display className="my-1.5 block text-center" />;
+        }
+        if (part.startsWith('$') && part.endsWith('$') && part.length > 2) {
+          const math = part.slice(1, -1);
+          return <KatexMath key={index} math={math} className="inline-block px-0.5" />;
+        }
+        return part;
+      })}
+    </span>
   );
 }
 
