@@ -372,7 +372,7 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
   subjectSlug: 'cau-truc-dai-so',
   courseCode: 'MATH1301',
   examCourseCode: '2522MATH170401',
-  courseTitle: 'Cấu trúc Đại số',
+  courseTitle: 'Cấu trúc đại số',
   subtitle:
     'Đề thi chính thức HK2 (2025 - 2026), phân tích cấu trúc 40/60 và bộ đề biên soạn ôn tập',
   officialExams: [MATH1301_OFFICIAL_HK2_PAPER],

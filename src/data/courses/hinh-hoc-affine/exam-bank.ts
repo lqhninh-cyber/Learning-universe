@@ -287,7 +287,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
   subjectSlug: 'hinh-hoc-affine',
   courseCode: 'MATH1302',
   examCourseCode: '2512MATH18221',
-  courseTitle: 'Hình học Affine và Hình học Euclid',
+  courseTitle: 'Hình học Affine và hình học Euclide',
   subtitle: 'Đề thi chính thức HK1 (2025 - 2026), cấu trúc cố định 3 bài và bộ đề biên soạn ôn tập',
   officialExams: [MATH1302_OFFICIAL_HK1_PAPER],
   matrixAnalysis: {

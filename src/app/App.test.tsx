@@ -141,7 +141,8 @@ describe('App routing smoke test', () => {
     expect(screen.getAllByText('10 chương · 39 bài học').length).toBeGreaterThan(0);
     expect(screen.getByRole('link', { name: /Tiếp tục học: Bài/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Đọc giáo trình PDF/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Ngân hàng Đề thi & Lời giải/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^Ôn tập$/i })).toBeInTheDocument();
+    expect(screen.queryByText(/Ngân hàng Đề thi & Lời giải/i)).not.toBeInTheDocument();
   });
 
   it('hiển thị trang Danh mục Học phần (/courses) đồng bộ phong cách Apple Card', async () => {

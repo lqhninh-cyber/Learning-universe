@@ -258,8 +258,17 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     const user = userEvent.setup();
     renderCourseDetailRoute('/courses/cau-truc-dai-so');
 
-    const mainTab = await screen.findByRole('tab', { name: /Ngân hàng Đề thi & Lời giải/i });
+    const mainTab = await screen.findByRole('tab', { name: /^Ôn tập$/i });
     await user.click(mainTab);
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Ôn tập môn Cấu trúc đại số' }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Ngân hàng Đề thi & Lời giải/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Kho Đề thi Kết thúc Học phần/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/phân tích cấu trúc 40\/60 và bộ đề biên soạn ôn tập/i),
+    ).not.toBeInTheDocument();
 
     // 3 tab chuẩn xác theo cấu trúc mới (Xanh Rêu Sơn Mài khi active)
     const tab1 = screen.getByRole('tab', { name: /1\.\s*Đề thi chính thức \(2025 - 2026\)/i });
@@ -349,8 +358,20 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     const user = userEvent.setup();
     renderCourseDetailRoute('/courses/hinh-hoc-affine');
 
-    const mainTab = await screen.findByRole('tab', { name: /Ngân hàng Đề thi & Lời giải/i });
+    const mainTab = await screen.findByRole('tab', { name: /^Ôn tập$/i });
     await user.click(mainTab);
+
+    expect(
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'Ôn tập môn Hình học Affine và hình học Euclide',
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Ngân hàng Đề thi & Lời giải/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Kho Đề thi Kết thúc Học phần/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/cấu trúc cố định 3 bài và bộ đề biên soạn ôn tập/i),
+    ).not.toBeInTheDocument();
 
     // Tuyệt đối không hiển thị mã tự thêm MATH1302 trên giao diện
     expect(screen.queryByText(/MATH1302/i)).not.toBeInTheDocument();

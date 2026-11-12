@@ -122,7 +122,7 @@ export function SubjectExamsPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B3D2F]/10 px-3 py-0.5 text-xs font-bold text-[#1B3D2F]">
                   <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Ngân hàng Đề thi Chính thức &amp; Lời giải Thực chiến</span>
+                  <span>Ôn tập</span>
                 </span>
                 <Badge variant="neutral">
                   {examPapers.length} Bộ đề · {totalProblemsAcrossPapers} Bài toán tự luận

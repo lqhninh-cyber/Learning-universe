@@ -82,24 +82,20 @@ function ExamBankWorkspaceContent({
 
   return (
     <div className="space-y-6">
-      {/* Header Khu vực Ngân hàng Đề thi & Lời giải */}
+      {/* Header Khu vực Ôn tập */}
       <Card className="border-[#1B3D2F]/20 bg-[var(--bg-surface)] p-5 shadow-xs sm:p-7">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-2">
+        <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-2.5">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="border-[#1B3D2F] bg-[#1B3D2F] text-white">
                 <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Ngân hàng Đề thi &amp; Lời giải</span>
+                <span>Ôn tập</span>
               </Badge>
             </div>
 
             <h2 className="font-serif text-xl font-bold tracking-tight text-[var(--text-main)] sm:text-2xl">
-              Kho Đề thi Kết thúc Học phần, Ma trận &amp; Đề mẫu — {bank.courseTitle}
+              Ôn tập môn {bank.courseTitle}
             </h2>
-
-            <p className="max-w-3xl text-xs leading-relaxed text-[var(--text-muted)] sm:text-sm">
-              {bank.subtitle}
-            </p>
           </div>
 
           <div className="flex shrink-0 flex-wrap items-center gap-2.5">
@@ -131,11 +127,11 @@ function ExamBankWorkspaceContent({
           </div>
         </div>
 
-        {/* 3 Sub-tabs Phân khu Học thuật */}
+        {/* 3 Sub-tabs Phân khu Ôn tập */}
         <div
           role="tablist"
-          aria-label="Phân khu Ngân hàng Đề thi và Lời giải"
-          className="mt-5 grid gap-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-1.5 md:grid-cols-3"
+          aria-label="Phân khu Ôn tập"
+          className="grid gap-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-1.5 md:grid-cols-3"
         >
           {SECTION_TABS.map((tab, index) => {
             const isActive = activeSection === tab.id;

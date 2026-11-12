@@ -169,7 +169,7 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
                   className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
                 >
                   <BookOpen className="h-4 w-4 text-amber-300" aria-hidden="true" />
-                  <span>Ngân hàng Đề thi &amp; Lời giải</span>
+                  <span>Ôn tập</span>
                 </Link>
               ) : (
                 <button
@@ -178,7 +178,7 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
                   className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/30 bg-stone-950/50 px-5 py-3.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/15"
                 >
                   <BookOpen className="h-4 w-4 text-amber-300" aria-hidden="true" />
-                  <span>Ngân hàng Đề thi &amp; Lời giải</span>
+                  <span>Ôn tập</span>
                 </button>
               )}
 

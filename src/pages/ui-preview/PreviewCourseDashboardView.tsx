@@ -730,7 +730,7 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
               {isCalculus ? (
                 <>
                   <FileQuestion className="h-4 w-4" aria-hidden="true" />
-                  <span>Đề thi &amp; Lời giải ({courseData.stats.examsCount})</span>
+                  <span>Ôn tập ({courseData.stats.examsCount})</span>
                 </>
               ) : (
                 <>
@@ -1071,7 +1071,7 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                   <div className="flex flex-col justify-between gap-4 border-b border-stone-100 pb-4 sm:flex-row sm:items-center">
                     <div>
                       <h3 className="font-serif text-xl font-bold text-stone-900">
-                        Ngân Hàng Đề Thi &amp; Lời Giải Thực Chiến (6 Bộ Đề)
+                        Ôn tập môn Giải tích hàm một biến (6 Bộ Đề)
                       </h3>
                       <p className="text-xs text-stone-600">
                         Các đề thi chính thức từ năm 2018 đến 2026 kèm thang điểm và gợi ý định lý.

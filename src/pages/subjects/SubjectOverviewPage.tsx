@@ -223,23 +223,14 @@ export function SubjectOverviewPage() {
         badge: 'Thực hành',
         icon: Sparkles,
       });
-    } else if (subject.slug === 'giai-tich-ham-mot-bien') {
+    } else if (
+      subject.slug === 'giai-tich-ham-mot-bien' ||
+      subject.slug === 'cau-truc-dai-so' ||
+      subject.slug === 'hinh-hoc-affine'
+    ) {
       tabs.push({
         id: 'specialized',
-        label: 'Đề thi & Lời giải các năm',
-        badge: '6 bộ đề',
-        icon: GraduationCap,
-      });
-    } else if (subject.slug === 'cau-truc-dai-so') {
-      tabs.push({
-        id: 'specialized',
-        label: 'Ngân hàng Đề thi & Lời giải',
-        icon: GraduationCap,
-      });
-    } else if (subject.slug === 'hinh-hoc-affine') {
-      tabs.push({
-        id: 'specialized',
-        label: 'Ngân hàng Đề thi & Lời giải',
+        label: 'Ôn tập',
         icon: GraduationCap,
       });
     }
@@ -590,12 +581,12 @@ export function SubjectOverviewPage() {
                     </div>
                   </div>
 
-                  {/* Tài liệu 3: Ngân hàng Đề thi Thực chiến */}
+                  {/* Tài liệu 3: Ôn tập & Đề thi thực chiến */}
                   <div className="border-subject-300 from-subject-50/50 hover:border-subject-400 flex flex-col justify-between rounded-2xl border bg-gradient-to-br via-white to-amber-50/30 p-5 shadow-2xs transition-all">
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-subject-800 text-xs font-bold tracking-wider uppercase">
-                          Ngân hàng Đề thi Thực chiến
+                          Ôn tập thực chiến
                         </span>
                         <Badge variant="subject">6 Bộ đề · 41 Bài</Badge>
                       </div>
@@ -617,7 +608,7 @@ export function SubjectOverviewPage() {
                       >
                         <Link to={ROUTES.subjectExams(subject.slug)}>
                           <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                          <span>Vào luyện đề thi &amp; Xem lời giải</span>
+                          <span>Vào ôn tập &amp; luyện đề</span>
                         </Link>
                       </Button>
                     </div>
@@ -907,7 +898,7 @@ export function SubjectOverviewPage() {
             </Card>
           )}
 
-          {/* 3.2 Dành cho môn Giải tích hàm một biến: Ngân hàng Đề thi qua các năm */}
+          {/* 3.2 Dành cho môn Giải tích hàm một biến: Khu vực Ôn tập qua các năm */}
           {subject.slug === 'giai-tich-ham-mot-bien' && (
             <Card className="border-subject-200/90 from-subject-50/50 bg-gradient-to-br via-white to-amber-50/30 p-6 shadow-xs sm:p-8">
               <div className="space-y-6">
@@ -916,22 +907,16 @@ export function SubjectOverviewPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="subject">
                         <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>Kho Đề thi Tự luận Chính thức</span>
+                        <span>Ôn tập</span>
                       </Badge>
-                      <Badge variant="neutral">6 Bộ đề · 41 Câu hỏi · Số hóa KaTeX 100%</Badge>
                     </div>
                     <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
-                      Ngân hàng Đề thi Kết thúc Học phần &amp; Lời giải Thực chiến (2018 – 2026)
+                      Ôn tập môn {subject.title}
                     </h2>
-                    <p className="max-w-3xl text-sm leading-relaxed text-stone-600">
-                      Kho đề thi chính thức được biên tập chuẩn xác từ đề thi thật của Khoa Toán -
-                      Tin, tích hợp gợi ý định lý trọng tâm và lời giải chi tiết từng bước cho từng
-                      bài toán.
-                    </p>
                   </div>
                   <Button asChild variant="subject" size="lg" className="shrink-0 shadow-xs">
                     <Link to={ROUTES.subjectExams(subject.slug)}>
-                      <span>Vào phòng Luyện đề &amp; Xem đáp án</span>
+                      <span>Vào ôn tập &amp; Luyện đề</span>
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   </Button>
