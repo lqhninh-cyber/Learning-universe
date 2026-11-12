@@ -1,13 +1,4 @@
-import {
-  BookOpen,
-  ChevronLeft,
-  ChevronRight,
-  Compass,
-  Landmark,
-  Pause,
-  Play,
-  X,
-} from 'lucide-react';
+import { BookOpen, ChevronLeft, ChevronRight, Landmark, Pause, Play, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
@@ -88,7 +79,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
       'Kiệt tác khắc đồng quy tụ khối đa diện cụt (Dürer solid), quả cầu hình học trắc lượng, ma phương bậc 4 và com-pa đo đạc. Tác phẩm kinh điển ghi lại sự chiêm nghiệm sâu sắc của tư duy toán học và hình học trước vũ trụ.',
     coreAcademicValue:
       'Sự giao hòa vĩ đại giữa cấu trúc hình học (hình bát diện cụt, ô vuông ma thuật bậc 4) và chiều sâu tư tưởng hàn lâm thời Phục Hưng.',
-    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/1/18/D%C3%BCrer_Melancholia_I.jpg',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/D%C3%BCrer_Melancholia_I.jpg/960px-D%C3%BCrer_Melancholia_I.jpg',
     alt: 'Bản khắc đồng Melencolia I của Albrecht Dürer năm 1514',
   },
   {
@@ -186,7 +178,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
       'Cuốn sách toán học in hình học đầu tiên trong lịch sử nhân loại, chuyển dịch từ bản dịch tiếng Ả Rập của Campanus xứ Novara. Hơn 420 hình vẽ hình học chính xác ở lề sách đã mở ra kỷ nguyên phổ biến đại chúng các tiên đề Euclid.',
     coreAcademicValue:
       'Cột mốc vĩ đại của ngành in và toán học, đặt nền móng tiên đề hóa chặt chẽ định hình toàn bộ nền khoa học suy diễn phương Tây.',
-    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/d/d4/Euclid%27s_Elements%2C_1482.jpg',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Euclid%27s_Elements%2C_1482.jpg/960px-Euclid%27s_Elements%2C_1482.jpg',
     alt: 'Trang sách bản in đầu tiên cuốn Cơ sở của Euclid do Erhard Ratdolt ấn hành năm 1482',
   },
   {
@@ -329,6 +322,268 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
 
 const ROTATION_INTERVAL_MS = 20000;
 const SLIDE_TRANSITION_MS = 350;
+
+/**
+ * Minh họa vector học thuật dự phòng (SVG) sắc nét khi ảnh gốc không thể tải (offline / 429),
+ * đảm bảo không bao giờ xuất hiện khung đen rỗng (đặc biệt cho bản khắc đồng Melencolia I 03/15).
+ */
+function HeritageFallbackIllustration({ artwork }: { readonly artwork: HeritageArtwork }) {
+  if (artwork.id === 'melencolia-i') {
+    return (
+      <svg
+        viewBox="0 0 440 320"
+        className="h-full w-full max-w-[420px] select-none"
+        aria-label={`Minh họa học thuật cho ${artwork.title}`}
+      >
+        <defs>
+          <linearGradient id="lu-melencolia-paper" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#213E37" />
+            <stop offset="100%" stopColor="#122722" />
+          </linearGradient>
+        </defs>
+        <rect
+          x="14"
+          y="14"
+          width="412"
+          height="292"
+          rx="14"
+          fill="url(#lu-melencolia-paper)"
+          stroke="#E5C158"
+          strokeOpacity="0.45"
+          strokeWidth="1.2"
+        />
+        {/* Tia sáng sao chổi trên mặt biển phía xa */}
+        <circle cx="96" cy="76" r="22" fill="#E5C158" fillOpacity="0.16" />
+        <circle cx="96" cy="76" r="7" fill="#F8F6F0" fillOpacity="0.88" />
+        <path
+          d="M 96 76 L 164 42 M 96 76 L 178 72 M 96 76 L 160 112"
+          stroke="#E5C158"
+          strokeOpacity="0.5"
+          strokeWidth="1"
+          strokeDasharray="3 4"
+        />
+
+        {/* Khối đa diện cụt nổi tiếng của Dürer (Truncated Rhombohedron) */}
+        <g stroke="#F8F6F0" strokeWidth="1.6" strokeLinejoin="round">
+          <polygon
+            points="126,118 190,104 222,158 196,232 132,246 98,194"
+            fill="#2B5248"
+            fillOpacity="0.82"
+          />
+          <polygon points="126,118 190,104 176,144 134,154" fill="#E5C158" fillOpacity="0.22" />
+          <line x1="134" y1="154" x2="176" y2="144" stroke="#E5C158" strokeWidth="1.3" />
+          <line x1="176" y1="144" x2="222" y2="158" stroke="#E5C158" strokeWidth="1.3" />
+          <line x1="176" y1="144" x2="164" y2="212" stroke="#D1DCD6" strokeOpacity="0.8" />
+          <line x1="164" y1="212" x2="196" y2="232" stroke="#D1DCD6" strokeOpacity="0.8" />
+          <line x1="164" y1="212" x2="132" y2="246" stroke="#D1DCD6" strokeOpacity="0.8" />
+          <line x1="134" y1="154" x2="98" y2="194" stroke="#D1DCD6" strokeOpacity="0.8" />
+        </g>
+
+        {/* Quả cầu trắc lượng & Compa hình học */}
+        <circle cx="236" cy="242" r="26" fill="#1B3932" stroke="#E5C158" strokeWidth="1.4" />
+        <ellipse
+          cx="236"
+          cy="242"
+          rx="26"
+          ry="9"
+          fill="none"
+          stroke="#D1DCD6"
+          strokeOpacity="0.55"
+          strokeWidth="0.9"
+          strokeDasharray="3 3"
+        />
+        <g stroke="#E5C158" strokeWidth="1.5" fill="none" strokeLinecap="round">
+          <circle cx="294" cy="186" r="4" fill="#E5C158" />
+          <path d="M 294 190 L 270 258 M 294 190 L 320 256" />
+          <path d="M 278 228 Q 295 234 312 228" strokeOpacity="0.8" />
+        </g>
+
+        {/* Ma phương bậc 4 kinh điển của Dürer (tổng mỗi hàng/cột = 34, đáy ghi năm 1514) */}
+        <g transform="translate(274, 50)">
+          <rect
+            x="0"
+            y="0"
+            width="124"
+            height="108"
+            rx="6"
+            fill="#11241F"
+            stroke="#E5C158"
+            strokeWidth="1.3"
+          />
+          <g stroke="#E5C158" strokeOpacity="0.35" strokeWidth="0.9">
+            <line x1="31" y1="0" x2="31" y2="108" />
+            <line x1="62" y1="0" x2="62" y2="108" />
+            <line x1="93" y1="0" x2="93" y2="108" />
+            <line x1="0" y1="27" x2="124" y2="27" />
+            <line x1="0" y1="54" x2="124" y2="54" />
+            <line x1="0" y1="81" x2="124" y2="81" />
+          </g>
+          <g
+            fill="#F8F6F0"
+            fontFamily="monospace"
+            fontSize="11"
+            fontWeight="600"
+            textAnchor="middle"
+          >
+            <text x="15.5" y="17">
+              16
+            </text>
+            <text x="46.5" y="17">
+              3
+            </text>
+            <text x="77.5" y="17">
+              2
+            </text>
+            <text x="108.5" y="17">
+              13
+            </text>
+            <text x="15.5" y="44">
+              5
+            </text>
+            <text x="46.5" y="44">
+              10
+            </text>
+            <text x="77.5" y="44">
+              11
+            </text>
+            <text x="108.5" y="44">
+              8
+            </text>
+            <text x="15.5" y="71">
+              9
+            </text>
+            <text x="46.5" y="71">
+              6
+            </text>
+            <text x="77.5" y="71">
+              7
+            </text>
+            <text x="108.5" y="71">
+              12
+            </text>
+            <text x="15.5" y="98">
+              4
+            </text>
+            <text x="46.5" y="98" fill="#E5C158">
+              15
+            </text>
+            <text x="77.5" y="98" fill="#E5C158">
+              14
+            </text>
+            <text x="108.5" y="98">
+              1
+            </text>
+          </g>
+        </g>
+
+        <text
+          x="220"
+          y="292"
+          textAnchor="middle"
+          fill="#E5C158"
+          fontFamily="monospace"
+          fontSize="10"
+          letterSpacing="1.8"
+        >
+          MELENCOLIA I · DÜRER SOLID &amp; MAGIC SQUARE (1514)
+        </text>
+      </svg>
+    );
+  }
+
+  const isCelestial =
+    artwork.id === 'copernicus-1543' ||
+    artwork.id === 'kepler-1596' ||
+    artwork.id === 'nguoi-chiem-tinh';
+  const isPolyhedron =
+    artwork.id === 'de-divina-proportione' ||
+    artwork.id === 'nguoi-vitruvius' ||
+    artwork.id === 'euclid-elements-1482';
+
+  return (
+    <svg
+      viewBox="0 0 440 320"
+      className="h-full w-full max-w-[420px] select-none"
+      aria-label={`Minh họa học thuật cho ${artwork.title}`}
+    >
+      <rect
+        x="14"
+        y="14"
+        width="412"
+        height="292"
+        rx="14"
+        fill="#162E28"
+        stroke="#E5C158"
+        strokeOpacity="0.45"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="24"
+        y="24"
+        width="392"
+        height="272"
+        rx="10"
+        fill="none"
+        stroke="#D1DCD6"
+        strokeOpacity="0.16"
+        strokeDasharray="4 4"
+      />
+      {isCelestial ? (
+        <g stroke="#E5C158" fill="none" strokeWidth="1.3">
+          <circle cx="220" cy="145" r="14" fill="#E5C158" fillOpacity="0.25" />
+          <circle cx="220" cy="145" r="42" strokeOpacity="0.65" />
+          <ellipse cx="220" cy="145" rx="82" ry="62" stroke="#F8F6F0" strokeOpacity="0.7" />
+          <circle cx="220" cy="145" r="102" strokeDasharray="5 5" strokeOpacity="0.45" />
+          <polygon points="220,76 280,180 160,180" stroke="#8EE5CE" strokeOpacity="0.55" />
+          <circle cx="262" cy="145" r="4.5" fill="#F8F6F0" />
+          <circle cx="152" cy="108" r="4" fill="#8EE5CE" />
+        </g>
+      ) : isPolyhedron ? (
+        <g stroke="#E5C158" fill="none" strokeWidth="1.35">
+          <circle cx="220" cy="148" r="82" strokeOpacity="0.45" />
+          <rect x="150" y="78" width="140" height="140" stroke="#F8F6F0" strokeOpacity="0.6" />
+          <polygon
+            points="220,66 286,114 260,192 180,192 154,114"
+            fill="#E5C158"
+            fillOpacity="0.12"
+          />
+          <polygon points="220,88 264,182 176,182" stroke="#8EE5CE" strokeOpacity="0.72" />
+        </g>
+      ) : (
+        <g stroke="#E5C158" fill="none" strokeWidth="1.35">
+          <circle cx="220" cy="145" r="76" strokeOpacity="0.55" />
+          <circle
+            cx="220"
+            cy="145"
+            r="52"
+            stroke="#F8F6F0"
+            strokeOpacity="0.45"
+            strokeDasharray="3 4"
+          />
+          <path
+            d="M 220 78 L 231 124 L 278 112 L 240 142 L 284 156 L 238 164 L 266 202 L 226 174 L 220 214 L 214 174 L 174 202 L 202 164 L 156 156 L 200 142 L 162 112 L 209 124 Z"
+            fill="#E5C158"
+            fillOpacity="0.2"
+          />
+        </g>
+      )}
+      <text
+        x="220"
+        y="264"
+        textAnchor="middle"
+        fill="#F8F6F0"
+        fontFamily="serif"
+        fontSize="13.5"
+        fontWeight="600"
+      >
+        {artwork.title}
+      </text>
+      <text x="220" y="284" textAnchor="middle" fill="#E5C158" fontFamily="monospace" fontSize="10">
+        {artwork.yearOrEra}
+      </text>
+    </svg>
+  );
+}
 
 export function HeritageArtShowcase() {
   const prefersReducedMotion = useReducedMotion();
@@ -485,15 +740,12 @@ export function HeritageArtShowcase() {
           'border-[#E8A85A]/35 bg-[#0E221E]/88',
         )}
       >
-        <div className="flex h-full w-full flex-col justify-between p-6 opacity-50">
+        <div className="flex h-full w-full flex-col justify-between p-6 opacity-55">
           <div className="h-4 w-32 rounded bg-[#C5A262]/20" />
-          <div className="my-auto flex h-[320px] items-center justify-center overflow-hidden rounded-xl border border-[#C5A262]/20 bg-black/5">
-            <img
-              src={thirdArtwork.imageSrc}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-contain opacity-45"
-            />
+          <div className="my-auto flex h-[320px] items-center justify-center overflow-hidden rounded-xl border border-[#C5A262]/20 bg-[#102621]/60">
+            <span className="font-mono text-[11px] tracking-widest text-[#E5C158]/70 uppercase">
+              {thirdArtwork.yearOrEra}
+            </span>
           </div>
           <div className="h-3 w-48 rounded bg-[#C5A262]/20" />
         </div>
@@ -512,20 +764,20 @@ export function HeritageArtShowcase() {
           'border-[#E8A85A]/45 bg-[#112722]/92',
         )}
       >
-        <div className="flex h-full w-full flex-col justify-between p-6 opacity-75">
-          <div className="flex items-center justify-between font-mono text-[10px] tracking-widest text-[#C5A262] uppercase">
+        <div className="flex h-full w-full flex-col justify-between p-6 opacity-80">
+          <div className="flex items-center justify-between font-mono text-[10px] tracking-widest text-[#E5C158] uppercase">
             <span>TIẾP THEO</span>
             <span>{nextArtwork.yearOrEra}</span>
           </div>
-          <div className="my-auto flex h-[340px] items-center justify-center overflow-hidden rounded-xl border border-[#C5A262]/25 bg-black/5 p-3">
-            <img
-              src={nextArtwork.imageSrc}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-contain opacity-65"
-            />
+          <div className="my-auto flex h-[340px] flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-[#C5A262]/25 bg-[#102621]/70 p-4 text-center">
+            <span className="font-serif text-base font-semibold text-[#F8F6F0]/85">
+              {nextArtwork.title}
+            </span>
+            <span className="font-mono text-[11px] text-[#D1DCD6]/75">
+              {nextArtwork.artistOrOrigin}
+            </span>
           </div>
-          <p className="truncate font-serif text-sm font-semibold text-[#C5A262]">
+          <p className="truncate font-serif text-sm font-semibold text-[#E5C158]">
             {nextArtwork.title}
           </p>
         </div>
@@ -613,19 +865,21 @@ export function HeritageArtShowcase() {
           data-testid="heritage-art-frame"
           onMouseMove={handleImageMouseMove}
           onMouseLeave={handleImageMouseLeave}
-          className="relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#E5B869]/35 bg-black/25 p-3 shadow-inner transition-colors duration-300 hover:border-[#F6D383]/65 md:h-[425px] xl:h-[460px]"
+          className="relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#E5B869]/35 bg-[#112722]/85 p-3 shadow-inner transition-colors duration-300 hover:border-[#F6D383]/65 md:h-[425px] xl:h-[460px]"
         >
           {imageError ? (
-            <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
-              <Compass className="h-8 w-8 text-[#C5A262] opacity-70" aria-hidden="true" />
-              <p className="mt-2 font-serif text-sm font-semibold">{currentArtwork.title}</p>
-              <p className="mt-1 font-mono text-xs opacity-75">{currentArtwork.caption}</p>
+            <div
+              data-testid="heritage-svg-fallback"
+              className="flex h-full w-full items-center justify-center p-2"
+            >
+              <HeritageFallbackIllustration artwork={currentArtwork} />
             </div>
           ) : (
             <img
               ref={imgMotionRef}
               src={currentArtwork.imageSrc}
               alt={currentArtwork.alt}
+              referrerPolicy="no-referrer"
               onError={() => setImageError(true)}
               className={cn(
                 'mx-auto h-full w-full object-contain transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform select-none',
@@ -651,22 +905,22 @@ export function HeritageArtShowcase() {
           )}
         >
           <div>
-            <h3 className="font-serif text-base font-bold text-[#FFF9F0] sm:text-lg">
+            <h3 className="font-serif text-base font-bold text-[#F8F6F0] sm:text-lg">
               {currentArtwork.title}
             </h3>
 
             {/* Bố cục hàng Metadata */}
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-              <span className="font-mono text-xs font-semibold text-[#F3C978]">
+              <span className="font-mono text-xs font-semibold text-[#E5C158]">
                 {currentArtwork.artistOrOrigin}
               </span>
-              <span className="opacity-60" aria-hidden="true">
+              <span className="text-[#D1DCD6]/60" aria-hidden="true">
                 ·
               </span>
               <span className="inline-flex items-center rounded-md border border-[#E8A85A]/35 bg-[#EBECE6] px-2 py-0.5 font-mono text-[11px] font-medium text-[#18221D]">
                 {currentArtwork.yearOrEra}
               </span>
-              <span className="opacity-60" aria-hidden="true">
+              <span className="text-[#D1DCD6]/60" aria-hidden="true">
                 ·
               </span>
               <button
@@ -674,18 +928,18 @@ export function HeritageArtShowcase() {
                 onClick={() => setIsMetadataOpen((prev) => !prev)}
                 aria-expanded={isMetadataOpen}
                 data-testid="archival-metadata-trigger"
-                className="cursor-pointer rounded-md border border-[#E5B869]/40 bg-white/10 px-2.5 py-1 font-mono text-[11px] text-[#F3C978] transition-colors hover:bg-white/20"
+                className="cursor-pointer rounded-md border border-[#E5B869]/40 bg-white/10 px-2.5 py-1 font-mono text-[11px] text-[#E5C158] transition-colors hover:bg-white/20"
               >
                 [Lược sử tác phẩm]
               </button>
             </div>
           </div>
 
-          <p className="mt-2 font-serif text-xs text-[#F3C978]/90 italic">
+          <p className="mt-2 font-serif text-xs text-[#E5C158]/95 italic">
             {currentArtwork.caption}
           </p>
 
-          <p className="mt-2 text-xs leading-relaxed text-[#E6E0D4]/85">
+          <p className="mt-2 text-xs leading-relaxed text-[#D1DCD6]">
             {currentArtwork.academicSignificance}
           </p>
 

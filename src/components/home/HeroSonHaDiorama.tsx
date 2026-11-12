@@ -16,6 +16,7 @@ interface KarstIslandSpec {
   readonly foliageHighlightPaths: readonly string[];
   readonly strataPaths: readonly string[];
   readonly fissurePaths: readonly string[];
+  readonly shoreFoamPaths?: readonly string[];
 }
 
 interface BirdSpec {
@@ -83,23 +84,27 @@ const VOLUMETRIC_GOD_RAYS: readonly {
 ];
 
 /**
- * 2 đàn chim chiều (hải âu / hạc) bay lượn qua bầu trời hoàng hôn
+ * 2 đàn chim bay theo đội hình chữ V (8 chim phía tây, 7 chim phía đông) qua nền hoàng hôn
  */
 const BIRD_FLOCK_WEST: readonly BirdSpec[] = [
-  { x: 560, y: 248, scale: 1.05, flapDelaySec: 0, flapDurationSec: 0.85 },
-  { x: 584, y: 238, scale: 0.9, flapDelaySec: 0.22, flapDurationSec: 0.92 },
-  { x: 606, y: 252, scale: 0.85, flapDelaySec: 0.45, flapDurationSec: 0.88 },
-  { x: 626, y: 234, scale: 0.78, flapDelaySec: 0.14, flapDurationSec: 0.96 },
-  { x: 644, y: 246, scale: 0.72, flapDelaySec: 0.58, flapDurationSec: 0.82 },
-  { x: 668, y: 229, scale: 0.68, flapDelaySec: 0.32, flapDurationSec: 1.02 },
+  { x: 540, y: 236, scale: 1.08, flapDelaySec: 0, flapDurationSec: 0.92 },
+  { x: 560, y: 226, scale: 0.96, flapDelaySec: 0.14, flapDurationSec: 0.96 },
+  { x: 564, y: 248, scale: 0.94, flapDelaySec: 0.28, flapDurationSec: 0.88 },
+  { x: 582, y: 217, scale: 0.86, flapDelaySec: 0.42, flapDurationSec: 1.0 },
+  { x: 588, y: 258, scale: 0.84, flapDelaySec: 0.19, flapDurationSec: 0.94 },
+  { x: 604, y: 209, scale: 0.76, flapDelaySec: 0.55, flapDurationSec: 0.98 },
+  { x: 614, y: 266, scale: 0.74, flapDelaySec: 0.34, flapDurationSec: 0.9 },
+  { x: 628, y: 202, scale: 0.68, flapDelaySec: 0.66, flapDurationSec: 1.04 },
 ];
 
 const BIRD_FLOCK_EAST: readonly BirdSpec[] = [
-  { x: 1025, y: 204, scale: 0.84, flapDelaySec: 0.12, flapDurationSec: 0.94 },
-  { x: 1046, y: 194, scale: 0.76, flapDelaySec: 0.38, flapDurationSec: 0.86 },
-  { x: 1068, y: 208, scale: 0.7, flapDelaySec: 0.62, flapDurationSec: 0.98 },
-  { x: 1090, y: 196, scale: 0.64, flapDelaySec: 0.24, flapDurationSec: 0.9 },
-  { x: 1112, y: 210, scale: 0.58, flapDelaySec: 0.5, flapDurationSec: 1.04 },
+  { x: 1014, y: 202, scale: 0.92, flapDelaySec: 0.1, flapDurationSec: 0.96 },
+  { x: 1034, y: 192, scale: 0.84, flapDelaySec: 0.26, flapDurationSec: 0.9 },
+  { x: 1036, y: 213, scale: 0.82, flapDelaySec: 0.44, flapDurationSec: 1.02 },
+  { x: 1054, y: 183, scale: 0.74, flapDelaySec: 0.18, flapDurationSec: 0.94 },
+  { x: 1058, y: 223, scale: 0.72, flapDelaySec: 0.56, flapDurationSec: 0.88 },
+  { x: 1074, y: 175, scale: 0.66, flapDelaySec: 0.36, flapDurationSec: 1.06 },
+  { x: 1080, y: 232, scale: 0.62, flapDelaySec: 0.64, flapDurationSec: 0.98 },
 ];
 
 /**
@@ -190,6 +195,10 @@ const LAYER3_MID_NEAR_ISLANDS: readonly KarstIslandSpec[] = [
       'M 366 364 L 374 494',
       'M 396 410 L 404 510',
     ],
+    shoreFoamPaths: [
+      'M 206 536 Q 272 532 338 536 Q 388 539 428 534',
+      'M 224 540 Q 294 543 368 539',
+    ],
   },
   {
     id: 'near-karst-right',
@@ -218,6 +227,10 @@ const LAYER3_MID_NEAR_ISLANDS: readonly KarstIslandSpec[] = [
       'M 1282 340 L 1288 498',
       'M 1326 392 L 1334 506',
     ],
+    shoreFoamPaths: [
+      'M 1114 536 Q 1192 532 1268 536 Q 1326 539 1368 534',
+      'M 1142 540 Q 1236 543 1344 539',
+    ],
   },
 ];
 
@@ -237,6 +250,7 @@ const HON_TRONG_MAI: readonly KarstIslandSpec[] = [
     foliageHighlightPaths: ['M 784 390 Q 798 380 810 398 Q 798 404 786 400 Z'],
     strataPaths: ['M 748 456 Q 778 452 806 458', 'M 748 494 Q 768 490 788 496'],
     fissurePaths: ['M 768 416 L 762 504', 'M 792 414 L 784 494'],
+    shoreFoamPaths: ['M 746 549 Q 770 546 792 549'],
   },
   {
     id: 'hon-mai',
@@ -250,6 +264,7 @@ const HON_TRONG_MAI: readonly KarstIslandSpec[] = [
     foliageHighlightPaths: ['M 830 406 Q 842 390 858 394 Q 848 408 832 410 Z'],
     strataPaths: ['M 824 448 Q 856 444 888 450', 'M 836 488 Q 862 484 886 490'],
     fissurePaths: ['M 846 422 L 842 502', 'M 870 426 L 868 506'],
+    shoreFoamPaths: ['M 838 549 Q 862 546 884 549'],
   },
 ];
 
@@ -266,11 +281,13 @@ function PainterlyKarstIsland({
   ids,
   litOpacity = 0.88,
   showRimStroke = true,
+  reducedMotion = false,
 }: {
   readonly island: KarstIslandSpec;
   readonly ids: IslandRenderIds;
   readonly litOpacity?: number;
   readonly showRimStroke?: boolean;
+  readonly reducedMotion?: boolean;
 }) {
   return (
     <g>
@@ -291,13 +308,35 @@ function PainterlyKarstIsland({
         ))}
       </g>
 
-      {/* Tán cây rừng nhiệt đới đa lớp nhấp nhô trên đỉnh đảo */}
-      {island.foliageBackPaths.map((fPath, idx) => (
-        <path key={`fb-${idx}`} d={fPath} fill={`url(#${ids.foliageDarkGradId})`} />
-      ))}
-      {island.foliageHighlightPaths.map((fPath, idx) => (
-        <path key={`fh-${idx}`} d={fPath} fill={ids.foliageLitColor} fillOpacity="0.78" />
-      ))}
+      {/* Tán cây rừng nhiệt đới đa lớp nhấp nhô khẽ đung đưa theo gió biển */}
+      <g className={reducedMotion ? undefined : 'lu-canopy-sway'}>
+        {island.foliageBackPaths.map((fPath, idx) => (
+          <path key={`fb-${idx}`} d={fPath} fill={`url(#${ids.foliageDarkGradId})`} />
+        ))}
+        {island.foliageHighlightPaths.map((fPath, idx) => (
+          <path key={`fh-${idx}`} d={fPath} fill={ids.foliageLitColor} fillOpacity="0.78" />
+        ))}
+      </g>
+
+      {/* Viền bọt sóng vỗ quanh chân vách đá vôi */}
+      {island.shoreFoamPaths && island.shoreFoamPaths.length > 0 && (
+        <g
+          data-testid={`karst-shore-foam-${island.id}`}
+          fill="none"
+          strokeLinecap="round"
+          className={reducedMotion ? undefined : 'lu-shore-foam'}
+        >
+          {island.shoreFoamPaths.map((foamPath, idx) => (
+            <path
+              key={`foam-${idx}`}
+              d={foamPath}
+              stroke={idx === 0 ? '#FFE8C2' : '#A6F4DF'}
+              strokeWidth={idx === 0 ? '1.6' : '1.05'}
+              strokeOpacity={idx === 0 ? '0.68' : '0.42'}
+            />
+          ))}
+        </g>
+      )}
 
       {/* Viền sáng vàng kim loại chạy dọc gờ đá đón nắng hoàng hôn */}
       {showRimStroke && (
@@ -352,6 +391,8 @@ function BatWingJunkBoat({
   const wakeClass = reducedMotion ? undefined : 'lu-wake-pulse';
   const lanternClass = reducedMotion ? undefined : 'lu-lantern-glow';
   const swayClass = reducedMotion ? undefined : 'lu-reflection-sway';
+  const sailBillowClass = reducedMotion ? undefined : 'lu-sail-billow';
+  const smokeClass = reducedMotion ? undefined : 'lu-smoke-curl';
 
   const sailGroup = (
     <g>
@@ -360,6 +401,25 @@ function BatWingJunkBoat({
         <path d="M 52 7 Q 86 11 132 16" stroke="#FFE6B8" strokeWidth="1.35" strokeOpacity="0.58" />
         <path d="M 56 4 Q 96 6 148 9" stroke="#FFF7E2" strokeWidth="0.9" strokeOpacity="0.45" />
         <path d="M 48 10 Q 80 15 118 22" stroke="#E8A85A" strokeWidth="1.05" strokeOpacity="0.42" />
+      </g>
+
+      {/* Khói bếp ấm mỏng bay lên nhẹ từ khoang thuyền */}
+      <g data-testid={`${testId}-smoke`} fill="none" strokeLinecap="round">
+        <path
+          d="M 14 -6 Q 11 -18 17 -28 Q 22 -36 16 -46"
+          stroke="#F7EFE2"
+          strokeWidth="1.6"
+          strokeOpacity="0.42"
+          className={smokeClass}
+        />
+        <path
+          d="M 17 -7 Q 22 -20 15 -31 Q 11 -40 20 -51"
+          stroke="#F7EFE2"
+          strokeWidth="1.1"
+          strokeOpacity="0.32"
+          className={smokeClass}
+          style={reducedMotion ? undefined : { animationDelay: '2.4s' }}
+        />
       </g>
 
       {/* Thân thuyền gỗ cong mềm mại, mũi & lái nâng cao */}
@@ -382,42 +442,45 @@ function BatWingJunkBoat({
         <line x1="34" y1="2" x2="29" y2="-56" />
       </g>
 
-      {/* Cánh buồm mũi (Fore Lug Sail) */}
-      <path
-        d="M -35 -64 C -18 -60, -10 -44, -12 -18 L -32 -14 C -36 -30, -37 -48, -35 -64 Z"
-        fill={`url(#${sailGradId})`}
-      />
-      <g stroke="#441E14" strokeWidth="0.9" strokeOpacity="0.72" fill="none">
-        <path d="M -35 -52 Q -24 -50 -16 -52" />
-        <path d="M -35 -42 Q -22 -39 -13 -42" />
-        <path d="M -34 -32 Q -22 -29 -12 -32" />
-        <path d="M -33 -22 Q -22 -19 -12 -22" />
-      </g>
+      {/* 3 cánh buồm cánh dơi căng gió nhẹ nhịp nhàng */}
+      <g className={sailBillowClass}>
+        {/* Cánh buồm mũi (Fore Lug Sail) */}
+        <path
+          d="M -35 -64 C -18 -60, -10 -44, -12 -18 L -32 -14 C -36 -30, -37 -48, -35 -64 Z"
+          fill={`url(#${sailGradId})`}
+        />
+        <g stroke="#441E14" strokeWidth="0.9" strokeOpacity="0.72" fill="none">
+          <path d="M -35 -52 Q -24 -50 -16 -52" />
+          <path d="M -35 -42 Q -22 -39 -13 -42" />
+          <path d="M -34 -32 Q -22 -29 -12 -32" />
+          <path d="M -33 -22 Q -22 -19 -12 -22" />
+        </g>
 
-      {/* Cánh buồm chính giữa (Main Bat-Wing Lug Sail) */}
-      <path
-        d="M -4 -88 C 18 -84, 32 -60, 29 -18 L -2 -12 C -8 -36, -9 -62, -4 -88 Z"
-        fill={`url(#${sailGradId})`}
-      />
-      <g stroke="#441E14" strokeWidth="1" strokeOpacity="0.75" fill="none">
-        <path d="M -4 -75 Q 10 -72 21 -74" />
-        <path d="M -5 -63 Q 11 -60 25 -62" />
-        <path d="M -5 -51 Q 12 -47 28 -50" />
-        <path d="M -5 -39 Q 12 -35 29 -38" />
-        <path d="M -4 -27 Q 12 -23 29 -26" />
-        <path d="M -3 -16 Q 13 -13 29 -16" />
-      </g>
+        {/* Cánh buồm chính giữa (Main Bat-Wing Lug Sail) */}
+        <path
+          d="M -4 -88 C 18 -84, 32 -60, 29 -18 L -2 -12 C -8 -36, -9 -62, -4 -88 Z"
+          fill={`url(#${sailGradId})`}
+        />
+        <g stroke="#441E14" strokeWidth="1" strokeOpacity="0.75" fill="none">
+          <path d="M -4 -75 Q 10 -72 21 -74" />
+          <path d="M -5 -63 Q 11 -60 25 -62" />
+          <path d="M -5 -51 Q 12 -47 28 -50" />
+          <path d="M -5 -39 Q 12 -35 29 -38" />
+          <path d="M -4 -27 Q 12 -23 29 -26" />
+          <path d="M -3 -16 Q 13 -13 29 -16" />
+        </g>
 
-      {/* Cánh buồm lái (Mizzen Lug Sail) */}
-      <path
-        d="M 29 -54 C 46 -49, 54 -34, 51 -14 L 31 -10 C 27 -24, 27 -40, 29 -54 Z"
-        fill={`url(#${sailGradId})`}
-      />
-      <g stroke="#441E14" strokeWidth="0.85" strokeOpacity="0.7" fill="none">
-        <path d="M 29 -43 Q 39 -41 47 -43" />
-        <path d="M 29 -33 Q 40 -30 50 -32" />
-        <path d="M 30 -23 Q 41 -20 51 -22" />
-        <path d="M 30 -14 Q 41 -12 51 -14" />
+        {/* Cánh buồm lái (Mizzen Lug Sail) */}
+        <path
+          d="M 29 -54 C 46 -49, 54 -34, 51 -14 L 31 -10 C 27 -24, 27 -40, 29 -54 Z"
+          fill={`url(#${sailGradId})`}
+        />
+        <g stroke="#441E14" strokeWidth="0.85" strokeOpacity="0.7" fill="none">
+          <path d="M 29 -43 Q 39 -41 47 -43" />
+          <path d="M 29 -33 Q 40 -30 50 -32" />
+          <path d="M 30 -23 Q 41 -20 51 -22" />
+          <path d="M 30 -14 Q 41 -12 51 -14" />
+        </g>
       </g>
 
       {/* Đèn lồng mũi thuyền & khoang thuyền màu vàng ấm (#FFB84D) */}
@@ -752,7 +815,7 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
           {/* Sương mù chân trời hòa tan vạch cắt trời - biển */}
           <rect x="-80" y="468" width="1760" height="122" fill={`url(#${horizonMistGradId})`} />
 
-          {/* 2 đàn chim hải âu / hạc chiều vỗ cánh bay lượn */}
+          {/* 2 đàn chim đội hình chữ V (8 chim + 7 chim) bay chéo qua bầu trời hoàng hôn */}
           <g data-testid="halong-bird-flocks" fill="none" stroke="#2D1D24" strokeLinecap="round">
             <g className={prefersReducedMotion ? undefined : 'lu-flock-glide-1'}>
               {BIRD_FLOCK_WEST.map((bird, idx) => (
@@ -761,8 +824,8 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
                   transform={`translate(${bird.x}, ${bird.y}) scale(${bird.scale})`}
                 >
                   <path
-                    d="M -9 -2 Q -4 -7 0 0 Q 4 -7 9 -2"
-                    strokeWidth="1.6"
+                    d="M -10 -1 C -6 -6 -2.5 -4.5 0 0 C 2.5 -4.5 6 -6 10 -1"
+                    strokeWidth="1.55"
                     className={prefersReducedMotion ? undefined : 'lu-bird-flap'}
                     style={
                       prefersReducedMotion
@@ -784,8 +847,8 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
                   transform={`translate(${bird.x}, ${bird.y}) scale(${bird.scale})`}
                 >
                   <path
-                    d="M -8 -2 Q -4 -6 0 0 Q 4 -6 8 -2"
-                    strokeWidth="1.45"
+                    d="M -9 -1 C -5 -5.5 -2 -4 0 0 C 2 -4 5 -5.5 9 -1"
+                    strokeWidth="1.4"
                     className={prefersReducedMotion ? undefined : 'lu-bird-flap'}
                     style={
                       prefersReducedMotion
@@ -836,7 +899,12 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
 
           {LAYER2_MID_FAR_ISLANDS.map((island) => (
             <g key={island.id} opacity="0.86">
-              <PainterlyKarstIsland island={island} ids={midFarIslandIds} litOpacity={0.78} />
+              <PainterlyKarstIsland
+                island={island}
+                ids={midFarIslandIds}
+                litOpacity={0.78}
+                reducedMotion={prefersReducedMotion}
+              />
             </g>
           ))}
 
@@ -986,7 +1054,12 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
               >
                 <path d={island.bodyPath} fill={`url(#${reflectGrad535Id})`} />
               </g>
-              <PainterlyKarstIsland island={island} ids={nearIslandIds} litOpacity={0.9} />
+              <PainterlyKarstIsland
+                island={island}
+                ids={nearIslandIds}
+                litOpacity={0.9}
+                reducedMotion={prefersReducedMotion}
+              />
             </g>
           ))}
 
@@ -1001,7 +1074,12 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps) {
                 >
                   <path d={rock.bodyPath} fill={`url(#${reflectGrad548Id})`} />
                 </g>
-                <PainterlyKarstIsland island={rock} ids={nearIslandIds} litOpacity={0.94} />
+                <PainterlyKarstIsland
+                  island={rock}
+                  ids={nearIslandIds}
+                  litOpacity={0.94}
+                  reducedMotion={prefersReducedMotion}
+                />
               </g>
             ))}
           </g>

@@ -565,6 +565,56 @@
   }
 }
 
+@keyframes lu-sail-billow {
+  0%,
+  100% {
+    transform: scaleX(1) skewY(0deg);
+  }
+  50% {
+    transform: scaleX(1.035) skewY(-0.9deg);
+  }
+}
+
+@keyframes lu-smoke-curl {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.82);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.48;
+  }
+  65% {
+    transform: translate3d(9px, -18px, 0) scale(1.06);
+    opacity: 0.34;
+  }
+  100% {
+    transform: translate3d(16px, -36px, 0) scale(1.25);
+    opacity: 0;
+  }
+}
+
+@keyframes lu-shore-foam {
+  0%,
+  100% {
+    transform: scaleX(0.97) translateY(0px);
+    opacity: 0.42;
+  }
+  50% {
+    transform: scaleX(1.035) translateY(-1.2px);
+    opacity: 0.85;
+  }
+}
+
+@keyframes lu-canopy-sway {
+  0%,
+  100% {
+    transform: rotate(-0.8deg) skewX(-0.6deg);
+  }
+  50% {
+    transform: rotate(1.1deg) skewX(0.9deg);
+  }
+}
+
 .lu-cloud-drift-1 {
   animation: lu-cloud-drift-1 38s ease-in-out infinite;
 }
@@ -643,6 +693,30 @@
   transform-box: fill-box;
   transform-origin: center bottom;
   animation: lu-bird-flap 0.9s ease-in-out infinite;
+}
+
+.lu-sail-billow {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: lu-sail-billow 5.4s ease-in-out infinite;
+}
+
+.lu-smoke-curl {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: lu-smoke-curl 6.2s ease-out infinite;
+}
+
+.lu-shore-foam {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: lu-shore-foam 4.6s ease-in-out infinite;
+}
+
+.lu-canopy-sway {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: lu-canopy-sway 7.2s ease-in-out infinite;
 }
 
 @keyframes lu-wave-drift-1 {
@@ -790,6 +864,10 @@
   .lu-flock-glide-1,
   .lu-flock-glide-2,
   .lu-bird-flap,
+  .lu-sail-billow,
+  .lu-smoke-curl,
+  .lu-shore-foam,
+  .lu-canopy-sway,
   .lu-wave-drift-1,
   .lu-wave-drift-2,
   .lu-wave-drift-3,

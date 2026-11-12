@@ -12,6 +12,8 @@ export interface FadeInProps {
 
 export function FadeIn({ children, className, delay = 0, yOffset = 8 }: FadeInProps) {
   const prefersReducedMotion = useReducedMotion();
+  // Chuyển đổi an toàn nếu giá trị truyền vào lỡ ở đơn vị mili-giây (> 5)
+  const delaySec = delay > 5 ? delay / 1000 : delay;
 
   if (prefersReducedMotion) {
     return <div className={className}>{children}</div>;
@@ -22,7 +24,7 @@ export function FadeIn({ children, className, delay = 0, yOffset = 8 }: FadeInPr
       className={className}
       initial={{ opacity: 0, y: yOffset }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.28, delay, ease: EASE_OUT_EXPO }}
+      transition={{ duration: 0.28, delay: delaySec, ease: EASE_OUT_EXPO }}
     >
       {children}
     </m.div>

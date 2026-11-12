@@ -180,6 +180,26 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       render(<HeritageArtShowcase />);
       expect(screen.getByText('01 / 15')).toBeInTheDocument();
     });
+
+    it('hiển thị SVG minh họa học thuật sắc nét khi ảnh 03 / 15 (Melencolia I) gặp lỗi tải và khóa chữ tương phản cao', async () => {
+      render(<HeritageArtShowcase />);
+
+      const art3Dot = screen.getByRole('button', {
+        name: /Chuyển đến tác phẩm 3:.*Melencolia I/i,
+      });
+      fireEvent.click(art3Dot);
+
+      expect(await screen.findByText('03 / 15')).toBeInTheDocument();
+      const heading = screen.getByRole('heading', { name: /Melencolia I/i });
+      expect(heading.className).toContain('text-[#F8F6F0]');
+
+      const img = screen.getByAltText(HERITAGE_ARTWORKS[2]!.alt);
+      fireEvent.error(img);
+
+      const svgFallback = screen.getByTestId('heritage-svg-fallback');
+      expect(svgFallback).toBeInTheDocument();
+      expect(svgFallback.querySelector('svg')).toBeInTheDocument();
+    });
   });
 
   describe('KnowledgeThread Component & Floral Bloom Animation', () => {
@@ -355,11 +375,23 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByText(/Đi một ngày đàng/i)).toBeInTheDocument();
       expect(screen.getByText(/học một sàng khôn/i)).toBeInTheDocument();
 
-      // Dấu ấn chìm môn học trong chế độ Atlas
+      // Dấu ấn chìm môn học & đủ lưới 4 môn học 2 cột trong chế độ Atlas
+      const atlasGrid = screen.getByTestId('atlas-subjects-grid');
+      expect(atlasGrid).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'gap-7');
       expect(screen.getByTestId('subject-watermark-cau-truc-dai-so')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-hinh-hoc-affine')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-giai-tich-ham-mot-bien')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-giao-duc-hoc')).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Vào học phần Cấu trúc đại số/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Vào học phần Hình học Affine/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Vào học phần Giải tích hàm một biến/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Vào học phần Giáo dục học/i })).toBeInTheDocument();
 
       // Nút ViewModeToggle
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
@@ -419,9 +451,14 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('halong-god-rays').querySelectorAll('polygon')).toHaveLength(5);
       expect(screen.getByTestId('halong-clouds')).toBeInTheDocument();
       expect(screen.getByTestId('halong-bird-flocks')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-bird-flocks').querySelectorAll('path')).toHaveLength(15);
       expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
       expect(screen.getByTestId('halong-junk-boat-far')).toBeInTheDocument();
       expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-junk-boat-far-smoke')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-junk-boat-near-smoke')).toBeInTheDocument();
+      expect(screen.getByTestId('karst-shore-foam-near-karst-left')).toBeInTheDocument();
+      expect(screen.getByTestId('karst-shore-foam-hon-trong')).toBeInTheDocument();
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     });
 

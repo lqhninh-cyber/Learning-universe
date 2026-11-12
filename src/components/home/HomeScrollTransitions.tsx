@@ -36,14 +36,14 @@ export function ShorelineWaveBridge() {
     <div
       data-testid="shoreline-wave-bridge"
       aria-hidden="true"
-      className="pointer-events-none relative z-10 -mt-20 h-[112px] w-full overflow-hidden select-none sm:-mt-24 sm:h-[132px] lg:h-[144px]"
+      className="pointer-events-none relative z-10 -mt-24 h-[126px] w-full overflow-hidden select-none sm:-mt-28 sm:h-[144px] lg:h-[156px]"
     >
-      {/* Dải sương vịnh hòa tan trước khi chạm 3 lớp sóng */}
+      {/* Dải sương vịnh hòa tan mềm từ mặt biển Vịnh Hạ Long (trong suốt dần) */}
       <div
-        className="absolute inset-x-0 top-0 h-16"
+        className="absolute inset-x-0 top-0 h-20"
         style={{
           background:
-            'linear-gradient(180deg, rgba(18, 56, 49, 0.72) 0%, rgba(18, 56, 49, 0.22) 60%, rgba(18, 56, 49, 0) 100%)',
+            'linear-gradient(180deg, rgba(18, 56, 49, 0) 0%, rgba(18, 56, 49, 0.42) 48%, rgba(28, 78, 69, 0.16) 80%, rgba(18, 56, 49, 0) 100%)',
         }}
       />
 
@@ -313,16 +313,19 @@ export function LakeshoreLotusTransition() {
         preserveAspectRatio="xMidYMax slice"
         className="absolute inset-0 h-full w-full"
       >
-        {/* BỜ TRÁI: Cụm cỏ lau, cỏ thủy sinh & lá sen non */}
-        <g fill="#0A221A">
+        {/* BỜ TRÁI: Cụm cỏ lau, cỏ thủy sinh & lá sen non mềm mại */}
+        <g fill="#0A221A" fillOpacity="0.88">
           {/* Cỏ thủy sinh đung đưa nhẹ */}
           <g className={prefersReducedMotion ? undefined : 'lu-reed-sway'}>
-            <path d="M 38 186 Q 24 130 14 82 Q 26 128 46 186 Z" />
-            <path d="M 54 186 Q 48 122 64 68 Q 58 126 62 186 Z" fill="#0E2C22" />
-            <path d="M 74 186 Q 82 136 102 92 Q 86 142 82 186 Z" />
+            <path d="M 38 186 C 28 148, 22 114, 14 82 C 24 114, 34 148, 46 186 Z" />
+            <path d="M 54 186 C 50 142, 54 102, 64 68 C 58 104, 58 144, 62 186 Z" fill="#0E2C22" />
+            <path d="M 74 186 C 80 152, 90 120, 102 92 C 88 122, 82 154, 82 186 Z" />
           </g>
           <g className={prefersReducedMotion ? undefined : 'lu-reed-sway-slow'}>
-            <path d="M 118 186 Q 112 138 96 98 Q 118 136 126 186 Z" fill="#0E2C22" />
+            <path
+              d="M 118 186 C 114 152, 106 122, 96 98 C 110 122, 118 152, 126 186 Z"
+              fill="#0E2C22"
+            />
             {/* Cuống và búp sen non bên trái */}
             <path
               d="M 152 186 Q 150 148 164 118"
@@ -343,23 +346,30 @@ export function LakeshoreLotusTransition() {
           </g>
 
           {/* Phiến lá sen non mặt nước ven bờ trái */}
-          <ellipse cx="128" cy="170" rx="34" ry="7.5" fill="#0E2E23" />
-          <ellipse cx="212" cy="176" rx="26" ry="5.5" fill="#092119" />
+          <ellipse cx="128" cy="170" rx="36" ry="7.5" fill="#0E2E23" fillOpacity="0.82" />
+          <ellipse cx="212" cy="176" rx="28" ry="5.5" fill="#092119" fillOpacity="0.76" />
           <path
-            d="M 184 184 Q 178 158 186 142 Q 194 136 206 142 Q 198 156 194 184 Z"
+            d="M 184 184 C 179 164, 181 149, 188 140 C 194 135, 200 137, 206 142 C 198 156, 194 170, 192 184 Z"
             fill="#12362A"
+            fillOpacity="0.84"
           />
         </g>
 
-        {/* BỜ PHẢI: Cụm cỏ thủy sinh, búp sen & lá sen non */}
-        <g fill="#0A221A">
+        {/* BỜ PHẢI: Cụm cỏ thủy sinh, búp sen & lá sen non mềm mại */}
+        <g fill="#0A221A" fillOpacity="0.88">
           <g className={prefersReducedMotion ? undefined : 'lu-reed-sway-slow'}>
-            <path d="M 1398 186 Q 1410 128 1426 80 Q 1416 130 1406 186 Z" />
-            <path d="M 1378 186 Q 1384 120 1368 70 Q 1374 128 1370 186 Z" fill="#0E2C22" />
-            <path d="M 1352 186 Q 1340 140 1322 96 Q 1338 144 1344 186 Z" />
+            <path d="M 1398 186 C 1408 146, 1416 112, 1426 80 C 1416 114, 1410 148, 1406 186 Z" />
+            <path
+              d="M 1378 186 C 1382 142, 1378 102, 1368 70 C 1374 108, 1374 146, 1370 186 Z"
+              fill="#0E2C22"
+            />
+            <path d="M 1352 186 C 1344 152, 1334 122, 1322 96 C 1336 124, 1342 154, 1344 186 Z" />
           </g>
           <g className={prefersReducedMotion ? undefined : 'lu-reed-sway'}>
-            <path d="M 1296 186 Q 1306 144 1320 104 Q 1300 142 1288 186 Z" fill="#0E2C22" />
+            <path
+              d="M 1296 186 C 1304 154, 1312 126, 1320 104 C 1306 128, 1296 154, 1288 186 Z"
+              fill="#0E2C22"
+            />
             {/* Cuống và búp sen nhỏ bên phải */}
             <path
               d="M 1258 186 Q 1262 148 1248 116"
@@ -380,8 +390,8 @@ export function LakeshoreLotusTransition() {
           </g>
 
           {/* Phiến lá sen non ven bờ phải */}
-          <ellipse cx="1312" cy="171" rx="36" ry="7.5" fill="#0E2E23" />
-          <ellipse cx="1224" cy="177" rx="25" ry="5.5" fill="#092119" />
+          <ellipse cx="1312" cy="171" rx="38" ry="7.5" fill="#0E2E23" fillOpacity="0.82" />
+          <ellipse cx="1224" cy="177" rx="27" ry="5.5" fill="#092119" fillOpacity="0.76" />
         </g>
       </svg>
     </div>

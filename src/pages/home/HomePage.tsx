@@ -150,7 +150,7 @@ function SubjectSpatialArtwork({
   const strokeAccent = '#C89738';
 
   if (slug === 'cau-truc-dai-so') {
-    // 01. Cấu trúc đại số (MATH1301): Mạng tinh thể (Crystal Lattice), phép biến hình & đa diện đối xứng
+    // 01. Cấu trúc đại số: Lưới đa diện đối xứng & đồ thị Cayley nhóm S₄
     return (
       <svg
         viewBox="0 0 520 240"
@@ -170,367 +170,433 @@ function SubjectSpatialArtwork({
         </defs>
         <rect width="520" height="240" fill="url(#lattice-grid-math1301)" />
 
-        {/* Vòng quỹ đạo nhóm đối xứng */}
-        <circle
-          cx="260"
-          cy="120"
-          r="88"
-          fill="none"
-          stroke={strokeMain}
-          strokeWidth="1"
-          strokeDasharray="4 4"
-          strokeOpacity="0.45"
-        />
-        <circle
-          cx="260"
-          cy="120"
-          r="56"
-          fill="none"
-          stroke={strokeAccent}
-          strokeWidth="1"
-          strokeOpacity="0.4"
-        />
-
-        {/* Cấu trúc lục giác đối xứng D_6 & mạng tinh thể */}
-        <polygon
-          points="260,34 334,77 334,163 260,206 186,163 186,77"
-          fill="#FAF9F6"
-          fillOpacity="0.65"
-          stroke={strokeMain}
-          strokeWidth="1.5"
-        />
-        <polygon
-          points="260,64 308,92 308,148 260,176 212,148 212,92"
-          fill="#EBECE6"
-          fillOpacity="0.55"
-          stroke={strokeMain}
-          strokeWidth="1.2"
-        />
-
-        {/* Các đường đồng cấu kết nối tâm và đỉnh */}
-        <line
-          x1="260"
-          y1="34"
-          x2="260"
-          y2="206"
-          stroke={strokeMain}
-          strokeWidth="0.9"
-          strokeOpacity="0.5"
-        />
-        <line
-          x1="186"
-          y1="77"
-          x2="334"
-          y2="163"
-          stroke={strokeMain}
-          strokeWidth="0.9"
-          strokeOpacity="0.5"
-        />
-        <line
-          x1="334"
-          y1="77"
-          x2="186"
-          y2="163"
-          stroke={strokeMain}
-          strokeWidth="0.9"
-          strokeOpacity="0.5"
-        />
-
-        {/* Mạng tinh thể phụ bên trái & phải */}
-        <g stroke={strokeMain} strokeWidth="1" strokeOpacity="0.55" fill="none">
-          <polygon points="88,76 132,52 156,96 112,120" />
-          <line x1="132" y1="52" x2="186" y2="77" strokeDasharray="3 3" />
-          <line x1="156" y1="96" x2="212" y2="92" strokeDasharray="3 3" />
-
-          <polygon points="432,164 388,188 364,144 408,120" />
-          <line x1="388" y1="188" x2="334" y2="163" strokeDasharray="3 3" />
-          <line x1="364" y1="144" x2="308" y2="148" strokeDasharray="3 3" />
+        {/* Trái: Lưới đa diện đối xứng xoay nhẹ khi hover */}
+        <g className="origin-[135px_122px] transition-transform duration-500 ease-out group-hover:scale-105 group-hover:rotate-[-6deg]">
+          <polygon
+            points="135,44 198,80 198,164 135,200 72,164 72,80"
+            fill="#FAF9F6"
+            fillOpacity="0.72"
+            stroke={strokeMain}
+            strokeWidth="1.4"
+          />
+          <polygon
+            points="135,68 176,92 176,152 135,176 94,152 94,92"
+            fill="#EBECE6"
+            fillOpacity="0.6"
+            stroke={strokeAccent}
+            strokeWidth="1.2"
+          />
+          <line
+            x1="135"
+            y1="44"
+            x2="135"
+            y2="200"
+            stroke={strokeMain}
+            strokeWidth="0.9"
+            strokeOpacity="0.55"
+          />
+          <line
+            x1="72"
+            y1="80"
+            x2="198"
+            y2="164"
+            stroke={strokeMain}
+            strokeWidth="0.9"
+            strokeOpacity="0.55"
+          />
+          <line
+            x1="198"
+            y1="80"
+            x2="72"
+            y2="164"
+            stroke={strokeMain}
+            strokeWidth="0.9"
+            strokeOpacity="0.55"
+          />
+          <circle cx="135" cy="122" r="4.5" fill={strokeAccent} />
         </g>
 
-        {/* Các nút phần tử nhóm (Nodes) */}
-        {[
-          [260, 34],
-          [334, 77],
-          [334, 163],
-          [260, 206],
-          [186, 163],
-          [186, 77],
-          [260, 120],
-          [132, 52],
-          [388, 188],
-        ].map(([x, y], idx) => (
-          <circle
-            key={idx}
-            cx={x}
-            cy={y}
-            r={idx === 6 ? 5 : 3.5}
-            fill={idx === 6 ? strokeAccent : '#FAF9F6'}
-            stroke={idx === 6 ? strokeAccent : strokeMain}
-            strokeWidth="1.6"
-          />
-        ))}
+        {/* Đường đẳng cấu kết nối lưới đa diện sang đồ thị Cayley S₄ */}
+        <path
+          d="M 205 112 Q 236 96 266 112"
+          fill="none"
+          stroke={strokeAccent}
+          strokeWidth="1.3"
+          strokeDasharray="4 3"
+        />
 
-        {/* Ký hiệu toán học tinh tế */}
-        <text x="24" y="34" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.5">
-          LATTICE · D₆ / CAYLEY GRAPH
+        {/* Phải: Đồ thị Cayley của nhóm đối xứng S₄ (vòng 4 chiều & chuyển vị) */}
+        <g className="origin-[365px_120px] transition-transform duration-500 ease-out group-hover:scale-105 group-hover:rotate-[5deg]">
+          <circle
+            cx="365"
+            cy="120"
+            r="74"
+            fill="none"
+            stroke={strokeMain}
+            strokeWidth="1.15"
+            strokeDasharray="4 4"
+            strokeOpacity="0.6"
+          />
+          <polygon
+            points="365,52 433,120 365,188 297,120"
+            fill="#FAF9F6"
+            fillOpacity="0.7"
+            stroke={strokeMain}
+            strokeWidth="1.45"
+          />
+          <polygon
+            points="318,73 412,73 412,167 318,167"
+            fill="none"
+            stroke={strokeAccent}
+            strokeWidth="1.25"
+            strokeOpacity="0.85"
+          />
+          <rect
+            x="342"
+            y="97"
+            width="46"
+            height="46"
+            rx="4"
+            fill="#EBECE6"
+            fillOpacity="0.75"
+            stroke={strokeMain}
+            strokeWidth="1.2"
+          />
+          {[
+            [365, 52],
+            [433, 120],
+            [365, 188],
+            [297, 120],
+            [318, 73],
+            [412, 73],
+            [412, 167],
+            [318, 167],
+            [342, 97],
+            [388, 97],
+            [388, 143],
+            [342, 143],
+          ].map(([cx, cy], idx) => (
+            <circle
+              key={idx}
+              cx={cx}
+              cy={cy}
+              r={idx < 4 ? 4 : 3}
+              fill={idx % 2 === 0 ? '#FAF9F6' : strokeAccent}
+              stroke={idx % 2 === 0 ? strokeMain : strokeAccent}
+              strokeWidth="1.4"
+            />
+          ))}
+        </g>
+
+        <text x="24" y="30" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.3">
+          LATTICE · D₆ &amp; S₄ CAYLEY GRAPH
         </text>
-        <text x="378" y="222" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
-          G / ker(φ) ≅ Im(φ)
+        <text x="358" y="224" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
+          |S₄| = 24 · G/ker(φ) ≅ Im(φ)
         </text>
       </svg>
     );
   }
 
   if (slug === 'hinh-hoc-affine') {
-    // 02. Hình học Affine & Euclide (MATH1302): Mặt phẳng phối cảnh 3D, mục tiêu affine & thiết diện
+    // 02. Hình học Affine & Euclide: Mục tiêu Affine, Mặt bậc hai & Phép chiếu Desargues
     return (
       <svg
-        viewBox="0 0 420 240"
+        viewBox="0 0 520 240"
         className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105"
         aria-hidden="true"
       >
-        {/* Lưới phối cảnh không gian */}
-        <g stroke="#D9DFD9" strokeWidth="0.7" fill="none">
-          <line x1="30" y1="195" x2="390" y2="195" />
-          <line x1="65" y1="160" x2="355" y2="160" />
-          <line x1="100" y1="125" x2="320" y2="125" />
-          <line x1="210" y1="30" x2="50" y2="210" />
-          <line x1="210" y1="30" x2="155" y2="210" />
-          <line x1="210" y1="30" x2="265" y2="210" />
-          <line x1="210" y1="30" x2="370" y2="210" />
+        {/* Chùm tia phối cảnh Desargues từ tâm O bên trái */}
+        <g stroke="#C89738" strokeWidth="1" strokeOpacity="0.55" strokeDasharray="3 3" fill="none">
+          <line x1="56" y1="122" x2="274" y2="54" />
+          <line x1="56" y1="122" x2="288" y2="122" />
+          <line x1="56" y1="122" x2="262" y2="190" />
         </g>
 
-        {/* Mặt phẳng siêu phẳng P_1 */}
-        <polygon
-          points="75,148 195,58 345,88 225,178"
-          fill="#FAF9F6"
-          fillOpacity="0.75"
-          stroke={strokeMain}
-          strokeWidth="1.5"
-        />
-
-        {/* Mặt phẳng cắt P_2 tạo giao tuyến affine */}
-        <polygon
-          points="115,62 295,46 315,174 135,190"
-          fill="#EBECE6"
-          fillOpacity="0.6"
-          stroke={strokeAccent}
-          strokeWidth="1.3"
-        />
-
-        {/* Giao tuyến không gian (Line of intersection) */}
-        <line
-          x1="145"
-          y1="95"
-          x2="282"
-          y2="136"
-          stroke="#262B28"
-          strokeWidth="2"
-          strokeDasharray="5 3"
-        />
-
-        {/* Hệ véc-tơ mục tiêu Affine (O; e1, e2, e3) */}
-        <g stroke={strokeMain} strokeWidth="1.6">
-          <line x1="185" y1="138" x2="265" y2="122" />
-          <line x1="185" y1="138" x2="142" y2="172" />
-          <line x1="185" y1="138" x2="185" y2="66" />
+        {/* Hai tam giác phối cảnh Desargues ABC & A'B'C' */}
+        <g className="origin-[165px_122px] transition-transform duration-500 ease-out group-hover:rotate-[-2.5deg]">
+          <polygon
+            points="126,99 138,122 118,144"
+            fill="#FAF9F6"
+            fillOpacity="0.82"
+            stroke={strokeMain}
+            strokeWidth="1.45"
+          />
+          <polygon
+            points="212,72 232,122 204,172"
+            fill="#EBECE6"
+            fillOpacity="0.65"
+            stroke={strokeMain}
+            strokeWidth="1.5"
+          />
+          <line
+            x1="142"
+            y1="198"
+            x2="274"
+            y2="42"
+            stroke="#262B28"
+            strokeWidth="1.15"
+            strokeDasharray="5 3"
+          />
+          <circle cx="56" cy="122" r="4" fill={strokeAccent} />
         </g>
-        <circle cx="185" cy="138" r="4.5" fill={strokeAccent} />
-        <circle cx="265" cy="122" r="3" fill="#FAF9F6" stroke={strokeMain} strokeWidth="1.5" />
-        <circle cx="142" cy="172" r="3" fill="#FAF9F6" stroke={strokeMain} strokeWidth="1.5" />
-        <circle cx="185" cy="66" r="3" fill="#FAF9F6" stroke={strokeMain} strokeWidth="1.5" />
 
-        <text x="20" y="32" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.5">
-          AFFINE SPACE · (O; e₁, e₂, e₃)
+        {/* Phải: Khung mục tiêu Affine (O; e₁, e₂, e₃) & Mặt bậc hai (Quadric Ellipsoid/Hyperboloid) */}
+        <g className="origin-[388px_120px] transition-transform duration-500 ease-out group-hover:scale-105 group-hover:rotate-[4deg]">
+          <ellipse
+            cx="392"
+            cy="122"
+            rx="78"
+            ry="44"
+            fill="#FAF9F6"
+            fillOpacity="0.6"
+            stroke={strokeMain}
+            strokeWidth="1.5"
+          />
+          <ellipse
+            cx="392"
+            cy="122"
+            rx="78"
+            ry="18"
+            fill="none"
+            stroke={strokeAccent}
+            strokeWidth="1.2"
+            strokeDasharray="4 3"
+          />
+          <ellipse
+            cx="392"
+            cy="122"
+            rx="28"
+            ry="44"
+            fill="none"
+            stroke={strokeMain}
+            strokeWidth="1.15"
+            strokeOpacity="0.7"
+          />
+          {/* Khung mục tiêu Affine */}
+          <g stroke={strokeMain} strokeWidth="1.75" strokeLinecap="round">
+            <line x1="392" y1="122" x2="454" y2="108" />
+            <line x1="392" y1="122" x2="352" y2="152" />
+            <line x1="392" y1="122" x2="392" y2="54" />
+          </g>
+          <circle cx="392" cy="122" r="4.5" fill={strokeAccent} />
+        </g>
+
+        <text x="24" y="30" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.3">
+          AFFINE FRAME · QUADRICS &amp; DESARGUES
         </text>
-        <text x="285" y="222" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
-          dim(U + V)
+        <text x="352" y="222" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
+          (O; e₁, e₂, e₃) · Desargues
         </text>
       </svg>
     );
   }
 
   if (slug === 'giai-tich-ham-mot-bien') {
-    // 03. Giải tích hàm một biến (MATH1303): Đường cong trơn, phân hoạch tích phân Riemann & tiếp tuyến
+    // 03. Giải tích hàm một biến: Hội tụ Taylor–Maclaurin & Tích phân Riemann phân hoạch động
     return (
       <svg
-        viewBox="0 0 420 240"
+        viewBox="0 0 520 240"
         className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105"
         aria-hidden="true"
       >
-        {/* Trục tọa độ giải tích */}
-        <line x1="36" y1="188" x2="392" y2="188" stroke="#58635E" strokeWidth="1.1" />
-        <line x1="58" y1="28" x2="58" y2="212" stroke="#58635E" strokeWidth="1.1" />
+        <line x1="42" y1="186" x2="478" y2="186" stroke="#58635E" strokeWidth="1.15" />
+        <line x1="88" y1="30" x2="88" y2="210" stroke="#58635E" strokeWidth="1.15" />
 
-        {/* Dải lân cận epsilon-delta */}
-        <rect
-          x="58"
-          y="74"
-          width="320"
-          height="42"
-          fill="#EBECE6"
-          fillOpacity="0.45"
-          stroke="#D9DFD9"
-          strokeDasharray="3 3"
-        />
+        {/* Các lát cắt phân hoạch Riemann co giãn nhẹ khi hover */}
+        <g className="transition-transform duration-500 ease-out group-hover:translate-x-1">
+          {[
+            { x: 120, h: 62 },
+            { x: 146, h: 86 },
+            { x: 172, h: 102 },
+            { x: 198, h: 98 },
+            { x: 224, h: 78 },
+            { x: 250, h: 58 },
+            { x: 276, h: 64 },
+            { x: 302, h: 86 },
+            { x: 328, h: 104 },
+            { x: 354, h: 92 },
+          ].map((bar, idx) => (
+            <rect
+              key={idx}
+              x={bar.x}
+              y={186 - bar.h}
+              width="22"
+              height={bar.h}
+              fill={idx % 2 === 0 ? '#365E4E' : '#C89738'}
+              fillOpacity="0.16"
+              stroke={strokeMain}
+              strokeWidth="0.9"
+            />
+          ))}
+        </g>
 
-        {/* Các lát cắt tổng tích phân Riemann (Riemann Sum Partitions) */}
-        {[
-          { x: 96, h: 68 },
-          { x: 124, h: 88 },
-          { x: 152, h: 102 },
-          { x: 180, h: 98 },
-          { x: 208, h: 82 },
-          { x: 236, h: 64 },
-          { x: 264, h: 58 },
-          { x: 292, h: 72 },
-          { x: 320, h: 96 },
-        ].map((bar, idx) => (
-          <rect
-            key={idx}
-            x={bar.x}
-            y={188 - bar.h}
-            width="24"
-            height={bar.h}
-            fill={idx % 2 === 0 ? '#365E4E' : '#365E4E'}
-            fillOpacity="0.16"
-            stroke={strokeMain}
-            strokeWidth="0.9"
-          />
-        ))}
-
-        {/* Đường cong hàm số khả vi f(x) */}
+        {/* Xấp xỉ đa thức Taylor–Maclaurin các bậc P₁, P₃ ôm sát hàm gốc */}
         <path
-          d="M 48 164 C 95 140, 130 68, 172 82 C 218 96, 245 148, 288 122 C 324 100, 352 62, 384 52"
+          d="M 88 148 L 284 44"
           fill="none"
-          stroke={strokeMain}
-          strokeWidth="2.2"
+          stroke="#9CA3AF"
+          strokeWidth="1.2"
+          strokeDasharray="4 4"
         />
-
-        {/* Đường tiếp tuyến đạo hàm tại điểm cực trị / tiếp xúc */}
-        <line
-          x1="112"
-          y1="108"
-          x2="236"
-          y2="62"
+        <path
+          d="M 64 166 C 122 142, 166 72, 224 94 C 282 116, 336 146, 434 52"
+          fill="none"
           stroke={strokeAccent}
           strokeWidth="1.5"
-          strokeDasharray="4 3"
+          strokeDasharray="5 3"
         />
-        <circle cx="172" cy="85" r="4.5" fill={strokeAccent} stroke="#FAF9F6" strokeWidth="1.5" />
 
-        <text x="72" y="34" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.5">
-          RIEMANN INTEGRAL · CONTINUUM
+        {/* Đường cong giải tích chính f(x) */}
+        <path
+          d="M 52 162 C 110 138, 152 68, 198 84 C 244 100, 274 148, 326 114 C 372 84, 412 56, 456 50"
+          fill="none"
+          stroke={strokeMain}
+          strokeWidth="2.3"
+        />
+        <circle cx="198" cy="84" r="4.5" fill={strokeAccent} stroke="#FAF9F6" strokeWidth="1.5" />
+        <circle cx="326" cy="114" r="4" fill={strokeMain} stroke="#FAF9F6" strokeWidth="1.5" />
+
+        <text
+          x="102"
+          y="32"
+          fill="#58635E"
+          fontSize="10"
+          fontFamily="monospace"
+          letterSpacing="1.3"
+        >
+          TAYLOR–MACLAURIN &amp; RIEMANN SUM
         </text>
-        <text x="278" y="218" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
-          ∫ₐᵇ f(x)dx = F(b) − F(a)
+        <text x="336" y="216" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
+          Pₙ(x) → f(x) · ∫ₐᵇ f(x)dx
         </text>
       </svg>
     );
   }
 
-  // 04. Giáo dục học (EDUC2802): Không gian mở với các lớp sơ đồ tương tác giữa Con người, Môi trường & Quá trình Giáo dục
+  // 04. Giáo dục học: Cấu trúc hệ thống giáo dục, Chu trình phản tư & Ma trận chuẩn đầu ra CLO
   return (
     <svg
       viewBox="0 0 520 240"
       className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105"
       aria-hidden="true"
     >
-      {/* Các lớp không gian đồng tâm: Nhà trường - Gia đình - Xã hội */}
-      <ellipse
-        cx="260"
-        cy="122"
-        rx="195"
-        ry="86"
-        fill="#FAF9F6"
-        fillOpacity="0.55"
-        stroke="#D9DFD9"
-        strokeWidth="1.1"
-      />
-      <ellipse
-        cx="260"
-        cy="122"
-        rx="138"
-        ry="62"
-        fill="#EBECE6"
-        fillOpacity="0.5"
-        stroke={strokeMain}
-        strokeWidth="1.1"
-        strokeDasharray="5 4"
-      />
-      <ellipse
-        cx="260"
-        cy="122"
-        rx="82"
-        ry="38"
-        fill="#FAF9F6"
-        fillOpacity="0.85"
-        stroke={strokeMain}
-        strokeWidth="1.5"
-      />
+      {/* Trái: Chu trình phản tư sư phạm 4 pha xoay nhẹ khi hover */}
+      <g className="origin-[148px_124px] transition-transform duration-500 ease-out group-hover:rotate-[8deg]">
+        <circle
+          cx="148"
+          cy="124"
+          r="66"
+          fill="#FAF9F6"
+          fillOpacity="0.65"
+          stroke={strokeMain}
+          strokeWidth="1.4"
+          strokeDasharray="18 6"
+        />
+        <circle
+          cx="148"
+          cy="124"
+          r="40"
+          fill="#EBECE6"
+          fillOpacity="0.65"
+          stroke={strokeAccent}
+          strokeWidth="1.3"
+        />
+        <circle cx="148" cy="58" r="5" fill={strokeAccent} stroke="#FAF9F6" strokeWidth="1.5" />
+        <circle cx="214" cy="124" r="5" fill={strokeMain} stroke="#FAF9F6" strokeWidth="1.5" />
+        <circle cx="148" cy="190" r="5" fill={strokeAccent} stroke="#FAF9F6" strokeWidth="1.5" />
+        <circle cx="82" cy="124" r="5" fill={strokeMain} stroke="#FAF9F6" strokeWidth="1.5" />
+        <circle cx="148" cy="124" r="7" fill={strokeMain} />
+      </g>
 
-      {/* Tam giác biện chứng: Nhà trường (Đỉnh chủ đạo) - Gia đình - Xã hội */}
-      <polygon
-        points="260,46 148,176 372,176"
-        fill="none"
+      {/* Cầu nối hệ thống sang Ma trận CLO */}
+      <line
+        x1="220"
+        y1="124"
+        x2="268"
+        y2="124"
         stroke={strokeAccent}
-        strokeWidth="1.4"
-        strokeOpacity="0.75"
-      />
-      <line
-        x1="260"
-        y1="46"
-        x2="260"
-        y2="122"
-        stroke={strokeMain}
-        strokeWidth="1"
-        strokeDasharray="3 3"
-      />
-      <line
-        x1="148"
-        y1="176"
-        x2="260"
-        y2="122"
-        stroke={strokeMain}
-        strokeWidth="1"
-        strokeDasharray="3 3"
-      />
-      <line
-        x1="372"
-        y1="176"
-        x2="260"
-        y2="122"
-        stroke={strokeMain}
-        strokeWidth="1"
-        strokeDasharray="3 3"
+        strokeWidth="1.5"
+        strokeDasharray="4 3"
       />
 
-      {/* Các nút tương tác sư phạm */}
-      <circle cx="260" cy="122" r="7" fill={strokeMain} />
-      <circle cx="260" cy="46" r="5" fill={strokeAccent} stroke="#FAF9F6" strokeWidth="1.5" />
-      <circle cx="148" cy="176" r="5" fill="#FAF9F6" stroke={strokeMain} strokeWidth="1.8" />
-      <circle cx="372" cy="176" r="5" fill="#FAF9F6" stroke={strokeMain} strokeWidth="1.8" />
+      {/* Phải: Ma trận chuẩn đầu ra CLO (4 × 3) */}
+      <g className="origin-[372px_124px] transition-transform duration-500 ease-out group-hover:scale-105">
+        <rect
+          x="274"
+          y="64"
+          width="196"
+          height="120"
+          rx="12"
+          fill="#FAF9F6"
+          fillOpacity="0.82"
+          stroke={strokeMain}
+          strokeWidth="1.4"
+        />
+        <g stroke="#D9DFD9" strokeWidth="1">
+          <line x1="274" y1="94" x2="470" y2="94" />
+          <line x1="274" y1="124" x2="470" y2="124" />
+          <line x1="274" y1="154" x2="470" y2="154" />
+          <line x1="338" y1="64" x2="338" y2="184" />
+          <line x1="404" y1="64" x2="404" y2="184" />
+        </g>
+        <text
+          x="288"
+          y="83"
+          fill={strokeMain}
+          fontSize="9.5"
+          fontFamily="monospace"
+          fontWeight="700"
+        >
+          CLO1
+        </text>
+        <text
+          x="352"
+          y="83"
+          fill={strokeMain}
+          fontSize="9.5"
+          fontFamily="monospace"
+          fontWeight="700"
+        >
+          CLO2
+        </text>
+        <text
+          x="418"
+          y="83"
+          fill={strokeMain}
+          fontSize="9.5"
+          fontFamily="monospace"
+          fontWeight="700"
+        >
+          CLO3
+        </text>
+        {[
+          [306, 109, true],
+          [371, 109, false],
+          [437, 109, true],
+          [306, 139, false],
+          [371, 139, true],
+          [437, 139, true],
+          [306, 169, true],
+          [371, 169, true],
+          [437, 169, false],
+        ].map(([cx, cy, highlight], idx) => (
+          <circle
+            key={idx}
+            cx={cx as number}
+            cy={cy as number}
+            r="5"
+            fill={highlight ? strokeAccent : strokeMain}
+            fillOpacity={highlight ? 0.9 : 0.72}
+          />
+        ))}
+      </g>
 
-      {/* Các vệ tinh thành tố quá trình giáo dục (Mục đích, Nội dung, Phương pháp, Kết quả) */}
-      <circle cx="102" cy="96" r="3.5" fill={strokeMain} />
-      <circle cx="418" cy="96" r="3.5" fill={strokeMain} />
-      <line x1="102" y1="96" x2="178" y2="122" stroke="#D9DFD9" strokeWidth="1" />
-      <line x1="418" y1="96" x2="342" y2="122" stroke="#D9DFD9" strokeWidth="1" />
-
-      <text x="24" y="32" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.5">
-        PEDAGOGICAL ECOSYSTEM · HUMAN &amp; SOCIETY
+      <text x="24" y="30" fill="#58635E" fontSize="10" fontFamily="monospace" letterSpacing="1.3">
+        PEDAGOGY · REFLECTIVE CYCLE &amp; CLO MATRIX
       </text>
-      <text x="276" y="42" fill="#262B28" fontSize="10" fontFamily="monospace">
-        NHÀ TRƯỜNG
-      </text>
-      <text x="86" y="192" fill="#58635E" fontSize="10" fontFamily="monospace">
-        GIA ĐÌNH
-      </text>
-      <text x="382" y="192" fill="#58635E" fontSize="10" fontFamily="monospace">
-        XÃ HỘI
-      </text>
-      <text x="368" y="224" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
-        Nhân cách · Chủ đạo
+      <text x="336" y="218" fill="#365E4E" fontSize="11" fontFamily="serif" fontStyle="italic">
+        Thực tiễn · Phản tư · CLO₁..CLO₆
       </text>
     </svg>
   );
@@ -1020,7 +1086,10 @@ export function HomePage() {
                       </button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div
+                      data-testid="atlas-subjects-grid"
+                      className="grid grid-cols-1 gap-7 md:grid-cols-2"
+                    >
                       {filteredSubjects.map((subject, idx) => {
                         const asset = getCourseCinematicAsset(subject.slug);
                         const stats = getSubjectStats(subject);
@@ -1034,7 +1103,7 @@ export function HomePage() {
                         return (
                           <FadeIn
                             key={subject.id}
-                            delay={idx * 60}
+                            delay={idx * 0.06}
                             className={isLonelyTailCard ? 'md:col-span-2' : undefined}
                           >
                             <article

@@ -54,12 +54,86 @@ interface WaterSparkle {
   tone: 'gold' | 'jade';
 }
 
+interface ForegroundBird {
+  species: 'gull' | 'egret';
+  xRatio: number;
+  yRatio: number;
+  vxRatio: number;
+  bobAmp: number;
+  wingSpan: number;
+  flapSpeed: number;
+  phase: number;
+}
+
+interface HighEagle {
+  centerXRatio: number;
+  centerYRatio: number;
+  orbitRx: number;
+  orbitRy: number;
+  angularSpeed: number;
+  phase: number;
+  wingSpan: number;
+}
+
+interface SchoolFish {
+  schoolIdx: 0 | 1;
+  offsetX: number;
+  offsetY: number;
+  length: number;
+  opacity: number;
+  phase: number;
+  tone: 'gold' | 'silver';
+}
+
+interface FishSchool {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  baseSpeed: number;
+  phase: number;
+  tone: 'gold' | 'silver';
+}
+
+interface PlanktonMote {
+  xRatio: number;
+  yNorm: number;
+  phase: number;
+  driftSpeed: number;
+  radius: number;
+  tone: 'emerald' | 'gold';
+}
+
+interface LeapingFishState {
+  active: boolean;
+  startMs: number;
+  nextTriggerMs: number;
+  originX: number;
+  originY: number;
+  direction: 1 | -1;
+  arcWidth: number;
+  arcHeight: number;
+  durationMs: number;
+  entrySplashed: boolean;
+}
+
+interface SplashDroplet {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  alpha: number;
+  radius: number;
+}
+
 const PARTICLE_COUNT = 64;
 const SUN_GLINT_COUNT = 136;
 const WATER_SPARKLE_COUNT = 48;
+const PLANKTON_COUNT = 42;
 const INTERACTION_RADIUS = 140;
-const MAX_TRAIL_POINTS = 16;
-const MAX_ACTIVE_RIPPLES = 20;
+const MAX_TRAIL_POINTS = 18;
+const MAX_ACTIVE_RIPPLES = 24;
+const MAX_SPLASH_DROPLETS = 28;
 const WATERLINE_RATIO = 535 / 900;
 
 function createParticles(width: number, height: number): Particle[] {
@@ -117,6 +191,227 @@ function createWaterSparkles(): WaterSparkle[] {
   return sparkles;
 }
 
+function createForegroundBirds(): ForegroundBird[] {
+  return [
+    {
+      species: 'gull',
+      xRatio: 0.14,
+      yRatio: 0.44,
+      vxRatio: 0.024,
+      bobAmp: 7,
+      wingSpan: 17,
+      flapSpeed: 5.2,
+      phase: 0.2,
+    },
+    {
+      species: 'egret',
+      xRatio: 0.31,
+      yRatio: 0.51,
+      vxRatio: 0.019,
+      bobAmp: 6,
+      wingSpan: 22,
+      flapSpeed: 4.1,
+      phase: 1.6,
+    },
+    {
+      species: 'gull',
+      xRatio: 0.48,
+      yRatio: 0.47,
+      vxRatio: -0.021,
+      bobAmp: 8,
+      wingSpan: 16,
+      flapSpeed: 5.5,
+      phase: 2.9,
+    },
+    {
+      species: 'egret',
+      xRatio: 0.66,
+      yRatio: 0.54,
+      vxRatio: -0.017,
+      bobAmp: 5.5,
+      wingSpan: 21,
+      flapSpeed: 3.9,
+      phase: 4.1,
+    },
+    {
+      species: 'gull',
+      xRatio: 0.82,
+      yRatio: 0.41,
+      vxRatio: -0.026,
+      bobAmp: 7.5,
+      wingSpan: 15,
+      flapSpeed: 5.8,
+      phase: 5.0,
+    },
+    {
+      species: 'gull',
+      xRatio: 0.57,
+      yRatio: 0.37,
+      vxRatio: 0.022,
+      bobAmp: 6.5,
+      wingSpan: 14,
+      flapSpeed: 5.1,
+      phase: 0.9,
+    },
+  ];
+}
+
+function createHighEagles(): HighEagle[] {
+  return [
+    {
+      centerXRatio: 0.22,
+      centerYRatio: 0.23,
+      orbitRx: 68,
+      orbitRy: 22,
+      angularSpeed: 0.24,
+      phase: 0.4,
+      wingSpan: 24,
+    },
+    {
+      centerXRatio: 0.77,
+      centerYRatio: 0.2,
+      orbitRx: 78,
+      orbitRy: 25,
+      angularSpeed: -0.21,
+      phase: 2.2,
+      wingSpan: 26,
+    },
+    {
+      centerXRatio: 0.48,
+      centerYRatio: 0.16,
+      orbitRx: 56,
+      orbitRy: 18,
+      angularSpeed: 0.19,
+      phase: 4.1,
+      wingSpan: 22,
+    },
+  ];
+}
+
+function createFishSchools(
+  width: number,
+  height: number,
+): {
+  schools: FishSchool[];
+  members: SchoolFish[];
+} {
+  const horizonY = height * WATERLINE_RATIO;
+  const schools: FishSchool[] = [
+    {
+      x: width * 0.28,
+      y: horizonY + (height - horizonY) * 0.46,
+      vx: 0.56,
+      vy: 0.04,
+      baseSpeed: 0.58,
+      phase: 0.3,
+      tone: 'gold',
+    },
+    {
+      x: width * 0.72,
+      y: horizonY + (height - horizonY) * 0.64,
+      vx: -0.5,
+      vy: -0.03,
+      baseSpeed: 0.52,
+      phase: 2.6,
+      tone: 'silver',
+    },
+  ];
+
+  const members: SchoolFish[] = [];
+  for (let i = 0; i < 10; i += 1) {
+    const col = Math.floor(i / 2);
+    const rowSign = i % 2 === 0 ? 1 : -1;
+    members.push({
+      schoolIdx: 0,
+      offsetX: -col * 13 + (i % 3) * 4,
+      offsetY: rowSign * (4 + col * 3.5),
+      length: 11 + (i % 4) * 2.2,
+      opacity: 0.38 + ((i * 13) % 24) / 100,
+      phase: i * 0.85,
+      tone: 'gold',
+    });
+  }
+  for (let i = 0; i < 9; i += 1) {
+    const col = Math.floor(i / 2);
+    const rowSign = i % 2 === 0 ? 1 : -1;
+    members.push({
+      schoolIdx: 1,
+      offsetX: col * 14 - (i % 3) * 3,
+      offsetY: rowSign * (4 + col * 3.4),
+      length: 10.5 + (i % 3) * 2.4,
+      opacity: 0.36 + ((i * 17) % 26) / 100,
+      phase: i * 0.92 + 1.2,
+      tone: 'silver',
+    });
+  }
+
+  return { schools, members };
+}
+
+function createPlanktonMotes(): PlanktonMote[] {
+  const motes: PlanktonMote[] = [];
+  for (let i = 0; i < PLANKTON_COUNT; i += 1) {
+    motes.push({
+      xRatio: ((i * 61 + 13) % 100) / 100,
+      yNorm: 0.06 + (((i * 37 + 11) % 88) / 100) * 0.9,
+      phase: i * 0.91,
+      driftSpeed: 0.8 + (i % 5) * 0.25,
+      radius: 1.1 + (i % 3) * 0.55,
+      tone: i % 3 === 0 ? 'gold' : 'emerald',
+    });
+  }
+  return motes;
+}
+
+function drawArticulatedBird(
+  context: CanvasRenderingContext2D,
+  bx: number,
+  by: number,
+  wingSpan: number,
+  flapWave: number,
+  facing: 1 | -1,
+  color: string,
+  species: 'gull' | 'egret' | 'eagle',
+) {
+  context.save();
+  context.translate(bx, by);
+  context.scale(facing, 1);
+
+  const innerElbowLift = -wingSpan * (0.28 + flapWave * 0.34);
+  const tipLift = wingSpan * (0.08 - flapWave * 0.44);
+
+  // Thân thuôn nhọn & cổ/mỏ thanh mảnh
+  context.fillStyle = color;
+  context.beginPath();
+  context.ellipse(0, 0, wingSpan * 0.26, wingSpan * 0.085, 0, 0, Math.PI * 2);
+  context.fill();
+
+  context.strokeStyle = color;
+  context.lineCap = 'round';
+  context.lineJoin = 'round';
+  context.lineWidth = species === 'eagle' ? 1.85 : species === 'egret' ? 1.55 : 1.35;
+
+  // Cánh sau (cung 2 khớp gập lướt gió)
+  context.beginPath();
+  context.moveTo(-1, -0.5);
+  context.quadraticCurveTo(
+    -wingSpan * 0.44,
+    innerElbowLift * 0.9,
+    -wingSpan * 0.82,
+    innerElbowLift + tipLift * 0.65,
+  );
+  context.stroke();
+
+  // Cánh trước (cung 2 khớp rõ nét)
+  context.beginPath();
+  context.moveTo(1, -0.5);
+  context.quadraticCurveTo(wingSpan * 0.38, innerElbowLift, wingSpan * 0.64, innerElbowLift * 0.72);
+  context.quadraticCurveTo(wingSpan * 0.84, tipLift * 0.5, wingSpan, tipLift);
+  context.stroke();
+
+  context.restore();
+}
+
 /**
  * Canvas 2D hiệu ứng liên tục 60fps cho Vịnh Hạ Long (gộp trong 1 vòng lặp requestAnimationFrame):
  * - Dải ánh nắng mặt trời hình thoi mảnh co giãn & lấp lánh trên mặt sóng từ chân trời tới tiền cảnh
@@ -161,8 +456,25 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     const particles = createParticles(width, height);
     const sunGlints = createSunGlints();
     const waterSparkles = createWaterSparkles();
+    const foregroundBirds = createForegroundBirds();
+    const highEagles = createHighEagles();
+    const { schools: fishSchools, members: schoolMembers } = createFishSchools(width, height);
+    const planktonMotes = createPlanktonMotes();
     const ripples: Ripple[] = [];
     const trail: TrailPoint[] = [];
+    const splashDroplets: SplashDroplet[] = [];
+    const leapState: LeapingFishState = {
+      active: false,
+      startMs: 0,
+      nextTriggerMs: 3200,
+      originX: width * 0.42,
+      originY: height * (WATERLINE_RATIO + 0.14),
+      direction: 1,
+      arcWidth: 68,
+      arcHeight: 42,
+      durationMs: 980,
+      entrySplashed: false,
+    };
 
     const pointer = {
       x: -9999,
@@ -353,6 +665,269 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       }
     };
 
+    const drawBioluminescentPlankton = (context: CanvasRenderingContext2D, timeSec: number) => {
+      const horizonY = height * WATERLINE_RATIO;
+      const seaSpanY = Math.max(height - horizonY - 18, 90);
+
+      for (const mote of planktonMotes) {
+        const px =
+          (((mote.xRatio * width + Math.sin(timeSec * 0.35 + mote.phase) * 18) % width) + width) %
+          width;
+        const py = horizonY + 8 + mote.yNorm * seaSpanY + Math.cos(timeSec * 0.55 + mote.phase) * 4;
+        const glow =
+          0.25 + 0.75 * Math.pow(0.5 + 0.5 * Math.sin(timeSec * mote.driftSpeed + mote.phase), 2);
+        const radius = mote.radius * (0.85 + 0.35 * glow);
+
+        context.beginPath();
+        context.arc(px, py, radius * 2.4, 0, Math.PI * 2);
+        context.fillStyle =
+          mote.tone === 'emerald'
+            ? `rgba(110, 231, 183, ${(glow * 0.16).toFixed(3)})`
+            : `rgba(253, 230, 138, ${(glow * 0.16).toFixed(3)})`;
+        context.fill();
+
+        context.beginPath();
+        context.arc(px, py, radius, 0, Math.PI * 2);
+        context.fillStyle =
+          mote.tone === 'emerald'
+            ? `rgba(110, 231, 183, ${(glow * 0.65).toFixed(3)})`
+            : `rgba(253, 230, 138, ${(glow * 0.68).toFixed(3)})`;
+        context.fill();
+      }
+    };
+
+    const drawUnderwaterFishSchools = (
+      context: CanvasRenderingContext2D,
+      timeSec: number,
+      animate: boolean,
+    ) => {
+      const horizonY = height * WATERLINE_RATIO;
+      const minSeaY = horizonY + 28;
+      const maxSeaY = Math.max(height - 26, minSeaY + 40);
+
+      for (const school of fishSchools) {
+        if (animate) {
+          school.phase += 0.022;
+          const baseDir = school.tone === 'gold' ? 1 : -1;
+          let targetVx = baseDir * school.baseSpeed;
+          let targetVy = Math.sin(timeSec * 0.75 + school.phase) * 0.24;
+
+          if (pointer.active && pointer.y > horizonY + 14) {
+            const dx = pointer.x - school.x;
+            const dy = pointer.y - school.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist > 28 && dist < 240) {
+              targetVx += (dx / dist) * 0.42;
+              targetVy += (dy / dist) * 0.28;
+            }
+          }
+
+          school.vx += (targetVx - school.vx) * 0.03;
+          school.vy += (targetVy - school.vy) * 0.03;
+          school.x += school.vx;
+          school.y += school.vy;
+
+          if (school.x > width + 90) school.x = -90;
+          if (school.x < -90) school.x = width + 90;
+          if (school.y < minSeaY) school.y = minSeaY + 4;
+          if (school.y > maxSeaY) school.y = maxSeaY - 4;
+        }
+      }
+
+      for (const fish of schoolMembers) {
+        const school = fishSchools[fish.schoolIdx];
+        if (!school) continue;
+        const swimWave = Math.sin(timeSec * 4.5 + fish.phase) * 2.2;
+        const fx = school.x + fish.offsetX;
+        const fy = school.y + fish.offsetY + swimWave;
+        const heading = Math.atan2(school.vy, school.vx || 1);
+        const tailWag = Math.sin(timeSec * 11 + fish.phase) * 2.6;
+
+        context.save();
+        context.translate(fx, fy);
+        context.rotate(heading);
+
+        context.fillStyle =
+          fish.tone === 'gold'
+            ? `rgba(246, 201, 107, ${fish.opacity.toFixed(3)})`
+            : `rgba(182, 238, 224, ${fish.opacity.toFixed(3)})`;
+
+        // Thân cá thuôn dài mờ ảo dưới làn nước ngọc
+        context.beginPath();
+        context.moveTo(fish.length * 0.55, 0);
+        context.quadraticCurveTo(0, -fish.length * 0.22, -fish.length * 0.45, 0);
+        context.quadraticCurveTo(0, fish.length * 0.22, fish.length * 0.55, 0);
+        context.fill();
+
+        // Đuôi cá vẫy nhẹ
+        context.beginPath();
+        context.moveTo(-fish.length * 0.4, 0);
+        context.lineTo(-fish.length * 0.78, -fish.length * 0.22 + tailWag);
+        context.lineTo(-fish.length * 0.78, fish.length * 0.22 + tailWag);
+        context.closePath();
+        context.fill();
+
+        context.restore();
+      }
+    };
+
+    const drawLeapingFishAndSplashes = (
+      context: CanvasRenderingContext2D,
+      timeMs: number,
+      animate: boolean,
+    ) => {
+      if (!animate) return;
+      const horizonY = height * WATERLINE_RATIO;
+
+      if (!leapState.active && timeMs >= leapState.nextTriggerMs) {
+        const spot = 0.24 + Math.random() * 0.54;
+        leapState.active = true;
+        leapState.startMs = timeMs;
+        leapState.originX = width * spot;
+        leapState.originY = horizonY + 34 + Math.random() * Math.max(height - horizonY - 96, 40);
+        leapState.direction = Math.random() > 0.5 ? 1 : -1;
+        leapState.arcWidth = 54 + Math.random() * 28;
+        leapState.arcHeight = 32 + Math.random() * 18;
+        leapState.entrySplashed = false;
+
+        // Vòng sóng khi cá phóng lên khỏi mặt nước
+        pushRipple({
+          x: leapState.originX,
+          y: leapState.originY,
+          radius: 5,
+          maxRadius: 68,
+          alpha: 0.52,
+          speed: 1.55,
+          isWater: true,
+        });
+      }
+
+      if (leapState.active) {
+        const elapsed = timeMs - leapState.startMs;
+        const progress = Math.min(1, elapsed / leapState.durationMs);
+        const fx = leapState.originX + leapState.direction * leapState.arcWidth * progress;
+        const fy = leapState.originY - 4 * leapState.arcHeight * progress * (1 - progress);
+        const slopeY = -4 * leapState.arcHeight * (1 - 2 * progress);
+        const angle = Math.atan2(slopeY, leapState.direction * leapState.arcWidth);
+
+        context.save();
+        context.translate(fx, fy);
+        context.rotate(angle);
+        context.fillStyle = 'rgba(255, 224, 152, 0.9)';
+        context.beginPath();
+        context.ellipse(0, 0, 8.5, 2.7, 0, 0, Math.PI * 2);
+        context.fill();
+        context.beginPath();
+        context.moveTo(-7.5, 0);
+        context.lineTo(-12.5, -3.5);
+        context.lineTo(-12.5, 3.5);
+        context.closePath();
+        context.fill();
+        context.restore();
+
+        if (progress >= 0.96 && !leapState.entrySplashed) {
+          leapState.entrySplashed = true;
+          const endX = leapState.originX + leapState.direction * leapState.arcWidth;
+          for (let rIdx = 0; rIdx < 3; rIdx += 1) {
+            pushRipple({
+              x: endX,
+              y: leapState.originY,
+              radius: 3 + rIdx * 4,
+              maxRadius: 56 + rIdx * 24,
+              alpha: 0.56 - rIdx * 0.1,
+              speed: 1.2 + rIdx * 0.25,
+              isWater: true,
+            });
+          }
+          for (let d = 0; d < 7; d += 1) {
+            if (splashDroplets.length >= MAX_SPLASH_DROPLETS) {
+              splashDroplets.shift();
+            }
+            splashDroplets.push({
+              x: endX + (Math.random() - 0.5) * 6,
+              y: leapState.originY,
+              vx: (Math.random() - 0.5) * 2.2,
+              vy: -2.2 - Math.random() * 1.9,
+              alpha: 0.85,
+              radius: 1.2 + Math.random() * 1.1,
+            });
+          }
+        }
+
+        if (progress >= 1) {
+          leapState.active = false;
+          leapState.nextTriggerMs = timeMs + 4200 + Math.random() * 1700;
+        }
+      }
+
+      for (let i = splashDroplets.length - 1; i >= 0; i -= 1) {
+        const drop = splashDroplets[i];
+        if (!drop) continue;
+        drop.vy += 0.14;
+        drop.x += drop.vx;
+        drop.y += drop.vy;
+        drop.alpha -= 0.032;
+
+        if (drop.alpha <= 0.02) {
+          splashDroplets.splice(i, 1);
+          continue;
+        }
+
+        context.beginPath();
+        context.arc(drop.x, drop.y, drop.radius, 0, Math.PI * 2);
+        context.fillStyle = `rgba(220, 250, 240, ${drop.alpha.toFixed(3)})`;
+        context.fill();
+      }
+    };
+
+    const drawAirborneBirdsAndEagles = (
+      context: CanvasRenderingContext2D,
+      timeSec: number,
+      animate: boolean,
+    ) => {
+      // 3 đại bàng biển lượn vòng elip chậm trên tầm cao quanh các đỉnh Karst
+      for (const eagle of highEagles) {
+        const angle = eagle.phase + timeSec * eagle.angularSpeed;
+        const ex = eagle.centerXRatio * width + Math.cos(angle) * eagle.orbitRx;
+        const ey = eagle.centerYRatio * height + Math.sin(angle) * eagle.orbitRy;
+        const facing: 1 | -1 = Math.sin(angle) * eagle.angularSpeed < 0 ? 1 : -1;
+        const flap = Math.sin(timeSec * 1.8 + eagle.phase) * 0.25;
+        drawArticulatedBird(
+          context,
+          ex,
+          ey,
+          eagle.wingSpan,
+          flap,
+          facing,
+          'rgba(28, 22, 26, 0.72)',
+          'eagle',
+        );
+      }
+
+      // 6 chim hải âu & cò trắng có cánh 2 khớp bay lướt qua vịnh & đan xen nhịp vỗ - lướt
+      for (const bird of foregroundBirds) {
+        if (animate) {
+          bird.xRatio += bird.vxRatio * 0.016;
+          if (bird.xRatio > 1.06) bird.xRatio = -0.06;
+          if (bird.xRatio < -0.06) bird.xRatio = 1.06;
+        }
+
+        const bx = bird.xRatio * width;
+        const by = bird.yRatio * height + Math.sin(timeSec * 1.2 + bird.phase) * bird.bobAmp;
+        // Xen kẽ chu kỳ vỗ cánh và lướt nghiêng nhẹ
+        const glideCycle = Math.sin(timeSec * 0.65 + bird.phase);
+        const flap =
+          glideCycle > 0.28
+            ? 0.16 * Math.sin(timeSec * 1.4 + bird.phase)
+            : Math.sin(timeSec * bird.flapSpeed + bird.phase);
+        const facing: 1 | -1 = bird.vxRatio >= 0 ? 1 : -1;
+        const color =
+          bird.species === 'egret' ? 'rgba(248, 245, 236, 0.84)' : 'rgba(255, 236, 200, 0.76)';
+
+        drawArticulatedBird(context, bx, by, bird.wingSpan, flap, facing, color, bird.species);
+      }
+    };
+
     const drawFrame = (timeMs: number, animate: boolean) => {
       const timeSec = timeMs * 0.001;
 
@@ -361,12 +936,16 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
 
       const sampleTime = animate ? timeSec : 0.45;
 
-      // 1. Gợn sóng sine mềm & Dải nắng mặt trời hình thoi lấp lánh trên mặt biển
+      // 1. Gợn sóng sine mềm, dải nắng mặt trời, sinh vật phát quang & đàn cá bơi dưới vịnh
       drawSineWaterWaves(ctx, sampleTime);
       drawDynamicSunpath(ctx, sampleTime);
+      drawBioluminescentPlankton(ctx, sampleTime);
+      drawUnderwaterFishSchools(ctx, sampleTime, animate);
+      drawLeapingFishAndSplashes(ctx, timeMs, animate);
 
-      // 2. Đốm sáng lấp lánh (water sparkles) bật/tắt dịu trên mặt biển xanh ngọc
+      // 2. Đốm sáng lấp lánh (water sparkles) & Đàn chim hải âu / cò trắng / đại bàng trên cao
       drawWaterSparkles(ctx, sampleTime);
+      drawAirborneBirdsAndEagles(ctx, sampleTime, animate);
 
       // 3. Bụi nắng vàng kim & đom đóm lơ lửng tương tác chuột (bán kính 140px)
       for (const p of particles) {
@@ -418,12 +997,13 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
         }
       }
 
-      // 4. Vệt sáng mảnh theo đầu con trỏ
+      // 4. Vệt sáng & rẽ nước hình chữ V phát quang theo đầu con trỏ trên mặt vịnh
       if (animate && trail.length > 1) {
+        const horizonY = height * WATERLINE_RATIO;
         for (let i = trail.length - 1; i >= 0; i -= 1) {
           const pt = trail[i];
           if (!pt) continue;
-          pt.life -= 0.06;
+          pt.life -= 0.055;
           if (pt.life <= 0) {
             trail.splice(i, 1);
           }
@@ -433,13 +1013,37 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
           const prevPt = trail[i - 1];
           const currPt = trail[i];
           if (!prevPt || !currPt) continue;
+          const overWater = currPt.y > horizonY + 8;
+
           ctx.beginPath();
           ctx.moveTo(prevPt.x, prevPt.y);
           ctx.lineTo(currPt.x, currPt.y);
-          ctx.lineWidth = Math.max(0.7, currPt.life * 2.1);
+          ctx.lineWidth = Math.max(0.7, currPt.life * (overWater ? 2.4 : 2.1));
           ctx.lineCap = 'round';
-          ctx.strokeStyle = `rgba(255, 213, 132, ${(currPt.life * 0.45).toFixed(3)})`;
+          ctx.strokeStyle = overWater
+            ? `rgba(110, 231, 183, ${(currPt.life * 0.56).toFixed(3)})`
+            : `rgba(255, 213, 132, ${(currPt.life * 0.45).toFixed(3)})`;
           ctx.stroke();
+
+          // Vệt rẽ nước chữ V sinh vật phù du phát quang khi rê chuột qua vùng mặt vịnh
+          if (overWater) {
+            const dx = currPt.x - prevPt.x;
+            const dy = currPt.y - prevPt.y;
+            const len = Math.hypot(dx, dy);
+            if (len > 1.5) {
+              const nx = -dy / len;
+              const ny = dx / len;
+              const spread = (1 - currPt.life) * 18 + 5;
+              ctx.beginPath();
+              ctx.moveTo(currPt.x, currPt.y);
+              ctx.lineTo(prevPt.x + nx * spread, prevPt.y + ny * spread);
+              ctx.moveTo(currPt.x, currPt.y);
+              ctx.lineTo(prevPt.x - nx * spread, prevPt.y - ny * spread);
+              ctx.lineWidth = 0.85;
+              ctx.strokeStyle = `rgba(110, 231, 183, ${(currPt.life * 0.28).toFixed(3)})`;
+              ctx.stroke();
+            }
+          }
         }
       }
 
@@ -499,6 +1103,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       }
       ripples.length = 0;
       trail.length = 0;
+      splashDroplets.length = 0;
     };
   }, [prefersReducedMotion]);
 
