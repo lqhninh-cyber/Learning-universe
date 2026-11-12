@@ -11,7 +11,7 @@ import {
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import type { CourseExamBank } from '@/data/courses/exam-bank-types';
-import { ExamPaperPracticeView } from '@/features/exams/ExamPaperPracticeView';
+import { ExamSheetPaperView } from '@/features/exams/ExamSheetPaperView';
 import { MatrixAnalysisView } from '@/features/exams/MatrixAnalysisView';
 import { MathGlossaryPopover, MathGlossaryProvider } from '@/features/math-glossary';
 import { ROUTES } from '@/shared/config/routes';
@@ -34,17 +34,17 @@ const SECTION_TABS: ReadonlyArray<{
 }> = [
   {
     id: 'official',
-    label: 'Đề thi chính thức & Lời giải chuẩn',
+    label: 'Đề thi chính thức (2025 - 2026)',
     icon: FileCheck2,
   },
   {
     id: 'matrix',
-    label: 'Phân tích cấu trúc & Chiến lược ôn tập',
+    label: 'Phân tích cấu trúc & Hướng dẫn ôn tập',
     icon: BarChart3,
   },
   {
     id: 'mock',
-    label: 'Đề ôn tập mẫu bám sát cấu trúc',
+    label: 'Đề biên soạn thêm để ôn tập (Đề mẫu)',
     icon: ClipboardCheck,
   },
 ];
@@ -83,11 +83,11 @@ function ExamBankWorkspaceContent({
   return (
     <div className="space-y-6">
       {/* Header Khu vực Ngân hàng Đề thi & Lời giải */}
-      <Card className="border-subject-200/90 bg-[var(--bg-surface)] p-5 shadow-xs sm:p-7">
+      <Card className="border-[#1B3D2F]/20 bg-[var(--bg-surface)] p-5 shadow-xs sm:p-7">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="subject">
+              <Badge className="border-[#1B3D2F] bg-[#1B3D2F] text-white">
                 <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Ngân hàng Đề thi &amp; Lời giải</span>
               </Badge>
@@ -113,14 +113,18 @@ function ExamBankWorkspaceContent({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Sparkles className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
+                  <Sparkles className="h-3.5 w-3.5 text-[#1B3D2F]" aria-hidden="true" />
                   <span>Phòng Lab 3D</span>
                   <ExternalLink className="h-3 w-3 opacity-75" aria-hidden="true" />
                 </a>
               </Button>
             )}
             {showFullPageLink && (
-              <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
+              <Button
+                asChild
+                size="sm"
+                className="gap-1.5 bg-[#1B3D2F] text-xs text-white hover:bg-[#142F24]"
+              >
                 <Link to={ROUTES.subjectExams(bank.subjectSlug)}>
                   <span>Mở chế độ Toàn trang</span>
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -149,7 +153,7 @@ function ExamBankWorkspaceContent({
                 className={cn(
                   'flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] active:scale-[0.98] sm:text-sm',
                   isActive
-                    ? 'bg-subject-600 text-white shadow-xs'
+                    ? 'bg-[#1B3D2F] text-white shadow-xs'
                     : 'text-[var(--text-muted)] hover:-translate-y-0.5 hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]',
                 )}
               >
@@ -184,7 +188,7 @@ function ExamBankWorkspaceContent({
                       className={cn(
                         'inline-flex min-h-[40px] cursor-pointer items-center gap-2 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] active:scale-[0.98]',
                         isSelected
-                          ? 'border-subject-600 bg-subject-600 text-white shadow-xs'
+                          ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs'
                           : 'border-[var(--border-subtle)] bg-[var(--bg-sunken)]/60 text-[var(--text-main)] hover:border-[var(--border-control)]',
                       )}
                     >
@@ -223,45 +227,47 @@ function ExamBankWorkspaceContent({
             </div>
           )}
 
-          <ExamPaperPracticeView paper={activeOfficialPaper} variantLabel="Đề thi chính thức" />
+          <ExamSheetPaperView key={activeOfficialPaper.id} paper={activeOfficialPaper} />
         </div>
       )}
 
-      {/* Phân khu 2: Phân tích cấu trúc & Chiến lược ôn tập */}
+      {/* Phân khu 2: Phân tích cấu trúc & Hướng dẫn ôn tập */}
       {activeSection === 'matrix' && (
         <MatrixAnalysisView subjectSlug={bank.subjectSlug} analysis={bank.matrixAnalysis} />
       )}
 
-      {/* Phân khu 3: Đề ôn tập mẫu bám sát cấu trúc */}
+      {/* Phân khu 3: Đề biên soạn thêm để ôn tập (Đề mẫu) */}
       {activeSection === 'mock' && activeMockPaper && (
         <div className="space-y-4">
-          {bank.mockExams.length > 1 && (
-            <div className="flex flex-wrap gap-2">
-              {bank.mockExams.map((paper) => {
-                const isSelected = paper.id === activeMockPaper.id;
-                return (
-                  <button
-                    key={paper.id}
-                    type="button"
-                    onClick={() => setSelectedMockId(paper.id)}
-                    className={cn(
-                      'min-h-[40px] cursor-pointer rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all',
-                      isSelected
-                        ? 'border-subject-600 bg-subject-600 text-white'
-                        : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)]',
-                    )}
-                  >
-                    {paper.semester}
-                  </button>
-                );
-              })}
+          {bank.mockExams.length > 0 && (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300/80 bg-amber-50/70 px-4 py-3">
+              <span className="text-xs font-bold tracking-wide text-amber-950 uppercase">
+                Chọn đề biên soạn thêm để ôn tập
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {bank.mockExams.map((paper) => {
+                  const isSelected = paper.id === activeMockPaper.id;
+                  return (
+                    <button
+                      key={paper.id}
+                      type="button"
+                      onClick={() => setSelectedMockId(paper.id)}
+                      className={cn(
+                        'min-h-[38px] cursor-pointer rounded-xl border px-3.5 py-1.5 text-xs font-semibold transition-all',
+                        isSelected
+                          ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs'
+                          : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-main)] hover:border-[var(--border-control)]',
+                      )}
+                    >
+                      {paper.semester}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
-          <ExamPaperPracticeView
-            paper={activeMockPaper}
-            variantLabel="Đề ôn tập mẫu bám sát cấu trúc"
-          />
+          <ExamSheetPaperView key={activeMockPaper.id} paper={activeMockPaper} />
         </div>
       )}
     </div>

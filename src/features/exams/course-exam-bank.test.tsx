@@ -27,6 +27,9 @@ function collectPaperTexts(paper: ExamPaper): Array<{ context: string; text: str
   for (const problem of paper.problems) {
     const pCtx = `${paper.id}.${problem.id}`;
     if (problem.title) entries.push({ context: `${pCtx}.title`, text: problem.title });
+    if (problem.sheetHeading) {
+      entries.push({ context: `${pCtx}.sheetHeading`, text: problem.sheetHeading });
+    }
     if (problem.statement) entries.push({ context: `${pCtx}.statement`, text: problem.statement });
     if (problem.hint) entries.push({ context: `${pCtx}.hint`, text: problem.hint });
     if (problem.solution) entries.push({ context: `${pCtx}.solution`, text: problem.solution });
@@ -172,6 +175,12 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     const banks: readonly CourseExamBank[] = [MATH1301_EXAM_BANK, MATH1302_EXAM_BANK];
 
     for (const bank of banks) {
+      // Tách bạch 01 đề chính thức thực tế và 02 đề biên soạn ôn tập
+      expect(bank.officialExams).toHaveLength(1);
+      expect(bank.officialExams.every((p) => !p.isMockExam)).toBe(true);
+      expect(bank.mockExams).toHaveLength(2);
+      expect(bank.mockExams.every((p) => p.isMockExam === true)).toBe(true);
+
       // Thang điểm các đề phải đúng 10.0 điểm
       for (const paper of [...bank.officialExams, ...bank.mockExams]) {
         const totalPoints = paper.problems.reduce((sum, p) => sum + p.points, 0);
@@ -245,53 +254,73 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     });
   });
 
-  it('MATH1301: trang chi tiết học phần /courses/cau-truc-dai-so hiển thị đủ 3 phân khu và thu gọn lời giải mặc định', async () => {
+  it('MATH1301: hiển thị tờ đề chính thức nguyên bản 2522MATH170401, tách rời lời giải bên dưới và tách bạch đề ôn tập', async () => {
     const user = userEvent.setup();
     renderCourseDetailRoute('/courses/cau-truc-dai-so');
 
     const mainTab = await screen.findByRole('tab', { name: /Ngân hàng Đề thi & Lời giải/i });
     await user.click(mainTab);
 
-    // 3 phân khu con
-    expect(
-      screen.getByRole('tab', { name: /1\.\s*Đề thi chính thức & Lời giải chuẩn/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('tab', { name: /2\.\s*Phân tích cấu trúc & Chiến lược ôn tập/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('tab', { name: /3\.\s*Đề ôn tập mẫu bám sát cấu trúc/i }),
-    ).toBeInTheDocument();
+    // 3 tab chuẩn xác theo cấu trúc mới (Xanh Rêu Sơn Mài khi active)
+    const tab1 = screen.getByRole('tab', { name: /1\.\s*Đề thi chính thức \(2025 - 2026\)/i });
+    const tab2 = screen.getByRole('tab', {
+      name: /2\.\s*Phân tích cấu trúc & Hướng dẫn ôn tập/i,
+    });
+    const tab3 = screen.getByRole('tab', {
+      name: /3\.\s*Đề biên soạn thêm để ôn tập \(Đề mẫu\)/i,
+    });
+    expect(tab1).toBeInTheDocument();
+    expect(tab1.className).toContain('bg-[#1B3D2F]');
+    expect(tab2).toBeInTheDocument();
+    expect(tab3).toBeInTheDocument();
 
-    // Hiển thị đề HK2 2025-2026 (2522MATH170401)
-    expect(
-      screen.getByText(/Đề thi Chính thức HK2 \(2025 - 2026\) — Cấu trúc Đại số/),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(/2522MATH170401/).length).toBeGreaterThan(0);
+    // Tuyệt đối không có thanh chọn các học kỳ I ảo hay tên tóm tắt câu hỏi tự đặt
+    expect(screen.queryByText(/Chọn đề thi chính thức/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/2024-2025/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Nhóm con của nhóm đối xứng S₃/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^📝 Lời giải$/i })).not.toBeInTheDocument();
 
-    // Lời giải mặc định thu gọn để sinh viên tự làm trước
+    // Header 2 cột và nội dung tờ đề gốc 2522MATH170401
+    expect(screen.getByText('TRƯỜNG ĐH SƯ PHẠM TPHCM')).toBeInTheDocument();
+    expect(screen.getByText('KHOA TOÁN - TIN HỌC')).toBeInTheDocument();
+    expect(screen.getByText('Đề chính thức')).toBeInTheDocument();
+    expect(screen.getByText('(Đề thi gồm có 1 trang)')).toBeInTheDocument();
+    expect(screen.getByText('ĐỀ THI KẾT THỨC HỌC PHẦN')).toBeInTheDocument();
+    expect(screen.getByText('Tên HP: ĐẠI SỐ')).toBeInTheDocument();
+    expect(screen.getByText('Mã LHP: 2522MATH170401 — Số tín chỉ: 3')).toBeInTheDocument();
+    expect(screen.getByText('Học kỳ: 2 — Năm học: 2025 - 2026')).toBeInTheDocument();
+    expect(screen.getByText('Thời gian: 90 phút (không kể thời gian phát đề)')).toBeInTheDocument();
+
+    expect(screen.getByText(/Câu 1\. \(3 điểm\)/)).toBeInTheDocument();
+    expect(screen.getByText(/Câu 2\. \(3 điểm\)/)).toBeInTheDocument();
+    expect(screen.getByText(/Câu 3\. \(4 điểm\)/)).toBeInTheDocument();
+    expect(screen.getByText('— HẾT —')).toBeInTheDocument();
+    expect(screen.getByText('Ghi chú:')).toBeInTheDocument();
+    expect(screen.getByText(/Thí sinh KHÔNG được sử dụng tài liệu\./)).toBeInTheDocument();
+    expect(screen.getByText(/Cán bộ coi thi không giải thích gì thêm\./)).toBeInTheDocument();
+
+    // Khối 2 độc lập ở dưới mặc định thu gọn; 1 nút tổng Xanh Rêu bật/tắt toàn bộ lời giải
+    expect(
+      screen.getByRole('heading', { name: /LỜI GIẢI CHI TIẾT & THANG ĐIỂM THAM KHẢO/i }),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/Xét chuyển trí/i)).not.toBeInTheDocument();
 
-    // Mở lời giải Câu 1a (nhấn nút 📝 Lời giải đầu tiên)
-    const revealButtons = screen.getAllByRole('button', { name: /^📝 Lời giải$/i });
-    const firstRevealButton = revealButtons[0];
-    if (!firstRevealButton) throw new Error('Expected at least one reveal button');
-    await user.click(firstRevealButton);
-    expect(await screen.findByText(/Xét chuyển trí/i)).toBeInTheDocument();
+    const masterToggle = screen.getByRole('button', {
+      name: /Hiện lời giải chi tiết & thang điểm/i,
+    });
+    expect(masterToggle.className).toContain('bg-[#1B3D2F]');
+    await user.click(masterToggle);
 
-    // Chuyển sang phân khu 2: Phân tích cấu trúc & Chiến lược ôn tập
-    await user.click(
-      screen.getByRole('tab', { name: /2\.\s*Phân tích cấu trúc & Chiến lược ôn tập/i }),
-    );
+    expect(await screen.findByText(/Xét chuyển trí/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Thang điểm tham khảo:/).length).toBe(3);
+
+    // Chuyển sang Tab 2: Phân tích cấu trúc & Hướng dẫn ôn tập
+    await user.click(tab2);
     expect(screen.getAllByText(/Chứng minh định lý nền tảng về nhóm con/i).length).toBeGreaterThan(
       0,
     );
-    expect(
-      screen.getAllByText(/Tìm cấu trúc tường minh trên nhóm mẫu hữu hạn/i).length,
-    ).toBeGreaterThan(0);
     expect(screen.getByText(/Bốn họ nhóm mẫu cần thuộc lòng/i)).toBeInTheDocument();
 
-    // Kiểm tra tương tác checklist ôn tập
     const checkboxes = screen.getAllByRole('checkbox');
     const firstCheckbox = checkboxes[0];
     expect(checkboxes.length).toBeGreaterThan(0);
@@ -300,48 +329,80 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     await user.click(firstCheckbox);
     expect(firstCheckbox).toHaveAttribute('aria-checked', 'true');
 
-    // Chuyển sang phân khu 3: Đề ôn tập mẫu
-    await user.click(screen.getByRole('tab', { name: /3\.\s*Đề ôn tập mẫu bám sát cấu trúc/i }));
+    // Chuyển sang Tab 3: Đề biên soạn thêm để ôn tập (Đề mẫu)
+    await user.click(tab3);
     expect(
-      screen.getByText(/Đề ôn tập mẫu số 1 — Cấu trúc Đại số \(MATH1301\)/i),
+      screen.getByText(/ĐỀ BIÊN SOẠN ÔN TẬP \(MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC\)/),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Tâm nhóm Z\(G\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/chứng minh tâm nhóm/i)).toBeInTheDocument();
+
+    // Chọn Đề ôn tập số 2 và kiểm tra lời giải mặc định thu gọn trước khi mở
+    await user.click(screen.getByRole('button', { name: 'Đề ôn tập số 2' }));
+    expect(screen.getByText(/chỉ số/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Kiểm tra các phần tử còn lại/i)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Hiện lời giải chi tiết & thang điểm/i }));
+    expect(await screen.findByText(/Kiểm tra các phần tử còn lại/i)).toBeInTheDocument();
   });
 
-  it('MATH1302: trang chi tiết học phần /courses/hinh-hoc-affine hiển thị đúng Bài 1-3, ma trận 3-4-3 và đề mẫu', async () => {
+  it('MATH1302: hiển thị tờ đề chính thức nguyên bản 2512MATH18221, tách rời lời giải bên dưới và có 2 đề biên soạn ôn tập', async () => {
     const user = userEvent.setup();
     renderCourseDetailRoute('/courses/hinh-hoc-affine');
 
     const mainTab = await screen.findByRole('tab', { name: /Ngân hàng Đề thi & Lời giải/i });
     await user.click(mainTab);
 
-    // Mã đề chính thức HK1 2025-2026 (2512MATH18221) và nút Phòng Lab 3D
-    expect(screen.getAllByText(/2512MATH18221/).length).toBeGreaterThan(0);
+    // Header 2 cột nguyên bản đề 2512MATH18221 và nút Phòng Lab 3D
+    expect(screen.getByText('TRƯỜNG ĐẠI HỌC SƯ PHẠM TP.HCM')).toBeInTheDocument();
+    expect(screen.getByText('KHOA TOÁN – TIN HỌC')).toBeInTheDocument();
+    expect(screen.getByText('Đề số 1')).toBeInTheDocument();
+    expect(screen.getByText('(Đề thi gồm có 01 trang)')).toBeInTheDocument();
+    expect(screen.getByText('HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID')).toBeInTheDocument();
+    expect(screen.getByText('Mã học phần: 2512MATH18221 — ĐVHT: 2')).toBeInTheDocument();
+    expect(screen.getByText('Năm học: 2025-2026 — Học kỳ: 1')).toBeInTheDocument();
+    expect(screen.getByText('Thời gian làm bài: 90 phút')).toBeInTheDocument();
+
     expect(
       screen
         .getAllByRole('link', { name: /Phòng Lab 3D/i })
         .some((el) => el.getAttribute('href') === '/interactive/affine-geometry.html'),
     ).toBe(true);
-    expect(screen.getAllByText(/Bài 1/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Bài 2/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Bài 3/).length).toBeGreaterThan(0);
 
-    // Lời giải chi tiết mặc định thu gọn; bấm Mở tất cả lời giải
+    // Nội dung nguyên bản Bài 1, Bài 2, Bài 3 *(Đề gốc ghi Bài 1)*, ---HẾT--- và Chú ý:
+    expect(screen.getByText(/Bài 1 \(3\.0 điểm\)\./)).toBeInTheDocument();
+    expect(screen.getByText(/Bài 2 \(4\.0 điểm\)\./)).toBeInTheDocument();
+    expect(screen.getByText(/Bài 3 \(3\.0 điểm\)\./)).toBeInTheDocument();
+    expect(screen.getByText(/\(Đề gốc ghi Bài 1\)/)).toBeInTheDocument();
+    expect(screen.getByText('---HẾT---')).toBeInTheDocument();
+    expect(screen.getByText('Chú ý:')).toBeInTheDocument();
+    expect(screen.getByText(/Được sử dụng máy tính cầm tay\./)).toBeInTheDocument();
+
+    // Không tự đặt tiêu đề tóm tắt trên tờ đề
+    expect(
+      screen.queryByText(/Siêu mặt bậc hai và siêu phẳng kính liên hợp trong A³/i),
+    ).not.toBeInTheDocument();
+
+    // Lời giải chi tiết ở khối dưới mặc định thu gọn; 1 nút tổng bật toàn bộ
     expect(screen.queryByText(/vế trái phương trình/i)).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Mở tất cả lời giải/i }));
+    await user.click(screen.getByRole('button', { name: /Hiện lời giải chi tiết & thang điểm/i }));
     expect(await screen.findByText(/vế trái phương trình/i)).toBeInTheDocument();
 
     // Phân tích cấu trúc 3.0 - 4.0 - 3.0
     await user.click(
-      screen.getByRole('tab', { name: /2\.\s*Phân tích cấu trúc & Chiến lược ôn tập/i }),
+      screen.getByRole('tab', { name: /2\.\s*Phân tích cấu trúc & Hướng dẫn ôn tập/i }),
     );
     expect(screen.getByText(/Bài 3: Chứng minh đại cương Aⁿ/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Tham số hóa phẳng bù trực giao/i).length).toBeGreaterThan(0);
 
-    // Đề ôn tập mẫu MATH1302
-    await user.click(screen.getByRole('tab', { name: /3\.\s*Đề ôn tập mẫu bám sát cấu trúc/i }));
+    // Đề biên soạn thêm để ôn tập (Tab 3)
+    await user.click(
+      screen.getByRole('tab', { name: /3\.\s*Đề biên soạn thêm để ôn tập \(Đề mẫu\)/i }),
+    );
     expect(
-      screen.getByText(/Đề ôn tập mẫu số 1 — Hình học Affine và Euclid \(MATH1302\)/i),
+      screen.getByText(/ĐỀ BIÊN SOẠN ÔN TẬP \(MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC\)/),
     ).toBeInTheDocument();
+    expect(screen.getByText(/Tìm tọa độ tâm của/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Đề ôn tập số 2' }));
+    expect(screen.getByText(/chéo nhau hoàn toàn/i)).toBeInTheDocument();
   });
 });

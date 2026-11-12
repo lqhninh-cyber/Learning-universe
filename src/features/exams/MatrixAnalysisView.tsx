@@ -17,10 +17,10 @@ const SEGMENT_TONE_CLASSES: Readonly<
   >
 > = {
   primary: {
-    bar: 'bg-subject-600',
+    bar: 'bg-[#1B3D2F]',
     badge:
-      'border-subject-200 bg-subject-50 text-subject-800 dark:border-subject-700 dark:bg-subject-950/60 dark:text-subject-200',
-    dot: 'bg-subject-600',
+      'border-[#1B3D2F]/25 bg-emerald-50/80 text-[#1B3D2F] dark:border-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200',
+    dot: 'bg-[#1B3D2F]',
   },
   secondary: {
     bar: 'bg-[var(--gold-line)]',
@@ -101,7 +101,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="subject">
+              <Badge className="border-[#1B3D2F] bg-[#1B3D2F] text-white">
                 <BarChart3 className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Phân bổ Tỷ trọng Điểm</span>
               </Badge>
@@ -179,7 +179,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
       <section className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-xs sm:p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Target className="text-subject-600 h-4 w-4" aria-hidden="true" />
+            <Target className="h-4 w-4 text-[#1B3D2F]" aria-hidden="true" />
             <h3 className="font-serif text-lg font-bold text-[var(--text-main)]">
               Bảng Ma trận Đặc tả Đề thi
             </h3>
@@ -231,7 +231,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
         <div className="mb-5 flex flex-col gap-3 border-b border-[var(--border-subtle)] pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <ClipboardList className="text-subject-600 h-4 w-4" aria-hidden="true" />
+              <ClipboardList className="h-4 w-4 text-[#1B3D2F]" aria-hidden="true" />
               <h3 className="font-serif text-lg font-bold text-[var(--text-main)]">
                 Checklist Trọng tâm Cần Nắm Vững
               </h3>
@@ -243,7 +243,7 @@ function MatrixAnalysisContent({ subjectSlug, analysis }: MatrixAnalysisViewProp
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            <Badge variant="subject" className="font-mono text-xs font-bold">
+            <Badge className="border-[#1B3D2F] bg-[#1B3D2F] font-mono text-xs font-bold text-white">
               <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
               <span>
                 Đã ôn: {completedChecklistItems}/{totalChecklistItems} ({progressPercent}%)

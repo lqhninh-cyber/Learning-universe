@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { MathText } from '@/features/exams/MathText';
@@ -169,7 +170,8 @@ $$\\lim_{n \\to \\infty} \\frac{n^2 + 1}{2n^2 + 3} = \\frac{1}{2}$$`}
       ).toBeGreaterThan(0);
     });
 
-    it('hiển thị đầy đủ 5 câu hỏi tự luận lớn cho học phần Cấu trúc đại số tại /mon-hoc/cau-truc-dai-so/de-thi', () => {
+    it('hiển thị tờ đề thi chính thức nguyên bản 2522MATH170401 và 3 tab tách biệt tại /mon-hoc/cau-truc-dai-so/de-thi', async () => {
+      const user = userEvent.setup();
       render(
         <MemoryRouter initialEntries={['/mon-hoc/cau-truc-dai-so/de-thi']}>
           <Routes>
@@ -180,28 +182,46 @@ $$\\lim_{n \\to \\infty} \\frac{n^2 + 1}{2n^2 + 3} = \\frac{1}{2}$$`}
 
       expect(
         screen.getByRole('heading', {
-          name: /Đề thi Kết thúc Học phần Cấu trúc Đại số — Năm học 2025-2026/i,
+          name: /Đề thi Kết thúc Học phần Cấu trúc Đại số/i,
         }),
       ).toBeInTheDocument();
 
-      // Kiểm tra 5 tiêu đề câu hỏi lớn
+      // 3 tab chuẩn tách biệt Đề chính thức - Phân tích - Đề ôn tập
       expect(
-        screen.getByText(
-          /Quan hệ tương đương, Lớp tương đương và Phép toán cảm sinh trên Tập thương/i,
-        ),
+        screen.getByRole('tab', { name: /1\.\s*Đề thi chính thức \(2025 - 2026\)/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Cấp của Phần tử, Phần tử sinh và Cấu trúc Nhóm con của Nhóm Cyclic/i),
+        screen.getByRole('tab', { name: /2\.\s*Phân tích cấu trúc & Hướng dẫn ôn tập/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/Lớp kề trong Nhóm Hoán vị S_3, Định lý Lagrange và Ứng dụng/i),
+        screen.getByRole('tab', { name: /3\.\s*Đề biên soạn thêm để ôn tập \(Đề mẫu\)/i }),
       ).toBeInTheDocument();
+
+      // Không trộn lẫn thanh chọn học kỳ I cũ hay tiêu đề tóm tắt tự đặt
+      expect(screen.queryByText(/Chọn đề thi chính thức/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/2024-2025/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Nhóm con của nhóm đối xứng S₃/i)).not.toBeInTheDocument();
+
+      // Tờ đề thi nguyên bản 2522MATH170401 ở phía trên
+      expect(screen.getByText(/TRƯỜNG ĐH SƯ PHẠM TPHCM/)).toBeInTheDocument();
+      expect(screen.getByText(/Mã LHP: 2522MATH170401 — Số tín chỉ: 3/)).toBeInTheDocument();
+      expect(screen.getByText(/Câu 1\. \(3 điểm\)/)).toBeInTheDocument();
+      expect(screen.getByText(/Câu 2\. \(3 điểm\)/)).toBeInTheDocument();
+      expect(screen.getByText(/Câu 3\. \(4 điểm\)/)).toBeInTheDocument();
+      expect(screen.getByText('— HẾT —')).toBeInTheDocument();
+
+      // Lời giải chi tiết tách biệt ở dưới, mặc định thu gọn
       expect(
-        screen.getByText(/Đồng cấu Nhóm, Tiêu chuẩn Đơn cấu và Định lý Đẳng cấu thứ nhất/i),
+        screen.getByRole('heading', { name: /LỜI GIẢI CHI TIẾT & THANG ĐIỂM THAM KHẢO/i }),
       ).toBeInTheDocument();
-      expect(
-        screen.getByText(/Tiêu chuẩn Eisenstein, Vành thương và Tìm Phần tử Nghịch đảo/i),
-      ).toBeInTheDocument();
+      expect(screen.queryByText(/Xét chuyển trí/i)).not.toBeInTheDocument();
+
+      const toggleBtn = screen.getByRole('button', {
+        name: /Hiện lời giải chi tiết & thang điểm/i,
+      });
+      expect(toggleBtn.className).toContain('bg-[#1B3D2F]');
+      await user.click(toggleBtn);
+      expect(await screen.findByText(/Xét chuyển trí/i)).toBeInTheDocument();
     });
   });
 });

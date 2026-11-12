@@ -1,5 +1,11 @@
 import type { CourseExamBank, ExamPaper } from '../exam-bank-types';
 
+const MATH1302_SHEET_NOTES = [
+  'Không được sử dụng tài liệu.',
+  'Được sử dụng máy tính cầm tay.',
+  'Cán bộ coi thi không giải thích gì thêm.',
+] as const;
+
 export const MATH1302_OFFICIAL_HK1_PAPER: ExamPaper = {
   id: 'hhave-official-2025-2026-hk1',
   year: '2025 - 2026',
@@ -10,16 +16,37 @@ export const MATH1302_OFFICIAL_HK1_PAPER: ExamPaper = {
   questionPrefix: 'Bài',
   title: 'Đề thi Chính thức HK1 (2025 - 2026) — Hình học Affine và Euclid',
   description:
-    'Mã học phần đề thi: 2512MATH18221 · Thời gian làm bài: 90 phút (Được dùng máy tính cầm tay). Cấu trúc chuẩn 3 bài tự luận (3.0đ – 4.0đ – 3.0đ): Siêu mặt bậc hai trong A³, Hình chiếu và khoảng cách trong E⁴ trực chuẩn, và Chứng minh đại cương trong Aⁿ.',
+    'Mã học phần đề thi: 2512MATH18221 · Thời gian làm bài: 90 phút (Được sử dụng máy tính cầm tay). Cấu trúc 3 bài tự luận (3.0đ – 4.0đ – 3.0đ).',
+  sheetHeader: {
+    leftLines: [
+      'TRƯỜNG ĐẠI HỌC SƯ PHẠM TP.HCM',
+      'KHOA TOÁN – TIN HỌC',
+      'Đề số 1',
+      '(Đề thi gồm có 01 trang)',
+    ],
+    rightTitle: 'ĐỀ THI KẾT THỨC HỌC PHẦN',
+    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID',
+    metaRows: [
+      'Mã học phần: 2512MATH18221 — ĐVHT: 2',
+      'Năm học: 2025-2026 — Học kỳ: 1',
+      'Thời gian làm bài: 90 phút',
+    ],
+  },
+  endMarker: '---HẾT---',
+  sheetNotesHeading: 'Chú ý:',
+  sheetNotes: MATH1302_SHEET_NOTES,
   problems: [
     {
       id: 'hhave-2025-2026-hk1-b1',
       number: 1,
       points: 3.0,
       labelPrefix: 'Bài',
-      title: 'Siêu mặt bậc hai và siêu phẳng kính liên hợp trong A³',
+      sheetHeading: 'Bài 1 (3.0 điểm).',
+      inlineSheetHeading: true,
+      solutionRubric:
+        'Tính đúng các đạo hàm riêng chia đôi: 1.5 điểm · Lập đúng phương trình siêu phẳng kính liên hợp: 1.5 điểm.',
       statement:
-        'Trong không gian afin $A^3$, cho siêu mặt bậc hai $(S)$ có phương trình đối với mục tiêu cho trước là:\n$$\nx^2 - 2y^2 + z^2 + 4xy - 8xz - 4yz - 14x - 4y + 14z + 16 = 0.\n$$\nViết phương trình siêu phẳng kính liên hợp với phương $\\vec{c} = (1, 2, 3)$.',
+        'Trong không gian afin $A^3$, cho siêu mặt bậc hai $(S)$ có phương trình đối với mục tiêu cho trước là\n$$\nx^2 - 2y^2 + z^2 + 4xy - 8xz - 4yz - 14x - 4y + 14z + 16 = 0.\n$$\nViết phương trình siêu phẳng kính liên hợp với phương $\\vec{c} = (1, 2, 3)$.',
       hint: "Tính các đa thức đạo hàm riêng chia đôi $F'_1, F'_2, F'_3$ rồi lập tổ hợp tuyến tính $c_1 F'_1 + c_2 F'_2 + c_3 F'_3 = 0$.",
       solution:
         "Đặt $F(x, y, z)$ là vế trái phương trình. Ta có các đa thức đạo hàm riêng chia đôi:\n$$\nF'_1 = x + 2y - 4z - 7, \\quad F'_2 = 2x - 2y - 2z - 2, \\quad F'_3 = -4x - 2y + z + 7.\n$$\nPhương trình siêu phẳng kính liên hợp với phương $\\vec{c} = (1, 2, 3)$ là:\n$$\n1 \\cdot F'_1 + 2 \\cdot F'_2 + 3 \\cdot F'_3 = 0 \\iff (x + 2y - 4z - 7) + 2(2x - 2y - 2z - 2) + 3(-4x - 2y + z + 7) = 0\n$$\n$$\n\\iff -7x - 8y - 5z + 10 = 0 \\iff 7x + 8y + 5z - 10 = 0.\n$$",
@@ -29,7 +56,10 @@ export const MATH1302_OFFICIAL_HK1_PAPER: ExamPaper = {
       number: 2,
       points: 4.0,
       labelPrefix: 'Bài',
-      title: 'Hình chiếu vuông góc và khoảng cách trong không gian Euclid E⁴',
+      sheetHeading: 'Bài 2 (4.0 điểm).',
+      inlineSheetHeading: true,
+      partDelimiter: ')',
+      solutionRubric: 'Ý 1: 2.5 điểm · Ý 2: 1.5 điểm.',
       statement:
         'Trong không gian Euclid $E^4$ với mục tiêu trực chuẩn cho trước, cho điểm $M(2, -1, 3, 1)$ và phẳng $\\alpha$ có phương trình tổng quát là:\n$$\n\\begin{cases} x_1 + x_2 + x_3 - x_4 + 1 = 0 \\\\ 2x_1 + x_2 - 2x_3 + x_4 + 2 = 0 \\end{cases}\n$$',
       parts: [
@@ -53,7 +83,10 @@ export const MATH1302_OFFICIAL_HK1_PAPER: ExamPaper = {
       number: 3,
       points: 3.0,
       labelPrefix: 'Bài',
-      title: 'Bao afin và tính chéo nhau hoàn toàn trong không gian Aⁿ',
+      sheetHeading: 'Bài 3 (3.0 điểm). *(Đề gốc ghi Bài 1)*',
+      inlineSheetHeading: false,
+      solutionRubric:
+        "Lập bao afin A = af(N), A' = af(N'): 1.0 điểm · Chứng minh chéo nhau hoàn toàn: 2.0 điểm.",
       statement:
         "Trong không gian afin $A^n$, cho tập hợp $M = \\{A_0, A_1, \\dots, A_m\\}$ gồm $m + 1$ điểm độc lập. Gọi $N$ và $N'$ là hai tập con khác rỗng và không giao nhau của $M$. Chứng minh rằng có hai cái phẳng $A$ và $A'$ chéo nhau hoàn toàn lần lượt chứa $N$ và $N'$.",
       hint: "Chọn $A = \\text{af}(N)$ và $A' = \\text{af}(N')$. Từ giả thiết $M$ độc lập afin, kiểm tra $\\vec{A} \\cap \\vec{A'} = \\{\\vec{0}\\}$ và $\\overrightarrow{P_0 Q_0} \\notin \\vec{A} + \\vec{A'}$.",
@@ -65,22 +98,45 @@ export const MATH1302_OFFICIAL_HK1_PAPER: ExamPaper = {
 
 export const MATH1302_MOCK_EXAM_1: ExamPaper = {
   id: 'hhave-mock-01',
-  year: 'Đề mẫu 2025-2026',
+  year: 'Đề ôn tập tự biên soạn',
   semester: 'Đề ôn tập số 1',
   examCourseCode: 'MATH1302 · Đề mẫu 01',
   allowedMaterials: 'Được dùng máy tính cầm tay',
   durationMinutes: 90,
   questionPrefix: 'Bài',
-  title: 'Đề ôn tập mẫu số 1 — Hình học Affine và Euclid (MATH1302)',
+  title: 'Đề ôn tập số 1 — Hình học Affine và Euclid (MATH1302)',
   description:
-    'Bám sát cấu trúc cố định 3 bài (3.0đ – 4.0đ – 3.0đ) trong 90 phút: Tìm tâm và siêu phẳng tiếp diện của siêu mặt bậc hai trong A³, Hình chiếu, điểm đối xứng và khoảng cách trong E⁴, và Bài toán chứng minh tồn tại duy nhất cặp phẳng song song trong Aⁿ.',
+    'Đề biên soạn mô phỏng cấu trúc cố định 3 bài (3.0đ – 4.0đ – 3.0đ): tìm tâm và tiếp diện siêu mặt bậc hai trong A³, hình chiếu, đối xứng, khoảng cách trong E⁴ và cặp phẳng song song trong Aⁿ.',
+  isMockExam: true,
+  mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
+  sheetHeader: {
+    leftLines: [
+      'TÀI LIỆU ÔN TẬP NỘI BỘ',
+      'HỌC PHẦN: HÌNH HỌC AFFINE VÀ EUCLID',
+      'Đề biên soạn số 1',
+      '(Gồm có 01 trang)',
+    ],
+    rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
+    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID (MATH1302)',
+    metaRows: [
+      'Cấu trúc mô phỏng: 3 bài (3.0đ – 4.0đ – 3.0đ)',
+      'Năm học: 2025-2026 — Học kỳ: 1',
+      'Thời gian làm bài gợi ý: 90 phút',
+    ],
+  },
+  endMarker: '---HẾT---',
+  sheetNotesHeading: 'Chú ý:',
+  sheetNotes: MATH1302_SHEET_NOTES,
   problems: [
     {
       id: 'hhave-mock-01-b1',
       number: 1,
       points: 3.0,
       labelPrefix: 'Bài',
-      title: 'Tâm và siêu phẳng tiếp diện của siêu mặt bậc hai trong A³',
+      sheetHeading: 'Bài 1 (3.0 điểm).',
+      inlineSheetHeading: true,
+      partDelimiter: ')',
+      solutionRubric: 'Ý 1: 1.5 điểm · Ý 2: 1.5 điểm.',
       statement:
         'Trong $A^3$, cho siêu mặt bậc hai $(S): x^2 + 2y^2 - z^2 - 2xy + 4xz - 2x + 6y - 8z + 5 = 0$.',
       parts: [
@@ -103,7 +159,10 @@ export const MATH1302_MOCK_EXAM_1: ExamPaper = {
       number: 2,
       points: 4.0,
       labelPrefix: 'Bài',
-      title: 'Hình chiếu, điểm đối xứng và khoảng cách trong E⁴',
+      sheetHeading: 'Bài 2 (4.0 điểm).',
+      inlineSheetHeading: true,
+      partDelimiter: ')',
+      solutionRubric: "Ý 1: 2.5 điểm (tìm đúng M' 1.5đ, M'' 1.0đ) · Ý 2: 1.5 điểm.",
       statement:
         'Trong $E^4$ với mục tiêu trực chuẩn, cho $M(1, 2, -1, 3)$ và phẳng $\\alpha$:\n$$\n\\begin{cases} x_1 - x_2 + x_3 + x_4 - 2 = 0 \\\\ x_1 + x_2 - x_3 + x_4 - 4 = 0 \\end{cases}\n$$',
       parts: [
@@ -126,11 +185,102 @@ export const MATH1302_MOCK_EXAM_1: ExamPaper = {
       number: 3,
       points: 3.0,
       labelPrefix: 'Bài',
-      title: 'Tồn tại duy nhất cặp phẳng song song chứa hai phẳng chéo nhau',
+      sheetHeading: 'Bài 3 (3.0 điểm).',
+      inlineSheetHeading: true,
+      solutionRubric: 'Chứng minh tồn tại: 1.5 điểm · Chứng minh duy nhất: 1.5 điểm.',
       statement:
         "Trong $A^n$, cho hai phẳng $P, Q$ chéo nhau. Chứng minh tồn tại duy nhất cặp phẳng $(P', Q')$ sao cho $P \\subseteq P', Q \\subseteq Q'$, $\\dim P' = \\dim Q' = \\dim P + \\dim Q$ và $P' \\parallel Q'$.",
       solution:
         "Vì $P, Q$ chéo nhau nên $P \\cap Q = \\emptyset$ và $\\vec{P} \\cap \\vec{Q} = \\{\\vec{0}\\}$. Chọn $P'$ qua $A \\in P$ và $Q'$ qua $B \\in Q$ cùng có phương:\n$$\n\\vec{W} = \\vec{P} \\oplus \\vec{Q}.\n$$\nKhi đó $\\dim P' = \\dim Q' = \\dim P + \\dim Q$, $P' \\cap Q' = \\emptyset$ nên $P' \\parallel Q'$.\n\nTính duy nhất suy trực tiếp từ việc mọi phẳng chứa $P$ và song song với phẳng chứa $Q$ có số chiều $\\dim P + \\dim Q$ đều buộc phải nhận $\\vec{P} \\oplus \\vec{Q}$ làm phương.",
+    },
+  ],
+};
+
+export const MATH1302_MOCK_EXAM_2: ExamPaper = {
+  id: 'hhave-mock-02',
+  year: 'Đề ôn tập tự biên soạn',
+  semester: 'Đề ôn tập số 2',
+  examCourseCode: 'MATH1302 · Đề mẫu 02',
+  allowedMaterials: 'Được dùng máy tính cầm tay',
+  durationMinutes: 90,
+  questionPrefix: 'Bài',
+  title: 'Đề ôn tập số 2 — Hình học Affine và Euclid (MATH1302)',
+  description:
+    'Đề biên soạn mở rộng theo ma trận 3 bài (3.0đ – 4.0đ – 3.0đ): kính liên hợp siêu mặt bậc hai trong A³, hình chiếu vuông góc và khoảng cách trong E⁴, và tính chéo nhau từ hai phẳng chéo nhau hoàn toàn trong Aⁿ.',
+  isMockExam: true,
+  mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
+  sheetHeader: {
+    leftLines: [
+      'TÀI LIỆU ÔN TẬP NỘI BỘ',
+      'HỌC PHẦN: HÌNH HỌC AFFINE VÀ EUCLID',
+      'Đề biên soạn số 2',
+      '(Gồm có 01 trang)',
+    ],
+    rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
+    rightSubtitle: 'HÌNH HỌC AFFINE VÀ HÌNH HỌC EUCLID (MATH1302)',
+    metaRows: [
+      'Cấu trúc mô phỏng: 3 bài (3.0đ – 4.0đ – 3.0đ)',
+      'Năm học: 2025-2026 — Học kỳ: 1',
+      'Thời gian làm bài gợi ý: 90 phút',
+    ],
+  },
+  endMarker: '---HẾT---',
+  sheetNotesHeading: 'Chú ý:',
+  sheetNotes: MATH1302_SHEET_NOTES,
+  problems: [
+    {
+      id: 'hhave-mock-02-b1',
+      number: 1,
+      points: 3.0,
+      labelPrefix: 'Bài',
+      sheetHeading: 'Bài 1 (3.0 điểm).',
+      inlineSheetHeading: true,
+      solutionRubric:
+        'Tính đúng các đạo hàm riêng chia đôi: 1.5 điểm · Viết đúng phương trình siêu phẳng kính: 1.5 điểm.',
+      statement:
+        'Trong không gian afin $A^3$, cho siêu mặt bậc hai $(S)$ có phương trình đối với mục tiêu cho trước là\n$$\n2x^2 + y^2 - z^2 + 2xy - 2xz + 4yz - 4x + 2y + 6z - 5 = 0.\n$$\nViết phương trình siêu phẳng kính liên hợp với phương $\\vec{c} = (1, -1, 2)$.',
+      solution:
+        "Đặt $F(x, y, z)$ là vế trái phương trình. Các đa thức đạo hàm riêng chia đôi lần lượt là:\n$$\nF'_1 = 2x + y - z - 2, \\quad F'_2 = x + y + 2z + 1, \\quad F'_3 = -x + 2y - z + 3.\n$$\nKiểm tra với $\\vec{c} = (1, -1, 2)$, ta có phương trình siêu phẳng kính liên hợp:\n$$\n1 \\cdot F'_1 - 1 \\cdot F'_2 + 2 \\cdot F'_3 = 0 \\iff (2x + y - z - 2) - (x + y + 2z + 1) + 2(-x + 2y - z + 3) = 0\n$$\n$$\n\\iff -x + 4y - 5z + 3 = 0 \\iff x - 4y + 5z - 3 = 0.\n$$",
+    },
+    {
+      id: 'hhave-mock-02-b2',
+      number: 2,
+      points: 4.0,
+      labelPrefix: 'Bài',
+      sheetHeading: 'Bài 2 (4.0 điểm).',
+      inlineSheetHeading: true,
+      partDelimiter: ')',
+      solutionRubric: 'Ý 1: 2.5 điểm · Ý 2: 1.5 điểm.',
+      statement:
+        'Trong không gian Euclid $E^4$ với mục tiêu trực chuẩn cho trước, cho điểm $M(1, 0, 2, -1)$ và phẳng $\\alpha$ có phương trình tổng quát là:\n$$\n\\begin{cases} x_1 + x_2 - x_3 + x_4 - 2 = 0 \\\\ x_1 - x_2 + x_3 + x_4 + 2 = 0 \\end{cases}\n$$',
+      parts: [
+        {
+          label: '1',
+          statement: "Tìm tọa độ hình chiếu vuông góc $M'$ của $M$ trên $\\alpha$.",
+          solution:
+            "Hai vectơ pháp tuyến $\\vec{n}_1 = (1, 1, -1, 1)$ và $\\vec{n}_2 = (1, -1, 1, 1)$ lập thành cơ sở của $\\vec{\\alpha}^\\perp$. Phẳng bù trực giao $\\beta$ đi qua $M(1, 0, 2, -1)$ có phương trình tham số:\n$$\n\\begin{cases} x_1 = 1 + t + s \\\\ x_2 = t - s \\\\ x_3 = 2 - t + s \\\\ x_4 = -1 + t + s \\end{cases} \\quad (t, s \\in \\mathbb{R}).\n$$\nThay vào hệ phương trình của $\\alpha$, ta thu được:\n$$\n\\begin{cases} 4t - 4 = 0 \\\\ 4s + 4 = 0 \\end{cases} \\iff \\begin{cases} t = 1 \\\\ s = -1 \\end{cases} \\implies M'(1, 2, 0, -1).\n$$",
+        },
+        {
+          label: '2',
+          statement: 'Tính khoảng cách từ $M$ đến phẳng $\\alpha$.',
+          solution:
+            "Ta có $\\overrightarrow{MM'} = (0, 2, -2, 0)$. Khoảng cách từ $M$ đến phẳng $\\alpha$ là:\n$$\nd(M, \\alpha) = |\\overrightarrow{MM'}| = \\sqrt{0^2 + 2^2 + (-2)^2 + 0^2} = 2\\sqrt{2}.\n$$",
+        },
+      ],
+    },
+    {
+      id: 'hhave-mock-02-b3',
+      number: 3,
+      points: 3.0,
+      labelPrefix: 'Bài',
+      sheetHeading: 'Bài 3 (3.0 điểm).',
+      inlineSheetHeading: true,
+      solutionRubric:
+        'Thiết lập vectơ và điều kiện chéo nhau hoàn toàn: 1.5 điểm · Chứng minh độc lập tuyến tính suy ra hai đường thẳng chéo nhau: 1.5 điểm.',
+      statement:
+        'Trong không gian afin $A^n$, cho hai cái phẳng $P$ và $Q$ chéo nhau hoàn toàn, mỗi phẳng có số chiều lớn hơn hoặc bằng $1$. Trên $P$ lấy hai điểm phân biệt $A_1, A_2$, trên $Q$ lấy hai điểm phân biệt $B_1, B_2$. Chứng minh rằng hai đường thẳng $A_1 B_1$ và $A_2 B_2$ chéo nhau.',
+      solution:
+        'Đặt $\\vec{u} = \\overrightarrow{A_1 A_2} \\in \\vec{P} \\setminus \\{\\vec{0}\\}$, $\\vec{v} = \\overrightarrow{B_1 B_2} \\in \\vec{Q} \\setminus \\{\\vec{0}\\}$ và $\\vec{w} = \\overrightarrow{A_1 B_1}$. Khi đó $\\overrightarrow{A_2 B_2} = -\\vec{u} + \\vec{w} + \\vec{v}$.\n\nVì $P$ và $Q$ chéo nhau hoàn toàn nên $\\vec{P} \\cap \\vec{Q} = \\{\\vec{0}\\}$ và $\\vec{w} = \\overrightarrow{A_1 B_1} \\notin \\vec{P} + \\vec{Q}$.\n\nXét tổ hợp tuyến tính $\\lambda \\overrightarrow{A_1 B_1} + \\mu \\overrightarrow{A_2 B_2} + \\nu \\overrightarrow{A_1 A_2} = \\vec{0}$, ta viết lại:\n$$\n(\\lambda + \\mu)\\vec{w} = -(\\nu - \\mu)\\vec{u} - \\mu\\vec{v} \\in \\vec{P} + \\vec{Q}.\n$$\nDo $\\vec{w} \\notin \\vec{P} + \\vec{Q}$ nên $\\lambda + \\mu = 0$. Khi đó $(\\nu - \\mu)\\vec{u} = -\\mu\\vec{v} \\in \\vec{P} \\cap \\vec{Q} = \\{\\vec{0}\\}$. Vì $\\vec{u} \\neq \\vec{0}$ và $\\vec{v} \\neq \\vec{0}$, suy ra $\\mu = 0$, kéo theo $\\lambda = 0$ và $\\nu = 0$.\n\nVậy hệ vectơ $\\{\\overrightarrow{A_1 B_1}, \\overrightarrow{A_2 B_2}, \\overrightarrow{A_1 A_2}\\}$ độc lập tuyến tính, nghĩa là bốn điểm $A_1, A_2, B_1, B_2$ độc lập afin. Do đó hai đường thẳng $A_1 B_1$ và $A_2 B_2$ chéo nhau.',
     },
   ],
 };
@@ -140,8 +290,7 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
   courseCode: 'MATH1302',
   examCourseCode: '2512MATH18221',
   courseTitle: 'Hình học Affine và Hình học Euclid',
-  subtitle:
-    'Đề thi chính thức HK1 (2025 - 2026), cấu trúc cố định 3 bài và đề ôn tập mẫu bám sát ma trận',
+  subtitle: 'Đề thi chính thức HK1 (2025 - 2026), cấu trúc cố định 3 bài và bộ đề biên soạn ôn tập',
   officialExams: [MATH1302_OFFICIAL_HK1_PAPER],
   matrixAnalysis: {
     headline: 'Phân tích cấu trúc & Chiến lược ôn tập MATH1302',
@@ -264,5 +413,5 @@ export const MATH1302_EXAM_BANK: CourseExamBank = {
       },
     ],
   },
-  mockExams: [MATH1302_MOCK_EXAM_1],
+  mockExams: [MATH1302_MOCK_EXAM_1, MATH1302_MOCK_EXAM_2],
 };

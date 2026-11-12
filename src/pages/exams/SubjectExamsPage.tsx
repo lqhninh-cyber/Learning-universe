@@ -13,19 +13,12 @@ import {
 import { useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { getSubjectBySlug } from '@/content-runtime';
-import {
-  MATH1301_EXAM_BANK,
-  MATH1301_MOCK_EXAM_1,
-  MATH1301_OFFICIAL_HK2_PAPER,
-} from '@/data/courses/cau-truc-dai-so/exam-bank';
-import { CTDS_EXAM_PAPERS } from '@/data/courses/cau-truc-dai-so/exams';
+import { MATH1301_EXAM_BANK } from '@/data/courses/cau-truc-dai-so/exam-bank';
 import { GTHMB_EXAM_PAPERS } from '@/data/courses/giai-tich-ham-mot-bien/exams';
 import { MATH1302_EXAM_BANK } from '@/data/courses/hinh-hoc-affine/exam-bank';
-import { HHAVE_EXAM_PAPERS } from '@/data/courses/hinh-hoc-affine/exams';
 import { CourseExamBankWorkspace } from '@/features/exams/CourseExamBankWorkspace';
 import { ExamImageModal } from '@/features/exams/ExamImageModal';
 import { ExamProblemCard } from '@/features/exams/ExamProblemCard';
-import { MatrixAnalysisView } from '@/features/exams/MatrixAnalysisView';
 import { MathGlossaryPopover, MathGlossaryProvider } from '@/features/math-glossary';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
@@ -43,10 +36,10 @@ export function SubjectExamsPage() {
       return GTHMB_EXAM_PAPERS;
     }
     if (subjectSlug === 'cau-truc-dai-so') {
-      return [...CTDS_EXAM_PAPERS, MATH1301_OFFICIAL_HK2_PAPER, MATH1301_MOCK_EXAM_1];
+      return [...MATH1301_EXAM_BANK.officialExams, ...MATH1301_EXAM_BANK.mockExams];
     }
     if (subjectSlug === 'hinh-hoc-affine') {
-      return HHAVE_EXAM_PAPERS;
+      return [...MATH1302_EXAM_BANK.officialExams, ...MATH1302_EXAM_BANK.mockExams];
     }
     return [];
   }, [subjectSlug]);
@@ -125,16 +118,16 @@ export function SubjectExamsPage() {
             </Button>
 
             <div className="flex items-center gap-2">
-              <Badge variant="subject">Toán học</Badge>
+              <Badge className="border-[#1B3D2F] bg-[#1B3D2F] text-white">Toán học</Badge>
               <Badge variant="neutral">{courseCodeLabel}</Badge>
             </div>
           </div>
 
           {/* Hero banner */}
-          <div className="border-subject-200/90 from-subject-50/50 relative overflow-hidden rounded-3xl border bg-gradient-to-br via-white to-stone-50/70 p-6 shadow-xs sm:p-8">
+          <div className="relative overflow-hidden rounded-3xl border border-[#1B3D2F]/20 bg-gradient-to-br from-emerald-50/45 via-white to-stone-50/70 p-6 shadow-xs sm:p-8">
             <div className="relative z-10 space-y-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-subject-800 bg-subject-100/80 inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-bold">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B3D2F]/10 px-3 py-0.5 text-xs font-bold text-[#1B3D2F]">
                   <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Ngân hàng Đề thi Chính thức &amp; Lời giải Thực chiến</span>
                 </span>
@@ -159,6 +152,12 @@ export function SubjectExamsPage() {
         {subjectSlug === 'hinh-hoc-affine' ? (
           <CourseExamBankWorkspace
             bank={MATH1302_EXAM_BANK}
+            showFullPageLink={false}
+            withGlossaryProvider={false}
+          />
+        ) : subjectSlug === 'cau-truc-dai-so' ? (
+          <CourseExamBankWorkspace
+            bank={MATH1301_EXAM_BANK}
             showFullPageLink={false}
             withGlossaryProvider={false}
           />
@@ -198,7 +197,7 @@ export function SubjectExamsPage() {
                       className={cn(
                         'flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium transition-all sm:text-sm',
                         isSelected
-                          ? 'border-subject-600 bg-subject-600 text-white shadow-xs'
+                          ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs'
                           : 'border-stone-200 bg-stone-50/80 text-stone-700 hover:border-stone-300 hover:bg-stone-100',
                       )}
                     >
@@ -329,16 +328,6 @@ export function SubjectExamsPage() {
                     year={`${activePaper.year} (${activePaper.semester})`}
                   />
                 ) : null}
-
-                {/* Phân tích ma trận đặc tả & Checklist ôn tập (MATH1301) */}
-                {subjectSlug === 'cau-truc-dai-so' ? (
-                  <div className="mt-8 border-t border-stone-200/80 pt-8">
-                    <MatrixAnalysisView
-                      subjectSlug="cau-truc-dai-so"
-                      analysis={MATH1301_EXAM_BANK.matrixAnalysis}
-                    />
-                  </div>
-                ) : null}
               </div>
             )}
 
@@ -346,35 +335,23 @@ export function SubjectExamsPage() {
             <div className="mt-8 rounded-2xl border border-stone-200/80 bg-white p-5 text-center shadow-2xs sm:p-6">
               <h3 className="text-sm font-bold text-stone-800">Cần ôn lại nền tảng lý thuyết?</h3>
               <p className="mt-1 text-xs text-stone-600">
-                {subjectSlug === 'cau-truc-dai-so'
-                  ? 'Xem lại 10 chương bài học hoặc đề cương trọng tâm CLO và bộ câu hỏi tự luận kinh điển của học phần.'
-                  : 'Xem lại 7 chương bài học hoặc đề cương trọng tâm và 5 câu tự luận đề mẫu học phần.'}
+                Xem lại 7 chương bài học hoặc đề cương trọng tâm và 5 câu tự luận đề mẫu học phần.
               </p>
               <div className="mt-4 flex flex-wrap justify-center gap-3">
                 <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
                   <Link to={ROUTES.subjectOverview(subject.slug)}>
                     <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>
-                      {subjectSlug === 'cau-truc-dai-so'
-                        ? 'Tổng quan môn học & 10 Chương'
-                        : 'Tổng quan môn học & 7 Chương'}
-                    </span>
+                    <span>Tổng quan môn học &amp; 7 Chương</span>
                   </Link>
                 </Button>
-                <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
-                  <Link
-                    to={
-                      subjectSlug === 'cau-truc-dai-so'
-                        ? '/mon-hoc/cau-truc-dai-so/truong-con-truong-cac-thuong/bai-tap-chuong-9-va-tong-ket-hoc-phan'
-                        : '/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi'
-                    }
-                  >
+                <Button
+                  asChild
+                  size="sm"
+                  className="gap-1.5 bg-[#1B3D2F] text-xs text-white hover:bg-[#142F24]"
+                >
+                  <Link to="/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi">
                     <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>
-                      {subjectSlug === 'cau-truc-dai-so'
-                        ? 'Tổng kết học phần & Đề cương CLO'
-                        : 'Đề cương trọng tâm & Đề mẫu'}
-                    </span>
+                    <span>Đề cương trọng tâm &amp; Đề mẫu</span>
                   </Link>
                 </Button>
               </div>

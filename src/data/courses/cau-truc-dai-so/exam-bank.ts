@@ -1,5 +1,9 @@
 import type { CourseExamBank, ExamPaper } from '../exam-bank-types';
-import { CTDS_EXAM_PAPERS } from './exams';
+
+const MATH1301_SHEET_NOTES = [
+  'Thí sinh KHÔNG được sử dụng tài liệu.',
+  'Cán bộ coi thi không giải thích gì thêm.',
+] as const;
 
 export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
   id: 'ctds-official-2025-2026-hk2',
@@ -11,14 +15,34 @@ export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
   questionPrefix: 'Câu',
   title: 'Đề thi Chính thức HK2 (2025 - 2026) — Cấu trúc Đại số',
   description:
-    'Mã học phần đề thi: 2522MATH170401 · Thời gian làm bài: 90 phút (Không dùng tài liệu). Gồm 3 câu hỏi tự luận (3.0đ – 3.0đ – 4.0đ) kết hợp tìm nhóm con tường minh trên S₃, ℤ₄, V₄, S₄ và chứng minh các định lý nền tảng về giao và tích nhóm con.',
+    'Mã học phần đề thi: 2522MATH170401 · Thời gian làm bài: 90 phút (Không dùng tài liệu). Gồm 3 câu hỏi tự luận (3.0đ – 3.0đ – 4.0đ).',
+  sheetHeader: {
+    leftLines: [
+      'TRƯỜNG ĐH SƯ PHẠM TPHCM',
+      'KHOA TOÁN - TIN HỌC',
+      'Đề chính thức',
+      '(Đề thi gồm có 1 trang)',
+    ],
+    rightTitle: 'ĐỀ THI KẾT THỨC HỌC PHẦN',
+    rightSubtitle: 'Tên HP: ĐẠI SỐ',
+    metaRows: [
+      'Mã LHP: 2522MATH170401 — Số tín chỉ: 3',
+      'Học kỳ: 2 — Năm học: 2025 - 2026',
+      'Thời gian: 90 phút (không kể thời gian phát đề)',
+    ],
+  },
+  endMarker: '— HẾT —',
+  sheetNotesHeading: 'Ghi chú:',
+  sheetNotes: MATH1301_SHEET_NOTES,
   problems: [
     {
       id: 'ctds-2025-2026-hk2-c1',
       number: 1,
       points: 3.0,
       labelPrefix: 'Câu',
-      title: 'Nhóm con của nhóm đối xứng S₃ và nhóm cộng ℤ₄',
+      sheetHeading: 'Câu 1. (3 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 1.0 điểm · Ý b: 1.0 điểm · Ý c: 1.0 điểm.',
       parts: [
         {
           label: 'a',
@@ -46,7 +70,9 @@ export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
       number: 2,
       points: 3.0,
       labelPrefix: 'Câu',
-      title: 'Giao, hợp hai nhóm con và các nhóm con của nhóm Klein V₄',
+      sheetHeading: 'Câu 2. (3 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 1.0 điểm · Ý b: 1.0 điểm · Ý c: 1.0 điểm.',
       parts: [
         {
           label: 'a',
@@ -76,7 +102,9 @@ export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
       number: 3,
       points: 4.0,
       labelPrefix: 'Câu',
-      title: 'Điều kiện HK là nhóm con và nhóm con cấp 4 của S₄',
+      sheetHeading: 'Câu 3. (4 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 3.0 điểm (mỗi chiều 1.5 điểm) · Ý b: 1.0 điểm.',
       parts: [
         {
           label: 'a',
@@ -98,22 +126,44 @@ export const MATH1301_OFFICIAL_HK2_PAPER: ExamPaper = {
 
 export const MATH1301_MOCK_EXAM_1: ExamPaper = {
   id: 'ctds-mock-01',
-  year: 'Đề mẫu 2025-2026',
+  year: 'Đề ôn tập tự biên soạn',
   semester: 'Đề ôn tập số 1',
   examCourseCode: 'MATH1301 · Đề mẫu 01',
   allowedMaterials: 'Không dùng tài liệu',
   durationMinutes: 90,
   questionPrefix: 'Câu',
-  title: 'Đề ôn tập mẫu số 1 — Cấu trúc Đại số (MATH1301)',
+  title: 'Đề ôn tập số 1 — Cấu trúc Đại số (MATH1301)',
   description:
-    'Bám sát cấu trúc đề thi 90 phút của học phần Cấu trúc Đại số: kết hợp phân tích phép thế $S_4$, nhóm cyclic $\\mathbb{Z}_6$, nhóm nhân $U(10)$ với các chứng minh kinh điển về tâm nhóm $Z(G)$, tính chuẩn tắc và đồng cấu nhóm.',
+    'Đề biên soạn mô phỏng cấu trúc 90 phút (3.0đ – 3.0đ – 4.0đ): phép thế S₄, nhóm cyclic ℤ₆, nhóm nhân U(10), tâm nhóm Z(G) và đồng cấu nhóm.',
+  isMockExam: true,
+  mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
+  sheetHeader: {
+    leftLines: [
+      'TÀI LIỆU ÔN TẬP NỘI BỘ',
+      'HỌC PHẦN: CẤU TRÚC ĐẠI SỐ',
+      'Đề biên soạn số 1',
+      '(Gồm có 1 trang)',
+    ],
+    rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
+    rightSubtitle: 'Tên HP: ĐẠI SỐ (MATH1301)',
+    metaRows: [
+      'Cấu trúc mô phỏng: 3 câu (3đ – 3đ – 4đ)',
+      'Học kỳ II — Năm học 2025 - 2026',
+      'Thời gian làm bài gợi ý: 90 phút (Không dùng tài liệu)',
+    ],
+  },
+  endMarker: '— HẾT —',
+  sheetNotesHeading: 'Ghi chú:',
+  sheetNotes: MATH1301_SHEET_NOTES,
   problems: [
     {
       id: 'ctds-mock-01-c1',
       number: 1,
       points: 3.0,
       labelPrefix: 'Câu',
-      title: 'Phép thế S₄, nhóm con của ℤ₆ và phần tử sinh của U(10)',
+      sheetHeading: 'Câu 1. (3 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 1.0 điểm · Ý b: 1.0 điểm · Ý c: 1.0 điểm.',
       parts: [
         {
           label: 'a',
@@ -143,7 +193,9 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
       number: 2,
       points: 3.0,
       labelPrefix: 'Câu',
-      title: 'Tâm nhóm Z(G), tính chuẩn tắc trong S₃ và nhóm có x² = e',
+      sheetHeading: 'Câu 2. (3 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 1.0 điểm · Ý b: 1.0 điểm · Ý c: 1.0 điểm.',
       parts: [
         {
           label: 'a',
@@ -172,7 +224,9 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
       number: 3,
       points: 4.0,
       labelPrefix: 'Câu',
-      title: 'Hạt nhân, ảnh đồng cấu nhóm và các nhóm con chuẩn tắc của S₃',
+      sheetHeading: 'Câu 3. (4 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 2.5 điểm · Ý b: 1.5 điểm.',
       parts: [
         {
           label: 'a',
@@ -192,13 +246,138 @@ export const MATH1301_MOCK_EXAM_1: ExamPaper = {
   ],
 };
 
+export const MATH1301_MOCK_EXAM_2: ExamPaper = {
+  id: 'ctds-mock-02',
+  year: 'Đề ôn tập tự biên soạn',
+  semester: 'Đề ôn tập số 2',
+  examCourseCode: 'MATH1301 · Đề mẫu 02',
+  allowedMaterials: 'Không dùng tài liệu',
+  durationMinutes: 90,
+  questionPrefix: 'Câu',
+  title: 'Đề ôn tập số 2 — Cấu trúc Đại số (MATH1301)',
+  description:
+    'Đề biên soạn mở rộng bám sát ma trận 40/60: cấp phần tử trong S₃, nhóm con ℤ₈, tính cyclic của U(12), nhóm con có chỉ số 2 và nghịch ảnh chuẩn tắc qua đồng cấu.',
+  isMockExam: true,
+  mockBannerLabel: 'ĐỀ BIÊN SOẠN ÔN TẬP (MÔ PHỎNG CẤU TRÚC ĐỀ CHÍNH THỨC)',
+  sheetHeader: {
+    leftLines: [
+      'TÀI LIỆU ÔN TẬP NỘI BỘ',
+      'HỌC PHẦN: CẤU TRÚC ĐẠI SỐ',
+      'Đề biên soạn số 2',
+      '(Gồm có 1 trang)',
+    ],
+    rightTitle: 'ĐỀ ÔN TẬP MÔ PHỎNG THI KẾT THÚC HỌC PHẦN',
+    rightSubtitle: 'Tên HP: ĐẠI SỐ (MATH1301)',
+    metaRows: [
+      'Cấu trúc mô phỏng: 3 câu (3đ – 3đ – 4đ)',
+      'Học kỳ II — Năm học 2025 - 2026',
+      'Thời gian làm bài gợi ý: 90 phút (Không dùng tài liệu)',
+    ],
+  },
+  endMarker: '— HẾT —',
+  sheetNotesHeading: 'Ghi chú:',
+  sheetNotes: MATH1301_SHEET_NOTES,
+  problems: [
+    {
+      id: 'ctds-mock-02-c1',
+      number: 1,
+      points: 3.0,
+      labelPrefix: 'Câu',
+      sheetHeading: 'Câu 1. (3 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 1.0 điểm · Ý b: 1.0 điểm · Ý c: 1.0 điểm.',
+      parts: [
+        {
+          label: 'a',
+          statement:
+            'Tìm tất cả các phần tử có cấp bằng $2$ và các phần tử có cấp bằng $3$ trong nhóm đối xứng $S_3$.',
+          solution:
+            'Trong nhóm $S_3 = \\{id, (1\\ 2), (1\\ 3), (2\\ 3), (1\\ 2\\ 3), (1\\ 3\\ 2)\\}$:\n- **Các phần tử cấp $2$:** $(1\\ 2), (1\\ 3), (2\\ 3)$ (do mỗi chuyển trí $\\tau \\neq id$ thỏa $\\tau^2 = id$).\n- **Các phần tử cấp $3$:** $(1\\ 2\\ 3), (1\\ 3\\ 2)$ (do $(1\\ 2\\ 3)^2 = (1\\ 3\\ 2)$, $(1\\ 2\\ 3)^3 = id$ và $(1\\ 3\\ 2)^2 = (1\\ 2\\ 3)$, $(1\\ 3\\ 2)^3 = id$).',
+        },
+        {
+          label: 'b',
+          statement:
+            'Liệt kê tất cả các nhóm con của nhóm cộng $\\mathbb{Z}_8 = \\{0, 1, 2, 3, 4, 5, 6, 7\\}$.',
+          solution:
+            'Vì $\\mathbb{Z}_8 = \\langle 1 \\rangle$ là nhóm cyclic cấp $8$, ứng với mỗi ước dương $d \\in \\{1, 2, 4, 8\\}$ có duy nhất $1$ nhóm con cấp $d$:\n- **Cấp $1$:** $H_1 = \\langle 0 \\rangle = \\{0\\}$.\n- **Cấp $2$:** $H_2 = \\langle 4 \\rangle = \\{0, 4\\}$.\n- **Cấp $4$:** $H_3 = \\langle 2 \\rangle = \\{0, 2, 4, 6\\}$.\n- **Cấp $8$:** $H_4 = \\langle 1 \\rangle = \\mathbb{Z}_8 = \\{0, 1, 2, 3, 4, 5, 6, 7\\}$.',
+        },
+        {
+          label: 'c',
+          statement:
+            'Tìm cấp của phần tử $\\overline{5}$ trong nhóm nhân $U(12) = \\{\\overline{1}, \\overline{5}, \\overline{7}, \\overline{11}\\}$. Nhóm $U(12)$ có phải là nhóm cyclic hay không? Giải thích.',
+          solution:
+            'Ta có $\\overline{5}^2 = \\overline{25} = \\overline{1} \\implies \\operatorname{ord}(\\overline{5}) = 2$.\n\nKiểm tra các phần tử còn lại: $\\overline{7}^2 = \\overline{49} = \\overline{1}$, $\\overline{11}^2 = \\overline{121} = \\overline{1}$ và $\\operatorname{ord}(\\overline{1}) = 1$. Vì $|U(12)| = 4$ nhưng không có phần tử nào có cấp $4$ nên $U(12)$ **không phải** là nhóm cyclic.',
+        },
+      ],
+    },
+    {
+      id: 'ctds-mock-02-c2',
+      number: 2,
+      points: 3.0,
+      labelPrefix: 'Câu',
+      sheetHeading: 'Câu 2. (3 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 1.0 điểm · Ý b: 1.0 điểm · Ý c: 1.0 điểm.',
+      parts: [
+        {
+          label: 'a',
+          statement:
+            'Cho $H$ và $K$ là hai nhóm con chuẩn tắc của nhóm $G$. Chứng minh rằng $H \\cap K$ cũng là một nhóm con chuẩn tắc của $G$.',
+          solution:
+            'Vì $H, K \\le G$ nên $H \\cap K \\le G$ ($e \\in H \\cap K$ và mọi $x, y \\in H \\cap K$ có $xy^{-1} \\in H \\cap K$).\n\nVới mọi $g \\in G$ và $u \\in H \\cap K$, vì $H \\trianglelefteq G$ và $K \\trianglelefteq G$ nên $gug^{-1} \\in H$ và $gug^{-1} \\in K$, suy ra $gug^{-1} \\in H \\cap K$. Vậy $H \\cap K \\trianglelefteq G$.',
+        },
+        {
+          label: 'b',
+          statement:
+            'Trong $S_3$, xét hai nhóm con $H = \\{id, (1\\ 2)\\}$ và $K = \\{id, (1\\ 3)\\}$. Chứng minh rằng tập tích $HK = \\{hk \\mid h \\in H, k \\in K\\}$ không phải là nhóm con của $S_3$.',
+          solution:
+            'Do $H \\cap K = \\{id\\}$ nên số phần tử của tập tích $HK$ là:\n$$\n|HK| = \\frac{|H|\\cdot|K|}{|H \\cap K|} = \\frac{2 \\cdot 2}{1} = 4.\n$$\nVì $|S_3| = 6$ và $4 \\nmid 6$, theo định lý Lagrange thì $HK$ không thể là nhóm con của $S_3$ *(hoặc trực tiếp thấy $(1\\ 2)(1\\ 3) \\neq (1\\ 3)(1\\ 2)$ nên $HK \\neq KH$)*.',
+        },
+        {
+          label: 'c',
+          statement:
+            'Chứng minh rằng nếu $H$ là nhóm con có chỉ số $[G : H] = 2$ trong nhóm $G$ thì $H$ là nhóm con chuẩn tắc của $G$.',
+          solution:
+            'Vì $[G : H] = 2$, nhóm $G$ phân hoạch thành đúng $2$ lớp kề trái ($H$ và $G \\setminus H$) và $2$ lớp kề phải ($H$ và $G \\setminus H$).\n\nVới mọi $g \\in G$:\n- Nếu $g \\in H$ thì $gH = H = Hg$.\n- Nếu $g \\notin H$ thì $gH \\neq H$ và $Hg \\neq H$, suy ra $gH = G \\setminus H = Hg$.\n\nVậy $gH = Hg$ với mọi $g \\in G$, tức là $H \\trianglelefteq G$.',
+        },
+      ],
+    },
+    {
+      id: 'ctds-mock-02-c3',
+      number: 3,
+      points: 4.0,
+      labelPrefix: 'Câu',
+      sheetHeading: 'Câu 3. (4 điểm)',
+      partDelimiter: ')',
+      solutionRubric: 'Ý a: 2.5 điểm · Ý b: 1.5 điểm.',
+      parts: [
+        {
+          label: 'a',
+          statement:
+            "Cho đồng cấu nhóm $f: G \\to G'$ và $K'$ là một nhóm con chuẩn tắc của $G'$. Chứng minh rằng nghịch ảnh $f^{-1}(K') = \\{x \\in G \\mid f(x) \\in K'\\}$ là một nhóm con chuẩn tắc của $G$.",
+          solution:
+            "Ta có $f(e) = e' \\in K' \\implies e \\in f^{-1}(K') \\neq \\emptyset$. Với mọi $x, y \\in f^{-1}(K')$, vì $f(x), f(y) \\in K'$ nên:\n$$\nf(xy^{-1}) = f(x)f(y)^{-1} \\in K' \\implies xy^{-1} \\in f^{-1}(K').\n$$\nDo đó $f^{-1}(K') \\le G$. Hơn nữa, với mọi $g \\in G$ và $u \\in f^{-1}(K')$, vì $f(u) \\in K'$ và $K' \\trianglelefteq G'$ nên:\n$$\nf(gug^{-1}) = f(g)f(u)f(g)^{-1} \\in K' \\implies gug^{-1} \\in f^{-1}(K').\n$$\nVậy $f^{-1}(K') \\trianglelefteq G$.",
+        },
+        {
+          label: 'b',
+          statement:
+            'Trong $S_4$, hãy chỉ ra một nhóm con cấp $4$ KHÔNG chuẩn tắc và một nhóm con cấp $4$ chuẩn tắc.',
+          solution:
+            '- **Nhóm con cấp $4$ không chuẩn tắc:** $H_1 = \\langle (1\\ 2\\ 3\\ 4) \\rangle = \\{id, (1\\ 2\\ 3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4\\ 3\\ 2)\\}$, vì liên hợp bởi $(1\\ 2) \\in S_4$ cho $(1\\ 2)(1\\ 2\\ 3\\ 4)(1\\ 2)^{-1} = (1\\ 3\\ 4\\ 2) \\notin H_1$.\n- **Nhóm con cấp $4$ chuẩn tắc:** Nhóm bốn Klein $V_4 = \\{id, (1\\ 2)(3\\ 4), (1\\ 3)(2\\ 4), (1\\ 4)(2\\ 3)\\} \\trianglelefteq S_4$ (bất biến qua mọi phép liên hợp trong $S_4$).',
+        },
+      ],
+    },
+  ],
+};
+
 export const MATH1301_EXAM_BANK: CourseExamBank = {
   subjectSlug: 'cau-truc-dai-so',
   courseCode: 'MATH1301',
   examCourseCode: '2522MATH170401',
   courseTitle: 'Cấu trúc Đại số',
-  subtitle: 'Đề thi chính thức HK2 (2025 - 2026), ma trận đặc tả 40/60 và đề ôn tập mẫu chuẩn hóa',
-  officialExams: [MATH1301_OFFICIAL_HK2_PAPER, ...CTDS_EXAM_PAPERS],
+  subtitle:
+    'Đề thi chính thức HK2 (2025 - 2026), phân tích cấu trúc 40/60 và bộ đề biên soạn ôn tập',
+  officialExams: [MATH1301_OFFICIAL_HK2_PAPER],
   matrixAnalysis: {
     headline: 'Phân tích cấu trúc & Chiến lược ôn tập MATH1301',
     summary:
@@ -374,5 +553,5 @@ export const MATH1301_EXAM_BANK: CourseExamBank = {
       },
     ],
   },
-  mockExams: [MATH1301_MOCK_EXAM_1],
+  mockExams: [MATH1301_MOCK_EXAM_1, MATH1301_MOCK_EXAM_2],
 };

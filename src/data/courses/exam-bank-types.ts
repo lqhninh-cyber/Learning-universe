@@ -13,15 +13,26 @@ export interface ExamProblemPart {
   readonly solution: string;
 }
 
+export interface ExamSheetHeader {
+  readonly leftLines: readonly string[];
+  readonly rightTitle: string;
+  readonly rightSubtitle: string;
+  readonly metaRows: readonly string[];
+}
+
 export interface ExamProblem {
   readonly id: string;
   readonly number: number;
   readonly points: number;
   readonly labelPrefix?: ExamQuestionPrefix;
   readonly title?: string;
+  readonly sheetHeading?: string;
+  readonly inlineSheetHeading?: boolean;
+  readonly partDelimiter?: ')' | '.';
   readonly statement?: string;
   readonly hint?: string;
   readonly solution?: string;
+  readonly solutionRubric?: string;
   readonly parts?: readonly ExamProblemPart[];
 }
 
@@ -36,6 +47,12 @@ export interface ExamPaper {
   readonly description: string;
   readonly questionPrefix?: ExamQuestionPrefix;
   readonly originalImagePath?: string;
+  readonly sheetHeader?: ExamSheetHeader;
+  readonly endMarker?: string;
+  readonly sheetNotesHeading?: string;
+  readonly sheetNotes?: readonly string[];
+  readonly isMockExam?: boolean;
+  readonly mockBannerLabel?: string;
   readonly problems: readonly ExamProblem[];
 }
 
