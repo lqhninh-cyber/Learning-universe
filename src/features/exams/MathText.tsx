@@ -1,10 +1,10 @@
-import { Check, Copy } from 'lucide-react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { detectCourseIdFromPath } from '@/data/math-glossary';
 import { annotateTextString } from '@/features/math-glossary/annotator';
 import { KatexMath } from '@/features/math-glossary/KatexMath';
 import { useMathGlossary } from '@/features/math-glossary/useMathGlossary';
 import { cn } from '@/shared/lib/cn';
+import { normalizeMixedMathProse } from '@/shared/lib/math-sanitize';
 
 export interface MathTextProps {
   readonly text: string;
@@ -21,52 +21,16 @@ export interface KatexDisplayFormulaProps {
 }
 
 /**
- * Hiển thị một công thức toán khối (`displayMode`) bằng KaTeX kèm nút sao chép mã nguồn LaTeX.
+ * Hiển thị một công thức toán khối (`displayMode`) bằng KaTeX.
  */
 export function KatexDisplayFormula({ math, className }: KatexDisplayFormulaProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(math);
-      }
-      setCopied(true);
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => setCopied(false), 1800);
-      }
-    } catch {
-      // Bỏ qua nếu môi trường không hỗ trợ Clipboard API
-    }
-  };
-
   return (
     <div
       className={cn(
-        'group/katex relative my-4 overflow-x-auto rounded-xl border border-[var(--border-subtle)]/70 bg-[var(--bg-subtle)]/60 px-5 pt-8 pb-3.5 transition-colors duration-200 hover:border-[var(--border-control)]',
+        'my-4 overflow-x-auto rounded-xl border border-[var(--border-subtle)]/70 bg-[var(--bg-subtle)]/60 px-5 py-3.5 transition-colors duration-200 hover:border-[var(--border-control)]',
         className,
       )}
     >
-      <button
-        type="button"
-        onClick={handleCopy}
-        aria-label={copied ? 'Đã sao chép mã LaTeX' : 'Sao chép LaTeX'}
-        title="Sao chép mã nguồn LaTeX"
-        className="absolute top-2 right-2 z-10 inline-flex min-h-[28px] cursor-pointer items-center gap-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[11px] font-medium text-[var(--text-muted)] shadow-2xs transition-all duration-200 hover:border-[var(--border-control)] hover:text-[var(--text-main)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-primary)] active:scale-[0.98] print:hidden"
-      >
-        {copied ? (
-          <>
-            <Check className="h-3 w-3 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
-            <span>Đã chép</span>
-          </>
-        ) : (
-          <>
-            <Copy className="h-3 w-3" aria-hidden="true" />
-            <span>Copy LaTeX</span>
-          </>
-        )}
-      </button>
-
       <div className="overflow-x-auto py-0.5 text-center text-[var(--text-main)]">
         <KatexMath math={math} display={true} />
       </div>
@@ -76,7 +40,7 @@ export function KatexDisplayFormula({ math, className }: KatexDisplayFormulaProp
 
 /**
  * Phân tích và hiển thị chuỗi văn bản hỗn hợp chứa định dạng Markdown cơ bản và công thức KaTeX:
- * - Display math: `$$...$$` (có nút copy mã LaTeX)
+ * - Display math: `$$...$$`
  * - Inline math: `$...$`
  * - Bold `**...**`, Italic `*...*`, Inline code `` `...` ``
  * - Danh sách gạch đầu dòng `-`, `*`, danh sách có thứ tự `1.`, `a)`, phân cách `---`
@@ -100,13 +64,13 @@ export function MathText({
 
   const inlineNodes = useMemo(() => {
     if (!inline || !text) return null;
-    return renderInlineTokens(text.trim(), 'inline', effectiveCourseId);
+    return renderInlineTokens(normalizeMixedMathProse(text).trim(), 'inline', effectiveCourseId);
   }, [inline, text, effectiveCourseId]);
 
   const renderedContent = useMemo(() => {
     if (inline || !text) return null;
 
-    const normalized = text.replace(/\r\n/g, '\n').trim();
+    const normalized = normalizeMixedMathProse(text.replace(/\r\n/g, '\n')).trim();
     const topSegments = normalized.split(/(\$\$[\s\S]*?\$\$)/g);
 
     return topSegments.map((segment, segIdx) => {

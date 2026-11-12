@@ -145,7 +145,7 @@ export function SubjectExamsPage() {
               <p className="max-w-3xl text-sm leading-relaxed text-stone-600 sm:text-base">
                 Hệ thống hóa toàn bộ đề thi chính thức, phân tích ma trận đặc tả và đề ôn tập mẫu.
                 Mỗi bài toán đều có thang điểm chuẩn, gợi ý định lý trọng tâm và lời giải chi tiết
-                từng bước được số hóa 100% bằng KaTeX kèm nút copy LaTeX.
+                từng bước được số hóa 100% bằng KaTeX.
               </p>
             </div>
           </div>

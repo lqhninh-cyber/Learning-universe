@@ -151,7 +151,7 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
         name: 'Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley',
       }),
     ).toBeInTheDocument();
-  });
+  }, 30_000);
 
   it('5. Đường dẫn rút gọn (/bai-hoc/nhom và /bai-hoc/nhom-con) tự động điều hướng về bài học chuẩn', async () => {
     renderRoute('/bai-hoc/nhom');

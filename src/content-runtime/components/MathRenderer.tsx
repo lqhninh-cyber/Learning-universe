@@ -1,6 +1,7 @@
 import { type ReactNode, useMemo } from 'react';
 import { KatexMath } from '@/features/math-glossary/KatexMath';
 import { cn } from '@/shared/lib/cn';
+import { normalizeMixedMathProse } from '@/shared/lib/math-sanitize';
 
 export interface MathRendererProps {
   readonly content?: string | null;
@@ -67,9 +68,11 @@ export function MathRenderer({ content, inline = true, className }: MathRenderer
   const rendered = useMemo(() => {
     if (!content) return null;
 
+    const normalizedContent = normalizeMixedMathProse(content);
+
     // Kiểm tra xem chuỗi có chứa cặp dấu $...$ hay không
-    if (content.includes('$')) {
-      const segments = content.split(DELIMITED_MATH_REGEX);
+    if (normalizedContent.includes('$')) {
+      const segments = normalizedContent.split(DELIMITED_MATH_REGEX);
 
       return segments.map((seg, index) => {
         const key = `math-seg-${index}`;

@@ -1,5 +1,5 @@
 import type { MDXComponents } from 'mdx/types';
-import { type ComponentPropsWithoutRef, type ComponentType, useMemo, useState } from 'react';
+import { type ComponentPropsWithoutRef, type ComponentType, useMemo } from 'react';
 import type { BibliographyEntry, LessonMeta } from '@schemas/index';
 import {
   annotateChildren,
@@ -17,43 +17,13 @@ import { LessonProvider } from './LessonContext';
 import { mdxComponents } from './mdx-components';
 
 function KatexDisplayBlock({
-  tex,
   spanProps,
 }: {
-  readonly tex: string | null;
   readonly spanProps: ComponentPropsWithoutRef<'span'>;
 }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (!tex) return;
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(tex);
-      }
-      setCopied(true);
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => setCopied(false), 1800);
-      }
-    } catch {
-      // Bỏ qua nếu môi trường không hỗ trợ Clipboard API
-    }
-  };
-
   return (
-    <span className="group/katex relative my-4 block overflow-x-auto rounded-xl bg-[var(--bg-subtle)]/60 px-5 py-1.5 transition-colors duration-200">
+    <span className="my-4 block overflow-x-auto rounded-xl bg-[var(--bg-subtle)]/60 px-5 py-1.5 transition-colors duration-200">
       <span {...spanProps} />
-      {tex && (
-        <button
-          type="button"
-          onClick={handleCopy}
-          aria-label="Sao chép LaTeX"
-          title="Sao chép mã nguồn LaTeX"
-          className="absolute top-2 right-2 z-10 inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#CFDADB] bg-[#F7FAFA]/95 px-2 py-0.5 font-mono text-[11px] font-medium text-[#55676B] opacity-0 shadow-2xs backdrop-blur-xs transition-all duration-200 group-hover/katex:opacity-100 hover:border-[#71889A] hover:text-[#29383D] focus-visible:opacity-100 print:hidden"
-        >
-          <span>{copied ? 'Đã chép!' : 'Sao chép LaTeX'}</span>
-        </button>
-      )}
     </span>
   );
 }
@@ -97,8 +67,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
       ),
       span: (props: ComponentPropsWithoutRef<'span'>) => {
         if (typeof props.className === 'string' && props.className.includes('katex-display')) {
-          const tex = extractLatexFromKatexNode({ props });
-          return <KatexDisplayBlock tex={tex} spanProps={props} />;
+          return <KatexDisplayBlock spanProps={props} />;
         }
 
         // Nếu thẻ span chứa công thức KaTeX nội dòng

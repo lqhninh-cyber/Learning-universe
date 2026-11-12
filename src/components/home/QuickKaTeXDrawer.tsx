@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Copy, Search, X } from 'lucide-react';
+import { ArrowRight, Search, X } from 'lucide-react';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { getAllGlossaryEntries, KatexMath } from '@/features/math-glossary';
@@ -185,7 +185,6 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [activeCategory, setActiveCategory] = useState<KaTeXCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Tích hợp thêm dữ liệu từ kho từ điển chung để phong phú hóa tra cứu
   const combinedItems = useMemo<readonly QuickKaTeXItem[]>(() => {
@@ -251,20 +250,6 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
-
-  const handleCopyLatex = async (item: QuickKaTeXItem) => {
-    try {
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-        await navigator.clipboard.writeText(item.latexCode);
-      }
-    } catch {
-      // Dự phòng nếu môi trường kiểm thử không hỗ trợ clipboard API
-    }
-    setCopiedId(item.id);
-    window.setTimeout(() => {
-      setCopiedId((prev) => (prev === item.id ? null : prev));
-    }, 1800);
-  };
 
   if (!isOpen) {
     return null;
@@ -388,67 +373,36 @@ export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
               </p>
             </div>
           ) : (
-            filteredItems.map((item) => {
-              const isCopied = copiedId === item.id;
-              return (
-                <div
-                  key={item.id}
-                  data-testid="katex-drawer-item"
-                  className="flex flex-col justify-between gap-2.5 rounded-xl border border-[#D9DFD9]/60 bg-white p-3 transition-colors hover:border-[#365E4E]"
-                >
-                  {/* Hàng trên: Cột trái (KaTeX + Tên Việt - Anh) & Cột phải (Nút Chép mã) */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="rounded bg-[#EBECE6] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#365E4E]">
-                          {item.categoryLabel}
-                        </span>
-                        <h3 className="font-serif text-xs font-bold text-[#262B28]">
-                          {item.nameVi}
-                        </h3>
-                        <span className="text-[11px] text-[#58635E] italic">({item.nameEn})</span>
-                      </div>
-
-                      <div className="overflow-x-auto rounded-lg bg-[#FAF9F6] px-2.5 py-1.5 text-sm text-[#262B28]">
-                        <KatexMath math={item.formula} />
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => void handleCopyLatex(item)}
-                      aria-label={`Chép mã LaTeX cho ${item.nameVi}`}
-                      className={cn(
-                        'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border px-2.5 py-1 font-mono text-[11px] font-medium transition-colors',
-                        isCopied
-                          ? 'border-[#365E4E] bg-[#365E4E] text-white'
-                          : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#365E4E] hover:bg-[#EBECE6]',
-                      )}
-                    >
-                      {isCopied ? (
-                        <>
-                          <Check className="h-3 w-3" aria-hidden="true" />
-                          <span>Đã sao chép</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-3 w-3" aria-hidden="true" />
-                          <span>Chép mã</span>
-                        </>
-                      )}
-                    </button>
+            filteredItems.map((item) => (
+              <div
+                key={item.id}
+                data-testid="katex-drawer-item"
+                className="flex flex-col justify-between gap-2.5 rounded-xl border border-[#D9DFD9]/60 bg-white p-3 transition-colors hover:border-[#365E4E]"
+              >
+                {/* Hàng trên: KaTeX & Tên Việt - Anh */}
+                <div className="min-w-0 flex-1 space-y-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="rounded bg-[#EBECE6] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#365E4E]">
+                      {item.categoryLabel}
+                    </span>
+                    <h3 className="font-serif text-xs font-bold text-[#262B28]">{item.nameVi}</h3>
+                    <span className="text-[11px] text-[#58635E] italic">({item.nameEn})</span>
                   </div>
 
-                  {/* Hàng dưới: Mã nguồn LaTeX gốc & Tóm tắt nghĩa */}
-                  <div className="flex flex-col gap-1 border-t border-[#D9DFD9]/40 pt-2">
-                    <code className="overflow-x-auto rounded bg-[#F5F4EF]/80 px-2 py-1 font-mono text-[11px] text-[#365E4E]">
-                      {item.latexCode}
-                    </code>
-                    <p className="text-[11px] leading-relaxed text-[#58635E]">{item.brief}</p>
+                  <div className="overflow-x-auto rounded-lg bg-[#FAF9F6] px-2.5 py-1.5 text-sm text-[#262B28]">
+                    <KatexMath math={item.formula} />
                   </div>
                 </div>
-              );
-            })
+
+                {/* Hàng dưới: Mã nguồn LaTeX gốc & Tóm tắt nghĩa */}
+                <div className="flex flex-col gap-1 border-t border-[#D9DFD9]/40 pt-2">
+                  <code className="overflow-x-auto rounded bg-[#F5F4EF]/80 px-2 py-1 font-mono text-[11px] text-[#365E4E]">
+                    {item.latexCode}
+                  </code>
+                  <p className="text-[11px] leading-relaxed text-[#58635E]">{item.brief}</p>
+                </div>
+              </div>
+            ))
           )}
         </div>
 

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import katex from 'katex';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -236,22 +236,12 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     }
   });
 
-  it('KatexDisplayFormula hiển thị KaTeX và nút Copy LaTeX sao chép chính xác công thức', async () => {
-    const user = userEvent.setup();
-    const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined);
-
+  it('KatexDisplayFormula hiển thị KaTeX sạch sẽ và không chứa nút Copy LaTeX', () => {
     const formula = String.raw`\mathbb{Z}_8 = \{\overline{0}, \overline{1}, \ldots, \overline{7}\}`;
     const { container } = render(<KatexDisplayFormula math={formula} />);
 
     expect(container.querySelector('.katex-display')).toBeInTheDocument();
-
-    const copyBtn = screen.getByRole('button', { name: /LaTeX/i });
-    await user.click(copyBtn);
-
-    expect(writeText).toHaveBeenCalledWith(formula);
-    await waitFor(() => {
-      expect(screen.getByText('Đã chép')).toBeInTheDocument();
-    });
+    expect(screen.queryByRole('button', { name: /LaTeX/i })).not.toBeInTheDocument();
   });
 
   it('MATH1301: hiển thị tờ đề chính thức nguyên bản 2522MATH170401, tách rời lời giải bên dưới và tách bạch đề ôn tập', async () => {

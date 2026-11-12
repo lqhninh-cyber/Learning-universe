@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Copy, Lightbulb, Pin, X } from 'lucide-react';
+import { ArrowRight, Lightbulb, Pin, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
@@ -38,21 +38,8 @@ export function MathGlossaryPopover() {
   const { activeEntry, anchorRect, cancelHide, hidePopover, closePopover } = useMathGlossary();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isPinned, setIsPinned] = useState(false);
-  const [copiedLatex, setCopiedLatex] = useState(false);
 
   const coords = useMemo(() => computeCoords(anchorRect), [anchorRect]);
-
-  const handleCopyLatex = async (formulaText: string) => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(formulaText);
-        setCopiedLatex(true);
-        setTimeout(() => setCopiedLatex(false), 2000);
-      }
-    } catch {
-      // Ignore clipboard write errors
-    }
-  };
 
   // Đóng popover khi nhấn phím Escape hoặc click bên ngoài (nếu chưa ghim)
   useEffect(() => {
@@ -152,26 +139,6 @@ export function MathGlossaryPopover() {
                 className="font-serif text-sm text-[#29383D] dark:text-stone-100"
               />
             </div>
-            <button
-              type="button"
-              onClick={() => handleCopyLatex(displayFormula)}
-              aria-label={copiedLatex ? 'Đã sao chép mã LaTeX' : 'Sao chép mã LaTeX'}
-              title={
-                copiedLatex ? 'Đã sao chép vào bộ nhớ tạm' : `Sao chép mã LaTeX: ${displayFormula}`
-              }
-              className={cn(
-                'cursor-pointer rounded-md p-1 transition-colors',
-                copiedLatex
-                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300'
-                  : 'text-stone-500 hover:bg-[#E1E9EA] hover:text-[#29383D] dark:text-stone-400 dark:hover:bg-stone-800',
-              )}
-            >
-              {copiedLatex ? (
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-            </button>
             <button
               type="button"
               onClick={() => {

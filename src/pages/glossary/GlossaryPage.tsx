@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Check, Copy, Lightbulb, Search, X } from 'lucide-react';
+import { ArrowRight, BookOpen, Lightbulb, Search, X } from 'lucide-react';
 import { useId, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import {
@@ -24,21 +24,6 @@ export function GlossaryPage() {
     setQuery(urlQuery);
   }
   const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>('all');
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const handleCopyLatex = async (id: string, formulaText: string) => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(formulaText);
-        setCopiedId(id);
-        setTimeout(() => {
-          setCopiedId((curr) => (curr === id ? null : curr));
-        }, 2000);
-      }
-    } catch {
-      // Ignore clipboard write errors
-    }
-  };
 
   const allEntries = useMemo(() => getAllGlossaryEntries(), []);
 
@@ -218,45 +203,15 @@ export function GlossaryPage() {
                   className="group/card flex h-full flex-col justify-between rounded-2xl border border-[#DFE6E1] bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-[#1E3B2D]"
                 >
                   <div className="flex-1 space-y-3.5">
-                    {/* Hàng trên: Ký hiệu + Nút chép LaTeX + Badge môn học */}
+                    {/* Hàng trên: Ký hiệu + Badge môn học */}
                     <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-1.5">
-                        <div className="inline-flex h-14 min-w-[64px] shrink-0 items-center justify-center overflow-visible rounded-xl border border-[#DFE6E1] bg-[#EEF2EE] px-3 shadow-2xs dark:border-[#1E3B2D] dark:bg-[#12241C]">
-                          <div className="flex items-center justify-center leading-none">
-                            <KatexMath
-                              math={entry.symbol}
-                              className="font-serif text-2xl font-semibold text-[#29383D] dark:text-[#E2E8F0]"
-                            />
-                          </div>
+                      <div className="inline-flex h-14 min-w-[64px] shrink-0 items-center justify-center overflow-visible rounded-xl border border-[#DFE6E1] bg-[#EEF2EE] px-3 shadow-2xs dark:border-[#1E3B2D] dark:bg-[#12241C]">
+                        <div className="flex items-center justify-center leading-none">
+                          <KatexMath
+                            math={entry.symbol}
+                            className="font-serif text-2xl font-semibold text-[#29383D] dark:text-[#E2E8F0]"
+                          />
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => handleCopyLatex(entry.id, entry.formula || entry.symbol)}
-                          title={`Sao chép mã LaTeX: ${entry.formula || entry.symbol}`}
-                          aria-label={
-                            copiedId === entry.id
-                              ? 'Đã sao chép mã LaTeX'
-                              : 'Sao chép mã nguồn LaTeX'
-                          }
-                          className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[#DFE6E1] bg-white/80 px-2 py-1 text-[11px] font-medium text-[#55676B] transition-colors hover:border-[#3F6570] hover:text-[#29383D] dark:border-[#1E3B2D] dark:bg-[#12241C]/80 dark:text-[#A7B5AC] dark:hover:text-[#E2E8F0]"
-                        >
-                          {copiedId === entry.id ? (
-                            <>
-                              <Check
-                                className="h-3 w-3 text-emerald-600 dark:text-emerald-400"
-                                aria-hidden="true"
-                              />
-                              <span className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
-                                Đã chép
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="h-3 w-3" aria-hidden="true" />
-                              <span className="text-[10px]">TeX</span>
-                            </>
-                          )}
-                        </button>
                       </div>
                       <Badge variant={isAlgebra ? 'subject' : 'neutral'}>
                         {entry.courseName ||
