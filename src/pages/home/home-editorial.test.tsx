@@ -407,6 +407,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       for (let i = 1; i <= 4; i += 1) {
         expect(container.querySelector(`[data-testid="son-ha-layer-${i}"]`)).toBeInTheDocument();
       }
+      expect(screen.getByTestId('halong-sunset-sun')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-god-rays').querySelectorAll('polygon')).toHaveLength(5);
+      expect(screen.getByTestId('halong-clouds')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-bird-flocks')).toBeInTheDocument();
       expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
       expect(screen.getByTestId('halong-junk-boat-far')).toBeInTheDocument();
       expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();

@@ -387,52 +387,281 @@
    HERO DIORAMA & HOLOGRAPHIC SHOWCASE ANIMATIONS (60fps GPU-friendly)
    ========================================================================= */
 
+@keyframes lu-cloud-drift-1 {
+  0%,
+  100% {
+    transform: translate3d(-28px, 0, 0);
+  }
+  50% {
+    transform: translate3d(34px, -4px, 0);
+  }
+}
+
+@keyframes lu-cloud-drift-2 {
+  0%,
+  100% {
+    transform: translate3d(26px, 0, 0);
+  }
+  50% {
+    transform: translate3d(-32px, 3px, 0);
+  }
+}
+
 @keyframes lu-mist-drift {
   0%,
   100% {
-    transform: translate3d(-16px, 0, 0);
+    transform: translate3d(-24px, 0, 0);
   }
   50% {
-    transform: translate3d(20px, -3px, 0);
+    transform: translate3d(28px, -3px, 0);
   }
 }
 
-@keyframes lu-boat-bob {
+@keyframes lu-mist-drift-reverse {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(24px, 0, 0);
   }
   50% {
-    transform: translate3d(8px, -1.5px, 0);
+    transform: translate3d(-26px, 2px, 0);
   }
 }
 
-@keyframes lu-boat-bob-slow {
+@keyframes lu-god-ray-pulse {
   0%,
   100% {
-    transform: translate3d(0, 0, 0);
+    opacity: 0.68;
+    transform: rotate(-1.2deg) scaleY(1);
   }
   50% {
-    transform: translate3d(-6px, -1.2px, 0);
+    opacity: 1;
+    transform: rotate(1.4deg) scaleY(1.06);
   }
+}
+
+@keyframes lu-god-ray-pulse-alt {
+  0%,
+  100% {
+    opacity: 0.92;
+    transform: rotate(1.1deg) scaleY(1.04);
+  }
+  50% {
+    opacity: 0.56;
+    transform: rotate(-1.3deg) scaleY(0.97);
+  }
+}
+
+@keyframes lu-boat-glide-far {
+  0%,
+  100% {
+    transform: translate3d(-18px, 0, 0);
+  }
+  50% {
+    transform: translate3d(22px, 0, 0);
+  }
+}
+
+@keyframes lu-boat-glide-near {
+  0%,
+  100% {
+    transform: translate3d(24px, 0, 0);
+  }
+  50% {
+    transform: translate3d(-28px, 0, 0);
+  }
+}
+
+@keyframes lu-boat-rock {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1.1deg);
+  }
+  50% {
+    transform: translate3d(0, -2.2px, 0) rotate(1.2deg);
+  }
+}
+
+@keyframes lu-boat-rock-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0.9deg);
+  }
+  50% {
+    transform: translate3d(0, -1.6px, 0) rotate(-1deg);
+  }
+}
+
+@keyframes lu-lantern-glow {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.16);
+  }
+}
+
+@keyframes lu-wake-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scaleX(0.94);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scaleX(1.08);
+  }
+}
+
+@keyframes lu-reflection-sway {
+  0%,
+  100% {
+    transform: skewX(-0.9deg) scaleY(1);
+  }
+  50% {
+    transform: skewX(0.9deg) scaleY(1.03);
+  }
+}
+
+@keyframes lu-flock-glide-1 {
+  0% {
+    transform: translate3d(-40px, 14px, 0);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(42px, -16px, 0);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(-40px, 14px, 0);
+    opacity: 0.75;
+  }
+}
+
+@keyframes lu-flock-glide-2 {
+  0% {
+    transform: translate3d(36px, 10px, 0);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(-38px, -14px, 0);
+    opacity: 0.88;
+  }
+  100% {
+    transform: translate3d(36px, 10px, 0);
+    opacity: 0.65;
+  }
+}
+
+@keyframes lu-bird-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(-0.55);
+  }
+}
+
+.lu-cloud-drift-1 {
+  animation: lu-cloud-drift-1 38s ease-in-out infinite;
+}
+
+.lu-cloud-drift-2 {
+  animation: lu-cloud-drift-2 44s ease-in-out infinite;
 }
 
 .lu-mist-drift {
-  animation: lu-mist-drift 26s ease-in-out infinite;
+  animation: lu-mist-drift 28s ease-in-out infinite;
 }
 
-.lu-boat-bob {
-  animation: lu-boat-bob 7.5s ease-in-out infinite;
+.lu-mist-drift-reverse {
+  animation: lu-mist-drift-reverse 36s ease-in-out infinite;
 }
 
-.lu-boat-bob-slow {
-  animation: lu-boat-bob-slow 11s ease-in-out infinite;
+.lu-god-ray-pulse {
+  transform-box: view-box;
+  transform-origin: 815px 488px;
+  animation: lu-god-ray-pulse 9.5s ease-in-out infinite;
+}
+
+.lu-god-ray-pulse-alt {
+  transform-box: view-box;
+  transform-origin: 815px 488px;
+  animation: lu-god-ray-pulse-alt 12.5s ease-in-out infinite;
+}
+
+.lu-boat-glide-far {
+  animation: lu-boat-glide-far 42s ease-in-out infinite;
+}
+
+.lu-boat-glide-near {
+  animation: lu-boat-glide-near 34s ease-in-out infinite;
+}
+
+.lu-boat-rock {
+  transform-box: fill-box;
+  transform-origin: 50% 85%;
+  animation: lu-boat-rock 6.2s ease-in-out infinite;
+}
+
+.lu-boat-rock-slow {
+  transform-box: fill-box;
+  transform-origin: 50% 85%;
+  animation: lu-boat-rock-slow 8.4s ease-in-out infinite;
+}
+
+.lu-lantern-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lu-lantern-glow 2.8s ease-in-out infinite;
+}
+
+.lu-wake-pulse {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: lu-wake-pulse 3.6s ease-in-out infinite;
+}
+
+.lu-reflection-sway {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation: lu-reflection-sway 5.5s ease-in-out infinite;
+}
+
+.lu-flock-glide-1 {
+  animation: lu-flock-glide-1 28s ease-in-out infinite;
+}
+
+.lu-flock-glide-2 {
+  animation: lu-flock-glide-2 34s ease-in-out infinite;
+}
+
+.lu-bird-flap {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: lu-bird-flap 0.9s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lu-cloud-drift-1,
+  .lu-cloud-drift-2,
   .lu-mist-drift,
-  .lu-boat-bob,
-  .lu-boat-bob-slow {
+  .lu-mist-drift-reverse,
+  .lu-god-ray-pulse,
+  .lu-god-ray-pulse-alt,
+  .lu-boat-glide-far,
+  .lu-boat-glide-near,
+  .lu-boat-rock,
+  .lu-boat-rock-slow,
+  .lu-lantern-glow,
+  .lu-wake-pulse,
+  .lu-reflection-sway,
+  .lu-flock-glide-1,
+  .lu-flock-glide-2,
+  .lu-bird-flap {
     animation: none;
   }
 }
