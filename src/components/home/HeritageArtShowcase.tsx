@@ -8,9 +8,10 @@ import {
   Play,
   X,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
+import type { HeroAtmosphere } from './heroAtmosphere';
 
 export interface HeritageArtwork {
   readonly id: string;
@@ -328,9 +329,13 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
 ] as const;
 
 const ROTATION_INTERVAL_MS = 20000;
-const FADE_TRANSITION_MS = 350;
+const FADE_TRANSITION_MS = 260;
 
-export function HeritageArtShowcase() {
+export interface HeritageArtShowcaseProps {
+  readonly atmosphere?: HeroAtmosphere;
+}
+
+export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcaseProps) {
   const prefersReducedMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -338,8 +343,16 @@ export function HeritageArtShowcase() {
   const [imageError, setImageError] = useState(false);
   const [isMetadataOpen, setIsMetadataOpen] = useState(false);
 
+  const tiltCardRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
+  const tiltRafRef = useRef<number>(0);
+
   const totalArtworks = HERITAGE_ARTWORKS.length;
   const currentArtwork = HERITAGE_ARTWORKS[currentIndex] ?? HERITAGE_ARTWORKS[0]!;
+  const nextIndex = (currentIndex + 1) % totalArtworks;
+  const thirdIndex = (currentIndex + 2) % totalArtworks;
+  const nextArtwork = HERITAGE_ARTWORKS[nextIndex] ?? HERITAGE_ARTWORKS[0]!;
+  const thirdArtwork = HERITAGE_ARTWORKS[thirdIndex] ?? HERITAGE_ARTWORKS[0]!;
 
   const goToArtwork = useCallback(
     (newIndex: number) => {
@@ -379,217 +392,498 @@ export function HeritageArtShowcase() {
     };
   }, [handleNext, isMetadataOpen, isPaused]);
 
+  // Dọn dẹp animation frame khi unmount
+  useEffect(() => {
+    return () => {
+      if (tiltRafRef.current !== 0) {
+        window.cancelAnimationFrame(tiltRafRef.current);
+      }
+    };
+  }, []);
+
+  const handleCardMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion || !tiltCardRef.current) return;
+    const rect = tiltCardRef.current.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    const px = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+    const py = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+    const rotateY = (px - 0.5) * 16; // tối đa ±8deg
+    const rotateX = (0.5 - py) * 16; // tối đa ±8deg
+
+    if (tiltRafRef.current !== 0) {
+      window.cancelAnimationFrame(tiltRafRef.current);
+    }
+    tiltRafRef.current = window.requestAnimationFrame(() => {
+      tiltRafRef.current = 0;
+      if (tiltCardRef.current) {
+        tiltCardRef.current.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+      }
+      if (glareRef.current) {
+        glareRef.current.style.opacity = '1';
+        glareRef.current.style.background = `radial-gradient(circle 240px at ${(px * 100).toFixed(1)}% ${(py * 100).toFixed(1)}%, rgba(255, 246, 214, 0.34), rgba(229, 184, 105, 0.14) 42%, transparent 72%)`;
+      }
+    });
+  };
+
+  const handleCardMouseLeave = () => {
+    setIsPaused(false);
+    if (tiltRafRef.current !== 0) {
+      window.cancelAnimationFrame(tiltRafRef.current);
+      tiltRafRef.current = 0;
+    }
+    if (tiltCardRef.current) {
+      tiltCardRef.current.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+    }
+    if (glareRef.current) {
+      glareRef.current.style.opacity = '0';
+    }
+  };
+
   const formattedIndex = String(currentIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalArtworks).padStart(2, '0');
+  const isDarkSurface = atmosphere !== 'dawn';
+
+  const ambientGlowStyle =
+    atmosphere === 'sunset'
+      ? 'radial-gradient(circle at 50% 45%, rgba(229, 184, 105, 0.42), rgba(200, 62, 55, 0.28) 48%, transparent 75%)'
+      : atmosphere === 'night'
+        ? 'radial-gradient(circle at 50% 45%, rgba(134, 239, 172, 0.26), rgba(212, 175, 55, 0.22) 48%, transparent 75%)'
+        : 'radial-gradient(circle at 50% 45%, rgba(229, 184, 105, 0.34), rgba(200, 62, 55, 0.14) 50%, transparent 75%)';
+
+  const stackShellTransition = 'transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]';
 
   return (
     <div
       data-testid="heritage-art-showcase"
       onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      className="relative mx-auto flex w-full max-w-[780px] flex-col rounded-3xl border border-[#D9DFD9] bg-[#FAF9F6]/85 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40 sm:p-7"
+      onMouseLeave={handleCardMouseLeave}
+      className="relative mx-auto w-full max-w-[780px] pr-5 pb-6 sm:pr-10 sm:pb-7"
+      style={{ perspective: '1200px' }}
     >
-      {/* Top Header Bar */}
-      <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#D9DFD9]/60 pb-3">
-        <div className="flex items-center gap-2">
-          <Landmark className="h-3.5 w-3.5 text-[#B85D6F]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-semibold tracking-widest text-[#B85D6F] uppercase">
-            DI SẢN HỌC THUẬT &amp; NGHỆ THUẬT
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2.5">
-          <span className="font-mono text-[11px] font-medium text-[#58635E]">
-            {formattedIndex} / {formattedTotal}
-          </span>
-
-          {/* Dots Indicator */}
-          <div className="hidden items-center gap-1.5 sm:flex" role="tablist">
-            {HERITAGE_ARTWORKS.map((art, idx) => (
-              <button
-                key={art.id}
-                type="button"
-                onClick={() => goToArtwork(idx)}
-                aria-label={`Chuyển đến tác phẩm ${idx + 1}: ${art.title}`}
-                className={cn(
-                  'h-1.5 rounded-full transition-all duration-300',
-                  idx === currentIndex
-                    ? 'w-5 bg-[#B85D6F]'
-                    : 'w-1.5 bg-[#D9DFD9] hover:bg-[#365E4E]',
-                )}
-              />
-            ))}
-          </div>
-
-          {/* Nút điều khiển lật trang */}
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={handlePrev}
-              aria-label="Tác phẩm trước"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsPaused((prev) => !prev)}
-              aria-label={isPaused ? 'Tiếp tục trình chiếu tác phẩm' : 'Tạm dừng trình chiếu'}
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
-            >
-              {isPaused ? (
-                <Play className="h-3 w-3" aria-hidden="true" />
-              ) : (
-                <Pause className="h-3 w-3" aria-hidden="true" />
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              aria-label="Tác phẩm tiếp theo"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] transition-colors hover:border-[#B85D6F] hover:text-[#262B28]"
-            >
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực (Hoàn toàn sạch sẽ, không che ảnh) */}
+      {/* Quầng sáng trung tâm (Ambient Glow) tiệp theo tác phẩm & khí quyển */}
       <div
-        data-testid="heritage-art-frame"
-        className="relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#D9DFD9]/60 bg-[#EBECE6]/30 p-3 shadow-inner md:h-[425px] xl:h-[460px]"
-      >
-        {imageError ? (
-          <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[#58635E]">
-            <Compass className="h-8 w-8 text-[#365E4E] opacity-50" aria-hidden="true" />
-            <p className="mt-2 font-serif text-sm font-semibold text-[#262B28]">
-              {currentArtwork.title}
-            </p>
-            <p className="mt-1 font-mono text-xs text-[#58635E]">{currentArtwork.caption}</p>
-          </div>
-        ) : (
-          <img
-            src={currentArtwork.imageSrc}
-            alt={currentArtwork.alt}
-            onError={() => setImageError(true)}
-            className={cn(
-              'mx-auto h-full w-full object-contain transition-transform duration-500 select-none',
-              isFading ? 'opacity-0' : 'opacity-100',
-            )}
-          />
-        )}
-      </div>
+        data-testid="heritage-ambient-glow"
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-6 rounded-[2.5rem] blur-3xl transition-all duration-700"
+        style={{ background: ambientGlowStyle }}
+      />
 
-      {/* Thông tin tác phẩm, Chú giải học thuật & Nút [Lược sử tác phẩm] */}
-      <div
+      {/* LỚP XẾP CHỒNG 3: Thẻ tác phẩm sâu phía sau (z-10) */}
+      <button
+        type="button"
+        onClick={() => goToArtwork(thirdIndex)}
+        aria-label={`Chuyển đến tác phẩm kế thứ hai: ${thirdArtwork.title}`}
+        data-testid="heritage-stack-card-3"
         className={cn(
-          'mt-4 transition-opacity duration-700 ease-in-out',
-          isFading ? 'opacity-0' : 'opacity-100',
+          'absolute inset-x-0 top-0 right-5 bottom-6 left-0 z-10 origin-center cursor-pointer overflow-hidden rounded-3xl border shadow-md sm:right-10 sm:bottom-7',
+          'translate-x-9 translate-y-6 scale-[0.90] rotate-[5deg] opacity-45 hover:opacity-65',
+          stackShellTransition,
+          isDarkSurface
+            ? 'border-[#D4AF37]/40 bg-[#12201A]/85'
+            : 'border-[#C5A262]/45 bg-[#EFEBE0]/90',
         )}
       >
-        <div>
-          <h3 className="font-serif text-base font-bold text-[#262B28] sm:text-lg">
-            {currentArtwork.title}
-          </h3>
-
-          {/* Bố cục hàng Metadata: [Tên tác giả / Nghệ nhân] · [Thời kỳ - Địa danh] · [Nút: Lược sử tác phẩm] */}
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="font-mono text-xs font-semibold text-[#365E4E]">
-              {currentArtwork.artistOrOrigin}
-            </span>
-            <span className="text-[#58635E]" aria-hidden="true">
-              ·
-            </span>
-            <span className="inline-flex items-center rounded-md border border-[#D9DFD9]/60 bg-[#EBECE6] px-2 py-0.5 font-mono text-[11px] text-[#58635E]">
-              {currentArtwork.yearOrEra}
-            </span>
-            <span className="text-[#58635E]" aria-hidden="true">
-              ·
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsMetadataOpen((prev) => !prev)}
-              aria-expanded={isMetadataOpen}
-              data-testid="archival-metadata-trigger"
-              className="cursor-pointer rounded-md border border-[#D9DFD9] bg-[#FAF9F6]/90 px-2.5 py-1 font-mono text-[11px] text-[#365E4E] transition-colors hover:bg-[#EBECE6]"
-            >
-              [Lược sử tác phẩm]
-            </button>
+        <div className="flex h-full w-full flex-col justify-between p-6 opacity-55">
+          <div className="h-4 w-32 rounded bg-[#C5A262]/25" />
+          <div className="my-auto flex h-[320px] items-center justify-center overflow-hidden rounded-xl border border-[#C5A262]/20 bg-black/5">
+            <img
+              src={thirdArtwork.imageSrc}
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-contain opacity-45"
+            />
           </div>
+          <div className="h-3 w-48 rounded bg-[#C5A262]/20" />
         </div>
+      </button>
 
-        <p className="mt-2 font-serif text-xs text-[#365E4E] italic">{currentArtwork.caption}</p>
+      {/* LỚP XẾP CHỒNG 2: Thẻ tác phẩm kế tiếp ở tầng giữa (z-20) */}
+      <button
+        type="button"
+        onClick={handleNext}
+        aria-label={`Chuyển sang tác phẩm kế tiếp: ${nextArtwork.title}`}
+        data-testid="heritage-stack-card-2"
+        className={cn(
+          'absolute inset-x-0 top-0 right-5 bottom-6 left-0 z-20 origin-center cursor-pointer overflow-hidden rounded-3xl border shadow-lg sm:right-10 sm:bottom-7',
+          'translate-x-5 translate-y-3 scale-[0.95] rotate-[2.5deg] opacity-75 hover:opacity-90',
+          stackShellTransition,
+          isDarkSurface
+            ? 'border-[#E5B869]/50 bg-[#182720]/90'
+            : 'border-[#C5A262]/55 bg-[#F6F3EA]/95',
+        )}
+      >
+        <div className="flex h-full w-full flex-col justify-between p-6 opacity-75">
+          <div className="flex items-center justify-between font-mono text-[10px] tracking-widest text-[#C5A262] uppercase">
+            <span>TIẾP THEO</span>
+            <span>{nextArtwork.yearOrEra}</span>
+          </div>
+          <div className="my-auto flex h-[340px] items-center justify-center overflow-hidden rounded-xl border border-[#C5A262]/25 bg-black/5 p-3">
+            <img
+              src={nextArtwork.imageSrc}
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-contain opacity-65"
+            />
+          </div>
+          <p className="truncate font-serif text-sm font-semibold text-[#C5A262]">
+            {nextArtwork.title}
+          </p>
+        </div>
+      </button>
 
-        <p className="mt-2 text-xs leading-relaxed text-[#58635E]">
-          {currentArtwork.academicSignificance}
-        </p>
+      {/* LỚP TIỀN CẢNH (z-30 scale-100): Thẻ tác phẩm đang chọn kèm 3D Tilt & Foil Glare */}
+      <div
+        ref={tiltCardRef}
+        data-testid="heritage-active-card"
+        onMouseMove={handleCardMouseMove}
+        className={cn(
+          'relative z-30 flex w-full scale-100 flex-col overflow-hidden rounded-3xl border p-5 backdrop-blur-xl sm:p-7',
+          'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform',
+          atmosphere === 'sunset' &&
+            'border-[#E5B869]/65 bg-[#2A1820]/82 text-[#FFF9F0] shadow-[0_24px_55px_-16px_rgba(24,8,12,0.65),0_0_0_1px_rgba(243,201,120,0.22)]',
+          atmosphere === 'night' &&
+            'border-[#D4AF37]/55 bg-[#0D1E17]/84 text-[#F4F1EA] shadow-[0_24px_55px_-16px_rgba(3,10,7,0.75),0_0_0_1px_rgba(134,239,172,0.16)]',
+          atmosphere === 'dawn' &&
+            'border-[#C5A262]/65 bg-[#FAF9F6]/90 text-[#262B28] shadow-[0_20px_50px_-14px_rgba(24,34,29,0.18),0_0_0_1px_rgba(197,162,98,0.25)]',
+        )}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* Viền ánh kim mạ vàng tinh tế phía trên */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#F3C978]/80 to-transparent"
+        />
 
-        {/* Thẻ Lược sử Văn bản (Archival Metadata Popover / Drawer) */}
-        {isMetadataOpen && (
-          <div
-            data-testid="archival-metadata-popover"
-            role="region"
-            aria-label={`Hồ sơ văn khố: ${currentArtwork.title}`}
-            className="mt-4 rounded-2xl border border-[#D9DFD9] bg-[#F5F4EF]/90 p-4 text-xs shadow-xs"
-          >
-            <div className="mb-3 flex items-center justify-between border-b border-[#D9DFD9] pb-2">
-              <div className="flex items-center gap-2 font-mono text-[10px] font-semibold tracking-wider text-[#365E4E] uppercase">
-                <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>HỒ SƠ LƯỢC SỬ &amp; VĂN KHỐ TÁC PHẨM</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsMetadataOpen(false)}
-                aria-label="Đóng lược sử tác phẩm"
-                className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:text-[#262B28]"
-              >
-                <X className="h-3 w-3" aria-hidden="true" />
-              </button>
+        {/* Top Header Bar */}
+        <div
+          className={cn(
+            'mb-3 flex items-center justify-between gap-2 border-b pb-3',
+            isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]/60',
+          )}
+        >
+          <div className="flex items-center gap-2">
+            <Landmark
+              className={cn('h-3.5 w-3.5', isDarkSurface ? 'text-[#F3C978]' : 'text-[#B85D6F]')}
+              aria-hidden="true"
+            />
+            <span
+              className={cn(
+                'font-mono text-[10px] font-semibold tracking-widest uppercase',
+                isDarkSurface ? 'text-[#F3C978]' : 'text-[#B85D6F]',
+              )}
+            >
+              DI SẢN HỌC THUẬT &amp; NGHỆ THUẬT
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <span
+              className={cn(
+                'font-mono text-[11px] font-medium',
+                isDarkSurface ? 'text-[#E6E0D4]/80' : 'text-[#58635E]',
+              )}
+            >
+              {formattedIndex} / {formattedTotal}
+            </span>
+
+            {/* Dots Indicator */}
+            <div className="hidden items-center gap-1.5 sm:flex" role="tablist">
+              {HERITAGE_ARTWORKS.map((art, idx) => (
+                <button
+                  key={art.id}
+                  type="button"
+                  onClick={() => goToArtwork(idx)}
+                  aria-label={`Chuyển đến tác phẩm ${idx + 1}: ${art.title}`}
+                  className={cn(
+                    'h-1.5 cursor-pointer rounded-full transition-all duration-300',
+                    idx === currentIndex
+                      ? isDarkSurface
+                        ? 'w-5 bg-[#F3C978]'
+                        : 'w-5 bg-[#B85D6F]'
+                      : isDarkSurface
+                        ? 'w-1.5 bg-white/25 hover:bg-[#86EFAC]'
+                        : 'w-1.5 bg-[#D9DFD9] hover:bg-[#365E4E]',
+                  )}
+                />
+              ))}
             </div>
 
-            <dl className="space-y-2 text-xs leading-relaxed">
-              <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
-                  Tác phẩm:
-                </dt>
-                <dd className="font-serif font-medium text-[#262B28] sm:col-span-8">
-                  {currentArtwork.originalTitle}
-                </dd>
-              </div>
-
-              <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
-                  Niên đại &amp; Thời kỳ:
-                </dt>
-                <dd className="text-[#262B28] sm:col-span-8">{currentArtwork.eraAndPeriod}</dd>
-              </div>
-
-              <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
-                  Chất liệu &amp; Kỹ thuật:
-                </dt>
-                <dd className="text-[#58635E] sm:col-span-8">
-                  {currentArtwork.materialAndTechnique}
-                </dd>
-              </div>
-
-              <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#365E4E] sm:col-span-4">
-                  Nơi lưu trữ gốc:
-                </dt>
-                <dd className="text-[#262B28] sm:col-span-8">{currentArtwork.archivalLocation}</dd>
-              </div>
-
-              <div className="grid grid-cols-1 gap-0.5 border-t border-[#D9DFD9]/70 pt-2 sm:grid-cols-12 sm:gap-2">
-                <dt className="font-mono text-[11px] font-semibold text-[#C89738] sm:col-span-4">
-                  Giá trị học thuật cốt lõi:
-                </dt>
-                <dd className="text-[#262B28] sm:col-span-8">{currentArtwork.coreAcademicValue}</dd>
-              </div>
-            </dl>
+            {/* Nút điều khiển lật trang */}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={handlePrev}
+                aria-label="Tác phẩm trước"
+                className={cn(
+                  'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  isDarkSurface
+                    ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:border-[#F3C978] hover:text-[#F3C978]'
+                    : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#B85D6F] hover:text-[#262B28]',
+                )}
+              >
+                <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPaused((prev) => !prev)}
+                aria-label={isPaused ? 'Tiếp tục trình chiếu tác phẩm' : 'Tạm dừng trình chiếu'}
+                className={cn(
+                  'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  isDarkSurface
+                    ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:border-[#F3C978] hover:text-[#F3C978]'
+                    : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#B85D6F] hover:text-[#262B28]',
+                )}
+              >
+                {isPaused ? (
+                  <Play className="h-3 w-3" aria-hidden="true" />
+                ) : (
+                  <Pause className="h-3 w-3" aria-hidden="true" />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-label="Tác phẩm tiếp theo"
+                className={cn(
+                  'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  isDarkSurface
+                    ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:border-[#F3C978] hover:text-[#F3C978]'
+                    : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:border-[#B85D6F] hover:text-[#262B28]',
+                )}
+              >
+                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực kèm ánh sáng phản quang lướt theo chuột */}
+        <div
+          data-testid="heritage-art-frame"
+          className={cn(
+            'relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border p-3 shadow-inner md:h-[425px] xl:h-[460px]',
+            isDarkSurface
+              ? 'border-[#E5B869]/35 bg-black/25'
+              : 'border-[#C5A262]/45 bg-[#EBECE6]/35',
+          )}
+        >
+          {imageError ? (
+            <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
+              <Compass className="h-8 w-8 text-[#C5A262] opacity-70" aria-hidden="true" />
+              <p className="mt-2 font-serif text-sm font-semibold">{currentArtwork.title}</p>
+              <p className="mt-1 font-mono text-xs opacity-75">{currentArtwork.caption}</p>
+            </div>
+          ) : (
+            <img
+              src={currentArtwork.imageSrc}
+              alt={currentArtwork.alt}
+              onError={() => setImageError(true)}
+              className={cn(
+                'mx-auto h-full w-full object-contain transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] select-none',
+                isFading ? 'scale-[0.98] opacity-0' : 'scale-100 opacity-100',
+              )}
+            />
+          )}
+
+          {/* Lớp phủ phản quang kim loại (Foil Glare) lướt theo vị trí con trỏ */}
+          <div
+            ref={glareRef}
+            data-testid="heritage-foil-glare"
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-0 mix-blend-screen transition-opacity duration-300"
+          />
+        </div>
+
+        {/* Thông tin tác phẩm, Chú giải học thuật & Nút [Lược sử tác phẩm] */}
+        <div
+          className={cn(
+            'mt-4 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
+            isFading ? 'opacity-0' : 'opacity-100',
+          )}
+        >
+          <div>
+            <h3
+              className={cn(
+                'font-serif text-base font-bold sm:text-lg',
+                isDarkSurface ? 'text-[#FFF9F0]' : 'text-[#262B28]',
+              )}
+            >
+              {currentArtwork.title}
+            </h3>
+
+            {/* Bố cục hàng Metadata */}
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+              <span
+                className={cn(
+                  'font-mono text-xs font-semibold',
+                  isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
+                )}
+              >
+                {currentArtwork.artistOrOrigin}
+              </span>
+              <span className="opacity-60" aria-hidden="true">
+                ·
+              </span>
+              <span
+                className={cn(
+                  'inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[11px]',
+                  isDarkSurface
+                    ? 'border-white/15 bg-white/10 text-[#F4F1EA]'
+                    : 'border-[#D9DFD9]/60 bg-[#EBECE6] text-[#58635E]',
+                )}
+              >
+                {currentArtwork.yearOrEra}
+              </span>
+              <span className="opacity-60" aria-hidden="true">
+                ·
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsMetadataOpen((prev) => !prev)}
+                aria-expanded={isMetadataOpen}
+                data-testid="archival-metadata-trigger"
+                className={cn(
+                  'cursor-pointer rounded-md border px-2.5 py-1 font-mono text-[11px] transition-colors',
+                  isDarkSurface
+                    ? 'border-[#E5B869]/40 bg-white/10 text-[#F3C978] hover:bg-white/20'
+                    : 'border-[#D9DFD9] bg-[#FAF9F6]/90 text-[#365E4E] hover:bg-[#EBECE6]',
+                )}
+              >
+                [Lược sử tác phẩm]
+              </button>
+            </div>
+          </div>
+
+          <p
+            className={cn(
+              'mt-2 font-serif text-xs italic',
+              isDarkSurface ? 'text-[#F3C978]/90' : 'text-[#365E4E]',
+            )}
+          >
+            {currentArtwork.caption}
+          </p>
+
+          <p
+            className={cn(
+              'mt-2 text-xs leading-relaxed',
+              isDarkSurface ? 'text-[#E6E0D4]/85' : 'text-[#58635E]',
+            )}
+          >
+            {currentArtwork.academicSignificance}
+          </p>
+
+          {/* Thẻ Lược sử Văn bản (Archival Metadata Popover / Drawer) */}
+          {isMetadataOpen && (
+            <div
+              data-testid="archival-metadata-popover"
+              role="region"
+              aria-label={`Hồ sơ văn khố: ${currentArtwork.title}`}
+              className={cn(
+                'mt-4 rounded-2xl border p-4 text-xs shadow-xs',
+                isDarkSurface
+                  ? 'border-[#E5B869]/35 bg-black/35 text-[#F4F1EA]'
+                  : 'border-[#D9DFD9] bg-[#F5F4EF]/90 text-[#262B28]',
+              )}
+            >
+              <div
+                className={cn(
+                  'mb-3 flex items-center justify-between border-b pb-2',
+                  isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]',
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex items-center gap-2 font-mono text-[10px] font-semibold tracking-wider uppercase',
+                    isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
+                  )}
+                >
+                  <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>HỒ SƠ LƯỢC SỬ &amp; VĂN KHỐ TÁC PHẨM</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsMetadataOpen(false)}
+                  aria-label="Đóng lược sử tác phẩm"
+                  className={cn(
+                    'inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border',
+                    isDarkSurface
+                      ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:text-[#F3C978]'
+                      : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:text-[#262B28]',
+                  )}
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
+              </div>
+
+              <dl className="space-y-2 text-xs leading-relaxed">
+                <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
+                  <dt
+                    className={cn(
+                      'font-mono text-[11px] font-semibold sm:col-span-4',
+                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
+                    )}
+                  >
+                    Tác phẩm:
+                  </dt>
+                  <dd className="font-serif font-medium sm:col-span-8">
+                    {currentArtwork.originalTitle}
+                  </dd>
+                </div>
+
+                <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
+                  <dt
+                    className={cn(
+                      'font-mono text-[11px] font-semibold sm:col-span-4',
+                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
+                    )}
+                  >
+                    Niên đại &amp; Thời kỳ:
+                  </dt>
+                  <dd className="sm:col-span-8">{currentArtwork.eraAndPeriod}</dd>
+                </div>
+
+                <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
+                  <dt
+                    className={cn(
+                      'font-mono text-[11px] font-semibold sm:col-span-4',
+                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
+                    )}
+                  >
+                    Chất liệu &amp; Kỹ thuật:
+                  </dt>
+                  <dd className="opacity-85 sm:col-span-8">
+                    {currentArtwork.materialAndTechnique}
+                  </dd>
+                </div>
+
+                <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
+                  <dt
+                    className={cn(
+                      'font-mono text-[11px] font-semibold sm:col-span-4',
+                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
+                    )}
+                  >
+                    Nơi lưu trữ gốc:
+                  </dt>
+                  <dd className="sm:col-span-8">{currentArtwork.archivalLocation}</dd>
+                </div>
+
+                <div
+                  className={cn(
+                    'grid grid-cols-1 gap-0.5 border-t pt-2 sm:grid-cols-12 sm:gap-2',
+                    isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]/70',
+                  )}
+                >
+                  <dt className="font-mono text-[11px] font-semibold text-[#C89738] sm:col-span-4">
+                    Giá trị học thuật cốt lõi:
+                  </dt>
+                  <dd className="sm:col-span-8">{currentArtwork.coreAcademicValue}</dd>
+                </div>
+              </dl>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

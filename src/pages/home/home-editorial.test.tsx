@@ -1,6 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
+import { AtmosphereSwitcher } from '@/components/home/AtmosphereSwitcher';
+import { HERO_ATMOSPHERE_STORAGE_KEY } from '@/components/home/heroAtmosphere';
+import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
+import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { getSubjects } from '@/content-runtime';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { HERITAGE_ARTWORKS, HeritageArtShowcase } from '@/pages/home/HeritageArtShowcase';
@@ -367,6 +371,78 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(katexTrigger);
 
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
+    });
+
+    it('chuyển đổi khí quyển Thời gian (dawn / sunset / night) và lưu vào localStorage', () => {
+      window.localStorage.removeItem(HERO_ATMOSPHERE_STORAGE_KEY);
+      render(
+        <MemoryRouter>
+          <HomePage />
+        </MemoryRouter>,
+      );
+
+      expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-atmosphere', 'dawn');
+      expect(screen.getByTestId('atmosphere-option-dawn')).toHaveAttribute('aria-checked', 'true');
+
+      fireEvent.click(screen.getByTestId('atmosphere-option-sunset'));
+      expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-atmosphere', 'sunset');
+      expect(window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY)).toBe('sunset');
+
+      fireEvent.click(screen.getByTestId('atmosphere-option-night'));
+      expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-atmosphere', 'night');
+      expect(window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY)).toBe('night');
+      window.localStorage.removeItem(HERO_ATMOSPHERE_STORAGE_KEY);
+    });
+  });
+
+  describe('Hero Diorama, Physics Canvas & 3D Stack Components', () => {
+    it('AtmosphereSwitcher phát đúng callback cho từng chế độ thời khắc', () => {
+      let current: 'dawn' | 'sunset' | 'night' = 'dawn';
+      const { rerender } = render(
+        <AtmosphereSwitcher
+          atmosphere={current}
+          onChange={(next) => {
+            current = next;
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByTestId('atmosphere-option-night'));
+      expect(current).toBe('night');
+
+      rerender(<AtmosphereSwitcher atmosphere="night" onChange={() => {}} />);
+      expect(screen.getByTestId('atmosphere-option-night')).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('HeroSonHaDiorama render đủ 5 lớp Parallax SVG và HeroPhysicsCanvas gắn canvas 2D', () => {
+      const { container } = render(
+        <div className="relative h-96 w-full">
+          <HeroSonHaDiorama atmosphere="night" />
+          <HeroPhysicsCanvas atmosphere="night" />
+        </div>,
+      );
+
+      for (let i = 1; i <= 5; i += 1) {
+        expect(container.querySelector(`[data-testid="son-ha-layer-${i}"]`)).toBeInTheDocument();
+      }
+      expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
+    });
+
+    it('HeritageArtShowcase hỗ trợ chồng thẻ 3 lớp và tráo thẻ mượt khi bấm vào thẻ kế tiếp', async () => {
+      render(<HeritageArtShowcase atmosphere="sunset" />);
+
+      expect(screen.getByTestId('heritage-ambient-glow')).toBeInTheDocument();
+      expect(screen.getByTestId('heritage-stack-card-2')).toBeInTheDocument();
+      expect(screen.getByTestId('heritage-stack-card-3')).toBeInTheDocument();
+      expect(screen.getByTestId('heritage-foil-glare')).toBeInTheDocument();
+      const expectedTotal = String(HERITAGE_ARTWORKS.length).padStart(2, '0');
+      expect(screen.getByText(new RegExp(`01 / ${expectedTotal}`))).toBeInTheDocument();
+
+      fireEvent.click(screen.getByTestId('heritage-stack-card-2'));
+      expect(await screen.findByText(new RegExp(`02 / ${expectedTotal}`))).toBeInTheDocument();
+      expect(
+        screen.getAllByText(new RegExp(HERITAGE_ARTWORKS[1]!.title, 'i')).length,
+      ).toBeGreaterThan(0);
     });
   });
 });

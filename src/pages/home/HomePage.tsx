@@ -13,23 +13,28 @@ import {
 import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { getLessonById, getSubjects, getSubjectStats } from '@/content-runtime';
-import {
-  type AcademicBranch,
-  getCourseCinematicAsset,
-  HOMEPAGE_OPENING_ASSET,
-} from '@/data/cinematicAssets';
+import { type AcademicBranch, getCourseCinematicAsset } from '@/data/cinematicAssets';
 import { useLearningStore } from '@/features/learning';
 import { searchContent } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
-import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
+import { AtmosphereSwitcher } from '@/components/home/AtmosphereSwitcher';
+import {
+  ATMOSPHERE_THEMES,
+  detectSystemDarkMode,
+  getInitialHeroAtmosphere,
+  HERO_ATMOSPHERE_STORAGE_KEY,
+  type HeroAtmosphere,
+  saveHeroAtmosphere,
+} from '@/components/home/heroAtmosphere';
+import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
+import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { ArchivalIndexView } from './ArchivalIndexView';
 import { GrandLotusLake } from './GrandLotusLake';
 import { HeritageArtShowcase } from './HeritageArtShowcase';
-import { KnowledgeThread } from './KnowledgeThread';
 import { QuickKaTeXDrawer } from './QuickKaTeXDrawer';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
 import {
@@ -535,65 +540,8 @@ function SubjectSpatialArtwork({
   );
 }
 
-/**
- * Tính tọa độ điểm trên đường cong Bézier bậc 3: B(t) = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
- */
-function evaluateCubicBezier(
-  p0: { x: number; y: number },
-  p1: { x: number; y: number },
-  p2: { x: number; y: number },
-  p3: { x: number; y: number },
-  t: number,
-): { x: number; y: number } {
-  const mt = 1 - t;
-  const mt2 = mt * mt;
-  const mt3 = mt2 * mt;
-  const t2 = t * t;
-  const t3 = t2 * t;
-  return {
-    x: Math.round(mt3 * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t3 * p3.x),
-    y: Math.round(mt3 * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t3 * p3.y),
-  };
-}
-
-/**
- * Tính tọa độ chính xác của đầu dẫn (Lead Tip) theo tỷ lệ cuộn trang (0..1)
- */
-function computeThreadTipPoint(progress: number): { x: number; y: number } {
-  const r = Math.max(0, Math.min(1, progress));
-  if (r <= 0.33) {
-    const t = r / 0.33;
-    return evaluateCubicBezier(
-      { x: 720, y: 140 },
-      { x: 720, y: 420 },
-      { x: 1120, y: 560 },
-      { x: 1120, y: 860 },
-      t,
-    );
-  }
-  if (r <= 0.66) {
-    const t = (r - 0.33) / 0.33;
-    return evaluateCubicBezier(
-      { x: 1120, y: 860 },
-      { x: 1120, y: 1160 },
-      { x: 320, y: 1320 },
-      { x: 320, y: 1640 },
-      t,
-    );
-  }
-  const t = (r - 0.66) / 0.34;
-  return evaluateCubicBezier(
-    { x: 320, y: 1640 },
-    { x: 320, y: 1920 },
-    { x: 720, y: 2080 },
-    { x: 720, y: 2320 },
-    t,
-  );
-}
-
 export function HomePage() {
   const subjects = getSubjects();
-  const prefersReducedMotion = useReducedMotion();
   const navigate = useNavigate();
   const searchListboxId = useId();
 
@@ -606,18 +554,47 @@ export function HomePage() {
   const [pageScrollProgress, setPageScrollProgress] = useState(0);
   const [viewMode, setViewMode] = useState<HomepageViewMode>(() => getInitialHomepageViewMode());
   const [isKaTeXDrawerOpen, setIsKaTeXDrawerOpen] = useState(false);
+  const [atmosphere, setAtmosphere] = useState<HeroAtmosphere>(() => getInitialHeroAtmosphere());
+
+  const heroTheme = ATMOSPHERE_THEMES[atmosphere];
 
   const handleViewModeChange = (nextMode: HomepageViewMode) => {
     setViewMode(nextMode);
     saveHomepageViewMode(nextMode);
   };
 
+  const handleAtmosphereChange = (nextAtmosphere: HeroAtmosphere) => {
+    setAtmosphere(nextAtmosphere);
+    saveHeroAtmosphere(nextAtmosphere);
+  };
+
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const threadPathRef = useRef<SVGPathElement>(null);
-  const [leadTip, setLeadTip] = useState<{ x: number; y: number }>({ x: 720, y: 140 });
 
-  // Theo dõi tiến trình cuộn trang cho The Knowledge Thread (Đường dẫn tri thức xuyên suốt)
+  // Đồng bộ khí quyển mặc định nếu người dùng chuyển Light/Dark mode toàn trang (chưa khóa tay)
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const handleReadingThemeChange = () => {
+      try {
+        const manualAtmosphere = window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY);
+        if (!manualAtmosphere) {
+          setAtmosphere(detectSystemDarkMode() ? 'night' : 'dawn');
+        }
+      } catch {
+        setAtmosphere(detectSystemDarkMode() ? 'night' : 'dawn');
+      }
+    };
+
+    window.addEventListener('lu_reading_theme_change', handleReadingThemeChange);
+    return () => {
+      window.removeEventListener('lu_reading_theme_change', handleReadingThemeChange);
+    };
+  }, []);
+
+  // Theo dõi tiến trình cuộn trang cho vùng chuyển tiếp tới Đại cảnh Hồ Sen
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
@@ -650,21 +627,6 @@ export function HomePage() {
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
-
-  // Cập nhật vị trí đầu dẫn phát sáng (Glowing Lead Tip) theo vị trí cuộn trang
-  useEffect(() => {
-    const currentRatio = Math.max(0.14, pageScrollProgress);
-    if (threadPathRef.current && typeof threadPathRef.current.getPointAtLength === 'function') {
-      try {
-        const pt = threadPathRef.current.getPointAtLength(currentRatio * 2400);
-        setLeadTip({ x: Math.round(pt.x), y: Math.round(pt.y) });
-        return;
-      } catch {
-        // Dự phòng tính toán giải tích Bézier thuần
-      }
-    }
-    setLeadTip(computeThreadTipPoint(currentRatio));
-  }, [pageScrollProgress]);
 
   // Đóng dropdown tìm kiếm khi click ra ngoài hoặc nhấn phím Escape
   useEffect(() => {
@@ -755,73 +717,125 @@ export function HomePage() {
 
   return (
     <div className="relative overflow-x-clip bg-[#F5F4EF] text-[#262B28]">
-      {/* =====================================================================
-          KHU VỰC NỘI DUNG VỚI ĐƯỜNG DẪN TRI THỨC (THE KNOWLEDGE THREAD)
-          The Knowledge Thread trải dài qua các phân khu nội dung:
-          Hero -> Subject Gallery -> My Learning Orbit -> Vùng chuyển tiếp tri thức
-          Dừng lại hoàn toàn và nở hoa trọn vẹn ở vùng đệm TRƯỚC KHI bước vào Đại cảnh Hồ Sen
-          ===================================================================== */}
       <div className="relative">
-        <KnowledgeThread
-          pageScrollProgress={pageScrollProgress}
-          leadTip={leadTip}
-          threadPathRef={threadPathRef}
-          prefersReducedMotion={prefersReducedMotion}
-        />
-
         {/* =====================================================================
-          SECTION 1: HERO — THE KNOWLEDGE UNIVERSE (BỐ CỤC ĐA LỚP 4 TẦNG)
+          SECTION 1: HERO — SƠN HÀ 3D PARALLAX DIORAMA, PHYSICS CANVAS & HOLOGRAPHIC SHOWCASE
           ===================================================================== */}
         <section
           aria-label="Không gian Khởi đầu Learning Universe"
-          className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden border-b border-[#D9DFD9] bg-[#F5F4EF] pt-20 pb-8 md:pt-24 md:pb-10"
+          className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden pt-20 pb-8 transition-colors duration-700 md:pt-24 md:pb-10"
+          style={{ background: heroTheme.skyGradient }}
         >
-          {/* LAYER 1 (Backdrop): Ho Chi Minh City / Vietnam Architectural Skyline ở độ tương phản cực thấp */}
-          <img
-            src={HOMEPAGE_OPENING_ASSET.localSrc}
-            onError={(event) => {
-              const target = event.currentTarget;
-              if (target.src !== HOMEPAGE_OPENING_ASSET.remoteSrc) {
-                target.src = HOMEPAGE_OPENING_ASSET.remoteSrc;
-              }
-            }}
-            alt={HOMEPAGE_OPENING_ASSET.alt}
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-10 mix-blend-multiply grayscale"
-          />
+          {/* LAYER 1: 5-Layer 3D Parallax Sơn Hà Diorama */}
+          <HeroSonHaDiorama atmosphere={atmosphere} />
 
-          {/* Lớp lưới tọa độ kiến trúc nền mảnh (Spatial Atlas Grid) */}
+          {/* LAYER 2: 60fps Particle Physics, Silk Light Ribbons & Click Shockwaves */}
+          <HeroPhysicsCanvas atmosphere={atmosphere} />
+
+          {/* Dải chuyển tiếp mượt xuống không gian Học phần (#F5F4EF) */}
           <div
-            data-testid="horizontal-blinds-mask"
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#D9DFD9_1px,transparent_1px),linear-gradient(to_bottom,#D9DFD9_1px,transparent_1px)] bg-[size:4.5rem_4.5rem] opacity-35"
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 transition-all duration-700"
+            style={{ background: heroTheme.bottomEdgeBlend }}
           />
 
-          {/* Container chính của Hero (Kết hợp Layer 4 Foreground Typography & Cột Trưng bày Nghệ thuật Di sản) */}
-          <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-center gap-10 pt-2 lg:grid-cols-[1.1fr_0.9fr] lg:pt-4 xl:gap-16">
-            {/* LAYER 4 (Foreground Typography & CTAs — Cột Trái) */}
+          {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Nghệ Thuật 3D) */}
+          <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-center gap-10 pt-2 lg:grid-cols-[1.08fr_0.92fr] lg:pt-4 xl:gap-16">
+            {/* Cột Trái: Khí quyển Thời gian, Ấn Triện Đỏ, Tục Ngữ & Danh Ngôn */}
             <div className="min-w-0 space-y-6">
-              {/* Dòng định danh chuẩn mực */}
-              <div className="inline-flex items-center gap-2.5 rounded-full border border-[#D9DFD9] bg-[#FAF9F6]/90 px-3.5 py-1.5 shadow-2xs">
-                <span className="h-2 w-2 rounded-full bg-[#B85D6F]" aria-hidden="true" />
-                <span className="font-mono text-xs tracking-widest text-[#58635E] uppercase">
-                  LEARNING UNIVERSE
-                </span>
+              {/* Hàng điều khiển khí quyển + Dòng định danh chuẩn mực */}
+              <div className="flex flex-wrap items-center gap-3">
+                <AtmosphereSwitcher atmosphere={atmosphere} onChange={handleAtmosphereChange} />
+
+                <div
+                  className={cn(
+                    'inline-flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 transition-colors duration-700',
+                    heroTheme.eyebrowContainerClass,
+                  )}
+                >
+                  <span className="h-2 w-2 rounded-full bg-[#C83E37]" aria-hidden="true" />
+                  <span
+                    className={cn(
+                      'font-mono text-xs tracking-widest uppercase transition-colors duration-700',
+                      heroTheme.eyebrowTextClass,
+                    )}
+                  >
+                    LEARNING UNIVERSE
+                  </span>
+                </div>
               </div>
 
-              {/* Tiêu đề chính (Serif) & Trích dẫn nguồn gốc */}
-              <div className="space-y-2">
-                <h1 className="font-serif text-[clamp(2.5rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight text-[#262B28]">
-                  <span className="sr-only">LEARNING UNIVERSE — </span>
-                  <span className="block">Đi một ngày đàng,</span>{' '}
-                  <span className="mt-1 block font-normal text-[#B85D6F] italic">
-                    học một sàng khôn.
-                  </span>
-                </h1>
-                <p className="font-serif text-sm text-[#365E4E] italic">— Tục ngữ Việt Nam</p>
+              {/* Tiêu đề chính (Serif) kèm Ấn Triện Đỏ Hoàng Gia (#C83E37) & Trích dẫn nguồn gốc */}
+              <div className="flex items-start gap-4 sm:gap-5">
+                <div
+                  data-testid="cinnabar-imperial-seal"
+                  aria-hidden="true"
+                  className="mt-1.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#C83E37]/85 bg-[#C83E37] text-[#FFF8EE] shadow-md ring-1 shadow-[#C83E37]/25 ring-[#F3C978]/50 sm:h-14 sm:w-14"
+                >
+                  <svg
+                    viewBox="0 0 40 40"
+                    className="h-9 w-9 sm:h-10 sm:w-10"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="3"
+                      y="3"
+                      width="34"
+                      height="34"
+                      rx="5"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeOpacity="0.9"
+                    />
+                    <path
+                      d="M11 13h18M20 9v22M13 21h14M12 28c3-3 5-5 8-5s5 2 8 5"
+                      stroke="currentColor"
+                      strokeWidth="2.1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <circle cx="14" cy="17" r="1.4" fill="currentColor" />
+                    <circle cx="26" cy="17" r="1.4" fill="currentColor" />
+                  </svg>
+                </div>
+
+                <div className="min-w-0 space-y-2">
+                  <h1
+                    className={cn(
+                      'font-serif text-[clamp(2.4rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight transition-colors duration-700',
+                      heroTheme.headingTextClass,
+                    )}
+                  >
+                    <span className="sr-only">LEARNING UNIVERSE — </span>
+                    <span className="block">Đi một ngày đàng,</span>{' '}
+                    <span
+                      className={cn(
+                        'mt-1 block font-serif italic transition-all duration-700',
+                        heroTheme.highlightGradientClass,
+                      )}
+                    >
+                      học một sàng khôn.
+                    </span>
+                  </h1>
+                  <p
+                    className={cn(
+                      'font-serif text-sm italic transition-colors duration-700',
+                      heroTheme.proverbAuthorClass,
+                    )}
+                  >
+                    — Tục ngữ Việt Nam
+                  </p>
+                </div>
               </div>
 
               {/* Khẩu hiệu dẫn nhập (Subheading) */}
-              <p className="max-w-2xl text-base leading-relaxed text-[#58635E] sm:text-lg lg:text-[18.5px]">
+              <p
+                className={cn(
+                  'max-w-2xl text-base leading-relaxed transition-colors duration-700 sm:text-lg lg:text-[18.5px]',
+                  heroTheme.subtextClass,
+                )}
+              >
                 Không gian hỗ trợ Toán học và Khoa học Giáo dục, đồng hành cùng người học trên bước
                 đường học tập.
               </p>
@@ -830,7 +844,10 @@ export function HomePage() {
               <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <a
                   href="#khong-gian-mon-hoc"
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#365E4E] px-6 py-3 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#2B4C3E]"
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all duration-300',
+                    heroTheme.primaryCtaClass,
+                  )}
                 >
                   <span>Khám phá không gian tri thức</span>
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -842,34 +859,55 @@ export function HomePage() {
                     event.preventDefault();
                     setIsKaTeXDrawerOpen(true);
                   }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[#D9DFD9] bg-[#FAF9F6] px-6 py-3 text-sm font-medium text-[#262B28] transition-all duration-200 hover:bg-[#EBECE6]"
+                  className={cn(
+                    'inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all duration-300',
+                    heroTheme.secondaryCtaClass,
+                  )}
                 >
-                  <BookMarked className="h-4 w-4 text-[#365E4E]" aria-hidden="true" />
+                  <BookMarked className="h-4 w-4" aria-hidden="true" />
                   <span>Tra cứu thuật ngữ KaTeX</span>
                 </Link>
               </div>
 
               {/* Danh ngôn học thuật xoay vòng (Rotating Scholarly Quotes) */}
-              <RotatingScholarlyQuote />
+              <RotatingScholarlyQuote atmosphere={atmosphere} />
             </div>
 
-            {/* Cột Phải: Khối Trưng bày Tác phẩm Nghệ thuật & Di sản Học thuật Đích thực */}
+            {/* Cột Phải: Bộ Sưu Tập Tranh Xếp Lớp 3D Phản Quang Holographic */}
             <div className="relative min-w-0">
-              <HeritageArtShowcase />
+              <HeritageArtShowcase atmosphere={atmosphere} />
             </div>
           </div>
 
           {/* Chân trang Hero (Architectural Status Bar) */}
-          <div className="lu-container-wide relative z-20 mt-8 flex flex-col items-center justify-between gap-3 border-t border-[#D9DFD9] pt-5 text-xs text-[#58635E] sm:flex-row">
-            <p className="font-mono text-[11px] tracking-[0.2em] text-[#365E4E] uppercase">
+          <div
+            className={cn(
+              'lu-container-wide relative z-20 mt-8 flex flex-col items-center justify-between gap-3 border-t pt-5 text-xs transition-colors duration-700 sm:flex-row',
+              heroTheme.statusBarBorderClass,
+            )}
+          >
+            <p
+              className={cn(
+                'font-mono text-[11px] tracking-[0.2em] uppercase transition-colors duration-700',
+                heroTheme.statusAccentTextClass,
+              )}
+            >
               TOÁN HỌC &amp; KHOA HỌC GIÁO DỤC · HCMUE
             </p>
-            <p className="font-mono text-[11px] tracking-[0.18em] text-[#58635E] uppercase">
+            <p
+              className={cn(
+                'font-mono text-[11px] tracking-[0.18em] uppercase transition-colors duration-700',
+                heroTheme.statusMutedTextClass,
+              )}
+            >
               04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026
             </p>
             <a
               href="#khong-gian-mon-hoc"
-              className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-wider text-[#262B28] uppercase transition-colors hover:text-[#365E4E]"
+              className={cn(
+                'inline-flex items-center gap-1.5 font-mono text-[11px] tracking-wider uppercase transition-colors duration-700 hover:opacity-80',
+                heroTheme.statusAccentTextClass,
+              )}
             >
               <span>Cuộn xuống Không gian Học phần</span>
               <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />

@@ -55,7 +55,7 @@ describe('App routing smoke test', () => {
   it('hiển thị đầy đủ kiến trúc trang chủ The Living Atlas (4-Layer Hero, Spatial Subject Gallery, My Learning Orbit & Knowledge Thread)', async () => {
     renderWithProviders('/');
 
-    // 1. Hero Section — THE LIVING ATLAS (Hero Di sản, Rotating Quotes & The Knowledge Thread)
+    // 1. Hero Section — Sơn Hà 3D Parallax Diorama, Physics Canvas, Cinnabar Seal & Holographic Showcase
     expect(await screen.findByRole('heading', { name: /Đi một ngày đàng/i })).toBeInTheDocument();
     expect(screen.getByText(/— Tục ngữ Việt Nam/i)).toBeInTheDocument();
     expect(
@@ -66,7 +66,12 @@ describe('App routing smoke test', () => {
     expect(screen.getAllByText('LEARNING UNIVERSE').length).toBeGreaterThan(0);
     expect(screen.getByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).toBeInTheDocument();
     expect(screen.getByText(/04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026/i)).toBeInTheDocument();
-    expect(screen.getByTestId('the-knowledge-thread')).toBeInTheDocument();
+    expect(screen.getByTestId('son-ha-diorama')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
+    expect(screen.getByTestId('atmosphere-switcher')).toBeInTheDocument();
+    expect(screen.getByTestId('cinnabar-imperial-seal')).toBeInTheDocument();
+    expect(screen.queryByTestId('the-knowledge-thread')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('horizontal-blinds-mask')).not.toBeInTheDocument();
     expect(screen.getByTestId('rotating-scholarly-quote')).toBeInTheDocument();
     expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Khám phá không gian tri thức/i })).toHaveAttribute(

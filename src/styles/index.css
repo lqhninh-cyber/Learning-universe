@@ -382,3 +382,47 @@
     padding-right: 2rem;
   }
 }
+
+/* =========================================================================
+   HERO DIORAMA & HOLOGRAPHIC SHOWCASE ANIMATIONS (60fps GPU-friendly)
+   ========================================================================= */
+
+@keyframes lu-orbit-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lu-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.12);
+  }
+}
+
+.lu-orbit-slow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lu-orbit-slow 90s linear infinite;
+}
+
+.lu-star-twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lu-star-twinkle 4.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-orbit-slow,
+  .lu-star-twinkle {
+    animation: none;
+  }
+}
