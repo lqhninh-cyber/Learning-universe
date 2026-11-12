@@ -9,7 +9,7 @@ import {
 } from '@/features/math-glossary';
 import { ROUTES } from '@/shared/config/routes';
 import { FadeIn } from '@/shared/motion/FadeIn';
-import { Badge, Breadcrumb, Button, Card, Container } from '@/shared/ui';
+import { Badge, Breadcrumb, Button, Card } from '@/shared/ui';
 
 type SubjectFilter = 'all' | MathGlossarySubject;
 
@@ -68,7 +68,7 @@ export function GlossaryPage() {
 
   return (
     <FadeIn className="space-y-8 bg-[var(--bg-page)] pb-16 text-[var(--text-main)]">
-      <Container className="space-y-6">
+      <div className="mx-auto w-[min(94vw,1600px)] space-y-6">
         <Breadcrumb
           items={[
             { label: 'Trang chủ', href: ROUTES.home },
@@ -209,23 +209,23 @@ export function GlossaryPage() {
 
         {/* Danh sách thẻ thuật ngữ */}
         {filteredEntries.length > 0 ? (
-          <div className="grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {filteredEntries.map((entry) => {
               const isAlgebra = entry.subject === 'cau-truc-dai-so';
               return (
                 <Card
                   key={entry.id}
-                  className="group/card flex h-full flex-col justify-between rounded-2xl border border-[#DFE6E1] bg-[var(--bg-surface)] p-5 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-[#1E3B2D]"
+                  className="group/card flex h-full flex-col justify-between rounded-2xl border border-[#DFE6E1] bg-[var(--bg-surface)] p-6 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-[#1E3B2D]"
                 >
-                  <div className="flex-1 space-y-3">
+                  <div className="flex-1 space-y-3.5">
                     {/* Hàng trên: Ký hiệu + Nút chép LaTeX + Badge môn học */}
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-1.5">
-                        <div className="inline-flex h-12 min-w-[54px] shrink-0 items-center justify-center overflow-visible rounded-xl border border-[#DFE6E1] bg-[#EEF2EE] px-2 shadow-2xs dark:border-[#1E3B2D] dark:bg-[#12241C]">
+                        <div className="inline-flex h-14 min-w-[64px] shrink-0 items-center justify-center overflow-visible rounded-xl border border-[#DFE6E1] bg-[#EEF2EE] px-3 shadow-2xs dark:border-[#1E3B2D] dark:bg-[#12241C]">
                           <div className="flex items-center justify-center leading-none">
                             <KatexMath
                               math={entry.symbol}
-                              className="font-serif text-base font-semibold text-[#29383D] dark:text-[#E2E8F0]"
+                              className="font-serif text-2xl font-semibold text-[#29383D] dark:text-[#E2E8F0]"
                             />
                           </div>
                         </div>
@@ -272,7 +272,7 @@ export function GlossaryPage() {
 
                     {/* Tên thuật ngữ */}
                     <div>
-                      <h2 className="font-serif text-lg leading-snug font-bold text-[#29383D] dark:text-[#E6ECE7]">
+                      <h2 className="font-serif text-[18.5px] leading-snug font-bold text-[#29383D] dark:text-[#E6ECE7]">
                         {entry.nameVi}
                       </h2>
                       <p className="text-xs text-[#55676B] italic dark:text-[#A7B5AC]">
@@ -281,12 +281,12 @@ export function GlossaryPage() {
                     </div>
 
                     {/* Định nghĩa tóm tắt */}
-                    <p className="text-xs leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
+                    <p className="text-[15.5px] leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
                       {entry.brief}
                     </p>
 
                     {/* Hộp trực quan */}
-                    <div className="space-y-1 rounded-xl border border-[#DFE6E1] bg-[#EEF2EE]/60 p-3 text-[11px] leading-relaxed text-[#29383D] dark:border-[#1E3B2D] dark:bg-[#12241C]/60 dark:text-[#E2E8F0]">
+                    <div className="space-y-1.5 rounded-xl border border-[#DFE6E1] bg-[#EEF2EE]/60 p-3.5 text-[14.5px] leading-relaxed text-[#29383D] dark:border-[#1E3B2D] dark:bg-[#12241C]/60 dark:text-[#E2E8F0]">
                       <div className="flex items-center gap-1.5 font-semibold text-[#3F6570] dark:text-[#739B88]">
                         <Lightbulb className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                         <span>Trực quan &amp; Bản chất:</span>
@@ -339,7 +339,7 @@ export function GlossaryPage() {
             </div>
           </Card>
         )}
-      </Container>
+      </div>
     </FadeIn>
   );
 }

@@ -89,8 +89,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const { container } = render(<HeritageArtShowcase />);
 
       const frame = screen.getByTestId('heritage-art-frame');
-      expect(frame.className).toContain('h-[300px]');
-      expect(frame.className).toContain('md:h-[340px]');
+      expect(frame.className).toContain('h-[350px]');
+      expect(frame.className).toContain('md:h-[425px]');
+      expect(frame.className).toContain('xl:h-[460px]');
 
       // Khung chứa tranh không còn kính lúp overlay
       expect(screen.queryByTestId('archival-zoom-lens')).not.toBeInTheDocument();

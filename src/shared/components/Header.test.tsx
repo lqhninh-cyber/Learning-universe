@@ -47,7 +47,8 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     const header = container.querySelector('header.lu-site-header');
     expect(header).toBeInTheDocument();
     expect(header?.className).toContain('rounded-full');
-    expect(header?.className).toContain('h-[62px]');
+    expect(header?.className).toContain('h-[66px]');
+    expect(header?.className).toContain('w-[min(94vw,1520px)]');
     expect(header?.className).toContain('sticky');
 
     // Logo 8 lá xanh SVG kèm gradient

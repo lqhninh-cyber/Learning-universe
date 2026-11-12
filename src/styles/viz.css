@@ -52,6 +52,7 @@
 }
 
 .viz {
+  width: 100%;
   margin: 1.5rem 0 2rem;
   border: 1px solid var(--border-subtle, #cbd5e1);
   border-radius: 0.9rem;

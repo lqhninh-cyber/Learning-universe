@@ -226,7 +226,7 @@ export function LessonToc({
               <span>MỤC LỤC BÀI HỌC</span>
             </div>
           )}
-          <ul className="custom-scrollbar max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto pr-1 text-[14px]">
+          <ul className="custom-scrollbar max-h-[calc(100vh-12rem)] space-y-1 overflow-y-auto pr-1 text-[14.5px]">
             {headings.map((heading) => {
               const isActive = activeId === heading.id;
               return (
@@ -239,7 +239,7 @@ export function LessonToc({
                     aria-current={isActive ? 'location' : undefined}
                     onClick={(e) => handleAnchorClick(e, heading.id)}
                     className={cn(
-                      'group flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[14px] leading-snug transition-all',
+                      'group flex items-start gap-1.5 rounded-lg px-2.5 py-1.5 text-[14.5px] leading-snug transition-all',
                       isDark
                         ? isActive
                           ? 'bg-[#242C33] font-medium text-[#F8FAFC]'
@@ -290,7 +290,7 @@ export function LessonToc({
               <span>Định nghĩa &amp; Định lý ({blocks.length})</span>
             </div>
           )}
-          <ul className="custom-scrollbar max-h-[calc(100vh-12rem)] space-y-1.5 overflow-y-auto pr-1 text-[14px]">
+          <ul className="custom-scrollbar max-h-[calc(100vh-12rem)] space-y-1.5 overflow-y-auto pr-1 text-[14.5px]">
             {blocks.map((block) => {
               const isActive = activeId === block.anchorId;
               return (
@@ -300,7 +300,7 @@ export function LessonToc({
                     aria-current={isActive ? 'location' : undefined}
                     onClick={(e) => handleAnchorClick(e, block.anchorId)}
                     className={cn(
-                      'group block rounded-lg border px-2.5 py-1.5 text-[14px] leading-snug transition-all',
+                      'group block rounded-lg border px-2.5 py-1.5 text-[14.5px] leading-snug transition-all',
                       isDark
                         ? isActive
                           ? 'border-[#C89738] bg-[#242C33] font-medium text-[#F8FAFC]'

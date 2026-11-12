@@ -327,20 +327,20 @@ export function ChapterAccordionList({
                 {isOpen && (
                   <>
                     {chapter.lessons.length > 0 ? (
-                      <ul className="divide-y divide-stone-100 dark:divide-[#2A323A]">
+                      <ul className="grid grid-cols-1 gap-4 p-4 sm:p-6 lg:grid-cols-2">
                         {chapter.lessons.map((lesson) => {
                           const isCompleted = Boolean(completedLessons[lesson.id]);
                           const isBookmarked = Boolean(bookmarkedLessons[lesson.id]);
                           const lessonHref = ROUTES.lesson(subject.slug, chapter.slug, lesson.slug);
 
                           return (
-                            <li key={lesson.id}>
+                            <li key={lesson.id} className="h-full">
                               <Link
                                 to={lessonHref}
-                                className="group hover:bg-subject-50/35 flex flex-col justify-between gap-4 p-4.5 transition-colors sm:flex-row sm:items-center sm:px-6 dark:hover:bg-[#202630]/40"
+                                className="group hover:border-subject-300 hover:bg-subject-50/40 dark:hover:border-subject-700/60 flex h-full flex-col justify-between gap-4 rounded-xl border border-stone-200/85 bg-stone-50/45 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm dark:border-[#2A323A] dark:bg-[#1A1F26]/55 dark:hover:bg-[#202630]/75"
                               >
                                 <div className="flex items-start gap-3.5">
-                                  <div className="mt-0.5 shrink-0">
+                                  <div className="mt-1 shrink-0">
                                     {isCompleted ? (
                                       <CheckCircle2
                                         className="h-5 w-5 text-emerald-600"
@@ -354,55 +354,65 @@ export function ChapterAccordionList({
                                     )}
                                   </div>
 
-                                  <div className="space-y-1.5">
-                                    <div className="flex flex-wrap items-center gap-2">
+                                  <div className="min-w-0 flex-1 space-y-2">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
                                       <span className="text-subject-700 font-mono text-xs font-semibold">
                                         {/^Thực hành/i.test(lesson.title)
                                           ? `Thực hành ${lesson.number}`
                                           : `Bài ${chapter.number}.${lesson.number}`}
                                       </span>
-                                      <h3 className="group-hover:text-subject-700 text-[17px] leading-snug font-semibold text-stone-900 transition-colors dark:text-[#F8FAFC]">
-                                        {lesson.title.replace(
-                                          /^(?:Bài\s+\d+(?:\.\d+)?|Thực hành\s+\d+|Chuyên đề\s+\d+(?:\.\d+)?)\s*:\s*/i,
-                                          '',
+                                      <div className="flex items-center gap-1.5">
+                                        <Badge variant="neutral">
+                                          {LEVEL_LABELS[lesson.level]}
+                                        </Badge>
+                                        {isBookmarked && (
+                                          <Bookmark
+                                            className="h-3.5 w-3.5 fill-amber-400 text-amber-500"
+                                            aria-label="Đã lưu yêu thích"
+                                          />
                                         )}
-                                      </h3>
-                                      <Badge variant="neutral">{LEVEL_LABELS[lesson.level]}</Badge>
-                                      {isBookmarked && (
-                                        <Bookmark
-                                          className="h-3.5 w-3.5 fill-amber-400 text-amber-500"
-                                          aria-label="Đã lưu yêu thích"
-                                        />
-                                      )}
+                                      </div>
                                     </div>
 
-                                    <p className="text-[15px] leading-relaxed text-stone-600 dark:text-stone-400">
+                                    <h3 className="group-hover:text-subject-700 text-[17.5px] leading-snug font-bold text-stone-900 transition-colors dark:text-[#F8FAFC]">
+                                      {lesson.title.replace(
+                                        /^(?:Bài\s+\d+(?:\.\d+)?|Thực hành\s+\d+|Chuyên đề\s+\d+(?:\.\d+)?)\s*:\s*/i,
+                                        '',
+                                      )}
+                                    </h3>
+
+                                    <p className="line-clamp-2 text-[15px] leading-relaxed text-stone-600 dark:text-stone-400">
                                       {lesson.description}
                                     </p>
-
-                                    <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-stone-500 dark:text-stone-400">
-                                      <span className="inline-flex items-center gap-1">
-                                        <Clock
-                                          className="h-3.5 w-3.5 text-stone-400"
-                                          aria-hidden="true"
-                                        />
-                                        <span>{lesson.estimatedMinutes} phút</span>
-                                      </span>
-                                      {lesson.tags.map((tag) => (
-                                        <span key={tag} className="text-stone-400">
-                                          #{tag}
-                                        </span>
-                                      ))}
-                                    </div>
                                   </div>
                                 </div>
 
-                                <div className="text-subject-700 flex items-center gap-1.5 self-end text-xs font-semibold sm:self-center">
-                                  <span>Đọc bài</span>
-                                  <ArrowRight
-                                    className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                                    aria-hidden="true"
-                                  />
+                                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-200/65 pt-3 dark:border-[#2A323A]">
+                                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400">
+                                    <span className="mr-1 inline-flex items-center gap-1 font-medium">
+                                      <Clock
+                                        className="h-3.5 w-3.5 text-stone-400"
+                                        aria-hidden="true"
+                                      />
+                                      <span>{lesson.estimatedMinutes} phút</span>
+                                    </span>
+                                    {lesson.tags.slice(0, 3).map((tag) => (
+                                      <span
+                                        key={tag}
+                                        className="rounded-md bg-stone-200/60 px-2 py-0.5 text-[11px] font-medium text-stone-600 dark:bg-[#242C36] dark:text-stone-300"
+                                      >
+                                        #{tag}
+                                      </span>
+                                    ))}
+                                  </div>
+
+                                  <div className="text-subject-700 inline-flex items-center gap-1.5 text-xs font-semibold">
+                                    <span>Đọc bài</span>
+                                    <ArrowRight
+                                      className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                                      aria-hidden="true"
+                                    />
+                                  </div>
                                 </div>
                               </Link>
                             </li>

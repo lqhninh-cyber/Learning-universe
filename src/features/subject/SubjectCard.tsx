@@ -38,7 +38,7 @@ export function SubjectCard({ subject }: SubjectCardProps) {
   return (
     <article
       aria-label={`Học phần ${subject.title}`}
-      className="group flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-7 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg sm:p-8"
+      className="group flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-7 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg lg:p-8"
     >
       {/* Phía trên: Huy hiệu tín chỉ */}
       <div className="space-y-4">
@@ -46,26 +46,45 @@ export function SubjectCard({ subject }: SubjectCardProps) {
           <span className="inline-flex items-center rounded-full border border-[#C5A262]/40 bg-[#C5A262]/10 px-3 py-1 text-xs font-semibold text-[#8A6A2F] dark:border-[#C5A262]/30 dark:bg-[#C5A262]/15 dark:text-[#E5C378]">
             {creditsText}
           </span>
+          <span className="font-mono text-xs font-medium text-[#55676B] dark:text-[#A7B5AC]">
+            {subject.slug === 'giao-duc-hoc'
+              ? `5 chương & 3 bài thực hành (${stats.lessonCount} bài học)`
+              : `${stats.chapterCount} chương · ${stats.lessonCount} bài học`}
+          </span>
         </div>
 
         <div className="space-y-2.5">
-          <h2 className="font-serif text-2xl leading-snug font-bold text-[#29383D] transition-colors group-hover:text-[#3F6570] sm:text-3xl dark:text-[#E6ECE7] dark:group-hover:text-[#739B88]">
+          <h2 className="font-serif text-2xl leading-snug font-bold text-[#29383D] transition-colors group-hover:text-[#3F6570] dark:text-[#E6ECE7] dark:group-hover:text-[#739B88]">
             <Link to={ROUTES.courseOverview(subject.slug)}>{subject.title}</Link>
           </h2>
 
-          <p className="line-clamp-2 text-sm leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
+          <p className="line-clamp-2 text-[16px] leading-relaxed text-[#55676B] dark:text-[#A7B5AC]">
             {asset.conciseDescription}
           </p>
         </div>
-      </div>
 
-      {/* Thông tin chương/bài */}
-      <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-medium text-[#55676B] dark:text-[#A7B5AC]">
-        <span>
-          {subject.slug === 'giao-duc-hoc'
-            ? `5 chương & 3 bài thực hành (${stats.lessonCount} bài học)`
-            : `${stats.chapterCount} chương · ${stats.lessonCount} bài học`}
-        </span>
+        {/* Danh sách nhanh các chương trọng tâm */}
+        {subject.chapters.length > 0 && (
+          <div className="space-y-1.5 border-t border-[var(--border-subtle)]/70 pt-3">
+            <p className="font-mono text-[11px] font-semibold tracking-wider text-[#3F6570] uppercase dark:text-[#739B88]">
+              Nội dung trọng tâm
+            </p>
+            <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+              {subject.chapters.slice(0, 4).map((chapter) => (
+                <li
+                  key={chapter.id}
+                  className="truncate text-[13.5px] text-[#3B4842] dark:text-[#CBD5E1]"
+                  title={chapter.title}
+                >
+                  <span className="font-mono text-xs font-semibold text-[#3F6570] dark:text-[#739B88]">
+                    Ch.{chapter.number}:
+                  </span>{' '}
+                  {chapter.title.replace(/^(?:Chương|Chuyên đề)\s+\d+\s*:\s*/i, '')}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Phía dưới: Thanh tiến độ tổng thể (Tiến độ cá nhân: X%) + Nút tròn điều hướng */}

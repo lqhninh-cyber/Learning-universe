@@ -387,7 +387,7 @@ export function HeritageArtShowcase() {
       data-testid="heritage-art-showcase"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative mx-auto flex w-full max-w-2xl flex-col rounded-3xl border border-[#D9DFD9] bg-[#FAF9F6]/85 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40 sm:p-6"
+      className="relative mx-auto flex w-full max-w-[780px] flex-col rounded-3xl border border-[#D9DFD9] bg-[#FAF9F6]/85 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40 sm:p-7"
     >
       {/* Top Header Bar */}
       <div className="mb-3 flex items-center justify-between gap-2 border-b border-[#D9DFD9]/60 pb-3">
@@ -458,7 +458,7 @@ export function HeritageArtShowcase() {
       {/* Frame Trưng bày Hình ảnh Tác phẩm đích thực (Hoàn toàn sạch sẽ, không che ảnh) */}
       <div
         data-testid="heritage-art-frame"
-        className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#D9DFD9]/60 bg-[#EBECE6]/30 p-2 shadow-inner md:h-[340px]"
+        className="relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#D9DFD9]/60 bg-[#EBECE6]/30 p-3 shadow-inner md:h-[425px] xl:h-[460px]"
       >
         {imageError ? (
           <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-[#58635E]">

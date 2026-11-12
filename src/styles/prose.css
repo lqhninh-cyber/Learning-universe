@@ -9,30 +9,30 @@
  */
 
 :root {
-  --lu-reading-size: 18.5px;
+  --lu-reading-size: clamp(18px, 1.12vw, 20px);
   --lu-reading-line-height: 1.9;
 }
 
 @media (min-width: 1024px) {
   :root {
-    --lu-reading-size: 18.5px;
+    --lu-reading-size: clamp(18px, 1.12vw, 20px);
     --lu-reading-line-height: 1.9;
   }
 }
 
 [data-reading-size='sm'] {
-  --lu-reading-size: 16.5px;
+  --lu-reading-size: clamp(16.5px, 1vw, 18px);
   --lu-reading-line-height: 1.8;
 }
 
 [data-reading-size='base'] {
-  --lu-reading-size: 18.5px;
+  --lu-reading-size: clamp(18px, 1.12vw, 20px);
   --lu-reading-line-height: 1.9;
 }
 
 @media (min-width: 1024px) {
   [data-reading-size='base'] {
-    --lu-reading-size: 18.5px;
+    --lu-reading-size: clamp(18px, 1.12vw, 20px);
     --lu-reading-line-height: 1.9;
   }
 }

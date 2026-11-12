@@ -284,7 +284,7 @@ export function SubjectOverviewPage() {
   };
 
   return (
-    <FadeIn className="mx-auto max-w-5xl space-y-8">
+    <FadeIn className="mx-auto w-[min(94vw,1520px)] space-y-8">
       {/* =========================================================================
           KHU VỰC 1: CINEMATIC COURSE HERO TRÀN VIỀN (FULL-BLEED 100VW)
           ========================================================================= */}

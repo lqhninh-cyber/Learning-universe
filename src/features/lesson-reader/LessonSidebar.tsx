@@ -197,7 +197,7 @@ export function LessonSidebar({
                           onClick={onSelectLesson}
                           aria-current={isActive ? 'page' : undefined}
                           className={cn(
-                            'flex items-start gap-2.5 rounded-xl border-l-[3px] px-3 py-2.5 text-[14.5px] leading-snug transition-colors',
+                            'flex items-start gap-2.5 rounded-xl border-l-[3px] px-3.5 py-2.5 text-[15px] leading-snug transition-colors',
                             isDark
                               ? isActive
                                 ? 'border-[#4E9B58] bg-[#4E9B58]/20 font-semibold text-[#86EFAC]'

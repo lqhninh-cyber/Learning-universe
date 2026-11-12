@@ -338,7 +338,7 @@ function LessonPageContent() {
               : 'bg-[var(--bg-page)] text-[var(--text-main)]',
           isFocusMode
             ? 'max-w-[1040px] px-4 pt-2 sm:px-6'
-            : 'max-w-[1640px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
+            : 'w-[min(96vw,1680px)] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
         )}
       >
         {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
@@ -474,16 +474,25 @@ function LessonPageContent() {
           </div>
         </div>
 
-        {/* Bố cục 3 cột linh hoạt: Sidebar (280px) | Main Content | TOC (230px) */}
-        <div className="flex items-start justify-center gap-6 transition-all duration-300 lg:gap-8">
+        {/* Bố cục 3 cột chuẩn Widescreen: Sidebar (320px) | Main Content (1040px) | TOC (290px) */}
+        <div
+          className={cn(
+            'grid grid-cols-1 items-start gap-6 transition-all duration-300 xl:gap-9',
+            isZenMode
+              ? 'mx-auto max-w-[1040px]'
+              : isSidebarCollapsed
+                ? 'xl:grid-cols-[minmax(0,1fr)_290px]'
+                : 'lg:grid-cols-[290px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)_290px]',
+          )}
+        >
           {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) */}
           {!isSidebarCollapsed && (
             <aside
               className={cn(
-                'sticky top-24 hidden max-h-[calc(100vh-7rem)] shrink-0 self-start overflow-y-auto rounded-2xl border p-3.5 shadow-sm transition-all duration-300 lg:block print:hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-track]:bg-transparent',
+                'sticky top-24 hidden max-h-[calc(100vh-7rem)] w-full self-start overflow-y-auto rounded-2xl border p-4 shadow-sm transition-all duration-300 lg:block print:hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-track]:bg-transparent',
                 isZenMode
-                  ? 'pointer-events-none m-0 w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0 shadow-none'
-                  : 'w-[280px] translate-x-0 opacity-100',
+                  ? 'pointer-events-none m-0 hidden w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0 shadow-none'
+                  : 'translate-x-0 opacity-100',
                 readingTheme === 'dark'
                   ? 'border-[#1E3B2E] bg-[#12241C] text-[#ECE8DF]'
                   : readingTheme === 'sepia'
@@ -502,14 +511,7 @@ function LessonPageContent() {
           )}
 
           {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
-          <main
-            className={cn(
-              'mx-auto min-w-0 flex-1 transition-all duration-300',
-              isZenMode
-                ? 'max-w-[820px] px-4 py-8 sm:px-6'
-                : 'max-w-[860px] px-4 py-6 sm:px-6 lg:px-8',
-            )}
-          >
+          <main className="mx-auto w-full min-w-0 py-4 transition-all duration-300 lg:py-6">
             {isFocusMode && (
               <div
                 className={cn(
@@ -574,7 +576,7 @@ function LessonPageContent() {
               data-reading-theme={readingTheme}
               data-reading-size={fontSize}
               className={cn(
-                'lesson-content transition-all duration-300',
+                'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.9] transition-all duration-300',
                 typographyClasses,
                 'rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[#18221D] shadow-[var(--shadow-editorial)]',
                 readingTheme === 'dark' &&
@@ -582,7 +584,7 @@ function LessonPageContent() {
                 readingTheme === 'sepia' &&
                   'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18] shadow-sm',
                 fontSize === 'lg' && 'reader-scale-lg',
-                isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 md:p-12',
+                isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 lg:p-12',
               )}
             >
               <EditorialChapterOpener
@@ -753,10 +755,10 @@ function LessonPageContent() {
           <aside
             data-sidenotes-column
             className={cn(
-              'custom-scrollbar sticky top-24 hidden max-h-[calc(100vh-7rem)] shrink-0 scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block print:hidden',
+              'custom-scrollbar sticky top-24 hidden max-h-[calc(100vh-7rem)] w-full scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block print:hidden',
               isZenMode
-                ? 'pointer-events-none m-0 w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
-                : 'w-[260px] translate-x-0 opacity-100',
+                ? 'pointer-events-none m-0 hidden w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
+                : 'translate-x-0 opacity-100',
               readingTheme === 'dark' ? 'text-[#94A3B8]' : '',
             )}
             role="complementary"

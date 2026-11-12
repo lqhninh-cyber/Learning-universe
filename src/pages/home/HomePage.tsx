@@ -774,7 +774,7 @@ export function HomePage() {
           ===================================================================== */}
         <section
           aria-label="Không gian Khởi đầu Learning Universe"
-          className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden border-b border-[#D9DFD9] bg-[#F5F4EF] pt-24 pb-10 md:pt-28 md:pb-12"
+          className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden border-b border-[#D9DFD9] bg-[#F5F4EF] pt-20 pb-8 md:pt-24 md:pb-10"
         >
           {/* LAYER 1 (Backdrop): Ho Chi Minh City / Vietnam Architectural Skyline ở độ tương phản cực thấp */}
           <img
@@ -797,9 +797,9 @@ export function HomePage() {
           />
 
           {/* Container chính của Hero (Kết hợp Layer 4 Foreground Typography & Cột Trưng bày Nghệ thuật Di sản) */}
-          <div className="relative z-20 mx-auto my-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
-            {/* LAYER 4 (Foreground Typography & CTAs — Cột Trái 6/12) */}
-            <div className="space-y-6 lg:col-span-6">
+          <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-center gap-10 pt-2 lg:grid-cols-[1.1fr_0.9fr] lg:pt-4 xl:gap-16">
+            {/* LAYER 4 (Foreground Typography & CTAs — Cột Trái) */}
+            <div className="min-w-0 space-y-6">
               {/* Dòng định danh chuẩn mực */}
               <div className="inline-flex items-center gap-2.5 rounded-full border border-[#D9DFD9] bg-[#FAF9F6]/90 px-3.5 py-1.5 shadow-2xs">
                 <span className="h-2 w-2 rounded-full bg-[#B85D6F]" aria-hidden="true" />
@@ -810,7 +810,7 @@ export function HomePage() {
 
               {/* Tiêu đề chính (Serif) & Trích dẫn nguồn gốc */}
               <div className="space-y-2">
-                <h1 className="font-serif text-4xl leading-[1.12] font-bold tracking-tight text-[#262B28] sm:text-5xl lg:text-6xl">
+                <h1 className="font-serif text-[clamp(2.5rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight text-[#262B28]">
                   <span className="sr-only">LEARNING UNIVERSE — </span>
                   <span className="block">Đi một ngày đàng,</span>{' '}
                   <span className="mt-1 block font-normal text-[#B85D6F] italic">
@@ -821,7 +821,7 @@ export function HomePage() {
               </div>
 
               {/* Khẩu hiệu dẫn nhập (Subheading) */}
-              <p className="max-w-xl text-base leading-relaxed text-[#58635E] sm:text-lg">
+              <p className="max-w-2xl text-base leading-relaxed text-[#58635E] sm:text-lg lg:text-[18.5px]">
                 Không gian hỗ trợ Toán học và Khoa học Giáo dục, đồng hành cùng người học trên bước
                 đường học tập.
               </p>
@@ -853,14 +853,14 @@ export function HomePage() {
               <RotatingScholarlyQuote />
             </div>
 
-            {/* Cột Phải (6/12): Khối Trưng bày Tác phẩm Nghệ thuật & Di sản Học thuật Đích thực */}
-            <div className="relative lg:col-span-6">
+            {/* Cột Phải: Khối Trưng bày Tác phẩm Nghệ thuật & Di sản Học thuật Đích thực */}
+            <div className="relative min-w-0">
               <HeritageArtShowcase />
             </div>
           </div>
 
           {/* Chân trang Hero (Architectural Status Bar) */}
-          <div className="relative z-20 mx-auto mt-10 flex w-full max-w-7xl flex-col items-center justify-between gap-3 border-t border-[#D9DFD9] px-4 pt-5 text-xs text-[#58635E] sm:flex-row sm:px-6 lg:px-8">
+          <div className="lu-container-wide relative z-20 mt-8 flex flex-col items-center justify-between gap-3 border-t border-[#D9DFD9] pt-5 text-xs text-[#58635E] sm:flex-row">
             <p className="font-mono text-[11px] tracking-[0.2em] text-[#365E4E] uppercase">
               TOÁN HỌC &amp; KHOA HỌC GIÁO DỤC · HCMUE
             </p>
@@ -885,7 +885,7 @@ export function HomePage() {
           aria-label="Không gian Học phần"
           className="relative z-20 scroll-mt-24 py-16 sm:py-20"
         >
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="lu-container-wide">
             {/* Header 2 tầng: Tầng 1 Tiêu đề & Mô tả trải rộng; Tầng 2 Toolbar linh hoạt không tràn mép */}
             <div className="mb-10 border-b border-[#D9DFD9] pb-6">
               {/* TẦNG 1: TIÊU ĐỀ & MÔ TẢ TRẢI RỘNG */}
@@ -1235,7 +1235,7 @@ export function HomePage() {
             aria-label="Không gian Tiếp tục học tập"
             className="relative z-20 border-t border-[#D9DFD9] bg-[#EBECE6]/45 py-20 sm:py-24"
           >
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="lu-container-wide">
               {/* Header khu vực My Learning Orbit */}
               <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div className="space-y-2">

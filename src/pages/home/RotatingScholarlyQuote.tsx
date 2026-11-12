@@ -167,7 +167,7 @@ export function RotatingScholarlyQuote() {
       aria-label="Danh ngôn học thuật kinh điển"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="group relative rounded-2xl border border-[#D9DFD9] bg-[#FAF9F6]/90 p-5 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40"
+      className="group relative w-full rounded-2xl border border-[#D9DFD9] bg-[#FAF9F6]/90 p-6 shadow-2xs backdrop-blur-md transition-all duration-300 hover:border-[#B85D6F]/40"
     >
       {/* Header: Phân loại & Điều khiển luân phiên */}
       <div className="flex items-center justify-between gap-3 border-b border-[#D9DFD9]/60 pb-3">
@@ -222,7 +222,7 @@ export function RotatingScholarlyQuote() {
           isFading ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <p className="mb-3 font-serif text-sm leading-relaxed text-[#262B28] italic md:text-base">
+        <p className="mb-3 font-serif text-[16.5px] leading-relaxed text-[#262B28] italic">
           &ldquo;{currentQuote.content}&rdquo;
         </p>
         <div className="mt-2 flex w-full items-center justify-end border-t border-[#D9DFD9]/40 pt-2">

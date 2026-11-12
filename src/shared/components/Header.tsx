@@ -352,7 +352,7 @@ export const Header: FC<HeaderProps> = ({
       <header
         ref={mastheadRef}
         className={cn(
-          'lu-site-header sticky top-3 z-50 mx-auto -mb-[62px] flex h-[62px] w-[min(95vw,1200px)] items-center rounded-full border px-4 shadow-[0_8px_28px_-10px_rgba(20,43,33,0.10)] ring-1 backdrop-blur-md transition-colors duration-200 print:hidden',
+          'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-5 shadow-[0_8px_28px_-10px_rgba(20,43,33,0.10)] ring-1 backdrop-blur-md transition-colors duration-200 print:hidden',
           isDark
             ? 'border-[#4E9B58]/25 bg-[#11221A]/92 text-[#F7F4EB] ring-[#4E9B58]/10'
             : isSepia
