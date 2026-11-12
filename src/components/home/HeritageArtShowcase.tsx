@@ -11,7 +11,6 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
-import type { HeroAtmosphere } from './heroAtmosphere';
 
 export interface HeritageArtwork {
   readonly id: string;
@@ -331,11 +330,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
 const ROTATION_INTERVAL_MS = 20000;
 const SLIDE_TRANSITION_MS = 350;
 
-export interface HeritageArtShowcaseProps {
-  readonly atmosphere?: HeroAtmosphere;
-}
-
-export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcaseProps) {
+export function HeritageArtShowcase() {
   const prefersReducedMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -453,14 +448,9 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
 
   const formattedIndex = String(currentIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalArtworks).padStart(2, '0');
-  const isDarkSurface = atmosphere !== 'dawn';
 
   const ambientGlowStyle =
-    atmosphere === 'sunset'
-      ? 'radial-gradient(circle at 50% 45%, rgba(246, 211, 131, 0.34), rgba(34, 111, 99, 0.28) 48%, transparent 75%)'
-      : atmosphere === 'night'
-        ? 'radial-gradient(circle at 50% 45%, rgba(134, 239, 172, 0.24), rgba(212, 175, 55, 0.2) 48%, transparent 75%)'
-        : 'radial-gradient(circle at 50% 45%, rgba(227, 180, 72, 0.26), rgba(91, 140, 90, 0.16) 50%, transparent 75%)';
+    'radial-gradient(circle at 50% 45%, rgba(232, 168, 90, 0.34), rgba(28, 78, 69, 0.32) 48%, transparent 75%)';
 
   const stackShellTransition = 'transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)]';
 
@@ -474,7 +464,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
       onMouseLeave={() => setIsPaused(false)}
       className="relative mx-auto w-full max-w-[780px] pb-6"
     >
-      {/* Quầng sáng dịu tiệp theo cảnh quan */}
+      {/* Quầng sáng dịu tiệp hoàng hôn Vịnh Hạ Long */}
       <div
         data-testid="heritage-ambient-glow"
         aria-hidden="true"
@@ -492,9 +482,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
           'absolute inset-x-0 top-0 bottom-6 z-10 origin-bottom cursor-pointer overflow-hidden rounded-3xl border shadow-md',
           'translate-y-4 scale-[0.92] opacity-45 hover:opacity-65',
           stackShellTransition,
-          isDarkSurface
-            ? 'border-[#D4AF37]/35 bg-[#12201A]/85'
-            : 'border-[#5B8C5A]/35 bg-[#EFEBE0]/90',
+          'border-[#E8A85A]/35 bg-[#0E221E]/88',
         )}
       >
         <div className="flex h-full w-full flex-col justify-between p-6 opacity-50">
@@ -521,9 +509,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
           'absolute inset-x-0 top-0 bottom-6 z-20 origin-bottom cursor-pointer overflow-hidden rounded-3xl border shadow-lg',
           'translate-y-2 scale-[0.96] opacity-75 hover:opacity-90',
           stackShellTransition,
-          isDarkSurface
-            ? 'border-[#E5B869]/45 bg-[#162721]/90'
-            : 'border-[#5B8C5A]/45 bg-[#F6F3EA]/95',
+          'border-[#E8A85A]/45 bg-[#112722]/92',
         )}
       >
         <div className="flex h-full w-full flex-col justify-between p-6 opacity-75">
@@ -548,15 +534,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
       {/* LỚP TIỀN CẢNH (z-30): Khung thẻ đứng phẳng 100% (rotate-0), nút bấm cố định dễ thao tác */}
       <div
         data-testid="heritage-active-card"
-        className={cn(
-          'relative z-30 flex w-full scale-100 rotate-0 flex-col overflow-hidden rounded-3xl border p-5 backdrop-blur-xl transition-colors duration-700 sm:p-7',
-          atmosphere === 'sunset' &&
-            'border-[#F6D383]/55 bg-[#182927]/84 text-[#FFF9F0] shadow-[0_24px_55px_-16px_rgba(9,24,22,0.65)]',
-          atmosphere === 'night' &&
-            'border-[#86EFAC]/45 bg-[#0C1D16]/86 text-[#F4F1EA] shadow-[0_24px_55px_-16px_rgba(3,10,7,0.75)]',
-          atmosphere === 'dawn' &&
-            'border-[#5B8C5A]/45 bg-[#FAF9F6]/92 text-[#262B28] shadow-[0_20px_50px_-14px_rgba(24,34,29,0.16)]',
-        )}
+        className="relative z-30 flex w-full scale-100 rotate-0 flex-col overflow-hidden rounded-3xl border border-[#E8A85A]/50 bg-[#122623]/84 p-5 text-[#FFF9F0] shadow-[0_24px_55px_-16px_rgba(9,24,22,0.65)] backdrop-blur-xl transition-colors duration-700 sm:p-7"
       >
         {/* Viền ánh sáng nhẹ phía trên */}
         <div
@@ -565,34 +543,16 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
         />
 
         {/* Top Header Bar */}
-        <div
-          className={cn(
-            'mb-3 flex items-center justify-between gap-2 border-b pb-3',
-            isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]/70',
-          )}
-        >
+        <div className="mb-3 flex items-center justify-between gap-2 border-b border-white/15 pb-3">
           <div className="flex items-center gap-2">
-            <Landmark
-              className={cn('h-3.5 w-3.5', isDarkSurface ? 'text-[#F6D383]' : 'text-[#2E5D46]')}
-              aria-hidden="true"
-            />
-            <span
-              className={cn(
-                'font-mono text-[10px] font-semibold tracking-widest uppercase',
-                isDarkSurface ? 'text-[#F6D383]' : 'text-[#2E5D46]',
-              )}
-            >
+            <Landmark className="h-3.5 w-3.5 text-[#F6D383]" aria-hidden="true" />
+            <span className="font-mono text-[10px] font-semibold tracking-widest text-[#F6D383] uppercase">
               DI SẢN HỌC THUẬT &amp; NGHỆ THUẬT
             </span>
           </div>
 
           <div className="flex items-center gap-2.5">
-            <span
-              className={cn(
-                'font-mono text-[11px] font-medium',
-                isDarkSurface ? 'text-[#E6E0D4]/85' : 'text-[#58635E]',
-              )}
-            >
+            <span className="font-mono text-[11px] font-medium text-[#E6E0D4]/85">
               {formattedIndex} / {formattedTotal}
             </span>
 
@@ -607,12 +567,8 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                   className={cn(
                     'h-1.5 cursor-pointer rounded-full transition-all duration-300',
                     idx === currentIndex
-                      ? isDarkSurface
-                        ? 'w-5 bg-[#F6D383]'
-                        : 'w-5 bg-[#2E5D46]'
-                      : isDarkSurface
-                        ? 'w-1.5 bg-white/25 hover:bg-[#86EFAC]'
-                        : 'w-1.5 bg-[#D9DFD9] hover:bg-[#5B8C5A]',
+                      ? 'w-5 bg-[#F6D383]'
+                      : 'w-1.5 bg-white/25 hover:bg-[#86EFAC]',
                   )}
                 />
               ))}
@@ -624,12 +580,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 type="button"
                 onClick={handlePrev}
                 aria-label="Tác phẩm trước"
-                className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 active:scale-95',
-                  isDarkSurface
-                    ? 'border-white/25 bg-white/10 text-[#F4F1EA] hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383]'
-                    : 'border-[#C5CECA] bg-[#FAF9F6] text-[#36493E] hover:border-[#2E5D46] hover:bg-[#EBF2ED] hover:text-[#18221D]',
-                )}
+                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/25 bg-white/10 text-[#F4F1EA] transition-all duration-200 hover:scale-105 hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383] active:scale-95"
               >
                 <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -637,12 +588,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 type="button"
                 onClick={() => setIsPaused((prev) => !prev)}
                 aria-label={isPaused ? 'Tiếp tục trình chiếu tác phẩm' : 'Tạm dừng trình chiếu'}
-                className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 active:scale-95',
-                  isDarkSurface
-                    ? 'border-white/25 bg-white/10 text-[#F4F1EA] hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383]'
-                    : 'border-[#C5CECA] bg-[#FAF9F6] text-[#36493E] hover:border-[#2E5D46] hover:bg-[#EBF2ED] hover:text-[#18221D]',
-                )}
+                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/25 bg-white/10 text-[#F4F1EA] transition-all duration-200 hover:scale-105 hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383] active:scale-95"
               >
                 {isPaused ? (
                   <Play className="h-3.5 w-3.5" aria-hidden="true" />
@@ -654,12 +600,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 type="button"
                 onClick={handleNext}
                 aria-label="Tác phẩm tiếp theo"
-                className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 hover:scale-105 active:scale-95',
-                  isDarkSurface
-                    ? 'border-white/25 bg-white/10 text-[#F4F1EA] hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383]'
-                    : 'border-[#C5CECA] bg-[#FAF9F6] text-[#36493E] hover:border-[#2E5D46] hover:bg-[#EBF2ED] hover:text-[#18221D]',
-                )}
+                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/25 bg-white/10 text-[#F4F1EA] transition-all duration-200 hover:scale-105 hover:border-[#F6D383] hover:bg-white/20 hover:text-[#F6D383] active:scale-95"
               >
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -672,12 +613,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
           data-testid="heritage-art-frame"
           onMouseMove={handleImageMouseMove}
           onMouseLeave={handleImageMouseLeave}
-          className={cn(
-            'relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border p-3 shadow-inner transition-colors duration-300 md:h-[425px] xl:h-[460px]',
-            isDarkSurface
-              ? 'border-[#E5B869]/35 bg-black/25 hover:border-[#F6D383]/65'
-              : 'border-[#5B8C5A]/35 bg-[#EBECE6]/35 hover:border-[#5B8C5A]/70',
-          )}
+          className="relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#E5B869]/35 bg-black/25 p-3 shadow-inner transition-colors duration-300 hover:border-[#F6D383]/65 md:h-[425px] xl:h-[460px]"
         >
           {imageError ? (
             <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center">
@@ -715,36 +651,19 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
           )}
         >
           <div>
-            <h3
-              className={cn(
-                'font-serif text-base font-bold sm:text-lg',
-                isDarkSurface ? 'text-[#FFF9F0]' : 'text-[#262B28]',
-              )}
-            >
+            <h3 className="font-serif text-base font-bold text-[#FFF9F0] sm:text-lg">
               {currentArtwork.title}
             </h3>
 
             {/* Bố cục hàng Metadata */}
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-              <span
-                className={cn(
-                  'font-mono text-xs font-semibold',
-                  isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
-                )}
-              >
+              <span className="font-mono text-xs font-semibold text-[#F3C978]">
                 {currentArtwork.artistOrOrigin}
               </span>
               <span className="opacity-60" aria-hidden="true">
                 ·
               </span>
-              <span
-                className={cn(
-                  'inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[11px]',
-                  isDarkSurface
-                    ? 'border-white/15 bg-white/10 text-[#F4F1EA]'
-                    : 'border-[#D9DFD9]/60 bg-[#EBECE6] text-[#58635E]',
-                )}
-              >
+              <span className="inline-flex items-center rounded-md border border-[#E8A85A]/35 bg-[#EBECE6] px-2 py-0.5 font-mono text-[11px] font-medium text-[#18221D]">
                 {currentArtwork.yearOrEra}
               </span>
               <span className="opacity-60" aria-hidden="true">
@@ -755,33 +674,18 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 onClick={() => setIsMetadataOpen((prev) => !prev)}
                 aria-expanded={isMetadataOpen}
                 data-testid="archival-metadata-trigger"
-                className={cn(
-                  'cursor-pointer rounded-md border px-2.5 py-1 font-mono text-[11px] transition-colors',
-                  isDarkSurface
-                    ? 'border-[#E5B869]/40 bg-white/10 text-[#F3C978] hover:bg-white/20'
-                    : 'border-[#D9DFD9] bg-[#FAF9F6]/90 text-[#365E4E] hover:bg-[#EBECE6]',
-                )}
+                className="cursor-pointer rounded-md border border-[#E5B869]/40 bg-white/10 px-2.5 py-1 font-mono text-[11px] text-[#F3C978] transition-colors hover:bg-white/20"
               >
                 [Lược sử tác phẩm]
               </button>
             </div>
           </div>
 
-          <p
-            className={cn(
-              'mt-2 font-serif text-xs italic',
-              isDarkSurface ? 'text-[#F3C978]/90' : 'text-[#365E4E]',
-            )}
-          >
+          <p className="mt-2 font-serif text-xs text-[#F3C978]/90 italic">
             {currentArtwork.caption}
           </p>
 
-          <p
-            className={cn(
-              'mt-2 text-xs leading-relaxed',
-              isDarkSurface ? 'text-[#E6E0D4]/85' : 'text-[#58635E]',
-            )}
-          >
+          <p className="mt-2 text-xs leading-relaxed text-[#E6E0D4]/85">
             {currentArtwork.academicSignificance}
           </p>
 
@@ -791,25 +695,10 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
               data-testid="archival-metadata-popover"
               role="region"
               aria-label={`Hồ sơ văn khố: ${currentArtwork.title}`}
-              className={cn(
-                'mt-4 rounded-2xl border p-4 text-xs shadow-xs',
-                isDarkSurface
-                  ? 'border-[#E5B869]/35 bg-black/35 text-[#F4F1EA]'
-                  : 'border-[#D9DFD9] bg-[#F5F4EF]/90 text-[#262B28]',
-              )}
+              className="mt-4 rounded-2xl border border-[#E5B869]/35 bg-black/35 p-4 text-xs text-[#F4F1EA] shadow-xs"
             >
-              <div
-                className={cn(
-                  'mb-3 flex items-center justify-between border-b pb-2',
-                  isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]',
-                )}
-              >
-                <div
-                  className={cn(
-                    'flex items-center gap-2 font-mono text-[10px] font-semibold tracking-wider uppercase',
-                    isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
-                  )}
-                >
+              <div className="mb-3 flex items-center justify-between border-b border-white/15 pb-2">
+                <div className="flex items-center gap-2 font-mono text-[10px] font-semibold tracking-wider text-[#F3C978] uppercase">
                   <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>HỒ SƠ LƯỢC SỬ &amp; VĂN KHỐ TÁC PHẨM</span>
                 </div>
@@ -817,12 +706,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                   type="button"
                   onClick={() => setIsMetadataOpen(false)}
                   aria-label="Đóng lược sử tác phẩm"
-                  className={cn(
-                    'inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border',
-                    isDarkSurface
-                      ? 'border-white/20 bg-white/10 text-[#F4F1EA] hover:text-[#F3C978]'
-                      : 'border-[#D9DFD9] bg-[#FAF9F6] text-[#58635E] hover:text-[#262B28]',
-                  )}
+                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-white/20 bg-white/10 text-[#F4F1EA] hover:text-[#F3C978]"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -830,12 +714,7 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
 
               <dl className="space-y-2 text-xs leading-relaxed">
                 <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                  <dt
-                    className={cn(
-                      'font-mono text-[11px] font-semibold sm:col-span-4',
-                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
-                    )}
-                  >
+                  <dt className="font-mono text-[11px] font-semibold text-[#F3C978] sm:col-span-4">
                     Tác phẩm:
                   </dt>
                   <dd className="font-serif font-medium sm:col-span-8">
@@ -844,24 +723,14 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 </div>
 
                 <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                  <dt
-                    className={cn(
-                      'font-mono text-[11px] font-semibold sm:col-span-4',
-                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
-                    )}
-                  >
+                  <dt className="font-mono text-[11px] font-semibold text-[#F3C978] sm:col-span-4">
                     Niên đại &amp; Thời kỳ:
                   </dt>
                   <dd className="sm:col-span-8">{currentArtwork.eraAndPeriod}</dd>
                 </div>
 
                 <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                  <dt
-                    className={cn(
-                      'font-mono text-[11px] font-semibold sm:col-span-4',
-                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
-                    )}
-                  >
+                  <dt className="font-mono text-[11px] font-semibold text-[#F3C978] sm:col-span-4">
                     Chất liệu &amp; Kỹ thuật:
                   </dt>
                   <dd className="opacity-85 sm:col-span-8">
@@ -870,23 +739,13 @@ export function HeritageArtShowcase({ atmosphere = 'dawn' }: HeritageArtShowcase
                 </div>
 
                 <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-12 sm:gap-2">
-                  <dt
-                    className={cn(
-                      'font-mono text-[11px] font-semibold sm:col-span-4',
-                      isDarkSurface ? 'text-[#F3C978]' : 'text-[#365E4E]',
-                    )}
-                  >
+                  <dt className="font-mono text-[11px] font-semibold text-[#F3C978] sm:col-span-4">
                     Nơi lưu trữ gốc:
                   </dt>
                   <dd className="sm:col-span-8">{currentArtwork.archivalLocation}</dd>
                 </div>
 
-                <div
-                  className={cn(
-                    'grid grid-cols-1 gap-0.5 border-t pt-2 sm:grid-cols-12 sm:gap-2',
-                    isDarkSurface ? 'border-white/15' : 'border-[#D9DFD9]/70',
-                  )}
-                >
+                <div className="grid grid-cols-1 gap-0.5 border-t border-white/15 pt-2 sm:grid-cols-12 sm:gap-2">
                   <dt className="font-mono text-[11px] font-semibold text-[#C89738] sm:col-span-4">
                     Giá trị học thuật cốt lõi:
                   </dt>

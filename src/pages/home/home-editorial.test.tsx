@@ -1,8 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
-import { AtmosphereSwitcher } from '@/components/home/AtmosphereSwitcher';
-import { HERO_ATMOSPHERE_STORAGE_KEY } from '@/components/home/heroAtmosphere';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { getSubjects } from '@/content-runtime';
@@ -373,8 +371,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
 
-    it('chuyển đổi 3 cảnh quan thiên nhiên Việt Nam (Ruộng Bậc Thang / Vịnh Hạ Long / Hang Sơn Đoòng) và ẩn dải chữ đáy + Hán tự', () => {
-      window.localStorage.removeItem(HERO_ATMOSPHERE_STORAGE_KEY);
+    it('khóa cố định duy nhất cảnh quan Vịnh Hạ Long, ẩn bộ chuyển đổi cảnh quan, dải chữ đáy và Hán tự', () => {
       render(
         <MemoryRouter>
           <HomePage />
@@ -382,66 +379,42 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
 
       const diorama = screen.getByTestId('son-ha-diorama');
-      expect(diorama).toHaveAttribute('data-atmosphere', 'dawn');
-      expect(diorama).toHaveAttribute('data-landscape', 'ruong-bac-thang');
-      expect(screen.getByTestId('atmosphere-option-dawn')).toHaveAttribute('aria-checked', 'true');
+      expect(diorama).toHaveAttribute('data-landscape', 'vinh-ha-long');
+      expect(screen.queryByTestId('atmosphere-switcher')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('atmosphere-option-dawn')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('atmosphere-option-night')).not.toBeInTheDocument();
       expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
+      expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-junk-boat-far')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();
       expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
       expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG/i)).not.toBeInTheDocument();
-
-      fireEvent.click(screen.getByTestId('atmosphere-option-sunset'));
-      expect(diorama).toHaveAttribute('data-atmosphere', 'sunset');
-      expect(diorama).toHaveAttribute('data-landscape', 'vinh-ha-long');
-      expect(window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY)).toBe('sunset');
-
-      fireEvent.click(screen.getByTestId('atmosphere-option-night'));
-      expect(diorama).toHaveAttribute('data-atmosphere', 'night');
-      expect(diorama).toHaveAttribute('data-landscape', 'hang-son-doong');
-      expect(window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY)).toBe('night');
-      window.localStorage.removeItem(HERO_ATMOSPHERE_STORAGE_KEY);
+      expect(screen.queryByText(/Ruộng Bậc Thang/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Hang Sơn Đoòng/i)).not.toBeInTheDocument();
     });
   });
 
   describe('Hero Diorama, Physics Canvas & 3D Stack Components', () => {
-    it('AtmosphereSwitcher phát đúng callback cho từng cảnh quan thiên nhiên Việt Nam', () => {
-      let current: 'dawn' | 'sunset' | 'night' = 'dawn';
-      const { rerender } = render(
-        <AtmosphereSwitcher
-          atmosphere={current}
-          onChange={(next) => {
-            current = next;
-          }}
-        />,
-      );
-
-      expect(screen.getByTestId('atmosphere-option-dawn')).toHaveTextContent(/Ruộng Bậc Thang/i);
-      expect(screen.getByTestId('atmosphere-option-sunset')).toHaveTextContent(/Vịnh Hạ Long/i);
-      expect(screen.getByTestId('atmosphere-option-night')).toHaveTextContent(/Hang Sơn Đoòng/i);
-
-      fireEvent.click(screen.getByTestId('atmosphere-option-night'));
-      expect(current).toBe('night');
-
-      rerender(<AtmosphereSwitcher atmosphere="night" onChange={() => {}} />);
-      expect(screen.getByTestId('atmosphere-option-night')).toHaveAttribute('aria-checked', 'true');
-    });
-
-    it('HeroSonHaDiorama render đủ 5 lớp Parallax SVG và HeroPhysicsCanvas gắn canvas 2D', () => {
+    it('HeroSonHaDiorama render đủ 4 lớp Karst Vịnh Hạ Long, Hòn Trống Mái, Thuyền buồm cánh dơi và HeroPhysicsCanvas', () => {
       const { container } = render(
         <div className="relative h-96 w-full">
-          <HeroSonHaDiorama atmosphere="night" />
-          <HeroPhysicsCanvas atmosphere="night" />
+          <HeroSonHaDiorama />
+          <HeroPhysicsCanvas />
         </div>,
       );
 
-      for (let i = 1; i <= 5; i += 1) {
+      for (let i = 1; i <= 4; i += 1) {
         expect(container.querySelector(`[data-testid="son-ha-layer-${i}"]`)).toBeInTheDocument();
       }
+      expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-junk-boat-far')).toBeInTheDocument();
+      expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     });
 
     it('HeritageArtShowcase cố định thẻ thẳng góc (rotate-0), nút bấm h-8 w-8 rounded-full và chuyển tác phẩm mượt', async () => {
-      render(<HeritageArtShowcase atmosphere="sunset" />);
+      render(<HeritageArtShowcase />);
 
       const activeCard = screen.getByTestId('heritage-active-card');
       expect(activeCard).toHaveClass('rotate-0');

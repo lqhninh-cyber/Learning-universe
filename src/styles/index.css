@@ -387,69 +387,52 @@
    HERO DIORAMA & HOLOGRAPHIC SHOWCASE ANIMATIONS (60fps GPU-friendly)
    ========================================================================= */
 
-@keyframes lu-cloud-drift {
+@keyframes lu-mist-drift {
   0%,
   100% {
-    transform: translate3d(-18px, 0, 0);
+    transform: translate3d(-16px, 0, 0);
   }
   50% {
-    transform: translate3d(22px, -4px, 0);
+    transform: translate3d(20px, -3px, 0);
   }
 }
 
-@keyframes lu-water-shimmer {
-  0%,
-  100% {
-    opacity: 0.65;
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    opacity: 1;
-    transform: translate3d(6px, 0, 0);
-  }
-}
-
-@keyframes lu-beam-pulse {
-  0%,
-  100% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 0.88;
-  }
-}
-
-@keyframes lu-boat-glide {
+@keyframes lu-boat-bob {
   0%,
   100% {
     transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(16px, -2px, 0);
+    transform: translate3d(8px, -1.5px, 0);
   }
 }
 
-.lu-cloud-drift {
-  animation: lu-cloud-drift 22s ease-in-out infinite;
+@keyframes lu-boat-bob-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-6px, -1.2px, 0);
+  }
 }
 
-.lu-water-shimmer {
-  animation: lu-water-shimmer 5.5s ease-in-out infinite;
+.lu-mist-drift {
+  animation: lu-mist-drift 26s ease-in-out infinite;
 }
 
-.lu-beam-pulse {
-  animation: lu-beam-pulse 7s ease-in-out infinite;
+.lu-boat-bob {
+  animation: lu-boat-bob 7.5s ease-in-out infinite;
 }
 
-.lu-boat-glide {
-  animation: lu-boat-glide 18s ease-in-out infinite;
+.lu-boat-bob-slow {
+  animation: lu-boat-bob-slow 11s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lu-cloud-drift,
-  .lu-water-shimmer,
-  .lu-beam-pulse,
-  .lu-boat-glide {
+  .lu-mist-drift,
+  .lu-boat-bob,
+  .lu-boat-bob-slow {
     animation: none;
   }
 }

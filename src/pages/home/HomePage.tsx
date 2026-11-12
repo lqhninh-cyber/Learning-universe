@@ -20,15 +20,6 @@ import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
-import { AtmosphereSwitcher } from '@/components/home/AtmosphereSwitcher';
-import {
-  ATMOSPHERE_THEMES,
-  detectSystemDarkMode,
-  getInitialHeroAtmosphere,
-  HERO_ATMOSPHERE_STORAGE_KEY,
-  type HeroAtmosphere,
-  saveHeroAtmosphere,
-} from '@/components/home/heroAtmosphere';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { ArchivalIndexView } from './ArchivalIndexView';
@@ -553,45 +544,14 @@ export function HomePage() {
   const [pageScrollProgress, setPageScrollProgress] = useState(0);
   const [viewMode, setViewMode] = useState<HomepageViewMode>(() => getInitialHomepageViewMode());
   const [isKaTeXDrawerOpen, setIsKaTeXDrawerOpen] = useState(false);
-  const [atmosphere, setAtmosphere] = useState<HeroAtmosphere>(() => getInitialHeroAtmosphere());
-
-  const heroTheme = ATMOSPHERE_THEMES[atmosphere];
 
   const handleViewModeChange = (nextMode: HomepageViewMode) => {
     setViewMode(nextMode);
     saveHomepageViewMode(nextMode);
   };
 
-  const handleAtmosphereChange = (nextAtmosphere: HeroAtmosphere) => {
-    setAtmosphere(nextAtmosphere);
-    saveHeroAtmosphere(nextAtmosphere);
-  };
-
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  // Đồng bộ khí quyển mặc định nếu người dùng chuyển Light/Dark mode toàn trang (chưa khóa tay)
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const handleReadingThemeChange = () => {
-      try {
-        const manualAtmosphere = window.localStorage.getItem(HERO_ATMOSPHERE_STORAGE_KEY);
-        if (!manualAtmosphere) {
-          setAtmosphere(detectSystemDarkMode() ? 'night' : 'dawn');
-        }
-      } catch {
-        setAtmosphere(detectSystemDarkMode() ? 'night' : 'dawn');
-      }
-    };
-
-    window.addEventListener('lu_reading_theme_change', handleReadingThemeChange);
-    return () => {
-      window.removeEventListener('lu_reading_theme_change', handleReadingThemeChange);
-    };
-  }, []);
 
   // Theo dõi tiến trình cuộn trang cho vùng chuyển tiếp tới Đại cảnh Hồ Sen
   useEffect(() => {
@@ -718,106 +678,58 @@ export function HomePage() {
     <div className="relative overflow-x-clip bg-[#F5F4EF] text-[#262B28]">
       <div className="relative">
         {/* =====================================================================
-          SECTION 1: HERO — CẢNH QUAN VIỆT NAM 3D PARALLAX, PHYSICS CANVAS & DI SẢN
+          SECTION 1: HERO — VỊNH HẠ LONG 4 TẦNG KARST, SÓNG PHẢN CHIẾU & DI SẢN
           ===================================================================== */}
         <section
           aria-label="Không gian Khởi đầu Learning Universe"
-          className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden pt-20 pb-14 transition-colors duration-700 md:pt-24 md:pb-16"
-          style={{ background: heroTheme.skyGradient }}
+          className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-[#133832] pt-20 pb-14 md:pt-24 md:pb-16"
         >
-          {/* LAYER 1: 5-Layer 3D Parallax Cảnh quan Thiên nhiên Việt Nam */}
-          <HeroSonHaDiorama atmosphere={atmosphere} />
+          {/* LAYER 1: 4-Layer Karst Diorama Vịnh Hạ Long (Hòn Trống Mái & Thuyền Buồm Cánh Dơi) */}
+          <HeroSonHaDiorama />
 
-          {/* LAYER 2: 60fps Particle Physics, Water Ripples & Click Shockwaves */}
-          <HeroPhysicsCanvas atmosphere={atmosphere} />
-
-          {/* Dải chuyển tiếp mượt xuống không gian Học phần (#F5F4EF) */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 transition-all duration-700"
-            style={{ background: heroTheme.bottomEdgeBlend }}
-          />
+          {/* LAYER 2: 60fps Dynamic Sunpath Shimmer & Soft Fireflies */}
+          <HeroPhysicsCanvas />
 
           {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Di Sản Cố Định) */}
           <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-center gap-10 pt-2 lg:grid-cols-[1.08fr_0.92fr] lg:pt-4 xl:gap-16">
-            {/* Cột Trái: Bộ chuyển cảnh quan, Ngôi sao Trống Đồng Đông Sơn, Tục Ngữ & Danh Ngôn */}
+            {/* Cột Trái: Huy hiệu LEARNING UNIVERSE, Tục Ngữ & Danh Ngôn */}
             <div className="min-w-0 space-y-6">
-              {/* Hàng điều khiển 3 cảnh quan Việt Nam + Dòng định danh thuần Việt */}
-              <div className="flex flex-wrap items-center gap-3">
-                <AtmosphereSwitcher atmosphere={atmosphere} onChange={handleAtmosphereChange} />
-
-                <div
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 transition-colors duration-700',
-                    heroTheme.eyebrowContainerClass,
-                  )}
+              {/* Badge LEARNING UNIVERSE tinh gọn với Ngôi sao Trống Đồng Đông Sơn */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#E8A85A]/45 bg-[#122623]/75 px-3.5 py-1.5 shadow-sm backdrop-blur-md">
+                <svg
+                  data-testid="dong-son-star-motif"
+                  viewBox="0 0 24 24"
+                  className="h-3.5 w-3.5 shrink-0 text-[#F6D383]"
+                  fill="none"
+                  aria-hidden="true"
                 >
-                  {/* Họa tiết Ngôi sao 8 cánh Trống Đồng Đông Sơn nét mảnh thuần Việt */}
-                  <svg
-                    data-testid="dong-son-star-motif"
-                    viewBox="0 0 24 24"
-                    className={cn(
-                      'h-3.5 w-3.5 shrink-0 transition-colors duration-700',
-                      heroTheme.eyebrowTextClass,
-                    )}
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.2" />
-                    <path
-                      d="M12 3.5L13.6 9.4L19.5 7.5L14.8 11.4L20.5 12L14.8 12.6L19.5 16.5L13.6 14.6L12 20.5L10.4 14.6L4.5 16.5L9.2 12.6L3.5 12L9.2 11.4L4.5 7.5L10.4 9.4Z"
-                      stroke="currentColor"
-                      strokeWidth="1.1"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span
-                    className={cn(
-                      'font-mono text-xs tracking-widest uppercase transition-colors duration-700',
-                      heroTheme.eyebrowTextClass,
-                    )}
-                  >
-                    LEARNING UNIVERSE
-                  </span>
-                </div>
+                  <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.2" />
+                  <path
+                    d="M12 3.5L13.6 9.4L19.5 7.5L14.8 11.4L20.5 12L14.8 12.6L19.5 16.5L13.6 14.6L12 20.5L10.4 14.6L4.5 16.5L9.2 12.6L3.5 12L9.2 11.4L4.5 7.5L10.4 9.4Z"
+                    stroke="currentColor"
+                    strokeWidth="1.1"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="font-mono text-xs tracking-widest text-[#F6D383] uppercase">
+                  LEARNING UNIVERSE
+                </span>
               </div>
 
               {/* Tiêu đề chính (Serif) căn trái gọn gàng & Trích dẫn nguồn gốc */}
               <div className="min-w-0 space-y-2">
-                <h1
-                  className={cn(
-                    'font-serif text-[clamp(2.4rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight transition-colors duration-700',
-                    heroTheme.headingTextClass,
-                  )}
-                >
+                <h1 className="font-serif text-[clamp(2.4rem,3.6vw,3.75rem)] leading-[1.12] font-bold tracking-tight text-[#FFF9F0]">
                   <span className="sr-only">LEARNING UNIVERSE — </span>
                   <span className="block">Đi một ngày đàng,</span>{' '}
-                  <span
-                    className={cn(
-                      'mt-1 block font-serif italic transition-all duration-700',
-                      heroTheme.highlightGradientClass,
-                    )}
-                  >
+                  <span className="mt-1 block bg-gradient-to-r from-[#F6D383] via-[#E8A85A] to-[#8EE5CE] bg-clip-text font-serif text-transparent italic">
                     học một sàng khôn.
                   </span>
                 </h1>
-                <p
-                  className={cn(
-                    'font-serif text-sm italic transition-colors duration-700',
-                    heroTheme.proverbAuthorClass,
-                  )}
-                >
-                  — Tục ngữ Việt Nam
-                </p>
+                <p className="font-serif text-sm text-[#F6D383] italic">— Tục ngữ Việt Nam</p>
               </div>
 
               {/* Khẩu hiệu dẫn nhập (Subheading) */}
-              <p
-                className={cn(
-                  'max-w-2xl text-base leading-relaxed transition-colors duration-700 sm:text-lg lg:text-[18.5px]',
-                  heroTheme.subtextClass,
-                )}
-              >
+              <p className="max-w-2xl text-base leading-relaxed text-[#FDEBD3]/92 sm:text-lg lg:text-[18.5px]">
                 Không gian hỗ trợ Toán học và Khoa học Giáo dục, đồng hành cùng người học trên bước
                 đường học tập.
               </p>
@@ -826,10 +738,7 @@ export function HomePage() {
               <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <a
                   href="#khong-gian-mon-hoc"
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all duration-300',
-                    heroTheme.primaryCtaClass,
-                  )}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#1D6B5F] to-[#2B8C7B] px-6 py-3 text-sm font-medium text-[#FFF9F0] shadow-md shadow-[#0C2E29]/40 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.98]"
                 >
                   <span>Khám phá không gian tri thức</span>
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -841,10 +750,7 @@ export function HomePage() {
                     event.preventDefault();
                     setIsKaTeXDrawerOpen(true);
                   }}
-                  className={cn(
-                    'inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all duration-300',
-                    heroTheme.secondaryCtaClass,
-                  )}
+                  className="inline-flex items-center gap-2 rounded-xl border border-[#E8A85A]/50 bg-[#122623]/72 px-6 py-3 text-sm font-medium text-[#FFF9F0] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F6D383] hover:bg-[#193530]/85 active:scale-[0.98]"
                 >
                   <BookMarked className="h-4 w-4" aria-hidden="true" />
                   <span>Tra cứu thuật ngữ KaTeX</span>
@@ -852,12 +758,12 @@ export function HomePage() {
               </div>
 
               {/* Danh ngôn học thuật xoay vòng (Rotating Scholarly Quotes) */}
-              <RotatingScholarlyQuote atmosphere={atmosphere} />
+              <RotatingScholarlyQuote />
             </div>
 
             {/* Cột Phải: Bộ Sưu Tập Di Sản Thẳng Góc & Cố Định Khung Tương Tác */}
             <div className="relative min-w-0">
-              <HeritageArtShowcase atmosphere={atmosphere} />
+              <HeritageArtShowcase />
             </div>
           </div>
         </section>

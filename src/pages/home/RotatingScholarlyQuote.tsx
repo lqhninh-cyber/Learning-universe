@@ -1,6 +1,5 @@
 import { ChevronLeft, ChevronRight, Pause, Play, Quote } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import type { HeroAtmosphere } from '@/components/home/heroAtmosphere';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 
@@ -113,11 +112,7 @@ export const SCHOLARLY_QUOTES: readonly ScholarlyQuote[] = [
 const ROTATION_INTERVAL_MS = 20000;
 const FADE_TRANSITION_MS = 350;
 
-export interface RotatingScholarlyQuoteProps {
-  readonly atmosphere?: HeroAtmosphere;
-}
-
-export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarlyQuoteProps) {
+export function RotatingScholarlyQuote() {
   const prefersReducedMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -165,56 +160,6 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
 
   const formattedIndex = String(currentIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalQuotes).padStart(2, '0');
-  const isNight = atmosphere === 'night';
-  const isSunset = atmosphere === 'sunset';
-
-  const cardSurfaceClass = isNight
-    ? 'border-[#86EFAC]/35 bg-[#0A1913]/78 hover:border-[#86EFAC]/60 shadow-lg shadow-black/25'
-    : isSunset
-      ? 'border-[#F6D383]/45 bg-[#162825]/76 hover:border-[#F6D383]/75 shadow-lg shadow-[#0B1D1B]/30'
-      : 'border-[#5B8C5A]/40 bg-[#FFFDF8]/84 hover:border-[#2E5D46]/55 shadow-sm';
-
-  const headerBorderClass = isNight
-    ? 'border-[#86EFAC]/20'
-    : isSunset
-      ? 'border-[#F6D383]/25'
-      : 'border-[#5B8C5A]/20';
-
-  const accentColorClass = isNight
-    ? 'text-[#86EFAC]'
-    : isSunset
-      ? 'text-[#F6D383]'
-      : 'text-[#2E5D46]';
-
-  const counterTextClass = isNight
-    ? 'text-[#D0DDD5]/80'
-    : isSunset
-      ? 'text-[#FDEBD3]/85'
-      : 'text-[#4A5851]';
-
-  const buttonClass = isNight
-    ? 'border-[#86EFAC]/35 bg-[#0F261D]/85 text-[#D0DDD5] hover:border-[#86EFAC]/65 hover:text-[#F4F1EA]'
-    : isSunset
-      ? 'border-[#F6D383]/40 bg-[#1E3631]/80 text-[#FDEBD3] hover:border-[#F6D383] hover:text-white'
-      : 'border-[#5B8C5A]/35 bg-[#FAF6EC]/90 text-[#36493E] hover:border-[#2E5D46]/55 hover:text-[#18221D]';
-
-  const quoteBodyClass = isNight
-    ? 'text-[#F4F1EA]'
-    : isSunset
-      ? 'text-[#FFF9F0]'
-      : 'text-[#18221D]';
-
-  const footerBorderClass = isNight
-    ? 'border-[#86EFAC]/20'
-    : isSunset
-      ? 'border-[#F6D383]/20'
-      : 'border-[#5B8C5A]/20';
-
-  const authorTextClass = isNight
-    ? 'text-[#A7F3D0]'
-    : isSunset
-      ? 'text-[#F6D383]'
-      : 'text-[#2E5D46]';
 
   return (
     <aside
@@ -222,40 +167,19 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
       aria-label="Danh ngôn học thuật kinh điển"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className={cn(
-        'group relative w-full rounded-2xl border p-5 backdrop-blur-md transition-all duration-700 sm:p-6',
-        cardSurfaceClass,
-      )}
+      className="group relative w-full rounded-2xl border border-[#E8A85A]/40 bg-[#122623]/76 p-5 shadow-lg shadow-[#081715]/35 backdrop-blur-md transition-all duration-300 hover:border-[#E8A85A]/70 sm:p-6"
     >
       {/* Header: Phân loại & Điều khiển luân phiên */}
-      <div
-        className={cn(
-          'flex items-center justify-between gap-3 border-b pb-3 transition-colors duration-700',
-          headerBorderClass,
-        )}
-      >
+      <div className="flex items-center justify-between gap-3 border-b border-[#E8A85A]/20 pb-3">
         <div className="flex items-center gap-2">
-          <Quote
-            className={cn('h-3.5 w-3.5 transition-colors duration-700', accentColorClass)}
-            aria-hidden="true"
-          />
-          <span
-            className={cn(
-              'font-mono text-[10px] font-semibold tracking-wider uppercase transition-colors duration-700',
-              accentColorClass,
-            )}
-          >
+          <Quote className="h-3.5 w-3.5 text-[#F6D383]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#F6D383] uppercase">
             DANH NGÔN HỌC THUẬT
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              'font-mono text-[11px] font-medium transition-colors duration-700',
-              counterTextClass,
-            )}
-          >
+          <span className="font-mono text-[11px] font-medium text-[#FDEBD3]/85">
             {formattedIndex} / {formattedTotal}
           </span>
           <div className="flex items-center gap-1">
@@ -263,10 +187,7 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
               type="button"
               onClick={handlePrev}
               aria-label="Câu danh ngôn trước"
-              className={cn(
-                'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                buttonClass,
-              )}
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E8A85A]/40 bg-[#1A3530]/85 text-[#FDEBD3] transition-colors hover:border-[#F6D383] hover:text-white"
             >
               <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -274,10 +195,7 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
               aria-label={isPaused ? 'Tiếp tục tự động chuyển câu' : 'Tạm dừng tự động chuyển câu'}
-              className={cn(
-                'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                buttonClass,
-              )}
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E8A85A]/40 bg-[#1A3530]/85 text-[#FDEBD3] transition-colors hover:border-[#F6D383] hover:text-white"
             >
               {isPaused ? (
                 <Play className="h-3 w-3" aria-hidden="true" />
@@ -289,10 +207,7 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
               type="button"
               onClick={handleNext}
               aria-label="Câu danh ngôn tiếp theo"
-              className={cn(
-                'inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                buttonClass,
-              )}
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E8A85A]/40 bg-[#1A3530]/85 text-[#FDEBD3] transition-colors hover:border-[#F6D383] hover:text-white"
             >
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -307,26 +222,11 @@ export function RotatingScholarlyQuote({ atmosphere = 'dawn' }: RotatingScholarl
           isFading ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <p
-          className={cn(
-            'mb-3 font-serif text-[16.5px] leading-relaxed italic transition-colors duration-700',
-            quoteBodyClass,
-          )}
-        >
+        <p className="mb-3 font-serif text-[16.5px] leading-relaxed text-[#FFF9F0] italic">
           &ldquo;{currentQuote.content}&rdquo;
         </p>
-        <div
-          className={cn(
-            'mt-2 flex w-full items-center justify-end border-t pt-2 transition-colors duration-700',
-            footerBorderClass,
-          )}
-        >
-          <footer
-            className={cn(
-              'text-right font-mono text-xs transition-colors duration-700',
-              authorTextClass,
-            )}
-          >
+        <div className="mt-2 flex w-full items-center justify-end border-t border-[#E8A85A]/20 pt-2">
+          <footer className="text-right font-mono text-xs text-[#F6D383]">
             — {currentQuote.author}
             {currentQuote.roleOrEra ? ` · ${currentQuote.roleOrEra}` : ''}
           </footer>
