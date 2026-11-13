@@ -17,6 +17,7 @@ import {
   drawLowLyingMist,
   drawMidgroundBotanicalClusters,
   drawPerchingDragonflies,
+  drawPondBedAndCaustics,
   makeDewdropSprite,
   spawnBaitAt,
   stepEcosystem,
@@ -2382,8 +2383,9 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       // THỨ TỰ VẼ HỆ SINH THÁI ĐA TẦNG 120FPS
       // =================================================================
 
-      // 1. Nước hồ, đàn cá Koi 8 con đa sắc (spine + bóng dưới nước) & đàn cá con Boids
+      // 1. Nước hồ, đáy hồ sâu & caustics, đàn cá đa loài (spine 3D + bóng đáy hồ) & đàn cá con Boids
       water(ctx, t, cx, cy, W, H, S, gl, theme, backdrop.waterCached);
+      drawPondBedAndCaustics(ctx, W, H, S, t, wy, theme);
       drawDynamicKoiFishes(ctx, ecoState.koiFishes, t, H, S);
       drawBoidsMinnows(ctx, ecoState.minnows, t, W, H, S);
 

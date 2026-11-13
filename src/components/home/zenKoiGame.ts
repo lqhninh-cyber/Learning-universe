@@ -1,4 +1,101 @@
-export type KoiBreedId = 'kohaku' | 'yamabuki' | 'sanke' | 'jade' | 'celestial';
+export type FishSpeciesId = 'koi' | 'goldfish' | 'betta' | 'butterfly' | 'arowana' | 'neon';
+
+export type KoiBreedId = FishSpeciesId | 'kohaku' | 'yamabuki' | 'sanke' | 'jade' | 'celestial';
+
+export interface FishSpeciesMeta {
+  readonly id: FishSpeciesId;
+  readonly nameVi: string;
+  readonly commonName: string;
+  readonly description: string;
+  readonly bodyShape:
+    'torpedo' | 'fantail_oranda' | 'halfmoon_betta' | 'butterfly_carp' | 'arowana' | 'neon_tetra';
+  readonly defaultZRange: readonly [number, number];
+  readonly baseColor: readonly [number, number, number];
+  readonly spotColor: readonly [number, number, number];
+  readonly accentColor?: readonly [number, number, number];
+  readonly glowColor?: string;
+  readonly isButterfly?: boolean;
+}
+
+export const FISH_SPECIES: Record<FishSpeciesId, FishSpeciesMeta> = {
+  koi: {
+    id: 'koi',
+    nameVi: 'Cá Chép Koi',
+    commonName: 'Koi Carp',
+    description:
+      'Thân hình thoi khỏe khoắn, có đôi râu ngắn ở mõm, bơi uốn lượn khoan thai với hoa văn Hồng Bạch, Hoàng Kim hoặc Tam Sắc.',
+    bodyShape: 'torpedo',
+    defaultZRange: [0.25, 0.85],
+    baseColor: [252, 250, 246],
+    spotColor: [232, 66, 42],
+    accentColor: [28, 30, 36],
+  },
+  goldfish: {
+    id: 'goldfish',
+    nameVi: 'Cá Vàng Đuôi Voan',
+    commonName: 'Fantail Oranda Goldfish',
+    description:
+      'Thân bầu tròn mũm mĩm, đỉnh đầu có bướu oranda mềm mại, bộ đuôi kép xòe rộng 4 thùy thướt tha đung đưa bồng bềnh như váy lụa.',
+    bodyShape: 'fantail_oranda',
+    defaultZRange: [0.35, 0.8],
+    baseColor: [255, 122, 41],
+    spotColor: [255, 218, 148],
+    accentColor: [229, 62, 62],
+  },
+  betta: {
+    id: 'betta',
+    nameVi: 'Cá Betta Xiêm Rồng',
+    commonName: 'Halfmoon Betta',
+    description:
+      'Thân nhỏ thanh mảnh, vây lưng, vây hậu môn và vây đuôi xòe quạt 180 độ uốn sóng lộng lẫy với sắc Đỏ Ngọc Bích hoặc Xanh Lam Ánh Tím.',
+    bodyShape: 'halfmoon_betta',
+    defaultZRange: [0.4, 0.88],
+    baseColor: [225, 29, 72],
+    spotColor: [99, 102, 241],
+    accentColor: [248, 250, 252],
+    glowColor: 'rgba(244, 63, 94, 0.45)',
+  },
+  butterfly: {
+    id: 'butterfly',
+    nameVi: 'Cá Chép Phụng',
+    commonName: 'Butterfly Fin Carp',
+    description:
+      'Thân trắng bạc hoặc vàng kim ánh ngọc trai, nổi bật với đôi vây ngực và vây đuôi dài thướt tha gấp 3 lần bình thường tung bay như cánh phượng.',
+    bodyShape: 'butterfly_carp',
+    defaultZRange: [0.3, 0.9],
+    baseColor: [248, 245, 235],
+    spotColor: [251, 191, 36],
+    accentColor: [255, 245, 180],
+    glowColor: 'rgba(251, 191, 36, 0.4)',
+    isButterfly: true,
+  },
+  arowana: {
+    id: 'arowana',
+    nameVi: 'Cá Rồng Kim Long',
+    commonName: 'Asian Arowana',
+    description:
+      'Thân dài uy nghi, mõm hếch với 2 râu rồng vểnh trước, vảy lớn ánh kim loại 3D (Vàng 24K hoặc Đỏ Huyết), dáng bơi thẳng dứt khoát ở tầng nước mặt.',
+    bodyShape: 'arowana',
+    defaultZRange: [0.72, 0.98],
+    baseColor: [245, 158, 11],
+    spotColor: [252, 211, 77],
+    accentColor: [220, 38, 38],
+    glowColor: 'rgba(245, 158, 11, 0.55)',
+  },
+  neon: {
+    id: 'neon',
+    nameVi: 'Cá Thanh Ngọc Phát Quang',
+    commonName: 'Bioluminescent Medaka',
+    description:
+      'Kích thước nhỏ nhắn trong suốt, trên sống lưng có dải quang học phát sáng xanh ngọc – lam điện tử, thường bơi quấn quýt quanh gốc sen.',
+    bodyShape: 'neon_tetra',
+    defaultZRange: [0.2, 0.75],
+    baseColor: [52, 211, 153],
+    spotColor: [0, 245, 255],
+    accentColor: [167, 243, 208],
+    glowColor: 'rgba(0, 245, 255, 0.65)',
+  },
+};
 
 export interface KoiBreedMeta {
   readonly id: KoiBreedId;
@@ -15,6 +112,83 @@ export interface KoiBreedMeta {
 }
 
 export const KOI_BREEDS: Record<KoiBreedId, KoiBreedMeta> = {
+  koi: {
+    id: 'koi',
+    nameVi: FISH_SPECIES.koi.nameVi,
+    englishName: FISH_SPECIES.koi.commonName,
+    rarityVi: 'Phổ biến',
+    rarityTier: 1,
+    description: FISH_SPECIES.koi.description,
+    baseColor: [...FISH_SPECIES.koi.baseColor],
+    spotColor: [...FISH_SPECIES.koi.spotColor],
+    accentColor: FISH_SPECIES.koi.accentColor ? [...FISH_SPECIES.koi.accentColor] : undefined,
+  },
+  goldfish: {
+    id: 'goldfish',
+    nameVi: FISH_SPECIES.goldfish.nameVi,
+    englishName: FISH_SPECIES.goldfish.commonName,
+    rarityVi: 'Phổ biến',
+    rarityTier: 2,
+    description: FISH_SPECIES.goldfish.description,
+    baseColor: [...FISH_SPECIES.goldfish.baseColor],
+    spotColor: [...FISH_SPECIES.goldfish.spotColor],
+    accentColor: FISH_SPECIES.goldfish.accentColor
+      ? [...FISH_SPECIES.goldfish.accentColor]
+      : undefined,
+  },
+  betta: {
+    id: 'betta',
+    nameVi: FISH_SPECIES.betta.nameVi,
+    englishName: FISH_SPECIES.betta.commonName,
+    rarityVi: 'Hiếm',
+    rarityTier: 3,
+    description: FISH_SPECIES.betta.description,
+    baseColor: [...FISH_SPECIES.betta.baseColor],
+    spotColor: [...FISH_SPECIES.betta.spotColor],
+    accentColor: FISH_SPECIES.betta.accentColor ? [...FISH_SPECIES.betta.accentColor] : undefined,
+    glowColor: FISH_SPECIES.betta.glowColor,
+  },
+  butterfly: {
+    id: 'butterfly',
+    nameVi: FISH_SPECIES.butterfly.nameVi,
+    englishName: FISH_SPECIES.butterfly.commonName,
+    rarityVi: 'Cực hiếm',
+    rarityTier: 4,
+    description: FISH_SPECIES.butterfly.description,
+    baseColor: [...FISH_SPECIES.butterfly.baseColor],
+    spotColor: [...FISH_SPECIES.butterfly.spotColor],
+    accentColor: FISH_SPECIES.butterfly.accentColor
+      ? [...FISH_SPECIES.butterfly.accentColor]
+      : undefined,
+    glowColor: FISH_SPECIES.butterfly.glowColor,
+    isButterfly: true,
+  },
+  arowana: {
+    id: 'arowana',
+    nameVi: FISH_SPECIES.arowana.nameVi,
+    englishName: FISH_SPECIES.arowana.commonName,
+    rarityVi: 'Huyền thoại',
+    rarityTier: 5,
+    description: FISH_SPECIES.arowana.description,
+    baseColor: [...FISH_SPECIES.arowana.baseColor],
+    spotColor: [...FISH_SPECIES.arowana.spotColor],
+    accentColor: FISH_SPECIES.arowana.accentColor
+      ? [...FISH_SPECIES.arowana.accentColor]
+      : undefined,
+    glowColor: FISH_SPECIES.arowana.glowColor,
+  },
+  neon: {
+    id: 'neon',
+    nameVi: FISH_SPECIES.neon.nameVi,
+    englishName: FISH_SPECIES.neon.commonName,
+    rarityVi: 'Hiếm',
+    rarityTier: 3,
+    description: FISH_SPECIES.neon.description,
+    baseColor: [...FISH_SPECIES.neon.baseColor],
+    spotColor: [...FISH_SPECIES.neon.spotColor],
+    accentColor: FISH_SPECIES.neon.accentColor ? [...FISH_SPECIES.neon.accentColor] : undefined,
+    glowColor: FISH_SPECIES.neon.glowColor,
+  },
   kohaku: {
     id: 'kohaku',
     nameVi: 'Hồng Bạch (Kohaku)',
@@ -81,7 +255,8 @@ export const KOI_BREEDS: Record<KoiBreedId, KoiBreedMeta> = {
 export interface SavedKoiFish {
   readonly id: string;
   name: string;
-  readonly breed: KoiBreedId;
+  species: FishSpeciesId;
+  breed: KoiBreedId;
   level: number;
   xp: number;
   scale: number;
@@ -124,11 +299,12 @@ export function computePondLevel(fishes: readonly SavedKoiFish[]): number {
   return Math.max(1, 1 + Math.floor((totalLevels - fishes.length) / 3));
 }
 
-const SERENE_KOI_NAMES: readonly string[] = [
+const SERENE_FISH_NAMES: readonly string[] = [
   'Bạch Vân',
   'Kim Ngân',
   'Thủy Mặc',
   'Hồng Diệp',
+  'Xích Long',
   'Thanh Ba',
   'Bích Ngọc',
   'Kim Lân',
@@ -147,51 +323,78 @@ const SERENE_KOI_NAMES: readonly string[] = [
   'An Nhiên',
 ];
 
+export function mapOldBreedToSpecies(breed: string): FishSpeciesId {
+  switch (breed) {
+    case 'goldfish':
+      return 'goldfish';
+    case 'betta':
+      return 'betta';
+    case 'butterfly':
+    case 'celestial':
+      return 'butterfly';
+    case 'arowana':
+      return 'arowana';
+    case 'neon':
+    case 'jade':
+      return 'neon';
+    case 'koi':
+    case 'kohaku':
+    case 'yamabuki':
+    case 'sanke':
+    default:
+      return 'koi';
+  }
+}
+
 export function createInitialZenKoiState(): ZenKoiGameState {
   const now = Date.now();
   const initialFishes: SavedKoiFish[] = [
     {
-      id: 'koi-init-1',
+      id: 'fish-init-1',
       name: 'Bạch Vân',
-      breed: 'kohaku',
+      species: 'koi',
+      breed: 'koi',
       level: 2,
       xp: 20,
       scale: getScaleForLevel(2),
       patternSeed: 101,
-      affection: 22,
+      affection: 25,
       hatchedAt: now - 86400000,
     },
     {
-      id: 'koi-init-2',
+      id: 'fish-init-2',
       name: 'Kim Ngân',
-      breed: 'yamabuki',
+      species: 'goldfish',
+      breed: 'goldfish',
       level: 1,
       xp: 0,
       scale: getScaleForLevel(1),
       patternSeed: 202,
-      affection: 15,
+      affection: 18,
       hatchedAt: now - 72000000,
     },
     {
-      id: 'koi-init-3',
-      name: 'Thủy Mặc',
-      breed: 'sanke',
-      level: 1,
-      xp: 25,
-      scale: getScaleForLevel(1),
+      id: 'fish-init-3',
+      name: 'Xích Long',
+      species: 'betta',
+      breed: 'betta',
+      level: 2,
+      xp: 35,
+      scale: getScaleForLevel(2),
       patternSeed: 303,
-      affection: 18,
+      affection: 22,
       hatchedAt: now - 60000000,
     },
     {
-      id: 'koi-init-4',
-      name: 'Hồng Diệp',
-      breed: 'kohaku',
+      id: 'fish-init-4',
+      name: 'Thanh Ngọc',
+      species: 'neon',
+      breed: 'neon',
       level: 1,
-      xp: 10,
+      xp: 15,
       scale: getScaleForLevel(1),
       patternSeed: 404,
-      affection: 12,
+      affection: 14,
       hatchedAt: now - 48000000,
     },
   ];
@@ -199,10 +402,10 @@ export function createInitialZenKoiState(): ZenKoiGameState {
   return {
     version: 1,
     pondLevel: computePondLevel(initialFishes),
-    foodCount: 30,
-    dewGems: 8,
+    foodCount: 99,
+    dewGems: 25,
     fishes: initialFishes,
-    unlockedBreeds: ['kohaku', 'yamabuki', 'sanke'],
+    unlockedBreeds: ['koi', 'goldfish', 'betta', 'butterfly', 'arowana', 'neon'],
     lastFedAt: now,
     lastForageAt: now,
     lastReplenishedAt: now,
@@ -239,28 +442,38 @@ export function loadZenKoiState(): ZenKoiGameState {
       return initial;
     }
 
-    // Đảm bảo dữ liệu các trường hợp lệ
     const state: ZenKoiGameState = {
       version: 1,
       pondLevel:
         typeof parsed.pondLevel === 'number' ? parsed.pondLevel : computePondLevel(parsed.fishes),
-      foodCount: typeof parsed.foodCount === 'number' ? Math.max(0, parsed.foodCount) : 30,
-      dewGems: typeof parsed.dewGems === 'number' ? Math.max(0, parsed.dewGems) : 8,
-      fishes: parsed.fishes.map((f, idx) => ({
-        id: f.id || `koi-${idx + 1}`,
-        name: f.name || `Cá Koi ${idx + 1}`,
-        breed: (KOI_BREEDS[f.breed as KoiBreedId] ? f.breed : 'kohaku') as KoiBreedId,
-        level: Math.max(1, Math.min(10, f.level || 1)),
-        xp: Math.max(0, f.xp || 0),
-        scale: getScaleForLevel(f.level || 1),
-        patternSeed: typeof f.patternSeed === 'number' ? f.patternSeed : (idx + 1) * 111,
-        affection: Math.max(0, Math.min(100, f.affection || 10)),
-        hatchedAt: f.hatchedAt || Date.now(),
-      })),
+      foodCount: typeof parsed.foodCount === 'number' ? Math.max(0, parsed.foodCount) : 99,
+      dewGems: typeof parsed.dewGems === 'number' ? Math.max(0, parsed.dewGems) : 25,
+      fishes: parsed.fishes.map((f, idx) => {
+        const rawBreed = String(f.breed || 'koi');
+        const species = (
+          f.species && FISH_SPECIES[f.species as FishSpeciesId]
+            ? f.species
+            : mapOldBreedToSpecies(rawBreed)
+        ) as FishSpeciesId;
+        const validBreed = (KOI_BREEDS[rawBreed as KoiBreedId] ? rawBreed : species) as KoiBreedId;
+
+        return {
+          id: f.id || `fish-${idx + 1}`,
+          name: f.name || `Cá ${idx + 1}`,
+          species,
+          breed: validBreed,
+          level: Math.max(1, Math.min(10, f.level || 1)),
+          xp: Math.max(0, f.xp || 0),
+          scale: typeof f.scale === 'number' ? f.scale : getScaleForLevel(f.level || 1),
+          patternSeed: typeof f.patternSeed === 'number' ? f.patternSeed : (idx + 1) * 111,
+          affection: Math.max(0, Math.min(100, f.affection || 10)),
+          hatchedAt: f.hatchedAt || Date.now(),
+        };
+      }),
       unlockedBreeds:
         Array.isArray(parsed.unlockedBreeds) && parsed.unlockedBreeds.length > 0
           ? parsed.unlockedBreeds
-          : ['kohaku', 'yamabuki', 'sanke'],
+          : ['koi', 'goldfish', 'betta', 'butterfly', 'arowana', 'neon'],
       lastFedAt: parsed.lastFedAt || Date.now(),
       lastForageAt: parsed.lastForageAt || Date.now(),
       lastReplenishedAt: parsed.lastReplenishedAt || Date.now(),
@@ -291,54 +504,39 @@ export function saveZenKoiState(state: ZenKoiGameState): void {
 export const HATCH_GEM_COST = 10;
 
 /**
- * Triệu hồi / Ấp cá Koi mới (Gacha với tỉ lệ Kim Long Ngư 8%)
+ * Thêm một chú cá mới vào hồ (Chế độ Sandbox tự do)
  */
-export function hatchNewKoi(
+export function addFishToLake(
   state: ZenKoiGameState,
-): { newState: ZenKoiGameState; fish: SavedKoiFish } | null {
-  if (state.dewGems < HATCH_GEM_COST) {
-    return null;
-  }
-
-  const roll = Math.random() * 100;
-  let breed: KoiBreedId;
-  if (roll < 44) {
-    breed = 'kohaku'; // 44%
-  } else if (roll < 69) {
-    breed = 'yamabuki'; // 25%
-  } else if (roll < 85) {
-    breed = 'sanke'; // 16%
-  } else if (roll < 92) {
-    breed = 'jade'; // 7%
-  } else {
-    breed = 'celestial'; // 8% (Huyền thoại)
-  }
-
+  species: FishSpeciesId,
+  customName?: string,
+): { newState: ZenKoiGameState; fish: SavedKoiFish } {
   const existingNames = new Set(state.fishes.map((f) => f.name));
-  const availableNames = SERENE_KOI_NAMES.filter((n) => !existingNames.has(n));
+  const availableNames = SERENE_FISH_NAMES.filter((n) => !existingNames.has(n));
   const chosenName =
-    availableNames.length > 0
+    customName?.trim() ||
+    (availableNames.length > 0
       ? availableNames[Math.floor(Math.random() * availableNames.length)]!
-      : `Kim Ngư ${state.fishes.length + 1}`;
+      : `${FISH_SPECIES[species].nameVi} ${state.fishes.length + 1}`);
 
   const newFish: SavedKoiFish = {
-    id: `koi-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    id: `fish-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     name: chosenName,
-    breed,
+    species,
+    breed: species,
     level: 1,
     xp: 0,
     scale: getScaleForLevel(1),
     patternSeed: Math.floor(Math.random() * 10000),
-    affection: 10,
+    affection: 15,
     hatchedAt: Date.now(),
   };
 
   const updatedFishes = [...state.fishes, newFish];
-  const unlocked = new Set([...state.unlockedBreeds, breed]);
+  const unlocked = new Set([...state.unlockedBreeds, species]);
 
   const newState: ZenKoiGameState = {
     ...state,
-    dewGems: state.dewGems - HATCH_GEM_COST,
     fishes: updatedFishes,
     unlockedBreeds: Array.from(unlocked),
     pondLevel: computePondLevel(updatedFishes),
@@ -353,7 +551,81 @@ export function hatchNewKoi(
 }
 
 /**
- * Cho một chú cá ăn: cộng XP, nếu đủ XP thì lên cấp và phóng to kích thước
+ * Thả bớt cá ra khỏi hồ
+ */
+export function removeFishFromLake(state: ZenKoiGameState, fishId: string): ZenKoiGameState {
+  const updatedFishes = state.fishes.filter((f) => f.id !== fishId);
+  if (updatedFishes.length === 0) return state; // Giữ ít nhất 1 chú cá
+
+  const newState: ZenKoiGameState = {
+    ...state,
+    fishes: updatedFishes,
+    pondLevel: computePondLevel(updatedFishes),
+  };
+
+  saveZenKoiState(newState);
+  return newState;
+}
+
+/**
+ * Điều chỉnh kích thước cá trong chế độ Sandbox
+ */
+export function updateFishScale(
+  state: ZenKoiGameState,
+  fishId: string,
+  newScale: number,
+): ZenKoiGameState {
+  const clamped = Number(Math.max(0.4, Math.min(1.8, newScale)).toFixed(2));
+  const updatedFishes = state.fishes.map((f) => {
+    if (f.id !== fishId) return f;
+    return {
+      ...f,
+      scale: clamped,
+    };
+  });
+
+  const newState: ZenKoiGameState = {
+    ...state,
+    fishes: updatedFishes,
+  };
+
+  saveZenKoiState(newState);
+  return newState;
+}
+
+/**
+ * Ấp / Tạo cá mới (Gacha ngẫu nhiên 6 loài)
+ */
+export function hatchNewKoi(
+  state: ZenKoiGameState,
+): { newState: ZenKoiGameState; fish: SavedKoiFish } | null {
+  const roll = Math.random() * 100;
+  let species: FishSpeciesId;
+  if (roll < 30) {
+    species = 'koi'; // 30%
+  } else if (roll < 52) {
+    species = 'goldfish'; // 22%
+  } else if (roll < 70) {
+    species = 'betta'; // 18%
+  } else if (roll < 82) {
+    species = 'neon'; // 12%
+  } else if (roll < 92) {
+    species = 'butterfly'; // 10%
+  } else {
+    species = 'arowana'; // 8% (Huyền thoại Cá Rồng Kim Long)
+  }
+
+  const result = addFishToLake(state, species);
+  const newState: ZenKoiGameState = {
+    ...result.newState,
+    dewGems: Math.max(0, state.dewGems - (state.dewGems >= HATCH_GEM_COST ? HATCH_GEM_COST : 0)),
+  };
+  saveZenKoiState(newState);
+  return { newState, fish: result.fish };
+}
+
+/**
+ * Cho cá ăn: cộng XP, lên cấp và tăng nhẹ kích thước
  */
 export function feedFish(
   state: ZenKoiGameState,
@@ -388,7 +660,7 @@ export function feedFish(
 
   const newState: ZenKoiGameState = {
     ...state,
-    dewGems: state.dewGems + 1, // Đớp mồi nhận thêm 1 ngọc sương
+    dewGems: state.dewGems + 1,
     fishes: updatedFishes,
     pondLevel: computePondLevel(updatedFishes),
     lastFedAt: Date.now(),
@@ -402,9 +674,6 @@ export function feedFish(
   return { newState, leveledUp, newLevel };
 }
 
-/**
- * Vuốt ve chú cá: tăng độ thân thiết
- */
 export function petFish(state: ZenKoiGameState, fishId: string): ZenKoiGameState {
   const updatedFishes = state.fishes.map((fish) => {
     if (fish.id !== fishId) return fish;
@@ -423,9 +692,6 @@ export function petFish(state: ZenKoiGameState, fishId: string): ZenKoiGameState
   return newState;
 }
 
-/**
- * Đổi tên cho chú cá
- */
 export function renameFish(
   state: ZenKoiGameState,
   fishId: string,
@@ -451,9 +717,6 @@ export function renameFish(
   return newState;
 }
 
-/**
- * Tự động hồi phục thức ăn định kỳ (mỗi 60s nhận 2 Hạt Sen)
- */
 export function applyPassiveReplenishment(
   state: ZenKoiGameState,
   now: number = Date.now(),
@@ -475,9 +738,6 @@ export function applyPassiveReplenishment(
   return newState;
 }
 
-/**
- * Tặng thưởng thức ăn & ngọc sương khi người dùng hoàn thành 1 bài học trên web
- */
 export function awardLessonBonus(state: ZenKoiGameState): ZenKoiGameState {
   const newState: ZenKoiGameState = {
     ...state,
