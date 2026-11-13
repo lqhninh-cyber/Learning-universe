@@ -553,9 +553,8 @@ export const ColorSystemPreviewPage: FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="rounded-full bg-[var(--edu-light)] px-3 py-0.5 font-mono text-xs font-semibold text-[var(--edu-accent)]">
-                      KHOA HỌC GIÁO DỤC · 04 TÍN CHỈ
+                      KHOA HỌC GIÁO DỤC
                     </span>
-                    <span className="text-xs text-[var(--text-secondary)]">04 Tín chỉ</span>
                   </div>
                   <h3 className="font-serif text-2xl font-bold text-[var(--text-primary)] transition-colors group-hover:text-[var(--secondary)]">
                     Giáo dục học

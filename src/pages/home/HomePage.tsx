@@ -806,7 +806,7 @@ export function HomePage() {
                 đường học tập.
               </p>
 
-              {/* Hai nút CTA đồng cấp */}
+              {/* Nút hành động chính */}
               <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <a
                   href="#khong-gian-mon-hoc"
@@ -815,18 +815,6 @@ export function HomePage() {
                   <span>Khám phá không gian tri thức</span>
                   <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </a>
-
-                <Link
-                  to="/glossary"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setIsKaTeXDrawerOpen(true);
-                  }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-[#E8A85A]/50 bg-[#122623]/72 px-6 py-3 text-sm font-medium text-[#FFF9F0] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F6D383] hover:bg-[#193530]/85 active:scale-[0.98]"
-                >
-                  <BookMarked className="h-4 w-4" aria-hidden="true" />
-                  <span>Tra cứu thuật ngữ KaTeX</span>
-                </Link>
               </div>
 
               {/* Danh ngôn học thuật xoay vòng (Rotating Scholarly Quotes) */}

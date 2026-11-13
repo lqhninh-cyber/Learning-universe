@@ -84,10 +84,9 @@ describe('App routing smoke test', () => {
       'href',
       '#khong-gian-mon-hoc',
     );
-    expect(screen.getByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i })).toHaveAttribute(
-      'href',
-      '/glossary',
-    );
+    expect(
+      screen.queryByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i }),
+    ).not.toBeInTheDocument();
 
     // Đảm bảo không lộ các nhãn nội bộ
     expect(screen.queryByText(/SCREEN 01/i)).not.toBeInTheDocument();

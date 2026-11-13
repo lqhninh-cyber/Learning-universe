@@ -109,7 +109,7 @@ export function SubjectHero({ subject, onSelectSpecializedTab }: SubjectHeroProp
               <Layers className="h-3.5 w-3.5 text-amber-300" aria-hidden="true" />
               <span>
                 {subject.slug === 'giao-duc-hoc'
-                  ? `04 tín chỉ · 5 chương & 3 bài thực hành (${stats.lessonCount} bài học)`
+                  ? `5 chương & 3 bài thực hành (${stats.lessonCount} bài học)`
                   : `${stats.chapterCount} chương · ${stats.lessonCount} bài học`}
               </span>
             </span>

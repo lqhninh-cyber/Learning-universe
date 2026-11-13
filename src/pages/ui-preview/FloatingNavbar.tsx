@@ -364,7 +364,6 @@ export const FloatingNavbar: FC<FloatingNavbarProps> = ({
                         <span className="text-[10px] font-bold text-teal-800">
                           Khoa học Giáo dục
                         </span>
-                        <span className="text-[10px] text-stone-500">04 Tín chỉ</span>
                       </div>
                       <h4 className="mt-1 text-xs font-bold text-stone-900 group-hover:text-teal-900">
                         Giáo dục học

@@ -12,13 +12,6 @@ export interface SubjectCardProps {
   readonly subject: ManifestSubject;
 }
 
-const CREDITS_MAP: Record<string, string> = {
-  'cau-truc-dai-so': '04 Tín chỉ · Bắt buộc',
-  'hinh-hoc-affine': '03 Tín chỉ · Bắt buộc',
-  'giai-tich-ham-mot-bien': '04 Tín chỉ · Bắt buộc',
-  'giao-duc-hoc': '04 Tín chỉ · Bắt buộc',
-};
-
 export function SubjectCard({ subject }: SubjectCardProps) {
   const stats = getSubjectStats(subject);
   const asset = getCourseCinematicAsset(subject.slug);
@@ -33,18 +26,17 @@ export function SubjectCard({ subject }: SubjectCardProps) {
 
   const totalLessons = stats.lessonCount;
   const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
-  const creditsText = CREDITS_MAP[subject.slug] ?? '03 Tín chỉ · Bắt buộc';
 
   return (
     <article
       aria-label={`Học phần ${subject.title}`}
       className="group flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-7 shadow-[var(--shadow-editorial)] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg lg:p-8"
     >
-      {/* Phía trên: Huy hiệu tín chỉ */}
+      {/* Phía trên: Nhãn lĩnh vực và quy mô học phần */}
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center rounded-full border border-[#C5A262]/40 bg-[#C5A262]/10 px-3 py-1 text-xs font-semibold text-[#8A6A2F] dark:border-[#C5A262]/30 dark:bg-[#C5A262]/15 dark:text-[#E5C378]">
-            {creditsText}
+            {asset.categoryLabel}
           </span>
           <span className="font-mono text-xs font-medium text-[#55676B] dark:text-[#A7B5AC]">
             {subject.slug === 'giao-duc-hoc'

@@ -396,8 +396,13 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       // Nút ViewModeToggle
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
 
-      // Bấm vào CTA Tra cứu thuật ngữ KaTeX mở Drawer
-      const katexTrigger = screen.getByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i });
+      // Nút phụ Tra cứu thuật ngữ KaTeX ở Hero đã được gỡ bỏ; bấm vào thẻ Ngân hàng Thuật ngữ KaTeX mở Drawer
+      expect(
+        screen.queryByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i }),
+      ).not.toBeInTheDocument();
+      const katexTrigger = screen.getByRole('link', {
+        name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i,
+      });
       fireEvent.click(katexTrigger);
 
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();

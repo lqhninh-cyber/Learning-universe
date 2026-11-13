@@ -23,21 +23,15 @@ export function SubjectsListPage() {
 
   return (
     <FadeIn className="mx-auto w-[min(94vw,1560px)] space-y-8 bg-[var(--bg-page)] text-[var(--text-main)]">
-      {/* Tiêu đề đầu trang & Đoạn dẫn cô đọng */}
+      {/* Tiêu đề đầu trang */}
       <div className="space-y-4">
         <Breadcrumb
           items={[{ label: 'Trang chủ', href: ROUTES.home }, { label: 'Danh mục Học phần' }]}
         />
 
-        <div className="space-y-2">
-          <h1 className="font-serif text-3xl font-bold tracking-tight text-[#29383D] sm:text-5xl dark:text-stone-100">
-            Danh mục Học phần
-          </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-[#55676B]">
-            Chương trình đào tạo đại học chuẩn mực gồm các học phần Toán học nền tảng và Khoa học
-            Giáo dục dành cho sinh viên Sư phạm Toán học.
-          </p>
-        </div>
+        <h1 className="mb-6 font-serif text-3xl font-bold tracking-tight text-[#29383D] sm:text-5xl dark:text-stone-100">
+          Danh mục Học phần
+        </h1>
       </div>
 
       {/* Thanh bộ lọc tối giản: Tất cả | Toán học | Khoa học Giáo dục cùng ô tìm kiếm */}

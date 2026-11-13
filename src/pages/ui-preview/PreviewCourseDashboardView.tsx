@@ -42,7 +42,6 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
       return {
         slug: 'giai-tich-ham-mot-bien',
         title: 'Giải tích hàm một biến',
-        credits: '3 Tín chỉ',
         badge: 'Khối Toán học',
         instructor: 'GV. Trần Trí Dũng (Khoa Toán - Tin, HCMUE)',
         description:
@@ -258,7 +257,6 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
     return {
       slug: 'giao-duc-hoc',
       title: 'Giáo dục học',
-      credits: '04 Tín chỉ',
       badge: 'Khối Khoa học Giáo dục',
       instructor: 'TS. Lê Thị Thu Liễu (Khoa Khoa học Giáo dục, HCMUE)',
       description:
@@ -538,9 +536,6 @@ export const PreviewCourseDashboardView: FC<PreviewCourseDashboardViewProps> = (
                 )}
               >
                 {courseData.badge}
-              </span>
-              <span className="rounded-full border border-stone-300/80 bg-white px-2.5 py-0.5 text-xs font-medium text-stone-700">
-                {courseData.credits}
               </span>
             </div>
 

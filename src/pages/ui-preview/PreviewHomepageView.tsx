@@ -483,7 +483,6 @@ export const PreviewHomepageView: FC<PreviewHomepageViewProps> = ({
                   <span className="text-[10px] font-bold tracking-wider text-teal-800 uppercase">
                     Khoa học Giáo dục
                   </span>
-                  <span className="font-mono text-xs font-bold text-teal-900">04 Tín chỉ</span>
                 </div>
                 <h4 className="mt-1 text-base font-bold text-stone-900 group-hover:text-teal-950">
                   Giáo dục học

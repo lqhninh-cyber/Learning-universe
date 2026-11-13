@@ -161,7 +161,6 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
                 className="flex min-h-11 items-center justify-between rounded-xl px-3.5 py-2 text-sm text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
               >
                 <span className="font-serif font-semibold">Cấu trúc đại số</span>
-                <span className="font-mono text-[11px] text-[#55676B]">04 TC</span>
               </Link>
               <Link
                 to={ROUTES.subjectOverview('hinh-hoc-affine')}
@@ -170,7 +169,6 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
                 className="flex min-h-11 items-center justify-between rounded-xl px-3.5 py-2 text-sm text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
               >
                 <span className="font-serif font-semibold">Hình học Affine &amp; Euclide</span>
-                <span className="font-mono text-[11px] text-[#55676B]">03 TC</span>
               </Link>
               <Link
                 to={ROUTES.subjectOverview('giai-tich-ham-mot-bien')}
@@ -179,7 +177,6 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
                 className="flex min-h-11 items-center justify-between rounded-xl px-3.5 py-2 text-sm text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
               >
                 <span className="font-serif font-semibold">Giải tích hàm một biến</span>
-                <span className="font-mono text-[11px] text-[#55676B]">04 TC</span>
               </Link>
             </div>
           </div>
@@ -197,7 +194,6 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
                 className="flex min-h-11 items-center justify-between rounded-xl px-3.5 py-2 text-sm text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
               >
                 <span className="font-serif font-semibold">Giáo dục học</span>
-                <span className="font-mono text-[11px] text-[#55676B]">04 TC</span>
               </Link>
               <Link
                 to="/mon-hoc/giao-duc-hoc/khoi-thuc-hanh-nghiep-vu-su-pham/phan-tich-va-giai-quyet-20-tinh-huong-su-pham-thuc-te"

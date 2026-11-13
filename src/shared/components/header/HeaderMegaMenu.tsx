@@ -19,32 +19,38 @@ export interface HeaderMegaMenuProps {
 }
 
 export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClose }) => {
-  const mathItems = [
+  const mathItems: ReadonlyArray<{
+    readonly to: string;
+    readonly title: string;
+    readonly badge?: string;
+    readonly icon: typeof Layers;
+  }> = [
     {
       to: ROUTES.courseOverview('cau-truc-dai-so'),
       title: 'Cấu trúc đại số',
-      badge: '04 TC',
       icon: Layers,
     },
     {
       to: ROUTES.courseOverview('hinh-hoc-affine'),
       title: 'Hình học Affine & Euclide',
-      badge: '03 TC',
       icon: Compass,
     },
     {
       to: ROUTES.courseOverview('giai-tich-ham-mot-bien'),
       title: 'Giải tích hàm một biến',
-      badge: '04 TC',
       icon: Activity,
     },
-  ] as const;
+  ];
 
-  const eduItems = [
+  const eduItems: ReadonlyArray<{
+    readonly to: string;
+    readonly title: string;
+    readonly badge?: string;
+    readonly icon: typeof Layers;
+  }> = [
     {
       to: ROUTES.courseOverview('giao-duc-hoc'),
       title: 'Giáo dục học',
-      badge: '04 TC',
       icon: GraduationCap,
     },
     {
@@ -59,7 +65,7 @@ export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClo
       badge: 'GD phổ thông',
       icon: FileText,
     },
-  ] as const;
+  ];
 
   return (
     <div
@@ -121,14 +127,16 @@ export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClo
                       {item.title}
                     </span>
                   </div>
-                  <span
-                    className={cn(
-                      'shrink-0 font-mono text-[11px] opacity-80',
-                      isDark ? 'text-[#A7B5AC]' : 'text-[#55676B] dark:text-[#A7B5AC]',
-                    )}
-                  >
-                    {item.badge}
-                  </span>
+                  {item.badge && (
+                    <span
+                      className={cn(
+                        'shrink-0 font-mono text-[11px] opacity-80',
+                        isDark ? 'text-[#A7B5AC]' : 'text-[#55676B] dark:text-[#A7B5AC]',
+                      )}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -181,14 +189,16 @@ export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClo
                       {item.title}
                     </span>
                   </div>
-                  <span
-                    className={cn(
-                      'shrink-0 font-mono text-[11px] opacity-80',
-                      isDark ? 'text-[#A7B5AC]' : 'text-[#55676B] dark:text-[#A7B5AC]',
-                    )}
-                  >
-                    {item.badge}
-                  </span>
+                  {item.badge && (
+                    <span
+                      className={cn(
+                        'shrink-0 font-mono text-[11px] opacity-80',
+                        isDark ? 'text-[#A7B5AC]' : 'text-[#55676B] dark:text-[#A7B5AC]',
+                      )}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
