@@ -11,6 +11,8 @@ import {
   drawDynamicKoiFishes,
   drawEnhancedFireflies,
   drawFallingPetalsAndDewdrops,
+  drawFloatingTextsAndSparkles,
+  drawForageItems,
   drawInteractiveRipplesAndBaits,
   drawLowLyingMist,
   drawMidgroundBotanicalClusters,
@@ -18,7 +20,9 @@ import {
   makeDewdropSprite,
   spawnBaitAt,
   stepEcosystem,
+  syncEcosystemFishesWithGameState,
 } from './lotusEcosystem';
+import type { SavedKoiFish } from './zenKoiGame';
 
 /**
  * PROCEDURAL LOTUS CANVAS ENGINE (Thuật toán đồ họa Canvas 2D thủ tục hoa sen tả thực - Hoa sen_2.html)
@@ -2143,6 +2147,13 @@ export interface LotusCanvasEngine {
   ) => void;
   addRipple: (x: number, y: number, t?: number) => void;
   setPointer: (x: number | null, y: number | null) => void;
+  syncFishes: (savedFishes: readonly SavedKoiFish[]) => void;
+  feedBait: (x: number, y: number) => boolean;
+  checkPetFish: (x: number, y: number) => string | null;
+  checkCollectForage: (x: number, y: number) => boolean;
+  setOnFishFed: (cb: (fishId: string, levelUp: boolean, newLevel: number) => void) => void;
+  setOnForageCollected: (cb: (type: 'dew' | 'seed', food: number, gems: number) => void) => void;
+  setOnFishPetted: (cb: (fishId: string) => void) => void;
 }
 
 export function createLotusCanvasEngine(): LotusCanvasEngine {
@@ -2507,6 +2518,9 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       });
       drawCornerFramingPads(ctx, W, H, S, t, padSp);
 
+      // 7b. Giọt sương phát sáng & Hạt sen vàng tự nhiên trên lá sen (Foraging items)
+      drawForageItems(ctx, ecoState.forageItems, t, S);
+
       // 8. CHÚ ẾCH XANH HOẠT CẢNH (ộp phồng túi thanh âm 4s & bật nhảy parabol sang lá bên)
       drawAnimatedFrog(ctx, ecoState, PADS, t, W, H, S, wy, pointerX, pointerY);
 
@@ -2541,6 +2555,9 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.fill();
       }
 
+      // 11b. Hiển thị chữ nổi động (+10 XP, +5 🌾, ...) & bụi sao kim sa của Kim Long Ngư
+      drawFloatingTextsAndSparkles(ctx, ecoState.floatingTexts, ecoState.starParticles, S);
+
       // 12. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang (đã cache gradient)
       ctx.fillStyle = backdrop.topMistGrad;
       ctx.fillRect(0, 0, W, 110 * S);
@@ -2559,6 +2576,79 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
     setPointer: (x: number | null, y: number | null) => {
       pointerX = x;
       pointerY = y;
+    },
+
+    syncFishes: (savedFishes: readonly SavedKoiFish[]) => {
+      syncEcosystemFishesWithGameState(ecoState, savedFishes);
+    },
+
+    feedBait: (x: number, y: number): boolean => {
+      return spawnBaitAt(ecoState, x, y, lastScale);
+    },
+
+    checkPetFish: (x: number, y: number): string | null => {
+      for (const fish of ecoState.koiFishes) {
+        const radius = 34 * lastScale * (fish.customScale ?? 1);
+        const dist = Math.hypot(x - fish.x, y - fish.y);
+        if (dist <= radius) {
+          fish.petSpinTimer = 1.35;
+          fish.boostTimer = 0;
+          for (let b = 0; b < 4; b += 1) {
+            ecoState.bubbles.push({
+              x: fish.x + (b - 1.5) * 5 * lastScale,
+              y: fish.y,
+              vy: 24 * lastScale,
+              radius: (1.5 + (b % 2) * 0.8) * lastScale,
+              alpha: 0.9,
+              wobblePhase: b,
+            });
+          }
+          if (ecoState.onFishPettedCallback && fish.savedId) {
+            ecoState.onFishPettedCallback(fish.savedId);
+          }
+          return fish.savedId || `koi-${fish.fi}`;
+        }
+      }
+      return null;
+    },
+
+    checkCollectForage: (x: number, y: number): boolean => {
+      for (const item of ecoState.forageItems) {
+        if (!item.collected && Math.hypot(x - item.x, y - item.y) < 36 * lastScale) {
+          item.collected = true;
+          item.collectAnim = 0;
+          const foodBonus = item.type === 'dew' ? 5 : 8;
+          const gemBonus = item.type === 'dew' ? 2 : 1;
+          ecoState.floatingTexts.push({
+            id: `ft-${Date.now()}-${Math.random()}`,
+            x: item.x,
+            y: item.y - 12 * lastScale,
+            text: item.type === 'dew' ? `+${foodBonus} 🌾 +${gemBonus} 💧` : `+${foodBonus} 🌾`,
+            color: item.type === 'dew' ? '#6EE7B7' : '#FCD34D',
+            vy: -32 * lastScale,
+            alpha: 1.0,
+            life: 0,
+            maxLife: 1.3,
+          });
+          if (ecoState.onForageCollectedCallback) {
+            ecoState.onForageCollectedCallback(item.type, foodBonus, gemBonus);
+          }
+          return true;
+        }
+      }
+      return false;
+    },
+
+    setOnFishFed: (cb) => {
+      ecoState.onFishFedCallback = cb;
+    },
+
+    setOnForageCollected: (cb) => {
+      ecoState.onForageCollectedCallback = cb;
+    },
+
+    setOnFishPetted: (cb) => {
+      ecoState.onFishPettedCallback = cb;
     },
   };
 }

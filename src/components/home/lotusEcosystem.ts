@@ -9,6 +9,7 @@ import {
   rgb,
   rng,
 } from './lotusCanvasEngine';
+import { type KoiBreedId, KOI_BREEDS, type SavedKoiFish } from './zenKoiGame';
 
 export interface FallingPetal {
   xRatio: number;
@@ -51,6 +52,42 @@ export interface BaitPellet {
   eaten: boolean;
 }
 
+export interface ForageItem {
+  readonly id: string;
+  readonly type: 'dew' | 'seed';
+  x: number;
+  y: number;
+  padIdx: number;
+  birthTime: number;
+  collected: boolean;
+  collectAnim: number;
+  floatPhase: number;
+}
+
+export interface FloatingTextParticle {
+  readonly id: string;
+  x: number;
+  y: number;
+  text: string;
+  color: string;
+  vy: number;
+  alpha: number;
+  life: number;
+  maxLife: number;
+}
+
+export interface StarParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  color: string;
+  life: number;
+  maxLife: number;
+}
+
 export interface WaterBubble {
   x: number;
   y: number;
@@ -66,7 +103,7 @@ export interface InteractiveWaterRipple {
   readonly birthTime: number;
   readonly maxRadiusScale: number;
   readonly ringCount: number;
-  readonly tint: 'emerald' | 'sound' | 'gold';
+  readonly tint: 'emerald' | 'sound' | 'gold' | 'jade';
 }
 
 export interface FrogState {
@@ -119,8 +156,16 @@ export interface KoiSpeciesConfig {
 }
 
 export interface DynamicKoiFish {
-  readonly config: KoiSpeciesConfig;
+  config: KoiSpeciesConfig;
   readonly fi: number;
+  savedId?: string;
+  name?: string;
+  breed?: KoiBreedId;
+  level?: number;
+  customScale?: number;
+  glowColor?: string;
+  isButterfly?: boolean;
+  petSpinTimer: number;
   u: number;
   x: number;
   y: number;
@@ -170,6 +215,9 @@ export interface EcosystemState {
   nextDewdropAt: number;
   splashDroplets: SplashMicroDroplet[];
   baitPellets: BaitPellet[];
+  forageItems: ForageItem[];
+  floatingTexts: FloatingTextParticle[];
+  starParticles: StarParticle[];
   bubbles: WaterBubble[];
   ripples: InteractiveWaterRipple[];
   frog: FrogState;
@@ -183,9 +231,13 @@ export interface EcosystemState {
   lastTrailRippleX: number;
   lastTrailRippleY: number;
   lastTrailRippleTime: number;
+  lastForageSpawnTime: number;
   pointerSmoothX: number | null;
   pointerSmoothY: number | null;
   pointerSpeed: number;
+  onFishFedCallback?: (fishId: string, levelUp: boolean, newLevel: number) => void;
+  onForageCollectedCallback?: (type: 'dew' | 'seed', food: number, gems: number) => void;
+  onFishPettedCallback?: (fishId: string) => void;
 }
 
 export const KOI_ROSTER: readonly KoiSpeciesConfig[] = [
@@ -442,6 +494,7 @@ export function buildEcosystemState(padCount: number): EcosystemState {
   const koiFishes: DynamicKoiFish[] = KOI_ROSTER.map((config, fi) => ({
     config,
     fi,
+    petSpinTimer: 0,
     u: config.ph,
     x: 0,
     y: 0,
@@ -508,6 +561,9 @@ export function buildEcosystemState(padCount: number): EcosystemState {
     nextDewdropAt: 2.4,
     splashDroplets: [],
     baitPellets: [],
+    forageItems: [],
+    floatingTexts: [],
+    starParticles: [],
     bubbles: [],
     ripples: [],
     frog: {
@@ -533,6 +589,7 @@ export function buildEcosystemState(padCount: number): EcosystemState {
     lastTrailRippleX: -9999,
     lastTrailRippleY: -9999,
     lastTrailRippleTime: -999,
+    lastForageSpawnTime: 0,
     pointerSmoothX: null,
     pointerSmoothY: null,
     pointerSpeed: 0,
@@ -574,9 +631,13 @@ export function pushRipple(
   }
 }
 
-export function spawnBaitAt(state: EcosystemState, x: number, y: number, S: number) {
+export function spawnBaitAt(state: EcosystemState, x: number, y: number, S: number): boolean {
   pushRipple(state, x, y, 'gold', 1.15, 3);
-  const count = 2 + (Math.round(x + y) % 2); // 2 hoặc 3 hạt sáng vàng
+  const activeCount = state.baitPellets.filter((p) => !p.eaten).length;
+  if (activeCount >= 8) {
+    return false;
+  }
+  const count = Math.min(2 + (Math.round(x + y) % 2), 8 - activeCount);
   for (let i = 0; i < count; i += 1) {
     const spreadX = (i - (count - 1) * 0.5) * 14 * S + ((i * 7) % 5) - 2;
     const spreadY = ((i % 2) * 8 - 4) * S;
@@ -591,9 +652,71 @@ export function spawnBaitAt(state: EcosystemState, x: number, y: number, S: numb
       eaten: false,
     });
   }
-  if (state.baitPellets.length > 18) {
-    state.baitPellets.splice(0, state.baitPellets.length - 18);
+  if (state.baitPellets.length > 8) {
+    state.baitPellets.splice(0, state.baitPellets.length - 8);
   }
+  return true;
+}
+
+export function syncEcosystemFishesWithGameState(
+  eco: EcosystemState,
+  savedFishes: readonly SavedKoiFish[],
+): void {
+  if (!savedFishes || savedFishes.length === 0) return;
+
+  const newKoiFishes: DynamicKoiFish[] = savedFishes.map((saved, idx) => {
+    const existing = eco.koiFishes.find((f) => f.savedId === saved.id);
+    const breedMeta = KOI_BREEDS[saved.breed] ?? KOI_BREEDS.kohaku;
+    const baseConfig = KOI_ROSTER[idx % KOI_ROSTER.length] ?? KOI_ROSTER[0]!;
+
+    const config: KoiSpeciesConfig = {
+      ax: baseConfig.ax,
+      ay: baseConfig.ay,
+      sp: baseConfig.sp,
+      ph: baseConfig.ph,
+      sz: 1.0,
+      baseColor: breedMeta.baseColor,
+      spotColor: breedMeta.spotColor,
+      accentColor: breedMeta.accentColor,
+    };
+
+    if (existing) {
+      existing.config = config;
+      existing.name = saved.name;
+      existing.breed = saved.breed;
+      existing.level = saved.level;
+      existing.customScale = saved.scale;
+      existing.glowColor = breedMeta.glowColor;
+      existing.isButterfly = breedMeta.isButterfly;
+      return existing;
+    }
+
+    return {
+      config,
+      fi: idx,
+      savedId: saved.id,
+      name: saved.name,
+      breed: saved.breed,
+      level: saved.level,
+      customScale: saved.scale,
+      glowColor: breedMeta.glowColor,
+      isButterfly: breedMeta.isButterfly,
+      petSpinTimer: 0,
+      u: baseConfig.ph,
+      x: 0,
+      y: 0,
+      heading: 0,
+      boostTimer: 0,
+      speedMult: 1,
+      seekingBait: false,
+      scatterTimeLeft: 0,
+      scatterVx: 0,
+      scatterVy: 0,
+      initialized: false,
+    };
+  });
+
+  eco.koiFishes = newKoiFishes;
 }
 
 export function getRightLeafTip(W: number, H: number, t: number, S: number): [number, number] {
@@ -962,6 +1085,22 @@ export function stepEcosystem(
       fish.initialized = true;
     }
 
+    if (fish.petSpinTimer > 0) {
+      fish.petSpinTimer = Math.max(0, fish.petSpinTimer - dt);
+      fish.heading += dt * 8.5;
+      fish.speedMult = 1.45;
+      if (Math.random() < 0.25) {
+        state.bubbles.push({
+          x: fish.x + (Math.random() - 0.5) * 12 * S,
+          y: fish.y + (Math.random() - 0.5) * 12 * S,
+          vy: 20 * S,
+          radius: 1.2 * S,
+          alpha: 0.8,
+          wobblePhase: t,
+        });
+      }
+    }
+
     // Tìm hạt mồi vàng gần nhất trong bán kính 290 * S
     let nearestBait: BaitPellet | null = null;
     let nearestDist = 290 * S;
@@ -1007,6 +1146,20 @@ export function stepEcosystem(
             wobblePhase: t + b,
           });
         }
+        state.floatingTexts.push({
+          id: `xp-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          x: targetX,
+          y: targetY - 14 * S,
+          text: '+10 XP',
+          color: '#FBD38D',
+          vy: -28 * S,
+          alpha: 1.0,
+          life: 0,
+          maxLife: 1.25,
+        });
+        if (state.onFishFedCallback && fish.savedId) {
+          state.onFishFedCallback(fish.savedId, false, fish.level || 1);
+        }
       }
       return;
     }
@@ -1046,7 +1199,118 @@ export function stepEcosystem(
       Math.cos(nextHeading - fish.heading),
     );
     fish.heading += dh * blendLerp;
+
+    if (fish.isButterfly && Math.random() < 0.42) {
+      const tailScale = fish.customScale ?? 1;
+      const tailX = fish.x - Math.cos(fish.heading) * 30 * S * tailScale;
+      const tailY = fish.y - Math.sin(fish.heading) * 30 * S * tailScale;
+      state.starParticles.push({
+        x: tailX + (Math.random() - 0.5) * 8 * S,
+        y: tailY + (Math.random() - 0.5) * 8 * S,
+        vx: -Math.cos(fish.heading) * (14 + Math.random() * 18) * S,
+        vy: -Math.sin(fish.heading) * (14 + Math.random() * 18) * S,
+        size: (1.4 + Math.random() * 2.2) * S,
+        alpha: 0.95,
+        color: Math.random() > 0.4 ? '#FDE047' : '#FEF08A',
+        life: 0,
+        maxLife: 0.85 + Math.random() * 0.4,
+      });
+    }
   });
+
+  // 6b. Hệ thống nhặt lượm tự nhiên trên lá sen (mỗi 8s - 12s)
+  if (t - state.lastForageSpawnTime > 9.5 && state.forageItems.length < 3 && pads.length > 0) {
+    const eligibleIndices = [0, 1, 2, 3, 4, 5, 6, 7].filter((i) => i < pads.length);
+    const chosenIdx = eligibleIndices[Math.floor(Math.random() * eligibleIndices.length)] ?? 0;
+    const targetPad = pads[chosenIdx];
+    if (targetPad) {
+      const [fx, fy] = getPadCenter(targetPad, t, W, H, wy, state.padBounces[chosenIdx] ?? 0);
+      const isDew = Math.random() < 0.6;
+      state.forageItems.push({
+        id: `forage-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        type: isDew ? 'dew' : 'seed',
+        x: fx,
+        y: fy - 6 * S,
+        padIdx: chosenIdx,
+        birthTime: t,
+        collected: false,
+        collectAnim: 0,
+        floatPhase: Math.random() * Math.PI * 2,
+      });
+      state.lastForageSpawnTime = t;
+    }
+  }
+
+  // Cập nhật vị trí & kiểm tra thu thập forageItems
+  for (let i = state.forageItems.length - 1; i >= 0; i -= 1) {
+    const item = state.forageItems[i];
+    if (!item) continue;
+
+    const pad = pads[item.padIdx];
+    if (pad) {
+      const [fx, fy] = getPadCenter(pad, t, W, H, wy, state.padBounces[item.padIdx] ?? 0);
+      item.floatPhase += dt * 2.6;
+      item.x = fx;
+      item.y = fy - 8 * S + Math.sin(item.floatPhase) * 3.5 * S;
+    }
+
+    if (!item.collected && pointerX !== null && pointerY !== null) {
+      const dist = Math.hypot(pointerX - item.x, pointerY - item.y);
+      if (dist < 34 * S) {
+        item.collected = true;
+        item.collectAnim = 0;
+        pushRipple(state, item.x, item.y, 'gold', 1.05, 2);
+        const foodBonus = item.type === 'dew' ? 5 : 8;
+        const gemBonus = item.type === 'dew' ? 2 : 1;
+        state.floatingTexts.push({
+          id: `ft-${Date.now()}-${Math.random()}`,
+          x: item.x,
+          y: item.y - 12 * S,
+          text: item.type === 'dew' ? `+${foodBonus} 🌾 +${gemBonus} 💧` : `+${foodBonus} 🌾`,
+          color: item.type === 'dew' ? '#6EE7B7' : '#FCD34D',
+          vy: -32 * S,
+          alpha: 1.0,
+          life: 0,
+          maxLife: 1.3,
+        });
+        if (state.onForageCollectedCallback) {
+          state.onForageCollectedCallback(item.type, foodBonus, gemBonus);
+        }
+      }
+    }
+
+    if (item.collected) {
+      item.collectAnim += dt * 3.2;
+      if (item.collectAnim >= 1) {
+        state.forageItems.splice(i, 1);
+      }
+    }
+  }
+
+  // Cập nhật floatingTexts
+  for (let i = state.floatingTexts.length - 1; i >= 0; i -= 1) {
+    const ft = state.floatingTexts[i];
+    if (!ft) continue;
+    ft.life += dt;
+    ft.y += ft.vy * dt;
+    ft.alpha = Math.max(0, 1 - ft.life / ft.maxLife);
+    if (ft.life >= ft.maxLife) {
+      state.floatingTexts.splice(i, 1);
+    }
+  }
+
+  // Cập nhật starParticles
+  for (let i = state.starParticles.length - 1; i >= 0; i -= 1) {
+    const sp = state.starParticles[i];
+    if (!sp) continue;
+    sp.life += dt;
+    sp.x += sp.vx * dt;
+    sp.y += sp.vy * dt;
+    sp.alpha = Math.max(0, 1 - sp.life / sp.maxLife);
+    if (sp.life >= sp.maxLife) {
+      state.starParticles.splice(i, 1);
+    }
+  }
 
   // 7. Đàn cá nhỏ (Boids) gần gốc sen: tách đàn tránh cá Koi & chuột
   const flockCenterX = 0.48;
@@ -1680,7 +1944,8 @@ export function drawDynamicKoiFishes(
     const dd = Math.min(d0, per - d0);
     const nr = Math.exp(-Math.pow(dd / 1.35, 2));
 
-    const k = S * f.sz * (1 + 0.06 * nr) * (0.58 + (0.78 * Math.max(0, fish.y)) / H);
+    const sizeMult = fish.customScale ?? 1;
+    const k = S * f.sz * sizeMult * (1 + 0.06 * nr) * (0.58 + (0.78 * Math.max(0, fish.y)) / H);
     const seg = 6.6 * k;
     const pts: [number, number, number][] = [];
     let px = fish.x;
@@ -1699,6 +1964,24 @@ export function drawDynamicKoiFishes(
     const e = pts[N - 1];
     const q = pts[2];
     if (!h || !e || !q) return;
+
+    // Hào quang phát quang dưới nước cho cá cấp >= 5 hoặc giống đặc biệt
+    const hasAura = (fish.level && fish.level >= 5) || Boolean(fish.glowColor);
+    if (hasAura) {
+      ctx.save();
+      const auraColor = fish.glowColor || 'rgba(255, 215, 0, 0.35)';
+      ctx.shadowColor = auraColor;
+      ctx.shadowBlur = (12 + (fish.level ? (fish.level - 4) * 3 : 6)) * k;
+      ctx.fillStyle = auraColor;
+      ctx.beginPath();
+      pts.forEach((p, idx) => {
+        const rW = (wd[idx] ?? 0.4) * 8.5 * k;
+        ctx.moveTo(p[0] + rW, p[1]);
+        ctx.ellipse(p[0], p[1], rW, rW * 0.7, p[2], 0, Math.PI * 2);
+      });
+      ctx.fill();
+      ctx.restore();
+    }
 
     // 1. Bóng mờ của cá Koi dưới làn nước sâu
     ctx.save();
@@ -1720,8 +2003,10 @@ export function drawDynamicKoiFishes(
     const ca = Math.cos(e[2]);
     const sa = Math.sin(e[2]);
     const wv = Math.sin(t * swimFreq - N * 0.6 + fi * 2) * 4.2 * k;
-    const bx = e[0] - ca * 17 * k;
-    const by = e[1] - sa * 17 * k;
+    const tailLen = fish.isButterfly ? 28 * k : 17 * k;
+    const tailW = fish.isButterfly ? 18 * k : 11 * k;
+    const bx = e[0] - ca * tailLen;
+    const by = e[1] - sa * tailLen;
     const nx = -sa;
     const ny = ca;
 
@@ -1729,25 +2014,43 @@ export function drawDynamicKoiFishes(
     ctx.beginPath();
     ctx.moveTo(e[0], e[1]);
     ctx.quadraticCurveTo(
-      e[0] - ca * 9 * k + nx * 8 * k,
-      e[1] - sa * 9 * k + ny * 8 * k,
-      bx + nx * (11 * k + wv),
-      by + ny * (11 * k + wv),
+      e[0] - ca * 9 * k + nx * (fish.isButterfly ? 12 : 8) * k,
+      e[1] - sa * 9 * k + ny * (fish.isButterfly ? 12 : 8) * k,
+      bx + nx * (tailW + wv),
+      by + ny * (tailW + wv),
     );
     ctx.lineTo(e[0] - ca * 11 * k + nx * wv * 0.5, e[1] - sa * 11 * k + ny * wv * 0.5);
-    ctx.lineTo(bx - nx * (11 * k - wv), by - ny * (11 * k - wv));
+    ctx.lineTo(bx - nx * (tailW - wv), by - ny * (tailW - wv));
     ctx.quadraticCurveTo(
-      e[0] - ca * 9 * k - nx * 8 * k,
-      e[1] - sa * 9 * k - ny * 8 * k,
+      e[0] - ca * 9 * k - nx * (fish.isButterfly ? 12 : 8) * k,
+      e[1] - sa * 9 * k - ny * (fish.isButterfly ? 12 : 8) * k,
       e[0],
       e[1],
     );
     ctx.fillStyle = rgb(f.baseColor, 0.62);
     ctx.fill();
 
+    if (fish.isButterfly) {
+      // Lớp tà vây bướm thứ 2 thướt tha phát quang dịu
+      ctx.beginPath();
+      ctx.moveTo(e[0], e[1]);
+      ctx.quadraticCurveTo(
+        e[0] - ca * 14 * k + nx * 16 * k,
+        e[1] - sa * 14 * k + ny * 16 * k,
+        bx - ca * 6 * k + nx * (tailW * 1.35 + wv * 1.2),
+        by - sa * 6 * k + ny * (tailW * 1.35 + wv * 1.2),
+      );
+      ctx.lineTo(bx - nx * (tailW * 1.35 - wv * 1.2), by - ny * (tailW * 1.35 - wv * 1.2));
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255, 235, 170, 0.38)';
+      ctx.fill();
+    }
+
     // Đôi vây ngực vẫy nhịp nhàng đối xứng
     const qn: [number, number] = [-Math.sin(q[2]), Math.cos(q[2])];
     const qw = (wd[2] ?? 1) * 6.5 * k;
+    const pectLen = fish.isButterfly ? 15 * k : 9 * k;
+    const pectSpan = fish.isButterfly ? 14 * k : 9 * k;
     for (const s of [-1, 1]) {
       const sx = q[0] + qn[0] * qw * s;
       const sy = q[1] + qn[1] * qw * s;
@@ -1755,13 +2058,13 @@ export function drawDynamicKoiFishes(
       ctx.beginPath();
       ctx.moveTo(sx, sy);
       ctx.quadraticCurveTo(
-        sx + qn[0] * s * (9 * k + fw),
-        sy + qn[1] * s * (9 * k + fw),
-        sx - Math.cos(q[2]) * 9 * k + qn[0] * s * 5 * k,
-        sy - Math.sin(q[2]) * 9 * k + qn[1] * s * 5 * k,
+        sx + qn[0] * s * (pectSpan + fw),
+        sy + qn[1] * s * (pectSpan + fw),
+        sx - Math.cos(q[2]) * pectLen + qn[0] * s * 5 * k,
+        sy - Math.sin(q[2]) * pectLen + qn[1] * s * 5 * k,
       );
       ctx.closePath();
-      ctx.fillStyle = rgb(f.baseColor, 0.52);
+      ctx.fillStyle = rgb(f.baseColor, fish.isButterfly ? 0.68 : 0.52);
       ctx.fill();
     }
 
@@ -2175,6 +2478,134 @@ export function drawEnhancedFireflies(
     }
   });
   ctx.restore();
+}
+
+export function drawForageItems(
+  ctx: CanvasRenderingContext2D,
+  items: readonly ForageItem[],
+  t: number,
+  S: number,
+) {
+  if (items.length === 0) return;
+  ctx.save();
+  for (const item of items) {
+    const scale = item.collected ? Math.max(0, 1 - item.collectAnim) * 1.4 : 1;
+    const alpha = item.collected ? Math.max(0, 1 - item.collectAnim) : 0.95;
+    ctx.save();
+    ctx.translate(item.x, item.y);
+    ctx.scale(scale * S, scale * S);
+    ctx.globalAlpha = alpha;
+
+    if (item.type === 'dew') {
+      // Giọt sương phát sáng ngọc bích / lam
+      const pulse = 1 + Math.sin(t * 4 + item.floatPhase) * 0.15;
+      const glowGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, 14 * pulse);
+      glowGrad.addColorStop(0, 'rgba(110, 231, 183, 0.85)');
+      glowGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.45)');
+      glowGrad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 14 * pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Giọt nước chính hình teardrop
+      ctx.beginPath();
+      ctx.moveTo(0, -6);
+      ctx.quadraticCurveTo(5, 0, 4, 4);
+      ctx.quadraticCurveTo(0, 7, -4, 4);
+      ctx.quadraticCurveTo(-5, 0, 0, -6);
+      ctx.fillStyle = '#6EE7B7';
+      ctx.fill();
+      ctx.strokeStyle = '#E0F2FE';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Điểm sáng lóe
+      ctx.beginPath();
+      ctx.arc(-1.5, 0, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+    } else {
+      // Hạt sen vàng phát sáng hoàng kim
+      const pulse = 1 + Math.sin(t * 4.5 + item.floatPhase) * 0.16;
+      const glowGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, 15 * pulse);
+      glowGrad.addColorStop(0, 'rgba(253, 224, 71, 0.85)');
+      glowGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.45)');
+      glowGrad.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 15 * pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hạt sen hình ô-van bầu dục
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 4.5, 6.5, Math.PI * 0.1, 0, Math.PI * 2);
+      ctx.fillStyle = '#FBBF24';
+      ctx.fill();
+      ctx.strokeStyle = '#FFFBEB';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Chữ thập lấp lánh (sparkle cross)
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, -9);
+      ctx.lineTo(0, 9);
+      ctx.moveTo(-9, 0);
+      ctx.lineTo(9, 0);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+export function drawFloatingTextsAndSparkles(
+  ctx: CanvasRenderingContext2D,
+  texts: readonly FloatingTextParticle[],
+  stars: readonly StarParticle[],
+  S: number,
+) {
+  // 1. Star particles (bụi sao kim sa của Kim Long Ngư)
+  if (stars.length > 0) {
+    ctx.save();
+    for (const sp of stars) {
+      ctx.save();
+      ctx.globalAlpha = sp.alpha;
+      ctx.fillStyle = sp.color;
+      ctx.shadowColor = sp.color;
+      ctx.shadowBlur = 4 * S;
+      ctx.beginPath();
+      ctx.moveTo(sp.x, sp.y - sp.size);
+      ctx.lineTo(sp.x + sp.size * 0.6, sp.y);
+      ctx.lineTo(sp.x, sp.y + sp.size);
+      ctx.lineTo(sp.x - sp.size * 0.6, sp.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  // 2. Floating texts (+10 XP, +5 🌾 +2 💧)
+  if (texts.length > 0) {
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `bold ${Math.round(13 * S)}px "Be Vietnam Pro", system-ui, sans-serif`;
+    for (const ft of texts) {
+      ctx.save();
+      ctx.globalAlpha = ft.alpha;
+      ctx.fillStyle = ft.color;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+      ctx.shadowBlur = 5 * S;
+      ctx.fillText(ft.text, ft.x, ft.y);
+      ctx.restore();
+    }
+    ctx.restore();
+  }
 }
 
 export type { LayerConfig };

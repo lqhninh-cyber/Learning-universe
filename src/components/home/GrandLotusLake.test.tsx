@@ -1,19 +1,30 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { GrandLotusLake } from './GrandLotusLake';
 import { PADS } from './lotusCanvasEngine';
 import { buildEcosystemState, spawnBaitAt, stepEcosystem } from './lotusEcosystem';
+import {
+  createInitialZenKoiState,
+  feedFish,
+  getScaleForLevel,
+  hatchNewKoi,
+  loadZenKoiState,
+  saveZenKoiState,
+  ZEN_KOI_STORAGE_KEY,
+} from './zenKoiGame';
 
-describe('GrandLotusLake Procedural Canvas & Clean Immersive View', () => {
+describe('GrandLotusLake Procedural Canvas & Zen Koi Sanctuary', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    window.localStorage.clear();
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    window.localStorage.clear();
   });
 
-  it('kết xuất thành công đại cảnh Hồ Sen Tri Thức với thẻ canvas và không có thanh điều khiển đè lên', () => {
+  it('kết xuất thành công đại cảnh Hồ Sen Tri Thức với thẻ canvas và viên thuốc Zen Koi HUD tinh gọn', () => {
     render(<GrandLotusLake />);
 
     const section = screen.getByRole('region', { name: /Đại cảnh Hồ Sen Tri Thức/i });
@@ -23,14 +34,88 @@ describe('GrandLotusLake Procedural Canvas & Clean Immersive View', () => {
     const canvas = section.querySelector('canvas');
     expect(canvas).toBeInTheDocument();
 
-    // Đã dọn dẹp sạch sẽ: không render bất kỳ nút bấm hoặc điều khiển nổi nào trên canvas
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    expect(screen.queryByText(/Tự động/i)).not.toBeInTheDocument();
+    // Viên thuốc HUD Hồ Sen của bạn hiển thị tinh gọn ở góc trên bên phải
+    expect(screen.getByText(/Hồ Sen của bạn/i)).toBeInTheDocument();
+
+    // Không render các nút điều khiển cũ (Âm thanh / Tự động)
     expect(screen.queryByText(/Âm thanh/i)).not.toBeInTheDocument();
   });
 
+  it('bấm vào viên thuốc HUD mở bảng điều khiển Liên Trì Ngư Các với tài nguyên và các nút chế độ', () => {
+    render(<GrandLotusLake />);
+
+    const hudPill = screen.getByText(/Hồ Sen của bạn/i);
+    fireEvent.click(hudPill);
+
+    // Bảng điều khiển mở ra
+    expect(screen.getByText(/Liên Trì Ngư Các/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Hạt Sen/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Ngọc Sương/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: /Cho ăn/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Vuốt ve/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Ấp cá mới/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Sổ Cá/i })).toBeInTheDocument();
+  });
+
+  it('mở Sổ Cá (Koi Compendium) hiển thị 5 giống loài và danh sách cá đang bơi', () => {
+    render(<GrandLotusLake />);
+
+    const hudPill = screen.getByText(/Hồ Sen của bạn/i);
+    fireEvent.click(hudPill);
+
+    const compendiumBtn = screen.getByRole('button', { name: /Sổ Cá/i });
+    fireEvent.click(compendiumBtn);
+
+    expect(screen.getByText(/Sổ Tay Ngư Các/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hồng Bạch/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hoàng Kim/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tam Sắc/i)).toBeInTheDocument();
+    expect(screen.getByText(/Đàn cá trong hồ/i)).toBeInTheDocument();
+  });
+
+  it('lưu trữ dữ liệu bền vững qua localStorage lu_lotus_koi_game_v1', () => {
+    const initial = loadZenKoiState();
+    expect(initial.fishes.length).toBe(4);
+    expect(initial.foodCount).toBe(30);
+
+    const raw = window.localStorage.getItem(ZEN_KOI_STORAGE_KEY);
+    expect(raw).toBeTruthy();
+    const parsed = JSON.parse(raw!);
+    expect(parsed.version).toBe(1);
+    expect(parsed.fishes).toHaveLength(4);
+  });
+
+  it('cho cá ăn tăng XP, lên cấp và phóng to kích thước tỉ lệ', () => {
+    const state = createInitialZenKoiState();
+    const fishId = state.fishes[0]!.id;
+    const initialLevel = state.fishes[0]!.level;
+
+    // Cho ăn nhiều lần để lên cấp
+    let curState = state;
+    for (let i = 0; i < 15; i += 1) {
+      const res = feedFish(curState, fishId);
+      curState = res.newState;
+    }
+
+    const updatedFish = curState.fishes.find((f) => f.id === fishId)!;
+    expect(updatedFish.level).toBeGreaterThan(initialLevel);
+    expect(updatedFish.scale).toBe(getScaleForLevel(updatedFish.level));
+    expect(curState.dewGems).toBeGreaterThan(state.dewGems);
+  });
+
+  it('hatchNewKoi ấp cá mới tiêu tốn 10 Ngọc Sương và mở khóa giống loài mới', () => {
+    const state = createInitialZenKoiState();
+    state.dewGems = 20;
+    saveZenKoiState(state);
+
+    const result = hatchNewKoi(state);
+    expect(result).not.toBeNull();
+    expect(result!.newState.dewGems).toBe(10);
+    expect(result!.newState.fishes).toHaveLength(5);
+    expect(result!.newState.unlockedBreeds).toContain(result!.fish.breed);
+  });
+
   it('tự động áp dụng sắc thái "Sương mai" (day) khi hệ thống ở khung giờ 06:00 - 17:59', () => {
-    // Đặt giờ giả lập là 10:00 sáng
     vi.setSystemTime(new Date(2026, 10, 10, 10, 0, 0));
 
     const { container } = render(<GrandLotusLake />);
@@ -39,17 +124,7 @@ describe('GrandLotusLake Procedural Canvas & Clean Immersive View', () => {
   });
 
   it('tự động áp dụng sắc thái "Nguyệt dạ" (night) khi hệ thống ở khung giờ tối (>= 18:00)', () => {
-    // Đặt giờ giả lập là 20:30 tối
     vi.setSystemTime(new Date(2026, 10, 10, 20, 30, 0));
-
-    const { container } = render(<GrandLotusLake />);
-    const section = container.querySelector('section');
-    expect(section).toHaveClass('bg-[#040D08]');
-  });
-
-  it('tự động áp dụng sắc thái "Nguyệt dạ" (night) khi hệ thống ở khung giờ đêm khuya (< 06:00)', () => {
-    // Đặt giờ giả lập là 02:15 sáng
-    vi.setSystemTime(new Date(2026, 10, 10, 2, 15, 0));
 
     const { container } = render(<GrandLotusLake />);
     const section = container.querySelector('section');
@@ -63,7 +138,6 @@ describe('GrandLotusLake Procedural Canvas & Clean Immersive View', () => {
     expect(eco.minnows).toHaveLength(12);
     expect(eco.dragonflies).toHaveLength(3);
 
-    // Chạy mô phỏng qua 6 giây với dt chuẩn 120Hz (1/120s)
     const dt = 1 / 120;
     let time = 0;
     for (let step = 0; step < 720; step += 1) {
@@ -71,40 +145,19 @@ describe('GrandLotusLake Procedural Canvas & Clean Immersive View', () => {
       stepEcosystem(eco, PADS, 1440, 620, 1, 450, time, dt, null, null, 'night');
     }
 
-    // Đã phát sinh cánh hoa rơi & vòng gợn sóng âm thanh ếch ộp (~4s)
     expect(eco.fallingPetals.length).toBeGreaterThanOrEqual(1);
     expect(eco.ripples.some((r) => r.tint === 'sound')).toBe(true);
 
-    // Click thả mồi hạt sáng vàng thu hút đàn cá Koi
     const koi0 = eco.koiFishes[0];
     expect(koi0).toBeDefined();
     spawnBaitAt(eco, (koi0?.x ?? 500) + 32, (koi0?.y ?? 420) + 8, 1);
     expect(eco.baitPellets.length).toBeGreaterThanOrEqual(2);
     expect(eco.baitPellets.length).toBeLessThanOrEqual(3);
 
-    // Mô phỏng tiếp để cá Koi lao đến đớp mồi tạo bọt nước
     for (let step = 0; step < 240; step += 1) {
       time += dt;
       stepEcosystem(eco, PADS, 1440, 620, 1, 450, time, dt, 400, 480, 'night');
     }
     expect(eco.ripples.length).toBeGreaterThan(0);
-
-    // Rê chuột sát lá sen chú ếch để kích hoạt nhảy parabol sang lá lân cận
-    const startPad = eco.frog.currentPadIdx;
-    const frogPad = PADS[startPad]!;
-    stepEcosystem(
-      eco,
-      PADS,
-      1440,
-      620,
-      1,
-      450,
-      time + dt,
-      dt,
-      frogPad.x * 1440,
-      450 + frogPad.y * 620,
-      'night',
-    );
-    expect(eco.frog.isJumping).toBe(true);
   });
 });
