@@ -5,10 +5,10 @@ import {
 } from '@/shared/lib/canvasSprites';
 import {
   buildEcosystemState,
+  drawAllFishPondBedShadows,
   drawAnimatedFrog,
   drawAquaticReeds,
   drawBoidsMinnows,
-  drawDynamicKoiFishes,
   drawEnhancedFireflies,
   drawFallingPetalsAndDewdrops,
   drawFloatingTextsAndSparkles,
@@ -18,7 +18,12 @@ import {
   drawMidgroundBotanicalClusters,
   drawPerchingDragonflies,
   drawPondBedAndCaustics,
+  drawSingleWaterBubble,
+  drawSingleZFish,
+  getBoxfishPuffScale,
   makeDewdropSprite,
+  pushRipple,
+  pushShockwave,
   spawnBaitAt,
   stepEcosystem,
   syncEcosystemFishesWithGameState,
@@ -248,13 +253,14 @@ export function pod(ctx: CanvasRenderingContext2D, t: number) {
   const r = rng(7);
   ctx.save();
 
-  // 1. Vầng hào quang ấm nhẹ quanh nhị hoa
-  const hg = ctx.createRadialGradient(0, -14, 4, 0, -14, 48);
-  hg.addColorStop(0, 'rgba(254, 232, 107, 0.25)');
-  hg.addColorStop(0.6, 'rgba(254, 232, 107, 0.08)');
+  // 1. Vầng hào quang vàng dịu phát sáng ấm áp quanh gương sen & nhị hoa
+  const pulseGlow = 0.25 + 0.08 * Math.sin(t * 1.5);
+  const hg = ctx.createRadialGradient(0, -14, 3, 0, -14, 54);
+  hg.addColorStop(0, `rgba(254, 232, 107, ${pulseGlow.toFixed(3)})`);
+  hg.addColorStop(0.55, 'rgba(254, 224, 96, 0.11)');
   hg.addColorStop(1, 'rgba(254, 232, 107, 0)');
   ctx.fillStyle = hg;
-  ctx.fillRect(-50, -42, 100, 60);
+  ctx.fillRect(-56, -46, 112, 68);
 
   // 2. LỚP NHỊ SAU (Back stamens): ~50 sợi mọc dày đặc quanh chân gương sen, uốn cong ôm sát lưng
   const backCount = 50;
@@ -427,15 +433,15 @@ export function flower(ctx: CanvasRenderingContext2D, t: number, layers: readonl
     }
   }
 
-  // Đổ bóng tự nhiên (Self-shadowing): Chân các cánh trước đổ bóng mờ nhẹ vào lòng hoa
+  // Đổ bóng khe sâu (Ambient Occlusion crevices) giữa các tầng cánh hoa 3D
   {
-    const shadowGrad = ctx.createRadialGradient(0, 0, 3, 0, 2, 26);
-    shadowGrad.addColorStop(0, 'rgba(60, 20, 35, 0.32)');
-    shadowGrad.addColorStop(0.65, 'rgba(60, 20, 35, 0.14)');
-    shadowGrad.addColorStop(1, 'rgba(60, 20, 35, 0)');
-    ctx.fillStyle = shadowGrad;
+    const outerCreviceGrad = ctx.createRadialGradient(0, -4, 4, 0, -2, 34);
+    outerCreviceGrad.addColorStop(0, 'rgba(54, 16, 32, 0.42)');
+    outerCreviceGrad.addColorStop(0.58, 'rgba(60, 20, 35, 0.18)');
+    outerCreviceGrad.addColorStop(1, 'rgba(60, 20, 35, 0)');
+    ctx.fillStyle = outerCreviceGrad;
     ctx.beginPath();
-    ctx.ellipse(0, 2, 26, 12, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 1, 32, 15, 0, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -606,6 +612,36 @@ export function initPadsDewdrops(pads: readonly PadConfig[]) {
   });
 }
 
+export function drawPadPondBedShadow(
+  ctx: CanvasRenderingContext2D,
+  p: PadConfig,
+  t: number,
+  W: number,
+  H: number,
+  S: number,
+  wy: number,
+  bounceOffset = 0,
+): void {
+  const yy = p.f ? wy + p.y * H : p.y * H;
+  const dep = 0.55 + 0.9 * Math.min(1, yy / H);
+  const PS = Math.max(S, 0.9);
+  const x = p.x * W + Math.sin(t * 0.12 + p.p) * 6;
+  const y = yy + Math.cos(t * 0.1 + p.p) * 4 + bounceOffset;
+  const r = p.r * PS * dep;
+  const depthFactor = Math.max(0.25, Math.min(1.0, (yy - wy * 0.65) / Math.max(120, H * 0.4)));
+  const shiftX = (4 + 14 * depthFactor) * S;
+  const shiftY = (14 + 26 * depthFactor) * S;
+
+  ctx.save();
+  ctx.translate(x + shiftX, y + shiftY);
+  ctx.scale(1, 0.42);
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 1.02, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(2, 16, 10, ${(0.22 + 0.1 * depthFactor).toFixed(3)})`;
+  ctx.fill();
+  ctx.restore();
+}
+
 export function padDraw(
   ctx: CanvasRenderingContext2D,
   p: PadConfig,
@@ -628,21 +664,42 @@ export function padDraw(
   ctx.save();
   ctx.translate(x, y);
   ctx.scale(1, 0.42);
+
+  // Độ dày mép lá 3D đùn nổi dưới mặt nước (Extruded 3D Rim Thickness)
   ctx.beginPath();
-  ctx.arc(0, r * 0.14, r * 0.99, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0,25,15,.38)';
+  ctx.arc(0, r * 0.14, r * 1.0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0, 25, 15, 0.42)';
   ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(0, r * 0.08, r * 0.99, 0, Math.PI * 2);
+  ctx.fillStyle = '#0D3B22';
+  ctx.fill();
+
   ctx.beginPath();
   ctx.arc(0, 0, r * 1.05, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(220,255,235,.16)';
-  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = 'rgba(220,255,235,.18)';
+  ctx.lineWidth = 1.25;
   ctx.stroke();
 
+  ctx.save();
   ctx.rotate(Math.sin(p.rot * 2.3) * 0.6 + Math.sin(t * 0.08 + p.p) * 0.04);
   const padCanvas = padSp[p.s];
   if (padCanvas) {
     ctx.drawImage(padCanvas, -r, -r, r * 2, r * 2);
   }
+  ctx.restore();
+
+  // Ánh sáng lòng chảo 3D dịu nhẹ trũng sâu ở tâm lá sen (Concave bowl lighting)
+  const concaveGrad = ctx.createRadialGradient(-r * 0.18, -r * 0.18, r * 0.08, 0, 0, r * 0.85);
+  concaveGrad.addColorStop(0, 'rgba(6, 36, 18, 0.22)');
+  concaveGrad.addColorStop(0.55, 'rgba(255, 255, 225, 0.05)');
+  concaveGrad.addColorStop(1, 'rgba(215, 255, 225, 0.14)');
+  ctx.fillStyle = concaveGrad;
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.92, 0, Math.PI * 2);
+  ctx.fill();
+
   ctx.restore();
 
   // Giọt sương đêm thủy ngân trong suốt lăn nhẹ quanh tâm trên các lá sen lớn
@@ -858,8 +915,20 @@ export function bud(
   const by = cy - 250 * S + tremorY;
   const sw = Math.sin(t * 0.3) * 5 * S + cursorLeanX;
 
-  // Thân nụ sen uốn lượn S-curve tự nhiên, thuôn nhỏ dần từ gốc lên cổ đài
+  // Cuống nụ sen chìm dần xuống tầng nước sâu (giúp cá bơi luồn ra sau/trước thân sen 3D)
   ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(bx - 22 * S, cy);
+  ctx.quadraticCurveTo(bx - 16 * S, cy + 36 * S, bx - 10 * S, cy + 72 * S);
+  const subGrad = ctx.createLinearGradient(0, cy, 0, cy + 72 * S);
+  subGrad.addColorStop(0, 'rgba(34, 86, 46, 0.72)');
+  subGrad.addColorStop(1, 'rgba(10, 42, 26, 0)');
+  ctx.strokeStyle = subGrad;
+  ctx.lineWidth = 4.4 * S;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Thân nụ sen uốn lượn S-curve tự nhiên, thuôn nhỏ dần từ gốc lên cổ đài
   ctx.beginPath();
   ctx.moveTo(bx - 22 * S, cy);
   ctx.bezierCurveTo(
@@ -1790,6 +1859,21 @@ export function stem(
   const P2: readonly [number, number] = [cx + (2.5 * S + sw * 0.4), cy + (wy - cy) * 0.72];
   const P3: readonly [number, number] = [cx, wy + 8 * S];
 
+  // Thân sen chìm kéo dài xuống vùng nước sâu (tạo tương tác che khuất Z-Buffer chân thực với đàn cá)
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(cx, wy + 4 * S);
+  ctx.quadraticCurveTo(cx + 6 * S - sw * 0.3, wy + 46 * S, cx + 10 * S, wy + 96 * S);
+  const underwaterStemGrad = ctx.createLinearGradient(0, wy, 0, wy + 96 * S);
+  underwaterStemGrad.addColorStop(0, 'rgba(34, 88, 44, 0.85)');
+  underwaterStemGrad.addColorStop(0.55, 'rgba(20, 62, 34, 0.52)');
+  underwaterStemGrad.addColorStop(1, 'rgba(8, 34, 22, 0)');
+  ctx.strokeStyle = underwaterStemGrad;
+  ctx.lineWidth = 8.4 * S;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.restore();
+
   const N = 24;
   const leftPts: [number, number][] = [];
   const rightPts: [number, number][] = [];
@@ -1929,6 +2013,18 @@ export function standLeaf(
 
   ctx.save();
   ctx.lineCap = 'round';
+
+  // Gốc cuống lá chìm xuống đáy sâu
+  ctx.beginPath();
+  ctx.moveTo(x - 8 * S, wy + 3 * S);
+  ctx.quadraticCurveTo(x - 14 * S, wy + 38 * S, x - 18 * S, wy + 82 * S);
+  const subLeafGrad = ctx.createLinearGradient(0, wy, 0, wy + 82 * S);
+  subLeafGrad.addColorStop(0, 'rgba(36, 92, 48, 0.75)');
+  subLeafGrad.addColorStop(1, 'rgba(10, 42, 24, 0)');
+  ctx.strokeStyle = subLeafGrad;
+  ctx.lineWidth = 4.4 * S;
+  ctx.stroke();
+
   ctx.beginPath();
   ctx.moveTo(x - 8 * S, wy + 3 * S);
   ctx.quadraticCurveTo(x - 14 * S + sw * 0.5, (wy + ly) / 2, lx, ly + r * 0.45);
@@ -2036,16 +2132,21 @@ export function drawCornerFramingPads(
   ctx.translate(lx, ly);
   ctx.scale(1.15, 0.44);
 
-  // Bóng đổ đáy lá góc trái
+  // Độ dày 3D & bóng đổ đáy lá góc trái
   ctx.beginPath();
   ctx.arc(0, lr * 0.16, lr * 0.98, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0, 20, 12, 0.5)';
+  ctx.fillStyle = 'rgba(0, 20, 12, 0.52)';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(0, lr * 0.08, lr * 0.99, 0, Math.PI * 2);
+  ctx.fillStyle = '#0D3B22';
   ctx.fill();
 
   // Viền sáng mép lá
   ctx.beginPath();
   ctx.arc(0, 0, lr * 1.04, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(200, 255, 225, 0.22)';
+  ctx.strokeStyle = 'rgba(200, 255, 225, 0.24)';
   ctx.lineWidth = 1.4;
   ctx.stroke();
 
@@ -2089,16 +2190,21 @@ export function drawCornerFramingPads(
   ctx.translate(rx, ry);
   ctx.scale(1.18, 0.45);
 
-  // Bóng đổ đáy lá góc phải
+  // Độ dày 3D & bóng đổ đáy lá góc phải
   ctx.beginPath();
   ctx.arc(0, rr * 0.16, rr * 0.98, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(0, 20, 12, 0.52)';
+  ctx.fillStyle = 'rgba(0, 20, 12, 0.54)';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(0, rr * 0.08, rr * 0.99, 0, Math.PI * 2);
+  ctx.fillStyle = '#0D3B22';
   ctx.fill();
 
   // Viền sáng mép lá
   ctx.beginPath();
   ctx.arc(0, 0, rr * 1.04, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(200, 255, 225, 0.24)';
+  ctx.strokeStyle = 'rgba(200, 255, 225, 0.26)';
   ctx.lineWidth = 1.4;
   ctx.stroke();
 
@@ -2134,6 +2240,16 @@ export function drawCornerFramingPads(
   });
 }
 
+export interface ZBufferedRenderEntity {
+  readonly depthZ: number;
+  readonly kind: string;
+  readonly draw: () => void;
+}
+
+export function sortZBufferedEntities<T extends { depthZ: number }>(entities: T[]): T[] {
+  return entities.sort((a, b) => a.depthZ - b.depthZ);
+}
+
 /**
  * ENGINE FACTORY: Khởi tạo toàn bộ bộ nhớ cache offscreen canvas và các bảng tham số
  */
@@ -2147,8 +2263,10 @@ export interface LotusCanvasEngine {
     dtSeconds?: number,
   ) => void;
   addRipple: (x: number, y: number, t?: number) => void;
+  triggerShockwave: (x?: number, y?: number) => void;
   setPointer: (x: number | null, y: number | null) => void;
   syncFishes: (savedFishes: readonly SavedKoiFish[]) => void;
+  getFishesSnapshot: () => readonly { id: string; z: number; puffTimer: number }[];
   feedBait: (x: number, y: number) => boolean;
   checkPetFish: (x: number, y: number) => string | null;
   checkCollectForage: (x: number, y: number) => boolean;
@@ -2218,10 +2336,12 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
   // 46 đốm sáng lấp lánh ngẫu nhiên
   const gl = createGlistens();
 
-  // Tọa độ con trỏ chuột & tỷ lệ khung hình hiện tại
+  // Tọa độ con trỏ chuột & kích thước khung hình hiện tại
   let pointerX: number | null = null;
   let pointerY: number | null = null;
   let lastScale = 1;
+  let lastW = 1200;
+  let lastH = 720;
 
   // Hệ sinh thái tự chủ 120fps (Koi 8 con đa sắc, boids cá con, ếch nhảy/ộp, 3 chuồn chuồn, 40 đom đóm, sương, mồi click)
   const ecoState = buildEcosystemState(PADS.length);
@@ -2371,6 +2491,8 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
     render: (ctx, W, H, t, theme: 'day' | 'night' = 'night', dtSeconds = 1 / 60) => {
       const S = Math.min(W, H * 1.1) / 620;
       lastScale = S;
+      lastW = W;
+      lastH = H;
       const cx = W / 2;
       const cy = H * 0.5;
       const wy = cy + 140 * S;
@@ -2380,83 +2502,20 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       stepEcosystem(ecoState, PADS, W, H, S, wy, t, dtSeconds, pointerX, pointerY, theme);
 
       // =================================================================
-      // THỨ TỰ VẼ HỆ SINH THÁI ĐA TẦNG 120FPS
+      // THỨ TỰ VẼ HỆ SINH THÁI 3D Z-BUFFER 120FPS
       // =================================================================
 
-      // 1. Nước hồ, đáy hồ sâu & caustics, đàn cá đa loài (spine 3D + bóng đáy hồ) & đàn cá con Boids
+      // 1. Mặt nước nền, Đáy hồ 3D phối cảnh + Ánh sáng khối (Light Shafts) + Voronoi Caustics
       water(ctx, t, cx, cy, W, H, S, gl, theme, backdrop.waterCached);
       drawPondBedAndCaustics(ctx, W, H, S, t, wy, theme);
-      drawDynamicKoiFishes(ctx, ecoState.koiFishes, t, H, S);
-      drawBoidsMinnows(ctx, ecoState.minnows, t, W, H, S);
 
-      // 2. Lá sen hậu cảnh (có khía V, gân tỏa tròn, giọt sương lăn), cỏ ven bờ & gợn sóng
-      drawAquaticReeds(ctx, ecoState.reeds, W, wy, t, S, pointerX, pointerY, theme);
+      // 2. Bóng đổ 3D xuống đáy hồ (Lá sen & Toàn đàn cá theo tỷ lệ độ sâu)
       PADS.forEach((p, idx) => {
-        if (!p.f) {
-          padDraw(ctx, p, t, W, H, S, wy, padSp, ecoState.padBounces[idx] ?? 0, dewdropSprite);
-        }
+        drawPadPondBedShadow(ctx, p, t, W, H, S, wy, ecoState.padBounces[idx] ?? 0);
       });
-      fishRipples(ctx, t, W, H, S);
-      ripples(ctx, cx, wy, t, S);
-      drawInteractiveRipplesAndBaits(ctx, ecoState, t, S, glowSprites);
+      drawAllFishPondBedShadows(ctx, ecoState.koiFishes, t, H, S);
 
-      // 3. Bóng hoa sen phản chiếu gợn sóng dưới nước (scale(S, -S * 0.28) & sóng ngang GPU-friendly)
-      if (offReflCtx && offReflCanvas) {
-        offReflCtx.clearRect(0, 0, 380, 280);
-        offReflCtx.save();
-        offReflCtx.translate(190, 150);
-        flower(offReflCtx, t, LAY);
-        offReflCtx.restore();
-
-        ctx.save();
-        ctx.translate(cx, wy + 8 * S);
-        ctx.scale(S, -S * 0.28);
-        ctx.globalAlpha = theme === 'day' ? 0.23 : 0.19;
-
-        const stripH = 3;
-        const offW = 380;
-        const offH = 280;
-        for (let sy = 0; sy < offH; sy += stripH) {
-          const waveX = Math.sin((sy - 150) * 0.05 + t * 0.8) * 3.5;
-          ctx.drawImage(
-            offReflCanvas,
-            0,
-            sy,
-            offW,
-            stripH,
-            -offW / 2 + waveX,
-            sy - 150,
-            offW,
-            stripH,
-          );
-        }
-        ctx.restore();
-      } else {
-        ctx.save();
-        ctx.translate(cx, wy + 8 * S);
-        ctx.scale(S, -S * 0.28);
-        ctx.globalAlpha = theme === 'day' ? 0.23 : 0.19;
-        flower(ctx, t, LAY);
-        ctx.restore();
-      }
-
-      // Ánh trăng / Quầng nguyệt dạ in bóng nước lung linh trong chế độ Nguyệt Dạ
-      if (theme === 'night') {
-        const moonWave = Math.sin(t * 1.1) * 3.5;
-        ctx.save();
-        ctx.translate(cx + 80 * S + moonWave * S, wy + 30 * S);
-        ctx.scale(S, -S * 0.28);
-        ctx.fillStyle = backdrop.moonGrad;
-        ctx.beginPath();
-        ctx.arc(0, 0, 52, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      // 4. Hai lớp sương đêm trôi ngang mặt hồ phản chiếu ánh hồng dịu từ hoa sen
-      drawLowLyingMist(ctx, t, W, H, wy, S, glowSprites, theme);
-
-      // 5. Quần thể 2 cụm sen phụ trái/phải + lá sen đứng bên phải + cuống sen & nụ sen chính
+      // 3. Hàng đợi sắp xếp Z-Buffer thực sự (0.0 -> 1.0): Cá có thể lách ra sau/trước thân sen
       const calcPointerLean = (anchorX: number) =>
         pointerX !== null &&
         pointerY !== null &&
@@ -2465,68 +2524,223 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
           ? (anchorX >= pointerX ? 1 : -1) * (1 - Math.abs(anchorX - pointerX) / (110 * S)) * 10 * S
           : 0;
 
-      drawMidgroundBotanicalClusters(
-        ctx,
-        t,
-        W,
-        H,
-        wy,
-        S,
-        BUD,
-        pointerX,
-        pointerY,
-        ecoState.perchTremors,
-        dewdropSprite,
-      );
-      const rightLeafX = Math.min(W - 70 * S, cx + 255 * S);
-      standLeaf(
-        ctx,
-        rightLeafX,
-        wy,
-        cy + 10 * S,
-        56 * S,
-        t,
-        S,
-        calcPointerLean(rightLeafX),
-        dewdropSprite,
-      );
-      stem(ctx, cx, cy, wy, t, S);
-      bud(
-        ctx,
-        cx,
-        wy,
-        t,
-        S,
-        BUD,
-        ecoState.perchTremors[0] ?? 0,
-        calcPointerLean(Math.max(70 * S, cx - 215 * S)),
-      );
+      const zEntities: ZBufferedRenderEntity[] = [];
 
-      // 6. Đóa sen chính nở vòm chén 3D (Cánh sau -> Đài sen & Nhụy vàng -> Cánh tiền cảnh)
-      ctx.fillStyle = backdrop.bloomGlowGrad;
-      ctx.fillRect(0, 0, W, H);
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(S, S);
-      flower(ctx, t, LAY);
-      ctx.restore();
-
-      // 7. Phiến lá sen tiền cảnh góc trái (và các phiến lá tiền cảnh)
+      // Lá sen hậu cảnh (từ xa tới trung cảnh)
       PADS.forEach((p, idx) => {
-        if (p.f) {
-          padDraw(ctx, p, t, W, H, S, wy, padSp, ecoState.padBounces[idx] ?? 0, dewdropSprite);
+        if (!p.f) {
+          zEntities.push({
+            depthZ: 0.24 + idx * 0.028,
+            kind: `pad-back-${idx}`,
+            draw: () =>
+              padDraw(ctx, p, t, W, H, S, wy, padSp, ecoState.padBounces[idx] ?? 0, dewdropSprite),
+          });
         }
       });
-      drawCornerFramingPads(ctx, W, H, S, t, padSp);
 
-      // 7b. Giọt sương phát sáng & Hạt sen vàng tự nhiên trên lá sen (Foraging items)
+      // Cỏ ven bờ
+      zEntities.push({
+        depthZ: 0.3,
+        kind: 'reeds',
+        draw: () => drawAquaticReeds(ctx, ecoState.reeds, W, wy, t, S, pointerX, pointerY, theme),
+      });
+
+      // Quần thể cụm sen trung cảnh trái/phải
+      zEntities.push({
+        depthZ: 0.44,
+        kind: 'midground-clusters',
+        draw: () =>
+          drawMidgroundBotanicalClusters(
+            ctx,
+            t,
+            W,
+            H,
+            wy,
+            S,
+            BUD,
+            pointerX,
+            pointerY,
+            ecoState.perchTremors,
+            dewdropSprite,
+          ),
+      });
+
+      // Đàn cá con Boids
+      zEntities.push({
+        depthZ: 0.48,
+        kind: 'minnows',
+        draw: () => drawBoidsMinnows(ctx, ecoState.minnows, t, W, H, S),
+      });
+
+      // Thân nụ sen trái (depthZ = 0.50)
+      zEntities.push({
+        depthZ: 0.5,
+        kind: 'lotus-bud-stem',
+        draw: () =>
+          bud(
+            ctx,
+            cx,
+            wy,
+            t,
+            S,
+            BUD,
+            ecoState.perchTremors[0] ?? 0,
+            calcPointerLean(Math.max(70 * S, cx - 215 * S)),
+          ),
+      });
+
+      // Thân sen trung tâm (depthZ = 0.58)
+      zEntities.push({
+        depthZ: 0.58,
+        kind: 'lotus-main-stem',
+        draw: () => stem(ctx, cx, cy, wy, t, S),
+      });
+
+      // Thân lá sen đứng bên phải (depthZ = 0.66)
+      zEntities.push({
+        depthZ: 0.66,
+        kind: 'stand-leaf-stem',
+        draw: () => {
+          const rightLeafX = Math.min(W - 70 * S, cx + 255 * S);
+          standLeaf(
+            ctx,
+            rightLeafX,
+            wy,
+            cy + 10 * S,
+            56 * S,
+            t,
+            S,
+            calcPointerLean(rightLeafX),
+            dewdropSprite,
+          );
+        },
+      });
+
+      // Toàn bộ cá trong hồ theo độ sâu z thực sự
+      ecoState.koiFishes.forEach((fish) => {
+        zEntities.push({
+          depthZ: fish.z ?? 0.5,
+          kind: `fish-${fish.savedId ?? fish.fi}`,
+          draw: () => drawSingleZFish(ctx, fish, t, H, S),
+        });
+      });
+
+      // Toàn bộ bọt khí hình cầu 3D theo depthZ
+      ecoState.bubbles.forEach((bubble, bIdx) => {
+        zEntities.push({
+          depthZ: bubble.z ?? 0.55,
+          kind: `bubble-${bIdx}`,
+          draw: () => drawSingleWaterBubble(ctx, bubble),
+        });
+      });
+
+      // Hiệu ứng phản chiếu, gợn sóng, shockwave & sương mặt nước (depthZ = 0.85)
+      zEntities.push({
+        depthZ: 0.85,
+        kind: 'water-surface-fx',
+        draw: () => {
+          fishRipples(ctx, t, W, H, S);
+          ripples(ctx, cx, wy, t, S);
+          drawInteractiveRipplesAndBaits(ctx, ecoState, t, S, glowSprites, false);
+
+          if (offReflCtx && offReflCanvas) {
+            offReflCtx.clearRect(0, 0, 380, 280);
+            offReflCtx.save();
+            offReflCtx.translate(190, 150);
+            flower(offReflCtx, t, LAY);
+            offReflCtx.restore();
+
+            ctx.save();
+            ctx.translate(cx, wy + 8 * S);
+            ctx.scale(S, -S * 0.28);
+            ctx.globalAlpha = theme === 'day' ? 0.23 : 0.19;
+
+            const stripH = 3;
+            const offW = 380;
+            const offH = 280;
+            for (let sy = 0; sy < offH; sy += stripH) {
+              const waveX = Math.sin((sy - 150) * 0.05 + t * 0.8) * 3.5;
+              ctx.drawImage(
+                offReflCanvas,
+                0,
+                sy,
+                offW,
+                stripH,
+                -offW / 2 + waveX,
+                sy - 150,
+                offW,
+                stripH,
+              );
+            }
+            ctx.restore();
+          } else {
+            ctx.save();
+            ctx.translate(cx, wy + 8 * S);
+            ctx.scale(S, -S * 0.28);
+            ctx.globalAlpha = theme === 'day' ? 0.23 : 0.19;
+            flower(ctx, t, LAY);
+            ctx.restore();
+          }
+
+          if (theme === 'night') {
+            const moonWave = Math.sin(t * 1.1) * 3.5;
+            ctx.save();
+            ctx.translate(cx + 80 * S + moonWave * S, wy + 30 * S);
+            ctx.scale(S, -S * 0.28);
+            ctx.fillStyle = backdrop.moonGrad;
+            ctx.beginPath();
+            ctx.arc(0, 0, 52, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          drawLowLyingMist(ctx, t, W, H, wy, S, glowSprites, theme);
+        },
+      });
+
+      // Phiến lá sen tiền cảnh nổi trên mặt nước (depthZ: 0.86 .. 0.94)
+      let fgCounter = 0;
+      PADS.forEach((p, idx) => {
+        if (p.f) {
+          const padDepth = 0.86 + fgCounter * 0.024;
+          fgCounter += 1;
+          zEntities.push({
+            depthZ: padDepth,
+            kind: `pad-front-${idx}`,
+            draw: () =>
+              padDraw(ctx, p, t, W, H, S, wy, padSp, ecoState.padBounces[idx] ?? 0, dewdropSprite),
+          });
+        }
+      });
+
+      // Đóa sen chính nở vòm chén 3D (AO crevices + Gương sen ấm áp)
+      zEntities.push({
+        depthZ: 0.96,
+        kind: 'lotus-main-flower',
+        draw: () => {
+          ctx.fillStyle = backdrop.bloomGlowGrad;
+          ctx.fillRect(0, 0, W, H);
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.scale(S, S);
+          flower(ctx, t, LAY);
+          ctx.restore();
+        },
+      });
+
+      // Lá sen framing tiền cảnh 2 góc sát camera nhất
+      zEntities.push({
+        depthZ: 0.99,
+        kind: 'corner-framing-pads',
+        draw: () => drawCornerFramingPads(ctx, W, H, S, t, padSp),
+      });
+
+      // Sắp xếp toàn bộ thực thể hồ theo chiều sâu trục Z thực sự & kết xuất
+      sortZBufferedEntities(zEntities).forEach((entity) => entity.draw());
+
+      // 4. Các thực thể trên mặt lá & không trung phía trên mặt hồ
       drawForageItems(ctx, ecoState.forageItems, t, S);
-
-      // 8. CHÚ ẾCH XANH HOẠT CẢNH (ộp phồng túi thanh âm 4s & bật nhảy parabol sang lá bên)
       drawAnimatedFrog(ctx, ecoState, PADS, t, W, H, S, wy, pointerX, pointerY);
-
-      // 9. Cánh hoa sen hồng rơi & giọt sương rơi có gia tốc trọng trường
       drawFallingPetalsAndDewdrops(
         ctx,
         ecoState,
@@ -2537,11 +2751,7 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         LAY[1]?.ps[0] ?? BUD[2],
         dewdropSprite,
       );
-
-      // 10. Đàn 3 Chuồn Chuồn Kim & Chuồn Chuồn Ngô (bay lượn & đậu nghỉ 3-5s trên nụ/gương sen)
       drawPerchingDragonflies(ctx, ecoState.dragonflies, t, S);
-
-      // 11. ĐÀN 40 ĐOM ĐÓM PHÁT SÁNG ĐÊM (vệt sáng + phản xạ nước) & 26 hạt phấn hoa
       drawEnhancedFireflies(ctx, ecoState.fireflies, t, S, wy, glowSprites, theme);
 
       const pollenSprite = theme === 'day' ? glowSprites.gold : glowSprites.firefly;
@@ -2557,10 +2767,9 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
         ctx.fill();
       }
 
-      // 11b. Hiển thị chữ nổi động (+10 XP, +5 🌾, ...) & bụi sao kim sa của Kim Long Ngư
       drawFloatingTextsAndSparkles(ctx, ecoState.floatingTexts, ecoState.starParticles, S);
 
-      // 12. Lớp sương mù che viền đỉnh và vignette chuyển tiếp chân trang (đã cache gradient)
+      // 5. Sương mù viền đỉnh & vignette chuyển tiếp chân trang
       ctx.fillStyle = backdrop.topMistGrad;
       ctx.fillRect(0, 0, W, 110 * S);
 
@@ -2575,6 +2784,12 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       spawnBaitAt(ecoState, x, y, lastScale);
     },
 
+    triggerShockwave: (x?: number, y?: number) => {
+      const originX = x ?? Math.max(80, lastW - 88);
+      const originY = y ?? Math.max(80, lastH - 42);
+      pushShockwave(ecoState, originX, originY);
+    },
+
     setPointer: (x: number | null, y: number | null) => {
       pointerX = x;
       pointerY = y;
@@ -2584,23 +2799,38 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       syncEcosystemFishesWithGameState(ecoState, savedFishes);
     },
 
+    getFishesSnapshot: () =>
+      ecoState.koiFishes.map((f) => ({
+        id: f.savedId || `koi-${f.fi}`,
+        z: f.z ?? 0.5,
+        puffTimer: f.puffTimer ?? 0,
+      })),
+
     feedBait: (x: number, y: number): boolean => {
       return spawnBaitAt(ecoState, x, y, lastScale);
     },
 
     checkPetFish: (x: number, y: number): string | null => {
-      for (const fish of ecoState.koiFishes) {
-        const radius = 34 * lastScale * (fish.customScale ?? 1);
+      const frontToBack = [...ecoState.koiFishes].sort((a, b) => (b.z ?? 0.5) - (a.z ?? 0.5));
+      for (const fish of frontToBack) {
+        const radius = 36 * lastScale * (fish.customScale ?? 1) * getBoxfishPuffScale(fish);
         const dist = Math.hypot(x - fish.x, y - fish.y);
         if (dist <= radius) {
-          fish.petSpinTimer = 1.35;
-          fish.boostTimer = 0;
-          for (let b = 0; b < 4; b += 1) {
+          if (fish.species === 'boxfish') {
+            fish.puffTimer = 2.0;
+            fish.petSpinTimer = 0.4;
+            pushRipple(ecoState, fish.x, fish.y, 'jade', 1.35, 3);
+          } else {
+            fish.petSpinTimer = 1.35;
+            fish.boostTimer = 0;
+          }
+          for (let b = 0; b < 5; b += 1) {
             ecoState.bubbles.push({
-              x: fish.x + (b - 1.5) * 5 * lastScale,
+              x: fish.x + (b - 2) * 5 * lastScale,
               y: fish.y,
+              z: fish.z,
               vy: 24 * lastScale,
-              radius: (1.5 + (b % 2) * 0.8) * lastScale,
+              radius: (1.6 + (b % 2) * 0.8) * lastScale,
               alpha: 0.9,
               wobblePhase: b,
             });
@@ -2625,7 +2855,8 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
             id: `ft-${Date.now()}-${Math.random()}`,
             x: item.x,
             y: item.y - 12 * lastScale,
-            text: item.type === 'dew' ? `+${foodBonus} 🌾 +${gemBonus} 💧` : `+${foodBonus} 🌾`,
+            text:
+              item.type === 'dew' ? `+${foodBonus} Sương +${gemBonus} Ngọc` : `+${foodBonus} Sen`,
             color: item.type === 'dew' ? '#6EE7B7' : '#FCD34D',
             vy: -32 * lastScale,
             alpha: 1.0,

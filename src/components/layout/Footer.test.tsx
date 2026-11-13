@@ -13,7 +13,13 @@ describe('Footer Component', () => {
 
     const brand = screen.getByText('Learning Universe');
     expect(brand).toBeInTheDocument();
-    expect(brand).toHaveClass('font-serif', 'text-base', 'font-bold', 'text-[#F5F2EB]');
+    expect(brand).toHaveClass(
+      'font-serif',
+      'text-[20px]',
+      'lg:text-[22px]',
+      'font-bold',
+      'text-[#F5F2EB]',
+    );
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
 
@@ -30,15 +36,16 @@ describe('Footer Component', () => {
     expect(quoteText).toHaveClass(
       'font-serif',
       'italic',
-      'text-xs',
-      'md:text-sm',
+      'text-[15.5px]',
+      'lg:text-[16.5px]',
+      'leading-[1.8]',
+      'max-w-[740px]',
       'text-[#CBD5CE]',
-      'leading-relaxed',
     );
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-xs', 'text-[#C5A262]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#C5A262]', 'not-italic');
   });
 
   it('renders signature logo symbol for both mobile and desktop', () => {
@@ -100,8 +107,14 @@ describe('Footer Component', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Learning Universe. Bản quyền mở.')).toBeInTheDocument();
+    const copyright = screen.getByText('Learning Universe. Bản quyền mở.');
+    expect(copyright).toBeInTheDocument();
+    expect(copyright.parentElement).toHaveClass('text-[15.5px]', 'font-medium');
     expect(screen.getByText('~Không gian tri thức mở~')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Trang chủ' })).toHaveClass(
+      'text-[15.5px]',
+      'font-medium',
+    );
     expect(
       screen.queryByRole('button', { name: /Trải nghiệm lại nghi thức tĩnh tâm/i }),
     ).not.toBeInTheDocument();

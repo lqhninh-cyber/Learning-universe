@@ -10,7 +10,7 @@ export interface FooterProps {
 
 export function Footer({ isDarkLesson }: FooterProps = {}) {
   const footerLinkClass = cn(
-    'min-h-[44px] flex items-center px-3 text-xs md:text-sm font-medium whitespace-nowrap rounded-md',
+    'min-h-[44px] flex items-center px-3 text-[15.5px] font-medium whitespace-nowrap rounded-md',
     'transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]',
     'hover:-translate-y-0.5 active:scale-[0.98]',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E5B25D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081a13]',
@@ -44,12 +44,12 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             </div>
           </div>
 
-          {/* Left Column: Branding & President Ho Chi Minh Quotation (Dàn rộng max-w-xl) */}
-          <div className="w-full max-w-xl md:w-[55%]">
-            <div className="mb-1.5 flex items-center gap-2">
+          {/* Left Column: Branding & President Ho Chi Minh Quotation */}
+          <div className="w-full max-w-[740px] md:w-[58%]">
+            <div className="mb-2 flex items-center gap-2">
               <span
                 className={cn(
-                  'font-serif text-base font-bold tracking-wide transition-colors md:text-lg',
+                  'font-serif text-[20px] font-bold tracking-wide transition-colors lg:text-[22px]',
                   isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#F5F2EB]',
                 )}
               >
@@ -58,7 +58,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             </div>
             <blockquote
               className={cn(
-                'max-w-xl font-serif text-xs leading-relaxed italic transition-colors md:text-sm',
+                'max-w-[740px] font-serif text-[15.5px] leading-[1.8] italic transition-colors lg:text-[16.5px]',
                 isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#CBD5CE]',
               )}
             >
@@ -67,10 +67,10 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               xảo. Mình không chịu học thì lạc hậu, mà lạc hậu là bị đào thải, tự mình đào thải
               mình...”
             </blockquote>
-            <div className="mt-1 flex w-full justify-end">
+            <div className="mt-1.5 flex w-full justify-end">
               <cite
                 className={cn(
-                  'mt-1.5 text-right font-mono text-xs font-medium not-italic transition-colors',
+                  'mt-1.5 text-right font-mono text-[14.5px] font-medium not-italic transition-colors',
                   isDarkLesson ? 'text-[#C89738]' : 'text-[#C5A262]',
                 )}
               >
@@ -112,7 +112,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         {/* Bottom Metadata Bar */}
         <div
           className={cn(
-            'mt-4 flex flex-col items-center justify-between gap-2 border-t pt-3 font-mono text-xs transition-colors sm:flex-row',
+            'mt-5 flex flex-col items-center justify-between gap-2 border-t pt-4 font-mono text-[15.5px] font-medium transition-colors sm:flex-row',
             isDarkLesson ? 'border-[#2A323A] text-[#94A3B8]' : 'border-[#2A483B]/70 text-[#A1B5AB]',
           )}
         >

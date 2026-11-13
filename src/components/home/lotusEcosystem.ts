@@ -91,10 +91,12 @@ export interface StarParticle {
 export interface WaterBubble {
   x: number;
   y: number;
+  z: number;
   vy: number;
   radius: number;
   alpha: number;
   wobblePhase: number;
+  fromRoot?: boolean;
 }
 
 export interface InteractiveWaterRipple {
@@ -103,7 +105,7 @@ export interface InteractiveWaterRipple {
   readonly birthTime: number;
   readonly maxRadiusScale: number;
   readonly ringCount: number;
-  readonly tint: 'emerald' | 'sound' | 'gold' | 'jade';
+  readonly tint: 'emerald' | 'sound' | 'gold' | 'jade' | 'shockwave';
 }
 
 export interface FrogState {
@@ -167,6 +169,7 @@ export interface DynamicKoiFish {
   glowColor?: string;
   isButterfly?: boolean;
   petSpinTimer: number;
+  puffTimer: number;
   u: number;
   x: number;
   y: number;
@@ -505,6 +508,7 @@ export function buildEcosystemState(padCount: number): EcosystemState {
       fi,
       species,
       petSpinTimer: 0,
+      puffTimer: 0,
       u: config.ph,
       x: 0,
       y: 0,
@@ -630,7 +634,7 @@ export function pushRipple(
   state: EcosystemState,
   x: number,
   y: number,
-  tint: 'emerald' | 'sound' | 'gold' = 'emerald',
+  tint: 'emerald' | 'sound' | 'gold' | 'jade' | 'shockwave' = 'emerald',
   maxRadiusScale = 1,
   ringCount = 3,
 ) {
@@ -642,9 +646,13 @@ export function pushRipple(
     ringCount,
     tint,
   });
-  if (state.ripples.length > 36) {
+  if (state.ripples.length > 42) {
     state.ripples.shift();
   }
+}
+
+export function pushShockwave(state: EcosystemState, x: number, y: number) {
+  pushRipple(state, x, y, 'shockwave', 1.4, 3);
 }
 
 export function spawnBaitAt(state: EcosystemState, x: number, y: number, S: number): boolean {
@@ -724,6 +732,7 @@ export function syncEcosystemFishesWithGameState(
       glowColor: speciesMeta.glowColor,
       isButterfly: speciesMeta.isButterfly,
       petSpinTimer: 0,
+      puffTimer: 0,
       u: baseConfig.ph,
       x: 0,
       y: 0,
@@ -982,13 +991,37 @@ export function stepEcosystem(
     }
   }
 
+  // Sinh bọt khí 3D từ rễ sen đáy hồ trôi ngược lên mặt nước
+  if (state.bubbles.length < 16 && Math.random() < Math.min(0.48, dt * 3.2)) {
+    const anchors = [0.22, 0.5, 0.78];
+    const anchorX = W * (anchors[Math.floor(Math.random() * anchors.length)] ?? 0.5);
+    const startY = H - (18 + Math.random() * 68) * S;
+    if (startY > wy + 25 * S) {
+      state.bubbles.push({
+        x: anchorX + (Math.random() - 0.5) * 90 * S,
+        y: startY,
+        z: 0.22 + Math.random() * 0.68,
+        vy: (22 + Math.random() * 18) * S,
+        radius: (1.5 + Math.random() * 2.1) * S,
+        alpha: 0.76 + Math.random() * 0.18,
+        wobblePhase: t * 1.4 + Math.random() * 6.28,
+        fromRoot: true,
+      });
+    }
+  }
+
   for (let i = state.bubbles.length - 1; i >= 0; i -= 1) {
     const b = state.bubbles[i];
     if (!b) continue;
     b.wobblePhase += dt * 7;
     b.y -= b.vy * dt;
     b.x += Math.sin(b.wobblePhase) * 9 * S * dt;
-    b.alpha -= 0.72 * dt;
+    b.alpha -= (b.fromRoot ? 0.16 : 0.72) * dt;
+    if (b.fromRoot && b.y <= wy + 4 * S) {
+      pushRipple(state, b.x, b.y, 'emerald', 0.36, 1);
+      state.bubbles.splice(i, 1);
+      continue;
+    }
     if (b.alpha <= 0.02) {
       state.bubbles.splice(i, 1);
     }
@@ -1112,6 +1145,10 @@ export function stepEcosystem(
       fish.initialized = true;
     }
 
+    if (fish.puffTimer > 0) {
+      fish.puffTimer = Math.max(0, fish.puffTimer - dt);
+    }
+
     if (fish.petSpinTimer > 0) {
       fish.petSpinTimer = Math.max(0, fish.petSpinTimer - dt);
       fish.heading += dt * 8.5;
@@ -1120,9 +1157,10 @@ export function stepEcosystem(
         state.bubbles.push({
           x: fish.x + (Math.random() - 0.5) * 12 * S,
           y: fish.y + (Math.random() - 0.5) * 12 * S,
+          z: fish.z,
           vy: 20 * S,
-          radius: 1.2 * S,
-          alpha: 0.8,
+          radius: 1.4 * S,
+          alpha: 0.85,
           wobblePhase: t,
         });
       }
@@ -1167,6 +1205,7 @@ export function stepEcosystem(
           state.bubbles.push({
             x: targetX + (b - 1.5) * 4 * S,
             y: targetY + 4 * S,
+            z: fish.z,
             vy: (26 + b * 7) * S,
             radius: (1.5 + (b % 2) * 0.8) * S,
             alpha: 0.88,
@@ -1911,41 +1950,82 @@ export function drawFallingPetalsAndDewdrops(
   });
 }
 
+export function drawSingleWaterBubble(ctx: CanvasRenderingContext2D, b: WaterBubble): void {
+  const depthScale = 0.65 + 0.4 * b.z;
+  const r = b.radius * depthScale;
+  ctx.save();
+  ctx.globalAlpha = Math.max(0, Math.min(1, b.alpha * (0.6 + 0.4 * b.z)));
+
+  // Khối cầu khí 3D bán trong suốt
+  const g = ctx.createRadialGradient(b.x - r * 0.32, b.y - r * 0.32, r * 0.1, b.x, b.y, r);
+  g.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
+  g.addColorStop(0.45, 'rgba(195, 255, 240, 0.36)');
+  g.addColorStop(0.85, 'rgba(110, 231, 183, 0.18)');
+  g.addColorStop(1, 'rgba(225, 255, 248, 0.55)');
+
+  ctx.beginPath();
+  ctx.arc(b.x, b.y, r, 0, Math.PI * 2);
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(230, 255, 248, 0.68)';
+  ctx.lineWidth = 0.95;
+  ctx.stroke();
+
+  // Điểm phản chiếu specular trắng sắc nét góc trên-trái
+  ctx.beginPath();
+  ctx.arc(b.x - r * 0.34, b.y - r * 0.34, Math.max(0.7, r * 0.28), 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+  ctx.fill();
+  ctx.restore();
+}
+
 export function drawInteractiveRipplesAndBaits(
   ctx: CanvasRenderingContext2D,
   state: EcosystemState,
   t: number,
   S: number,
   glowSprites: GlowSpriteCache,
+  drawBubbles = true,
 ) {
-  // 1. Vòng gợn sóng tương tác (chuột, âm thanh ếch ộp, giọt sương, cánh hoa)
+  // 1. Vòng gợn sóng tương tác (chuột, shockwave, âm thanh ếch ộp, giọt sương, cánh hoa)
   for (let i = state.ripples.length - 1; i >= 0; i -= 1) {
     const rip = state.ripples[i];
     if (!rip) continue;
     const age = t - rip.birthTime;
-    const maxLife = 1.25;
+    const isShockwave = rip.tint === 'shockwave';
+    const maxLife = isShockwave ? 1.55 : 1.25;
     if (age > maxLife || age < 0) {
       state.ripples.splice(i, 1);
       continue;
     }
     const p = age / maxLife;
     for (let ring = 0; ring < rip.ringCount; ring += 1) {
-      const ringP = p - ring * 0.16;
+      const ringP = p - ring * (isShockwave ? 0.12 : 0.16);
       if (ringP <= 0 || ringP > 1) continue;
-      const radX = (10 + ringP * 62 * rip.maxRadiusScale) * S;
-      const radY = radX * 0.32;
-      const alpha = (1 - ringP) * (rip.tint === 'sound' ? 0.38 : 0.48);
+      const eased = 1 - Math.pow(1 - ringP, 2.2);
+      const radX = isShockwave
+        ? (28 + eased * 820 * rip.maxRadiusScale) * S
+        : (10 + ringP * 62 * rip.maxRadiusScale) * S;
+      const radY = radX * (isShockwave ? 0.44 : 0.32);
+      const alpha = (1 - ringP) * (isShockwave ? 0.58 : rip.tint === 'sound' ? 0.38 : 0.48);
 
       ctx.beginPath();
       ctx.ellipse(rip.x, rip.y, radX, radY, 0, 0, Math.PI * 2);
-      if (rip.tint === 'gold') {
+      if (isShockwave) {
+        ctx.strokeStyle =
+          ring === 0
+            ? `rgba(110, 231, 183, ${alpha.toFixed(3)})`
+            : `rgba(253, 224, 71, ${(alpha * 0.72).toFixed(3)})`;
+      } else if (rip.tint === 'gold') {
         ctx.strokeStyle = `rgba(255, 232, 165, ${alpha.toFixed(3)})`;
       } else if (rip.tint === 'sound') {
         ctx.strokeStyle = `rgba(248, 210, 224, ${alpha.toFixed(3)})`;
       } else {
         ctx.strokeStyle = `rgba(216, 255, 236, ${alpha.toFixed(3)})`;
       }
-      ctx.lineWidth = (1.55 - ringP * 0.55) * Math.max(0.8, S);
+      ctx.lineWidth = isShockwave
+        ? (3.0 - ringP * 1.6) * Math.max(0.85, S)
+        : (1.55 - ringP * 0.55) * Math.max(0.8, S);
       ctx.stroke();
     }
   }
@@ -1971,14 +2051,12 @@ export function drawInteractiveRipplesAndBaits(
     ctx.fill();
   });
 
-  // 3. Bọt nước khi cá Koi đớp mồi
-  state.bubbles.forEach((b) => {
-    ctx.beginPath();
-    ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(230, 255, 248, ${b.alpha.toFixed(3)})`;
-    ctx.lineWidth = 1.05;
-    ctx.stroke();
-  });
+  // 3. Bọt khí 3D nổi lên
+  if (drawBubbles) {
+    state.bubbles.forEach((b) => {
+      drawSingleWaterBubble(ctx, b);
+    });
+  }
 }
 
 export function drawPondBedAndCaustics(
@@ -1990,124 +2068,274 @@ export function drawPondBedAndCaustics(
   wy: number,
   theme: 'day' | 'night',
 ) {
-  const bedTop = wy + 20 * S;
+  const bedTop = wy + 12 * S;
   if (bedTop >= H) return;
+  const bedHeight = Math.max(40, H - bedTop);
 
   ctx.save();
 
-  // 1. Sỏi cuội nhẵn hình bầu dục dẹt ở đáy hồ sâu (Z = 0.15)
-  const pebbleCols = 14;
-  for (let pi = 0; pi < pebbleCols; pi++) {
-    const px = (W * (pi + 0.5)) / pebbleCols + Math.sin(pi * 4.3) * 20 * S;
-    const py = H - 24 * S - Math.abs(Math.sin(pi * 2.7)) * 55 * S;
-    const prx = (14 + (pi % 4) * 4) * S;
-    const pry = prx * (0.45 + (pi % 3) * 0.1);
+  // 0. Lớp chiều sâu đáy hồ phối cảnh 3D (Deep Benthic Perspective Floor Horizon)
+  const benthicGrad = ctx.createLinearGradient(0, bedTop, 0, H);
+  if (theme === 'day') {
+    benthicGrad.addColorStop(0, 'rgba(10, 44, 34, 0.35)');
+    benthicGrad.addColorStop(0.42, 'rgba(10, 38, 30, 0.62)');
+    benthicGrad.addColorStop(1, 'rgba(4, 18, 14, 0.84)');
+  } else {
+    benthicGrad.addColorStop(0, 'rgba(4, 18, 14, 0.45)');
+    benthicGrad.addColorStop(0.45, 'rgba(10, 38, 30, 0.72)');
+    benthicGrad.addColorStop(1, 'rgba(3, 13, 10, 0.92)');
+  }
+  ctx.fillStyle = benthicGrad;
+  ctx.fillRect(0, bedTop, W, bedHeight);
+
+  // 0b. Tia sáng xuyên nước Volumetric Light Shafts (God Rays 3D)
+  ctx.save();
+  const shaftCount = 4;
+  for (let i = 0; i < shaftCount; i += 1) {
+    const originX = W * (0.14 + i * 0.24) + Math.sin(t * 0.25 + i * 1.9) * 18 * S;
+    const topHalfW = (18 + (i % 2) * 10) * S;
+    const skewX = 95 * S + Math.cos(t * 0.2 + i) * 14 * S;
+    const botHalfW = (58 + (i % 3) * 18) * S;
+
+    const shaftGrad = ctx.createLinearGradient(originX, wy, originX + skewX, H);
+    const baseAlpha = theme === 'day' ? 0.095 : 0.055;
+    shaftGrad.addColorStop(0, `rgba(212, 255, 232, ${baseAlpha.toFixed(3)})`);
+    shaftGrad.addColorStop(0.55, `rgba(145, 235, 198, ${(baseAlpha * 0.45).toFixed(3)})`);
+    shaftGrad.addColorStop(1, 'rgba(110, 220, 180, 0)');
+
+    ctx.beginPath();
+    ctx.moveTo(originX - topHalfW, wy);
+    ctx.lineTo(originX + topHalfW, wy);
+    ctx.lineTo(originX + skewX + botHalfW, H);
+    ctx.lineTo(originX + skewX - botHalfW, H);
+    ctx.closePath();
+    ctx.fillStyle = shaftGrad;
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // 1. Cụm sỏi cuội nhẵn phân tầng phối cảnh ở đáy hồ sâu
+  const pebbleCols = 16;
+  for (let pi = 0; pi < pebbleCols; pi += 1) {
+    const px = (W * (pi + 0.45)) / pebbleCols + Math.sin(pi * 4.3) * 22 * S;
+    const depthFrac = 0.2 + (0.78 * ((pi * 37) % 11)) / 10;
+    const py = bedTop + bedHeight * depthFrac;
+    const persp = 0.65 + depthFrac * 0.62;
+    const prx = (11 + (pi % 4) * 3.8) * S * persp;
+    const pry = prx * (0.42 + (pi % 3) * 0.09);
     const pRot = (pi * 0.45) % Math.PI;
 
     ctx.save();
     ctx.translate(px, py);
     ctx.rotate(pRot);
 
-    // Bóng đổ sỏi cuội
     ctx.beginPath();
-    ctx.ellipse(2 * S, 4 * S, prx, pry, 0, 0, Math.PI * 2);
-    ctx.fillStyle = theme === 'day' ? 'rgba(8, 28, 20, 0.45)' : 'rgba(2, 10, 6, 0.6)';
+    ctx.ellipse(2.5 * S, 4.2 * S, prx, pry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = theme === 'day' ? 'rgba(6, 22, 16, 0.48)' : 'rgba(2, 10, 6, 0.65)';
     ctx.fill();
 
-    // Thân sỏi cuội sẫm pha rêu phong
     ctx.beginPath();
     ctx.ellipse(0, 0, prx, pry, 0, 0, Math.PI * 2);
     const pebbleGrad = ctx.createLinearGradient(-prx, -pry, prx, pry);
     if (theme === 'day') {
-      pebbleGrad.addColorStop(0, '#1c4232');
-      pebbleGrad.addColorStop(0.6, '#133326');
-      pebbleGrad.addColorStop(1, '#0b2018');
+      pebbleGrad.addColorStop(0, '#224f3c');
+      pebbleGrad.addColorStop(0.58, '#133326');
+      pebbleGrad.addColorStop(1, '#081b14');
     } else {
-      pebbleGrad.addColorStop(0, '#0f291e');
+      pebbleGrad.addColorStop(0, '#133124');
       pebbleGrad.addColorStop(0.6, '#091c14');
-      pebbleGrad.addColorStop(1, '#040d09');
+      pebbleGrad.addColorStop(1, '#030d09');
     }
     ctx.fillStyle = pebbleGrad;
     ctx.fill();
 
-    // Vệt rêu sáng nhẹ trên mép sỏi
     ctx.beginPath();
-    ctx.ellipse(-prx * 0.15, -pry * 0.25, prx * 0.65, pry * 0.45, 0, 0, Math.PI * 2);
-    ctx.fillStyle = theme === 'day' ? 'rgba(74, 138, 100, 0.25)' : 'rgba(40, 92, 65, 0.2)';
+    ctx.ellipse(-prx * 0.16, -pry * 0.26, prx * 0.62, pry * 0.42, 0, 0, Math.PI * 2);
+    ctx.fillStyle = theme === 'day' ? 'rgba(94, 168, 120, 0.26)' : 'rgba(46, 108, 76, 0.22)';
     ctx.fill();
 
     ctx.restore();
   }
 
-  // 2. Rễ sen chìm uốn lượn mờ ảo dưới bùn sâu
+  // 2. Ngó sen & rễ sen chìm phân đốt dưới bùn sâu
   ctx.save();
-  ctx.lineWidth = 3.5 * S;
-  ctx.strokeStyle = theme === 'day' ? 'rgba(18, 48, 34, 0.35)' : 'rgba(8, 24, 16, 0.4)';
   ctx.lineCap = 'round';
   const rootAnchors = [W * 0.22, W * 0.5, W * 0.78];
-  for (const rx of rootAnchors) {
+  for (let rIdx = 0; rIdx < rootAnchors.length; rIdx += 1) {
+    const rx = rootAnchors[rIdx]!;
+    const sway = Math.sin(t * 0.2 + rx) * 7 * S;
     ctx.beginPath();
-    ctx.moveTo(rx, wy + 40 * S);
+    ctx.moveTo(rx, wy + 22 * S);
     ctx.bezierCurveTo(
-      rx - 30 * S + Math.sin(t * 0.2 + rx) * 8 * S,
-      wy + 110 * S,
-      rx + 40 * S,
-      H - 50 * S,
-      rx + 15 * S,
+      rx - 28 * S + sway,
+      wy + bedHeight * 0.34,
+      rx + 36 * S - sway * 0.4,
+      wy + bedHeight * 0.68,
+      rx + 14 * S,
       H,
     );
+    ctx.lineWidth = 4.5 * S;
+    ctx.strokeStyle = theme === 'day' ? 'rgba(18, 54, 38, 0.45)' : 'rgba(8, 28, 19, 0.52)';
     ctx.stroke();
+
+    // Đốt ngó sen sáng dịu + rễ tơ phụ
+    for (let node = 1; node <= 3; node += 1) {
+      const ny = wy + (bedHeight * node) / 4;
+      const nx = rx + Math.sin(node * 1.7 + rIdx) * 14 * S;
+      ctx.beginPath();
+      ctx.ellipse(nx, ny, 4.2 * S, 2.2 * S, 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = theme === 'day' ? 'rgba(64, 128, 92, 0.34)' : 'rgba(32, 74, 52, 0.38)';
+      ctx.fill();
+    }
   }
   ctx.restore();
 
-  // 3. Volumetric Water Caustics (Lưới quang học khúc xạ đáy hồ giao thoa sóng sin)
-  const causticsCount = 9;
-  const causticsAlpha = theme === 'day' ? 0.09 : 0.06;
-  ctx.save();
-  ctx.strokeStyle =
-    theme === 'day'
-      ? `rgba(190, 255, 230, ${causticsAlpha})`
-      : `rgba(160, 240, 210, ${causticsAlpha})`;
-  ctx.lineWidth = 2.2 * S;
-  ctx.lineJoin = 'round';
+  // 3. Mạng lưới Voronoi Water Caustics 3D (Phối cảnh hội tụ ở tầng đáy)
+  const cols = 10;
+  const rows = 5;
+  const gridX = new Float32Array((rows + 1) * (cols + 1));
+  const gridY = new Float32Array((rows + 1) * (cols + 1));
 
-  for (let c = 0; c < causticsCount; c++) {
-    const yBase = wy + 35 * S + (c * (H - wy - 45 * S)) / causticsCount;
-    const speed = 0.55 + (c % 3) * 0.15;
+  for (let r = 0; r <= rows; r += 1) {
+    const vLin = r / rows;
+    const vPersp = Math.pow(vLin, 1.32);
+    const yBase = bedTop + 10 * S + vPersp * Math.max(24, bedHeight - 20 * S);
+    const rowScale = 0.55 + 0.65 * vPersp;
+    for (let c = 0; c <= cols; c += 1) {
+      const idx = r * (cols + 1) + c;
+      const u = c / cols;
+      const xBase = (u - 0.5) * W * (0.94 + 0.22 * vPersp) + W * 0.5;
+      const phase = c * 1.37 + r * 2.13;
+      const jitterX = Math.sin(t * 1.15 + phase) * 18 * S * rowScale;
+      const jitterY = Math.cos(t * 0.95 - phase * 0.85) * 9 * S * rowScale;
+      gridX[idx] = xBase + jitterX;
+      gridY[idx] = yBase + jitterY;
+    }
+  }
+
+  ctx.save();
+  ctx.lineJoin = 'round';
+  const passConfigs = [
+    {
+      width: 4.0 * S,
+      color: theme === 'day' ? 'rgba(130, 240, 200, 0.045)' : 'rgba(94, 212, 175, 0.035)',
+    },
+    {
+      width: 1.35 * S,
+      color: theme === 'day' ? 'rgba(218, 255, 240, 0.145)' : 'rgba(167, 243, 215, 0.1)',
+    },
+  ];
+
+  for (const pass of passConfigs) {
     ctx.beginPath();
-    for (let x = 0; x <= W + 40; x += 35 * S) {
-      const wave1 = Math.sin(x * 0.012 + t * speed + c * 1.4) * 8 * S;
-      const wave2 = Math.cos(x * 0.024 - t * speed * 0.8 + c * 0.9) * 5 * S;
-      const cyPos = yBase + wave1 + wave2;
-      if (x === 0) {
-        ctx.moveTo(x, cyPos);
-      } else {
-        ctx.lineTo(x, cyPos);
+    for (let r = 0; r <= rows; r += 1) {
+      for (let c = 0; c <= cols; c += 1) {
+        const idx = r * (cols + 1) + c;
+        const x0 = gridX[idx]!;
+        const y0 = gridY[idx]!;
+        if (c < cols) {
+          const right = idx + 1;
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(gridX[right]!, gridY[right]!);
+        }
+        if (r < rows) {
+          const down = idx + cols + 1;
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(gridX[down]!, gridY[down]!);
+          if (c < cols && (r + c) % 2 === 0) {
+            const diag = down + 1;
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(gridX[diag]!, gridY[diag]!);
+          }
+        }
       }
     }
+    ctx.strokeStyle = pass.color;
+    ctx.lineWidth = pass.width;
     ctx.stroke();
   }
 
-  // Điểm tụ sáng khúc xạ lấp lánh (Focal bright spots)
-  const spotCount = 12;
-  for (let s = 0; s < spotCount; s++) {
-    const sx = ((s * 123 + t * 14 * (0.8 + (s % 3) * 0.2)) % (W + 80)) - 40;
-    const sy = wy + 45 * S + ((s * 73 + t * 4) % Math.max(40, H - wy - 60 * S));
-    const rad = (12 + (s % 4) * 6) * S;
-    const spotAlpha = (0.05 + 0.04 * Math.sin(t * 2.2 + s)) * (theme === 'day' ? 1.2 : 0.8);
-
-    const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, rad);
-    grad.addColorStop(0, `rgba(220, 255, 240, ${spotAlpha.toFixed(3)})`);
-    grad.addColorStop(0.6, `rgba(180, 245, 215, ${(spotAlpha * 0.4).toFixed(3)})`);
-    grad.addColorStop(1, 'rgba(180, 245, 215, 0)');
-
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(sx, sy, rad, 0, Math.PI * 2);
-    ctx.fill();
+  // Điểm giao thoa khúc xạ Voronoi rực sáng
+  for (let r = 1; r < rows; r += 1) {
+    for (let c = 1; c < cols; c += 2) {
+      const idx = r * (cols + 1) + c;
+      const sx = gridX[idx]!;
+      const sy = gridY[idx]!;
+      const rad = (8 + ((r + c) % 3) * 4) * S;
+      const glint = 0.04 + 0.045 * Math.sin(t * 2.1 + r * 1.4 + c);
+      const spotAlpha = glint * (theme === 'day' ? 1.25 : 0.85);
+      const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, rad);
+      grad.addColorStop(0, `rgba(225, 255, 244, ${spotAlpha.toFixed(3)})`);
+      grad.addColorStop(1, 'rgba(180, 245, 215, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(sx, sy, rad, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   ctx.restore();
+  ctx.restore();
+}
+
+/** Tạo gradient khối trụ 3D xuyên thân cá theo hướng ánh sáng trên & góc nghiêng rollAngle */
+function makeCylindricalBodyFill(
+  ctx: CanvasRenderingContext2D,
+  anchor: readonly [number, number, number],
+  halfWidth: number,
+  baseColor: readonly [number, number, number],
+  rollAngle = 0,
+): CanvasGradient {
+  const nx = -Math.sin(anchor[2]);
+  const ny = Math.cos(anchor[2]);
+  const rollShift = Math.sin(rollAngle) * halfWidth * 0.45;
+  const x0 = anchor[0] - nx * halfWidth + nx * rollShift;
+  const y0 = anchor[1] - ny * halfWidth + ny * rollShift;
+  const x1 = anchor[0] + nx * halfWidth + nx * rollShift;
+  const y1 = anchor[1] + ny * halfWidth + ny * rollShift;
+
+  const grad = ctx.createLinearGradient(x0, y0, x1, y1);
+  grad.addColorStop(0, rgb(mix(baseColor, [8, 22, 16], 0.48)));
+  grad.addColorStop(0.32, rgb(baseColor));
+  grad.addColorStop(0.56, rgb(mix(baseColor, [255, 255, 245], 0.36)));
+  grad.addColorStop(0.84, rgb(baseColor));
+  grad.addColorStop(1, rgb(mix(baseColor, [8, 24, 18], 0.42)));
+  return grad;
+}
+
+/** Ánh khúc xạ Voronoi lướt nhẹ trên lưng cá khi bơi ở tầng nước trung-sâu */
+function drawFishCausticDapple(
+  ctx: CanvasRenderingContext2D,
+  pts: readonly [number, number, number][],
+  k: number,
+  t: number,
+  z: number,
+): void {
+  if (z >= 0.88 || pts.length < 7) return;
+  const alpha = (1 - z) * 0.18;
+  ctx.save();
+  ctx.strokeStyle = `rgba(210, 255, 238, ${alpha.toFixed(3)})`;
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 1.6 * k;
+
+  [1, 3, 5].forEach((idx, i) => {
+    const p = pts[idx];
+    if (!p) return;
+    const wave = Math.sin(t * 2.8 + i * 1.9 + p[0] * 0.02);
+    if (wave < -0.15) return;
+    const nx = -Math.sin(p[2]);
+    const ny = Math.cos(p[2]);
+    const span = (3.4 + (i % 2) * 1.2) * k;
+    ctx.beginPath();
+    ctx.moveTo(p[0] - nx * span, p[1] - ny * span);
+    ctx.quadraticCurveTo(
+      p[0] + Math.cos(p[2]) * 2 * k,
+      p[1] + Math.sin(p[2]) * 2 * k,
+      p[0] + nx * span,
+      p[1] + ny * span,
+    );
+    ctx.stroke();
+  });
   ctx.restore();
 }
 
@@ -2210,7 +2438,7 @@ function drawKoiCarp(
     if (rp) ctx.lineTo(rp[0], rp[1]);
   }
   ctx.closePath();
-  ctx.fillStyle = rgb(f.baseColor);
+  ctx.fillStyle = makeCylindricalBodyFill(ctx, pts[3] ?? h, 6.5 * k, f.baseColor, fish.rollAngle);
   ctx.fill();
 
   // Đốm hoa văn Kohaku / Yamabuki / Sanke
@@ -2301,7 +2529,7 @@ function drawFantailGoldfish(
     if (rp) ctx.lineTo(rp[0], rp[1]);
   }
   ctx.closePath();
-  ctx.fillStyle = rgb(f.baseColor);
+  ctx.fillStyle = makeCylindricalBodyFill(ctx, pts[3] ?? h, 6.5 * k, f.baseColor, fish.rollAngle);
   ctx.fill();
 
   // U bướu Oranda (Wen crown nodules) trên đỉnh đầu
@@ -2485,7 +2713,7 @@ function drawHalfmoonBetta(
     if (rp) ctx.lineTo(rp[0], rp[1]);
   }
   ctx.closePath();
-  ctx.fillStyle = rgb(f.baseColor);
+  ctx.fillStyle = makeCylindricalBodyFill(ctx, pts[3] ?? h, 6.5 * k, f.baseColor, fish.rollAngle);
   ctx.fill();
 
   // Mắt
@@ -2614,7 +2842,7 @@ function drawButterflyCarp(
     if (rp) ctx.lineTo(rp[0], rp[1]);
   }
   ctx.closePath();
-  ctx.fillStyle = rgb(f.baseColor);
+  ctx.fillStyle = makeCylindricalBodyFill(ctx, pts[3] ?? h, 6.5 * k, f.baseColor, fish.rollAngle);
   ctx.fill();
 
   // Đốm vàng hoàng kim
@@ -2743,7 +2971,7 @@ function drawAsianArowana(
     if (rp) ctx.lineTo(rp[0], rp[1]);
   }
   ctx.closePath();
-  ctx.fillStyle = rgb(f.baseColor);
+  ctx.fillStyle = makeCylindricalBodyFill(ctx, pts[3] ?? h, 6.5 * k, f.baseColor, fish.rollAngle);
   ctx.fill();
 
   // Hàng vảy rồng lớn óng ánh kim loại 3D
@@ -2876,31 +3104,532 @@ function drawBioluminescentNeon(
   }
 }
 
-export function drawDynamicKoiFishes(
+export function getBoxfishPuffScale(fish: DynamicKoiFish): number {
+  if (fish.species !== 'boxfish' || fish.puffTimer <= 0) return 1.0;
+  const progress = Math.max(0, Math.min(1, fish.puffTimer / 2.0));
+  return 1.0 + 0.4 * Math.sin(progress * Math.PI);
+}
+
+/** 7. Cá Đuối Ngọc Bích (Jade Stingray): Thân đĩa tròn dẹt ngọc bích, đốm vàng cân xứng, đuôi roi dài, sóng rajiform */
+function drawJadeStingray(
+  ctx: CanvasRenderingContext2D,
+  fish: DynamicKoiFish,
+  pts: readonly [number, number, number][],
+  k: number,
+  t: number,
+  swimFreq: number,
+) {
+  const anchor = pts[2] ?? pts[0]!;
+  const discR = 17.5 * k;
+
+  ctx.save();
+  ctx.translate(anchor[0], anchor[1]);
+  ctx.rotate(anchor[2]);
+  ctx.scale(1, Math.max(0.76, Math.cos(fish.rollAngle * 0.85)));
+
+  // 1. Đuôi roi dài thanh mảnh lướt phía sau với sóng hình học + ngạnh vàng
+  ctx.beginPath();
+  ctx.moveTo(-discR * 0.72, 0);
+  const tailSegs = 12;
+  for (let i = 1; i <= tailSegs; i += 1) {
+    const frac = i / tailSegs;
+    const tx = -discR * (0.72 + frac * 2.15);
+    const ty = Math.sin(t * swimFreq * 0.9 - frac * 3.4 + fish.fi) * (1.2 + frac * 3.8) * k;
+    ctx.lineTo(tx, ty);
+  }
+  ctx.strokeStyle = '#0D4D3D';
+  ctx.lineWidth = 2.6 * k;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  ctx.strokeStyle = 'rgba(245, 208, 92, 0.75)';
+  ctx.lineWidth = 0.9 * k;
+  ctx.stroke();
+
+  // 2. Cặp vây bụng nhỏ ở gốc đuôi
+  for (const s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.ellipse(-discR * 0.72, s * discR * 0.34, 4.2 * k, 2.3 * k, -s * 0.45, 0, Math.PI * 2);
+    ctx.fillStyle = '#0F5947';
+    ctx.fill();
+  }
+
+  // 3. Thân đĩa cánh bướm (Diamond-rounded rajiform disc) uốn sóng cánh liên tục
+  ctx.beginPath();
+  const steps = 32;
+  for (let i = 0; i <= steps; i += 1) {
+    const a = (i / steps) * Math.PI * 2;
+    const ca = Math.cos(a);
+    const sa = Math.sin(a);
+    const wingWave =
+      1 + 0.13 * Math.sin(t * swimFreq * 0.9 - Math.abs(sa) * 2.4 + fish.fi) * Math.abs(sa);
+    const snoutStretch = ca > 0 ? 1.12 : 0.86;
+    const rx = ca * discR * snoutStretch;
+    const ry = sa * discR * 1.15 * wingWave;
+    if (i === 0) ctx.moveTo(rx, ry);
+    else ctx.lineTo(rx, ry);
+  }
+  ctx.closePath();
+
+  const discGrad = ctx.createRadialGradient(-2 * k, -3 * k, 1.5 * k, 0, 0, discR * 1.18);
+  discGrad.addColorStop(0, '#34D399');
+  discGrad.addColorStop(0.45, '#148066');
+  discGrad.addColorStop(0.84, '#0A4E3E');
+  discGrad.addColorStop(1, '#052920');
+  ctx.fillStyle = discGrad;
+  ctx.fill();
+
+  ctx.strokeStyle = 'rgba(110, 231, 183, 0.45)';
+  ctx.lineWidth = 1.1 * k;
+  ctx.stroke();
+
+  // 4. Các đốm vòng tròn vàng cân xứng hai bên cánh đĩa (Ocelli spots)
+  const ocelli: readonly [number, number, number][] = [
+    [2.5 * k, 8.2 * k, 2.4 * k],
+    [-4.5 * k, 9.6 * k, 2.0 * k],
+    [-9.2 * k, 6.2 * k, 1.7 * k],
+  ];
+  for (const [ox, oy, orad] of ocelli) {
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      ctx.arc(ox, oy * s, orad, 0, Math.PI * 2);
+      ctx.fillStyle = '#F5D05C';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(ox, oy * s, orad * 0.52, 0, Math.PI * 2);
+      ctx.fillStyle = '#093B2E';
+      ctx.fill();
+    }
+  }
+
+  // 5. Đôi mắt & lỗ thở nổi trên sống lưng
+  for (const s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.arc(6.8 * k, s * 3.4 * k, 1.55 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#07221B';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(7.1 * k, s * 3.2 * k, 0.6 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#FDE68A';
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+/** 8. Cá Ngân Đai Thủy Tinh (Celestial Ribbonfish): Thân dài dẹt gấp 2.5x, mào tia vây & vây lưng đỏ, 3 nhịp sóng sin */
+function drawCelestialRibbonfish(
+  ctx: CanvasRenderingContext2D,
+  fish: DynamicKoiFish,
+  pts: readonly [number, number, number][],
+  k: number,
+  t: number,
+  seg: number,
+  swimFreq: number,
+) {
+  const h = pts[0]!;
+  const rN = 26; // Dài gấp 2.5 lần cá thường (~24*seg)
+  const rSeg = seg * 0.92;
+  const rPts: [number, number, number][] = [];
+  let px = h[0];
+  let py = h[1];
+  let a = h[2];
+
+  for (let i = 0; i < rN; i += 1) {
+    rPts.push([px, py, a]);
+    px -= Math.cos(a) * rSeg;
+    py -= Math.sin(a) * rSeg;
+    // 3 nhịp sóng sin uốn lượn toàn dải ruy-băng
+    a += Math.sin(t * swimFreq * 1.15 - i * 0.78 + fish.fi * 1.3) * (0.14 + (i / rN) * 0.19);
+  }
+
+  const L: [number, number][] = [];
+  const R: [number, number][] = [];
+  rPts.forEach((p, idx) => {
+    const taper =
+      idx === 0 ? 0.55 : idx < 4 ? 0.85 : Math.max(0.06, 0.92 * (1 - (idx - 3) / (rN - 2)));
+    const w = taper * 4.4 * k;
+    const nx = -Math.sin(p[2]);
+    const ny = Math.cos(p[2]);
+    L.push([p[0] + nx * w, p[1] + ny * w]);
+    R.push([p[0] - nx * w, p[1] - ny * w]);
+  });
+
+  // 1. Vây lưng đỏ chu sa chạy dọc toàn thân trên gợn theo 3 nhịp sóng sin
+  ctx.save();
+  ctx.beginPath();
+  rPts.forEach((p, idx) => {
+    const waveOffset = Math.sin(t * swimFreq * 1.3 - idx * 0.72 + fish.fi) * (5.8 + idx * 0.05) * k;
+    const finSpan = (1 - idx / rN) * 8.2 * k + 1.5 * k;
+    const nx = -Math.sin(p[2]);
+    const ny = Math.cos(p[2]);
+    const fx = p[0] + nx * (waveOffset + (waveOffset >= 0 ? finSpan * 0.6 : -finSpan * 0.4));
+    const fy = p[1] + ny * (waveOffset + (waveOffset >= 0 ? finSpan * 0.6 : -finSpan * 0.4));
+    if (idx === 0) ctx.moveTo(fx, fy);
+    else ctx.lineTo(fx, fy);
+  });
+  for (let i = rN - 1; i >= 0; i -= 1) {
+    const p = rPts[i]!;
+    ctx.lineTo(p[0], p[1]);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(225, 45, 68, 0.58)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(251, 113, 133, 0.85)';
+  ctx.lineWidth = 0.85 * k;
+  ctx.stroke();
+  ctx.restore();
+
+  // 2. Thân dải bạc ngọc trai 3D óng ánh bán trong suốt
+  ctx.beginPath();
+  ctx.moveTo(h[0] + Math.cos(h[2]) * rSeg * 0.55, h[1] + Math.sin(h[2]) * rSeg * 0.55);
+  L.forEach((p) => ctx.lineTo(p[0], p[1]));
+  for (let i = rN - 1; i >= 0; i -= 1) {
+    const rp = R[i];
+    if (rp) ctx.lineTo(rp[0], rp[1]);
+  }
+  ctx.closePath();
+  ctx.fillStyle = makeCylindricalBodyFill(
+    ctx,
+    rPts[4] ?? h,
+    4.4 * k,
+    [232, 242, 250],
+    fish.rollAngle,
+  );
+  ctx.fill();
+
+  // Đường ánh xà cừ giữa thân
+  ctx.beginPath();
+  rPts
+    .slice(0, rN - 2)
+    .forEach((p, idx) => (idx === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1])));
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+  ctx.lineWidth = 1.2 * k;
+  ctx.stroke();
+
+  // 3. Vương miện tia vây đỏ vươn cao trên đỉnh đầu
+  for (let c = 0; c < 3; c += 1) {
+    const flare = (c - 1) * 0.28 + Math.sin(t * swimFreq * 0.9 + c) * 0.12;
+    const crestAngle = h[2] + Math.PI + flare;
+    const len = (17 - c * 2.5) * k;
+    ctx.beginPath();
+    ctx.moveTo(h[0] + Math.cos(h[2]) * 1.5 * k, h[1] + Math.sin(h[2]) * 1.5 * k);
+    ctx.quadraticCurveTo(
+      h[0] + Math.cos(crestAngle - 0.25) * len * 0.55,
+      h[1] + Math.sin(crestAngle - 0.25) * len * 0.55 - 3 * k,
+      h[0] + Math.cos(crestAngle) * len,
+      h[1] + Math.sin(crestAngle) * len,
+    );
+    ctx.strokeStyle = c === 1 ? '#FB7185' : '#E12D44';
+    ctx.lineWidth = (1.6 - c * 0.25) * k;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
+  // 4. Mắt ánh bạc & đồng tử ruby
+  for (const s of [-1, 1]) {
+    const ex = h[0] + Math.cos(h[2]) * 1.6 * k - Math.sin(h[2]) * 2.4 * k * s;
+    const ey = h[1] + Math.sin(h[2]) * 1.6 * k + Math.cos(h[2]) * 2.4 * k * s;
+    ctx.beginPath();
+    ctx.arc(ex, ey, 1.35 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#0F172A';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex + 0.3 * k, ey - 0.3 * k, 0.5 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#F8FAFC';
+    ctx.fill();
+  }
+}
+
+/** 9. Cá Thần Tiên Vũ Y (High-Fin Veil Angelfish): Dáng tam giác cao vút, vây lớn hơn thân, ánh bạc sọc đen */
+function drawVeilAngelfish(
+  ctx: CanvasRenderingContext2D,
+  fish: DynamicKoiFish,
+  pts: readonly [number, number, number][],
+  k: number,
+  t: number,
+  swimFreq: number,
+) {
+  const anchor = pts[2] ?? pts[0]!;
+  const bodyLen = 13.5 * k;
+  const wingSpread = 25 * k; // Sải vây lớn hơn chiều dài thân!
+  const flutter = Math.sin(t * swimFreq * 0.95 + fish.fi) * 3.2 * k;
+
+  ctx.save();
+  ctx.translate(anchor[0], anchor[1]);
+  ctx.rotate(anchor[2]);
+  ctx.scale(Math.cos(fish.pitchAngle * 0.45), Math.max(0.78, Math.cos(fish.rollAngle * 0.6)));
+
+  // 1. Đôi vây bụng dạng sợi dài bay phất phơ phía sau
+  for (const s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.moveTo(-1 * k, s * 4.5 * k);
+    ctx.bezierCurveTo(
+      -9 * k,
+      s * (11 * k + flutter * 0.5),
+      -19 * k,
+      s * (16 * k - flutter * 0.7),
+      -26 * k,
+      s * (12 * k + flutter),
+    );
+    ctx.strokeStyle = 'rgba(226, 232, 240, 0.85)';
+    ctx.lineWidth = 1.25 * k;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
+  // 2. Vây đuôi tam giác xòe thanh mảnh
+  ctx.beginPath();
+  ctx.moveTo(-bodyLen * 0.75, 0);
+  ctx.lineTo(-bodyLen * 1.48, -8.5 * k + flutter * 0.6);
+  ctx.quadraticCurveTo(-bodyLen * 1.2, 0, -bodyLen * 1.48, 8.5 * k + flutter * 0.6);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(203, 213, 225, 0.62)';
+  ctx.fill();
+
+  // 3. Cặp sải vây tam giác cao vút (Dorsal & Anal High-Fin Veils)
+  for (const s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.moveTo(4 * k, s * 5 * k);
+    ctx.quadraticCurveTo(
+      -3 * k,
+      s * wingSpread * 0.72,
+      -17 * k,
+      s * (wingSpread + flutter * s * 0.8),
+    );
+    ctx.quadraticCurveTo(-12 * k, s * wingSpread * 0.48, -bodyLen * 0.72, s * 4.5 * k);
+    ctx.closePath();
+
+    const veilGrad = ctx.createLinearGradient(0, 0, -14 * k, s * wingSpread);
+    veilGrad.addColorStop(0, 'rgba(226, 232, 240, 0.88)');
+    veilGrad.addColorStop(0.55, 'rgba(148, 163, 184, 0.52)');
+    veilGrad.addColorStop(1, 'rgba(186, 230, 253, 0.25)');
+    ctx.fillStyle = veilGrad;
+    ctx.fill();
+  }
+
+  // 4. Thân hình tam giác dẹt ánh bạc ngọc trai 3D
+  ctx.beginPath();
+  ctx.moveTo(bodyLen * 0.95, 0);
+  ctx.quadraticCurveTo(3 * k, -10 * k, -bodyLen * 0.82, -4 * k);
+  ctx.quadraticCurveTo(-bodyLen * 0.95, 0, -bodyLen * 0.82, 4 * k);
+  ctx.quadraticCurveTo(3 * k, 10 * k, bodyLen * 0.95, 0);
+  ctx.closePath();
+
+  const silverGrad = ctx.createRadialGradient(2 * k, -2 * k, 1 * k, 0, 0, bodyLen);
+  silverGrad.addColorStop(0, '#FFFFFF');
+  silverGrad.addColorStop(0.48, '#CBD5E1');
+  silverGrad.addColorStop(1, '#475569');
+  ctx.fillStyle = silverGrad;
+  ctx.fill();
+
+  // 5. Các sọc mực đen sắc nét cắt ngang thân & chân vây
+  ctx.save();
+  const barXs = [5.2 * k, 0.4 * k, -4.4 * k, -8.5 * k];
+  const barWidths = [1.8 * k, 2.2 * k, 1.9 * k, 1.4 * k];
+  barXs.forEach((bx, bi) => {
+    const bw = barWidths[bi] ?? 1.6 * k;
+    const span = bi === 0 ? 5.5 * k : bi === 1 ? 15 * k : bi === 2 ? 12.5 * k : 7 * k;
+    ctx.fillStyle = bi < 3 ? 'rgba(20, 26, 36, 0.86)' : 'rgba(20, 26, 36, 0.72)';
+    ctx.beginPath();
+    ctx.ellipse(bx, 0, bw * 0.65, span, 0.14, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.restore();
+
+  // 6. Mắt ánh bạc đồng tử ruby
+  for (const s of [-1, 1]) {
+    ctx.beginPath();
+    ctx.arc(8.2 * k, s * 2.5 * k, 1.45 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#B91C1C';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(8.2 * k, s * 2.5 * k, 0.85 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#090D16';
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+/** 10. Cá Nóc Ngọc Trai (Pearl Boxfish): Hình khối cầu tròn, hoa văn lục giác ngọc bích, vây nhỏ vẫy nhanh, phồng 1.4x khi nhấn */
+function drawPearlBoxfish(
+  ctx: CanvasRenderingContext2D,
+  fish: DynamicKoiFish,
+  pts: readonly [number, number, number][],
+  k: number,
+  t: number,
+  swimFreq: number,
+  puffScale: number,
+) {
+  const anchor = pts[1] ?? pts[0]!;
+  const rx = 11.2 * k * puffScale;
+  const ry = 8.9 * k * puffScale;
+  const tailWag = Math.sin(t * swimFreq * 2.2 + fish.fi) * 2.5 * k;
+
+  ctx.save();
+  ctx.translate(anchor[0], anchor[1]);
+  ctx.rotate(anchor[2]);
+
+  // 0. Vầng hào quang ngọc trai khi Cá Nóc đang phồng 3D (1.4x trong 2s)
+  if (puffScale > 1.01) {
+    const puffAura = ctx.createRadialGradient(0, 0, rx * 0.6, 0, 0, rx * 1.85);
+    const auraAlpha = Math.min(0.65, (puffScale - 1) * 1.5);
+    puffAura.addColorStop(0, `rgba(94, 234, 212, ${auraAlpha.toFixed(3)})`);
+    puffAura.addColorStop(0.5, `rgba(254, 240, 138, ${(auraAlpha * 0.45).toFixed(3)})`);
+    puffAura.addColorStop(1, 'rgba(94, 234, 212, 0)');
+    ctx.fillStyle = puffAura;
+    ctx.beginPath();
+    ctx.arc(0, 0, rx * 1.85, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 1. Đôi vây ngực nhỏ vẫy cực nhanh (High-frequency buzzing boxfish fans)
+  for (const s of [-1, 1]) {
+    const buzz = Math.sin(t * swimFreq * 3.8 + s * 1.4 + fish.fi) * 0.55;
+    ctx.save();
+    ctx.translate(2 * k * puffScale, s * ry * 0.88);
+    ctx.rotate(s * (0.65 + buzz));
+    ctx.beginPath();
+    ctx.ellipse(0, s * 2.6 * k, 2.8 * k, 4.2 * k, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(254, 249, 219, 0.72)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // 2. Vây đuôi tròn nhỏ đáng yêu
+  ctx.beginPath();
+  ctx.moveTo(-rx * 0.85, 0);
+  ctx.quadraticCurveTo(-rx - 5 * k, -4.5 * k + tailWag, -rx - 7.5 * k, tailWag);
+  ctx.quadraticCurveTo(-rx - 5 * k, 4.5 * k + tailWag, -rx * 0.85, 0);
+  ctx.fillStyle = 'rgba(253, 224, 130, 0.78)';
+  ctx.fill();
+
+  // 3. Thân khối cầu tròn bầu bĩnh 3D (Rounded Cubic/Spherical Carapace)
+  ctx.beginPath();
+  ctx.moveTo(rx, 0);
+  ctx.bezierCurveTo(rx, -ry * 0.92, rx * 0.45, -ry, 0, -ry);
+  ctx.bezierCurveTo(-rx * 0.58, -ry, -rx, -ry * 0.82, -rx, 0);
+  ctx.bezierCurveTo(-rx, ry * 0.82, -rx * 0.58, ry, 0, ry);
+  ctx.bezierCurveTo(rx * 0.45, ry, rx, ry * 0.92, rx, 0);
+  ctx.closePath();
+
+  const shellGrad = ctx.createRadialGradient(-rx * 0.15, -ry * 0.35, 1.5 * k, 0, 0, rx * 1.15);
+  shellGrad.addColorStop(0, '#FEF9DB');
+  shellGrad.addColorStop(0.42, '#EAC860');
+  shellGrad.addColorStop(0.82, '#B68D2E');
+  shellGrad.addColorStop(1, '#6C5016');
+  ctx.fillStyle = shellGrad;
+  ctx.fill();
+
+  // 4. Hoa văn lục giác ngọc bích phát sáng dịu nhẹ trên mai cá
+  ctx.save();
+  ctx.strokeStyle = 'rgba(45, 212, 191, 0.85)';
+  ctx.shadowColor = '#2DD4BF';
+  ctx.shadowBlur = 4 * k;
+  ctx.lineWidth = 0.95 * k;
+  const hexCenters: readonly [number, number, number][] = [
+    [0, 0, 3.2 * k * puffScale],
+    [-4.8 * k * puffScale, -3.4 * k * puffScale, 2.5 * k * puffScale],
+    [-4.8 * k * puffScale, 3.4 * k * puffScale, 2.5 * k * puffScale],
+    [4.6 * k * puffScale, -3.0 * k * puffScale, 2.4 * k * puffScale],
+    [4.6 * k * puffScale, 3.0 * k * puffScale, 2.4 * k * puffScale],
+  ];
+  hexCenters.forEach(([hx, hy, hr]) => {
+    ctx.beginPath();
+    for (let v = 0; v < 6; v += 1) {
+      const ang = (v * Math.PI) / 3;
+      const vx = hx + Math.cos(ang) * hr;
+      const vy = hy + Math.sin(ang) * hr;
+      if (v === 0) ctx.moveTo(vx, vy);
+      else ctx.lineTo(vx, vy);
+    }
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(hx, hy, hr * 0.32, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(94, 234, 212, 0.8)';
+    ctx.fill();
+  });
+  ctx.restore();
+
+  // 5. Đôi mắt tròn long lanh cỡ lớn đặc trưng cá nóc
+  for (const s of [-1, 1]) {
+    const ex = rx * 0.62;
+    const ey = s * ry * 0.46;
+    ctx.beginPath();
+    ctx.arc(ex, ey, 2.05 * k * Math.sqrt(puffScale), 0, Math.PI * 2);
+    ctx.fillStyle = '#0F172A';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex + 0.5 * k, ey - 0.5 * k, 0.72 * k, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+const DEFAULT_FISH_WD = [
+  0.5, 0.85, 1, 0.95, 0.82, 0.64, 0.48, 0.34, 0.24, 0.17, 0.13, 0.1,
+] as const;
+
+/** Vẽ bóng đổ 3D của toàn bộ đàn cá xuống đáy hồ trước khi sắp xếp Z-Buffer */
+export function drawAllFishPondBedShadows(
   ctx: CanvasRenderingContext2D,
   koiFishes: readonly DynamicKoiFish[],
   t: number,
   H: number,
   S: number,
-) {
-  const wd = [0.5, 0.85, 1, 0.95, 0.82, 0.64, 0.48, 0.34, 0.24, 0.17, 0.13, 0.1] as const;
+): void {
   const N = 12;
-
-  // =========================================================================
-  // PASS 1: 3D DROP SHADOWS ON POND BED (Đổ bóng 3D rơi xuống đáy hồ sâu Z)
-  // =========================================================================
   ctx.save();
   koiFishes.forEach((fish) => {
     const z = fish.z ?? 0.5;
     const shadowOffsetX = (1 + 18 * z) * S;
     const shadowOffsetY = (12 + 26 * z) * S;
-    const shadowAlpha = 0.22 * (1 - 0.25 * z);
+    const shadowAlpha = 0.24 * (1 - 0.26 * z);
 
-    const sizeMult = fish.customScale ?? 1;
+    const puffScale = getBoxfishPuffScale(fish);
+    const sizeMult = (fish.customScale ?? 1) * puffScale;
     const k =
       S * fish.config.sz * sizeMult * (0.55 + 0.45 * z) * (0.58 + (0.78 * Math.max(0, fish.y)) / H);
-    const seg = 6.6 * k;
 
+    ctx.fillStyle = `rgba(3, 23, 15, ${shadowAlpha.toFixed(3)})`;
+
+    if (fish.species === 'stingray') {
+      ctx.beginPath();
+      ctx.ellipse(
+        fish.x - Math.cos(fish.heading) * 8 * k + shadowOffsetX,
+        fish.y - Math.sin(fish.heading) * 8 * k + shadowOffsetY,
+        18 * k,
+        14 * k,
+        fish.heading,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+      return;
+    }
+
+    if (fish.species === 'boxfish') {
+      ctx.beginPath();
+      ctx.ellipse(
+        fish.x - Math.cos(fish.heading) * 6 * k + shadowOffsetX,
+        fish.y - Math.sin(fish.heading) * 6 * k + shadowOffsetY,
+        11.5 * k,
+        9.2 * k,
+        fish.heading,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+      return;
+    }
+
+    const seg = (fish.species === 'ribbonfish' ? 11.2 : 6.6) * k;
     let px = fish.x + shadowOffsetX;
     let py = fish.y + shadowOffsetY;
     let a = fish.heading;
@@ -2908,122 +3637,249 @@ export function drawDynamicKoiFishes(
 
     ctx.beginPath();
     for (let i = 0; i < N; i += 1) {
-      const rW = (wd[i] ?? 0.4) * 6.2 * k;
+      const rW = (DEFAULT_FISH_WD[i] ?? 0.4) * (fish.species === 'ribbonfish' ? 4.4 : 6.2) * k;
       ctx.moveTo(px + rW, py);
       ctx.ellipse(px, py, rW, rW * 0.65, a, 0, Math.PI * 2);
       px -= Math.cos(a) * seg;
       py -= Math.sin(a) * seg;
       a += Math.sin(t * swimFreq - i * 0.58 + fish.fi * 1.9) * 0.16 * (0.3 + i / N);
     }
-    ctx.fillStyle = `rgba(3, 23, 15, ${shadowAlpha.toFixed(3)})`;
     ctx.fill();
   });
   ctx.restore();
+}
 
-  // =========================================================================
-  // PASS 2: Z-SORTED 3D BODIES & 6 SPECIES MORPHOLOGIES
-  // =========================================================================
-  const sortedFishes = [...koiFishes].sort((a, b) => (a.z ?? 0.5) - (b.z ?? 0.5));
+/** Vẽ từng cá thể cá 3D độc lập ở tọa độ Z thực (dùng được cả trong Z-Buffer và xem trước Sổ Cá) */
+export function drawSingleZFish(
+  ctx: CanvasRenderingContext2D,
+  fish: DynamicKoiFish,
+  t: number,
+  H: number,
+  S: number,
+  fixedBaseScale?: number,
+): void {
+  const N = 12;
+  const { fi } = fish;
+  const z = fish.z ?? 0.5;
+  const per = 11 + (fi % 4) * 2;
+  const d0 = (((t - fi * 3.1) % per) + per) % per;
+  const dd = Math.min(d0, per - d0);
+  const nr = Math.exp(-Math.pow(dd / 1.35, 2));
 
-  sortedFishes.forEach((fish) => {
-    const { fi } = fish;
-    const z = fish.z ?? 0.5;
-    const per = 11 + (fi % 4) * 2;
-    const d0 = (((t - fi * 3.1) % per) + per) % per;
-    const dd = Math.min(d0, per - d0);
-    const nr = Math.exp(-Math.pow(dd / 1.35, 2));
+  const sizeMult = fish.customScale ?? 1;
+  const puffScale = getBoxfishPuffScale(fish);
+  const k =
+    fixedBaseScale !== undefined
+      ? fixedBaseScale * sizeMult * puffScale
+      : S *
+        fish.config.sz *
+        sizeMult *
+        (0.55 + 0.45 * z) *
+        (1 + 0.06 * nr) *
+        (0.58 + (0.78 * Math.max(0, fish.y)) / H);
 
-    const sizeMult = fish.customScale ?? 1;
-    // Phối cảnh 3D trên trục Z: S_persp = 0.55 + 0.45 * z
-    const k =
-      S *
-      fish.config.sz *
-      sizeMult *
-      (0.55 + 0.45 * z) *
-      (1 + 0.06 * nr) *
-      (0.58 + (0.78 * Math.max(0, fish.y)) / H);
-    const seg = 6.6 * k;
-    const pts: [number, number, number][] = [];
-    let px = fish.x;
-    let py = fish.y;
-    let a = fish.heading;
+  const pitchForeshorten = Math.max(0.78, Math.cos(fish.pitchAngle * 0.6));
+  const seg = 6.6 * k * pitchForeshorten;
+  const pts: [number, number, number][] = [];
+  let px = fish.x;
+  let py = fish.y;
+  let a = fish.heading;
 
-    const swimFreq = 3.8 * fish.speedMult;
-    for (let i = 0; i < N; i += 1) {
-      pts.push([px, py, a]);
-      px -= Math.cos(a) * seg;
-      py -= Math.sin(a) * seg;
-      a += Math.sin(t * swimFreq - i * 0.58 + fi * 1.9) * 0.16 * (0.3 + i / N);
-    }
+  const swimFreq = 3.8 * fish.speedMult;
+  for (let i = 0; i < N; i += 1) {
+    pts.push([px, py, a]);
+    px -= Math.cos(a) * seg;
+    py -= Math.sin(a) * seg;
+    a += Math.sin(t * swimFreq - i * 0.58 + fi * 1.9) * 0.16 * (0.3 + i / N);
+  }
 
-    const h = pts[0];
-    const e = pts[N - 1];
-    const q = pts[2];
-    if (!h || !e || !q) return;
+  const h = pts[0];
+  const e = pts[N - 1];
+  const q = pts[2];
+  if (!h || !e || !q) return;
 
-    // Hào quang phát quang dưới nước cho cá cấp >= 5 hoặc giống đặc biệt
-    const hasAura = (fish.level && fish.level >= 5) || Boolean(fish.glowColor);
-    if (hasAura) {
-      ctx.save();
-      const auraColor = fish.glowColor || 'rgba(255, 215, 0, 0.35)';
-      ctx.shadowColor = auraColor;
-      ctx.shadowBlur = (12 + (fish.level ? (fish.level - 4) * 3 : 6)) * k;
-      ctx.fillStyle = auraColor;
-      ctx.beginPath();
-      pts.forEach((p, idx) => {
-        const rW = (wd[idx] ?? 0.4) * 8.5 * k;
-        ctx.moveTo(p[0] + rW, p[1]);
-        ctx.ellipse(p[0], p[1], rW, rW * 0.7, p[2], 0, Math.PI * 2);
-      });
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // Depth fog khi cá lặn sâu Z < 0.75
+  // Hào quang phát quang dưới nước cho cá cấp >= 5 hoặc giống đặc biệt
+  const hasAura = (fish.level && fish.level >= 5) || Boolean(fish.glowColor);
+  if (hasAura) {
     ctx.save();
-    const depthFogAlpha = z < 0.75 ? 0.65 + 0.35 * (z / 0.75) : 1.0;
-    ctx.globalAlpha = (0.88 + 0.12 * nr) * depthFogAlpha;
-    ctx.lineJoin = 'round';
+    const auraColor = fish.glowColor || 'rgba(255, 215, 0, 0.35)';
+    ctx.shadowColor = auraColor;
+    ctx.shadowBlur = (12 + (fish.level ? (fish.level - 4) * 3 : 6)) * k;
+    ctx.fillStyle = auraColor;
+    ctx.beginPath();
+    pts.forEach((p, idx) => {
+      const rW = (DEFAULT_FISH_WD[idx] ?? 0.4) * 8.5 * k;
+      ctx.moveTo(p[0] + rW, p[1]);
+      ctx.ellipse(p[0], p[1], rW, rW * 0.7, p[2], 0, Math.PI * 2);
+    });
+    ctx.fill();
+    ctx.restore();
+  }
 
-    // Dispatch theo đúng 6 hình thái học cá riêng biệt
-    switch (fish.species) {
-      case 'goldfish':
-        drawFantailGoldfish(ctx, fish, pts, k, t, seg, swimFreq);
-        break;
-      case 'betta':
-        drawHalfmoonBetta(ctx, fish, pts, k, t, seg, swimFreq);
-        break;
-      case 'butterfly':
-        drawButterflyCarp(ctx, fish, pts, wd, k, t, seg, swimFreq);
-        break;
-      case 'arowana':
-        drawAsianArowana(ctx, fish, pts, k, t, seg, swimFreq);
-        break;
-      case 'neon':
-        drawBioluminescentNeon(ctx, fish, pts, k, t, seg, swimFreq);
-        break;
-      case 'koi':
-      default:
-        drawKoiCarp(ctx, fish, pts, wd, k, t, seg, swimFreq);
-        break;
-    }
+  // Depth fog khi cá lặn sâu Z < 0.75
+  ctx.save();
+  const depthFogAlpha = z < 0.75 ? 0.68 + 0.32 * (z / 0.75) : 1.0;
+  ctx.globalAlpha = (0.88 + 0.12 * nr) * depthFogAlpha;
+  ctx.lineJoin = 'round';
 
-    // Sống lưng ánh ngọc phản xạ ánh sáng (Dorsal specular ridge khi Z > 0.88)
+  // Dispatch đầy đủ 10 hình thái học cá riêng biệt
+  switch (fish.species) {
+    case 'goldfish':
+      drawFantailGoldfish(ctx, fish, pts, k, t, seg, swimFreq);
+      break;
+    case 'betta':
+      drawHalfmoonBetta(ctx, fish, pts, k, t, seg, swimFreq);
+      break;
+    case 'butterfly':
+      drawButterflyCarp(ctx, fish, pts, DEFAULT_FISH_WD, k, t, seg, swimFreq);
+      break;
+    case 'arowana':
+      drawAsianArowana(ctx, fish, pts, k, t, seg, swimFreq);
+      break;
+    case 'neon':
+      drawBioluminescentNeon(ctx, fish, pts, k, t, seg, swimFreq);
+      break;
+    case 'stingray':
+      drawJadeStingray(ctx, fish, pts, k, t, swimFreq);
+      break;
+    case 'ribbonfish':
+      drawCelestialRibbonfish(ctx, fish, pts, k, t, seg, swimFreq);
+      break;
+    case 'angelfish':
+      drawVeilAngelfish(ctx, fish, pts, k, t, swimFreq);
+      break;
+    case 'boxfish':
+      drawPearlBoxfish(ctx, fish, pts, k, t, swimFreq, puffScale);
+      break;
+    case 'koi':
+    default:
+      drawKoiCarp(ctx, fish, pts, DEFAULT_FISH_WD, k, t, seg, swimFreq);
+      break;
+  }
+
+  // Ánh khúc xạ Voronoi lướt nhẹ trên lưng cá + Sống lưng ánh ngọc phản xạ ánh sáng
+  drawFishCausticDapple(ctx, pts, k, t, z);
+
+  if (fish.species !== 'stingray' && fish.species !== 'boxfish' && fish.species !== 'ribbonfish') {
     ctx.beginPath();
     pts.forEach((p, idx) => (idx ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+    const rollShiftX = Math.sin(fish.rollAngle) * 1.4 * k;
     if (z > 0.88) {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
       ctx.lineWidth = 2.2 * k;
       ctx.shadowColor = '#FFFFFF';
       ctx.shadowBlur = 5 * k;
     } else {
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
-      ctx.lineWidth = 1.5 * k;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+      ctx.lineWidth = 1.45 * k + Math.abs(rollShiftX) * 0.2;
     }
     ctx.stroke();
+  }
 
-    ctx.restore();
+  ctx.restore();
+}
+
+export function drawDynamicKoiFishes(
+  ctx: CanvasRenderingContext2D,
+  koiFishes: readonly DynamicKoiFish[],
+  t: number,
+  H: number,
+  S: number,
+) {
+  drawAllFishPondBedShadows(ctx, koiFishes, t, H, S);
+  const sortedFishes = [...koiFishes].sort((a, b) => (a.z ?? 0.5) - (b.z ?? 0.5));
+  sortedFishes.forEach((fish) => {
+    drawSingleZFish(ctx, fish, t, H, S);
   });
+}
+
+/** Vẽ xem trước hình thái 3D sống động cho từng loài cá trong Sổ Cá */
+export function drawFishMorphologyPreview(
+  ctx: CanvasRenderingContext2D,
+  speciesId: FishSpeciesId,
+  W: number,
+  H: number,
+  t: number,
+): void {
+  const speciesMeta = FISH_SPECIES[speciesId] ?? FISH_SPECIES.koi;
+  ctx.clearRect(0, 0, W, H);
+
+  // Nền nước sâu 3D + đốm caustic dịu
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#051913');
+  bg.addColorStop(0.5, '#0B2F24');
+  bg.addColorStop(1, '#04140F');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.strokeStyle = 'rgba(167, 243, 208, 0.08)';
+  ctx.lineWidth = 1.2;
+  for (let i = 0; i < 3; i += 1) {
+    ctx.beginPath();
+    const y0 = H * (0.28 + i * 0.24);
+    for (let x = 0; x <= W; x += 24) {
+      const y = y0 + Math.sin(x * 0.04 + t * 1.4 + i) * 5;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const anchorX =
+    speciesId === 'ribbonfish'
+      ? W * 0.8
+      : speciesId === 'butterfly' || speciesId === 'goldfish' || speciesId === 'betta'
+        ? W * 0.68
+        : W * 0.64;
+  const anchorY = H * 0.52 + Math.sin(t * 1.4) * 3.5;
+
+  const previewFish: DynamicKoiFish = {
+    config: {
+      ax: 0,
+      ay: 0,
+      sp: 1,
+      ph: 0,
+      sz: 1,
+      baseColor: speciesMeta.baseColor,
+      spotColor: speciesMeta.spotColor,
+      accentColor: speciesMeta.accentColor,
+    },
+    fi: 1,
+    species: speciesId,
+    level: speciesId === 'arowana' || speciesId === 'ribbonfish' ? 6 : 2,
+    customScale: 1,
+    glowColor: speciesMeta.glowColor,
+    isButterfly: speciesMeta.isButterfly,
+    petSpinTimer: 0,
+    puffTimer: speciesId === 'boxfish' && Math.sin(t * 1.1) > 0.25 ? 1.0 : 0,
+    u: 0,
+    x: anchorX,
+    y: anchorY,
+    z: 0.78,
+    vz: 0,
+    targetZ: 0.78,
+    heading: Math.sin(t * 1.2) * 0.1,
+    rollAngle: Math.sin(t * 1.1) * 0.14,
+    pitchAngle: Math.cos(t * 1.1) * 0.06,
+    boostTimer: 0,
+    speedMult: 0.9,
+    seekingBait: false,
+    scatterTimeLeft: 0,
+    scatterVx: 0,
+    scatterVy: 0,
+    initialized: true,
+  };
+
+  const baseScale =
+    speciesId === 'ribbonfish'
+      ? Math.min(W / 245, H / 90)
+      : speciesId === 'angelfish'
+        ? Math.min(W / 205, H / 88)
+        : Math.min(W / 185, H / 80);
+
+  drawSingleZFish(ctx, previewFish, t, H, 1, baseScale);
 }
 
 export function drawBoidsMinnows(

@@ -1,4 +1,14 @@
-export type FishSpeciesId = 'koi' | 'goldfish' | 'betta' | 'butterfly' | 'arowana' | 'neon';
+export type FishSpeciesId =
+  | 'koi'
+  | 'goldfish'
+  | 'betta'
+  | 'butterfly'
+  | 'arowana'
+  | 'neon'
+  | 'stingray'
+  | 'ribbonfish'
+  | 'angelfish'
+  | 'boxfish';
 
 export type KoiBreedId = FishSpeciesId | 'kohaku' | 'yamabuki' | 'sanke' | 'jade' | 'celestial';
 
@@ -8,7 +18,16 @@ export interface FishSpeciesMeta {
   readonly commonName: string;
   readonly description: string;
   readonly bodyShape:
-    'torpedo' | 'fantail_oranda' | 'halfmoon_betta' | 'butterfly_carp' | 'arowana' | 'neon_tetra';
+    | 'torpedo'
+    | 'fantail_oranda'
+    | 'halfmoon_betta'
+    | 'butterfly_carp'
+    | 'arowana'
+    | 'neon_tetra'
+    | 'jade_stingray'
+    | 'celestial_ribbon'
+    | 'veil_angelfish'
+    | 'pearl_boxfish';
   readonly defaultZRange: readonly [number, number];
   readonly baseColor: readonly [number, number, number];
   readonly spotColor: readonly [number, number, number];
@@ -95,7 +114,72 @@ export const FISH_SPECIES: Record<FishSpeciesId, FishSpeciesMeta> = {
     accentColor: [167, 243, 208],
     glowColor: 'rgba(0, 245, 255, 0.65)',
   },
+  stingray: {
+    id: 'stingray',
+    nameVi: 'Cá Đuối Ngọc Bích',
+    commonName: 'Freshwater Jade Stingray',
+    description:
+      'Thân đĩa tròn dẹt màu ngọc bích điểm đốm vàng cân xứng và đuôi roi dài thanh mảnh, lướt nhẹ sát tầng đáy hồ bằng chuyển động sóng cánh hình học.',
+    bodyShape: 'jade_stingray',
+    defaultZRange: [0.15, 0.45],
+    baseColor: [20, 128, 102],
+    spotColor: [245, 208, 92],
+    accentColor: [110, 231, 183],
+    glowColor: 'rgba(52, 211, 153, 0.35)',
+  },
+  ribbonfish: {
+    id: 'ribbonfish',
+    nameVi: 'Cá Ngân Đai Thủy Tinh',
+    commonName: 'Celestial Ribbonfish',
+    description:
+      'Thân dẹt dài óng ánh bạc ngọc trai gấp 2.5 lần cá thường, đội mào tia vây đầu và vây lưng đỏ chu sa chạy dọc thân theo 3 nhịp sóng sin uyển chuyển.',
+    bodyShape: 'celestial_ribbon',
+    defaultZRange: [0.32, 0.78],
+    baseColor: [236, 244, 250],
+    spotColor: [225, 45, 68],
+    accentColor: [165, 224, 248],
+    glowColor: 'rgba(225, 45, 68, 0.35)',
+  },
+  angelfish: {
+    id: 'angelfish',
+    nameVi: 'Cá Thần Tiên Vũ Y',
+    commonName: 'High-Fin Veil Angelfish',
+    description:
+      'Dáng tam giác cao vút thanh tao với sải vây lưng và vây hậu môn lớn hơn chiều dài thân, ánh bạc xà cừ điểm sọc mực đậm nghiêng mình lướt qua cuống sen.',
+    bodyShape: 'veil_angelfish',
+    defaultZRange: [0.42, 0.86],
+    baseColor: [242, 246, 250],
+    spotColor: [28, 34, 44],
+    accentColor: [186, 230, 253],
+    glowColor: 'rgba(186, 230, 253, 0.42)',
+  },
+  boxfish: {
+    id: 'boxfish',
+    nameVi: 'Cá Nóc Ngọc Trai',
+    commonName: 'Celestial Pearl Boxfish',
+    description:
+      'Thân khối cầu bầu bĩnh với hoa văn lục giác ngọc bích phát sáng dịu nhẹ và đôi vây nhỏ vẫy nhanh; chạm vào sẽ phồng tròn 3D gấp 1.4 lần trong 2 giây.',
+    bodyShape: 'pearl_boxfish',
+    defaultZRange: [0.38, 0.85],
+    baseColor: [234, 200, 96],
+    spotColor: [45, 212, 191],
+    accentColor: [254, 249, 219],
+    glowColor: 'rgba(94, 234, 212, 0.52)',
+  },
 };
+
+export const ALL_FISH_SPECIES_IDS: readonly FishSpeciesId[] = [
+  'koi',
+  'goldfish',
+  'betta',
+  'butterfly',
+  'arowana',
+  'neon',
+  'stingray',
+  'ribbonfish',
+  'angelfish',
+  'boxfish',
+];
 
 export interface KoiBreedMeta {
   readonly id: KoiBreedId;
@@ -188,6 +272,62 @@ export const KOI_BREEDS: Record<KoiBreedId, KoiBreedMeta> = {
     spotColor: [...FISH_SPECIES.neon.spotColor],
     accentColor: FISH_SPECIES.neon.accentColor ? [...FISH_SPECIES.neon.accentColor] : undefined,
     glowColor: FISH_SPECIES.neon.glowColor,
+  },
+  stingray: {
+    id: 'stingray',
+    nameVi: FISH_SPECIES.stingray.nameVi,
+    englishName: FISH_SPECIES.stingray.commonName,
+    rarityVi: 'Cực hiếm',
+    rarityTier: 4,
+    description: FISH_SPECIES.stingray.description,
+    baseColor: [...FISH_SPECIES.stingray.baseColor],
+    spotColor: [...FISH_SPECIES.stingray.spotColor],
+    accentColor: FISH_SPECIES.stingray.accentColor
+      ? [...FISH_SPECIES.stingray.accentColor]
+      : undefined,
+    glowColor: FISH_SPECIES.stingray.glowColor,
+  },
+  ribbonfish: {
+    id: 'ribbonfish',
+    nameVi: FISH_SPECIES.ribbonfish.nameVi,
+    englishName: FISH_SPECIES.ribbonfish.commonName,
+    rarityVi: 'Huyền thoại',
+    rarityTier: 5,
+    description: FISH_SPECIES.ribbonfish.description,
+    baseColor: [...FISH_SPECIES.ribbonfish.baseColor],
+    spotColor: [...FISH_SPECIES.ribbonfish.spotColor],
+    accentColor: FISH_SPECIES.ribbonfish.accentColor
+      ? [...FISH_SPECIES.ribbonfish.accentColor]
+      : undefined,
+    glowColor: FISH_SPECIES.ribbonfish.glowColor,
+  },
+  angelfish: {
+    id: 'angelfish',
+    nameVi: FISH_SPECIES.angelfish.nameVi,
+    englishName: FISH_SPECIES.angelfish.commonName,
+    rarityVi: 'Hiếm',
+    rarityTier: 3,
+    description: FISH_SPECIES.angelfish.description,
+    baseColor: [...FISH_SPECIES.angelfish.baseColor],
+    spotColor: [...FISH_SPECIES.angelfish.spotColor],
+    accentColor: FISH_SPECIES.angelfish.accentColor
+      ? [...FISH_SPECIES.angelfish.accentColor]
+      : undefined,
+    glowColor: FISH_SPECIES.angelfish.glowColor,
+  },
+  boxfish: {
+    id: 'boxfish',
+    nameVi: FISH_SPECIES.boxfish.nameVi,
+    englishName: FISH_SPECIES.boxfish.commonName,
+    rarityVi: 'Cực hiếm',
+    rarityTier: 4,
+    description: FISH_SPECIES.boxfish.description,
+    baseColor: [...FISH_SPECIES.boxfish.baseColor],
+    spotColor: [...FISH_SPECIES.boxfish.spotColor],
+    accentColor: FISH_SPECIES.boxfish.accentColor
+      ? [...FISH_SPECIES.boxfish.accentColor]
+      : undefined,
+    glowColor: FISH_SPECIES.boxfish.glowColor,
   },
   kohaku: {
     id: 'kohaku',
@@ -337,6 +477,14 @@ export function mapOldBreedToSpecies(breed: string): FishSpeciesId {
     case 'neon':
     case 'jade':
       return 'neon';
+    case 'stingray':
+      return 'stingray';
+    case 'ribbonfish':
+      return 'ribbonfish';
+    case 'angelfish':
+      return 'angelfish';
+    case 'boxfish':
+      return 'boxfish';
     case 'koi':
     case 'kohaku':
     case 'yamabuki':
@@ -405,7 +553,7 @@ export function createInitialZenKoiState(): ZenKoiGameState {
     foodCount: 99,
     dewGems: 25,
     fishes: initialFishes,
-    unlockedBreeds: ['koi', 'goldfish', 'betta', 'butterfly', 'arowana', 'neon'],
+    unlockedBreeds: [...ALL_FISH_SPECIES_IDS],
     lastFedAt: now,
     lastForageAt: now,
     lastReplenishedAt: now,
@@ -473,7 +621,7 @@ export function loadZenKoiState(): ZenKoiGameState {
       unlockedBreeds:
         Array.isArray(parsed.unlockedBreeds) && parsed.unlockedBreeds.length > 0
           ? parsed.unlockedBreeds
-          : ['koi', 'goldfish', 'betta', 'butterfly', 'arowana', 'neon'],
+          : [...ALL_FISH_SPECIES_IDS],
       lastFedAt: parsed.lastFedAt || Date.now(),
       lastForageAt: parsed.lastForageAt || Date.now(),
       lastReplenishedAt: parsed.lastReplenishedAt || Date.now(),
@@ -594,25 +742,33 @@ export function updateFishScale(
 }
 
 /**
- * Ấp / Tạo cá mới (Gacha ngẫu nhiên 6 loài)
+ * Ấp / Tạo cá mới (Ngẫu nhiên 10 loài)
  */
 export function hatchNewKoi(
   state: ZenKoiGameState,
 ): { newState: ZenKoiGameState; fish: SavedKoiFish } | null {
   const roll = Math.random() * 100;
   let species: FishSpeciesId;
-  if (roll < 30) {
-    species = 'koi'; // 30%
-  } else if (roll < 52) {
-    species = 'goldfish'; // 22%
-  } else if (roll < 70) {
-    species = 'betta'; // 18%
-  } else if (roll < 82) {
-    species = 'neon'; // 12%
-  } else if (roll < 92) {
-    species = 'butterfly'; // 10%
+  if (roll < 18) {
+    species = 'koi'; // 18%
+  } else if (roll < 33) {
+    species = 'goldfish'; // 15%
+  } else if (roll < 46) {
+    species = 'betta'; // 13%
+  } else if (roll < 57) {
+    species = 'neon'; // 11%
+  } else if (roll < 67) {
+    species = 'angelfish'; // 10%
+  } else if (roll < 76) {
+    species = 'butterfly'; // 9%
+  } else if (roll < 84) {
+    species = 'boxfish'; // 8%
+  } else if (roll < 91) {
+    species = 'stingray'; // 7%
+  } else if (roll < 96) {
+    species = 'ribbonfish'; // 5%
   } else {
-    species = 'arowana'; // 8% (Huyền thoại Cá Rồng Kim Long)
+    species = 'arowana'; // 4% (Huyền thoại Cá Rồng Kim Long)
   }
 
   const result = addFishToLake(state, species);
