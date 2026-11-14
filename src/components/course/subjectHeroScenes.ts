@@ -69,12 +69,13 @@ function getGlowSprite(color: string): HTMLCanvasElement | null {
   const sprite = document.createElement('canvas');
   sprite.width = 64;
   sprite.height = 64;
-  let g: CanvasRenderingContext2D | null = null;
-  try {
-    g = sprite.getContext('2d');
-  } catch {
-    g = null;
-  }
+  const g = (() => {
+    try {
+      return sprite.getContext('2d');
+    } catch {
+      return null;
+    }
+  })();
   if (!g) {
     glowSpriteCache.set(color, null);
     return null;

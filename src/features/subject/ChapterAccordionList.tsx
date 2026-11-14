@@ -156,7 +156,10 @@ export function ChapterAccordionList({
       {/* Thanh điều khiển nhanh Thu gọn / Mở rộng */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-2 text-xs text-stone-600">
-          <Layers className="h-4 w-4 text-[var(--accent-primary)]" aria-hidden="true" />
+          <Layers
+            className="h-4 w-4 text-[var(--subject-accent-ink,var(--accent-primary))]"
+            aria-hidden="true"
+          />
           <span className="font-semibold text-stone-800">
             {chapters.length} chương · {totalLessonsInView} bài học
           </span>
@@ -223,7 +226,7 @@ export function ChapterAccordionList({
       <div className="relative space-y-6 pt-2">
         {/* Trục kẻ dọc mảnh chạy dọc mép trái nối liền từ Chương đầu đến Chương cuối */}
         <div
-          className="absolute top-6 bottom-6 left-3.5 w-[1.5px] bg-[#DFE6E1] sm:left-4 dark:bg-[#1E3B2D]"
+          className="absolute top-6 bottom-6 left-3.5 w-[1.5px] bg-[var(--subject-accent-border,#DFE6E1)] opacity-55 sm:left-4 dark:bg-[#1E3B2D]"
           aria-hidden="true"
         />
 
@@ -250,7 +253,7 @@ export function ChapterAccordionList({
                 {percentInChapter === 100 ? (
                   <div
                     title="Đã hoàn thành 100%"
-                    className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--subject-accent,#1A7F5A)] text-white shadow-xs ring-4 ring-[#EAF0F1] sm:h-8 sm:w-8 dark:ring-[#121517]"
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--subject-accent-ink,#1A7F5A)] text-white shadow-xs ring-4 ring-[#EAF0F1] sm:h-8 sm:w-8 dark:ring-[#121517]"
                   >
                     <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
                   </div>
@@ -353,7 +356,10 @@ export function ChapterAccordionList({
                     <div className="border-t border-stone-100 bg-white/70 px-5 py-3 sm:px-6 dark:border-[#2A323A] dark:bg-[#16191D]/70">
                       <div className="rounded-xl border border-stone-200/70 bg-stone-50/50 p-3 dark:border-[#2A323A] dark:bg-[#1A1F26]/50">
                         <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-stone-700 dark:text-stone-300">
-                          <Target className="text-subject-600 h-3.5 w-3.5" aria-hidden="true" />
+                          <Target
+                            className="h-3.5 w-3.5 text-[var(--subject-accent-ink,#57534E)] dark:text-[var(--subject-accent,#8EC5AA)]"
+                            aria-hidden="true"
+                          />
                           <span>Mục tiêu chương:</span>
                         </p>
                         <ul className="list-disc space-y-1 pl-4 text-xs text-stone-600 dark:text-stone-400">

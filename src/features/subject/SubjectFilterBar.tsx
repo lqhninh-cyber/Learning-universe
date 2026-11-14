@@ -74,7 +74,7 @@ export function SubjectFilterBar({
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Lọc bài học theo tên, khái niệm hoặc từ khóa trong môn..."
             aria-label="Lọc bài học trong môn"
-            className="focus:border-subject-500 h-10 w-full rounded-xl border border-stone-200 bg-stone-50/70 pr-4 pl-10 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus:bg-white focus:outline-none"
+            className="h-10 w-full rounded-xl border border-stone-200 bg-stone-50/70 pr-4 pl-10 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus:border-[var(--subject-accent-border,#6E6B7B)] focus:bg-white focus:outline-none"
           />
         </div>
 
@@ -94,7 +94,7 @@ export function SubjectFilterBar({
                 className={cn(
                   'cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
                   active
-                    ? 'bg-subject-600 text-white'
+                    ? 'bg-[var(--subject-accent-ink,#4338CA)] text-white shadow-2xs'
                     : 'border border-stone-200 bg-white text-stone-700 hover:bg-stone-50',
                 )}
               >
@@ -123,7 +123,7 @@ export function SubjectFilterBar({
                   className={cn(
                     'cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                     active
-                      ? 'border-subject-300 bg-subject-100 text-subject-900 border font-semibold'
+                      ? 'border border-[var(--subject-accent-border,#A5B4FC)] bg-[var(--subject-accent-soft,#E0E7FF)] font-semibold text-[var(--subject-accent-ink,#312E81)]'
                       : 'border border-stone-200/80 bg-stone-50 text-stone-600 hover:bg-stone-100',
                   )}
                 >

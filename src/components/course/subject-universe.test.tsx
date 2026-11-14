@@ -1,10 +1,11 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getSubjectBySlug } from '@/content-runtime';
 import { CourseDetailPage } from '@/pages/courses/CourseDetailPage';
 import { MotionProvider } from '@/shared/motion/MotionProvider';
 import { TooltipProvider } from '@/shared/ui/Tooltip';
+import { SubjectHeroCanvas } from './SubjectHeroCanvas';
 import { getSubjectUniverseTheme, SUBJECT_UNIVERSE_THEMES } from './subjectUniverseThemes';
 
 function renderCourse(slug: string) {
@@ -27,15 +28,27 @@ describe('Không gian Tri thức 120fps trên trang Chi tiết Môn học', () =
     Element.prototype.scrollIntoView = vi.fn();
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
   it.each([
-    ['cau-truc-dai-so', 'ctds', 'Thang Cấu Trúc Đại Số'],
-    ['hinh-hoc-affine', 'hhave', 'Ba Tầng Hình Học'],
-    ['giai-tich-ham-mot-bien', 'gthmb', 'Mạch Giải Tích 5 Chặng'],
-    ['giao-duc-hoc', 'gdh', 'Bản Đồ 4 Trụ Cột Sư Phạm'],
+    ['cau-truc-dai-so', 'ctds', 'Thang Cấu Trúc Đại Số', '#E5B84B', '#FBF5E6'],
+    ['hinh-hoc-affine', 'hhave', 'Ba Tầng Hình Học', '#38BDF8', '#EEF8FD'],
+    ['giai-tich-ham-mot-bien', 'gthmb', 'Mạch Giải Tích 5 Chặng', '#34D399', '#ECF9F3'],
+    ['giao-duc-hoc', 'gdh', 'Bản Đồ 4 Trụ Cột Sư Phạm', '#E76F51', '#FDF1EC'],
   ] as const)(
-    'môn %s dùng cảnh Canvas riêng (%s), không còn ảnh nền chụp và có sơ đồ điều hướng',
-    async (slug, universe, widgetTitle) => {
-      renderCourse(slug);
+    'môn %s dùng cảnh Canvas riêng (%s), đồng bộ biến CSS và có sơ đồ điều hướng',
+    async (slug, universe, widgetTitle, expectedAccent, expectedSurface) => {
+      const { container } = renderCourse(slug);
+
+      const pageRoot = container.querySelector(
+        `[data-subject-universe="${universe}"]`,
+      ) as HTMLElement;
+      expect(pageRoot).toBeInTheDocument();
+      expect(pageRoot.style.getPropertyValue('--subject-accent')).toBe(expectedAccent);
+      expect(pageRoot.style.getPropertyValue('--subject-surface')).toBe(expectedSurface);
 
       const hero = await screen.findByTestId('subject-universe-hero');
       expect(hero).toHaveAttribute('data-subject-universe', universe);
@@ -67,6 +80,73 @@ describe('Không gian Tri thức 120fps trên trang Chi tiết Môn học', () =
     expect(focused).toHaveLength(1);
     expect(focused[0]?.getAttribute('aria-label')).toMatch(/Trường con và trường các thương/);
     expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+  });
+
+  it('SubjectHeroCanvas tự tạm dừng vòng lặp 120fps qua IntersectionObserver khi cuộn ra khỏi khung nhìn', () => {
+    let ioCallback: IntersectionObserverCallback | undefined;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+
+    class MockIntersectionObserver implements IntersectionObserver {
+      readonly root = null;
+      readonly rootMargin = '';
+      readonly scrollMargin = '';
+      readonly thresholds = [];
+      constructor(cb: IntersectionObserverCallback) {
+        ioCallback = cb;
+      }
+      observe = observe;
+      unobserve = vi.fn();
+      disconnect = disconnect;
+      takeRecords = () => [];
+    }
+
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+    const fakeCtx = {
+      clearRect: vi.fn(),
+      save: vi.fn(),
+      restore: vi.fn(),
+      translate: vi.fn(),
+      rotate: vi.fn(),
+      beginPath: vi.fn(),
+      moveTo: vi.fn(),
+      lineTo: vi.fn(),
+      stroke: vi.fn(),
+      fill: vi.fn(),
+      fillRect: vi.fn(),
+      arc: vi.fn(),
+      fillText: vi.fn(),
+      closePath: vi.fn(),
+      setTransform: vi.fn(),
+      drawImage: vi.fn(),
+      createRadialGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
+      createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
+    } as unknown as CanvasRenderingContext2D;
+
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(fakeCtx);
+    const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(42);
+    const cafSpy = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
+
+    const { unmount } = render(<SubjectHeroCanvas universe="ctds" />);
+    expect(observe).toHaveBeenCalledTimes(1);
+    expect(rafSpy).toHaveBeenCalledTimes(1);
+
+    // Rời khung nhìn -> hủy frame đang chờ
+    ioCallback?.(
+      [{ isIntersecting: false } as IntersectionObserverEntry],
+      {} as IntersectionObserver,
+    );
+    expect(cafSpy).toHaveBeenCalledWith(42);
+
+    // Cuộn trở lại khung nhìn -> khởi động lại vòng lặp
+    ioCallback?.(
+      [{ isIntersecting: true } as IntersectionObserverEntry],
+      {} as IntersectionObserver,
+    );
+    expect(rafSpy).toHaveBeenCalledTimes(2);
+
+    unmount();
+    expect(disconnect).toHaveBeenCalledTimes(1);
   });
 
   it('mỗi bậc trong sơ đồ đều trỏ tới chương có thật trong manifest', () => {
