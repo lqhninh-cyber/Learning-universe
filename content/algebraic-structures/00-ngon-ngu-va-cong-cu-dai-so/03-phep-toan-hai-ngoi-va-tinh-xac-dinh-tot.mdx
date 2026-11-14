@@ -19,9 +19,6 @@ sources:
     pages: '7-11'
     sections: 'Mục 0.5, 0.6, 0.7'
     note: 'Phép toán hai ngôi, Định lý 0.14 (trang 8-9), Ví dụ 0.10 - 0.18 và bốn mẫu chứng minh (trang 11)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '12-18'
-    sections: 'Chương 0 - Chương 1'
 status: published
 version: 0.1.0
 authoring:
@@ -46,7 +43,7 @@ Sau khi hoàn thành bài học này, bạn có thể:
 
 ## 1. Phép toán hai ngôi, phần tử đơn vị và phần tử nghịch đảo
 
-Để chuyển từ một tập hợp thuần túy sang một *cấu trúc đại số* (như nhóm, vành, trường), ta cần trang bị cho tập hợp đó một hoặc nhiều phép toán kết hợp hai phần tử bất kỳ thành một phần tử mới thuộc chính tập hợp đó (<Cite source="gt-ctds-hvk-2026" page="7" note="Mục 0.5" />).
+Để chuyển từ một tập hợp thuần túy sang một *cấu trúc đại số* (như nửa nhóm, vị nhóm, nhóm), ta cần trang bị cho tập hợp đó một hoặc nhiều phép toán kết hợp hai phần tử bất kỳ thành một phần tử mới thuộc chính tập hợp đó (<Cite source="gt-ctds-hvk-2026" page="7" note="Mục 0.5" />).
 
 <Definition
   id="def-c0-b3-phep-toan-hai-ngoi"
@@ -231,8 +228,8 @@ Khi áp dụng <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" />, phải 
    - *Tính toàn ánh:* Với mọi $y \in \operatorname{im} f$, theo định nghĩa ảnh toàn miền tồn tại $x \in X$ sao cho $f(x) = y$. Khi đó lớp $[x]_{\sim_f} \in X/{\sim_f}$ thỏa mãn $\tilde{f}([x]_{\sim_f}) = f(x) = y$. Vậy $\tilde{f}$ là một song ánh.
 </Proof>
 
-<Remark title="Hạt nhân hình thức của các định lý đẳng cấu">
-Song ánh tự nhiên $\tilde{f}: X/{\sim_f} \to \operatorname{im} f, [x] \mapsto f(x)$ ở ý (2) của <Ref to="prop-c0-b3-cong-nhan-modulo-n-va-song-anh-tu-nhien" /> chính là bộ khung tập hợp của **Định lý đẳng cấu thứ nhất** cho nhóm (Chương 3) và cho vành (Chương 4): khi $f$ bảo toàn phép toán, tập thương $X/{\sim_f}$ tự động kế thừa cấu trúc đại số và đẳng cấu với ảnh $\operatorname{im} f$ (<Cite source="gt-ctds-hvk-2026" page="10" note="Ví dụ 0.18" />).
+<Remark title="Cơ sở tập hợp của phép toán cảm sinh trên tập thương">
+Song ánh tự nhiên $\tilde{f}: X/{\sim_f} \to \operatorname{im} f, [x] \mapsto f(x)$ ở ý (2) của <Ref to="prop-c0-b3-cong-nhan-modulo-n-va-song-anh-tu-nhien" /> chính là bộ khung tập hợp cho thấy khi $f$ bảo toàn phép toán hai ngôi, tập thương $X/{\sim_f}$ kế thừa phép toán cảm sinh tương ứng một-một với ảnh $\operatorname{im} f$ (<Cite source="gt-ctds-hvk-2026" page="10" note="Ví dụ 0.18" />).
 </Remark>
 
 <Counterexample id="cex-c0-b3-quy-tac-phu-thuoc-dai-dien" title="Ánh xạ và phép toán giữa các tập thương không xác định tốt">
@@ -261,21 +258,13 @@ Khi muốn chứng minh một quy tắc trên tập thương **không xác đị
 
 ## 4. Bài tập tự luyện
 
-<Exercise id="exr-c0-b3-a1" title="[Nhóm A · Mã CTDS-C0-B3-A01] Kiểm tra phép toán hai ngôi, tìm đơn vị, nghịch đảo và xét tính xác định tốt của ánh xạ giữa Z/nZ">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Tính kết hợp, giao hoán, đơn vị, nghịch đảo của phép toán hai ngôi và tính xác định tốt của ánh xạ $\Z/m\Z \to \Z/n\Z$
-- **Mục tiêu đánh giá:** Kiểm tra đúng các tính chất của một phép toán cho bằng công thức và phân biệt được quy tắc xác định tốt với quy tắc phụ thuộc đại diện *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b3-phep-toan-hai-ngoi" /> · <Ref to="def-c0-b3-tinh-xac-dinh-tot-anh-xa" /> · <Cite source="gt-ctds-hvk-2026" page="7-9" note="Mục 0.5 - 0.6" />
-
-**Đề bài:**
-
+<Exercise id="exr-c0-b3-a1" title="Kiểm tra phép toán hai ngôi, tìm đơn vị, nghịch đảo và xét tính xác định tốt của ánh xạ giữa Z/nZ" group="Nhóm A">
 1. Trên tập số nguyên $\Z$, xét phép toán hai ngôi $*$ xác định bởi $a * b = a + b + 3$ với mọi $a, b \in \Z$. Hãy kiểm tra tính kết hợp, tính giao hoán của $*$, tìm phần tử đơn vị $e \in \Z$ và tìm phần tử nghịch đảo của một phần tử $a \in \Z$ bất kỳ đối với phép toán $*$.
 2. Xét hai quy tắc cho giữa các tập thương:
    - $\alpha: \Z/12\Z \to \Z/4\Z$ xác định bởi $\alpha([a]_{12}) = [2a + 1]_4$;
    - $\beta: \Z/4\Z \to \Z/6\Z$ xác định bởi $\beta([a]_4) = [a]_6$.
    Quy tắc nào xác định tốt, quy tắc nào không xác định tốt? Hãy chứng minh hoặc chỉ ra phản ví dụ cụ thể.
-</Exercise>
+
 
 <Hint>
 Ở câu (1), làm tương tự <Ref to="ex-c0-b3-phep-toan-dich-chuyen-va-anh-xa" /> bằng cách giải phương trình $a + e + 3 = a$ rồi $a + b + 3 = e$. Ở câu (2), áp dụng Mẫu 3 cho $\alpha$ (chú ý $12 \mid (a - a') \implies 4 \mid 2(a - a')$) và Mẫu 4 cho $\beta$ với hai đại diện $0$ và $4$ của lớp $[0]_4$.
@@ -297,24 +286,10 @@ Khi muốn chứng minh một quy tắc trên tập thương **không xác đị
      $$
      chia hết cho $4$. Do đó $[2a + 1]_4 = [2a' + 1]_4$ trong $\Z/4\Z$, nên $\alpha$ xác định tốt.
    - **Quy tắc $\beta: \Z/4\Z \to \Z/6\Z, [a]_4 \mapsto [a]_6$ không xác định tốt:** Trong $\Z/4\Z$, ta có $[0]_4 = [4]_4$ (vì $4 - 0 = 4 \vdots 4$). Tuy nhiên, nếu tính theo đại diện $0$ ta được $[0]_6$, còn tính theo đại diện $4$ ta được $[4]_6 \neq [0]_6$ trong $\Z/6\Z$ (vì $4 - 0 = 4$ không chia hết cho $6$). Vậy $\beta$ phụ thuộc vào đại diện nên không xác định tốt.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Kiểm tra đúng tính kết hợp và tính giao hoán của $a * b = a + b + 3$ | `0,25 đ` |
-| 1b | Tìm đúng phần tử đơn vị $e = -3$ và phần tử nghịch đảo $b = -a - 6$ | `0,25 đ` |
-| 2a | Chứng minh đúng $\alpha([a]_{12}) = [2a+1]_4$ xác định tốt | `0,25 đ` |
-| 2b | Kết luận $\beta([a]_4) = [a]_6$ không xác định tốt và chỉ ra phản ví dụ cụ thể (như $[0]_4 = [4]_4$ nhưng $[0]_6 \neq [4]_6$) | `0,25 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c0-b3-b1" title="[Nhóm B · Mã CTDS-C0-B3-B01] Điều kiện cần và đủ để ánh xạ tuyến tính giữa Z/mZ và Z/nZ xác định tốt">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Tiêu chuẩn xác định tốt cho họ ánh xạ $f_k: \Z/m\Z \to \Z/n\Z, [a]_m \mapsto [ka]_n$
-- **Mục tiêu đánh giá:** Vận dụng <Ref to="def-c0-b3-tinh-xac-dinh-tot-anh-xa" /> để thiết lập điều kiện chia hết cần và đủ giữa $m, n$ và hệ số $k$ *(Đánh giá quá trình)*
-- **Mức độ khó:** Trung bình (Mức 2)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b3-tinh-xac-dinh-tot-anh-xa" /> · <Ref to="prop-c0-b3-cong-nhan-modulo-n-va-song-anh-tu-nhien" /> · <Cite source="gt-ctds-hvk-2026" page="8-9, 13-14" note="Mục 0.6 & Bài tập 0.14 - 0.15" />
-
+<Exercise id="exr-c0-b3-b1" title="Điều kiện cần và đủ để ánh xạ tuyến tính giữa Z/mZ và Z/nZ xác định tốt" group="Nhóm B">
 **Đề bài:** Cho hai số nguyên dương $m, n \ge 1$ và một số nguyên cố định $k \in \Z$. Xét quy tắc:
 $$
 f_k: \Z/m\Z \to \Z/n\Z, \quad [a]_m \mapsto [ka]_n.
@@ -322,7 +297,7 @@ $$
 
 1. Chứng minh rằng quy tắc $f_k$ xác định tốt khi và chỉ khi $n \mid km$.
 2. Áp dụng kết quả câu (1) với $m = 6$ và $n = 9$: hãy tìm tất cả các lớp $[k]_9 \in \Z/9\Z$ sao cho quy tắc $[a]_6 \mapsto [ka]_9$ xác định tốt.
-</Exercise>
+
 
 <Hint>
 Ở câu (1), chiều đảo ($\Leftarrow$) biến đổi $ka - ka' = k(a - a')$ khi $a - a' = mq$; chiều thuận ($\Rightarrow$) chỉ cần áp dụng giả thiết xác định tốt cho hai đại diện $a = m$ và $a' = 0$ của cùng lớp $[0]_m = [m]_m$.
@@ -344,23 +319,10 @@ $$
    9 \mid 6k \iff 3 \mid 2k.
    $$
    Vì $\gcd(3, 2) = 1$, theo Bổ đề Euclid ta có $3 \mid 2k \iff 3 \mid k$. Trong hệ đại diện chuẩn $R_9 = \{0, 1, \dots, 8\}$, các giá trị $k$ chia hết cho $3$ là $k \in \{0, 3, 6\}$. Vậy có đúng $3$ lớp $[k]_9 \in \Z/9\Z$ làm cho quy tắc xác định tốt là $[0]_9, [3]_9, [6]_9$.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Chứng minh đúng chiều thuận: từ $[m]_m = [0]_m$ suy ra $[km]_n = [0]_n \implies n \mid km$ | `0,35 đ` |
-| 1b | Chứng minh đúng chiều đảo: từ $n \mid km$ và $m \mid (a - a')$ suy ra $n \mid k(a - a')$ | `0,35 đ` |
-| 2 | Thay $m=6, n=9$, giải đúng $9 \mid 6k \iff 3 \mid k$ và liệt kê đúng 3 lớp $[0]_9, [3]_9, [6]_9$ | `0,30 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c0-b3-c1" title="[Nhóm C · Mã CTDS-C0-B3-C01] Kiểm định tính xác định tốt của phép lũy thừa trên Z/nZ và phép toán cảm sinh qua quan hệ tương đương">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Phân biệt phép lũy thừa với số mũ nguyên cố định và quy tắc mũ hóa giữa hai lớp đồng dư trên $\Z/n\Z$
-- **Mục tiêu đánh giá:** Vận dụng <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" /> và Mẫu 4 để bác bỏ quy tắc lũy thừa hai lớp đồng dư $[a]_n^{[b]_n} = [a^b]_n$, đồng thời chứng minh tính xác định tốt khi số mũ nguyên dương cố định *(Kiểm tra giữa kỳ)*
-- **Mức độ khó:** Khá – Giỏi (Mức 3)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b3-tinh-xac-dinh-tot-anh-xa" /> · <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" /> · <Cite source="gt-ctds-hvk-2026" page="8-9, 14" note="Mục 0.6 & Bài tập 0.16" />
-
+<Exercise id="exr-c0-b3-c1" title="Kiểm định tính xác định tốt của phép lũy thừa trên Z/nZ và phép toán cảm sinh qua quan hệ tương đương" group="Nhóm C">
 **Đề bài:** Cho số nguyên dương $n \ge 3$.
 
 1. Với số nguyên dương cố định $k \ge 1$, chứng minh rằng ánh xạ một biến $P_k: \Z/n\Z \to \Z/n\Z$ xác định bởi $P_k([a]_n) = [a^k]_n$ là **xác định tốt**.
@@ -369,7 +331,7 @@ $$
    [a]_n \star [b]_n = [a^b]_n.
    $$
    Hỏi quy tắc $\star$ có xác định tốt trên $\Z/3\Z$ hay không? Hãy chứng minh hoặc chỉ ra một phản ví dụ cụ thể. Từ đó giải thích vì sao kết quả ở câu (1) không mâu thuẫn với câu (2).
-</Exercise>
+
 
 <Hint>
 Ở câu (1), sử dụng tính xác định tốt của phép nhân trên $\Z/n\Z$ (<Ref to="prop-c0-b3-cong-nhan-modulo-n-va-song-anh-tu-nhien" />) kết hợp quy nạp theo $k$ (hoặc hằng đẳng thức $a^k - (a')^k = (a - a')(a^{k-1} + \dots + (a')^{k-1})$). Ở câu (2), giữ nguyên cơ số $a = 2$ và đổi đại diện ở **số mũ**: chọn $b = 1$ và $b' = 4$ trong lớp $[1]_3$.
@@ -387,23 +349,10 @@ $$
      - Nếu chọn cặp đại diện $(a, b') = (2, 4)$, ta được $[2^4]_3 = [16]_3 = [1]_3$ (vì $16 = 3 \cdot 5 + 1$).
      Do $[2]_3 \neq [1]_3$ trong $\Z/3\Z$, kết quả phụ thuộc vào việc chọn đại diện của lớp số mũ $[b]_3$, nên phép toán $\star$ không xác định tốt.
    - *Giải thích sự khác biệt giữa (1) và (2):* Ở câu (1), số mũ $k \in \Z^+$ là một số nguyên cố định, chỉ có cơ số $[a]_n$ thay đổi đại diện ($a \equiv a' \pmod{n} \implies a^k \equiv (a')^k \pmod{n}$). Còn ở câu (2), theo <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" />, cả cơ số lẫn số mũ đều là các lớp trong $\Z/n\Z$; khi thay đổi đại diện của số mũ $b \equiv b' \pmod{n}$, ta **không có** $a^b \equiv a^{b'} \pmod{n}$ (thực tế chu kỳ lũy thừa phụ thuộc vào $\varphi(n)$ chứ không phải $n$).
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1 | Chứng minh đúng $[a]_n = [a']_n \implies [a^k]_n = [(a')^k]_n$ với $k \ge 1$ cố định | `0,35 đ` |
-| 2a | Kết luận $\star$ không xác định tốt trên $\Z/3\Z$ và chỉ ra phản ví dụ đúng (như $[2]_3 \star [1]_3$ với đại diện $b=1$ và $b'=4$) | `0,40 đ` |
-| 2b | Giải thích rõ: câu (1) chỉ đổi đại diện ở cơ số, còn câu (2) đòi hỏi đổi đại diện ở cả số mũ theo <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" /> | `0,25 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c0-b3-d1" title="[Nhóm D · Mã CTDS-C0-B3-D01] Chứng minh tính xác định tốt của phép cộng và phép nhân phân số trên tập thương P/~">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Áp dụng <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" /> để hoàn chỉnh việc xây dựng phép cộng và phép nhân trên tập số hữu tỉ $\Q = P/{\sim}$
-- **Mục tiêu đánh giá:** Thực hiện trọn vẹn phép kiểm tra tính xác định tốt khi thay đổi đồng thời cả hai cặp đại diện $(a, b) \sim (a', b')$ và $(c, d) \sim (c', d')$ trên $P = \Z \times (\Z \setminus \{0\})$ *(Thi kết thúc học phần)*
-- **Mức độ khó:** Nâng cao (Mức 4)
-- **Nguồn kiến thức liên quan:** <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" /> · <Cite source="gt-ctds-hvk-2026" page="9-10" note="Ví dụ 0.17" />
-
+<Exercise id="exr-c0-b3-d1" title="Chứng minh tính xác định tốt của phép cộng và phép nhân phân số trên tập thương P/~" group="Nhóm D">
 **Đề bài:** Trên tập hợp $P = \Z \times (\Z \setminus \{0\}) = \{(a, b) \mid a, b \in \Z, \, b \neq 0\}$, xét quan hệ tương đương $(a, b) \sim (a', b') \iff ab' = ba'$ (đã chứng minh ở Bài 0.2). Trên tập thương $P/{\sim}$, ta định nghĩa phép cộng $\oplus$ và phép nhân $\odot$ thông qua phần tử đại diện bởi:
 $$
 [(a, b)] \oplus [(c, d)] = [(ad + bc, bd)], \quad [(a, b)] \odot [(c, d)] = [(ac, bd)].
@@ -412,7 +361,7 @@ $$
 1. Giải thích vì sao với mọi $(a, b), (c, d) \in P$, các cặp $(ad + bc, bd)$ và $(ac, bd)$ luôn thuộc $P$.
 2. Áp dụng <Ref to="thm-c0-b3-tieu-chuan-xac-dinh-tot-phep-toan" />, hãy chứng minh chi tiết rằng cả hai phép toán $\oplus$ và $\odot$ đều **xác định tốt** trên tập thương $P/{\sim}$.
 3. Tìm phần tử đơn vị của $(P/{\sim}, \oplus)$ và phần tử đơn vị của $(P/{\sim}, \odot)$.
-</Exercise>
+
 
 <Hint>
 Ở câu (1), dùng tính chất tích của hai số nguyên khác $0$ là một số nguyên khác $0$. Ở câu (2), giả sử $(a, b) \sim (a', b')$ ($ab' = ba'$) và $(c, d) \sim (c', d')$ ($cd' = dc'$); để kiểm tra $(ad + bc, bd) \sim (a'd' + b'c', b'd')$, hãy nhân khai triển $(ad + bc)(b'd')$ và dùng giả thiết $ab' = ba', cd' = dc'$.
@@ -439,8 +388,9 @@ $$
      (ac)(b'd') = (ab')(cd') = (ba')(dc') = (bd)(a'c').
      $$
      Vậy $(ac, bd) \sim (a'c', b'd')$, nên phép nhân $\odot$ xác định tốt.
-3. **Phần tử đơn vị của $\oplus$ và $\odot$:**
-   - Với phép cộng $\oplus$: xét lớp $[(0, 1)] \in P/{\sim}$. Với mọi $[(a, b)] \in P/{\sim}$, ta có:
+**3. Phần tử đơn vị của $\oplus$ và $\odot$**
+
+ - Với phép cộng $\oplus$: xét lớp $[(0, 1)] \in P/{\sim}$. Với mọi $[(a, b)] \in P/{\sim}$, ta có:
      $$
      [(a, b)] \oplus [(0, 1)] = [(a \cdot 1 + b \cdot 0, b \cdot 1)] = [(a, b)],
      $$
@@ -450,16 +400,8 @@ $$
      [(a, b)] \odot [(1, 1)] = [(a \cdot 1, b \cdot 1)] = [(a, b)] = [(1, 1)] \odot [(a, b)].
      $$
      Vậy phần tử đơn vị của $(P/{\sim}, \odot)$ là lớp $[(1, 1)] = \{(k, k) \mid k \in \Z \setminus \{0\}\}$.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1 | Giải thích đúng $b \neq 0, d \neq 0 \implies bd \neq 0$ nên $(ad+bc, bd), (ac, bd) \in P$ | `0,15 đ` |
-| 2a | Chứng minh đúng $(ad+bc)(b'd') = (bd)(a'd'+b'c')$ khi thay đồng thời $(a,b) \sim (a',b')$ và $(c,d) \sim (c',d')$ | `0,35 đ` |
-| 2b | Chứng minh đúng $(ac)(b'd') = (bd)(a'c')$ để kết luận $\odot$ xác định tốt | `0,25 đ` |
-| 3 | Chỉ ra và kiểm chứng đúng đơn vị cộng $[(0, 1)]$ và đơn vị nhân $[(1, 1)]$ | `0,25 đ` |
 </Solution>
+</Exercise>
 
 <KeyTakeaways>
 - **Phép toán hai ngôi và tính duy nhất (<Ref to="def-c0-b3-phep-toan-hai-ngoi" />, <Ref to="prop-c0-b3-duy-nhat-don-vi-nghich-dao" />):** Một phép toán hai ngôi trên $X$ trước hết phải là ánh xạ $*: X \times X \to X$ (đóng trên $X$); phần tử đơn vị $e$ (nếu có) luôn duy nhất, và khi $*$ có tính kết hợp thì phần tử nghịch đảo của mỗi $a \in X$ (nếu có) cũng duy nhất.

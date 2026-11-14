@@ -19,14 +19,11 @@ sources:
     pages: '134-137'
     sections: 'Mục 8.5, 8.6'
     note: 'Định lý 8.8 (Đẳng cấu thứ nhất), Định lý 8.14 (Đẳng cấu thứ hai), Định lý 8.16 (Đẳng cấu thứ ba), Định lý 8.18 (Định lý tương ứng)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '225-235'
-    sections: 'Chương 7, Mục 7.2'
 status: published
 version: 0.1.0
 ---
 
-Bộ ba định lý đẳng cấu và Định lý tương ứng là những công cụ then chốt trong đại số trừu tượng. Nếu như trong lý thuyết nhóm, các định lý này giúp nhận diện nhóm thương $G/N$, thì trong lý thuyết vành, chúng cho phép "nhìn xuyên qua" cấu trúc phức tạp của các vành thương $R/I$, chuyển các bài toán tính toán đại số trừu tượng về các trường số và vành quen thuộc như $\mathbb{C}$, $\mathbb{Z}_n$, hay $\mathbb{Q}(\sqrt{d})$.
+Bộ ba định lý đẳng cấu và Định lý tương ứng là những công cụ then chốt trong đại số trừu tượng. Nếu như trong lý thuyết nhóm, các định lý này giúp nhận diện nhóm thương $G/N$, thì trong lý thuyết vành, chúng cho phép "nhìn xuyên qua" cấu trúc phức tạp của các vành thương $R/I$, chuyển các bài toán tính toán đại số trừu tượng về các trường số và vành quen thuộc như $\mathbb{C}$, $\mathbb{Z}/n\mathbb{Z}$, hay $\mathbb{Q}(\sqrt{d})$.
 
 ---
 
@@ -236,7 +233,7 @@ Sử dụng Định lý đẳng cấu thứ nhất để chứng minh rằng:
 $$
 \mathbb{Q}[x]/(x^2 - 2) \cong \mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b \in \mathbb{Q}\}.
 $$
-</Exercise>
+
 
 <Solution>
 Xét ánh xạ tính giá trị tại $\sqrt{2}$:
@@ -244,8 +241,9 @@ $$
 \operatorname{ev}_{\sqrt{2}}: \mathbb{Q}[x] \longrightarrow \mathbb{R}, \quad P(x) \longmapsto P(\sqrt{2}).
 $$
 1. **Kiểm tra đồng cấu vành:** Theo tính chất đại số cơ bản, phép thế một số thực vào đa thức luôn bảo toàn phép cộng và phép nhân đa thức, đồng thời $\operatorname{ev}_{\sqrt{2}}(1) = 1$. Do đó $\operatorname{ev}_{\sqrt{2}}$ là một đồng cấu vành.
-2. **Xác định ảnh:**
-   Với mọi đa thức $P(x) \in \mathbb{Q}[x]$, chia $P(x)$ cho $x^2 - 2$:
+**2. Xác định ảnh**
+
+Với mọi đa thức $P(x) \in \mathbb{Q}[x]$, chia $P(x)$ cho $x^2 - 2$:
    $$
    P(x) = Q(x)(x^2 - 2) + (ax + b) \quad (a, b \in \mathbb{Q}).
    $$
@@ -255,8 +253,9 @@ $$
    $$
    Ngược lại, với mọi $b + a\sqrt{2} \in \mathbb{Q}(\sqrt{2})$, xét đa thức $ax + b \in \mathbb{Q}[x]$, ta có $\operatorname{ev}_{\sqrt{2}}(ax + b) = b + a\sqrt{2}$.
    Do đó $\operatorname{im}(\operatorname{ev}_{\sqrt{2}}) = \mathbb{Q}(\sqrt{2})$.
-3. **Xác định hạt nhân:**
-   $$
+**3. Xác định hạt nhân**
+
+ $$
    P(x) \in \ker(\operatorname{ev}_{\sqrt{2}}) \iff P(\sqrt{2}) = 0 \iff b + a\sqrt{2} = 0.
    $$
    Vì $\sqrt{2}$ là số vô tỉ và $a, b \in \mathbb{Q}$, ta bắt buộc phải có $a = b = 0$.
@@ -268,17 +267,19 @@ $$
 \mathbb{Q}[x]/\ker(\operatorname{ev}_{\sqrt{2}}) \cong \operatorname{im}(\operatorname{ev}_{\sqrt{2}}) \iff \mathbb{Q}[x]/(x^2 - 2) \cong \mathbb{Q}(\sqrt{2}).
 $$
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b2-a2">
 ### Bài 8.2.A2 (Nhóm A - Kiểm tra Định lý đẳng cấu thứ hai trên $\mathbb{Z}$)
 Trong vành số nguyên $\mathbb{Z}$, đặt vành con $S = 4\mathbb{Z}$ và iđêan $I = 6\mathbb{Z}$.
 1. Xác định tổng $S + I$ và giao $S \cap I$.
 2. Áp dụng Định lý đẳng cấu thứ hai để chỉ ra đẳng cấu giữa hai vành thương tương ứng và tìm số phần tử của chúng.
-</Exercise>
+
 
 <Solution>
-1. **Xác định $S + I$ và $S \cap I$:**
-   - Tổng của hai iđêan trong $\mathbb{Z}$ là $m\mathbb{Z} + n\mathbb{Z} = \gcd(m, n)\mathbb{Z}$:
+**1. Xác định $S + I$ và $S \cap I$**
+
+ - Tổng của hai iđêan trong $\mathbb{Z}$ là $m\mathbb{Z} + n\mathbb{Z} = \gcd(m, n)\mathbb{Z}$:
      $$
      S + I = 4\mathbb{Z} + 6\mathbb{Z} = \gcd(4, 6)\mathbb{Z} = 2\mathbb{Z}.
      $$
@@ -287,8 +288,9 @@ Trong vành số nguyên $\mathbb{Z}$, đặt vành con $S = 4\mathbb{Z}$ và i�
      S \cap I = 4\mathbb{Z} \cap 6\mathbb{Z} = \operatorname{lcm}(4, 6)\mathbb{Z} = 12\mathbb{Z}.
      $$
 
-2. **Áp dụng Định lý đẳng cấu thứ hai:**
-   Theo Định lý 8.14:
+**2. Áp dụng Định lý đẳng cấu thứ hai**
+
+Theo Định lý 8.14:
    $$
    (S + I)/I \cong S/(S \cap I).
    $$
@@ -306,11 +308,12 @@ Trong vành số nguyên $\mathbb{Z}$, đặt vành con $S = 4\mathbb{Z}$ và i�
      $$
    Đẳng cấu được thiết lập bởi ánh xạ $s + 12\mathbb{Z} \mapsto s + 6\mathbb{Z}$. Cả hai vành thương đều đẳng cấu với vành $\mathbb{Z}/3\mathbb{Z}$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b2-b1">
 ### Bài 8.2.B1 (Nhóm B - Vành thương của số nguyên Gauss $\mathbb{Z}[i]/(2 + i)$)
 Chứng minh rằng vành thương $\mathbb{Z}[i]/(2 + i)$ đẳng cấu với trường hữu hạn $\mathbb{Z}/5\mathbb{Z} \cong \mathbb{F}_5$.
-</Exercise>
+
 
 <Solution>
 Ta sử dụng phương pháp xây dựng đồng cấu từ $\mathbb{Z}$ vào vành thương $\mathbb{Z}[i]/(2 + i)$ hoặc qua biểu diễn đa thức.
@@ -359,13 +362,14 @@ $$
 $$
 Vì $5$ là số nguyên tố, $\mathbb{Z}/5\mathbb{Z}$ là một trường, do đó $\mathbb{Z}[i]/(2 + i)$ là một trường gồm 5 phần tử.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b2-b2">
 ### Bài 8.2.B2 (Nhóm B - Ứng dụng Định lý tương ứng tìm iđêan trong vành thương)
 Xét vành $R = \mathbb{R}[x]/(x^3 - x)$.
 1. Sử dụng Định lý tương ứng để xác định tất cả các iđêan của $R$.
 2. Chỉ ra các iđêan nguyên tố và các iđêan cực đại của $R$.
-</Exercise>
+
 
 <Solution>
 Đặt $f(x) = x^3 - x = x(x - 1)(x + 1) \in \mathbb{R}[x]$ và $I = (f(x))$.
@@ -392,6 +396,7 @@ $$
 Vành thương tại các iđêan này là $R/M_k \cong \mathbb{R}[x]/(g_k(x)) \cong \mathbb{R}$ (là trường).
 Vì $R$ là vành hữu hạn chiều trên $\mathbb{R}$, mọi iđêan nguyên tố của $R$ đều là iđêan cực đại. Do đó $M_1, M_2, M_3$ cũng chính là $3$ iđêan nguyên tố duy nhất của $R$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b2-c1">
 ### Bài 8.2.C1 (Nhóm C - Dựng trường hữu hạn 9 phần tử $\mathbb{F}_9$)
@@ -408,15 +413,15 @@ $$
 1. **Bước 1: Tính thương theo modulo 3:**
    Đồng cấu chiếu hệ số modulo 3:
    $$
-   \phi: \mathbb{Z}[x] \to \mathbb{Z}_3[x], \quad \sum a_k x^k \mapsto \sum \bar{a}_k x^k.
+   \phi: \mathbb{Z}[x] \to \mathbb{Z}/3\mathbb{Z}[x], \quad \sum a_k x^k \mapsto \sum \bar{a}_k x^k.
    $$
    $\phi$ là toàn ánh với $\ker\phi = 3\mathbb{Z}[x] = I$.
-   Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}[x]/I \cong \mathbb{Z}_3[x] = \mathbb{F}_3[x]$.
+   Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}[x]/I \cong \mathbb{Z}/3\mathbb{Z}[x] = \mathbb{F}_3[x]$.
 
 2. **Bước 2: Tính ảnh của $J$ qua $\phi$:**
    Ảnh của iđêan $J = (x^2 + 1, 3)$ qua $\phi$ là iđêan sinh bởi các ảnh của phần tử sinh:
    $$
-   \phi(J) = (\phi(x^2 + 1), \phi(3)) = (x^2 + \bar{1}, \bar{0}) = (x^2 + 1) \triangleleft \mathbb{F}_3[x].
+   \phi(J) = (\phi(x^2 + 1), \phi(3)) = (x^2 + [1], [0]) = (x^2 + 1) \triangleleft \mathbb{F}_3[x].
    $$
    Do đó:
    $$
@@ -424,7 +429,7 @@ $$
    $$
 
 3. **Bước 3: Kiểm tra tính chất trường và số phần tử:**
-   - Trong $\mathbb{F}_3 = \{\bar{0}, \bar{1}, \bar{2}\}$:
+   - Trong $\mathbb{F}_3 = \{[0], [1], [2]\}$:
      $$
      0^2 + 1 = 1 \neq 0, \quad 1^2 + 1 = 2 \neq 0, \quad 2^2 + 1 = 5 \equiv 2 \neq 0.
      $$

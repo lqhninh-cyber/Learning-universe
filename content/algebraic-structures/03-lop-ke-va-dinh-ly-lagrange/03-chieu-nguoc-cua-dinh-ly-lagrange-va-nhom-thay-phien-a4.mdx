@@ -18,9 +18,6 @@ sources:
     pages: '63-66'
     sections: 'Mục 3.7, 3.8'
     note: 'Phản ví dụ 3.16 (V4), Phản ví dụ 3.17 (A4 không có nhóm con cấp 6)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '98-105'
-    sections: 'Chương 3, Mục 3.3'
 status: published
 version: 0.1.0
 authoring:
@@ -188,7 +185,7 @@ Theo Định lý Lagrange, chỉ số của $H$ trong $A_4$ là:
 $$
 [A_4 : H] = \frac{|A_4|}{|H|} = \frac{12}{6} = 2.
 $$
-Vì $[A_4 : H] = 2$, áp dụng Bổ đề <Ref to="lem-c3-b3-chi-so-2-binh-phuong" />, với mọi phần tử $\sigma \in A_4$, ta luôn có:
+Vì $[A_4 : H] = 2$, áp dụng <Ref to="lem-c3-b3-chi-so-2-binh-phuong" />, với mọi phần tử $\sigma \in A_4$, ta luôn có:
 $$
 \sigma^2 \in H.
 $$
@@ -240,7 +237,7 @@ Khi ước số $d$ có dạng lũy thừa của một số nguyên tố, chiề
   id="thm-c3-b3-cauchy"
   title="Định lý Cauchy (1845)"
   original="Mục 3.8"
-  source="hai-deo-dai-so-hien-dai-2013"
+  source="gt-ctds-hvk-2026"
   page="102"
 >
 Nếu $G$ là một nhóm hữu hạn và $p$ là một số **nguyên tố** chia hết cấp của $G$ ($p \mid |G|$), thì:
@@ -260,14 +257,14 @@ Chính vì $6 = 2 \cdot 3$ không phải là lũy thừa của một số nguyê
 
 Kết hợp Định lý Lagrange, Định lý Cauchy và tính chất nhóm cyclic, ta có bức tranh toàn cảnh về phân loại các nhóm hữu hạn có cấp nhỏ:
 
-| Cấp $|G|$ | Cấu trúc phân loại | Số mô hình (sai khác đẳng cấu) | Đặc điểm |
+| Cấp $|G|$ | Cấu trúc phân loại | Số cấu trúc bảng phép toán | Đặc điểm |
 | :---: | :--- | :---: | :--- |
 | **1** | $\{e\}$ | 1 | Tầm thường |
 | **2** | $\mathbb{Z}/2\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
 | **3** | $\mathbb{Z}/3\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
-| **4** | $\mathbb{Z}/4\mathbb{Z}$, $V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$ | 2 | Đều là nhóm Abel |
+| **4** | $\mathbb{Z}/4\mathbb{Z}$, $V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$ | 2 | Đều là nhóm Abel |
 | **5** | $\mathbb{Z}/5\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
-| **6** | $\mathbb{Z}/6\mathbb{Z}$, $S_3 \cong D_6$ | 2 | Nhóm không giao hoán nhỏ nhất ($S_3$) |
+| **6** | $\mathbb{Z}/6\mathbb{Z}$, $S_3$ (hoặc $D_6$) | 2 | Nhóm không giao hoán nhỏ nhất ($S_3$) |
 | **7** | $\mathbb{Z}/7\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
 | **8** | $\mathbb{Z}/8\mathbb{Z}$, $\mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$, $(\mathbb{Z}/2\mathbb{Z})^3$, $D_8$, $Q_8$ | 5 | 3 nhóm Abel, 2 nhóm không giao hoán |
 
@@ -277,31 +274,22 @@ Kết hợp Định lý Lagrange, Định lý Cauchy và tính chất nhóm cycl
 
 <Exercise
   id="exr-c3-b3-a1"
-  title="[Nhóm A · Mã CTDS-C3-B3-A01] Khảo sát các nhóm con cấp 2 và cấp 3 của A4"
+  title="Khảo sát các nhóm con cấp 2 và cấp 3 của A4" group="Nhóm A"
 >
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Cấp phần tử và danh sách nhóm con trong $A_4$
-- **Mục tiêu đánh giá:** Xác định và liệt kê toàn bộ các nhóm con cyclic cấp 2 và cấp 3 của nhóm thay phiên $A_4$.
-- **Mức độ:** Cơ bản
-
-**Đề bài:**
 Cho nhóm thay phiên $A_4$ cấp 12.
 1. Hãy tìm và liệt kê tất cả các nhóm con có cấp bằng 2 của $A_4$.
 2. Hãy tìm và liệt kê tất cả các nhóm con có cấp bằng 3 của $A_4$.
 3. Giải thích vì sao hai nhóm con cấp 3 khác nhau của $A_4$ luôn có giao chỉ gồm duy nhất phần tử đơn vị.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Mỗi nhóm con cấp 2 được sinh bởi một phần tử cấp 2. Có bao nhiêu phần tử cấp 2 trong $A_4$?
 2. Mỗi nhóm con cấp 3 được sinh bởi một phần tử cấp 3 và chứa 2 phần tử cấp 3.
 3. Cấp 3 là số nguyên tố; áp dụng tính chất $\gcd(3, 3) = 3$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Các nhóm con cấp 2 của $A_4$**
 
-**Ý 1: Các nhóm con cấp 2 của $A_4$**
 Mỗi nhóm con cấp 2 có dạng $\{ \operatorname{id}, x \}$ với $x$ là phần tử có cấp 2.
 Trong $A_4$ có đúng 3 phần tử cấp 2 là:
 $$
@@ -312,7 +300,8 @@ Mỗi phần tử này sinh ra một nhóm con cyclic cấp 2 duy nhất. Do đ�
 - $H_2 = \langle \sigma_2 \rangle = \{\operatorname{id}, (1\;3)(2\;4)\}$.
 - $H_3 = \langle \sigma_3 \rangle = \{\operatorname{id}, (1\;4)(2\;3)\}$.
 
-**Ý 2: Các nhóm con cấp 3 của $A_4$**
+**2. Các nhóm con cấp 3 của $A_4$**
+
 Vì 3 là số nguyên tố, mọi nhóm con cấp 3 đều là nhóm cyclic sinh bởi một 3-chu trình.
 Mỗi nhóm con cấp 3 có dạng $\{\operatorname{id}, \tau, \tau^2\}$, trong đó $\tau$ và $\tau^2 = \tau^{-1}$ là 2 phần tử có cấp 3 đối ngẫu nhau.
 Trong $A_4$ có 8 phần tử cấp 3, mỗi nhóm con chứa 2 phần tử cấp 3 nên số nhóm con cấp 3 là $\frac{8}{2} = 4$.
@@ -322,50 +311,35 @@ Bốn nhóm con cấp 3 cụ thể là:
 - $K_3 = \langle (1\;3\;4) \rangle = \{\operatorname{id}, (1\;3\;4), (1\;4\;3)\}$.
 - $K_4 = \langle (2\;3\;4) \rangle = \{\operatorname{id}, (2\;3\;4), (2\;4\;3)\}$.
 
-**Ý 3: Giao của hai nhóm con cấp 3 khác nhau**
+**3. Giao của hai nhóm con cấp 3 khác nhau**
+
 Giả sử $K_i$ và $K_j$ là hai nhóm con cấp 3 khác nhau ($i \ne j$).
 Giao $K_i \cap K_j$ là một nhóm con của cả $K_i$ và $K_j$.
 Theo Định lý Lagrange, $|K_i \cap K_j|$ phải là ước của $|K_i| = 3$.
 Vì 3 là số nguyên tố, $|K_i \cap K_j| \in \{1, 3\}$.
 Nếu $|K_i \cap K_j| = 3$, do $K_i, K_j$ đều có cấp 3 nên $K_i = K_j$, mâu thuẫn với giả thiết hai nhóm con khác nhau.
 Do đó buộc phải có $|K_i \cap K_j| = 1$, nghĩa là $K_i \cap K_j = \{\operatorname{id}\}$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Liệt kê đầy đủ và chính xác 3 nhóm con cấp 2 của $A_4$ | 0.35 điểm |
-| Liệt kê đầy đủ và ghép cặp đúng 4 nhóm con cấp 3 của $A_4$ | 0.35 điểm |
-| Lập luận chặt chẽ qua Lagrange suy ra giao chỉ gồm phần tử đơn vị | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b3-b1"
-  title="[Nhóm B · Mã CTDS-C3-B3-B01] Nhóm con bốn Klein V trong A4"
+  title="Nhóm con bốn Klein V trong A4" group="Nhóm B"
 >
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Nhóm con Klein $V_4 \le A_4$ và chỉ số
-- **Mục tiêu đánh giá:** Chứng minh tập hợp các phần tử có cấp $\le 2$ trong $A_4$ lập thành nhóm con cấp 4 và tính chỉ số tương ứng.
-- **Mức độ:** Trung bình
-
-**Đề bài:**
 Xét tập hợp $V = \{\operatorname{id}, (1\;2)(3\;4), (1\;3)(2\;4), (1\;4)(2\;3)\} \subset A_4$.
 1. Lập bảng nhân (bảng Cayley) của $V$ và chứng minh $V$ là một nhóm con của $A_4$.
-2. Nhóm con $V$ đẳng cấu với mô hình nhóm quen thuộc nào?
+2. Bảng phép toán của nhóm con $V$ trùng với cấu trúc nhóm quen thuộc nào?
 3. Tính chỉ số $[A_4 : V]$ và liệt kê tất cả các lớp kề trái của $V$ trong $A_4$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Tính tích của từng cặp phần tử cấp 2, ví dụ $[(1\;2)(3\;4)][(1\;3)(2\;4)] = (1\;4)(2\;3)$.
 2. So sánh bảng Cayley với nhóm bốn Klein $V_4$.
 3. $[A_4 : V] = 12 / 4 = 3$. Chọn hệ đại diện gồm $\operatorname{id}$ và hai phần tử cấp 3 khác lớp.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Bảng Cayley và kiểm tra nhóm con**
 
-**Ý 1: Bảng Cayley và kiểm tra nhóm con**
 Đặt $\sigma_1 = (1\;2)(3\;4)$, $\sigma_2 = (1\;3)(2\;4)$, $\sigma_3 = (1\;4)(2\;3)$.
 Thực hiện các phép nhân hoán vị:
 - $\sigma_1 \sigma_2 = [(1\;2)(3\;4)][(1\;3)(2\;4)]$:
@@ -384,14 +358,13 @@ Bảng nhân của $V$ được lập như sau:
 
 Bảng nhân đóng kín, chứa phần tử đơn vị và mỗi phần tử tự nghịch đảo. Do đó $V \le A_4$.
 
-**Ý 2: Mô hình đẳng cấu**
-Từ bảng nhân, ta thấy mọi phần tử khác đơn vị đều có cấp 2 và phép toán giao hoán.
-Do đó $V$ đẳng cấu với nhóm bốn Klein:
-$$
-V \cong V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}.
-$$
+**2. Nhận diện cấu trúc của nhóm con $V$**
 
-**Ý 3: Chỉ số và các lớp kề trái**
+Từ bảng nhân, ta thấy mọi phần tử khác đơn vị đều có cấp 2 và phép toán giao hoán.
+Do đó $V$ có cùng bảng phép toán với nhóm bốn Klein $V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
+
+**3. Chỉ số và các lớp kề trái**
+
 Theo Định lý Lagrange, chỉ số của $V$ trong $A_4$ là:
 $$
 [A_4 : V] = \frac{|A_4|}{|V|} = \frac{12}{4} = 3.
@@ -403,48 +376,32 @@ Ta chọn hệ đại diện là $\{\operatorname{id}, (1\;2\;3), (1\;3\;2)\}$:
 - Lớp 3: $(1\;3\;2)V = \{(1\;3\;2), (2\;3\;4), (1\;2\;4), (1\;4\;3)\}$.
 
 Ba lớp kề này đôi một rời nhau và hợp thành đúng 12 phần tử của $A_4$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Lập đúng bảng Cayley và kiểm chứng $V$ là nhóm con đóng kín | 0.40 điểm |
-| Nhận diện chính xác $V \cong V_4 \cong \mathbb{Z}_2 \times \mathbb{Z}_2$ | 0.20 điểm |
-| Tính đúng $[A_4:V] = 3$ và liệt kê tường minh 3 lớp kề trái | 0.40 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b3-c1"
-  title="[Nhóm C · Mã CTDS-C3-B3-C01] Tính duy nhất của nhóm con chỉ số 2 trong S4"
+  title="Tính duy nhất của nhóm con chỉ số 2 trong S4" group="Nhóm C"
 >
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Ứng dụng tính chất nhóm con chỉ số 2
-- **Mục tiêu đánh giá:** Chứng minh rằng $A_4$ là nhóm con duy nhất có cấp 12 (chỉ số 2) trong nhóm đối xứng $S_4$.
-- **Mức độ:** Nâng cao
-
-**Đề bài:**
 Cho $S_4$ là nhóm đối xứng cấp 24.
 1. Giả sử $H$ là một nhóm con tùy ý của $S_4$ có cấp 12 ($|H| = 12$). Chứng minh rằng $H$ bắt buộc phải chứa tất cả các 3-chu trình trong $S_4$.
 2. Chứng minh rằng $A_4$ được sinh bởi tập hợp tất cả các 3-chu trình trong $S_4$.
 3. Từ đó, kết luận rằng $A_4$ là nhóm con **duy nhất** có cấp 12 trong $S_4$.
 
-<details>
-<summary>Gợi ý</summary>
-
-1. Vì $[S_4 : H] = 24 / 12 = 2$, áp dụng Bổ đề <Ref to="lem-c3-b3-chi-so-2-binh-phuong" />, với mọi $\sigma \in S_4$ thì $\sigma^2 \in H$.
+<Hint>
+1. Vì $[S_4 : H] = 24 / 12 = 2$, áp dụng <Ref to="lem-c3-b3-chi-so-2-binh-phuong" />, với mọi $\sigma \in S_4$ thì $\sigma^2 \in H$.
 2. Biểu diễn tích hai chuyển vị rời nhau thành tích của hai 3-chu trình: ví dụ $(1\;2)(3\;4) = (1\;2\;3)(2\;3\;4)$.
 3. Suy ra $A_4 \subseteq H$, kết hợp $|A_4| = |H| = 12$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. $H$ chứa toàn bộ các 3-chu trình của $S_4$**
 
-**Ý 1: $H$ chứa toàn bộ các 3-chu trình của $S_4$**
 Vì $|S_4| = 24$ và $|H| = 12$, chỉ số của $H$ trong $S_4$ là:
 $$
 [S_4 : H] = \frac{24}{12} = 2.
 $$
-Theo Bổ đề <Ref to="lem-c3-b3-chi-so-2-binh-phuong" />, nhóm con có chỉ số 2 chứa bình phương của mọi phần tử trong nhóm mẹ:
+Theo <Ref to="lem-c3-b3-chi-so-2-binh-phuong" />, nhóm con có chỉ số 2 chứa bình phương của mọi phần tử trong nhóm mẹ:
 $$
 \sigma^2 \in H, \quad \forall \sigma \in S_4.
 $$
@@ -455,7 +412,8 @@ $$
 Đặt $x = \tau^2 \in S_4$. Theo tính chất trên, $x^2 \in H$, nghĩa là $\tau = (\tau^2)^2 \in H$.
 Như vậy, nhóm con $H$ bắt buộc phải chứa tất cả 8 phần tử 3-chu trình của $S_4$.
 
-**Ý 2: Tập các 3-chu trình sinh ra toàn thể $A_4$**
+**2. Tập các 3-chu trình sinh ra toàn thể $A_4$**
+
 Ta biết rằng $A_4$ bao gồm phần tử đơn vị, 8 phần tử 3-chu trình và 3 phần tử dạng $(ab)(cd)$.
 Ta có thể phân tích mỗi phần tử dạng $(ab)(cd)$ thành tích của hai 3-chu trình:
 $$
@@ -469,7 +427,8 @@ $$
 $$
 Vì mọi phần tử của $A_4$ đều là 3-chu trình hoặc là tích của hai 3-chu trình, nhóm sinh bởi tập hợp tất cả các 3-chu trình chính là $A_4$.
 
-**Ý 3: Tính duy nhất của nhóm con cấp 12 trong $S_4$**
+**3. Tính duy nhất của nhóm con cấp 12 trong $S_4$**
+
 Từ câu 1, mọi 3-chu trình của $S_4$ đều thuộc $H$.
 Vì $H$ là một nhóm con, $H$ phải đóng kín dưới phép nhân, do đó $H$ phải chứa nhóm sinh bởi tất cả các 3-chu trình.
 Kết hợp với kết quả ở câu 2, ta suy ra:
@@ -481,53 +440,38 @@ $$
 H = A_4.
 $$
 Vậy trong nhóm $S_4$, chỉ tồn tại duy nhất một nhóm con có cấp 12, đó chính là nhóm thay phiên $A_4$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Dùng chỉ số 2 chứng minh mọi 3-chu trình đều thuộc $H$ | 0.35 điểm |
-| Biểu diễn tích chuyển vị rời thành tích hai 3-chu trình để chứng minh $\langle \text{3-chu trình} \rangle = A_4$ | 0.35 điểm |
-| Suy ra $A_4 \subseteq H$ và kết luận tính duy nhất từ đẳng thức lực lượng | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b3-d1"
-  title="[Nhóm D · Mã CTDS-C3-B3-D01] Phân loại nhóm cấp 6"
+  title="Phân loại nhóm cấp 6" group="Nhóm D"
 >
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Phân loại toàn diện cấu trúc nhóm cấp 6
-- **Mục tiêu đánh giá:** Vận dụng Định lý Cauchy và Định lý Lagrange để chứng minh mọi nhóm cấp 6 chỉ có thể đẳng cấu với $\mathbb{Z}/6\mathbb{Z}$ hoặc $S_3$.
-- **Mức độ:** Nâng cao
-
-**Đề bài:**
 Cho $G$ là một nhóm có cấp 6 ($|G| = 6$).
 1. Dùng Định lý Cauchy, chứng minh rằng trong $G$ luôn tồn tại một phần tử $a$ có cấp 3 và một phần tử $b$ có cấp 2.
 2. Đặt $H = \langle a \rangle$. Chứng minh rằng $[G:H] = 2$ và $b \notin H$. Từ đó viết $G$ dưới dạng hợp rời của hai lớp kề của $H$.
 3. Xét phần tử $bab^{-1}$. Chứng minh rằng $bab^{-1} \in \{a, a^2\}$.
 4. Chứng minh rằng:
-   - Nếu $bab^{-1} = a$, thì $G$ là nhóm cyclic và $G \cong \mathbb{Z}/6\mathbb{Z}$.
-   - Nếu $bab^{-1} = a^2 = a^{-1}$, thì $G$ không giao hoán và $G \cong S_3$.
+   - Nếu $bab^{-1} = a$, thì $G$ là nhóm cyclic cấp $6$ sinh bởi $ab$.
+   - Nếu $bab^{-1} = a^2 = a^{-1}$, thì $G$ là nhóm không giao hoán cấp $6$ có cùng bảng phép toán với $S_3$ (và $D_6$).
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Vì $2 \mid 6$ và $3 \mid 6$ là các số nguyên tố, áp dụng Định lý Cauchy.
 2. $[G:H] = 6 / 3 = 2$. $G = H \sqcup bH = \{e, a, a^2, b, ba, ba^2\}$.
 3. Vì $[G:H] = 2$, $H$ có tính chất $gHg^{-1} = H$, do đó $bab^{-1} \in H$. Phần tử này phải có cùng cấp với $a$.
-4. Với $bab = a^{-1}$ và $b^2 = e$, đây chính là quan hệ xác định của nhóm nhị diện $D_6 \cong S_3$.
-</details>
+4. Với $bab = a^{-1}$ và $b^2 = e$, đây chính là hệ thức xác định bảng phép toán của nhóm nhị diện $D_6$ và nhóm đối xứng $S_3$.
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Sự tồn tại phần tử cấp 3 và cấp 2**
 
-**Ý 1: Sự tồn tại phần tử cấp 3 và cấp 2**
 Cấp của nhóm là $|G| = 6 = 2 \cdot 3$.
 Vì $2$ và $3$ là các số nguyên tố chia hết cho $|G|$, theo Định lý Cauchy (<Ref to="thm-c3-b3-cauchy" />):
 - Tồn tại phần tử $a \in G$ sao cho $\operatorname{ord}(a) = 3$.
 - Tồn tại phần tử $b \in G$ sao cho $\operatorname{ord}(b) = 2$.
 
-**Ý 2: Chỉ số và phân hoạch theo lớp kề**
+**2. Chỉ số và phân hoạch theo lớp kề**
+
 Xét nhóm con cyclic $H = \langle a \rangle = \{e, a, a^2\}$ có cấp $|H| = 3$.
 Theo Định lý Lagrange, chỉ số của $H$ trong $G$ là:
 $$
@@ -539,7 +483,8 @@ $$
 G = H \sqcup bH = \{e, a, a^2, b, ba, ba^2\}.
 $$
 
-**Ý 3: Khảo sát phần tử liên hợp $bab^{-1}$**
+**3. Khảo sát phần tử liên hợp $bab^{-1}$**
+
 Vì $[G:H] = 2$, theo Bài 1, ta có $gH = Hg$ với mọi $g \in G$, tương đương $gHg^{-1} = H$.
 Do đó với $g = b$, ta có:
 $$
@@ -555,7 +500,8 @@ $$
 b a b^{-1} = a \quad \text{hoặc} \quad b a b^{-1} = a^2.
 $$
 
-**Ý 4: Phân loại hai trường hợp**
+**4. Phân loại hai trường hợp**
+
 - **Trường hợp 1: $b a b^{-1} = a$**
   Nhân $b$ vào bên phải: $ba = ab$.
   Như vậy $a$ và $b$ giao hoán với nhau.
@@ -564,7 +510,7 @@ $$
   \operatorname{ord}(ab) = \operatorname{ord}(a) \cdot \operatorname{ord}(b) = 3 \cdot 2 = 6.
   $$
   Nhóm $G$ chứa phần tử $ab$ có cấp bằng 6 đúng bằng $|G|$.
-  Do đó, $G$ là nhóm cyclic và $G = \langle ab \rangle \cong \mathbb{Z}/6\mathbb{Z}$.
+  Do đó, $G = \langle ab \rangle$ là nhóm cyclic cấp $6$.
 
 - **Trường hợp 2: $b a b^{-1} = a^2 = a^{-1}$**
   Vì $b^2 = e \implies b = b^{-1}$, hệ thức này viết lại thành:
@@ -577,18 +523,10 @@ $$
   a^3 = e, \quad b^2 = e, \quad ba = a^2 b.
   $$
   Cấu trúc này hoàn toàn trùng khớp với nhóm đối xứng $S_3$ (với phép quay $a \leftrightarrow (1\;2\;3)$ và phép lật $b \leftrightarrow (1\;2)$) hoặc nhóm nhị diện $D_6$.
-  Do đó $G \cong S_3$.
+  Do đó $G$ có bảng phép toán hoàn toàn xác định như nhóm $S_3$ (hoặc $D_6$).
 
-Vậy mọi nhóm cấp 6 chỉ có thể đẳng cấu với $\mathbb{Z}/6\mathbb{Z}$ hoặc $S_3$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Dùng Cauchy chỉ ra tồn tại $a$ cấp 3 và $b$ cấp 2 | 0.20 điểm |
-| Tính đúng $[G:H] = 2$, chỉ ra $b \notin H$ và viết đủ 6 phần tử | 0.25 điểm |
-| Chứng minh $bab^{-1} \in \{a, a^2\}$ bảo toàn cấp 3 | 0.25 điểm |
-| Hoàn thiện phân loại hai trường hợp ra $\mathbb{Z}_6$ và $S_3$ | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+Vậy mọi nhóm cấp $6$ chỉ có thể là nhóm cyclic cấp $6$ hoặc nhóm không giao hoán có cấu trúc của $S_3$.
+</Solution>
 </Exercise>
 
 ---

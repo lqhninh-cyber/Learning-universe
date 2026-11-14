@@ -19,9 +19,6 @@ sources:
     pages: '47-54, 169-173'
     sections: 'Mục 2.6, 2.7'
     note: 'Hệ thống bài tập Chương 2 (Bài 2.1 đến 2.36) và Lời giải chọn lọc'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '74-82'
-    sections: 'Chương 2, Bài tập'
 status: published
 version: 0.1.0
 authoring:
@@ -105,12 +102,7 @@ flowchart TD
 
 ## 3. Hệ thống bài tập chuyên đề chọn lọc
 
-<Exercise id="exr-c2-b4-a1" title="[Nhóm A · Mã CTDS-C2-B4-A01] Khảo sát tính cyclic và phần tử sinh của nhóm U(14)">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Bài tập 2.12 giáo trình chính — Nhóm các lớp khả nghịch $U(14)$
-- **Mục tiêu đánh giá:** Liệt kê các phần tử của $U(n)$, tính cấp từng phần tử và xác định phần tử sinh *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-
+<Exercise id="exr-c2-b4-a1" title="Khảo sát tính cyclic và phần tử sinh của nhóm U(14)" group="Nhóm A">
 Xét nhóm nhân các lớp thặng dư khả nghịch môđulô 14:
 $$
 U(14) = \{[a]_{14} \in \Z/14\Z \mid \gcd(a, 14) = 1\}.
@@ -119,18 +111,15 @@ $$
 2. Tính cấp của từng phần tử trong nhóm $U(14)$.
 3. Nhóm $U(14)$ có phải là một nhóm cyclic hay không? Nếu có, hãy chỉ ra tất cả các phần tử sinh của $U(14)$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Các số nguyên $1 \le a < 14$ lẻ và không chia hết cho 7. Cấp $|U(14)| = \varphi(14) = 14(1 - 1/2)(1 - 1/7)$.
 2. Tính các lũy thừa môđulô 14: $[3]^1, [3]^2, [3]^3, \dots$
 3. Nhóm có cấp 6, nếu có phần tử cấp 6 thì là nhóm cyclic.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Liệt kê phần tử và tính cấp của $U(14)$**
 
-**Ý 1: Liệt kê phần tử và tính cấp của $U(14)$**
 Các số nguyên từ $1$ đến $13$ nguyên tố cùng nhau với $14 = 2 \times 7$ là những số lẻ và khác $7$:
 $$
 U(14) = \{[1], [3], [5], [9], [11], [13]\}.
@@ -140,7 +129,8 @@ $$
 |U(14)| = \varphi(14) = 14 \times \left(1 - \frac{1}{2}\right) \times \left(1 - \frac{1}{7}\right) = 14 \times \frac{1}{2} \times \frac{6}{7} = 6.
 $$
 
-**Ý 2: Tính cấp của từng phần tử**
+**2. Tính cấp của từng phần tử**
+
 - $[1]$: phần tử đơn vị nên $\operatorname{ord}([1]) = 1$.
 - $[13] = [-1]$: ta có $[-1]^2 = [1]$, nên $\operatorname{ord}([13]) = 2$.
 - Xét phần tử $[3]$:
@@ -163,46 +153,32 @@ Bảng tổng kết cấp phần tử:
 - Cấp 3: $[9], [11]$ (2 phần tử).
 - Cấp 6: $[3], [5]$ (2 phần tử).
 
-**Ý 3: Tính cyclic và phần tử sinh**
+**3. Tính cyclic và phần tử sinh**
+
 Vì trong nhóm $U(14)$ (có cấp 6) tồn tại phần tử $[3]$ có cấp đúng bằng 6, nhóm $U(14)$ là một **nhóm cyclic cấp 6**:
 $$
-U(14) = \langle [3] \rangle \cong (\Z/6\Z, +).
+U(14) = \langle [3]_{14} \rangle \text{ (nhóm cyclic cấp } 6\text{)}.
 $$
 Số phần tử sinh của $U(14)$ bằng $\varphi(6) = 6(1 - 1/2)(1 - 1/3) = 2$.
 Hai phần tử sinh của $U(14)$ là $[3]^1 = [3]$ và $[3]^5 = [5]$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Liệt kê đúng 6 phần tử của $U(14)$ và tính đúng $|U(14)| = 6$ | 0.30 điểm |
-| Tính chính xác cấp của cả 6 phần tử trong nhóm | 0.40 điểm |
-| Khẳng định $U(14)$ cyclic và chỉ ra đúng hai phần tử sinh $[3]$ và $[5]$ | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b4-b1" title="[Nhóm B · Mã CTDS-C2-B4-B01] Mạng nhóm con và sơ đồ Hasse của Z/20Z">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Bài tập 2.25 giáo trình chính — Phân loại toàn bộ các nhóm con của $\Z/20\Z$
-- **Mục tiêu đánh giá:** Thiết lập song ánh giữa ước số và nhóm con, vẽ đúng sơ đồ Hasse *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Trung bình (Mức 2)
-
+<Exercise id="exr-c2-b4-b1" title="Mạng nhóm con và sơ đồ Hasse của Z/20Z" group="Nhóm B">
 Xét nhóm cyclic $G = (\Z/20\Z, +)$.
 1. Tìm tất cả các ước nguyên dương của 20 và cho biết $G$ có bao nhiêu nhóm con.
 2. Với mỗi ước dương $d$ của 20, hãy viết nhóm con duy nhất $H_d$ cấp $d$ dưới dạng phần tử sinh chuẩn $\langle [20/d]_{20} \rangle$ và liệt kê các phần tử.
 3. Vẽ sơ đồ quan hệ bao hàm (sơ đồ Hasse) giữa các nhóm con của $G$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Các ước dương của 20: $1, 2, 4, 5, 10, 20$.
 2. Áp dụng $H_d = \langle [20/d]_{20} \rangle$.
 3. Quan hệ bao hàm $H_{d_1} \subseteq H_{d_2} \iff d_1 \mid d_2$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Các ước của 20 và số nhóm con**
 
-**Ý 1: Các ước của 20 và số nhóm con**
 Tập các ước nguyên dương của 20 là:
 $$
 \mathcal{D}(20) = \{1, 2, 4, 5, 10, 20\}.
@@ -210,7 +186,8 @@ $$
 Vì $G = \Z/20\Z$ là nhóm cyclic cấp 20, theo Định lý 2.12, các nhóm con của $G$ tương ứng 1-1 với các ước nguyên dương của 20.
 Do đó $G$ có đúng **6 nhóm con**.
 
-**Ý 2: Danh sách 6 nhóm con theo cấp $d$**
+**2. Danh sách 6 nhóm con theo cấp $d$**
+
 - $d = 1$: $H_1 = \langle [20/1] \rangle = \langle [0]_{20} \rangle = \{[0]\}$.
 - $d = 2$: $H_2 = \langle [20/2] \rangle = \langle [10]_{20} \rangle = \{[0], [10]\}$.
 - $d = 4$: $H_4 = \langle [20/4] \rangle = \langle [5]_{20} \rangle = \{[0], [5], [10], [15]\}$.
@@ -218,7 +195,8 @@ Do đó $G$ có đúng **6 nhóm con**.
 - $d = 10$: $H_{10} = \langle [20/10] \rangle = \langle [2]_{20} \rangle = \{[0], [2], [4], [6], [8], [10], [12], [14], [16], [18]\}$.
 - $d = 20$: $H_{20} = \langle [20/20] \rangle = \langle [1]_{20} \rangle = \Z/20\Z$.
 
-**Ý 3: Sơ đồ Hasse**
+**3. Sơ đồ Hasse**
+
 Quan hệ bao hàm: $H_{d_1} \subseteq H_{d_2} \iff d_1 \mid d_2$:
 - $H_1$ là nhóm con nhỏ nhất, chứa trong mọi nhóm con.
 - $H_2$ bao hàm $H_1$.
@@ -252,39 +230,24 @@ flowchart TD
     style H2 fill:#f1f5f9,stroke:#64748b,stroke-width:1px
     style H1 fill:#f8fafc,stroke:#94a3b8,stroke-width:1px
 ```
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Liệt kê đúng 6 ước số của 20 và kết luận số lượng nhóm con | 0.30 điểm |
-| Xác định đúng phần tử sinh chuẩn và danh sách phần tử của 6 nhóm con | 0.40 điểm |
-| Vẽ đúng sơ đồ Hasse thể hiện chính xác quan hệ chia hết giữa các cấp | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b4-c1" title="[Nhóm C · Mã CTDS-C2-B4-C01] Đặc trưng nhóm chỉ có các nhóm con tầm thường">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Bài tập 2.27 giáo trình chính — Nhóm có cấu trúc nhóm con tối tiểu
-- **Mục tiêu đánh giá:** Chứng minh nhóm không có nhóm con thực sự không tầm thường phải là cyclic cấp nguyên tố *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Nâng cao (Mức 3)
-
+<Exercise id="exr-c2-b4-c1" title="Đặc trưng nhóm chỉ có các nhóm con tầm thường" group="Nhóm C">
 Cho $G$ là một nhóm có nhiều hơn một phần tử ($|G| > 1$). Giả sử rằng $G$ **không có bất kỳ nhóm con thực sự không tầm thường nào** (nghĩa là các nhóm con duy nhất của $G$ chỉ là $\{e\}$ và $G$).
 1. Lấy một phần tử $a \in G$ với $a \neq e$. Chứng minh rằng $G = \langle a \rangle$, và suy ra $G$ là một nhóm cyclic.
 2. Chứng minh rằng cấp của nhóm $G$ không thể là vô hạn ($|G| < \infty$).
 3. Chứng minh rằng cấp của nhóm $G$ phải là một **số nguyên tố** $p$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Xét nhóm con cyclic $\langle a \rangle$. Vì $a \neq e$ nên $\langle a \rangle \neq \{e\}$. Theo giả thiết, $\langle a \rangle$ buộc phải bằng $G$.
-2. Nếu $|G| = \infty$ thì $G \cong \Z$. Nhóm $\Z$ có chứa các nhóm con thực sự không? (Ví dụ $2\Z$).
+2. Nếu $|G| = \infty$ thì $G = \langle a \rangle$ với mọi lũy thừa $a^k$ phân biệt. Nhóm $\Z$ có chứa các nhóm con thực sự không? (Ví dụ $2\Z$).
 3. Nếu $|G| = n$ là hợp số ($n = rs$ với $1 < r < n$), hãy xét nhóm con $\langle a^r \rangle$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $G$ là nhóm cyclic**
 
-**Ý 1: Chứng minh $G$ là nhóm cyclic**
 Vì $|G| > 1$, tồn tại ít nhất một phần tử $a \in G$ sao cho $a \neq e$.
 Xét nhóm con $\langle a \rangle$ sinh bởi phần tử $a$.
 Vì $a \in \langle a \rangle$ và $a \neq e$, nhóm con $\langle a \rangle$ chứa ít nhất hai phần tử phân biệt $e$ và $a$, do đó:
@@ -298,16 +261,18 @@ $$
 $$
 Vì $G$ được sinh bởi một phần tử duy nhất $a$, ta kết luận $G$ là một **nhóm cyclic**.
 
-**Ý 2: Chứng minh $|G| < \infty$**
+**2. Chứng minh $|G| < \infty$**
+
 Ta chứng minh bằng phản chứng: giả sử $|G| = \infty$.
-Vì $G$ là nhóm cyclic vô hạn, theo Định lý 2.8, $G$ đẳng cấu với nhóm cộng các số nguyên $(\Z, +)$.
+Vì $G$ là nhóm cyclic vô hạn, mọi lũy thừa $a^k$ ($k \in \Z$) của phần tử sinh $a$ đều đôi một phân biệt.
 Xét nhóm con $H = \langle a^2 \rangle \le G$ (tương ứng với nhóm con $2\Z \le \Z$).
 - Rõ ràng $a \notin \langle a^2 \rangle$ (vì trong nhóm cyclic vô hạn, $a = a^{2k} \implies 2k = 1$, vô nghiệm nguyên), nên $\langle a^2 \rangle \neq G$.
 - Mặt khác $a^2 \neq e$ (vì $\operatorname{ord}(a) = \infty$), nên $\langle a^2 \rangle \neq \{e\}$.
 Như vậy $\langle a^2 \rangle$ là một nhóm con thực sự không tầm thường của $G$, mâu thuẫn trực tiếp với giả thiết của bài toán.
 Do đó cấp của $G$ không thể vô hạn. Vậy $|G| = n < \infty$.
 
-**Ý 3: Chứng minh $|G| = p$ là số nguyên tố**
+**3. Chứng minh $|G| = p$ là số nguyên tố**
+
 Vì $|G| = n > 1$ là số nguyên dương hữu hạn, ta chứng minh $n$ là số nguyên tố bằng phản chứng.
 Giả sử $n$ là một hợp số, nghĩa là tồn tại hai số nguyên $r, s$ sao cho:
 $$
@@ -323,23 +288,11 @@ Xét phần tử $b = a^r \in G$ và nhóm con $K = \langle a^r \rangle \le G$.
   - $|K| = s < n = |G| \implies K \neq G$.
 Do đó $K = \langle a^r \rangle$ là một nhóm con thực sự không tầm thường của $G$, tiếp tục mâu thuẫn với giả thiết.
 Vì vậy $n$ không thể là hợp số. Do $n > 1$, $n$ bắt buộc phải là một số nguyên tố $p$.
-Vậy $G$ là một nhóm cyclic cấp nguyên tố ($G \cong \Z/p\Z$).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Lập luận $\langle a \rangle \neq \{e\} \implies \langle a \rangle = G$ và kết luận $G$ cyclic | 0.35 điểm |
-| Chứng minh phản chứng loại trừ trường hợp vô hạn qua nhóm con $\langle a^2 \rangle$ | 0.35 điểm |
-| Chứng minh phản chứng loại trừ hợp số qua nhóm con $\langle a^r \rangle$ cấp $s$ và kết luận cấp nguyên tố | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+Vậy $G$ là một nhóm cyclic cấp nguyên tố cấp $p$.
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b4-d1" title="[Nhóm D · Mã CTDS-C2-B4-D01] Nhóm con xoắn của nhóm Abel (Torsion Subgroup)">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Bài tập 2.35, 2.36 giáo trình chính — Cấu trúc nhóm con xoắn $T(G)$
-- **Mục tiêu đánh giá:** Chứng minh tập các phần tử cấp hữu hạn trong nhóm abel là nhóm con và phân tích phản ví dụ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Rất khó (Mức 4)
-
+<Exercise id="exr-c2-b4-d1" title="Nhóm con xoắn của nhóm Abel (Torsion Subgroup)" group="Nhóm D">
 Cho $G$ là một nhóm. Ta gọi tập hợp tất cả các phần tử có cấp hữu hạn trong $G$ là **tập các phần tử xoắn**, ký hiệu là:
 $$
 T(G) = \{x \in G \mid \operatorname{ord}(x) < \infty\}.
@@ -348,18 +301,15 @@ $$
 2. Hãy chỉ ra một phản ví dụ chứng minh rằng nếu nhóm $G$ **không giao hoán**, thì tập $T(G)$ chưa chắc là một nhóm con của $G$.
 3. Trong nhóm nhân các số phức khác không $\mathbb{C}^\times$, hãy mô tả cụ thể nhóm con xoắn $T(\mathbb{C}^\times)$ và cho biết nhóm con này là hữu hạn hay vô hạn.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Dùng tiêu chuẩn hai bước: $e \in T(G)$; nếu $\operatorname{ord}(a) = m, \operatorname{ord}(b) = n$ và $ab = ba$, hãy tính $(ab)^{mn}$ và $(a^{-1})^m$.
 2. Trong nhóm ma trận $\operatorname{GL}_2(\R)$, tìm hai ma trận có cấp 2 hoặc 4 nhưng tích của chúng có cấp vô hạn.
 3. Phần tử $z \in \mathbb{C}^\times$ có cấp hữu hạn $n \iff z^n = 1 \iff |z| = 1$ và argument là bội hữu tỉ của $2\pi$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $T(G) \le G$ khi $G$ là nhóm abel**
 
-**Ý 1: Chứng minh $T(G) \le G$ khi $G$ là nhóm abel**
 Ta kiểm tra tiêu chuẩn hai bước cho $T(G)$:
 - *Khác rỗng:* Vì $\operatorname{ord}(e) = 1 < \infty$, phần tử đơn vị luôn có cấp hữu hạn. Do đó $e \in T(G)$, suy ra $T(G) \neq \varnothing$.
 - *Đóng với phép nhân:* Lấy $a, b \in T(G)$.
@@ -378,7 +328,8 @@ Ta kiểm tra tiêu chuẩn hai bước cho $T(G)$:
   Suy ra $a^{-1} \in T(G)$.
 Theo tiêu chuẩn nhóm con, $T(G)$ là một nhóm con của $G$.
 
-**Ý 2: Phản ví dụ khi nhóm không giao hoán**
+**2. Phản ví dụ khi nhóm không giao hoán**
+
 Trong nhóm ma trận không giao hoán $\operatorname{GL}_2(\R)$, xét hai ma trận sau:
 $$
 A = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}, \quad B = \begin{pmatrix} 0 & 1 \\ -1 & -1 \end{pmatrix}.
@@ -406,7 +357,8 @@ $$
 Vì tích của hai phần tử trong $T(\operatorname{GL}_2(\R))$ không thuộc $T(\operatorname{GL}_2(\R))$, tập $T(\operatorname{GL}_2(\R))$ không đóng với phép nhân ma trận.
 Vậy khi $G$ không giao hoán, $T(G)$ nói chung không phải là nhóm con của $G$.
 
-**Ý 3: Nhóm con xoắn của $\mathbb{C}^\times$**
+**3. Nhóm con xoắn của $\mathbb{C}^\times$**
+
 Nhóm nhân $\mathbb{C}^\times$ là nhóm giao hoán. Do đó $T(\mathbb{C}^\times)$ là một nhóm con của $\mathbb{C}^\times$.
 Một số phức $z \in \mathbb{C}^\times$ có cấp hữu hạn khi và chỉ khi tồn tại $n \in \Z^+$ sao cho $z^n = 1$.
 Lấy môđun hai vế: $|z|^n = 1 \implies |z| = 1$.
@@ -418,14 +370,7 @@ T(\mathbb{C}^\times) = \left\{ e^{i 2\pi \frac{m}{n}} \;\middle|\; m \in \Z, \; 
 $$
 Đây là hợp của tất cả các nhóm các căn bậc $n$ của đơn vị.
 Nhóm con này là một **nhóm vô hạn** (chứa vô hạn các căn của đơn vị với mọi bậc $n \ge 1$).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Sử dụng tính giao hoán tính đúng $(ab)^{mn} = e$ và $(a^{-1})^m = e$ suy ra $T(G) \le G$ | 0.40 điểm |
-| Xây dựng chính xác hai ma trận cấp hữu hạn có tích cấp vô hạn trong $\operatorname{GL}_2(\R)$ | 0.35 điểm |
-| Mô tả đúng $T(\mathbb{C}^\times)$ là tập các căn đơn vị và khẳng định là nhóm vô hạn | 0.25 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---

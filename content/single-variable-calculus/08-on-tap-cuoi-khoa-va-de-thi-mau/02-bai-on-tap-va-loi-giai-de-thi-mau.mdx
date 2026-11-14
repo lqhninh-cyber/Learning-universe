@@ -50,7 +50,7 @@ Tính giới hạn của dãy số sau:
 $$
 \lim_{n \to \infty} \left( \frac{n^2}{n^3 + 1} + \frac{n^2}{n^3 + 2} + \dots + \frac{n^2}{n^3 + n} \right)
 $$
-</Exercise>
+
 
 <Solution>
 Đặt tổng riêng của $n$ số hạng là $S_n$:
@@ -83,6 +83,7 @@ $$
 \lim_{n \to \infty} S_n = \lim_{n \to \infty} \left( \frac{n^2}{n^3 + 1} + \frac{n^2}{n^3 + 2} + \dots + \frac{n^2}{n^3 + n} \right) = 1
 $$
 </Solution>
+</Exercise>
 
 <Exercise
   id="exer-gthmb-c8-b2-cau-1b-gioi-han-maclaurin"
@@ -92,7 +93,7 @@ Tính giới hạn sau:
 $$
 L = \lim_{x \to 0} \left[ \frac{1}{\tan(\sin x)} - \frac{1}{x} \right]
 $$
-</Exercise>
+
 
 <Solution>
 Biểu thức có dạng vô định $\infty - \infty$ khi $x \to 0$. Ta thực hiện quy đồng mẫu số:
@@ -135,6 +136,7 @@ L = \lim_{x \to 0} \frac{-\frac{x^3}{6} + o(x^3)}{x^2} = \lim_{x \to 0} \left( -
 $$
 Vậy $L = 0$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -149,7 +151,7 @@ $$
 f(x) = \cos x
 $$
 có ít nhất một nghiệm trong đoạn $[0; \pi/2]$.
-</Exercise>
+
 
 <Solution>
 Xét hàm số phụ $g: [0; \pi/2] \to \mathbb{R}$ xác định bởi:
@@ -157,8 +159,9 @@ $$
 g(x) = f(x) - \cos x
 $$
 1. **Tính liên tục:** Vì hàm số $f(x)$ liên tục trên đoạn $[0; \pi/2]$ theo giả thiết và hàm $\cos x$ liên tục trên toàn bộ $\mathbb{R}$, hàm hiệu $g(x)$ liên tục trên đoạn đóng $[0; \pi/2]$.
-2. **Xét giá trị tại hai đầu mút đoạn:**
-   - Tại $x = 0$:
+**2. Xét giá trị tại hai đầu mút đoạn**
+
+ - Tại $x = 0$:
      $$
      g(0) = f(0) - \cos 0 = f(0) - 1
      $$
@@ -174,8 +177,9 @@ $$
      $$
      g\left(\frac{\pi}{2}\right) = f\left(\frac{\pi}{2}\right) \ge 0
      $$
-3. **Biện luận các trường hợp:**
-   - Nếu $g(0) = 0$, khi đó $x = 0 \in [0; \pi/2]$ chính là một nghiệm của phương trình $f(x) = \cos x$.
+**3. Biện luận các trường hợp**
+
+ - Nếu $g(0) = 0$, khi đó $x = 0 \in [0; \pi/2]$ chính là một nghiệm của phương trình $f(x) = \cos x$.
    - Nếu $g(\pi/2) = 0$, khi đó $x = \pi/2 \in [0; \pi/2]$ chính là một nghiệm của phương trình.
    - Nếu $g(0) < 0$ và $g(\pi/2) > 0$: hàm số $g$ liên tục trên $[0; \pi/2]$ và đổi dấu ở hai đầu mút ($g(0) \cdot g(\pi/2) < 0$).
      Theo **Định lý Giá trị Trung gian Bolzano - Cauchy**, tồn tại ít nhất một điểm $c \in (0; \pi/2)$ sao cho:
@@ -184,6 +188,7 @@ $$
      $$
 Trong mọi trường hợp, phương trình $f(x) = \cos x$ luôn có ít nhất một nghiệm trong đoạn $[0; \pi/2]$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exer-gthmb-c8-b2-cau-2b-bac-bo-lien-tuc-deu"
@@ -193,7 +198,7 @@ Chứng minh rằng hàm số sau không liên tục đều trên toàn trục s
 $$
 f(x) = x^3 + x^2 + x
 $$
-</Exercise>
+
 
 <Solution>
 Để chứng minh $f(x)$ không liên tục đều trên $\mathbb{R}$, ta áp dụng **đặc trưng phủ định bằng hai dãy số**:
@@ -237,6 +242,7 @@ Chọn hằng số $\varepsilon_0 = 1 > 0$. Ta thấy:
 - Nhưng $|f(x_n') - f(x_n)| > 3 \ge \varepsilon_0$ với mọi $n \ge 1$.
 Theo đặc trưng phủ định, hàm số $f(x) = x^3 + x^2 + x$ **không liên tục đều trên $\mathbb{R}$**.
 </Solution>
+</Exercise>
 
 ---
 
@@ -253,7 +259,7 @@ x^3 & \text{nếu } x \in \mathbb{Q} \\
 -x^3 & \text{nếu } x \in \mathbb{R} \setminus \mathbb{Q}
 \end{cases}
 $$
-</Exercise>
+
 
 <Solution>
 **Trường hợp 1: Xét tại điểm $x_0 \neq 0$:**
@@ -295,6 +301,7 @@ $$
 
 **Kết luận chung:** Hàm số $f(x)$ chỉ khả vi tại duy nhất một điểm $x = 0$ với $f'(0) = 0$, và không khả vi tại mọi $x \neq 0$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exer-gthmb-c8-b2-cau-3b-taylor-dao-ham-vo-cuc"
@@ -308,7 +315,7 @@ Chứng minh rằng:
 $$
 \lim_{x \to +\infty} f'(x) = 0
 $$
-</Exercise>
+
 
 <Solution>
 Lấy số thực $h > 0$ cố định bất kỳ.
@@ -352,6 +359,7 @@ $$
 $$
 Định lý được chứng minh hoàn tất.
 </Solution>
+</Exercise>
 
 ---
 
@@ -365,7 +373,7 @@ Tính tích phân suy rộng sau:
 $$
 I = \int_0^1 x \ln x \, dx
 $$
-</Exercise>
+
 
 <Solution>
 Hàm số dưới dấu tích phân $f(x) = x \ln x$ không xác định tại $x = 0$. Đây là tích phân suy rộng loại 2 với điểm kỳ dị tại cận dưới $x = 0^+$.
@@ -407,6 +415,7 @@ I = \lim_{c \to 0^+} \left( -\frac{1}{4} - \frac{c^2 \ln c}{2} + \frac{c^2}{4} \
 $$
 Vậy tích phân suy rộng hội tụ và có giá trị $I = -\frac{1}{4}$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exer-gthmb-c8-b2-cau-4b-khao-sat-tham-so-p"
@@ -416,7 +425,7 @@ Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho tích
 $$
 J = \int_0^{+\infty} \frac{e^{-x}}{x^p} \, dx
 $$
-</Exercise>
+
 
 <Solution>
 Hàm số dưới dấu tích phân $f(x) = \frac{e^{-x}}{x^p}$ là hàm số dương trên $(0; +\infty)$.
@@ -458,6 +467,7 @@ p < 1
 $$
 (Đây chính là hàm Gamma mở rộng $\Gamma(1 - p)$).
 </Solution>
+</Exercise>
 
 ---
 
@@ -473,7 +483,7 @@ $$
 $$
 1. Tìm miền hội tụ $D$ của chuỗi hàm.
 2. Chứng minh rằng chuỗi hàm hội tụ đều trên toàn bộ miền hội tụ $D$.
-</Exercise>
+
 
 <Solution>
 **1. Tìm miền hội tụ $D$:**
@@ -522,6 +532,7 @@ Ta sử dụng **Dấu hiệu Weierstrass (M-test)** về sự hội tụ đều
 
 Theo **Dấu hiệu Weierstrass (Định lý 7.2.2)**, chuỗi hàm $\sum_{n=1}^\infty \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n$ **hội tụ đều trên toàn bộ $\mathbb{R}$**.
 </Solution>
+</Exercise>
 
 ---
 

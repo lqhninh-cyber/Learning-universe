@@ -80,11 +80,12 @@ Chứng minh các tính chất đã nêu ở Mục 1.1.3 của giáo trình:
    $$
    \left( \bigcup_{i \in I} A_i \right)^c = \bigcap_{i \in I} A_i^c, \quad \left( \bigcap_{i \in I} A_i \right)^c = \bigcup_{i \in I} A_i^c.
    $$
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$:**
-   Lấy phần tử $x$ bất kỳ thuộc không gian toàn thể $X$. Ta có chuỗi tương đương:
+**1. Chứng minh $A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$**
+
+Lấy phần tử $x$ bất kỳ thuộc không gian toàn thể $X$. Ta có chuỗi tương đương:
    $$
    \begin{aligned}
    x \in A \cap (B \cup C) &\iff (x \in A) \wedge (x \in B \cup C) \\
@@ -96,8 +97,9 @@ Chứng minh các tính chất đã nêu ở Mục 1.1.3 của giáo trình:
    $$
    Vì chuỗi tương đương đúng với mọi $x$, ta suy ra đẳng thức cần chứng minh. Đẳng thức phân phối của $\cup$ đối với $\cap$ được chứng minh hoàn toàn tương tự.
 
-2. **Chứng minh luật De Morgan cho họ tùy ý:**
-   - Với đẳng thức thứ nhất:
+**2. Chứng minh luật De Morgan cho họ tùy ý**
+
+ - Với đẳng thức thứ nhất:
      $$
      x \in \left( \bigcup_{i \in I} A_i \right)^c \iff x \notin \bigcup_{i \in I} A_i \iff \forall i \in I, \, x \notin A_i \iff \forall i \in I, \, x \in A_i^c \iff x \in \bigcap_{i \in I} A_i^c.
      $$
@@ -106,6 +108,7 @@ Chứng minh các tính chất đã nêu ở Mục 1.1.3 của giáo trình:
      x \in \left( \bigcap_{i \in I} A_i \right)^c \iff x \notin \bigcap_{i \in I} A_i \iff \exists i \in I, \, x \notin A_i \iff \exists i \in I, \, x \in A_i^c \iff x \in \bigcup_{i \in I} A_i^c.
      $$
 </Solution>
+</Exercise>
 
 ---
 
@@ -116,29 +119,33 @@ Cho các tập hợp $A, B, C$ là các tập con của một tập hợp toàn 
 3. $(A \cap B) \cup (A \setminus B) = A$.
 4. $A \setminus (B \setminus C) = (A \setminus B) \cup (A \cap C)$.
 5. $A^c \cap B^c = B^c$ và $B \subseteq A$ khi và chỉ khi $A = B$.
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $A \cap (B \setminus A) = \emptyset$:**
-   Ta có $B \setminus A = B \cap A^c$. Do đó:
+**1. Chứng minh $A \cap (B \setminus A) = \emptyset$**
+
+Ta có $B \setminus A = B \cap A^c$. Do đó:
    $$
    A \cap (B \setminus A) = A \cap (B \cap A^c) = (A \cap A^c) \cap B = \emptyset \cap B = \emptyset.
    $$
 
-2. **Chứng minh $A \cup (B \setminus A) = A \cup B$:**
-   Sử dụng tính phân phối:
+**2. Chứng minh $A \cup (B \setminus A) = A \cup B$**
+
+Sử dụng tính phân phối:
    $$
    A \cup (B \setminus A) = A \cup (B \cap A^c) = (A \cup B) \cap (A \cup A^c) = (A \cup B) \cap X = A \cup B.
    $$
 
-3. **Chứng minh $(A \cap B) \cup (A \setminus B) = A$:**
-   Vì $A \setminus B = A \cap B^c$, ta áp dụng tính phân phối:
+**3. Chứng minh $(A \cap B) \cup (A \setminus B) = A$**
+
+Vì $A \setminus B = A \cap B^c$, ta áp dụng tính phân phối:
    $$
    (A \cap B) \cup (A \cap B^c) = A \cap (B \cup B^c) = A \cap X = A.
    $$
 
-4. **Chứng minh $A \setminus (B \setminus C) = (A \setminus B) \cup (A \cap C)$:**
-   Ta biến đổi vế trái:
+**4. Chứng minh $A \setminus (B \setminus C) = (A \setminus B) \cup (A \cap C)$**
+
+Ta biến đổi vế trái:
    $$
    \begin{aligned}
    A \setminus (B \setminus C) &= A \cap (B \cap C^c)^c \\
@@ -149,12 +156,14 @@ Cho các tập hợp $A, B, C$ là các tập con của một tập hợp toàn 
    \end{aligned}
    $$
 
-5. **Chứng minh $A^c \cap B^c = B^c$ và $B \subseteq A \iff A = B$:**
-   - Theo luật De Morgan, $A^c \cap B^c = (A \cup B)^c$.
+**5. Chứng minh $A^c \cap B^c = B^c$ và $B \subseteq A \iff A = B$**
+
+ - Theo luật De Morgan, $A^c \cap B^c = (A \cup B)^c$.
      Do đó $(A \cup B)^c = B^c \iff A \cup B = B \iff A \subseteq B$.
    - Kết hợp với giả thiết $B \subseteq A$, ta có đồng thời $A \subseteq B$ và $B \subseteq A$, điều này tương đương với $A = B$.
    - Ngược lại, nếu $A = B$ thì hiển nhiên $B \subseteq A$ và $A^c \cap B^c = A^c \cap A^c = A^c = B^c$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -163,11 +172,12 @@ Cho $A, B$ là các tập con của $X$ và $C, D$ là các tập con của $Y$.
 1. $(A \times C) \cap (B \times D) = (A \cap B) \times (C \cap D)$.
 2. $(A \times C) \cup (A \times D) = A \times (C \cup D)$.
 3. $(A \times C) \cup (B \times D) \subseteq (A \cup B) \times (C \cup D)$. Hãy đưa ra một ví dụ chỉ ra rằng đẳng thức không nhất thiết xảy ra.
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $(A \times C) \cap (B \times D) = (A \cap B) \times (C \cap D)$:**
-   Lấy cặp $(x, y) \in X \times Y$ bất kỳ:
+**1. Chứng minh $(A \times C) \cap (B \times D) = (A \cap B) \times (C \cap D)$**
+
+Lấy cặp $(x, y) \in X \times Y$ bất kỳ:
    $$
    \begin{aligned}
    (x, y) \in (A \times C) \cap (B \times D) &\iff (x, y) \in A \times C \text{ và } (x, y) \in B \times D \\
@@ -178,8 +188,9 @@ Cho $A, B$ là các tập con của $X$ và $C, D$ là các tập con của $Y$.
    \end{aligned}
    $$
 
-2. **Chứng minh $(A \times C) \cup (A \times D) = A \times (C \cup D)$:**
-   Lấy cặp $(x, y) \in X \times Y$ bất kỳ:
+**2. Chứng minh $(A \times C) \cup (A \times D) = A \times (C \cup D)$**
+
+Lấy cặp $(x, y) \in X \times Y$ bất kỳ:
    $$
    \begin{aligned}
    (x, y) \in (A \times C) \cup (A \times D) &\iff (x \in A \wedge y \in C) \vee (x \in A \wedge y \in D) \\
@@ -189,8 +200,9 @@ Cho $A, B$ là các tập con của $X$ và $C, D$ là các tập con của $Y$.
    \end{aligned}
    $$
 
-3. **Chứng minh bao hàm $(A \times C) \cup (B \times D) \subseteq (A \cup B) \times (C \cup D)$ và phản ví dụ:**
-   - *Chứng minh bao hàm:*
+**3. Chứng minh bao hàm $(A \times C) \cup (B \times D) \subseteq (A \cup B) \times (C \cup D)$ và phản ví dụ**
+
+ - *Chứng minh bao hàm:*
      Lấy $(x, y) \in (A \times C) \cup (B \times D)$. Khi đó:
      - Hoặc $(x, y) \in A \times C \implies x \in A \subseteq A \cup B$ và $y \in C \subseteq C \cup D \implies (x, y) \in (A \cup B) \times (C \cup D)$.
      - Hoặc $(x, y) \in B \times D \implies x \in B \subseteq A \cup B$ và $y \in D \subseteq C \cup D \implies (x, y) \in (A \cup B) \times (C \cup D)$.
@@ -204,6 +216,7 @@ Cho $A, B$ là các tập con của $X$ và $C, D$ là các tập con của $Y$.
        Vế phải: $(A \cup B) \times (C \cup D) = \{(1, 3), (1, 4), (2, 3), (2, 4)\}$.
      Rõ ràng cặp $(1, 4)$ thuộc vế phải nhưng không thuộc vế trái. Do đó đẳng thức không xảy ra!
 </Solution>
+</Exercise>
 
 ---
 
@@ -212,7 +225,7 @@ Bằng cách lập bảng giá trị logic $0$ và $1$, hãy chứng minh các q
 1. $p \Rightarrow q \equiv \bar{q} \Rightarrow \bar{p} \equiv \bar{p} \vee q$.
 2. $\overline{p \wedge q} \equiv \bar{p} \vee \bar{q}$ và $\overline{p \vee q} \equiv \bar{p} \wedge \bar{q}$.
 3. $\overline{p \Rightarrow q} \equiv p \wedge \bar{q}$.
-</Exercise>
+
 
 <Solution>
 Ta lập bảng chân trị tổng hợp cho tất cả các mệnh đề cần kiểm tra:
@@ -229,6 +242,7 @@ Từ bảng chân trị:
 - Cột $\overline{p \wedge q}$ và $\bar{p} \vee \bar{q}$ hoàn toàn trùng nhau $(0, 1, 1, 1)$, chứng minh luật De Morgan thứ nhất.
 - Cột $\overline{p \Rightarrow q}$ và $p \wedge \bar{q}$ hoàn toàn trùng nhau $(0, 1, 0, 0)$, chứng minh mục 3.
 </Solution>
+</Exercise>
 
 ---
 
@@ -244,7 +258,7 @@ Hãy phát biểu và xác định chân trị của các mệnh đề sau:
 4. $\bar{p}$.
 5. $\bar{p} \Rightarrow q$.
 6. $p \iff q$.
-</Exercise>
+
 
 <Solution>
 Vì $p \equiv 1$ và $q \equiv 0$:
@@ -262,6 +276,7 @@ Vì $p \equiv 1$ và $q \equiv 0$:
 6. **Mệnh đề $p \iff q$:** "$17$ là số nguyên tố khi và chỉ khi $\sqrt{2}$ là số hữu tỉ".
    Hai mệnh đề có chân trị khác nhau ($1$ và $0$), do đó $p \iff q \equiv 0$ (**Sai**).
 </Solution>
+</Exercise>
 
 ---
 
@@ -272,7 +287,7 @@ Trong các phát biểu dưới đây, phát biểu nào là mệnh đề? Hãy 
 3. Tồn tại một hành tinh có khối lượng lớn hơn Trái Đất.
 4. Tất cả các con chó có đôi cánh đều có bộ lông màu trắng.
 5. Với mọi số nguyên không âm $x, y, z$, nếu $x^{2015} + y^{2015} = z^{2015}$ thì $x + y \ge z$.
-</Exercise>
+
 
 <Solution>
 Tất cả 5 phát biểu trên đều là các mệnh đề toán học hoặc logic xác định:
@@ -305,6 +320,7 @@ Tất cả 5 phát biểu trên đều là các mệnh đề toán học hoặc 
        Nếu $x, y > 0$, ta có $(x + y)^{2015} > x^{2015} + y^{2015} = z^{2015} \implies x + y > z$, mâu thuẫn. Nếu một trong hai số bằng $0$ (chẳng hạn $x = 0$), thì $y^{2015} = z^{2015} \implies y = z \implies x + y = z \ge z$.
    - *Kết luận:* Đây là mệnh đề **ĐÚNG**.
 </Solution>
+</Exercise>
 
 ---
 
@@ -313,11 +329,12 @@ Cho ánh xạ $f: X \to Y$. Giả sử $A_1, A_2 \subseteq X$ và $B_1, B_2 \sub
 1. $f^{-1}(B_1 \cup B_2) = f^{-1}(B_1) \cup f^{-1}(B_2)$ và $f^{-1}(B_1 \cap B_2) = f^{-1}(B_1) \cap f^{-1}(B_2)$.
 2. $f(A_1 \cup A_2) = f(A_1) \cup f(A_2)$ và $f(A_1 \cap A_2) \subseteq f(A_1) \cap f(A_2)$.
 3. Nếu $f$ là đơn ánh thì $f(A_1 \cap A_2) = f(A_1) \cap f(A_2)$.
-</Exercise>
+
 
 <Solution>
-1. **Nghịch ảnh bảo toàn phép hợp và giao:**
-   - Với phép hợp:
+**1. Nghịch ảnh bảo toàn phép hợp và giao**
+
+ - Với phép hợp:
      $$
      x \in f^{-1}(B_1 \cup B_2) \iff f(x) \in B_1 \cup B_2 \iff (f(x) \in B_1) \vee (f(x) \in B_2) \iff x \in f^{-1}(B_1) \cup f^{-1}(B_2).
      $$
@@ -326,15 +343,17 @@ Cho ánh xạ $f: X \to Y$. Giả sử $A_1, A_2 \subseteq X$ và $B_1, B_2 \sub
      x \in f^{-1}(B_1 \cap B_2) \iff f(x) \in B_1 \cap B_2 \iff (f(x) \in B_1) \wedge (f(x) \in B_2) \iff x \in f^{-1}(B_1) \cap f^{-1}(B_2).
      $$
 
-2. **Ảnh bảo toàn phép hợp và bảo toàn bao hàm đối với phép giao:**
-   - *Với phép hợp:* Lấy $y \in f(A_1 \cup A_2) \iff \exists x \in A_1 \cup A_2$ sao cho $y = f(x)$.
+**2. Ảnh bảo toàn phép hợp và bảo toàn bao hàm đối với phép giao**
+
+ - *Với phép hợp:* Lấy $y \in f(A_1 \cup A_2) \iff \exists x \in A_1 \cup A_2$ sao cho $y = f(x)$.
      Điều này tương đương với $(\exists x \in A_1: y = f(x)) \vee (\exists x \in A_2: y = f(x)) \iff y \in f(A_1) \cup f(A_2)$.
    - *Với phép giao:* Lấy $y \in f(A_1 \cap A_2) \implies \exists x \in A_1 \cap A_2$ sao cho $y = f(x)$.
      Vì $x \in A_1 \implies y \in f(A_1)$, và $x \in A_2 \implies y \in f(A_2)$.
      Do đó $y \in f(A_1) \cap f(A_2)$, suy ra $f(A_1 \cap A_2) \subseteq f(A_1) \cap f(A_2)$.
 
-3. **Khi $f$ là đơn ánh thì $f(A_1 \cap A_2) = f(A_1) \cap f(A_2)$:**
-   Ta chỉ cần chứng minh chiều ngược lại: $f(A_1) \cap f(A_2) \subseteq f(A_1 \cap A_2)$.
+**3. Khi $f$ là đơn ánh thì $f(A_1 \cap A_2) = f(A_1) \cap f(A_2)$**
+
+Ta chỉ cần chứng minh chiều ngược lại: $f(A_1) \cap f(A_2) \subseteq f(A_1 \cap A_2)$.
    Lấy $y \in f(A_1) \cap f(A_2)$. Khi đó tồn tại $x_1 \in A_1$ và $x_2 \in A_2$ sao cho $f(x_1) = y$ và $f(x_2) = y$.
    Do đó $f(x_1) = f(x_2)$.
    Vì $f$ là đơn ánh, bắt buộc $x_1 = x_2$.
@@ -342,6 +361,7 @@ Cho ánh xạ $f: X \to Y$. Giả sử $A_1, A_2 \subseteq X$ và $B_1, B_2 \sub
    Suy ra $y = f(x) \in f(A_1 \cap A_2)$.
    Vậy $f(A_1) \cap f(A_2) \subseteq f(A_1 \cap A_2)$, kết hợp chiều bao hàm ở mục 2 ta được đẳng thức.
 </Solution>
+</Exercise>
 
 ---
 
@@ -355,11 +375,12 @@ Cho ánh xạ $f: X \to Y$. Chứng minh rằng:
    $$
    B = f(f^{-1}(B)).
    $$
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh đặc trưng của đơn ánh:**
-   Lưu ý rằng bao hàm $A \subseteq f^{-1}(f(A))$ luôn đúng với mọi ánh xạ (vì nếu $x \in A$ thì $f(x) \in f(A)$, suy ra $x \in f^{-1}(f(A))$).
+**1. Chứng minh đặc trưng của đơn ánh**
+
+Lưu ý rằng bao hàm $A \subseteq f^{-1}(f(A))$ luôn đúng với mọi ánh xạ (vì nếu $x \in A$ thì $f(x) \in f(A)$, suy ra $x \in f^{-1}(f(A))$).
    - *Chiều thuận ($\implies$):* Giả sử $f$ đơn ánh. Lấy $x \in f^{-1}(f(A)) \implies f(x) \in f(A) \implies \exists a \in A: f(x) = f(a)$.
      Vì $f$ đơn ánh nên $x = a \in A$. Vậy $f^{-1}(f(A)) \subseteq A \implies A = f^{-1}(f(A))$.
    - *Chiều đảo ($\impliedby$):* Giả sử $A = f^{-1}(f(A))$ với mọi $A \subseteq X$. Lấy $x_1, x_2 \in X$ sao cho $f(x_1) = f(x_2)$.
@@ -367,8 +388,9 @@ Cho ánh xạ $f: X \to Y$. Chứng minh rằng:
      Do $f(x_2) = f(x_1) \in f(A)$, ta suy ra $x_2 \in f^{-1}(f(A)) = A = \{x_1\}$, nghĩa là $x_2 = x_1$.
      Vậy $f$ là đơn ánh.
 
-2. **Chứng minh đặc trưng của toàn ánh:**
-   Lưu ý rằng bao hàm $f(f^{-1}(B)) \subseteq B$ luôn đúng với mọi ánh xạ (nếu $y \in f(f^{-1}(B))$ thì $y = f(x)$ với $x \in f^{-1}(B)$, suy ra $y = f(x) \in B$).
+**2. Chứng minh đặc trưng của toàn ánh**
+
+Lưu ý rằng bao hàm $f(f^{-1}(B)) \subseteq B$ luôn đúng với mọi ánh xạ (nếu $y \in f(f^{-1}(B))$ thì $y = f(x)$ với $x \in f^{-1}(B)$, suy ra $y = f(x) \in B$).
    - *Chiều thuận ($\implies$):* Giả sử $f$ toàn ánh. Lấy $y \in B \subseteq Y$.
      Vì $f$ toàn ánh nên tồn tại $x \in X$ sao cho $f(x) = y \in B$.
      Do đó $x \in f^{-1}(B)$, kéo theo $y = f(x) \in f(f^{-1}(B))$.
@@ -378,6 +400,7 @@ Cho ánh xạ $f: X \to Y$. Chứng minh rằng:
      Vì $f^{-1}(Y) \subseteq X$, suy ra $Y = f(f^{-1}(Y)) \subseteq f(X) \subseteq Y$, do đó $f(X) = Y$.
      Vậy $f$ là toàn ánh.
 </Solution>
+</Exercise>
 
 ---
 
@@ -389,25 +412,28 @@ Cho các ánh xạ $f: X \to Y$ và $g: Y \to Z$. Chứng minh:
    $$
    (g \circ f)^{-1} = f^{-1} \circ g^{-1}.
    $$
-</Exercise>
+
 
 <Solution>
-1. **Nếu $g \circ f$ là đơn ánh thì $f$ là đơn ánh:**
-   Giả sử $x_1, x_2 \in X$ sao cho $f(x_1) = f(x_2)$.
+**1. Nếu $g \circ f$ là đơn ánh thì $f$ là đơn ánh**
+
+Giả sử $x_1, x_2 \in X$ sao cho $f(x_1) = f(x_2)$.
    Tác động ánh xạ $g$ lên hai vế:
    $$
    g(f(x_1)) = g(f(x_2)) \iff (g \circ f)(x_1) = (g \circ f)(x_2).
    $$
    Vì $g \circ f$ là đơn ánh, suy ra $x_1 = x_2$. Do đó $f$ là đơn ánh.
 
-2. **Nếu $g \circ f$ là toàn ánh thì $g$ là toàn ánh:**
-   Lấy phần tử $z \in Z$ tùy ý.
+**2. Nếu $g \circ f$ là toàn ánh thì $g$ là toàn ánh**
+
+Lấy phần tử $z \in Z$ tùy ý.
    Vì $g \circ f: X \to Z$ là toàn ánh, tồn tại $x \in X$ sao cho $(g \circ f)(x) = z \iff g(f(x)) = z$.
    Đặt $y = f(x) \in Y$, ta có $g(y) = z$.
    Như vậy, với mỗi $z \in Z$, luôn tìm được phần tử $y \in Y$ thỏa mãn $g(y) = z$. Do đó $g$ là toàn ánh.
 
-3. **Tính chất song ánh và công thức ánh xạ ngược:**
-   - *Chứng minh $g \circ f$ là song ánh:*
+**3. Tính chất song ánh và công thức ánh xạ ngược**
+
+ - *Chứng minh $g \circ f$ là song ánh:*
      - Vì $f, g$ đơn ánh: Giả sử $(g \circ f)(x_1) = (g \circ f)(x_2) \implies g(f(x_1)) = g(f(x_2))$. Do $g$ đơn ánh nên $f(x_1) = f(x_2)$. Do $f$ đơn ánh nên $x_1 = x_2$. Vậy $g \circ f$ đơn ánh.
      - Vì $f, g$ toàn ánh: Với mọi $z \in Z$, do $g$ toàn ánh nên $\exists y \in Y: z = g(y)$. Do $f$ toàn ánh nên $\exists x \in X: y = f(x)$. Suy ra $z = g(f(x)) = (g \circ f)(x)$. Vậy $g \circ f$ toàn ánh.
      - Kết luận: $g \circ f$ là song ánh.
@@ -423,6 +449,7 @@ Cho các ánh xạ $f: X \to Y$ và $g: Y \to Z$. Chứng minh:
      (g \circ f)^{-1} = f^{-1} \circ g^{-1}.
      $$
 </Solution>
+</Exercise>
 
 ---
 

@@ -391,8 +391,8 @@ export function Chapter1KnowledgeMap({
                 <p className="text-stone-600">
                   • Nhóm cyclic <KatexMath math="\mathbb{Z}/4\mathbb{Z}" /> (chứa phần tử cấp 4).
                   <br />• Nhóm bốn Klein{' '}
-                  <KatexMath math="V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}" />{' '}
-                  (<KatexMath math="x^2 = e" />
+                  <KatexMath math="V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}" /> (
+                  <KatexMath math="x^2 = e" />
                   ).
                 </p>
               </div>
@@ -403,7 +403,8 @@ export function Chapter1KnowledgeMap({
                 </span>
                 <p className="text-stone-600">
                   • Nhóm Abel: <KatexMath math="\mathbb{Z}/6\mathbb{Z}" />.
-                  <br />• Nhóm không giao hoán: <KatexMath math="S_3 \cong D_6" /> (cấp 6).
+                  <br />• Nhóm không giao hoán: <KatexMath math="S_3" /> và <KatexMath math="D_6" />{' '}
+                  (cấp 6).
                 </p>
               </div>
             </div>

@@ -19,9 +19,6 @@ sources:
     pages: '113-118'
     sections: 'Mục 7.1, 7.2, 7.3'
     note: 'Định nghĩa 7.1 (iđêan một phía, hai phía), Phản ví dụ 7.4 (vành con không là iđêan), Định lý 7.5 (tiêu chuẩn iđêan), Định nghĩa 7.7 & Định lý 7.8 (iđêan sinh)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '195-208'
-    sections: 'Chương 7, Mục 7.1'
 status: published
 version: 0.1.0
 authoring:
@@ -299,10 +296,10 @@ Công thức $(a) = Ra$ chỉ đúng khi vành $R$ có phần tử đơn vị $1
 
 ## 6. Hệ thống bài tập 4 phân lớp có lời giải
 
-<Exercise id="ex-c7-b1-nhom-a" title="Bài tập 7.1 (Nhóm A): Kiểm tra và nhận diện iđêan trong Z và Z/18Z">
+<Exercise id="ex-c7-b1-nhom-a" title="Kiểm tra và nhận diện iđêan trong Z và Z/18Z" group="Nhóm A">
 1. Chứng minh rằng mọi iđêan của vành số nguyên $\mathbb{Z}$ đều là iđêan chính có dạng $n\mathbb{Z}$ với $n \ge 0$.
 2. Tìm tất cả các iđêan của vành $\mathbb{Z}/18\mathbb{Z}$. Iđêan nào chứa phần tử $[5]_{18}$?
-</Exercise>
+
 
 <Hint>
 1. Sử dụng tính chất nhóm con cyclic của $(\mathbb{Z}, +)$ và tính hấp thụ số học.
@@ -310,15 +307,17 @@ Công thức $(a) = Ra$ chỉ đúng khi vành $R$ có phần tử đơn vị $1
 </Hint>
 
 <Solution>
-1. **Mọi iđêan của $\mathbb{Z}$ đều có dạng $n\mathbb{Z}$:**
-   - Cho $I$ là một iđêan bất kỳ của $\mathbb{Z}$.
+**1. Mọi iđêan của $\mathbb{Z}$ đều có dạng $n\mathbb{Z}$**
+
+ - Cho $I$ là một iđêan bất kỳ của $\mathbb{Z}$.
    - Theo định nghĩa, $(I, +)$ trước hết là một nhóm con của nhóm cộng Abel $(\mathbb{Z}, +)$.
    - Từ Chương 2, ta đã chứng minh mọi nhóm con của $\mathbb{Z}$ đều là nhóm cyclic có dạng $n\mathbb{Z}$ với $n \ge 0$ ($n$ là số nguyên dương nhỏ nhất thuộc $I$, hoặc $n = 0$ nếu $I = \{0\}$).
    - Mặt khác, với mọi $k \in \mathbb{Z}$ và $x = nm \in n\mathbb{Z}$, tích $k \cdot x = n(km) \in n\mathbb{Z}$. Do đó $n\mathbb{Z}$ tự động thỏa mãn tính chất hấp thụ phép nhân của $\mathbb{Z}$.
    Vậy mọi iđêan của $\mathbb{Z}$ đều có dạng $n\mathbb{Z} = (n)$. Vành $\mathbb{Z}$ là một **miền iđêan chính**.
 
-2. **Các iđêan của $\mathbb{Z}/18\mathbb{Z}$:**
-   Các iđêan của $\mathbb{Z}/18\mathbb{Z}$ tương ứng với các ước số nguyên dương của $18$: $d \in \{1, 2, 3, 6, 9, 18\}$.
+**2. Các iđêan của $\mathbb{Z}/18\mathbb{Z}$**
+
+Các iđêan của $\mathbb{Z}/18\mathbb{Z}$ tương ứng với các ước số nguyên dương của $18$: $d \in \{1, 2, 3, 6, 9, 18\}$.
    - $d = 1$: $\langle [1] \rangle = \mathbb{Z}/18\mathbb{Z}$.
    - $d = 2$: $\langle [2] \rangle = \{[0], [2], [4], [6], [8], [10], [12], [14], [16]\}$.
    - $d = 3$: $\langle [3] \rangle = \{[0], [3], [6], [9], [12], [15]\}$.
@@ -329,52 +328,58 @@ Công thức $(a) = Ra$ chỉ đúng khi vành $R$ có phần tử đơn vị $1
    Theo Định lý 7.5, bất kỳ iđêan nào chứa phần tử khả nghịch đều phải bằng toàn bộ vành.
    Do đó, iđêan duy nhất của $\mathbb{Z}/18\mathbb{Z}$ chứa $[5]_{18}$ là chính $\mathbb{Z}/18\mathbb{Z}$.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b1-nhom-b" title="Bài tập 7.2 (Nhóm B): Giao, Tổng và Tích của hai iđêan trong Z">
+<Exercise id="ex-c7-b1-nhom-b" title="Giao, Tổng và Tích của hai iđêan trong Z" group="Nhóm B">
 Cho hai iđêan $I = m\mathbb{Z}$ và $J = n\mathbb{Z}$ trong vành số nguyên $\mathbb{Z}$ với $m, n \ge 1$.
 1. Chứng minh rằng $I \cap J = \operatorname{lcm}(m, n)\mathbb{Z}$.
 2. Chứng minh rằng $I + J = \gcd(m, n)\mathbb{Z}$.
 3. Chứng minh rằng $IJ = (mn)\mathbb{Z}$.
 4. Khi nào ta có đẳng thức $IJ = I \cap J$?
-</Exercise>
+
 
 <Hint>
 Dùng đồng nhất thức Bézout cho tổng, và tính chất chia hết cho giao. Chú ý $\gcd(m, n) \operatorname{lcm}(m, n) = mn$.
 </Hint>
 
 <Solution>
-1. **Tìm giao $I \cap J$:**
-   $x \in I \cap J \iff x \in m\mathbb{Z} \text{ và } x \in n\mathbb{Z} \iff m \mid x \text{ và } n \mid x$.
+**1. Tìm giao $I \cap J$**
+
+$x \in I \cap J \iff x \in m\mathbb{Z} \text{ và } x \in n\mathbb{Z} \iff m \mid x \text{ và } n \mid x$.
    Số nguyên $x$ là bội chung của $m$ và $n$ khi và chỉ khi $x$ là bội của bội chung nhỏ nhất $\operatorname{lcm}(m, n)$.
    Do đó $I \cap J = \operatorname{lcm}(m, n)\mathbb{Z}$.
 
-2. **Tìm tổng $I + J$:**
-   $I + J = \{am + bn \mid a, b \in \mathbb{Z}\}$.
+**2. Tìm tổng $I + J$**
+
+$I + J = \{am + bn \mid a, b \in \mathbb{Z}\}$.
    Đặt $d = \gcd(m, n)$. Vì $d \mid m$ và $d \mid n$, nên $d \mid (am + bn)$ với mọi $a, b \in \mathbb{Z}$, suy ra $I + J \subseteq d\mathbb{Z}$.
    Ngược lại, theo đồng nhất thức Bézout, tồn tại $u, v \in \mathbb{Z}$ sao cho $d = um + vn \in I + J$.
    Vì $I + J$ là một iđêan chứa $d$, nó phải chứa toàn bộ bội của $d$: $d\mathbb{Z} \subseteq I + J$.
    Vậy $I + J = \gcd(m, n)\mathbb{Z}$.
 
-3. **Tìm tích $IJ$:**
-   Theo định nghĩa, $IJ$ gồm các tổng hữu hạn $\sum x_i y_i$ với $x_i = a_i m$ và $y_i = b_i n$.
+**3. Tìm tích $IJ$**
+
+Theo định nghĩa, $IJ$ gồm các tổng hữu hạn $\sum x_i y_i$ với $x_i = a_i m$ và $y_i = b_i n$.
    Khi đó $x_i y_i = (a_i b_i)(mn)$, nên mọi phần tử của $IJ$ đều là bội của $mn$.
    Mặt khác $mn = (1 \cdot m)(1 \cdot n) \in IJ$, nên $IJ$ chứa $mn$ và sinh ra toàn bộ $(mn)\mathbb{Z}$.
    Vậy $IJ = (mn)\mathbb{Z}$.
 
-4. **Điều kiện để $IJ = I \cap J$:**
-   Ta có $IJ = I \cap J \iff (mn)\mathbb{Z} = \operatorname{lcm}(m, n)\mathbb{Z} \iff mn = \operatorname{lcm}(m, n)$.
+**4. Điều kiện để $IJ = I \cap J$**
+
+Ta có $IJ = I \cap J \iff (mn)\mathbb{Z} = \operatorname{lcm}(m, n)\mathbb{Z} \iff mn = \operatorname{lcm}(m, n)$.
    Vì $mn = \gcd(m, n) \operatorname{lcm}(m, n)$, đẳng thức xảy ra khi và chỉ khi:
    $$
    \gcd(m, n) = 1.
    $$
    Tức là $m$ và $n$ nguyên tố cùng nhau (hai iđêan đồng nguyên tố $I + J = \mathbb{Z}$).
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b1-nhom-c" title="Bài tập 7.3 (Nhóm C): Iđêan không chính (2, x) trong vành đa thức Z[x]">
+<Exercise id="ex-c7-b1-nhom-c" title="Iđêan không chính (2, x) trong vành đa thức Z[x]" group="Nhóm C">
 Trong vành đa thức $\mathbb{Z}[x]$, xét tập con:
 $$
 I = (2, x) = \{2f(x) + x g(x) \mid f(x), g(x) \in \mathbb{Z}[x]\}.
@@ -382,15 +387,16 @@ $$
 1. Chứng minh rằng $I$ là tập hợp tất cả các đa thức $P(x) = a_0 + a_1 x + \dots + a_n x^n \in \mathbb{Z}[x]$ có hệ số tự do $a_0$ là số chẵn.
 2. Chứng minh rằng $I$ là một iđêan của $\mathbb{Z}[x]$.
 3. Chứng minh rằng $I$ **không phải là một iđêan chính** của $\mathbb{Z}[x]$ (nghĩa là không tồn tại đa thức $d(x) \in \mathbb{Z}[x]$ sao cho $I = (d(x))$).
-</Exercise>
+
 
 <Hint>
 Nếu $I = (d(x))$ thì $d(x)$ phải là ước của cả $2$ và $x$. Xét bậc của $d(x)$ và hệ số hàng đầu.
 </Hint>
 
 <Solution>
-1. **Mô tả cấu trúc của $I$:**
-   Lấy tùy ý $P(x) = 2f(x) + xg(x) \in I$. Thay $x = 0$:
+**1. Mô tả cấu trúc của $I$**
+
+Lấy tùy ý $P(x) = 2f(x) + xg(x) \in I$. Thay $x = 0$:
    $$
    P(0) = 2f(0) + 0 \cdot g(0) = 2f(0).
    $$
@@ -402,12 +408,14 @@ Nếu $I = (d(x))$ thì $d(x)$ phải là ước của cả $2$ và $x$. Xét b�
    với $f(x) = k \in \mathbb{Z}[x]$ và $g(x) = a_1 + a_2 x + \dots + a_n x^{n-1} \in \mathbb{Z}[x]$.
    Do đó $I$ chính là tập hợp tất cả các đa thức trong $\mathbb{Z}[x]$ có hệ số tự do là số chẵn.
 
-2. **$I$ là một iđêan:**
-   - $I$ là tổng của hai iđêan chính $I = (2) + (x)$ trong vành giao hoán $\mathbb{Z}[x]$.
+**2. $I$ là một iđêan**
+
+ - $I$ là tổng của hai iđêan chính $I = (2) + (x)$ trong vành giao hoán $\mathbb{Z}[x]$.
    - Theo Định lý 7.5, tổng của hai iđêan luôn là một iđêan. Vậy $I \trianglelefteq \mathbb{Z}[x]$.
 
-3. **$I$ không phải là iđêan chính:**
-   Giả sử phản chứng $I$ là iđêan chính sinh bởi đa thức $d(x) \in \mathbb{Z}[x]$, tức là $I = (d(x))$.
+**3. $I$ không phải là iđêan chính**
+
+Giả sử phản chứng $I$ là iđêan chính sinh bởi đa thức $d(x) \in \mathbb{Z}[x]$, tức là $I = (d(x))$.
    - Vì $2 \in I$, nên $2 \in (d(x)) \implies d(x) \mid 2$ trong $\mathbb{Z}[x]$.
      Vì $\deg(2) = 0$, công thức bậc trên miền nguyên $\mathbb{Z}$ cho ta $\deg(d) \le 0$, suy ra $d(x) = c$ là đa thức hằng nguyên.
      Các ước số nguyên của $2$ trong $\mathbb{Z}$ chỉ có thể là $c \in \{\pm 1, \pm 2\}$.
@@ -419,10 +427,11 @@ Nếu $I = (d(x))$ thì $d(x)$ phải là ước của cả $2$ và $x$. Xét b�
    Mâu thuẫn này chứng tỏ không tồn tại đa thức $d(x)$ nào thỏa mãn $I = (d(x))$.
    Vậy $I = (2, x)$ không phải là iđêan chính. Vành $\mathbb{Z}[x]$ **không phải là miền iđêan chính**.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b1-nhom-d" title="Bài tập 7.4 (Nhóm D): Tính đơn của vành ma trận Mn(F)">
+<Exercise id="ex-c7-b1-nhom-d" title="Tính đơn của vành ma trận Mn(F)" group="Nhóm D">
 Cho $F$ là một trường bất kỳ và $n \ge 1$ là số nguyên dương. Xét vành ma trận $R = M_n(F)$.
 1. Với mỗi cặp chỉ số $1 \le i, j \le n$, ký hiệu $E_{ij}$ là ma trận có phần tử ở vị trí $(i, j)$ bằng $1$ và các vị trí khác bằng $0$. Chứng minh hệ thức nhân:
    $$
@@ -432,15 +441,16 @@ Cho $F$ là một trường bất kỳ và $n \ge 1$ là số nguyên dương. X
 2. Cho $I$ là một iđêan **hai phía** của $M_n(F)$. Giả sử $I \neq \{0\}$. Chứng minh tồn tại một ma trận đơn vị cơ sở $E_{11} \in I$.
 3. Rút ra rằng mọi ma trận cơ sở $E_{ij} \in I$, từ đó suy ra ma trận đơn vị $I_n \in I$ và kết luận $I = M_n(F)$.
 4. Ý nghĩa: Vành ma trận $M_n(F)$ trên một trường chỉ có đúng hai iđêan hai phía là $\{0\}$ và $M_n(F)$ (vành đơn).
-</Exercise>
+
 
 <Hint>
 Lấy ma trận khác không $A = (a_{pq}) \in I$ có phần tử $a_{kl} \neq 0$. Xét tích $E_{ik} A E_{lj}$ để cô lập phần tử $a_{kl}$ tại vị trí $(i, j)$.
 </Hint>
 
 <Solution>
-1. **Kiểm tra tích ma trận cơ sở:**
-   Phần tử ở dòng $p$, cột $q$ của tích $E_{ij} E_{kl}$ là:
+**1. Kiểm tra tích ma trận cơ sở**
+
+Phần tử ở dòng $p$, cột $q$ của tích $E_{ij} E_{kl}$ là:
    $$
    (E_{ij} E_{kl})_{pq} = \sum_{m=1}^n (E_{ij})_{pm} (E_{kl})_{mq}.
    $$
@@ -448,8 +458,9 @@ Lấy ma trận khác không $A = (a_{pq}) \in I$ có phần tử $a_{kl} \neq 0
    Điều này đòi hỏi $j = k$, và khi đó phần tử duy nhất khác không nằm ở vị trí $(i, l)$ với giá trị bằng $1$.
    Vậy $E_{ij} E_{kl} = \delta_{jk} E_{il}$.
 
-2. **Chứng minh tồn tại $E_{11} \in I$:**
-   Vì $I \neq \{0\}$, tồn tại ma trận $A = (a_{ij}) \in I$ với $A \neq 0$. Tồn tại chỉ số $k, l$ sao cho $a_{kl} \neq 0$.
+**2. Chứng minh tồn tại $E_{11} \in I$**
+
+Vì $I \neq \{0\}$, tồn tại ma trận $A = (a_{ij}) \in I$ với $A \neq 0$. Tồn tại chỉ số $k, l$ sao cho $a_{kl} \neq 0$.
    Vì $F$ là một trường và $a_{kl} \neq 0$, phần tử $a_{kl}$ có nghịch đảo $a_{kl}^{-1} \in F$.
    Vì $I$ là iđêan hai phía của $M_n(F)$, nên với mọi ma trận $X, Y \in M_n(F)$, ta có $XAY \in I$.
    Chọn $X = E_{1k}$ và $Y = a_{kl}^{-1} E_{l1} \in M_n(F)$.
@@ -464,8 +475,9 @@ Lấy ma trận khác không $A = (a_{pq}) \in I$ có phần tử $a_{kl} \neq 0
    $$
    Vì $X \in M_n(F), A \in I, Y \in M_n(F)$ và $I$ là iđêan hai phía, suy ra $E_{11} \in I$.
 
-3. **Suy ra $I = M_n(F)$:**
-   Với mọi cặp chỉ số $(i, j)$, ta có thể viết:
+**3. Suy ra $I = M_n(F)$**
+
+Với mọi cặp chỉ số $(i, j)$, ta có thể viết:
    $$
    E_{ij} = E_{i1} E_{11} E_{1j}.
    $$
@@ -476,9 +488,11 @@ Lấy ma trận khác không $A = (a_{pq}) \in I$ có phần tử $a_{kl} \neq 0
    $$
    Theo Định lý 7.5, vì iđêan $I$ chứa phần tử đơn vị $I_n$, ta kết luận $I = M_n(F)$.
 
-4. **Kết luận:**
-   Vành ma trận $M_n(F)$ trên trường $F$ không có bất kỳ iđêan hai phía thực sự khác không nào; hai iđêan hai phía duy nhất là $\{0\}$ và $M_n(F)$. Vành có tính chất này được gọi là một **vành đơn** (*simple ring*).
+**4. Kết luận**
+
+Vành ma trận $M_n(F)$ trên trường $F$ không có bất kỳ iđêan hai phía thực sự khác không nào; hai iđêan hai phía duy nhất là $\{0\}$ và $M_n(F)$. Vành có tính chất này được gọi là một **vành đơn** (*simple ring*).
 </Solution>
+</Exercise>
 
 ---
 

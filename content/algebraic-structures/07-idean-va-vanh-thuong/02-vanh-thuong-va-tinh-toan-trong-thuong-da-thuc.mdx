@@ -19,9 +19,6 @@ sources:
     pages: '118-122'
     sections: 'Mục 7.4, 7.5, 7.6, 7.7'
     note: 'Định lý 7.11 (phép dựng vành thương), Mệnh đề 7.12 (đại diện chuẩn trong F[x]/(f)), Ví dụ 7.13-7.15 (ba mô hình thương đa thức)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '209-222'
-    sections: 'Chương 7, Mục 7.2'
 status: published
 version: 0.1.0
 authoring:
@@ -249,20 +246,21 @@ $$
 
 ## 5. Hệ thống bài tập 4 phân lớp có lời giải
 
-<Exercise id="ex-c7-b2-nhom-a" title="Bài tập 7.5 (Nhóm A): Tính toán trong vành thương Z/2Z[x]/(x^3 + x + 1)">
+<Exercise id="ex-c7-b2-nhom-a" title="Tính toán trong vành thương Z/2Z[x]/(x^3 + x + 1)" group="Nhóm A">
 Xét trường $\mathbb{F}_2 = \mathbb{Z}/2\mathbb{Z}$ và đa thức $f(x) = x^3 + x + 1 \in \mathbb{F}_2[x]$.
 Đặt $K = \mathbb{F}_2[x]/(x^3 + x + 1)$ và gọi $\alpha = \bar{x} = x + (f(x))$.
 1. Vành $K$ có bao nhiêu phần tử? Liệt kê tất cả các phần tử của $K$ dưới dạng đại diện chuẩn theo $\alpha$.
 2. Tính tổng và tích của hai phần tử $u = \alpha^2 + 1$ và $v = \alpha^2 + \alpha$.
-</Exercise>
+
 
 <Hint>
 Số phần tử là $2^{\deg f} = 2^3 = 8$. Chú ý hệ thức $\alpha^3 + \alpha + 1 = 0 \iff \alpha^3 = \alpha + 1$ trong đặc số 2 (nơi $+1 = -1$).
 </Hint>
 
 <Solution>
-1. **Số phần tử và liệt kê:**
-   Đa thức $f(x)$ có bậc $d = 3$. Vì trường nền $\mathbb{F}_2$ có $2$ phần tử, số phần tử của $K$ là:
+**1. Số phần tử và liệt kê**
+
+Đa thức $f(x)$ có bậc $d = 3$. Vì trường nền $\mathbb{F}_2$ có $2$ phần tử, số phần tử của $K$ là:
    $$
    |K| = 2^3 = 8.
    $$
@@ -272,8 +270,9 @@ Số phần tử là $2^{\deg f} = 2^3 = 8$. Chú ý hệ thức $\alpha^3 + \al
    K = \{0, 1, \alpha, \alpha + 1, \alpha^2, \alpha^2 + 1, \alpha^2 + \alpha, \alpha^2 + \alpha + 1\}.
    $$
 
-2. **Thực hiện phép tính:**
-   - **Phép cộng:** Vì trong $\mathbb{F}_2$ ta có $1 + 1 = 0$:
+**2. Thực hiện phép tính**
+
+ - **Phép cộng:** Vì trong $\mathbb{F}_2$ ta có $1 + 1 = 0$:
      $$
      u + v = (\alpha^2 + 1) + (\alpha^2 + \alpha) = (\alpha^2 + \alpha^2) + \alpha + 1 = 0 + \alpha + 1 = \alpha + 1.
      $$
@@ -291,28 +290,31 @@ Số phần tử là $2^{\deg f} = 2^3 = 8$. Chú ý hệ thức $\alpha^3 + \al
      $$
      Vậy $u \cdot v = \alpha + 1$.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b2-nhom-b" title="Bài tập 7.6 (Nhóm B): Tìm phần tử nghịch đảo trong Q[x]/(x^2 - 2)">
+<Exercise id="ex-c7-b2-nhom-b" title="Tìm phần tử nghịch đảo trong Q[x]/(x^2 - 2)" group="Nhóm B">
 Xét đa thức $f(x) = x^2 - 2 \in \mathbb{Q}[x]$ và vành thương $E = \mathbb{Q}[x]/(x^2 - 2)$.
 Đặt $\theta = \bar{x} = x + (x^2 - 2)$.
 1. Giải thích vì sao $E = \{a + b\theta \mid a, b \in \mathbb{Q}\}$ với $\theta^2 = 2$.
 2. Với phần tử khác không $u = 3 + 2\theta \in E$, hãy tìm phần tử nghịch đảo $u^{-1}$ trong $E$.
 3. Rút ra đẳng cấu trường $E \cong \mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b \in \mathbb{Q}\}$.
-</Exercise>
+
 
 <Hint>
 Sử dụng biểu thức liên hợp $3 - 2\theta$ hoặc áp dụng thuật toán chia Euclid cho $x^2 - 2$ và $2x + 3$.
 </Hint>
 
 <Solution>
-1. **Cấu trúc của $E$:**
-   Vì $f(x) = x^2 - 2$ có bậc $2$, theo Mệnh đề 7.12, mỗi lớp trong $E$ có duy nhất đại diện bậc $< 2$, tức dạng $a + bx$ ($a, b \in \mathbb{Q}$).
+**1. Cấu trúc của $E$**
+
+Vì $f(x) = x^2 - 2$ có bậc $2$, theo Mệnh đề 7.12, mỗi lớp trong $E$ có duy nhất đại diện bậc $< 2$, tức dạng $a + bx$ ($a, b \in \mathbb{Q}$).
    Thay $x$ bằng $\theta = \bar{x}$, ta có $E = \{a + b\theta \mid a, b \in \mathbb{Q}\}$ với hệ thức triệt tiêu $\theta^2 - 2 = 0 \iff \theta^2 = 2$.
 
-2. **Tìm nghịch đảo của $u = 3 + 2\theta$:**
-   - *Cách 1 (Nhân lượng liên hợp):*
+**2. Tìm nghịch đảo của $u = 3 + 2\theta$**
+
+ - *Cách 1 (Nhân lượng liên hợp):*
      Xét phần tử liên hợp $v = 3 - 2\theta \in E$. Tính tích:
      $$
      u \cdot v = (3 + 2\theta)(3 - 2\theta) = 3^2 - (2\theta)^2 = 9 - 4\theta^2 = 9 - 4(2) = 9 - 8 = 1.
@@ -330,30 +332,34 @@ Sử dụng biểu thức liên hợp $3 - 2\theta$ hoặc áp dụng thuật to
      Lấy modulo $x^2 - 2$, ta được $(2\theta + 3)(3 - 2\theta) = 1$.
      Vậy $(3 + 2\theta)^{-1} = 3 - 2\theta$.
 
-3. **Đẳng cấu trường:**
-   Ánh xạ $\phi: E \to \mathbb{Q}(\sqrt{2}), a + b\theta \mapsto a + b\sqrt{2}$ là một song ánh bảo toàn phép cộng và nhân (vì $\theta^2 = 2$ tương ứng với $(\sqrt{2})^2 = 2$). Do đó $E \cong \mathbb{Q}(\sqrt{2})$.
+**3. Đẳng cấu trường**
+
+Ánh xạ $\phi: E \to \mathbb{Q}(\sqrt{2}), a + b\theta \mapsto a + b\sqrt{2}$ là một song ánh bảo toàn phép cộng và nhân (vì $\theta^2 = 2$ tương ứng với $(\sqrt{2})^2 = 2$). Do đó $E \cong \mathbb{Q}(\sqrt{2})$.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b2-nhom-c" title="Bài tập 7.7 (Nhóm C): Phân tích tính lũy linh và ước của không trong R[x]/(x^2 - x)">
+<Exercise id="ex-c7-b2-nhom-c" title="Phân tích tính lũy linh và ước của không trong R[x]/(x^2 - x)" group="Nhóm C">
 Xét vành thương $R = \mathbb{R}[x]/(x^2 - x)$. Đặt $e = \bar{x} = x + (x^2 - x)$.
 1. Chứng minh rằng $e$ là một phần tử lũy đẳng trong $R$ ($e^2 = e$).
 2. Chứng minh rằng $R$ có chứa ước của không.
 3. Chứng minh rằng $R$ không chứa bất kỳ phần tử lũy linh khác không nào.
-</Exercise>
+
 
 <Hint>
 Đa thức $x^2 - x = x(x-1)$. Kiểm tra $e(e-1) = 0$. Một phần tử lũy linh trong $R$ tương ứng với đa thức $g(x)$ thỏa mãn $g(x)^m \in (x(x-1))$.
 </Hint>
 
 <Solution>
-1. **$e$ là phần tử lũy đẳng:**
-   Trong vành thương $R$, hệ thức triệt tiêu là $e^2 - e = 0 \iff e^2 = e$.
+**1. $e$ là phần tử lũy đẳng**
+
+Trong vành thương $R$, hệ thức triệt tiêu là $e^2 - e = 0 \iff e^2 = e$.
    Do đó $e$ là một phần tử lũy đẳng.
 
-2. **Chỉ ra ước của không:**
-   Xét hai phần tử $e$ và $1 - e$ trong $R$.
+**2. Chỉ ra ước của không**
+
+Xét hai phần tử $e$ và $1 - e$ trong $R$.
    - Vì $e$ là lớp của $x$ và $\deg x = 1 < 2$, nên $e \neq 0$ trong $R$.
    - Vì $1 - e$ là lớp của $1 - x$ có bậc $1 < 2$, nên $1 - e \neq 0$ trong $R$.
    - Tuy nhiên:
@@ -362,38 +368,42 @@ Xét vành thương $R = \mathbb{R}[x]/(x^2 - x)$. Đặt $e = \bar{x} = x + (x^
      $$
    Tích của hai phần tử khác không bằng không, vậy $e$ và $1 - e$ là các ước của không trong $R$.
 
-3. **Không có phần tử lũy linh khác không:**
-   Giả sử $u = a + bx \in R$ ($a, b \in \mathbb{R}$) là một phần tử lũy linh, tức tồn tại $m \ge 1$ để $u^m = 0$ trong $R$.
+**3. Không có phần tử lũy linh khác không**
+
+Giả sử $u = a + bx \in R$ ($a, b \in \mathbb{R}$) là một phần tử lũy linh, tức tồn tại $m \ge 1$ để $u^m = 0$ trong $R$.
    Điều này có nghĩa là đa thức $(a + bx)^m$ chia hết cho $x^2 - x = x(x - 1)$ trong $\mathbb{R}[x]$.
    - Vì $x \mid (a + bx)^m$, nên $0$ là nghiệm của $(a + bx)^m$, suy ra $a + b(0) = 0 \implies a = 0$.
    - Vì $x - 1 \mid (a + bx)^m$, nên $1$ là nghiệm của $(a + bx)^m$, suy ra $a + b(1) = 0 \implies 0 + b = 0 \implies b = 0$.
    Do đó $a = b = 0$, tức là $u = 0$.
    Vậy phần tử lũy linh duy nhất của $R$ là phần tử không.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b2-nhom-d" title="Bài tập 7.8 (Nhóm D): Dựng Trường hữu hạn 4 phần tử F_4">
+<Exercise id="ex-c7-b2-nhom-d" title="Dựng Trường hữu hạn 4 phần tử F_4" group="Nhóm D">
 Xét trường $\mathbb{F}_2 = \mathbb{Z}/2\mathbb{Z}$ và đa thức $p(x) = x^2 + x + 1 \in \mathbb{F}_2[x]$.
 1. Chứng minh rằng $p(x)$ là đa thức bất khả quy trên $\mathbb{F}_2$.
 2. Đặt $\mathbb{F}_4 = \mathbb{F}_2[x]/(x^2 + x + 1)$ và gọi $\omega = \bar{x} = x + (x^2 + x + 1)$. Lập bảng Cayley cho phép nhân của nhóm các phần tử khả nghịch $\mathbb{F}_4^\times$.
-3. Chứng minh $\mathbb{F}_4^\times \cong \mathbb{Z}_3$ và kiểm chứng mọi phần tử $a \in \mathbb{F}_4$ đều thỏa mãn $a^4 = a$.
-</Exercise>
+3. Chứng minh $\mathbb{F}_4^\times \cong \mathbb{Z}/3\mathbb{Z}$ và kiểm chứng mọi phần tử $a \in \mathbb{F}_4$ đều thỏa mãn $a^4 = a$.
+
 
 <Hint>
 Đa thức bậc 2 bất khả quy trên trường khi và chỉ khi không có nghiệm trong trường đó. Nhóm khả nghịch $\mathbb{F}_4^\times$ gồm 3 phần tử khác không: $\{1, \omega, \omega^2\}$.
 </Hint>
 
 <Solution>
-1. **Tính bất khả quy của $p(x)$:**
-   Đa thức $p(x) = x^2 + x + 1$ có bậc $2$.
+**1. Tính bất khả quy của $p(x)$**
+
+Đa thức $p(x) = x^2 + x + 1$ có bậc $2$.
    Thử các giá trị trong $\mathbb{F}_2$:
    - $p(0) = 0^2 + 0 + 1 = 1 \neq 0$.
    - $p(1) = 1^2 + 1 + 1 = 3 \equiv 1 \neq 0$.
    Vì $p(x)$ không có nghiệm trong $\mathbb{F}_2$, nên $p(x)$ không thể phân tích thành tích của hai đa thức bậc nhất. Do đó $p(x)$ bất khả quy trên $\mathbb{F}_2$.
 
-2. **Cấu trúc của $\mathbb{F}_4$ và bảng nhân:**
-   Vì $p(x)$ có bậc $2$, $\mathbb{F}_4 = \{0, 1, \omega, \omega + 1\}$ với $\omega^2 + \omega + 1 = 0 \iff \omega^2 = \omega + 1$ (do $-1 = 1$ trong $\mathbb{F}_2$).
+**2. Cấu trúc của $\mathbb{F}_4$ và bảng nhân**
+
+Vì $p(x)$ có bậc $2$, $\mathbb{F}_4 = \{0, 1, \omega, \omega + 1\}$ với $\omega^2 + \omega + 1 = 0 \iff \omega^2 = \omega + 1$ (do $-1 = 1$ trong $\mathbb{F}_2$).
    Ba phần tử khác không lập thành nhóm nhân $\mathbb{F}_4^\times = \{1, \omega, \omega^2 = \omega + 1\}$.
    Ta lập bảng nhân:
    - $\omega \cdot \omega = \omega^2 = \omega + 1$.
@@ -409,15 +419,17 @@ Xét trường $\mathbb{F}_2 = \mathbb{Z}/2\mathbb{Z}$ và đa thức $p(x) = x^
    Mọi phần tử khác không đều có nghịch đảo: $1^{-1} = 1$, $\omega^{-1} = \omega^2 = \omega + 1$, và $(\omega+1)^{-1} = \omega$.
    Vậy $\mathbb{F}_4$ là một **trường hữu hạn gồm 4 phần tử**.
 
-3. **Cấu trúc nhóm nhân và phương trình $a^4 = a$:**
-   Nhóm nhân $\mathbb{F}_4^\times$ có cấp $3$. Vì $3$ là số nguyên tố, $\mathbb{F}_4^\times$ bắt buộc là nhóm cyclic:
+**3. Cấu trúc nhóm nhân và phương trình $a^4 = a$**
+
+Nhóm nhân $\mathbb{F}_4^\times$ có cấp $3$. Vì $3$ là số nguyên tố, $\mathbb{F}_4^\times$ bắt buộc là nhóm cyclic:
    $$
-   \mathbb{F}_4^\times = \langle \omega \rangle \cong \mathbb{Z}_3.
+   \mathbb{F}_4^\times = \langle \omega \rangle \cong \mathbb{Z}/3\mathbb{Z}.
    $$
    Theo định lý Lagrange cho nhóm nhân, với mọi $u \in \mathbb{F}_4^\times$, ta có $u^3 = 1 \implies u^4 = u$.
    Đối với phần tử $0 \in \mathbb{F}_4$, hiển nhiên $0^4 = 0$.
    Vậy với mọi $a \in \mathbb{F}_4$, ta luôn có $a^4 = a$.
 </Solution>
+</Exercise>
 
 ---
 

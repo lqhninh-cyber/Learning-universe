@@ -67,9 +67,9 @@ export function Chapter0KnowledgeMap({
                     toàn ánh, song ánh).
                   </p>
                   <p>
-                    <strong className="text-stone-900">Quan hệ đồng dư:</strong> Trên vành số nguyên{' '}
-                    <KatexMath math="\mathbb{Z}" />, hai số <KatexMath math="a, b" /> đồng dư modulo{' '}
-                    <KatexMath math="n" />:
+                    <strong className="text-stone-900">Quan hệ đồng dư:</strong> Trên tập hợp số
+                    nguyên <KatexMath math="\mathbb{Z}" />, hai số <KatexMath math="a, b" /> đồng dư
+                    modulo <KatexMath math="n" />:
                   </p>
                   <div className="rounded-lg border border-indigo-100/80 bg-indigo-50/70 p-2 text-center">
                     <KatexMath
@@ -338,24 +338,25 @@ export function Chapter0KnowledgeMap({
                 <li className="flex items-start gap-2 rounded-lg border border-emerald-200/60 bg-white/90 p-2.5">
                   <span className="font-bold text-emerald-700">•</span>
                   <span>
-                    <strong className="text-stone-900">Vành thặng dư modulo:</strong>{' '}
-                    <KatexMath math="\mathbb{Z}/n\mathbb{Z}" /> với phép cộng và nhân lớp thặng dư.
+                    <strong className="text-stone-900">Tập thương các lớp đồng dư:</strong>{' '}
+                    <KatexMath math="\mathbb{Z}/n\mathbb{Z} = \{[0]_n, [1]_n, \dots, [n-1]_n\}" />{' '}
+                    với phép cộng và phép nhân lớp đồng dư.
                   </span>
                 </li>
                 <li className="flex items-start gap-2 rounded-lg border border-emerald-200/60 bg-white/90 p-2.5">
                   <span className="font-bold text-emerald-700">•</span>
                   <span>
-                    <strong className="text-stone-900">Nhóm thương:</strong>{' '}
-                    <KatexMath math="G/N" /> với phép nhân lớp kề khi{' '}
-                    <KatexMath math="N \trianglelefteq G" /> là nhóm con chuẩn tắc (Chương 4).
+                    <strong className="text-stone-900">Các lớp đồng dư khả nghịch:</strong>{' '}
+                    <KatexMath math="U(n) = (\mathbb{Z}/n\mathbb{Z})^\times" /> gồm các lớp{' '}
+                    <KatexMath math="[a]_n" /> với <KatexMath math="\gcd(a, n) = 1" />.
                   </span>
                 </li>
                 <li className="flex items-start gap-2 rounded-lg border border-emerald-200/60 bg-white/90 p-2.5">
                   <span className="font-bold text-emerald-700">•</span>
                   <span>
-                    <strong className="text-stone-900">Vành thương & Trường thương:</strong>{' '}
-                    <KatexMath math="R/I" /> khi <KatexMath math="I" /> là iđêan hai phía (Chương 7)
-                    và <KatexMath math="\operatorname{Frac}(R) = \mathbb{Q}" /> (Chương 9).
+                    <strong className="text-stone-900">Nền tảng cấu trúc thương:</strong> Chuẩn bị
+                    trực tiếp cho phép chia lớp kề (Chương 3) và nhóm thương{' '}
+                    <KatexMath math="G/N" /> (Chương 4).
                   </span>
                 </li>
               </ul>
@@ -384,7 +385,7 @@ export function Chapter0KnowledgeMap({
 
               <div className="space-y-2 rounded-lg border border-rose-200/70 bg-white/90 p-3">
                 <p className="text-xs font-bold tracking-wide text-rose-900 uppercase">
-                  Phản ví dụ kinh điển trên trường số hữu tỉ <KatexMath math="\mathbb{Q}" />:
+                  Phản ví dụ kinh điển trên tập hợp số hữu tỉ <KatexMath math="\mathbb{Q}" />:
                 </p>
                 <p className="text-[13px] text-stone-700">
                   Định nghĩa quy tắc gán: <KatexMath math="f\left(\frac{a}{b}\right) = a + b" />.

@@ -18,9 +18,6 @@ sources:
     pages: '92-96, 179-182'
     sections: 'Mục 5.9, 5.10'
     note: 'Hệ thống 44 bài tập Chương 5 (Bài 5.1 đến 5.44) và 9 Lời giải chọn lọc, Tổng kết Phần I'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '162-172'
-    sections: 'Chương 5, Bài tập'
 status: published
 version: 0.1.0
 authoring:
@@ -39,7 +36,7 @@ Sau khi hoàn thành bài học này, bạn có thể:
 1. **Hệ thống hóa toàn bộ bức tranh kiến thức Phần I (Lý thuyết Nhóm):** Nắm vững sợi dây phát triển logic từ *Tiên đề nhóm* $\to$ *Nhóm con & Nhóm cyclic* $\to$ *Lớp kề & Định lý Lagrange* $\to$ *Nhóm con chuẩn tắc & Nhóm thương* $\to$ *Đồng cấu & Ba định lý đẳng cấu*.
 2. **Sử dụng chuẩn xác hệ thống thuật ngữ chuyên ngành song ngữ:** Làm chủ toàn bộ từ vựng chuyên ngành quốc tế về lý thuyết nhóm phục vụ tra cứu và đọc tài liệu đại số hiện đại.
 3. **Chinh phục 4 dạng bài tập đỉnh cao của Phần Nhóm:** Khảo sát đồng cấu ma trận và nghiệm đơn vị, phân loại nhóm cấp $pq$ ($p > q, q \nmid p-1$), chứng minh Định lý nhúng Cayley kinh điển (1854), và định lý phần dư Trung Hoa cho nhóm qua tích trực tiếp.
-4. **Sẵn sàng bước sang Phần II (Lý thuyết Vành & Trường):** Nhận thức sâu sắc rằng cấu trúc nhóm cộng của vành và đồng cấu vành kế thừa trực tiếp mọi định lý đẳng cấu vừa học.
+4. **Tổng hợp toàn diện Phần Lý thuyết Nhóm:** Kết nối liền mạch chuỗi kiến thức từ nhóm, nhóm con, lớp kề, Định lý Lagrange, nhóm thương đến các định lý đẳng cấu nhóm.
 </Note>
 
 **Kiến thức tiên quyết:** Toàn bộ nội dung lý thuyết từ Chương 0 đến Chương 5 (<Cite source="gt-ctds-hvk-2026" page="1-96" note="Phần I: Nhóm" />).
@@ -96,7 +93,7 @@ Dưới đây là bảng đối chiếu thuật ngữ cốt lõi của toàn b�
 
 <Exercise
   id="exr-c5-b4-a1"
-  title="[Nhóm A · Mã CTDS-C5-B4-A01] Đồng cấu ma trận và đồng cấu vào nhóm nhân số phức"
+  title="Đồng cấu ma trận và đồng cấu vào nhóm nhân số phức" group="Nhóm A"
   source="gt-ctds-hvk-2026"
   page="92"
   original="Bài 5.4, 5.8"
@@ -105,15 +102,16 @@ Dưới đây là bảng đối chiếu thuật ngữ cốt lõi của toàn b�
    - Chứng minh $\varphi$ là một toàn cấu nhóm.
    - Tìm hạt nhân $\ker\varphi$ và viết đẳng cấu nhóm thương theo Định lý đẳng cấu thứ nhất.
 2. Tìm tất cả các đồng cấu nhóm từ nhóm cyclic $\mathbb{Z}/4\mathbb{Z}$ vào nhóm nhân các số phức khác không $(\mathbb{C}^\times, \cdot)$.
-</Exercise>
+
 
 <Hint>
 Dùng $(\det(AB))^2 = (\det A)^2 (\det B)^2$. Với câu 2, ảnh của phần tử sinh $[1]$ có cấp là ước của 4 trong $\mathbb{C}^\times$, tức là các căn bậc 4 của đơn vị.
 </Hint>
 
 <Solution>
-1. **Khảo sát $\varphi(A) = (\det A)^2$ trên $\operatorname{GL}_2(\mathbb{R})$:**
-   - *Đồng cấu:* Với mọi $A, B \in \operatorname{GL}_2(\mathbb{R})$, theo tính chất định thức:
+**1. Khảo sát $\varphi(A) = (\det A)^2$ trên $\operatorname{GL}_2(\mathbb{R})$**
+
+ - *Đồng cấu:* Với mọi $A, B \in \operatorname{GL}_2(\mathbb{R})$, theo tính chất định thức:
      $$
      \varphi(AB) = (\det(AB))^2 = (\det A \cdot \det B)^2 = (\det A)^2 \cdot (\det B)^2 = \varphi(A)\varphi(B).
      $$
@@ -130,8 +128,9 @@ Dùng $(\det(AB))^2 = (\det A)^2 (\det B)^2$. Với câu 2, ảnh của phần t
      \operatorname{GL}_2(\mathbb{R}) / \operatorname{SL}_2^\pm(\mathbb{R}) \cong (\mathbb{R}_{>0}, \cdot).
      $$
 
-2. **Tìm các đồng cấu từ $\mathbb{Z}/4\mathbb{Z}$ vào $\mathbb{C}^\times$:**
-   Theo Mệnh đề 5.1.3, một đồng cấu $\psi: \mathbb{Z}/4\mathbb{Z} \to \mathbb{C}^\times$ được xác định duy nhất bởi giá trị $w = \psi([1]_4) \in \mathbb{C}^\times$.
+**2. Tìm các đồng cấu từ $\mathbb{Z}/4\mathbb{Z}$ vào $\mathbb{C}^\times$**
+
+Theo Mệnh đề 5.1.3, một đồng cấu $\psi: \mathbb{Z}/4\mathbb{Z} \to \mathbb{C}^\times$ được xác định duy nhất bởi giá trị $w = \psi([1]_4) \in \mathbb{C}^\times$.
    Vì $4 \cdot [1]_4 = [0]_4$, ta phải có:
    $$
    w^4 = (\psi([1]_4))^4 = \psi(4 \cdot [1]_4) = \psi([0]_4) = 1.
@@ -147,17 +146,12 @@ Dùng $(\det(AB))^2 = (\det A)^2 (\det B)^2$. Với câu 2, ảnh của phần t
    - $\psi_i([x]_4) = i^x$ (đơn cấu, hạt nhân $\ker\psi_i = \{[0]\}$).
    - $\psi_{-i}([x]_4) = (-i)^x$ (đơn cấu, hạt nhân $\ker\psi_{-i} = \{[0]\}$).
    Vậy có đúng 4 đồng cấu nhóm từ $\mathbb{Z}/4\mathbb{Z}$ vào $\mathbb{C}^\times$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $\varphi$ là đồng cấu và toàn ánh lên $\mathbb{R}_{>0}$: `0,25 đ`
-- Xác định đúng $\ker\varphi = \operatorname{SL}_2^\pm(\mathbb{R})$ và viết đẳng cấu thương: `0,25 đ`
-- Thiết lập điều kiện $w^4 = 1$ cho ảnh phần tử sinh: `0,25 đ`
-- Liệt kê đầy đủ 4 đồng cấu với các nghiệm $\{1, -1, i, -i\}$: `0,25 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b4-b1"
-  title="[Nhóm B · Mã CTDS-C5-B4-B01] Phân loại nhóm cấp pq khi q không chia hết p - 1"
+  title="Phân loại nhóm cấp pq khi q không chia hết p - 1" group="Nhóm B"
   source="gt-ctds-hvk-2026"
   page="94"
   original="Bài 5.22, 5.40"
@@ -168,21 +162,23 @@ Giả sử đã biết $G$ có duy nhất một nhóm con $H$ cấp $p$ và duy 
 2. Chứng minh rằng $H \cap K = \{e\}$ và $HK = G$.
 3. Áp dụng định lý nhận diện tích trực tiếp trong để suy ra $G \cong H \times K$.
 4. Từ đó chứng minh $G$ là một nhóm cyclic và $G \cong \mathbb{Z}/pq\mathbb{Z}$.
-</Exercise>
+
 
 <Hint>
 Nhóm con duy nhất của một cấp luôn chuẩn tắc. Dùng Định lý nhận diện tích trực tiếp $G \cong H \times K$ và định lý phần dư Trung Hoa cho nhóm cyclic: $\mathbb{Z}/p\mathbb{Z} \times \mathbb{Z}/q\mathbb{Z} \cong \mathbb{Z}/pq\mathbb{Z}$ khi $\gcd(p, q) = 1$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $H \trianglelefteq G$ và $K \trianglelefteq G$:**
-   Theo Bài tập 3.2.4 (Chương 3), với mọi $g \in G$, nhóm con liên hợp $gHg^{-1}$ có cùng cấp với $H$: $|gHg^{-1}| = |H| = p$.
+**1. Chứng minh $H \trianglelefteq G$ và $K \trianglelefteq G$**
+
+Theo Bài tập 3.2.4 (Chương 3), với mọi $g \in G$, nhóm con liên hợp $gHg^{-1}$ có cùng cấp với $H$: $|gHg^{-1}| = |H| = p$.
    Vì theo giả thiết $H$ là nhóm con DUY NHẤT của $G$ có cấp $p$, ta bắt buộc phải có $gHg^{-1} = H$ với mọi $g \in G$.
    Do đó $H \trianglelefteq G$.
    Hoàn toàn tương tự, $K$ là nhóm con duy nhất có cấp $q$, nên $gKg^{-1} = K$ với mọi $g \in G$. Do đó $K \trianglelefteq G$.
 
-2. **Chứng minh $H \cap K = \{e\}$ và $HK = G$:**
-   - Vì $H \cap K \le H$ và $H \cap K \le K$, theo Định lý Lagrange, cấp $|H \cap K|$ phải vừa là ước của $p$, vừa là ước của $q$. Do đó $|H \cap K| \mid \gcd(p, q)$.
+**2. Chứng minh $H \cap K = \{e\}$ và $HK = G$**
+
+ - Vì $H \cap K \le H$ và $H \cap K \le K$, theo Định lý Lagrange, cấp $|H \cap K|$ phải vừa là ước của $p$, vừa là ước của $q$. Do đó $|H \cap K| \mid \gcd(p, q)$.
      Vì $p, q$ là hai số nguyên tố phân biệt, $\gcd(p, q) = 1$. Suy ra $|H \cap K| = 1 \implies H \cap K = \{e\}$.
    - Vì $K \trianglelefteq G$, tích $HK$ là một nhóm con của $G$. Theo công thức lực lượng tích:
      $$
@@ -190,16 +186,18 @@ Nhóm con duy nhất của một cấp luôn chuẩn tắc. Dùng Định lý nh
      $$
      Vì $HK \subseteq G$ và $|HK| = |G| < \infty$, ta kết luận $HK = G$.
 
-3. **Chứng minh $G \cong H \times K$:**
-   Theo Định lý nhận diện tích trực tiếp trong (Bài 3, Bài tập 5.3.4), vì:
+**3. Chứng minh $G \cong H \times K$**
+
+Theo Định lý nhận diện tích trực tiếp trong (Bài 3, Bài tập 5.3.4), vì:
    - $H \trianglelefteq G$ và $K \trianglelefteq G$,
    - $H \cap K = \{e\}$,
    - $HK = G$,
    ánh xạ $\theta: H \times K \to G$ cho bởi $\theta(h, k) = hk$ là một đẳng cấu nhóm.
    Vậy $G \cong H \times K$.
 
-4. **Kết luận $G \cong \mathbb{Z}/pq\mathbb{Z}$ là nhóm cyclic:**
-   Vì $p$ và $q$ là các số nguyên tố, theo Hệ quả 3.2.3, mọi nhóm cấp nguyên tố đều là nhóm cyclic:
+**4. Kết luận $G \cong \mathbb{Z}/pq\mathbb{Z}$ là nhóm cyclic**
+
+Vì $p$ và $q$ là các số nguyên tố, theo Hệ quả 3.2.3, mọi nhóm cấp nguyên tố đều là nhóm cyclic:
    $$
    H \cong \mathbb{Z}/p\mathbb{Z} \quad \text{và} \quad K \cong \mathbb{Z}/q\mathbb{Z}.
    $$
@@ -213,17 +211,12 @@ Nhóm con duy nhất của một cấp luôn chuẩn tắc. Dùng Định lý nh
    $$
    Vậy $G$ là một nhóm cyclic và $G \cong \mathbb{Z}/pq\mathbb{Z}$.
    *(Ví dụ: Mọi nhóm có cấp 15 đều bắt buộc phải đẳng cấu với $\mathbb{Z}/15\mathbb{Z}$).*
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Lập luận tính chuẩn tắc $H, K \trianglelefteq G$ từ tính duy nhất theo cấp: `0,25 đ`
-- Tính $|H \cap K| = 1$ và $|HK| = pq \implies HK = G$: `0,25 đ`
-- Vận dụng định lý tích trực tiếp trong chứng minh $G \cong H \times K$: `0,25 đ`
-- Áp dụng Định lý phần dư Trung Hoa kết luận $G \cong \mathbb{Z}/pq\mathbb{Z}$ là cyclic: `0,25 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b4-c1"
-  title="[Nhóm C · Mã CTDS-C5-B4-C01] Định lý Cayley (1854): Mọi nhóm đều là nhóm hoán vị"
+  title="Định lý Cayley (1854): Mọi nhóm đều là nhóm hoán vị" group="Nhóm C"
   source="gt-ctds-hvk-2026"
   page="95"
   original="Bài 5.43"
@@ -237,21 +230,23 @@ $$
 2. Xét ánh xạ $\Psi: G \to \operatorname{Sym}(G)$ xác định bởi $\Psi(g) = L_g$. Chứng minh rằng $\Psi$ là một đồng cấu nhóm (nhúng Cayley).
 3. Chứng minh rằng $\ker\Psi = \{e_G\}$, từ đó suy ra $\Psi$ là một đơn cấu.
 4. Áp dụng Định lý đẳng cấu thứ nhất để rút ra phát biểu của **Định lý Cayley**: Mọi nhóm $G$ đều đẳng cấu với một nhóm con của nhóm đối xứng $\operatorname{Sym}(G)$. Đặc biệt, nếu $|G| = n < \infty$ thì $G$ đẳng cấu với một nhóm con của nhóm đối xứng $S_n$.
-</Exercise>
+
 
 <Hint>
 Kiểm tra $L_{gh} = L_g \circ L_h$. Điều kiện $\Psi(g) = \operatorname{id}_G \iff L_g(x) = x, \forall x$. Chọn $x = e$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $L_g \in \operatorname{Sym}(G)$:**
-   Ta kiểm tra $L_g$ là song ánh:
+**1. Chứng minh $L_g \in \operatorname{Sym}(G)$**
+
+Ta kiểm tra $L_g$ là song ánh:
    - *Đơn ánh:* Nếu $L_g(x) = L_g(y) \implies gx = gy$, nhân $g^{-1}$ vào bên trái theo luật giản ước ta được $x = y$.
    - *Toàn ánh:* Với mọi $y \in G$, chọn $x = g^{-1}y \in G$. Khi đó $L_g(x) = g(g^{-1}y) = y$.
    Vậy $L_g$ là một song ánh từ $G$ lên $G$, tức là $L_g \in \operatorname{Sym}(G)$.
 
-2. **Chứng minh $\Psi$ là đồng cấu nhóm:**
-   Với mọi $g, h \in G$, ta so sánh hai ánh xạ $\Psi(gh) = L_{gh}$ và $\Psi(g) \circ \Psi(h) = L_g \circ L_h$.
+**2. Chứng minh $\Psi$ là đồng cấu nhóm**
+
+Với mọi $g, h \in G$, ta so sánh hai ánh xạ $\Psi(gh) = L_{gh}$ và $\Psi(g) \circ \Psi(h) = L_g \circ L_h$.
    Với mọi $x \in G$, theo tính kết hợp của phép nhân trong $G$:
    $$
    (L_g \circ L_h)(x) = L_g(L_h(x)) = L_g(hx) = g(hx) = (gh)x = L_{gh}(x).
@@ -262,8 +257,9 @@ Kiểm tra $L_{gh} = L_g \circ L_h$. Điều kiện $\Psi(g) = \operatorname{id}
    $$
    Vậy $\Psi$ là một đồng cấu nhóm từ $(G, \cdot)$ vào $(\operatorname{Sym}(G), \circ)$.
 
-3. **Chứng minh $\ker\Psi = \{e_G\}$:**
-   Phần tử đơn vị của $\operatorname{Sym}(G)$ là ánh xạ đồng nhất $\operatorname{id}_G$.
+**3. Chứng minh $\ker\Psi = \{e_G\}$**
+
+Phần tử đơn vị của $\operatorname{Sym}(G)$ là ánh xạ đồng nhất $\operatorname{id}_G$.
    Theo định nghĩa hạt nhân:
    $$
    g \in \ker\Psi \iff \Psi(g) = \operatorname{id}_G \iff L_g = \operatorname{id}_G \iff L_g(x) = x, \; \forall x \in G \iff gx = x, \; \forall x \in G.
@@ -279,25 +275,21 @@ Kiểm tra $L_{gh} = L_g \circ L_h$. Điều kiện $\Psi(g) = \operatorname{id}
    $$
    Theo tiêu chuẩn đơn cấu, $\Psi$ là một **đơn cấu nhóm** (nhúng Cayley).
 
-4. **Kết luận Định lý Cayley:**
-   Theo Định lý đẳng cấu thứ nhất:
+**4. Kết luận Định lý Cayley**
+
+Theo Định lý đẳng cấu thứ nhất:
    $$
    G/\ker\Psi \cong \operatorname{im}\Psi \iff G/\{e_G\} \cong \operatorname{im}\Psi \iff G \cong \operatorname{im}\Psi.
    $$
    Vì $\operatorname{im}\Psi$ là một nhóm con của $\operatorname{Sym}(G)$, ta kết luận:
    **Mọi nhóm $G$ đều đẳng cấu với một nhóm con của nhóm đối xứng $\operatorname{Sym}(G)$.**
    Khi $G$ hữu hạn có cấp $n$, tập $G$ có $n$ phần tử nên $\operatorname{Sym}(G) \cong S_n$. Do đó mọi nhóm hữu hạn cấp $n$ đều đẳng cấu với một nhóm con của nhóm hoán vị $S_n$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $L_g$ là song ánh qua luật giản ước và tạo ảnh: `0,25 đ`
-- Chứng minh $L_{gh} = L_g \circ L_h \implies \Psi$ là đồng cấu: `0,30 đ`
-- Chứng minh $\ker\Psi = \{e\}$ bằng cách chọn $x = e$: `0,25 đ`
-- Áp dụng Định lý đẳng cấu I kết luận phát biểu Định lý Cayley: `0,20 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b4-d1"
-  title="[Nhóm D · Mã CTDS-C5-B4-D01] Định lý Phần dư Trung Hoa cho nhóm qua Định lý đẳng cấu"
+  title="Định lý Phần dư Trung Hoa cho nhóm qua Định lý đẳng cấu" group="Nhóm D"
   source="gt-ctds-hvk-2026"
   page="96"
   original="Bài 5.44"
@@ -311,15 +303,16 @@ Cho $(G, \cdot)$ là một nhóm và $M, N$ là hai nhóm con chuẩn tắc củ
    $$
    G/(M \cap N) \cong (G/M) \times (G/N).
    $$
-</Exercise>
+
 
 <Hint>
 Để tìm $g$: đặt $g = an = bm^{-1}$. Kiểm tra $gM = anM = aM$ (vì $n = m^{-1}a^{-1}b \in M(a^{-1}b)$) và $gN = bN$.
 </Hint>
 
 <Solution>
-1. **Áp dụng Định lý đẳng cấu thứ hai:**
-   Vì $M \trianglelefteq G$ và $N \le G$, áp dụng Định lý đẳng cấu thứ hai (Định lý kim cương):
+**1. Áp dụng Định lý đẳng cấu thứ hai**
+
+Vì $M \trianglelefteq G$ và $N \le G$, áp dụng Định lý đẳng cấu thứ hai (Định lý kim cương):
    $$
    N / (M \cap N) \cong MN / M.
    $$
@@ -332,15 +325,17 @@ Cho $(G, \cdot)$ là một nhóm và $M, N$ là hai nhóm con chuẩn tắc củ
    G / N \cong M / (M \cap N).
    $$
 
-2. **Chứng minh $\theta$ là đồng cấu nhóm:**
-   Ánh xạ $\theta(g) = (gM, gN)$. Với mọi $x, y \in G$:
+**2. Chứng minh $\theta$ là đồng cấu nhóm**
+
+Ánh xạ $\theta(g) = (gM, gN)$. Với mọi $x, y \in G$:
    $$
    \theta(xy) = ((xy)M, (xy)N) = (xM \cdot yM, \; xN \cdot yN) = (xM, xN)(yM, yN) = \theta(x)\theta(y).
    $$
    Vậy $\theta$ là một đồng cấu nhóm từ $G$ vào nhóm tích $(G/M) \times (G/N)$.
 
-3. **Xác định hạt nhân $\ker\theta$:**
-   Phần tử đơn vị của nhóm tích là $(e_{G/M}, e_{G/N}) = (M, N)$.
+**3. Xác định hạt nhân $\ker\theta$**
+
+Phần tử đơn vị của nhóm tích là $(e_{G/M}, e_{G/N}) = (M, N)$.
    Theo định nghĩa hạt nhân:
    $$
    g \in \ker\theta \iff (gM, gN) = (M, N) \iff gM = M \text{ và } gN = N \iff g \in M \text{ và } g \in N \iff g \in M \cap N.
@@ -350,8 +345,9 @@ Cho $(G, \cdot)$ là một nhóm và $M, N$ là hai nhóm con chuẩn tắc củ
    \ker\theta = M \cap N.
    $$
 
-4. **Chứng minh $\theta$ là toàn ánh:**
-   Lấy một phần tử tùy ý $(aM, bN) \in (G/M) \times (G/N)$. Ta cần tìm $g \in G$ sao cho $gM = aM$ và $gN = bN$.
+**4. Chứng minh $\theta$ là toàn ánh**
+
+Lấy một phần tử tùy ý $(aM, bN) \in (G/M) \times (G/N)$. Ta cần tìm $g \in G$ sao cho $gM = aM$ và $gN = bN$.
    Xét phần tử $a^{-1}b \in G$. Vì theo giả thiết $MN = G$, tồn tại $m \in M$ và $n \in N$ sao cho:
    $$
    a^{-1}b = mn \iff b = a m n \iff b n^{-1} = am.
@@ -369,8 +365,9 @@ Cho $(G, \cdot)$ là một nhóm và $M, N$ là hai nhóm con chuẩn tắc củ
    $$
    Điều này chứng minh $\theta$ là một toàn ánh ($\operatorname{im}\theta = (G/M) \times (G/N)$).
 
-5. **Áp dụng Định lý đẳng cấu thứ nhất:**
-   Theo Định lý đẳng cấu thứ nhất:
+**5. Áp dụng Định lý đẳng cấu thứ nhất**
+
+Theo Định lý đẳng cấu thứ nhất:
    $$
    G/\ker\theta \cong \operatorname{im}\theta.
    $$
@@ -379,13 +376,8 @@ Cho $(G, \cdot)$ là một nhóm và $M, N$ là hai nhóm con chuẩn tắc củ
    G/(M \cap N) \cong (G/M) \times (G/N).
    $$
    Đây chính là phiên bản tổng quát của Định lý phần dư Trung Hoa cho các nhóm bất kỳ (khi $G = \mathbb{Z}$, $M = m\mathbb{Z}, N = n\mathbb{Z}$ với $\gcd(m, n) = 1$, ta có $M + N = \mathbb{Z}$ và $M \cap N = mn\mathbb{Z}$, khôi phục lại đẳng cấu $\mathbb{Z}/mn\mathbb{Z} \cong \mathbb{Z}/m\mathbb{Z} \times \mathbb{Z}/n\mathbb{Z}$).
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Áp dụng Định lý đẳng cấu II chứng minh $G/M \cong N/(M \cap N)$: `0,20 đ`
-- Chứng minh $\theta$ là đồng cấu và xác định $\ker\theta = M \cap N$: `0,25 đ`
-- Xây dựng phần tử $g = am = bn^{-1}$ và chứng minh $\theta$ toàn ánh: `0,35 đ`
-- Kết luận đẳng cấu $G/(M \cap N) \cong (G/M) \times (G/N)$ qua Định lý đẳng cấu I: `0,20 đ`
 </Solution>
+</Exercise>
 
 ---
 
@@ -395,5 +387,5 @@ Cho $(G, \cdot)$ là một nhóm và $M, N$ là hai nhóm con chuẩn tắc củ
 - **Đỉnh cao của Lý thuyết Nhóm:** Ba định lý đẳng cấu và Định lý tương ứng là bộ công cụ tối thượng cho phép giải mã cấu trúc của mọi nhóm thương mà không cần tính toán thủ công.
 - **Định lý Cayley:** Mọi cấu trúc nhóm trừu tượng đều có thể xem như một nhóm các phép biến đổi hoán vị cụ thể.
 - **Định lý phần dư Trung Hoa cho nhóm:** Khi hai nhóm con chuẩn tắc thỏa $MN = G$, nhóm thương $G/(M \cap N)$ phân tích thành tích trực tiếp $(G/M) \times (G/N)$.
-- **Cầu nối sang Phần II (Lý thuyết Vành):** Nhóm là cấu trúc nền tảng của một phép toán. Khi bổ sung phép toán thứ hai (phép nhân phân phối đối với phép cộng), ta bước vào thế giới phong phú của **Vành, Miền nguyên và Trường** (bắt đầu từ Chương 6).
+- **Tổng kết Phần Lý thuyết Nhóm:** Nhóm là cấu trúc nền tảng của một phép toán hai ngôi kết hợp có đơn vị và nghịch đảo; toàn bộ các công cụ nhóm con, lớp kề, nhóm thương và đồng cấu nhóm tạo nên nền tảng vững chắc cho đại số trừu tượng.
 </KeyTakeaways>

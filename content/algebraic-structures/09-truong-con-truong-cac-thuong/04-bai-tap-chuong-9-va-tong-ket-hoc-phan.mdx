@@ -19,9 +19,6 @@ sources:
     pages: '157-162, 195-200'
     sections: 'Mục 9.12, 9.13'
     note: '28 bài tập (9.1-9.28), 8 lời giải chọn lọc (9.5, 9.12, 9.13, 9.17, 9.19, 9.22, 9.23, 9.27), tổng kết toàn bộ học phần Cấu trúc đại số'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '265-275'
-    sections: 'Chương 8, Mục 8.4'
 status: published
 version: 0.1.0
 ---
@@ -84,7 +81,7 @@ Bảng dưới đây chuẩn hóa các thuật ngữ toán học trọng tâm c�
 | :---: | :--- | :--- | :--- | :--- |
 | **0** | Ngôn ngữ & Công cụ đại số | Ánh xạ, đồng dư, thớ, tính xác định tốt | **Định lý 0.14:** Tiêu chuẩn xác định tốt trên tập thương | Nền tảng ngôn ngữ chung cho cả học phần |
 | **1** | Nhóm & Các ví dụ cơ bản | Tiên đề nhóm, luật giản ước, lũy thừa | **Định lý 1.8:** Tính duy nhất của đơn vị và phần tử nghịch đảo | Rèn luyện tư duy tiên đề từ các họ nhóm cụ thể |
-| **2** | Nhóm con & Nhóm cyclic | Nhóm con $\le$, nhóm cyclic $\langle a \rangle$, cấp | **Định lý 2.12:** Phân loại toàn bộ các nhóm cyclic ($\mathbb{Z}$ và $\mathbb{Z}_n$) | Mẫu hình nhóm đơn giản và hoàn hảo nhất |
+| **2** | Nhóm con & Nhóm cyclic | Nhóm con $\le$, nhóm cyclic $\langle a \rangle$, cấp | **Định lý 2.12:** Phân loại toàn bộ các nhóm cyclic ($\mathbb{Z}$ và $\mathbb{Z}/n\mathbb{Z}$) | Mẫu hình nhóm đơn giản và hoàn hảo nhất |
 | **3** | Lớp kề & Định lý Lagrange | Phân hoạch lớp kề $aH$, chỉ số $[G:H]$ | **Định lý Lagrange (ĐL 3.5):** $|G| = [G:H]|H|$ | Định lý số học vĩ đại nhất của lý thuyết nhóm hữu hạn |
 | **4** | Nhóm con chuẩn tắc & Nhóm thương | Nhóm chuẩn tắc $N \trianglelefteq G$, nhóm thương $G/N$ | **Định lý 4.8:** Phép nhân lớp kề xác định tốt $\iff N$ chuẩn tắc | Khởi đầu tư duy "chia để trị" và xây dựng cấu trúc thương |
 | **5** | Đồng cấu nhóm & Định lý đẳng cấu | Hạt nhân $\ker\phi$, ảnh $\operatorname{im}\phi$, 3 định lý đẳng cấu | **Định lý Đẳng cấu thứ nhất (ĐL 5.8):** $G/\ker\phi \cong \operatorname{im}\phi$ | Đồng nhất hạt nhân với nhóm chuẩn tắc; phân loại nhóm |
@@ -133,19 +130,21 @@ Vậy $F^\times$ là một nhóm cyclic.
 Tìm đặc số và mô tả tường minh trường con nguyên tố $P_F$ của các trường sau:
 1. $F_1 = \mathbb{Q}(\sqrt{2}, i)$.
 2. $F_2 = \mathbb{F}_2[x]/(x^3 + x + 1)$.
-</Exercise>
+
 
 <Solution>
-1. **Xét $F_1 = \mathbb{Q}(\sqrt{2}, i) \subseteq \mathbb{C}$:**
-   Vì $F_1$ là trường con của trường số phức $\mathbb{C}$, ta có $n \cdot 1 \neq 0$ với mọi $n \ge 1$. Do đó $\operatorname{char}(F_1) = 0$.
+**1. Xét $F_1 = \mathbb{Q}(\sqrt{2}, i) \subseteq \mathbb{C}$**
+
+Vì $F_1$ là trường con của trường số phức $\mathbb{C}$, ta có $n \cdot 1 \neq 0$ với mọi $n \ge 1$. Do đó $\operatorname{char}(F_1) = 0$.
    Theo Định lý 9.10, trường con nguyên tố của $F_1$ là:
    $$
    P_{F_1} \cong \mathbb{Q}.
    $$
    Cụ thể $P_{F_1} = \mathbb{Q} \subset \mathbb{Q}(\sqrt{2}, i)$.
 
-2. **Xét $F_2 = \mathbb{F}_2[x]/(x^3 + x + 1)$:**
-   Trong vành này, $2 \cdot 1 = 0$, do đó $\operatorname{char}(F_2) = 2$.
+**2. Xét $F_2 = \mathbb{F}_2[x]/(x^3 + x + 1)$**
+
+Trong vành này, $2 \cdot 1 = 0$, do đó $\operatorname{char}(F_2) = 2$.
    Đa thức $x^3 + x + 1$ là đa thức bậc 3 trên $\mathbb{F}_2$. Ta kiểm tra nghiệm:
    - $0^3 + 0 + 1 = 1 \neq 0$.
    - $1^3 + 1 + 1 = 3 \equiv 1 \neq 0$.
@@ -153,20 +152,22 @@ Tìm đặc số và mô tả tường minh trường con nguyên tố $P_F$ c�
    Do đó $F_2 \cong \mathbb{F}_{2^3} = \mathbb{F}_8$ là một trường gồm 8 phần tử.
    Theo Định lý 9.10, trường con nguyên tố của $F_2$ là:
    $$
-   P_{F_2} \cong \mathbb{F}_2 = \{\bar{0}, \bar{1}\}.
+   P_{F_2} \cong \mathbb{F}_2 = \{[0], [1]\}.
    $$
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b4-a2">
 ### Bài 9.4.A2 (Nhóm A - Bài tập 9.7: Rút gọn phân số trong $\operatorname{Frac}(\mathbb{Z}[i])$)
 Trong trường số hữu tỉ Gauss $\mathbb{Q}(i) = \operatorname{Frac}(\mathbb{Z}[i])$, thực hiện các phép tính:
 1. $X = \frac{3 + 2i}{1 + i} + \frac{2 - i}{2 + i}$.
 2. Tìm nghịch đảo nhân của $X$ dưới dạng chuẩn $u + vi$ với $u, v \in \mathbb{Q}$.
-</Exercise>
+
 
 <Solution>
-1. **Rút gọn từng phân số:**
-   - Phân số thứ nhất:
+**1. Rút gọn từng phân số**
+
+ - Phân số thứ nhất:
      $$
      \frac{3 + 2i}{1 + i} = \frac{(3 + 2i)(1 - i)}{(1 + i)(1 - i)} = \frac{3 - 3i + 2i - 2i^2}{1^2 + 1^2} = \frac{5 - i}{2} = \frac{5}{2} - \frac{1}{2}i.
      $$
@@ -179,11 +180,13 @@ Trong trường số hữu tỉ Gauss $\mathbb{Q}(i) = \operatorname{Frac}(\math
      X = \left(\frac{5}{2} + \frac{3}{5}\right) + \left(-\frac{1}{2} - \frac{4}{5}\right)i = \frac{25 + 6}{10} - \frac{5 + 8}{10}i = \frac{31}{10} - \frac{13}{10}i = \frac{31 - 13i}{10}.
      $$
 
-2. **Tìm nghịch đảo của $X$:**
-   $$
+**2. Tìm nghịch đảo của $X$**
+
+ $$
    X^{-1} = \frac{10}{31 - 13i} = \frac{10(31 + 13i)}{31^2 + 13^2} = \frac{10(31 + 13i)}{961 + 169} = \frac{10(31 + 13i)}{1130} = \frac{31 + 13i}{113} = \frac{31}{113} + \frac{13}{113}i.
    $$
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b4-b1">
 ### Bài 9.4.B1 (Nhóm B - Bài tập 9.12 & 9.13: Tính chất phổ dụng cho $\mathbb{Z}[x]$)
@@ -191,14 +194,16 @@ Trong trường số hữu tỉ Gauss $\mathbb{Q}(i) = \operatorname{Frac}(\math
 $$
 \operatorname{Frac}(\mathbb{Z}[x]) \cong \mathbb{Q}(x).
 $$
-</Exercise>
+
 
 <Solution>
 Ta kiểm tra các điều kiện của Mệnh đề 9.19 đối với miền nguyên $R = \mathbb{Z}[x]$ và trường $F = \mathbb{Q}(x)$:
-1. **$F$ là một trường chứa $R$:**
-   Ta có $\mathbb{Z}[x] \subset \mathbb{Q}[x] \subset \mathbb{Q}(x)$. Ánh xạ nhúng $j: \mathbb{Z}[x] \hookrightarrow \mathbb{Q}(x)$ là một đơn cấu vành bảo toàn đơn vị.
-2. **Mọi phần tử của $\mathbb{Q}(x)$ đều là thương của hai đa thức hệ số nguyên:**
-   Lấy bất kỳ phân thức $f \in \mathbb{Q}(x)$, ta có $f = \frac{P(x)}{Q(x)}$ với $P(x), Q(x) \in \mathbb{Q}[x]$ và $Q(x) \neq 0$.
+**1. $F$ là một trường chứa $R$**
+
+Ta có $\mathbb{Z}[x] \subset \mathbb{Q}[x] \subset \mathbb{Q}(x)$. Ánh xạ nhúng $j: \mathbb{Z}[x] \hookrightarrow \mathbb{Q}(x)$ là một đơn cấu vành bảo toàn đơn vị.
+**2. Mọi phần tử của $\mathbb{Q}(x)$ đều là thương của hai đa thức hệ số nguyên**
+
+Lấy bất kỳ phân thức $f \in \mathbb{Q}(x)$, ta có $f = \frac{P(x)}{Q(x)}$ với $P(x), Q(x) \in \mathbb{Q}[x]$ và $Q(x) \neq 0$.
    Gọi $m_1 \in \mathbb{Z}^+$ là bội chung nhỏ nhất của các mẫu số của các hệ số trong $P(x)$, khi đó $m_1 P(x) = A(x) \in \mathbb{Z}[x]$.
    Gọi $m_2 \in \mathbb{Z}^+$ là bội chung nhỏ nhất của các mẫu số của các hệ số trong $Q(x)$, khi đó $m_2 Q(x) = B(x) \in \mathbb{Z}[x]$ với $B(x) \neq 0$.
    Do đó:
@@ -210,22 +215,25 @@ Ta kiểm tra các điều kiện của Mệnh đề 9.19 đối với miền ng
 
 Theo Mệnh đề 9.19, tồn tại duy nhất một đẳng cấu trường $\theta: \operatorname{Frac}(\mathbb{Z}[x]) \to \mathbb{Q}(x)$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b4-b2">
 ### Bài 9.4.B2 (Nhóm B - Bài tập 9.17: Đẳng cấu miền nguyên và trường các thương)
 1. Chứng minh rằng nếu hai miền nguyên $R$ và $S$ đẳng cấu với nhau thì hai trường các thương $\operatorname{Frac}(R)$ và $\operatorname{Frac}(S)$ đẳng cấu với nhau.
 2. Chỉ ra phản ví dụ chứng minh chiều ngược lại là sai: Tồn tại hai miền nguyên $R \not\cong S$ nhưng $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
-</Exercise>
+
 
 <Solution>
 1. **Chiều thuận:** Đã được chứng minh chi tiết trong Bài 9.2.C2 bằng cách thiết lập đẳng cấu cảm sinh $\tilde{\phi}\left(\frac{a}{b}\right) = \frac{\phi(a)}{\phi(b)}$.
-2. **Chiều đảo sai:**
-   - Xét $R = \mathbb{Z}$ và $S = \mathbb{Q}$.
+**2. Chiều đảo sai**
+
+ - Xét $R = \mathbb{Z}$ và $S = \mathbb{Q}$.
    - Cả hai đều là miền nguyên, và $\operatorname{Frac}(\mathbb{Z}) = \mathbb{Q}$, $\operatorname{Frac}(\mathbb{Q}) \cong \mathbb{Q}$. Do đó $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
    - Tuy nhiên $\mathbb{Z} \not\cong \mathbb{Q}$ vì $\mathbb{Q}$ là trường còn $\mathbb{Z}$ không phải là trường (phần tử $2 \in \mathbb{Z}$ không khả nghịch trong $\mathbb{Z}$).
    - Một phản ví dụ khác mà cả hai vành đều không phải là trường: $R = \mathbb{Z}[2x]$ và $S = \mathbb{Z}[x]$.
      Cả hai đều có trường các thương là $\mathbb{Q}(x)$, nhưng $R \not\cong S$ vì $S$ có phần tử $x$ chia hết cho $2$ trong trường thương trong khi mọi phần tử bậc 1 của $R$ đều có hệ số chẵn.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b4-c1">
 ### Bài 9.4.C1 (Nhóm C - Bài tập 9.19: Vành con của trường hữu hạn)
@@ -256,31 +264,35 @@ Cho $F$ là một trường hữu hạn.
 1. Chứng minh rằng số phần tử của $F$ là $p^n$ với $p$ là số nguyên tố và $n \ge 1$.
 2. Chứng minh rằng nhóm nhân $F^\times$ là nhóm cyclic cấp $p^n - 1$.
 3. Tìm phần tử sinh của nhóm nhân của trường $\mathbb{F}_7$.
-</Exercise>
+
 
 <Solution>
-1. **Số phần tử $|F| = p^n$:**
-   Đã được chứng minh trong Bài 9.1.D1 bằng cách xem $F$ là không gian vectơ hữu hạn chiều $n$ trên trường con nguyên tố $P_F \cong \mathbb{F}_p$.
+**1. Số phần tử $|F| = p^n$**
 
-2. **Nhóm nhân $F^\times$ là cyclic:**
-   Đã được chứng minh trong Định lý 9.20 bằng cách so sánh exponent của nhóm abel hữu hạn với số nghiệm tối đa của đa thức $x^m - 1$ trên trường $F$.
+Đã được chứng minh trong Bài 9.1.D1 bằng cách xem $F$ là không gian vectơ hữu hạn chiều $n$ trên trường con nguyên tố $P_F \cong \mathbb{F}_p$.
 
-3. **Phần tử sinh của $\mathbb{F}_7^\times$:**
-   Cấp của nhóm nhân là $|\mathbb{F}_7^\times| = 7 - 1 = 6$. Nhóm này cyclic cấp 6.
+**2. Nhóm nhân $F^\times$ là cyclic**
+
+Đã được chứng minh trong Định lý 9.20 bằng cách so sánh exponent của nhóm abel hữu hạn với số nghiệm tối đa của đa thức $x^m - 1$ trên trường $F$.
+
+**3. Phần tử sinh của $\mathbb{F}_7^\times$**
+
+Cấp của nhóm nhân là $|\mathbb{F}_7^\times| = 7 - 1 = 6$. Nhóm này cyclic cấp 6.
    Các ước của 6 là $1, 2, 3, 6$.
-   Thử các phần tử trong $\mathbb{F}_7 = \{\bar{1}, \bar{2}, \bar{3}, \bar{4}, \bar{5}, \bar{6}\}$:
-   - Thử $\bar{2}$: $\bar{2}^1 = \bar{2}$, $\bar{2}^2 = \bar{4}$, $\bar{2}^3 = \bar{8} \equiv \bar{1}$. Cấp của $\bar{2}$ là $3 \neq 6$.
-   - Thử $\bar{3}$:
+   Thử các phần tử trong $\mathbb{F}_7 = \{[1], [2], [3], [4], [5], [6]\}$:
+   - Thử $[2]$: $[2]^1 = [2]$, $[2]^2 = [4]$, $[2]^3 = [8] \equiv [1]$. Cấp của $[2]$ là $3 \neq 6$.
+   - Thử $[3]$:
      $$
-     \bar{3}^1 = \bar{3}, \quad \bar{3}^2 = \bar{9} \equiv \bar{2}, \quad \bar{3}^3 = \bar{6},
+     [3]^1 = [3], \quad [3]^2 = [9] \equiv [2], \quad [3]^3 = [6],
      $$
      $$
-     \bar{3}^4 = \bar{18} \equiv \bar{4}, \quad \bar{3}^5 = \bar{12} \equiv \bar{5}, \quad \bar{3}^6 = \bar{15} \equiv \bar{1}.
+     [3]^4 = [18] \equiv [4], \quad [3]^5 = [12] \equiv [5], \quad [3]^6 = [15] \equiv [1].
      $$
-   Lũy thừa của $\bar{3}$ quét qua toàn bộ 6 phần tử khác không của $\mathbb{F}_7$.
-   Do đó $\bar{3}$ là một phần tử sinh nguyên thủy của $\mathbb{F}_7^\times$.
-   (Phần tử sinh còn lại là $\bar{3}^{-1} = \bar{5}$).
+   Lũy thừa của $[3]$ quét qua toàn bộ 6 phần tử khác không của $\mathbb{F}_7$.
+   Do đó $[3]$ là một phần tử sinh nguyên thủy của $\mathbb{F}_7^\times$.
+   (Phần tử sinh còn lại là $[3]^{-1} = [5]$).
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b4-d1">
 ### Bài 9.4.D1 (Nhóm D - Bài tập 9.23: Vành địa phương $\mathbb{Z}_{(p)}$ là một PID)

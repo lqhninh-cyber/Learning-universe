@@ -18,9 +18,6 @@ sources:
     pages: '55-59'
     sections: 'Mục 3.1, 3.2, 3.3'
     note: 'Định lý 3.1 (Cấu trúc các lớp kề), định nghĩa chỉ số [G:H]'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '83-92'
-    sections: 'Chương 3, Mục 3.1'
 status: published
 version: 0.1.0
 authoring:
@@ -269,12 +266,7 @@ Vậy trong mọi trường hợp, ta luôn có $gH = Hg$.
 
 ## 5. Bài tập tự luyện
 
-<Exercise id="exr-c3-b1-a1" title="[Nhóm A · Mã CTDS-C3-B1-A01] Tìm các lớp kề của nhóm con các phép quay trong D8">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Tính toán lớp kề và chỉ số của nhóm con trong nhóm nhị diện $D_8$
-- **Mục tiêu đánh giá:** Liệt kê đầy đủ các lớp kề trái, kề phải và kiểm tra tính trùng nhau *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-
+<Exercise id="exr-c3-b1-a1" title="Tìm các lớp kề của nhóm con các phép quay trong D8" group="Nhóm A">
 Trong nhóm nhị diện $D_8 = \{e, r, r^2, r^3, s, sr, sr^2, sr^3\}$ (nhóm đối xứng hình vuông, cấp 8), xét nhóm con các phép quay:
 $$
 R = \{e, r, r^2, r^3\} = \langle r \rangle.
@@ -283,18 +275,15 @@ $$
 2. Hãy liệt kê tường minh tất cả các lớp kề trái của $R$ trong $D_8$.
 3. Hãy liệt kê tường minh tất cả các lớp kề phải của $R$ trong $D_8$. Đối chiếu và nhận xét về quan hệ giữa lớp kề trái và lớp kề phải.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. $|D_8| = 8, |R| = 4$. Chỉ số $[D_8:R] = 8/4 = 2$.
 2. Lớp kề thứ nhất là $eR = R$. Chọn một phần tử không thuộc $R$, ví dụ $s$, để tìm lớp kề thứ hai $sR$.
 3. Tương tự cho $Rs$ bằng cách dùng hệ thức $sr^k = r^{-k}s$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chỉ số $[D_8:R]$**
 
-**Ý 1: Chỉ số $[D_8:R]$**
 Cấp của nhóm nhị diện là $|D_8| = 8$. Cấp của nhóm con các phép quay là $|R| = 4$.
 Do mỗi lớp kề có đúng $4$ phần tử và các lớp kề phân hoạch $D_8$, số lớp kề trái phân biệt là:
 $$
@@ -302,7 +291,8 @@ $$
 $$
 Vậy $R$ có đúng 2 lớp kề trái phân biệt.
 
-**Ý 2: Các lớp kề trái của $R$**
+**2. Các lớp kề trái của $R$**
+
 - Lớp kề thứ nhất ứng với đại diện $e$:
   $$
   eR = R = \{e, r, r^2, r^3\}.
@@ -313,7 +303,8 @@ Vậy $R$ có đúng 2 lớp kề trái phân biệt.
   $$
 Hai lớp kề này rời nhau và $R \cup sR = D_8$.
 
-**Ý 3: Các lớp kề phải của $R$**
+**3. Các lớp kề phải của $R$**
+
 - Lớp kề phải thứ nhất:
   $$
   Re = R = \{e, r, r^2, r^3\}.
@@ -330,53 +321,39 @@ Do đó tập hợp $\{s, rs, r^2 s, r^3 s\}$ chính là tập $\{s, sr^3, sr^2,
 Vậy $Rs = sR$.
 
 *Nhận xét:* Vì chỉ số $[D_8:R] = 2$, theo <Ref to="thm-c3-b1-nhom-con-chi-so-2" />, mọi lớp kề trái của $R$ đều trùng với lớp kề phải tương ứng ($gR = Rg$ với mọi $g \in D_8$).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Tính đúng chỉ số $[D_8:R] = 2$ | 0.25 điểm |
-| Liệt kê chính xác 2 lớp kề trái $R$ và $sR$ | 0.35 điểm |
-| Liệt kê đúng 2 lớp kề phải $R$ và $Rs$, chứng minh $sR = Rs$ và liên hệ định lý chỉ số 2 | 0.40 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c3-b1-b1" title="[Nhóm B · Mã CTDS-C3-B1-B01] Hệ đại diện lớp kề của nhóm con cố định một điểm trong S4">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Lớp kề và chỉ số của nhóm con hoán vị
-- **Mục tiêu đánh giá:** Xác định chỉ số và xây dựng hệ đại diện lớp kề đầy đủ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Trung bình (Mức 2)
-
+<Exercise id="exr-c3-b1-b1" title="Hệ đại diện lớp kề của nhóm con cố định một điểm trong S4" group="Nhóm B">
 Trong nhóm hoán vị $S_4$, xét tập hợp tất cả các hoán vị giữ cố định điểm 4:
 $$
 H = \{\sigma \in S_4 \mid \sigma(4) = 4\}.
 $$
-1. Chứng minh rằng $H$ là một nhóm con của $S_4$ và chỉ ra $H$ đẳng cấu với $S_3$. Tính cấp $|H|$ và chỉ số $[S_4:H]$.
+1. Chứng minh rằng $H$ là một nhóm con của $S_4$ và thiết lập song ánh bảo toàn phép toán từ $H$ lên $S_3$. Tính cấp $|H|$ và chỉ số $[S_4:H]$.
 2. Cho $\sigma, \tau \in S_4$. Chứng minh rằng $\sigma H = \tau H$ khi và chỉ khi $\sigma(4) = \tau(4)$.
 3. Hãy chỉ ra một hệ đại diện đầy đủ gồm 4 phần tử cho các lớp kề trái của $H$ trong $S_4$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Áp dụng tiêu chuẩn nhóm con. Các hoán vị cố định 4 chỉ hoán vị 3 phần tử $\{1, 2, 3\}$.
 2. $\sigma H = \tau H \iff \tau^{-1}\sigma \in H \iff (\tau^{-1}\sigma)(4) = 4 \iff \sigma(4) = \tau(4)$.
 3. Chọn 4 hoán vị biến điểm 4 lần lượt thành $1, 2, 3, 4$ (ví dụ các chuyển vị $(1 \, 4), (2 \, 4), (3 \, 4), \operatorname{id}$).
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Cấu trúc nhóm con và chỉ số**
 
-**Ý 1: Cấu trúc nhóm con và chỉ số**
 - *Kiểm tra nhóm con:* Ánh xạ đồng nhất có $\operatorname{id}(4) = 4$ nên $\operatorname{id} \in H \neq \varnothing$.
   Với $\sigma, \tau \in H$, ta có $\tau(4) = 4 \implies \tau^{-1}(4) = 4$. Do đó $(\sigma\tau^{-1})(4) = \sigma(\tau^{-1}(4)) = \sigma(4) = 4$, suy ra $\sigma\tau^{-1} \in H$.
   Theo tiêu chuẩn một bước, $H \le S_4$.
-- *Đẳng cấu:* Các phần tử của $H$ chỉ hoán vị các số trong tập $\{1, 2, 3\}$ và cố định 4. Do đó ánh xạ thu hẹp $\sigma \mapsto \sigma|_{\{1, 2, 3\}}$ là một đẳng cấu từ $H$ lên $S_3$.
+- *Song ánh bảo toàn phép toán:* Các phần tử của $H$ chỉ hoán vị các số trong tập $\{1, 2, 3\}$ và giữ cố định $4$. Do đó ánh xạ thu hẹp $\sigma \mapsto \sigma|_{\{1, 2, 3\}}$ là một song ánh bảo toàn phép nhân hoán vị từ $H$ lên $S_3$.
   Cấp của $H$ là $|H| = |S_3| = 3! = 6$.
 - *Chỉ số:* Cấp của $S_4$ là $|S_4| = 4! = 24$. Chỉ số của $H$ trong $S_4$ là:
   $$
   [S_4:H] = \frac{|S_4|}{|H|} = \frac{24}{6} = 4.
   $$
 
-**Ý 2: Tiêu chuẩn $\sigma H = \tau H \iff \sigma(4) = \tau(4)$**
+**2. Tiêu chuẩn $\sigma H = \tau H \iff \sigma(4) = \tau(4)$**
+
 Theo <Ref to="thm-c3-b1-cau-truc-cac-lop-ke" />:
 $$
 \sigma H = \tau H \iff \tau^{-1}\sigma \in H.
@@ -387,7 +364,8 @@ $$
 $$
 Điều này cho thấy: mỗi lớp kề trái của $H$ trong $S_4$ tương ứng duy nhất với ảnh của điểm 4 dưới tác động của các hoán vị trong lớp đó!
 
-**Ý 3: Hệ đại diện đầy đủ**
+**3. Hệ đại diện đầy đủ**
+
 Vì $\sigma(4) \in \{1, 2, 3, 4\}$, có đúng 4 giá trị có thể nhận.
 Để chọn một hệ đại diện đầy đủ $\mathcal{R} = \{\tau_1, \tau_2, \tau_3, \tau_4\}$, ta chỉ cần chọn các hoán vị biến 4 lần lượt thành $1, 2, 3, 4$:
 - $\tau_1 = (1 \, 4)$: biến $4 \mapsto 1$. Lớp kề $(1 \, 4)H$ gồm các hoán vị có $\sigma(4) = 1$.
@@ -396,22 +374,10 @@ Vì $\sigma(4) \in \{1, 2, 3, 4\}$, có đúng 4 giá trị có thể nhận.
 - $\tau_4 = \operatorname{id}$: biến $4 \mapsto 4$. Lớp kề $\operatorname{id}H = H$ gồm các hoán vị có $\sigma(4) = 4$.
 
 Tập $\mathcal{R} = \{\operatorname{id}, (1 \, 4), (2 \, 4), (3 \, 4)\}$ là một hệ đại diện đầy đủ cho 4 lớp kề trái của $H$ trong $S_4$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh $H \le S_4$, chỉ ra $H \cong S_3$, tính đúng $|H| = 6$ và $[S_4:H] = 4$ | 0.35 điểm |
-| Biến đổi tương đương chặt chẽ $\tau^{-1}\sigma \in H \iff \sigma(4) = \tau(4)$ | 0.35 điểm |
-| Xây dựng chính xác hệ đại diện 4 phần tử $\{\operatorname{id}, (1 \, 4), (2 \, 4), (3 \, 4)\}$ | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c3-b1-c1" title="[Nhóm C · Mã CTDS-C3-B1-C01] Bất đẳng thức chỉ số Poincaré cho giao của hai nhóm con">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Bất đẳng thức Poincaré $[G : H \cap K] \le [G:H][G:K]$
-- **Mục tiêu đánh giá:** Xây dựng đơn ánh giữa các lớp kề và chứng minh đẳng thức khi hai chỉ số nguyên tố cùng nhau *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Nâng cao (Mức 3)
-
+<Exercise id="exr-c3-b1-c1" title="Bất đẳng thức chỉ số Poincaré cho giao của hai nhóm con" group="Nhóm C">
 Cho $G$ là một nhóm và $H, K$ là hai nhóm con có chỉ số hữu hạn trong $G$.
 1. Xét ánh xạ $f: G/(H \cap K)_L \to (G/H)_L \times (G/K)_L$ xác định bởi:
    $$
@@ -427,18 +393,15 @@ Cho $G$ là một nhóm và $H, K$ là hai nhóm con có chỉ số hữu hạn 
    [G : H \cap K] = [G:H] \cdot [G:K].
    $$
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Kiểm tra tính xác định tốt: $g(H \cap K) = x(H \cap K) \implies g^{-1}x \in H \cap K \implies g^{-1}x \in H$ và $g^{-1}x \in K \implies gH = xH$ và $gK = xK$. Đơn ánh chứng minh theo chiều ngược lại.
 2. Số phần tử của tập nguồn không vượt quá số phần tử của tập đích.
 3. Ở Bài 2 ta sẽ thấy $[G:H] \mid [G : H \cap K]$ và $[G:K] \mid [G : H \cap K]$. Hai số nguyên tố cùng nhau cùng chia hết một số thì tích của chúng chia hết số đó.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Ánh xạ $f$ xác định tốt và là đơn ánh**
 
-**Ý 1: Ánh xạ $f$ xác định tốt và là đơn ánh**
 - *Tính xác định tốt:* Lấy hai đại diện $g, x \in G$ sao cho $g(H \cap K) = x(H \cap K)$.
   Theo tiêu chuẩn trùng nhau của lớp kề:
   $$
@@ -453,7 +416,8 @@ Cho $G$ là một nhóm và $H, K$ là hai nhóm con có chỉ số hữu hạn 
   $$
   Vậy $f$ là một đơn ánh.
 
-**Ý 2: Bất đẳng thức Poincaré**
+**2. Bất đẳng thức Poincaré**
+
 Vì $f$ là một đơn ánh từ tập $G/(H \cap K)_L$ vào tập tích Descartes $(G/H)_L \times (G/K)_L$, số phần tử của tập nguồn không thể vượt quá số phần tử của tập đích:
 $$
 |G/(H \cap K)_L| \le |(G/H)_L \times (G/K)_L| = |(G/H)_L| \cdot |(G/K)_L|.
@@ -463,8 +427,9 @@ $$
 [G : H \cap K] \le [G:H] \cdot [G:K].
 $$
 
-**Ý 3: Đẳng thức khi hai chỉ số nguyên tố cùng nhau**
-Vì $H \cap K \le H \le G$, mỗi lớp kề của $H$ được phân hoạch thành các lớp kề của $H \cap K$. Cụ thể, ta có công thức tháp chỉ số (sẽ chứng minh tổng quát ở Bài 2):
+**3. Đẳng thức khi hai chỉ số nguyên tố cùng nhau**
+
+Vì $H \cap K \le H \le G$, mỗi lớp kề của $H$ được phân hoạch thành các lớp kề của $H \cap K$. Cụ thể, theo quy tắc nhân chỉ số cho chuỗi nhóm con lồng nhau $H \cap K \le H \le G$:
 $$
 [G : H \cap K] = [G:H] \cdot [H : H \cap K].
 $$
@@ -488,46 +453,31 @@ Kết hợp với bất đẳng thức Poincaré $[G : H \cap K] \le [G:H] \cdot
 $$
 [G : H \cap K] = [G:H] \cdot [G:K].
 $$
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh ánh xạ $f$ xác định tốt và là đơn ánh | 0.35 điểm |
-| Suy ra bất đẳng thức Poincaré $[G : H \cap K] \le [G:H][G:K]$ từ tính đơn ánh | 0.30 điểm |
-| Chỉ ra $[G:H]$ và $[G:K]$ cùng chia hết $[G : H \cap K]$ và dùng $\gcd = 1$ kết luận đẳng thức | 0.35 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c3-b1-d1" title="[Nhóm D · Mã CTDS-C3-B1-D01] Lớp kề và tác động tịnh tiến trái chuẩn bị cho Định lý Cayley">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và chuẩn bị cấu trúc thương
-- **Chủ đề:** Tác động của nhóm lên tập các lớp kề và đồng cấu vào nhóm đối xứng
-- **Mục tiêu đánh giá:** Chứng minh phép tịnh tiến trên tập lớp kề xác định một đồng cấu nhóm *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Rất khó (Mức 4)
-
+<Exercise id="exr-c3-b1-d1" title="Lớp kề và tác động tịnh tiến trái chuẩn bị cho Định lý Cayley" group="Nhóm D">
 Cho $G$ là một nhóm và $H \le G$ là một nhóm con có chỉ số hữu hạn $[G:H] = n$. Ký hiệu tập hợp các lớp kề trái là $X = (G/H)_L = \{g_1 H, g_2 H, \dots, g_n H\}$.
 Với mỗi $g \in G$, xét ánh xạ:
 $$
 \pi_g: X \to X, \quad xH \mapsto (gx)H.
 $$
-1. Chứng minh rằng với mỗi $g \in G$, ánh xạ $\pi_g$ là một song ánh trên $X$, tức $\pi_g \in \operatorname{Sym}(X) \cong S_n$.
+1. Chứng minh rằng với mỗi $g \in G$, ánh xạ $\pi_g$ là một song ánh trên $X$, tức $\pi_g \in \operatorname{Sym}(X)$ (nhóm các hoán vị trên $n$ lớp kề).
 2. Chứng minh rằng ánh xạ $\psi: G \to \operatorname{Sym}(X)$ xác định bởi $\psi(g) = \pi_g$ bảo toàn phép nhân: $\psi(g_1 g_2) = \psi(g_1) \circ \psi(g_2)$.
 3. Đặt $K = \{g \in G \mid \pi_g = \operatorname{id}_X\}$. Chứng minh rằng $K \le H$ và $K$ là giao của tất cả các nhóm con liên hợp với $H$:
    $$
    K = \bigcap_{x \in G} x H x^{-1}.
    $$
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Kiểm tra tính xác định tốt: $xH = yH \implies x^{-1}y \in H \implies (gx)^{-1}(gy) = x^{-1}g^{-1}gy = x^{-1}y \in H \implies (gx)H = (gy)H$. Tìm ánh xạ ngược là $\pi_{g^{-1}}$.
 2. Tính $\pi_{g_1 g_2}(xH) = (g_1 g_2 x)H = g_1(g_2 x H) = \pi_{g_1}(\pi_{g_2}(xH))$.
 3. $\pi_g = \operatorname{id}_X \iff \forall x \in G: gxH = xH \iff x^{-1}gx \in H \iff g \in xHx^{-1}$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. $\pi_g$ là một song ánh trên $X$**
 
-**Ý 1: $\pi_g$ là một song ánh trên $X$**
 - *Tính xác định tốt:* Giả sử $xH = yH$. Khi đó $x^{-1}y \in H$.
   Ta cần kiểm tra $\pi_g(xH) = \pi_g(yH)$, tức $(gx)H = (gy)H$.
   Thật vậy, xét:
@@ -543,7 +493,8 @@ $$
   Do đó $\pi_{g^{-1}}$ chính là ánh xạ ngược của $\pi_g$.
   Vậy $\pi_g$ là một song ánh trên tập $X$, tức $\pi_g \in \operatorname{Sym}(X)$.
 
-**Ý 2: Ánh xạ $\psi$ bảo toàn phép nhân**
+**2. Ánh xạ $\psi$ bảo toàn phép nhân**
+
 Lấy tùy ý $g_1, g_2 \in G$. Với mọi lớp kề $xH \in X$:
 $$
 \pi_{g_1 g_2}(xH) = ((g_1 g_2)x)H = (g_1 (g_2 x))H = \pi_{g_1}((g_2 x)H) = \pi_{g_1}(\pi_{g_2}(xH)) = (\pi_{g_1} \circ \pi_{g_2})(xH).
@@ -552,9 +503,10 @@ Vì đẳng thức này đúng với mọi $xH \in X$, ta có:
 $$
 \pi_{g_1 g_2} = \pi_{g_1} \circ \pi_{g_2} \iff \psi(g_1 g_2) = \psi(g_1) \circ \psi(g_2).
 $$
-Vậy $\psi$ là một đồng cấu nhóm từ $G$ vào nhóm đối xứng $\operatorname{Sym}(X) \cong S_n$.
+Vậy $\psi$ là một ánh xạ bảo toàn phép nhân từ $G$ vào nhóm đối xứng $\operatorname{Sym}(X)$.
 
-**Ý 3: Cấu trúc của hạt nhân $K$**
+**3. Cấu trúc của tập hợp $K$**
+
 Theo định nghĩa, $g \in K \iff \pi_g = \operatorname{id}_X$.
 Điều này xảy ra khi và chỉ khi $\pi_g(xH) = xH$ với mọi $x \in G$.
 Biến đổi tương đương:
@@ -572,14 +524,7 @@ $$
 Do đó $K = \bigcap_{x \in G} x H x^{-1}$.
 Đặc biệt, chọn $x = e$, ta có $K \subseteq eHe^{-1} = H$.
 Vì giao của các nhóm con là nhóm con, $K$ là một nhóm con của $G$ chứa trong $H$ (gọi là *core* của $H$ trong $G$, đóng vai trò quyết định trong Định lý Cayley tổng quát).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh $\pi_g$ xác định tốt và chỉ ra ánh xạ ngược $\pi_{g^{-1}}$ | 0.35 điểm |
-| Biến đổi chứng minh $\pi_{g_1 g_2} = \pi_{g_1} \circ \pi_{g_2}$ | 0.30 điểm |
-| Biến đổi tương đương $gxH = xH \iff g \in xHx^{-1}$ và suy ra $K = \bigcap xHx^{-1} \le H$ | 0.35 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---

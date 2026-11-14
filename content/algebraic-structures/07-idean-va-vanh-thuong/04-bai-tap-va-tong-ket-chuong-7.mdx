@@ -92,7 +92,7 @@ Bảng dưới đây chuẩn hóa các thuật ngữ toán học trọng tâm c�
 | Vành mẹ $R$ | Mọi iđêan có là iđêan chính? | Các iđêan nguyên tố | Các iđêan cực đại | Mối quan hệ giữa nguyên tố và cực đại |
 | :--- | :--- | :--- | :--- | :--- |
 | $\mathbb{Z}$ | **Có** (mọi $I = n\mathbb{Z}$) | $\{0\}$ và $p\mathbb{Z}$ ($p$ nguyên tố) | $p\mathbb{Z}$ ($p$ nguyên tố) | $\{0\}$ nguyên tố nhưng không cực đại; các iđêan nguyên tố khác đều cực đại |
-| $\mathbb{Z}_n = \mathbb{Z}/n\mathbb{Z}$ | **Có** (ảnh của iđêan trong $\mathbb{Z}$) | $d\mathbb{Z}_n$ với $n/d = p$ nguyên tố | $d\mathbb{Z}_n$ với $n/d = p$ nguyên tố | Mọi iđêan nguyên tố đều là iđêan cực đại (do $\mathbb{Z}_n$ hữu hạn) |
+| $\mathbb{Z}/n\mathbb{Z} = \mathbb{Z}/n\mathbb{Z}$ | **Có** (ảnh của iđêan trong $\mathbb{Z}$) | $d\mathbb{Z}/n\mathbb{Z}$ với $n/d = p$ nguyên tố | $d\mathbb{Z}/n\mathbb{Z}$ với $n/d = p$ nguyên tố | Mọi iđêan nguyên tố đều là iđêan cực đại (do $\mathbb{Z}/n\mathbb{Z}$ hữu hạn) |
 | $F[x]$ ($F$ trường) | **Có** (mọi $I = (f(x))$) | $\{0\}$ và $(p(x))$ ($p$ bất khả quy) | $(p(x))$ ($p$ bất khả quy) | $\{0\}$ nguyên tố nhưng không cực đại; mọi iđêan khác $\{0\}$ nguyên tố $\iff$ cực đại |
 | $\mathbb{Z}[x]$ | **Không** (ví dụ: $(2, x)$) | $\{0\}$, $(p)$, $(f(x))$, $(p, f(x))$ | $(p, f(x))$ ($p$ nguyên tố, $f$ bất khả quy mod $p$) | Tồn tại iđêan nguyên tố không cực đại khác $\{0\}$: ví dụ $(x)$ và $(2)$ |
 | $M_n(F)$ ($n \ge 2, F$ trường) | Không xét (không giao hoán) | Không có iđêan 2 phía chân phương | Không có iđêan 2 phía chân phương | Vành đơn: chỉ có iđêan hai phía $\{0\}$ và $M_n(F)$ |
@@ -170,7 +170,7 @@ Vậy $\psi(x) = (a + I, b + J)$, chứng tỏ $\psi$ là một toàn ánh.
 Trong vành thương $R = \mathbb{Q}[x]/(x^3 - 2)$, xét phần tử $u = \overline{x - 1} = (x - 1) + (x^3 - 2)$.
 1. Chứng minh rằng $u$ là một phần tử khả nghịch trong $R$.
 2. Sử dụng thuật toán Euclid mở rộng để tìm phần tử nghịch đảo $u^{-1} \in R$ dưới dạng đa thức chuẩn tắc bậc $\le 2$.
-</Exercise>
+
 
 <Hint>
 Đa thức $f(x) = x^3 - 2$ và $g(x) = x - 1$ nguyên tố cùng nhau trong $\mathbb{Q}[x]$ vì $f(1) = -1 \neq 0$. Tìm hệ thức Bézout $a(x)f(x) + b(x)g(x) = 1$. Khi đó $u^{-1} = \overline{b(x)}$.
@@ -191,7 +191,7 @@ Vì ước chung lớn nhất của $x^3 - 2$ và $x - 1$ trong $\mathbb{Q}[x]$ 
 **Bước 2: Tìm nghịch đảo nhân:**
 Chuyển đẳng thức trên sang vành thương modulo $x^3 - 2$:
 $$
-\overline{(x - 1)} \cdot \overline{(x^2 + x + 1)} - \overline{0} = \overline{1} \implies u \cdot \overline{(x^2 + x + 1)} = \overline{1}.
+\overline{(x - 1)} \cdot \overline{(x^2 + x + 1)} - [0] = [1] \implies u \cdot \overline{(x^2 + x + 1)} = [1].
 $$
 Vậy phần tử nghịch đảo là:
 $$
@@ -199,6 +199,7 @@ u^{-1} = \overline{x^2 + x + 1} = (x^2 + x + 1) + (x^3 - 2).
 $$
 Kiểm tra lại: $u \cdot u^{-1} = (x - 1)(x^2 + x + 1) = x^3 - 1 = (x^3 - 2) + 1 \equiv 1 \pmod{x^3 - 2}$. Kết quả hoàn toàn chính xác.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c7-b4-a2">
 ### Bài 7.4.A2 (Nhóm A - Nhận diện iđêan trên vành tích)
@@ -207,13 +208,14 @@ $$
 I_1 = \{(2a, 3b) : a, b \in \mathbb{Z}\}, \quad I_2 = \{(a, a) : a \in \mathbb{Z}\}, \quad I_3 = \{(a, 0) : a \in \mathbb{Z}\}.
 $$
 Hỏi tập nào là iđêan của $R$? Nếu không phải, hãy chỉ rõ điều kiện nào bị vi phạm.
-</Exercise>
+
 
 <Solution>
 Ta kiểm tra tiêu chuẩn iđêan cho từng tập:
 
-1. **Xét $I_1$:**
-   - $I_1 = 2\mathbb{Z} \times 3\mathbb{Z}$.
+**1. Xét $I_1$**
+
+ - $I_1 = 2\mathbb{Z} \times 3\mathbb{Z}$.
    - Với mọi $(2a_1, 3b_1), (2a_2, 3b_2) \in I_1$, hiệu là $(2(a_1 - a_2), 3(b_1 - b_2)) \in I_1$.
    - Với mọi phần tử vành mẹ $(r, s) \in \mathbb{Z} \times \mathbb{Z}$ và $(2a, 3b) \in I_1$:
      $$
@@ -221,8 +223,9 @@ Ta kiểm tra tiêu chuẩn iđêan cho từng tập:
      $$
    - Do đó, $I_1$ thỏa mãn điều kiện hấp thụ nhân. Vậy $I_1$ là một **iđêan** của $\mathbb{Z} \times \mathbb{Z}$.
 
-2. **Xét $I_2$ (đường chéo chính):**
-   - Rõ ràng $(I_2, +)$ là một nhóm con cộng của $\mathbb{Z} \times \mathbb{Z}$.
+**2. Xét $I_2$ (đường chéo chính)**
+
+ - Rõ ràng $(I_2, +)$ là một nhóm con cộng của $\mathbb{Z} \times \mathbb{Z}$.
    - Tuy nhiên, kiểm tra điều kiện hấp thụ phép nhân: lấy phần tử vành mẹ $(1, 0) \in R$ và phần tử $(1, 1) \in I_2$:
      $$
      (1, 0) \cdot (1, 1) = (1 \cdot 1, 0 \cdot 1) = (1, 0).
@@ -230,8 +233,9 @@ Ta kiểm tra tiêu chuẩn iđêan cho từng tập:
      Rõ ràng $(1, 0) \notin I_2$ (vì hai tọa độ khác nhau).
    - Điều kiện hấp thụ bị vi phạm! Vậy $I_2$ **không phải là một iđêan** (dù $I_2$ là một vành con có đơn vị $(1, 1)$).
 
-3. **Xét $I_3$:**
-   - $I_3 = \mathbb{Z} \times \{0\}$.
+**3. Xét $I_3$**
+
+ - $I_3 = \mathbb{Z} \times \{0\}$.
    - Hiệu hai phần tử: $(a_1, 0) - (a_2, 0) = (a_1 - a_2, 0) \in I_3$.
    - Tích với phần tử vành mẹ bất kỳ $(r, s) \in R$:
      $$
@@ -239,49 +243,51 @@ Ta kiểm tra tiêu chuẩn iđêan cho từng tập:
      $$
    - Vậy $I_3$ là một **iđêan** của $\mathbb{Z} \times \mathbb{Z}$ (chính là hạt nhân của phép chiếu tọa độ thứ hai $\pi_2: \mathbb{Z} \times \mathbb{Z} \to \mathbb{Z}$).
 </Solution>
-
-<Exercise id="ex-c7-b4-b1">
-### Bài 7.4.B1 (Nhóm B - Phân loại iđêan trong vành hữu hạn $\mathbb{Z}_{60}$)
-Xét vành $\mathbb{Z}_{60} = \mathbb{Z}/60\mathbb{Z}$.
-1. Tìm tất cả các iđêan của $\mathbb{Z}_{60}$.
-2. Xác định chính xác các iđêan nguyên tố và các iđêan cực đại của $\mathbb{Z}_{60}$.
-3. Tìm căn lũy linh $\operatorname{Nil}(\mathbb{Z}_{60})$ và tập hợp các phần tử lũy linh của $\mathbb{Z}_{60}$.
 </Exercise>
 
+<Exercise id="ex-c7-b4-b1">
+### Bài 7.4.B1 (Nhóm B - Phân loại iđêan trong vành hữu hạn $\mathbb{Z}/60\mathbb{Z}$)
+Xét vành $\mathbb{Z}/60\mathbb{Z} = \mathbb{Z}/60\mathbb{Z}$.
+1. Tìm tất cả các iđêan của $\mathbb{Z}/60\mathbb{Z}$.
+2. Xác định chính xác các iđêan nguyên tố và các iđêan cực đại của $\mathbb{Z}/60\mathbb{Z}$.
+3. Tìm căn lũy linh $\operatorname{Nil}(\mathbb{Z}/60\mathbb{Z})$ và tập hợp các phần tử lũy linh của $\mathbb{Z}/60\mathbb{Z}$.
+
+
 <Solution>
-**1. Tìm tất cả các iđêan của $\mathbb{Z}_{60}$:**
-Theo Định lý tương ứng iđêan, các iđêan của $\mathbb{Z}_{60}$ tương ứng $1-1$ với các iđêan của $\mathbb{Z}$ chứa $60\mathbb{Z}$, tức là các iđêan dạng $d\mathbb{Z}$ với $d \mid 60$.
+**1. Tìm tất cả các iđêan của $\mathbb{Z}/60\mathbb{Z}$:**
+Theo Định lý tương ứng iđêan, các iđêan của $\mathbb{Z}/60\mathbb{Z}$ tương ứng $1-1$ với các iđêan của $\mathbb{Z}$ chứa $60\mathbb{Z}$, tức là các iđêan dạng $d\mathbb{Z}$ với $d \mid 60$.
 Phân tích thừa số nguyên tố: $60 = 2^2 \times 3 \times 5$. Số ước nguyên dương của $60$ là $(2 + 1)(1 + 1)(1 + 1) = 12$.
-Do đó, $\mathbb{Z}_{60}$ có đúng $12$ iđêan, mỗi iđêan có dạng $I = \langle \bar{d} \rangle$ với $d$ là một ước của $60$:
+Do đó, $\mathbb{Z}/60\mathbb{Z}$ có đúng $12$ iđêan, mỗi iđêan có dạng $I = \langle \bar{d} \rangle$ với $d$ là một ước của $60$:
 $$
 d \in \{1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60\}.
 $$
 
 **2. Xác định các iđêan nguyên tố và cực đại:**
-Vì $\mathbb{Z}_{60}$ là một vành giao hoán hữu hạn, mọi iđêan nguyên tố đều là iđêan cực đại.
-Một iđêan $I = \langle \bar{d} \rangle$ là cực đại khi và chỉ khi vành thương $\mathbb{Z}_{60}/\langle \bar{d} \rangle \cong \mathbb{Z}_d$ là một trường, điều này tương đương với $d$ là một số nguyên tố.
+Vì $\mathbb{Z}/60\mathbb{Z}$ là một vành giao hoán hữu hạn, mọi iđêan nguyên tố đều là iđêan cực đại.
+Một iđêan $I = \langle \bar{d} \rangle$ là cực đại khi và chỉ khi vành thương $\mathbb{Z}/60\mathbb{Z}/\langle \bar{d} \rangle \cong \mathbb{Z}_d$ là một trường, điều này tương đương với $d$ là một số nguyên tố.
 Các ước nguyên tố của $60$ là $p \in \{2, 3, 5\}$. Do đó:
-- Khi $d = 2$: iđêan cực đại là $\langle \bar{2} \rangle$, vành thương $\mathbb{Z}_{60}/\langle \bar{2} \rangle \cong \mathbb{Z}_2$ (trường).
-- Khi $d = 3$: iđêan cực đại là $\langle \bar{3} \rangle$, vành thương $\mathbb{Z}_{60}/\langle \bar{3} \rangle \cong \mathbb{Z}_3$ (trường).
-- Khi $d = 5$: iđêan cực đại là $\langle \bar{5} \rangle$, vành thương $\mathbb{Z}_{60}/\langle \bar{5} \rangle \cong \mathbb{Z}_5$ (trường).
+- Khi $d = 2$: iđêan cực đại là $\langle [2] \rangle$, vành thương $\mathbb{Z}/60\mathbb{Z}/\langle [2] \rangle \cong \mathbb{Z}/2\mathbb{Z}$ (trường).
+- Khi $d = 3$: iđêan cực đại là $\langle [3] \rangle$, vành thương $\mathbb{Z}/60\mathbb{Z}/\langle [3] \rangle \cong \mathbb{Z}/3\mathbb{Z}$ (trường).
+- Khi $d = 5$: iđêan cực đại là $\langle [5] \rangle$, vành thương $\mathbb{Z}/60\mathbb{Z}/\langle [5] \rangle \cong \mathbb{Z}/5\mathbb{Z}$ (trường).
 
-Như vậy, $\mathbb{Z}_{60}$ có đúng $3$ iđêan nguyên tố và chúng cũng chính là $3$ iđêan cực đại:
+Như vậy, $\mathbb{Z}/60\mathbb{Z}$ có đúng $3$ iđêan nguyên tố và chúng cũng chính là $3$ iđêan cực đại:
 $$
-M_1 = \langle \bar{2} \rangle = 2\mathbb{Z}_{60}, \quad M_2 = \langle \bar{3} \rangle = 3\mathbb{Z}_{60}, \quad M_3 = \langle \bar{5} \rangle = 5\mathbb{Z}_{60}.
+M_1 = \langle [2] \rangle = 2\mathbb{Z}/60\mathbb{Z}, \quad M_2 = \langle [3] \rangle = 3\mathbb{Z}/60\mathbb{Z}, \quad M_3 = \langle [5] \rangle = 5\mathbb{Z}/60\mathbb{Z}.
 $$
 
-**3. Tìm căn lũy linh $\operatorname{Nil}(\mathbb{Z}_{60})$:**
+**3. Tìm căn lũy linh $\operatorname{Nil}(\mathbb{Z}/60\mathbb{Z})$:**
 Theo định lý căn lũy linh, $\operatorname{Nil}(R)$ là giao của tất cả các iđêan nguyên tố của $R$:
 $$
-\operatorname{Nil}(\mathbb{Z}_{60}) = M_1 \cap M_2 \cap M_3 = \langle \bar{2} \rangle \cap \langle \bar{3} \rangle \cap \langle \bar{5} \rangle.
+\operatorname{Nil}(\mathbb{Z}/60\mathbb{Z}) = M_1 \cap M_2 \cap M_3 = \langle [2] \rangle \cap \langle [3] \rangle \cap \langle [5] \rangle.
 $$
 Trong $\mathbb{Z}$, giao $2\mathbb{Z} \cap 3\mathbb{Z} \cap 5\mathbb{Z} = \operatorname{lcm}(2, 3, 5)\mathbb{Z} = 30\mathbb{Z}$.
 Do đó:
 $$
-\operatorname{Nil}(\mathbb{Z}_{60}) = \langle \overline{30} \rangle = \{\bar{0}, \overline{30}\}.
+\operatorname{Nil}(\mathbb{Z}/60\mathbb{Z}) = \langle [30] \rangle = \{[0], [30]\}.
 $$
-Vậy $\mathbb{Z}_{60}$ chỉ có đúng $2$ phần tử lũy linh là $\bar{0}$ và $\overline{30}$ (kiểm tra: $\overline{30}^2 = \overline{900} = \overline{15 \times 60} = \bar{0}$).
+Vậy $\mathbb{Z}/60\mathbb{Z}$ chỉ có đúng $2$ phần tử lũy linh là $[0]$ và $[30]$ (kiểm tra: $[30]^2 = [900] = \overline{15 \times 60} = [0]$).
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c7-b4-b2">
 ### Bài 7.4.B2 (Nhóm B - Cấu trúc vành thương đa thức thực)
@@ -289,7 +295,7 @@ Xét vành thương $R = \mathbb{R}[x]/(x^4 - 1)$.
 1. Áp dụng Định lý Thặng dư Trung Hoa để phân tích $R$ thành tích trực tiếp của các trường.
 2. Vành $R$ có phải là miền nguyên không? Có phải là trường không?
 3. Tìm tất cả các phần tử lũy đẳng ($e^2 = e$) không tầm thường của $R$.
-</Exercise>
+
 
 <Solution>
 **1. Phân tích qua Định lý Thặng dư Trung Hoa:**
@@ -328,6 +334,7 @@ $$
 $$
 Mỗi phần tử này tương ứng duy nhất với một lớp kề đại diện trong $\mathbb{R}[x]/(x^4 - 1)$ thông qua công thức nội suy Bézout.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c7-b4-c1">
 ### Bài 7.4.C1 (Nhóm C - Vành có mọi iđêan đều nguyên tố là một trường)
@@ -418,7 +425,7 @@ Vậy ta phải có $x \in M$ với mọi iđêan cực đại $M$, tức là $x
 <Exercise id="ex-c7-b4-d1">
 ### Bài 7.4.D1 (Nhóm D - Tính đơn của vành ma trận tổng quát)
 Cho $D$ là một vành chia (không nhất thiết giao hoán). Chứng minh rằng vành ma trận $M_n(D)$ với $n \ge 1$ không có bất kỳ iđêan hai phía nào khác ngoài $\{0\}$ và chính nó. Từ đó, hãy giải thích vì sao tính giao hoán là điều kiện thiết yếu để khái niệm iđêan nguyên tố và iđêan cực đại phát huy ý nghĩa hình học đại số.
-</Exercise>
+
 
 <Solution>
 **1. Chứng minh $M_n(D)$ là vành đơn:**
@@ -450,6 +457,7 @@ Vì $I_n \in I$, ta kết luận $I = M_n(D)$. Vậy $M_n(D)$ là một vành đ
 Trong hình học đại số hiện đại (theo quan điểm Grothendieck), mỗi vành giao hoán $R$ gắn liền với một không gian topo gọi là phổ nguyên tố $\operatorname{Spec}(R)$, trong đó các điểm là các iđêan nguyên tố và các điểm đóng là các iđêan cực đại.
 Nếu vành không giao hoán như $M_n(D)$, cấu trúc iđêan hai phía bị "đóng băng" (vành đơn chỉ có $\{0\}$), khiến cho phổ không còn cấu trúc điểm phong phú. Do đó, lý thuyết phổ đại số hình học chủ yếu phát triển trên nền tảng các vành giao hoán có đơn vị.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c7-b4-d2">
 ### Bài 7.4.D2 (Nhóm D - Định lý Krull và Bổ đề Zorn)

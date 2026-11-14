@@ -18,9 +18,6 @@ sources:
     pages: '123-124'
     sections: 'Mục 7.8, 7.9'
     note: 'Định nghĩa 7.16 (iđêan nguyên tố và iđêan cực đại), Định lý 7.17 (đặc trưng vành thương)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '223-234'
-    sections: 'Chương 7, Mục 7.3'
 status: published
 version: 0.1.0
 authoring:
@@ -186,7 +183,7 @@ $$
    $$
    - Phần tử $2 \in (2, x)$ nhưng $2 \notin (x)$ (vì $2$ không chia hết cho $x$), nên $(x) \subsetneq (2, x)$.
    - Phần tử $1 \notin (2, x)$ (vì mọi đa thức trong $(2, x)$ có hệ số tự do chẵn), nên $(2, x) \subsetneq \mathbb{Z}[x]$.
-   Iđêan $(2, x)$ chen giữa chứng minh $(x)$ không cực đại. Hơn nữa, $\mathbb{Z}[x]/(2, x) \cong \mathbb{Z}_2$ là một trường, nên $(2, x)$ chính là một **iđêan cực đại** chứa $(x)$.
+   Iđêan $(2, x)$ chen giữa chứng minh $(x)$ không cực đại. Hơn nữa, $\mathbb{Z}[x]/(2, x) \cong \mathbb{Z}/2\mathbb{Z}$ là một trường, nên $(2, x)$ chính là một **iđêan cực đại** chứa $(x)$.
 </Counterexample>
 
 <Example id="ex-c7-b3-idean-khong-trong-mien-nguyen" title="Iđêan {0} trong Miền nguyên vô hạn">
@@ -228,57 +225,62 @@ $$
 
 ## 6. Hệ thống bài tập 4 phân lớp có lời giải
 
-<Exercise id="ex-c7-b3-nhom-a" title="Bài tập 7.9 (Nhóm A): Phân loại iđêan nguyên tố và cực đại trong Z/24Z">
+<Exercise id="ex-c7-b3-nhom-a" title="Phân loại iđêan nguyên tố và cực đại trong Z/24Z" group="Nhóm A">
 Trong vành các lớp thặng dư $\mathbb{Z}/24\mathbb{Z}$:
 1. Liệt kê tất cả các iđêan của $\mathbb{Z}/24\mathbb{Z}$.
 2. Chỉ ra các iđêan nguyên tố và các iđêan cực đại.
 3. Nhận xét về mối quan hệ giữa iđêan nguyên tố và iđêan cực đại trong vành hữu hạn này.
-</Exercise>
+
 
 <Hint>
 Dùng Định lý 7.17: Vành thương $(\mathbb{Z}/24\mathbb{Z})/\langle [d] \rangle \cong \mathbb{Z}/d\mathbb{Z}$. Kiểm tra khi nào $\mathbb{Z}/d\mathbb{Z}$ là miền nguyên hay trường.
 </Hint>
 
 <Solution>
-1. **Tất cả các iđêan của $\mathbb{Z}/24\mathbb{Z}$:**
-   Các iđêan tương ứng với các ước nguyên dương của $24$: $d \in \{1, 2, 3, 4, 6, 8, 12, 24\}$.
+**1. Tất cả các iđêan của $\mathbb{Z}/24\mathbb{Z}$**
+
+Các iđêan tương ứng với các ước nguyên dương của $24$: $d \in \{1, 2, 3, 4, 6, 8, 12, 24\}$.
    Có đúng 8 iđêan: $\langle [1] \rangle, \langle [2] \rangle, \langle [3] \rangle, \langle [4] \rangle, \langle [6] \rangle, \langle [8] \rangle, \langle [12] \rangle, \langle [0] \rangle$.
 
-2. **Xác định iđêan nguyên tố và cực đại:**
-   Theo Định lý đẳng cấu, vành thương tương ứng là:
+**2. Xác định iđêan nguyên tố và cực đại**
+
+Theo Định lý đẳng cấu, vành thương tương ứng là:
    $$
    (\mathbb{Z}/24\mathbb{Z}) / \langle [d] \rangle \cong \mathbb{Z}/d\mathbb{Z}.
    $$
    - Để $\langle [d] \rangle$ là iđêan nguyên tố $\iff \mathbb{Z}/d\mathbb{Z}$ là miền nguyên $\iff d$ là số nguyên tố (vì $d \mid 24$ và $d > 1$).
      Các ước nguyên tố của $24$ chỉ có $d = 2$ và $d = 3$.
-   - Khi $d = 2$: $(\mathbb{Z}/24\mathbb{Z})/\langle [2] \rangle \cong \mathbb{Z}_2$, là một trường. Do đó $\langle [2] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
-   - Khi $d = 3$: $(\mathbb{Z}/24\mathbb{Z})/\langle [3] \rangle \cong \mathbb{Z}_3$, là một trường. Do đó $\langle [3] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
+   - Khi $d = 2$: $(\mathbb{Z}/24\mathbb{Z})/\langle [2] \rangle \cong \mathbb{Z}/2\mathbb{Z}$, là một trường. Do đó $\langle [2] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
+   - Khi $d = 3$: $(\mathbb{Z}/24\mathbb{Z})/\langle [3] \rangle \cong \mathbb{Z}/3\mathbb{Z}$, là một trường. Do đó $\langle [3] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
    - Với các ước hợp số $d \in \{4, 6, 8, 12\}$, $\mathbb{Z}/d\mathbb{Z}$ có ước của không nên không phải miền nguyên.
    - Với $d = 24$, vành thương là $\mathbb{Z}/24\mathbb{Z}$ có ước của không (ví dụ $[4][6]=[0]$).
 
-3. **Nhận xét:**
-   Trong vành hữu hạn $\mathbb{Z}/24\mathbb{Z}$, chỉ có đúng hai iđêan nguyên tố là $\langle [2] \rangle$ và $\langle [3] \rangle$.
+**3. Nhận xét**
+
+Trong vành hữu hạn $\mathbb{Z}/24\mathbb{Z}$, chỉ có đúng hai iđêan nguyên tố là $\langle [2] \rangle$ và $\langle [3] \rangle$.
    Cả hai đều đồng thời là iđêan cực đại. Trong thế giới hữu hạn, khái niệm iđêan nguyên tố và iđêan cực đại trùng khớp nhau (do miền nguyên hữu hạn luôn là trường).
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b3-nhom-b" title="Bài tập 7.10 (Nhóm B): Phân loại iđêan trong vành đa thức R[x]">
+<Exercise id="ex-c7-b3-nhom-b" title="Phân loại iđêan trong vành đa thức R[x]" group="Nhóm B">
 Trong vành đa thức $\mathbb{R}[x]$, xét ba iđêan chính:
 $$
 I_1 = (x^2 - 4), \quad I_2 = (x^2 + 1), \quad I_3 = (x^3).
 $$
 1. Iđêan nào trong số trên là iđêan nguyên tố? Iđêan nào là iđêan cực đại?
 2. Với mỗi iđêan, mô tả đặc tính cấu trúc của vành thương tương ứng ($\mathbb{R}[x]/I_k$).
-</Exercise>
+
 
 <Hint>
 Đa thức bất khả quy trên $\mathbb{R}$ chỉ có bậc 1 và bậc 2 có $\Delta < 0$. Một iđêan $(f)$ trong $\mathbb{R}[x]$ cực đại $\iff f$ bất khả quy.
 </Hint>
 
 <Solution>
-1. **Phân loại từng iđêan:**
-   - **Xét $I_1 = (x^2 - 4)$:**
+**1. Phân loại từng iđêan**
+
+ - **Xét $I_1 = (x^2 - 4)$:**
      Đa thức $x^2 - 4 = (x - 2)(x + 2)$ không bất khả quy trên $\mathbb{R}$.
      Tích $(x - 2)(x + 2) \in I_1$, nhưng cả $x - 2 \notin I_1$ và $x + 2 \notin I_1$ (vì bậc $1 < 2$).
      Do đó $I_1$ **không phải là iđêan nguyên tố**, và hiển nhiên **không phải là iđêan cực đại**.
@@ -290,39 +292,42 @@ $$
      Đa thức $x^3 = x \cdot x^2 \in I_3$, nhưng $x \notin I_3$.
      Do đó $I_3$ **không phải là iđêan nguyên tố**, và **không phải là iđêan cực đại**.
 
-2. **Đặc tính của từng vành thương:**
-   - $\mathbb{R}[x]/I_1 = \mathbb{R}[x]/(x^2 - 4)$: Chứa ước của không $(\bar{x} - 2)(\bar{x} + 2) = \bar{0}$. Đẳng cấu với $\mathbb{R} \times \mathbb{R}$.
+**2. Đặc tính của từng vành thương**
+
+ - $\mathbb{R}[x]/I_1 = \mathbb{R}[x]/(x^2 - 4)$: Chứa ước của không $(\bar{x} - 2)(\bar{x} + 2) = \bar{0}$. Đẳng cấu với $\mathbb{R} \times \mathbb{R}$.
    - $\mathbb{R}[x]/I_2 = \mathbb{R}[x]/(x^2 + 1)$: Là một trường đẳng cấu với $\mathbb{C}$. Không có ước của không và mọi phần tử khác không đều khả nghịch.
    - $\mathbb{R}[x]/I_3 = \mathbb{R}[x]/(x^3)$: Chứa phần tử lũy linh khác không $\bar{x}$ vì $\bar{x} \neq \bar{0}$ nhưng $\bar{x}^3 = \bar{0}$.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b3-nhom-c" title="Bài tập 7.11 (Nhóm C): Chứng minh (2, x) là iđêan cực đại trong Z[x]">
+<Exercise id="ex-c7-b3-nhom-c" title="Chứng minh (2, x) là iđêan cực đại trong Z[x]" group="Nhóm C">
 Xét vành đa thức hệ số nguyên $\mathbb{Z}[x]$ và iđêan sinh bởi hai phần tử:
 $$
 M = (2, x) = \{2f(x) + x g(x) \mid f(x), g(x) \in \mathbb{Z}[x]\}.
 $$
-1. Xét ánh xạ $\psi: \mathbb{Z}[x] \to \mathbb{Z}_2 = \mathbb{Z}/2\mathbb{Z}$ định bởi $\psi(P(x)) = [P(0)]_2$ (lấy hệ số tự do modulo 2).
+1. Xét ánh xạ $\psi: \mathbb{Z}[x] \to \mathbb{Z}/2\mathbb{Z} = \mathbb{Z}/2\mathbb{Z}$ định bởi $\psi(P(x)) = [P(0)]_2$ (lấy hệ số tự do modulo 2).
    Chứng minh $\psi$ là một toàn cấu vành và tìm $\ker\psi$.
-2. Áp dụng Định lý đẳng cấu thứ nhất để suy ra $\mathbb{Z}[x]/M \cong \mathbb{Z}_2$.
+2. Áp dụng Định lý đẳng cấu thứ nhất để suy ra $\mathbb{Z}[x]/M \cong \mathbb{Z}/2\mathbb{Z}$.
 3. Kết luận rằng $M$ là một iđêan cực đại của $\mathbb{Z}[x]$.
-</Exercise>
+
 
 <Hint>
-Phép gán $\psi$ là hợp thành của phép gán giá trị tại $0$ ($P(x) \mapsto P(0) \in \mathbb{Z}$) và phép chiếu modulo 2 ($\mathbb{Z} \to \mathbb{Z}_2$).
+Phép gán $\psi$ là hợp thành của phép gán giá trị tại $0$ ($P(x) \mapsto P(0) \in \mathbb{Z}$) và phép chiếu modulo 2 ($\mathbb{Z} \to \mathbb{Z}/2\mathbb{Z}$).
 </Hint>
 
 <Solution>
-1. **$\psi$ là toàn cấu vành và tìm hạt nhân:**
-   - Với mọi $P(x), Q(x) \in \mathbb{Z}[x]$:
+**1. $\psi$ là toàn cấu vành và tìm hạt nhân**
+
+ - Với mọi $P(x), Q(x) \in \mathbb{Z}[x]$:
      $$
      \psi(P + Q) = [(P + Q)(0)]_2 = [P(0) + Q(0)]_2 = [P(0)]_2 + [Q(0)]_2 = \psi(P) + \psi(Q),
      $$
      $$
      \psi(P \cdot Q) = [(P \cdot Q)(0)]_2 = [P(0) \cdot Q(0)]_2 = [P(0)]_2 \cdot [Q(0)]_2 = \psi(P) \cdot \psi(Q).
      $$
-   - Với mọi $[c]_2 \in \mathbb{Z}_2$, chọn đa thức hằng $P(x) = c$, ta có $\psi(P) = [c]_2$. Vậy $\psi$ là toàn ánh.
+   - Với mọi $[c]_2 \in \mathbb{Z}/2\mathbb{Z}$, chọn đa thức hằng $P(x) = c$, ta có $\psi(P) = [c]_2$. Vậy $\psi$ là toàn ánh.
    - Hạt nhân:
      $$
      \ker\psi = \{P(x) \in \mathbb{Z}[x] \mid \psi(P) = [0]_2\} = \{P(x) \in \mathbb{Z}[x] \mid P(0) \equiv 0 \pmod 2\}.
@@ -331,20 +336,23 @@ Phép gán $\psi$ là hợp thành của phép gán giá trị tại $0$ ($P(x) 
      Theo kết quả Bài tập 7.3 (Bài 1), tập hợp này chính xác bằng iđêan $M = (2, x)$.
      Vậy $\ker\psi = M = (2, x)$.
 
-2. **Áp dụng Định lý đẳng cấu thứ nhất:**
-   Vì $\psi: \mathbb{Z}[x] \to \mathbb{Z}_2$ là một toàn cấu vành có hạt nhân $\ker\psi = M$, theo Định lý đẳng cấu thứ nhất cho vành (Định lý 8.8):
+**2. Áp dụng Định lý đẳng cấu thứ nhất**
+
+Vì $\psi: \mathbb{Z}[x] \to \mathbb{Z}/2\mathbb{Z}$ là một toàn cấu vành có hạt nhân $\ker\psi = M$, theo Định lý đẳng cấu thứ nhất cho vành (Định lý 8.8):
    $$
-   \mathbb{Z}[x]/M = \mathbb{Z}[x]/\ker\psi \cong \operatorname{im}\psi = \mathbb{Z}_2.
+   \mathbb{Z}[x]/M = \mathbb{Z}[x]/\ker\psi \cong \operatorname{im}\psi = \mathbb{Z}/2\mathbb{Z}.
    $$
 
-3. **Kết luận về tính cực đại:**
-   Vì $\mathbb{Z}_2 = \mathbb{F}_2$ là một trường hữu hạn, vành thương $\mathbb{Z}[x]/M$ là một trường.
+**3. Kết luận về tính cực đại**
+
+Vì $\mathbb{Z}/2\mathbb{Z} = \mathbb{F}_2$ là một trường hữu hạn, vành thương $\mathbb{Z}[x]/M$ là một trường.
    Theo Định lý 7.17 (phần 2), suy ra $M = (2, x)$ là một **iđêan cực đại** của $\mathbb{Z}[x]$.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c7-b3-nhom-d" title="Bài tập 7.12 (Nhóm D): Căn lũy linh (Nilradical) và giao của các iđêan nguyên tố">
+<Exercise id="ex-c7-b3-nhom-d" title="Căn lũy linh (Nilradical) và giao của các iđêan nguyên tố" group="Nhóm D">
 Cho $R$ là một vành giao hoán có phần tử đơn vị $1_R$.
 Tập hợp tất cả các phần tử lũy linh của $R$ được gọi là **căn lũy linh** (*nilradical*) của $R$, ký hiệu là $\operatorname{Nil}(R)$:
 $$
@@ -353,7 +361,7 @@ $$
 1. Chứng minh rằng $\operatorname{Nil}(R)$ là một iđêan của $R$.
 2. Chứng minh rằng nếu $P$ là một iđêan nguyên tố bất kỳ của $R$ thì $\operatorname{Nil}(R) \subseteq P$.
 3. Chứng minh rằng vành thương $R/\operatorname{Nil}(R)$ không chứa bất kỳ phần tử lũy linh khác không nào (vành thu gọn / *reduced ring*).
-</Exercise>
+
 
 <Hint>
 1. Dùng công thức nhị thức Newton cho $(a+b)^{m+n-1}$ khi $a^m = 0, b^n = 0$.
@@ -361,8 +369,9 @@ $$
 </Hint>
 
 <Solution>
-1. **Chứng minh $\operatorname{Nil}(R)$ là một iđêan:**
-   - $0_R \in \operatorname{Nil}(R)$ vì $0_R^1 = 0_R$, nên tập khác rỗng.
+**1. Chứng minh $\operatorname{Nil}(R)$ là một iđêan**
+
+ - $0_R \in \operatorname{Nil}(R)$ vì $0_R^1 = 0_R$, nên tập khác rỗng.
    - Lấy $a, b \in \operatorname{Nil}(R)$, tồn tại $m, n \ge 1$ để $a^m = 0_R$ và $b^n = 0_R$.
      Xét khai triển nhị thức Newton cho $(a - b)^{m+n}$:
      $$
@@ -375,8 +384,9 @@ $$
      Vì $R$ giao hoán: $(ra)^m = r^m a^m = r^m \cdot 0_R = 0_R \implies ra \in \operatorname{Nil}(R)$.
    Vậy $\operatorname{Nil}(R)$ là một iđêan của $R$.
 
-2. **Chứng minh $\operatorname{Nil}(R) \subseteq P$ với mọi $P$ nguyên tố:**
-   Lấy tùy ý $a \in \operatorname{Nil}(R)$, tồn tại $m \ge 1$ để $a^m = 0_R$.
+**2. Chứng minh $\operatorname{Nil}(R) \subseteq P$ với mọi $P$ nguyên tố**
+
+Lấy tùy ý $a \in \operatorname{Nil}(R)$, tồn tại $m \ge 1$ để $a^m = 0_R$.
    Vì $0_R \in P$, ta có $a^m \in P$.
    Ta chứng minh bằng quy nạp theo $m$ rằng $a \in P$:
    - Với $m = 1$: $a^1 = a \in P$, đúng.
@@ -389,8 +399,9 @@ $$
    Như vậy $a \in P$ với mọi $a \in \operatorname{Nil}(R)$, tức $\operatorname{Nil}(R) \subseteq P$.
    *(Định lý Krull nổi tiếng còn khẳng định: $\operatorname{Nil}(R)$ chính xác bằng giao của tất cả các iđêan nguyên tố của $R$).*
 
-3. **Vành thương không có phần tử lũy linh khác không:**
-   Đặt $I = \operatorname{Nil}(R)$. Giả sử lớp $\bar{x} = x + I \in R/I$ là phần tử lũy linh, tức tồn tại $k \ge 1$ sao cho:
+**3. Vành thương không có phần tử lũy linh khác không**
+
+Đặt $I = \operatorname{Nil}(R)$. Giả sử lớp $\bar{x} = x + I \in R/I$ là phần tử lũy linh, tức tồn tại $k \ge 1$ sao cho:
    $$
    \bar{x}^k = \bar{0} \iff x^k + I = I \iff x^k \in I = \operatorname{Nil}(R).
    $$
@@ -402,6 +413,7 @@ $$
    Do đó $\bar{x} = x + I = I = \bar{0}$.
    Vậy phần tử lũy linh duy nhất trong $R/\operatorname{Nil}(R)$ là lớp không. Vành này là một vành thu gọn.
 </Solution>
+</Exercise>
 
 ---
 

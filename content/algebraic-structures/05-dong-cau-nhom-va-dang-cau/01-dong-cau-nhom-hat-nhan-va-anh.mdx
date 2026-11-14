@@ -18,9 +18,6 @@ sources:
     pages: '83-86'
     sections: 'Mục 5.1, 5.2, 5.3'
     note: 'Định nghĩa 5.1, Mệnh đề 5.2, 5.3, Định lý 5.5 (Hạt nhân và ảnh)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '130-142'
-    sections: 'Chương 5, Mục 5.1'
 status: published
 version: 0.1.0
 authoring:
@@ -92,7 +89,7 @@ Cho $\varphi: G \to K$ là một đồng cấu nhóm.
    Vì $\exp$ là song ánh với ánh xạ ngược $\ln$, đây là một **đẳng cấu nhóm**: $(\mathbb{R}, +) \cong (\mathbb{R}_{>0}, \cdot)$.
 2. **Ánh xạ dấu của hoán vị:** Ánh xạ $\operatorname{sgn}: S_n \to \{1, -1\}$ xác định bởi dấu của hoán vị là một **toàn cấu nhóm** (với $n \ge 2$), vì $\operatorname{sgn}(\sigma \tau) = \operatorname{sgn}(\sigma)\operatorname{sgn}(\tau)$.
 3. **Định thức ma trận:** Ánh xạ $\det: \operatorname{GL}_n(\mathbb{R}) \to \mathbb{R}^\times$ cho bởi $A \mapsto \det(A)$ là một **toàn cấu nhóm**, vì $\det(AB) = \det(A)\det(B)$.
-4. **Chiếu chính tắc:** Ánh xạ $\pi: \mathbb{Z} \to \mathbb{Z}/n\mathbb{Z}$ cho bởi $\pi(a) = \bar{a}$ là một **toàn cấu nhóm cộng**, vì $\pi(a + b) = \overline{a + b} = \bar{a} + \bar{b} = \pi(a) + \pi(b)$.
+4. **Chiếu chính tắc:** Ánh xạ $\pi: \mathbb{Z} \to \mathbb{Z}/n\mathbb{Z}$ cho bởi $\pi(a) = [a]_n$ là một **toàn cấu nhóm cộng**, vì $\pi(a + b) = [a + b]_n = [a]_n + [b]_n = \pi(a) + \pi(b)$.
 </Example>
 
 ---
@@ -167,7 +164,7 @@ $$
 
 <Proof of="prop-c5-b1-dong-cau-tu-nhom-cyclic">
 Vì $G = \langle a \rangle$, mọi phần tử $x \in G$ đều có dạng $x = a^k$ với $k \in \mathbb{Z}$.
-Theo Mệnh đề <Ref to="prop-c5-b1-tinh-chat-co-ban" />, ta có $\varphi(x) = \varphi(a^k) = (\varphi(a))^k$. Do đó giá trị $\varphi(x)$ tại mọi điểm đều bị ấn định duy nhất khi ta biết $\varphi(a)$.
+Theo <Ref to="prop-c5-b1-tinh-chat-co-ban" />, ta có $\varphi(x) = \varphi(a^k) = (\varphi(a))^k$. Do đó giá trị $\varphi(x)$ tại mọi điểm đều bị ấn định duy nhất khi ta biết $\varphi(a)$.
 Nếu $|G| = n$, thì $a^n = e_G$, suy ra $(\varphi(a))^n = \varphi(a^n) = \varphi(e_G) = e_K \implies \operatorname{ord}(\varphi(a)) \mid n$.
 </Proof>
 
@@ -294,7 +291,7 @@ Cho $\varphi: G \to K$ là một đồng cấu nhóm.
 
 <Exercise
   id="exr-c5-b1-a1"
-  title="[Nhóm A · Mã CTDS-C5-B1-A01] Kiểm tra đồng cấu, xác định hạt nhân và ảnh"
+  title="Kiểm tra đồng cấu, xác định hạt nhân và ảnh" group="Nhóm A"
   source="gt-ctds-hvk-2026"
   page="92"
   original="Bài 5.1"
@@ -305,40 +302,39 @@ Xét các ánh xạ sau:
 3. $\varphi_3: \operatorname{GL}_2(\mathbb{R}) \to (\mathbb{R}^\times, \cdot)$ xác định bởi $\varphi_3(A) = \det(A)$.
 
 Với mỗi ánh xạ trên, hãy chứng minh nó là một đồng cấu nhóm, tìm hạt nhân $\ker\varphi_i$, ảnh $\operatorname{im}\varphi_i$, và cho biết ánh xạ có phải là đơn cấu hoặc toàn cấu không.
-</Exercise>
+
 
 <Hint>
 Dùng công thức Euler $e^{2\pi i(x+y)} = e^{2\pi i x} e^{2\pi i y}$ và định thức $\det(AB) = \det(A)\det(B)$.
 </Hint>
 
 <Solution>
-1. **Khảo sát $\varphi_1(x) = 5x$ trên $(\mathbb{Z}, +)$:**
-   - *Đồng cấu:* Với mọi $x, y \in \mathbb{Z}$, $\varphi_1(x + y) = 5(x + y) = 5x + 5y = \varphi_1(x) + \varphi_1(y)$. Vậy $\varphi_1$ là đồng cấu.
+**1. Khảo sát $\varphi_1(x) = 5x$ trên $(\mathbb{Z}, +)$**
+
+ - *Đồng cấu:* Với mọi $x, y \in \mathbb{Z}$, $\varphi_1(x + y) = 5(x + y) = 5x + 5y = \varphi_1(x) + \varphi_1(y)$. Vậy $\varphi_1$ là đồng cấu.
    - *Hạt nhân:* $\ker\varphi_1 = \{x \in \mathbb{Z} \mid 5x = 0\} = \{0\}$.
    - *Ảnh:* $\operatorname{im}\varphi_1 = \{5x \mid x \in \mathbb{Z}\} = 5\mathbb{Z}$.
    - *Phân loại:* Vì $\ker\varphi_1 = \{0\}$, $\varphi_1$ là một **đơn cấu**. Tuy nhiên $\varphi_1$ **không toàn cấu** vì $\operatorname{im}\varphi_1 = 5\mathbb{Z} \ne \mathbb{Z}$ (ví dụ $1 \notin 5\mathbb{Z}$).
 
-2. **Khảo sát $\varphi_2(x) = e^{2\pi i x}$ từ $(\mathbb{R}, +) \to (\mathbb{C}^\times, \cdot)$:**
-   - *Đồng cấu:* $\varphi_2(x + y) = e^{2\pi i(x+y)} = e^{2\pi i x} \cdot e^{2\pi i y} = \varphi_2(x) \cdot \varphi_2(y)$.
+**2. Khảo sát $\varphi_2(x) = e^{2\pi i x}$ từ $(\mathbb{R}, +) \to (\mathbb{C}^\times, \cdot)$**
+
+ - *Đồng cấu:* $\varphi_2(x + y) = e^{2\pi i(x+y)} = e^{2\pi i x} \cdot e^{2\pi i y} = \varphi_2(x) \cdot \varphi_2(y)$.
    - *Hạt nhân:* $\ker\varphi_2 = \{x \in \mathbb{R} \mid e^{2\pi i x} = 1\} = \{x \in \mathbb{R} \mid 2\pi x = 2k\pi, k \in \mathbb{Z}\} = \mathbb{Z}$.
    - *Ảnh:* $\operatorname{im}\varphi_2 = \{z \in \mathbb{C} \mid |z| = 1\} = \mathbb{S}^1$ (đường tròn đơn vị trong mặt phẳng phức).
    - *Phân loại:* Vì $\ker\varphi_2 = \mathbb{Z} \ne \{0\}$, $\varphi_2$ **không đơn cấu**. Vì $\operatorname{im}\varphi_2 = \mathbb{S}^1 \ne \mathbb{C}^\times$ (chẳng hạn $2 \notin \mathbb{S}^1$), $\varphi_2$ **không toàn cấu**.
 
-3. **Khảo sát $\varphi_3(A) = \det(A)$ từ $\operatorname{GL}_2(\mathbb{R}) \to (\mathbb{R}^\times, \cdot)$:**
-   - *Đồng cấu:* $\varphi_3(AB) = \det(AB) = \det(A)\det(B) = \varphi_3(A)\varphi_3(B)$.
+**3. Khảo sát $\varphi_3(A) = \det(A)$ từ $\operatorname{GL}_2(\mathbb{R}) \to (\mathbb{R}^\times, \cdot)$**
+
+ - *Đồng cấu:* $\varphi_3(AB) = \det(AB) = \det(A)\det(B) = \varphi_3(A)\varphi_3(B)$.
    - *Hạt nhân:* $\ker\varphi_3 = \{A \in \operatorname{GL}_2(\mathbb{R}) \mid \det(A) = 1\} = \operatorname{SL}_2(\mathbb{R})$ (nhóm tuyến tính đặc biệt cấp 2).
    - *Ảnh:* Với mọi $r \in \mathbb{R}^\times$, ma trận đường chéo $A = \begin{pmatrix} r & 0 \\ 0 & 1 \end{pmatrix}$ có $\det(A) = r$. Do đó $\operatorname{im}\varphi_3 = \mathbb{R}^\times$.
    - *Phân loại:* $\varphi_3$ là một **toàn cấu**, nhưng **không đơn cấu** vì $\ker\varphi_3 = \operatorname{SL}_2(\mathbb{R}) \ne \{I_2\}$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Khảo sát đúng $\varphi_1$: đồng cấu, $\ker = \{0\}$, $\operatorname{im} = 5\mathbb{Z}$, đơn cấu không toàn cấu: `0,35 đ`
-- Khảo sát đúng $\varphi_2$: đồng cấu, $\ker = \mathbb{Z}$, $\operatorname{im} = \mathbb{S}^1$, không đơn không toàn: `0,35 đ`
-- Khảo sát đúng $\varphi_3$: đồng cấu, $\ker = \operatorname{SL}_2(\mathbb{R})$, $\operatorname{im} = \mathbb{R}^\times$, toàn cấu: `0,30 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b1-b1"
-  title="[Nhóm B · Mã CTDS-C5-B1-B01] Tìm và đếm số lượng đồng cấu giữa các nhóm cyclic hữu hạn"
+  title="Tìm và đếm số lượng đồng cấu giữa các nhóm cyclic hữu hạn" group="Nhóm B"
   source="gt-ctds-hvk-2026"
   page="93"
   original="Bài 5.9"
@@ -347,23 +343,25 @@ Cho hai số nguyên dương $m, n \ge 2$. Xét hai nhóm cyclic $\mathbb{Z}/m\m
 1. Giả sử $\varphi: \mathbb{Z}/m\mathbb{Z} \to \mathbb{Z}/n\mathbb{Z}$ là một đồng cấu nhóm. Đặt $\varphi([1]_m) = [c]_n$. Chứng minh rằng $c$ phải thỏa mãn điều kiện $m \cdot [c]_n = [0]_n$, tương đương với $n \mid mc$.
 2. Tìm tất cả các đồng cấu nhóm từ $\mathbb{Z}/6\mathbb{Z}$ vào $\mathbb{Z}/9\mathbb{Z}$.
 3. Chứng minh rằng tổng số đồng cấu nhóm từ $\mathbb{Z}/m\mathbb{Z}$ vào $\mathbb{Z}/n\mathbb{Z}$ đúng bằng ước số chung lớn nhất $\gcd(m, n)$.
-</Exercise>
+
 
 <Hint>
 Phần tử sinh $[1]_m$ có cấp $m$, nên ảnh $\varphi([1]_m)$ phải có cấp là ước của $m$. Số nghiệm của phương trình đồng dư $mc \equiv 0 \pmod n$ trong $\{0, 1, \dots, n-1\}$ bằng $\gcd(m, n)$.
 </Hint>
 
 <Solution>
-1. **Điều kiện của ảnh phần tử sinh:**
-   Trong $\mathbb{Z}/m\mathbb{Z}$, ta có $m \cdot [1]_m = [m]_m = [0]_m$.
+**1. Điều kiện của ảnh phần tử sinh**
+
+Trong $\mathbb{Z}/m\mathbb{Z}$, ta có $m \cdot [1]_m = [m]_m = [0]_m$.
    Áp dụng tính chất đồng cấu:
    $$
    [0]_n = \varphi([0]_m) = \varphi(m \cdot [1]_m) = m \cdot \varphi([1]_m) = m \cdot [c]_n = [mc]_n.
    $$
    Theo định nghĩa lớp thặng dư trong $\mathbb{Z}/n\mathbb{Z}$, $[mc]_n = [0]_n \iff mc \equiv 0 \pmod n \iff n \mid mc$.
 
-2. **Tìm các đồng cấu từ $\mathbb{Z}/6\mathbb{Z} \to \mathbb{Z}/9\mathbb{Z}$:**
-   Áp dụng với $m = 6, n = 9$. Ta tìm các giá trị $c \in \{0, 1, 2, \dots, 8\}$ sao cho $9 \mid 6c \iff 3 \mid 2c \iff 3 \mid c$.
+**2. Tìm các đồng cấu từ $\mathbb{Z}/6\mathbb{Z} \to \mathbb{Z}/9\mathbb{Z}$**
+
+Áp dụng với $m = 6, n = 9$. Ta tìm các giá trị $c \in \{0, 1, 2, \dots, 8\}$ sao cho $9 \mid 6c \iff 3 \mid 2c \iff 3 \mid c$.
    Các giá trị của $c$ thỏa mãn là:
    $$
    c \in \{0, 3, 6\}.
@@ -373,8 +371,9 @@ Phần tử sinh $[1]_m$ có cấp $m$, nên ảnh $\varphi([1]_m)$ phải có c
    - $\varphi_3([x]_6) = [3x]_9$.
    - $\varphi_6([x]_6) = [6x]_9$.
 
-3. **Chứng minh số đồng cấu bằng $\gcd(m, n)$:**
-   Đặt $d = \gcd(m, n)$. Ta có:
+**3. Chứng minh số đồng cấu bằng $\gcd(m, n)$**
+
+Đặt $d = \gcd(m, n)$. Ta có:
    $$
    mc \equiv 0 \pmod n \iff \frac{m}{d} c \equiv 0 \pmod{\frac{n}{d}}.
    $$
@@ -387,16 +386,12 @@ Phần tử sinh $[1]_m$ có cấp $m$, nên ảnh $\varphi([1]_m)$ phải có c
    Rõ ràng có đúng $d = \gcd(m, n)$ giá trị phân biệt của $k$.
    Mỗi giá trị này xác định duy nhất một đồng cấu nhóm hợp thức.
    Vậy số lượng đồng cấu nhóm từ $\mathbb{Z}/m\mathbb{Z}$ vào $\mathbb{Z}/n\mathbb{Z}$ đúng bằng $\gcd(m, n)$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Thiết lập điều kiện $n \mid mc$ chặt chẽ qua cấp phần tử sinh: `0,30 đ`
-- Tìm đầy đủ 3 đồng cấu cụ thể giữa $\mathbb{Z}_6$ và $\mathbb{Z}_9$: `0,35 đ`
-- Chứng minh tổng quát số nghiệm bằng $\gcd(m, n)$: `0,35 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b1-c1"
-  title="[Nhóm C · Mã CTDS-C5-B1-C01] Ảnh của nhóm con chuẩn tắc khi đồng cấu không toàn ánh"
+  title="Ảnh của nhóm con chuẩn tắc khi đồng cấu không toàn ánh" group="Nhóm C"
   source="gt-ctds-hvk-2026"
   page="94"
   original="Bài 5.33"
@@ -404,15 +399,16 @@ Phần tử sinh $[1]_m$ có cấp $m$, nên ảnh $\varphi([1]_m)$ phải có c
 Cho $\varphi: G \to K$ là một đồng cấu nhóm và $N \trianglelefteq G$.
 1. Chứng minh rằng $\varphi(N)$ luôn là một nhóm con chuẩn tắc của nhóm ảnh: $\varphi(N) \trianglelefteq \operatorname{im}\varphi$.
 2. Hãy chỉ ra một phản ví dụ cụ thể chứng minh rằng nếu $\varphi$ không toàn ánh, thì $\varphi(N)$ **không nhất thiết** là nhóm con chuẩn tắc của nhóm đích $K$.
-</Exercise>
+
 
 <Hint>
 Dùng phép nhúng (nhóm con) $\iota: H \hookrightarrow G$. Chọn $H$ và nhóm con $N \trianglelefteq H$ sao cho $N$ không chuẩn tắc trong $G$ (ví dụ mô hình tính không bắc cầu trong $D_8$).
 </Hint>
 
 <Solution>
-1. **Chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$:**
-   Ta đã biết $\varphi(N) \le \operatorname{im}\varphi$ theo Mệnh đề <Ref to="prop-c5-b1-anh-nghich-anh-nhom-con" />.
+**1. Chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$**
+
+Ta đã biết $\varphi(N) \le \operatorname{im}\varphi$ theo <Ref to="prop-c5-b1-anh-nghich-anh-nhom-con" />.
    Lấy tùy ý $y \in \operatorname{im}\varphi$ và $u \in \varphi(N)$.
    Theo định nghĩa, tồn tại $g \in G$ sao cho $y = \varphi(g)$, và tồn tại $n \in N$ sao cho $u = \varphi(n)$.
    Ta tính phần tử liên hợp của $u$ qua $y$:
@@ -423,8 +419,9 @@ Dùng phép nhúng (nhóm con) $\iota: H \hookrightarrow G$. Chọn $H$ và nhó
    Do đó $y u y^{-1} = \varphi(g n g^{-1}) \in \varphi(N)$.
    Điều này chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$.
 
-2. **Phản ví dụ $\varphi(N) \not\trianglelefteq K$ khi $\varphi$ không toàn ánh:**
-   Xét nhóm nhị diện $K = D_8 = \langle r, s \mid r^4 = e, s^2 = e, rs = sr^{-1} \rangle$.
+**2. Phản ví dụ $\varphi(N) \not\trianglelefteq K$ khi $\varphi$ không toàn ánh**
+
+Xét nhóm nhị diện $K = D_8 = \langle r, s \mid r^4 = e, s^2 = e, rs = sr^{-1} \rangle$.
    Xét nhóm con $G = H = \{e, r^2, s, sr^2\} \le D_8$. Ta biết $H$ là nhóm abel cấp 4 (nhóm bốn Klein).
    Xét nhóm con $N = \{e, s\} \le H$. Vì $H$ là nhóm giao hoán, $N$ là nhóm con chuẩn tắc của $H$:
    $$
@@ -444,17 +441,13 @@ Dùng phép nhúng (nhóm con) $\iota: H \hookrightarrow G$. Chọn $H$ và nhó
    $$
    \iota(N) \not\trianglelefteq K.
    $$
-   Phản ví dụ này chứng minh rằng điều kiện $\varphi$ toàn ánh trong Mệnh đề <Ref to="prop-c5-b1-anh-nghich-anh-nhom-con" /> là hoàn toàn không thể bỏ qua.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $\varphi(N) \trianglelefteq \operatorname{im}\varphi$ chặt chẽ qua liên hợp đại diện: `0,40 đ`
-- Xây dựng phép nhúng $H \hookrightarrow D_8$ với $N = \{e, s\}$: `0,35 đ`
-- Tính toán chỉ rõ $rNr^{-1} \ne N$ để kết luận $\iota(N) \not\trianglelefteq D_8$: `0,25 đ`
+   Phản ví dụ này chứng minh rằng điều kiện $\varphi$ toàn ánh trong <Ref to="prop-c5-b1-anh-nghich-anh-nhom-con" /> là hoàn toàn không thể bỏ qua.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b1-d1"
-  title="[Nhóm D · Mã CTDS-C5-B1-D01] Cấu trúc nhóm tự đẳng cấu của nhóm cyclic Aut(Z/nZ)"
+  title="Cấu trúc nhóm tự đẳng cấu của nhóm cyclic Aut(Z/nZ)" group="Nhóm D"
   source="gt-ctds-hvk-2026"
   page="95"
   original="Bài 5.34"
@@ -467,15 +460,16 @@ Cho $n \ge 2$ và nhóm cyclic $(\mathbb{Z}/n\mathbb{Z}, +)$.
    \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n).
    $$
 4. Hãy suy ra cấp của nhóm $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$ theo phi hàm Euler $\varphi(n)$.
-</Exercise>
+
 
 <Hint>
 Một tự đẳng cấu biến phần tử sinh thành phần tử sinh. Ánh xạ $\Phi: \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \to U(n)$ cho bởi $\Phi(\varphi) = \varphi([1])$ là một đẳng cấu nhóm.
 </Hint>
 
 <Solution>
-1. **$\varphi \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \implies \gcd(a, n) = 1$:**
-   Vì $\varphi$ là tự đẳng cấu, $\varphi$ là một toàn ánh. Do đó:
+**1. $\varphi \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \implies \gcd(a, n) = 1$**
+
+Vì $\varphi$ là tự đẳng cấu, $\varphi$ là một toàn ánh. Do đó:
    $$
    \operatorname{im}\varphi = \varphi(\mathbb{Z}/n\mathbb{Z}) = \mathbb{Z}/n\mathbb{Z}.
    $$
@@ -486,14 +480,16 @@ Một tự đẳng cấu biến phần tử sinh thành phần tử sinh. Ánh x
    \gcd(a, n) = 1.
    $$
 
-2. **Ánh xạ $\varphi_a$ là tự đẳng cấu khi $\gcd(a, n) = 1$:**
-   - *Đồng cấu:* $\varphi_a([x] + [y]) = [a(x+y)] = [ax] + [ay] = \varphi_a([x]) + \varphi_a([y])$.
+**2. Ánh xạ $\varphi_a$ là tự đẳng cấu khi $\gcd(a, n) = 1$**
+
+ - *Đồng cấu:* $\varphi_a([x] + [y]) = [a(x+y)] = [ax] + [ay] = \varphi_a([x]) + \varphi_a([y])$.
    - *Đơn ánh:* $\ker\varphi_a = \{[x] \in \mathbb{Z}/n\mathbb{Z} \mid [ax] = [0]\} = \{[x] \mid n \mid ax\}$. Vì $\gcd(a, n) = 1$, theo bổ đề Gauss ta có $n \mid x \implies [x] = [0]$. Do đó $\ker\varphi_a = \{[0]\}$. Theo tiêu chuẩn đơn cấu, $\varphi_a$ là đơn ánh.
    - *Toàn ánh:* Vì $\mathbb{Z}/n\mathbb{Z}$ là tập hữu hạn và $\varphi_a$ là đơn ánh từ tập hữu hạn vào chính nó, $\varphi_a$ tự động là toàn ánh.
    Vậy $\varphi_a \in \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})$.
 
-3. **Chứng minh $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n)$:**
-   Xét ánh xạ:
+**3. Chứng minh $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n)$**
+
+Xét ánh xạ:
    $$
    \Phi: \operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \to U(n) = (\mathbb{Z}/n\mathbb{Z})^\times, \quad \Phi(\varphi) = \varphi([1]_n).
    $$
@@ -507,18 +503,14 @@ Một tự đẳng cấu biến phần tử sinh thành phần tử sinh. Ánh x
      Do đó $\Phi$ là một song ánh.
    Vậy $\Phi$ là một đẳng cấu nhóm, suy ra $\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z}) \cong U(n)$.
 
-4. **Cấp của nhóm tự đẳng cấu:**
-   $$
+**4. Cấp của nhóm tự đẳng cấu**
+
+ $$
    |\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})| = |U(n)| = \varphi(n).
    $$
    (Ví dụ: $|\operatorname{Aut}(\mathbb{Z}/8\mathbb{Z})| = \varphi(8) = 4$, và nhóm này đẳng cấu với $U(8) \cong V_4$).
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $\varphi([1])$ là phần tử sinh $\iff \gcd(a, n) = 1$: `0,25 đ`
-- Chứng minh $\varphi_a$ là tự đẳng cấu qua $\ker\varphi_a = \{[0]\}$: `0,25 đ`
-- Thiết lập đồng cấu $\Phi$, chứng minh bảo toàn tích và là song ánh: `0,35 đ`
-- Kết luận chính xác $|\operatorname{Aut}(\mathbb{Z}/n\mathbb{Z})| = \varphi(n)$: `0,15 đ`
 </Solution>
+</Exercise>
 
 ---
 

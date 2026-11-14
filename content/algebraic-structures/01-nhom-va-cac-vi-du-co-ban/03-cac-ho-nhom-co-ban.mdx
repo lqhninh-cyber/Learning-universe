@@ -19,9 +19,6 @@ sources:
     pages: '24-30'
     sections: 'Mục 1.6, 1.7'
     note: 'Các họ nhóm cơ bản, Mệnh đề 1.21 và Bảng 8 nhóm mẫu (trang 30)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '25-38'
-    sections: 'Chương 1, Mục 1.3'
 status: published
 version: 0.1.0
 authoring:
@@ -39,7 +36,7 @@ Sau khi hoàn thành bài học này, bạn có thể:
 
 1. **Nhận diện và thao tác thành thạo trên các họ nhóm số học:** Phân biệt cấu trúc nhóm cộng $(\Z, +)$, $(\Z/n\Z, +)$ và nhóm nhân các lớp khả nghịch $U(n) = (\Z/n\Z)^\times$ với cấp $|U(n)| = \varphi(n)$.
 2. **Làm chủ hai họ nhóm không giao hoán hữu hạn kinh điển:** Nhóm đối xứng $S_n$ (với cách nhân chu trình, chuyển vị) và nhóm nhị diện $D_{2n}$ (với các hệ thức quay - phản xạ $r^n = e, s^2 = e, sr = r^{-1}s$).
-3. **Phân tích nhóm ma trận $\operatorname{GL}_2(\R)$ và nhóm affine $\operatorname{Aff}(\R)$:** Chứng minh nhóm affine đẳng cấu với một nhóm ma trận tam giác qua biểu diễn ma trận (Mệnh đề 1.21) và đối chiếu toàn diện 8 nhóm mẫu trên bảng tổng kết.
+3. **Phân tích nhóm ma trận $\operatorname{GL}_2(\R)$ và nhóm affine $\operatorname{Aff}(\R)$:** Chứng minh nhóm affine tương ứng một-một bảo toàn phép toán với một nhóm ma trận tam giác qua biểu diễn ma trận (Mệnh đề 1.21) và đối chiếu toàn diện 8 nhóm mẫu trên bảng tổng kết.
 </Note>
 
 **Kiến thức tiên quyết:** Quy tắc lũy thừa nguyên, cấp của nhóm và cấu trúc bảng Cayley đã học ở Bài 1.2 (<Cite source="gt-ctds-hvk-2026" page="22-24" note="Mục 1.4 - 1.5" />).
@@ -124,7 +121,7 @@ Cả hai nhóm $U(8)$ và $U(10)$ đều có cấp bằng $4$, vì $\varphi(8) =
    $$
    [3]^1 = [3], \quad [3]^2 = [9], \quad [3]^3 = [27] = [7], \quad [3]^4 = [81] = [1].
    $$
-   Phần tử $[3]_{10}$ sinh ra toàn bộ nhóm. Nhóm này là một nhóm cyclic cấp 4 (đẳng cấu với $(\Z/4\Z, +)$).
+   Phần tử $[3]_{10}$ sinh ra toàn bộ nhóm. Nhóm này là một nhóm cyclic cấp 4 (có cùng bảng phép toán với $(\Z/4\Z, +)$).
 
 Ví dụ này cho thấy hai nhóm có cùng số phần tử (cùng cấp bằng 4) nhưng có cấu trúc đại số hoàn toàn khác nhau.
 </Example>
@@ -345,7 +342,7 @@ là một song ánh bảo toàn phép toán nhóm:
 $$
 \Phi(T_{a,b} \circ T_{c,d}) = \Phi(T_{a,b}) \cdot \Phi(T_{c,d}), \quad \forall T_{a,b}, T_{c,d} \in \operatorname{Aff}(\R).
 $$
-Điều này khẳng định nhóm $\operatorname{Aff}(\R)$ đẳng cấu với nhóm ma trận $G_{\text{aff}}$.
+Điều này khẳng định song ánh $\Phi$ bảo toàn phép toán giữa nhóm $\operatorname{Aff}(\R)$ và nhóm ma trận $G_{\text{aff}}$.
 </Proposition>
 
 <Proof of="prop-c1-b3-bieu-dien-ma-tran-nhom-affine">
@@ -379,35 +376,29 @@ $$
 | 5 | $S_n$ ($n \ge 3$) | $n!$ | $\operatorname{id}$ | Tích các chu trình rời | **Không** | Nhóm hoán vị, không giao hoán nhỏ nhất là $S_3$ cấp 6. |
 | 6 | $D_{2n}$ ($n \ge 3$) | $2n$ | $e$ | $r^k$ hoặc $r^k s$ ($0 \le k < n$) | **Không** | Nhóm đối xứng đa giác đều, quan hệ $sr = r^{-1}s$. |
 | 7 | $\operatorname{GL}_2(\R)$ | Vô hạn | $I_2$ | $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ với $ad-bc \neq 0$ | **Không** | Nhóm ma trận khả nghịch, đóng vai trò nền tảng biểu diễn. |
-| 8 | $\operatorname{Aff}(\R)$ | Vô hạn | $T_{1,0}$ | $T_{a,b}(x) = ax + b$ ($a \neq 0$) | **Không** | Nhóm các phép biến đổi affine, đẳng cấu với ma trận tam giác. |
+| 8 | $\operatorname{Aff}(\R)$ | Vô hạn | $T_{1,0}$ | $T_{a,b}(x) = ax + b$ ($a \neq 0$) | **Không** | Nhóm các phép biến đổi affine, biểu diễn được qua nhóm ma trận tam giác. |
 </Figure>
 
 ---
 
 ## 6. Bài tập tự luyện
 
-<Exercise id="exr-c1-b3-a1" title="[Nhóm A · Mã CTDS-C1-B3-A01] Tính toán trong nhóm hoán vị, nhóm nhị diện và nhóm U(n)">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Thao tác đại số trên $S_4$, $D_8$ và $U(15)$
-- **Mục tiêu đánh giá:** Tính đúng tích chu trình, rút gọn biểu thức nhị diện và tìm nghịch đảo môđulô *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-
+<Exercise id="exr-c1-b3-a1" title="Tính toán trong nhóm hoán vị, nhóm nhị diện và nhóm U(n)" group="Nhóm A">
 1. Trong nhóm hoán vị $S_4$, cho $\alpha = (1 \, 3 \, 2)$ và $\beta = (2 \, 3 \, 4)$. Hãy phân tích $\alpha\beta$ và $(\alpha\beta)^{-1}$ thành tích các chu trình rời nhau.
 2. Trong nhóm nhị diện $D_8$ ($r^4 = e, s^2 = e, sr = r^3 s$), hãy rút gọn phần tử $y = s r^3 s r^2$.
 3. Liệt kê toàn bộ các phần tử của nhóm $U(15)$ và tìm phần tử nghịch đảo của $[7]_{15}$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Thực hiện nhân ánh xạ từ phải sang trái: tính lần lượt ảnh của $1, 2, 3, 4$ qua $\beta$ rồi qua $\alpha$.
 2. Sử dụng quy tắc đẩy $s$ sang phải: $sr^3 = r^{-3}s = rs$.
 3. Các phần tử của $U(15)$ là các số từ $1$ đến $14$ nguyên tố cùng nhau với $15$. Sử dụng thuật toán Euclid để tìm nghịch đảo của $7$ môđulô $15$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Giải câu 1**
 
-**Ý 1:** Ta tính tác động của $\alpha\beta = (1 \, 3 \, 2)(2 \, 3 \, 4)$ lên từng phần tử:
+Ta tính tác động của $\alpha\beta = (1 \, 3 \, 2)(2 \, 3 \, 4)$ lên từng phần tử:
+
 - $1 \xrightarrow{\beta} 1 \xrightarrow{\alpha} 3$
 - $3 \xrightarrow{\beta} 4 \xrightarrow{\alpha} 4$
 - $4 \xrightarrow{\beta} 2 \xrightarrow{\alpha} 1$
@@ -415,13 +406,19 @@ $$
 Do đó $\alpha\beta$ cố định điểm $2$ và biến $1 \to 3 \to 4 \to 1$. Vậy $\alpha\beta = (1 \, 3 \, 4)$.
 Nghịch đảo của chu trình là chu trình viết theo chiều ngược lại: $(\alpha\beta)^{-1} = (1 \, 4 \, 3)$.
 
-**Ý 2:** Rút gọn trong $D_8$:
+**2. Giải câu 2**
+
+Rút gọn trong $D_8$:
+
 Áp dụng hệ thức $sr^3 = r^{-3}s = rs$ (vì $r^4 = e \implies r^{-3} = r$):
 $$
 y = (s r^3) s r^2 = (r s) s r^2 = r (s^2) r^2 = r e r^2 = r^3.
 $$
 
-**Ý 3:** Tìm $U(15)$ và $[7]_{15}^{-1}$:
+**3. Giải câu 3**
+
+Tìm $U(15)$ và $[7]_{15}^{-1}$:
+
 Các số nguyên $1 \le a < 15$ thỏa mãn $\gcd(a, 15) = 1$ là những số không chia hết cho $3$ và không chia hết cho $5$:
 $$
 U(15) = \{[1], [2], [4], [7], [8], [11], [13], [14]\}.
@@ -431,22 +428,10 @@ Số phần tử $|U(15)| = \varphi(15) = 15(1 - 1/3)(1 - 1/5) = 8$.
 Ta thấy $7 \times 2 = 14 \equiv -1 \pmod{15}$, do đó $7 \times (-2) = -14 \equiv 1 \pmod{15}$.
 Vì $-2 \equiv 13 \pmod{15}$, nên $[7]_{15}^{-1} = [13]_{15}$.
 Kiểm tra lại: $7 \times 13 = 91 = 6 \times 15 + 1 \equiv 1 \pmod{15}$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Tính đúng $\alpha\beta = (1 \, 3 \, 4)$ và $(\alpha\beta)^{-1} = (1 \, 4 \, 3)$ | 0.35 điểm |
-| Rút gọn chính xác $y = r^3$ qua các hệ thức của $D_8$ | 0.35 điểm |
-| Liệt kê đúng 8 phần tử của $U(15)$ và tìm đúng $[7]^{-1} = [13]$ | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c1-b3-b1" title="[Nhóm B · Mã CTDS-C1-B3-B01] Nhóm ma trận tam giác và mô hình hóa hình học">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Nhóm ma trận tam giác trên khả nghịch $T_2(\R)$
-- **Mục tiêu đánh giá:** Chứng minh cấu trúc nhóm ma trận và thiết lập phép chiếu sang nhóm nhân $\R^\times$ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Trung bình (Mức 2)
-
+<Exercise id="exr-c1-b3-b1" title="Nhóm ma trận tam giác và mô hình hóa hình học" group="Nhóm B">
 Xét tập hợp các ma trận tam giác trên khả nghịch cấp 2:
 $$
 T_2(\R) = \left\{ \begin{pmatrix} a & b \\ 0 & d \end{pmatrix} \;\middle|\; a, b, d \in \R, \; ad \neq 0 \right\}.
@@ -456,18 +441,17 @@ $$
 2. Tìm công thức tường minh cho ma trận nghịch đảo của $\begin{pmatrix} a & b \\ 0 & d \end{pmatrix} \in T_2(\R)$.
 3. Chứng minh rằng ánh xạ $\psi: T_2(\R) \to \R^\times \times \R^\times$ xác định bởi $\psi\begin{pmatrix} a & b \\ 0 & d \end{pmatrix} = (a, d)$ bảo toàn phép nhân: $\psi(AB) = \psi(A)\psi(B)$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Kiểm tra tính đóng dưới phép nhân hai ma trận tam giác trên và chỉ ra ma trận đơn vị thuộc $T_2(\R)$.
 2. Dùng công thức ma trận nghịch đảo cấp 2: $A^{-1} = \frac{1}{\det A} \begin{pmatrix} d & -b \\ 0 & a \end{pmatrix}$.
 3. Nhân hai ma trận tổng quát và so sánh các phần tử trên đường chéo chính.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Giải câu 1**
 
-**Ý 1:** Ta kiểm tra 4 tiên đề:
+Ta kiểm tra 4 tiên đề:
+
 - *Tính đóng:* Với $A = \begin{pmatrix} a_1 & b_1 \\ 0 & d_1 \end{pmatrix}$ và $B = \begin{pmatrix} a_2 & b_2 \\ 0 & d_2 \end{pmatrix}$ thuộc $T_2(\R)$, ta có:
   $$
   AB = \begin{pmatrix} a_1 a_2 & a_1 b_2 + b_1 d_2 \\ 0 & d_1 d_2 \end{pmatrix}.
@@ -478,13 +462,19 @@ $$
 - *Phần tử nghịch đảo:* Với $A = \begin{pmatrix} a & b \\ 0 & d \end{pmatrix}$, vì $\det A = ad \neq 0$, $A$ khả nghịch trong $M_2(\R)$. Ta kiểm tra nghịch đảo ở Ý 2 để khẳng định $A^{-1} \in T_2(\R)$.
 Vậy $T_2(\R)$ là một nhóm.
 
-**Ý 2:** Theo công thức nghịch đảo ma trận cấp 2:
+**2. Giải câu 2**
+
+Theo công thức nghịch đảo ma trận cấp 2:
+
 $$
 A^{-1} = \frac{1}{ad} \begin{pmatrix} d & -b \\ 0 & a \end{pmatrix} = \begin{pmatrix} \frac{1}{a} & -\frac{b}{ad} \\ 0 & \frac{1}{d} \end{pmatrix}.
 $$
 Tích các phần tử chéo là $\frac{1}{a} \cdot \frac{1}{d} = \frac{1}{ad} \neq 0$, và phần tử góc dưới bên trái bằng $0$. Vậy $A^{-1} \in T_2(\R)$.
 
-**Ý 3:** Với $A = \begin{pmatrix} a_1 & b_1 \\ 0 & d_1 \end{pmatrix}$ và $B = \begin{pmatrix} a_2 & b_2 \\ 0 & d_2 \end{pmatrix}$, ta có:
+**3. Giải câu 3**
+
+Với $A = \begin{pmatrix} a_1 & b_1 \\ 0 & d_1 \end{pmatrix}$ và $B = \begin{pmatrix} a_2 & b_2 \\ 0 & d_2 \end{pmatrix}$, ta có:
+
 $$
 \psi(AB) = \psi \begin{pmatrix} a_1 a_2 & a_1 b_2 + b_1 d_2 \\ 0 & d_1 d_2 \end{pmatrix} = (a_1 a_2, \, d_1 d_2).
 $$
@@ -493,36 +483,23 @@ $$
 \psi(A) \cdot \psi(B) = (a_1, d_1) \cdot (a_2, d_2) = (a_1 a_2, \, d_1 d_2).
 $$
 Vậy $\psi(AB) = \psi(A)\psi(B)$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh $T_2(\R)$ đóng với phép nhân và thỏa mãn các tiên đề nhóm | 0.40 điểm |
-| Tìm đúng ma trận nghịch đảo và chứng minh thuộc $T_2(\R)$ | 0.30 điểm |
-| Chứng minh ánh xạ $\psi$ bảo toàn phép nhân thành phần | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c1-b3-c1" title="[Nhóm C · Mã CTDS-C1-B3-C01] Chứng minh tính không giao hoán tổng quát của Sn và D2n">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Tính không giao hoán của các họ nhóm hữu hạn kinh điển
-- **Mục tiêu đánh giá:** Xây dựng cặp phần tử không giao hoán cho mọi $n \ge 3$ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Nâng cao (Mức 3)
-
+<Exercise id="exr-c1-b3-c1" title="Chứng minh tính không giao hoán tổng quát của Sn và D2n" group="Nhóm C">
 1. Cho $n$ là số nguyên với $n \ge 3$. Hãy chỉ ra một cặp hoán vị cụ thể $\sigma, \tau \in S_n$ và chứng minh chi tiết rằng $\sigma\tau \neq \tau\sigma$.
 2. Cho $n \ge 3$. Chứng minh rằng trong nhóm nhị diện $D_{2n}$, phần tử quay $r$ giao hoán với phần tử phản xạ $s$ khi và chỉ khi $n \le 2$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Nhúng hai chuyển vị $(1 \, 2)$ và $(1 \, 3)$ vào $S_n$.
 2. Sử dụng hệ thức $sr = r^{-1}s$. Nếu $sr = rs$, hãy suy ra $r^2 = e$ và đối chiếu với cấp của phép quay $r$ bằng $n$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Giải câu 1**
 
-**Ý 1:** Với $n \ge 3$, tập $\{1, 2, \dots, n\}$ chứa ít nhất 3 phần tử phân biệt $1, 2, 3$.
+Với $n \ge 3$, tập $\{1, 2, \dots, n\}$ chứa ít nhất 3 phần tử phân biệt $1, 2, 3$.
+
 Xét hai chuyển vị $\sigma = (1 \, 2)$ và $\tau = (1 \, 3)$ trong $S_n$ (các phần tử $k \ge 4$ nếu có đều được cả $\sigma$ và $\tau$ giữ cố định).
 Ta tính tác động của $\sigma\tau$ và $\tau\sigma$ lên phần tử $1$:
 - $(\sigma\tau)(1) = \sigma(\tau(1)) = \sigma(3) = 3$ (vì $\tau(1) = 3$ và $\sigma$ giữ nguyên $3$).
@@ -530,7 +507,10 @@ Ta tính tác động của $\sigma\tau$ và $\tau\sigma$ lên phần tử $1$:
 Vì $(\sigma\tau)(1) = 3 \neq 2 = (\tau\sigma)(1)$, hai ánh xạ $\sigma\tau$ và $\tau\sigma$ khác nhau tại điểm $1$.
 Do đó $\sigma\tau \neq \tau\sigma$. Điều này chứng minh $S_n$ không giao hoán với mọi $n \ge 3$.
 
-**Ý 2:** Trong $D_{2n}$, ta có hệ thức nền tảng $sr = r^{-1}s$.
+**2. Giải câu 2**
+
+Trong $D_{2n}$, ta có hệ thức nền tảng $sr = r^{-1}s$.
+
 Giả sử $r$ và $s$ giao hoán, nghĩa là $sr = rs$. Khi đó:
 $$
 r^{-1}s = rs \implies r^{-1} = r \quad (\text{giản ước } s \text{ ở bên phải}).
@@ -540,32 +520,17 @@ Do $r$ là phép quay một góc $\frac{2\pi}{n}$, cấp của $r$ trong $D_{2n}
 Từ $r^2 = e$, ta suy ra cấp của $r$ phải là ước của $2$, do đó $n \le 2$.
 Ngược lại, nếu $n \ge 3$, thì $r^2 \neq e$, dẫn tới $r \neq r^{-1}$, kéo theo $rs \neq r^{-1}s = sr$.
 Vậy $r$ và $s$ không thể giao hoán khi $n \ge 3$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Xây dựng đúng cặp $\sigma = (1 \, 2), \tau = (1 \, 3)$ và chứng minh $(\sigma\tau)(1) \neq (\tau\sigma)(1)$ | 0.50 điểm |
-| Vận dụng hệ thức $sr = r^{-1}s$ để dẫn tới $r^2 = e$ và kết luận về điều kiện $n \le 2$ | 0.50 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c1-b3-d1" title="[Nhóm D · Mã CTDS-C1-B3-D01] Nguyên lý ghép cặp nghịch đảo và phần tử cấp 2 trong nhóm cấp chẵn">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và tư duy nâng cao
-- **Chủ đề:** Bài toán 1.20 trong giáo trình chính — Cấu trúc nhóm hữu hạn cấp chẵn
-- **Mục tiêu đánh giá:** Vận dụng nguyên lý phân hoạch và ghép cặp $\{x, x^{-1}\}$ để chứng minh sự tồn tại của phần tử cấp 2 *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Rất khó (Mức 4)
-
+<Exercise id="exr-c1-b3-d1" title="Nguyên lý ghép cặp nghịch đảo và phần tử cấp 2 trong nhóm cấp chẵn" group="Nhóm D">
 Cho $G$ là một nhóm hữu hạn có cấp chẵn ($|G| = 2m$ với $m \in \Z^+$). Chứng minh rằng luôn tồn tại ít nhất một phần tử $a \in G$ thỏa mãn $a \neq e$ và $a^2 = e$ (nghĩa là tồn tại phần tử khác đơn vị có cấp bằng 2).
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 Xét quan hệ ghép cặp mỗi phần tử $x \in G$ với phần tử nghịch đảo $x^{-1}$ của nó. Phân hoạch tập $G$ thành hai loại tập con: các tập gồm đúng 1 phần tử (khi $x = x^{-1}$) và các tập gồm đúng 2 phần tử (khi $x \neq x^{-1}$). Đếm số phần tử theo tính chẵn lẻ.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
-
+<Solution>
 Xét tập hợp $G$. Với mỗi phần tử $x \in G$, theo tính duy nhất của nghịch đảo, tồn tại duy nhất $x^{-1} \in G$ sao cho $(x^{-1})^{-1} = x$.
 
 Ta chia các phần tử của $G$ thành hai tập rời nhau:
@@ -591,14 +556,7 @@ Ta phân tích số phần tử của từng tập:
    Theo định nghĩa của $S_1$, phần tử $a$ này thỏa mãn $a = a^{-1}$, tức là $a^2 = e$.
 
 Vậy trong mọi nhóm hữu hạn cấp chẵn, luôn tồn tại ít nhất một phần tử cấp 2.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Thiết lập đúng phân hoạch $G = S_1 \cup S_2$ theo tính chất $x = x^{-1}$ hoặc $x \neq x^{-1}$ | 0.35 điểm |
-| Chứng minh $|S_2|$ là số chẵn bằng nguyên lý ghép cặp $\{x, x^{-1}\}$ | 0.30 điểm |
-| Suy ra $|S_1|$ chẵn, chỉ ra $e \in S_1$ nên $|S_1| \ge 2$ và kết luận tồn tại $a \neq e$ có $a^2 = e$ | 0.35 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---
@@ -608,6 +566,6 @@ Vậy trong mọi nhóm hữu hạn cấp chẵn, luôn tồn tại ít nhất m
 - **2 họ nhóm không giao hoán kinh điển:**
   - $S_n$ (cấp $n!$): Biểu diễn qua chu trình rời; tích tính từ phải sang trái; chuyển vị có cấp 2; không giao hoán khi $n \ge 3$.
   - $D_{2n}$ (cấp $2n$): Gồm $n$ phép quay và $n$ phép phản xạ; hệ thức chuyển vị trí $sr^k = r^{-k}s$; không giao hoán khi $n \ge 3$.
-- **Biểu diễn ma trận:** Nhóm affine $\operatorname{Aff}(\R)$ các ánh xạ $T_{a,b}(x) = ax + b$ đẳng cấu với nhóm ma trận tam giác $\begin{pmatrix} a & b \\ 0 & 1 \end{pmatrix} \le \operatorname{GL}_2(\R)$ qua Mệnh đề 1.21.
+- **Biểu diễn ma trận:** Nhóm affine $\operatorname{Aff}(\R)$ các ánh xạ $T_{a,b}(x) = ax + b$ tương ứng song ánh bảo toàn phép toán với nhóm ma trận tam giác $\begin{pmatrix} a & b \\ 0 & 1 \end{pmatrix} \le \operatorname{GL}_2(\R)$ qua Mệnh đề 1.21.
 - **Định lý cấp chẵn (Bài 1.20):** Bằng nguyên lý ghép cặp $\{x, x^{-1}\}$, mọi nhóm hữu hạn cấp chẵn đều chứa ít nhất một phần tử cấp 2.
 </KeyTakeaways>

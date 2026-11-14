@@ -19,9 +19,6 @@ sources:
     pages: '138-139'
     sections: 'Mục 8.7, 8.8'
     note: 'Định nghĩa 8.20 (đặc số char R), Định lý 8.21 (đặc số của miền nguyên và trường), Bảng đối chiếu tổng thể Nhóm - Vành'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '235-242'
-    sections: 'Chương 7, Mục 7.3'
 status: published
 version: 0.1.0
 ---
@@ -94,8 +91,8 @@ flowchart LR
 ### Các ví dụ tiêu biểu về đặc số
 - **Đặc số $0$:** Các tập số quen thuộc $\mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$ đều có $\operatorname{char} = 0$, vì $n \cdot 1 = n \neq 0$ với mọi $n \ge 1$. Vành đa thức $F[x]$ trên trường $F$ có $\operatorname{char}(F[x]) = \operatorname{char}(F)$.
 - **Đặc số $n > 0$:**
-  - Vành các lớp thặng dư $\mathbb{Z}_n = \mathbb{Z}/n\mathbb{Z}$ có $\operatorname{char}(\mathbb{Z}_n) = n$.
-  - Vành ma trận $M_m(\mathbb{Z}_n)$ có đặc số bằng $n$.
+  - Vành các lớp thặng dư $\mathbb{Z}/n\mathbb{Z} = \mathbb{Z}/n\mathbb{Z}$ có $\operatorname{char}(\mathbb{Z}/n\mathbb{Z}) = n$.
+  - Vành ma trận $M_m(\mathbb{Z}/n\mathbb{Z})$ có đặc số bằng $n$.
   - Vành tích $R \times S$ có $\operatorname{char}(R \times S) = \operatorname{lcm}(\operatorname{char} R, \operatorname{char} S)$ (nếu cả hai đều khác $0$).
 
 ---
@@ -206,7 +203,7 @@ Bảng dưới đây tổng kết toàn bộ kiến thức tương ứng giữa 
 | **Định lý Đẳng cấu II:** $(HN)/N \cong H/(H \cap N)$ | **Định lý Đẳng cấu II:** $(S + I)/I \cong S/(S \cap I)$ | Cắt lớp giữa vành con/nhóm con với iđêan/nhóm chuẩn tắc. |
 | **Định lý Đẳng cấu III:** $(G/N)/(M/N) \cong G/M$ | **Định lý Đẳng cấu III:** $(R/I)/(J/I) \cong R/J$ | Rút gọn thương hai tầng liên tiếp ($N \subseteq M$, $I \subseteq J$). |
 | **Cấp của phần tử** $\operatorname{ord}(a)$ | **Đặc số của vành** $\operatorname{char}(R)$ | Cấp đo lường phép nhân nhóm; Đặc số đo lường bội nguyên của đơn vị $1_R$. |
-| **Nhóm đơn:** Không có nhóm chuẩn tắc chân phương | **Vành đơn:** Không có iđêan hai phía chân phương | Vành giao hoán đơn có 1 bắt buộc là một trường; Nhóm giao hoán đơn là $\mathbb{Z}_p$. |
+| **Nhóm đơn:** Không có nhóm chuẩn tắc chân phương | **Vành đơn:** Không có iđêan hai phía chân phương | Vành giao hoán đơn có 1 bắt buộc là một trường; Nhóm giao hoán đơn là $\mathbb{Z}/p\mathbb{Z}$. |
 
 ---
 
@@ -215,42 +212,47 @@ Bảng dưới đây tổng kết toàn bộ kiến thức tương ứng giữa 
 <Exercise id="ex-c8-b3-a1">
 ### Bài 8.3.A1 (Nhóm A - Tính đặc số của các vành cụ thể)
 Xác định đặc số của các vành sau:
-1. $R_1 = \mathbb{Z}_4 \times \mathbb{Z}_6$.
-2. $R_2 = M_3(\mathbb{Z}_7)$.
+1. $R_1 = \mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/6\mathbb{Z}$.
+2. $R_2 = M_3(\mathbb{Z}/7\mathbb{Z})$.
 3. $R_3 = \mathbb{Q}[x]/(x^3 - 5)$.
 4. $R_4 = \mathbb{Z}[x]/(x^2 + 2, 5)$.
-</Exercise>
+
 
 <Solution>
 Ta tìm số nguyên dương nhỏ nhất $n$ sao cho $n \cdot 1 = 0$:
 
-1. **Vành $R_1 = \mathbb{Z}_4 \times \mathbb{Z}_6$:**
-   Phần tử đơn vị là $1_{R_1} = (\bar{1}, \bar{1})$.
+**1. Vành $R_1 = \mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/6\mathbb{Z}$**
+
+Phần tử đơn vị là $1_{R_1} = ([1], [1])$.
    $$
-   n \cdot (\bar{1}, \bar{1}) = (n \cdot \bar{1}, n \cdot \bar{1}) = (\bar{0}, \bar{0}) \iff 4 \mid n \text{ và } 6 \mid n \iff \operatorname{lcm}(4, 6) \mid n.
+   n \cdot ([1], [1]) = (n \cdot [1], n \cdot [1]) = ([0], [0]) \iff 4 \mid n \text{ và } 6 \mid n \iff \operatorname{lcm}(4, 6) \mid n.
    $$
    Vì $\operatorname{lcm}(4, 6) = 12$, số nguyên dương nhỏ nhất là $12$. Vậy $\operatorname{char}(R_1) = 12$.
 
-2. **Vành $R_2 = M_3(\mathbb{Z}_7)$:**
-   Phần tử đơn vị là ma trận đơn vị $I_3$. Ta có $n \cdot I_3 = 0 \iff n \equiv 0 \pmod 7$.
+**2. Vành $R_2 = M_3(\mathbb{Z}/7\mathbb{Z})$**
+
+Phần tử đơn vị là ma trận đơn vị $I_3$. Ta có $n \cdot I_3 = 0 \iff n \equiv 0 \pmod 7$.
    Số nguyên dương nhỏ nhất là $7$. Vậy $\operatorname{char}(R_2) = 7$.
 
-3. **Vành $R_3 = \mathbb{Q}[x]/(x^3 - 5)$:**
-   Đa thức $x^3 - 5$ bất khả quy trên $\mathbb{Q}$ theo tiêu chuẩn Eisenstein với $p = 5$. Do đó $R_3 \cong \mathbb{Q}(\sqrt[3]{5})$ là một trường mở rộng của $\mathbb{Q}$.
+**3. Vành $R_3 = \mathbb{Q}[x]/(x^3 - 5)$**
+
+Đa thức $x^3 - 5$ bất khả quy trên $\mathbb{Q}$ theo tiêu chuẩn Eisenstein với $p = 5$. Do đó $R_3 \cong \mathbb{Q}(\sqrt[3]{5})$ là một trường mở rộng của $\mathbb{Q}$.
    Vì $\mathbb{Q} \subseteq R_3$ và $\operatorname{char}(\mathbb{Q}) = 0$, ta có $n \cdot 1 \neq 0$ với mọi $n \ge 1$.
    Vậy $\operatorname{char}(R_3) = 0$.
 
-4. **Vành $R_4 = \mathbb{Z}[x]/(x^2 + 2, 5)$:**
-   Trong vành thương này, $5 \equiv 0$, do đó $5 \cdot 1 = 0$.
+**4. Vành $R_4 = \mathbb{Z}[x]/(x^2 + 2, 5)$**
+
+Trong vành thương này, $5 \equiv 0$, do đó $5 \cdot 1 = 0$.
    Mặt khác $1, 2, 3, 4$ không chia hết cho $5$ nên $k \cdot 1 \neq 0$ với mọi $1 \le k \le 4$.
    Vậy $\operatorname{char}(R_4) = 5$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b3-a2">
 ### Bài 8.3.A2 (Nhóm A - Tính chất hấp thụ của đặc số lên toàn bộ vành)
 Cho $R$ là một vành có phần tử đơn vị với $\operatorname{char}(R) = n > 0$.
 Chứng minh rằng $n \cdot x = 0_R$ với mọi phần tử $x \in R$.
-</Exercise>
+
 
 <Solution>
 Lấy bất kỳ $x \in R$. Theo tính chất của phép nhân với phần tử đơn vị $1_R$:
@@ -267,13 +269,14 @@ n \cdot x = 0_R \cdot x = 0_R.
 $$
 Đẳng thức này đúng với mọi $x \in R$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b3-b1">
 ### Bài 8.3.B1 (Nhóm B - Đặc số và tính giao hoán của Vành Boole)
 Một vành $R$ có phần tử đơn vị được gọi là **vành Boole** (Boolean ring) nếu mọi phần tử $x \in R$ đều thỏa mãn tính chất lũy đẳng: $x^2 = x$.
 1. Chứng minh rằng $\operatorname{char}(R) = 2$.
 2. Chứng minh rằng $R$ bắt buộc phải là một vành giao hoán.
-</Exercise>
+
 
 <Solution>
 **1. Chứng minh $\operatorname{char}(R) = 2$:**
@@ -320,17 +323,19 @@ ab = ba.
 $$
 Vì đẳng thức đúng với mọi $a, b \in R$, $R$ là một vành giao hoán.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b3-b2">
 ### Bài 8.3.B2 (Nhóm B - Tính toán với tự đồng cấu Frobenius)
 Trong vành đa thức $\mathbb{F}_5[x, y]$ gồm hai biến trên trường $\mathbb{F}_5$:
 1. Khai triển rút gọn biểu thức $(x + 2y)^5$.
 2. Cho $R$ là một miền nguyên có đặc số $p$. Chứng minh rằng nếu $a^p = b^p$ thì $a = b$.
-</Exercise>
+
 
 <Solution>
-1. **Khai triển $(x + 2y)^5$:**
-   Vì trường $\mathbb{F}_5$ có đặc số $p = 5$ và vành $\mathbb{F}_5[x, y]$ giao hoán, áp dụng Định lý 8.22:
+**1. Khai triển $(x + 2y)^5$**
+
+Vì trường $\mathbb{F}_5$ có đặc số $p = 5$ và vành $\mathbb{F}_5[x, y]$ giao hoán, áp dụng Định lý 8.22:
    $$
    (x + 2y)^5 = x^5 + (2y)^5 = x^5 + 2^5 y^5.
    $$
@@ -340,8 +345,9 @@ Trong vành đa thức $\mathbb{F}_5[x, y]$ gồm hai biến trên trường $\m
    (x + 2y)^5 = x^5 + 2y^5.
    $$
 
-2. **Chứng minh $a^p = b^p \implies a = b$ trên miền nguyên $R$:**
-   Theo Định lý 8.22, tự đồng cấu Frobenius $\Phi(x) = x^p$ bảo toàn phép trừ:
+**2. Chứng minh $a^p = b^p \implies a = b$ trên miền nguyên $R$**
+
+Theo Định lý 8.22, tự đồng cấu Frobenius $\Phi(x) = x^p$ bảo toàn phép trừ:
    $$
    a^p = b^p \iff a^p - b^p = 0 \iff (a - b)^p = 0.
    $$
@@ -351,6 +357,7 @@ Trong vành đa thức $\mathbb{F}_5[x, y]$ gồm hai biến trên trường $\m
    a - b = 0 \iff a = b.
    $$
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b3-c1">
 ### Bài 8.3.C1 (Nhóm C - Cấu trúc trường con nguyên tố theo đặc số)
@@ -392,17 +399,19 @@ Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}/\ker\eta_F \cong \opera
 Một trường $K$ có đặc số $p > 0$ được gọi là **trường hoàn hảo** (perfect field) nếu tự đồng cấu Frobenius $\Phi: K \to K, x \mapsto x^p$ là một toàn ánh.
 1. Chứng minh rằng mọi trường hữu hạn đều là trường hoàn hảo.
 2. Cho ví dụ về một trường vô hạn có đặc số $p$ không phải là trường hoàn hảo.
-</Exercise>
+
 
 <Solution>
-1. **Mọi trường hữu hạn đều hoàn hảo:**
-   Cho $K$ là trường hữu hạn có đặc số $p$.
+**1. Mọi trường hữu hạn đều hoàn hảo**
+
+Cho $K$ là trường hữu hạn có đặc số $p$.
    Theo Định lý 8.22, $\Phi: K \to K, x \mapsto x^p$ là một đơn cấu vì $K$ là trường.
    Vì $K$ là tập hữu hạn, mọi đơn ánh từ $K$ vào chính nó đều là toàn ánh.
    Do đó $\Phi$ là toàn ánh, chứng minh $K$ là trường hoàn hảo (mọi phần tử của $K$ đều có căn bậc $p$ duy nhất trong $K$).
 
-2. **Trường không hoàn hảo:**
-   Xét trường các phân thức hữu tỉ $K = \mathbb{F}_p(t)$ gồm các phân thức $P(t)/Q(t)$ với biến $t$ trên trường $\mathbb{F}_p$.
+**2. Trường không hoàn hảo**
+
+Xét trường các phân thức hữu tỉ $K = \mathbb{F}_p(t)$ gồm các phân thức $P(t)/Q(t)$ với biến $t$ trên trường $\mathbb{F}_p$.
    - Ảnh của tự đồng cấu Frobenius là:
      $$
      \Phi(K) = K^p = \{f(t)^p \mid f(t) \in \mathbb{F}_p(t)\} = \mathbb{F}_p(t^p).
@@ -411,6 +420,7 @@ Một trường $K$ có đặc số $p > 0$ được gọi là **trường hoàn
    - Do đó $t \notin K^p$, chứng tỏ $\Phi$ không phải là toàn ánh.
    Vậy trường vô hạn $\mathbb{F}_p(t)$ không phải là trường hoàn hảo.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b3-d1">
 ### Bài 8.3.D1 (Nhóm D - Định lý tự đẳng cấu Frobenius trên trường hữu hạn)

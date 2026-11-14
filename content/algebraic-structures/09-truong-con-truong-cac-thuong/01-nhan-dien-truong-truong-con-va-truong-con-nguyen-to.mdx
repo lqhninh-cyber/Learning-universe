@@ -18,9 +18,6 @@ sources:
     pages: '145-149'
     sections: 'Mục 9.1, 9.2, 9.3, 9.4'
     note: 'Định lý 9.1 (Nhận diện trường qua iđêan), Định nghĩa 9.3 & Mệnh đề 9.4 (Tiêu chuẩn trường con), Định lý 9.5, Định nghĩa 9.9 & Định lý 9.10 (Trường con nguyên tố P_F)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '245-255'
-    sections: 'Chương 8, Mục 8.1'
 status: published
 version: 0.1.0
 ---
@@ -209,11 +206,12 @@ Xét các tập con sau của trường số thực $\mathbb{R}$:
 2. $K_2 = \{a + b\sqrt[3]{2} \mid a, b \in \mathbb{Q}\}$.
 3. $K_3 = \{a + b\sqrt{2} \mid a, b \in \mathbb{Z}\}$.
 Tập con nào là trường con của $\mathbb{R}$? Nếu không phải, hãy chỉ rõ điều kiện nào trong Mệnh đề 9.4 bị vi phạm.
-</Exercise>
+
 
 <Solution>
-1. **Xét $K_1 = \{a + b\sqrt{5} \mid a, b \in \mathbb{Q}\}$:**
-   - $K_1$ chứa $0 = 0 + 0\sqrt{5}$ và $1 = 1 + 0\sqrt{5}$.
+**1. Xét $K_1 = \{a + b\sqrt{5} \mid a, b \in \mathbb{Q}\}$**
+
+ - $K_1$ chứa $0 = 0 + 0\sqrt{5}$ và $1 = 1 + 0\sqrt{5}$.
    - Hiệu hai phần tử: $(a_1 + b_1\sqrt{5}) - (a_2 + b_2\sqrt{5}) = (a_1 - a_2) + (b_1 - b_2)\sqrt{5} \in K_1$.
    - Nghịch đảo của phần tử khác không $a + b\sqrt{5} \neq 0$: Vì $\sqrt{5}$ vô tỉ nên $a^2 - 5b^2 \neq 0$. Trục căn thức:
      $$
@@ -222,8 +220,9 @@ Tập con nào là trường con của $\mathbb{R}$? Nếu không phải, hãy c
    - Tích hai phần tử cũng thuộc $K_1$.
    Vậy $K_1 = \mathbb{Q}(\sqrt{5})$ là một **trường con** của $\mathbb{R}$.
 
-2. **Xét $K_2 = \{a + b\sqrt[3]{2} \mid a, b \in \mathbb{Q}\}$:**
-   - Xét phép nhân hai phần tử trong $K_2$: phần tử $\sqrt[3]{2} \in K_2$ (với $a = 0, b = 1$).
+**2. Xét $K_2 = \{a + b\sqrt[3]{2} \mid a, b \in \mathbb{Q}\}$**
+
+ - Xét phép nhân hai phần tử trong $K_2$: phần tử $\sqrt[3]{2} \in K_2$ (với $a = 0, b = 1$).
    - Bình phương của nó: $(\sqrt[3]{2})^2 = \sqrt[3]{4}$.
    - Nếu $\sqrt[3]{4} \in K_2$, tồn tại $a, b \in \mathbb{Q}$ sao cho $\sqrt[3]{4} = a + b\sqrt[3]{2}$.
      Nhân hai vế với $\sqrt[3]{2}$: $2 = a\sqrt[3]{2} + b\sqrt[3]{4} = a\sqrt[3]{2} + b(a + b\sqrt[3]{2}) = ab + (a + b^2)\sqrt[3]{2}$.
@@ -231,13 +230,15 @@ Tập con nào là trường con của $\mathbb{R}$? Nếu không phải, hãy c
    - Do đó $\sqrt[3]{4} \notin K_2$. Tập $K_2$ thậm chí không đóng với phép nhân!
    Vậy $K_2$ **không phải là trường con** (trường con sinh bởi $\sqrt[3]{2}$ phải có dạng $\{a + b\sqrt[3]{2} + c\sqrt[3]{4} \mid a, b, c \in \mathbb{Q}\}$).
 
-3. **Xét $K_3 = \mathbb{Z}[\sqrt{2}] = \{a + b\sqrt{2} \mid a, b \in \mathbb{Z}\}$:**
-   - $K_3$ là một vành con đóng với phép cộng và phép nhân.
+**3. Xét $K_3 = \mathbb{Z}[\sqrt{2}] = \{a + b\sqrt{2} \mid a, b \in \mathbb{Z}\}$**
+
+ - $K_3$ là một vành con đóng với phép cộng và phép nhân.
    - Tuy nhiên, phần tử $2 = 2 + 0\sqrt{2} \in K_3$ có nghịch đảo trong $\mathbb{R}$ là $\frac{1}{2}$.
    - Rõ ràng $\frac{1}{2} \notin K_3$ vì các hệ số không phải là số nguyên.
    - Do đó $K_3$ không đóng đối với phép lấy nghịch đảo.
    Vậy $K_3$ **không phải là trường con** (nó là một miền nguyên, không phải trường).
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b1-a2">
 ### Bài 9.1.A2 (Nhóm A - Xác định trường con nguyên tố)
@@ -245,40 +246,44 @@ Tìm đặc số và mô tả tường minh trường con nguyên tố $P_F$ c�
 1. $F_1 = \mathbb{Q}(\sqrt{3}, \pi)$.
 2. $F_2 = \mathbb{F}_3[x]/(x^2 + 1)$.
 3. $F_3 = \mathbb{F}_p(t)$ (trường phân thức hữu tỉ trên $\mathbb{F}_p$).
-</Exercise>
+
 
 <Solution>
 Theo Định lý 9.10, trường con nguyên tố được xác định duy nhất bởi đặc số của trường:
 
-1. **Trường $F_1 = \mathbb{Q}(\sqrt{3}, \pi) \subseteq \mathbb{R}$:**
-   Vì $F_1 \subseteq \mathbb{R}$, ta có $n \cdot 1 \neq 0$ với mọi $n \ge 1$. Do đó $\operatorname{char}(F_1) = 0$.
+**1. Trường $F_1 = \mathbb{Q}(\sqrt{3}, \pi) \subseteq \mathbb{R}$**
+
+Vì $F_1 \subseteq \mathbb{R}$, ta có $n \cdot 1 \neq 0$ với mọi $n \ge 1$. Do đó $\operatorname{char}(F_1) = 0$.
    Theo Định lý 9.10, trường con nguyên tố của $F_1$ là:
    $$
    P_{F_1} \cong \mathbb{Q} \quad (\text{chính là trường số hữu tỉ } \mathbb{Q} \subseteq F_1).
    $$
 
-2. **Trường $F_2 = \mathbb{F}_3[x]/(x^2 + 1)$:**
-   Trong vành thương này, $3 \cdot 1 = 0$, do đó $\operatorname{char}(F_2) = 3$.
+**2. Trường $F_2 = \mathbb{F}_3[x]/(x^2 + 1)$**
+
+Trong vành thương này, $3 \cdot 1 = 0$, do đó $\operatorname{char}(F_2) = 3$.
    Đa thức $x^2 + 1$ không có nghiệm trong $\mathbb{F}_3$ nên bất khả quy, do đó $F_2 \cong \mathbb{F}_9$ là một trường hữu hạn gồm 9 phần tử.
    Theo Định lý 9.10, trường con nguyên tố của $F_2$ là:
    $$
-   P_{F_2} \cong \mathbb{F}_3 = \{\bar{0}, \bar{1}, \bar{2}\}.
+   P_{F_2} \cong \mathbb{F}_3 = \{[0], [1], [2]\}.
    $$
 
-3. **Trường $F_3 = \mathbb{F}_p(t)$:**
-   Các hệ số của phân thức nằm trong $\mathbb{F}_p$, do đó $p \cdot 1 = 0$, suy ra $\operatorname{char}(F_3) = p$.
+**3. Trường $F_3 = \mathbb{F}_p(t)$**
+
+Các hệ số của phân thức nằm trong $\mathbb{F}_p$, do đó $p \cdot 1 = 0$, suy ra $\operatorname{char}(F_3) = p$.
    Mặc dù $F_3$ là một trường vô hạn (chứa vô số phân thức biến $t$), trường con nguyên tố của nó chỉ gồm các phân thức hằng:
    $$
    P_{F_3} = \mathbb{F}_p \cong \mathbb{Z}/p\mathbb{Z}.
    $$
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b1-b1">
 ### Bài 9.1.B1 (Nhóm B - Trường mở rộng đơn và nghịch đảo đại số)
 Cho trường mở rộng $K = \mathbb{Q}(\sqrt{2}, \sqrt{3})$.
 1. Chứng minh rằng $K = \mathbb{Q}(\sqrt{2} + \sqrt{3})$.
 2. Tìm phần tử nghịch đảo của $u = \sqrt{2} + \sqrt{3}$ trong $K$ dưới dạng tổ hợp tuyến tính của $\{1, \sqrt{2}, \sqrt{3}, \sqrt{6}\}$.
-</Exercise>
+
 
 <Solution>
 **1. Chứng minh $K = \mathbb{Q}(\sqrt{2} + \sqrt{3})$:**
@@ -306,6 +311,7 @@ u^{-1} = \frac{1}{\sqrt{2} + \sqrt{3}} = -\sqrt{2} + \sqrt{3} = 0 \cdot 1 - 1 \c
 $$
 Kiểm tra lại: $(\sqrt{3} + \sqrt{2})(\sqrt{3} - \sqrt{2}) = 3 - 2 = 1$. Kết quả hoàn toàn chính xác.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b1-b2">
 ### Bài 9.1.B2 (Nhóm B - Hợp của hai trường con)

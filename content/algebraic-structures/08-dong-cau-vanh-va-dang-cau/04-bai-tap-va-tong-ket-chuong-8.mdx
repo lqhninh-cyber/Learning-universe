@@ -19,9 +19,6 @@ sources:
     pages: '140-144, 190-195'
     sections: 'Mục 8.9, 8.10'
     note: '32 bài tập (8.1-8.32), 8 lời giải chọn lọc (8.4, 8.10, 8.13, 8.21, 8.25, 8.26, 8.27, 8.32), bảng tóm tắt thuật ngữ Chương 8'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '235-245'
-    sections: 'Chương 7, Mục 7.4'
 status: published
 version: 0.1.0
 ---
@@ -155,15 +152,15 @@ $$
 ## 4. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
 
 <Exercise id="ex-c8-b4-a1">
-### Bài 8.4.A1 (Nhóm A - Bài tập 8.4: Đồng cấu vành từ $\mathbb{Z}$ vào $\mathbb{Z}_{12}$)
+### Bài 8.4.A1 (Nhóm A - Bài tập 8.4: Đồng cấu vành từ $\mathbb{Z}$ vào $\mathbb{Z}/12\mathbb{Z}$)
 Tìm tất cả các đồng cấu vành $f: \mathbb{Z} \to \mathbb{Z}/12\mathbb{Z}$.
 1. Chỉ ra những đồng cấu nào bảo toàn phần tử đơn vị.
 2. Với mỗi đồng cấu tìm được, hãy xác định hạt nhân $\ker f$ và ảnh $\operatorname{im} f$.
-</Exercise>
+
 
 <Solution>
-Một đồng cấu vành $f: \mathbb{Z} \to \mathbb{Z}_{12}$ được xác định duy nhất bởi giá trị $e = f(1) \in \mathbb{Z}_{12}$.
-Phần tử $e$ phải thỏa mãn phương trình lũy đẳng trong $\mathbb{Z}_{12}$:
+Một đồng cấu vành $f: \mathbb{Z} \to \mathbb{Z}/12\mathbb{Z}$ được xác định duy nhất bởi giá trị $e = f(1) \in \mathbb{Z}/12\mathbb{Z}$.
+Phần tử $e$ phải thỏa mãn phương trình lũy đẳng trong $\mathbb{Z}/12\mathbb{Z}$:
 $$
 e^2 \equiv e \pmod{12} \iff e(e - 1) \equiv 0 \pmod{12}.
 $$
@@ -174,58 +171,66 @@ Thử các giá trị $e \in \{0, 1, 2, \dots, 11\}$:
 - $e = 9$: $9 \cdot 8 = 72 \equiv 0 \pmod{12}$ (thỏa mãn).
 Các giá trị khác không thỏa mãn modulo 12.
 
-Như vậy, có đúng $4$ đồng cấu vành $f_e: \mathbb{Z} \to \mathbb{Z}_{12}$ định bởi $f_e(x) = \overline{ex}$:
+Như vậy, có đúng $4$ đồng cấu vành $f_e: \mathbb{Z} \to \mathbb{Z}/12\mathbb{Z}$ định bởi $f_e(x) = \overline{ex}$:
 
-1. **Với $e = 0$ (Ánh xạ không):**
-   - $f_0(x) = \bar{0}$ với mọi $x \in \mathbb{Z}$. Không bảo toàn đơn vị.
-   - $\ker f_0 = \mathbb{Z}$, $\operatorname{im} f_0 = \{\bar{0}\}$.
-2. **Với $e = 1$ (Phép chiếu chính tắc):**
-   - $f_1(x) = \bar{x}$. Bảo toàn phần tử đơn vị vì $f_1(1) = \bar{1}$.
-   - $\ker f_1 = 12\mathbb{Z}$, $\operatorname{im} f_1 = \mathbb{Z}_{12}$ (toàn ánh).
-3. **Với $e = 4$:**
-   - $f_4(x) = \overline{4x}$. Không bảo toàn đơn vị vì $f_4(1) = \bar{4} \neq \bar{1}$.
+**1. Với $e = 0$ (Ánh xạ không)**
+
+ - $f_0(x) = [0]$ với mọi $x \in \mathbb{Z}$. Không bảo toàn đơn vị.
+   - $\ker f_0 = \mathbb{Z}$, $\operatorname{im} f_0 = \{[0]\}$.
+**2. Với $e = 1$ (Phép chiếu chính tắc)**
+
+ - $f_1(x) = \bar{x}$. Bảo toàn phần tử đơn vị vì $f_1(1) = [1]$.
+   - $\ker f_1 = 12\mathbb{Z}$, $\operatorname{im} f_1 = \mathbb{Z}/12\mathbb{Z}$ (toàn ánh).
+**3. Với $e = 4$**
+
+ - $f_4(x) = \overline{4x}$. Không bảo toàn đơn vị vì $f_4(1) = [4] \neq [1]$.
    - Hạt nhân: $4x \equiv 0 \pmod{12} \iff 12 \mid 4x \iff 3 \mid x$. Vậy $\ker f_4 = 3\mathbb{Z}$.
-   - Ảnh: $\operatorname{im} f_4 = \{\bar{0}, \bar{4}, \bar{8}\} \cong \mathbb{Z}_3$.
-4. **Với $e = 9$:**
-   - $f_9(x) = \overline{9x}$. Không bảo toàn đơn vị.
+   - Ảnh: $\operatorname{im} f_4 = \{[0], [4], [8]\} \cong \mathbb{Z}/3\mathbb{Z}$.
+**4. Với $e = 9$**
+
+ - $f_9(x) = \overline{9x}$. Không bảo toàn đơn vị.
    - Hạt nhân: $9x \equiv 0 \pmod{12} \iff 12 \mid 9x \iff 4 \mid x$. Vậy $\ker f_9 = 4\mathbb{Z}$.
-   - Ảnh: $\operatorname{im} f_9 = \{\bar{0}, \bar{3}, \bar{6}, \bar{9}\} \cong \mathbb{Z}_4$.
+   - Ảnh: $\operatorname{im} f_9 = \{[0], [3], [6], [9]\} \cong \mathbb{Z}/4\mathbb{Z}$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b4-a2">
 ### Bài 8.4.A2 (Nhóm A - Bài tập 8.7: Tính toán đặc số của vành)
 1. Xác định đặc số của vành tích $R = \mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/6\mathbb{Z} \times \mathbb{Z}/10\mathbb{Z}$.
 2. Xác định đặc số của vành ma trận $S = M_2(\mathbb{F}_3)$.
-</Exercise>
+
 
 <Solution>
-1. **Xét $R = \mathbb{Z}_4 \times \mathbb{Z}_6 \times \mathbb{Z}_{10}$:**
-   Phần tử đơn vị của $R$ là $1_R = (\bar{1}, \bar{1}, \bar{1})$.
+**1. Xét $R = \mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/6\mathbb{Z} \times \mathbb{Z}/10\mathbb{Z}$**
+
+Phần tử đơn vị của $R$ là $1_R = ([1], [1], [1])$.
    Ta tìm số nguyên dương $n$ nhỏ nhất sao cho:
    $$
-   n \cdot (\bar{1}, \bar{1}, \bar{1}) = (\bar{0}, \bar{0}, \bar{0}) \iff 4 \mid n, \; 6 \mid n, \; 10 \mid n.
+   n \cdot ([1], [1], [1]) = ([0], [0], [0]) \iff 4 \mid n, \; 6 \mid n, \; 10 \mid n.
    $$
    Do đó $n = \operatorname{lcm}(4, 6, 10)$.
    Phân tích ra thừa số nguyên tố: $4 = 2^2$, $6 = 2 \times 3$, $10 = 2 \times 5$.
    Suy ra $\operatorname{lcm}(4, 6, 10) = 2^2 \times 3 \times 5 = 60$.
    Vậy $\operatorname{char}(R) = 60$.
 
-2. **Xét $S = M_2(\mathbb{F}_3)$:**
-   Phần tử đơn vị là ma trận đơn vị $I_2 = \begin{pmatrix} \bar{1} & \bar{0} \\ \bar{0} & \bar{1} \end{pmatrix}$.
-   Ta có $n \cdot I_2 = \begin{pmatrix} n \cdot \bar{1} & \bar{0} \\ \bar{0} & n \cdot \bar{1} \end{pmatrix} = 0 \iff n \cdot \bar{1} = \bar{0} \text{ trong } \mathbb{F}_3 \iff 3 \mid n$.
+**2. Xét $S = M_2(\mathbb{F}_3)$**
+
+Phần tử đơn vị là ma trận đơn vị $I_2 = \begin{pmatrix} [1] & [0] \\ [0] & [1] \end{pmatrix}$.
+   Ta có $n \cdot I_2 = \begin{pmatrix} n \cdot [1] & [0] \\ [0] & n \cdot [1] \end{pmatrix} = 0 \iff n \cdot [1] = [0] \text{ trong } \mathbb{F}_3 \iff 3 \mid n$.
    Số nguyên dương nhỏ nhất là $3$.
    Vậy $\operatorname{char}(M_2(\mathbb{F}_3)) = 3$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b4-b1">
 ### Bài 8.4.B1 (Nhóm B - Bài tập 8.10: Ứng dụng Định lý đẳng cấu thứ nhất)
 Sử dụng Định lý đẳng cấu thứ nhất cho vành để chứng minh các đẳng cấu sau:
 1. $\mathbb{Z}[x]/(n, x) \cong \mathbb{Z}/n\mathbb{Z}$ với mọi số nguyên dương $n \ge 1$.
 2. $\mathbb{R}[x]/(x^2 + 2) \cong \mathbb{C}$.
-</Exercise>
+
 
 <Solution>
-**1. Chứng minh $\mathbb{Z}[x]/(n, x) \cong \mathbb{Z}_n$:**
+**1. Chứng minh $\mathbb{Z}[x]/(n, x) \cong \mathbb{Z}/n\mathbb{Z}$:**
 Xét ánh xạ:
 $$
 f: \mathbb{Z}[x] \longrightarrow \mathbb{Z}/n\mathbb{Z}, \quad f(P(x)) = \overline{P(0)}.
@@ -235,7 +240,7 @@ $$
 - Xác định $\ker f$:
   Một đa thức $P(x) = \sum_{k=0}^m a_k x^k$ thỏa mãn:
   $$
-  P(x) \in \ker f \iff f(P(x)) = \bar{0} \iff \overline{a_0} = \bar{0} \iff n \mid a_0 \iff a_0 \in n\mathbb{Z}.
+  P(x) \in \ker f \iff f(P(x)) = [0] \iff \overline{a_0} = [0] \iff n \mid a_0 \iff a_0 \in n\mathbb{Z}.
   $$
   Mặt khác, ta viết:
   $$
@@ -264,24 +269,27 @@ $$
   Đa thức $x^2 + 2$ bất khả quy trên $\mathbb{R}$ bậc hai, do đó iđêan $(x^2 + 2)$ là cực đại trong $\mathbb{R}[x]$. Vì $\ker g \neq \mathbb{R}[x]$, ta bắt buộc phải có $\ker g = (x^2 + 2)$.
 Áp dụng Định lý đẳng cấu thứ nhất: $\mathbb{R}[x]/(x^2 + 2) \cong \mathbb{C}$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b4-b2">
 ### Bài 8.4.B2 (Nhóm B - Bài tập 8.16: Tìm iđêan trong vành thương đa thức)
 Cho $R = \mathbb{Q}[x]/(x^4 - 5x^2 + 6)$.
 1. Phân tích đa thức mẫu thành nhân tử trên $\mathbb{Q}[x]$.
 2. Sử dụng Định lý tương ứng để tìm tất cả các iđêan cực đại của $R$ và xác định các trường thương tương ứng.
-</Exercise>
+
 
 <Solution>
-1. **Phân tích đa thức mẫu:**
-   Đặt $t = x^2$, ta có phương trình $t^2 - 5t + 6 = (t - 2)(t - 3)$. Do đó:
+**1. Phân tích đa thức mẫu**
+
+Đặt $t = x^2$, ta có phương trình $t^2 - 5t + 6 = (t - 2)(t - 3)$. Do đó:
    $$
    f(x) = x^4 - 5x^2 + 6 = (x^2 - 2)(x^2 - 3).
    $$
    Vì $\sqrt{2}$ và $\sqrt{3}$ là các số vô tỉ, hai đa thức bậc hai $x^2 - 2$ và $x^2 - 3$ không có nghiệm trong $\mathbb{Q}$. Do đó chúng là các đa thức bất khả quy trong $\mathbb{Q}[x]$.
 
-2. **Tìm các iđêan cực đại bằng Định lý tương ứng:**
-   Đặt $I = (x^4 - 5x^2 + 6) \triangleleft \mathbb{Q}[x]$.
+**2. Tìm các iđêan cực đại bằng Định lý tương ứng**
+
+Đặt $I = (x^4 - 5x^2 + 6) \triangleleft \mathbb{Q}[x]$.
    Theo Định lý tương ứng (Định lý 8.18), các iđêan cực đại của $R = \mathbb{Q}[x]/I$ tương ứng $1-1$ với các iđêan cực đại của $\mathbb{Q}[x]$ chứa $I$.
    Vì $\mathbb{Q}[x]$ là PID, các iđêan cực đại chứa $I$ có dạng $(p(x))$ với $p(x)$ là đa thức monic bất khả quy chia hết $f(x)$.
    Các ước monic bất khả quy của $f(x)$ là $x^2 - 2$ và $x^2 - 3$.
@@ -298,6 +306,7 @@ Cho $R = \mathbb{Q}[x]/(x^4 - 5x^2 + 6)$.
    $$
    Cả hai trường thương này đều là các trường mở rộng bậc hai của $\mathbb{Q}$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b4-c1">
 ### Bài 8.4.C1 (Nhóm C - Bất biến đẳng cấu và phân biệt các cặp vành)
@@ -308,12 +317,12 @@ Sử dụng các bất biến đại số (tính giao hoán, số phần tử kh
 </Exercise>
 
 <Proof>
-1. **Xét $\mathbb{Z}_4$ và $\mathbb{Z}_2 \times \mathbb{Z}_2$:**
+1. **Xét $\mathbb{Z}/4\mathbb{Z}$ và $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$:**
    Cả hai vành đều có cùng số phần tử là $4$.
    Tuy nhiên:
-   - Trong $\mathbb{Z}_4$, phần tử $\bar{2}$ thỏa mãn $\bar{2} \neq \bar{0}$ nhưng $\bar{2}^2 = \bar{4} = \bar{0}$ (có phần tử lũy linh khác không). Ngoài ra $\operatorname{char}(\mathbb{Z}_4) = 4$.
-   - Trong $\mathbb{Z}_2 \times \mathbb{Z}_2$, mọi phần tử $(a, b)$ đều thỏa $(a, b)^2 = (a^2, b^2) = (a, b)$ (mọi phần tử đều lũy đẳng). Do đó không có phần tử lũy linh khác không. Ngoài ra $\operatorname{char}(\mathbb{Z}_2 \times \mathbb{Z}_2) = 2$.
-   Vì đặc số là bất biến đẳng cấu và $4 \neq 2$, ta kết luận $\mathbb{Z}_4 \not\cong \mathbb{Z}_2 \times \mathbb{Z}_2$.
+   - Trong $\mathbb{Z}/4\mathbb{Z}$, phần tử $[2]$ thỏa mãn $[2] \neq [0]$ nhưng $[2]^2 = [4] = [0]$ (có phần tử lũy linh khác không). Ngoài ra $\operatorname{char}(\mathbb{Z}/4\mathbb{Z}) = 4$.
+   - Trong $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$, mọi phần tử $(a, b)$ đều thỏa $(a, b)^2 = (a^2, b^2) = (a, b)$ (mọi phần tử đều lũy đẳng). Do đó không có phần tử lũy linh khác không. Ngoài ra $\operatorname{char}(\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}) = 2$.
+   Vì đặc số là bất biến đẳng cấu và $4 \neq 2$, ta kết luận $\mathbb{Z}/4\mathbb{Z} \not\cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
 
 2. **Xét $\mathbb{Q}(\sqrt{2})$ và $\mathbb{Q}(\sqrt{3})$:**
    Giả sử tồn tại một đẳng cấu vành $\phi: \mathbb{Q}(\sqrt{2}) \to \mathbb{Q}(\sqrt{3})$.
@@ -344,11 +353,12 @@ Sử dụng các bất biến đại số (tính giao hoán, số phần tử kh
 ### Bài 8.4.C2 (Nhóm C - Bài tập 8.13: Cấu trúc thương của số nguyên Gauss)
 1. Chứng minh rằng trong vành số nguyên Gauss $\mathbb{Z}[i]$, iđêan $(1 + i)$ là iđêan cực đại và $\mathbb{Z}[i]/(1 + i) \cong \mathbb{Z}/2\mathbb{Z}$.
 2. Tổng quát: Cho $p$ là số nguyên tố trong $\mathbb{Z}$. Khi nào thì $p\mathbb{Z}[i]$ là iđêan nguyên tố trong $\mathbb{Z}[i]$?
-</Exercise>
+
 
 <Solution>
-1. **Xét vành thương $\mathbb{Z}[i]/(1 + i)$:**
-   Ta có chuẩn $N(1 + i) = 1^2 + 1^2 = 2$.
+**1. Xét vành thương $\mathbb{Z}[i]/(1 + i)$**
+
+Ta có chuẩn $N(1 + i) = 1^2 + 1^2 = 2$.
    Trong vành thương modulo $1 + i$:
    $$
    1 + i \equiv 0 \implies i \equiv -1 \pmod{1 + i}.
@@ -363,13 +373,14 @@ Sử dụng các bất biến đại số (tính giao hoán, số phần tử kh
    2 = (1 + i)(1 - i) \in (1 + i)\mathbb{Z}[i] \implies 2 \equiv 0 \pmod{1 + i}.
    $$
    Do đó $a - b \equiv (a - b) \bmod 2 \in \{0, 1\}$.
-   Như vậy vành thương chỉ có tối đa 2 phần tử: $\bar{0}$ và $\bar{1}$.
-   Vì $1 \notin (1 + i)$ (do $N(1) = 1 < N(1 + i) = 2$), ta có $\bar{1} \neq \bar{0}$.
-   Vậy $\mathbb{Z}[i]/(1 + i)$ là một vành có đúng 2 phần tử, bắt buộc đẳng cấu với $\mathbb{Z}_2 = \mathbb{F}_2$.
+   Như vậy vành thương chỉ có tối đa 2 phần tử: $[0]$ và $[1]$.
+   Vì $1 \notin (1 + i)$ (do $N(1) = 1 < N(1 + i) = 2$), ta có $[1] \neq [0]$.
+   Vậy $\mathbb{Z}[i]/(1 + i)$ là một vành có đúng 2 phần tử, bắt buộc đẳng cấu với $\mathbb{Z}/2\mathbb{Z} = \mathbb{F}_2$.
    Vì $\mathbb{F}_2$ là một trường, iđêan $(1 + i)$ là một **iđêan cực đại**.
 
-2. **Tính nguyên tố của $p\mathbb{Z}[i]$:**
-   Áp dụng Định lý đẳng cấu thứ ba qua biểu diễn đa thức:
+**2. Tính nguyên tố của $p\mathbb{Z}[i]$**
+
+Áp dụng Định lý đẳng cấu thứ ba qua biểu diễn đa thức:
    $$
    \mathbb{Z}[i]/p\mathbb{Z}[i] \cong (\mathbb{Z}[x]/(x^2 + 1)) / (p) \cong (\mathbb{Z}[x]/(p)) / (x^2 + 1) \cong \mathbb{F}_p[x]/(x^2 + 1).
    $$
@@ -380,6 +391,7 @@ Sử dụng các bất biến đại số (tính giao hoán, số phần tử kh
    - Nếu $p \equiv 3 \pmod 4$: $-1$ không là số chính phương mod $p$, $x^2 + 1$ bất khả quy.
    Vậy $p\mathbb{Z}[i]$ là iđêan nguyên tố khi và chỉ khi $p$ là số nguyên tố có dạng $p \equiv 3 \pmod 4$ (chẳng hạn $p = 3, 7, 11, 19, \dots$).
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c8-b4-d1">
 ### Bài 8.4.D1 (Nhóm D - Bài tập 8.25: Định lý Thặng dư Trung Hoa cho iđêan)
@@ -434,8 +446,8 @@ $$
 ### Bài 8.4.D2 (Nhóm D - Bài tập 8.32: Phân tích tích trực tiếp và lũy đẳng tâm)
 Cho $R$ là một vành có phần tử đơn vị.
 1. Giả sử $R = I_1 \oplus I_2$ là tổng trực tiếp của hai iđêan hai phía. Chứng minh rằng tồn tại duy nhất một phần tử lũy đẳng tâm $e \in Z(R)$ sao cho $I_1 = Re$ và $I_2 = R(1 - e)$.
-2. Áp dụng tìm các phần tử lũy đẳng tâm của vành $\mathbb{Z}_{30} \cong \mathbb{Z}_2 \times \mathbb{Z}_3 \times \mathbb{Z}_5$.
-</Exercise>
+2. Áp dụng tìm các phần tử lũy đẳng tâm của vành $\mathbb{Z}/30\mathbb{Z} \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/3\mathbb{Z} \times \mathbb{Z}/5\mathbb{Z}$.
+
 
 <Solution>
 **1. Chứng minh sự tồn tại của lũy đẳng tâm $e$:**
@@ -467,13 +479,13 @@ $$
   Vậy $e = e_1 \in Z(R)$.
 - *Dạng của iđêan:* Với mọi $x \in I_1$, $x = x \cdot 1 = x e_1 + x e_2 = x e_1 + 0 = x e_1 \in Re_1$. Do đó $I_1 = Re_1$. Tương tự $I_2 = R(1 - e_1)$.
 
-**2. Tìm các phần tử lũy đẳng trong $\mathbb{Z}_{30}$:**
+**2. Tìm các phần tử lũy đẳng trong $\mathbb{Z}/30\mathbb{Z}$:**
 Theo Định lý Thặng dư Trung Hoa:
 $$
-\mathbb{Z}_{30} \cong \mathbb{Z}_2 \times \mathbb{Z}_3 \times \mathbb{Z}_5.
+\mathbb{Z}/30\mathbb{Z} \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/3\mathbb{Z} \times \mathbb{Z}/5\mathbb{Z}.
 $$
-Trong mỗi trường $\mathbb{Z}_p$, các phần tử lũy đẳng duy nhất là $0$ và $1$.
-Do đó trong vành tích $\mathbb{Z}_2 \times \mathbb{Z}_3 \times \mathbb{Z}_5$, có đúng $2^3 = 8$ bộ lũy đẳng $(a, b, c) \in \{0, 1\}^3$.
+Trong mỗi trường $\mathbb{Z}/p\mathbb{Z}$, các phần tử lũy đẳng duy nhất là $0$ và $1$.
+Do đó trong vành tích $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/3\mathbb{Z} \times \mathbb{Z}/5\mathbb{Z}$, có đúng $2^3 = 8$ bộ lũy đẳng $(a, b, c) \in \{0, 1\}^3$.
 Dùng hệ thức Bézout giải ngược về modulo 30:
 - $(0, 0, 0) \leftrightarrow 0$.
 - $(1, 1, 1) \leftrightarrow 1$.
@@ -483,12 +495,13 @@ Dùng hệ thức Bézout giải ngược về modulo 30:
 - $(1, 1, 0) = 15 + 10 = 25$.
 - $(1, 0, 1) = 15 + 6 = 21$.
 - $(0, 1, 1) = 10 + 6 = 16$.
-Vậy tập hợp $8$ phần tử lũy đẳng của $\mathbb{Z}_{30}$ là:
+Vậy tập hợp $8$ phần tử lũy đẳng của $\mathbb{Z}/30\mathbb{Z}$ là:
 $$
 \{0, 1, 6, 10, 15, 16, 21, 25\}.
 $$
 Kiểm tra: $6^2 = 36 \equiv 6$, $10^2 = 100 \equiv 10$, $15^2 = 225 \equiv 15$, $16^2 = 256 \equiv 16$, $21^2 = 441 \equiv 21$, $25^2 = 625 \equiv 25 \pmod{30}$.
 </Solution>
+</Exercise>
 
 ---
 

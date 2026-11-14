@@ -18,9 +18,6 @@ sources:
     pages: '37-41'
     sections: 'Mục 2.1, 2.2'
     note: 'Định lý 2.1 (Tiêu chuẩn nhóm con), Định lý 2.5 (Mô tả nhóm con sinh)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '45-56'
-    sections: 'Chương 2, Mục 2.1'
 status: published
 version: 0.1.0
 authoring:
@@ -287,12 +284,7 @@ Do đó $S_3 = \langle (1 \, 2), (2 \, 3) \rangle$. Hai chuyển vị kề nhau 
 
 ## 4. Bài tập tự luyện
 
-<Exercise id="exr-c2-b1-a1" title="[Nhóm A · Mã CTDS-C2-B1-A01] Kiểm tra nhóm con ma trận đường chéo">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Tiêu chuẩn nhóm con rút gọn một bước trong $\operatorname{GL}_2(\R)$
-- **Mục tiêu đánh giá:** Vận dụng tiêu chuẩn $AB^{-1} \in H$ cho nhóm ma trận *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-
+<Exercise id="exr-c2-b1-a1" title="Kiểm tra nhóm con ma trận đường chéo" group="Nhóm A">
 Xét tập hợp các ma trận đường chéo cấp 2 khả nghịch trên $\R$:
 $$
 D_2(\R) = \left\{ \begin{pmatrix} a & 0 \\ 0 & d \end{pmatrix} \in M_2(\R) \;\middle|\; a, d \in \R \setminus \{0\} \right\}.
@@ -300,17 +292,14 @@ $$
 1. Chứng minh rằng $D_2(\R)$ là một nhóm con của $\operatorname{GL}_2(\R)$.
 2. Nhóm con $D_2(\R)$ có phải là một nhóm abel hay không? Giải thích rõ.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Kiểm tra $I_2 \in D_2(\R)$ và tính tích $AB^{-1}$ với hai ma trận đường chéo bất kỳ.
 2. Nhân hai ma trận đường chéo theo hai thứ tự $AB$ và $BA$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $D_2(\R) \le \operatorname{GL}_2(\R)$**
 
-**Ý 1: Chứng minh $D_2(\R) \le \operatorname{GL}_2(\R)$**
 Ta sử dụng tiêu chuẩn một bước:
 - *Khác rỗng:* Ma trận đơn vị $I_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ có các phần tử trên đường chéo là $1 \neq 0$ và ngoài đường chéo bằng $0$. Do đó $I_2 \in D_2(\R)$, suy ra $D_2(\R) \neq \varnothing$.
 - *Kiểm tra $AB^{-1} \in D_2(\R)$:* Lấy tùy ý hai ma trận $A, B \in D_2(\R)$:
@@ -329,29 +318,18 @@ Ta sử dụng tiêu chuẩn một bước:
   Ma trận $AB^{-1}$ là ma trận đường chéo có các phần tử chéo khác 0, nên $AB^{-1} \in D_2(\R)$.
 Theo tiêu chuẩn một bước, $D_2(\R)$ là một nhóm con của $\operatorname{GL}_2(\R)$.
 
-**Ý 2: Tính giao hoán của $D_2(\R)$**
+**2. Tính giao hoán của $D_2(\R)$**
+
 Với hai ma trận $A, B$ như trên:
 $$
 AB = \begin{pmatrix} a_1 a_2 & 0 \\ 0 & d_1 d_2 \end{pmatrix} = \begin{pmatrix} a_2 a_1 & 0 \\ 0 & d_2 d_1 \end{pmatrix} = BA.
 $$
 Vì phép nhân các số thực có tính giao hoán, nên $AB = BA$ với mọi $A, B \in D_2(\R)$.
 Do đó $D_2(\R)$ là một nhóm con abel (mặc dù nhóm mẹ $\operatorname{GL}_2(\R)$ không giao hoán).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chỉ ra $I_2 \in D_2(\R)$ khẳng định tập khác rỗng | 0.20 điểm |
-| Tìm đúng $B^{-1}$ và tính đúng tích $AB^{-1}$ thuộc $D_2(\R)$ | 0.50 điểm |
-| Chứng minh $AB = BA$ và kết luận $D_2(\R)$ là nhóm abel | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b1-b1" title="[Nhóm B · Mã CTDS-C2-B1-B01] Tâm của một nhóm (Center of a Group)">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Khái niệm tâm nhóm $Z(G)$ và tiêu chuẩn nhóm con
-- **Mục tiêu đánh giá:** Chứng minh $Z(G)$ luôn là một nhóm con giao hoán của $G$ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Trung bình (Mức 2)
-
+<Exercise id="exr-c2-b1-b1" title="Tâm của một nhóm (Center of a Group)" group="Nhóm B">
 Cho $G$ là một nhóm bất kỳ. **Tâm của nhóm** $G$, ký hiệu là $Z(G)$, là tập hợp tất cả các phần tử của $G$ giao hoán với mọi phần tử trong $G$:
 $$
 Z(G) = \{z \in G \mid zx = xz, \; \forall x \in G\}.
@@ -360,18 +338,15 @@ $$
 2. Chứng minh rằng $Z(G)$ luôn là một nhóm abel.
 3. Khi nào thì $Z(G) = G$?
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Kiểm tra $e \in Z(G)$. Để kiểm tra $ab^{-1} \in Z(G)$, hãy biến đổi $(ab^{-1})x = x(ab^{-1})$ bằng cách trước hết chứng minh $b \in Z(G) \implies b^{-1} \in Z(G)$.
 2. Dùng trực tiếp định nghĩa: các phần tử trong $Z(G)$ giao hoán với mọi phần tử của $G$, nên chúng tự giao hoán với nhau.
 3. Đối chiếu với định nghĩa của nhóm giao hoán.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $Z(G) \le G$**
 
-**Ý 1: Chứng minh $Z(G) \le G$**
 Ta dùng tiêu chuẩn hai bước:
 - *Khác rỗng:* Vì $ex = xe = x$ với mọi $x \in G$, phần tử đơn vị $e$ giao hoán với mọi phần tử của $G$. Do đó $e \in Z(G)$, suy ra $Z(G) \neq \varnothing$.
 - *Đóng với phép nhân:* Lấy $a, b \in Z(G)$. Với mọi $x \in G$, sử dụng tính kết hợp và giả thiết $a, b$ giao hoán với mọi phần tử:
@@ -389,43 +364,30 @@ Ta dùng tiêu chuẩn hai bước:
   Do đó $b^{-1} \in Z(G)$.
 Theo tiêu chuẩn hai bước, $Z(G) \le G$.
 
-**Ý 2: $Z(G)$ là nhóm abel**
+**2. $Z(G)$ là nhóm abel**
+
 Lấy tùy ý $z_1, z_2 \in Z(G)$. Vì $z_1 \in Z(G)$ và $z_2 \in G$, theo định nghĩa của $Z(G)$ ta có ngay $z_1 z_2 = z_2 z_1$.
 Vậy $Z(G)$ là nhóm giao hoán (abel).
 
-**Ý 3: Điều kiện để $Z(G) = G$**
+**3. Điều kiện để $Z(G) = G$**
+
 Theo định nghĩa, $Z(G) = G \iff \forall z \in G, \forall x \in G: zx = xz \iff G$ là nhóm abel.
 Vậy tâm của nhóm bằng chính nhóm khi và chỉ khi nhóm đó là nhóm abel.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chỉ ra $e \in Z(G)$ và chứng minh $(ab)x = x(ab)$ | 0.35 điểm |
-| Chứng minh chặt chẽ $b^{-1} \in Z(G)$ qua việc lấy nghịch đảo đẳng thức $bx = xb$ | 0.35 điểm |
-| Khẳng định $Z(G)$ giao hoán và kết luận $Z(G) = G \iff G$ là nhóm abel | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b1-c1" title="[Nhóm C · Mã CTDS-C2-B1-C01] Một nhóm không thể là hợp của hai nhóm con thực sự">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Tính chất của phép hợp nhóm con và cấu trúc đại số
-- **Mục tiêu đánh giá:** Vận dụng Định lý về hợp hai nhóm con để chứng minh tính chất không phủ đầy *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Nâng cao (Mức 3)
-
+<Exercise id="exr-c2-b1-c1" title="Một nhóm không thể là hợp của hai nhóm con thực sự" group="Nhóm C">
 1. Cho $G$ là một nhóm và $H, K$ là hai nhóm con của $G$. Chứng minh rằng nếu $G = H \cup K$ thì bắt buộc $G = H$ hoặc $G = K$ (nghĩa là một nhóm không bao giờ là hợp của hai nhóm con thực sự).
 2. Hãy chỉ ra một nhóm hữu hạn có thể viết thành hợp của **ba nhóm con thực sự**.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Áp dụng trực tiếp <Ref to="thm-c2-b1-hop-hai-nhom-con" />: vì $H \cup K = G$ là một nhóm con của $G$, suy ra $H \subseteq K$ hoặc $K \subseteq H$.
 2. Hãy nghĩ đến nhóm bốn Klein $V_4 = \{e, a, b, c\}$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $G = H \cup K \implies G = H$ hoặc $G = K$**
 
-**Ý 1: Chứng minh $G = H \cup K \implies G = H$ hoặc $G = K$**
 Vì $G = H \cup K$ và $G$ là một nhóm, nên hợp $H \cup K$ là một nhóm con của $G$.
 Theo <Ref to="thm-c2-b1-hop-hai-nhom-con" />, điều kiện cần và đủ để hợp của hai nhóm con là một nhóm con là $H \subseteq K$ hoặc $K \subseteq H$.
 - Nếu $H \subseteq K$, thì $G = H \cup K = K$.
@@ -433,7 +395,8 @@ Theo <Ref to="thm-c2-b1-hop-hai-nhom-con" />, điều kiện cần và đủ đ�
 Như vậy, trong mọi trường hợp, $G$ phải trùng với ít nhất một trong hai nhóm con $H$ hoặc $K$.
 Điều này chứng tỏ một nhóm không bao giờ có thể được biểu diễn thành hợp của hai nhóm con thực sự.
 
-**Ý 2: Ví dụ nhóm là hợp của ba nhóm con thực sự**
+**2. Ví dụ nhóm là hợp của ba nhóm con thực sự**
+
 Xét nhóm bốn Klein $V_4 = \{e, a, b, c\}$ với $a^2 = b^2 = c^2 = e$ và $ab = c, bc = a, ca = b$.
 Xét ba nhóm con thực sự cấp 2 của $V_4$:
 - $H_1 = \{e, a\} = \langle a \rangle < V_4$.
@@ -444,21 +407,10 @@ $$
 H_1 \cup H_2 \cup H_3 = \{e, a\} \cup \{e, b\} \cup \{e, c\} = \{e, a, b, c\} = V_4.
 $$
 Đây là một ví dụ kinh điển cho thấy một nhóm có thể là hợp của 3 nhóm con thực sự (nhưng không bao giờ là hợp của 2 nhóm con thực sự).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Vận dụng chính xác tiêu chuẩn hợp hai nhóm con để suy ra $H \subseteq K$ hoặc $K \subseteq H$ | 0.50 điểm |
-| Xây dựng đúng ví dụ nhóm Klein $V_4$ là hợp của ba nhóm con cấp 2 và kiểm tra chi tiết | 0.50 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b1-d1" title="[Nhóm D · Mã CTDS-C2-B1-D01] Tập tích của hai nhóm con HK và điều kiện để HK là nhóm con">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Tích tập hợp của hai nhóm con $HK$ và mối liên hệ giao hoán
-- **Mục tiêu đánh giá:** Chứng minh tiêu chuẩn $HK \le G \iff HK = KH$ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Rất khó (Mức 4)
-
+<Exercise id="exr-c2-b1-d1" title="Tập tích của hai nhóm con HK và điều kiện để HK là nhóm con" group="Nhóm D">
 Cho $G$ là một nhóm và $H, K$ là hai nhóm con của $G$. Định nghĩa tập tích của $H$ và $K$ là:
 $$
 HK = \{hk \mid h \in H, \; k \in K\}.
@@ -466,17 +418,14 @@ $$
 1. Chứng minh rằng $(HK)^{-1} = KH$, trong đó với một tập con $S \subseteq G$ ta ký hiệu $S^{-1} = \{s^{-1} \mid s \in S\}$.
 2. Chứng minh rằng $HK$ là một nhóm con của $G$ khi và chỉ khi $HK = KH$ (chú ý: đẳng thức này là đẳng thức tập hợp, không có nghĩa là từng phần tử $h, k$ giao hoán với nhau).
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Nghịch đảo của một tích là $(hk)^{-1} = k^{-1}h^{-1}$.
 2. Chiều thuận: nếu $HK \le G$ thì $(HK)^{-1} = HK$. Chiều đảo: dùng tiêu chuẩn hai bước hoặc một bước để kiểm tra tích $(h_1 k_1)(h_2 k_2)^{-1}$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $(HK)^{-1} = KH$**
 
-**Ý 1: Chứng minh $(HK)^{-1} = KH$**
 Lấy một phần tử bất kỳ $x \in (HK)^{-1}$. Theo định nghĩa, $x = y^{-1}$ với $y \in HK$.
 Vì $y \in HK$, tồn tại $h \in H, k \in K$ sao cho $y = hk$.
 Do đó $x = (hk)^{-1} = k^{-1}h^{-1}$.
@@ -489,7 +438,8 @@ Vì $h \in H \implies h^{-1} \in H$ và $k \in K \implies k^{-1} \in K$, ta có 
 Do đó $z \in (HK)^{-1}$. Vậy $KH \subseteq (HK)^{-1}$.
 Từ hai chiều bao hàm, ta có $(HK)^{-1} = KH$.
 
-**Ý 2: Chứng minh $HK \le G \iff HK = KH$**
+**2. Chứng minh $HK \le G \iff HK = KH$**
+
 - *Chiều thuận ($\Rightarrow$):* Giả sử $HK \le G$.
   Vì $HK$ là một nhóm con của $G$, tập $HK$ phải đóng với phép lấy nghịch đảo, nghĩa là:
   $$
@@ -511,14 +461,7 @@ Từ hai chiều bao hàm, ta có $(HK)^{-1} = KH$.
   - *Đóng với phép lấy nghịch đảo:* Lấy $x = hk \in HK$. Ta có $x^{-1} = k^{-1}h^{-1} \in KH$.
     Vì $KH = HK$, suy ra $x^{-1} \in HK$.
 Theo tiêu chuẩn nhóm con, $HK \le G$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh đầy đủ hai chiều bao hàm để có $(HK)^{-1} = KH$ | 0.35 điểm |
-| Chứng minh chiều thuận: $HK \le G \implies HK = (HK)^{-1} = KH$ | 0.30 điểm |
-| Vận dụng $k_1 h_2 \in KH = HK$ để chứng minh $HK$ đóng với phép nhân và nghịch đảo | 0.35 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---

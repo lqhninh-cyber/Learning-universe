@@ -62,11 +62,12 @@ Xét tính khả vi trên tập xác định của các hàm số sau:
 4. $y = \begin{cases} x^2, & x \le 0 \\ e^{-1/x}, & x > 0 \end{cases}$
 5. $y = \begin{cases} x^2, & x \in \mathbb{Q} \\ -x^2, & x \notin \mathbb{Q} \end{cases}$
 6. $y = \begin{cases} x^2, & x \in \mathbb{Z} \\ 0, & x \notin \mathbb{Z} \end{cases}$
-</Exercise>
+
 
 <Solution>
-1. **$y = |\sin x|$:**
-   - Tại mọi $x \ne k\pi$ ($k \in \mathbb{Z}$), $\sin x \ne 0$ nên hàm số khả vi và $y' = (\cos x) \operatorname{sgn}(\sin x)$.
+**1. $y = |\sin x|$**
+
+ - Tại mọi $x \ne k\pi$ ($k \in \mathbb{Z}$), $\sin x \ne 0$ nên hàm số khả vi và $y' = (\cos x) \operatorname{sgn}(\sin x)$.
    - Tại $x_0 = k\pi$, ta xét giới hạn tỉ số số gia khi $h \to 0$:
      $$
      \frac{|\sin(k\pi + h)| - 0}{h} = \frac{|\sin h|}{h}.
@@ -74,8 +75,9 @@ Xét tính khả vi trên tập xác định của các hàm số sau:
      Giới hạn phải khi $h \to 0^+$ bằng $1$; giới hạn trái khi $h \to 0^-$ bằng $-1$.
      Vì $1 \ne -1$, hàm số **không khả vi tại mọi điểm $x = k\pi$ ($k \in \mathbb{Z}$)**.
 
-2. **$y = x|x|$:**
-   - Khi $x > 0$: $y = x^2 \implies y'(x) = 2x$.
+**2. $y = x|x|$**
+
+ - Khi $x > 0$: $y = x^2 \implies y'(x) = 2x$.
    - Khi $x < 0$: $y = -x^2 \implies y'(x) = -2x$.
    - Tại $x = 0$:
      $$
@@ -83,8 +85,9 @@ Xét tính khả vi trên tập xác định của các hàm số sau:
      $$
      Do đó $y'(0) = 0$. Hàm số **khả vi trên toàn bộ $\mathbb{R}$** và $y'(x) = 2|x|$.
 
-3. **$y = |\pi - x| \sin x$:**
-   - Với mọi $x \ne \pi$, hàm số hiển nhiên khả vi.
+**3. $y = |\pi - x| \sin x$**
+
+ - Với mọi $x \ne \pi$, hàm số hiển nhiên khả vi.
    - Tại $x = \pi$: Xét tỉ số số gia khi $x \to \pi$:
      $$
      \lim_{x \to \pi} \frac{|\pi - x| \sin x - 0}{x - \pi} = \lim_{x \to \pi} \frac{|\pi - x|}{x - \pi} \sin x.
@@ -92,15 +95,17 @@ Xét tính khả vi trên tập xác định của các hàm số sau:
      Đặt $t = x - \pi \to 0$, biểu thức trở thành $\lim_{t \to 0} \frac{|t|}{t} \sin(\pi + t) = \lim_{t \to 0} \frac{|t|}{t} (-\sin t) = \lim_{t \to 0} \left(-\frac{|t|}{t} \cdot t \cdot \frac{\sin t}{t}\right) = \lim_{t \to 0} \big(-|t|\big) = 0$.
      Vì giới hạn tồn tại hữu hạn và bằng $0$, hàm số **khả vi tại $x = \pi$ với $y'(\pi) = 0$**, và do đó khả vi trên toàn bộ $\mathbb{R}$!
 
-4. **$y = \begin{cases} x^2, & x \le 0 \\ e^{-1/x}, & x > 0 \end{cases}$:**
-   - Trên $(-\infty; 0)$ và $(0; +\infty)$, hàm số khả vi sơ cấp.
+**4. $y = \begin{cases} x^2, & x \le 0 \\ e^{-1/x}, & x > 0 \end{cases}$**
+
+ - Trên $(-\infty; 0)$ và $(0; +\infty)$, hàm số khả vi sơ cấp.
    - Tại $x = 0$:
      - Đạo hàm trái: $y'_-(0) = \lim_{x \to 0^-} \frac{x^2 - 0}{x} = 0$.
      - Đạo hàm phải: $y'_+(0) = \lim_{x \to 0^+} \frac{e^{-1/x}}{x} = \lim_{t \to +\infty} t e^{-t} = 0$.
      Vì $y'_-(0) = y'_+(0) = 0$, hàm số **khả vi trên toàn $\mathbb{R}$** và $y'(0) = 0$.
 
-5. **$y = \begin{cases} x^2, & x \in \mathbb{Q} \\ -x^2, & x \notin \mathbb{Q} \end{cases}$:**
-   - Tại mọi $x \ne 0$, trong bất kỳ lân cận nào của $x$ cũng chứa cả số hữu tỉ lẫn số vô tỉ, khiến giá trị hàm dao động giữa $x^2$ và $-x^2 \ne x^2$. Do đó hàm gián đoạn tại mọi $x \ne 0$, kéo theo **không khả vi tại mọi $x \ne 0$**.
+**5. $y = \begin{cases} x^2, & x \in \mathbb{Q} \\ -x^2, & x \notin \mathbb{Q} \end{cases}$**
+
+ - Tại mọi $x \ne 0$, trong bất kỳ lân cận nào của $x$ cũng chứa cả số hữu tỉ lẫn số vô tỉ, khiến giá trị hàm dao động giữa $x^2$ và $-x^2 \ne x^2$. Do đó hàm gián đoạn tại mọi $x \ne 0$, kéo theo **không khả vi tại mọi $x \ne 0$**.
    - Tại $x = 0$: Xét tỉ số số gia:
      $$
      \left| \frac{y(x) - y(0)}{x - 0} \right| = \frac{|y(x)|}{|x|} = \frac{x^2}{|x|} = |x|.
@@ -108,8 +113,9 @@ Xét tính khả vi trên tập xác định của các hàm số sau:
      Khi $x \to 0$, $|x| \to 0$. Theo định lý kẹp, $\lim_{x \to 0} \frac{y(x) - 0}{x} = 0$.
      Vậy hàm số **khả vi tại duy nhất điểm $x = 0$** (với $y'(0) = 0$).
 
-6. **$y = \begin{cases} x^2, & x \in \mathbb{Z} \\ 0, & x \notin \mathbb{Z} \end{cases}$:**
-   - Tại các điểm nguyên $x = k \in \mathbb{Z} \setminus \{0\}$, hàm gián đoạn nên không khả vi.
+**6. $y = \begin{cases} x^2, & x \in \mathbb{Z} \\ 0, & x \notin \mathbb{Z} \end{cases}$**
+
+ - Tại các điểm nguyên $x = k \in \mathbb{Z} \setminus \{0\}$, hàm gián đoạn nên không khả vi.
    - Tại $x = 0$: Với mọi $x \in (-1; 1) \setminus \{0\}$, $x \notin \mathbb{Z}$ nên $y(x) = 0$. Do đó:
      $$
      y'(0) = \lim_{x \to 0} \frac{0 - 0}{x} = 0.
@@ -117,6 +123,7 @@ Xét tính khả vi trên tập xác định của các hàm số sau:
    - Tại các điểm $x \notin \mathbb{Z}$: Luôn tồn tại lân cận mở không chứa số nguyên nào, nên $y(t) = 0$ (hàm hằng) trên lân cận đó $\implies y'(x) = 0$.
    - Kết luận: Hàm số **khả vi trên tập $\mathbb{R} \setminus (\mathbb{Z} \setminus \{0\})$**.
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c5-b5-bai-2-ham-x2-sin-1-tren-x"
@@ -130,11 +137,12 @@ $$
 f(x) = \begin{cases} x^2 \sin \frac{1}{x}, & x \ne 0 \\ 0, & x = 0 \end{cases}
 $$
 Chứng tỏ rằng $f$ khả vi trên $\mathbb{R}$. Hàm $f$ có thuộc lớp $C^1(\mathbb{R})$ không?
-</Exercise>
+
 
 <Solution>
-1. **Xét tính khả vi của $f$ trên $\mathbb{R}$:**
-   - Với mọi $x \ne 0$, hàm số là tích của các hàm khả vi nên khả vi theo quy tắc đạo hàm:
+**1. Xét tính khả vi của $f$ trên $\mathbb{R}$**
+
+ - Với mọi $x \ne 0$, hàm số là tích của các hàm khả vi nên khả vi theo quy tắc đạo hàm:
      $$
      f'(x) = 2x \sin \frac{1}{x} + x^2 \left(-\frac{1}{x^2} \cos \frac{1}{x}\right) = 2x \sin \frac{1}{x} - \cos \frac{1}{x}.
      $$
@@ -148,8 +156,9 @@ Chứng tỏ rằng $f$ khả vi trên $\mathbb{R}$. Hàm $f$ có thuộc lớp 
      f'(x) = \begin{cases} 2x \sin \frac{1}{x} - \cos \frac{1}{x}, & x \ne 0 \\ 0, & x = 0 \end{cases}
      $$
 
-2. **Khảo sát $f$ có thuộc $C^1(\mathbb{R})$ hay không:**
-   Để $f \in C^1(\mathbb{R})$, hàm đạo hàm $f'$ phải liên tục tại mọi điểm trên $\mathbb{R}$, đặc biệt là tại $x = 0$.
+**2. Khảo sát $f$ có thuộc $C^1(\mathbb{R})$ hay không**
+
+Để $f \in C^1(\mathbb{R})$, hàm đạo hàm $f'$ phải liên tục tại mọi điểm trên $\mathbb{R}$, đặc biệt là tại $x = 0$.
    Ta xét giới hạn của $f'(x)$ khi $x \to 0$:
    $$
    \lim_{x \to 0} f'(x) = \lim_{x \to 0} \left(2x \sin \frac{1}{x} - \cos \frac{1}{x}\right).
@@ -158,6 +167,7 @@ Chứng tỏ rằng $f$ khả vi trên $\mathbb{R}$. Hàm $f$ có thuộc lớp 
    Do đó, $\lim_{x \to 0} f'(x)$ **không tồn tại**, kéo theo $f'$ gián đoạn tại $x = 0$.
    **Kết luận:** Hàm số $f$ **không thuộc lớp $C^1(\mathbb{R})$**.
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c5-b5-bai-3-ham-e-mu-tru-1-tren-x2"
@@ -171,7 +181,7 @@ $$
 f(x) = \begin{cases} e^{-1/x^2}, & x \ne 0 \\ 0, & x = 0 \end{cases}
 $$
 Chứng minh rằng $f \in C^\infty(\mathbb{R})$.
-</Exercise>
+
 
 <Solution>
 - Với mọi $x \ne 0$, hàm số là hợp của các hàm khả vi vô hạn nên $f$ có đạo hàm mọi cấp trên $\mathbb{R} \setminus \{0\}$. Bằng quy nạp, với mọi $n \ge 1$ và $x \ne 0$, ta có:
@@ -198,6 +208,7 @@ Chứng minh rằng $f \in C^\infty(\mathbb{R})$.
 - Hơn nữa, vì $\lim_{x \to 0} f^{(n)}(x) = \lim_{x \to 0} P_n(1/x)e^{-1/x^2} = 0 = f^{(n)}(0)$, hàm đạo hàm cấp $n$ liên tục tại $x = 0$ với mọi $n$.
 Vậy $f \in C^\infty(\mathbb{R})$.
 </Solution>
+</Exercise>
 
 ## Dạng 2: Đạo hàm cấp cao và Khai triển Maclaurin
 
@@ -211,11 +222,12 @@ Vậy $f \in C^\infty(\mathbb{R})$.
 Viết khai triển Maclaurin của các hàm số sau đến cấp 10, từ đó tính đạo hàm cấp 9 tại điểm $0$ ($f^{(9)}(0)$):
 1. $f(x) = x^2 \sin x$
 2. $f(x) = (x + x^3) e^x$
-</Exercise>
+
 
 <Solution>
-1. **Với hàm $f(x) = x^2 \sin x$:**
-   - Khai triển Maclaurin của $\sin x$ đến cấp 9:
+**1. Với hàm $f(x) = x^2 \sin x$**
+
+ - Khai triển Maclaurin của $\sin x$ đến cấp 9:
      $$
      \sin x = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^9}{9!} + o(x^9).
      $$
@@ -228,8 +240,9 @@ Viết khai triển Maclaurin của các hàm số sau đến cấp 10, từ đ�
      \frac{f^{(9)}(0)}{9!} = -\frac{1}{7!} \iff f^{(9)}(0) = -\frac{9!}{7!} = -(9 \times 8) = -72.
      $$
 
-2. **Với hàm $f(x) = (x + x^3) e^x$:**
-   - Khai triển Maclaurin của $e^x$ đến cấp 9:
+**2. Với hàm $f(x) = (x + x^3) e^x$**
+
+ - Khai triển Maclaurin của $e^x$ đến cấp 9:
      $$
      e^x = \sum_{k=0}^9 \frac{x^k}{k!} + o(x^9).
      $$
@@ -249,6 +262,7 @@ Viết khai triển Maclaurin của các hàm số sau đến cấp 10, từ đ�
      f^{(9)}(0) = 9! \times \frac{57}{8!} = 9 \times 57 = 513.
      $$
 </Solution>
+</Exercise>
 
 ## Dạng 3: Ứng dụng Định lý Giá trị trung bình Lagrange và Cauchy
 
@@ -264,7 +278,7 @@ $$
 |f(x) - f(y)| \le M |x - y|^\alpha, \quad \forall x, y \in \mathbb{R},
 $$
 trong đó $M > 0$ và $\alpha > 1$ là các hằng số. Chứng minh rằng $f$ là hàm hằng trên $\mathbb{R}$.
-</Exercise>
+
 
 <Solution>
 Cố định điểm $y \in \mathbb{R}$ tùy ý. Với mọi $x \ne y$, chia hai vế bất đẳng thức cho $|x - y| > 0$:
@@ -278,6 +292,7 @@ $$
 Vì $y$ được chọn tùy ý trên $\mathbb{R}$, ta có $f'(y) = 0$ với mọi $y \in \mathbb{R}$.
 Vì $\mathbb{R}$ là một khoảng liên thông, theo Hệ quả 5.3.7 của Định lý Lagrange, $f$ là hàm hằng trên $\mathbb{R}$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c5-b5-bai-12-dao-ham-bi-chan-keo-theo-lien-tuc-deu"
@@ -287,7 +302,7 @@ Vì $\mathbb{R}$ là một khoảng liên thông, theo Hệ quả 5.3.7 của Đ
   original="Bài tập 12"
 >
 Cho hàm số $f$ khả vi trên khoảng mở $(a; b)$ và hàm đạo hàm $f'$ bị chặn trên $(a; b)$. Chứng minh rằng $f$ liên tục đều trên $(a; b)$.
-</Exercise>
+
 
 <Solution>
 Vì $f'$ bị chặn trên $(a; b)$, tồn tại hằng số $M > 0$ sao cho:
@@ -311,6 +326,7 @@ $$
 $$
 Theo định nghĩa, hàm số $f$ liên tục đều trên khoảng $(a; b)$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c5-b5-bai-11-f-khong-bi-chan-thi-f-phay-khong-bi-chan"
@@ -320,7 +336,7 @@ Theo định nghĩa, hàm số $f$ liên tục đều trên khoảng $(a; b)$.
   original="Bài tập 11"
 >
 Cho hàm số $f$ khả vi trên khoảng hữu hạn $(a; b)$ và $f$ không bị chặn trên $(a; b)$. Chứng minh rằng đạo hàm $f'$ cũng không bị chặn trên $(a; b)$.
-</Exercise>
+
 
 <Solution>
 Ta chứng minh bằng phương pháp phản chứng.
@@ -338,6 +354,7 @@ Vì $|f(x_0)| + M(b - a)$ là một hằng số hữu hạn không phụ thuộc
 Điều này mâu thuẫn trực tiếp với giả thiết $f$ không bị chặn trên $(a; b)$.
 Vậy đạo hàm $f'$ bắt buộc phải không bị chặn trên $(a; b)$.
 </Solution>
+</Exercise>
 
 ## Dạng 4: Khử dạng vô định bằng Quy tắc L'Hôpital (Trọn bộ Bài 14)
 
@@ -357,26 +374,30 @@ Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
 6. $\lim_{x \to +\infty} x \ln\left(\frac{2\arctan x}{\pi}\right)$
 7. $\lim_{x \to 0^+} x^x$
 8. $\lim_{x \to (\pi/2)^-} (\tan x)^{\cos x}$
-</Exercise>
+
 
 <Solution>
-1. **Câu a: Dạng $\frac{0}{0}$:**
-   $$
+**1. Câu a: Dạng $\frac{0}{0}$**
+
+ $$
    \lim_{x \to 1} \frac{x^a - 1}{x^b - 1} \overset{\text{L'H}}{=} \lim_{x \to 1} \frac{a x^{a-1}}{b x^{b-1}} = \frac{a \cdot 1}{b \cdot 1} = \frac{a}{b}.
    $$
 
-2. **Câu b: Dạng $\frac{0}{0}$ (Áp dụng L'Hôpital liên tiếp):**
-   $$
+**2. Câu b: Dạng $\frac{0}{0}$ (Áp dụng L'Hôpital liên tiếp)**
+
+ $$
    \lim_{x \to 0} \frac{x - \sin x}{\tan x - x} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{1 - \cos x}{\frac{1}{\cos^2 x} - 1} = \lim_{x \to 0} \frac{1 - \cos x}{\frac{1 - \cos^2 x}{\cos^2 x}} = \lim_{x \to 0} \frac{(1 - \cos x)\cos^2 x}{(1 - \cos x)(1 + \cos x)} = \lim_{x \to 0} \frac{\cos^2 x}{1 + \cos x} = \frac{1}{2}.
    $$
 
-3. **Câu c: Dạng $\frac{0}{0}$:**
-   $$
+**3. Câu c: Dạng $\frac{0}{0}$**
+
+ $$
    \lim_{x \to 0} \frac{\ln(e+x) - 1}{e^x - e^{-x}} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{\frac{1}{e+x}}{e^x + e^{-x}} = \frac{\frac{1}{e}}{1 + 1} = \frac{1}{2e}.
    $$
 
-4. **Câu d: Dạng $\infty - \infty$ quy về $\frac{0}{0}$:**
-   $$
+**4. Câu d: Dạng $\infty - \infty$ quy về $\frac{0}{0}$**
+
+ $$
    \lim_{x \to 0} \left(\frac{1}{x^2} - \frac{1}{\sin^2 x}\right) = \lim_{x \to 0} \frac{\sin^2 x - x^2}{x^2 \sin^2 x} = \lim_{x \to 0} \frac{\sin^2 x - x^2}{x^4} \quad (\text{do } \lim_{x \to 0} \frac{\sin x}{x} = 1).
    $$
    Áp dụng L'Hôpital:
@@ -384,8 +405,9 @@ Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
    \lim_{x \to 0} \frac{2\sin x \cos x - 2x}{4x^3} = \lim_{x \to 0} \frac{\sin 2x - 2x}{4x^3} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{2\cos 2x - 2}{12x^2} = \lim_{x \to 0} \frac{-2(1 - \cos 2x)}{12x^2} = \lim_{x \to 0} \frac{-4\sin^2 x}{12x^2} = -\frac{1}{3}.
    $$
 
-5. **Câu e: Dạng $\infty - \infty$:**
-   $$
+**5. Câu e: Dạng $\infty - \infty$**
+
+ $$
    L = \lim_{x \to 0} \frac{\arcsin x - x}{x \arcsin x} = \lim_{x \to 0} \frac{\arcsin x - x}{x^2}.
    $$
    Áp dụng L'Hôpital:
@@ -393,8 +415,9 @@ Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
    L \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{\frac{1}{\sqrt{1-x^2}} - 1}{2x} = \lim_{x \to 0} \frac{1 - \sqrt{1-x^2}}{2x \sqrt{1-x^2}} = \lim_{x \to 0} \frac{x^2}{2x \sqrt{1-x^2}(1 + \sqrt{1-x^2})} = \lim_{x \to 0} \frac{x}{2(1 + 1)} = 0.
    $$
 
-6. **Câu f: Dạng $\infty \cdot 0$:**
-   $$
+**6. Câu f: Dạng $\infty \cdot 0$**
+
+ $$
    \lim_{x \to +\infty} x \ln\left(\frac{2\arctan x}{\pi}\right) = \lim_{x \to +\infty} \frac{\ln\left(\frac{2\arctan x}{\pi}\right)}{\frac{1}{x}}.
    $$
    Áp dụng L'Hôpital:
@@ -402,16 +425,18 @@ Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
    \lim_{x \to +\infty} \frac{\frac{1}{\frac{2\arctan x}{\pi}} \cdot \frac{2}{\pi(1+x^2)}}{-\frac{1}{x^2}} = \lim_{x \to +\infty} \frac{1}{\arctan x} \cdot \left(-\frac{x^2}{1+x^2}\right) = \frac{1}{\frac{\pi}{2}} \cdot (-1) = -\frac{2}{\pi}.
    $$
 
-7. **Câu g: Dạng $0^0$:**
-   Đặt $y = x^x \implies \ln y = x \ln x = \frac{\ln x}{1/x}$.
+**7. Câu g: Dạng $0^0$**
+
+Đặt $y = x^x \implies \ln y = x \ln x = \frac{\ln x}{1/x}$.
    Theo Ví dụ 5.4.3: $\lim_{x \to 0^+} x \ln x = 0$.
    Do đó:
    $$
    \lim_{x \to 0^+} x^x = e^{\lim_{x \to 0^+} x \ln x} = e^0 = 1.
    $$
 
-8. **Câu h: Dạng $\infty^0$:**
-   Đặt $y = (\tan x)^{\cos x} \implies \ln y = \cos x \ln(\tan x) = \frac{\ln(\tan x)}{\frac{1}{\cos x}} = \frac{\ln(\tan x)}{\sec x}$.
+**8. Câu h: Dạng $\infty^0$**
+
+Đặt $y = (\tan x)^{\cos x} \implies \ln y = \cos x \ln(\tan x) = \frac{\ln(\tan x)}{\frac{1}{\cos x}} = \frac{\ln(\tan x)}{\sec x}$.
    Khi $x \to (\pi/2)^-$, đây là dạng $\frac{\infty}{\infty}$. Áp dụng L'Hôpital:
    $$
    \lim_{x \to (\pi/2)^-} \frac{\frac{1+\tan^2 x}{\tan x}}{\sec x \tan x} = \lim_{x \to (\pi/2)^-} \frac{\sec^2 x}{\sec x \tan^2 x} = \lim_{x \to (\pi/2)^-} \frac{\sec x}{\tan^2 x} = \lim_{x \to (\pi/2)^-} \frac{\cos x}{\sin^2 x} = \frac{0}{1} = 0.
@@ -421,6 +446,7 @@ Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
    \lim_{x \to (\pi/2)^-} (\tan x)^{\cos x} = e^0 = 1.
    $$
 </Solution>
+</Exercise>
 
 ## Chuyên đề nâng cao ôn thi điểm 9-10 (Starred Exercises)
 
@@ -433,7 +459,7 @@ Dùng quy tắc L'Hôpital, hãy tính các giới hạn sau:
 >
 Cho hàm số $f$ khả vi trên $[a; b]$. Giả sử $f'(a) < m < f'(b)$.
 Chứng minh rằng tồn tại ít nhất một điểm $c \in (a; b)$ sao cho $f'(c) = m$.
-</Exercise>
+
 
 <Solution>
 Xét hàm số phụ trợ $g: [a; b] \to \mathbb{R}$ định nghĩa bởi:
@@ -459,6 +485,7 @@ g'(c) = 0 \iff f'(c) - m = 0 \iff f'(c) = m.
 $$
 Định lý Darboux được chứng minh trọn vẹn. Kết quả này khẳng định: **Dù đạo hàm $f'$ có thể gián đoạn, nó luôn có tính chất giá trị trung gian (không bao giờ có điểm gián đoạn loại 1)**.
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c5-b5-bai-15-chung-minh-e-la-so-vo-ti"
@@ -468,7 +495,7 @@ $$
   original="Bài tập 15*"
 >
 Dùng khai triển Maclaurin của hàm số $e^x$, chứng minh rằng $e$ là một số vô tỉ.
-</Exercise>
+
 
 <Solution>
 Ta chứng minh bằng phản chứng. Giả sử $e$ là một số hữu tỉ, nghĩa là tồn tại hai số nguyên dương $p, q \in \mathbb{N}^*$ sao cho:
@@ -506,6 +533,7 @@ Do đó ta luôn có $0 < R < 1$. Một số nằm ngặt giữa $0$ và $1$ kh�
 Mâu thuẫn này chứng tỏ giả thiết phản chứng là sai.
 **Kết luận:** Số $e$ là một số vô tỉ.
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c5-b5-bai-18-danh-gia-dao-ham-cap-mot"
@@ -519,7 +547,7 @@ Chứng minh rằng:
 $$
 |f'(x)| \le \frac{M}{2}, \quad \forall x \in [0; 1].
 $$
-</Exercise>
+
 
 <Solution>
 Lấy điểm $x \in (0; 1)$ tùy ý.
@@ -567,6 +595,7 @@ $$
 Vì $f \in C^2([0; 1])$, đạo hàm $f'$ liên tục trên $[0; 1]$, nên bất đẳng thức cũng đúng tại hai đầu mút $x = 0$ và $x = 1$.
 Ta có điều phải chứng minh.
 </Solution>
+</Exercise>
 
 ---
 

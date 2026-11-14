@@ -18,9 +18,6 @@ sources:
     pages: '154-157'
     sections: 'Mục 9.8, 9.9, 9.10, 9.11'
     note: 'Định lý 9.18 (Tính chất phổ dụng của trường các thương), Tính duy nhất sai khác đẳng cấu, Bảng đối chiếu toàn diện Vành thương R/I và Trường các thương Frac(R)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '265-272'
-    sections: 'Chương 8, Mục 8.3'
 status: published
 version: 0.1.0
 ---
@@ -162,14 +159,16 @@ Sử dụng Tính chất phổ dụng của trường các thương để chứn
 $$
 \operatorname{Frac}(\mathbb{Z}[\sqrt{3}]) \cong \mathbb{Q}(\sqrt{3}).
 $$
-</Exercise>
+
 
 <Solution>
 Ta kiểm tra hai điều kiện của Mệnh đề 9.19 đối với trường $F = \mathbb{Q}(\sqrt{3})$ và miền nguyên $R = \mathbb{Z}[\sqrt{3}]$:
-1. **$F$ là một trường chứa $R$:**
-   Ta có $\mathbb{Z}[\sqrt{3}] \subset \mathbb{Q}(\sqrt{3})$, và $\mathbb{Q}(\sqrt{3})$ là một trường số bậc hai. Ánh xạ nhúng $j: \mathbb{Z}[\sqrt{3}] \hookrightarrow \mathbb{Q}(\sqrt{3})$ là một đơn cấu vành bảo toàn đơn vị.
-2. **Mọi phần tử của $F$ đều có dạng thương:**
-   Lấy bất kỳ $\alpha = u + v\sqrt{3} \in \mathbb{Q}(\sqrt{3})$ với $u, v \in \mathbb{Q}$.
+**1. $F$ là một trường chứa $R$**
+
+Ta có $\mathbb{Z}[\sqrt{3}] \subset \mathbb{Q}(\sqrt{3})$, và $\mathbb{Q}(\sqrt{3})$ là một trường số bậc hai. Ánh xạ nhúng $j: \mathbb{Z}[\sqrt{3}] \hookrightarrow \mathbb{Q}(\sqrt{3})$ là một đơn cấu vành bảo toàn đơn vị.
+**2. Mọi phần tử của $F$ đều có dạng thương**
+
+Lấy bất kỳ $\alpha = u + v\sqrt{3} \in \mathbb{Q}(\sqrt{3})$ với $u, v \in \mathbb{Q}$.
    Viết $u = \frac{p}{q}$ và $v = \frac{r}{s}$ với $p, q, r, s \in \mathbb{Z}$ ($q, s > 0$).
    Quy đồng mẫu số chung $m = qs \in \mathbb{Z}^+$:
    $$
@@ -184,12 +183,13 @@ Ta kiểm tra hai điều kiện của Mệnh đề 9.19 đối với trường 
 Theo Mệnh đề 9.19, tồn tại duy nhất một đẳng cấu trường $\theta: \operatorname{Frac}(\mathbb{Z}[\sqrt{3}]) \to \mathbb{Q}(\sqrt{3})$.
 Chứng minh hoàn tất mà không cần xây dựng lại quan hệ phân số.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b3-a2">
 ### Bài 9.3.A2 (Nhóm A - Sự mở rộng đồng cấu qua tính chất phổ dụng)
 Cho đồng cấu tính giá trị $f: \mathbb{Q}[x] \to \mathbb{R}$ định bởi $f(P(x)) = P(\pi)$.
 Hỏi $f$ có thể mở rộng thành một đồng cấu từ trường phân thức $\mathbb{Q}(x) = \operatorname{Frac}(\mathbb{Q}[x])$ vào trường số thực $\mathbb{R}$ được không? Hãy giải thích rõ vì sao.
-</Exercise>
+
 
 <Solution>
 Theo Định lý 9.18 (Tính chất phổ dụng của trường các thương), đồng cấu $f: R \to K$ mở rộng được thành đồng cấu từ $\operatorname{Frac}(R)$ vào $K$ khi và chỉ khi $f$ là một **đơn ánh** (tức $f(b) \neq 0$ với mọi $b \in R \setminus \{0\}$).
@@ -210,12 +210,13 @@ $$
 $$
 Đồng cấu này hoàn toàn xác định tốt vì $Q(\pi) \neq 0$ với mọi đa thức $Q(x) \neq 0$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b3-b1">
 ### Bài 9.3.B1 (Nhóm B - Mở rộng tự đẳng cấu lên trường các thương)
 Cho $R$ là một miền nguyên và $\sigma \in \operatorname{Aut}(R)$ là một tự đẳng cấu vành của $R$.
 Chứng minh rằng tồn tại duy nhất một tự đẳng cấu trường $\tilde{\sigma} \in \operatorname{Aut}(\operatorname{Frac}(R))$ mở rộng $\sigma$.
-</Exercise>
+
 
 <Solution>
 Xét hợp thành của $\sigma$ với phép nhúng chính tắc $\iota_R$:
@@ -231,6 +232,7 @@ $$
 - Vì $\tilde{\sigma}$ là đồng cấu trường (tự động là đơn ánh) và toàn ánh, $\tilde{\sigma}$ là một **tự đẳng cấu** của $\operatorname{Frac}(R)$.
 Tính duy nhất suy ra trực tiếp từ tính duy nhất của ánh xạ trong Tính chất phổ dụng.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b3-b2">
 ### Bài 9.3.B2 (Nhóm B - Đối chiếu Vành thương và Trường phân thức trên $\mathbb{R}[x]$)
@@ -238,26 +240,30 @@ Cho vành đa thức $R = \mathbb{R}[x]$ và xét đa thức $f(x) = x^2 + 1$.
 1. Khảo sát cấu trúc của vành thương $K_1 = R/(x^2 + 1)$.
 2. Khảo sát cấu trúc của trường các thương $K_2 = \operatorname{Frac}(R)$.
 3. So sánh bậc mở rộng, số chiều trên $\mathbb{R}$, và giải thích sự khác biệt giữa hai phép dựng.
-</Exercise>
+
 
 <Solution>
-1. **Cấu trúc của vành thương $K_1 = \mathbb{R}[x]/(x^2 + 1)$:**
-   - Đa thức $x^2 + 1$ bất khả quy trên $\mathbb{R}$ nên iđêan $(x^2 + 1)$ là iđêan cực đại.
+**1. Cấu trúc của vành thương $K_1 = \mathbb{R}[x]/(x^2 + 1)$**
+
+ - Đa thức $x^2 + 1$ bất khả quy trên $\mathbb{R}$ nên iđêan $(x^2 + 1)$ là iđêan cực đại.
    - Do đó $K_1$ là một trường.
    - Theo Định lý đẳng cấu thứ nhất: $K_1 \cong \mathbb{C}$ (trường số phức).
    - Số chiều trên $\mathbb{R}$: $\dim_{\mathbb{R}}(K_1) = \deg(x^2 + 1) = 2$ (hữu hạn chiều, cơ sở $\{1, \bar{x}\}$ với $\bar{x}^2 = -1$).
    - Phép dựng này **thu gọn** vành đa thức vô hạn chiều về trường số phức 2 chiều bằng cách đồng nhất $x^2 + 1 \equiv 0$.
 
-2. **Cấu trúc của trường các thương $K_2 = \operatorname{Frac}(\mathbb{R}[x]) = \mathbb{R}(x)$:**
-   - $K_2$ là trường các phân thức hữu tỉ $\frac{P(x)}{Q(x)}$ với $Q(x) \neq 0$.
+**2. Cấu trúc của trường các thương $K_2 = \operatorname{Frac}(\mathbb{R}[x]) = \mathbb{R}(x)$**
+
+ - $K_2$ là trường các phân thức hữu tỉ $\frac{P(x)}{Q(x)}$ với $Q(x) \neq 0$.
    - Trong $K_2$, phần tử $x^2 + 1 \neq 0$ có nghịch đảo $\frac{1}{x^2 + 1}$.
    - Số chiều trên $\mathbb{R}$: $\dim_{\mathbb{R}}(K_2) = \infty$ (vô hạn chiều, chứa các phần tử độc lập tuyến tính $1, x, x^2, \dots, \frac{1}{x}, \frac{1}{x^2+1}, \dots$).
    - Phép dựng này **mở rộng** vành đa thức lên một trường vô hạn chiều bằng cách giữ nguyên mọi đa thức và bổ sung nghịch đảo cho tất cả các đa thức khác không.
 
-3. **Bản chất đối ngẫu:**
-   - $K_1$ là kết quả của phép **chiếu toàn ánh** $\pi: \mathbb{R}[x] \to \mathbb{C}$ với hạt nhân cực đại.
+**3. Bản chất đối ngẫu**
+
+ - $K_1$ là kết quả của phép **chiếu toàn ánh** $\pi: \mathbb{R}[x] \to \mathbb{C}$ với hạt nhân cực đại.
    - $K_2$ là kết quả của phép **nhúng đơn ánh** $\iota: \mathbb{R}[x] \hookrightarrow \mathbb{R}(x)$ với hạt nhân tầm thường.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b3-c1">
 ### Bài 9.3.C1 (Nhóm C - Điều kiện cần và đủ để mở rộng đồng cấu vành)
@@ -302,9 +308,9 @@ Iđêan $M = P R_P = \left\{ \frac{p}{s} \mid p \in P, s \in S \right\}$ gồm m
 $$
 \phi: R_P \longrightarrow \operatorname{Frac}(R/P), \quad \phi\left(\frac{a}{s}\right) = \frac{a + P}{s + P} = \frac{\bar{a}}{\bar{s}}.
 $$
-- Vì $s \in S = R \setminus P$, ta có $s \notin P$, tức $\bar{s} \neq \bar{0}$ trong $R/P$. Do đó mẫu số khác không trong miền nguyên $R/P$, phân số xác định tốt trong $\operatorname{Frac}(R/P)$.
+- Vì $s \in S = R \setminus P$, ta có $s \notin P$, tức $\bar{s} \neq [0]$ trong $R/P$. Do đó mẫu số khác không trong miền nguyên $R/P$, phân số xác định tốt trong $\operatorname{Frac}(R/P)$.
 - Dễ dàng kiểm tra $\phi$ là một đồng cấu vành toàn ánh.
-- Hạt nhân: $\frac{a}{s} \in \ker\phi \iff \frac{\bar{a}}{\bar{s}} = 0 \iff \bar{a} = \bar{0} \iff a \in P \iff \frac{a}{s} \in P R_P$.
+- Hạt nhân: $\frac{a}{s} \in \ker\phi \iff \frac{\bar{a}}{\bar{s}} = 0 \iff \bar{a} = [0] \iff a \in P \iff \frac{a}{s} \in P R_P$.
   Vậy $\ker\phi = P R_P$.
 Áp dụng Định lý đẳng cấu thứ nhất cho $\phi$:
 $$

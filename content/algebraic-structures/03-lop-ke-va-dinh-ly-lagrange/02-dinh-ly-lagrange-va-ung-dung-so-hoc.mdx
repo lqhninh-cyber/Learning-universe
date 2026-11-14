@@ -12,15 +12,11 @@ tags:
   - nhóm cấp nguyên tố
   - định lý Euler
   - định lý Fermat nhỏ
-  - tháp chỉ số
 sources:
   - source: gt-ctds-hvk-2026
     pages: '59-63'
     sections: 'Mục 3.4, 3.5, 3.6'
     note: 'Định lý 3.7 (Lagrange), Hệ quả 3.9, 3.10, Định lý 3.12 (Euler, Fermat nhỏ)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '92-101'
-    sections: 'Chương 3, Mục 3.2'
 status: published
 version: 0.1.0
 authoring:
@@ -37,9 +33,8 @@ review:
 Sau khi hoàn thành bài học này, bạn có thể:
 
 1. **Hiểu sâu sắc và chứng minh Định lý Lagrange:** Nắm vững mối quan hệ giữa cấp của nhóm mẹ, cấp của nhóm con và chỉ số: $|G| = [G:H]|H|$, từ đó giải thích vì sao cấp của nhóm con luôn là ước của cấp nhóm mẹ.
-2. **Vận dụng các hệ quả đại số về cấp:** Chứng minh công thức cấp phần tử $\operatorname{ord}(a) \mid |G|$, hệ quả lũy thừa $a^{|G|} = e$, và chứng minh mọi nhóm có cấp là số nguyên tố $p$ đều là nhóm cyclic đẳng cấu với $\mathbb{Z}/p\mathbb{Z}$.
-3. **Hiểu mối liên hệ giữa Đại số trừu tượng và Số học sơ cấp:** Dùng cấu trúc nhóm nhân $(\mathbb{Z}/n\mathbb{Z})^\times$ để suy ra Định lý Euler $a^{\varphi(n)} \equiv 1 \pmod n$ và Định lý Fermat nhỏ $a^{p-1} \equiv 1 \pmod p$ như những trường hợp riêng của Định lý Lagrange.
-4. **Vận dụng công thức tháp chỉ số:** Áp dụng công thức $[G:K] = [G:H][H:K]$ cho chuỗi nhóm con lồng nhau $K \le H \le G$ để giải quyết các bài toán về cấu trúc nhóm và chỉ số hữu hạn.
+2. **Vận dụng các hệ quả đại số về cấp:** Chứng minh công thức cấp phần tử $\operatorname{ord}(a) \mid |G|$, hệ quả lũy thừa $a^{|G|} = e$, và chứng minh mọi nhóm có cấp là số nguyên tố $p$ đều là nhóm cyclic.
+3. **Hiểu mối liên hệ giữa Đại số trừu tượng và Số học sơ cấp:** Dùng cấu trúc nhóm nhân các lớp đồng dư khả nghịch $U(n) = (\mathbb{Z}/n\mathbb{Z})^\times$ để suy ra Định lý Euler $a^{\varphi(n)} \equiv 1 \pmod n$ và Định lý Fermat nhỏ $a^{p-1} \equiv 1 \pmod p$ như những hệ quả trực tiếp của Định lý Lagrange.
 </Note>
 
 **Kiến thức tiên quyết:** Khái niệm lớp kề trái, tính chất phân hoạch nhóm mẹ và công thức đẳng thế $|gH| = |H|$ ở Bài 1 (<Cite source="gt-ctds-hvk-2026" page="55-58" note="Mục 3.1, 3.2" />).
@@ -112,79 +107,7 @@ Chúng ta sẽ phân tích chi tiết phản ví dụ kinh điển trong nhóm t
 
 ---
 
-## 2. Công thức tháp chỉ số (Tower Law for Indices)
-
-Khi ta có một chuỗi các nhóm con lồng nhau, Định lý Lagrange mở rộng thành một quy tắc nhân chỉ số, có giá trị ngay cả đối với các nhóm vô hạn.
-
-<Theorem
-  id="thm-c3-b2-thap-chi-so"
-  title="Công thức tháp chỉ số"
-  original="Mục 3.4"
-  source="hai-deo-dai-so-hien-dai-2013"
-  page="94"
->
-Cho $G$ là một nhóm và $K, H$ là các nhóm con của $G$ thỏa mãn $K \le H \le G$. Khi đó:
-$$
-[G:K] = [G:H] \cdot [H:K],
-$$
-theo nghĩa nếu hai trong ba chỉ số là hữu hạn thì chỉ số còn lại cũng hữu hạn và đẳng thức xảy ra.
-</Theorem>
-
-<Proof of="thm-c3-b2-thap-chi-so">
-Giả sử $[G:H] = m < \infty$ và $[H:K] = n < \infty$. 
-
-Gọi $\{g_1, g_2, \dots, g_m\}$ là hệ đại diện cho các lớp kề trái của $H$ trong $G$, nghĩa là:
-$$
-G = \bigsqcup_{i=1}^m g_i H.
-$$
-Gọi $\{h_1, h_2, \dots, h_n\}$ là hệ đại diện cho các lớp kề trái của $K$ trong $H$, nghĩa là:
-$$
-H = \bigsqcup_{j=1}^n h_j K.
-$$
-Thay phân hoạch của $H$ vào từng thành phần $g_i H$, với chú ý rằng phép nhân trái có tính chất phân phối qua phép hợp:
-$$
-g_i H = g_i \left( \bigsqcup_{j=1}^n h_j K \right) = \bigsqcup_{j=1}^n (g_i h_j) K.
-$$
-Do đó:
-$$
-G = \bigsqcup_{i=1}^m \left( \bigsqcup_{j=1}^n (g_i h_j) K \right) = \bigcup_{i=1}^m \bigcup_{j=1}^n (g_i h_j) K.
-$$
-Để chứng minh $[G:K] = m \cdot n$, ta chỉ cần chứng minh $m \cdot n$ lớp kề trái $(g_i h_j) K$ này đôi một rời nhau.
-
-Giả sử tồn tại hai cặp chỉ số $(i, j)$ và $(r, s)$ sao cho:
-$$
-(g_i h_j) K \cap (g_r h_s) K \ne \varnothing.
-$$
-Theo tính chất phân hoạch của lớp kề, hai lớp kề có giao khác rỗng thì phải trùng nhau hoàn toàn:
-$$
-(g_i h_j) K = (g_r h_s) K \implies (g_i h_j)^{-1} (g_r h_s) \in K.
-$$
-Vì $K \subseteq H$, ta suy ra:
-$$
-(g_i h_j)^{-1} (g_r h_s) \in H \implies h_j^{-1} g_i^{-1} g_r h_s \in H.
-$$
-Nhân $h_j$ vào bên trái và $h_s^{-1}$ vào bên phải:
-$$
-g_i^{-1} g_r = h_j \left( h_j^{-1} g_i^{-1} g_r h_s \right) h_s^{-1} \in H H H \subseteq H.
-$$
-Điều này kéo theo $g_i H = g_r H$. Vì $\{g_1, \dots, g_m\}$ là hệ đại diện cho các lớp kề khác nhau của $H$ trong $G$, ta bắt buộc phải có $i = r$.
-
-Khi $i = r$, ta có $g_i = g_r$, do đó điều kiện $(g_i h_j)^{-1} (g_r h_s) \in K$ trở thành:
-$$
-h_j^{-1} g_i^{-1} g_i h_s = h_j^{-1} h_s \in K \implies h_j K = h_s K.
-$$
-Vì $\{h_1, \dots, h_n\}$ là hệ đại diện cho các lớp kề khác nhau của $K$ trong $H$, ta suy ra $j = s$.
-
-Như vậy $(i, j) = (r, s)$, chứng tỏ $m \cdot n$ lớp kề $\{(g_i h_j) K \mid 1 \le i \le m, 1 \le j \le n\}$ đôi một rời nhau và phủ kín $G$. Suy ra:
-$$
-[G:K] = m \cdot n = [G:H] \cdot [H:K].
-$$
-Trường hợp một trong các chỉ số vô hạn được suy ra hoàn toàn tương tự bằng lập luận tập hợp.
-</Proof>
-
----
-
-## 3. Các hệ quả cơ bản về cấp của phần tử
+## 2. Các hệ quả cơ bản về cấp của phần tử
 
 Từ Định lý Lagrange, ta thu được hàng loạt kết quả mạnh mẽ chi phối cấu trúc đại số của các phần tử và các nhóm hữu hạn.
 
@@ -212,7 +135,7 @@ Cho $G$ là một nhóm hữu hạn và $a \in G$. Khi đó:
    $$
    |H| = |\langle a \rangle| = \operatorname{ord}(a).
    $$
-   Áp dụng Định lý Lagrange (<Ref to="thm-c3-b2-lagrange" />) cho nhóm con $H \le G$, ta có:
+   Áp dụng <Ref to="thm-c3-b2-lagrange" /> cho nhóm con $H \le G$, ta có:
    $$
    |H| \mid |G| \implies \operatorname{ord}(a) \mid |G|.
    $$
@@ -225,12 +148,12 @@ Chứng minh hoàn tất.
 
 <Example id="ex-c3-b2-kiem-tra-cap" title="Ứng dụng kiểm tra cấp phần tử trong nhóm cấp 15">
 Giả sử $G$ là một nhóm có cấp $|G| = 15$. 
-Theo Hệ quả <Ref to="cor-c3-b2-cap-phan-tu" />, cấp của bất kỳ phần tử $a \in G$ nào cũng phải là ước của 15. Do các ước nguyên dương của 15 là $1, 3, 5, 15$, cấp của các phần tử trong $G$ chỉ có thể nhận một trong 4 giá trị:
+Theo <Ref to="cor-c3-b2-cap-phan-tu" />, cấp của bất kỳ phần tử $a \in G$ nào cũng phải là ước của 15. Do các ước nguyên dương của 15 là $1, 3, 5, 15$, cấp của các phần tử trong $G$ chỉ có thể nhận một trong 4 giá trị:
 - $\operatorname{ord}(a) = 1 \iff a = e$.
 - $\operatorname{ord}(a) \in \{3, 5\}$ nếu $a$ sinh ra nhóm con thực sự.
 - $\operatorname{ord}(a) = 15$ nếu $a$ là phần tử sinh toàn thể nhóm (khi đó $G$ là nhóm cyclic).
 
-Không một phần tử nào trong $G$ có thể có cấp 2, 4, 6 hay bất kỳ giá trị nào không chia hết cho 15.
+Không một phần tử nào trong $G$ có thể có cấp 2, 4, 6 hay bất kỳ giá trị nào không phải là ước của 15.
 </Example>
 
 <Corollary
@@ -241,55 +164,49 @@ Không một phần tử nào trong $G$ có thể có cấp 2, 4, 6 hay bất k�
   page="61"
 >
 Nếu nhóm $G$ có cấp là một số nguyên tố $p$ ($|G| = p$), thì:
-1. $G$ là một nhóm cyclic và đẳng cấu với nhóm cộng $\mathbb{Z}/p\mathbb{Z}$:
-   $$
-   G \cong \mathbb{Z}/p\mathbb{Z}.
-   $$
+1. $G$ là một nhóm cyclic (do đó $G$ là nhóm giao hoán).
 2. Mọi phần tử $a \in G$ khác phần tử trung hòa ($a \ne e$) đều là phần tử sinh của $G$, nghĩa là $\langle a \rangle = G$.
-3. $G$ là nhóm đơn giản theo nghĩa nó không có nhóm con thực sự không tầm thường nào; các nhóm con duy nhất của $G$ là $\{e\}$ và chính nó.
+3. Các nhóm con duy nhất của $G$ chỉ gồm nhóm con tầm thường $\{e\}$ và chính $G$.
 </Corollary>
 
 <Proof of="cor-c3-b2-nhom-cap-nguyen-to">
 Lấy một phần tử tùy ý $a \in G$ sao cho $a \ne e$. Xét nhóm con cyclic $H = \langle a \rangle \le G$.
 Vì $a \ne e$, nhóm con $H$ chứa ít nhất hai phần tử phân biệt là $e$ và $a$, do đó cấp của $H$ thỏa mãn $|H| \ge 2$.
 
-Theo Định lý Lagrange (<Ref to="thm-c3-b2-lagrange" />), $|H|$ phải là ước của $|G| = p$. Nhưng $p$ là số nguyên tố, nên các ước nguyên dương duy nhất của $p$ chỉ là $1$ và $p$.
+Theo <Ref to="thm-c3-b2-lagrange" />, $|H|$ phải là ước của $|G| = p$. Nhưng $p$ là số nguyên tố, nên các ước nguyên dương duy nhất của $p$ chỉ là $1$ và $p$.
 
 Vì $|H| \ge 2$, ta buộc phải có:
 $$
 |H| = p = |G|.
 $$
-Vì $H \subseteq G$ và $|H| = |G| < \infty$, ta kết luận $H = G$. Điều này chứng minh $G = \langle a \rangle$, tức là $G$ là một nhóm cyclic hữu hạn cấp $p$, và $a$ là một phần tử sinh của $G$.
-
-Theo định lý phân loại nhóm cyclic hữu hạn, mọi nhóm cyclic hữu hạn cấp $p$ đều đẳng cấu với $(\mathbb{Z}/p\mathbb{Z}, +)$.
+Vì $H \subseteq G$ và $|H| = |G| < \infty$, ta kết luận $H = G$. Điều này chứng minh $G = \langle a \rangle$, tức là $G$ là một nhóm cyclic hữu hạn cấp $p$, và $a$ là một phần tử sinh của $G$. Vì mọi nhóm cyclic đều là nhóm abel, $G$ bắt buộc phải giao hoán.
 
 Hơn nữa, nếu $K \le G$ là nhóm con bất kỳ thì $|K| \mid p$, dẫn đến $|K| = 1$ (tức $K = \{e\}$) hoặc $|K| = p$ (tức $K = G$).
 </Proof>
 
 <Note title="Ý nghĩa cấu trúc của Hệ quả 3.10">
-Kết quả này cho thấy tính chất cứng nhắc phi thường của các nhóm cấp nguyên tố. Với mỗi số nguyên tố $p$ (chẳng hạn $p = 2, 3, 5, 7, 11, 13, 17, \dots$), chỉ tồn tại **duy nhất một cấu trúc nhóm** (sai khác một đẳng cấu) có cấp $p$, và nhóm đó bắt buộc phải giao hoán!
+Kết quả này cho thấy tính chất chặt chẽ đặc biệt của các nhóm cấp nguyên tố. Với mỗi số nguyên tố $p$ (chẳng hạn $p = 2, 3, 5, 7, 11, 13, 17, \dots$), mọi nhóm cấp $p$ đều được sinh bởi bất kỳ phần tử khác đơn vị nào: $G = \{e, a, a^2, \dots, a^{p-1}\}$ với $a^p = e$, và bắt buộc phải là nhóm giao hoán.
 </Note>
 
 ---
 
-## 4. Ứng dụng số học: Định lý Euler và Định lý Fermat nhỏ
+## 3. Hai ứng dụng số học: Định lý Euler và Định lý Fermat nhỏ
 
-Một trong những thành tựu rực rỡ nhất của Đại số trừu tượng là làm sáng tỏ bản chất của các định lý số học kinh điển. Thông qua ngôn ngữ lý thuyết nhóm, Định lý Euler và Fermat nhỏ chỉ đơn giản là biểu hiện cụ thể của Hệ quả $a^{|G|} = e$.
+Một trong những thành tựu rực rỡ nhất của Đại số trừu tượng là làm sáng tỏ bản chất của các định lý số học kinh điển. Thông qua ngôn ngữ lý thuyết nhóm, Định lý Euler và Định lý Fermat nhỏ chỉ đơn giản là biểu hiện cụ thể của hệ quả $a^{|G|} = e$.
 
-### 4.1. Nhóm các phần tử khả nghịch mô-đu-lô $n$
+### 3.1. Nhóm nhân các lớp đồng dư khả nghịch $U(n)$
 
-Xét vành $\mathbb{Z}/n\mathbb{Z}$ với $n \ge 2$. Tập hợp các phần tử khả nghịch đối với phép nhân mô-đu-lô $n$ được ký hiệu là:
+Với số nguyên $n \ge 2$, xét tập thương các lớp đồng dư $\mathbb{Z}/n\mathbb{Z} = \{[0]_n, [1]_n, \dots, [n-1]_n\}$ cùng phép nhân các lớp $[a]_n [b]_n = [ab]_n$. Như đã xây dựng ở Chương 1 nhờ đồng nhất thức Bézout, một lớp $[a]_n$ có phần tử nghịch đảo đối với phép nhân khi và chỉ khi $\gcd(a, n) = 1$ (điều kiện này không phụ thuộc vào đại diện của lớp). Tập hợp tất cả các lớp đồng dư khả nghịch môđulô $n$ lập thành một nhóm abel hữu hạn dưới phép nhân, ký hiệu là:
 $$
-U(n) = (\mathbb{Z}/n\mathbb{Z})^\times = \{\bar{a} \in \mathbb{Z}/n\mathbb{Z} \mid \gcd(a, n) = 1\}.
+U(n) = (\mathbb{Z}/n\mathbb{Z})^\times = \{[a]_n \in \mathbb{Z}/n\mathbb{Z} \mid \gcd(a, n) = 1\}.
 $$
-Như đã khảo sát ở Chương 1, $(U(n), \cdot)$ lập thành một nhóm abel hữu hạn dưới phép nhân mô-đu-lô $n$.
 
-Số phần tử của nhóm $U(n)$ chính là giá trị của **phi hàm Euler** $\varphi(n)$, tức là số lượng các số nguyên $a \in \{1, 2, \dots, n-1\}$ nguyên tố cùng nhau với $n$:
+Số phần tử của nhóm $U(n)$ chính là giá trị của **phi hàm Euler** $\varphi(n)$, tức là số lượng các số nguyên dương không vượt quá $n$ và nguyên tố cùng nhau với $n$:
 $$
 |U(n)| = \varphi(n).
 $$
 
-### 4.2. Định lý Euler và Định lý Fermat nhỏ
+### 3.2. Định lý Euler và Định lý Fermat nhỏ
 
 <Theorem
   id="thm-c3-b2-euler-fermat"
@@ -306,7 +223,7 @@ $$
    $$
    a^{p-1} \equiv 1 \pmod p.
    $$
-   Đặc biệt, với mọi số nguyên $a$ tùy ý, ta luôn có:
+   Đặc biệt, với mọi số nguyên $a \in \mathbb{Z}$ tùy ý, ta luôn có:
    $$
    a^p \equiv a \pmod p.
    $$
@@ -314,29 +231,28 @@ $$
 
 <Proof of="thm-c3-b2-euler-fermat">
 1. **Chứng minh Định lý Euler:**
-   Xét nhóm nhân $G = U(n) = (\mathbb{Z}/n\mathbb{Z})^\times$. Cấp của nhóm là $|G| = \varphi(n)$.
-   Vì $\gcd(a, n) = 1$, lớp thặng dư $\bar{a} = a \bmod n$ là một phần tử thuộc nhóm $G$.
-   Áp dụng Hệ quả <Ref to="cor-c3-b2-cap-phan-tu" /> với nhóm hữu hạn $G$, ta có:
-   $$
-   \bar{a}^{|G|} = \bar{e} \implies \bar{a}^{\varphi(n)} = \bar{1}.
-   $$
-   Theo định nghĩa phép nhân trong $\mathbb{Z}/n\mathbb{Z}$, điều này tương đương với:
-   $$
-   a^{\varphi(n)} \equiv 1 \pmod n.
-   $$
+   - **Bước 1 (Xác định cấp của nhóm $U(n)$):** Xét nhóm nhân các lớp đồng dư khả nghịch $G = U(n) = (\mathbb{Z}/n\mathbb{Z})^\times$ với phần tử trung hòa là $[1]_n$. Theo phép chia Euclid, mỗi lớp đồng dư môđulô $n$ có duy nhất một đại diện chính tắc $r \in R_n = \{0, 1, \dots, n-1\}$. Do điều kiện nguyên tố cùng nhau với $n$ không phụ thuộc vào đại diện của lớp ($\gcd(a, n) = \gcd(r, n)$), lớp $[r]_n$ thuộc $U(n)$ khi và chỉ khi $1 \le r \le n-1$ và $\gcd(r, n) = 1$. Theo định nghĩa hàm Euler $\varphi(n)$, có đúng $\varphi(n)$ số nguyên $r$ như vậy, nên cấp của nhóm là:
+     $$
+     |G| = |U(n)| = \varphi(n).
+     $$
+   - **Bước 2 (Áp dụng hệ quả của Định lý Lagrange):** Vì $\gcd(a, n) = 1$, lớp đồng dư $[a]_n$ là một phần tử của nhóm hữu hạn $U(n)$. Áp dụng <Ref to="cor-c3-b2-cap-phan-tu" /> cho phần tử $[a]_n \in U(n)$ với $|U(n)| = \varphi(n)$, ta có:
+     $$
+     ([a]_n)^{|U(n)|} = [1]_n \implies ([a]_n)^{\varphi(n)} = [1]_n.
+     $$
+   - **Bước 3 (Chuyển về quan hệ đồng dư):** Theo định nghĩa phép nhân các lớp đồng dư trong $\mathbb{Z}/n\mathbb{Z}$, ta có $([a]_n)^{\varphi(n)} = [a^{\varphi(n)}]_n$. Do đó:
+     $$
+     [a^{\varphi(n)}]_n = [1]_n \iff a^{\varphi(n)} \equiv 1 \pmod n.
+     $$
 
 2. **Chứng minh Định lý Fermat nhỏ:**
-   Khi $p$ là số nguyên tố, mọi số nguyên từ $1$ đến $p-1$ đều nguyên tố cùng nhau với $p$, do đó:
-   $$
-   \varphi(p) = p - 1.
-   $$
-   Nếu $p \nmid a$, ta có $\gcd(a, p) = 1$. Áp dụng Định lý Euler cho $n = p$, ta suy ra ngay:
-   $$
-   a^{p-1} = a^{\varphi(p)} \equiv 1 \pmod p.
-   $$
-   Nhân cả hai vế với $a$, ta được $a^p \equiv a \pmod p$.
-   Nếu $p \mid a$, ta có $a \equiv 0 \pmod p$, nên $a^p \equiv 0 \equiv a \pmod p$.
-   Như vậy đồng dư thức $a^p \equiv a \pmod p$ luôn đúng với mọi số nguyên $a$.
+   - **Trường hợp $p \nmid a$:** Khi $p$ là số nguyên tố, mọi số nguyên $r \in \{1, 2, \dots, p-1\}$ đều nguyên tố cùng nhau với $p$, suy ra $|U(p)| = \varphi(p) = p - 1$. Nếu số nguyên $a$ không chia hết cho $p$ ($p \nmid a$), thì $\gcd(a, p) = 1$, tức là $[a]_p \in U(p)$. Áp dụng Định lý Euler cho $n = p$, ta suy ra ngay:
+     $$
+     a^{p-1} = a^{\varphi(p)} \equiv 1 \pmod p.
+     $$
+   - **Đồng dư thức $a^p \equiv a \pmod p$ với mọi $a \in \mathbb{Z}$:**
+     + Nếu $p \nmid a$: Nhân cả hai vế của đồng dư thức $a^{p-1} \equiv 1 \pmod p$ với $a$, ta được $a^p \equiv a \pmod p$.
+     + Nếu $p \mid a$: Ta có $a \equiv 0 \pmod p$, kéo theo $a^p \equiv 0^p = 0 \equiv a \pmod p$.
+     Như vậy, đồng dư thức $a^p \equiv a \pmod p$ luôn nghiệm đúng với mọi số nguyên $a \in \mathbb{Z}$.
 </Proof>
 
 <Example id="ex-c3-b2-tinh-so-mu" title="Tính hai chữ số tận cùng của một số mũ lớn">
@@ -360,7 +276,7 @@ Do đó:
 $$
 7^{2026} = (7^{40})^{50} \cdot 7^{26} \equiv 1^{50} \cdot 7^{26} \equiv 7^{26} \pmod{100}.
 $$
-Ta tính lũy thừa $7^{26} \bmod 100$:
+Ta tính lũy thừa của $7$ môđulô $100$:
 $$
 \begin{aligned}
 7^2 &= 49 \equiv -51 \pmod{100}, \\
@@ -376,295 +292,226 @@ Vậy hai chữ số tận cùng của $7^{2026}$ là $49$.
 
 ---
 
-## 5. Bài tập rèn luyện
+## 4. Bài tập rèn luyện
 
 <Exercise
   id="exr-c3-b2-a1"
-  title="[Nhóm A · Mã CTDS-C3-B2-A01] Tính toán cấp phần tử và đồng dư số học"
+  title="Tìm số dư lũy thừa lớn bằng Định lý Fermat nhỏ"
+  group="Nhóm A"
 >
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Cấp phần tử và Định lý Euler/Fermat nhỏ
-- **Mục tiêu đánh giá:** Tính cấp của phần tử trong nhóm nhân mô-đu-lô, tìm số dư lũy thừa lớn và liệt kê các giá trị khả dĩ của cấp trong nhóm cấp cho trước.
-- **Mức độ:** Cơ bản
+1. Tìm cấp của phần tử $[3]_{13}$ trong nhóm nhân $U(13) = (\mathbb{Z}/13\mathbb{Z})^\times$.
+2. Sử dụng Định lý Euler hoặc Định lý Fermat nhỏ để tìm số dư của $3^{105}$ và $3^{2026}$ khi chia cho $13$.
+3. Cho nhóm $G$ có cấp $24$. Liệt kê tất cả các giá trị có thể có đối với cấp của một phần tử $g \in G$.
 
-**Đề bài:**
-1. Tìm cấp của phần tử $\bar{3}$ trong nhóm nhân $U(13) = (\mathbb{Z}/13\mathbb{Z})^\times$.
-2. Sử dụng Định lý Euler hoặc Fermat nhỏ để tìm số dư của $3^{105}$ khi chia cho 13.
-3. Cho nhóm $G$ có cấp 24. Liệt kê tất cả các giá trị có thể có đối với cấp của một phần tử $g \in G$.
+<Hint>
+1. Tính các lũy thừa liên tiếp của $[3]_{13}$ trong $U(13)$ cho đến khi gặp phần tử trung hòa $[1]_{13}$. Chú ý cấp của $[3]_{13}$ phải là ước của $|U(13)| = 12$.
+2. Phân tích số mũ theo chu kỳ $12$ (theo Định lý Fermat nhỏ) hoặc theo cấp $\operatorname{ord}([3]_{13}) = 3$.
+3. Vận dụng trực tiếp <Ref to="cor-c3-b2-cap-phan-tu" />.
+</Hint>
 
-<details>
-<summary>Gợi ý</summary>
+<Solution>
+**1. Tìm cấp của phần tử $[3]_{13}$ trong nhóm $U(13)$**
 
-1. Tính lũy thừa của $\bar{3}$ trong $\mathbb{Z}/13\mathbb{Z}$ cho đến khi gặp $\bar{1}$. Chú ý cấp phải là ước của $|U(13)| = 12$.
-2. Phân tích số mũ $105$ theo cấp của phần tử 3 (hoặc theo $p-1 = 12$).
-3. Vận dụng trực tiếp Hệ quả cấp phần tử chia hết cấp nhóm.
-</details>
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Vì $13$ là số nguyên tố nên nhóm nhân $U(13) = (\mathbb{Z}/13\mathbb{Z})^\times$ có cấp $|U(13)| = \varphi(13) = 12$. Theo <Ref to="cor-c3-b2-cap-phan-tu" />, cấp của $[3]_{13}$ phải là một ước nguyên dương của $12$, tức là $\operatorname{ord}([3]_{13}) \in \{1, 2, 3, 4, 6, 12\}$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  Ta kiểm tra các lũy thừa liên tiếp của $[3]_{13}$ trong $U(13)$:
+  $$
+  \begin{aligned}
+  ([3]_{13})^1 &= [3]_{13} \ne [1]_{13}, \\
+  ([3]_{13})^2 &= [9]_{13} \ne [1]_{13}, \\
+  ([3]_{13})^3 &= [27]_{13} = [1]_{13}.
+  \end{aligned}
+  $$
+- **Bước 3 — Kết luận:**
+  Số nguyên dương nhỏ nhất $k$ thỏa mãn $([3]_{13})^k = [1]_{13}$ là $k = 3$. Vậy $\operatorname{ord}([3]_{13}) = 3$.
 
-<details>
-<summary>Lời giải chi tiết</summary>
+**2. Tìm số dư của $3^{105}$ và $3^{2026}$ khi chia cho $13$**
 
-**Ý 1: Tìm cấp của $\bar{3}$ trong $U(13)$**
-Vì 13 là số nguyên tố, nhóm $U(13)$ có cấp $|U(13)| = \varphi(13) = 12$. Cấp của $\bar{3}$ phải là ước của 12: $\operatorname{ord}(\bar{3}) \in \{1, 2, 3, 4, 6, 12\}$.
-Ta tính các lũy thừa liên tiếp:
-$$
-\begin{aligned}
-3^1 &\equiv 3 \pmod{13}, \\
-3^2 &= 9 \equiv -4 \pmod{13}, \\
-3^3 &= 27 \equiv 1 \pmod{13}.
-\end{aligned}
-$$
-Số nguyên dương nhỏ nhất $k$ để $3^k \equiv 1 \pmod{13}$ là $k = 3$.
-Vậy $\operatorname{ord}(\bar{3}) = 3$ trong nhóm $U(13)$.
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Vì $13$ là số nguyên tố và $\gcd(3, 13) = 1$, theo Định lý Fermat nhỏ (<Ref to="thm-c3-b2-euler-fermat" />) ta có $3^{12} \equiv 1 \pmod{13}$. Hơn nữa, theo câu 1 ta đã biết chu kỳ nhỏ hơn là $3^3 \equiv 1 \pmod{13}$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  + Với $3^{105}$: Ta tách số mũ $105 = 3 \cdot 35$, suy ra:
+    $$
+    3^{105} = (3^3)^{35} \equiv 1^{35} = 1 \pmod{13}.
+    $$
+  + Với $3^{2026}$: Chia số mũ cho $12$ ta có $2026 = 12 \cdot 168 + 10$ (hoặc chia cho $3$ ta có $2026 = 3 \cdot 675 + 1$), do đó:
+    $$
+    3^{2026} = (3^{12})^{168} \cdot 3^{10} \equiv 3^{10} = (3^3)^3 \cdot 3^1 \equiv 1^3 \cdot 3 = 3 \pmod{13}.
+    $$
+- **Bước 3 — Kết luận:**
+  Khi chia cho $13$, số dư của $3^{105}$ là $1$ và số dư của $3^{2026}$ là $3$.
 
-**Ý 2: Tìm số dư của $3^{105}$ khi chia cho 13**
-Vì $\operatorname{ord}(\bar{3}) = 3$, ta có $3^3 \equiv 1 \pmod{13}$.
-Chia số mũ cho 3: $105 = 3 \cdot 35$.
-Do đó:
-$$
-3^{105} = (3^3)^{35} \equiv 1^{35} \equiv 1 \pmod{13}.
-$$
-Vậy số dư của $3^{105}$ khi chia cho 13 là $1$.
+**3. Liệt kê các giá trị khả dĩ của cấp phần tử trong nhóm cấp $24$**
 
-*(Ghi chú: Nếu dùng Fermat nhỏ, $3^{12} \equiv 1 \pmod{13}$. Ta có $105 = 12 \cdot 8 + 9$, suy ra $3^{105} \equiv 3^9 = (3^3)^3 \equiv 1^3 \equiv 1 \pmod{13}$, kết quả hoàn toàn trùng khớp).*
-
-**Ý 3: Các giá trị khả dĩ của cấp phần tử trong nhóm cấp 24**
-Theo <Ref to="cor-c3-b2-cap-phan-tu" />, cấp của mọi phần tử $g \in G$ phải là một ước của $|G| = 24$.
-Tập hợp các ước nguyên dương của 24 là:
-$$
-\mathcal{D}(24) = \{1, 2, 3, 4, 6, 8, 12, 24\}.
-$$
-Vậy cấp của một phần tử trong nhóm cấp 24 chỉ có thể nhận một trong 8 giá trị trên.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Xác định đúng cấp $\operatorname{ord}(\bar{3}) = 3$ với tính toán cụ thể | 0.35 điểm |
-| Tính đúng số dư $3^{105} \equiv 1 \pmod{13}$ kèm lập luận số mũ | 0.35 điểm |
-| Liệt kê đầy đủ và chính xác tất cả 8 ước nguyên dương của 24 | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Theo <Ref to="cor-c3-b2-cap-phan-tu" />, trong một nhóm hữu hạn $G$, cấp của mọi phần tử $g \in G$ đều là ước nguyên dương của $|G|$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  Phân tích $|G| = 24 = 2^3 \cdot 3$. Tập hợp tất cả các ước nguyên dương của $24$ là:
+  $$
+  \mathcal{D}(24) = \{1, 2, 3, 4, 6, 8, 12, 24\}.
+  $$
+- **Bước 3 — Kết luận:**
+  Cấp của một phần tử $g \in G$ chỉ có thể nhận một trong $8$ giá trị thuộc tập $\{1, 2, 3, 4, 6, 8, 12, 24\}$.
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b2-b1"
-  title="[Nhóm B · Mã CTDS-C3-B2-B01] Giao của các nhóm con và tháp chỉ số"
+  title="Giao của hai nhóm con có cấp nguyên tố cùng nhau"
+  group="Nhóm B"
 >
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Ứng dụng Định lý Lagrange vào giao nhóm con và sự tồn tại của nhóm con
-- **Mục tiêu đánh giá:** Sử dụng tính chia hết của cấp nhóm con để chứng minh hai nhóm con có giao tầm thường và loại trừ sự tồn tại của nhóm con không thỏa mãn điều kiện chia hết.
-- **Mức độ:** Trung bình
-
-**Đề bài:**
 Cho $G$ là một nhóm hữu hạn, $H$ và $K$ là hai nhóm con của $G$.
 1. Chứng minh rằng nếu $\gcd(|H|, |K|) = 1$ thì $H \cap K = \{e\}$.
 2. Giả sử $|G| = 60$, $|H| = 12$ và $|K| = 35$. Hãy giải thích vì sao không thể cùng lúc tồn tại hai nhóm con như vậy trong nhóm $G$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Giao $H \cap K$ là nhóm con của cả $H$ và $K$. Áp dụng Định lý Lagrange cho $H \cap K \le H$ và $H \cap K \le K$.
 2. Áp dụng Định lý Lagrange cho $K \le G$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $H \cap K = \{e\}$ khi $\gcd(|H|, |K|) = 1$**
 
-**Ý 1: Chứng minh $H \cap K = \{e\}$ khi $\gcd(|H|, |K|) = 1$**
-Vì $H \le G$ và $K \le G$, theo tính chất của giao nhóm con, ta có:
-$$
-H \cap K \le H \quad \text{và} \quad H \cap K \le K.
-$$
-Áp dụng Định lý Lagrange (<Ref to="thm-c3-b2-lagrange" />):
-- Từ $H \cap K \le H$, suy ra $|H \cap K| \mid |H|$.
-- Từ $H \cap K \le K$, suy ra $|H \cap K| \mid |K|$.
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Vì $H \le G$ và $K \le G$, giao của hai nhóm con $H \cap K$ cũng là một nhóm con của $G$. Do $H \cap K \subseteq H$ và $H \cap K \subseteq K$, ta đồng thời có:
+  $$
+  H \cap K \le H \quad \text{và} \quad H \cap K \le K.
+  $$
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  Áp dụng <Ref to="thm-c3-b2-lagrange" /> cho hai quan hệ nhóm con trên:
+  $$
+  |H \cap K| \mid |H| \quad \text{và} \quad |H \cap K| \mid |K|.
+  $$
+  Như vậy, $|H \cap K|$ là một ước chung nguyên dương của $|H|$ và $|K|$, kéo theo:
+  $$
+  |H \cap K| \mid \gcd(|H|, |K|) = 1.
+  $$
+  Vì cấp của một nhóm luôn là số nguyên dương lớn hơn hoặc bằng $1$, ta suy ra $|H \cap K| = 1$.
+- **Bước 3 — Kết luận:**
+  Nhóm con duy nhất có cấp bằng $1$ là nhóm con tầm thường, vậy $H \cap K = \{e\}$.
 
-Như vậy, $|H \cap K|$ là một ước số chung dương của $|H|$ và $|K|$.
-Do đó $|H \cap K|$ phải là ước của ước số chung lớn nhất:
-$$
-|H \cap K| \mid \gcd(|H|, |K|).
-$$
-Theo giả thiết $\gcd(|H|, |K|) = 1$, mà cấp của một nhóm con luôn là số nguyên dương $\ge 1$, ta suy ra:
-$$
-|H \cap K| = 1.
-$$
-Một nhóm có cấp bằng 1 chỉ chứa duy nhất phần tử trung hòa. Vậy $H \cap K = \{e\}$.
+**2. Giải thích vì sao không thể tồn tại nhóm con cấp $35$ trong nhóm cấp $60$**
 
-**Ý 2: Giải thích vì sao không thể cùng lúc tồn tại $|H| = 12$ và $|K| = 35$ trong nhóm cấp 60**
-Giả sử tồn tại nhóm con $K \le G$ có cấp $|K| = 35$.
-Theo Định lý Lagrange (<Ref to="thm-c3-b2-lagrange" />), cấp của nhóm con $K$ bắt buộc phải là ước của cấp nhóm mẹ $G$:
-$$
-|K| \mid |G| \implies 35 \mid 60.
-$$
-Tuy nhiên, $60 = 35 \cdot 1 + 25$, tức là 60 không chia hết cho 35 (vì $35 = 5 \cdot 7$, trong khi $60 = 2^2 \cdot 3 \cdot 5$ không chia hết cho 7).
-Điều này mâu thuẫn với Định lý Lagrange. Do đó, trong bất kỳ nhóm nào có cấp 60, không bao giờ có thể tồn tại nhóm con cấp 35 (dù nhóm con cấp 12 hoàn toàn có thể tồn tại vì $12 \mid 60$).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh $|H \cap K|$ là ước chung của $|H|$ và $|K|$ qua Lagrange | 0.40 điểm |
-| Kết luận chính xác $|H \cap K| = 1 \implies H \cap K = \{e\}$ | 0.20 điểm |
-| Chỉ rõ mâu thuẫn $35 \nmid 60$ theo Định lý Lagrange để bác bỏ sự tồn tại của $K$ | 0.40 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Theo <Ref to="thm-c3-b2-lagrange" />, nếu $K$ là một nhóm con của nhóm hữu hạn $G$ thì cấp $|K|$ bắt buộc phải là một ước của $|G|$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  Giả sử phản chứng rằng tồn tại nhóm con $K \le G$ với $|K| = 35$ trong nhóm $|G| = 60$. Khi đó ta phải có:
+  $$
+  35 \mid 60.
+  $$
+  Tuy nhiên, $60 = 35 \cdot 1 + 25$ (hay $35 = 5 \cdot 7$ trong khi $60 = 2^2 \cdot 3 \cdot 5$ không chia hết cho $7$), nên $35 \nmid 60$ (mâu thuẫn).
+- **Bước 3 — Kết luận:**
+  Không thể tồn tại nhóm con $K$ cấp $35$ trong nhóm $G$ cấp $60$.
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b2-c1"
-  title="[Nhóm C · Mã CTDS-C3-B2-C01] Phân loại nhóm có cấp chia hết cho 2 và Định lý Cauchy cho p = 2"
+  title="Sự tồn tại phần tử cấp 2 trong nhóm cấp chẵn và phân loại nhóm cấp 4"
+  group="Nhóm C"
 >
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Cấu trúc nhóm cấp chẵn và phân loại nhóm cấp 4
-- **Mục tiêu đánh giá:** Vận dụng phép phân hoạch nghịch đảo chứng minh sự tồn tại phần tử cấp 2 trong nhóm cấp chẵn và phân loại toàn diện mọi nhóm cấp 4.
-- **Mức độ:** Nâng cao
-
-**Đề bài:**
 Cho $G$ là một nhóm hữu hạn có cấp chẵn ($|G| = 2n$ với $n \in \mathbb{Z}^+$).
-1. Chứng minh rằng trong $G$ luôn tồn tại ít nhất một phần tử cấp 2 (tức tồn tại $a \in G \setminus \{e\}$ sao cho $a^2 = e$).
-2. Giả sử nhóm $G$ có cấp 4 ($|G| = 4$). Chứng minh rằng $G$ chỉ có thể đẳng cấu với một trong hai mô hình:
-   - Nhóm cyclic $\mathbb{Z}/4\mathbb{Z}$.
-   - Nhóm bốn Klein $V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
+1. Chứng minh rằng trong $G$ luôn tồn tại ít nhất một phần tử cấp $2$ (tức tồn tại $a \in G \setminus \{e\}$ sao cho $a^2 = e$).
+2. Giả sử nhóm $G$ có cấp $4$ ($|G| = 4$). Chứng minh rằng $G$ hoặc là một nhóm cyclic cấp $4$, hoặc là một nhóm giao hoán có dạng $G = \{e, a, b, c\}$ trong đó mọi phần tử khác $e$ đều có cấp $2$ (nhóm bốn Klein $V_4$).
 
-<details>
-<summary>Gợi ý</summary>
+<Hint>
+1. Ghép cặp mỗi phần tử $x \in G$ với phần tử nghịch đảo $x^{-1}$ của nó và đếm số phần tử tự nghịch đảo ($x = x^{-1}$).
+2. Theo <Ref to="cor-c3-b2-cap-phan-tu" />, cấp của mỗi phần tử khác $e$ trong nhóm cấp $4$ chỉ có thể bằng $2$ hoặc $4$.
+</Hint>
 
-1. Ghép cặp mỗi phần tử $x \in G$ với phần tử nghịch đảo $x^{-1}$ của nó. Phần tử nào tự nghịch đảo ($x = x^{-1}$)?
-2. Xét cấp của các phần tử khác $e$ trong nhóm cấp 4: chúng chỉ có thể có cấp 2 hoặc cấp 4. Phân nhánh theo sự tồn tại của phần tử cấp 4.
-</details>
+<Solution>
+**1. Chứng minh nhóm cấp chẵn luôn chứa ít nhất một phần tử cấp $2$**
 
-<details>
-<summary>Lời giải chi tiết</summary>
-
-**Ý 1: Chứng minh nhóm cấp chẵn luôn chứa phần tử cấp 2**
-Xét quan hệ ghép cặp trên tập hợp $G$: ghép mỗi phần tử $x \in G$ với nghịch đảo $x^{-1}$ của nó.
-Tập hợp $G$ được phân chia thành hai loại phần tử:
-- Loại 1: Các phần tử tự nghịch đảo, tức $x = x^{-1} \iff x^2 = e$.
-- Loại 2: Các phần tử không tự nghịch đảo, tức $x \ne x^{-1}$.
-
-Tập hợp các phần tử loại 2 luôn được chia thành các cặp rời nhau $\{x, x^{-1}\}$. Do đó, số lượng phần tử loại 2 luôn là một số chẵn, đặt là $2k$ với $k \ge 0$.
-
-Gọi $S = \{x \in G \mid x^2 = e\}$ là tập hợp các phần tử loại 1. Ta có:
-$$
-|G| = |S| + 2k.
-$$
-Vì $|G| = 2n$ là số chẵn, suy ra $|S| = |G| - 2k = 2n - 2k$ cũng bắt buộc phải là một **số chẵn**.
-Mặt khác, phần tử trung hòa $e$ luôn thỏa mãn $e^2 = e$, do đó $e \in S$, kéo theo $|S| \ge 1$.
-Vì $|S|$ là số chẵn và $|S| \ge 1$, ta suy ra:
-$$
-|S| \ge 2.
-$$
-Điều này khẳng định ngoài phần tử $e$, tập $S$ bắt buộc phải chứa ít nhất một phần tử $a \ne e$.
-Phần tử $a$ này thỏa mãn $a \ne e$ và $a^2 = e$, tức là $\operatorname{ord}(a) = 2$.
-
-**Ý 2: Phân loại mọi nhóm cấp 4**
-Cho $|G| = 4$. Cấp của phần tử khác $e$ chỉ có thể là ước của 4 và lớn hơn 1, tức là nhận giá trị 2 hoặc 4.
-Ta xét hai trường hợp loại trừ nhau:
-
-- **Trường hợp 1:** $G$ chứa ít nhất một phần tử $a$ có cấp bằng 4 ($\operatorname{ord}(a) = 4$).
-  Khi đó nhóm con cyclic $\langle a \rangle$ có cấp bằng 4. Vì $|\langle a \rangle| = |G| = 4$, ta có $G = \langle a \rangle$.
-  Do đó, $G$ là nhóm cyclic cấp 4, và $G \cong \mathbb{Z}/4\mathbb{Z}$.
-
-- **Trường hợp 2:** $G$ không chứa bất kỳ phần tử nào có cấp bằng 4.
-  Khi đó, mọi phần tử $x \in G \setminus \{e\}$ đều bắt buộc phải có cấp bằng 2, tức là $x^2 = e$ với mọi $x \in G$.
-  Ta đã biết một nhóm mà mọi phần tử đều có cấp 2 thì bắt buộc phải là nhóm giao hoán (vì $(xy)^2 = e \implies xyxy = e \implies xy = y^{-1}x^{-1} = yx$).
-  Gọi $G = \{e, a, b, c\}$. Vì $a^2 = b^2 = c^2 = e$, tích $ab$ không thể bằng $e$ (vì $a \ne b$), không thể bằng $a$ (vì $b \ne e$), không thể bằng $b$ (vì $a \ne e$). Do đó buộc phải có $ab = c$.
-  Bảng Cayley của $G$ được xác định duy nhất:
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Xét phép ghép cặp mỗi phần tử $x \in G$ với phần tử nghịch đảo $x^{-1}$ của nó. Một phần tử $x \in G$ trùng với nghịch đảo của chính nó khi và chỉ khi:
   $$
-  ab = ba = c, \quad bc = cb = a, \quad ca = ac = b.
+  x = x^{-1} \iff x^2 = e.
   $$
-  Cấu trúc này đẳng cấu với nhóm bốn Klein $V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  Đặt $S = \{x \in G \mid x^2 = e\}$. Mọi phần tử $x \in G \setminus S$ đều thỏa mãn $x \ne x^{-1}$, nên tập bù $G \setminus S$ được phân hoạch thành các cặp đôi một rời nhau có dạng $\{x, x^{-1}\}$. Do đó số phần tử của $G \setminus S$ là một số chẵn $2k$ ($k \in \mathbb{N}$), suy ra:
+  $$
+  |S| = |G| - 2k = 2n - 2k = 2(n - k).
+  $$
+  Vì $|S|$ là một số chẵn và $e \in S$ (nên $|S| \ge 1$), ta bắt buộc phải có $|S| \ge 2$.
+- **Bước 3 — Kết luận:**
+  Ngoài phần tử trung hòa $e$, tập $S$ luôn chứa ít nhất một phần tử $a \ne e$ thỏa mãn $a^2 = e$, tức là $\operatorname{ord}(a) = 2$.
 
-Vậy mọi nhóm cấp 4 chỉ có thể là $\mathbb{Z}/4\mathbb{Z}$ hoặc $V_4$.
-</details>
+**2. Phân loại cấu trúc của nhóm cấp $4$**
 
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Thiết lập phép phân hoạch nghịch đảo $x \mapsto x^{-1}$ và lập luận tính chẵn | 0.30 điểm |
-| Suy ra $|S| \ge 2$ và khẳng định sự tồn tại của phần tử cấp 2 | 0.20 điểm |
-| Phân tích trường hợp có phần tử cấp 4 dẫn tới $G \cong \mathbb{Z}/4\mathbb{Z}$ | 0.25 điểm |
-| Phân tích trường hợp mọi phần tử khác $e$ đều có cấp 2 dẫn tới $G \cong V_4$ | 0.25 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Với $|G| = 4$, theo <Ref to="cor-c3-b2-cap-phan-tu" />, mọi phần tử $x \in G \setminus \{e\}$ chỉ có thể có cấp là ước của $4$ lớn hơn $1$, tức là $\operatorname{ord}(x) \in \{2, 4\}$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  + **Trường hợp 1:** Tồn tại phần tử $a \in G$ có $\operatorname{ord}(a) = 4$. Khi đó nhóm con cyclic $\langle a \rangle$ có cấp $|\langle a \rangle| = 4 = |G|$, suy ra $G = \langle a \rangle$ là nhóm cyclic cấp $4$.
+  + **Trường hợp 2:** Không tồn tại phần tử nào của $G$ có cấp $4$. Khi đó mọi phần tử $x \in G \setminus \{e\}$ đều có cấp $2$, nghĩa là $x^2 = e$ với mọi $x \in G$. Viết $G = \{e, a, b, c\}$. Vì $a^2 = b^2 = c^2 = e$, tích $ab$ không thể bằng $e$ (do $a \ne b^{-1} = b$), không thể bằng $a$ (do $b \ne e$) và không thể bằng $b$ (do $a \ne e$), nên buộc phải có $ab = c$. Tương tự:
+    $$
+    ab = ba = c, \quad bc = cb = a, \quad ca = ac = b.
+    $$
+- **Bước 3 — Kết luận:**
+  Mọi nhóm cấp $4$ đều là nhóm giao hoán và chỉ có thể là nhóm cyclic cấp $4$ hoặc có bảng phép toán trùng với nhóm bốn Klein $V_4$.
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b2-d1"
-  title="[Nhóm D · Mã CTDS-C3-B2-D01] Tính bất biến của nhóm con duy nhất theo cấp"
+  title="Tính bất biến của nhóm con duy nhất theo cấp và công thức nhân chỉ số"
+  group="Nhóm D"
 >
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Tác động liên hợp và tính bất biến của nhóm con
-- **Mục tiêu đánh giá:** Chứng minh nhóm con duy nhất của một cấp cho trước là bất biến dưới phép liên hợp ($gHg^{-1} = H$), tạo tiền đề cho khái niệm nhóm con chuẩn tắc.
-- **Mức độ:** Nâng cao
+1. Cho $G$ là một nhóm hữu hạn và $H$ là nhóm con **duy nhất** của $G$ có cấp $|H| = m$. Chứng minh rằng với mọi $g \in G$, tập hợp $g H g^{-1} = \{g h g^{-1} \mid h \in H\}$ cũng là một nhóm con của $G$ có cấp $m$, từ đó suy ra $g H g^{-1} = H$ và $g H = H g$ với mọi $g \in G$.
+2. *(Bài tập mở rộng 3.29 — Công thức nhân chỉ số):* Cho nhóm $G$ và chuỗi nhóm con lồng nhau $K \le H \le G$ với $[G:H] = m < \infty$ và $[H:K] = n < \infty$. Chứng minh rằng $[G:K]$ hữu hạn và thỏa mãn:
+   $$
+   [G:K] = [G:H] \cdot [H:K].
+   $$
 
-**Đề bài:**
-Cho $G$ là một nhóm hữu hạn và $H$ là một nhóm con của $G$ có cấp $|H| = m$. Giả sử $H$ là **nhóm con duy nhất** của $G$ có cấp bằng $m$.
-1. Chứng minh rằng với mọi phần tử $g \in G$, tập hợp $g H g^{-1} = \{g h g^{-1} \mid h \in H\}$ cũng là một nhóm con của $G$ và $|g H g^{-1}| = |H|$.
-2. Từ tính duy nhất của $H$, chứng minh rằng $g H g^{-1} = H$ với mọi $g \in G$, tương đương với $g H = H g$ với mọi $g \in G$.
-3. Hãy giải thích vì sao tính chất này là bước đệm then chốt dẫn tới định nghĩa của **Nhóm con chuẩn tắc** (Normal Subgroup) ở Chương 4.
+<Hint>
+1. Kiểm tra tiêu chuẩn nhóm con cho tập liên hợp $g H g^{-1}$, thiết lập song ánh $h \mapsto g h g^{-1}$ để suy ra $|g H g^{-1}| = |H| = m$, rồi dùng tính duy nhất của $H$.
+2. Gọi $\{g_1, \dots, g_m\}$ là hệ đại diện lớp kề trái của $H$ trong $G$ và $\{h_1, \dots, h_n\}$ là hệ đại diện lớp kề trái của $K$ trong $H$; chứng minh $\{(g_i h_j)K\}$ phân hoạch $G$.
+</Hint>
 
-<details>
-<summary>Gợi ý</summary>
+<Solution>
+**1. Chứng minh $g H g^{-1} = H$ và $g H = H g$ với mọi $g \in G$**
 
-1. Kiểm tra tiêu chuẩn nhóm con cho tập liên hợp $g H g^{-1}$ và thiết lập song ánh từ $H$ vào $g H g^{-1}$.
-2. Vì $g H g^{-1}$ là nhóm con cấp $m$, mà $H$ là nhóm con duy nhất cấp $m$, hai tập hợp này buộc phải trùng nhau.
-3. Liên hệ với điều kiện lớp kề trái bằng lớp kề phải $gH = Hg$.
-</details>
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Để chứng minh $g H g^{-1} = H$, ta chứng minh $g H g^{-1}$ là một nhóm con của $G$ có cùng cấp $m$ với $H$, sau đó áp dụng giả thiết $H$ là nhóm con duy nhất cấp $m$.
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  + *Kiểm tra nhóm con:* Vì $e \in H$ nên $e = g e g^{-1} \in g H g^{-1} \ne \varnothing$. Với mọi $x = g h_1 g^{-1}, y = g h_2 g^{-1} \in g H g^{-1}$ ($h_1, h_2 \in H$), ta có:
+    $$
+    x y^{-1} = (g h_1 g^{-1})(g h_2 g^{-1})^{-1} = g h_1 g^{-1} g h_2^{-1} g^{-1} = g (h_1 h_2^{-1}) g^{-1} \in g H g^{-1}.
+    $$
+    Do đó $g H g^{-1} \le G$.
+  + *Tính cấp:* Ánh xạ $\phi_g : H \to g H g^{-1}$ cho bởi $\phi_g(h) = g h g^{-1}$ là một song ánh (có ánh xạ ngược $y \mapsto g^{-1} y g$), suy ra $|g H g^{-1}| = |H| = m$.
+  + *Sử dụng tính duy nhất:* Vì $H$ là nhóm con duy nhất của $G$ có cấp $m$, ta buộc phải có:
+    $$
+    g H g^{-1} = H \implies (g H g^{-1}) g = H g \implies g H = H g, \quad \forall g \in G.
+    $$
+- **Bước 3 — Kết luận:**
+  Với mọi $g \in G$, ta luôn có $g H g^{-1} = H$ và lớp kề trái $gH$ trùng với lớp kề phải $Hg$.
 
-<details>
-<summary>Lời giải chi tiết</summary>
+**2. Chứng minh công thức nhân chỉ số $[G:K] = [G:H] \cdot [H:K]$**
 
-**Ý 1: Chứng minh $g H g^{-1} \le G$ và $|g H g^{-1}| = |H|$**
-- *Không rỗng:* Vì $e \in H$, ta có $g e g^{-1} = g g^{-1} = e \in g H g^{-1}$.
-- *Đóng kín dưới phép nhân:* Lấy $x, y \in g H g^{-1}$, tồn tại $h_1, h_2 \in H$ sao cho $x = g h_1 g^{-1}$ và $y = g h_2 g^{-1}$. Khi đó:
+- **Bước 1 — Nhận xét / Cơ sở lý thuyết:**
+  Gọi $\{g_1, g_2, \dots, g_m\}$ là hệ đại diện đầy đủ các lớp kề trái của $H$ trong $G$, và $\{h_1, h_2, \dots, h_n\}$ là hệ đại diện đầy đủ các lớp kề trái của $K$ trong $H$:
   $$
-  x y = (g h_1 g^{-1})(g h_2 g^{-1}) = g h_1 (g^{-1} g) h_2 g^{-1} = g (h_1 h_2) g^{-1}.
+  G = \bigsqcup_{i=1}^m g_i H, \qquad H = \bigsqcup_{j=1}^n h_j K.
   $$
-  Vì $H \le G$, ta có $h_1 h_2 \in H$, suy ra $x y \in g H g^{-1}$.
-- *Đóng kín dưới nghịch đảo:* Lấy $x = g h g^{-1} \in g H g^{-1}$ với $h \in H$. Ta có:
+- **Bước 2 — Trình bày biến đổi từng bước:**
+  Thay phân hoạch của $H$ vào từng lớp kề $g_i H$, ta được $G = \bigcup_{i=1}^m \bigcup_{j=1}^n (g_i h_j) K$. Giả sử hai lớp kề $(g_i h_j) K$ và $(g_r h_s) K$ có giao khác rỗng; khi đó chúng trùng nhau:
   $$
-  x^{-1} = (g h g^{-1})^{-1} = (g^{-1})^{-1} h^{-1} g^{-1} = g h^{-1} g^{-1}.
+  (g_i h_j) K = (g_r h_s) K \implies (g_i h_j)^{-1} (g_r h_s) = h_j^{-1} g_i^{-1} g_r h_s \in K \subseteq H.
   $$
-  Vì $H \le G$, $h^{-1} \in H$, suy ra $x^{-1} \in g H g^{-1}$.
-Vậy $g H g^{-1} \le G$.
-
-- *Lực lượng:* Xét ánh xạ liên hợp $\phi_g: H \to g H g^{-1}$ cho bởi $\phi_g(h) = g h g^{-1}$.
-  - Toàn ánh: Hiển nhiên theo định nghĩa tập $g H g^{-1}$.
-  - Đơn ánh: Nếu $\phi_g(h_1) = \phi_g(h_2) \implies g h_1 g^{-1} = g h_2 g^{-1}$, nhân $g^{-1}$ bên trái và $g$ bên phải suy ra $h_1 = h_2$.
-  Do đó $\phi_g$ là một song ánh, kéo theo $|g H g^{-1}| = |H| = m$.
-
-**Ý 2: Chứng minh $g H g^{-1} = H$ và $g H = H g$**
-Theo câu 1, với mọi $g \in G$, $g H g^{-1}$ là một nhóm con của $G$ có cấp đúng bằng $m$.
-Theo giả thiết của bài toán, $H$ là nhóm con DUY NHẤT của $G$ có cấp bằng $m$. Do đó, nhóm con $g H g^{-1}$ bắt buộc phải trùng với $H$:
-$$
-g H g^{-1} = H, \quad \forall g \in G.
-$$
-Từ đẳng thức này, nhân thêm phần tử $g$ vào bên phải của cả hai vế:
-$$
-(g H g^{-1}) g = H g \implies g H (g^{-1} g) = H g \implies g H = H g, \quad \forall g \in G.
-$$
-Đẳng thức này khẳng định lớp kề trái $gH$ luôn trùng với lớp kề phải $Hg$ với mọi $g \in G$.
-
-**Ý 3: Ý nghĩa chuẩn bị cho cấu trúc nhóm con chuẩn tắc**
-Trong bài học trước, ta đã thấy nói chung lớp kề trái $gH$ không nhất thiết phải bằng lớp kề phải $Hg$ (ví dụ trong nhóm không giao hoán $S_3$). 
-Tuy nhiên, khi một nhóm con thỏa mãn $g H g^{-1} = H$ (hay $gH = Hg$) với mọi $g \in G$, các lớp kề của $H$ sẽ sở hữu một phép toán cảm sinh hoàn toàn tự nhiên:
-$$
-(aH)(bH) = (ab)H.
-$$
-Phép toán này biến tập hợp các lớp kề thành một nhóm mới gọi là **nhóm thương** (Quotient group) $G/H$. Nhóm con $H$ có tính chất bất biến này được gọi là **nhóm con chuẩn tắc** ($H \trianglelefteq G$), là đối tượng trung tâm của toàn bộ Chương 4.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh đầy đủ 3 tiên đề nhóm con cho $g H g^{-1}$ và song ánh $|g H g^{-1}| = |H|$ | 0.40 điểm |
-| Suy luận $g H g^{-1} = H$ từ tính duy nhất và biến đổi tương đương thành $g H = H g$ | 0.35 điểm |
-| Phân tích sâu sắc vai trò của tính chất này đối với phép nhân lớp kề và nhóm thương | 0.25 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+  Nhân $h_j$ vào bên trái và $h_s^{-1}$ vào bên phải, ta suy ra $g_i^{-1} g_r \in H$, tức là $g_i H = g_r H \implies i = r$. Thay $g_i = g_r$ trở lại, ta được $h_j^{-1} h_s \in K \implies h_j K = h_s K \implies j = s$.
+- **Bước 3 — Kết luận:**
+  Tất cả $m \cdot n$ lớp kề trái $(g_i h_j) K$ đôi một rời nhau và phân hoạch $G$, vậy $[G:K] = m \cdot n = [G:H] \cdot [H:K]$.
+</Solution>
 </Exercise>
 
 ---
 
-## 6. Tóm tắt kiến thức cốt lõi
+## 5. Tóm tắt kiến thức cốt lõi
 
 <KeyTakeaways>
-- **Định lý Lagrange:** Nếu $G$ hữu hạn và $H \le G$, thì $|G| = [G:H]|H|$. Kéo theo $|H| \mid |G|$ và $[G:H] \mid |G|$.
-- **Tháp chỉ số:** Với chuỗi nhóm con $K \le H \le G$, ta luôn có công thức nhân chỉ số $[G:K] = [G:H][H:K]$.
-- **Cấp phần tử:** Trong nhóm hữu hạn $G$, cấp của mọi phần tử $a \in G$ đều chia hết cho cấp của nhóm ($\operatorname{ord}(a) \mid |G|$), và do đó $a^{|G|} = e$.
-- **Nhóm cấp nguyên tố:** Mọi nhóm có cấp nguyên tố $p$ đều là nhóm cyclic đẳng cấu với $\mathbb{Z}/p\mathbb{Z}$. Mọi phần tử khác $e$ đều là phần tử sinh.
-- **Cầu nối số học:** Định lý Euler $a^{\varphi(n)} \equiv 1 \pmod n$ và Định lý Fermat nhỏ $a^{p-1} \equiv 1 \pmod p$ chính là hệ quả trực tiếp của Định lý Lagrange áp dụng cho nhóm các phần tử khả nghịch $U(n) = (\mathbb{Z}/n\mathbb{Z})^\times$.
+- **Định lý Lagrange:** Nếu $G$ là nhóm hữu hạn và $H \le G$, thì $|G| = [G:H] \cdot |H|$. Hệ quả trực tiếp là $|H| \mid |G|$ và $[G:H] \mid |G|$.
+- **Cấp phần tử:** Trong nhóm hữu hạn $G$, cấp của mọi phần tử $a \in G$ đều là ước của cấp nhóm ($\operatorname{ord}(a) \mid |G|$), kéo theo $a^{|G|} = e$.
+- **Nhóm cấp nguyên tố:** Mọi nhóm có cấp nguyên tố $p$ đều là nhóm cyclic giao hoán, và mọi phần tử $a \ne e$ đều là phần tử sinh của nhóm.
+- **Ứng dụng số học:** Định lý Euler $a^{\varphi(n)} \equiv 1 \pmod n$ (với $\gcd(a, n) = 1$) và Định lý Fermat nhỏ $a^{p-1} \equiv 1 \pmod p$ (với $p \nmid a$) là hệ quả trực tiếp của Định lý Lagrange áp dụng cho nhóm nhân các lớp đồng dư khả nghịch $U(n) = (\mathbb{Z}/n\mathbb{Z})^\times$.
 </KeyTakeaways>

@@ -18,9 +18,6 @@ sources:
     pages: '5-7'
     sections: 'Mục 0.4'
     note: 'Quan hệ tương đương, tập thương, phân hoạch, Định lý 0.5 (trang 5-6), Ví dụ 0.6 - 0.8 và Phản ví dụ 0.9'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '10-14'
-    sections: 'Chương 0'
 status: published
 version: 0.1.0
 authoring:
@@ -74,7 +71,7 @@ Khi $\sim$ là một quan hệ tương đương trên $X$, ta gom tất cả cá
 >
 Giả sử $\sim$ là một quan hệ tương đương trên tập hợp $X$.
 
-1. Với mỗi $x \in X$, **lớp tương đương** của $x$ đối với quan hệ $\sim$, ký hiệu là $[x]$ (hoặc $[x]_\sim$, $\bar{x}$), là tập con của $X$ xác định bởi:
+1. Với mỗi $x \in X$, **lớp tương đương** của $x$ đối với quan hệ $\sim$, ký hiệu là $[x]$ (hoặc $[x]_\sim$), là tập con của $X$ xác định bởi:
    $$
    [x] = \{y \in X \mid x \sim y\} \subseteq X.
    $$
@@ -195,7 +192,7 @@ a \equiv b \pmod{n},
 $$
 nếu $n \mid (a - b)$, tức là tồn tại $k \in \Z$ sao cho $a - b = nk$.
 
-1. Lớp tương đương của $a \in \Z$ theo quan hệ đồng dư modulo $n$ được gọi là **lớp thặng dư** (hay **lớp đồng dư**) của $a$ modulo $n$, ký hiệu là $[a]_n$ (hoặc $\bar{a}$ khi $n$ đã rõ):
+1. Lớp tương đương của $a \in \Z$ theo quan hệ đồng dư modulo $n$ được gọi là **lớp thặng dư** (hay **lớp đồng dư**) của $a$ modulo $n$, ký hiệu là $[a]_n$ (hoặc $[a]$ khi môđulô $n$ đã rõ):
    $$
    [a]_n = \{a + nk \mid k \in \Z\} = a + n\Z.
    $$
@@ -245,7 +242,7 @@ Cho ánh xạ $f: X \to Y$. Trên miền xác định $X$, xét quan hệ $\sim_
 $$
 x \sim_f x' \iff f(x) = f(x'), \quad \forall x, x' \in X.
 $$
-Khi đó $\sim_f$ là một quan hệ tương đương trên $X$ (được gọi là **quan hệ cùng ảnh** hay **quan hệ hạt nhân** của $f$). Với mỗi $x \in X$, lớp tương đương của $x$ chính là thớ của $f$ trên phần tử $f(x)$:
+Khi đó $\sim_f$ là một quan hệ tương đương trên $X$ (được gọi là **quan hệ cùng ảnh** của $f$). Với mỗi $x \in X$, lớp tương đương của $x$ chính là thớ của $f$ trên phần tử $f(x)$:
 $$
 [x]_{\sim_f} = \{x' \in X \mid f(x') = f(x)\} = f^{-1}(\{f(x)\}),
 $$
@@ -277,18 +274,12 @@ chính là đường thẳng đi qua $M_0$ và song song với đường thẳng
 
 ## 4. Bài tập tự luyện
 
-<Exercise id="exr-c0-b2-a1" title="[Nhóm A · Mã CTDS-C0-B2-A01] Kiểm tra quan hệ tương đương và mô tả các lớp đồng dư trong Z/12Z">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Nhận diện lớp đồng dư trong $\Z/n\Z$, tìm đại diện chuẩn và liệt kê các lớp nguyên tố cùng nhau với $n$
-- **Mục tiêu đánh giá:** Xác định đúng đại diện chuẩn của các lớp trong $\Z/12\Z$ và vận dụng tính bất biến của $\gcd(a, n)$ trên lớp đồng dư *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b2-dong-du-modulo-n" /> · <Ref to="prop-c0-b2-dong-du-va-ucln" /> · <Cite source="gt-ctds-hvk-2026" page="5-6" note="Mục 0.4" />
-
+<Exercise id="exr-c0-b2-a1" title="Kiểm tra quan hệ tương đương và mô tả các lớp đồng dư trong Z/12Z" group="Nhóm A">
 **Đề bài:** Trong tập thương $\Z/12\Z$ của quan hệ đồng dư modulo $12$:
 
 1. Cho các lớp đồng dư $[-29]_{12}, [43]_{12}, [91]_{12}, [-5]_{12}, [100]_{12}, [-20]_{12}$. Hãy tìm phần tử đại diện chuẩn $r \in R_{12} = \{0, 1, \dots, 11\}$ của từng lớp và chỉ ra những lớp nào trong số đó bằng nhau.
 2. Liệt kê tất cả các lớp $[r]_{12} \in \Z/12\Z$ thỏa mãn $\gcd(r, 12) = 1$. Với lớp $[7]_{12}$, hãy kiểm tra trực tiếp rằng ba phần tử đại diện $a_1 = 7, a_2 = -5, a_3 = 31$ đều thuộc $[7]_{12}$ và cùng thỏa mãn $\gcd(a_i, 12) = 1$.
-</Exercise>
+
 
 <Hint>
 Ở câu (1), thực hiện phép chia Euclid có dư không âm ($a = 12q + r$ với $0 \le r < 12$) cho từng số nguyên; chú ý với số âm như $-29 = 12 \cdot (-3) + 7$ thì số dư là $7$ chứ không phải $-5$. Ở câu (2), dùng <Ref to="prop-c0-b2-dong-du-va-ucln" />.
@@ -308,24 +299,10 @@ chính là đường thẳng đi qua $M_0$ và song song với đường thẳng
    [1]_{12}, \quad [5]_{12}, \quad [7]_{12}, \quad [11]_{12}.
    $$
    Với lớp $[7]_{12}$, ta có $-5 - 7 = -12 = 12 \cdot (-1)$ và $31 - 7 = 24 = 12 \cdot 2$, nên $7, -5, 31 \in [7]_{12}$. Hơn nữa $\gcd(7, 12) = 1$, $\gcd(-5, 12) = 1$ và $\gcd(31, 12) = 1$, đúng như khẳng định ở ý (3) của <Ref to="prop-c0-b2-dong-du-va-ucln" />.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Tìm đúng đại diện chuẩn $r \in R_{12}$ cho cả $6$ lớp (đặc biệt xử lý đúng các số âm $-29, -5, -20$) | `0,35 đ` |
-| 1b | Kết luận đúng hai nhóm lớp bằng nhau ($[7]_{12}$ và $[4]_{12}$) | `0,15 đ` |
-| 2a | Liệt kê đúng $4$ lớp $[1]_{12}, [5]_{12}, [7]_{12}, [11]_{12}$ có $\gcd(r, 12) = 1$ | `0,25 đ` |
-| 2b | Kiểm tra đúng $7, -5, 31 \in [7]_{12}$ và $\gcd(a_i, 12) = 1$ với $i = 1, 2, 3$ | `0,25 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c0-b2-b1" title="[Nhóm B · Mã CTDS-C0-B2-B01] Khảo sát quan hệ tương đương và mô tả hình học tập thương qua quan hệ cùng ảnh">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Áp dụng <Ref to="prop-c0-b2-quan-he-cung-anh" /> và <Ref to="thm-c0-b2-quan-he-tuong-duong-va-phan-hoach" /> để chứng minh quan hệ tương đương và tìm tập thương
-- **Mục tiêu đánh giá:** Nhận diện được quan hệ đã cho là quan hệ cùng ảnh của một ánh xạ để chứng minh nhanh và mô tả chính xác các lớp tương đương *(Đánh giá quá trình)*
-- **Mức độ khó:** Trung bình (Mức 2)
-- **Nguồn kiến thức liên quan:** <Ref to="thm-c0-b2-quan-he-tuong-duong-va-phan-hoach" /> · <Ref to="prop-c0-b2-quan-he-cung-anh" /> · <Cite source="gt-ctds-hvk-2026" page="5-6, 13" note="Mục 0.4 & Bài tập 0.9" />
-
+<Exercise id="exr-c0-b2-b1" title="Khảo sát quan hệ tương đương và mô tả hình học tập thương qua quan hệ cùng ảnh" group="Nhóm B">
 **Đề bài:** Trên mặt phẳng tọa độ $\R^2$, xét quan hệ hai ngôi $\sim$ xác định bởi:
 $$
 (x_1, y_1) \sim (x_2, y_2) \iff x_1^2 + y_1^2 = x_2^2 + y_2^2.
@@ -333,7 +310,7 @@ $$
 
 1. Chứng minh rằng $\sim$ là một quan hệ tương đương trên $\R^2$ bằng hai cách: (i) kiểm tra trực tiếp ba tính chất phản xạ, đối xứng, bắc cầu; và (ii) sử dụng <Ref to="prop-c0-b2-quan-he-cung-anh" /> với một ánh xạ $f: \R^2 \to \R$ thích hợp.
 2. Mô tả hình học lớp tương đương $[(x_0, y_0)]$ của một điểm $(x_0, y_0) \in \R^2$ bất kỳ. Tìm một tập con $S \subseteq \R^2$ sao cho mỗi lớp tương đương trong $\R^2/{\sim}$ đều chứa **duy nhất** một phần tử đại diện thuộc $S$.
-</Exercise>
+
 
 <Hint>
 Ở câu (1), xét ánh xạ $f: \R^2 \to \R, (x, y) \mapsto x^2 + y^2$. Ở câu (2), chú ý $r^2 = x_0^2 + y_0^2 \ge 0$; khi $r > 0$ thì tập hợp $\{(x, y) \in \R^2 \mid x^2 + y^2 = r^2\}$ là đường gì, và giao của nó với tia $Ox^+$ là điểm nào?
@@ -353,31 +330,15 @@ $$
    - Nếu $(x_0, y_0) = (0, 0)$ (tức $r = 0$), lớp tương đương chỉ gồm một điểm duy nhất là gốc tọa độ $[(0, 0)] = \{(0, 0)\}$.
    - Nếu $(x_0, y_0) \neq (0, 0)$ (tức $r > 0$), lớp tương đương $[(x_0, y_0)]$ là **đường tròn tâm $O(0, 0)$ bán kính $r$**.
    Mỗi đường tròn tâm $O$ bán kính $r \ge 0$ cắt tia trục hoành không âm $S = \{(r, 0) \mid r \ge 0\} \subseteq \R^2$ tại **duy nhất** một điểm $(r, 0)$. Vậy $S = [0, +\infty) \times \{0\}$ là một hệ đại diện đầy đủ và duy nhất cho tập thương $\R^2/{\sim}$.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Kiểm tra đúng 3 tính chất phản xạ, đối xứng, bắc cầu của quan hệ $\sim$ | `0,25 đ` |
-| 1b | Chỉ ra đúng ánh xạ $f(x, y) = x^2 + y^2$ và áp dụng <Ref to="prop-c0-b2-quan-he-cung-anh" /> | `0,25 đ` |
-| 2a | Mô tả đúng lớp tương đương là gốc tọa độ $\{(0,0)\}$ (khi $r=0$) và đường tròn tâm $O$ bán kính $r$ (khi $r>0$) | `0,25 đ` |
-| 2b | Chỉ ra đúng hệ đại diện duy nhất (chẳng hạn tia $S = \{(r, 0) \mid r \ge 0\}$) và giải thích tính duy nhất | `0,25 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c0-b2-c1" title="[Nhóm C · Mã CTDS-C0-B2-C01] Sự cần thiết của tính khác rỗng trong tiên đề phản xạ và phân biệt quan hệ tương đương">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Phân tích lỗ hổng trong chứng minh giả tạo "đối xứng + bắc cầu suy ra phản xạ" và kiểm định các quan hệ trên $\Z$
-- **Mục tiêu đánh giá:** Phát hiện chính xác lỗi ẩn giả thiết trong một lập luận sai kinh điển về quan hệ tương đương và xây dựng phản ví dụ *(Kiểm tra giữa kỳ)*
-- **Mức độ khó:** Khá – Giỏi (Mức 3)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b2-quan-he-tuong-duong" /> · <Ref to="thm-c0-b2-quan-he-tuong-duong-va-phan-hoach" /> · <Cite source="gt-ctds-hvk-2026" page="5-7, 13" note="Mục 0.4 & Bài tập 0.11" />
-
-**Đề bài:**
-
+<Exercise id="exr-c0-b2-c1" title="Sự cần thiết của tính khác rỗng trong tiên đề phản xạ và phân biệt quan hệ tương đương" group="Nhóm C">
 1. Một sinh viên lập luận rằng tiên đề *phản xạ* trong <Ref to="def-c0-b2-quan-he-tuong-duong" /> là thừa vì có thể suy ra từ tính *đối xứng* và *bắc cầu* như sau:
    > *"Lấy $x \in X$. Nếu $x \sim y$ thì do tính đối xứng ta có $y \sim x$; áp dụng tính bắc cầu cho $x \sim y$ và $y \sim x$, ta suy ra $x \sim x$."*
    Hãy chỉ rõ lập luận trên sai ở đâu và xây dựng một phản ví dụ cụ thể trên tập số nguyên $\Z$ về một quan hệ vừa đối xứng, vừa bắc cầu nhưng **không phản xạ**.
 2. Giả sử quan hệ $\sim$ trên $X$ có tính đối xứng, bắc cầu và thỏa mãn thêm điều kiện: với mọi $x \in X$, luôn tồn tại ít nhất một $y \in X$ sao cho $x \sim y$. Chứng minh rằng khi đó $\sim$ thực sự là một quan hệ tương đương trên $X$.
-</Exercise>
+
 
 <Hint>
 Ở câu (1), hãy tự hỏi: nếu với một phần tử $x_0 \in X$ nào đó, **không tồn tại bất kỳ $y \in X$ nào** thỏa mãn $x_0 \sim y$ thì sao? Chẳng hạn xét quan hệ $a \sim b \iff ab > 0$ trên $\Z$ tại phần tử $0$.
@@ -394,23 +355,10 @@ $$
    - *Bắc cầu:* Nếu $ab > 0$ và $bc > 0$ thì $a, b, c$ đều khác $0$ và $a, c$ cùng dấu với $b$, suy ra $ac > 0$, nên $a \sim c$.
    - *Không phản xạ:* Tại $a = 0 \in \Z$, ta có $0 \cdot 0 = 0 \ngtr 0$ nên $0 \nsim 0$ (phần tử $0$ không có quan hệ với bất kỳ phần tử nào trong $\Z$). Vậy $\sim$ đối xứng và bắc cầu nhưng không phản xạ.
 2. Giả sử $\sim$ có tính đối xứng, bắc cầu và với mọi $x \in X$, tồn tại $y \in X$ sao cho $x \sim y$. Khi đó với mỗi $x \in X$, lấy phần tử $y \in X$ thỏa mãn $x \sim y$. Nhờ tính đối xứng, từ $x \sim y$ ta suy ra $y \sim x$. Tiếp tục áp dụng tính bắc cầu cho $x \sim y$ và $y \sim x$, ta thu được $x \sim x$. Vậy $\sim$ có tính phản xạ trên toàn bộ $X$, nên là một quan hệ tương đương.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Chỉ ra chính xác lỗi ngầm giả sử sự tồn tại của $y \in X$ thỏa mãn $x \sim y$ | `0,35 đ` |
-| 1b | Đưa ra phản ví dụ hợp lệ trên $\Z$ (như $a \sim b \iff ab > 0$ hoặc quan hệ rỗng) và kiểm chứng đủ 3 ý | `0,35 đ` |
-| 2 | Chứng minh chặt chẽ $\sim$ phản xạ khi bổ sung giả thiết $\forall x \in X, \exists y \in X: x \sim y$ | `0,30 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c0-b2-d1" title="[Nhóm D · Mã CTDS-C0-B2-D01] Xây dựng tập số hữu tỉ như tập thương của quan hệ tương đương trên các cặp số nguyên">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Thiết lập quan hệ tương đương xây dựng trường phân thức/tập số hữu tỉ trên $P = \Z \times (\Z \setminus \{0\})$
-- **Mục tiêu đánh giá:** Chứng minh trọn vẹn tính tương đương của quan hệ nhân chéo $ad = bc$ (kể cả vai trò thiết yếu của điều kiện mẫu khác $0$) và mô tả dạng chuẩn tối giản của mỗi lớp *(Thi kết thúc học phần)*
-- **Mức độ khó:** Nâng cao (Mức 4)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c0-b2-quan-he-tuong-duong" /> · <Ref to="thm-c0-b2-quan-he-tuong-duong-va-phan-hoach" /> · <Cite source="gt-ctds-hvk-2026" page="1, 4, 5-6, 9-10" note="Mục 0.1, 0.3.1, 0.4 & Ví dụ 0.17" />
-
+<Exercise id="exr-c0-b2-d1" title="Xây dựng tập số hữu tỉ như tập thương của quan hệ tương đương trên các cặp số nguyên" group="Nhóm D">
 **Đề bài:** Đặt $P = \Z \times (\Z \setminus \{0\}) = \{(a, b) \mid a, b \in \Z, \, b \neq 0\}$. Trên tập $P$, xét quan hệ hai ngôi $\sim$ xác định bởi:
 $$
 (a, b) \sim (c, d) \iff ad = bc.
@@ -418,15 +366,16 @@ $$
 
 1. Chứng minh rằng $\sim$ là một quan hệ tương đương trên $P$. Chỉ rõ giả thiết $b \neq 0$ (với mọi $(a, b) \in P$) đã được sử dụng ở bước nào; nếu thay $P$ bằng toàn bộ $\Z \times \Z$ thì $\sim$ còn là quan hệ tương đương không?
 2. Chứng minh rằng mỗi lớp tương đương $[(a, b)] \in P/{\sim}$ đều chứa **duy nhất** một phần tử đại diện $(p, q) \in P$ thỏa mãn đồng thời $q > 0$ và $\gcd(p, q) = 1$ (đại diện phân số tối giản với mẫu dương).
-</Exercise>
+
 
 <Hint>
 Ở câu (1), khi chứng minh tính bắc cầu từ $ad = bc$ và $cf = de$, hãy nhân đẳng thức thứ nhất với $f$, đẳng thức thứ hai với $b$ để xuất hiện $bcf = bde$, rồi rút gọn $d \neq 0$. Ở câu (2), chia cả $a$ và $b$ cho $d = \gcd(a, b)$ và đổi dấu nếu mẫu âm; để chứng minh tính duy nhất, dùng Bổ đề Euclid (nếu $q \mid pq'$ và $\gcd(p, q) = 1$ thì $q \mid q'$).
 </Hint>
 
 <Solution>
-1. **Kiểm tra ba tính chất của quan hệ tương đương trên $P$:**
-   - *Phản xạ:* Với mọi $(a, b) \in P$, ta có $ab = ba$ nên $(a, b) \sim (a, b)$.
+**1. Kiểm tra ba tính chất của quan hệ tương đương trên $P$**
+
+ - *Phản xạ:* Với mọi $(a, b) \in P$, ta có $ab = ba$ nên $(a, b) \sim (a, b)$.
    - *Đối xứng:* Với mọi $(a, b), (c, d) \in P$, nếu $(a, b) \sim (c, d)$ thì $ad = bc$, suy ra $cb = da$, tức là $(c, d) \sim (a, b)$.
    - *Bắc cầu:* Giả sử $(a, b) \sim (c, d)$ và $(c, d) \sim (e, f)$ với $(a, b), (c, d), (e, f) \in P$. Khi đó:
      $$
@@ -439,8 +388,9 @@ $$
      Vì $(c, d) \in P$ nên **$d \neq 0$**; trong tập số nguyên $\Z$, từ $(af - be)d = 0$ và $d \neq 0$ ta suy ra $af - be = 0$, hay $af = be$, nghĩa là $(a, b) \sim (e, f)$.
 
    **Vai trò của điều kiện mẫu khác $0$:** Giả thiết $d \neq 0$ được dùng trực tiếp để giản ước $d$ ở bước bắc cầu. Nếu thay $P$ bằng $\Z \times \Z$, quan hệ $\sim$ **không còn tính bắc cầu**: chẳng hạn $(1, 1) \sim (0, 0)$ (vì $1 \cdot 0 = 1 \cdot 0$) và $(0, 0) \sim (2, 1)$ (vì $0 \cdot 1 = 0 \cdot 2$), nhưng $(1, 1) \nsim (2, 1)$ (vì $1 \cdot 1 \neq 1 \cdot 2$).
-2. **Sự tồn tại và tính duy nhất của đại diện tối giản mẫu dương:**
-   - *Sự tồn tại:* Cho $(a, b) \in P$ ($b \neq 0$). Đặt $g = \gcd(a, b) \ge 1$ và $\varepsilon = \operatorname{sgn}(b) \in \{1, -1\}$ (sao cho $\varepsilon b = |b| > 0$). Chọn:
+**2. Sự tồn tại và tính duy nhất của đại diện tối giản mẫu dương**
+
+ - *Sự tồn tại:* Cho $(a, b) \in P$ ($b \neq 0$). Đặt $g = \gcd(a, b) \ge 1$ và $\varepsilon = \operatorname{sgn}(b) \in \{1, -1\}$ (sao cho $\varepsilon b = |b| > 0$). Chọn:
      $$
      p = \frac{\varepsilon a}{g} \in \Z, \quad q = \frac{\varepsilon b}{g} = \frac{|b|}{g} \in \Z^+.
      $$
@@ -450,16 +400,8 @@ $$
      pq' = qp'.
      $$
      Đẳng thức này suy ra $q \mid pq'$ và $q' \mid qp'$. Vì $\gcd(p, q) = 1$ và $\gcd(p', q') = 1$, áp dụng Bổ đề Euclid ta có $q \mid q'$ và $q' \mid q$. Do $q > 0$ và $q' > 0$ nên $q = q'$. Thay $q = q' \neq 0$ vào $pq' = qp'$ ta được $p = p'$. Vậy đại diện $(p, q)$ là duy nhất.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Chứng minh đúng 3 tính chất phản xạ, đối xứng, bắc cầu của $\sim$ trên $P$ (làm rõ bước giản ước $d \neq 0$) | `0,35 đ` |
-| 1b | Chỉ ra phản ví dụ cụ thể với $(0, 0)$ chứng tỏ $\sim$ mất tính bắc cầu trên $\Z \times \Z$ | `0,15 đ` |
-| 2a | Xây dựng được đại diện $(p, q) \in [(a, b)]$ thỏa mãn $q > 0$ và $\gcd(p, q) = 1$ | `0,25 đ` |
-| 2b | Dùng $pq' = qp'$ và Bổ đề Euclid suy ra $q \mid q', q' \mid q \implies (p, q) = (p', q')$ | `0,25 đ` |
 </Solution>
+</Exercise>
 
 <KeyTakeaways>
 - **Quan hệ tương đương và tập thương (<Ref to="def-c0-b2-quan-he-tuong-duong" />, <Ref to="def-c0-b2-lop-tuong-duong-tap-thuong" />):** Quan hệ $\sim$ trên $X$ là tương đương nếu có đủ 3 tính chất *phản xạ*, *đối xứng*, *bắc cầu*; mỗi phần tử của tập thương $X/{\sim}$ là một lớp tương đương $[x] = \{y \in X \mid x \sim y\} \subseteq X$.

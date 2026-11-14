@@ -20,9 +20,6 @@ sources:
     pages: '17-22'
     sections: 'Mục 1.1, 1.2, 1.3'
     note: 'Tiên đề nhóm và Định lý 1.8 (trang 20)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '15-24'
-    sections: 'Chương 1, Mục 1.1'
 status: published
 version: 0.1.0
 authoring:
@@ -203,13 +200,7 @@ Trong một nhóm không giao hoán:
 
 ## 3. Bài tập tự luyện
 
-<Exercise id="exr-c1-b1-a1" title="[Nhóm A · Mã CTDS-C1-B1-A01] Nhận diện cấu trúc và giải phương trình trong nhóm ma trận">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Quy tắc nghịch đảo của tích và phương trình $AX = B, YA = B$ trong nhóm không giao hoán
-- **Mục tiêu đánh giá:** Thực hiện đúng phép tìm nghịch đảo và phân biệt nghiệm của $AX = B$ với $YA = B$ *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-- **Nguồn kiến thức liên quan:** <Ref to="thm-c1-b1-he-qua-tien-de-nhom" /> · <Cite source="gt-ctds-hvk-2026" page="20-21" note="Mục 1.3" />
-
+<Exercise id="exr-c1-b1-a1" title="Nhận diện cấu trúc và giải phương trình trong nhóm ma trận" group="Nhóm A">
 **Đề bài:** Trong nhóm nhân các ma trận thực khả nghịch cấp hai $\operatorname{GL}_2(\R)$, cho hai ma trận:
 $$
 A = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix}, \quad B = \begin{pmatrix} 1 & 0 \\ 3 & 1 \end{pmatrix}.
@@ -217,7 +208,7 @@ $$
 
 1. Tính $A^{-1}, B^{-1}$ và kiểm chứng trực tiếp đẳng thức $(AB)^{-1} = B^{-1}A^{-1} \neq A^{-1}B^{-1}$.
 2. Giải hai phương trình ma trận $AX = B$ và $YA = B$ trong $\operatorname{GL}_2(\R)$, từ đó so sánh $X$ và $Y$.
-</Exercise>
+
 
 <Hint>
 Áp dụng công thức nghịch đảo của ma trận cấp hai có định thức bằng $1$: $\begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1} = \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$. Ở câu (2), dùng công thức nghiệm duy nhất $X = A^{-1}B$ và $Y = BA^{-1}$ trong <Ref to="thm-c1-b1-he-qua-tien-de-nhom" />.
@@ -242,29 +233,15 @@ $$
    Y = BA^{-1} = \begin{pmatrix} 1 & 0 \\ 3 & 1 \end{pmatrix}\begin{pmatrix} 1 & -2 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & -2 \\ 3 & -5 \end{pmatrix}.
    $$
    Hai nghiệm $X$ và $Y$ khác nhau vì $A$ và $B$ không giao hoán.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Tính đúng $A^{-1}, B^{-1}$ và $(AB)^{-1}$ | `0,25 đ` |
-| 1b | Tính đúng $B^{-1}A^{-1} = (AB)^{-1}$ và chỉ ra $A^{-1}B^{-1} \neq (AB)^{-1}$ | `0,25 đ` |
-| 2a | Giải đúng nghiệm duy nhất $X = A^{-1}B = \begin{pmatrix} -5 & -2 \\ 3 & 1 \end{pmatrix}$ | `0,25 đ` |
-| 2b | Giải đúng nghiệm duy nhất $Y = BA^{-1} = \begin{pmatrix} 1 & -2 \\ 3 & -5 \end{pmatrix}$ và kết luận $X \neq Y$ | `0,25 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c1-b1-b1" title="[Nhóm B · Mã CTDS-C1-B1-B01] Áp dụng quy trình 4 bước và luật giản ước để rút gọn đẳng thức trong nhóm">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Vận dụng luật giản ước trái/phải và tính duy nhất của đơn vị trong nhóm
-- **Mục tiêu đánh giá:** Vận dụng <Ref to="thm-c1-b1-he-qua-tien-de-nhom" /> để biến đổi phương trình đại số trong một nhóm tùy ý *(Đánh giá quá trình)*
-- **Mức độ khó:** Trung bình (Mức 2)
-- **Nguồn kiến thức liên quan:** <Ref to="thm-c1-b1-he-qua-tien-de-nhom" /> · <Cite source="gt-ctds-hvk-2026" page="20-21" note="Định lý 1.8" />
-
+<Exercise id="exr-c1-b1-b1" title="Áp dụng quy trình 4 bước và luật giản ước để rút gọn đẳng thức trong nhóm" group="Nhóm B">
 **Đề bài:** Cho $(G, \cdot)$ là một nhóm với phần tử đơn vị $e$ và $a, b \in G$.
 
 1. Chứng minh rằng nếu $x \in G$ là một phần tử lũy đẳng (tức là $x^2 = x$) thì bắt buộc $x = e$.
 2. Giả sử hai phần tử $a, b \in G$ thỏa mãn $aba^{-1} = b^2$ và $a^2 = e$. Chứng minh rằng $b^3 = e$.
-</Exercise>
+
 
 <Hint>
 Ở ý (1), viết $x^2 = x$ thành $xx = xe$ rồi áp dụng luật giản ước trái. Ở ý (2), hãy tính $a^2 b a^{-2}$ bằng cách thay liên tiếp giả thiết $aba^{-1} = b^2$, sau đó kết hợp với $a^2 = e$.
@@ -281,29 +258,15 @@ $$
    b^4 = a(aba^{-1})a^{-1} = a^2 b (a^{-1})^2 = a^2 b (a^2)^{-1}.
    $$
    Do $a^2 = e$ nên $(a^2)^{-1} = e^{-1} = e$, suy ra $b^4 = ebe = b$, hay $b^3 \cdot b = e \cdot b$. Áp dụng luật giản ước phải cho $b$, ta kết luận $b^3 = e$.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1 | Viết được $xx = xe$ và áp dụng luật giản ước trái suy ra $x = e$ | `0,25 đ` |
-| 2a | Chứng minh được $(aba^{-1})^2 = ab^2a^{-1} = b^4$ nhờ tính kết hợp | `0,25 đ` |
-| 2b | Thay $b^2 = aba^{-1}$ và dùng $a^2 = e$ để suy ra $b^4 = b$ | `0,25 đ` |
-| 2c | Dùng luật giản ước suy ra $b^3 = e$ | `0,25 đ` |
 </Solution>
+</Exercise>
 
-<Exercise id="exr-c1-b1-c1" title="[Nhóm C · Mã CTDS-C1-B1-C01] Đặc trưng tính giao hoán của nhóm qua đẳng thức lũy thừa và phản ví dụ">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Điều kiện cần và đủ để một nhóm là nhóm abel
-- **Mục tiêu đánh giá:** Thiết lập chứng minh hai chiều bằng luật giản ước và xây dựng phản ví dụ khi giảm số phần tử kiểm tra *(Kiểm tra giữa kỳ)*
-- **Mức độ khó:** Khá – Giỏi (Mức 3)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c1-b1-nua-nhom-vi-nhom-nhom" /> · <Ref to="thm-c1-b1-he-qua-tien-de-nhom" /> · <Cite source="gt-ctds-hvk-2026" page="20-23" note="Mục 1.3 - 1.4" />
-
+<Exercise id="exr-c1-b1-c1" title="Đặc trưng tính giao hoán của nhóm qua đẳng thức lũy thừa và phản ví dụ" group="Nhóm C">
 **Đề bài:** Cho $(G, \cdot)$ là một nhóm.
 
 1. Chứng minh rằng $G$ là nhóm abel khi và chỉ khi $(ab)^{-1} = a^{-1}b^{-1}$ với mọi $a, b \in G$.
 2. Khẳng định sau đúng hay sai: *"Nếu tồn tại hai phần tử $a, b \in G$ sao cho $(ab)^2 = a^2b^2$ thì $G$ là nhóm abel"*? Nếu sai, hãy chỉ ra một phản ví dụ cụ thể trong nhóm $\operatorname{GL}_2(\R)$.
-</Exercise>
+
 
 <Hint>
 Ở ý (1), kết hợp công thức tổng quát $(ab)^{-1} = b^{-1}a^{-1}$ trong <Ref to="thm-c1-b1-he-qua-tien-de-nhom" /> với tính chất $(x^{-1})^{-1} = x$. Ở ý (2), lưu ý sự khác biệt giữa lượng từ *"với mọi $a, b \in G$"* và *"tồn tại $a, b \in G$"*; chẳng hạn chọn $a = e$ trong một nhóm không giao hoán.
@@ -320,25 +283,12 @@ $$
    $$
    Lấy nghịch đảo hai vế của đẳng thức $(ab)^{-1} = (ba)^{-1}$ và sử dụng tính chất $(x^{-1})^{-1} = x$, ta thu được $ab = ba$ với mọi $a, b \in G$. Vậy $G$ là nhóm abel.
 2. Khẳng định đã cho là **sai**. Phản ví dụ: Xét nhóm $G = \operatorname{GL}_2(\R)$ (không phải là nhóm abel theo <Ref to="exr-c1-b1-a1" />). Chọn $A = I_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ và $B = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$. Khi đó $(AB)^2 = B^2 = I_2^2 B^2 = A^2 B^2$, nhưng $G = \operatorname{GL}_2(\R)$ không giao hoán. Điều kiện $(ab)^2 = a^2b^2$ chỉ kéo theo $G$ abel khi nó đúng **với mọi** $a, b \in G$.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1a | Chứng minh đúng chiều thuận: $G$ abel $\implies (ab)^{-1} = a^{-1}b^{-1}$ | `0,25 đ` |
-| 1b | Chứng minh đúng chiều đảo: từ $b^{-1}a^{-1} = a^{-1}b^{-1}$ suy ra $ab = ba$ ($\forall a,b \in G$) | `0,50 đ` |
-| 2 | Kết luận khẳng định sai, giải thích rõ lỗi lượng từ và chỉ ra phản ví dụ hợp lệ trong $\operatorname{GL}_2(\R)$ | `0,25 đ` |
 </Solution>
-
-<Exercise id="exr-c1-b1-d1" title="[Nhóm D · Mã CTDS-C1-B1-D01] Tiêu chuẩn nhóm từ sự tồn tại nghiệm của phương trình tuyến tính trái và phải">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Đặc trưng hệ tiên đề nhóm qua tính toàn ánh của các phép tịnh tiến trái và phải
-- **Mục tiêu đánh giá:** Tổng hợp lập luận đại số để dựng phần tử đơn vị toàn cục và nghịch đảo hai phía từ điều kiện giải được phương trình $ax = b, ya = b$ *(Thi kết thúc học phần)*
-- **Mức độ khó:** Nâng cao (Mức 4)
-- **Nguồn kiến thức liên quan:** <Ref to="def-c1-b1-nua-nhom-vi-nhom-nhom" /> · <Ref to="thm-c1-b1-he-qua-tien-de-nhom" /> · <Cite source="gt-ctds-hvk-2026" page="20-22" note="Mục 1.3 & Bài tập 1.27" />
-
-**Đề bài:** Cho $(G, \cdot)$ là một nửa nhóm khác rỗng thỏa mãn tính chất: với mọi $a, b \in G$, các phương trình $ax = b$ và $ya = b$ luôn có ít nhất một nghiệm $x, y \in G$. Chứng minh rằng $(G, \cdot)$ là một nhóm.
 </Exercise>
+
+<Exercise id="exr-c1-b1-d1" title="Tiêu chuẩn nhóm từ sự tồn tại nghiệm của phương trình tuyến tính trái và phải" group="Nhóm D">
+**Đề bài:** Cho $(G, \cdot)$ là một nửa nhóm khác rỗng thỏa mãn tính chất: với mọi $a, b \in G$, các phương trình $ax = b$ và $ya = b$ luôn có ít nhất một nghiệm $x, y \in G$. Chứng minh rằng $(G, \cdot)$ là một nhóm.
+
 
 <Hint>
 Cố định một phần tử $a_0 \in G$ và lấy $e \in G$ sao cho $a_0 e = a_0$. Với mọi $b \in G$, hãy biểu diễn $b = y a_0$ (nhờ sự tồn tại nghiệm của $y a_0 = b$) để chứng minh $be = b$ với mọi $b \in G$ (tức $e$ là đơn vị phải). Tương tự dựng đơn vị trái $e'$, chỉ ra $e = e'$, rồi dùng phương trình $ax = e$ và $ya = e$ để suy ra nghịch đảo hai phía.
@@ -362,15 +312,8 @@ Vì $G \neq \varnothing$, ta cố định một phần tử $a_0 \in G$.
    y = ye = y(ax) = (ya)x = ex = x.
    $$
    Đặt $a^{-1} = x = y \in G$, ta có $aa^{-1} = a^{-1}a = e$. Vậy $(G, \cdot)$ là một nhóm.
-
-**Thang điểm đánh giá (1,00 điểm):**
-
-| Ý | Nội dung đạt được | Điểm |
-| :---: | :--- | :---: |
-| 1 | Cố định $a_0 \in G$, chọn $a_0 e = a_0$ và dùng $b = ya_0$ chứng minh $be = b$ ($\forall b \in G$) | `0,35 đ` |
-| 2 | Dựng đơn vị trái $e'$ thỏa mãn $e'b = b$ ($\forall b \in G$) và suy ra $e' = e'e = e$ | `0,30 đ` |
-| 3 | Giải $ax = e, ya = e$ và chứng minh $y = y(ax) = (ya)x = x$ để kết luận $G$ là nhóm | `0,35 đ` |
 </Solution>
+</Exercise>
 
 <KeyTakeaways>
 - **Phân cấp cấu trúc một phép toán:** Nửa nhóm (kết hợp) $\supset$ Vị nhóm (thêm đơn vị $e$) $\supset$ Nhóm (thêm nghịch đảo $x^{-1}$ cho mọi phần tử) $\supset$ Nhóm abel (thêm giao hoán) (<Ref to="def-c1-b1-nua-nhom-vi-nhom-nhom" />).

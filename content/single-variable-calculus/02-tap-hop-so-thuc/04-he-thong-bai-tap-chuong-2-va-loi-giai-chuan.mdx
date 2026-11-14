@@ -69,41 +69,47 @@ Sử dụng các Tiên đề từ 1 đến 9 của trường số thực $\mathb
 3. $(-1)(-1) = 1$.
 4. $(-x)(-y) = xy$.
 5. Trong Tiên đề 7, giải thích tại sao ta bắt buộc phải có điều kiện $1 \neq 0$.
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $-x = (-1)x$:**
-   Ta xét tổng $(-1)x + x$:
+**1. Chứng minh $-x = (-1)x$**
+
+Ta xét tổng $(-1)x + x$:
    $$
    (-1)x + x = (-1)x + 1 \cdot x = (-1 + 1)x = 0 \cdot x = 0.
    $$
    Theo Tiên đề 4, phần tử đối của $x$ là duy nhất. Vì $(-1)x$ cộng với $x$ bằng $0$, nên $(-1)x$ chính là phần tử đối của $x$, tức là $-x = (-1)x$.
 
-2. **Chứng minh $-(-x) = x$:**
-   Theo định nghĩa phần tử đối (Tiên đề 4), số đối của $-x$ là số khi cộng với $-x$ cho kết quả bằng $0$.
+**2. Chứng minh $-(-x) = x$**
+
+Theo định nghĩa phần tử đối (Tiên đề 4), số đối của $-x$ là số khi cộng với $-x$ cho kết quả bằng $0$.
    Mặt khác ta có $x + (-x) = 0$.
    Do tính duy nhất của phần tử đối của $-x$, suy ra $-(-x) = x$.
 
-3. **Chứng minh $(-1)(-1) = 1$:**
-   Áp dụng kết quả câu 1 cho $x = -1$:
+**3. Chứng minh $(-1)(-1) = 1$**
+
+Áp dụng kết quả câu 1 cho $x = -1$:
    $$
    (-1)(-1) = -(-1).
    $$
    Theo kết quả câu 2, $-(-1) = 1$. Do đó $(-1)(-1) = 1$.
 
-4. **Chứng minh $(-x)(-y) = xy$:**
-   Sử dụng câu 1, tính kết hợp và giao hoán của phép nhân:
+**4. Chứng minh $(-x)(-y) = xy$**
+
+Sử dụng câu 1, tính kết hợp và giao hoán của phép nhân:
    $$
    (-x)(-y) = [(-1)x][(-1)y] = [(-1)(-1)](xy) = 1 \cdot (xy) = xy.
    $$
 
-5. **Giải thích điều kiện $1 \neq 0$ trong Tiên đề 7:**
-   Nếu $1 = 0$, thì với bất kỳ số thực $x \in \mathbb{R}$ nào, ta có:
+**5. Giải thích điều kiện $1 \neq 0$ trong Tiên đề 7**
+
+Nếu $1 = 0$, thì với bất kỳ số thực $x \in \mathbb{R}$ nào, ta có:
    $$
    x = 1 \cdot x = 0 \cdot x = 0.
    $$
    Khi đó toàn bộ trường $\mathbb{R}$ sẽ chỉ gồm duy nhất một phần tử là $\{0\}$. Trường suy biến này không có ý nghĩa toán học và không thể xây dựng bất kỳ phép tính giải tích nào. Do đó điều kiện $1 \neq 0$ là tối quan trọng để trường có ít nhất hai phần tử phân biệt.
 </Solution>
+</Exercise>
 
 ---
 
@@ -113,33 +119,38 @@ Chứng minh các khẳng định sau từ các tiên đề thứ tự:
 2. Nếu $0 \le a \le c$ và $0 \le b \le d$ thì $ab \le cd$.
 3. Với $a, b \ge 0$, chứng minh rằng: $a \le b \iff a^2 \le b^2$.
 4. Với $a, b > 0$, chứng minh rằng: $a < b \iff b^{-1} < a^{-1}$ (tức là $0 < a < b \iff 0 < \frac{1}{b} < \frac{1}{a}$).
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $a + b \le c + d$:**
-   - Từ $a \le c$, cộng $b$ vào cả hai vế (Tiên đề 10): $a + b \le c + b$.
+**1. Chứng minh $a + b \le c + d$**
+
+ - Từ $a \le c$, cộng $b$ vào cả hai vế (Tiên đề 10): $a + b \le c + b$.
    - Từ $b \le d$, cộng $c$ vào cả hai vế (Tiên đề 10): $c + b \le c + d$.
    - Áp dụng tính chất bắc cầu: $a + b \le c + d$.
 
-2. **Chứng minh $ab \le cd$ khi các số không âm:**
-   - Vì $a \le c$ và $b \ge 0$, nhân $b$ vào hai vế: $ab \le cb$.
+**2. Chứng minh $ab \le cd$ khi các số không âm**
+
+ - Vì $a \le c$ và $b \ge 0$, nhân $b$ vào hai vế: $ab \le cb$.
    - Vì $b \le d$ và $c \ge 0$, nhân $c$ vào hai vế: $cb \le cd$.
    - Theo tính bắc cầu suy ra $ab \le cd$.
 
-3. **Chứng minh $a \le b \iff a^2 \le b^2$ (với $a, b \ge 0$):**
-   - Ta có hằng đẳng thức: $b^2 - a^2 = (b - a)(b + a)$.
+**3. Chứng minh $a \le b \iff a^2 \le b^2$ (với $a, b \ge 0$)**
+
+ - Ta có hằng đẳng thức: $b^2 - a^2 = (b - a)(b + a)$.
    - Nếu $a = b = 0$, hiển nhiên $0 \le 0 \iff 0 \le 0$.
    - Nếu $a + b > 0$: Vì $b + a > 0$, dấu của $b^2 - a^2$ trùng hoàn toàn với dấu của $b - a$.
      Do đó $b^2 - a^2 \ge 0 \iff b - a \ge 0 \iff a \le b$.
 
-4. **Chứng minh $0 < a < b \iff 0 < \frac{1}{b} < \frac{1}{a}$:**
-   - Vì $a > 0$ và $b > 0$, tích $ab > 0$. Do đó phần tử nghịch đảo $(ab)^{-1} = a^{-1}b^{-1} > 0$.
+**4. Chứng minh $0 < a < b \iff 0 < \frac{1}{b} < \frac{1}{a}$**
+
+ - Vì $a > 0$ và $b > 0$, tích $ab > 0$. Do đó phần tử nghịch đảo $(ab)^{-1} = a^{-1}b^{-1} > 0$.
    - Nhân số dương $a^{-1}b^{-1}$ vào hai vế của bất đẳng thức $a < b$:
      $$
      a(a^{-1}b^{-1}) < b(a^{-1}b^{-1}) \iff b^{-1} < a^{-1} \iff \frac{1}{b} < \frac{1}{a}.
      $$
    - Ngược lại, nhân $ab > 0$ vào hai vế của $\frac{1}{b} < \frac{1}{a}$ ta thu lại $a < b$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -160,27 +171,30 @@ Cho $A$ và $B$ là các tập con khác rỗng và bị chặn của $\mathbb{R
    $$
    \sup(A + B) = \sup A + \sup B \quad \text{và} \quad \inf(A + B) = \inf A + \inf B.
    $$
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh khi $A \subseteq B$:**
-   - Với mọi $x \in A$, do $A \subseteq B$ nên $x \in B$.
+**1. Chứng minh khi $A \subseteq B$**
+
+ - Với mọi $x \in A$, do $A \subseteq B$ nên $x \in B$.
    - Vì $\sup B$ là cận trên của $B$, nên $x \le \sup B$ với mọi $x \in A$.
      Do đó $\sup B$ là một cận trên của $A$. Theo định nghĩa cận trên nhỏ nhất, $\sup A \le \sup B$.
    - Tương tự, $\inf B \le x$ với mọi $x \in A$, suy ra $\inf B$ là một cận dưới của $A \implies \inf B \le \inf A$.
    - Vì $A \neq \emptyset$, lấy $x_0 \in A$ thì $\inf A \le x_0 \le \sup A$.
    - Kết hợp lại: $\inf B \le \inf A \le \sup A \le \sup B$.
 
-2. **Chứng minh $\inf F = \sup E$:**
-   - Đặt $a = \sup E$. Theo định nghĩa, $a$ là một cận trên của $E$, do đó $a \in F$.
+**2. Chứng minh $\inf F = \sup E$**
+
+ - Đặt $a = \sup E$. Theo định nghĩa, $a$ là một cận trên của $E$, do đó $a \in F$.
    - Mặt khác, nếu $M \in F$ thì $M$ là một cận trên của $E$. Theo tính nhỏ nhất của supremum, ta có $a \le M$.
    - Như vậy $a \in F$ và $a \le M$ với mọi $M \in F$. Do đó $a$ chính là phần tử nhỏ nhất của $F$:
      $$
      \inf F = \min F = a = \sup E.
      $$
 
-3. **Tính chất phép nhân vô hướng $rA$:**
-   - *Trường hợp $r = 0$:* $0A = \{0\} \implies \sup(0A) = 0 = 0 \cdot \sup A$.
+**3. Tính chất phép nhân vô hướng $rA$**
+
+ - *Trường hợp $r = 0$:* $0A = \{0\} \implies \sup(0A) = 0 = 0 \cdot \sup A$.
    - *Trường hợp $r > 0$:*
      Với mọi $x \in A$, $x \le \sup A \implies rx \le r \sup A$. Vậy $r \sup A$ là cận trên của $rA$.
      Với $\varepsilon > 0$, xét $\varepsilon' = \frac{\varepsilon}{r} > 0$. Tồn tại $x \in A$ sao cho $x > \sup A - \varepsilon'$.
@@ -193,8 +207,9 @@ Cho $A$ và $B$ là các tập con khác rỗng và bị chặn của $\mathbb{R
      $$
      Do đó $r \inf A$ là cận trên của $rA$. Áp dụng tương tự ta được $\sup(rA) = r \inf A$ và $\inf(rA) = r \sup A$.
 
-4. **Chứng minh $\sup(A + B) = \sup A + \sup B$:**
-   - *Cận trên:* Với mọi $a \in A, b \in B$, ta có $a \le \sup A$ và $b \le \sup B$.
+**4. Chứng minh $\sup(A + B) = \sup A + \sup B$**
+
+ - *Cận trên:* Với mọi $a \in A, b \in B$, ta có $a \le \sup A$ và $b \le \sup B$.
      Cộng lại: $a + b \le \sup A + \sup B$. Vậy $\sup A + \sup B$ là một cận trên của $A + B$.
      Do đó $\sup(A + B) \le \sup A + \sup B$.
    - *Đặc trưng $\varepsilon$:* Cho $\varepsilon > 0$ tùy ý.
@@ -203,6 +218,7 @@ Cho $A$ và $B$ là các tập con khác rỗng và bị chặn của $\mathbb{R
      Cộng lại: $a_0 + b_0 > (\sup A + \sup B) - \varepsilon$.
      Vì $a_0 + b_0 \in A + B$, theo đặc trưng $\varepsilon$ ta suy ra $\sup(A + B) = \sup A + \sup B$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -214,18 +230,20 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
 4. $A_4 = \left\{2 + \frac{(-1)^n}{n} \;\middle|\; n \in \mathbb{N}\right\}$.
 5. $A_5 = \left\{\frac{m}{2^n + 1} \;\middle|\; m, n \in \mathbb{N}\right\}$.
 6. $A_6 = \left\{x = a + \frac{1}{a} \;\middle|\; a \in \mathbb{Q}^c, a > 0\right\}$.
-</Exercise>
+
 
 <Solution>
-1. **Tập $A_1 = \{\sin x \mid x \in \mathbb{R}\}$:**
-   Vì $-1 \le \sin x \le 1$ với mọi $x \in \mathbb{R}$, và $\sin(-\frac{\pi}{2}) = -1 \in A_1$, $\sin(\frac{\pi}{2}) = 1 \in A_1$.
+**1. Tập $A_1 = \{\sin x \mid x \in \mathbb{R}\}$**
+
+Vì $-1 \le \sin x \le 1$ với mọi $x \in \mathbb{R}$, và $\sin(-\frac{\pi}{2}) = -1 \in A_1$, $\sin(\frac{\pi}{2}) = 1 \in A_1$.
    Do đó:
    $$
    \min A_1 = \inf A_1 = -1, \quad \max A_1 = \sup A_1 = 1.
    $$
 
-2. **Tập $A_2 = \{2 - \frac{1}{n} \mid n \in \mathbb{N}\} = \{1, \frac{3}{2}, \frac{5}{3}, \frac{7}{4}, \dots\}$:**
-   - Dãy tăng ngặt: với $n = 1$, $x_1 = 2 - 1 = 1$. Với mọi $n \ge 1$, $2 - \frac{1}{n} \ge 1$. Vì $1 \in A_2$ nên:
+**2. Tập $A_2 = \{2 - \frac{1}{n} \mid n \in \mathbb{N}\} = \{1, \frac{3}{2}, \frac{5}{3}, \frac{7}{4}, \dots\}$**
+
+ - Dãy tăng ngặt: với $n = 1$, $x_1 = 2 - 1 = 1$. Với mọi $n \ge 1$, $2 - \frac{1}{n} \ge 1$. Vì $1 \in A_2$ nên:
      $$
      \min A_2 = \inf A_2 = 1.
      $$
@@ -236,16 +254,18 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
      \sup A_2 = 2, \quad \text{không tồn tại } \max A_2.
      $$
 
-3. **Tập $A_3 = \{x \in \mathbb{Q} \mid x^2 - 1 < 0\} = (-1, 1) \cap \mathbb{Q}$:**
-   - Tập này bị chặn dưới bởi $-1$ và bị chặn trên bởi $1$.
+**3. Tập $A_3 = \{x \in \mathbb{Q} \mid x^2 - 1 < 0\} = (-1, 1) \cap \mathbb{Q}$**
+
+ - Tập này bị chặn dưới bởi $-1$ và bị chặn trên bởi $1$.
    - Vì $-1, 1 \notin A_3$ nên $A_3$ **không có $\min$ và không có $\max$**.
    - Do tính trù mật của $\mathbb{Q}$ trong $\mathbb{R}$, trong mọi khoảng $(-1, -1 + \varepsilon)$ và $(1 - \varepsilon, 1)$ luôn tồn tại số hữu tỉ. Do đó:
      $$
      \inf A_3 = -1, \quad \sup A_3 = 1.
      $$
 
-4. **Tập $A_4 = \{2 + \frac{(-1)^n}{n} \mid n \in \mathbb{N}\} = \{1, 2 + \frac{1}{2}, 2 - \frac{1}{3}, 2 + \frac{1}{4}, \dots\}$:**
-   - Các phần tử với $n$ lẻ: $2 - \frac{1}{n}$ tăng dần từ $2 - 1 = 1$ lên $2$.
+**4. Tập $A_4 = \{2 + \frac{(-1)^n}{n} \mid n \in \mathbb{N}\} = \{1, 2 + \frac{1}{2}, 2 - \frac{1}{3}, 2 + \frac{1}{4}, \dots\}$**
+
+ - Các phần tử với $n$ lẻ: $2 - \frac{1}{n}$ tăng dần từ $2 - 1 = 1$ lên $2$.
      Phần tử nhỏ nhất đạt được tại $n = 1$: $x_1 = 1$. Do đó:
      $$
      \min A_4 = \inf A_4 = 1.
@@ -256,15 +276,17 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
      \max A_4 = \sup A_4 = \frac{5}{2}.
      $$
 
-5. **Tập $A_5 = \{\frac{m}{2^n + 1} \mid m, n \in \mathbb{N}\}$:**
-   - Vì $m \ge 1$ và $2^n + 1 > 0$, mọi phần tử đều dương. Cố định $m = 1$, cho $n \to +\infty$ thì $\frac{1}{2^n + 1} \to 0$. Do đó $\inf A_5 = 0$. Vì $0 \notin A_5$ (do $m \ge 1$), nên **không có $\min$**.
+**5. Tập $A_5 = \{\frac{m}{2^n + 1} \mid m, n \in \mathbb{N}\}$**
+
+ - Vì $m \ge 1$ và $2^n + 1 > 0$, mọi phần tử đều dương. Cố định $m = 1$, cho $n \to +\infty$ thì $\frac{1}{2^n + 1} \to 0$. Do đó $\inf A_5 = 0$. Vì $0 \notin A_5$ (do $m \ge 1$), nên **không có $\min$**.
    - Cố định $n = 1$, cho $m \to +\infty$ thì $\frac{m}{3} \to +\infty$. Tập $A_5$ không bị chặn trên, do đó:
      $$
      \sup A_5 = +\infty, \quad \inf A_5 = 0, \quad \text{không có } \max, \min.
      $$
 
-6. **Tập $A_6 = \{a + \frac{1}{a} \mid a \in \mathbb{Q}^c, a > 0\}$:**
-   - Theo bất đẳng thức Cauchy: $a + \frac{1}{a} \ge 2\sqrt{a \cdot \frac{1}{a}} = 2$.
+**6. Tập $A_6 = \{a + \frac{1}{a} \mid a \in \mathbb{Q}^c, a > 0\}$**
+
+ - Theo bất đẳng thức Cauchy: $a + \frac{1}{a} \ge 2\sqrt{a \cdot \frac{1}{a}} = 2$.
    - Dấu bằng xảy ra khi $a = 1$. Tuy nhiên $1 \in \mathbb{Q}$, trong khi điều kiện đề bài là $a \in \mathbb{Q}^c$ (số vô tỉ).
    - Vì $a \neq 1$, ta luôn có $a + \frac{1}{a} > 2$. Do đó $A_6$ **không có $\min$**.
    - Ta chứng minh $\inf A_6 = 2$: Chọn dãy số vô tỉ $a_k = 1 + \frac{\sqrt{2}}{k} \in \mathbb{Q}^c$ với $k \in \mathbb{N}$. Khi $k \to +\infty$, $a_k \to 1$ nên $a_k + \frac{1}{a_k} \to 2$.
@@ -273,6 +295,7 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
      \inf A_6 = 2, \quad \sup A_6 = +\infty, \quad \text{không có } \min, \max.
      $$
 </Solution>
+</Exercise>
 
 ---
 
@@ -289,11 +312,12 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
    $$
    \left(\sum_{k=1}^n a_k^2\right) \left(\sum_{k=1}^n b_k^2\right) \ge \left(\sum_{k=1}^n a_k b_k\right)^2.
    $$
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $\prod_{i=2}^n (1 - \frac{1}{i^2}) = \frac{n+1}{2n}$:**
-   - Ta có $1 - \frac{1}{i^2} = \frac{i^2 - 1}{i^2} = \frac{(i - 1)(i + 1)}{i^2}$.
+**1. Chứng minh $\prod_{i=2}^n (1 - \frac{1}{i^2}) = \frac{n+1}{2n}$**
+
+ - Ta có $1 - \frac{1}{i^2} = \frac{i^2 - 1}{i^2} = \frac{(i - 1)(i + 1)}{i^2}$.
    - Với $n = 2$: Vế trái là $1 - \frac{1}{4} = \frac{3}{4}$. Vế phải là $\frac{2 + 1}{2 \cdot 2} = \frac{3}{4}$ (Đúng).
    - Giả sử đẳng thức đúng cho $n = k \ge 2$: $\prod_{i=2}^k (1 - \frac{1}{i^2}) = \frac{k+1}{2k}$.
    - Với $n = k + 1$:
@@ -302,8 +326,9 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
      $$
      Đẳng thức đúng với $k + 1$. Theo quy nạp, công thức đúng với mọi $n \ge 2$.
 
-2. **Chứng minh $r^n + \frac{1}{r^n} \in \mathbb{Z}$:**
-   - Với $n = 1$: $r + \frac{1}{r} \in \mathbb{Z}$ theo giả thiết.
+**2. Chứng minh $r^n + \frac{1}{r^n} \in \mathbb{Z}$**
+
+ - Với $n = 1$: $r + \frac{1}{r} \in \mathbb{Z}$ theo giả thiết.
    - Với $n = 2$: $r^2 + \frac{1}{r^2} = (r + \frac{1}{r})^2 - 2 \in \mathbb{Z}$ (vì bình phương của số nguyên trừ đi $2$ là số nguyên).
    - Giả sử khẳng định đúng cho mọi $k \le n$ ($n \ge 2$), tức là $r^k + \frac{1}{r^k} \in \mathbb{Z}$.
    - Xét $k = n + 1$: Ta khai triển đồng nhất thức:
@@ -317,8 +342,9 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
      Theo giả thiết quy nạp, $r^n + \frac{1}{r^n} \in \mathbb{Z}$, $r + \frac{1}{r} \in \mathbb{Z}$, và $r^{n-1} + \frac{1}{r^{n-1}} \in \mathbb{Z}$. Do đó hiệu của chúng cũng là một số nguyên.
      Theo nguyên lý quy nạp mạnh, khẳng định đúng với mọi $n \in \mathbb{N}$.
 
-3. **Chứng minh Bất đẳng thức Cauchy-Schwarz:**
-   - Xét tam thức bậc hai theo biến thực $t \in \mathbb{R}$:
+**3. Chứng minh Bất đẳng thức Cauchy-Schwarz**
+
+ - Xét tam thức bậc hai theo biến thực $t \in \mathbb{R}$:
      $$
      P(t) = \sum_{k=1}^n (a_k t - b_k)^2 \ge 0, \quad \forall t \in \mathbb{R}.
      $$
@@ -333,6 +359,7 @@ Tìm $\min, \max, \inf, \sup$ (nếu có) của các tập hợp sau:
      $$
      Bất đẳng thức được chứng minh.
 </Solution>
+</Exercise>
 
 ---
 
@@ -341,19 +368,21 @@ Chứng minh rằng các số sau đây đều là số vô tỉ:
 1. $\sqrt{3}$.
 2. $\sqrt{2} + \sqrt{3}$.
 3. $\log_2 3$.
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $\sqrt{3} \in \mathbb{Q}^c$:**
-   Giả sử phản chứng $\sqrt{3} = \frac{m}{n}$ với $m, n \in \mathbb{N}, \gcd(m, n) = 1$.
+**1. Chứng minh $\sqrt{3} \in \mathbb{Q}^c$**
+
+Giả sử phản chứng $\sqrt{3} = \frac{m}{n}$ với $m, n \in \mathbb{N}, \gcd(m, n) = 1$.
    Bình phương hai vế: $3 = \frac{m^2}{n^2} \implies m^2 = 3n^2$.
    - Suy ra $m^2$ chia hết cho $3$, do $3$ là số nguyên tố nên $m$ chia hết cho $3$, tức là $m = 3k$ ($k \in \mathbb{N}$).
    - Thay vào: $(3k)^2 = 3n^2 \iff 9k^2 = 3n^2 \iff n^2 = 3k^2$.
    - Suy ra $n^2$ chia hết cho $3 \implies n$ chia hết cho $3$.
    Như vậy $3$ là ước chung của $m$ và $n$, mâu thuẫn với $\gcd(m, n) = 1$. Vậy $\sqrt{3}$ là số vô tỉ.
 
-2. **Chứng minh $\sqrt{2} + \sqrt{3} \in \mathbb{Q}^c$:**
-   Đặt $x = \sqrt{2} + \sqrt{3}$. Giả sử phản chứng $x \in \mathbb{Q}$.
+**2. Chứng minh $\sqrt{2} + \sqrt{3} \in \mathbb{Q}^c$**
+
+Đặt $x = \sqrt{2} + \sqrt{3}$. Giả sử phản chứng $x \in \mathbb{Q}$.
    Vì $\sqrt{2}, \sqrt{3} > 0$ nên $x > 0$. Bình phương hai vế:
    $$
    x^2 = (\sqrt{2} + \sqrt{3})^2 = 2 + 2\sqrt{6} + 3 = 5 + 2\sqrt{6} \implies \sqrt{6} = \frac{x^2 - 5}{2}.
@@ -362,8 +391,9 @@ Chứng minh rằng các số sau đây đều là số vô tỉ:
    Tuy nhiên, chứng minh hoàn toàn tương tự câu 1, $\sqrt{6}$ là số vô tỉ (vì $m^2 = 6n^2 \implies 6 \mid m \implies 36k^2 = 6n^2 \implies 6 \mid n$).
    Mâu thuẫn này chứng tỏ $\sqrt{2} + \sqrt{3}$ phải là số vô tỉ.
 
-3. **Chứng minh $\log_2 3 \in \mathbb{Q}^c$:**
-   Giả sử phản chứng $\log_2 3 \in \mathbb{Q}$.
+**3. Chứng minh $\log_2 3 \in \mathbb{Q}^c$**
+
+Giả sử phản chứng $\log_2 3 \in \mathbb{Q}$.
    Vì $3 > 1$ và $2 > 1$ nên $\log_2 3 > 0$. Do đó tồn tại các số nguyên dương $m, n \in \mathbb{N}$ sao cho:
    $$
    \log_2 3 = \frac{m}{n}.
@@ -378,6 +408,7 @@ Chứng minh rằng các số sau đây đều là số vô tỉ:
    Một số chẵn không thể bằng một số lẻ ($2^m \neq 3^n$).
    Mâu thuẫn này chứng minh $\log_2 3$ là số vô tỉ.
 </Solution>
+</Exercise>
 
 ---
 

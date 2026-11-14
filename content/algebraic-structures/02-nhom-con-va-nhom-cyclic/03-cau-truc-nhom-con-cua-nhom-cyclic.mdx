@@ -18,9 +18,6 @@ sources:
     pages: '44-47'
     sections: 'Mục 2.4, 2.5'
     note: 'Định lý 2.12 (Cấu trúc nhóm con của nhóm cyclic) và Ví dụ 2.13 (Lưới nhóm con của Z/12Z)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '65-74'
-    sections: 'Chương 2, Mục 2.3'
 status: published
 version: 0.1.0
 authoring:
@@ -57,8 +54,8 @@ Nhóm cyclic sở hữu cấu trúc mạng nhóm con đơn giản và hoàn mỹ
 Cho $G = \langle a \rangle$ là một nhóm cyclic. Khi đó:
 
 1. **Tính kế thừa:** Mọi nhóm con $H$ của $G$ đều là nhóm cyclic.
-2. **Trường hợp nhóm cyclic vô hạn ($G \cong \Z$):**
-   Mọi nhóm con của $G$ đều có dạng $H = \langle a^m \rangle$ với $m$ là số nguyên không âm duy nhất ($m \ge 0$). Khi đó $H \cong \Z$ (nếu $m > 0$) hoặc $H = \{e\}$ (nếu $m = 0$).
+2. **Trường hợp nhóm cyclic vô hạn ($|G| = \infty$):**
+   Mọi nhóm con của $G$ đều có dạng $H = \langle a^m \rangle$ với $m$ là số nguyên không âm duy nhất ($m \ge 0$). Khi đó $H$ là nhóm cyclic vô hạn (nếu $m > 0$) hoặc $H = \{e\}$ (nếu $m = 0$).
 3. **Trường hợp nhóm cyclic hữu hạn ($|G| = n < \infty$):**
    - (a) Với mỗi số nguyên $k \in \Z$, cấp của phần tử $a^k$ được tính bởi công thức:
      $$
@@ -245,35 +242,28 @@ Mỗi phần tử của $\Z/12\Z$ là phần tử sinh của đúng một nhóm 
 
 ## 4. Bài tập tự luyện
 
-<Exercise id="exr-c2-b3-a1" title="[Nhóm A · Mã CTDS-C2-B3-A01] Tính cấp phần tử và tìm phần tử sinh trong nhóm cyclic cấp 30">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Áp dụng công thức $\operatorname{ord}(a^k) = \frac{n}{\gcd(n, k)}$ và hàm Euler $\varphi(n)$
-- **Mục tiêu đánh giá:** Tính đúng cấp của lũy thừa và liệt kê đầy đủ các phần tử sinh *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-
+<Exercise id="exr-c2-b3-a1" title="Tính cấp phần tử và tìm phần tử sinh trong nhóm cyclic cấp 30" group="Nhóm A">
 Cho $G = \langle a \rangle$ là một nhóm cyclic có cấp bằng $30$.
 1. Tính cấp của các phần tử sau: $a^4$, $a^{18}$, $a^{25}$.
 2. Nhóm con $\langle a^{18} \rangle$ có bao nhiêu phần tử? Hãy liệt kê một phần tử sinh khác của nhóm con này có số mũ nhỏ hơn 18.
 3. Nhóm $G$ có tất cả bao nhiêu phần tử sinh? Hãy liệt kê 4 phần tử sinh phân biệt của $G$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Dùng công thức $\operatorname{ord}(a^k) = \frac{30}{\gcd(30, k)}$.
 2. $|\langle a^{18} \rangle| = \operatorname{ord}(a^{18})$. Nhóm con $\langle a^{18} \rangle = \langle a^{\gcd(30, 18)} \rangle$.
 3. Số phần tử sinh bằng $\varphi(30) = 30(1 - 1/2)(1 - 1/3)(1 - 1/5)$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Tính cấp của $a^4, a^{18}, a^{25}$**
 
-**Ý 1: Tính cấp của $a^4, a^{18}, a^{25}$**
 Áp dụng công thức $\operatorname{ord}(a^k) = \frac{30}{\gcd(30, k)}$:
 - Với $a^4$: $\gcd(30, 4) = 2 \implies \operatorname{ord}(a^4) = \frac{30}{2} = 15$.
 - Với $a^{18}$: $\gcd(30, 18) = 6 \implies \operatorname{ord}(a^{18}) = \frac{30}{6} = 5$.
 - Với $a^{25}$: $\gcd(30, 25) = 5 \implies \operatorname{ord}(a^{25}) = \frac{30}{5} = 6$.
 
-**Ý 2: Khảo sát nhóm con $\langle a^{18} \rangle$**
+**2. Khảo sát nhóm con $\langle a^{18} \rangle$**
+
 - Số phần tử của nhóm con là $|\langle a^{18} \rangle| = \operatorname{ord}(a^{18}) = 5$.
 - Theo <Ref to="thm-c2-b3-dinh-ly-co-ban-nhom-cyclic" />:
   $$
@@ -282,7 +272,8 @@ Cho $G = \langle a \rangle$ là một nhóm cyclic có cấp bằng $30$.
   Do đó $a^6$ là một phần tử sinh của nhóm con này với số mũ $6 < 18$.
   (Các phần tử sinh khác của nhóm con cấp 5 này là $a^{12}, a^{18}, a^{24}$).
 
-**Ý 3: Số phần tử sinh của $G$**
+**3. Số phần tử sinh của $G$**
+
 Số phần tử sinh của $G$ bằng giá trị hàm phi Euler:
 $$
 \varphi(30) = 30 \times \left(1 - \frac{1}{2}\right) \times \left(1 - \frac{1}{3}\right) \times \left(1 - \frac{1}{5}\right) = 30 \times \frac{1}{2} \times \frac{2}{3} \times \frac{4}{5} = 8.
@@ -290,39 +281,24 @@ $$
 Các phần tử sinh có dạng $a^k$ với $1 \le k < 30$ và $\gcd(30, k) = 1$.
 Các số nguyên tố cùng nhau với 30 là: $1, 7, 11, 13, 17, 19, 23, 29$.
 Bốn phần tử sinh cụ thể là: $a^1 = a, a^7, a^{11}, a^{13}$.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Áp dụng đúng công thức tìm được cấp của $a^4$ (15), $a^{18}$ (5), $a^{25}$ (6) | 0.35 điểm |
-| Xác định đúng $|\langle a^{18} \rangle| = 5$ và chỉ ra phần tử sinh $a^6$ | 0.35 điểm |
-| Tính đúng $\varphi(30) = 8$ và liệt kê đúng 4 phần tử sinh | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b3-b1" title="[Nhóm B · Mã CTDS-C2-B3-B01] Phân loại mạng nhóm con của Z/18Z">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Mạng nhóm con của nhóm cyclic hữu hạn
-- **Mục tiêu đánh giá:** Xác định đầy đủ các nhóm con theo ước số và vẽ sơ đồ quan hệ bao hàm *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Trung bình (Mức 2)
-
+<Exercise id="exr-c2-b3-b1" title="Phân loại mạng nhóm con của Z/18Z" group="Nhóm B">
 Xét nhóm cộng các lớp thặng dư $G = (\Z/18\Z, +)$.
 1. Tìm tất cả các ước nguyên dương của 18. Nhóm $G$ có bao nhiêu nhóm con?
 2. Với mỗi ước dương $d$ của 18, hãy chỉ ra phần tử sinh chuẩn và liệt kê toàn bộ các phần tử của nhóm con cấp $d$.
 3. Vẽ sơ đồ quan hệ bao hàm (sơ đồ Hasse) giữa các nhóm con của $\Z/18\Z$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Các ước dương của 18 là $1, 2, 3, 6, 9, 18$.
 2. Nhóm con cấp $d$ sinh bởi $[18/d]_{18}$.
 3. Biểu diễn quan hệ $H_{d_1} \subseteq H_{d_2} \iff d_1 \mid d_2$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Các ước của 18 và số nhóm con**
 
-**Ý 1: Các ước của 18 và số nhóm con**
 Tập các ước nguyên dương của 18 là:
 $$
 \mathcal{D}(18) = \{1, 2, 3, 6, 9, 18\}.
@@ -330,7 +306,8 @@ $$
 Vì $G = \Z/18\Z$ là nhóm cyclic cấp 18, theo Định lý 2.12, các nhóm con của $G$ tương ứng 1-1 với các ước dương của 18.
 Do đó $G$ có đúng **6 nhóm con**.
 
-**Ý 2: Danh sách 6 nhóm con theo cấp $d$**
+**2. Danh sách 6 nhóm con theo cấp $d$**
+
 Áp dụng công thức $H_d = \langle [18/d]_{18} \rangle$:
 - $d = 1$: $H_1 = \langle [18]_{18} \rangle = \langle [0] \rangle = \{[0]\}$.
 - $d = 2$: $H_2 = \langle [9] \rangle = \{[0], [9]\}$.
@@ -339,7 +316,8 @@ Do đó $G$ có đúng **6 nhóm con**.
 - $d = 9$: $H_9 = \langle [2] \rangle = \{[0], [2], [4], [6], [8], [10], [12], [14], [16]\}$.
 - $d = 18$: $H_{18} = \langle [1] \rangle = \Z/18\Z$.
 
-**Ý 3: Sơ đồ Hasse quan hệ bao hàm**
+**3. Sơ đồ Hasse quan hệ bao hàm**
+
 Quan hệ bao hàm $H_{d_1} \subseteq H_{d_2} \iff d_1 \mid d_2$:
 - $H_1$ nằm ở đáy, là tập con của mọi nhóm con.
 - $H_2$ và $H_3$ bao hàm $H_1$.
@@ -351,22 +329,10 @@ Sơ đồ liên kết:
 - $H_{18} \to H_6 \to H_2 \to H_1$
 - $H_{18} \to H_6 \to H_3 \to H_1$
 - $H_{18} \to H_9 \to H_3 \to H_1$
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Liệt kê đúng 6 ước số của 18 và khẳng định có đúng 6 nhóm con | 0.30 điểm |
-| Xác định đúng phần tử sinh chuẩn và danh sách phần tử của 6 nhóm con | 0.40 điểm |
-| Mô tả/vẽ chính xác sơ đồ quan hệ bao hàm tương ứng với quan hệ chia hết | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b3-c1" title="[Nhóm C · Mã CTDS-C2-B3-C01] Đếm số phần tử theo cấp và đồng nhất thức Gauss">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Số phần tử có cấp $d$ trong nhóm cyclic và công thức $\sum_{d \mid n} \varphi(d) = n$
-- **Mục tiêu đánh giá:** Chứng minh số phần tử cấp $d$ là $\varphi(d)$ và phân hoạch nhóm theo cấp *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Nâng cao (Mức 3)
-
+<Exercise id="exr-c2-b3-c1" title="Đếm số phần tử theo cấp và đồng nhất thức Gauss" group="Nhóm C">
 Cho $G$ là một nhóm cyclic hữu hạn có cấp bằng $n$.
 1. Chứng minh rằng nếu $d$ là một ước dương của $n$ ($d \mid n$), thì số phần tử có cấp đúng bằng $d$ trong $G$ là $\varphi(d)$.
 2. Nếu $d \nmid n$, chứng minh rằng trong $G$ không có phần tử nào có cấp bằng $d$.
@@ -375,18 +341,15 @@ Cho $G$ là một nhóm cyclic hữu hạn có cấp bằng $n$.
    \sum_{d \mid n} \varphi(d) = n.
    $$
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Một phần tử $x \in G$ có cấp $d \iff \langle x \rangle$ là một nhóm con cấp $d$. Theo tính duy nhất của nhóm con, có bao nhiêu nhóm con cấp $d$? Trong nhóm con đó có bao nhiêu phần tử sinh?
 2. Dùng tính chất cấp của phần tử phải chia hết cấp của nhóm con mà nó thuộc về.
 3. Thiết lập quan hệ tương đương trên $G$: $x \sim y \iff \operatorname{ord}(x) = \operatorname{ord}(y)$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Số phần tử có cấp đúng bằng $d$ ($d \mid n$)**
 
-**Ý 1: Số phần tử có cấp đúng bằng $d$ ($d \mid n$)**
 Lấy một phần tử $x \in G$.
 Phần tử $x$ có cấp đúng bằng $d$ khi và chỉ khi nhóm con $\langle x \rangle$ sinh bởi $x$ có cấp bằng $d$:
 $$
@@ -402,12 +365,14 @@ Vì $H_d$ là một nhóm cyclic cấp $d$, theo Định lý 2.12, số phần t
 Vì $H_d$ là duy nhất, tập tất cả các phần tử có cấp $d$ trong $G$ chính là tập các phần tử sinh của $H_d$.
 Vậy số phần tử có cấp đúng bằng $d$ trong $G$ bằng $\varphi(d)$.
 
-**Ý 2: Trường hợp $d \nmid n$**
+**2. Trường hợp $d \nmid n$**
+
 Với mỗi $x \in G$, theo Định lý 2.8, nhóm con $\langle x \rangle$ là một nhóm con của $G$, do đó cấp $\operatorname{ord}(x) = |\langle x \rangle|$ phải là một ước của $n = |G|$ (sẽ được tổng quát hóa bằng Định lý Lagrange ở Chương 3).
 Hoặc trực tiếp: vì $G = \langle a \rangle$, mọi phần tử có dạng $x = a^k$, cấp của nó là $\operatorname{ord}(a^k) = \frac{n}{\gcd(n, k)}$, số này luôn là ước của $n$.
 Do đó, nếu $d$ không phải là ước của $n$, thì trong $G$ không thể tồn tại phần tử nào có cấp bằng $d$. Số phần tử cấp $d$ bằng 0.
 
-**Ý 3: Chứng minh đồng nhất thức Gauss**
+**3. Chứng minh đồng nhất thức Gauss**
+
 Mỗi phần tử $x \in G$ đều có một cấp $\operatorname{ord}(x)$ xác định, và cấp này luôn là một ước dương của $n$.
 Ta phân hoạch tập hợp $G$ theo cấp của các phần tử:
 $$
@@ -422,39 +387,24 @@ $$
 n = \sum_{d \mid n} \varphi(d).
 $$
 Đây chính là đồng nhất thức Gauss nổi tiếng trong lý thuyết số.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Lập luận $x$ có cấp $d \iff x$ sinh ra nhóm con duy nhất $H_d$ cấp $d$ | 0.35 điểm |
-| Khẳng định số phần tử sinh của $H_d$ là $\varphi(d)$ và giải thích trường hợp $d \nmid n$ | 0.35 điểm |
-| Thiết lập phân hoạch nhóm theo cấp phần tử và suy ra công thức Gauss | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c2-b3-d1" title="[Nhóm D · Mã CTDS-C2-B3-D01] Tiêu chuẩn nhóm cyclic từ tính duy nhất của nhóm con">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Mệnh đề đảo của Định lý 2.12 — Đặc trưng của nhóm cyclic hữu hạn
-- **Mục tiêu đánh giá:** Vận dụng đồng nhất thức Gauss và nguyên lý đếm phần tử để chứng minh nhóm là cyclic *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Rất khó (Mức 4)
-
+<Exercise id="exr-c2-b3-d1" title="Tiêu chuẩn nhóm cyclic từ tính duy nhất của nhóm con" group="Nhóm D">
 Cho $G$ là một nhóm hữu hạn có cấp bằng $n$. Giả sử rằng với mỗi ước nguyên dương $d$ của $n$, nhóm $G$ chứa **nhiều nhất một** nhóm con có cấp bằng $d$ (có thể không có hoặc có đúng một).
 1. Với mỗi ước dương $d$ của $n$, chứng minh rằng số phần tử có cấp đúng bằng $d$ trong $G$ hoặc bằng $0$, hoặc bằng đúng $\varphi(d)$.
 2. Chứng minh rằng với mọi ước dương $d \mid n$, trong $G$ luôn tồn tại đúng một nhóm con có cấp $d$.
 3. Từ đó chứng minh rằng $G$ bắt buộc phải là một **nhóm cyclic**.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Nếu $G$ không có phần tử cấp $d$ thì số đó bằng 0. Nếu có phần tử $x$ cấp $d$, thì $\langle x \rangle$ là một nhóm con cấp $d$. Theo giả thiết nhóm con cấp $d$ là duy nhất. Hãy đếm số phần tử sinh của nhóm con đó.
 2. Dùng bất đẳng thức: $\sum_{d \mid n} N(d) = n$, trong đó $N(d) \le \varphi(d)$. Kết hợp với đồng nhất thức Gauss $\sum_{d \mid n} \varphi(d) = n$.
 3. Xét trường hợp $d = n$: tồn tại phần tử cấp $n$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Số phần tử cấp $d$ chỉ có thể là 0 hoặc $\varphi(d)$**
 
-**Ý 1: Số phần tử cấp $d$ chỉ có thể là 0 hoặc $\varphi(d)$**
 Đặt $N(d)$ là số phần tử có cấp đúng bằng $d$ trong $G$.
 - Nếu trong $G$ không có phần tử nào có cấp $d$, thì $N(d) = 0$.
 - Nếu trong $G$ tồn tại ít nhất một phần tử $a$ có cấp $d$:
@@ -466,7 +416,8 @@ Cho $G$ là một nhóm hữu hạn có cấp bằng $n$. Giả sử rằng vớ
   Vậy $N(d) = \varphi(d)$.
 Tóm lại, với mọi ước $d \mid n$, ta luôn có $N(d) \in \{0, \varphi(d)\}$, tức $N(d) \le \varphi(d)$.
 
-**Ý 2: Chứng minh $N(d) = \varphi(d)$ với mọi ước $d \mid n$**
+**2. Chứng minh $N(d) = \varphi(d)$ với mọi ước $d \mid n$**
+
 Mỗi phần tử của $G$ đều có một cấp xác định là ước của $n$. Phân hoạch $G$ theo cấp phần tử:
 $$
 n = |G| = \sum_{d \mid n} N(d).
@@ -486,7 +437,8 @@ $$
 $$
 Vì $N(d) = \varphi(d) > 0$ với mọi $d \mid n$, trong $G$ luôn tồn tại ít nhất một phần tử cấp $d$, và do đó luôn tồn tại đúng một nhóm con cấp $d$ với mọi ước $d$ của $n$.
 
-**Ý 3: Kết luận $G$ là nhóm cyclic**
+**3. Kết luận $G$ là nhóm cyclic**
+
 Đặc biệt, xét ước $d = n$.
 Theo kết quả Ý 2, ta có:
 $$
@@ -499,14 +451,7 @@ $$
 G = \langle g \rangle.
 $$
 Vậy $G$ là một nhóm cyclic.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh $N(d) \le \varphi(d)$ nhờ tính duy nhất của nhóm con cấp $d$ | 0.35 điểm |
-| Thiết lập phương trình $\sum (\varphi(d) - N(d)) = 0$ và suy ra $N(d) = \varphi(d)$ với mọi $d \mid n$ | 0.35 điểm |
-| Xét $d = n$ chỉ ra tồn tại phần tử cấp $n$ và kết luận $G$ cyclic | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---

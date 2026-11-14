@@ -19,9 +19,6 @@ sources:
     pages: '30-36, 166-168'
     sections: 'Mục 1.8, 1.9'
     note: 'Hệ thống bài tập Chương 1 (Bài 1.1 đến 1.32) và Lời giải chọn lọc'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '38-44'
-    sections: 'Chương 1, Bài tập'
 status: published
 version: 0.1.0
 authoring:
@@ -102,19 +99,14 @@ Việc nắm vững thuật ngữ chuẩn quốc tế giúp sinh viên Sư phạ
 | Nhóm nhị diện | Dihedral group $D_{2n}$ | Nhóm đối xứng của đa giác đều $n$ cạnh, cấp $2n$ |
 | Nhóm tuyến tính tổng quát | General linear group | $\operatorname{GL}_n(F)$ gồm các ma trận khả nghịch cấp $n$ |
 | Nhóm Affine | Affine group $\operatorname{Aff}(\R)$ | Ánh xạ $T_{a,b}(x) = ax + b$ ($a \neq 0$), hợp thành ánh xạ |
-| Nhóm bốn Klein | Klein four-group $V_4$ | Nhóm không cyclic cấp 4, $V_4 \cong \Z/2\Z \times \Z/2\Z$ |
+| Nhóm bốn Klein | Klein four-group $V_4$ | Nhóm không cyclic cấp 4, $V_4 = \Z/2\Z \times \Z/2\Z$ |
 </Figure>
 
 ---
 
 ## 3. Hệ thống bài tập chuyên đề chọn lọc
 
-<Exercise id="exr-c1-b4-a1" title="[Nhóm A · Mã CTDS-C1-B4-A01] Phục dựng bảng Cayley khuyết và nhận diện nhóm cấp 4">
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Bảng Cayley của nhóm hữu hạn và phân loại nhóm cấp 4
-- **Mục tiêu đánh giá:** Vận dụng tính chất mỗi hàng/cột là hoán vị để hoàn thành bảng Cayley và xác định nhóm cyclic hay nhóm Klein *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Cơ bản (Mức 1)
-
+<Exercise id="exr-c1-b4-a1" title="Phục dựng bảng Cayley khuyết và nhận diện nhóm cấp 4" group="Nhóm A">
 Cho $G = \{e, a, b, c\}$ là một nhóm gồm $4$ phần tử với phần tử đơn vị $e$. Bảng Cayley của $G$ đang bị khuyết một số vị trí như sau:
 
 | $\cdot$ | $e$ | $a$ | $b$ | $c$ |
@@ -128,17 +120,14 @@ Biết thêm rằng phần tử $a$ có cấp bằng $4$, nghĩa là $a^4 = e$ v
 1. Hãy điền đầy đủ tất cả các dấu hỏi **?** trong bảng Cayley của nhóm $G$.
 2. Nhóm $(G, \cdot)$ này là nhóm cyclic $(\Z/4\Z, +)$ hay nhóm bốn Klein $V_4$? Giải thích lý do.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Vì $a$ có cấp 4, các lũy thừa $e, a, a^2, a^3$ đôi một phân biệt. Nhìn vào hàng của $a$: ta có $ab = c$, hãy xác định xem $a^2$ có thể bằng $b$ được không.
 2. Áp dụng định lý bảng Cayley: trên mỗi hàng và mỗi cột, mỗi phần tử của $\{e, a, b, c\}$ xuất hiện đúng một lần.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Hoàn thành bảng Cayley**
 
-**Ý 1: Hoàn thành bảng Cayley**
 - Xét hàng thứ hai (phép nhân với $a$ bên trái): $\{a \cdot e, a \cdot a, a \cdot b, a \cdot c\} = \{a, a^2, c, ac\}$.
   Hàng này đã có $a$ (tại cột $e$) và $c$ (tại cột $b$). Như vậy hai phần tử còn lại là $a^2$ và $ac$ phải rơi vào tập $\{e, b\}$.
   Theo giả thiết $a$ có cấp 4 nên $a^2 \neq e$. Do đó bắt buộc:
@@ -170,24 +159,13 @@ Bảng Cayley hoàn chỉnh là:
 | $b$ | $b$ | $c$ | $e$ | $a$ |
 | $c$ | $c$ | $e$ | $a$ | $b$ |
 
-**Ý 2: Nhận diện cấu trúc nhóm**
-Vì $G = \{e, a, a^2, a^3\}$ được sinh ra bởi một phần tử duy nhất $a$ có cấp bằng $4$, nhóm $G$ là một **nhóm cyclic cấp 4** (đẳng cấu với $(\Z/4\Z, +)$). Nó không phải là nhóm Klein $V_4$ vì trong nhóm Klein $V_4$, mọi phần tử khác đơn vị đều có bình phương bằng $e$ (cấp 2), trong khi ở đây $a^2 = b \neq e$.
-</details>
+**2. Nhận diện cấu trúc nhóm**
 
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Suy luận đúng $a^2 = b$ và $ac = e$ từ giả thiết cấp của $a$ bằng 4 | 0.35 điểm |
-| Điền chính xác toàn bộ 6 vị trí còn thiếu trong bảng Cayley | 0.35 điểm |
-| Khẳng định và giải thích đúng $G$ là nhóm cyclic cấp 4 (không phải Klein $V_4$) | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+Vì $G = \{e, a, a^2, a^3\}$ được sinh ra bởi một phần tử duy nhất $a$ có cấp bằng $4$, nhóm $G$ là một **nhóm cyclic cấp 4** (có cùng cấu trúc bảng phép toán với $(\Z/4\Z, +)$). Nó không phải là nhóm Klein $V_4$ vì trong nhóm Klein $V_4$, mọi phần tử khác đơn vị đều có bình phương bằng $e$ (cấp 2), trong khi ở đây $a^2 = b \neq e$.
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c1-b4-b1" title="[Nhóm B · Mã CTDS-C1-B4-B01] Hệ tiên đề tối thiểu của Nhóm (Bài tập 1.9)">
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Bài tập 1.9 giáo trình chính — Tiên đề nhóm một phía
-- **Mục tiêu đánh giá:** Chứng minh đơn vị trái và nghịch đảo trái tự động là đơn vị phải và nghịch đảo phải *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Trung bình (Mức 2)
-
+<Exercise id="exr-c1-b4-b1" title="Hệ tiên đề tối thiểu của Nhóm (Bài tập 1.9)" group="Nhóm B">
 Cho $G$ là một tập hợp khác rỗng cùng với một phép toán hai ngôi có tính kết hợp (nghĩa là $(G, \cdot)$ là một nửa nhóm). Giả sử thỏa mãn hai điều kiện sau:
 1. Tồn tại phần tử $e \in G$ sao cho $ea = a$ với mọi $a \in G$ ($e$ là **đơn vị trái**).
 2. Với mỗi $a \in G$, tồn tại phần tử $a' \in G$ sao cho $a'a = e$ ($a'$ là **nghịch đảo trái** của $a$).
@@ -197,17 +175,14 @@ Hãy chứng minh rằng:
 2. Phần tử $e$ cũng là đơn vị phải của $G$, tức là $ae = a$ với mọi $a \in G$.
 3. Từ đó kết luận $(G, \cdot)$ là một nhóm.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Vì $a' \in G$, áp dụng điều kiện (2) cho chính $a'$, tồn tại phần tử $a'' \in G$ sao cho $a''a' = e$. Hãy tính tích $a''a'aa'$ theo hai cách kết hợp khác nhau.
 2. Khi đã có $aa' = e$, hãy tính $ae = a(a'a)$ bằng cách đổi dấu ngoặc thành $(aa')a$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $aa' = e$ (nghịch đảo trái là nghịch đảo phải)**
 
-**Ý 1: Chứng minh $aa' = e$ (nghịch đảo trái là nghịch đảo phải)**
 Lấy tùy ý $a \in G$. Theo giả thiết (2), tồn tại $a' \in G$ sao cho $a'a = e$.
 Vì $a' \in G$, tiếp tục áp dụng giả thiết (2) cho phần tử $a'$, tồn tại $a'' \in G$ sao cho:
 $$
@@ -230,49 +205,36 @@ aa' = e.
 $$
 Vậy $a'$ cũng chính là nghịch đảo phải của $a$.
 
-**Ý 2: Chứng minh $ae = a$ (đơn vị trái là đơn vị phải)**
+**2. Chứng minh $ae = a$ (đơn vị trái là đơn vị phải)**
+
 Với mọi $a \in G$, sử dụng kết quả $a'a = e$ và $aa' = e$ vừa chứng minh:
 $$
 ae = a(a'a) = (aa')a = ea = a \quad (\text{vì } ea = a \text{ theo giả thiết đơn vị trái}).
 $$
 Vậy $ae = a$ với mọi $a \in G$, chứng tỏ $e$ là phần tử đơn vị phải.
 
-**Ý 3: Kết luận**
+**3. Kết luận**
+
 Vì $ea = ae = a$ với mọi $a \in G$, $e$ là phần tử đơn vị hai phía.
 Vì $a'a = aa' = e$, mỗi phần tử $a \in G$ đều có phần tử nghịch đảo hai phía là $a'$.
 Kết hợp với tính kết hợp đã cho, $(G, \cdot)$ thỏa mãn đầy đủ các tiên đề của một nhóm.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Đưa ra phần tử $a''$ thỏa mãn $a''a' = e$ và thiết lập biểu thức tính toán | 0.30 điểm |
-| Biến đổi chính xác để chứng minh $aa' = e$ | 0.40 điểm |
-| Chứng minh $ae = a$ và kết luận cấu trúc nhóm | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c1-b4-c1" title="[Nhóm C · Mã CTDS-C1-B4-C01] Nhóm có mọi phần tử bình phương bằng đơn vị là nhóm Abel (Bài tập 1.11)">
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Bài tập 1.11 giáo trình chính — Mối liên hệ giữa lũy thừa và tính giao hoán
-- **Mục tiêu đánh giá:** Chứng minh tính giao hoán của nhóm từ điều kiện $x^2 = e$ và phân tích phản ví dụ với số mũ lớn hơn *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Nâng cao (Mức 3)
-
+<Exercise id="exr-c1-b4-c1" title="Nhóm có mọi phần tử bình phương bằng đơn vị là nhóm Abel (Bài tập 1.11)" group="Nhóm C">
 1. Cho $G$ là một nhóm thỏa mãn $x^2 = e$ với mọi $x \in G$. Chứng minh rằng $G$ là một nhóm abel (giao hoán).
 2. Hãy chỉ ra một ví dụ về một nhóm thỏa mãn điều kiện trên.
 3. Nếu thay đổi giả thiết thành $x^3 = e$ với mọi $x \in G$, thì nhóm $G$ có nhất thiết phải giao hoán hay không? Giải thích rõ.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Từ $x^2 = e$, suy ra nghịch đảo của $x$ là gì? Áp dụng công thức nghịch đảo của tích $(ab)^{-1}$ cho hai phần tử bất kỳ.
 2. Xem lại nhóm bốn Klein $V_4$ hoặc nhóm $U(8)$.
 3. Tìm hiểu nhóm Heisenberg hoặc nhóm không giao hoán cấp 27 có mọi phần tử đều có cấp 3 (nhóm lũy linh cấp 2).
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $G$ giao hoán khi $x^2 = e, \forall x \in G$**
 
-**Ý 1: Chứng minh $G$ giao hoán khi $x^2 = e, \forall x \in G$**
 Lấy tùy ý $x \in G$. Theo giả thiết $x^2 = e$, ta có $xx = e$.
 Nhân $x^{-1}$ vào bên phải của đẳng thức, ta được:
 $$
@@ -298,62 +260,50 @@ ab = (ab)^{-1} = b^{-1}a^{-1} = ba.
 $$
 Vì đẳng thức $ab = ba$ đúng với mọi $a, b \in G$, ta kết luận $(G, \cdot)$ là một nhóm abel.
 
-**Ý 2: Ví dụ minh họa**
+**2. Ví dụ minh họa**
+
 Nhóm bốn Klein $V_4 = \{e, a, b, c\}$ thỏa mãn $a^2 = b^2 = c^2 = e^2 = e$.
 Một ví dụ số học là nhóm $U(8) = \{[1]_8, [3]_8, [5]_8, [7]_8\}$ với $[1]^2 = [3]^2 = [5]^2 = [7]^2 = [1]_8$.
 
-**Ý 3: Khảo sát trường hợp $x^3 = e$**
+**3. Khảo sát trường hợp $x^3 = e$**
+
 Nếu $x^3 = e$ với mọi $x \in G$, nhóm $G$ **không nhất thiết** phải giao hoán.
 *Giải thích:* Điều kiện $x^3 = e$ cho ta $x^{-1} = x^2$. Khi đó $(ab)^{-1} = b^{-1}a^{-1} \iff (ab)^2 = b^2 a^2$. Từ đó suy ra $abab = bbaa \implies ba = a^2 b^2$, chưa đủ để kết luận $ab = ba$.
-Trong đại số trừu tượng, tồn tại nhóm không giao hoán cấp $27$ (nhóm Heisenberg trên trường $\mathbb{F}_3$) gồm các ma trận:
+Trong đại số trừu tượng, tồn tại nhóm không giao hoán cấp $27$ (nhóm ma trận tam giác trên $\Z/3\Z$) gồm các ma trận:
 $$
 G = \left\{ \begin{pmatrix} 1 & a & b \\ 0 & 1 & c \\ 0 & 0 & 1 \end{pmatrix} \;\middle|\; a, b, c \in \Z/3\Z \right\}.
 $$
 Mọi ma trận khác đơn vị trong nhóm này đều thỏa mãn $A^3 = I_3$, nhưng nhóm này không giao hoán (ví dụ lấy $a = 1, c = 0$ và $a = 0, c = 1$).
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Suy ra $x = x^{-1}$ với mọi $x \in G$ và biến đổi $(ab)^{-1} = b^{-1}a^{-1} = ba$ để kết luận giao hoán | 0.50 điểm |
-| Chỉ ra ví dụ cụ thể ($V_4$ hoặc $U(8)$) | 0.20 điểm |
-| Khẳng định $x^3 = e$ không suy ra giao hoán và giải thích/nêu ví dụ phản chứng | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
-<Exercise id="exr-c1-b4-d1" title="[Nhóm D · Mã CTDS-C1-B4-D01] Phân loại các cấu trúc nhóm cấp nhỏ hơn hoặc bằng 5">
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Bài tập 1.27, 1.28 giáo trình chính — Phân loại các nhóm cấp nhỏ
-- **Mục tiêu đánh giá:** Chứng minh sự duy nhất (sai khác đẳng cấu) của các nhóm cấp 1, 2, 3, 5 và phân loại triệt để nhóm cấp 4 *(Đánh giá thường xuyên)*
-- **Mức độ khó:** Rất khó (Mức 4)
-
-1. Chứng minh rằng mọi nhóm cấp $1, 2, 3$ đều là nhóm cyclic, và với mỗi cấp này chỉ tồn tại duy nhất một cấu trúc nhóm (sai khác bảng Cayley / đẳng cấu).
+<Exercise id="exr-c1-b4-d1" title="Phân loại các cấu trúc nhóm cấp nhỏ hơn hoặc bằng 5" group="Nhóm D">
+1. Chứng minh rằng mọi nhóm cấp $1, 2, 3$ đều là nhóm cyclic, và với mỗi cấp này chỉ tồn tại duy nhất một cấu trúc nhóm (sai khác phép đổi tên phần tử trong bảng Cayley).
 2. Cho $G$ là nhóm cấp $4$. Chứng minh rằng $G$ chỉ có thể rơi vào đúng một trong hai trường hợp sau:
-   - Trường hợp 1: $G$ chứa một phần tử cấp $4$, khi đó $G$ đẳng cấu với nhóm cyclic $(\Z/4\Z, +)$.
-   - Trường hợp 2: Mọi phần tử khác đơn vị của $G$ đều có cấp $2$, khi đó $G$ đẳng cấu với nhóm bốn Klein $V_4$.
-3. Tổng hợp kết quả: Tính số cấu trúc nhóm phân biệt (sai khác đẳng cấu) đối với từng cấp $n \in \{1, 2, 3, 4, 5\}$ và chỉ ra nhóm có cấp nhỏ nhất không giao hoán.
+   - Trường hợp 1: $G$ chứa một phần tử cấp $4$, khi đó $G$ có cùng cấu trúc bảng phép toán với nhóm cyclic $(\Z/4\Z, +)$.
+   - Trường hợp 2: Mọi phần tử khác đơn vị của $G$ đều có cấp $2$, khi đó $G$ có cùng cấu trúc bảng phép toán với nhóm bốn Klein $V_4$.
+3. Tổng hợp kết quả: Tính số cấu trúc nhóm phân biệt (sai khác phép đổi tên phần tử bảo toàn phép toán) đối với từng cấp $n \in \{1, 2, 3, 4, 5\}$ và chỉ ra nhóm có cấp nhỏ nhất không giao hoán.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Dùng bảng Cayley: nhóm cấp 1 là $\{e\}$; nhóm cấp 2 là $\{e, a\}$ bắt buộc $a^2 = e$; nhóm cấp 3 là $\{e, a, b\}$ bắt buộc $a^2 = b, ab = e$.
 2. Áp dụng bảng Cayley và tính duy nhất trên mỗi hàng: nếu không có phần tử cấp 4 thì mọi phần tử khác $e$ đều có bình phương bằng $e$.
 3. Cấp 5 là số nguyên tố nên chỉ có nhóm cyclic. Nhóm không giao hoán nhỏ nhất là $S_3$ cấp 6.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Phân loại nhóm cấp 1, 2, 3**
 
-**Ý 1: Phân loại nhóm cấp 1, 2, 3**
 - *Cấp 1:* $G = \{e\}$. Bảng Cayley chỉ có một ô $e \cdot e = e$. Đây là nhóm tầm thường $\Z/1\Z$.
-- *Cấp 2:* $G = \{e, a\}$ với $a \neq e$. Hàng thứ hai của bảng Cayley chứa $\{a \cdot e, a \cdot a\} = \{a, a^2\}$. Vì $a$ đã xuất hiện tại cột $e$, nên tại cột $a$ bắt buộc phải là phần tử còn lại: $a^2 = e$. Vậy bảng Cayley hoàn toàn bị xác định duy nhất: $G = \{e, a\} = \langle a \rangle \cong \Z/2\Z$ (cyclic cấp 2).
+- *Cấp 2:* $G = \{e, a\}$ với $a \neq e$. Hàng thứ hai của bảng Cayley chứa $\{a \cdot e, a \cdot a\} = \{a, a^2\}$. Vì $a$ đã xuất hiện tại cột $e$, nên tại cột $a$ bắt buộc phải là phần tử còn lại: $a^2 = e$. Vậy bảng Cayley hoàn toàn bị xác định duy nhất: $G = \{e, a\} = \langle a \rangle \simeq \Z/2\Z$ (cyclic cấp 2).
 - *Cấp 3:* $G = \{e, a, b\}$. Hàng của $a$ gồm $\{a, a^2, ab\}$. Cột $e$ đã có $a$. Do đó $\{a^2, ab\} = \{e, b\}$.
   Nếu $a^2 = e$, thì hàng của $a$ là $a, e, b$, suy ra cột $b$ có hai lần xuất hiện phần tử $b$ (ở hàng $e$ và hàng $a$), mâu thuẫn với định lý bảng Cayley.
   Do đó bắt buộc $a^2 = b$ và $ab = e$. Khi đó $a^3 = a \cdot a^2 = ab = e$.
-  Vậy $G = \{e, a, a^2\}$ là nhóm cyclic cấp 3, đẳng cấu với $\Z/3\Z$. Bảng Cayley duy nhất.
+  Vậy $G = \{e, a, a^2\}$ là nhóm cyclic cấp 3, có cùng cấu trúc bảng phép toán với $\Z/3\Z$. Bảng Cayley duy nhất.
 
-**Ý 2: Phân loại nhóm cấp 4**
+**2. Phân loại nhóm cấp 4**
+
 Cho $G = \{e, a, b, c\}$.
-- *Nếu $G$ chứa một phần tử có cấp 4:* Giả sử $\operatorname{ord}(a) = 4$. Khi đó các phần tử $e, a, a^2, a^3$ đôi một phân biệt. Vì $|G| = 4$, ta có $G = \{e, a, a^2, a^3\} = \langle a \rangle$. Nhóm này là **nhóm cyclic cấp 4**, đẳng cấu với $(\Z/4\Z, +)$.
+- *Nếu $G$ chứa một phần tử có cấp 4:* Giả sử $\operatorname{ord}(a) = 4$. Khi đó các phần tử $e, a, a^2, a^3$ đôi một phân biệt. Vì $|G| = 4$, ta có $G = \{e, a, a^2, a^3\} = \langle a \rangle$. Nhóm này là **nhóm cyclic cấp 4**, có cùng cấu trúc bảng phép toán với $(\Z/4\Z, +)$.
 - *Nếu $G$ không chứa phần tử nào có cấp 4:* Do cấp của mỗi phần tử khác $e$ phải là ước của 4 và không bằng 4 (và không bằng 1 vì khác $e$), cấp của mọi phần tử $x \neq e$ bắt buộc phải bằng 2.
   Nghĩa là:
   $$
@@ -367,13 +317,14 @@ Cho $G = \{e, a, b, c\}$.
   ab = c.
   $$
   Tương tự, ta suy ra $ba = c, bc = cb = a, ca = ac = b$.
-  Đây chính là bảng Cayley của **nhóm bốn Klein $V_4$** (đẳng cấu với $\Z/2\Z \times \Z/2\Z$).
-Vậy chỉ có đúng 2 cấu trúc nhóm cấp 4 sai khác đẳng cấu.
+  Đây chính là bảng Cayley của **nhóm bốn Klein $V_4$** (có cùng cấu trúc bảng phép toán với $\Z/2\Z \times \Z/2\Z$).
+Vậy chỉ có đúng 2 cấu trúc nhóm cấp 4 sai khác phép đổi tên phần tử bảo toàn phép toán.
 
-**Ý 3: Bảng tổng hợp số cấu trúc nhóm cấp $\le 5$**
+**3. Bảng tổng hợp số cấu trúc nhóm cấp $\le 5$**
+
 Đối với cấp 5: Vì 5 là số nguyên tố, lý luận tương tự cấp 3 (hoặc dùng định lý Lagrange sau này), mọi phần tử $a \neq e$ đều sinh ra nhóm cấp 5, nên chỉ có duy nhất 1 cấu trúc nhóm cyclic $\Z/5\Z$.
 
-| Cấp của nhóm $\|G\|$ | Số cấu trúc nhóm phân biệt (sai khác đẳng cấu) | Danh sách các nhóm | Tính giao hoán |
+| Cấp của nhóm $\|G\|$ | Số cấu trúc nhóm phân biệt (sai khác phép đổi tên phần tử bảo toàn phép toán) | Danh sách các nhóm | Tính giao hoán |
 | :---: | :---: | :--- | :---: |
 | 1 | 1 | Nhóm tầm thường $\{e\}$ | Abel |
 | 2 | 1 | $\Z/2\Z$ (cyclic) | Abel |
@@ -382,14 +333,7 @@ Vậy chỉ có đúng 2 cấu trúc nhóm cấp 4 sai khác đẳng cấu.
 | 5 | 1 | $\Z/5\Z$ (cyclic) | Abel |
 
 Nhóm không giao hoán có cấp nhỏ nhất trong toàn bộ đại số là **nhóm đối xứng $S_3$** (cũng chính là nhóm nhị diện $D_6$), có cấp bằng $6 = 3!$. Mọi nhóm có cấp từ 1 đến 5 đều là nhóm abel.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Lập luận hoàn chỉnh tính duy nhất và cyclic của các nhóm cấp 1, 2, 3 qua bảng Cayley | 0.35 điểm |
-| Phân loại đầy đủ hai nhánh của nhóm cấp 4 ($\Z/4\Z$ và $V_4$) | 0.35 điểm |
-| Lập bảng thống kê cấp $\le 5$ và chỉ ra nhóm không giao hoán nhỏ nhất là $S_3$ cấp 6 | 0.30 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---
@@ -398,6 +342,6 @@ Nhóm không giao hoán có cấp nhỏ nhất trong toàn bộ đại số là 
 - **Khung lý thuyết hoàn chỉnh:** Hệ thống đại số có một phép toán hai ngôi gồm 4 nấc thang: Nửa nhóm $\to$ Vị nhóm $\to$ Nhóm $\to$ Nhóm abel. Tiên đề một phía (đơn vị trái và nghịch đảo trái) là đủ để bảo đảm cấu trúc nhóm hoàn chỉnh.
 - **Hệ quả lũy thừa và giao hoán:** Điều kiện $x^2 = e$ với mọi phần tử kéo theo tính tự nghịch đảo $x = x^{-1}$ và dẫn tới tính giao hoán $ab = ba$. Điều này không còn đúng khi số mũ lớn hơn 2 ($x^3 = e$).
 - **Phân loại nhóm cấp nhỏ:** Mọi nhóm có cấp $1, 2, 3, 5$ đều là nhóm cyclic; nhóm cấp 4 có đúng 2 cấu trúc: nhóm cyclic $\Z/4\Z$ và nhóm Klein $V_4$.
-- **Mọi nhóm có cấp nhỏ hơn 6 đều là nhóm Abel:** Nhóm không giao hoán có cấp nhỏ nhất là nhóm hoán vị $S_3$ (đẳng cấu với nhóm nhị diện $D_6$) có cấp bằng 6.
+- **Mọi nhóm có cấp nhỏ hơn 6 đều là nhóm Abel:** Nhóm không giao hoán có cấp nhỏ nhất là nhóm hoán vị $S_3$ (có cùng cấu trúc bảng phép toán với nhóm nhị diện $D_6$) có cấp bằng 6.
 - **Cầu nối sang Chương 2:** Việc khảo sát các tập con của nhóm đóng dưới phép toán dẫn đến khái niệm trung tâm tiếp theo: **Nhóm con** ($H \le G$) và cấu trúc đặc biệt của **Nhóm cyclic** sinh bởi một phần tử.
 </KeyTakeaways>

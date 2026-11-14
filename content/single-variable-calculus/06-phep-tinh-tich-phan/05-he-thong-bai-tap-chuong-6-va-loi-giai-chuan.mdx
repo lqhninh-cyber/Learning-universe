@@ -60,11 +60,12 @@ Tính các tích phân suy rộng sau:
 2. $I_2 = \int_0^{+\infty} x e^{-x} dx$
 3. $I_3 = \int_0^{+\infty} e^{-ax} \cos x dx \quad (a > 0)$
 4. $I_4 = \int_0^{+\infty} \frac{\arctan x}{(1+x^2)^{3/2}} dx$
-</Exercise>
+
 
 <Solution>
-1. **Câu a: $I_1 = \int_3^{+\infty} \frac{dx}{(x - 1)(x - 2)}$:**
-   Phân tích thành phân thức đơn giản: $\frac{1}{(x-1)(x-2)} = \frac{1}{x-2} - \frac{1}{x-1}$.
+**1. Câu a: $I_1 = \int_3^{+\infty} \frac{dx}{(x - 1)(x - 2)}$**
+
+Phân tích thành phân thức đơn giản: $\frac{1}{(x-1)(x-2)} = \frac{1}{x-2} - \frac{1}{x-1}$.
    Với $c > 3$:
    $$
    \int_3^c \left(\frac{1}{x-2} - \frac{1}{x-1}\right) dx = \left[ \ln\left|\frac{x-2}{x-1}\right| \right]_3^c = \ln\left(\frac{c-2}{c-1}\right) - \ln\left(\frac{1}{2}\right).
@@ -75,8 +76,9 @@ Tính các tích phân suy rộng sau:
    I_1 = 0 - \ln\left(\frac{1}{2}\right) = \ln 2.
    $$
 
-2. **Câu b: $I_2 = \int_0^{+\infty} x e^{-x} dx$:**
-   Sử dụng phương pháp tích phân từng phần: đặt $u = x \implies du = dx$; $dv = e^{-x} dx \implies v = -e^{-x}$.
+**2. Câu b: $I_2 = \int_0^{+\infty} x e^{-x} dx$**
+
+Sử dụng phương pháp tích phân từng phần: đặt $u = x \implies du = dx$; $dv = e^{-x} dx \implies v = -e^{-x}$.
    Với $c > 0$:
    $$
    \int_0^c x e^{-x} dx = \big[ -x e^{-x} \big]_0^c + \int_0^c e^{-x} dx = -c e^{-c} - e^{-c} + 1.
@@ -87,8 +89,9 @@ Tính các tích phân suy rộng sau:
    I_2 = \lim_{c \to +\infty} (1 - c e^{-c} - e^{-c}) = 1.
    $$
 
-3. **Câu c: $I_3 = \int_0^{+\infty} e^{-ax} \cos x dx$ ($a > 0$):**
-   Ta tìm nguyên hàm của $e^{-ax} \cos x$ bằng tích phân từng phần hai lần:
+**3. Câu c: $I_3 = \int_0^{+\infty} e^{-ax} \cos x dx$ ($a > 0$)**
+
+Ta tìm nguyên hàm của $e^{-ax} \cos x$ bằng tích phân từng phần hai lần:
    $$
    \int e^{-ax} \cos x dx = \frac{e^{-ax}(-a\cos x + \sin x)}{a^2 + 1}.
    $$
@@ -102,8 +105,9 @@ Tính các tích phân suy rộng sau:
    I_3 = 0 - \left(-\frac{a}{a^2 + 1}\right) = \frac{a}{a^2 + 1}.
    $$
 
-4. **Câu d: $I_4 = \int_0^{+\infty} \frac{\arctan x}{(1+x^2)^{3/2}} dx$:**
-   Đặt tích phân từng phần: $u = \arctan x \implies du = \frac{dx}{1+x^2}$; $dv = \frac{dx}{(1+x^2)^{3/2}} \implies v = \frac{x}{\sqrt{1+x^2}}$ (do $\int (1+x^2)^{-3/2} x dx$ sau đổi biến).
+**4. Câu d: $I_4 = \int_0^{+\infty} \frac{\arctan x}{(1+x^2)^{3/2}} dx$**
+
+Đặt tích phân từng phần: $u = \arctan x \implies du = \frac{dx}{1+x^2}$; $dv = \frac{dx}{(1+x^2)^{3/2}} \implies v = \frac{x}{\sqrt{1+x^2}}$ (do $\int (1+x^2)^{-3/2} x dx$ sau đổi biến).
    $$
    \int \frac{\arctan x}{(1+x^2)^{3/2}} dx = \frac{x \arctan x}{\sqrt{1+x^2}} - \int \frac{x dx}{(1+x^2)^{3/2}} = \frac{x \arctan x + 1}{\sqrt{1+x^2}}.
    $$
@@ -114,6 +118,7 @@ Tính các tích phân suy rộng sau:
    I_4 = \frac{\pi}{2} - 1.
    $$
 </Solution>
+</Exercise>
 
 <Exercise
   id="ex-gthmb-c6-b5-bai-2-tinh-tich-phan-ham-khong-bi-chan"
@@ -127,17 +132,19 @@ Tính các tích phân suy rộng sau trên đoạn $[0; 1]$:
 2. $J_2 = \int_0^1 \ln x dx$
 3. $J_3 = \int_0^1 \frac{dx}{(2-x)\sqrt{1-x}}$
 4. $J_4 = \int_0^1 x \ln^2 x dx$
-</Exercise>
+
 
 <Solution>
-1. **Câu a: $J_1 = \int_0^1 \frac{x+1}{\sqrt{x}} dx$ (Điểm bất thường tại $x = 0$):**
-   Tách hàm dưới dấu tích phân: $\frac{x+1}{\sqrt{x}} = x^{1/2} + x^{-1/2}$.
+**1. Câu a: $J_1 = \int_0^1 \frac{x+1}{\sqrt{x}} dx$ (Điểm bất thường tại $x = 0$)**
+
+Tách hàm dưới dấu tích phân: $\frac{x+1}{\sqrt{x}} = x^{1/2} + x^{-1/2}$.
    $$
    J_1 = \lim_{c \to 0^+} \int_c^1 (x^{1/2} + x^{-1/2}) dx = \lim_{c \to 0^+} \left[ \frac{2}{3} x^{3/2} + 2 x^{1/2} \right]_c^1 = \left(\frac{2}{3} + 2\right) - \lim_{c \to 0^+} \left(\frac{2}{3} c^{3/2} + 2 c^{1/2}\right) = \frac{8}{3} - 0 = \frac{8}{3}.
    $$
 
-2. **Câu b: $J_2 = \int_0^1 \ln x dx$ (Điểm bất thường tại $x = 0$):**
-   Tích phân từng phần: $u = \ln x, dv = dx \implies v = x$.
+**2. Câu b: $J_2 = \int_0^1 \ln x dx$ (Điểm bất thường tại $x = 0$)**
+
+Tích phân từng phần: $u = \ln x, dv = dx \implies v = x$.
    $$
    \int \ln x dx = x \ln x - x.
    $$
@@ -150,16 +157,18 @@ Tính các tích phân suy rộng sau trên đoạn $[0; 1]$:
    J_2 = -1 - 0 = -1.
    $$
 
-3. **Câu c: $J_3 = \int_0^1 \frac{dx}{(2-x)\sqrt{1-x}}$ (Điểm bất thường tại $x = 1$):**
-   Thực hiện phép đổi biến: Đặt $t = \sqrt{1-x} \implies x = 1 - t^2 \implies dx = -2t dt$.
+**3. Câu c: $J_3 = \int_0^1 \frac{dx}{(2-x)\sqrt{1-x}}$ (Điểm bất thường tại $x = 1$)**
+
+Thực hiện phép đổi biến: Đặt $t = \sqrt{1-x} \implies x = 1 - t^2 \implies dx = -2t dt$.
    Khi $x = 0 \implies t = 1$; khi $x \to 1^- \implies t \to 0^+$.
    Mẫu số: $(2 - x)\sqrt{1-x} = (2 - (1 - t^2)) t = (1 + t^2)t$.
    $$
    J_3 = \int_1^0 \frac{-2t dt}{(1 + t^2)t} = \int_0^1 \frac{2 dt}{1 + t^2} = 2 \big[ \arctan t \big]_0^1 = 2\left(\frac{\pi}{4} - 0\right) = \frac{\pi}{2}.
    $$
 
-4. **Câu d: $J_4 = \int_0^1 x \ln^2 x dx$ (Điểm bất thường tại $x = 0$):**
-   Tích phân từng phần: đặt $u = \ln^2 x \implies du = \frac{2\ln x}{x} dx$; $dv = x dx \implies v = \frac{x^2}{2}$.
+**4. Câu d: $J_4 = \int_0^1 x \ln^2 x dx$ (Điểm bất thường tại $x = 0$)**
+
+Tích phân từng phần: đặt $u = \ln^2 x \implies du = \frac{2\ln x}{x} dx$; $dv = x dx \implies v = \frac{x^2}{2}$.
    $$
    \int x \ln^2 x dx = \frac{x^2}{2} \ln^2 x - \int x \ln x dx.
    $$
@@ -174,6 +183,7 @@ Tính các tích phân suy rộng sau trên đoạn $[0; 1]$:
    J_4 = \frac{1}{4} - 0 = \frac{1}{4}.
    $$
 </Solution>
+</Exercise>
 
 ## Dạng 2: Khảo sát sự Hội tụ của Tích phân Loại 1 (Cận vô hạn)
 
@@ -189,7 +199,7 @@ Xét sự hội tụ của các tích phân sau:
 2. $K_2 = \int_1^{+\infty} \left(1 - \cos \frac{2}{x}\right) dx$
 3. $K_3 = \int_1^{+\infty} \frac{1}{x} \left(e^{1/x} - \cos \frac{1}{x}\right) dx$
 4. $K_4 = \int_1^{+\infty} \frac{\ln(x+1)}{x^2} dx$
-</Exercise>
+
 
 <Solution>
 1. **Câu a:** Khi $x \to +\infty$:
@@ -225,6 +235,7 @@ Xét sự hội tụ của các tích phân sau:
    $$
    Theo Tiêu chuẩn so sánh giới hạn (trường hợp $k = 0$), vì $\int_1^{+\infty} \frac{dx}{x^{3/2}}$ hội tụ ($p = \frac{3}{2} > 1$), nên tích phân $K_4$ **hội tụ**.
 </Solution>
+</Exercise>
 
 ## Dạng 3: Khảo sát sự Hội tụ của Tích phân Loại 2 và Phức hợp
 
@@ -241,19 +252,21 @@ Xét sự hội tụ của các tích phân sau:
 3. $L_3 = \int_0^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx$
 4. $L_4 = \int_0^{+\infty} \frac{1 - \cos x}{x^2} dx$
 5. $L_5 = \int_0^{\pi/2} \frac{\ln(\sin x)}{\sqrt{x}} dx$
-</Exercise>
+
 
 <Solution>
-1. **Câu a: Điểm bất thường tại $x = 0$:**
-   Khi $x \to 0^+$, ta có $\sin x \sim x \implies \sin^2 x \sim x^2$.
+**1. Câu a: Điểm bất thường tại $x = 0$**
+
+Khi $x \to 0^+$, ta có $\sin x \sim x \implies \sin^2 x \sim x^2$.
    Do đó:
    $$
    f(x) = \frac{x}{\sin^2 x} \sim \frac{x}{x^2} = \frac{1}{x}.
    $$
    Vì tích phân mẫu loại 2 $\int_0^1 \frac{dx}{x}$ phân kỳ ($p = 1 \ge 1$), tích phân $L_1$ **phân kỳ**.
 
-2. **Câu b: Điểm bất thường tại $x = 1$:**
-   Phân tích mẫu số khi $x \to 1^-$:
+**2. Câu b: Điểm bất thường tại $x = 1$**
+
+Phân tích mẫu số khi $x \to 1^-$:
    $$
    1 - x^4 = (1 - x)(1 + x)(1 + x^2) \sim (1 - x) \cdot 2 \cdot 2 = 4(1 - x).
    $$
@@ -263,21 +276,24 @@ Xét sự hội tụ của các tích phân sau:
    $$
    Vì tích phân mẫu loại 2 $\int_0^1 \frac{dx}{(1 - x)^{1/2}}$ hội tụ ($p = \frac{1}{2} < 1$), tích phân $L_2$ **hội tụ**.
 
-3. **Câu c: Tích phân phức hợp (Kỳ dị tại $0$ và cận $+\infty$):**
-   Tách tích phân: $L_3 = \int_0^1 \frac{e^{-x}}{\sqrt{x}} dx + \int_1^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx = A + B$.
+**3. Câu c: Tích phân phức hợp (Kỳ dị tại $0$ và cận $+\infty$)**
+
+Tách tích phân: $L_3 = \int_0^1 \frac{e^{-x}}{\sqrt{x}} dx + \int_1^{+\infty} \frac{e^{-x}}{\sqrt{x}} dx = A + B$.
    - Tại $0$: Khi $x \to 0^+$, $\frac{e^{-x}}{\sqrt{x}} \sim \frac{1}{x^{1/2}}$. Tích phân mẫu hội tụ vì $p = 1/2 < 1 \implies A$ hội tụ.
    - Tại $+\infty$: Với $x \ge 1$, $\frac{e^{-x}}{\sqrt{x}} \le e^{-x}$. Tích phân $\int_1^{+\infty} e^{-x} dx$ hội tụ $\implies B$ hội tụ.
    Vậy $L_3$ **hội tụ**.
 
-4. **Câu d: Tích phân tại $0$ và $+\infty$:**
-   Tách tích phân: $L_4 = \int_0^1 \frac{1 - \cos x}{x^2} dx + \int_1^{+\infty} \frac{1 - \cos x}{x^2} dx$.
+**4. Câu d: Tích phân tại $0$ và $+\infty$**
+
+Tách tích phân: $L_4 = \int_0^1 \frac{1 - \cos x}{x^2} dx + \int_1^{+\infty} \frac{1 - \cos x}{x^2} dx$.
    - Tại $x \to 0^+$: Ta có $1 - \cos x \sim \frac{x^2}{2} \implies \lim_{x \to 0^+} \frac{1 - \cos x}{x^2} = \frac{1}{2}$.
      Hàm số có giới hạn hữu hạn tại $0$, do đó điểm $0$ không phải là điểm bất thường (hàm số liên tục và bị chặn trên $[0; 1]$). Tích phân trên $[0; 1]$ là tích phân Riemann xác định thông thường!
    - Tại cận $+\infty$: $\left|\frac{1 - \cos x}{x^2}\right| \le \frac{2}{x^2}$. Vì $\int_1^{+\infty} \frac{dx}{x^2}$ hội tụ ($p = 2 > 1$), tích phân trên $[1; +\infty)$ hội tụ.
    Vậy $L_4$ **hội tụ**.
 
-5. **Câu e: Điểm bất thường tại $x = 0$:**
-   Khi $x \to 0^+$, $\sin x \sim x \implies \ln(\sin x) = \ln\left(x \cdot \frac{\sin x}{x}\right) = \ln x + \ln\left(\frac{\sin x}{x}\right) \sim \ln x$.
+**5. Câu e: Điểm bất thường tại $x = 0$**
+
+Khi $x \to 0^+$, $\sin x \sim x \implies \ln(\sin x) = \ln\left(x \cdot \frac{\sin x}{x}\right) = \ln x + \ln\left(\frac{\sin x}{x}\right) \sim \ln x$.
    Do đó $f(x) \sim \frac{\ln x}{\sqrt{x}}$.
    Xét tích phân $\int_0^{\pi/2} \frac{\ln x}{\sqrt{x}} dx$ bằng tích phân từng phần:
    $$
@@ -286,6 +302,7 @@ Xét sự hội tụ của các tích phân sau:
    Khi $c \to 0^+$, $\lim_{c \to 0^+} \sqrt{c} \ln c = 0$.
    Giới hạn hữu hạn, do đó tích phân $L_5$ **hội tụ**.
 </Solution>
+</Exercise>
 
 ## Dạng 4: Biện luận Tham số $p$ để Tích phân Suy rộng Hội tụ
 
@@ -299,11 +316,12 @@ Xét sự hội tụ của các tích phân sau:
 Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các tích phân sau hội tụ:
 1. $M_1 = \int_0^{+\infty} \frac{x^p}{1 + x} dx$
 2. $M_2 = \int_0^{+\infty} \frac{\ln(1 + x)}{x^p} dx$
-</Exercise>
+
 
 <Solution>
-1. **Khảo sát $M_1 = \int_0^{+\infty} \frac{x^p}{1 + x} dx$:**
-   Tích phân có hai vị trí nhạy cảm: điểm $0$ và cận $+\infty$. Ta tách tích phân tại $1$:
+**1. Khảo sát $M_1 = \int_0^{+\infty} \frac{x^p}{1 + x} dx$**
+
+Tích phân có hai vị trí nhạy cảm: điểm $0$ và cận $+\infty$. Ta tách tích phân tại $1$:
    $$
    M_1 = \int_0^1 \frac{x^p}{1 + x} dx + \int_1^{+\infty} \frac{x^p}{1 + x} dx = I_1 + I_2.
    $$
@@ -324,8 +342,9 @@ Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các 
    -1 < p < 0.
    $$
 
-2. **Khảo sát $M_2 = \int_0^{+\infty} \frac{\ln(1 + x)}{x^p} dx$:**
-   Tách tích phân tại $1$: $M_2 = \int_0^1 \frac{\ln(1+x)}{x^p} dx + \int_1^{+\infty} \frac{\ln(1+x)}{x^p} dx = J_1 + J_2$.
+**2. Khảo sát $M_2 = \int_0^{+\infty} \frac{\ln(1 + x)}{x^p} dx$**
+
+Tách tích phân tại $1$: $M_2 = \int_0^1 \frac{\ln(1+x)}{x^p} dx + \int_1^{+\infty} \frac{\ln(1+x)}{x^p} dx = J_1 + J_2$.
    - **Xét $J_1$ trên $(0; 1]$ (Điểm kỳ dị tại $0$):**
      Khi $x \to 0^+$, $\ln(1+x) \sim x \implies \frac{\ln(1+x)}{x^p} \sim \frac{x}{x^p} = \frac{1}{x^{p-1}}$.
      Tích phân loại 2 này hội tụ khi và chỉ khi:
@@ -342,6 +361,7 @@ Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các 
    1 < p < 2.
    $$
 </Solution>
+</Exercise>
 
 ## Dạng 5: Phân tích Câu hỏi Tích phân trong Đề thi Mẫu
 
@@ -360,11 +380,12 @@ Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các 
    $$
    J = \int_0^{+\infty} \frac{e^{-x}}{x^p} dx.
    $$
-</Exercise>
+
 
 <Solution>
-1. **Tính tích phân $I = \int_0^1 x \ln x dx$:**
-   Hàm số $f(x) = x \ln x$ có điểm bất thường tại $x = 0$ (do $\ln x \to -\infty$).
+**1. Tính tích phân $I = \int_0^1 x \ln x dx$**
+
+Hàm số $f(x) = x \ln x$ có điểm bất thường tại $x = 0$ (do $\ln x \to -\infty$).
    Áp dụng phương pháp tích phân từng phần:
    - Đặt $u = \ln x \implies du = \frac{1}{x} dx$.
    - Đặt $dv = x dx \implies v = \frac{x^2}{2}$.
@@ -386,8 +407,9 @@ Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các 
    I = \lim_{c \to 0^+} \left( -\frac{1}{4} - \frac{c^2}{2} \ln c + \frac{c^2}{4} \right) = -\frac{1}{4} - 0 + 0 = -\frac{1}{4}.
    $$
 
-2. **Tìm $p \in \mathbb{R}$ để $J = \int_0^{+\infty} \frac{e^{-x}}{x^p} dx$ hội tụ:**
-   Hàm số $f(x) = \frac{e^{-x}}{x^p}$ xác định và liên tục trên $(0; +\infty)$.
+**2. Tìm $p \in \mathbb{R}$ để $J = \int_0^{+\infty} \frac{e^{-x}}{x^p} dx$ hội tụ**
+
+Hàm số $f(x) = \frac{e^{-x}}{x^p}$ xác định và liên tục trên $(0; +\infty)$.
    Tích phân có hai điểm cần khảo sát: điểm $0$ và cận $+\infty$. Phân tách tích phân tại $1$:
    $$
    J = \int_0^1 \frac{e^{-x}}{x^p} dx + \int_1^{+\infty} \frac{e^{-x}}{x^p} dx = J_1 + J_2.
@@ -413,6 +435,7 @@ Tìm tất cả các giá trị của tham số $p \in \mathbb{R}$ sao cho các 
    p < 1.
    $$
 </Solution>
+</Exercise>
 
 ## Chuyên đề Nâng cao: Hàm Gamma Euler (Bài 8*)
 
@@ -427,11 +450,12 @@ Hàm Gamma Euler $\Gamma(p)$ là một trong những hàm đặc biệt quan tr�
 >
 1. Chứng minh rằng tích phân suy rộng $\int_0^{+\infty} x^{p-1} e^{-x} dx$ hội tụ khi và chỉ khi $p > 0$.
 2. Đặt $\Gamma(p) = \int_0^{+\infty} x^{p-1} e^{-x} dx$ với $p > 0$. Chứng minh rằng $\Gamma(n) = (n - 1)!$ với mọi $n \in \mathbb{N}^*$.
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh sự hội tụ khi và chỉ khi $p > 0$:**
-   Tách tích phân tại $1$:
+**1. Chứng minh sự hội tụ khi và chỉ khi $p > 0$**
+
+Tách tích phân tại $1$:
    $$
    \Gamma(p) = \int_0^1 x^{p-1} e^{-x} dx + \int_1^{+\infty} x^{p-1} e^{-x} dx = H_1 + H_2.
    $$
@@ -443,8 +467,9 @@ Hàm Gamma Euler $\Gamma(p)$ là một trong những hàm đặc biệt quan tr�
    - Tại $+\infty$: Vì $\lim_{x \to +\infty} \frac{x^{p-1} e^{-x}}{1/x^2} = \lim_{x \to +\infty} \frac{x^{p+1}}{e^x} = 0$ với mọi $p$, nên $H_2$ luôn hội tụ với mọi $p \in \mathbb{R}$.
    Vậy tích phân hội tụ khi và chỉ khi $p > 0$.
 
-2. **Chứng minh $\Gamma(n) = (n - 1)!$:**
-   - Trước hết với $p = 1$:
+**2. Chứng minh $\Gamma(n) = (n - 1)!$**
+
+ - Trước hết với $p = 1$:
      $$
      \Gamma(1) = \int_0^{+\infty} x^0 e^{-x} dx = \int_0^{+\infty} e^{-x} dx = \big[ -e^{-x} \big]_0^{+\infty} = 0 - (-1) = 1.
      $$
@@ -463,6 +488,7 @@ Hàm Gamma Euler $\Gamma(p)$ là một trong những hàm đặc biệt quan tr�
      $$
    Chứng minh hoàn tất.
 </Solution>
+</Exercise>
 
 ---
 

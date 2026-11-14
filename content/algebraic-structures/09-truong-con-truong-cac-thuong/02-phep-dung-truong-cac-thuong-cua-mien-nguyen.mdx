@@ -18,9 +18,6 @@ sources:
     pages: '149-154'
     sections: 'Mục 9.5, 9.6, 9.7'
     note: 'Mệnh đề 9.11 (Quan hệ phân số), Định lý 9.12 (Tính xác định tốt & Cấu trúc trường Frac R), Định nghĩa 9.13 (Trường các thương và đơn cấu nhúng chính tắc)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '255-265'
-    sections: 'Chương 8, Mục 8.2'
 status: published
 version: 0.1.0
 ---
@@ -83,20 +80,20 @@ Sự tồn tại của ước của không sẽ làm sụp đổ toàn bộ phé
 
 <Counterexample id="counter-c9-b2-that-bai-khi-co-uoc-cua-khong">
 ### Phản ví dụ: Sự thất bại của tính bắc cầu trên vành có ước của không
-Xét vành $R = \mathbb{Z}/6\mathbb{Z} = \{\bar{0}, \bar{1}, \bar{2}, \bar{3}, \bar{4}, \bar{5}\}$, không phải là miền nguyên vì $\bar{2} \cdot \bar{3} = \bar{0}$.
-Xét ba cặp trong $\mathcal{P}_R = R \times (R \setminus \{\bar{0}\})$:
+Xét vành $R = \mathbb{Z}/6\mathbb{Z} = \{[0], [1], [2], [3], [4], [5]\}$, không phải là miền nguyên vì $[2] \cdot [3] = [0]$.
+Xét ba cặp trong $\mathcal{P}_R = R \times (R \setminus \{[0]\})$:
 $$
-x = (\bar{3}, \bar{2}), \quad y = (\bar{0}, \bar{4}), \quad z = (\bar{0}, \bar{1}).
+x = ([3], [2]), \quad y = ([0], [4]), \quad z = ([0], [1]).
 $$
 1. **Kiểm tra $x \sim y$:**
-   Tích chéo: $\bar{3} \cdot \bar{4} = \overline{12} = \bar{0}$ và $\bar{2} \cdot \bar{0} = \bar{0}$.
-   Vì $\bar{3} \cdot \bar{4} = \bar{2} \cdot \bar{0}$, ta có $(\bar{3}, \bar{2}) \sim (\bar{0}, \bar{4})$.
+   Tích chéo: $[3] \cdot [4] = [12] = [0]$ và $[2] \cdot [0] = [0]$.
+   Vì $[3] \cdot [4] = [2] \cdot [0]$, ta có $([3], [2]) \sim ([0], [4])$.
 2. **Kiểm tra $y \sim z$:**
-   Tích chéo: $\bar{0} \cdot \bar{1} = \bar{0}$ và $\bar{4} \cdot \bar{0} = \bar{0}$.
-   Vì $\bar{0} \cdot \bar{1} = \bar{4} \cdot \bar{0}$, ta có $(\bar{0}, \bar{4}) \sim (\bar{0}, \bar{1})$.
+   Tích chéo: $[0] \cdot [1] = [0]$ và $[4] \cdot [0] = [0]$.
+   Vì $[0] \cdot [1] = [4] \cdot [0]$, ta có $([0], [4]) \sim ([0], [1])$.
 3. **Kiểm tra $x \sim z$:**
-   Tích chéo: $\bar{3} \cdot \bar{1} = \bar{3}$, trong khi $\bar{2} \cdot \bar{0} = \bar{0}$.
-   Vì $\bar{3} \neq \bar{0}$, ta có $(\bar{3}, \bar{2}) \not\sim (\bar{0}, \bar{1})$!
+   Tích chéo: $[3] \cdot [1] = [3]$, trong khi $[2] \cdot [0] = [0]$.
+   Vì $[3] \neq [0]$, ta có $([3], [2]) \not\sim ([0], [1])$!
 
 Tính bắc cầu hoàn toàn thất bại: $x \sim y$ và $y \sim z$ nhưng $x \not\sim z$. Điều này chứng minh rằng **giả thiết $R$ là miền nguyên là điều kiện bắt buộc không thể lược bỏ**.
 </Counterexample>
@@ -239,18 +236,20 @@ $$
 A = \frac{x}{x^2 - 1} + \frac{1}{x + 1}.
 $$
 2. Trong trường các thương của vành số nguyên Gauss $\operatorname{Frac}(\mathbb{Z}[i])$, tìm nghịch đảo của phần tử $\alpha = \frac{2 + i}{1 - i}$ và biểu diễn dưới dạng $u + vi$ với $u, v \in \mathbb{Q}$.
-</Exercise>
+
 
 <Solution>
-1. **Tính toán trong $\mathbb{Q}(x)$:**
-   Ta có mẫu số chung là $x^2 - 1 = (x - 1)(x + 1)$:
+**1. Tính toán trong $\mathbb{Q}(x)$**
+
+Ta có mẫu số chung là $x^2 - 1 = (x - 1)(x + 1)$:
    $$
    A = \frac{x}{x^2 - 1} + \frac{x - 1}{(x + 1)(x - 1)} = \frac{x + (x - 1)}{x^2 - 1} = \frac{2x - 1}{x^2 - 1}.
    $$
    Vì $\gcd(2x - 1, x^2 - 1) = 1$, phân thức $\frac{2x - 1}{x^2 - 1}$ đã ở dạng tối giản.
 
-2. **Tìm nghịch đảo của $\alpha$ trong $\operatorname{Frac}(\mathbb{Z}[i])$:**
-   Phần tử $\alpha = \frac{2 + i}{1 - i}$.
+**2. Tìm nghịch đảo của $\alpha$ trong $\operatorname{Frac}(\mathbb{Z}[i])$**
+
+Phần tử $\alpha = \frac{2 + i}{1 - i}$.
    Nghịch đảo của $\alpha$ là:
    $$
    \alpha^{-1} = \frac{1 - i}{2 + i}.
@@ -261,6 +260,7 @@ $$
    $$
    Kiểm tra: $\alpha \cdot \alpha^{-1} = \frac{2+i}{1-i} \cdot \frac{1-i}{2+i} = \frac{1}{1}$. Kết quả hoàn toàn chính xác.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b2-a2">
 ### Bài 9.2.A2 (Nhóm A - Kiểm tra quan hệ tương đương phân số)
@@ -269,7 +269,7 @@ $$
 u = (2 + \sqrt{2}, \; 3 - \sqrt{2}) \quad \text{và} \quad v = (8 + 5\sqrt{2}, \; 7).
 $$
 Hỏi $u$ và $v$ có tương đương với nhau trong $\mathcal{P}_R$ không? (Tức là $\frac{2+\sqrt{2}}{3-\sqrt{2}} = \frac{8+5\sqrt{2}}{7}$ trong $\operatorname{Frac}(R)$?)
-</Exercise>
+
 
 <Solution>
 Ta kiểm tra điều kiện tích chéo $ad = bc$:
@@ -287,11 +287,12 @@ u \sim v.
 $$
 Nghĩa là trong trường $\mathbb{Q}(\sqrt{2})$, hai phân số này bằng nhau.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b2-b1">
 ### Bài 9.2.B1 (Nhóm B - Trường các thương của một trường)
 Chứng minh rằng nếu $F$ là một trường thì trường các thương $\operatorname{Frac}(F)$ đẳng cấu tự nhiên với chính $F$.
-</Exercise>
+
 
 <Solution>
 Xét đơn cấu nhúng chính tắc $\iota_F: F \to \operatorname{Frac}(F), a \mapsto \frac{a}{1}$.
@@ -315,6 +316,7 @@ $$
 Vậy $\iota_F$ là một toàn ánh.
 Vì $\iota_F$ vừa là đơn ánh vừa là toàn ánh, nó là một đẳng cấu trường: $\operatorname{Frac}(F) \cong F$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b2-b2">
 ### Bài 9.2.B2 (Nhóm B - Trường các thương của vành số nguyên bậc hai)
@@ -323,15 +325,16 @@ Chứng minh rằng trường các thương $\operatorname{Frac}(\mathbb{Z}[\sqr
 $$
 \mathbb{Q}(\sqrt{d}) = \{u + v\sqrt{d} \mid u, v \in \mathbb{Q}\}.
 $$
-</Exercise>
+
 
 <Solution>
 Xét ánh xạ:
 $$
 \psi: \operatorname{Frac}(\mathbb{Z}[\sqrt{d}]) \longrightarrow \mathbb{Q}(\sqrt{d}), \quad \psi\left(\frac{a + b\sqrt{d}}{c + d'\sqrt{d}}\right) = \frac{a + b\sqrt{d}}{c + d'\sqrt{d}}.
 $$
-1. **Tính xác định tốt:**
-   Nếu $\frac{a + b\sqrt{d}}{c + d'\sqrt{d}} = \frac{a' + b'\sqrt{d}}{c' + d''\sqrt{d}}$ trong $\operatorname{Frac}(R)$, thì theo định nghĩa:
+**1. Tính xác định tốt**
+
+Nếu $\frac{a + b\sqrt{d}}{c + d'\sqrt{d}} = \frac{a' + b'\sqrt{d}}{c' + d''\sqrt{d}}$ trong $\operatorname{Frac}(R)$, thì theo định nghĩa:
    $$
    (a + b\sqrt{d})(c' + d''\sqrt{d}) = (a' + b'\sqrt{d})(c + d'\sqrt{d}) \quad \text{trong } \mathbb{Z}[\sqrt{d}].
    $$
@@ -346,6 +349,7 @@ $$
    Phần tử này chính là ảnh của phân số $\frac{a + b\sqrt{d}}{m} \in \operatorname{Frac}(\mathbb{Z}[\sqrt{d}])$ qua $\psi$.
 Vậy $\psi$ là một đẳng cấu: $\operatorname{Frac}(\mathbb{Z}[\sqrt{d}]) \cong \mathbb{Q}(\sqrt{d})$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b2-c1">
 ### Bài 9.2.C1 (Nhóm C - Tính cực tiểu của trường các thương)
@@ -383,7 +387,7 @@ Vậy trường con nhỏ nhất của $K$ chứa $R$ đẳng cấu với $\oper
 Cho $R$ và $S$ là hai miền nguyên.
 1. Chứng minh rằng nếu $R \cong S$ thì $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
 2. Chiều ngược lại có đúng không? Nếu $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$ thì có suy ra được $R \cong S$ không? Hãy giải thích và chỉ ra phản ví dụ.
-</Exercise>
+
 
 <Solution>
 **1. Chiều thuận ($R \cong S \implies \operatorname{Frac}(R) \cong \operatorname{Frac}(S)$):**
@@ -409,6 +413,7 @@ $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$ **không kéo theo** $R \c
   Hoặc tinh tế hơn: chọn $R = \mathbb{Z}$ và $S = \mathbb{Z}[\sqrt{4}] = \mathbb{Z}$.
   Chọn $R = \mathbb{Z}[2x]$ và $S = \mathbb{Z}[x]$. Hai miền nguyên này không đẳng cấu nhưng cùng có trường các thương là $\mathbb{Q}(x)$.
 </Solution>
+</Exercise>
 
 <Exercise id="ex-c9-b2-d1">
 ### Bài 9.2.D1 (Nhóm D - Hai miền nguyên khác nhau có cùng trường các thương)
@@ -454,7 +459,7 @@ $$
 Cho $R$ là một miền nguyên và $S \subseteq R \setminus \{0\}$ là một tập con nhân đóng chứa $1$ ($1 \in S$ và $s_1, s_2 \in S \implies s_1 s_2 \in S$).
 1. Chứng minh rằng tập hợp $S^{-1}R = \left\{ \frac{a}{s} \in \operatorname{Frac}(R) \;\middle|\; a \in R, s \in S \right\}$ là một vành con của $\operatorname{Frac}(R)$ chứa $R$.
 2. Cho $p$ là một số nguyên tố trong $\mathbb{Z}$, xét $S = \mathbb{Z} \setminus p\mathbb{Z}$ (tập các số nguyên không chia hết cho $p$). Hãy mô tả vành $S^{-1}\mathbb{Z}$ và tìm nhóm phần tử khả nghịch của nó.
-</Exercise>
+
 
 <Solution>
 **1. Chứng minh $S^{-1}R$ là vành con:**
@@ -485,6 +490,7 @@ Với mọi $a \in R$, $\frac{a}{1} \in S^{-1}R$ (do $1 \in S$), nên $R \subset
 - Các phần tử không khả nghịch là những phân số có tử số chia hết cho $p$: $M = p\mathbb{Z}_{(p)} = \left\{ \frac{pa'}{b} \;\middle|\; p \nmid b \right\}$.
 - Tập $M$ chính là **iđêan cực đại duy nhất** của $\mathbb{Z}_{(p)}$ (vành địa phương).
 </Solution>
+</Exercise>
 
 ---
 

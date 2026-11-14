@@ -39,6 +39,10 @@ export function SourceAttributionBadge({
 }) {
   const { resolveSource } = useLessonContext();
 
+  if (source !== 'nguon-kiem-thu') {
+    return null;
+  }
+
   if (!original && !source && !page) {
     return null;
   }

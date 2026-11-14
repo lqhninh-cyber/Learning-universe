@@ -56,7 +56,7 @@ Sau khi hoàn thành bài học này, bạn có thể:
   original="Bài 1a"
 >
 Chứng minh rằng mọi số thực $a \in \mathbb{R}$ đều là điểm giới hạn của tập các số hữu tỉ $\mathbb{Q}$ (tức là $\mathbb{Q}' = \mathbb{R}$).
-</Exercise>
+
 
 <Hint>
 Vận dụng tính trù mật của tập số hữu tỉ $\mathbb{Q}$ trong $\mathbb{R}$: giữa hai số thực bất kỳ luôn tồn tại ít nhất một số hữu tỉ.
@@ -76,6 +76,7 @@ $$
 Theo định nghĩa điểm giới hạn (Định nghĩa 4.1.3), $a$ là một điểm giới hạn của $\mathbb{Q}$.
 Vì $a \in \mathbb{R}$ được chọn tùy ý, ta kết luận $\mathbb{Q}' = \mathbb{R}$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c4-b5-bt1b"
@@ -85,7 +86,7 @@ Vì $a \in \mathbb{R}$ được chọn tùy ý, ta kết luận $\mathbb{Q}' = \
   original="Bài 1b"
 >
 Cho tập hợp $E = \left\{x = \frac{1}{n} : n \in \mathbb{N}\right\}$. Tìm tất cả các điểm cô lập của $E$.
-</Exercise>
+
 
 <Solution>
 Xét phần tử bất kỳ $x_n = \frac{1}{n} \in E$ (với $n \in \mathbb{N}$).
@@ -106,6 +107,7 @@ $$
 Vậy **mọi phần tử** của $E$ đều là điểm cô lập của $E$.
 Tập các điểm cô lập của $E$ chính là toàn bộ tập $E$. Điểm $0$ là điểm giới hạn duy nhất của $E$ nhưng $0 \notin E$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -122,11 +124,12 @@ Tính các giới hạn sau:
 $$
 \lim_{x \to +\infty} \frac{\ln(1 + e^x)}{x} \quad \text{và} \quad \lim_{x \to -\infty} \frac{\ln(1 + e^x)}{x}.
 $$
-</Exercise>
+
 
 <Solution>
-1. **Khi $x \to +\infty$:**
-   Ta biến đổi biểu thức trong logarit bằng cách đưa $e^x$ ra ngoài:
+**1. Khi $x \to +\infty$**
+
+Ta biến đổi biểu thức trong logarit bằng cách đưa $e^x$ ra ngoài:
    $$
    1 + e^x = e^x \left(e^{-x} + 1\right).
    $$
@@ -143,13 +146,15 @@ $$
    \lim_{x \to +\infty} \frac{\ln(1 + e^x)}{x} = 1 + 0 = 1.
    $$
 
-2. **Khi $x \to -\infty$:**
-   Khi $x \to -\infty$, ta có $e^x \to 0$, do đó tử số $\ln(1 + e^x) \to \ln 1 = 0$.
+**2. Khi $x \to -\infty$**
+
+Khi $x \to -\infty$, ta có $e^x \to 0$, do đó tử số $\ln(1 + e^x) \to \ln 1 = 0$.
    Mẫu số $x \to -\infty$. Áp dụng quy tắc chia cho vô cực:
    $$
    \lim_{x \to -\infty} \frac{\ln(1 + e^x)}{x} = \frac{0}{-\infty} = 0.
    $$
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c4-b5-bt4a"
@@ -159,7 +164,7 @@ $$
   original="Bài 4a"
 >
 Chứng minh rằng không tồn tại giới hạn $\lim_{x \to 0} \cos \frac{1}{x}$.
-</Exercise>
+
 
 <Solution>
 Ta sử dụng tiêu chuẩn Heine (Hệ quả 4.1.12).
@@ -179,6 +184,7 @@ f(x'_n) = \cos\big((2n + 1)\pi\big) = -1 \implies \lim_{n \to \infty} f(x'_n) = 
 $$
 Vì hai dãy cùng tiến về $0$ nhưng dãy ảnh tiến về hai giá trị khác nhau ($1 \ne -1$), nên giới hạn $\lim_{x \to 0} \cos \frac{1}{x}$ **không tồn tại**.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c4-b5-bt4b"
@@ -188,7 +194,7 @@ Vì hai dãy cùng tiến về $0$ nhưng dãy ảnh tiến về hai giá trị 
   original="Bài 4b"
 >
 Chứng minh rằng không tồn tại giới hạn $\lim_{x \to 0} \frac{[x]}{x}$.
-</Exercise>
+
 
 <Solution>
 Ta xét hai giới hạn một phía của hàm số khi $x \to 0$:
@@ -202,6 +208,7 @@ $$
 $$
 Vì giới hạn trái và giới hạn phải không bằng nhau (giới hạn trái thậm chí tiến ra vô cực), nên giới hạn $\lim_{x \to 0} \frac{[x]}{x}$ **không tồn tại**.
 </Solution>
+</Exercise>
 
 ---
 
@@ -215,17 +222,19 @@ Vì giới hạn trái và giới hạn phải không bằng nhau (giới hạn 
   original="Bài 6"
 >
 Chứng minh rằng hàm số $f(x) = [x] \sin(\pi x)$ liên tục trên toàn bộ $\mathbb{R}$.
-</Exercise>
+
 
 <Solution>
 Ta phân tích tính liên tục trên hai tập hợp rời nhau của $\mathbb{R}$:
-1. **Khi $x_0 \notin \mathbb{Z}$ (không phải là số nguyên):**
-   Tồn tại số nguyên $k \in \mathbb{Z}$ sao cho $x_0 \in (k, k+1)$.
+**1. Khi $x_0 \notin \mathbb{Z}$ (không phải là số nguyên)**
+
+Tồn tại số nguyên $k \in \mathbb{Z}$ sao cho $x_0 \in (k, k+1)$.
    Trên khoảng mở $(k, k+1)$, hàm phần nguyên là hàm hằng $[x] = k$.
    Do đó trên khoảng $(k, k+1)$, ta có $f(x) = k \sin(\pi x)$, đây là một hàm sơ cấp liên tục. Vậy $f$ liên tục tại mọi điểm $x_0 \notin \mathbb{Z}$.
 
-2. **Khi $x_0 = k \in \mathbb{Z}$ (là một số nguyên):**
-   Ta có giá trị thực tế của hàm tại điểm nguyên $k$ là:
+**2. Khi $x_0 = k \in \mathbb{Z}$ (là một số nguyên)**
+
+Ta có giá trị thực tế của hàm tại điểm nguyên $k$ là:
    $$
    f(k) = [k] \sin(k\pi) = k \cdot 0 = 0.
    $$
@@ -242,6 +251,7 @@ Ta phân tích tính liên tục trên hai tập hợp rời nhau của $\mathbb
 
 Kết hợp cả hai trường hợp, hàm số $f(x) = [x] \sin(\pi x)$ liên tục trên toàn bộ $\mathbb{R}$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c4-b5-bt7b"
@@ -254,11 +264,12 @@ Xét tính liên tục của hàm số:
 $$
 f(x) = \begin{cases} x & \text{nếu } x \in \mathbb{Q} \\ 0 & \text{nếu } x \notin \mathbb{Q} \end{cases}
 $$
-</Exercise>
+
 
 <Solution>
-1. **Tại điểm $x_0 = 0$:**
-   Ta có $f(0) = 0$. Với mọi $x \in \mathbb{R}$, ta có đánh giá:
+**1. Tại điểm $x_0 = 0$**
+
+Ta có $f(0) = 0$. Với mọi $x \in \mathbb{R}$, ta có đánh giá:
    $$
    |f(x) - f(0)| = |f(x)| \le |x|.
    $$
@@ -268,8 +279,9 @@ $$
    $$
    Do đó hàm số $f$ **liên tục tại điểm $x = 0$**.
 
-2. **Tại điểm $x_0 \ne 0$:**
-   - Dùng tính trù mật của $\mathbb{Q}$, tồn tại dãy số hữu tỉ $(q_n) \subset \mathbb{Q}$ sao cho $\lim q_n = x_0$. Khi đó:
+**2. Tại điểm $x_0 \ne 0$**
+
+ - Dùng tính trù mật của $\mathbb{Q}$, tồn tại dãy số hữu tỉ $(q_n) \subset \mathbb{Q}$ sao cho $\lim q_n = x_0$. Khi đó:
      $$
      \lim_{n \to \infty} f(q_n) = \lim_{n \to \infty} q_n = x_0.
      $$
@@ -281,6 +293,7 @@ $$
 
 **Kết luận:** Hàm số $f(x)$ liên tục tại duy nhất điểm $x = 0$ và gián đoạn tại mọi điểm còn lại trên $\mathbb{R}$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -298,7 +311,7 @@ $$
 P(x) = a_{2n+1} x^{2n+1} + a_{2n} x^{2n} + \dots + a_1 x + a_0 \quad (a_{2n+1} \ne 0)
 $$
 đều có ít nhất một nghiệm thực.
-</Exercise>
+
 
 <Solution>
 Không mất tính tổng quát, giả sử hệ số cao nhất $a_{2n+1} > 0$ (nếu âm, ta xét $-P(x)$).
@@ -318,6 +331,7 @@ Hàm số $P(x)$ liên tục trên đoạn $[a; b]$ và thỏa mãn $P(a) P(b) <
 Theo **Hệ quả của Định lý Bolzano-Cauchy (Hệ quả 4.4.11)**, tồn tại ít nhất một số thực $c \in (a; b)$ sao cho $P(c) = 0$.
 Vậy mọi đa thức bậc lẻ đều có ít nhất một nghiệm thực.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c4-b5-bt13a"
@@ -327,7 +341,7 @@ Vậy mọi đa thức bậc lẻ đều có ít nhất một nghiệm thực.
   original="Bài 13a"
 >
 Cho hàm số $f: [a; b] \to [a; b]$ liên tục trên đoạn $[a; b]$. Chứng minh rằng phương trình $f(x) = x$ có ít nhất một nghiệm trong đoạn $[a; b]$.
-</Exercise>
+
 
 <Solution>
 Xét hàm phụ $g(x) = f(x) - x$ trên đoạn $[a; b]$.
@@ -341,6 +355,7 @@ Xét hàm phụ $g(x) = f(x) - x$ trên đoạn $[a; b]$.
   - Nếu $g(a) > 0$ và $g(b) < 0$ thì $g(a) g(b) < 0$. Theo Định lý giá trị trung gian Bolzano-Cauchy, tồn tại $c \in (a; b)$ sao cho $g(c) = 0 \iff f(c) = c$.
 Trong mọi trường hợp, phương trình $f(x) = x$ luôn có ít nhất một nghiệm thuộc $[a; b]$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -354,7 +369,7 @@ Trong mọi trường hợp, phương trình $f(x) = x$ luôn có ít nhất m�
   original="Bài 14d"
 >
 Chứng minh rằng hàm số $f(x) = \sqrt{x}$ liên tục đều trên $[0; +\infty)$.
-</Exercise>
+
 
 <Solution>
 Ta sử dụng bất đẳng thức đại số căn thức: với mọi $u, v \ge 0$, ta luôn có:
@@ -372,6 +387,7 @@ $$
 $$
 Vì $\delta = \varepsilon^2$ chỉ phụ thuộc duy nhất vào $\varepsilon$ mà không phụ thuộc vào vị trí của $x$ hay $x'$, nên hàm số $f(x) = \sqrt{x}$ liên tục đều trên $[0; +\infty)$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c4-b5-bt15b"
@@ -381,7 +397,7 @@ Vì $\delta = \varepsilon^2$ chỉ phụ thuộc duy nhất vào $\varepsilon$ m
   original="Bài 15b"
 >
 Chứng minh rằng hàm số $f(x) = \sin(x^2)$ không liên tục đều trên $\mathbb{R}$.
-</Exercise>
+
 
 <Solution>
 Ta chọn hai dãy số thực trong $\mathbb{R}$:
@@ -403,6 +419,7 @@ $$
 $$
 Chọn $\varepsilon_0 = 1$. Vì khoảng cách hai điểm tiến về $0$ nhưng hiệu giá trị hàm luôn bằng $1$, theo Định lý 4.4.15, hàm số $f(x) = \sin(x^2)$ **không liên tục đều** trên $\mathbb{R}$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -416,7 +433,7 @@ Chọn $\varepsilon_0 = 1$. Vì khoảng cách hai điểm tiến về $0$ nhưn
   original="Bài 11"
 >
 Cho các hàm số $f, g$ xác định và liên tục trên $X$. Chứng minh rằng các hàm số $M(x) = \max(f(x), g(x))$ và $m(x) = \min(f(x), g(x))$ cũng liên tục trên $X$.
-</Exercise>
+
 
 <Solution>
 Ta sử dụng các đồng nhất thức giải tích kinh điển sau: với mọi số thực $u, v \in \mathbb{R}$:
@@ -433,6 +450,7 @@ Theo Định lý 4.4.5:
 3. Tổng, hiệu và phép nhân với hằng số $\frac{1}{2}$ bảo toàn tính liên tục.
 Do đó $M(x)$ và $m(x)$ là các hàm số liên tục trên $X$.
 </Solution>
+</Exercise>
 
 ---
 

@@ -218,15 +218,15 @@ export function Chapter3KnowledgeMap({
                 <p className="leading-relaxed text-stone-700">
                   Nếu <KatexMath math="|G| = p" /> (nguyên tố), mọi <KatexMath math="a \neq e" />{' '}
                   đều có cấp <KatexMath math="p" />. Suy ra{' '}
-                  <KatexMath math="G \cong \mathbb{Z}/p\mathbb{Z}" />.
+                  <KatexMath math="G = \langle a \rangle" /> là nhóm cyclic.
                 </p>
               </div>
 
               <div className="space-y-1 rounded-xl border border-amber-200/80 bg-white/90 p-3">
                 <span className="block font-bold text-amber-950">3. Nhóm con chỉ số 2</span>
                 <p className="leading-relaxed text-stone-700">
-                  Mọi nhóm con có chỉ số <KatexMath math="[G : H] = 2" /> đều là{' '}
-                  <strong>nhóm con chuẩn tắc</strong> (<KatexMath math="H \trianglelefteq G" />
+                  Mọi nhóm con có chỉ số <KatexMath math="[G : H] = 2" /> đều thỏa mãn lớp kề trái
+                  trùng với lớp kề phải (<KatexMath math="gH = Hg, \; \forall g \in G" />
                   ).
                 </p>
               </div>

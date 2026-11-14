@@ -17,9 +17,6 @@ sources:
     pages: '87-89'
     sections: 'Mục 5.4, 5.5.1'
     note: 'Định lý 5.7 (Nguyên lý phân tích qua thương), Định lý 5.8 (Định lý đẳng cấu thứ nhất)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '142-152'
-    sections: 'Chương 5, Mục 5.2'
 status: published
 version: 0.1.0
 authoring:
@@ -204,7 +201,7 @@ $$
 
 <Exercise
   id="exr-c5-b2-a1"
-  title="[Nhóm A · Mã CTDS-C5-B2-A01] Nhận diện nhóm thương hình học trên mặt phẳng R²"
+  title="Nhận diện nhóm thương hình học trên mặt phẳng R²" group="Nhóm A"
   source="gt-ctds-hvk-2026"
   page="93"
   original="Bài 5.12"
@@ -216,15 +213,16 @@ $$
 1. Chứng minh rằng $L$ là một nhóm con của $(\mathbb{R}^2, +)$ và $L \trianglelefteq (\mathbb{R}^2, +)$.
 2. Hãy thiết lập một toàn cấu nhóm thích hợp $\varphi: (\mathbb{R}^2, +) \to (\mathbb{R}, +)$ có hạt nhân đúng bằng $L$.
 3. Sử dụng Định lý đẳng cấu thứ nhất để nhận diện cấu trúc của nhóm thương $(\mathbb{R}^2, +)/L$.
-</Exercise>
+
 
 <Hint>
 Phương trình đường thẳng $2x - y = 0$ gợi ý xét ánh xạ tuyến tính $\varphi(x, y) = 2x - y$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $L \le \mathbb{R}^2$ và $L \trianglelefteq \mathbb{R}^2$:**
-   Tập $L$ chứa $(0, 0)$ vì $2(0) - 0 = 0$.
+**1. Chứng minh $L \le \mathbb{R}^2$ và $L \trianglelefteq \mathbb{R}^2$**
+
+Tập $L$ chứa $(0, 0)$ vì $2(0) - 0 = 0$.
    Với $(x_1, y_1), (x_2, y_2) \in L$, ta có $2x_1 - y_1 = 0$ và $2x_2 - y_2 = 0$.
    Xét hiệu: $(x_1 - x_2, y_1 - y_2)$, ta có:
    $$
@@ -233,8 +231,9 @@ Phương trình đường thẳng $2x - y = 0$ gợi ý xét ánh xạ tuyến t
    Do đó $(x_1 - x_2, y_1 - y_2) \in L$. Theo tiêu chuẩn một bước, $L \le (\mathbb{R}^2, +)$.
    Vì $(\mathbb{R}^2, +)$ là nhóm giao hoán (abel), mọi nhóm con của nó đều là nhóm con chuẩn tắc. Vậy $L \trianglelefteq (\mathbb{R}^2, +)$.
 
-2. **Thiết lập toàn cấu nhóm $\varphi$:**
-   Xét ánh xạ:
+**2. Thiết lập toàn cấu nhóm $\varphi$**
+
+Xét ánh xạ:
    $$
    \varphi: \mathbb{R}^2 \to \mathbb{R}, \quad \varphi(x, y) = 2x - y.
    $$
@@ -248,23 +247,19 @@ Phương trình đường thẳng $2x - y = 0$ gợi ý xét ánh xạ tuyến t
      \ker\varphi = \{(x, y) \in \mathbb{R}^2 \mid \varphi(x, y) = 0\} = \{(x, y) \in \mathbb{R}^2 \mid 2x - y = 0\} = L.
      $$
 
-3. **Áp dụng Định lý đẳng cấu thứ nhất:**
-   Theo Định lý đẳng cấu thứ nhất (<Ref to="thm-c5-b2-dang-cau-thu-nhat" />):
+**3. Áp dụng Định lý đẳng cấu thứ nhất**
+
+Theo Định lý đẳng cấu thứ nhất (<Ref to="thm-c5-b2-dang-cau-thu-nhat" />):
    $$
    (\mathbb{R}^2, +)/\ker\varphi \cong \operatorname{im}\varphi \iff (\mathbb{R}^2, +)/L \cong (\mathbb{R}, +).
    $$
    Về mặt hình học, mỗi lớp kề của $L$ là một đường thẳng song song với $L$, và tập hợp tất cả các đường thẳng song song này tạo thành một cấu trúc nhóm đẳng cấu với đường thẳng thực $\mathbb{R}$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $L \le \mathbb{R}^2$ và $L \trianglelefteq \mathbb{R}^2$ qua tính abel: `0,25 đ`
-- Thiết lập đúng ánh xạ $\varphi(x, y) = 2x - y$ và kiểm tra đồng cấu: `0,30 đ`
-- Chứng minh $\varphi$ là toàn ánh và tính đúng $\ker\varphi = L$: `0,25 đ`
-- Áp dụng chuẩn xác Định lý đẳng cấu I kết luận $(\mathbb{R}^2)/L \cong \mathbb{R}$: `0,20 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b2-b1"
-  title="[Nhóm B · Mã CTDS-C5-B2-B01] Nhóm Affin và phân tích thương Aff(R)/T"
+  title="Nhóm Affin và phân tích thương Aff(R)/T" group="Nhóm B"
   source="gt-ctds-hvk-2026"
   page="93"
   original="Bài 5.13"
@@ -281,15 +276,16 @@ $$
 1. Tìm quy tắc hợp thành $f_{a_1, b_1} \circ f_{a_2, b_2}$.
 2. Xét ánh xạ $\Phi: \operatorname{Aff}(\mathbb{R}) \to (\mathbb{R}^\times, \cdot)$ xác định bởi $\Phi(f_{a, b}) = a$. Chứng minh rằng $\Phi$ là một toàn cấu nhóm.
 3. Tìm hạt nhân $\ker\Phi$ và rút ra cấu trúc của nhóm thương $\operatorname{Aff}(\mathbb{R})/T$.
-</Exercise>
+
 
 <Hint>
 Tính $(f_{a_1, b_1} \circ f_{a_2, b_2})(x) = f_{a_1, b_1}(a_2 x + b_2) = a_1(a_2 x + b_2) + b_1$. Hệ số của $x$ chính là tích $a_1 a_2$.
 </Hint>
 
 <Solution>
-1. **Quy tắc hợp thành trong $\operatorname{Aff}(\mathbb{R})$:**
-   Với mọi $x \in \mathbb{R}$, ta có:
+**1. Quy tắc hợp thành trong $\operatorname{Aff}(\mathbb{R})$**
+
+Với mọi $x \in \mathbb{R}$, ta có:
    $$
    (f_{a_1, b_1} \circ f_{a_2, b_2})(x) = f_{a_1, b_1}(a_2 x + b_2) = a_1(a_2 x + b_2) + b_1 = (a_1 a_2)x + (a_1 b_2 + b_1).
    $$
@@ -298,8 +294,9 @@ Tính $(f_{a_1, b_1} \circ f_{a_2, b_2})(x) = f_{a_1, b_1}(a_2 x + b_2) = a_1(a_
    f_{a_1, b_1} \circ f_{a_2, b_2} = f_{a_1 a_2, \; a_1 b_2 + b_1}.
    $$
 
-2. **Chứng minh $\Phi$ là toàn cấu nhóm:**
-   Ánh xạ $\Phi(f_{a, b}) = a$.
+**2. Chứng minh $\Phi$ là toàn cấu nhóm**
+
+Ánh xạ $\Phi(f_{a, b}) = a$.
    - *Đồng cấu:* Lấy tùy ý hai phần tử $f_{a_1, b_1}$ và $f_{a_2, b_2}$. Theo công thức hợp thành ở câu 1:
      $$
      \Phi(f_{a_1, b_1} \circ f_{a_2, b_2}) = \Phi(f_{a_1 a_2, \; a_1 b_2 + b_1}) = a_1 a_2 = \Phi(f_{a_1, b_1}) \cdot \Phi(f_{a_2, b_2}).
@@ -308,8 +305,9 @@ Tính $(f_{a_1, b_1} \circ f_{a_2, b_2})(x) = f_{a_1, b_1}(a_2 x + b_2) = a_1(a_
    - *Toàn ánh:* Với mọi $r \in \mathbb{R}^\times$, xét phép vị tự $f_{r, 0}(x) = rx$. Ta có $\Phi(f_{r, 0}) = r$.
      Do đó $\operatorname{im}\Phi = \mathbb{R}^\times$. Vậy $\Phi$ là toàn cấu.
 
-3. **Tìm hạt nhân và nhận diện nhóm thương:**
-   Hạt nhân của $\Phi$ là tập các phép biến đổi có hệ số $a = 1$:
+**3. Tìm hạt nhân và nhận diện nhóm thương**
+
+Hạt nhân của $\Phi$ là tập các phép biến đổi có hệ số $a = 1$:
    $$
    \ker\Phi = \{f_{a, b} \in \operatorname{Aff}(\mathbb{R}) \mid \Phi(f_{a, b}) = 1\} = \{f_{1, b} \in \operatorname{Aff}(\mathbb{R}) \mid b \in \mathbb{R}\} = T.
    $$
@@ -319,17 +317,12 @@ Tính $(f_{a_1, b_1} \circ f_{a_2, b_2})(x) = f_{a_1, b_1}(a_2 x + b_2) = a_1(a_
    \operatorname{Aff}(\mathbb{R})/\ker\Phi \cong \operatorname{im}\Phi \iff \operatorname{Aff}(\mathbb{R})/T \cong (\mathbb{R}^\times, \cdot).
    $$
    Nhóm thương của nhóm affin theo nhóm tịnh tiến đẳng cấu với nhóm nhân các số thực khác 0 (nhóm các phép vị tự).
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Tính đúng công thức hợp thành $f_{a_1 a_2, a_1 b_2 + b_1}$: `0,25 đ`
-- Chứng minh $\Phi$ bảo toàn phép nhân và là toàn ánh: `0,35 đ`
-- Xác định chính xác $\ker\Phi = T$: `0,20 đ`
-- Kết luận đẳng cấu $\operatorname{Aff}(\mathbb{R})/T \cong \mathbb{R}^\times$ qua Định lý đẳng cấu I: `0,20 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b2-c1"
-  title="[Nhóm C · Mã CTDS-C5-B2-C01] Phân loại nhóm cyclic bằng Định lý đẳng cấu thứ nhất"
+  title="Phân loại nhóm cyclic bằng Định lý đẳng cấu thứ nhất" group="Nhóm C"
   source="gt-ctds-hvk-2026"
   page="94"
   original="Bài 5.29"
@@ -340,22 +333,24 @@ Xét ánh xạ $\varphi: (\mathbb{Z}, +) \to G$ xác định bởi $\varphi(k) =
 2. Giả sử $G$ là nhóm vô hạn. Chứng minh rằng $\ker\varphi = \{0\}$ và suy ra $G \cong (\mathbb{Z}, +)$.
 3. Giả sử $G$ là nhóm hữu hạn cấp $n$ ($|G| = n$). Chứng minh rằng $\ker\varphi = n\mathbb{Z}$ và suy ra $G \cong (\mathbb{Z}/n\mathbb{Z}, +)$.
 4. Kết luận về việc phân loại toàn bộ các nhóm cyclic sai khác một đẳng cấu.
-</Exercise>
+
 
 <Hint>
 Dùng tính chất cấp của phần tử trong nhóm: $a^k = e \iff n \mid k$. Hạt nhân $\ker\varphi$ là tập các số nguyên $k$ sao cho $a^k = e$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $\varphi$ là toàn cấu nhóm:**
-   - *Đồng cấu:* Với mọi $k, m \in \mathbb{Z}$, theo quy tắc lũy thừa nguyên:
+**1. Chứng minh $\varphi$ là toàn cấu nhóm**
+
+ - *Đồng cấu:* Với mọi $k, m \in \mathbb{Z}$, theo quy tắc lũy thừa nguyên:
      $$
      \varphi(k + m) = a^{k + m} = a^k \cdot a^m = \varphi(k) \cdot \varphi(m).
      $$
    - *Toàn ánh:* Vì $G = \langle a \rangle$, mọi phần tử $x \in G$ đều có dạng $x = a^k$ với $k \in \mathbb{Z}$. Do đó $x = \varphi(k)$, suy ra $\operatorname{im}\varphi = G$.
 
-2. **Trường hợp $G$ là nhóm vô hạn:**
-   Theo định nghĩa, nếu $G$ vô hạn thì $\operatorname{ord}(a) = \infty$, nghĩa là không tồn tại số nguyên $k \ne 0$ nào thỏa mãn $a^k = e$.
+**2. Trường hợp $G$ là nhóm vô hạn**
+
+Theo định nghĩa, nếu $G$ vô hạn thì $\operatorname{ord}(a) = \infty$, nghĩa là không tồn tại số nguyên $k \ne 0$ nào thỏa mãn $a^k = e$.
    Do đó hạt nhân của $\varphi$ là:
    $$
    \ker\varphi = \{k \in \mathbb{Z} \mid \varphi(k) = e\} = \{k \in \mathbb{Z} \mid a^k = e\} = \{0\}.
@@ -365,8 +360,9 @@ Dùng tính chất cấp của phần tử trong nhóm: $a^k = e \iff n \mid k$.
    \mathbb{Z}/\ker\varphi \cong \operatorname{im}\varphi \iff \mathbb{Z}/\{0\} \cong G \iff G \cong (\mathbb{Z}, +).
    $$
 
-3. **Trường hợp $G$ là nhóm hữu hạn cấp $n$:**
-   Vì $|G| = n$, cấp của phần tử sinh là $\operatorname{ord}(a) = n$.
+**3. Trường hợp $G$ là nhóm hữu hạn cấp $n$**
+
+Vì $|G| = n$, cấp của phần tử sinh là $\operatorname{ord}(a) = n$.
    Theo tính chất cơ bản của cấp phần tử (Chương 2, Định lý 2.2.1), ta có $a^k = e \iff n \mid k$.
    Do đó hạt nhân của $\varphi$ là:
    $$
@@ -377,22 +373,18 @@ Dùng tính chất cấp của phần tử trong nhóm: $a^k = e \iff n \mid k$.
    \mathbb{Z}/\ker\varphi \cong \operatorname{im}\varphi \iff \mathbb{Z}/n\mathbb{Z} \cong G \iff G \cong (\mathbb{Z}/n\mathbb{Z}, +).
    $$
 
-4. **Kết luận về phân loại nhóm cyclic:**
-   Mọi nhóm cyclic trên thế giới chỉ thuộc về một trong hai loại cấu trúc (sai khác một đẳng cấu):
+**4. Kết luận về phân loại nhóm cyclic**
+
+Mọi nhóm cyclic trên thế giới chỉ thuộc về một trong hai loại cấu trúc (sai khác một đẳng cấu):
    - Nếu vô hạn, nó đẳng cấu với nhóm cộng các số nguyên $(\mathbb{Z}, +)$.
    - Nếu hữu hạn cấp $n$, nó đẳng cấu với nhóm cộng các lớp thặng dư $(\mathbb{Z}/n\mathbb{Z}, +)$.
    Định lý đẳng cấu thứ nhất đã chứng minh kết quả phân loại kinh điển này chỉ trong vài dòng biến đổi đại số mẫu mực.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $\varphi$ là đồng cấu và toàn ánh: `0,25 đ`
-- Xử lý trường hợp vô hạn: $\ker\varphi = \{0\} \implies G \cong \mathbb{Z}$: `0,30 đ`
-- Xử lý trường hợp hữu hạn: $\ker\varphi = n\mathbb{Z} \implies G \cong \mathbb{Z}/n\mathbb{Z}$: `0,30 đ`
-- Kết luận tường minh định lý phân loại nhóm cyclic: `0,15 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b2-d1"
-  title="[Nhóm D · Mã CTDS-C5-B2-D01] Đẳng cấu giữa G/Z(G) và nhóm các tự đẳng cấu trong Inn(G)"
+  title="Đẳng cấu giữa G/Z(G) và nhóm các tự đẳng cấu trong Inn(G)" group="Nhóm D"
   source="gt-ctds-hvk-2026"
   page="95"
   original="Bài 5.38"
@@ -407,15 +399,16 @@ Với mỗi $g \in G$, xét phép liên hợp $c_g \in \operatorname{Aut}(G)$ x�
    $$
    G/Z(G) \cong \operatorname{Inn}(G).
    $$
-</Exercise>
+
 
 <Hint>
 Tính $c_{gh}(x) = (gh)x(gh)^{-1} = g(hxh^{-1})g^{-1} = c_g(c_h(x))$. Điều kiện $c_g = \operatorname{id}_G$ tương đương với $gxg^{-1} = x$ với mọi $x$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $\Phi$ là đồng cấu nhóm:**
-   Với mọi $g, h \in G$, ta xét tự đẳng cấu $\Phi(gh) = c_{gh}$. Với mọi $x \in G$:
+**1. Chứng minh $\Phi$ là đồng cấu nhóm**
+
+Với mọi $g, h \in G$, ta xét tự đẳng cấu $\Phi(gh) = c_{gh}$. Với mọi $x \in G$:
    $$
    c_{gh}(x) = (gh)x(gh)^{-1} = (gh)x(h^{-1}g^{-1}) = g(hxh^{-1})g^{-1} = c_g(hxh^{-1}) = c_g(c_h(x)) = (c_g \circ c_h)(x).
    $$
@@ -425,8 +418,9 @@ Tính $c_{gh}(x) = (gh)x(gh)^{-1} = g(hxh^{-1})g^{-1} = c_g(c_h(x))$. Điều ki
    $$
    Vậy $\Phi$ là một đồng cấu nhóm từ $(G, \cdot)$ vào $(\operatorname{Aut}(G), \circ)$.
 
-2. **Ảnh $\operatorname{im}\Phi$:**
-   Theo định nghĩa của tập $\operatorname{Inn}(G)$:
+**2. Ảnh $\operatorname{im}\Phi$**
+
+Theo định nghĩa của tập $\operatorname{Inn}(G)$:
    $$
    \operatorname{im}\Phi = \{\Phi(g) \mid g \in G\} = \{c_g \mid g \in G\} = \operatorname{Inn}(G).
    $$
@@ -435,8 +429,9 @@ Tính $c_{gh}(x) = (gh)x(gh)^{-1} = g(hxh^{-1})g^{-1} = c_g(c_h(x))$. Điều ki
    \operatorname{Inn}(G) \le \operatorname{Aut}(G).
    $$
 
-3. **Xác định hạt nhân $\ker\Phi$:**
-   Phần tử đơn vị của nhóm đích $\operatorname{Aut}(G)$ là ánh xạ đồng nhất $\operatorname{id}_G$.
+**3. Xác định hạt nhân $\ker\Phi$**
+
+Phần tử đơn vị của nhóm đích $\operatorname{Aut}(G)$ là ánh xạ đồng nhất $\operatorname{id}_G$.
    Theo định nghĩa hạt nhân:
    $$
    \begin{aligned}
@@ -453,8 +448,9 @@ Tính $c_{gh}(x) = (gh)x(gh)^{-1} = g(hxh^{-1})g^{-1} = c_g(c_h(x))$. Điều ki
    \ker\Phi = Z(G).
    $$
 
-4. **Áp dụng Định lý đẳng cấu thứ nhất:**
-   Theo Định lý đẳng cấu thứ nhất (<Ref to="thm-c5-b2-dang-cau-thu-nhat" />):
+**4. Áp dụng Định lý đẳng cấu thứ nhất**
+
+Theo Định lý đẳng cấu thứ nhất (<Ref to="thm-c5-b2-dang-cau-thu-nhat" />):
    $$
    G/\ker\Phi \cong \operatorname{im}\Phi.
    $$
@@ -463,13 +459,8 @@ Tính $c_{gh}(x) = (gh)x(gh)^{-1} = g(hxh^{-1})g^{-1} = c_g(c_h(x))$. Điều ki
    G/Z(G) \cong \operatorname{Inn}(G).
    $$
    Kết quả này cho thấy: nhóm các tự đẳng cấu trong $\operatorname{Inn}(G)$ phản ánh chính xác mức độ "không giao hoán" của nhóm $G$ thông qua nhóm thương theo tâm!
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $c_{gh} = c_g \circ c_h \implies \Phi$ là đồng cấu: `0,30 đ`
-- Xác định $\operatorname{im}\Phi = \operatorname{Inn}(G) \le \operatorname{Aut}(G)$: `0,20 đ`
-- Biến đổi tương đương chuẩn xác $\Phi(g) = \operatorname{id} \iff g \in Z(G)$: `0,30 đ`
-- Kết luận đẳng cấu $G/Z(G) \cong \operatorname{Inn}(G)$ qua Định lý đẳng cấu I: `0,20 đ`
 </Solution>
+</Exercise>
 
 ---
 

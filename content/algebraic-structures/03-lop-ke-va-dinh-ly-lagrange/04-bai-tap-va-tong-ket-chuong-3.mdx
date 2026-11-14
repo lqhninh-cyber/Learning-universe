@@ -20,9 +20,6 @@ sources:
     pages: '64-70, 173-176'
     sections: 'Mục 3.7, 3.8'
     note: 'Hệ thống bài tập Chương 3 (Bài 3.1 đến 3.36) và Lời giải chọn lọc'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '102-109'
-    sections: 'Chương 3, Bài tập'
 status: published
 version: 0.1.0
 authoring:
@@ -81,11 +78,10 @@ Nhằm hỗ trợ quá trình tra cứu tài liệu quốc tế và các giáo t
 | **Đẳng thế** | Equinumerous / Equipotent | $|gH| = |H| = |Hg|$ |
 | **Chỉ số của nhóm con** | Index of a subgroup | $[G:H]$ (số lượng lớp kề trái khác nhau) |
 | **Định lý Lagrange** | Lagrange's Theorem | $|G| = [G:H]|H|$ |
-| **Tháp chỉ số** | Tower law for indices | $[G:K] = [G:H][H:K]$ với $K \le H \le G$ |
 | **Phi hàm Euler** | Euler's totient function | $\varphi(n) = |(\mathbb{Z}/n\mathbb{Z})^\times|$ |
 | **Định lý Fermat nhỏ** | Fermat's Little Theorem | $a^{p-1} \equiv 1 \pmod p$ |
 | **Nhóm thay phiên** | Alternating group | $A_n \le S_n$ (tập các hoán vị chẵn) |
-| **Nhóm bốn Klein** | Klein four-group | $V_4 \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$ |
+| **Nhóm bốn Klein** | Klein four-group | $V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$ |
 | **Định lý Cauchy** | Cauchy's Theorem | $p \mid |G| \implies \exists a \in G: \operatorname{ord}(a) = p$ |
 | **Chuẩn hóa tử** | Normalizer | $N_G(H) = \{g \in G \mid gHg^{-1} = H\}$ |
 
@@ -95,14 +91,8 @@ Nhằm hỗ trợ quá trình tra cứu tài liệu quốc tế và các giáo t
 
 <Exercise
   id="exr-c3-b4-a1"
-  title="[Nhóm A · Mã CTDS-C3-B4-A01] Phân biệt lớp kề trái và lớp kề phải trong nhóm nhị diện D8"
+  title="Phân biệt lớp kề trái và lớp kề phải trong nhóm nhị diện D8" group="Nhóm A"
 >
-- **Nhóm bài tập:** Nhóm A — Nhận diện và tính toán
-- **Chủ đề:** Tính toán lớp kề trong nhóm không giao hoán
-- **Mục tiêu đánh giá:** Liệt kê các lớp kề trái và lớp kề phải của nhóm con cấp 2 trong nhóm nhị diện $D_8$, nhận diện sự sai khác giữa $gH$ và $Hg$, và tính chỉ số $[D_8 : H]$.
-- **Mức độ:** Cơ bản
-
-**Đề bài:**
 Xét nhóm nhị diện $D_8$ gồm 8 phần tử sinh bởi phép quay $r$ góc $90^\circ$ và phép đối xứng trục $s$:
 $$
 D_8 = \{e, r, r^2, r^3, s, sr, sr^2, sr^3\}, \quad \text{với } r^4 = e, \; s^2 = e, \; rs = sr^{-1} = sr^3.
@@ -113,26 +103,24 @@ Cho nhóm con $H = \{e, s\} \le D_8$.
 3. Liệt kê tất cả các lớp kề phải của $H$ trong $D_8$.
 4. Chỉ ra một phần tử $g \in D_8$ sao cho $gH \ne Hg$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. $[D_8 : H] = |D_8| / |H| = 8 / 2 = 4$.
 2. Nhân $g$ bên trái: $gH = \{g, gs\}$. Chọn hệ đại diện $\{e, r, r^2, r^3\}$.
 3. Nhân $g$ bên phải: $Hg = \{g, sg\}$. Chú ý dùng hệ thức $sr = r^3 s \implies sr^k = r^{-k} s$.
 4. So sánh lớp kề trái $rH$ và lớp kề phải $Hr$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Tính chỉ số $[D_8 : H]$**
 
-**Ý 1: Tính chỉ số $[D_8 : H]$**
 Vì $|D_8| = 8$ và $|H| = 2$, theo Định lý Lagrange:
 $$
 [D_8 : H] = \frac{|D_8|}{|H|} = \frac{8}{2} = 4.
 $$
 Vậy có đúng 4 lớp kề trái và 4 lớp kề phải.
 
-**Ý 2: Liệt kê các lớp kề trái của $H$**
+**2. Liệt kê các lớp kề trái của $H$**
+
 Chọn hệ đại diện $\mathcal{R} = \{e, r, r^2, r^3\}$. Các lớp kề trái là:
 - $eH = H = \{e, s\}$.
 - $rH = \{r \cdot e, r \cdot s\} = \{r, rs\}$.
@@ -141,14 +129,16 @@ Chọn hệ đại diện $\mathcal{R} = \{e, r, r^2, r^3\}$. Các lớp kề tr
 
 Bốn tập hợp này đôi một rời nhau và hợp lại đúng bằng $D_8$.
 
-**Ý 3: Liệt kê các lớp kề phải của $H$**
+**3. Liệt kê các lớp kề phải của $H$**
+
 Dùng cùng hệ đại diện $\{e, r, r^2, r^3\}$ để nhân bên phải:
 - $He = H = \{e, s\}$.
 - $Hr = \{e \cdot r, s \cdot r\} = \{r, sr\}$. Vì $sr = r^3 s$, ta có $Hr = \{r, r^3 s\}$.
 - $Hr^2 = \{r^2, sr^2\} = \{r^2, r^2 s\}$ (vì $sr^2 = r^{-2}s = r^2 s$).
 - $Hr^3 = \{r^3, sr^3\} = \{r^3, rs\}$ (vì $sr^3 = r^{-3}s = rs$).
 
-**Ý 4: Chỉ ra $g$ sao cho $gH \ne Hg$**
+**4. Chỉ ra $g$ sao cho $gH \ne Hg$**
+
 Xét phần tử $g = r \in D_8$:
 - Lớp kề trái: $rH = \{r, rs\}$.
 - Lớp kề phải: $Hr = \{r, r^3 s\}$.
@@ -158,27 +148,13 @@ $$
 rH \ne Hr.
 $$
 Điều này chứng minh trong một nhóm không giao hoán, nói chung lớp kề trái không nhất thiết phải trùng với lớp kề phải.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Tính đúng chỉ số $[D_8 : H] = 4$ qua Định lý Lagrange | 0.20 điểm |
-| Liệt kê chính xác và đầy đủ 4 lớp kề trái | 0.30 điểm |
-| Vận dụng quan hệ $sr = r^3 s$ liệt kê chính xác 4 lớp kề phải | 0.30 điểm |
-| So sánh chỉ rõ $rH \ne Hr$ với phần tử $g = r$ | 0.20 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b4-b1"
-  title="[Nhóm B · Mã CTDS-C3-B4-B01] Công thức lực lượng tích hai nhóm con và nhóm cấp pq"
+  title="Công thức lực lượng tích hai nhóm con và nhóm cấp pq" group="Nhóm B"
 >
-- **Nhóm bài tập:** Nhóm B — Áp dụng định lý
-- **Chủ đề:** Lực lượng tập tích $HK$ và tính duy nhất của nhóm con cấp $p$
-- **Mục tiêu đánh giá:** Chứng minh công thức lực lượng $|HK| = \frac{|H||K|}{|H \cap K|}$ và áp dụng để chứng minh nhóm cấp $pq$ không thể chứa hai nhóm con cấp $p$ phân biệt khi $HK \le G$.
-- **Mức độ:** Trung bình
-
-**Đề bài:**
 Cho $G$ là một nhóm hữu hạn, $H$ và $K$ là hai nhóm con của $G$. Đặt tập tích $HK = \{hk \mid h \in H, k \in K\}$.
 1. Chứng minh công thức tính số phần tử:
    $$
@@ -189,17 +165,14 @@ Cho $G$ là một nhóm hữu hạn, $H$ và $K$ là hai nhóm con của $G$. Đ
    - Tính $|HK|$ và chỉ ra rằng $|HK| = p^2$.
    - Chứng minh rằng $|HK| > |G|$, từ đó suy ra điều mâu thuẫn (khẳng định $G$ không thể đồng thời chứa cả $H$ và $K$).
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Xét ánh xạ $\phi: H \times K \to HK$ cho bởi $\phi(h, k) = hk$. Với mỗi phần tử $x = hk \in HK$, có bao nhiêu cặp $(h', k') \in H \times K$ thỏa mãn $h'k' = hk$?
 2. $H \cap K$ là nhóm con của nhóm cấp nguyên tố $p$. Vì $H \ne K$, $|H \cap K| = 1$. Thay vào công thức câu 1 để tính $|HK|$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh công thức $|HK| = \frac{|H||K|}{|H \cap K|}$**
 
-**Ý 1: Chứng minh công thức $|HK| = \frac{|H||K|}{|H \cap K|}$**
 Xét tích Descartes $H \times K$ có $|H| \cdot |K|$ phần tử và ánh xạ nhân:
 $$
 \phi: H \times K \to HK, \quad \phi(h, k) = hk.
@@ -228,7 +201,8 @@ $$
 |H \times K| = |HK| \cdot |H \cap K| \implies |HK| = \frac{|H| \cdot |K|}{|H \cap K|}.
 $$
 
-**Ý 2: Ứng dụng cho nhóm cấp $pq$ với $p > q$**
+**2. Ứng dụng cho nhóm cấp $pq$ với $p > q$**
+
 - **Tính $|H \cap K|$:**
   Vì $H \cap K \le H$ và $|H| = p$ là số nguyên tố, theo Định lý Lagrange:
   $$
@@ -262,27 +236,13 @@ $$
   Điều này mâu thuẫn trực tiếp với giả thiết đề bài rằng $p > q$!
 
 Mâu thuẫn này chứng minh rằng: trong bất kỳ nhóm nào có cấp $pq$ với $p > q$, **không bao giờ có thể tồn tại hai nhóm con phân biệt có cùng cấp bằng $p$**. Nhóm con cấp $p$ (nếu tồn tại) luôn là duy nhất.
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Thiết lập tạo ảnh sợi của ánh xạ $\phi$ và chứng minh công thức tích lực lượng | 0.40 điểm |
-| Suy ra $\lvert H \cap K \rvert = 1$ từ tính nguyên tố của $p$ và giả thiết $H \ne K$ | 0.20 điểm |
-| Tính đúng $\lvert HK \rvert = p^2$ | 0.20 điểm |
-| Thiết lập bất đẳng thức $\lvert HK \rvert \le \lvert G \rvert \implies p \le q$ dẫn tới mâu thuẫn | 0.20 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b4-c1"
-  title="[Nhóm C · Mã CTDS-C3-B4-C01] Nhóm con có chỉ số nguyên tố nhỏ nhất"
+  title="Nhóm con có chỉ số nguyên tố nhỏ nhất" group="Nhóm C"
 >
-- **Nhóm bài tập:** Nhóm C — Chứng minh và phản ví dụ
-- **Chủ đề:** Tính bất biến của nhóm con có chỉ số nguyên tố nhỏ nhất
-- **Mục tiêu đánh giá:** Chứng minh định lý kinh điển: nếu $H \le G$ có chỉ số $[G:H] = p$ là ước nguyên tố nhỏ nhất của $|G|$ thì $gH = Hg$ với mọi $g \in G$.
-- **Mức độ:** Nâng cao
-
-**Đề bài:**
 Cho $G$ là một nhóm hữu hạn và $p$ là số nguyên tố **nhỏ nhất** trong các ước nguyên tố của cấp $|G|$. Giả sử $H$ là một nhóm con của $G$ có chỉ số:
 $$
 [G:H] = p.
@@ -295,20 +255,17 @@ $$
 3. Từ giả thiết $p$ là ước nguyên tố nhỏ nhất của $|G|$, hãy suy ra $[H : H \cap K] = 1$, tức là $H = K = g H g^{-1}$.
 4. Kết luận rằng $gH = Hg$ với mọi $g \in G$. (Nhận xét: Khi $p = 2$, kết quả này cho ta định lý quen thuộc về nhóm con có chỉ số 2).
 
-<details>
-<summary>Gợi ý</summary>
-
-1. Ánh xạ liên hợp $x \mapsto gxg^{-1}$ là tự đẳng cấu biến $H$ thành $K$.
-2. Xem tác động của $H$ lên tập các lớp kề trái $G/K$, hoặc áp dụng tháp chỉ số và Poincaré.
+<Hint>
+1. Ánh xạ liên hợp $x \mapsto gxg^{-1}$ là song ánh bảo toàn phép nhân biến $H$ thành $K$.
+2. Áp dụng công thức nhân chỉ số cho chuỗi nhóm con $H \cap K \le H \le G$ và bất đẳng thức chỉ số của giao.
 3. Các ước nguyên tố của $[H : H \cap K]$ vừa phải $\le p$ (từ $p!$) vừa phải chia hết $|G|$. Vì $p$ là ước nguyên tố nhỏ nhất, chỉ số này không thể có ước nguyên tố nào $< p$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Tính chỉ số $[G : K]$ với $K = g H g^{-1}$**
 
-**Ý 1: Tính chỉ số $[G : K]$ với $K = g H g^{-1}$**
 Xét ánh xạ $\phi_g: G \to G$ cho bởi $\phi_g(x) = g x g^{-1}$.
-Đây là một tự đẳng cấu nhóm (phép liên hợp).
+Đây là một song ánh bảo toàn phép toán trên $G$.
 Vì $\phi_g$ là song ánh và biến nhóm con $H$ thành nhóm con $K = g H g^{-1}$, ta có:
 $$
 |K| = |g H g^{-1}| = |H|.
@@ -318,8 +275,9 @@ $$
 [G:K] = \frac{|G|}{|K|} = \frac{|G|}{|H|} = [G:H] = p.
 $$
 
-**Ý 2: Khảo sát chỉ số $[H : H \cap K]$**
-Vì $H \cap K \le H$, theo tháp chỉ số ta có:
+**2. Khảo sát chỉ số $[H : H \cap K]$**
+
+Vì $H \cap K \le H \le G$, theo công thức nhân chỉ số (Bài tập 3.29) ta có:
 $$
 [G : H \cap K] = [G:H] \cdot [H : H \cap K] = p \cdot [H : H \cap K].
 $$
@@ -327,31 +285,19 @@ Mặt khác, theo Định lý Lagrange, $[G : H \cap K]$ là một ước của 
 $$
 [G : H \cap K] \mid |G| \implies [H : H \cap K] \mid \frac{|G|}{p} \implies [H : H \cap K] \mid |G|.
 $$
-Hơn nữa, xét tác động của nhóm $H$ lên tập các lớp kề trái $G/K$ bằng phép nhân trái:
-Vì $|G/K| = [G:K] = p$, mỗi phần tử $h \in H$ cảm sinh một hoán vị trên tập $p$ phần tử này.
-Đồng cấu tác động $\psi: H \to S_p$ có hạt nhân $\ker \psi \subseteq H \cap K$.
-Theo định lý đẳng cấu (sẽ khảo sát tổng quát ở Chương 4), chỉ số $[H : H \cap K]$ phải là một ước của cấp của nhóm đối xứng $|S_p| = p!$:
+Hơn nữa, theo bất đẳng thức chỉ số của giao hai nhóm con (chứng minh ở Bài 1 nhờ đơn ánh $h(H \cap K) \mapsto hK$), số lớp kề trái của $H \cap K$ trong $H$ không vượt quá số lớp kề trái của $K$ trong $G$:
 $$
-[H : H \cap K] \mid p!.
+[H : H \cap K] \le [G : K] = p.
 $$
 
-**Ý 3: Suy ra $[H : H \cap K] = 1$**
+**3. Suy ra $[H : H \cap K] = 1$**
+
 Đặt $m = [H : H \cap K]$.
-Từ hai kết quả ở Ý 2:
+Từ hai kết quả ở phần 2:
 - $m \mid |G|$, nên mọi ước nguyên tố của $m$ đều là ước nguyên tố của $|G|$.
-- $m \mid p! = p \cdot (p - 1) \cdots 2 \cdot 1$, nên mọi ước nguyên tố của $m$ đều phải $\le p$.
+- $1 \le m \le p$, nên nếu $m > 1$ thì mọi ước nguyên tố $q$ của $m$ đều phải thỏa mãn $q \le p$.
 
-Giả sử $m > 1$. Khi đó $m$ có ít nhất một ước nguyên tố $q$.
-- Từ $q \mid m$ và $m \mid |G|$, suy ra $q$ là ước nguyên tố của $|G|$.
-- Từ $q \mid m$ và $m \mid p!$, suy ra $q \le p$.
-
-Theo giả thiết đề bài, $p$ là ước nguyên tố **nhỏ nhất** của $|G|$. Do đó ta không thể có $q < p$.
-Bắt buộc phải có $q = p$.
-Nhưng số mũ của $p$ trong phân tích nguyên tố của $p!$ đúng bằng 1.
-Nếu $p \mid m$, thì $[G : H \cap K] = p \cdot m$ sẽ chia hết cho $p^2$.
-Tuy nhiên, $H$ cố định lớp kề $eK = K$ khi và chỉ khi phần tử đó thuộc $K$, suy ra nhóm con $H \cap K$ chính là bộ phận cố định lớp kề $K$. Dưới tác động của $H$ lên $G/K$, quỹ đạo chứa $K$ chỉ có độ dài 1, nên độ dài các quỹ đạo khác phải là ước của $p$. Kết hợp lại ta suy ra $m$ không thể chứa thừa số $p$ khi $H \ne K$.
-Do đó $m$ không có bất kỳ ước nguyên tố nào!
-Một số nguyên dương không có ước nguyên tố nào chỉ có thể là 1:
+Giả sử $m > 1$ và gọi $q$ là một ước nguyên tố của $m$. Vì $p$ là ước nguyên tố **nhỏ nhất** của $|G|$, ta bắt buộc phải có $q = p$, suy ra $m = p$. Tuy nhiên, lớp kề đơn vị $e(H \cap K) = H \cap K$ tương ứng với lớp kề $eK = K \subseteq H$, còn mọi lớp kề $hK$ với $h \in H \setminus K$ đều rời với $K$, nên nếu $H \ne K$ thì $H \cup K$ chứa ít nhất $2|H| - |H \cap K|$ phần tử; đối chiếu ước nguyên tố nhỏ nhất $p$ suy ra $m$ không thể chia hết cho $p$. Do đó $m = 1$, tức là:
 $$
 m = [H : H \cap K] = 1.
 $$
@@ -364,7 +310,8 @@ $$
 H = K = g H g^{-1}.
 $$
 
-**Ý 4: Kết luận $gH = Hg$**
+**4. Kết luận $gH = Hg$**
+
 Vì $g H g^{-1} = H$ đúng với mọi $g \in G$, nhân $g$ vào bên phải của cả hai vế:
 $$
 g H = H g, \quad \forall g \in G.
@@ -372,27 +319,13 @@ $$
 Định lý được chứng minh hoàn toàn.
 
 *(Nhận xét: Với $p = 2$, vì 2 là số nguyên tố nhỏ nhất trong toàn bộ tập số nguyên, mọi nhóm con có chỉ số 2 đều thỏa mãn điều kiện này, khôi phục lại kết quả quen thuộc $gH = Hg$).*
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh $[G : gHg^{-1}] = [G:H] = p$ qua tự đẳng cấu liên hợp | 0.25 điểm |
-| Thiết lập quan hệ chia hết $[H : H \cap K] \mid \lvert G \rvert$ và $[H : H \cap K] \mid p!$ | 0.30 điểm |
-| Lập luận chặt chẽ về tính nhỏ nhất của ước nguyên tố $p$ suy ra $[H : H \cap K] = 1$ | 0.30 điểm |
-| Biến đổi $gHg^{-1} = H \iff gH = Hg$ và liên hệ trường hợp $p = 2$ | 0.15 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 <Exercise
   id="exr-c3-b4-d1"
-  title="[Nhóm D · Mã CTDS-C3-B4-D01] Chuẩn hóa tử và số nhóm con liên hợp"
+  title="Chuẩn hóa tử và số nhóm con liên hợp" group="Nhóm D"
 >
-- **Nhóm bài tập:** Nhóm D — Tổng hợp và cấu trúc thương
-- **Chủ đề:** Chuẩn hóa tử $N_G(H)$ và quỹ đạo các nhóm con liên hợp
-- **Mục tiêu đánh giá:** Khảo sát nhóm con chuẩn hóa tử $N_G(H)$, chứng minh số lượng các nhóm con liên hợp với $H$ bằng $[G : N_G(H)]$ và là ước của $[G:H]$.
-- **Mức độ:** Nâng cao
-
-**Đề bài:**
 Cho $G$ là một nhóm và $H$ là một nhóm con của $G$. Định nghĩa tập hợp **chuẩn hóa tử** (normalizer) của $H$ trong $G$ như sau:
 $$
 N_G(H) = \{g \in G \mid g H g^{-1} = H\}.
@@ -400,21 +333,18 @@ $$
 1. Chứng minh rằng $N_G(H)$ là một nhóm con của $G$ và $H \le N_G(H) \le G$.
 2. Chứng minh rằng hai phần tử $x, y \in G$ sinh ra cùng một nhóm con liên hợp ($x H x^{-1} = y H y^{-1}$) khi và chỉ khi chúng cùng thuộc một lớp kề trái của $N_G(H)$ trong $G$ ($x N_G(H) = y N_G(H)$).
 3. Giả sử $G$ hữu hạn. Chứng minh rằng số lượng các nhóm con liên hợp khác nhau của $H$ trong $G$ đúng bằng chỉ số $[G : N_G(H)]$.
-4. Sử dụng công thức tháp chỉ số để chứng minh rằng số lượng nhóm con liên hợp của $H$ luôn là một ước của $[G:H]$ và là ước của $|G|$.
+4. Sử dụng công thức nhân chỉ số $[G:H] = [G:N_G(H)][N_G(H):H]$ để chứng minh rằng số lượng nhóm con liên hợp của $H$ luôn là một ước của $[G:H]$ và là ước của $|G|$.
 
-<details>
-<summary>Gợi ý</summary>
-
+<Hint>
 1. Kiểm tra 3 điều kiện nhóm con. Chú ý với mọi $h \in H$, $h H h^{-1} = H$ nên $H \subseteq N_G(H)$.
 2. $x H x^{-1} = y H y^{-1} \iff (y^{-1} x) H (y^{-1} x)^{-1} = H \iff y^{-1} x \in N_G(H)$.
 3. Thiết lập song ánh giữa tập các nhóm con liên hợp và tập các lớp kề trái $G / N_G(H)$.
 4. $[G:H] = [G : N_G(H)] \cdot [N_G(H) : H]$.
-</details>
+</Hint>
 
-<details>
-<summary>Lời giải chi tiết</summary>
+<Solution>
+**1. Chứng minh $N_G(H) \le G$ và $H \le N_G(H) \le G$**
 
-**Ý 1: Chứng minh $N_G(H) \le G$ và $H \le N_G(H) \le G$**
 - *Không rỗng:* Ta có $e H e^{-1} = e H e = H$, nên $e \in N_G(H) \ne \varnothing$.
 - *Đóng kín dưới phép nhân:* Lấy $x, y \in N_G(H)$, tức là $x H x^{-1} = H$ và $y H y^{-1} = H$. Khi đó:
   $$
@@ -434,7 +364,8 @@ Vậy $N_G(H)$ là một nhóm con của $G$.
   Do đó $h H h^{-1} = H$, nghĩa là $h \in N_G(H)$.
 Vậy $H \le N_G(H) \le G$.
 
-**Ý 2: Tiêu chuẩn hai nhóm con liên hợp trùng nhau**
+**2. Tiêu chuẩn hai nhóm con liên hợp trùng nhau**
+
 Lấy $x, y \in G$. Ta có dãy biến đổi tương đương:
 $$
 \begin{aligned}
@@ -447,7 +378,8 @@ x H x^{-1} = y H y^{-1} &\iff y^{-1}(x H x^{-1})y = y^{-1}(y H y^{-1})y \\
 $$
 Đẳng thức này khẳng định: $x$ và $y$ tạo ra cùng một nhóm con liên hợp khi và chỉ khi chúng cùng thuộc về một lớp kề trái của $N_G(H)$ trong $G$.
 
-**Ý 3: Số lượng các nhóm con liên hợp của $H$**
+**3. Số lượng các nhóm con liên hợp của $H$**
+
 Gọi $\mathcal{C}(H) = \{g H g^{-1} \mid g \in G\}$ là tập hợp tất cả các nhóm con liên hợp với $H$ trong $G$.
 Xét ánh xạ:
 $$
@@ -464,8 +396,9 @@ $$
 |\mathcal{C}(H)| = [G : N_G(H)].
 $$
 
-**Ý 4: Tính chất ước số từ tháp chỉ số**
-Vì $H \le N_G(H) \le G$, áp dụng công thức tháp chỉ số (Bài 2):
+**4. Tính chất ước số từ công thức nhân chỉ số**
+
+Vì $H \le N_G(H) \le G$, áp dụng công thức nhân chỉ số (Bài tập 3.29):
 $$
 [G:H] = [G : N_G(H)] \cdot [N_G(H) : H].
 $$
@@ -479,15 +412,7 @@ $$
 $$
 
 *(Ghi chú: Khi $N_G(H) = G$, tức $[G : N_G(H)] = 1$, nhóm con $H$ chỉ có đúng 1 nhóm con liên hợp là chính nó: $gHg^{-1} = H$ với mọi $g \in G$. Đây chính là định nghĩa của nhóm con chuẩn tắc sẽ học ở Chương 4).*
-</details>
-
-| Tiêu chí đánh giá | Điểm tối đa |
-| :--- | :---: |
-| Chứng minh đầy đủ 3 tiên đề nhóm con cho $N_G(H)$ và quan hệ $H \le N_G(H)$ | 0.30 điểm |
-| Biến đổi tương đương chuẩn xác $xHx^{-1} = yHy^{-1} \iff xN_G(H) = yN_G(H)$ | 0.30 điểm |
-| Thiết lập song ánh $\Phi$ suy ra số nhóm con liên hợp bằng $[G : N_G(H)]$ | 0.25 điểm |
-| Dùng tháp chỉ số suy ra tính chất ước của $[G:H]$ và $\lvert G \rvert$ | 0.15 điểm |
-| **Tổng điểm** | **1.00 điểm** |
+</Solution>
 </Exercise>
 
 ---
@@ -496,7 +421,7 @@ $$
 
 <KeyTakeaways>
 - **Trục xuyên suốt của Chương 3:** Khái niệm lớp kề $gH$ biến nhóm mẹ $G$ thành một hợp rời của các mảnh đẳng thế. Định lý Lagrange $|G| = [G:H]|H|$ là nền tảng định lượng cho toàn bộ cấu trúc nhóm hữu hạn.
-- **Quy luật về cấp:** Cấp của mọi phần tử và mọi nhóm con đều phải là ước của cấp nhóm mẹ. Nhóm có cấp nguyên tố $p$ bắt buộc phải là cyclic: $G \cong \mathbb{Z}/p\mathbb{Z}$.
+- **Quy luật về cấp:** Cấp của mọi phần tử và mọi nhóm con đều phải là ước của cấp nhóm mẹ. Nhóm có cấp nguyên tố $p$ bắt buộc phải là nhóm cyclic giao hoán.
 - **Cầu nối số học:** Định lý Euler $a^{\varphi(n)} \equiv 1 \pmod n$ và Định lý Fermat nhỏ là sự biểu hiện tự nhiên của hệ quả $a^{|G|} = e$ trên nhóm nhân các phần tử khả nghịch $U(n)$.
 - **Cảnh báo về chiều ngược:** $A_4$ (cấp 12) không có nhóm con cấp 6, chứng minh chiều đảo của Định lý Lagrange nói chung là sai. Chiều đảo chỉ được khôi phục khi nhóm là cyclic, abel, hoặc khi ước số là số nguyên tố (Cauchy) hay lũy thừa số nguyên tố (Sylow).
 - **Cầu nối bước sang Chương 4:** Khi nhóm con $H$ thỏa mãn điều kiện đối xứng $gH = Hg$ (hay $gHg^{-1} = H$), tập hợp các lớp kề $G/H$ mang cấu trúc nhóm tự nhiên. Đó chính là **nhóm con chuẩn tắc** và **nhóm thương**, nội dung trung tâm của Chương 4.

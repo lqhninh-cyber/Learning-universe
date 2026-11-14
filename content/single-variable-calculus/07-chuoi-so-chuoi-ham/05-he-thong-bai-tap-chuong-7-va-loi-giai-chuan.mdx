@@ -54,7 +54,7 @@ Tìm tổng của các chuỗi số sau:
 2. $S_b = \sum_{n=1}^\infty \frac{2^n + 3^n}{6^n}$
 3. $S_c = \sum_{n=1}^\infty \frac{2n - 1}{2^n}$
 4. $S_d = \sum_{n=1}^\infty \frac{1}{n(n+1)(n+2)}$
-</Exercise>
+
 
 <Solution>
 **1. Câu a:**
@@ -107,6 +107,7 @@ $$
 S_d = \frac{1}{2} \cdot \frac{1}{1 \cdot 2} = \frac{1}{4}
 $$
 </Solution>
+</Exercise>
 
 ## Dạng 2: Tính chất của Chuỗi Hội tụ (Bài 2, 3, 4 Giáo trình)
 
@@ -116,7 +117,7 @@ $$
 >
 1. Chứng minh rằng nếu các chuỗi số $\sum_{n=1}^\infty a_n^2$ và $\sum_{n=1}^\infty b_n^2$ hội tụ thì các chuỗi $\sum_{n=1}^\infty |a_n b_n|$ và $\sum_{n=1}^\infty \frac{|a_n|}{n}$ cũng hội tụ.
 2. Chứng minh rằng nếu chuỗi số dương $\sum_{n=1}^\infty a_n$ hội tụ thì chuỗi $\sum_{n=1}^\infty a_n^2$ cũng hội tụ. Chiều ngược lại có đúng không?
-</Exercise>
+
 
 <Solution>
 **1. Câu 1:**
@@ -136,6 +137,7 @@ $$
 - **Chiều ngược lại không đúng:** Phản ví dụ là chuỗi $a_n = \frac{1}{n}$.
   Chuỗi bình phương $\sum_{n=1}^\infty a_n^2 = \sum_{n=1}^\infty \frac{1}{n^2}$ hội tụ (chuỗi Riemann với $p = 2$), nhưng chuỗi gốc $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \frac{1}{n}$ lại là chuỗi điều hòa phân kỳ.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exer-gthmb-c7-b5-bai-4-bo-de-kronecker"
@@ -145,7 +147,7 @@ Cho $(a_n)$ là dãy các số thực dương giảm và tiến về 0 sao cho c
 $$
 \lim_{n \to \infty} n a_n = 0
 $$
-</Exercise>
+
 
 <Solution>
 Vì chuỗi $\sum a_n$ hội tụ, theo tiêu chuẩn Cauchy: với mọi $\varepsilon > 0$, tồn tại chỉ số $N \in \mathbb{N}^*$ sao cho với mọi $m > n \ge N$:
@@ -163,6 +165,7 @@ $$
    $$
 Vì cả hai dãy con chỉ số chẵn $(2n a_{2n})$ và chỉ số lẻ $((2n+1) a_{2n+1})$ đều tiến về 0, ta kết luận $\lim_{n \to \infty} n a_n = 0$.
 </Solution>
+</Exercise>
 
 ## Dạng 3: Tiêu chuẩn Hội tụ của Chuỗi Số Dương (Bài 5, 6 Giáo trình)
 
@@ -178,7 +181,7 @@ Xét tính hội tụ của các chuỗi số sau:
 5. $\sum_{n=1}^\infty \frac{(n+1)^{n^2}}{3^n n^{n^2}}$
 6. $\sum_{n=2}^\infty \frac{1}{n(\ln n)^p}$ ($p \in \mathbb{R}$)
 7. $\sum_{n=1}^\infty \frac{1}{\ln(n!)}$
-</Exercise>
+
 
 <Solution>
 **1. Câu 1:**
@@ -243,6 +246,7 @@ $$
 Từ kết quả câu 6 với $p = 1$, chuỗi số $\sum_{n=2}^\infty \frac{1}{n \ln n}$ phân kỳ.
 Theo dấu hiệu so sánh trực tiếp, chuỗi $\sum_{n=1}^\infty \frac{1}{\ln(n!)}$ **phân kỳ**.
 </Solution>
+</Exercise>
 
 ## Dạng 4: Chuỗi Đan Dấu và Phân loại Hội Tụ (Bài 7 Giáo trình)
 
@@ -253,7 +257,7 @@ Theo dấu hiệu so sánh trực tiếp, chuỗi $\sum_{n=1}^\infty \frac{1}{\l
 Khảo sát sự hội tụ (hội tụ tuyệt đối hay bán hội tụ) của các chuỗi đan dấu sau:
 1. $\sum_{n=1}^\infty (-1)^n \frac{n+1}{n^2 + n + 2}$
 2. $\sum_{n=1}^\infty \frac{(-1)^n}{n^p}$ với $p \in \mathbb{R}$
-</Exercise>
+
 
 <Solution>
 **1. Câu 1:**
@@ -272,6 +276,7 @@ Khảo sát sự hội tụ (hội tụ tuyệt đối hay bán hội tụ) củ
 - Nếu $p > 1$: chuỗi giá trị tuyệt đối $\sum \frac{1}{n^p}$ hội tụ (chuỗi Riemann). Do đó chuỗi **hội tụ tuyệt đối**.
 - Nếu $0 < p \le 1$: dãy $a_n = \frac{1}{n^p}$ giảm và tiến về 0, nên chuỗi hội tụ theo dấu hiệu Leibniz. Tuy nhiên chuỗi trị tuyệt đối $\sum \frac{1}{n^p}$ phân kỳ. Do đó chuỗi **bán hội tụ**.
 </Solution>
+</Exercise>
 
 ## Dạng 5: Miền Hội Tụ của Chuỗi Hàm (Bài 8 Giáo trình)
 
@@ -283,7 +288,7 @@ Tìm miền hội tụ, hội tụ tuyệt đối và bán hội tụ của chu�
 $$
 \sum_{n=2}^\infty \frac{(-1)^n}{2n - 1} \left( \frac{1 - x}{1 + x} \right)^n, \quad (x \neq -1)
 $$
-</Exercise>
+
 
 <Solution>
 Đặt biến phụ $u = \frac{1 - x}{1 + x}$. Chuỗi hàm trở thành chuỗi lũy thừa theo biến $u$:
@@ -318,11 +323,13 @@ $$
    - Từ bất phương trình đầu: $1 + x > 0 \iff x > -1$.
    - Khi $1 + x > 0$, bất phương trình thứ hai tương đương $-2x \le 0 \iff x \ge 0$.
    - Giao hai điều kiện: $x \ge 0$.
-4. **Kết luận:**
-   - Miền hội tụ của chuỗi hàm là $D = [0; +\infty)$.
+**4. Kết luận**
+
+ - Miền hội tụ của chuỗi hàm là $D = [0; +\infty)$.
    - Miền hội tụ tuyệt đối là $(0; +\infty)$ (ứng với $|u| < 1 \iff x > 0$).
    - Điểm bán hội tụ duy nhất là $x = 0$ (ứng với $u = 1$).
 </Solution>
+</Exercise>
 
 ## Dạng 6: Tiêu chuẩn Weierstrass M-test Chứng minh Hội tụ Đều (Bài 9 Giáo trình)
 
@@ -333,7 +340,7 @@ $$
 Chứng minh các chuỗi hàm sau hội tụ đều trên miền đã cho:
 1. $\sum_{n=1}^\infty \frac{1}{x^2 + n^3}$ trên $\mathbb{R}$.
 2. $\sum_{n=1}^\infty \frac{x}{1 + x^2 n^4}$ trên $[0; +\infty)$.
-</Exercise>
+
 
 <Solution>
 **1. Câu 1:**
@@ -358,6 +365,7 @@ Bất đẳng thức này hiển nhiên cũng đúng tại $x = 0$ vì khi đó 
 Chuỗi số $\sum_{n=1}^\infty \frac{1}{2n^2} = \frac{1}{2} \sum_{n=1}^\infty \frac{1}{n^2}$ hội tụ.
 Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty \frac{x}{1 + x^2 n^4}$ **hội tụ đều** trên $[0; +\infty)$.
 </Solution>
+</Exercise>
 
 ## Dạng 7: Bài Toán Thi Kết Thúc Học Phần Mẫu
 
@@ -371,7 +379,7 @@ $$
 $$
 1. Tìm miền hội tụ của chuỗi hàm trên $\mathbb{R}$.
 2. Chứng minh rằng chuỗi hàm hội tụ đều trên toàn bộ trục số thực $\mathbb{R}$.
-</Exercise>
+
 
 <Solution>
 **1. Tìm miền hội tụ:**
@@ -395,6 +403,7 @@ $$
 Chuỗi số $\sum_{n=1}^\infty a_n = \sum_{n=1}^\infty \left(\frac{1}{2}\right)^n$ là chuỗi cấp số nhân hội tụ có công bội $q = \frac{1}{2} < 1$.
 Theo dấu hiệu Weierstrass M-test, chuỗi hàm $\sum_{n=1}^\infty \frac{1}{n} \left( \frac{x}{1 + x^2} \right)^n$ **hội tụ đều trên toàn bộ $\mathbb{R}$**.
 </Solution>
+</Exercise>
 
 ---
 

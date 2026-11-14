@@ -17,9 +17,6 @@ sources:
     pages: '75-78'
     sections: 'Mục 4.3, 4.4'
     note: 'Định lý 4.8 (Tính xác định tốt và Nhóm thương G/N), Phản ví dụ 4.9'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '115-125'
-    sections: 'Chương 4, Mục 4.2'
 status: published
 version: 0.1.0
 authoring:
@@ -293,7 +290,7 @@ Mặt khác, theo định nghĩa cấp của phần tử trong nhóm thương, $
 
 <Exercise
   id="exr-c4-b2-a1"
-  title="[Nhóm A · Mã CTDS-C4-B2-A01] Bảng nhân và cấp phần tử trong nhóm thương S3/A3"
+  title="Bảng nhân và cấp phần tử trong nhóm thương S3/A3" group="Nhóm A"
   source="gt-ctds-hvk-2026"
   page="78"
   original="Bài 4.2"
@@ -302,15 +299,16 @@ Xét nhóm đối xứng $S_3$ và nhóm con chuẩn tắc $A_3 = \{\operatornam
 1. Tính cấp của nhóm thương $|S_3/A_3|$ và liệt kê tất cả các phần tử của $S_3/A_3$.
 2. Lập bảng Cayley (bảng nhân) của nhóm thương $S_3/A_3$.
 3. Tìm phần tử đơn vị, phần tử nghịch đảo và cấp của từng phần tử trong $S_3/A_3$.
-</Exercise>
+
 
 <Hint>
 Vì $[S_3 : A_3] = 2$, nhóm thương có đúng 2 phần tử: lớp kề đơn vị $A_3$ và lớp kề của một chuyển vị bất kỳ, chẳng hạn $(1\;2)A_3$.
 </Hint>
 
 <Solution>
-1. **Cấp và danh sách phần tử của $S_3/A_3$:**
-   Cấp của nhóm thương là:
+**1. Cấp và danh sách phần tử của $S_3/A_3$**
+
+Cấp của nhóm thương là:
    $$
    |S_3/A_3| = \frac{|S_3|}{|A_3|} = \frac{6}{3} = 2.
    $$
@@ -318,8 +316,9 @@ Vì $[S_3 : A_3] = 2$, nhóm thương có đúng 2 phần tử: lớp kề đơn
    - Phần tử đơn vị: $\bar{e} = A_3 = \{\operatorname{id}, (1\;2\;3), (1\;3\;2)\}$.
    - Phần tử không tầm thường: $\bar{\tau} = (1\;2)A_3 = \{(1\;2), (2\;3), (1\;3)\}$.
 
-2. **Lập bảng Cayley của $S_3/A_3$:**
-   Ta thực hiện các phép nhân lớp kề:
+**2. Lập bảng Cayley của $S_3/A_3$**
+
+Ta thực hiện các phép nhân lớp kề:
    - $\bar{e} \cdot \bar{e} = A_3 \cdot A_3 = A_3 = \bar{e}$.
    - $\bar{e} \cdot \bar{\tau} = A_3 \cdot ((1\;2)A_3) = (1\;2)A_3 = \bar{\tau}$.
    - $\bar{\tau} \cdot \bar{e} = ((1\;2)A_3) \cdot A_3 = (1\;2)A_3 = \bar{\tau}$.
@@ -331,21 +330,18 @@ Vì $[S_3 : A_3] = 2$, nhóm thương có đúng 2 phần tử: lớp kề đơn
    | $\bar{e}$ | $\bar{e}$ | $\bar{\tau}$ |
    | $\bar{\tau}$ | $\bar{\tau}$ | $\bar{e}$ |
 
-3. **Phần tử đơn vị, nghịch đảo và cấp:**
-   - Phần tử đơn vị là $\bar{e} = A_3$, có cấp bằng 1.
+**3. Phần tử đơn vị, nghịch đảo và cấp**
+
+ - Phần tử đơn vị là $\bar{e} = A_3$, có cấp bằng 1.
    - Phần tử $\bar{\tau} = (1\;2)A_3$ có nghịch đảo là chính nó: $\bar{\tau}^{-1} = \bar{\tau}$.
    - Vì $\bar{\tau} \ne \bar{e}$ và $\bar{\tau}^2 = \bar{e}$, cấp của $\bar{\tau}$ bằng 2.
-   Nhóm thương $S_3/A_3$ là nhóm cyclic cấp 2, đẳng cấu với $(\mathbb{Z}/2\mathbb{Z}, +)$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Tính đúng $|S_3/A_3| = 2$ và liệt kê đầy đủ 2 lớp kề: `0,30 đ`
-- Lập đúng và đầy đủ bảng Cayley: `0,40 đ`
-- Xác định chính xác đơn vị, nghịch đảo và cấp của từng phần tử: `0,30 đ`
+   Nhóm thương $S_3/A_3$ là một nhóm cyclic cấp $2$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c4-b2-b1"
-  title="[Nhóm B · Mã CTDS-C4-B2-B01] Tính giao hoán của nhóm thương và phản ví dụ chiều ngược"
+  title="Tính giao hoán của nhóm thương và phản ví dụ chiều ngược" group="Nhóm B"
   source="gt-ctds-hvk-2026"
   page="79"
   original="Bài 4.10"
@@ -353,15 +349,16 @@ Vì $[S_3 : A_3] = 2$, nhóm thương có đúng 2 phần tử: lớp kề đơn
 Cho $(G, \cdot)$ là một nhóm và $N \trianglelefteq G$.
 1. Chứng minh rằng nếu $G$ là nhóm giao hoán (abel), thì nhóm thương $G/N$ luôn là nhóm giao hoán.
 2. Mệnh đề đảo: *"Nếu nhóm thương $G/N$ là nhóm giao hoán thì nhóm mẹ $G$ cũng phải là nhóm giao hoán"* có đúng không? Nếu không, hãy chỉ ra một phản ví dụ cụ thể và phân tích chi tiết.
-</Exercise>
+
 
 <Hint>
 Dùng định nghĩa phép nhân lớp kề $(aN)(bN) = (ab)N$. Đối với phản ví dụ, hãy xem lại nhóm thương $S_3/A_3$ từ Bài 4.2.
 </Hint>
 
 <Solution>
-1. **Chứng minh $G$ abel $\implies G/N$ abel:**
-   Giả sử $(G, \cdot)$ là nhóm giao hoán, nghĩa là $xy = yx$ với mọi $x, y \in G$.
+**1. Chứng minh $G$ abel $\implies G/N$ abel**
+
+Giả sử $(G, \cdot)$ là nhóm giao hoán, nghĩa là $xy = yx$ với mọi $x, y \in G$.
    Lấy hai phần tử tùy ý $aN, bN \in G/N$. Theo định nghĩa phép nhân trong nhóm thương:
    $$
    (aN)(bN) = (ab)N.
@@ -373,8 +370,9 @@ Dùng định nghĩa phép nhân lớp kề $(aN)(bN) = (ab)N$. Đối với ph�
    Đẳng thức này chứng tỏ $(aN)(bN) = (bN)(aN)$ với mọi $aN, bN \in G/N$.
    Vậy nhóm thương $G/N$ là một nhóm giao hoán.
 
-2. **Phân tích mệnh đề đảo:**
-   Mệnh đề đảo: *"Nếu $G/N$ abel thì $G$ abel"* là **SAI**.
+**2. Phân tích mệnh đề đảo**
+
+Mệnh đề đảo: *"Nếu $G/N$ abel thì $G$ abel"* là **SAI**.
    
    *Phản ví dụ cụ thể:*
    Xét nhóm đối xứng $G = S_3$ và nhóm con chuẩn tắc $N = A_3$.
@@ -384,16 +382,12 @@ Dùng định nghĩa phép nhân lớp kề $(aN)(bN) = (ab)N$. Đối với ph�
      (1\;2)(1\;3) = (1\;3\;2) \ne (1\;2\;3) = (1\;3)(1\;2).
      $$
    Như vậy, nhóm thương $G/N$ hoàn toàn có thể là nhóm giao hoán ngay cả khi nhóm mẹ $G$ không giao hoán.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh chặt chẽ $G$ abel $\implies G/N$ abel qua tính chất đại diện: `0,40 đ`
-- Khẳng định chính xác mệnh đề đảo là sai: `0,20 đ`
-- Trình bày phản ví dụ mẫu mực $S_3/A_3$ kèm kiểm chứng không giao hoán của $S_3$: `0,40 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c4-b2-c1"
-  title="[Nhóm C · Mã CTDS-C4-B2-C01] Cơ chế thất bại của phép nhân lớp kề khi thiếu tính chuẩn tắc"
+  title="Cơ chế thất bại của phép nhân lớp kề khi thiếu tính chuẩn tắc" group="Nhóm C"
   source="gt-ctds-hvk-2026"
   page="80"
   original="Bài 4.18"
@@ -405,22 +399,24 @@ Cho nhóm $G$ và một nhóm con $H \le G$ **không chuẩn tắc**.
    (x_1 y_1)H \ne (x_2 y_2)H.
    $$
 3. Giải thích tại sao điều này chứng minh rằng việc xây dựng phép nhân lớp kề bắt buộc phải loại trừ các nhóm con không chuẩn tắc.
-</Exercise>
+
 
 <Hint>
 Chọn $x_1 = g, y_1 = g^{-1}$ cho tích $x_1 y_1 = e$. Chọn $x_2 = gh, y_2 = g^{-1}$ cho tích $x_2 y_2 = ghg^{-1}$.
 </Hint>
 
 <Solution>
-1. **Sự tồn tại của $g \in G, h \in H$ sao cho $ghg^{-1} \notin H$:**
-   Theo định nghĩa nhóm con chuẩn tắc ở Bài 1, một nhóm con $H$ được gọi là chuẩn tắc nếu với mọi $g \in G$ và mọi $h \in H$, ta đều có $ghg^{-1} \in H$.
+**1. Sự tồn tại của $g \in G, h \in H$ sao cho $ghg^{-1} \notin H$**
+
+Theo định nghĩa nhóm con chuẩn tắc ở Bài 1, một nhóm con $H$ được gọi là chuẩn tắc nếu với mọi $g \in G$ và mọi $h \in H$, ta đều có $ghg^{-1} \in H$.
    Do đó, mệnh đề phủ định khẳng định rằng: nếu $H$ không chuẩn tắc trong $G$, thì bắt buộc phải tồn tại ít nhất một phần tử $g \in G$ và một phần tử $h \in H$ sao cho:
    $$
    ghg^{-1} \notin H.
    $$
 
-2. **Chỉ ra hai cặp đại diện cho hai kết quả khác nhau:**
-   Xét hai lớp kề trái $A = gH$ và $B = g^{-1}H$.
+**2. Chỉ ra hai cặp đại diện cho hai kết quả khác nhau**
+
+Xét hai lớp kề trái $A = gH$ và $B = g^{-1}H$.
    - **Cặp 1:** Chọn $x_1 = g \in gH = A$ và $y_1 = g^{-1} \in g^{-1}H = B$.
      Tích của hai đại diện này là:
      $$
@@ -450,19 +446,15 @@ Chọn $x_1 = g, y_1 = g^{-1}$ cho tích $x_1 y_1 = e$. Chọn $x_2 = gh, y_2 = 
    (x_1 y_1)H \ne (x_2 y_2)H.
    $$
 
-3. **Ý nghĩa đại số:**
-   Kết quả trên chứng minh rằng: đối với bất kỳ nhóm con không chuẩn tắc nào, luôn luôn tìm được hai lớp kề mà tích của chúng phụ thuộc vào sự ngẫu nhiên khi người học chọn phần tử đại diện. Do đó, phép gán $(aH, bH) \mapsto (ab)H$ không phải là một ánh xạ hợp lệ (không thỏa mãn tính duy nhất của ảnh). Cấu trúc nhóm thương $G/H$ về mặt bản chất chỉ có thể tồn tại khi và chỉ khi $H$ là nhóm con chuẩn tắc.
+**3. Ý nghĩa đại số**
 
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Phát biểu đúng mệnh đề phủ định chỉ ra sự tồn tại của $g, h$: `0,25 đ`
-- Xây dựng chuẩn xác hai cặp đại diện $(g, g^{-1})$ và $(gh, g^{-1})$: `0,35 đ`
-- Lập luận $(ghg^{-1})H \ne H$ do $ghg^{-1} \notin H$: `0,25 đ`
-- Kết luận chặt chẽ về tính hợp thức của ánh xạ: `0,15 đ`
+Kết quả trên chứng minh rằng: đối với bất kỳ nhóm con không chuẩn tắc nào, luôn luôn tìm được hai lớp kề mà tích của chúng phụ thuộc vào sự ngẫu nhiên khi người học chọn phần tử đại diện. Do đó, phép gán $(aH, bH) \mapsto (ab)H$ không phải là một ánh xạ hợp lệ (không thỏa mãn tính duy nhất của ảnh). Cấu trúc nhóm thương $G/H$ về mặt bản chất chỉ có thể tồn tại khi và chỉ khi $H$ là nhóm con chuẩn tắc.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c4-b2-d1"
-  title="[Nhóm D · Mã CTDS-C4-B2-D01] Cấp của lớp kề trong nhóm thương"
+  title="Cấp của lớp kề trong nhóm thương" group="Nhóm D"
   source="gt-ctds-hvk-2026"
   page="81"
   original="Bài 4.25"
@@ -471,15 +463,16 @@ Cho $N \trianglelefteq G$ và phần tử $a \in G$ có cấp hữu hạn $\oper
 1. Chứng minh rằng cấp của lớp kề $aN$ trong nhóm thương $G/N$ là một ước của $n$: $\operatorname{ord}(aN) \mid n$.
 2. Chứng minh rằng $\operatorname{ord}(aN) = n$ khi và chỉ khi $\langle a \rangle \cap N = \{e\}$.
 3. Cho ví dụ cụ thể về nhóm $G$, nhóm con chuẩn tắc $N$ và phần tử $a \in G$ sao cho $\operatorname{ord}(aN) < \operatorname{ord}(a)$.
-</Exercise>
+
 
 <Hint>
 Dùng tính chất $(aN)^k = a^k N = N \iff a^k \in N$. Với câu 3, xét $G = \mathbb{Z}/12\mathbb{Z}$ và nhóm con $N = \langle [4]_{12} \rangle$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $\operatorname{ord}(aN) \mid n$:**
-   Vì $\operatorname{ord}(a) = n$, ta có $a^n = e$.
+**1. Chứng minh $\operatorname{ord}(aN) \mid n$**
+
+Vì $\operatorname{ord}(a) = n$, ta có $a^n = e$.
    Lũy thừa bậc $n$ của lớp kề $aN$ trong nhóm thương $G/N$ là:
    $$
    (aN)^n = a^n N = eN = N = e_{G/N}.
@@ -489,8 +482,9 @@ Dùng tính chất $(aN)^k = a^k N = N \iff a^k \in N$. Với câu 3, xét $G = 
    \operatorname{ord}(aN) \mid n.
    $$
 
-2. **Chứng minh $\operatorname{ord}(aN) = n \iff \langle a \rangle \cap N = \{e\}$:**
-   Đặt $k = \operatorname{ord}(aN)$. Theo định nghĩa, $k$ là số nguyên dương nhỏ nhất sao cho $(aN)^k = N \iff a^k \in N$.
+**2. Chứng minh $\operatorname{ord}(aN) = n \iff \langle a \rangle \cap N = \{e\}$**
+
+Đặt $k = \operatorname{ord}(aN)$. Theo định nghĩa, $k$ là số nguyên dương nhỏ nhất sao cho $(aN)^k = N \iff a^k \in N$.
    Theo câu 1, ta luôn có $k \mid n$, do đó $k \le n$.
    - **Chiều thuận ($\implies$):** Giả sử $k = n$. Ta cần chứng minh $\langle a \rangle \cap N = \{e\}$.
      Lấy $x \in \langle a \rangle \cap N$. Vì $x \in \langle a \rangle$, ta có $x = a^t$ với $0 \le t < n$.
@@ -503,8 +497,9 @@ Dùng tính chất $(aN)^k = a^k N = N \iff a^k \in N$. Với câu 3, xét $G = 
      Vì $n = \operatorname{ord}(a)$ là số nguyên dương nhỏ nhất để $a^n = e$, ta suy ra $n \le k$.
      Kết hợp với $k \le n$, ta bắt buộc phải có $k = n$.
 
-3. **Ví dụ cụ thể $\operatorname{ord}(aN) < \operatorname{ord}(a)$:**
-   Xét nhóm cộng $G = \mathbb{Z}/12\mathbb{Z}$ (nhóm abel nên mọi nhóm con đều chuẩn tắc).
+**3. Ví dụ cụ thể $\operatorname{ord}(aN) < \operatorname{ord}(a)$**
+
+Xét nhóm cộng $G = \mathbb{Z}/12\mathbb{Z}$ (nhóm abel nên mọi nhóm con đều chuẩn tắc).
    Xét nhóm con $N = \langle [4]_{12} \rangle = \{[0], [4], [8]\}$.
    Xét phần tử $a = [2]_{12} \in G$:
    - Trong nhóm mẹ $G$, cấp của $a = [2]$ là:
@@ -518,12 +513,8 @@ Dùng tính chất $(aN)^k = a^k N = N \iff a^k \in N$. Với câu 3, xét $G = 
      Suy ra $\operatorname{ord}([2] + N) = 2$.
    
    Ta thấy rõ ràng $2 < 6$, tức là $\operatorname{ord}(aN) < \operatorname{ord}(a)$ (và $2 \mid 6$).
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh chặt chẽ $(aN)^n = N \implies \operatorname{ord}(aN) \mid n$: `0,25 đ`
-- Chứng minh đầy đủ hai chiều tương đương $\operatorname{ord}(aN) = n \iff \langle a \rangle \cap N = \{e\}$: `0,45 đ`
-- Cho ví dụ chuẩn xác trong $\mathbb{Z}_{12}$ và tính đúng cấp trong cả hai nhóm: `0,30 đ`
 </Solution>
+</Exercise>
 
 ---
 

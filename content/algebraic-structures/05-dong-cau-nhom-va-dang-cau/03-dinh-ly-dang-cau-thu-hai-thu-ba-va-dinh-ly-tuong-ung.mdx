@@ -17,9 +17,6 @@ sources:
     pages: '89-92'
     sections: 'Mục 5.5.2, 5.5.3, 5.6, 5.7, 5.8'
     note: 'Định lý 5.14 (Đẳng cấu thứ hai), Định lý 5.16 (Đẳng cấu thứ ba), Mệnh đề 5.18 (Bất biến), Định lý 5.19 (Định lý tương ứng)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '150-162'
-    sections: 'Chương 5, Mục 5.3'
 status: published
 version: 0.1.0
 authoring:
@@ -228,7 +225,7 @@ Hơn nữa, song ánh này bảo toàn đầy đủ các tính chất cấu trú
 
 <Exercise
   id="exr-c5-b3-a1"
-  title="[Nhóm A · Mã CTDS-C5-B3-A01] Áp dụng Định lý đẳng cấu II và III cho nhóm số nguyên Z"
+  title="Áp dụng Định lý đẳng cấu II và III cho nhóm số nguyên Z" group="Nhóm A"
   source="gt-ctds-hvk-2026"
   page="93"
   original="Bài 5.19"
@@ -237,20 +234,22 @@ Trong nhóm cộng các số nguyên $(\mathbb{Z}, +)$:
 1. Cho hai nhóm con $H = 12\mathbb{Z}$ và $N = 18\mathbb{Z}$. Hãy tìm tổng $H + N$ và giao $H \cap N$.
 2. Áp dụng Định lý đẳng cấu thứ hai để viết đẳng cấu giữa các nhóm thương tương ứng và rút ra một hệ thức số học quen thuộc liên hệ giữa $\gcd$ và $\operatorname{lcm}$.
 3. Cho chuỗi nhóm con $N = 24\mathbb{Z} \subseteq H = 6\mathbb{Z} \subseteq G = \mathbb{Z}$. Áp dụng Định lý đẳng cấu thứ ba cho thương của các nhóm này.
-</Exercise>
+
 
 <Hint>
 Trong $\mathbb{Z}$, $a\mathbb{Z} + b\mathbb{Z} = \gcd(a, b)\mathbb{Z}$ và $a\mathbb{Z} \cap b\mathbb{Z} = \operatorname{lcm}(a, b)\mathbb{Z}$.
 </Hint>
 
 <Solution>
-1. **Tìm tổng $H + N$ và giao $H \cap N$:**
-   Theo tính chất nhóm con của $\mathbb{Z}$ (Chương 2):
+**1. Tìm tổng $H + N$ và giao $H \cap N$**
+
+Theo tính chất nhóm con của $\mathbb{Z}$ (Chương 2):
    - Tổng: $H + N = 12\mathbb{Z} + 18\mathbb{Z} = \gcd(12, 18)\mathbb{Z} = 6\mathbb{Z}$.
    - Giao: $H \cap N = 12\mathbb{Z} \cap 18\mathbb{Z} = \operatorname{lcm}(12, 18)\mathbb{Z} = 36\mathbb{Z}$.
 
-2. **Áp dụng Định lý đẳng cấu thứ hai:**
-   Vì $(\mathbb{Z}, +)$ là nhóm abel, mọi nhóm con đều chuẩn tắc.
+**2. Áp dụng Định lý đẳng cấu thứ hai**
+
+Vì $(\mathbb{Z}, +)$ là nhóm abel, mọi nhóm con đều chuẩn tắc.
    Theo Định lý đẳng cấu thứ hai (<Ref to="thm-c5-b3-dang-cau-thu-hai" />) với phép toán cộng:
    $$
    H / (H \cap N) \cong (H + N) / N.
@@ -268,22 +267,19 @@ Trong $\mathbb{Z}$, $a\mathbb{Z} + b\mathbb{Z} = \gcd(a, b)\mathbb{Z}$ và $a\ma
    $$
    Hệ thức số học quen thuộc $\gcd(a, b) \cdot \operatorname{lcm}(a, b) = ab$ chính là biểu hiện cấp lực lượng của Định lý đẳng cấu thứ hai!
 
-3. **Áp dụng Định lý đẳng cấu thứ ba:**
-   Vì $24\mathbb{Z} \subseteq 6\mathbb{Z} \subseteq \mathbb{Z}$, áp dụng Định lý đẳng cấu thứ ba (<Ref to="thm-c5-b3-dang-cau-thu-ba" />):
+**3. Áp dụng Định lý đẳng cấu thứ ba**
+
+Vì $24\mathbb{Z} \subseteq 6\mathbb{Z} \subseteq \mathbb{Z}$, áp dụng Định lý đẳng cấu thứ ba (<Ref to="thm-c5-b3-dang-cau-thu-ba" />):
    $$
    (\mathbb{Z}/24\mathbb{Z}) / (6\mathbb{Z}/24\mathbb{Z}) \cong \mathbb{Z}/6\mathbb{Z}.
    $$
    Về mặt số phần tử: $|\mathbb{Z}/24\mathbb{Z}| = 24$, $|6\mathbb{Z}/24\mathbb{Z}| = 24 / 6 = 4$. Cấp của nhóm thương bên trái là $24 / 4 = 6$, đúng bằng cấp $|\mathbb{Z}/6\mathbb{Z}| = 6$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Tính đúng $H + N = 6\mathbb{Z}$ và $H \cap N = 36\mathbb{Z}$: `0,30 đ`
-- Thiết lập đẳng cấu $12\mathbb{Z}/36\mathbb{Z} \cong 6\mathbb{Z}/18\mathbb{Z}$ và suy ra $\gcd \cdot \operatorname{lcm} = ab$: `0,40 đ`
-- Áp dụng đúng Định lý đẳng cấu III cho $(\mathbb{Z}_{24})/(6\mathbb{Z}_{24}) \cong \mathbb{Z}_6$: `0,30 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b3-b1"
-  title="[Nhóm B · Mã CTDS-C5-B3-B01] Tìm toàn bộ nhóm con của nhóm thương bằng Định lý tương ứng"
+  title="Tìm toàn bộ nhóm con của nhóm thương bằng Định lý tương ứng" group="Nhóm B"
   source="gt-ctds-hvk-2026"
   page="93"
   original="Bài 5.20"
@@ -292,15 +288,16 @@ Xét nhóm cyclic $G = \mathbb{Z}/36\mathbb{Z}$ và nhóm con $N = \langle [12]_
 1. Tìm tất cả các nhóm con $H$ của $G$ chứa nhóm con $N$ ($N \subseteq H \le G$).
 2. Áp dụng Định lý tương ứng để liệt kê toàn bộ các nhóm con của nhóm thương $G/N$.
 3. Nhóm thương $G/N$ đẳng cấu với mô hình nhóm quen thuộc nào?
-</Exercise>
+
 
 <Hint>
 Mọi nhóm con của $\mathbb{Z}/36\mathbb{Z}$ có dạng $\langle [d] \rangle$ với $d \mid 36$. Điều kiện $N \subseteq H$ tương đương với $[12] \in \langle [d] \rangle \iff d \mid 12$.
 </Hint>
 
 <Solution>
-1. **Tìm các nhóm con $H \le \mathbb{Z}/36\mathbb{Z}$ chứa $N = \langle [12] \rangle$:**
-   Mỗi nhóm con của nhóm cyclic $G = \mathbb{Z}/36\mathbb{Z}$ được sinh bởi một ước dương $d$ của 36:
+**1. Tìm các nhóm con $H \le \mathbb{Z}/36\mathbb{Z}$ chứa $N = \langle [12] \rangle$**
+
+Mỗi nhóm con của nhóm cyclic $G = \mathbb{Z}/36\mathbb{Z}$ được sinh bởi một ước dương $d$ của 36:
    $$
    H_d = \langle [d]_{36} \rangle, \quad \text{với } d \in \{1, 2, 3, 4, 6, 9, 12, 18, 36\}.
    $$
@@ -320,8 +317,9 @@ Mọi nhóm con của $\mathbb{Z}/36\mathbb{Z}$ có dạng $\langle [d] \rangle$
    - $H_6 = \langle [6] \rangle$.
    - $H_{12} = \langle [12] \rangle = N$.
 
-2. **Liệt kê các nhóm con của nhóm thương $G/N$:**
-   Theo Định lý tương ứng (<Ref to="thm-c5-b3-dinh-ly-tuong-ung" />), các nhóm con của $G/N$ tương ứng song ánh 1-1 với 6 nhóm con $H_d$ ở câu 1.
+**2. Liệt kê các nhóm con của nhóm thương $G/N$**
+
+Theo Định lý tương ứng (<Ref to="thm-c5-b3-dinh-ly-tuong-ung" />), các nhóm con của $G/N$ tương ứng song ánh 1-1 với 6 nhóm con $H_d$ ở câu 1.
    Do đó, nhóm thương $G/N$ có đúng 6 nhóm con là:
    - $\bar{H}_1 = H_1/N = (G/N)$ (toàn thể nhóm thương).
    - $\bar{H}_2 = H_2/N = \langle [2] + N \rangle$.
@@ -330,22 +328,19 @@ Mọi nhóm con của $\mathbb{Z}/36\mathbb{Z}$ có dạng $\langle [d] \rangle$
    - $\bar{H}_6 = H_6/N = \langle [6] + N \rangle$.
    - $\bar{H}_{12} = N/N = \{e_{G/N}\}$ (nhóm con tầm thường).
 
-3. **Mô hình đẳng cấu của $G/N$:**
-   Theo Định lý đẳng cấu thứ ba, vì $N = 12\mathbb{Z}/36\mathbb{Z}$ và $G = \mathbb{Z}/36\mathbb{Z}$:
+**3. Mô hình đẳng cấu của $G/N$**
+
+Theo Định lý đẳng cấu thứ ba, vì $N = 12\mathbb{Z}/36\mathbb{Z}$ và $G = \mathbb{Z}/36\mathbb{Z}$:
    $$
    G/N = (\mathbb{Z}/36\mathbb{Z}) / (12\mathbb{Z}/36\mathbb{Z}) \cong \mathbb{Z}/12\mathbb{Z}.
    $$
    Nhóm thương $G/N$ là một nhóm cyclic cấp 12, đẳng cấu với $\mathbb{Z}/12\mathbb{Z}$. Mạng lưới 6 nhóm con của nó tương ứng chính xác với 6 ước của 12.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Xác định đúng điều kiện $d \mid 12$ và liệt kê đủ 6 nhóm con $H_d$: `0,40 đ`
-- Vận dụng Định lý tương ứng suy ra đúng 6 nhóm con của $G/N$: `0,35 đ`
-- Nhận diện đúng $G/N \cong \mathbb{Z}/12\mathbb{Z}$ qua Định lý đẳng cấu III: `0,25 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b3-c1"
-  title="[Nhóm C · Mã CTDS-C5-B3-C01] Bác bỏ đẳng cấu nhóm bằng phương pháp bất biến đại số"
+  title="Bác bỏ đẳng cấu nhóm bằng phương pháp bất biến đại số" group="Nhóm C"
   source="gt-ctds-hvk-2026"
   page="94"
   original="Bài 5.23, 5.26"
@@ -354,27 +349,29 @@ Chứng minh rằng các cặp nhóm sau đây không đẳng cấu với nhau:
 1. $(\mathbb{R}, +)$ và $(\mathbb{R}^\times, \cdot)$.
 2. Nhóm đối xứng $S_4$ và nhóm nhị diện $D_{24}$.
 3. Nhóm nhân $U(8) = (\mathbb{Z}/8\mathbb{Z})^\times$ và $U(10) = (\mathbb{Z}/10\mathbb{Z})^\times$.
-</Exercise>
+
 
 <Hint>
 Tìm các bất biến đẳng cấu: số phần tử cấp hữu hạn, cấp lớn nhất của phần tử, hoặc tính cyclic.
 </Hint>
 
 <Solution>
-1. **Chứng minh $(\mathbb{R}, +) \not\cong (\mathbb{R}^\times, \cdot)$:**
-   Giả sử phản chứng tồn tại đẳng cấu nhóm $\varphi: (\mathbb{R}, +) \to (\mathbb{R}^\times, \cdot)$.
+**1. Chứng minh $(\mathbb{R}, +) \not\cong (\mathbb{R}^\times, \cdot)$**
+
+Giả sử phản chứng tồn tại đẳng cấu nhóm $\varphi: (\mathbb{R}, +) \to (\mathbb{R}^\times, \cdot)$.
    Trong nhóm nhân $(\mathbb{R}^\times, \cdot)$, phần tử $-1$ có cấp 2 vì $(-1)^2 = 1$ và $-1 \ne 1$.
    Vì $\varphi$ là song ánh, tồn tại số thực $x \in \mathbb{R}$ sao cho $\varphi(x) = -1$.
    Theo Mệnh đề 5.1.2, đẳng cấu bảo toàn cấp phần tử, do đó cấp của $x$ trong $(\mathbb{R}, +)$ phải bằng 2:
    $$
    2 \cdot x = 0 \iff x + x = 0.
    $$
-   Trong trường số thực, phương trình $2x = 0$ chỉ có nghiệm duy nhất là $x = 0$.
+   Trong tập hợp số thực $\mathbb{R}$, phương trình $2x = 0$ chỉ có nghiệm duy nhất là $x = 0$.
    Nhưng nếu $x = 0$, ta có $\varphi(0) = 1 \ne -1$, mâu thuẫn!
    Vậy không thể tồn tại đẳng cấu giữa $(\mathbb{R}, +)$ và $(\mathbb{R}^\times, \cdot)$.
 
-2. **Chứng minh $S_4 \not\cong D_{24}$:**
-   Cả hai nhóm đều có cấp bằng 24: $|S_4| = 4! = 24$ và $|D_{24}| = 2 \cdot 12 = 24$.
+**2. Chứng minh $S_4 \not\cong D_{24}$**
+
+Cả hai nhóm đều có cấp bằng 24: $|S_4| = 4! = 24$ và $|D_{24}| = 2 \cdot 12 = 24$.
    Cả hai nhóm đều không giao hoán.
    Tuy nhiên:
    - Trong nhóm nhị diện $D_{24}$, phép quay cơ bản $r$ có cấp bằng 12 ($\operatorname{ord}(r) = 12$).
@@ -382,8 +379,9 @@ Tìm các bất biến đẳng cấu: số phần tử cấp hữu hạn, cấp 
    Cấp lớn nhất của một phần tử trong $S_4$ chỉ bằng 4. Nhóm $S_4$ **không có bất kỳ phần tử nào có cấp bằng 12**.
    Vì phổ cấp phần tử là một bất biến đẳng cấu, ta kết luận $S_4 \not\cong D_{24}$.
 
-3. **Chứng minh $U(8) \not\cong U(10)$:**
-   Ta liệt kê các phần tử của từng nhóm:
+**3. Chứng minh $U(8) \not\cong U(10)$**
+
+Ta liệt kê các phần tử của từng nhóm:
    - $U(8) = \{[1], [3], [5], [7]\}$ có cấp $|U(8)| = \varphi(8) = 4$. Tính bình phương:
      $3^2 = 9 \equiv 1 \pmod 8$; $5^2 = 25 \equiv 1 \pmod 8$; $7^2 = 49 \equiv 1 \pmod 8$.
      Mọi phần tử khác đơn vị trong $U(8)$ đều có cấp 2. Do đó $U(8) \cong V_4$ (không cyclic).
@@ -392,16 +390,12 @@ Tìm các bất biến đẳng cấu: số phần tử cấp hữu hạn, cấp 
      Phần tử $[3]$ có cấp đúng bằng 4. Do đó $U(10) = \langle [3] \rangle \cong \mathbb{Z}/4\mathbb{Z}$ là nhóm cyclic.
    
    Vì một nhóm là cyclic còn nhóm kia không cyclic, ta kết luận $U(8) \not\cong U(10)$.
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $(\mathbb{R}, +) \not\cong (\mathbb{R}^\times, \cdot)$ qua phần tử cấp 2: `0,35 đ`
-- Chứng minh $S_4 \not\cong D_{24}$ qua sự tồn tại của phần tử cấp 12: `0,35 đ`
-- Chứng minh $U(8) \not\cong U(10)$ qua tính cyclic: `0,30 đ`
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-c5-b3-d1"
-  title="[Nhóm D · Mã CTDS-C5-B3-D01] Định lý nhận diện Tích trực tiếp trong"
+  title="Định lý nhận diện Tích trực tiếp trong" group="Nhóm D"
   source="gt-ctds-hvk-2026"
   page="95"
   original="Bài 5.39"
@@ -414,15 +408,16 @@ Cho $(G, \cdot)$ là một nhóm, $H$ và $K$ là hai nhóm con của $G$ thỏa
 Hãy chứng minh rằng:
 - Với mọi $h \in H$ và mọi $k \in K$, ta có $hk = kh$ (phần tử của $H$ và $K$ giao hoán với nhau).
 - Ánh xạ $\theta: H \times K \to G$ xác định bởi $\theta(h, k) = hk$ là một đẳng cấu nhóm, suy ra $G \cong H \times K$.
-</Exercise>
+
 
 <Hint>
 Xét giao hoán tử $x = hkh^{-1}k^{-1}$. Phân tích $x = (hkh^{-1})k^{-1} \in K$ và $x = h(kh^{-1}k^{-1}) \in H$ để suy ra $x \in H \cap K = \{e\}$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $hk = kh$ với mọi $h \in H, k \in K$:**
-   Xét phần tử giao hoán tử:
+**1. Chứng minh $hk = kh$ với mọi $h \in H, k \in K$**
+
+Xét phần tử giao hoán tử:
    $$
    x = h k h^{-1} k^{-1}.
    $$
@@ -444,8 +439,9 @@ Xét giao hoán tử $x = hkh^{-1}k^{-1}$. Phân tích $x = (hkh^{-1})k^{-1} \in
    $$
    Vậy mọi phần tử của $H$ đều giao hoán với mọi phần tử của $K$.
 
-2. **Chứng minh $\theta: H \times K \to G$ là một đẳng cấu nhóm:**
-   Ánh xạ $\theta(h, k) = hk$.
+**2. Chứng minh $\theta: H \times K \to G$ là một đẳng cấu nhóm**
+
+Ánh xạ $\theta(h, k) = hk$.
    - **Đồng cấu:** Lấy $(h_1, k_1), (h_2, k_2) \in H \times K$. Sử dụng tính giao hoán $k_1 h_2 = h_2 k_1$ vừa chứng minh:
      $$
      \theta((h_1, k_1)(h_2, k_2)) = \theta(h_1 h_2, k_1 k_2) = (h_1 h_2)(k_1 k_2) = h_1 (h_2 k_1) k_2 = h_1 (k_1 h_2) k_2 = (h_1 k_1)(h_2 k_2) = \theta(h_1, k_1)\theta(h_2, k_2).
@@ -463,13 +459,8 @@ Xét giao hoán tử $x = hkh^{-1}k^{-1}$. Phân tích $x = (hkh^{-1})k^{-1} \in
 
 Vì $\theta$ vừa là đồng cấu, vừa là đơn ánh và toàn ánh, $\theta$ là một đẳng cấu nhóm.
 Ta kết luận $G \cong H \times K$ (gọi là tích trực tiếp trong của $H$ và $K$).
-
-**Tiêu chí đánh giá (Rubric 1,00 điểm):**
-- Chứng minh $hkh^{-1}k^{-1} \in H \cap K = \{e\} \implies hk = kh$: `0,40 đ`
-- Chứng minh $\theta$ là đồng cấu dựa vào tính giao hoán: `0,25 đ`
-- Chứng minh $\theta$ là toàn ánh từ $G = HK$: `0,15 đ`
-- Chứng minh $\ker\theta = \{(e, e)\} \implies \theta$ đơn ánh và kết luận $G \cong H \times K$: `0,20 đ`
 </Solution>
+</Exercise>
 
 ---
 

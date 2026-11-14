@@ -17,9 +17,6 @@ sources:
     pages: '98-101'
     sections: 'Mục 6.1, 6.2, 6.3'
     note: 'Định nghĩa 6.1, Định lý 6.4 (quy tắc tính toán cơ bản), Mệnh đề 6.6 (nhóm các đơn vị)'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '145-155'
-    sections: 'Chương 6, Mục 6.1'
 status: published
 version: 0.1.0
 authoring:
@@ -262,7 +259,7 @@ Vậy $(R^\times, \cdot)$ là một nhóm.
 <Example id="ex-c6-b1-nhom-kha-nghich-kinh-dien" title="Nhóm khả nghịch của các vành quen thuộc">
 1. **Vành số nguyên $\mathbb{Z}$:** Phương trình $uv = 1$ trong $\mathbb{Z}$ chỉ có đúng hai nghiệm nguyên là $u = 1$ hoặc $u = -1$. Do đó:
    $$
-   \mathbb{Z}^\times = \{1, -1\} \cong \mathbb{Z}_2.
+   \mathbb{Z}^\times = \{1, -1\} \cong \mathbb{Z}/2\mathbb{Z}.
    $$
 2. **Vành các số hữu tỉ $\mathbb{Q}$ và số thực $\mathbb{R}$:** Mọi phần tử khác không đều có nghịch đảo thông thường. Do đó:
    $$
@@ -283,44 +280,48 @@ Vậy $(R^\times, \cdot)$ là một nhóm.
 
 ## 5. Hệ thống bài tập 4 phân lớp có lời giải
 
-<Exercise id="ex-c6-b1-nhom-a" title="Bài tập 6.1 (Nhóm A): Kiểm tra tiên đề và tính khả nghịch trong Z/10Z">
+<Exercise id="ex-c6-b1-nhom-a" title="Kiểm tra tiên đề và tính khả nghịch trong Z/10Z" group="Nhóm A">
 Trong vành các lớp thặng dư $\mathbb{Z}/10\mathbb{Z}$:
 1. Liệt kê tất cả các phần tử của nhóm khả nghịch $(\mathbb{Z}/10\mathbb{Z})^\times$.
 2. Tìm phần tử nghịch đảo của từng phần tử trong nhóm này.
-3. Nhóm $(\mathbb{Z}/10\mathbb{Z})^\times$ đẳng cấu với nhóm nào trong số $\mathbb{Z}_4$ hay $\mathbb{Z}_2 \times \mathbb{Z}_2$?
-</Exercise>
+3. Nhóm $(\mathbb{Z}/10\mathbb{Z})^\times$ đẳng cấu với nhóm nào trong số $\mathbb{Z}/4\mathbb{Z}$ hay $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$?
+
 
 <Hint>
 Lớp $[a]_{10}$ khả nghịch khi và chỉ khi $\gcd(a, 10) = 1$. Tính cấp của từng phần tử trong nhóm nhân để xác định tính cyclic.
 </Hint>
 
 <Solution>
-1. **Liệt kê các phần tử khả nghịch:**
-   Các số nguyên dương $a < 10$ thỏa mãn $\gcd(a, 10) = 1$ là $1, 3, 7, 9$. Do đó:
+**1. Liệt kê các phần tử khả nghịch**
+
+Các số nguyên dương $a < 10$ thỏa mãn $\gcd(a, 10) = 1$ là $1, 3, 7, 9$. Do đó:
    $$
    (\mathbb{Z}/10\mathbb{Z})^\times = \{[1], [3], [7], [9]\}.
    $$
    Số phần tử của nhóm là $\varphi(10) = 4$.
 
-2. **Tìm nghịch đảo của từng phần tử:**
-   - $[1] \cdot [1] = [1] \implies [1]^{-1} = [1]$.
+**2. Tìm nghịch đảo của từng phần tử**
+
+ - $[1] \cdot [1] = [1] \implies [1]^{-1} = [1]$.
    - $[3] \cdot [7] = [21] = [1] \implies [3]^{-1} = [7]$ và $[7]^{-1} = [3]$.
    - $[9] \cdot [9] = [81] = [1] \implies [9]^{-1} = [9]$.
 
-3. **Xác định cấu trúc nhóm:**
-   Tính lũy thừa của phần tử $[3]$ trong nhóm nhân:
+**3. Xác định cấu trúc nhóm**
+
+Tính lũy thừa của phần tử $[3]$ trong nhóm nhân:
    $$
    [3]^1 = [3], \quad [3]^2 = [9], \quad [3]^3 = [27] = [7], \quad [3]^4 = [1].
    $$
    Phần tử $[3]$ có cấp bằng $4$. Một nhóm hữu hạn cấp 4 chứa phần tử cấp 4 thì bắt buộc phải là một **nhóm cyclic**:
    $$
-   (\mathbb{Z}/10\mathbb{Z})^\times = \langle [3] \rangle \cong \mathbb{Z}_4.
+   (\mathbb{Z}/10\mathbb{Z})^\times = \langle [3] \rangle \cong \mathbb{Z}/4\mathbb{Z}.
    $$
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c6-b1-nhom-b" title="Bài tập 6.2 (Nhóm B): Vành các số nguyên Gauss Z[i] và nhóm đơn vị">
+<Exercise id="ex-c6-b1-nhom-b" title="Vành các số nguyên Gauss Z[i] và nhóm đơn vị" group="Nhóm B">
 Xét tập hợp các số nguyên Gauss:
 $$
 \mathbb{Z}[i] = \{a + bi \mid a, b \in \mathbb{Z}, \; i^2 = -1\}.
@@ -328,15 +329,16 @@ $$
 1. Chứng minh $\mathbb{Z}[i]$ là một vành giao hoán có đơn vị với phép cộng và nhân số phức thông thường.
 2. Với mỗi $z = a + bi \in \mathbb{Z}[i]$, định nghĩa chuẩn $N(z) = |z|^2 = a^2 + b^2 \in \mathbb{Z}_{\ge 0}$. Chứng minh $N(z_1 z_2) = N(z_1) N(z_2)$.
 3. Chứng minh $z \in (\mathbb{Z}[i])^\times \iff N(z) = 1$, từ đó tìm tất cả các phần tử khả nghịch của $\mathbb{Z}[i]$.
-</Exercise>
+
 
 <Hint>
 Dùng tính chất nhân của chuẩn $N(z_1 z_2) = N(z_1)N(z_2)$. Nếu $z$ khả nghịch thì $z w = 1$, suy ra $N(z)N(w) = N(1) = 1$ trong $\mathbb{Z}$.
 </Hint>
 
 <Solution>
-1. **Chứng minh $\mathbb{Z}[i]$ là vành giao hoán có đơn vị:**
-   - Với mọi $z_1 = a_1 + b_1 i$ và $z_2 = a_2 + b_2 i \in \mathbb{Z}[i]$:
+**1. Chứng minh $\mathbb{Z}[i]$ là vành giao hoán có đơn vị**
+
+ - Với mọi $z_1 = a_1 + b_1 i$ và $z_2 = a_2 + b_2 i \in \mathbb{Z}[i]$:
      $$
      z_1 - z_2 = (a_1 - a_2) + (b_1 - b_2)i \in \mathbb{Z}[i] \quad (\text{vì } a_1 - a_2, b_1 - b_2 \in \mathbb{Z}),
      $$
@@ -346,14 +348,16 @@ Dùng tính chất nhân của chuẩn $N(z_1 z_2) = N(z_1)N(z_2)$. Nếu $z$ kh
    - Tập $\mathbb{Z}[i]$ khác rỗng (chứa $0 = 0 + 0i$), đóng đối với phép trừ và phép nhân, đồng thời kế thừa tính kết hợp, giao hoán và luật phân phối từ trường số phức $\mathbb{C}$.
    - Phần tử $1 = 1 + 0i \in \mathbb{Z}[i]$ là phần tử đơn vị. Do đó $\mathbb{Z}[i]$ là vành giao hoán có đơn vị.
 
-2. **Tính chất nhân của chuẩn:**
-   Với $z_1, z_2 \in \mathbb{C}$, chuẩn $N(z) = z \bar{z} = |z|^2$. Ta có:
+**2. Tính chất nhân của chuẩn**
+
+Với $z_1, z_2 \in \mathbb{C}$, chuẩn $N(z) = z \bar{z} = |z|^2$. Ta có:
    $$
    N(z_1 z_2) = (z_1 z_2) \overline{(z_1 z_2)} = (z_1 \bar{z}_1)(z_2 \bar{z}_2) = N(z_1) N(z_2).
    $$
 
-3. **Xác định nhóm khả nghịch:**
-   - Giả sử $z \in (\mathbb{Z}[i])^\times$. Tồn tại $w \in \mathbb{Z}[i]$ sao cho $zw = 1$. Lấy chuẩn hai vế:
+**3. Xác định nhóm khả nghịch**
+
+ - Giả sử $z \in (\mathbb{Z}[i])^\times$. Tồn tại $w \in \mathbb{Z}[i]$ sao cho $zw = 1$. Lấy chuẩn hai vế:
      $$
      N(z) N(w) = N(zw) = N(1) = 1.
      $$
@@ -364,20 +368,21 @@ Dùng tính chất nhân của chuẩn $N(z_1 z_2) = N(z_1)N(z_2)$. Nếu $z$ kh
      - $a = 0, b = \pm 1 \implies z = \pm i$.
    - Vậy nhóm các phần tử khả nghịch của $\mathbb{Z}[i]$ là:
      $$
-     (\mathbb{Z}[i])^\times = \{1, -1, i, -i\} = \langle i \rangle \cong \mathbb{Z}_4.
+     (\mathbb{Z}[i])^\times = \{1, -1, i, -i\} = \langle i \rangle \cong \mathbb{Z}/4\mathbb{Z}.
      $$
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c6-b1-nhom-c" title="Bài tập 6.3 (Nhóm C): Phân tích công thức khai triển đa thức trong vành không giao hoán">
+<Exercise id="ex-c6-b1-nhom-c" title="Phân tích công thức khai triển đa thức trong vành không giao hoán" group="Nhóm C">
 Cho $R$ là một vành bất kỳ và $a, b \in R$.
 1. Chứng minh bằng quy nạp rằng nếu $ab = ba$ thì với mọi số nguyên dương $n \ge 1$:
    $$
    (a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k.
    $$
 2. Xây dựng một ví dụ trong $M_2(\mathbb{R})$ chỉ ra hai ma trận $A, B$ sao cho $(A + B)^3 \neq A^3 + 3A^2 B + 3AB^2 + B^3$.
-</Exercise>
+
 
 <Hint>
 1. Áp dụng công thức truy hồi tổ hợp $\binom{n}{k-1} + \binom{n}{k} = \binom{n+1}{k}$ và tính giao hoán $ab=ba$ để đổi vị trí thừa số $a$ và $b$.
@@ -385,8 +390,9 @@ Cho $R$ là một vành bất kỳ và $a, b \in R$.
 </Hint>
 
 <Solution>
-1. **Chứng minh công thức nhị thức Newton khi $ab = ba$:**
-   - Với $n = 1$: $(a + b)^1 = \binom{1}{0} a + \binom{1}{1} b = a + b$, công thức đúng.
+**1. Chứng minh công thức nhị thức Newton khi $ab = ba$**
+
+ - Với $n = 1$: $(a + b)^1 = \binom{1}{0} a + \binom{1}{1} b = a + b$, công thức đúng.
    - Giả sử công thức đúng đến $n \ge 1$: $(a + b)^n = \sum_{k=0}^n \binom{n}{k} a^{n-k} b^k$.
    - Khi đó:
      $$
@@ -402,8 +408,9 @@ Cho $R$ là một vành bất kỳ và $a, b \in R$.
      $$
    - Kết hợp với số hạng đầu $a^{n+1}$ và số hạng cuối $b^{n+1}$, ta thu được công thức đúng cho $n+1$. Theo nguyên lý quy nạp, công thức đúng với mọi $n \ge 1$.
 
-2. **Ví dụ phản chứng trong $M_2(\mathbb{R})$:**
-   Chọn $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ và $B = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$.
+**2. Ví dụ phản chứng trong $M_2(\mathbb{R})$**
+
+Chọn $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ và $B = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$.
    Ta có:
    $$
    AB = \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix}, \quad BA = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = A.
@@ -424,10 +431,11 @@ Cho $R$ là một vành bất kỳ và $a, b \in R$.
    $$
    Rõ ràng $\begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \neq \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$. Công thức nhị thức Newton hoàn toàn thất bại khi các phần tử không giao hoán.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c6-b1-nhom-d" title="Bài tập 6.4 (Nhóm D): Cấu trúc nhóm khả nghịch của vành tích trực tiếp">
+<Exercise id="ex-c6-b1-nhom-d" title="Cấu trúc nhóm khả nghịch của vành tích trực tiếp" group="Nhóm D">
 Cho $R$ và $S$ là hai vành có phần tử đơn vị lần lượt là $1_R$ và $1_S$. Trên tập tích Descartes $R \times S$, ta định nghĩa hai phép toán cộng và nhân theo từng tọa độ:
 $$
 (r_1, s_1) + (r_2, s_2) = (r_1 + r_2, s_1 + s_2), \quad (r_1, s_1) \cdot (r_2, s_2) = (r_1 r_2, s_1 s_2).
@@ -439,15 +447,16 @@ $$
    (R \times S)^\times \cong R^\times \times S^\times.
    $$
 4. Áp dụng: Tìm cấp và cấu trúc của nhóm $((\mathbb{Z}/3\mathbb{Z}) \times (\mathbb{Z}/5\mathbb{Z}))^\times$.
-</Exercise>
+
 
 <Hint>
 Phương trình $(u, v)(x, y) = (1_R, 1_S)$ tương đương với hệ hai phương trình độc lập $ux = 1_R$ và $vy = 1_S$.
 </Hint>
 
 <Solution>
-1. **Kiểm tra tiên đề vành cho $R \times S$:**
-   - Phép cộng theo tọa độ biến $R \times S$ thành tích trực tiếp của hai nhóm cộng Abel $(R, +)$ và $(S, +)$, do đó $(R \times S, +)$ là một nhóm Abel có phần tử không là $0_{R \times S} = (0_R, 0_S)$.
+**1. Kiểm tra tiên đề vành cho $R \times S$**
+
+ - Phép cộng theo tọa độ biến $R \times S$ thành tích trực tiếp của hai nhóm cộng Abel $(R, +)$ và $(S, +)$, do đó $(R \times S, +)$ là một nhóm Abel có phần tử không là $0_{R \times S} = (0_R, 0_S)$.
    - Phép nhân có tính kết hợp vì từng thành phần $r_i$ và $s_i$ kết hợp trong $R$ và $S$.
    - Luật phân phối thỏa mãn trên từng tọa độ:
      $$
@@ -455,8 +464,9 @@ Phương trình $(u, v)(x, y) = (1_R, 1_S)$ tương đương với hệ hai phư
      $$
    - Phần tử $(1_R, 1_S)$ thỏa mãn $(r, s)(1_R, 1_S) = (r \cdot 1_R, s \cdot 1_S) = (r, s)$, nên đây là phần tử đơn vị của $R \times S$.
 
-2. **Tiêu chuẩn khả nghịch:**
-   - Phần tử $(u, v) \in R \times S$ khả nghịch khi và chỉ khi tồn tại $(x, y) \in R \times S$ sao cho:
+**2. Tiêu chuẩn khả nghịch**
+
+ - Phần tử $(u, v) \in R \times S$ khả nghịch khi và chỉ khi tồn tại $(x, y) \in R \times S$ sao cho:
      $$
      (u, v)(x, y) = (ux, vy) = (1_R, 1_S) \quad \text{và} \quad (x, y)(u, v) = (xu, yv) = (1_R, 1_S).
      $$
@@ -466,24 +476,27 @@ Phương trình $(u, v)(x, y) = (1_R, 1_S)$ tương đương với hệ hai phư
      $$
    - Khi đó nghịch đảo nhân là $(u, v)^{-1} = (u^{-1}, v^{-1})$.
 
-3. **Thiết lập đẳng cấu nhóm:**
-   Từ chứng minh trên, tập hợp $(R \times S)^\times$ chính xác bằng tập tích Descartes $R^\times \times S^\times$.
+**3. Thiết lập đẳng cấu nhóm**
+
+Từ chứng minh trên, tập hợp $(R \times S)^\times$ chính xác bằng tập tích Descartes $R^\times \times S^\times$.
    Ánh xạ đồng nhất $\theta: (R \times S)^\times \to R^\times \times S^\times, (u, v) \mapsto (u, v)$ bảo toàn phép nhân:
    $$
    \theta((u_1, v_1)(u_2, v_2)) = \theta(u_1 u_2, v_1 v_2) = (u_1 u_2, v_1 v_2) = (u_1, v_1)(u_2, v_2) = \theta(u_1, v_1)\theta(u_2, v_2).
    $$
    Vì $\theta$ là song ánh, ta có đẳng cấu nhóm $(R \times S)^\times \cong R^\times \times S^\times$.
 
-4. **Áp dụng tính toán:**
-   Với $R = \mathbb{Z}/3\mathbb{Z}$ và $S = \mathbb{Z}/5\mathbb{Z}$:
-   - $R^\times = (\mathbb{Z}/3\mathbb{Z})^\times = \{[1], [2]\} \cong \mathbb{Z}_2$.
-   - $S^\times = (\mathbb{Z}/5\mathbb{Z})^\times = \{[1], [2], [3], [4]\} \cong \mathbb{Z}_4$.
+**4. Áp dụng tính toán**
+
+Với $R = \mathbb{Z}/3\mathbb{Z}$ và $S = \mathbb{Z}/5\mathbb{Z}$:
+   - $R^\times = (\mathbb{Z}/3\mathbb{Z})^\times = \{[1], [2]\} \cong \mathbb{Z}/2\mathbb{Z}$.
+   - $S^\times = (\mathbb{Z}/5\mathbb{Z})^\times = \{[1], [2], [3], [4]\} \cong \mathbb{Z}/4\mathbb{Z}$.
    Do đó:
    $$
-   ((\mathbb{Z}/3\mathbb{Z}) \times (\mathbb{Z}/5\mathbb{Z}))^\times \cong \mathbb{Z}_2 \times \mathbb{Z}_4.
+   ((\mathbb{Z}/3\mathbb{Z}) \times (\mathbb{Z}/5\mathbb{Z}))^\times \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/4\mathbb{Z}.
    $$
    Cấp của nhóm là $2 \times 4 = 8$.
 </Solution>
+</Exercise>
 
 ---
 

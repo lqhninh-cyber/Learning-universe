@@ -19,9 +19,6 @@ sources:
     pages: '102-104'
     sections: 'Mục 6.4, 6.5'
     note: 'Định lý 6.8 (luật giản ước), Định nghĩa 6.10 (miền nguyên, vành chia, trường), Định lý 6.12 (miền nguyên hữu hạn là trường), Hệ quả 6.13'
-  - source: hai-deo-dai-so-hien-dai-2013
-    pages: '156-168'
-    sections: 'Chương 6, Mục 6.2'
 status: published
 version: 0.1.0
 authoring:
@@ -236,20 +233,21 @@ Nói cách khác, trong các cấu trúc đại số hữu hạn có hai phép t
 
 ## 4. Hệ thống bài tập 4 phân lớp có lời giải
 
-<Exercise id="ex-c6-b2-nhom-a" title="Bài tập 6.5 (Nhóm A): Phân loại ước của không và phần tử khả nghịch trong Z/15Z">
+<Exercise id="ex-c6-b2-nhom-a" title="Phân loại ước của không và phần tử khả nghịch trong Z/15Z" group="Nhóm A">
 Trong vành các lớp thặng dư $\mathbb{Z}/15\mathbb{Z}$:
 1. Liệt kê tất cả các ước của không của vành.
 2. Liệt kê tất cả các phần tử khả nghịch của vành và chỉ rõ nghịch đảo của $[2], [4], [7]$.
 3. Kiểm tra xem có phần tử nào khác $[0]$ không thuộc vào cả hai tập trên hay không.
-</Exercise>
+
 
 <Hint>
 Số nguyên $a \in \{1, 2, \dots, 14\}$ nguyên tố cùng nhau với $15$ cho phần tử khả nghịch; có ước chung lớn hơn $1$ với $15$ cho ước của không.
 </Hint>
 
 <Solution>
-1. **Các ước của không trong $\mathbb{Z}/15\mathbb{Z}$:**
-   Đó là các lớp $[a]_{15} \neq [0]$ sao cho $\gcd(a, 15) > 1$. Vì $15 = 3 \times 5$, các phần tử này gồm:
+**1. Các ước của không trong $\mathbb{Z}/15\mathbb{Z}$**
+
+Đó là các lớp $[a]_{15} \neq [0]$ sao cho $\gcd(a, 15) > 1$. Vì $15 = 3 \times 5$, các phần tử này gồm:
    - Các bội của $3$ (khác $0$ mod $15$): $[3], [6], [9], [12]$.
    - Các bội của $5$ (khác $0$ mod $15$): $[5], [10]$.
    Vậy tập ước của không là:
@@ -258,8 +256,9 @@ Số nguyên $a \in \{1, 2, \dots, 14\}$ nguyên tố cùng nhau với $15$ cho 
    $$
    Ví dụ tích triệt tiêu: $[3][5] = [15] = [0]$, $[6][5] = [30] = [0]$, $[9][5] = [45] = [0]$, $[10][3] = [30] = [0]$.
 
-2. **Các phần tử khả nghịch và nghịch đảo:**
-   Đó là các lớp $[a]_{15}$ với $\gcd(a, 15) = 1$:
+**2. Các phần tử khả nghịch và nghịch đảo**
+
+Đó là các lớp $[a]_{15}$ với $\gcd(a, 15) = 1$:
    $$
    (\mathbb{Z}/15\mathbb{Z})^\times = \{[1], [2], [4], [7], [8], [11], [13], [14]\}.
    $$
@@ -268,30 +267,33 @@ Số nguyên $a \in \{1, 2, \dots, 14\}$ nguyên tố cùng nhau với $15$ cho 
    - Tìm nghịch đảo của $[4]$: $4 \times 4 = 16 \equiv 1 \pmod{15} \implies [4]^{-1} = [4]$.
    - Tìm nghịch đảo của $[7]$: $7 \times 13 = 91 = 6 \times 15 + 1 \equiv 1 \pmod{15} \implies [7]^{-1} = [13]$.
 
-3. **Phân hoạch tập phần tử khác không:**
-   Tổng số phần tử khác không là $14$. Số ước của không là $6$, số phần tử khả nghịch là $8$.
+**3. Phân hoạch tập phần tử khác không**
+
+Tổng số phần tử khác không là $14$. Số ước của không là $6$, số phần tử khả nghịch là $8$.
    Vì $6 + 8 = 14$, tập hợp các phần tử khác không của $\mathbb{Z}/15\mathbb{Z}$ được phân hoạch hoàn toàn thành hai tập rời nhau:
    $$
    (\mathbb{Z}/15\mathbb{Z}) \setminus \{[0]\} = (\mathbb{Z}/15\mathbb{Z})^\times \cup \mathcal{Z}(\mathbb{Z}/15\mathbb{Z}).
    $$
    Không có phần tử khác không nào nằm ngoài hai tập này.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c6-b2-nhom-b" title="Bài tập 6.6 (Nhóm B): Phân loại phần tử trong Z/nZ tổng quát">
+<Exercise id="ex-c6-b2-nhom-b" title="Phân loại phần tử trong Z/nZ tổng quát" group="Nhóm B">
 Cho $n \ge 2$ là một số nguyên dương bất kỳ.
 1. Chứng minh rằng trong vành $\mathbb{Z}/n\mathbb{Z}$, mọi phần tử khác $[0]$ hoặc là phần tử khả nghịch, hoặc là ước của không.
 2. Từ đó chứng minh lại rằng $\mathbb{Z}/n\mathbb{Z}$ không có ước của không khi và chỉ khi $n$ là số nguyên tố.
-</Exercise>
+
 
 <Hint>
 Với mỗi $a \in \{1, 2, \dots, n-1\}$, xét số nguyên $d = \gcd(a, n)$. Phân chia hai trường hợp: $d = 1$ và $d > 1$.
 </Hint>
 
 <Solution>
-1. **Chứng minh tính phân loại đầy đủ:**
-   Lấy tùy ý một lớp $[a] \in \mathbb{Z}/n\mathbb{Z}$ với $[a] \neq [0]$, tức là $a \not\equiv 0 \pmod n$. Đặt $d = \gcd(a, n) \ge 1$.
+**1. Chứng minh tính phân loại đầy đủ**
+
+Lấy tùy ý một lớp $[a] \in \mathbb{Z}/n\mathbb{Z}$ với $[a] \neq [0]$, tức là $a \not\equiv 0 \pmod n$. Đặt $d = \gcd(a, n) \ge 1$.
    - **Trường hợp 1: $d = 1$.**
      Theo đồng nhất thức Bézout, tồn tại các số nguyên $u, v \in \mathbb{Z}$ sao cho $au + nv = 1$.
      Lấy modulo $n$ cả hai vế:
@@ -309,18 +311,20 @@ Với mỗi $a \in \{1, 2, \dots, n-1\}$, xét số nguyên $d = \gcd(a, n)$. Ph
      Như vậy $[a]$ nhân với phần tử khác không $[b]$ cho kết quả bằng $[0]$. Do đó $[a]$ là một ước của không.
    Vì $d = 1$ hoặc $d > 1$ là hai trường hợp vét cạn và xung khắc, mọi phần tử khác $[0]$ của $\mathbb{Z}/n\mathbb{Z}$ hoặc là phần tử khả nghịch, hoặc là ước của không.
 
-2. **Hệ quả về tính nguyên tố:**
-   - $\mathbb{Z}/n\mathbb{Z}$ không có ước của không $\iff$ tập ước của không là rỗng $\iff$ mọi phần tử khác $[0]$ đều có $\gcd(a, n) = 1$ với mọi $1 \le a < n \iff n$ không có ước số thực sự nào lớn hơn $1 \iff n$ là số nguyên tố.
+**2. Hệ quả về tính nguyên tố**
+
+ - $\mathbb{Z}/n\mathbb{Z}$ không có ước của không $\iff$ tập ước của không là rỗng $\iff$ mọi phần tử khác $[0]$ đều có $\gcd(a, n) = 1$ với mọi $1 \le a < n \iff n$ không có ước số thực sự nào lớn hơn $1 \iff n$ là số nguyên tố.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c6-b2-nhom-c" title="Bài tập 6.7 (Nhóm C): Tính chất của phần tử lũy linh và luật giản ước">
+<Exercise id="ex-c6-b2-nhom-c" title="Tính chất của phần tử lũy linh và luật giản ước" group="Nhóm C">
 Cho $R$ là một vành có phần tử đơn vị $1_R$. Một phần tử $a \in R$ được gọi là **lũy linh** (*nilpotent*) nếu tồn tại số nguyên dương $m \ge 1$ sao cho $a^m = 0_R$.
 1. Chứng minh rằng nếu $a \in R$ lũy linh và $a \neq 0_R$ thì $a$ bắt buộc phải là một ước của không.
 2. Chứng minh rằng nếu $a$ là phần tử lũy linh thì $1_R - a$ là một phần tử khả nghịch trong $R$. Hãy chỉ ra công thức tường minh cho $(1_R - a)^{-1}$.
 3. Suy ra rằng trong một miền nguyên, phần tử lũy linh duy nhất là $0_R$.
-</Exercise>
+
 
 <Hint>
 1. Xét số nguyên dương nhỏ nhất $k$ sao cho $a^k = 0$, khi đó $a \cdot a^{k-1} = 0$.
@@ -328,8 +332,9 @@ Cho $R$ là một vành có phần tử đơn vị $1_R$. Một phần tử $a \
 </Hint>
 
 <Solution>
-1. **Chứng minh $a$ là ước của không:**
-   Vì $a$ lũy linh và $a \neq 0_R$, tập hợp các số nguyên dương $k$ sao cho $a^k = 0_R$ là khác rỗng. Theo nguyên lý thứ tự tốt, tồn tại số nguyên dương nhỏ nhất $k \ge 2$ sao cho $a^k = 0_R$ (chú ý $k \ge 2$ vì $a^1 = a \neq 0_R$).
+**1. Chứng minh $a$ là ước của không**
+
+Vì $a$ lũy linh và $a \neq 0_R$, tập hợp các số nguyên dương $k$ sao cho $a^k = 0_R$ là khác rỗng. Theo nguyên lý thứ tự tốt, tồn tại số nguyên dương nhỏ nhất $k \ge 2$ sao cho $a^k = 0_R$ (chú ý $k \ge 2$ vì $a^1 = a \neq 0_R$).
    Đặt $b = a^{k-1}$. Do $k$ là số nguyên dương nhỏ nhất làm triệt tiêu lũy thừa, ta có $b = a^{k-1} \neq 0_R$.
    Khi đó:
    $$
@@ -337,8 +342,9 @@ Cho $R$ là một vành có phần tử đơn vị $1_R$. Một phần tử $a \
    $$
    Vì $a \neq 0_R$ và $b \neq 0_R$ thỏa mãn $ab = 0_R$, suy ra $a$ là một ước của không (trái và phải).
 
-2. **Chứng minh $1_R - a$ khả nghịch:**
-   Giả sử $a^m = 0_R$ với $m \ge 1$. Đặt:
+**2. Chứng minh $1_R - a$ khả nghịch**
+
+Giả sử $a^m = 0_R$ với $m \ge 1$. Đặt:
    $$
    v = 1_R + a + a^2 + \cdots + a^{m-1} \in R.
    $$
@@ -353,32 +359,36 @@ Cho $R$ là một vành có phần tử đơn vị $1_R$. Một phần tử $a \
    (1_R - a)^{-1} = 1_R + a + a^2 + \cdots + a^{m-1}.
    $$
 
-3. **Phần tử lũy linh trong miền nguyên:**
-   Trong miền nguyên $R$, theo định nghĩa không tồn tại ước của không. Theo câu 1, nếu tồn tại $a \in R$ lũy linh với $a \neq 0_R$ thì $a$ phải là ước của không, mâu thuẫn! Do đó, phần tử lũy linh duy nhất trong miền nguyên là $0_R$.
+**3. Phần tử lũy linh trong miền nguyên**
+
+Trong miền nguyên $R$, theo định nghĩa không tồn tại ước của không. Theo câu 1, nếu tồn tại $a \in R$ lũy linh với $a \neq 0_R$ thì $a$ phải là ước của không, mâu thuẫn! Do đó, phần tử lũy linh duy nhất trong miền nguyên là $0_R$.
 </Solution>
+</Exercise>
 
 ---
 
-<Exercise id="ex-c6-b2-nhom-d" title="Bài tập 6.8 (Nhóm D): Vành hữu hạn không có ước của không là một Vành chia">
+<Exercise id="ex-c6-b2-nhom-d" title="Vành hữu hạn không có ước của không là một Vành chia" group="Nhóm D">
 Cho $R$ là một vành **hữu hạn** có nhiều hơn một phần tử ($|R| \ge 2$) thỏa mãn điều kiện: $R$ không có ước của không bên trái và không có ước của không bên phải (tuy nhiên **chưa giả thiết** $R$ có phần tử đơn vị).
 1. Chứng minh rằng với mỗi $a \in R, a \neq 0_R$, ánh xạ nhân trái $L_a: R \to R, x \mapsto ax$ là một song ánh.
 2. Chứng minh tồn tại phần tử $e \in R$ đóng vai trò phần tử đơn vị hai phía của $R$.
 3. Chứng minh $R$ là một vành chia (và nếu $R$ giao hoán thì $R$ là một trường).
-</Exercise>
+
 
 <Hint>
 Dùng tính toàn ánh của $L_a$ để tìm $e_a$ sao cho $a e_a = a$, sau đó chứng minh $e_a$ độc lập với $a$ và là đơn vị trên toàn vành.
 </Hint>
 
 <Solution>
-1. **Chứng minh $L_a$ là song ánh:**
-   Lấy tùy ý $a \in R, a \neq 0_R$.
+**1. Chứng minh $L_a$ là song ánh**
+
+Lấy tùy ý $a \in R, a \neq 0_R$.
    - Nếu $L_a(x) = L_a(y)$ thì $ax = ay \iff a(x - y) = 0_R$. Do $R$ không có ước của không trái và $a \neq 0_R$, suy ra $x - y = 0_R \implies x = y$. Vậy $L_a$ đơn ánh.
    - Vì $R$ hữu hạn, một đơn ánh từ $R$ vào $R$ bắt buộc phải là toàn ánh. Vậy $L_a$ là song ánh.
    Hoàn toàn tương tự, ánh xạ nhân phải $R_a: R \to R, x \mapsto xa$ cũng là một song ánh.
 
-2. **Chứng minh sự tồn tại của phần tử đơn vị:**
-   - Cố định một phần tử $a \neq 0_R$. Vì $L_a$ toàn ánh, tồn tại $e \in R$ sao cho:
+**2. Chứng minh sự tồn tại của phần tử đơn vị**
+
+ - Cố định một phần tử $a \neq 0_R$. Vì $L_a$ toàn ánh, tồn tại $e \in R$ sao cho:
      $$
      L_a(e) = a \iff ae = a.
      $$
@@ -391,8 +401,9 @@ Dùng tính toàn ánh của $L_a$ để tìm $e_a$ sao cho $a e_a = a$, sau đ�
    - Xét tích $e'e$: Vì $e'$ là đơn vị trái nên $e'e = e$; vì $e$ là đơn vị phải nên $e'e = e'$. Suy ra $e = e'$.
    Đặt $1_R = e = e'$, ta có $x \cdot 1_R = 1_R \cdot x = x$ với mọi $x \in R$. Vì $|R| \ge 2$, ta có $1_R \neq 0_R$.
 
-3. **Chứng minh $R$ là vành chia:**
-   Với mọi $a \in R, a \neq 0_R$, vì $L_a$ và $R_a$ là toàn ánh và $1_R \in R$, tồn tại $b, c \in R$ sao cho:
+**3. Chứng minh $R$ là vành chia**
+
+Với mọi $a \in R, a \neq 0_R$, vì $L_a$ và $R_a$ là toàn ánh và $1_R \in R$, tồn tại $b, c \in R$ sao cho:
    $$
    ab = 1_R \quad \text{và} \quad ca = 1_R.
    $$
@@ -400,6 +411,7 @@ Dùng tính toàn ánh của $L_a$ để tìm $e_a$ sao cho $a e_a = a$, sau đ�
    Do đó $a$ khả nghịch hai phía với $a^{-1} = b = c \in R$.
    Vậy mọi phần tử khác không của $R$ đều khả nghịch, tức $R$ là một vành chia. Nếu $R$ giao hoán thì hiển nhiên $R$ là một trường.
 </Solution>
+</Exercise>
 
 ---
 

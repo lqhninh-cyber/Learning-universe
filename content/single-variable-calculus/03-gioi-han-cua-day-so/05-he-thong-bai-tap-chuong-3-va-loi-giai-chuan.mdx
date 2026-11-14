@@ -66,7 +66,7 @@ Sau khi hoàn thành bài học này, bạn có thể:
   original="Bài 1a"
 >
 Cho dãy số $x_n = \frac{n-1}{n+1}$. Dãy này có giới hạn $L = 1$. Với $\varepsilon > 0$ cho trước, hãy tìm một số tự nhiên $N$ sao cho với mọi $n \ge N$ ta có $|x_n - 1| < \varepsilon$.
-</Exercise>
+
 
 <Hint>
 Biến đổi hiệu $|x_n - 1| = \left|\frac{n-1 - (n+1)}{n+1}\right| = \frac{2}{n+1}$, sau đó giải bất phương trình $\frac{2}{n+1} < \varepsilon$.
@@ -87,6 +87,7 @@ N = \max\left\{1, \left\lfloor \frac{2}{\varepsilon} - 1 \right\rfloor + 1\right
 $$
 Khi đó với mọi $n \ge N$, ta chắc chắn có $|x_n - 1| < \varepsilon$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c3-b5-bt1c"
@@ -96,7 +97,7 @@ Khi đó với mọi $n \ge N$, ta chắc chắn có $|x_n - 1| < \varepsilon$.
   original="Bài 1c"
 >
 Cho dãy số $x_n = \frac{1 + 2 + \dots + n}{n^2}$. Tìm giới hạn $L$ và xác định $N(\varepsilon)$.
-</Exercise>
+
 
 <Solution>
 Áp dụng công thức tổng cấp số cộng:
@@ -117,6 +118,7 @@ $$
 $$
 Ta chọn $N = \left\lfloor \frac{1}{2\varepsilon} \right\rfloor + 1$. Khi đó với mọi $n \ge N$, ta có $\left|x_n - \frac{1}{2}\right| < \varepsilon$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c3-b5-bt1d"
@@ -126,7 +128,7 @@ Ta chọn $N = \left\lfloor \frac{1}{2\varepsilon} \right\rfloor + 1$. Khi đó 
   original="Bài 1d"
 >
 Cho dãy số $x_n = \frac{1}{1 \cdot 2} + \frac{1}{2 \cdot 3} + \dots + \frac{1}{n(n+1)}$. Tìm giới hạn $L$ và tìm $N(\varepsilon)$.
-</Exercise>
+
 
 <Solution>
 Ta khai triển phân tích từng số hạng:
@@ -143,6 +145,7 @@ $$
 $$
 Để $|x_n - 1| < \varepsilon$, ta chỉ cần chọn $n > \frac{1}{\varepsilon} - 1$. Do đó chọn $N = \left\lfloor \frac{1}{\varepsilon} \right\rfloor$. Với mọi $n \ge N$, ta có $|x_n - 1| < \varepsilon$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -159,7 +162,7 @@ Tính giới hạn của dãy số:
 $$
 x_n = \sqrt{n}\left(\sqrt{n+1} - \sqrt{n}\right).
 $$
-</Exercise>
+
 
 <Solution>
 Biểu thức có dạng vô định $\infty \cdot (\infty - \infty)$. Ta nhân và chia với lượng liên hợp $\sqrt{n+1} + \sqrt{n}$:
@@ -175,6 +178,7 @@ $$
 \lim_{n \to \infty} x_n = \frac{1}{\sqrt{1 + 0} + 1} = \frac{1}{2}.
 $$
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c3-b5-bt2c"
@@ -187,7 +191,7 @@ Tính giới hạn của dãy số:
 $$
 x_n = \sqrt[n]{3^n + 4^n + 2015^n}.
 $$
-</Exercise>
+
 
 <Solution>
 Cơ số lớn nhất trong biểu thức là $2015$. Ta đặt $2015$ ra ngoài dấu căn:
@@ -211,6 +215,7 @@ $$
 \lim_{n \to \infty} x_n = 2015.
 $$
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c3-b5-bt2d"
@@ -223,7 +228,7 @@ Tính giới hạn của dãy số:
 $$
 x_n = \frac{n}{n^2+1} + \frac{n}{n^2+2} + \dots + \frac{n}{n^2+n}.
 $$
-</Exercise>
+
 
 <Solution>
 Tổng $x_n$ gồm đúng $n$ số hạng.
@@ -246,6 +251,7 @@ $$
 $$
 Theo Nguyên lý kẹp, ta suy ra $\lim_{n \to \infty} x_n = 1$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -259,7 +265,7 @@ Theo Nguyên lý kẹp, ta suy ra $\lim_{n \to \infty} x_n = 1$.
   original="Bài 12b"
 >
 Cho dãy số $(x_n)$ xác định bởi $x_1 = 5$ và $x_{n+1} = \frac{x_n}{2} + 2$ với mọi $n \ge 1$. Chứng minh rằng dãy số hội tụ và tìm giới hạn của nó.
-</Exercise>
+
 
 <Solution>
 - **Bước 1: Chứng minh tính bị chặn dưới:**
@@ -286,6 +292,7 @@ Cho dãy số $(x_n)$ xác định bởi $x_1 = 5$ và $x_{n+1} = \frac{x_n}{2} 
   $$
 Vậy $\lim_{n \to \infty} x_n = 4$.
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c3-b5-bt20"
@@ -300,11 +307,12 @@ $$
 $$
 1. Chứng minh rằng $(x_n)$ là một dãy Cauchy và do đó hội tụ.
 2. Áp dụng: Tìm giới hạn của dãy số xác định bởi $x_1 > 0$ và $x_{n+1} = \frac{1}{2 + x_n}$ với mọi $n \ge 1$.
-</Exercise>
+
 
 <Solution>
-1. **Chứng minh $(x_n)$ là dãy Cauchy:**
-   Áp dụng liên tiếp giả thiết:
+**1. Chứng minh $(x_n)$ là dãy Cauchy**
+
+Áp dụng liên tiếp giả thiết:
    $$
    |x_{k+1} - x_k| \le r |x_k - x_{k-1}| \le r^2 |x_{k-1} - x_{k-2}| \le \dots \le r^{k-1} |x_2 - x_1|.
    $$
@@ -318,8 +326,9 @@ $$
    $$
    Vậy $(x_n)$ là dãy Cauchy, suy ra nó hội tụ.
 
-2. **Áp dụng cho $x_{n+1} = \frac{1}{2 + x_n}$:**
-   Vì $x_1 > 0$, quy nạp dễ thấy $x_n > 0$ với mọi $n$. Hơn nữa $x_n = \frac{1}{2 + x_{n-1}} < \frac{1}{2}$ với mọi $n \ge 2$.
+**2. Áp dụng cho $x_{n+1} = \frac{1}{2 + x_n}$**
+
+Vì $x_1 > 0$, quy nạp dễ thấy $x_n > 0$ với mọi $n$. Hơn nữa $x_n = \frac{1}{2 + x_{n-1}} < \frac{1}{2}$ với mọi $n \ge 2$.
    Ta xét hiệu:
    $$
    |x_{n+2} - x_{n+1}| = \left|\frac{1}{2 + x_{n+1}} - \frac{1}{2 + x_n}\right| = \frac{|x_n - x_{n+1}|}{(2 + x_{n+1})(2 + x_n)}.
@@ -334,6 +343,7 @@ $$
    $$
    Vì $L \ge 0$, ta nhận nghiệm $L = \sqrt{2} - 1$.
 </Solution>
+</Exercise>
 
 ---
 
@@ -350,7 +360,7 @@ Dùng tiêu chuẩn Cauchy, xét sự hội tụ của dãy số:
 $$
 x_n = \frac{\sin 1}{1^2} + \frac{\sin 2}{2^2} + \dots + \frac{\sin n}{n^2}.
 $$
-</Exercise>
+
 
 <Solution>
 Với mọi $n, p \in \mathbb{N}$, ta xét hiệu:
@@ -367,6 +377,7 @@ $$
 $$
 Vậy $(x_n)$ là một dãy Cauchy. Theo Tiêu chuẩn Cauchy, dãy số hội tụ.
 </Solution>
+</Exercise>
 
 ---
 
@@ -382,11 +393,12 @@ Vậy $(x_n)$ là một dãy Cauchy. Theo Tiêu chuẩn Cauchy, dãy số hội 
 Cho $(x_n)$ là dãy các số thực dương sao cho $\lim_{n \to \infty} \frac{x_{n+1}}{x_n} = s$. Chứng minh rằng:
 1. Nếu $s < 1$ thì $\lim_{n \to \infty} x_n = 0$.
 2. Nếu $s > 1$ thì $\lim_{n \to \infty} x_n = +\infty$.
-</Exercise>
+
 
 <Solution>
-1. **Trường hợp $s < 1$:**
-   Chọn số thực $q$ sao cho $s < q < 1$. Đặt $\varepsilon = q - s > 0$.
+**1. Trường hợp $s < 1$**
+
+Chọn số thực $q$ sao cho $s < q < 1$. Đặt $\varepsilon = q - s > 0$.
    Vì $\lim \frac{x_{n+1}}{x_n} = s$, tồn tại số tự nhiên $N \in \mathbb{N}$ sao cho:
    $$
    \left|\frac{x_{n+1}}{x_n} - s\right| < \varepsilon \implies \frac{x_{n+1}}{x_n} < s + \varepsilon = q, \quad \forall n \ge N.
@@ -398,8 +410,9 @@ Cho $(x_n)$ là dãy các số thực dương sao cho $\lim_{n \to \infty} \frac
    Đặt $n = N + k$, ta có $0 < x_n < q^{n-N} x_N = \left(\frac{x_N}{q^N}\right) q^n$.
    Vì $0 < q < 1$, ta biết $\lim_{n \to \infty} q^n = 0$. Theo Nguyên lý kẹp, ta suy ra $\lim_{n \to \infty} x_n = 0$.
 
-2. **Trường hợp $s > 1$:**
-   Xét dãy nghịch đảo $y_n = \frac{1}{x_n} > 0$. Ta có:
+**2. Trường hợp $s > 1$**
+
+Xét dãy nghịch đảo $y_n = \frac{1}{x_n} > 0$. Ta có:
    $$
    \lim_{n \to \infty} \frac{y_{n+1}}{y_n} = \lim_{n \to \infty} \frac{x_n}{x_{n+1}} = \frac{1}{s} < 1.
    $$
@@ -408,6 +421,7 @@ Cho $(x_n)$ là dãy các số thực dương sao cho $\lim_{n \to \infty} \frac
    \lim_{n \to \infty} x_n = \lim_{n \to \infty} \frac{1}{y_n} = +\infty.
    $$
 </Solution>
+</Exercise>
 
 <Exercise
   id="exr-gthmb-c3-b5-bt14b"
@@ -417,7 +431,7 @@ Cho $(x_n)$ là dãy các số thực dương sao cho $\lim_{n \to \infty} \frac
   original="Bài 14b"
 >
 Chứng minh rằng dãy số $x_n = \sin n$ không hội tụ.
-</Exercise>
+
 
 <Solution>
 Giả sử phản chứng rằng dãy số $(\sin n)$ hội tụ về một số thực $a$.
@@ -448,6 +462,7 @@ $$
 $$
 Mâu thuẫn này chứng tỏ giả thiết phản chứng là sai. Vậy dãy $(\sin n)$ không hội tụ.
 </Solution>
+</Exercise>
 
 ---
 
