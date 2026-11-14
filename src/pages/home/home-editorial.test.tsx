@@ -79,8 +79,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByText(/DI SẢN HỌC THUẬT & NGHỆ THUẬT/i)).toBeInTheDocument();
       expect(screen.getByText(/01 \/ 15/i)).toBeInTheDocument();
 
-      // Tác phẩm 1: Thầy đồ Cóc
-      expect(screen.getByRole('heading', { name: /Thầy đồ Cóc/i })).toBeInTheDocument();
+      // Tác phẩm 1 mặc định: Khuê Văn Các (không chứa Hán tự)
+      expect(screen.getByRole('heading', { name: /Khuê Văn Các/i })).toBeInTheDocument();
       expect(
         screen.getAllByText(new RegExp(HERITAGE_ARTWORKS[0]!.artistOrOrigin, 'i')).length,
       ).toBeGreaterThan(0);
@@ -143,18 +143,18 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(nextButton).toBeInTheDocument();
 
       const artwork2Button = screen.getByRole('button', {
-        name: /Chuyển đến tác phẩm 2: Khuê Văn Các/i,
+        name: /Chuyển đến tác phẩm 2: Thầy đồ Cóc/i,
       });
       fireEvent.click(artwork2Button);
       expect(artwork2Button).toBeInTheDocument();
     });
 
-    it('chứa toàn bộ 15 tác phẩm di sản đích thực theo yêu cầu', () => {
+    it('chứa toàn bộ 15 tác phẩm di sản đích thực theo yêu cầu (Khuê Văn Các đầu tiên)', () => {
       expect(HERITAGE_ARTWORKS).toHaveLength(15);
       const ids = HERITAGE_ARTWORKS.map((a) => a.id);
       expect(ids).toEqual([
-        'thay-do-coc',
         'khue-van-cac',
+        'thay-do-coc',
         'melencolia-i',
         'truong-hoc-athena',
         'nguoi-vitruvius',
@@ -408,7 +408,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
 
-    it('khóa cố định duy nhất cảnh quan Vịnh Hạ Long, ẩn bộ chuyển đổi cảnh quan, dải chữ đáy và Hán tự', () => {
+    it('khóa cố định duy nhất cảnh quan Biển Mây & Ngân Hà Hoàng Liên Sơn, ẩn bộ chuyển đổi, dải chữ đáy và Hán tự', () => {
       render(
         <MemoryRouter>
           <HomePage />
@@ -416,19 +416,23 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
 
       const diorama = screen.getByTestId('son-ha-diorama');
-      expect(diorama).toHaveAttribute('data-landscape', 'vinh-ha-long');
+      expect(diorama).toHaveAttribute('data-landscape', 'hoang-lien-son');
       expect(screen.queryByTestId('atmosphere-switcher')).not.toBeInTheDocument();
       expect(screen.queryByTestId('atmosphere-option-dawn')).not.toBeInTheDocument();
       expect(screen.queryByTestId('atmosphere-option-night')).not.toBeInTheDocument();
       expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
-      expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-junk-boat-far')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();
+      expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
+      expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
+      expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
       expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
       expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/Ruộng Bậc Thang/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/Hang Sơn Đoòng/i)).not.toBeInTheDocument();
+
+      // Khung Di sản mặc định Khuê Văn Các (01 / 15) không chứa chữ Hán
+      const showcase = screen.getByTestId('heritage-art-showcase');
+      expect(showcase.textContent).toContain('Khuê Văn Các');
+      expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
 
       // Seamless Scroll Storytelling Bridges (Kết nối 1, 2, 3) & Lưới 2 cột cân xứng
       const shoreline = screen.getByTestId('shoreline-wave-bridge');
@@ -441,7 +445,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
   });
 
   describe('Hero Diorama, Physics Canvas & 3D Stack Components', () => {
-    it('HeroSonHaDiorama render đủ 4 lớp Karst Vịnh Hạ Long, Hòn Trống Mái, Thuyền buồm cánh dơi và HeroPhysicsCanvas', () => {
+    it('HeroSonHaDiorama render đủ 4 lớp Hoàng Liên Sơn (Phan Xi Păng, Ruộng bậc thang, Rừng tùng, Hạc lượn) và HeroPhysicsCanvas', () => {
       const { container } = render(
         <div className="relative h-96 w-full">
           <HeroSonHaDiorama />
@@ -452,18 +456,14 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       for (let i = 1; i <= 4; i += 1) {
         expect(container.querySelector(`[data-testid="son-ha-layer-${i}"]`)).toBeInTheDocument();
       }
-      expect(screen.getByTestId('halong-sunset-sun')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-god-rays').querySelectorAll('polygon')).toHaveLength(5);
-      expect(screen.getByTestId('halong-clouds')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-bird-flocks')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-bird-flocks').querySelectorAll('path')).toHaveLength(15);
-      expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-junk-boat-far')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-junk-boat-far-smoke')).toBeInTheDocument();
-      expect(screen.getByTestId('halong-junk-boat-near-smoke')).toBeInTheDocument();
-      expect(screen.getByTestId('karst-shore-foam-near-karst-left')).toBeInTheDocument();
-      expect(screen.getByTestId('karst-shore-foam-hon-trong')).toBeInTheDocument();
+      expect(screen.getByTestId('hoang-lien-dawn-glow')).toBeInTheDocument();
+      expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
+      expect(screen.getByTestId('midground-slopes')).toBeInTheDocument();
+      expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
+      expect(screen.getByTestId('village-lantern-glow')).toBeInTheDocument();
+      expect(screen.getByTestId('hoang-lien-foliage')).toBeInTheDocument();
+      expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
+      expect(screen.getByTestId('hoang-lien-cranes').querySelectorAll('path')).toHaveLength(9);
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     });
 
@@ -486,9 +486,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       fireEvent.click(screen.getByTestId('heritage-stack-card-2'));
       expect(await screen.findByText(new RegExp(`02 / ${expectedTotal}`))).toBeInTheDocument();
-      expect(
-        screen.getAllByText(new RegExp(HERITAGE_ARTWORKS[1]!.title, 'i')).length,
-      ).toBeGreaterThan(0);
+      expect(screen.getAllByText(HERITAGE_ARTWORKS[1]!.title).length).toBeGreaterThan(0);
     });
   });
 });

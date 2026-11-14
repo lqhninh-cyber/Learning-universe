@@ -22,15 +22,15 @@ const SHORELINE_SPORES: readonly FloatingSporeSpec[] = [
 ];
 
 /**
- * KẾT NỐI 1: Shoreline Wave & Mist Bridge
- * Dải sóng bờ vịnh & sương sớm 3 lớp chuyển mượt từ mặt nước Hạ Long (#123831)
- * qua sương ngọc lục bảo (rgba(28,78,69,0.25)) vào nền kem giấy dó / sơn mài (var(--bg-page)).
+ * KẾT NỐI 1: Cloud Sea & Mountain Dawn Bridge
+ * Dải biển mây Hoàng Liên Sơn 3 tầng (#C5D3DC -> #E6E2D6 -> #F8F6F0) chuyển hòa tan 100%
+ * vào nền giấy dó / đêm tối (var(--bg-page)) ở đầu phần "Không gian Học phần".
  */
 export function ShorelineWaveBridge() {
   const uid = useId().replace(/:/g, '');
   const prefersReducedMotion = useReducedMotion();
-  const mistWaveGradId = `lu-shore-mist-${uid}`;
-  const foamStrokeGradId = `lu-shore-foam-${uid}`;
+  const cloudBackGradId = `lu-cloud-back-${uid}`;
+  const cloudCrestStrokeGradId = `lu-cloud-crest-${uid}`;
 
   return (
     <div
@@ -38,58 +38,58 @@ export function ShorelineWaveBridge() {
       aria-hidden="true"
       className="pointer-events-none relative z-10 -mt-24 h-[126px] w-full overflow-hidden select-none sm:-mt-28 sm:h-[144px] lg:h-[156px]"
     >
-      {/* Dải sương vịnh hòa tan mềm từ mặt biển Vịnh Hạ Long (trong suốt dần) */}
+      {/* Dải sương mây vùng cao hòa tan mềm từ chân mây Hoàng Liên Sơn xuống nền trang */}
       <div
-        className="absolute inset-x-0 top-0 h-20"
+        className="absolute inset-x-0 top-0 h-24"
         style={{
           background:
-            'linear-gradient(180deg, rgba(18, 56, 49, 0) 0%, rgba(18, 56, 49, 0.42) 48%, rgba(28, 78, 69, 0.16) 80%, rgba(18, 56, 49, 0) 100%)',
+            'linear-gradient(180deg, rgba(248, 246, 240, 0) 0%, rgba(230, 226, 214, 0.34) 55%, rgba(248, 246, 240, 0.72) 100%)',
         }}
       />
 
-      {/* 3 lớp sóng uốn lượn SVG trôi ngang lệch pha */}
+      {/* 3 lớp sóng mây bồng bềnh SVG trôi ngang lệch pha */}
       <svg
         viewBox="0 0 1440 140"
         preserveAspectRatio="none"
         className="absolute inset-0 h-full w-full"
       >
         <defs>
-          <linearGradient id={mistWaveGradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#123831" stopOpacity="0.82" />
-            <stop offset="100%" stopColor="#1C4E45" stopOpacity="0.28" />
+          <linearGradient id={cloudBackGradId} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#C5D3DC" stopOpacity="0.68" />
+            <stop offset="100%" stopColor="#E6E2D6" stopOpacity="0.45" />
           </linearGradient>
-          <linearGradient id={foamStrokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#E8A85A" stopOpacity="0" />
-            <stop offset="28%" stopColor="#F6D383" stopOpacity="0.48" />
-            <stop offset="52%" stopColor="#E8A85A" stopOpacity="0.62" />
-            <stop offset="78%" stopColor="#8EE5CE" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#E8A85A" stopOpacity="0" />
+          <linearGradient id={cloudCrestStrokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#D4A373" stopOpacity="0" />
+            <stop offset="28%" stopColor="#F6D383" stopOpacity="0.45" />
+            <stop offset="52%" stopColor="#F8F6F0" stopOpacity="0.72" />
+            <stop offset="78%" stopColor="#C5D3DC" stopOpacity="0.48" />
+            <stop offset="100%" stopColor="#D4A373" stopOpacity="0" />
           </linearGradient>
         </defs>
 
-        {/* Lớp sóng 1 (sâu): Xanh ngọc lục bảo mặt vịnh #123831 */}
+        {/* Lớp mây 1 (xa): Mây lam bạc #C5D3DC hòa sương */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-1'}>
           <path
             d="M -120 44 C 120 12, 340 68, 580 40 C 820 12, 1060 66, 1300 36 C 1420 22, 1520 34, 1580 44 L 1580 140 L -120 140 Z"
-            fill={`url(#${mistWaveGradId})`}
+            fill={`url(#${cloudBackGradId})`}
           />
         </g>
 
-        {/* Lớp sóng 2 (giữa): Sương ngọc lục bảo mờ rgba(28, 78, 69, 0.25) */}
+        {/* Lớp mây 2 (giữa): Mây kem ngọc trai #E6E2D6 gợn ánh bình minh */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-2'}>
           <path
             d="M -120 68 C 140 94, 380 38, 660 68 C 940 96, 1180 42, 1440 68 C 1510 76, 1550 72, 1580 68 L 1580 140 L -120 140 Z"
-            className="fill-[#1C4E45]/25 dark:fill-[#1C4E45]/45"
+            className="fill-[#E6E2D6]/75 dark:fill-[#1A293C]/70"
           />
           <path
             d="M -120 68 C 140 94, 380 38, 660 68 C 940 96, 1180 42, 1440 68 C 1510 76, 1550 72, 1580 68"
             fill="none"
-            stroke={`url(#${foamStrokeGradId})`}
+            stroke={`url(#${cloudCrestStrokeGradId})`}
             strokeWidth="1.4"
           />
         </g>
 
-        {/* Lớp sóng 3 (tiền cảnh): Hòa tiệp hoàn toàn vào nền kem/tối var(--bg-page) */}
+        {/* Lớp mây 3 (tiền cảnh): Hòa tiệp 100% vào nền var(--bg-page) */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-3'}>
           <path
             d="M -120 92 C 180 62, 440 116, 740 88 C 1020 62, 1260 114, 1580 86 L 1580 142 L -120 142 Z"
@@ -101,14 +101,14 @@ export function ShorelineWaveBridge() {
         <rect x="-120" y="132" width="1700" height="12" fill="var(--bg-page)" />
       </svg>
 
-      {/* Hạt bọt sáng vàng kim bay lơ lửng từ mặt nước lên thềm "Không gian Học phần" */}
+      {/* Bụi ánh sao vàng ấm bay lơ lửng trên biển mây sang thềm "Không gian Học phần" */}
       {SHORELINE_SPORES.map((spore, idx) => (
         <span
           key={idx}
           className={
             prefersReducedMotion
-              ? 'absolute rounded-full bg-[#E8A85A]/55'
-              : 'lu-foam-float absolute rounded-full bg-[#F6D383] shadow-[0_0_8px_rgba(232,168,90,0.65)]'
+              ? 'absolute rounded-full bg-[#D4A373]/55'
+              : 'lu-foam-float absolute rounded-full bg-[#F6D383] shadow-[0_0_8px_rgba(212,163,115,0.65)]'
           }
           style={{
             left: spore.left,

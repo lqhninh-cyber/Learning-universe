@@ -750,16 +750,16 @@ export function HomePage() {
     <div className="relative overflow-x-clip bg-[var(--bg-page)] text-[var(--text-main)]">
       <div className="relative">
         {/* =====================================================================
-          SECTION 1: HERO — VỊNH HẠ LONG 4 TẦNG KARST, SÓNG PHẢN CHIẾU & DI SẢN
+          SECTION 1: HERO — BIỂN MÂY & NGÂN HÀ HOÀNG LIÊN SƠN 4 TẦNG 120FPS & DI SẢN
           ===================================================================== */}
         <section
           aria-label="Không gian Khởi đầu Learning Universe"
-          className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-[#133832] pt-20 pb-24 md:pt-24 md:pb-28"
+          className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-[#050B16] pt-20 pb-24 md:pt-24 md:pb-28"
         >
-          {/* LAYER 1: 4-Layer Karst Diorama Vịnh Hạ Long (Hòn Trống Mái & Thuyền Buồm Cánh Dơi) */}
+          {/* LAYER 1: 4-Layer Panorama Biển Mây Hoàng Liên Sơn (Phan Xi Păng, Ruộng Bậc Thang & Hạc Lượn) */}
           <HeroSonHaDiorama />
 
-          {/* LAYER 2: 60fps Dynamic Sunpath Shimmer & Soft Fireflies */}
+          {/* LAYER 2: 120fps Dải Ngân Hà, Chòm sao Hình học, Sao băng & 5 Tầng Biển Mây Cuộn Trôi */}
           <HeroPhysicsCanvas />
 
           {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Di Sản Cố Định) */}

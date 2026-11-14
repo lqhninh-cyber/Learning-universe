@@ -26,6 +26,25 @@ export interface HeritageArtwork {
  */
 export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   {
+    id: 'khue-van-cac',
+    title: 'Khuê Văn Các',
+    originalTitle: 'Khuê Văn Các (Gác vẻ đẹp của Sao Khuê — Văn Miếu Quốc Tử Giám)',
+    artistOrOrigin: 'Văn Miếu – Quốc Tử Giám',
+    yearOrEra: '1805 · Thăng Long – Hà Nội',
+    eraAndPeriod: '1805 · Thăng Long - Hà Nội',
+    materialAndTechnique:
+      'Kiến trúc cổ truyền hai tầng tám mái (trùng thiềm điệp ốc); tầng dưới bốn trụ gạch Bát Tràng vuông, tầng trên kết cấu gỗ lim sơn son thếp vàng với cửa tròn tám tiếp tuyến.',
+    archivalLocation:
+      'Khu di tích Quốc gia Đặc biệt Văn Miếu – Quốc Tử Giám (Số 58 Quốc Tử Giám, Đống Đa, Hà Nội)',
+    caption: 'Khuê Văn Các · Biểu tượng văn hiến và đỉnh cao học thuật Thăng Long',
+    academicSignificance:
+      'Gác Khuê Văn tròn vuông giao hòa soi bóng giếng Thiên Quang, biểu trưng cho sao Khuê chủ quản văn sự và đỉnh cao văn hiến Thăng Long. Nơi hội tụ tinh hoa học vấn, đề cao người hiền tài — nguyên khí quốc gia của nền giáo dục khoa cử nghìn năm.',
+    coreAcademicValue:
+      'Gác Khuê Văn tròn vuông giao hòa soi bóng giếng Thiên Quang, biểu trưng cho sao Khuê chủ quản văn sự và đỉnh cao văn hiến Thăng Long.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/7/77/Khu%C3%AA_v%C4%83n_c%C3%A1c.jpg',
+    alt: 'Kiến trúc Khuê Văn Các Văn Miếu Thăng Long Hà Nội',
+  },
+  {
     id: 'thay-do-coc',
     title: 'Thầy đồ Cóc (Tranh dân gian Đông Hồ)',
     originalTitle: 'Thầy đồ Cóc (Lão Oa giảng học — Tranh khắc gỗ dân gian Đông Hồ)',
@@ -44,25 +63,6 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     imageSrc:
       'https://upload.wikimedia.org/wikipedia/commons/6/67/%E1%BA%BEch_%C4%91i_h%E1%BB%8Dc.JPG',
     alt: 'Tranh dân gian Đông Hồ Thầy đồ Cóc dạy học',
-  },
-  {
-    id: 'khue-van-cac',
-    title: 'Khuê Văn Các',
-    originalTitle: 'Khuê Văn Các (Gác vẻ đẹp của Sao Khuê — Văn Miếu Quốc Tử Giám)',
-    artistOrOrigin: 'Văn Miếu – Quốc Tử Giám',
-    yearOrEra: '1805 · Thăng Long – Hà Nội',
-    eraAndPeriod: '1805 · Thăng Long - Hà Nội',
-    materialAndTechnique:
-      'Kiến trúc cổ truyền hai tầng tám mái (trùng thiềm điệp ốc); tầng dưới bốn trụ gạch Bát Tràng vuông, tầng trên kết cấu gỗ lim sơn son thếp vàng với cửa tròn tám tiếp tuyến.',
-    archivalLocation:
-      'Khu di tích Quốc gia Đặc biệt Văn Miếu – Quốc Tử Giám (Số 58 Quốc Tử Giám, Đống Đa, Hà Nội)',
-    caption: 'Khuê Văn Các · Biểu tượng văn hiến và đỉnh cao học thuật Thăng Long',
-    academicSignificance:
-      'Gác Khuê Văn tròn vuông giao hòa soi bóng giếng Thiên Quang, biểu trưng cho sao Khuê chủ quản văn sự và đỉnh cao văn hiến Thăng Long. Nơi hội tụ tinh hoa học vấn, đề cao người hiền tài — nguyên khí quốc gia của nền giáo dục khoa cử nghìn năm.',
-    coreAcademicValue:
-      'Gác Khuê Văn tròn vuông giao hòa soi bóng giếng Thiên Quang, biểu trưng cho sao Khuê chủ quản văn sự và đỉnh cao văn hiến Thăng Long.',
-    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/7/77/Khu%C3%AA_v%C4%83n_c%C3%A1c.jpg',
-    alt: 'Kiến trúc Khuê Văn Các Văn Miếu Thăng Long Hà Nội',
   },
   {
     id: 'melencolia-i',
@@ -760,7 +760,7 @@ export function HeritageArtShowcase() {
   const formattedTotal = String(totalArtworks).padStart(2, '0');
 
   const ambientGlowStyle =
-    'radial-gradient(circle at 50% 45%, rgba(232, 168, 90, 0.34), rgba(28, 78, 69, 0.32) 48%, transparent 75%)';
+    'radial-gradient(circle at 50% 45%, rgba(212, 163, 115, 0.32), rgba(22, 50, 79, 0.34) 48%, transparent 75%)';
 
   const stackShellTransition = 'transition-all duration-[350ms] ease-[cubic-bezier(0.22,1,0.36,1)]';
 
@@ -774,7 +774,7 @@ export function HeritageArtShowcase() {
       onMouseLeave={() => setIsPaused(false)}
       className="relative mx-auto w-full max-w-[780px] pb-6"
     >
-      {/* Quầng sáng dịu tiệp hoàng hôn Vịnh Hạ Long */}
+      {/* Quầng sáng dịu tiệp bầu trời đêm và biển mây Hoàng Liên Sơn */}
       <div
         data-testid="heritage-ambient-glow"
         aria-hidden="true"

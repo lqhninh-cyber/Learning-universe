@@ -13,418 +13,399 @@ export interface HeroPhysicsCanvasProps {
   readonly className?: string;
 }
 
-interface Particle {
+type OffscreenSurface = OffscreenCanvas | HTMLCanvasElement;
+
+interface StarSpriteCache {
+  readonly ivory: OffscreenSurface | null;
+  readonly silver: OffscreenSurface | null;
+  readonly gold: OffscreenSurface | null;
+  readonly cloudIvory: OffscreenSurface | null;
+  readonly cloudMist: OffscreenSurface | null;
+  readonly cloudSlate: OffscreenSurface | null;
+}
+
+interface StarMote {
+  readonly nx: number;
+  readonly ny: number;
+  readonly size: number;
+  readonly baseAlpha: number;
+  readonly twinkleSpeed: number;
+  readonly phase: number;
+  readonly tone: 'ivory' | 'silver' | 'gold';
+  readonly inMilkyWay: boolean;
+}
+
+interface ConstellationVertex {
+  readonly nx: number;
+  readonly ny: number;
+}
+
+interface ConstellationCircle {
+  readonly cx: number;
+  readonly cy: number;
+  readonly rRatio: number;
+}
+
+interface ConstellationSpec {
+  readonly id: string;
+  readonly centerNx: number;
+  readonly centerNy: number;
+  readonly vertices: readonly ConstellationVertex[];
+  readonly edges: readonly (readonly [number, number])[];
+  readonly circumcircle?: ConstellationCircle;
+  readonly baseOpacity: number;
+  glow: number;
+}
+
+interface ShootingStar {
+  active: boolean;
   x: number;
   y: number;
   vx: number;
   vy: number;
-  baseVx: number;
-  baseVy: number;
+  length: number;
+  life: number;
+  maxLife: number;
+}
+
+interface ValleyFirefly {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
   radius: number;
   alpha: number;
   phase: number;
-  tone: 'gold' | 'emerald';
 }
 
-interface Ripple {
+interface CloudRipple {
   x: number;
   y: number;
   radius: number;
   maxRadius: number;
   alpha: number;
   speed: number;
-  isWater: boolean;
 }
 
-interface TrailPoint {
-  x: number;
-  y: number;
-  life: number;
+interface CloudLayerSpec {
+  readonly yRatio: number;
+  readonly amplitude: number;
+  readonly speed: number;
+  readonly waveFreq: number;
+  readonly waveCount: number;
+  readonly color: string;
+  readonly opacity: number;
+  readonly puffTone: 'cloudIvory' | 'cloudMist' | 'cloudSlate';
+  readonly puffRadius: number;
 }
 
-interface SunGlint {
-  rowNorm: number; // 0 gần chân trời .. 1 gần tiền cảnh
-  baseWidth: number;
-  baseHeight: number;
-  phase: number;
-  speed: number;
-  driftAmp: number;
-  offsetX: number;
+const CLOUD_LAYERS: readonly CloudLayerSpec[] = [
+  {
+    yRatio: 0.675,
+    amplitude: 16,
+    speed: 14,
+    waveFreq: 0.0042,
+    waveCount: 9,
+    color: '#C5D3DC',
+    opacity: 0.34,
+    puffTone: 'cloudSlate',
+    puffRadius: 112,
+  },
+  {
+    yRatio: 0.735,
+    amplitude: 20,
+    speed: -18,
+    waveFreq: 0.0036,
+    waveCount: 8,
+    color: '#D5DFE5',
+    opacity: 0.44,
+    puffTone: 'cloudSlate',
+    puffRadius: 124,
+  },
+  {
+    yRatio: 0.795,
+    amplitude: 22,
+    speed: 24,
+    waveFreq: 0.0046,
+    waveCount: 9,
+    color: '#E6E2D6',
+    opacity: 0.56,
+    puffTone: 'cloudMist',
+    puffRadius: 136,
+  },
+  {
+    yRatio: 0.86,
+    amplitude: 24,
+    speed: -28,
+    waveFreq: 0.0039,
+    waveCount: 8,
+    color: '#F2EFE7',
+    opacity: 0.7,
+    puffTone: 'cloudIvory',
+    puffRadius: 148,
+  },
+  {
+    yRatio: 0.925,
+    amplitude: 20,
+    speed: 32,
+    waveFreq: 0.0044,
+    waveCount: 9,
+    color: '#F8F6F0',
+    opacity: 0.86,
+    puffTone: 'cloudIvory',
+    puffRadius: 158,
+  },
+];
+
+function createOffscreenSurface(size: number): OffscreenSurface | null {
+  if (typeof OffscreenCanvas !== 'undefined') {
+    return new OffscreenCanvas(size, size);
+  }
+  if (typeof document !== 'undefined') {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    return canvas;
+  }
+  return null;
 }
 
-interface WaterSparkle {
-  xRatio: number;
-  yNorm: number; // 0 .. 1 trong vùng mặt biển
-  phase: number;
-  speed: number;
-  size: number;
-  tone: 'gold' | 'jade';
+function buildRadialSprite(
+  size: number,
+  stops: readonly (readonly [number, string])[],
+): OffscreenSurface | null {
+  const surface = createOffscreenSurface(size);
+  if (!surface) return null;
+  const ctx = surface.getContext('2d') as
+    CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
+  if (!ctx) return null;
+
+  const half = size / 2;
+  const grad = ctx.createRadialGradient(half, half, 0, half, half, half);
+  for (const [offset, color] of stops) {
+    grad.addColorStop(offset, color);
+  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  return surface;
 }
 
-interface ForegroundBird {
-  species: 'gull' | 'egret';
-  xRatio: number;
-  yRatio: number;
-  vxRatio: number;
-  bobAmp: number;
-  wingSpan: number;
-  flapSpeed: number;
-  phase: number;
+function createStarAndCloudSpriteCache(): StarSpriteCache {
+  return {
+    ivory: buildRadialSprite(32, [
+      [0, 'rgba(255, 253, 247, 1)'],
+      [0.24, 'rgba(248, 246, 240, 0.72)'],
+      [0.62, 'rgba(197, 211, 220, 0.22)'],
+      [1, 'rgba(197, 211, 220, 0)'],
+    ]),
+    silver: buildRadialSprite(32, [
+      [0, 'rgba(226, 240, 255, 0.98)'],
+      [0.28, 'rgba(148, 179, 200, 0.62)'],
+      [0.66, 'rgba(74, 107, 130, 0.18)'],
+      [1, 'rgba(74, 107, 130, 0)'],
+    ]),
+    gold: buildRadialSprite(32, [
+      [0, 'rgba(255, 248, 225, 1)'],
+      [0.28, 'rgba(246, 211, 131, 0.68)'],
+      [0.64, 'rgba(212, 163, 115, 0.22)'],
+      [1, 'rgba(212, 163, 115, 0)'],
+    ]),
+    cloudIvory: buildRadialSprite(96, [
+      [0, 'rgba(248, 246, 240, 0.75)'],
+      [0.42, 'rgba(248, 246, 240, 0.42)'],
+      [0.78, 'rgba(230, 226, 214, 0.14)'],
+      [1, 'rgba(248, 246, 240, 0)'],
+    ]),
+    cloudMist: buildRadialSprite(96, [
+      [0, 'rgba(230, 226, 214, 0.68)'],
+      [0.45, 'rgba(230, 226, 214, 0.34)'],
+      [0.8, 'rgba(197, 211, 220, 0.12)'],
+      [1, 'rgba(230, 226, 214, 0)'],
+    ]),
+    cloudSlate: buildRadialSprite(96, [
+      [0, 'rgba(197, 211, 220, 0.56)'],
+      [0.45, 'rgba(197, 211, 220, 0.28)'],
+      [0.82, 'rgba(74, 107, 130, 0.08)'],
+      [1, 'rgba(197, 211, 220, 0)'],
+    ]),
+  };
 }
 
-interface HighEagle {
-  centerXRatio: number;
-  centerYRatio: number;
-  orbitRx: number;
-  orbitRy: number;
-  angularSpeed: number;
-  phase: number;
-  wingSpan: number;
+function deterministicUnit(seed: number): number {
+  const raw = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return raw - Math.floor(raw);
 }
 
-interface SchoolFish {
-  schoolIdx: 0 | 1;
-  offsetX: number;
-  offsetY: number;
-  length: number;
-  opacity: number;
-  phase: number;
-  tone: 'gold' | 'silver';
-}
+function createStarField(count: number): readonly StarMote[] {
+  const stars: StarMote[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const r1 = deterministicUnit(i + 1);
+    const r2 = deterministicUnit(i * 3 + 7);
+    const r3 = deterministicUnit(i * 5 + 19);
+    const r4 = deterministicUnit(i * 7 + 31);
+    const inMilkyWay = i < Math.floor(count * 0.68);
 
-interface FishSchool {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  baseSpeed: number;
-  phase: number;
-  tone: 'gold' | 'silver';
-}
+    let nx: number;
+    let ny: number;
+    if (inMilkyWay) {
+      // Dải Ngân Hà kéo chéo từ góc trên trái (0.04, 0.04) xuống sau đỉnh núi bên phải (0.94, 0.49)
+      const t = r1;
+      const spread = (r2 + r3 - 1) * 0.145;
+      nx = Math.min(Math.max(0.03 + t * 0.92 + spread * 0.28, 0.01), 0.99);
+      ny = Math.min(Math.max(0.05 + t * 0.42 + spread, 0.02), 0.56);
+    } else {
+      nx = r1 * 0.98 + 0.01;
+      ny = r2 * 0.56 + 0.02;
+    }
 
-interface PlanktonMote {
-  xRatio: number;
-  yNorm: number;
-  phase: number;
-  driftSpeed: number;
-  radius: number;
-  tone: 'emerald' | 'gold';
-}
-
-interface LeapingFishState {
-  active: boolean;
-  startMs: number;
-  nextTriggerMs: number;
-  originX: number;
-  originY: number;
-  direction: 1 | -1;
-  arcWidth: number;
-  arcHeight: number;
-  durationMs: number;
-  entrySplashed: boolean;
-}
-
-interface SplashDroplet {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  alpha: number;
-  radius: number;
-}
-
-const PARTICLE_COUNT = 64;
-const SUN_GLINT_COUNT = 136;
-const WATER_SPARKLE_COUNT = 48;
-const PLANKTON_COUNT = 42;
-const INTERACTION_RADIUS = 140;
-const MAX_TRAIL_POINTS = 18;
-const MAX_ACTIVE_RIPPLES = 24;
-const MAX_SPLASH_DROPLETS = 28;
-const WATERLINE_RATIO = 535 / 900;
-
-function createParticles(width: number, height: number): Particle[] {
-  const particles: Particle[] = [];
-  for (let i = 0; i < PARTICLE_COUNT; i += 1) {
-    const baseVx = (Math.random() - 0.5) * 0.24;
-    const baseVy = -0.07 - Math.random() * 0.16;
-    const tone: Particle['tone'] = i % 4 === 0 ? 'emerald' : 'gold';
-    particles.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: baseVx,
-      vy: baseVy,
-      baseVx,
-      baseVy,
-      radius: tone === 'emerald' ? 1.2 + Math.random() * 1.3 : 1.0 + Math.random() * 1.5,
-      alpha: 0.34 + Math.random() * 0.48,
-      phase: Math.random() * Math.PI * 2,
+    const tone: StarMote['tone'] = r4 > 0.8 ? 'gold' : r4 > 0.42 ? 'silver' : 'ivory';
+    stars.push({
+      nx,
+      ny,
+      size: inMilkyWay ? 2.2 + r3 * 4.4 : 2.6 + r3 * 5.6,
+      baseAlpha: inMilkyWay ? 0.32 + r4 * 0.62 : 0.28 + r4 * 0.54,
+      twinkleSpeed: 0.9 + r2 * 2.1,
+      phase: r3 * Math.PI * 2,
       tone,
+      inMilkyWay,
     });
   }
-  return particles;
+  return stars;
 }
 
-function createSunGlints(): SunGlint[] {
-  const glints: SunGlint[] = [];
-  for (let i = 0; i < SUN_GLINT_COUNT; i += 1) {
-    const rowNorm = i / (SUN_GLINT_COUNT - 1);
-    const spread = 1 + rowNorm * 1.45;
-    glints.push({
-      rowNorm,
-      baseWidth: 12 + rowNorm * 68 + ((i * 19) % 22),
-      baseHeight: 0.9 + rowNorm * 2.1,
-      phase: i * 0.73,
-      speed: 0.9 + (i % 6) * 0.2,
-      driftAmp: 4 + rowNorm * 18,
-      offsetX: (i % 2 === 0 ? 1 : -1) * (((i * 31) % 72) - 8) * spread * 0.55,
-    });
-  }
-  return glints;
-}
-
-function createWaterSparkles(): WaterSparkle[] {
-  const sparkles: WaterSparkle[] = [];
-  for (let i = 0; i < WATER_SPARKLE_COUNT; i += 1) {
-    sparkles.push({
-      xRatio: ((i * 73 + 19) % 100) / 100,
-      yNorm: ((i * 41 + 7) % 100) / 100,
-      phase: i * 1.17,
-      speed: 1.2 + (i % 5) * 0.35,
-      size: 1.4 + (i % 3) * 0.75,
-      tone: i % 3 === 0 ? 'jade' : 'gold',
-    });
-  }
-  return sparkles;
-}
-
-function createForegroundBirds(): ForegroundBird[] {
+function createGeometricConstellations(): ConstellationSpec[] {
   return [
     {
-      species: 'gull',
-      xRatio: 0.14,
-      yRatio: 0.44,
-      vxRatio: 0.024,
-      bobAmp: 7,
-      wingSpan: 17,
-      flapSpeed: 5.2,
-      phase: 0.2,
+      // 1. Tứ diện đều & Đường tròn ngoại tiếp
+      id: 'tetrahedron-circumcircle',
+      centerNx: 0.19,
+      centerNy: 0.2,
+      baseOpacity: 0.18,
+      glow: 0,
+      circumcircle: { cx: 0.19, cy: 0.2, rRatio: 0.068 },
+      vertices: [
+        { nx: 0.19, ny: 0.125 },
+        { nx: 0.138, ny: 0.235 },
+        { nx: 0.244, ny: 0.24 },
+        { nx: 0.194, ny: 0.198 },
+      ],
+      edges: [
+        [0, 1],
+        [1, 2],
+        [2, 0],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+      ],
     },
     {
-      species: 'egret',
-      xRatio: 0.31,
-      yRatio: 0.51,
-      vxRatio: 0.019,
-      bobAmp: 6,
-      wingSpan: 22,
-      flapSpeed: 4.1,
-      phase: 1.6,
+      // 2. Bát diện đều chiếu phẳng trên trục Ngân Hà
+      id: 'octahedron-projection',
+      centerNx: 0.48,
+      centerNy: 0.16,
+      baseOpacity: 0.18,
+      glow: 0,
+      circumcircle: { cx: 0.48, cy: 0.16, rRatio: 0.062 },
+      vertices: [
+        { nx: 0.48, ny: 0.088 },
+        { nx: 0.432, ny: 0.158 },
+        { nx: 0.528, ny: 0.162 },
+        { nx: 0.48, ny: 0.232 },
+        { nx: 0.464, ny: 0.142 },
+        { nx: 0.496, ny: 0.178 },
+      ],
+      edges: [
+        [0, 1],
+        [0, 2],
+        [3, 1],
+        [3, 2],
+        [1, 4],
+        [4, 2],
+        [2, 5],
+        [5, 1],
+        [0, 4],
+        [0, 5],
+        [3, 4],
+        [3, 5],
+      ],
     },
     {
-      species: 'gull',
-      xRatio: 0.48,
-      yRatio: 0.47,
-      vxRatio: -0.021,
-      bobAmp: 8,
-      wingSpan: 16,
-      flapSpeed: 5.5,
-      phase: 2.9,
+      // 3. Tâm tỷ cự Affine & Tam giác nội tiếp đường tròn
+      id: 'affine-circumcircle-triangle',
+      centerNx: 0.72,
+      centerNy: 0.22,
+      baseOpacity: 0.18,
+      glow: 0,
+      circumcircle: { cx: 0.72, cy: 0.22, rRatio: 0.066 },
+      vertices: [
+        { nx: 0.72, ny: 0.145 },
+        { nx: 0.666, ny: 0.262 },
+        { nx: 0.778, ny: 0.256 },
+        { nx: 0.721, ny: 0.221 },
+      ],
+      edges: [
+        [0, 1],
+        [1, 2],
+        [2, 0],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+      ],
     },
     {
-      species: 'egret',
-      xRatio: 0.66,
-      yRatio: 0.54,
-      vxRatio: -0.017,
-      bobAmp: 5.5,
-      wingSpan: 21,
-      flapSpeed: 3.9,
-      phase: 4.1,
-    },
-    {
-      species: 'gull',
-      xRatio: 0.82,
-      yRatio: 0.41,
-      vxRatio: -0.026,
-      bobAmp: 7.5,
-      wingSpan: 15,
-      flapSpeed: 5.8,
-      phase: 5.0,
-    },
-    {
-      species: 'gull',
-      xRatio: 0.57,
-      yRatio: 0.37,
-      vxRatio: 0.022,
-      bobAmp: 6.5,
-      wingSpan: 14,
-      flapSpeed: 5.1,
-      phase: 0.9,
+      // 4. Ngũ giác đều vàng phía Đông Phan Xi Păng
+      id: 'golden-pentagon-polyhedron',
+      centerNx: 0.89,
+      centerNy: 0.145,
+      baseOpacity: 0.18,
+      glow: 0,
+      circumcircle: { cx: 0.89, cy: 0.145, rRatio: 0.056 },
+      vertices: [
+        { nx: 0.89, ny: 0.082 },
+        { nx: 0.938, ny: 0.125 },
+        { nx: 0.919, ny: 0.194 },
+        { nx: 0.861, ny: 0.194 },
+        { nx: 0.842, ny: 0.125 },
+      ],
+      edges: [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [3, 4],
+        [4, 0],
+        [0, 2],
+        [0, 3],
+        [1, 4],
+      ],
     },
   ];
 }
 
-function createHighEagles(): HighEagle[] {
-  return [
-    {
-      centerXRatio: 0.22,
-      centerYRatio: 0.23,
-      orbitRx: 68,
-      orbitRy: 22,
-      angularSpeed: 0.24,
-      phase: 0.4,
-      wingSpan: 24,
-    },
-    {
-      centerXRatio: 0.77,
-      centerYRatio: 0.2,
-      orbitRx: 78,
-      orbitRy: 25,
-      angularSpeed: -0.21,
-      phase: 2.2,
-      wingSpan: 26,
-    },
-    {
-      centerXRatio: 0.48,
-      centerYRatio: 0.16,
-      orbitRx: 56,
-      orbitRy: 18,
-      angularSpeed: 0.19,
-      phase: 4.1,
-      wingSpan: 22,
-    },
-  ];
-}
-
-function createFishSchools(
-  width: number,
-  height: number,
-): {
-  schools: FishSchool[];
-  members: SchoolFish[];
-} {
-  const horizonY = height * WATERLINE_RATIO;
-  const schools: FishSchool[] = [
-    {
-      x: width * 0.28,
-      y: horizonY + (height - horizonY) * 0.46,
-      vx: 0.56,
-      vy: 0.04,
-      baseSpeed: 0.58,
-      phase: 0.3,
-      tone: 'gold',
-    },
-    {
-      x: width * 0.72,
-      y: horizonY + (height - horizonY) * 0.64,
-      vx: -0.5,
-      vy: -0.03,
-      baseSpeed: 0.52,
-      phase: 2.6,
-      tone: 'silver',
-    },
-  ];
-
-  const members: SchoolFish[] = [];
-  for (let i = 0; i < 10; i += 1) {
-    const col = Math.floor(i / 2);
-    const rowSign = i % 2 === 0 ? 1 : -1;
-    members.push({
-      schoolIdx: 0,
-      offsetX: -col * 13 + (i % 3) * 4,
-      offsetY: rowSign * (4 + col * 3.5),
-      length: 11 + (i % 4) * 2.2,
-      opacity: 0.38 + ((i * 13) % 24) / 100,
-      phase: i * 0.85,
-      tone: 'gold',
+function createValleyFireflies(count: number, width: number, height: number): ValleyFirefly[] {
+  const list: ValleyFirefly[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const r1 = deterministicUnit(i + 101);
+    const r2 = deterministicUnit(i + 203);
+    const r3 = deterministicUnit(i + 307);
+    list.push({
+      x: r1 * width,
+      y: height * (0.58 + r2 * 0.3),
+      vx: (r3 - 0.5) * 0.26,
+      vy: -(0.14 + r2 * 0.24),
+      radius: 2 + r3 * 2.5,
+      alpha: 0.35 + r1 * 0.5,
+      phase: r2 * Math.PI * 2,
     });
   }
-  for (let i = 0; i < 9; i += 1) {
-    const col = Math.floor(i / 2);
-    const rowSign = i % 2 === 0 ? 1 : -1;
-    members.push({
-      schoolIdx: 1,
-      offsetX: col * 14 - (i % 3) * 3,
-      offsetY: rowSign * (4 + col * 3.4),
-      length: 10.5 + (i % 3) * 2.4,
-      opacity: 0.36 + ((i * 17) % 26) / 100,
-      phase: i * 0.92 + 1.2,
-      tone: 'silver',
-    });
-  }
-
-  return { schools, members };
-}
-
-function createPlanktonMotes(): PlanktonMote[] {
-  const motes: PlanktonMote[] = [];
-  for (let i = 0; i < PLANKTON_COUNT; i += 1) {
-    motes.push({
-      xRatio: ((i * 61 + 13) % 100) / 100,
-      yNorm: 0.06 + (((i * 37 + 11) % 88) / 100) * 0.9,
-      phase: i * 0.91,
-      driftSpeed: 0.8 + (i % 5) * 0.25,
-      radius: 1.1 + (i % 3) * 0.55,
-      tone: i % 3 === 0 ? 'gold' : 'emerald',
-    });
-  }
-  return motes;
-}
-
-function drawArticulatedBird(
-  context: CanvasRenderingContext2D,
-  bx: number,
-  by: number,
-  wingSpan: number,
-  flapWave: number,
-  facing: 1 | -1,
-  color: string,
-  species: 'gull' | 'egret' | 'eagle',
-) {
-  context.save();
-  context.translate(bx, by);
-  context.scale(facing, 1);
-
-  const innerElbowLift = -wingSpan * (0.28 + flapWave * 0.34);
-  const tipLift = wingSpan * (0.08 - flapWave * 0.44);
-
-  // Thân thuôn nhọn & cổ/mỏ thanh mảnh
-  context.fillStyle = color;
-  context.beginPath();
-  context.ellipse(0, 0, wingSpan * 0.26, wingSpan * 0.085, 0, 0, Math.PI * 2);
-  context.fill();
-
-  context.strokeStyle = color;
-  context.lineCap = 'round';
-  context.lineJoin = 'round';
-  context.lineWidth = species === 'eagle' ? 1.85 : species === 'egret' ? 1.55 : 1.35;
-
-  // Cánh sau (cung 2 khớp gập lướt gió)
-  context.beginPath();
-  context.moveTo(-1, -0.5);
-  context.quadraticCurveTo(
-    -wingSpan * 0.44,
-    innerElbowLift * 0.9,
-    -wingSpan * 0.82,
-    innerElbowLift + tipLift * 0.65,
-  );
-  context.stroke();
-
-  // Cánh trước (cung 2 khớp rõ nét)
-  context.beginPath();
-  context.moveTo(1, -0.5);
-  context.quadraticCurveTo(wingSpan * 0.38, innerElbowLift, wingSpan * 0.64, innerElbowLift * 0.72);
-  context.quadraticCurveTo(wingSpan * 0.84, tipLift * 0.5, wingSpan, tipLift);
-  context.stroke();
-
-  context.restore();
+  return list;
 }
 
 /**
- * Canvas 2D hiệu ứng liên tục 60fps cho Vịnh Hạ Long (gộp trong 1 vòng lặp requestAnimationFrame):
- * - Dải ánh nắng mặt trời hình thoi mảnh co giãn & lấp lánh trên mặt sóng từ chân trời tới tiền cảnh
- * - Gợn sóng sine mảnh & đốm sáng lấp lánh (water sparkles) bật/tắt dịu trên mặt biển ngọc
- * - Bụi nắng vàng kim & hạt sáng lơ lửng tương tác con trỏ chuột (bán kính 140px)
- * - Vòng gợn sóng nước elip lan tỏa khi rê chuột trên mặt vịnh & sóng đồng tâm khi Click
+ * Canvas 2D hiệu ứng liên tục 120fps (`dtScale`) cho Cảnh quan Biển Mây & Ngân Hà Hoàng Liên Sơn:
+ * - Dải Ngân Hà kéo chéo góc trên trái ra sau đỉnh núi + hàng trăm đốm sáng lấp lánh (OffscreenCanvas cache)
+ * - 4 Chòm sao Hình học Toán học (Đa diện đều & Đường tròn ngoại tiếp) sáng dịu theo vị trí chuột
+ * - Sao băng định kỳ (4s–7s) với vệt sáng vàng trắng thanh mảnh
+ * - 5 tầng Biển Mây cuộn trôi mượt (`#F8F6F0`, `#E6E2D6`, `#C5D3DC`), sương ấm bản làng & đom đóm thung lũng
  */
 export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -438,6 +419,9 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     if (!ctx) return;
 
     const glowSprites = createGlowSpriteCache();
+    const spriteCache = createStarAndCloudSpriteCache();
+    const stars = createStarField(260);
+    const constellations = createGeometricConstellations();
 
     let width = window.innerWidth || 1440;
     let height = window.innerHeight || 900;
@@ -457,664 +441,376 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
 
     resize();
 
-    const particles = createParticles(width, height);
-    const sunGlints = createSunGlints();
-    const waterSparkles = createWaterSparkles();
-    const foregroundBirds = createForegroundBirds();
-    const highEagles = createHighEagles();
-    const { schools: fishSchools, members: schoolMembers } = createFishSchools(width, height);
-    const planktonMotes = createPlanktonMotes();
-    const ripples: Ripple[] = [];
-    const trail: TrailPoint[] = [];
-    const splashDroplets: SplashDroplet[] = [];
-    const leapState: LeapingFishState = {
-      active: false,
-      startMs: 0,
-      nextTriggerMs: 3200,
-      originX: width * 0.42,
-      originY: height * (WATERLINE_RATIO + 0.14),
-      direction: 1,
-      arcWidth: 68,
-      arcHeight: 42,
-      durationMs: 980,
-      entrySplashed: false,
-    };
+    const fireflies = createValleyFireflies(28, width, height);
+    const ripples: CloudRipple[] = [];
 
-    const pointer = {
-      x: -9999,
-      y: -9999,
+    const shootingStar: ShootingStar = {
       active: false,
-      lastRippleX: -9999,
-      lastRippleY: -9999,
-      lastRippleAt: 0,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      length: 120,
+      life: 0,
+      maxLife: 1.05,
     };
+    // Kích hoạt sao băng đầu tiên sớm (~1.6s) rồi lặp ngẫu nhiên 4s–7s
+    let nextMeteorCountdownSec = 1.6;
 
-    const pushRipple = (ripple: Ripple) => {
-      ripples.push(ripple);
-      if (ripples.length > MAX_ACTIVE_RIPPLES) {
-        ripples.shift();
-      }
-    };
+    const mouse = { x: -9999, y: -9999, active: false };
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      pointer.x = x;
-      pointer.y = y;
-      pointer.active = x >= 0 && x <= width && y >= 0 && y <= height;
+      const nextX = event.clientX - rect.left;
+      const nextY = event.clientY - rect.top;
+      mouse.x = nextX;
+      mouse.y = nextY;
+      mouse.active = nextX >= 0 && nextX <= width && nextY >= 0 && nextY <= height;
 
-      if (!pointer.active) return;
-
-      trail.push({ x, y, life: 1 });
-      if (trail.length > MAX_TRAIL_POINTS) {
-        trail.shift();
-      }
-
-      // Tạo vòng sóng nước lan tỏa khi rê chuột ngang vùng mặt vịnh
-      const horizonY = height * WATERLINE_RATIO;
-      if (y > horizonY + 8) {
-        const now = performance.now();
-        const dx = x - pointer.lastRippleX;
-        const dy = y - pointer.lastRippleY;
-        if (dx * dx + dy * dy > 780 && now - pointer.lastRippleAt > 90) {
-          pointer.lastRippleX = x;
-          pointer.lastRippleY = y;
-          pointer.lastRippleAt = now;
-          pushRipple({
-            x,
-            y,
-            radius: 4,
-            maxRadius: 56 + ((y - horizonY) / Math.max(height - horizonY, 1)) * 42,
-            alpha: 0.42,
-            speed: 1.45,
-            isWater: true,
-          });
-        }
+      if (mouse.active && nextY > height * 0.66 && Math.random() < 0.16 && ripples.length < 16) {
+        ripples.push({
+          x: nextX,
+          y: nextY,
+          radius: 8,
+          maxRadius: 64,
+          alpha: 0.24,
+          speed: 0.9,
+        });
       }
     };
 
     const handleClick = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      const cx = event.clientX - rect.left;
-      const cy = event.clientY - rect.top;
-      const isWater = cy > height * WATERLINE_RATIO;
-
-      pushRipple({
-        x: cx,
-        y: cy,
-        radius: 6,
-        maxRadius: isWater ? 140 : 175,
-        alpha: 0.58,
-        speed: isWater ? 2.4 : 2.9,
-        isWater,
-      });
-      pushRipple({
-        x: cx,
-        y: cy,
-        radius: 2,
-        maxRadius: isWater ? 195 : 235,
+      const clickX = event.clientX - rect.left;
+      const clickY = event.clientY - rect.top;
+      if (clickX < 0 || clickX > width || clickY < 0 || clickY > height) return;
+      if (ripples.length >= 20) ripples.shift();
+      ripples.push({
+        x: clickX,
+        y: clickY,
+        radius: 10,
+        maxRadius: 96,
         alpha: 0.36,
-        speed: isWater ? 1.75 : 2.1,
-        isWater,
+        speed: 1.25,
       });
-
-      for (const p of particles) {
-        const dx = p.x - cx;
-        const dy = p.y - cy;
-        const distSq = dx * dx + dy * dy;
-        if (distSq > 0.5 && distSq < INTERACTION_RADIUS * INTERACTION_RADIUS * 2.2) {
-          const dist = Math.sqrt(distSq);
-          const impulse = (1 - dist / (INTERACTION_RADIUS * 1.5)) * 2.2;
-          p.vx += (dx / dist) * impulse;
-          p.vy += (dy / dist) * impulse;
-        }
-      }
     };
 
-    const drawSineWaterWaves = (context: CanvasRenderingContext2D, timeSec: number) => {
-      const horizonY = height * WATERLINE_RATIO;
-      const seaSpanY = Math.max(height - horizonY - 18, 100);
-      const waveBands = 7;
+    const drawMilkyWayBand = (tSec: number) => {
+      ctx.save();
+      ctx.translate(width * 0.46, height * 0.24);
+      ctx.rotate(0.41);
 
-      context.lineWidth = 1;
-      for (let b = 0; b < waveBands; b += 1) {
-        const norm = (b + 0.4) / waveBands;
-        const baseY = horizonY + 14 + Math.pow(norm, 1.38) * seaSpanY;
-        const amp = 1.1 + norm * 2.4;
-        const freq = 0.014 - norm * 0.005;
-        const phase = timeSec * (0.9 + b * 0.14) + b * 1.3;
+      // Lõi Dải Ngân Hà mờ dịu lam ngọc - hồng hổ phách
+      const coreGrad = ctx.createRadialGradient(0, 0, width * 0.04, 0, 0, width * 0.56);
+      const pulse = 0.92 + Math.sin(tSec * 0.35) * 0.08;
+      coreGrad.addColorStop(0, `rgba(148, 196, 236, ${(0.14 * pulse).toFixed(3)})`);
+      coreGrad.addColorStop(0.38, `rgba(116, 162, 206, ${(0.09 * pulse).toFixed(3)})`);
+      coreGrad.addColorStop(0.68, `rgba(212, 163, 115, ${(0.055 * pulse).toFixed(3)})`);
+      coreGrad.addColorStop(1, 'rgba(11, 25, 44, 0)');
 
-        context.beginPath();
-        for (let sx = 0; sx <= width; sx += 44) {
-          const sy = baseY + Math.sin(sx * freq + phase) * amp;
-          if (sx === 0) {
-            context.moveTo(sx, sy);
-          } else {
-            context.lineTo(sx, sy);
-          }
-        }
-        context.strokeStyle = `rgba(142, 229, 206, ${(0.04 + norm * 0.05).toFixed(3)})`;
-        context.stroke();
-      }
+      ctx.scale(1.65, 0.34);
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, width * 0.56, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
     };
 
-    const drawDynamicSunpath = (context: CanvasRenderingContext2D, timeSec: number) => {
-      const horizonY = height * WATERLINE_RATIO;
-      const seaSpanY = Math.max(height - horizonY - 22, 120);
-      const sunCenterX = width * 0.51;
+    const drawStars = (tSec: number) => {
+      for (const star of stars) {
+        const sx = star.nx * width;
+        const sy = star.ny * height;
+        const twinkle = 0.55 + 0.45 * Math.sin(tSec * star.twinkleSpeed + star.phase);
+        let alpha = star.baseAlpha * twinkle;
 
-      for (const glint of sunGlints) {
-        const perspectiveY = horizonY + 6 + Math.pow(glint.rowNorm, 1.55) * seaSpanY;
-        const waveX = Math.sin(timeSec * glint.speed + glint.phase) * glint.driftAmp;
-        const waveY =
-          Math.cos(timeSec * (glint.speed * 0.8) + glint.phase) * (0.8 + glint.rowNorm * 1.4);
-        const widthMod = 0.68 + 0.42 * Math.sin(timeSec * (glint.speed * 1.15) + glint.phase);
-        const shimmer = 0.48 + 0.52 * Math.sin(timeSec * glint.speed * 1.5 + glint.phase);
-        const alpha = (0.24 + 0.52 * (1 - glint.rowNorm * 0.48)) * shimmer;
-
-        const xCenter = sunCenterX + glint.offsetX + waveX;
-        const py = perspectiveY + waveY;
-        const halfW = glint.baseWidth * widthMod * 0.5;
-        const halfH = glint.baseHeight * (0.75 + 0.25 * shimmer);
-
-        // Vệt sóng hình thoi mảnh sắc nét
-        context.beginPath();
-        context.moveTo(xCenter - halfW, py);
-        context.lineTo(xCenter, py - halfH);
-        context.lineTo(xCenter + halfW, py);
-        context.lineTo(xCenter, py + halfH);
-        context.closePath();
-        context.fillStyle = `rgba(232, 168, 90, ${alpha.toFixed(3)})`;
-        context.fill();
-
-        // Lõi ánh nắng vàng rực ở giữa hình thoi
-        if (shimmer > 0.55) {
-          context.beginPath();
-          context.moveTo(xCenter - halfW * 0.45, py);
-          context.lineTo(xCenter, py - halfH * 0.65);
-          context.lineTo(xCenter + halfW * 0.45, py);
-          context.lineTo(xCenter, py + halfH * 0.65);
-          context.closePath();
-          context.fillStyle = `rgba(255, 232, 175, ${(alpha * 0.92).toFixed(3)})`;
-          context.fill();
-        }
-      }
-    };
-
-    const drawShimmeringWaterReflections = (context: CanvasRenderingContext2D, timeSec: number) => {
-      const horizonY = height * WATERLINE_RATIO;
-      const seaSpanY = Math.max(height - horizonY - 18, 90);
-      // Gợn phản chiếu bóng đảo Karst & thuyền buồm cắt lát ngang 120fps thay thế SVG feDisplacementMap
-      const anchors = [
-        { xRatio: 0.16, spanW: 54, tone: 'rgba(13, 34, 31, 0.24)' },
-        { xRatio: 0.56, spanW: 68, tone: 'rgba(16, 40, 36, 0.28)' },
-        { xRatio: 0.77, spanW: 84, tone: 'rgba(12, 30, 27, 0.26)' },
-        { xRatio: 0.9, spanW: 48, tone: 'rgba(20, 44, 39, 0.22)' },
-      ] as const;
-
-      context.lineCap = 'round';
-      for (let a = 0; a < anchors.length; a += 1) {
-        const anchor = anchors[a];
-        if (!anchor) continue;
-        const baseX = width * anchor.xRatio;
-        context.strokeStyle = anchor.tone;
-        for (let row = 0; row < 5; row += 1) {
-          const norm = (row + 0.3) / 5.4;
-          const ry = horizonY + 12 + norm * seaSpanY * 0.58;
-          const waveShift = Math.sin(timeSec * 1.45 + row * 1.1 + a) * (4 + row * 1.5);
-          const halfSpan = anchor.spanW * (1 - norm * 0.42);
-          context.lineWidth = Math.max(1.2, 2.8 - norm * 1.4);
-          context.beginPath();
-          context.moveTo(baseX + waveShift - halfSpan, ry);
-          context.lineTo(baseX + waveShift + halfSpan, ry);
-          context.stroke();
-        }
-      }
-    };
-
-    const drawWaterSparkles = (context: CanvasRenderingContext2D, timeSec: number) => {
-      const horizonY = height * WATERLINE_RATIO;
-      const seaSpanY = Math.max(height - horizonY - 24, 100);
-
-      for (const sp of waterSparkles) {
-        const pulse = Math.pow(Math.max(0, Math.sin(timeSec * sp.speed + sp.phase)), 4);
-        if (pulse < 0.04) continue;
-
-        const sx = sp.xRatio * width;
-        const sy = horizonY + 12 + Math.pow(sp.yNorm, 1.3) * seaSpanY;
-        const arm = sp.size * (0.7 + pulse * 1.1);
-
-        context.strokeStyle =
-          sp.tone === 'jade'
-            ? `rgba(174, 244, 224, ${(pulse * 0.72).toFixed(3)})`
-            : `rgba(255, 228, 168, ${(pulse * 0.85).toFixed(3)})`;
-        context.lineWidth = 0.95;
-
-        context.beginPath();
-        context.moveTo(sx - arm * 1.6, sy);
-        context.lineTo(sx + arm * 1.6, sy);
-        context.moveTo(sx, sy - arm);
-        context.lineTo(sx, sy + arm);
-        context.stroke();
-      }
-    };
-
-    const drawBioluminescentPlankton = (context: CanvasRenderingContext2D, timeSec: number) => {
-      const horizonY = height * WATERLINE_RATIO;
-      const seaSpanY = Math.max(height - horizonY - 18, 90);
-
-      for (const mote of planktonMotes) {
-        const px =
-          (((mote.xRatio * width + Math.sin(timeSec * 0.35 + mote.phase) * 18) % width) + width) %
-          width;
-        const py = horizonY + 8 + mote.yNorm * seaSpanY + Math.cos(timeSec * 0.55 + mote.phase) * 4;
-        const glow =
-          0.25 + 0.75 * Math.pow(0.5 + 0.5 * Math.sin(timeSec * mote.driftSpeed + mote.phase), 2);
-        const radius = mote.radius * (0.85 + 0.35 * glow);
-
-        drawGlowSprite(
-          context,
-          glowSprites[mote.tone === 'emerald' ? 'emerald' : 'gold'],
-          px,
-          py,
-          radius * 4.2,
-          glow * 0.42,
-        );
-
-        context.beginPath();
-        context.arc(px, py, radius, 0, Math.PI * 2);
-        context.fillStyle =
-          mote.tone === 'emerald'
-            ? `rgba(110, 231, 183, ${(glow * 0.65).toFixed(3)})`
-            : `rgba(253, 230, 138, ${(glow * 0.68).toFixed(3)})`;
-        context.fill();
-      }
-    };
-
-    const drawUnderwaterFishSchools = (
-      context: CanvasRenderingContext2D,
-      timeSec: number,
-      dtSeconds: number,
-      dtScale: number,
-      animate: boolean,
-    ) => {
-      const horizonY = height * WATERLINE_RATIO;
-      const minSeaY = horizonY + 28;
-      const maxSeaY = Math.max(height - 26, minSeaY + 40);
-      const schoolLerp = frameDampFactor(1.85, dtSeconds);
-
-      for (const school of fishSchools) {
-        if (animate) {
-          school.phase += 0.022 * dtScale;
-          const baseDir = school.tone === 'gold' ? 1 : -1;
-          let targetVx = baseDir * school.baseSpeed;
-          let targetVy = Math.sin(timeSec * 0.75 + school.phase) * 0.24;
-
-          if (pointer.active && pointer.y > horizonY + 14) {
-            const dx = pointer.x - school.x;
-            const dy = pointer.y - school.y;
-            const dist = Math.hypot(dx, dy);
-            if (dist > 28 && dist < 240) {
-              targetVx += (dx / dist) * 0.42;
-              targetVy += (dy / dist) * 0.28;
-            }
-          }
-
-          school.vx += (targetVx - school.vx) * schoolLerp;
-          school.vy += (targetVy - school.vy) * schoolLerp;
-          school.x += school.vx * dtScale;
-          school.y += school.vy * dtScale;
-
-          if (school.x > width + 90) school.x = -90;
-          if (school.x < -90) school.x = width + 90;
-          if (school.y < minSeaY) school.y = minSeaY + 4;
-          if (school.y > maxSeaY) school.y = maxSeaY - 4;
-        }
-      }
-
-      for (const fish of schoolMembers) {
-        const school = fishSchools[fish.schoolIdx];
-        if (!school) continue;
-        const swimWave = Math.sin(timeSec * 4.5 + fish.phase) * 2.2;
-        const fx = school.x + fish.offsetX;
-        const fy = school.y + fish.offsetY + swimWave;
-        const heading = Math.atan2(school.vy, school.vx || 1);
-        const tailWag = Math.sin(timeSec * 11 + fish.phase) * 2.6;
-
-        context.save();
-        context.translate(fx, fy);
-        context.rotate(heading);
-
-        context.fillStyle =
-          fish.tone === 'gold'
-            ? `rgba(246, 201, 107, ${fish.opacity.toFixed(3)})`
-            : `rgba(182, 238, 224, ${fish.opacity.toFixed(3)})`;
-
-        // Thân cá thuôn dài mờ ảo dưới làn nước ngọc
-        context.beginPath();
-        context.moveTo(fish.length * 0.55, 0);
-        context.quadraticCurveTo(0, -fish.length * 0.22, -fish.length * 0.45, 0);
-        context.quadraticCurveTo(0, fish.length * 0.22, fish.length * 0.55, 0);
-        context.fill();
-
-        // Đuôi cá vẫy nhẹ
-        context.beginPath();
-        context.moveTo(-fish.length * 0.4, 0);
-        context.lineTo(-fish.length * 0.78, -fish.length * 0.22 + tailWag);
-        context.lineTo(-fish.length * 0.78, fish.length * 0.22 + tailWag);
-        context.closePath();
-        context.fill();
-
-        context.restore();
-      }
-    };
-
-    const drawLeapingFishAndSplashes = (
-      context: CanvasRenderingContext2D,
-      timeMs: number,
-      dtScale: number,
-      animate: boolean,
-    ) => {
-      if (!animate) return;
-      const horizonY = height * WATERLINE_RATIO;
-
-      if (!leapState.active && timeMs >= leapState.nextTriggerMs) {
-        const spot = 0.24 + Math.random() * 0.54;
-        leapState.active = true;
-        leapState.startMs = timeMs;
-        leapState.originX = width * spot;
-        leapState.originY = horizonY + 34 + Math.random() * Math.max(height - horizonY - 96, 40);
-        leapState.direction = Math.random() > 0.5 ? 1 : -1;
-        leapState.arcWidth = 54 + Math.random() * 28;
-        leapState.arcHeight = 32 + Math.random() * 18;
-        leapState.entrySplashed = false;
-
-        // Vòng sóng khi cá phóng lên khỏi mặt nước
-        pushRipple({
-          x: leapState.originX,
-          y: leapState.originY,
-          radius: 5,
-          maxRadius: 68,
-          alpha: 0.52,
-          speed: 1.55,
-          isWater: true,
-        });
-      }
-
-      if (leapState.active) {
-        const elapsed = timeMs - leapState.startMs;
-        const progress = Math.min(1, elapsed / leapState.durationMs);
-        const fx = leapState.originX + leapState.direction * leapState.arcWidth * progress;
-        const fy = leapState.originY - 4 * leapState.arcHeight * progress * (1 - progress);
-        const slopeY = -4 * leapState.arcHeight * (1 - 2 * progress);
-        const angle = Math.atan2(slopeY, leapState.direction * leapState.arcWidth);
-
-        context.save();
-        context.translate(fx, fy);
-        context.rotate(angle);
-        context.fillStyle = 'rgba(255, 224, 152, 0.9)';
-        context.beginPath();
-        context.ellipse(0, 0, 8.5, 2.7, 0, 0, Math.PI * 2);
-        context.fill();
-        context.beginPath();
-        context.moveTo(-7.5, 0);
-        context.lineTo(-12.5, -3.5);
-        context.lineTo(-12.5, 3.5);
-        context.closePath();
-        context.fill();
-        context.restore();
-
-        if (progress >= 0.96 && !leapState.entrySplashed) {
-          leapState.entrySplashed = true;
-          const endX = leapState.originX + leapState.direction * leapState.arcWidth;
-          for (let rIdx = 0; rIdx < 3; rIdx += 1) {
-            pushRipple({
-              x: endX,
-              y: leapState.originY,
-              radius: 3 + rIdx * 4,
-              maxRadius: 56 + rIdx * 24,
-              alpha: 0.56 - rIdx * 0.1,
-              speed: 1.2 + rIdx * 0.25,
-              isWater: true,
-            });
-          }
-          for (let d = 0; d < 7; d += 1) {
-            if (splashDroplets.length >= MAX_SPLASH_DROPLETS) {
-              splashDroplets.shift();
-            }
-            splashDroplets.push({
-              x: endX + (Math.random() - 0.5) * 6,
-              y: leapState.originY,
-              vx: (Math.random() - 0.5) * 2.2,
-              vy: -2.2 - Math.random() * 1.9,
-              alpha: 0.85,
-              radius: 1.2 + Math.random() * 1.1,
-            });
+        if (mouse.active) {
+          const dist = Math.hypot(mouse.x - sx, mouse.y - sy);
+          if (dist < 130) {
+            alpha = Math.min(1, alpha + (1 - dist / 130) * 0.35);
           }
         }
 
-        if (progress >= 1) {
-          leapState.active = false;
-          leapState.nextTriggerMs = timeMs + 4200 + Math.random() * 1700;
-        }
-      }
-
-      for (let i = splashDroplets.length - 1; i >= 0; i -= 1) {
-        const drop = splashDroplets[i];
-        if (!drop) continue;
-        drop.vy += 0.14 * dtScale;
-        drop.x += drop.vx * dtScale;
-        drop.y += drop.vy * dtScale;
-        drop.alpha -= 0.032 * dtScale;
-
-        if (drop.alpha <= 0.02) {
-          splashDroplets.splice(i, 1);
-          continue;
-        }
-
-        context.beginPath();
-        context.arc(drop.x, drop.y, drop.radius, 0, Math.PI * 2);
-        context.fillStyle = `rgba(220, 250, 240, ${drop.alpha.toFixed(3)})`;
-        context.fill();
-      }
-    };
-
-    const drawAirborneBirdsAndEagles = (
-      context: CanvasRenderingContext2D,
-      timeSec: number,
-      dtScale: number,
-      animate: boolean,
-    ) => {
-      // 3 đại bàng biển lượn vòng elip chậm trên tầm cao quanh các đỉnh Karst
-      for (const eagle of highEagles) {
-        const angle = eagle.phase + timeSec * eagle.angularSpeed;
-        const ex = eagle.centerXRatio * width + Math.cos(angle) * eagle.orbitRx;
-        const ey = eagle.centerYRatio * height + Math.sin(angle) * eagle.orbitRy;
-        const facing: 1 | -1 = Math.sin(angle) * eagle.angularSpeed < 0 ? 1 : -1;
-        const flap = Math.sin(timeSec * 1.8 + eagle.phase) * 0.25;
-        drawArticulatedBird(
-          context,
-          ex,
-          ey,
-          eagle.wingSpan,
-          flap,
-          facing,
-          'rgba(28, 22, 26, 0.72)',
-          'eagle',
-        );
-      }
-
-      // 6 chim hải âu & cò trắng có cánh 2 khớp bay lướt qua vịnh & đan xen nhịp vỗ - lướt
-      for (const bird of foregroundBirds) {
-        if (animate) {
-          bird.xRatio += bird.vxRatio * 0.016 * dtScale;
-          if (bird.xRatio > 1.06) bird.xRatio = -0.06;
-          if (bird.xRatio < -0.06) bird.xRatio = 1.06;
-        }
-
-        const bx = bird.xRatio * width;
-        const by = bird.yRatio * height + Math.sin(timeSec * 1.2 + bird.phase) * bird.bobAmp;
-        // Xen kẽ chu kỳ vỗ cánh và lướt nghiêng nhẹ
-        const glideCycle = Math.sin(timeSec * 0.65 + bird.phase);
-        const flap =
-          glideCycle > 0.28
-            ? 0.16 * Math.sin(timeSec * 1.4 + bird.phase)
-            : Math.sin(timeSec * bird.flapSpeed + bird.phase);
-        const facing: 1 | -1 = bird.vxRatio >= 0 ? 1 : -1;
-        const color =
-          bird.species === 'egret' ? 'rgba(248, 245, 236, 0.84)' : 'rgba(255, 236, 200, 0.76)';
-
-        drawArticulatedBird(context, bx, by, bird.wingSpan, flap, facing, color, bird.species);
-      }
-    };
-
-    const drawFrame = (timeMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
-      const timeSec = timeMs * 0.001;
-
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, width, height);
-
-      const sampleTime = animate ? timeSec : 0.45;
-      const particleDamp = frameDampFactor(2.76, dtSeconds);
-
-      // 1. Gợn phản chiếu Karst 120fps, sóng sine, dải nắng, sinh vật phát quang & đàn cá bơi dưới vịnh
-      drawShimmeringWaterReflections(ctx, sampleTime);
-      drawSineWaterWaves(ctx, sampleTime);
-      drawDynamicSunpath(ctx, sampleTime);
-      drawBioluminescentPlankton(ctx, sampleTime);
-      drawUnderwaterFishSchools(ctx, sampleTime, dtSeconds, dtScale, animate);
-      drawLeapingFishAndSplashes(ctx, timeMs, dtScale, animate);
-
-      // 2. Đốm sáng lấp lánh (water sparkles) & Đàn chim hải âu / cò trắng / đại bàng trên cao
-      drawWaterSparkles(ctx, sampleTime);
-      drawAirborneBirdsAndEagles(ctx, sampleTime, dtScale, animate);
-
-      // 3. Bụi nắng vàng kim & đom đóm lơ lửng tương tác chuột (bán kính 140px)
-      for (const p of particles) {
-        if (animate) {
-          p.phase += 0.028 * dtScale;
-
-          if (pointer.active) {
-            const dx = p.x - pointer.x;
-            const dy = p.y - pointer.y;
-            const distSq = dx * dx + dy * dy;
-            if (distSq > 0.5 && distSq < INTERACTION_RADIUS * INTERACTION_RADIUS) {
-              const dist = Math.sqrt(distSq);
-              const strength = (1 - dist / INTERACTION_RADIUS) * 0.36 * dtScale;
-              const nx = dx / dist;
-              const ny = dy / dist;
-              p.vx += nx * strength - ny * strength * 0.65;
-              p.vy += ny * strength + nx * strength * 0.65;
-            }
-          }
-
-          p.vx += (p.baseVx - p.vx) * particleDamp;
-          p.vy += (p.baseVy - p.vy) * particleDamp;
-
-          p.x += p.vx * dtScale;
-          p.y += p.vy * dtScale;
-
-          if (p.y < -12) p.y = height + 12;
-          if (p.y > height + 12) p.y = -12;
-          if (p.x < -12) p.x = width + 12;
-          if (p.x > width + 12) p.x = -12;
-        }
-
-        const pulse = 0.58 + 0.42 * Math.sin(p.phase);
-        const alpha = p.alpha * pulse;
-
-        if (p.tone === 'gold') {
-          drawGlowSprite(ctx, glowSprites.gold, p.x, p.y, p.radius * 3.8, alpha * 0.48);
-        }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle =
-          p.tone === 'emerald'
-            ? `rgba(142, 229, 206, ${(alpha * 0.7).toFixed(3)})`
-            : `rgba(255, 213, 132, ${(alpha * 0.88).toFixed(3)})`;
-        ctx.fill();
-      }
-
-      // 4. Vệt sáng & rẽ nước hình chữ V phát quang theo đầu con trỏ trên mặt vịnh
-      if (animate && trail.length > 1) {
-        const horizonY = height * WATERLINE_RATIO;
-        for (let i = trail.length - 1; i >= 0; i -= 1) {
-          const pt = trail[i];
-          if (!pt) continue;
-          pt.life -= 0.055 * dtScale;
-          if (pt.life <= 0) {
-            trail.splice(i, 1);
-          }
-        }
-
-        for (let i = 1; i < trail.length; i += 1) {
-          const prevPt = trail[i - 1];
-          const currPt = trail[i];
-          if (!prevPt || !currPt) continue;
-          const overWater = currPt.y > horizonY + 8;
-
+        const sprite = spriteCache[star.tone];
+        const drawSize = star.size * 2.4;
+        if (sprite) {
+          ctx.save();
+          ctx.globalAlpha = Math.min(1, Math.max(0.08, alpha));
+          ctx.drawImage(sprite, sx - drawSize / 2, sy - drawSize / 2, drawSize, drawSize);
+          ctx.restore();
+        } else {
+          ctx.fillStyle = `rgba(248, 246, 240, ${alpha.toFixed(3)})`;
           ctx.beginPath();
-          ctx.moveTo(prevPt.x, prevPt.y);
-          ctx.lineTo(currPt.x, currPt.y);
-          ctx.lineWidth = Math.max(0.7, currPt.life * (overWater ? 2.4 : 2.1));
-          ctx.lineCap = 'round';
-          ctx.strokeStyle = overWater
-            ? `rgba(110, 231, 183, ${(currPt.life * 0.56).toFixed(3)})`
-            : `rgba(255, 213, 132, ${(currPt.life * 0.45).toFixed(3)})`;
-          ctx.stroke();
-
-          // Vệt rẽ nước chữ V sinh vật phù du phát quang khi rê chuột qua vùng mặt vịnh
-          if (overWater) {
-            const dx = currPt.x - prevPt.x;
-            const dy = currPt.y - prevPt.y;
-            const len = Math.hypot(dx, dy);
-            if (len > 1.5) {
-              const nx = -dy / len;
-              const ny = dx / len;
-              const spread = (1 - currPt.life) * 18 + 5;
-              ctx.beginPath();
-              ctx.moveTo(currPt.x, currPt.y);
-              ctx.lineTo(prevPt.x + nx * spread, prevPt.y + ny * spread);
-              ctx.moveTo(currPt.x, currPt.y);
-              ctx.lineTo(prevPt.x - nx * spread, prevPt.y - ny * spread);
-              ctx.lineWidth = 0.85;
-              ctx.strokeStyle = `rgba(110, 231, 183, ${(currPt.life * 0.28).toFixed(3)})`;
-              ctx.stroke();
-            }
-          }
+          ctx.arc(sx, sy, star.size * 0.32, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
+    };
 
-      // 5. Gợn sóng nước lan tỏa tròn phối cảnh elip (rê chuột trên biển & Click)
+    const drawConstellations = (tSec: number, dtSeconds: number, animate: boolean) => {
+      const refDim = Math.min(width, height * 1.45);
+      const smooth = frameDampFactor(8, dtSeconds);
+
+      for (const c of constellations) {
+        const cx = c.centerNx * width;
+        const cy = c.centerNy * height;
+        let targetGlow = 0;
+
+        if (animate && mouse.active) {
+          const dist = Math.hypot(mouse.x - cx, mouse.y - cy);
+          const triggerRadius = Math.max(150, refDim * 0.18);
+          if (dist < triggerRadius) {
+            targetGlow = 1 - dist / triggerRadius;
+          }
+        }
+        c.glow = animate ? c.glow + (targetGlow - c.glow) * smooth : 0;
+
+        const breath = 0.92 + Math.sin(tSec * 1.1 + c.centerNx * 10) * 0.08;
+        const strokeAlpha = (c.baseOpacity + c.glow * 0.4) * breath;
+        const circleAlpha = (0.11 + c.glow * 0.28) * breath;
+
+        // Đường tròn ngoại tiếp đa diện
+        if (c.circumcircle) {
+          ctx.save();
+          ctx.strokeStyle = `rgba(232, 200, 132, ${circleAlpha.toFixed(3)})`;
+          ctx.lineWidth = 0.85 + c.glow * 0.6;
+          ctx.setLineDash([4, 5]);
+          ctx.beginPath();
+          ctx.arc(
+            c.circumcircle.cx * width,
+            c.circumcircle.cy * height,
+            c.circumcircle.rRatio * width,
+            0,
+            Math.PI * 2,
+          );
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Các cạnh nối chòm sao hình học
+        ctx.save();
+        ctx.strokeStyle = `rgba(246, 211, 131, ${strokeAlpha.toFixed(3)})`;
+        ctx.lineWidth = 0.95 + c.glow * 0.75;
+        ctx.beginPath();
+        for (const [i, j] of c.edges) {
+          const v1 = c.vertices[i];
+          const v2 = c.vertices[j];
+          if (!v1 || !v2) continue;
+          ctx.moveTo(v1.nx * width, v1.ny * height);
+          ctx.lineTo(v2.nx * width, v2.ny * height);
+        }
+        ctx.stroke();
+        ctx.restore();
+
+        // Đỉnh sao chòm sao
+        for (const v of c.vertices) {
+          const vx = v.nx * width;
+          const vy = v.ny * height;
+          drawGlowSprite(
+            ctx,
+            glowSprites.gold,
+            vx,
+            vy,
+            6 + c.glow * 6,
+            Math.min(0.95, 0.36 + c.glow * 0.55),
+            '#F6D383',
+          );
+        }
+      }
+    };
+
+    const updateAndDrawShootingStar = (dtSeconds: number, dtScale: number, animate: boolean) => {
+      if (!animate) return;
+
+      if (!shootingStar.active) {
+        nextMeteorCountdownSec -= dtSeconds;
+        if (nextMeteorCountdownSec <= 0) {
+          const startFromLeft = Math.random() > 0.35;
+          shootingStar.active = true;
+          shootingStar.x = startFromLeft
+            ? width * (0.12 + Math.random() * 0.36)
+            : width * (0.58 + Math.random() * 0.25);
+          shootingStar.y = height * (0.04 + Math.random() * 0.14);
+          shootingStar.vx = (startFromLeft ? 1 : -0.85) * (11.5 + Math.random() * 4.5);
+          shootingStar.vy = 5.2 + Math.random() * 2.4;
+          shootingStar.length = 115 + Math.random() * 65;
+          shootingStar.life = 0;
+          shootingStar.maxLife = 0.85 + Math.random() * 0.3;
+          nextMeteorCountdownSec = 4 + Math.random() * 3;
+        }
+        return;
+      }
+
+      shootingStar.life += dtSeconds;
+      shootingStar.x += shootingStar.vx * dtScale;
+      shootingStar.y += shootingStar.vy * dtScale;
+
+      const progress = shootingStar.life / shootingStar.maxLife;
+      if (progress >= 1 || shootingStar.y > height * 0.58) {
+        shootingStar.active = false;
+        return;
+      }
+
+      const fadeAlpha = Math.sin(progress * Math.PI);
+      const speedMag = Math.hypot(shootingStar.vx, shootingStar.vy) || 1;
+      const tailX = shootingStar.x - (shootingStar.vx / speedMag) * shootingStar.length;
+      const tailY = shootingStar.y - (shootingStar.vy / speedMag) * shootingStar.length;
+
+      const tailGrad = ctx.createLinearGradient(tailX, tailY, shootingStar.x, shootingStar.y);
+      tailGrad.addColorStop(0, 'rgba(246, 211, 131, 0)');
+      tailGrad.addColorStop(0.55, `rgba(246, 211, 131, ${(0.38 * fadeAlpha).toFixed(3)})`);
+      tailGrad.addColorStop(1, `rgba(255, 250, 232, ${(0.95 * fadeAlpha).toFixed(3)})`);
+
+      ctx.save();
+      ctx.strokeStyle = tailGrad;
+      ctx.lineWidth = 2.1;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(shootingStar.x, shootingStar.y);
+      ctx.stroke();
+      ctx.restore();
+
+      drawGlowSprite(
+        ctx,
+        glowSprites.gold,
+        shootingStar.x,
+        shootingStar.y,
+        12,
+        0.9 * fadeAlpha,
+        '#FFF7DC',
+      );
+    };
+
+    const drawVolumetricCloudSea = (tSec: number) => {
+      for (let layerIdx = 0; layerIdx < CLOUD_LAYERS.length; layerIdx += 1) {
+        const layer = CLOUD_LAYERS[layerIdx];
+        if (!layer) continue;
+
+        const baseY = height * layer.yRatio;
+        const driftX = (tSec * layer.speed) % (width + 420);
+        const puffSprite = spriteCache[layer.puffTone];
+
+        // Dải sóng mây nền cuộn trôi liên tục
+        ctx.save();
+        ctx.beginPath();
+        const step = 36;
+        for (let x = -step; x <= width + step * 2; x += step) {
+          const wave1 = Math.sin((x + driftX) * layer.waveFreq + layerIdx * 1.3) * layer.amplitude;
+          const wave2 =
+            Math.cos((x - driftX * 0.55) * (layer.waveFreq * 1.8) + layerIdx) *
+            (layer.amplitude * 0.45);
+          const cursorBoost =
+            mouse.active && Math.abs(mouse.y - baseY) < 120
+              ? Math.exp(-Math.pow((x - mouse.x) / 140, 2)) * Math.sin(tSec * 3.6 + x * 0.02) * 8
+              : 0;
+          const py = baseY + wave1 + wave2 + cursorBoost;
+          if (x === -step) {
+            ctx.moveTo(x, py);
+          } else {
+            ctx.lineTo(x, py);
+          }
+        }
+        ctx.lineTo(width + step * 2, height + 24);
+        ctx.lineTo(-step, height + 24);
+        ctx.closePath();
+
+        const bandGrad = ctx.createLinearGradient(0, baseY - layer.amplitude, 0, height);
+        bandGrad.addColorStop(0, layer.color);
+        bandGrad.addColorStop(1, layerIdx >= 3 ? '#F8F6F0' : '#E6E2D6');
+        ctx.globalAlpha = layer.opacity;
+        ctx.fillStyle = bandGrad;
+        ctx.fill();
+        ctx.restore();
+
+        // Lớp cụm mây bồng bềnh OffscreenCanvas cache tại đỉnh sóng mây
+        if (puffSprite) {
+          const span = width + 320;
+          const spacing = span / layer.waveCount;
+          ctx.save();
+          ctx.globalAlpha = layer.opacity * 0.78;
+          for (let k = -1; k <= layer.waveCount + 1; k += 1) {
+            const rawX = ((((k * spacing + driftX * 1.15) % span) + span) % span) - 160;
+            const puffY =
+              baseY + Math.sin(k * 1.45 + tSec * 0.4 + layerIdx) * (layer.amplitude * 0.65);
+            const r = layer.puffRadius * (0.85 + 0.22 * Math.sin(k * 2.1 + layerIdx));
+            ctx.drawImage(puffSprite, rawX - r, puffY - r * 0.58, r * 2, r * 1.16);
+          }
+          ctx.restore();
+        }
+      }
+    };
+
+    const drawValleyFirefliesAndRipples = (tSec: number, dtScale: number, animate: boolean) => {
+      for (const ff of fireflies) {
+        if (animate) {
+          ff.x += (ff.vx + Math.sin(tSec * 0.9 + ff.phase) * 0.16) * dtScale;
+          ff.y += ff.vy * dtScale;
+
+          if (mouse.active) {
+            const dx = ff.x - mouse.x;
+            const dy = ff.y - mouse.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist > 1 && dist < 140) {
+              const force = ((140 - dist) / 140) * 0.22 * dtScale;
+              ff.x += (dx / dist) * force * 4.5;
+              ff.y += (dy / dist) * force * 4.5;
+            }
+          }
+
+          if (ff.y < height * 0.52) {
+            ff.y = height * 0.88;
+            ff.x = deterministicUnit(ff.phase * 100 + tSec) * width;
+          }
+          if (ff.x < -20) ff.x = width + 20;
+          if (ff.x > width + 20) ff.x = -20;
+        }
+
+        const flicker = 0.45 + 0.55 * Math.sin(tSec * 2.3 + ff.phase);
+        drawGlowSprite(
+          ctx,
+          glowSprites.firefly,
+          ff.x,
+          ff.y,
+          ff.radius * 3.4,
+          ff.alpha * flicker,
+          '#F6D383',
+        );
+      }
+
       if (animate && ripples.length > 0) {
-        const waterDecay = Math.pow(0.96, dtScale);
-        const airDecay = Math.pow(0.95, dtScale);
+        const decay = Math.pow(0.955, dtScale);
         for (let i = ripples.length - 1; i >= 0; i -= 1) {
-          const ripple = ripples[i];
-          if (!ripple) continue;
-          ripple.radius += ripple.speed * dtScale;
-          ripple.alpha *= ripple.isWater ? waterDecay : airDecay;
-
-          if (ripple.radius >= ripple.maxRadius || ripple.alpha <= 0.015) {
+          const r = ripples[i];
+          if (!r) continue;
+          r.radius += r.speed * dtScale;
+          r.alpha *= decay;
+          if (r.radius >= r.maxRadius || r.alpha <= 0.012) {
             ripples.splice(i, 1);
             continue;
           }
 
+          ctx.save();
           ctx.beginPath();
-          if (ripple.isWater) {
-            ctx.ellipse(ripple.x, ripple.y, ripple.radius, ripple.radius * 0.34, 0, 0, Math.PI * 2);
-            ctx.lineWidth = 1.25;
-            ctx.strokeStyle = `rgba(174, 244, 224, ${ripple.alpha.toFixed(3)})`;
-          } else {
-            ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-            ctx.lineWidth = 1.4;
-            ctx.strokeStyle = `rgba(255, 213, 132, ${ripple.alpha.toFixed(3)})`;
-          }
+          ctx.ellipse(r.x, r.y, r.radius, r.radius * 0.36, 0, 0, Math.PI * 2);
+          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = `rgba(248, 246, 240, ${r.alpha.toFixed(3)})`;
           ctx.stroke();
+          ctx.restore();
         }
       }
+    };
+
+    const drawFrame = (nowMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
+      const tSec = nowMs / 1000;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      drawMilkyWayBand(tSec);
+      drawStars(tSec);
+      drawConstellations(tSec, dtSeconds, animate);
+      updateAndDrawShootingStar(dtSeconds, dtScale, animate);
+      drawVolumetricCloudSea(tSec);
+      drawValleyFirefliesAndRipples(tSec, dtScale, animate);
     };
 
     if (prefersReducedMotion) {
@@ -1188,8 +884,6 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       window.removeEventListener('click', handleClick);
       window.removeEventListener('resize', resize);
       ripples.length = 0;
-      trail.length = 0;
-      splashDroplets.length = 0;
     };
   }, [prefersReducedMotion]);
 

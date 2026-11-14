@@ -55,7 +55,7 @@ describe('App routing smoke test', () => {
   it('hiển thị đầy đủ kiến trúc trang chủ The Living Atlas (4-Layer Hero, Spatial Subject Gallery, My Learning Orbit & Knowledge Thread)', async () => {
     renderWithProviders('/');
 
-    // 1. Hero Section — Vịnh Hạ Long độc bản, Physics Canvas, Ngôi sao Đông Sơn & Di sản cố định
+    // 1. Hero Section — Biển Mây & Ngân Hà Hoàng Liên Sơn, Physics Canvas, Ngôi sao Đông Sơn & Di sản cố định
     expect(await screen.findByRole('heading', { name: /Đi một ngày đàng/i })).toBeInTheDocument();
     expect(screen.getByText(/— Tục ngữ Việt Nam/i)).toBeInTheDocument();
     expect(
@@ -64,9 +64,12 @@ describe('App routing smoke test', () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getAllByText('LEARNING UNIVERSE').length).toBeGreaterThan(0);
-    expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute('data-landscape', 'vinh-ha-long');
-    expect(screen.getByTestId('hon-trong-mai')).toBeInTheDocument();
-    expect(screen.getByTestId('halong-junk-boat-near')).toBeInTheDocument();
+    expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute(
+      'data-landscape',
+      'hoang-lien-son',
+    );
+    expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
+    expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
     expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     expect(screen.queryByTestId('atmosphere-switcher')).not.toBeInTheDocument();
     expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
