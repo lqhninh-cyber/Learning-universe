@@ -130,7 +130,7 @@ export const mdxComponents: MDXComponents = {
     />
   ),
   table: (props: ComponentPropsWithoutRef<'table'>) => (
-    <div className="my-6 overflow-hidden overflow-x-auto rounded-2xl border border-stone-200/90 bg-white/70 p-0 shadow-sm dark:border dark:border-[#1D3629] dark:bg-[#0B1712]">
+    <div className="my-6 overflow-hidden overflow-x-auto rounded-xl border border-[var(--border-subtle)] bg-white/80 p-0 shadow-xs dark:border-[#1D3629] dark:bg-[#0B1712]">
       <table
         className="w-full border-collapse text-left text-sm text-stone-800 dark:text-[#E8F1EC]"
         {...props}
@@ -139,7 +139,7 @@ export const mdxComponents: MDXComponents = {
   ),
   thead: (props: ComponentPropsWithoutRef<'thead'>) => (
     <thead
-      className="border-b border-stone-200/80 bg-stone-100/80 font-serif text-xs tracking-wider text-stone-900 uppercase dark:border-b dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]"
+      className="border-b border-[var(--border-subtle)] bg-[#1B3D2F]/[0.06] font-serif text-[13px] font-bold text-stone-900 dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]"
       {...props}
     />
   ),
@@ -154,13 +154,13 @@ export const mdxComponents: MDXComponents = {
   ),
   th: (props: ComponentPropsWithoutRef<'th'>) => (
     <th
-      className="border-b border-stone-200/80 px-4 py-3 text-left font-serif text-xs font-bold tracking-wider text-stone-900 uppercase dark:border-b dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262]"
+      className="border-b border-[var(--border-subtle)] px-4 py-3 text-left font-serif text-[13px] font-bold tracking-wide text-stone-900 dark:border-[#1F3D2E] dark:bg-[#12241C] dark:text-[#C5A262] [&_.katex]:normal-case"
       {...props}
     />
   ),
   td: (props: ComponentPropsWithoutRef<'td'>) => (
     <td
-      className="border-b border-stone-200/60 px-4 py-3 text-left text-sm leading-relaxed text-stone-800 transition-colors dark:border-b dark:border-[#152B20] dark:text-[#E8F1EC] [&_.katex]:text-stone-900 dark:[&_.katex]:text-[#F5F2EB] [&:first-child]:font-mono [&:first-child]:font-bold dark:[&:first-child]:text-[#739B88]"
+      className="border-b border-stone-200/60 px-4 py-3 text-left text-[14.5px] leading-relaxed text-stone-800 transition-colors dark:border-b dark:border-[#152B20] dark:text-[#E8F1EC] [&_.katex]:text-stone-900 dark:[&_.katex]:text-[#F5F2EB] [&:first-child]:font-semibold dark:[&:first-child]:text-[#739B88]"
       {...props}
     />
   ),

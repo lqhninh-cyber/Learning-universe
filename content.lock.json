@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T05:35:23.973Z",
+  "updatedAt": "2026-11-14T06:27:41.748Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -261,7 +261,7 @@
       "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/03-chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "23ada596fa1f52494f7c51213e74a7e5637b11bb6eb5080569574eae15ea962d",
+      "sha256": "e45a3ae145fcc04e67f8b97ba0a348637df8694ac0afccf898a18642a8f151de",
       "numberedBlocks": {
         "ctx-c3-b3-phan-tu-v4": "3.3.1",
         "thm-c3-b3-cau-truc-a4": "3.3.1",

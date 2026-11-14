@@ -21,6 +21,7 @@ import {
 } from '../schemas/index.ts';
 import { scanContent, type ContentIssue } from './content-scanner.ts';
 import { remarkTheoremNumbering } from './remark-theorem-numbering.ts';
+import { preprocessMarkdownTables } from '../src/shared/lib/math-sanitize.ts';
 
 export type ValidationCategory =
   'structure' | 'metadata' | 'sources' | 'mdx' | 'latex' | 'references' | 'assets' | 'lock';
@@ -431,7 +432,10 @@ export function validateContent(options: ValidateContentOptions): ValidationResu
           .use(remarkMath)
           .use(remarkMdx);
 
-        const vfile = new VFile({ path: absoluteLessonPath, value: rawSource });
+        const vfile = new VFile({
+          path: absoluteLessonPath,
+          value: preprocessMarkdownTables(rawSource),
+        });
         let tree: Root | null = null;
 
         try {

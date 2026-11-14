@@ -1,6 +1,18 @@
 import katex from 'katex';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import remarkParse from 'remark-parse';
+import { unified } from 'unified';
+import { visit } from 'unist-util-visit';
 import { describe, expect, it } from 'vitest';
-import { fixKaTeXNegations, sanitizeLatex } from './math-sanitize';
+import {
+  fixKaTeXNegations,
+  parseMarkdownTableAlignments,
+  parseMarkdownTableRow,
+  preprocessMarkdownTables,
+  protectTableMathPipes,
+  sanitizeLatex,
+} from './math-sanitize';
 
 describe('sanitizeLatex & fixKaTeXNegations', () => {
   it('chuẩn hóa các biến thể toán tử phủ định (/=, !=, /=, \\in/, /|, ∤, ≢, ⊄)', () => {
@@ -62,5 +74,45 @@ describe('sanitizeLatex & fixKaTeXNegations', () => {
       const closeSpans = (fixedHtml.match(/<\/span>/g) ?? []).length;
       expect(openSpans).toBe(closeSpans);
     }
+  });
+
+  it('bảo vệ dấu gạch đứng | trong công thức toán bảng Markdown sang \\lvert...\\rvert / \\mid', () => {
+    expect(protectTableMathPipes('|G|')).toBe('\\lvert G\\rvert');
+    expect(protectTableMathPipes('|gH| = |H| = |Hg|')).toBe(
+      '\\lvert gH\\rvert = \\lvert H\\rvert = \\lvert Hg\\rvert',
+    );
+    expect(protectTableMathPipes('\\varphi(n) = |(\\mathbb{Z}/n\\mathbb{Z})^\\times|')).toBe(
+      '\\varphi(n) = \\lvert(\\mathbb{Z}/n\\mathbb{Z})^\\times\\rvert',
+    );
+    expect(protectTableMathPipes('d | |G|')).toBe('d \\mid \\lvert G\\rvert');
+    expect(protectTableMathPipes('\\{x \\in G | x^2 = e\\}')).toBe('\\{x \\in G \\mid x^2 = e\\}');
+    expect(protectTableMathPipes('\\|x - a\\| < \\delta')).toBe('\\lvert x - a\\rvert < \\delta');
+  });
+
+  it('khôi phục bảng Markdown bị gộp dòng (| |) và giúp remarkGfm parse đúng nút table', () => {
+    const collapsed =
+      '| Cấp $|G|$ | Cấu trúc | Số kiểu | | :---: | :--- | :---: | | $1$ | $\\{e\\}$ | $1$ |';
+    const expanded = preprocessMarkdownTables(collapsed);
+    expect(expanded.split('\n')).toEqual([
+      '| Cấp $\\lvert G\\rvert$ | Cấu trúc | Số kiểu |',
+      '| :---: | :--- | :---: |',
+      '| $1$ | $\\{e\\}$ | $1$ |',
+    ]);
+
+    const tree = unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(expanded);
+    const tables: unknown[] = [];
+    visit(tree, 'table', (node) => {
+      tables.push(node);
+    });
+    expect(tables).toHaveLength(1);
+    expect(parseMarkdownTableRow('| **Đẳng thế** | $|gH| = |H|$ |')).toEqual([
+      '**Đẳng thế**',
+      '$\\lvert gH\\rvert = \\lvert H\\rvert$',
+    ]);
+    expect(parseMarkdownTableAlignments('| :---: | :--- | ---: |')).toEqual([
+      'center',
+      'left',
+      'right',
+    ]);
   });
 });

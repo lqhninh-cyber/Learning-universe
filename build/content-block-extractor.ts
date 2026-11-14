@@ -20,6 +20,7 @@ import {
   type VirtualSearchIndex,
 } from '../schemas/index.ts';
 import { remarkTheoremNumbering } from './remark-theorem-numbering.ts';
+import { preprocessMarkdownTables } from '../src/shared/lib/math-sanitize.ts';
 
 const MAX_EXCERPT_LENGTH = 340;
 
@@ -313,7 +314,10 @@ export function extractContentSearchIndex(
         }
 
         const source = readFileSync(absolutePath, 'utf8');
-        const vfile = new VFile({ path: absolutePath, value: source });
+        const vfile = new VFile({
+          path: absolutePath,
+          value: preprocessMarkdownTables(source),
+        });
 
         let tree: Root;
         try {

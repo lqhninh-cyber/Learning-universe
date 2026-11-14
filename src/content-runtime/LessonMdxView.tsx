@@ -59,7 +59,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
       ),
       td: (props: ComponentPropsWithoutRef<'td'>) => (
         <td
-          className="border-t border-stone-200 px-4 py-3 text-[15px] leading-relaxed text-stone-800"
+          className="border-b border-stone-200/60 px-4 py-3 text-left text-[14.5px] leading-relaxed text-stone-800 transition-colors dark:border-b dark:border-[#152B20] dark:text-[#E8F1EC] [&_.katex]:text-stone-900 dark:[&_.katex]:text-[#F5F2EB] [&:first-child]:font-semibold dark:[&:first-child]:text-[#739B88]"
           {...props}
         >
           {annotateChildren(props.children, currentCourseId)}

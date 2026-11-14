@@ -308,6 +308,375 @@ export function sanitizeLatex(raw: string): string {
   return out;
 }
 
+const TABLE_SEPARATOR_LINE_RE = /^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*(?:\s*:?-{3,}:?\s*)?\|?\s*$/;
+const INLINE_CODE_OR_MATH_RE = /(`[^`\n]*`)|(?<!\\)\$(?!\$)([^$\n]+?)(?<!\\)\$/g;
+
+/**
+ * Kiểm tra xem một dòng có phải là dòng phân cách tiêu đề bảng Markdown GFM (`| :--- | :---: |`) hay không.
+ */
+export function isMarkdownTableSeparatorLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed.includes('|') || !trimmed.includes('---')) return false;
+  return TABLE_SEPARATOR_LINE_RE.test(trimmed);
+}
+
+/**
+ * Chuyển các ký hiệu gạch đứng `|` (và `\|` thoát GFM) bên trong biểu thức toán `$...$` của ô bảng Markdown
+ * sang lệnh KaTeX không chứa `|` (`\lvert ... \rvert`, `\mid`) để không làm vỡ cột bảng.
+ */
+export function protectTableMathPipes(mathBody: string): string {
+  if (!mathBody || !mathBody.includes('|')) return mathBody;
+
+  const protectedSpecs: string[] = [];
+  let work = mathBody.replace(/\\begin\{array\}\{[^{}]*\}/g, (match) => {
+    const token = `__LU_ARRAY_SPEC_${protectedSpecs.length}__`;
+    protectedSpecs.push(match);
+    return token;
+  });
+
+  // Đưa các cặp \left\| ... \right\| và \|...\| (do escape GFM trong bảng) về | trước khi phân cặp \lvert / \rvert
+  work = work
+    .replace(/\\left\s*\\?\|/g, '\\left\\lvert ')
+    .replace(/\\right\s*\\?\|/g, '\\right\\rvert ')
+    .replace(/\\middle\s*\\?\|/g, '\\middle\\vert ')
+    .replace(/\\([bB]igg?)l\s*\\?\|/g, '\\$1l\\lvert ')
+    .replace(/\\([bB]igg?)r\s*\\?\|/g, '\\$1r\\rvert ')
+    .replace(/\\([bB]igg?)m\s*\\?\|/g, '\\$1m\\vert ')
+    .replace(/\\([bB]igg?)\s*\\?\|/g, '\\$1|')
+    .replace(/\\\|/g, '|');
+
+  const outTokens: string[] = [];
+  const openStack: number[] = [];
+
+  for (let i = 0; i < work.length; i += 1) {
+    const ch = work[i] ?? '';
+    if (ch !== '|') {
+      outTokens.push(ch);
+      continue;
+    }
+
+    const prev = i > 0 ? work[i - 1] : undefined;
+    const next = i + 1 < work.length ? work[i + 1] : undefined;
+
+    // Quan hệ chia hết / tập hợp dạng `a | b` hoặc `d | |G|` (có khoảng trắng hai bên)
+    if (prev !== undefined && /\s/.test(prev) && next !== undefined && /\s/.test(next)) {
+      outTokens.push('\\mid');
+      continue;
+    }
+
+    const shouldOpenNested =
+      openStack.length > 0 &&
+      (prev === undefined || /[\s+\-=<>(,[{|]/.test(prev)) &&
+      next !== undefined &&
+      !/[\s+\-=<>),\].}|^_]/.test(next);
+
+    if (openStack.length === 0 || shouldOpenNested) {
+      openStack.push(outTokens.length);
+      outTokens.push(next && /[A-Za-z]/.test(next) ? '\\lvert ' : '\\lvert');
+    } else {
+      openStack.pop();
+      outTokens.push(next && /[A-Za-z]/.test(next) ? '\\rvert ' : '\\rvert');
+    }
+  }
+
+  // Nếu còn dấu | đơn lẻ chưa đóng (vd: `{x \in G|x^2=e}`), đổi thành \mid
+  for (const unmatchedIdx of openStack) {
+    outTokens[unmatchedIdx] = ' \\mid ';
+  }
+
+  let result = outTokens.join('');
+  result = result.replace(/__LU_ARRAY_SPEC_(\d+)__/g, (_m, idxStr: string) => {
+    return protectedSpecs[Number(idxStr)] ?? '';
+  });
+
+  return result;
+}
+
+function protectMathPipesInLine(line: string): string {
+  if (!line.includes('$') || !line.includes('|')) return line;
+  return line.replace(
+    INLINE_CODE_OR_MATH_RE,
+    (full, codeSpan: string | undefined, mathBody: string | undefined) => {
+      if (codeSpan !== undefined) return codeSpan;
+      if (mathBody === undefined) return full;
+      return `$${protectTableMathPipes(mathBody)}$`;
+    },
+  );
+}
+
+function countTableColumns(row: string): number {
+  let pipes = 0;
+  let inMath = false;
+  let inCode = false;
+
+  for (let i = 0; i < row.length; i += 1) {
+    const ch = row[i];
+    if (ch === '\\') {
+      i += 1;
+      continue;
+    }
+    if (ch === '`') {
+      inCode = !inCode;
+      continue;
+    }
+    if (!inCode && ch === '$') {
+      inMath = !inMath;
+      continue;
+    }
+    if (!inCode && !inMath && ch === '|') {
+      pipes += 1;
+    }
+  }
+
+  return Math.max(0, pipes - 1);
+}
+
+function expandCollapsedTableLine(rawLine: string): string[] {
+  const safeLine = protectMathPipesInLine(rawLine);
+  const sepMatch = safeLine.match(/\|(?:[ \t]*:?-{3,}:?[ \t]*\|)+/);
+  if (!sepMatch) return [safeLine];
+
+  const expectedCols = Math.max(1, countTableColumns(sepMatch[0]));
+
+  // Tìm ranh giới `| |` nằm ngoài $...$ và `...`
+  const splitPositions: number[] = [];
+  let inMath = false;
+  let inCode = false;
+
+  for (let i = 0; i < safeLine.length; i += 1) {
+    const ch = safeLine[i];
+    if (ch === '\\') {
+      i += 1;
+      continue;
+    }
+    if (ch === '`') {
+      inCode = !inCode;
+      continue;
+    }
+    if (!inCode && ch === '$') {
+      inMath = !inMath;
+      continue;
+    }
+    if (!inCode && !inMath && ch === '|') {
+      let j = i + 1;
+      while (j < safeLine.length && (safeLine[j] === ' ' || safeLine[j] === '\t')) {
+        j += 1;
+      }
+      if (j > i + 1 && safeLine[j] === '|') {
+        splitPositions.push(j);
+      }
+    }
+  }
+
+  if (splitPositions.length === 0) {
+    return [safeLine];
+  }
+
+  const rawSegments: string[] = [];
+  let start = 0;
+  for (const pos of splitPositions) {
+    rawSegments.push(safeLine.slice(start, pos).trimEnd());
+    start = pos;
+  }
+  rawSegments.push(safeLine.slice(start).trimEnd());
+
+  // Tách văn bản dẫn đứng trước hàng tiêu đề nếu có (vd: "Bảng: | Cột 1 | Cột 2 |")
+  const leadingPrefixLines: string[] = [];
+  if (rawSegments[0] && !rawSegments[0].trimStart().startsWith('|')) {
+    const firstPipe = rawSegments[0].indexOf('|');
+    if (firstPipe > 0) {
+      const leadText = rawSegments[0].slice(0, firstPipe).trim();
+      rawSegments[0] = rawSegments[0].slice(firstPipe).trimStart();
+      if (leadText) {
+        leadingPrefixLines.push(leadText, '');
+      }
+    }
+  }
+
+  // Ghép lại các đoạn bị tách do ô trống `|  |` để mỗi hàng khớp đúng số cột
+  const rows: string[] = [];
+  let pending = '';
+  for (const seg of rawSegments) {
+    const candidate = pending ? `${pending} ${seg.trimStart()}` : seg.trim();
+    if (countTableColumns(candidate) < expectedCols) {
+      pending = candidate;
+    } else {
+      rows.push(candidate);
+      pending = '';
+    }
+  }
+  if (pending) {
+    rows.push(pending);
+  }
+
+  const sepIdx = rows.findIndex((r) => isMarkdownTableSeparatorLine(r));
+  if (sepIdx === -1) {
+    return [safeLine];
+  }
+
+  return [...leadingPrefixLines, ...rows];
+}
+
+/**
+ * Tiền xử lý bảng Markdown trước khi parse GFM/MDX:
+ * 1. Khôi phục các bảng bị gộp trên một dòng qua `| |` và chứa `|:---` / `|---` về từng hàng riêng biệt.
+ * 2. Chuyển mọi dấu gạch đứng `|` (và `\|`) bên trong `$...$` thuộc hàng bảng sang `\lvert ... \rvert` / `\mid`
+ *    để bộ tách cột GFM không bao giờ chia nhầm cột trong biểu thức giá trị tuyệt đối hoặc cấp của nhóm.
+ */
+export function preprocessMarkdownTables(markdown: string): string {
+  if (!markdown || !markdown.includes('|')) return markdown;
+
+  const lineEnding = markdown.includes('\r\n') ? '\r\n' : '\n';
+  const rawLines = markdown.split(/\r?\n/);
+
+  // Bước 1: Mở rộng các bảng bị gộp dòng (bỏ qua code block)
+  const expandedLines: string[] = [];
+  let inFence = false;
+  let fenceMarker = '';
+
+  for (const line of rawLines) {
+    const fenceMatch = line.match(/^\s*(```+|~~~+)/);
+    if (fenceMatch) {
+      const marker = fenceMatch[1]?.slice(0, 3) ?? '```';
+      if (!inFence) {
+        inFence = true;
+        fenceMarker = marker;
+      } else if (marker === fenceMarker) {
+        inFence = false;
+        fenceMarker = '';
+      }
+      expandedLines.push(line);
+      continue;
+    }
+
+    if (
+      !inFence &&
+      line.includes('---') &&
+      /\|(?:[ \t]*:?-{3,}:?[ \t]*\|)+/.test(line) &&
+      /\|[ \t]+\|/.test(line)
+    ) {
+      expandedLines.push(...expandCollapsedTableLine(line));
+    } else {
+      expandedLines.push(line);
+    }
+  }
+
+  // Bước 2: Bảo vệ dấu `|` trong `$...$` ở toàn bộ các hàng thuộc bảng Markdown
+  const tableRowMask = new Array<boolean>(expandedLines.length).fill(false);
+  inFence = false;
+  fenceMarker = '';
+
+  for (let i = 0; i < expandedLines.length; i += 1) {
+    const line = expandedLines[i] ?? '';
+    const fenceMatch = line.match(/^\s*(```+|~~~+)/);
+    if (fenceMatch) {
+      const marker = fenceMatch[1]?.slice(0, 3) ?? '```';
+      if (!inFence) {
+        inFence = true;
+        fenceMarker = marker;
+      } else if (marker === fenceMarker) {
+        inFence = false;
+        fenceMarker = '';
+      }
+      continue;
+    }
+
+    if (inFence) continue;
+
+    if (isMarkdownTableSeparatorLine(line)) {
+      if (i > 0 && (expandedLines[i - 1] ?? '').includes('|')) {
+        tableRowMask[i - 1] = true;
+      }
+      tableRowMask[i] = true;
+
+      let r = i + 1;
+      while (r < expandedLines.length) {
+        const rowLine = expandedLines[r] ?? '';
+        const trimmed = rowLine.trim();
+        if (
+          !trimmed ||
+          !trimmed.includes('|') ||
+          /^\s*(```+|~~~+)/.test(rowLine) ||
+          /^\s*<\/?[A-Z]/.test(trimmed)
+        ) {
+          break;
+        }
+        tableRowMask[r] = true;
+        r += 1;
+      }
+    }
+  }
+
+  const finalLines = expandedLines.map((line, idx) =>
+    tableRowMask[idx] ? protectMathPipesInLine(line) : line,
+  );
+
+  return finalLines.join(lineEnding);
+}
+
+/**
+ * Tách một hàng bảng Markdown GFM thành mảng giá trị từng ô,
+ * bảo đảm không bao giờ tách nhầm tại dấu `|` bên trong `$...$` hoặc `` `...` ``.
+ */
+export function parseMarkdownTableRow(row: string): string[] {
+  const safeRow = protectMathPipesInLine(row).trim();
+  const stripped = safeRow.replace(/^\|/, '').replace(/\|$/, '');
+  const cells: string[] = [];
+
+  let current = '';
+  let inMath = false;
+  let inCode = false;
+
+  for (let i = 0; i < stripped.length; i += 1) {
+    const ch = stripped[i] ?? '';
+    if (ch === '\\' && i + 1 < stripped.length) {
+      if (!inMath && !inCode && stripped[i + 1] === '|') {
+        current += '|';
+        i += 1;
+        continue;
+      }
+      current += ch + (stripped[i + 1] ?? '');
+      i += 1;
+      continue;
+    }
+    if (ch === '`') {
+      inCode = !inCode;
+      current += ch;
+      continue;
+    }
+    if (!inCode && ch === '$') {
+      inMath = !inMath;
+      current += ch;
+      continue;
+    }
+    if (!inCode && !inMath && ch === '|') {
+      cells.push(current.trim());
+      current = '';
+      continue;
+    }
+    current += ch;
+  }
+
+  cells.push(current.trim());
+  return cells;
+}
+
+/**
+ * Phân tích căn lề từng cột từ hàng phân cách GFM (`:---`, `:---:`, `---:`).
+ */
+export function parseMarkdownTableAlignments(
+  separatorRow: string,
+): Array<'left' | 'center' | 'right'> {
+  return parseMarkdownTableRow(separatorRow).map((cell) => {
+    const trimmed = cell.trim();
+    const startsColon = trimmed.startsWith(':');
+    const endsColon = trimmed.endsWith(':');
+    if (startsColon && endsColon) return 'center';
+    if (endsColon) return 'right';
+    return 'left';
+  });
+}
+
 /**
  * Alias tương thích ngược cho các điểm gọi hiện có (`KatexMath`).
  */

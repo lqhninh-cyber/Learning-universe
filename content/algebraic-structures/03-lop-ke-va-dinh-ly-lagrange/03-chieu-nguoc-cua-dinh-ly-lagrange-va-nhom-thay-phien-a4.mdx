@@ -233,18 +233,23 @@ Mặc dù chiều ngược nói chung là sai, nhưng trong trường hợp nhó
 
 ## 5. Cấu trúc và phân loại các nhóm cấp nhỏ
 
-Kết hợp Định lý Lagrange và tính chất nhóm cyclic, ta có bức tranh toàn cảnh về phân loại các nhóm hữu hạn có cấp nhỏ:
+Kết hợp Định lý Lagrange và tính chất nhóm cyclic, ta có bức tranh toàn cảnh về phân loại các nhóm hữu hạn có cấp nhỏ (dựa trên cấu trúc bảng phép toán và cấp của các phần tử):
 
-| Cấp $|G|$ | Cấu trúc phân loại | Số cấu trúc bảng phép toán | Đặc điểm |
+| Cấp $|G|$ | Các kiểu cấu trúc tiêu biểu | Số kiểu bảng phép toán | Đặc điểm đại số (theo Định lý Lagrange) |
 | :---: | :--- | :---: | :--- |
-| **1** | $\{e\}$ | 1 | Tầm thường |
-| **2** | $\mathbb{Z}/2\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
-| **3** | $\mathbb{Z}/3\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
-| **4** | $\mathbb{Z}/4\mathbb{Z}$, $V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$ | 2 | Đều là nhóm Abel |
-| **5** | $\mathbb{Z}/5\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
-| **6** | $\mathbb{Z}/6\mathbb{Z}$, $S_3$ (hoặc $D_6$) | 2 | Nhóm không giao hoán nhỏ nhất ($S_3$) |
-| **7** | $\mathbb{Z}/7\mathbb{Z}$ | 1 | Cấp nguyên tố $\implies$ Cyclic |
-| **8** | $\mathbb{Z}/8\mathbb{Z}$, $\mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$, $(\mathbb{Z}/2\mathbb{Z})^3$, $D_8$, $Q_8$ | 5 | 3 nhóm Abel, 2 nhóm không giao hoán |
+| **$1$** | $\{e\}$ | $1$ | Nhóm tầm thường (nhóm cyclic). |
+| **Nguyên tố $p$** ($2, 3, 5, 7, \dots$) | $\mathbb{Z}/p\mathbb{Z}$ | $1$ | Mọi nhóm cấp nguyên tố $p$ đều là nhóm cyclic (Hệ quả 3.9c), có cùng kiểu bảng phép toán với nhóm cộng $\mathbb{Z}/p\mathbb{Z}$ và luôn giao hoán. |
+| **$4$** | $\mathbb{Z}/4\mathbb{Z}$, $V_4 = \{e, a, b, c\}$ | $2$ | Hợp số nhỏ nhất; phần tử khác $e$ có cấp $2$ hoặc $4$ (Bài tập 3.32). Đều là nhóm abel: cyclic $\mathbb{Z}/4\mathbb{Z}$ (có phần tử cấp $4$) hoặc nhóm Klein $V_4$ không cyclic (mọi phần tử $\neq e$ đều có cấp $2$). |
+| **$6$** | $\mathbb{Z}/6\mathbb{Z}$, $S_3$ (hoặc $D_6$) | $2$ | Có $2$ kiểu cấu trúc tiêu biểu: nhóm cyclic giao hoán $\mathbb{Z}/6\mathbb{Z}$ và nhóm không giao hoán nhỏ nhất $S_3$ (tức $D_6$ theo ký hiệu $D_{2n}$ với $n = 3$). |
+
+Chi tiết phân tích từng trường hợp trong phạm vi Chương 3:
+
+- **Cấp $1$:** Nhóm tầm thường $\{e\}$ ($1$ kiểu bảng phép toán — nhóm cyclic).
+- **Cấp nguyên tố $p$ ($p = 2, 3, 5, 7, \dots$):** Mọi nhóm cấp nguyên tố $p$ đều là nhóm cyclic (Hệ quả 3.9c), có cùng kiểu bảng phép toán với nhóm cộng $\mathbb{Z}/p\mathbb{Z}$ và luôn giao hoán.
+- **Cấp $4$ (Hợp số nhỏ nhất):** Theo Định lý Lagrange, các phần tử khác $e$ chỉ có thể có cấp $2$ hoặc $4$ (Bài tập 3.32). Có đúng $2$ kiểu cấu trúc bảng phép toán (đều là nhóm abel):
+  1. Nếu có phần tử cấp $4$: nhóm là cyclic, có cùng kiểu bảng với $\mathbb{Z}/4\mathbb{Z}$.
+  2. Nếu mọi phần tử khác $e$ đều có cấp $2$: nhóm có cùng kiểu bảng với nhóm Klein $V_4 = \{e, a, b, c\}$ (không cyclic).
+- **Cấp $6$:** Có $2$ kiểu cấu trúc tiêu biểu là nhóm cyclic giao hoán $\mathbb{Z}/6\mathbb{Z}$ và nhóm không giao hoán nhỏ nhất $S_3$ (hoặc $D_6$ theo ký hiệu $D_{2n}$ với $n = 3$).
 
 ---
 
@@ -339,7 +344,7 @@ Bảng nhân đóng kín, chứa phần tử đơn vị và mỗi phần tử t�
 **2. Nhận diện cấu trúc của nhóm con $V$**
 
 Từ bảng nhân, ta thấy mọi phần tử khác đơn vị đều có cấp 2 và phép toán giao hoán.
-Do đó $V$ có cùng bảng phép toán với nhóm bốn Klein $V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
+Do đó $V$ có cùng bảng phép toán với nhóm bốn Klein $V_4 = \{e, a, b, c\}$ (không cyclic).
 
 **3. Chỉ số và các lớp kề trái**
 

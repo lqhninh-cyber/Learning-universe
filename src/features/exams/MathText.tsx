@@ -4,7 +4,13 @@ import { annotateTextString } from '@/features/math-glossary/annotator';
 import { KatexMath } from '@/features/math-glossary/KatexMath';
 import { useMathGlossary } from '@/features/math-glossary/useMathGlossary';
 import { cn } from '@/shared/lib/cn';
-import { normalizeMixedMathProse } from '@/shared/lib/math-sanitize';
+import {
+  isMarkdownTableSeparatorLine,
+  normalizeMixedMathProse,
+  parseMarkdownTableAlignments,
+  parseMarkdownTableRow,
+  preprocessMarkdownTables,
+} from '@/shared/lib/math-sanitize';
 
 export interface MathTextProps {
   readonly text: string;
@@ -70,7 +76,9 @@ export function MathText({
   const renderedContent = useMemo(() => {
     if (inline || !text) return null;
 
-    const normalized = normalizeMixedMathProse(text.replace(/\r\n/g, '\n')).trim();
+    const normalized = preprocessMarkdownTables(
+      normalizeMixedMathProse(text.replace(/\r\n/g, '\n')),
+    ).trim();
     const topSegments = normalized.split(/(\$\$[\s\S]*?\$\$)/g);
 
     return topSegments.map((segment, segIdx) => {
@@ -108,6 +116,12 @@ const UNORDERED_ITEM_RE = /^\s*[-*+]\s+(.*)$/;
 const ORDERED_ITEM_RE = /^\s*(?:\d+\.|[a-z]\))\s+(.*)$/;
 const HR_RE = /^\s*---+\s*$/;
 
+function isTableStartAt(lines: readonly string[], idx: number): boolean {
+  const headerLine = lines[idx] ?? '';
+  const sepLine = lines[idx + 1] ?? '';
+  return headerLine.includes('|') && isMarkdownTableSeparatorLine(sepLine);
+}
+
 function renderTextBlock(block: string, blockKey: string, courseId?: string): ReactNode {
   const trimmed = block.trim();
   if (!trimmed) return null;
@@ -118,6 +132,65 @@ function renderTextBlock(block: string, blockKey: string, courseId?: string): Re
 
   while (idx < lines.length) {
     const current = lines[idx] ?? '';
+
+    if (isTableStartAt(lines, idx)) {
+      const startIdx = idx;
+      const headerCells = parseMarkdownTableRow(current);
+      const alignments = parseMarkdownTableAlignments(lines[idx + 1] ?? '');
+      idx += 2;
+
+      const bodyRows: string[][] = [];
+      while (idx < lines.length && (lines[idx] ?? '').includes('|')) {
+        bodyRows.push(parseMarkdownTableRow(lines[idx] ?? ''));
+        idx += 1;
+      }
+
+      nodes.push(
+        <div
+          key={`tbl-${blockKey}-${startIdx}`}
+          className="my-4 overflow-hidden overflow-x-auto rounded-xl border border-[var(--border-subtle)] bg-white/80 shadow-xs dark:border-[#1D3629] dark:bg-[#0B1712]"
+        >
+          <table className="w-full border-collapse text-left text-sm text-[var(--text-main)]">
+            <thead className="border-b border-[var(--border-subtle)] bg-[#1B3D2F]/[0.06] font-bold">
+              <tr>
+                {headerCells.map((cell, colIdx) => (
+                  <th
+                    key={`th-${blockKey}-${startIdx}-${colIdx}`}
+                    style={{ textAlign: alignments[colIdx] ?? 'left' }}
+                    className="border-b border-[var(--border-subtle)] px-4 py-3 font-serif text-[13px] font-bold text-[var(--text-main)] [&_.katex]:normal-case"
+                  >
+                    {renderInlineTokens(cell, `th-${blockKey}-${startIdx}-${colIdx}`, courseId)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--border-subtle)]/70">
+              {bodyRows.map((row, rowIdx) => (
+                <tr
+                  key={`tr-${blockKey}-${startIdx}-${rowIdx}`}
+                  className="transition-colors hover:bg-stone-50/50 dark:hover:bg-[#102219]"
+                >
+                  {headerCells.map((_hdr, colIdx) => (
+                    <td
+                      key={`td-${blockKey}-${startIdx}-${rowIdx}-${colIdx}`}
+                      style={{ textAlign: alignments[colIdx] ?? 'left' }}
+                      className="px-4 py-3 text-sm leading-relaxed text-[var(--text-main)] [&:first-child]:font-semibold"
+                    >
+                      {renderInlineTokens(
+                        row[colIdx] ?? '',
+                        `td-${blockKey}-${startIdx}-${rowIdx}-${colIdx}`,
+                        courseId,
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
 
     if (HR_RE.test(current)) {
       nodes.push(
@@ -177,6 +250,7 @@ function renderTextBlock(block: string, blockKey: string, courseId?: string): Re
     const startIdx = idx;
     while (
       idx < lines.length &&
+      !isTableStartAt(lines, idx) &&
       !HR_RE.test(lines[idx] ?? '') &&
       !UNORDERED_ITEM_RE.test(lines[idx] ?? '') &&
       !ORDERED_ITEM_RE.test(lines[idx] ?? '')

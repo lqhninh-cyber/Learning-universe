@@ -17,6 +17,7 @@ import {
 } from './build/remark-math-sanitize.ts';
 import { remarkTheoremNumbering } from './build/remark-theorem-numbering.ts';
 import { contentPlugin } from './build/vite-plugin-content.ts';
+import { preprocessMarkdownTables } from './src/shared/lib/math-sanitize.ts';
 
 const rootDir = import.meta.dirname;
 
@@ -28,6 +29,15 @@ const katexMacros = JSON.parse(
 export default defineConfig({
   plugins: [
     contentPlugin({ contentDir: 'content' }),
+    {
+      name: 'learning-universe-mdx-table-preprocess',
+      enforce: 'pre',
+      transform(code, id) {
+        if (!id.endsWith('.mdx')) return null;
+        const next = preprocessMarkdownTables(code);
+        return next === code ? null : { code: next, map: null };
+      },
+    },
     {
       enforce: 'pre',
       ...mdx({

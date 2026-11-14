@@ -5,6 +5,7 @@ import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import { describe, expect, it } from 'vitest';
+import { MathText } from '@/features/exams/MathText';
 import { KatexMath } from '@/features/math-glossary/KatexMath';
 import { remarkMathSanitizePost, remarkMathSanitizePre } from '../../../build/remark-math-sanitize';
 import { normalizeMixedMathProse, sanitizeKatexInput, sanitizeLatex } from './math-sanitize';
@@ -162,5 +163,20 @@ describe('KatexMath với bộ tiền xử lý sanitizeKatexInput', () => {
       math18.push((node as unknown as { value: string }).value);
     });
     expect(math18).toEqual(['P = \\sum_{i,j=1}^{n}a_{ij}b_{i}c_{j}']);
+  });
+
+  it('MathText render bảng Markdown bị gộp dòng (| |) và bảo toàn $|G|$ trong KaTeX', () => {
+    const markdown =
+      '| Cấp $|G|$ | Cấu trúc | Đặc điểm | | :---: | :--- | :--- | | **$1$** | $\\{e\\}$ | Nhóm tầm thường | | **$4$** | $\\mathbb{Z}/4\\mathbb{Z}$, $V_4 = \\{e, a, b, c\\}$ | Đều là nhóm abel ($|H| \\mid |G|$) |';
+    const { container } = render(<MathText text={markdown} />);
+
+    const table = container.querySelector('table');
+    expect(table).not.toBeNull();
+    expect(container.querySelectorAll('thead th')).toHaveLength(3);
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(2);
+    expect(container.querySelectorAll('.katex-error')).toHaveLength(0);
+    expect(container.textContent).not.toContain('| :--- |');
+    expect(container.textContent).toContain('∣G∣');
+    expect(container.textContent).toContain('\\lvert G\\rvert');
   });
 });
