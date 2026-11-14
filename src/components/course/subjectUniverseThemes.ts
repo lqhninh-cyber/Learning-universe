@@ -23,10 +23,8 @@ export interface SubjectUniverseStage {
 export interface SubjectUniverseTheme {
   readonly id: SubjectUniverseId;
   readonly slug: string;
-  /** Mã viết tắt hiển thị: CTĐS, HHAVE, GTHMB, GDH */
+  /** Mã viết tắt nội bộ: CTĐS, HHAVE, GTHMB, GDH */
   readonly code: string;
-  /** Tên chủ đề không gian tri thức */
-  readonly themeTitle: string;
   /** Nền gradient sơn mài / không gian của Hero */
   readonly background: string;
   /** Màu nền tối nhất (dùng cho lớp tương phản chữ bên trái) */
@@ -51,7 +49,6 @@ export const SUBJECT_UNIVERSE_THEMES: Readonly<Record<SubjectUniverseId, Subject
     id: 'ctds',
     slug: 'cau-truc-dai-so',
     code: 'CTĐS',
-    themeTitle: 'Tinh Thể Đối Xứng & Đồ Thị Cayley',
     background: 'linear-gradient(135deg, #120E0A 0%, #1F1710 55%, #2C1E12 100%)',
     baseRgb: [18, 14, 10],
     accent: '#E5B84B',
@@ -71,7 +68,6 @@ export const SUBJECT_UNIVERSE_THEMES: Readonly<Record<SubjectUniverseId, Subject
     id: 'hhave',
     slug: 'hinh-hoc-affine',
     code: 'HHAVE',
-    themeTitle: 'Không Gian Tọa Độ & Siêu Mặt Bậc Hai',
     background: 'linear-gradient(135deg, #07151F 0%, #0C2536 55%, #12374D 100%)',
     baseRgb: [7, 21, 31],
     accent: '#38BDF8',
@@ -104,7 +100,6 @@ export const SUBJECT_UNIVERSE_THEMES: Readonly<Record<SubjectUniverseId, Subject
     id: 'gthmb',
     slug: 'giai-tich-ham-mot-bien',
     code: 'GTHMB',
-    themeTitle: 'Dòng Chảy Liên Tục & Hội Tụ Chuỗi Hàm',
     background: 'linear-gradient(135deg, #061A15 0%, #0B2B23 55%, #123E33 100%)',
     baseRgb: [6, 26, 21],
     accent: '#34D399',
@@ -134,7 +129,6 @@ export const SUBJECT_UNIVERSE_THEMES: Readonly<Record<SubjectUniverseId, Subject
     id: 'gdh',
     slug: 'giao-duc-hoc',
     code: 'GDH',
-    themeTitle: 'Vòm Cây Nhân Cách & Hệ Sinh Thái Sư Phạm',
     background: 'linear-gradient(135deg, #1A110F 0%, #2B1A16 55%, #3B241E 100%)',
     baseRgb: [26, 17, 15],
     accent: '#E76F51',

@@ -62,8 +62,13 @@ describe('Không gian Tri thức 120fps trên trang Chi tiết Môn học', () =
       expect(within(hero).getByTestId('subject-progress-pill')).toBeInTheDocument();
       const visualStage = within(hero).getByTestId('subject-visual-stage');
       expect(visualStage).toBeInTheDocument();
-      expect(within(visualStage).getByText('Rê chuột để tương tác mô hình')).toBeInTheDocument();
-      expect(visualStage.querySelectorAll('a, button')).toHaveLength(0);
+      expect(visualStage).toBeEmptyDOMElement();
+      expect(within(hero).queryByText(/Rê chuột để tương tác mô hình/i)).not.toBeInTheDocument();
+      expect(
+        within(hero).queryByText(
+          /Tinh Thể Đối Xứng|Không Gian Tọa Độ|Dòng Chảy Liên Tục|Vòm Cây Nhân Cách/i,
+        ),
+      ).not.toBeInTheDocument();
 
       const dock = within(hero).getByTestId('subject-pathway-dock');
       expect(within(dock).getByRole('list', { name: widgetTitle })).toBeInTheDocument();

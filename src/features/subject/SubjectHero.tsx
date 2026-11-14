@@ -121,13 +121,7 @@ export function SubjectHero({
             </div>
 
             {/* Khối tiêu đề & Mô tả */}
-            <div className="mt-5">
-              <p className="mb-2.5 inline-flex items-center gap-2 font-mono text-[11.5px] font-semibold tracking-[0.18em] text-[var(--subject-accent)] uppercase">
-                <span>{theme.code}</span>
-                <span className="h-px w-6 bg-[var(--subject-accent-border)]" aria-hidden="true" />
-                <span className="text-white/70">{theme.themeTitle}</span>
-              </p>
-
+            <div className="mt-4">
               <h1 className="font-serif text-4xl leading-tight tracking-tight text-white md:text-5xl xl:text-[54px]">
                 {subject.title}
               </h1>
@@ -215,11 +209,7 @@ export function SubjectHero({
           <div
             data-testid="subject-visual-stage"
             className="relative z-10 min-h-[260px] sm:min-h-[300px] lg:min-h-[330px] lg:w-[48%] xl:w-[50%]"
-          >
-            <span className="pointer-events-none absolute right-0 bottom-1 inline-flex items-center rounded-full border border-white/10 bg-black/25 px-3 py-1 font-mono text-[11px] text-white/60 backdrop-blur-xs">
-              Rê chuột để tương tác mô hình
-            </span>
-          </div>
+          />
         </div>
 
         {/* VÙNG 3 — THANH LỘ TRÌNH NGANG DƯỚI ĐÁY HERO */}
