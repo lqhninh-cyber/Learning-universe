@@ -318,7 +318,7 @@
 
 .lesson-content .katex .vlist-t,
 .lu-prose .katex .vlist-t {
-  border-collapse: separate;
+  border-collapse: collapse !important;
 }
 
 .lesson-content .katex-display,

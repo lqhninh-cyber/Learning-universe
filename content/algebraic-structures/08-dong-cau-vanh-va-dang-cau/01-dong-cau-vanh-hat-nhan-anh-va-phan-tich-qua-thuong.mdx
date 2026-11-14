@@ -30,7 +30,7 @@ Bài học này xây dựng nền tảng cho lý thuyết đồng cấu vành: l
 
 ## 1. Định nghĩa đồng cấu vành và điều kiện đơn vị
 
-<Definition id="def-c8-b1-dong-cau-vanh" title="Đồng cấu vành" original="Định nghĩa 8.1">
+<Definition id="def-c8-b1-dong-cau-vanh" title="Đồng cấu vành" original="Định nghĩa 8.1" source="gt-ctds-hvk-2026">
 Cho $(R, +, \cdot)$ và $(S, +, \cdot)$ là hai vành. Một ánh xạ $f: R \to S$ được gọi là một **đồng cấu vành** (ring homomorphism) nếu $f$ bảo toàn cả hai phép toán cộng và nhân:
 1. $f(a + b) = f(a) + f(b)$ với mọi $a, b \in R$.
 2. $f(ab) = f(a)f(b)$ với mọi $a, b \in R$.
@@ -48,7 +48,7 @@ Tuy nhiên, đối với phép nhân, điều kiện $f(1_R) = 1_S$ **không t�
 
 ### Sự cần thiết của điều kiện bảo toàn phần tử đơn vị
 
-<Proposition id="prop-c8-b1-phan-tu-luy-dang" title="Tính chất lũy đẳng của ảnh phần tử đơn vị" original="Mệnh đề 8.2">
+<Proposition id="prop-c8-b1-phan-tu-luy-dang" title="Tính chất lũy đẳng của ảnh phần tử đơn vị" original="Mệnh đề 8.2" source="gt-ctds-hvk-2026">
 Cho $R, S$ là hai vành có đơn vị $1_R$ và $1_S$. Nếu $f: R \to S$ là một đồng cấu vành thì phần tử $e = f(1_R) \in S$ thỏa mãn tính chất **lũy đẳng**:
 $$
 e^2 = e \quad (\text{tức là } [f(1_R)]^2 = f(1_R)).
@@ -68,7 +68,7 @@ Trong một vành tổng quát, phương trình lũy đẳng $e^2 = e$ có thể
 - **Đồng cấu vành tổng quát:** Chỉ thỏa mãn $f(a+b) = f(a)+f(b)$ và $f(ab) = f(a)f(b)$.
 - **Đồng cấu vành có đơn vị (unital ring homomorphism):** Thỏa mãn thêm điều kiện $f(1_R) = 1_S$.
 
-<Theorem id="thm-c8-b1-khi-nao-bao-toan-don-vi" title="Điều kiện bảo đảm f(1_R) = 1_S" original="Mệnh đề 8.3">
+<Theorem id="thm-c8-b1-khi-nao-bao-toan-don-vi" title="Điều kiện bảo đảm f(1_R) = 1_S" original="Mệnh đề 8.3" source="gt-ctds-hvk-2026">
 Cho $R, S$ là hai vành có đơn vị và $f: R \to S$ là một đồng cấu vành. Khi đó $f(1_R) = 1_S$ trong mỗi trường hợp sau:
 1. $f$ là một **toàn ánh**.
 2. $S$ là một **miền nguyên** và $f$ **không phải là ánh xạ không** (tức là tồn tại $x \in R$ sao cho $f(x) \neq 0_S$).
@@ -111,7 +111,7 @@ Phần tử $(1, 0)$ là một phần tử lũy đẳng không tầm thường t
 
 ## 2. Hạt nhân và Ảnh của đồng cấu vành
 
-<Definition id="def-c8-b1-hat-nhan-va-anh" title="Hạt nhân và Ảnh" original="Định nghĩa 8.4">
+<Definition id="def-c8-b1-hat-nhan-va-anh" title="Hạt nhân và Ảnh" original="Định nghĩa 8.4" source="gt-ctds-hvk-2026">
 Cho $f: R \to S$ là một đồng cấu vành.
 1. **Hạt nhân** của $f$, ký hiệu là $\ker f$, là tập hợp mọi phần tử của $R$ được $f$ biến thành phần tử không của $S$:
 $$
@@ -123,7 +123,7 @@ $$
 $$
 </Definition>
 
-<Theorem id="thm-c8-b1-tinh-chat-hat-nhan-va-anh" title="Cấu trúc đại số của Hạt nhân và Ảnh" original="Định lý 8.5">
+<Theorem id="thm-c8-b1-tinh-chat-hat-nhan-va-anh" title="Cấu trúc đại số của Hạt nhân và Ảnh" original="Định lý 8.5" source="gt-ctds-hvk-2026">
 Cho $f: R \to S$ là một đồng cấu vành. Khi đó:
 1. $\operatorname{im} f$ là một **vành con** của $S$. (Nếu $f(1_R) = 1_S$ thì $\operatorname{im} f$ là vành con chứa đơn vị $1_S$).
 2. $\ker f$ là một **iđêan hai phía** của $R$.
@@ -178,7 +178,7 @@ Xét phép nhúng chính tắc $\iota: \mathbb{Z} \to \mathbb{Q}$ định bởi 
 
 Tương tự như trong lý thuyết nhóm, mỗi đồng cấu vành $f: R \to S$ đều có thể "phân rã" qua một vành thương $R/I$ nếu $I$ bị triệt tiêu bởi $f$.
 
-<Theorem id="thm-c8-b1-nguyen-ly-phan-tich" title="Nguyên lý phân tích qua vành thương" original="Định lý 8.7">
+<Theorem id="thm-c8-b1-nguyen-ly-phan-tich" title="Nguyên lý phân tích qua vành thương" original="Định lý 8.7" source="gt-ctds-hvk-2026">
 Cho $f: R \to S$ là một đồng cấu vành và $I$ là một iđêan hai phía của $R$ sao cho $I \subseteq \ker f$. Khi đó:
 1. Tồn tại duy nhất một đồng cấu vành $\bar{f}: R/I \to S$ thỏa mãn:
 $$

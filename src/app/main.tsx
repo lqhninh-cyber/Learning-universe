@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import 'katex/dist/katex.min.css';
 import { App } from '@/app/App';
 import { verifySupabaseConnection } from '@/services/supabase/client';
 import '@/styles/index.css';

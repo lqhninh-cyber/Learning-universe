@@ -217,3 +217,186 @@ export const remarkMathSanitizePost: Plugin<[], Root> = function remarkMathSanit
     });
   };
 };
+
+interface HastNodeLike {
+  type: string;
+  tagName?: string;
+  value?: string;
+  properties?: {
+    className?: string[];
+    [key: string]: unknown;
+  };
+  children?: HastNodeLike[];
+}
+
+const KATEX_CLASS_COMPAT_MAP: Readonly<Record<string, string>> = {
+  base: 'katex-base',
+  strut: 'katex-strut',
+  vbox: 'katex-vbox',
+  thinbox: 'katex-thinbox',
+  inner: 'katex-inner',
+  fix: 'katex-fix',
+  sizing: 'katex-sizing',
+  overline: 'katex-overline',
+  underline: 'katex-underline',
+  rule: 'katex-rule',
+  hline: 'katex-hline',
+  hdashline: 'katex-hdashline',
+  smash: 'katex-smash',
+  root: 'katex-root',
+  accent: 'katex-accent',
+  overlay: 'katex-overlay',
+  stretchy: 'katex-stretchy',
+  sout: 'katex-sout',
+  tag: 'katex-tag',
+  newline: 'katex-newline',
+};
+
+const AMS_NEG_HAST_MAP: Readonly<Record<string, string>> = {
+  '∤': '∣',
+  '⊈': '⊆',
+  '⊉': '⊇',
+  '≁': '∼',
+  '∦': '∥',
+  '≠': '=',
+  '∉': '∈',
+  '≢': '≡',
+  '⊄': '⊂',
+  '⊅': '⊃',
+};
+
+function hasHastClass(node: HastNodeLike | undefined, cls: string): boolean {
+  const list = node?.properties?.className;
+  return Array.isArray(list) && list.includes(cls);
+}
+
+function addHastClass(node: HastNodeLike, cls: string): void {
+  if (!node.properties) {
+    node.properties = {};
+  }
+  if (!Array.isArray(node.properties.className)) {
+    node.properties.className = [];
+  }
+  if (!node.properties.className.includes(cls)) {
+    node.properties.className.push(cls);
+  }
+}
+
+function removeHastClass(node: HastNodeLike, cls: string): void {
+  if (Array.isArray(node.properties?.className)) {
+    node.properties.className = node.properties.className.filter((c) => c !== cls);
+  }
+}
+
+function hasHastDescendantClass(node: HastNodeLike | undefined, cls: string): boolean {
+  if (!node) return false;
+  if (hasHastClass(node, cls)) return true;
+  if (Array.isArray(node.children)) {
+    return node.children.some((child) => hasHastDescendantClass(child, cls));
+  }
+  return false;
+}
+
+function getHastText(node: HastNodeLike | undefined): string {
+  if (!node) return '';
+  if (node.type === 'text') return node.value ?? '';
+  if (Array.isArray(node.children)) {
+    return node.children.map((child) => getHastText(child)).join('');
+  }
+  return '';
+}
+
+/**
+ * Plugin Rehype hậu xử lý ngay sau `rehypeKatex`:
+ * 1. Đồng bộ các class nội bộ giữa KaTeX 0.16.x (`rehype-katex`) và KaTeX 0.19.x (`katex.min.css`).
+ * 2. Loại bỏ các thẻ `.rlap` / `.llap` chứa ký tự gạch chéo phủ định (`\uE020`, `\u0338`, `/`) và gắn `.lu-negated-rel` trực tiếp lên toán tử quan hệ (`=`, `∈`, `∣`, `≡`, `⊂`, `⊆`, `∼`, `∥`).
+ */
+export const rehypeFixKatexNegations: Plugin<[]> = function rehypeFixKatexNegations() {
+  return (tree) => {
+    visit(tree, 'element', (rawNode) => {
+      const node = rawNode as unknown as HastNodeLike;
+
+      // 1. Đồng bộ class KaTeX 0.16.x <-> 0.19.x
+      const classes = node.properties?.className;
+      if (Array.isArray(classes)) {
+        for (const cls of [...classes]) {
+          const mapped = KATEX_CLASS_COMPAT_MAP[cls];
+          if (mapped && !classes.includes(mapped)) {
+            classes.push(mapped);
+          }
+        }
+      }
+
+      // 2. Chuyển đổi các ký tự phủ định đơn lẻ thuộc font AMS (∤, ⊈, ⊉, ≁, ∦) sang toán tử gốc + .lu-negated-rel
+      if (
+        hasHastClass(node, 'mrel') &&
+        Array.isArray(node.children) &&
+        node.children.length === 1
+      ) {
+        const onlyChild = node.children[0];
+        if (onlyChild?.type === 'text' && typeof onlyChild.value === 'string') {
+          const baseOp = AMS_NEG_HAST_MAP[onlyChild.value];
+          if (baseOp) {
+            onlyChild.value = baseOp;
+            removeHastClass(node, 'amsrm');
+            addHastClass(node, 'lu-negated-rel');
+          }
+        }
+      }
+
+      // 3. Thu gọn cụm .rlap / .llap phủ định trong mảng children
+      if (Array.isArray(node.children) && node.children.length > 1) {
+        const nextChildren: HastNodeLike[] = [];
+        for (let i = 0; i < node.children.length; i += 1) {
+          const cur = node.children[i];
+          const next1 = node.children[i + 1];
+          const next2 = node.children[i + 2];
+
+          if (!cur) continue;
+
+          // Trường hợp A: \notin -> cur chứa '∈', next1 chứa '.llap'
+          if (
+            cur.type === 'element' &&
+            getHastText(cur) === '∈' &&
+            next1?.type === 'element' &&
+            hasHastDescendantClass(next1, 'llap')
+          ) {
+            addHastClass(node, 'lu-negated-rel');
+            nextChildren.push({ type: 'text', value: '∈' });
+            i += 1;
+            continue;
+          }
+
+          // Trường hợp B: \neq, \not\equiv, \not\subset, \not\mid -> cur là .mrel chứa '.rlap'
+          if (
+            cur.type === 'element' &&
+            hasHastClass(cur, 'mrel') &&
+            hasHastDescendantClass(cur, 'rlap')
+          ) {
+            if (
+              next1?.type === 'element' &&
+              hasHastClass(next1, 'mspace') &&
+              hasHastClass(next1, 'nobreak') &&
+              next2?.type === 'element' &&
+              hasHastClass(next2, 'mrel')
+            ) {
+              addHastClass(next2, 'lu-negated-rel');
+              nextChildren.push(next2);
+              i += 2;
+              continue;
+            }
+            if (next1?.type === 'element' && hasHastClass(next1, 'mrel')) {
+              addHastClass(next1, 'lu-negated-rel');
+              nextChildren.push(next1);
+              i += 1;
+              continue;
+            }
+          }
+
+          nextChildren.push(cur);
+        }
+        node.children = nextChildren;
+      }
+    });
+  };
+};

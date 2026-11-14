@@ -38,6 +38,13 @@ const UNICODE_OPERATOR_REPLACEMENTS: ReadonlyArray<readonly [RegExp, string]> = 
   [/∞/g, '\\infty '],
   [/∉/g, '\\notin '],
   [/⊄/g, '\\not\\subset '],
+  [/⊅/g, '\\not\\supset '],
+  [/⊈/g, '\\nsubseteq '],
+  [/⊉/g, '\\nsupseteq '],
+  [/∤/g, '\\nmid '],
+  [/≢/g, '\\not\\equiv '],
+  [/≁/g, '\\nsim '],
+  [/∦/g, '\\nparallel '],
   [/≠/g, '\\neq '],
   [/∈/g, '\\in '],
   [/×/g, '\\times '],
@@ -179,21 +186,42 @@ export function sanitizeLatex(raw: string): string {
     .replace(/([a-zA-Z])[\u20EF\u20D7]/g, '\\vec{$1}')
     .replace(/\\vec\{e\}_\{([a-zA-Z0-9])\}/g, '\\vec{e}_$1');
 
-  // 2. Chuẩn hóa dấu khác, không thuộc, không chứa
+  // 2. Chuẩn hóa dấu khác, không thuộc, không chia hết, không đồng dư, không chứa
   out = out
     .replace(/\\not\s*=/g, '\\neq ')
     .replace(/=\s*\\not\b/g, '\\neq ')
     .replace(/=\u0338/g, '\\neq ')
+    .replace(/!=/g, '\\neq ')
     .replace(/\/=(?=[A-Za-z])/g, '\\neq ')
-    .replace(/\/=/g, '\\neq')
+    .replace(/\/=/g, '\\neq ')
+    .replace(/\\ne\b(?![a-zA-Z])/g, '\\neq ')
     .replace(/\\in\//g, '\\notin ')
     .replace(/\/\\in\b/g, '\\notin ')
     .replace(/∈\u0338/g, '\\notin ')
     .replace(/\\not\s*\\in\b/g, '\\notin ')
+    .replace(/(?<=\s|^)\/\|(?=\s|$)/g, '\\nmid ')
+    .replace(/\\not\s*\|/g, '\\nmid ')
+    .replace(/\\not\s*\\mid\b/g, '\\nmid ')
+    .replace(/[|∣]\u0338/g, '\\nmid ')
+    .replace(/\\nequiv\b/g, '\\not\\equiv ')
+    .replace(/≡\u0338/g, '\\not\\equiv ')
+    .replace(/\\not\s*\\equiv\b/g, '\\not\\equiv ')
+    .replace(/\\nsubset\b/g, '\\not\\subset ')
     .replace(/\\subset\//g, '\\not\\subset ')
     .replace(/\/\\subset\b/g, '\\not\\subset ')
     .replace(/⊂\u0338/g, '\\not\\subset ')
-    .replace(/\\not\s*\\subset\b/g, '\\not\\subset ');
+    .replace(/\\not\s*\\subset\b/g, '\\not\\subset ')
+    .replace(/\\nsupset\b/g, '\\not\\supset ')
+    .replace(/\\supset\//g, '\\not\\supset ')
+    .replace(/\/\\supset\b/g, '\\not\\supset ')
+    .replace(/⊃\u0338/g, '\\not\\supset ')
+    .replace(/\\not\s*\\supset\b/g, '\\not\\supset ');
+
+  // 2b. Chuẩn hóa chỉ số dưới của lớp đồng dư bị viết thiếu dấu _ (vd: [3]13 -> [3]_{13}, [a]n -> [a]_{n})
+  out = out.replace(
+    /(?<!\\sqrt)\[([0-9a-zA-Z+-]+)\]([0-9]+|[nmpk])\b/g,
+    (_m, inner: string, sub: string) => `[${inner}]_{${sub}}`,
+  );
 
   // 3. Hiệu tập hợp thiếu \setminus và ngoặc nhọn (giữ an toàn cho \\ {y = 2} trong cases)
   out = out.replace(/(^|[^\\])\\\s+\\?\{([^}\\]+)\\?\}/g, '$1\\setminus \\{$2\\}');
@@ -285,6 +313,58 @@ export function sanitizeLatex(raw: string): string {
  */
 export function sanitizeKatexInput(math: string): string {
   return sanitizeLatex(math);
+}
+
+const AMS_NEGATED_CHAR_MAP: Readonly<Record<string, string>> = {
+  '∤': '∣',
+  '⊈': '⊆',
+  '⊉': '⊇',
+  '≁': '∼',
+  '∦': '∥',
+  '≠': '=',
+  '∉': '∈',
+  '≢': '≡',
+  '⊄': '⊂',
+  '⊅': '⊃',
+};
+
+/**
+ * Hậu xử lý chuỗi HTML đầu ra của `katex.renderToString`:
+ * - Xóa bỏ thẻ `.rlap` / `.llap` chứa ký tự gạch chéo phủ định (`\uE020`, `\u0338`, `&#x0338;`, `/`)
+ * - Chuyển các ký tự quan hệ phủ định AMS (`∤`, `⊈`, `⊉`, `≁`, `∦`) về toán tử gốc (`∣`, `⊆`, `⊇`, `∼`, `∥`)
+ * - Gắn trực tiếp class `lu-negated-rel` vào thẻ `<span class="mrel lu-negated-rel">` để vẽ nét gạch chéo bằng CSS độc lập font.
+ */
+export function fixKaTeXNegations(html: string): string {
+  if (!html) return html;
+
+  let out = html;
+
+  // 1. \neq, \not\equiv, \not\subset, \not\supset, \not\subseteq, \not\mid, v.v. (cụm .rlap đứng liền trước .mrel)
+  out = out.replace(
+    /<span class="mrel"><span class="mord (?:katex-)?vbox"><span class="(?:katex-)?thinbox"><span class="rlap"><span class="(?:katex-)?strut"[^>]*><\/span><span class="(?:katex-)?inner"><span class="mord"><span class="mrel">(?:\uE020|&#x0338;|&#824;|\u0338|\/)<\/span><\/span><\/span><span class="(?:katex-)?fix"><\/span><\/span><\/span><\/span><\/span>(?:<span class="mspace nobreak"><\/span>)?<span class="mrel">([^<]+)<\/span>/g,
+    '<span class="mrel lu-negated-rel">$1</span>',
+  );
+
+  // Dự phòng cho cấu trúc rút gọn <span class="mrel"><span class="mord"><span class="rlap">...&#x0338;...</span></span></span>
+  out = out.replace(
+    /<span class="mrel"><span class="mord"><span class="rlap">(?:<span[^>]*><\/span>)*<span class="(?:katex-)?inner">(?:<span[^>]*>)*(?:\uE020|&#x0338;|&#824;|\u0338|\/)(?:<\/span>)*<\/span>(?:<span[^>]*><\/span>)*<\/span><\/span><\/span>(?:<span class="mspace nobreak"><\/span>)?<span class="mrel">([^<]+)<\/span>/g,
+    '<span class="mrel lu-negated-rel">$1</span>',
+  );
+
+  // 2. \notin (cụm .llap chứa '/' đứng ngay sau \in)
+  out = out.replace(
+    /<span class="mrel"><span class="mord"><span class="mrel">∈<\/span><\/span><span class="mord (?:katex-)?vbox"><span class="(?:katex-)?thinbox"><span class="llap"><span class="(?:katex-)?strut"[^>]*><\/span><span class="(?:katex-)?inner"><span class="mord"><span class="mord">\/<\/span><span class="mspace"[^>]*><\/span><\/span><\/span><span class="(?:katex-)?fix"><\/span><\/span><\/span><\/span><\/span>/g,
+    '<span class="mrel"><span class="mrel lu-negated-rel">∈</span></span>',
+  );
+
+  // 3. Ký tự phủ định đơn lẻ thuộc font AMS (\nmid -> ∤, \nsubseteq -> ⊈, \nsim -> ≁, \nparallel -> ∦)
+  out = out.replace(
+    /<span class="mrel(?:\s+amsrm)?">([∤⊈⊉≁∦≠∉≢⊄⊅])<\/span>/g,
+    (_m, ch: string) =>
+      `<span class="mrel lu-negated-rel">${AMS_NEGATED_CHAR_MAP[ch] ?? ch}</span>`,
+  );
+
+  return out;
 }
 
 /**

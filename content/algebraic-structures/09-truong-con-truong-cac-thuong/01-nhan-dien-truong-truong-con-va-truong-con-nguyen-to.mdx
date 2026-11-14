@@ -32,7 +32,7 @@ Chương 9 khép lại toàn bộ học phần Cấu trúc đại số bằng vi
 
 Nhắc lại rằng một vành giao hoán có phần tử đơn vị $1 \neq 0$ được gọi là một **trường** nếu mọi phần tử khác không đều khả nghịch: $R^\times = R \setminus \{0\}$. Dưới góc nhìn hiện đại của lý thuyết iđêan và đồng cấu vành, trường có một đặc trưng tuyệt đẹp:
 
-<Theorem id="thm-c9-b1-nhan-dien-truong" title="Tiêu chuẩn nhận diện trường qua iđêan" original="Định lý 9.1">
+<Theorem id="thm-c9-b1-nhan-dien-truong" title="Tiêu chuẩn nhận diện trường qua iđêan" original="Định lý 9.1" source="gt-ctds-hvk-2026">
 Cho $R$ là một vành giao hoán có phần tử đơn vị $1 \neq 0$. Các mệnh đề sau là tương đương:
 1. $R$ là một **trường**.
 2. Các iđêan duy nhất của $R$ là iđêan tầm thường $\{0\}$ và chính $R$.
@@ -74,12 +74,12 @@ Ta chứng minh tương đương theo chu trình: $(1) \implies (2) \implies (3)
 
 ## 2. Tiêu chuẩn trường con
 
-<Definition id="def-c9-b1-truong-con" title="Trường con và Trường mở rộng" original="Định nghĩa 9.3">
+<Definition id="def-c9-b1-truong-con" title="Trường con và Trường mở rộng" original="Định nghĩa 9.3" source="gt-ctds-hvk-2026">
 Cho $(F, +, \cdot)$ là một trường. Một tập con $K \subseteq F$ được gọi là một **trường con** (subfield) của $F$ nếu $K$ cùng với hai phép toán cộng và nhân thu hẹp từ $F$ lập thành một trường.
 Khi đó, $F$ được gọi là một **trường mở rộng** (extension field) của $K$, ký hiệu là $F/K$.
 </Definition>
 
-<Theorem id="thm-c9-b1-tieu-chuan-truong-con" title="Tiêu chuẩn kiểm tra trường con" original="Mệnh đề 9.4">
+<Theorem id="thm-c9-b1-tieu-chuan-truong-con" title="Tiêu chuẩn kiểm tra trường con" original="Mệnh đề 9.4" source="gt-ctds-hvk-2026">
 Cho $F$ là một trường và $K$ là một tập con của $F$ chứa ít nhất hai phần tử phân biệt (hoặc tương đương $1_F \in K$). Tập con $K$ là một trường con của $F$ khi và chỉ khi với mọi $a, b \in K$:
 1. $a - b \in K$ (đóng với phép trừ nhóm cộng).
 2. Nếu $b \neq 0$ thì $ab^{-1} \in K$ (đóng với phép chia nhóm nhân).
@@ -109,7 +109,7 @@ Nhân với phần tử $c + d\sqrt{2}$ bất kỳ vẫn cho kết quả thuộc
 Theo Mệnh đề 9.4, $\mathbb{Q}(\sqrt{2})$ là một trường con của $\mathbb{R}$.
 </Example>
 
-<Proposition id="prop-c9-b1-giao-cac-truong-con" title="Giao của một họ các trường con" original="Mệnh đề 9.5">
+<Proposition id="prop-c9-b1-giao-cac-truong-con" title="Giao của một họ các trường con" original="Mệnh đề 9.5" source="gt-ctds-hvk-2026">
 Nếu $\{K_\alpha\}_{\alpha \in \Lambda}$ là một họ tùy ý các trường con của trường $F$, thì giao của chúng:
 $$
 K = \bigcap_{\alpha \in \Lambda} K_\alpha
@@ -130,7 +130,7 @@ Do đó $a - b \in K$ và $ab^{-1} \in K$. Vậy $K$ là một trường con c�
 
 Từ Mệnh đề 9.5, giao của tất cả các trường con của một trường $F$ là trường con nhỏ nhất của $F$. Trường con này chứa đựng cấu trúc số học cơ bản nhất và được quyết định hoàn toàn bởi **đặc số** của trường.
 
-<Definition id="def-c9-b1-truong-con-nguyen-to" title="Trường con nguyên tố (Prime subfield)" original="Định nghĩa 9.9">
+<Definition id="def-c9-b1-truong-con-nguyen-to" title="Trường con nguyên tố (Prime subfield)" original="Định nghĩa 9.9" source="gt-ctds-hvk-2026">
 Cho $F$ là một trường bất kỳ. **Trường con nguyên tố** của $F$, ký hiệu là $P_F$, là giao của tất cả các trường con của $F$:
 $$
 P_F = \bigcap \{K \subseteq F \mid K \text{ là trường con của } F\}.
@@ -138,7 +138,7 @@ $$
 $P_F$ là trường con bé nhất của $F$ (theo quan hệ bao hàm) và bị chứa trong mọi trường con khác của $F$.
 </Definition>
 
-<Theorem id="thm-c9-b1-phan-loai-truong-con-nguyen-to" title="Phân loại trường con nguyên tố theo đặc số" original="Định lý 9.10">
+<Theorem id="thm-c9-b1-phan-loai-truong-con-nguyen-to" title="Phân loại trường con nguyên tố theo đặc số" original="Định lý 9.10" source="gt-ctds-hvk-2026">
 Cho $F$ là một trường có phần tử đơn vị $1_F$. Khi đó:
 1. Nếu $\operatorname{char}(F) = 0$, thì trường con nguyên tố $P_F$ đẳng cấu với trường số hữu tỉ:
 $$

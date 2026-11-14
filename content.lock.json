@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T04:04:21.856Z",
+  "updatedAt": "2026-11-14T05:35:23.973Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "a515ba739f33b1b79b5af28b18530cfdbc0a6670680c8e253884471396f5a192",
+      "sha256": "2d87796907ec6ed4ad18abaede3aeaa4fbb5c07d5b54b47f2c484688bbbda627",
       "numberedBlocks": {
         "def-c0-b1-anh-xa-anh-nghich-anh": "0.1.1",
         "ex-c0-b1-anh-nghich-anh-va-tho": "0.1.1",
@@ -29,7 +29,7 @@
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/02-quan-he-tuong-duong-va-tap-thuong.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "febab68f9b31fa350e45cde7e152c51169275a6ddf5432be87049d3f05095cfd",
+      "sha256": "8b496b3c10a0886da62f801449bfbbc28b1ce61aec11f277770d6b8b70f3b882",
       "numberedBlocks": {
         "def-c0-b2-quan-he-tuong-duong": "0.2.1",
         "def-c0-b2-lop-tuong-duong-tap-thuong": "0.2.2",
@@ -100,7 +100,7 @@
       "path": "content/algebraic-structures/01-nhom-va-cac-vi-du-co-ban/02-luy-thua-nguyen-nhom-huu-han-va-bang-cayley.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "bc3edf784ca05dbf2ca965a1cc6417df145e2f71fb92d59e4e28cf74fb6ed94e",
+      "sha256": "9215f93a72ff063a8057e3852842b49cd05d42709b606e57f12612d90b1839d0",
       "numberedBlocks": {
         "def-c1-b2-luy-thua-nguyen": "1.2.1",
         "thm-c1-b2-quy-tac-luy-thua": "1.2.2",
@@ -223,7 +223,7 @@
       "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/01-lop-ke-phan-hoach-va-chi-so-cua-nhom-con.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "4e1e6bc45e45de65a6d0b759347486c6f377deca84e54c0a1047e1611250cadf",
+      "sha256": "c1ab0f35f056aa863cdefe964fd0bbf62234ea37c8d67b33c6f9a85a76b534ee",
       "numberedBlocks": {
         "def-c3-b1-lop-ke": "3.1.1",
         "thm-c3-b1-cau-truc-cac-lop-ke": "3.1.2",
@@ -242,7 +242,7 @@
       "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/02-dinh-ly-lagrange-va-ung-dung-so-hoc.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "87bef4faa8bf34deadd423a0f7a9647b7754e39e946ddf916909d7788d653f65",
+      "sha256": "e9dff75c9eb752ec115636f3e32af4161c51e424270ddae769700af6c767f063",
       "numberedBlocks": {
         "thm-c3-b2-lagrange": "3.2.1",
         "ex-c3-b2-lagrange-s3": "3.2.1",
@@ -261,13 +261,12 @@
       "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/03-chieu-nguoc-cua-dinh-ly-lagrange-va-nhom-thay-phien-a4.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "5d500eb5e26e2438307aa8e7540c40741a528745d382b8db027135ec68bec999",
+      "sha256": "23ada596fa1f52494f7c51213e74a7e5637b11bb6eb5080569574eae15ea962d",
       "numberedBlocks": {
         "ctx-c3-b3-phan-tu-v4": "3.3.1",
         "thm-c3-b3-cau-truc-a4": "3.3.1",
         "thm-c3-b3-a4-khong-co-nhom-con-cap-6": "3.3.2",
         "lem-c3-b3-chi-so-2-binh-phuong": "3.3.3",
-        "thm-c3-b3-cauchy": "3.3.4",
         "exr-c3-b3-a1": "3.3.1",
         "exr-c3-b3-b1": "3.3.2",
         "exr-c3-b3-c1": "3.3.3",
@@ -278,7 +277,7 @@
       "path": "content/algebraic-structures/03-lop-ke-va-dinh-ly-lagrange/04-bai-tap-va-tong-ket-chuong-3.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "1df6a4cf2ff0ab08da3d3924ee8b448b71ef58efba05cf509a73603ce5048ddb",
+      "sha256": "b26e1f697ca2cac93dcf9659f2bf5369b35fb1e30c9720c2ee54dd6d9122883c",
       "numberedBlocks": {
         "exr-c3-b4-a1": "3.4.1",
         "exr-c3-b4-b1": "3.4.2",
@@ -401,7 +400,7 @@
       "path": "content/algebraic-structures/05-dong-cau-nhom-va-dang-cau/04-bai-tap-chuong-5-va-tong-ket-phan-nhom.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "78e64de43659d6a96c47fe92398b8c69ffe7ca0ca6f5d1dda274b186dcb5b863",
+      "sha256": "fe74ef1ac4612af40f8362240316b724cafa3ed71d88e242e3ccdd78a0c37ff1",
       "numberedBlocks": {
         "exr-c5-b4-a1": "5.4.1",
         "exr-c5-b4-b1": "5.4.2",
@@ -432,7 +431,7 @@
       "path": "content/algebraic-structures/06-vanh-va-cac-cau-truc/02-uoc-cua-khong-mien-nguyen-vanh-chia-va-truong.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "2b793403699710d392959c7b68e247544fef65c7768b888aa90cf69fc0de0fae",
+      "sha256": "1e6500993672c92a83d27655efd60dae4a10cd7c40cb2f5b32f2556478a9dd7b",
       "numberedBlocks": {
         "def-c6-b2-uoc-cua-khong": "6.2.1",
         "thm-c6-b2-luat-gian-uoc": "6.2.2",
@@ -451,7 +450,7 @@
       "path": "content/algebraic-structures/06-vanh-va-cac-cau-truc/03-cac-cach-dung-vanh-va-vanh-con.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "0e6a4984180db0f958a0e7bfea54d4ea9e8a52cefe1aba61b0ca7449b4fc5640",
+      "sha256": "c4dea0e8c692e6ffa86195514ad1c06f8b9e30ad356bda0c461c5c2b790dfd27",
       "numberedBlocks": {
         "thm-c6-b3-vanh-da-thuc-tren-mien-nguyen": "6.3.1",
         "ce-c6-b3-sup-do-cong-thuc-bac": "6.3.1",
@@ -484,7 +483,7 @@
       "path": "content/algebraic-structures/07-idean-va-vanh-thuong/01-idean-giao-tong-va-idean-sinh.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "05d45b30a26c9744b4a76047a2ef2b86050538c4128885b1c571a1fc490269fa",
+      "sha256": "80dcc61613bb0341b4c8027635ded5d9c7388df2664a75a92da91af4c4d05d64",
       "numberedBlocks": {
         "ce-c7-b1-that-bai-nhan-lop-q-z": "7.1.1",
         "def-c7-b1-idean": "7.1.1",
@@ -505,7 +504,7 @@
       "path": "content/algebraic-structures/07-idean-va-vanh-thuong/02-vanh-thuong-va-tinh-toan-trong-thuong-da-thuc.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "8edcd9774f3c809aac85a47561b9dcaaeece7b250203ec4bf1460a9985746a78",
+      "sha256": "9cb5efee6b47f465c80d4541d67dd4a0ea2bc519796f330828415af402a3a8a2",
       "numberedBlocks": {
         "thm-c7-b2-vanh-thuong": "7.2.1",
         "def-c7-b2-phep-chieu-chinh-tac": "7.2.2",
@@ -522,7 +521,7 @@
       "path": "content/algebraic-structures/07-idean-va-vanh-thuong/03-idean-nguyen-to-va-idean-cuc-dai.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "83acd9eaef2a77438d792cef1f73bb4a60e3da606298ae84125dc509eb93b45c",
+      "sha256": "cd5063c22fc014f3746ac7db8dff0ea222767bcd3a40b2925fd8eac46ba14735",
       "numberedBlocks": {
         "def-c7-b3-idean-nguyen-to-cuc-dai": "7.3.1",
         "thm-c7-b3-dac-trung-vanh-thuong": "7.3.2",
@@ -540,7 +539,7 @@
       "path": "content/algebraic-structures/07-idean-va-vanh-thuong/04-bai-tap-va-tong-ket-chuong-7.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "e520c56907968ba72c9839c15851437bfe76c3d4319be9fc0f41cb44c0e6adc1",
+      "sha256": "7529146d77aefb432050c1e61e1eade8238a3a963f7129e6e39d82bd2e95f59e",
       "numberedBlocks": {
         "thm-c7-b4-vanh-don-ma-tran": "7.4.1",
         "thm-c7-b4-dinh-ly-thang-du-trung-hoa": "7.4.2",
@@ -558,7 +557,7 @@
       "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/01-dong-cau-vanh-hat-nhan-anh-va-phan-tich-qua-thuong.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "6c7d3332d1a2eed176f9d47e6a1269c2b5c9778ca3b62f1a198ab9fbe45952ee",
+      "sha256": "b2db36dd7ec88fdbb97b57d2e26ec1ea3043cfd3c92fecb074b6c80e0f934d51",
       "numberedBlocks": {
         "def-c8-b1-dong-cau-vanh": "8.1.1",
         "prop-c8-b1-phan-tu-luy-dang": "8.1.2",
@@ -582,7 +581,7 @@
       "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/02-cac-dinh-ly-dang-cau-vanh-va-dinh-ly-tuong-ung.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "a78f3c2c95aecd2aed57f314126d5930b1fd724ef7204ec19f81b0e2680a9eb2",
+      "sha256": "7ecd1743020b2f3aecea398bc77347941a2aab574144be7f8be05b2213fd8025",
       "numberedBlocks": {
         "thm-c8-b2-dang-cau-thu-nhat": "8.2.1",
         "thm-c8-b2-dang-cau-thu-hai": "8.2.2",
@@ -602,7 +601,7 @@
       "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/03-dac-so-cua-vanh-va-so-sanh-nhom-vanh.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "d583f420b3aec5671aaa39411f750b80ed9ec360c01f845a2d1cf1d6b3007abe",
+      "sha256": "bb1f92f84bcbe52ce2d982151c9de2f9bf0a036861f5a087b025a6759df99d6c",
       "numberedBlocks": {
         "prop-c8-b3-dong-cau-don-vi": "8.3.1",
         "def-c8-b3-dac-so": "8.3.2",
@@ -622,7 +621,7 @@
       "path": "content/algebraic-structures/08-dong-cau-vanh-va-dang-cau/04-bai-tap-va-tong-ket-chuong-8.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "c5d7582572701624e99006f43497aa802289c307b97d188a5a254e541ec6ec14",
+      "sha256": "8f7ac5a7eb999fbd34f5315f46de9bba96597ee4749170786825ab3853a63021",
       "numberedBlocks": {
         "thm-c8-b4-tinh-cung-so-thuc": "8.4.1",
         "thm-c8-b4-phan-tich-luy-dang-tam": "8.4.2",
@@ -640,7 +639,7 @@
       "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/01-nhan-dien-truong-truong-con-va-truong-con-nguyen-to.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "286c5437e7439062bf1d6cbaecf89a1ffa1c3e84fa999a74290e8f3c8d7b9b9a",
+      "sha256": "cf59b5a96fc3bd965edbee78387ed90e5579001d59c240bcf459742d1f2dd45a",
       "numberedBlocks": {
         "thm-c9-b1-nhan-dien-truong": "9.1.1",
         "def-c9-b1-truong-con": "9.1.2",
@@ -663,7 +662,7 @@
       "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/02-phep-dung-truong-cac-thuong-cua-mien-nguyen.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "fd145b90b5faf375536002d195498af8a81bed3f68391f6873be7454b376faa2",
+      "sha256": "8cb156e1d2c7a2b2cc042951a2e2faaea85d1b48669f8e477cdf1e8584586bf7",
       "numberedBlocks": {
         "prop-c9-b2-quan-he-tuong-duong": "9.2.1",
         "counter-c9-b2-that-bai-khi-co-uoc-cua-khong": "9.2.1",
@@ -683,7 +682,7 @@
       "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/03-tinh-chat-pho-dung-va-doi-chieu-vanh-thuong-truong-cac-thuong.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "6ce7ed723c28bfa0d4db205783342670122e129791572daaa714fb7eabe9e25b",
+      "sha256": "d40a2bbd8e26d7f461fd131b566afe09de0b1f3690d3847a4455353eab2ec01d",
       "numberedBlocks": {
         "thm-c9-b3-tinh-chat-pho-dung": "9.3.1",
         "thm-c9-b3-tinh-duy-nhat": "9.3.2",
@@ -701,7 +700,7 @@
       "path": "content/algebraic-structures/09-truong-con-truong-cac-thuong/04-bai-tap-chuong-9-va-tong-ket-hoc-phan.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "b1e6af21d4dee2eb870f36b5f1467270a5994635b1fc4d6c949163ce47beffcd",
+      "sha256": "7937d88243462455bd8bf5d196c1edea7552b53dcffd43d149cfa4c36266ceeb",
       "numberedBlocks": {
         "thm-c9-b4-truong-huu-han-tuan-hoan": "9.4.1",
         "ex-c9-b4-a1": "9.4.1",

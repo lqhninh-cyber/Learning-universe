@@ -1,7 +1,7 @@
 import katex from 'katex';
 import { type ReactNode, useMemo } from 'react';
 import { cn } from '@/shared/lib/cn';
-import { sanitizeKatexInput } from '@/shared/lib/math-sanitize';
+import { fixKaTeXNegations, sanitizeKatexInput } from '@/shared/lib/math-sanitize';
 
 export interface KatexMathProps {
   readonly math: string;
@@ -24,6 +24,9 @@ const KATEX_MACROS = {
   '\\Hom': '\\operatorname{Hom}',
   '\\aut': '\\operatorname{Aut}',
   '\\Aut': '\\operatorname{Aut}',
+  '\\nequiv': '\\not\\equiv',
+  '\\nsubset': '\\not\\subset',
+  '\\nsupset': '\\not\\supset',
   '\\vect': '\\overrightarrow{#1}',
 };
 
@@ -31,13 +34,14 @@ export function KatexMath({ math, display = false, className, altText }: KatexMa
   const html = useMemo(() => {
     const normalizedMath = sanitizeKatexInput(math);
     try {
-      return katex.renderToString(normalizedMath, {
+      const rawHtml = katex.renderToString(normalizedMath, {
         displayMode: display,
         throwOnError: false,
         strict: 'ignore',
         output: 'htmlAndMathml',
         macros: KATEX_MACROS,
       });
+      return fixKaTeXNegations(rawHtml);
     } catch {
       return normalizedMath;
     }

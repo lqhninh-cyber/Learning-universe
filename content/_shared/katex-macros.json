@@ -12,5 +12,8 @@
   "\\Hom": "\\operatorname{Hom}",
   "\\aut": "\\operatorname{Aut}",
   "\\Aut": "\\operatorname{Aut}",
+  "\\nequiv": "\\not\\equiv",
+  "\\nsubset": "\\not\\subset",
+  "\\nsupset": "\\not\\supset",
   "\\vect": "\\overrightarrow{#1}"
 }

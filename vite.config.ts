@@ -10,7 +10,11 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { defineConfig } from 'vitest/config';
-import { remarkMathSanitizePost, remarkMathSanitizePre } from './build/remark-math-sanitize.ts';
+import {
+  rehypeFixKatexNegations,
+  remarkMathSanitizePost,
+  remarkMathSanitizePre,
+} from './build/remark-math-sanitize.ts';
 import { remarkTheoremNumbering } from './build/remark-theorem-numbering.ts';
 import { contentPlugin } from './build/vite-plugin-content.ts';
 
@@ -47,6 +51,7 @@ export default defineConfig({
               throwOnError: true,
             },
           ],
+          rehypeFixKatexNegations,
           rehypeSlug,
         ],
       }),

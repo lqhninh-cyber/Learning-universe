@@ -4,6 +4,7 @@
 @import '@fontsource/be-vietnam-pro/700.css';
 @import '@fontsource-variable/jetbrains-mono';
 @import 'katex/dist/katex.min.css';
+@import './katex-compat.css';
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *, [data-reading-theme="dark"], [data-reading-theme="dark"] *, .scoped-dark-mode, .scoped-dark-mode *));
 @custom-variant sepia (&:where([data-theme="sepia"], [data-theme="sepia"] *, [data-reading-theme="sepia"], [data-reading-theme="sepia"] *));
@@ -14,15 +15,23 @@
 @import './viz.css';
 
 /* ==========================================================================
-   BẢO TOÀN FONT METRICS TỰ NHIÊN CHO CÔNG THỨC TOÁN (KaTeX Reset)
-   Thiết lập an toàn cho KaTeX - Không can thiệp vào các thẻ định vị vlist con
+   BẢO TOÀN FONT METRICS TỰ NHIÊN & ĐỊNH VỊ CHUẨN CHO CÔNG THỨC TOÁN (KaTeX)
    ========================================================================== */
 
 .katex {
-  font-size: 1.12em !important;
+  font:
+    normal 1.12em KaTeX_Main,
+    'Times New Roman',
+    serif !important;
+  line-height: 1.2;
+  text-indent: 0;
   text-rendering: auto;
   letter-spacing: normal !important;
   white-space: normal;
+}
+
+.katex .mtext {
+  font-family: KaTeX_Main, 'Crimson Pro', Georgia, 'Times New Roman', serif;
 }
 
 /* Đệm an toàn thanh phân số, không chạm chữ ở mẫu số hay tử số */
@@ -32,13 +41,81 @@
   margin-bottom: 0.08em;
 }
 
-/* Bảo tồn vị trí tự nhiên của chỉ số trên và dưới, không bị đè bẹp khi đi cùng nhau (c_1^k, x_1^2) */
-.katex .msupsub {
-  text-align: left;
+/* Khóa cứng quy tắc định vị của KaTeX để không bị Tailwind Preflight hoặc CSS bảng làm hỏng */
+.katex .rlap {
+  width: 0 !important;
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.katex .rlap > .inner,
+.katex .rlap > .katex-inner {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+
+.katex .llap {
+  width: 0 !important;
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.katex .llap > .inner,
+.katex .llap > .katex-inner {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
 }
 
 .katex .vlist-t {
-  border-collapse: separate;
+  display: inline-table !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+.katex .vlist-r {
+  display: table-row !important;
+}
+
+.katex .vlist {
+  display: table-cell !important;
+  vertical-align: bottom !important;
+  position: relative !important;
+}
+
+.katex .vlist > span {
+  display: block !important;
+  height: 0 !important;
+  position: relative !important;
+}
+
+/* Bảo tồn vị trí tự nhiên của chỉ số trên và dưới, hạ thấp rõ ràng chỉ số dưới ([3]_{13}, [a]_n) xuống dưới chân dấu ] */
+.katex .msupsub {
+  text-align: left !important;
+}
+
+.katex .msupsub .vlist-t2 > .vlist-r:first-child > .vlist > span:first-child {
+  transform: translateY(0.12em);
+}
+
+/* Bộ render dấu phủ định độc lập font (.lu-negated-rel) */
+.katex .lu-negated-rel {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.katex .lu-negated-rel::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 0.72em !important;
+  height: 0.065em !important;
+  background-color: currentColor !important;
+  transform: translate(-50%, -50%) rotate(-58deg) !important;
+  pointer-events: none !important;
+  border-radius: 1px !important;
 }
 
 .katex-display {
