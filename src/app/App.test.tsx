@@ -68,10 +68,10 @@ describe('App routing smoke test', () => {
       'data-landscape',
       'hoang-lien-son',
     );
+    expect(screen.getByTestId('atmospheric-time-dial')).toBeInTheDocument();
     expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
     expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
     expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
-    expect(screen.queryByTestId('atmosphere-switcher')).not.toBeInTheDocument();
     expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
     expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
     expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();

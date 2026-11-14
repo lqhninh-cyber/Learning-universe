@@ -20,6 +20,8 @@ import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Kbd, ProgressRing } from '@/shared/ui';
+import { type AtmosphericPhase } from '@/components/home/atmosphereThemes';
+import { AtmosphericTimeDial } from '@/components/home/AtmosphericTimeDial';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import {
@@ -616,6 +618,7 @@ export function HomePage() {
   const [pageScrollProgress, setPageScrollProgress] = useState(0);
   const [viewMode, setViewMode] = useState<HomepageViewMode>(() => getInitialHomepageViewMode());
   const [isKaTeXDrawerOpen, setIsKaTeXDrawerOpen] = useState(false);
+  const [atmosphericPhase, setAtmosphericPhase] = useState<AtmosphericPhase>('dem-ngan-ha');
 
   const handleViewModeChange = (nextMode: HomepageViewMode) => {
     setViewMode(nextMode);
@@ -756,11 +759,11 @@ export function HomePage() {
           aria-label="Không gian Khởi đầu Learning Universe"
           className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-[#050B16] pt-20 pb-24 md:pt-24 md:pb-28"
         >
-          {/* LAYER 1: Khối núi 3D đa diện Hoàng Liên Sơn, hẻm Thác Bạc & thung lũng ruộng bậc thang */}
-          <HeroSonHaDiorama />
+          {/* LAYER 1: Khối núi 3D đa diện Hoàng Liên Sơn, Camera bay xuyên 3D & 4 thời khắc */}
+          <HeroSonHaDiorama phase={atmosphericPhase} />
 
-          {/* LAYER 2: Engine Khí Quyển 3D 120fps (Tia sáng xuyên núi, Nối sao O(N), Thác Bạc, Biển mây rẽ sóng & Hoa Đỗ Quyên 3D) */}
-          <HeroPhysicsCanvas />
+          {/* LAYER 2: Engine Khí Quyển 3D 120fps (Tia sáng, Chim Lạc ánh sao, Cực quang gảy dây & Đèn Trời 3D) */}
+          <HeroPhysicsCanvas phase={atmosphericPhase} />
 
           {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Di Sản Cố Định) */}
           <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-center gap-10 pt-2 lg:grid-cols-[1.08fr_0.92fr] lg:pt-4 xl:gap-16">
@@ -819,6 +822,14 @@ export function HomePage() {
 
               {/* Danh ngôn học thuật xoay vòng (Rotating Scholarly Quotes) */}
               <RotatingScholarlyQuote />
+
+              {/* La bàn 4 thời khắc khí quyển (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn) */}
+              <div className="pt-1">
+                <AtmosphericTimeDial
+                  activePhase={atmosphericPhase}
+                  onChangePhase={setAtmosphericPhase}
+                />
+              </div>
             </div>
 
             {/* Cột Phải: Bộ Sưu Tập Di Sản Thẳng Góc & Cố Định Khung Tương Tác */}

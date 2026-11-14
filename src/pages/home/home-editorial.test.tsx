@@ -1,7 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
-import { createAtmosphereWorld } from '@/components/home/heroAtmosphereEngine';
+import {
+  ATMOSPHERIC_PALETTES,
+  interpolateAtmospherePalette,
+} from '@/components/home/atmosphereThemes';
+import {
+  createAtmosphereWorld,
+  triggerAuroraPluck,
+  tryBoostSkyLanternAt,
+} from '@/components/home/heroAtmosphereEngine';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { getSubjects } from '@/content-runtime';
@@ -409,7 +417,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
 
-    it('khóa cố định duy nhất cảnh quan Biển Mây & Ngân Hà Hoàng Liên Sơn, ẩn bộ chuyển đổi, dải chữ đáy và Hán tự', () => {
+    it('tích hợp La Bàn 4 Thời Khắc Khí Quyển đồng bộ giữa Diorama & Canvas, giữ lớp phủ tương phản chữ', () => {
       render(
         <MemoryRouter>
           <HomePage />
@@ -417,14 +425,35 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
 
       const diorama = screen.getByTestId('son-ha-diorama');
+      const canvas = screen.getByTestId('hero-physics-canvas');
       expect(diorama).toHaveAttribute('data-landscape', 'hoang-lien-son');
-      expect(screen.queryByTestId('atmosphere-switcher')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('atmosphere-option-dawn')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('atmosphere-option-night')).not.toBeInTheDocument();
+      expect(diorama).toHaveAttribute('data-phase', 'dem-ngan-ha');
+      expect(canvas).toHaveAttribute('data-phase', 'dem-ngan-ha');
+      expect(screen.getByTestId('hero-text-contrast-scrim')).toBeInTheDocument();
+
+      // Kiểm chứng La Bàn 4 Thời Khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
+      expect(screen.getByTestId('atmospheric-time-dial')).toBeInTheDocument();
+      expect(screen.getByTestId('time-phase-dem-ngan-ha')).toHaveAttribute('aria-pressed', 'true');
+
+      fireEvent.click(screen.getByTestId('time-phase-binh-minh'));
+      expect(diorama).toHaveAttribute('data-phase', 'binh-minh');
+      expect(canvas).toHaveAttribute('data-phase', 'binh-minh');
+      expect(screen.getByTestId('time-phase-binh-minh')).toHaveAttribute('aria-pressed', 'true');
+
+      fireEvent.click(screen.getByTestId('time-phase-nang-ngoc'));
+      expect(diorama).toHaveAttribute('data-phase', 'nang-ngoc');
+      expect(canvas).toHaveAttribute('data-phase', 'nang-ngoc');
+
+      fireEvent.click(screen.getByTestId('time-phase-hoang-hon'));
+      expect(diorama).toHaveAttribute('data-phase', 'hoang-hon');
+      expect(canvas).toHaveAttribute('data-phase', 'hoang-hon');
+
       expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
       expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
       expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
+      expect(screen.getByTestId('flythrough-west-slope')).toBeInTheDocument();
+      expect(screen.getByTestId('flythrough-east-slope')).toBeInTheDocument();
       expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
       expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG/i)).not.toBeInTheDocument();
@@ -446,11 +475,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
   });
 
   describe('Hero Diorama, Physics Canvas & 3D Stack Components', () => {
-    it('HeroSonHaDiorama render đủ 4 lớp Hoàng Liên Sơn (Phan Xi Păng, Ruộng bậc thang, Rừng tùng, Hạc lượn) và HeroPhysicsCanvas', () => {
+    it('HeroSonHaDiorama & HeroPhysicsCanvas khởi tạo đủ 5 đột phá 120fps (4 thời khắc, Fly-Through, Chim Lạc, Cực quang gảy dây & Đèn Trời 3D)', () => {
       const { container } = render(
         <div className="relative h-96 w-full">
-          <HeroSonHaDiorama />
-          <HeroPhysicsCanvas />
+          <HeroSonHaDiorama phase="dem-ngan-ha" />
+          <HeroPhysicsCanvas phase="dem-ngan-ha" />
         </div>,
       );
 
@@ -463,6 +492,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         screen.getByTestId('mountain-3d-facets').querySelectorAll('polygon').length,
       ).toBeGreaterThanOrEqual(18);
       expect(screen.getByTestId('midground-slopes')).toBeInTheDocument();
+      expect(screen.getByTestId('flythrough-west-slope')).toBeInTheDocument();
+      expect(screen.getByTestId('flythrough-east-slope')).toBeInTheDocument();
       expect(screen.getByTestId('thac-bac-gorge')).toBeInTheDocument();
       expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
       expect(screen.getByTestId('village-lantern-glow')).toBeInTheDocument();
@@ -471,7 +502,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('hoang-lien-cranes').querySelectorAll('path')).toHaveLength(9);
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
 
-      // Kiểm chứng Engine Khí Quyển 3D 120fps khởi tạo đủ hạt sao, thác nước, 4 lớp mây thể tích & cánh hoa đỗ quyên
+      // Kiểm chứng Engine Khí Quyển 3D 120fps & 5 đột phá
       const world = createAtmosphereWorld(1440, 900);
       expect(world.stars.length).toBeGreaterThanOrEqual(240);
       expect(world.waterfallDrops.length).toBeGreaterThanOrEqual(80);
@@ -481,6 +512,50 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         new Set(['cloudSlate', 'cloudRoseGold', 'cloudPearl', 'cloudIvory']),
       );
       expect(world.petals.length).toBeGreaterThanOrEqual(25);
+
+      // 3. Đàn Chim Lạc Ánh Sao (3-5 cá thể) & Object Pool bụi sao
+      expect(world.chimLacFlock.length).toBeGreaterThanOrEqual(3);
+      expect(world.chimLacFlock.length).toBeLessThanOrEqual(5);
+      expect(world.chimLacSparks.items.length).toBeGreaterThanOrEqual(100);
+
+      // 4. 2 dải Lụa Cực Quang (#34D399 & #FBBF24) + gảy dây đàn
+      expect(world.auroraRibbons).toHaveLength(2);
+      const ribbon = world.auroraRibbons[0]!;
+      ribbon.lastSamples.fill(180);
+      triggerAuroraPluck(world, 720, 180, 12, 1440);
+      expect(Math.abs(ribbon.pluckAmplitude)).toBeGreaterThan(0);
+      expect(world.auroraSparks.items.some((s) => s.active)).toBe(true);
+
+      // 5. Đèn Trời 3D (8-12 đèn, z ∈ [0.2, 0.9]) & tương tác click đẩy tốc độ
+      expect(world.skyLanterns.length).toBeGreaterThanOrEqual(8);
+      expect(world.skyLanterns.length).toBeLessThanOrEqual(12);
+      const firstLantern = world.skyLanterns[0]!;
+      expect(firstLantern.z).toBeGreaterThanOrEqual(0.2);
+      expect(firstLantern.z).toBeLessThanOrEqual(0.9);
+      const hit = tryBoostSkyLanternAt(
+        world,
+        firstLantern.nx * 1440,
+        firstLantern.ny * 900,
+        1440,
+        900,
+      );
+      expect(hit).toBe(true);
+      expect(firstLantern.boosted).toBe(true);
+      expect(world.lanternSparks.items.some((s) => s.active)).toBe(true);
+
+      // Kiểm chứng nội suy 600ms bảng màu khí quyển
+      const lerped = interpolateAtmospherePalette(
+        ATMOSPHERIC_PALETTES['dem-ngan-ha'],
+        ATMOSPHERIC_PALETTES['nang-ngoc'],
+        0.5,
+      );
+      expect(lerped.sky0[0]).toBe(
+        Math.round(
+          (ATMOSPHERIC_PALETTES['dem-ngan-ha'].sky0[0] +
+            ATMOSPHERIC_PALETTES['nang-ngoc'].sky0[0]) /
+            2,
+        ),
+      );
     });
 
     it('HeritageArtShowcase cố định thẻ thẳng góc (rotate-0), nút bấm h-8 w-8 rounded-full và chuyển tác phẩm mượt', async () => {

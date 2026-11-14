@@ -1,8 +1,17 @@
 import { useEffect, useRef } from 'react';
 import {
+  ATMOSPHERIC_PALETTES,
+  interpolateAtmospherePalette,
+  type AtmospherePalette,
+  type AtmosphericPhase,
+} from '@/components/home/atmosphereThemes';
+import {
   buildAtmosphereSpriteCache,
   createAtmosphereWorld,
   renderAtmosphereFrame,
+  spawnNovaPulse,
+  triggerAuroraPluck,
+  tryBoostSkyLanternAt,
   type AtmosphereMouseState,
 } from '@/components/home/heroAtmosphereEngine';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
@@ -15,20 +24,41 @@ import {
 import { cn } from '@/shared/lib/cn';
 
 export interface HeroPhysicsCanvasProps {
+  readonly phase?: AtmosphericPhase;
   readonly className?: string;
 }
 
 /**
  * Canvas 2D Engine Khí Quyển 3D Hoàng Liên Sơn 120fps (`dtScale` + `OffscreenCanvas` cache):
- * - 8 luồng tia sáng thể tích xuyên núi (`globalCompositeOperation = 'screen'`) dịch chuyển đối xứng chuột
- * - Vòng thiên văn Đông Sơn chìm (`opacity: 0.12`) xoay quanh sao Bắc Đẩu + Dải Ngân Hà
- * - Tương tác nối sao thời gian thực `O(N)` trong bán kính 160px & Celestial Nova Pulse khi click bầu trời
- * - Thác Bạc 120fps đổ từ vách núi xuống chân thác bốc sương sáng & ruộng bậc thang phản quang ánh sao
- * - Biển mây thể tích 4 lớp cache, chớp sáng ẩn mây, rẽ mây vật lý 150px, 3 dải lụa gió & 28 cánh hoa đỗ quyên 3D
+ * - Đồng bộ 600ms bảng màu theo 4 thời khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
+ * - Camera 3D Scroll Fly-Through đẩy tầng mây đáy dâng lên đón người học khi cuộn xuống
+ * - Đàn Chim Lạc ánh sao 2 khớp thả bụi sao + 2 dải lụa cực quang tương tác gảy dây đàn + 10 Đèn Trời 3D
  */
-export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
+export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhysicsCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = useReducedMotion();
+
+  const paletteTransitionRef = useRef<{
+    from: AtmospherePalette;
+    to: AtmospherePalette;
+    current: AtmospherePalette;
+    elapsedSec: number;
+  }>({
+    from: ATMOSPHERIC_PALETTES[phase],
+    to: ATMOSPHERIC_PALETTES[phase],
+    current: ATMOSPHERIC_PALETTES[phase],
+    elapsedSec: 0.6,
+  });
+
+  useEffect(() => {
+    const target = ATMOSPHERIC_PALETTES[phase];
+    paletteTransitionRef.current = {
+      from: paletteTransitionRef.current.current,
+      to: target,
+      current: prefersReducedMotion ? target : paletteTransitionRef.current.current,
+      elapsedSec: prefersReducedMotion ? 0.6 : 0,
+    };
+  }, [phase, prefersReducedMotion]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -70,6 +100,13 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     };
     let targetNormX = 0;
     let targetNormY = 0;
+    let targetScroll = 0;
+    let currentScroll = 0;
+
+    const updateTargetScroll = () => {
+      const heroHeight = Math.max(height, 360);
+      targetScroll = Math.min(Math.max(window.scrollY / heroHeight, 0), 1);
+    };
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -91,6 +128,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       if (mouse.active) {
         targetNormX = (nextX / Math.max(width, 1) - 0.5) * 2;
         targetNormY = (nextY / Math.max(height, 1) - 0.5) * 2;
+        triggerAuroraPluck(world, nextX, nextY, mouse.vy, width);
       }
     };
 
@@ -100,27 +138,38 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       const clickY = event.clientY - rect.top;
       if (clickX < 0 || clickX > width || clickY < 0 || clickY > height) return;
 
-      // Phát xung sóng ánh sáng thiên hà (Celestial Nova Pulse) làm bừng sáng sao, đỉnh núi & ruộng bậc thang
-      if (world.novaPulses.length >= 6) {
-        world.novaPulses.shift();
+      // Ưu tiên tương tác thắp sáng Đèn Trời 3D bay vút lên trước khi tạo xung Nova
+      if (tryBoostSkyLanternAt(world, clickX, clickY, width, height)) {
+        world.novaSceneBoost = Math.min(1, world.novaSceneBoost + 0.35);
+        return;
       }
+
       const isSkyClick = clickY < height * 0.65;
-      world.novaPulses.push({
-        x: clickX,
-        y: clickY,
-        radius: 10,
-        maxRadius: isSkyClick ? Math.max(width, height) * 0.52 : 170,
-        alpha: isSkyClick ? 0.68 : 0.42,
-        speed: isSkyClick ? 5.6 : 2.6,
-      });
+      spawnNovaPulse(
+        world,
+        clickX,
+        clickY,
+        isSkyClick ? Math.max(width, height) * 0.52 : 170,
+        isSkyClick ? 0.68 : 0.42,
+        isSkyClick ? 5.6 : 2.6,
+      );
       world.novaSceneBoost = Math.min(1, world.novaSceneBoost + (isSkyClick ? 0.95 : 0.45));
     };
 
     const drawFrame = (nowMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
+      const tr = paletteTransitionRef.current;
+      if (tr.elapsedSec < 0.6) {
+        tr.elapsedSec = Math.min(0.6, tr.elapsedSec + dtSeconds);
+        const eased = 1 - Math.pow(1 - tr.elapsedSec / 0.6, 3);
+        tr.current = interpolateAtmospherePalette(tr.from, tr.to, eased);
+      }
+
       if (animate) {
         const smooth = frameDampFactor(10, dtSeconds);
+        const scrollSmooth = frameDampFactor(14, dtSeconds);
         mouse.normX += (targetNormX - mouse.normX) * smooth;
         mouse.normY += (targetNormY - mouse.normY) * smooth;
+        currentScroll += (targetScroll - currentScroll) * scrollSmooth;
         const velDecay = Math.pow(0.84, dtScale);
         mouse.vx *= velDecay;
         mouse.vy *= velDecay;
@@ -134,7 +183,9 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
         tSec: nowMs / 1000,
         dtSeconds,
         dtScale,
+        scrollProgress: currentScroll,
         animate,
+        palette: tr.current,
         sprites,
         glowSprites,
         mouse,
@@ -200,8 +251,10 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       intersectionObserver.observe(canvas);
     }
 
+    updateTargetScroll();
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('click', handleClick, { passive: true });
+    window.addEventListener('scroll', updateTargetScroll, { passive: true });
     window.addEventListener('resize', resize, { passive: true });
     startLoop();
 
@@ -211,8 +264,11 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
       intersectionObserver?.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleClick);
+      window.removeEventListener('scroll', updateTargetScroll);
       window.removeEventListener('resize', resize);
-      world.novaPulses.length = 0;
+      for (const np of world.novaPulses) {
+        np.active = false;
+      }
     };
   }, [prefersReducedMotion]);
 
@@ -220,6 +276,7 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps) {
     <canvas
       ref={canvasRef}
       data-testid="hero-physics-canvas"
+      data-phase={phase}
       aria-hidden="true"
       className={cn('pointer-events-none absolute inset-0 h-full w-full', className)}
     />
