@@ -756,10 +756,10 @@ export function HomePage() {
           aria-label="Không gian Khởi đầu Learning Universe"
           className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden bg-[#050B16] pt-20 pb-24 md:pt-24 md:pb-28"
         >
-          {/* LAYER 1: 4-Layer Panorama Biển Mây Hoàng Liên Sơn (Phan Xi Păng, Ruộng Bậc Thang & Hạc Lượn) */}
+          {/* LAYER 1: Khối núi 3D đa diện Hoàng Liên Sơn, hẻm Thác Bạc & thung lũng ruộng bậc thang */}
           <HeroSonHaDiorama />
 
-          {/* LAYER 2: 120fps Dải Ngân Hà, Chòm sao Hình học, Sao băng & 5 Tầng Biển Mây Cuộn Trôi */}
+          {/* LAYER 2: Engine Khí Quyển 3D 120fps (Tia sáng xuyên núi, Nối sao O(N), Thác Bạc, Biển mây rẽ sóng & Hoa Đỗ Quyên 3D) */}
           <HeroPhysicsCanvas />
 
           {/* Container chính của Hero (Cột Trái Biên Tập & Cột Phải Trưng Bày Di Sản Cố Định) */}

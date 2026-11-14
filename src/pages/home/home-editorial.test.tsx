@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
+import { createAtmosphereWorld } from '@/components/home/heroAtmosphereEngine';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { getSubjects } from '@/content-runtime';
@@ -458,13 +459,28 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       }
       expect(screen.getByTestId('hoang-lien-dawn-glow')).toBeInTheDocument();
       expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('mountain-3d-facets').querySelectorAll('polygon').length,
+      ).toBeGreaterThanOrEqual(18);
       expect(screen.getByTestId('midground-slopes')).toBeInTheDocument();
+      expect(screen.getByTestId('thac-bac-gorge')).toBeInTheDocument();
       expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
       expect(screen.getByTestId('village-lantern-glow')).toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-foliage')).toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-cranes').querySelectorAll('path')).toHaveLength(9);
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
+
+      // Kiểm chứng Engine Khí Quyển 3D 120fps khởi tạo đủ hạt sao, thác nước, 4 lớp mây thể tích & cánh hoa đỗ quyên
+      const world = createAtmosphereWorld(1440, 900);
+      expect(world.stars.length).toBeGreaterThanOrEqual(240);
+      expect(world.waterfallDrops.length).toBeGreaterThanOrEqual(80);
+      expect(world.waterfallMist.length).toBeGreaterThanOrEqual(12);
+      expect(world.terraceGlints.length).toBeGreaterThanOrEqual(40);
+      expect(new Set(world.cloudPuffs.map((p) => p.variant))).toEqual(
+        new Set(['cloudSlate', 'cloudRoseGold', 'cloudPearl', 'cloudIvory']),
+      );
+      expect(world.petals.length).toBeGreaterThanOrEqual(25);
     });
 
     it('HeritageArtShowcase cố định thẻ thẳng góc (rotate-0), nút bấm h-8 w-8 rounded-full và chuyển tác phẩm mượt', async () => {
