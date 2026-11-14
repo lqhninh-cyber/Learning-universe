@@ -32,8 +32,7 @@ Chương 9 khép lại toàn bộ học phần Cấu trúc đại số bằng vi
 
 Nhắc lại rằng một vành giao hoán có phần tử đơn vị $1 \neq 0$ được gọi là một **trường** nếu mọi phần tử khác không đều khả nghịch: $R^\times = R \setminus \{0\}$. Dưới góc nhìn hiện đại của lý thuyết iđêan và đồng cấu vành, trường có một đặc trưng tuyệt đẹp:
 
-<Theorem id="thm-c9-b1-nhan-dien-truong">
-### Định lý 9.1: Tiêu chuẩn nhận diện trường qua iđêan
+<Theorem id="thm-c9-b1-nhan-dien-truong" title="Tiêu chuẩn nhận diện trường qua iđêan" original="Định lý 9.1">
 Cho $R$ là một vành giao hoán có phần tử đơn vị $1 \neq 0$. Các mệnh đề sau là tương đương:
 1. $R$ là một **trường**.
 2. Các iđêan duy nhất của $R$ là iđêan tầm thường $\{0\}$ và chính $R$.
@@ -75,14 +74,12 @@ Ta chứng minh tương đương theo chu trình: $(1) \implies (2) \implies (3)
 
 ## 2. Tiêu chuẩn trường con
 
-<Definition id="def-c9-b1-truong-con">
-### Định nghĩa 9.3: Trường con và Trường mở rộng
+<Definition id="def-c9-b1-truong-con" title="Trường con và Trường mở rộng" original="Định nghĩa 9.3">
 Cho $(F, +, \cdot)$ là một trường. Một tập con $K \subseteq F$ được gọi là một **trường con** (subfield) của $F$ nếu $K$ cùng với hai phép toán cộng và nhân thu hẹp từ $F$ lập thành một trường.
 Khi đó, $F$ được gọi là một **trường mở rộng** (extension field) của $K$, ký hiệu là $F/K$.
 </Definition>
 
-<Theorem id="thm-c9-b1-tieu-chuan-truong-con">
-### Mệnh đề 9.4: Tiêu chuẩn kiểm tra trường con
+<Theorem id="thm-c9-b1-tieu-chuan-truong-con" title="Tiêu chuẩn kiểm tra trường con" original="Mệnh đề 9.4">
 Cho $F$ là một trường và $K$ là một tập con của $F$ chứa ít nhất hai phần tử phân biệt (hoặc tương đương $1_F \in K$). Tập con $K$ là một trường con của $F$ khi và chỉ khi với mọi $a, b \in K$:
 1. $a - b \in K$ (đóng với phép trừ nhóm cộng).
 2. Nếu $b \neq 0$ thì $ab^{-1} \in K$ (đóng với phép chia nhóm nhân).
@@ -98,8 +95,7 @@ Cho $F$ là một trường và $K$ là một tập con của $F$ chứa ít nh�
   Vậy $K$ là một trường con của $F$.
 </Proof>
 
-<Example id="ex-c9-b1-q-can-2">
-### Ví dụ: Trường con $\mathbb{Q}(\sqrt{2})$ của trường số thực $\mathbb{R}$
+<Example id="ex-c9-b1-q-can-2" title="Trường con Q(căn 2) của trường số thực R">
 Xét tập con:
 $$
 \mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b \in \mathbb{Q}\} \subseteq \mathbb{R}.
@@ -113,8 +109,7 @@ Nhân với phần tử $c + d\sqrt{2}$ bất kỳ vẫn cho kết quả thuộc
 Theo Mệnh đề 9.4, $\mathbb{Q}(\sqrt{2})$ là một trường con của $\mathbb{R}$.
 </Example>
 
-<Proposition id="prop-c9-b1-giao-cac-truong-con">
-### Mệnh đề 9.5: Giao của một họ các trường con
+<Proposition id="prop-c9-b1-giao-cac-truong-con" title="Giao của một họ các trường con" original="Mệnh đề 9.5">
 Nếu $\{K_\alpha\}_{\alpha \in \Lambda}$ là một họ tùy ý các trường con của trường $F$, thì giao của chúng:
 $$
 K = \bigcap_{\alpha \in \Lambda} K_\alpha
@@ -135,8 +130,7 @@ Do đó $a - b \in K$ và $ab^{-1} \in K$. Vậy $K$ là một trường con c�
 
 Từ Mệnh đề 9.5, giao của tất cả các trường con của một trường $F$ là trường con nhỏ nhất của $F$. Trường con này chứa đựng cấu trúc số học cơ bản nhất và được quyết định hoàn toàn bởi **đặc số** của trường.
 
-<Definition id="def-c9-b1-truong-con-nguyen-to">
-### Định nghĩa 9.9: Trường con nguyên tố (Prime subfield)
+<Definition id="def-c9-b1-truong-con-nguyen-to" title="Trường con nguyên tố (Prime subfield)" original="Định nghĩa 9.9">
 Cho $F$ là một trường bất kỳ. **Trường con nguyên tố** của $F$, ký hiệu là $P_F$, là giao của tất cả các trường con của $F$:
 $$
 P_F = \bigcap \{K \subseteq F \mid K \text{ là trường con của } F\}.
@@ -144,8 +138,7 @@ $$
 $P_F$ là trường con bé nhất của $F$ (theo quan hệ bao hàm) và bị chứa trong mọi trường con khác của $F$.
 </Definition>
 
-<Theorem id="thm-c9-b1-phan-loai-truong-con-nguyen-to">
-### Định lý 9.10: Phân loại trường con nguyên tố theo đặc số
+<Theorem id="thm-c9-b1-phan-loai-truong-con-nguyen-to" title="Phân loại trường con nguyên tố theo đặc số" original="Định lý 9.10">
 Cho $F$ là một trường có phần tử đơn vị $1_F$. Khi đó:
 1. Nếu $\operatorname{char}(F) = 0$, thì trường con nguyên tố $P_F$ đẳng cấu với trường số hữu tỉ:
 $$
@@ -199,8 +192,7 @@ Vì $P_F$ là trường con chứa $1_F$, nó phải đóng đối với phép c
 
 ## 4. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
 
-<Exercise id="ex-c9-b1-a1">
-### Bài 9.1.A1 (Nhóm A - Kiểm tra tiêu chuẩn trường con)
+<Exercise id="ex-c9-b1-a1" title="Kiểm tra tiêu chuẩn trường con" group="Nhóm A">
 Xét các tập con sau của trường số thực $\mathbb{R}$:
 1. $K_1 = \{a + b\sqrt{5} \mid a, b \in \mathbb{Q}\}$.
 2. $K_2 = \{a + b\sqrt[3]{2} \mid a, b \in \mathbb{Q}\}$.
@@ -240,8 +232,7 @@ Tập con nào là trường con của $\mathbb{R}$? Nếu không phải, hãy c
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b1-a2">
-### Bài 9.1.A2 (Nhóm A - Xác định trường con nguyên tố)
+<Exercise id="ex-c9-b1-a2" title="Xác định trường con nguyên tố" group="Nhóm A">
 Tìm đặc số và mô tả tường minh trường con nguyên tố $P_F$ của các trường sau:
 1. $F_1 = \mathbb{Q}(\sqrt{3}, \pi)$.
 2. $F_2 = \mathbb{F}_3[x]/(x^2 + 1)$.
@@ -278,15 +269,15 @@ Các hệ số của phân thức nằm trong $\mathbb{F}_p$, do đó $p \cdot 1
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b1-b1">
-### Bài 9.1.B1 (Nhóm B - Trường mở rộng đơn và nghịch đảo đại số)
+<Exercise id="ex-c9-b1-b1" title="Trường mở rộng đơn và nghịch đảo đại số" group="Nhóm B">
 Cho trường mở rộng $K = \mathbb{Q}(\sqrt{2}, \sqrt{3})$.
 1. Chứng minh rằng $K = \mathbb{Q}(\sqrt{2} + \sqrt{3})$.
 2. Tìm phần tử nghịch đảo của $u = \sqrt{2} + \sqrt{3}$ trong $K$ dưới dạng tổ hợp tuyến tính của $\{1, \sqrt{2}, \sqrt{3}, \sqrt{6}\}$.
 
 
 <Solution>
-**1. Chứng minh $K = \mathbb{Q}(\sqrt{2} + \sqrt{3})$:**
+**1. Chứng minh $K = \mathbb{Q}(\sqrt{2} + \sqrt{3})$**
+
 Đặt $\alpha = \sqrt{2} + \sqrt{3}$. Rõ ràng $\alpha \in \mathbb{Q}(\sqrt{2}, \sqrt{3})$, do đó $\mathbb{Q}(\alpha) \subseteq \mathbb{Q}(\sqrt{2}, \sqrt{3})$.
 Ta cần chứng minh chiều ngược lại: $\sqrt{2} \in \mathbb{Q}(\alpha)$ và $\sqrt{3} \in \mathbb{Q}(\alpha)$.
 Tính nghịch đảo của $\alpha$ bằng trục căn thức:
@@ -304,7 +295,8 @@ $$
 Vì cả $\sqrt{2}$ và $\sqrt{3}$ đều thuộc $\mathbb{Q}(\alpha)$, ta suy ra $\mathbb{Q}(\sqrt{2}, \sqrt{3}) \subseteq \mathbb{Q}(\alpha)$.
 Vậy $\mathbb{Q}(\sqrt{2}, \sqrt{3}) = \mathbb{Q}(\sqrt{2} + \sqrt{3})$.
 
-**2. Biểu diễn nghịch đảo:**
+**2. Biểu diễn nghịch đảo**
+
 Từ tính toán ở trên:
 $$
 u^{-1} = \frac{1}{\sqrt{2} + \sqrt{3}} = -\sqrt{2} + \sqrt{3} = 0 \cdot 1 - 1 \cdot \sqrt{2} + 1 \cdot \sqrt{3} + 0 \cdot \sqrt{6}.
@@ -313,13 +305,12 @@ Kiểm tra lại: $(\sqrt{3} + \sqrt{2})(\sqrt{3} - \sqrt{2}) = 3 - 2 = 1$. Kế
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b1-b2">
-### Bài 9.1.B2 (Nhóm B - Hợp của hai trường con)
+<Exercise id="ex-c9-b1-b2" title="Hợp của hai trường con" group="Nhóm B">
 Cho $K_1$ và $K_2$ là hai trường con của một trường $F$.
 Chứng minh rằng $K_1 \cup K_2$ là một trường con của $F$ khi và chỉ khi $K_1 \subseteq K_2$ hoặc $K_2 \subseteq K_1$.
-</Exercise>
 
-<Proof>
+
+<Solution>
 - **Chiều thuận ($\impliedby$):** Nếu $K_1 \subseteq K_2$ thì $K_1 \cup K_2 = K_2$ là trường con. Tương tự nếu $K_2 \subseteq K_1$ thì $K_1 \cup K_2 = K_1$ là trường con.
 - **Chiều đảo ($\implies$):** Giả sử $K_1 \cup K_2$ là một trường con của $F$.
   Khi đó $(K_1 \cup K_2, +)$ là một nhóm con của nhóm cộng $(F, +)$.
@@ -329,15 +320,16 @@ Chứng minh rằng $K_1 \cup K_2$ là một trường con của $F$ khi và ch�
   $$
   (Chứng minh trực tiếp bằng phản chứng: Nếu $K_1 \not\subseteq K_2$ và $K_2 \not\subseteq K_1$, tồn tại $x \in K_1 \setminus K_2$ và $y \in K_2 \setminus K_1$. Xét tổng $x + y$. Do $K_1 \cup K_2$ là trường con, $x + y \in K_1 \cup K_2$. Nếu $x + y \in K_1$, thì $y = (x + y) - x \in K_1$, mâu thuẫn. Nếu $x + y \in K_2$, thì $x = (x + y) - y \in K_2$, mâu thuẫn. Do đó điều giả sử là sai).
 Vậy $K_1 \subseteq K_2$ hoặc $K_2 \subseteq K_1$.
-</Proof>
-
-<Exercise id="ex-c9-b1-c1">
-### Bài 9.1.C1 (Nhóm C - Vành con của trường hữu hạn là trường con)
-Cho $F$ là một trường hữu hạn. Chứng minh rằng mọi vành con $R$ của $F$ chứa phần tử đơn vị $1_F$ đều là một **trường con** của $F$. Chỉ ra phản ví dụ khi $F$ là trường vô hạn.
+</Solution>
 </Exercise>
 
-<Proof>
-1. **Chứng minh với $F$ hữu hạn:**
+<Exercise id="ex-c9-b1-c1" title="Vành con của trường hữu hạn là trường con" group="Nhóm C">
+Cho $F$ là một trường hữu hạn. Chứng minh rằng mọi vành con $R$ của $F$ chứa phần tử đơn vị $1_F$ đều là một **trường con** của $F$. Chỉ ra phản ví dụ khi $F$ là trường vô hạn.
+
+
+<Solution>
+**1. Chứng minh với $F$ hữu hạn**
+
    Giả sử $R$ là vành con của $F$ chứa $1_F$.
    Vì $R \subseteq F$ và $F$ là trường, $R$ không có ước của không khác không (nếu $ab = 0$ trong $R$ thì $ab = 0$ trong $F$, suy ra $a = 0$ hoặc $b = 0$). Do đó $R$ là một **miền nguyên**.
    Mặt khác, vì $F$ là tập hữu hạn, vành con $R$ cũng là một tập hữu hạn.
@@ -347,24 +339,26 @@ Cho $F$ là một trường hữu hạn. Chứng minh rằng mọi vành con $R$
    Vì $F$ giao hoán, $ba = ab = 1_F$, nghĩa là $a^{-1} = b \in R$.
    Vì mọi phần tử khác không trong $R$ đều có nghịch đảo nhân trong $R$, $R$ là một **trường con** của $F$.
 
-2. **Phản ví dụ khi $F$ vô hạn:**
+**2. Phản ví dụ khi $F$ vô hạn**
+
    Xét trường số thực vô hạn $F = \mathbb{R}$.
    Tập hợp các số nguyên $R = \mathbb{Z}$ là một vành con chứa đơn vị $1 \in \mathbb{R}$.
    Tuy nhiên $\mathbb{Z}$ không phải là trường con của $\mathbb{R}$ vì phần tử $2 \in \mathbb{Z}$ không có nghịch đảo trong $\mathbb{Z}$ (nghịch đảo của nó là $\frac{1}{2} \notin \mathbb{Z}$).
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c9-b1-c2">
-### Bài 9.1.C2 (Nhóm C - Trường các lũy thừa bậc $p$)
+<Exercise id="ex-c9-b1-c2" title="Trường các lũy thừa bậc p" group="Nhóm C">
 Cho $F$ là một trường có đặc số $p > 0$. Đặt:
 $$
 F^p = \{x^p \mid x \in F\}.
 $$
 1. Chứng minh rằng $F^p$ là một trường con của $F$.
 2. Chứng minh rằng $F$ là trường hữu hạn khi và chỉ khi $F^p = F$.
-</Exercise>
 
-<Proof>
-1. **$F^p$ là trường con:**
+
+<Solution>
+**1. $F^p$ là trường con**
+
    - $0 = 0^p \in F^p$ và $1 = 1^p \in F^p$.
    - Với mọi $a^p, b^p \in F^p$:
      Theo Định lý Frobenius (Định lý 8.22), vì $\operatorname{char}(F) = p$, ta có:
@@ -377,22 +371,23 @@ $$
      $$
    Theo Mệnh đề 9.4, $F^p$ là một trường con của $F$.
 
-2. **Đẳng thức $F^p = F$:**
+**2. Đẳng thức $F^p = F$**
+
    Tập $F^p$ chính là ảnh của tự đồng cấu Frobenius $\Phi: F \to F, x \mapsto x^p$.
    - Vì $F$ là trường, $\Phi$ luôn là một đơn cấu ($\ker\Phi = \{0\}$).
    - Nếu $F$ hữu hạn, mọi đơn ánh từ $F$ vào $F$ đều là toàn ánh, do đó $\operatorname{im}\Phi = F^p = F$.
    - Ngược lại, nếu $F = \mathbb{F}_p(t)$ (vô hạn), ta đã chứng minh ở Bài 8.3.C2 rằng $t \notin F^p$, suy ra $F^p \subsetneq F$.
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c9-b1-d1">
-### Bài 9.1.D1 (Nhóm D - Định lý cấp của trường hữu hạn $|F| = p^n$)
+<Exercise id="ex-c9-b1-d1" title="Định lý cấp của trường hữu hạn |F| = p^n" group="Nhóm D">
 Sử dụng cấu trúc không gian vectơ trên trường con nguyên tố để chứng minh rằng: Nếu $F$ là một trường hữu hạn có đặc số $p$, thì số phần tử của $F$ bắt buộc phải có dạng:
 $$
 |F| = p^n \quad \text{với } n \ge 1 \text{ là một số nguyên dương.}
 $$
-</Exercise>
 
-<Proof>
+
+<Solution>
 Giả sử $F$ là trường hữu hạn có đặc số $p$.
 1. Theo Định lý 8.21, $p$ bắt buộc là số nguyên tố.
 2. Theo Định lý 9.10, trường con nguyên tố của $F$ là $P_F \cong \mathbb{F}_p = \mathbb{Z}/p\mathbb{Z}$, có đúng $p$ phần tử.
@@ -415,29 +410,33 @@ Giả sử $F$ là trường hữu hạn có đặc số $p$.
    |F| = \underbrace{p \times p \times \dots \times p}_{n \text{ lần}} = p^n.
    $$
 Chứng minh hoàn tất.
-</Proof>
-
-<Exercise id="ex-c9-b1-d2">
-### Bài 9.1.D2 (Nhóm D - Sự không tồn tại của các trường cấp 6 và cấp 10)
-Chứng minh rằng không tồn tại bất kỳ trường nào có đúng 6 phần tử hoặc đúng 10 phần tử.
+</Solution>
 </Exercise>
 
-<Proof>
+<Exercise id="ex-c9-b1-d2" title="Sự không tồn tại của các trường cấp 6 và cấp 10" group="Nhóm D">
+Chứng minh rằng không tồn tại bất kỳ trường nào có đúng 6 phần tử hoặc đúng 10 phần tử.
+
+
+<Solution>
 Theo Định lý 9.1.D1 vừa chứng minh, lực lượng (số phần tử) của một trường hữu hạn bất kỳ bắt buộc phải là lũy thừa của một số nguyên tố:
 $$
 |F| = p^n \quad (p \text{ nguyên tố}, n \in \mathbb{Z}^+).
 $$
-1. **Xét cấp bằng 6:**
+
+**1. Xét cấp bằng 6**
+
    Phân tích thừa số nguyên tố: $6 = 2 \times 3$.
    Số $6$ không thể viết dưới dạng $p^n$ của bất kỳ số nguyên tố nào (vì $2^1 = 2 < 6 < 2^3 = 8$, và $3^1 = 3 < 6 < 3^2 = 9$).
    Do đó, không tồn tại trường nào có đúng 6 phần tử.
    *(Giải thích theo cấu trúc: Nếu $R$ có 6 phần tử, đặc số của nó phải chia hết 6. Nếu $\operatorname{char}=6$ thì có ước của không $2 \cdot 3 = 0$, không là trường. Nếu $\operatorname{char}=2$ thì $|R|$ phải là lũy thừa của 2, mâu thuẫn; nếu $\operatorname{char}=3$ thì $|R|$ phải là lũy thừa của 3, mâu thuẫn).*
 
-2. **Xét cấp bằng 10:**
+**2. Xét cấp bằng 10**
+
    Phân tích thừa số nguyên tố: $10 = 2 \times 5$.
    Số $10$ không phải là lũy thừa của một số nguyên tố nào.
    Do đó không tồn tại trường nào có đúng 10 phần tử.
-</Proof>
+</Solution>
+</Exercise>
 
 ---
 

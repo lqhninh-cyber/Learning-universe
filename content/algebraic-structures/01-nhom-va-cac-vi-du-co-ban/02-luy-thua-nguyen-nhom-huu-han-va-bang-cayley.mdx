@@ -346,8 +346,9 @@ Vì $a \neq e$ và $a^2 \neq e$, ta xét 4 phần tử: $e, a, a^2, a^3$.
 **2. Trường hợp mọi $x \in G$ đều thỏa mãn $x^2 = e$**
 
 Theo <Ref to="exr-c1-b2-c1" />, $G$ là một nhóm abel. Đặt $G = \{e, a, b, c\}$ với $a, b, c$ phân biệt và khác $e$.
-   - Xét tích $ab$: do $a \neq e, b \neq e$ nên $ab \neq a$ và $ab \neq b$. Nếu $ab = e$ thì $b = a^{-1} = a$ (vì $a^2 = e$), mâu thuẫn với $a \neq b$. Vì vậy bắt buộc $ab = c$.
-   - Do tính giao hoán, $ba = ab = c$. Hoàn toàn tương tự, $bc = cb = a$ và $ca = ac = b$.
+   - Xét tích $ab$: do $a \neq e, b \neq e$ nên $ab \neq a$ và $ab \neq b$. Nếu $ab = e$ thì $b = a^{-1} = a$ (vì $a^2 = e$), mâu thuẫn với $a \neq b$. Vì vậy bắt buộc $ab = c$, và do tính giao hoán nên $ba = ab = c$.
+   - Xét tích $bc$: do $b \neq e, c \neq e$ và $b \neq c$ nên $bc \notin \{b, c, e\}$, suy ra $bc = cb = a$.
+   - Xét tích $ca$: do $c \neq e, a \neq e$ và $c \neq a$ nên $ca \notin \{c, a, e\}$, suy ra $ca = ac = b$.
    - Cùng với $a^2 = b^2 = c^2 = e$, bảng Cayley của $G$ được xác định duy nhất:
      $$
      \begin{array}{c|cccc}
@@ -360,7 +361,10 @@ Theo <Ref to="exr-c1-b2-c1" />, $G$ là một nhóm abel. Đặt $G = \{e, a, b,
      \end{array}
      $$
      Bảng này chính là bảng Cayley của nhóm bốn Klein $V_4$.
-3. **Kết luận:** Mọi nhóm cấp 4 chỉ có thể có đúng một trong **hai cấu trúc** trừu tượng (sai khác một phép đổi tên phần tử bảo toàn phép toán): nhóm cyclic $\Z/4\Z$ hoặc nhóm bốn Klein $V_4$.
+
+**3. Kết luận**
+
+Mọi nhóm cấp 4 chỉ có thể có đúng một trong **hai cấu trúc** trừu tượng (sai khác một phép đổi tên phần tử bảo toàn phép toán): nhóm cyclic $\Z/4\Z$ hoặc nhóm bốn Klein $V_4$.
 </Solution>
 </Exercise>
 

@@ -348,12 +348,14 @@ Giả sử $a^m = 0_R$ với $m \ge 1$. Đặt:
    $$
    v = 1_R + a + a^2 + \cdots + a^{m-1} \in R.
    $$
-   Khai triển tích $(1_R - a)v$:
+   Khai triển tích $(1_R - a)v$ và $v(1_R - a)$:
    $$
-   (1_R - a)(1_R + a + a^2 + \cdots + a^{m-1}) = (1_R + a + \cdots + a^{m-1}) - (a + a^2 + \cdots + a^m) = 1_R - a^m.
+   (1_R - a)(1_R + a + a^2 + \cdots + a^{m-1}) = (1_R + a + \cdots + a^{m-1}) - (a + a^2 + \cdots + a^m) = 1_R - a^m,
    $$
-   Vì $a^m = 0_R$, ta được $(1_R - a)v = 1_R - 0_R = 1_R$.
-   Hoàn toàn tương tự, $v(1_R - a) = 1_R - a^m = 1_R$.
+   $$
+   (1_R + a + a^2 + \cdots + a^{m-1})(1_R - a) = (1_R + a + \cdots + a^{m-1}) - (a + a^2 + \cdots + a^m) = 1_R - a^m.
+   $$
+   Vì $a^m = 0_R$, ta được $(1_R - a)v = v(1_R - a) = 1_R - 0_R = 1_R$.
    Do đó $1_R - a$ khả nghịch với nghịch đảo duy nhất:
    $$
    (1_R - a)^{-1} = 1_R + a + a^2 + \cdots + a^{m-1}.
@@ -384,7 +386,7 @@ Dùng tính toàn ánh của $L_a$ để tìm $e_a$ sao cho $a e_a = a$, sau đ�
 Lấy tùy ý $a \in R, a \neq 0_R$.
    - Nếu $L_a(x) = L_a(y)$ thì $ax = ay \iff a(x - y) = 0_R$. Do $R$ không có ước của không trái và $a \neq 0_R$, suy ra $x - y = 0_R \implies x = y$. Vậy $L_a$ đơn ánh.
    - Vì $R$ hữu hạn, một đơn ánh từ $R$ vào $R$ bắt buộc phải là toàn ánh. Vậy $L_a$ là song ánh.
-   Hoàn toàn tương tự, ánh xạ nhân phải $R_a: R \to R, x \mapsto xa$ cũng là một song ánh.
+   - Đối với ánh xạ nhân phải $R_a: R \to R, x \mapsto xa$: nếu $R_a(x) = R_a(y)$ thì $xa = ya \iff (x - y)a = 0_R \implies x = y$ (do $R$ không có ước của không phải và $a \neq 0_R$), nên $R_a$ đơn ánh trên tập hữu hạn $R$ và do đó cũng là một song ánh.
 
 **2. Chứng minh sự tồn tại của phần tử đơn vị**
 

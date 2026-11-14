@@ -90,8 +90,7 @@ Bảng dưới đây chuẩn hóa các thuật ngữ toán học trọng tâm c�
 
 ## 3. Các định lý nâng cao chọn lọc
 
-<Theorem id="thm-c8-b4-tinh-cung-so-thuc">
-### Định lý 8.23: Tính cứng của trường số thực (Rigidity of $\mathbb{R}$)
+<Theorem id="thm-c8-b4-tinh-cung-so-thuc" title="Tính cứng của trường số thực (Rigidity of R)" original="Định lý 8.23">
 Nhóm các tự đẳng cấu vành của trường số thực $\mathbb{R}$ là nhóm tầm thường, nghĩa là tự đẳng cấu duy nhất của $\mathbb{R}$ là ánh xạ đồng nhất:
 $$
 \operatorname{Aut}(\mathbb{R}) = \{\operatorname{id}_{\mathbb{R}}\}.
@@ -131,8 +130,7 @@ Giả sử $\sigma: \mathbb{R} \to \mathbb{R}$ là một tự đẳng cấu vàn
 Vậy ta bắt buộc phải có $\sigma(x) = x$ với mọi $x \in \mathbb{R}$, tức $\sigma = \operatorname{id}_{\mathbb{R}}$.
 </Proof>
 
-<Theorem id="thm-c8-b4-phan-tich-luy-dang-tam">
-### Định lý 8.24: Phân tích tích trực tiếp qua phần tử lũy đẳng tâm
+<Theorem id="thm-c8-b4-phan-tich-luy-dang-tam" title="Phân tích tích trực tiếp qua phần tử lũy đẳng tâm" original="Định lý 8.24">
 Cho $R$ là một vành có phần tử đơn vị $1$. Vành $R$ đẳng cấu với tích trực tiếp của hai vành $R_1 \times R_2$ khi và chỉ khi tồn tại một phần tử lũy đẳng tâm không tầm thường $e \in Z(R)$ ($e \neq 0, 1$, $e^2 = e$, $er = re \; \forall r \in R$) sao cho:
 $$
 R \cong Re \times R(1 - e).
@@ -151,8 +149,7 @@ $$
 
 ## 4. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
 
-<Exercise id="ex-c8-b4-a1">
-### Bài 8.4.A1 (Nhóm A - Bài tập 8.4: Đồng cấu vành từ $\mathbb{Z}$ vào $\mathbb{Z}/12\mathbb{Z}$)
+<Exercise id="ex-c8-b4-a1" title="Đồng cấu vành từ Z vào Z/12Z" group="Nhóm A">
 Tìm tất cả các đồng cấu vành $f: \mathbb{Z} \to \mathbb{Z}/12\mathbb{Z}$.
 1. Chỉ ra những đồng cấu nào bảo toàn phần tử đơn vị.
 2. Với mỗi đồng cấu tìm được, hãy xác định hạt nhân $\ker f$ và ảnh $\operatorname{im} f$.
@@ -194,8 +191,7 @@ Như vậy, có đúng $4$ đồng cấu vành $f_e: \mathbb{Z} \to \mathbb{Z}/1
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b4-a2">
-### Bài 8.4.A2 (Nhóm A - Bài tập 8.7: Tính toán đặc số của vành)
+<Exercise id="ex-c8-b4-a2" title="Tính toán đặc số của vành" group="Nhóm A">
 1. Xác định đặc số của vành tích $R = \mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/6\mathbb{Z} \times \mathbb{Z}/10\mathbb{Z}$.
 2. Xác định đặc số của vành ma trận $S = M_2(\mathbb{F}_3)$.
 
@@ -222,15 +218,15 @@ Phần tử đơn vị là ma trận đơn vị $I_2 = \begin{pmatrix} [1] & [0]
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b4-b1">
-### Bài 8.4.B1 (Nhóm B - Bài tập 8.10: Ứng dụng Định lý đẳng cấu thứ nhất)
+<Exercise id="ex-c8-b4-b1" title="Ứng dụng Định lý đẳng cấu thứ nhất" group="Nhóm B">
 Sử dụng Định lý đẳng cấu thứ nhất cho vành để chứng minh các đẳng cấu sau:
 1. $\mathbb{Z}[x]/(n, x) \cong \mathbb{Z}/n\mathbb{Z}$ với mọi số nguyên dương $n \ge 1$.
 2. $\mathbb{R}[x]/(x^2 + 2) \cong \mathbb{C}$.
 
 
 <Solution>
-**1. Chứng minh $\mathbb{Z}[x]/(n, x) \cong \mathbb{Z}/n\mathbb{Z}$:**
+**1. Chứng minh $\mathbb{Z}[x]/(n, x) \cong \mathbb{Z}/n\mathbb{Z}$**
+
 Xét ánh xạ:
 $$
 f: \mathbb{Z}[x] \longrightarrow \mathbb{Z}/n\mathbb{Z}, \quad f(P(x)) = \overline{P(0)}.
@@ -255,7 +251,8 @@ $$
 \mathbb{Z}[x]/\ker f \cong \operatorname{im} f \iff \mathbb{Z}[x]/(n, x) \cong \mathbb{Z}/n\mathbb{Z}.
 $$
 
-**2. Chứng minh $\mathbb{R}[x]/(x^2 + 2) \cong \mathbb{C}$:**
+**2. Chứng minh $\mathbb{R}[x]/(x^2 + 2) \cong \mathbb{C}$**
+
 Xét ánh xạ tính giá trị tại $i\sqrt{2}$:
 $$
 g: \mathbb{R}[x] \longrightarrow \mathbb{C}, \quad g(P(x)) = P(i\sqrt{2}).
@@ -271,8 +268,7 @@ $$
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b4-b2">
-### Bài 8.4.B2 (Nhóm B - Bài tập 8.16: Tìm iđêan trong vành thương đa thức)
+<Exercise id="ex-c8-b4-b2" title="Tìm iđêan trong vành thương đa thức" group="Nhóm B">
 Cho $R = \mathbb{Q}[x]/(x^4 - 5x^2 + 6)$.
 1. Phân tích đa thức mẫu thành nhân tử trên $\mathbb{Q}[x]$.
 2. Sử dụng Định lý tương ứng để tìm tất cả các iđêan cực đại của $R$ và xác định các trường thương tương ứng.
@@ -308,23 +304,24 @@ Cho $R = \mathbb{Q}[x]/(x^4 - 5x^2 + 6)$.
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b4-c1">
-### Bài 8.4.C1 (Nhóm C - Bất biến đẳng cấu và phân biệt các cặp vành)
+<Exercise id="ex-c8-b4-c1" title="Bất biến đẳng cấu và phân biệt các cặp vành" group="Nhóm C">
 Sử dụng các bất biến đại số (tính giao hoán, số phần tử khả nghịch, ước của không, đặc số, nghiệm của phương trình) để chứng minh các cặp vành sau không đẳng cấu:
 1. $\mathbb{Z}/4\mathbb{Z}$ và $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
 2. $\mathbb{Q}(\sqrt{2})$ và $\mathbb{Q}(\sqrt{3})$.
 3. $\mathbb{Z}[x]$ và $\mathbb{Q}[x]$.
-</Exercise>
 
-<Proof>
-1. **Xét $\mathbb{Z}/4\mathbb{Z}$ và $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$:**
+
+<Solution>
+**1. Xét $\mathbb{Z}/4\mathbb{Z}$ và $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$**
+
    Cả hai vành đều có cùng số phần tử là $4$.
    Tuy nhiên:
    - Trong $\mathbb{Z}/4\mathbb{Z}$, phần tử $[2]$ thỏa mãn $[2] \neq [0]$ nhưng $[2]^2 = [4] = [0]$ (có phần tử lũy linh khác không). Ngoài ra $\operatorname{char}(\mathbb{Z}/4\mathbb{Z}) = 4$.
    - Trong $\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$, mọi phần tử $(a, b)$ đều thỏa $(a, b)^2 = (a^2, b^2) = (a, b)$ (mọi phần tử đều lũy đẳng). Do đó không có phần tử lũy linh khác không. Ngoài ra $\operatorname{char}(\mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}) = 2$.
    Vì đặc số là bất biến đẳng cấu và $4 \neq 2$, ta kết luận $\mathbb{Z}/4\mathbb{Z} \not\cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$.
 
-2. **Xét $\mathbb{Q}(\sqrt{2})$ và $\mathbb{Q}(\sqrt{3})$:**
+**2. Xét $\mathbb{Q}(\sqrt{2})$ và $\mathbb{Q}(\sqrt{3})$**
+
    Giả sử tồn tại một đẳng cấu vành $\phi: \mathbb{Q}(\sqrt{2}) \to \mathbb{Q}(\sqrt{3})$.
    Theo tính chất của đồng cấu trường, $\phi$ cố định mọi số hữu tỉ: $\phi(q) = q$ với mọi $q \in \mathbb{Q}$.
    Trong trường $\mathbb{Q}(\sqrt{2})$, phần tử $\sqrt{2}$ thỏa mãn phương trình $x^2 - 2 = 0$. Tác động $\phi$:
@@ -341,16 +338,17 @@ Sử dụng các bất biến đại số (tính giao hoán, số phần tử kh
    Mâu thuẫn này chứng tỏ phương trình $x^2 = 2$ không có nghiệm trong $\mathbb{Q}(\sqrt{3})$.
    Vậy $\mathbb{Q}(\sqrt{2}) \not\cong \mathbb{Q}(\sqrt{3})$.
 
-3. **Xét $\mathbb{Z}[x]$ và $\mathbb{Q}[x]$:**
+**3. Xét $\mathbb{Z}[x]$ và $\mathbb{Q}[x]$**
+
    Giả sử tồn tại một đẳng cấu vành $\psi: \mathbb{Q}[x] \to \mathbb{Z}[x]$.
    Trong $\mathbb{Q}[x]$, phần tử $\frac{1}{2}$ là phần tử khả nghịch vì $\frac{1}{2} \cdot 2 = 1$.
    Do đẳng cấu bảo toàn phần tử khả nghịch, $\psi(2) = 2$ phải là một phần tử khả nghịch trong $\mathbb{Z}[x]$.
    Tuy nhiên, nhóm các phần tử khả nghịch của $\mathbb{Z}[x]$ là $\mathbb{Z}[x]^\times = \{\pm 1\}$. Số $2$ không có nghịch đảo nhân trong $\mathbb{Z}[x]$.
    Mâu thuẫn này chứng minh $\mathbb{Z}[x] \not\cong \mathbb{Q}[x]$. (Hơn nữa, $\mathbb{Q}[x]$ là PID trong khi $\mathbb{Z}[x]$ không phải là PID vì iđêan $(2, x)$ không là iđêan chính).
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c8-b4-c2">
-### Bài 8.4.C2 (Nhóm C - Bài tập 8.13: Cấu trúc thương của số nguyên Gauss)
+<Exercise id="ex-c8-b4-c2" title="Cấu trúc thương của số nguyên Gauss" group="Nhóm C">
 1. Chứng minh rằng trong vành số nguyên Gauss $\mathbb{Z}[i]$, iđêan $(1 + i)$ là iđêan cực đại và $\mathbb{Z}[i]/(1 + i) \cong \mathbb{Z}/2\mathbb{Z}$.
 2. Tổng quát: Cho $p$ là số nguyên tố trong $\mathbb{Z}$. Khi nào thì $p\mathbb{Z}[i]$ là iđêan nguyên tố trong $\mathbb{Z}[i]$?
 
@@ -393,8 +391,7 @@ Ta có chuẩn $N(1 + i) = 1^2 + 1^2 = 2$.
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b4-d1">
-### Bài 8.4.D1 (Nhóm D - Bài tập 8.25: Định lý Thặng dư Trung Hoa cho iđêan)
+<Exercise id="ex-c8-b4-d1" title="Định lý Thặng dư Trung Hoa cho iđêan" group="Nhóm D">
 Cho $R$ là một vành giao hoán có đơn vị và $I, J$ là hai iđêan của $R$ thỏa mãn $I + J = R$ (đồng nguyên tố).
 1. Chứng minh rằng $I \cap J = IJ$.
 2. Chứng minh rằng ánh xạ $\psi: R \to R/I \times R/J, a \mapsto (a + I, a + J)$ là một đẳng cấu cảm sinh:
@@ -402,10 +399,11 @@ $$
 R/(I \cap J) \cong R/I \times R/J.
 $$
 3. Áp dụng phân tích vành thương $\mathbb{R}[x]/(x^2 - 1) \cong \mathbb{R} \times \mathbb{R}$ và giải thích ý nghĩa hình học đại số.
-</Exercise>
 
-<Proof>
-1. **Chứng minh $I \cap J = IJ$:**
+
+<Solution>
+**1. Chứng minh $I \cap J = IJ$**
+
    Tích hai iđêan luôn chứa trong giao: $IJ \subseteq I \cap J$.
    Vì $I + J = R$ và $1 \in R$, tồn tại $u \in I, v \in J$ sao cho $u + v = 1$.
    Với mọi $x \in I \cap J$:
@@ -416,7 +414,8 @@ $$
    Vì $x \in I$ và $v \in J$, $xv \in IJ$.
    Do đó $x = xu + xv \in IJ$. Suy ra $I \cap J \subseteq IJ$. Vậy $I \cap J = IJ$.
 
-2. **Chứng minh đẳng cấu:**
+**2. Chứng minh đẳng cấu**
+
    Xét ánh xạ $\psi: R \to R/I \times R/J, \psi(a) = (a + I, a + J)$.
    - $\psi$ là một đồng cấu vành bảo toàn đơn vị.
    - $\ker\psi = \{a \in R \mid a \in I \text{ và } a \in J\} = I \cap J$.
@@ -432,7 +431,8 @@ $$
      Do đó $\psi(x) = (a_1 + I, a_2 + J)$. Vậy $\psi$ là toàn ánh.
    Theo Định lý đẳng cấu thứ nhất: $R/(I \cap J) \cong R/I \times R/J$.
 
-3. **Áp dụng cho $\mathbb{R}[x]/(x^2 - 1)$:**
+**3. Áp dụng cho $\mathbb{R}[x]/(x^2 - 1)$**
+
    Đặt $I = (x - 1)$ và $J = (x + 1)$.
    Ta có đồng nhất thức Bézout: $\frac{1}{2}(x + 1) - \frac{1}{2}(x - 1) = 1 \in I + J \implies I + J = \mathbb{R}[x]$.
    Do đó:
@@ -440,17 +440,18 @@ $$
    \mathbb{R}[x]/(x^2 - 1) = \mathbb{R}[x]/(I \cap J) \cong \mathbb{R}[x]/(x - 1) \times \mathbb{R}[x]/(x + 1) \cong \mathbb{R} \times \mathbb{R}.
    $$
    *Ý nghĩa hình học:* Vành thương $\mathbb{R}[x]/(x^2 - 1)$ tương ứng với không gian hàm trên tập hai điểm phân biệt $\{1, -1\}$ của đường thẳng thực. Mỗi hàm số trên tập hai điểm này được xác định độc lập bởi hai giá trị $(f(1), f(-1)) \in \mathbb{R} \times \mathbb{R}$.
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c8-b4-d2">
-### Bài 8.4.D2 (Nhóm D - Bài tập 8.32: Phân tích tích trực tiếp và lũy đẳng tâm)
+<Exercise id="ex-c8-b4-d2" title="Phân tích tích trực tiếp và lũy đẳng tâm" group="Nhóm D">
 Cho $R$ là một vành có phần tử đơn vị.
 1. Giả sử $R = I_1 \oplus I_2$ là tổng trực tiếp của hai iđêan hai phía. Chứng minh rằng tồn tại duy nhất một phần tử lũy đẳng tâm $e \in Z(R)$ sao cho $I_1 = Re$ và $I_2 = R(1 - e)$.
 2. Áp dụng tìm các phần tử lũy đẳng tâm của vành $\mathbb{Z}/30\mathbb{Z} \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/3\mathbb{Z} \times \mathbb{Z}/5\mathbb{Z}$.
 
 
 <Solution>
-**1. Chứng minh sự tồn tại của lũy đẳng tâm $e$:**
+**1. Chứng minh sự tồn tại của lũy đẳng tâm $e$**
+
 Vì $R = I_1 \oplus I_2$, mỗi phần tử $x \in R$ đều phân tích duy nhất thành:
 $$
 x = x_1 + x_2 \quad (x_1 \in I_1, x_2 \in I_2).
@@ -479,7 +480,8 @@ $$
   Vậy $e = e_1 \in Z(R)$.
 - *Dạng của iđêan:* Với mọi $x \in I_1$, $x = x \cdot 1 = x e_1 + x e_2 = x e_1 + 0 = x e_1 \in Re_1$. Do đó $I_1 = Re_1$. Tương tự $I_2 = R(1 - e_1)$.
 
-**2. Tìm các phần tử lũy đẳng trong $\mathbb{Z}/30\mathbb{Z}$:**
+**2. Tìm các phần tử lũy đẳng trong $\mathbb{Z}/30\mathbb{Z}$**
+
 Theo Định lý Thặng dư Trung Hoa:
 $$
 \mathbb{Z}/30\mathbb{Z} \cong \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/3\mathbb{Z} \times \mathbb{Z}/5\mathbb{Z}.

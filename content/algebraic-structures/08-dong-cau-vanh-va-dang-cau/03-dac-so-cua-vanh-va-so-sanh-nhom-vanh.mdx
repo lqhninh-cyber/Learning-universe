@@ -40,8 +40,7 @@ n \cdot 1_R = \begin{cases}
 \end{cases}
 $$
 
-<Proposition id="prop-c8-b3-dong-cau-don-vi">
-### Mệnh đề 8.19: Đồng cấu đơn vị tự nhiên
+<Proposition id="prop-c8-b3-dong-cau-don-vi" title="Đồng cấu đơn vị tự nhiên" original="Mệnh đề 8.19">
 Ánh xạ:
 $$
 \eta_R: \mathbb{Z} \longrightarrow R, \quad n \longmapsto n \cdot 1_R
@@ -64,8 +63,7 @@ $$
 $$
 Số nguyên $n$ này chính là **đặc số** của vành $R$.
 
-<Definition id="def-c8-b3-dac-so">
-### Định nghĩa 8.20: Đặc số của vành (Characteristic)
+<Definition id="def-c8-b3-dac-so" title="Đặc số của vành (Characteristic)" original="Định nghĩa 8.20">
 Cho $R$ là một vành có phần tử đơn vị $1_R$. **Đặc số** của $R$, ký hiệu là $\operatorname{char}(R)$, được định nghĩa như sau:
 1. Nếu tồn tại số nguyên dương $k \ge 1$ sao cho $k \cdot 1_R = 0_R$, thì $\operatorname{char}(R)$ là **số nguyên dương nhỏ nhất** thỏa mãn điều này.
 2. Nếu không tồn tại số nguyên dương nào như vậy (nghĩa là $k \cdot 1_R \neq 0_R$ với mọi $k \ge 1$), ta định nghĩa:
@@ -99,8 +97,7 @@ flowchart LR
 
 ## 2. Đặc số của Miền nguyên và Trường
 
-<Theorem id="thm-c8-b3-dac-so-mien-nguyen">
-### Định lý 8.21: Đặc số của miền nguyên và trường
+<Theorem id="thm-c8-b3-dac-so-mien-nguyen" title="Đặc số của miền nguyên và trường" original="Định lý 8.21">
 Nếu $R$ là một **miền nguyên** (đặc biệt nếu $R$ là một **trường**) thì đặc số của $R$ chỉ có thể là **$0$** hoặc một **số nguyên tố $p$**.
 </Theorem>
 
@@ -138,8 +135,7 @@ Vậy $n = 0$ hoặc $n = p$ là một số nguyên tố.
 
 Trong các vành giao hoán có đặc số nguyên tố $p$, xảy ra một hiện tượng giải tích kỳ diệu: lũy thừa bậc $p$ biến thành một phép toán tuyến tính phân phối qua phép cộng!
 
-<Theorem id="thm-c8-b3-dong-cau-frobenius">
-### Định lý 8.22: Tự đồng cấu Frobenius
+<Theorem id="thm-c8-b3-dong-cau-frobenius" title="Tự đồng cấu Frobenius" original="Định lý 8.22">
 Cho $R$ là một vành giao hoán có đơn vị với đặc số $\operatorname{char}(R) = p$ là một số nguyên tố. Khi đó:
 1. Với mọi $a, b \in R$:
 $$
@@ -209,8 +205,7 @@ Bảng dưới đây tổng kết toàn bộ kiến thức tương ứng giữa 
 
 ## 5. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
 
-<Exercise id="ex-c8-b3-a1">
-### Bài 8.3.A1 (Nhóm A - Tính đặc số của các vành cụ thể)
+<Exercise id="ex-c8-b3-a1" title="Tính đặc số của các vành cụ thể" group="Nhóm A">
 Xác định đặc số của các vành sau:
 1. $R_1 = \mathbb{Z}/4\mathbb{Z} \times \mathbb{Z}/6\mathbb{Z}$.
 2. $R_2 = M_3(\mathbb{Z}/7\mathbb{Z})$.
@@ -248,8 +243,7 @@ Trong vành thương này, $5 \equiv 0$, do đó $5 \cdot 1 = 0$.
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b3-a2">
-### Bài 8.3.A2 (Nhóm A - Tính chất hấp thụ của đặc số lên toàn bộ vành)
+<Exercise id="ex-c8-b3-a2" title="Tính chất hấp thụ của đặc số lên toàn bộ vành" group="Nhóm A">
 Cho $R$ là một vành có phần tử đơn vị với $\operatorname{char}(R) = n > 0$.
 Chứng minh rằng $n \cdot x = 0_R$ với mọi phần tử $x \in R$.
 
@@ -271,15 +265,15 @@ $$
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b3-b1">
-### Bài 8.3.B1 (Nhóm B - Đặc số và tính giao hoán của Vành Boole)
+<Exercise id="ex-c8-b3-b1" title="Đặc số và tính giao hoán của Vành Boole" group="Nhóm B">
 Một vành $R$ có phần tử đơn vị được gọi là **vành Boole** (Boolean ring) nếu mọi phần tử $x \in R$ đều thỏa mãn tính chất lũy đẳng: $x^2 = x$.
 1. Chứng minh rằng $\operatorname{char}(R) = 2$.
 2. Chứng minh rằng $R$ bắt buộc phải là một vành giao hoán.
 
 
 <Solution>
-**1. Chứng minh $\operatorname{char}(R) = 2$:**
+**1. Chứng minh $\operatorname{char}(R) = 2$**
+
 Lấy $x = 1_R + 1_R \in R$. Vì mọi phần tử trong $R$ đều lũy đẳng:
 $$
 (1_R + 1_R)^2 = 1_R + 1_R.
@@ -300,7 +294,8 @@ Vì $1_R \neq 0_R$ (vành Boole không tầm thường), số nguyên dương nh
 Vậy $\operatorname{char}(R) = 2$.
 Đặc biệt, từ $2x = 0$ ta suy ra $-x = x$ với mọi $x \in R$.
 
-**2. Chứng minh $R$ giao hoán:**
+**2. Chứng minh $R$ giao hoán**
+
 Lấy hai phần tử $a, b \in R$ bất kỳ. Áp dụng tính chất lũy đẳng cho phần tử $a + b$:
 $$
 (a + b)^2 = a + b.
@@ -325,8 +320,7 @@ Vì đẳng thức đúng với mọi $a, b \in R$, $R$ là một vành giao ho�
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b3-b2">
-### Bài 8.3.B2 (Nhóm B - Tính toán với tự đồng cấu Frobenius)
+<Exercise id="ex-c8-b3-b2" title="Tính toán với tự đồng cấu Frobenius" group="Nhóm B">
 Trong vành đa thức $\mathbb{F}_5[x, y]$ gồm hai biến trên trường $\mathbb{F}_5$:
 1. Khai triển rút gọn biểu thức $(x + 2y)^5$.
 2. Cho $R$ là một miền nguyên có đặc số $p$. Chứng minh rằng nếu $a^p = b^p$ thì $a = b$.
@@ -359,18 +353,18 @@ Theo Định lý 8.22, tự đồng cấu Frobenius $\Phi(x) = x^p$ bảo toàn 
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b3-c1">
-### Bài 8.3.C1 (Nhóm C - Cấu trúc trường con nguyên tố theo đặc số)
+<Exercise id="ex-c8-b3-c1" title="Cấu trúc trường con nguyên tố theo đặc số" group="Nhóm C">
 Chứng minh rằng:
 1. Mọi trường $F$ có đặc số $\operatorname{char}(F) = 0$ đều chứa một trường con đẳng cấu với trường số hữu tỉ $\mathbb{Q}$.
 2. Mọi trường $F$ có đặc số $\operatorname{char}(F) = p > 0$ đều chứa một trường con đẳng cấu với trường hữu hạn $\mathbb{F}_p = \mathbb{Z}/p\mathbb{Z}$.
-</Exercise>
 
-<Proof>
+
+<Solution>
 Xét đồng cấu đơn vị tự nhiên $\eta_F: \mathbb{Z} \to F, n \mapsto n \cdot 1_F$.
 Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}/\ker\eta_F \cong \operatorname{im}\eta_F \subseteq F$.
 
-1. **Trường hợp $\operatorname{char}(F) = 0$:**
+**1. Trường hợp $\operatorname{char}(F) = 0$**
+
    Khi đó $\ker\eta_F = \{0\}$, nên $\eta_F$ là một đơn cấu. Vành con $\operatorname{im}\eta_F \cong \mathbb{Z}$.
    Do đó $F$ chứa một bản sao đẳng cấu của vành số nguyên $\mathbb{Z}$:
    $$
@@ -381,10 +375,11 @@ Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}/\ker\eta_F \cong \opera
    $$
    K = \left\{ \frac{n \cdot 1_F}{m \cdot 1_F} = (n \cdot 1_F)(m \cdot 1_F)^{-1} \;\middle|\; n, m \in \mathbb{Z}, m \neq 0 \right\} \subseteq F.
    $$
-   Dễ dàng kiểm tra $K$ là trường con nhỏ nhất của $F$ chứa $1_F$.
+   Vì $K$ đóng kín dưới phép trừ, phép nhân và phép lấy nghịch đảo của mọi phần tử khác không (và mọi trường con chứa $1_F$ đều phải chứa $\mathbb{Z} \cdot 1_F$ cùng các thương của chúng), $K$ chính là trường con nhỏ nhất của $F$ chứa $1_F$.
    Ánh xạ $\psi: \mathbb{Q} \to K, \frac{n}{m} \mapsto (n \cdot 1_F)(m \cdot 1_F)^{-1}$ là một đẳng cấu trường. Vậy $F$ chứa trường con đẳng cấu với $\mathbb{Q}$.
 
-2. **Trường hợp $\operatorname{char}(F) = p > 0$:**
+**2. Trường hợp $\operatorname{char}(F) = p > 0$**
+
    Theo Định lý 8.21, $p$ phải là số nguyên tố.
    Khi đó $\ker\eta_F = p\mathbb{Z}$, nên:
    $$
@@ -392,10 +387,10 @@ Theo Định lý đẳng cấu thứ nhất: $\mathbb{Z}/\ker\eta_F \cong \opera
    $$
    Vì $p$ nguyên tố, $\mathbb{Z}/p\mathbb{Z}$ đã là một trường.
    Do đó bản thân $\operatorname{im}\eta_F = \{0 \cdot 1_F, 1 \cdot 1_F, \dots, (p - 1) \cdot 1_F\}$ là một trường con của $F$ đẳng cấu với $\mathbb{F}_p$.
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c8-b3-c2">
-### Bài 8.3.C2 (Nhóm C - Đơn cấu Frobenius và tính hoàn hảo)
+<Exercise id="ex-c8-b3-c2" title="Đơn cấu Frobenius và tính hoàn hảo" group="Nhóm C">
 Một trường $K$ có đặc số $p > 0$ được gọi là **trường hoàn hảo** (perfect field) nếu tự đồng cấu Frobenius $\Phi: K \to K, x \mapsto x^p$ là một toàn ánh.
 1. Chứng minh rằng mọi trường hữu hạn đều là trường hoàn hảo.
 2. Cho ví dụ về một trường vô hạn có đặc số $p$ không phải là trường hoàn hảo.
@@ -422,18 +417,18 @@ Xét trường các phân thức hữu tỉ $K = \mathbb{F}_p(t)$ gồm các ph�
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c8-b3-d1">
-### Bài 8.3.D1 (Nhóm D - Định lý tự đẳng cấu Frobenius trên trường hữu hạn)
+<Exercise id="ex-c8-b3-d1" title="Định lý tự đẳng cấu Frobenius trên trường hữu hạn" group="Nhóm D">
 Cho $F$ là trường hữu hạn gồm $q = p^n$ phần tử ($n \ge 1$).
 1. Chứng minh rằng $\Phi^n = \operatorname{id}_F$, nghĩa là $x^{p^n} = x$ với mọi $x \in F$.
 2. Chứng minh rằng nhóm các tự đẳng cấu trường của $F$ cố định $\mathbb{F}_p$ là một nhóm cyclic cấp $n$ sinh bởi $\Phi$:
 $$
 \operatorname{Gal}(F/\mathbb{F}_p) = \langle \Phi \rangle \cong \mathbb{Z}/n\mathbb{Z}.
 $$
-</Exercise>
 
-<Proof>
-1. **Chứng minh $x^{p^n} = x$:**
+
+<Solution>
+**1. Chứng minh $x^{p^n} = x$**
+
    Nhóm nhân các phần tử khả nghịch $F^\times = F \setminus \{0\}$ là một nhóm abel hữu hạn có cấp $|F^\times| = q - 1 = p^n - 1$.
    Theo Định lý Lagrange cho nhóm nhân, với mọi $x \in F^\times$:
    $$
@@ -443,7 +438,8 @@ $$
    Do đó $x^{p^n} = x$ đúng với mọi $x \in F$.
    Điều này có nghĩa là $\Phi^n(x) = x$, tức $\Phi^n = \operatorname{id}_F$.
 
-2. **Cấp của $\Phi$ và nhóm Galois:**
+**2. Cấp của $\Phi$ và nhóm Galois**
+
    Nếu tồn tại $k < n$ sao cho $\Phi^k = \operatorname{id}_F$, thì phương trình $x^{p^k} - x = 0$ có $p^n$ nghiệm trong $F$. Nhưng một đa thức bậc $p^k$ trên trường $F$ có tối đa $p^k$ nghiệm. Vì $p^k < p^n$, điều này là vô lý.
    Do đó, cấp của phần tử $\Phi$ trong nhóm tự đẳng cấu là đúng bằng $n$.
    Từ lý thuyết trường (Định lý Dedekind về tính độc lập tuyến tính của các ký tự), số lượng tự đẳng cấu của mở rộng bậc $n$ không vượt quá $n$.
@@ -451,25 +447,27 @@ $$
    $$
    \operatorname{Aut}(F) = \langle \Phi \rangle = \{\operatorname{id}, \Phi, \Phi^2, \dots, \Phi^{n-1}\} \cong \mathbb{Z}/n\mathbb{Z}.
    $$
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c8-b3-d2">
-### Bài 8.3.D2 (Nhóm D - Phân biệt bản chất Vành đơn và Nhóm đơn)
+<Exercise id="ex-c8-b3-d2" title="Phân biệt bản chất Vành đơn và Nhóm đơn" group="Nhóm D">
 So sánh cấu trúc giao hoán đơn giữa lý thuyết nhóm và lý thuyết vành:
 1. Chứng minh rằng nếu $G$ là một nhóm giao hoán đơn thì $G \cong \mathbb{Z}/p\mathbb{Z}$ với $p$ nguyên tố.
 2. Chứng minh rằng nếu $R$ là một vành giao hoán đơn có đơn vị ($R \neq \{0\}$) thì $R$ bắt buộc phải là một **trường**.
 3. Hãy giải thích vì sao định nghĩa của vành đơn không xét iđêan một phía mà bắt buộc phải xét iđêan hai phía.
-</Exercise>
 
-<Proof>
-1. **Nhóm giao hoán đơn:**
+
+<Solution>
+**1. Nhóm giao hoán đơn**
+
    Giả sử $G$ là nhóm giao hoán đơn. Vì $G$ giao hoán, mọi nhóm con của $G$ đều là nhóm con chuẩn tắc.
    Do $G$ đơn, $G$ không có nhóm con chân phương nào ngoài $\{e\}$ và $G$.
    Lấy $x \in G, x \neq e$. Nhóm con cyclic $\langle x \rangle$ là nhóm con khác $\{e\}$, nên $\langle x \rangle = G$. Do đó $G$ là nhóm cyclic.
    Nếu $G$ vô hạn ($G \cong \mathbb{Z}$), thì $2\mathbb{Z}$ là nhóm con chân phương khác $\{0\}$, mâu thuẫn.
    Vậy $G$ hữu hạn, $G \cong \mathbb{Z}/n\mathbb{Z}$. Nếu $n$ là hợp số có ước $d$, thì $d\mathbb{Z}/n\mathbb{Z}$ là nhóm con chân phương, mâu thuẫn. Vậy $n = p$ là số nguyên tố, $G \cong \mathbb{Z}/p\mathbb{Z}$.
 
-2. **Vành giao hoán đơn có đơn vị là một trường:**
+**2. Vành giao hoán đơn có đơn vị là một trường**
+
    Giả sử $R$ là vành giao hoán có đơn vị $1 \neq 0$ không có iđêan chân phương nào ngoài $\{0\}$ và $R$.
    Lấy bất kỳ phần tử $a \in R$ sao cho $a \neq 0$.
    Xét iđêan chính sinh bởi $a$:
@@ -488,11 +486,13 @@ So sánh cấu trúc giao hoán đơn giữa lý thuyết nhóm và lý thuyết
    Vì $R$ giao hoán, $ar = ra = 1$, nghĩa là $a$ có phần tử nghịch đảo nhân trong $R$.
    Vì mọi phần tử khác không đều khả nghịch, $R$ là một **trường**.
 
-3. **Vì sao định nghĩa vành đơn đòi hỏi iđêan hai phía:**
+**3. Vì sao định nghĩa vành đơn đòi hỏi iđêan hai phía**
+
    Mục đích của khái niệm "đơn" (simple) trong đại số là xác định các khối cấu trúc nền tảng không thể phân rã tiếp qua cấu trúc thương.
    Trong lý thuyết vành, một vành thương $R/I$ chỉ được định nghĩa tốt khi $I$ là **iđêan hai phía** (Định lý 7.11).
    Nếu chỉ xét iđêan một phía, một vành ma trận $M_n(F)$ trên trường $F$ ($n \ge 2$) có rất nhiều iđêan trái (chẳng hạn tập các ma trận có một cột bằng $0$), nhưng nó hoàn toàn không có iđêan hai phía chân phương nào. Do đó $M_n(F)$ không thể phân rã thành vành thương nhỏ hơn. Định nghĩa vành đơn bằng iđêan hai phía phản ánh chính xác tính bất khả phân rã này.
-</Proof>
+</Solution>
+</Exercise>
 
 ---
 

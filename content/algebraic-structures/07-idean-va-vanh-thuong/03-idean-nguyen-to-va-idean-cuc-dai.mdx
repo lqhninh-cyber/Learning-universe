@@ -166,16 +166,13 @@ $$
 P = (x) = \{x \cdot f(x) \mid f(x) \in \mathbb{Z}[x]\}.
 $$
 1. **$P$ là một iđêan nguyên tố:**
-   Xét phép gán giá trị tại $0$: $\phi: \mathbb{Z}[x] \to \mathbb{Z}, f(x) \mapsto f(0)$.
-   Ánh xạ $\phi$ là một toàn cấu vành có hạt nhân $\ker\phi = (x)$.
-   Theo Định lý đẳng cấu thứ nhất (hoặc xét trực tiếp qua lớp kề):
-   $$
-   \mathbb{Z}[x]/(x) \cong \mathbb{Z}.
-   $$
-   Vì $\mathbb{Z}$ là một miền nguyên, theo Định lý 7.17 (phần 1), $P = (x)$ là một **iđêan nguyên tố**.
+   Một đa thức $f(x) = a_0 + a_1 x + \dots + a_n x^n \in \mathbb{Z}[x]$ thuộc $(x)$ khi và chỉ khi hệ số tự do $f(0) = a_0 = 0$.
+   Giả sử $f(x), g(x) \in \mathbb{Z}[x]$ sao cho $f(x)g(x) \in (x)$. Khi đó hệ số tự do của tích bằng $0$, tức là $f(0)g(0) = 0$ trong $\mathbb{Z}$.
+   Vì $\mathbb{Z}$ là một miền nguyên, ta suy ra $f(0) = 0$ hoặc $g(0) = 0$, nghĩa là $f(x) \in (x)$ hoặc $g(x) \in (x)$.
+   Do đó $P = (x)$ là một **iđêan nguyên tố** (hơn nữa mỗi lớp kề $f(x) + (x) = f(0) + (x)$ được xác định duy nhất bởi số nguyên $f(0) \in \mathbb{Z}$, nên vành thương $\mathbb{Z}[x]/(x)$ có cấu trúc cộng và nhân hoàn toàn trùng khớp với miền nguyên $\mathbb{Z}$).
 
 2. **$P$ KHÔNG phải là một iđêan cực đại:**
-   Vành thương $\mathbb{Z}[x]/(x) \cong \mathbb{Z}$ **không phải là một trường** (vì các số nguyên $\pm 2, \pm 3, \dots$ không có nghịch đảo trong $\mathbb{Z}$).
+   Trong vành thương $\mathbb{Z}[x]/(x)$, lớp $2 + (x) \neq 0 + (x)$ không có nghịch đảo nhân vì với mọi $g(x) \in \mathbb{Z}[x]$, hệ số tự do của $2g(x)$ là $2g(0)$ luôn là số chẵn nên $2g(x) - 1 \notin (x)$. Vậy $\mathbb{Z}[x]/(x)$ **không phải là một trường**.
    Theo Định lý 7.17 (phần 2), suy ra $(x)$ không thể là iđêan cực đại!
    Cụ thể, ta chỉ ra một iđêan chen giữa thực sự:
    $$
@@ -183,15 +180,15 @@ $$
    $$
    - Phần tử $2 \in (2, x)$ nhưng $2 \notin (x)$ (vì $2$ không chia hết cho $x$), nên $(x) \subsetneq (2, x)$.
    - Phần tử $1 \notin (2, x)$ (vì mọi đa thức trong $(2, x)$ có hệ số tự do chẵn), nên $(2, x) \subsetneq \mathbb{Z}[x]$.
-   Iđêan $(2, x)$ chen giữa chứng minh $(x)$ không cực đại. Hơn nữa, $\mathbb{Z}[x]/(2, x) \cong \mathbb{Z}/2\mathbb{Z}$ là một trường, nên $(2, x)$ chính là một **iđêan cực đại** chứa $(x)$.
+   Iđêan $(2, x)$ chen giữa chứng minh $(x)$ không cực đại. Hơn nữa, như sẽ chứng minh ở Bài tập Nhóm C bên dưới, vành thương $\mathbb{Z}[x]/(2, x)$ chỉ gồm hai lớp $\bar{0}, \bar{1}$ lập thành một trường, nên $(2, x)$ chính là một **iđêan cực đại** chứa $(x)$.
 </Counterexample>
 
 <Example id="ex-c7-b3-idean-khong-trong-mien-nguyen" title="Iđêan {0} trong Miền nguyên vô hạn">
 Cho $R$ là một miền nguyên bất kỳ.
 Xét iđêan không $P = \{0_R\}$.
-Vành thương $R/\{0_R\} \cong R$.
+Trong vành thương $R/\{0_R\}$, mỗi lớp kề $a + \{0_R\} = \{a\}$ chỉ gồm đúng một phần tử, nên phép cộng và phép nhân trên $R/\{0_R\}$ trùng khớp hoàn toàn với trên $R$.
 - Vì $R$ là miền nguyên, nên $\{0_R\}$ **luôn luôn là một iđêan nguyên tố** của $R$.
-- Tuy nhiên, nếu $R$ không phải là trường (chẳng hạn $R = \mathbb{Z}$ hay $R = \mathbb{R}[x]$), thì $R/\{0_R\} \cong R$ không phải là trường, do đó $\{0_R\}$ **không phải là iđêan cực đại**.
+- Tuy nhiên, nếu $R$ không phải là trường (chẳng hạn $R = \mathbb{Z}$ hay $R = \mathbb{R}[x]$), thì $R/\{0_R\}$ không phải là trường, do đó $\{0_R\}$ **không phải là iđêan cực đại**.
 - Chẳng hạn trong $\mathbb{Z}$, ta có chuỗi: $\{0\} \subsetneq 2\mathbb{Z} \subsetneq \mathbb{Z}$.
 </Example>
 
@@ -233,27 +230,23 @@ Trong vành các lớp thặng dư $\mathbb{Z}/24\mathbb{Z}$:
 
 
 <Hint>
-Dùng Định lý 7.17: Vành thương $(\mathbb{Z}/24\mathbb{Z})/\langle [d] \rangle \cong \mathbb{Z}/d\mathbb{Z}$. Kiểm tra khi nào $\mathbb{Z}/d\mathbb{Z}$ là miền nguyên hay trường.
+Xét điều kiện chia hết $ab \in \langle [d] \rangle \iff d \mid ab$ và bao hàm thức $\langle [d_1] \rangle \subseteq \langle [d_2] \rangle \iff d_2 \mid d_1$ với $d \mid 24$.
 </Hint>
 
 <Solution>
 **1. Tất cả các iđêan của $\mathbb{Z}/24\mathbb{Z}$**
 
-Các iđêan tương ứng với các ước nguyên dương của $24$: $d \in \{1, 2, 3, 4, 6, 8, 12, 24\}$.
+Mọi nhóm con cộng của $\mathbb{Z}/24\mathbb{Z}$ đều có dạng $\langle [d] \rangle$ với $d$ là ước nguyên dương của $24$: $d \in \{1, 2, 3, 4, 6, 8, 12, 24\}$, và đều tự động hấp thụ phép nhân trong $\mathbb{Z}/24\mathbb{Z}$.
    Có đúng 8 iđêan: $\langle [1] \rangle, \langle [2] \rangle, \langle [3] \rangle, \langle [4] \rangle, \langle [6] \rangle, \langle [8] \rangle, \langle [12] \rangle, \langle [0] \rangle$.
 
 **2. Xác định iđêan nguyên tố và cực đại**
 
-Theo Định lý đẳng cấu, vành thương tương ứng là:
-   $$
-   (\mathbb{Z}/24\mathbb{Z}) / \langle [d] \rangle \cong \mathbb{Z}/d\mathbb{Z}.
-   $$
-   - Để $\langle [d] \rangle$ là iđêan nguyên tố $\iff \mathbb{Z}/d\mathbb{Z}$ là miền nguyên $\iff d$ là số nguyên tố (vì $d \mid 24$ và $d > 1$).
+Với mỗi ước $d \mid 24$ ($d > 1$), trong vành thương $(\mathbb{Z}/24\mathbb{Z}) / \langle [d] \rangle$, hai lớp $[a]$ và $[b]$ trùng nhau modulo $\langle [d] \rangle$ khi và chỉ khi $a - b \in d\mathbb{Z}$, nên vành thương gồm đúng $d$ lớp đại diện $\{[0], [1], \dots, [d-1]\}$ với phép cộng và nhân modulo $d$.
+   - Để $\langle [d] \rangle$ là iđêan nguyên tố $\iff [a][b] \in \langle [d] \rangle \implies [a] \in \langle [d] \rangle$ hoặc $[b] \in \langle [d] \rangle \iff d \mid ab \implies d \mid a$ hoặc $d \mid b \iff d$ là số nguyên tố (vì $d \mid 24$ và $d > 1$).
      Các ước nguyên tố của $24$ chỉ có $d = 2$ và $d = 3$.
-   - Khi $d = 2$: $(\mathbb{Z}/24\mathbb{Z})/\langle [2] \rangle \cong \mathbb{Z}/2\mathbb{Z}$, là một trường. Do đó $\langle [2] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
-   - Khi $d = 3$: $(\mathbb{Z}/24\mathbb{Z})/\langle [3] \rangle \cong \mathbb{Z}/3\mathbb{Z}$, là một trường. Do đó $\langle [3] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
-   - Với các ước hợp số $d \in \{4, 6, 8, 12\}$, $\mathbb{Z}/d\mathbb{Z}$ có ước của không nên không phải miền nguyên.
-   - Với $d = 24$, vành thương là $\mathbb{Z}/24\mathbb{Z}$ có ước của không (ví dụ $[4][6]=[0]$).
+   - Khi $d = 2$: $\langle [2] \rangle$ là iđêan chân phương và không có ước thực sự nào của $2$ ngoài $1$, nên không có iđêan nào chen giữa $\langle [2] \rangle$ và $\langle [1] \rangle = \mathbb{Z}/24\mathbb{Z}$. Do đó $\langle [2] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
+   - Khi $d = 3$: tương tự, vì $3$ là số nguyên tố nên chỉ có $\langle [3] \rangle \subsetneq \langle [1] \rangle = \mathbb{Z}/24\mathbb{Z}$. Do đó $\langle [3] \rangle$ là **iđêan cực đại** (và là iđêan nguyên tố).
+   - Với các ước hợp số $d \in \{4, 6, 8, 12, 24\}$, có thể viết $d = u v$ với $1 < u, v < d$; khi đó $[u][v] = [d] \in \langle [d] \rangle$ nhưng $[u] \notin \langle [d] \rangle$ và $[v] \notin \langle [d] \rangle$, nên $\langle [d] \rangle$ không nguyên tố và cũng bị chứa thực sự trong $\langle [2] \rangle$ hoặc $\langle [3] \rangle$.
 
 **3. Nhận xét**
 
@@ -286,7 +279,7 @@ $$
      Do đó $I_1$ **không phải là iđêan nguyên tố**, và hiển nhiên **không phải là iđêan cực đại**.
    - **Xét $I_2 = (x^2 + 1)$:**
      Đa thức $x^2 + 1$ có $\Delta = -4 < 0$, không có nghiệm thực nên bất khả quy trên $\mathbb{R}$.
-     Theo Mệnh đề 7.12 và Ví dụ 7.15, vành thương $\mathbb{R}[x]/(x^2 + 1) \cong \mathbb{C}$ là một trường.
+     Theo Mệnh đề 7.12 và Ví dụ 7.15, vành thương $\mathbb{R}[x]/(x^2 + 1)$ là một trường (trường số phức $\mathbb{C}$).
      Theo Định lý 7.17, $I_2$ là một **iđêan cực đại**, và do đó cũng là một **iđêan nguyên tố**.
    - **Xét $I_3 = (x^3)$:**
      Đa thức $x^3 = x \cdot x^2 \in I_3$, nhưng $x \notin I_3$.
@@ -294,8 +287,8 @@ $$
 
 **2. Đặc tính của từng vành thương**
 
- - $\mathbb{R}[x]/I_1 = \mathbb{R}[x]/(x^2 - 4)$: Chứa ước của không $(\bar{x} - 2)(\bar{x} + 2) = \bar{0}$. Đẳng cấu với $\mathbb{R} \times \mathbb{R}$.
-   - $\mathbb{R}[x]/I_2 = \mathbb{R}[x]/(x^2 + 1)$: Là một trường đẳng cấu với $\mathbb{C}$. Không có ước của không và mọi phần tử khác không đều khả nghịch.
+ - $\mathbb{R}[x]/I_1 = \mathbb{R}[x]/(x^2 - 4)$: Chứa ước của không khác không là $(\bar{x} - 2)$ và $(\bar{x} + 2)$ vì $(\bar{x} - 2)(\bar{x} + 2) = \bar{0}$, nên không phải là miền nguyên.
+   - $\mathbb{R}[x]/I_2 = \mathbb{R}[x]/(x^2 + 1)$: Là một trường gồm các phần tử $a + bi$ ($i = \bar{x}, i^2 = -1$), không có ước của không và mọi phần tử khác không đều khả nghịch.
    - $\mathbb{R}[x]/I_3 = \mathbb{R}[x]/(x^3)$: Chứa phần tử lũy linh khác không $\bar{x}$ vì $\bar{x} \neq \bar{0}$ nhưng $\bar{x}^3 = \bar{0}$.
 </Solution>
 </Exercise>
@@ -307,46 +300,47 @@ Xét vành đa thức hệ số nguyên $\mathbb{Z}[x]$ và iđêan sinh bởi h
 $$
 M = (2, x) = \{2f(x) + x g(x) \mid f(x), g(x) \in \mathbb{Z}[x]\}.
 $$
-1. Xét ánh xạ $\psi: \mathbb{Z}[x] \to \mathbb{Z}/2\mathbb{Z} = \mathbb{Z}/2\mathbb{Z}$ định bởi $\psi(P(x)) = [P(0)]_2$ (lấy hệ số tự do modulo 2).
-   Chứng minh $\psi$ là một toàn cấu vành và tìm $\ker\psi$.
-2. Áp dụng Định lý đẳng cấu thứ nhất để suy ra $\mathbb{Z}[x]/M \cong \mathbb{Z}/2\mathbb{Z}$.
-3. Kết luận rằng $M$ là một iđêan cực đại của $\mathbb{Z}[x]$.
+1. Chứng minh rằng với mọi đa thức $P(x) \in \mathbb{Z}[x]$, lớp kề $P(x) + M$ trong vành thương $\mathbb{Z}[x]/M$ chỉ có thể bằng $0 + M$ (nếu $P(0)$ chẵn) hoặc $1 + M$ (nếu $P(0)$ lẻ).
+2. Từ đó chứng minh vành thương $\mathbb{Z}[x]/M$ là một trường gồm đúng $2$ phần tử và kết luận $M$ là iđêan cực đại của $\mathbb{Z}[x]$.
+3. Chứng minh lại tính cực đại của $M$ trực tiếp từ định nghĩa bao hàm: nếu $J$ là một iđêan của $\mathbb{Z}[x]$ sao cho $M \subsetneq J \subseteq \mathbb{Z}[x]$ thì $J = \mathbb{Z}[x]$.
 
 
 <Hint>
-Phép gán $\psi$ là hợp thành của phép gán giá trị tại $0$ ($P(x) \mapsto P(0) \in \mathbb{Z}$) và phép chiếu modulo 2 ($\mathbb{Z} \to \mathbb{Z}/2\mathbb{Z}$).
+Tách đa thức $P(x) = P(0) + x h(x)$ và chia số nguyên $P(0) = 2q + r$ với $r \in \{0, 1\}$.
 </Hint>
 
 <Solution>
-**1. $\psi$ là toàn cấu vành và tìm hạt nhân**
+**1. Phân tích lớp kề trong vành thương $\mathbb{Z}[x]/M$**
 
- - Với mọi $P(x), Q(x) \in \mathbb{Z}[x]$:
+ - Với mọi đa thức $P(x) = a_0 + a_1 x + \dots + a_n x^n \in \mathbb{Z}[x]$, ta tách hệ số tự do $a_0 = P(0) \in \mathbb{Z}$:
      $$
-     \psi(P + Q) = [(P + Q)(0)]_2 = [P(0) + Q(0)]_2 = [P(0)]_2 + [Q(0)]_2 = \psi(P) + \psi(Q),
+     P(x) = P(0) + x(a_1 + a_2 x + \dots + a_n x^{n-1}) = P(0) + x h(x), \quad \text{với } h(x) \in \mathbb{Z}[x].
      $$
+   - Thực hiện phép chia Euclid số nguyên $P(0)$ cho $2$: tồn tại duy nhất $q \in \mathbb{Z}$ và $r \in \{0, 1\}$ sao cho $P(0) = 2q + r$. Khi đó:
      $$
-     \psi(P \cdot Q) = [(P \cdot Q)(0)]_2 = [P(0) \cdot Q(0)]_2 = [P(0)]_2 \cdot [Q(0)]_2 = \psi(P) \cdot \psi(Q).
+     P(x) - r = 2q + x h(x) \in (2, x) = M.
      $$
-   - Với mọi $[c]_2 \in \mathbb{Z}/2\mathbb{Z}$, chọn đa thức hằng $P(x) = c$, ta có $\psi(P) = [c]_2$. Vậy $\psi$ là toàn ánh.
-   - Hạt nhân:
-     $$
-     \ker\psi = \{P(x) \in \mathbb{Z}[x] \mid \psi(P) = [0]_2\} = \{P(x) \in \mathbb{Z}[x] \mid P(0) \equiv 0 \pmod 2\}.
-     $$
-     Hạt nhân gồm tất cả các đa thức có hệ số tự do là số chẵn.
-     Theo kết quả Bài tập 7.3 (Bài 1), tập hợp này chính xác bằng iđêan $M = (2, x)$.
-     Vậy $\ker\psi = M = (2, x)$.
+   - Suy ra $P(x) + M = r + M$ với $r \in \{0, 1\}$.
+   - Hơn nữa, hai lớp $\bar{0} = 0 + M$ và $\bar{1} = 1 + M$ phân biệt nhau vì $1 - 0 = 1 \notin M$ (theo Bài 7.1.C, mọi đa thức thuộc $M$ đều có hệ số tự do chẵn).
+   - Vậy $\mathbb{Z}[x]/M = \{\bar{0}, \bar{1}\}$ có đúng $2$ phần tử: $P(x) + M = \bar{0}$ khi $P(0)$ chẵn, và $P(x) + M = \bar{1}$ khi $P(0)$ lẻ.
 
-**2. Áp dụng Định lý đẳng cấu thứ nhất**
+**2. Vành thương $\mathbb{Z}[x]/M$ là trường và $M$ cực đại**
 
-Vì $\psi: \mathbb{Z}[x] \to \mathbb{Z}/2\mathbb{Z}$ là một toàn cấu vành có hạt nhân $\ker\psi = M$, theo Định lý đẳng cấu thứ nhất cho vành (Định lý 8.8):
+Trong vành thương $\mathbb{Z}[x]/M = \{\bar{0}, \bar{1}\}$, phần tử đơn vị là $\bar{1} \neq \bar{0}$, và phần tử khác không duy nhất là $\bar{1}$ có nghịch đảo nhân là chính nó ($\bar{1} \cdot \bar{1} = \bar{1}$).
+   Do đó $\mathbb{Z}[x]/M$ là một **trường gồm $2$ phần tử**.
+   Theo Định lý 7.17 (phần 2), vì vành thương $\mathbb{Z}[x]/M$ là một trường nên $M = (2, x)$ là một **iđêan cực đại** của $\mathbb{Z}[x]$.
+
+**3. Chứng minh trực tiếp bằng bao hàm iđêan**
+
+Giả sử $J$ là một iđêan của $\mathbb{Z}[x]$ thỏa mãn $M \subsetneq J \subseteq \mathbb{Z}[x]$.
+   Vì $M \subsetneq J$, tồn tại một đa thức $P(x) \in J \setminus M$.
+   Do $P(x) \notin M$, hệ số tự do $P(0)$ phải là một số nguyên lẻ: $P(0) = 2k + 1$ ($k \in \mathbb{Z}$).
+   Viết $P(x) = (2k + 1) + x h(x)$ với $h(x) \in \mathbb{Z}[x]$, ta có:
    $$
-   \mathbb{Z}[x]/M = \mathbb{Z}[x]/\ker\psi \cong \operatorname{im}\psi = \mathbb{Z}/2\mathbb{Z}.
+   1 = P(x) - (2k + x h(x)).
    $$
-
-**3. Kết luận về tính cực đại**
-
-Vì $\mathbb{Z}/2\mathbb{Z} = \mathbb{F}_2$ là một trường hữu hạn, vành thương $\mathbb{Z}[x]/M$ là một trường.
-   Theo Định lý 7.17 (phần 2), suy ra $M = (2, x)$ là một **iđêan cực đại** của $\mathbb{Z}[x]$.
+   Vì $P(x) \in J$ và $2k + x h(x) \in M \subset J$, mà $J$ là iđêan đóng với phép trừ, nên $1 \in J$.
+   Theo Định lý 7.5, iđêan $J$ chứa phần tử đơn vị $1$ nên bắt buộc $J = \mathbb{Z}[x]$. Vậy $M = (2, x)$ là iđêan cực đại.
 </Solution>
 </Exercise>
 
@@ -423,6 +417,6 @@ Lấy tùy ý $a \in \operatorname{Nil}(R)$, tồn tại $m \ge 1$ để $a^m = 
 - **Iđêan nguyên tố:** $P \subsetneq R$ thỏa mãn $ab \in P \implies a \in P \lor b \in P$. Tương đương với việc vành thương $R/P$ là một miền nguyên.
 - **Iđêan cực đại:** $M \subsetneq R$ không có iđêan nào chen giữa $M$ và $R$. Tương đương với việc vành thương $R/M$ là một trường.
 - **Thứ bậc bao hàm:** Mọi iđêan cực đại đều là iđêan nguyên tố (vì mọi trường đều là miền nguyên).
-- **Phản ví dụ chiều ngược lại:** $(x)$ trong $\mathbb{Z}[x]$ là iđêan nguyên tố nhưng không cực đại vì $\mathbb{Z}[x]/(x) \cong \mathbb{Z}$ không là trường; chuỗi chen giữa là $(x) \subsetneq (2, x) \subsetneq \mathbb{Z}[x]$.
+- **Phản ví dụ chiều ngược lại:** $(x)$ trong $\mathbb{Z}[x]$ là iđêan nguyên tố nhưng không cực đại vì vành thương $\mathbb{Z}[x]/(x)$ (tương ứng với $\mathbb{Z}$) không là trường; chuỗi chen giữa là $(x) \subsetneq (2, x) \subsetneq \mathbb{Z}[x]$.
 - **Trong PID:** Mọi iđêan nguyên tố khác $\{0\}$ đều là iđêan cực đại.
 </KeyTakeaways>

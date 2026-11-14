@@ -94,8 +94,7 @@ Bảng dưới đây chuẩn hóa các thuật ngữ toán học trọng tâm c�
 
 ## 4. Các định lý nâng cao chọn lọc
 
-<Theorem id="thm-c9-b4-truong-huu-han-tuan-hoan">
-### Định lý 9.20: Tính cyclic của nhóm nhân trường hữu hạn
+<Theorem id="thm-c9-b4-truong-huu-han-tuan-hoan" title="Tính cyclic của nhóm nhân trường hữu hạn" original="Định lý 9.20">
 Cho $F$ là một trường hữu hạn bất kỳ gồm $q = p^n$ phần tử. Khi đó nhóm nhân các phần tử khác không:
 $$
 (F^\times, \cdot) = (F \setminus \{0\}, \cdot)
@@ -125,8 +124,7 @@ Vậy $F^\times$ là một nhóm cyclic.
 
 ## 5. Hệ thống bài tập 4 phân lớp kèm lời giải chi tiết
 
-<Exercise id="ex-c9-b4-a1">
-### Bài 9.4.A1 (Nhóm A - Bài tập 9.5: Trường con nguyên tố của trường cụ thể)
+<Exercise id="ex-c9-b4-a1" title="Trường con nguyên tố của trường cụ thể" group="Nhóm A">
 Tìm đặc số và mô tả tường minh trường con nguyên tố $P_F$ của các trường sau:
 1. $F_1 = \mathbb{Q}(\sqrt{2}, i)$.
 2. $F_2 = \mathbb{F}_2[x]/(x^3 + x + 1)$.
@@ -157,8 +155,7 @@ Trong vành này, $2 \cdot 1 = 0$, do đó $\operatorname{char}(F_2) = 2$.
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b4-a2">
-### Bài 9.4.A2 (Nhóm A - Bài tập 9.7: Rút gọn phân số trong $\operatorname{Frac}(\mathbb{Z}[i])$)
+<Exercise id="ex-c9-b4-a2" title="Rút gọn phân số trong Frac(Z[i])" group="Nhóm A">
 Trong trường số hữu tỉ Gauss $\mathbb{Q}(i) = \operatorname{Frac}(\mathbb{Z}[i])$, thực hiện các phép tính:
 1. $X = \frac{3 + 2i}{1 + i} + \frac{2 - i}{2 + i}$.
 2. Tìm nghịch đảo nhân của $X$ dưới dạng chuẩn $u + vi$ với $u, v \in \mathbb{Q}$.
@@ -188,8 +185,7 @@ Trong trường số hữu tỉ Gauss $\mathbb{Q}(i) = \operatorname{Frac}(\math
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b4-b1">
-### Bài 9.4.B1 (Nhóm B - Bài tập 9.12 & 9.13: Tính chất phổ dụng cho $\mathbb{Z}[x]$)
+<Exercise id="ex-c9-b4-b1" title="Tính chất phổ dụng cho Z[x]" group="Nhóm B">
 Áp dụng Tính chất phổ dụng của trường các thương để chứng minh rằng:
 $$
 \operatorname{Frac}(\mathbb{Z}[x]) \cong \mathbb{Q}(x).
@@ -217,14 +213,32 @@ Theo Mệnh đề 9.19, tồn tại duy nhất một đẳng cấu trường $\t
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b4-b2">
-### Bài 9.4.B2 (Nhóm B - Bài tập 9.17: Đẳng cấu miền nguyên và trường các thương)
+<Exercise id="ex-c9-b4-b2" title="Đẳng cấu miền nguyên và trường các thương" group="Nhóm B">
 1. Chứng minh rằng nếu hai miền nguyên $R$ và $S$ đẳng cấu với nhau thì hai trường các thương $\operatorname{Frac}(R)$ và $\operatorname{Frac}(S)$ đẳng cấu với nhau.
 2. Chỉ ra phản ví dụ chứng minh chiều ngược lại là sai: Tồn tại hai miền nguyên $R \not\cong S$ nhưng $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
 
 
 <Solution>
-1. **Chiều thuận:** Đã được chứng minh chi tiết trong Bài 9.2.C2 bằng cách thiết lập đẳng cấu cảm sinh $\tilde{\phi}\left(\frac{a}{b}\right) = \frac{\phi(a)}{\phi(b)}$.
+**1. Chiều thuận ($R \cong S \implies \operatorname{Frac}(R) \cong \operatorname{Frac}(S)$)**
+
+Giả sử $\phi: R \to S$ là một đẳng cấu vành. Vì $\phi$ là đơn ánh và $\phi(0_R) = 0_S$, với mọi $b \in R \setminus \{0_R\}$ ta luôn có $\phi(b) \in S \setminus \{0_S\}$.
+Xét ánh xạ cảm sinh $\tilde{\phi}: \operatorname{Frac}(R) \to \operatorname{Frac}(S)$ cho bởi:
+$$
+\tilde{\phi}\left(\frac{a}{b}\right) = \frac{\phi(a)}{\phi(b)}.
+$$
+- *Tính xác định tốt:* Nếu $\frac{a}{b} = \frac{a'}{b'}$ trong $\operatorname{Frac}(R)$, thì $ab' = a'b$ trong $R$. Tác động đồng cấu $\phi$ lên hai vế:
+  $$
+  \phi(a)\phi(b') = \phi(ab') = \phi(a'b) = \phi(a')\phi(b) \implies \frac{\phi(a)}{\phi(b)} = \frac{\phi(a')}{\phi(b')} \quad \text{trong } \operatorname{Frac}(S).
+  $$
+- *Bảo toàn phép cộng và phép nhân:* Với mọi $\frac{a}{b}, \frac{c}{d} \in \operatorname{Frac}(R)$:
+  $$
+  \tilde{\phi}\left(\frac{a}{b} + \frac{c}{d}\right) = \tilde{\phi}\left(\frac{ad + bc}{bd}\right) = \frac{\phi(ad + bc)}{\phi(bd)} = \frac{\phi(a)\phi(d) + \phi(b)\phi(c)}{\phi(b)\phi(d)} = \tilde{\phi}\left(\frac{a}{b}\right) + \tilde{\phi}\left(\frac{c}{d}\right),
+  $$
+  $$
+  \tilde{\phi}\left(\frac{a}{b} \cdot \frac{c}{d}\right) = \tilde{\phi}\left(\frac{ac}{bd}\right) = \frac{\phi(a)\phi(c)}{\phi(b)\phi(d)} = \tilde{\phi}\left(\frac{a}{b}\right) \cdot \tilde{\phi}\left(\frac{c}{d}\right).
+  $$
+- *Tính song ánh:* Ánh xạ $\widetilde{\phi^{-1}}: \operatorname{Frac}(S) \to \operatorname{Frac}(R), \frac{u}{v} \mapsto \frac{\phi^{-1}(u)}{\phi^{-1}(v)}$ là ánh xạ ngược hai phía của $\tilde{\phi}$. Vậy $\operatorname{Frac}(R) \cong \operatorname{Frac}(S)$.
+
 **2. Chiều đảo sai**
 
  - Xét $R = \mathbb{Z}$ và $S = \mathbb{Q}$.
@@ -235,15 +249,15 @@ Theo Mệnh đề 9.19, tồn tại duy nhất một đẳng cấu trường $\t
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b4-c1">
-### Bài 9.4.C1 (Nhóm C - Bài tập 9.19: Vành con của trường hữu hạn)
+<Exercise id="ex-c9-b4-c1" title="Vành con của trường hữu hạn" group="Nhóm C">
 Cho $F$ là một trường hữu hạn và $R$ là một vành con của $F$ thỏa mãn $1_F \in R$.
 1. Chứng minh rằng $R$ là một trường con của $F$.
 2. Từ đó kết luận rằng $\operatorname{Frac}(R) = R$.
-</Exercise>
 
-<Proof>
-1. **$R$ là trường con:**
+
+<Solution>
+**1. $R$ là trường con**
+
    - Vì $R \subseteq F$ và $F$ là trường, $R$ không có ước của không khác không, nên $R$ là miền nguyên.
    - Vì $F$ hữu hạn, vành con $R$ là một tập hợp hữu hạn.
    - Với mọi $a \in R, a \neq 0$, xét ánh xạ nhân $L_a: R \to R, x \mapsto ax$.
@@ -254,12 +268,13 @@ Cho $F$ là một trường hữu hạn và $R$ là một vành con của $F$ th
    - Vì mọi phần tử khác không trong $R$ đều có nghịch đảo trong $R$, $R$ là một trường.
    Theo Mệnh đề 9.4, $R$ là một trường con của $F$.
 
-2. **$\operatorname{Frac}(R) = R$:**
-   Theo Bài 9.2.B1, trường các thương của một trường luôn đẳng cấu tự nhiên với chính nó. Do đó $\operatorname{Frac}(R) \cong R$, và khi đồng nhất qua phép nhúng $\iota_R$, ta có $\operatorname{Frac}(R) = R$.
-</Proof>
+**2. $\operatorname{Frac}(R) = R$**
 
-<Exercise id="ex-c9-b4-c2">
-### Bài 9.4.C2 (Nhóm C - Bài tập 9.22: Cấp của trường hữu hạn và tính cyclic)
+   Theo Bài 9.2.B1, trường các thương của một trường luôn đẳng cấu tự nhiên với chính nó. Do đó $\operatorname{Frac}(R) \cong R$, và khi đồng nhất qua phép nhúng $\iota_R$, ta có $\operatorname{Frac}(R) = R$.
+</Solution>
+</Exercise>
+
+<Exercise id="ex-c9-b4-c2" title="Cấp của trường hữu hạn và tính cyclic" group="Nhóm C">
 Cho $F$ là một trường hữu hạn.
 1. Chứng minh rằng số phần tử của $F$ là $p^n$ với $p$ là số nguyên tố và $n \ge 1$.
 2. Chứng minh rằng nhóm nhân $F^\times$ là nhóm cyclic cấp $p^n - 1$.
@@ -269,11 +284,21 @@ Cho $F$ là một trường hữu hạn.
 <Solution>
 **1. Số phần tử $|F| = p^n$**
 
-Đã được chứng minh trong Bài 9.1.D1 bằng cách xem $F$ là không gian vectơ hữu hạn chiều $n$ trên trường con nguyên tố $P_F \cong \mathbb{F}_p$.
+Vì $F$ là một trường hữu hạn, đặc số $\operatorname{char}(F)$ không thể bằng $0$ (nếu bằng $0$ thì $F$ chứa $\mathbb{Q}$ vô hạn). Do $F$ là miền nguyên, $\operatorname{char}(F) = p$ là một số nguyên tố, và trường con nguyên tố của $F$ là $P_F \cong \mathbb{F}_p = \mathbb{Z}/p\mathbb{Z}$.
+   Xem $F$ như một không gian vectơ trên trường nền $P_F \cong \mathbb{F}_p$. Vì $F$ hữu hạn nên $\dim_{\mathbb{F}_p}(F) = n < \infty$ ($n \ge 1$).
+   Gọi $\{e_1, e_2, \dots, e_n\}$ là một cơ sở của $F$ trên $\mathbb{F}_p$. Khi đó mọi phần tử $x \in F$ đều biểu diễn duy nhất dưới dạng:
+   $$
+   x = c_1 e_1 + c_2 e_2 + \dots + c_n e_n, \quad c_i \in \mathbb{F}_p.
+   $$
+   Vì mỗi hệ số $c_i$ có đúng $p$ cách chọn độc lập trong $\mathbb{F}_p$, số phần tử của $F$ là $|F| = p^n$.
 
 **2. Nhóm nhân $F^\times$ là cyclic**
 
-Đã được chứng minh trong Định lý 9.20 bằng cách so sánh exponent của nhóm abel hữu hạn với số nghiệm tối đa của đa thức $x^m - 1$ trên trường $F$.
+Đặt $G = F^\times$ là nhóm nhân Abel hữu hạn cấp $N = p^n - 1$. Gọi $m = \operatorname{lcm}\{\operatorname{ord}(a) \mid a \in G\}$ là số mũ (exponent) của nhóm Abel $G$.
+   - Theo tính chất của nhóm Abel hữu hạn, tồn tại một phần tử $g \in G$ có cấp đúng bằng $\operatorname{ord}(g) = m$, và mọi ước của cấp nhóm đều chia hết cho $m$, nên $m \le N$.
+   - Mặt khác, với mọi $a \in G$, vì $\operatorname{ord}(a) \mid m$, ta có $a^m = 1$, nghĩa là mọi phần tử của $G$ đều là nghiệm của đa thức $P(x) = x^m - 1 \in F[x]$.
+   - Vì đa thức bậc $m$ trên trường $F$ có tối đa $m$ nghiệm trong $F$, mà $P(x)$ có ít nhất $|G| = N$ nghiệm phân biệt trong $F$, ta suy ra $N \le m$.
+   - Kết hợp $m \le N$ và $N \le m$, ta được $m = N = |F^\times|$. Vậy phần tử $g$ có cấp $\operatorname{ord}(g) = |F^\times|$, nghĩa là $F^\times = \langle g \rangle$ là nhóm cyclic cấp $p^n - 1$.
 
 **3. Phần tử sinh của $\mathbb{F}_7^\times$**
 
@@ -294,8 +319,7 @@ Cấp của nhóm nhân là $|\mathbb{F}_7^\times| = 7 - 1 = 6$. Nhóm này cycl
 </Solution>
 </Exercise>
 
-<Exercise id="ex-c9-b4-d1">
-### Bài 9.4.D1 (Nhóm D - Bài tập 9.23: Vành địa phương $\mathbb{Z}_{(p)}$ là một PID)
+<Exercise id="ex-c9-b4-d1" title="Vành địa phương Z_(p) là một PID" group="Nhóm D">
 Cho $p$ là số nguyên tố. Xét vành địa phương:
 $$
 \mathbb{Z}_{(p)} = \left\{ \frac{a}{b} \in \mathbb{Q} \;\middle|\; a, b \in \mathbb{Z}, \gcd(a, b) = 1, p \nmid b \right\}.
@@ -305,10 +329,11 @@ $$
 x = p^k \cdot u \quad \text{với } k \ge 0 \text{ và } u \in (\mathbb{Z}_{(p)})^\times.
 $$
 2. Chứng minh rằng mọi iđêan của $\mathbb{Z}_{(p)}$ đều có dạng $(p^k)$ với $k \ge 0$. Từ đó suy ra $\mathbb{Z}_{(p)}$ là một miền iđêan chính (PID) có duy nhất một iđêan cực đại là $(p)$.
-</Exercise>
 
-<Proof>
-1. **Biểu diễn $x = p^k \cdot u$:**
+
+<Solution>
+**1. Biểu diễn $x = p^k \cdot u$**
+
    Lấy $x = \frac{a}{b} \in \mathbb{Z}_{(p)} \setminus \{0\}$ với $\gcd(a, b) = 1$ và $p \nmid b$.
    Phân tích $a = p^k \cdot a'$ với $k \ge 0$ và $p \nmid a'$. Khi đó:
    $$
@@ -317,7 +342,8 @@ $$
    Đặt $u = \frac{a'}{b}$. Vì $p \nmid a'$ và $p \nmid b$, theo Bài 9.2.D2, phần tử nghịch đảo $u^{-1} = \frac{b}{a'}$ cũng có mẫu số không chia hết cho $p$, nên $u \in (\mathbb{Z}_{(p)})^\times$.
    Tính duy nhất của $k$ suy ra từ định lý phân tích thừa số nguyên tố duy nhất trong $\mathbb{Z}$.
 
-2. **Cấu trúc iđêan của $\mathbb{Z}_{(p)}$:**
+**2. Cấu trúc iđêan của $\mathbb{Z}_{(p)}$**
+
    Lấy $I$ là một iđêan bất kỳ của $\mathbb{Z}_{(p)}$.
    Nếu $I = \{0\}$, thì $I = (0)$ là iđêan chính.
    Nếu $I \neq \{0\}$, xét tập hợp các số mũ:
@@ -335,25 +361,27 @@ $$
    \mathbb{Z}_{(p)} = (1) \supset (p) \supset (p^2) \supset (p^3) \supset \dots \supset \{0\}.
    $$
    Do đó $\mathbb{Z}_{(p)}$ là một miền iđêan chính (PID). Iđêan chân phương lớn nhất duy nhất là $(p)$, nên nó là iđêan cực đại duy nhất.
-</Proof>
+</Solution>
+</Exercise>
 
-<Exercise id="ex-c9-b4-d2">
-### Bài 9.4.D2 (Nhóm D - Bài tập 9.27: Phép dựng kết hợp Trường hàm của đường cong suy biến)
+<Exercise id="ex-c9-b4-d2" title="Phép dựng kết hợp Trường hàm của đường cong suy biến" group="Nhóm D">
 Trong vành đa thức hai biến $\mathbb{C}[x, y]$, xét đa thức $f(x, y) = y^2 - x^3$.
 1. Chứng minh rằng $P = (y^2 - x^3)$ là một iđêan nguyên tố của $\mathbb{C}[x, y]$ và do đó $R = \mathbb{C}[x, y]/P$ là một miền nguyên.
 2. Mô tả trường các thương $K = \operatorname{Frac}(R)$.
 3. Đặt $t = \frac{\bar{y}}{\bar{x}} \in K$. Chứng minh rằng $K \cong \mathbb{C}(t)$ (trường phân thức hữu tỉ một biến) và tìm biểu diễn của $\bar{x}, \bar{y}$ theo $t$.
-</Exercise>
 
-<Proof>
-1. **$P$ là iđêan nguyên tố:**
+
+<Solution>
+**1. $P$ là iđêan nguyên tố**
+
    Đa thức $y^2 - x^3$ xem như đa thức bậc hai theo $y$ với hệ số tự do là $-x^3 \in \mathbb{C}[x]$.
    Phần tử nguyên tố $x$ chia hết $-x^3$ nhưng $x^2 \nmid -x^3$ (chỉ chia hết $x^2$, nhưng đối với tính nguyên tố trong $\mathbb{C}[x]$, $x$ là nguyên tố và tiêu chuẩn Eisenstein áp dụng với lũy thừa bậc 1 nếu xét hệ số nguyên tố). Hoặc đơn giản hơn: $y^2 - x^3$ không thể phân tích thành tích của hai đa thức bậc nhất theo $y$ trong $(\mathbb{C}[x])[y]$ vì $\sqrt{x^3} = x\sqrt{x} \notin \mathbb{C}[x]$.
    Do đó $y^2 - x^3$ bất khả quy trong $\mathbb{C}[x, y]$.
    Vì $\mathbb{C}[x, y]$ là vành UFD, phần tử bất khả quy sinh ra một iđêan nguyên tố.
    Theo Định lý 7.17, $R = \mathbb{C}[x, y]/(y^2 - x^3)$ là một miền nguyên.
 
-2. **Trường các thương $K = \operatorname{Frac}(R)$:**
+**2. Trường các thương $K = \operatorname{Frac}(R)$**
+
    Ký hiệu $\bar{x}, \bar{y}$ là ảnh của $x, y$ trong $R$, thỏa mãn hệ thức:
    $$
    \bar{y}^2 = \bar{x}^3.
@@ -363,7 +391,8 @@ Trong vành đa thức hai biến $\mathbb{C}[x, y]$, xét đa thức $f(x, y) =
    K = \mathbb{C}(\bar{x}, \bar{y}) = \left\{ \frac{A(\bar{x}, \bar{y})}{B(\bar{x}, \bar{y})} \;\middle|\; B \not\equiv 0 \pmod{y^2 - x^3} \right\}.
    $$
 
-3. **Đẳng cấu với $\mathbb{C}(t)$:**
+**3. Đẳng cấu với $\mathbb{C}(t)$**
+
    Đặt $t = \frac{\bar{y}}{\bar{x}} \in K$ (với $\bar{x} \neq 0$). Ta có:
    $$
    t^2 = \frac{\bar{y}^2}{\bar{x}^2} = \frac{\bar{x}^3}{\bar{x}^2} = \bar{x}.
@@ -384,7 +413,8 @@ Trong vành đa thức hai biến $\mathbb{C}[x, y]$, xét đa thức $f(x, y) =
    $$
    Vậy trường các thương của vành tọa độ đường cong cuspidal cubic $y^2 = x^3$ đẳng cấu hoàn toàn với trường phân thức một biến $\mathbb{C}(t)$.
    Đây là đỉnh cao kết nối giữa đại số trừu tượng và hình học đại số!
-</Proof>
+</Solution>
+</Exercise>
 
 ---
 

@@ -11,7 +11,7 @@ tags:
   - nhóm thay phiên A4
   - nhóm bốn Klein
   - phản ví dụ
-  - định lý Cauchy
+  - số nghịch thế
   - phân loại nhóm cấp nhỏ
 sources:
   - source: gt-ctds-hvk-2026
@@ -34,9 +34,9 @@ review:
 Sau khi hoàn thành bài học này, bạn có thể:
 
 1. **Hiểu rõ giới hạn logic của Định lý Lagrange:** Nhận thức rõ ràng rằng chiều đảo của Định lý Lagrange nói chung không đúng: một số nguyên $d$ là ước của $|G|$ không đảm bảo sự tồn tại của phần tử cấp $d$ hay nhóm con cấp $d$.
-2. **Khảo sát toàn diện cấu trúc nhóm thay phiên $A_4$:** Liệt kê đầy đủ 12 hoán vị chẵn của $A_4$, phân loại chúng theo dạng chu trình và cấp phần tử (1 phần tử cấp 1, 3 phần tử cấp 2, 8 phần tử cấp 3).
-3. **Chứng minh chặt chẽ phản ví dụ kinh điển:** Nắm vững phương pháp chứng minh phản chứng rằng nhóm $A_4$ (cấp 12) không thể có bất kỳ một nhóm con nào có cấp bằng 6, dựa trên tính chất của nhóm con có chỉ số 2.
-4. **Nhận diện các định lý một phần về chiều ngược:** Biết được ranh giới khi nào chiều ngược đúng (nhóm cyclic, Định lý Cauchy cho ước nguyên tố $p$, Định lý Sylow cho lũy thừa nguyên tố $p^k$).
+2. **Khảo sát toàn diện cấu trúc nhóm thay phiên $A_4$:** Xác định hoán vị chẵn qua số nghịch thế và phân tích tích chuyển vị; liệt kê đầy đủ 12 hoán vị chẵn của $A_4$, phân loại chúng theo dạng chu trình và cấp phần tử (1 phần tử cấp 1, 3 phần tử cấp 2, 8 phần tử cấp 3).
+3. **Chứng minh chặt chẽ phản ví dụ kinh điển:** Nắm vững phương pháp chứng minh phản chứng rằng nhóm $A_4$ (cấp 12) không thể có bất kỳ một nhóm con nào có cấp bằng 6, dựa trên phân tích cấp của các phần tử trong $A_4$ và tính chất của nhóm con có chỉ số 2.
+4. **Nhận diện trường hợp chiều ngược đúng:** Chứng minh chiều ngược đúng trọn vẹn trên mọi nhóm cyclic hữu hạn và phân loại các nhóm có cấp nhỏ.
 </Note>
 
 **Kiến thức tiên quyết:** Định lý Lagrange và tính chất của nhóm con chỉ số 2 ($gH = Hg \implies x^2 \in H$) từ Bài 1 và Bài 2 (<Cite source="gt-ctds-hvk-2026" page="57-61" note="Mục 3.2, 3.4" />).
@@ -75,7 +75,7 @@ Phải đến khi khảo sát nhóm thay phiên $A_4$, các nhà toán học m�
 
 ## 2. Cấu trúc của nhóm thay phiên $A_4$
 
-Nhắc lại từ Chương 1, nhóm thay phiên $A_n$ là nhóm con của nhóm đối xứng $S_n$ gồm tất cả các hoán vị chẵn (các hoán vị có dấu bằng $+1$, tức là phân tích được thành tích của một số chẵn các chuyển vị).
+Nhắc lại từ Chương 1, với mỗi hoán vị $\sigma \in S_n$, một cặp chỉ số $(i, j)$ ($1 \le i < j \le n$) thỏa mãn $\sigma(i) > \sigma(j)$ được gọi là một **nghịch thế** của $\sigma$, và tổng số nghịch thế được ký hiệu là $\operatorname{inv}(\sigma)$. Khi phân tích $\sigma = \tau_1 \tau_2 \cdots \tau_t$ thành tích của $t$ chuyển vị, mỗi lần nhân thêm một chuyển vị làm thay đổi tính chẵn lẻ của số nghịch thế, nên $t \equiv \operatorname{inv}(\sigma) \pmod 2$. Hoán vị $\sigma$ được gọi là **hoán vị chẵn** nếu $\operatorname{inv}(\sigma)$ chẵn (tương đương biểu diễn được thành tích của một số chẵn các chuyển vị). Tập hợp tất cả các hoán vị chẵn trong $S_n$ lập thành **nhóm thay phiên** $A_n \le S_n$.
 
 Với $n = 4$, nhóm đối xứng $S_4$ có cấp $|S_4| = 4! = 24$.
 Nhóm thay phiên $A_4$ có cấp:
@@ -108,12 +108,12 @@ Nhóm thay phiên $A_4$ gồm đúng 12 phần tử, được phân chia thành 
 </Theorem>
 
 <Proof of="thm-c3-b3-cau-truc-a4">
-Ta kiểm tra tính chẵn và cấp của từng loại hoán vị trong $S_4$:
-- $\operatorname{id}$ là hoán vị chẵn có cấp 1.
-- Một chuyển vị đơn lẻ $(a\;b)$ là hoán vị lẻ, nên không thuộc $A_4$.
-- Tích hai chuyển vị rời nhau $(a\;b)(c\;d)$ có dấu $\operatorname{sgn} = (-1)(-1) = 1$, nên là hoán vị chẵn. Vì hai chuyển vị giao hoán và có cấp 2, $[(a\;b)(c\;d)]^2 = (a\;b)^2 (c\;d)^2 = \operatorname{id}$, nên có cấp 2. Số cách ghép 4 phần tử thành 2 cặp rời nhau là $\frac{1}{2}\binom{4}{2} = 3$.
-- Một 3-chu trình $(a\;b\;c) = (a\;c)(a\;b)$ là tích của 2 chuyển vị, nên là hoán vị chẵn. Cấp của 3-chu trình là 3. Số lượng 3-chu trình chọn từ 4 phần tử là $\binom{4}{3} \cdot (3 - 1)! = 4 \cdot 2 = 8$.
-- Một 4-chu trình $(a\;b\;c\;d) = (a\;d)(a\;c)(a\;b)$ là tích của 3 chuyển vị, nên là hoán vị lẻ, không thuộc $A_4$.
+Ta kiểm tra tính chẵn và cấp của từng loại hoán vị trong $S_4$ thông qua phân tích tích chuyển vị ($t \equiv \operatorname{inv}(\sigma) \pmod 2$):
+- $\operatorname{id}$ có $\operatorname{inv}(\operatorname{id}) = 0$ chẵn, nên là hoán vị chẵn có cấp 1.
+- Một chuyển vị đơn lẻ $(a\;b)$ là tích của $t = 1$ chuyển vị (số lẻ), nên là hoán vị lẻ, không thuộc $A_4$.
+- Tích hai chuyển vị rời nhau $(a\;b)(c\;d)$ là tích của đúng $t = 2$ chuyển vị (số chẵn), nên là hoán vị chẵn thuộc $A_4$. Vì hai chuyển vị rời nhau giao hoán và có cấp 2, $[(a\;b)(c\;d)]^2 = (a\;b)^2 (c\;d)^2 = \operatorname{id}$, nên có cấp 2. Số cách ghép 4 phần tử thành 2 cặp rời nhau là $\frac{1}{2}\binom{4}{2} = 3$.
+- Một 3-chu trình $(a\;b\;c) = (a\;c)(a\;b)$ là tích của $t = 2$ chuyển vị (số chẵn), nên là hoán vị chẵn thuộc $A_4$. Cấp của 3-chu trình là 3. Số lượng 3-chu trình chọn từ 4 phần tử là $\binom{4}{3} \cdot (3 - 1)! = 4 \cdot 2 = 8$.
+- Một 4-chu trình $(a\;b\;c\;d) = (a\;d)(a\;c)(a\;b)$ là tích của $t = 3$ chuyển vị (số lẻ), nên là hoán vị lẻ, không thuộc $A_4$.
 
 Tổng số phần tử đã liệt kê là $1 + 3 + 8 = 12 = |A_4|$. Do đó đây là toàn bộ các phần tử của $A_4$.
 </Proof>
@@ -224,38 +224,16 @@ Mâu thuẫn này chứng tỏ điều giả sử là sai. Vậy nhóm thay phi�
 
 ## 4. Khi nào chiều ngược của Định lý Lagrange đúng?
 
-Mặc dù chiều ngược nói chung là sai, nhưng trong nhiều trường hợp quan trọng có thêm điều kiện cấu trúc, chiều ngược lại được bảo toàn:
+Mặc dù chiều ngược nói chung là sai, nhưng trong trường hợp nhóm có cấu trúc cyclic (hoặc tổng quát hơn là nhóm abel hữu hạn), chiều ngược lại được bảo toàn trọn vẹn:
 
-### 4.1. Nhóm Cyclic và Nhóm Abel hữu hạn
-- **Với nhóm cyclic:** Nếu $G = \langle a \rangle$ là nhóm cyclic hữu hạn cấp $n$, thì với **mọi** ước dương $d$ của $n$, luôn tồn tại **duy nhất** một nhóm con cấp $d$, chính là $H = \langle a^{n/d} \rangle$ (Định lý 2.4.3 ở Chương 2).
+- **Với nhóm cyclic hữu hạn:** Nếu $G = \langle a \rangle$ là nhóm cyclic hữu hạn cấp $n$, thì với **mọi** ước nguyên dương $d$ của $n$ ($d \mid n$), luôn tồn tại **duy nhất** một nhóm con cấp $d$, chính là $H = \langle a^{n/d} \rangle$ (Định lý 2.12 ở Chương 2).
 - **Với nhóm abel hữu hạn:** Mọi nhóm abel hữu hạn đều thỏa mãn chiều ngược của Định lý Lagrange: nếu $d \mid |G|$ thì luôn tồn tại ít nhất một nhóm con cấp $d$.
-
-### 4.2. Các định lý số nguyên tố: Cauchy và Sylow
-Khi ước số $d$ có dạng lũy thừa của một số nguyên tố, chiều ngược được khôi phục mạnh mẽ:
-
-<Theorem
-  id="thm-c3-b3-cauchy"
-  title="Định lý Cauchy (1845)"
-  original="Mục 3.8"
-  source="gt-ctds-hvk-2026"
-  page="102"
->
-Nếu $G$ là một nhóm hữu hạn và $p$ là một số **nguyên tố** chia hết cấp của $G$ ($p \mid |G|$), thì:
-1. $G$ luôn chứa ít nhất một phần tử có cấp bằng $p$.
-2. $G$ luôn chứa ít nhất một nhóm con cyclic có cấp bằng $p$.
-</Theorem>
-
-<Note title="Mở rộng: Định lý Sylow (1872)">
-Định lý Sylow mở rộng Định lý Cauchy cho lũy thừa nguyên tố: Nếu $p^k \mid |G|$ với $p$ nguyên tố và $k \ge 1$, thì $G$ luôn luôn chứa ít nhất một nhóm con có cấp $p^k$.
-
-Chính vì $6 = 2 \cdot 3$ không phải là lũy thừa của một số nguyên tố, nên Định lý Sylow không đảm bảo sự tồn tại của nhóm con cấp 6 trong nhóm cấp 12 như $A_4$!
-</Note>
 
 ---
 
 ## 5. Cấu trúc và phân loại các nhóm cấp nhỏ
 
-Kết hợp Định lý Lagrange, Định lý Cauchy và tính chất nhóm cyclic, ta có bức tranh toàn cảnh về phân loại các nhóm hữu hạn có cấp nhỏ:
+Kết hợp Định lý Lagrange và tính chất nhóm cyclic, ta có bức tranh toàn cảnh về phân loại các nhóm hữu hạn có cấp nhỏ:
 
 | Cấp $|G|$ | Cấu trúc phân loại | Số cấu trúc bảng phép toán | Đặc điểm |
 | :---: | :--- | :---: | :--- |
@@ -421,7 +399,7 @@ $$
 $$
 Thật vậy, kiểm tra tác động:
 $1 \mapsto 1 \mapsto 2$; $2 \mapsto 3 \mapsto 1$; $3 \mapsto 4 \mapsto 4$; $4 \mapsto 2 \mapsto 3$.
-Hoàn toàn tương tự với hai phần tử còn lại:
+Đối với hai phần tử cấp 2 còn lại, ta cũng phân tích tường minh thành tích hai 3-chu trình:
 $$
 (1\;3)(2\;4) = (1\;3\;2)(3\;2\;4), \quad (1\;4)(2\;3) = (1\;4\;2)(4\;2\;3).
 $$
@@ -448,7 +426,7 @@ Vậy trong nhóm $S_4$, chỉ tồn tại duy nhất một nhóm con có cấp 
   title="Phân loại nhóm cấp 6" group="Nhóm D"
 >
 Cho $G$ là một nhóm có cấp 6 ($|G| = 6$).
-1. Dùng Định lý Cauchy, chứng minh rằng trong $G$ luôn tồn tại một phần tử $a$ có cấp 3 và một phần tử $b$ có cấp 2.
+1. Bằng cách phân tích cấp của các phần tử theo Định lý Lagrange và ghép cặp $x \leftrightarrow x^{-1}$, chứng minh rằng trong $G$ luôn tồn tại một phần tử $b$ có cấp 2 và một phần tử $a$ có cấp 3.
 2. Đặt $H = \langle a \rangle$. Chứng minh rằng $[G:H] = 2$ và $b \notin H$. Từ đó viết $G$ dưới dạng hợp rời của hai lớp kề của $H$.
 3. Xét phần tử $bab^{-1}$. Chứng minh rằng $bab^{-1} \in \{a, a^2\}$.
 4. Chứng minh rằng:
@@ -456,19 +434,22 @@ Cho $G$ là một nhóm có cấp 6 ($|G| = 6$).
    - Nếu $bab^{-1} = a^2 = a^{-1}$, thì $G$ là nhóm không giao hoán cấp $6$ có cùng bảng phép toán với $S_3$ (và $D_6$).
 
 <Hint>
-1. Vì $2 \mid 6$ và $3 \mid 6$ là các số nguyên tố, áp dụng Định lý Cauchy.
+1. Ghép mỗi phần tử $x \ne x^{-1}$ thành từng cặp $\{x, x^{-1}\}$ có 2 phần tử; vì $|G| = 6$ chẵn và $e = e^{-1}$, phải có ít nhất một phần tử $b \ne e$ thỏa mãn $b = b^{-1}$ (cấp 2). Nếu mọi phần tử khác $e$ đều có cấp 2 thì $G$ giao hoán và chứa nhóm con $\{e, u, v, uv\}$ cấp $4 \nmid 6$ (vô lý), nên phải tồn tại phần tử cấp 3 hoặc cấp 6.
 2. $[G:H] = 6 / 3 = 2$. $G = H \sqcup bH = \{e, a, a^2, b, ba, ba^2\}$.
 3. Vì $[G:H] = 2$, $H$ có tính chất $gHg^{-1} = H$, do đó $bab^{-1} \in H$. Phần tử này phải có cùng cấp với $a$.
 4. Với $bab = a^{-1}$ và $b^2 = e$, đây chính là hệ thức xác định bảng phép toán của nhóm nhị diện $D_6$ và nhóm đối xứng $S_3$.
 </Hint>
 
 <Solution>
-**1. Sự tồn tại phần tử cấp 3 và cấp 2**
+**1. Sự tồn tại phần tử cấp 2 và phần tử cấp 3**
 
-Cấp của nhóm là $|G| = 6 = 2 \cdot 3$.
-Vì $2$ và $3$ là các số nguyên tố chia hết cho $|G|$, theo Định lý Cauchy (<Ref to="thm-c3-b3-cauchy" />):
-- Tồn tại phần tử $a \in G$ sao cho $\operatorname{ord}(a) = 3$.
-- Tồn tại phần tử $b \in G$ sao cho $\operatorname{ord}(b) = 2$.
+Theo Hệ quả của Định lý Lagrange, cấp của mọi phần tử trong $G$ phải là ước của $6$, tức là $\operatorname{ord}(x) \in \{1, 2, 3, 6\}$.
+- *Sự tồn tại phần tử cấp 2:* Với mỗi $x \in G$, phần tử $x$ có cấp lớn hơn $2$ khi và chỉ khi $x \ne x^{-1}$. Các phần tử thỏa mãn $x \ne x^{-1}$ luôn đi thành từng cặp rời nhau $\{x, x^{-1}\}$ gồm đúng $2$ phần tử, nên tổng số phần tử có cấp lớn hơn $2$ là một số chẵn. Vì $|G| = 6$ là số chẵn và chỉ có đúng $1$ phần tử cấp $1$ là $e$, số lượng phần tử có cấp bằng $2$ phải là một số lẻ (tối thiểu là $1$). Vậy tồn tại ít nhất một phần tử $b \in G$ có $\operatorname{ord}(b) = 2$.
+- *Sự tồn tại phần tử cấp 3:* Giả sử phản chứng $G$ không có phần tử nào cấp $3$. Khi đó $G$ cũng không có phần tử nào cấp $6$ (vì nếu $\operatorname{ord}(g) = 6$ thì $\operatorname{ord}(g^2) = 3$). Suy ra mọi phần tử $x \in G \setminus \{e\}$ đều có cấp $2$, nghĩa là $x^2 = e \implies x = x^{-1}$ với mọi $x \in G$. Khi đó với mọi $u, v \in G$:
+  $$
+  uv = (uv)^{-1} = v^{-1} u^{-1} = vu,
+  $$
+  nên $G$ là nhóm giao hoán. Lấy hai phần tử phân biệt $u, v \in G \setminus \{e\}$. Tập hợp $K = \{e, u, v, uv\}$ đóng kín dưới phép nhân và nghịch đảo nên là một nhóm con của $G$ có $|K| = 4$. Nhưng theo Định lý Lagrange, $|K| = 4$ phải là ước của $|G| = 6$, vô lý vì $4 \nmid 6$! Vậy trong $G$ phải tồn tại ít nhất một phần tử $a \in G$ có $\operatorname{ord}(a) = 3$.
 
 **2. Chỉ số và phân hoạch theo lớp kề**
 
@@ -537,6 +518,6 @@ Vậy mọi nhóm cấp $6$ chỉ có thể là nhóm cyclic cấp $6$ hoặc nh
 - **Chiều ngược của Lagrange nói chung là sai:** Một ước $d \mid |G|$ không đảm bảo sự tồn tại của phần tử cấp $d$ (phản ví dụ $V_4$ không có phần tử cấp 4) hay nhóm con cấp $d$ (phản ví dụ $A_4$ không có nhóm con cấp 6).
 - **Cấu trúc nhóm $A_4$:** Cấp 12, gồm $1$ phần tử cấp 1, $3$ phần tử cấp 2 và $8$ phần tử cấp 3.
 - **Tính chất nhóm con chỉ số 2:** Nếu $[G:H] = 2$ thì $x^2 \in H$ với mọi $x \in G$. Áp dụng vào $A_4$ kéo theo mọi 3-chu trình đều phải thuộc $H$, dẫn tới mâu thuẫn $|H| \ge 9 > 6$.
-- **Định lý Cauchy và Sylow:** Chiều ngược được khôi phục khi ước số là số nguyên tố $p$ (Định lý Cauchy) hoặc lũy thừa số nguyên tố $p^k$ (Định lý Sylow).
-- **Phân loại nhóm cấp nhỏ:** Mọi nhóm cấp nguyên tố $p$ là $\mathbb{Z}/p\mathbb{Z}$; nhóm cấp 4 là $\mathbb{Z}/4\mathbb{Z}$ hoặc $V_4$; nhóm cấp 6 là $\mathbb{Z}/6\mathbb{Z}$ hoặc $S_3$.
+- **Chiều ngược trên nhóm cyclic:** Nếu $G$ là nhóm cyclic hữu hạn cấp $n$, thì với mọi ước dương $d \mid n$, luôn tồn tại duy nhất một nhóm con cấp $d$.
+- **Phân loại nhóm cấp nhỏ:** Mọi nhóm cấp nguyên tố $p$ là cyclic; nhóm cấp 4 có cấu trúc của $\mathbb{Z}/4\mathbb{Z}$ hoặc $V_4$; nhóm cấp 6 có cấu trúc của $\mathbb{Z}/6\mathbb{Z}$ hoặc $S_3$.
 </KeyTakeaways>

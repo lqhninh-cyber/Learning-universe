@@ -35,7 +35,7 @@ review:
 Sau khi hoàn thành bài học này, bạn có thể:
 
 1. **Chứng minh tính xác định tốt của Vành thương $R/I$:** Nắm vững Định lý 7.11: phép nhân lớp kề $(a+I)(b+I) = ab+I$ xác định tốt khi và chỉ khi $I$ là iđêan hai phía.
-2. **Hiểu vai trò của phép chiếu chính tắc:** Khảo sát toàn cấu $\pi_I: R \to R/I, a \mapsto a+I$ và nhận diện mối liên hệ căn bản $\ker\pi_I = I$.
+2. **Hiểu vai trò của phép chiếu chính tắc:** Khảo sát ánh xạ chiếu toàn ánh $\pi_I: R \to R/I, a \mapsto a+I$ bảo toàn phép cộng và phép nhân, với tập các phần tử gửi về lớp không chính xác bằng $I$.
 3. **Làm chủ cấu trúc thương đa thức $F[x]/(f)$:** Áp dụng định lý chia có dư để chứng minh mỗi phần tử trong $F[x]/(f)$ có duy nhất một đại diện chuẩn bậc $< \deg f$.
 4. **Phân tích bộ ba mô hình thương đa thức bậc hai:** So sánh bản chất đại số giữa $F[x]/(x^2)$ (vành có phần tử lũy linh), $\mathbb{R}[x]/(x^2-1)$ (vành có ước của không), và $\mathbb{R}[x]/(x^2+1)$ (trường số phức $\mathbb{C}$).
 5. **Thực hiện thành thạo các phép tính đại số trong $F[x]/(f)$:** Cộng, nhân các lớp đa thức, rút gọn theo $f(\bar{x}) = 0$, và tìm phần tử nghịch đảo bằng thuật toán Euclid mở rộng (Bézout).
@@ -91,9 +91,11 @@ Khi đó:
      $$
    - *Luật phân phối hai phía:*
      $$
-     (a+I)[(b+I) + (c+I)] = (a+I)[(b+c)+I] = a(b+c)+I = (ab+ac)+I = (ab+I) + (ac+I).
+     (a+I)[(b+I) + (c+I)] = (a+I)[(b+c)+I] = a(b+c)+I = (ab+ac)+I = (ab+I) + (ac+I),
      $$
-     Phân phối phải chứng minh hoàn toàn tương tự.
+     $$
+     [(a+I) + (b+I)](c+I) = [(a+b)+I](c+I) = (a+b)c+I = (ac+bc)+I = (ac+I) + (bc+I).
+     $$
 
 3. **Tính giao hoán và đơn vị:**
    - Nếu $ab = ba$ trong $R$, thì $(a+I)(b+I) = ab+I = ba+I = (b+I)(a+I)$, nên $R/I$ giao hoán.
@@ -105,20 +107,18 @@ Cho $R$ là một vành và $I \trianglelefteq R$. Ánh xạ:
 $$
 \pi_I: R \to R/I, \quad a \mapsto a + I
 $$
-được gọi là **phép chiếu chính tắc** (hay *đồng cấu thương*).
-- $\pi_I$ là một **toàn cấu vành** (toàn ánh bảo toàn cả phép cộng và phép nhân).
-- Hạt nhân của $\pi_I$ chính xác bằng $I$:
+được gọi là **phép chiếu chính tắc** từ $R$ lên vành thương $R/I$.
+- $\pi_I$ là một **toàn ánh bảo toàn cả phép cộng và phép nhân**: $\pi_I(a+b) = \pi_I(a) + \pi_I(b)$ và $\pi_I(ab) = \pi_I(a)\pi_I(b)$.
+- Tập hợp các phần tử của $R$ bị gửi về phần tử không của $R/I$ chính xác bằng $I$:
   $$
-  \ker\pi_I = \{a \in R \mid \pi_I(a) = 0_{R/I}\} = \{a \in R \mid a + I = I\} = I.
+  \pi_I^{-1}(\{0_{R/I}\}) = \{a \in R \mid \pi_I(a) = 0_{R/I}\} = \{a \in R \mid a + I = I\} = I.
   $$
 </Definition>
 
-<Note title="Ý nghĩa nền tảng: Mọi Iđêan đều là Hạt nhân">
-Trong Lý thuyết Nhóm, mọi nhóm con chuẩn tắc $N \trianglelefteq G$ đều là hạt nhân của một đồng cấu nhóm (cụ thể là phép chiếu $\pi_N: G \to G/N$).
+<Note title="Ý nghĩa nền tảng của phép chiếu chính tắc">
+Trong Lý thuyết Nhóm, phép chiếu $\pi_N: G \to G/N$ gửi mọi phần tử thuộc nhóm con chuẩn tắc $N$ về phần tử đơn vị của nhóm thương $G/N$.
 Hoàn toàn tương tự, trong Lý thuyết Vành:
-> **Mọi iđêan hai phía $I \trianglelefteq R$ đều là hạt nhân của một đồng cấu vành (chính là phép chiếu $\pi_I: R \to R/I$).**
-
-Ngược lại, như sẽ chứng minh ở Chương 8, hạt nhân của bất kỳ đồng cấu vành nào cũng bắt buộc phải là một iđêan hai phía! Do đó, hai khái niệm "iđêan hai phía" và "hạt nhân của đồng cấu vành" là **hoàn toàn tương đương**.
+> **Qua phép chiếu chính tắc $\pi_I: R \to R/I$, iđêan hai phía $I \trianglelefteq R$ chính là tập hợp tất cả các phần tử bị "đồng nhất về $0$" trong vành thương $R/I$: $a + I = b + I \iff a - b \in I$.**
 </Note>
 
 ---
@@ -201,9 +201,9 @@ flowchart TD
    - Mỗi phần tử có dạng duy nhất $a + bu$ với $a, b \in \mathbb{R}$ và $u = \bar{x}$.
    - Hệ thức: $u^2 = 1$.
    - Ta có: $(u - 1)(u + 1) = u^2 - 1 = 0$.
-   - Vì $u \neq 1$ và $u \neq -1$, nên cả hai phần tử $u - 1$ và $u + 1$ đều khác không nhưng có tích bằng không! Do đó vành thương này **chứa ước của không** và không phải là miền nguyên (sau này ở Chương 8 ta sẽ thấy $\mathbb{R}[x]/(x^2-1) \cong \mathbb{R} \times \mathbb{R}$).
+   - Vì $u \neq 1$ và $u \neq -1$, nên cả hai phần tử $u - 1$ và $u + 1$ đều khác không nhưng có tích bằng không! Do đó vành thương này **chứa ước của không** và không phải là miền nguyên.
 
-3. **Mô hình 3: Đa thức bất khả quy — Dựng Trường số phức $\mathbb{R}[x]/(x^2+1) \cong \mathbb{C}$:**
+3. **Mô hình 3: Đa thức bất khả quy — Dựng Trường số phức từ $\mathbb{R}[x]/(x^2+1)$:**
    - Đa thức $x^2 + 1$ không có nghiệm thực nào trên $\mathbb{R}$, tức là bất khả quy trên $\mathbb{R}[x]$.
    - Đặt $i = \bar{x} = x + (x^2+1)$. Khi đó mỗi phần tử có dạng duy nhất:
      $$
@@ -217,7 +217,7 @@ flowchart TD
      $$
      (a + bi) \cdot \frac{a - bi}{a^2 + b^2} = \frac{a^2 - b^2 i^2}{a^2 + b^2} = \frac{a^2 + b^2}{a^2 + b^2} = 1.
      $$
-   - Mọi phần tử khác không đều khả nghịch! Do đó $\mathbb{R}[x]/(x^2+1)$ là một **trường**, và trường này đẳng cấu với trường số phức $\mathbb{C}$.
+   - Mọi phần tử khác không đều khả nghịch! Do đó $\mathbb{R}[x]/(x^2+1)$ là một **trường**, hoàn toàn tương ứng $1-1$ và bảo toàn cả hai phép toán với trường số phức $\mathbb{C}$.
 </Example>
 
 ---
@@ -299,7 +299,7 @@ Xét đa thức $f(x) = x^2 - 2 \in \mathbb{Q}[x]$ và vành thương $E = \math
 Đặt $\theta = \bar{x} = x + (x^2 - 2)$.
 1. Giải thích vì sao $E = \{a + b\theta \mid a, b \in \mathbb{Q}\}$ với $\theta^2 = 2$.
 2. Với phần tử khác không $u = 3 + 2\theta \in E$, hãy tìm phần tử nghịch đảo $u^{-1}$ trong $E$.
-3. Rút ra đẳng cấu trường $E \cong \mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b \in \mathbb{Q}\}$.
+3. Thiết lập một song ánh bảo toàn phép cộng và phép nhân giữa $E$ và $\mathbb{Q}(\sqrt{2}) = \{a + b\sqrt{2} \mid a, b \in \mathbb{Q}\}$.
 
 
 <Hint>
@@ -332,9 +332,9 @@ Vì $f(x) = x^2 - 2$ có bậc $2$, theo Mệnh đề 7.12, mỗi lớp trong $E
      Lấy modulo $x^2 - 2$, ta được $(2\theta + 3)(3 - 2\theta) = 1$.
      Vậy $(3 + 2\theta)^{-1} = 3 - 2\theta$.
 
-**3. Đẳng cấu trường**
+**3. Song ánh bảo toàn phép toán**
 
-Ánh xạ $\phi: E \to \mathbb{Q}(\sqrt{2}), a + b\theta \mapsto a + b\sqrt{2}$ là một song ánh bảo toàn phép cộng và nhân (vì $\theta^2 = 2$ tương ứng với $(\sqrt{2})^2 = 2$). Do đó $E \cong \mathbb{Q}(\sqrt{2})$.
+Ánh xạ $\phi: E \to \mathbb{Q}(\sqrt{2}), a + b\theta \mapsto a + b\sqrt{2}$ là một song ánh bảo toàn cả phép cộng và phép nhân (vì $\theta^2 = 2$ tương ứng chính xác với $(\sqrt{2})^2 = 2$).
 </Solution>
 </Exercise>
 
@@ -437,7 +437,7 @@ Nhóm nhân $\mathbb{F}_4^\times$ có cấp $3$. Vì $3$ là số nguyên tố, 
 
 <KeyTakeaways>
 - **Định lý Vành thương:** Phép nhân $(a+I)(b+I) = ab+I$ xác định tốt $\iff I$ là iđêan hai phía. Khi đó $R/I$ là một vành có phần tử không $I$ và đơn vị $1_R+I$.
-- **Phép chiếu chính tắc:** $\pi_I: R \to R/I, a \mapsto a+I$ là toàn cấu vành với $\ker\pi_I = I$. Mọi iđêan đều là hạt nhân của một đồng cấu vành.
+- **Phép chiếu chính tắc:** $\pi_I: R \to R/I, a \mapsto a+I$ là toàn ánh bảo toàn phép cộng và phép nhân, với tập các phần tử gửi về lớp không chính xác bằng $I$.
 - **Đại diện chuẩn trong $F[x]/(f)$:** Mỗi lớp kề có duy nhất một đa thức đại diện có bậc $< \deg f$ (chính là phần dư trong phép chia cho $f$). Số chiều không gian vectơ là $\dim_F(F[x]/(f)) = \deg f$.
 - **Bộ ba mô hình đa thức:** $F[x]/(x^2)$ có lũy linh; $\mathbb{R}[x]/(x^2-1)$ có ước của không; $\mathbb{R}[x]/(x^2+1)$ là trường số phức $\mathbb{C}$.
 - **Kỹ thuật Euclid mở rộng:** Lớp $g + (f)$ khả nghịch trong $F[x]/(f) \iff \gcd(g, f) = 1$. Nghịch đảo tìm được từ đồng nhất thức Bézout $ug + vf = 1$.

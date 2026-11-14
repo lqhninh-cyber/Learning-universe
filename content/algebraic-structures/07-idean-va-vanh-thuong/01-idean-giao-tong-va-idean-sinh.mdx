@@ -273,23 +273,31 @@ Cho $I$ và $J$ là hai iđêan của vành $R$. Khi đó:
 </Proof>
 
 <Definition id="def-c7-b1-idean-sinh" title="Iđêan sinh bởi một tập hợp và Iđêan chính (Định lý 7.8 Giáo trình)">
-Cho $R$ là một vành và $X \subseteq R$.
-1. **Iđêan sinh bởi $X$**, ký hiệu $\langle X \rangle$ (hoặc $(X)$), là iđêan nhỏ nhất của $R$ chứa $X$. Nó chính bằng giao của tất cả các iđêan của $R$ chứa $X$.
-2. Khi $R$ là một **vành giao hoán có phần tử đơn vị $1_R$** và $X = \{a\}$ chỉ gồm một phần tử duy nhất, iđêan sinh bởi $a$ được gọi là **iđêan chính** (*principal ideal*) sinh bởi $a$, ký hiệu là $(a)$ hoặc $Ra$:
+Cho $R$ là một vành và $X \subseteq R$ là một tập con khác rỗng.
+1. **Iđêan trái, phải và hai phía sinh bởi $X$** — ký hiệu lần lượt là $\langle X \rangle_L$, $\langle X \rangle_R$ và $\langle X \rangle$ (hoặc $(X)$) — là iđêan trái, iđêan phải và iđêan hai phía nhỏ nhất của $R$ chứa $X$ (bằng giao của tất cả các iđêan cùng loại chứa $X$).
+2. **Công thức tường minh trên vành tổng quát (chưa giả sử có đơn vị $1_R$):**
+   $$
+   \langle X \rangle_L = \mathbb{Z}X + RX, \qquad \langle X \rangle_R = \mathbb{Z}X + XR, \qquad \langle X \rangle = \mathbb{Z}X + RX + XR + RXR,
+   $$
+   trong đó $\mathbb{Z}X = \left\{\sum_{i=1}^m n_i x_i \;\middle|\; n_i \in \mathbb{Z}, x_i \in X\right\}$, $RX = \left\{\sum_{j=1}^k r_j y_j \;\middle|\; r_j \in R, y_j \in X\right\}$, $XR = \left\{\sum_{l=1}^p z_l s_l \;\middle|\; z_l \in X, s_l \in R\right\}$ và $RXR = \left\{\sum_{t=1}^q u_t w_t v_t \;\middle|\; u_t, v_t \in R, w_t \in X\right\}$. Đặc biệt, với $X = \{a\}$ trên vành giao hoán tổng quát: $\langle a \rangle = \mathbb{Z}a + Ra = \{na + ra \mid n \in \mathbb{Z}, r \in R\}$.
+3. **Khi vành $R$ có phần tử đơn vị $1_R$:** Vì mọi $x \in X$ đều viết được thành $x = 1_R x = x 1_R = 1_R x 1_R$, thành phần $\mathbb{Z}X$ tự động nằm trong $RX$, $XR$ và $RXR$, nên công thức rút gọn thành:
+   $$
+   \langle X \rangle_L = RX, \qquad \langle X \rangle_R = XR, \qquad \langle X \rangle = RXR.
+   $$
+4. Khi $R$ là một **vành giao hoán có phần tử đơn vị $1_R$** và $X = \{a\}$ chỉ gồm một phần tử, iđêan sinh bởi $a$ được gọi là **iđêan chính** (*principal ideal*) sinh bởi $a$, ký hiệu là $(a)$ hoặc $Ra$:
    $$
    (a) = Ra = \{r \cdot a \mid r \in R\}.
    $$
 </Definition>
 
 <Counterexample id="ce-c7-b1-idean-sinh-vanh-khong-don-vi" title="Sự khác biệt khi vành KHÔNG có phần tử đơn vị">
-Nếu vành $R$ không có phần tử đơn vị, tập $Ra$ **chưa chắc chứa chính phần tử $a$**, và do đó $Ra$ có thể không bằng $\langle a \rangle$!
+Nếu vành $R$ không có phần tử đơn vị, tập $Ra$ **chưa chắc chứa chính phần tử $a$**, nên ta bắt buộc phải giữ số hạng $\mathbb{Z}a$ trong công thức $\langle a \rangle = \mathbb{Z}a + Ra$!
 *Minh họa trong $R = 2\mathbb{Z}$:*
 - Xét phần tử $a = 2 \in 2\mathbb{Z}$.
-- Tập tích $R a = (2\mathbb{Z}) \cdot 2 = 4\mathbb{Z}$.
-- Rõ ràng $2 \notin 4\mathbb{Z}$, do đó $Ra$ không chứa $a$!
-- Trong khi đó, iđêan nhỏ nhất chứa $2$ của $2\mathbb{Z}$ chính là toàn bộ $2\mathbb{Z}$ (vì $\langle 2 \rangle$ chứa $2$ và đóng với phép cộng).
+- Tập tích $R a = (2\mathbb{Z}) \cdot 2 = 4\mathbb{Z}$. Rõ ràng $2 \notin 4\mathbb{Z}$, do đó $Ra$ không chứa $2$!
+- Áp dụng đúng công thức tổng quát: $\langle 2 \rangle = \mathbb{Z} \cdot 2 + (2\mathbb{Z}) \cdot 2 = 2\mathbb{Z} + 4\mathbb{Z} = 2\mathbb{Z}$.
 - Như vậy trong $2\mathbb{Z}$: $\langle 2 \rangle = 2\mathbb{Z} \neq Ra = 4\mathbb{Z}$.
-Công thức $(a) = Ra$ chỉ đúng khi vành $R$ có phần tử đơn vị $1_R$ (để đảm bảo $a = 1_R \cdot a \in Ra$).
+Công thức rút gọn $(a) = Ra$ chỉ áp dụng khi vành $R$ có phần tử đơn vị $1_R$ (để đảm bảo $a = 1_R \cdot a \in Ra$).
 </Counterexample>
 
 ---

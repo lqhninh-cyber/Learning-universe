@@ -56,7 +56,7 @@ flowchart TD
     B -->|"Ánh xạ tịnh tiến trái là song ánh"| D["Đẳng thế: |gH| = |H|"]
     C & D -->|"Tổng lực lượng các lớp kề"| E["Định lý Lagrange: |G| = [G:H] · |H|"]
     E -->|"H = ⟨a⟩"| F["Cấp phần tử: ord(a) | |G| và a^|G| = e"]
-    E -->|"|G| = p (nguyên tố)"| G["Mọi nhóm cấp nguyên tố là Cyclic: G ≅ Z/pZ"]
+    E -->|"|G| = p (nguyên tố)"| G["Mọi nhóm cấp nguyên tố là Cyclic"]
     F -->|"Áp dụng cho U(n) cấp φ(n)"| H["Định lý Euler: a^φ(n) ≡ 1 (mod n) & Fermat nhỏ"]
     E -->|"Cảnh báo chiều ngược sai!"| I["Phản ví dụ A4: Cấp 12 không có nhóm con cấp 6"]
     B -->|"Điều kiện gH = Hg"| J["Nhóm con chỉ số [G:H] = 2 luôn chuẩn tắc"]
@@ -81,8 +81,7 @@ Nhằm hỗ trợ quá trình tra cứu tài liệu quốc tế và các giáo t
 | **Phi hàm Euler** | Euler's totient function | $\varphi(n) = |(\mathbb{Z}/n\mathbb{Z})^\times|$ |
 | **Định lý Fermat nhỏ** | Fermat's Little Theorem | $a^{p-1} \equiv 1 \pmod p$ |
 | **Nhóm thay phiên** | Alternating group | $A_n \le S_n$ (tập các hoán vị chẵn) |
-| **Nhóm bốn Klein** | Klein four-group | $V_4 = \mathbb{Z}/2\mathbb{Z} \times \mathbb{Z}/2\mathbb{Z}$ |
-| **Định lý Cauchy** | Cauchy's Theorem | $p \mid |G| \implies \exists a \in G: \operatorname{ord}(a) = p$ |
+| **Nhóm bốn Klein** | Klein four-group | $V_4 = \{e, a, b, c\}$ với $a^2 = b^2 = c^2 = e$ |
 | **Chuẩn hóa tử** | Normalizer | $N_G(H) = \{g \in G \mid gHg^{-1} = H\}$ |
 
 ---
@@ -423,6 +422,6 @@ $$
 - **Trục xuyên suốt của Chương 3:** Khái niệm lớp kề $gH$ biến nhóm mẹ $G$ thành một hợp rời của các mảnh đẳng thế. Định lý Lagrange $|G| = [G:H]|H|$ là nền tảng định lượng cho toàn bộ cấu trúc nhóm hữu hạn.
 - **Quy luật về cấp:** Cấp của mọi phần tử và mọi nhóm con đều phải là ước của cấp nhóm mẹ. Nhóm có cấp nguyên tố $p$ bắt buộc phải là nhóm cyclic giao hoán.
 - **Cầu nối số học:** Định lý Euler $a^{\varphi(n)} \equiv 1 \pmod n$ và Định lý Fermat nhỏ là sự biểu hiện tự nhiên của hệ quả $a^{|G|} = e$ trên nhóm nhân các phần tử khả nghịch $U(n)$.
-- **Cảnh báo về chiều ngược:** $A_4$ (cấp 12) không có nhóm con cấp 6, chứng minh chiều đảo của Định lý Lagrange nói chung là sai. Chiều đảo chỉ được khôi phục khi nhóm là cyclic, abel, hoặc khi ước số là số nguyên tố (Cauchy) hay lũy thừa số nguyên tố (Sylow).
+- **Cảnh báo về chiều ngược:** $A_4$ (cấp 12) không có nhóm con cấp 6, chứng minh chiều đảo của Định lý Lagrange nói chung là sai. Chiều đảo chỉ được khôi phục trọn vẹn trên các nhóm cyclic hữu hạn (và tổng quát hơn là các nhóm abel hữu hạn).
 - **Cầu nối bước sang Chương 4:** Khi nhóm con $H$ thỏa mãn điều kiện đối xứng $gH = Hg$ (hay $gHg^{-1} = H$), tập hợp các lớp kề $G/H$ mang cấu trúc nhóm tự nhiên. Đó chính là **nhóm con chuẩn tắc** và **nhóm thương**, nội dung trung tâm của Chương 4.
 </KeyTakeaways>
