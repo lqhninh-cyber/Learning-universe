@@ -26,11 +26,24 @@ const SHORELINE_SPORES: readonly FloatingSporeSpec[] = [
  * Dải biển mây Hoàng Liên Sơn 3 tầng (#C5D3DC -> #E6E2D6 -> #F8F6F0) chuyển hòa tan 100%
  * vào nền giấy dó / đêm tối (var(--bg-page)) ở đầu phần "Không gian Học phần".
  */
-export function ShorelineWaveBridge() {
+export interface ShorelineWaveBridgeProps {
+  readonly bottomColor?: string;
+  readonly variant?: 'paper' | 'pavilion';
+}
+
+/**
+ * KẾT NỐI 1: Cloud Sea & Mountain Dawn Bridge
+ * Dải biển mây Hoàng Liên Sơn 3 tầng chuyển hòa tan 100% vào phần tiếp theo (Bảo tàng Di sản hoặc nền giấy dó).
+ */
+export function ShorelineWaveBridge({
+  bottomColor = 'var(--bg-page)',
+  variant = 'paper',
+}: ShorelineWaveBridgeProps = {}) {
   const uid = useId().replace(/:/g, '');
   const prefersReducedMotion = useReducedMotion();
   const cloudBackGradId = `lu-cloud-back-${uid}`;
   const cloudCrestStrokeGradId = `lu-cloud-crest-${uid}`;
+  const isPavilion = variant === 'pavilion';
 
   return (
     <div
@@ -38,12 +51,13 @@ export function ShorelineWaveBridge() {
       aria-hidden="true"
       className="pointer-events-none relative z-10 -mt-24 h-[126px] w-full overflow-hidden select-none sm:-mt-28 sm:h-[144px] lg:h-[156px]"
     >
-      {/* Dải sương mây vùng cao hòa tan mềm từ chân mây Hoàng Liên Sơn xuống nền trang */}
+      {/* Dải sương mây vùng cao hòa tan mềm từ chân mây Hoàng Liên Sơn xuống màn tiếp theo */}
       <div
         className="absolute inset-x-0 top-0 h-24"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(248, 246, 240, 0) 0%, rgba(230, 226, 214, 0.34) 55%, rgba(248, 246, 240, 0.72) 100%)',
+          background: isPavilion
+            ? 'linear-gradient(180deg, rgba(6, 12, 24, 0) 0%, rgba(11, 25, 42, 0.55) 55%, rgba(9, 23, 30, 0.92) 100%)'
+            : 'linear-gradient(180deg, rgba(248, 246, 240, 0) 0%, rgba(230, 226, 214, 0.34) 55%, rgba(248, 246, 240, 0.72) 100%)',
         }}
       />
 
@@ -55,19 +69,19 @@ export function ShorelineWaveBridge() {
       >
         <defs>
           <linearGradient id={cloudBackGradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#C5D3DC" stopOpacity="0.68" />
-            <stop offset="100%" stopColor="#E6E2D6" stopOpacity="0.45" />
+            <stop offset="0%" stopColor={isPavilion ? '#133146' : '#C5D3DC'} stopOpacity="0.68" />
+            <stop offset="100%" stopColor={isPavilion ? '#0B202C' : '#E6E2D6'} stopOpacity="0.52" />
           </linearGradient>
           <linearGradient id={cloudCrestStrokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#D4A373" stopOpacity="0" />
-            <stop offset="28%" stopColor="#F6D383" stopOpacity="0.45" />
-            <stop offset="52%" stopColor="#F8F6F0" stopOpacity="0.72" />
-            <stop offset="78%" stopColor="#C5D3DC" stopOpacity="0.48" />
-            <stop offset="100%" stopColor="#D4A373" stopOpacity="0" />
+            <stop offset="0%" stopColor="#D4A359" stopOpacity="0" />
+            <stop offset="28%" stopColor="#E5C158" stopOpacity="0.5" />
+            <stop offset="52%" stopColor="#F7F3E8" stopOpacity="0.55" />
+            <stop offset="78%" stopColor="#4EA8DE" stopOpacity="0.48" />
+            <stop offset="100%" stopColor="#D4A359" stopOpacity="0" />
           </linearGradient>
         </defs>
 
-        {/* Lớp mây 1 (xa): Mây lam bạc #C5D3DC hòa sương */}
+        {/* Lớp mây 1 (xa) */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-1'}>
           <path
             d="M -120 44 C 120 12, 340 68, 580 40 C 820 12, 1060 66, 1300 36 C 1420 22, 1520 34, 1580 44 L 1580 140 L -120 140 Z"
@@ -75,11 +89,13 @@ export function ShorelineWaveBridge() {
           />
         </g>
 
-        {/* Lớp mây 2 (giữa): Mây kem ngọc trai #E6E2D6 gợn ánh bình minh */}
+        {/* Lớp mây 2 (giữa) */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-2'}>
           <path
             d="M -120 68 C 140 94, 380 38, 660 68 C 940 96, 1180 42, 1440 68 C 1510 76, 1550 72, 1580 68 L 1580 140 L -120 140 Z"
-            className="fill-[#E6E2D6]/75 dark:fill-[#1A293C]/70"
+            className={
+              isPavilion ? 'fill-[#0D2129]/80' : 'fill-[#E6E2D6]/75 dark:fill-[#1A293C]/70'
+            }
           />
           <path
             d="M -120 68 C 140 94, 380 38, 660 68 C 940 96, 1180 42, 1440 68 C 1510 76, 1550 72, 1580 68"
@@ -89,16 +105,16 @@ export function ShorelineWaveBridge() {
           />
         </g>
 
-        {/* Lớp mây 3 (tiền cảnh): Hòa tiệp 100% vào nền var(--bg-page) */}
+        {/* Lớp mây 3 (tiền cảnh): Hòa tiệp 100% vào bottomColor */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-3'}>
           <path
             d="M -120 92 C 180 62, 440 116, 740 88 C 1020 62, 1260 114, 1580 86 L 1580 142 L -120 142 Z"
-            fill="var(--bg-page)"
+            fill={bottomColor}
           />
         </g>
 
         {/* Dải đáy khóa mép 2px tuyệt đối không hở viền */}
-        <rect x="-120" y="132" width="1700" height="12" fill="var(--bg-page)" />
+        <rect x="-120" y="132" width="1700" height="12" fill={bottomColor} />
       </svg>
 
       {/* Bụi ánh sao vàng ấm bay lơ lửng trên biển mây sang thềm "Không gian Học phần" */}
@@ -267,44 +283,44 @@ export function LakeshoreLotusTransition() {
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-1'}>
           <path
             d="M -120 76 C 180 54, 420 102, 740 74 C 1060 46, 1280 96, 1580 72 L 1580 190 L -120 190 Z"
-            fill="#52796F"
-            fillOpacity="0.38"
+            fill="#14332A"
+            fillOpacity="0.48"
           />
         </g>
 
-        {/* Sóng bờ hồ 2 (bờ rêu trung cảnh) */}
+        {/* Sóng bờ hồ 2 (bờ rêu trung cảnh & ánh vàng phản chiếu mặt nước) */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-2'}>
           <path
             d="M -120 104 C 160 128, 460 82, 760 108 C 1060 132, 1300 84, 1580 106 L 1580 190 L -120 190 Z"
-            fill="#1B3B32"
-            fillOpacity="0.72"
+            fill="#0C261D"
+            fillOpacity="0.82"
           />
           <path
             d="M 140 112 Q 360 100 580 112 M 820 110 Q 1080 98 1310 112"
             fill="none"
             stroke={`url(#${glintGradId})`}
-            strokeWidth="1.2"
+            strokeWidth="1.4"
             strokeLinecap="round"
           />
         </g>
 
-        {/* Sóng bờ hồ 3 (mặt nước đêm sâu thẳm nối liền vào Hồ Sen) */}
+        {/* Sóng bờ hồ 3 (mặt nước đêm ngọc lục bảo #061510 nối liền vào Hồ Sen Tri Thức) */}
         <g className={prefersReducedMotion ? undefined : 'lu-wave-drift-3'}>
           <path
             d="M -120 138 C 200 114, 500 158, 820 134 C 1100 114, 1340 152, 1580 132 L 1580 192 L -120 192 Z"
-            fill="#071A14"
+            fill="#061510"
           />
           <path
             d="M 280 140 Q 520 148 760 138 Q 980 128 1190 142"
             fill="none"
             stroke={`url(#${glintGradId})`}
-            strokeWidth="1.1"
-            strokeOpacity="0.6"
+            strokeWidth="1.25"
+            strokeOpacity="0.72"
           />
         </g>
 
-        {/* Khóa dải đáy 12px trùng khớp màu mặt hồ #071A14 */}
-        <rect x="-120" y="178" width="1700" height="14" fill="#071A14" />
+        {/* Khóa dải đáy 14px trùng khớp màu mặt hồ trên #061510 */}
+        <rect x="-120" y="178" width="1700" height="14" fill="#061510" />
       </svg>
 
       {/* LỚP 3: Bóng lá sen non, búp sen nhỏ & cụm cỏ thủy sinh đung đưa ở 2 bên bờ hồ */}

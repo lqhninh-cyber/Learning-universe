@@ -20,6 +20,7 @@ import { KnowledgeThread, KNOWLEDGE_THREAD_STATIONS } from '@/pages/home/Knowled
 import { QuickKaTeXDrawer } from '@/pages/home/QuickKaTeXDrawer';
 import { RotatingScholarlyQuote, SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
 import { ViewModeToggle } from '@/pages/home/ViewModeToggle';
+import { LearningSpacePage } from '@/pages/learning-space/LearningSpacePage';
 
 describe('Home Editorial Components & Scholarly Upgrades', () => {
   describe('RotatingScholarlyQuote Component', () => {
@@ -372,17 +373,20 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
     });
   });
 
-  describe('HomePage Integration with Scholarly Upgrades', () => {
-    it('hiển thị đầy đủ chế độ Atlas với SubjectWatermarkSignature và mở KaTeX Drawer khi tương tác', () => {
+  describe('LearningSpacePage & HomePage Integration with Scholarly Upgrades', () => {
+    it('LearningSpacePage hiển thị Sanctuary Banner, chế độ Atlas với SubjectWatermarkSignature và mở KaTeX Drawer khi tương tác', () => {
       render(
         <MemoryRouter>
-          <HomePage />
+          <LearningSpacePage />
         </MemoryRouter>,
       );
 
-      // Hero
-      expect(screen.getByText(/Đi một ngày đàng/i)).toBeInTheDocument();
-      expect(screen.getByText(/học một sàng khôn/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 1, name: /Không Gian Học Tập & Nghiên Cứu/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByTestId('learning-space-celestial-rings')).toBeInTheDocument();
+      expect(screen.getByTestId('topographic-waterlines')).toBeInTheDocument();
+      expect(screen.getByTestId('golden-compass-spine')).toBeInTheDocument();
 
       // Dấu ấn chìm môn học & đủ lưới 4 môn học 2 cột trong chế độ Atlas
       const atlasGrid = screen.getByTestId('atlas-subjects-grid');
@@ -405,10 +409,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       // Nút ViewModeToggle
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
 
-      // Nút phụ Tra cứu thuật ngữ KaTeX ở Hero đã được gỡ bỏ; bấm vào thẻ Ngân hàng Thuật ngữ KaTeX mở Drawer
-      expect(
-        screen.queryByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i }),
-      ).not.toBeInTheDocument();
+      // Bấm vào thẻ Ngân hàng Thuật ngữ KaTeX mở Drawer
       const katexTrigger = screen.getByRole('link', {
         name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i,
       });
@@ -417,11 +418,23 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
 
-    it('tích hợp La Bàn 4 Thời Khắc Khí Quyển đồng bộ giữa Diorama & Canvas, giữ lớp phủ tương phản chữ', () => {
+    it('HomePage tái cấu trúc 3 màn hình: Toàn cảnh Lam Ngọc Hoàng Kim -> Bảo tàng Di sản 3 tầng -> Hồ Sen Đêm', () => {
       render(
         <MemoryRouter>
           <HomePage />
         </MemoryRouter>,
+      );
+
+      // Hero Screen 1
+      expect(screen.getByText(/Đi một ngày đàng/i)).toBeInTheDocument();
+      expect(screen.getByText(/học một sàng khôn/i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Khám phá Không gian học tập/i })).toHaveAttribute(
+        'href',
+        '/learning-space',
+      );
+      expect(screen.getByRole('link', { name: /Thưởng lãm Di sản/i })).toHaveAttribute(
+        'href',
+        '#khong-gian-di-san',
       );
 
       const diorama = screen.getByTestId('son-ha-diorama');
@@ -454,22 +467,31 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
       expect(screen.getByTestId('flythrough-west-slope')).toBeInTheDocument();
       expect(screen.getByTestId('flythrough-east-slope')).toBeInTheDocument();
-      expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
-      expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/Hang Sơn Đoòng/i)).not.toBeInTheDocument();
 
-      // Khung Di sản mặc định Khuê Văn Các (01 / 15) không chứa chữ Hán
+      // Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng 3 tầng (#khong-gian-di-san)
       const showcase = screen.getByTestId('heritage-art-showcase');
+      expect(showcase).toHaveAttribute('id', 'khong-gian-di-san');
       expect(showcase.textContent).toContain('Khuê Văn Các');
       expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
+      expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-      // Seamless Scroll Storytelling Bridges (Kết nối 1, 2, 3) & Lưới 2 cột cân xứng
+      // Bộ lọc phân loại di sản
+      const mathTab = screen.getByRole('tab', { name: /Toán học & Hình học Cổ điển/i });
+      fireEvent.click(mathTab);
+      expect(mathTab).toHaveAttribute('aria-selected', 'true');
+      expect(screen.getByRole('heading', { name: /Melencolia I/i })).toBeInTheDocument();
+
+      // Chuyển về Tất cả & mở Lightbox
+      fireEvent.click(screen.getByRole('tab', { name: /Tất cả/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Phóng to tác phẩm/i }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: /Đóng xem toàn màn hình/i }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+      // Cầu nối mây Screen 1->2 và bờ hồ Screen 2->3
       const shoreline = screen.getByTestId('shoreline-wave-bridge');
       expect(shoreline).toBeInTheDocument();
       expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
-      expect(screen.getByTestId('topographic-waterlines')).toBeInTheDocument();
-      expect(screen.getByTestId('golden-compass-spine')).toBeInTheDocument();
       expect(screen.getByTestId('lakeshore-lotus-transition')).toBeInTheDocument();
     });
   });

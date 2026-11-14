@@ -4,8 +4,24 @@ import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
+export type HeritageCategory = 'vietnam-heritage' | 'math-geometry' | 'astronomy-science';
+
+export interface HeritageCategoryTab {
+  readonly id: 'all' | HeritageCategory;
+  readonly label: string;
+}
+
+export const HERITAGE_CATEGORY_TABS: readonly HeritageCategoryTab[] = [
+  { id: 'all', label: 'Tất cả' },
+  { id: 'vietnam-heritage', label: 'Văn hiến & Khoa bảng Việt Nam' },
+  { id: 'math-geometry', label: 'Toán học & Hình học Cổ điển' },
+  { id: 'astronomy-science', label: 'Thiên văn & Khoa học Thế giới' },
+] as const;
+
 export interface HeritageArtwork {
   readonly id: string;
+  readonly category: HeritageCategory;
+  readonly shortTitle: string;
   readonly title: string;
   readonly originalTitle: string;
   readonly artistOrOrigin: string;
@@ -27,6 +43,8 @@ export interface HeritageArtwork {
 export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   {
     id: 'khue-van-cac',
+    category: 'vietnam-heritage',
+    shortTitle: 'Khuê Văn Các',
     title: 'Khuê Văn Các',
     originalTitle: 'Khuê Văn Các (Gác vẻ đẹp của Sao Khuê — Văn Miếu Quốc Tử Giám)',
     artistOrOrigin: 'Văn Miếu – Quốc Tử Giám',
@@ -46,6 +64,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'thay-do-coc',
+    category: 'vietnam-heritage',
+    shortTitle: 'Thầy đồ Cóc',
     title: 'Thầy đồ Cóc (Tranh dân gian Đông Hồ)',
     originalTitle: 'Thầy đồ Cóc (Lão Oa giảng học — Tranh khắc gỗ dân gian Đông Hồ)',
     artistOrOrigin: 'Nghệ nhân dân gian Việt Nam',
@@ -66,6 +86,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'melencolia-i',
+    category: 'math-geometry',
+    shortTitle: 'Melencolia I',
     title: 'Bản khắc đồng "Melencolia I"',
     originalTitle: 'Melencolia I (Meisterstiche — Bản khắc bậc thầy số I)',
     artistOrOrigin: 'Albrecht Dürer',
@@ -86,6 +108,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'truong-hoc-athena',
+    category: 'math-geometry',
+    shortTitle: 'Trường học Athena',
     title: 'Bích họa "Trường học Athena" (Scuola di Atene)',
     originalTitle: 'La Scuola di Atene (Trường học Athena — Bích họa Phục hưng)',
     artistOrOrigin: 'Raphael (Raffaello Sanzio)',
@@ -107,6 +131,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'nguoi-vitruvius',
+    category: 'math-geometry',
+    shortTitle: 'Người Vitruvius',
     title: 'Bản vẽ "Người Vitruvius" (L\'Uomo Vitruviano)',
     originalTitle:
       "Le proporzioni del corpo umano secondo Vitruvio (L'Uomo Vitruviano — Người Vitruvius)",
@@ -129,6 +155,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'bia-tien-si',
+    category: 'vietnam-heritage',
+    shortTitle: '82 Bia Tiến sĩ',
     title: '82 Bia Tiến sĩ Văn Miếu Thăng Long',
     originalTitle: '82 Bia Tiến sĩ Văn Miếu – Quốc Tử Giám (Thạch bi đề danh tiến sĩ khoa thị)',
     artistOrOrigin: 'Triều Lê – Mạc – Lê Trung Hưng',
@@ -147,6 +175,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'trong-dong-ngoc-lu',
+    category: 'vietnam-heritage',
+    shortTitle: 'Trống đồng Ngọc Lũ',
     title: 'Mặt Trống đồng Ngọc Lũ',
     originalTitle: 'Mặt Trống đồng Ngọc Lũ I (Bảo vật Quốc gia Đợt 1 — Văn hóa Đông Sơn)',
     artistOrOrigin: 'Cư dân Việt cổ (Bảo vật Quốc gia)',
@@ -165,6 +195,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'euclid-elements-1482',
+    category: 'math-geometry',
+    shortTitle: 'Cơ sở của Euclid',
     title: 'Bản in đầu tiên "Cơ sở" của Euclid (1482)',
     originalTitle: 'Elementa geometriae (Bản in đầu tiên bộ Cơ sở hình học của Euclid)',
     artistOrOrigin: 'Euclid (Bản in của Erhard Ratdolt)',
@@ -185,6 +217,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'nguoi-chiem-tinh',
+    category: 'astronomy-science',
+    shortTitle: 'Người Chiêm tinh',
     title: 'Bức họa "Người Chiêm tinh" (The Astronomer)',
     originalTitle: 'De astronoom (Người Chiêm tinh / Nhà thiên văn học)',
     artistOrOrigin: 'Johannes Vermeer',
@@ -204,6 +238,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'de-divina-proportione',
+    category: 'math-geometry',
+    shortTitle: 'De Divina Proportione',
     title: 'Các Khối Đa diện Đều (De Divina Proportione)',
     originalTitle: 'De Divina Proportione — Icosaedron Elevatum (Tỷ lệ Thần thánh)',
     artistOrOrigin: 'Leonardo da Vinci & Luca Pacioli',
@@ -224,6 +260,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'ban-do-hong-duc',
+    category: 'vietnam-heritage',
+    shortTitle: 'Bản đồ Hồng Đức',
     title: 'Bản đồ Hồng Đức (Hồng Đức bản đồ, 1490)',
     originalTitle:
       'Hồng Đức bản đồ sách (洪德版圖冊 — Bản đồ Thăng Long kinh thành & 13 thừa tuyên)',
@@ -244,6 +282,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'tuong-quan-am-but-thap',
+    category: 'vietnam-heritage',
+    shortTitle: 'Quan Âm Bút Tháp',
     title: 'Tượng Quan Âm thiên thủ thiên nhãn (Chùa Bút Tháp)',
     originalTitle:
       'Tượng Quan Âm nghìn mắt nghìn tay (Bảo vật Quốc gia — Diên Phúc Tự / Chùa Bút Tháp)',
@@ -264,6 +304,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'copernicus-1543',
+    category: 'astronomy-science',
+    shortTitle: 'Copernicus (1543)',
     title: 'Về chuyển động quay của các thiên thể (Copernicus, 1543)',
     originalTitle: 'De revolutionibus orbium coelestium (Về sự vận hành của các thiên cầu)',
     artistOrOrigin: 'Nicolaus Copernicus',
@@ -283,6 +325,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'kepler-1596',
+    category: 'astronomy-science',
+    shortTitle: 'Kepler (1596)',
     title: 'Mysterium Cosmographicum (Johannes Kepler, 1596)',
     originalTitle:
       'Mysterium Cosmographicum (Bí mật Vũ trụ học — Mô hình 5 khối đa diện đều Platon)',
@@ -302,6 +346,8 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   },
   {
     id: 'chua-mot-cot-1049',
+    category: 'vietnam-heritage',
+    shortTitle: 'Chùa Một Cột',
     title: 'Kiến trúc Chùa Một Cột (Diên Hựu Tự, 1049)',
     originalTitle: 'Diên Hựu Tự — Liên Hoa Đài (Chùa Một Cột thời Lý)',
     artistOrOrigin: 'Triều Lý Thái Tông',
@@ -328,7 +374,7 @@ const SLIDE_TRANSITION_MS = 350;
  * Minh họa vector học thuật dự phòng (SVG) sắc nét khi ảnh gốc không thể tải (offline / 429),
  * đảm bảo không bao giờ xuất hiện khung đen rỗng (đặc biệt cho bản khắc đồng Melencolia I 03/15).
  */
-function HeritageFallbackIllustration({ artwork }: { readonly artwork: HeritageArtwork }) {
+export function HeritageFallbackIllustration({ artwork }: { readonly artwork: HeritageArtwork }) {
   if (artwork.id === 'melencolia-i') {
     return (
       <svg

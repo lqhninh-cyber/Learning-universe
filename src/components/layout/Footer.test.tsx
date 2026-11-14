@@ -18,7 +18,7 @@ describe('Footer Component', () => {
       'text-[20px]',
       'lg:text-[22px]',
       'font-bold',
-      'text-[#F5F2EB]',
+      'text-[#F7F3E8]',
     );
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
@@ -40,15 +40,15 @@ describe('Footer Component', () => {
       'lg:text-[16.5px]',
       'leading-[1.8]',
       'max-w-[740px]',
-      'text-[#CBD5CE]',
+      'text-[#D0DDD7]',
     );
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#C5A262]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#E5C158]', 'not-italic');
   });
 
-  it('renders signature logo symbol for both mobile and desktop', () => {
+  it('renders Imperial Gold Lotus–Khue Star SVG emblem for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />
@@ -61,18 +61,18 @@ describe('Footer Component', () => {
     const desktopLogoWrapper = container.querySelector('.hidden.md\\:flex');
     expect(desktopLogoWrapper).toBeInTheDocument();
 
-    const logos = screen.getAllByAltText('Learning Universe Logo');
-    expect(logos.length).toBeGreaterThanOrEqual(2);
-    logos.forEach((logo) => {
-      expect(logo.tagName.toLowerCase()).toBe('img');
-      expect(logo).toHaveAttribute('src', '/logo-laxanh.png');
+    const goldEmblems = screen.getAllByTestId('footer-gold-lotus-emblem');
+    expect(goldEmblems.length).toBeGreaterThanOrEqual(2);
+    goldEmblems.forEach((emblem) => {
+      expect(emblem.querySelector('svg')).toBeInTheDocument();
     });
 
-    // Cũ monogram vuông không còn tồn tại
+    // Ảnh lá xanh cũ đã được thay bằng huy hiệu sen vàng SVG
+    expect(screen.queryByAltText('Learning Universe Logo')).not.toBeInTheDocument();
     expect(container.querySelectorAll('.w-10.h-10').length).toBe(0);
   });
 
-  it('renders exactly 3 simplified navigation links in a single horizontal row', () => {
+  it('renders 4 simplified navigation links including Không gian học tập in a single horizontal row', () => {
     render(
       <MemoryRouter>
         <Footer />
@@ -85,6 +85,9 @@ describe('Footer Component', () => {
 
     const homeLink = screen.getByRole('link', { name: 'Trang chủ' });
     expect(homeLink).toHaveAttribute('href', '/');
+
+    const learningSpaceLink = screen.getByRole('link', { name: 'Không gian học tập' });
+    expect(learningSpaceLink).toHaveAttribute('href', '/learning-space');
 
     const coursesLink = screen.getByRole('link', { name: 'Tất cả môn học' });
     expect(coursesLink).toHaveAttribute('href', '/courses');
@@ -109,10 +112,10 @@ describe('Footer Component', () => {
 
     const copyright = screen.getByText('Learning Universe. Bản quyền mở.');
     expect(copyright).toBeInTheDocument();
-    expect(copyright.parentElement).toHaveClass('text-[15.5px]', 'font-medium');
+    expect(copyright.parentElement).toHaveClass('text-[15px]', 'font-medium');
     expect(screen.getByText('~Không gian tri thức mở~')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Trang chủ' })).toHaveClass(
-      'text-[15.5px]',
+      'text-[15px]',
       'font-medium',
     );
     expect(

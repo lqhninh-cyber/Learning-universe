@@ -22,7 +22,7 @@ describe('App routing smoke test', () => {
     useLearningStore.getState().resetLearningStore();
   });
 
-  it('hiển thị trang chủ Learning Universe với các môn học từ manifest tại /', async () => {
+  it('hiển thị trang chủ 3 màn hình thuần khiết (Phong cảnh -> Bảo tàng Di sản -> Hồ Sen) tại /', async () => {
     renderWithProviders('/');
 
     expect(
@@ -30,32 +30,17 @@ describe('App routing smoke test', () => {
         name: /LEARNING UNIVERSE/i,
       }),
     ).toBeInTheDocument();
-    // Floating Capsule Island Header: Wordmark LEARNING UNIVERSE, nút Tìm kiếm ⌘K và Avatar tối giản
+    // Floating Capsule Island Header: Wordmark LEARNING UNIVERSE, nút Tìm kiếm ⌘K, Avatar và liên kết Không gian học tập
     expect(screen.getByRole('button', { name: /Mở tìm kiếm nhanh/i })).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Tài khoản và cài đặt giao diện/i }),
     ).toBeInTheDocument();
-    const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
-    expect(algebraLinks.length).toBeGreaterThan(0);
-    expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');
+    expect(screen.getAllByRole('link', { name: 'Không gian học tập' })[0]).toHaveAttribute(
+      'href',
+      '/learning-space',
+    );
 
-    const affineLinks = screen.getAllByRole('link', {
-      name: 'Hình học Affine và hình học Euclide',
-    });
-    expect(affineLinks.length).toBeGreaterThan(0);
-    expect(affineLinks[0]).toHaveAttribute('href', '/mon-hoc/hinh-hoc-affine');
-
-    const calculusLinks = screen.getAllByRole('link', {
-      name: 'Giải tích hàm một biến',
-    });
-    expect(calculusLinks.length).toBeGreaterThan(0);
-    expect(calculusLinks[0]).toHaveAttribute('href', '/mon-hoc/giai-tich-ham-mot-bien');
-  });
-
-  it('hiển thị đầy đủ kiến trúc trang chủ The Living Atlas (4-Layer Hero, Spatial Subject Gallery, My Learning Orbit & Knowledge Thread)', async () => {
-    renderWithProviders('/');
-
-    // 1. Hero Section — Biển Mây & Ngân Hà Hoàng Liên Sơn, Physics Canvas, Ngôi sao Đông Sơn & Di sản cố định
+    // 1. Hero Section — Toàn cảnh thoáng đãng + Thanh dock chân Hero (Danh ngôn & Thời khắc)
     expect(await screen.findByRole('heading', { name: /Đi một ngày đàng/i })).toBeInTheDocument();
     expect(screen.getByText(/— Tục ngữ Việt Nam/i)).toBeInTheDocument();
     expect(
@@ -73,30 +58,38 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
     expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
-    expect(screen.queryByTestId('cinnabar-imperial-seal')).not.toBeInTheDocument();
-    expect(screen.queryByText(/TOÁN HỌC & KHOA HỌC GIÁO DỤC · HCMUE/i)).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/04 HỌC PHẦN · 123 BÀI GIẢNG · ĐỒNG BỘ 2026/i),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/Cuộn xuống Không gian Học phần/i)).not.toBeInTheDocument();
-    expect(screen.queryByTestId('the-knowledge-thread')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('horizontal-blinds-mask')).not.toBeInTheDocument();
     expect(screen.getByTestId('rotating-scholarly-quote')).toBeInTheDocument();
-    expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Khám phá không gian tri thức/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Khám phá Không gian học tập/i })).toHaveAttribute(
       'href',
-      '#khong-gian-mon-hoc',
+      '/learning-space',
     );
+    expect(screen.getByRole('link', { name: /Thưởng lãm Di sản/i })).toHaveAttribute(
+      'href',
+      '#khong-gian-di-san',
+    );
+
+    // 2. Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng (#khong-gian-di-san) tách riêng khỏi Screen 1
+    expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
     expect(
-      screen.queryByRole('link', { name: /Tra cứu thuật ngữ KaTeX/i }),
-    ).not.toBeInTheDocument();
+      screen.getByRole('heading', { name: /Di sản Học thuật & Nghệ thuật/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-    // Đảm bảo không lộ các nhãn nội bộ
-    expect(screen.queryByText(/SCREEN 01/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/SCREEN 02/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Cảnh quan hiện tại/i)).not.toBeInTheDocument();
+    // Không gian Học phần & Quỹ đạo cá nhân đã được tách hoàn toàn sang /learning-space
+    expect(screen.queryByRole('heading', { name: /Không gian Học phần/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /Tiếp tục học tập/i })).not.toBeInTheDocument();
+  });
 
-    // 2. Spatial Subject Gallery (3 Tabs phân loại & DUY NHẤT 01 ô tìm kiếm thông minh)
+  it('hiển thị trang Không gian Học tập & Nghiên cứu (/learning-space) với đầy đủ học phần và quỹ đạo học tập', async () => {
+    renderWithProviders('/learning-space');
+
+    // Academic Sanctuary Banner
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /Không Gian Học Tập & Nghiên Cứu/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId('learning-space-celestial-rings')).toBeInTheDocument();
+
+    // Spatial Subject Gallery (3 Tabs phân loại & ô tìm kiếm tích hợp)
     expect(screen.getByRole('heading', { name: /Không gian Học phần/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Tất cả/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Toán học/i })).toBeInTheDocument();
@@ -107,15 +100,14 @@ describe('App routing smoke test', () => {
     });
     expect(searchboxes).toHaveLength(1);
 
-    expect(screen.getAllByText('Toán học').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Khoa học Giáo dục').length).toBeGreaterThan(0);
-    expect(screen.queryByText(/MATH1301|MATH1302|MATH1303|EDUC2802/i)).not.toBeInTheDocument();
+    const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
+    expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');
 
     const enterCourseLinks = screen.getAllByRole('link', { name: /Vào học phần/i });
     expect(enterCourseLinks.length).toBe(4);
     expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
 
-    // 3. My Learning Orbit (Bố cục bất đối xứng 65% Hero Progress Card : 35% 2 Thẻ tiện ích)
+    // My Learning Orbit (65% Hero Progress Card : 35% 2 Thẻ tiện ích)
     expect(screen.getByRole('heading', { name: /Tiếp tục học tập/i })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
     expect(
@@ -137,10 +129,9 @@ describe('App routing smoke test', () => {
       screen.getByText(/Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt/i),
     ).toBeInTheDocument();
 
-    // Đảm bảo không còn lộ dữ liệu cá nhân hoặc link thư mục Drive tổng
+    expect(screen.queryByText(/MATH1301|MATH1302|MATH1303|EDUC2802/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Đang đồng bộ:/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Supabase Cloud/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Kho Tài liệu Giáo trình/i)).not.toBeInTheDocument();
   });
 
   it('hiển thị Cinematic Course Cover tràn viền tại /courses/cau-truc-dai-so', async () => {

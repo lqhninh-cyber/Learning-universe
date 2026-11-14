@@ -38,12 +38,12 @@ export function AtmosphericTimeDial({
     <div
       data-testid="atmospheric-time-dial"
       className={cn(
-        'inline-flex flex-wrap items-center gap-1.5 rounded-2xl border border-white/18 bg-[#091522]/72 p-1.5 shadow-[0_12px_30px_rgba(4,9,18,0.45)] backdrop-blur-md',
+        'inline-flex flex-wrap items-center gap-1.5 rounded-2xl border border-[#E5C158]/25 bg-[#081520]/65 p-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl',
         className,
       )}
     >
-      <span className="hidden items-center gap-1.5 pr-1 pl-2 font-mono text-[10px] tracking-widest text-[#F6D383]/85 uppercase sm:inline-flex">
-        <Compass className="h-3.5 w-3.5 text-[#E8A85A]" aria-hidden="true" />
+      <span className="hidden items-center gap-1.5 pr-1 pl-2 font-mono text-[10px] tracking-widest text-[#E5C158]/90 uppercase sm:inline-flex">
+        <Compass className="h-3.5 w-3.5 text-[#E5C158]" aria-hidden="true" />
         <span>Thời khắc</span>
       </span>
 
@@ -65,8 +65,8 @@ export function AtmosphericTimeDial({
               className={cn(
                 'inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-medium transition-all duration-300',
                 isActive
-                  ? 'bg-gradient-to-r from-[#F6D383] to-[#E8A85A] text-[#0B192C] shadow-sm'
-                  : 'text-[#F8F6F0]/80 hover:bg-white/10 hover:text-[#FFF9F0]',
+                  ? 'bg-gradient-to-r from-[#E5C158] to-[#D4A359] text-[#060C18] shadow-sm'
+                  : 'text-[#F7F3E8]/85 hover:bg-white/10 hover:text-[#FFF9F0]',
               )}
             >
               <PhaseIcon id={opt.id} active={isActive} />

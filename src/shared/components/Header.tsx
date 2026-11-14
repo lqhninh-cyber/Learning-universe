@@ -309,6 +309,7 @@ export const Header: FC<HeaderProps> = ({
   const isGlossaryActive = pathname === ROUTES.glossary || pathname === '/glossary';
   const isLearningSpaceActive =
     isMegaMenuOpen ||
+    pathname === ROUTES.learningSpace ||
     pathname.startsWith('/mon-hoc/') ||
     (pathname.startsWith('/courses/') && pathname !== ROUTES.courses);
 
@@ -351,6 +352,7 @@ export const Header: FC<HeaderProps> = ({
     <>
       <header
         ref={mastheadRef}
+        onMouseLeave={() => setIsMegaMenuOpen(false)}
         className={cn(
           'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-5 shadow-[0_8px_28px_-10px_rgba(20,43,33,0.10)] ring-1 backdrop-blur-md transition-colors duration-200 print:hidden',
           isDark
@@ -401,28 +403,48 @@ export const Header: FC<HeaderProps> = ({
               <span>Trang chủ</span>
             </Link>
 
-            <button
-              type="button"
-              tabIndex={showReadingContextBar ? -1 : undefined}
-              onClick={() => {
-                setIsMegaMenuOpen((prev) => !prev);
-                setIsAccountMenuOpen(false);
-              }}
-              aria-expanded={isMegaMenuOpen}
-              aria-haspopup="true"
-              className={navItemClass(isLearningSpaceActive)}
+            <div
+              onMouseEnter={() => setIsMegaMenuOpen(true)}
+              className="inline-flex shrink-0 items-center"
             >
-              {isLearningSpaceActive && activeSealDot}
-              <span>Không gian học tập</span>
-              <ChevronDown
+              <Link
+                to={ROUTES.learningSpace}
+                tabIndex={showReadingContextBar ? -1 : undefined}
+                onClick={() => {
+                  setIsMegaMenuOpen(false);
+                  setIsAccountMenuOpen(false);
+                }}
+                className={cn(navItemClass(isLearningSpaceActive), 'pr-1.5')}
+              >
+                {isLearningSpaceActive && activeSealDot}
+                <span>Không gian học tập</span>
+              </Link>
+              <button
+                type="button"
+                tabIndex={showReadingContextBar ? -1 : undefined}
+                onClick={() => {
+                  setIsMegaMenuOpen((prev) => !prev);
+                  setIsAccountMenuOpen(false);
+                }}
+                aria-label="Mở menu nhanh Không gian học tập"
+                aria-expanded={isMegaMenuOpen}
+                aria-haspopup="true"
                 className={cn(
-                  'h-3.5 w-3.5 transition-transform duration-200',
-                  isDark ? 'text-[#86EFAC]' : 'text-[#55676B]',
-                  isMegaMenuOpen && 'rotate-180',
+                  'inline-flex h-8 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none',
+                  isDark
+                    ? 'text-[#86EFAC] hover:bg-white/[0.08]'
+                    : 'text-[#55676B] hover:bg-[#1B3D2F]/[0.08] hover:text-[#142B21]',
                 )}
-                aria-hidden="true"
-              />
-            </button>
+              >
+                <ChevronDown
+                  className={cn(
+                    'h-3.5 w-3.5 transition-transform duration-200',
+                    isMegaMenuOpen && 'rotate-180',
+                  )}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
 
             <Link
               to={ROUTES.courses}

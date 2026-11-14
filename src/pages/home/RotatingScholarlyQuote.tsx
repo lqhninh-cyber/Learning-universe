@@ -112,7 +112,15 @@ export const SCHOLARLY_QUOTES: readonly ScholarlyQuote[] = [
 const ROTATION_INTERVAL_MS = 20000;
 const FADE_TRANSITION_MS = 350;
 
-export function RotatingScholarlyQuote() {
+export interface RotatingScholarlyQuoteProps {
+  readonly variant?: 'card' | 'dock';
+  readonly className?: string;
+}
+
+export function RotatingScholarlyQuote({
+  variant = 'card',
+  className,
+}: RotatingScholarlyQuoteProps = {}) {
   const prefersReducedMotion = useReducedMotion();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -120,6 +128,7 @@ export function RotatingScholarlyQuote() {
 
   const totalQuotes = SCHOLARLY_QUOTES.length;
   const currentQuote = SCHOLARLY_QUOTES[currentIndex] ?? SCHOLARLY_QUOTES[0]!;
+  const isDock = variant === 'dock';
 
   const goToQuote = useCallback(
     (newIndex: number) => {
@@ -167,19 +176,28 @@ export function RotatingScholarlyQuote() {
       aria-label="Danh ngôn học thuật kinh điển"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="group relative w-full rounded-2xl border border-[#E8A85A]/40 bg-[#122623]/76 p-5 shadow-lg shadow-[#081715]/35 backdrop-blur-md transition-all duration-300 hover:border-[#E8A85A]/70 sm:p-6"
+      className={cn(
+        'group relative w-full rounded-2xl border border-[#E5C158]/25 bg-[#081520]/65 shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-all duration-300 hover:border-[#E5C158]/50',
+        isDock ? 'px-4 py-3.5 sm:px-5 sm:py-4' : 'p-5 sm:p-6',
+        className,
+      )}
     >
       {/* Header: Phân loại & Điều khiển luân phiên */}
-      <div className="flex items-center justify-between gap-3 border-b border-[#E8A85A]/20 pb-3">
+      <div
+        className={cn(
+          'flex items-center justify-between gap-3 border-b border-[#E5C158]/20',
+          isDock ? 'pb-2' : 'pb-3',
+        )}
+      >
         <div className="flex items-center gap-2">
-          <Quote className="h-3.5 w-3.5 text-[#F6D383]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#F6D383] uppercase">
+          <Quote className="h-3.5 w-3.5 text-[#E5C158]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#E5C158] uppercase">
             DANH NGÔN HỌC THUẬT
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[11px] font-medium text-[#FDEBD3]/85">
+          <span className="font-mono text-[11px] font-medium text-[#F7F3E8]/85">
             {formattedIndex} / {formattedTotal}
           </span>
           <div className="flex items-center gap-1">
@@ -187,7 +205,7 @@ export function RotatingScholarlyQuote() {
               type="button"
               onClick={handlePrev}
               aria-label="Câu danh ngôn trước"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E8A85A]/40 bg-[#1A3530]/85 text-[#FDEBD3] transition-colors hover:border-[#F6D383] hover:text-white"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E5C158]/30 bg-[#0D2130]/80 text-[#F7F3E8] transition-colors hover:border-[#E5C158] hover:text-white"
             >
               <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -195,7 +213,7 @@ export function RotatingScholarlyQuote() {
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
               aria-label={isPaused ? 'Tiếp tục tự động chuyển câu' : 'Tạm dừng tự động chuyển câu'}
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E8A85A]/40 bg-[#1A3530]/85 text-[#FDEBD3] transition-colors hover:border-[#F6D383] hover:text-white"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E5C158]/30 bg-[#0D2130]/80 text-[#F7F3E8] transition-colors hover:border-[#E5C158] hover:text-white"
             >
               {isPaused ? (
                 <Play className="h-3 w-3" aria-hidden="true" />
@@ -207,7 +225,7 @@ export function RotatingScholarlyQuote() {
               type="button"
               onClick={handleNext}
               aria-label="Câu danh ngôn tiếp theo"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E8A85A]/40 bg-[#1A3530]/85 text-[#FDEBD3] transition-colors hover:border-[#F6D383] hover:text-white"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E5C158]/30 bg-[#0D2130]/80 text-[#F7F3E8] transition-colors hover:border-[#E5C158] hover:text-white"
             >
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -218,15 +236,21 @@ export function RotatingScholarlyQuote() {
       {/* Nội dung trích dẫn với hiệu ứng mờ dần (Fade Transition) */}
       <blockquote
         className={cn(
-          'mt-3.5 transition-opacity duration-700 ease-in-out',
+          'transition-opacity duration-700 ease-in-out',
+          isDock ? 'mt-2.5' : 'mt-3.5',
           isFading ? 'opacity-0' : 'opacity-100',
         )}
       >
-        <p className="mb-3 font-serif text-[16.5px] leading-relaxed text-[#FFF9F0] italic">
+        <p
+          className={cn(
+            'font-serif leading-relaxed text-[#FFF9F0] italic',
+            isDock ? 'mb-1.5 text-[14.5px] sm:text-[15.5px]' : 'mb-3 text-[16.5px]',
+          )}
+        >
           &ldquo;{currentQuote.content}&rdquo;
         </p>
-        <div className="mt-2 flex w-full items-center justify-end border-t border-[#E8A85A]/20 pt-2">
-          <footer className="text-right font-mono text-xs text-[#F6D383]">
+        <div className="mt-2 flex w-full items-center justify-end border-t border-[#E5C158]/18 pt-2">
+          <footer className="text-right font-mono text-xs text-[#E5C158]">
             — {currentQuote.author}
             {currentQuote.roleOrEra ? ` · ${currentQuote.roleOrEra}` : ''}
           </footer>

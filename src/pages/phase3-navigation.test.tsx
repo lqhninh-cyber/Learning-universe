@@ -26,9 +26,9 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     useLearningStore.getState().resetLearningStore();
   });
 
-  it('1. Trang chủ: tìm kiếm tức thời bài học bằng từ khóa không dấu và có dấu', async () => {
+  it('1. Không gian học tập (/learning-space): tìm kiếm tức thời bài học bằng từ khóa không dấu và có dấu', async () => {
     const user = userEvent.setup();
-    renderRoute('/');
+    renderRoute('/learning-space');
 
     const searchInput = await screen.findByRole('searchbox', {
       name: /Tìm kiếm môn học hoặc bài học/i,

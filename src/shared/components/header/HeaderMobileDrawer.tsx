@@ -133,6 +133,13 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
               Trang chủ
             </Link>
             <Link
+              to={ROUTES.learningSpace}
+              onClick={closeDrawer}
+              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
+            >
+              Không gian học tập
+            </Link>
+            <Link
               to={ROUTES.courses}
               onClick={closeDrawer}
               className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"

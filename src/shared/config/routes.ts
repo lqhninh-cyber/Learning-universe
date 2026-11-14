@@ -3,6 +3,7 @@
  */
 export const ROUTES = {
   home: '/',
+  learningSpace: '/learning-space',
   subjects: '/mon-hoc',
   courses: '/courses',
   subjectOverview: (subjectSlug: string) => `/mon-hoc/${subjectSlug}`,

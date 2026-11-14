@@ -790,12 +790,12 @@ export function water(
       g.addColorStop(1, '#2C5E47');
     } else {
       // Nguyệt Dạ (Night):
-      // Đỉnh: #040D08 (sơn mài đen sẫm hòa quyện vào chân trang)
-      // Giữa: #0B2016 (xanh rêu đêm sâu thẳm)
-      // Đáy: #06130E
-      g.addColorStop(0, '#040D08');
-      g.addColorStop(0.5, '#0B2016');
-      g.addColorStop(1, '#06130E');
+      // Đỉnh: #061510 (lục bảo đêm hòa tan êm ái từ cầu nối Screen 2 #081A15)
+      // Giữa: #091E16 (xanh ngọc đêm sâu thẳm)
+      // Đáy: #040E0B (hòa quyện tự nhiên vào Footer)
+      g.addColorStop(0, '#061510');
+      g.addColorStop(0.52, '#091E16');
+      g.addColorStop(1, '#040E0B');
     }
   }
   ctx.fillStyle = g;
@@ -2452,9 +2452,9 @@ export function createLotusCanvasEngine(): LotusCanvasEngine {
       topMistGrad.addColorStop(0.5, 'rgba(240, 248, 243, 0.35)');
       topMistGrad.addColorStop(1, 'rgba(240, 248, 243, 0)');
     } else {
-      topMistGrad.addColorStop(0, 'rgba(4, 13, 8, 0.85)');
-      topMistGrad.addColorStop(0.5, 'rgba(4, 13, 8, 0.3)');
-      topMistGrad.addColorStop(1, 'rgba(4, 13, 8, 0)');
+      topMistGrad.addColorStop(0, 'rgba(6, 21, 16, 0.94)');
+      topMistGrad.addColorStop(0.45, 'rgba(20, 48, 36, 0.36)');
+      topMistGrad.addColorStop(1, 'rgba(6, 21, 16, 0)');
     }
 
     const vignetteGrad = ctx.createRadialGradient(

@@ -899,29 +899,15 @@
   animation: lu-reed-sway-slow 7.4s ease-in-out infinite;
 }
 
-/* Chuyển sắc thích ứng Light / Dark cho các cầu nối chuyển tiếp Trang chủ */
+/* Chuyển sắc mềm từ đáy Phòng trưng bày Di sản (#081A15) xuống mặt nước Hồ Sen (#061510) */
 .lu-lakeshore-sky-wash {
-  background: linear-gradient(
-    180deg,
-    var(--bg-page) 0%,
-    #d8e4dd 28%,
-    #52796f 62%,
-    #1b3b32 86%,
-    #071a14 100%
-  );
+  background: linear-gradient(180deg, #081a15 0%, #0a211a 35%, #071b14 70%, #061510 100%);
 }
 
 .dark .lu-lakeshore-sky-wash,
 [data-theme='dark'] .lu-lakeshore-sky-wash,
 [data-reading-theme='dark'] .lu-lakeshore-sky-wash {
-  background: linear-gradient(
-    180deg,
-    var(--bg-page) 0%,
-    #152e25 32%,
-    #102921 64%,
-    #0a1f18 86%,
-    #071a14 100%
-  );
+  background: linear-gradient(180deg, #081a15 0%, #0a211a 35%, #071b14 70%, #061510 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {

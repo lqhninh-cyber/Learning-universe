@@ -11,8 +11,9 @@ export const ATMOSPHERIC_PHASE_OPTIONS: readonly AtmosphericPhaseOption[] = [
   {
     id: 'dem-ngan-ha',
     label: 'Đêm Ngân Hà',
-    description: 'Trời đêm xanh vũ trụ, Dải Ngân Hà sáng rực & ruộng bậc thang ánh trăng bạc',
-    swatchGradient: 'linear-gradient(135deg, #050B16 0%, #2B4C65 65%, #E5B869 100%)',
+    description:
+      'Lam Ngọc Vũ Trụ sâu thẳm, ánh vàng Hoàng Kim trên đỉnh Fansipan & hổ phách ấm chân trời',
+    swatchGradient: 'linear-gradient(135deg, #060C18 0%, #0F263A 58%, #E5C158 100%)',
   },
   {
     id: 'binh-minh',
@@ -68,33 +69,33 @@ export interface AtmospherePalette {
 
 export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> = {
   'dem-ngan-ha': {
-    sky0: [5, 11, 22], // #050B16
-    sky1: [11, 25, 44], // #0B192C
-    sky2: [22, 50, 79], // #16324F
-    sky3: [43, 76, 101], // #2B4C65
-    sky4: [27, 46, 66], // #1B2E42
-    dawnCore: [229, 184, 105], // #E5B869
-    dawnEdge: [92, 130, 166], // #5C82A6
-    facetCelestial: [92, 130, 166],
-    facetDawn: [229, 184, 105],
-    facetMid: [29, 55, 82],
-    facetAbyss: [7, 17, 30], // #07111E
-    rimGlow: [229, 184, 105],
-    terracePoolA: [35, 75, 110],
-    terracePoolB: [180, 206, 228],
-    terraceRim: [243, 201, 120],
-    cloudIvory: [251, 249, 242], // #FBF9F2
-    cloudPearl: [232, 238, 244],
-    cloudSlate: [143, 166, 184], // #8FA6B8
-    cloudRim: [232, 197, 148], // #E8C594
-    rayWarm: [229, 184, 105],
-    rayCool: [130, 178, 224],
-    pineTop: [24, 44, 61],
-    pineBot: [5, 11, 22],
+    sky0: [6, 12, 24], // #060C18 (Lam Ngọc Vũ Trụ)
+    sky1: [10, 24, 41], // Chuyển sắc đêm sâu
+    sky2: [15, 38, 58], // #0F263A (Ngọc Bích Đêm)
+    sky3: [28, 62, 88], // Xanh lam ngọc tầng mây
+    sky4: [42, 72, 92], // Chân trời lam hổ phách
+    dawnCore: [212, 163, 89], // #D4A359 (Hổ Phách ấm)
+    dawnEdge: [78, 168, 222], // #4EA8DE (Ngọc Lam)
+    facetCelestial: [78, 168, 222], // #4EA8DE (Ngọc Lam đón sáng Ngân Hà)
+    facetDawn: [229, 193, 88], // #E5C158 (Vàng Hoàng Kim vách đỉnh)
+    facetMid: [18, 46, 68],
+    facetAbyss: [6, 14, 24],
+    rimGlow: [229, 193, 88], // #E5C158
+    terracePoolA: [32, 84, 118],
+    terracePoolB: [132, 198, 228],
+    terraceRim: [229, 193, 88], // #E5C158
+    cloudIvory: [248, 245, 236],
+    cloudPearl: [224, 234, 242],
+    cloudSlate: [128, 156, 178],
+    cloudRim: [229, 193, 88], // #E5C158
+    rayWarm: [229, 193, 88],
+    rayCool: [78, 168, 222],
+    pineTop: [19, 42, 58],
+    pineBot: [5, 11, 20],
     starIntensity: 1.0,
     milkyWayIntensity: 1.0,
-    rayIntensity: 1.0,
-    contrastScrimAlpha: 0.24,
+    rayIntensity: 1.05,
+    contrastScrimAlpha: 0.28,
   },
   'binh-minh': {
     sky0: [24, 24, 52], // Sắc tím chàm đỉnh trời giữ chữ sáng rõ

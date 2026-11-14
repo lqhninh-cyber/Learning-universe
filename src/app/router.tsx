@@ -65,6 +65,13 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.learningSpace,
+        lazy: async () => {
+          const { LearningSpacePage } = await import('@/pages/learning-space/LearningSpacePage');
+          return { Component: LearningSpacePage };
+        },
+      },
+      {
         path: ROUTES.subjects,
         lazy: async () => {
           const { SubjectsListPage } = await import('@/pages/subjects/SubjectsListPage');
