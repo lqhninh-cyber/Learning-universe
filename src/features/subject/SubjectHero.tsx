@@ -2,7 +2,7 @@ import type { ManifestSubject } from '@schemas/index';
 import { BookOpen, ExternalLink, FileText, Layers, PlayCircle, Sparkles } from 'lucide-react';
 import { Link } from 'react-router';
 import { SubjectHeroCanvas } from '@/components/course/SubjectHeroCanvas';
-import { SubjectUniverseWidget } from '@/components/course/SubjectUniverseWidget';
+import { SubjectPathwayDock, SubjectProgressPill } from '@/components/course/SubjectUniverseWidget';
 import {
   getSubjectThemeVars,
   getSubjectUniverseTheme,
@@ -15,12 +15,12 @@ import { COURSE_DIRECT_PDF_LINKS, ROUTES } from '@/shared/config/routes';
 export interface SubjectHeroProps {
   readonly subject: ManifestSubject;
   readonly onSelectSpecializedTab?: () => void;
-  /** Nhảy nhanh tới các chương tương ứng khi bấm vào sơ đồ cấu trúc môn học */
+  /** Nhảy nhanh tới các chương tương ứng khi bấm vào thanh lộ trình ngang ở đáy Hero */
   readonly onJumpToChapters?: (chapterNumbers: readonly number[]) => void;
 }
 
 const SECONDARY_CTA_CLASS =
-  'inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-3 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-[var(--subject-accent-border)] hover:bg-white/12';
+  'inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-md transition-all hover:border-[var(--subject-accent-border)] hover:bg-white/12';
 
 export function SubjectHero({
   subject,
@@ -59,7 +59,8 @@ export function SubjectHero({
       : `${stats.chapterCount} chương · ${stats.lessonCount} bài học`;
 
   const [baseR, baseG, baseB] = theme.baseRgb;
-  const legibilityVeil = `linear-gradient(90deg, rgba(${baseR}, ${baseG}, ${baseB}, 0.82) 0%, rgba(${baseR}, ${baseG}, ${baseB}, 0.5) 38%, rgba(${baseR}, ${baseG}, ${baseB}, 0) 70%)`;
+  // Lớp bảo toàn độ tương phản chỉ phủ nửa trái chứa văn bản, để trống hoàn toàn sân khấu bên phải
+  const legibilityVeil = `linear-gradient(90deg, rgba(${baseR}, ${baseG}, ${baseB}, 0.84) 0%, rgba(${baseR}, ${baseG}, ${baseB}, 0.56) 36%, rgba(${baseR}, ${baseG}, ${baseB}, 0) 56%)`;
 
   return (
     <section
@@ -71,69 +72,73 @@ export function SubjectHero({
     >
       {/* CẢNH NỀN CANVAS 120FPS ĐỘC BẢN CHO TỪNG MÔN HỌC */}
       <SubjectHeroCanvas universe={theme.id} />
-      {/* Lớp tương phản theo chính tông nền môn học, giữ chữ bên trái sắc nét */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{ background: legibilityVeil }}
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 pt-24 pb-10 sm:px-10 sm:pt-28 lg:px-12 lg:pb-12">
-        {/* PHÍA TRÊN: Breadcrumb & nhãn quy mô học phần */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/12 pb-4">
-          <nav aria-label="Breadcrumb" className="text-xs font-medium text-white/75">
-            <ol className="flex flex-wrap items-center gap-2">
-              <li>
-                <Link to={ROUTES.home} className="transition-colors hover:text-white">
-                  Trang chủ
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-white/35">
-                /
-              </li>
-              <li>
-                <Link to={ROUTES.subjects} className="transition-colors hover:text-white">
-                  Môn học
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-white/35">
-                /
-              </li>
-              <li aria-current="page" className="font-semibold text-white">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-between px-6 pt-24 pb-8 sm:px-10 sm:pt-28 lg:px-12 lg:pb-10">
+        {/* BỐ CỤC TRÊN: VÙNG 1 (CỘT THÔNG TIN BÊN TRÁI) + VÙNG 2 (SÂN KHẤU ĐỒ HỌA TRỐNG HOÀN TOÀN BÊN PHẢI) */}
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-8">
+          {/* VÙNG 1 — CỘT THÔNG TIN BÊN TRÁI */}
+          <div className="relative z-20 flex flex-col justify-center lg:w-[52%] xl:w-[50%]">
+            {/* Dòng trên cùng: Breadcrumb & 2 badge gọn gàng bên cột trái */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-white/12 pb-3.5">
+              <nav aria-label="Breadcrumb" className="text-xs font-medium text-white/75">
+                <ol className="flex flex-wrap items-center gap-1.5">
+                  <li>
+                    <Link to={ROUTES.home} className="transition-colors hover:text-white">
+                      Trang chủ
+                    </Link>
+                  </li>
+                  <li aria-hidden="true" className="text-white/35">
+                    /
+                  </li>
+                  <li>
+                    <Link to={ROUTES.subjects} className="transition-colors hover:text-white">
+                      Môn học
+                    </Link>
+                  </li>
+                  <li aria-hidden="true" className="text-white/35">
+                    /
+                  </li>
+                  <li aria-current="page" className="font-semibold text-white">
+                    {subject.title}
+                  </li>
+                </ol>
+              </nav>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-full border border-[var(--subject-accent-border)] bg-[var(--subject-accent-soft)] px-2.5 py-0.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--subject-accent)] uppercase backdrop-blur-md">
+                  {cinematicAsset.categoryLabel}
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/30 px-2.5 py-0.5 text-[11px] font-medium text-white/85 backdrop-blur-md">
+                  <Layers className="h-3 w-3 text-[var(--subject-accent)]" aria-hidden="true" />
+                  <span>{scaleLabel}</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Khối tiêu đề & Mô tả */}
+            <div className="mt-5">
+              <p className="mb-2.5 inline-flex items-center gap-2 font-mono text-[11.5px] font-semibold tracking-[0.18em] text-[var(--subject-accent)] uppercase">
+                <span>{theme.code}</span>
+                <span className="h-px w-6 bg-[var(--subject-accent-border)]" aria-hidden="true" />
+                <span className="text-white/70">{theme.themeTitle}</span>
+              </p>
+
+              <h1 className="font-serif text-4xl leading-tight tracking-tight text-white md:text-5xl xl:text-[54px]">
                 {subject.title}
-              </li>
-            </ol>
-          </nav>
+              </h1>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center rounded-full border border-[var(--subject-accent-border)] bg-[var(--subject-accent-soft)] px-3.5 py-1 font-mono text-xs font-semibold tracking-wider text-[var(--subject-accent)] uppercase backdrop-blur-md">
-              {cinematicAsset.categoryLabel}
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/30 px-3.5 py-1 text-xs font-medium text-white/85 backdrop-blur-md">
-              <Layers className="h-3.5 w-3.5 text-[var(--subject-accent)]" aria-hidden="true" />
-              <span>{scaleLabel}</span>
-            </span>
-          </div>
-        </div>
+              <p className="mt-3 line-clamp-3 max-w-xl text-base font-light text-white/82 md:text-[16.5px]">
+                {cinematicAsset.conciseDescription}
+              </p>
+            </div>
 
-        {/* PHẦN CHÍNH: Tiêu đề, mô tả, CTA & Sơ đồ cấu trúc kèm tiến độ */}
-        <div className="grid flex-1 gap-8 pt-7 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-7">
-            <p className="mb-3 inline-flex items-center gap-2 font-mono text-[11.5px] font-semibold tracking-[0.18em] text-[var(--subject-accent)] uppercase">
-              <span>{theme.code}</span>
-              <span className="h-px w-6 bg-[var(--subject-accent-border)]" aria-hidden="true" />
-              <span className="text-white/70">{theme.themeTitle}</span>
-            </p>
-
-            <h1 className="font-serif text-4xl leading-tight tracking-tight text-white md:text-6xl">
-              {subject.title}
-            </h1>
-
-            <p className="mt-4 line-clamp-3 max-w-2xl text-base font-light text-white/80 md:text-[17px]">
-              {cinematicAsset.conciseDescription}
-            </p>
-
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            {/* Hàng Nút Hành Động + Huy Hiệu Tiến Độ Thu Gọn */}
+            <div className="mt-6 flex flex-wrap items-center gap-2.5">
               {ctaLocation && (
                 <Link
                   to={ROUTES.lesson(
@@ -141,7 +146,7 @@ export function SubjectHero({
                     ctaLocation.chapter.slug,
                     ctaLocation.lesson.slug,
                   )}
-                  className="inline-flex items-center gap-2.5 rounded-full bg-[#FBFAF6] px-6 py-3 text-sm font-semibold text-stone-950 shadow-md transition-all hover:bg-white"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#FBFAF6] px-5 py-2.5 text-sm font-semibold text-stone-950 shadow-md transition-all hover:bg-white"
                 >
                   <PlayCircle
                     className="h-4 w-4 text-[var(--subject-accent-ink)]"
@@ -194,23 +199,36 @@ export function SubjectHero({
                   <ExternalLink className="h-3.5 w-3.5 opacity-75" aria-hidden="true" />
                 </a>
               )}
+
+              <SubjectProgressPill
+                theme={theme}
+                isAuthenticated={isAuthenticated}
+                completedCount={completedCount}
+                lessonCount={stats.lessonCount}
+                progressPercent={progressPercent}
+                onEnableLearnerMode={() => enableLearnerMode()}
+              />
             </div>
           </div>
 
-          <div className="flex lg:col-span-5 lg:justify-end">
-            <SubjectUniverseWidget
-              theme={theme}
-              chapters={subject.chapters}
-              completedLessons={completedLessons}
-              isAuthenticated={isAuthenticated}
-              completedCount={completedCount}
-              lessonCount={stats.lessonCount}
-              progressPercent={progressPercent}
-              onEnableLearnerMode={() => enableLearnerMode()}
-              onJumpToChapters={onJumpToChapters}
-            />
+          {/* VÙNG 2 — SÂN KHẤU ĐỒ HỌA 3D/2D TRỐNG HOÀN TOÀN BÊN PHẢI */}
+          <div
+            data-testid="subject-visual-stage"
+            className="relative z-10 min-h-[260px] sm:min-h-[300px] lg:min-h-[330px] lg:w-[48%] xl:w-[50%]"
+          >
+            <span className="pointer-events-none absolute right-0 bottom-1 inline-flex items-center rounded-full border border-white/10 bg-black/25 px-3 py-1 font-mono text-[11px] text-white/60 backdrop-blur-xs">
+              Rê chuột để tương tác mô hình
+            </span>
           </div>
         </div>
+
+        {/* VÙNG 3 — THANH LỘ TRÌNH NGANG DƯỚI ĐÁY HERO */}
+        <SubjectPathwayDock
+          theme={theme}
+          chapters={subject.chapters}
+          completedLessons={completedLessons}
+          onJumpToChapters={onJumpToChapters}
+        />
       </div>
 
       {/* ĐƯỜNG VIỀN NGHỆ THUẬT MẢNH CHUYỂN TIẾP SANG THANH TAB */}

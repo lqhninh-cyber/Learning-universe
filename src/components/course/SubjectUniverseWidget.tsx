@@ -1,19 +1,29 @@
 import type { ManifestChapter } from '@schemas/index';
-import { ArrowDown, CheckCircle2, UserCheck } from 'lucide-react';
+import { ArrowRight, CheckCircle2, UserCheck } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 import type { SubjectUniverseStage, SubjectUniverseTheme } from './subjectUniverseThemes';
 
-export interface SubjectUniverseWidgetProps {
+export interface SubjectProgressPillProps {
   readonly theme: SubjectUniverseTheme;
-  readonly chapters: readonly ManifestChapter[];
-  readonly completedLessons: Readonly<Record<string, unknown>>;
   readonly isAuthenticated: boolean;
   readonly completedCount: number;
   readonly lessonCount: number;
   readonly progressPercent: number;
   readonly onEnableLearnerMode: () => void;
+}
+
+export interface SubjectPathwayDockProps {
+  readonly theme: SubjectUniverseTheme;
+  readonly chapters: readonly ManifestChapter[];
+  readonly completedLessons: Readonly<Record<string, unknown>>;
   readonly onJumpToChapters?: (chapterNumbers: readonly number[]) => void;
 }
+
+const STAGE_GRID_CLASSES: Readonly<Record<number, string>> = {
+  3: 'grid grid-cols-1 gap-3 sm:grid-cols-3',
+  4: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4',
+  5: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5',
+};
 
 function formatStageCaption(
   stage: SubjectUniverseStage,
@@ -33,22 +43,19 @@ function formatStageCaption(
 }
 
 /**
- * Sơ đồ điều hướng nhanh theo cấu trúc môn học kết hợp hộp Tiến độ hoàn thành,
- * đặt ở cột phải của Hero Không gian Tri thức.
+ * Hộp Tiến độ Thu gọn (Compact Progress Pill) đặt cạnh cụm CTA ở cột trái Hero,
+ * không che khuất sân khấu đồ họa 3D/2D bên phải.
  */
-export function SubjectUniverseWidget({
+export function SubjectProgressPill({
   theme,
-  chapters,
-  completedLessons,
   isAuthenticated,
   completedCount,
   lessonCount,
   progressPercent,
   onEnableLearnerMode,
-  onJumpToChapters,
-}: SubjectUniverseWidgetProps) {
-  const ringSize = 52;
-  const strokeWidth = 4;
+}: SubjectProgressPillProps) {
+  const ringSize = 26;
+  const strokeWidth = 3;
   const radius = (ringSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
@@ -56,152 +63,164 @@ export function SubjectUniverseWidget({
   return (
     <div
       aria-label={isAuthenticated ? 'Tiến độ học tập môn học' : 'Chế độ khách'}
-      data-testid="subject-universe-widget"
-      className="w-full rounded-2xl border border-white/15 bg-black/35 p-4 text-white shadow-lg backdrop-blur-md sm:p-5 lg:max-w-md"
+      data-testid="subject-progress-pill"
+      className="inline-flex flex-wrap items-center gap-2.5 rounded-full border border-white/15 bg-black/30 px-3.5 py-2 text-xs text-white backdrop-blur-md"
     >
-      {/* Tiến độ hoàn thành */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="font-mono text-[11px] font-semibold tracking-wider text-[var(--subject-accent)] uppercase">
-            Tiến độ hoàn thành
-          </p>
-          <p className="mt-0.5 flex items-baseline gap-2">
-            <span className="font-serif text-2xl text-white">{progressPercent}%</span>
-            <span className="text-xs text-white/70">
-              {completedCount}/{lessonCount} bài học
-            </span>
-          </p>
-        </div>
-        <div className="relative flex items-center justify-center">
-          <svg
-            width={ringSize}
-            height={ringSize}
-            viewBox={`0 0 ${ringSize} ${ringSize}`}
-            className="-rotate-90 transform"
-            role="progressbar"
-            aria-valuenow={progressPercent}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={`Tiến độ hoàn thành: ${progressPercent}%`}
-          >
-            <circle
-              cx={ringSize / 2}
-              cy={ringSize / 2}
-              r={radius}
-              fill="transparent"
-              stroke="rgba(255,255,255,0.16)"
-              strokeWidth={strokeWidth}
-            />
-            <circle
-              cx={ringSize / 2}
-              cy={ringSize / 2}
-              r={radius}
-              fill="transparent"
-              stroke={theme.accent}
-              strokeWidth={strokeWidth}
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              className="transition-all duration-500 ease-out"
-            />
-          </svg>
-          <span className="absolute font-mono text-[11px] font-semibold text-white/90">
-            {progressPercent}%
-          </span>
-        </div>
+      <div className="relative flex items-center justify-center">
+        <svg
+          width={ringSize}
+          height={ringSize}
+          viewBox={`0 0 ${ringSize} ${ringSize}`}
+          className="-rotate-90 transform"
+          role="progressbar"
+          aria-valuenow={progressPercent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`Tiến độ hoàn thành: ${progressPercent}%`}
+        >
+          <circle
+            cx={ringSize / 2}
+            cy={ringSize / 2}
+            r={radius}
+            fill="transparent"
+            stroke="rgba(255,255,255,0.18)"
+            strokeWidth={strokeWidth}
+          />
+          <circle
+            cx={ringSize / 2}
+            cy={ringSize / 2}
+            r={radius}
+            fill="transparent"
+            stroke={theme.accent}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            className="transition-all duration-500 ease-out"
+          />
+        </svg>
       </div>
 
-      {/* Sơ đồ cấu trúc môn học */}
-      <div className="mt-4 border-t border-white/12 pt-3.5">
-        <p className="mb-2.5 font-mono text-[11px] font-semibold tracking-wider text-white/75 uppercase">
-          {theme.widgetTitle}
-        </p>
-        <ol className="space-y-1" aria-label={theme.widgetTitle}>
-          {theme.stages.map((stage, index) => {
-            const stageChapters = chapters.filter((chapter) =>
-              stage.chapterNumbers.includes(chapter.number),
-            );
-            const total = stageChapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0);
-            const done = stageChapters.reduce(
-              (sum, chapter) =>
-                sum +
-                chapter.lessons.filter((lesson) => Boolean(completedLessons[lesson.id])).length,
-              0,
-            );
-            const percent = total > 0 ? Math.round((done / total) * 100) : 0;
-            const caption = formatStageCaption(stage, chapters);
-            const isLast = index === theme.stages.length - 1;
-
-            return (
-              <li key={stage.id}>
-                <button
-                  type="button"
-                  onClick={() => onJumpToChapters?.(stage.chapterNumbers)}
-                  disabled={stageChapters.length === 0}
-                  aria-label={`${stage.label}${stage.detail ? ` ${stage.detail}` : ''} — ${caption}`}
-                  className={cn(
-                    'group flex w-full cursor-pointer items-center gap-3 rounded-xl px-2.5 py-1.5 text-left transition-colors',
-                    'hover:bg-white/8 focus-visible:ring-2 focus-visible:ring-[var(--subject-accent)] focus-visible:outline-none',
-                    'disabled:cursor-not-allowed disabled:opacity-50',
-                  )}
-                >
-                  <span className="relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--subject-accent-border)] bg-[var(--subject-accent-soft)] font-mono text-[11px] font-semibold text-[var(--subject-accent)] transition-colors group-hover:bg-[var(--subject-accent)] group-hover:text-black">
-                    {index + 1}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex flex-wrap items-baseline gap-x-1.5">
-                      <span className="text-[13.5px] leading-snug font-semibold text-white">
-                        {stage.label}
-                      </span>
-                      {stage.detail && (
-                        <span className="font-mono text-[11.5px] text-[var(--subject-accent-2)]">
-                          {stage.detail}
-                        </span>
-                      )}
-                    </span>
-                    <span className="mt-1 flex items-center gap-2">
-                      <span className="h-1 w-16 overflow-hidden rounded-full bg-white/12">
-                        <span
-                          className="block h-full rounded-full bg-[var(--subject-accent)] transition-all duration-300"
-                          style={{ width: `${percent}%` }}
-                        />
-                      </span>
-                      <span className="text-[11px] text-white/60">{caption}</span>
-                    </span>
-                  </span>
-                  {!isLast && (
-                    <ArrowDown
-                      className="h-3.5 w-3.5 shrink-0 text-white/30 transition-colors group-hover:text-[var(--subject-accent)]"
-                      aria-hidden="true"
-                    />
-                  )}
-                </button>
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+      <span className="font-medium text-white/90">
+        Tiến độ:{' '}
+        <strong className="font-mono text-[var(--subject-accent)]">{progressPercent}%</strong>{' '}
+        <span className="text-white/65">
+          ({completedCount}/{lessonCount} bài học)
+        </span>
+      </span>
 
       {isAuthenticated ? (
         completedCount === lessonCount &&
         lessonCount > 0 && (
-          <div className="mt-3 flex items-center gap-1.5 border-t border-white/12 pt-3 text-xs font-medium text-emerald-300">
+          <span className="inline-flex items-center gap-1 border-l border-white/15 pl-2.5 font-medium text-emerald-300">
             <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span>Đã hoàn thành toàn bộ học phần</span>
-          </div>
+            <span>Hoàn thành</span>
+          </span>
         )
       ) : (
-        <div className="mt-3 border-t border-white/12 pt-3">
-          <button
-            type="button"
-            onClick={onEnableLearnerMode}
-            className="inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full border border-white/20 bg-white/8 px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-white/15"
-          >
-            <UserCheck className="h-3.5 w-3.5 text-[var(--subject-accent)]" aria-hidden="true" />
-            <span>Bật theo dõi tiến độ học tập</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onEnableLearnerMode}
+          aria-label="Bật theo dõi tiến độ học tập"
+          className="inline-flex cursor-pointer items-center gap-1 border-l border-white/15 pl-2.5 font-medium text-[var(--subject-accent)] transition-colors hover:text-white"
+        >
+          <UserCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span>Bật theo dõi</span>
+        </button>
       )}
+    </div>
+  );
+}
+
+/**
+ * Thanh lộ trình ngang (Horizontal Pathway Dock) trải đều ở đáy Hero, giúp nhảy nhanh
+ * tới các chương tương ứng mà không che tầm nhìn đồ họa 3D/2D.
+ */
+export function SubjectPathwayDock({
+  theme,
+  chapters,
+  completedLessons,
+  onJumpToChapters,
+}: SubjectPathwayDockProps) {
+  const gridClass =
+    STAGE_GRID_CLASSES[theme.stages.length] ??
+    'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4';
+
+  return (
+    <div
+      data-testid="subject-pathway-dock"
+      className="relative z-20 mt-7 w-full border-t border-white/10 pt-5"
+    >
+      <p className="mb-3 font-mono text-[11px] font-semibold tracking-[0.16em] text-white/75 uppercase">
+        {theme.widgetTitle}
+      </p>
+
+      <ol className={gridClass} aria-label={theme.widgetTitle}>
+        {theme.stages.map((stage, index) => {
+          const stageChapters = chapters.filter((chapter) =>
+            stage.chapterNumbers.includes(chapter.number),
+          );
+          const total = stageChapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0);
+          const done = stageChapters.reduce(
+            (sum, chapter) =>
+              sum + chapter.lessons.filter((lesson) => Boolean(completedLessons[lesson.id])).length,
+            0,
+          );
+          const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+          const caption = formatStageCaption(stage, chapters);
+          const isLast = index === theme.stages.length - 1;
+
+          return (
+            <li key={stage.id} className="min-w-0">
+              <button
+                type="button"
+                onClick={() => onJumpToChapters?.(stage.chapterNumbers)}
+                disabled={stageChapters.length === 0}
+                aria-label={`${stage.label}${stage.detail ? ` ${stage.detail}` : ''} — ${caption}`}
+                className={cn(
+                  'group flex h-full w-full cursor-pointer items-center justify-between gap-2.5 rounded-xl border border-white/10 bg-black/25 px-3.5 py-2.5 text-left backdrop-blur-md transition-all',
+                  'hover:border-[var(--subject-accent-border)] hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[var(--subject-accent)] focus-visible:outline-none',
+                  'disabled:cursor-not-allowed disabled:opacity-50',
+                )}
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2">
+                    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[var(--subject-accent-border)] bg-[var(--subject-accent-soft)] font-mono text-[10.5px] font-semibold text-[var(--subject-accent)] transition-colors group-hover:bg-[var(--subject-accent)] group-hover:text-black">
+                      {index + 1}
+                    </span>
+                    <span className="truncate text-[13px] font-semibold text-white">
+                      {stage.label}
+                    </span>
+                  </span>
+
+                  <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 pl-7">
+                    {stage.detail && (
+                      <span className="font-mono text-[11px] font-medium text-[var(--subject-accent-2)]">
+                        {stage.detail}
+                      </span>
+                    )}
+                    <span className="text-[11px] text-white/60">{caption}</span>
+                  </span>
+
+                  <span className="mt-1.5 block h-0.5 w-full overflow-hidden rounded-full bg-white/10">
+                    <span
+                      className="block h-full rounded-full bg-[var(--subject-accent)] transition-all duration-300"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </span>
+                </span>
+
+                {!isLast && (
+                  <ArrowRight
+                    className="h-3.5 w-3.5 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--subject-accent)]"
+                    aria-hidden="true"
+                  />
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }

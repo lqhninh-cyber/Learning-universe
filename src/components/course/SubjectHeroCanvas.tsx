@@ -80,8 +80,8 @@ export function SubjectHeroCanvas({ universe, className }: SubjectHeroCanvasProp
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       if (target.px === 0 && target.py === 0) {
-        target.px = width * 0.7;
-        target.py = height * 0.5;
+        target.px = width * 0.74;
+        target.py = height * 0.42;
         pointer.px = target.px;
         pointer.py = target.py;
       }

@@ -159,13 +159,18 @@ function stepParticles(particles: Particle[], dtScale: number, time: number): vo
   }
 }
 
-/** Vị trí tâm cảnh vật: lệch phải trên màn hình rộng để nhường chỗ cho chữ bên trái. */
+/**
+ * Vị trí tâm sân khấu đồ họa bên phải Hero:
+ * - Desktop (`width >= 960`): căn tại `(0.74 * width, 0.42 * height)` trong vùng trống hoàn toàn
+ *   nằm bên phải cột chữ và phía trên Thanh lộ trình ngang ở đáy Hero.
+ * - Mobile/Tablet: căn giữa theo chiều ngang ở nửa trên/giữa sân khấu.
+ */
 function sceneAnchor(width: number, height: number): { cx: number; cy: number; size: number } {
   const wide = width >= 960;
   return {
-    cx: wide ? width * 0.7 : width * 0.62,
-    cy: height * 0.52,
-    size: Math.min(width * (wide ? 0.34 : 0.6), height * 0.92),
+    cx: wide ? width * 0.74 : width * 0.5,
+    cy: wide ? height * 0.42 : height * 0.46,
+    size: Math.min(width * (wide ? 0.32 : 0.62), height * 0.56),
   };
 }
 
@@ -245,10 +250,10 @@ export function createCtdsScene(): SubjectScene {
 
   return ({ ctx, width, height, time, dtScale, pointer }) => {
     const { cx, cy, size } = sceneAnchor(width, height);
-    const scale = size * 0.5;
+    const scale = size * 0.47;
     const yaw = time * 0.16 + pointer.nx * 0.65;
-    const pitch = 0.38 + pointer.ny * 0.28;
-    const camera = 3.6;
+    const pitch = 0.36 + pointer.ny * 0.24;
+    const camera = 3.8;
 
     // Hoa văn đối xứng 12 tia mờ phía sau (nhóm quay C12)
     ctx.save();
@@ -415,10 +420,10 @@ export function createHhaveScene(): SubjectScene {
 
   return ({ ctx, width, height, time, dtScale, pointer }) => {
     const { cx, cy, size } = sceneAnchor(width, height);
-    const scale = size * 0.42;
+    const scale = size * 0.34;
     const yaw = time * 0.2 + pointer.nx * 0.55;
-    const pitch = 0.3 + pointer.ny * 0.2;
-    const camera = 6;
+    const pitch = 0.28 + pointer.ny * 0.18;
+    const camera = 6.2;
 
     // Sao xa xăm
     stepParticles(stars, dtScale * 0.3, time);
@@ -503,11 +508,11 @@ export function createHhaveScene(): SubjectScene {
       drawGlow(ctx, HH_PLATINUM, p.x, p.y, 14 * p.k, depthAlpha(p.depth, 1.1));
     }
 
-    // Mục tiêu affine {O; e₁, e₂, e₃} phản ứng theo con trỏ (cơ sở không nhất thiết trực chuẩn)
-    const origin: Vec3 = { x: -2.1, y: floorY, z: 1.6 };
-    const e1: Vec3 = { x: 1, y: 0, z: 0.35 * pointer.ny };
-    const e2: Vec3 = { x: 0.3 * pointer.nx, y: 1.05, z: 0 };
-    const e3: Vec3 = { x: 0.25 * pointer.nx, y: 0, z: -1 };
+    // Mục tiêu affine {O; e₁, e₂, e₃} phản ứng theo con trỏ (gọn trong sân khấu bên phải)
+    const origin: Vec3 = { x: -1.65, y: floorY, z: 1.35 };
+    const e1: Vec3 = { x: 0.9, y: 0, z: 0.32 * pointer.ny };
+    const e2: Vec3 = { x: 0.26 * pointer.nx, y: 0.95, z: 0 };
+    const e3: Vec3 = { x: 0.22 * pointer.nx, y: 0, z: -0.9 };
     const o = toScreen(origin);
     const add = (a: Vec3, b: Vec3): Vec3 => ({ x: a.x + b.x, y: a.y + b.y, z: a.z + b.z });
     drawArrow(ctx, o, toScreen(add(origin, e1)), hexToRgba(HH_SKY, 0.95), 'e₁');
@@ -543,52 +548,68 @@ export function createGthmbScene(): SubjectScene {
   return ({ ctx, width, height, time, dtScale, pointer }) => {
     const wide = width >= 960;
     const bandTop = height * 0.2;
-    const bandAmp = height * 0.085;
+    const bandAmp = height * 0.065;
     const step = Math.max(4, Math.round(width / 260));
+    const rightFocusX = wide ? width * 0.5 : width * 0.06;
 
-    // Dải cực quang mềm (vùng giữa hai đồ thị sin)
-    const aurora = ctx.createLinearGradient(0, bandTop - bandAmp * 2, 0, bandTop + bandAmp * 3);
-    aurora.addColorStop(0, hexToRgba(GT_EMERALD, 0));
-    aurora.addColorStop(0.5, hexToRgba(GT_EMERALD, 0.1));
-    aurora.addColorStop(1, hexToRgba(GT_SUN, 0));
+    // Dải cực quang mềm uốn mượt từ vùng phải về phía trái
+    const aurora = ctx.createLinearGradient(
+      0,
+      bandTop - bandAmp * 1.8,
+      width,
+      bandTop + bandAmp * 2.2,
+    );
+    aurora.addColorStop(0, hexToRgba(GT_EMERALD, 0.01));
+    aurora.addColorStop(0.45, hexToRgba(GT_EMERALD, 0.05));
+    aurora.addColorStop(0.75, hexToRgba(GT_EMERALD, 0.14));
+    aurora.addColorStop(1, hexToRgba(GT_SUN, 0.06));
     ctx.fillStyle = aurora;
     ctx.beginPath();
     for (let x = 0; x <= width; x += step) {
-      const y = bandTop + Math.sin(x * 0.006 + time * 0.4) * bandAmp * 1.4;
+      const y = bandTop + Math.sin(x * 0.006 + time * 0.4) * bandAmp * 1.35;
       if (x === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
     for (let x = width; x >= 0; x -= step) {
-      const y = bandTop + bandAmp * 2.4 + Math.sin(x * 0.005 - time * 0.3 + 1.2) * bandAmp;
+      const y = bandTop + bandAmp * 2.2 + Math.sin(x * 0.005 - time * 0.3 + 1.2) * bandAmp;
       ctx.lineTo(x, y);
     }
     ctx.closePath();
     ctx.fill();
 
-    // Họ tổng riêng Fourier S₁…S₆ hội tụ dần về sóng vuông
-    const baseline = bandTop + bandAmp * 1.6;
+    // Họ tổng riêng Fourier S₁…S₆ nổi bật ở nửa phải, uốn mượt về phía trái
+    const baseline = bandTop + bandAmp * 1.5;
     const phase = time * 0.35 + pointer.nx * 0.4;
     for (let terms = 1; terms <= 6; terms++) {
       const t = terms / 6;
-      ctx.strokeStyle = hexToRgba(terms === 6 ? GT_SUN : GT_EMERALD, 0.14 + t * 0.5);
-      ctx.lineWidth = terms === 6 ? 1.8 : 1.1;
+      const baseColor = terms === 6 ? GT_SUN : GT_EMERALD;
+      const stroke = ctx.createLinearGradient(0, baseline, width, baseline);
+      stroke.addColorStop(0, hexToRgba(baseColor, 0.06 + t * 0.1));
+      stroke.addColorStop(0.45, hexToRgba(baseColor, 0.14 + t * 0.22));
+      stroke.addColorStop(0.75, hexToRgba(baseColor, 0.24 + t * 0.56));
+      stroke.addColorStop(1, hexToRgba(baseColor, 0.2 + t * 0.45));
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = terms === 6 ? 1.9 : 1.1;
       ctx.beginPath();
       for (let x = 0; x <= width; x += step) {
         const u = (x / width) * TAU * 2.2 + phase;
-        const y = baseline - squareWavePartialSum(u, terms) * bandAmp * 0.9 + (6 - terms) * 3;
+        const ampScale =
+          0.55 + 0.45 * Math.min(Math.max((x - rightFocusX * 0.35) / (width * 0.45), 0), 1);
+        const y =
+          baseline - squareWavePartialSum(u, terms) * bandAmp * 0.9 * ampScale + (6 - terms) * 2.5;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
     }
 
-    // Tổng Riemann dưới đồ thị hàm khả vi f
-    const regionStart = wide ? width * 0.44 : width * 0.04;
-    const regionEnd = width * 0.98;
-    const floor = height - 2;
-    const barCount = wide ? 30 : 22;
+    // Tổng Riemann tập trung nổi bật trong sân khấu phải (phía trên thanh dock đáy Hero)
+    const regionStart = wide ? width * 0.51 : width * 0.06;
+    const regionEnd = width * 0.96;
+    const floor = wide ? height * 0.66 : height * 0.68;
+    const barCount = wide ? 28 : 20;
     const barWidth = (regionEnd - regionStart) / barCount;
-    const maxBar = height * 0.36;
+    const maxBar = height * 0.28;
     const f = (x: number) => {
       const u = (x - regionStart) / (regionEnd - regionStart);
       return (
@@ -665,17 +686,22 @@ const GDH_LOTUS = '#52B788';
 
 export function createGdhScene(): SubjectScene {
   const embers = createParticles(80, 31);
-  const nodes: { label: string; color: string; angle: number }[] = [
-    { label: 'Giáo dục', color: GDH_CINNABAR, angle: -Math.PI / 2 },
-    { label: 'Dạy học', color: GDH_GOLD, angle: -Math.PI / 2 + TAU / 3 },
-    { label: 'Phát triển nhân cách', color: GDH_LOTUS, angle: -Math.PI / 2 + (2 * TAU) / 3 },
+  const nodes: { label: string; subLabel: string; color: string; angle: number }[] = [
+    { label: 'Giáo dục', subLabel: 'Tri thức', color: GDH_CINNABAR, angle: -Math.PI / 2 },
+    { label: 'Dạy học', subLabel: 'Chủ nhiệm', color: GDH_GOLD, angle: -Math.PI / 2 + TAU / 3 },
+    {
+      label: 'Phát triển nhân cách',
+      subLabel: 'Nhân cách',
+      color: GDH_LOTUS,
+      angle: -Math.PI / 2 + (2 * TAU) / 3,
+    },
   ];
 
   return ({ ctx, width, height, time, dtScale, pointer }) => {
     const { cx, cy, size } = sceneAnchor(width, height);
-    const spread = size * 0.2;
-    const circleRadius = size * 0.27;
-    const ringMax = size * 0.55;
+    const spread = size * 0.19;
+    const circleRadius = size * 0.26;
+    const ringMax = size * 0.5;
 
     const centers = nodes.map((node, index) => {
       const breathe = 1 + 0.04 * Math.sin(time * 0.8 + index * 2.1);
@@ -713,22 +739,26 @@ export function createGdhScene(): SubjectScene {
     }
     ctx.restore();
 
-    // Ba vòng tròn thống nhất (đường viền) và nhãn
-    ctx.font = '600 12px ui-sans-serif, system-ui, sans-serif';
+    // Ba vòng tròn thống nhất (đường viền) và nhãn trụ cột (Giáo dục, Dạy học, Phát triển nhân cách + Tri thức, Chủ nhiệm, Nhân cách)
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     for (const c of centers) {
-      ctx.strokeStyle = hexToRgba(c.color, 0.55);
-      ctx.lineWidth = 1.3;
+      ctx.strokeStyle = hexToRgba(c.color, 0.72);
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(c.x, c.y, circleRadius, 0, TAU);
       ctx.stroke();
-      const lx = cx + (c.x - cx) * 2.55;
-      const ly = cy + (c.y - cy) * 2.55;
-      ctx.fillStyle = hexToRgba(c.color, 0.85);
-      ctx.fillText(c.label, lx, ly);
+
+      const lx = cx + (c.x - cx) * 2.5;
+      const ly = cy + (c.y - cy) * 2.5;
+      ctx.font = '600 12px ui-sans-serif, system-ui, sans-serif';
+      ctx.fillStyle = hexToRgba(c.color, 0.96);
+      ctx.fillText(c.label, lx, ly - 7);
+      ctx.font = '500 10.5px ui-monospace, SFMono-Regular, Menlo, monospace';
+      ctx.fillStyle = hexToRgba('#FDECE6', 0.78);
+      ctx.fillText(c.subLabel, lx, ly + 8);
     }
-    drawGlow(ctx, GDH_GOLD, cx, cy, spread * 1.3, 0.5 + 0.15 * Math.sin(time * 1.6));
+    drawGlow(ctx, GDH_GOLD, cx, cy, spread * 1.3, 0.55 + 0.15 * Math.sin(time * 1.6));
 
     // Đường cung kết nối mềm từ con trỏ tới ba tâm
     if (pointer.presence > 0.02) {

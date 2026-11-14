@@ -57,7 +57,16 @@ describe('Không gian Tri thức 120fps trên trang Chi tiết Môn học', () =
         'data-universe',
         universe,
       );
-      expect(within(hero).getByRole('list', { name: widgetTitle })).toBeInTheDocument();
+
+      // Vùng 1: Progress Pill gọn nằm bên cột thông tin; Vùng 2: Sân khấu đồ họa bên phải trống hoàn toàn; Vùng 3: Dock ngang ở đáy
+      expect(within(hero).getByTestId('subject-progress-pill')).toBeInTheDocument();
+      const visualStage = within(hero).getByTestId('subject-visual-stage');
+      expect(visualStage).toBeInTheDocument();
+      expect(within(visualStage).getByText('Rê chuột để tương tác mô hình')).toBeInTheDocument();
+      expect(visualStage.querySelectorAll('a, button')).toHaveLength(0);
+
+      const dock = within(hero).getByTestId('subject-pathway-dock');
+      expect(within(dock).getByRole('list', { name: widgetTitle })).toBeInTheDocument();
       expect(within(hero).queryByText(/tín chỉ/i)).not.toBeInTheDocument();
     },
   );
