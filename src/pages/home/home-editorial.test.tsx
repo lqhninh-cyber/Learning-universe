@@ -426,6 +426,26 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       // Nút ViewModeToggle
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
 
+      // Quick search chips, Orbital Map, interactive Atlas controls & footer transition
+      expect(screen.getByTestId('quick-search-chips')).toBeInTheDocument();
+      expect(screen.getByTestId('orbital-subject-node-cau-truc-dai-so')).toBeInTheDocument();
+      expect(screen.getByTestId('orbital-subject-node-hinh-hoc-affine')).toBeInTheDocument();
+      expect(screen.getByTestId('orbital-subject-node-giai-tich-ham-mot-bien')).toBeInTheDocument();
+      expect(screen.getByTestId('orbital-subject-node-giao-duc-hoc')).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Định lý Lagrange' }));
+      expect(screen.getByTestId('spotlight-search-popover')).toBeInTheDocument();
+
+      expect(screen.getByTestId('subject-progress-badge-cau-truc-dai-so')).toBeInTheDocument();
+      const roadmapToggle = screen.getByTestId('roadmap-toggle-cau-truc-dai-so');
+      fireEvent.click(roadmapToggle);
+      expect(screen.getByTestId('roadmap-drawer-cau-truc-dai-so')).toBeInTheDocument();
+
+      expect(screen.getByTestId('up-next-queue')).toBeInTheDocument();
+      expect(screen.getByTestId('progress-matrix-4-subjects')).toBeInTheDocument();
+      expect(screen.getByTestId('spatial-lab-3d-canvas')).toBeInTheDocument();
+      expect(screen.getByTestId('learning-space-footer-transition')).toBeInTheDocument();
+
       // Bấm vào thẻ Ngân hàng Thuật ngữ KaTeX mở Drawer
       const katexTrigger = screen.getByRole('link', {
         name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i,

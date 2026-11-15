@@ -1,21 +1,51 @@
-import { ArrowRight, BookOpen, Compass, GraduationCap, Layers, Search, X } from 'lucide-react';
+import type { ManifestChapter, ManifestSubject } from '@schemas/index';
+import {
+  ArrowRight,
+  BookOpen,
+  Compass,
+  FolderKanban,
+  GraduationCap,
+  Layers,
+  Search,
+  Sparkles,
+  X,
+} from 'lucide-react';
 import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { TopographicWaterlinesBackdrop } from '@/components/home/HomeScrollTransitions';
-import { LearningSpaceHeroCanvas } from '@/components/home/LearningSpaceHeroCanvas';
+import {
+  LearningSpaceHeroCanvas,
+  type OrbitalSubjectProgress,
+} from '@/components/home/LearningSpaceHeroCanvas';
 import { LearningSpaceHub } from '@/components/home/LearningSpaceHub';
 import { getSubjects, getSubjectStats } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
+import { InlineMathText, KatexMath, searchGlossary } from '@/features/math-glossary';
 import { searchContent } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
+import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { Badge, Kbd } from '@/shared/ui';
+
+const QUICK_SEARCH_CHIPS: readonly string[] = [
+  'Định lý Lagrange',
+  'Nhóm thương',
+  'Siêu mặt bậc hai',
+  'Khai triển Taylor',
+  'Tình huống sư phạm',
+];
+
+interface ChapterSearchHit {
+  readonly subject: ManifestSubject;
+  readonly chapter: ManifestChapter;
+  readonly href: string;
+}
 
 /**
  * Trang Không Gian Học Tập (/learning-space):
  * Hệ màu "Bạch Ngọc Khoáng Thạch & Trắng Sứ Dịu" (Balanced Mineral & Soft Porcelain):
  * - Nền trang: #F2F4F3 | Bề mặt: #FAFBF9 | Mực chữ: #182624
- * - Hero Banner Sương Ngọc Khoáng Thạch Dịu (#EBF0EE -> #E2EAE7 -> #E8ECE8) cùng Thiên cầu Đa diện 120fps
- * - Không gian Học phần (Spatial Subject Atlas 2x2 với 4 khung Bảng màu Khoáng thạch Tự nhiên)
+ * - Hero Spotlight Search phân nhóm 4 loại + Quick Chips & Bản đồ Quỹ đạo 4 Học Phần Tương Tác 120fps
+ * - Atlas 4 Thẻ Học Phần Tương Tác 3D Tilt + Quỹ Đạo Học Tập Cá Nhân + Chuyển sắc mượt nối Footer
  */
 export function LearningSpacePage() {
   const subjects = getSubjects();
@@ -71,16 +101,88 @@ export function LearningSpacePage() {
     totalLessonCount > 0 ? Math.round((completedCount / totalLessonCount) * 100) : 0;
   const displayOrbitPercent = completedCount > 0 ? Math.max(computedPercent, 1) : 8;
 
-  const instantSearchResults = useMemo(() => searchContent(hubQuery), [hubQuery]);
+  const orbitalSubjectProgress = useMemo<Readonly<Record<string, OrbitalSubjectProgress>>>(() => {
+    const map: Record<string, OrbitalSubjectProgress> = {};
+    for (const sub of subjects) {
+      const stats = getSubjectStats(sub);
+      let completed = 0;
+      for (const ch of sub.chapters) {
+        for (const ls of ch.lessons) {
+          if (completedLessons[ls.id]) completed += 1;
+        }
+      }
+      const percent = stats.lessonCount > 0 ? Math.round((completed / stats.lessonCount) * 100) : 0;
+      map[sub.slug] = { completed, total: stats.lessonCount, percent };
+    }
+    return map;
+  }, [completedLessons, subjects]);
+
   const hasSearchQuery = hubQuery.trim().length > 0;
+  const instantSearchResults = useMemo(() => searchContent(hubQuery, 12), [hubQuery]);
+
+  const subjectHits = useMemo(
+    () => instantSearchResults.filter((item) => item.kind === 'subject').slice(0, 4),
+    [instantSearchResults],
+  );
+
+  const chapterHits = useMemo<readonly ChapterSearchHit[]>(() => {
+    if (!hasSearchQuery) return [];
+    const hits: ChapterSearchHit[] = [];
+    for (const sub of subjects) {
+      for (const ch of sub.chapters) {
+        const hay = `Chương ${ch.number} ${ch.title} ${ch.description ?? ''} ${sub.title}`;
+        if (matchesVietnameseQuery(hay, hubQuery)) {
+          hits.push({
+            subject: sub,
+            chapter: ch,
+            href: `${ROUTES.subjectOverview(sub.slug)}?chapter=${ch.slug}`,
+          });
+        }
+      }
+    }
+    return hits.slice(0, 5);
+  }, [hasSearchQuery, hubQuery, subjects]);
+
+  const lessonHits = useMemo(
+    () => instantSearchResults.filter((item) => item.kind === 'lesson').slice(0, 6),
+    [instantSearchResults],
+  );
+
+  const glossaryHits = useMemo(() => {
+    if (!hasSearchQuery) return [];
+    return searchGlossary({ query: hubQuery }).slice(0, 5);
+  }, [hasSearchQuery, hubQuery]);
+
+  const totalSearchHitCount =
+    subjectHits.length + chapterHits.length + lessonHits.length + glossaryHits.length;
 
   const handleSearchSubmit = (event: FormEvent) => {
     event.preventDefault();
-    const firstResult = instantSearchResults[0];
-    if (firstResult) {
+    const firstHref =
+      subjectHits[0]?.href ??
+      chapterHits[0]?.href ??
+      lessonHits[0]?.href ??
+      (glossaryHits[0] ? (glossaryHits[0].lessonUrl ?? glossaryHits[0].relatedLesson) : undefined);
+
+    if (firstHref) {
       setIsSearchDropdownOpen(false);
-      void navigate(firstResult.href);
+      void navigate(firstHref);
     }
+  };
+
+  const handleQuickChipSelect = (chipQuery: string) => {
+    setHubQuery(chipQuery);
+    setIsSearchDropdownOpen(true);
+    searchInputRef.current?.focus();
+  };
+
+  const handleSelectOrbitalSubject = (slug: string) => {
+    const cardEl = document.getElementById(`atlas-subject-${slug}`);
+    if (cardEl && typeof cardEl.scrollIntoView === 'function') {
+      cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    void navigate(ROUTES.subjectOverview(slug));
   };
 
   return (
@@ -90,16 +192,16 @@ export function LearningSpacePage() {
         ================================================================= */}
       <section
         aria-label="Không gian Học tập & Nghiên cứu"
-        className="relative pt-24 pb-4 sm:pt-28"
+        className="relative z-30 pt-24 pb-4 sm:pt-28"
       >
         <div className="lu-container-wide">
           <div
             style={{
               background: 'linear-gradient(135deg, #EBF0EE 0%, #E2EAE7 55%, #E8ECE8 100%)',
             }}
-            className="relative min-h-[380px] overflow-hidden rounded-3xl border border-[#CBD6D2] p-8 text-[#162623] shadow-[0_10px_32px_rgba(24,38,36,0.05)] lg:p-11"
+            className="relative min-h-[420px] rounded-3xl border border-[#CBD6D2] p-8 text-[#162623] shadow-[0_10px_32px_rgba(24,38,36,0.05)] lg:p-11"
           >
-            {/* Họa tiết lưới hình học khoáng thạch cực mờ */}
+            {/* Họa tiết lưới hình học khoáng thạch cực mờ (clip trong khung bo góc để Popover tìm kiếm không bị cắt) */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl select-none"
@@ -141,7 +243,7 @@ export function LearningSpacePage() {
             </div>
 
             <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-              <div className="space-y-6 lg:col-span-7">
+              <div className="space-y-5 lg:col-span-7">
                 {/* Breadcrumb */}
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-[#4A5D58]">
                   <Link to={ROUTES.home} className="transition-colors hover:text-[#182624]">
@@ -186,8 +288,8 @@ export function LearningSpacePage() {
                   </span>
                 </div>
 
-                {/* Ô tìm kiếm Trắng Sứ Dịu */}
-                <div ref={searchContainerRef} className="relative max-w-2xl">
+                {/* Ô Tìm kiếm Spotlight Tức thời + Từ khóa gợi ý nhanh */}
+                <div ref={searchContainerRef} className="relative max-w-2xl space-y-2.5">
                   <form
                     onSubmit={handleSearchSubmit}
                     role="search"
@@ -204,7 +306,7 @@ export function LearningSpacePage() {
                           setIsSearchDropdownOpen(true);
                         }}
                         onFocus={() => setIsSearchDropdownOpen(true)}
-                        placeholder="Tìm nhanh môn học, chương, định lý hoặc bài giảng (vd: Cayley, Chasles)..."
+                        placeholder="Tìm nhanh môn học, chương, định lý hoặc bài giảng..."
                         aria-label="Tìm kiếm môn học hoặc bài học"
                         aria-expanded={isSearchDropdownOpen && hasSearchQuery}
                         aria-controls={searchListboxId}
@@ -232,86 +334,213 @@ export function LearningSpacePage() {
                     </div>
                   </form>
 
-                  {/* Popover kết quả tìm kiếm tức thời */}
+                  {/* Hàng Từ khóa gợi ý nhanh (Quick Search Chips) */}
+                  <div
+                    data-testid="quick-search-chips"
+                    className="flex flex-wrap items-center gap-1.5"
+                  >
+                    <span className="mr-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#4A5D58] uppercase">
+                      Gợi ý nhanh:
+                    </span>
+                    {QUICK_SEARCH_CHIPS.map((chip) => {
+                      const isActive = hubQuery.trim().toLowerCase() === chip.toLowerCase();
+                      return (
+                        <button
+                          key={chip}
+                          type="button"
+                          onClick={() => handleQuickChipSelect(chip)}
+                          className={
+                            isActive
+                              ? 'cursor-pointer rounded-full border border-[#1E332E] bg-[#1E332E] px-2.5 py-1 text-[11px] font-semibold text-[#FAFBF9] shadow-2xs transition-all'
+                              : 'cursor-pointer rounded-full border border-[#CBD6D2] bg-[#FAFBF9]/85 px-2.5 py-1 text-[11px] font-medium text-[#3F524E] transition-all hover:border-[#1E332E] hover:bg-white hover:text-[#182624] active:scale-[0.98]'
+                          }
+                        >
+                          {chip}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Popover Kết Quả Spotlight Tức Thời (Phân nhóm: Môn học · Chương · Bài giảng · Định lý/Thuật ngữ KaTeX) */}
                   {isSearchDropdownOpen && hasSearchQuery && (
                     <div
                       id={searchListboxId}
+                      data-testid="spotlight-search-popover"
                       role="region"
                       aria-label="Kết quả tìm kiếm"
-                      className="absolute top-full right-0 left-0 z-40 mt-2 max-h-96 overflow-y-auto rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9] p-2 shadow-xl"
+                      className="absolute top-14 right-0 left-0 z-50 max-h-[420px] space-y-3 overflow-y-auto rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9] p-3 shadow-2xl"
                     >
-                      {instantSearchResults.length > 0 ? (
-                        <ul className="divide-y divide-[#E7ECEA]">
-                          {instantSearchResults.map((result) => {
-                            if (result.kind === 'subject') {
-                              return (
-                                <li key={`subject-${result.subject.id}`}>
-                                  <Link
-                                    to={result.href}
-                                    onClick={() => setIsSearchDropdownOpen(false)}
-                                    className="flex items-center justify-between gap-3 rounded-xl px-3.5 py-3 transition-colors hover:bg-[#EBF0EE]"
-                                  >
-                                    <div className="flex items-start gap-3">
-                                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E7ECEA] text-[#1E332E]">
-                                        <Layers className="h-4 w-4" aria-hidden="true" />
-                                      </div>
-                                      <div>
-                                        <div className="flex items-center gap-2">
-                                          <span className="text-sm font-semibold text-[#182624]">
-                                            {result.subject.title}
-                                          </span>
-                                          <Badge variant="neutral">Môn học</Badge>
+                      {totalSearchHitCount > 0 ? (
+                        <>
+                          {subjectHits.length > 0 && (
+                            <div className="space-y-1">
+                              <p className="px-2 font-mono text-[10px] font-bold tracking-wider text-[#4A5D58] uppercase">
+                                Môn học ({subjectHits.length})
+                              </p>
+                              <ul className="space-y-1">
+                                {subjectHits.map((result) => (
+                                  <li key={`subject-${result.subject.id}`}>
+                                    <Link
+                                      to={result.href}
+                                      onClick={() => setIsSearchDropdownOpen(false)}
+                                      className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-[#EBF0EE]"
+                                    >
+                                      <div className="flex min-w-0 items-start gap-3">
+                                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E7ECEA] text-[#1E332E]">
+                                          <Layers className="h-4 w-4" aria-hidden="true" />
                                         </div>
-                                        <p className="mt-0.5 line-clamp-1 text-xs text-[#4A5D58]">
-                                          {result.subject.description}
-                                        </p>
+                                        <div className="min-w-0">
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-sm font-semibold text-[#182624]">
+                                              {result.subject.title}
+                                            </span>
+                                            <Badge variant="neutral">Môn học</Badge>
+                                          </div>
+                                          <p className="mt-0.5 line-clamp-1 text-xs text-[#4A5D58]">
+                                            {result.subject.description}
+                                          </p>
+                                        </div>
                                       </div>
-                                    </div>
-                                    <ArrowRight
-                                      className="h-4 w-4 shrink-0 text-[#4A5D58]"
-                                      aria-hidden="true"
-                                    />
-                                  </Link>
-                                </li>
-                              );
-                            }
+                                      <ArrowRight
+                                        className="h-4 w-4 shrink-0 text-[#4A5D58]"
+                                        aria-hidden="true"
+                                      />
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
 
-                            return (
-                              <li key={`lesson-${result.lesson.id}`}>
-                                <Link
-                                  to={result.href}
-                                  onClick={() => setIsSearchDropdownOpen(false)}
-                                  className="flex items-center justify-between gap-3 rounded-xl px-3.5 py-3 transition-colors hover:bg-[#EBF0EE]"
-                                >
-                                  <div className="flex items-start gap-3">
-                                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E7ECEA] text-[#1E332E]">
-                                      <BookOpen className="h-4 w-4" aria-hidden="true" />
-                                    </div>
-                                    <div>
-                                      <div className="flex flex-wrap items-center gap-2">
-                                        <span className="text-sm font-semibold text-[#182624]">
-                                          Bài {result.chapter.number}.{result.lesson.number}:{' '}
-                                          {result.lesson.title}
-                                        </span>
-                                        <Badge variant="neutral">{result.subject.title}</Badge>
+                          {chapterHits.length > 0 && (
+                            <div className="space-y-1 border-t border-[#E7ECEA] pt-2">
+                              <p className="px-2 font-mono text-[10px] font-bold tracking-wider text-[#4A5D58] uppercase">
+                                Chương ({chapterHits.length})
+                              </p>
+                              <ul className="space-y-1">
+                                {chapterHits.map((ch) => (
+                                  <li key={`chapter-${ch.chapter.id}`}>
+                                    <Link
+                                      to={ch.href}
+                                      onClick={() => setIsSearchDropdownOpen(false)}
+                                      className="flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-[#EBF0EE]"
+                                    >
+                                      <div className="flex min-w-0 items-center gap-3">
+                                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#ECF1F4] text-[#2D5266]">
+                                          <FolderKanban
+                                            className="h-3.5 w-3.5"
+                                            aria-hidden="true"
+                                          />
+                                        </div>
+                                        <div className="min-w-0">
+                                          <span className="block truncate text-xs font-semibold text-[#182624]">
+                                            Chương {ch.chapter.number}: {ch.chapter.title}
+                                          </span>
+                                          <span className="font-mono text-[10.5px] text-[#4A5D58]">
+                                            {ch.subject.title} · {ch.chapter.lessons.length} bài
+                                          </span>
+                                        </div>
                                       </div>
-                                      <p className="mt-0.5 line-clamp-1 text-xs text-[#4A5D58]">
-                                        {result.lesson.description}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <ArrowRight
-                                    className="h-4 w-4 shrink-0 text-[#4A5D58]"
-                                    aria-hidden="true"
-                                  />
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
+                                      <ArrowRight
+                                        className="h-3.5 w-3.5 shrink-0 text-[#4A5D58]"
+                                        aria-hidden="true"
+                                      />
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {lessonHits.length > 0 && (
+                            <div className="space-y-1 border-t border-[#E7ECEA] pt-2">
+                              <p className="px-2 font-mono text-[10px] font-bold tracking-wider text-[#4A5D58] uppercase">
+                                Bài giảng ({lessonHits.length})
+                              </p>
+                              <ul className="space-y-1">
+                                {lessonHits.map((result) => (
+                                  <li key={`lesson-${result.lesson.id}`}>
+                                    <Link
+                                      to={result.href}
+                                      onClick={() => setIsSearchDropdownOpen(false)}
+                                      className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-[#EBF0EE]"
+                                    >
+                                      <div className="flex min-w-0 items-start gap-3">
+                                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E7ECEA] text-[#1E332E]">
+                                          <BookOpen className="h-4 w-4" aria-hidden="true" />
+                                        </div>
+                                        <div className="min-w-0">
+                                          <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-sm font-semibold text-[#182624]">
+                                              Bài {result.chapter.number}.{result.lesson.number}:{' '}
+                                              <InlineMathText text={result.lesson.title} />
+                                            </span>
+                                            <Badge variant="neutral">{result.subject.title}</Badge>
+                                          </div>
+                                          <p className="mt-0.5 line-clamp-1 text-xs text-[#4A5D58]">
+                                            <InlineMathText text={result.lesson.description} />
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <ArrowRight
+                                        className="h-4 w-4 shrink-0 text-[#4A5D58]"
+                                        aria-hidden="true"
+                                      />
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {glossaryHits.length > 0 && (
+                            <div className="space-y-1 border-t border-[#E7ECEA] pt-2">
+                              <p className="px-2 font-mono text-[10px] font-bold tracking-wider text-[#4A5D58] uppercase">
+                                Định lý &amp; Thuật ngữ KaTeX ({glossaryHits.length})
+                              </p>
+                              <ul className="space-y-1">
+                                {glossaryHits.map((entry) => {
+                                  const targetHref = entry.lessonUrl ?? entry.relatedLesson;
+                                  return (
+                                    <li key={`glossary-${entry.id}`}>
+                                      <Link
+                                        to={targetHref}
+                                        onClick={() => setIsSearchDropdownOpen(false)}
+                                        className="flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-[#EBF0EE]"
+                                      >
+                                        <div className="flex min-w-0 items-start gap-3">
+                                          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F3F0E8] text-[#6B5335]">
+                                            <Sparkles className="h-4 w-4" aria-hidden="true" />
+                                          </div>
+                                          <div className="min-w-0 space-y-1">
+                                            <div className="flex flex-wrap items-center gap-2">
+                                              <span className="text-xs font-semibold text-[#182624]">
+                                                {entry.nameVi}
+                                              </span>
+                                              <span className="rounded-md border border-[#D8D0C0] bg-[#FAFBF9] px-1.5 py-0.5 text-xs text-[#182624]">
+                                                <KatexMath math={entry.formula || entry.symbol} />
+                                              </span>
+                                            </div>
+                                            <p className="line-clamp-1 text-[11px] text-[#4A5D58]">
+                                              <InlineMathText text={entry.brief} />
+                                            </p>
+                                          </div>
+                                        </div>
+                                        <ArrowRight
+                                          className="h-3.5 w-3.5 shrink-0 text-[#4A5D58]"
+                                          aria-hidden="true"
+                                        />
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          )}
+                        </>
                       ) : (
                         <div className="px-4 py-6 text-center text-xs text-[#4A5D58]">
-                          Không tìm thấy môn học hoặc bài học nào khớp với{' '}
+                          Không tìm thấy môn học, chương, bài học hoặc thuật ngữ nào khớp với{' '}
                           <strong className="font-semibold text-[#182624]">
                             &ldquo;{hubQuery}&rdquo;
                           </strong>
@@ -323,10 +552,13 @@ export function LearningSpacePage() {
                 </div>
               </div>
 
-              {/* Cột Phải Banner (5 cột): Thiên Cầu Đa Diện 120fps vẽ trực tiếp không đóng hộp tối */}
+              {/* Cột Phải Banner (5 cột): Bản đồ Quỹ đạo 4 Học Phần Tương Tác 120fps (tăng kích thước 1.35×) */}
               <div className="hidden flex-col items-center justify-center lg:col-span-5 lg:flex">
-                <div className="relative w-full max-w-[350px]">
-                  <LearningSpaceHeroCanvas />
+                <div className="relative w-full max-w-[475px]">
+                  <LearningSpaceHeroCanvas
+                    subjectProgress={orbitalSubjectProgress}
+                    onSelectSubject={handleSelectOrbitalSubject}
+                  />
                 </div>
               </div>
             </div>
@@ -339,6 +571,16 @@ export function LearningSpacePage() {
         <TopographicWaterlinesBackdrop />
         <LearningSpaceHub hubQuery={hubQuery} onResetQuery={() => setHubQuery('')} />
       </div>
+
+      {/* Dải chuyển sắc mềm cuối trang nối liền vào nền tối Footer (#0D211D) */}
+      <div
+        data-testid="learning-space-footer-transition"
+        aria-hidden="true"
+        style={{
+          background: 'linear-gradient(180deg, #F2F4F3 0%, #DAE4E0 36%, #5E7B73 74%, #0D211D 100%)',
+        }}
+        className="pointer-events-none relative h-24 w-full"
+      />
     </div>
   );
 }

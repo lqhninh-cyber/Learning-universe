@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
+import { cn } from '@/shared/lib/cn';
 
 interface Vec3 {
   readonly x: number;
@@ -15,53 +16,125 @@ interface ProjectedPoint {
   readonly scale: number;
 }
 
-interface SatelliteSpec {
-  readonly color: string;
-  readonly glow: string;
+interface OrbitalRingSpec {
   readonly radius: number;
-  readonly tiltX: number;
-  readonly tiltZ: number;
-  readonly speed: number;
+  readonly baseTiltX: number;
+  readonly baseRotZ: number;
+  readonly speedY: number;
+  readonly speedZ: number;
+  readonly color: string;
+  readonly withTicks: boolean;
+}
+
+interface SatelliteSpec {
+  readonly index: string;
+  readonly slug: string;
+  readonly shortLabel: string;
+  readonly title: string;
+  readonly color: string;
+  readonly softBg: string;
+  readonly borderColor: string;
+  readonly glow: string;
+  readonly ringIndex: 0 | 1 | 2;
+  readonly orbitSpeed: number;
   readonly phase: number;
 }
 
-// 4 vệ tinh Khoáng Thạch Tự Nhiên (Muted Mineral Palette) của 4 môn học
-const SATELLITES: readonly SatelliteSpec[] = [
+export interface OrbitalSubjectProgress {
+  readonly completed: number;
+  readonly total: number;
+  readonly percent: number;
+}
+
+export interface LearningSpaceHeroCanvasProps {
+  readonly subjectProgress?: Readonly<Record<string, OrbitalSubjectProgress>>;
+  readonly onSelectSubject?: (slug: string) => void;
+}
+
+// 3 Vòng Quỹ đạo 3D cân chỉnh cho Thiên cầu Khuê Văn
+const ORBITAL_RINGS: readonly [OrbitalRingSpec, OrbitalRingSpec, OrbitalRingSpec] = [
   {
+    radius: 0.45,
+    baseTiltX: 0.94,
+    baseRotZ: 0.24,
+    speedY: 0.16,
+    speedZ: 0,
+    color: '#243E38',
+    withTicks: true,
+  },
+  {
+    radius: 0.39,
+    baseTiltX: -0.76,
+    baseRotZ: 0.82,
+    speedY: -0.2,
+    speedZ: 0,
+    color: '#8C7248',
+    withTicks: false,
+  },
+  {
+    radius: 0.33,
+    baseTiltX: 0.42,
+    baseRotZ: -0.62,
+    speedY: 0.26,
+    speedZ: 0.08,
+    color: '#3B6275',
+    withTicks: false,
+  },
+];
+
+// 4 Nút Tinh Cầu đại diện 4 học phần gắn trực tiếp trên 3 vòng quỹ đạo 3D
+const ORBITAL_SUBJECTS: readonly SatelliteSpec[] = [
+  {
+    index: '01',
+    slug: 'cau-truc-dai-so',
+    shortLabel: '01. CTĐS',
+    title: 'Cấu trúc đại số',
     color: '#6B5335',
-    glow: 'rgba(156, 122, 76, 0.20)',
-    radius: 0.37,
-    tiltX: 0.48,
-    tiltZ: 0.32,
-    speed: 0.56,
-    phase: 0.2,
+    softBg: '#F3F0E8',
+    borderColor: '#D8D0C0',
+    glow: 'rgba(156, 122, 76, 0.28)',
+    ringIndex: 1,
+    orbitSpeed: 0.22,
+    phase: 0.35,
   },
   {
+    index: '02',
+    slug: 'hinh-hoc-affine',
+    shortLabel: '02. HHAVE',
+    title: 'Hình học Affine & Euclide',
     color: '#2D5266',
-    glow: 'rgba(73, 118, 143, 0.20)',
-    radius: 0.41,
-    tiltX: -0.64,
-    tiltZ: -0.45,
-    speed: 0.42,
-    phase: 2.1,
+    softBg: '#ECF1F4',
+    borderColor: '#C9D7DF',
+    glow: 'rgba(73, 118, 143, 0.28)',
+    ringIndex: 2,
+    orbitSpeed: 0.27,
+    phase: 2.35,
   },
   {
+    index: '03',
+    slug: 'giai-tich-ham-mot-bien',
+    shortLabel: '03. GTHMB',
+    title: 'Giải tích hàm một biến',
     color: '#245746',
-    glow: 'rgba(59, 122, 101, 0.18)',
-    radius: 0.34,
-    tiltX: 0.92,
-    tiltZ: -0.22,
-    speed: 0.68,
-    phase: 4.0,
+    softBg: '#EBF2EE',
+    borderColor: '#C6DBD0',
+    glow: 'rgba(59, 122, 101, 0.26)',
+    ringIndex: 0,
+    orbitSpeed: 0.19,
+    phase: 3.9,
   },
   {
+    index: '04',
+    slug: 'giao-duc-hoc',
+    shortLabel: '04. GDH',
+    title: 'Giáo dục học',
     color: '#7A463B',
-    glow: 'rgba(158, 99, 86, 0.18)',
-    radius: 0.43,
-    tiltX: -0.25,
-    tiltZ: 0.78,
-    speed: 0.35,
-    phase: 5.3,
+    softBg: '#F3ECE9',
+    borderColor: '#D8C8C1',
+    glow: 'rgba(158, 99, 86, 0.26)',
+    ringIndex: 0,
+    orbitSpeed: 0.19,
+    phase: 0.78,
   },
 ];
 
@@ -120,11 +193,11 @@ const ICO_EDGES: readonly (readonly [number, number])[] = [
 ];
 
 const FLOATING_SYMBOLS = [
-  { char: 'Σ', x: 0.14, y: 0.2, phase: 0.4, depth: 1.1, color: 'rgba(140, 114, 72, 0.54)' },
-  { char: '∫', x: 0.86, y: 0.24, phase: 1.7, depth: 0.9, color: 'rgba(36, 62, 56, 0.48)' },
-  { char: '∀', x: 0.16, y: 0.8, phase: 2.9, depth: 1.0, color: 'rgba(59, 98, 117, 0.50)' },
-  { char: 'π', x: 0.84, y: 0.78, phase: 4.1, depth: 1.15, color: 'rgba(140, 114, 72, 0.50)' },
-  { char: '≅', x: 0.52, y: 0.11, phase: 5.2, depth: 0.8, color: 'rgba(36, 62, 56, 0.44)' },
+  { char: 'Σ', x: 0.11, y: 0.16, phase: 0.4, depth: 1.1, color: 'rgba(140, 114, 72, 0.52)' },
+  { char: '∫', x: 0.89, y: 0.18, phase: 1.7, depth: 0.9, color: 'rgba(36, 62, 56, 0.48)' },
+  { char: '∀', x: 0.12, y: 0.84, phase: 2.9, depth: 1.0, color: 'rgba(59, 98, 117, 0.50)' },
+  { char: 'π', x: 0.88, y: 0.82, phase: 4.1, depth: 1.15, color: 'rgba(140, 114, 72, 0.48)' },
+  { char: '≅', x: 0.52, y: 0.08, phase: 5.2, depth: 0.8, color: 'rgba(36, 62, 56, 0.44)' },
 ] as const;
 
 function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
@@ -169,6 +242,7 @@ function drawArmillaryRing(
   rotZ: number,
   color: string,
   withTicks: boolean,
+  isHighlighted: boolean,
 ): void {
   const segments = 96;
   const points: ProjectedPoint[] = [];
@@ -187,20 +261,20 @@ function drawArmillaryRing(
     const p1 = points[i];
     const p2 = points[i + 1];
     if (!p1 || !p2) continue;
-    const depthAlpha = Math.max(0.18, Math.min(0.76, 0.42 + (p1.z + p2.z) * 0.36));
+    const baseAlpha = Math.max(0.2, Math.min(0.78, 0.44 + (p1.z + p2.z) * 0.36));
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.strokeStyle = color;
-    ctx.globalAlpha = depthAlpha;
-    ctx.lineWidth = p1.z > 0 ? 1.4 : 0.95;
+    ctx.globalAlpha = isHighlighted ? Math.min(1, baseAlpha + 0.34) : baseAlpha;
+    ctx.lineWidth = isHighlighted ? (p1.z > 0 ? 2.6 : 1.75) : p1.z > 0 ? 1.45 : 0.95;
     ctx.stroke();
   }
 
   if (withTicks) {
     for (let deg = 0; deg < 360; deg += 30) {
       const rad = (deg * Math.PI) / 180;
-      const tickLen = deg % 90 === 0 ? 0.04 : 0.022;
+      const tickLen = deg % 90 === 0 ? 0.042 : 0.024;
       const inner = rotateVec3(
         { x: Math.cos(rad) * (radius - tickLen), y: Math.sin(rad) * (radius - tickLen), z: 0 },
         rotX,
@@ -218,9 +292,9 @@ function drawArmillaryRing(
       ctx.beginPath();
       ctx.moveTo(pi.x, pi.y);
       ctx.lineTo(po.x, po.y);
-      ctx.strokeStyle = '#A6824B';
-      ctx.globalAlpha = outer.z > 0 ? 0.68 : 0.25;
-      ctx.lineWidth = deg % 90 === 0 ? 1.25 : 0.8;
+      ctx.strokeStyle = isHighlighted ? color : '#8C7248';
+      ctx.globalAlpha = outer.z > 0 ? 0.72 : 0.28;
+      ctx.lineWidth = deg % 90 === 0 ? 1.3 : 0.85;
       ctx.stroke();
     }
   }
@@ -228,13 +302,24 @@ function drawArmillaryRing(
 }
 
 /**
- * Sân khấu Canvas 2D 120fps trực tiếp trên nền sáng Xanh Men Ngọc & Giấy Dó Ngà:
- * Thiên cầu Đa diện & Vòng quỹ đạo Khuê Văn nét mảnh (#23423A, #A6824B, #3E6B7E).
+ * Bản đồ Quỹ đạo 4 Học Phần Tương tác 120fps trên nền sáng Khoáng Thạch & Trắng Sứ Dịu:
+ * Tích hợp 3 vòng quỹ đạo 3D, lõi Nhị thập diện và 4 Nút Tinh Cầu có thể di chuột / nhấp chuyển hướng.
  */
-export function LearningSpaceHeroCanvas() {
+export function LearningSpaceHeroCanvas({
+  subjectProgress,
+  onSelectSubject,
+}: LearningSpaceHeroCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const orbButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const hoveredSlugRef = useRef<string | null>(null);
+
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    hoveredSlugRef.current = hoveredSlug;
+  }, [hoveredSlug]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -244,14 +329,14 @@ export function LearningSpaceHeroCanvas() {
     const ctx = getLowLatency2DContext(canvas);
     if (!ctx) return;
 
-    let width = Math.max(260, container.clientWidth || 340);
-    let height = Math.max(260, container.clientHeight || 320);
+    let width = Math.max(320, container.clientWidth || 440);
+    let height = Math.max(320, container.clientHeight || 400);
     let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-      width = Math.max(260, container.clientWidth || 340);
-      height = Math.max(260, container.clientHeight || 320);
+      width = Math.max(320, container.clientWidth || 440);
+      height = Math.max(320, container.clientHeight || 400);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -308,62 +393,54 @@ export function LearningSpaceHeroCanvas() {
       const cx = width * 0.5 + smoothX * 8;
       const cy = height * 0.5 + smoothY * 8;
       const minDim = Math.min(width, height);
-      const fov = minDim * 1.15;
+      const fov = minDim * 1.24;
 
-      // Hào quang trung tâm cực dịu hòa tan vào nền xanh men ngọc
-      const coreGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, minDim * 0.44);
+      const activeHoverSlug = hoveredSlugRef.current;
+      const activeSatellite = ORBITAL_SUBJECTS.find((sat) => sat.slug === activeHoverSlug);
+      const highlightedRingIndex = activeSatellite?.ringIndex ?? -1;
+
+      // Hào quang trung tâm dịu nhẹ
+      const coreGlow = ctx.createRadialGradient(cx, cy, 6, cx, cy, minDim * 0.46);
       coreGlow.addColorStop(0, 'rgba(166, 130, 75, 0.14)');
-      coreGlow.addColorStop(0.5, 'rgba(62, 107, 126, 0.07)');
-      coreGlow.addColorStop(1, 'rgba(237, 243, 240, 0)');
+      coreGlow.addColorStop(0.5, 'rgba(59, 98, 117, 0.07)');
+      coreGlow.addColorStop(1, 'rgba(235, 240, 238, 0)');
       ctx.fillStyle = coreGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // 3 Vòng Quỹ đạo Khuê Văn: #243E38, #8C7248, #3B6275
-      drawArmillaryRing(
-        ctx,
-        cx,
-        cy,
-        0.46,
-        fov,
-        0.95 + smoothY * 0.14,
-        time * 0.18 + smoothX * 0.16,
-        0.25,
-        '#243E38',
-        true,
-      );
-      drawArmillaryRing(
-        ctx,
-        cx,
-        cy,
-        0.39,
-        fov,
-        -0.78 + smoothY * 0.12,
-        -time * 0.24 + smoothX * 0.14,
-        0.82,
-        '#8C7248',
-        false,
-      );
-      drawArmillaryRing(
-        ctx,
-        cx,
-        cy,
-        0.33,
-        fov,
-        0.38 - smoothY * 0.1,
-        time * 0.31,
-        -0.65 + time * 0.1,
-        '#3B6275',
-        false,
-      );
+      // Tính góc quay hiện tại của cả 3 vòng quỹ đạo (để các nút tinh cầu bám khít trên vòng)
+      const ringAngles = ORBITAL_RINGS.map((ring, idx) => ({
+        rotX: ring.baseTiltX + smoothY * (0.14 - idx * 0.02),
+        rotY: time * ring.speedY + smoothX * (0.16 - idx * 0.02),
+        rotZ: ring.baseRotZ + time * ring.speedZ,
+      }));
 
-      // Lõi Đa diện 3D Nhị thập diện nét mảnh sắc sảo
+      // Vẽ 3 vòng quỹ đạo 3D
+      ORBITAL_RINGS.forEach((ring, idx) => {
+        const ang = ringAngles[idx]!;
+        const isRingHighlighted = highlightedRingIndex === idx;
+        drawArmillaryRing(
+          ctx,
+          cx,
+          cy,
+          ring.radius,
+          fov,
+          ang.rotX,
+          ang.rotY,
+          ang.rotZ,
+          isRingHighlighted && activeSatellite ? activeSatellite.color : ring.color,
+          ring.withTicks,
+          isRingHighlighted,
+        );
+      });
+
+      // Lõi Đa diện 3D Nhị thập diện ở tâm
       const polyScale = 0.21;
       const rotatedVerts = RAW_ICO_VERTICES.map((v) =>
         rotateVec3(
           { x: v.x * polyScale, y: v.y * polyScale, z: v.z * polyScale },
-          time * 0.36 + smoothY * 0.35,
-          time * 0.52 + smoothX * 0.4,
-          time * 0.18,
+          time * 0.34 + smoothY * 0.35,
+          time * 0.48 + smoothX * 0.4,
+          time * 0.16,
         ),
       );
       const projectedVerts = rotatedVerts.map((v) => projectPoint(v, cx, cy, fov));
@@ -377,7 +454,7 @@ export function LearningSpaceHeroCanvas() {
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
         ctx.strokeStyle = avgZ > 0 ? '#243E38' : '#8C7248';
-        ctx.globalAlpha = avgZ > 0 ? 0.8 : 0.34;
+        ctx.globalAlpha = avgZ > 0 ? 0.78 : 0.32;
         ctx.lineWidth = avgZ > 0 ? 1.25 : 0.8;
         ctx.stroke();
       }
@@ -391,9 +468,8 @@ export function LearningSpaceHeroCanvas() {
       }
       ctx.globalAlpha = 1;
 
-      // Điểm tâm Đồng Trầm thanh lịch
       ctx.beginPath();
-      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 4.2, 0, Math.PI * 2);
       ctx.fillStyle = '#8C7248';
       ctx.fill();
       ctx.beginPath();
@@ -401,35 +477,47 @@ export function LearningSpaceHeroCanvas() {
       ctx.fillStyle = '#FAFBF9';
       ctx.fill();
 
-      // 4 Vệ tinh Pastel Khoáng Vật của 4 học phần
-      for (const sat of SATELLITES) {
-        const angle = sat.phase + time * sat.speed;
-        const pos = rotateVec3(
-          { x: Math.cos(angle) * sat.radius, y: Math.sin(angle) * sat.radius, z: 0 },
-          sat.tiltX + smoothY * 0.12,
-          time * 0.14 + smoothX * 0.14,
-          sat.tiltZ,
-        );
-        const proj = projectPoint(pos, cx, cy, fov);
-        const r = pos.z > 0 ? 4.4 : 3.2;
+      // Vẽ quầng sáng và cập nhật tọa độ 3D của 4 nút Tinh Cầu theo 120fps (không gây re-render React)
+      for (const sat of ORBITAL_SUBJECTS) {
+        const ringSpec = ORBITAL_RINGS[sat.ringIndex];
+        const ang = ringAngles[sat.ringIndex]!;
+        // Tạm chậm quỹ đạo khi người dùng đang rê vào tinh cầu để dễ bấm
+        const speedFactor = activeHoverSlug ? 0.35 : 1;
+        const theta = sat.phase + time * sat.orbitSpeed * speedFactor;
 
-        const satGlow = ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, r * 3);
+        const localPos: Vec3 = {
+          x: Math.cos(theta) * ringSpec.radius,
+          y: Math.sin(theta) * ringSpec.radius,
+          z: 0,
+        };
+        const worldPos = rotateVec3(localPos, ang.rotX, ang.rotY, ang.rotZ);
+        const proj = projectPoint(worldPos, cx, cy, fov);
+
+        const isHovered = activeHoverSlug === sat.slug;
+        const glowRadius = isHovered ? 24 : 15;
+
+        const satGlow = ctx.createRadialGradient(proj.x, proj.y, 1, proj.x, proj.y, glowRadius);
         satGlow.addColorStop(0, sat.glow);
-        satGlow.addColorStop(1, 'rgba(237, 243, 240, 0)');
+        satGlow.addColorStop(1, 'rgba(235, 240, 238, 0)');
         ctx.fillStyle = satGlow;
         ctx.beginPath();
-        ctx.arc(proj.x, proj.y, r * 3, 0, Math.PI * 2);
+        ctx.arc(proj.x, proj.y, glowRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.beginPath();
-        ctx.arc(proj.x, proj.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = sat.color;
-        ctx.globalAlpha = pos.z > 0 ? 0.92 : 0.5;
-        ctx.fill();
-        ctx.globalAlpha = 1;
+        const btn = orbButtonRefs.current[sat.slug];
+        if (btn) {
+          const depthScale = isHovered ? 1.08 : worldPos.z > 0 ? 1 : 0.92;
+          const clampedX = Math.max(54, Math.min(width - 54, proj.x));
+          const clampedY = Math.max(24, Math.min(height - 24, proj.y));
+          btn.style.top = '0px';
+          btn.style.left = '0px';
+          btn.style.transform = `translate3d(${clampedX.toFixed(1)}px, ${clampedY.toFixed(1)}px, 0) translate(-50%, -50%) scale(${depthScale})`;
+          btn.style.zIndex = isHovered ? '30' : worldPos.z > 0 ? '20' : '15';
+          btn.style.opacity = isHovered ? '1' : worldPos.z > 0 ? '0.98' : '0.84';
+        }
       }
 
-      // Ký hiệu toán học lơ lửng tinh tế trên nền sáng
+      // Ký hiệu toán học lơ lửng tinh tế
       ctx.font = '600 13px "JetBrains Mono", "Fira Code", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -476,42 +564,118 @@ export function LearningSpaceHeroCanvas() {
     };
   }, [prefersReducedMotion]);
 
+  const activeSubject = ORBITAL_SUBJECTS.find((item) => item.slug === hoveredSlug) ?? null;
+  const activeStats = activeSubject ? subjectProgress?.[activeSubject.slug] : undefined;
+
   return (
     <div
       ref={containerRef}
       data-testid="learning-space-celestial-rings"
-      className="relative flex h-[280px] w-full items-center justify-center sm:h-[320px]"
-      aria-hidden="true"
+      className="relative flex h-[350px] w-full items-center justify-center select-none sm:h-[420px]"
     >
-      {/* Khung SVG dự phòng thanh mảnh hòa quyện nền sáng khi môi trường không chạy Canvas 2D */}
+      {/* Khung SVG dự phòng thanh mảnh khi môi trường không chạy Canvas 2D */}
       <svg
-        viewBox="0 0 320 320"
-        className="pointer-events-none absolute inset-0 m-auto h-[260px] w-[260px] opacity-30"
+        viewBox="0 0 360 360"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 m-auto h-[320px] w-[320px] opacity-30"
         fill="none"
       >
-        <circle cx="160" cy="160" r="124" stroke="#8C7248" strokeWidth="1" strokeDasharray="4 6" />
+        <circle cx="180" cy="180" r="144" stroke="#8C7248" strokeWidth="1" strokeDasharray="4 6" />
         <ellipse
-          cx="160"
-          cy="160"
-          rx="116"
-          ry="52"
-          transform="rotate(-24 160 160)"
+          cx="180"
+          cy="180"
+          rx="136"
+          ry="62"
+          transform="rotate(-24 180 180)"
           stroke="#243E38"
           strokeWidth="1"
         />
         <ellipse
-          cx="160"
-          cy="160"
-          rx="112"
-          ry="48"
-          transform="rotate(34 160 160)"
+          cx="180"
+          cy="180"
+          rx="130"
+          ry="56"
+          transform="rotate(34 180 180)"
           stroke="#3B6275"
           strokeWidth="1"
         />
-        <circle cx="160" cy="160" r="4" fill="#8C7248" />
+        <circle cx="180" cy="180" r="4.5" fill="#8C7248" />
       </svg>
 
-      <canvas ref={canvasRef} className="relative z-10 block h-full w-full" />
+      <canvas ref={canvasRef} aria-hidden="true" className="relative z-10 block h-full w-full" />
+
+      {/* 4 Nút Tinh Cầu Tương Tác cho 4 Học Phần */}
+      {ORBITAL_SUBJECTS.map((sat, idx) => {
+        const isHovered = hoveredSlug === sat.slug;
+        const fallbackPositions = [
+          'top-[18%] left-[72%]',
+          'top-[34%] left-[18%]',
+          'top-[76%] left-[24%]',
+          'top-[74%] left-[78%]',
+        ] as const;
+
+        return (
+          <button
+            key={sat.slug}
+            ref={(el) => {
+              orbButtonRefs.current[sat.slug] = el;
+            }}
+            type="button"
+            data-testid={`orbital-subject-node-${sat.slug}`}
+            aria-label={`${sat.shortLabel}: ${sat.title}`}
+            onMouseEnter={() => setHoveredSlug(sat.slug)}
+            onMouseLeave={() => setHoveredSlug((prev) => (prev === sat.slug ? null : prev))}
+            onFocus={() => setHoveredSlug(sat.slug)}
+            onBlur={() => setHoveredSlug((prev) => (prev === sat.slug ? null : prev))}
+            onClick={() => onSelectSubject?.(sat.slug)}
+            style={{
+              borderColor: isHovered ? sat.color : sat.borderColor,
+              backgroundColor: isHovered ? sat.color : sat.softBg,
+              color: isHovered ? '#FAFBF9' : sat.color,
+              boxShadow: isHovered ? `0 8px 22px ${sat.glow}` : '0 4px 12px rgba(24, 38, 36, 0.08)',
+            }}
+            className={cn(
+              'absolute top-0 left-0 inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px] font-bold tracking-tight whitespace-nowrap transition-[background-color,color,border-color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
+              // Vị trí dự phòng ban đầu trước khi canvas compute frame đầu
+              fallbackPositions[idx],
+            )}
+          >
+            <span
+              className="h-2 w-2 shrink-0 rounded-full transition-colors"
+              style={{ backgroundColor: isHovered ? '#FAFBF9' : sat.color }}
+              aria-hidden="true"
+            />
+            <span>{sat.shortLabel}</span>
+          </button>
+        );
+      })}
+
+      {/* Tooltip tóm tắt tiến độ môn học khi di chuột hoặc focus vào Tinh cầu */}
+      {activeSubject && (
+        <div
+          role="status"
+          data-testid="orbital-subject-tooltip"
+          className="pointer-events-none absolute right-2 bottom-2 left-2 z-40 mx-auto max-w-[300px] rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9]/95 px-3.5 py-2.5 shadow-lg backdrop-blur-md transition-all duration-200"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <span
+              className="font-mono text-[10px] font-bold"
+              style={{ color: activeSubject.color }}
+            >
+              {activeSubject.shortLabel}
+            </span>
+            {activeStats && (
+              <span className="font-mono text-[10.5px] font-semibold text-[#182624]">
+                Đã học {activeStats.completed}/{activeStats.total} bài ({activeStats.percent}%)
+              </span>
+            )}
+          </div>
+          <p className="mt-0.5 text-xs font-semibold text-[#182624]">{activeSubject.title}</p>
+          <p className="mt-0.5 text-[10.5px] text-[#4A5D58]">
+            Nhấp để di chuyển nhanh tới học phần
+          </p>
+        </div>
+      )}
     </div>
   );
 }

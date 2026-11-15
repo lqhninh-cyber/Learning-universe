@@ -47,11 +47,11 @@ export const CURATED_KATEX_ITEMS: readonly QuickKaTeXItem[] = [
     id: 'katex-lagrange-index',
     category: 'algebra',
     categoryLabel: 'Đại số',
-    nameVi: 'Định lý Lagrange & Chỉ số nhóm con',
+    nameVi: 'Định lý Lagrange & Cấp phần tử',
     nameEn: "Lagrange's Theorem",
-    formula: '|G| = [G : H] \\cdot |H|',
-    latexCode: '|G| = [G : H] \\cdot |H|',
-    brief: 'Cấp của nhóm hữu hạn chia hết cho cấp của mọi nhóm con của nó.',
+    formula: '|G| = [G : H] \\cdot |H|, \\quad \\operatorname{ord}(a) \\mid |G|',
+    latexCode: '|G| = [G : H] \\cdot |H|, \\operatorname{ord}(a) \\mid |G|',
+    brief: 'Cấp của nhóm hữu hạn chia hết cho cấp của mọi nhóm con và cấp của mọi phần tử.',
   },
   {
     id: 'katex-quotient-ring',
@@ -170,6 +170,8 @@ export const CURATED_KATEX_ITEMS: readonly QuickKaTeXItem[] = [
 export interface QuickKaTeXDrawerProps {
   readonly isOpen: boolean;
   readonly onClose: () => void;
+  readonly initialQuery?: string;
+  readonly initialCategory?: KaTeXCategory;
 }
 
 const CATEGORY_TABS: readonly { id: KaTeXCategory; label: string }[] = [
@@ -180,11 +182,25 @@ const CATEGORY_TABS: readonly { id: KaTeXCategory; label: string }[] = [
   { id: 'logic', label: 'Logic' },
 ] as const;
 
-export function QuickKaTeXDrawer({ isOpen, onClose }: QuickKaTeXDrawerProps) {
+export function QuickKaTeXDrawer({
+  isOpen,
+  onClose,
+  initialQuery = '',
+  initialCategory = 'all',
+}: QuickKaTeXDrawerProps) {
   const searchInputId = useId();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [activeCategory, setActiveCategory] = useState<KaTeXCategory>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<KaTeXCategory>(initialCategory);
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [wasOpen, setWasOpen] = useState(isOpen);
+
+  if (isOpen && !wasOpen) {
+    setWasOpen(true);
+    setActiveCategory(initialCategory);
+    setSearchQuery(initialQuery);
+  } else if (!isOpen && wasOpen) {
+    setWasOpen(false);
+  }
 
   // Tích hợp thêm dữ liệu từ kho từ điển chung để phong phú hóa tra cứu
   const combinedItems = useMemo<readonly QuickKaTeXItem[]>(() => {

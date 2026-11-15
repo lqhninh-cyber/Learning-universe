@@ -1,4 +1,4 @@
-import { ChevronDown, Eye, EyeOff, Menu, Play, Search, X } from 'lucide-react';
+import { Eye, EyeOff, Menu, Play, Search, X } from 'lucide-react';
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import {
@@ -15,7 +15,6 @@ import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { EightPetalBrandMark } from './header/EightPetalBrandMark';
 import { HeaderAccountMenu } from './header/HeaderAccountMenu';
-import { HeaderMegaMenu } from './header/HeaderMegaMenu';
 import { HeaderMobileDrawer } from './header/HeaderMobileDrawer';
 
 export interface HeaderProps {
@@ -115,7 +114,6 @@ export const Header: FC<HeaderProps> = ({
   } = useReadingSettings();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolledInLesson, setIsScrolledInLesson] = useState(false);
@@ -174,7 +172,6 @@ export const Header: FC<HeaderProps> = ({
   const [prevPath, setPrevPath] = useState(pathname);
   if (pathname !== prevPath) {
     setPrevPath(pathname);
-    setIsMegaMenuOpen(false);
     setIsAccountMenuOpen(false);
     setIsMobileMenuOpen(false);
     setIsSearchOpen(false);
@@ -237,7 +234,6 @@ export const Header: FC<HeaderProps> = ({
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (mastheadRef.current && !mastheadRef.current.contains(event.target as Node)) {
-        setIsMegaMenuOpen(false);
         setIsAccountMenuOpen(false);
       }
     }
@@ -249,7 +245,6 @@ export const Header: FC<HeaderProps> = ({
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setIsMegaMenuOpen(false);
         setIsAccountMenuOpen(false);
         setIsLessonMenuPinned(false);
         setIsLessonMenuHovered(false);
@@ -303,17 +298,12 @@ export const Header: FC<HeaderProps> = ({
   const isHomeActive = pathname === ROUTES.home;
   const isGlossaryActive = pathname === ROUTES.glossary || pathname === '/glossary';
   const isLearningSpaceActive =
-    isMegaMenuOpen ||
     pathname === ROUTES.learningSpace ||
     pathname.startsWith('/mon-hoc/') ||
     (pathname.startsWith('/courses/') && pathname !== ROUTES.courses);
 
   const showReadingContextBar =
-    isLessonPage &&
-    isScrolledInLesson &&
-    !isLessonMenuPinned &&
-    !isLessonMenuHovered &&
-    !isMegaMenuOpen;
+    isLessonPage && isScrolledInLesson && !isLessonMenuPinned && !isLessonMenuHovered;
 
   const chapterContextBadge = currentLessonLocation
     ? `Ch.${currentLessonLocation.chapter.number}`
@@ -347,7 +337,6 @@ export const Header: FC<HeaderProps> = ({
     <>
       <header
         ref={mastheadRef}
-        onMouseLeave={() => setIsMegaMenuOpen(false)}
         className={cn(
           'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-5 backdrop-blur-xl transition-colors duration-200 print:hidden',
           isDark
@@ -398,48 +387,15 @@ export const Header: FC<HeaderProps> = ({
               <span>Trang chủ</span>
             </Link>
 
-            <div
-              onMouseEnter={() => setIsMegaMenuOpen(true)}
-              className="inline-flex shrink-0 items-center"
+            <Link
+              to={ROUTES.learningSpace}
+              tabIndex={showReadingContextBar ? -1 : undefined}
+              onClick={() => setIsAccountMenuOpen(false)}
+              className={navItemClass(isLearningSpaceActive)}
             >
-              <Link
-                to={ROUTES.learningSpace}
-                tabIndex={showReadingContextBar ? -1 : undefined}
-                onClick={() => {
-                  setIsMegaMenuOpen(false);
-                  setIsAccountMenuOpen(false);
-                }}
-                className={cn(navItemClass(isLearningSpaceActive), 'pr-1.5')}
-              >
-                {isLearningSpaceActive && activeSealDot}
-                <span>Không gian học tập</span>
-              </Link>
-              <button
-                type="button"
-                tabIndex={showReadingContextBar ? -1 : undefined}
-                onClick={() => {
-                  setIsMegaMenuOpen((prev) => !prev);
-                  setIsAccountMenuOpen(false);
-                }}
-                aria-label="Mở menu nhanh Không gian học tập"
-                aria-expanded={isMegaMenuOpen}
-                aria-haspopup="true"
-                className={cn(
-                  'inline-flex h-8 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
-                  isDark
-                    ? 'text-[#9EC5B8] hover:bg-white/[0.08]'
-                    : 'text-[#4A5D58] hover:bg-[#E7ECEA] hover:text-[#182624]',
-                )}
-              >
-                <ChevronDown
-                  className={cn(
-                    'h-3.5 w-3.5 transition-transform duration-200',
-                    isMegaMenuOpen && 'rotate-180',
-                  )}
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
+              {isLearningSpaceActive && activeSealDot}
+              <span>Không gian học tập</span>
+            </Link>
 
             <Link
               to="/glossary"
@@ -456,7 +412,6 @@ export const Header: FC<HeaderProps> = ({
                 onClick={() => {
                   setIsLessonMenuPinned(false);
                   setIsLessonMenuHovered(false);
-                  setIsMegaMenuOpen(false);
                 }}
                 aria-label="Quay lại thanh ngữ cảnh bài đọc"
                 className="ml-1 inline-flex cursor-pointer items-center gap-1 rounded-full border border-[#1B3D2F]/18 px-2.5 py-1 text-xs font-semibold text-[#1B3D2F] transition-colors hover:bg-[#1B3D2F]/8 dark:border-[#4E9B58]/35 dark:text-[#86EFAC]"
@@ -613,7 +568,6 @@ export const Header: FC<HeaderProps> = ({
             type="button"
             onClick={() => {
               setIsSearchOpen(true);
-              setIsMegaMenuOpen(false);
               setIsAccountMenuOpen(false);
             }}
             aria-label="Mở tìm kiếm nhanh"
@@ -643,7 +597,6 @@ export const Header: FC<HeaderProps> = ({
             isOpen={isAccountMenuOpen}
             onToggle={() => {
               setIsAccountMenuOpen((prev) => !prev);
-              setIsMegaMenuOpen(false);
             }}
             onClose={() => setIsAccountMenuOpen(false)}
             isDark={isDark}
@@ -694,15 +647,6 @@ export const Header: FC<HeaderProps> = ({
               className="h-full w-full rounded-full will-change-transform"
             />
           </div>
-        )}
-
-        {/* DROPDOWN "KHÔNG GIAN HỌC TẬP" */}
-        {isMegaMenuOpen && (
-          <HeaderMegaMenu
-            isDark={isDark}
-            isSepia={isSepia}
-            onClose={() => setIsMegaMenuOpen(false)}
-          />
         )}
       </header>
 

@@ -1,11 +1,24 @@
-import { ArrowRight, ArrowUpRight, BookMarked, Compass, Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import type { ManifestChapter, ManifestLesson, ManifestSubject } from '@schemas/index';
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BookMarked,
+  CheckCircle2,
+  ChevronDown,
+  Compass,
+  Play,
+  Sparkles,
+} from 'lucide-react';
+import { type MouseEvent, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjects, getSubjectStats } from '@/content-runtime';
 import { type AcademicBranch, getCourseCinematicAsset } from '@/data/cinematicAssets';
 import { useLearningStore } from '@/features/learning';
+import { KatexMath } from '@/features/math-glossary';
 import { searchContent } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
+import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -29,7 +42,18 @@ interface AtlasCardPalette {
   readonly badgeClass: string;
   readonly titleHover: string;
   readonly ctaClass: string;
+  readonly secondaryBtnClass: string;
+  readonly chapterPillClass: string;
+  readonly progressBarColor: string;
+  readonly progressBadgeClass: string;
 }
+
+const SUBJECT_SHORT_CODES: Record<string, string> = {
+  'cau-truc-dai-so': 'CTĐS',
+  'hinh-hoc-affine': 'HHAVE',
+  'giai-tich-ham-mot-bien': 'GTHMB',
+  'giao-duc-hoc': 'GDH',
+};
 
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
   cardBorder: 'border-[#D8E0DD] hover:border-[#6B5335]/55',
@@ -37,6 +61,12 @@ const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
   badgeClass: 'border-[#D8D0C0] bg-[#F3F0E8] text-[#6B5335]',
   titleHover: 'hover:text-[#6B5335]',
   ctaClass: 'bg-[#6B5335] text-[#FAFBF9] hover:bg-[#57432B]',
+  secondaryBtnClass:
+    'border-[#D8D0C0] bg-[#F3F0E8]/70 text-[#6B5335] hover:border-[#6B5335] hover:bg-[#F3F0E8]',
+  chapterPillClass:
+    'border-[#D8D0C0] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#6B5335] hover:bg-[#F3F0E8] hover:text-[#6B5335]',
+  progressBarColor: '#6B5335',
+  progressBadgeClass: 'border-[#D8D0C0] bg-[#F3F0E8]/80 text-[#6B5335]',
 };
 
 const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
@@ -47,6 +77,12 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     badgeClass: 'border-[#C9D7DF] bg-[#ECF1F4] text-[#2D5266]',
     titleHover: 'hover:text-[#2D5266]',
     ctaClass: 'bg-[#2D5266] text-[#FAFBF9] hover:bg-[#224050]',
+    secondaryBtnClass:
+      'border-[#C9D7DF] bg-[#ECF1F4]/70 text-[#2D5266] hover:border-[#2D5266] hover:bg-[#ECF1F4]',
+    chapterPillClass:
+      'border-[#C9D7DF] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#2D5266] hover:bg-[#ECF1F4] hover:text-[#2D5266]',
+    progressBarColor: '#2D5266',
+    progressBadgeClass: 'border-[#C9D7DF] bg-[#ECF1F4]/80 text-[#2D5266]',
   },
   'giai-tich-ham-mot-bien': {
     cardBorder: 'border-[#D8E0DD] hover:border-[#245746]/55',
@@ -54,6 +90,12 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     badgeClass: 'border-[#C6DBD0] bg-[#EBF2EE] text-[#245746]',
     titleHover: 'hover:text-[#245746]',
     ctaClass: 'bg-[#245746] text-[#FAFBF9] hover:bg-[#1B4436]',
+    secondaryBtnClass:
+      'border-[#C6DBD0] bg-[#EBF2EE]/70 text-[#245746] hover:border-[#245746] hover:bg-[#EBF2EE]',
+    chapterPillClass:
+      'border-[#C6DBD0] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#245746] hover:bg-[#EBF2EE] hover:text-[#245746]',
+    progressBarColor: '#245746',
+    progressBadgeClass: 'border-[#C6DBD0] bg-[#EBF2EE]/80 text-[#245746]',
   },
   'giao-duc-hoc': {
     cardBorder: 'border-[#D8E0DD] hover:border-[#7A463B]/55',
@@ -61,6 +103,12 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     badgeClass: 'border-[#D8C8C1] bg-[#F3ECE9] text-[#7A463B]',
     titleHover: 'hover:text-[#7A463B]',
     ctaClass: 'bg-[#7A463B] text-[#FAFBF9] hover:bg-[#62372E]',
+    secondaryBtnClass:
+      'border-[#D8C8C1] bg-[#F3ECE9]/70 text-[#7A463B] hover:border-[#7A463B] hover:bg-[#F3ECE9]',
+    chapterPillClass:
+      'border-[#D8C8C1] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#7A463B] hover:bg-[#F3ECE9] hover:text-[#7A463B]',
+    progressBarColor: '#7A463B',
+    progressBadgeClass: 'border-[#D8C8C1] bg-[#F3ECE9]/80 text-[#7A463B]',
   },
 };
 
@@ -608,14 +656,288 @@ export interface LearningSpaceHubProps {
   readonly onResetQuery: () => void;
 }
 
+interface NextQueueItem {
+  readonly lesson: ManifestLesson;
+  readonly chapter: ManifestChapter;
+  readonly subjectSlug: string;
+}
+
+function SpatialLabMiniCanvas() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+    const ctx = getLowLatency2DContext(canvas);
+    if (!ctx) return;
+
+    let width = Math.max(220, container.clientWidth || 280);
+    let height = Math.max(72, container.clientHeight || 88);
+    let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      width = Math.max(220, container.clientWidth || 280);
+      height = Math.max(72, container.clientHeight || 88);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    };
+    resize();
+
+    let isHover = false;
+    let pointerOffsetX = 0;
+    let pointerOffsetY = 0;
+    let smoothX = 0;
+    let smoothY = 0;
+    let isVisible = true;
+    let rafId = 0;
+    let elapsed = 0;
+    let prevNow = performance.now();
+
+    const onMove = (event: PointerEvent) => {
+      const rect = container.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      pointerOffsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+      pointerOffsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    };
+    const onEnter = () => {
+      isHover = true;
+    };
+    const onLeave = () => {
+      isHover = false;
+      pointerOffsetX = 0;
+      pointerOffsetY = 0;
+    };
+
+    container.addEventListener('pointermove', onMove);
+    container.addEventListener('pointerenter', onEnter);
+    container.addEventListener('pointerleave', onLeave);
+
+    let ro: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => resize());
+      ro.observe(container);
+    }
+
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        (entries) => {
+          isVisible = entries[0]?.isIntersecting ?? true;
+        },
+        { threshold: 0.05 },
+      );
+      io.observe(container);
+    }
+
+    const cubeVerts = [
+      [-1, -0.7, -1],
+      [1, -0.7, -1],
+      [1, 0.7, -1],
+      [-1, 0.7, -1],
+      [-1, -0.7, 1],
+      [1, -0.7, 1],
+      [1, 0.7, 1],
+      [-1, 0.7, 1],
+    ] as const;
+    const cubeEdges = [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 0],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 4],
+      [0, 4],
+      [1, 5],
+      [2, 6],
+      [3, 7],
+      [0, 6],
+      [2, 4],
+    ] as const;
+
+    const project = (x: number, y: number, z: number, ay: number, ax: number) => {
+      const cy = Math.cos(ay);
+      const sy = Math.sin(ay);
+      const x1 = x * cy + z * sy;
+      const z1 = -x * sy + z * cy;
+      const cx = Math.cos(ax);
+      const sx = Math.sin(ax);
+      const y2 = y * cx - z1 * sx;
+      const z2 = y * sx + z1 * cx;
+      const scale = (height * 0.95) / (3.4 - z2);
+      return {
+        px: width * 0.54 + x1 * scale,
+        py: height * 0.5 + y2 * scale,
+        z: z2,
+      };
+    };
+
+    const draw = (t: number) => {
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      // Lưới phẳng tham chiếu dưới đáy
+      ctx.strokeStyle = 'rgba(45, 82, 102, 0.16)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(12, height - 12);
+      ctx.lineTo(width - 12, height - 12);
+      ctx.stroke();
+
+      const ay = t * 0.72 + smoothX * 0.9;
+      const ax = 0.42 + Math.sin(t * 0.45) * 0.12 + smoothY * 0.55;
+      const projected = cubeVerts.map(([vx, vy, vz]) => project(vx, vy, vz, ay, ax));
+
+      for (const [idx, edge] of cubeEdges.entries()) {
+        const a = projected[edge[0]];
+        const b = projected[edge[1]];
+        if (!a || !b) continue;
+        const isDiagonal = idx >= 12;
+        ctx.beginPath();
+        ctx.moveTo(a.px, a.py);
+        ctx.lineTo(b.px, b.py);
+        if (isDiagonal) {
+          ctx.setLineDash([3, 3]);
+          ctx.strokeStyle = '#9C7A4C';
+          ctx.globalAlpha = 0.72;
+          ctx.lineWidth = 1;
+        } else {
+          ctx.setLineDash([]);
+          const front = (a.z + b.z) * 0.5 > 0;
+          ctx.strokeStyle = front ? '#2D5266' : '#49768F';
+          ctx.globalAlpha = front ? 0.92 : 0.42;
+          ctx.lineWidth = front ? 1.5 : 1;
+        }
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+
+      const center = project(0, 0, 0, ay, ax);
+      ctx.beginPath();
+      ctx.arc(center.px, center.py, 3.6, 0, Math.PI * 2);
+      ctx.fillStyle = '#9C7A4C';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(center.px, center.py, 1.4, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBF9';
+      ctx.fill();
+
+      ctx.restore();
+    };
+
+    draw(0.4);
+    if (prefersReducedMotion) {
+      return () => {
+        container.removeEventListener('pointermove', onMove);
+        container.removeEventListener('pointerenter', onEnter);
+        container.removeEventListener('pointerleave', onLeave);
+        ro?.disconnect();
+        io?.disconnect();
+      };
+    }
+
+    const tick = (now: number) => {
+      const { dtSeconds } = computeFrameDelta(now, prevNow);
+      prevNow = now;
+      if (isVisible && !document.hidden) {
+        elapsed += dtSeconds * (isHover ? 1.8 : 1);
+        const lerp = Math.min(1, dtSeconds * 8);
+        smoothX += (pointerOffsetX - smoothX) * lerp;
+        smoothY += (pointerOffsetY - smoothY) * lerp;
+        draw(elapsed);
+      }
+      rafId = window.requestAnimationFrame(tick);
+    };
+    rafId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      container.removeEventListener('pointermove', onMove);
+      container.removeEventListener('pointerenter', onEnter);
+      container.removeEventListener('pointerleave', onLeave);
+      ro?.disconnect();
+      io?.disconnect();
+    };
+  }, [prefersReducedMotion]);
+
+  return (
+    <div
+      ref={containerRef}
+      data-testid="spatial-lab-3d-canvas"
+      className="relative h-22 w-full overflow-hidden rounded-xl border border-[#C9D7DF] bg-[#ECF1F4]/70"
+    >
+      <span className="pointer-events-none absolute top-2 left-2.5 z-10 font-mono text-[9.5px] font-semibold tracking-wider text-[#2D5266]">
+        3D AFFINE VIEWPORT
+      </span>
+      <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
+    </div>
+  );
+}
+
+function findSubjectResumeTarget(
+  subject: ManifestSubject,
+  completedLessons: Readonly<Record<string, string | boolean>>,
+  lastVisitedLessonId?: string,
+): { chapter: ManifestChapter; lesson: ManifestLesson } | undefined {
+  if (lastVisitedLessonId) {
+    for (const ch of subject.chapters) {
+      const found = ch.lessons.find((l) => l.id === lastVisitedLessonId);
+      if (found) return { chapter: ch, lesson: found };
+    }
+  }
+  for (const ch of subject.chapters) {
+    const firstPending = ch.lessons.find((l) => !completedLessons[l.id]);
+    if (firstPending) return { chapter: ch, lesson: firstPending };
+  }
+  const firstChapter = subject.chapters[0];
+  const firstLesson = firstChapter?.lessons[0];
+  return firstChapter && firstLesson ? { chapter: firstChapter, lesson: firstLesson } : undefined;
+}
+
 export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubProps) {
   const subjects = getSubjects();
   const completedLessons = useLearningStore((state) => state.completedLessons);
   const lastVisitedGlobal = useLearningStore((state) => state.lastVisitedGlobal);
+  const lastVisitedBySubject = useLearningStore((state) => state.lastVisitedBySubject);
+  const prefersReducedMotion = useReducedMotion();
 
   const [activeBranch, setActiveBranch] = useState<HubBranchFilter>('all');
   const [viewMode, setViewMode] = useState<HomepageViewMode>(() => getInitialHomepageViewMode());
   const [isKaTeXDrawerOpen, setIsKaTeXDrawerOpen] = useState(false);
+  const [katexDrawerQuery, setKatexDrawerQuery] = useState('');
+  const [hoveredCardSlug, setHoveredCardSlug] = useState<string | null>(null);
+  const [expandedRoadmaps, setExpandedRoadmaps] = useState<Record<string, boolean>>({});
+
+  const openKaTeXDrawer = (query = '') => {
+    setKatexDrawerQuery(query);
+    setIsKaTeXDrawerOpen(true);
+  };
+
+  const handleCardMouseMove = (event: MouseEvent<HTMLElement>) => {
+    if (prefersReducedMotion) return;
+    const el = event.currentTarget;
+    const rect = el.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const normX = (event.clientX - rect.left) / rect.width - 0.5;
+    const normY = (event.clientY - rect.top) / rect.height - 0.5;
+    const rotateY = (normX * 3.4).toFixed(2);
+    const rotateX = (-normY * 3.4).toFixed(2);
+    el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+  };
+
+  const handleCardMouseLeave = (event: MouseEvent<HTMLElement>, slug: string) => {
+    event.currentTarget.style.transform = '';
+    setHoveredCardSlug((prev) => (prev === slug ? null : prev));
+  };
 
   const handleViewModeChange = (nextMode: HomepageViewMode) => {
     setViewMode(nextMode);
@@ -654,6 +976,49 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
   const computedPercent =
     totalLessonCount > 0 ? Math.round((completedCount / totalLessonCount) * 100) : 0;
   const displayOrbitPercent = completedCount > 0 ? Math.max(computedPercent, 1) : 8;
+
+  const subjectProgressMatrix = subjects.map((sub) => {
+    const stats = getSubjectStats(sub);
+    let done = 0;
+    for (const ch of sub.chapters) {
+      for (const ls of ch.lessons) {
+        if (completedLessons[ls.id]) done += 1;
+      }
+    }
+    const percent = stats.lessonCount > 0 ? Math.round((done / stats.lessonCount) * 100) : 0;
+    const palette = ATLAS_CARD_PALETTES[sub.slug] ?? DEFAULT_ATLAS_PALETTE;
+    return {
+      subject: sub,
+      shortCode: SUBJECT_SHORT_CODES[sub.slug] ?? sub.shortTitle.toUpperCase(),
+      done,
+      total: stats.lessonCount,
+      percent,
+      palette,
+    };
+  });
+
+  const upNextQueue: readonly NextQueueItem[] = (() => {
+    if (!activeRecentLesson) return [];
+    const queue: NextQueueItem[] = [];
+    const flat: NextQueueItem[] = [];
+    for (const ch of activeRecentLesson.subject.chapters) {
+      for (const ls of ch.lessons) {
+        flat.push({
+          lesson: ls,
+          chapter: ch,
+          subjectSlug: activeRecentLesson.subject.slug,
+        });
+      }
+    }
+    const curIndex = flat.findIndex((entry) => entry.lesson.id === activeRecentLesson.lesson.id);
+    if (curIndex >= 0) {
+      for (let i = curIndex + 1; i < flat.length && queue.length < 3; i += 1) {
+        const item = flat[i];
+        if (item) queue.push(item);
+      }
+    }
+    return queue;
+  })();
 
   const filteredSubjects = subjects.filter((subject) => {
     const asset = getCourseCinematicAsset(subject.slug);
@@ -776,6 +1141,24 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                       filteredSubjects.length % 2 === 1 && idx === filteredSubjects.length - 1;
                     const galleryIndex = String(idx + 1).padStart(2, '0');
 
+                    let subjectCompletedCount = 0;
+                    for (const ch of subject.chapters) {
+                      for (const ls of ch.lessons) {
+                        if (completedLessons[ls.id]) subjectCompletedCount += 1;
+                      }
+                    }
+                    const subjectPercent =
+                      stats.lessonCount > 0
+                        ? Math.round((subjectCompletedCount / stats.lessonCount) * 100)
+                        : 0;
+                    const resumeTarget = findSubjectResumeTarget(
+                      subject,
+                      completedLessons,
+                      lastVisitedBySubject[subject.id]?.lessonId,
+                    );
+                    const highlightedChapters = subject.chapters.slice(0, 3);
+                    const isRoadmapOpen = Boolean(expandedRoadmaps[subject.slug]);
+
                     return (
                       <FadeIn
                         key={subject.id}
@@ -783,15 +1166,22 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         className={isLonelyTailCard ? 'md:col-span-2' : undefined}
                       >
                         <article
-                          style={{ viewTransitionName: `subject-card-${subject.slug}` }}
+                          id={`atlas-subject-${subject.slug}`}
+                          onMouseEnter={() => setHoveredCardSlug(subject.slug)}
+                          onMouseMove={handleCardMouseMove}
+                          onMouseLeave={(event) => handleCardMouseLeave(event, subject.slug)}
+                          style={{
+                            viewTransitionName: `subject-card-${subject.slug}`,
+                            transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                          }}
                           className={cn(
-                            'group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-[#FAFBF9] p-6 shadow-xs transition-all duration-500 sm:p-8',
+                            'group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl border bg-[#FAFBF9] p-6 shadow-xs transition-[border-color,box-shadow,transform] duration-200 will-change-transform sm:p-7',
                             palette.cardBorder,
                           )}
                         >
                           <SubjectWatermarkSignature slug={subject.slug} />
 
-                          <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex flex-wrap items-start justify-between gap-3">
                             <div className="flex items-center gap-2.5">
                               <span
                                 className={cn('font-mono text-xs font-bold', palette.indexText)}
@@ -808,16 +1198,43 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               </span>
                             </div>
 
-                            <span className="font-mono text-[11px] text-[#4A5D58]">
-                              {stats.chapterCount} chương · {stats.lessonCount} bài giảng
-                            </span>
+                            {/* Số chương/bài & Huy hiệu Tiến độ môn học */}
+                            <div className="flex flex-col items-end gap-1.5">
+                              <div className="flex flex-wrap items-center justify-end gap-2">
+                                <span className="font-mono text-[11px] text-[#4A5D58]">
+                                  {stats.chapterCount} chương · {stats.lessonCount} bài giảng
+                                </span>
+                                <span
+                                  data-testid={`subject-progress-badge-${subject.slug}`}
+                                  className={cn(
+                                    'rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold',
+                                    palette.progressBadgeClass,
+                                  )}
+                                >
+                                  Đã học {subjectCompletedCount}/{stats.lessonCount} bài ·{' '}
+                                  {subjectPercent}%
+                                </span>
+                              </div>
+                              <div className="h-1 w-32 overflow-hidden rounded-full bg-[#E7ECEA]">
+                                <div
+                                  className="h-full rounded-full transition-all duration-500"
+                                  style={{
+                                    width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
+                                    backgroundColor: palette.progressBarColor,
+                                  }}
+                                />
+                              </div>
+                            </div>
                           </div>
 
-                          <SubjectStageCanvas slug={subject.slug} />
+                          <SubjectStageCanvas
+                            slug={subject.slug}
+                            isCardHovered={hoveredCardSlug === subject.slug}
+                          />
 
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
+                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.6rem]">
                                 <Link
                                   to={ROUTES.subjectOverview(subject.slug)}
                                   className={cn('transition-colors', palette.titleHover)}
@@ -830,22 +1247,149 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               </p>
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#D8E0DD] pt-4">
-                              <span className="line-clamp-1 font-mono text-[11px] text-[#4A5D58]">
+                            {/* Dải Nhảy Nhanh Chương & Nút Xem nhanh lộ trình */}
+                            <div className="space-y-2.5 rounded-2xl border border-[#D8E0DD]/80 bg-[#F2F4F3]/65 p-3">
+                              <div className="flex flex-wrap items-center justify-between gap-2">
+                                <span className="font-mono text-[10px] font-semibold tracking-wider text-[#4A5D58] uppercase">
+                                  Chương trọng tâm
+                                </span>
+                                <button
+                                  type="button"
+                                  aria-expanded={isRoadmapOpen}
+                                  data-testid={`roadmap-toggle-${subject.slug}`}
+                                  onClick={() =>
+                                    setExpandedRoadmaps((prev) => ({
+                                      ...prev,
+                                      [subject.slug]: !prev[subject.slug],
+                                    }))
+                                  }
+                                  className={cn(
+                                    'inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors',
+                                    palette.indexText,
+                                    'hover:bg-[#FAFBF9]',
+                                  )}
+                                >
+                                  <span>
+                                    {isRoadmapOpen ? 'Thu gọn lộ trình' : 'Xem nhanh lộ trình'}
+                                  </span>
+                                  <ChevronDown
+                                    className={cn(
+                                      'h-3 w-3 transition-transform duration-200',
+                                      isRoadmapOpen && 'rotate-180',
+                                    )}
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                              </div>
+
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                {highlightedChapters.map((chapter) => (
+                                  <Link
+                                    key={chapter.id}
+                                    to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
+                                    title={`Mở Chương ${chapter.number}: ${chapter.title}`}
+                                    className={cn(
+                                      'inline-flex max-w-[190px] items-center gap-1 truncate rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-all duration-150',
+                                      palette.chapterPillClass,
+                                    )}
+                                  >
+                                    <span className="font-mono text-[10px] font-bold">
+                                      Ch.{chapter.number}
+                                    </span>
+                                    <span className="truncate">{chapter.title}</span>
+                                  </Link>
+                                ))}
+                                {subject.chapters.length > highlightedChapters.length && (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setExpandedRoadmaps((prev) => ({
+                                        ...prev,
+                                        [subject.slug]: !prev[subject.slug],
+                                      }))
+                                    }
+                                    className="inline-flex cursor-pointer items-center rounded-lg border border-dashed border-[#CBD6D2] bg-[#FAFBF9] px-2.5 py-1 font-mono text-[10.5px] font-semibold text-[#4A5D58] transition-colors hover:border-[#1E332E] hover:text-[#182624]"
+                                  >
+                                    +{subject.chapters.length - highlightedChapters.length} chương
+                                  </button>
+                                )}
+                              </div>
+
+                              {isRoadmapOpen && (
+                                <div
+                                  data-testid={`roadmap-drawer-${subject.slug}`}
+                                  className="mt-2 max-h-48 space-y-1.5 overflow-y-auto border-t border-[#D8E0DD] pt-2.5 pr-1"
+                                >
+                                  {subject.chapters.map((chapter) => {
+                                    const chDone = chapter.lessons.filter(
+                                      (l) => completedLessons[l.id],
+                                    ).length;
+                                    return (
+                                      <Link
+                                        key={chapter.id}
+                                        to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
+                                        className="flex items-center justify-between gap-2 rounded-xl border border-transparent bg-[#FAFBF9] px-3 py-1.5 text-xs transition-colors hover:border-[#CBD6D2] hover:bg-white"
+                                      >
+                                        <span className="flex min-w-0 items-center gap-2">
+                                          <span
+                                            className={cn(
+                                              'shrink-0 font-mono text-[10.5px] font-bold',
+                                              palette.indexText,
+                                            )}
+                                          >
+                                            Ch.{chapter.number}
+                                          </span>
+                                          <span className="truncate font-medium text-[#182624]">
+                                            {chapter.title}
+                                          </span>
+                                        </span>
+                                        <span className="shrink-0 font-mono text-[10.5px] text-[#4A5D58]">
+                                          {chDone}/{chapter.lessons.length} bài
+                                        </span>
+                                      </Link>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Chân thẻ: Cụm nút Học tiếp bài đang dở + Vào học phần */}
+                            <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-[#D8E0DD] pt-4">
+                              <span className="line-clamp-1 max-w-full font-mono text-[11px] text-[#4A5D58] xl:max-w-[44%]">
                                 {asset.visualMetaphor}
                               </span>
 
-                              <Link
-                                to={ROUTES.courseOverview(subject.slug)}
-                                aria-label={`Vào học phần ${subject.title}`}
-                                className={cn(
-                                  'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-2xs transition-all duration-200',
-                                  palette.ctaClass,
+                              <div className="ml-auto flex flex-wrap items-center gap-2">
+                                {resumeTarget && (
+                                  <Link
+                                    to={ROUTES.lesson(
+                                      subject.slug,
+                                      resumeTarget.chapter.slug,
+                                      resumeTarget.lesson.slug,
+                                    )}
+                                    title={`Mở ngay: ${resumeTarget.lesson.title}`}
+                                    className={cn(
+                                      'inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all duration-150 active:scale-[0.98]',
+                                      palette.secondaryBtnClass,
+                                    )}
+                                  >
+                                    <Play className="h-3 w-3 fill-current" aria-hidden="true" />
+                                    <span>Học tiếp bài đang dở</span>
+                                  </Link>
                                 )}
-                              >
-                                <span>Vào học phần</span>
-                                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                              </Link>
+
+                                <Link
+                                  to={ROUTES.courseOverview(subject.slug)}
+                                  aria-label={`Vào học phần ${subject.title}`}
+                                  className={cn(
+                                    'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-2xs transition-all duration-200 active:scale-[0.98]',
+                                    palette.ctaClass,
+                                  )}
+                                >
+                                  <span>Vào học phần</span>
+                                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         </article>
@@ -940,15 +1484,101 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                             <span className="font-medium text-[var(--text-main)]">
                               Trạng thái đọc bài &amp; ghi chú học thuật
                             </span>
-                            <span className="font-mono font-semibold text-[#365E4E] dark:text-[#8EE5CE]">
+                            <span className="font-mono font-semibold text-[#1E332E] dark:text-[#8EE5CE]">
                               {displayOrbitPercent}% hoàn thành
                             </span>
                           </div>
                           <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--border-subtle)]">
                             <div
-                              className="h-full rounded-full bg-[#365E4E] transition-all duration-500 dark:bg-[#499C7E]"
+                              className="h-full rounded-full bg-[#1E332E] transition-all duration-500 dark:bg-[#499C7E]"
                               style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
                             />
+                          </div>
+                        </div>
+
+                        {/* Lộ trình bài kế tiếp (Up Next Queue) */}
+                        {upNextQueue.length > 0 && (
+                          <div className="space-y-2.5" data-testid="up-next-queue">
+                            <p className="font-mono text-[11px] font-semibold tracking-wider text-[#4A5D58] uppercase">
+                              Lộ trình bài kế tiếp ({upNextQueue.length} bài)
+                            </p>
+                            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+                              {upNextQueue.map((item) => {
+                                const isDone = Boolean(completedLessons[item.lesson.id]);
+                                return (
+                                  <Link
+                                    key={item.lesson.id}
+                                    to={ROUTES.lesson(
+                                      item.subjectSlug,
+                                      item.chapter.slug,
+                                      item.lesson.slug,
+                                    )}
+                                    className="group/next flex flex-col justify-between gap-1.5 rounded-2xl border border-[#D8E0DD] bg-[#F2F4F3]/65 p-3 transition-all duration-150 hover:border-[#1E332E]/40 hover:bg-white hover:shadow-xs"
+                                  >
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="font-mono text-[10.5px] font-bold text-[#1E332E]">
+                                        Bài {item.chapter.number}.{item.lesson.number}
+                                      </span>
+                                      {isDone ? (
+                                        <CheckCircle2
+                                          className="h-3.5 w-3.5 text-[#245746]"
+                                          aria-hidden="true"
+                                        />
+                                      ) : (
+                                        <span className="font-mono text-[10px] text-[#4A5D58]">
+                                          {item.lesson.estimatedMinutes} phút
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="line-clamp-2 text-xs leading-snug font-semibold text-[#182624] group-hover/next:text-[#245746]">
+                                      {item.lesson.title}
+                                    </p>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Tổng quan Tiến độ 4 Học phần */}
+                        <div className="space-y-2.5" data-testid="progress-matrix-4-subjects">
+                          <p className="font-mono text-[11px] font-semibold tracking-wider text-[#4A5D58] uppercase">
+                            Tổng quan Tiến độ 4 Học phần
+                          </p>
+                          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+                            {subjectProgressMatrix.map((entry) => (
+                              <Link
+                                key={entry.subject.id}
+                                to={ROUTES.subjectOverview(entry.subject.slug)}
+                                className="flex flex-col justify-between gap-2 rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9] p-3 transition-colors hover:border-[#1E332E]/40 hover:bg-white"
+                              >
+                                <div className="flex items-center justify-between gap-1">
+                                  <span
+                                    className={cn(
+                                      'font-mono text-[11px] font-bold',
+                                      entry.palette.indexText,
+                                    )}
+                                  >
+                                    {entry.shortCode}
+                                  </span>
+                                  <span className="font-mono text-[11px] font-bold text-[#182624]">
+                                    {entry.percent}%
+                                  </span>
+                                </div>
+                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E7ECEA]">
+                                  <div
+                                    className="h-full rounded-full transition-all duration-500"
+                                    style={{
+                                      width: `${Math.max(entry.percent, entry.done > 0 ? 8 : 0)}%`,
+                                      backgroundColor: entry.palette.progressBarColor,
+                                    }}
+                                  />
+                                </div>
+                                <span className="font-mono text-[10px] text-[#4A5D58]">
+                                  {entry.done}/{entry.total} bài
+                                </span>
+                              </Link>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -1000,12 +1630,37 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         tích và thuật ngữ khoa học giáo dục chuẩn mực.
                       </p>
 
-                      <div className="grid grid-cols-3 gap-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-2.5 text-center font-mono text-xs text-[var(--text-main)]">
-                        <span className="rounded-lg bg-[var(--bg-surface)] py-1">G / ker φ</span>
-                        <span className="rounded-lg bg-[var(--bg-surface)] py-1">
-                          ∀ε &gt; 0, ∃δ
-                        </span>
-                        <span className="rounded-lg bg-[var(--bg-surface)] py-1">CLO1–9</span>
+                      <div className="grid grid-cols-3 gap-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-2 text-center text-xs text-[var(--text-main)]">
+                        <button
+                          type="button"
+                          onClick={() => openKaTeXDrawer('Định lý Đẳng cấu')}
+                          title="Mở tra cứu Định lý Đẳng cấu thứ nhất"
+                          className="flex min-h-[38px] cursor-pointer items-center justify-center rounded-lg border border-transparent bg-[var(--bg-surface)] px-1.5 py-1 transition-all hover:border-[#6B5335]/50 hover:shadow-2xs active:scale-[0.98]"
+                        >
+                          <KatexMath math="G / \ker\varphi" className="text-[11.5px]" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openKaTeXDrawer('Cauchy')}
+                          title="Mở tra cứu Định nghĩa Giới hạn Cauchy"
+                          className="flex min-h-[38px] cursor-pointer items-center justify-center rounded-lg border border-transparent bg-[var(--bg-surface)] px-1.5 py-1 transition-all hover:border-[#245746]/50 hover:shadow-2xs active:scale-[0.98]"
+                        >
+                          <KatexMath
+                            math="\forall\varepsilon > 0,\,\exists\delta > 0"
+                            className="text-[10.5px]"
+                          />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openKaTeXDrawer('Lagrange')}
+                          title="Mở tra cứu Định lý Lagrange & Cấp phần tử"
+                          className="flex min-h-[38px] cursor-pointer items-center justify-center rounded-lg border border-transparent bg-[var(--bg-surface)] px-1.5 py-1 transition-all hover:border-[#2D5266]/50 hover:shadow-2xs active:scale-[0.98]"
+                        >
+                          <KatexMath
+                            math="\operatorname{ord}(a) \mid |G|"
+                            className="text-[11px]"
+                          />
+                        </button>
                       </div>
                     </div>
 
@@ -1014,10 +1669,10 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         to="/glossary"
                         onClick={(event) => {
                           event.preventDefault();
-                          setIsKaTeXDrawerOpen(true);
+                          openKaTeXDrawer('');
                         }}
                         aria-label="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
-                        className="inline-flex w-full items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/80 px-4 py-2.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[#365E4E] hover:text-white"
+                        className="inline-flex w-full items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/80 px-4 py-2.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[#1E332E] hover:text-white"
                       >
                         <span>Mở Ngân hàng Thuật ngữ &amp; Ký hiệu Toán</span>
                         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -1026,14 +1681,14 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                   </div>
 
                   {/* Tiện ích 2: Phòng Lab Hình học 3D */}
-                  <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-xs transition-colors hover:border-[#365E4E] dark:hover:border-[#8EE5CE]/50">
+                  <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-xs transition-colors hover:border-[#2D5266] dark:hover:border-[#8EE5CE]/50">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="rounded-lg bg-[#EBECE6] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#365E4E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
+                        <span className="rounded-lg bg-[#ECF1F4] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#2D5266] dark:bg-[#19332A] dark:text-[#A6E3CD]">
                           UTILITY 02 · SPATIAL LAB
                         </span>
                         <Compass
-                          className="h-4 w-4 text-[#365E4E] dark:text-[#8EE5CE]"
+                          className="h-4 w-4 text-[#2D5266] dark:text-[#8EE5CE]"
                           aria-hidden="true"
                         />
                       </div>
@@ -1047,48 +1702,14 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         học phối cảnh đa chiều.
                       </p>
 
-                      <div className="overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)] p-2">
-                        <svg viewBox="0 0 280 76" className="h-16 w-full" aria-hidden="true">
-                          <line
-                            x1="16"
-                            y1="62"
-                            x2="264"
-                            y2="62"
-                            stroke="var(--border-subtle)"
-                            strokeWidth="1"
-                          />
-                          <polygon
-                            points="76,54 132,14 204,24 148,64"
-                            fill="var(--bg-surface)"
-                            stroke="#365E4E"
-                            strokeWidth="1.3"
-                          />
-                          <polygon
-                            points="108,18 184,12 196,58 120,64"
-                            fill="var(--bg-sunken)"
-                            fillOpacity="0.65"
-                            stroke="#365E4E"
-                            strokeWidth="1.2"
-                          />
-                          <circle cx="140" cy="38" r="3.5" fill="#C89738" />
-                          <text
-                            x="14"
-                            y="20"
-                            fill="var(--text-muted)"
-                            fontSize="8.5"
-                            fontFamily="monospace"
-                          >
-                            3D AFFINE VIEWPORT
-                          </text>
-                        </svg>
-                      </div>
+                      <SpatialLabMiniCanvas />
                     </div>
 
                     <div className="mt-5 border-t border-[var(--border-subtle)] pt-4">
                       <a
                         href="/interactive/affine-geometry.html"
                         aria-label="Mở Phòng Lab Hình học Không gian"
-                        className="inline-flex w-full items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/80 px-4 py-2.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[#365E4E] hover:text-white"
+                        className="inline-flex w-full items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/80 px-4 py-2.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[#2D5266] hover:text-white"
                       >
                         <span>Mở Phòng Lab Hình học Không gian</span>
                         <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -1102,7 +1723,11 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
         </>
       )}
 
-      <QuickKaTeXDrawer isOpen={isKaTeXDrawerOpen} onClose={() => setIsKaTeXDrawerOpen(false)} />
+      <QuickKaTeXDrawer
+        isOpen={isKaTeXDrawerOpen}
+        onClose={() => setIsKaTeXDrawerOpen(false)}
+        initialQuery={katexDrawerQuery}
+      />
     </>
   );
 }

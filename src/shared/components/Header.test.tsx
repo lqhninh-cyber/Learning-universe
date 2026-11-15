@@ -60,8 +60,10 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.getByText('LEARNING')).toBeInTheDocument();
     expect(screen.getByText('UNIVERSE')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Trang chủ' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Không gian học tập' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Không gian học tập/i })).toBeInTheDocument();
+    const learningSpaceLink = screen.getByRole('link', { name: 'Không gian học tập' });
+    expect(learningSpaceLink).toBeInTheDocument();
+    expect(learningSpaceLink).toHaveAttribute('href', '/learning-space');
+    expect(screen.queryByRole('button', { name: /Không gian học tập/i })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Tất cả môn học' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thuật ngữ' })).toBeInTheDocument();
 

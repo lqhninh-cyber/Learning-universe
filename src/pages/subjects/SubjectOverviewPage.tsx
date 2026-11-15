@@ -75,6 +75,7 @@ export function SubjectOverviewPage() {
   const workspaceTabsRef = useRef<HTMLDivElement>(null);
 
   const urlTab = resolveWorkspaceTab(searchParams.get('tab'));
+  const urlChapter = searchParams.get('chapter');
   const initialTab: CourseWorkspaceTab = urlTab ?? 'roadmap';
 
   const [activeTab, setActiveTab] = useState<CourseWorkspaceTab>(initialTab);
@@ -96,7 +97,26 @@ export function SubjectOverviewPage() {
     'rubrics' | 'principles' | 'cases' | 'legal'
   >('rubrics');
   const [activeCaseStudyId, setActiveCaseStudyId] = useState<number>(1);
-  const [chapterFocus, setChapterFocus] = useState<ChapterFocusRequest | null>(null);
+  const [chapterFocus, setChapterFocus] = useState<ChapterFocusRequest | null>(() => {
+    if (!urlChapter || !subject) return null;
+    const matched = subject.chapters.find(
+      (ch) => ch.slug === urlChapter || ch.id === urlChapter || String(ch.number) === urlChapter,
+    );
+    return matched ? { chapterIds: [matched.id], nonce: 1 } : null;
+  });
+  const [prevUrlChapter, setPrevUrlChapter] = useState<string | null>(urlChapter);
+  if (urlChapter !== prevUrlChapter) {
+    setPrevUrlChapter(urlChapter);
+    if (urlChapter && subject) {
+      const matched = subject.chapters.find(
+        (ch) => ch.slug === urlChapter || ch.id === urlChapter || String(ch.number) === urlChapter,
+      );
+      if (matched) {
+        setActiveTab('roadmap');
+        setChapterFocus((prev) => ({ chapterIds: [matched.id], nonce: (prev?.nonce ?? 0) + 1 }));
+      }
+    }
+  }
   const universeTheme = getSubjectUniverseTheme(subjectSlug ?? '');
 
   const stats = useMemo(() => (subject ? getSubjectStats(subject) : null), [subject]);

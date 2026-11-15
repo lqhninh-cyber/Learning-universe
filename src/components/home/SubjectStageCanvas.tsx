@@ -1,7 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
+
+interface StageInteraction {
+  readonly rotOffsetX: number;
+  readonly rotOffsetY: number;
+}
 
 interface Vec3 {
   readonly x: number;
@@ -91,6 +96,7 @@ function drawAlgebraStage(
   width: number,
   height: number,
   t: number,
+  interaction: StageInteraction,
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.5;
@@ -107,7 +113,7 @@ function drawAlgebraStage(
   // Vòng ngoài đồ thị Cayley S_4 (8 đỉnh bát giác + chu trình đối xứng 4-bước)
   const outerNodes: { x: number; y: number }[] = [];
   for (let i = 0; i < 8; i += 1) {
-    const a = (i / 8) * Math.PI * 2 + t * 0.12;
+    const a = (i / 8) * Math.PI * 2 + t * 0.12 + interaction.rotOffsetX * 0.45;
     outerNodes.push({
       x: cx + Math.cos(a) * rMain * 1.18,
       y: cy + Math.sin(a) * rMain * 0.88,
@@ -207,7 +213,17 @@ function drawAlgebraStage(
 
   const fov = Math.min(width, height) * 0.94;
   const projected = octVerts.map((v) =>
-    projectPoint3D(rotatePoint3D(v, t * 0.42, t * 0.62, t * 0.18), cx, cy, fov),
+    projectPoint3D(
+      rotatePoint3D(
+        v,
+        t * 0.42 + interaction.rotOffsetY,
+        t * 0.62 + interaction.rotOffsetX,
+        t * 0.18,
+      ),
+      cx,
+      cy,
+      fov,
+    ),
   );
   for (const [i, j] of octEdges) {
     const pa = projected[i];
@@ -238,6 +254,7 @@ function drawAffineStage(
   width: number,
   height: number,
   t: number,
+  interaction: StageInteraction,
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.52;
@@ -251,8 +268,8 @@ function drawAffineStage(
 
   // Đường sinh thẳng của siêu mặt Hyperboloid 1 tầng xoay 3D
   const generators = 18;
-  const rotY = t * 0.32;
-  const rotX = 0.52 + Math.sin(t * 0.4) * 0.08;
+  const rotY = t * 0.32 + interaction.rotOffsetX;
+  const rotX = 0.52 + Math.sin(t * 0.4) * 0.08 + interaction.rotOffsetY;
 
   for (let i = 0; i < generators; i += 1) {
     const phi = (i / generators) * Math.PI * 2;
@@ -348,6 +365,7 @@ function drawCalculusStage(
   width: number,
   height: number,
   t: number,
+  interaction: StageInteraction,
 ): void {
   const midY = height * 0.56;
   const leftPad = width * 0.08;
@@ -363,8 +381,12 @@ function drawCalculusStage(
   ctx.lineTo(width * 0.5, height * 0.88);
   ctx.stroke();
 
+  const phaseShift = interaction.rotOffsetX * 0.85;
+  const ampMod = 1 + Math.max(-0.28, Math.min(0.28, -interaction.rotOffsetY * 0.22));
   const fn = (u: number) =>
-    Math.sin(u * Math.PI * 2 + t * 0.85) * 0.56 + Math.cos(u * Math.PI * 4 - t * 0.48) * 0.22;
+    (Math.sin(u * Math.PI * 2 + t * 0.85 + phaseShift) * 0.56 +
+      Math.cos(u * Math.PI * 4 - t * 0.48 + phaseShift * 0.5) * 0.22) *
+    ampMod;
 
   // Các lát cắt tích phân Riemann tô bóng #3B7A65 với alpha 20%
   const bars = 18;
@@ -442,6 +464,7 @@ function drawPedagogyStage(
   width: number,
   height: number,
   t: number,
+  interaction: StageInteraction,
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.52;
@@ -454,7 +477,7 @@ function drawPedagogyStage(
   ] as const;
 
   for (const c of circles) {
-    const a = c.angle + t * 0.18;
+    const a = c.angle + t * 0.18 + interaction.rotOffsetX * 0.7;
     const ox = cx + Math.cos(a) * (rOrbit * 0.62);
     const oy = cy + Math.sin(a) * (rOrbit * 0.48);
 
@@ -476,9 +499,10 @@ function drawPedagogyStage(
   }
 
   // Quỹ đạo phát triển nhân cách đi lên dạng Bezier nối các mốc
+  const curveTilt = Math.max(-24, Math.min(24, interaction.rotOffsetY * 18));
   const p0 = { x: width * 0.16, y: height * 0.78 };
-  const p1 = { x: width * 0.42, y: height * 0.62 };
-  const p2 = { x: width * 0.62, y: height * 0.42 };
+  const p1 = { x: width * 0.42, y: height * 0.62 + curveTilt };
+  const p2 = { x: width * 0.62, y: height * 0.42 - curveTilt };
   const p3 = { x: width * 0.84, y: height * 0.24 };
 
   ctx.beginPath();
@@ -519,16 +543,25 @@ function drawPedagogyStage(
 
 export interface SubjectStageCanvasProps {
   readonly slug: string;
+  readonly isCardHovered?: boolean;
 }
 
 /**
- * Sân khấu Canvas 2D 120fps theo Bảng Màu Pastel Học Thuật cho 4 môn học trong Atlas Không gian Học tập.
+ * Sân khấu Canvas 2D 120fps theo Bảng Màu Khoáng Thạch Tự Nhiên cho 4 môn học:
+ * hỗ trợ kéo chuột để xoay trực tiếp mô hình 3D và tăng tốc phản hồi khi di chuột.
  */
-export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
+export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStageCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isCardHoveredRef = useRef(isCardHovered);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isStageHovered, setIsStageHovered] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const theme = STAGE_THEMES[slug] ?? DEFAULT_STAGE_THEME;
+
+  useEffect(() => {
+    isCardHoveredRef.current = isCardHovered;
+  }, [isCardHovered]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -558,6 +591,102 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
     let elapsed = 0;
     let prevNow = performance.now();
 
+    let dragging = false;
+    let lastClientX = 0;
+    let lastClientY = 0;
+    let targetOffsetX = 0;
+    let targetOffsetY = 0;
+    let currentOffsetX = 0;
+    let currentOffsetY = 0;
+
+    const render = (time: number) => {
+      const interaction: StageInteraction = {
+        rotOffsetX: currentOffsetX,
+        rotOffsetY: currentOffsetY,
+      };
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      if (slug === 'hinh-hoc-affine') {
+        drawAffineStage(ctx, width, height, time, interaction);
+      } else if (slug === 'giai-tich-ham-mot-bien') {
+        drawCalculusStage(ctx, width, height, time, interaction);
+      } else if (slug === 'giao-duc-hoc') {
+        drawPedagogyStage(ctx, width, height, time, interaction);
+      } else {
+        drawAlgebraStage(ctx, width, height, time, interaction);
+      }
+
+      ctx.restore();
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      dragging = true;
+      lastClientX = event.clientX;
+      lastClientY = event.clientY;
+      setIsDragging(true);
+      if (typeof container.setPointerCapture === 'function') {
+        try {
+          container.setPointerCapture(event.pointerId);
+        } catch {
+          // Bỏ qua nếu trình duyệt không hỗ trợ capture
+        }
+      }
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (dragging) {
+        const dx = event.clientX - lastClientX;
+        const dy = event.clientY - lastClientY;
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+        targetOffsetX += dx * 0.012;
+        targetOffsetY = Math.max(-1.2, Math.min(1.2, targetOffsetY + dy * 0.01));
+        if (prefersReducedMotion) {
+          currentOffsetX = targetOffsetX;
+          currentOffsetY = targetOffsetY;
+          render(0.8);
+        }
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const nx = (event.clientX - rect.left) / rect.width - 0.5;
+        const ny = (event.clientY - rect.top) / rect.height - 0.5;
+        targetOffsetX += (nx * 0.35 - (targetOffsetX % 6.283)) * 0.015;
+        targetOffsetY = Math.max(-0.45, Math.min(0.45, ny * 0.4));
+      }
+    };
+
+    const onPointerUp = (event: PointerEvent) => {
+      if (!dragging) return;
+      dragging = false;
+      setIsDragging(false);
+      if (typeof container.releasePointerCapture === 'function') {
+        try {
+          container.releasePointerCapture(event.pointerId);
+        } catch {
+          // Bỏ qua
+        }
+      }
+    };
+
+    const onPointerEnter = () => setIsStageHovered(true);
+    const onPointerLeave = () => {
+      dragging = false;
+      setIsDragging(false);
+      setIsStageHovered(false);
+    };
+
+    container.addEventListener('pointerdown', onPointerDown);
+    container.addEventListener('pointermove', onPointerMove);
+    container.addEventListener('pointerup', onPointerUp);
+    container.addEventListener('pointercancel', onPointerUp);
+    container.addEventListener('pointerenter', onPointerEnter);
+    container.addEventListener('pointerleave', onPointerLeave);
+
     let resizeObserver: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined') {
       resizeObserver = new ResizeObserver(() => resize());
@@ -575,27 +704,15 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
       intersectionObserver.observe(container);
     }
 
-    const render = (time: number) => {
-      ctx.save();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, width, height);
-
-      if (slug === 'hinh-hoc-affine') {
-        drawAffineStage(ctx, width, height, time);
-      } else if (slug === 'giai-tich-ham-mot-bien') {
-        drawCalculusStage(ctx, width, height, time);
-      } else if (slug === 'giao-duc-hoc') {
-        drawPedagogyStage(ctx, width, height, time);
-      } else {
-        drawAlgebraStage(ctx, width, height, time);
-      }
-
-      ctx.restore();
-    };
-
     render(0.8);
     if (prefersReducedMotion) {
       return () => {
+        container.removeEventListener('pointerdown', onPointerDown);
+        container.removeEventListener('pointermove', onPointerMove);
+        container.removeEventListener('pointerup', onPointerUp);
+        container.removeEventListener('pointercancel', onPointerUp);
+        container.removeEventListener('pointerenter', onPointerEnter);
+        container.removeEventListener('pointerleave', onPointerLeave);
         resizeObserver?.disconnect();
         intersectionObserver?.disconnect();
       };
@@ -605,7 +722,11 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
       const { dtSeconds } = computeFrameDelta(now, prevNow);
       prevNow = now;
       if (isVisible && !document.hidden) {
-        elapsed += dtSeconds;
+        const speedMultiplier = dragging ? 0.55 : isCardHoveredRef.current ? 1.6 : 1;
+        elapsed += dtSeconds * speedMultiplier;
+        const smoothRate = Math.min(1, dtSeconds * 10);
+        currentOffsetX += (targetOffsetX - currentOffsetX) * smoothRate;
+        currentOffsetY += (targetOffsetY - currentOffsetY) * smoothRate;
         render(elapsed);
       }
       rafId = window.requestAnimationFrame(tick);
@@ -614,6 +735,12 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
 
     return () => {
       window.cancelAnimationFrame(rafId);
+      container.removeEventListener('pointerdown', onPointerDown);
+      container.removeEventListener('pointermove', onPointerMove);
+      container.removeEventListener('pointerup', onPointerUp);
+      container.removeEventListener('pointercancel', onPointerUp);
+      container.removeEventListener('pointerenter', onPointerEnter);
+      container.removeEventListener('pointerleave', onPointerLeave);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
     };
@@ -625,7 +752,8 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
       data-testid={`subject-stage-${slug}`}
       style={{ background: theme.background }}
       className={cn(
-        'relative my-5 h-52 w-full overflow-hidden rounded-2xl border transition-transform duration-300 group-hover:scale-[1.01]',
+        'relative my-4 h-52 w-full overflow-hidden rounded-2xl border transition-transform duration-300 select-none group-hover:scale-[1.01]',
+        isDragging ? 'cursor-grabbing' : 'cursor-grab',
         theme.borderClass,
       )}
       aria-hidden="true"
@@ -639,7 +767,19 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
         }}
       />
 
-      <canvas ref={canvasRef} className="relative z-10 block h-full w-full" />
+      <canvas ref={canvasRef} className="relative z-10 block h-full w-full touch-none" />
+
+      {(isCardHovered || isStageHovered) && (
+        <span
+          className={cn(
+            'pointer-events-none absolute top-2.5 left-3 z-20 rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-medium backdrop-blur-xs transition-opacity',
+            theme.labelBgClass,
+            theme.labelTextClass,
+          )}
+        >
+          Kéo để xoay 3D · 120fps
+        </span>
+      )}
 
       <span
         className={cn(
