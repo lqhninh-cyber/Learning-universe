@@ -37,8 +37,8 @@ export interface HeritageArtwork {
 }
 
 /**
- * 15 Kiệt tác nghệ thuật & tư liệu lịch sử đích thực đại diện cho
- * sự giao hòa giữa Toán học, Hình học, Triết học và Nghệ thuật Sư phạm.
+ * 30 Kiệt tác nghệ thuật, di sản kiến trúc & tư liệu lịch sử đích thực đại diện cho
+ * sự giao hòa giữa Toán học, Hình học, Thiên văn, Triết học và Nghệ thuật Sư phạm.
  */
 export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   {
@@ -365,6 +365,331 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Chua_Mot_Cot.jpg',
     alt: 'Kiến trúc Chùa Một Cột Liên Hoa Đài thời Lý tại Thăng Long Hà Nội',
   },
+  {
+    id: 'dai-thanh-toan-phap',
+    category: 'vietnam-heritage',
+    shortTitle: 'Đại thành Toán pháp',
+    title: 'Đại thành Toán pháp (Lương Thế Vinh)',
+    originalTitle: 'Đại thành Toán pháp — Bộ sách toán học kinh điển thời Lê Sơ',
+    artistOrOrigin: 'Trạng Lường Lương Thế Vinh',
+    yearOrEra: 'Thế kỷ XV · Thời Lê Sơ',
+    eraAndPeriod: 'Thế kỷ XV · Thời Lê Sơ (Đại Việt)',
+    materialAndTechnique:
+      'Văn bản toán học khắc bản gỗ cổ truyền chữ Hán – Nôm; hệ thống hóa bài toán bằng văn vần lục bát và quy tắc bàn tính cửu chương.',
+    archivalLocation: 'Thư viện Viện Nghiên cứu Hán Nôm (Hà Nội) & Tư liệu Cổ sử Đại Việt',
+    caption:
+      'Trạng Lường Lương Thế Vinh · Hệ thống hóa phép đo đạc ruộng đất, thể tích khối và tam giác đồng dạng',
+    academicSignificance:
+      'Bộ sách toán học kinh điển của Việt Nam hệ thống hóa phép đo đạc diện tích ruộng đất, thể tích hình khối, tam giác đồng dạng và bảng cửu chương. Tác phẩm kết hợp chặt chẽ tư duy tính toán thuật toán với thực tiễn canh tác và quản trị quốc gia.',
+    coreAcademicValue:
+      'Bộ sách toán học kinh điển của Việt Nam; chuẩn hóa phép đo đạc ruộng đất, thể tích hình khối, tam giác đồng dạng và phương pháp dạy toán bằng thơ ca dễ nhớ.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/%E7%9B%98%E7%8F%A0%E7%AE%97%E6%B3%95.jpg',
+    alt: 'Tư liệu Đại thành Toán pháp của Trạng Lường Lương Thế Vinh thế kỷ XV',
+  },
+  {
+    id: 'lap-thanh-toan-phap',
+    category: 'vietnam-heritage',
+    shortTitle: 'Lập thành Toán pháp',
+    title: 'Lập thành Toán pháp (Vũ Hữu)',
+    originalTitle: 'Lập thành Toán pháp — Toán học ứng dụng kiến trúc & thủy lợi Đại Việt',
+    artistOrOrigin: 'Hoàng giáp Vũ Hữu',
+    yearOrEra: 'Thế kỷ XV · Thời Lê Sơ',
+    eraAndPeriod: 'Thế kỷ XV · Thời Lê Sơ (Đại Việt)',
+    materialAndTechnique:
+      'Hệ thống bảng tra lập thành và công thức đo lường hình học thực địa bằng sào đo, thước dây và cọc tiêu tam giác đồng dạng.',
+    archivalLocation: 'Văn miếu Mao Điền (Hải Dương) & Tư liệu Khoa cử Triều Lê Sơ',
+    caption:
+      'Hoàng giáp Vũ Hữu · Công trình toán học ứng dụng quy hoạch kiến trúc, vật liệu xây thành và thủy lợi',
+    academicSignificance:
+      'Công trình toán học ứng dụng xuất sắc phục vụ quy hoạch kiến trúc, tính toán vật liệu xây dựng thành lũy và đo đạc thủy lợi Đại Việt. Vũ Hữu cùng Lương Thế Vinh đặt nền móng cho truyền thống toán học thực hành chính xác cao của nước Việt.',
+    coreAcademicValue:
+      'Toán học ứng dụng xuất sắc phục vụ quy hoạch kiến trúc, tính toán khối lượng vật liệu xây thành và kỹ thuật đo đạc địa hình bằng tam giác đồng dạng.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Replica_of_Han_Dynasty_Counting_rods_in_National_Museum_of_Natural_Science_in_Taiwan.JPG',
+    alt: 'Hệ thống toán trù và phép đo đạc trong Lập thành Toán pháp của Hoàng giáp Vũ Hữu',
+  },
+  {
+    id: 'chua-mot-cot-lien-hoa-dai',
+    category: 'vietnam-heritage',
+    shortTitle: 'Liên Hoa Đài',
+    title: 'Chùa Một Cột — Liên Hoa Đài',
+    originalTitle: 'Liên Hoa Đài — Giao thoa Hình học Đường tròn & Hình vuông giữa Hồ Linh Chiểu',
+    artistOrOrigin: 'Thời Lý Thái Tông',
+    yearOrEra: '1049 · Thăng Long – Hà Nội',
+    eraAndPeriod: '1049 · Thăng Long – Hà Nội (Triều Lý)',
+    materialAndTechnique:
+      'Cột trụ đá hình tròn đỡ hệ con sơn tỏa tia tám hướng như đài sen, nâng đỡ ngôi lầu vuông tám mái uốn cong cân bằng tĩnh lực.',
+    archivalLocation: 'Quần thể Di tích Ba Đình · Thăng Long – Hà Nội',
+    caption:
+      'Thời Lý Thái Tông (1049) · Đài sen dựng trên cột đá trụ độc nhất giữa hồ Linh Chiểu hình vuông',
+    academicSignificance:
+      'Kiệt tác kiến trúc gỗ dựng trên một cột đá trụ độc nhất giữa hồ Linh Chiểu hình vuông, biểu trưng cho sự giao thoa hình học giữa đường tròn và hình vuông. Cấu trúc thanh chống đối xứng tỏa tâm truyền lực nén tập trung cực kỳ tinh xảo.',
+    coreAcademicValue:
+      'Biểu trưng hoàn mỹ cho sự giao thoa hình học giữa đường tròn cột trụ và hình vuông đài sen, kết hợp cân bằng đối xứng tâm tuyệt đối.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Chua_Mot_Cot.jpg',
+    alt: 'Chùa Một Cột Liên Hoa Đài giao thoa hình học tròn vuông giữa hồ Linh Chiểu',
+  },
+  {
+    id: 'ngo-mon-dien-thai-hoa',
+    category: 'vietnam-heritage',
+    shortTitle: 'Ngọ Môn & Thái Hòa',
+    title: 'Ngọ Môn & Điện Thái Hòa (Kinh thành Huế)',
+    originalTitle: 'Ngọ Môn & Điện Thái Hòa — Trục Thần đạo Đối xứng Kinh thành Huế',
+    artistOrOrigin: 'Triều Nguyễn',
+    yearOrEra: '1804–1833 · Cố đô Huế',
+    eraAndPeriod: '1804–1833 · Triều Nguyễn (Cố đô Huế)',
+    materialAndTechnique:
+      'Đài cổng gạch đá xây kiểu chữ U ôm lấy sân lễ kết hợp Lầu Ngũ Phụng gỗ lim năm gian; trục đối xứng Đông–Tây định vị theo sao Bắc Đẩu.',
+    archivalLocation: 'Quần thể Di tích Cố đô Huế (Di sản Văn hóa Thế giới UNESCO, Thừa Thiên Huế)',
+    caption:
+      'Triều Nguyễn (1804–1833) · Đỉnh cao quy hoạch trục đối xứng tâm kết hợp bình đồ Vauban & kết cấu gỗ',
+    academicSignificance:
+      'Đỉnh cao quy hoạch kiến trúc trục đối xứng tâm, tỷ lệ hài hòa trên bình đồ Vauban kết hợp hệ kết cấu gỗ truyền thống Việt Nam. Từng khoảng sân, hồ Thái Dịch và điện đài tạo nên chuỗi tỷ lệ không gian nhịp nhàng.',
+    coreAcademicValue:
+      'Chuẩn mực quy hoạch trục đối xứng tâm và hình học phòng thủ Vauban giao thoa với hệ vì kèo gỗ chồng rường truyền thống Đại Nam.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Ng%E1%BB%8D_M%C3%B4n_-_Hu%E1%BA%BF.jpg',
+    alt: 'Ngọ Môn và trục đối xứng Kinh thành Huế triều Nguyễn',
+  },
+  {
+    id: 'cuu-dinh-hoang-cung-hue',
+    category: 'vietnam-heritage',
+    shortTitle: 'Cửu Đỉnh Huế',
+    title: 'Cửu Đỉnh Hoàng cung Huế',
+    originalTitle: 'Cửu Đỉnh — Chín Đỉnh Đồng Bách khoa Toàn thư trước Thế Miếu Huế',
+    artistOrOrigin: 'Thời Minh Mạng',
+    yearOrEra: '1835–1837 · Di sản Tư liệu Thế giới',
+    eraAndPeriod: '1835–1837 · Triều Minh Mạng (Huế)',
+    materialAndTechnique:
+      'Đúc đồng nguyên khối theo phương pháp khuôn ghép nhiều mảnh; chạm nổi 162 bức họa tiết thiên văn, địa lý, thủy triều và thảo mộc.',
+    archivalLocation:
+      'Sân Thế Miếu, Đại Nội Huế (Di sản Tư liệu Thế giới Khu vực Châu Á – Thái Bình Dương)',
+    caption:
+      'Thời Minh Mạng (1835–1837) · Chín đỉnh đồng khắc 162 họa tiết bầu trời, tinh tú, núi sông và biển đảo',
+    academicSignificance:
+      'Chín đỉnh đồng khắc nổi 162 họa tiết bách khoa toàn thư về bầu trời, tinh tú, núi sông, biển đảo và sản vật nước Việt. Số 9 (Cửu) phản ánh cấu trúc phân loại không gian thiên – địa – nhân có hệ thống nhất thế kỷ XIX.',
+    coreAcademicValue:
+      'Tư liệu đúc đồng lưu giữ tri thức thiên văn, bản đồ học sông núi và kỹ thuật hợp kim truyền thống chuẩn xác bậc nhất Đông Nam Á.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/C%E1%BB%ADu_%C4%91%E1%BB%89nh_Hu%E1%BA%BF.jpg',
+    alt: 'Cửu Đỉnh Hoàng cung Huế thời Minh Mạng trước Thế Miếu',
+  },
+  {
+    id: 'hong-duc-ban-do-1490',
+    category: 'vietnam-heritage',
+    shortTitle: 'Hồng Đức Bản Đồ',
+    title: 'Bản đồ Hồng Đức (Hồng Đức Bản Đồ)',
+    originalTitle: 'Toản tập Thiên Nam Tứ chí Lộ đồ thư — Hồng Đức Bản Đồ (1490)',
+    artistOrOrigin: 'Triều Lê Thánh Tông',
+    yearOrEra: '1490 · Quốc sử quán',
+    eraAndPeriod: '1490 · Quốc sử quán Triều Lê Thánh Tông',
+    materialAndTechnique:
+      'Bản đồ cổ vẽ tay và in khắc mộc bản trên giấy dó màu khoáng, sử dụng hệ ký hiệu định hướng núi – sông và tỷ lệ lộ trình.',
+    archivalLocation: 'Viện Nghiên cứu Hán Nôm (Hà Nội) & Lưu trữ Cổ sử Việt Nam',
+    caption:
+      'Triều Lê Thánh Tông (1490) · Tập bản đồ địa lý – trắc địa quốc gia đầu tiên của Việt Nam',
+    academicSignificance:
+      'Tập bản đồ địa lý – trắc địa quốc gia đầu tiên của Việt Nam thể hiện tư duy không gian, cương vực và hệ thống hành chính Đại Việt. Bộ bản đồ cho thấy năng lực đồ biểu hóa tôpô và định vị khoảng cách đường thủy – đường bộ từ kinh đô đến các trấn.',
+    coreAcademicValue:
+      'Minh chứng cho tư duy không gian, năng lực đồ biểu hóa cương vực lãnh thổ và phép trắc địa hành chính có hệ thống từ thế kỷ XV.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/B%E1%BA%A3n_%C4%91%E1%BB%93_kinh_th%C3%A0nh_Th%C4%83ng_Long_n%C4%83m_H%E1%BB%93ng_%C4%90%E1%BB%A9c_21_(1490).jpg',
+    alt: 'Bản đồ Hồng Đức năm 1490 thể hiện tư duy không gian và cương vực Đại Việt',
+  },
+  {
+    id: 'hoang-thanh-thang-long',
+    category: 'vietnam-heritage',
+    shortTitle: 'Đoan Môn & Kỳ Đài',
+    title: 'Hoàng thành Thăng Long — Đoan Môn & Kỳ Đài',
+    originalTitle: 'Hoàng thành Thăng Long — Kết cấu Vòm cuốn Đoan Môn & Cột cờ Bát giác Hà Nội',
+    artistOrOrigin: 'Kinh thành Thăng Long',
+    yearOrEra: 'Thế kỷ XI – XIX · Hà Nội',
+    eraAndPeriod: 'Thế kỷ XI – XIX · Di sản Văn hóa Thế giới · Hà Nội',
+    materialAndTechnique:
+      'Gạch vồ và đá phiến xếp theo cung vòm cuốn parabol truyền tải trọng nén đều hai bên; Kỳ Đài cấu trúc lăng trụ bát giác ba tầng thu nhỏ dần.',
+    archivalLocation: 'Khu Trung tâm Hoàng thành Thăng Long (Số 19C Hoàng Diệu, Ba Đình, Hà Nội)',
+    caption:
+      'Thế kỷ XI – XIX · Vòm cuốn đá chịu lực và tháp Cột cờ ba tầng bát giác trường tồn hàng thế kỷ',
+    academicSignificance:
+      'Cấu trúc vòm cuốn đá chịu lực và tháp Cột cờ ba tầng bát giác thể hiện kỹ thuật kết cấu hình học bền vững qua hàng thế kỷ. Các tầng lăng trụ thu nhỏ theo cấp số tỷ lệ vàng bảo đảm ổn định trọng tâm trước gió bão và thời gian.',
+    coreAcademicValue:
+      'Hình mẫu xuất sắc về cơ học vòm cuốn chịu nén và hình học lăng trụ bát giác thu tầng đảm bảo tính vững chãi qua nhiều triều đại.',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/c/c2/%C4%90oan_M%C3%B4n%2C_Ho%C3%A0ng_th%C3%A0nh_Th%C4%83ng_Long%2C_H%C3%A0_N%E1%BB%99i_003.JPG',
+    alt: 'Đoan Môn thuộc Hoàng thành Thăng Long Di sản Văn hóa Thế giới tại Hà Nội',
+  },
+  {
+    id: 'thap-cham-my-son',
+    category: 'vietnam-heritage',
+    shortTitle: 'Tháp Chăm Mỹ Sơn',
+    title: 'Tháp Chăm Mỹ Sơn',
+    originalTitle: 'Thánh địa Mỹ Sơn — Kiến trúc Kalan Champa Tự đồng dạng',
+    artistOrOrigin: 'Văn hóa Champa',
+    yearOrEra: 'Thế kỷ IV – XIII · Quảng Nam',
+    eraAndPeriod: 'Thế kỷ IV – XIII · Thung lũng Mỹ Sơn, Quảng Nam, Việt Nam',
+    materialAndTechnique:
+      'Gạch nung mài khít không lộ mạch vữa liên kết bằng nhựa thực vật dầu rái, xếp thu giật cấp tạo hình thái tự đồng dạng (fractal).',
+    archivalLocation: 'Khu đền tháp Mỹ Sơn (Duy Xuyên, Quảng Nam · Di sản Văn hóa Thế giới UNESCO)',
+    caption:
+      'Thế kỷ IV – XIII · Kiến trúc gạch nung không mạch vữa theo cấu trúc tháp tầng tự đồng dạng (fractal)',
+    academicSignificance:
+      'Nghệ thuật kiến trúc gạch nung không mạch vữa với cấu trúc tháp tầng tự đồng dạng (fractal geometry) và hệ thống trụ đá chạm khắc tinh xảo. Các tháp nhỏ góc mái lặp lại đồng dạng hình khối của thân tháp chính trên từng cấp độ.',
+    coreAcademicValue:
+      'Ví dụ kinh điển của hình học tự đồng dạng (fractal geometry) và kỹ thuật cân bằng trọng tâm bằng gạch mài khít không mạch vữa.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Th%C3%A1nh_%C4%91%E1%BB%8Ba_M%E1%BB%B9_S%C6%A1n_2.JPG',
+    alt: 'Thánh địa Tháp Chăm Mỹ Sơn tại Quảng Nam Việt Nam',
+  },
+  {
+    id: 'thap-pho-minh',
+    category: 'vietnam-heritage',
+    shortTitle: 'Tháp Phổ Minh',
+    title: 'Tháp Phổ Minh & Vạc Phổ Minh',
+    originalTitle: 'Bảo tháp 14 tầng Phổ Minh Tự & An Nam Tứ Đại Khí',
+    artistOrOrigin: 'Thời Trần',
+    yearOrEra: '1305 · Nam Định',
+    eraAndPeriod: '1305 · Thời Trần (Tức Mặc, Nam Định)',
+    materialAndTechnique:
+      'Bệ đá hoa sen chạm nổi kết hợp 13 tầng gạch nung hoa chanh vươn cao 19.5 m; vạc đồng khổng lồ chứng tỏ trình độ luyện kim thế kỷ XIII–XIV.',
+    archivalLocation: 'Chùa Phổ Minh (Phường Lộc Vượng, Thành phố Nam Định, Tỉnh Nam Định)',
+    caption:
+      'Thời Trần (1305) · Bảo tháp 14 tầng bằng đá và gạch nung minh chứng trình độ tính toán tải trọng',
+    academicSignificance:
+      'Bảo tháp 14 tầng bằng đá chạm hoa sen và gạch nung thời Trần, minh chứng cho trình độ tính toán tải trọng và kỹ thuật luyện đồng Đại Việt. Mặt cắt các tầng thu nhỏ theo quy luật tuyến tính tạo nên đường biên vươn thanh thoát.',
+    coreAcademicValue:
+      'Kết tinh trình độ phân bố tải trọng kết cấu nhiều tầng, đối xứng hoa sen 8 cánh và kỹ thuật đúc đồng quy mô lớn thời Trần.',
+    imageSrc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pho_Minh_tower.jpg',
+    alt: 'Tháp Phổ Minh 14 tầng thời Trần tại Nam Định',
+  },
+  {
+    id: 'rhind-mathematical-papyrus',
+    category: 'math-geometry',
+    shortTitle: 'Papyrus Rhind',
+    title: 'Cuộn Papyrus Toán học Rhind',
+    originalTitle: 'Rhind Mathematical Papyrus — Bản thảo Toán học của Ký lục Ahmes',
+    artistOrOrigin: 'Ahmes',
+    yearOrEra: 'Khoảng 1550 TCN · Ai Cập Cổ đại',
+    eraAndPeriod: 'Khoảng 1550 TCN · Vương triều Thứ 15 (Ai Cập Cổ đại)',
+    materialAndTechnique:
+      'Mực đen và mực chu sa chữ thầy tu (Hieratic) viết trên giấy cói papyrus dài hơn 5 mét với hình vẽ minh họa hình thang, tam giác, hình tròn.',
+    archivalLocation: 'Bảo tàng Anh (The British Museum, London · EA 10057 & EA 10058)',
+    caption:
+      'Ahmes (khoảng 1550 TCN) · 84 bài toán về phân số đơn vị, cấp số nhân và phép xấp xỉ diện tích hình tròn',
+    academicSignificance:
+      'Văn bản toán học cổ đại ghi chép 84 bài toán về phân số đơn vị, cấp số nhân, thể tích kho thóc và phép xấp xỉ diện tích hình tròn tương ứng π ≈ 256/81 ≈ 3.1605. Đây là chứng tích vô giá về nguồn gốc đại số sơ cấp và sư phạm toán học cổ đại.',
+    coreAcademicValue:
+      'Tài liệu cổ nhất trình bày hệ thống bài toán mẫu sư phạm về phân số đơn vị Ai Cập, phương trình bậc nhất (aha) và xấp xỉ hằng số π.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Rhind_Mathematical_Papyrus.jpg',
+    alt: 'Cuộn giấy cói Toán học Rhind viết khoảng năm 1550 TCN hiện lưu giữ tại Bảo tàng Anh',
+  },
+  {
+    id: 'archimedes-palimpsest',
+    category: 'math-geometry',
+    shortTitle: 'Archimedes Palimpsest',
+    title: 'Phương pháp Các Định lý Cơ học (Archimedes Palimpsest)',
+    originalTitle: 'The Method of Mechanical Theorems — Archimedes Palimpsest',
+    artistOrOrigin: 'Archimedes xứ Syracuse',
+    yearOrEra: 'Thế kỷ III TCN · Syracuse',
+    eraAndPeriod: 'Thế kỷ III TCN (Bản chép thế kỷ X · Đế quốc Byzantine)',
+    materialAndTechnique:
+      'Bản thảo da dê viết đè (palimpsest) được giải mã bằng tia X huỳnh quang, hé lộ hình vẽ cân bằng vi phân hình học của Archimedes.',
+    archivalLocation: 'Bảo tàng Nghệ thuật Walters (Walters Art Museum, Baltimore, Maryland)',
+    caption:
+      'Archimedes (Thế kỷ III TCN) · Nguyên lý đòn bẩy và phép vét kiệt — Tiền thân của Tích phân Riemann',
+    academicSignificance:
+      'Công trình sử dụng nguyên lý đòn bẩy và phép vét kiệt (tiền thân của tích phân Riemann) để tính thể tích hình cầu, hình nón và paraboloid. Lần đầu tiên trong lịch sử, các lát cắt vô cùng bé và vô hạn thực tại được dùng để khám phá định lý hình học.',
+    coreAcademicValue:
+      'Đỉnh cao phương pháp giải tích sơ khai: kết hợp trực giác cơ học (cân các lát cắt phẳng) với phép vét kiệt Euclid để mở đường cho Giải tích.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/ArPalimTypPage.jpg',
+    alt: 'Trang bản thảo da dê Archimedes Palimpsest phục dựng bằng hình ảnh đa phổ',
+  },
+  {
+    id: 'al-jabr-khwarizmi',
+    category: 'math-geometry',
+    shortTitle: 'Al-Jabr (Al-Khwarizmi)',
+    title: 'Al-Jabr — Sách Đại số của Al-Khwarizmi',
+    originalTitle: 'Al-Kitab al-Mukhtasar fi Hisab al-Jabr wal-Muqabala',
+    artistOrOrigin: 'Muhammad ibn Musa al-Khwarizmi',
+    yearOrEra: 'Khoảng 820 · Baghdad',
+    eraAndPeriod: 'Khoảng năm 820 · Nhà Thông thái (Bayt al-Hikma, Baghdad)',
+    materialAndTechnique:
+      'Bản thảo mực sắt trên giấy cổ thế kỷ XIV chép lại công trình bằng tiếng Ả Rập kèm hình vuông chứng minh hằng đẳng thức hoàn chỉnh bình phương.',
+    archivalLocation: 'Thư viện Bodleian (Bodleian Library, Đại học Oxford · MS Hunt. 214)',
+    caption:
+      'Al-Khwarizmi (khoảng 820) · Nền móng ngành Đại số với phương pháp giải tổng quát phương trình bậc hai',
+    academicSignificance:
+      'Tác phẩm đặt nền móng cho ngành Đại số (Algebra) với phương pháp giải tổng quát các phương trình bậc nhất và bậc hai bằng hai phép biến đổi cơ bản: chuyển vế đổi dấu (al-jabr) và giản ước đồng hạng (al-muqabala), minh họa bằng ghép hình vuông hoàn chỉnh bình phương.',
+    coreAcademicValue:
+      'Khai sinh thuật ngữ Đại số (Algebra) và Thuật toán (Algorithm), hợp nhất tư duy giải phương trình với chứng minh hình học chặt chẽ.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Image-Al-Kit%C4%81b_al-mu%E1%B8%A5ta%E1%B9%A3ar_f%C4%AB_%E1%B8%A5is%C4%81b_al-%C4%9Fabr_wa-l-muq%C4%81bala.jpg',
+    alt: 'Trang bản thảo Al-Jabr của Al-Khwarizmi đặt nền móng cho Đại số học',
+  },
+  {
+    id: 'la-geometrie-descartes',
+    category: 'math-geometry',
+    shortTitle: 'La Géométrie (1637)',
+    title: 'La Géométrie (Hình học Giải tích)',
+    originalTitle: 'La Géométrie — Phụ lục Phương pháp luận của René Descartes',
+    artistOrOrigin: 'René Descartes',
+    yearOrEra: '1637 · Leiden',
+    eraAndPeriod: '1637 · Leiden, Hà Lan (In tại xưởng Jan Maire)',
+    materialAndTechnique:
+      'Ấn bản in chữ chì thế kỷ XVII sử dụng ký hiệu lũy thừa x², x³ và chữ cái đầu a, b, c cho hằng số, x, y, z cho ẩn số.',
+    archivalLocation: 'Thư viện Quốc gia Pháp (BnF, Paris) & Bảo tàng Lịch sử Khoa học Boerhaave',
+    caption:
+      'René Descartes (1637) · Kết nối Đại số và Hình học qua hệ tọa độ — Mở đường cho Hình học Affine & Giải tích',
+    academicSignificance:
+      'Công trình cách mạng kết nối Đại số với Hình học thông qua hệ tọa độ, mở đường cho Hình học Affine, Hình học Euclide và Giải tích hiện đại. Descartes chứng minh rằng mọi đường cong hình học có thể mã hóa thành phương trình đa thức đại số f(x, y) = 0.',
+    coreAcademicValue:
+      'Cầu nối vĩ đại giữa Hình học không gian và Đại số đa thức, định hình ký hiệu toán học hiện đại (a, b, c vs x, y, z) và hệ trục tọa độ.',
+    imageSrc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Descartes_La-Geometrie_1637.png',
+    alt: 'Trang nhan đề ấn bản gốc La Géométrie năm 1637 của René Descartes',
+  },
+  {
+    id: 'principia-mathematica-newton',
+    category: 'astronomy-science',
+    shortTitle: 'Principia (1687)',
+    title: 'Principia Mathematica (Các Nguyên lý Toán học của Triết học Tự nhiên)',
+    originalTitle: 'Philosophiæ Naturalis Principia Mathematica — Ấn bản đầu năm 1687',
+    artistOrOrigin: 'Isaac Newton',
+    yearOrEra: '1687 · Luân Đôn',
+    eraAndPeriod: '1687 · Hội Hoàng gia Luân Đôn (Royal Society, Anh Quốc)',
+    materialAndTechnique:
+      'Ấn bản sách in folio thế kỷ XVII chứa ba quyển định luật cơ học, lý thuyết tỷ lệ sơ yếu tối hậu (giới hạn) và đồ thị quỹ đạo conic.',
+    archivalLocation: 'Thư viện Trinity College, Cambridge & Thư viện Hội Hoàng gia Luân Đôn',
+    caption:
+      'Isaac Newton (1687) · Đặt nền tảng cho Giải tích, lý thuyết giới hạn và các định luật chuyển động vũ trụ',
+    academicSignificance:
+      'Tác phẩm đặt nền tảng cho phép tính vi tích phân, lý thuyết giới hạn (Method of First and Last Ratios) và các định luật chuyển động vũ trụ. Newton chứng minh rằng định luật vạn vật hấp dẫn tỷ lệ nghịch bình phương khoảng cách tất yếu suy ra quỹ đạo conic của Kepler.',
+    coreAcademicValue:
+      'Tượng đài tổng hợp giữa Giải tích vi phân, lý thuyết giới hạn và Vật lý thiên văn, thống nhất cơ học Trái Đất với chuyển động thiên thể.',
+    imageSrc:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Newton_-_Principia_(1687),_title,_p._5,_cropped.jpg',
+    alt: 'Trang bìa ấn bản năm 1687 Philosophiae Naturalis Principia Mathematica của Isaac Newton',
+  },
+  {
+    id: 'disquisitiones-arithmeticae-gauss',
+    category: 'math-geometry',
+    shortTitle: 'Disquisitiones (1801)',
+    title: 'Disquisitiones Arithmeticae (Nghiên cứu Số học)',
+    originalTitle: 'Disquisitiones Arithmeticae — Kiệt tác Số học Môđulô và Nhóm Aben',
+    artistOrOrigin: 'Carl Friedrich Gauss',
+    yearOrEra: '1801 · Leipzig',
+    eraAndPeriod: '1801 · Leipzig, Đức (In tại Gerh. Fleischer Jun.)',
+    materialAndTechnique:
+      'Ấn bản in Latin đầu thế kỷ XIX giới thiệu ký hiệu đồng dư thức (≡), luật thuận nghịch bậc hai và phương trình chia đường tròn cyclotomic.',
+    archivalLocation: 'Thư viện Bang và Đại học Hạ Saxony (SUB Göttingen, Đức)',
+    caption:
+      'Carl Friedrich Gauss (1801) · Khai sinh số học môđulô a ≡ b (mod n), cấu trúc nhóm và đa giác đều 17 cạnh',
+    academicSignificance:
+      'Kiệt tác khai sinh số học môđulô hiện đại a ≡ b (mod n), cấu trúc nhóm các lớp thặng dư khả nghịch và định lý dựng đa giác đều 17 cạnh chỉ bằng thước thẳng và compa. Đây là trụ cột trực tiếp dẫn tới Cấu trúc Đại số hiện đại về nhóm, vành và trường Galois.',
+    coreAcademicValue:
+      'Khai sinh phép đồng dư (mod n), cấu trúc đại số của nhóm lớp thặng dư khả nghịch U(n) và tiêu chuẩn Gauss–Wantzel về dựng hình đa giác đều.',
+    imageSrc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Disqvisitiones-800.jpg',
+    alt: 'Trang bìa ấn bản đầu Disquisitiones Arithmeticae năm 1801 của Carl Friedrich Gauss',
+  },
 ] as const;
 
 const ROTATION_INTERVAL_MS = 20000;
@@ -541,11 +866,22 @@ export function HeritageFallbackIllustration({ artwork }: { readonly artwork: He
   const isCelestial =
     artwork.id === 'copernicus-1543' ||
     artwork.id === 'kepler-1596' ||
-    artwork.id === 'nguoi-chiem-tinh';
+    artwork.id === 'nguoi-chiem-tinh' ||
+    artwork.id === 'principia-mathematica-newton';
   const isPolyhedron =
     artwork.id === 'de-divina-proportione' ||
     artwork.id === 'nguoi-vitruvius' ||
-    artwork.id === 'euclid-elements-1482';
+    artwork.id === 'euclid-elements-1482' ||
+    artwork.id === 'archimedes-palimpsest' ||
+    artwork.id === 'la-geometrie-descartes' ||
+    artwork.id === 'disquisitiones-arithmeticae-gauss';
+  const isTreatiseOrStele =
+    artwork.id === 'dai-thanh-toan-phap' ||
+    artwork.id === 'lap-thanh-toan-phap' ||
+    artwork.id === 'hong-duc-ban-do-1490' ||
+    artwork.id === 'rhind-mathematical-papyrus' ||
+    artwork.id === 'al-jabr-khwarizmi' ||
+    artwork.id === 'bia-tien-si';
 
   return (
     <svg
@@ -595,6 +931,19 @@ export function HeritageFallbackIllustration({ artwork }: { readonly artwork: He
             fillOpacity="0.12"
           />
           <polygon points="220,88 264,182 176,182" stroke="#8EE5CE" strokeOpacity="0.72" />
+          <path d="M 140 148 H 300 M 220 66 V 230" stroke="#E5C158" strokeOpacity="0.28" />
+        </g>
+      ) : isTreatiseOrStele ? (
+        <g stroke="#E5C158" fill="none" strokeWidth="1.3">
+          <rect x="136" y="64" width="168" height="168" rx="8" fill="#1B3931" fillOpacity="0.7" />
+          <path d="M 220 64 V 232 M 136 148 H 304" stroke="#E5C158" strokeOpacity="0.32" />
+          <circle cx="178" cy="106" r="24" stroke="#8EE5CE" strokeOpacity="0.65" />
+          <polygon points="262,84 288,128 236,128" fill="#E5C158" fillOpacity="0.18" />
+          <path
+            d="M 154 176 H 286 M 154 196 H 264 M 154 214 H 286"
+            stroke="#F8F6F0"
+            strokeOpacity="0.5"
+          />
         </g>
       ) : (
         <g stroke="#E5C158" fill="none" strokeWidth="1.35">

@@ -1,9 +1,5 @@
 import { type FC, useCallback, useEffect, useRef, useState } from 'react';
-import {
-  computeFrameDelta,
-  frameDampFactor,
-  getLowLatency2DContext,
-} from '@/shared/lib/canvasSprites';
+import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 import { EVENT_OPEN_INTRO, INTRO_STORAGE_KEY } from './introEvents';
 import {
@@ -245,7 +241,13 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    const ctx = getLowLatency2DContext(canvas, { alpha: false });
+    // Bắt buộc bật kênh alpha: true để thao tác destination-out đục lỗ trong suốt thật sự nhìn xuyên xuống Trang chủ
+    let ctx: CanvasRenderingContext2D | null = null;
+    try {
+      ctx = canvas.getContext('2d', { alpha: true });
+    } catch {
+      ctx = canvas.getContext('2d');
+    }
     if (!ctx) return;
 
     let viewportWidth = window.innerWidth;
@@ -362,11 +364,11 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
       onTouchStart={handleDismiss}
       onKeyDown={handleDismiss}
       className={cn(
-        'fixed inset-0 z-[100] select-none',
-        isDismissing ? 'pointer-events-none cursor-default' : 'cursor-pointer',
+        'fixed inset-0 z-[100] bg-transparent select-none',
+        isDismissing ? 'pointer-events-none cursor-default' : 'pointer-events-auto cursor-pointer',
       )}
     >
-      <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
+      <canvas ref={canvasRef} className="block h-full w-full bg-transparent" aria-hidden="true" />
     </aside>
   );
 };

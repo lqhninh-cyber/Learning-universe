@@ -113,7 +113,7 @@ const ROTATION_INTERVAL_MS = 20000;
 const FADE_TRANSITION_MS = 350;
 
 export interface RotatingScholarlyQuoteProps {
-  readonly variant?: 'card' | 'dock';
+  readonly variant?: 'card' | 'dock' | 'hero';
   readonly className?: string;
 }
 
@@ -177,8 +177,8 @@ export function RotatingScholarlyQuote({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       className={cn(
-        'group relative w-full rounded-2xl border border-[#E5C158]/25 bg-[#081520]/65 shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-all duration-300 hover:border-[#E5C158]/50',
-        isDock ? 'px-4 py-3.5 sm:px-5 sm:py-4' : 'p-5 sm:p-6',
+        'group relative w-full rounded-2xl border border-[#E5C158]/30 bg-[#081520]/70 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#E5C158]/55',
+        isDock ? 'px-4 py-3.5 sm:px-5 sm:py-4' : 'p-6',
         className,
       )}
     >
@@ -243,8 +243,10 @@ export function RotatingScholarlyQuote({
       >
         <p
           className={cn(
-            'font-serif leading-relaxed text-[#FFF9F0] italic',
-            isDock ? 'mb-1.5 text-[14.5px] sm:text-[15.5px]' : 'mb-3 text-[16.5px]',
+            'font-serif text-[#FFF9F0] italic',
+            isDock
+              ? 'mb-1.5 text-[14.5px] leading-relaxed sm:text-[15.5px]'
+              : 'mb-3.5 text-[17px] leading-[1.65] lg:text-[18px]',
           )}
         >
           &ldquo;{currentQuote.content}&rdquo;

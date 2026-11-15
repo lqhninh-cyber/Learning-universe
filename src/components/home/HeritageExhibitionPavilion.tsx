@@ -9,22 +9,19 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   HERITAGE_ARTWORKS,
-  HERITAGE_CATEGORY_TABS,
   HeritageFallbackIllustration,
   type HeritageArtwork,
-  type HeritageCategory,
 } from '@/components/home/HeritageArtShowcase';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
-type PavilionFilter = 'all' | HeritageCategory;
-
 const ROTATION_INTERVAL_MS = 20000;
 const SLIDE_TRANSITION_MS = 320;
+const FILMSTRIP_SCROLL_STEP_PX = 420;
 
 interface FilmstripItemProps {
   readonly artwork: HeritageArtwork;
@@ -98,13 +95,12 @@ function FilmstripThumbnailButton({
 /**
  * SCREEN 2: PHÒNG TRƯNG BÀY DI SẢN BẢO TÀNG (#khong-gian-di-san)
  * - Nền sơn mài ngọc bích sâu thẳm (#09171E -> #0B1D19 -> #081A15) tách biệt hoàn toàn khỏi mây Screen 1.
- * - Bố cục 3 tầng: Bộ lọc phân nhánh + Sân khấu 12 cột (Khung tranh 16:10 + Hồ sơ Học thuật trực tiếp) + Filmstrip 15 tác phẩm.
+ * - Bố cục 3 tầng: Sân khấu 12 cột (Khung tranh 16:10 + Hồ sơ Học thuật trực tiếp) -> Thanh điều khiển trình chiếu trung tâm -> Filmstrip 30 tác phẩm.
  */
 export function HeritageExhibitionPavilion() {
   const prefersReducedMotion = useReducedMotion();
   const drumPatternId = useId().replace(/:/g, '');
 
-  const [activeFilter, setActiveFilter] = useState<PavilionFilter>('all');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -115,6 +111,9 @@ export function HeritageExhibitionPavilion() {
   const glareRef = useRef<HTMLDivElement>(null);
   const motionRafRef = useRef<number>(0);
   const transitionTimerRef = useRef<number>(0);
+  const filmstripRef = useRef<HTMLDivElement>(null);
+  const thumbRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const hasInteractedIndexRef = useRef(false);
   const parallaxStateRef = useRef({
     curX: 0,
     curY: 0,
@@ -128,30 +127,10 @@ export function HeritageExhibitionPavilion() {
     lastNow: 0,
   });
 
-  const categoryCounts = useMemo(() => {
-    const counts: Record<PavilionFilter, number> = {
-      all: HERITAGE_ARTWORKS.length,
-      'vietnam-heritage': 0,
-      'math-geometry': 0,
-      'astronomy-science': 0,
-    };
-    HERITAGE_ARTWORKS.forEach((item) => {
-      counts[item.category] += 1;
-    });
-    return counts;
-  }, []);
-
-  const filteredArtworks = useMemo(
-    () =>
-      activeFilter === 'all'
-        ? HERITAGE_ARTWORKS
-        : HERITAGE_ARTWORKS.filter((item) => item.category === activeFilter),
-    [activeFilter],
-  );
-
-  const safeIndex = Math.min(currentIndex, Math.max(filteredArtworks.length - 1, 0));
-  const currentArtwork = filteredArtworks[safeIndex] ?? HERITAGE_ARTWORKS[0]!;
-  const totalCount = filteredArtworks.length;
+  const artworks = HERITAGE_ARTWORKS;
+  const totalCount = artworks.length;
+  const safeIndex = Math.min(currentIndex, Math.max(totalCount - 1, 0));
+  const currentArtwork = artworks[safeIndex] ?? artworks[0]!;
   const formattedIndex = String(safeIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalCount).padStart(2, '0');
 
@@ -160,6 +139,8 @@ export function HeritageExhibitionPavilion() {
       if (totalCount <= 0) return;
       const wrapped = ((nextIdx % totalCount) + totalCount) % totalCount;
       if (wrapped === safeIndex && !imageError) return;
+
+      hasInteractedIndexRef.current = true;
 
       if (transitionTimerRef.current) {
         window.clearTimeout(transitionTimerRef.current);
@@ -180,13 +161,26 @@ export function HeritageExhibitionPavilion() {
     [imageError, prefersReducedMotion, safeIndex, totalCount],
   );
 
-  const handleFilterChange = (nextFilter: PavilionFilter) => {
-    if (nextFilter === activeFilter) return;
-    setActiveFilter(nextFilter);
-    setCurrentIndex(0);
-    setImageError(false);
-    setIsTransitioning(false);
-  };
+  // Tự động cuộn mượt để căn giữa thumbnail đang được chọn trên dải Filmstrip
+  useEffect(() => {
+    if (!hasInteractedIndexRef.current) return;
+    const activeThumb = thumbRefs.current[safeIndex];
+    activeThumb?.scrollIntoView?.({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      inline: 'center',
+      block: 'nearest',
+    });
+  }, [prefersReducedMotion, safeIndex]);
+
+  const scrollFilmstripBy = useCallback(
+    (deltaX: number) => {
+      filmstripRef.current?.scrollBy?.({
+        left: deltaX,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
+    },
+    [prefersReducedMotion],
+  );
 
   const handleNext = useCallback(() => {
     goToIndex(safeIndex + 1);
@@ -332,9 +326,9 @@ export function HeritageExhibitionPavilion() {
 
       <div className="lu-container-wide relative z-10">
         {/* ================================================================
-          TẦNG 1: TIÊU ĐỀ & BỘ LỌC PHÂN NHÁNH
+          TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN
           ================================================================ */}
-        <div className="mb-10 flex flex-col gap-6 border-b border-[#C9A45C]/25 pb-7 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-10 border-b border-[#C9A45C]/25 pb-7">
           <div className="space-y-2.5">
             <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#E5C158] uppercase">
               <Landmark className="h-3.5 w-3.5 text-[#E5C158]" aria-hidden="true" />
@@ -344,83 +338,10 @@ export function HeritageExhibitionPavilion() {
               Di sản Học thuật &amp; Nghệ thuật
             </h2>
             <p className="max-w-2xl text-sm leading-relaxed text-[#C8D6CE] sm:text-base">
-              Không gian triển lãm 15 kiệt tác kiến trúc, hội họa và tư liệu lịch sử ghi dấu hành
-              trình khoa bảng Việt Nam và cách mạng tư duy toán học – thiên văn nhân loại.
+              Không gian triển lãm {totalCount} kiệt tác kiến trúc, hội họa và tư liệu lịch sử ghi
+              dấu hành trình khoa bảng Việt Nam và cách mạng tư duy toán học – thiên văn nhân loại.
             </p>
           </div>
-
-          {/* Điều khiển trình chiếu & bộ lọc */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#C9A45C]/30 bg-[#05100D]/80 px-2.5 py-1">
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Tác phẩm trước"
-                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/30 bg-white/5 text-[#F7F3E8] transition-all hover:border-[#E5C158] hover:text-[#E5C158]"
-              >
-                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsPaused((prev) => !prev)}
-                aria-label={
-                  isPaused ? 'Tiếp tục trình chiếu di sản' : 'Tạm dừng trình chiếu di sản'
-                }
-                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/30 bg-white/5 text-[#F7F3E8] transition-all hover:border-[#E5C158] hover:text-[#E5C158]"
-              >
-                {isPaused ? (
-                  <Play className="h-3.5 w-3.5" aria-hidden="true" />
-                ) : (
-                  <Pause className="h-3.5 w-3.5" aria-hidden="true" />
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Tác phẩm tiếp theo"
-                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/30 bg-white/5 text-[#F7F3E8] transition-all hover:border-[#E5C158] hover:text-[#E5C158]"
-              >
-                <ChevronRight className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Category Filter Tabs */}
-        <div
-          role="tablist"
-          aria-label="Phân loại tác phẩm di sản"
-          className="mb-8 flex flex-wrap items-center gap-2"
-        >
-          {HERITAGE_CATEGORY_TABS.map((tab) => {
-            const isSelected = activeFilter === tab.id;
-            const count = categoryCounts[tab.id];
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isSelected}
-                onClick={() => handleFilterChange(tab.id)}
-                className={cn(
-                  'inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200',
-                  isSelected
-                    ? 'border-[#E5C158] bg-gradient-to-r from-[#E5C158] to-[#D4A359] font-semibold text-[#05100D] shadow-sm'
-                    : 'border-[#C9A45C]/25 bg-[#05100D]/60 text-[#D1DCD6] hover:border-[#E5C158]/55 hover:text-[#FAF6EE]',
-                )}
-              >
-                <span>{tab.label}</span>
-                <span
-                  className={cn(
-                    'rounded-full px-1.5 py-0.5 font-mono text-[10px]',
-                    isSelected ? 'bg-[#05100D]/15 text-[#05100D]' : 'bg-white/10 text-[#E8C87D]',
-                  )}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
         </div>
 
         {/* ================================================================
@@ -466,20 +387,11 @@ export function HeritageExhibitionPavilion() {
               />
             </div>
 
-            {/* Thanh chú thích & nút Lightbox đặt ngoài khung tranh để không che hình */}
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3 px-1">
+            {/* Thanh chú thích đặt ngoài khung tranh để không che hình */}
+            <div className="mt-3 px-1">
               <p className="font-serif text-xs text-[#E8C87D]/95 italic sm:text-sm">
                 {currentArtwork.caption}
               </p>
-              <button
-                type="button"
-                onClick={() => setIsLightboxOpen(true)}
-                aria-label={`Phóng to tác phẩm ${currentArtwork.title}`}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#C9A45C]/35 bg-[#05100D]/80 px-3 py-1.5 font-mono text-[11px] font-medium text-[#E5C158] transition-colors hover:border-[#E5C158] hover:bg-[#C9A45C]/15"
-              >
-                <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Xem toàn màn hình</span>
-              </button>
             </div>
           </div>
 
@@ -559,34 +471,125 @@ export function HeritageExhibitionPavilion() {
         </div>
 
         {/* ================================================================
-          TẦNG 3: THANH FILMSTRIP 15 THU NHỎ TƯƠNG TÁC
+          THANH ĐIỀU KHIỂN TRÌNH CHIẾU TRUNG TÂM (GIỮA KHUNG TRANH & FILMSTRIP)
           ================================================================ */}
-        <div className="mt-8 border-t border-[#C9A45C]/20 pt-6">
-          <div className="mb-3 flex items-center justify-between">
+        <div
+          data-testid="heritage-control-bar"
+          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+        >
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Tác phẩm trước"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#F5EFE2] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+          >
+            <ChevronLeft className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+            <span>Tác phẩm trước</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsPaused((prev) => !prev)}
+            aria-label={isPaused ? 'Tự động chiếu' : 'Tạm dừng'}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#E5C158] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+          >
+            {isPaused ? (
+              <>
+                <Play className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Tự động chiếu</span>
+              </>
+            ) : (
+              <>
+                <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Tạm dừng</span>
+              </>
+            )}
+          </button>
+
+          <span
+            data-testid="heritage-index-indicator"
+            className="inline-flex items-center rounded-full border border-[#C9A45C]/40 bg-[#05100D] px-4 py-2 font-mono text-xs font-bold tracking-widest text-[#E5C158] sm:text-sm"
+          >
+            {formattedIndex} / {formattedTotal}
+          </span>
+
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Tác phẩm tiếp"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#F5EFE2] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+          >
+            <span>Tác phẩm tiếp</span>
+            <ChevronRight className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsLightboxOpen(true)}
+            aria-label={`Phóng to tác phẩm ${currentArtwork.title}`}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#F5EFE2] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+          >
+            <Maximize2 className="h-3.5 w-3.5 text-[#E5C158]" aria-hidden="true" />
+            <span>Xem toàn màn hình</span>
+          </button>
+        </div>
+
+        {/* ================================================================
+          TẦNG 3: THANH FILMSTRIP 30 THU NHỎ TƯƠNG TÁC (KHÔNG THANH CUỘN THÔ)
+          ================================================================ */}
+        <div className="mt-7 border-t border-[#C9A45C]/20 pt-6">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="font-mono text-[11px] tracking-widest text-[#E8C87D]/90 uppercase">
               DANH MỤC TRIỂN LÃM ({formattedTotal} TÁC PHẨM)
             </span>
             <span className="font-mono text-[11px] text-[#9FB3A9]">
-              Bấm chọn tác phẩm để chiêm ngưỡng hồ sơ chi tiết
+              Bấm chọn tác phẩm hoặc trượt ngang để chiêm ngưỡng hồ sơ chi tiết
             </span>
           </div>
 
-          <div
-            data-testid="heritage-filmstrip"
-            className="flex gap-3 overflow-x-auto pb-2"
-            role="list"
-            aria-label="Dải thu nhỏ 15 tác phẩm di sản"
-          >
-            {filteredArtworks.map((art, idx) => (
-              <div key={art.id} role="listitem">
-                <FilmstripThumbnailButton
-                  artwork={art}
-                  displayIndex={idx}
-                  isActive={idx === safeIndex}
-                  onSelect={() => goToIndex(idx)}
-                />
-              </div>
-            ))}
+          <div className="relative flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => scrollFilmstripBy(-FILMSTRIP_SCROLL_STEP_PX)}
+              aria-label="Cuộn danh mục sang trái"
+              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/40 bg-[#0A211B] text-[#F5EFE2] shadow-md transition-all hover:border-[#E5C158] hover:bg-[#13352C] sm:h-10 sm:w-10"
+            >
+              <ChevronLeft className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+            </button>
+
+            <div
+              ref={filmstripRef}
+              data-testid="heritage-filmstrip"
+              className="flex flex-1 [scrollbar-width:none] gap-3 overflow-x-auto scroll-smooth pb-1 [&::-webkit-scrollbar]:hidden"
+              role="list"
+              aria-label={`Dải thu nhỏ ${totalCount} tác phẩm di sản`}
+            >
+              {artworks.map((art, idx) => (
+                <div
+                  key={art.id}
+                  role="listitem"
+                  ref={(el) => {
+                    thumbRefs.current[idx] = el;
+                  }}
+                >
+                  <FilmstripThumbnailButton
+                    artwork={art}
+                    displayIndex={idx}
+                    isActive={idx === safeIndex}
+                    onSelect={() => goToIndex(idx)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => scrollFilmstripBy(FILMSTRIP_SCROLL_STEP_PX)}
+              aria-label="Cuộn danh mục sang phải"
+              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/40 bg-[#0A211B] text-[#F5EFE2] shadow-md transition-all hover:border-[#E5C158] hover:bg-[#13352C] sm:h-10 sm:w-10"
+            >
+              <ChevronRight className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </div>

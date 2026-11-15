@@ -73,9 +73,10 @@ export function HomePage() {
         {/* LAYER 2: Engine Khí Quyển 3D 120fps (Tia sáng, Chim Lạc ánh sao, Cực quang gảy dây & Đèn Trời 3D) */}
         <HeroPhysicsCanvas phase={atmosphericPhase} />
 
-        {/* TẦNG TRÊN & GIỮA: Cột Typography thoáng đãng giải phóng >65% tầm nhìn toàn cảnh núi non */}
-        <div className="lu-container-wide relative z-20 flex flex-1 flex-col justify-center py-6">
-          <div className="max-w-2xl space-y-5">
+        {/* KHỐI NỘI DUNG NGANG TẦM MẮT: 2 CỘT CÂN ĐỐI GIẢI PHÓNG HOÀN TOÀN THÁC NƯỚC, RUỘNG BẬC THANG & BIỂN MÂY */}
+        <div className="lu-container-wide relative z-20 my-auto grid grid-cols-1 items-end gap-8 pt-6 pb-10 lg:grid-cols-12">
+          {/* Cột Trái (7 cột): Thông điệp khai phóng & La bàn 4 thời khắc */}
+          <div className="space-y-5 lg:col-span-7">
             {/* Badge LEARNING UNIVERSE với Ngôi sao Trống Đồng Đông Sơn */}
             <div className="inline-flex items-center gap-2 rounded-full border border-[#E5C158]/30 bg-[#081520]/65 px-3.5 py-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.45)] backdrop-blur-xl">
               <svg
@@ -134,19 +135,19 @@ export function HomePage() {
                 <ArrowDown className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
               </a>
             </div>
-          </div>
-        </div>
 
-        {/* THANH CHÂN HERO COMPACT FROSTED GLASS: Danh ngôn học thuật + La bàn 4 Thời khắc */}
-        <div className="lu-container-wide relative z-20 mt-auto pt-4">
-          <div className="grid grid-cols-1 items-end gap-4 lg:grid-cols-[1.35fr_auto]">
-            <RotatingScholarlyQuote variant="dock" />
-            <div className="flex justify-start lg:justify-end">
+            {/* La bàn 4 Thời khắc Khí quyển đặt ngay bên dưới khối CTA */}
+            <div className="mt-6 pt-2">
               <AtmosphericTimeDial
                 activePhase={atmosphericPhase}
                 onChangePhase={setAtmosphericPhase}
               />
             </div>
+          </div>
+
+          {/* Cột Phải (5 cột): Thẻ Danh ngôn học thuật nâng cao ngang tầm khu vực CTA */}
+          <div className="lg:col-span-5 lg:mb-2">
+            <RotatingScholarlyQuote variant="hero" />
           </div>
         </div>
       </section>

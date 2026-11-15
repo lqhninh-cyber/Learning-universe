@@ -192,6 +192,26 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
     );
     expect(mouseMoveRemove).toBeDefined();
   });
+
+  it('khởi tạo Canvas 2D với kênh alpha: true (không dùng alpha: false) và nền bg-transparent để lộ trang bên dưới', () => {
+    const getContextSpy = vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+
+    const { container } = render(
+      <div>
+        <main data-testid="underlying-page">Nội dung Trang chủ bên dưới</main>
+        <WaterTouchIntro />
+      </div>,
+    );
+
+    const dialog = screen.getByRole('dialog', { name: /Thiên Cầu Khuê Văn Các/i });
+    expect(dialog).toHaveClass('bg-transparent', 'pointer-events-auto');
+    expect(screen.getByTestId('underlying-page')).toBeInTheDocument();
+
+    const canvas = container.querySelector('canvas');
+    expect(canvas).toHaveClass('bg-transparent');
+    expect(getContextSpy).toHaveBeenCalledWith('2d', { alpha: true });
+    expect(getContextSpy).not.toHaveBeenCalledWith('2d', { alpha: false });
+  });
 });
 
 describe('KhueVanCanvas Math & Portal Choreography', () => {
