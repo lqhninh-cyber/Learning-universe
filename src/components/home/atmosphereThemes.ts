@@ -61,6 +61,7 @@ export interface AtmospherePalette {
   readonly rayCool: RgbTriplet;
   readonly pineTop: RgbTriplet;
   readonly pineBot: RgbTriplet;
+  readonly bottomMistDeep: RgbTriplet;
   readonly starIntensity: number;
   readonly milkyWayIntensity: number;
   readonly rayIntensity: number;
@@ -92,9 +93,10 @@ export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> =
     rayCool: [120, 174, 218],
     pineTop: [22, 46, 68],
     pineBot: [8, 18, 30],
+    bottomMistDeep: [17, 34, 51], // #112233 Deep Indigo Mist nối vào #121B28 Screen 2
     starIntensity: 1.0,
     milkyWayIntensity: 1.0,
-    rayIntensity: 1.15,
+    rayIntensity: 1.0,
     contrastScrimAlpha: 0.28,
   },
   'binh-minh': {
@@ -121,9 +123,10 @@ export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> =
     rayCool: [255, 143, 163],
     pineTop: [46, 33, 62],
     pineBot: [20, 14, 30],
+    bottomMistDeep: [28, 34, 54],
     starIntensity: 0.36,
     milkyWayIntensity: 0.22,
-    rayIntensity: 1.65,
+    rayIntensity: 1.35,
     contrastScrimAlpha: 0.44,
   },
   'nang-ngoc': {
@@ -150,9 +153,10 @@ export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> =
     rayCool: [144, 224, 239],
     pineTop: [18, 66, 78],
     pineBot: [8, 32, 42],
+    bottomMistDeep: [18, 42, 58],
     starIntensity: 0.14,
     milkyWayIntensity: 0.08,
-    rayIntensity: 1.45,
+    rayIntensity: 1.2,
     contrastScrimAlpha: 0.5,
   },
   'hoang-hon': {
@@ -179,9 +183,10 @@ export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> =
     rayCool: [200, 62, 55],
     pineTop: [38, 22, 46],
     pineBot: [16, 9, 22],
+    bottomMistDeep: [17, 34, 51], // #112233 Deep Indigo Mist nối mượt vào #121B28 Screen 2
     starIntensity: 0.56,
     milkyWayIntensity: 0.42,
-    rayIntensity: 1.55,
+    rayIntensity: 1.25,
     contrastScrimAlpha: 0.42,
   },
 };
@@ -242,6 +247,7 @@ export function interpolateAtmospherePalette(
     rayCool: lerpRgb(from.rayCool, to.rayCool, t),
     pineTop: lerpRgb(from.pineTop, to.pineTop, t),
     pineBot: lerpRgb(from.pineBot, to.pineBot, t),
+    bottomMistDeep: lerpRgb(from.bottomMistDeep, to.bottomMistDeep, t),
     starIntensity: lerp(from.starIntensity, to.starIntensity, t),
     milkyWayIntensity: lerp(from.milkyWayIntensity, to.milkyWayIntensity, t),
     rayIntensity: lerp(from.rayIntensity, to.rayIntensity, t),

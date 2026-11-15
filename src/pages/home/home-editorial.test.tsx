@@ -529,6 +529,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
       expect(screen.getByTestId('flythrough-west-slope')).toBeInTheDocument();
       expect(screen.getByTestId('flythrough-east-slope')).toBeInTheDocument();
+      expect(screen.getByTestId('valley-mist-band-1')).toBeInTheDocument();
+      expect(screen.getByTestId('valley-mist-band-2')).toBeInTheDocument();
+      expect(screen.getByTestId('valley-mist-band-3')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-bottom-mist-transition')).toBeInTheDocument();
+      expect(screen.getByTestId('quote-progress-bar')).toBeInTheDocument();
+      expect(screen.getByTestId('quote-discipline-badge')).toHaveTextContent(/Triết học Giáo dục/i);
 
       // Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng 3 tầng (#khong-gian-di-san)
       const showcase = screen.getByTestId('heritage-art-showcase');
@@ -612,11 +618,19 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('hoang-lien-cranes').querySelectorAll('path')).toHaveLength(9);
       expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
 
-      // Kiểm chứng Engine Khí Quyển 3D 120fps & 5 đột phá
+      // Kiểm chứng Engine Khí Quyển 3D 120fps & 5 đột phá + Thác nước 3 tầng & Sương đáy mượt mà
+      expect(screen.getByTestId('valley-mist-band-1')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-bottom-mist-transition')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('fansipan-peaks').querySelector('path')?.getAttribute('d'),
+      ).toContain('Q ');
+      expect(
+        screen.getByTestId('thac-bac-gorge').querySelectorAll('ellipse').length,
+      ).toBeGreaterThanOrEqual(2);
       const world = createAtmosphereWorld(1440, 900);
       expect(world.stars.length).toBeGreaterThanOrEqual(240);
-      expect(world.waterfallDrops.length).toBeGreaterThanOrEqual(80);
-      expect(world.waterfallMist.length).toBeGreaterThanOrEqual(12);
+      expect(world.waterfallDrops.length).toBeGreaterThanOrEqual(120);
+      expect(world.waterfallMist.length).toBeGreaterThanOrEqual(20);
       expect(world.terraceGlints.length).toBeGreaterThanOrEqual(40);
       expect(new Set(world.cloudPuffs.map((p) => p.variant))).toEqual(
         new Set(['cloudSlate', 'cloudRoseGold', 'cloudPearl', 'cloudIvory']),

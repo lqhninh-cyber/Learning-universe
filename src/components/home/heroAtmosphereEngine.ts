@@ -13,6 +13,7 @@ export interface AtmosphereSpriteCache {
   readonly cloudRoseGold: OffscreenSurface | null;
   readonly subsurfaceAmber: OffscreenSurface | null;
   readonly waterStreak: OffscreenSurface | null;
+  readonly waterfallSpray: OffscreenSurface | null;
   readonly waterfallMist: OffscreenSurface | null;
   readonly petalRose: OffscreenSurface | null;
   readonly petalGold: OffscreenSurface | null;
@@ -246,14 +247,14 @@ interface CrepuscularRaySpec {
 }
 
 const CREPUSCULAR_RAYS: readonly CrepuscularRaySpec[] = [
-  { angleDeg: -136, spreadDeg: 6.5, lengthRatio: 0.72, intensity: 0.14, warm: false },
-  { angleDeg: -116, spreadDeg: 8.5, lengthRatio: 0.78, intensity: 0.19, warm: true },
-  { angleDeg: -92, spreadDeg: 7.0, lengthRatio: 0.82, intensity: 0.16, warm: false },
-  { angleDeg: -64, spreadDeg: 9.0, lengthRatio: 0.76, intensity: 0.21, warm: true },
-  { angleDeg: -38, spreadDeg: 7.5, lengthRatio: 0.7, intensity: 0.15, warm: false },
-  { angleDeg: 32, spreadDeg: 10.5, lengthRatio: 0.56, intensity: 0.13, warm: true },
-  { angleDeg: 62, spreadDeg: 11.5, lengthRatio: 0.62, intensity: 0.17, warm: true },
-  { angleDeg: 102, spreadDeg: 9.5, lengthRatio: 0.58, intensity: 0.12, warm: false },
+  { angleDeg: -138, spreadDeg: 14.5, lengthRatio: 0.72, intensity: 0.038, warm: false },
+  { angleDeg: -116, spreadDeg: 17.5, lengthRatio: 0.78, intensity: 0.048, warm: true },
+  { angleDeg: -92, spreadDeg: 16.0, lengthRatio: 0.82, intensity: 0.042, warm: false },
+  { angleDeg: -64, spreadDeg: 19.5, lengthRatio: 0.76, intensity: 0.054, warm: true },
+  { angleDeg: -38, spreadDeg: 15.5, lengthRatio: 0.7, intensity: 0.04, warm: false },
+  { angleDeg: 32, spreadDeg: 21.0, lengthRatio: 0.58, intensity: 0.036, warm: true },
+  { angleDeg: 62, spreadDeg: 22.5, lengthRatio: 0.62, intensity: 0.046, warm: true },
+  { angleDeg: 102, spreadDeg: 18.0, lengthRatio: 0.58, intensity: 0.034, warm: false },
 ];
 
 const AURORA_SAMPLE_COUNT = 56;
@@ -474,6 +475,11 @@ export function buildAtmosphereSpriteCache(): AtmosphereSpriteCache {
       [1, 'rgba(255, 159, 67, 0)'],
     ]),
     waterStreak: buildWaterStreakSprite(),
+    waterfallSpray: buildRadialSprite(16, 16, [
+      [0, 'rgba(255, 255, 255, 0.94)'],
+      [0.42, 'rgba(218, 238, 252, 0.54)'],
+      [1, 'rgba(200, 224, 240, 0)'],
+    ]),
     waterfallMist: buildRadialSprite(64, 64, [
       [0, 'rgba(248, 251, 255, 0.78)'],
       [0.38, 'rgba(182, 212, 235, 0.4)'],
@@ -588,32 +594,32 @@ export function createAtmosphereWorld(width: number, height: number): Atmosphere
   }
 
   const waterfallDrops: WaterfallDrop[] = [];
-  for (let i = 0; i < 85; i += 1) {
+  for (let i = 0; i < 140; i += 1) {
     const r1 = deterministicUnit(i + 401);
     const r2 = deterministicUnit(i + 503);
     waterfallDrops.push({
-      xOffset: (r1 - 0.5) * 14,
+      xOffset: (r1 - 0.5) * 18,
       yProgress: r2,
-      vy: 1.4 + r1 * 1.1,
-      vx: (r2 - 0.5) * 0.14,
-      length: 12 + r1 * 18,
-      width: 2.2 + r2 * 2.8,
-      alpha: 0.42 + r1 * 0.5,
-      bounced: r2 > 0.46,
+      vy: 1.3 + r1 * 1.1,
+      vx: (r2 - 0.5) * 0.16,
+      length: 10 + r1 * 16,
+      width: 1.8 + r2 * 2.4,
+      alpha: 0.36 + r1 * 0.48,
+      bounced: r2 > 0.34,
     });
   }
 
   const waterfallMist: WaterfallMistPuff[] = [];
-  for (let i = 0; i < 16; i += 1) {
+  for (let i = 0; i < 24; i += 1) {
     const r1 = deterministicUnit(i + 601);
     const r2 = deterministicUnit(i + 703);
     waterfallMist.push({
-      xOffset: (r1 - 0.5) * 38,
-      yOffset: (r2 - 0.5) * 12,
-      vx: (r1 - 0.5) * 0.35,
-      vy: -(0.12 + r2 * 0.18),
-      radius: 20 + r1 * 26,
-      alpha: 0.48,
+      xOffset: (r1 - 0.5) * 52,
+      yOffset: (r2 - 0.5) * 14,
+      vx: (r1 - 0.5) * 0.42,
+      vy: -(0.14 + r2 * 0.2),
+      radius: 22 + r1 * 28,
+      alpha: 0.45,
       life: r2 * 2.4,
       maxLife: 2.2 + r1 * 1.1,
     });
@@ -1014,14 +1020,25 @@ function renderDongSonCompassAndMilkyWay(data: RenderContextData): void {
 
 function renderDynamicCrepuscularRays(data: RenderContextData): void {
   const { ctx, width, height, tSec, mouse, palette, world } = data;
-  const pivotX = width * (0.6 - mouse.normX * 0.075);
-  const pivotY = height * (0.35 - mouse.normY * 0.045);
-  const tiltShiftDeg = -mouse.normX * 12;
-  const mouseGlowFactor = mouse.active ? 1.18 : 1;
-  const novaMul = 1 + world.novaSceneBoost * 0.7;
+  const pivotX = width * (0.6 - mouse.normX * 0.065);
+  const pivotY = height * (0.36 - mouse.normY * 0.04);
+  const tiltShiftDeg = -mouse.normX * 10;
+  const mouseGlowFactor = mouse.active ? 1.12 : 1;
+  const novaMul = 1 + world.novaSceneBoost * 0.35;
 
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
+
+  // Quầng tán xạ bầu khí quyển tỏa rộng mềm mại phía sau đỉnh Hoàng Liên Sơn (tối đa alpha 0.10)
+  const scatterRadius = Math.max(width, height) * 0.56;
+  const scatterGrad = ctx.createRadialGradient(pivotX, pivotY, 0, pivotX, pivotY, scatterRadius);
+  scatterGrad.addColorStop(0, rgbaString(palette.rayWarm, 0.085));
+  scatterGrad.addColorStop(0.42, rgbaString(palette.rayCool, 0.038));
+  scatterGrad.addColorStop(1, rgbaString(palette.rayCool, 0));
+  ctx.fillStyle = scatterGrad;
+  ctx.beginPath();
+  ctx.arc(pivotX, pivotY, scatterRadius, 0, Math.PI * 2);
+  ctx.fill();
 
   for (let i = 0; i < CREPUSCULAR_RAYS.length; i += 1) {
     const ray = CREPUSCULAR_RAYS[i];
@@ -1038,16 +1055,17 @@ function renderDynamicCrepuscularRays(data: RenderContextData): void {
     const midEndX = (endX1 + endX2) / 2;
     const midEndY = (endY1 + endY2) / 2;
 
-    const shimmer = 0.8 + 0.2 * Math.sin(tSec * 0.65 + i * 1.1);
+    const shimmer = 0.82 + 0.18 * Math.sin(tSec * 0.55 + i * 1.1);
     const alpha = Math.min(
-      0.46,
+      0.1,
       ray.intensity * shimmer * mouseGlowFactor * novaMul * palette.rayIntensity,
     );
 
     const rayGrad = ctx.createLinearGradient(pivotX, pivotY, midEndX, midEndY);
     const tint = ray.warm ? palette.rayWarm : palette.rayCool;
     rayGrad.addColorStop(0, rgbaString(tint, alpha));
-    rayGrad.addColorStop(0.45, rgbaString(tint, alpha * 0.4));
+    rayGrad.addColorStop(0.38, rgbaString(tint, alpha * 0.42));
+    rayGrad.addColorStop(0.76, rgbaString(tint, alpha * 0.1));
     rayGrad.addColorStop(1, rgbaString(tint, 0));
 
     ctx.fillStyle = rayGrad;
@@ -1451,64 +1469,153 @@ function renderSkyLanterns(data: RenderContextData): void {
 }
 
 function renderMountainWaterfall(data: RenderContextData): void {
-  const { ctx, width, height, tSec, dtScale, scrollProgress, animate, sprites, world } = data;
+  const { ctx, width, height, tSec, dtScale, scrollProgress, animate, sprites, palette, world } =
+    data;
   const zoom = 1 + scrollProgress * 0.28;
   const anchorX = width * WATERFALL_ANCHOR_NX;
   const topY = height * (WATERFALL_TOP_NY - scrollProgress * 0.04);
   const bottomY = height * (WATERFALL_BOTTOM_NY + scrollProgress * 0.04);
-  const fallSpan = Math.max(bottomY - topY, 60);
+  const fallSpan = Math.max(bottomY - topY, 64);
+
+  // Tọa độ uốn chữ S của 3 tầng thác qua ghềnh đá (y = 0 -> 1)
+  const curveShiftAt = (p: number) => Math.sin(p * Math.PI * 2.15 + 0.4) * 5.2 * zoom;
+  const halfWidthAt = (p: number) => (4.5 + p * p * 16.5) * zoom;
 
   ctx.save();
   const mistFlowGrad = ctx.createLinearGradient(0, topY, 0, bottomY);
-  mistFlowGrad.addColorStop(0, 'rgba(248, 251, 255, 0.34)');
-  mistFlowGrad.addColorStop(0.55, 'rgba(200, 224, 240, 0.24)');
-  mistFlowGrad.addColorStop(1, 'rgba(248, 246, 240, 0.05)');
+  mistFlowGrad.addColorStop(0, 'rgba(248, 251, 255, 0.36)');
+  mistFlowGrad.addColorStop(0.36, 'rgba(220, 238, 250, 0.28)');
+  mistFlowGrad.addColorStop(0.72, 'rgba(200, 224, 240, 0.22)');
+  mistFlowGrad.addColorStop(1, 'rgba(248, 246, 240, 0.04)');
   ctx.fillStyle = mistFlowGrad;
+
   const rippleShift = Math.sin(tSec * 5.2) * 1.4;
+  const yT1 = topY + fallSpan * 0.34;
+  const yT2 = topY + fallSpan * 0.68;
+
   ctx.beginPath();
-  ctx.moveTo(anchorX - 5 * zoom, topY);
-  ctx.quadraticCurveTo(
-    anchorX - 8 * zoom + rippleShift,
+  ctx.moveTo(anchorX - halfWidthAt(0), topY);
+  ctx.bezierCurveTo(
+    anchorX - 4 * zoom + rippleShift,
+    topY + fallSpan * 0.16,
+    anchorX - 9 * zoom,
+    yT1 - 6,
+    anchorX - halfWidthAt(0.34),
+    yT1,
+  );
+  ctx.bezierCurveTo(
+    anchorX - 15 * zoom - rippleShift,
     topY + fallSpan * 0.5,
-    anchorX - 11 * zoom,
+    anchorX - 8 * zoom,
+    yT2 - 8,
+    anchorX - halfWidthAt(0.68),
+    yT2,
+  );
+  ctx.bezierCurveTo(
+    anchorX - 18 * zoom + rippleShift,
+    topY + fallSpan * 0.85,
+    anchorX - 20 * zoom,
+    bottomY - 6,
+    anchorX - halfWidthAt(1),
     bottomY,
   );
-  ctx.lineTo(anchorX + 11 * zoom, bottomY);
-  ctx.quadraticCurveTo(
-    anchorX + 8 * zoom - rippleShift,
+  ctx.lineTo(anchorX + halfWidthAt(1), bottomY);
+  ctx.bezierCurveTo(
+    anchorX + 20 * zoom - rippleShift,
+    topY + fallSpan * 0.85,
+    anchorX + 10 * zoom,
+    yT2 - 8,
+    anchorX + halfWidthAt(0.68),
+    yT2,
+  );
+  ctx.bezierCurveTo(
+    anchorX + 12 * zoom + rippleShift,
     topY + fallSpan * 0.5,
-    anchorX + 5 * zoom,
+    anchorX + 6 * zoom,
+    yT1 - 6,
+    anchorX + halfWidthAt(0.34),
+    yT1,
+  );
+  ctx.bezierCurveTo(
+    anchorX + 6 * zoom - rippleShift,
+    topY + fallSpan * 0.16,
+    anchorX + 4 * zoom,
+    topY + 4,
+    anchorX + halfWidthAt(0),
     topY,
   );
   ctx.closePath();
   ctx.fill();
+
+  // Quầng sương tròn phát sáng dịu + 2 vòng gợn sóng tại điểm thác chạm biển mây
+  const plumeRadius = 64 * zoom;
+  const plumeGrad = ctx.createRadialGradient(
+    anchorX,
+    bottomY + 2,
+    2,
+    anchorX,
+    bottomY + 2,
+    plumeRadius,
+  );
+  plumeGrad.addColorStop(0, rgbaString(palette.cloudIvory, 0.34));
+  plumeGrad.addColorStop(0.45, rgbaString(palette.dawnEdge, 0.16));
+  plumeGrad.addColorStop(1, rgbaString(palette.cloudSlate, 0));
+  ctx.fillStyle = plumeGrad;
+  ctx.beginPath();
+  ctx.ellipse(anchorX, bottomY + 2, plumeRadius, plumeRadius * 0.34, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  for (let ring = 0; ring < 2; ring += 1) {
+    const ripplePhase = (tSec * 0.48 + ring * 0.5) % 1;
+    const rx = (22 + ripplePhase * 48) * zoom;
+    const ry = rx * 0.28;
+    const rippleAlpha = Math.sin(ripplePhase * Math.PI) * 0.24;
+    ctx.strokeStyle = rgbaString(palette.cloudIvory, rippleAlpha);
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    ctx.ellipse(anchorX, bottomY + 3, rx, ry, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
   ctx.restore();
 
   const streakSprite = sprites.waterStreak;
-  for (const drop of world.waterfallDrops) {
+  const spraySprite = sprites.waterfallSpray;
+  for (let i = 0; i < world.waterfallDrops.length; i += 1) {
+    const drop = world.waterfallDrops[i]!;
     if (animate) {
-      drop.vy = Math.min(drop.vy + 0.065 * dtScale, 4.4);
-      drop.yProgress += drop.vy * 0.011 * dtScale;
+      // Gia tốc trọng trường thực tế dọc 3 tầng thác
+      drop.vy = Math.min(drop.vy + 0.088 * dtScale, 4.9);
+      drop.yProgress += drop.vy * 0.0115 * dtScale;
       drop.xOffset += drop.vx * dtScale;
 
-      if (!drop.bounced && drop.yProgress >= 0.45) {
+      if (!drop.bounced && drop.yProgress >= 0.34 && drop.yProgress < 0.66) {
         drop.bounced = true;
-        drop.vx = (deterministicUnit(drop.length + tSec) - 0.5) * 0.42;
+        drop.vx = (deterministicUnit(drop.length + tSec * 1.7) - 0.5) * 0.56;
+      } else if (drop.bounced && drop.yProgress >= 0.66) {
+        drop.vx = (deterministicUnit(drop.width + tSec * 2.3) - 0.5) * 0.72;
       }
+
       if (drop.yProgress >= 1) {
         drop.yProgress = 0;
-        drop.vy = 1.2 + deterministicUnit(tSec * 10 + drop.length) * 0.9;
-        drop.vx = (deterministicUnit(drop.width + tSec) - 0.5) * 0.14;
-        drop.xOffset = (deterministicUnit(drop.alpha + tSec) - 0.5) * 12;
+        drop.vy = 1.15 + deterministicUnit(tSec * 10 + drop.length) * 0.85;
+        drop.vx = (deterministicUnit(drop.width + tSec) - 0.5) * 0.16;
+        drop.xOffset = (deterministicUnit(drop.alpha + tSec) - 0.5) * 8;
         drop.bounced = false;
       }
     }
 
-    const dx = anchorX + drop.xOffset * zoom;
+    const spreadScale = 0.45 + drop.yProgress * 1.45;
+    const dx = anchorX + curveShiftAt(drop.yProgress) + drop.xOffset * spreadScale * zoom;
     const dy = topY + drop.yProgress * fallSpan;
     const stretchLen = drop.length * (0.65 + drop.vy * 0.35) * zoom;
 
-    if (streakSprite && typeof ctx.drawImage === 'function') {
+    if (i % 3 === 0 && spraySprite && typeof ctx.drawImage === 'function') {
+      const prevAlpha = ctx.globalAlpha;
+      const spraySize = (3.4 + drop.width) * zoom;
+      ctx.globalAlpha = prevAlpha * Math.min(0.8, drop.alpha * 0.9);
+      ctx.drawImage(spraySprite, dx - spraySize / 2, dy - spraySize / 2, spraySize, spraySize);
+      ctx.globalAlpha = prevAlpha;
+    } else if (streakSprite && typeof ctx.drawImage === 'function') {
       const prevAlpha = ctx.globalAlpha;
       ctx.globalAlpha = prevAlpha * drop.alpha;
       ctx.drawImage(
@@ -1530,20 +1637,20 @@ function renderMountainWaterfall(data: RenderContextData): void {
       puff.yOffset += puff.vy * dtScale;
       if (puff.life >= puff.maxLife) {
         puff.life = 0;
-        puff.xOffset = (deterministicUnit(tSec * 13 + puff.radius) - 0.5) * 34;
+        puff.xOffset = (deterministicUnit(tSec * 13 + puff.radius) - 0.5) * 52;
         puff.yOffset = 0;
       }
     }
     const ratio = puff.life / puff.maxLife;
     const fade = Math.sin(ratio * Math.PI);
-    const radius = puff.radius * (0.7 + ratio * 0.65) * zoom;
+    const radius = puff.radius * (0.72 + ratio * 0.72) * zoom;
     const px = anchorX + puff.xOffset * zoom;
-    const py = bottomY + puff.yOffset - ratio * 16;
+    const py = bottomY + puff.yOffset - ratio * 18;
 
     if (mistSprite && typeof ctx.drawImage === 'function') {
       const prevAlpha = ctx.globalAlpha;
-      ctx.globalAlpha = prevAlpha * Math.min(0.65, puff.alpha * fade);
-      ctx.drawImage(mistSprite, px - radius, py - radius * 0.65, radius * 2, radius * 1.3);
+      ctx.globalAlpha = prevAlpha * Math.min(0.68, puff.alpha * fade);
+      ctx.drawImage(mistSprite, px - radius, py - radius * 0.62, radius * 2, radius * 1.24);
       ctx.globalAlpha = prevAlpha;
     }
   }
@@ -1654,8 +1761,13 @@ function renderVolumetricCloudSea(data: RenderContextData): void {
     const puffSprite = sprites[puff.variant];
 
     if (puffSprite && typeof ctx.drawImage === 'function') {
+      const bottomEdgeFade =
+        py > height * 0.85
+          ? Math.max(0.18, 1 - ((py - height * 0.85) / (height * 0.22)) * 0.82)
+          : 1;
       const prevAlpha = ctx.globalAlpha;
-      ctx.globalAlpha = prevAlpha * Math.min(0.95, puff.opacity + scrollProgress * 0.14);
+      ctx.globalAlpha =
+        prevAlpha * Math.min(0.95, puff.opacity + scrollProgress * 0.14) * bottomEdgeFade;
       ctx.drawImage(
         puffSprite,
         px - puff.radiusX,

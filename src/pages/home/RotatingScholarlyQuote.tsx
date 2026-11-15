@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Pause, Play, Quote } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 
@@ -8,6 +8,7 @@ export interface ScholarlyQuote {
   readonly content: string;
   readonly author: string;
   readonly roleOrEra: string;
+  readonly discipline: string;
 }
 
 /**
@@ -20,24 +21,28 @@ export const SCHOLARLY_QUOTES: readonly ScholarlyQuote[] = [
     content: 'Vì lợi ích mười năm thì phải trồng cây, vì lợi ích trăm năm thì phải trồng người.',
     author: 'Hồ Chí Minh',
     roleOrEra: 'Chủ tịch nước Việt Nam Dân chủ Cộng hòa',
+    discipline: 'Triết học Giáo dục',
   },
   {
     id: 2,
     content: 'Nhà giáo dục trước hết phải tự mình được giáo dục.',
     author: 'Karl Marx',
     roleOrEra: 'Luận cương về Feuerbach (1845)',
+    discipline: 'Triết học Giáo dục',
   },
   {
     id: 3,
     content: 'Học, học nữa, học mãi.',
     author: 'V. I. Lênin',
     roleOrEra: 'Nhà tư tưởng & Lãnh tụ cách mạng',
+    discipline: 'Phương pháp học tập',
   },
   {
     id: 4,
     content: 'Dưới ánh mặt trời không có nghề nào cao quý hơn nghề dạy học.',
     author: 'J. A. Cômenxki (Comenius)',
     roleOrEra: 'Ông tổ của nền Sư phạm cận đại',
+    discipline: 'Sư phạm học',
   },
   {
     id: 5,
@@ -45,42 +50,49 @@ export const SCHOLARLY_QUOTES: readonly ScholarlyQuote[] = [
       'Hiền tài là nguyên khí của quốc gia, nguyên khí thịnh thì thế nước mạnh rồi lên cao, nguyên khí suy thì thế nước yếu rồi xuống thấp.',
     author: 'Thân Nhân Trung',
     roleOrEra: 'Văn bia Quốc Tử Giám (1442)',
+    discipline: 'Hiền tài & Quốc học',
   },
   {
     id: 6,
     content: 'Phi trí bất hưng, phi nông bất ổn, phi công bất phú, phi thương bất hoạt.',
     author: 'Lê Quý Đôn',
     roleOrEra: 'Nhà bác học thời Lê Trung Hưng',
+    discipline: 'Bác học & Khai phóng',
   },
   {
     id: 7,
     content: 'Giáo dục là vũ khí mạnh nhất mà bạn có thể dùng để thay đổi thế giới.',
     author: 'Nelson Mandela',
     roleOrEra: 'Giải Nobel Hòa bình (1993)',
+    discipline: 'Triết học Giáo dục',
   },
   {
     id: 8,
     content: 'Giáo dục không phải là học thuộc lòng sự thật, mà là rèn luyện tâm trí để tư duy.',
     author: 'Albert Einstein',
     roleOrEra: 'Nhà vật lý lý thuyết lỗi lạc',
+    discipline: 'Tư duy Khoa học',
   },
   {
     id: 9,
     content: 'Lao động đã sáng tạo ra bản thân con người.',
     author: 'Friedrich Engels',
     roleOrEra: 'Biện chứng của tự nhiên',
+    discipline: 'Triết học & Tự nhiên',
   },
   {
     id: 10,
     content: 'Người thầy tồi mang đến chân lý, người thầy giỏi dạy cách tìm ra chân lý.',
     author: 'A. F. Đixtecvec (Diesterweg)',
     roleOrEra: 'Nhà sư phạm tiến bộ Đức',
+    discipline: 'Phương pháp Sư phạm',
   },
   {
     id: 11,
     content: 'Rễ của giáo dục thì đắng, nhưng quả của nó lại ngọt ngào.',
     author: 'Aristotle',
     roleOrEra: 'Triết gia Hy Lạp cổ đại',
+    discipline: 'Triết học Cổ đại',
   },
   {
     id: 12,
@@ -88,29 +100,33 @@ export const SCHOLARLY_QUOTES: readonly ScholarlyQuote[] = [
       'Bạn không thể dạy một người bất cứ điều gì; bạn chỉ có thể giúp họ tìm thấy điều đó bên trong chính họ.',
     author: 'Galileo Galilei',
     roleOrEra: 'Nhà thiên văn & Vật lý học',
+    discipline: 'Khoa học Tự nhiên',
   },
   {
     id: 13,
     content: 'Tôi tư duy, nên tôi tồn tại.',
     author: 'René Descartes',
     roleOrEra: 'Nhà triết học & Toán học Pháp',
+    discipline: 'Triết học & Toán học',
   },
   {
     id: 14,
     content: 'Học mà không suy nghĩ thì vô ích, suy nghĩ mà không học thì nguy hiểm.',
     author: 'Khổng Tử',
     roleOrEra: 'Luận ngữ',
+    discipline: 'Triết học Phương Đông',
   },
   {
     id: 15,
     content: 'Nghề dạy học là nghề sáng tạo vào bậc nhất trong các nghề sáng tạo.',
     author: 'Phạm Văn Đồng',
     roleOrEra: 'Thủ tướng Chính phủ Việt Nam',
+    discipline: 'Nghệ thuật Sư phạm',
   },
 ] as const;
 
 const ROTATION_INTERVAL_MS = 20000;
-const FADE_TRANSITION_MS = 350;
+const FADE_TRANSITION_MS = 300;
 
 export interface RotatingScholarlyQuoteProps {
   readonly variant?: 'card' | 'dock' | 'hero';
@@ -125,19 +141,39 @@ export function RotatingScholarlyQuote({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  const elapsedMsRef = useRef(0);
+  const fadeTimerRef = useRef<number | null>(null);
 
   const totalQuotes = SCHOLARLY_QUOTES.length;
   const currentQuote = SCHOLARLY_QUOTES[currentIndex] ?? SCHOLARLY_QUOTES[0]!;
   const isDock = variant === 'dock';
 
+  useEffect(() => {
+    return () => {
+      if (fadeTimerRef.current !== null) {
+        window.clearTimeout(fadeTimerRef.current);
+      }
+    };
+  }, []);
+
   const goToQuote = useCallback(
     (newIndex: number) => {
+      if (fadeTimerRef.current !== null) {
+        window.clearTimeout(fadeTimerRef.current);
+        fadeTimerRef.current = null;
+      }
+      elapsedMsRef.current = 0;
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = 'scaleX(0)';
+      }
       if (prefersReducedMotion) {
         setCurrentIndex((newIndex + totalQuotes) % totalQuotes);
         return;
       }
       setIsFading(true);
-      window.setTimeout(() => {
+      fadeTimerRef.current = window.setTimeout(() => {
+        fadeTimerRef.current = null;
         setCurrentIndex((newIndex + totalQuotes) % totalQuotes);
         setIsFading(false);
       }, FADE_TRANSITION_MS);
@@ -153,17 +189,39 @@ export function RotatingScholarlyQuote({
     goToQuote(currentIndex - 1);
   }, [currentIndex, goToQuote]);
 
-  // Luân phiên tự động mỗi 20 giây khi không bị tạm dừng bởi hover
+  // Luân phiên tự động mỗi 20 giây & cập nhật thanh tiến trình vàng 1.5px chuẩn 120fps (tạm dừng khi hover/pause)
   useEffect(() => {
     if (isPaused) {
       return;
     }
-    const timer = window.setInterval(() => {
-      handleNext();
-    }, ROTATION_INTERVAL_MS);
 
+    let rafId = 0;
+    let lastTick = performance.now();
+
+    const tick = (now: number) => {
+      const dt = Math.min(250, Math.max(0, now - lastTick));
+      lastTick = now;
+      elapsedMsRef.current += dt;
+
+      const ratio = Math.min(1, elapsedMsRef.current / ROTATION_INTERVAL_MS);
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
+      }
+
+      if (elapsedMsRef.current >= ROTATION_INTERVAL_MS) {
+        elapsedMsRef.current = 0;
+        handleNext();
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    rafId = window.requestAnimationFrame(tick);
     return () => {
-      window.clearInterval(timer);
+      if (rafId !== 0) {
+        window.cancelAnimationFrame(rafId);
+      }
     };
   }, [handleNext, isPaused]);
 
@@ -177,11 +235,24 @@ export function RotatingScholarlyQuote({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       className={cn(
-        'group relative w-full rounded-2xl border border-[#E5C158]/30 bg-[#081520]/70 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#E5C158]/55',
+        'group relative w-full overflow-hidden rounded-2xl border border-[#E5C158]/30 bg-[#081520]/70 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#E5C158]/55',
         isDock ? 'px-4 py-3.5 sm:px-5 sm:py-4' : 'p-6',
         className,
       )}
     >
+      {/* Thanh tiến trình vàng 1.5px chạy dọc mép trên báo hiệu thời gian chuyển câu (tạm dừng khi hover) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-[#E5C158]/15"
+      >
+        <div
+          ref={progressBarRef}
+          data-testid="quote-progress-bar"
+          className="h-full w-full origin-left bg-gradient-to-r from-[#C99B3B] via-[#E5C158] to-[#F6D383] will-change-transform"
+          style={{ transform: 'scaleX(0)' }}
+        />
+      </div>
+
       {/* Header: Phân loại & Điều khiển luân phiên */}
       <div
         className={cn(
@@ -233,12 +304,12 @@ export function RotatingScholarlyQuote({
         </div>
       </div>
 
-      {/* Nội dung trích dẫn với hiệu ứng mờ dần (Fade Transition) */}
+      {/* Nội dung trích dẫn với hiệu ứng mờ dần & trượt nhẹ translateY(6px -> 0) */}
       <blockquote
         className={cn(
-          'transition-opacity duration-700 ease-in-out',
+          'transition-all duration-300 ease-out will-change-transform',
           isDock ? 'mt-2.5' : 'mt-3.5',
-          isFading ? 'opacity-0' : 'opacity-100',
+          isFading ? 'translate-y-[6px] opacity-0' : 'translate-y-0 opacity-100',
         )}
       >
         <p
@@ -251,7 +322,13 @@ export function RotatingScholarlyQuote({
         >
           &ldquo;{currentQuote.content}&rdquo;
         </p>
-        <div className="mt-2 flex w-full items-center justify-end border-t border-[#E5C158]/18 pt-2">
+        <div className="mt-2 flex w-full flex-wrap items-center justify-end gap-2.5 border-t border-[#E5C158]/18 pt-2">
+          <span
+            data-testid="quote-discipline-badge"
+            className="inline-flex items-center rounded-full border border-[#E5C158]/30 bg-[#E5C158]/10 px-2.5 py-0.5 font-mono text-[10px] font-medium tracking-wide text-[#F6D383]"
+          >
+            {currentQuote.discipline}
+          </span>
           <footer className="text-right font-mono text-xs text-[#E5C158]">
             — {currentQuote.author}
             {currentQuote.roleOrEra ? ` · ${currentQuote.roleOrEra}` : ''}

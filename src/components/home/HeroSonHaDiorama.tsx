@@ -47,31 +47,136 @@ interface VillageLanternPoolSpec {
   readonly points: readonly { readonly x: number; readonly y: number; readonly r: number }[];
 }
 
-const MOUNTAIN_3D_FACETS: readonly FacetSpec[] = [
-  { id: 'f-w1-a', points: '125,468 42,585 135,585', tone: 'celestial' },
-  { id: 'f-w1-b', points: '125,468 135,585 215,548', tone: 'abyss' },
-  { id: 'f-w2-a', points: '312,422 208,548 308,556', tone: 'celestial' },
-  { id: 'f-w2-b', points: '312,422 308,556 392,512', tone: 'abyss' },
-  { id: 'f-w2-rim', points: '312,422 365,478 392,512 332,474', tone: 'dawn' },
+interface MountainPoint {
+  readonly x: number;
+  readonly y: number;
+}
 
-  { id: 'f-c1-a', points: '548,374 412,518 538,532', tone: 'celestial' },
-  { id: 'f-c1-b', points: '548,374 538,532 648,476', tone: 'abyss' },
-  { id: 'f-c1-c', points: '548,374 620,440 538,532', tone: 'mid' },
-  { id: 'f-c2-a', points: '712,356 618,478 726,462', tone: 'celestial' },
-  { id: 'f-c2-dawn', points: '712,356 756,422 726,462', tone: 'dawn' },
+interface OrganicRidgeGeometry {
+  readonly fillPath: string;
+  readonly rimPath: string;
+  readonly points: readonly MountainPoint[];
+}
 
-  { id: 'f-p1-a', points: '1018,266 868,452 998,468', tone: 'celestial' },
-  { id: 'f-p1-dawn', points: '1018,266 1088,372 998,468', tone: 'dawn' },
-  { id: 'f-p1-b', points: '1018,266 1138,412 1088,372', tone: 'abyss' },
-  { id: 'f-p1-deep', points: '998,468 1088,372 1148,510', tone: 'abyss' },
+function buildOrganicMountainRidge(options: {
+  readonly seed: number;
+  readonly baseY: number;
+  readonly xStart: number;
+  readonly xEnd: number;
+  readonly step: number;
+  readonly bottomY: number;
+  readonly amplitude: number;
+  readonly peaks: readonly {
+    readonly centerX: number;
+    readonly width: number;
+    readonly height: number;
+  }[];
+}): OrganicRidgeGeometry {
+  const { seed, baseY, xStart, xEnd, step, bottomY, amplitude, peaks } = options;
+  const points: MountainPoint[] = [];
 
-  { id: 'f-e1-a', points: '1262,286 1135,418 1244,442', tone: 'celestial' },
-  { id: 'f-e1-dawn', points: '1262,286 1336,368 1244,442', tone: 'dawn' },
-  { id: 'f-e1-b', points: '1262,286 1392,396 1336,368', tone: 'abyss' },
-  { id: 'f-e2-a', points: '1478,274 1372,396 1468,418', tone: 'celestial' },
-  { id: 'f-e2-dawn', points: '1478,274 1558,348 1468,418', tone: 'dawn' },
-  { id: 'f-e2-b', points: '1478,274 1640,368 1558,348', tone: 'abyss' },
-];
+  for (let x = xStart; x <= xEnd; x += step) {
+    const nx = x * 0.0042 + seed;
+    const oct1 = Math.sin(nx * 1.15 + seed * 0.7) * amplitude * 0.45;
+    const oct2 = Math.cos(nx * 2.45 + seed * 1.9) * amplitude * 0.28;
+    const oct3 = Math.sin(nx * 5.2 + seed * 3.1) * amplitude * 0.14;
+    const oct4 = (1 - Math.abs(Math.sin(nx * 1.85 + seed * 2.3))) * amplitude * 0.24;
+
+    let massifLift = 0;
+    for (const peak of peaks) {
+      const dist = (x - peak.centerX) / peak.width;
+      massifLift += Math.exp(-dist * dist) * peak.height;
+    }
+
+    const y = Math.round((baseY - oct1 - oct2 - oct3 - oct4 - massifLift) * 10) / 10;
+    points.push({ x, y });
+  }
+
+  const first = points[0] ?? { x: xStart, y: baseY };
+  const last = points[points.length - 1] ?? { x: xEnd, y: baseY };
+
+  // Nối các điểm bằng đường cong bậc hai (Quadratic Bézier) qua trung điểm để tạo đường sống núi mềm mại tự nhiên
+  const curveParts: string[] = [`M ${first.x} ${first.y}`];
+  for (let i = 1; i < points.length - 1; i += 1) {
+    const p = points[i]!;
+    const next = points[i + 1]!;
+    const midX = Math.round(((p.x + next.x) / 2) * 10) / 10;
+    const midY = Math.round(((p.y + next.y) / 2) * 10) / 10;
+    curveParts.push(`Q ${p.x} ${p.y} ${midX} ${midY}`);
+  }
+  curveParts.push(`T ${last.x} ${last.y}`);
+
+  const rimPath = curveParts.join(' ');
+  const fillPath = `${rimPath} L ${last.x} ${bottomY} L ${first.x} ${bottomY} Z`;
+
+  return { fillPath, rimPath, points };
+}
+
+// 4 lớp dãy núi Hoàng Liên Sơn hữu cơ (xa -> trung -> đỉnh chính Fansipan -> đèo phụ)
+const FAR_ALPS_RIDGE = buildOrganicMountainRidge({
+  seed: 1.4,
+  baseY: 468,
+  xStart: -100,
+  xEnd: 1700,
+  step: 60,
+  bottomY: 760,
+  amplitude: 42,
+  peaks: [
+    { centerX: 280, width: 190, height: 54 },
+    { centerX: 740, width: 230, height: 82 },
+    { centerX: 1180, width: 220, height: 108 },
+    { centerX: 1520, width: 170, height: 74 },
+  ],
+});
+
+const SECONDARY_SPUR_RIDGE = buildOrganicMountainRidge({
+  seed: 3.1,
+  baseY: 506,
+  xStart: -100,
+  xEnd: 1700,
+  step: 54,
+  bottomY: 760,
+  amplitude: 46,
+  peaks: [
+    { centerX: 165, width: 165, height: 68 },
+    { centerX: 540, width: 195, height: 92 },
+    { centerX: 985, width: 210, height: 126 },
+    { centerX: 1365, width: 180, height: 112 },
+  ],
+});
+
+const FANSIPAN_MAIN_RIDGE = buildOrganicMountainRidge({
+  seed: 5.7,
+  baseY: 542,
+  xStart: -100,
+  xEnd: 1710,
+  step: 45,
+  bottomY: 780,
+  amplitude: 44,
+  peaks: [
+    { centerX: 130, width: 140, height: 84 },
+    { centerX: 335, width: 145, height: 114 },
+    { centerX: 565, width: 155, height: 138 },
+    { centerX: 1020, width: 175, height: 228 }, // Đỉnh Fansipan 3.143m
+    { centerX: 1265, width: 150, height: 194 },
+    { centerX: 1495, width: 165, height: 206 },
+  ],
+});
+
+const MOUNTAIN_3D_FACETS: readonly FacetSpec[] = FANSIPAN_MAIN_RIDGE.points
+  .slice(2, 26)
+  .map((pt, idx, arr) => {
+    const nextPt = arr[idx + 1] ?? FANSIPAN_MAIN_RIDGE.points[idx + 3] ?? pt;
+    const spurShiftX = idx % 2 === 0 ? 32 : -26;
+    const dropY = 78 + (idx % 3) * 30;
+    const tone: FacetSpec['tone'] =
+      idx % 4 === 1 ? 'dawn' : idx % 3 === 0 ? 'celestial' : idx % 2 === 0 ? 'mid' : 'abyss';
+    return {
+      id: `f-ridge-${idx}`,
+      points: `${pt.x},${pt.y} ${nextPt.x},${nextPt.y} ${Math.round(nextPt.x + spurShiftX)},${Math.round(nextPt.y + dropY)} ${Math.round(pt.x + spurShiftX * 0.55)},${Math.round(pt.y + dropY * 0.92)}`,
+      tone,
+    };
+  });
 
 const TERRACE_WEST_POOLS: readonly TerracePoolSpec[] = [
   {
@@ -264,6 +369,7 @@ function applyPaletteCssVars(el: HTMLElement, p: AtmospherePalette): void {
   el.style.setProperty('--hls-cloud-b', rgbString(p.cloudIvory));
   el.style.setProperty('--hls-pine-top', rgbString(p.pineTop));
   el.style.setProperty('--hls-pine-bot', rgbString(p.pineBot));
+  el.style.setProperty('--hls-bottom-mist', rgbString(p.bottomMistDeep));
   el.style.setProperty('--hls-scrim-alpha', p.contrastScrimAlpha.toFixed(3));
 }
 
@@ -584,30 +690,53 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
           />
 
           <g data-testid="fansipan-peaks">
+            {/* Lớp 1: Dãy núi xa mờ sương tạo chiều sâu viễn cảnh khí quyển */}
+            <path d={FAR_ALPS_RIDGE.fillPath} fill="var(--hls-facet-mid, #1D3752)" opacity="0.46" />
+
+            {/* Dải sương thung lũng tầng 1 trôi ngang giữa lớp núi xa và dãy chính */}
+            <g
+              data-testid="valley-mist-band-1"
+              className={prefersReducedMotion ? undefined : 'lu-wave-drift-1'}
+            >
+              <path
+                d="M -160 442 Q 220 418 540 448 Q 880 476 1220 434 Q 1480 408 1760 444 L 1760 660 L -160 660 Z"
+                fill={`url(#${valleyMistId})`}
+                opacity="0.62"
+              />
+            </g>
+
+            {/* Lớp 2: Dãy sườn phụ Hoàng Liên Sơn nhấp nhô mềm mại */}
             <path
-              d="M -100 545 L 40 488 L 155 516 L 295 452 L 420 492 L 560 442 L 690 474 L 835 398 L 945 436 L 1075 344 L 1185 388 L 1320 302 L 1435 358 L 1545 316 L 1700 378 L 1700 760 L -100 760 Z"
+              d={SECONDARY_SPUR_RIDGE.fillPath}
               fill="var(--hls-facet-mid, #1D3752)"
               opacity="0.72"
             />
-            <path
-              d="M -100 596 L 42 522 L 125 468 L 215 548 L 312 422 L 392 512 L 548 374 L 648 476 L 712 356 L 795 445 L 868 452 L 1018 266 L 1138 412 L 1262 286 L 1392 396 L 1478 274 L 1640 368 L 1710 342 L 1710 780 L -100 780 Z"
-              fill={`url(#${facetAbyssGradId})`}
-            />
-            <g data-testid="mountain-3d-facets">
+
+            {/* Lớp 3: Khối đỉnh chính Phan Xi Păng điêu khắc hữu cơ */}
+            <path d={FANSIPAN_MAIN_RIDGE.fillPath} fill={`url(#${facetAbyssGradId})`} />
+            <g data-testid="mountain-3d-facets" opacity="0.52">
               {MOUNTAIN_3D_FACETS.map((facet) => (
                 <polygon key={facet.id} points={facet.points} fill={facetFillUrl(facet.tone)} />
               ))}
             </g>
             <path
-              d="M -50 568 L 42 522 L 125 468 L 215 548 L 312 422 L 392 512 L 548 374 L 648 476 L 712 356 L 795 445 L 868 452 L 1018 266 L 1138 412 L 1262 286 L 1392 396 L 1478 274 L 1640 368"
+              d={FANSIPAN_MAIN_RIDGE.rimPath}
               fill="none"
               stroke={`url(#${farRimGradId})`}
-              strokeWidth="1.5"
+              strokeWidth="1.65"
+              strokeLinecap="round"
               strokeLinejoin="round"
+              opacity="0.88"
             />
           </g>
 
-          <rect x="-80" y="510" width="1760" height="230" fill={`url(#${valleyMistId})`} />
+          {/* Dải sương thung lũng tầng 2 ngăn cách dãy núi chính với hẻm thác trung cảnh */}
+          <g
+            data-testid="valley-mist-band-2"
+            className={prefersReducedMotion ? undefined : 'lu-wave-drift-2'}
+          >
+            <rect x="-120" y="504" width="1840" height="236" fill={`url(#${valleyMistId})`} />
+          </g>
         </svg>
       </div>
 
@@ -668,19 +797,71 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
             </radialGradient>
           </defs>
 
-          {/* Hẻm núi Thác Bạc ở khe trung tâm */}
+          {/* Hẻm núi Thác Bạc 3 tầng ghềnh đá uốn lượn & hồ sương phát sáng */}
           <g data-testid="thac-bac-gorge">
+            {/* Hốc hẻm đá granite tối sâu dẫn dòng thác */}
             <path
-              d="M 760 444 L 802 452 L 808 656 L 754 656 Z"
+              d="M 758 442 Q 782 440 806 450 Q 814 542 820 658 L 750 658 Q 754 544 758 442 Z"
               fill="var(--hls-facet-abyss, #07111E)"
               opacity="0.92"
             />
+            {/* Bậc đá chia tầng 1->2 và 2->3 */}
             <path
-              d="M 772 448 C 770 502, 774 548, 768 625 L 792 625 C 788 548, 792 502, 790 452 Z"
+              d="M 762 504 Q 784 497 804 507 L 798 516 Q 780 510 760 513 Z"
+              fill="var(--hls-facet-mid, #1D3752)"
+              opacity="0.88"
+            />
+            <path
+              d="M 757 566 Q 784 558 810 568 L 806 579 Q 782 572 756 575 Z"
+              fill="var(--hls-facet-mid, #1D3752)"
+              opacity="0.88"
+            />
+            {/* Dòng thác 3 tầng hẹp ở thượng nguồn -> loe rộng ở hạ lưu */}
+            <path
+              d="M 776 446 C 779 468, 773 486, 778 504 L 790 504 C 786 485, 790 468, 787 447 Z"
               fill={`url(#${waterfallStreamGradId})`}
             />
-            <path d="M 778 449 L 785 451 L 787 624 L 775 624 Z" fill="#FFFFFF" opacity="0.48" />
-            <ellipse cx="780" cy="624" rx="56" ry="20" fill={`url(#${waterfallMistId})`} />
+            <path
+              d="M 774 504 C 769 528, 780 546, 771 566 L 796 566 C 792 544, 798 525, 791 504 Z"
+              fill={`url(#${waterfallStreamGradId})`}
+            />
+            <path
+              d="M 770 566 C 764 590, 768 612, 761 634 L 807 634 C 801 610, 800 588, 796 566 Z"
+              fill={`url(#${waterfallStreamGradId})`}
+            />
+            {/* Dải bọt bạc mảnh uốn chữ S dọc 3 tầng thác */}
+            <path
+              d="M 781 448 C 783 472, 777 486, 783 504 C 788 524, 776 544, 783 566 C 789 590, 778 610, 785 634"
+              fill="none"
+              stroke="#FFFFFF"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              opacity="0.62"
+            />
+            {/* Quầng sương tròn phát sáng nhẹ & gợn sóng tại chân thác */}
+            <ellipse cx="785" cy="634" rx="70" ry="22" fill={`url(#${waterfallMistId})`} />
+            <ellipse
+              cx="785"
+              cy="636"
+              rx="48"
+              ry="11"
+              fill="none"
+              stroke="var(--hls-dawn-edge, #9CC1DE)"
+              strokeWidth="0.9"
+              opacity="0.45"
+            />
+          </g>
+
+          {/* Dải sương thung lũng tầng 3 trôi ngang phía trên ruộng bậc thang */}
+          <g
+            data-testid="valley-mist-band-3"
+            className={prefersReducedMotion ? undefined : 'lu-wave-drift-1'}
+          >
+            <path
+              d="M -120 564 Q 320 536 740 572 Q 1160 604 1720 558 L 1720 676 L -120 676 Z"
+              fill={`url(#${valleyMistId})`}
+              opacity="0.42"
+            />
           </g>
 
           {/* Khối sườn Tây (dạt trái -140px khi cuộn xuống) */}
@@ -858,12 +1039,12 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
           <defs>
             <linearGradient id={cloudFloorGradId} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="var(--hls-cloud-a, #8FA6B8)" stopOpacity="0" />
-              <stop offset="48%" stopColor="var(--hls-cloud-b, #E6E2D6)" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#FBF9F2" stopOpacity="0.45" />
+              <stop offset="54%" stopColor="var(--hls-bottom-mist, #112233)" stopOpacity="0.62" />
+              <stop offset="100%" stopColor="#121B28" stopOpacity="0.96" />
             </linearGradient>
           </defs>
 
-          <rect x="-80" y="650" width="1760" height="260" fill={`url(#${cloudFloorGradId})`} />
+          <rect x="-80" y="685" width="1760" height="235" fill={`url(#${cloudFloorGradId})`} />
 
           <g data-testid="hoang-lien-cranes">
             {CRANE_FORMATION.map((crane) => (
@@ -892,6 +1073,17 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
           </g>
         </svg>
       </div>
+
+      {/* Dải hòa tan 15% đáy Hero (Deep Indigo Mist #112233 -> #121B28) triệt tiêu hoàn toàn đường cắt giữa Screen 1 và Screen 2 */}
+      <div
+        data-testid="hero-bottom-mist-transition"
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[18%]"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(17, 34, 51, 0) 0%, color-mix(in srgb, var(--hls-bottom-mist, #112233) 72%, transparent) 58%, #121B28 100%)',
+        }}
+      />
 
       {/* Lớp nền tương phản an toàn phía sau chữ tiêu đề ở mọi thời khắc (Đêm/Bình minh/Nắng Ngọc/Hoàng hôn) */}
       <div
