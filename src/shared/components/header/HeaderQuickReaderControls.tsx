@@ -1,5 +1,5 @@
-import { Moon } from 'lucide-react';
-import { type FC, useEffect, useRef, useState } from 'react';
+import { Maximize2, Minimize2, Moon, Sun } from 'lucide-react';
+import type { FC } from 'react';
 import { FONT_SCALE_MAX, FONT_SCALE_MIN } from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
 import { cn } from '@/shared/lib/cn';
@@ -8,120 +8,133 @@ export interface HeaderQuickReaderControlsProps {
   readonly isDark?: boolean;
 }
 
+/**
+ * Viên Thuốc Điều Khiển Đọc Bài Đồng Nhất trên thanh Island đầu trang:
+ * - Điều chỉnh cỡ chữ: A- · % hiện tại · A+
+ * - Chuyển chế độ Sáng / Tối (Phím D)
+ * - Bật / tắt Chế độ tập trung Zen thu gọn 2 cột bên (Phím Z)
+ */
 export const HeaderQuickReaderControls: FC<HeaderQuickReaderControlsProps> = ({
   isDark = false,
 }) => {
-  const { readerSettings, increaseFontScale, decreaseFontScale, toggleEyeComfortWarmth } =
+  const { readerSettings, increaseFontScale, decreaseFontScale, toggleDarkMode, toggleZenMode } =
     useIsland();
-  const [showScaleReadout, setShowScaleReadout] = useState(false);
-  const timerRef = useRef<number | null>(null);
-
-  const flashReadout = () => {
-    setShowScaleReadout(true);
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current);
-    }
-    timerRef.current = window.setTimeout(() => {
-      timerRef.current = null;
-      setShowScaleReadout(false);
-    }, 1400);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current !== null) {
-        window.clearTimeout(timerRef.current);
-      }
-    };
-  }, []);
 
   const scalePercent = Math.round(readerSettings.fontScale * 100);
   const isMin = readerSettings.fontScale <= FONT_SCALE_MIN;
   const isMax = readerSettings.fontScale >= FONT_SCALE_MAX;
+  const darkActive = isDark || readerSettings.isDarkMode;
 
   return (
     <div
       role="group"
-      aria-label="Điều chỉnh nhanh khổ chữ và chế độ dịu mắt"
+      aria-label="Điều khiển đọc bài: cỡ chữ, chế độ sáng tối và chế độ tập trung"
       data-testid="quick-reader-controls"
       className={cn(
-        'relative hidden h-9 items-center gap-0.5 rounded-full border p-0.5 md:flex',
-        isDark ? 'border-[#4E9B58]/30 bg-[#182E24]' : 'border-[#D8E0DD] bg-[#EDF1EF]',
+        'hidden items-center gap-1.5 rounded-full border px-2 py-1 transition-colors md:flex',
+        darkActive
+          ? 'border-white/15 bg-white/10'
+          : 'border-[#D8E0DD] bg-[#EDF1EF] dark:border-white/15 dark:bg-white/10',
       )}
     >
-      <button
-        type="button"
-        onClick={() => {
-          decreaseFontScale();
-          flashReadout();
-        }}
-        disabled={isMin}
-        aria-label="Giảm cỡ chữ"
-        title="Giảm khổ chữ (-5%)"
-        className={cn(
-          'inline-flex h-7 cursor-pointer items-center justify-center rounded-full px-2 font-serif text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35',
-          isDark ? 'text-[#EBF0EE] hover:bg-white/10' : 'text-[#182624] hover:bg-[#FAFBF9]',
-        )}
-      >
-        A-
-      </button>
+      {/* 1. Cụm chỉnh cỡ chữ: A- · Nhãn % · A+ */}
+      <div className="flex items-center gap-0.5">
+        <button
+          type="button"
+          onClick={decreaseFontScale}
+          disabled={isMin}
+          aria-label="Giảm cỡ chữ"
+          title="Giảm cỡ chữ (-5%)"
+          className={cn(
+            'inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-[13px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35',
+            darkActive ? 'text-[#EBF0EE] hover:bg-white/15' : 'text-[#182624] hover:bg-[#FAFBF9]',
+          )}
+        >
+          A-
+        </button>
 
-      {showScaleReadout && (
         <span
           data-testid="quick-reader-scale-badge"
           aria-live="polite"
           className={cn(
-            'px-1 font-mono text-[10px] font-semibold tabular-nums',
-            isDark ? 'text-[#9EC5B8]' : 'text-[#1E332E]',
+            'min-w-[36px] text-center text-[12px] font-medium tabular-nums select-none',
+            darkActive ? 'text-[#C2D1CC]' : 'text-[#4A5D58]',
           )}
         >
           {scalePercent}%
         </span>
-      )}
 
-      <button
-        type="button"
-        onClick={() => {
-          increaseFontScale();
-          flashReadout();
-        }}
-        disabled={isMax}
-        aria-label="Tăng cỡ chữ"
-        title="Tăng khổ chữ (+5%)"
-        className={cn(
-          'inline-flex h-7 cursor-pointer items-center justify-center rounded-full px-2 font-serif text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35',
-          isDark ? 'text-[#EBF0EE] hover:bg-white/10' : 'text-[#182624] hover:bg-[#FAFBF9]',
-        )}
-      >
-        A+
-      </button>
+        <button
+          type="button"
+          onClick={increaseFontScale}
+          disabled={isMax}
+          aria-label="Tăng cỡ chữ"
+          title="Tăng cỡ chữ (+5%)"
+          className={cn(
+            'inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-[13px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-35',
+            darkActive ? 'text-[#EBF0EE] hover:bg-white/15' : 'text-[#182624] hover:bg-[#FAFBF9]',
+          )}
+        >
+          A+
+        </button>
+      </div>
 
       <span
-        className={cn('mx-0.5 h-4 w-[1px]', isDark ? 'bg-white/15' : 'bg-[#D8E0DD]')}
+        className={cn('h-4 w-[1px]', darkActive ? 'bg-white/15' : 'bg-[#D8E0DD]')}
         aria-hidden="true"
       />
 
+      {/* 2. Chế độ Sáng / Tối (Phím D) */}
       <button
         type="button"
-        data-testid="eye-comfort-toggle"
-        onClick={toggleEyeComfortWarmth}
-        aria-pressed={readerSettings.eyeComfortWarmth}
-        aria-label="Chế độ dịu mắt"
-        title={
-          readerSettings.eyeComfortWarmth
-            ? 'Tắt chế độ dịu mắt (đang bật sắc ngà ấm)'
-            : 'Bật chế độ dịu mắt (giảm ánh sáng xanh)'
+        data-testid="theme-mode-toggle"
+        onClick={toggleDarkMode}
+        aria-pressed={readerSettings.isDarkMode}
+        aria-label={
+          readerSettings.isDarkMode ? 'Chuyển sang chế độ Sáng' : 'Chuyển sang chế độ Tối'
         }
+        title="Chế độ Sáng/Tối (Phím D)"
         className={cn(
-          'inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
-          readerSettings.eyeComfortWarmth
+          'inline-flex h-7 cursor-pointer items-center justify-center gap-1 rounded-full px-2 text-[12px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
+          readerSettings.isDarkMode
             ? 'bg-[#1E332E] text-[#FCD34D] shadow-2xs'
-            : isDark
-              ? 'text-[#B8C7C2] hover:bg-white/10 hover:text-[#EBF0EE]'
+            : darkActive
+              ? 'text-[#B8C7C2] hover:bg-white/15 hover:text-[#EBF0EE]'
               : 'text-[#4A5D58] hover:bg-[#FAFBF9] hover:text-[#182624]',
         )}
       >
-        <Moon className="h-3.5 w-3.5" aria-hidden="true" />
+        {readerSettings.isDarkMode ? (
+          <Sun className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        ) : (
+          <Moon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        )}
+        <span className="hidden xl:inline">{readerSettings.isDarkMode ? 'Sáng' : 'Tối'}</span>
+      </button>
+
+      {/* 3. Chế độ tập trung Zen (Phím Z) */}
+      <button
+        type="button"
+        data-testid="zen-mode-toggle"
+        onClick={toggleZenMode}
+        aria-pressed={readerSettings.isZenMode}
+        aria-label={
+          readerSettings.isZenMode ? 'Tắt chế độ tập trung Zen' : 'Bật chế độ tập trung Zen'
+        }
+        title="Chế độ tập trung Zen (Phím Z)"
+        className={cn(
+          'inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
+          readerSettings.isZenMode
+            ? 'bg-[#1E332E] text-[#9EC5B8] shadow-2xs'
+            : darkActive
+              ? 'text-[#B8C7C2] hover:bg-white/15 hover:text-[#EBF0EE]'
+              : 'text-[#4A5D58] hover:bg-[#FAFBF9] hover:text-[#182624]',
+        )}
+      >
+        {readerSettings.isZenMode ? (
+          <Minimize2 className="h-3.5 w-3.5" aria-hidden="true" />
+        ) : (
+          <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+        )}
       </button>
     </div>
   );

@@ -38,6 +38,8 @@ export interface IslandNoticeState {
 export interface IslandReaderSettings {
   readonly fontScale: number;
   readonly eyeComfortWarmth: boolean;
+  readonly isDarkMode: boolean;
+  readonly isZenMode: boolean;
 }
 
 export type PomodoroStatus = 'idle' | 'running' | 'paused';
@@ -59,6 +61,10 @@ export interface IslandContextValue {
   readonly decreaseFontScale: () => void;
   readonly setEyeComfortWarmth: (enabled: boolean) => void;
   readonly toggleEyeComfortWarmth: () => void;
+  readonly setDarkMode: (dark: boolean) => void;
+  readonly toggleDarkMode: () => void;
+  readonly setZenMode: (zen: boolean) => void;
+  readonly toggleZenMode: () => void;
   readonly activeSubject: IslandSubjectMeta | null;
   readonly routePathname: string;
   readonly setRoutePathname: (pathname: string) => void;
@@ -71,6 +77,8 @@ export interface IslandContextValue {
 
 const FONT_SCALE_STORAGE_KEY = 'lu_island_font_scale';
 const EYE_COMFORT_STORAGE_KEY = 'lu_eye_comfort_warmth';
+const THEME_STORAGE_KEY = 'lu_reading_theme';
+const ZEN_MODE_STORAGE_KEY = 'lu_zen_mode';
 const NOTICE_AUTO_DISMISS_MS = 2200;
 
 const DEFAULT_POMODORO: IslandPomodoroState = {
@@ -87,12 +95,18 @@ const DEFAULT_ISLAND_CONTEXT: IslandContextValue = {
   readerSettings: {
     fontScale: FONT_SCALE_DEFAULT,
     eyeComfortWarmth: false,
+    isDarkMode: false,
+    isZenMode: false,
   },
   setFontScale: () => {},
   increaseFontScale: () => {},
   decreaseFontScale: () => {},
   setEyeComfortWarmth: () => {},
   toggleEyeComfortWarmth: () => {},
+  setDarkMode: () => {},
+  toggleDarkMode: () => {},
+  setZenMode: () => {},
+  toggleZenMode: () => {},
   activeSubject: null,
   routePathname: '/',
   setRoutePathname: () => {},
@@ -169,6 +183,28 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     if (typeof window !== 'undefined') {
       try {
         return localStorage.getItem(EYE_COMFORT_STORAGE_KEY) === 'true';
+      } catch {
+        // Bỏ qua lỗi lưu trữ cục bộ
+      }
+    }
+    return false;
+  });
+
+  const [isDarkMode, setIsDarkModeState] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem(THEME_STORAGE_KEY) === 'dark';
+      } catch {
+        // Bỏ qua lỗi lưu trữ cục bộ
+      }
+    }
+    return false;
+  });
+
+  const [isZenMode, setIsZenModeState] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return localStorage.getItem(ZEN_MODE_STORAGE_KEY) === 'true';
       } catch {
         // Bỏ qua lỗi lưu trữ cục bộ
       }
@@ -297,6 +333,90 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     };
   }, [eyeComfortWarmth]);
 
+  const setDarkMode = useCallback((dark: boolean) => {
+    setIsDarkModeState(dark);
+    const nextTheme = dark ? 'dark' : 'light';
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // Bỏ qua lỗi storage
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: nextTheme }));
+    }
+  }, []);
+
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkModeState((prev) => {
+      const next = !prev;
+      const nextTheme = next ? 'dark' : 'light';
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+      if (typeof window !== 'undefined') {
+        queueMicrotask(() => {
+          window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: nextTheme }));
+        });
+      }
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleThemeEvent = (event: Event) => {
+      const custom = event as CustomEvent<string>;
+      if (custom.detail === 'dark' || custom.detail === 'light' || custom.detail === 'sepia') {
+        setIsDarkModeState(custom.detail === 'dark');
+      }
+    };
+    window.addEventListener('lu_reading_theme_change', handleThemeEvent);
+    return () => window.removeEventListener('lu_reading_theme_change', handleThemeEvent);
+  }, []);
+
+  const setZenMode = useCallback((zen: boolean) => {
+    setIsZenModeState(zen);
+    try {
+      localStorage.setItem(ZEN_MODE_STORAGE_KEY, String(zen));
+    } catch {
+      // Bỏ qua lỗi storage
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: zen }));
+    }
+  }, []);
+
+  const toggleZenMode = useCallback(() => {
+    setIsZenModeState((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(ZEN_MODE_STORAGE_KEY, String(next));
+      } catch {
+        // Bỏ qua lỗi storage
+      }
+      if (typeof window !== 'undefined') {
+        queueMicrotask(() => {
+          window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: next }));
+        });
+      }
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleZenEvent = (event: Event) => {
+      const custom = event as CustomEvent<boolean>;
+      if (typeof custom.detail === 'boolean') {
+        setIsZenModeState(custom.detail);
+      }
+    };
+    window.addEventListener('lu_zen_mode_change', handleZenEvent);
+    return () => window.removeEventListener('lu_zen_mode_change', handleZenEvent);
+  }, []);
+
   // Bộ đếm Pomodoro chạy ngầm bền vững khi người học chuyển trang
   useEffect(() => {
     if (pomodoro.status !== 'running' || typeof window === 'undefined') {
@@ -365,8 +485,8 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   const activeSubject = useMemo(() => resolveActiveSubjectFromPath(routePathname), [routePathname]);
 
   const readerSettings = useMemo<IslandReaderSettings>(
-    () => ({ fontScale, eyeComfortWarmth }),
-    [fontScale, eyeComfortWarmth],
+    () => ({ fontScale, eyeComfortWarmth, isDarkMode, isZenMode }),
+    [fontScale, eyeComfortWarmth, isDarkMode, isZenMode],
   );
 
   const value = useMemo<IslandContextValue>(
@@ -380,6 +500,10 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       decreaseFontScale,
       setEyeComfortWarmth,
       toggleEyeComfortWarmth,
+      setDarkMode,
+      toggleDarkMode,
+      setZenMode,
+      toggleZenMode,
       activeSubject,
       routePathname,
       setRoutePathname,
@@ -399,6 +523,10 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       decreaseFontScale,
       setEyeComfortWarmth,
       toggleEyeComfortWarmth,
+      setDarkMode,
+      toggleDarkMode,
+      setZenMode,
+      toggleZenMode,
       activeSubject,
       routePathname,
       setRoutePathname,

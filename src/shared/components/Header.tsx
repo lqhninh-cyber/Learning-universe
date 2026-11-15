@@ -1,4 +1,4 @@
-import { Bell, CheckCircle2, Eye, EyeOff, Menu, Search, Sparkles, X } from 'lucide-react';
+import { Bell, CheckCircle2, Menu, Search, Sparkles, X } from 'lucide-react';
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import {
@@ -109,14 +109,7 @@ export const Header: FC<HeaderProps> = ({
   const enableLearnerMode = useLearningStore((state) => state.enableLearnerMode);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
 
-  const {
-    fontSize,
-    setFontSize,
-    increaseFontSize,
-    decreaseFontSize,
-    isSkimmingMode,
-    toggleSkimmingMode,
-  } = useReadingSettings();
+  const { fontSize, setFontSize, increaseFontSize, decreaseFontSize } = useReadingSettings();
 
   const { activeNotice, activeSubject, setRoutePathname, dismissIslandNotice } = useIsland();
 
@@ -481,7 +474,7 @@ export const Header: FC<HeaderProps> = ({
               <span
                 title={lessonContextTitle}
                 className={cn(
-                  'max-w-[340px] truncate text-[14.5px] font-bold',
+                  'max-w-[440px] truncate text-[14.5px] font-bold xl:max-w-[520px]',
                   isDark ? 'text-[#F7F4EB]' : 'text-[#142B21] dark:text-[#F7F4EB]',
                 )}
               >
@@ -490,30 +483,6 @@ export const Header: FC<HeaderProps> = ({
             </div>
 
             <div className="flex shrink-0 items-center gap-1.5">
-              {/* Bật/tắt nhanh Đọc lướt định lý */}
-              <button
-                type="button"
-                tabIndex={showReadingContextBar ? undefined : -1}
-                onClick={toggleSkimmingMode}
-                aria-pressed={isSkimmingMode}
-                title="Đọc lướt định lý (ẩn/hiện nhanh Ví dụ & Chứng minh)"
-                className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs font-semibold whitespace-nowrap transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98]',
-                  isSkimmingMode
-                    ? 'border-[#1B3D2F] bg-[#1B3D2F] text-white shadow-xs dark:border-[#388E3C] dark:bg-[#388E3C]'
-                    : isDark
-                      ? 'border-[#4E9B58]/25 bg-[#182E24] text-[#E6ECE7] hover:border-[#4E9B58]/50'
-                      : 'border-[#1B3D2F]/14 bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/35 hover:text-[#1B3D2F]',
-                )}
-              >
-                {isSkimmingMode ? (
-                  <EyeOff className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                ) : (
-                  <Eye className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                )}
-                <span>Đọc lướt định lý</span>
-              </button>
-
               {/* Nút bật lại Menu điều hướng chính */}
               <button
                 type="button"
@@ -630,8 +599,6 @@ export const Header: FC<HeaderProps> = ({
             onOpenChange={setIsMobileMenuOpen}
             isDark={isDark}
             isLessonPage={isLessonPage}
-            isSkimmingMode={isSkimmingMode}
-            onToggleSkimmingMode={toggleSkimmingMode}
             fontSize={fontSize}
             onDecreaseFontSize={handleDecreaseFontSize}
             onIncreaseFontSize={handleIncreaseFontSize}

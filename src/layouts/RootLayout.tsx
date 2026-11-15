@@ -54,7 +54,7 @@ function RootLayoutContent() {
       className={cn(
         'flex min-h-screen flex-col overflow-x-clip transition-colors duration-300',
         isDarkLesson
-          ? 'scoped-dark-mode dark bg-[#121517] text-[#E2E8F0]'
+          ? 'scoped-dark-mode dark bg-[#0F1917] text-[#E2E8F0]'
           : isSepiaLesson
             ? 'scoped-sepia-mode bg-[#F4EEDF] text-[#231F18]'
             : isEyeComfort

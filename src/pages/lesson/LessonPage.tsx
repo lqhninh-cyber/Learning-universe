@@ -19,7 +19,6 @@ import {
   LessonToc,
   SourcePanel,
 } from '@/features/lesson-reader';
-import { FloatingZenToolbar } from '@/components/reader/FloatingZenToolbar';
 import { FoliageReadingProgress } from '@/components/reader/FoliageReadingProgress';
 import {
   EditorialChapterOpener,
@@ -171,16 +170,17 @@ function LessonPageContent() {
     return false;
   });
 
-  const { theme, fontSize, isZenMode, toggleZenMode, setZenMode, typographyClasses } =
-    useReadingSettings();
-  const { readerSettings } = useIsland();
-  const readingTheme = theme;
+  const { theme, fontSize, typographyClasses } = useReadingSettings();
+  const { readerSettings, toggleDarkMode, toggleZenMode, setZenMode, triggerIslandNotice } =
+    useIsland();
+  const readingTheme = readerSettings.isDarkMode ? 'dark' : theme;
   const isEyeComfort =
     readerSettings.eyeComfortWarmth && readingTheme !== 'dark' && readingTheme !== 'sepia';
+  const isZenMode = readerSettings.isZenMode;
   const isFocusMode = isZenMode;
   const articleRef = useRef<HTMLElement>(null);
 
-  // Hỗ trợ phím tắt F và Escape bổ trợ cho Zen Mode
+  // Hỗ trợ phím tắt D (Sáng/Tối), Z (Zen Mode) và Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -198,9 +198,22 @@ function LessonPageContent() {
         return;
       }
 
-      if (e.key === 'f' || e.key === 'F') {
+      if (e.key === 'd' || e.key === 'D') {
         e.preventDefault();
+        const nextDark = !readerSettings.isDarkMode;
+        toggleDarkMode();
+        triggerIslandNotice({
+          text: nextDark ? 'Đã chuyển sang chế độ Tối' : 'Đã chuyển sang chế độ Sáng',
+          type: 'info',
+        });
+      } else if (e.key === 'z' || e.key === 'Z') {
+        e.preventDefault();
+        const nextZen = !isZenMode;
         toggleZenMode();
+        triggerIslandNotice({
+          text: nextZen ? 'Đã bật chế độ tập trung Zen' : 'Đã tắt chế độ tập trung Zen',
+          type: 'info',
+        });
       } else if (e.key === 'Escape' && isZenMode) {
         e.preventDefault();
         setZenMode(false);
@@ -209,7 +222,14 @@ function LessonPageContent() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleZenMode, setZenMode, isZenMode]);
+  }, [
+    readerSettings.isDarkMode,
+    isZenMode,
+    toggleDarkMode,
+    toggleZenMode,
+    setZenMode,
+    triggerIslandNotice,
+  ]);
 
   const handleToggleSidebarCollapse = () => {
     setIsSidebarCollapsed((prev) => {
@@ -655,7 +675,7 @@ function LessonPageContent() {
                   ? 'rounded-3xl border border-[#D8D3C6] bg-[#F5F3EE] text-[#182624] shadow-[var(--shadow-editorial)]'
                   : 'rounded-3xl border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624] shadow-[var(--shadow-editorial)]',
                 readingTheme === 'dark' &&
-                  'dark border-[#2A323A] bg-[#181C20] text-[#ECE8DF] shadow-none',
+                  'dark border-[#243833] bg-[#162421] text-[#ECE8DF] shadow-none',
                 readingTheme === 'sepia' &&
                   'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18] shadow-sm',
                 fontSize === 'lg' && 'reader-scale-lg',
@@ -845,9 +865,6 @@ function LessonPageContent() {
 
         {/* Vạch tiến độ mầm cây sinh trưởng công thái học */}
         <FoliageReadingProgress articleContainerRef={articleRef} />
-
-        {/* Floating Zen Toolbar ghim nổi công thái học */}
-        <FloatingZenToolbar />
       </FadeIn>
     </div>
   );

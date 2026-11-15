@@ -44,9 +44,6 @@ export interface ReadingSettingsContextValue {
   readonly isZenMode: boolean;
   readonly setZenMode: (zen: boolean) => void;
   readonly toggleZenMode: () => void;
-  readonly isSkimmingMode: boolean;
-  readonly setSkimmingMode: (skim: boolean) => void;
-  readonly toggleSkimmingMode: () => void;
   readonly typographyClasses: string;
 }
 
@@ -64,9 +61,6 @@ const DEFAULT_READING_SETTINGS: ReadingSettingsContextValue = {
   isZenMode: false,
   setZenMode: () => {},
   toggleZenMode: () => {},
-  isSkimmingMode: false,
-  setSkimmingMode: () => {},
-  toggleSkimmingMode: () => {},
   typographyClasses: 'font-serif text-[18.5px] leading-[1.9]',
 };
 
@@ -78,7 +72,6 @@ export interface ReadingSettingsProviderProps {
   readonly initialFontFamily?: ReadingFontFamily;
   readonly initialFontSize?: ReadingFontSize;
   readonly initialZenMode?: boolean;
-  readonly initialSkimmingMode?: boolean;
 }
 
 const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
@@ -87,7 +80,6 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
   initialFontFamily,
   initialFontSize,
   initialZenMode,
-  initialSkimmingMode,
 }) => {
   const [theme, setThemeState] = useState<ReadingTheme>(() => {
     if (initialTheme) return initialTheme;
@@ -133,18 +125,6 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     if (typeof window !== 'undefined') {
       try {
         return localStorage.getItem('lu_zen_mode') === 'true';
-      } catch {
-        // Ignore storage error
-      }
-    }
-    return false;
-  });
-
-  const [isSkimmingMode, setSkimmingModeState] = useState<boolean>(() => {
-    if (initialSkimmingMode !== undefined) return initialSkimmingMode;
-    if (typeof window !== 'undefined') {
-      try {
-        return sessionStorage.getItem('lu_skim_mode') === 'true';
       } catch {
         // Ignore storage error
       }
@@ -309,6 +289,9 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     } catch {
       // Ignore
     }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: zen }));
+    }
   }, []);
 
   const toggleZenMode = useCallback(() => {
@@ -319,43 +302,25 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
       } catch {
         // Ignore
       }
-      return next;
-    });
-  }, []);
-
-  const setSkimmingMode = useCallback((skim: boolean) => {
-    setSkimmingModeState(skim);
-    try {
-      sessionStorage.setItem('lu_skim_mode', String(skim));
-    } catch {
-      // Ignore
-    }
-  }, []);
-
-  const toggleSkimmingMode = useCallback(() => {
-    setSkimmingModeState((prev) => {
-      const next = !prev;
-      try {
-        sessionStorage.setItem('lu_skim_mode', String(next));
-      } catch {
-        // Ignore
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: next }));
       }
       return next;
     });
   }, []);
 
-  // Đồng bộ thuộc tính data-skim-mode lên document.body
+  // Đồng bộ chế độ tập trung Zen từ IslandContext
   useEffect(() => {
-    if (typeof document === 'undefined') return;
-    if (isSkimmingMode) {
-      document.body.setAttribute('data-skim-mode', 'true');
-    } else {
-      document.body.removeAttribute('data-skim-mode');
-    }
-    return () => {
-      document.body.removeAttribute('data-skim-mode');
+    if (typeof window === 'undefined') return;
+    const handler = (event: Event) => {
+      const custom = event as CustomEvent<boolean>;
+      if (typeof custom.detail === 'boolean') {
+        setZenModeState((prev) => (prev === custom.detail ? prev : custom.detail));
+      }
     };
-  }, [isSkimmingMode]);
+    window.addEventListener('lu_zen_mode_change', handler);
+    return () => window.removeEventListener('lu_zen_mode_change', handler);
+  }, []);
 
   // Đồng bộ thuộc tính data-zen-mode và data-focus-mode lên document.body
   useEffect(() => {
@@ -394,9 +359,6 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
       isZenMode,
       setZenMode,
       toggleZenMode,
-      isSkimmingMode,
-      setSkimmingMode,
-      toggleSkimmingMode,
       typographyClasses,
     }),
     [
@@ -413,9 +375,6 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
       isZenMode,
       setZenMode,
       toggleZenMode,
-      isSkimmingMode,
-      setSkimmingMode,
-      toggleSkimmingMode,
       typographyClasses,
     ],
   );

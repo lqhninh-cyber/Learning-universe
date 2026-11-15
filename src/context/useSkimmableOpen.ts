@@ -1,40 +1,22 @@
 import { useCallback, useState } from 'react';
-import { useReadingSettings } from './ReadingSettingsContext';
 
 /**
- * Đồng bộ trạng thái đóng/mở của khối Ví dụ / Chứng minh với chế độ "Đọc lướt định lý":
- * - Tự động thu gọn toàn bộ khi bật Đọc lướt định lý (`isSkimmingMode = true`).
- * - Vẫn cho phép người học tự mở/đóng từng khối riêng lẻ bất kỳ lúc nào.
- * - Khi đổi trạng thái Đọc lướt định lý, tất cả khối tự đồng bộ lại theo chế độ mới mà không cần useEffect.
+ * Hook quản lý trạng thái đóng/mở cục bộ cho các khối Ví dụ, Chứng minh và Ghi chú học thuật.
  */
-export function useSkimmableOpen(defaultOpenWhenNotSkimming = true): {
+export function useSkimmableOpen(defaultOpen = true): {
   readonly isOpen: boolean;
+  readonly setOpen: (open: boolean) => void;
   readonly toggle: () => void;
-  readonly setOpen: (nextOpen: boolean) => void;
 } {
-  const { isSkimmingMode } = useReadingSettings();
-  const [override, setOverride] = useState<{
-    readonly skimMode: boolean;
-    readonly open: boolean;
-  } | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
 
-  const isOpen =
-    override !== null && override.skimMode === isSkimmingMode
-      ? override.open
-      : isSkimmingMode
-        ? false
-        : defaultOpenWhenNotSkimming;
-
-  const setOpen = useCallback(
-    (nextOpen: boolean) => {
-      setOverride({ skimMode: isSkimmingMode, open: nextOpen });
-    },
-    [isSkimmingMode],
-  );
+  const setOpen = useCallback((nextOpen: boolean) => {
+    setIsOpen(nextOpen);
+  }, []);
 
   const toggle = useCallback(() => {
-    setOverride({ skimMode: isSkimmingMode, open: !isOpen });
-  }, [isSkimmingMode, isOpen]);
+    setIsOpen((prev) => !prev);
+  }, []);
 
-  return { isOpen, toggle, setOpen };
+  return { isOpen, setOpen, toggle };
 }

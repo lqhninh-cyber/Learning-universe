@@ -1,6 +1,7 @@
-import { LogIn, LogOut, Menu, Play, Sparkles } from 'lucide-react';
+import { LogIn, LogOut, Menu, Moon, Play, Sun } from 'lucide-react';
 import type { FC } from 'react';
 import { Link } from 'react-router';
+import { useIsland } from '@/context/IslandContext';
 import type { ReadingFontSize } from '@/context/ReadingSettingsContext';
 import { SearchBar } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
@@ -17,8 +18,6 @@ export interface HeaderMobileDrawerProps {
   readonly onOpenChange: (open: boolean) => void;
   readonly isDark: boolean;
   readonly isLessonPage: boolean;
-  readonly isSkimmingMode: boolean;
-  readonly onToggleSkimmingMode: () => void;
   readonly fontSize: ReadingFontSize;
   readonly onDecreaseFontSize: () => void;
   readonly onIncreaseFontSize: () => void;
@@ -33,8 +32,6 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
   onOpenChange,
   isDark,
   isLessonPage,
-  isSkimmingMode,
-  onToggleSkimmingMode,
   fontSize,
   onDecreaseFontSize,
   onIncreaseFontSize,
@@ -43,6 +40,7 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
   onOpenAuthModal,
   onSignOut,
 }) => {
+  const { readerSettings, toggleDarkMode } = useIsland();
   const closeDrawer = () => onOpenChange(false);
 
   return (
@@ -88,17 +86,21 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
               <div className="flex items-center justify-between gap-2">
                 <button
                   type="button"
-                  onClick={onToggleSkimmingMode}
-                  aria-pressed={isSkimmingMode}
+                  onClick={toggleDarkMode}
+                  aria-pressed={readerSettings.isDarkMode}
                   className={cn(
                     'inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-colors',
-                    isSkimmingMode
-                      ? 'border-[#C83E37] bg-[#C83E37] text-white'
+                    readerSettings.isDarkMode
+                      ? 'border-[#1E332E] bg-[#1E332E] text-[#FCD34D]'
                       : 'border-[var(--border-subtle)] bg-white text-[#142B21]',
                   )}
                 >
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Đọc lướt định lý</span>
+                  {readerSettings.isDarkMode ? (
+                    <Sun className="h-3.5 w-3.5" aria-hidden="true" />
+                  ) : (
+                    <Moon className="h-3.5 w-3.5" aria-hidden="true" />
+                  )}
+                  <span>{readerSettings.isDarkMode ? 'Chế độ Sáng' : 'Chế độ Tối'}</span>
                 </button>
                 <div className="inline-flex items-center rounded-xl border border-[var(--border-subtle)] bg-white p-0.5">
                   <button

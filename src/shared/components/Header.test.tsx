@@ -121,7 +121,7 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.getByText('Tìm: Tâm tỉ cự...')).toBeInTheDocument();
   });
 
-  it('biến hình Ngăn 2 sang Thanh Ngữ Cảnh Bài Đọc khi cuộn quá 200px, hỗ trợ Đọc lướt, A−/A+, Menu và xoay hoa', () => {
+  it('biến hình Ngăn 2 sang Thanh Ngữ Cảnh Bài Đọc khi cuộn quá 200px, không còn Đọc lướt định lý và hỗ trợ Menu + xoay ấn chương', () => {
     const { container } = renderHeaderAt(
       '/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin',
     );
@@ -132,6 +132,8 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
 
     // Không hiển thị chip Học tiếp khi đang ở bên trong trang bài học
     expect(screen.queryByRole('link', { name: /Học tiếp:/i })).not.toBeInTheDocument();
+    // Đã xóa bỏ hoàn toàn nút Đọc lướt định lý
+    expect(screen.queryByRole('button', { name: /Đọc lướt định lý/i })).not.toBeInTheDocument();
 
     // Giả lập cuộn xuống 300px
     act(() => {
@@ -148,13 +150,7 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(brandSvg).toBeInTheDocument();
     expect(brandSvg?.getAttribute('style') ?? '').not.toContain('rotate(');
 
-    // Bật Đọc lướt định lý từ Header
-    const skimBtn = screen.getByRole('button', { name: /Đọc lướt định lý/i });
-    fireEvent.click(skimBtn);
-    expect(skimBtn).toHaveAttribute('aria-pressed', 'true');
-    expect(document.body.getAttribute('data-skim-mode')).toBe('true');
-
-    // Chỉnh nhanh cỡ chữ A+
+    // Chỉnh nhanh cỡ chữ A+ trên viên thuốc Island
     const incBtn = screen.getByRole('button', { name: 'Tăng cỡ chữ' });
     fireEvent.click(incBtn);
     expect(localStorage.getItem('lu_reading_font_size')).toBe('lg');
@@ -204,7 +200,7 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(previewCard).toHaveTextContent('48%');
   });
 
-  it('hiển thị cụm điều khiển đọc nhanh A-/A+/Dịu mắt và nút tìm kiếm thu gọn trên trang bài học', () => {
+  it('hiển thị viên thuốc điều khiển đọc bài đồng nhất (A-/A+, Sáng/Tối, Zen) và nút tìm kiếm thu gọn trên trang bài học', () => {
     renderHeaderAt('/learning-space');
     expect(screen.queryByTestId('quick-reader-controls')).not.toBeInTheDocument();
     expect(screen.queryByTestId('compact-search-trigger')).not.toBeInTheDocument();
@@ -212,15 +208,23 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     renderHeaderAt('/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin');
     expect(screen.getByTestId('quick-reader-controls')).toBeInTheDocument();
     expect(screen.getByTestId('compact-search-trigger')).toBeInTheDocument();
+    expect(screen.getByTestId('quick-reader-scale-badge')).toHaveTextContent('100%');
 
     const incBtns = screen.getAllByRole('button', { name: 'Tăng cỡ chữ' });
     fireEvent.click(incBtns[0]!);
     expect(screen.getByTestId('quick-reader-scale-badge')).toHaveTextContent('105%');
 
-    const comfortBtn = screen.getByTestId('eye-comfort-toggle');
-    expect(comfortBtn).toHaveAttribute('aria-pressed', 'false');
-    fireEvent.click(comfortBtn);
-    expect(comfortBtn).toHaveAttribute('aria-pressed', 'true');
+    const themeBtn = screen.getByTestId('theme-mode-toggle');
+    expect(themeBtn).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(themeBtn);
+    expect(themeBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('lu_reading_theme')).toBe('dark');
+
+    const zenBtn = screen.getByTestId('zen-mode-toggle');
+    expect(zenBtn).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(zenBtn);
+    expect(zenBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(localStorage.getItem('lu_zen_mode')).toBe('true');
   });
 
   it('vận hành đồng hồ Pomodoro, bắn thông báo đồng tâm trên Island và tự đóng sau 2200ms', async () => {
