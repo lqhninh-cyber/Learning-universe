@@ -1,19 +1,42 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { type ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { IslandProvider, useIsland } from '@/context/IslandContext';
+import { writeLessonReadingPosition } from '@/context/island-helpers';
 import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
 import { AuthProvider } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import { TooltipProvider } from '@/shared/ui';
 import { Header } from './Header';
 
-function renderHeaderAt(initialEntry: string) {
+function NoticeTriggerProbe() {
+  const { triggerIslandNotice } = useIsland();
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        triggerIslandNotice({
+          text: 'Đã hoàn thành Bài 1.2 · Tiến độ HHAVE: 25%',
+          type: 'success',
+        })
+      }
+    >
+      Trigger Notice
+    </button>
+  );
+}
+
+function renderHeaderAt(initialEntry: string, extraChild?: ReactNode) {
   return render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <TooltipProvider>
         <AuthProvider>
           <ReadingSettingsProvider>
-            <Header />
+            <IslandProvider>
+              <Header />
+              {extraChild}
+            </IslandProvider>
           </ReadingSettingsProvider>
         </AuthProvider>
       </TooltipProvider>
@@ -140,5 +163,95 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     const menuBtn = screen.getByRole('button', { name: 'Mở menu điều hướng chính' });
     fireEvent.click(menuBtn);
     expect(contextBar).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('hiển thị huy hiệu ngữ cảnh môn học động trong "Không gian học tập" khi ở môn học/bài học', () => {
+    renderHeaderAt('/mon-hoc/cau-truc-dai-so');
+    const badge = screen.getByTestId('island-subject-badge');
+    expect(badge).toHaveTextContent('CTĐS');
+
+    const { container } = renderHeaderAt('/');
+    expect(container.querySelectorAll('[data-testid="island-subject-badge"]')).toHaveLength(0);
+  });
+
+  it('mở thẻ kính mờ xem trước "Học tiếp" khi rê chuột với mục đang đọc dở và % tiến độ', () => {
+    vi.useFakeTimers();
+    useLearningStore
+      .getState()
+      .recordLessonVisit('affine-geometry', 'toa-do-afin-va-muc-tieu-afin');
+    writeLessonReadingPosition('toa-do-afin-va-muc-tieu-afin', {
+      sectionTitle: 'Mục 2. Mục tiêu Affine',
+      progressPercent: 48,
+    });
+
+    renderHeaderAt('/');
+    const resumeLink = screen.getByRole('link', { name: /Học tiếp: Bài 1\.2/i });
+    const wrapper = resumeLink.parentElement;
+    expect(wrapper).not.toBeNull();
+
+    fireEvent.mouseEnter(wrapper!);
+    expect(screen.queryByTestId('resume-preview-card')).not.toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(120);
+    });
+
+    const previewCard = screen.getByTestId('resume-preview-card');
+    expect(previewCard).toBeInTheDocument();
+    expect(previewCard).toHaveTextContent('Hình học Affine và Euclide');
+    expect(previewCard).toHaveTextContent('Chương 1');
+    expect(previewCard).toHaveTextContent(/Đang dừng ở:\s*Mục 2\. Mục tiêu Affine/);
+    expect(previewCard).toHaveTextContent('48%');
+  });
+
+  it('hiển thị cụm điều khiển đọc nhanh A-/A+/Dịu mắt và nút tìm kiếm thu gọn trên trang bài học', () => {
+    renderHeaderAt('/learning-space');
+    expect(screen.queryByTestId('quick-reader-controls')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('compact-search-trigger')).not.toBeInTheDocument();
+
+    renderHeaderAt('/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin');
+    expect(screen.getByTestId('quick-reader-controls')).toBeInTheDocument();
+    expect(screen.getByTestId('compact-search-trigger')).toBeInTheDocument();
+
+    const incBtns = screen.getAllByRole('button', { name: 'Tăng cỡ chữ' });
+    fireEvent.click(incBtns[0]!);
+    expect(screen.getByTestId('quick-reader-scale-badge')).toHaveTextContent('105%');
+
+    const comfortBtn = screen.getByTestId('eye-comfort-toggle');
+    expect(comfortBtn).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(comfortBtn);
+    expect(comfortBtn).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('vận hành đồng hồ Pomodoro, bắn thông báo đồng tâm trên Island và tự đóng sau 2200ms', async () => {
+    vi.useFakeTimers();
+    renderHeaderAt('/', <NoticeTriggerProbe />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger Notice' }));
+    const banner = screen.getByTestId('island-notice-banner');
+    expect(banner).toHaveTextContent('Đã hoàn thành Bài 1.2 · Tiến độ HHAVE: 25%');
+
+    act(() => {
+      vi.advanceTimersByTime(2200);
+    });
+    expect(screen.queryByTestId('island-notice-banner')).not.toBeInTheDocument();
+
+    // Bật Pomodoro 5 phút và đếm ngược đến hoàn tất
+    fireEvent.click(screen.getByTestId('pomodoro-trigger'));
+    expect(screen.getByTestId('pomodoro-popover')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Nghỉ ngơi/i }));
+    expect(screen.getByTestId('pomodoro-trigger')).toHaveTextContent('05:00');
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(screen.getByTestId('pomodoro-trigger')).toHaveTextContent('04:59');
+
+    await act(async () => {
+      vi.advanceTimersByTime(299 * 1000);
+      await Promise.resolve();
+    });
+    expect(screen.getByTestId('island-notice-banner')).toHaveTextContent(/Hoàn thành nhịp học/i);
   });
 });

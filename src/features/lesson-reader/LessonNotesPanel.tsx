@@ -1,5 +1,6 @@
 import { FileEdit, Save, Trash2 } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
+import { useIsland } from '@/context/IslandContext';
 import { useLearningStore } from '@/features/learning';
 import { Button, Card } from '@/shared/ui';
 
@@ -12,6 +13,7 @@ export interface LessonNotesPanelProps {
 export function LessonNotesPanel({ lessonId, lessonTitle, onClose }: LessonNotesPanelProps) {
   const existingNote = useLearningStore((state) => state.lessonNotes[lessonId]);
   const saveLessonNote = useLearningStore((state) => state.saveLessonNote);
+  const { triggerIslandNotice } = useIsland();
 
   const [draft, setDraft] = useState(existingNote?.body ?? '');
   const [savedFeedback, setSavedFeedback] = useState(false);
@@ -21,12 +23,21 @@ export function LessonNotesPanel({ lessonId, lessonTitle, onClose }: LessonNotes
     if (saveLessonNote(lessonId, draft)) {
       setSavedFeedback(true);
       setTimeout(() => setSavedFeedback(false), 2000);
+      triggerIslandNotice({
+        text: draft.trim() ? `Đã lưu ghi chú · ${lessonTitle}` : `Đã xóa ghi chú · ${lessonTitle}`,
+        type: draft.trim() ? 'success' : 'info',
+      });
     }
   };
 
   const handleClear = () => {
     setDraft('');
-    saveLessonNote(lessonId, '');
+    if (saveLessonNote(lessonId, '')) {
+      triggerIslandNotice({
+        text: `Đã xóa ghi chú · ${lessonTitle}`,
+        type: 'info',
+      });
+    }
   };
 
   return (

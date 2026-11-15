@@ -904,6 +904,23 @@
   animation: lu-reed-sway-slow 7.4s ease-in-out infinite;
 }
 
+@keyframes lu-notice-countdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Chế độ Dịu mắt khoáng thạch ấm áp (giảm ánh sáng xanh khi đọc đêm) */
+[data-eye-comfort='true'] {
+  --bg-page: #eae8e1;
+  --bg-surface: #f5f3ee;
+  --bg-subtle: #e3dfd4;
+  --border-subtle: #d6d1c4;
+}
+
 /* Chuyển sắc mềm từ đáy Phòng trưng bày Di sản (#081A15) xuống mặt nước Hồ Sen (#061510) */
 .lu-lakeshore-sky-wash {
   background: linear-gradient(180deg, #081a15 0%, #0a211a 35%, #071b14 70%, #061510 100%);

@@ -1,5 +1,5 @@
 import { ArrowLeft, BookOpen, Link2, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   type CompiledLessonModule,
@@ -27,6 +27,8 @@ import {
   type ChapterCloItem,
   type ChapterDifficultyLevel,
 } from '@/components/lesson';
+import { writeLessonReadingPosition } from '@/context/island-helpers';
+import { useIsland } from '@/context/IslandContext';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { InPageSearchNavigator, useInPageSearch } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
@@ -171,7 +173,10 @@ function LessonPageContent() {
 
   const { theme, fontSize, isZenMode, toggleZenMode, setZenMode, typographyClasses } =
     useReadingSettings();
+  const { readerSettings } = useIsland();
   const readingTheme = theme;
+  const isEyeComfort =
+    readerSettings.eyeComfortWarmth && readingTheme !== 'dark' && readingTheme !== 'sepia';
   const isFocusMode = isZenMode;
   const articleRef = useRef<HTMLElement>(null);
 
@@ -238,6 +243,67 @@ function LessonPageContent() {
       recordLessonVisit(subjectId, lessonId);
     }
   }, [subjectId, lessonId, recordLessonVisit]);
+
+  useEffect(() => {
+    if (!lessonId || typeof window === 'undefined') {
+      return;
+    }
+
+    let rafId = 0;
+    let lastSavedKey = '';
+
+    const updateReadingPosition = () => {
+      rafId = 0;
+      const articleEl = articleRef.current;
+      if (!articleEl) {
+        return;
+      }
+
+      const rect = articleEl.getBoundingClientRect();
+      const articleTop = rect.top + window.scrollY;
+      const scrollable = Math.max(1, articleEl.scrollHeight - window.innerHeight * 0.65);
+      const rawProgress = ((window.scrollY - articleTop + 160) / scrollable) * 100;
+      const progressPercent = Math.max(0, Math.min(100, Math.round(rawProgress)));
+
+      const headings = articleEl.querySelectorAll<HTMLElement>('h2, h3');
+      let sectionTitle = '';
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top <= 160) {
+          sectionTitle = (heading.textContent ?? '').trim();
+        } else {
+          break;
+        }
+      }
+      if (!sectionTitle && headings.length > 0) {
+        sectionTitle = (headings[0]?.textContent ?? '').trim();
+      }
+
+      const nextKey = `${sectionTitle}::${progressPercent}`;
+      if (nextKey !== lastSavedKey && sectionTitle) {
+        lastSavedKey = nextKey;
+        writeLessonReadingPosition(lessonId, {
+          sectionTitle,
+          progressPercent,
+        });
+      }
+    };
+
+    const handleScroll = () => {
+      if (rafId !== 0) {
+        return;
+      }
+      rafId = window.requestAnimationFrame(updateReadingPosition);
+    };
+
+    rafId = window.requestAnimationFrame(updateReadingPosition);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      if (rafId !== 0) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lessonId, compiled]);
 
   useEffect(() => {
     if (!lessonId || loadedMap[lessonId]) {
@@ -327,7 +393,11 @@ function LessonPageContent() {
   const { subject, chapter, lesson } = location;
 
   return (
-    <div id="reading-container" className={cn(readingTheme === 'dark' && 'dark')}>
+    <div
+      id="reading-container"
+      data-eye-comfort={isEyeComfort ? 'true' : undefined}
+      className={cn(readingTheme === 'dark' && 'dark')}
+    >
       <FadeIn
         className={cn(
           'mx-auto w-full pb-16 transition-all duration-300',
@@ -335,7 +405,9 @@ function LessonPageContent() {
             ? 'dark bg-[#121517] text-[#E2E8F0]'
             : readingTheme === 'sepia'
               ? 'bg-[#F4EEDF] text-[#231F18]'
-              : 'bg-[var(--bg-page)] text-[var(--text-main)]',
+              : isEyeComfort
+                ? 'bg-[#EAE8E1] text-[#182624]'
+                : 'bg-[var(--bg-page)] text-[var(--text-main)]',
           isFocusMode
             ? 'max-w-[1040px] px-4 pt-2 sm:px-6'
             : 'w-[min(96vw,1680px)] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
@@ -575,10 +647,13 @@ function LessonPageContent() {
               data-reading-article
               data-reading-theme={readingTheme}
               data-reading-size={fontSize}
+              style={{ '--lu-reading-scale': String(readerSettings.fontScale) } as CSSProperties}
               className={cn(
                 'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.8] transition-all duration-300',
                 typographyClasses,
-                'rounded-3xl border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624] shadow-[var(--shadow-editorial)]',
+                isEyeComfort
+                  ? 'rounded-3xl border border-[#D8D3C6] bg-[#F5F3EE] text-[#182624] shadow-[var(--shadow-editorial)]'
+                  : 'rounded-3xl border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624] shadow-[var(--shadow-editorial)]',
                 readingTheme === 'dark' &&
                   'dark border-[#2A323A] bg-[#181C20] text-[#ECE8DF] shadow-none',
                 readingTheme === 'sepia' &&

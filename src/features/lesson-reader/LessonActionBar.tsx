@@ -1,5 +1,8 @@
 import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { getLessonById } from '@/content-runtime';
+import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
+import { useIsland } from '@/context/IslandContext';
 import type { ReadingTheme } from '@/context/ReadingSettingsContext';
 import { useLearningStore } from '@/features/learning';
 import { cn } from '@/shared/lib/cn';
@@ -28,6 +31,7 @@ export function LessonActionBar({
   const toggleLessonBookmark = useLearningStore((state) => state.toggleLessonBookmark);
   const toggleGlossaryAnnotations = useLearningStore((state) => state.toggleGlossaryAnnotations);
   const requestNoteAccess = useLearningStore((state) => state.requestNoteAccess);
+  const { triggerIslandNotice } = useIsland();
 
   const [internalTheme, setInternalTheme] = useState<ReadingTheme>(() => {
     if (typeof window !== 'undefined') {
@@ -76,6 +80,42 @@ export function LessonActionBar({
       : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] hover:bg-[#E1E9EA]',
   );
 
+  const handleCompleteClick = () => {
+    const wasCompleted = Boolean(useLearningStore.getState().completedLessons[lessonId]);
+    if (!toggleLessonCompleted(lessonId)) {
+      return;
+    }
+
+    const loc = getLessonById(lessonId);
+    const shortLesson = loc ? `Bài ${loc.chapter.number}.${loc.lesson.number}` : 'bài học';
+
+    if (wasCompleted) {
+      triggerIslandNotice({
+        text: `Đã bỏ đánh dấu ${shortLesson}`,
+        type: 'info',
+      });
+      return;
+    }
+
+    if (loc) {
+      const updatedMap = useLearningStore.getState().completedLessons;
+      const allLessons = loc.subject.chapters.flatMap((ch) => ch.lessons);
+      const doneInSubject = allLessons.filter((item) => Boolean(updatedMap[item.id])).length;
+      const pct = allLessons.length > 0 ? Math.round((doneInSubject / allLessons.length) * 100) : 0;
+      const subjectCode = getIslandSubjectByIdOrSlug(loc.subject.slug)?.code ?? loc.subject.title;
+      triggerIslandNotice({
+        text: `Đã hoàn thành ${shortLesson} · Tiến độ ${subjectCode}: ${pct}%`,
+        type: 'success',
+      });
+      return;
+    }
+
+    triggerIslandNotice({
+      text: `Đã hoàn thành ${shortLesson}`,
+      type: 'success',
+    });
+  };
+
   return (
     <div
       role="toolbar"
@@ -84,7 +124,7 @@ export function LessonActionBar({
     >
       <button
         type="button"
-        onClick={() => toggleLessonCompleted(lessonId)}
+        onClick={handleCompleteClick}
         aria-pressed={isCompleted}
         aria-label={isCompleted ? 'Đã hoàn thành bài học' : 'Đánh dấu hoàn thành'}
         className={cn(

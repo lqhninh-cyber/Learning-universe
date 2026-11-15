@@ -1,4 +1,4 @@
-import { Eye, EyeOff, Menu, Play, Search, X } from 'lucide-react';
+import { Bell, CheckCircle2, Eye, EyeOff, Menu, Search, Sparkles, X } from 'lucide-react';
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import {
@@ -7,6 +7,8 @@ import {
   resolveLessonShortcut,
   type LessonLocation,
 } from '@/content-runtime';
+import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
+import { useIsland } from '@/context/IslandContext';
 import { type ReadingFontSize, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { useAuth } from '@/features/auth';
 import { type LastVisitedEntry, useLearningStore } from '@/features/learning';
@@ -16,6 +18,9 @@ import { cn } from '@/shared/lib/cn';
 import { EightPetalBrandMark } from './header/EightPetalBrandMark';
 import { HeaderAccountMenu } from './header/HeaderAccountMenu';
 import { HeaderMobileDrawer } from './header/HeaderMobileDrawer';
+import { HeaderPomodoroTimer } from './header/HeaderPomodoroTimer';
+import { HeaderQuickReaderControls } from './header/HeaderQuickReaderControls';
+import { HeaderResumePreview, type ResumePreviewData } from './header/HeaderResumePreview';
 
 export interface HeaderProps {
   readonly isDarkLesson?: boolean;
@@ -113,6 +118,8 @@ export const Header: FC<HeaderProps> = ({
     toggleSkimmingMode,
   } = useReadingSettings();
 
+  const { activeNotice, activeSubject, setRoutePathname, dismissIslandNotice } = useIsland();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -125,6 +132,10 @@ export const Header: FC<HeaderProps> = ({
   const roseRef = useRef<SVGSVGElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    setRoutePathname(pathname);
+  }, [pathname, setRoutePathname]);
 
   const isLessonPage =
     /^\/(mon-hoc|courses)\/[^/]+\/[^/]+\/[^/]+\/?$/.test(pathname) ||
@@ -280,17 +291,25 @@ export const Header: FC<HeaderProps> = ({
     [isLessonPage, pathname],
   );
 
-  const quickResume = useMemo(() => {
+  const quickResume = useMemo<ResumePreviewData | null>(() => {
     if (isLessonPage) return null;
     const entry = lastVisitedGlobal ?? readPersistedLastVisited();
     if (!entry?.lessonId) return null;
     const loc = getLessonById(entry.lessonId);
     if (!loc) return null;
+    const subjectMeta =
+      getIslandSubjectByIdOrSlug(loc.subject.slug) ?? getIslandSubjectByIdOrSlug(loc.subject.id);
     return {
       label: formatQuickResumeLabel(loc),
       to: ROUTES.lesson(loc.subject.slug, loc.chapter.slug, loc.lesson.slug),
+      lessonId: loc.lesson.id,
+      subjectName: subjectMeta?.name ?? loc.subject.title,
+      subjectAccentColor: subjectMeta?.accentColor ?? '#3B7A65',
+      chapterNumber: loc.chapter.number,
+      lessonTitle: loc.lesson.title,
+      isCompleted: Boolean(completedLessons[loc.lesson.id]),
     };
-  }, [isLessonPage, lastVisitedGlobal]);
+  }, [completedLessons, isLessonPage, lastVisitedGlobal]);
 
   const isUserLoggedIn = isAuthenticated || isStoreAuthenticated;
   const completedCount = Object.keys(completedLessons).length;
@@ -338,7 +357,8 @@ export const Header: FC<HeaderProps> = ({
       <header
         ref={mastheadRef}
         className={cn(
-          'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-5 backdrop-blur-xl transition-colors duration-200 print:hidden',
+          'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-4 backdrop-blur-xl transition-all duration-300 ease-out xl:px-5 print:hidden',
+          activeNotice && 'py-1 ring-2 ring-[#9EC5B8]/35',
           isDark
             ? 'border-[#9E845A]/30 bg-[#0D211D]/94 text-[#EBF0EE] shadow-[0_12px_36px_rgba(6,16,14,0.42)]'
             : isSepia
@@ -395,6 +415,24 @@ export const Header: FC<HeaderProps> = ({
             >
               {isLearningSpaceActive && activeSealDot}
               <span>Không gian học tập</span>
+              {activeSubject && (
+                <span
+                  data-testid="island-subject-badge"
+                  className="inline-flex items-center gap-1.5 transition-all duration-300"
+                >
+                  <span aria-hidden="true" className="opacity-50">
+                    ·
+                  </span>
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: activeSubject.accentColor }}
+                    aria-hidden="true"
+                  />
+                  <span className="font-mono text-xs font-bold tracking-wide">
+                    {activeSubject.code}
+                  </span>
+                </span>
+              )}
             </Link>
 
             <Link
@@ -476,53 +514,6 @@ export const Header: FC<HeaderProps> = ({
                 <span>Đọc lướt định lý</span>
               </button>
 
-              {/* Chỉnh nhanh cỡ chữ A− / A+ */}
-              <div
-                role="group"
-                aria-label="Chỉnh nhanh cỡ chữ bài đọc"
-                className={cn(
-                  'inline-flex h-8 items-center rounded-full border p-0.5',
-                  isDark
-                    ? 'border-[#4E9B58]/25 bg-[#182E24]'
-                    : 'border-[#1B3D2F]/14 bg-[var(--bg-page)]',
-                )}
-              >
-                <button
-                  type="button"
-                  tabIndex={showReadingContextBar ? undefined : -1}
-                  onClick={handleDecreaseFontSize}
-                  disabled={fontSize === 'sm'}
-                  aria-label="Giảm cỡ chữ"
-                  className={cn(
-                    'h-7 cursor-pointer rounded-full px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-35',
-                    isDark
-                      ? 'text-[#E6ECE7] hover:bg-white/10'
-                      : 'text-[#142B21] hover:bg-[#1B3D2F]/10',
-                  )}
-                >
-                  A−
-                </button>
-                <span
-                  className="h-3.5 w-[1px] bg-[#1B3D2F]/15 dark:bg-white/15"
-                  aria-hidden="true"
-                />
-                <button
-                  type="button"
-                  tabIndex={showReadingContextBar ? undefined : -1}
-                  onClick={handleIncreaseFontSize}
-                  disabled={fontSize === 'xl'}
-                  aria-label="Tăng cỡ chữ"
-                  className={cn(
-                    'h-7 cursor-pointer rounded-full px-2 text-xs font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-35',
-                    isDark
-                      ? 'text-[#E6ECE7] hover:bg-white/10'
-                      : 'text-[#142B21] hover:bg-[#1B3D2F]/10',
-                  )}
-                >
-                  A+
-                </button>
-              </div>
-
               {/* Nút bật lại Menu điều hướng chính */}
               <button
                 type="button"
@@ -551,46 +542,68 @@ export const Header: FC<HeaderProps> = ({
         />
 
         {/* NGĂN 3 — TRỢ LÝ HỌC TẬP & CÔNG CỤ (Phải) */}
-        <div className="ml-auto flex shrink-0 items-center gap-2.5 pl-3">
-          {/* Huy hiệu "Học tiếp" thông minh trên Trang chủ / Danh mục */}
-          {quickResume && (
-            <Link
-              to={quickResume.to}
-              className="hidden items-center gap-1.5 rounded-full border border-[#9E845A]/30 bg-[#26403A] px-4 py-2 text-[12.5px] font-semibold whitespace-nowrap text-[#F2F4F3] shadow-sm transition-all duration-150 hover:bg-[#1E332E] focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98] xl:inline-flex"
+        <div className="ml-auto flex shrink-0 items-center gap-2 pl-2 xl:gap-2.5 xl:pl-3">
+          {/* Huy hiệu "Học tiếp" + Thẻ Kính Mờ Xem Trước trên Trang chủ / Danh mục */}
+          {quickResume && <HeaderResumePreview data={quickResume} />}
+
+          {/* Cụm điều khiển đọc nhanh A- / A+ / Chế độ Dịu mắt (Chỉ hiển thị khi đang ở Chi tiết Bài học) */}
+          {isLessonPage && <HeaderQuickReaderControls isDark={isDark} />}
+
+          {/* Ô tìm kiếm: thu gọn thành nút tròn 36px khi ở trang Chi tiết Bài học để tối ưu chiều ngang 1280px */}
+          {isLessonPage ? (
+            <button
+              type="button"
+              data-testid="compact-search-trigger"
+              onClick={() => {
+                setIsSearchOpen(true);
+                setIsAccountMenuOpen(false);
+              }}
+              aria-label="Mở tìm kiếm nhanh"
+              title="Tìm kiếm (⌘K)"
+              className={cn(
+                'hidden h-9 w-9 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98] md:inline-flex',
+                isDark
+                  ? 'border-[#9E845A]/30 bg-[#0D211D] text-[#9EC5B8] hover:border-[#9EC5B8]/50 hover:bg-[#112624]'
+                  : 'border-[#D8E0DD] bg-[#EDF1EF] text-[#4A5D58] hover:border-[#9EC5B8]/60 hover:bg-[#FAFBF9] hover:text-[#182624]',
+              )}
             >
-              <Play className="h-3 w-3 fill-current" aria-hidden="true" />
-              <span>Học tiếp: {quickResume.label}</span>
-            </Link>
+              <Search className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearchOpen(true);
+                setIsAccountMenuOpen(false);
+              }}
+              aria-label="Mở tìm kiếm nhanh"
+              className={cn(
+                'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-full border px-4 text-left text-[13px] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
+                isDark
+                  ? 'border-[#9E845A]/30 bg-[#0D211D] text-[#B8C7C2] hover:border-[#9EC5B8]/50 hover:bg-[#112624]'
+                  : 'border-[#D8E0DD] bg-[#EDF1EF] text-[#182624] hover:border-[#9EC5B8]/60 hover:bg-[#FAFBF9] dark:border-[#9E845A]/30 dark:bg-[#0D211D] dark:text-[#B8C7C2]',
+              )}
+            >
+              <span className="flex min-w-0 flex-1 items-center gap-2">
+                <Search
+                  className={cn(
+                    'h-3.5 w-3.5 shrink-0',
+                    isDark ? 'text-[#9EC5B8]' : 'text-[#4A5D58]',
+                  )}
+                  aria-hidden="true"
+                />
+                <span key={searchHintIndex} className="block truncate pr-2 font-medium">
+                  {ROTATING_SEARCH_HINTS[searchHintIndex]}
+                </span>
+              </span>
+              <kbd className="shrink-0 rounded-full border border-[#D8E0DD] bg-[#FAFBF9] px-2 py-0.5 text-[11px] font-medium text-[#4A5D58] dark:border-white/15 dark:bg-white/10 dark:text-[#B8C7C2]">
+                ⌘K
+              </kbd>
+            </button>
           )}
 
-          {/* Ô tìm kiếm viên thuốc luân phiên gợi ý (đảm bảo không chồng badge ⌘K) */}
-          <button
-            type="button"
-            onClick={() => {
-              setIsSearchOpen(true);
-              setIsAccountMenuOpen(false);
-            }}
-            aria-label="Mở tìm kiếm nhanh"
-            className={cn(
-              'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-full border px-4 text-left text-[13px] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
-              isDark
-                ? 'border-[#9E845A]/30 bg-[#0D211D] text-[#B8C7C2] hover:border-[#9EC5B8]/50 hover:bg-[#112624]'
-                : 'border-[#D8E0DD] bg-[#EDF1EF] text-[#182624] hover:border-[#9EC5B8]/60 hover:bg-[#FAFBF9] dark:border-[#9E845A]/30 dark:bg-[#0D211D] dark:text-[#B8C7C2]',
-            )}
-          >
-            <span className="flex min-w-0 flex-1 items-center gap-2">
-              <Search
-                className={cn('h-3.5 w-3.5 shrink-0', isDark ? 'text-[#9EC5B8]' : 'text-[#4A5D58]')}
-                aria-hidden="true"
-              />
-              <span key={searchHintIndex} className="block truncate pr-2 font-medium">
-                {ROTATING_SEARCH_HINTS[searchHintIndex]}
-              </span>
-            </span>
-            <kbd className="shrink-0 rounded-full border border-[#D8E0DD] bg-[#FAFBF9] px-2 py-0.5 text-[11px] font-medium text-[#4A5D58] dark:border-white/15 dark:bg-white/10 dark:text-[#B8C7C2]">
-              ⌘K
-            </kbd>
-          </button>
+          {/* Bộ đếm nhịp học tập sâu Pomodoro tối giản */}
+          <HeaderPomodoroTimer isDark={isDark} />
 
           {/* Tài khoản & cài đặt */}
           <HeaderAccountMenu
@@ -628,6 +641,36 @@ export const Header: FC<HeaderProps> = ({
             onSignOut={handleSignOut}
           />
         </div>
+
+        {/* LỚP PHỦ THÔNG BÁO ĐỘNG ĐỒNG TÂM TRONG LÒNG ISLAND (DYNAMIC ISLAND MICRO-NOTIFICATIONS) */}
+        {activeNotice && (
+          <div
+            key={activeNotice.id}
+            role="status"
+            aria-live="polite"
+            data-testid="island-notice-banner"
+            onClick={dismissIslandNotice}
+            className="pointer-events-auto absolute top-1/2 left-1/2 z-50 flex max-w-[min(88vw,560px)] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center gap-2.5 overflow-hidden rounded-full bg-[#1E332E] px-4 py-1.5 text-xs font-semibold text-[#FAFBF9] shadow-md transition-all duration-300 ease-out"
+          >
+            {activeNotice.type === 'success' ? (
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-[#6EE7B7]" aria-hidden="true" />
+            ) : activeNotice.type === 'timer' ? (
+              <Bell className="h-4 w-4 shrink-0 text-[#FCD34D]" aria-hidden="true" />
+            ) : (
+              <Sparkles
+                className="h-4 w-4 shrink-0 text-[#9EC5B8]"
+                style={activeNotice.accentColor ? { color: activeNotice.accentColor } : undefined}
+                aria-hidden="true"
+              />
+            )}
+            <span className="truncate">{activeNotice.text}</span>
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-3 bottom-0 h-[1.5px] origin-left rounded-full bg-[#6EE7B7]/80"
+              style={{ animation: 'lu-notice-countdown 2200ms linear forwards' }}
+            />
+          </div>
+        )}
 
         {/* THANH TIẾN ĐỘ ĐỌC TÍCH HỢP DƯỚI ĐÁY BAR (Khi ở Trang bài học) */}
         {isLessonPage && (

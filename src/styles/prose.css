@@ -61,7 +61,7 @@
   font-family: var(--font-serif);
   max-width: 100%;
   color: var(--text-primary, #182624);
-  font-size: var(--lu-reading-size, 18.5px);
+  font-size: calc(var(--lu-reading-size, 18.5px) * var(--lu-reading-scale, 1));
   line-height: var(--lu-reading-line-height, 1.8);
 }
 
@@ -73,7 +73,7 @@
 .lu-prose p,
 .lesson-content p {
   text-wrap: pretty;
-  font-size: var(--lu-reading-size, 18.5px);
+  font-size: calc(var(--lu-reading-size, 18.5px) * var(--lu-reading-scale, 1));
   line-height: var(--lu-reading-line-height, 1.8);
   color: var(--text-primary, #182624);
   margin-bottom: 1rem;

@@ -1,4 +1,33 @@
 export {
+  IslandProvider,
+  useIsland,
+  type IslandContextValue,
+  type IslandNoticePayload,
+  type IslandNoticeState,
+  type IslandNoticeType,
+  type IslandPomodoroState,
+  type IslandProviderProps,
+  type IslandReaderSettings,
+  type PomodoroStatus,
+} from './IslandContext';
+export {
+  clampFontScale,
+  FONT_SCALE_DEFAULT,
+  FONT_SCALE_MAX,
+  FONT_SCALE_MIN,
+  FONT_SCALE_STEP,
+  fontScaleToReadingSize,
+  getIslandSubjectByIdOrSlug,
+  ISLAND_SUBJECT_CATALOG,
+  readLessonReadingPosition,
+  readingSizeToFontScale,
+  resolveActiveSubjectFromPath,
+  writeLessonReadingPosition,
+  type IslandSubjectCode,
+  type IslandSubjectMeta,
+  type LessonReadingPosition,
+} from './island-helpers';
+export {
   ReadingSettingsProvider,
   useReadingSettings,
   type ReadingSettingsContextValue,

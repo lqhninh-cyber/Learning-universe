@@ -235,6 +235,11 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     } catch {
       // Ignore
     }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: size }),
+      );
+    }
   }, []);
 
   const increaseFontSize = useCallback(() => {
@@ -247,6 +252,11 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
             localStorage.setItem('lu_reading_font_size', next);
           } catch {
             // Ignore
+          }
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(
+              new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: next }),
+            );
           }
           return next;
         }
@@ -266,11 +276,30 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
           } catch {
             // Ignore
           }
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(
+              new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: next }),
+            );
+          }
           return next;
         }
       }
       return prev;
     });
+  }, []);
+
+  // Đồng bộ ngược khi Island Quick Reader Controls thay đổi fontScale
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handler = (event: Event) => {
+      const custom = event as CustomEvent<ReadingFontSize>;
+      const tier = custom.detail;
+      if (tier === 'sm' || tier === 'base' || tier === 'lg' || tier === 'xl') {
+        setFontSizeState((prev) => (prev === tier ? prev : tier));
+      }
+    };
+    window.addEventListener('lu_island_font_scale_to_size', handler);
+    return () => window.removeEventListener('lu_island_font_scale_to_size', handler);
   }, []);
 
   const setZenMode = useCallback((zen: boolean) => {

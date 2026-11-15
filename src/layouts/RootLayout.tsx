@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { WaterTouchIntro } from '@/components/intro';
 import { Footer } from '@/components/layout/Footer';
+import { IslandProvider, useIsland } from '@/context/IslandContext';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { AuthModal, AuthProvider, PendingNoticeDialog } from '@/features/auth';
 import { LoginPromptDialog } from '@/features/learning';
@@ -25,8 +26,14 @@ function RootLayoutContent() {
     pathname === '/dev/mdx';
 
   const { theme } = useReadingSettings();
+  const { setRoutePathname, readerSettings } = useIsland();
   const isDarkLesson = isLessonPage && theme === 'dark';
   const isSepiaLesson = isLessonPage && theme === 'sepia';
+  const isEyeComfort = isLessonPage && readerSettings.eyeComfortWarmth;
+
+  useEffect(() => {
+    setRoutePathname(pathname);
+  }, [pathname, setRoutePathname]);
 
   useEffect(() => {
     if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
@@ -42,6 +49,7 @@ function RootLayoutContent() {
     <div
       id="reading-container"
       data-reading-theme={isLessonPage ? theme : undefined}
+      data-eye-comfort={isEyeComfort ? 'true' : undefined}
       data-theme={theme}
       className={cn(
         'flex min-h-screen flex-col overflow-x-clip transition-colors duration-300',
@@ -49,7 +57,9 @@ function RootLayoutContent() {
           ? 'scoped-dark-mode dark bg-[#121517] text-[#E2E8F0]'
           : isSepiaLesson
             ? 'scoped-sepia-mode bg-[#F4EEDF] text-[#231F18]'
-            : 'bg-[var(--bg-page)] text-[var(--text-main)]',
+            : isEyeComfort
+              ? 'bg-[#EAE8E1] text-[#182624]'
+              : 'bg-[var(--bg-page)] text-[var(--text-main)]',
       )}
     >
       {/* SKIP TO MAIN CONTENT LINK CHO BÀN PHÍM & SCREEN READER (WCAG 2.1 SC 2.4.1) */}
@@ -102,9 +112,11 @@ function RootLayoutContent() {
 export function RootLayout() {
   return (
     <AuthProvider>
-      <ReadingSettingsProvider>
-        <RootLayoutContent />
-      </ReadingSettingsProvider>
+      <IslandProvider>
+        <ReadingSettingsProvider>
+          <RootLayoutContent />
+        </ReadingSettingsProvider>
+      </IslandProvider>
     </AuthProvider>
   );
 }
