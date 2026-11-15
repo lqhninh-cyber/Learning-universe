@@ -15,92 +15,6 @@ export interface HeroSonHaDioramaProps {
   readonly className?: string;
 }
 
-interface CraneSpec {
-  readonly id: string;
-  readonly x: number;
-  readonly y: number;
-  readonly scale: number;
-  readonly opacity: number;
-  readonly flapDelaySec: number;
-  readonly flapDurationSec: number;
-}
-
-const CRANE_FORMATION: readonly CraneSpec[] = [
-  { id: 'c1', x: 642, y: 392, scale: 0.72, opacity: 0.86, flapDelaySec: 0, flapDurationSec: 3.1 },
-  {
-    id: 'c2',
-    x: 684,
-    y: 376,
-    scale: 0.86,
-    opacity: 0.92,
-    flapDelaySec: 0.35,
-    flapDurationSec: 2.9,
-  },
-  {
-    id: 'c3',
-    x: 734,
-    y: 364,
-    scale: 0.98,
-    opacity: 0.96,
-    flapDelaySec: 0.7,
-    flapDurationSec: 3.3,
-  },
-  {
-    id: 'c4',
-    x: 782,
-    y: 379,
-    scale: 0.82,
-    opacity: 0.88,
-    flapDelaySec: 1.1,
-    flapDurationSec: 2.8,
-  },
-  {
-    id: 'c5',
-    x: 822,
-    y: 396,
-    scale: 0.68,
-    opacity: 0.82,
-    flapDelaySec: 1.45,
-    flapDurationSec: 3.4,
-  },
-  {
-    id: 'c6',
-    x: 418,
-    y: 446,
-    scale: 0.56,
-    opacity: 0.72,
-    flapDelaySec: 0.55,
-    flapDurationSec: 3.2,
-  },
-  {
-    id: 'c7',
-    x: 452,
-    y: 438,
-    scale: 0.64,
-    opacity: 0.78,
-    flapDelaySec: 1.05,
-    flapDurationSec: 2.9,
-  },
-  {
-    id: 'c8',
-    x: 1126,
-    y: 332,
-    scale: 0.58,
-    opacity: 0.74,
-    flapDelaySec: 0.25,
-    flapDurationSec: 3.0,
-  },
-  {
-    id: 'c9',
-    x: 1164,
-    y: 344,
-    scale: 0.5,
-    opacity: 0.68,
-    flapDelaySec: 0.9,
-    flapDurationSec: 3.5,
-  },
-];
-
 function applyPaletteCssVars(el: HTMLElement, p: AtmospherePalette): void {
   el.style.setProperty('--hls-sky-0', rgbString(p.sky0));
   el.style.setProperty('--hls-sky-1', rgbString(p.sky1));
@@ -109,18 +23,16 @@ function applyPaletteCssVars(el: HTMLElement, p: AtmospherePalette): void {
   el.style.setProperty('--hls-sky-4', rgbString(p.sky4));
   el.style.setProperty('--hls-dawn-core', rgbString(p.dawnCore));
   el.style.setProperty('--hls-dawn-edge', rgbString(p.dawnEdge));
-  el.style.setProperty('--hls-cloud-b', rgbString(p.cloudIvory));
   el.style.setProperty('--hls-bottom-mist', rgbString(p.bottomMistDeep));
   el.style.setProperty('--hls-scrim-alpha', p.contrastScrimAlpha.toFixed(3));
 }
 
 /**
- * Nền Bầu Trời Đa Thời Khắc & Lớp Phủ Tương Phản AAA cho Engine Sơn Thủy Fractal 6 Lớp:
- * - Cung cấp nền bầu trời chuyển sắc 600ms giữa 4 thời khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
- * - Giữ nguyên đàn hạc Hoàng Liên bay lượn ở tầng bầu trời tiền cảnh (`z-[3]`)
- * - Đặt hai lớp phủ tối bảo vệ độ tương phản WCAG > 10:1 ở `z-10` (trên Canvas `z-[2]`, dưới UI `z-20`)
- * - Toàn bộ địa hình núi đá Fractal 3D, Vọng Tinh Các, Cầu Vòm Đá Cổ, Thác đa dòng & Hồ Fresnel
- *   được dựng bằng `OffscreenCanvas` 120fps trong `HeroPhysicsCanvas`
+ * Nền Bầu Trời Đa Thời Khắc & Lớp Phủ Tương Phản AAA cho Cảnh Quan
+ * "Sơn Thủy Trắc Địa Đại Việt & Thiên Cầu Đông Sơn" (120fps):
+ * - Chuyển đổi bảng màu 600ms giữa 4 thời khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
+ * - Loại bỏ hoàn toàn các hình chim chữ M SVG, núi viền cứng và chi tiết ngoại lai
+ * - Đặt 2 lớp phủ tương phản WCAG > 10:1 ở z-10 (trên Canvas z-[2], dưới UI z-20)
  */
 export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHaDioramaProps) {
   const uid = useId().replace(/:/g, '');
@@ -128,7 +40,6 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
 
   const containerRef = useRef<HTMLDivElement>(null);
   const layer1Ref = useRef<HTMLDivElement>(null);
-  const layer4Ref = useRef<HTMLDivElement>(null);
 
   const transitionRef = useRef<{
     from: AtmospherePalette;
@@ -157,11 +68,9 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
 
   useEffect(() => {
     const applyNeutral = () => {
-      for (const ref of [layer1Ref, layer4Ref]) {
-        if (ref.current) {
-          ref.current.style.transform = 'translate3d(0px, 0px, 0px) scale(1)';
-          ref.current.style.backfaceVisibility = 'hidden';
-        }
+      if (layer1Ref.current) {
+        layer1Ref.current.style.transform = 'translate3d(0px, 0px, 0px) scale(1)';
+        layer1Ref.current.style.backfaceVisibility = 'hidden';
       }
       if (containerRef.current) {
         applyPaletteCssVars(containerRef.current, transitionRef.current.to);
@@ -173,10 +82,8 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
       return;
     }
 
-    for (const ref of [layer1Ref, layer4Ref]) {
-      if (ref.current) {
-        ref.current.style.backfaceVisibility = 'hidden';
-      }
+    if (layer1Ref.current) {
+      layer1Ref.current.style.backfaceVisibility = 'hidden';
     }
 
     let targetX = 0;
@@ -229,12 +136,8 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
       currentScroll += (targetScroll - currentScroll) * smoothScroll;
 
       const sp = currentScroll;
-
       if (layer1Ref.current) {
         layer1Ref.current.style.transform = `translate3d(${(-currentX * 8).toFixed(2)}px, ${(-currentY * 4 - sp * 10).toFixed(2)}px, 0px) scale(${(1 + sp * 0.04).toFixed(4)})`;
-      }
-      if (layer4Ref.current) {
-        layer4Ref.current.style.transform = `translate3d(${(currentX * 38).toFixed(2)}px, ${(currentY * 20 - sp * 26).toFixed(2)}px, 0px) scale(${(1 + sp * 0.18).toFixed(4)})`;
       }
 
       rafId = window.requestAnimationFrame(tick);
@@ -301,7 +204,7 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
           'linear-gradient(180deg, var(--hls-sky-0, #050B16) 0%, var(--hls-sky-1, #0B192C) 28%, var(--hls-sky-2, #16324F) 54%, var(--hls-sky-3, #2B4C65) 78%, var(--hls-sky-4, #1B2E42) 100%)',
       }}
     >
-      {/* TẦNG 1 (z-[1]): Bầu trời đa thời khắc & quầng ánh sáng chân trời phía sau Canvas 6 lớp */}
+      {/* TẦNG 1 (z-[1]): Bầu trời đa thời khắc & quầng ánh sáng chân trời phía sau Canvas trắc địa */}
       <div
         ref={layer1Ref}
         data-testid="son-ha-layer-1"
@@ -334,58 +237,23 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
             fill={`url(#${dawnWashId})`}
           />
 
-          {/* Mỏ neo ngữ nghĩa cho khối núi Fractal 3D được dựng ở 120fps OffscreenCanvas */}
-          <g data-testid="fansipan-peaks" data-terrain-mode="fractal-offscreen-6layer" />
+          {/* Mỏ neo ngữ nghĩa cho địa hình 5 tầng sương mù & đường đồng mức trắc địa trên Canvas */}
+          <g data-testid="fansipan-peaks" data-terrain-mode="topographic-dong-son-6layer" />
         </svg>
       </div>
 
-      {/* TẦNG 3 (z-[3]): Đàn hạc Hoàng Liên bay lượn trên bầu trời phía trên dãy Fractal */}
-      <div
-        ref={layer4Ref}
-        data-testid="son-ha-layer-4"
-        className="pointer-events-none absolute -inset-10 z-[3] will-change-transform"
-      >
-        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
-          <g data-testid="hoang-lien-cranes">
-            {CRANE_FORMATION.map((crane) => (
-              <g
-                key={crane.id}
-                transform={`translate(${crane.x}, ${crane.y}) scale(${crane.scale})`}
-                opacity={crane.opacity}
-              >
-                <path
-                  d="M -20 4 Q -10 -7 0 -1 Q 10 -7 20 4 Q 10 -2 0 1.5 Q -10 -2 -20 4 Z"
-                  fill="var(--hls-cloud-b, #E6E2D6)"
-                  stroke="#F8F6F0"
-                  strokeWidth="0.65"
-                  className={prefersReducedMotion ? undefined : 'lu-canopy-sway'}
-                  style={
-                    prefersReducedMotion
-                      ? undefined
-                      : {
-                          animationDelay: `${crane.flapDelaySec}s`,
-                          animationDuration: `${crane.flapDurationSec}s`,
-                        }
-                  }
-                />
-              </g>
-            ))}
-          </g>
-        </svg>
-      </div>
-
-      {/* Dải hòa tan 18% đáy Hero (z-10) triệt tiêu hoàn toàn đường cắt giữa Screen 1 và Screen 2 (#121B28) */}
+      {/* Dải hòa tan 18% đáy Hero (z-10) nối mặt hồ sương khói xuống Screen 2 (#121B28) */}
       <div
         data-testid="hero-bottom-mist-transition"
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[18%]"
         style={{
           background:
-            'linear-gradient(180deg, rgba(17, 34, 51, 0) 0%, color-mix(in srgb, var(--hls-bottom-mist, #112233) 74%, transparent) 58%, #121B28 100%)',
+            'linear-gradient(180deg, rgba(17, 34, 51, 0) 0%, color-mix(in srgb, var(--hls-bottom-mist, #112233) 68%, transparent) 62%, #121B28 100%)',
         }}
       />
 
-      {/* Lớp phủ bảo vệ độ tương phản AAA (> 10:1) phía sau cụm Tuyên ngôn học thuật bên trái (z-10) */}
+      {/* Lớp phủ bảo vệ độ tương phản AAA (> 10:1) phía sau cụm Tuyên ngôn bên trái (z-10) */}
       <div
         data-testid="hero-text-contrast-scrim"
         aria-hidden="true"
@@ -397,7 +265,7 @@ export function HeroSonHaDiorama({ phase = 'dem-ngan-ha', className }: HeroSonHa
         }}
       />
 
-      {/* Lớp phủ bảo vệ độ tương phản AAA (> 10:1) phía sau Thẻ Danh Ngôn bên phải, dưới Vọng Tinh Các (z-10) */}
+      {/* Lớp phủ bảo vệ độ tương phản AAA (> 10:1) phía sau Thẻ Danh Ngôn bên phải (z-10) */}
       <div
         data-testid="hero-quote-contrast-scrim"
         aria-hidden="true"

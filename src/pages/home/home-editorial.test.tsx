@@ -8,9 +8,7 @@ import {
 import {
   PIPELINE_LAYER_NAMES,
   createAtmosphereWorld,
-  triggerAuroraPluck,
-  tryBoostSkyLanternAt,
-  trySpawnMouseLakeRipple,
+  spawnHarmonicContourPulse,
 } from '@/components/home/heroAtmosphereEngine';
 import {
   buildHeroTerrainGeometry,
@@ -532,10 +530,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
       expect(screen.getByTestId('fansipan-peaks')).toHaveAttribute(
         'data-terrain-mode',
-        'fractal-offscreen-6layer',
+        'topographic-dong-son-6layer',
       );
-      expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
+      expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
       expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
+      expect(canvas).toHaveAttribute('data-landscape-style', 'topographic-dong-son');
       expect(screen.getByTestId('hero-text-contrast-scrim')).toBeInTheDocument();
       expect(screen.getByTestId('hero-quote-contrast-scrim')).toBeInTheDocument();
       expect(screen.getByTestId('hero-bottom-mist-transition')).toBeInTheDocument();
@@ -596,8 +595,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
     });
   });
 
-  describe('Hero Diorama, Physics Canvas & 6-Layer Fractal Terrain Engine', () => {
-    it('HeroSonHaDiorama & HeroPhysicsCanvas vận hành chuẩn kiến trúc Sơn Thủy Fractal 6 lớp, OffscreenCanvas & 120fps', () => {
+  describe('Hero Diorama, Physics Canvas & Sơn Thủy Trắc Địa + Thiên Cầu Đông Sơn Engine', () => {
+    it('HeroSonHaDiorama & HeroPhysicsCanvas vận hành chuẩn 5 tầng núi sương mù, 21 đồng mức, Thiên Cầu Đông Sơn & 3 tương tác 120fps', () => {
       const { container } = render(
         <div className="relative h-96 w-full">
           <HeroSonHaDiorama phase="dem-ngan-ha" />
@@ -606,37 +605,51 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
 
       expect(container.querySelector('[data-testid="son-ha-layer-1"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="son-ha-layer-4"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="son-ha-layer-4"]')).not.toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-dawn-glow')).toBeInTheDocument();
       const fansipanAnchor = screen.getByTestId('fansipan-peaks');
-      expect(fansipanAnchor).toHaveAttribute('data-terrain-mode', 'fractal-offscreen-6layer');
+      expect(fansipanAnchor).toHaveAttribute('data-terrain-mode', 'topographic-dong-son-6layer');
       expect(fansipanAnchor.querySelectorAll('path')).toHaveLength(0);
-
-      expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
-      expect(screen.getByTestId('hoang-lien-cranes').querySelectorAll('path')).toHaveLength(9);
+      expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
 
       const canvas = screen.getByTestId('hero-physics-canvas');
       expect(canvas).toBeInTheDocument();
       expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
+      expect(canvas).toHaveAttribute('data-landscape-style', 'topographic-dong-son');
 
       // Hai lớp tương phản AAA (>10:1) & dải hòa tan đáy Screen 2 nằm trên Canvas (z-10)
       expect(screen.getByTestId('hero-bottom-mist-transition').className).toContain('z-10');
       expect(screen.getByTestId('hero-text-contrast-scrim').className).toContain('z-10');
       expect(screen.getByTestId('hero-quote-contrast-scrim').className).toContain('z-10');
 
-      // 1. Kiến trúc 6 lớp theo thứ tự Z & hình học địa chất Fractal + Vọng Tinh Các + Cầu Vòm Đá + Thác 5 dòng
+      // 1. 5 Tầng núi sương mù Fourier mượt, 18-25 đường đồng mức trắc địa (0.65px) & Đài Thiên Cầu Đông Sơn
       expect(PIPELINE_LAYER_NAMES).toHaveLength(6);
       const terrain = buildHeroTerrainGeometry(1440, 900);
-      expect(terrain.ridges).toHaveLength(4);
-      const midMain = terrain.ridges[2]!;
-      expect(midMain.spurs.length).toBeGreaterThanOrEqual(4);
-      expect(midMain.spurs.some((spur) => spur.striations.length >= 2)).toBe(true);
-      expect(midMain.rimLightSegments.length).toBeGreaterThanOrEqual(6);
-      expect(terrain.pavilion.stoneLanterns).toHaveLength(7);
-      expect(terrain.pavilion.pathPoints.length).toBeGreaterThanOrEqual(5);
-      expect(terrain.terraces.length).toBe(14);
-      expect(terrain.streams.length).toBe(5);
-      expect(terrain.bridge.rightX - terrain.bridge.leftX).toBeGreaterThan(20);
+      expect(terrain.mountainLayers).toHaveLength(5);
+      expect(terrain.contours.length).toBeGreaterThanOrEqual(18);
+      expect(terrain.contours.length).toBeLessThanOrEqual(25);
+      expect(terrain.contours.every((c) => c.lineWidth === 0.65)).toBe(true);
+      expect(new Set(terrain.contours.map((c) => c.layerIndex))).toEqual(new Set([2, 3, 4]));
+      expect(new Set(terrain.contours.map((c) => c.tone))).toEqual(new Set(['gold', 'cyan']));
+
+      // Đài Thiên Cầu Đông Sơn (72% x 30%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo)
+      expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.72, 2);
+      expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.3, 2);
+      expect(terrain.astrolabe.starRays).toBe(14);
+      expect(terrain.astrolabe.rings).toHaveLength(4);
+      expect(
+        terrain.astrolabe.rings.every((r) => r.tickStepDeg === 5 && r.majorStepDeg === 30),
+      ).toBe(true);
+      expect(Math.abs(terrain.astrolabe.rings[0]!.angularSpeedRadSec)).toBeCloseTo(0.04, 3);
+      expect(terrain.astrolabe.eclipticArcs).toHaveLength(2);
+
+      // Tinh vân mềm (bán kính 250-450px, độ mờ 0.03-0.06)
+      expect(terrain.nebulaHalos.length).toBeGreaterThanOrEqual(5);
+      expect(
+        terrain.nebulaHalos.every(
+          (h) => h.radius >= 250 && h.radius <= 450 && h.alpha >= 0.03 && h.alpha <= 0.06,
+        ),
+      ).toBe(true);
 
       const layerCache = buildHeroTerrainLayerCache(
         1440,
@@ -647,67 +660,24 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(layerCache.width).toBe(1440);
       expect(layerCache.height).toBe(900);
       expect(layerCache.phase).toBe('dem-ngan-ha');
-      expect(layerCache.geometry.ridges).toHaveLength(4);
+      expect(layerCache.geometry.mountainLayers).toHaveLength(5);
 
-      // 2. Engine Khí Quyển 120fps: Curtain Aurora, Cloud-Fall, Waterfall, Hồ Fresnel, Bokeh & Đèn Trời
-      const world = createAtmosphereWorld(1440, 900);
+      // 2. Bầu trời 15 sao khúc xạ chữ thập (r=1.3px, 8-14px), 25 hạt tinh tú & sóng trống đồng R=600px
+      const world = createAtmosphereWorld();
       expect(world.stars.length).toBeGreaterThanOrEqual(240);
-      expect(world.auroraCurtains.length).toBeGreaterThanOrEqual(60);
-      expect(world.auroraCurtains.length).toBeLessThanOrEqual(80);
-      expect(world.cloudFallPuffs.length).toBeGreaterThanOrEqual(15);
-      expect(world.cloudFallPuffs.length).toBeLessThanOrEqual(20);
-      expect(world.waterfallDrops.length).toBeGreaterThanOrEqual(120);
-      expect(world.waterfallMist.length).toBeGreaterThanOrEqual(24);
-      expect(new Set(world.waterfallMist.map((m) => m.tierIndex))).toEqual(new Set([0, 1, 2]));
-      expect(world.lotusLanterns.length).toBeGreaterThanOrEqual(5);
-      expect(world.lotusLanterns.length).toBeLessThanOrEqual(7);
-      expect(world.mouseLakeRipples.length).toBeGreaterThanOrEqual(10);
-      expect(world.bokehFireflies.length).toBeGreaterThanOrEqual(15);
-      expect(world.bokehFireflies.length).toBeLessThanOrEqual(25);
+      const flareStars = world.stars.filter((s) => s.crossFlare);
+      expect(flareStars).toHaveLength(15);
       expect(
-        world.bokehFireflies.every(
-          (b) => b.radius >= 6 && b.radius <= 16 && b.alpha >= 0.08 && b.alpha <= 0.22,
-        ),
+        flareStars.every((s) => s.baseRadius === 1.3 && s.flareLength >= 8 && s.flareLength <= 14),
       ).toBe(true);
-      expect(world.terraceGlints.length).toBeGreaterThanOrEqual(40);
-      expect(new Set(world.cloudPuffs.map((p) => p.variant))).toEqual(
-        new Set(['cloudSlate', 'cloudRoseGold', 'cloudPearl', 'cloudIvory']),
-      );
-      expect(world.petals.length).toBeGreaterThanOrEqual(25);
 
-      // 3. Đàn Chim Lạc Ánh Sao (3-5 cá thể) & Object Pool bụi sao
-      expect(world.chimLacFlock.length).toBeGreaterThanOrEqual(3);
-      expect(world.chimLacFlock.length).toBeLessThanOrEqual(5);
-      expect(world.chimLacSparks.items.length).toBeGreaterThanOrEqual(100);
+      expect(world.ascendingStarlights).toHaveLength(25);
+      expect(world.ascendingStarlights.every((m) => m.radius === 1.5)).toBe(true);
+      expect(world.mistRipples.every((r) => r.ny >= 0.82)).toBe(true);
 
-      // 4. Cực quang màn rèm tương tác gió con trỏ & gợn sóng hồ Fresnel 3.5:1
-      const targetColumn = world.auroraCurtains[32]!;
-      const colX = targetColumn.nx * 1440;
-      const colY = targetColumn.baseNy * 900 + 60;
-      triggerAuroraPluck(world, colX, colY, 14, 1440, 900);
-      expect(Math.abs(targetColumn.swayVelocity)).toBeGreaterThan(0);
-      expect(world.auroraSparks.items.some((s) => s.active)).toBe(true);
-
-      expect(trySpawnMouseLakeRipple(world, 700, 180, 1440, 900, 1000)).toBe(false);
-      expect(trySpawnMouseLakeRipple(world, 720, 740, 1440, 900, 1200)).toBe(true);
-      expect(world.mouseLakeRipples.some((r) => r.active)).toBe(true);
-
-      // 5. Đèn Trời 3D (8-12 đèn, z ∈ [0.2, 0.9]) & tương tác click đẩy tốc độ
-      expect(world.skyLanterns.length).toBeGreaterThanOrEqual(8);
-      expect(world.skyLanterns.length).toBeLessThanOrEqual(12);
-      const firstLantern = world.skyLanterns[0]!;
-      expect(firstLantern.z).toBeGreaterThanOrEqual(0.2);
-      expect(firstLantern.z).toBeLessThanOrEqual(0.9);
-      const hit = tryBoostSkyLanternAt(
-        world,
-        firstLantern.nx * 1440,
-        firstLantern.ny * 900,
-        1440,
-        900,
-      );
-      expect(hit).toBe(true);
-      expect(firstLantern.boosted).toBe(true);
-      expect(world.lanternSparks.items.some((s) => s.active)).toBe(true);
+      // Sóng Ngân Trống Đồng (Harmonic Contour Pulse R: 0 -> 600px)
+      spawnHarmonicContourPulse(world, 720, 480, 600);
+      expect(world.pulses.some((p) => p.active && p.maxRadius === 600)).toBe(true);
 
       // Kiểm chứng nội suy 600ms bảng màu khí quyển
       const lerped = interpolateAtmospherePalette(

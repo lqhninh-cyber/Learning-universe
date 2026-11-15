@@ -55,7 +55,7 @@ describe('App routing smoke test', () => {
     );
     expect(screen.getByTestId('atmospheric-time-dial')).toBeInTheDocument();
     expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
-    expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
+    expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
     expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
     expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
     expect(screen.getByTestId('rotating-scholarly-quote')).toBeInTheDocument();

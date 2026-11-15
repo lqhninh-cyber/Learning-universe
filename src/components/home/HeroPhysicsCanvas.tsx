@@ -9,10 +9,7 @@ import {
   buildAtmosphereSpriteCache,
   createAtmosphereWorld,
   renderAtmosphereFrame,
-  spawnNovaPulse,
-  triggerAuroraPluck,
-  tryBoostSkyLanternAt,
-  trySpawnMouseLakeRipple,
+  spawnHarmonicContourPulse,
   type AtmosphereMouseState,
 } from '@/components/home/heroAtmosphereEngine';
 import {
@@ -153,7 +150,7 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
 
     resize();
 
-    const world = createAtmosphereWorld(width, height);
+    const world = createAtmosphereWorld();
     const mouse: AtmosphereMouseState = {
       x: -9999,
       y: -9999,
@@ -193,35 +190,21 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       if (mouse.active) {
         targetNormX = (nextX / Math.max(width, 1) - 0.5) * 2;
         targetNormY = (nextY / Math.max(height, 1) - 0.5) * 2;
-        triggerAuroraPluck(world, nextX, nextY, mouse.vy, width, height);
-        if (nextY > height * 0.7) {
-          trySpawnMouseLakeRipple(world, nextX, nextY, width, height, performance.now());
-        }
       }
     };
 
     const handleClick = (event: MouseEvent) => {
+      const targetEl = event.target as HTMLElement | null;
+      if (targetEl?.closest('a, button, [role="button"], input, textarea, select')) {
+        return;
+      }
       const rect = canvas.getBoundingClientRect();
       const clickX = event.clientX - rect.left;
       const clickY = event.clientY - rect.top;
       if (clickX < 0 || clickX > width || clickY < 0 || clickY > height) return;
 
-      // Ưu tiên tương tác thắp sáng Đèn Trời 3D bay vút lên trước khi tạo xung Nova
-      if (tryBoostSkyLanternAt(world, clickX, clickY, width, height)) {
-        world.novaSceneBoost = Math.min(1, world.novaSceneBoost + 0.35);
-        return;
-      }
-
-      const isSkyClick = clickY < height * 0.65;
-      spawnNovaPulse(
-        world,
-        clickX,
-        clickY,
-        isSkyClick ? Math.max(width, height) * 0.52 : 170,
-        isSkyClick ? 0.68 : 0.42,
-        isSkyClick ? 5.6 : 2.6,
-      );
-      world.novaSceneBoost = Math.min(1, world.novaSceneBoost + (isSkyClick ? 0.95 : 0.45));
+      // Sóng Ngân Trống Đồng lan tỏa R(t): 0 -> 600px làm bừng sáng đồng mức & thiên cầu
+      spawnHarmonicContourPulse(world, clickX, clickY, 600);
     };
 
     const drawFrame = (nowMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
@@ -337,8 +320,8 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       window.removeEventListener('click', handleClick);
       window.removeEventListener('scroll', updateTargetScroll);
       window.removeEventListener('resize', resize);
-      for (const np of world.novaPulses) {
-        np.active = false;
+      for (const pulse of world.pulses) {
+        pulse.active = false;
       }
     };
   }, [prefersReducedMotion]);
@@ -349,6 +332,7 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       data-testid="hero-physics-canvas"
       data-phase={phase}
       data-pipeline-layers="6"
+      data-landscape-style="topographic-dong-son"
       aria-hidden="true"
       className={cn('pointer-events-none absolute inset-0 z-[2] h-full w-full', className)}
     />
