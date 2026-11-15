@@ -12,8 +12,13 @@ import {
   spawnNovaPulse,
   triggerAuroraPluck,
   tryBoostSkyLanternAt,
+  trySpawnMouseLakeRipple,
   type AtmosphereMouseState,
 } from '@/components/home/heroAtmosphereEngine';
+import {
+  buildHeroTerrainLayerCache,
+  type HeroTerrainLayerCache,
+} from '@/components/home/heroTerrainBuilder';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import {
   computeFrameDelta,
@@ -29,35 +34,70 @@ export interface HeroPhysicsCanvasProps {
 }
 
 /**
- * Canvas 2D Engine Khí Quyển 3D Hoàng Liên Sơn 120fps (`dtScale` + `OffscreenCanvas` cache):
- * - Đồng bộ 600ms bảng màu theo 4 thời khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
- * - Camera 3D Scroll Fly-Through đẩy tầng mây đáy dâng lên đón người học khi cuộn xuống
- * - Đàn Chim Lạc ánh sao 2 khớp thả bụi sao + 2 dải lụa cực quang tương tác gảy dây đàn + 10 Đèn Trời 3D
+ * Canvas 2D Engine Khí Quyển & Sơn Thủy Fractal 6 Lớp 120fps (`dtScale` + `OffscreenCanvas` cache):
+ * - Đồng bộ 600ms bảng màu & cache địa hình OffscreenCanvas theo 4 thời khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
+ * - 6 lớp thứ tự Z: Ngân Hà + Cực Quang Màn Rèm -> Núi Fractal + Vọng Tinh Các + Thác Đa Dòng -> Cầu Vòm Đá + Hồ Fresnel -> Tiền cảnh Tùng & Bokeh DoF
+ * - Tương tác gảy màn cực quang, thắp Đèn Trời 3D bay vút & tạo sóng lăn tăn elip 3.5:1 trên mặt hồ
  */
 export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhysicsCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   const paletteTransitionRef = useRef<{
+    fromPhase: AtmosphericPhase;
+    toPhase: AtmosphericPhase;
     from: AtmospherePalette;
     to: AtmospherePalette;
     current: AtmospherePalette;
     elapsedSec: number;
   }>({
+    fromPhase: phase,
+    toPhase: phase,
     from: ATMOSPHERIC_PALETTES[phase],
     to: ATMOSPHERIC_PALETTES[phase],
     current: ATMOSPHERIC_PALETTES[phase],
     elapsedSec: 0.6,
   });
 
+  const terrainCacheRef = useRef<{
+    from: HeroTerrainLayerCache | null;
+    to: HeroTerrainLayerCache | null;
+    width: number;
+    height: number;
+    dpr: number;
+    fromPhase: AtmosphericPhase;
+    toPhase: AtmosphericPhase;
+  }>({
+    from: null,
+    to: null,
+    width: 0,
+    height: 0,
+    dpr: 1,
+    fromPhase: phase,
+    toPhase: phase,
+  });
+
   useEffect(() => {
+    const tr = paletteTransitionRef.current;
     const target = ATMOSPHERIC_PALETTES[phase];
+    const prevPhase = tr.toPhase;
     paletteTransitionRef.current = {
-      from: paletteTransitionRef.current.current,
+      fromPhase: prevPhase,
+      toPhase: phase,
+      from: tr.current,
       to: target,
-      current: prefersReducedMotion ? target : paletteTransitionRef.current.current,
+      current: prefersReducedMotion ? target : tr.current,
       elapsedSec: prefersReducedMotion ? 0.6 : 0,
     };
+
+    const tc = terrainCacheRef.current;
+    if (tc.width > 0 && tc.height > 0 && tc.toPhase !== phase) {
+      const nextCache = buildHeroTerrainLayerCache(tc.width, tc.height, phase, target, tc.dpr);
+      tc.fromPhase = tc.toPhase;
+      tc.toPhase = phase;
+      tc.from = prefersReducedMotion ? nextCache : tc.to;
+      tc.to = nextCache;
+    }
   }, [phase, prefersReducedMotion]);
 
   useEffect(() => {
@@ -84,6 +124,31 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
+
+      const tr = paletteTransitionRef.current;
+      const tc = terrainCacheRef.current;
+      tc.width = width;
+      tc.height = height;
+      tc.dpr = dpr;
+      tc.fromPhase = tr.fromPhase;
+      tc.toPhase = tr.toPhase;
+      tc.to = buildHeroTerrainLayerCache(
+        width,
+        height,
+        tr.toPhase,
+        ATMOSPHERIC_PALETTES[tr.toPhase],
+        dpr,
+      );
+      tc.from =
+        tr.fromPhase !== tr.toPhase
+          ? buildHeroTerrainLayerCache(
+              width,
+              height,
+              tr.fromPhase,
+              ATMOSPHERIC_PALETTES[tr.fromPhase],
+              dpr,
+            )
+          : tc.to;
     };
 
     resize();
@@ -128,7 +193,10 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       if (mouse.active) {
         targetNormX = (nextX / Math.max(width, 1) - 0.5) * 2;
         targetNormY = (nextY / Math.max(height, 1) - 0.5) * 2;
-        triggerAuroraPluck(world, nextX, nextY, mouse.vy, width);
+        triggerAuroraPluck(world, nextX, nextY, mouse.vy, width, height);
+        if (nextY > height * 0.7) {
+          trySpawnMouseLakeRipple(world, nextX, nextY, width, height, performance.now());
+        }
       }
     };
 
@@ -176,6 +244,8 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       }
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const blend = tr.elapsedSec >= 0.6 ? 1 : 1 - Math.pow(1 - tr.elapsedSec / 0.6, 3);
+      const tc = terrainCacheRef.current;
       renderAtmosphereFrame({
         ctx,
         width,
@@ -190,6 +260,7 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
         glowSprites,
         mouse,
         world,
+        terrainLayers: tc.to ? { prev: tc.from, next: tc.to, blend } : undefined,
       });
     };
 
@@ -277,8 +348,9 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       ref={canvasRef}
       data-testid="hero-physics-canvas"
       data-phase={phase}
+      data-pipeline-layers="6"
       aria-hidden="true"
-      className={cn('pointer-events-none absolute inset-0 h-full w-full', className)}
+      className={cn('pointer-events-none absolute inset-0 z-[2] h-full w-full', className)}
     />
   );
 }

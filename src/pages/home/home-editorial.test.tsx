@@ -6,10 +6,16 @@ import {
   interpolateAtmospherePalette,
 } from '@/components/home/atmosphereThemes';
 import {
+  PIPELINE_LAYER_NAMES,
   createAtmosphereWorld,
   triggerAuroraPluck,
   tryBoostSkyLanternAt,
+  trySpawnMouseLakeRipple,
 } from '@/components/home/heroAtmosphereEngine';
+import {
+  buildHeroTerrainGeometry,
+  buildHeroTerrainLayerCache,
+} from '@/components/home/heroTerrainBuilder';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { getSubjects } from '@/content-runtime';
@@ -524,14 +530,14 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(canvas).toHaveAttribute('data-phase', 'hoang-hon');
 
       expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
-      expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
-      expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
+      expect(screen.getByTestId('fansipan-peaks')).toHaveAttribute(
+        'data-terrain-mode',
+        'fractal-offscreen-6layer',
+      );
       expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
-      expect(screen.getByTestId('flythrough-west-slope')).toBeInTheDocument();
-      expect(screen.getByTestId('flythrough-east-slope')).toBeInTheDocument();
-      expect(screen.getByTestId('valley-mist-band-1')).toBeInTheDocument();
-      expect(screen.getByTestId('valley-mist-band-2')).toBeInTheDocument();
-      expect(screen.getByTestId('valley-mist-band-3')).toBeInTheDocument();
+      expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
+      expect(screen.getByTestId('hero-text-contrast-scrim')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-quote-contrast-scrim')).toBeInTheDocument();
       expect(screen.getByTestId('hero-bottom-mist-transition')).toBeInTheDocument();
       expect(screen.getByTestId('quote-progress-bar')).toBeInTheDocument();
       expect(screen.getByTestId('quote-discipline-badge')).toHaveTextContent(/Triết học Giáo dục/i);
@@ -590,8 +596,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
     });
   });
 
-  describe('Hero Diorama, Physics Canvas & 3D Stack Components', () => {
-    it('HeroSonHaDiorama & HeroPhysicsCanvas khởi tạo đủ 5 đột phá 120fps (4 thời khắc, Fly-Through, Chim Lạc, Cực quang gảy dây & Đèn Trời 3D)', () => {
+  describe('Hero Diorama, Physics Canvas & 6-Layer Fractal Terrain Engine', () => {
+    it('HeroSonHaDiorama & HeroPhysicsCanvas vận hành chuẩn kiến trúc Sơn Thủy Fractal 6 lớp, OffscreenCanvas & 120fps', () => {
       const { container } = render(
         <div className="relative h-96 w-full">
           <HeroSonHaDiorama phase="dem-ngan-ha" />
@@ -599,38 +605,70 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         </div>,
       );
 
-      for (let i = 1; i <= 4; i += 1) {
-        expect(container.querySelector(`[data-testid="son-ha-layer-${i}"]`)).toBeInTheDocument();
-      }
+      expect(container.querySelector('[data-testid="son-ha-layer-1"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="son-ha-layer-4"]')).toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-dawn-glow')).toBeInTheDocument();
-      expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
-      expect(
-        screen.getByTestId('mountain-3d-facets').querySelectorAll('polygon').length,
-      ).toBeGreaterThanOrEqual(18);
-      expect(screen.getByTestId('midground-slopes')).toBeInTheDocument();
-      expect(screen.getByTestId('flythrough-west-slope')).toBeInTheDocument();
-      expect(screen.getByTestId('flythrough-east-slope')).toBeInTheDocument();
-      expect(screen.getByTestId('thac-bac-gorge')).toBeInTheDocument();
-      expect(screen.getByTestId('terraced-fields')).toBeInTheDocument();
-      expect(screen.getByTestId('village-lantern-glow')).toBeInTheDocument();
-      expect(screen.getByTestId('hoang-lien-foliage')).toBeInTheDocument();
+      const fansipanAnchor = screen.getByTestId('fansipan-peaks');
+      expect(fansipanAnchor).toHaveAttribute('data-terrain-mode', 'fractal-offscreen-6layer');
+      expect(fansipanAnchor.querySelectorAll('path')).toHaveLength(0);
+
       expect(screen.getByTestId('hoang-lien-cranes')).toBeInTheDocument();
       expect(screen.getByTestId('hoang-lien-cranes').querySelectorAll('path')).toHaveLength(9);
-      expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
 
-      // Kiểm chứng Engine Khí Quyển 3D 120fps & 5 đột phá + Thác nước 3 tầng & Sương đáy mượt mà
-      expect(screen.getByTestId('valley-mist-band-1')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-bottom-mist-transition')).toBeInTheDocument();
-      expect(
-        screen.getByTestId('fansipan-peaks').querySelector('path')?.getAttribute('d'),
-      ).toContain('Q ');
-      expect(
-        screen.getByTestId('thac-bac-gorge').querySelectorAll('ellipse').length,
-      ).toBeGreaterThanOrEqual(2);
+      const canvas = screen.getByTestId('hero-physics-canvas');
+      expect(canvas).toBeInTheDocument();
+      expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
+
+      // Hai lớp tương phản AAA (>10:1) & dải hòa tan đáy Screen 2 nằm trên Canvas (z-10)
+      expect(screen.getByTestId('hero-bottom-mist-transition').className).toContain('z-10');
+      expect(screen.getByTestId('hero-text-contrast-scrim').className).toContain('z-10');
+      expect(screen.getByTestId('hero-quote-contrast-scrim').className).toContain('z-10');
+
+      // 1. Kiến trúc 6 lớp theo thứ tự Z & hình học địa chất Fractal + Vọng Tinh Các + Cầu Vòm Đá + Thác 5 dòng
+      expect(PIPELINE_LAYER_NAMES).toHaveLength(6);
+      const terrain = buildHeroTerrainGeometry(1440, 900);
+      expect(terrain.ridges).toHaveLength(4);
+      const midMain = terrain.ridges[2]!;
+      expect(midMain.spurs.length).toBeGreaterThanOrEqual(4);
+      expect(midMain.spurs.some((spur) => spur.striations.length >= 2)).toBe(true);
+      expect(midMain.rimLightSegments.length).toBeGreaterThanOrEqual(6);
+      expect(terrain.pavilion.stoneLanterns).toHaveLength(7);
+      expect(terrain.pavilion.pathPoints.length).toBeGreaterThanOrEqual(5);
+      expect(terrain.terraces.length).toBe(14);
+      expect(terrain.streams.length).toBe(5);
+      expect(terrain.bridge.rightX - terrain.bridge.leftX).toBeGreaterThan(20);
+
+      const layerCache = buildHeroTerrainLayerCache(
+        1440,
+        900,
+        'dem-ngan-ha',
+        ATMOSPHERIC_PALETTES['dem-ngan-ha'],
+      );
+      expect(layerCache.width).toBe(1440);
+      expect(layerCache.height).toBe(900);
+      expect(layerCache.phase).toBe('dem-ngan-ha');
+      expect(layerCache.geometry.ridges).toHaveLength(4);
+
+      // 2. Engine Khí Quyển 120fps: Curtain Aurora, Cloud-Fall, Waterfall, Hồ Fresnel, Bokeh & Đèn Trời
       const world = createAtmosphereWorld(1440, 900);
       expect(world.stars.length).toBeGreaterThanOrEqual(240);
+      expect(world.auroraCurtains.length).toBeGreaterThanOrEqual(60);
+      expect(world.auroraCurtains.length).toBeLessThanOrEqual(80);
+      expect(world.cloudFallPuffs.length).toBeGreaterThanOrEqual(15);
+      expect(world.cloudFallPuffs.length).toBeLessThanOrEqual(20);
       expect(world.waterfallDrops.length).toBeGreaterThanOrEqual(120);
-      expect(world.waterfallMist.length).toBeGreaterThanOrEqual(20);
+      expect(world.waterfallMist.length).toBeGreaterThanOrEqual(24);
+      expect(new Set(world.waterfallMist.map((m) => m.tierIndex))).toEqual(new Set([0, 1, 2]));
+      expect(world.lotusLanterns.length).toBeGreaterThanOrEqual(5);
+      expect(world.lotusLanterns.length).toBeLessThanOrEqual(7);
+      expect(world.mouseLakeRipples.length).toBeGreaterThanOrEqual(10);
+      expect(world.bokehFireflies.length).toBeGreaterThanOrEqual(15);
+      expect(world.bokehFireflies.length).toBeLessThanOrEqual(25);
+      expect(
+        world.bokehFireflies.every(
+          (b) => b.radius >= 6 && b.radius <= 16 && b.alpha >= 0.08 && b.alpha <= 0.22,
+        ),
+      ).toBe(true);
       expect(world.terraceGlints.length).toBeGreaterThanOrEqual(40);
       expect(new Set(world.cloudPuffs.map((p) => p.variant))).toEqual(
         new Set(['cloudSlate', 'cloudRoseGold', 'cloudPearl', 'cloudIvory']),
@@ -642,13 +680,17 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(world.chimLacFlock.length).toBeLessThanOrEqual(5);
       expect(world.chimLacSparks.items.length).toBeGreaterThanOrEqual(100);
 
-      // 4. 2 dải Lụa Cực Quang (#34D399 & #FBBF24) + gảy dây đàn
-      expect(world.auroraRibbons).toHaveLength(2);
-      const ribbon = world.auroraRibbons[0]!;
-      ribbon.lastSamples.fill(180);
-      triggerAuroraPluck(world, 720, 180, 12, 1440);
-      expect(Math.abs(ribbon.pluckAmplitude)).toBeGreaterThan(0);
+      // 4. Cực quang màn rèm tương tác gió con trỏ & gợn sóng hồ Fresnel 3.5:1
+      const targetColumn = world.auroraCurtains[32]!;
+      const colX = targetColumn.nx * 1440;
+      const colY = targetColumn.baseNy * 900 + 60;
+      triggerAuroraPluck(world, colX, colY, 14, 1440, 900);
+      expect(Math.abs(targetColumn.swayVelocity)).toBeGreaterThan(0);
       expect(world.auroraSparks.items.some((s) => s.active)).toBe(true);
+
+      expect(trySpawnMouseLakeRipple(world, 700, 180, 1440, 900, 1000)).toBe(false);
+      expect(trySpawnMouseLakeRipple(world, 720, 740, 1440, 900, 1200)).toBe(true);
+      expect(world.mouseLakeRipples.some((r) => r.active)).toBe(true);
 
       // 5. Đèn Trời 3D (8-12 đèn, z ∈ [0.2, 0.9]) & tương tác click đẩy tốc độ
       expect(world.skyLanterns.length).toBeGreaterThanOrEqual(8);
