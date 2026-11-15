@@ -12,36 +12,46 @@ interface Vec3 {
 interface StageTheme {
   readonly background: string;
   readonly borderClass: string;
-  readonly accent: string;
+  readonly dotColor: string;
+  readonly labelBgClass: string;
+  readonly labelTextClass: string;
   readonly label: string;
 }
 
 const DEFAULT_STAGE_THEME: StageTheme = {
-  background: 'linear-gradient(135deg, #16120D 0%, #261C12 100%)',
-  borderClass: 'border-[#E5B85B]/30',
-  accent: '#E5B85B',
-  label: 'CAYLEY · ĐỐI XỨNG NHÓM',
+  background: 'linear-gradient(135deg, #F6F0E4 0%, #EDE3CF 100%)',
+  borderClass: 'border-[#DFD1B8]',
+  dotColor: '#7C552B',
+  labelBgClass: 'border-[#DFD1B8] bg-white/75',
+  labelTextClass: 'text-[#7C552B]',
+  label: 'CAYLEY · ĐỐI XỨNG NHÓM S₄',
 };
 
 const STAGE_THEMES: Record<string, StageTheme> = {
   'cau-truc-dai-so': DEFAULT_STAGE_THEME,
   'hinh-hoc-affine': {
-    background: 'linear-gradient(135deg, #0B1C28 0%, #133146 100%)',
-    borderClass: 'border-[#38BDF8]/30',
-    accent: '#38BDF8',
-    label: 'MỤC TIÊU AFFINE · QUADRIC',
+    background: 'linear-gradient(135deg, #ECF2F6 0%, #DEE9F0 100%)',
+    borderClass: 'border-[#C8D8E4]',
+    dotColor: '#2B5470',
+    labelBgClass: 'border-[#C8D8E4] bg-white/75',
+    labelTextClass: 'text-[#2B5470]',
+    label: 'HYPERBOLOID · MỤC TIÊU AFFINE',
   },
   'giai-tich-ham-mot-bien': {
-    background: 'linear-gradient(135deg, #09211B 0%, #12382E 100%)',
-    borderClass: 'border-[#34D399]/30',
-    accent: '#34D399',
-    label: 'RIEMANN · HỘI TỤ TAYLOR',
+    background: 'linear-gradient(135deg, #EAF3EE 0%, #DCECE3 100%)',
+    borderClass: 'border-[#C4DDD0]',
+    dotColor: '#235C47',
+    labelBgClass: 'border-[#C4DDD0] bg-white/75',
+    labelTextClass: 'text-[#235C47]',
+    label: 'TAYLOR · TÍCH PHÂN RIEMANN',
   },
   'giao-duc-hoc': {
-    background: 'linear-gradient(135deg, #211412 0%, #38201B 100%)',
-    borderClass: 'border-[#E76F51]/30',
-    accent: '#F4A261',
-    label: 'HỆ SINH THÁI SƯ PHẠM',
+    background: 'linear-gradient(135deg, #F6EEEB 0%, #EDE0DA 100%)',
+    borderClass: 'border-[#DECAC1]',
+    dotColor: '#8A483A',
+    labelBgClass: 'border-[#DECAC1] bg-white/75',
+    labelTextClass: 'text-[#8A483A]',
+    label: 'HỆ SINH THÁI · QUỸ ĐẠO SƯ PHẠM',
   },
 };
 
@@ -75,7 +85,7 @@ function projectPoint3D(v: Vec3, cx: number, cy: number, fov: number) {
   };
 }
 
-// 1. Sân khấu Đại số: Khối bát diện 3D + Đồ thị Cayley lục giác & các gói sáng truyền dọc cạnh
+// 1. Cấu trúc đại số (Kem Hổ Phách & Nâu Đồng Trầm): Lưới Đa Diện Đối Xứng & Đồ Thị Cayley S_4
 function drawAlgebraStage(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -84,84 +94,101 @@ function drawAlgebraStage(
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.5;
-  const rMain = Math.min(width, height) * 0.34;
+  const rMain = Math.min(width, height) * 0.35;
 
-  // Ánh hào quang vàng sơn mài
+  // Vòng sáng hổ phách rất nhẹ trên nền pastel
   const glow = ctx.createRadialGradient(cx, cy, 4, cx, cy, rMain * 1.45);
-  glow.addColorStop(0, 'rgba(229, 184, 91, 0.24)');
-  glow.addColorStop(0.6, 'rgba(200, 150, 62, 0.08)');
-  glow.addColorStop(1, 'rgba(22, 18, 13, 0)');
+  glow.addColorStop(0, 'rgba(184, 132, 64, 0.14)');
+  glow.addColorStop(0.65, 'rgba(124, 85, 43, 0.05)');
+  glow.addColorStop(1, 'rgba(246, 240, 228, 0)');
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, width, height);
 
-  // Vòng ngoài đồ thị Cayley Z_6 / S_3
+  // Vòng ngoài đồ thị Cayley S_4 (8 đỉnh bát giác + chu trình đối xứng 4-bước)
   const outerNodes: { x: number; y: number }[] = [];
-  for (let i = 0; i < 6; i += 1) {
-    const a = (i / 6) * Math.PI * 2 + t * 0.14;
+  for (let i = 0; i < 8; i += 1) {
+    const a = (i / 8) * Math.PI * 2 + t * 0.12;
     outerNodes.push({
-      x: cx + Math.cos(a) * rMain * 1.15,
-      y: cy + Math.sin(a) * rMain * 0.85,
+      x: cx + Math.cos(a) * rMain * 1.18,
+      y: cy + Math.sin(a) * rMain * 0.88,
     });
   }
 
-  // Các cạnh vòng sinh Cayley
-  ctx.strokeStyle = 'rgba(229, 184, 91, 0.35)';
-  ctx.lineWidth = 1.25;
-  for (let i = 0; i < 6; i += 1) {
+  // Các cạnh sinh (vòng liên tiếp & dây hoán vị đối xứng)
+  for (let i = 0; i < 8; i += 1) {
     const a = outerNodes[i];
-    const b = outerNodes[(i + 1) % 6];
-    const opposite = outerNodes[(i + 3) % 6];
+    const b = outerNodes[(i + 1) % 8];
+    const opposite = outerNodes[(i + 4) % 8];
+    const chord = outerNodes[(i + 2) % 8];
     if (!a || !b) continue;
+
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = 'rgba(124, 85, 43, 0.42)';
+    ctx.lineWidth = 1.25;
     ctx.stroke();
 
-    if (i < 3 && opposite) {
+    if (chord) {
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(chord.x, chord.y);
+      ctx.strokeStyle = 'rgba(184, 132, 64, 0.28)';
+      ctx.lineWidth = 0.9;
+      ctx.stroke();
+    }
+
+    if (i < 4 && opposite) {
       ctx.beginPath();
       ctx.setLineDash([4, 4]);
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(opposite.x, opposite.y);
+      ctx.strokeStyle = 'rgba(124, 85, 43, 0.34)';
+      ctx.lineWidth = 1;
       ctx.stroke();
       ctx.setLineDash([]);
     }
   }
 
-  // Gói ánh sáng chạy dọc chu trình Cayley
-  const packetProgress = (t * 0.9) % 6;
+  // Điểm chuyển động minh họa tác động nhóm trên đồ thị Cayley
+  const packetProgress = (t * 0.95) % 8;
   const segIndex = Math.floor(packetProgress);
   const segT = packetProgress - segIndex;
   const pStart = outerNodes[segIndex];
-  const pEnd = outerNodes[(segIndex + 1) % 6];
+  const pEnd = outerNodes[(segIndex + 1) % 8];
   if (pStart && pEnd) {
     const px = pStart.x + (pEnd.x - pStart.x) * segT;
     const py = pStart.y + (pEnd.y - pStart.y) * segT;
 
     ctx.beginPath();
     ctx.arc(px, py, 4.2, 0, Math.PI * 2);
-    ctx.fillStyle = '#FFF3D1';
+    ctx.fillStyle = '#B88440';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = '#FAF6EF';
     ctx.fill();
   }
 
   for (const node of outerNodes) {
     ctx.beginPath();
-    ctx.arc(node.x, node.y, 4.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#E5B85B';
+    ctx.arc(node.x, node.y, 4.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#B88440';
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
-    ctx.fillStyle = '#16120D';
+    ctx.arc(node.x, node.y, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = '#F6F0E4';
     ctx.fill();
   }
 
-  // Khối Bát diện 3D xoay ở tâm
+  // Lưới Đa diện Tứ diện kép / Bát diện đối xứng 3D ở tâm (nhóm đối xứng S_4)
   const octVerts: readonly Vec3[] = [
-    { x: 0, y: -0.75, z: 0 },
-    { x: 0, y: 0.75, z: 0 },
-    { x: -0.75, y: 0, z: 0 },
-    { x: 0.75, y: 0, z: 0 },
-    { x: 0, y: 0, z: -0.75 },
-    { x: 0, y: 0, z: 0.75 },
+    { x: 0, y: -0.76, z: 0 },
+    { x: 0, y: 0.76, z: 0 },
+    { x: -0.76, y: 0, z: 0 },
+    { x: 0.76, y: 0, z: 0 },
+    { x: 0, y: 0, z: -0.76 },
+    { x: 0, y: 0, z: 0.76 },
   ];
   const octEdges: readonly (readonly [number, number])[] = [
     [0, 2],
@@ -178,9 +205,9 @@ function drawAlgebraStage(
     [5, 2],
   ];
 
-  const fov = Math.min(width, height) * 0.95;
+  const fov = Math.min(width, height) * 0.94;
   const projected = octVerts.map((v) =>
-    projectPoint3D(rotatePoint3D(v, t * 0.45, t * 0.65, t * 0.2), cx, cy, fov),
+    projectPoint3D(rotatePoint3D(v, t * 0.42, t * 0.62, t * 0.18), cx, cy, fov),
   );
   for (const [i, j] of octEdges) {
     const pa = projected[i];
@@ -190,15 +217,22 @@ function drawAlgebraStage(
     ctx.beginPath();
     ctx.moveTo(pa.x, pa.y);
     ctx.lineTo(pb.x, pb.y);
-    ctx.strokeStyle = front ? '#FAF5E8' : '#C8963E';
-    ctx.globalAlpha = front ? 0.88 : 0.36;
-    ctx.lineWidth = front ? 1.5 : 0.9;
+    ctx.strokeStyle = front ? '#7C552B' : '#B88440';
+    ctx.globalAlpha = front ? 0.92 : 0.44;
+    ctx.lineWidth = front ? 1.55 : 0.95;
     ctx.stroke();
+  }
+  for (const pt of projected) {
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, pt.z > 0 ? 2.6 : 1.7, 0, Math.PI * 2);
+    ctx.fillStyle = pt.z > 0 ? '#7C552B' : '#B88440';
+    ctx.globalAlpha = pt.z > 0 ? 0.95 : 0.55;
+    ctx.fill();
   }
   ctx.globalAlpha = 1;
 }
 
-// 2. Sân khấu Hình học Affine: Mặt Quadric Hyperboloid 1 tầng xoay 3D & Mục tiêu Affine (O; e1, e2, e3)
+// 2. Hình học Affine và Euclide (Xanh Lam Sương & Đá Phiến): Siêu mặt Hyperboloid & Hệ mục tiêu Affine
 function drawAffineStage(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -207,15 +241,15 @@ function drawAffineStage(
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.52;
-  const fov = Math.min(width, height) * 1.15;
+  const fov = Math.min(width, height) * 1.12;
 
   const bgGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, width * 0.44);
-  bgGlow.addColorStop(0, 'rgba(56, 189, 248, 0.2)');
-  bgGlow.addColorStop(1, 'rgba(11, 28, 40, 0)');
+  bgGlow.addColorStop(0, 'rgba(74, 124, 155, 0.14)');
+  bgGlow.addColorStop(1, 'rgba(236, 242, 246, 0)');
   ctx.fillStyle = bgGlow;
   ctx.fillRect(0, 0, width, height);
 
-  // Vẽ đường sinh thẳng của Hyperboloid 1 tầng xoay chậm
+  // Đường sinh thẳng của siêu mặt Hyperboloid 1 tầng xoay 3D
   const generators = 18;
   const rotY = t * 0.32;
   const rotX = 0.52 + Math.sin(t * 0.4) * 0.08;
@@ -240,14 +274,14 @@ function drawAffineStage(
     ctx.beginPath();
     ctx.moveTo(rTop.x, rTop.y);
     ctx.lineTo(rBot.x, rBot.y);
-    ctx.strokeStyle = avgZ > 0 ? '#7DD3FC' : '#0EA5E9';
-    ctx.globalAlpha = avgZ > 0 ? 0.65 : 0.24;
-    ctx.lineWidth = avgZ > 0 ? 1.3 : 0.85;
+    ctx.strokeStyle = avgZ > 0 ? '#2B5470' : '#4A7C9B';
+    ctx.globalAlpha = avgZ > 0 ? 0.78 : 0.32;
+    ctx.lineWidth = avgZ > 0 ? 1.35 : 0.85;
     ctx.stroke();
   }
   ctx.globalAlpha = 1;
 
-  // Vẽ 3 vòng tròn mặt cắt Hyperboloid
+  // 3 mặt cắt elip Hyperboloid nét #4A7C9B
   for (const [yLevel, radius] of [
     [-0.78, 0.95],
     [0, 0.56],
@@ -270,17 +304,17 @@ function drawAffineStage(
       if (s === 0) ctx.moveTo(pt.x, pt.y);
       else ctx.lineTo(pt.x, pt.y);
     }
-    ctx.strokeStyle = 'rgba(186, 230, 253, 0.36)';
-    ctx.lineWidth = 1.05;
+    ctx.strokeStyle = 'rgba(74, 124, 155, 0.65)';
+    ctx.lineWidth = 1.15;
     ctx.stroke();
   }
 
-  // Mục tiêu Affine (O; e1, e2, e3) ở tâm
+  // Hệ mục tiêu Affine (O; e1, e2, e3) ở tâm
   const origin = projectPoint3D(rotatePoint3D({ x: 0, y: 0, z: 0 }, rotX, rotY, 0.14), cx, cy, fov);
   const axes: readonly { vec: Vec3; color: string; label: string }[] = [
-    { vec: { x: 0.72, y: 0, z: 0 }, color: '#E5B85B', label: 'e₁' },
-    { vec: { x: 0, y: -0.72, z: 0 }, color: '#38BDF8', label: 'e₂' },
-    { vec: { x: 0, y: 0, z: 0.72 }, color: '#F4A261', label: 'e₃' },
+    { vec: { x: 0.72, y: 0, z: 0 }, color: '#2B5470', label: 'e₁' },
+    { vec: { x: 0, y: -0.72, z: 0 }, color: '#4A7C9B', label: 'e₂' },
+    { vec: { x: 0, y: 0, z: 0.72 }, color: '#7C552B', label: 'e₃' },
   ];
   ctx.font = '600 11px "JetBrains Mono", monospace';
   for (const axis of axes) {
@@ -289,7 +323,7 @@ function drawAffineStage(
     ctx.moveTo(origin.x, origin.y);
     ctx.lineTo(tip.x, tip.y);
     ctx.strokeStyle = axis.color;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.9;
     ctx.stroke();
 
     ctx.beginPath();
@@ -299,12 +333,16 @@ function drawAffineStage(
     ctx.fillText(axis.label, tip.x + 6, tip.y - 4);
   }
   ctx.beginPath();
-  ctx.arc(origin.x, origin.y, 3.8, 0, Math.PI * 2);
-  ctx.fillStyle = '#FAF5E8';
+  ctx.arc(origin.x, origin.y, 3.6, 0, Math.PI * 2);
+  ctx.fillStyle = '#2B5470';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(origin.x, origin.y, 1.4, 0, Math.PI * 2);
+  ctx.fillStyle = '#F5F9FC';
   ctx.fill();
 }
 
-// 3. Sân khấu Giải tích: Sóng hội tụ Taylor & Các cột Tích phân Riemann sống động
+// 3. Giải tích hàm một biến (Xanh Men Ngọc & Lục Bảo Trầm): Chuỗi Taylor, Tiếp tuyến trượt & Tích phân Riemann
 function drawCalculusStage(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -315,8 +353,8 @@ function drawCalculusStage(
   const leftPad = width * 0.08;
   const spanX = width * 0.84;
 
-  // Trục tọa độ
-  ctx.strokeStyle = 'rgba(110, 231, 183, 0.22)';
+  // Hệ trục tọa độ nét mảnh
+  ctx.strokeStyle = 'rgba(35, 92, 71, 0.24)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(leftPad, midY);
@@ -326,9 +364,9 @@ function drawCalculusStage(
   ctx.stroke();
 
   const fn = (u: number) =>
-    Math.sin(u * Math.PI * 2 + t * 0.9) * 0.56 + Math.cos(u * Math.PI * 4 - t * 0.5) * 0.22;
+    Math.sin(u * Math.PI * 2 + t * 0.85) * 0.56 + Math.cos(u * Math.PI * 4 - t * 0.48) * 0.22;
 
-  // Cột Riemann
+  // Các lát cắt tích phân Riemann tô bóng #3D8268 với alpha 20%
   const bars = 18;
   const barW = spanX / bars;
   for (let i = 0; i < bars; i += 1) {
@@ -338,28 +376,29 @@ function drawCalculusStage(
     const y = val >= 0 ? midY - val : midY;
     const h = Math.abs(val);
 
-    ctx.fillStyle = 'rgba(52, 211, 153, 0.16)';
-    ctx.strokeStyle = 'rgba(110, 231, 183, 0.42)';
-    ctx.lineWidth = 1;
+    ctx.fillStyle = 'rgba(61, 130, 104, 0.20)';
+    ctx.strokeStyle = 'rgba(35, 92, 71, 0.42)';
+    ctx.lineWidth = 0.95;
     ctx.fillRect(x + 2, y, barW - 4, h);
     ctx.strokeRect(x + 2, y, barW - 4, h);
   }
 
-  // Đường cong xấp xỉ Taylor bậc thấp (mờ) & hàm gốc sáng nét
+  // Đường cong xấp xỉ Taylor bậc thấp (nét đứt)
   ctx.beginPath();
   for (let s = 0; s <= 90; s += 1) {
     const u = s / 90;
     const x = leftPad + u * spanX;
-    const y = midY - Math.sin(u * Math.PI * 2 + t * 0.9) * (height * 0.2);
+    const y = midY - Math.sin(u * Math.PI * 2 + t * 0.85) * (height * 0.2);
     if (s === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
-  ctx.strokeStyle = 'rgba(229, 184, 91, 0.35)';
+  ctx.strokeStyle = 'rgba(166, 130, 75, 0.65)';
   ctx.setLineDash([4, 4]);
   ctx.lineWidth = 1.25;
   ctx.stroke();
   ctx.setLineDash([]);
 
+  // Đường cong hàm chính nét Xanh Lục Trầm (#235C47)
   ctx.beginPath();
   for (let s = 0; s <= 100; s += 1) {
     const u = s / 100;
@@ -368,11 +407,11 @@ function drawCalculusStage(
     if (s === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
-  ctx.strokeStyle = '#6EE7B7';
-  ctx.lineWidth = 2.1;
+  ctx.strokeStyle = '#235C47';
+  ctx.lineWidth = 2.0;
   ctx.stroke();
 
-  // Điểm tiếp tuyến trượt dọc theo đồ thị
+  // Tiếp tuyến trượt dọc đồ thị
   const probeU = (Math.sin(t * 0.55) + 1) * 0.5;
   const px = leftPad + probeU * spanX;
   const py = midY - fn(probeU) * (height * 0.34);
@@ -383,17 +422,21 @@ function drawCalculusStage(
   ctx.beginPath();
   ctx.moveTo(px - 38, py - 38 * slopePx);
   ctx.lineTo(px + 38, py + 38 * slopePx);
-  ctx.strokeStyle = '#E5B85B';
+  ctx.strokeStyle = '#7C552B';
   ctx.lineWidth = 1.6;
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(px, py, 4.5, 0, Math.PI * 2);
-  ctx.fillStyle = '#FFF3D1';
+  ctx.arc(px, py, 4.3, 0, Math.PI * 2);
+  ctx.fillStyle = '#235C47';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(px, py, 1.7, 0, Math.PI * 2);
+  ctx.fillStyle = '#F4FAF7';
   ctx.fill();
 }
 
-// 4. Sân khấu Giáo dục học: 3 Quỹ đạo Venn giao thoa & Đường tăng trưởng phát triển nhân cách
+// 4. Giáo dục học (Hồng Đất Nhạt & Đỏ Gốm Trầm): Sơ đồ giao thoa Hệ sinh thái Sư phạm & Quỹ đạo Nhân cách
 function drawPedagogyStage(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -405,19 +448,9 @@ function drawPedagogyStage(
   const rOrbit = Math.min(width, height) * 0.25;
 
   const circles = [
-    { angle: 0, color: 'rgba(231, 111, 81, 0.36)', stroke: '#E76F51', label: 'Tri thức' },
-    {
-      angle: (Math.PI * 2) / 3,
-      color: 'rgba(229, 184, 91, 0.30)',
-      stroke: '#E5B85B',
-      label: 'Năng lực',
-    },
-    {
-      angle: (Math.PI * 4) / 3,
-      color: 'rgba(244, 162, 97, 0.28)',
-      stroke: '#F4A261',
-      label: 'Phẩm chất',
-    },
+    { angle: 0, fill: 'rgba(138, 72, 58, 0.14)', stroke: '#8A483A' },
+    { angle: (Math.PI * 2) / 3, fill: 'rgba(168, 118, 62, 0.14)', stroke: '#A8763E' },
+    { angle: (Math.PI * 4) / 3, fill: 'rgba(138, 72, 58, 0.10)', stroke: '#8A483A' },
   ] as const;
 
   for (const c of circles) {
@@ -425,24 +458,24 @@ function drawPedagogyStage(
     const ox = cx + Math.cos(a) * (rOrbit * 0.62);
     const oy = cy + Math.sin(a) * (rOrbit * 0.48);
 
-    const grad = ctx.createRadialGradient(ox, oy, 4, ox, oy, rOrbit * 1.1);
-    grad.addColorStop(0, c.color);
-    grad.addColorStop(1, 'rgba(33, 20, 18, 0)');
+    const grad = ctx.createRadialGradient(ox, oy, 4, ox, oy, rOrbit * 1.08);
+    grad.addColorStop(0, c.fill);
+    grad.addColorStop(1, 'rgba(246, 238, 235, 0)');
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(ox, oy, rOrbit * 1.1, 0, Math.PI * 2);
+    ctx.arc(ox, oy, rOrbit * 1.08, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(ox, oy, rOrbit * 1.05, 0, Math.PI * 2);
+    ctx.arc(ox, oy, rOrbit * 1.02, 0, Math.PI * 2);
     ctx.strokeStyle = c.stroke;
-    ctx.globalAlpha = 0.58;
-    ctx.lineWidth = 1.4;
+    ctx.globalAlpha = 0.68;
+    ctx.lineWidth = 1.35;
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
 
-  // Quỹ đạo phát triển đi lên dạng Bezier nối các mốc
+  // Quỹ đạo phát triển nhân cách đi lên dạng Bezier nối các mốc
   const p0 = { x: width * 0.16, y: height * 0.78 };
   const p1 = { x: width * 0.42, y: height * 0.62 };
   const p2 = { x: width * 0.62, y: height * 0.42 };
@@ -451,11 +484,11 @@ function drawPedagogyStage(
   ctx.beginPath();
   ctx.moveTo(p0.x, p0.y);
   ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-  ctx.strokeStyle = '#FFF3D1';
+  ctx.strokeStyle = '#8A483A';
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Hạt ánh sáng trượt dọc đường quỹ đạo phát triển
+  // Hạt ánh sáng Vàng Đồng trượt dọc quỹ đạo phát triển
   const u = (t * 0.35) % 1;
   const inv = 1 - u;
   const bx =
@@ -465,13 +498,21 @@ function drawPedagogyStage(
 
   ctx.beginPath();
   ctx.arc(bx, by, 4.5, 0, Math.PI * 2);
-  ctx.fillStyle = '#E5B85B';
+  ctx.fillStyle = '#A8763E';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(bx, by, 1.8, 0, Math.PI * 2);
+  ctx.fillStyle = '#FAF5F3';
   ctx.fill();
 
   for (const anchor of [p0, p3]) {
     ctx.beginPath();
-    ctx.arc(anchor.x, anchor.y, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#FAF5E8';
+    ctx.arc(anchor.x, anchor.y, 3.8, 0, Math.PI * 2);
+    ctx.fillStyle = '#8A483A';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(anchor.x, anchor.y, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#FAF5F3';
     ctx.fill();
   }
 }
@@ -481,7 +522,7 @@ export interface SubjectStageCanvasProps {
 }
 
 /**
- * Sân khấu Canvas 2D 120fps chuyên biệt cho 4 môn học trong Atlas Không gian Học tập.
+ * Sân khấu Canvas 2D 120fps theo Bảng Màu Pastel Học Thuật cho 4 môn học trong Atlas Không gian Học tập.
  */
 export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -584,7 +625,7 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
       data-testid={`subject-stage-${slug}`}
       style={{ background: theme.background }}
       className={cn(
-        'relative my-5 h-52 w-full overflow-hidden rounded-2xl border shadow-inner transition-transform duration-300 group-hover:scale-[1.01]',
+        'relative my-5 h-52 w-full overflow-hidden rounded-2xl border transition-transform duration-300 group-hover:scale-[1.01]',
         theme.borderClass,
       )}
       aria-hidden="true"
@@ -593,14 +634,20 @@ export function SubjectStageCanvas({ slug }: SubjectStageCanvasProps) {
       <div
         className="pointer-events-none absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `radial-gradient(${theme.accent} 0.75px, transparent 0.75px)`,
+          backgroundImage: `radial-gradient(${theme.dotColor} 0.7px, transparent 0.7px)`,
           backgroundSize: '18px 18px',
         }}
       />
 
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full" />
 
-      <span className="pointer-events-none absolute right-3 bottom-2.5 z-20 rounded-full border border-white/15 bg-black/45 px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-[#FAF6EE]/85 backdrop-blur-xs">
+      <span
+        className={cn(
+          'pointer-events-none absolute right-3 bottom-2.5 z-20 rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider backdrop-blur-xs',
+          theme.labelBgClass,
+          theme.labelTextClass,
+        )}
+      >
         {theme.label}
       </span>
     </div>

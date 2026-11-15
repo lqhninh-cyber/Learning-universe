@@ -51,10 +51,11 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(header?.className).toContain('w-[min(94vw,1520px)]');
     expect(header?.className).toContain('sticky');
 
-    // Logo Huy hiệu Sao Khuê & Thiên Cầu Đông Sơn SVG kèm gradient
+    // Logo Ấn Chương Khuê Văn Hình Học tối giản (vuông bo góc rx=8 nền #1D332E, không gradient/quỹ đạo thừa)
     const brandSvg = container.querySelector('header svg[aria-hidden="true"]');
-    expect(brandSvg?.querySelectorAll('linearGradient').length).toBe(2);
-    expect(brandSvg?.querySelectorAll('ellipse').length).toBe(2);
+    expect(brandSvg?.querySelector('rect[rx="8"]')).toHaveAttribute('fill', '#1D332E');
+    expect(brandSvg?.querySelectorAll('ellipse').length).toBe(0);
+    expect(brandSvg?.querySelectorAll('linearGradient').length).toBe(0);
 
     expect(screen.getByText('LEARNING')).toBeInTheDocument();
     expect(screen.getByText('UNIVERSE')).toBeInTheDocument();
@@ -64,10 +65,10 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.queryByRole('link', { name: 'Tất cả môn học' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thuật ngữ' })).toBeInTheDocument();
 
-    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Chàm Hoàng Gia (#142834)
+    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Xanh Đá Phiến Dịu (#213B34)
     const homeLink = screen.getByRole('link', { name: 'Trang chủ' });
     expect(homeLink.className).toContain('rounded-full');
-    expect(homeLink.className).toContain('bg-[#142834]');
+    expect(homeLink.className).toContain('bg-[#213B34]');
   });
 
   it('hiển thị chip "Học tiếp" từ bài học gần nhất trên Trang chủ và luân phiên gợi ý tìm kiếm mỗi 4 giây', () => {
@@ -117,9 +118,10 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.getByText('Ch.1')).toBeInTheDocument();
     expect(screen.getByText(/Tọa độ Affine/i)).toBeInTheDocument();
 
-    // Kiểm tra hoa 8 cánh xoay GPU translate3d theo scrollY * 0.08deg = 24.00deg
+    // Ấn chương Khuê Văn giữ nguyên thế đứng trang trọng khi cuộn trang (không xoay nghiêng)
     const brandSvg = container.querySelector('header svg[aria-hidden="true"]');
-    expect(brandSvg).toHaveStyle({ transform: 'translate3d(0px, 0px, 0px) rotate(24.00deg)' });
+    expect(brandSvg).toBeInTheDocument();
+    expect(brandSvg?.getAttribute('style') ?? '').not.toContain('rotate(');
 
     // Bật Đọc lướt định lý từ Header
     const skimBtn = screen.getByRole('button', { name: /Đọc lướt định lý/i });

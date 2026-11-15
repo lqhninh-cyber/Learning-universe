@@ -18,7 +18,7 @@ describe('Footer Component', () => {
       'text-[20px]',
       'lg:text-[22px]',
       'font-bold',
-      'text-[#FAF5E8]',
+      'text-[#F4F1EA]',
     );
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
@@ -40,15 +40,15 @@ describe('Footer Component', () => {
       'lg:text-[16.5px]',
       'leading-[1.8]',
       'max-w-[740px]',
-      'text-[#DCE6E2]',
+      'text-[#C4D4CE]',
     );
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#E8C16D]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#D4B47A]', 'not-italic');
   });
 
-  it('renders Sao Khuê & Thiên Cầu Đông Sơn SVG emblem for both mobile and desktop', () => {
+  it('renders Minimalist Khue Van Geometric Seal SVG emblem for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />

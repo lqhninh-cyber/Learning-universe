@@ -23,6 +23,47 @@ import {
 
 type HubBranchFilter = 'all' | AcademicBranch;
 
+interface AtlasCardPalette {
+  readonly cardBorder: string;
+  readonly indexText: string;
+  readonly badgeClass: string;
+  readonly titleHover: string;
+  readonly ctaClass: string;
+}
+
+const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
+  cardBorder: 'border-[#E6DEC9] hover:border-[#7C552B]/60',
+  indexText: 'text-[#7C552B]',
+  badgeClass: 'border-[#DFD1B8] bg-[#F6F0E4] text-[#7C552B]',
+  titleHover: 'hover:text-[#7C552B]',
+  ctaClass: 'bg-[#7C552B] text-[#FAF6EF] hover:bg-[#664522]',
+};
+
+const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
+  'cau-truc-dai-so': DEFAULT_ATLAS_PALETTE,
+  'hinh-hoc-affine': {
+    cardBorder: 'border-[#D4E1EB] hover:border-[#2B5470]/60',
+    indexText: 'text-[#2B5470]',
+    badgeClass: 'border-[#C8D8E4] bg-[#ECF2F6] text-[#2B5470]',
+    titleHover: 'hover:text-[#2B5470]',
+    ctaClass: 'bg-[#2B5470] text-[#F5F9FC] hover:bg-[#214259]',
+  },
+  'giai-tich-ham-mot-bien': {
+    cardBorder: 'border-[#CDE2D6] hover:border-[#235C47]/60',
+    indexText: 'text-[#235C47]',
+    badgeClass: 'border-[#C4DDD0] bg-[#EAF3EE] text-[#235C47]',
+    titleHover: 'hover:text-[#235C47]',
+    ctaClass: 'bg-[#235C47] text-[#F4FAF7] hover:bg-[#1B4938]',
+  },
+  'giao-duc-hoc': {
+    cardBorder: 'border-[#E6D6CF] hover:border-[#8A483A]/60',
+    indexText: 'text-[#8A483A]',
+    badgeClass: 'border-[#DECAC1] bg-[#F6EEEB] text-[#8A483A]',
+    titleHover: 'hover:text-[#8A483A]',
+    ctaClass: 'bg-[#8A483A] text-[#FAF5F3] hover:bg-[#70392E]',
+  },
+};
+
 /**
  * Chữ ký chìm nhận diện môn học (Watermark Signature) ở góc dưới bên phải mỗi thẻ môn học
  * tại chế độ Bản đồ Không gian (Atlas Mode).
@@ -682,8 +723,8 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         className={cn(
                           'cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all',
                           isSelected
-                            ? 'bg-[#365E4E] text-white shadow-2xs'
-                            : 'text-[var(--text-muted)] hover:text-[var(--text-main)]',
+                            ? 'bg-[#213B34] text-[#F6F4EE] shadow-2xs'
+                            : 'text-[#425650] hover:text-[#162923]',
                         )}
                       >
                         {tab.label}
@@ -717,7 +758,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                       setActiveBranch('all');
                       onResetQuery();
                     }}
-                    className="mt-4 cursor-pointer rounded-xl bg-[#365E4E] px-5 py-2.5 text-xs font-medium text-white transition-colors hover:bg-[#2B4C3E]"
+                    className="mt-4 cursor-pointer rounded-xl bg-[#213B34] px-5 py-2.5 text-xs font-medium text-[#F6F4EE] transition-colors hover:bg-[#182C26]"
                   >
                     Khôi phục bộ lọc
                   </button>
@@ -730,6 +771,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                   {filteredSubjects.map((subject, idx) => {
                     const asset = getCourseCinematicAsset(subject.slug);
                     const stats = getSubjectStats(subject);
+                    const palette = ATLAS_CARD_PALETTES[subject.slug] ?? DEFAULT_ATLAS_PALETTE;
                     const isLonelyTailCard =
                       filteredSubjects.length % 2 === 1 && idx === filteredSubjects.length - 1;
                     const galleryIndex = String(idx + 1).padStart(2, '0');
@@ -742,21 +784,31 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                       >
                         <article
                           style={{ viewTransitionName: `subject-card-${subject.slug}` }}
-                          className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-xs transition-all duration-500 hover:border-[#365E4E] sm:p-8 dark:hover:border-[#8EE5CE]/50"
+                          className={cn(
+                            'group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-[#FCFBF7] p-6 shadow-xs transition-all duration-500 sm:p-8',
+                            palette.cardBorder,
+                          )}
                         >
                           <SubjectWatermarkSignature slug={subject.slug} />
 
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="flex items-center gap-2.5">
-                              <span className="font-mono text-xs font-bold text-[#C89738]">
+                              <span
+                                className={cn('font-mono text-xs font-bold', palette.indexText)}
+                              >
                                 {galleryIndex}.
                               </span>
-                              <span className="rounded-full border border-[#365E4E]/30 bg-[#EBECE6] px-3 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#365E4E] transition-transform duration-300 group-hover:translate-x-0.5 dark:border-[#8EE5CE]/25 dark:bg-[#19332A] dark:text-[#A6E3CD]">
+                              <span
+                                className={cn(
+                                  'rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider transition-transform duration-300 group-hover:translate-x-0.5',
+                                  palette.badgeClass,
+                                )}
+                              >
                                 {asset.categoryLabel}
                               </span>
                             </div>
 
-                            <span className="font-mono text-[11px] text-[var(--text-muted)]">
+                            <span className="font-mono text-[11px] text-[#526B63]">
                               {stats.chapterCount} chương · {stats.lessonCount} bài giảng
                             </span>
                           </div>
@@ -765,28 +817,31 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
 
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[var(--text-main)] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
+                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#162923] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
                                 <Link
                                   to={ROUTES.subjectOverview(subject.slug)}
-                                  className="transition-colors hover:text-[#365E4E] dark:hover:text-[#8EE5CE]"
+                                  className={cn('transition-colors', palette.titleHover)}
                                 >
                                   {subject.title}
                                 </Link>
                               </h3>
-                              <p className="line-clamp-3 text-sm leading-relaxed text-[var(--text-muted)]">
+                              <p className="line-clamp-3 text-sm leading-relaxed text-[#3D534B]">
                                 {asset.conciseDescription}
                               </p>
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] pt-4">
-                              <span className="line-clamp-1 font-mono text-[11px] text-[var(--text-muted)]">
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E6E2D8] pt-4">
+                              <span className="line-clamp-1 font-mono text-[11px] text-[#526B63]">
                                 {asset.visualMetaphor}
                               </span>
 
                               <Link
                                 to={ROUTES.courseOverview(subject.slug)}
                                 aria-label={`Vào học phần ${subject.title}`}
-                                className="inline-flex items-center gap-2 rounded-xl bg-[#365E4E] px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-[#2B4C3E]"
+                                className={cn(
+                                  'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-2xs transition-all duration-200',
+                                  palette.ctaClass,
+                                )}
                               >
                                 <span>Vào học phần</span>
                                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

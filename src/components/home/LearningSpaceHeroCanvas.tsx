@@ -23,53 +23,49 @@ interface SatelliteSpec {
   readonly tiltZ: number;
   readonly speed: number;
   readonly phase: number;
-  readonly glyph: string;
 }
 
+// 4 vệ tinh mang sắc thái Pastel Khoáng Vật của 4 môn học
 const SATELLITES: readonly SatelliteSpec[] = [
   {
-    color: '#E5B85B',
-    glow: 'rgba(229, 184, 91, 0.45)',
+    color: '#7C552B',
+    glow: 'rgba(184, 132, 64, 0.22)',
     radius: 0.37,
     tiltX: 0.48,
     tiltZ: 0.32,
     speed: 0.56,
     phase: 0.2,
-    glyph: 'Σ',
   },
   {
-    color: '#38BDF8',
-    glow: 'rgba(56, 189, 248, 0.45)',
+    color: '#3E6B7E',
+    glow: 'rgba(62, 107, 126, 0.22)',
     radius: 0.41,
     tiltX: -0.64,
     tiltZ: -0.45,
     speed: 0.42,
     phase: 2.1,
-    glyph: '∀',
   },
   {
-    color: '#34D399',
-    glow: 'rgba(52, 211, 153, 0.42)',
+    color: '#235C47',
+    glow: 'rgba(35, 92, 71, 0.20)',
     radius: 0.34,
     tiltX: 0.92,
     tiltZ: -0.22,
     speed: 0.68,
     phase: 4.0,
-    glyph: '∫',
   },
   {
-    color: '#E76F51',
-    glow: 'rgba(231, 111, 81, 0.42)',
+    color: '#8A483A',
+    glow: 'rgba(138, 72, 58, 0.20)',
     radius: 0.43,
     tiltX: -0.25,
     tiltZ: 0.78,
     speed: 0.35,
     phase: 5.3,
-    glyph: '≅',
   },
 ];
 
-// Đỉnh và cạnh khối Bát diện kép / Nhị thập diện chuẩn (Octahedron + inner cube dual core)
+// Đỉnh và cạnh khối Nhị thập diện chuẩn (Icosahedron) tối giản
 const PHI = (1 + Math.sqrt(5)) / 2;
 const RAW_ICO_COORDS: readonly (readonly [number, number, number])[] = [
   [-1, PHI, 0],
@@ -124,33 +120,31 @@ const ICO_EDGES: readonly (readonly [number, number])[] = [
 ];
 
 const FLOATING_SYMBOLS = [
-  { char: 'Σ', x: 0.14, y: 0.2, phase: 0.4, depth: 1.15, color: 'rgba(229,184,91,0.55)' },
-  { char: '∫', x: 0.86, y: 0.24, phase: 1.7, depth: 0.9, color: 'rgba(52,211,153,0.5)' },
-  { char: '∀', x: 0.16, y: 0.8, phase: 2.9, depth: 1.0, color: 'rgba(56,189,248,0.5)' },
-  { char: 'π', x: 0.84, y: 0.78, phase: 4.1, depth: 1.2, color: 'rgba(229,184,91,0.5)' },
-  { char: '≅', x: 0.52, y: 0.11, phase: 5.2, depth: 0.8, color: 'rgba(231,111,81,0.5)' },
+  { char: 'Σ', x: 0.14, y: 0.2, phase: 0.4, depth: 1.1, color: 'rgba(166, 130, 75, 0.56)' },
+  { char: '∫', x: 0.86, y: 0.24, phase: 1.7, depth: 0.9, color: 'rgba(35, 66, 58, 0.50)' },
+  { char: '∀', x: 0.16, y: 0.8, phase: 2.9, depth: 1.0, color: 'rgba(62, 107, 126, 0.52)' },
+  { char: 'π', x: 0.84, y: 0.78, phase: 4.1, depth: 1.15, color: 'rgba(166, 130, 75, 0.52)' },
+  { char: '≅', x: 0.52, y: 0.11, phase: 5.2, depth: 0.8, color: 'rgba(35, 66, 58, 0.46)' },
 ] as const;
 
 function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
-  // Rotate around X
   const cx = Math.cos(ax);
   const sx = Math.sin(ax);
   const y1 = v.y * cx - v.z * sx;
   const z1 = v.y * sx + v.z * cx;
 
-  // Rotate around Y
   const cy = Math.cos(ay);
   const sy = Math.sin(ay);
   const x2 = v.x * cy + z1 * sy;
   const z2 = -v.x * sy + z1 * cy;
 
-  // Rotate around Z
   const cz = Math.cos(az);
   const sz = Math.sin(az);
-  const x3 = x2 * cz - y1 * sz;
-  const y3 = x2 * sz + y1 * cz;
-
-  return { x: x3, y: y3, z: z2 };
+  return {
+    x: x2 * cz - y1 * sz,
+    y: x2 * sz + y1 * cz,
+    z: z2,
+  };
 }
 
 function projectPoint(v: Vec3, cx: number, cy: number, fov: number): ProjectedPoint {
@@ -189,25 +183,24 @@ function drawArmillaryRing(
     points.push(projectPoint(r, cx, cy, fov));
   }
 
-  // Vẽ nửa sau mờ hơn, nửa trước sáng sắc nét
   for (let i = 0; i < segments; i += 1) {
     const p1 = points[i];
     const p2 = points[i + 1];
     if (!p1 || !p2) continue;
-    const depthAlpha = Math.max(0.14, Math.min(0.88, 0.48 + (p1.z + p2.z) * 0.45));
+    const depthAlpha = Math.max(0.18, Math.min(0.76, 0.42 + (p1.z + p2.z) * 0.36));
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.strokeStyle = color;
     ctx.globalAlpha = depthAlpha;
-    ctx.lineWidth = p1.z > 0 ? 1.55 : 1.0;
+    ctx.lineWidth = p1.z > 0 ? 1.4 : 0.95;
     ctx.stroke();
   }
 
   if (withTicks) {
-    for (let deg = 0; deg < 360; deg += 15) {
+    for (let deg = 0; deg < 360; deg += 30) {
       const rad = (deg * Math.PI) / 180;
-      const tickLen = deg % 45 === 0 ? 0.042 : 0.022;
+      const tickLen = deg % 90 === 0 ? 0.04 : 0.022;
       const inner = rotateVec3(
         { x: Math.cos(rad) * (radius - tickLen), y: Math.sin(rad) * (radius - tickLen), z: 0 },
         rotX,
@@ -225,9 +218,9 @@ function drawArmillaryRing(
       ctx.beginPath();
       ctx.moveTo(pi.x, pi.y);
       ctx.lineTo(po.x, po.y);
-      ctx.strokeStyle = '#E5B85B';
-      ctx.globalAlpha = outer.z > 0 ? 0.65 : 0.2;
-      ctx.lineWidth = deg % 45 === 0 ? 1.3 : 0.8;
+      ctx.strokeStyle = '#A6824B';
+      ctx.globalAlpha = outer.z > 0 ? 0.68 : 0.25;
+      ctx.lineWidth = deg % 90 === 0 ? 1.25 : 0.8;
       ctx.stroke();
     }
   }
@@ -235,8 +228,8 @@ function drawArmillaryRing(
 }
 
 /**
- * Sân khấu Canvas 2D 120fps cho Hero trang Không gian Học tập:
- * Thiên cầu Armillary 3D xoay đa trục + Lõi Đa diện Toán học + 4 vệ tinh môn học.
+ * Sân khấu Canvas 2D 120fps trực tiếp trên nền sáng Xanh Men Ngọc & Giấy Dó Ngà:
+ * Thiên cầu Đa diện & Vòng quỹ đạo Khuê Văn nét mảnh (#23423A, #A6824B, #3E6B7E).
  */
 export function LearningSpaceHeroCanvas() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -315,17 +308,17 @@ export function LearningSpaceHeroCanvas() {
       const cx = width * 0.5 + smoothX * 8;
       const cy = height * 0.5 + smoothY * 8;
       const minDim = Math.min(width, height);
-      const fov = minDim * 1.12;
+      const fov = minDim * 1.15;
 
-      // Hào quang trung tâm vàng hổ phách + lam ngọc nhẹ
-      const coreGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, minDim * 0.45);
-      coreGlow.addColorStop(0, 'rgba(229, 184, 91, 0.22)');
-      coreGlow.addColorStop(0.45, 'rgba(56, 189, 248, 0.09)');
-      coreGlow.addColorStop(1, 'rgba(16, 33, 46, 0)');
+      // Hào quang trung tâm cực dịu hòa tan vào nền xanh men ngọc
+      const coreGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, minDim * 0.44);
+      coreGlow.addColorStop(0, 'rgba(166, 130, 75, 0.14)');
+      coreGlow.addColorStop(0.5, 'rgba(62, 107, 126, 0.07)');
+      coreGlow.addColorStop(1, 'rgba(237, 243, 240, 0)');
       ctx.fillStyle = coreGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // 3 Vòng Thiên cầu Armillary nghiêng theo các trục khác nhau
+      // 3 Vòng Quỹ đạo Khuê Văn: Xanh Đá Phiến (#23423A), Vàng Đồng Trầm (#A6824B), Lam Khói (#3E6B7E)
       drawArmillaryRing(
         ctx,
         cx,
@@ -335,7 +328,7 @@ export function LearningSpaceHeroCanvas() {
         0.95 + smoothY * 0.14,
         time * 0.18 + smoothX * 0.16,
         0.25,
-        '#E5B85B',
+        '#23423A',
         true,
       );
       drawArmillaryRing(
@@ -347,7 +340,7 @@ export function LearningSpaceHeroCanvas() {
         -0.78 + smoothY * 0.12,
         -time * 0.24 + smoothX * 0.14,
         0.82,
-        '#38BDF8',
+        '#A6824B',
         false,
       );
       drawArmillaryRing(
@@ -359,11 +352,11 @@ export function LearningSpaceHeroCanvas() {
         0.38 - smoothY * 0.1,
         time * 0.31,
         -0.65 + time * 0.1,
-        '#34D399',
+        '#3E6B7E',
         false,
       );
 
-      // Lõi Đa diện 3D Nhị thập diện (Icosahedron) phát sáng tinh thể vàng
+      // Lõi Đa diện 3D Nhị thập diện nét mảnh sắc sảo
       const polyScale = 0.21;
       const rotatedVerts = RAW_ICO_VERTICES.map((v) =>
         rotateVec3(
@@ -383,32 +376,32 @@ export function LearningSpaceHeroCanvas() {
         ctx.beginPath();
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
-        ctx.strokeStyle = avgZ > 0 ? '#FAF6EE' : '#D4A853';
-        ctx.globalAlpha = avgZ > 0 ? 0.72 : 0.28;
-        ctx.lineWidth = avgZ > 0 ? 1.35 : 0.85;
+        ctx.strokeStyle = avgZ > 0 ? '#23423A' : '#A6824B';
+        ctx.globalAlpha = avgZ > 0 ? 0.8 : 0.34;
+        ctx.lineWidth = avgZ > 0 ? 1.25 : 0.8;
         ctx.stroke();
       }
 
       for (const pt of projectedVerts) {
         ctx.beginPath();
-        ctx.arc(pt.x, pt.y, pt.z > 0 ? 2.4 : 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = pt.z > 0 ? '#FFF3D1' : '#C89D54';
-        ctx.globalAlpha = pt.z > 0 ? 0.95 : 0.45;
+        ctx.arc(pt.x, pt.y, pt.z > 0 ? 2.2 : 1.4, 0, Math.PI * 2);
+        ctx.fillStyle = pt.z > 0 ? '#23423A' : '#A6824B';
+        ctx.globalAlpha = pt.z > 0 ? 0.9 : 0.45;
         ctx.fill();
       }
       ctx.globalAlpha = 1;
 
-      // Hạt sáng tâm
+      // Điểm tâm Vàng Đồng Trầm thanh lịch
       ctx.beginPath();
-      ctx.arc(cx, cy, 4.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#E76F51';
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#A6824B';
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(cx, cy, 2, 0, Math.PI * 2);
-      ctx.fillStyle = '#FFF3D1';
+      ctx.arc(cx, cy, 1.7, 0, Math.PI * 2);
+      ctx.fillStyle = '#F6F4EE';
       ctx.fill();
 
-      // 4 Vệ tinh màu của 4 môn học chuyển động trên quỹ đạo 3D
+      // 4 Vệ tinh Pastel Khoáng Vật của 4 học phần
       for (const sat of SATELLITES) {
         const angle = sat.phase + time * sat.speed;
         const pos = rotateVec3(
@@ -418,25 +411,25 @@ export function LearningSpaceHeroCanvas() {
           sat.tiltZ,
         );
         const proj = projectPoint(pos, cx, cy, fov);
-        const r = pos.z > 0 ? 5.2 : 3.8;
+        const r = pos.z > 0 ? 4.4 : 3.2;
 
-        const satGlow = ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, r * 3.2);
+        const satGlow = ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, r * 3);
         satGlow.addColorStop(0, sat.glow);
-        satGlow.addColorStop(1, 'rgba(0,0,0,0)');
+        satGlow.addColorStop(1, 'rgba(237, 243, 240, 0)');
         ctx.fillStyle = satGlow;
         ctx.beginPath();
-        ctx.arc(proj.x, proj.y, r * 3.2, 0, Math.PI * 2);
+        ctx.arc(proj.x, proj.y, r * 3, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.beginPath();
         ctx.arc(proj.x, proj.y, r, 0, Math.PI * 2);
         ctx.fillStyle = sat.color;
-        ctx.globalAlpha = pos.z > 0 ? 0.96 : 0.58;
+        ctx.globalAlpha = pos.z > 0 ? 0.92 : 0.5;
         ctx.fill();
         ctx.globalAlpha = 1;
       }
 
-      // Ký hiệu toán học lơ lửng đáp ứng parallax nhẹ
+      // Ký hiệu toán học lơ lửng tinh tế trên nền sáng
       ctx.font = '600 13px "JetBrains Mono", "Fira Code", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -490,20 +483,20 @@ export function LearningSpaceHeroCanvas() {
       className="relative flex h-[280px] w-full items-center justify-center sm:h-[320px]"
       aria-hidden="true"
     >
-      {/* Khung SVG dự phòng thanh lịch khi môi trường không chạy Canvas 2D */}
+      {/* Khung SVG dự phòng thanh mảnh hòa quyện nền sáng khi môi trường không chạy Canvas 2D */}
       <svg
         viewBox="0 0 320 320"
-        className="pointer-events-none absolute inset-0 m-auto h-[260px] w-[260px] opacity-25"
+        className="pointer-events-none absolute inset-0 m-auto h-[260px] w-[260px] opacity-30"
         fill="none"
       >
-        <circle cx="160" cy="160" r="124" stroke="#E5B85B" strokeWidth="1" strokeDasharray="4 6" />
+        <circle cx="160" cy="160" r="124" stroke="#A6824B" strokeWidth="1" strokeDasharray="4 6" />
         <ellipse
           cx="160"
           cy="160"
           rx="116"
           ry="52"
           transform="rotate(-24 160 160)"
-          stroke="#38BDF8"
+          stroke="#23423A"
           strokeWidth="1"
         />
         <ellipse
@@ -512,10 +505,10 @@ export function LearningSpaceHeroCanvas() {
           rx="112"
           ry="48"
           transform="rotate(34 160 160)"
-          stroke="#34D399"
+          stroke="#3E6B7E"
           strokeWidth="1"
         />
-        <circle cx="160" cy="160" r="4.5" fill="#E5B85B" />
+        <circle cx="160" cy="160" r="4" fill="#A6824B" />
       </svg>
 
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full" />
