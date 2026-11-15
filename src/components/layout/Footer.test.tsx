@@ -18,7 +18,7 @@ describe('Footer Component', () => {
       'text-[20px]',
       'lg:text-[22px]',
       'font-bold',
-      'text-[#F4F1EA]',
+      'text-[#EBF0EE]',
     );
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
@@ -40,12 +40,12 @@ describe('Footer Component', () => {
       'lg:text-[16.5px]',
       'leading-[1.8]',
       'max-w-[740px]',
-      'text-[#C4D4CE]',
+      'text-[#B8C7C2]',
     );
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#D4B47A]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#C8AE7D]', 'not-italic');
   });
 
   it('renders Minimalist Khue Van Geometric Seal SVG emblem for both mobile and desktop', () => {

@@ -128,47 +128,49 @@
 
 :root {
   /* ==========================================================================
-     SEMANTIC DESIGN TOKENS — CHUẨN WCAG & SƠN MÀI DI SẢN (Ý TƯỞNG MÀU)
+     BẢNG MÀU SINH HỌC THỊ GIÁC: "BẠCH NGỌC KHOÁNG THẠCH & TRẮNG SỨ DỊU"
+     (Balanced Mineral & Soft Porcelain — Tương phản ~13.2:1 chuẩn đọc lâu)
      ========================================================================== */
   /* Nền & Thẻ */
-  --bg-page: #f6f8f5;
-  --bg-surface: #ffffff;
-  --bg-sunken: #eef2ee; /* Bậc lõm cho ô ví dụ, input */
-  --border-subtle: #dfe6e1;
-  --border-control: #739b88; /* Đạt chuẩn tương phản 3:1 cho input/border */
+  --bg-page: #f2f4f3;
+  --bg-surface: #fafbf9;
+  --bg-subtle: #e7ecea;
+  --bg-sunken: #e7ecea;
+  --border-subtle: #d8e0dd;
+  --border-control: #6b847d;
 
   /* Typography */
-  --text-main: #141c18;
-  --text-muted: #4a5851;
+  --text-main: #182624;
+  --text-muted: #4a5d58;
+  --text-primary: #182624;
+  --text-secondary: #4a5d58;
 
-  /* Ba bậc Vàng Thếp */
+  /* Ba bậc Đồng & Ngọc */
   --gold-badge: #e5c378;
-  --gold-line: #c5a262;
-  --gold-text: #8a6a2f; /* Đạt chuẩn WCAG 5:1 trên nền sáng */
+  --gold-line: #9e845a;
+  --gold-text: #7a623c;
 
-  /* Xanh Chàm (Dành riêng cho liên kết & Đồ thị) */
-  --indigo-link: #2e4a6b;
+  /* Xanh Đá Lam (Liên kết & Đồ thị) */
+  --indigo-link: #2d5266;
 
-  /* Đỏ Son (Thu hẹp cho Bẫy sư phạm & Dấu triện) */
-  --cinnabar-text: #9e3d3d;
-  --cinnabar-bg: rgba(158, 61, 61, 0.08);
+  /* Đỏ Đất Nung (Bẫy sư phạm & Dấu triện) */
+  --cinnabar-text: #7a463b;
+  --cinnabar-bg: rgba(122, 70, 59, 0.055);
 
-  /* Bóng rêu 2 lớp */
-  --shadow-editorial: 0 1px 2px rgba(18, 36, 28, 0.06), 0 8px 24px rgba(18, 36, 28, 0.06);
+  /* Bóng dịu 2 lớp */
+  --shadow-editorial: 0 1px 2px rgba(24, 38, 36, 0.04), 0 8px 24px rgba(24, 38, 36, 0.05);
 
   /* Bôi đen văn bản */
-  --selection-bg: #d6e4dc;
+  --selection-bg: #dbe6e2;
 
   /* Hệ hòa sắc tương thích ngược */
-  --bg-canvas: #eaf0f1;
-  --bg-muted: #cfdadb;
-  --border-hairline: #cfdadb;
-  --text-primary: #29383d;
-  --text-secondary: #55676b;
-  --accent-primary: #3f6570;
-  --accent-verandah: #5e786d;
-  --accent-wood: #92714f;
-  --accent-interactive: #2e4a6b;
+  --bg-canvas: #f2f4f3;
+  --bg-muted: #d8e0dd;
+  --border-hairline: #d8e0dd;
+  --accent-primary: #2d5266;
+  --accent-verandah: #4a5d58;
+  --accent-wood: #9e845a;
+  --accent-interactive: #2d5266;
 
   /* Typography tokens */
   --font-serif: 'Crimson Pro', Georgia, Cambria, 'Times New Roman', serif;
@@ -286,12 +288,15 @@
   /* Semantic Theme Tokens */
   --color-bg-page: var(--bg-page);
   --color-bg-surface: var(--bg-surface);
+  --color-bg-subtle: var(--bg-subtle);
   --color-bg-sunken: var(--bg-sunken);
   --color-border-subtle: var(--border-subtle);
   --color-border-control: var(--border-control);
 
   --color-text-main: var(--text-main);
   --color-text-muted: var(--text-muted);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
 
   --color-gold-badge: var(--gold-badge);
   --color-gold-line: var(--gold-line);

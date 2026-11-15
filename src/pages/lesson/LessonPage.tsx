@@ -367,7 +367,7 @@ function LessonPageContent() {
         <div
           className={cn(
             'flex flex-col justify-between gap-4 border-b pb-4 transition-all duration-300 lg:flex-row lg:items-center',
-            readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
+            readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#D8E0DD]',
             isFocusMode && 'border-transparent pb-1',
           )}
         >
@@ -497,7 +497,7 @@ function LessonPageContent() {
                   ? 'border-[#1E3B2E] bg-[#12241C] text-[#ECE8DF]'
                   : readingTheme === 'sepia'
                     ? 'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18]'
-                    : 'border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[#18221D]',
+                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#182624]',
               )}
               aria-label="Danh mục điều hướng bài học"
             >
@@ -518,14 +518,14 @@ function LessonPageContent() {
                   'mb-6 flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs shadow-2xs',
                   readingTheme === 'dark'
                     ? 'border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
-                    : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
+                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#182624]',
                 )}
               >
                 <span className="flex items-center gap-2 font-medium">
                   <BookOpen
                     className={cn(
                       'h-3.5 w-3.5',
-                      readingTheme === 'dark' ? 'text-[#C89738]' : 'text-[#3F6570]',
+                      readingTheme === 'dark' ? 'text-[#C89738]' : 'text-[#2D5266]',
                     )}
                     aria-hidden="true"
                   />
@@ -536,7 +536,7 @@ function LessonPageContent() {
                         'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
                         readingTheme === 'dark'
                           ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
-                          : 'border-[#CFDADB] bg-stone-100 text-[#29383D]',
+                          : 'border-[#D8E0DD] bg-[#E7ECEA] text-[#182624]',
                       )}
                     >
                       Z
@@ -576,9 +576,9 @@ function LessonPageContent() {
               data-reading-theme={readingTheme}
               data-reading-size={fontSize}
               className={cn(
-                'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.9] transition-all duration-300',
+                'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.8] transition-all duration-300',
                 typographyClasses,
-                'rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[#18221D] shadow-[var(--shadow-editorial)]',
+                'rounded-3xl border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624] shadow-[var(--shadow-editorial)]',
                 readingTheme === 'dark' &&
                   'dark border-[#2A323A] bg-[#181C20] text-[#ECE8DF] shadow-none',
                 readingTheme === 'sepia' &&
@@ -603,19 +603,19 @@ function LessonPageContent() {
                         'clear-both mt-3 flex flex-wrap items-center gap-2.5 rounded-xl border p-3 text-xs md:text-sm',
                         readingTheme === 'dark'
                           ? 'border-[#2A323A] bg-[#20252B]/80 text-[#E2E8F0]'
-                          : 'border-[#71889A]/30 bg-[#E5EDF1]/80 text-[#29383D]',
+                          : 'border-[#D8E0DD] bg-[#E7ECEA]/70 text-[#182624]',
                       )}
                     >
                       <div
                         className={cn(
                           'flex shrink-0 items-center gap-1.5 font-semibold',
-                          readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+                          readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#182624]',
                         )}
                       >
                         <Link2
                           className={cn(
                             'h-4 w-4',
-                            readingTheme === 'dark' ? 'text-[#C5A262]' : 'text-[#3F6570]',
+                            readingTheme === 'dark' ? 'text-[#C5A262]' : 'text-[#2D5266]',
                           )}
                           aria-hidden="true"
                         />
@@ -643,7 +643,7 @@ function LessonPageContent() {
                                 'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs shadow-2xs transition-colors',
                                 readingTheme === 'dark'
                                   ? 'border border-[#2A323A] bg-[#14171A] font-medium text-[#C89738] hover:border-[#C89738] hover:bg-[#20252B]'
-                                  : 'border border-[#CFDADB] bg-white/90 font-semibold text-[#29383D] hover:border-[#71889A] hover:bg-white hover:text-[#3F6570]',
+                                  : 'border border-[#D8E0DD] bg-[#FAFBF9] font-semibold text-[#182624] hover:border-[#2D5266] hover:bg-white hover:text-[#2D5266]',
                               )}
                             >
                               <span>
@@ -726,7 +726,7 @@ function LessonPageContent() {
               <footer
                 className={cn(
                   'mt-10 border-t pt-6 print:hidden',
-                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#CFDADB]',
+                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#D8E0DD]',
                 )}
               >
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">

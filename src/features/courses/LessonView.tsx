@@ -90,7 +90,7 @@ export const LessonView: FC<LessonViewProps> = ({
         data-reading-theme={activeTheme}
         className={cn(
           'relative mx-auto max-w-7xl px-6 transition-colors duration-300 lg:grid lg:grid-cols-12 lg:gap-12',
-          isDark ? 'bg-[#121517] text-[#E2E8F0]' : 'bg-[#EAF0F1] text-[#29383D]',
+          isDark ? 'bg-[#121517] text-[#E2E8F0]' : 'bg-[#F2F4F3] text-[#182624]',
           className,
         )}
       >
@@ -102,25 +102,25 @@ export const LessonView: FC<LessonViewProps> = ({
               isZen && 'pointer-events-none -translate-x-8 opacity-0 lg:hidden',
               isDark
                 ? 'border-r border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
-                : 'border-r border-[#CFDADB] bg-[#E1E9EA] text-[#29383D]',
+                : 'border-r border-[#D8E0DD] bg-[#E7ECEA] text-[#182624]',
             )}
           >
             {sidebar}
           </aside>
         )}
 
-        {/* Khung bài học chính: Sáng: bg-[#F7FAFA] border-[#CFDADB] | Tối: bg-[#181C20] border-[#2A323A] */}
+        {/* Khung bài học chính: Sáng: bg-[#FAFBF9] border-[#D8E0DD] | Tối: bg-[#181C20] border-[#2A323A] */}
         <div
           data-testid="scholar-main-column"
           data-space={space}
           className={cn(
-            'min-w-0 rounded-3xl p-8 shadow-sm transition-all duration-300 md:p-12',
+            'min-w-0 rounded-3xl p-8 leading-[1.8] shadow-sm transition-all duration-300 md:p-12',
             isZen
               ? 'mx-auto max-w-[720px] lg:col-span-12'
               : 'max-w-[70ch] ' + (sidebar ? 'lg:col-span-6' : 'lg:col-span-8'),
             isDark
               ? 'border border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
-              : 'border border-[#CFDADB] bg-[#F7FAFA] text-[#29383D]',
+              : 'border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624]',
             settings.typographyClasses,
           )}
         >
@@ -128,7 +128,7 @@ export const LessonView: FC<LessonViewProps> = ({
             <h1
               className={cn(
                 'mb-6 font-serif text-3xl font-bold tracking-tight lg:text-4xl',
-                isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                isDark ? 'text-[#F8FAFC]' : 'text-[#182624]',
               )}
             >
               {title}
@@ -139,15 +139,15 @@ export const LessonView: FC<LessonViewProps> = ({
             <p
               data-testid="scholar-lead-paragraph"
               className={cn(
-                'academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.85]',
-                isDark ? 'text-[#E2E8F0]' : 'text-[#29383D]',
+                'academic-dropcap mb-6 font-serif text-[18.5px] leading-[1.8]',
+                isDark ? 'text-[#E2E8F0]' : 'text-[#182624]',
               )}
             >
               <span
                 aria-hidden="true"
                 className={cn(
                   'float-left pt-1 pr-3 font-serif text-5xl leading-none font-normal md:text-6xl',
-                  isDark ? 'text-[#F8FAFC]' : 'text-[#29383D]',
+                  isDark ? 'text-[#F8FAFC]' : 'text-[#182624]',
                 )}
               >
                 {firstChar}
@@ -161,7 +161,7 @@ export const LessonView: FC<LessonViewProps> = ({
           {children}
         </div>
 
-        {/* Cột mục lục & chú giải bên phải: Sáng: bg-[#E1E9EA]/80 border-[#CFDADB] | Tối: bg-[#181C20] border-[#2A323A] */}
+        {/* Cột mục lục & chú giải bên phải: Sáng: bg-[#E7ECEA]/85 border-[#D8E0DD] | Tối: bg-[#181C20] border-[#2A323A] */}
         <aside
           data-sidenotes-column
           data-testid="scholar-sidenotes-column"
@@ -171,7 +171,7 @@ export const LessonView: FC<LessonViewProps> = ({
             isZen && 'pointer-events-none translate-x-8 opacity-0 lg:hidden',
             isDark
               ? 'border border-[#2A323A] bg-[#181C20] text-[#94A3B8]'
-              : 'border border-[#CFDADB] bg-[#E1E9EA]/80 text-[#29383D]',
+              : 'border border-[#D8E0DD] bg-[#E7ECEA]/85 text-[#182624]',
             sidebar ? 'lg:col-span-3' : 'lg:col-span-4',
           )}
         >

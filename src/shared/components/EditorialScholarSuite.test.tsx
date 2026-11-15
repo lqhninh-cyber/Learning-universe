@@ -26,7 +26,7 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     expect(feTurbulence).toHaveAttribute('stitchTiles', 'stitch');
   });
 
-  it('kết xuất bố cục bài đọc LessonView với 2 thanh điều hướng sticky, khung sáng bg-[#F7FAFA] rounded-3xl và mục lục bg-[#E1E9EA]/80', () => {
+  it('kết xuất bố cục bài đọc LessonView với 2 thanh điều hướng sticky, khung sáng bg-[#FAFBF9] rounded-3xl và mục lục bg-[#E7ECEA]/85', () => {
     render(
       <LessonView
         title="Định lý Lagrange và Cấp của Phần tử"
@@ -45,8 +45,8 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     );
 
     const grid = screen.getByTestId('asymmetric-scholar-grid');
-    expect(grid.className).toContain('bg-[#EAF0F1]');
-    expect(grid.className).toContain('text-[#29383D]');
+    expect(grid.className).toContain('bg-[#F2F4F3]');
+    expect(grid.className).toContain('text-[#182624]');
     expect(grid.className).toContain('lg:grid-cols-12');
 
     const sidebar = screen.getByLabelText('Danh mục chương bài');
@@ -56,16 +56,16 @@ describe('Editorial Scholar Suite (Hệ màu Giấy Dó đồng nhất)', () => 
     expect(sidebar.className).toContain('scrollbar-thin');
 
     const mainCol = screen.getByTestId('scholar-main-column');
-    expect(mainCol.className).toContain('bg-[#F7FAFA]');
+    expect(mainCol.className).toContain('bg-[#FAFBF9]');
     expect(mainCol.className).toContain('rounded-3xl');
-    expect(mainCol.className).toContain('border-[#CFDADB]');
+    expect(mainCol.className).toContain('border-[#D8E0DD]');
     expect(mainCol.className).toContain('shadow-sm');
 
     const sidenotesCol = screen.getByTestId('scholar-sidenotes-column');
-    expect(sidenotesCol.className).toContain('bg-[#E1E9EA]/80');
+    expect(sidenotesCol.className).toContain('bg-[#E7ECEA]/85');
     expect(sidenotesCol.className).toContain('backdrop-blur');
     expect(sidenotesCol.className).toContain('rounded-2xl');
-    expect(sidenotesCol.className).toContain('border-[#CFDADB]');
+    expect(sidenotesCol.className).toContain('border-[#D8E0DD]');
     expect(sidenotesCol.className).toContain('sticky');
     expect(sidenotesCol.className).toContain('top-24');
     expect(sidenotesCol.className).toContain('self-start');

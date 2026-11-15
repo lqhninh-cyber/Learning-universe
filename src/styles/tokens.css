@@ -6,40 +6,40 @@
 [data-theme='light'],
 [data-theme='mist-blue-sage'],
 [data-theme='bach-do'] {
-  /* LIGHT MODE (Semantic Tokens — Chuẩn WCAG & Sơn mài di sản) */
-  --bg-page: #f6f8f5;
-  --bg-surface: #ffffff;
-  --bg-sunken: #eef2ee;
-  --border-subtle: #dfe6e1;
-  --border-control: #739b88;
+  /* LIGHT MODE ("Bạch Ngọc Khoáng Thạch & Trắng Sứ Dịu" — Balanced Mineral & Soft Porcelain) */
+  --bg-page: #f2f4f3;
+  --bg-surface: #fafbf9;
+  --bg-subtle: #e7ecea;
+  --bg-sunken: #e7ecea;
+  --border-subtle: #d8e0dd;
+  --border-control: #6b847d;
 
-  --text-main: #141c18;
-  --text-muted: #4a5851;
+  --text-main: #182624;
+  --text-muted: #4a5d58;
 
   --gold-badge: #e5c378;
-  --gold-line: #c5a262;
-  --gold-text: #8a6a2f;
+  --gold-line: #9e845a;
+  --gold-text: #7a623c;
 
-  --indigo-link: #2e4a6b;
+  --indigo-link: #2d5266;
 
-  --cinnabar-text: #9e3d3d;
-  --cinnabar-bg: rgba(158, 61, 61, 0.08);
+  --cinnabar-text: #7a463b;
+  --cinnabar-bg: rgba(122, 70, 59, 0.055);
 
-  --shadow-editorial: 0 1px 2px rgba(18, 36, 28, 0.06), 0 8px 24px rgba(18, 36, 28, 0.06);
-  --selection-bg: #d6e4dc;
+  --shadow-editorial: 0 1px 2px rgba(24, 38, 36, 0.04), 0 8px 24px rgba(24, 38, 36, 0.05);
+  --selection-bg: #dbe6e2;
 
-  /* LIGHT MODE ("Mist Blue & Sage" compatibility) */
-  --bg-main: #eaf0f1;
-  --surface-primary: #f7fafa;
-  --surface-secondary: #e1e9ea;
-  --surface-tertiary: #d7e1e2;
-  --primary: #3f6570;
-  --primary-hover: #345761;
-  --secondary: #5e786d;
-  --accent: #92714f;
-  --text-primary: #29383d;
-  --text-secondary: #55676b;
-  --border-subtle: #cfdadb;
+  /* Compatibility tokens */
+  --bg-main: #f2f4f3;
+  --surface-primary: #fafbf9;
+  --surface-secondary: #e7ecea;
+  --surface-tertiary: #dce4e1;
+  --primary: #2d5266;
+  --primary-hover: #234152;
+  --secondary: #4a5d58;
+  --accent: #9e845a;
+  --text-primary: #182624;
+  --text-secondary: #4a5d58;
 
   /* Semantic Colors */
   --success: #4f7967;

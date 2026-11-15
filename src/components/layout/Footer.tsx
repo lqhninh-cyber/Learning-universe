@@ -13,8 +13,8 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
     'min-h-[44px] flex items-center px-2.5 text-[15px] font-medium whitespace-nowrap rounded-md',
     'transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]',
     'hover:-translate-y-0.5 active:scale-[0.98]',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4B47A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#152C26]',
-    isDarkLesson ? 'text-[#94A3B8] hover:text-[#D4B47A]' : 'text-[#C4D4CE] hover:text-[#D4B47A]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8AE7D] focus-visible:ring-offset-2 focus-visible:ring-offset-[#112624]',
+    isDarkLesson ? 'text-[#94A3B8] hover:text-[#C8AE7D]' : 'text-[#B8C7C2] hover:text-[#C8AE7D]',
   );
 
   return (
@@ -28,21 +28,20 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               '--lake-accent': '#C89738',
             } as React.CSSProperties)
           : ({
-              '--lake-deep': '#10241F',
-              '--lake-text': '#F4F1EA',
-              '--lake-text-muted': '#C4D4CE',
-              '--lake-accent': '#D4B47A',
-              background: 'linear-gradient(180deg, #10241F 0%, #152C26 100%)',
+              '--lake-deep': '#0D211D',
+              '--lake-text': '#EBF0EE',
+              '--lake-text-muted': '#B8C7C2',
+              '--lake-accent': '#C8AE7D',
+              background: 'linear-gradient(180deg, #0D211D 0%, #112624 100%)',
             } as React.CSSProperties)
       }
       className={cn(
-        'relative transition-colors duration-200',
-        isDarkLesson ? 'border-t border-[#2A323A] bg-[#16191D] text-[#E2E8F0]' : 'text-[#F4F1EA]',
+        'relative border-t transition-colors duration-200',
+        isDarkLesson
+          ? 'border-[#2A323A] bg-[#16191D] text-[#E2E8F0]'
+          : 'border-[#9E845A]/30 text-[#EBF0EE]',
       )}
     >
-      {/* Đường viền mảnh Vàng Đồng Dịu phân tách thanh thoát */}
-      {!isDarkLesson && <div aria-hidden="true" className="h-px w-full bg-[#B89762]/25" />}
-
       <Container size="wide" className="relative z-10 px-6 pt-7 pb-8 md:px-12 md:pb-10">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
           {/* Mobile Center Emblem */}
@@ -58,7 +57,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <span
                 className={cn(
                   'font-serif text-[20px] font-bold tracking-wide transition-colors lg:text-[22px]',
-                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#F4F1EA]',
+                  isDarkLesson ? 'text-[#F8FAFC]' : 'text-[#EBF0EE]',
                 )}
               >
                 Learning Universe
@@ -67,7 +66,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             <blockquote
               className={cn(
                 'max-w-[740px] font-serif text-[15.5px] leading-[1.8] italic transition-colors lg:text-[16.5px]',
-                isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#C4D4CE]',
+                isDarkLesson ? 'text-[#CBD5E1]' : 'text-[#B8C7C2]',
               )}
             >
               “Chúng ta phải học, phải cố gắng học nhiều. Không chịu khó học thì không tiến bộ được.
@@ -79,7 +78,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
               <cite
                 className={cn(
                   'mt-1.5 text-right font-mono text-[14.5px] font-medium not-italic transition-colors',
-                  isDarkLesson ? 'text-[#C89738]' : 'text-[#D4B47A]',
+                  isDarkLesson ? 'text-[#C89738]' : 'text-[#C8AE7D]',
                 )}
               >
                 — Chủ tịch Hồ Chí Minh
@@ -87,7 +86,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             </div>
           </div>
 
-          {/* Center Column: Ấn Chương Khuê Văn Hình Học (Desktop) */}
+          {/* Center Column: Ấn Chương Khuê Văn Tối Giản (Desktop) */}
           <div className="hidden shrink-0 items-center justify-center px-3 md:flex">
             <div data-testid="footer-brand-logo">
               <BrandLogo variant="emblem-only" size="lg" />
@@ -102,13 +101,13 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
             <Link to={ROUTES.home} className={footerLinkClass}>
               Trang chủ
             </Link>
-            <span className="text-[#B89762]/50 select-none" aria-hidden="true">
+            <span className="text-[#9E845A]/55 select-none" aria-hidden="true">
               ·
             </span>
             <Link to={ROUTES.learningSpace} className={footerLinkClass}>
               Không gian học tập
             </Link>
-            <span className="text-[#B89762]/50 select-none" aria-hidden="true">
+            <span className="text-[#9E845A]/55 select-none" aria-hidden="true">
               ·
             </span>
             <Link to={ROUTES.glossary} className={footerLinkClass}>
@@ -121,7 +120,7 @@ export function Footer({ isDarkLesson }: FooterProps = {}) {
         <div
           className={cn(
             'mt-6 flex flex-col items-center justify-between gap-2 border-t pt-4 font-mono text-[15px] font-medium transition-colors sm:flex-row',
-            isDarkLesson ? 'border-[#2A323A] text-[#94A3B8]' : 'border-[#B89762]/25 text-[#A9BEB6]',
+            isDarkLesson ? 'border-[#2A323A] text-[#94A3B8]' : 'border-[#9E845A]/25 text-[#B8C7C2]',
           )}
         >
           <p>Learning Universe. Bản quyền mở.</p>

@@ -32,35 +32,35 @@ interface AtlasCardPalette {
 }
 
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
-  cardBorder: 'border-[#E6DEC9] hover:border-[#7C552B]/60',
-  indexText: 'text-[#7C552B]',
-  badgeClass: 'border-[#DFD1B8] bg-[#F6F0E4] text-[#7C552B]',
-  titleHover: 'hover:text-[#7C552B]',
-  ctaClass: 'bg-[#7C552B] text-[#FAF6EF] hover:bg-[#664522]',
+  cardBorder: 'border-[#D8E0DD] hover:border-[#6B5335]/55',
+  indexText: 'text-[#6B5335]',
+  badgeClass: 'border-[#D8D0C0] bg-[#F3F0E8] text-[#6B5335]',
+  titleHover: 'hover:text-[#6B5335]',
+  ctaClass: 'bg-[#6B5335] text-[#FAFBF9] hover:bg-[#57432B]',
 };
 
 const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
   'cau-truc-dai-so': DEFAULT_ATLAS_PALETTE,
   'hinh-hoc-affine': {
-    cardBorder: 'border-[#D4E1EB] hover:border-[#2B5470]/60',
-    indexText: 'text-[#2B5470]',
-    badgeClass: 'border-[#C8D8E4] bg-[#ECF2F6] text-[#2B5470]',
-    titleHover: 'hover:text-[#2B5470]',
-    ctaClass: 'bg-[#2B5470] text-[#F5F9FC] hover:bg-[#214259]',
+    cardBorder: 'border-[#D8E0DD] hover:border-[#2D5266]/55',
+    indexText: 'text-[#2D5266]',
+    badgeClass: 'border-[#C9D7DF] bg-[#ECF1F4] text-[#2D5266]',
+    titleHover: 'hover:text-[#2D5266]',
+    ctaClass: 'bg-[#2D5266] text-[#FAFBF9] hover:bg-[#224050]',
   },
   'giai-tich-ham-mot-bien': {
-    cardBorder: 'border-[#CDE2D6] hover:border-[#235C47]/60',
-    indexText: 'text-[#235C47]',
-    badgeClass: 'border-[#C4DDD0] bg-[#EAF3EE] text-[#235C47]',
-    titleHover: 'hover:text-[#235C47]',
-    ctaClass: 'bg-[#235C47] text-[#F4FAF7] hover:bg-[#1B4938]',
+    cardBorder: 'border-[#D8E0DD] hover:border-[#245746]/55',
+    indexText: 'text-[#245746]',
+    badgeClass: 'border-[#C6DBD0] bg-[#EBF2EE] text-[#245746]',
+    titleHover: 'hover:text-[#245746]',
+    ctaClass: 'bg-[#245746] text-[#FAFBF9] hover:bg-[#1B4436]',
   },
   'giao-duc-hoc': {
-    cardBorder: 'border-[#E6D6CF] hover:border-[#8A483A]/60',
-    indexText: 'text-[#8A483A]',
-    badgeClass: 'border-[#DECAC1] bg-[#F6EEEB] text-[#8A483A]',
-    titleHover: 'hover:text-[#8A483A]',
-    ctaClass: 'bg-[#8A483A] text-[#FAF5F3] hover:bg-[#70392E]',
+    cardBorder: 'border-[#D8E0DD] hover:border-[#7A463B]/55',
+    indexText: 'text-[#7A463B]',
+    badgeClass: 'border-[#D8C8C1] bg-[#F3ECE9] text-[#7A463B]',
+    titleHover: 'hover:text-[#7A463B]',
+    ctaClass: 'bg-[#7A463B] text-[#FAFBF9] hover:bg-[#62372E]',
   },
 };
 
@@ -723,8 +723,8 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         className={cn(
                           'cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all',
                           isSelected
-                            ? 'bg-[#213B34] text-[#F6F4EE] shadow-2xs'
-                            : 'text-[#425650] hover:text-[#162923]',
+                            ? 'bg-[#1E332E] text-[#FAFBF9] shadow-2xs'
+                            : 'text-[#4A5D58] hover:text-[#182624]',
                         )}
                       >
                         {tab.label}
@@ -758,7 +758,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                       setActiveBranch('all');
                       onResetQuery();
                     }}
-                    className="mt-4 cursor-pointer rounded-xl bg-[#213B34] px-5 py-2.5 text-xs font-medium text-[#F6F4EE] transition-colors hover:bg-[#182C26]"
+                    className="mt-4 cursor-pointer rounded-xl bg-[#1E332E] px-5 py-2.5 text-xs font-medium text-[#FAFBF9] transition-colors hover:bg-[#182624]"
                   >
                     Khôi phục bộ lọc
                   </button>
@@ -785,7 +785,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         <article
                           style={{ viewTransitionName: `subject-card-${subject.slug}` }}
                           className={cn(
-                            'group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-[#FCFBF7] p-6 shadow-xs transition-all duration-500 sm:p-8',
+                            'group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border bg-[#FAFBF9] p-6 shadow-xs transition-all duration-500 sm:p-8',
                             palette.cardBorder,
                           )}
                         >
@@ -808,7 +808,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               </span>
                             </div>
 
-                            <span className="font-mono text-[11px] text-[#526B63]">
+                            <span className="font-mono text-[11px] text-[#4A5D58]">
                               {stats.chapterCount} chương · {stats.lessonCount} bài giảng
                             </span>
                           </div>
@@ -817,7 +817,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
 
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#162923] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
+                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.65rem]">
                                 <Link
                                   to={ROUTES.subjectOverview(subject.slug)}
                                   className={cn('transition-colors', palette.titleHover)}
@@ -825,13 +825,13 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   {subject.title}
                                 </Link>
                               </h3>
-                              <p className="line-clamp-3 text-sm leading-relaxed text-[#3D534B]">
+                              <p className="line-clamp-3 text-sm leading-relaxed text-[#4A5D58]">
                                 {asset.conciseDescription}
                               </p>
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#E6E2D8] pt-4">
-                              <span className="line-clamp-1 font-mono text-[11px] text-[#526B63]">
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#D8E0DD] pt-4">
+                              <span className="line-clamp-1 font-mono text-[11px] text-[#4A5D58]">
                                 {asset.visualMetaphor}
                               </span>
 
@@ -894,7 +894,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                       <div className="space-y-6">
                         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-5">
                           <div className="flex flex-wrap items-center gap-2.5">
-                            <span className="rounded-lg bg-[#EBECE6] px-3 py-1 font-mono text-xs font-semibold text-[#365E4E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
+                            <span className="rounded-lg bg-[#E7ECEA] px-3 py-1 font-mono text-xs font-semibold text-[#1E332E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
                               {
                                 getCourseCinematicAsset(activeRecentLesson.subject.slug)
                                   .categoryLabel

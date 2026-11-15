@@ -10,13 +10,13 @@
 
 :root {
   --lu-reading-size: clamp(18px, 1.12vw, 20px);
-  --lu-reading-line-height: 1.9;
+  --lu-reading-line-height: 1.8;
 }
 
 @media (min-width: 1024px) {
   :root {
     --lu-reading-size: clamp(18px, 1.12vw, 20px);
-    --lu-reading-line-height: 1.9;
+    --lu-reading-line-height: 1.8;
   }
 }
 
@@ -27,42 +27,42 @@
 
 [data-reading-size='base'] {
   --lu-reading-size: clamp(18px, 1.12vw, 20px);
-  --lu-reading-line-height: 1.9;
+  --lu-reading-line-height: 1.8;
 }
 
 @media (min-width: 1024px) {
   [data-reading-size='base'] {
     --lu-reading-size: clamp(18px, 1.12vw, 20px);
-    --lu-reading-line-height: 1.9;
+    --lu-reading-line-height: 1.8;
   }
 }
 
 [data-reading-size='lg'],
 .reader-scale-lg {
   --lu-reading-size: 20.5px;
-  --lu-reading-line-height: 1.9;
+  --lu-reading-line-height: 1.85;
 }
 
 @media (min-width: 1024px) {
   [data-reading-size='lg'],
   .reader-scale-lg {
     --lu-reading-size: 20.5px;
-    --lu-reading-line-height: 1.9;
+    --lu-reading-line-height: 1.85;
   }
 }
 
 [data-reading-size='xl'] {
   --lu-reading-size: 22px;
-  --lu-reading-line-height: 1.95;
+  --lu-reading-line-height: 1.85;
 }
 
 .lu-prose,
 .lesson-content {
   font-family: var(--font-serif);
   max-width: 100%;
-  color: #18221d;
+  color: var(--text-primary, #182624);
   font-size: var(--lu-reading-size, 18.5px);
-  line-height: var(--lu-reading-line-height, 1.9);
+  line-height: var(--lu-reading-line-height, 1.8);
 }
 
 .lu-prose > * + *,
@@ -74,8 +74,8 @@
 .lesson-content p {
   text-wrap: pretty;
   font-size: var(--lu-reading-size, 18.5px);
-  line-height: var(--lu-reading-line-height, 1.9);
-  color: #18221d;
+  line-height: var(--lu-reading-line-height, 1.8);
+  color: var(--text-primary, #182624);
   margin-bottom: 1rem;
 }
 

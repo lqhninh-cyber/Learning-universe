@@ -51,9 +51,9 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(header?.className).toContain('w-[min(94vw,1520px)]');
     expect(header?.className).toContain('sticky');
 
-    // Logo Ấn Chương Khuê Văn Hình Học tối giản (vuông bo góc rx=8 nền #1D332E, không gradient/quỹ đạo thừa)
+    // Logo Ấn Chương Khuê Văn Hình Học tối giản (vuông bo góc rx=8 nền #1E332E, không gradient/quỹ đạo thừa)
     const brandSvg = container.querySelector('header svg[aria-hidden="true"]');
-    expect(brandSvg?.querySelector('rect[rx="8"]')).toHaveAttribute('fill', '#1D332E');
+    expect(brandSvg?.querySelector('rect[rx="8"]')).toHaveAttribute('fill', '#1E332E');
     expect(brandSvg?.querySelectorAll('ellipse').length).toBe(0);
     expect(brandSvg?.querySelectorAll('linearGradient').length).toBe(0);
 
@@ -65,10 +65,10 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(screen.queryByRole('link', { name: 'Tất cả môn học' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thuật ngữ' })).toBeInTheDocument();
 
-    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Xanh Đá Phiến Dịu (#213B34)
+    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Xanh Đá Phiến Trầm (#1E332E)
     const homeLink = screen.getByRole('link', { name: 'Trang chủ' });
     expect(homeLink.className).toContain('rounded-full');
-    expect(homeLink.className).toContain('bg-[#213B34]');
+    expect(homeLink.className).toContain('bg-[#1E332E]');
   });
 
   it('hiển thị chip "Học tiếp" từ bài học gần nhất trên Trang chủ và luân phiên gợi ý tìm kiếm mỗi 4 giây', () => {

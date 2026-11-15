@@ -25,11 +25,11 @@ interface SatelliteSpec {
   readonly phase: number;
 }
 
-// 4 vệ tinh mang sắc thái Pastel Khoáng Vật của 4 môn học
+// 4 vệ tinh Khoáng Thạch Tự Nhiên (Muted Mineral Palette) của 4 môn học
 const SATELLITES: readonly SatelliteSpec[] = [
   {
-    color: '#7C552B',
-    glow: 'rgba(184, 132, 64, 0.22)',
+    color: '#6B5335',
+    glow: 'rgba(156, 122, 76, 0.20)',
     radius: 0.37,
     tiltX: 0.48,
     tiltZ: 0.32,
@@ -37,8 +37,8 @@ const SATELLITES: readonly SatelliteSpec[] = [
     phase: 0.2,
   },
   {
-    color: '#3E6B7E',
-    glow: 'rgba(62, 107, 126, 0.22)',
+    color: '#2D5266',
+    glow: 'rgba(73, 118, 143, 0.20)',
     radius: 0.41,
     tiltX: -0.64,
     tiltZ: -0.45,
@@ -46,8 +46,8 @@ const SATELLITES: readonly SatelliteSpec[] = [
     phase: 2.1,
   },
   {
-    color: '#235C47',
-    glow: 'rgba(35, 92, 71, 0.20)',
+    color: '#245746',
+    glow: 'rgba(59, 122, 101, 0.18)',
     radius: 0.34,
     tiltX: 0.92,
     tiltZ: -0.22,
@@ -55,8 +55,8 @@ const SATELLITES: readonly SatelliteSpec[] = [
     phase: 4.0,
   },
   {
-    color: '#8A483A',
-    glow: 'rgba(138, 72, 58, 0.20)',
+    color: '#7A463B',
+    glow: 'rgba(158, 99, 86, 0.18)',
     radius: 0.43,
     tiltX: -0.25,
     tiltZ: 0.78,
@@ -120,11 +120,11 @@ const ICO_EDGES: readonly (readonly [number, number])[] = [
 ];
 
 const FLOATING_SYMBOLS = [
-  { char: 'Σ', x: 0.14, y: 0.2, phase: 0.4, depth: 1.1, color: 'rgba(166, 130, 75, 0.56)' },
-  { char: '∫', x: 0.86, y: 0.24, phase: 1.7, depth: 0.9, color: 'rgba(35, 66, 58, 0.50)' },
-  { char: '∀', x: 0.16, y: 0.8, phase: 2.9, depth: 1.0, color: 'rgba(62, 107, 126, 0.52)' },
-  { char: 'π', x: 0.84, y: 0.78, phase: 4.1, depth: 1.15, color: 'rgba(166, 130, 75, 0.52)' },
-  { char: '≅', x: 0.52, y: 0.11, phase: 5.2, depth: 0.8, color: 'rgba(35, 66, 58, 0.46)' },
+  { char: 'Σ', x: 0.14, y: 0.2, phase: 0.4, depth: 1.1, color: 'rgba(140, 114, 72, 0.54)' },
+  { char: '∫', x: 0.86, y: 0.24, phase: 1.7, depth: 0.9, color: 'rgba(36, 62, 56, 0.48)' },
+  { char: '∀', x: 0.16, y: 0.8, phase: 2.9, depth: 1.0, color: 'rgba(59, 98, 117, 0.50)' },
+  { char: 'π', x: 0.84, y: 0.78, phase: 4.1, depth: 1.15, color: 'rgba(140, 114, 72, 0.50)' },
+  { char: '≅', x: 0.52, y: 0.11, phase: 5.2, depth: 0.8, color: 'rgba(36, 62, 56, 0.44)' },
 ] as const;
 
 function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
@@ -318,7 +318,7 @@ export function LearningSpaceHeroCanvas() {
       ctx.fillStyle = coreGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // 3 Vòng Quỹ đạo Khuê Văn: Xanh Đá Phiến (#23423A), Vàng Đồng Trầm (#A6824B), Lam Khói (#3E6B7E)
+      // 3 Vòng Quỹ đạo Khuê Văn: #243E38, #8C7248, #3B6275
       drawArmillaryRing(
         ctx,
         cx,
@@ -328,7 +328,7 @@ export function LearningSpaceHeroCanvas() {
         0.95 + smoothY * 0.14,
         time * 0.18 + smoothX * 0.16,
         0.25,
-        '#23423A',
+        '#243E38',
         true,
       );
       drawArmillaryRing(
@@ -340,7 +340,7 @@ export function LearningSpaceHeroCanvas() {
         -0.78 + smoothY * 0.12,
         -time * 0.24 + smoothX * 0.14,
         0.82,
-        '#A6824B',
+        '#8C7248',
         false,
       );
       drawArmillaryRing(
@@ -352,7 +352,7 @@ export function LearningSpaceHeroCanvas() {
         0.38 - smoothY * 0.1,
         time * 0.31,
         -0.65 + time * 0.1,
-        '#3E6B7E',
+        '#3B6275',
         false,
       );
 
@@ -376,7 +376,7 @@ export function LearningSpaceHeroCanvas() {
         ctx.beginPath();
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
-        ctx.strokeStyle = avgZ > 0 ? '#23423A' : '#A6824B';
+        ctx.strokeStyle = avgZ > 0 ? '#243E38' : '#8C7248';
         ctx.globalAlpha = avgZ > 0 ? 0.8 : 0.34;
         ctx.lineWidth = avgZ > 0 ? 1.25 : 0.8;
         ctx.stroke();
@@ -385,20 +385,20 @@ export function LearningSpaceHeroCanvas() {
       for (const pt of projectedVerts) {
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, pt.z > 0 ? 2.2 : 1.4, 0, Math.PI * 2);
-        ctx.fillStyle = pt.z > 0 ? '#23423A' : '#A6824B';
+        ctx.fillStyle = pt.z > 0 ? '#243E38' : '#8C7248';
         ctx.globalAlpha = pt.z > 0 ? 0.9 : 0.45;
         ctx.fill();
       }
       ctx.globalAlpha = 1;
 
-      // Điểm tâm Vàng Đồng Trầm thanh lịch
+      // Điểm tâm Đồng Trầm thanh lịch
       ctx.beginPath();
       ctx.arc(cx, cy, 4, 0, Math.PI * 2);
-      ctx.fillStyle = '#A6824B';
+      ctx.fillStyle = '#8C7248';
       ctx.fill();
       ctx.beginPath();
       ctx.arc(cx, cy, 1.7, 0, Math.PI * 2);
-      ctx.fillStyle = '#F6F4EE';
+      ctx.fillStyle = '#FAFBF9';
       ctx.fill();
 
       // 4 Vệ tinh Pastel Khoáng Vật của 4 học phần
@@ -489,14 +489,14 @@ export function LearningSpaceHeroCanvas() {
         className="pointer-events-none absolute inset-0 m-auto h-[260px] w-[260px] opacity-30"
         fill="none"
       >
-        <circle cx="160" cy="160" r="124" stroke="#A6824B" strokeWidth="1" strokeDasharray="4 6" />
+        <circle cx="160" cy="160" r="124" stroke="#8C7248" strokeWidth="1" strokeDasharray="4 6" />
         <ellipse
           cx="160"
           cy="160"
           rx="116"
           ry="52"
           transform="rotate(-24 160 160)"
-          stroke="#23423A"
+          stroke="#243E38"
           strokeWidth="1"
         />
         <ellipse
@@ -505,10 +505,10 @@ export function LearningSpaceHeroCanvas() {
           rx="112"
           ry="48"
           transform="rotate(34 160 160)"
-          stroke="#3E6B7E"
+          stroke="#3B6275"
           strokeWidth="1"
         />
-        <circle cx="160" cy="160" r="4" fill="#A6824B" />
+        <circle cx="160" cy="160" r="4" fill="#8C7248" />
       </svg>
 
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full" />

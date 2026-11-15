@@ -8,31 +8,31 @@
    ============================================================================ */
 
 :root {
-  --kb-def-accent: #264a8a;
-  --kb-def-bg: rgba(233, 239, 249, 0.36);
-  --kb-def-header-bg: #e9eff9;
-  --kb-def-border: #c5d4ee;
-  --kb-def-pill-bg: #dce6f7;
-  --kb-def-pill-text: #1b3668;
+  --kb-def-accent: #2d5266;
+  --kb-def-bg: rgba(45, 82, 102, 0.038);
+  --kb-def-header-bg: rgba(45, 82, 102, 0.055);
+  --kb-def-border: #c9d7df;
+  --kb-def-pill-bg: rgba(45, 82, 102, 0.09);
+  --kb-def-pill-text: #223f4f;
 
-  --kb-thm-accent: #9b2c3d;
-  --kb-thm-bg: rgba(251, 234, 237, 0.36);
-  --kb-thm-header-bg: #fbeaed;
-  --kb-thm-border: #ecc5cc;
-  --kb-thm-pill-bg: #f7d9df;
-  --kb-thm-pill-text: #7a1e2c;
+  --kb-thm-accent: #7a463b;
+  --kb-thm-bg: rgba(122, 70, 59, 0.038);
+  --kb-thm-header-bg: rgba(122, 70, 59, 0.055);
+  --kb-thm-border: #d8c8c1;
+  --kb-thm-pill-bg: rgba(122, 70, 59, 0.09);
+  --kb-thm-pill-text: #61372e;
 
-  --kb-ex-accent: #25694c;
-  --kb-ex-bg: #f4faf6;
-  --kb-ex-header-bg: #e8f4ee;
-  --kb-ex-border: #bee0ce;
-  --kb-ex-pill-bg: #d7ede1;
-  --kb-ex-pill-text: #1a4e38;
+  --kb-ex-accent: #245746;
+  --kb-ex-bg: rgba(36, 87, 70, 0.035);
+  --kb-ex-header-bg: rgba(36, 87, 70, 0.055);
+  --kb-ex-border: #c6dbd0;
+  --kb-ex-pill-bg: rgba(36, 87, 70, 0.09);
+  --kb-ex-pill-text: #1b4336;
 
-  --kb-proof-border: var(--border-subtle, #cfdadb);
-  --kb-proof-bg: rgba(247, 250, 250, 0.65);
-  --kb-proof-label: #475569;
-  --kb-proof-target: #334155;
+  --kb-proof-border: var(--border-subtle, #d8e0dd);
+  --kb-proof-bg: rgba(231, 236, 234, 0.36);
+  --kb-proof-label: #4a5d58;
+  --kb-proof-target: #182624;
 }
 
 .dark,
@@ -154,13 +154,13 @@
 .semantic-block-body,
 .ex-block-body {
   font-size: 18px;
-  line-height: 1.85;
+  line-height: 1.8;
 }
 
 .semantic-block-body p,
 .ex-block-body p {
   font-size: 18px;
-  line-height: 1.85;
+  line-height: 1.8;
 }
 
 .semantic-block-body p:not(:last-child),

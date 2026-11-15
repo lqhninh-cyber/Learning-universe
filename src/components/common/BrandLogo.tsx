@@ -7,7 +7,7 @@ export interface BrandLogoProps {
   readonly size?: 'sm' | 'md' | 'lg' | 'xl';
   readonly isDark?: boolean;
   readonly isSepia?: boolean;
-  /** Tham chiếu SVG ngoài (tùy chọn cho hiệu ứng xoay nhẹ theo scroll ở Header) */
+  /** Tham chiếu SVG ngoài (tùy chọn) */
   readonly svgRef?: RefObject<SVGSVGElement | null>;
   readonly className?: string;
   readonly 'aria-label'?: string;
@@ -21,11 +21,10 @@ const SIZE_CLASSES = {
 } as const;
 
 /**
- * ẤN CHƯƠNG KHUÊ VĂN HÌNH HỌC (MINIMALIST GEOMETRIC SEAL)
+ * MONOLINE GEOMETRIC MARK — ẤN CHƯƠNG KHUÊ VĂN TỐI GIẢN
  *
- * - Khung ngoài: Hình vuông bo góc mềm (rx="8") nền Xanh Đá Phiến Trầm (#1D332E), viền mảnh Vàng Đồng Dịu (#B89762).
- * - Tâm điểm: Vòng tròn Cửa sổ Khuê Văn lồng hình thoi mảnh và Ngôi Sao Khuê 4 cánh đối xứng
- *   bằng nét đơn (#EAE0C8, strokeWidth 1.6) cùng điểm tâm nhỏ màu Vàng Đồng Dịu (#B89762).
+ * - Khung vuông bo góc mềm (rx="8") nền Đá Phiến Trầm (#1E332E), viền nhẫn mảnh Đồng Trầm (#9E845A).
+ * - Tâm điểm: Vòng tròn đồng tâm lồng Ngôi Sao Khuê 4 cánh mảnh đối xứng nét đơn Ngà Sáng (#EDF2F0).
  */
 export const BrandLogo: FC<BrandLogoProps> = ({
   variant = 'emblem-only',
@@ -53,40 +52,34 @@ export const BrandLogo: FC<BrandLogoProps> = ({
           'shrink-0 transition-transform duration-300 ease-out group-hover:scale-[1.03]',
         )}
       >
-        {/* Khung ngoài hình vuông bo góc mềm rx="8" nền #1D332E viền mảnh #B89762 */}
+        {/* Khung vuông bo góc mềm rx="8" màu Đá Phiến Trầm (#1E332E) viền mảnh Đồng Trầm (#9E845A) */}
         <rect
           x="1.5"
           y="1.5"
           width="33"
           height="33"
           rx="8"
-          fill="#1D332E"
-          stroke="#B89762"
+          fill="#1E332E"
+          stroke="#9E845A"
           strokeWidth="1.2"
         />
 
-        {/* Vòng tròn Cửa sổ Khuê Văn chuẩn mực */}
-        <circle cx="18" cy="18" r="10.2" stroke="#EAE0C8" strokeWidth="1.6" />
+        {/* Viền nhẫn đồng tâm mảnh Đồng Trầm (#9E845A) */}
+        <circle cx="18" cy="18" r="11.2" stroke="#9E845A" strokeWidth="0.9" strokeOpacity="0.85" />
 
-        {/* Hình thoi mảnh lồng bên trong vòng tròn */}
-        <polygon
-          points="18,7.8 28.2,18 18,28.2 7.8,18"
-          stroke="#EAE0C8"
-          strokeWidth="0.95"
-          strokeOpacity="0.65"
-          strokeLinejoin="round"
-        />
+        {/* Vòng tròn Cửa sổ Khuê Văn nét đơn Ngà Sáng (#EDF2F0) */}
+        <circle cx="18" cy="18" r="8.8" stroke="#EDF2F0" strokeWidth="1.45" />
 
-        {/* Ngôi Sao Khuê 4 cánh đối xứng thanh mảnh bằng nét đơn */}
+        {/* Ngôi Sao Khuê 4 cánh mảnh đối xứng nét đơn Ngà Sáng (#EDF2F0) */}
         <path
-          d="M18 10.2 L20.1 15.9 L25.8 18 L20.1 20.1 L18 25.8 L15.9 20.1 L10.2 18 L15.9 15.9 Z"
-          stroke="#EAE0C8"
-          strokeWidth="1.6"
+          d="M18 9.4 L20 16 L26.6 18 L20 20 L18 26.6 L16 20 L9.4 18 L16 16 Z"
+          stroke="#EDF2F0"
+          strokeWidth="1.45"
           strokeLinejoin="round"
         />
 
-        {/* Điểm tâm tròn nhỏ Vàng Đồng Dịu (#B89762) */}
-        <circle cx="18" cy="18" r="1.9" fill="#B89762" />
+        {/* Tâm điểm nhỏ Đồng Trầm (#9E845A) */}
+        <circle cx="18" cy="18" r="1.4" fill="#9E845A" />
       </svg>
 
       {variant === 'full' && (
@@ -95,10 +88,10 @@ export const BrandLogo: FC<BrandLogoProps> = ({
             className={cn(
               'text-[14px] font-extrabold tracking-[0.16em] uppercase transition-colors',
               isDark
-                ? 'text-[#EAE0C8]'
+                ? 'text-[#EBF0EE]'
                 : isSepia
-                  ? 'text-[#1D332E]'
-                  : 'text-[#1D332E] dark:text-[#EAE0C8]',
+                  ? 'text-[#182624]'
+                  : 'text-[#182624] dark:text-[#EBF0EE]',
             )}
           >
             LEARNING
@@ -107,10 +100,10 @@ export const BrandLogo: FC<BrandLogoProps> = ({
             className={cn(
               'mt-1 text-[10.5px] font-bold tracking-[0.26em] uppercase transition-colors',
               isDark
-                ? 'text-[#D4B47A]'
+                ? 'text-[#9EC5B8]'
                 : isSepia
-                  ? 'text-[#1D332E]'
-                  : 'text-[#1D332E] dark:text-[#D4B47A]',
+                  ? 'text-[#4A5D58]'
+                  : 'text-[#1E332E] dark:text-[#9EC5B8]',
             )}
           >
             UNIVERSE
