@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import {
@@ -87,7 +87,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
       expect(screen.getByText(/DI SẢN HỌC THUẬT & NGHỆ THUẬT/i)).toBeInTheDocument();
-      expect(screen.getByText(/01 \/ 30/i)).toBeInTheDocument();
+      expect(screen.getByText(/01 \/ 32/i)).toBeInTheDocument();
 
       // Tác phẩm 1 mặc định: Khuê Văn Các (không chứa Hán tự)
       expect(screen.getByRole('heading', { name: /Khuê Văn Các/i })).toBeInTheDocument();
@@ -159,8 +159,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(artwork2Button).toBeInTheDocument();
     });
 
-    it('chứa toàn bộ 30 tác phẩm di sản đích thực theo yêu cầu (Khuê Văn Các đầu tiên)', () => {
-      expect(HERITAGE_ARTWORKS).toHaveLength(30);
+    it('chứa toàn bộ 32 tác phẩm di sản đích thực theo yêu cầu (Khuê Văn Các đầu tiên)', () => {
+      expect(HERITAGE_ARTWORKS).toHaveLength(32);
       const ids = HERITAGE_ARTWORKS.map((a) => a.id);
       expect(ids).toEqual([
         'khue-van-cac',
@@ -180,19 +180,21 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         'chua-mot-cot-1049',
         'dai-thanh-toan-phap',
         'lap-thanh-toan-phap',
-        'chua-mot-cot-lien-hoa-dai',
+        'thap-but-dai-nghien-1865',
         'ngo-mon-dien-thai-hoa',
         'cuu-dinh-hoang-cung-hue',
-        'hong-duc-ban-do-1490',
+        'truong-quoc-hoc-hue-1896',
         'hoang-thanh-thang-long',
         'thap-cham-my-son',
         'thap-pho-minh',
         'rhind-mathematical-papyrus',
         'archimedes-palimpsest',
-        'al-jabr-khwarizmi',
+        'gac-chuong-chua-keo-1632',
         'la-geometrie-descartes',
         'principia-mathematica-newton',
         'disquisitiones-arithmeticae-gauss',
+        'moc-ban-quoc-tu-giam-trieu-nguyen',
+        'dai-hoc-dong-duong-1906',
       ]);
 
       const ngocLu = HERITAGE_ARTWORKS.find((a) => a.id === 'trong-dong-ngoc-lu');
@@ -201,12 +203,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(ngocLu?.imageSrc).not.toContain('.svg');
     });
 
-    it('hiển thị bộ đếm tác phẩm dạng 01 / 30', () => {
+    it('hiển thị bộ đếm tác phẩm dạng 01 / 32', () => {
       render(<HeritageArtShowcase />);
-      expect(screen.getByText('01 / 30')).toBeInTheDocument();
+      expect(screen.getByText('01 / 32')).toBeInTheDocument();
     });
 
-    it('hiển thị SVG minh họa học thuật sắc nét khi ảnh 03 / 30 (Melencolia I) gặp lỗi tải và khóa chữ tương phản cao', async () => {
+    it('hiển thị SVG minh họa học thuật sắc nét khi ảnh 03 / 32 (Melencolia I) gặp lỗi tải và khóa chữ tương phản cao', async () => {
       render(<HeritageArtShowcase />);
 
       const art3Dot = screen.getByRole('button', {
@@ -214,7 +216,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       });
       fireEvent.click(art3Dot);
 
-      expect(await screen.findByText('03 / 30')).toBeInTheDocument();
+      expect(await screen.findByText('03 / 32')).toBeInTheDocument();
       const heading = screen.getByRole('heading', { name: /Melencolia I/i });
       expect(heading.className).toContain('text-[#F8F6F0]');
 
@@ -433,7 +435,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
     });
 
-    it('HomePage tái cấu trúc 3 màn hình: Toàn cảnh Lam Ngọc Hoàng Kim -> Bảo tàng Di sản 3 tầng -> Hồ Sen Đêm', () => {
+    it('HomePage tái cấu trúc 3 màn hình: Toàn cảnh Lam Ngọc Hoàng Kim -> Bảo tàng Di sản 3 tầng -> Hồ Sen Đêm', async () => {
       render(
         <MemoryRouter>
           <HomePage />
@@ -490,24 +492,40 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
       expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-      // Không còn dải lọc phân loại cũ; thay bằng Thanh Điều Khiển Trình Chiếu Trung Tâm + Filmstrip 30 tác phẩm
+      // Không còn dải lọc phân loại cũ; thay bằng Thanh Điều Khiển Trình Chiếu Trung Tâm + Filmstrip 32 tác phẩm
       expect(
         screen.queryByRole('tablist', { name: /Phân loại tác phẩm di sản/i }),
       ).not.toBeInTheDocument();
 
+      // Bảo đảm 32 tác phẩm không trùng id, tiêu đề hay imageSrc
+      expect(HERITAGE_ARTWORKS).toHaveLength(32);
+      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.id)).size).toBe(32);
+      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.title)).size).toBe(32);
+      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.imageSrc)).size).toBe(32);
+
       const controlBar = screen.getByTestId('heritage-control-bar');
       expect(controlBar).toBeInTheDocument();
-      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 30');
+      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 32');
       expect(screen.getByRole('button', { name: /Tác phẩm trước/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Tác phẩm tiếp/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cuộn danh mục sang trái/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cuộn danh mục sang phải/i })).toBeInTheDocument();
 
-      // Chọn trực tiếp tác phẩm thứ 30 (Gauss) trên dải Filmstrip & mở Lightbox
-      const gaussBtn = screen.getByRole('button', {
-        name: /Chọn tác phẩm 30: Disquisitiones/i,
+      // Kiểm tra mục 16 (Đại thành Toán pháp) dùng bản vẽ điển tịch Giấy Dó SVG nội bộ (không ảnh thẻ tre)
+      const daiThanhBtn = screen.getByRole('button', {
+        name: /Chọn tác phẩm 16: Đại thành Toán pháp/i,
       });
-      fireEvent.click(gaussBtn);
+      fireEvent.click(daiThanhBtn);
+      expect(await screen.findByTestId('heritage-svg-fallback')).toBeInTheDocument();
+
+      // Chọn trực tiếp tác phẩm thứ 32 (Đại học Đông Dương 1906) trên dải Filmstrip & mở Lightbox
+      const dongDuongBtn = screen.getByRole('button', {
+        name: /Chọn tác phẩm 32: Đại học Đông Dương/i,
+      });
+      fireEvent.click(dongDuongBtn);
+      await waitFor(() => {
+        expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('32 / 32');
+      });
       fireEvent.click(screen.getByRole('button', { name: /Phóng to tác phẩm/i }));
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: /Đóng xem toàn màn hình/i }));

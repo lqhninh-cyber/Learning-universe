@@ -13,6 +13,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   HERITAGE_ARTWORKS,
   HeritageFallbackIllustration,
+  isHeritageInlineSvg,
   type HeritageArtwork,
 } from '@/components/home/HeritageArtShowcase';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
@@ -38,6 +39,7 @@ function FilmstripThumbnailButton({
 }: FilmstripItemProps) {
   const [thumbError, setThumbError] = useState(false);
   const numStr = String(displayIndex + 1).padStart(2, '0');
+  const showInlineSvg = thumbError || isHeritageInlineSvg(artwork);
 
   return (
     <button
@@ -49,19 +51,20 @@ function FilmstripThumbnailButton({
         'group relative flex w-[136px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-xl border text-left transition-all duration-250 focus-visible:ring-2 focus-visible:ring-[#E5C158] focus-visible:outline-none sm:w-[152px]',
         isActive
           ? 'border-[#E5C158] bg-[#C9A45C]/18 shadow-[0_0_24px_rgba(229,193,88,0.24)]'
-          : 'border-[#C9A45C]/22 bg-[#05100D]/80 opacity-80 hover:border-[#C9A45C]/55 hover:opacity-100',
+          : 'border-[#C9A45C]/22 bg-[#0D1622]/85 opacity-85 hover:border-[#C9A45C]/55 hover:opacity-100',
       )}
     >
-      <div className="relative h-20 w-full overflow-hidden bg-[#040D0A]">
-        {thumbError ? (
-          <div className="flex h-full w-full items-center justify-center bg-[#091A15]">
-            <Landmark className="h-5 w-5 text-[#E5C158]/75" aria-hidden="true" />
+      <div className="relative h-20 w-full overflow-hidden bg-[#10212E]">
+        {showInlineSvg ? (
+          <div className="h-full w-full">
+            <HeritageFallbackIllustration artwork={artwork} compact />
           </div>
         ) : (
           <img
             src={artwork.imageSrc}
             alt=""
             loading="lazy"
+            decoding="async"
             referrerPolicy="no-referrer"
             onError={() => setThumbError(true)}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -360,10 +363,10 @@ export function HeritageExhibitionPavilion() {
               onMouseLeave={handleFrameMouseLeave}
               className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#D4A853]/40 bg-[#0D1622] p-4 shadow-[0_24px_60px_rgba(0,0,0,0.45)] transition-colors duration-300 hover:border-[#E5B85B]/75"
             >
-              {imageError ? (
+              {imageError || isHeritageInlineSvg(currentArtwork) ? (
                 <div
                   data-testid="heritage-svg-fallback"
-                  className="flex h-full w-full items-center justify-center p-2"
+                  className="h-full w-full overflow-hidden rounded-xl"
                 >
                   <HeritageFallbackIllustration artwork={currentArtwork} />
                 </div>
@@ -372,6 +375,7 @@ export function HeritageExhibitionPavilion() {
                   ref={imgMotionRef}
                   src={currentArtwork.imageSrc}
                   alt={currentArtwork.alt}
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   onError={() => setImageError(true)}
                   style={{ backfaceVisibility: 'hidden' }}
@@ -631,8 +635,8 @@ export function HeritageExhibitionPavilion() {
             </div>
 
             <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-xl bg-black/45 p-2">
-              {imageError ? (
-                <div className="flex h-[55vh] w-full items-center justify-center">
+              {imageError || isHeritageInlineSvg(currentArtwork) ? (
+                <div className="aspect-[16/10] w-full max-w-4xl overflow-hidden rounded-lg">
                   <HeritageFallbackIllustration artwork={currentArtwork} />
                 </div>
               ) : (

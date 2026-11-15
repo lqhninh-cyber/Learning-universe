@@ -1,5 +1,5 @@
 import { BookOpen, ChevronLeft, ChevronRight, Landmark, Pause, Play, X } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
@@ -37,8 +37,8 @@ export interface HeritageArtwork {
 }
 
 /**
- * 30 Kiệt tác nghệ thuật, di sản kiến trúc & tư liệu lịch sử đích thực đại diện cho
- * sự giao hòa giữa Toán học, Hình học, Thiên văn, Triết học và Nghệ thuật Sư phạm.
+ * 32 Kiệt tác nghệ thuật, di sản văn hóa – giáo dục Việt Nam & tư liệu khoa học kinh điển
+ * đại diện cho sự giao hòa giữa Toán học, Hình học, Thiên văn, Triết học và Nghệ thuật Sư phạm.
  */
 export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   {
@@ -261,10 +261,9 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
   {
     id: 'ban-do-hong-duc',
     category: 'vietnam-heritage',
-    shortTitle: 'Bản đồ Hồng Đức',
-    title: 'Bản đồ Hồng Đức (Hồng Đức bản đồ, 1490)',
-    originalTitle:
-      'Hồng Đức bản đồ sách (洪德版圖冊 — Bản đồ Thăng Long kinh thành & 13 thừa tuyên)',
+    shortTitle: 'Hồng Đức Bản Đồ',
+    title: 'Hồng Đức Bản Đồ (1490)',
+    originalTitle: 'Hồng Đức Bản Đồ Sách — Bản đồ Thăng Long kinh thành & 13 thừa tuyên',
     artistOrOrigin: 'Triều đình Lê sơ (Bộ Lễ & Hàn lâm viện)',
     yearOrEra: '1490 · Triều Lê Thánh Tông, Đại Việt',
     eraAndPeriod: '1490 · Thăng Long, Đại Việt (Niên hiệu Hồng Đức thứ 21)',
@@ -348,7 +347,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     id: 'chua-mot-cot-1049',
     category: 'vietnam-heritage',
     shortTitle: 'Chùa Một Cột',
-    title: 'Kiến trúc Chùa Một Cột (Diên Hựu Tự, 1049)',
+    title: 'Chùa Một Cột — Liên Hoa Đài (1049)',
     originalTitle: 'Diên Hựu Tự — Liên Hoa Đài (Chùa Một Cột thời Lý)',
     artistOrOrigin: 'Triều Lý Thái Tông',
     yearOrEra: '1049 · Thăng Long – Hà Nội',
@@ -375,17 +374,16 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     yearOrEra: 'Thế kỷ XV · Thời Lê Sơ',
     eraAndPeriod: 'Thế kỷ XV · Thời Lê Sơ (Đại Việt)',
     materialAndTechnique:
-      'Văn bản toán học khắc bản gỗ cổ truyền chữ Hán – Nôm; hệ thống hóa bài toán bằng văn vần lục bát và quy tắc bàn tính cửu chương.',
+      'Văn bản toán học khắc bản gỗ cổ truyền trên nền giấy dó; hệ thống hóa bài toán bằng thơ ca dân tộc và quy tắc bàn tính cửu chương.',
     archivalLocation: 'Thư viện Viện Nghiên cứu Hán Nôm (Hà Nội) & Tư liệu Cổ sử Đại Việt',
     caption:
-      'Trạng Lường Lương Thế Vinh · Hệ thống hóa phép đo đạc ruộng đất, thể tích khối và tam giác đồng dạng',
+      'Trạng Lường Lương Thế Vinh · Bản vẽ điển tịch giấy dó về phép đo hình khuyên, bàn tính & tam giác đồng dạng',
     academicSignificance:
-      'Bộ sách toán học kinh điển của Việt Nam hệ thống hóa phép đo đạc diện tích ruộng đất, thể tích hình khối, tam giác đồng dạng và bảng cửu chương. Tác phẩm kết hợp chặt chẽ tư duy tính toán thuật toán với thực tiễn canh tác và quản trị quốc gia.',
+      'Bộ sách toán học kinh điển của Việt Nam hệ thống hóa phép đo đạc diện tích ruộng đất, hình khuyên, thể tích hình khối chóp cụt, tam giác đồng dạng và bảng cửu chương. Tác phẩm kết hợp chặt chẽ tư duy tính toán thuật toán với thực tiễn canh tác và quản trị quốc gia.',
     coreAcademicValue:
-      'Bộ sách toán học kinh điển của Việt Nam; chuẩn hóa phép đo đạc ruộng đất, thể tích hình khối, tam giác đồng dạng và phương pháp dạy toán bằng thơ ca dễ nhớ.',
-    imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/%E7%9B%98%E7%8F%A0%E7%AE%97%E6%B3%95.jpg',
-    alt: 'Tư liệu Đại thành Toán pháp của Trạng Lường Lương Thế Vinh thế kỷ XV',
+      'Bộ sách toán học kinh điển của Việt Nam; chuẩn hóa phép đo đạc ruộng đất, hình khuyên, thể tích khối chóp cụt, tam giác đồng dạng và phương pháp dạy toán bằng thơ ca dễ nhớ.',
+    imageSrc: 'svg://dai-thanh-toan-phap',
+    alt: 'Bản vẽ minh họa điển tịch giấy dó Đại thành Toán pháp của Trạng Lường Lương Thế Vinh',
   },
   {
     id: 'lap-thanh-toan-phap',
@@ -397,38 +395,38 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     yearOrEra: 'Thế kỷ XV · Thời Lê Sơ',
     eraAndPeriod: 'Thế kỷ XV · Thời Lê Sơ (Đại Việt)',
     materialAndTechnique:
-      'Hệ thống bảng tra lập thành và công thức đo lường hình học thực địa bằng sào đo, thước dây và cọc tiêu tam giác đồng dạng.',
+      'Bản vẽ điển tịch giấy dó hệ thống hóa bảng tra lập thành và công thức đo lường trắc địa bằng sào đo, dây giăng và cọc tiêu tam giác đồng dạng.',
     archivalLocation: 'Văn miếu Mao Điền (Hải Dương) & Tư liệu Khoa cử Triều Lê Sơ',
     caption:
-      'Hoàng giáp Vũ Hữu · Công trình toán học ứng dụng quy hoạch kiến trúc, vật liệu xây thành và thủy lợi',
+      'Hoàng giáp Vũ Hữu · Điển tịch toán học ứng dụng đo đạc tam giác đồng dạng, diện tích hình thang & khối đắp đê',
     academicSignificance:
       'Công trình toán học ứng dụng xuất sắc phục vụ quy hoạch kiến trúc, tính toán vật liệu xây dựng thành lũy và đo đạc thủy lợi Đại Việt. Vũ Hữu cùng Lương Thế Vinh đặt nền móng cho truyền thống toán học thực hành chính xác cao của nước Việt.',
     coreAcademicValue:
       'Toán học ứng dụng xuất sắc phục vụ quy hoạch kiến trúc, tính toán khối lượng vật liệu xây thành và kỹ thuật đo đạc địa hình bằng tam giác đồng dạng.',
-    imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Replica_of_Han_Dynasty_Counting_rods_in_National_Museum_of_Natural_Science_in_Taiwan.JPG',
-    alt: 'Hệ thống toán trù và phép đo đạc trong Lập thành Toán pháp của Hoàng giáp Vũ Hữu',
+    imageSrc: 'svg://lap-thanh-toan-phap',
+    alt: 'Bản vẽ minh họa điển tịch giấy dó Lập thành Toán pháp của Hoàng giáp Vũ Hữu',
   },
   {
-    id: 'chua-mot-cot-lien-hoa-dai',
+    id: 'thap-but-dai-nghien-1865',
     category: 'vietnam-heritage',
-    shortTitle: 'Liên Hoa Đài',
-    title: 'Chùa Một Cột — Liên Hoa Đài',
-    originalTitle: 'Liên Hoa Đài — Giao thoa Hình học Đường tròn & Hình vuông giữa Hồ Linh Chiểu',
-    artistOrOrigin: 'Thời Lý Thái Tông',
-    yearOrEra: '1049 · Thăng Long – Hà Nội',
-    eraAndPeriod: '1049 · Thăng Long – Hà Nội (Triều Lý)',
+    shortTitle: 'Tháp Bút — Đài Nghiên',
+    title: 'Tháp Bút — Đài Nghiên (Độc Tôn Đài · Đền Ngọc Sơn, 1865)',
+    originalTitle: 'Tháp Bút & Đài Nghiên — Độc Tôn Đài bên Hồ Hoàn Kiếm',
+    artistOrOrigin: 'Nguyễn Văn Siêu',
+    yearOrEra: '1865 · Hồ Hoàn Kiếm, Hà Nội',
+    eraAndPeriod: 'Năm 1865 (Thời Tự Đức) · Hồ Hoàn Kiếm, Hà Nội',
     materialAndTechnique:
-      'Cột trụ đá hình tròn đỡ hệ con sơn tỏa tia tám hướng như đài sen, nâng đỡ ngôi lầu vuông tám mái uốn cong cân bằng tĩnh lực.',
-    archivalLocation: 'Quần thể Di tích Ba Đình · Thăng Long – Hà Nội',
+      'Tháp đá xanh 5 tầng dựng trên đỉnh núi đá Ngọc Bội cao 28 m, đỉnh tạc hình ngòi bút lông vươn thẳng, kết nối cùng Đài Nghiên đá gánh trên lưng ba con thiềm thừ.',
+    archivalLocation:
+      'Di tích Quốc gia Đặc biệt Đền Ngọc Sơn & Hồ Hoàn Kiếm (Quận Hoàn Kiếm, Hà Nội)',
     caption:
-      'Thời Lý Thái Tông (1049) · Đài sen dựng trên cột đá trụ độc nhất giữa hồ Linh Chiểu hình vuông',
+      'Nguyễn Văn Siêu (1865) · "Tả thanh thiên" — Đỉnh cao trắc địa thiên văn đưa bóng ngòi bút chấm lòng Đài Nghiên',
     academicSignificance:
-      'Kiệt tác kiến trúc gỗ dựng trên một cột đá trụ độc nhất giữa hồ Linh Chiểu hình vuông, biểu trưng cho sự giao thoa hình học giữa đường tròn và hình vuông. Cấu trúc thanh chống đối xứng tỏa tâm truyền lực nén tập trung cực kỳ tinh xảo.',
+      'Biểu tượng bất hủ của truyền thống hiếu học và khí phách trí thức Việt Nam với thông điệp "Tả thanh thiên" (Viết lên trời xanh). Cấu trúc tháp đá 5 tầng đặt trên núi Ngọc Bội được tính toán trắc địa chuẩn xác để vào chính ngọ, bóng đỉnh bút nghiên chiếu đúng vào lòng Đài Nghiên đá.',
     coreAcademicValue:
-      'Biểu trưng hoàn mỹ cho sự giao thoa hình học giữa đường tròn cột trụ và hình vuông đài sen, kết hợp cân bằng đối xứng tâm tuyệt đối.',
-    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Chua_Mot_Cot.jpg',
-    alt: 'Chùa Một Cột Liên Hoa Đài giao thoa hình học tròn vuông giữa hồ Linh Chiểu',
+      'Kết tinh giữa tinh thần hiếu học "Tả thanh thiên" và kỹ thuật tính toán góc chiếu mặt trời chính ngọ đưa bóng Tháp Bút chấm chuẩn vào lòng Đài Nghiên.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ThapButHG.jpg',
+    alt: 'Tháp Bút Đài Nghiên bên Hồ Hoàn Kiếm Đền Ngọc Sơn Hà Nội xây dựng năm 1865',
   },
   {
     id: 'ngo-mon-dien-thai-hoa',
@@ -449,7 +447,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     coreAcademicValue:
       'Chuẩn mực quy hoạch trục đối xứng tâm và hình học phòng thủ Vauban giao thoa với hệ vì kèo gỗ chồng rường truyền thống Đại Nam.',
     imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Ng%E1%BB%8D_M%C3%B4n_-_Hu%E1%BA%BF.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/4/4c/Ng%E1%BB%8D_M%C3%B4n_-_Hu%E1%BA%BF.jpg',
     alt: 'Ngọ Môn và trục đối xứng Kinh thành Huế triều Nguyễn',
   },
   {
@@ -472,30 +470,30 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     coreAcademicValue:
       'Tư liệu đúc đồng lưu giữ tri thức thiên văn, bản đồ học sông núi và kỹ thuật hợp kim truyền thống chuẩn xác bậc nhất Đông Nam Á.',
     imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/C%E1%BB%ADu_%C4%91%E1%BB%89nh_Hu%E1%BA%BF.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/1/1f/C%E1%BB%ADu_%C4%91%E1%BB%89nh_Hu%E1%BA%BF.jpg',
     alt: 'Cửu Đỉnh Hoàng cung Huế thời Minh Mạng trước Thế Miếu',
   },
   {
-    id: 'hong-duc-ban-do-1490',
+    id: 'truong-quoc-hoc-hue-1896',
     category: 'vietnam-heritage',
-    shortTitle: 'Hồng Đức Bản Đồ',
-    title: 'Bản đồ Hồng Đức (Hồng Đức Bản Đồ)',
-    originalTitle: 'Toản tập Thiên Nam Tứ chí Lộ đồ thư — Hồng Đức Bản Đồ (1490)',
-    artistOrOrigin: 'Triều Lê Thánh Tông',
-    yearOrEra: '1490 · Quốc sử quán',
-    eraAndPeriod: '1490 · Quốc sử quán Triều Lê Thánh Tông',
+    shortTitle: 'Quốc Học Huế (1896)',
+    title: 'Trường Quốc Học Huế (1896)',
+    originalTitle: 'Trường THPT Chuyên Quốc Học — Huế (Thành lập năm Thành Thái thứ 8)',
+    artistOrOrigin: 'Ngôi trường Lịch sử & Khoa bảng',
+    yearOrEra: '1896 · Bên bờ sông Hương, Cố đô Huế',
+    eraAndPeriod: 'Thành lập năm 1896 · Số 12 Lê Lợi, Bên bờ sông Hương, Thành phố Huế',
     materialAndTechnique:
-      'Bản đồ cổ vẽ tay và in khắc mộc bản trên giấy dó màu khoáng, sử dụng hệ ký hiệu định hướng núi – sông và tỷ lệ lộ trình.',
-    archivalLocation: 'Viện Nghiên cứu Hán Nôm (Hà Nội) & Lưu trữ Cổ sử Việt Nam',
+      'Quần thể kiến trúc giao thoa Á – Âu với cổng tam quan truyền thống sắc đỏ son, dãy giảng đường hành lang vòm đối xứng ẩn mình dưới tán điệp anh đào.',
+    archivalLocation: 'Trường THPT Chuyên Quốc Học Huế (Di tích Quốc gia Đặc biệt, Thừa Thiên Huế)',
     caption:
-      'Triều Lê Thánh Tông (1490) · Tập bản đồ địa lý – trắc địa quốc gia đầu tiên của Việt Nam',
+      'Thành lập năm 1896 · Cái nôi giáo dục hiếu học yêu nước bên dòng Hương Giang thơ mộng',
     academicSignificance:
-      'Tập bản đồ địa lý – trắc địa quốc gia đầu tiên của Việt Nam thể hiện tư duy không gian, cương vực và hệ thống hành chính Đại Việt. Bộ bản đồ cho thấy năng lực đồ biểu hóa tôpô và định vị khoảng cách đường thủy – đường bộ từ kinh đô đến các trấn.',
+      'Một trong những ngôi trường trung học lâu đời và giàu truyền thống hiếu học, yêu nước bậc nhất Việt Nam — nơi Chủ tịch Hồ Chí Minh cùng nhiều nhà khoa học, danh nhân văn hóa từng theo học. Kiến trúc giao thoa Á – Âu cân xứng hài hòa giữa thiên nhiên xứ Huế.',
     coreAcademicValue:
-      'Minh chứng cho tư duy không gian, năng lực đồ biểu hóa cương vực lãnh thổ và phép trắc địa hành chính có hệ thống từ thế kỷ XV.',
+      'Biểu tượng sống động của truyền thống sư phạm, tinh thần yêu nước và sự kết hợp hài hòa giữa kiến trúc Đông – Tây trong không gian học đường.',
     imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/B%E1%BA%A3n_%C4%91%E1%BB%93_kinh_th%C3%A0nh_Th%C4%83ng_Long_n%C4%83m_H%E1%BB%93ng_%C4%90%E1%BB%A9c_21_(1490).jpg',
-    alt: 'Bản đồ Hồng Đức năm 1490 thể hiện tư duy không gian và cương vực Đại Việt',
+      'https://upload.wikimedia.org/wikipedia/commons/3/35/Qu%E1%BB%91c_H%E1%BB%8Dc_Hu%E1%BA%BF.jpg',
+    alt: 'Cổng tam quan và khuôn viên Trường Quốc Học Huế thành lập năm 1896 bên bờ sông Hương',
   },
   {
     id: 'hoang-thanh-thang-long',
@@ -538,7 +536,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     coreAcademicValue:
       'Ví dụ kinh điển của hình học tự đồng dạng (fractal geometry) và kỹ thuật cân bằng trọng tâm bằng gạch mài khít không mạch vữa.',
     imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Th%C3%A1nh_%C4%91%E1%BB%8Ba_M%E1%BB%B9_S%C6%A1n_2.JPG',
+      'https://upload.wikimedia.org/wikipedia/commons/4/45/Th%C3%A1nh_%C4%91%E1%BB%8Ba_M%E1%BB%B9_S%C6%A1n_2.JPG',
     alt: 'Thánh địa Tháp Chăm Mỹ Sơn tại Quảng Nam Việt Nam',
   },
   {
@@ -559,7 +557,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
       'Bảo tháp 14 tầng bằng đá chạm hoa sen và gạch nung thời Trần, minh chứng cho trình độ tính toán tải trọng và kỹ thuật luyện đồng Đại Việt. Mặt cắt các tầng thu nhỏ theo quy luật tuyến tính tạo nên đường biên vươn thanh thoát.',
     coreAcademicValue:
       'Kết tinh trình độ phân bố tải trọng kết cấu nhiều tầng, đối xứng hoa sen 8 cánh và kỹ thuật đúc đồng quy mô lớn thời Trần.',
-    imageSrc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Pho_Minh_tower.jpg',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/7/71/Pho_Minh_tower.jpg',
     alt: 'Tháp Phổ Minh 14 tầng thời Trần tại Nam Định',
   },
   {
@@ -605,26 +603,25 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     alt: 'Trang bản thảo da dê Archimedes Palimpsest phục dựng bằng hình ảnh đa phổ',
   },
   {
-    id: 'al-jabr-khwarizmi',
-    category: 'math-geometry',
-    shortTitle: 'Al-Jabr (Al-Khwarizmi)',
-    title: 'Al-Jabr — Sách Đại số của Al-Khwarizmi',
-    originalTitle: 'Al-Kitab al-Mukhtasar fi Hisab al-Jabr wal-Muqabala',
-    artistOrOrigin: 'Muhammad ibn Musa al-Khwarizmi',
-    yearOrEra: 'Khoảng 820 · Baghdad',
-    eraAndPeriod: 'Khoảng năm 820 · Nhà Thông thái (Bayt al-Hikma, Baghdad)',
+    id: 'gac-chuong-chua-keo-1632',
+    category: 'vietnam-heritage',
+    shortTitle: 'Gác Chuông Chùa Keo',
+    title: 'Gác Chuông Chùa Keo (Thái Bình, 1632)',
+    originalTitle: 'Thần Quang Tự — Gác chuông gỗ ba tầng 12 mái không đinh sắt',
+    artistOrOrigin: 'Nghệ nhân Thời Lê Trung Hưng',
+    yearOrEra: '1632 · Vũ Thư, Thái Bình',
+    eraAndPeriod: 'Thời Lê Trung Hưng · Năm 1632 · Xã Duy Nhất, Vũ Thư, Thái Bình',
     materialAndTechnique:
-      'Bản thảo mực sắt trên giấy cổ thế kỷ XIV chép lại công trình bằng tiếng Ả Rập kèm hình vuông chứng minh hằng đẳng thức hoàn chỉnh bình phương.',
-    archivalLocation: 'Thư viện Bodleian (Bodleian Library, Đại học Oxford · MS Hunt. 214)',
+      'Kiến trúc gỗ lim cao 11,04 m gồm 3 tầng 12 mái đao cong; lắp ghép hoàn toàn từ hệ con sơn đấu củng và mộng gỗ chính xác tuyệt đối không dùng đinh sắt.',
+    archivalLocation: 'Chùa Keo (Di tích Quốc gia Đặc biệt · Huyện Vũ Thư, Tỉnh Thái Bình)',
     caption:
-      'Al-Khwarizmi (khoảng 820) · Nền móng ngành Đại số với phương pháp giải tổng quát phương trình bậc hai',
+      'Thời Lê Trung Hưng (1632) · Đỉnh cao hình học kết cấu gỗ cổ truyền 3 tầng 12 mái lắp mộng không đinh sắt',
     academicSignificance:
-      'Tác phẩm đặt nền móng cho ngành Đại số (Algebra) với phương pháp giải tổng quát các phương trình bậc nhất và bậc hai bằng hai phép biến đổi cơ bản: chuyển vế đổi dấu (al-jabr) và giản ước đồng hạng (al-muqabala), minh họa bằng ghép hình vuông hoàn chỉnh bình phương.',
+      'Đỉnh cao hình học kết cấu gỗ cổ truyền Việt Nam cao 11,04m gồm 3 tầng 12 mái uốn đao mềm mại. Toàn bộ khung chịu lực được lắp ghép từ hàng trăm con sơn, đấu củng bằng mộng gỗ chính xác tuyệt đối mà không dùng một chiếc đinh sắt nào.',
     coreAcademicValue:
-      'Khai sinh thuật ngữ Đại số (Algebra) và Thuật toán (Algorithm), hợp nhất tư duy giải phương trình với chứng minh hình học chặt chẽ.',
-    imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Image-Al-Kit%C4%81b_al-mu%E1%B8%A5ta%E1%B9%A3ar_f%C4%AB_%E1%B8%A5is%C4%81b_al-%C4%9Fabr_wa-l-muq%C4%81bala.jpg',
-    alt: 'Trang bản thảo Al-Jabr của Al-Khwarizmi đặt nền móng cho Đại số học',
+      'Kiệt tác cơ học tĩnh lực và hình học không gian gỗ lim: hàng trăm thanh đấu củng phân tán trọng lực đều đặn qua mộng khớp hoàn hảo.',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Gac_chuong_chua_Keo_3.jpg',
+    alt: 'Gác chuông Chùa Keo ba tầng mái cong cổ kính tại Vũ Thư Thái Bình năm 1632',
   },
   {
     id: 'la-geometrie-descartes',
@@ -644,7 +641,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
       'Công trình cách mạng kết nối Đại số với Hình học thông qua hệ tọa độ, mở đường cho Hình học Affine, Hình học Euclide và Giải tích hiện đại. Descartes chứng minh rằng mọi đường cong hình học có thể mã hóa thành phương trình đa thức đại số f(x, y) = 0.',
     coreAcademicValue:
       'Cầu nối vĩ đại giữa Hình học không gian và Đại số đa thức, định hình ký hiệu toán học hiện đại (a, b, c vs x, y, z) và hệ trục tọa độ.',
-    imageSrc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Descartes_La-Geometrie_1637.png',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Descartes_La-Geometrie_1637.png',
     alt: 'Trang nhan đề ấn bản gốc La Géométrie năm 1637 của René Descartes',
   },
   {
@@ -666,7 +663,7 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
     coreAcademicValue:
       'Tượng đài tổng hợp giữa Giải tích vi phân, lý thuyết giới hạn và Vật lý thiên văn, thống nhất cơ học Trái Đất với chuyển động thiên thể.',
     imageSrc:
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Newton_-_Principia_(1687),_title,_p._5,_cropped.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/f/f8/Newton_-_Principia_%281687%29%2C_title%2C_p._5%2C_cropped.jpg',
     alt: 'Trang bìa ấn bản năm 1687 Philosophiae Naturalis Principia Mathematica của Isaac Newton',
   },
   {
@@ -687,8 +684,53 @@ export const HERITAGE_ARTWORKS: readonly HeritageArtwork[] = [
       'Kiệt tác khai sinh số học môđulô hiện đại a ≡ b (mod n), cấu trúc nhóm các lớp thặng dư khả nghịch và định lý dựng đa giác đều 17 cạnh chỉ bằng thước thẳng và compa. Đây là trụ cột trực tiếp dẫn tới Cấu trúc Đại số hiện đại về nhóm, vành và trường Galois.',
     coreAcademicValue:
       'Khai sinh phép đồng dư (mod n), cấu trúc đại số của nhóm lớp thặng dư khả nghịch U(n) và tiêu chuẩn Gauss–Wantzel về dựng hình đa giác đều.',
-    imageSrc: 'https://commons.wikimedia.org/wiki/Special:FilePath/Disqvisitiones-800.jpg',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Disqvisitiones-800.jpg',
     alt: 'Trang bìa ấn bản đầu Disquisitiones Arithmeticae năm 1801 của Carl Friedrich Gauss',
+  },
+  {
+    id: 'moc-ban-quoc-tu-giam-trieu-nguyen',
+    category: 'vietnam-heritage',
+    shortTitle: 'Mộc bản Triều Nguyễn',
+    title: 'Mộc bản Quốc Tử Giám & Triều Nguyễn (Di sản Tư liệu Thế giới)',
+    originalTitle: 'Mộc bản Triều Nguyễn — 34.618 bản khắc gỗ in sách khoa cử & sử liệu',
+    artistOrOrigin: 'Quốc sử quán & Nghệ nhân Khắc bản',
+    yearOrEra: 'Thế kỷ XVII – XX · Đà Lạt',
+    eraAndPeriod: 'Thế kỷ XVII – XX · UNESCO công nhận Di sản Tư liệu Thế giới năm 2009',
+    materialAndTechnique:
+      'Ván gỗ thị và gỗ nha đồng phơi khô kỹ thuật cao, chạm khắc nổi chữ viết đảo ngược tinh xảo hai mặt dùng để nhân bản sách giáo khoa, lịch sử, toán pháp.',
+    archivalLocation: 'Trung tâm Lưu trữ Quốc gia IV (Thành phố Đà Lạt, Tỉnh Lâm Đồng)',
+    caption:
+      'Di sản Tư liệu Thế giới (UNESCO 2009) · 34.618 tấm ván gỗ thị khắc ngược lưu truyền học thuật quốc gia',
+    academicSignificance:
+      'Kho tàng 34.618 tấm ván gỗ thị khắc chữ ngược tinh xảo dùng để in sách giáo khoa, lịch sử, địa chí và toán pháp phục vụ giảng dạy tại Quốc Tử Giám và các kỳ thi Hương, thi Hội, thi Đình.',
+    coreAcademicValue:
+      'Kỹ thuật đối xứng gương trên bản khắc gỗ thị cùng hệ thống văn bản giáo dục chuẩn mực, bảo tồn tri thức quốc gia suốt nhiều thế kỷ.',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/b/bb/Woodblocks_of_the_Nguy%E1%BB%85n_Dynasty_01.jpg',
+    alt: 'Mộc bản Quốc Tử Giám và Triều Nguyễn Di sản Tư liệu Thế giới tại Đà Lạt',
+  },
+  {
+    id: 'dai-hoc-dong-duong-1906',
+    category: 'vietnam-heritage',
+    shortTitle: 'Đại học Đông Dương (1906)',
+    title: 'Tòa nhà Đại học Đông Dương (Đại học Quốc gia Hà Nội, 1906)',
+    originalTitle: 'Université Indochinoise — Giảng đường Khoa học Cơ bản 19 Lê Thánh Tông',
+    artistOrOrigin: 'Kiến trúc sư Ernest Hébrard',
+    yearOrEra: '1906 · 19 Lê Thánh Tông, Hà Nội',
+    eraAndPeriod: 'Thành lập năm 1906 · Đầu thế kỷ XX · 19 Lê Thánh Tông, Hoàn Kiếm, Hà Nội',
+    materialAndTechnique:
+      'Tòa nhà kiến trúc phong cách Đông Dương (Indochine) đối xứng với mái vòm bát giác, hệ mái ngói nhiều tầng Á Đông và giảng đường vòm lấy sáng tự nhiên.',
+    archivalLocation:
+      'Đại học Quốc gia Hà Nội & Trường Đại học Khoa học Tự nhiên (19 Lê Thánh Tông)',
+    caption:
+      'Kiến trúc sư Ernest Hébrard · Thiết chế đại học và nghiên cứu khoa học hiện đại đầu tiên tại Việt Nam',
+    academicSignificance:
+      'Thiết chế giáo dục đại học và nghiên cứu khoa học hiện đại đầu tiên tại Việt Nam. Công trình là biểu tượng của phong cách kiến trúc Đông Dương (Indochine) với mái vòm bát giác đối xứng, hệ cửa lấy sáng tự nhiên và giảng đường học thuật trang nghiêm.',
+    coreAcademicValue:
+      'Khởi nguồn nền giáo dục đại học – nghiên cứu khoa học cơ bản Việt Nam trong không gian mái vòm bát giác giao thoa Á – Âu chuẩn mực.',
+    imageSrc:
+      'https://upload.wikimedia.org/wikipedia/commons/6/60/T%C3%B2a_nh%C3%A0_19_L%C3%AA_Th%C3%A1nh_T%C3%B4ng_bi%E1%BB%83u_t%C6%B0%E1%BB%A3ng_%C4%90%E1%BA%A1i_h%E1%BB%8Dc_Qu%E1%BB%91c_gia_H%C3%A0_N%E1%BB%99i.jpg',
+    alt: 'Tòa nhà Đại học Đông Dương 19 Lê Thánh Tông biểu tượng Đại học Quốc gia Hà Nội thành lập năm 1906',
   },
 ] as const;
 
@@ -696,287 +738,1047 @@ const ROTATION_INTERVAL_MS = 20000;
 const SLIDE_TRANSITION_MS = 350;
 
 /**
- * Minh họa vector học thuật dự phòng (SVG) sắc nét khi ảnh gốc không thể tải (offline / 429),
- * đảm bảo không bao giờ xuất hiện khung đen rỗng (đặc biệt cho bản khắc đồng Melencolia I 03/15).
+ * Kiểm tra xem tác phẩm sử dụng tranh minh họa SVG nội bộ hay URL ảnh mạng.
  */
-export function HeritageFallbackIllustration({ artwork }: { readonly artwork: HeritageArtwork }) {
-  if (artwork.id === 'melencolia-i') {
+export function isHeritageInlineSvg(artwork: HeritageArtwork): boolean {
+  return artwork.imageSrc.startsWith('svg://');
+}
+
+/**
+ * Minh họa đồ họa toàn khung (`w-full h-full`) đa lớp Vàng Đồng – Giấy Dó – Chàm Ngọc:
+ * - Bản vẽ Điển tịch Giấy Dó Việt Nam sắc nét riêng cho Đại thành Toán pháp (16) & Lập thành Toán pháp (17).
+ * - Đồ họa kiến trúc cổ truyền, bản đồ – mộc bản và hình học – thiên văn học kinh điển cho mọi tác phẩm khi ngoại tuyến.
+ */
+export function HeritageFallbackIllustration({
+  artwork,
+  compact = false,
+}: {
+  readonly artwork: HeritageArtwork;
+  readonly compact?: boolean;
+}) {
+  const uid = useId().replace(/:/g, '');
+  const indigoBgId = `lu-her-bg-${uid}`;
+  const goldGradId = `lu-her-gold-${uid}`;
+  const paperGradId = `lu-her-paper-${uid}`;
+
+  const renderHeaderLabel = !compact && (
+    <g>
+      <rect
+        x="110"
+        y="344"
+        width="420"
+        height="42"
+        rx="10"
+        fill="#0D1824"
+        fillOpacity="0.88"
+        stroke="#D4A853"
+        strokeOpacity="0.45"
+        strokeWidth="1"
+      />
+      <text
+        x="320"
+        y="362"
+        textAnchor="middle"
+        fill="#FAF5E8"
+        fontFamily="serif"
+        fontSize="13.5"
+        fontWeight="700"
+      >
+        {artwork.shortTitle} · {artwork.artistOrOrigin}
+      </text>
+      <text
+        x="320"
+        y="378"
+        textAnchor="middle"
+        fill="#E5B85B"
+        fontFamily="monospace"
+        fontSize="10"
+        letterSpacing="1.2"
+      >
+        {artwork.yearOrEra}
+      </text>
+    </g>
+  );
+
+  // =====================================================================
+  // MỤC 16: ĐẠI THÀNH TOÁN PHÁP — BẢN VẼ ĐIỂN TỊCH GIẤY DÓ VIỆT NAM
+  // =====================================================================
+  if (artwork.id === 'dai-thanh-toan-phap') {
     return (
       <svg
-        viewBox="0 0 440 320"
-        className="h-full w-full max-w-[420px] select-none"
-        aria-label={`Minh họa học thuật cho ${artwork.title}`}
+        viewBox="0 0 640 400"
+        preserveAspectRatio="xMidYMid slice"
+        className="h-full w-full select-none"
+        aria-label={`Minh họa điển tịch giấy dó ${artwork.title}`}
       >
         <defs>
-          <linearGradient id="lu-melencolia-paper" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#213E37" />
-            <stop offset="100%" stopColor="#122722" />
+          <linearGradient id={indigoBgId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0E1D2A" />
+            <stop offset="55%" stopColor="#172E42" />
+            <stop offset="100%" stopColor="#0B1620" />
+          </linearGradient>
+          <linearGradient id={paperGradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FAF2DC" />
+            <stop offset="50%" stopColor="#F2E4C2" />
+            <stop offset="100%" stopColor="#E6D2A6" />
+          </linearGradient>
+          <linearGradient id={goldGradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFF3D1" />
+            <stop offset="50%" stopColor="#E5B85B" />
+            <stop offset="100%" stopColor="#C8963E" />
           </linearGradient>
         </defs>
+
+        <rect width="640" height="400" fill={`url(#${indigoBgId})`} />
         <rect
           x="14"
           y="14"
-          width="412"
-          height="292"
+          width="612"
+          height="372"
           rx="14"
-          fill="url(#lu-melencolia-paper)"
-          stroke="#E5C158"
+          fill="none"
+          stroke={`url(#${goldGradId})`}
           strokeOpacity="0.45"
           strokeWidth="1.2"
         />
-        {/* Tia sáng sao chổi trên mặt biển phía xa */}
-        <circle cx="96" cy="76" r="22" fill="#E5C158" fillOpacity="0.16" />
-        <circle cx="96" cy="76" r="7" fill="#F8F6F0" fillOpacity="0.88" />
-        <path
-          d="M 96 76 L 164 42 M 96 76 L 178 72 M 96 76 L 160 112"
-          stroke="#E5C158"
-          strokeOpacity="0.5"
-          strokeWidth="1"
-          strokeDasharray="3 4"
+
+        {/* Cuốn điển tịch Giấy Dó cổ mở đôi */}
+        <rect
+          x="46"
+          y="34"
+          width="548"
+          height="304"
+          rx="10"
+          fill="#261B12"
+          stroke="#D4A853"
+          strokeOpacity="0.6"
+          strokeWidth="1.4"
         />
+        {/* Trang trái & Trang phải */}
+        <rect
+          x="56"
+          y="42"
+          width="260"
+          height="288"
+          rx="4"
+          fill={`url(#${paperGradId})`}
+          stroke="#B83B2E"
+          strokeOpacity="0.45"
+          strokeWidth="1"
+        />
+        <rect
+          x="324"
+          y="42"
+          width="260"
+          height="288"
+          rx="4"
+          fill={`url(#${paperGradId})`}
+          stroke="#B83B2E"
+          strokeOpacity="0.45"
+          strokeWidth="1"
+        />
+        {/* Đường rãnh gáy sách & 4 nút khâu chỉ đỏ */}
+        <line x1="320" y1="42" x2="320" y2="330" stroke="#7A542E" strokeWidth="2.4" />
+        {[74, 142, 224, 294].map((ky) => (
+          <g key={ky}>
+            <line x1="312" y1={ky} x2="328" y2={ky} stroke="#B83B2E" strokeWidth="1.8" />
+            <circle cx="320" cy={ky} r="2.2" fill="#B83B2E" />
+          </g>
+        ))}
 
-        {/* Khối đa diện cụt nổi tiếng của Dürer (Truncated Rhombohedron) */}
-        <g stroke="#F8F6F0" strokeWidth="1.6" strokeLinejoin="round">
-          <polygon
-            points="126,118 190,104 222,158 196,232 132,246 98,194"
-            fill="#2B5248"
-            fillOpacity="0.82"
-          />
-          <polygon points="126,118 190,104 176,144 134,154" fill="#E5C158" fillOpacity="0.22" />
-          <line x1="134" y1="154" x2="176" y2="144" stroke="#E5C158" strokeWidth="1.3" />
-          <line x1="176" y1="144" x2="222" y2="158" stroke="#E5C158" strokeWidth="1.3" />
-          <line x1="176" y1="144" x2="164" y2="212" stroke="#D1DCD6" strokeOpacity="0.8" />
-          <line x1="164" y1="212" x2="196" y2="232" stroke="#D1DCD6" strokeOpacity="0.8" />
-          <line x1="164" y1="212" x2="132" y2="246" stroke="#D1DCD6" strokeOpacity="0.8" />
-          <line x1="134" y1="154" x2="98" y2="194" stroke="#D1DCD6" strokeOpacity="0.8" />
-        </g>
-
-        {/* Quả cầu trắc lượng & Compa hình học */}
-        <circle cx="236" cy="242" r="26" fill="#1B3932" stroke="#E5C158" strokeWidth="1.4" />
-        <ellipse
-          cx="236"
-          cy="242"
-          rx="26"
-          ry="9"
+        {/* Khung kẻ chỉ chu sa trên hai trang */}
+        <rect
+          x="68"
+          y="54"
+          width="236"
+          height="264"
           fill="none"
-          stroke="#D1DCD6"
+          stroke="#B83B2E"
           strokeOpacity="0.55"
           strokeWidth="0.9"
-          strokeDasharray="3 3"
         />
-        <g stroke="#E5C158" strokeWidth="1.5" fill="none" strokeLinecap="round">
-          <circle cx="294" cy="186" r="4" fill="#E5C158" />
-          <path d="M 294 190 L 270 258 M 294 190 L 320 256" />
-          <path d="M 278 228 Q 295 234 312 228" strokeOpacity="0.8" />
-        </g>
+        <rect
+          x="336"
+          y="54"
+          width="236"
+          height="264"
+          fill="none"
+          stroke="#B83B2E"
+          strokeOpacity="0.55"
+          strokeWidth="0.9"
+        />
 
-        {/* Ma phương bậc 4 kinh điển của Dürer (tổng mỗi hàng/cột = 34, đáy ghi năm 1514) */}
-        <g transform="translate(274, 50)">
+        {/* TRANG TRÁI: BÀN TÍNH & PHÉP ĐO HÌNH KHUYÊN */}
+        <text
+          x="186"
+          y="74"
+          textAnchor="middle"
+          fill="#8C2318"
+          fontFamily="serif"
+          fontSize="12.5"
+          fontWeight="700"
+          letterSpacing="0.8"
+        >
+          ĐẠI THÀNH TOÁN PHÁP
+        </text>
+        <line x1="94" y1="81" x2="278" y2="81" stroke="#B83B2E" strokeOpacity="0.4" />
+
+        {/* Bàn tính cổ truyền 7 cột */}
+        <g transform="translate(88, 92)">
           <rect
             x="0"
             y="0"
-            width="124"
-            height="108"
-            rx="6"
-            fill="#11241F"
-            stroke="#E5C158"
+            width="196"
+            height="74"
+            rx="4"
+            fill="#E3CE9E"
+            stroke="#593B1F"
+            strokeWidth="2"
+          />
+          <line x1="0" y1="22" x2="196" y2="22" stroke="#593B1F" strokeWidth="2" />
+          {[24, 49, 74, 98, 123, 148, 172].map((bx, idx) => (
+            <g key={bx}>
+              <line x1={bx} y1="2" x2={bx} y2="72" stroke="#7A542E" strokeWidth="1.1" />
+              <ellipse cx={bx} cy={11} rx="6" ry="3.8" fill="#6E3B1E" />
+              <ellipse cx={bx} cy={36 + (idx % 2) * 8} rx="6" ry="3.8" fill="#8C2318" />
+              <ellipse cx={bx} cy={54} rx="6" ry="3.8" fill="#6E3B1E" />
+              <ellipse cx={bx} cy={63} rx="6" ry="3.8" fill="#6E3B1E" />
+            </g>
+          ))}
+        </g>
+
+        {/* Phép đo Diện tích Hình khuyên (Vành khăn) */}
+        <g transform="translate(186, 232)">
+          <circle
+            cx="0"
+            cy="0"
+            r="44"
+            fill="#D4A853"
+            fillOpacity="0.22"
+            stroke="#1B3B4B"
+            strokeWidth="1.5"
+          />
+          <circle cx="0" cy="0" r="22" fill="#F2E4C2" stroke="#B83B2E" strokeWidth="1.4" />
+          <line x1="0" y1="0" x2="44" y2="0" stroke="#1B3B4B" strokeDasharray="3 2" />
+          <line x1="0" y1="0" x2="-15" y2="-16" stroke="#B83B2E" />
+          <circle cx="0" cy="0" r="2.2" fill="#1B3B4B" />
+          {!compact && (
+            <>
+              <text
+                x="0"
+                y="62"
+                textAnchor="middle"
+                fill="#142834"
+                fontFamily="serif"
+                fontSize="11"
+                fontWeight="700"
+              >
+                Phép đo hình khuyên: S = π(R² − r²)
+              </text>
+              <text
+                x="0"
+                y="-52"
+                textAnchor="middle"
+                fill="#593B1F"
+                fontFamily="serif"
+                fontSize="10.5"
+                fontWeight="600"
+              >
+                Bàn tính Cửu chương &amp; Diện tích vành khăn
+              </text>
+            </>
+          )}
+        </g>
+
+        {/* TRANG PHẢI: TAM GIÁC ĐỒNG DẠNG & THỂ TÍCH CHÓP CỤT */}
+        <text
+          x="454"
+          y="74"
+          textAnchor="middle"
+          fill="#142834"
+          fontFamily="serif"
+          fontSize="12"
+          fontWeight="700"
+        >
+          TRẠNG LƯỜNG LƯƠNG THẾ VINH
+        </text>
+        <line x1="364" y1="81" x2="544" y2="81" stroke="#B83B2E" strokeOpacity="0.4" />
+
+        {/* Sơ đồ Tam giác đồng dạng đo chiều cao */}
+        <g transform="translate(362, 96)">
+          <line x1="10" y1="92" x2="184" y2="92" stroke="#593B1F" strokeWidth="1.4" />
+          <polygon
+            points="24,92 24,22 174,92"
+            fill="#1B3B4B"
+            fillOpacity="0.1"
+            stroke="#1B3B4B"
+            strokeWidth="1.5"
+          />
+          <line x1="94" y1="92" x2="94" y2="55" stroke="#B83B2E" strokeWidth="1.6" />
+          <circle cx="24" cy="22" r="3" fill="#B83B2E" />
+          <circle cx="94" cy="55" r="2.8" fill="#1B3B4B" />
+          {!compact && (
+            <text
+              x="98"
+              y="16"
+              textAnchor="middle"
+              fill="#142834"
+              fontFamily="serif"
+              fontSize="10.5"
+              fontWeight="600"
+            >
+              Tam giác đồng dạng đo chiều cao
+            </text>
+          )}
+        </g>
+
+        {/* Khối chóp cụt 3D */}
+        <g transform="translate(384, 212)">
+          <polygon
+            points="26,20 96,20 122,74 0,74"
+            fill="#D4A853"
+            fillOpacity="0.24"
+            stroke="#1B3B4B"
+            strokeWidth="1.5"
+          />
+          <polygon
+            points="38,8 106,8 96,20 26,20"
+            fill="#E5B85B"
+            fillOpacity="0.32"
+            stroke="#1B3B4B"
             strokeWidth="1.3"
           />
-          <g stroke="#E5C158" strokeOpacity="0.35" strokeWidth="0.9">
-            <line x1="31" y1="0" x2="31" y2="108" />
-            <line x1="62" y1="0" x2="62" y2="108" />
-            <line x1="93" y1="0" x2="93" y2="108" />
-            <line x1="0" y1="27" x2="124" y2="27" />
-            <line x1="0" y1="54" x2="124" y2="54" />
-            <line x1="0" y1="81" x2="124" y2="81" />
+          <polygon
+            points="96,20 106,8 134,60 122,74"
+            fill="#8C6A2E"
+            fillOpacity="0.22"
+            stroke="#1B3B4B"
+            strokeWidth="1.3"
+          />
+          <line x1="61" y1="14" x2="61" y2="68" stroke="#B83B2E" strokeDasharray="3 2" />
+          {!compact && (
+            <text
+              x="64"
+              y="92"
+              textAnchor="middle"
+              fill="#142834"
+              fontFamily="serif"
+              fontSize="10.5"
+              fontWeight="700"
+            >
+              Thể tích khối chóp cụt
+            </text>
+          )}
+        </g>
+
+        {/* Triện son tác giả */}
+        <g transform="translate(528, 266)">
+          <rect
+            x="0"
+            y="0"
+            width="36"
+            height="36"
+            rx="4"
+            fill="#B83B2E"
+            fillOpacity="0.14"
+            stroke="#B83B2E"
+            strokeWidth="1.6"
+          />
+          <text
+            x="18"
+            y="16"
+            textAnchor="middle"
+            fill="#B83B2E"
+            fontFamily="serif"
+            fontSize="8.5"
+            fontWeight="700"
+          >
+            LƯƠNG
+          </text>
+          <text
+            x="18"
+            y="28"
+            textAnchor="middle"
+            fill="#B83B2E"
+            fontFamily="serif"
+            fontSize="8.5"
+            fontWeight="700"
+          >
+            THẾ VINH
+          </text>
+        </g>
+
+        {renderHeaderLabel}
+      </svg>
+    );
+  }
+
+  // =====================================================================
+  // MỤC 17: LẬP THÀNH TOÁN PHÁP — BẢN VẼ ĐIỂN TỊCH GIẤY DÓ VIỆT NAM
+  // =====================================================================
+  if (artwork.id === 'lap-thanh-toan-phap') {
+    return (
+      <svg
+        viewBox="0 0 640 400"
+        preserveAspectRatio="xMidYMid slice"
+        className="h-full w-full select-none"
+        aria-label={`Minh họa điển tịch giấy dó ${artwork.title}`}
+      >
+        <defs>
+          <linearGradient id={indigoBgId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0E1D2A" />
+            <stop offset="55%" stopColor="#183246" />
+            <stop offset="100%" stopColor="#0B1620" />
+          </linearGradient>
+          <linearGradient id={paperGradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FAF2DC" />
+            <stop offset="55%" stopColor="#EFE0BC" />
+            <stop offset="100%" stopColor="#E4CFA0" />
+          </linearGradient>
+          <linearGradient id={goldGradId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFF3D1" />
+            <stop offset="50%" stopColor="#E5B85B" />
+            <stop offset="100%" stopColor="#C8963E" />
+          </linearGradient>
+        </defs>
+
+        <rect width="640" height="400" fill={`url(#${indigoBgId})`} />
+        <rect
+          x="14"
+          y="14"
+          width="612"
+          height="372"
+          rx="14"
+          fill="none"
+          stroke={`url(#${goldGradId})`}
+          strokeOpacity="0.45"
+          strokeWidth="1.2"
+        />
+
+        {/* Sách mở đôi trên nền gỗ Chàm */}
+        <rect
+          x="46"
+          y="34"
+          width="548"
+          height="304"
+          rx="10"
+          fill="#261B12"
+          stroke="#D4A853"
+          strokeOpacity="0.6"
+          strokeWidth="1.4"
+        />
+        <rect
+          x="56"
+          y="42"
+          width="260"
+          height="288"
+          rx="4"
+          fill={`url(#${paperGradId})`}
+          stroke="#B83B2E"
+          strokeOpacity="0.45"
+          strokeWidth="1"
+        />
+        <rect
+          x="324"
+          y="42"
+          width="260"
+          height="288"
+          rx="4"
+          fill={`url(#${paperGradId})`}
+          stroke="#B83B2E"
+          strokeOpacity="0.45"
+          strokeWidth="1"
+        />
+        <line x1="320" y1="42" x2="320" y2="330" stroke="#7A542E" strokeWidth="2.4" />
+        {[74, 142, 224, 294].map((ky) => (
+          <g key={ky}>
+            <line x1="312" y1={ky} x2="328" y2={ky} stroke="#B83B2E" strokeWidth="1.8" />
+            <circle cx="320" cy={ky} r="2.2" fill="#B83B2E" />
+          </g>
+        ))}
+
+        <rect
+          x="68"
+          y="54"
+          width="236"
+          height="264"
+          fill="none"
+          stroke="#B83B2E"
+          strokeOpacity="0.55"
+          strokeWidth="0.9"
+        />
+        <rect
+          x="336"
+          y="54"
+          width="236"
+          height="264"
+          fill="none"
+          stroke="#B83B2E"
+          strokeOpacity="0.55"
+          strokeWidth="0.9"
+        />
+
+        {/* TRANG TRÁI: TRẮC ĐỊA TAM GIÁC ĐỒNG DẠNG & ĐO RUỘNG HÌNH THANG */}
+        <text
+          x="186"
+          y="74"
+          textAnchor="middle"
+          fill="#8C2318"
+          fontFamily="serif"
+          fontSize="12.5"
+          fontWeight="700"
+          letterSpacing="0.8"
+        >
+          LẬP THÀNH TOÁN PHÁP
+        </text>
+        <line x1="94" y1="81" x2="278" y2="81" stroke="#B83B2E" strokeOpacity="0.4" />
+
+        {/* Trắc địa cọc tiêu đo chiều rộng sông bằng tam giác đồng dạng */}
+        <g transform="translate(86, 94)">
+          <path
+            d="M 10 40 Q 60 32 104 40 Q 148 48 192 40"
+            fill="none"
+            stroke="#2B678C"
+            strokeOpacity="0.5"
+            strokeWidth="2"
+          />
+          <polygon points="100,12 36,90 164,90" fill="none" stroke="#142834" strokeWidth="1.4" />
+          <line x1="64" y1="56" x2="136" y2="56" stroke="#B83B2E" strokeWidth="1.4" />
+          <line x1="100" y1="12" x2="100" y2="90" stroke="#142834" strokeDasharray="3 2" />
+          <circle cx="100" cy="12" r="3" fill="#B83B2E" />
+          {!compact && (
+            <text
+              x="100"
+              y="107"
+              textAnchor="middle"
+              fill="#142834"
+              fontFamily="serif"
+              fontSize="10.5"
+              fontWeight="600"
+            >
+              Trắc địa tam giác đồng dạng qua sông
+            </text>
+          )}
+        </g>
+
+        {/* Hình thang đo điền thổ */}
+        <g transform="translate(96, 224)">
+          <polygon
+            points="32,8 148,8 180,68 0,68"
+            fill="#D4A853"
+            fillOpacity="0.22"
+            stroke="#1B3B4B"
+            strokeWidth="1.5"
+          />
+          <line x1="90" y1="8" x2="90" y2="68" stroke="#B83B2E" strokeDasharray="3 2" />
+          {!compact && (
+            <text
+              x="90"
+              y="84"
+              textAnchor="middle"
+              fill="#142834"
+              fontFamily="serif"
+              fontSize="10.5"
+              fontWeight="700"
+            >
+              Phép đo điền thổ hình thang &amp; hình tròn
+            </text>
+          )}
+        </g>
+
+        {/* TRANG PHẢI: MẶT CẮT ĐẮP ĐÊ CHÓP CỤT & LƯỚI VẬT LIỆU XÂY THÀNH */}
+        <text
+          x="454"
+          y="74"
+          textAnchor="middle"
+          fill="#142834"
+          fontFamily="serif"
+          fontSize="12"
+          fontWeight="700"
+        >
+          HOÀNG GIÁP VŨ HỮU
+        </text>
+        <line x1="364" y1="81" x2="544" y2="81" stroke="#B83B2E" strokeOpacity="0.4" />
+
+        {/* Mô hình khối đê điều (Lăng trụ hình thang 3D) */}
+        <g transform="translate(366, 98)">
+          <polygon
+            points="22,68 48,26 112,26 138,68"
+            fill="#D4A853"
+            fillOpacity="0.25"
+            stroke="#1B3B4B"
+            strokeWidth="1.5"
+          />
+          <polygon
+            points="48,26 112,26 156,12 92,12"
+            fill="#E5B85B"
+            fillOpacity="0.32"
+            stroke="#1B3B4B"
+            strokeWidth="1.3"
+          />
+          <polygon
+            points="112,26 156,12 180,52 138,68"
+            fill="#8C6A2E"
+            fillOpacity="0.22"
+            stroke="#1B3B4B"
+            strokeWidth="1.3"
+          />
+          {!compact && (
+            <text
+              x="90"
+              y="90"
+              textAnchor="middle"
+              fill="#142834"
+              fontFamily="serif"
+              fontSize="10.5"
+              fontWeight="600"
+            >
+              Khối lượng đắp đê &amp; công trình thủy lợi
+            </text>
+          )}
+        </g>
+
+        {/* Bảng lưới lập thành tính gạch xây thành */}
+        <g transform="translate(370, 212)">
+          <rect
+            x="0"
+            y="0"
+            width="138"
+            height="72"
+            fill="#E9D6AA"
+            stroke="#1B3B4B"
+            strokeWidth="1.3"
+          />
+          <g stroke="#1B3B4B" strokeOpacity="0.45" strokeWidth="0.9">
+            <line x1="46" y1="0" x2="46" y2="72" />
+            <line x1="92" y1="0" x2="92" y2="72" />
+            <line x1="0" y1="24" x2="138" y2="24" />
+            <line x1="0" y1="48" x2="138" y2="48" />
+          </g>
+          {!compact && (
+            <text
+              x="69"
+              y="88"
+              textAnchor="middle"
+              fill="#142834"
+              fontFamily="serif"
+              fontSize="10.5"
+              fontWeight="700"
+            >
+              Bảng tra Lập thành vật liệu
+            </text>
+          )}
+        </g>
+
+        {/* Triện son Vũ Hữu */}
+        <g transform="translate(526, 266)">
+          <rect
+            x="0"
+            y="0"
+            width="36"
+            height="36"
+            rx="4"
+            fill="#B83B2E"
+            fillOpacity="0.14"
+            stroke="#B83B2E"
+            strokeWidth="1.6"
+          />
+          <text
+            x="18"
+            y="16"
+            textAnchor="middle"
+            fill="#B83B2E"
+            fontFamily="serif"
+            fontSize="9"
+            fontWeight="700"
+          >
+            VŨ
+          </text>
+          <text
+            x="18"
+            y="28"
+            textAnchor="middle"
+            fill="#B83B2E"
+            fontFamily="serif"
+            fontSize="9"
+            fontWeight="700"
+          >
+            HỮU
+          </text>
+        </g>
+
+        {renderHeaderLabel}
+      </svg>
+    );
+  }
+
+  // =====================================================================
+  // MỤC 03: MELENCOLIA I (ALBRECHT DÜRER, 1514) — ĐỒ HỌA KHẮC ĐỒNG TOÀN KHUNG
+  // =====================================================================
+  if (artwork.id === 'melencolia-i') {
+    return (
+      <svg
+        viewBox="0 0 640 400"
+        preserveAspectRatio="xMidYMid slice"
+        className="h-full w-full select-none"
+        aria-label={`Minh họa học thuật cho ${artwork.title}`}
+      >
+        <defs>
+          <linearGradient id={indigoBgId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#10212E" />
+            <stop offset="55%" stopColor="#183244" />
+            <stop offset="100%" stopColor="#0D1822" />
+          </linearGradient>
+        </defs>
+        <rect width="640" height="400" fill={`url(#${indigoBgId})`} />
+        <rect
+          x="16"
+          y="16"
+          width="608"
+          height="368"
+          rx="14"
+          fill="none"
+          stroke="#D4A853"
+          strokeOpacity="0.48"
+          strokeWidth="1.2"
+        />
+
+        {/* Sao chổi & tia hào quang trên biển */}
+        <circle cx="130" cy="96" r="34" fill="#E5B85B" fillOpacity="0.16" />
+        <circle cx="130" cy="96" r="10" fill="#FAF5E8" fillOpacity="0.9" />
+        <path
+          d="M 130 96 L 236 46 M 130 96 L 250 90 M 130 96 L 228 144"
+          stroke="#E5B85B"
+          strokeOpacity="0.52"
+          strokeWidth="1.1"
+          strokeDasharray="4 4"
+        />
+
+        {/* Khối đa diện cụt nổi tiếng của Dürer */}
+        <g stroke="#FAF5E8" strokeWidth="1.7" strokeLinejoin="round">
+          <polygon
+            points="178,136 266,118 310,190 274,288 188,306 140,238"
+            fill="#1B3B4B"
+            fillOpacity="0.88"
+          />
+          <polygon points="178,136 266,118 248,172 188,186" fill="#E5B85B" fillOpacity="0.25" />
+          <line x1="188" y1="186" x2="248" y2="172" stroke="#E5B85B" strokeWidth="1.4" />
+          <line x1="248" y1="172" x2="310" y2="190" stroke="#E5B85B" strokeWidth="1.4" />
+          <line x1="248" y1="172" x2="232" y2="262" stroke="#DCE6E2" strokeOpacity="0.85" />
+          <line x1="232" y1="262" x2="274" y2="288" stroke="#DCE6E2" strokeOpacity="0.85" />
+          <line x1="232" y1="262" x2="188" y2="306" stroke="#DCE6E2" strokeOpacity="0.85" />
+          <line x1="188" y1="186" x2="140" y2="238" stroke="#DCE6E2" strokeOpacity="0.85" />
+        </g>
+
+        {/* Quả cầu trắc lượng & Compa */}
+        <circle cx="344" cy="284" r="32" fill="#142834" stroke="#E5B85B" strokeWidth="1.6" />
+        <ellipse
+          cx="344"
+          cy="284"
+          rx="32"
+          ry="11"
+          fill="none"
+          stroke="#DCE6E2"
+          strokeOpacity="0.55"
+          strokeDasharray="3 3"
+        />
+        <g stroke="#E5B85B" strokeWidth="1.7" fill="none" strokeLinecap="round">
+          <circle cx="424" cy="222" r="4.5" fill="#E5B85B" />
+          <path d="M 424 226 L 392 310 M 424 226 L 456 308" />
+          <path d="M 402 276 Q 424 284 446 276" strokeOpacity="0.85" />
+        </g>
+
+        {/* Ma phương bậc 4 của Dürer */}
+        <g transform="translate(392, 54)">
+          <rect
+            x="0"
+            y="0"
+            width="160"
+            height="136"
+            rx="8"
+            fill="#0D1822"
+            stroke="#E5B85B"
+            strokeWidth="1.4"
+          />
+          <g stroke="#E5B85B" strokeOpacity="0.35" strokeWidth="0.9">
+            <line x1="40" y1="0" x2="40" y2="136" />
+            <line x1="80" y1="0" x2="80" y2="136" />
+            <line x1="120" y1="0" x2="120" y2="136" />
+            <line x1="0" y1="34" x2="160" y2="34" />
+            <line x1="0" y1="68" x2="160" y2="68" />
+            <line x1="0" y1="102" x2="160" y2="102" />
           </g>
           <g
-            fill="#F8F6F0"
+            fill="#FAF5E8"
             fontFamily="monospace"
-            fontSize="11"
+            fontSize="13"
             fontWeight="600"
             textAnchor="middle"
           >
-            <text x="15.5" y="17">
+            <text x="20" y="22">
               16
             </text>
-            <text x="46.5" y="17">
+            <text x="60" y="22">
               3
             </text>
-            <text x="77.5" y="17">
+            <text x="100" y="22">
               2
             </text>
-            <text x="108.5" y="17">
+            <text x="140" y="22">
               13
             </text>
-            <text x="15.5" y="44">
+            <text x="20" y="56">
               5
             </text>
-            <text x="46.5" y="44">
+            <text x="60" y="56">
               10
             </text>
-            <text x="77.5" y="44">
+            <text x="100" y="56">
               11
             </text>
-            <text x="108.5" y="44">
+            <text x="140" y="56">
               8
             </text>
-            <text x="15.5" y="71">
+            <text x="20" y="90">
               9
             </text>
-            <text x="46.5" y="71">
+            <text x="60" y="90">
               6
             </text>
-            <text x="77.5" y="71">
+            <text x="100" y="90">
               7
             </text>
-            <text x="108.5" y="71">
+            <text x="140" y="90">
               12
             </text>
-            <text x="15.5" y="98">
+            <text x="20" y="124">
               4
             </text>
-            <text x="46.5" y="98" fill="#E5C158">
+            <text x="60" y="124" fill="#E5B85B">
               15
             </text>
-            <text x="77.5" y="98" fill="#E5C158">
+            <text x="100" y="124" fill="#E5B85B">
               14
             </text>
-            <text x="108.5" y="98">
+            <text x="140" y="124">
               1
             </text>
           </g>
         </g>
 
-        <text
-          x="220"
-          y="292"
-          textAnchor="middle"
-          fill="#E5C158"
-          fontFamily="monospace"
-          fontSize="10"
-          letterSpacing="1.8"
-        >
-          MELENCOLIA I · DÜRER SOLID &amp; MAGIC SQUARE (1514)
-        </text>
+        {renderHeaderLabel}
       </svg>
     );
   }
 
+  // =====================================================================
+  // CÁC TÁC PHẨM KHÁC KHI NGOẠI TUYẾN / LỖI TẢI ẢNH: ĐỒ HỌA KIẾN TRÚC & KHOA HỌC ĐA LỚP TOÀN KHUNG
+  // =====================================================================
+  const isVnArch =
+    artwork.id === 'khue-van-cac' ||
+    artwork.id === 'chua-mot-cot-1049' ||
+    artwork.id === 'thap-but-dai-nghien-1865' ||
+    artwork.id === 'truong-quoc-hoc-hue-1896' ||
+    artwork.id === 'gac-chuong-chua-keo-1632' ||
+    artwork.id === 'dai-hoc-dong-duong-1906' ||
+    artwork.id === 'ngo-mon-dien-thai-hoa' ||
+    artwork.id === 'hoang-thanh-thang-long' ||
+    artwork.id === 'thap-cham-my-son' ||
+    artwork.id === 'thap-pho-minh';
+
   const isCelestial =
-    artwork.id === 'copernicus-1543' ||
-    artwork.id === 'kepler-1596' ||
+    artwork.category === 'astronomy-science' ||
     artwork.id === 'nguoi-chiem-tinh' ||
-    artwork.id === 'principia-mathematica-newton';
-  const isPolyhedron =
-    artwork.id === 'de-divina-proportione' ||
     artwork.id === 'nguoi-vitruvius' ||
-    artwork.id === 'euclid-elements-1482' ||
-    artwork.id === 'archimedes-palimpsest' ||
-    artwork.id === 'la-geometrie-descartes' ||
-    artwork.id === 'disquisitiones-arithmeticae-gauss';
-  const isTreatiseOrStele =
-    artwork.id === 'dai-thanh-toan-phap' ||
-    artwork.id === 'lap-thanh-toan-phap' ||
-    artwork.id === 'hong-duc-ban-do-1490' ||
-    artwork.id === 'rhind-mathematical-papyrus' ||
-    artwork.id === 'al-jabr-khwarizmi' ||
-    artwork.id === 'bia-tien-si';
+    artwork.id === 'truong-hoc-athena';
+
+  const isGeometry = artwork.category === 'math-geometry';
 
   return (
     <svg
-      viewBox="0 0 440 320"
-      className="h-full w-full max-w-[420px] select-none"
+      viewBox="0 0 640 400"
+      preserveAspectRatio="xMidYMid slice"
+      className="h-full w-full select-none"
       aria-label={`Minh họa học thuật cho ${artwork.title}`}
     >
+      <defs>
+        <linearGradient id={indigoBgId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#10212E" />
+          <stop offset="50%" stopColor="#183244" />
+          <stop offset="100%" stopColor="#0C1722" />
+        </linearGradient>
+        <radialGradient id={paperGradId} cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stopColor="#E5B85B" stopOpacity="0.28" />
+          <stop offset="55%" stopColor="#D4A853" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="#10212E" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id={goldGradId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFF3D1" />
+          <stop offset="50%" stopColor="#E5B85B" />
+          <stop offset="100%" stopColor="#C8963E" />
+        </linearGradient>
+      </defs>
+
+      {/* Nền Chàm Hoàng Gia & Hào quang Hổ Phách */}
+      <rect width="640" height="400" fill={`url(#${indigoBgId})`} />
+      <circle cx="320" cy="180" r="210" fill={`url(#${paperGradId})`} />
+
+      {/* Đường viền khung bảo tàng kép */}
       <rect
-        x="14"
-        y="14"
-        width="412"
-        height="292"
+        x="16"
+        y="16"
+        width="608"
+        height="368"
         rx="14"
-        fill="#162E28"
-        stroke="#E5C158"
+        fill="none"
+        stroke="#D4A853"
         strokeOpacity="0.45"
         strokeWidth="1.2"
       />
       <rect
-        x="24"
-        y="24"
-        width="392"
-        height="272"
+        x="26"
+        y="26"
+        width="588"
+        height="348"
         rx="10"
         fill="none"
-        stroke="#D1DCD6"
-        strokeOpacity="0.16"
-        strokeDasharray="4 4"
+        stroke="#FAF5E8"
+        strokeOpacity="0.14"
+        strokeDasharray="4 6"
       />
-      {isCelestial ? (
-        <g stroke="#E5C158" fill="none" strokeWidth="1.3">
-          <circle cx="220" cy="145" r="14" fill="#E5C158" fillOpacity="0.25" />
-          <circle cx="220" cy="145" r="42" strokeOpacity="0.65" />
-          <ellipse cx="220" cy="145" rx="82" ry="62" stroke="#F8F6F0" strokeOpacity="0.7" />
-          <circle cx="220" cy="145" r="102" strokeDasharray="5 5" strokeOpacity="0.45" />
-          <polygon points="220,76 280,180 160,180" stroke="#8EE5CE" strokeOpacity="0.55" />
-          <circle cx="262" cy="145" r="4.5" fill="#F8F6F0" />
-          <circle cx="152" cy="108" r="4" fill="#8EE5CE" />
-        </g>
-      ) : isPolyhedron ? (
-        <g stroke="#E5C158" fill="none" strokeWidth="1.35">
-          <circle cx="220" cy="148" r="82" strokeOpacity="0.45" />
-          <rect x="150" y="78" width="140" height="140" stroke="#F8F6F0" strokeOpacity="0.6" />
-          <polygon
-            points="220,66 286,114 260,192 180,192 154,114"
-            fill="#E5C158"
-            fillOpacity="0.12"
-          />
-          <polygon points="220,88 264,182 176,182" stroke="#8EE5CE" strokeOpacity="0.72" />
-          <path d="M 140 148 H 300 M 220 66 V 230" stroke="#E5C158" strokeOpacity="0.28" />
-        </g>
-      ) : isTreatiseOrStele ? (
-        <g stroke="#E5C158" fill="none" strokeWidth="1.3">
-          <rect x="136" y="64" width="168" height="168" rx="8" fill="#1B3931" fillOpacity="0.7" />
-          <path d="M 220 64 V 232 M 136 148 H 304" stroke="#E5C158" strokeOpacity="0.32" />
-          <circle cx="178" cy="106" r="24" stroke="#8EE5CE" strokeOpacity="0.65" />
-          <polygon points="262,84 288,128 236,128" fill="#E5C158" fillOpacity="0.18" />
+
+      {/* Họa tiết đồng tâm Trống Đồng mờ */}
+      <circle cx="320" cy="182" r="146" fill="none" stroke="#D4A853" strokeOpacity="0.16" />
+      <circle
+        cx="320"
+        cy="182"
+        r="116"
+        fill="none"
+        stroke="#D4A853"
+        strokeOpacity="0.22"
+        strokeDasharray="5 5"
+      />
+
+      {isVnArch ? (
+        <g stroke={`url(#${goldGradId})`} fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {/* Mái đao cong nhiều tầng cổ truyền Việt Nam & Bóng nước phản chiếu */}
           <path
-            d="M 154 176 H 286 M 154 196 H 264 M 154 214 H 286"
-            stroke="#F8F6F0"
-            strokeOpacity="0.5"
+            d="M 196 156 Q 256 142 320 92 Q 384 142 444 156 Z"
+            fill="#E5B85B"
+            fillOpacity="0.18"
+            strokeWidth="1.8"
           />
+          <path
+            d="M 224 198 Q 272 186 320 144 Q 368 186 416 198 Z"
+            fill="#FAF5E8"
+            fillOpacity="0.12"
+            strokeWidth="1.6"
+          />
+          <rect
+            x="246"
+            y="198"
+            width="148"
+            height="68"
+            fill="#142834"
+            fillOpacity="0.72"
+            strokeWidth="1.5"
+          />
+          <circle cx="320" cy="162" r="16" fill="#FAF5E8" fillOpacity="0.18" strokeWidth="1.5" />
+          {[268, 294, 346, 372].map((px) => (
+            <line key={px} x1={px} y1="198" x2={px} y2="266" strokeWidth="2.1" />
+          ))}
+          {/* Đường soi bóng mặt hồ */}
+          <line x1="170" y1="274" x2="470" y2="274" strokeOpacity="0.6" strokeWidth="1.4" />
+          <line
+            x1="210"
+            y1="288"
+            x2="430"
+            y2="288"
+            stroke="#FAF5E8"
+            strokeOpacity="0.32"
+            strokeDasharray="8 6"
+          />
+          <line x1="240" y1="302" x2="400" y2="302" strokeOpacity="0.22" strokeDasharray="5 7" />
+        </g>
+      ) : isCelestial ? (
+        <g stroke={`url(#${goldGradId})`} fill="none" strokeWidth="1.45">
+          <circle cx="320" cy="182" r="18" fill="#E5B85B" fillOpacity="0.28" />
+          <circle cx="320" cy="182" r="54" strokeOpacity="0.72" />
+          <ellipse
+            cx="320"
+            cy="182"
+            rx="124"
+            ry="66"
+            transform="rotate(-22 320 182)"
+            stroke="#FAF5E8"
+            strokeOpacity="0.68"
+          />
+          <ellipse
+            cx="320"
+            cy="182"
+            rx="118"
+            ry="58"
+            transform="rotate(28 320 182)"
+            stroke="#38BDF8"
+            strokeOpacity="0.62"
+          />
+          <polygon points="320,96 394,226 246,226" stroke="#E5B85B" strokeOpacity="0.58" />
+          <circle cx="394" cy="152" r="5" fill="#FAF5E8" stroke="none" />
+          <circle cx="242" cy="204" r="4.5" fill="#38BDF8" stroke="none" />
+        </g>
+      ) : isGeometry ? (
+        <g stroke={`url(#${goldGradId})`} fill="none" strokeWidth="1.5">
+          <rect
+            x="230"
+            y="92"
+            width="180"
+            height="180"
+            fill="#142834"
+            fillOpacity="0.5"
+            stroke="#FAF5E8"
+            strokeOpacity="0.58"
+          />
+          <polygon
+            points="320,82 414,150 378,260 262,260 226,150"
+            fill="#E5B85B"
+            fillOpacity="0.16"
+          />
+          <polygon points="320,104 378,244 262,244" stroke="#38BDF8" strokeOpacity="0.75" />
+          <path d="M 188 182 H 452 M 320 68 V 296" stroke="#E5B85B" strokeOpacity="0.32" />
+          <circle cx="320" cy="182" r="4" fill="#FAF5E8" stroke="none" />
         </g>
       ) : (
-        <g stroke="#E5C158" fill="none" strokeWidth="1.35">
-          <circle cx="220" cy="145" r="76" strokeOpacity="0.55" />
+        /* Di sản Bản đồ, Mộc bản, Bia ký & Trống đồng Việt Nam */
+        <g stroke={`url(#${goldGradId})`} fill="none" strokeWidth="1.45">
+          <rect
+            x="200"
+            y="84"
+            width="240"
+            height="196"
+            rx="10"
+            fill="#FAF5E8"
+            fillOpacity="0.08"
+            strokeOpacity="0.65"
+          />
+          <circle cx="320" cy="182" r="70" strokeOpacity="0.6" />
           <circle
-            cx="220"
-            cy="145"
-            r="52"
-            stroke="#F8F6F0"
+            cx="320"
+            cy="182"
+            r="46"
+            stroke="#FAF5E8"
             strokeOpacity="0.45"
             strokeDasharray="3 4"
           />
           <path
-            d="M 220 78 L 231 124 L 278 112 L 240 142 L 284 156 L 238 164 L 266 202 L 226 174 L 220 214 L 214 174 L 174 202 L 202 164 L 156 156 L 200 142 L 162 112 L 209 124 Z"
-            fill="#E5C158"
-            fillOpacity="0.2"
+            d="M 320 112 L 331 158 L 378 146 L 340 176 L 384 190 L 338 198 L 366 236 L 326 208 L 320 248 L 314 208 L 274 236 L 302 198 L 256 190 L 300 176 L 262 146 L 309 158 Z"
+            fill="#E5B85B"
+            fillOpacity="0.24"
           />
+          <circle cx="320" cy="182" r="4.5" fill="#FAF5E8" stroke="none" />
         </g>
       )}
-      <text
-        x="220"
-        y="264"
-        textAnchor="middle"
-        fill="#F8F6F0"
-        fontFamily="serif"
-        fontSize="13.5"
-        fontWeight="600"
-      >
-        {artwork.title}
-      </text>
-      <text x="220" y="284" textAnchor="middle" fill="#E5C158" fontFamily="monospace" fontSize="10">
-        {artwork.yearOrEra}
-      </text>
+
+      {renderHeaderLabel}
     </svg>
   );
 }
@@ -1317,10 +2119,10 @@ export function HeritageArtShowcase() {
           onMouseLeave={handleImageMouseLeave}
           className="relative flex h-[350px] w-full items-center justify-center overflow-hidden rounded-xl border border-[#E5B869]/35 bg-[#112722]/85 p-3 shadow-inner transition-colors duration-300 hover:border-[#F6D383]/65 md:h-[425px] xl:h-[460px]"
         >
-          {imageError ? (
+          {imageError || isHeritageInlineSvg(currentArtwork) ? (
             <div
               data-testid="heritage-svg-fallback"
-              className="flex h-full w-full items-center justify-center p-2"
+              className="flex h-full w-full items-center justify-center"
             >
               <HeritageFallbackIllustration artwork={currentArtwork} />
             </div>
