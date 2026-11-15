@@ -1,0 +1,464 @@
+import { useEffect, useRef, useState } from 'react';
+import { Network } from 'lucide-react';
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
+import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
+import { cn } from '@/shared/lib/cn';
+
+interface AnchorSubjectNode {
+  readonly id: 'CTDS' | 'HHAVE' | 'GTHMB' | 'GDH';
+  readonly shortLabel: string;
+  readonly nx: number;
+  readonly ny: number;
+  readonly color: string;
+  readonly bg: string;
+}
+
+export interface KnowledgeBridgeNode {
+  readonly id: string;
+  readonly shortLabel: string;
+  readonly title: string;
+  readonly relationLabel: string;
+  readonly explanation: string;
+  readonly targets: readonly ('CTDS' | 'HHAVE' | 'GTHMB' | 'GDH')[];
+  readonly nx: number;
+  readonly ny: number;
+  readonly color: string;
+  readonly pillActiveClass: string;
+  readonly phase: number;
+}
+
+const ANCHOR_SUBJECTS: readonly AnchorSubjectNode[] = [
+  { id: 'CTDS', shortLabel: 'CTĐS', nx: 0.16, ny: 0.22, color: '#6B5335', bg: '#F3F0E8' },
+  { id: 'HHAVE', shortLabel: 'HHAVE', nx: 0.83, ny: 0.22, color: '#2D5266', bg: '#ECF1F4' },
+  { id: 'GTHMB', shortLabel: 'GTHMB', nx: 0.82, ny: 0.8, color: '#245746', bg: '#EBF2EE' },
+  { id: 'GDH', shortLabel: 'GDH', nx: 0.16, ny: 0.8, color: '#7A463B', bg: '#F3ECE9' },
+];
+
+const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
+  {
+    id: 'equiv-quotient',
+    shortLabel: 'Tập thương',
+    title: 'Quan hệ tương đương & Tập thương',
+    relationLabel: 'CTĐS ↔ HHAVE',
+    explanation:
+      'Phân hoạch lớp tương đương và nhóm thương G / ker φ là nền tảng đại số xây dựng không gian thương V / W và các lớp song song trong Hình học Affine.',
+    targets: ['CTDS', 'HHAVE'],
+    nx: 0.49,
+    ny: 0.15,
+    color: '#6B5335',
+    pillActiveClass: 'border-[#6B5335] bg-[#F3F0E8] text-[#6B5335]',
+    phase: 0.2,
+  },
+  {
+    id: 'isometry-group',
+    shortLabel: 'Đẳng cự',
+    title: 'Nhóm biến hình & Đẳng cự',
+    relationLabel: 'CTĐS ↔ HHAVE',
+    explanation:
+      'Theo Chương trình Erlangen của Felix Klein, nhóm đối xứng GL(n), nhóm trực giao O(n) và nhóm Affine phân loại các phép biến đổi và bất biến hình học.',
+    targets: ['CTDS', 'HHAVE'],
+    nx: 0.5,
+    ny: 0.34,
+    color: '#2D5266',
+    pillActiveClass: 'border-[#2D5266] bg-[#ECF1F4] text-[#2D5266]',
+    phase: 1.4,
+  },
+  {
+    id: 'polynomial-series',
+    shortLabel: 'Đa thức & Chuỗi',
+    title: 'Vành đa thức & Chuỗi lũy thừa',
+    relationLabel: 'CTĐS ↔ GTHMB',
+    explanation:
+      'Cấu trúc vành đa thức K[X] và công thức chia có dư chuẩn hóa cầu nối trực tiếp sang xấp xỉ đa thức Taylor và bán kính hội tụ trong Giải tích.',
+    targets: ['CTDS', 'GTHMB'],
+    nx: 0.56,
+    ny: 0.55,
+    color: '#8C6D3F',
+    pillActiveClass: 'border-[#8C6D3F] bg-[#F3F0E8] text-[#6B5335]',
+    phase: 2.6,
+  },
+  {
+    id: 'metric-euclide',
+    shortLabel: 'Metric Euclide',
+    title: 'Cấu trúc Không gian Metric / Euclide',
+    relationLabel: 'HHAVE ↔ GTHMB',
+    explanation:
+      'Chuẩn vector và tích vô hướng Euclide từ hình học mở rộng thành khoảng cách metric, tôpô mở, dãy Cauchy và định lý giá trị trung bình nhiều chiều.',
+    targets: ['HHAVE', 'GTHMB'],
+    nx: 0.84,
+    ny: 0.51,
+    color: '#245746',
+    pillActiveClass: 'border-[#245746] bg-[#EBF2EE] text-[#245746]',
+    phase: 3.7,
+  },
+  {
+    id: 'axiomatic-pedagogy',
+    shortLabel: 'Sư phạm Tiên đề',
+    title: 'Tư duy Tiên đề & Sư phạm Toán',
+    relationLabel: 'Toán học ↔ GDH',
+    explanation:
+      'Chuyển hóa sư phạm biến các cấu trúc tiên đề trừu tượng (nhóm, giới hạn ε-δ, phép dời hình) thành tình huống gợi vấn đề và trực quan cho học sinh phổ thông.',
+    targets: ['CTDS', 'HHAVE', 'GTHMB', 'GDH'],
+    nx: 0.31,
+    ny: 0.62,
+    color: '#7A463B',
+    pillActiveClass: 'border-[#7A463B] bg-[#F3ECE9] text-[#7A463B]',
+    phase: 4.8,
+  },
+];
+
+/**
+ * Mô hình 2 (Cột phải - Quỹ đạo học tập cá nhân):
+ * Mạng Lưới Liên Kết Tri Thức Liên Môn (Interactive Node-Link Graph 120fps)
+ * thể hiện giao thoa kiến thức Toán học — Khoa học Giáo dục.
+ */
+export function KnowledgeConstellationCard() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const selectedIdRef = useRef<string>(KNOWLEDGE_BRIDGE_NODES[0]!.id);
+  const [selectedId, setSelectedId] = useState<string>(KNOWLEDGE_BRIDGE_NODES[0]!.id);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    selectedIdRef.current = selectedId;
+  }, [selectedId]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+
+    const ctx = getLowLatency2DContext(canvas);
+    if (!ctx) return;
+
+    let width = Math.max(240, container.clientWidth || 320);
+    let height = Math.max(200, container.clientHeight || 228);
+    let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      width = Math.max(240, container.clientWidth || 320);
+      height = Math.max(200, container.clientHeight || 228);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    };
+    resize();
+
+    let rafId = 0;
+    let isVisible = true;
+    let elapsed = 0;
+    let prevNow = performance.now();
+
+    const getBridgePos = (node: KnowledgeBridgeNode, time: number) => ({
+      x: node.nx * width + Math.cos(time * 1.15 + node.phase) * 3.5,
+      y: node.ny * height + Math.sin(time * 1.35 + node.phase) * 3.5,
+    });
+
+    const getAnchorPos = (anchor: AnchorSubjectNode) => ({
+      x: anchor.nx * width,
+      y: anchor.ny * height,
+    });
+
+    const drawGraph = (time: number) => {
+      ctx.save();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const activeId = selectedIdRef.current;
+      const anchorPositions = new Map(ANCHOR_SUBJECTS.map((a) => [a.id, getAnchorPos(a)]));
+
+      // 1. Vẽ liên kết nền nhẹ giữa 4 học phần
+      ctx.strokeStyle = 'rgba(74, 93, 88, 0.14)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+      const cornerOrder: readonly ('CTDS' | 'HHAVE' | 'GTHMB' | 'GDH')[] = [
+        'CTDS',
+        'HHAVE',
+        'GTHMB',
+        'GDH',
+      ];
+      ctx.beginPath();
+      cornerOrder.forEach((id, idx) => {
+        const pt = anchorPositions.get(id)!;
+        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 2. Vẽ các cạnh nối nút cầu nối tri thức tới các môn học liên quan
+      for (const bridge of KNOWLEDGE_BRIDGE_NODES) {
+        const bPos = getBridgePos(bridge, time);
+        const isActive = bridge.id === activeId;
+
+        bridge.targets.forEach((targetId, tIdx) => {
+          const targetAnchor = ANCHOR_SUBJECTS.find((a) => a.id === targetId);
+          const aPos = anchorPositions.get(targetId);
+          if (!aPos || !targetAnchor) return;
+
+          // Điểm uốn nhẹ để đường nối song song không trùng nhau
+          const midX = (aPos.x + bPos.x) * 0.5;
+          const midY = (aPos.y + bPos.y) * 0.5 + (tIdx % 2 === 0 ? -8 : 8);
+
+          ctx.beginPath();
+          ctx.moveTo(bPos.x, bPos.y);
+          ctx.quadraticCurveTo(midX, midY, aPos.x, aPos.y);
+          ctx.strokeStyle = isActive ? bridge.color : 'rgba(74, 93, 88, 0.22)';
+          ctx.globalAlpha = isActive ? 0.85 : 0.45;
+          ctx.lineWidth = isActive ? 2.1 : 1;
+          ctx.stroke();
+
+          // Hạt tri thức di chuyển dọc cạnh nối đang được chọn
+          if (isActive) {
+            const u = (time * 0.52 + tIdx * 0.35) % 1;
+            const inv = 1 - u;
+            const px = inv * inv * bPos.x + 2 * inv * u * midX + u * u * aPos.x;
+            const py = inv * inv * bPos.y + 2 * inv * u * midY + u * u * aPos.y;
+            ctx.globalAlpha = 1;
+            ctx.beginPath();
+            ctx.arc(px, py, 3.2, 0, Math.PI * 2);
+            ctx.fillStyle = targetAnchor.color;
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(px, py, 1.3, 0, Math.PI * 2);
+            ctx.fillStyle = '#FAFBF9';
+            ctx.fill();
+          }
+        });
+      }
+      ctx.globalAlpha = 1;
+
+      // 3. Vẽ 4 nút Học phần (Subject Anchor Hubs)
+      const activeBridge = KNOWLEDGE_BRIDGE_NODES.find((b) => b.id === activeId);
+      for (const anchor of ANCHOR_SUBJECTS) {
+        const pos = anchorPositions.get(anchor.id)!;
+        const isLinked = activeBridge ? activeBridge.targets.includes(anchor.id) : true;
+
+        if (isLinked) {
+          const glow = ctx.createRadialGradient(pos.x, pos.y, 4, pos.x, pos.y, 24);
+          glow.addColorStop(0, `${anchor.color}2E`);
+          glow.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 24, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, 16, 0, Math.PI * 2);
+        ctx.fillStyle = isLinked ? anchor.bg : '#F2F4F3';
+        ctx.fill();
+        ctx.strokeStyle = anchor.color;
+        ctx.globalAlpha = isLinked ? 1 : 0.4;
+        ctx.lineWidth = isLinked ? 1.8 : 1.1;
+        ctx.stroke();
+
+        ctx.font = '700 9.5px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = anchor.color;
+        ctx.fillText(anchor.shortLabel, pos.x, pos.y);
+      }
+      ctx.globalAlpha = 1;
+
+      // 4. Vẽ 5 nút Cầu nối Liên môn
+      for (const bridge of KNOWLEDGE_BRIDGE_NODES) {
+        const bPos = getBridgePos(bridge, time);
+        const isActive = bridge.id === activeId;
+
+        if (isActive) {
+          const halo = ctx.createRadialGradient(bPos.x, bPos.y, 2, bPos.x, bPos.y, 18);
+          halo.addColorStop(0, `${bridge.color}40`);
+          halo.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = halo;
+          ctx.beginPath();
+          ctx.arc(bPos.x, bPos.y, 18, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(bPos.x, bPos.y, isActive ? 6.2 : 4.4, 0, Math.PI * 2);
+        ctx.fillStyle = isActive ? bridge.color : '#FAFBF9';
+        ctx.fill();
+        ctx.strokeStyle = bridge.color;
+        ctx.lineWidth = isActive ? 2 : 1.4;
+        ctx.stroke();
+
+        if (isActive) {
+          ctx.beginPath();
+          ctx.arc(bPos.x, bPos.y, 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = '#FAFBF9';
+          ctx.fill();
+        }
+
+        ctx.font = `${isActive ? '700' : '600'} 9.5px "Be Vietnam Pro", system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = isActive ? '#182624' : '#4A5D58';
+        ctx.fillText(bridge.shortLabel, bPos.x, bPos.y + 9);
+      }
+
+      ctx.restore();
+    };
+
+    const pickNearestBridge = (px: number, py: number): string | null => {
+      let bestId: string | null = null;
+      let bestDist = 30;
+      for (const bridge of KNOWLEDGE_BRIDGE_NODES) {
+        const pos = getBridgePos(bridge, elapsed);
+        const d = Math.hypot(px - pos.x, py - pos.y);
+        if (d < bestDist) {
+          bestDist = d;
+          bestId = bridge.id;
+        }
+      }
+      return bestId;
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const rect = container.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const found = pickNearestBridge(event.clientX - rect.left, event.clientY - rect.top);
+      container.style.cursor = found ? 'pointer' : 'default';
+      if (found && found !== selectedIdRef.current) {
+        setSelectedId(found);
+      }
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const found = pickNearestBridge(event.clientX - rect.left, event.clientY - rect.top);
+      if (found) setSelectedId(found);
+    };
+
+    container.addEventListener('pointermove', handlePointerMove);
+    container.addEventListener('click', handleClick);
+
+    let ro: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => resize());
+      ro.observe(container);
+    }
+
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver(
+        (entries) => {
+          isVisible = entries[0]?.isIntersecting ?? true;
+        },
+        { threshold: 0.05 },
+      );
+      io.observe(container);
+    }
+
+    drawGraph(0.6);
+    if (prefersReducedMotion) {
+      return () => {
+        container.removeEventListener('pointermove', handlePointerMove);
+        container.removeEventListener('click', handleClick);
+        ro?.disconnect();
+        io?.disconnect();
+      };
+    }
+
+    const tick = (now: number) => {
+      const { dtSeconds } = computeFrameDelta(now, prevNow);
+      prevNow = now;
+      if (isVisible && !document.hidden) {
+        elapsed += dtSeconds;
+        drawGraph(elapsed);
+      }
+      rafId = window.requestAnimationFrame(tick);
+    };
+    rafId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      container.removeEventListener('pointermove', handlePointerMove);
+      container.removeEventListener('click', handleClick);
+      ro?.disconnect();
+      io?.disconnect();
+    };
+  }, [prefersReducedMotion]);
+
+  const activeBridge =
+    KNOWLEDGE_BRIDGE_NODES.find((item) => item.id === selectedId) ?? KNOWLEDGE_BRIDGE_NODES[0]!;
+
+  return (
+    <div
+      data-testid="knowledge-constellation-card"
+      className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-xs sm:p-6"
+    >
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className="rounded-lg bg-[#ECF1F4] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#2D5266]">
+            GIAO THOA LIÊN MÔN · 120FPS GRAPH
+          </span>
+          <Network className="h-4 w-4 text-[#2D5266]" aria-hidden="true" />
+        </div>
+
+        <h3 className="font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
+          Mạng Lưới Liên Kết Tri Thức
+        </h3>
+
+        {/* Đồ thị Mạng lưới Tri thức Canvas 120fps */}
+        <div
+          ref={containerRef}
+          className="relative h-[222px] w-full overflow-hidden rounded-2xl border border-[#C9D7DF] bg-[#ECF1F4]/45"
+        >
+          <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
+        </div>
+
+        {/* Các nút cầu nối tri thức để chọn / chạm trực tiếp */}
+        <div
+          className="flex flex-wrap gap-1.5"
+          role="group"
+          aria-label="Chọn điểm giao thoa tri thức"
+        >
+          {KNOWLEDGE_BRIDGE_NODES.map((bridge) => {
+            const isActive = bridge.id === activeBridge.id;
+            return (
+              <button
+                key={bridge.id}
+                type="button"
+                data-testid={`constellation-node-${bridge.id}`}
+                onMouseEnter={() => setSelectedId(bridge.id)}
+                onClick={() => setSelectedId(bridge.id)}
+                aria-pressed={isActive}
+                className={cn(
+                  'cursor-pointer rounded-full border px-2.5 py-1 text-[10.5px] font-semibold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
+                  isActive
+                    ? bridge.pillActiveClass
+                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#2D5266]/45 hover:text-[#182624]',
+                )}
+              >
+                {bridge.shortLabel}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Hộp giải thích ngắn gọn sự giao thoa kiến thức giữa các môn */}
+      <div
+        data-testid="constellation-insight-panel"
+        className="mt-3 space-y-1.5 rounded-xl border border-[#C9D7DF] bg-[#ECF1F4]/60 px-3.5 py-2.5"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-bold text-[#182624]">{activeBridge.title}</span>
+          <span
+            className="rounded-md border border-[#C9D7DF] bg-[#FAFBF9] px-1.5 py-0.5 font-mono text-[10px] font-bold"
+            style={{ color: activeBridge.color }}
+          >
+            {activeBridge.relationLabel}
+          </span>
+        </div>
+        <p className="text-[11.5px] leading-relaxed text-[#3F524E]">{activeBridge.explanation}</p>
+      </div>
+    </div>
+  );
+}

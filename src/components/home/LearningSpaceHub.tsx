@@ -1,32 +1,21 @@
 import type { ManifestChapter, ManifestLesson, ManifestSubject } from '@schemas/index';
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BookMarked,
-  CheckCircle2,
-  ChevronDown,
-  Compass,
-  Play,
-  Sparkles,
-} from 'lucide-react';
-import { type MouseEvent, useEffect, useRef, useState } from 'react';
+import { ArrowRight, CheckCircle2, ChevronDown, Compass, Play, Sparkles } from 'lucide-react';
+import { type CSSProperties, type MouseEvent, useState } from 'react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjects, getSubjectStats } from '@/content-runtime';
 import { type AcademicBranch, getCourseCinematicAsset } from '@/data/cinematicAssets';
 import { useLearningStore } from '@/features/learning';
-import { KatexMath } from '@/features/math-glossary';
 import { searchContent } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
-import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
-import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { ProgressRing } from '@/shared/ui';
+import { CurriculumRadarCard, type RadarSubjectStat } from '@/components/home/CurriculumRadarCard';
 import { GoldenCompassSpineBridge } from '@/components/home/HomeScrollTransitions';
+import { KnowledgeConstellationCard } from '@/components/home/KnowledgeConstellationCard';
 import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
-import { QuickKaTeXDrawer } from '@/pages/home/QuickKaTeXDrawer';
 import {
   getInitialHomepageViewMode,
   type HomepageViewMode,
@@ -37,6 +26,8 @@ import {
 type HubBranchFilter = 'all' | AcademicBranch;
 
 interface AtlasCardPalette {
+  readonly subjectRgb: string;
+  readonly topBarGradient: string;
   readonly cardBorder: string;
   readonly indexText: string;
   readonly badgeClass: string;
@@ -56,7 +47,9 @@ const SUBJECT_SHORT_CODES: Record<string, string> = {
 };
 
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
-  cardBorder: 'border-[#D8E0DD] hover:border-[#6B5335]/55',
+  subjectRgb: '156, 122, 76',
+  topBarGradient: 'linear-gradient(90deg, transparent 0%, #9C7A4C 50%, transparent 100%)',
+  cardBorder: 'border-[#D8E0DD] hover:border-[#9C7A4C]',
   indexText: 'text-[#6B5335]',
   badgeClass: 'border-[#D8D0C0] bg-[#F3F0E8] text-[#6B5335]',
   titleHover: 'hover:text-[#6B5335]',
@@ -72,7 +65,9 @@ const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
 const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
   'cau-truc-dai-so': DEFAULT_ATLAS_PALETTE,
   'hinh-hoc-affine': {
-    cardBorder: 'border-[#D8E0DD] hover:border-[#2D5266]/55',
+    subjectRgb: '45, 82, 102',
+    topBarGradient: 'linear-gradient(90deg, transparent 0%, #2D5266 50%, transparent 100%)',
+    cardBorder: 'border-[#D8E0DD] hover:border-[#2D5266]',
     indexText: 'text-[#2D5266]',
     badgeClass: 'border-[#C9D7DF] bg-[#ECF1F4] text-[#2D5266]',
     titleHover: 'hover:text-[#2D5266]',
@@ -85,7 +80,9 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     progressBadgeClass: 'border-[#C9D7DF] bg-[#ECF1F4]/80 text-[#2D5266]',
   },
   'giai-tich-ham-mot-bien': {
-    cardBorder: 'border-[#D8E0DD] hover:border-[#245746]/55',
+    subjectRgb: '36, 87, 70',
+    topBarGradient: 'linear-gradient(90deg, transparent 0%, #245746 50%, transparent 100%)',
+    cardBorder: 'border-[#D8E0DD] hover:border-[#245746]',
     indexText: 'text-[#245746]',
     badgeClass: 'border-[#C6DBD0] bg-[#EBF2EE] text-[#245746]',
     titleHover: 'hover:text-[#245746]',
@@ -98,7 +95,9 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     progressBadgeClass: 'border-[#C6DBD0] bg-[#EBF2EE]/80 text-[#245746]',
   },
   'giao-duc-hoc': {
-    cardBorder: 'border-[#D8E0DD] hover:border-[#7A463B]/55',
+    subjectRgb: '122, 70, 59',
+    topBarGradient: 'linear-gradient(90deg, transparent 0%, #7A463B 50%, transparent 100%)',
+    cardBorder: 'border-[#D8E0DD] hover:border-[#7A463B]',
     indexText: 'text-[#7A463B]',
     badgeClass: 'border-[#D8C8C1] bg-[#F3ECE9] text-[#7A463B]',
     titleHover: 'hover:text-[#7A463B]',
@@ -662,227 +661,6 @@ interface NextQueueItem {
   readonly subjectSlug: string;
 }
 
-function SpatialLabMiniCanvas() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-    const ctx = getLowLatency2DContext(canvas);
-    if (!ctx) return;
-
-    let width = Math.max(220, container.clientWidth || 280);
-    let height = Math.max(72, container.clientHeight || 88);
-    let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-
-    const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-      width = Math.max(220, container.clientWidth || 280);
-      height = Math.max(72, container.clientHeight || 88);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-    };
-    resize();
-
-    let isHover = false;
-    let pointerOffsetX = 0;
-    let pointerOffsetY = 0;
-    let smoothX = 0;
-    let smoothY = 0;
-    let isVisible = true;
-    let rafId = 0;
-    let elapsed = 0;
-    let prevNow = performance.now();
-
-    const onMove = (event: PointerEvent) => {
-      const rect = container.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      pointerOffsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-      pointerOffsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-    };
-    const onEnter = () => {
-      isHover = true;
-    };
-    const onLeave = () => {
-      isHover = false;
-      pointerOffsetX = 0;
-      pointerOffsetY = 0;
-    };
-
-    container.addEventListener('pointermove', onMove);
-    container.addEventListener('pointerenter', onEnter);
-    container.addEventListener('pointerleave', onLeave);
-
-    let ro: ResizeObserver | undefined;
-    if (typeof ResizeObserver !== 'undefined') {
-      ro = new ResizeObserver(() => resize());
-      ro.observe(container);
-    }
-
-    let io: IntersectionObserver | undefined;
-    if (typeof IntersectionObserver !== 'undefined') {
-      io = new IntersectionObserver(
-        (entries) => {
-          isVisible = entries[0]?.isIntersecting ?? true;
-        },
-        { threshold: 0.05 },
-      );
-      io.observe(container);
-    }
-
-    const cubeVerts = [
-      [-1, -0.7, -1],
-      [1, -0.7, -1],
-      [1, 0.7, -1],
-      [-1, 0.7, -1],
-      [-1, -0.7, 1],
-      [1, -0.7, 1],
-      [1, 0.7, 1],
-      [-1, 0.7, 1],
-    ] as const;
-    const cubeEdges = [
-      [0, 1],
-      [1, 2],
-      [2, 3],
-      [3, 0],
-      [4, 5],
-      [5, 6],
-      [6, 7],
-      [7, 4],
-      [0, 4],
-      [1, 5],
-      [2, 6],
-      [3, 7],
-      [0, 6],
-      [2, 4],
-    ] as const;
-
-    const project = (x: number, y: number, z: number, ay: number, ax: number) => {
-      const cy = Math.cos(ay);
-      const sy = Math.sin(ay);
-      const x1 = x * cy + z * sy;
-      const z1 = -x * sy + z * cy;
-      const cx = Math.cos(ax);
-      const sx = Math.sin(ax);
-      const y2 = y * cx - z1 * sx;
-      const z2 = y * sx + z1 * cx;
-      const scale = (height * 0.95) / (3.4 - z2);
-      return {
-        px: width * 0.54 + x1 * scale,
-        py: height * 0.5 + y2 * scale,
-        z: z2,
-      };
-    };
-
-    const draw = (t: number) => {
-      ctx.save();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, width, height);
-
-      // Lưới phẳng tham chiếu dưới đáy
-      ctx.strokeStyle = 'rgba(45, 82, 102, 0.16)';
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(12, height - 12);
-      ctx.lineTo(width - 12, height - 12);
-      ctx.stroke();
-
-      const ay = t * 0.72 + smoothX * 0.9;
-      const ax = 0.42 + Math.sin(t * 0.45) * 0.12 + smoothY * 0.55;
-      const projected = cubeVerts.map(([vx, vy, vz]) => project(vx, vy, vz, ay, ax));
-
-      for (const [idx, edge] of cubeEdges.entries()) {
-        const a = projected[edge[0]];
-        const b = projected[edge[1]];
-        if (!a || !b) continue;
-        const isDiagonal = idx >= 12;
-        ctx.beginPath();
-        ctx.moveTo(a.px, a.py);
-        ctx.lineTo(b.px, b.py);
-        if (isDiagonal) {
-          ctx.setLineDash([3, 3]);
-          ctx.strokeStyle = '#9C7A4C';
-          ctx.globalAlpha = 0.72;
-          ctx.lineWidth = 1;
-        } else {
-          ctx.setLineDash([]);
-          const front = (a.z + b.z) * 0.5 > 0;
-          ctx.strokeStyle = front ? '#2D5266' : '#49768F';
-          ctx.globalAlpha = front ? 0.92 : 0.42;
-          ctx.lineWidth = front ? 1.5 : 1;
-        }
-        ctx.stroke();
-      }
-      ctx.setLineDash([]);
-      ctx.globalAlpha = 1;
-
-      const center = project(0, 0, 0, ay, ax);
-      ctx.beginPath();
-      ctx.arc(center.px, center.py, 3.6, 0, Math.PI * 2);
-      ctx.fillStyle = '#9C7A4C';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(center.px, center.py, 1.4, 0, Math.PI * 2);
-      ctx.fillStyle = '#FAFBF9';
-      ctx.fill();
-
-      ctx.restore();
-    };
-
-    draw(0.4);
-    if (prefersReducedMotion) {
-      return () => {
-        container.removeEventListener('pointermove', onMove);
-        container.removeEventListener('pointerenter', onEnter);
-        container.removeEventListener('pointerleave', onLeave);
-        ro?.disconnect();
-        io?.disconnect();
-      };
-    }
-
-    const tick = (now: number) => {
-      const { dtSeconds } = computeFrameDelta(now, prevNow);
-      prevNow = now;
-      if (isVisible && !document.hidden) {
-        elapsed += dtSeconds * (isHover ? 1.8 : 1);
-        const lerp = Math.min(1, dtSeconds * 8);
-        smoothX += (pointerOffsetX - smoothX) * lerp;
-        smoothY += (pointerOffsetY - smoothY) * lerp;
-        draw(elapsed);
-      }
-      rafId = window.requestAnimationFrame(tick);
-    };
-    rafId = window.requestAnimationFrame(tick);
-
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      container.removeEventListener('pointermove', onMove);
-      container.removeEventListener('pointerenter', onEnter);
-      container.removeEventListener('pointerleave', onLeave);
-      ro?.disconnect();
-      io?.disconnect();
-    };
-  }, [prefersReducedMotion]);
-
-  return (
-    <div
-      ref={containerRef}
-      data-testid="spatial-lab-3d-canvas"
-      className="relative h-22 w-full overflow-hidden rounded-xl border border-[#C9D7DF] bg-[#ECF1F4]/70"
-    >
-      <span className="pointer-events-none absolute top-2 left-2.5 z-10 font-mono text-[9.5px] font-semibold tracking-wider text-[#2D5266]">
-        3D AFFINE VIEWPORT
-      </span>
-      <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
-    </div>
-  );
-}
-
 function findSubjectResumeTarget(
   subject: ManifestSubject,
   completedLessons: Readonly<Record<string, string | boolean>>,
@@ -908,34 +686,21 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
   const completedLessons = useLearningStore((state) => state.completedLessons);
   const lastVisitedGlobal = useLearningStore((state) => state.lastVisitedGlobal);
   const lastVisitedBySubject = useLearningStore((state) => state.lastVisitedBySubject);
-  const prefersReducedMotion = useReducedMotion();
 
   const [activeBranch, setActiveBranch] = useState<HubBranchFilter>('all');
   const [viewMode, setViewMode] = useState<HomepageViewMode>(() => getInitialHomepageViewMode());
-  const [isKaTeXDrawerOpen, setIsKaTeXDrawerOpen] = useState(false);
-  const [katexDrawerQuery, setKatexDrawerQuery] = useState('');
   const [hoveredCardSlug, setHoveredCardSlug] = useState<string | null>(null);
   const [expandedRoadmaps, setExpandedRoadmaps] = useState<Record<string, boolean>>({});
 
-  const openKaTeXDrawer = (query = '') => {
-    setKatexDrawerQuery(query);
-    setIsKaTeXDrawerOpen(true);
-  };
-
   const handleCardMouseMove = (event: MouseEvent<HTMLElement>) => {
-    if (prefersReducedMotion) return;
     const el = event.currentTarget;
     const rect = el.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
-    const normX = (event.clientX - rect.left) / rect.width - 0.5;
-    const normY = (event.clientY - rect.top) / rect.height - 0.5;
-    const rotateY = (normX * 3.4).toFixed(2);
-    const rotateX = (-normY * 3.4).toFixed(2);
-    el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+    el.style.setProperty('--mx', `${Math.round(event.clientX - rect.left)}px`);
+    el.style.setProperty('--my', `${Math.round(event.clientY - rect.top)}px`);
   };
 
-  const handleCardMouseLeave = (event: MouseEvent<HTMLElement>, slug: string) => {
-    event.currentTarget.style.transform = '';
+  const handleCardMouseLeave = (slug: string) => {
     setHoveredCardSlug((prev) => (prev === slug ? null : prev));
   };
 
@@ -943,24 +708,6 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
     setViewMode(nextMode);
     saveHomepageViewMode(nextMode);
   };
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        (event.key === 'K' || event.key === 'k') &&
-        event.shiftKey &&
-        document.activeElement?.tagName !== 'INPUT' &&
-        document.activeElement?.tagName !== 'TEXTAREA'
-      ) {
-        event.preventDefault();
-        setIsKaTeXDrawerOpen((prev) => !prev);
-      } else if (event.key === 'Escape') {
-        setIsKaTeXDrawerOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   const hasSearchQuery = hubQuery.trim().length > 0;
   const instantSearchResults = hasSearchQuery ? searchContent(hubQuery) : [];
@@ -994,6 +741,21 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
       total: stats.lessonCount,
       percent,
       palette,
+    };
+  });
+
+  const radarSubjectStats: readonly RadarSubjectStat[] = subjectProgressMatrix.map((entry) => {
+    const asset = getCourseCinematicAsset(entry.subject.slug);
+    const stats = getSubjectStats(entry.subject);
+    return {
+      slug: entry.subject.slug,
+      shortCode: entry.shortCode,
+      title: entry.subject.title,
+      chapters: stats.chapterCount,
+      lessons: entry.total,
+      completed: entry.done,
+      percent: entry.percent,
+      branch: asset.branch,
     };
   });
 
@@ -1049,7 +811,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-2 font-mono text-xs tracking-wider text-[var(--text-muted)] uppercase">
                 <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>SPATIAL SUBJECT GALLERY · HỆ THỐNG HỌC PHẦN CHUYÊN KHẢO</span>
+                <span>HỆ THỐNG HỌC PHẦN</span>
               </div>
               <h2 className="font-serif text-2xl font-semibold text-[var(--text-main)] md:text-3xl">
                 Không gian Học phần
@@ -1169,19 +931,40 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                           id={`atlas-subject-${subject.slug}`}
                           onMouseEnter={() => setHoveredCardSlug(subject.slug)}
                           onMouseMove={handleCardMouseMove}
-                          onMouseLeave={(event) => handleCardMouseLeave(event, subject.slug)}
-                          style={{
-                            viewTransitionName: `subject-card-${subject.slug}`,
-                            transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                          }}
+                          onMouseLeave={() => handleCardMouseLeave(subject.slug)}
+                          style={
+                            {
+                              viewTransitionName: `subject-card-${subject.slug}`,
+                              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                              '--subject-rgb': palette.subjectRgb,
+                            } as CSSProperties & { '--subject-rgb': string }
+                          }
                           className={cn(
-                            'group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl border bg-[#FAFBF9] p-6 shadow-xs transition-[border-color,box-shadow,transform] duration-200 will-change-transform sm:p-7',
+                            'group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl border bg-[#FAFBF9] p-6 shadow-xs transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(20,36,32,0.09)] sm:p-7',
                             palette.cardBorder,
                           )}
                         >
+                          {/* Dải sáng mảnh chạy dọc mép trên của thẻ khi hover */}
+                          <div
+                            aria-hidden="true"
+                            style={{ background: palette.topBarGradient }}
+                            className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-[2.5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                          />
+
+                          {/* Quầng sáng Radial Spotlight bám theo con trỏ chuột (không gây mờ chữ) */}
+                          <div
+                            aria-hidden="true"
+                            data-testid={`card-spotlight-${subject.slug}`}
+                            style={{
+                              background:
+                                'radial-gradient(420px circle at var(--mx, 50%) var(--my, 35%), rgba(var(--subject-rgb), 0.10), transparent 70%)',
+                            }}
+                            className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                          />
+
                           <SubjectWatermarkSignature slug={subject.slug} />
 
-                          <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div className="relative z-10 flex flex-wrap items-start justify-between gap-3">
                             <div className="flex items-center gap-2.5">
                               <span
                                 className={cn('font-mono text-xs font-bold', palette.indexText)}
@@ -1190,7 +973,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               </span>
                               <span
                                 className={cn(
-                                  'rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider transition-transform duration-300 group-hover:translate-x-0.5',
+                                  'rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider transition-colors duration-200',
                                   palette.badgeClass,
                                 )}
                               >
@@ -1227,14 +1010,16 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                             </div>
                           </div>
 
-                          <SubjectStageCanvas
-                            slug={subject.slug}
-                            isCardHovered={hoveredCardSlug === subject.slug}
-                          />
+                          <div className="relative z-10">
+                            <SubjectStageCanvas
+                              slug={subject.slug}
+                              isCardHovered={hoveredCardSlug === subject.slug}
+                            />
+                          </div>
 
-                          <div className="space-y-4">
+                          <div className="relative z-10 space-y-4">
                             <div className="space-y-2">
-                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] transition-transform duration-300 group-hover:translate-x-1 sm:text-[1.6rem]">
+                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] sm:text-[1.6rem]">
                                 <Link
                                   to={ROUTES.subjectOverview(subject.slug)}
                                   className={cn('transition-colors', palette.titleHover)}
@@ -1431,7 +1216,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                 <div
                   role="region"
                   aria-label="Tiếp tục học dở"
-                  className="flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-8 lg:col-span-8"
+                  className="flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-8 lg:col-span-7"
                 >
                   {activeRecentLesson ? (
                     <>
@@ -1607,127 +1392,22 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                   ) : null}
                 </div>
 
-                <div className="flex flex-col justify-between gap-6 lg:col-span-4">
-                  {/* Tiện ích 1: Ngân hàng Thuật ngữ KaTeX */}
-                  <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-xs transition-colors hover:border-[#365E4E] dark:hover:border-[#8EE5CE]/50">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="rounded-lg bg-[#EBECE6] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#365E4E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
-                          UTILITY 01 · KATEX LEXICON
-                        </span>
-                        <BookMarked
-                          className="h-4 w-4 text-[#365E4E] dark:text-[#8EE5CE]"
-                          aria-hidden="true"
-                        />
-                      </div>
+                <div className="flex flex-col justify-between gap-6 lg:col-span-5">
+                  {/* Mô hình 1: Biểu đồ Radar Cấu trúc & Phân tích Năng lực Học phần */}
+                  <CurriculumRadarCard
+                    stats={radarSubjectStats}
+                    totalCompleted={completedCount}
+                    totalLessons={totalLessonCount}
+                  />
 
-                      <h3 className="font-serif text-xl font-bold text-[var(--text-main)]">
-                        Ngân hàng Thuật ngữ KaTeX
-                      </h3>
-
-                      <p className="text-xs leading-relaxed text-[var(--text-muted)]">
-                        Tra cứu tức thời hệ thống ký hiệu đại số, tiên đề hình học, định lý giải
-                        tích và thuật ngữ khoa học giáo dục chuẩn mực.
-                      </p>
-
-                      <div className="grid grid-cols-3 gap-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-2 text-center text-xs text-[var(--text-main)]">
-                        <button
-                          type="button"
-                          onClick={() => openKaTeXDrawer('Định lý Đẳng cấu')}
-                          title="Mở tra cứu Định lý Đẳng cấu thứ nhất"
-                          className="flex min-h-[38px] cursor-pointer items-center justify-center rounded-lg border border-transparent bg-[var(--bg-surface)] px-1.5 py-1 transition-all hover:border-[#6B5335]/50 hover:shadow-2xs active:scale-[0.98]"
-                        >
-                          <KatexMath math="G / \ker\varphi" className="text-[11.5px]" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => openKaTeXDrawer('Cauchy')}
-                          title="Mở tra cứu Định nghĩa Giới hạn Cauchy"
-                          className="flex min-h-[38px] cursor-pointer items-center justify-center rounded-lg border border-transparent bg-[var(--bg-surface)] px-1.5 py-1 transition-all hover:border-[#245746]/50 hover:shadow-2xs active:scale-[0.98]"
-                        >
-                          <KatexMath
-                            math="\forall\varepsilon > 0,\,\exists\delta > 0"
-                            className="text-[10.5px]"
-                          />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => openKaTeXDrawer('Lagrange')}
-                          title="Mở tra cứu Định lý Lagrange & Cấp phần tử"
-                          className="flex min-h-[38px] cursor-pointer items-center justify-center rounded-lg border border-transparent bg-[var(--bg-surface)] px-1.5 py-1 transition-all hover:border-[#2D5266]/50 hover:shadow-2xs active:scale-[0.98]"
-                        >
-                          <KatexMath
-                            math="\operatorname{ord}(a) \mid |G|"
-                            className="text-[11px]"
-                          />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="mt-5 border-t border-[var(--border-subtle)] pt-4">
-                      <Link
-                        to="/glossary"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          openKaTeXDrawer('');
-                        }}
-                        aria-label="Mở Ngân hàng Thuật ngữ & Ký hiệu Toán"
-                        className="inline-flex w-full items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/80 px-4 py-2.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[#1E332E] hover:text-white"
-                      >
-                        <span>Mở Ngân hàng Thuật ngữ &amp; Ký hiệu Toán</span>
-                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Tiện ích 2: Phòng Lab Hình học 3D */}
-                  <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-xs transition-colors hover:border-[#2D5266] dark:hover:border-[#8EE5CE]/50">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="rounded-lg bg-[#ECF1F4] px-2.5 py-1 font-mono text-[11px] font-semibold text-[#2D5266] dark:bg-[#19332A] dark:text-[#A6E3CD]">
-                          UTILITY 02 · SPATIAL LAB
-                        </span>
-                        <Compass
-                          className="h-4 w-4 text-[#2D5266] dark:text-[#8EE5CE]"
-                          aria-hidden="true"
-                        />
-                      </div>
-
-                      <h3 className="font-serif text-xl font-bold text-[var(--text-main)]">
-                        Phòng Lab Hình học 3D
-                      </h3>
-
-                      <p className="text-xs leading-relaxed text-[var(--text-muted)]">
-                        Cửa sổ mô phỏng trực quan không gian Affine, phép biến đổi đẳng cự và hình
-                        học phối cảnh đa chiều.
-                      </p>
-
-                      <SpatialLabMiniCanvas />
-                    </div>
-
-                    <div className="mt-5 border-t border-[var(--border-subtle)] pt-4">
-                      <a
-                        href="/interactive/affine-geometry.html"
-                        aria-label="Mở Phòng Lab Hình học Không gian"
-                        className="inline-flex w-full items-center justify-between rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/80 px-4 py-2.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[#2D5266] hover:text-white"
-                      >
-                        <span>Mở Phòng Lab Hình học Không gian</span>
-                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </a>
-                    </div>
-                  </div>
+                  {/* Mô hình 2: Mạng lưới Liên kết Tri thức Liên môn 120fps */}
+                  <KnowledgeConstellationCard />
                 </div>
               </div>
             </div>
           </section>
         </>
       )}
-
-      <QuickKaTeXDrawer
-        isOpen={isKaTeXDrawerOpen}
-        onClose={() => setIsKaTeXDrawerOpen(false)}
-        initialQuery={katexDrawerQuery}
-      />
     </>
   );
 }

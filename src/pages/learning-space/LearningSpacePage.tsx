@@ -13,10 +13,7 @@ import {
 import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { TopographicWaterlinesBackdrop } from '@/components/home/HomeScrollTransitions';
-import {
-  LearningSpaceHeroCanvas,
-  type OrbitalSubjectProgress,
-} from '@/components/home/LearningSpaceHeroCanvas';
+import { LearningSpaceHeroCanvas } from '@/components/home/LearningSpaceHeroCanvas';
 import { LearningSpaceHub } from '@/components/home/LearningSpaceHub';
 import { getSubjects, getSubjectStats } from '@/content-runtime';
 import { useLearningStore } from '@/features/learning';
@@ -43,9 +40,9 @@ interface ChapterSearchHit {
 /**
  * Trang Không Gian Học Tập (/learning-space):
  * Hệ màu "Bạch Ngọc Khoáng Thạch & Trắng Sứ Dịu" (Balanced Mineral & Soft Porcelain):
- * - Nền trang: #F2F4F3 | Bề mặt: #FAFBF9 | Mực chữ: #182624
- * - Hero Spotlight Search phân nhóm 4 loại + Quick Chips & Bản đồ Quỹ đạo 4 Học Phần Tương Tác 120fps
- * - Atlas 4 Thẻ Học Phần Tương Tác 3D Tilt + Quỹ Đạo Học Tập Cá Nhân + Chuyển sắc mượt nối Footer
+ * - Nền Hero đa lớp tán xạ ánh sáng Ngọc Bích Sương (#DCECE5), Hổ Phách Nhạt (#EFE8D8), Lam Khói (#E2EBF0)
+ * - Khối điêu khắc đa diện lồng nhau & 4 vòng Thiên cầu Hoàng Kim 3D (120fps) bên phải Hero
+ * - Atlas 4 Thẻ Học Phần với hiệu ứng Spotlight Aura phẳng tuyệt đối + Quỹ đạo học tập & Biểu đồ phân tích
  */
 export function LearningSpacePage() {
   const subjects = getSubjects();
@@ -100,22 +97,6 @@ export function LearningSpacePage() {
   const computedPercent =
     totalLessonCount > 0 ? Math.round((completedCount / totalLessonCount) * 100) : 0;
   const displayOrbitPercent = completedCount > 0 ? Math.max(computedPercent, 1) : 8;
-
-  const orbitalSubjectProgress = useMemo<Readonly<Record<string, OrbitalSubjectProgress>>>(() => {
-    const map: Record<string, OrbitalSubjectProgress> = {};
-    for (const sub of subjects) {
-      const stats = getSubjectStats(sub);
-      let completed = 0;
-      for (const ch of sub.chapters) {
-        for (const ls of ch.lessons) {
-          if (completedLessons[ls.id]) completed += 1;
-        }
-      }
-      const percent = stats.lessonCount > 0 ? Math.round((completed / stats.lessonCount) * 100) : 0;
-      map[sub.slug] = { completed, total: stats.lessonCount, percent };
-    }
-    return map;
-  }, [completedLessons, subjects]);
 
   const hasSearchQuery = hubQuery.trim().length > 0;
   const instantSearchResults = useMemo(() => searchContent(hubQuery, 12), [hubQuery]);
@@ -176,68 +157,83 @@ export function LearningSpacePage() {
     searchInputRef.current?.focus();
   };
 
-  const handleSelectOrbitalSubject = (slug: string) => {
-    const cardEl = document.getElementById(`atlas-subject-${slug}`);
-    if (cardEl && typeof cardEl.scrollIntoView === 'function') {
-      cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-    void navigate(ROUTES.subjectOverview(slug));
-  };
-
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-[#F2F4F3] text-[#182624]">
+    <div className="relative min-h-screen overflow-x-clip bg-[#F2F4F3] pb-10 text-[#182624]">
       {/* =================================================================
-        HERO BANNER SƯƠNG NGỌC KHOÁNG THẠCH DỊU (Balanced Mineral Mist)
+        HERO BANNER SƯƠNG NGỌC KHOÁNG THẠCH ĐA TẦNG (Volumetric Frosted Mineral)
         ================================================================= */}
-      <section
-        aria-label="Không gian Học tập & Nghiên cứu"
-        className="relative z-30 pt-24 pb-4 sm:pt-28"
-      >
+      <section aria-label="Không gian Học tập" className="relative z-30 pt-24 pb-4 sm:pt-28">
         <div className="lu-container-wide">
           <div
             style={{
-              background: 'linear-gradient(135deg, #EBF0EE 0%, #E2EAE7 55%, #E8ECE8 100%)',
+              background:
+                'radial-gradient(640px circle at 14% 18%, rgba(220, 236, 229, 0.92), transparent 64%), radial-gradient(620px circle at 48% 92%, rgba(239, 232, 216, 0.85), transparent 62%), radial-gradient(560px circle at 88% 28%, rgba(226, 235, 240, 0.94), transparent 65%), linear-gradient(135deg, rgba(250, 251, 249, 0.94) 0%, rgba(240, 245, 243, 0.92) 55%, rgba(244, 247, 245, 0.95) 100%)',
             }}
-            className="relative min-h-[420px] rounded-3xl border border-[#CBD6D2] p-8 text-[#162623] shadow-[0_10px_32px_rgba(24,38,36,0.05)] lg:p-11"
+            className="relative min-h-[430px] rounded-3xl border border-[#CBD6D2] p-8 text-[#162623] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_16px_44px_rgba(20,36,32,0.06)] backdrop-blur-md lg:p-11"
           >
-            {/* Họa tiết lưới hình học khoáng thạch cực mờ (clip trong khung bo góc để Popover tìm kiếm không bị cắt) */}
+            {/* Họa tiết đường đồng mức hình học khắc chìm & lưới tọa độ khoáng thạch */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl select-none"
             >
               <svg className="h-full w-full">
                 <defs>
-                  <pattern id={gridPatternId} width="56" height="56" patternUnits="userSpaceOnUse">
+                  <pattern id={gridPatternId} width="52" height="52" patternUnits="userSpaceOnUse">
                     <path
-                      d="M 56 0 L 0 0 0 56"
+                      d="M 52 0 L 0 0 0 52"
                       fill="none"
                       stroke="#243E38"
-                      strokeOpacity="0.045"
+                      strokeOpacity="0.042"
                       strokeWidth="0.7"
                     />
-                    <circle cx="56" cy="56" r="1.15" fill="#243E38" fillOpacity="0.055" />
+                    <circle cx="52" cy="52" r="1.1" fill="#243E38" fillOpacity="0.06" />
                   </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill={`url(#${gridPatternId})`} />
+                {/* Vòng đồng mức thiên cầu khắc chìm bên phải */}
                 <circle
                   cx="78%"
                   cy="50%"
-                  r="195"
+                  r="172"
                   fill="none"
-                  stroke="#243E38"
-                  strokeOpacity="0.055"
-                  strokeWidth="0.8"
-                  strokeDasharray="4 6"
+                  stroke="#8C6D3F"
+                  strokeOpacity="0.09"
+                  strokeWidth="0.9"
+                  strokeDasharray="3 5"
                 />
                 <circle
                   cx="78%"
                   cy="50%"
-                  r="265"
+                  r="238"
                   fill="none"
-                  stroke="#3B6275"
-                  strokeOpacity="0.045"
-                  strokeWidth="0.7"
+                  stroke="#243E38"
+                  strokeOpacity="0.065"
+                  strokeWidth="0.85"
+                />
+                <circle
+                  cx="78%"
+                  cy="50%"
+                  r="305"
+                  fill="none"
+                  stroke="#2D5266"
+                  strokeOpacity="0.055"
+                  strokeWidth="0.8"
+                  strokeDasharray="6 8"
+                />
+                {/* Đường đồng mức toán học uốn lượn tinh xảo */}
+                <path
+                  d="M -40 340 C 190 290, 360 390, 580 315 C 770 250, 960 360, 1280 280"
+                  fill="none"
+                  stroke="#243E38"
+                  strokeOpacity="0.055"
+                  strokeWidth="1"
+                />
+                <path
+                  d="M -40 372 C 210 322, 390 412, 620 338 C 820 274, 990 385, 1280 312"
+                  fill="none"
+                  stroke="#8C6D3F"
+                  strokeOpacity="0.06"
+                  strokeWidth="0.9"
                 />
               </svg>
             </div>
@@ -256,17 +252,17 @@ export function LearningSpacePage() {
                 <div className="space-y-3">
                   <div className="inline-flex items-center gap-2 rounded-full border border-[#CBD6D2] bg-[#FAFBF9]/85 px-3.5 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#1E332E] uppercase">
                     <Compass className="h-3.5 w-3.5 text-[#243E38]" aria-hidden="true" />
-                    <span>ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN &amp; NGHIÊN CỨU</span>
+                    <span>ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN</span>
                   </div>
 
                   <h1 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#162623] sm:text-4xl lg:text-5xl">
-                    Không Gian Học Tập &amp; Nghiên Cứu
+                    Không Gian Học Tập
                   </h1>
 
                   <p className="max-w-2xl text-sm leading-relaxed text-[#3F524E] sm:text-base">
-                    Toàn bộ kho tàng học phần Toán học và Khoa học Giáo dục, tra cứu ký hiệu KaTeX,
-                    phòng mô phỏng hình học 3D và quỹ đạo tiến độ học tập cá nhân được tổ chức khoa
-                    học tại đây.
+                    Toàn bộ kho tàng học phần Toán học và Khoa học Giáo dục, biểu đồ phân tích năng
+                    lực, mạng lưới liên kết tri thức liên môn và quỹ đạo tiến độ học tập cá nhân
+                    được tổ chức khoa học tại đây.
                   </p>
                 </div>
 
@@ -274,7 +270,7 @@ export function LearningSpacePage() {
                 <div className="flex flex-wrap items-center gap-3 text-xs">
                   <span className="inline-flex items-center gap-1.5 rounded-xl border border-[#CBD6D2] bg-[#FAFBF9]/85 px-3.5 py-1.5 font-mono font-semibold text-[#182624] backdrop-blur-xs">
                     <Layers className="h-3.5 w-3.5 text-[#243E38]" aria-hidden="true" />
-                    <span>{String(subjects.length).padStart(2, '0')} học phần cốt lõi</span>
+                    <span>{String(subjects.length).padStart(2, '0')} học phần</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5 rounded-xl border border-[#CBD6D2] bg-[#FAFBF9]/85 px-3.5 py-1.5 font-mono font-semibold text-[#182624] backdrop-blur-xs">
                     <BookOpen className="h-3.5 w-3.5 text-[#3B6275]" aria-hidden="true" />
@@ -552,13 +548,10 @@ export function LearningSpacePage() {
                 </div>
               </div>
 
-              {/* Cột Phải Banner (5 cột): Bản đồ Quỹ đạo 4 Học Phần Tương Tác 120fps (tăng kích thước 1.35×) */}
+              {/* Cột Phải Banner (5 cột): Điêu khắc Đa diện Lồng nhau & Thiên cầu Hoàng Kim 3D 120fps */}
               <div className="hidden flex-col items-center justify-center lg:col-span-5 lg:flex">
-                <div className="relative w-full max-w-[475px]">
-                  <LearningSpaceHeroCanvas
-                    subjectProgress={orbitalSubjectProgress}
-                    onSelectSubject={handleSelectOrbitalSubject}
-                  />
+                <div className="relative w-full max-w-[500px]">
+                  <LearningSpaceHeroCanvas />
                 </div>
               </div>
             </div>
@@ -571,16 +564,6 @@ export function LearningSpacePage() {
         <TopographicWaterlinesBackdrop />
         <LearningSpaceHub hubQuery={hubQuery} onResetQuery={() => setHubQuery('')} />
       </div>
-
-      {/* Dải chuyển sắc mềm cuối trang nối liền vào nền tối Footer (#0D211D) */}
-      <div
-        data-testid="learning-space-footer-transition"
-        aria-hidden="true"
-        style={{
-          background: 'linear-gradient(180deg, #F2F4F3 0%, #DAE4E0 36%, #5E7B73 74%, #0D211D 100%)',
-        }}
-        className="pointer-events-none relative h-24 w-full"
-      />
     </div>
   );
 }

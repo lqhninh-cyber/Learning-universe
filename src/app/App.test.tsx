@@ -80,16 +80,16 @@ describe('App routing smoke test', () => {
     expect(screen.queryByRole('heading', { name: /Tiếp tục học tập/i })).not.toBeInTheDocument();
   });
 
-  it('hiển thị trang Không gian Học tập & Nghiên cứu (/learning-space) với đầy đủ học phần và quỹ đạo học tập', async () => {
+  it('hiển thị trang Không gian Học tập (/learning-space) với đầy đủ học phần, Radar và Mạng lưới tri thức', async () => {
     renderWithProviders('/learning-space');
 
     // Academic Sanctuary Banner
     expect(
-      await screen.findByRole('heading', { level: 1, name: /Không Gian Học Tập & Nghiên Cứu/i }),
+      await screen.findByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
     ).toBeInTheDocument();
     expect(screen.getByTestId('learning-space-celestial-rings')).toBeInTheDocument();
 
-    // Spatial Subject Gallery (3 Tabs phân loại & ô tìm kiếm tích hợp)
+    // Hệ thống học phần (3 Tabs phân loại & ô tìm kiếm tích hợp)
     expect(screen.getByRole('heading', { name: /Không gian Học phần/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Tất cả/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /Toán học/i })).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('App routing smoke test', () => {
     expect(enterCourseLinks.length).toBe(4);
     expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
 
-    // My Learning Orbit (65% Hero Progress Card : 35% 2 Thẻ tiện ích)
+    // Quỹ đạo học tập cá nhân + Biểu đồ Radar + Mạng lưới Liên kết Tri thức
     expect(screen.getByRole('heading', { name: /Tiếp tục học tập/i })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: /Tiếp tục học dở/i })).toBeInTheDocument();
     expect(
@@ -116,15 +116,12 @@ describe('App routing smoke test', () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Tiếp tục đọc ngay/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Ngân hàng Thuật ngữ KaTeX/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Phòng Lab Hình học 3D/i })).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i }),
-    ).toHaveAttribute('href', '/glossary');
-    expect(screen.getByRole('link', { name: /Mở Phòng Lab Hình học Không gian/i })).toHaveAttribute(
-      'href',
-      '/interactive/affine-geometry.html',
-    );
+      screen.getByRole('heading', { name: /Biểu đồ Radar Năng lực Học phần/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Mạng Lưới Liên Kết Tri Thức/i }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(/Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt/i),
     ).toBeInTheDocument();
@@ -149,13 +146,13 @@ describe('App routing smoke test', () => {
     expect(screen.queryByText(/Ngân hàng Đề thi & Lời giải/i)).not.toBeInTheDocument();
   });
 
-  it('chuyển hướng /courses về Không Gian Học Tập & Nghiên Cứu (/learning-space)', async () => {
+  it('chuyển hướng /courses về Không Gian Học Tập (/learning-space)', async () => {
     renderWithProviders('/courses');
 
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: /Không Gian Học Tập & Nghiên Cứu/i,
+        name: /^Không Gian Học Tập$/i,
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Vào học phần Cấu trúc đại số/i })).toHaveAttribute(

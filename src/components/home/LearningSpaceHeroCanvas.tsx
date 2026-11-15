@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
-import { cn } from '@/shared/lib/cn';
 
 interface Vec3 {
   readonly x: number;
@@ -16,130 +15,55 @@ interface ProjectedPoint {
   readonly scale: number;
 }
 
-interface OrbitalRingSpec {
+interface ArmillaryRingSpec {
   readonly radius: number;
   readonly baseTiltX: number;
-  readonly baseRotZ: number;
+  readonly baseTiltZ: number;
   readonly speedY: number;
   readonly speedZ: number;
   readonly color: string;
-  readonly withTicks: boolean;
+  readonly accentColor: string;
+  readonly tickStepDeg: number;
+  readonly strokeWidth: number;
 }
 
-interface SatelliteSpec {
-  readonly index: string;
-  readonly slug: string;
-  readonly shortLabel: string;
-  readonly title: string;
-  readonly color: string;
-  readonly softBg: string;
-  readonly borderColor: string;
-  readonly glow: string;
-  readonly ringIndex: 0 | 1 | 2;
+interface HarmonicDustParticle {
+  readonly baseRadius: number;
+  readonly goldenAngle: number;
+  readonly verticalTilt: number;
   readonly orbitSpeed: number;
+  readonly size: number;
+  readonly hue: 'gold' | 'jade' | 'slate';
   readonly phase: number;
 }
 
-export interface OrbitalSubjectProgress {
-  readonly completed: number;
-  readonly total: number;
-  readonly percent: number;
+function dotVec3(a: Vec3, b: Vec3): number {
+  return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-export interface LearningSpaceHeroCanvasProps {
-  readonly subjectProgress?: Readonly<Record<string, OrbitalSubjectProgress>>;
-  readonly onSelectSubject?: (slug: string) => void;
+function subVec3(a: Vec3, b: Vec3): Vec3 {
+  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
 }
 
-// 3 Vòng Quỹ đạo 3D cân chỉnh cho Thiên cầu Khuê Văn
-const ORBITAL_RINGS: readonly [OrbitalRingSpec, OrbitalRingSpec, OrbitalRingSpec] = [
-  {
-    radius: 0.45,
-    baseTiltX: 0.94,
-    baseRotZ: 0.24,
-    speedY: 0.16,
-    speedZ: 0,
-    color: '#243E38',
-    withTicks: true,
-  },
-  {
-    radius: 0.39,
-    baseTiltX: -0.76,
-    baseRotZ: 0.82,
-    speedY: -0.2,
-    speedZ: 0,
-    color: '#8C7248',
-    withTicks: false,
-  },
-  {
-    radius: 0.33,
-    baseTiltX: 0.42,
-    baseRotZ: -0.62,
-    speedY: 0.26,
-    speedZ: 0.08,
-    color: '#3B6275',
-    withTicks: false,
-  },
-];
+function crossVec3(a: Vec3, b: Vec3): Vec3 {
+  return {
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x,
+  };
+}
 
-// 4 Nút Tinh Cầu đại diện 4 học phần gắn trực tiếp trên 3 vòng quỹ đạo 3D
-const ORBITAL_SUBJECTS: readonly SatelliteSpec[] = [
-  {
-    index: '01',
-    slug: 'cau-truc-dai-so',
-    shortLabel: '01. CTĐS',
-    title: 'Cấu trúc đại số',
-    color: '#6B5335',
-    softBg: '#F3F0E8',
-    borderColor: '#D8D0C0',
-    glow: 'rgba(156, 122, 76, 0.28)',
-    ringIndex: 1,
-    orbitSpeed: 0.22,
-    phase: 0.35,
-  },
-  {
-    index: '02',
-    slug: 'hinh-hoc-affine',
-    shortLabel: '02. HHAVE',
-    title: 'Hình học Affine & Euclide',
-    color: '#2D5266',
-    softBg: '#ECF1F4',
-    borderColor: '#C9D7DF',
-    glow: 'rgba(73, 118, 143, 0.28)',
-    ringIndex: 2,
-    orbitSpeed: 0.27,
-    phase: 2.35,
-  },
-  {
-    index: '03',
-    slug: 'giai-tich-ham-mot-bien',
-    shortLabel: '03. GTHMB',
-    title: 'Giải tích hàm một biến',
-    color: '#245746',
-    softBg: '#EBF2EE',
-    borderColor: '#C6DBD0',
-    glow: 'rgba(59, 122, 101, 0.26)',
-    ringIndex: 0,
-    orbitSpeed: 0.19,
-    phase: 3.9,
-  },
-  {
-    index: '04',
-    slug: 'giao-duc-hoc',
-    shortLabel: '04. GDH',
-    title: 'Giáo dục học',
-    color: '#7A463B',
-    softBg: '#F3ECE9',
-    borderColor: '#D8C8C1',
-    glow: 'rgba(158, 99, 86, 0.26)',
-    ringIndex: 0,
-    orbitSpeed: 0.19,
-    phase: 0.78,
-  },
-];
+function normalizeVec3(v: Vec3): Vec3 {
+  const len = Math.hypot(v.x, v.y, v.z) || 1;
+  return { x: v.x / len, y: v.y / len, z: v.z / len };
+}
 
-// Đỉnh và cạnh khối Nhị thập diện chuẩn (Icosahedron) tối giản
+const LIGHT_DIR = normalizeVec3({ x: -0.45, y: -0.62, z: 0.64 });
+
 const PHI = (1 + Math.sqrt(5)) / 2;
+const INV_PHI = 1 / PHI;
+
+// 1. Khối Nhị thập diện đều bên trong (Icosahedron - 12 đỉnh, 20 mặt tam giác)
 const RAW_ICO_COORDS: readonly (readonly [number, number, number])[] = [
   [-1, PHI, 0],
   [1, PHI, 0],
@@ -154,51 +78,159 @@ const RAW_ICO_COORDS: readonly (readonly [number, number, number])[] = [
   [-PHI, 0, -1],
   [-PHI, 0, 1],
 ];
-const RAW_ICO_VERTICES: readonly Vec3[] = RAW_ICO_COORDS.map(([x, y, z]) => {
-  const len = Math.hypot(x, y, z);
-  return { x: x / len, y: y / len, z: z / len };
-});
+const ICO_VERTICES: readonly Vec3[] = RAW_ICO_COORDS.map(([x, y, z]) => normalizeVec3({ x, y, z }));
 
-const ICO_EDGES: readonly (readonly [number, number])[] = [
-  [0, 1],
-  [0, 5],
-  [0, 7],
-  [0, 10],
-  [0, 11],
-  [1, 5],
-  [1, 7],
-  [1, 8],
-  [1, 9],
-  [2, 3],
-  [2, 4],
-  [2, 6],
-  [2, 10],
-  [2, 11],
-  [3, 4],
-  [3, 6],
-  [3, 8],
-  [3, 9],
-  [4, 5],
-  [4, 9],
-  [4, 11],
-  [5, 9],
-  [5, 11],
-  [6, 7],
-  [6, 8],
-  [6, 10],
-  [7, 8],
-  [7, 10],
-  [8, 9],
-  [10, 11],
+const ICO_FACES: readonly (readonly [number, number, number])[] = (() => {
+  const faces: [number, number, number][] = [];
+  for (let i = 0; i < ICO_VERTICES.length; i += 1) {
+    for (let j = i + 1; j < ICO_VERTICES.length; j += 1) {
+      if (dotVec3(ICO_VERTICES[i]!, ICO_VERTICES[j]!) < 0.42) continue;
+      for (let k = j + 1; k < ICO_VERTICES.length; k += 1) {
+        if (
+          dotVec3(ICO_VERTICES[i]!, ICO_VERTICES[k]!) < 0.42 ||
+          dotVec3(ICO_VERTICES[j]!, ICO_VERTICES[k]!) < 0.42
+        ) {
+          continue;
+        }
+        const vi = ICO_VERTICES[i]!;
+        const vj = ICO_VERTICES[j]!;
+        const vk = ICO_VERTICES[k]!;
+        const centroid = {
+          x: (vi.x + vj.x + vk.x) / 3,
+          y: (vi.y + vj.y + vk.y) / 3,
+          z: (vi.z + vj.z + vk.z) / 3,
+        };
+        const normal = crossVec3(subVec3(vj, vi), subVec3(vk, vi));
+        if (dotVec3(normal, centroid) < 0) {
+          faces.push([i, k, j]);
+        } else {
+          faces.push([i, j, k]);
+        }
+      }
+    }
+  }
+  return faces;
+})();
+
+// 2. Khối Thập nhị diện đều bao ngoài (Dodecahedron - 20 đỉnh, 12 mặt ngũ giác đều)
+const RAW_DODECA_COORDS: readonly (readonly [number, number, number])[] = [
+  [-1, -1, -1],
+  [-1, -1, 1],
+  [-1, 1, -1],
+  [-1, 1, 1],
+  [1, -1, -1],
+  [1, -1, 1],
+  [1, 1, -1],
+  [1, 1, 1],
+  [0, -INV_PHI, -PHI],
+  [0, -INV_PHI, PHI],
+  [0, INV_PHI, -PHI],
+  [0, INV_PHI, PHI],
+  [-INV_PHI, -PHI, 0],
+  [-INV_PHI, PHI, 0],
+  [INV_PHI, -PHI, 0],
+  [INV_PHI, PHI, 0],
+  [-PHI, 0, -INV_PHI],
+  [-PHI, 0, INV_PHI],
+  [PHI, 0, -INV_PHI],
+  [PHI, 0, INV_PHI],
 ];
 
-const FLOATING_SYMBOLS = [
-  { char: 'Σ', x: 0.11, y: 0.16, phase: 0.4, depth: 1.1, color: 'rgba(140, 114, 72, 0.52)' },
-  { char: '∫', x: 0.89, y: 0.18, phase: 1.7, depth: 0.9, color: 'rgba(36, 62, 56, 0.48)' },
-  { char: '∀', x: 0.12, y: 0.84, phase: 2.9, depth: 1.0, color: 'rgba(59, 98, 117, 0.50)' },
-  { char: 'π', x: 0.88, y: 0.82, phase: 4.1, depth: 1.15, color: 'rgba(140, 114, 72, 0.48)' },
-  { char: '≅', x: 0.52, y: 0.08, phase: 5.2, depth: 0.8, color: 'rgba(36, 62, 56, 0.44)' },
-] as const;
+const DODECA_VERTICES: readonly Vec3[] = RAW_DODECA_COORDS.map(([x, y, z]) =>
+  normalizeVec3({ x, y, z }),
+);
+
+const DODECA_FACES: readonly (readonly number[])[] = ICO_VERTICES.map((faceNormal) => {
+  const nearest = DODECA_VERTICES.map((v, index) => ({
+    index,
+    v,
+    d: dotVec3(v, faceNormal),
+  }))
+    .sort((a, b) => b.d - a.d)
+    .slice(0, 5);
+
+  const upHint = Math.abs(faceNormal.y) < 0.9 ? { x: 0, y: 1, z: 0 } : { x: 1, y: 0, z: 0 };
+  const tangentU = normalizeVec3(crossVec3(upHint, faceNormal));
+  const tangentW = crossVec3(faceNormal, tangentU);
+
+  const ordered = [...nearest]
+    .sort(
+      (a, b) =>
+        Math.atan2(dotVec3(a.v, tangentW), dotVec3(a.v, tangentU)) -
+        Math.atan2(dotVec3(b.v, tangentW), dotVec3(b.v, tangentU)),
+    )
+    .map((entry) => entry.index);
+
+  const p0 = DODECA_VERTICES[ordered[0]!]!;
+  const p1 = DODECA_VERTICES[ordered[1]!]!;
+  const p2 = DODECA_VERTICES[ordered[2]!]!;
+  const nCheck = crossVec3(subVec3(p1, p0), subVec3(p2, p0));
+  return dotVec3(nCheck, faceNormal) < 0 ? [...ordered].reverse() : ordered;
+});
+
+// 3. Hệ 4 Vòng Thiên Cầu Khắc Độ (Engraved Armillary Rings)
+const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
+  {
+    radius: 0.72,
+    baseTiltX: 0.96,
+    baseTiltZ: 0.22,
+    speedY: 0.14,
+    speedZ: 0.03,
+    color: '#1E3A34',
+    accentColor: '#8C6D3F',
+    tickStepDeg: 10,
+    strokeWidth: 1.55,
+  },
+  {
+    radius: 0.64,
+    baseTiltX: -0.78,
+    baseTiltZ: 0.84,
+    speedY: -0.19,
+    speedZ: -0.04,
+    color: '#8C6D3F',
+    accentColor: '#1E3A34',
+    tickStepDeg: 15,
+    strokeWidth: 1.4,
+  },
+  {
+    radius: 0.56,
+    baseTiltX: 0.44,
+    baseTiltZ: -0.68,
+    speedY: 0.24,
+    speedZ: 0.07,
+    color: '#2D5266',
+    accentColor: '#A6844E',
+    tickStepDeg: 30,
+    strokeWidth: 1.25,
+  },
+  {
+    radius: 0.48,
+    baseTiltX: 1.24,
+    baseTiltZ: -0.34,
+    speedY: -0.27,
+    speedZ: 0.09,
+    color: '#A6844E',
+    accentColor: '#1E3A34',
+    tickStepDeg: 30,
+    strokeWidth: 1.15,
+  },
+];
+
+// 4. Hạt bụi sáng tỷ lệ vàng xoắn ốc & trường sóng điều hòa
+const GOLDEN_ANGLE_RAD = Math.PI * (3 - Math.sqrt(5));
+const HARMONIC_DUST: readonly HarmonicDustParticle[] = Array.from({ length: 28 }, (_, idx) => {
+  const norm = (idx + 1) / 28;
+  const hues: readonly ('gold' | 'jade' | 'slate')[] = ['gold', 'jade', 'slate'];
+  return {
+    baseRadius: 0.42 + Math.sqrt(norm) * 0.44,
+    goldenAngle: idx * GOLDEN_ANGLE_RAD,
+    verticalTilt: ((idx % 7) - 3) * 0.18,
+    orbitSpeed: 0.09 + (idx % 5) * 0.025,
+    size: 1.2 + (idx % 3) * 0.55,
+    hue: hues[idx % 3]!,
+    phase: idx * 0.55,
+  };
+});
 
 function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
   const cx = Math.cos(ax);
@@ -221,7 +253,7 @@ function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
 }
 
 function projectPoint(v: Vec3, cx: number, cy: number, fov: number): ProjectedPoint {
-  const dist = 3.2;
+  const dist = 3.25;
   const scale = fov / (dist - v.z);
   return {
     x: cx + v.x * scale,
@@ -231,95 +263,205 @@ function projectPoint(v: Vec3, cx: number, cy: number, fov: number): ProjectedPo
   };
 }
 
-function drawArmillaryRing(
+interface ShadedFaceItem {
+  readonly points: readonly ProjectedPoint[];
+  readonly avgZ: number;
+  readonly light: number;
+  readonly isFront: boolean;
+}
+
+function buildPolyhedronFaces(
+  vertices: readonly Vec3[],
+  faces: readonly (readonly number[])[],
+  scaleFactor: number,
+  rotX: number,
+  rotY: number,
+  rotZ: number,
+  cx: number,
+  cy: number,
+  fov: number,
+): { readonly back: readonly ShadedFaceItem[]; readonly front: readonly ShadedFaceItem[] } {
+  const worldVerts = vertices.map((v) =>
+    rotateVec3(
+      { x: v.x * scaleFactor, y: v.y * scaleFactor, z: v.z * scaleFactor },
+      rotX,
+      rotY,
+      rotZ,
+    ),
+  );
+  const projVerts = worldVerts.map((v) => projectPoint(v, cx, cy, fov));
+
+  const back: ShadedFaceItem[] = [];
+  const front: ShadedFaceItem[] = [];
+
+  for (const faceIndices of faces) {
+    const w0 = worldVerts[faceIndices[0]!]!;
+    const w1 = worldVerts[faceIndices[1]!]!;
+    const w2 = worldVerts[faceIndices[2]!]!;
+    const normal = normalizeVec3(crossVec3(subVec3(w1, w0), subVec3(w2, w0)));
+    const light = Math.max(0, dotVec3(normal, LIGHT_DIR));
+    let avgZ = 0;
+    const pts: ProjectedPoint[] = [];
+    for (const idx of faceIndices) {
+      const p = projVerts[idx]!;
+      pts.push(p);
+      avgZ += p.z;
+    }
+    avgZ /= faceIndices.length;
+
+    const item: ShadedFaceItem = {
+      points: pts,
+      avgZ,
+      light,
+      isFront: normal.z >= -0.04,
+    };
+    if (item.isFront) front.push(item);
+    else back.push(item);
+  }
+
+  back.sort((a, b) => a.avgZ - b.avgZ);
+  front.sort((a, b) => a.avgZ - b.avgZ);
+  return { back, front };
+}
+
+function drawPolygonFace(
+  ctx: CanvasRenderingContext2D,
+  pts: readonly ProjectedPoint[],
+  fillStyle: string,
+  strokeStyle: string,
+  lineWidth: number,
+): void {
+  if (pts.length === 0) return;
+  ctx.beginPath();
+  ctx.moveTo(pts[0]!.x, pts[0]!.y);
+  for (let i = 1; i < pts.length; i += 1) {
+    ctx.lineTo(pts[i]!.x, pts[i]!.y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = fillStyle;
+  ctx.fill();
+  ctx.strokeStyle = strokeStyle;
+  ctx.lineWidth = lineWidth;
+  ctx.stroke();
+}
+
+function drawArmillaryHalf(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
-  radius: number,
+  ring: ArmillaryRingSpec,
   fov: number,
   rotX: number,
   rotY: number,
   rotZ: number,
-  color: string,
-  withTicks: boolean,
-  isHighlighted: boolean,
+  time: number,
+  drawFrontHalf: boolean,
 ): void {
   const segments = 96;
-  const points: ProjectedPoint[] = [];
+  const worldPoints: Vec3[] = [];
+  const projPoints: ProjectedPoint[] = [];
+
   for (let i = 0; i <= segments; i += 1) {
     const theta = (i / segments) * Math.PI * 2;
-    const base: Vec3 = {
-      x: Math.cos(theta) * radius,
-      y: Math.sin(theta) * radius,
-      z: 0,
-    };
-    const r = rotateVec3(base, rotX, rotY, rotZ);
-    points.push(projectPoint(r, cx, cy, fov));
+    const world = rotateVec3(
+      { x: Math.cos(theta) * ring.radius, y: Math.sin(theta) * ring.radius, z: 0 },
+      rotX,
+      rotY,
+      rotZ,
+    );
+    worldPoints.push(world);
+    projPoints.push(projectPoint(world, cx, cy, fov));
   }
 
+  // Vẽ nửa sau hoặc nửa trước của vành nhẫn
   for (let i = 0; i < segments; i += 1) {
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    if (!p1 || !p2) continue;
-    const baseAlpha = Math.max(0.2, Math.min(0.78, 0.44 + (p1.z + p2.z) * 0.36));
+    const p1 = projPoints[i]!;
+    const p2 = projPoints[i + 1]!;
+    const avgZ = (p1.z + p2.z) * 0.5;
+    if (avgZ >= 0 !== drawFrontHalf) continue;
+
+    const alpha = Math.max(0.24, Math.min(0.86, 0.46 + avgZ * 0.46));
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
-    ctx.strokeStyle = color;
-    ctx.globalAlpha = isHighlighted ? Math.min(1, baseAlpha + 0.34) : baseAlpha;
-    ctx.lineWidth = isHighlighted ? (p1.z > 0 ? 2.6 : 1.75) : p1.z > 0 ? 1.45 : 0.95;
+    ctx.strokeStyle = ring.color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = drawFrontHalf ? ring.strokeWidth * 1.15 : ring.strokeWidth * 0.72;
     ctx.stroke();
   }
 
-  if (withTicks) {
-    for (let deg = 0; deg < 360; deg += 30) {
-      const rad = (deg * Math.PI) / 180;
-      const tickLen = deg % 90 === 0 ? 0.042 : 0.024;
-      const inner = rotateVec3(
-        { x: Math.cos(rad) * (radius - tickLen), y: Math.sin(rad) * (radius - tickLen), z: 0 },
-        rotX,
-        rotY,
-        rotZ,
-      );
-      const outer = rotateVec3(
-        { x: Math.cos(rad) * radius, y: Math.sin(rad) * radius, z: 0 },
-        rotX,
-        rotY,
-        rotZ,
-      );
-      const pi = projectPoint(inner, cx, cy, fov);
-      const po = projectPoint(outer, cx, cy, fov);
+  // Vạch khắc độ chia độ góc trên vòng Thiên cầu
+  for (let deg = 0; deg < 360; deg += ring.tickStepDeg) {
+    const rad = (deg * Math.PI) / 180;
+    const isMajor = deg % 30 === 0;
+    const tickLen = isMajor ? 0.038 : 0.02;
+    const outerW = rotateVec3(
+      { x: Math.cos(rad) * ring.radius, y: Math.sin(rad) * ring.radius, z: 0 },
+      rotX,
+      rotY,
+      rotZ,
+    );
+    if (outerW.z >= 0 !== drawFrontHalf) continue;
+
+    const innerW = rotateVec3(
+      {
+        x: Math.cos(rad) * (ring.radius - tickLen),
+        y: Math.sin(rad) * (ring.radius - tickLen),
+        z: 0,
+      },
+      rotX,
+      rotY,
+      rotZ,
+    );
+    const pi = projectPoint(innerW, cx, cy, fov);
+    const po = projectPoint(outerW, cx, cy, fov);
+    ctx.beginPath();
+    ctx.moveTo(pi.x, pi.y);
+    ctx.lineTo(po.x, po.y);
+    ctx.strokeStyle = isMajor ? ring.accentColor : ring.color;
+    ctx.globalAlpha = drawFrontHalf ? (isMajor ? 0.78 : 0.46) : 0.24;
+    ctx.lineWidth = isMajor ? 1.25 : 0.75;
+    ctx.stroke();
+  }
+
+  // Điểm nút đồng sáng trượt dọc theo từng vòng nhẫn
+  for (const offset of [0.4, Math.PI + 0.4]) {
+    const nodeTheta = offset + time * ring.speedY * 1.3;
+    const nodeW = rotateVec3(
+      { x: Math.cos(nodeTheta) * ring.radius, y: Math.sin(nodeTheta) * ring.radius, z: 0 },
+      rotX,
+      rotY,
+      rotZ,
+    );
+    if (nodeW.z >= 0 !== drawFrontHalf) continue;
+    const np = projectPoint(nodeW, cx, cy, fov);
+    ctx.globalAlpha = drawFrontHalf ? 0.95 : 0.35;
+    ctx.beginPath();
+    ctx.arc(np.x, np.y, drawFrontHalf ? 3.2 : 2.1, 0, Math.PI * 2);
+    ctx.fillStyle = ring.accentColor;
+    ctx.fill();
+    if (drawFrontHalf) {
       ctx.beginPath();
-      ctx.moveTo(pi.x, pi.y);
-      ctx.lineTo(po.x, po.y);
-      ctx.strokeStyle = isHighlighted ? color : '#8C7248';
-      ctx.globalAlpha = outer.z > 0 ? 0.72 : 0.28;
-      ctx.lineWidth = deg % 90 === 0 ? 1.3 : 0.85;
-      ctx.stroke();
+      ctx.arc(np.x, np.y, 1.3, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBF9';
+      ctx.fill();
     }
   }
+
   ctx.globalAlpha = 1;
 }
 
 /**
- * Bản đồ Quỹ đạo 4 Học Phần Tương tác 120fps trên nền sáng Khoáng Thạch & Trắng Sứ Dịu:
- * Tích hợp 3 vòng quỹ đạo 3D, lõi Nhị thập diện và 4 Nút Tinh Cầu có thể di chuột / nhấp chuyển hướng.
+ * Điêu Khắc Đa Diện Lồng Nhau & Thiên Cầu Hoàng Kim 3D (120FPS Volumetric Sculpture):
+ * Khối trang trí hình học tinh khiết bên phải Hero:
+ * - Thập nhị diện đều bán trong suốt bao bọc Nhị thập diện đều ấm áp bên trong
+ * - Hệ 4 vòng Thiên cầu khắc độ xoay lệch trục với độ sâu che khuất 3D chuẩn mực
+ * - Trường sóng điều hòa & hạt sáng tỷ lệ vàng nghiêng mượt theo vị trí chuột trên Hero
  */
-export function LearningSpaceHeroCanvas({
-  subjectProgress,
-  onSelectSubject,
-}: LearningSpaceHeroCanvasProps) {
+export function LearningSpaceHeroCanvas() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const orbButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const hoveredSlugRef = useRef<string | null>(null);
-
-  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    hoveredSlugRef.current = hoveredSlug;
-  }, [hoveredSlug]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -329,14 +471,14 @@ export function LearningSpaceHeroCanvas({
     const ctx = getLowLatency2DContext(canvas);
     if (!ctx) return;
 
-    let width = Math.max(320, container.clientWidth || 440);
-    let height = Math.max(320, container.clientHeight || 400);
+    let width = Math.max(340, container.clientWidth || 460);
+    let height = Math.max(340, container.clientHeight || 420);
     let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-      width = Math.max(320, container.clientWidth || 440);
-      height = Math.max(320, container.clientHeight || 400);
+      width = Math.max(340, container.clientWidth || 460);
+      height = Math.max(340, container.clientHeight || 420);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -353,11 +495,14 @@ export function LearningSpaceHeroCanvas({
     let elapsed = 0;
     let prevNow = performance.now();
 
-    const handlePointerMove = (event: PointerEvent) => {
-      const rect = container.getBoundingClientRect();
+    const heroSection = container.closest('section') ?? container;
+
+    const handlePointerMove = (event: Event) => {
+      const ptr = event as PointerEvent;
+      const rect = heroSection.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
-      pointerX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-      pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+      pointerX = Math.max(-1, Math.min(1, ((ptr.clientX - rect.left) / rect.width - 0.5) * 2));
+      pointerY = Math.max(-1, Math.min(1, ((ptr.clientY - rect.top) / rect.height - 0.5) * 2));
     };
 
     const handlePointerLeave = () => {
@@ -365,8 +510,8 @@ export function LearningSpaceHeroCanvas({
       pointerY = 0;
     };
 
-    container.addEventListener('pointermove', handlePointerMove);
-    container.addEventListener('pointerleave', handlePointerLeave);
+    heroSection.addEventListener('pointermove', handlePointerMove);
+    heroSection.addEventListener('pointerleave', handlePointerLeave);
 
     let resizeObserver: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined') {
@@ -390,152 +535,210 @@ export function LearningSpaceHeroCanvas({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
-      const cx = width * 0.5 + smoothX * 8;
-      const cy = height * 0.5 + smoothY * 8;
+      const cx = width * 0.5 + smoothX * 10;
+      const cy = height * 0.5 + smoothY * 9;
       const minDim = Math.min(width, height);
-      const fov = minDim * 1.24;
+      const fov = minDim * 1.18;
 
-      const activeHoverSlug = hoveredSlugRef.current;
-      const activeSatellite = ORBITAL_SUBJECTS.find((sat) => sat.slug === activeHoverSlug);
-      const highlightedRingIndex = activeSatellite?.ringIndex ?? -1;
-
-      // Hào quang trung tâm dịu nhẹ
-      const coreGlow = ctx.createRadialGradient(cx, cy, 6, cx, cy, minDim * 0.46);
-      coreGlow.addColorStop(0, 'rgba(166, 130, 75, 0.14)');
-      coreGlow.addColorStop(0.5, 'rgba(59, 98, 117, 0.07)');
-      coreGlow.addColorStop(1, 'rgba(235, 240, 238, 0)');
-      ctx.fillStyle = coreGlow;
+      // Hào quang tinh thể nhiều tầng phía sau khối điêu khắc
+      const outerHalo = ctx.createRadialGradient(cx, cy, 8, cx, cy, minDim * 0.52);
+      outerHalo.addColorStop(0, 'rgba(184, 142, 74, 0.20)');
+      outerHalo.addColorStop(0.42, 'rgba(45, 82, 102, 0.10)');
+      outerHalo.addColorStop(0.75, 'rgba(30, 58, 52, 0.05)');
+      outerHalo.addColorStop(1, 'rgba(242, 244, 243, 0)');
+      ctx.fillStyle = outerHalo;
       ctx.fillRect(0, 0, width, height);
 
-      // Tính góc quay hiện tại của cả 3 vòng quỹ đạo (để các nút tinh cầu bám khít trên vòng)
-      const ringAngles = ORBITAL_RINGS.map((ring, idx) => ({
-        rotX: ring.baseTiltX + smoothY * (0.14 - idx * 0.02),
-        rotY: time * ring.speedY + smoothX * (0.16 - idx * 0.02),
-        rotZ: ring.baseRotZ + time * ring.speedZ,
+      // Trường sóng điều hòa mảnh đồng bộ góc nghiêng 3D
+      for (const wave of [
+        {
+          rx: minDim * 0.44,
+          ry: minDim * 0.16,
+          tilt: -0.32 + smoothY * 0.1,
+          color: 'rgba(140, 109, 63, 0.22)',
+        },
+        {
+          rx: minDim * 0.47,
+          ry: minDim * 0.19,
+          tilt: 0.46 - smoothY * 0.08,
+          color: 'rgba(30, 58, 52, 0.18)',
+        },
+      ]) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(wave.tilt + Math.sin(time * 0.22) * 0.04);
+        ctx.beginPath();
+        for (let s = 0; s <= 72; s += 1) {
+          const th = (s / 72) * Math.PI * 2;
+          const amp = 3.5 * Math.sin(th * 6 + time * 1.2);
+          const wx = (wave.rx + amp) * Math.cos(th);
+          const wy = (wave.ry + amp * 0.45) * Math.sin(th);
+          if (s === 0) ctx.moveTo(wx, wy);
+          else ctx.lineTo(wx, wy);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = wave.color;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Góc Euler của 4 vòng Thiên cầu
+      const ringAngles = ARMILLARY_RINGS.map((ring, idx) => ({
+        rotX: ring.baseTiltX + smoothY * (0.24 - idx * 0.03),
+        rotY: time * ring.speedY + smoothX * (0.28 - idx * 0.04),
+        rotZ: ring.baseTiltZ + time * ring.speedZ,
       }));
 
-      // Vẽ 3 vòng quỹ đạo 3D
-      ORBITAL_RINGS.forEach((ring, idx) => {
+      // LỚP 1: Nửa sau của 4 Vòng Thiên cầu khắc độ (nằm phía sau đa diện)
+      ARMILLARY_RINGS.forEach((ring, idx) => {
         const ang = ringAngles[idx]!;
-        const isRingHighlighted = highlightedRingIndex === idx;
-        drawArmillaryRing(
-          ctx,
-          cx,
-          cy,
-          ring.radius,
-          fov,
-          ang.rotX,
-          ang.rotY,
-          ang.rotZ,
-          isRingHighlighted && activeSatellite ? activeSatellite.color : ring.color,
-          ring.withTicks,
-          isRingHighlighted,
-        );
+        drawArmillaryHalf(ctx, cx, cy, ring, fov, ang.rotX, ang.rotY, ang.rotZ, time, false);
       });
 
-      // Lõi Đa diện 3D Nhị thập diện ở tâm
-      const polyScale = 0.21;
-      const rotatedVerts = RAW_ICO_VERTICES.map((v) =>
-        rotateVec3(
-          { x: v.x * polyScale, y: v.y * polyScale, z: v.z * polyScale },
-          time * 0.34 + smoothY * 0.35,
-          time * 0.48 + smoothX * 0.4,
-          time * 0.16,
-        ),
+      // Hạt sáng xoắn ốc tỷ lệ vàng phía sau tâm
+      const dustProjected = HARMONIC_DUST.map((pt) => {
+        const a = pt.goldenAngle + time * pt.orbitSpeed;
+        const w = rotateVec3(
+          {
+            x: Math.cos(a) * pt.baseRadius,
+            y: Math.sin(a * 0.7 + time * 0.5 + pt.phase) * 0.18 + pt.verticalTilt,
+            z: Math.sin(a) * pt.baseRadius,
+          },
+          smoothY * 0.25,
+          smoothX * 0.28,
+          0.12,
+        );
+        return { w, p: projectPoint(w, cx, cy, fov), pt };
+      });
+
+      for (const item of dustProjected) {
+        if (item.w.z >= 0) continue;
+        ctx.beginPath();
+        ctx.arc(item.p.x, item.p.y, item.pt.size * 0.85, 0, Math.PI * 2);
+        ctx.fillStyle =
+          item.pt.hue === 'gold'
+            ? 'rgba(166, 132, 78, 0.36)'
+            : item.pt.hue === 'slate'
+              ? 'rgba(45, 82, 102, 0.30)'
+              : 'rgba(30, 58, 52, 0.28)';
+        ctx.fill();
+      }
+
+      // LỚP 2: Khối đa diện ngoài Thập nhị diện đều (Dodecahedron) & Lõi Nhị thập diện đều (Icosahedron)
+      const dodecaFaces = buildPolyhedronFaces(
+        DODECA_VERTICES,
+        DODECA_FACES,
+        0.37,
+        time * 0.19 + smoothY * 0.42,
+        time * 0.28 + smoothX * 0.46,
+        time * 0.08,
+        cx,
+        cy,
+        fov,
       );
-      const projectedVerts = rotatedVerts.map((v) => projectPoint(v, cx, cy, fov));
 
-      for (const [a, b] of ICO_EDGES) {
-        const pa = projectedVerts[a];
-        const pb = projectedVerts[b];
-        if (!pa || !pb) continue;
-        const avgZ = (pa.z + pb.z) * 0.5;
-        ctx.beginPath();
-        ctx.moveTo(pa.x, pa.y);
-        ctx.lineTo(pb.x, pb.y);
-        ctx.strokeStyle = avgZ > 0 ? '#243E38' : '#8C7248';
-        ctx.globalAlpha = avgZ > 0 ? 0.78 : 0.32;
-        ctx.lineWidth = avgZ > 0 ? 1.25 : 0.8;
-        ctx.stroke();
+      const icoFaces = buildPolyhedronFaces(
+        ICO_VERTICES,
+        ICO_FACES,
+        0.215,
+        -time * 0.32 + smoothY * 0.52,
+        -time * 0.44 + smoothX * 0.54,
+        time * 0.14,
+        cx,
+        cy,
+        fov,
+      );
+
+      // 2a. Mặt sau bán trong suốt của Thập nhị diện ngoài (chiều sâu kính khoáng thạch)
+      for (const f of dodecaFaces.back) {
+        const lum = 0.05 + f.light * 0.08;
+        drawPolygonFace(
+          ctx,
+          f.points,
+          `rgba(36, 87, 70, ${lum.toFixed(3)})`,
+          'rgba(45, 82, 102, 0.16)',
+          0.7,
+        );
       }
 
-      for (const pt of projectedVerts) {
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, pt.z > 0 ? 2.2 : 1.4, 0, Math.PI * 2);
-        ctx.fillStyle = pt.z > 0 ? '#243E38' : '#8C7248';
-        ctx.globalAlpha = pt.z > 0 ? 0.9 : 0.45;
-        ctx.fill();
+      // 2b. Lõi Nhị thập diện phát sáng ấm áp (Mặt sau + Mặt trước tô bóng pháp tuyến 3D)
+      for (const f of icoFaces.back) {
+        drawPolygonFace(
+          ctx,
+          f.points,
+          'rgba(140, 109, 63, 0.18)',
+          'rgba(166, 132, 78, 0.26)',
+          0.75,
+        );
       }
-      ctx.globalAlpha = 1;
+      for (const f of icoFaces.front) {
+        const r = Math.round(168 + f.light * 56);
+        const g = Math.round(132 + f.light * 52);
+        const b = Math.round(68 + f.light * 38);
+        const alpha = 0.38 + f.light * 0.44;
+        drawPolygonFace(
+          ctx,
+          f.points,
+          `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`,
+          `rgba(246, 232, 198, ${(0.42 + f.light * 0.45).toFixed(2)})`,
+          1.15,
+        );
+      }
 
+      // Điểm tâm phát sáng trong lõi tinh thể
+      const coreGlow = ctx.createRadialGradient(cx, cy, 1, cx, cy, minDim * 0.12);
+      coreGlow.addColorStop(0, 'rgba(255, 243, 214, 0.85)');
+      coreGlow.addColorStop(0.45, 'rgba(184, 142, 74, 0.32)');
+      coreGlow.addColorStop(1, 'rgba(184, 142, 74, 0)');
+      ctx.fillStyle = coreGlow;
       ctx.beginPath();
-      ctx.arc(cx, cy, 4.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#8C7248';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(cx, cy, 1.7, 0, Math.PI * 2);
-      ctx.fillStyle = '#FAFBF9';
+      ctx.arc(cx, cy, minDim * 0.12, 0, Math.PI * 2);
       ctx.fill();
 
-      // Vẽ quầng sáng và cập nhật tọa độ 3D của 4 nút Tinh Cầu theo 120fps (không gây re-render React)
-      for (const sat of ORBITAL_SUBJECTS) {
-        const ringSpec = ORBITAL_RINGS[sat.ringIndex];
-        const ang = ringAngles[sat.ringIndex]!;
-        // Tạm chậm quỹ đạo khi người dùng đang rê vào tinh cầu để dễ bấm
-        const speedFactor = activeHoverSlug ? 0.35 : 1;
-        const theta = sat.phase + time * sat.orbitSpeed * speedFactor;
-
-        const localPos: Vec3 = {
-          x: Math.cos(theta) * ringSpec.radius,
-          y: Math.sin(theta) * ringSpec.radius,
-          z: 0,
-        };
-        const worldPos = rotateVec3(localPos, ang.rotX, ang.rotY, ang.rotZ);
-        const proj = projectPoint(worldPos, cx, cy, fov);
-
-        const isHovered = activeHoverSlug === sat.slug;
-        const glowRadius = isHovered ? 24 : 15;
-
-        const satGlow = ctx.createRadialGradient(proj.x, proj.y, 1, proj.x, proj.y, glowRadius);
-        satGlow.addColorStop(0, sat.glow);
-        satGlow.addColorStop(1, 'rgba(235, 240, 238, 0)');
-        ctx.fillStyle = satGlow;
-        ctx.beginPath();
-        ctx.arc(proj.x, proj.y, glowRadius, 0, Math.PI * 2);
-        ctx.fill();
-
-        const btn = orbButtonRefs.current[sat.slug];
-        if (btn) {
-          const depthScale = isHovered ? 1.08 : worldPos.z > 0 ? 1 : 0.92;
-          const clampedX = Math.max(54, Math.min(width - 54, proj.x));
-          const clampedY = Math.max(24, Math.min(height - 24, proj.y));
-          btn.style.top = '0px';
-          btn.style.left = '0px';
-          btn.style.transform = `translate3d(${clampedX.toFixed(1)}px, ${clampedY.toFixed(1)}px, 0) translate(-50%, -50%) scale(${depthScale})`;
-          btn.style.zIndex = isHovered ? '30' : worldPos.z > 0 ? '20' : '15';
-          btn.style.opacity = isHovered ? '1' : worldPos.z > 0 ? '0.98' : '0.84';
-        }
+      // 2c. Mặt trước Thập nhị diện ngoài (tô bóng ngọc lam-lục khoáng bán trong suốt + viền phản chiếu)
+      for (const f of dodecaFaces.front) {
+        const r = Math.round(28 + f.light * 124);
+        const g = Math.round(62 + f.light * 120);
+        const b = Math.round(58 + f.light * 116);
+        const alpha = 0.09 + f.light * 0.22;
+        drawPolygonFace(
+          ctx,
+          f.points,
+          `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`,
+          `rgba(30, 58, 52, ${(0.32 + f.light * 0.48).toFixed(2)})`,
+          1.25,
+        );
       }
 
-      // Ký hiệu toán học lơ lửng tinh tế
-      ctx.font = '600 13px "JetBrains Mono", "Fira Code", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      for (const sym of FLOATING_SYMBOLS) {
-        const sx = width * sym.x + smoothX * 14 * sym.depth;
-        const sy = height * sym.y + smoothY * 14 * sym.depth + Math.sin(time * 1.1 + sym.phase) * 5;
-        ctx.fillStyle = sym.color;
-        ctx.fillText(sym.char, sx, sy);
+      // LỚP 3: Nửa trước của 4 Vòng Thiên cầu khắc độ + hạt bụi sáng phía trước
+      ARMILLARY_RINGS.forEach((ring, idx) => {
+        const ang = ringAngles[idx]!;
+        drawArmillaryHalf(ctx, cx, cy, ring, fov, ang.rotX, ang.rotY, ang.rotZ, time, true);
+      });
+
+      for (const item of dustProjected) {
+        if (item.w.z < 0) continue;
+        const pulse = 0.72 + Math.sin(time * 2.1 + item.pt.phase) * 0.28;
+        ctx.beginPath();
+        ctx.arc(item.p.x, item.p.y, item.pt.size * pulse, 0, Math.PI * 2);
+        ctx.fillStyle =
+          item.pt.hue === 'gold'
+            ? 'rgba(166, 132, 78, 0.82)'
+            : item.pt.hue === 'slate'
+              ? 'rgba(45, 82, 102, 0.72)'
+              : 'rgba(30, 58, 52, 0.68)';
+        ctx.fill();
       }
 
       ctx.restore();
     };
 
-    renderFrame(0.6);
+    renderFrame(0.65);
     if (prefersReducedMotion) {
       return () => {
-        container.removeEventListener('pointermove', handlePointerMove);
-        container.removeEventListener('pointerleave', handlePointerLeave);
+        heroSection.removeEventListener('pointermove', handlePointerMove);
+        heroSection.removeEventListener('pointerleave', handlePointerLeave);
         resizeObserver?.disconnect();
         intersectionObserver?.disconnect();
       };
@@ -557,125 +760,50 @@ export function LearningSpaceHeroCanvas({
 
     return () => {
       window.cancelAnimationFrame(rafId);
-      container.removeEventListener('pointermove', handlePointerMove);
-      container.removeEventListener('pointerleave', handlePointerLeave);
+      heroSection.removeEventListener('pointermove', handlePointerMove);
+      heroSection.removeEventListener('pointerleave', handlePointerLeave);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
     };
   }, [prefersReducedMotion]);
 
-  const activeSubject = ORBITAL_SUBJECTS.find((item) => item.slug === hoveredSlug) ?? null;
-  const activeStats = activeSubject ? subjectProgress?.[activeSubject.slug] : undefined;
-
   return (
     <div
       ref={containerRef}
       data-testid="learning-space-celestial-rings"
-      className="relative flex h-[350px] w-full items-center justify-center select-none sm:h-[420px]"
+      className="relative flex h-[360px] w-full items-center justify-center select-none sm:h-[430px]"
     >
-      {/* Khung SVG dự phòng thanh mảnh khi môi trường không chạy Canvas 2D */}
+      {/* Khung SVG dự phòng thanh mảnh khi môi trường không hỗ trợ Canvas 2D */}
       <svg
         viewBox="0 0 360 360"
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 m-auto h-[320px] w-[320px] opacity-30"
+        className="pointer-events-none absolute inset-0 m-auto h-[320px] w-[320px] opacity-25"
         fill="none"
       >
-        <circle cx="180" cy="180" r="144" stroke="#8C7248" strokeWidth="1" strokeDasharray="4 6" />
+        <circle cx="180" cy="180" r="146" stroke="#8C6D3F" strokeWidth="1" strokeDasharray="4 6" />
         <ellipse
           cx="180"
           cy="180"
-          rx="136"
-          ry="62"
+          rx="138"
+          ry="64"
           transform="rotate(-24 180 180)"
-          stroke="#243E38"
+          stroke="#1E3A34"
           strokeWidth="1"
         />
         <ellipse
           cx="180"
           cy="180"
           rx="130"
-          ry="56"
+          ry="58"
           transform="rotate(34 180 180)"
-          stroke="#3B6275"
+          stroke="#2D5266"
           strokeWidth="1"
         />
-        <circle cx="180" cy="180" r="4.5" fill="#8C7248" />
+        <polygon points="180,96 244,142 220,224 140,224 116,142" stroke="#1E3A34" strokeWidth="1" />
+        <polygon points="180,126 220,192 140,192" stroke="#8C6D3F" strokeWidth="1" />
       </svg>
 
       <canvas ref={canvasRef} aria-hidden="true" className="relative z-10 block h-full w-full" />
-
-      {/* 4 Nút Tinh Cầu Tương Tác cho 4 Học Phần */}
-      {ORBITAL_SUBJECTS.map((sat, idx) => {
-        const isHovered = hoveredSlug === sat.slug;
-        const fallbackPositions = [
-          'top-[18%] left-[72%]',
-          'top-[34%] left-[18%]',
-          'top-[76%] left-[24%]',
-          'top-[74%] left-[78%]',
-        ] as const;
-
-        return (
-          <button
-            key={sat.slug}
-            ref={(el) => {
-              orbButtonRefs.current[sat.slug] = el;
-            }}
-            type="button"
-            data-testid={`orbital-subject-node-${sat.slug}`}
-            aria-label={`${sat.shortLabel}: ${sat.title}`}
-            onMouseEnter={() => setHoveredSlug(sat.slug)}
-            onMouseLeave={() => setHoveredSlug((prev) => (prev === sat.slug ? null : prev))}
-            onFocus={() => setHoveredSlug(sat.slug)}
-            onBlur={() => setHoveredSlug((prev) => (prev === sat.slug ? null : prev))}
-            onClick={() => onSelectSubject?.(sat.slug)}
-            style={{
-              borderColor: isHovered ? sat.color : sat.borderColor,
-              backgroundColor: isHovered ? sat.color : sat.softBg,
-              color: isHovered ? '#FAFBF9' : sat.color,
-              boxShadow: isHovered ? `0 8px 22px ${sat.glow}` : '0 4px 12px rgba(24, 38, 36, 0.08)',
-            }}
-            className={cn(
-              'absolute top-0 left-0 inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px] font-bold tracking-tight whitespace-nowrap transition-[background-color,color,border-color,box-shadow] duration-200 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
-              // Vị trí dự phòng ban đầu trước khi canvas compute frame đầu
-              fallbackPositions[idx],
-            )}
-          >
-            <span
-              className="h-2 w-2 shrink-0 rounded-full transition-colors"
-              style={{ backgroundColor: isHovered ? '#FAFBF9' : sat.color }}
-              aria-hidden="true"
-            />
-            <span>{sat.shortLabel}</span>
-          </button>
-        );
-      })}
-
-      {/* Tooltip tóm tắt tiến độ môn học khi di chuột hoặc focus vào Tinh cầu */}
-      {activeSubject && (
-        <div
-          role="status"
-          data-testid="orbital-subject-tooltip"
-          className="pointer-events-none absolute right-2 bottom-2 left-2 z-40 mx-auto max-w-[300px] rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9]/95 px-3.5 py-2.5 shadow-lg backdrop-blur-md transition-all duration-200"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <span
-              className="font-mono text-[10px] font-bold"
-              style={{ color: activeSubject.color }}
-            >
-              {activeSubject.shortLabel}
-            </span>
-            {activeStats && (
-              <span className="font-mono text-[10.5px] font-semibold text-[#182624]">
-                Đã học {activeStats.completed}/{activeStats.total} bài ({activeStats.percent}%)
-              </span>
-            )}
-          </div>
-          <p className="mt-0.5 text-xs font-semibold text-[#182624]">{activeSubject.title}</p>
-          <p className="mt-0.5 text-[10.5px] text-[#4A5D58]">
-            Nhấp để di chuyển nhanh tới học phần
-          </p>
-        </div>
-      )}
     </div>
   );
 }

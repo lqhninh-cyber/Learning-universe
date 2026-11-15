@@ -391,7 +391,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
   });
 
   describe('LearningSpacePage & HomePage Integration with Scholarly Upgrades', () => {
-    it('LearningSpacePage hiển thị Sanctuary Banner, chế độ Atlas với SubjectWatermarkSignature và mở KaTeX Drawer khi tương tác', () => {
+    it('LearningSpacePage hiển thị Sanctuary Banner chuẩn hóa, khối 3D thuần trang trí, Spotlight Hover, Biểu đồ Radar và Mạng lưới Liên kết Tri thức', () => {
       render(
         <MemoryRouter>
           <LearningSpacePage />
@@ -399,19 +399,40 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
 
       expect(
-        screen.getByRole('heading', { level: 1, name: /Không Gian Học Tập & Nghiên Cứu/i }),
+        screen.getByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
       ).toBeInTheDocument();
+      expect(screen.getByText(/ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN$/i)).toBeInTheDocument();
+      expect(screen.getByText(/^04 học phần$/i)).toBeInTheDocument();
+      expect(screen.queryByText(/học phần cốt lõi/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/^HỆ THỐNG HỌC PHẦN$/i)).toBeInTheDocument();
+      expect(screen.queryByText(/SPATIAL SUBJECT GALLERY/i)).not.toBeInTheDocument();
+
+      // Khối Điêu khắc Đa diện & Thiên cầu 3D thuần trang trí (không còn nút pill 01. CTĐS .. 04. GDH)
       expect(screen.getByTestId('learning-space-celestial-rings')).toBeInTheDocument();
+      expect(screen.queryByTestId('orbital-subject-node-cau-truc-dai-so')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('orbital-subject-node-hinh-hoc-affine')).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('orbital-subject-node-giai-tich-ham-mot-bien'),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId('orbital-subject-node-giao-duc-hoc')).not.toBeInTheDocument();
+
+      // Khung minh họa môn học tinh khiết, không nhãn mô tả góc
+      expect(screen.queryByText(/CAYLEY · ĐỐI XỨNG NHÓM/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/HYPERBOLOID · MỤC TIÊU AFFINE/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/TAYLOR · TÍCH PHÂN RIEMANN/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Kéo để xoay 3D/i)).not.toBeInTheDocument();
+
       expect(screen.getByTestId('topographic-waterlines')).toBeInTheDocument();
       expect(screen.getByTestId('golden-compass-spine')).toBeInTheDocument();
 
-      // Dấu ấn chìm môn học & đủ lưới 4 môn học 2 cột trong chế độ Atlas
+      // Dấu ấn chìm môn học, quầng sáng Spotlight & đủ lưới 4 môn học 2 cột trong chế độ Atlas
       const atlasGrid = screen.getByTestId('atlas-subjects-grid');
       expect(atlasGrid).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'gap-7');
       expect(screen.getByTestId('subject-watermark-cau-truc-dai-so')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-hinh-hoc-affine')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-giai-tich-ham-mot-bien')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-giao-duc-hoc')).toBeInTheDocument();
+      expect(screen.getByTestId('card-spotlight-cau-truc-dai-so')).toBeInTheDocument();
       expect(
         screen.getByRole('link', { name: /Vào học phần Cấu trúc đại số/i }),
       ).toBeInTheDocument();
@@ -423,15 +444,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       ).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Vào học phần Giáo dục học/i })).toBeInTheDocument();
 
-      // Nút ViewModeToggle
+      // Nút ViewModeToggle & Quick search chips
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
-
-      // Quick search chips, Orbital Map, interactive Atlas controls & footer transition
       expect(screen.getByTestId('quick-search-chips')).toBeInTheDocument();
-      expect(screen.getByTestId('orbital-subject-node-cau-truc-dai-so')).toBeInTheDocument();
-      expect(screen.getByTestId('orbital-subject-node-hinh-hoc-affine')).toBeInTheDocument();
-      expect(screen.getByTestId('orbital-subject-node-giai-tich-ham-mot-bien')).toBeInTheDocument();
-      expect(screen.getByTestId('orbital-subject-node-giao-duc-hoc')).toBeInTheDocument();
 
       fireEvent.click(screen.getByRole('button', { name: 'Định lý Lagrange' }));
       expect(screen.getByTestId('spotlight-search-popover')).toBeInTheDocument();
@@ -443,16 +458,26 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       expect(screen.getByTestId('up-next-queue')).toBeInTheDocument();
       expect(screen.getByTestId('progress-matrix-4-subjects')).toBeInTheDocument();
-      expect(screen.getByTestId('spatial-lab-3d-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('learning-space-footer-transition')).toBeInTheDocument();
 
-      // Bấm vào thẻ Ngân hàng Thuật ngữ KaTeX mở Drawer
-      const katexTrigger = screen.getByRole('link', {
-        name: /Mở Ngân hàng Thuật ngữ & Ký hiệu Toán/i,
-      });
-      fireEvent.click(katexTrigger);
+      // Không còn 2 thẻ tiện ích cũ và không còn dải màu tối cuối trang
+      expect(
+        screen.queryByRole('heading', { name: /Ngân hàng Thuật ngữ KaTeX/i }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: /Phòng Lab Hình học 3D/i }),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId('learning-space-footer-transition')).not.toBeInTheDocument();
 
-      expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
+      // Mô hình 1 & Mô hình 2: Biểu đồ Radar Năng lực & Mạng lưới Liên kết Tri thức tương tác
+      expect(screen.getByTestId('curriculum-radar-card')).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId('radar-axis-hinh-hoc-affine'));
+      expect(screen.getByTestId('radar-detail-panel')).toHaveTextContent(/Không gian & Biến hình/i);
+
+      expect(screen.getByTestId('knowledge-constellation-card')).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId('constellation-node-polynomial-series'));
+      expect(screen.getByTestId('constellation-insight-panel')).toHaveTextContent(
+        /Vành đa thức & Chuỗi lũy thừa/i,
+      );
     });
 
     it('HomePage tái cấu trúc 3 màn hình: Toàn cảnh Lam Ngọc Hoàng Kim -> Bảo tàng Di sản 3 tầng -> Hồ Sen Đêm', async () => {
