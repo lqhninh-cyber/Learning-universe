@@ -305,7 +305,6 @@ export const Header: FC<HeaderProps> = ({
   const completedCount = Object.keys(completedLessons).length;
 
   const isHomeActive = pathname === ROUTES.home;
-  const isCoursesActive = pathname === ROUTES.courses || pathname === ROUTES.subjects;
   const isGlossaryActive = pathname === ROUTES.glossary || pathname === '/glossary';
   const isLearningSpaceActive =
     isMegaMenuOpen ||
@@ -334,18 +333,18 @@ export const Header: FC<HeaderProps> = ({
 
   const navItemClass = (active: boolean) =>
     cn(
-      'relative inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-[15px] font-semibold tracking-tight whitespace-nowrap transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98] xl:px-4',
+      'relative inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-[15px] font-semibold tracking-tight whitespace-nowrap transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-[#D4A853] focus-visible:outline-none active:scale-[0.98] xl:px-4',
       active
         ? isDark
-          ? 'bg-[#4E9B58]/20 text-[#86EFAC]'
-          : 'bg-[#1B3D2F]/[0.08] text-[#142B21] dark:bg-[#4E9B58]/20 dark:text-[#86EFAC]'
+          ? 'bg-[#E5B85B]/20 text-[#FFF3D1]'
+          : 'bg-[#142834] text-[#F9F3E3] shadow-sm dark:bg-[#E5B85B]/20 dark:text-[#FFF3D1]'
         : isDark
-          ? 'text-[#D6DFD9] hover:bg-white/[0.06] hover:text-[#FFFDF9]'
-          : 'text-[#3F5148] hover:bg-[#1B3D2F]/[0.04] hover:text-[#142B21] dark:text-[#D6DFD9] dark:hover:bg-white/[0.06] dark:hover:text-[#FFFDF9]',
+          ? 'text-[#DCE6E2] hover:bg-white/[0.08] hover:text-[#FAF5E8]'
+          : 'text-[#2C3E4C] hover:bg-[#EFE8D8]/70 hover:text-[#142834] dark:text-[#DCE6E2] dark:hover:bg-white/[0.08] dark:hover:text-[#FAF5E8]',
     );
 
   const activeSealDot = (
-    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#388E3C]" aria-hidden="true" />
+    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#E5B85B]" aria-hidden="true" />
   );
 
   return (
@@ -354,12 +353,12 @@ export const Header: FC<HeaderProps> = ({
         ref={mastheadRef}
         onMouseLeave={() => setIsMegaMenuOpen(false)}
         className={cn(
-          'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-5 shadow-[0_8px_28px_-10px_rgba(20,43,33,0.10)] ring-1 backdrop-blur-md transition-colors duration-200 print:hidden',
+          'lu-site-header sticky top-3 z-50 mx-auto -mb-[66px] flex h-[66px] w-[min(94vw,1520px)] items-center rounded-full border px-5 backdrop-blur-xl transition-colors duration-200 print:hidden',
           isDark
-            ? 'border-[#4E9B58]/25 bg-[#11221A]/92 text-[#F7F4EB] ring-[#4E9B58]/10'
+            ? 'border-[#D4A853]/30 bg-[#10212E]/94 text-[#FAF5E8] shadow-[0_12px_36px_rgba(6,12,20,0.45)]'
             : isSepia
-              ? 'border-[#1B3D2F]/16 bg-[#FBF7EC]/94 text-[#231F18] ring-[#2E7D32]/8'
-              : 'border-[#1B3D2F]/14 bg-[#FCFDFC]/92 text-[#142B21] ring-[#2E7D32]/8 dark:border-[#4E9B58]/25 dark:bg-[#11221A]/92 dark:text-[#F7F4EB] dark:ring-[#4E9B58]/10',
+              ? 'border-[#C89D54]/35 bg-[#FBF7EC]/95 text-[#142834] shadow-[0_12px_36px_rgba(12,24,36,0.14),inset_0_1px_0_rgba(255,255,255,0.85)]'
+              : 'border-[#C89D54]/35 bg-[#FAF6EE]/92 text-[#142834] shadow-[0_12px_36px_rgba(12,24,36,0.16),inset_0_1px_0_rgba(255,255,255,0.85)] dark:border-[#D4A853]/30 dark:bg-[#10212E]/94 dark:text-[#FAF5E8]',
           className,
         )}
       >
@@ -367,7 +366,7 @@ export const Header: FC<HeaderProps> = ({
         <Link
           to={ROUTES.home}
           aria-label="LEARNING UNIVERSE"
-          className="flex h-full shrink-0 cursor-pointer items-center pr-3 pl-1 transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none md:pr-4"
+          className="flex h-full shrink-0 cursor-pointer items-center pr-3 pl-1 transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#D4A853] focus-visible:outline-none md:pr-4"
         >
           <EightPetalBrandMark roseRef={roseRef} isDark={isDark} isSepia={isSepia} />
         </Link>
@@ -430,10 +429,10 @@ export const Header: FC<HeaderProps> = ({
                 aria-expanded={isMegaMenuOpen}
                 aria-haspopup="true"
                 className={cn(
-                  'inline-flex h-8 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none',
+                  'inline-flex h-8 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#D4A853] focus-visible:outline-none',
                   isDark
-                    ? 'text-[#86EFAC] hover:bg-white/[0.08]'
-                    : 'text-[#55676B] hover:bg-[#1B3D2F]/[0.08] hover:text-[#142B21]',
+                    ? 'text-[#E5B85B] hover:bg-white/[0.08]'
+                    : 'text-[#2C3E4C] hover:bg-[#EFE8D8]/80 hover:text-[#142834]',
                 )}
               >
                 <ChevronDown
@@ -445,15 +444,6 @@ export const Header: FC<HeaderProps> = ({
                 />
               </button>
             </div>
-
-            <Link
-              to={ROUTES.courses}
-              tabIndex={showReadingContextBar ? -1 : undefined}
-              className={navItemClass(isCoursesActive)}
-            >
-              {isCoursesActive && activeSealDot}
-              <span>Tất cả môn học</span>
-            </Link>
 
             <Link
               to="/glossary"
@@ -615,7 +605,7 @@ export const Header: FC<HeaderProps> = ({
           {quickResume && (
             <Link
               to={quickResume.to}
-              className="hidden items-center gap-1.5 rounded-full bg-[#1B3D2F] px-4 py-2 text-[12.5px] font-semibold whitespace-nowrap text-white transition-colors duration-150 hover:bg-[#25523F] focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98] xl:inline-flex"
+              className="hidden items-center gap-1.5 rounded-full border border-[#D4A853]/45 bg-gradient-to-r from-[#183140] to-[#234558] px-4 py-2 text-[12.5px] font-semibold whitespace-nowrap text-[#F7E3B5] shadow-sm transition-all duration-150 hover:brightness-110 focus-visible:ring-2 focus-visible:ring-[#D4A853] focus-visible:outline-none active:scale-[0.98] xl:inline-flex"
             >
               <Play className="h-3 w-3 fill-current" aria-hidden="true" />
               <span>Học tiếp: {quickResume.label}</span>
@@ -632,22 +622,25 @@ export const Header: FC<HeaderProps> = ({
             }}
             aria-label="Mở tìm kiếm nhanh"
             className={cn(
-              'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)] px-4 text-left text-[13px] transition-all duration-200 hover:border-[#1B3D2F]/30 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
+              'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-full border px-4 text-left text-[13px] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#D4A853] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
               isDark
-                ? 'border-[#4E9B58]/25 bg-[#0E1A15] text-[#CBD5CE] hover:bg-[#162920]'
-                : 'text-[#4A5851] hover:bg-white hover:text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#0E1A15] dark:text-[#CBD5CE]',
+                ? 'border-[#D4A853]/25 bg-[#0C1924] text-[#DCE6E2] hover:border-[#D4A853]/50 hover:bg-[#142736]'
+                : 'border-[#C89D54]/25 bg-[#F2ECE1]/90 text-[#2C3E4C] hover:border-[#C89D54]/60 hover:bg-[#FAF6EE] hover:text-[#142834] dark:border-[#D4A853]/25 dark:bg-[#0C1924] dark:text-[#DCE6E2]',
             )}
           >
             <span className="flex min-w-0 flex-1 items-center gap-2">
               <Search
-                className={cn('h-3.5 w-3.5 shrink-0', isDark ? 'text-[#A7B5AC]' : 'text-[#55676B]')}
+                className={cn(
+                  'h-3.5 w-3.5 shrink-0',
+                  isDark ? 'text-[#E5B85B]/80' : 'text-[#8C6A2E]',
+                )}
                 aria-hidden="true"
               />
               <span key={searchHintIndex} className="block truncate pr-2 font-medium">
                 {ROTATING_SEARCH_HINTS[searchHintIndex]}
               </span>
             </span>
-            <kbd className="shrink-0 rounded-full border border-[#1B3D2F]/10 bg-[#1B3D2F]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[var(--text-secondary)] dark:border-white/15 dark:bg-white/10 dark:text-[#A7B5AC]">
+            <kbd className="shrink-0 rounded-full border border-[#C89D54]/30 bg-[#FAF6EE]/80 px-2 py-0.5 text-[11px] font-medium text-[#6B5428] dark:border-white/15 dark:bg-white/10 dark:text-[#DCE6E2]">
               ⌘K
             </kbd>
           </button>

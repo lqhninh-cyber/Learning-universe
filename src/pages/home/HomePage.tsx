@@ -152,8 +152,8 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* CẦU NỐI 1: Biển mây Hoàng Liên Sơn hòa tan êm ái vào Phòng Trưng Bày Di Sản (#09171E) */}
-      <ShorelineWaveBridge variant="pavilion" bottomColor="#09171E" />
+      {/* CẦU NỐI 1: Biển mây Hoàng Liên Sơn hòa tan êm ái vào Phòng Trưng Bày Di Sản (#121B28) */}
+      <ShorelineWaveBridge variant="pavilion" bottomColor="#121B28" />
 
       {/* =====================================================================
         SCREEN 2: PHÒNG TRƯNG BÀY DI SẢN BẢO TÀNG (#khong-gian-di-san)

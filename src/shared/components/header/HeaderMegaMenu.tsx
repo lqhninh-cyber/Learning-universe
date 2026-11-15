@@ -74,10 +74,10 @@ export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClo
       className={cn(
         'absolute top-full left-1/2 mt-3 w-[640px] max-w-[94vw] -translate-x-1/2 rounded-3xl p-6 shadow-2xl backdrop-blur-xl transition-all duration-200',
         isDark
-          ? 'border border-[#4E9B58]/25 bg-[#11221A]/96 text-[#F7F4EB]'
+          ? 'border border-[#D4A853]/30 bg-[#10212E]/96 text-[#FAF5E8]'
           : isSepia
-            ? 'border border-[#1B3D2F]/16 bg-[#FBF7EC]/98 text-[#231F18]'
-            : 'border border-[#1B3D2F]/14 bg-[#FCFDFC]/96 text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#11221A]/96 dark:text-[#F7F4EB]',
+            ? 'border border-[#C89D54]/30 bg-[#FBF7EC]/98 text-[#231F18]'
+            : 'border border-[#C89D54]/35 bg-[#FAF6EE]/96 text-[#142834] dark:border-[#D4A853]/30 dark:bg-[#10212E]/96 dark:text-[#FAF5E8]',
       )}
     >
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -206,27 +206,27 @@ export const HeaderMegaMenu: FC<HeaderMegaMenuProps> = ({ isDark, isSepia, onClo
         </div>
       </div>
 
-      {/* Dưới cùng: Liên kết Xem tất cả học phần */}
+      {/* Dưới cùng: Liên kết Mở Không gian học tập */}
       <div
         className={cn(
           'mt-5 flex items-center justify-between border-t pt-3.5',
-          isDark ? 'border-[#2A4035]' : 'border-[var(--border-subtle)]',
+          isDark ? 'border-[#253C4D]' : 'border-[#C89D54]/25',
         )}
       >
-        <span className="text-[11px] text-[#55676B] dark:text-[#A7B5AC]">
+        <span className="text-[11px] text-[#4C5E6B] dark:text-[#B8C7D1]">
           Sư phạm Toán học · ĐH Sư phạm TP.HCM (HCMUE)
         </span>
         <Link
-          to={ROUTES.courses}
+          to={ROUTES.learningSpace}
           onClick={onClose}
           className={cn(
             'inline-flex items-center gap-1.5 px-2.5 text-xs font-semibold transition-colors',
             isDark
-              ? 'text-[#E5C378] hover:text-[#DFAD4D]'
-              : 'text-[#1B3D2F] hover:text-[#C83E37] dark:text-[#E5C378]',
+              ? 'text-[#E5B85B] hover:text-[#FFF3D1]'
+              : 'text-[#142834] hover:text-[#C83E37] dark:text-[#E5B85B]',
           )}
         >
-          <span>Xem tất cả học phần</span>
+          <span>Mở Không gian học tập</span>
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
       </div>

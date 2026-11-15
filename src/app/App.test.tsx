@@ -149,15 +149,15 @@ describe('App routing smoke test', () => {
     expect(screen.queryByText(/Ngân hàng Đề thi & Lời giải/i)).not.toBeInTheDocument();
   });
 
-  it('hiển thị trang Danh mục Học phần (/courses) đồng bộ phong cách Apple Card', async () => {
+  it('chuyển hướng /courses về Không Gian Học Tập & Nghiên Cứu (/learning-space)', async () => {
     renderWithProviders('/courses');
 
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Danh mục Học phần' }),
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /Không Gian Học Tập & Nghiên Cứu/i,
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Tất cả' })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Toán học' })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Khoa học Giáo dục' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Vào học phần Cấu trúc đại số/i })).toHaveAttribute(
       'href',
       '/courses/cau-truc-dai-so',

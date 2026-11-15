@@ -51,22 +51,23 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(header?.className).toContain('w-[min(94vw,1520px)]');
     expect(header?.className).toContain('sticky');
 
-    // Logo 8 lá xanh SVG kèm gradient
+    // Logo Huy hiệu Sao Khuê & Thiên Cầu Đông Sơn SVG kèm gradient
     const brandSvg = container.querySelector('header svg[aria-hidden="true"]');
-    expect(brandSvg?.querySelectorAll('linearGradient').length).toBe(1);
-    expect(brandSvg?.querySelectorAll('g').length).toBe(8);
+    expect(brandSvg?.querySelectorAll('linearGradient').length).toBe(2);
+    expect(brandSvg?.querySelectorAll('ellipse').length).toBe(2);
 
     expect(screen.getByText('LEARNING')).toBeInTheDocument();
     expect(screen.getByText('UNIVERSE')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Trang chủ' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Không gian học tập' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Không gian học tập/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Tất cả môn học' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Tất cả môn học' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thuật ngữ' })).toBeInTheDocument();
 
-    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Xanh Ngọc Nhạt thay vì gạch chân đỏ
+    // Mục đang chọn trên trang chủ dùng dáng viên thuốc nền Chàm Hoàng Gia (#142834)
     const homeLink = screen.getByRole('link', { name: 'Trang chủ' });
     expect(homeLink.className).toContain('rounded-full');
-    expect(homeLink.className).toContain('bg-[#1B3D2F]/[0.08]');
+    expect(homeLink.className).toContain('bg-[#142834]');
   });
 
   it('hiển thị chip "Học tiếp" từ bài học gần nhất trên Trang chủ và luân phiên gợi ý tìm kiếm mỗi 4 giây', () => {

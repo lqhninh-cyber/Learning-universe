@@ -56,7 +56,7 @@ export function ShorelineWaveBridge({
         className="absolute inset-x-0 top-0 h-24"
         style={{
           background: isPavilion
-            ? 'linear-gradient(180deg, rgba(6, 12, 24, 0) 0%, rgba(11, 25, 42, 0.55) 55%, rgba(9, 23, 30, 0.92) 100%)'
+            ? 'linear-gradient(180deg, rgba(10, 21, 38, 0) 0%, rgba(16, 30, 48, 0.56) 55%, rgba(18, 27, 40, 0.92) 100%)'
             : 'linear-gradient(180deg, rgba(248, 246, 240, 0) 0%, rgba(230, 226, 214, 0.34) 55%, rgba(248, 246, 240, 0.72) 100%)',
         }}
       />
@@ -69,8 +69,8 @@ export function ShorelineWaveBridge({
       >
         <defs>
           <linearGradient id={cloudBackGradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={isPavilion ? '#133146' : '#C5D3DC'} stopOpacity="0.68" />
-            <stop offset="100%" stopColor={isPavilion ? '#0B202C' : '#E6E2D6'} stopOpacity="0.52" />
+            <stop offset="0%" stopColor={isPavilion ? '#182C42' : '#C5D3DC'} stopOpacity="0.68" />
+            <stop offset="100%" stopColor={isPavilion ? '#121B28' : '#E6E2D6'} stopOpacity="0.52" />
           </linearGradient>
           <linearGradient id={cloudCrestStrokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#D4A359" stopOpacity="0" />

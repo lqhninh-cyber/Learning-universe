@@ -11,6 +11,7 @@ import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { ProgressRing } from '@/shared/ui';
 import { GoldenCompassSpineBridge } from '@/components/home/HomeScrollTransitions';
+import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { QuickKaTeXDrawer } from '@/pages/home/QuickKaTeXDrawer';
 import {
@@ -760,9 +761,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                             </span>
                           </div>
 
-                          <div className="my-6 h-48 overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/75 transition-colors duration-500 group-hover:border-[#365E4E]/40 sm:h-52">
-                            <SubjectSpatialArtwork slug={subject.slug} branch={asset.branch} />
-                          </div>
+                          <SubjectStageCanvas slug={subject.slug} />
 
                           <div className="space-y-4">
                             <div className="space-y-2">

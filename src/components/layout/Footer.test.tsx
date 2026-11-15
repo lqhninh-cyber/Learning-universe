@@ -18,7 +18,7 @@ describe('Footer Component', () => {
       'text-[20px]',
       'lg:text-[22px]',
       'font-bold',
-      'text-[#F7F3E8]',
+      'text-[#FAF5E8]',
     );
     expect(screen.queryByText(/· Toán học & Sư phạm/i)).not.toBeInTheDocument();
   });
@@ -40,15 +40,15 @@ describe('Footer Component', () => {
       'lg:text-[16.5px]',
       'leading-[1.8]',
       'max-w-[740px]',
-      'text-[#D0DDD7]',
+      'text-[#DCE6E2]',
     );
 
     const author = screen.getByText(/Chủ tịch Hồ Chí Minh/i);
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#E5C158]', 'not-italic');
+    expect(author).toHaveClass('font-mono', 'text-[14.5px]', 'text-[#E8C16D]', 'not-italic');
   });
 
-  it('renders Imperial Gold Lotus–Khue Star SVG emblem for both mobile and desktop', () => {
+  it('renders Sao Khuê & Thiên Cầu Đông Sơn SVG emblem for both mobile and desktop', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer />
@@ -61,18 +61,18 @@ describe('Footer Component', () => {
     const desktopLogoWrapper = container.querySelector('.hidden.md\\:flex');
     expect(desktopLogoWrapper).toBeInTheDocument();
 
-    const goldEmblems = screen.getAllByTestId('footer-gold-lotus-emblem');
-    expect(goldEmblems.length).toBeGreaterThanOrEqual(2);
-    goldEmblems.forEach((emblem) => {
+    const brandEmblems = screen.getAllByTestId('footer-brand-logo');
+    expect(brandEmblems.length).toBeGreaterThanOrEqual(2);
+    brandEmblems.forEach((emblem) => {
       expect(emblem.querySelector('svg')).toBeInTheDocument();
     });
 
-    // Ảnh lá xanh cũ đã được thay bằng huy hiệu sen vàng SVG
+    // Ảnh lá xanh cũ đã được thay bằng huy hiệu Sao Khuê SVG
     expect(screen.queryByAltText('Learning Universe Logo')).not.toBeInTheDocument();
     expect(container.querySelectorAll('.w-10.h-10').length).toBe(0);
   });
 
-  it('renders 4 simplified navigation links including Không gian học tập in a single horizontal row', () => {
+  it('renders 3 simplified navigation links without duplicate Tất cả môn học link', () => {
     render(
       <MemoryRouter>
         <Footer />
@@ -89,8 +89,7 @@ describe('Footer Component', () => {
     const learningSpaceLink = screen.getByRole('link', { name: 'Không gian học tập' });
     expect(learningSpaceLink).toHaveAttribute('href', '/learning-space');
 
-    const coursesLink = screen.getByRole('link', { name: 'Tất cả môn học' });
-    expect(coursesLink).toHaveAttribute('href', '/courses');
+    expect(screen.queryByRole('link', { name: 'Tất cả môn học' })).not.toBeInTheDocument();
 
     const glossaryLink = screen.getByRole('link', { name: 'Thuật ngữ' });
     expect(glossaryLink).toHaveAttribute('href', '/thuat-ngu');

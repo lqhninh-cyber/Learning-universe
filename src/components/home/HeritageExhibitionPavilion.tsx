@@ -293,7 +293,11 @@ export function HeritageExhibitionPavilion() {
       aria-label="Không gian Di sản Học thuật và Nghệ thuật"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative overflow-hidden bg-[linear-gradient(180deg,#09171E_0%,#0B1D19_50%,#081A15_100%)] py-20 text-[#F7F3E8] lg:py-24"
+      style={{
+        background:
+          'radial-gradient(circle at 30% 40%, rgba(212,168,83,0.10), transparent 65%), linear-gradient(180deg, #121B28 0%, #1A2332 50%, #15222B 100%)',
+      }}
+      className="relative overflow-hidden py-20 text-[#FAF5E8] lg:py-24"
     >
       {/* Họa tiết đồng tâm Trống Đồng Đông Sơn mờ tinh tế */}
       <svg
@@ -354,7 +358,7 @@ export function HeritageExhibitionPavilion() {
               data-testid="heritage-art-frame"
               onMouseMove={handleFrameMouseMove}
               onMouseLeave={handleFrameMouseLeave}
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#C9A45C]/40 bg-[#05100D] p-4 shadow-[0_24px_60px_rgba(0,0,0,0.45)] transition-colors duration-300 hover:border-[#E5C158]/75"
+              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#D4A853]/40 bg-[#0D1622] p-4 shadow-[0_24px_60px_rgba(0,0,0,0.45)] transition-colors duration-300 hover:border-[#E5B85B]/75"
             >
               {imageError ? (
                 <div
@@ -399,7 +403,7 @@ export function HeritageExhibitionPavilion() {
           <aside
             aria-label={`Hồ sơ học thuật: ${currentArtwork.title}`}
             className={cn(
-              'flex flex-col justify-between rounded-2xl border border-[#C9A45C]/30 bg-[#05100D]/82 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-md transition-opacity duration-[320ms] sm:p-7 lg:col-span-5',
+              'flex flex-col justify-between rounded-2xl border border-[#D4A853]/30 bg-[#0F1926]/86 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] backdrop-blur-md transition-opacity duration-[320ms] sm:p-7 lg:col-span-5',
               isTransitioning ? 'opacity-65' : 'opacity-100',
             )}
           >
@@ -481,9 +485,9 @@ export function HeritageExhibitionPavilion() {
             type="button"
             onClick={handlePrev}
             aria-label="Tác phẩm trước"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#F5EFE2] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#D4A853]/40 bg-[#132030] px-4 py-2 text-xs font-medium text-[#FAF5E8] shadow-sm transition-all hover:border-[#E5B85B] hover:bg-[#1B2D42] active:scale-[0.98] sm:text-sm"
           >
-            <ChevronLeft className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+            <ChevronLeft className="h-4 w-4 text-[#E5B85B]" aria-hidden="true" />
             <span>Tác phẩm trước</span>
           </button>
 
@@ -491,7 +495,7 @@ export function HeritageExhibitionPavilion() {
             type="button"
             onClick={() => setIsPaused((prev) => !prev)}
             aria-label={isPaused ? 'Tự động chiếu' : 'Tạm dừng'}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#E5C158] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#D4A853]/40 bg-[#132030] px-4 py-2 text-xs font-medium text-[#E5B85B] shadow-sm transition-all hover:border-[#E5B85B] hover:bg-[#1B2D42] active:scale-[0.98] sm:text-sm"
           >
             {isPaused ? (
               <>
@@ -508,7 +512,7 @@ export function HeritageExhibitionPavilion() {
 
           <span
             data-testid="heritage-index-indicator"
-            className="inline-flex items-center rounded-full border border-[#C9A45C]/40 bg-[#05100D] px-4 py-2 font-mono text-xs font-bold tracking-widest text-[#E5C158] sm:text-sm"
+            className="inline-flex items-center rounded-full border border-[#D4A853]/40 bg-[#0D1622] px-4 py-2 font-mono text-xs font-bold tracking-widest text-[#E5B85B] sm:text-sm"
           >
             {formattedIndex} / {formattedTotal}
           </span>
@@ -517,19 +521,19 @@ export function HeritageExhibitionPavilion() {
             type="button"
             onClick={handleNext}
             aria-label="Tác phẩm tiếp"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#F5EFE2] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#D4A853]/40 bg-[#132030] px-4 py-2 text-xs font-medium text-[#FAF5E8] shadow-sm transition-all hover:border-[#E5B85B] hover:bg-[#1B2D42] active:scale-[0.98] sm:text-sm"
           >
             <span>Tác phẩm tiếp</span>
-            <ChevronRight className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+            <ChevronRight className="h-4 w-4 text-[#E5B85B]" aria-hidden="true" />
           </button>
 
           <button
             type="button"
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`Phóng to tác phẩm ${currentArtwork.title}`}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#C9A45C]/40 bg-[#0A211B] px-4 py-2 text-xs font-medium text-[#F5EFE2] shadow-sm transition-all hover:border-[#E5C158] hover:bg-[#13352C] active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#D4A853]/40 bg-[#132030] px-4 py-2 text-xs font-medium text-[#FAF5E8] shadow-sm transition-all hover:border-[#E5B85B] hover:bg-[#1B2D42] active:scale-[0.98] sm:text-sm"
           >
-            <Maximize2 className="h-3.5 w-3.5 text-[#E5C158]" aria-hidden="true" />
+            <Maximize2 className="h-3.5 w-3.5 text-[#E5B85B]" aria-hidden="true" />
             <span>Xem toàn màn hình</span>
           </button>
         </div>
@@ -537,12 +541,12 @@ export function HeritageExhibitionPavilion() {
         {/* ================================================================
           TẦNG 3: THANH FILMSTRIP 30 THU NHỎ TƯƠNG TÁC (KHÔNG THANH CUỘN THÔ)
           ================================================================ */}
-        <div className="mt-7 border-t border-[#C9A45C]/20 pt-6">
+        <div className="mt-7 border-t border-[#D4A853]/20 pt-6">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="font-mono text-[11px] tracking-widest text-[#E8C87D]/90 uppercase">
               DANH MỤC TRIỂN LÃM ({formattedTotal} TÁC PHẨM)
             </span>
-            <span className="font-mono text-[11px] text-[#9FB3A9]">
+            <span className="font-mono text-[11px] text-[#B8C7D4]">
               Bấm chọn tác phẩm hoặc trượt ngang để chiêm ngưỡng hồ sơ chi tiết
             </span>
           </div>
@@ -552,9 +556,9 @@ export function HeritageExhibitionPavilion() {
               type="button"
               onClick={() => scrollFilmstripBy(-FILMSTRIP_SCROLL_STEP_PX)}
               aria-label="Cuộn danh mục sang trái"
-              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/40 bg-[#0A211B] text-[#F5EFE2] shadow-md transition-all hover:border-[#E5C158] hover:bg-[#13352C] sm:h-10 sm:w-10"
+              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#D4A853]/40 bg-[#132030] text-[#FAF5E8] shadow-md transition-all hover:border-[#E5B85B] hover:bg-[#1B2D42] sm:h-10 sm:w-10"
             >
-              <ChevronLeft className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+              <ChevronLeft className="h-4 w-4 text-[#E5B85B]" aria-hidden="true" />
             </button>
 
             <div
@@ -586,9 +590,9 @@ export function HeritageExhibitionPavilion() {
               type="button"
               onClick={() => scrollFilmstripBy(FILMSTRIP_SCROLL_STEP_PX)}
               aria-label="Cuộn danh mục sang phải"
-              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#C9A45C]/40 bg-[#0A211B] text-[#F5EFE2] shadow-md transition-all hover:border-[#E5C158] hover:bg-[#13352C] sm:h-10 sm:w-10"
+              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#D4A853]/40 bg-[#132030] text-[#FAF5E8] shadow-md transition-all hover:border-[#E5B85B] hover:bg-[#1B2D42] sm:h-10 sm:w-10"
             >
-              <ChevronRight className="h-4 w-4 text-[#E5C158]" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 text-[#E5B85B]" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -605,7 +609,7 @@ export function HeritageExhibitionPavilion() {
         >
           <div
             onClick={(event) => event.stopPropagation()}
-            className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#C9A45C]/45 bg-[#05100D] p-4 shadow-2xl sm:p-6"
+            className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#D4A853]/45 bg-[#0D1622] p-4 shadow-2xl sm:p-6"
           >
             <div className="mb-3 flex items-center justify-between gap-4 border-b border-[#C9A45C]/20 pb-3">
               <div>

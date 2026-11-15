@@ -73,7 +73,7 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
             <Link
               to={quickResume.to}
               onClick={closeDrawer}
-              className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#1B3D2F] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#25523F]"
+              className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#D4A853]/45 bg-gradient-to-r from-[#183140] to-[#234558] px-4 py-2 text-xs font-semibold text-[#F7E3B5] transition-all hover:brightness-110"
             >
               <Play className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
               <span>Học tiếp: {quickResume.label}</span>
@@ -128,28 +128,21 @@ export const HeaderMobileDrawer: FC<HeaderMobileDrawerProps> = ({
             <Link
               to={ROUTES.home}
               onClick={closeDrawer}
-              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
+              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142834] transition-colors hover:bg-[#EFE8D8]/70"
             >
               Trang chủ
             </Link>
             <Link
               to={ROUTES.learningSpace}
               onClick={closeDrawer}
-              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
+              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142834] transition-colors hover:bg-[#EFE8D8]/70"
             >
               Không gian học tập
             </Link>
             <Link
-              to={ROUTES.courses}
-              onClick={closeDrawer}
-              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
-            >
-              Tất cả môn học
-            </Link>
-            <Link
               to="/glossary"
               onClick={closeDrawer}
-              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142B21] transition-colors hover:bg-[#E9EFEA]/70"
+              className="flex min-h-11 items-center rounded-xl px-3.5 py-2 text-sm font-semibold text-[#142834] transition-colors hover:bg-[#EFE8D8]/70"
             >
               Thuật ngữ
             </Link>

@@ -69,32 +69,32 @@ export interface AtmospherePalette {
 
 export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> = {
   'dem-ngan-ha': {
-    sky0: [6, 12, 24], // #060C18 (Lam Ngọc Vũ Trụ)
-    sky1: [10, 24, 41], // Chuyển sắc đêm sâu
-    sky2: [15, 38, 58], // #0F263A (Ngọc Bích Đêm)
-    sky3: [28, 62, 88], // Xanh lam ngọc tầng mây
-    sky4: [42, 72, 92], // Chân trời lam hổ phách
-    dawnCore: [212, 163, 89], // #D4A359 (Hổ Phách ấm)
-    dawnEdge: [78, 168, 222], // #4EA8DE (Ngọc Lam)
-    facetCelestial: [78, 168, 222], // #4EA8DE (Ngọc Lam đón sáng Ngân Hà)
-    facetDawn: [229, 193, 88], // #E5C158 (Vàng Hoàng Kim vách đỉnh)
-    facetMid: [18, 46, 68],
-    facetAbyss: [6, 14, 24],
-    rimGlow: [229, 193, 88], // #E5C158
-    terracePoolA: [32, 84, 118],
-    terracePoolB: [132, 198, 228],
-    terraceRim: [229, 193, 88], // #E5C158
-    cloudIvory: [248, 245, 236],
-    cloudPearl: [224, 234, 242],
-    cloudSlate: [128, 156, 178],
-    cloudRim: [229, 193, 88], // #E5C158
-    rayWarm: [229, 193, 88],
-    rayCool: [78, 168, 222],
-    pineTop: [19, 42, 58],
-    pineBot: [5, 11, 20],
+    sky0: [10, 21, 38], // #0A1526 (Xanh Chàm Đêm Hoàng Gia)
+    sky1: [16, 35, 58], // Chuyển sắc chàm sâu
+    sky2: [22, 46, 71], // #162E47 (Chàm Huyền Bí)
+    sky3: [44, 68, 92], // Tầng mây lam trầm
+    sky4: [86, 82, 92], // Chân trời hổ phách dịu
+    dawnCore: [217, 155, 82], // #D99B52 (Ánh Hổ Phách chân trời)
+    dawnEdge: [200, 109, 81], // #C86D51 (Sắc đào cam ấm áp)
+    facetCelestial: [94, 152, 198], // Đón ánh sao Ngân Hà
+    facetDawn: [229, 184, 91], // #E5B85B (Vàng Hoàng Kim vách núi)
+    facetMid: [24, 52, 78],
+    facetAbyss: [10, 20, 34],
+    rimGlow: [229, 184, 91], // #E5B85B
+    terracePoolA: [36, 82, 114],
+    terracePoolB: [217, 155, 82],
+    terraceRim: [229, 184, 91], // #E5B85B
+    cloudIvory: [250, 245, 232], // #FAF5E8
+    cloudPearl: [226, 230, 236],
+    cloudSlate: [126, 146, 170],
+    cloudRim: [229, 184, 91], // #E5B85B
+    rayWarm: [217, 155, 82],
+    rayCool: [120, 174, 218],
+    pineTop: [22, 46, 68],
+    pineBot: [8, 18, 30],
     starIntensity: 1.0,
     milkyWayIntensity: 1.0,
-    rayIntensity: 1.05,
+    rayIntensity: 1.15,
     contrastScrimAlpha: 0.28,
   },
   'binh-minh': {

@@ -1,4 +1,4 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { RootHydrateFallback, RootLayout } from '@/layouts/RootLayout';
 import { SubjectLayout } from '@/layouts/SubjectLayout';
 import { ROUTES } from '@/shared/config/routes';
@@ -80,10 +80,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: ROUTES.courses,
-        lazy: async () => {
-          const { SubjectsListPage } = await import('@/pages/subjects/SubjectsListPage');
-          return { Component: SubjectsListPage };
-        },
+        element: <Navigate to={ROUTES.learningSpace} replace />,
       },
       {
         path: ROUTES.glossary,
