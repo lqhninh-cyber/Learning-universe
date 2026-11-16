@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
-import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
+import {
+  computeFrameDelta,
+  frameDampFactor,
+  getLowLatency2DContext,
+} from '@/shared/lib/canvasSprites';
 
 interface Vec3 {
   readonly x: number;
@@ -16,13 +20,15 @@ interface ProjectedPoint {
 }
 
 interface ArmillaryRingSpec {
-  readonly radius: number;
+  readonly radiusX: number;
+  readonly radiusY: number;
   readonly baseTiltX: number;
   readonly baseTiltZ: number;
   readonly speedY: number;
   readonly speedZ: number;
   readonly color: string;
   readonly accentColor: string;
+  readonly nodeGlowRgba: string;
   readonly tickStepDeg: number;
   readonly strokeWidth: number;
 }
@@ -33,9 +39,69 @@ interface HarmonicDustParticle {
   readonly verticalTilt: number;
   readonly orbitSpeed: number;
   readonly size: number;
-  readonly hue: 'gold' | 'jade' | 'slate';
+  readonly hue: 'gold' | 'jade' | 'cyan';
   readonly phase: number;
 }
+
+interface MathParallaxGlyph {
+  readonly symbol: string;
+  readonly label: string;
+  readonly positionClass: string;
+  readonly depthFactor: number;
+  readonly floatPhase: number;
+  readonly toneClass: string;
+}
+
+const MATH_PARALLAX_GLYPHS: readonly MathParallaxGlyph[] = [
+  {
+    symbol: '∫',
+    label: 'Tích phân',
+    positionClass: 'top-5 left-4 text-xl sm:text-2xl',
+    depthFactor: 14,
+    floatPhase: 0.2,
+    toneClass: 'text-[#1E322D]/22',
+  },
+  {
+    symbol: '∂',
+    label: 'Đạo hàm riêng',
+    positionClass: 'top-10 right-6 text-lg sm:text-xl',
+    depthFactor: -18,
+    floatPhase: 1.4,
+    toneClass: 'text-[#2D5266]/25',
+  },
+  {
+    symbol: '∑',
+    label: 'Tổng chuỗi',
+    positionClass: 'top-1/2 -left-1 text-lg sm:text-xl',
+    depthFactor: 12,
+    floatPhase: 2.3,
+    toneClass: 'text-[#8C6D3F]/28',
+  },
+  {
+    symbol: 'π',
+    label: 'Hằng số Pi',
+    positionClass: 'right-3 bottom-16 text-lg sm:text-xl',
+    depthFactor: -14,
+    floatPhase: 3.1,
+    toneClass: 'text-[#1E322D]/22',
+  },
+  {
+    symbol: '∆',
+    label: 'Toán tử Laplace',
+    positionClass: 'bottom-6 left-10 text-base sm:text-lg',
+    depthFactor: 16,
+    floatPhase: 4.2,
+    toneClass: 'text-[#2D5266]/24',
+  },
+  {
+    symbol: 'φ',
+    label: 'Tỷ lệ vàng Phi',
+    positionClass: 'top-1/3 right-1 text-lg sm:text-xl',
+    depthFactor: -12,
+    floatPhase: 5.0,
+    toneClass: 'text-[#8C6D3F]/26',
+  },
+];
 
 function dotVec3(a: Vec3, b: Vec3): number {
   return a.x * b.x + a.y * b.y + a.z * b.z;
@@ -58,12 +124,34 @@ function normalizeVec3(v: Vec3): Vec3 {
   return { x: v.x / len, y: v.y / len, z: v.z / len };
 }
 
-const LIGHT_DIR = normalizeVec3({ x: -0.45, y: -0.62, z: 0.64 });
+const LIGHT_DIR = normalizeVec3({ x: -0.46, y: -0.64, z: 0.61 });
+const VIEW_DIR: Vec3 = { x: 0, y: 0, z: 1 };
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 const INV_PHI = 1 / PHI;
 
-// 1. Khối Nhị thập diện đều bên trong (Icosahedron - 12 đỉnh, 20 mặt tam giác)
+// 1. Lõi Bát diện đều bên trong (Octahedron Core - 6 đỉnh, 8 mặt tam giác đều)
+const OCTA_VERTICES: readonly Vec3[] = [
+  { x: 0, y: 1.08, z: 0 },
+  { x: 0, y: -1.08, z: 0 },
+  { x: 0.96, y: 0, z: 0 },
+  { x: -0.96, y: 0, z: 0 },
+  { x: 0, y: 0, z: 0.96 },
+  { x: 0, y: 0, z: -0.96 },
+];
+
+const OCTA_FACES: readonly (readonly [number, number, number])[] = [
+  [0, 4, 2],
+  [0, 2, 5],
+  [0, 5, 3],
+  [0, 3, 4],
+  [1, 2, 4],
+  [1, 5, 2],
+  [1, 3, 5],
+  [1, 4, 3],
+];
+
+// Nhị thập diện đều phụ dùng để dựng mặt phẳng cho Thập nhị diện đều bao ngoài
 const RAW_ICO_COORDS: readonly (readonly [number, number, number])[] = [
   [-1, PHI, 0],
   [1, PHI, 0],
@@ -79,38 +167,6 @@ const RAW_ICO_COORDS: readonly (readonly [number, number, number])[] = [
   [-PHI, 0, 1],
 ];
 const ICO_VERTICES: readonly Vec3[] = RAW_ICO_COORDS.map(([x, y, z]) => normalizeVec3({ x, y, z }));
-
-const ICO_FACES: readonly (readonly [number, number, number])[] = (() => {
-  const faces: [number, number, number][] = [];
-  for (let i = 0; i < ICO_VERTICES.length; i += 1) {
-    for (let j = i + 1; j < ICO_VERTICES.length; j += 1) {
-      if (dotVec3(ICO_VERTICES[i]!, ICO_VERTICES[j]!) < 0.42) continue;
-      for (let k = j + 1; k < ICO_VERTICES.length; k += 1) {
-        if (
-          dotVec3(ICO_VERTICES[i]!, ICO_VERTICES[k]!) < 0.42 ||
-          dotVec3(ICO_VERTICES[j]!, ICO_VERTICES[k]!) < 0.42
-        ) {
-          continue;
-        }
-        const vi = ICO_VERTICES[i]!;
-        const vj = ICO_VERTICES[j]!;
-        const vk = ICO_VERTICES[k]!;
-        const centroid = {
-          x: (vi.x + vj.x + vk.x) / 3,
-          y: (vi.y + vj.y + vk.y) / 3,
-          z: (vi.z + vj.z + vk.z) / 3,
-        };
-        const normal = crossVec3(subVec3(vj, vi), subVec3(vk, vi));
-        if (dotVec3(normal, centroid) < 0) {
-          faces.push([i, k, j]);
-        } else {
-          faces.push([i, j, k]);
-        }
-      }
-    }
-  }
-  return faces;
-})();
 
 // 2. Khối Thập nhị diện đều bao ngoài (Dodecahedron - 20 đỉnh, 12 mặt ngũ giác đều)
 const RAW_DODECA_COORDS: readonly (readonly [number, number, number])[] = [
@@ -168,49 +224,57 @@ const DODECA_FACES: readonly (readonly number[])[] = ICO_VERTICES.map((faceNorma
   return dotVec3(nCheck, faceNormal) < 0 ? [...ordered].reverse() : ordered;
 });
 
-// 3. Hệ 4 Vòng Thiên Cầu Khắc Độ (Engraved Armillary Rings)
+// 3. Hệ 4 Vòng Elip Quỹ Đạo Thiên Cầu Khắc Độ (Engraved Elliptical Orbit Rings)
 const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
   {
-    radius: 0.72,
+    radiusX: 0.78,
+    radiusY: 0.68,
     baseTiltX: 0.96,
     baseTiltZ: 0.22,
     speedY: 0.14,
     speedZ: 0.03,
     color: '#1E3A34',
-    accentColor: '#8C6D3F',
+    accentColor: '#34D399',
+    nodeGlowRgba: 'rgba(52, 211, 153, 0.85)',
     tickStepDeg: 10,
-    strokeWidth: 1.55,
+    strokeWidth: 1.5,
   },
   {
-    radius: 0.64,
+    radiusX: 0.7,
+    radiusY: 0.59,
     baseTiltX: -0.78,
     baseTiltZ: 0.84,
     speedY: -0.19,
     speedZ: -0.04,
-    color: '#8C6D3F',
-    accentColor: '#1E3A34',
+    color: '#2D5266',
+    accentColor: '#38BDF8',
+    nodeGlowRgba: 'rgba(56, 189, 248, 0.85)',
     tickStepDeg: 15,
-    strokeWidth: 1.4,
+    strokeWidth: 1.38,
   },
   {
-    radius: 0.56,
+    radiusX: 0.62,
+    radiusY: 0.52,
     baseTiltX: 0.44,
     baseTiltZ: -0.68,
     speedY: 0.24,
     speedZ: 0.07,
-    color: '#2D5266',
-    accentColor: '#A6844E',
+    color: '#8C6D3F',
+    accentColor: '#E5B85B',
+    nodeGlowRgba: 'rgba(229, 184, 91, 0.9)',
     tickStepDeg: 30,
     strokeWidth: 1.25,
   },
   {
-    radius: 0.48,
+    radiusX: 0.54,
+    radiusY: 0.45,
     baseTiltX: 1.24,
     baseTiltZ: -0.34,
     speedY: -0.27,
     speedZ: 0.09,
-    color: '#A6844E',
-    accentColor: '#1E3A34',
+    color: '#2B5B50',
+    accentColor: '#34D399',
+    nodeGlowRgba: 'rgba(52, 211, 153, 0.82)',
     tickStepDeg: 30,
     strokeWidth: 1.15,
   },
@@ -218,11 +282,11 @@ const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
 
 // 4. Hạt bụi sáng tỷ lệ vàng xoắn ốc & trường sóng điều hòa
 const GOLDEN_ANGLE_RAD = Math.PI * (3 - Math.sqrt(5));
-const HARMONIC_DUST: readonly HarmonicDustParticle[] = Array.from({ length: 28 }, (_, idx) => {
-  const norm = (idx + 1) / 28;
-  const hues: readonly ('gold' | 'jade' | 'slate')[] = ['gold', 'jade', 'slate'];
+const HARMONIC_DUST: readonly HarmonicDustParticle[] = Array.from({ length: 30 }, (_, idx) => {
+  const norm = (idx + 1) / 30;
+  const hues: readonly ('gold' | 'jade' | 'cyan')[] = ['gold', 'jade', 'cyan'];
   return {
-    baseRadius: 0.42 + Math.sqrt(norm) * 0.44,
+    baseRadius: 0.42 + Math.sqrt(norm) * 0.46,
     goldenAngle: idx * GOLDEN_ANGLE_RAD,
     verticalTilt: ((idx % 7) - 3) * 0.18,
     orbitSpeed: 0.09 + (idx % 5) * 0.025,
@@ -267,6 +331,8 @@ interface ShadedFaceItem {
   readonly points: readonly ProjectedPoint[];
   readonly avgZ: number;
   readonly light: number;
+  readonly specular: number;
+  readonly normalBlend: number;
   readonly isFront: boolean;
 }
 
@@ -300,6 +366,13 @@ function buildPolyhedronFaces(
     const w2 = worldVerts[faceIndices[2]!]!;
     const normal = normalizeVec3(crossVec3(subVec3(w1, w0), subVec3(w2, w0)));
     const light = Math.max(0, dotVec3(normal, LIGHT_DIR));
+    const halfVec = normalizeVec3({
+      x: LIGHT_DIR.x + VIEW_DIR.x,
+      y: LIGHT_DIR.y + VIEW_DIR.y,
+      z: LIGHT_DIR.z + VIEW_DIR.z,
+    });
+    const specular = Math.pow(Math.max(0, dotVec3(normal, halfVec)), 10);
+    const normalBlend = Math.max(0, Math.min(1, 0.5 + normal.x * 0.45 - normal.y * 0.25));
     let avgZ = 0;
     const pts: ProjectedPoint[] = [];
     for (const idx of faceIndices) {
@@ -313,6 +386,8 @@ function buildPolyhedronFaces(
       points: pts,
       avgZ,
       light,
+      specular,
+      normalBlend,
       isFront: normal.z >= -0.04,
     };
     if (item.isFront) front.push(item);
@@ -358,45 +433,43 @@ function drawArmillaryHalf(
   drawFrontHalf: boolean,
 ): void {
   const segments = 96;
-  const worldPoints: Vec3[] = [];
   const projPoints: ProjectedPoint[] = [];
 
   for (let i = 0; i <= segments; i += 1) {
     const theta = (i / segments) * Math.PI * 2;
     const world = rotateVec3(
-      { x: Math.cos(theta) * ring.radius, y: Math.sin(theta) * ring.radius, z: 0 },
+      { x: Math.cos(theta) * ring.radiusX, y: Math.sin(theta) * ring.radiusY, z: 0 },
       rotX,
       rotY,
       rotZ,
     );
-    worldPoints.push(world);
     projPoints.push(projectPoint(world, cx, cy, fov));
   }
 
-  // Vẽ nửa sau hoặc nửa trước của vành nhẫn
+  // Vẽ nửa sau hoặc nửa trước của vòng quỹ đạo elip 3D
   for (let i = 0; i < segments; i += 1) {
     const p1 = projPoints[i]!;
     const p2 = projPoints[i + 1]!;
     const avgZ = (p1.z + p2.z) * 0.5;
     if (avgZ >= 0 !== drawFrontHalf) continue;
 
-    const alpha = Math.max(0.24, Math.min(0.86, 0.46 + avgZ * 0.46));
+    const alpha = Math.max(0.22, Math.min(0.84, 0.44 + avgZ * 0.44));
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.strokeStyle = ring.color;
     ctx.globalAlpha = alpha;
-    ctx.lineWidth = drawFrontHalf ? ring.strokeWidth * 1.15 : ring.strokeWidth * 0.72;
+    ctx.lineWidth = drawFrontHalf ? ring.strokeWidth * 1.15 : ring.strokeWidth * 0.7;
     ctx.stroke();
   }
 
-  // Vạch khắc độ chia độ góc trên vòng Thiên cầu
+  // Vạch khắc độ chia độ góc trên vòng quỹ đạo
   for (let deg = 0; deg < 360; deg += ring.tickStepDeg) {
     const rad = (deg * Math.PI) / 180;
     const isMajor = deg % 30 === 0;
-    const tickLen = isMajor ? 0.038 : 0.02;
+    const tickRatio = isMajor ? 0.052 : 0.028;
     const outerW = rotateVec3(
-      { x: Math.cos(rad) * ring.radius, y: Math.sin(rad) * ring.radius, z: 0 },
+      { x: Math.cos(rad) * ring.radiusX, y: Math.sin(rad) * ring.radiusY, z: 0 },
       rotX,
       rotY,
       rotZ,
@@ -405,8 +478,8 @@ function drawArmillaryHalf(
 
     const innerW = rotateVec3(
       {
-        x: Math.cos(rad) * (ring.radius - tickLen),
-        y: Math.sin(rad) * (ring.radius - tickLen),
+        x: Math.cos(rad) * ring.radiusX * (1 - tickRatio),
+        y: Math.sin(rad) * ring.radiusY * (1 - tickRatio),
         z: 0,
       },
       rotX,
@@ -419,30 +492,74 @@ function drawArmillaryHalf(
     ctx.moveTo(pi.x, pi.y);
     ctx.lineTo(po.x, po.y);
     ctx.strokeStyle = isMajor ? ring.accentColor : ring.color;
-    ctx.globalAlpha = drawFrontHalf ? (isMajor ? 0.78 : 0.46) : 0.24;
-    ctx.lineWidth = isMajor ? 1.25 : 0.75;
+    ctx.globalAlpha = drawFrontHalf ? (isMajor ? 0.78 : 0.44) : 0.22;
+    ctx.lineWidth = isMajor ? 1.2 : 0.7;
     ctx.stroke();
   }
 
-  // Điểm nút đồng sáng trượt dọc theo từng vòng nhẫn
+  // Hạt sáng nhỏ chuyển động dọc quỹ đạo
+  for (const particleOffset of [1.25, Math.PI + 1.25]) {
+    const pTheta = particleOffset - time * ring.speedY * 1.65;
+    const pWorld = rotateVec3(
+      { x: Math.cos(pTheta) * ring.radiusX, y: Math.sin(pTheta) * ring.radiusY, z: 0 },
+      rotX,
+      rotY,
+      rotZ,
+    );
+    if (pWorld.z >= 0 !== drawFrontHalf) continue;
+    const pp = projectPoint(pWorld, cx, cy, fov);
+    ctx.globalAlpha = drawFrontHalf ? 0.78 : 0.28;
+    ctx.beginPath();
+    ctx.arc(pp.x, pp.y, drawFrontHalf ? 1.9 : 1.3, 0, Math.PI * 2);
+    ctx.fillStyle = ring.accentColor;
+    ctx.fill();
+  }
+
+  // Điểm nút giao (Glowing Nodes) có tia sáng mảnh nối trực tiếp về tâm
   for (const offset of [0.4, Math.PI + 0.4]) {
     const nodeTheta = offset + time * ring.speedY * 1.3;
     const nodeW = rotateVec3(
-      { x: Math.cos(nodeTheta) * ring.radius, y: Math.sin(nodeTheta) * ring.radius, z: 0 },
+      { x: Math.cos(nodeTheta) * ring.radiusX, y: Math.sin(nodeTheta) * ring.radiusY, z: 0 },
       rotX,
       rotY,
       rotZ,
     );
     if (nodeW.z >= 0 !== drawFrontHalf) continue;
     const np = projectPoint(nodeW, cx, cy, fov);
-    ctx.globalAlpha = drawFrontHalf ? 0.95 : 0.35;
+
+    // Tia sáng mảnh nối trực tiếp từ Điểm nút giao về tâm (cx, cy)
+    const rayGrad = ctx.createLinearGradient(cx, cy, np.x, np.y);
+    rayGrad.addColorStop(0, 'rgba(229, 184, 91, 0.58)');
+    rayGrad.addColorStop(0.55, ring.nodeGlowRgba);
+    rayGrad.addColorStop(1, ring.accentColor);
+
+    ctx.globalAlpha = drawFrontHalf ? 0.52 : 0.2;
     ctx.beginPath();
-    ctx.arc(np.x, np.y, drawFrontHalf ? 3.2 : 2.1, 0, Math.PI * 2);
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(np.x, np.y);
+    ctx.strokeStyle = rayGrad;
+    ctx.lineWidth = drawFrontHalf ? 0.95 : 0.65;
+    ctx.stroke();
+
+    // Quầng sáng mềm quanh Điểm nút giao
+    const glowR = drawFrontHalf ? 10 : 6.5;
+    const nodeHalo = ctx.createRadialGradient(np.x, np.y, 0.5, np.x, np.y, glowR);
+    nodeHalo.addColorStop(0, ring.nodeGlowRgba);
+    nodeHalo.addColorStop(1, 'rgba(250, 251, 249, 0)');
+    ctx.globalAlpha = drawFrontHalf ? 0.82 : 0.34;
+    ctx.fillStyle = nodeHalo;
+    ctx.beginPath();
+    ctx.arc(np.x, np.y, glowR, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = drawFrontHalf ? 0.96 : 0.38;
+    ctx.beginPath();
+    ctx.arc(np.x, np.y, drawFrontHalf ? 3.3 : 2.1, 0, Math.PI * 2);
     ctx.fillStyle = ring.accentColor;
     ctx.fill();
     if (drawFrontHalf) {
       ctx.beginPath();
-      ctx.arc(np.x, np.y, 1.3, 0, Math.PI * 2);
+      ctx.arc(np.x, np.y, 1.35, 0, Math.PI * 2);
       ctx.fillStyle = '#FAFBF9';
       ctx.fill();
     }
@@ -455,12 +572,15 @@ function drawArmillaryHalf(
  * Điêu Khắc Đa Diện Lồng Nhau & Thiên Cầu Hoàng Kim 3D (120FPS Volumetric Sculpture):
  * Khối trang trí hình học tinh khiết bên phải Hero:
  * - Thập nhị diện đều bán trong suốt bao bọc Nhị thập diện đều ấm áp bên trong
- * - Hệ 4 vòng Thiên cầu khắc độ xoay lệch trục với độ sâu che khuất 3D chuẩn mực
- * - Trường sóng điều hòa & hạt sáng tỷ lệ vàng nghiêng mượt theo vị trí chuột trên Hero
+ * - Lõi Bát diện đều Vàng Hổ Phách (#E5B85B) phát sáng cùng hiệu ứng tỏa tia sáng mềm
+ * - Lớp vỏ Thập nhị diện đều bán trong suốt tô bóng pháp tuyến Z-sorted (#34D399 & #38BDF8)
+ * - Hệ 4 vòng Elip Quỹ đạo 3D với hạt sáng & Điểm nút giao (Glowing Nodes) nối tia về tâm
+ * - Tương tác pitch/yaw damping mượt mà theo tọa độ chuột + ký hiệu toán học Parallax (120fps)
  */
 export function LearningSpaceHeroCanvas() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const glyphRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -471,14 +591,14 @@ export function LearningSpaceHeroCanvas() {
     const ctx = getLowLatency2DContext(canvas);
     if (!ctx) return;
 
-    let width = Math.max(340, container.clientWidth || 460);
-    let height = Math.max(340, container.clientHeight || 420);
+    let width = Math.max(360, container.clientWidth || 480);
+    let height = Math.max(360, container.clientHeight || 450);
     let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-      width = Math.max(340, container.clientWidth || 460);
-      height = Math.max(340, container.clientHeight || 420);
+      width = Math.max(360, container.clientWidth || 480);
+      height = Math.max(360, container.clientHeight || 450);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -530,21 +650,31 @@ export function LearningSpaceHeroCanvas() {
       intersectionObserver.observe(container);
     }
 
+    const updateParallaxGlyphs = (time: number) => {
+      MATH_PARALLAX_GLYPHS.forEach((glyph, idx) => {
+        const el = glyphRefs.current[idx];
+        if (!el) return;
+        const px = smoothX * glyph.depthFactor + Math.sin(time * 0.65 + glyph.floatPhase) * 4.5;
+        const py = smoothY * glyph.depthFactor + Math.cos(time * 0.55 + glyph.floatPhase) * 5.5;
+        el.style.transform = `translate3d(${px.toFixed(2)}px, ${py.toFixed(2)}px, 0)`;
+      });
+    };
+
     const renderFrame = (time: number) => {
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
-      const cx = width * 0.5 + smoothX * 10;
-      const cy = height * 0.5 + smoothY * 9;
+      const cx = width * 0.5 + smoothX * 11;
+      const cy = height * 0.5 + smoothY * 10;
       const minDim = Math.min(width, height);
       const fov = minDim * 1.18;
 
-      // Hào quang tinh thể nhiều tầng phía sau khối điêu khắc
-      const outerHalo = ctx.createRadialGradient(cx, cy, 8, cx, cy, minDim * 0.52);
-      outerHalo.addColorStop(0, 'rgba(184, 142, 74, 0.20)');
-      outerHalo.addColorStop(0.42, 'rgba(45, 82, 102, 0.10)');
-      outerHalo.addColorStop(0.75, 'rgba(30, 58, 52, 0.05)');
+      // Hào quang tinh thể nhiều tầng phía sau khối điêu khắc (Vàng Hổ Phách #E5B85B + Ngọc Lam)
+      const outerHalo = ctx.createRadialGradient(cx, cy, 8, cx, cy, minDim * 0.54);
+      outerHalo.addColorStop(0, 'rgba(229, 184, 91, 0.28)');
+      outerHalo.addColorStop(0.36, 'rgba(52, 211, 153, 0.11)');
+      outerHalo.addColorStop(0.68, 'rgba(56, 189, 248, 0.07)');
       outerHalo.addColorStop(1, 'rgba(242, 244, 243, 0)');
       ctx.fillStyle = outerHalo;
       ctx.fillRect(0, 0, width, height);
@@ -552,16 +682,16 @@ export function LearningSpaceHeroCanvas() {
       // Trường sóng điều hòa mảnh đồng bộ góc nghiêng 3D
       for (const wave of [
         {
-          rx: minDim * 0.44,
+          rx: minDim * 0.45,
           ry: minDim * 0.16,
           tilt: -0.32 + smoothY * 0.1,
-          color: 'rgba(140, 109, 63, 0.22)',
+          color: 'rgba(140, 109, 63, 0.20)',
         },
         {
-          rx: minDim * 0.47,
+          rx: minDim * 0.48,
           ry: minDim * 0.19,
           tilt: 0.46 - smoothY * 0.08,
-          color: 'rgba(30, 58, 52, 0.18)',
+          color: 'rgba(45, 82, 102, 0.16)',
         },
       ]) {
         ctx.save();
@@ -583,14 +713,14 @@ export function LearningSpaceHeroCanvas() {
         ctx.restore();
       }
 
-      // Góc Euler của 4 vòng Thiên cầu
+      // Góc Euler của 4 vòng Elip Quỹ đạo (tương tác pitch/yaw theo chuột)
       const ringAngles = ARMILLARY_RINGS.map((ring, idx) => ({
-        rotX: ring.baseTiltX + smoothY * (0.24 - idx * 0.03),
-        rotY: time * ring.speedY + smoothX * (0.28 - idx * 0.04),
+        rotX: ring.baseTiltX + smoothY * (0.28 - idx * 0.03),
+        rotY: time * ring.speedY + smoothX * (0.32 - idx * 0.04),
         rotZ: ring.baseTiltZ + time * ring.speedZ,
       }));
 
-      // LỚP 1: Nửa sau của 4 Vòng Thiên cầu khắc độ (nằm phía sau đa diện)
+      // LỚP 1: Nửa sau của 4 Vòng Elip Quỹ đạo & Điểm nút giao (phía sau đa diện)
       ARMILLARY_RINGS.forEach((ring, idx) => {
         const ang = ringAngles[idx]!;
         drawArmillaryHalf(ctx, cx, cy, ring, fov, ang.rotX, ang.rotY, ang.rotZ, time, false);
@@ -618,100 +748,130 @@ export function LearningSpaceHeroCanvas() {
         ctx.arc(item.p.x, item.p.y, item.pt.size * 0.85, 0, Math.PI * 2);
         ctx.fillStyle =
           item.pt.hue === 'gold'
-            ? 'rgba(166, 132, 78, 0.36)'
-            : item.pt.hue === 'slate'
-              ? 'rgba(45, 82, 102, 0.30)'
-              : 'rgba(30, 58, 52, 0.28)';
+            ? 'rgba(229, 184, 91, 0.44)'
+            : item.pt.hue === 'cyan'
+              ? 'rgba(56, 189, 248, 0.36)'
+              : 'rgba(52, 211, 153, 0.36)';
         ctx.fill();
       }
 
-      // LỚP 2: Khối đa diện ngoài Thập nhị diện đều (Dodecahedron) & Lõi Nhị thập diện đều (Icosahedron)
+      // LỚP 2: Lớp vỏ Thập nhị diện đều (Dodecahedron) & Lõi Bát diện Vàng Hổ Phách (Octahedron)
       const dodecaFaces = buildPolyhedronFaces(
         DODECA_VERTICES,
         DODECA_FACES,
-        0.37,
-        time * 0.19 + smoothY * 0.42,
-        time * 0.28 + smoothX * 0.46,
+        0.38,
+        time * 0.19 + smoothY * 0.48,
+        time * 0.28 + smoothX * 0.52,
         time * 0.08,
         cx,
         cy,
         fov,
       );
 
-      const icoFaces = buildPolyhedronFaces(
-        ICO_VERTICES,
-        ICO_FACES,
+      const octaFaces = buildPolyhedronFaces(
+        OCTA_VERTICES,
+        OCTA_FACES,
         0.215,
-        -time * 0.32 + smoothY * 0.52,
-        -time * 0.44 + smoothX * 0.54,
-        time * 0.14,
+        -time * 0.36 + smoothY * 0.58,
+        -time * 0.48 + smoothX * 0.62,
+        time * 0.15,
         cx,
         cy,
         fov,
       );
 
-      // 2a. Mặt sau bán trong suốt của Thập nhị diện ngoài (chiều sâu kính khoáng thạch)
+      // 2a. Mặt sau bán trong suốt của Vỏ Đa Diện Ngoài (tô bóng Z-sorted #34D399 <-> #38BDF8)
       for (const f of dodecaFaces.back) {
-        const lum = 0.05 + f.light * 0.08;
-        drawPolygonFace(
-          ctx,
-          f.points,
-          `rgba(36, 87, 70, ${lum.toFixed(3)})`,
-          'rgba(45, 82, 102, 0.16)',
-          0.7,
-        );
-      }
-
-      // 2b. Lõi Nhị thập diện phát sáng ấm áp (Mặt sau + Mặt trước tô bóng pháp tuyến 3D)
-      for (const f of icoFaces.back) {
-        drawPolygonFace(
-          ctx,
-          f.points,
-          'rgba(140, 109, 63, 0.18)',
-          'rgba(166, 132, 78, 0.26)',
-          0.75,
-        );
-      }
-      for (const f of icoFaces.front) {
-        const r = Math.round(168 + f.light * 56);
-        const g = Math.round(132 + f.light * 52);
-        const b = Math.round(68 + f.light * 38);
-        const alpha = 0.38 + f.light * 0.44;
+        const r = Math.round(52 * (1 - f.normalBlend) + 56 * f.normalBlend);
+        const g = Math.round(211 * (1 - f.normalBlend) + 189 * f.normalBlend);
+        const b = Math.round(153 * (1 - f.normalBlend) + 248 * f.normalBlend);
+        const alpha = 0.08 + f.light * 0.11;
         drawPolygonFace(
           ctx,
           f.points,
           `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`,
-          `rgba(246, 232, 198, ${(0.42 + f.light * 0.45).toFixed(2)})`,
-          1.15,
+          'rgba(45, 82, 102, 0.18)',
+          0.72,
         );
       }
 
-      // Điểm tâm phát sáng trong lõi tinh thể
-      const coreGlow = ctx.createRadialGradient(cx, cy, 1, cx, cy, minDim * 0.12);
-      coreGlow.addColorStop(0, 'rgba(255, 243, 214, 0.85)');
-      coreGlow.addColorStop(0.45, 'rgba(184, 142, 74, 0.32)');
-      coreGlow.addColorStop(1, 'rgba(184, 142, 74, 0)');
-      ctx.fillStyle = coreGlow;
+      // 2b. Hiệu ứng tỏa tia sáng mềm quanh Lõi Vàng Hổ Phách (#E5B85B)
+      const rayPulse = 0.88 + Math.sin(time * 1.9) * 0.12;
+      const rayRadius = minDim * 0.22 * rayPulse;
+      const amberCoreHalo = ctx.createRadialGradient(cx, cy, 2, cx, cy, rayRadius);
+      amberCoreHalo.addColorStop(0, 'rgba(255, 248, 224, 0.94)');
+      amberCoreHalo.addColorStop(0.32, 'rgba(229, 184, 91, 0.58)');
+      amberCoreHalo.addColorStop(0.7, 'rgba(229, 184, 91, 0.16)');
+      amberCoreHalo.addColorStop(1, 'rgba(229, 184, 91, 0)');
+      ctx.fillStyle = amberCoreHalo;
       ctx.beginPath();
-      ctx.arc(cx, cy, minDim * 0.12, 0, Math.PI * 2);
+      ctx.arc(cx, cy, rayRadius, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2c. Mặt trước Thập nhị diện ngoài (tô bóng ngọc lam-lục khoáng bán trong suốt + viền phản chiếu)
-      for (const f of dodecaFaces.front) {
-        const r = Math.round(28 + f.light * 124);
-        const g = Math.round(62 + f.light * 120);
-        const b = Math.round(58 + f.light * 116);
-        const alpha = 0.09 + f.light * 0.22;
+      // Tia sáng mềm tỏa ra từ tâm bát diện
+      for (let rayIdx = 0; rayIdx < 6; rayIdx += 1) {
+        const rayAngle = (rayIdx / 6) * Math.PI + time * 0.18 + smoothX * 0.25;
+        const rayLen = minDim * (0.17 + (rayIdx % 2) * 0.05) * rayPulse;
+        const rx1 = cx - Math.cos(rayAngle) * rayLen;
+        const ry1 = cy - Math.sin(rayAngle) * rayLen;
+        const rx2 = cx + Math.cos(rayAngle) * rayLen;
+        const ry2 = cy + Math.sin(rayAngle) * rayLen;
+        const beamGrad = ctx.createLinearGradient(rx1, ry1, rx2, ry2);
+        beamGrad.addColorStop(0, 'rgba(229, 184, 91, 0)');
+        beamGrad.addColorStop(0.5, 'rgba(229, 184, 91, 0.42)');
+        beamGrad.addColorStop(1, 'rgba(229, 184, 91, 0)');
+        ctx.beginPath();
+        ctx.moveTo(rx1, ry1);
+        ctx.lineTo(rx2, ry2);
+        ctx.strokeStyle = beamGrad;
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+      }
+
+      // 2c. Lõi Bát diện Vàng Hổ Phách Phát Sáng (#E5B85B)
+      for (const f of octaFaces.back) {
+        drawPolygonFace(
+          ctx,
+          f.points,
+          'rgba(229, 184, 91, 0.24)',
+          'rgba(229, 184, 91, 0.36)',
+          0.85,
+        );
+      }
+      for (const f of octaFaces.front) {
+        const r = Math.round(205 + f.light * 44);
+        const g = Math.round(156 + f.light * 58);
+        const b = Math.round(62 + f.light * 74);
+        const alpha = 0.46 + f.light * 0.44;
         drawPolygonFace(
           ctx,
           f.points,
           `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`,
-          `rgba(30, 58, 52, ${(0.32 + f.light * 0.48).toFixed(2)})`,
+          `rgba(255, 244, 212, ${(0.55 + f.light * 0.42).toFixed(2)})`,
           1.25,
         );
       }
 
-      // LỚP 3: Nửa trước của 4 Vòng Thiên cầu khắc độ + hạt bụi sáng phía trước
+      // 2d. Mặt trước Vỏ Đa Diện Bán Trong Suốt (tô bóng Z-sorted sắc Ngọc Bích #34D399 & Lam Nhạt #38BDF8)
+      for (const f of dodecaFaces.front) {
+        const baseR = Math.round(52 * (1 - f.normalBlend) + 56 * f.normalBlend);
+        const baseG = Math.round(211 * (1 - f.normalBlend) + 189 * f.normalBlend);
+        const baseB = Math.round(153 * (1 - f.normalBlend) + 248 * f.normalBlend);
+        const shade = 0.42 + f.light * 0.58;
+        const r = Math.min(255, Math.round(baseR * shade + f.specular * 90));
+        const g = Math.min(255, Math.round(baseG * shade + f.specular * 90));
+        const b = Math.min(255, Math.round(baseB * shade + f.specular * 95));
+        const alpha = 0.13 + f.light * 0.26 + f.specular * 0.14;
+        drawPolygonFace(
+          ctx,
+          f.points,
+          `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`,
+          `rgba(22, 62, 58, ${(0.34 + f.light * 0.42).toFixed(2)})`,
+          1.25,
+        );
+      }
+
+      // LỚP 3: Nửa trước của 4 Vòng Elip Quỹ đạo, Điểm nút giao & Hạt sáng phía trước
       ARMILLARY_RINGS.forEach((ring, idx) => {
         const ang = ringAngles[idx]!;
         drawArmillaryHalf(ctx, cx, cy, ring, fov, ang.rotX, ang.rotY, ang.rotZ, time, true);
@@ -724,10 +884,10 @@ export function LearningSpaceHeroCanvas() {
         ctx.arc(item.p.x, item.p.y, item.pt.size * pulse, 0, Math.PI * 2);
         ctx.fillStyle =
           item.pt.hue === 'gold'
-            ? 'rgba(166, 132, 78, 0.82)'
-            : item.pt.hue === 'slate'
-              ? 'rgba(45, 82, 102, 0.72)'
-              : 'rgba(30, 58, 52, 0.68)';
+            ? 'rgba(229, 184, 91, 0.88)'
+            : item.pt.hue === 'cyan'
+              ? 'rgba(56, 189, 248, 0.82)'
+              : 'rgba(52, 211, 153, 0.80)';
         ctx.fill();
       }
 
@@ -735,6 +895,7 @@ export function LearningSpaceHeroCanvas() {
     };
 
     renderFrame(0.65);
+    updateParallaxGlyphs(0.65);
     if (prefersReducedMotion) {
       return () => {
         heroSection.removeEventListener('pointermove', handlePointerMove);
@@ -745,14 +906,15 @@ export function LearningSpaceHeroCanvas() {
     }
 
     const tick = (now: number) => {
-      const { dtSeconds } = computeFrameDelta(now, prevNow);
+      const { dtSeconds, dtScale } = computeFrameDelta(now, prevNow);
       prevNow = now;
       if (isVisible && !document.hidden) {
-        elapsed += dtSeconds;
-        const lerpRate = Math.min(1, dtSeconds * 6);
-        smoothX += (pointerX - smoothX) * lerpRate;
-        smoothY += (pointerY - smoothY) * lerpRate;
+        elapsed += dtScale / 60;
+        const damp = frameDampFactor(6.5, dtSeconds);
+        smoothX += (pointerX - smoothX) * damp;
+        smoothY += (pointerY - smoothY) * damp;
         renderFrame(elapsed);
+        updateParallaxGlyphs(elapsed);
       }
       rafId = window.requestAnimationFrame(tick);
     };
@@ -771,8 +933,29 @@ export function LearningSpaceHeroCanvas() {
     <div
       ref={containerRef}
       data-testid="learning-space-celestial-rings"
-      className="relative flex h-[360px] w-full items-center justify-center select-none sm:h-[430px]"
+      data-sculpture-version="polyhedral-armillary-v2"
+      className="relative flex h-[380px] w-full items-center justify-center select-none sm:h-[440px] lg:h-[460px]"
     >
+      {/* Ký hiệu toán học vector nhỏ trôi lờ mờ theo hiệu ứng Parallax quanh khối 3D */}
+      <div
+        aria-hidden="true"
+        data-testid="hero-math-parallax-glyphs"
+        className="pointer-events-none absolute inset-0 z-20 overflow-visible"
+      >
+        {MATH_PARALLAX_GLYPHS.map((glyph, idx) => (
+          <span
+            key={glyph.symbol}
+            ref={(node) => {
+              glyphRefs.current[idx] = node;
+            }}
+            title={glyph.label}
+            className={`absolute font-serif font-semibold tracking-tight italic transition-opacity duration-300 will-change-transform ${glyph.positionClass} ${glyph.toneClass}`}
+          >
+            {glyph.symbol}
+          </span>
+        ))}
+      </div>
+
       {/* Khung SVG dự phòng thanh mảnh khi môi trường không hỗ trợ Canvas 2D */}
       <svg
         viewBox="0 0 360 360"
@@ -780,27 +963,27 @@ export function LearningSpaceHeroCanvas() {
         className="pointer-events-none absolute inset-0 m-auto h-[320px] w-[320px] opacity-25"
         fill="none"
       >
-        <circle cx="180" cy="180" r="146" stroke="#8C6D3F" strokeWidth="1" strokeDasharray="4 6" />
+        <circle cx="180" cy="180" r="146" stroke="#E5B85B" strokeWidth="1" strokeDasharray="4 6" />
         <ellipse
           cx="180"
           cy="180"
-          rx="138"
-          ry="64"
+          rx="142"
+          ry="66"
           transform="rotate(-24 180 180)"
-          stroke="#1E3A34"
+          stroke="#34D399"
           strokeWidth="1"
         />
         <ellipse
           cx="180"
           cy="180"
-          rx="130"
+          rx="132"
           ry="58"
           transform="rotate(34 180 180)"
-          stroke="#2D5266"
+          stroke="#38BDF8"
           strokeWidth="1"
         />
         <polygon points="180,96 244,142 220,224 140,224 116,142" stroke="#1E3A34" strokeWidth="1" />
-        <polygon points="180,126 220,192 140,192" stroke="#8C6D3F" strokeWidth="1" />
+        <polygon points="180,126 220,192 140,192" stroke="#E5B85B" strokeWidth="1" />
       </svg>
 
       <canvas ref={canvasRef} aria-hidden="true" className="relative z-10 block h-full w-full" />

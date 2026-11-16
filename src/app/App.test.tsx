@@ -87,7 +87,14 @@ describe('App routing smoke test', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
     ).toBeInTheDocument();
-    expect(screen.getByTestId('learning-space-celestial-rings')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-blueprint-grid')).toBeInTheDocument();
+    const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
+    expect(ringsContainer).toBeInTheDocument();
+    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'polyhedral-armillary-v2');
+    const glyphs = screen.getByTestId('hero-math-parallax-glyphs');
+    for (const symbol of ['∫', '∂', '∑', 'π', '∆', 'φ']) {
+      expect(glyphs).toHaveTextContent(symbol);
+    }
 
     // Hệ thống học phần (3 Tabs phân loại & ô tìm kiếm tích hợp)
     expect(screen.getByRole('heading', { name: /Không gian Học phần/i })).toBeInTheDocument();

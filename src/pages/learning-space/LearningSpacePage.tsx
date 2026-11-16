@@ -171,22 +171,41 @@ export function LearningSpacePage() {
             }}
             className="relative min-h-[430px] rounded-3xl border border-[#CBD6D2] p-8 text-[#162623] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_16px_44px_rgba(20,36,32,0.06)] backdrop-blur-md lg:p-11"
           >
-            {/* Họa tiết đường đồng mức hình học khắc chìm & lưới tọa độ khoáng thạch */}
+            {/* Lớp Lưới tọa độ trắc địa mờ (Engineering Blueprint Grid) & đường đồng mức hình học */}
             <div
               aria-hidden="true"
+              data-testid="hero-blueprint-grid"
               className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl select-none"
             >
               <svg className="h-full w-full">
                 <defs>
-                  <pattern id={gridPatternId} width="52" height="52" patternUnits="userSpaceOnUse">
+                  <pattern
+                    id={`${gridPatternId}-minor`}
+                    width="24"
+                    height="24"
+                    patternUnits="userSpaceOnUse"
+                  >
                     <path
-                      d="M 52 0 L 0 0 0 52"
+                      d="M 24 0 L 0 0 0 24"
                       fill="none"
-                      stroke="#243E38"
-                      strokeOpacity="0.042"
+                      stroke="rgba(30, 50, 45, 0.03)"
                       strokeWidth="0.7"
                     />
-                    <circle cx="52" cy="52" r="1.1" fill="#243E38" fillOpacity="0.06" />
+                  </pattern>
+                  <pattern id={gridPatternId} width="96" height="96" patternUnits="userSpaceOnUse">
+                    <rect width="96" height="96" fill={`url(#${gridPatternId}-minor)`} />
+                    <path
+                      d="M 96 0 L 0 0 0 96"
+                      fill="none"
+                      stroke="rgba(30, 50, 45, 0.05)"
+                      strokeWidth="0.9"
+                    />
+                    <path
+                      d="M 92 96 L 96 96 L 96 92"
+                      fill="none"
+                      stroke="rgba(30, 50, 45, 0.08)"
+                      strokeWidth="1"
+                    />
                   </pattern>
                 </defs>
                 <rect width="100%" height="100%" fill={`url(#${gridPatternId})`} />
@@ -238,8 +257,8 @@ export function LearningSpacePage() {
               </svg>
             </div>
 
-            <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-              <div className="space-y-5 lg:col-span-7">
+            <div className="relative z-10 flex flex-col items-stretch gap-8 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-5 lg:w-[58%]">
                 {/* Breadcrumb */}
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-[#4A5D58]">
                   <Link to={ROUTES.home} className="transition-colors hover:text-[#182624]">
@@ -548,9 +567,9 @@ export function LearningSpacePage() {
                 </div>
               </div>
 
-              {/* Cột Phải Banner (5 cột): Điêu khắc Đa diện Lồng nhau & Thiên cầu Hoàng Kim 3D 120fps */}
-              <div className="hidden flex-col items-center justify-center lg:col-span-5 lg:flex">
-                <div className="relative w-full max-w-[500px]">
+              {/* Cột Phải Banner (42% chiều rộng): Điêu khắc Đa diện Lồng nhau & Thiên cầu Hoàng Kim 3D 120fps */}
+              <div className="hidden flex-col items-center justify-center lg:flex lg:w-[42%]">
+                <div className="relative w-full">
                   <LearningSpaceHeroCanvas />
                 </div>
               </div>
