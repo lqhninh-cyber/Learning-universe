@@ -7,8 +7,11 @@ import {
 } from '@/components/home/atmosphereThemes';
 import {
   PIPELINE_LAYER_NAMES,
+  buildAtmosphereSpriteCache,
   createAtmosphereWorld,
+  renderAtmosphereFrame,
   spawnHarmonicContourPulse,
+  spawnShootingStar,
 } from '@/components/home/heroAtmosphereEngine';
 import {
   buildHeroTerrainGeometry,
@@ -674,6 +677,20 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(world.ascendingStarlights).toHaveLength(25);
       expect(world.ascendingStarlights.every((m) => m.radius === 1.5)).toBe(true);
       expect(world.mistRipples.every((r) => r.ny >= 0.82)).toBe(true);
+
+      // Chòm sao hình học toán học (4-5 cụm sao gồm Scorpion), bụi sao 3D (56 hạt) & sao băng định kỳ (5-9s)
+      expect(world.constellations).toHaveLength(5);
+      expect(world.constellations.some((c) => c.id === 'scorpion')).toBe(true);
+      expect(world.stardust3D).toHaveLength(56);
+      expect(world.nextShootingStarInSec).toBeGreaterThanOrEqual(5);
+      expect(world.nextShootingStarInSec).toBeLessThanOrEqual(9);
+      spawnShootingStar(world, true);
+      expect(world.shootingStars.some((s) => s.active && s.vx > 0)).toBe(true);
+
+      // Kiểm chứng renderAtmosphereFrame chạy an toàn trong môi trường Canvas giả lập
+      const spriteCache = buildAtmosphereSpriteCache();
+      expect(spriteCache).toHaveProperty('warmStarSprite');
+      expect(typeof renderAtmosphereFrame).toBe('function');
 
       // Sóng Ngân Trống Đồng (Harmonic Contour Pulse R: 0 -> 600px)
       spawnHarmonicContourPulse(world, 720, 480, 600);

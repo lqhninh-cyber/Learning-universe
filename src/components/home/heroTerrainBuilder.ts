@@ -588,6 +588,39 @@ function renderMountainTopographyOffscreen(
     ctx.fillStyle = grad;
     ctx.fill();
 
+    // 1.5. Viền sáng khí quyển (Atmospheric Ridge Rim-Lighting) mảnh mai hắt từ thiên thể lên sống núi cao nhất
+    if (layer.index <= 2) {
+      const rimIntensity = layer.index === 0 ? 0.25 : layer.index === 1 ? 0.2 : 0.14;
+      const rimGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
+      const focusStop = Math.max(0.15, Math.min(0.85, geometry.astrolabe.cx / geometry.width));
+      rimGrad.addColorStop(0, `rgba(243, 229, 171, ${(rimIntensity * 0.24).toFixed(3)})`);
+      rimGrad.addColorStop(
+        Math.max(0.05, focusStop - 0.28),
+        `rgba(243, 229, 171, ${(rimIntensity * 0.58).toFixed(3)})`,
+      );
+      rimGrad.addColorStop(focusStop, `rgba(243, 229, 171, ${rimIntensity.toFixed(3)})`);
+      rimGrad.addColorStop(
+        Math.min(0.95, focusStop + 0.24),
+        `rgba(243, 229, 171, ${(rimIntensity * 0.65).toFixed(3)})`,
+      );
+      rimGrad.addColorStop(1, `rgba(243, 229, 171, ${(rimIntensity * 0.2).toFixed(3)})`);
+
+      ctx.save();
+      ctx.beginPath();
+      traceSmoothQuadraticCurve(ctx, layer.points, true);
+      ctx.strokeStyle = rimGrad;
+      ctx.lineWidth = layer.index === 0 ? 1.05 : 0.85;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      if (layer.index === 0) {
+        ctx.strokeStyle = 'rgba(243, 229, 171, 0.08)';
+        ctx.lineWidth = 2.6;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
     // 2. Đường đồng mức ruộng bậc thang (chỉ trên 3 tầng sườn núi trung cảnh & gần: index 2, 3, 4)
     if (layer.index >= 2) {
       ctx.clip();

@@ -81,8 +81,53 @@ export interface AtmosphereSpriteCache {
   readonly warmStarSprite: TerrainSurface | null;
 }
 
+export interface ConstellationVertex {
+  readonly nx: number;
+  readonly ny: number;
+}
+
+/** Chòm sao hình học toán học (Scorpion, Đa diện Platon, Lưới cầu, Tam giác đồng dạng, Ngũ giác vàng) */
+export interface MathematicalConstellation {
+  readonly id: string;
+  readonly name: string;
+  readonly centerNx: number;
+  readonly centerNy: number;
+  readonly vertices: readonly ConstellationVertex[];
+  readonly edges: readonly (readonly [number, number])[];
+}
+
+/** Vệt sao băng định kỳ 5s-9s với đầu trắng bạc #FFFDF7 và đuôi mờ dần */
+export interface ShootingStar {
+  active: boolean;
+  nx: number;
+  ny: number;
+  vx: number;
+  vy: number;
+  lengthPx: number;
+  ageSec: number;
+  durationSec: number;
+}
+
+/** Hạt bụi sao 3D có độ sâu z khác nhau chuyển động theo quỹ đạo elip nhẹ quanh tâm thiên thể */
+export interface Stardust3DMote {
+  readonly orbitRx: number;
+  readonly orbitRy: number;
+  readonly tilt: number;
+  readonly zDepth: number;
+  readonly speed: number;
+  readonly phase: number;
+  readonly radius: number;
+  readonly alpha: number;
+  readonly warm: boolean;
+}
+
 export interface AtmosphereWorld {
   readonly stars: readonly StarMote[];
+  readonly constellations: readonly MathematicalConstellation[];
+  readonly shootingStars: ShootingStar[];
+  nextShootingStarInSec: number;
+  shootingStarCursor: number;
+  readonly stardust3D: readonly Stardust3DMote[];
   readonly pulses: HarmonicContourPulse[];
   pulseCursor: number;
   readonly ascendingStarlights: AscendingStarlight[];
@@ -207,13 +252,203 @@ export function createAtmosphereWorld(): AtmosphereWorld {
     alpha: 0.08 + seededRandom(i * 19.11) * 0.12,
   }));
 
+  // 5 Chòm sao Hình học Toán học (Scorpion, Đa diện Platon, Tam giác đồng dạng, Lưới tọa độ cầu, Ngũ giác tỷ lệ vàng)
+  const constellations: MathematicalConstellation[] = [
+    {
+      id: 'scorpion',
+      name: 'Chòm sao Bọ Cạp (Scorpion)',
+      centerNx: 0.2,
+      centerNy: 0.25,
+      vertices: [
+        { nx: 0.145, ny: 0.165 },
+        { nx: 0.17, ny: 0.195 },
+        { nx: 0.155, ny: 0.225 },
+        { nx: 0.195, ny: 0.23 }, // Antares
+        { nx: 0.225, ny: 0.27 },
+        { nx: 0.245, ny: 0.315 },
+        { nx: 0.23, ny: 0.355 },
+        { nx: 0.198, ny: 0.365 },
+        { nx: 0.184, ny: 0.342 },
+      ],
+      edges: [
+        [0, 3],
+        [1, 3],
+        [2, 3],
+        [3, 4],
+        [4, 5],
+        [5, 6],
+        [6, 7],
+        [7, 8],
+        [1, 2],
+      ],
+    },
+    {
+      id: 'platonic-octahedron',
+      name: 'Khối Đa diện Platon',
+      centerNx: 0.43,
+      centerNy: 0.18,
+      vertices: [
+        { nx: 0.43, ny: 0.095 },
+        { nx: 0.382, ny: 0.175 },
+        { nx: 0.478, ny: 0.175 },
+        { nx: 0.43, ny: 0.265 },
+        { nx: 0.415, ny: 0.148 },
+        { nx: 0.448, ny: 0.212 },
+      ],
+      edges: [
+        [0, 1],
+        [0, 2],
+        [1, 3],
+        [2, 3],
+        [1, 2],
+        [0, 4],
+        [4, 1],
+        [4, 2],
+        [4, 5],
+        [5, 3],
+        [5, 1],
+        [5, 2],
+      ],
+    },
+    {
+      id: 'similar-triangles',
+      name: 'Tam giác Đồng dạng Euclid',
+      centerNx: 0.57,
+      centerNy: 0.13,
+      vertices: [
+        { nx: 0.53, ny: 0.085 },
+        { nx: 0.618, ny: 0.098 },
+        { nx: 0.562, ny: 0.195 },
+        { nx: 0.574, ny: 0.091 },
+        { nx: 0.546, ny: 0.14 },
+        { nx: 0.59, ny: 0.146 },
+      ],
+      edges: [
+        [0, 1],
+        [1, 2],
+        [2, 0],
+        [3, 4],
+        [4, 5],
+        [5, 3],
+      ],
+    },
+    {
+      id: 'spherical-grid',
+      name: 'Lưới Tọa độ Cầu Trắc địa',
+      centerNx: 0.88,
+      centerNy: 0.17,
+      vertices: [
+        { nx: 0.88, ny: 0.095 },
+        { nx: 0.835, ny: 0.135 },
+        { nx: 0.88, ny: 0.145 },
+        { nx: 0.925, ny: 0.135 },
+        { nx: 0.825, ny: 0.19 },
+        { nx: 0.88, ny: 0.2 },
+        { nx: 0.935, ny: 0.19 },
+        { nx: 0.88, ny: 0.255 },
+      ],
+      edges: [
+        [0, 1],
+        [0, 2],
+        [0, 3],
+        [1, 2],
+        [2, 3],
+        [1, 4],
+        [2, 5],
+        [3, 6],
+        [4, 5],
+        [5, 6],
+        [4, 7],
+        [5, 7],
+        [6, 7],
+      ],
+    },
+    {
+      id: 'golden-pentagon',
+      name: 'Ngũ giác Tỷ lệ Vàng',
+      centerNx: 0.31,
+      centerNy: 0.33,
+      vertices: [
+        { nx: 0.31, ny: 0.275 },
+        { nx: 0.348, ny: 0.312 },
+        { nx: 0.334, ny: 0.368 },
+        { nx: 0.286, ny: 0.368 },
+        { nx: 0.272, ny: 0.312 },
+      ],
+      edges: [
+        [0, 1],
+        [1, 2],
+        [2, 3],
+        [3, 4],
+        [4, 0],
+        [0, 2],
+        [2, 4],
+        [4, 1],
+        [1, 3],
+        [3, 0],
+      ],
+    },
+  ];
+
+  // Object Pool cố định 2 Vệt Sao Băng (chu kỳ 5s - 9s)
+  const shootingStars: ShootingStar[] = Array.from({ length: 2 }, () => ({
+    active: false,
+    nx: 0,
+    ny: 0,
+    vx: 0,
+    vy: 0,
+    lengthPx: 140,
+    ageSec: 0,
+    durationSec: 0.7,
+  }));
+
+  // Nhân đôi trường hạt bụi sao 3D (56 hạt) chuyển động theo quỹ đạo elip nhẹ quanh tâm thiên thể
+  const stardust3D: Stardust3DMote[] = Array.from({ length: 56 }, (_, i) => {
+    const zDepth = 0.2 + seededRandom(i * 21.13 + 1.1) * 0.8;
+    return {
+      orbitRx: 0.12 + seededRandom(i * 22.37 + 2.4) * 0.56,
+      orbitRy: 0.06 + seededRandom(i * 23.71 + 3.8) * 0.24,
+      tilt: (seededRandom(i * 24.43) - 0.5) * 0.72,
+      zDepth,
+      speed: (0.015 + seededRandom(i * 25.19) * 0.032) * (0.55 + zDepth * 0.55),
+      phase: seededRandom(i * 26.83) * Math.PI * 2,
+      radius: 0.65 + zDepth * 1.25,
+      alpha: 0.18 + zDepth * 0.46,
+      warm: i % 3 !== 0,
+    };
+  });
+
   return {
     stars,
+    constellations,
+    shootingStars,
+    nextShootingStarInSec: 5.5,
+    shootingStarCursor: 0,
+    stardust3D,
     pulses,
     pulseCursor: 0,
     ascendingStarlights,
     mistRipples,
   };
+}
+
+/** Kích hoạt một vệt sao băng trắng bạc (#FFFDF7) vút qua góc trời */
+export function spawnShootingStar(world: AtmosphereWorld, leftToRight?: boolean): void {
+  const star = world.shootingStars[world.shootingStarCursor % world.shootingStars.length];
+  world.shootingStarCursor = (world.shootingStarCursor + 1) % world.shootingStars.length;
+  if (!star) return;
+
+  const dirLeftToRight = leftToRight ?? Math.random() >= 0.5;
+  star.active = true;
+  star.nx = dirLeftToRight ? 0.08 + Math.random() * 0.35 : 0.57 + Math.random() * 0.35;
+  star.ny = 0.06 + Math.random() * 0.24;
+  const speedX = (0.48 + Math.random() * 0.24) * (dirLeftToRight ? 1 : -1);
+  const speedY = 0.14 + Math.random() * 0.12;
+  star.vx = speedX;
+  star.vy = speedY;
+  star.lengthPx = 115 + Math.random() * 75;
+  star.ageSec = 0;
+  star.durationSec = 0.55 + Math.random() * 0.3;
 }
 
 /** Kích hoạt Sóng Ngân Trống Đồng tại (clickX, clickY), lan rộng R(t): 0 -> 600px */
@@ -725,6 +960,180 @@ function drawMistMirrorLakeAndStarlight(
   }
 }
 
+/** Vẽ 5 Chòm sao Hình học Toán học (lineWidth 0.45px mặc định; bừng sáng & tỏa tia sáng nhỏ khi chuột gần) */
+function drawMathematicalConstellations(
+  ctx: CanvasRenderingContext2D,
+  constellations: readonly MathematicalConstellation[],
+  mouse: AtmosphereMouseState,
+  width: number,
+  height: number,
+  tSec: number,
+  starIntensity: number,
+): void {
+  const parallaxX = -mouse.normX * 7;
+  const parallaxY = -mouse.normY * 4;
+  const hoverRadius = 195;
+
+  ctx.save();
+  for (let cIdx = 0; cIdx < constellations.length; cIdx += 1) {
+    const constellation = constellations[cIdx]!;
+    const cx = constellation.centerNx * width + parallaxX;
+    const cy = constellation.centerNy * height + parallaxY;
+
+    let proximity = 0;
+    if (mouse.active) {
+      let minDist = Math.hypot(mouse.x - cx, mouse.y - cy);
+      for (const v of constellation.vertices) {
+        const vx = v.nx * width + parallaxX;
+        const vy = v.ny * height + parallaxY;
+        const vd = Math.hypot(mouse.x - vx, mouse.y - vy);
+        if (vd < minDist) minDist = vd;
+      }
+      if (minDist < hoverRadius) {
+        proximity = 1 - minDist / hoverRadius;
+      }
+    }
+
+    const baseScale = 0.45 + 0.55 * starIntensity;
+    const lineAlpha = (0.16 + proximity * 0.56) * baseScale;
+    ctx.strokeStyle = `rgba(225, 195, 120, ${lineAlpha.toFixed(3)})`;
+    ctx.lineWidth = 0.45 + proximity * 0.5;
+    ctx.beginPath();
+    for (const [a, b] of constellation.edges) {
+      const va = constellation.vertices[a]!;
+      const vb = constellation.vertices[b]!;
+      ctx.moveTo(va.nx * width + parallaxX, va.ny * height + parallaxY);
+      ctx.lineTo(vb.nx * width + parallaxX, vb.ny * height + parallaxY);
+    }
+    ctx.stroke();
+
+    // Đỉnh sao neo của chòm sao + các hạt tia sáng nhỏ li ti khi chuột di chuyển gần
+    for (let vIdx = 0; vIdx < constellation.vertices.length; vIdx += 1) {
+      const v = constellation.vertices[vIdx]!;
+      const vx = v.nx * width + parallaxX;
+      const vy = v.ny * height + parallaxY;
+      const dotAlpha = (0.38 + proximity * 0.58) * baseScale;
+
+      ctx.fillStyle = `rgba(255, 245, 214, ${dotAlpha.toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(vx, vy, 1.15 + proximity * 0.85, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (proximity > 0.08) {
+        for (let s = 0; s < 3; s += 1) {
+          const sparkAngle = tSec * 1.4 + cIdx * 1.3 + vIdx * 0.9 + (s * Math.PI * 2) / 3;
+          const sparkDist = 4 + proximity * 9 * (0.55 + 0.45 * Math.sin(tSec * 3.1 + s + vIdx));
+          const sx = vx + Math.cos(sparkAngle) * sparkDist;
+          const sy = vy + Math.sin(sparkAngle) * sparkDist;
+          const sparkAlpha = proximity * (0.45 + 0.35 * Math.sin(tSec * 4.2 + s));
+          ctx.fillStyle = `rgba(255, 253, 247, ${Math.max(0.08, sparkAlpha).toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(sx, sy, 0.85, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+  }
+  ctx.restore();
+}
+
+/** Cập nhật và vẽ Vệt Sao Băng Định Kỳ (mỗi 5s-9s, #FFFDF7 + đuôi linearGradient mờ dần) */
+function updateAndDrawShootingStars(
+  ctx: CanvasRenderingContext2D,
+  world: AtmosphereWorld,
+  width: number,
+  height: number,
+  dtScale: number,
+  animate: boolean,
+): void {
+  const dt = dtScale / 60;
+  if (animate) {
+    world.nextShootingStarInSec -= dt;
+    if (world.nextShootingStarInSec <= 0) {
+      spawnShootingStar(world);
+      world.nextShootingStarInSec = 5 + Math.random() * 4;
+    }
+
+    for (const star of world.shootingStars) {
+      if (!star.active) continue;
+      star.ageSec += dt;
+      star.nx += star.vx * dt;
+      star.ny += star.vy * dt;
+      if (star.ageSec >= star.durationSec) {
+        star.active = false;
+      }
+    }
+  }
+
+  ctx.save();
+  for (const star of world.shootingStars) {
+    if (!star.active) continue;
+    const progress = Math.max(0, Math.min(1, star.ageSec / star.durationSec));
+    const envelope = Math.sin(progress * Math.PI);
+    const hx = star.nx * width;
+    const hy = star.ny * height;
+    const velMag = Math.hypot(star.vx * width, star.vy * height) || 1;
+    const dirX = (star.vx * width) / velMag;
+    const dirY = (star.vy * height) / velMag;
+    const tx = hx - dirX * star.lengthPx * (0.45 + 0.55 * progress);
+    const ty = hy - dirY * star.lengthPx * (0.45 + 0.55 * progress);
+
+    const tailGrad = ctx.createLinearGradient(tx, ty, hx, hy);
+    tailGrad.addColorStop(0, 'rgba(255, 253, 247, 0)');
+    tailGrad.addColorStop(0.55, `rgba(185, 225, 255, ${(0.32 * envelope).toFixed(3)})`);
+    tailGrad.addColorStop(1, `rgba(255, 253, 247, ${(0.95 * envelope).toFixed(3)})`);
+
+    ctx.strokeStyle = tailGrad;
+    ctx.lineWidth = 1.6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(tx, ty);
+    ctx.lineTo(hx, hy);
+    ctx.stroke();
+
+    ctx.fillStyle = `rgba(255, 253, 247, ${(0.96 * envelope).toFixed(3)})`;
+    ctx.beginPath();
+    ctx.arc(hx, hy, 1.85, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+/** Vẽ trường hạt bụi sao 3D (56 hạt) chuyển động theo quỹ đạo elip nhẹ quanh tâm thiên thể */
+function draw3DStardustDrift(
+  ctx: CanvasRenderingContext2D,
+  stardust: readonly Stardust3DMote[],
+  centerX: number,
+  centerY: number,
+  width: number,
+  height: number,
+  tSec: number,
+  starIntensity: number,
+): void {
+  const baseScale = 0.5 + 0.5 * starIntensity;
+  ctx.save();
+  for (const mote of stardust) {
+    const theta = mote.phase + tSec * mote.speed;
+    const lx = Math.cos(theta) * (mote.orbitRx * width);
+    const ly = Math.sin(theta) * (mote.orbitRy * height);
+    const cosTilt = Math.cos(mote.tilt);
+    const sinTilt = Math.sin(mote.tilt);
+    const x = centerX + lx * cosTilt - ly * sinTilt;
+    const y = centerY + lx * sinTilt + ly * cosTilt;
+    if (y > height * 0.84) continue;
+
+    const shimmer = 0.72 + 0.28 * Math.sin(tSec * (1.2 + mote.zDepth) + mote.phase);
+    const alpha = mote.alpha * shimmer * baseScale;
+    ctx.fillStyle = mote.warm
+      ? `rgba(243, 229, 171, ${alpha.toFixed(3)})`
+      : `rgba(185, 225, 255, ${alpha.toFixed(3)})`;
+    ctx.beginPath();
+    ctx.arc(x, y, mote.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 /** Kết xuất toàn bộ khung hình Sơn Thủy Trắc Địa Đại Việt & Thiên Cầu Đông Sơn 120fps (< 3ms/frame) */
 export function renderAtmosphereFrame(data: RenderContextData): void {
   const {
@@ -797,6 +1206,30 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
       ctx.fill();
     }
   }
+
+  // LỚP 1.5: Mạng lưới 5 Chòm sao Hình học Toán học & Trường bụi sao 3D + Sao băng định kỳ
+  drawMathematicalConstellations(
+    ctx,
+    world.constellations,
+    mouse,
+    width,
+    height,
+    tSec,
+    palette.starIntensity,
+  );
+
+  draw3DStardustDrift(
+    ctx,
+    world.stardust3D,
+    activeGeometry.astrolabe.cx + astrolabeParallaxX,
+    activeGeometry.astrolabe.cy + astrolabeParallaxY,
+    width,
+    height,
+    tSec,
+    palette.starIntensity,
+  );
+
+  updateAndDrawShootingStars(ctx, world, width, height, dtScale, animate);
 
   // LỚP 2: Đài Thiên Cầu Mặt Trời Đông Sơn (72% x 30%, 14 cánh, 4 vòng chia độ quay 0.04 rad/s)
   drawDongSonAstrolabe(
