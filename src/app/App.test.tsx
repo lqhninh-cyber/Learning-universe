@@ -87,6 +87,9 @@ describe('App routing smoke test', () => {
     expect(
       await screen.findByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
     ).toBeInTheDocument();
+    expect(screen.getByTestId('observatory-vignette')).toBeInTheDocument();
+    expect(screen.getByTestId('learning-space-perimeter-frame')).toBeInTheDocument();
+    expect(screen.getByTestId('geodesic-corner-brackets')).toBeInTheDocument();
     expect(screen.getByTestId('hero-blueprint-grid')).toBeInTheDocument();
     const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
     expect(ringsContainer).toBeInTheDocument();

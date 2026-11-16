@@ -807,7 +807,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
       >
         <div className="lu-container-wide">
           {/* Header 2 tầng + Toolbar lọc phân nhánh */}
-          <div className="mb-8 border-b border-[var(--border-subtle)] pb-6">
+          <div className="mb-8 pb-2">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-2 font-mono text-xs tracking-wider text-[var(--text-muted)] uppercase">
                 <Compass className="h-3.5 w-3.5" aria-hidden="true" />
@@ -860,6 +860,12 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                   })}
                 </div>
               </div>
+            </div>
+            {/* Dải phân cách hình học với chấm đồng thau giữa đường kẻ */}
+            <div aria-hidden="true" className="mt-6 flex items-center gap-3">
+              <div className="h-px flex-1 bg-gradient-to-r from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#C89738]/75 ring-4 ring-[#C89738]/12" />
+              <div className="h-px flex-1 bg-gradient-to-l from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
             </div>
           </div>
 
