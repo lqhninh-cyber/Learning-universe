@@ -715,16 +715,13 @@ export function LearningSpacePage() {
                   </div>
                 </div>
 
-                {/* Cột Phải Banner (46% chiều rộng): Điêu khắc Đa diện Lồng nhau & 3 Huy hiệu Thông số Nổi 120fps */}
+                {/* Cột Phải Banner (46% chiều rộng): Điêu khắc Đa diện Platonic Kép & Đĩa Thiên Văn 120fps */}
                 <div
                   data-testid="hero-3d-column"
                   className="hidden flex-col items-center justify-center lg:flex lg:w-[46%]"
                 >
                   <div className="relative w-full">
-                    <LearningSpaceHeroCanvas
-                      subjectCount={subjects.length}
-                      totalLessons={totalLessonCount}
-                    />
+                    <LearningSpaceHeroCanvas />
                   </div>
                 </div>
               </div>

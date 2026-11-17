@@ -94,13 +94,13 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('ambient-geodesic-wings')).toBeInTheDocument();
     expect(screen.getByTestId('hero-blueprint-grid')).toBeInTheDocument();
     expect(screen.getByTestId('hero-3d-column')).toBeInTheDocument();
-    const telemetryPills = screen.getByTestId('hero-telemetry-pills');
-    expect(telemetryPills).toHaveTextContent(/Cấu trúc · 04 Hệ tiên đề/i);
-    expect(telemetryPills).toHaveTextContent(/Bài giảng chuẩn hóa/i);
-    expect(telemetryPills).toHaveTextContent(/Mô phỏng 120 FPS/i);
+    expect(screen.queryByTestId('hero-telemetry-pills')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Cấu trúc · 04 Hệ tiên đề/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Bài giảng chuẩn hóa/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Mô phỏng 120 FPS/i)).not.toBeInTheDocument();
     const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
     expect(ringsContainer).toBeInTheDocument();
-    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'polyhedral-armillary-v2');
+    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'dual-platonic-astrolabe-v3');
     const glyphs = screen.getByTestId('hero-math-parallax-glyphs');
     for (const symbol of ['∫', '∂', '∑', 'π', '∆', 'φ']) {
       expect(glyphs).toHaveTextContent(symbol);
