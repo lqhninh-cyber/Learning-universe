@@ -97,10 +97,9 @@ export const ICO_VERTICES: readonly Vec3[] = RAW_ICO_COORDS.map(([x, y, z]) =>
   normalizeVec3({ x, y, z }),
 );
 
-function buildIcosahedronTopology(vertices: readonly Vec3[]): {
-  readonly faces: readonly (readonly [number, number, number])[];
-  readonly dualEdges: readonly (readonly [number, number])[];
-} {
+function buildIcosahedronFaces(
+  vertices: readonly Vec3[],
+): readonly (readonly [number, number, number])[] {
   const edgeThreshold = 1.15;
   const adj: boolean[][] = Array.from({ length: vertices.length }, () =>
     Array<boolean>(vertices.length).fill(false),
@@ -132,30 +131,10 @@ function buildIcosahedronTopology(vertices: readonly Vec3[]): {
     }
   }
 
-  // Tiền tính toán đúng 30 cạnh đối ngẫu nối các cặp mặt chung nhau 2 đỉnh
-  const dualEdges: [number, number][] = [];
-  for (let fA = 0; fA < faces.length; fA += 1) {
-    const triA = faces[fA]!;
-    for (let fB = fA + 1; fB < faces.length; fB += 1) {
-      const triB = faces[fB]!;
-      let shared = 0;
-      for (const va of triA) {
-        if (va === triB[0] || va === triB[1] || va === triB[2]) {
-          shared += 1;
-        }
-      }
-      if (shared === 2) {
-        dualEdges.push([fA, fB]);
-      }
-    }
-  }
-
-  return { faces, dualEdges };
+  return faces;
 }
 
-const ICO_TOPOLOGY = buildIcosahedronTopology(ICO_VERTICES);
-export const ICO_FACES = ICO_TOPOLOGY.faces;
-export const DUAL_EDGES = ICO_TOPOLOGY.dualEdges;
+export const ICO_FACES = buildIcosahedronFaces(ICO_VERTICES);
 
 // Lõi Bát diện kép cắt giác sắc nét (Faceted Dual-Octahedron Crystal Core)
 const PRIMARY_OCTA_VERTS: readonly Vec3[] = [
@@ -233,11 +212,11 @@ export const SPHERICAL_WAVE_TRIG: readonly {
   };
 });
 
-// 4 Vòng Quỹ Đạo Thiên Cầu với 4 Hạt Ngọc Khoáng Thạch chuẩn hệ màu 4 môn học
+// 4 Vòng Quỹ Đạo Thiên Cầu mở rộng bán kính +15% tạo khoảng thở thoáng quanh Nhị thập diện đều
 export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
   {
-    radiusX: 0.9,
-    radiusY: 0.78,
+    radiusX: 1.035,
+    radiusY: 0.897,
     innerRatio: 0.942,
     isDoubleRim: true,
     baseTiltX: 1.02,
@@ -253,8 +232,8 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     cometDirection: 1,
   },
   {
-    radiusX: 0.81,
-    radiusY: 0.69,
+    radiusX: 0.9315,
+    radiusY: 0.7935,
     innerRatio: 0.948,
     isDoubleRim: true,
     baseTiltX: -0.78,
@@ -270,8 +249,8 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     cometDirection: -1,
   },
   {
-    radiusX: 0.72,
-    radiusY: 0.6,
+    radiusX: 0.828,
+    radiusY: 0.69,
     innerRatio: 0.955,
     isDoubleRim: false,
     baseTiltX: 0.46,
@@ -287,8 +266,8 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     cometDirection: 1,
   },
   {
-    radiusX: 0.63,
-    radiusY: 0.52,
+    radiusX: 0.7245,
+    radiusY: 0.598,
     innerRatio: 0.96,
     isDoubleRim: false,
     baseTiltX: 1.26,

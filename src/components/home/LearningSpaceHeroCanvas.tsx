@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import {
   computeFrameDelta,
@@ -13,7 +13,6 @@ import {
   CRYSTAL_FACES,
   CRYSTAL_VERTICES,
   DIAL_TRIG_360,
-  DUAL_EDGES,
   formatAlidadeAngle,
   HALF_LIGHT_VEC,
   HARMONIC_WAVE_POINTS,
@@ -56,7 +55,6 @@ interface HoverWave {
 
 const MAX_RESONANCE_PULSES = 8;
 const RESONANCE_COOLDOWN_MS = 900;
-const DUAL_PROXIMITY_PX = 150;
 const SYMBOL_PROXIMITY_PX = 110;
 
 function createZeroVec3Array(count: number): Vec3[] {
@@ -156,7 +154,6 @@ function drawAstrolabeBackdropAndAlidade(
   cy: number,
   minDim: number,
   alphaCurr: number,
-  isDualLocked: boolean,
 ): void {
   const unitScale = minDim / 460;
   const outerR = 185 * unitScale;
@@ -168,7 +165,7 @@ function drawAstrolabeBackdropAndAlidade(
   // Hai vòng chia độ ngoại vi đồng tâm R = 185px & R = 178px
   ctx.beginPath();
   ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
-  ctx.strokeStyle = isDualLocked ? 'rgba(156, 122, 76, 0.42)' : 'rgba(30, 58, 52, 0.24)';
+  ctx.strokeStyle = 'rgba(30, 58, 52, 0.24)';
   ctx.lineWidth = 0.85;
   ctx.stroke();
 
@@ -720,19 +717,16 @@ function drawBlueprintSymbolsInCanvas(
 }
 
 /**
- * Điêu Khắc Đa Diện Kép Platonic & Đĩa Thiên Văn Trắc Địa 120fps (`dual-platonic-astrolabe-v4`):
- * - Nhị thập diện đều ↔ Thập nhị diện đều đối ngẫu (Dual Morphing) khi di chuột (< 150px) hoặc click khóa
+ * Điêu Khắc Nhị Thập Diện Ngọc Bích & Lõi Tinh Thể Hổ Phách 120fps (`dual-platonic-astrolabe-v4`):
+ * - Lõi Tinh Thể Hổ Phách Cắt Giác (#F5D078 -> #B87D28 -> #7C5216) nằm trong vỏ Nhị thập diện đều (12 đỉnh, 20 mặt tam giác)
  * - 2 vòng Sóng Đứng Điều Hòa Cầu xích đạo (Ngọc Bích & Hổ Phách, 120 điểm, ngược pha)
- * - 4 Hạt Ngọc Khoáng Thạch (#9C7A4C, #49768F, #3B7A65, #9E6356) kèm Cộng hưởng Giao điểm (Resonance Pulses)
+ * - 4 Vòng Quỹ Đạo Thiên Cầu mở rộng thoáng đãng (+15%) & 4 Hạt Ngọc Khoáng Thạch kèm Cộng hưởng Giao điểm
  * - Kim Chỉ Góc Alidade & Cung Vernier (±12°) khóa con trỏ chuột theo đường tròn ngắn nhất
  * - 8 Nút Giao Bản Vẽ Động (∫, ∑, ∂, ∆, φ, π, ∀, ≃) chuyển động Lissajous vi mô + tương tác từ trường
  */
 export function LearningSpaceHeroCanvas() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const isDualLockedRef = useRef(false);
-  const [isDualLockedUi, setIsDualLockedUi] = useState(false);
-  const [isNearCoreCursor, setIsNearCoreCursor] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -761,10 +755,6 @@ export function LearningSpaceHeroCanvas() {
     // Bộ đệm tiền cấp phát O(1) — không phát sinh cấp phát bộ nhớ trong vòng lặp 120fps
     const icoWorldVerts = createZeroVec3Array(ICO_VERTICES.length);
     const icoProjVerts = createZeroProjArray(ICO_VERTICES.length);
-    const icoCentroids = createZeroVec3Array(ICO_FACES.length);
-    const icoCentroidsProj = createZeroProjArray(ICO_FACES.length);
-    const dualWorldVerts = createZeroVec3Array(ICO_FACES.length);
-    const dualProjVerts = createZeroProjArray(ICO_FACES.length);
     const icoFacePool: ShadedTriangleBuffer[] = ICO_FACES.map(() => ({
       indices: [0, 0, 0],
       avgZ: 0,
@@ -837,7 +827,6 @@ export function LearningSpaceHeroCanvas() {
     let pointerInsideCanvas = false;
     let isHovered = false;
     let hoverMix = 0;
-    let dualMorphProgress = 0;
     let alphaCurr = -Math.PI / 4;
     let coreSpinPhase = 0;
     let isVisible = true;
@@ -905,12 +894,6 @@ export function LearningSpaceHeroCanvas() {
           pointerCanvasX <= canvasRect.width &&
           pointerCanvasY >= 0 &&
           pointerCanvasY <= canvasRect.height;
-
-        const distC = Math.hypot(
-          pointerCanvasX - canvasRect.width * 0.5,
-          pointerCanvasY - canvasRect.height * 0.5,
-        );
-        setIsNearCoreCursor(pointerInsideCanvas && distC < DUAL_PROXIMITY_PX);
       }
     };
 
@@ -918,7 +901,6 @@ export function LearningSpaceHeroCanvas() {
       pointerX = 0;
       pointerY = 0;
       pointerInsideCanvas = false;
-      setIsNearCoreCursor(false);
     };
 
     const handleSculptureEnter = () => {
@@ -938,7 +920,6 @@ export function LearningSpaceHeroCanvas() {
     const handleSculptureLeave = () => {
       isHovered = false;
       pointerInsideCanvas = false;
-      setIsNearCoreCursor(false);
     };
 
     heroSection.addEventListener('pointermove', handleHeroPointerMove);
@@ -1009,7 +990,7 @@ export function LearningSpaceHeroCanvas() {
       );
 
       // D & Backdrop. Đĩa Chuẩn Độ Trắc Địa 360° & Kim Chỉ Góc Alidade theo con trỏ
-      drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr, isDualLockedRef.current);
+      drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr);
 
       // Sóng giao thoa nhẹ khi tương tác chuột vào vùng mô hình
       for (const wave of hoverWaves) {
@@ -1289,69 +1270,6 @@ export function LearningSpaceHeroCanvas() {
         ctx.stroke();
       }
 
-      // A. Đối Ngẫu Đa Diện Platon (Nhị thập diện đều <-> Thập nhị diện đều bung nở xuyên qua 20 mặt)
-      if (dualMorphProgress > 0.01) {
-        const lerpScale = 0.65 + (1.18 - 0.65) * dualMorphProgress;
-        for (let f = 0; f < ICO_FACES.length; f += 1) {
-          const tri = ICO_FACES[f]!;
-          const v0 = icoWorldVerts[tri[0]]!;
-          const v1 = icoWorldVerts[tri[1]]!;
-          const v2 = icoWorldVerts[tri[2]]!;
-
-          const cf = icoCentroids[f]!;
-          cf.x = (v0.x + v1.x + v2.x) / 3;
-          cf.y = (v0.y + v1.y + v2.y) / 3;
-          cf.z = (v0.z + v1.z + v2.z) / 3;
-
-          const df = dualWorldVerts[f]!;
-          df.x = cf.x * lerpScale;
-          df.y = cf.y * lerpScale;
-          df.z = cf.z * lerpScale;
-
-          projectPointInto(cf, cx, cy, fov, icoCentroidsProj[f]!);
-          projectPointInto(df, cx, cy, fov, dualProjVerts[f]!);
-        }
-
-        // Tia pháp tuyến mảnh nối tâm mặt c_f -> đỉnh đối ngẫu d_f
-        ctx.beginPath();
-        for (let f = 0; f < ICO_FACES.length; f += 1) {
-          const cp = icoCentroidsProj[f]!;
-          const dp = dualProjVerts[f]!;
-          ctx.moveTo(cp.x, cp.y);
-          ctx.lineTo(dp.x, dp.y);
-        }
-        ctx.strokeStyle = `rgba(156, 122, 76, ${(0.45 * dualMorphProgress).toFixed(3)})`;
-        ctx.lineWidth = 0.75;
-        ctx.stroke();
-
-        // 30 cạnh Thập nhị diện đều bằng nét Vàng Đồng Kim Loại
-        ctx.beginPath();
-        for (let e = 0; e < DUAL_EDGES.length; e += 1) {
-          const edge = DUAL_EDGES[e]!;
-          const pA = dualProjVerts[edge[0]]!;
-          const pB = dualProjVerts[edge[1]]!;
-          ctx.moveTo(pA.x, pA.y);
-          ctx.lineTo(pB.x, pB.y);
-        }
-        ctx.strokeStyle = `rgba(184, 138, 68, ${(0.75 * dualMorphProgress).toFixed(3)})`;
-        ctx.lineWidth = 1.15;
-        ctx.stroke();
-
-        // 20 nút ngọc vàng sáng (r = 2px, #FAFBF9 viền #9C7A4C) tại đỉnh Thập nhị diện
-        ctx.globalAlpha = Math.min(1, dualMorphProgress * 1.15);
-        for (let f = 0; f < ICO_FACES.length; f += 1) {
-          const dp = dualProjVerts[f]!;
-          ctx.beginPath();
-          ctx.arc(dp.x, dp.y, 2, 0, Math.PI * 2);
-          ctx.fillStyle = '#FAFBF9';
-          ctx.fill();
-          ctx.strokeStyle = '#9C7A4C';
-          ctx.lineWidth = 1.05;
-          ctx.stroke();
-        }
-        ctx.globalAlpha = 1;
-      }
-
       // LỚP 3: Nửa trước của 4 Vòng Thiên Cầu Kép & 4 Hạt Ngọc Khoáng Thạch
       for (let idx = 0; idx < ARMILLARY_RINGS.length; idx += 1) {
         const ring = ARMILLARY_RINGS[idx]!;
@@ -1476,14 +1394,6 @@ export function LearningSpaceHeroCanvas() {
         const cx = width * 0.5 + smoothX * 8;
         const cy = height * 0.5 + smoothY * 7;
 
-        // A. Nội suy trạng thái Đối Ngẫu Nhị thập diện <-> Thập nhị diện (damping 0.08 * dtScale)
-        const nearCore =
-          pointerInsideCanvas &&
-          Math.hypot(pointerCanvasX - cx, pointerCanvasY - cy) < DUAL_PROXIMITY_PX;
-        const dualTarget = nearCore || isDualLockedRef.current ? 1 : 0;
-        const dualDamp = Math.min(1, 0.08 * dtScale);
-        dualMorphProgress += (dualTarget - dualMorphProgress) * dualDamp;
-
         // D. Nội suy góc Kim Chỉ Góc Alidade theo đường tròn ngắn nhất (damping 0.12 * dtScale)
         const targetAlidade = pointerInsideCanvas
           ? Math.atan2(pointerCanvasY - cy, pointerCanvasX - cx)
@@ -1530,27 +1440,12 @@ export function LearningSpaceHeroCanvas() {
     };
   }, [prefersReducedMotion]);
 
-  const handleToggleDualLock = () => {
-    const next = !isDualLockedRef.current;
-    isDualLockedRef.current = next;
-    setIsDualLockedUi(next);
-  };
-
   return (
     <div
       ref={containerRef}
-      onClick={handleToggleDualLock}
       data-testid="learning-space-celestial-rings"
       data-sculpture-version="dual-platonic-astrolabe-v4"
-      data-dual-locked={isDualLockedUi ? 'true' : 'false'}
-      title={
-        isDualLockedUi
-          ? 'Đang khóa hình thái đối ngẫu Thập nhị diện — Nhấp để mở khóa'
-          : 'Di chuột vào lõi hoặc nhấp để biến hình đối ngẫu Nhị thập diện ↔ Thập nhị diện'
-      }
-      className={`relative flex h-[400px] w-full items-center justify-center select-none sm:h-[460px] lg:h-[480px] ${
-        isNearCoreCursor || isDualLockedUi ? 'cursor-pointer' : 'cursor-crosshair'
-      }`}
+      className="relative flex h-[400px] w-full cursor-crosshair items-center justify-center select-none sm:h-[460px] lg:h-[480px]"
     >
       {/* Danh mục ký hiệu toán học chuẩn A11y đồng bộ với 8 Nút Giao Bản Vẽ Động trên Canvas */}
       <div aria-hidden="true" data-testid="hero-math-parallax-glyphs" className="sr-only">

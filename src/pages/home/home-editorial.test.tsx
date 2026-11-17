@@ -17,7 +17,6 @@ import {
   angleLerp,
   ARMILLARY_RINGS,
   BLUEPRINT_SYMBOLS,
-  DUAL_EDGES,
   formatAlidadeAngle,
   HARMONIC_WAVE_POINTS,
   ICO_FACES,
@@ -754,16 +753,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getAllByText(HERITAGE_ARTWORKS[1]!.title).length).toBeGreaterThan(0);
     });
 
-    it('heroSculptureGeometry: tạo đúng Nhị thập diện đều, 30 cạnh đối ngẫu, 4 hạt khoáng thạch và Alidade angleLerp', () => {
+    it('heroSculptureGeometry: tạo đúng Nhị thập diện đều (12 đỉnh, 20 mặt), 4 quỹ đạo mở rộng +15%, 4 hạt khoáng thạch và Alidade angleLerp', () => {
       expect(ICO_VERTICES).toHaveLength(12);
       expect(ICO_FACES).toHaveLength(20);
-      expect(DUAL_EDGES).toHaveLength(30);
-      for (const [fA, fB] of DUAL_EDGES) {
-        expect(fA).toBeLessThan(fB);
-        const triA = ICO_FACES[fA]!;
-        const triB = ICO_FACES[fB]!;
-        expect(triA.filter((v) => triB.includes(v)).length).toBe(2);
-      }
+      expect(ARMILLARY_RINGS[0]!.radiusX).toBeCloseTo(1.035, 3);
+      expect(ARMILLARY_RINGS[3]!.radiusX).toBeCloseTo(0.7245, 4);
 
       expect(SPHERICAL_WAVE_TRIG).toHaveLength(HARMONIC_WAVE_POINTS);
       expect(HARMONIC_WAVE_POINTS).toBe(120);
