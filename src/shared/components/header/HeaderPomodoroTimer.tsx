@@ -7,11 +7,32 @@ export interface HeaderPomodoroTimerProps {
   readonly isDark?: boolean;
 }
 
+const CUSTOM_MINUTES_STORAGE_KEY = 'lu_pomodoro_custom_minutes';
+const DEFAULT_CUSTOM_MINUTES = 30;
+const MIN_CUSTOM_MINUTES = 1;
+const MAX_CUSTOM_MINUTES = 180;
+
 const POMODORO_PRESETS: readonly { readonly minutes: number; readonly label: string }[] = [
   { minutes: 25, label: 'Tiêu chuẩn' },
-  { minutes: 45, label: 'Đọc chứng minh sâu' },
+  { minutes: 45, label: '1 tiết' },
   { minutes: 5, label: 'Nghỉ ngơi' },
 ];
+
+function clampCustomMinutes(value: number): number {
+  if (!Number.isFinite(value)) return DEFAULT_CUSTOM_MINUTES;
+  return Math.max(MIN_CUSTOM_MINUTES, Math.min(MAX_CUSTOM_MINUTES, Math.round(value)));
+}
+
+function readStoredCustomMinutes(): number {
+  if (typeof window === 'undefined') return DEFAULT_CUSTOM_MINUTES;
+  try {
+    const raw = localStorage.getItem(CUSTOM_MINUTES_STORAGE_KEY);
+    if (raw === null) return DEFAULT_CUSTOM_MINUTES;
+    return clampCustomMinutes(Number.parseInt(raw, 10));
+  } catch {
+    return DEFAULT_CUSTOM_MINUTES;
+  }
+}
 
 function formatMmSs(totalSec: number): string {
   const safe = Math.max(0, Math.floor(totalSec));
@@ -21,9 +42,34 @@ function formatMmSs(totalSec: number): string {
 }
 
 export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = false }) => {
-  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro, resetPomodoro } = useIsland();
+  const {
+    pomodoro,
+    startPomodoro,
+    addPomodoroMinutes,
+    pausePomodoro,
+    resumePomodoro,
+    resetPomodoro,
+  } = useIsland();
   const [isOpen, setIsOpen] = useState(false);
+  const [customMinutes, setCustomMinutes] = useState<number>(() => readStoredCustomMinutes());
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const updateCustomMinutes = (nextValue: number) => {
+    const clamped = clampCustomMinutes(nextValue);
+    setCustomMinutes(clamped);
+    try {
+      localStorage.setItem(CUSTOM_MINUTES_STORAGE_KEY, String(clamped));
+    } catch {
+      // Bỏ qua lỗi lưu trữ cục bộ
+    }
+  };
+
+  const handleStartCustomTimer = () => {
+    const clamped = clampCustomMinutes(customMinutes);
+    updateCustomMinutes(clamped);
+    startPomodoro(clamped, 'Tùy chỉnh');
+    setIsOpen(false);
+  };
 
   const isActive = pomodoro.status !== 'idle';
   const isRunning = pomodoro.status === 'running';
@@ -64,10 +110,10 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
         aria-expanded={isOpen}
         aria-label={
           isActive
-            ? `Bộ đếm Pomodoro đang còn ${formatMmSs(pomodoro.remainingSeconds)}`
-            : 'Mở bộ đếm nhịp học tập Pomodoro'
+            ? `Bộ đếm Nhịp học tập đang còn ${formatMmSs(pomodoro.remainingSeconds)}`
+            : 'Mở bộ đếm Nhịp học tập'
         }
-        title="Nhịp học tập sâu Pomodoro"
+        title="Nhịp học tập"
         className={cn(
           'inline-flex h-9 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98]',
           isActive
@@ -127,7 +173,8 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
         <div
           data-testid="pomodoro-popover"
           role="dialog"
-          aria-label="Chọn nhịp học tập Pomodoro"
+          aria-label="Chọn nhịp học tập"
+          onClick={(event) => event.stopPropagation()}
           className={cn(
             'absolute top-full right-0 z-50 mt-3 w-72 rounded-2xl border p-3.5 shadow-[0_16px_40px_rgba(24,38,36,0.12)] backdrop-blur-xl',
             isDark
@@ -137,7 +184,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
         >
           <div className="mb-2.5 flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
             <div>
-              <p className="text-xs font-bold">Nhịp học tập sâu (Pomodoro)</p>
+              <p className="text-xs font-bold">Nhịp học tập</p>
               <p className="text-[11px] text-[#4A5D58] dark:text-[#A7B5AC]">
                 {isActive
                   ? `${pomodoro.presetLabel} · Còn ${formatMmSs(pomodoro.remainingSeconds)}`
@@ -151,7 +198,8 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
               <button
                 key={preset.minutes}
                 type="button"
-                onClick={() => {
+                onClick={(event) => {
+                  event.stopPropagation();
                   startPomodoro(preset.minutes, preset.label);
                   setIsOpen(false);
                 }}
@@ -170,41 +218,179 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
             ))}
           </div>
 
-          {isActive && (
-            <div className="mt-2.5 flex items-center gap-2 border-t border-[var(--border-subtle)] pt-2.5">
-              <button
-                type="button"
-                onClick={isRunning ? pausePomodoro : resumePomodoro}
-                className="inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[#1E332E] px-3 py-1.5 text-xs font-semibold text-[#FAFBF9] transition-colors hover:bg-[#26403A]"
-              >
-                {isRunning ? (
-                  <>
-                    <Pause className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Tạm dừng</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Tiếp tục</span>
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  resetPomodoro();
-                  setIsOpen(false);
-                }}
+          {/* Phân khu Tùy chỉnh thời gian (Custom Duration Stepper & Input) */}
+          <div
+            onClick={(event) => event.stopPropagation()}
+            className={cn(
+              'mt-2 border-t pt-3',
+              isDark ? 'border-[#4E9B58]/25' : 'border-[#D8E0DD]',
+            )}
+          >
+            <p className="mb-2 text-[11px] font-semibold tracking-wide text-[#4A5D58] uppercase dark:text-[#A7B5AC]">
+              Tùy chỉnh thời gian
+            </p>
+            <div className="flex items-center justify-between gap-2">
+              <label
+                htmlFor="pomodoro-custom-minutes-input"
                 className={cn(
-                  'inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors',
-                  isDark
-                    ? 'border-[#4E9B58]/30 text-[#EBF0EE] hover:bg-white/10'
-                    : 'border-[#D8E0DD] text-[#4A5D58] hover:bg-[#EDF1EF] hover:text-[#182624]',
+                  'text-[12px] font-medium',
+                  isDark ? 'text-[#A7B5AC]' : 'text-[#4A5D58]',
                 )}
               >
-                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Đặt lại</span>
-              </button>
+                Tự chọn (phút)
+              </label>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  aria-label="Giảm 5 phút"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    updateCustomMinutes(customMinutes - 5);
+                  }}
+                  className={cn(
+                    'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border text-xs font-bold transition-colors',
+                    isDark
+                      ? 'border-[#4E9B58]/30 bg-[#182E24] text-[#EBF0EE] hover:bg-[#1E3B2E]'
+                      : 'border-[#CBD6D2] bg-[#EDF1EF] text-[#182624] hover:bg-[#E2E8E5]',
+                  )}
+                >
+                  -5
+                </button>
+
+                <input
+                  id="pomodoro-custom-minutes-input"
+                  data-testid="pomodoro-custom-input"
+                  type="number"
+                  min={MIN_CUSTOM_MINUTES}
+                  max={MAX_CUSTOM_MINUTES}
+                  value={customMinutes}
+                  onClick={(event) => event.stopPropagation()}
+                  onChange={(event) => {
+                    const parsed = Number.parseInt(event.target.value, 10);
+                    if (Number.isFinite(parsed)) {
+                      updateCustomMinutes(parsed);
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleStartCustomTimer();
+                    }
+                  }}
+                  aria-label="Số phút tự chọn"
+                  className={cn(
+                    'h-8 w-14 rounded-lg border text-center text-[13px] font-bold tabular-nums focus:outline-none',
+                    isDark
+                      ? 'border-[#4E9B58]/35 bg-[#182E24] text-[#F7F4EB] focus:border-[#6EE7B7]'
+                      : 'border-[#CBD6D2] bg-[#EDF1EF] text-[#182624] focus:border-[#1E332E]',
+                  )}
+                />
+
+                <button
+                  type="button"
+                  aria-label="Tăng 5 phút"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    updateCustomMinutes(customMinutes + 5);
+                  }}
+                  className={cn(
+                    'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border text-xs font-bold transition-colors',
+                    isDark
+                      ? 'border-[#4E9B58]/30 bg-[#182E24] text-[#EBF0EE] hover:bg-[#1E3B2E]'
+                      : 'border-[#CBD6D2] bg-[#EDF1EF] text-[#182624] hover:bg-[#E2E8E5]',
+                  )}
+                >
+                  +5
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              data-testid="pomodoro-custom-start"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleStartCustomTimer();
+              }}
+              className="mt-2.5 w-full cursor-pointer rounded-xl bg-[#1E332E] py-2 text-[13px] font-semibold text-[#FAFBF9] transition-colors hover:bg-[#26403A]"
+            >
+              Bắt đầu hẹn giờ
+            </button>
+          </div>
+
+          {isActive && (
+            <div
+              data-testid="pomodoro-active-controls"
+              className={cn(
+                'mt-2.5 space-y-2 border-t pt-2.5',
+                isDark ? 'border-[#4E9B58]/25' : 'border-[#D8E0DD]',
+              )}
+            >
+              <div className="flex items-center justify-between text-[11px] font-medium text-[#4A5D58] dark:text-[#A7B5AC]">
+                <span>Phiên: {pomodoro.presetLabel}</span>
+                <span className="font-mono font-semibold tabular-nums">
+                  {formatMmSs(pomodoro.remainingSeconds)}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (isRunning) pausePomodoro();
+                    else resumePomodoro();
+                  }}
+                  className="inline-flex flex-1 cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#1E332E] px-2.5 py-1.5 text-xs font-semibold text-[#FAFBF9] transition-colors hover:bg-[#26403A]"
+                >
+                  {isRunning ? (
+                    <>
+                      <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Tạm dừng</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Tiếp tục</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    addPomodoroMinutes(5);
+                  }}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center justify-center rounded-xl border px-2.5 py-1.5 text-xs font-semibold transition-colors',
+                    isDark
+                      ? 'border-[#4E9B58]/30 bg-[#182E24] text-[#EBF0EE] hover:bg-[#1E3B2E]'
+                      : 'border-[#D8E0DD] bg-[#EDF1EF]/80 text-[#182624] hover:bg-[#E2E8E5]',
+                  )}
+                >
+                  +5 phút
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    resetPomodoro();
+                    setIsOpen(false);
+                  }}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl border px-2.5 py-1.5 text-xs font-semibold transition-colors',
+                    isDark
+                      ? 'border-[#4E9B58]/30 text-[#EBF0EE] hover:bg-white/10'
+                      : 'border-[#D8E0DD] text-[#4A5D58] hover:bg-[#EDF1EF] hover:text-[#182624]',
+                  )}
+                >
+                  <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Đặt lại</span>
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -240,10 +240,40 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     });
     expect(screen.queryByTestId('island-notice-banner')).not.toBeInTheDocument();
 
-    // Bật Pomodoro 5 phút và đếm ngược đến hoàn tất
+    // Bật Pomodoro: kiểm tra nhãn mới ("Nhịp học tập", "1 tiết") & cụm Tùy chỉnh thời gian
     fireEvent.click(screen.getByTestId('pomodoro-trigger'));
+    const popover = screen.getByTestId('pomodoro-popover');
+    expect(popover).toBeInTheDocument();
+    expect(popover).toHaveTextContent('Nhịp học tập');
+    expect(popover).not.toHaveTextContent('Đọc chứng minh sâu');
+    expect(screen.getByRole('button', { name: /45 phút.*1 tiết/i })).toBeInTheDocument();
+
+    // Điều chỉnh -5 / +5 không làm đóng popover và lưu vào localStorage
+    const customInput = screen.getByTestId('pomodoro-custom-input');
+    expect(customInput).toHaveValue(30);
+    fireEvent.click(screen.getByRole('button', { name: 'Tăng 5 phút' }));
+    expect(customInput).toHaveValue(35);
+    expect(localStorage.getItem('lu_pomodoro_custom_minutes')).toBe('35');
     expect(screen.getByTestId('pomodoro-popover')).toBeInTheDocument();
 
+    fireEvent.click(screen.getByRole('button', { name: 'Giảm 5 phút' }));
+    expect(customInput).toHaveValue(30);
+
+    fireEvent.click(screen.getByTestId('pomodoro-custom-start'));
+    expect(screen.getByTestId('pomodoro-trigger')).toHaveTextContent('30:00');
+    expect(screen.getByTestId('island-notice-banner')).toHaveTextContent(
+      /Bắt đầu nhịp học tập 30 phút/i,
+    );
+
+    // Mở lại popover khi đang chạy: kiểm tra 3 nút Tạm dừng / +5 phút / Đặt lại
+    fireEvent.click(screen.getByTestId('pomodoro-trigger'));
+    expect(screen.getByTestId('pomodoro-active-controls')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '+5 phút' }));
+    expect(screen.getByTestId('pomodoro-trigger')).toHaveTextContent('35:00');
+    fireEvent.click(screen.getByRole('button', { name: 'Đặt lại' }));
+
+    // Bật mốc 5 phút (Nghỉ ngơi) và đếm ngược đến hoàn tất
+    fireEvent.click(screen.getByTestId('pomodoro-trigger'));
     fireEvent.click(screen.getByRole('button', { name: /Nghỉ ngơi/i }));
     expect(screen.getByTestId('pomodoro-trigger')).toHaveTextContent('05:00');
 

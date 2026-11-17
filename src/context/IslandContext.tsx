@@ -70,6 +70,7 @@ export interface IslandContextValue {
   readonly setRoutePathname: (pathname: string) => void;
   readonly pomodoro: IslandPomodoroState;
   readonly startPomodoro: (minutes: number, presetLabel?: string) => void;
+  readonly addPomodoroMinutes: (deltaMinutes: number) => void;
   readonly pausePomodoro: () => void;
   readonly resumePomodoro: () => void;
   readonly resetPomodoro: () => void;
@@ -112,6 +113,7 @@ const DEFAULT_ISLAND_CONTEXT: IslandContextValue = {
   setRoutePathname: () => {},
   pomodoro: DEFAULT_POMODORO,
   startPomodoro: () => {},
+  addPomodoroMinutes: () => {},
   pausePomodoro: () => {},
   resumePomodoro: () => {},
   resetPomodoro: () => {},
@@ -450,8 +452,9 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, [pomodoro.status, triggerIslandNotice]);
 
   const startPomodoro = useCallback(
-    (minutes: number, presetLabel = 'Tập trung') => {
-      const totalSeconds = Math.max(60, Math.round(minutes * 60));
+    (minutes: number, presetLabel = 'Tùy chỉnh') => {
+      const safeMinutes = Math.max(1, Math.min(180, Math.round(minutes)));
+      const totalSeconds = safeMinutes * 60;
       setPomodoro({
         status: 'running',
         totalSeconds,
@@ -459,7 +462,27 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
         presetLabel,
       });
       triggerIslandNotice({
-        text: `Bắt đầu nhịp học ${minutes} phút (${presetLabel})`,
+        text: `⏳ Bắt đầu nhịp học tập ${safeMinutes} phút (${presetLabel})`,
+        type: 'timer',
+      });
+    },
+    [triggerIslandNotice],
+  );
+
+  const addPomodoroMinutes = useCallback(
+    (deltaMinutes: number) => {
+      const deltaSeconds = Math.round(deltaMinutes * 60);
+      if (deltaSeconds <= 0) return;
+      setPomodoro((prev) => {
+        if (prev.status === 'idle') return prev;
+        return {
+          ...prev,
+          totalSeconds: prev.totalSeconds + deltaSeconds,
+          remainingSeconds: prev.remainingSeconds + deltaSeconds,
+        };
+      });
+      triggerIslandNotice({
+        text: `⏳ Đã cộng thêm ${deltaMinutes} phút vào nhịp học tập`,
         type: 'timer',
       });
     },
@@ -509,6 +532,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       setRoutePathname,
       pomodoro,
       startPomodoro,
+      addPomodoroMinutes,
       pausePomodoro,
       resumePomodoro,
       resetPomodoro,
@@ -532,6 +556,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       setRoutePathname,
       pomodoro,
       startPomodoro,
+      addPomodoroMinutes,
       pausePomodoro,
       resumePomodoro,
       resetPomodoro,
