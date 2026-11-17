@@ -14,6 +14,17 @@ import {
   spawnShootingStar,
 } from '@/components/home/heroAtmosphereEngine';
 import {
+  angleLerp,
+  ARMILLARY_RINGS,
+  BLUEPRINT_SYMBOLS,
+  DUAL_EDGES,
+  formatAlidadeAngle,
+  HARMONIC_WAVE_POINTS,
+  ICO_FACES,
+  ICO_VERTICES,
+  SPHERICAL_WAVE_TRIG,
+} from '@/components/home/heroSculptureGeometry';
+import {
   buildHeroTerrainGeometry,
   buildHeroTerrainLayerCache,
 } from '@/components/home/heroTerrainBuilder';
@@ -741,6 +752,43 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByTestId('heritage-stack-card-2'));
       expect(await screen.findByText(new RegExp(`02 / ${expectedTotal}`))).toBeInTheDocument();
       expect(screen.getAllByText(HERITAGE_ARTWORKS[1]!.title).length).toBeGreaterThan(0);
+    });
+
+    it('heroSculptureGeometry: tạo đúng Nhị thập diện đều, 30 cạnh đối ngẫu, 4 hạt khoáng thạch và Alidade angleLerp', () => {
+      expect(ICO_VERTICES).toHaveLength(12);
+      expect(ICO_FACES).toHaveLength(20);
+      expect(DUAL_EDGES).toHaveLength(30);
+      for (const [fA, fB] of DUAL_EDGES) {
+        expect(fA).toBeLessThan(fB);
+        const triA = ICO_FACES[fA]!;
+        const triB = ICO_FACES[fB]!;
+        expect(triA.filter((v) => triB.includes(v)).length).toBe(2);
+      }
+
+      expect(SPHERICAL_WAVE_TRIG).toHaveLength(HARMONIC_WAVE_POINTS);
+      expect(HARMONIC_WAVE_POINTS).toBe(120);
+      expect(BLUEPRINT_SYMBOLS.map((s) => s.symbol)).toEqual([
+        '∫',
+        '∂',
+        '∑',
+        'π',
+        '∆',
+        'φ',
+        '∀',
+        '≃',
+      ]);
+      expect(ARMILLARY_RINGS.map((r) => r.cometColor)).toEqual([
+        '#9C7A4C',
+        '#49768F',
+        '#3B7A65',
+        '#9E6356',
+      ]);
+
+      const wrapped = angleLerp(Math.PI - 0.1, -Math.PI + 0.1, 0.5);
+      expect(Math.abs(Math.sin(wrapped))).toBeCloseTo(0, 5);
+      expect(Math.cos(wrapped)).toBeLessThan(-0.99);
+      expect(formatAlidadeAngle((3 * Math.PI) / 4)).toBe('135° · 3π/4');
+      expect(formatAlidadeAngle(Math.PI / 2)).toBe('90° · π/2');
     });
   });
 });

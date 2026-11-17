@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { routes } from '@/app/router';
@@ -100,9 +100,12 @@ describe('App routing smoke test', () => {
     expect(screen.queryByText(/Mô phỏng 120 FPS/i)).not.toBeInTheDocument();
     const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
     expect(ringsContainer).toBeInTheDocument();
-    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'dual-platonic-astrolabe-v3');
+    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'dual-platonic-astrolabe-v4');
+    expect(ringsContainer).toHaveAttribute('data-dual-locked', 'false');
+    fireEvent.click(ringsContainer);
+    expect(ringsContainer).toHaveAttribute('data-dual-locked', 'true');
     const glyphs = screen.getByTestId('hero-math-parallax-glyphs');
-    for (const symbol of ['∫', '∂', '∑', 'π', '∆', 'φ']) {
+    for (const symbol of ['∫', '∂', '∑', 'π', '∆', 'φ', '∀', '≃']) {
       expect(glyphs).toHaveTextContent(symbol);
     }
 
