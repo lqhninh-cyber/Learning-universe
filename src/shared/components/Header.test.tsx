@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { IslandProvider, useIsland } from '@/context/IslandContext';
 import { writeLessonReadingPosition } from '@/context/island-helpers';
-import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
+import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { AuthProvider } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import { TooltipProvider } from '@/shared/ui';
@@ -200,31 +200,57 @@ describe('Header — 3-Compartment Editorial Masthead & Context Morphing', () =>
     expect(previewCard).toHaveTextContent('48%');
   });
 
-  it('hiển thị viên thuốc điều khiển đọc bài đồng nhất (A-/A+, Sáng/Tối, Zen) và nút tìm kiếm thu gọn trên trang bài học', () => {
+  function ReaderSettingsSyncProbe() {
+    const { theme, fontSize, isZenMode } = useReadingSettings();
+    return (
+      <div data-testid="reading-sync-probe">
+        <span data-testid="probe-theme">{theme}</span>
+        <span data-testid="probe-size">{fontSize}</span>
+        <span data-testid="probe-zen">{String(isZenMode)}</span>
+      </div>
+    );
+  }
+
+  it('hiển thị viên thuốc điều khiển đọc bài đồng nhất (A-/A+, Sáng/Tối, Dịu mắt, Zen) và đồng bộ 2 chiều với ReadingSettingsContext', () => {
     renderHeaderAt('/learning-space');
     expect(screen.queryByTestId('quick-reader-controls')).not.toBeInTheDocument();
     expect(screen.queryByTestId('compact-search-trigger')).not.toBeInTheDocument();
 
-    renderHeaderAt('/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin');
+    renderHeaderAt(
+      '/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin',
+      <ReaderSettingsSyncProbe />,
+    );
     expect(screen.getByTestId('quick-reader-controls')).toBeInTheDocument();
     expect(screen.getByTestId('compact-search-trigger')).toBeInTheDocument();
     expect(screen.getByTestId('quick-reader-scale-badge')).toHaveTextContent('100%');
+    expect(screen.getByTestId('probe-size')).toHaveTextContent('base');
 
     const incBtns = screen.getAllByRole('button', { name: 'Tăng cỡ chữ' });
     fireEvent.click(incBtns[0]!);
     expect(screen.getByTestId('quick-reader-scale-badge')).toHaveTextContent('105%');
+    expect(screen.getByTestId('probe-size')).toHaveTextContent('lg');
 
     const themeBtn = screen.getByTestId('theme-mode-toggle');
     expect(themeBtn).toHaveAttribute('aria-pressed', 'false');
     fireEvent.click(themeBtn);
     expect(themeBtn).toHaveAttribute('aria-pressed', 'true');
     expect(localStorage.getItem('lu_reading_theme')).toBe('dark');
+    expect(screen.getByTestId('probe-theme')).toHaveTextContent('dark');
+
+    // Bật Chế độ Dịu mắt khi đang ở Dark Mode sẽ tự động đưa về Sáng + gắn data-eye-comfort
+    const eyeComfortBtn = screen.getByTestId('eye-comfort-toggle');
+    expect(eyeComfortBtn).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(eyeComfortBtn);
+    expect(eyeComfortBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(document.documentElement.getAttribute('data-eye-comfort')).toBe('true');
+    expect(screen.getByTestId('probe-theme')).toHaveTextContent('light');
 
     const zenBtn = screen.getByTestId('zen-mode-toggle');
     expect(zenBtn).toHaveAttribute('aria-pressed', 'false');
     fireEvent.click(zenBtn);
     expect(zenBtn).toHaveAttribute('aria-pressed', 'true');
     expect(localStorage.getItem('lu_zen_mode')).toBe('true');
+    expect(screen.getByTestId('probe-zen')).toHaveTextContent('true');
   });
 
   it('vận hành đồng hồ Pomodoro, bắn thông báo đồng tâm trên Island và tự đóng sau 2200ms', async () => {

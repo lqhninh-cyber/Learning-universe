@@ -1,4 +1,4 @@
-import { Maximize2, Minimize2, Moon, Sun } from 'lucide-react';
+import { Eye, Maximize2, Minimize2, Moon, Sun } from 'lucide-react';
 import type { FC } from 'react';
 import { FONT_SCALE_MAX, FONT_SCALE_MIN } from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
@@ -12,18 +12,34 @@ export interface HeaderQuickReaderControlsProps {
  * Viên Thuốc Điều Khiển Đọc Bài Đồng Nhất trên thanh Island đầu trang:
  * - Điều chỉnh cỡ chữ: A- · % hiện tại · A+
  * - Chuyển chế độ Sáng / Tối (Phím D)
+ * - Chế độ Dịu mắt (Giấy Dó ấm #EAE8E1 / #F5F3EE)
  * - Bật / tắt Chế độ tập trung Zen thu gọn 2 cột bên (Phím Z)
  */
 export const HeaderQuickReaderControls: FC<HeaderQuickReaderControlsProps> = ({
   isDark = false,
 }) => {
-  const { readerSettings, increaseFontScale, decreaseFontScale, toggleDarkMode, toggleZenMode } =
-    useIsland();
+  const {
+    readerSettings,
+    increaseFontScale,
+    decreaseFontScale,
+    toggleEyeComfortWarmth,
+    setDarkMode,
+    toggleDarkMode,
+    toggleZenMode,
+  } = useIsland();
 
   const scalePercent = Math.round(readerSettings.fontScale * 100);
   const isMin = readerSettings.fontScale <= FONT_SCALE_MIN;
   const isMax = readerSettings.fontScale >= FONT_SCALE_MAX;
   const darkActive = isDark || readerSettings.isDarkMode;
+  const eyeComfortActive = readerSettings.eyeComfortWarmth && !readerSettings.isDarkMode;
+
+  const handleToggleEyeComfort = () => {
+    if (!readerSettings.eyeComfortWarmth && readerSettings.isDarkMode) {
+      setDarkMode(false);
+    }
+    toggleEyeComfortWarmth();
+  };
 
   return (
     <div
@@ -111,7 +127,27 @@ export const HeaderQuickReaderControls: FC<HeaderQuickReaderControlsProps> = ({
         <span className="hidden xl:inline">{readerSettings.isDarkMode ? 'Sáng' : 'Tối'}</span>
       </button>
 
-      {/* 3. Chế độ tập trung Zen (Phím Z) */}
+      {/* 3. Chế độ Dịu mắt (Giấy Dó ấm) */}
+      <button
+        type="button"
+        data-testid="eye-comfort-toggle"
+        onClick={handleToggleEyeComfort}
+        aria-pressed={eyeComfortActive}
+        aria-label={eyeComfortActive ? 'Tắt chế độ Dịu mắt' : 'Bật chế độ Dịu mắt'}
+        title="Chế độ Dịu mắt (Giấy Dó ấm)"
+        className={cn(
+          'inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
+          eyeComfortActive
+            ? 'bg-[#7A623C] text-[#FAFBF9] shadow-2xs'
+            : darkActive
+              ? 'text-[#B8C7C2] hover:bg-white/15 hover:text-[#EBF0EE]'
+              : 'text-[#4A5D58] hover:bg-[#FAFBF9] hover:text-[#182624]',
+        )}
+      >
+        <Eye className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+      </button>
+
+      {/* 4. Chế độ tập trung Zen (Phím Z) */}
       <button
         type="button"
         data-testid="zen-mode-toggle"

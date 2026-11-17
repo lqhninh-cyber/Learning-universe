@@ -214,6 +214,22 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     return false;
   });
 
+  const isDarkModeRef = useRef(isDarkMode);
+  const isZenModeRef = useRef(isZenMode);
+  const eyeComfortWarmthRef = useRef(eyeComfortWarmth);
+
+  useEffect(() => {
+    isDarkModeRef.current = isDarkMode;
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    isZenModeRef.current = isZenMode;
+  }, [isZenMode]);
+
+  useEffect(() => {
+    eyeComfortWarmthRef.current = eyeComfortWarmth;
+  }, [eyeComfortWarmth]);
+
   const [pomodoro, setPomodoro] = useState<IslandPomodoroState>(DEFAULT_POMODORO);
 
   useEffect(() => {
@@ -271,7 +287,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     applyFontScale(fontScale - FONT_SCALE_STEP);
   }, [applyFontScale, fontScale]);
 
-  // Đồng bộ hai chiều khi cỡ chữ được chỉnh từ FloatingZenToolbar hoặc HeaderAccountMenu
+  // Đồng bộ hai chiều khi cỡ chữ được chỉnh từ ReadingSettingsContext hoặc HeaderAccountMenu
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const handleReadingSizeEvent = (event: Event) => {
@@ -287,6 +303,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
             // Bỏ qua lỗi storage
           }
           if (typeof document !== 'undefined') {
+            document.documentElement.setAttribute('data-reading-size', tier);
             document.documentElement.style.setProperty('--lu-reading-scale', String(mapped));
           }
           return mapped;
@@ -303,6 +320,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, [fontScale]);
 
   const setEyeComfortWarmth = useCallback((enabled: boolean) => {
+    eyeComfortWarmthRef.current = enabled;
     setEyeComfortWarmthState(enabled);
     try {
       localStorage.setItem(EYE_COMFORT_STORAGE_KEY, String(enabled));
@@ -312,15 +330,14 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, []);
 
   const toggleEyeComfortWarmth = useCallback(() => {
-    setEyeComfortWarmthState((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(EYE_COMFORT_STORAGE_KEY, String(next));
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-      return next;
-    });
+    const next = !eyeComfortWarmthRef.current;
+    eyeComfortWarmthRef.current = next;
+    setEyeComfortWarmthState(next);
+    try {
+      localStorage.setItem(EYE_COMFORT_STORAGE_KEY, String(next));
+    } catch {
+      // Bỏ qua lỗi storage
+    }
   }, []);
 
   useEffect(() => {
@@ -336,6 +353,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, [eyeComfortWarmth]);
 
   const setDarkMode = useCallback((dark: boolean) => {
+    isDarkModeRef.current = dark;
     setIsDarkModeState(dark);
     const nextTheme = dark ? 'dark' : 'light';
     try {
@@ -349,21 +367,18 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, []);
 
   const toggleDarkMode = useCallback(() => {
-    setIsDarkModeState((prev) => {
-      const next = !prev;
-      const nextTheme = next ? 'dark' : 'light';
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-      if (typeof window !== 'undefined') {
-        queueMicrotask(() => {
-          window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: nextTheme }));
-        });
-      }
-      return next;
-    });
+    const next = !isDarkModeRef.current;
+    isDarkModeRef.current = next;
+    setIsDarkModeState(next);
+    const nextTheme = next ? 'dark' : 'light';
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // Bỏ qua lỗi storage
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: nextTheme }));
+    }
   }, []);
 
   useEffect(() => {
@@ -371,7 +386,9 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     const handleThemeEvent = (event: Event) => {
       const custom = event as CustomEvent<string>;
       if (custom.detail === 'dark' || custom.detail === 'light' || custom.detail === 'sepia') {
-        setIsDarkModeState(custom.detail === 'dark');
+        const nextDark = custom.detail === 'dark';
+        isDarkModeRef.current = nextDark;
+        setIsDarkModeState(nextDark);
       }
     };
     window.addEventListener('lu_reading_theme_change', handleThemeEvent);
@@ -379,6 +396,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, []);
 
   const setZenMode = useCallback((zen: boolean) => {
+    isZenModeRef.current = zen;
     setIsZenModeState(zen);
     try {
       localStorage.setItem(ZEN_MODE_STORAGE_KEY, String(zen));
@@ -391,20 +409,17 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, []);
 
   const toggleZenMode = useCallback(() => {
-    setIsZenModeState((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(ZEN_MODE_STORAGE_KEY, String(next));
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-      if (typeof window !== 'undefined') {
-        queueMicrotask(() => {
-          window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: next }));
-        });
-      }
-      return next;
-    });
+    const next = !isZenModeRef.current;
+    isZenModeRef.current = next;
+    setIsZenModeState(next);
+    try {
+      localStorage.setItem(ZEN_MODE_STORAGE_KEY, String(next));
+    } catch {
+      // Bỏ qua lỗi storage
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: next }));
+    }
   }, []);
 
   useEffect(() => {
@@ -412,6 +427,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     const handleZenEvent = (event: Event) => {
       const custom = event as CustomEvent<boolean>;
       if (typeof custom.detail === 'boolean') {
+        isZenModeRef.current = custom.detail;
         setIsZenModeState(custom.detail);
       }
     };

@@ -7,9 +7,13 @@ import {
   resolveLessonShortcut,
   type LessonLocation,
 } from '@/content-runtime';
-import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
+import {
+  fontScaleToReadingSize,
+  getIslandSubjectByIdOrSlug,
+  readingSizeToFontScale,
+} from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
-import { type ReadingFontSize, useReadingSettings } from '@/context/ReadingSettingsContext';
+import { type ReadingFontSize } from '@/context/ReadingSettingsContext';
 import { useAuth } from '@/features/auth';
 import { type LastVisitedEntry, useLearningStore } from '@/features/learning';
 import { CommandPalette } from '@/features/search';
@@ -109,9 +113,17 @@ export const Header: FC<HeaderProps> = ({
   const enableLearnerMode = useLearningStore((state) => state.enableLearnerMode);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
 
-  const { fontSize, setFontSize, increaseFontSize, decreaseFontSize } = useReadingSettings();
-
-  const { activeNotice, activeSubject, setRoutePathname, dismissIslandNotice } = useIsland();
+  const {
+    activeNotice,
+    activeSubject,
+    readerSettings,
+    setFontScale,
+    increaseFontScale,
+    decreaseFontScale,
+    setRoutePathname,
+    dismissIslandNotice,
+  } = useIsland();
+  const activeFontSize = fontScaleToReadingSize(readerSettings.fontScale);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
@@ -168,7 +180,15 @@ export const Header: FC<HeaderProps> = ({
     return () => window.removeEventListener('lu_reading_theme_change', handleThemeChange);
   }, []);
 
-  const activeTheme = propReadingTheme ?? (isLessonPage ? readingTheme : 'light');
+  const activeTheme =
+    propReadingTheme ??
+    (isLessonPage
+      ? readerSettings.isDarkMode
+        ? 'dark'
+        : readingTheme === 'dark'
+          ? 'light'
+          : readingTheme
+      : 'light');
   const isDark = propDarkLesson ?? activeTheme === 'dark';
   const isSepia = activeTheme === 'sepia';
 
@@ -259,18 +279,18 @@ export const Header: FC<HeaderProps> = ({
   }, []);
 
   const handleSelectFontSize = (scale: ReadingFontSize) => {
-    setFontSize(scale);
+    setFontScale(readingSizeToFontScale(scale));
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-reading-size', scale);
     }
   };
 
   const handleDecreaseFontSize = () => {
-    decreaseFontSize();
+    decreaseFontScale();
   };
 
   const handleIncreaseFontSize = () => {
-    increaseFontSize();
+    increaseFontScale();
   };
 
   const handleSignOut = async () => {
@@ -586,7 +606,7 @@ export const Header: FC<HeaderProps> = ({
             isAdmin={isAdmin}
             isUserLoggedIn={isUserLoggedIn}
             completedCount={completedCount}
-            fontSize={fontSize}
+            fontSize={activeFontSize}
             onSelectFontSize={handleSelectFontSize}
             onOpenAuthModal={openAuthModal}
             onEnableLearnerMode={enableLearnerMode}
@@ -599,7 +619,7 @@ export const Header: FC<HeaderProps> = ({
             onOpenChange={setIsMobileMenuOpen}
             isDark={isDark}
             isLessonPage={isLessonPage}
-            fontSize={fontSize}
+            fontSize={activeFontSize}
             onDecreaseFontSize={handleDecreaseFontSize}
             onIncreaseFontSize={handleIncreaseFontSize}
             quickResume={quickResume}

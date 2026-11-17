@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FC,
   type ReactNode,
@@ -132,7 +133,24 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     return false;
   });
 
+  const themeRef = useRef(theme);
+  const fontSizeRef = useRef(fontSize);
+  const isZenModeRef = useRef(isZenMode);
+
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    fontSizeRef.current = fontSize;
+  }, [fontSize]);
+
+  useEffect(() => {
+    isZenModeRef.current = isZenMode;
+  }, [isZenMode]);
+
   const setTheme = useCallback((nextTheme: ReadingTheme) => {
+    themeRef.current = nextTheme;
     setThemeState(nextTheme);
     try {
       localStorage.setItem('lu_reading_theme', nextTheme);
@@ -145,18 +163,17 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      try {
-        localStorage.setItem('lu_reading_theme', next);
-      } catch {
-        // Ignore
-      }
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: next }));
-      }
-      return next;
-    });
+    const next: ReadingTheme = themeRef.current === 'dark' ? 'light' : 'dark';
+    themeRef.current = next;
+    setThemeState(next);
+    try {
+      localStorage.setItem('lu_reading_theme', next);
+    } catch {
+      // Ignore
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('lu_reading_theme_change', { detail: next }));
+    }
   }, []);
 
   // Đồng bộ class 'dark' và attribute 'data-theme' trên <html> (document.documentElement)
@@ -180,6 +197,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     const handler = (e: Event) => {
       const custom = e as CustomEvent<ReadingTheme>;
       if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
+        themeRef.current = custom.detail;
         setThemeState(custom.detail);
       }
     };
@@ -209,6 +227,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
   }, []);
 
   const setFontSize = useCallback((size: ReadingFontSize) => {
+    fontSizeRef.current = size;
     setFontSizeState(size);
     try {
       localStorage.setItem('lu_reading_font_size', size);
@@ -223,49 +242,45 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
   }, []);
 
   const increaseFontSize = useCallback(() => {
-    setFontSizeState((prev) => {
-      const idx = FONT_SIZE_LEVELS.indexOf(prev);
-      if (idx >= 0 && idx < FONT_SIZE_LEVELS.length - 1) {
-        const next = FONT_SIZE_LEVELS[idx + 1];
-        if (next) {
-          try {
-            localStorage.setItem('lu_reading_font_size', next);
-          } catch {
-            // Ignore
-          }
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(
-              new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: next }),
-            );
-          }
-          return next;
+    const idx = FONT_SIZE_LEVELS.indexOf(fontSizeRef.current);
+    if (idx >= 0 && idx < FONT_SIZE_LEVELS.length - 1) {
+      const next = FONT_SIZE_LEVELS[idx + 1];
+      if (next) {
+        fontSizeRef.current = next;
+        setFontSizeState(next);
+        try {
+          localStorage.setItem('lu_reading_font_size', next);
+        } catch {
+          // Ignore
+        }
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: next }),
+          );
         }
       }
-      return prev;
-    });
+    }
   }, []);
 
   const decreaseFontSize = useCallback(() => {
-    setFontSizeState((prev) => {
-      const idx = FONT_SIZE_LEVELS.indexOf(prev);
-      if (idx > 0) {
-        const next = FONT_SIZE_LEVELS[idx - 1];
-        if (next) {
-          try {
-            localStorage.setItem('lu_reading_font_size', next);
-          } catch {
-            // Ignore
-          }
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(
-              new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: next }),
-            );
-          }
-          return next;
+    const idx = FONT_SIZE_LEVELS.indexOf(fontSizeRef.current);
+    if (idx > 0) {
+      const next = FONT_SIZE_LEVELS[idx - 1];
+      if (next) {
+        fontSizeRef.current = next;
+        setFontSizeState(next);
+        try {
+          localStorage.setItem('lu_reading_font_size', next);
+        } catch {
+          // Ignore
+        }
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent<ReadingFontSize>('lu_reading_font_size_change', { detail: next }),
+          );
         }
       }
-      return prev;
-    });
+    }
   }, []);
 
   // Đồng bộ ngược khi Island Quick Reader Controls thay đổi fontScale
@@ -275,6 +290,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
       const custom = event as CustomEvent<ReadingFontSize>;
       const tier = custom.detail;
       if (tier === 'sm' || tier === 'base' || tier === 'lg' || tier === 'xl') {
+        fontSizeRef.current = tier;
         setFontSizeState((prev) => (prev === tier ? prev : tier));
       }
     };
@@ -283,6 +299,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
   }, []);
 
   const setZenMode = useCallback((zen: boolean) => {
+    isZenModeRef.current = zen;
     setZenModeState(zen);
     try {
       localStorage.setItem('lu_zen_mode', String(zen));
@@ -295,18 +312,17 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
   }, []);
 
   const toggleZenMode = useCallback(() => {
-    setZenModeState((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem('lu_zen_mode', String(next));
-      } catch {
-        // Ignore
-      }
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: next }));
-      }
-      return next;
-    });
+    const next = !isZenModeRef.current;
+    isZenModeRef.current = next;
+    setZenModeState(next);
+    try {
+      localStorage.setItem('lu_zen_mode', String(next));
+    } catch {
+      // Ignore
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent<boolean>('lu_zen_mode_change', { detail: next }));
+    }
   }, []);
 
   // Đồng bộ chế độ tập trung Zen từ IslandContext
@@ -315,6 +331,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     const handler = (event: Event) => {
       const custom = event as CustomEvent<boolean>;
       if (typeof custom.detail === 'boolean') {
+        isZenModeRef.current = custom.detail;
         setZenModeState((prev) => (prev === custom.detail ? prev : custom.detail));
       }
     };

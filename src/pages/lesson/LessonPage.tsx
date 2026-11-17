@@ -173,7 +173,7 @@ function LessonPageContent() {
   const { theme, fontSize, typographyClasses } = useReadingSettings();
   const { readerSettings, toggleDarkMode, toggleZenMode, setZenMode, triggerIslandNotice } =
     useIsland();
-  const readingTheme = readerSettings.isDarkMode ? 'dark' : theme;
+  const readingTheme = readerSettings.isDarkMode ? 'dark' : theme === 'dark' ? 'light' : theme;
   const isEyeComfort =
     readerSettings.eyeComfortWarmth && readingTheme !== 'dark' && readingTheme !== 'sepia';
   const isZenMode = readerSettings.isZenMode;
@@ -422,7 +422,7 @@ function LessonPageContent() {
         className={cn(
           'mx-auto w-full pb-16 transition-all duration-300',
           readingTheme === 'dark'
-            ? 'dark bg-[#121517] text-[#E2E8F0]'
+            ? 'dark bg-[#0E1A15] text-[#E6ECE7]'
             : readingTheme === 'sepia'
               ? 'bg-[#F4EEDF] text-[#231F18]'
               : isEyeComfort
@@ -459,7 +459,7 @@ function LessonPageContent() {
         <div
           className={cn(
             'flex flex-col justify-between gap-4 border-b pb-4 transition-all duration-300 lg:flex-row lg:items-center',
-            readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#D8E0DD]',
+            readingTheme === 'dark' ? 'border-[#2A4035]' : 'border-[#D8E0DD]',
             isFocusMode && 'border-transparent pb-1',
           )}
         >
@@ -472,7 +472,7 @@ function LessonPageContent() {
                 className={cn(
                   'hidden items-center gap-1.5 text-xs shadow-2xs transition-colors lg:inline-flex',
                   readingTheme === 'dark'
-                    ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0] hover:bg-[#242C33]'
+                    ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7] hover:bg-[#1E3B2E]'
                     : 'border-stone-300 bg-stone-50/90 text-stone-700 hover:text-stone-900',
                 )}
                 title="Mở lại danh sách bài học (Thanh bên)"
@@ -481,7 +481,7 @@ function LessonPageContent() {
                 <PanelLeftOpen
                   className={cn(
                     'h-4 w-4',
-                    readingTheme === 'dark' ? 'text-[#C89738]' : 'text-subject-700',
+                    readingTheme === 'dark' ? 'text-[#E5C378]' : 'text-subject-700',
                   )}
                   aria-hidden="true"
                 />
@@ -609,7 +609,7 @@ function LessonPageContent() {
                 className={cn(
                   'mb-6 flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs shadow-2xs',
                   readingTheme === 'dark'
-                    ? 'border-[#2A323A] bg-[#181C20] text-[#E2E8F0]'
+                    ? 'border-[#2A4035] bg-[#12241C] text-[#E6ECE7]'
                     : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#182624]',
                 )}
               >
@@ -617,7 +617,7 @@ function LessonPageContent() {
                   <BookOpen
                     className={cn(
                       'h-3.5 w-3.5',
-                      readingTheme === 'dark' ? 'text-[#C89738]' : 'text-[#2D5266]',
+                      readingTheme === 'dark' ? 'text-[#E5C378]' : 'text-[#2D5266]',
                     )}
                     aria-hidden="true"
                   />
@@ -627,7 +627,7 @@ function LessonPageContent() {
                       className={cn(
                         'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
                         readingTheme === 'dark'
-                          ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
+                          ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7]'
                           : 'border-[#D8E0DD] bg-[#E7ECEA] text-[#182624]',
                       )}
                     >
@@ -638,8 +638,8 @@ function LessonPageContent() {
                       className={cn(
                         'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
                         readingTheme === 'dark'
-                          ? 'border-[#2A323A] bg-[#20252B] text-[#E2E8F0]'
-                          : 'border-[#CFDADB] bg-stone-100 text-[#29383D]',
+                          ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7]'
+                          : 'border-[#D8E0DD] bg-[#E7ECEA] text-[#182624]',
                       )}
                     >
                       Esc
@@ -653,8 +653,8 @@ function LessonPageContent() {
                   className={cn(
                     'cursor-pointer font-semibold underline',
                     readingTheme === 'dark'
-                      ? 'text-[#C89738] hover:text-[#DFAD4D]'
-                      : 'text-[#29383D] hover:text-[#3F6570]',
+                      ? 'text-[#E5C378] hover:text-[#F6D383]'
+                      : 'text-[#182624] hover:text-[#2D5266]',
                   )}
                 >
                   Thoát tập trung (Esc)
@@ -675,7 +675,7 @@ function LessonPageContent() {
                   ? 'rounded-3xl border border-[#D8D3C6] bg-[#F5F3EE] text-[#182624] shadow-[var(--shadow-editorial)]'
                   : 'rounded-3xl border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624] shadow-[var(--shadow-editorial)]',
                 readingTheme === 'dark' &&
-                  'dark border-[#243833] bg-[#162421] text-[#ECE8DF] shadow-none',
+                  'dark border-[#2A4035] bg-[#12241C] text-[#E6ECE7] shadow-none',
                 readingTheme === 'sepia' &&
                   'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18] shadow-sm',
                 fontSize === 'lg' && 'reader-scale-lg',
@@ -697,14 +697,14 @@ function LessonPageContent() {
                       className={cn(
                         'clear-both mt-3 flex flex-wrap items-center gap-2.5 rounded-xl border p-3 text-xs md:text-sm',
                         readingTheme === 'dark'
-                          ? 'border-[#2A323A] bg-[#20252B]/80 text-[#E2E8F0]'
+                          ? 'border-[#2A4035] bg-[#182E24]/80 text-[#E6ECE7]'
                           : 'border-[#D8E0DD] bg-[#E7ECEA]/70 text-[#182624]',
                       )}
                     >
                       <div
                         className={cn(
                           'flex shrink-0 items-center gap-1.5 font-semibold',
-                          readingTheme === 'dark' ? 'text-[#E2E8F0]' : 'text-[#182624]',
+                          readingTheme === 'dark' ? 'text-[#E6ECE7]' : 'text-[#182624]',
                         )}
                       >
                         <Link2
@@ -737,7 +737,7 @@ function LessonPageContent() {
                               className={cn(
                                 'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs shadow-2xs transition-colors',
                                 readingTheme === 'dark'
-                                  ? 'border border-[#2A323A] bg-[#14171A] font-medium text-[#C89738] hover:border-[#C89738] hover:bg-[#20252B]'
+                                  ? 'border border-[#2A4035] bg-[#091510] font-medium text-[#E5C378] hover:border-[#E5C378] hover:bg-[#182E24]'
                                   : 'border border-[#D8E0DD] bg-[#FAFBF9] font-semibold text-[#182624] hover:border-[#2D5266] hover:bg-white hover:text-[#2D5266]',
                               )}
                             >
@@ -763,7 +763,7 @@ function LessonPageContent() {
               <div
                 className={cn(
                   'clear-both mb-5 flex flex-wrap items-center gap-2.5 border-b pb-4',
-                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-stone-200/60',
+                  readingTheme === 'dark' ? 'border-[#2A4035]' : 'border-stone-200/60',
                 )}
               >
                 <LessonActionBar
@@ -821,14 +821,14 @@ function LessonPageContent() {
               <footer
                 className={cn(
                   'mt-10 border-t pt-6 print:hidden',
-                  readingTheme === 'dark' ? 'border-[#2A323A]' : 'border-[#D8E0DD]',
+                  readingTheme === 'dark' ? 'border-[#2A4035]' : 'border-[#D8E0DD]',
                 )}
               >
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                   <p
                     className={cn(
                       'text-xs',
-                      readingTheme === 'dark' ? 'text-[#94A3B8]' : 'text-[var(--text-muted)]',
+                      readingTheme === 'dark' ? 'text-[#A7B5AC]' : 'text-[var(--text-muted)]',
                     )}
                   >
                     Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.
@@ -854,7 +854,7 @@ function LessonPageContent() {
               isZenMode
                 ? 'pointer-events-none m-0 hidden w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
                 : 'translate-x-0 opacity-100',
-              readingTheme === 'dark' ? 'text-[#94A3B8]' : '',
+              readingTheme === 'dark' ? 'text-[#A7B5AC]' : '',
             )}
             role="complementary"
             aria-label="Cột biên tập lề và mục lục"

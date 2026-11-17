@@ -60,33 +60,32 @@
   --lake-accent: #e5b25d;
   --lotus-rose: #d9778d;
 
-  /* Scholar Suite & Backward-compatible aliases */
-  --bg-canvas: #eaf0f1;
-  --bg-surface: #f7fafa;
-  --bg-muted: #cfdadb;
-  --border-hairline: #cfdadb;
-  --text-muted: #55676b;
-  --accent-primary: #3f6570;
-  --accent-verandah: #5e786d;
-  --accent-wood: #92714f;
-  --accent-interactive: #3f6570;
+  /* Compatibility aliases (Đồng bộ Bạch Ngọc Khoáng Thạch) */
+  --bg-canvas: #f2f4f3;
+  --bg-muted: #e7ecea;
+  --border-hairline: #d8e0dd;
+  --accent-primary: #2d5266;
+  --accent-verandah: #3b7a65;
+  --accent-wood: #9e845a;
+  --accent-interactive: #2d5266;
 
   /* Scholar Suite aliases */
-  --scholar-bg: #eaf0f1;
-  --scholar-surface: #f7fafa;
-  --scholar-text: #29383d;
-  --scholar-muted: #55676b;
-  --scholar-accent: #3f6570;
-  --scholar-hairline: #cfdadb;
+  --scholar-bg: #f2f4f3;
+  --scholar-surface: #fafbf9;
+  --scholar-text: #182624;
+  --scholar-muted: #4a5d58;
+  --scholar-accent: #2d5266;
+  --scholar-hairline: #d8e0dd;
 }
 
 .dark,
 [data-theme='dark'],
 [data-reading-theme='dark'],
 [data-theme='muc-nho'] {
-  /* DARK MODE (Semantic Tokens — Đen Rêu Sơn Mài) */
+  /* DARK MODE (Đá Phiến Trầm & Đen Rêu Sơn Mài) */
   --bg-page: #0e1a15;
   --bg-surface: #12241c;
+  --bg-subtle: #182e24;
   --bg-sunken: #091510;
   --border-subtle: #2a4035;
   --border-control: #3d6151;
@@ -106,26 +105,28 @@
   --shadow-editorial: 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
   --selection-bg: #1b3d2f;
 
-  /* DARK MODE ("Mực Nho" compatibility) */
-  --bg-canvas: #12151a; /* Chàm đen mực nho */
-  --bg-surface: #1a2026; /* Phiến đá rêu trầm */
-  --bg-muted: rgba(240, 235, 225, 0.08); /* Viền kẻ hairline sáng dịu */
-  --border-hairline: rgba(240, 235, 225, 0.08);
-  --text-primary: #e2ddd5; /* Ngà sáng dịu mắt */
-  --text-secondary: #9a948b; /* Màu phụ / chú giải */
-  --text-muted: #9a948b;
-  --accent-primary: #e09f5a; /* Hổ phách ấm */
-  --accent-verandah: #7d8f4e;
-  --accent-wood: #c49e78;
-  --accent-interactive: #e09f5a;
+  /* Compatibility aliases */
+  --bg-main: #0e1a15;
+  --surface-primary: #12241c;
+  --surface-secondary: #12241c;
+  --surface-tertiary: #182e24;
+  --bg-canvas: #0e1a15;
+  --bg-muted: rgba(230, 236, 231, 0.08);
+  --border-hairline: #2a4035;
+  --text-primary: #e6ece7;
+  --text-secondary: #a7b5ac;
+  --accent-primary: #e5c378;
+  --accent-verandah: #52b788;
+  --accent-wood: #c5a262;
+  --accent-interactive: #9db8de;
 
   /* Scholar Suite aliases */
-  --scholar-bg: #12151a;
-  --scholar-surface: #1a2026;
-  --scholar-text: #e2ddd5;
-  --scholar-muted: #9a948b;
-  --scholar-accent: #e09f5a;
-  --scholar-hairline: rgba(240, 235, 225, 0.08);
+  --scholar-bg: #0e1a15;
+  --scholar-surface: #12241c;
+  --scholar-text: #e6ece7;
+  --scholar-muted: #a7b5ac;
+  --scholar-accent: #e5c378;
+  --scholar-hairline: #2a4035;
 }
 
 [data-theme='sepia'],
@@ -199,23 +200,28 @@ span.academic-dropcap {
 }
 
 /* ============================================================================
-   BẢNG MÀU "MIST BLUE & SAGE" (DESIGN SYSTEM EXPERIMENTAL TOKENS)
+   ÁNH XẠ MIST BLUE & SAGE VỀ HỆ BẠCH NGỌC KHOÁNG THẠCH THỐNG NHẤT
    ============================================================================ */
 
 [data-theme='mist-blue-sage'],
 .theme-mist-blue-sage {
-  /* Biến CSS chuẩn cho bảng màu "Mist Blue & Sage" */
-  --bg-main: #eaf0f1;
-  --surface-primary: #f7fafa;
-  --surface-secondary: #e1e9ea;
-  --surface-tertiary: #d7e1e2;
-  --primary: #3f6570;
-  --primary-hover: #345761;
-  --secondary: #5e786d;
-  --accent: #92714f;
-  --text-primary: #29383d;
-  --text-secondary: #55676b;
-  --border-subtle: #cfdadb;
+  --bg-page: #f2f4f3;
+  --bg-surface: #fafbf9;
+  --bg-subtle: #e7ecea;
+  --bg-sunken: #e7ecea;
+  --bg-main: #f2f4f3;
+  --surface-primary: #fafbf9;
+  --surface-secondary: #e7ecea;
+  --surface-tertiary: #dce4e1;
+  --primary: #2d5266;
+  --primary-hover: #234152;
+  --secondary: #4a5d58;
+  --accent: #9e845a;
+  --text-main: #182624;
+  --text-muted: #4a5d58;
+  --text-primary: #182624;
+  --text-secondary: #4a5d58;
+  --border-subtle: #d8e0dd;
 
   /* Semantic Colors */
   --success: #4f7967;
@@ -237,8 +243,7 @@ span.academic-dropcap {
   --lotus-rose: #d9778d;
 
   /* Ánh xạ tương thích cho các component học thuật dùng biến hệ thống */
-  --bg-canvas: var(--bg-main);
-  --bg-surface: var(--surface-primary);
+  --bg-canvas: var(--bg-page);
   --border-hairline: var(--border-subtle);
   --accent-primary: var(--primary);
   --accent-interactive: var(--primary);
@@ -271,52 +276,47 @@ span.academic-dropcap {
 }
 
 /* ============================================================================
-   HỆ HÒA SẮC "ĐÊM HỌC GIẢ" (FULL-VIEWPORT SCOPED DARK READING MODE)
-   Chế độ đọc chuyên sâu cách ly tuyệt đối cho bài học:
-   - Nền bao quanh Viewport: #121517
-   - Thanh Header trên cùng: #16191D (viền #2A323A, chữ #E2E8F0, hover #F8FAFC)
-   - Khung thẻ bài viết chính & Sidebar: #181C20 (viền #2A323A)
-   - Khối Metadata / Căn cứ pháp lý & Bảng ma trận: #1C2126 (ô con #14171A)
-   - Chữ chính: #E2E8F0
-   - Tiêu đề H1, H2, KaTeX: #F8FAFC font-serif font-bold
-   - Tiêu đề chương / TOC / Chú giải lề: #94A3B8
-   - Mục chọn Active: #242C33 với viền điểm nhấn #C89738
-   TUYỆT ĐỐI KHÔNG can thiệp html, body hay trang chủ.
+   HỆ HÒA SẮC "ĐÁ PHIẾN TRẦM & RÊU SƠN MÀI" (SCOPED DARK READING MODE)
+   Chế độ đọc chuyên sâu cách ly cho bài học đồng bộ với --bg-page (#0E1A15) & --bg-surface (#12241C).
    ============================================================================ */
 
 .scoped-dark-mode,
 [data-reading-theme='dark'] {
-  --reading-canvas: #121517;
-  --reading-surface: #181c20;
-  --reading-text: #e2e8f0;
-  --reading-text-muted: #94a3b8;
-  --reading-border: #2a323a;
-  --reading-accent: #c89738;
+  --reading-canvas: #0e1a15;
+  --reading-surface: #12241c;
+  --reading-text: #e6ece7;
+  --reading-text-muted: #a7b5ac;
+  --reading-border: #2a4035;
+  --reading-accent: #e5c378;
 
   /* Ghi đè biến CSS cục bộ trong phạm vi bài đọc */
-  --bg-main: #121517;
-  --surface-primary: #181c20;
-  --surface-secondary: #181c20;
-  --surface-tertiary: #20252b;
-  --bg-canvas: #121517;
-  --bg-surface: #181c20;
-  --border-subtle: #2a323a;
-  --border-hairline: #2a323a;
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #94a3b8;
-  --primary: #c89738;
-  --primary-hover: #dfad4d;
+  --bg-page: #0e1a15;
+  --bg-subtle: #182e24;
+  --bg-sunken: #091510;
+  --text-main: #e6ece7;
+  --bg-main: #0e1a15;
+  --surface-primary: #12241c;
+  --surface-secondary: #12241c;
+  --surface-tertiary: #182e24;
+  --bg-canvas: #0e1a15;
+  --bg-surface: #12241c;
+  --border-subtle: #2a4035;
+  --border-hairline: #2a4035;
+  --text-primary: #e6ece7;
+  --text-secondary: #a7b5ac;
+  --text-muted: #a7b5ac;
+  --primary: #e5c378;
+  --primary-hover: #f6d383;
   --secondary: #5e8a75;
-  --accent: #c89738;
+  --accent: #e5c378;
 
   /* Scholar Suite tokens */
-  --scholar-bg: #121517;
-  --scholar-surface: #181c20;
-  --scholar-text: #e2e8f0;
-  --scholar-muted: #94a3b8;
-  --scholar-accent: #c89738;
-  --scholar-hairline: #2a323a;
+  --scholar-bg: #0e1a15;
+  --scholar-surface: #12241c;
+  --scholar-text: #e6ece7;
+  --scholar-muted: #a7b5ac;
+  --scholar-accent: #e5c378;
+  --scholar-hairline: #2a4035;
 }
 
 /* 1. Typography & Khối văn bản trong Đêm Học Giả */
@@ -374,7 +374,7 @@ span.academic-dropcap {
 .scoped-dark-mode .lesson-content h2,
 [data-reading-theme='dark'] .lu-prose h2,
 [data-reading-theme='dark'] .lesson-content h2 {
-  border-bottom-color: #2a323a;
+  border-bottom-color: #2a4035;
 }
 
 .scoped-dark-mode .academic-dropcap::first-letter,
@@ -391,9 +391,9 @@ span.academic-dropcap {
 .scoped-dark-mode .lesson-content blockquote,
 [data-reading-theme='dark'] .lu-prose blockquote,
 [data-reading-theme='dark'] .lesson-content blockquote {
-  color: #cbd5e1 !important;
-  background-color: rgba(24, 28, 32, 0.8) !important;
-  border-left-color: #c89738 !important;
+  color: #e6ece7 !important;
+  background-color: rgba(18, 36, 28, 0.85) !important;
+  border-left-color: #c5a262 !important;
 }
 
 /* 2. KaTeX trong chế độ tối: BẮT BUỘC có màu text-[#F5F2EB] (Trắng Giấy Dó) rõ nét, không bị mờ nhạt */
@@ -435,9 +435,9 @@ span.academic-dropcap {
 [data-reading-theme='dark'] table,
 [data-reading-theme='dark'] .lu-prose table,
 [data-reading-theme='dark'] .lesson-content table {
-  background-color: #1c2126 !important;
-  color: #e2e8f0 !important;
-  border-color: #2a323a !important;
+  background-color: #12241c !important;
+  color: #e6ece7 !important;
+  border-color: #2a4035 !important;
 }
 
 .scoped-dark-mode thead th,
@@ -448,9 +448,9 @@ span.academic-dropcap {
 [data-reading-theme='dark'] table th,
 [data-reading-theme='dark'] .lu-prose th,
 [data-reading-theme='dark'] .lesson-content th {
-  background-color: #242c33 !important;
+  background-color: #182e24 !important;
   color: #f8fafc !important;
-  border: 1px solid #2a323a !important;
+  border: 1px solid #2a4035 !important;
 }
 
 .scoped-dark-mode tbody td,
@@ -461,9 +461,9 @@ span.academic-dropcap {
 [data-reading-theme='dark'] table td,
 [data-reading-theme='dark'] .lu-prose td,
 [data-reading-theme='dark'] .lesson-content td {
-  background-color: #1c2126 !important;
-  color: #e2e8f0 !important;
-  border: 1px solid rgba(42, 50, 58, 0.8) !important;
+  background-color: #12241c !important;
+  color: #e6ece7 !important;
+  border: 1px solid rgba(42, 64, 53, 0.85) !important;
 }
 
 .scoped-dark-mode tbody tr:nth-child(even) td,
@@ -474,20 +474,20 @@ span.academic-dropcap {
 [data-reading-theme='dark'] table tr:nth-child(even) td,
 [data-reading-theme='dark'] .lu-prose tr:nth-child(even) td,
 [data-reading-theme='dark'] .lesson-content tr:nth-child(even) td {
-  background-color: #181c20 !important;
+  background-color: #0e1a15 !important;
 }
 
 .scoped-dark-mode .cayley-table-wrapper,
 [data-reading-theme='dark'] .cayley-table-wrapper {
-  background-color: #1c2126 !important;
-  border-color: #2a323a !important;
+  background-color: #12241c !important;
+  border-color: #2a4035 !important;
 }
 
 .scoped-dark-mode table.cayley-table th,
 .scoped-dark-mode table.cayley-table tr td:first-child,
 [data-reading-theme='dark'] table.cayley-table th,
 [data-reading-theme='dark'] table.cayley-table tr td:first-child {
-  background-color: #242c33 !important;
+  background-color: #182e24 !important;
   color: #f8fafc !important;
 }
 
@@ -502,14 +502,14 @@ span.academic-dropcap {
 [data-reading-theme='dark'] section[aria-label*='Bổ đề'],
 [data-reading-theme='dark'] section[aria-label*='Mệnh đề'],
 [data-reading-theme='dark'] section[aria-label*='Hệ quả'] {
-  background-color: #1c2126 !important;
-  border-color: #2a323a !important;
-  color: #e2e8f0 !important;
+  background-color: #12241c !important;
+  border-color: #2a4035 !important;
+  color: #e6ece7 !important;
 }
 
 .scoped-dark-mode section[aria-label] header,
 [data-reading-theme='dark'] section[aria-label] header {
-  border-bottom-color: #2a323a !important;
+  border-bottom-color: #2a4035 !important;
 }
 
 .scoped-dark-mode section[aria-label] header span,
@@ -522,20 +522,20 @@ span.academic-dropcap {
 /* Khối Chứng minh (Proof) */
 .scoped-dark-mode [data-proof-of] > div,
 [data-reading-theme='dark'] [data-proof-of] > div {
-  border-color: #2a323a !important;
-  background-color: #14171a !important;
+  border-color: #2a4035 !important;
+  background-color: #091510 !important;
 }
 
 .scoped-dark-mode [data-proof-of] [role='region'],
 [data-reading-theme='dark'] [data-proof-of] [role='region'] {
-  background-color: #1c2126 !important;
-  color: #e2e8f0 !important;
+  background-color: #12241c !important;
+  color: #e6ece7 !important;
 }
 
 /* Breadcrumb in dark mode */
 .scoped-dark-mode nav[aria-label='Breadcrumb'],
 [data-reading-theme='dark'] nav[aria-label='Breadcrumb'] {
-  color: #94a3b8 !important;
+  color: #a7b5ac !important;
 }
 .scoped-dark-mode nav[aria-label='Breadcrumb'] a,
 [data-reading-theme='dark'] nav[aria-label='Breadcrumb'] a {
@@ -547,37 +547,37 @@ span.academic-dropcap {
 }
 .scoped-dark-mode nav[aria-label='Breadcrumb'] span,
 [data-reading-theme='dark'] nav[aria-label='Breadcrumb'] span {
-  color: #e2e8f0 !important;
+  color: #e6ece7 !important;
 }
 .scoped-dark-mode nav[aria-label='Breadcrumb'] svg,
 [data-reading-theme='dark'] nav[aria-label='Breadcrumb'] svg {
-  color: #64748b !important;
+  color: #6b847d !important;
 }
 
 /* Reading Progress Bar */
 .scoped-dark-mode [role='progressbar'] > div,
 [data-reading-theme='dark'] [role='progressbar'] > div {
-  background-color: #c89738 !important;
+  background-color: #e5c378 !important;
 }
 
 /* Footer in scoped dark mode */
 .scoped-dark-mode footer,
 [data-reading-theme='dark'] footer {
-  background-color: #16191d !important;
-  border-color: #2a323a !important;
-  color: #e2e8f0 !important;
+  background-color: #0e1a15 !important;
+  border-color: #2a4035 !important;
+  color: #e6ece7 !important;
 }
 .scoped-dark-mode footer blockquote,
 [data-reading-theme='dark'] footer blockquote {
-  color: #94a3b8 !important;
+  color: #a7b5ac !important;
 }
 .scoped-dark-mode footer cite,
 [data-reading-theme='dark'] footer cite {
-  color: #c89738 !important;
+  color: #e5c378 !important;
 }
 .scoped-dark-mode footer a,
 [data-reading-theme='dark'] footer a {
-  color: #94a3b8 !important;
+  color: #a7b5ac !important;
 }
 .scoped-dark-mode footer a:hover,
 [data-reading-theme='dark'] footer a:hover {
@@ -585,7 +585,7 @@ span.academic-dropcap {
 }
 .scoped-dark-mode footer span,
 [data-reading-theme='dark'] footer span {
-  color: #e2e8f0 !important;
+  color: #e6ece7 !important;
 }
 
 /* 4. Hộp Pháp lý, Callout Nền tảng & Nghiên cứu tình huống */
@@ -686,13 +686,13 @@ span.academic-dropcap {
 }
 
 [data-reading-theme='dark'] [data-case-study-box] textarea {
-  background-color: #14171a !important;
-  border-color: #2d3339 !important;
-  color: #e2e8f0 !important;
+  background-color: #091510 !important;
+  border-color: #2a4035 !important;
+  color: #e6ece7 !important;
 }
 
 [data-reading-theme='dark'] [data-case-study-box] textarea::placeholder {
-  color: #55676b !important;
+  color: #6b847d !important;
 }
 
 /* Fallback chống chìm chữ trên nền trắng trong chế độ đọc tối */
@@ -700,16 +700,16 @@ span.academic-dropcap {
 [data-reading-theme='dark'] .lesson-content .bg-white:not([class*='dark:bg-']),
 .scoped-dark-mode .lesson-content .bg-white:not([class*='dark:bg-']) {
   background-color: #12241c !important;
-  border-color: #1e362a !important;
-  color: #e4efe9 !important;
+  border-color: #2a4035 !important;
+  color: #e6ece7 !important;
 }
 
-.dark [data-reading-article] .bg-\[\#F7FAFA\]:not([class*='dark:bg-']),
-[data-reading-theme='dark'] .lesson-content .bg-\[\#F7FAFA\]:not([class*='dark:bg-']),
-.scoped-dark-mode .lesson-content .bg-\[\#F7FAFA\]:not([class*='dark:bg-']) {
-  background-color: #122018 !important;
-  border-color: #1e362a !important;
-  color: #e4efe9 !important;
+.dark [data-reading-article] .bg-\[\#FAFBF9\]:not([class*='dark:bg-']),
+[data-reading-theme='dark'] .lesson-content .bg-\[\#FAFBF9\]:not([class*='dark:bg-']),
+.scoped-dark-mode .lesson-content .bg-\[\#FAFBF9\]:not([class*='dark:bg-']) {
+  background-color: #12241c !important;
+  border-color: #2a4035 !important;
+  color: #e6ece7 !important;
 }
 
 .dark [data-reading-article] .bg-\[\#FAF8F5\]:not([class*='dark:bg-']),
@@ -808,15 +808,15 @@ span.academic-dropcap {
 [data-reading-theme='dark'] .sidenote-academic,
 [data-reading-theme='dark'] .academic-sidenote-mobile span[role='region'],
 [data-reading-theme='dark'] aside[data-sidenotes-column] {
-  background-color: #1a1e22 !important;
-  border-color: #2d3339 !important;
-  color: #94a3b8 !important;
+  background-color: #12241c !important;
+  border-color: #2a4035 !important;
+  color: #a7b5ac !important;
 }
 
 [data-reading-theme='dark'] [data-sidenote] span,
 [data-reading-theme='dark'] .sidenote-academic span,
 [data-reading-theme='dark'] .academic-sidenote-mobile span[role='region'] span {
-  color: #94a3b8;
+  color: #a7b5ac;
 }
 
 [data-reading-theme='dark'] [data-sidenote] span.font-mono,
@@ -827,23 +827,23 @@ span.academic-dropcap {
 
 [data-reading-theme='dark'] .academic-sidenote-wrapper sup,
 [data-reading-theme='dark'] .academic-sidenote-mobile button {
-  background-color: #1a1e22 !important;
-  border-color: #2d3339 !important;
+  background-color: #12241c !important;
+  border-color: #2a4035 !important;
   color: #5e8a75 !important;
 }
 
 /* 6. Code & Links */
 [data-reading-theme='dark'] .lu-prose code,
 [data-reading-theme='dark'] .lesson-content code {
-  background-color: #14171a;
-  border-color: #2d3339;
+  background-color: #091510;
+  border-color: #2a4035;
   color: #5e8a75;
 }
 
 [data-reading-theme='dark'] .lu-prose pre,
 [data-reading-theme='dark'] .lesson-content pre {
-  background-color: #14171a;
-  border-color: #2d3339;
+  background-color: #091510;
+  border-color: #2a4035;
 }
 
 [data-reading-theme='dark'] a:not([class*='bg-']),
@@ -863,7 +863,7 @@ span.academic-dropcap {
 [data-reading-theme='dark'] header.border-b,
 [data-reading-theme='dark'] div.border-t,
 [data-reading-theme='dark'] div.border-b {
-  border-color: #2d3339;
+  border-color: #2a4035;
 }
 
 /* ============================================================================

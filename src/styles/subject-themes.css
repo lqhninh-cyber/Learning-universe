@@ -19,67 +19,86 @@
   --subject-950: oklch(0.19 0.035 260);
 }
 
-/* Môn 1: Cấu trúc đại số — Indigo / Violet (trừu tượng, logic) */
-[data-subject='algebraic-structures'] {
-  --subject-hue: 275;
-  --subject-50: oklch(0.97 0.016 275);
-  --subject-100: oklch(0.935 0.032 275);
-  --subject-200: oklch(0.875 0.062 275);
-  --subject-300: oklch(0.79 0.105 275);
-  --subject-400: oklch(0.68 0.155 275);
-  --subject-500: oklch(0.585 0.195 275);
-  --subject-600: oklch(0.51 0.21 275);
-  --subject-700: oklch(0.44 0.185 275);
-  --subject-800: oklch(0.375 0.145 275);
-  --subject-900: oklch(0.32 0.11 275);
-  --subject-950: oklch(0.24 0.08 275);
+/* Môn 1: Cấu trúc đại số — Đá Hổ Phách & Đồng Nâu (#9C7A4C / #6B5335) */
+[data-subject='algebraic-structures'],
+[data-subject='cau-truc-dai-so'] {
+  --subject-hue: 68;
+  --subject-accent: #9c7a4c;
+  --subject-accent-ink: #6b5335;
+  --subject-surface: #f3f0e8;
+  --subject-border: #d8d0c0;
+  --subject-50: oklch(0.968 0.014 68);
+  --subject-100: oklch(0.938 0.028 68);
+  --subject-200: oklch(0.878 0.048 68);
+  --subject-300: oklch(0.785 0.072 68);
+  --subject-400: oklch(0.675 0.088 68);
+  --subject-500: oklch(0.585 0.095 68);
+  --subject-600: oklch(0.495 0.085 68);
+  --subject-700: oklch(0.425 0.072 68);
+  --subject-800: oklch(0.36 0.058 68);
+  --subject-900: oklch(0.305 0.046 68);
+  --subject-950: oklch(0.225 0.032 68);
 }
 
-/* Môn 2: Hình học Affine — Teal / Emerald (không gian, trực quan) */
-[data-subject='affine-geometry'] {
-  --subject-hue: 175;
-  --subject-50: oklch(0.972 0.018 175);
-  --subject-100: oklch(0.94 0.038 175);
-  --subject-200: oklch(0.885 0.07 175);
-  --subject-300: oklch(0.805 0.11 175);
-  --subject-400: oklch(0.71 0.135 175);
-  --subject-500: oklch(0.61 0.135 175);
-  --subject-600: oklch(0.525 0.12 175);
-  --subject-700: oklch(0.445 0.1 175);
-  --subject-800: oklch(0.38 0.08 175);
-  --subject-900: oklch(0.325 0.065 175);
-  --subject-950: oklch(0.24 0.048 175);
+/* Môn 2: Hình học Affine và Euclide — Đá Lam Phiến (#49768F / #2D5266) */
+[data-subject='affine-geometry'],
+[data-subject='hinh-hoc-affine'] {
+  --subject-hue: 232;
+  --subject-accent: #49768f;
+  --subject-accent-ink: #2d5266;
+  --subject-surface: #ecf1f4;
+  --subject-border: #c9d7df;
+  --subject-50: oklch(0.968 0.012 232);
+  --subject-100: oklch(0.938 0.024 232);
+  --subject-200: oklch(0.875 0.042 232);
+  --subject-300: oklch(0.775 0.062 232);
+  --subject-400: oklch(0.66 0.075 232);
+  --subject-500: oklch(0.555 0.078 232);
+  --subject-600: oklch(0.465 0.072 232);
+  --subject-700: oklch(0.395 0.062 232);
+  --subject-800: oklch(0.335 0.05 232);
+  --subject-900: oklch(0.285 0.04 232);
+  --subject-950: oklch(0.215 0.028 232);
 }
 
-/* Môn 3: Giải tích hàm một biến — Azure / Ocean (sự biến thiên, liên tục) */
-[data-subject='single-variable-calculus'] {
-  --subject-hue: 200;
-  --subject-50: oklch(0.975 0.018 200);
-  --subject-100: oklch(0.942 0.038 200);
-  --subject-200: oklch(0.888 0.068 200);
-  --subject-300: oklch(0.805 0.108 200);
-  --subject-400: oklch(0.705 0.138 200);
-  --subject-500: oklch(0.605 0.145 200);
-  --subject-600: oklch(0.52 0.135 200);
-  --subject-700: oklch(0.44 0.115 200);
-  --subject-800: oklch(0.375 0.09 200);
-  --subject-900: oklch(0.32 0.07 200);
-  --subject-950: oklch(0.235 0.05 200);
+/* Môn 3: Giải tích hàm một biến — Đá Ngọc Bích (#3B7A65 / #245746) */
+[data-subject='single-variable-calculus'],
+[data-subject='giai-tich-ham-mot-bien'] {
+  --subject-hue: 162;
+  --subject-accent: #3b7a65;
+  --subject-accent-ink: #245746;
+  --subject-surface: #ebf2ee;
+  --subject-border: #c6dbd0;
+  --subject-50: oklch(0.968 0.014 162);
+  --subject-100: oklch(0.938 0.028 162);
+  --subject-200: oklch(0.875 0.046 162);
+  --subject-300: oklch(0.775 0.068 162);
+  --subject-400: oklch(0.66 0.082 162);
+  --subject-500: oklch(0.545 0.085 162);
+  --subject-600: oklch(0.46 0.078 162);
+  --subject-700: oklch(0.39 0.066 162);
+  --subject-800: oklch(0.33 0.054 162);
+  --subject-900: oklch(0.28 0.042 162);
+  --subject-950: oklch(0.21 0.03 162);
 }
 
-/* Môn 4: Giáo dục học — Slate Teal (xanh học giả) & Terracotta (vàng đất nung) */
+/* Môn 4: Giáo dục học — Đá Đất Nung (#9E6356 / #7A463B) */
 [data-subject='giao-duc-hoc'],
 [data-subject='pedagogy'] {
-  --subject-hue: 190;
-  --subject-50: oklch(0.975 0.016 190);
-  --subject-100: oklch(0.945 0.034 190);
-  --subject-200: oklch(0.89 0.062 190);
-  --subject-300: oklch(0.81 0.098 190);
-  --subject-400: oklch(0.71 0.124 190);
-  --subject-500: oklch(0.605 0.13 190);
-  --subject-600: oklch(0.515 0.12 190);
-  --subject-700: oklch(0.435 0.1 190);
-  --subject-800: oklch(0.37 0.08 190);
-  --subject-900: oklch(0.315 0.06 190);
-  --subject-950: oklch(0.235 0.042 190);
+  --subject-hue: 32;
+  --subject-accent: #9e6356;
+  --subject-accent-ink: #7a463b;
+  --subject-surface: #f3ece9;
+  --subject-border: #d8c8c1;
+  --subject-50: oklch(0.968 0.014 32);
+  --subject-100: oklch(0.938 0.028 32);
+  --subject-200: oklch(0.875 0.046 32);
+  --subject-300: oklch(0.775 0.068 32);
+  --subject-400: oklch(0.665 0.082 32);
+  --subject-500: oklch(0.565 0.085 32);
+  --subject-600: oklch(0.475 0.078 32);
+  --subject-700: oklch(0.405 0.066 32);
+  --subject-800: oklch(0.345 0.054 32);
+  --subject-900: oklch(0.295 0.042 32);
+  --subject-950: oklch(0.22 0.03 32);
 }

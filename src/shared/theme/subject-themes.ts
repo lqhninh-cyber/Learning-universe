@@ -27,31 +27,32 @@ export const SUBJECT_THEMES: Record<SubjectThemeId, SubjectThemeMeta> = {
     id: 'algebraic-structures',
     name: 'Cấu trúc đại số',
     shortName: 'CTĐS',
-    hue: 275,
-    description: 'Tông Indigo / Violet thể hiện tính trừu tượng, cấu trúc và suy luận logic.',
+    hue: 68,
+    description:
+      'Tông Đá Hổ Phách & Đồng Nâu thể hiện tính trừu tượng, cấu trúc và suy luận logic.',
   },
   'affine-geometry': {
     id: 'affine-geometry',
     name: 'Hình học Affine và hình học Euclide',
     shortName: 'HHAVE',
-    hue: 175,
-    description: 'Tông Teal / Emerald thể hiện không gian hình học, trực quan và biến đổi.',
+    hue: 232,
+    description: 'Tông Đá Lam Phiến thể hiện không gian hình học, trực quan và biến đổi.',
   },
   'single-variable-calculus': {
     id: 'single-variable-calculus',
     name: 'Giải tích hàm một biến',
     shortName: 'GTHMB',
-    hue: 200,
+    hue: 162,
     description:
-      'Tông Azure / Ocean thể hiện sự biến thiên liên tục, giới hạn và phép tính vi tích phân.',
+      'Tông Đá Ngọc Bích thể hiện sự biến thiên liên tục, giới hạn và phép tính vi tích phân.',
   },
   'giao-duc-hoc': {
     id: 'giao-duc-hoc',
     name: 'Giáo dục học',
     shortName: 'GDH',
-    hue: 190,
+    hue: 32,
     description:
-      'Tông Slate Teal (xanh học giả) và Terracotta (vàng đất nung) thể hiện lý luận nhân cách, chuẩn nghề nghiệp và nghiệp vụ sư phạm.',
+      'Tông Đá Đất Nung thể hiện lý luận nhân cách, chuẩn nghề nghiệp và nghiệp vụ sư phạm.',
   },
 } as const;
 

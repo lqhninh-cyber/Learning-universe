@@ -27,9 +27,10 @@ function RootLayoutContent() {
 
   const { theme } = useReadingSettings();
   const { setRoutePathname, readerSettings } = useIsland();
-  const isDarkLesson = isLessonPage && theme === 'dark';
-  const isSepiaLesson = isLessonPage && theme === 'sepia';
-  const isEyeComfort = isLessonPage && readerSettings.eyeComfortWarmth;
+  const isDarkLesson = isLessonPage && (readerSettings.isDarkMode || theme === 'dark');
+  const isSepiaLesson = isLessonPage && !readerSettings.isDarkMode && theme === 'sepia';
+  const isEyeComfort =
+    isLessonPage && readerSettings.eyeComfortWarmth && !isDarkLesson && !isSepiaLesson;
 
   useEffect(() => {
     setRoutePathname(pathname);
@@ -54,7 +55,7 @@ function RootLayoutContent() {
       className={cn(
         'flex min-h-screen flex-col overflow-x-clip transition-colors duration-300',
         isDarkLesson
-          ? 'scoped-dark-mode dark bg-[#0F1917] text-[#E2E8F0]'
+          ? 'scoped-dark-mode dark bg-[#0E1A15] text-[#E6ECE7]'
           : isSepiaLesson
             ? 'scoped-sepia-mode bg-[#F4EEDF] text-[#231F18]'
             : isEyeComfort

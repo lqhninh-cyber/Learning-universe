@@ -48,7 +48,7 @@ describe('Design System & Subject Theming (Giai đoạn 1)', () => {
     const wrapper = container.querySelector('[data-subject="algebraic-structures"]');
     expect(wrapper).toBeInTheDocument();
     expect(screen.getByTestId('theme-name')).toHaveTextContent('Cấu trúc đại số');
-    expect(screen.getByTestId('theme-hue')).toHaveTextContent('275');
+    expect(screen.getByTestId('theme-hue')).toHaveTextContent('68');
   });
 
   it('hiển thị và đóng/mở Collapsible khi người dùng tương tác', async () => {

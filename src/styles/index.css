@@ -188,6 +188,7 @@
 [data-reading-theme='dark'] {
   --bg-page: #0e1a15;
   --bg-surface: #12241c;
+  --bg-subtle: #182e24;
   --bg-sunken: #091510;
   --border-subtle: #2a4035;
   --border-control: #3d6151;

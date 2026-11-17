@@ -182,7 +182,7 @@ export function PrincipleMatrix({ className, defaultPrincipleId = 1 }: Principle
             </ul>
           </div>
 
-          {/* Tình huống minh họa (Có thể thu gọn khi Đọc lướt) */}
+          {/* Tình huống minh họa thực tế */}
           <details
             id={`principle-ex-${instanceId}-${activePrinciple.id}`}
             data-kind="ex"
