@@ -734,6 +734,12 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
     }
     const percent = stats.lessonCount > 0 ? Math.round((done / stats.lessonCount) * 100) : 0;
     const palette = ATLAS_CARD_PALETTES[sub.slug] ?? DEFAULT_ATLAS_PALETTE;
+    const resume = findSubjectResumeTarget(
+      sub,
+      completedLessons,
+      lastVisitedBySubject[sub.id]?.lessonId,
+    );
+    const currentChapter = resume?.chapter ?? sub.chapters[0];
     return {
       subject: sub,
       shortCode: SUBJECT_SHORT_CODES[sub.slug] ?? sub.shortTitle.toUpperCase(),
@@ -741,6 +747,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
       total: stats.lessonCount,
       percent,
       palette,
+      currentChapter,
     };
   });
 
@@ -805,7 +812,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
         aria-label="Không gian Học phần"
         className="relative z-20 scroll-mt-24 pt-10 pb-10 lg:pt-12 lg:pb-12"
       >
-        <div className="lu-container-wide">
+        <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
           {/* Header 2 tầng + Toolbar lọc phân nhánh */}
           <div className="mb-8 pb-2">
             <div className="space-y-1.5">
@@ -1144,10 +1151,21 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               )}
                             </div>
 
-                            {/* Chân thẻ: Cụm nút Học tiếp bài đang dở + Vào học phần */}
+                            {/* Chân thẻ: Huy hiệu Tiến độ gọn gàng (không cắt chữ) + Cụm nút Học tiếp & Vào học phần */}
                             <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-[#D8E0DD] pt-4">
-                              <span className="line-clamp-1 max-w-full font-mono text-[11px] text-[#4A5D58] xl:max-w-[44%]">
-                                {asset.visualMetaphor}
+                              <span
+                                data-testid={`subject-footer-progress-${subject.slug}`}
+                                className="inline-flex items-center gap-2 rounded-full border border-[#D8E0DD] bg-[#F2F4F3]/75 px-3 py-1 font-mono text-[11px] font-semibold whitespace-nowrap text-[#182624]"
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className="h-2 w-2 shrink-0 rounded-full"
+                                  style={{ backgroundColor: palette.progressBarColor }}
+                                />
+                                <span>
+                                  Tiến độ: {subjectPercent}% ({subjectCompletedCount}/
+                                  {stats.lessonCount} bài)
+                                </span>
                               </span>
 
                               <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -1165,7 +1183,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                     )}
                                   >
                                     <Play className="h-3 w-3 fill-current" aria-hidden="true" />
-                                    <span>Học tiếp bài đang dở</span>
+                                    <span>Học tiếp</span>
                                   </Link>
                                 )}
 
@@ -1199,10 +1217,11 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
           <GoldenCompassSpineBridge />
 
           <section
+            id="quy-dao-hoc-tap"
             aria-label="Không gian Tiếp tục học tập"
-            className="relative z-20 py-10 lg:py-14"
+            className="relative z-20 scroll-mt-24 py-10 lg:py-14"
           >
-            <div className="lu-container-wide">
+            <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
               <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div className="space-y-2">
                   <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#365E4E] uppercase dark:text-[#8EE5CE]">
@@ -1218,16 +1237,22 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
-                <div
-                  role="region"
-                  aria-label="Tiếp tục học dở"
-                  className="flex flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-8 lg:col-span-7"
-                >
-                  {activeRecentLesson ? (
-                    <>
-                      <div className="space-y-6">
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-5">
+              {/* Lưới Bento 2 Cột x 2 Hàng Cân Xứng Tuyệt Đối (xóa sạch khoảng trắng thừa cột trái) */}
+              <div
+                data-testid="learning-bento-grid"
+                className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12"
+              >
+                {/* Cột Trái (7 cột): 2 Thẻ Bento xếp chồng khớp chiều cao với 2 thẻ bên phải */}
+                <div className="flex flex-col gap-6 lg:col-span-7">
+                  {/* Thẻ 1 (Hàng Trên): Bài Học Đang Đọc Dở & Lộ Trình Kế Tiếp */}
+                  <div
+                    role="region"
+                    aria-label="Tiếp tục học dở"
+                    className="rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-7"
+                  >
+                    {activeRecentLesson ? (
+                      <div className="space-y-5">
+                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
                           <div className="flex flex-wrap items-center gap-2.5">
                             <span className="rounded-lg bg-[#E7ECEA] px-3 py-1 font-mono text-xs font-semibold text-[#1E332E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
                               {
@@ -1242,7 +1267,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                           </div>
 
                           <div className="flex items-center gap-3">
-                            <ProgressRing value={displayOrbitPercent} size={44} strokeWidth={4} />
+                            <ProgressRing value={displayOrbitPercent} size={42} strokeWidth={4} />
                             <div>
                               <p className="font-mono text-sm font-bold text-[var(--text-main)]">
                                 Tiến trình: {displayOrbitPercent}%
@@ -1256,21 +1281,21 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                           </div>
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-2.5">
                           <p className="font-mono text-xs tracking-wider text-[#C89738] uppercase">
                             BÀI HỌC ĐANG ĐỌC DỞ
                           </p>
-                          <h3 className="font-serif text-2xl leading-snug font-bold text-[var(--text-main)] sm:text-3xl">
+                          <h3 className="font-serif text-2xl leading-snug font-bold text-[var(--text-main)] sm:text-[1.7rem]">
                             {activeRecentLesson.lesson.title.startsWith('Bài')
                               ? activeRecentLesson.lesson.title
                               : `Bài ${activeRecentLesson.chapter.number}.${activeRecentLesson.lesson.number}: ${activeRecentLesson.lesson.title}`}
                           </h3>
-                          <p className="text-sm leading-relaxed text-[var(--text-muted)] sm:text-base">
+                          <p className="text-sm leading-relaxed text-[var(--text-muted)]">
                             {activeRecentLesson.lesson.description}
                           </p>
                         </div>
 
-                        <div className="space-y-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-4">
+                        <div className="space-y-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-3.5">
                           <div className="flex items-center justify-between text-xs">
                             <span className="font-medium text-[var(--text-main)]">
                               Trạng thái đọc bài &amp; ghi chú học thuật
@@ -1287,9 +1312,8 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                           </div>
                         </div>
 
-                        {/* Lộ trình bài kế tiếp (Up Next Queue) */}
                         {upNextQueue.length > 0 && (
-                          <div className="space-y-2.5" data-testid="up-next-queue">
+                          <div className="space-y-2" data-testid="up-next-queue">
                             <p className="font-mono text-[11px] font-semibold tracking-wider text-[#4A5D58] uppercase">
                               Lộ trình bài kế tiếp ({upNextQueue.length} bài)
                             </p>
@@ -1331,31 +1355,81 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                           </div>
                         )}
 
-                        {/* Tổng quan Tiến độ 4 Học phần */}
-                        <div className="space-y-2.5" data-testid="progress-matrix-4-subjects">
-                          <p className="font-mono text-[11px] font-semibold tracking-wider text-[#4A5D58] uppercase">
-                            Tổng quan Tiến độ 4 Học phần
-                          </p>
-                          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                            {subjectProgressMatrix.map((entry) => (
-                              <Link
-                                key={entry.subject.id}
-                                to={ROUTES.subjectOverview(entry.subject.slug)}
-                                className="flex flex-col justify-between gap-2 rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9] p-3 transition-colors hover:border-[#1E332E]/40 hover:bg-white"
-                              >
-                                <div className="flex items-center justify-between gap-1">
-                                  <span
-                                    className={cn(
-                                      'font-mono text-[11px] font-bold',
-                                      entry.palette.indexText,
-                                    )}
-                                  >
-                                    {entry.shortCode}
-                                  </span>
-                                  <span className="font-mono text-[11px] font-bold text-[#182624]">
-                                    {entry.percent}%
-                                  </span>
-                                </div>
+                        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] pt-4">
+                          <div className="text-xs text-[var(--text-muted)]">
+                            Thời lượng ước tính:{' '}
+                            <strong className="text-[var(--text-main)]">
+                              {activeRecentLesson.lesson.estimatedMinutes} phút đọc sâu
+                            </strong>
+                          </div>
+
+                          <Link
+                            to={ROUTES.lesson(
+                              activeRecentLesson.subject.slug,
+                              activeRecentLesson.chapter.slug,
+                              activeRecentLesson.lesson.slug,
+                            )}
+                            className="inline-flex items-center gap-2.5 rounded-xl bg-[#365E4E] px-6 py-2.5 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#2B4C3E]"
+                          >
+                            <span>Tiếp tục đọc ngay</span>
+                            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                          </Link>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {/* Thẻ 2 Mới (Hàng Dưới — Cột Trái): Ma Trận Tiến Độ & Phân Bố 4 Học Phần */}
+                  <div
+                    role="region"
+                    aria-label="Ma Trận Tiến Độ 4 Học Phần"
+                    data-testid="progress-matrix-4-subjects"
+                    className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-7"
+                  >
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3.5">
+                      <div className="space-y-0.5">
+                        <p className="font-mono text-[11px] font-semibold tracking-wider text-[#8C6D3F] uppercase">
+                          OVERVIEW MATRIX · TỔNG QUAN PHÂN BỐ
+                        </p>
+                        <h3 className="font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
+                          Ma Trận Tiến Độ &amp; Phân Bố 4 Học Phần
+                        </h3>
+                      </div>
+                      <span className="rounded-full border border-[#D8E0DD] bg-[#F2F4F3] px-3 py-1 font-mono text-[11px] font-semibold text-[#1E332E]">
+                        {completedCount}/{totalLessonCount} bài toàn hệ
+                      </span>
+                    </div>
+
+                    <div className="grid flex-1 grid-cols-1 gap-3.5 sm:grid-cols-2">
+                      {subjectProgressMatrix.map((entry) => {
+                        const ch = entry.currentChapter;
+                        const chapterHref = ch
+                          ? `${ROUTES.subjectOverview(entry.subject.slug)}?chapter=${ch.slug}`
+                          : ROUTES.subjectOverview(entry.subject.slug);
+                        return (
+                          <div
+                            key={entry.subject.id}
+                            className="flex flex-col justify-between gap-3 rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9] p-4 transition-colors hover:border-[#1E332E]/40 hover:bg-white"
+                          >
+                            <div className="space-y-2.5">
+                              <div className="flex items-start justify-between gap-2">
+                                <Link
+                                  to={ROUTES.subjectOverview(entry.subject.slug)}
+                                  className="font-serif text-sm leading-snug font-bold text-[#182624] hover:text-[#245746]"
+                                >
+                                  {entry.subject.title}
+                                </Link>
+                                <span
+                                  className={cn(
+                                    'shrink-0 rounded-full border px-2 py-0.5 font-mono text-[10.5px] font-bold',
+                                    entry.palette.progressBadgeClass,
+                                  )}
+                                >
+                                  {entry.percent}%
+                                </span>
+                              </div>
+
+                              <div className="space-y-1.5">
                                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E7ECEA]">
                                   <div
                                     className="h-full rounded-full transition-all duration-500"
@@ -1365,49 +1439,50 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                     }}
                                   />
                                 </div>
-                                <span className="font-mono text-[10px] text-[#4A5D58]">
-                                  {entry.done}/{entry.total} bài
-                                </span>
+                                <div className="flex items-center justify-between font-mono text-[10.5px] text-[#4A5D58]">
+                                  <span>
+                                    {entry.done}/{entry.total} bài
+                                  </span>
+                                  <span className={entry.palette.indexText}>{entry.shortCode}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between gap-2 border-t border-[#E7ECEA] pt-2.5">
+                              <span className="line-clamp-1 text-[11px] font-medium text-[#4A5D58]">
+                                {ch ? `Chương ${ch.number}: ${ch.title}` : 'Sẵn sàng khởi đầu'}
+                              </span>
+                              <Link
+                                to={chapterHref}
+                                className={cn(
+                                  'inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1 font-mono text-[10.5px] font-semibold transition-colors',
+                                  entry.palette.secondaryBtnClass,
+                                )}
+                              >
+                                <span>Mở chương</span>
+                                <ArrowRight className="h-3 w-3" aria-hidden="true" />
                               </Link>
-                            ))}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] pt-5">
-                        <div className="text-xs text-[var(--text-muted)]">
-                          Thời lượng ước tính:{' '}
-                          <strong className="text-[var(--text-main)]">
-                            {activeRecentLesson.lesson.estimatedMinutes} phút đọc sâu
-                          </strong>
-                        </div>
-
-                        <Link
-                          to={ROUTES.lesson(
-                            activeRecentLesson.subject.slug,
-                            activeRecentLesson.chapter.slug,
-                            activeRecentLesson.lesson.slug,
-                          )}
-                          className="inline-flex items-center gap-2.5 rounded-xl bg-[#365E4E] px-6 py-3 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#2B4C3E]"
-                        >
-                          <span>Tiếp tục đọc ngay</span>
-                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                        </Link>
-                      </div>
-                    </>
-                  ) : null}
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex flex-col justify-between gap-6 lg:col-span-5">
-                  {/* Mô hình 1: Biểu đồ Radar Cấu trúc & Phân tích Năng lực Học phần */}
+                {/* Cột Phải (5 cột): 2 Thẻ Bento xếp chồng tương ứng chiều cao */}
+                <div className="flex flex-col gap-6 lg:col-span-5">
+                  {/* Hàng Trên Phải: Biểu đồ Radar Cấu trúc & Phân tích Năng lực Học phần */}
                   <CurriculumRadarCard
                     stats={radarSubjectStats}
                     totalCompleted={completedCount}
                     totalLessons={totalLessonCount}
                   />
 
-                  {/* Mô hình 2: Mạng lưới Liên kết Tri thức Liên môn 120fps */}
-                  <KnowledgeConstellationCard />
+                  {/* Hàng Dưới Phải: Mạng lưới Liên kết Tri thức Liên môn 120fps */}
+                  <div className="flex flex-1 flex-col [&>*]:flex-1">
+                    <KnowledgeConstellationCard />
+                  </div>
                 </div>
               </div>
             </div>

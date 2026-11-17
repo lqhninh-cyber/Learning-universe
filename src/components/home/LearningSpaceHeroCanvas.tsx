@@ -224,11 +224,11 @@ const DODECA_FACES: readonly (readonly number[])[] = ICO_VERTICES.map((faceNorma
   return dotVec3(nCheck, faceNormal) < 0 ? [...ordered].reverse() : ordered;
 });
 
-// 3. Hệ 4 Vòng Elip Quỹ Đạo Thiên Cầu Khắc Độ (Engraved Elliptical Orbit Rings)
+// 3. Hệ 4 Vòng Elip Quỹ Đạo Thiên Cầu Khắc Độ (Engraved Elliptical Orbit Rings vươn rộng)
 const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
   {
-    radiusX: 0.78,
-    radiusY: 0.68,
+    radiusX: 0.85,
+    radiusY: 0.74,
     baseTiltX: 0.96,
     baseTiltZ: 0.22,
     speedY: 0.14,
@@ -240,8 +240,8 @@ const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     strokeWidth: 1.5,
   },
   {
-    radiusX: 0.7,
-    radiusY: 0.59,
+    radiusX: 0.76,
+    radiusY: 0.65,
     baseTiltX: -0.78,
     baseTiltZ: 0.84,
     speedY: -0.19,
@@ -253,8 +253,8 @@ const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     strokeWidth: 1.38,
   },
   {
-    radiusX: 0.62,
-    radiusY: 0.52,
+    radiusX: 0.67,
+    radiusY: 0.56,
     baseTiltX: 0.44,
     baseTiltZ: -0.68,
     speedY: 0.24,
@@ -266,8 +266,8 @@ const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     strokeWidth: 1.25,
   },
   {
-    radiusX: 0.54,
-    radiusY: 0.45,
+    radiusX: 0.58,
+    radiusY: 0.48,
     baseTiltX: 1.24,
     baseTiltZ: -0.34,
     speedY: -0.27,
@@ -577,7 +577,15 @@ function drawArmillaryHalf(
  * - Hệ 4 vòng Elip Quỹ đạo 3D với hạt sáng & Điểm nút giao (Glowing Nodes) nối tia về tâm
  * - Tương tác pitch/yaw damping mượt mà theo tọa độ chuột + ký hiệu toán học Parallax (120fps)
  */
-export function LearningSpaceHeroCanvas() {
+export interface LearningSpaceHeroCanvasProps {
+  readonly subjectCount?: number;
+  readonly totalLessons?: number;
+}
+
+export function LearningSpaceHeroCanvas({
+  subjectCount = 4,
+  totalLessons = 122,
+}: LearningSpaceHeroCanvasProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const glyphRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -936,6 +944,30 @@ export function LearningSpaceHeroCanvas() {
       data-sculpture-version="polyhedral-armillary-v2"
       className="relative flex h-[380px] w-full items-center justify-center select-none sm:h-[440px] lg:h-[460px]"
     >
+      {/* 3 Huy Hiệu Thông Số Nổi (Floating Glass Telemetry Pills) cân đối quanh khối 3D */}
+      <div data-testid="hero-telemetry-pills" className="pointer-events-none absolute inset-0 z-30">
+        <div className="absolute top-2 left-0 flex items-center gap-2 rounded-xl border border-[#D8E0DD] bg-[#FAFBF9]/85 px-3 py-2 shadow-sm backdrop-blur-md">
+          <span className="h-2 w-2 rounded-full bg-[#34D399]" aria-hidden="true" />
+          <span className="font-mono text-[11px] font-semibold tracking-tight text-[#1E332E]">
+            Cấu trúc · {String(subjectCount).padStart(2, '0')} Hệ tiên đề
+          </span>
+        </div>
+
+        <div className="absolute top-5 right-0 flex items-center gap-2 rounded-xl border border-[#D8E0DD] bg-[#FAFBF9]/85 px-3 py-2 shadow-sm backdrop-blur-md">
+          <span className="h-2 w-2 rounded-full bg-[#E5B85B]" aria-hidden="true" />
+          <span className="font-mono text-[11px] font-semibold tracking-tight text-[#1E332E]">
+            {totalLessons} Bài giảng chuẩn hóa
+          </span>
+        </div>
+
+        <div className="absolute right-2 bottom-3 flex items-center gap-2 rounded-xl border border-[#D8E0DD] bg-[#FAFBF9]/85 px-3 py-2 shadow-sm backdrop-blur-md">
+          <span className="h-2 w-2 rounded-full bg-[#38BDF8]" aria-hidden="true" />
+          <span className="font-mono text-[11px] font-semibold tracking-tight text-[#1E332E]">
+            Mô phỏng 120 FPS
+          </span>
+        </div>
+      </div>
+
       {/* Ký hiệu toán học vector nhỏ trôi lờ mờ theo hiệu ứng Parallax quanh khối 3D */}
       <div
         aria-hidden="true"

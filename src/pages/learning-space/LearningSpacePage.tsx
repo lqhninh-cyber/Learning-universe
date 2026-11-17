@@ -53,9 +53,38 @@ export function LearningSpacePage() {
 
   const [hubQuery, setHubQuery] = useState('');
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [activeSpySection, setActiveSpySection] = useState<
+    'khoi-dau' | 'khong-gian-mon-hoc' | 'quy-dao-hoc-tap'
+  >('khoi-dau');
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const sectionIds = ['khoi-dau', 'khong-gian-mon-hoc', 'quy-dao-hoc-tap'] as const;
+    const handleScrollSpy = () => {
+      const markerY = window.scrollY + window.innerHeight * 0.32;
+      let current: (typeof sectionIds)[number] = 'khoi-dau';
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        if (markerY >= top) current = id;
+      }
+      setActiveSpySection((prev) => (prev === current ? prev : current));
+    };
+
+    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollSpy);
+  }, []);
+
+  const handleSpyJump = (targetId: 'khoi-dau' | 'khong-gian-mon-hoc' | 'quy-dao-hoc-tap') => {
+    setActiveSpySection(targetId);
+    const el = document.getElementById(targetId);
+    if (el && typeof el.scrollIntoView === 'function') {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -167,11 +196,91 @@ export function LearningSpacePage() {
         className="pointer-events-none fixed inset-0 z-40"
       />
 
+      {/* Trục Cánh Trái (Left Section Spy Rail cố định trên màn hình rộng 2xl+) */}
+      <nav
+        aria-label="Điều hướng phân khu Không gian học tập"
+        data-testid="learning-space-spy-rail"
+        className="fixed top-1/2 left-5 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 2xl:flex"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-3 bottom-3 left-1/2 w-px -translate-x-1/2 bg-[#CBD6D2]"
+        />
+        {(
+          [
+            { id: 'khoi-dau', label: '01 · KHỞI ĐẦU' },
+            { id: 'khong-gian-mon-hoc', label: '02 · HỌC PHẦN' },
+            { id: 'quy-dao-hoc-tap', label: '03 · QUỸ ĐẠO' },
+          ] as const
+        ).map((milestone) => {
+          const isActive = activeSpySection === milestone.id;
+          return (
+            <button
+              key={milestone.id}
+              type="button"
+              onClick={() => handleSpyJump(milestone.id)}
+              aria-current={isActive ? 'location' : undefined}
+              className={
+                isActive
+                  ? 'relative z-10 cursor-pointer rounded-full border border-[#1E332E] bg-[#1E332E] px-2.5 py-1.5 font-mono text-[10px] font-bold tracking-wider whitespace-nowrap text-[#FAFBF9] shadow-sm transition-all'
+                  : 'relative z-10 cursor-pointer rounded-full border border-[#CBD6D2] bg-[#FAFBF9]/90 px-2.5 py-1.5 font-mono text-[10px] font-medium tracking-wider whitespace-nowrap text-[#4A5D58] backdrop-blur-xs transition-all hover:border-[#1E332E]/50 hover:text-[#1E332E]'
+              }
+            >
+              {milestone.label}
+            </button>
+          );
+        })}
+      </nav>
+
       {/* Khung trưng bày học thuật bao quanh toàn bộ trang với 4 dấu ngoặc góc trắc địa */}
       <div
         data-testid="learning-space-perimeter-frame"
-        className="relative mx-auto min-h-[calc(100vh-3rem)] rounded-[28px] border border-[#D8E0DD]/75 bg-[var(--bg-page,#F2F4F3)] pb-10 shadow-[0_12px_40px_rgba(24,38,36,0.03)]"
+        className="relative mx-auto min-h-[calc(100vh-3rem)] overflow-hidden rounded-[28px] border border-[#D8E0DD]/75 bg-[var(--bg-page,#F2F4F3)] pb-10 shadow-[0_12px_40px_rgba(24,38,36,0.03)]"
       >
+        {/* Họa tiết Cánh Phải & Trái Ngoại Vi (Ambient Geodesic Wing & Side Ornaments) */}
+        <div
+          aria-hidden="true"
+          data-testid="ambient-geodesic-wings"
+          className="pointer-events-none absolute inset-0 z-10 overflow-hidden select-none"
+        >
+          <svg
+            viewBox="0 0 1600 1200"
+            preserveAspectRatio="none"
+            className="h-full w-full opacity-[0.055]"
+            fill="none"
+          >
+            {/* Hệ cung tròn trắc địa & lưới tọa độ cực bán nguyệt bên mép trái */}
+            <circle cx="0" cy="360" r="240" stroke="#1E332E" strokeWidth="1.2" />
+            <circle
+              cx="0"
+              cy="360"
+              r="340"
+              stroke="#9C7A4C"
+              strokeWidth="1"
+              strokeDasharray="6 8"
+            />
+            <circle cx="0" cy="360" r="440" stroke="#1E332E" strokeWidth="0.9" />
+            <circle cx="0" cy="920" r="280" stroke="#9C7A4C" strokeWidth="1" />
+            <line x1="0" y1="360" x2="340" y2="210" stroke="#1E332E" strokeWidth="0.7" />
+            <line x1="0" y1="360" x2="360" y2="510" stroke="#9C7A4C" strokeWidth="0.7" />
+
+            {/* Hệ cung tròn trắc địa & lưới tọa độ cực bán nguyệt bên mép phải */}
+            <circle cx="1600" cy="360" r="240" stroke="#1E332E" strokeWidth="1.2" />
+            <circle
+              cx="1600"
+              cy="360"
+              r="340"
+              stroke="#9C7A4C"
+              strokeWidth="1"
+              strokeDasharray="6 8"
+            />
+            <circle cx="1600" cy="360" r="440" stroke="#1E332E" strokeWidth="0.9" />
+            <circle cx="1600" cy="920" r="280" stroke="#9C7A4C" strokeWidth="1" />
+            <line x1="1600" y1="360" x2="1260" y2="210" stroke="#1E332E" strokeWidth="0.7" />
+            <line x1="1600" y1="360" x2="1240" y2="510" stroke="#9C7A4C" strokeWidth="0.7" />
+          </svg>
+        </div>
+
         {/* 4 Dấu ngoặc góc tọa độ trắc địa (12px x 12px) */}
         <div
           aria-hidden="true"
@@ -187,8 +296,12 @@ export function LearningSpacePage() {
         {/* =================================================================
           HERO BANNER SƯƠNG NGỌC KHOÁNG THẠCH ĐA TẦNG (Volumetric Frosted Mineral)
           ================================================================= */}
-        <section aria-label="Không gian Học tập" className="relative z-30 pt-20 pb-4 sm:pt-24">
-          <div className="lu-container-wide">
+        <section
+          id="khoi-dau"
+          aria-label="Không gian Học tập"
+          className="relative z-30 scroll-mt-24 pt-20 pb-4 sm:pt-24"
+        >
+          <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
             <div
               style={{
                 background:
@@ -288,7 +401,7 @@ export function LearningSpacePage() {
               </div>
 
               <div className="relative z-10 flex flex-col items-stretch gap-8 lg:flex-row lg:items-center lg:justify-between">
-                <div className="space-y-5 lg:w-[58%]">
+                <div className="space-y-5 lg:w-[54%]">
                   {/* Breadcrumb */}
                   <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-[#4A5D58]">
                     <Link to={ROUTES.home} className="transition-colors hover:text-[#182624]">
@@ -602,10 +715,16 @@ export function LearningSpacePage() {
                   </div>
                 </div>
 
-                {/* Cột Phải Banner (42% chiều rộng): Điêu khắc Đa diện Lồng nhau & Thiên cầu Hoàng Kim 3D 120fps */}
-                <div className="hidden flex-col items-center justify-center lg:flex lg:w-[42%]">
+                {/* Cột Phải Banner (46% chiều rộng): Điêu khắc Đa diện Lồng nhau & 3 Huy hiệu Thông số Nổi 120fps */}
+                <div
+                  data-testid="hero-3d-column"
+                  className="hidden flex-col items-center justify-center lg:flex lg:w-[46%]"
+                >
                   <div className="relative w-full">
-                    <LearningSpaceHeroCanvas />
+                    <LearningSpaceHeroCanvas
+                      subjectCount={subjects.length}
+                      totalLessons={totalLessonCount}
+                    />
                   </div>
                 </div>
               </div>
@@ -614,7 +733,10 @@ export function LearningSpacePage() {
         </section>
 
         {/* Dải phân cách hình học trắc địa giữa Hero & Hệ thống học phần */}
-        <div aria-hidden="true" className="lu-container-wide relative z-20 pt-5 pb-1">
+        <div
+          aria-hidden="true"
+          className="relative z-20 mx-auto w-full max-w-[1400px] px-6 pt-5 pb-1 lg:px-10"
+        >
           <div className="flex items-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#D8E0DD] to-[#CBD6D2]" />
             <div className="flex items-center gap-1.5 text-[#8C6D3F]/75">

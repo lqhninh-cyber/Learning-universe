@@ -90,7 +90,14 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('observatory-vignette')).toBeInTheDocument();
     expect(screen.getByTestId('learning-space-perimeter-frame')).toBeInTheDocument();
     expect(screen.getByTestId('geodesic-corner-brackets')).toBeInTheDocument();
+    expect(screen.getByTestId('learning-space-spy-rail')).toBeInTheDocument();
+    expect(screen.getByTestId('ambient-geodesic-wings')).toBeInTheDocument();
     expect(screen.getByTestId('hero-blueprint-grid')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-3d-column')).toBeInTheDocument();
+    const telemetryPills = screen.getByTestId('hero-telemetry-pills');
+    expect(telemetryPills).toHaveTextContent(/Cấu trúc · 04 Hệ tiên đề/i);
+    expect(telemetryPills).toHaveTextContent(/Bài giảng chuẩn hóa/i);
+    expect(telemetryPills).toHaveTextContent(/Mô phỏng 120 FPS/i);
     const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
     expect(ringsContainer).toBeInTheDocument();
     expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'polyhedral-armillary-v2');

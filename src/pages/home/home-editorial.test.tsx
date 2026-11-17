@@ -459,12 +459,18 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('spotlight-search-popover')).toBeInTheDocument();
 
       expect(screen.getByTestId('subject-progress-badge-cau-truc-dai-so')).toBeInTheDocument();
+      expect(screen.getByTestId('subject-footer-progress-cau-truc-dai-so')).toHaveTextContent(
+        /Tiến độ:\s*\d+%/,
+      );
       const roadmapToggle = screen.getByTestId('roadmap-toggle-cau-truc-dai-so');
       fireEvent.click(roadmapToggle);
       expect(screen.getByTestId('roadmap-drawer-cau-truc-dai-so')).toBeInTheDocument();
 
+      expect(screen.getByTestId('learning-bento-grid')).toBeInTheDocument();
       expect(screen.getByTestId('up-next-queue')).toBeInTheDocument();
-      expect(screen.getByTestId('progress-matrix-4-subjects')).toBeInTheDocument();
+      const matrixCard = screen.getByTestId('progress-matrix-4-subjects');
+      expect(matrixCard).toBeInTheDocument();
+      expect(matrixCard).toHaveTextContent(/Ma Trận Tiến Độ & Phân Bố 4 Học Phần/i);
 
       // Không còn 2 thẻ tiện ích cũ và không còn dải màu tối cuối trang
       expect(
