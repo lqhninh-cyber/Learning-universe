@@ -22,7 +22,7 @@ export interface SmoothMountainLayer {
 
 export interface TerracedContourLine {
   readonly id: number;
-  readonly layerIndex: 2 | 3 | 4;
+  readonly layerIndex: 1 | 2 | 3 | 4;
   readonly tierIndex: number;
   readonly depth: number;
   readonly tone: 'gold' | 'cyan';
@@ -88,6 +88,7 @@ export interface HeroTerrainLayerCache {
   readonly geometry: HeroTerrainGeometry;
   readonly nebulaLayer: TerrainSurface | null;
   readonly mountainTopographyLayer: TerrainSurface | null;
+  readonly valleyMistLayers: readonly (TerrainSurface | null)[];
   readonly astrolabeStarSprite: TerrainSurface | null;
   readonly astrolabeRingSprites: readonly (TerrainSurface | null)[];
   readonly astrolabeRingSpriteSize: number;
@@ -279,30 +280,31 @@ function sampleHarmonicMountainLayer(
 }
 
 /**
- * Sinh hệ thống 21 đường đồng mức ruộng bậc thang tinh xảo (6 + 7 + 8 = 21 đường trên 3 sườn núi gần/trung cảnh).
+ * Sinh hệ thống 24 đường đồng mức ruộng bậc thang nổi khối rõ nét (5 + 6 + 6 + 7 = 24 đường trên 4 tầng núi).
  * Khoảng cách thu hẹp ở sườn dốc đứng (|dy/dx| lớn) và giãn rộng tự nhiên ở vùng thung lũng thoải.
  */
 function buildTerracedContours(
   layers: readonly SmoothMountainLayer[],
   height: number,
 ): readonly TerracedContourLine[] {
-  const tierCounts: Record<2 | 3 | 4, number> = {
+  const tierCounts: Record<1 | 2 | 3 | 4, number> = {
+    1: 5,
     2: 6,
-    3: 7,
-    4: 8,
+    3: 6,
+    4: 7,
   };
 
   const contours: TerracedContourLine[] = [];
   let nextId = 0;
 
-  for (const targetIdx of [2, 3, 4] as const) {
+  for (const targetIdx of [1, 2, 3, 4] as const) {
     const layer = layers[targetIdx];
     if (!layer) continue;
 
     const count = tierCounts[targetIdx];
     const slopeBandPx = Math.max(
-      height * (targetIdx === 4 ? 0.145 : targetIdx === 3 ? 0.135 : 0.125),
-      72,
+      height * (targetIdx === 4 ? 0.15 : targetIdx === 3 ? 0.14 : targetIdx === 2 ? 0.13 : 0.115),
+      68,
     );
 
     for (let tier = 0; tier < count; tier += 1) {
@@ -314,10 +316,9 @@ function buildTerracedContours(
       for (let i = 0; i < layer.points.length; i += 1) {
         const ridge = layer.points[i]!;
         const slopeAbs = Math.abs(ridge.dydx);
-        // Chỗ dốc |dy/dx| cao -> hệ số nén nhỏ hơn (~0.42), thung lũng thoải -> giãn rộng (~1.0)
         const spacingCompression = 1 / (1 + 2.6 * slopeAbs);
         const subtleTerraceWave =
-          Math.sin(ridge.x * 0.012 + tier * 0.9 + targetIdx * 1.7) * (2.2 + targetIdx * 0.5);
+          Math.sin(ridge.x * 0.012 + tier * 0.9 + targetIdx * 1.7) * (2.4 + targetIdx * 0.55);
         const yOffset =
           6 + slopeBandPx * normalizedTier * (0.58 + 0.42 * spacingCompression) + subtleTerraceWave;
         const y = ridge.y + yOffset;
@@ -333,8 +334,8 @@ function buildTerracedContours(
         tierIndex: tier,
         depth: layer.depth,
         tone,
-        baseAlpha: tone === 'gold' ? 0.14 : 0.12,
-        lineWidth: 0.65,
+        baseAlpha: tone === 'gold' ? 0.24 : 0.2,
+        lineWidth: 0.85,
         minY,
         maxY,
         points: pts,
@@ -347,8 +348,8 @@ function buildTerracedContours(
 }
 
 function buildDongSonAstrolabe(width: number, height: number): AstrolabeSpec {
-  const cx = width * 0.72;
-  const cy = height * 0.3;
+  const cx = width * 0.73;
+  const cy = height * 0.32;
   const scale = Math.max(0.56, Math.min(width, height) / 900);
 
   const rings: readonly AstrolabeRingSpec[] = [
@@ -447,19 +448,19 @@ function buildDongSonAstrolabe(width: number, height: number): AstrolabeSpec {
 
 function buildSmoothNebulaHalos(width: number, height: number): readonly NebulaHaloSpec[] {
   const minDim = Math.min(width, height);
-  const scale = Math.max(0.75, Math.min(1.25, minDim / 880));
+  const scale = Math.max(0.85, Math.min(1.2, minDim / 880));
+  // 5 lớp tinh vân Ngân Hà vắt chéo từ (0.10W, 0.05H) xuống (0.85W, 0.55H) + quầng phụ
   return [
-    { cx: width * 0.18, cy: height * 0.24, radius: 320 * scale, alpha: 0.042, tone: 'indigo' },
-    { cx: width * 0.34, cy: height * 0.29, radius: 390 * scale, alpha: 0.052, tone: 'teal' },
-    { cx: width * 0.5, cy: height * 0.21, radius: 440 * scale, alpha: 0.056, tone: 'indigo' },
-    { cx: width * 0.67, cy: height * 0.27, radius: 380 * scale, alpha: 0.055, tone: 'amber' },
-    { cx: width * 0.84, cy: height * 0.18, radius: 300 * scale, alpha: 0.044, tone: 'teal' },
-    { cx: width * 0.44, cy: height * 0.39, radius: 340 * scale, alpha: 0.036, tone: 'teal' },
-    { cx: width * 0.74, cy: height * 0.34, radius: 270 * scale, alpha: 0.048, tone: 'amber' },
+    { cx: width * 0.1, cy: height * 0.05, radius: 290 * scale, alpha: 0.055, tone: 'teal' },
+    { cx: width * 0.27, cy: height * 0.17, radius: 360 * scale, alpha: 0.06, tone: 'indigo' },
+    { cx: width * 0.45, cy: height * 0.28, radius: 420 * scale, alpha: 0.06, tone: 'amber' },
+    { cx: width * 0.64, cy: height * 0.4, radius: 380 * scale, alpha: 0.058, tone: 'teal' },
+    { cx: width * 0.85, cy: height * 0.55, radius: 330 * scale, alpha: 0.052, tone: 'amber' },
+    { cx: width * 0.73, cy: height * 0.32, radius: 280 * scale, alpha: 0.055, tone: 'amber' },
   ];
 }
 
-/** Sinh toàn bộ hình học địa hình 5 tầng, 21 đường đồng mức, tinh vân & Đài Thiên Cầu Đông Sơn */
+/** Sinh toàn bộ hình học địa hình 5 tầng, 24 đường đồng mức, Dải Ngân Hà & Đài Thiên Cầu Đông Sơn */
 export function buildHeroTerrainGeometry(width: number, height: number): HeroTerrainGeometry {
   const w = Math.max(width, 320);
   const h = Math.max(height, 480);
@@ -477,7 +478,7 @@ export function buildHeroTerrainGeometry(width: number, height: number): HeroTer
     contours,
     astrolabe,
     nebulaHalos,
-    mistLakeTopY: h * 0.82,
+    mistLakeTopY: h * 0.76,
   };
 }
 
@@ -494,18 +495,59 @@ function renderNebulaOffscreen(
   if (!ctx) return null;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
+  const mwScale = 0.48 + palette.milkyWayIntensity * 0.52;
+
+  // Dải Ngân Hà 5 lớp vắt chéo từ (0.10W, 0.05H) -> (0.85W, 0.55H)
+  const x0 = geometry.width * 0.1;
+  const y0 = geometry.height * 0.05;
+  const x1 = geometry.width * 0.85;
+  const y1 = geometry.height * 0.55;
+  const bandCx = (x0 + x1) * 0.5;
+  const bandCy = (y0 + y1) * 0.5;
+  const bandAngle = Math.atan2(y1 - y0, x1 - x0);
+  const bandHalfLen = Math.hypot(x1 - x0, y1 - y0) * 0.62;
+
+  const ribbonSpecs: readonly {
+    readonly ryRatio: number;
+    readonly offsetPx: number;
+    readonly color: readonly [number, number, number];
+    readonly alpha: number;
+  }[] = [
+    { ryRatio: 0.28, offsetPx: -18, color: [90, 165, 215], alpha: 0.1 * mwScale },
+    { ryRatio: 0.22, offsetPx: 14, color: palette.rayCool, alpha: 0.085 * mwScale },
+    { ryRatio: 0.16, offsetPx: 0, color: [225, 185, 115], alpha: 0.08 * mwScale },
+    { ryRatio: 0.11, offsetPx: -8, color: [90, 165, 215], alpha: 0.095 * mwScale },
+    { ryRatio: 0.075, offsetPx: 6, color: palette.dawnCore, alpha: 0.075 * mwScale },
+  ];
+
+  for (const spec of ribbonSpecs) {
+    ctx.save();
+    ctx.translate(bandCx, bandCy + spec.offsetPx);
+    ctx.rotate(bandAngle);
+    ctx.scale(1, (geometry.height * spec.ryRatio) / Math.max(bandHalfLen, 1));
+    const bandGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, bandHalfLen);
+    bandGrad.addColorStop(0, rgbaString(spec.color, spec.alpha));
+    bandGrad.addColorStop(0.55, rgbaString(spec.color, spec.alpha * 0.45));
+    bandGrad.addColorStop(1, rgbaString(spec.color, 0));
+    ctx.fillStyle = bandGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, bandHalfLen, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
   const toneColorMap: Record<NebulaHaloSpec['tone'], readonly [number, number, number]> = {
     indigo: palette.facetCelestial,
-    teal: [96, 168, 206],
-    amber: palette.dawnCore,
+    teal: [90, 165, 215],
+    amber: [225, 185, 115],
   };
 
   for (const halo of geometry.nebulaHalos) {
     const rgb = toneColorMap[halo.tone];
-    const alpha = halo.alpha * (0.55 + palette.milkyWayIntensity * 0.55);
+    const alpha = Math.min(0.11, halo.alpha * 1.45 * mwScale);
     const grad = ctx.createRadialGradient(halo.cx, halo.cy, 0, halo.cx, halo.cy, halo.radius);
     grad.addColorStop(0, rgbaString(rgb, alpha));
-    grad.addColorStop(0.45, rgbaString(rgb, alpha * 0.5));
+    grad.addColorStop(0.48, rgbaString(rgb, alpha * 0.52));
     grad.addColorStop(1, rgbaString(rgb, 0));
     ctx.fillStyle = grad;
     ctx.beginPath();
@@ -514,6 +556,18 @@ function renderNebulaOffscreen(
   }
 
   return surf;
+}
+
+function mixRgb(
+  a: readonly [number, number, number],
+  b: readonly [number, number, number],
+  t: number,
+): readonly [number, number, number] {
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t),
+  ];
 }
 
 function renderMountainTopographyOffscreen(
@@ -532,48 +586,49 @@ function renderMountainTopographyOffscreen(
 
   const isNightLike = phase === 'dem-ngan-ha' || phase === 'hoang-hon';
 
-  // Sắc thái Chàm Ngọc / Lam Đá cho 5 tầng núi từ xa đến gần, hòa tan vào sương thung lũng (#1E384D / #28495E)
+  // Tách độ sáng rõ rệt giữa 5 tầng núi từ xa (nhuốm lam sáng/khí quyển) đến gần (lam trầm sâu), không bị bệt đen
   const layerPeakPalette: readonly (readonly [number, number, number])[] = isNightLike
     ? [
-        [22, 41, 61], // #16293D
-        [20, 38, 56],
-        [17, 34, 52],
-        [15, 29, 45],
-        [13, 27, 42], // #0D1B2A
+        mixRgb(palette.facetCelestial, [72, 134, 178], 0.55), // Xa nhất: lam ngọc sáng sương
+        mixRgb(palette.facetCelestial, palette.facetMid, 0.42),
+        mixRgb(palette.facetMid, [42, 86, 124], 0.4),
+        mixRgb(palette.facetMid, palette.facetAbyss, 0.45),
+        mixRgb(palette.facetAbyss, [22, 46, 70], 0.5),
       ]
     : [
+        mixRgb(palette.facetCelestial, palette.cloudPearl, 0.35),
+        mixRgb(palette.facetCelestial, palette.facetMid, 0.35),
         palette.facetMid,
-        palette.facetMid,
+        mixRgb(palette.facetMid, palette.facetAbyss, 0.5),
         palette.facetAbyss,
-        palette.facetAbyss,
-        palette.bottomMistDeep,
       ];
 
   const layerBasePalette: readonly (readonly [number, number, number])[] = isNightLike
     ? [
-        [30, 56, 77], // #1E384D
-        [34, 62, 84],
-        [28, 52, 74],
-        [22, 44, 64],
-        [17, 34, 51],
+        [52, 98, 132],
+        [44, 84, 114],
+        [35, 68, 96],
+        [27, 54, 78],
+        [22, 44, 66],
       ]
     : [
+        palette.cloudPearl,
         palette.cloudSlate,
         palette.facetMid,
-        palette.bottomMistDeep,
         palette.bottomMistDeep,
         palette.bottomMistDeep,
       ];
 
   const mistBandRgb: readonly [number, number, number] = isNightLike
-    ? [40, 73, 94] // #28495E
+    ? mixRgb([39, 71, 94], palette.rayCool, 0.25) // #27475E pha ánh lam khí quyển
     : palette.cloudPearl;
 
   for (const layer of geometry.mountainLayers) {
-    const peakRgb = layerPeakPalette[layer.index] ?? [22, 41, 61];
-    const skirtRgb = layerBasePalette[layer.index] ?? [30, 56, 77];
+    const peakRgb = layerPeakPalette[layer.index] ?? [42, 86, 124];
+    const skirtRgb = layerBasePalette[layer.index] ?? [35, 68, 96];
+    const sunlitRgb = mixRgb(peakRgb, palette.dawnCore, layer.index <= 1 ? 0.28 : 0.16);
 
-    // 1. Khối núi mịn qua quadraticCurveTo (tuyệt đối KHÔNG vẽ viền cứng ctx.stroke ở đỉnh núi)
+    // 1. Khối núi đa tầng có chiều sâu quang học (lưng núi nhận ánh sáng chân trời chuyển dần xuống thung lũng sương)
     ctx.save();
     ctx.beginPath();
     traceSmoothQuadraticCurve(ctx, layer.points, true);
@@ -581,73 +636,147 @@ function renderMountainTopographyOffscreen(
     ctx.lineTo(-48, geometry.height);
     ctx.closePath();
 
-    const grad = ctx.createLinearGradient(0, layer.baseY - 50, 0, layer.skirtY + 80);
-    grad.addColorStop(0, rgbaString(peakRgb, 0.94));
-    grad.addColorStop(0.58, rgbaString(skirtRgb, 0.96));
-    grad.addColorStop(1, rgbaString(mistBandRgb, 0.42));
+    const grad = ctx.createLinearGradient(0, layer.baseY - 46, 0, layer.skirtY + 75);
+    grad.addColorStop(0, rgbaString(sunlitRgb, layer.index === 0 ? 0.78 : 0.92));
+    grad.addColorStop(0.28, rgbaString(peakRgb, 0.92));
+    grad.addColorStop(0.68, rgbaString(skirtRgb, 0.9));
+    grad.addColorStop(1, rgbaString(mistBandRgb, 0.36));
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // 1.5. Viền sáng khí quyển (Atmospheric Ridge Rim-Lighting) mảnh mai hắt từ thiên thể lên sống núi cao nhất
-    if (layer.index <= 2) {
-      const rimIntensity = layer.index === 0 ? 0.25 : layer.index === 1 ? 0.2 : 0.14;
+    // 1.5. Đường viền sáng mảnh tách biệt hoàn toàn đỉnh núi & bầu trời:
+    // Sống núi cao nhất (layer 0): lineWidth 1.2px, rgba(160, 215, 245, 0.38) + viền hổ phách nhẹ ở tầng 1-2
+    if (layer.index === 0) {
+      const topRimColor =
+        phase === 'dem-ngan-ha'
+          ? 'rgba(160, 215, 245, 0.38)'
+          : rgbaString(mixRgb(palette.rayCool, [255, 244, 214], 0.4), 0.42);
+      ctx.save();
+      ctx.beginPath();
+      traceSmoothQuadraticCurve(ctx, layer.points, true);
+      ctx.strokeStyle = topRimColor;
+      ctx.lineWidth = 1.2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.restore();
+    } else if (layer.index <= 2) {
+      const rimIntensity = layer.index === 1 ? 0.28 : 0.22;
       const rimGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
       const focusStop = Math.max(0.15, Math.min(0.85, geometry.astrolabe.cx / geometry.width));
-      rimGrad.addColorStop(0, `rgba(243, 229, 171, ${(rimIntensity * 0.24).toFixed(3)})`);
+      const warmRimRgb = mixRgb([243, 229, 171], palette.rimGlow, 0.45);
+      rimGrad.addColorStop(0, rgbaString(warmRimRgb, rimIntensity * 0.28));
       rimGrad.addColorStop(
         Math.max(0.05, focusStop - 0.28),
-        `rgba(243, 229, 171, ${(rimIntensity * 0.58).toFixed(3)})`,
+        rgbaString(warmRimRgb, rimIntensity * 0.65),
       );
-      rimGrad.addColorStop(focusStop, `rgba(243, 229, 171, ${rimIntensity.toFixed(3)})`);
+      rimGrad.addColorStop(focusStop, rgbaString(warmRimRgb, rimIntensity));
       rimGrad.addColorStop(
         Math.min(0.95, focusStop + 0.24),
-        `rgba(243, 229, 171, ${(rimIntensity * 0.65).toFixed(3)})`,
+        rgbaString(warmRimRgb, rimIntensity * 0.7),
       );
-      rimGrad.addColorStop(1, `rgba(243, 229, 171, ${(rimIntensity * 0.2).toFixed(3)})`);
+      rimGrad.addColorStop(1, rgbaString(warmRimRgb, rimIntensity * 0.24));
 
       ctx.save();
       ctx.beginPath();
       traceSmoothQuadraticCurve(ctx, layer.points, true);
       ctx.strokeStyle = rimGrad;
-      ctx.lineWidth = layer.index === 0 ? 1.05 : 0.85;
+      ctx.lineWidth = layer.index === 1 ? 1.05 : 0.9;
       ctx.lineCap = 'round';
       ctx.stroke();
-
-      if (layer.index === 0) {
-        ctx.strokeStyle = 'rgba(243, 229, 171, 0.08)';
-        ctx.lineWidth = 2.6;
-        ctx.stroke();
-      }
       ctx.restore();
     }
 
-    // 2. Đường đồng mức ruộng bậc thang (chỉ trên 3 tầng sườn núi trung cảnh & gần: index 2, 3, 4)
-    if (layer.index >= 2) {
+    // 2. Đường đồng mức ruộng bậc thang nổi khối rõ nét trên cả 4 tầng núi (index 1, 2, 3, 4)
+    if (layer.index >= 1) {
       ctx.clip();
       const layerContours = geometry.contours.filter((c) => c.layerIndex === layer.index);
       for (const contour of layerContours) {
         ctx.beginPath();
         traceSmoothQuadraticCurve(ctx, contour.points, true);
         ctx.lineWidth = contour.lineWidth;
+        const goldRgb = mixRgb([212, 175, 105], palette.terraceRim, 0.35);
+        const cyanRgb = mixRgb([110, 185, 220], palette.rayCool, 0.35);
         ctx.strokeStyle =
           contour.tone === 'gold'
-            ? `rgba(218, 185, 120, ${contour.baseAlpha})`
-            : `rgba(125, 195, 225, ${contour.baseAlpha})`;
+            ? rgbaString(goldRgb, contour.baseAlpha)
+            : rgbaString(cyanRgb, contour.baseAlpha);
         ctx.stroke();
       }
     }
     ctx.restore();
 
-    // 3. Lớp Sương Mù Thung Lũng tách lớp chiều sâu tự nhiên ở chân mỗi tầng núi (không dùng nét viền cứng)
-    const mistTop = layer.skirtY - 52;
-    const mistBottom = Math.min(geometry.height * 0.88, layer.skirtY + 62);
+    // 3. Lớp Sương Mù Thung Lũng tách lớp chiều sâu ở chân mỗi tầng núi
+    const mistTop = layer.skirtY - 48;
+    const mistBottom = Math.min(geometry.height * 0.88, layer.skirtY + 64);
     const mistGrad = ctx.createLinearGradient(0, mistTop, 0, mistBottom);
-    const mistAlpha = isNightLike ? 0.26 - layer.index * 0.025 : 0.34 - layer.index * 0.03;
+    const mistAlpha = isNightLike ? 0.34 - layer.index * 0.03 : 0.38 - layer.index * 0.03;
     mistGrad.addColorStop(0, rgbaString(mistBandRgb, 0));
-    mistGrad.addColorStop(0.5, rgbaString(mistBandRgb, Math.max(0.1, mistAlpha)));
+    mistGrad.addColorStop(0.5, rgbaString(mistBandRgb, Math.max(0.14, mistAlpha)));
     mistGrad.addColorStop(1, rgbaString(mistBandRgb, 0));
     ctx.fillStyle = mistGrad;
     ctx.fillRect(-40, mistTop, geometry.width + 80, mistBottom - mistTop);
+  }
+
+  return surf;
+}
+
+/** Pre-render 3 lớp Biển Mây Bồng Bềnh seamless (OffscreenCanvas) cho vùng đáy 0.72H -> 1.0H */
+function renderValleyMistLayerOffscreen(
+  width: number,
+  height: number,
+  layerIndex: 0 | 1 | 2,
+  phase: AtmosphericPhase,
+  palette: AtmospherePalette,
+  dpr: number,
+): TerrainSurface | null {
+  const bandHeight = Math.ceil(height * 0.32);
+  const surf = makeOffscreenSurface(Math.round(width * dpr), Math.round(bandHeight * dpr));
+  const ctx = getSurfaceContext(surf);
+  if (!ctx) return null;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const isNightLike = phase === 'dem-ngan-ha' || phase === 'hoang-hon';
+  const coolCloudA: readonly [number, number, number] = isNightLike
+    ? [27, 53, 72] // #1B3548
+    : mixRgb([27, 53, 72], palette.cloudSlate, 0.55);
+  const coolCloudB: readonly [number, number, number] = isNightLike
+    ? [39, 71, 94] // #27475E
+    : mixRgb([39, 71, 94], palette.cloudPearl, 0.6);
+  const warmCloudGold: readonly [number, number, number] = mixRgb(
+    [212, 163, 89],
+    palette.dawnCore,
+    0.35,
+  );
+
+  const puffCount = 12 + layerIndex * 3;
+  const baseYRatio = 0.34 + layerIndex * 0.16;
+
+  for (let i = 0; i < puffCount; i += 1) {
+    const cx = ((i + 0.5) / puffCount) * width;
+    const cy = bandHeight * (baseYRatio + Math.sin(i * 1.9 + layerIndex * 2.3) * 0.14);
+    const rx = Math.max(90, (width / puffCount) * (1.25 + (i % 3) * 0.25));
+    const ry = bandHeight * (0.28 + (i % 2) * 0.08);
+    const isWarm = i % 3 === 0;
+    const rgb = isWarm ? warmCloudGold : i % 2 === 0 ? coolCloudB : coolCloudA;
+    const alpha = isWarm ? 0.15 : 0.24 - layerIndex * 0.03;
+
+    // Vẽ lặp qua biên trái/phải để cuộn ngang seamless không bị vết cắt
+    for (const offsetX of [-width, 0, width]) {
+      const px = cx + offsetX;
+      if (px + rx < -20 || px - rx > width + 20) continue;
+      ctx.save();
+      ctx.translate(px, cy);
+      ctx.scale(1, ry / rx);
+      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+      grad.addColorStop(0, rgbaString(rgb, alpha));
+      grad.addColorStop(0.55, rgbaString(rgb, alpha * 0.45));
+      grad.addColorStop(1, rgbaString(rgb, 0));
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, rx, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
   }
 
   return surf;
@@ -666,20 +795,20 @@ function renderAstrolabeStarOffscreen(
   const half = size * 0.5;
   ctx.translate(half, half);
 
-  // Vòng tròn tâm mảnh
+  // Vòng tròn tâm sáng rõ
   ctx.beginPath();
   ctx.arc(0, 0, astrolabe.starInnerRadius * 0.55, 0, Math.PI * 2);
-  ctx.lineWidth = 0.65;
-  ctx.strokeStyle = 'rgba(229, 193, 118, 0.24)';
+  ctx.lineWidth = 0.8;
+  ctx.strokeStyle = 'rgba(243, 201, 120, 0.55)';
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(0, 0, astrolabe.starInnerRadius, 0, Math.PI * 2);
-  ctx.lineWidth = 0.7;
-  ctx.strokeStyle = 'rgba(229, 193, 118, 0.22)';
+  ctx.lineWidth = 0.85;
+  ctx.strokeStyle = 'rgba(243, 201, 120, 0.52)';
   ctx.stroke();
 
-  // Ngôi sao Đông Sơn 14 cánh mảnh chuẩn tỷ lệ hình học
+  // Ngôi sao Đông Sơn 14 cánh rực rỡ chuẩn tỷ lệ hình học
   const totalPoints = astrolabe.starRays * 2;
   ctx.beginPath();
   for (let i = 0; i <= totalPoints; i += 1) {
@@ -694,10 +823,10 @@ function renderAstrolabeStarOffscreen(
     }
   }
   ctx.closePath();
-  ctx.fillStyle = 'rgba(229, 193, 118, 0.05)';
+  ctx.fillStyle = 'rgba(243, 201, 120, 0.14)';
   ctx.fill();
-  ctx.lineWidth = 0.7;
-  ctx.strokeStyle = 'rgba(229, 193, 118, 0.22)';
+  ctx.lineWidth = 0.95;
+  ctx.strokeStyle = 'rgba(243, 201, 120, 0.62)';
   ctx.stroke();
 
   return surf;
@@ -719,11 +848,11 @@ function renderAstrolabeRingOffscreen(
   const half = spriteLogicalSize * 0.5;
   ctx.translate(half, half);
 
-  // Vòng tròn đồng tâm siêu mảnh (0.55px - 0.85px)
+  // Vòng tròn đồng tâm sáng sắc nét (0.45 - 0.65 alpha)
   ctx.beginPath();
   ctx.arc(0, 0, ring.radius, 0, Math.PI * 2);
-  ctx.lineWidth = ring.lineWidth;
-  ctx.strokeStyle = 'rgba(229, 193, 118, 0.18)';
+  ctx.lineWidth = ring.lineWidth + 0.15;
+  ctx.strokeStyle = 'rgba(243, 201, 120, 0.48)';
   ctx.stroke();
 
   // Khắc vạch chia độ: mỗi 5° một vạch ngắn 3px, mỗi 30° một vạch dài 7px kèm chấm tròn nhỏ
@@ -739,14 +868,14 @@ function renderAstrolabeRingOffscreen(
     ctx.beginPath();
     ctx.moveTo(cos * innerR, sin * innerR);
     ctx.lineTo(cos * outerR, sin * outerR);
-    ctx.lineWidth = isMajor ? 0.85 : 0.5;
-    ctx.strokeStyle = isMajor ? 'rgba(229, 193, 118, 0.28)' : 'rgba(229, 193, 118, 0.15)';
+    ctx.lineWidth = isMajor ? 0.95 : 0.6;
+    ctx.strokeStyle = isMajor ? 'rgba(243, 201, 120, 0.64)' : 'rgba(243, 201, 120, 0.45)';
     ctx.stroke();
 
     if (isMajor) {
       ctx.beginPath();
-      ctx.arc(cos * (outerR + 3.5), sin * (outerR + 3.5), 1.15, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(229, 193, 118, 0.28)';
+      ctx.arc(cos * (outerR + 3.5), sin * (outerR + 3.5), 1.35, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 243, 209, 0.62)';
       ctx.fill();
     }
   }
@@ -755,7 +884,7 @@ function renderAstrolabeRingOffscreen(
 }
 
 /**
- * Tiền kết xuất (pre-render) các lớp địa hình cơ sở, tinh vân & vòng khắc độ Thiên Cầu Đông Sơn
+ * Tiền kết xuất (pre-render) các lớp địa hình cơ sở, Dải Ngân Hà, 3 lớp Biển Mây & vòng khắc độ Thiên Cầu Đông Sơn
  * vào OffscreenCanvas để đảm bảo thời gian vẽ khung hình 120fps luôn < 3ms/frame.
  */
 export function buildHeroTerrainLayerCache(
@@ -779,6 +908,9 @@ export function buildHeroTerrainLayerCache(
     geometry,
     nebulaLayer: renderNebulaOffscreen(geometry, palette, safeDpr),
     mountainTopographyLayer: renderMountainTopographyOffscreen(geometry, phase, palette, safeDpr),
+    valleyMistLayers: ([0, 1, 2] as const).map((idx) =>
+      renderValleyMistLayerOffscreen(geometry.width, geometry.height, idx, phase, palette, safeDpr),
+    ),
     astrolabeStarSprite: renderAstrolabeStarOffscreen(geometry.astrolabe, safeDpr),
     astrolabeRingSprites: geometry.astrolabe.rings.map((ring) =>
       renderAstrolabeRingOffscreen(ring, astrolabeRingSpriteSize, safeDpr),

@@ -625,19 +625,19 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('hero-text-contrast-scrim').className).toContain('z-10');
       expect(screen.getByTestId('hero-quote-contrast-scrim').className).toContain('z-10');
 
-      // 1. 5 Tầng núi sương mù Fourier mượt, 18-25 đường đồng mức trắc địa (0.65px) & Đài Thiên Cầu Đông Sơn
+      // 1. 5 Tầng núi sương mù Fourier mượt, 22-28 đường đồng mức phát sáng (0.85px) trên 4 tầng núi & Đài Thiên Cầu Đông Sơn
       expect(PIPELINE_LAYER_NAMES).toHaveLength(6);
       const terrain = buildHeroTerrainGeometry(1440, 900);
       expect(terrain.mountainLayers).toHaveLength(5);
-      expect(terrain.contours.length).toBeGreaterThanOrEqual(18);
-      expect(terrain.contours.length).toBeLessThanOrEqual(25);
-      expect(terrain.contours.every((c) => c.lineWidth === 0.65)).toBe(true);
-      expect(new Set(terrain.contours.map((c) => c.layerIndex))).toEqual(new Set([2, 3, 4]));
+      expect(terrain.contours.length).toBeGreaterThanOrEqual(22);
+      expect(terrain.contours.length).toBeLessThanOrEqual(28);
+      expect(terrain.contours.every((c) => c.lineWidth === 0.85)).toBe(true);
+      expect(new Set(terrain.contours.map((c) => c.layerIndex))).toEqual(new Set([1, 2, 3, 4]));
       expect(new Set(terrain.contours.map((c) => c.tone))).toEqual(new Set(['gold', 'cyan']));
 
-      // Đài Thiên Cầu Đông Sơn (72% x 30%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo)
-      expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.72, 2);
-      expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.3, 2);
+      // Đài Thiên Cầu Đông Sơn (73% x 32%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo)
+      expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.73, 2);
+      expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.32, 2);
       expect(terrain.astrolabe.starRays).toBe(14);
       expect(terrain.astrolabe.rings).toHaveLength(4);
       expect(
@@ -646,7 +646,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(Math.abs(terrain.astrolabe.rings[0]!.angularSpeedRadSec)).toBeCloseTo(0.04, 3);
       expect(terrain.astrolabe.eclipticArcs).toHaveLength(2);
 
-      // Tinh vân mềm (bán kính 250-450px, độ mờ 0.03-0.06)
+      // Tinh vân Dải Ngân Hà (5+ lớp bán kính 250-450px, độ mờ 0.03-0.06) & 3 lớp Biển Mây Bồng Bềnh
       expect(terrain.nebulaHalos.length).toBeGreaterThanOrEqual(5);
       expect(
         terrain.nebulaHalos.every(
@@ -664,10 +664,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(layerCache.height).toBe(900);
       expect(layerCache.phase).toBe('dem-ngan-ha');
       expect(layerCache.geometry.mountainLayers).toHaveLength(5);
+      expect(layerCache.valleyMistLayers).toHaveLength(3);
 
-      // 2. Bầu trời 15 sao khúc xạ chữ thập (r=1.3px, 8-14px), 25 hạt tinh tú & sóng trống đồng R=600px
+      // 2. Bầu trời 280 ngôi sao (gồm 15 sao chữ thập r=1.3px), 3 Đa diện Tinh Tú 3D, 25 tinh tú vàng & suối ánh sao
       const world = createAtmosphereWorld();
-      expect(world.stars.length).toBeGreaterThanOrEqual(240);
+      expect(world.stars).toHaveLength(280);
+      expect(world.polyhedralConstellations3D).toHaveLength(3);
       const flareStars = world.stars.filter((s) => s.crossFlare);
       expect(flareStars).toHaveLength(15);
       expect(
@@ -676,7 +678,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       expect(world.ascendingStarlights).toHaveLength(25);
       expect(world.ascendingStarlights.every((m) => m.radius === 1.5)).toBe(true);
-      expect(world.mistRipples.every((r) => r.ny >= 0.82)).toBe(true);
+      expect(world.mistRipples.length).toBeGreaterThanOrEqual(20);
+      expect(world.mistRipples.length).toBeLessThanOrEqual(30);
+      expect(world.mistRipples.every((r) => r.ny >= 0.76 && r.ny <= 0.98)).toBe(true);
 
       // Chòm sao hình học toán học (4-5 cụm sao gồm Scorpion), bụi sao 3D (56 hạt) & sao băng định kỳ (5-9s)
       expect(world.constellations).toHaveLength(5);

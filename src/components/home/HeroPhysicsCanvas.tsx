@@ -31,10 +31,11 @@ export interface HeroPhysicsCanvasProps {
 }
 
 /**
- * Canvas 2D Engine Khí Quyển & Sơn Thủy Fractal 6 Lớp 120fps (`dtScale` + `OffscreenCanvas` cache):
- * - Đồng bộ 600ms bảng màu & cache địa hình OffscreenCanvas theo 4 thời khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
- * - 6 lớp thứ tự Z: Ngân Hà + Cực Quang Màn Rèm -> Núi Fractal + Vọng Tinh Các + Thác Đa Dòng -> Cầu Vòm Đá + Hồ Fresnel -> Tiền cảnh Tùng & Bokeh DoF
- * - Tương tác gảy màn cực quang, thắp Đèn Trời 3D bay vút & tạo sóng lăn tăn elip 3.5:1 trên mặt hồ
+ * Canvas 2D Engine "Sơn Thủy Trắc Địa Phát Sáng & Vũ Trụ Đông Sơn" (120fps `dtScale` + `OffscreenCanvas` cache):
+ * - Đồng bộ 600ms bảng màu & cache địa hình, Ngân Hà và 3 lớp Biển Mây Bồng Bềnh theo 4 thời khắc
+ * - 24 đường đồng mức phát sáng (lineWidth 0.85px) trên 4 tầng núi kèm xung ánh sáng chạy dọc bậc thang
+ * - Đài Thiên Cầu Đông Sơn 14 cánh rực sáng (Core Radial Glow 220px, 8 Hạt Ngọc Tinh Tú), 3 Khối Đa Diện Tinh Tú 3D & Dòng Suối Ánh Sao
+ * - Tương tác chuột (240px) làm rực sáng gấp đôi & gợn sóng đàn hồi, click phát xung sóng vàng kim lan tỏa toàn cảnh quan
  */
 export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhysicsCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -203,8 +204,13 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       const clickY = event.clientY - rect.top;
       if (clickX < 0 || clickX > width || clickY < 0 || clickY > height) return;
 
-      // Sóng Ngân Trống Đồng lan tỏa R(t): 0 -> 600px làm bừng sáng đồng mức & thiên cầu
-      spawnHarmonicContourPulse(world, clickX, clickY, 600);
+      // Sóng Vàng Kim Trống Đồng lan tỏa toàn cảnh quan (R >= 720px) làm bừng sáng đồng mức, thiên cầu & đa diện 3D
+      spawnHarmonicContourPulse(
+        world,
+        clickX,
+        clickY,
+        Math.max(720, Math.round(Math.hypot(width, height) * 0.65)),
+      );
     };
 
     const drawFrame = (nowMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
