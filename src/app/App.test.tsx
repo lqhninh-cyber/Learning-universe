@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { routes } from '@/app/router';
@@ -100,8 +100,21 @@ describe('App routing smoke test', () => {
     expect(screen.queryByText(/Mô phỏng 120 FPS/i)).not.toBeInTheDocument();
     const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
     expect(ringsContainer).toBeInTheDocument();
-    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'dual-platonic-astrolabe-v4');
+    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'crystalline-astrolabe-v5');
     expect(ringsContainer).not.toHaveAttribute('data-dual-locked');
+    expect(ringsContainer).not.toHaveAttribute('title');
+    const heroCanvas = ringsContainer.querySelector('canvas');
+    expect(heroCanvas).not.toBeNull();
+    expect(heroCanvas).not.toHaveAttribute('title');
+    expect(heroCanvas).toHaveClass('cursor-grab');
+    if (heroCanvas) {
+      expect(heroCanvas).toHaveAttribute('data-dragging', 'false');
+      fireEvent.pointerDown(heroCanvas, { clientX: 120, clientY: 140, button: 0, pointerId: 1 });
+      expect(heroCanvas).toHaveAttribute('data-dragging', 'true');
+      fireEvent.pointerMove(heroCanvas, { clientX: 180, clientY: 165, pointerId: 1 });
+      fireEvent.pointerUp(heroCanvas, { clientX: 180, clientY: 165, pointerId: 1 });
+      expect(heroCanvas).toHaveAttribute('data-dragging', 'false');
+    }
     const glyphs = screen.getByTestId('hero-math-parallax-glyphs');
     for (const symbol of ['∫', '∂', '∑', 'π', '∆', 'φ', '∀', '≃']) {
       expect(glyphs).toHaveTextContent(symbol);

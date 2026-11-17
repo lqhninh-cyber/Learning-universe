@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import {
   computeFrameDelta,
@@ -10,6 +10,7 @@ import {
   ARMILLARY_RINGS,
   type ArmillaryRingSpec,
   BLUEPRINT_SYMBOLS,
+  CORE_TIER1_SCALE,
   CRYSTAL_FACES,
   CRYSTAL_VERTICES,
   DIAL_TRIG_360,
@@ -17,22 +18,40 @@ import {
   HALF_LIGHT_VEC,
   HARMONIC_WAVE_POINTS,
   ICO_FACES,
+  ICO_TIER1_SCALE,
   ICO_VERTICES,
   LIGHT_DIR,
   type ProjectedPoint,
   projectPointInto,
   rotateVec3ScaledInto,
+  SHININESS_BLINN,
   SPHERICAL_WAVE_TRIG,
   type Vec3,
 } from './heroSculptureGeometry';
 
 interface ShadedTriangleBuffer {
   indices: [number, number, number];
+  p0: ProjectedPoint;
+  p1: ProjectedPoint;
+  p2: ProjectedPoint;
   avgZ: number;
   light: number;
   specular: number;
   fresnel: number;
   isFront: boolean;
+}
+
+interface DragPhysicsState {
+  rotX: number;
+  rotY: number;
+  velX: number;
+  velY: number;
+  isDragging: boolean;
+  lastX: number;
+  lastY: number;
+  manualOffsetX: number;
+  manualOffsetY: number;
+  lastMoveMs: number;
 }
 
 interface ResonancePulse {
@@ -56,6 +75,13 @@ interface HoverWave {
 const MAX_RESONANCE_PULSES = 8;
 const RESONANCE_COOLDOWN_MS = 900;
 const SYMBOL_PROXIMITY_PX = 110;
+const FACET_HOVER_RADIUS_PX = 160;
+const BASE_AUTO_SPEED_X = 0.18 / 60;
+const BASE_AUTO_SPEED_Y = 0.25 / 60;
+const RADAR_SPEED = 0.42;
+const RADAR_SECTOR_RAD = 0.38;
+const RADAR_HIT_RAD = 0.22;
+const DRAG_SENSITIVITY = 0.0075;
 
 function createZeroVec3Array(count: number): Vec3[] {
   const arr: Vec3[] = [];
@@ -77,6 +103,7 @@ function projectPolyhedronIntoBuffers(
   vertices: readonly Vec3[],
   faces: readonly (readonly [number, number, number])[],
   scaleFactor: number,
+  normalExplosionPx: number,
   rotX: number,
   rotY: number,
   rotZ: number,
@@ -88,6 +115,7 @@ function projectPolyhedronIntoBuffers(
   facePool: ShadedTriangleBuffer[],
   backOut: ShadedTriangleBuffer[],
   frontOut: ShadedTriangleBuffer[],
+  tmpShiftVec: Vec3,
 ): void {
   for (let i = 0; i < vertices.length; i += 1) {
     const w = rotateVec3ScaledInto(vertices[i]!, scaleFactor, rotX, rotY, rotZ, worldOut[i]!);
@@ -96,6 +124,7 @@ function projectPolyhedronIntoBuffers(
 
   backOut.length = 0;
   frontOut.length = 0;
+  const shiftWorld = normalExplosionPx > 0.001 ? normalExplosionPx / (fov / 3.35) : 0;
 
   for (let f = 0; f < faces.length; f += 1) {
     const tri = faces[f]!;
@@ -122,21 +151,59 @@ function projectPolyhedronIntoBuffers(
     ny /= nLen;
     nz /= nLen;
 
-    const p0 = projOut[i0]!;
-    const p1 = projOut[i1]!;
-    const p2 = projOut[i2]!;
-
     const item = facePool[f]!;
     item.indices[0] = i0;
     item.indices[1] = i1;
     item.indices[2] = i2;
-    item.avgZ = (p0.z + p1.z + p2.z) / 3;
+
+    if (shiftWorld > 0) {
+      // Đảm bảo vector pháp tuyến luôn hướng ra ngoài khi mở khe hở vi mô theo pháp tuyến mặt
+      const centroidDot =
+        (w0.x + w1.x + w2.x) * nx + (w0.y + w1.y + w2.y) * ny + (w0.z + w1.z + w2.z) * nz;
+      const outSign = centroidDot >= 0 ? 1 : -1;
+      const sx = nx * outSign * shiftWorld;
+      const sy = ny * outSign * shiftWorld;
+      const sz = nz * outSign * shiftWorld;
+
+      tmpShiftVec.x = w0.x + sx;
+      tmpShiftVec.y = w0.y + sy;
+      tmpShiftVec.z = w0.z + sz;
+      projectPointInto(tmpShiftVec, cx, cy, fov, item.p0);
+
+      tmpShiftVec.x = w1.x + sx;
+      tmpShiftVec.y = w1.y + sy;
+      tmpShiftVec.z = w1.z + sz;
+      projectPointInto(tmpShiftVec, cx, cy, fov, item.p1);
+
+      tmpShiftVec.x = w2.x + sx;
+      tmpShiftVec.y = w2.y + sy;
+      tmpShiftVec.z = w2.z + sz;
+      projectPointInto(tmpShiftVec, cx, cy, fov, item.p2);
+    } else {
+      const p0 = projOut[i0]!;
+      const p1 = projOut[i1]!;
+      const p2 = projOut[i2]!;
+      item.p0.x = p0.x;
+      item.p0.y = p0.y;
+      item.p0.z = p0.z;
+      item.p0.scale = p0.scale;
+      item.p1.x = p1.x;
+      item.p1.y = p1.y;
+      item.p1.z = p1.z;
+      item.p1.scale = p1.scale;
+      item.p2.x = p2.x;
+      item.p2.y = p2.y;
+      item.p2.z = p2.z;
+      item.p2.scale = p2.scale;
+    }
+
+    item.avgZ = (item.p0.z + item.p1.z + item.p2.z) / 3;
     item.light = Math.max(0, nx * LIGHT_DIR.x + ny * LIGHT_DIR.y + nz * LIGHT_DIR.z);
     const halfDot = Math.max(
       0,
       nx * HALF_LIGHT_VEC.x + ny * HALF_LIGHT_VEC.y + nz * HALF_LIGHT_VEC.z,
     );
-    item.specular = Math.pow(halfDot, 14);
+    item.specular = Math.pow(halfDot, SHININESS_BLINN);
     item.fresnel = Math.pow(1 - Math.max(0, nz), 2.2);
     item.isFront = nz >= 0;
 
@@ -154,15 +221,17 @@ function drawAstrolabeBackdropAndAlidade(
   cy: number,
   minDim: number,
   alphaCurr: number,
+  radarAngle: number,
 ): void {
   const unitScale = minDim / 460;
   const outerR = 185 * unitScale;
   const innerR = 178 * unitScale;
   const axisExtent = 198 * unitScale;
+  const coreClearR = outerR * 0.36;
 
   ctx.save();
 
-  // Hai vòng chia độ ngoại vi đồng tâm R = 185px & R = 178px
+  // Hai vòng chia độ ngoại vi đồng tâm R_dial = 185px & 178px (tỉ lệ unitScale)
   ctx.beginPath();
   ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
   ctx.strokeStyle = 'rgba(30, 58, 52, 0.24)';
@@ -175,14 +244,35 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.lineWidth = 0.7;
   ctx.stroke();
 
-  // Vòng tham chiếu trắc địa phía trong
+  // Vòng phân cách Tầng 2 (0.48..0.78) và Tầng 3 (0.88..1.0)
   ctx.beginPath();
-  ctx.arc(cx, cy, outerR * 0.76, 0, Math.PI * 2);
+  ctx.arc(cx, cy, outerR * 0.82, 0, Math.PI * 2);
   ctx.setLineDash([3, 5]);
   ctx.strokeStyle = 'rgba(45, 82, 102, 0.14)';
   ctx.lineWidth = 0.65;
   ctx.stroke();
   ctx.setLineDash([]);
+
+  // G. Quét Radar Thiên Văn 22° (0.38 rad) nhẹ nhàng ngoài Tầng 1
+  const sweepSlices = 10;
+  for (let s = 0; s < sweepSlices; s += 1) {
+    const sliceStart = radarAngle - RADAR_SECTOR_RAD * ((sweepSlices - s) / sweepSlices);
+    ctx.beginPath();
+    ctx.arc(cx, cy, outerR, sliceStart, radarAngle, false);
+    ctx.arc(cx, cy, coreClearR, radarAngle, sliceStart, true);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(36, 87, 70, 0.0055)';
+    ctx.fill();
+  }
+
+  const sweepCos = Math.cos(radarAngle);
+  const sweepSin = Math.sin(radarAngle);
+  ctx.beginPath();
+  ctx.moveTo(cx + sweepCos * coreClearR, cy + sweepSin * coreClearR);
+  ctx.lineTo(cx + sweepCos * outerR, cy + sweepSin * outerR);
+  ctx.strokeStyle = 'rgba(156, 122, 76, 0.4)';
+  ctx.lineWidth = 0.85;
+  ctx.stroke();
 
   // 360 vạch chia độ mảnh 0.5px, mỗi 15° vạch dài hơn kèm chấm mốc tọa độ nhỏ
   for (let deg = 0; deg < 360; deg += 1) {
@@ -214,7 +304,7 @@ function drawAstrolabeBackdropAndAlidade(
     }
   }
 
-  // 2 trục chuẩn trực vuông góc & đường chéo 45° cắt qua tâm với reticle ticks
+  // 2 trục chuẩn trực vuông góc & đường chéo 45° chừa khoảng sạch Tầng 1 (0 -> 0.36 * R_dial)
   for (const angleDeg of [0, 45, 90, 135]) {
     const rad = (angleDeg * Math.PI) / 180;
     const cos = Math.cos(rad);
@@ -224,6 +314,8 @@ function drawAstrolabeBackdropAndAlidade(
 
     ctx.beginPath();
     ctx.moveTo(cx - cos * reach, cy - sin * reach);
+    ctx.lineTo(cx - cos * coreClearR, cy - sin * coreClearR);
+    ctx.moveTo(cx + cos * coreClearR, cy + sin * coreClearR);
     ctx.lineTo(cx + cos * reach, cy + sin * reach);
     ctx.strokeStyle = isCardinal ? 'rgba(30, 58, 52, 0.14)' : 'rgba(140, 109, 63, 0.11)';
     ctx.lineWidth = isCardinal ? 0.7 : 0.55;
@@ -231,7 +323,7 @@ function drawAstrolabeBackdropAndAlidade(
 
     const perpX = -sin;
     const perpY = cos;
-    const reticleSteps = isCardinal ? [0.35, 0.58, 0.82] : [0.45, 0.72];
+    const reticleSteps = isCardinal ? [0.43, 0.62, 0.82] : [0.46, 0.76];
     for (const frac of reticleSteps) {
       for (const sign of [-1, 1]) {
         const px = cx + cos * (outerR * frac * sign);
@@ -518,47 +610,36 @@ function drawSphericalHarmonicWaves(
   ctx: CanvasRenderingContext2D,
   cx: number,
   cy: number,
-  fov: number,
-  rotX: number,
-  rotY: number,
-  rotZ: number,
+  dialR: number,
   time: number,
   wavePrimaryBuf: ProjectedPoint[],
   waveSymBuf: ProjectedPoint[],
-  tmpVec: Vec3,
 ): void {
-  const baseR = 1.38 * 0.39; // ≈ 1.38 × R_icosa
-  const ampA = 0.042;
-  const ampB = 0.048;
-  const cosEnvelope = Math.cos(1.2 * time);
+  // Tầng 3 (0.88 * R_dial -> 1.0 * R_dial): ôm sát mép trong đĩa chuẩn độ, tách biệt hoàn toàn Tầng 1 & 2
+  const baseR = 0.91 * dialR;
+  const ampA = 0.026 * dialR;
+  const cosEnvelope = Math.cos(1.1 * time);
 
   for (let i = 0; i < HARMONIC_WAVE_POINTS; i += 1) {
     const trig = SPHERICAL_WAVE_TRIG[i]!;
     const th = trig.theta;
-    const radialOsc = ampA * Math.sin(6 * th - 2.4 * time) * cosEnvelope;
-    const heightOsc = ampB * Math.cos(6 * th + 1.8 * time);
+    const radialOsc = ampA * Math.sin(8 * th - 2.2 * time) * cosEnvelope;
 
     const r1 = baseR + radialOsc;
-    tmpVec.x = r1 * trig.cosT;
-    tmpVec.y = heightOsc;
-    tmpVec.z = r1 * trig.sinT;
-    rotateVec3ScaledInto(tmpVec, 1, rotX, rotY, rotZ, tmpVec);
-    projectPointInto(tmpVec, cx, cy, fov, wavePrimaryBuf[i]!);
+    wavePrimaryBuf[i]!.x = cx + r1 * trig.cosT;
+    wavePrimaryBuf[i]!.y = cy + r1 * trig.sinT;
 
     const r2 = baseR - radialOsc;
-    tmpVec.x = r2 * trig.cosT;
-    tmpVec.y = -heightOsc;
-    tmpVec.z = r2 * trig.sinT;
-    rotateVec3ScaledInto(tmpVec, 1, rotX, rotY, rotZ, tmpVec);
-    projectPointInto(tmpVec, cx, cy, fov, waveSymBuf[i]!);
+    waveSymBuf[i]!.x = cx + r2 * trig.cosT;
+    waveSymBuf[i]!.y = cy + r2 * trig.sinT;
   }
 
-  // Vạch pha siêu mảnh nối các đỉnh bụng sóng đối pha
+  // Vạch pha siêu mảnh nối các đỉnh bụng sóng đối pha quanh vành biên ngoài
   ctx.save();
-  ctx.strokeStyle = 'rgba(59, 122, 101, 0.22)';
+  ctx.strokeStyle = 'rgba(59, 122, 101, 0.2)';
   ctx.lineWidth = 0.55;
   ctx.beginPath();
-  for (let i = 0; i < HARMONIC_WAVE_POINTS; i += 10) {
+  for (let i = 0; i < HARMONIC_WAVE_POINTS; i += 5) {
     const pA = wavePrimaryBuf[i]!;
     const pB = waveSymBuf[i]!;
     ctx.moveTo(pA.x, pA.y);
@@ -573,7 +654,7 @@ function drawSphericalHarmonicWaves(
     ctx.lineTo(waveSymBuf[i]!.x, waveSymBuf[i]!.y);
   }
   ctx.closePath();
-  ctx.strokeStyle = 'rgba(156, 122, 76, 0.36)';
+  ctx.strokeStyle = 'rgba(156, 122, 76, 0.34)';
   ctx.lineWidth = 0.9;
   ctx.stroke();
 
@@ -584,7 +665,7 @@ function drawSphericalHarmonicWaves(
     ctx.lineTo(wavePrimaryBuf[i]!.x, wavePrimaryBuf[i]!.y);
   }
   ctx.closePath();
-  ctx.strokeStyle = 'rgba(59, 122, 101, 0.42)';
+  ctx.strokeStyle = 'rgba(59, 122, 101, 0.44)';
   ctx.lineWidth = 1.1;
   ctx.stroke();
 
@@ -605,12 +686,16 @@ function drawBlueprintSymbolsInCanvas(
   pointerCanvasX: number,
   pointerCanvasY: number,
   dtScale: number,
+  radarAngle: number,
+  updatePulse: boolean,
+  symbolPulseBuf: Float64Array,
   smoothProxBuf: Float64Array,
   smoothPushXBuf: Float64Array,
   smoothPushYBuf: Float64Array,
 ): void {
   const dialR = 185 * (minDim / 460);
   const damp = Math.min(1, 0.14 * dtScale);
+  const pulseDecay = Math.pow(0.96, dtScale);
 
   ctx.save();
   for (let i = 0; i < BLUEPRINT_SYMBOLS.length; i += 1) {
@@ -648,11 +733,20 @@ function drawBlueprintSymbolsInCanvas(
     const nxPos = baseX + smoothPushXBuf[i]!;
     const nyPos = baseY + smoothPushYBuf[i]!;
 
-    const baseOpacity = 0.28 + 0.1 * Math.sin(1.1 * time + spec.phase); // 0.18 <-> 0.38
-    const finalOpacity = Math.min(0.92, baseOpacity + prox * 0.58);
-    const circleR = 16;
+    if (updatePulse) {
+      const symbolAngle = Math.atan2(nyPos - cy, nxPos - cx);
+      let angDiff = Math.abs(radarAngle - symbolAngle) % (Math.PI * 2);
+      if (angDiff > Math.PI) angDiff = Math.PI * 2 - angDiff;
+      symbolPulseBuf[i] = angDiff < RADAR_HIT_RAD ? 1.0 : symbolPulseBuf[i]! * pulseDecay;
+    }
 
-    // Đường tiếp tuyến nét đứt siêu mảnh nối hướng về đĩa chuẩn độ trung tâm
+    const pulse = symbolPulseBuf[i]!;
+    const baseOpacity = 0.28 + 0.1 * Math.sin(1.1 * time + spec.phase); // 0.18 <-> 0.38
+    const sweepOpacity = baseOpacity + pulse * (0.75 - baseOpacity);
+    const finalOpacity = Math.max(sweepOpacity, Math.min(0.92, baseOpacity + prox * 0.58));
+    const circleR = 16 + 3 * pulse;
+
+    // Đường tiếp tuyến nét đứt siêu mảnh nối từ mép đĩa ra vòng tròn ký hiệu
     const toCenterDx = cx - nxPos;
     const toCenterDy = cy - nyPos;
     const toCenterDist = Math.hypot(toCenterDx, toCenterDy) || 1;
@@ -669,20 +763,41 @@ function drawBlueprintSymbolsInCanvas(
       ctx.setLineDash([2, 4]);
       ctx.moveTo(guideStartX, guideStartY);
       ctx.lineTo(guideEndX, guideEndY);
-      ctx.strokeStyle = `rgba(30, 51, 46, ${(0.08 + prox * 0.24).toFixed(3)})`;
-      ctx.lineWidth = 0.65;
+      ctx.strokeStyle = `rgba(30, 51, 46, ${(0.08 + prox * 0.24 + pulse * 0.14).toFixed(3)})`;
+      ctx.lineWidth = 0.65 + pulse * 0.2;
       ctx.stroke();
       ctx.setLineDash([]);
+
+      // Đốm sáng nhỏ chạy dọc theo đường nối nét đứt từ mép đĩa ra vòng tròn ký hiệu khi tia quét qua
+      if (pulse > 0.02) {
+        const travel = Math.min(1, (1 - pulse) / 0.85);
+        const dotX = guideEndX + (guideStartX - guideEndX) * travel;
+        const dotY = guideEndY + (guideStartY - guideEndY) * travel;
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 3.1, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(156, 122, 76, ${(0.38 * pulse).toFixed(3)})`;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, 1.55, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(250, 251, 249, ${Math.min(0.98, 0.45 + 0.55 * pulse).toFixed(3)})`;
+        ctx.fill();
+      }
     }
 
-    // Vòng tròn chuẩn độ mảnh r = 16px
+    // Vòng tròn chuẩn độ mảnh r = 16px (nở sáng vàng hổ phách khi Radar quét qua)
     ctx.beginPath();
     ctx.arc(nxPos, nyPos, circleR, 0, Math.PI * 2);
-    ctx.strokeStyle =
-      prox > 0.08
-        ? `rgba(30, 51, 46, ${(0.1 + prox * 0.45).toFixed(3)})`
-        : 'rgba(30, 51, 46, 0.10)';
-    ctx.lineWidth = 0.8 + prox * 0.45;
+    if (pulse > 0.02) {
+      ctx.strokeStyle = `rgba(156, 122, 76, ${(0.15 + 0.55 * pulse).toFixed(3)})`;
+      ctx.lineWidth = 0.9 + pulse * 0.65 + prox * 0.35;
+    } else {
+      ctx.strokeStyle =
+        prox > 0.08
+          ? `rgba(30, 51, 46, ${(0.1 + prox * 0.45).toFixed(3)})`
+          : 'rgba(30, 51, 46, 0.10)';
+      ctx.lineWidth = 0.8 + prox * 0.45;
+    }
     ctx.stroke();
 
     // Chấm nhỏ quay quanh vành tròn chuẩn độ
@@ -691,11 +806,11 @@ function drawBlueprintSymbolsInCanvas(
     ctx.arc(
       nxPos + Math.cos(rimAngle) * circleR,
       nyPos + Math.sin(rimAngle) * circleR,
-      1.45 + prox * 0.45,
+      1.45 + Math.max(prox, pulse * 0.6) * 0.45,
       0,
       Math.PI * 2,
     );
-    ctx.fillStyle = prox > 0.2 ? '#1E332E' : 'rgba(156, 122, 76, 0.58)';
+    ctx.fillStyle = pulse > 0.25 ? '#9C7A4C' : prox > 0.2 ? '#1E332E' : 'rgba(156, 122, 76, 0.58)';
     ctx.fill();
 
     // Ký hiệu toán học xoay nhẹ ±6°
@@ -703,11 +818,11 @@ function drawBlueprintSymbolsInCanvas(
     ctx.save();
     ctx.translate(nxPos, nyPos);
     ctx.rotate(tiltRad);
-    ctx.font = `italic 600 ${Math.round(16 + prox * 2)}px "Crimson Pro", Georgia, serif`;
+    ctx.font = `italic 600 ${Math.round(16 + Math.max(prox * 2, pulse * 1.5))}px "Crimson Pro", Georgia, serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle =
-      prox > 0.05
+      prox > 0.05 || pulse > 0.02
         ? `rgba(30, 51, 46, ${finalOpacity.toFixed(3)})`
         : `rgba(30, 51, 46, ${baseOpacity.toFixed(3)})`;
     ctx.fillText(spec.symbol, 0, 1);
@@ -717,16 +832,29 @@ function drawBlueprintSymbolsInCanvas(
 }
 
 /**
- * Điêu Khắc Nhị Thập Diện Ngọc Bích & Lõi Tinh Thể Hổ Phách 120fps (`dual-platonic-astrolabe-v4`):
- * - Lõi Tinh Thể Hổ Phách Cắt Giác (#F5D078 -> #B87D28 -> #7C5216) nằm trong vỏ Nhị thập diện đều (12 đỉnh, 20 mặt tam giác)
- * - 2 vòng Sóng Đứng Điều Hòa Cầu xích đạo (Ngọc Bích & Hổ Phách, 120 điểm, ngược pha)
- * - 4 Vòng Quỹ Đạo Thiên Cầu mở rộng thoáng đãng (+15%) & 4 Hạt Ngọc Khoáng Thạch kèm Cộng hưởng Giao điểm
- * - Kim Chỉ Góc Alidade & Cung Vernier (±12°) khóa con trỏ chuột theo đường tròn ngắn nhất
- * - 8 Nút Giao Bản Vẽ Động (∫, ∑, ∂, ∆, φ, π, ∀, ≃) chuyển động Lissajous vi mô + tương tác từ trường
+ * Điêu Khắc Nhị Thập Diện Ngọc Bích & Lõi Tinh Thể Hổ Phách 120fps (`crystalline-astrolabe-v5`):
+ * - Phân tầng 3 phân khu bán kính chuẩn Tỷ lệ vàng theo R_dial:
+ *   + Tầng 1 (0 -> 0.34 R_dial): Tâm sạch chỉ có Lõi Hổ Phách cắt giác bên trong Vỏ Nhị thập diện đều & khớp nở vi mô Blinn-Phong
+ *   + Tầng 2 (0.48 -> 0.78 R_dial): 4 Vòng Quỹ Đạo Thiên Cầu & 4 Hạt Ngọc Khoáng Thạch kèm Cộng hưởng Giao điểm
+ *   + Tầng 3 (0.88 -> 1.0 R_dial): Sóng Đứng Điều Hòa ôm sát mép trong đĩa chuẩn độ
+ * - Cơ chế Kéo Chuột Xoay 360° có quán tính vật lý (damping 0.94^dtScale)
+ * - Quét Radar Thiên Văn đồng bộ phát sáng 8 Nút Giao Bản Vẽ Động (∫, ∑, ∂, ∆, φ, π, ∀, ≃)
  */
 export function LearningSpaceHeroCanvas() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const dragPhysicsRef = useRef<DragPhysicsState>({
+    rotX: 0.65 * 0.18,
+    rotY: 0.65 * 0.25,
+    velX: 0,
+    velY: 0,
+    isDragging: false,
+    lastX: 0,
+    lastY: 0,
+    manualOffsetX: 0,
+    manualOffsetY: 0,
+    lastMoveMs: 0,
+  });
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -757,6 +885,9 @@ export function LearningSpaceHeroCanvas() {
     const icoProjVerts = createZeroProjArray(ICO_VERTICES.length);
     const icoFacePool: ShadedTriangleBuffer[] = ICO_FACES.map(() => ({
       indices: [0, 0, 0],
+      p0: { x: 0, y: 0, z: 0, scale: 1 },
+      p1: { x: 0, y: 0, z: 0, scale: 1 },
+      p2: { x: 0, y: 0, z: 0, scale: 1 },
       avgZ: 0,
       light: 0,
       specular: 0,
@@ -770,6 +901,9 @@ export function LearningSpaceHeroCanvas() {
     const crystalProjVerts = createZeroProjArray(CRYSTAL_VERTICES.length);
     const crystalFacePool: ShadedTriangleBuffer[] = CRYSTAL_FACES.map(() => ({
       indices: [0, 0, 0],
+      p0: { x: 0, y: 0, z: 0, scale: 1 },
+      p1: { x: 0, y: 0, z: 0, scale: 1 },
+      p2: { x: 0, y: 0, z: 0, scale: 1 },
       avgZ: 0,
       light: 0,
       specular: 0,
@@ -811,11 +945,13 @@ export function LearningSpaceHeroCanvas() {
     const blueprintSmoothProx = new Float64Array(BLUEPRINT_SYMBOLS.length);
     const blueprintSmoothPushX = new Float64Array(BLUEPRINT_SYMBOLS.length);
     const blueprintSmoothPushY = new Float64Array(BLUEPRINT_SYMBOLS.length);
+    const symbolPulseBuf = new Float64Array(BLUEPRINT_SYMBOLS.length);
 
     const ringAngles = ARMILLARY_RINGS.map(() => ({ rotX: 0, rotY: 0, rotZ: 0 }));
 
     const tmpVecA: Vec3 = { x: 0, y: 0, z: 0 };
     const tmpVecB: Vec3 = { x: 0, y: 0, z: 0 };
+    const tmpShiftVec: Vec3 = { x: 0, y: 0, z: 0 };
     const tmpProj: ProjectedPoint = { x: 0, y: 0, z: 0, scale: 1 };
 
     let pointerX = 0;
@@ -827,6 +963,7 @@ export function LearningSpaceHeroCanvas() {
     let pointerInsideCanvas = false;
     let isHovered = false;
     let hoverMix = 0;
+    let facetHoverMix = 0;
     let alphaCurr = -Math.PI / 4;
     let coreSpinPhase = 0;
     let isVisible = true;
@@ -950,6 +1087,7 @@ export function LearningSpaceHeroCanvas() {
       corePhase: number,
       dtScale: number,
       checkResonance: boolean,
+      facetHover: number,
     ) => {
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -960,6 +1098,8 @@ export function LearningSpaceHeroCanvas() {
       const minDim = Math.min(width, height);
       const fov = minDim * 1.15;
       const unitScale = minDim / 460;
+      const dialR = 185 * unitScale;
+      const radarAngle = (time * RADAR_SPEED) % (Math.PI * 2);
 
       // Hào quang tinh thể nền cực nhẹ
       const subtleBackdropGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, 195 * unitScale);
@@ -969,7 +1109,7 @@ export function LearningSpaceHeroCanvas() {
       ctx.fillStyle = subtleBackdropGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // E. 8 Nút Giao Bản Vẽ Động (Animated Blueprint Nodes) ngoài vành đĩa
+      // E. 8 Nút Giao Bản Vẽ Động (Animated Blueprint Nodes) ngoài vành đĩa đồng bộ Radar
       drawBlueprintSymbolsInCanvas(
         ctx,
         width,
@@ -984,13 +1124,19 @@ export function LearningSpaceHeroCanvas() {
         pointerCanvasX,
         pointerCanvasY,
         dtScale,
+        radarAngle,
+        checkResonance,
+        symbolPulseBuf,
         blueprintSmoothProx,
         blueprintSmoothPushX,
         blueprintSmoothPushY,
       );
 
-      // D & Backdrop. Đĩa Chuẩn Độ Trắc Địa 360° & Kim Chỉ Góc Alidade theo con trỏ
-      drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr);
+      // D, Backdrop & Radar Sweep. Đĩa Chuẩn Độ Trắc Địa 360° & Kim Chỉ Góc Alidade theo con trỏ
+      drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr, radarAngle);
+
+      // Tầng 3 (0.88 -> 1.0 * R_dial): Sóng Đứng Điều Hòa ôm sát mép trong đĩa chuẩn độ
+      drawSphericalHarmonicWaves(ctx, cx, cy, dialR, time, wavePrimaryProj, waveSymProj);
 
       // Sóng giao thoa nhẹ khi tương tác chuột vào vùng mô hình
       for (const wave of hoverWaves) {
@@ -1005,12 +1151,20 @@ export function LearningSpaceHeroCanvas() {
         ctx.stroke();
       }
 
-      // Góc Euler của 4 vòng Thiên Cầu (damping mượt theo chuột)
+      // Góc Euler của 4 vòng Thiên Cầu (Tầng 2: 0.48..0.78 R_dial, tích hợp quán tính kéo xoay 360°)
+      const drag = dragPhysicsRef.current;
       const tiltBoost = 1 + hoverMix * 0.28;
       for (let idx = 0; idx < ARMILLARY_RINGS.length; idx += 1) {
         const ring = ARMILLARY_RINGS[idx]!;
-        ringAngles[idx]!.rotX = ring.baseTiltX + smoothY * (0.3 * tiltBoost - idx * 0.03);
-        ringAngles[idx]!.rotY = time * ring.speedY + smoothX * (0.34 * tiltBoost - idx * 0.04);
+        ringAngles[idx]!.rotX =
+          ring.baseTiltX +
+          drag.manualOffsetX +
+          Math.sin(time * 0.38 + idx * 0.9) * 0.1 +
+          smoothY * (0.24 * tiltBoost - idx * 0.02);
+        ringAngles[idx]!.rotY =
+          drag.manualOffsetY +
+          Math.cos(time * ring.speedY + idx * 1.1) * 0.2 +
+          smoothX * (0.28 * tiltBoost - idx * 0.03);
         ringAngles[idx]!.rotZ = ring.baseTiltZ + time * ring.speedZ;
       }
 
@@ -1040,31 +1194,21 @@ export function LearningSpaceHeroCanvas() {
         );
       }
 
-      // Phép xoay chung cho Nhị thập diện đều & Vòng sóng đứng điều hòa cầu
-      const icoRotX = time * 0.18 + smoothY * 0.46 * tiltBoost;
-      const icoRotY = time * 0.25 + smoothX * 0.52 * tiltBoost;
+      // Tầng 1 (0 -> 0.34 R_dial): Phép xoay & Hiệu ứng Hô hấp Phản chiếu Ánh sáng Khớp nở vi mô
+      const icoRotX = drag.rotX + smoothY * 0.36 * tiltBoost;
+      const icoRotY = drag.rotY + smoothX * 0.42 * tiltBoost;
       const icoRotZ = time * 0.07;
 
-      // B. 2 Vòng Sóng Đứng Điều Hòa Cầu ngược pha quanh xích đạo 3D
-      drawSphericalHarmonicWaves(
-        ctx,
-        cx,
-        cy,
-        fov,
-        icoRotX,
-        icoRotY,
-        icoRotZ,
-        time,
-        wavePrimaryProj,
-        waveSymProj,
-        tmpVecA,
-      );
+      const naturalBreath = 0.15 * (0.5 + 0.5 * Math.sin(time * 2.0));
+      const facetExpansion = Math.min(1, naturalBreath + facetHover * 0.85);
+      const normalExplosionPx = 3.6 * facetExpansion;
 
       // Tính phép chiếu 3D cho Khối Nhị thập diện ngoài & Lõi tinh thể Hổ Phách trong
       projectPolyhedronIntoBuffers(
         ICO_VERTICES,
         ICO_FACES,
-        0.39,
+        ICO_TIER1_SCALE,
+        normalExplosionPx,
         icoRotX,
         icoRotY,
         icoRotZ,
@@ -1076,14 +1220,16 @@ export function LearningSpaceHeroCanvas() {
         icoFacePool,
         icoBackFaces,
         icoFrontFaces,
+        tmpShiftVec,
       );
 
       projectPolyhedronIntoBuffers(
         CRYSTAL_VERTICES,
         CRYSTAL_FACES,
-        0.2,
-        -corePhase * 0.34 + smoothY * 0.58 * tiltBoost,
-        -corePhase * 0.5 + smoothX * 0.62 * tiltBoost,
+        CORE_TIER1_SCALE,
+        0,
+        drag.rotX - corePhase * 0.34 + smoothY * 0.48 * tiltBoost,
+        drag.rotY - corePhase * 0.5 + smoothX * 0.54 * tiltBoost,
         corePhase * 0.19,
         cx,
         cy,
@@ -1093,6 +1239,7 @@ export function LearningSpaceHeroCanvas() {
         crystalFacePool,
         crystalBackFaces,
         crystalFrontFaces,
+        tmpShiftVec,
       );
 
       // LỚP 2a: Các mặt khuất phía sau của Nhị thập diện đều (n_z < 0)
@@ -1100,9 +1247,7 @@ export function LearningSpaceHeroCanvas() {
       ctx.setLineDash([2, 3]);
       for (let i = 0; i < icoBackFaces.length; i += 1) {
         const f = icoBackFaces[i]!;
-        const p0 = icoProjVerts[f.indices[0]]!;
-        const p1 = icoProjVerts[f.indices[1]]!;
-        const p2 = icoProjVerts[f.indices[2]]!;
+        const { p0, p1, p2 } = f;
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
         ctx.lineTo(p1.x, p1.y);
@@ -1117,25 +1262,10 @@ export function LearningSpaceHeroCanvas() {
       ctx.setLineDash([]);
       ctx.restore();
 
-      // Đỉnh khuất của Nhị thập diện
-      for (let idx = 0; idx < icoWorldVerts.length; idx += 1) {
-        if (icoWorldVerts[idx]!.z >= 0) continue;
-        const pv = icoProjVerts[idx]!;
-        ctx.beginPath();
-        ctx.arc(pv.x, pv.y, 1.35, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(250, 251, 249, 0.65)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(36, 87, 70, 0.32)';
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
-      }
-
       // LỚP 2b: Lõi Tinh Thể Hổ Phách Cắt Giác Sắc Nét (#F5D078 -> #B87D28 -> #7C5216)
       for (let i = 0; i < crystalBackFaces.length; i += 1) {
         const f = crystalBackFaces[i]!;
-        const p0 = crystalProjVerts[f.indices[0]]!;
-        const p1 = crystalProjVerts[f.indices[1]]!;
-        const p2 = crystalProjVerts[f.indices[2]]!;
+        const { p0, p1, p2 } = f;
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
         ctx.lineTo(p1.x, p1.y);
@@ -1150,9 +1280,7 @@ export function LearningSpaceHeroCanvas() {
 
       for (let i = 0; i < crystalFrontFaces.length; i += 1) {
         const f = crystalFrontFaces[i]!;
-        const p0 = crystalProjVerts[f.indices[0]]!;
-        const p1 = crystalProjVerts[f.indices[1]]!;
-        const p2 = crystalProjVerts[f.indices[2]]!;
+        const { p0, p1, p2 } = f;
         const grad = ctx.createLinearGradient(p0.x, p0.y, (p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5);
         if (f.light > 0.52) {
           grad.addColorStop(0, '#F5D078');
@@ -1191,48 +1319,23 @@ export function LearningSpaceHeroCanvas() {
       }
       ctx.globalAlpha = 1;
 
-      // Tia Liên Kết Lượng Tử từ đỉnh lõi tinh thể ra 4 Hạt Ngọc Khoáng Thạch
-      for (let i = 0; i < ARMILLARY_RINGS.length; i += 1) {
-        const ring = ARMILLARY_RINGS[i]!;
-        const anchorIdx = i * 2;
-        const coreWorld = crystalWorldVerts[anchorIdx]!;
-        const coreProj = crystalProjVerts[anchorIdx]!;
-        const satWorld = satWorldPositions[i]!;
-        const satProj = satProjPositions[i]!;
+      // Tia Sáng Khe Tinh Thể (Seam Glow): ánh hổ phách ấm hắt ra giữa các khe mặt vừa nở
+      const icoScreenRadius = ICO_TIER1_SCALE * (fov / 3.35);
+      const seamGlowRadius = icoScreenRadius * (1.14 + 0.14 * facetExpansion);
+      const seamAlpha = 0.18 + 0.28 * facetExpansion;
+      const seamGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, seamGlowRadius);
+      seamGrad.addColorStop(0, `rgba(235, 182, 92, ${seamAlpha.toFixed(3)})`);
+      seamGrad.addColorStop(0.55, `rgba(245, 208, 120, ${(seamAlpha * 0.42).toFixed(3)})`);
+      seamGrad.addColorStop(1, 'rgba(235, 182, 92, 0)');
+      ctx.fillStyle = seamGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, seamGlowRadius, 0, Math.PI * 2);
+      ctx.fill();
 
-        const tetherGrad = ctx.createLinearGradient(coreProj.x, coreProj.y, satProj.x, satProj.y);
-        tetherGrad.addColorStop(0, 'rgba(245, 208, 120, 0.56)');
-        tetherGrad.addColorStop(1, `rgba(${ring.cometRgb}, 0.42)`);
-
-        const isBackTether = satWorld.z < 0 && coreWorld.z < 0;
-        ctx.beginPath();
-        ctx.moveTo(coreProj.x, coreProj.y);
-        ctx.lineTo(satProj.x, satProj.y);
-        ctx.strokeStyle = tetherGrad;
-        ctx.globalAlpha = isBackTether ? 0.24 : 0.46;
-        ctx.lineWidth = 0.75;
-        ctx.stroke();
-
-        const u = 0.5 + 0.46 * Math.sin(time * (1.8 + i * 0.22) + i * 1.4);
-        const px = coreProj.x + (satProj.x - coreProj.x) * u;
-        const py = coreProj.y + (satProj.y - coreProj.y) * u;
-        ctx.globalAlpha = isBackTether ? 0.35 : 0.92;
-        ctx.beginPath();
-        ctx.arc(px, py, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#FAFBF9';
-        ctx.fill();
-        ctx.strokeStyle = ring.cometColor;
-        ctx.lineWidth = 0.9;
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-
-      // LỚP 2c: Các mặt hướng ra trước của Nhị thập diện đều (n_z >= 0)
+      // LỚP 2c: Các mặt hướng ra trước của Nhị thập diện đều (n_z >= 0) kèm phản chiếu Blinn-Phong
       for (let i = 0; i < icoFrontFaces.length; i += 1) {
         const f = icoFrontFaces[i]!;
-        const p0 = icoProjVerts[f.indices[0]]!;
-        const p1 = icoProjVerts[f.indices[1]]!;
-        const p2 = icoProjVerts[f.indices[2]]!;
+        const { p0, p1, p2 } = f;
         const oppMidX = (p1.x + p2.x) * 0.5;
         const oppMidY = (p1.y + p2.y) * 0.5;
         const faceGrad = ctx.createLinearGradient(p0.x, p0.y, oppMidX, oppMidY);
@@ -1251,23 +1354,21 @@ export function LearningSpaceHeroCanvas() {
         ctx.fillStyle = faceGrad;
         ctx.fill();
 
+        if (f.specular > 0.4) {
+          ctx.fillStyle = `rgba(255, 253, 245, ${(f.specular * 0.48).toFixed(3)})`;
+          ctx.fill();
+        }
+
         ctx.strokeStyle = '#1B3B33';
-        ctx.lineWidth = 1.25;
+        ctx.lineWidth = 1.2;
         ctx.lineJoin = 'round';
         ctx.stroke();
-      }
 
-      // Đỉnh mặt trước của Nhị thập diện (r = 1.8px, #FAFBF9 viền #245746)
-      for (let idx = 0; idx < icoWorldVerts.length; idx += 1) {
-        if (icoWorldVerts[idx]!.z < 0) continue;
-        const pv = icoProjVerts[idx]!;
-        ctx.beginPath();
-        ctx.arc(pv.x, pv.y, 1.8, 0, Math.PI * 2);
-        ctx.fillStyle = '#FAFBF9';
-        ctx.fill();
-        ctx.strokeStyle = '#245746';
-        ctx.lineWidth = 1.1;
-        ctx.stroke();
+        if (f.specular > 0.4) {
+          ctx.strokeStyle = `rgba(255, 253, 245, ${Math.min(0.95, 0.52 + f.specular * 0.42).toFixed(3)})`;
+          ctx.lineWidth = 0.9;
+          ctx.stroke();
+        }
       }
 
       // LỚP 3: Nửa trước của 4 Vòng Thiên Cầu Kép & 4 Hạt Ngọc Khoáng Thạch
@@ -1364,7 +1465,7 @@ export function LearningSpaceHeroCanvas() {
       ctx.restore();
     };
 
-    renderFrame(0.65, 0.65, 1, false);
+    renderFrame(0.65, 0.65, 1, false, 0);
     if (prefersReducedMotion) {
       return () => {
         heroSection.removeEventListener('pointermove', handleHeroPointerMove);
@@ -1394,6 +1495,26 @@ export function LearningSpaceHeroCanvas() {
         const cx = width * 0.5 + smoothX * 8;
         const cy = height * 0.5 + smoothY * 7;
 
+        // Cập nhật quán tính kéo xoay 360° chuẩn 120fps
+        const drag = dragPhysicsRef.current;
+        if (!drag.isDragging) {
+          const inertiaRotY = drag.velY * dtScale;
+          const inertiaRotX = drag.velX * dtScale;
+          drag.rotY += inertiaRotY + BASE_AUTO_SPEED_Y * dtScale;
+          drag.rotX += inertiaRotX + BASE_AUTO_SPEED_X * dtScale;
+          drag.manualOffsetY += inertiaRotY;
+          drag.manualOffsetX += inertiaRotX;
+          const friction = Math.pow(0.94, dtScale);
+          drag.velY *= friction;
+          drag.velX *= friction;
+        }
+
+        // Cập nhật độ mở khớp mặt tinh thể khi con trỏ lại gần lõi (< 160px)
+        const distToCenter = Math.hypot(pointerCanvasX - cx, pointerCanvasY - cy);
+        const targetFacetHover =
+          pointerInsideCanvas && distToCenter < FACET_HOVER_RADIUS_PX ? 1 : 0;
+        facetHoverMix += (targetFacetHover - facetHoverMix) * Math.min(1, 0.08 * dtScale);
+
         // D. Nội suy góc Kim Chỉ Góc Alidade theo đường tròn ngắn nhất (damping 0.12 * dtScale)
         const targetAlidade = pointerInsideCanvas
           ? Math.atan2(pointerCanvasY - cy, pointerCanvasX - cx)
@@ -1421,7 +1542,7 @@ export function LearningSpaceHeroCanvas() {
           }
         }
 
-        renderFrame(elapsed, coreSpinPhase, dtScale, true);
+        renderFrame(elapsed, coreSpinPhase, dtScale, true, facetHoverMix);
       }
 
       rafId = window.requestAnimationFrame(tick);
@@ -1440,19 +1561,62 @@ export function LearningSpaceHeroCanvas() {
     };
   }, [prefersReducedMotion]);
 
+  const handleCanvasPointerDown = (event: ReactPointerEvent<HTMLCanvasElement>) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    const drag = dragPhysicsRef.current;
+    drag.isDragging = true;
+    drag.lastX = event.clientX;
+    drag.lastY = event.clientY;
+    drag.velX = 0;
+    drag.velY = 0;
+    drag.lastMoveMs = performance.now();
+    event.currentTarget.dataset.dragging = 'true';
+    event.currentTarget.style.cursor = 'grabbing';
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const handleCanvasPointerMove = (event: ReactPointerEvent<HTMLCanvasElement>) => {
+    const drag = dragPhysicsRef.current;
+    if (!drag.isDragging) return;
+    const dx = event.clientX - drag.lastX;
+    const dy = event.clientY - drag.lastY;
+    drag.lastX = event.clientX;
+    drag.lastY = event.clientY;
+    drag.velY = dx * DRAG_SENSITIVITY;
+    drag.velX = dy * DRAG_SENSITIVITY;
+    drag.rotY += drag.velY;
+    drag.rotX += drag.velX;
+    drag.manualOffsetY += drag.velY;
+    drag.manualOffsetX += drag.velX;
+    drag.lastMoveMs = performance.now();
+  };
+
+  const handleCanvasPointerUp = (event: ReactPointerEvent<HTMLCanvasElement>) => {
+    const drag = dragPhysicsRef.current;
+    if (!drag.isDragging) return;
+    drag.isDragging = false;
+    if (performance.now() - drag.lastMoveMs > 90) {
+      drag.velX = 0;
+      drag.velY = 0;
+    }
+    event.currentTarget.dataset.dragging = 'false';
+    event.currentTarget.style.cursor = 'grab';
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
   return (
     <div
       ref={containerRef}
       data-testid="learning-space-celestial-rings"
-      data-sculpture-version="dual-platonic-astrolabe-v4"
-      className="relative flex h-[400px] w-full cursor-crosshair items-center justify-center select-none sm:h-[460px] lg:h-[480px]"
+      data-sculpture-version="crystalline-astrolabe-v5"
+      className="relative flex h-[400px] w-full cursor-grab items-center justify-center select-none active:cursor-grabbing sm:h-[460px] lg:h-[480px]"
     >
       {/* Danh mục ký hiệu toán học chuẩn A11y đồng bộ với 8 Nút Giao Bản Vẽ Động trên Canvas */}
       <div aria-hidden="true" data-testid="hero-math-parallax-glyphs" className="sr-only">
         {BLUEPRINT_SYMBOLS.map((glyph) => (
-          <span key={glyph.symbol} title={glyph.label}>
-            {glyph.symbol}
-          </span>
+          <span key={glyph.symbol}>{glyph.symbol}</span>
         ))}
       </div>
 
@@ -1493,7 +1657,16 @@ export function LearningSpaceHeroCanvas() {
         <polygon points="180,126 220,192 140,192" stroke="#9E6356" strokeWidth="1" />
       </svg>
 
-      <canvas ref={canvasRef} aria-hidden="true" className="relative z-10 block h-full w-full" />
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        data-dragging="false"
+        onPointerDown={handleCanvasPointerDown}
+        onPointerMove={handleCanvasPointerMove}
+        onPointerUp={handleCanvasPointerUp}
+        onPointerCancel={handleCanvasPointerUp}
+        className="relative z-10 block h-full w-full cursor-grab touch-none active:cursor-grabbing"
+      />
     </div>
   );
 }

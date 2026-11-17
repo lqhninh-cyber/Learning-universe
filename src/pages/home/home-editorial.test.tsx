@@ -17,11 +17,16 @@ import {
   angleLerp,
   ARMILLARY_RINGS,
   BLUEPRINT_SYMBOLS,
+  CORE_TIER1_SCALE,
   formatAlidadeAngle,
   HARMONIC_WAVE_POINTS,
   ICO_FACES,
+  ICO_TIER1_SCALE,
   ICO_VERTICES,
+  LIGHT_DIR,
+  SHININESS_BLINN,
   SPHERICAL_WAVE_TRIG,
+  WORLD_R_DIAL,
 } from '@/components/home/heroSculptureGeometry';
 import {
   buildHeroTerrainGeometry,
@@ -753,11 +758,20 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getAllByText(HERITAGE_ARTWORKS[1]!.title).length).toBeGreaterThan(0);
     });
 
-    it('heroSculptureGeometry: tạo đúng Nhị thập diện đều (12 đỉnh, 20 mặt), 4 quỹ đạo mở rộng +15%, 4 hạt khoáng thạch và Alidade angleLerp', () => {
+    it('heroSculptureGeometry: phân tầng 3 khu vực bán kính theo R_dial, ánh sáng Blinn-Phong, 4 hạt khoáng thạch và Alidade angleLerp', () => {
       expect(ICO_VERTICES).toHaveLength(12);
       expect(ICO_FACES).toHaveLength(20);
-      expect(ARMILLARY_RINGS[0]!.radiusX).toBeCloseTo(1.035, 3);
-      expect(ARMILLARY_RINGS[3]!.radiusX).toBeCloseTo(0.7245, 4);
+      expect(ICO_TIER1_SCALE / WORLD_R_DIAL).toBeLessThanOrEqual(0.34);
+      expect(CORE_TIER1_SCALE).toBeLessThan(ICO_TIER1_SCALE);
+
+      for (const ring of ARMILLARY_RINGS) {
+        expect(ring.radiusX).toBeLessThanOrEqual(0.78 * WORLD_R_DIAL + 1e-6);
+        expect(ring.radiusY).toBeGreaterThanOrEqual(0.48 * WORLD_R_DIAL - 1e-6);
+      }
+
+      expect(SHININESS_BLINN).toBe(12);
+      expect(Math.hypot(LIGHT_DIR.x, LIGHT_DIR.y, LIGHT_DIR.z)).toBeCloseTo(1, 5);
+      expect(LIGHT_DIR.z).toBeGreaterThan(0.68);
 
       expect(SPHERICAL_WAVE_TRIG).toHaveLength(HARMONIC_WAVE_POINTS);
       expect(HARMONIC_WAVE_POINTS).toBe(120);

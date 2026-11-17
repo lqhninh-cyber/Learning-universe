@@ -71,7 +71,12 @@ export function normalizeVec3(v: Vec3): Vec3 {
   return { x: v.x / len, y: v.y / len, z: v.z / len };
 }
 
-export const LIGHT_DIR = normalizeVec3({ x: -0.45, y: -0.62, z: 0.64 });
+export const WORLD_R_DIAL = (185 / 460) * (3.35 / 1.15);
+export const ICO_TIER1_SCALE = 0.31 * WORLD_R_DIAL;
+export const CORE_TIER1_SCALE = 0.165 * WORLD_R_DIAL;
+export const SHININESS_BLINN = 12;
+
+export const LIGHT_DIR = normalizeVec3({ x: -0.45, y: -0.55, z: 0.7 });
 export const VIEW_DIR: Vec3 = { x: 0, y: 0, z: 1 };
 export const HALF_LIGHT_VEC = normalizeVec3(addVec3(LIGHT_DIR, VIEW_DIR));
 
@@ -212,17 +217,17 @@ export const SPHERICAL_WAVE_TRIG: readonly {
   };
 });
 
-// 4 Vòng Quỹ Đạo Thiên Cầu mở rộng bán kính +15% tạo khoảng thở thoáng quanh Nhị thập diện đều
+// 4 Vòng Quỹ Đạo Thiên Cầu nằm gọn trong Tầng 2 (0.48 * R_dial -> 0.78 * R_dial) tạo khoảng thở rõ quanh lõi
 export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
   {
-    radiusX: 1.035,
-    radiusY: 0.897,
+    radiusX: 0.76 * WORLD_R_DIAL,
+    radiusY: 0.7 * WORLD_R_DIAL,
     innerRatio: 0.942,
     isDoubleRim: true,
-    baseTiltX: 1.02,
+    baseTiltX: 0.44,
     baseTiltZ: 0.24,
     speedY: 0.16,
-    speedZ: 0.03,
+    speedZ: 0.08,
     ringColor: '#6B5335',
     cometColor: '#9C7A4C',
     cometRgb: '156, 122, 76',
@@ -232,14 +237,14 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     cometDirection: 1,
   },
   {
-    radiusX: 0.9315,
-    radiusY: 0.7935,
+    radiusX: 0.69 * WORLD_R_DIAL,
+    radiusY: 0.64 * WORLD_R_DIAL,
     innerRatio: 0.948,
     isDoubleRim: true,
-    baseTiltX: -0.78,
+    baseTiltX: -0.46,
     baseTiltZ: 0.86,
     speedY: -0.21,
-    speedZ: -0.04,
+    speedZ: -0.1,
     ringColor: '#2D5266',
     cometColor: '#49768F',
     cometRgb: '73, 118, 143',
@@ -249,14 +254,14 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     cometDirection: -1,
   },
   {
-    radiusX: 0.828,
-    radiusY: 0.69,
+    radiusX: 0.63 * WORLD_R_DIAL,
+    radiusY: 0.58 * WORLD_R_DIAL,
     innerRatio: 0.955,
     isDoubleRim: false,
-    baseTiltX: 0.46,
+    baseTiltX: 0.38,
     baseTiltZ: -0.72,
     speedY: 0.25,
-    speedZ: 0.06,
+    speedZ: 0.12,
     ringColor: '#245746',
     cometColor: '#3B7A65',
     cometRgb: '59, 122, 101',
@@ -266,14 +271,14 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     cometDirection: 1,
   },
   {
-    radiusX: 0.7245,
-    radiusY: 0.598,
+    radiusX: 0.57 * WORLD_R_DIAL,
+    radiusY: 0.54 * WORLD_R_DIAL,
     innerRatio: 0.96,
     isDoubleRim: false,
-    baseTiltX: 1.26,
+    baseTiltX: -0.32,
     baseTiltZ: -0.36,
     speedY: -0.29,
-    speedZ: 0.08,
+    speedZ: -0.14,
     ringColor: '#7A463B',
     cometColor: '#9E6356',
     cometRgb: '158, 99, 86',
