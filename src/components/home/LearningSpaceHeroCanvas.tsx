@@ -1571,7 +1571,7 @@ export function LearningSpaceHeroCanvas() {
     drag.velY = 0;
     drag.lastMoveMs = performance.now();
     event.currentTarget.dataset.dragging = 'true';
-    event.currentTarget.style.cursor = 'grabbing';
+    event.currentTarget.classList.add('cursor-grabbing');
     event.currentTarget.setPointerCapture?.(event.pointerId);
   };
 
@@ -1600,7 +1600,7 @@ export function LearningSpaceHeroCanvas() {
       drag.velY = 0;
     }
     event.currentTarget.dataset.dragging = 'false';
-    event.currentTarget.style.cursor = 'grab';
+    event.currentTarget.classList.remove('cursor-grabbing');
     if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }

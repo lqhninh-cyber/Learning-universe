@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { routes } from '@/app/router';
+import { CustomCursorFollower } from '@/components/layout/CustomCursorFollower';
 import { useLearningStore } from '@/features/learning';
 import { MotionProvider } from '@/shared/motion/MotionProvider';
 import { TooltipProvider } from '@/shared/ui/Tooltip';
@@ -11,6 +12,7 @@ function renderWithProviders(initialEntry: string) {
   return render(
     <MotionProvider>
       <TooltipProvider>
+        <CustomCursorFollower />
         <RouterProvider router={router} />
       </TooltipProvider>
     </MotionProvider>,
@@ -137,6 +139,25 @@ describe('App routing smoke test', () => {
     const enterCourseLinks = screen.getAllByRole('link', { name: /Vào học phần/i });
     expect(enterCourseLinks.length).toBe(4);
     expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
+
+    // Vòng chuẩn độ ngữ cảnh 120fps (CustomCursorFollower)
+    const cursorFollower = screen.getByTestId('custom-cursor-follower');
+    const cursorRing = screen.getByTestId('custom-cursor-follower-ring');
+    expect(cursorFollower).toBeInTheDocument();
+    expect(cursorRing).toBeInTheDocument();
+
+    fireEvent.mouseMove(enterCourseLinks[0]!, { clientX: 240, clientY: 320 });
+    expect(cursorRing).toHaveAttribute('data-cursor-context', 'interactive');
+    expect(cursorRing).toHaveAttribute('data-target-scale', '1.35');
+    expect(cursorRing).toHaveAttribute('data-target-opacity', '1');
+
+    fireEvent.mouseDown(enterCourseLinks[0]!, { button: 0 });
+    expect(cursorRing).toHaveAttribute('data-cursor-pressed', 'true');
+    expect(cursorRing).toHaveAttribute('data-target-scale', '0.85');
+
+    fireEvent.mouseUp(enterCourseLinks[0]!, { button: 0 });
+    expect(cursorRing).toHaveAttribute('data-cursor-pressed', 'false');
+    expect(cursorRing).toHaveAttribute('data-target-scale', '1.35');
 
     // Quỹ đạo học tập cá nhân + Biểu đồ Radar + Mạng lưới Liên kết Tri thức
     expect(screen.getByRole('heading', { name: /Tiếp tục học tập/i })).toBeInTheDocument();

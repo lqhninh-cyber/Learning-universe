@@ -1,5 +1,6 @@
 import { RouterProvider } from 'react-router';
 import { createAppRouter } from '@/app/router';
+import { CustomCursorFollower } from '@/components/layout/CustomCursorFollower';
 import { IslandProvider } from '@/context/IslandContext';
 import { MotionProvider } from '@/shared/motion/MotionProvider';
 import { TooltipProvider } from '@/shared/ui/Tooltip';
@@ -12,6 +13,7 @@ export function App() {
       <MotionProvider>
         <TooltipProvider>
           <IslandProvider>
+            <CustomCursorFollower />
             <RouterProvider router={router} />
           </IslandProvider>
         </TooltipProvider>
