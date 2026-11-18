@@ -603,7 +603,7 @@ function LessonPageContent() {
           )}
 
           {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
-          <main className="mx-auto w-full min-w-0 py-4 transition-all duration-300 lg:py-6">
+          <main className="mx-auto w-full min-w-0 py-4 transition-colors duration-300 lg:py-6">
             {isFocusMode && (
               <div
                 className={cn(
@@ -669,7 +669,7 @@ function LessonPageContent() {
               data-reading-size={fontSize}
               style={{ '--lu-reading-scale': String(readerSettings.fontScale) } as CSSProperties}
               className={cn(
-                'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.8] transition-all duration-300',
+                'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.8] transition-[background-color,border-color,color,box-shadow] duration-300',
                 typographyClasses,
                 isEyeComfort
                   ? 'rounded-3xl border border-[#D8D3C6] bg-[#F5F3EE] text-[#182624] shadow-[var(--shadow-editorial)]'
@@ -850,7 +850,7 @@ function LessonPageContent() {
           <aside
             data-sidenotes-column
             className={cn(
-              'custom-scrollbar sticky top-24 hidden max-h-[calc(100vh-7rem)] w-full scrollbar-thin self-start overflow-y-auto pl-2 transition-all duration-300 xl:block print:hidden',
+              'custom-scrollbar sticky top-24 hidden max-h-[calc(100vh-7rem)] w-full scrollbar-thin self-start overflow-y-auto pl-2 transition-[opacity,transform] duration-300 xl:block print:hidden',
               isZenMode
                 ? 'pointer-events-none m-0 hidden w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
                 : 'translate-x-0 opacity-100',

@@ -347,7 +347,7 @@ export function SubjectOverviewPage() {
           ref={workspaceTabsRef}
           role="tablist"
           aria-label="Các không gian làm việc của môn học"
-          className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-stone-200/90 bg-white/90 p-1.5 shadow-2xs backdrop-blur-md sm:gap-2"
+          className="lu-fx-tabs-bar flex flex-wrap items-center gap-1.5 rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9]/95 p-1.5 backdrop-blur-md sm:gap-2"
         >
           {workspaceTabs.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -364,10 +364,10 @@ export function SubjectOverviewPage() {
                   setChapterFocus(null);
                 }}
                 className={cn(
-                  'flex cursor-pointer items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm',
+                  'lu-fx-tab flex cursor-pointer items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold sm:text-sm',
                   isActive
-                    ? 'bg-[var(--subject-accent-ink,#1C1917)] text-white shadow-xs'
-                    : 'text-stone-600 hover:bg-[var(--subject-surface,#F5F5F4)] hover:text-stone-900',
+                    ? 'bg-[var(--subject-accent-ink,#1C1917)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_1px_2px_rgba(24,38,36,0.16)]'
+                    : 'text-[#4A5D58] hover:bg-[var(--subject-surface,#F2F4F3)] hover:text-[#182624]',
                 )}
               >
                 <TabIcon className={cn('h-4 w-4', isActive ? 'text-white' : 'text-stone-500')} />

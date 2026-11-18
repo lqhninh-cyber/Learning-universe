@@ -2190,11 +2190,14 @@ export function drawPondBedAndCaustics(
   }
   ctx.restore();
 
-  // 3. Mạng lưới Voronoi Water Caustics 3D (Phối cảnh hội tụ ở tầng đáy)
+  // 3. Mạng lưới Voronoi Water Caustics 3D nâng cấp theo chuẩn taste-skill (caustics/effect.js):
+  // - Đường vân ánh sáng uốn cong hữu cơ (domain-warped quadratic ripples, không gãy khúc đa giác)
+  // - Trường hội tụ ánh sáng chậm (Focus Field F) làm dày sợi sáng tại vùng hội tụ và phát sáng nút giao 3 cạnh (triple-junction knots)
   const cols = 10;
   const rows = 5;
   const gridX = new Float32Array((rows + 1) * (cols + 1));
   const gridY = new Float32Array((rows + 1) * (cols + 1));
+  const gridFocus = new Float32Array((rows + 1) * (cols + 1));
 
   for (let r = 0; r <= rows; r += 1) {
     const vLin = r / rows;
@@ -2206,25 +2209,44 @@ export function drawPondBedAndCaustics(
       const u = c / cols;
       const xBase = (u - 0.5) * W * (0.94 + 0.22 * vPersp) + W * 0.5;
       const phase = c * 1.37 + r * 2.13;
-      const jitterX = Math.sin(t * 1.15 + phase) * 18 * S * rowScale;
-      const jitterY = Math.cos(t * 0.95 - phase * 0.85) * 9 * S * rowScale;
-      gridX[idx] = xBase + jitterX;
-      gridY[idx] = yBase + jitterY;
+      const warp1X = Math.sin(t * 1.05 + phase) * 16 * S * rowScale;
+      const warp2X = Math.cos(t * 0.62 - c * 0.9 + r * 1.4) * 6.5 * S * rowScale;
+      const warp1Y = Math.cos(t * 0.88 - phase * 0.85) * 8.5 * S * rowScale;
+      const warp2Y = Math.sin(t * 0.54 + c * 1.1 + r * 0.8) * 3.5 * S * rowScale;
+      gridX[idx] = xBase + warp1X + warp2X;
+      gridY[idx] = yBase + warp1Y + warp2Y;
+      // Focus field F in [0.25 .. 1.0]: nơi mặt nước hội tụ chùm tia khúc xạ mạnh
+      const fWave =
+        0.5 +
+        0.32 * Math.sin(u * 4.2 + t * 0.42 - vLin * 2.6) +
+        0.18 * Math.cos(u * 7.1 - t * 0.31 + vLin * 3.4);
+      gridFocus[idx] = Math.max(0.25, Math.min(1, fWave));
     }
   }
 
   ctx.save();
   ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
   const passConfigs = [
     {
-      width: 4.0 * S,
-      color: theme === 'day' ? 'rgba(130, 240, 200, 0.045)' : 'rgba(94, 212, 175, 0.035)',
+      width: 4.4 * S,
+      color: theme === 'day' ? 'rgba(130, 240, 200, 0.048)' : 'rgba(94, 212, 175, 0.038)',
     },
     {
-      width: 1.35 * S,
-      color: theme === 'day' ? 'rgba(218, 255, 240, 0.145)' : 'rgba(167, 243, 215, 0.1)',
+      width: 1.4 * S,
+      color: theme === 'day' ? 'rgba(222, 255, 242, 0.155)' : 'rgba(167, 243, 215, 0.11)',
     },
   ];
+
+  const traceWarpedSegment = (x0: number, y0: number, x1: number, y1: number, seed: number) => {
+    const mx = (x0 + x1) * 0.5;
+    const my = (y0 + y1) * 0.5;
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    const bend = Math.sin(t * 1.25 + seed) * 0.14;
+    ctx.moveTo(x0, y0);
+    ctx.quadraticCurveTo(mx - dy * bend, my + dx * bend * 0.45, x1, y1);
+  };
 
   for (const pass of passConfigs) {
     ctx.beginPath();
@@ -2235,17 +2257,14 @@ export function drawPondBedAndCaustics(
         const y0 = gridY[idx]!;
         if (c < cols) {
           const right = idx + 1;
-          ctx.moveTo(x0, y0);
-          ctx.lineTo(gridX[right]!, gridY[right]!);
+          traceWarpedSegment(x0, y0, gridX[right]!, gridY[right]!, idx * 0.73);
         }
         if (r < rows) {
           const down = idx + cols + 1;
-          ctx.moveTo(x0, y0);
-          ctx.lineTo(gridX[down]!, gridY[down]!);
+          traceWarpedSegment(x0, y0, gridX[down]!, gridY[down]!, idx * 1.19 + 2.1);
           if (c < cols && (r + c) % 2 === 0) {
             const diag = down + 1;
-            ctx.moveTo(x0, y0);
-            ctx.lineTo(gridX[diag]!, gridY[diag]!);
+            traceWarpedSegment(x0, y0, gridX[diag]!, gridY[diag]!, idx * 1.61 + 4.3);
           }
         }
       }
@@ -2255,17 +2274,20 @@ export function drawPondBedAndCaustics(
     ctx.stroke();
   }
 
-  // Điểm giao thoa khúc xạ Voronoi rực sáng
+  // Điểm giao thoa khúc xạ Voronoi (Triple-Junction Knots) rực sáng theo Focus Field F
   for (let r = 1; r < rows; r += 1) {
-    for (let c = 1; c < cols; c += 2) {
+    for (let c = 1; c < cols; c += 1) {
+      if ((r + c) % 2 !== 0) continue;
       const idx = r * (cols + 1) + c;
       const sx = gridX[idx]!;
       const sy = gridY[idx]!;
-      const rad = (8 + ((r + c) % 3) * 4) * S;
-      const glint = 0.04 + 0.045 * Math.sin(t * 2.1 + r * 1.4 + c);
-      const spotAlpha = glint * (theme === 'day' ? 1.25 : 0.85);
+      const focusVal = gridFocus[idx] ?? 0.6;
+      const rad = (7 + ((r + c) % 3) * 3.8) * S * (0.75 + 0.45 * focusVal);
+      const glint = (0.038 + 0.052 * Math.sin(t * 2.1 + r * 1.4 + c)) * (0.6 + 0.75 * focusVal);
+      const spotAlpha = glint * (theme === 'day' ? 1.28 : 0.88);
       const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, rad);
-      grad.addColorStop(0, `rgba(225, 255, 244, ${spotAlpha.toFixed(3)})`);
+      grad.addColorStop(0, `rgba(232, 255, 246, ${spotAlpha.toFixed(3)})`);
+      grad.addColorStop(0.45, `rgba(175, 245, 218, ${(spotAlpha * 0.42).toFixed(3)})`);
       grad.addColorStop(1, 'rgba(180, 245, 215, 0)');
       ctx.fillStyle = grad;
       ctx.beginPath();

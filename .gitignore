@@ -40,3 +40,9 @@ test-results/
 .vercel/
 supabase/.branches/
 supabase/.temp/
+
+# External design skill packages & local skill caches
+.agent/skills/hallmark/
+.agent/skills/taste-skill/
+.hallmark/
+.taste-skill/

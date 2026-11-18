@@ -132,6 +132,7 @@ describe('App routing smoke test', () => {
       name: /Tìm kiếm môn học hoặc bài học/i,
     });
     expect(searchboxes).toHaveLength(1);
+    expect(screen.getByTestId('fx-search-glow')).toBeInTheDocument();
 
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
     expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');
@@ -193,6 +194,7 @@ describe('App routing smoke test', () => {
     expect(screen.queryByText(/MATH1301/i)).not.toBeInTheDocument();
     expect(screen.getAllByText('10 chương · 39 bài học').length).toBeGreaterThan(0);
     expect(screen.getByRole('link', { name: /Tiếp tục học: Bài/i })).toBeInTheDocument();
+    expect(screen.getByTestId('pathway-bezier-connectors')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Đọc giáo trình PDF/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /^Ôn tập$/i })).toBeInTheDocument();
     expect(screen.queryByText(/Ngân hàng Đề thi & Lời giải/i)).not.toBeInTheDocument();

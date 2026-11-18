@@ -189,7 +189,7 @@ export function KnowledgeConstellationCard() {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // 2. Vẽ các cạnh nối nút cầu nối tri thức tới các môn học liên quan
+      // 2. Vẽ các đường cong Cubic Bezier (taste-skill diagram.js pCurve) nối nút cầu nối tri thức tới các môn học liên quan
       for (const bridge of KNOWLEDGE_BRIDGE_NODES) {
         const bPos = getBridgePos(bridge, time);
         const isActive = bridge.id === activeId;
@@ -199,31 +199,87 @@ export function KnowledgeConstellationCard() {
           const aPos = anchorPositions.get(targetId);
           if (!aPos || !targetAnchor) return;
 
-          // Điểm uốn nhẹ để đường nối song song không trùng nhau
-          const midX = (aPos.x + bPos.x) * 0.5;
-          const midY = (aPos.y + bPos.y) * 0.5 + (tIdx % 2 === 0 ? -8 : 8);
+          // Thuật toán pCurve (diagram.js): đường cong Cubic Bezier S-curve mượt với cổng kết nối dg-port
+          const dx = aPos.x - bPos.x;
+          const dy = aPos.y - bPos.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          // Điểm cổng kết nối (dg-port) cách tâm nút học phần 16px
+          const portX = aPos.x - (dx / dist) * 16;
+          const portY = aPos.y - (dy / dist) * 16;
 
+          const bendOffset = (tIdx % 2 === 0 ? -1 : 1) * 10;
+          const kx = (portX - bPos.x) * 0.48;
+          const cp1x = bPos.x + kx;
+          const cp1y = bPos.y + bendOffset;
+          const cp2x = portX - kx;
+          const cp2y = portY - bendOffset * 0.5;
+
+          // Vẽ đường dẫn cơ sở (.dg-line)
           ctx.beginPath();
           ctx.moveTo(bPos.x, bPos.y);
-          ctx.quadraticCurveTo(midX, midY, aPos.x, aPos.y);
-          ctx.strokeStyle = isActive ? bridge.color : 'rgba(74, 93, 88, 0.22)';
-          ctx.globalAlpha = isActive ? 0.85 : 0.45;
-          ctx.lineWidth = isActive ? 2.1 : 1;
+          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, portX, portY);
+          ctx.strokeStyle = isActive ? bridge.color : 'rgba(74, 93, 88, 0.24)';
+          ctx.globalAlpha = isActive ? 0.42 : 0.34;
+          ctx.lineWidth = isActive ? 1.5 : 1.05;
           ctx.stroke();
 
-          // Hạt tri thức di chuyển dọc cạnh nối đang được chọn
+          // Cổng kết nối .dg-port tại điểm tiếp xúc nút học phần
+          ctx.beginPath();
+          ctx.arc(portX, portY, isActive ? 2.4 : 1.7, 0, Math.PI * 2);
+          ctx.fillStyle = '#FAFBF9';
+          ctx.fill();
+          ctx.strokeStyle = isActive ? targetAnchor.color : 'rgba(74, 93, 88, 0.38)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          // Xung truyền dữ liệu (dg-comet, dg-glow, dg-spark chu kỳ 3.2s lệch pha ripple) trên các nhánh đang chọn
           if (isActive) {
-            const u = (time * 0.52 + tIdx * 0.35) % 1;
-            const inv = 1 - u;
-            const px = inv * inv * bPos.x + 2 * inv * u * midX + u * u * aPos.x;
-            const py = inv * inv * bPos.y + 2 * inv * u * midY + u * u * aPos.y;
+            const cycleSec = 3.2;
+            const u = ((time + tIdx * 0.55) % cycleSec) / cycleSec;
+            const evalCubic = (tVal: number) => {
+              const inv = 1 - tVal;
+              const c0 = inv * inv * inv;
+              const c1 = 3 * inv * inv * tVal;
+              const c2 = 3 * inv * tVal * tVal;
+              const c3 = tVal * tVal * tVal;
+              return {
+                x: c0 * bPos.x + c1 * cp1x + c2 * cp2x + c3 * portX,
+                y: c0 * bPos.y + c1 * cp1y + c2 * cp2y + c3 * portY,
+              };
+            };
+
+            const headPt = evalCubic(u);
+            const tailPt = evalCubic(Math.max(0, u - 0.26));
+
+            // Dải đuôi sáng .dg-comet & .dg-glow
+            const cometGrad = ctx.createLinearGradient(tailPt.x, tailPt.y, headPt.x, headPt.y);
+            cometGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+            cometGrad.addColorStop(0.55, `${bridge.color}88`);
+            cometGrad.addColorStop(1, targetAnchor.color);
+
+            ctx.globalAlpha = 0.95;
+            ctx.beginPath();
+            ctx.moveTo(tailPt.x, tailPt.y);
+            ctx.lineTo(headPt.x, headPt.y);
+            ctx.strokeStyle = cometGrad;
+            ctx.lineWidth = 2.4;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // Quầng sáng đầu xung .dg-spark-halo & .dg-spark
             ctx.globalAlpha = 1;
             ctx.beginPath();
-            ctx.arc(px, py, 3.2, 0, Math.PI * 2);
+            ctx.arc(headPt.x, headPt.y, 5.2, 0, Math.PI * 2);
+            ctx.fillStyle = `${targetAnchor.color}33`;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(headPt.x, headPt.y, 3.0, 0, Math.PI * 2);
             ctx.fillStyle = targetAnchor.color;
             ctx.fill();
+
             ctx.beginPath();
-            ctx.arc(px, py, 1.3, 0, Math.PI * 2);
+            ctx.arc(headPt.x, headPt.y, 1.35, 0, Math.PI * 2);
             ctx.fillStyle = '#FAFBF9';
             ctx.fill();
           }
@@ -391,7 +447,7 @@ export function KnowledgeConstellationCard() {
   return (
     <div
       data-testid="knowledge-constellation-card"
-      className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-xs sm:p-6"
+      className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-5 sm:p-6"
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
@@ -405,10 +461,10 @@ export function KnowledgeConstellationCard() {
           Mạng Lưới Liên Kết Tri Thức
         </h3>
 
-        {/* Đồ thị Mạng lưới Tri thức Canvas 120fps */}
+        {/* Đồ thị Mạng lưới Tri thức Canvas 120fps trên nền chấm chuẩn độ lu-dg-ground-dots */}
         <div
           ref={containerRef}
-          className="relative h-[222px] w-full overflow-hidden rounded-2xl border border-[#C9D7DF] bg-[#ECF1F4]/45"
+          className="lu-dg-ground-dots relative h-[222px] w-full overflow-hidden rounded-2xl border border-[#C9D7DF] bg-[#ECF1F4]/45"
         >
           <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
         </div>

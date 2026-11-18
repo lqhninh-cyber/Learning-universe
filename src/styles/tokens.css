@@ -76,6 +76,38 @@
   --scholar-muted: #4a5d58;
   --scholar-accent: #2d5266;
   --scholar-hairline: #d8e0dd;
+
+  /* Hallmark (Atelier · Vellum · Almanac · Blueprint) Typography & Surface Tokens */
+  --tracking-display: -0.022em;
+  --tracking-heading: -0.015em;
+  --tracking-telemetry: 0.04em;
+  --leading-display: 1.08;
+  --leading-heading: 1.22;
+  --leading-body: 1.65;
+  --rule-hair: 1px;
+  --rule-firm: 2px;
+  --rule-double: 4px;
+  --lit-edge: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  --shadow-card-mineral:
+    0 0 0 1px rgba(24, 38, 36, 0.045), 0 1px 2px rgba(24, 38, 36, 0.05),
+    0 12px 28px -12px rgba(24, 38, 36, 0.09);
+
+  /* 4 Sắc Khoáng Thạch Môn Học Chuẩn (CTĐS · HHAVE · GTHMB · GDH) */
+  --mineral-ctds: #6b5335;
+  --mineral-ctds-lit: #9c7a4c;
+  --mineral-hhave: #2d5266;
+  --mineral-hhave-lit: #49768f;
+  --mineral-gthmb: #245746;
+  --mineral-gthmb-lit: #3b7a65;
+  --mineral-gdh: #7a463b;
+  --mineral-gdh-lit: #9e6356;
+
+  /* Hallmark & Taste-Skill Motion Tokens */
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .dark,

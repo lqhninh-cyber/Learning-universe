@@ -151,9 +151,53 @@ export function SubjectPathwayDock({
       data-testid="subject-pathway-dock"
       className="relative z-20 mt-7 w-full border-t border-white/10 pt-5"
     >
-      <p className="mb-3 font-mono text-[11px] font-semibold tracking-[0.16em] text-white/75 uppercase">
-        {theme.widgetTitle}
-      </p>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="font-mono text-[11px] font-semibold tracking-[0.16em] text-white/75 uppercase">
+          {theme.widgetTitle}
+        </p>
+        {/* Đường dẫn Bezier & xung truyền dữ liệu giữa các chặng lộ trình (taste-skill diagram.js) */}
+        <svg
+          data-testid="pathway-bezier-connectors"
+          viewBox="0 0 360 18"
+          aria-hidden="true"
+          className="hidden h-4 w-44 overflow-visible opacity-85 sm:block"
+        >
+          <path
+            d="M 8 9 C 48 2, 72 16, 118 9 C 164 2, 196 16, 242 9 C 288 2, 316 16, 352 9"
+            fill="none"
+            stroke="rgba(255,255,255,0.2)"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 8 9 C 48 2, 72 16, 118 9 C 164 2, 196 16, 242 9 C 288 2, 316 16, 352 9"
+            fill="none"
+            stroke={theme.accent}
+            strokeWidth="1.6"
+            strokeDasharray="36 320"
+            strokeLinecap="round"
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              from="356"
+              to="0"
+              dur="3.2s"
+              repeatCount="indefinite"
+            />
+          </path>
+          {[8, 118, 242, 352].map((cxPos, i) => (
+            <circle
+              key={i}
+              cx={cxPos}
+              cy="9"
+              r="2.4"
+              fill="#FAFBF9"
+              stroke={theme.accent}
+              strokeWidth="1.2"
+            />
+          ))}
+        </svg>
+      </div>
 
       <ol className={gridClass} aria-label={theme.widgetTitle}>
         {theme.stages.map((stage, index) => {

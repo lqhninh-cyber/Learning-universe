@@ -837,7 +837,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                 <div
                   role="tablist"
                   aria-label="Phân nhánh học thuật"
-                  className="inline-flex shrink-0 items-center rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1 shadow-2xs"
+                  className="lu-fx-tabs-bar inline-flex shrink-0 items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1"
                 >
                   {(
                     [
@@ -855,10 +855,10 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         aria-selected={isSelected}
                         onClick={() => setActiveBranch(tab.id)}
                         className={cn(
-                          'cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all',
+                          'lu-fx-tab cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap',
                           isSelected
-                            ? 'bg-[#1E332E] text-[#FAFBF9] shadow-2xs'
-                            : 'text-[#4A5D58] hover:text-[#182624]',
+                            ? 'bg-[#1E332E] text-[#FAFBF9] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_1px_2px_rgba(24,38,36,0.16)]'
+                            : 'text-[#4A5D58] hover:bg-[#F2F4F3] hover:text-[#182624]',
                         )}
                       >
                         {tab.label}
@@ -953,7 +953,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                             } as CSSProperties & { '--subject-rgb': string }
                           }
                           className={cn(
-                            'group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl border bg-[#FAFBF9] p-6 shadow-xs transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(20,36,32,0.09)] sm:p-7',
+                            'lu-fx-card group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl p-6 sm:p-7',
                             palette.cardBorder,
                           )}
                         >
@@ -964,16 +964,29 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                             className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-[2.5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                           />
 
-                          {/* Quầng sáng Radial Spotlight bám theo con trỏ chuột (không gây mờ chữ) */}
+                          {/* Quầng sáng Radial Spotlight & lưới chấm Ruled-Dot bám theo con trỏ chuột (taste-skill fx-spotlight) */}
                           <div
                             aria-hidden="true"
                             data-testid={`card-spotlight-${subject.slug}`}
                             style={{
                               background:
-                                'radial-gradient(420px circle at var(--mx, 50%) var(--my, 35%), rgba(var(--subject-rgb), 0.10), transparent 70%)',
+                                'radial-gradient(420px circle at var(--mx, 50%) var(--my, 35%), rgba(var(--subject-rgb), 0.11), transparent 70%)',
                             }}
                             className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                          />
+                          >
+                            <div
+                              style={{
+                                backgroundImage:
+                                  'radial-gradient(circle, rgba(var(--subject-rgb), 0.24) 1px, transparent 1.35px)',
+                                backgroundSize: '16px 16px',
+                                WebkitMaskImage:
+                                  'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
+                                maskImage:
+                                  'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
+                              }}
+                              className="h-full w-full"
+                            />
+                          </div>
 
                           <SubjectWatermarkSignature slug={subject.slug} />
 
@@ -1003,7 +1016,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 <span
                                   data-testid={`subject-progress-badge-${subject.slug}`}
                                   className={cn(
-                                    'rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold',
+                                    'lu-tabular-telemetry rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold',
                                     palette.progressBadgeClass,
                                   )}
                                 >
@@ -1011,9 +1024,9 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   {subjectPercent}%
                                 </span>
                               </div>
-                              <div className="h-1 w-32 overflow-hidden rounded-full bg-[#E7ECEA]">
+                              <div className="lu-fx-progress-track h-1.5 w-32 rounded-full bg-[#E7ECEA]">
                                 <div
-                                  className="h-full rounded-full transition-all duration-500"
+                                  className="lu-fx-progress-fill h-full rounded-full transition-[width] duration-500"
                                   style={{
                                     width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
                                     backgroundColor: palette.progressBarColor,
@@ -1248,7 +1261,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                   <div
                     role="region"
                     aria-label="Tiếp tục học dở"
-                    className="rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-7"
+                    className="lu-fx-card rounded-3xl p-6 sm:p-7"
                   >
                     {activeRecentLesson ? (
                       <div className="space-y-5">
@@ -1384,7 +1397,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                     role="region"
                     aria-label="Ma Trận Tiến Độ 4 Học Phần"
                     data-testid="progress-matrix-4-subjects"
-                    className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-sm sm:p-7"
+                    className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-6 sm:p-7"
                   >
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3.5">
                       <div className="space-y-0.5">

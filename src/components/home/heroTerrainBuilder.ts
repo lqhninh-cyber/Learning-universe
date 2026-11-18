@@ -327,6 +327,7 @@ function buildTerracedContours(
         if (y > maxY) maxY = y;
       }
 
+      const isIndexContour = tier === 0 || (tier + 1) % 3 === 0;
       const tone: 'gold' | 'cyan' = (tier + targetIdx) % 2 === 0 ? 'gold' : 'cyan';
       contours.push({
         id: nextId,
@@ -334,7 +335,7 @@ function buildTerracedContours(
         tierIndex: tier,
         depth: layer.depth,
         tone,
-        baseAlpha: tone === 'gold' ? 0.24 : 0.2,
+        baseAlpha: isIndexContour ? 0.3 : tone === 'gold' ? 0.24 : 0.2,
         lineWidth: 0.85,
         minY,
         maxY,
@@ -555,6 +556,58 @@ function renderNebulaOffscreen(
     ctx.fill();
   }
 
+  // Taste-Skill aurora-curtains: Rèm cực quang gấp nếp chữ S (S-curve folded curtains with bright hem & vertical ray creases)
+  const curtainCount = 3;
+  for (let cIdx = 0; cIdx < curtainCount; cIdx += 1) {
+    const startX = geometry.width * (0.18 + cIdx * 0.22);
+    const spanW = geometry.width * (0.46 - cIdx * 0.05);
+    const baseHemY = geometry.height * (0.34 + cIdx * 0.06);
+    const reachH = geometry.height * (0.24 - cIdx * 0.025);
+    const foldFreq = (2.2 + cIdx * 0.55) / Math.max(spanW, 1);
+    const phaseShift = cIdx * 1.65 + 0.4;
+    const hemColor: readonly [number, number, number] =
+      cIdx === 1 ? [225, 185, 115] : [90, 175, 215];
+    const topColor: readonly [number, number, number] = palette.facetCelestial;
+
+    const raySteps = 44;
+    for (let s = 0; s < raySteps; s += 1) {
+      const u = s / raySteps;
+      const dx = (u - 0.5) * spanW;
+      const edgeEnv = Math.sin(u * Math.PI);
+      if (edgeEnv <= 0.02) continue;
+
+      const sp = dx * foldFreq * Math.PI * 2 + phaseShift;
+      const sw = Math.sin(sp + 0.45 * Math.sin(sp));
+      const turn = Math.abs(Math.cos(sp + 0.45 * Math.sin(sp)));
+      const crease = (0.58 + 0.82 * turn * turn * turn) * edgeEnv;
+
+      const xPos = startX + u * spanW;
+      // Giữ vùng chữ bên trái (calm zone: 0.25W, 0.58H) êm dịu theo chuẩn taste-skill aurora-curtains
+      const calmDx = (xPos / geometry.width - 0.24) * 1.35;
+      const calmDy = baseHemY / geometry.height - 0.56;
+      const calmDist = Math.hypot(calmDx, calmDy);
+      const calmMask = Math.min(1, Math.max(0.22, (calmDist - 0.14) / 0.38));
+
+      const hemY = baseHemY + sw * 22 * (1 - cIdx * 0.15);
+      const rayReach = reachH * (0.68 + 0.32 * Math.sin(sp * 1.7 + cIdx));
+      const rayAlpha = Math.min(0.11, 0.036 * crease * mwScale * calmMask);
+
+      const rayGrad = ctx.createLinearGradient(xPos, hemY + 18, xPos, hemY - rayReach);
+      rayGrad.addColorStop(0, rgbaString(hemColor, 0));
+      rayGrad.addColorStop(0.14, rgbaString(hemColor, rayAlpha * 1.25));
+      rayGrad.addColorStop(0.46, rgbaString(mixRgb(hemColor, topColor, 0.5), rayAlpha * 0.65));
+      rayGrad.addColorStop(1, rgbaString(topColor, 0));
+
+      ctx.fillStyle = rayGrad;
+      ctx.fillRect(
+        xPos - (spanW / raySteps) * 0.7,
+        hemY - rayReach,
+        (spanW / raySteps) * 1.4,
+        rayReach + 18,
+      );
+    }
+  }
+
   return surf;
 }
 
@@ -686,20 +739,33 @@ function renderMountainTopographyOffscreen(
       ctx.restore();
     }
 
-    // 2. Đường đồng mức ruộng bậc thang nổi khối rõ nét trên cả 4 tầng núi (index 1, 2, 3, 4)
+    // 2. Đường đồng mức ruộng bậc thang chuẩn taste-skill (contour-lines & ridgeline):
+    // - Phân tách đường đồng mức chỉ số (indexEvery = 3) đậm sắc khoáng thạch và đường trung gian mảnh
+    // - Khử răng cưa Moiré theo độ dốc |dy/dx| và làm dịu vùng calm dưới khối chữ Hero
     if (layer.index >= 1) {
       ctx.clip();
       const layerContours = geometry.contours.filter((c) => c.layerIndex === layer.index);
+      const goldRgb = mixRgb([212, 175, 105], palette.terraceRim, 0.35);
+      const cyanRgb = mixRgb([110, 185, 220], palette.rayCool, 0.35);
+
       for (const contour of layerContours) {
+        const isIdxLine = contour.tierIndex === 0 || (contour.tierIndex + 1) % 3 === 0;
+        const contourGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
+        const baseColor = contour.tone === 'gold' ? goldRgb : cyanRgb;
+        const aFull = contour.baseAlpha;
+        // Dịu nhẹ ở vùng chữ bên trái (calmX = 0.24) và sắc nét dần về sườn núi phải (focus = 0.72)
+        contourGrad.addColorStop(0, rgbaString(baseColor, aFull * 0.32));
+        contourGrad.addColorStop(0.24, rgbaString(baseColor, aFull * 0.42));
+        contourGrad.addColorStop(0.58, rgbaString(baseColor, aFull * (isIdxLine ? 1.15 : 0.92)));
+        contourGrad.addColorStop(0.84, rgbaString(baseColor, aFull * (isIdxLine ? 1.22 : 1.0)));
+        contourGrad.addColorStop(1, rgbaString(baseColor, aFull * 0.48));
+
         ctx.beginPath();
         traceSmoothQuadraticCurve(ctx, contour.points, true);
-        ctx.lineWidth = contour.lineWidth;
-        const goldRgb = mixRgb([212, 175, 105], palette.terraceRim, 0.35);
-        const cyanRgb = mixRgb([110, 185, 220], palette.rayCool, 0.35);
-        ctx.strokeStyle =
-          contour.tone === 'gold'
-            ? rgbaString(goldRgb, contour.baseAlpha)
-            : rgbaString(cyanRgb, contour.baseAlpha);
+        ctx.lineWidth = contour.lineWidth * (isIdxLine ? 1.24 : 0.94);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = contourGrad;
         ctx.stroke();
       }
     }

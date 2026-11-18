@@ -309,7 +309,7 @@ export function LearningSpacePage() {
               }}
               className="relative min-h-[430px] rounded-3xl border border-[#D8E0DD] p-8 text-[#162623] shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_20px_60px_rgba(24,38,36,0.06)] backdrop-blur-md transition-shadow duration-300 lg:p-11"
             >
-              {/* Lớp Lưới tọa độ trắc địa mờ (Engineering Blueprint Grid) & đường đồng mức hình học */}
+              {/* Lớp Lưới chuẩn độ Ruled-Grounds & Khắc Tuyến Tính Line-Engraving (taste-skill) */}
               <div
                 aria-hidden="true"
                 data-testid="hero-blueprint-grid"
@@ -317,51 +317,106 @@ export function LearningSpacePage() {
               >
                 <svg className="h-full w-full">
                   <defs>
+                    {/* ruled-grounds: chấm tròn 16px trên tâm điểm ảnh */}
                     <pattern
                       id={`${gridPatternId}-minor`}
-                      width="24"
-                      height="24"
+                      width="16"
+                      height="16"
                       patternUnits="userSpaceOnUse"
                     >
-                      <path
-                        d="M 24 0 L 0 0 0 24"
-                        fill="none"
-                        stroke="rgba(30, 50, 45, 0.03)"
-                        strokeWidth="0.7"
-                      />
+                      <circle cx="8" cy="8" r="0.85" fill="rgba(30, 51, 46, 0.14)" />
                     </pattern>
+                    {/* ruled-grounds: mỗi nút bậc 4 (64px) mang dấu chữ thập trắc địa mảnh */}
                     <pattern
                       id={gridPatternId}
-                      width="96"
-                      height="96"
+                      width="64"
+                      height="64"
                       patternUnits="userSpaceOnUse"
                     >
-                      <rect width="96" height="96" fill={`url(#${gridPatternId}-minor)`} />
+                      <rect width="64" height="64" fill={`url(#${gridPatternId}-minor)`} />
                       <path
-                        d="M 96 0 L 0 0 0 96"
+                        d="M 64 0 L 0 0 0 64"
                         fill="none"
-                        stroke="rgba(30, 50, 45, 0.05)"
-                        strokeWidth="0.9"
+                        stroke="rgba(30, 51, 46, 0.045)"
+                        strokeWidth="0.75"
                       />
                       <path
-                        d="M 92 96 L 96 96 L 96 92"
+                        d="M 29 32 L 35 32 M 32 29 L 32 35"
                         fill="none"
-                        stroke="rgba(30, 50, 45, 0.08)"
-                        strokeWidth="1"
+                        stroke="rgba(156, 122, 76, 0.28)"
+                        strokeWidth="0.9"
+                        strokeLinecap="round"
                       />
                     </pattern>
+                    {/* Mặt nạ Calm-Zone làm dịu nền dưới vùng chữ bên trái và tôn nổi vùng điêu khắc bên phải */}
+                    <radialGradient id={`${gridPatternId}-calm-mask`} cx="26%" cy="54%" r="58%">
+                      <stop offset="0%" stopColor="white" stopOpacity="0.22" />
+                      <stop offset="52%" stopColor="white" stopOpacity="0.68" />
+                      <stop offset="100%" stopColor="white" stopOpacity="1" />
+                    </radialGradient>
+                    <mask id={`${gridPatternId}-field-mask`}>
+                      <rect width="100%" height="100%" fill={`url(#${gridPatternId}-calm-mask)`} />
+                    </mask>
                   </defs>
-                  <rect width="100%" height="100%" fill={`url(#${gridPatternId})`} />
-                  {/* Vòng đồng mức thiên cầu khắc chìm bên phải */}
+                  <g mask={`url(#${gridPatternId}-field-mask)`}>
+                    <rect width="100%" height="100%" fill={`url(#${gridPatternId})`} />
+                    {/* line-engraving: hệ đường khắc song song uốn quanh tâm trường lực bên phải */}
+                    <path
+                      d="M -40 298 C 180 258, 355 344, 575 282 C 770 224, 960 326, 1320 248"
+                      fill="none"
+                      stroke="#245746"
+                      strokeOpacity="0.065"
+                      strokeWidth="0.85"
+                    />
+                    <path
+                      d="M -40 318 C 185 276, 360 364, 580 298 C 772 238, 962 344, 1320 264"
+                      fill="none"
+                      stroke="#1E332E"
+                      strokeOpacity="0.085"
+                      strokeWidth="1.15"
+                    />
+                    <path
+                      d="M -40 340 C 190 290, 360 390, 580 315 C 770 250, 960 360, 1280 280"
+                      fill="none"
+                      stroke="#243E38"
+                      strokeOpacity="0.07"
+                      strokeWidth="0.95"
+                    />
+                    <path
+                      d="M -40 362 C 202 310, 378 404, 602 328 C 798 264, 976 374, 1280 296"
+                      fill="none"
+                      stroke="#9C7A4C"
+                      strokeOpacity="0.08"
+                      strokeWidth="1.05"
+                    />
+                    <path
+                      d="M -40 384 C 214 332, 396 420, 624 344 C 824 280, 994 390, 1280 316"
+                      fill="none"
+                      stroke="#8C6D3F"
+                      strokeOpacity="0.055"
+                      strokeWidth="0.75"
+                    />
+                  </g>
+                  {/* Vòng đồng mức guilloche thiên cầu khắc chìm bên phải */}
                   <circle
                     cx="78%"
                     cy="50%"
                     r="172"
                     fill="none"
                     stroke="#8C6D3F"
-                    strokeOpacity="0.09"
+                    strokeOpacity="0.1"
                     strokeWidth="0.9"
                     strokeDasharray="3 5"
+                  />
+                  <circle
+                    cx="78%"
+                    cy="50%"
+                    r="206"
+                    fill="none"
+                    stroke="#3B7A65"
+                    strokeOpacity="0.065"
+                    strokeWidth="0.75"
+                    strokeDasharray="1.5 4.5"
                   />
                   <circle
                     cx="78%"
@@ -369,7 +424,7 @@ export function LearningSpacePage() {
                     r="238"
                     fill="none"
                     stroke="#243E38"
-                    strokeOpacity="0.065"
+                    strokeOpacity="0.075"
                     strokeWidth="0.85"
                   />
                   <circle
@@ -378,24 +433,9 @@ export function LearningSpacePage() {
                     r="305"
                     fill="none"
                     stroke="#2D5266"
-                    strokeOpacity="0.055"
+                    strokeOpacity="0.06"
                     strokeWidth="0.8"
                     strokeDasharray="6 8"
-                  />
-                  {/* Đường đồng mức toán học uốn lượn tinh xảo */}
-                  <path
-                    d="M -40 340 C 190 290, 360 390, 580 315 C 770 250, 960 360, 1280 280"
-                    fill="none"
-                    stroke="#243E38"
-                    strokeOpacity="0.055"
-                    strokeWidth="1"
-                  />
-                  <path
-                    d="M -40 372 C 210 322, 390 412, 620 338 C 820 274, 990 385, 1280 312"
-                    fill="none"
-                    stroke="#8C6D3F"
-                    strokeOpacity="0.06"
-                    strokeWidth="0.9"
                   />
                 </svg>
               </div>
@@ -446,14 +486,22 @@ export function LearningSpacePage() {
                     </span>
                   </div>
 
-                  {/* Ô Tìm kiếm Spotlight Tức thời + Từ khóa gợi ý nhanh */}
-                  <div ref={searchContainerRef} className="relative max-w-2xl space-y-2.5">
+                  {/* Ô Tìm kiếm Spotlight Tức thời theo kiến trúc taste-skill fx-search + Từ khóa gợi ý nhanh */}
+                  <div
+                    ref={searchContainerRef}
+                    className="lu-fx-search relative max-w-2xl space-y-2.5"
+                  >
+                    <div
+                      aria-hidden="true"
+                      data-testid="fx-search-glow"
+                      className="lu-fx-search-glow"
+                    />
                     <form
                       onSubmit={handleSearchSubmit}
                       role="search"
                       aria-label="Tìm kiếm nội dung học tập"
                     >
-                      <div className="relative flex h-12 w-full items-center rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9]/95 px-4 text-sm text-[#182624] shadow-sm transition-all focus-within:border-[#1E332E] focus-within:ring-2 focus-within:ring-[#1E332E]/15">
+                      <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9]/95 px-4 text-sm text-[#182624]">
                         <Search
                           className="mr-3 h-4 w-4 shrink-0 text-[#4A5D58]"
                           aria-hidden="true"

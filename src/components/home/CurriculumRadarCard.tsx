@@ -155,15 +155,23 @@ export function CurriculumRadarCard({
       const { cx, cy, maxR } = getCenterRadius();
       const focusedSlug = activeSlugRef.current;
 
-      // 4 vòng tròn đồng tâm đo tỷ lệ
+      // 4 vòng tròn đồng tâm đo tỷ lệ kèm nhãn chuẩn độ (fx-chart grid)
       for (const ringRatio of [0.25, 0.5, 0.75, 1.0]) {
         const r = maxR * ringRatio;
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = ringRatio === 1 ? 'rgba(30, 58, 52, 0.22)' : 'rgba(30, 58, 52, 0.10)';
+        ctx.strokeStyle = ringRatio === 1 ? 'rgba(30, 58, 52, 0.24)' : 'rgba(30, 58, 52, 0.11)';
         ctx.setLineDash(ringRatio === 0.5 || ringRatio === 0.25 ? [3, 4] : []);
-        ctx.lineWidth = ringRatio === 1 ? 1.25 : 0.9;
+        ctx.lineWidth = ringRatio === 1 ? 1.25 : 0.85;
         ctx.stroke();
+
+        if (ringRatio === 0.5 || ringRatio === 1.0) {
+          ctx.font = '500 8.5px "JetBrains Mono", monospace';
+          ctx.fillStyle = 'rgba(74, 93, 88, 0.55)';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(`${Math.round(ringRatio * 100)}%`, cx + 4, cy - r - 2);
+        }
       }
       ctx.setLineDash([]);
 
@@ -201,7 +209,7 @@ export function CurriculumRadarCard({
         ctx.fillText(axis.shortLabel, lx, ly);
       });
 
-      // Lớp 1: Đa giác Quy mô Học phần (Curriculum Footprint)
+      // Lớp 1: Đa giác Quy mô Học phần (Curriculum Footprint - fx-chart area gradient)
       const currentFootprint = footprintValuesRef.current;
       const currentMastery = masteryValuesRef.current;
       const footprintPts = RADAR_AXES.map((axis, idx) => {
@@ -213,17 +221,54 @@ export function CurriculumRadarCard({
         };
       });
 
+      const footAreaGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, maxR);
+      footAreaGrad.addColorStop(0, 'rgba(36, 87, 70, 0.06)');
+      footAreaGrad.addColorStop(1, 'rgba(36, 87, 70, 0.22)');
+
       ctx.beginPath();
       footprintPts.forEach((pt, idx) => {
         if (idx === 0) ctx.moveTo(pt.x, pt.y);
         else ctx.lineTo(pt.x, pt.y);
       });
       ctx.closePath();
-      ctx.fillStyle = 'rgba(36, 87, 70, 0.14)';
+      ctx.fillStyle = footAreaGrad;
       ctx.fill();
       ctx.strokeStyle = '#245746';
-      ctx.lineWidth = 1.75;
+      ctx.lineWidth = 1.8;
+      ctx.lineJoin = 'round';
       ctx.stroke();
+
+      // Xung truyền dữ liệu (dg-comet & dg-spark chu kỳ 3.2s) chạy dọc chu vi đa giác Quy mô
+      const cycleProgress = ((time % 3.2) / 3.2) * footprintPts.length;
+      const edgeIdx = Math.floor(cycleProgress) % footprintPts.length;
+      const edgeT = cycleProgress - Math.floor(cycleProgress);
+      const pStart = footprintPts[edgeIdx]!;
+      const pEnd = footprintPts[(edgeIdx + 1) % footprintPts.length]!;
+      const sparkX = pStart.x + (pEnd.x - pStart.x) * edgeT;
+      const sparkY = pStart.y + (pEnd.y - pStart.y) * edgeT;
+      const tailT = Math.max(0, edgeT - 0.32);
+      const tailX = pStart.x + (pEnd.x - pStart.x) * tailT;
+      const tailY = pStart.y + (pEnd.y - pStart.y) * tailT;
+
+      const cometGrad = ctx.createLinearGradient(tailX, tailY, sparkX, sparkY);
+      cometGrad.addColorStop(0, 'rgba(36, 87, 70, 0)');
+      cometGrad.addColorStop(1, 'rgba(59, 122, 101, 0.95)');
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(sparkX, sparkY);
+      ctx.strokeStyle = cometGrad;
+      ctx.lineWidth = 2.6;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(sparkX, sparkY, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(59, 122, 101, 0.24)';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(sparkX, sparkY, 2.0, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBF9';
+      ctx.fill();
 
       // Lớp 2: Đa giác Tiến độ Cá nhân (Mastery Overlay)
       const masteryPts = RADAR_AXES.map((axis, idx) => {
@@ -372,7 +417,7 @@ export function CurriculumRadarCard({
   return (
     <div
       data-testid="curriculum-radar-card"
-      className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-xs sm:p-6"
+      className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-5 sm:p-6"
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
@@ -398,10 +443,10 @@ export function CurriculumRadarCard({
           </span>
         </div>
 
-        {/* Canvas Radar 120fps */}
+        {/* Canvas Radar 120fps trên nền chấm chuẩn độ lu-dg-ground-dots */}
         <div
           ref={containerRef}
-          className="relative h-[218px] w-full overflow-hidden rounded-2xl border border-[#D8E0DD] bg-[#F2F4F3]/60"
+          className="lu-dg-ground-dots relative h-[218px] w-full overflow-hidden rounded-2xl border border-[#D8E0DD] bg-[#F2F4F3]/60"
         >
           <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
         </div>
