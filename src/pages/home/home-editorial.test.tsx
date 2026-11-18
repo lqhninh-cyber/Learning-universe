@@ -466,9 +466,17 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       ).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Vào học phần Giáo dục học/i })).toBeInTheDocument();
 
-      // Nút ViewModeToggle & Quick search chips
+      // Nút ViewModeToggle & Quick search chips & Hệ kiến trúc fx (Blueprint, EngravedGround, FlutedGlass, Band, Specimen)
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
       expect(screen.getByTestId('quick-search-chips')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-blueprint-frame')).toBeInTheDocument();
+      expect(screen.getByTestId('engraved-ground-canvas')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-eyebrow-fluted')).toBeInTheDocument();
+      expect(screen.getByTestId('architectural-band')).toBeInTheDocument();
+      expect(screen.getByTestId('atlas-blueprint-frame')).toBeInTheDocument();
+      expect(screen.getByTestId('orbit-blueprint-frame')).toBeInTheDocument();
+      expect(screen.getByText(/SPECIMEN № 01 \/\/ ALGEBRA/)).toBeInTheDocument();
+      expect(screen.getAllByTestId('specimen-fx-bars').length).toBeGreaterThanOrEqual(4);
 
       fireEvent.click(screen.getByRole('button', { name: 'Định lý Lagrange' }));
       expect(screen.getByTestId('spotlight-search-popover')).toBeInTheDocument();

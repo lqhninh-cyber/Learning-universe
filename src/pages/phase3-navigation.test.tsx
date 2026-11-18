@@ -90,6 +90,9 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
       }),
     ).toBeInTheDocument();
     expect(screen.getByText('Khái niệm Không gian Affine và Quy tắc Chasles')).toBeInTheDocument();
+    expect(screen.getByTestId('subject-workspace-blueprint-frame')).toBeInTheDocument();
+    expect(screen.getByText(/COURSE\.SPEC \/\/ HHAVE/)).toBeInTheDocument();
+    expect(screen.getByTestId('specimen-fx-bars')).toBeInTheDocument();
   });
 
   it('4. Trang bài học: hiển thị MDX, mục lục, hoàn thành bài (D1), ghi chú và chuyển bài tiếp theo', async () => {

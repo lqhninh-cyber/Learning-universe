@@ -806,8 +806,12 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
 
       const rect = container.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
-        const nx = (event.clientX - rect.left) / rect.width - 0.5;
-        const ny = (event.clientY - rect.top) / rect.height - 0.5;
+        const localX = event.clientX - rect.left;
+        const localY = event.clientY - rect.top;
+        container.style.setProperty('--stage-mx', `${localX.toFixed(1)}px`);
+        container.style.setProperty('--stage-my', `${localY.toFixed(1)}px`);
+        const nx = localX / rect.width - 0.5;
+        const ny = localY / rect.height - 0.5;
         targetOffsetX += (nx * 0.35 - (targetOffsetX % 6.283)) * 0.015;
         targetOffsetY = Math.max(-0.45, Math.min(0.45, ny * 0.4));
       }
@@ -903,20 +907,50 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       data-testid={`subject-stage-${slug}`}
       style={{ background: theme.background }}
       className={cn(
-        'relative my-4 h-52 w-full overflow-hidden rounded-2xl border select-none',
+        'group/stage relative my-4 h-52 w-full overflow-hidden rounded-2xl border select-none',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
         theme.borderClass,
       )}
       aria-hidden="true"
     >
-      {/* Lưới tọa độ siêu mờ phía sau Canvas */}
+      {/* Lưới tọa độ Ruled-Ground & spotlight bám con trỏ chuột (taste-skill) */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-20"
+        className="pointer-events-none absolute inset-0 opacity-24"
         style={{
-          backgroundImage: `radial-gradient(${theme.dotColor} 0.7px, transparent 0.7px)`,
-          backgroundSize: '18px 18px',
+          backgroundImage: `radial-gradient(${theme.dotColor} 0.75px, transparent 0.85px)`,
+          backgroundSize: '16px 16px',
         }}
       />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100"
+        style={{
+          background: `radial-gradient(210px circle at var(--stage-mx, 50%) var(--stage-my, 50%), ${theme.dotColor}1f, transparent 70%)`,
+        }}
+      />
+
+      {/* 4 chốt reticle thước đo ở góc khung sân khấu 3D */}
+      <span
+        className="pointer-events-none absolute top-2.5 left-2.5 z-20 h-2.5 w-2.5 border-t border-l opacity-55"
+        style={{ borderColor: theme.dotColor }}
+      />
+      <span
+        className="pointer-events-none absolute top-2.5 right-2.5 z-20 h-2.5 w-2.5 border-t border-r opacity-55"
+        style={{ borderColor: theme.dotColor }}
+      />
+      <span
+        className="pointer-events-none absolute bottom-2.5 left-2.5 z-20 h-2.5 w-2.5 border-b border-l opacity-55"
+        style={{ borderColor: theme.dotColor }}
+      />
+      <span
+        className="pointer-events-none absolute right-2.5 bottom-2.5 z-20 h-2.5 w-2.5 border-r border-b opacity-55"
+        style={{ borderColor: theme.dotColor }}
+      />
+      <span
+        className="lu-tabular-telemetry pointer-events-none absolute top-2 right-6 z-20 font-mono text-[9px] font-semibold tracking-[0.16em] uppercase opacity-50"
+        style={{ color: theme.dotColor }}
+      >
+        3D.STAGE // 120FPS
+      </span>
 
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full touch-none" />
     </div>

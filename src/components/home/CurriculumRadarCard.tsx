@@ -298,12 +298,35 @@ export function CurriculumRadarCard({
         const isFocused = focusedSlug === axis.slug;
 
         if (isFocused) {
-          const aura = ctx.createRadialGradient(fPt.x, fPt.y, 1, fPt.x, fPt.y, 14);
-          aura.addColorStop(0, `rgba(${axis.rgb}, 0.42)`);
+          const aura = ctx.createRadialGradient(fPt.x, fPt.y, 1, fPt.x, fPt.y, 16);
+          aura.addColorStop(0, `rgba(${axis.rgb}, 0.44)`);
           aura.addColorStop(1, 'rgba(255, 255, 255, 0)');
           ctx.fillStyle = aura;
           ctx.beginPath();
-          ctx.arc(fPt.x, fPt.y, 14, 0, Math.PI * 2);
+          ctx.arc(fPt.x, fPt.y, 16, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Đường dẫn kỹ thuật pElbow + cổng telemetry nối đỉnh radar đang chọn ra vành đo
+          const dirX = Math.cos(axis.angleRad);
+          const dirY = Math.sin(axis.angleRad);
+          const elbowMidX = fPt.x + dirX * 11;
+          const elbowMidY = fPt.y + dirY * 11;
+          const tickEndX = elbowMidX + (dirX >= 0 ? 12 : -12);
+          ctx.beginPath();
+          ctx.moveTo(fPt.x, fPt.y);
+          ctx.lineTo(elbowMidX, elbowMidY);
+          ctx.lineTo(tickEndX, elbowMidY);
+          ctx.strokeStyle = axis.color;
+          ctx.lineWidth = 1.25;
+          ctx.setLineDash([3, 3]);
+          ctx.lineDashOffset = -time * 18;
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.lineDashOffset = 0;
+
+          ctx.beginPath();
+          ctx.arc(tickEndX, elbowMidY, 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = axis.color;
           ctx.fill();
         }
 
@@ -464,13 +487,18 @@ export function CurriculumRadarCard({
                 onClick={() => setActiveSlug(axis.slug)}
                 aria-pressed={isSelected}
                 className={cn(
-                  'cursor-pointer rounded-lg border px-2 py-1 font-mono text-[10px] font-bold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
+                  'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-2 py-1 font-mono text-[10px] font-bold transition-[color,background-color,border-color,box-shadow] duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
                   isSelected
                     ? axis.pillClass
                     : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#1E332E]/40 hover:text-[#182624]',
                 )}
               >
-                {axis.shortLabel}
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: isSelected ? axis.color : '#8AA098' }}
+                />
+                <span>{axis.shortLabel}</span>
               </button>
             );
           })}

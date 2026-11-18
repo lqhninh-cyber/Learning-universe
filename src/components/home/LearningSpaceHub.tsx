@@ -15,6 +15,12 @@ import { CurriculumRadarCard, type RadarSubjectStat } from '@/components/home/Cu
 import { GoldenCompassSpineBridge } from '@/components/home/HomeScrollTransitions';
 import { KnowledgeConstellationCard } from '@/components/home/KnowledgeConstellationCard';
 import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
+import {
+  BlueprintSectionFrame,
+  SlidingTabBar,
+  SpecimenFxBars,
+  TelemetrySpecBar,
+} from '@/components/fx';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import {
   getInitialHomepageViewMode,
@@ -44,6 +50,13 @@ const SUBJECT_SHORT_CODES: Record<string, string> = {
   'hinh-hoc-affine': 'HHAVE',
   'giai-tich-ham-mot-bien': 'GTHMB',
   'giao-duc-hoc': 'GDH',
+};
+
+const SPECIMEN_DOMAIN_LABELS: Record<string, string> = {
+  'cau-truc-dai-so': 'ALGEBRA',
+  'hinh-hoc-affine': 'GEOMETRY',
+  'giai-tich-ham-mot-bien': 'ANALYSIS',
+  'giao-duc-hoc': 'PEDAGOGY',
 };
 
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
@@ -813,415 +826,429 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
         className="relative z-20 scroll-mt-24 pt-10 pb-10 lg:pt-12 lg:pb-12"
       >
         <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
-          {/* Header 2 tầng + Toolbar lọc phân nhánh */}
-          <div className="mb-8 pb-2">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-2 font-mono text-xs tracking-wider text-[var(--text-muted)] uppercase">
-                <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>HỆ THỐNG HỌC PHẦN</span>
-              </div>
-              <h2 className="font-serif text-2xl font-semibold text-[var(--text-main)] md:text-3xl">
-                Không gian Học phần
-              </h2>
-              <p className="mt-1.5 max-w-2xl font-sans text-sm leading-relaxed text-[var(--text-muted)]">
-                Mỗi học phần là một kiến trúc tư duy độc lập với ngôn ngữ hình học riêng.
-              </p>
-            </div>
-
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)]/60 pt-3">
-              <div className="flex items-center">
-                <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
-              </div>
-
-              <div className="flex max-w-full flex-wrap items-center gap-2.5">
-                <div
-                  role="tablist"
-                  aria-label="Phân nhánh học thuật"
-                  className="lu-fx-tabs-bar inline-flex shrink-0 items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1"
-                >
-                  {(
-                    [
-                      { id: 'all', label: 'Tất cả' },
-                      { id: 'math', label: 'Toán học' },
-                      { id: 'pedagogy', label: 'Khoa học Giáo dục' },
-                    ] as const
-                  ).map((tab) => {
-                    const isSelected = activeBranch === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={isSelected}
-                        onClick={() => setActiveBranch(tab.id)}
-                        className={cn(
-                          'lu-fx-tab cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium whitespace-nowrap',
-                          isSelected
-                            ? 'bg-[#1E332E] text-[#FAFBF9] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_1px_2px_rgba(24,38,36,0.16)]'
-                            : 'text-[#4A5D58] hover:bg-[#F2F4F3] hover:text-[#182624]',
-                        )}
-                      >
-                        {tab.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-            {/* Dải phân cách hình học với chấm đồng thau giữa đường kẻ */}
-            <div aria-hidden="true" className="mt-6 flex items-center gap-3">
-              <div className="h-px flex-1 bg-gradient-to-r from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
-              <span className="h-1.5 w-1.5 rounded-full bg-[#C89738]/75 ring-4 ring-[#C89738]/12" />
-              <div className="h-px flex-1 bg-gradient-to-l from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
-            </div>
-          </div>
-
-          {viewMode === 'archival' ? (
-            <ArchivalIndexView
-              subjects={subjects}
-              activeBranch={activeBranch}
-              externalQuery={hubQuery}
+          <BlueprintSectionFrame
+            data-testid="atlas-blueprint-frame"
+            columnSeams={[0.5]}
+            className="rounded-3xl border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
+            innerClassName="overflow-hidden rounded-3xl"
+          >
+            <TelemetrySpecBar
+              sectionCode="SEC. 02 // SPECIMEN ATLAS"
+              subtitle="BẢN ĐỒ ĐA CHIỀU CÁC MÔN HỌC"
+              items={[
+                { label: 'HIỂN THỊ', value: `${filteredSubjects.length}/${subjects.length}` },
+                { label: 'TIẾN ĐỘ', value: `${completedCount}/${totalLessonCount}` },
+              ]}
             />
-          ) : (
-            <>
-              {filteredSubjects.length === 0 ? (
-                <div className="rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-12 text-center">
-                  <p className="font-serif text-lg font-semibold text-[var(--text-main)]">
-                    Không tìm thấy học phần phù hợp với bộ lọc hiện tại.
+            <div className="p-6 sm:p-8 lg:p-10">
+              {/* Header 2 tầng + Toolbar lọc phân nhánh */}
+              <div className="mb-8 pb-2">
+                <div className="space-y-1.5">
+                  <div className="inline-flex items-center gap-2 font-mono text-xs tracking-wider text-[var(--text-muted)] uppercase">
+                    <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>HỆ THỐNG HỌC PHẦN</span>
+                  </div>
+                  <h2 className="font-serif text-2xl font-semibold text-[var(--text-main)] md:text-3xl">
+                    Không gian Học phần
+                  </h2>
+                  <p className="mt-1.5 max-w-2xl font-sans text-sm leading-relaxed text-[var(--text-muted)]">
+                    Mỗi học phần là một kiến trúc tư duy độc lập với ngôn ngữ hình học riêng.
                   </p>
-                  <p className="mt-1 text-sm text-[var(--text-muted)]">
-                    Hãy thử xóa từ khóa tìm kiếm hoặc chuyển sang phân nhánh &ldquo;Tất cả&rdquo;.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveBranch('all');
-                      onResetQuery();
-                    }}
-                    className="mt-4 cursor-pointer rounded-xl bg-[#1E332E] px-5 py-2.5 text-xs font-medium text-[#FAFBF9] transition-colors hover:bg-[#182624]"
-                  >
-                    Khôi phục bộ lọc
-                  </button>
                 </div>
+
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)]/60 pt-3">
+                  <div className="flex items-center">
+                    <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
+                  </div>
+
+                  <div className="flex max-w-full flex-wrap items-center gap-2.5">
+                    <SlidingTabBar
+                      ariaLabel="Phân nhánh học thuật"
+                      activeId={activeBranch}
+                      onChange={(id) => setActiveBranch(id as HubBranchFilter)}
+                      tabs={[
+                        { id: 'all', label: 'Tất cả' },
+                        { id: 'math', label: 'Toán học' },
+                        { id: 'pedagogy', label: 'Khoa học Giáo dục' },
+                      ]}
+                    />
+                  </div>
+                </div>
+                {/* Dải phân cách hình học với chấm đồng thau giữa đường kẻ */}
+                <div aria-hidden="true" className="mt-6 flex items-center gap-3">
+                  <div className="h-px flex-1 bg-gradient-to-r from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#C89738]/75 ring-4 ring-[#C89738]/12" />
+                  <div className="h-px flex-1 bg-gradient-to-l from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
+                </div>
+              </div>
+
+              {viewMode === 'archival' ? (
+                <ArchivalIndexView
+                  subjects={subjects}
+                  activeBranch={activeBranch}
+                  externalQuery={hubQuery}
+                />
               ) : (
-                <div
-                  data-testid="atlas-subjects-grid"
-                  className="grid grid-cols-1 gap-7 md:grid-cols-2"
-                >
-                  {filteredSubjects.map((subject, idx) => {
-                    const asset = getCourseCinematicAsset(subject.slug);
-                    const stats = getSubjectStats(subject);
-                    const palette = ATLAS_CARD_PALETTES[subject.slug] ?? DEFAULT_ATLAS_PALETTE;
-                    const isLonelyTailCard =
-                      filteredSubjects.length % 2 === 1 && idx === filteredSubjects.length - 1;
-                    const galleryIndex = String(idx + 1).padStart(2, '0');
-
-                    let subjectCompletedCount = 0;
-                    for (const ch of subject.chapters) {
-                      for (const ls of ch.lessons) {
-                        if (completedLessons[ls.id]) subjectCompletedCount += 1;
-                      }
-                    }
-                    const subjectPercent =
-                      stats.lessonCount > 0
-                        ? Math.round((subjectCompletedCount / stats.lessonCount) * 100)
-                        : 0;
-                    const resumeTarget = findSubjectResumeTarget(
-                      subject,
-                      completedLessons,
-                      lastVisitedBySubject[subject.id]?.lessonId,
-                    );
-                    const highlightedChapters = subject.chapters.slice(0, 3);
-                    const isRoadmapOpen = Boolean(expandedRoadmaps[subject.slug]);
-
-                    return (
-                      <FadeIn
-                        key={subject.id}
-                        delay={idx * 0.06}
-                        className={isLonelyTailCard ? 'md:col-span-2' : undefined}
+                <>
+                  {filteredSubjects.length === 0 ? (
+                    <div className="rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-12 text-center">
+                      <p className="font-serif text-lg font-semibold text-[var(--text-main)]">
+                        Không tìm thấy học phần phù hợp với bộ lọc hiện tại.
+                      </p>
+                      <p className="mt-1 text-sm text-[var(--text-muted)]">
+                        Hãy thử xóa từ khóa tìm kiếm hoặc chuyển sang phân nhánh &ldquo;Tất
+                        cả&rdquo;.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveBranch('all');
+                          onResetQuery();
+                        }}
+                        className="mt-4 cursor-pointer rounded-xl bg-[#1E332E] px-5 py-2.5 text-xs font-medium text-[#FAFBF9] transition-colors hover:bg-[#182624]"
                       >
-                        <article
-                          id={`atlas-subject-${subject.slug}`}
-                          onMouseEnter={() => setHoveredCardSlug(subject.slug)}
-                          onMouseMove={handleCardMouseMove}
-                          onMouseLeave={() => handleCardMouseLeave(subject.slug)}
-                          style={
-                            {
-                              viewTransitionName: `subject-card-${subject.slug}`,
-                              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                              '--subject-rgb': palette.subjectRgb,
-                            } as CSSProperties & { '--subject-rgb': string }
+                        Khôi phục bộ lọc
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      data-testid="atlas-subjects-grid"
+                      className="grid grid-cols-1 gap-7 md:grid-cols-2"
+                    >
+                      {filteredSubjects.map((subject, idx) => {
+                        const asset = getCourseCinematicAsset(subject.slug);
+                        const stats = getSubjectStats(subject);
+                        const palette = ATLAS_CARD_PALETTES[subject.slug] ?? DEFAULT_ATLAS_PALETTE;
+                        const isLonelyTailCard =
+                          filteredSubjects.length % 2 === 1 && idx === filteredSubjects.length - 1;
+                        const galleryIndex = String(idx + 1).padStart(2, '0');
+
+                        let subjectCompletedCount = 0;
+                        for (const ch of subject.chapters) {
+                          for (const ls of ch.lessons) {
+                            if (completedLessons[ls.id]) subjectCompletedCount += 1;
                           }
-                          className={cn(
-                            'lu-fx-card group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl p-6 sm:p-7',
-                            palette.cardBorder,
-                          )}
-                        >
-                          {/* Dải sáng mảnh chạy dọc mép trên của thẻ khi hover */}
-                          <div
-                            aria-hidden="true"
-                            style={{ background: palette.topBarGradient }}
-                            className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-[2.5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                          />
+                        }
+                        const subjectPercent =
+                          stats.lessonCount > 0
+                            ? Math.round((subjectCompletedCount / stats.lessonCount) * 100)
+                            : 0;
+                        const resumeTarget = findSubjectResumeTarget(
+                          subject,
+                          completedLessons,
+                          lastVisitedBySubject[subject.id]?.lessonId,
+                        );
+                        const highlightedChapters = subject.chapters.slice(0, 3);
+                        const isRoadmapOpen = Boolean(expandedRoadmaps[subject.slug]);
 
-                          {/* Quầng sáng Radial Spotlight & lưới chấm Ruled-Dot bám theo con trỏ chuột (taste-skill fx-spotlight) */}
-                          <div
-                            aria-hidden="true"
-                            data-testid={`card-spotlight-${subject.slug}`}
-                            style={{
-                              background:
-                                'radial-gradient(420px circle at var(--mx, 50%) var(--my, 35%), rgba(var(--subject-rgb), 0.11), transparent 70%)',
-                            }}
-                            className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                        return (
+                          <FadeIn
+                            key={subject.id}
+                            delay={idx * 0.06}
+                            className={isLonelyTailCard ? 'md:col-span-2' : undefined}
                           >
-                            <div
-                              style={{
-                                backgroundImage:
-                                  'radial-gradient(circle, rgba(var(--subject-rgb), 0.24) 1px, transparent 1.35px)',
-                                backgroundSize: '16px 16px',
-                                WebkitMaskImage:
-                                  'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
-                                maskImage:
-                                  'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
-                              }}
-                              className="h-full w-full"
-                            />
-                          </div>
+                            <article
+                              id={`atlas-subject-${subject.slug}`}
+                              onMouseEnter={() => setHoveredCardSlug(subject.slug)}
+                              onMouseMove={handleCardMouseMove}
+                              onMouseLeave={() => handleCardMouseLeave(subject.slug)}
+                              style={
+                                {
+                                  viewTransitionName: `subject-card-${subject.slug}`,
+                                  transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                                  '--subject-rgb': palette.subjectRgb,
+                                } as CSSProperties & { '--subject-rgb': string }
+                              }
+                              className={cn(
+                                'lu-fx-card group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl p-6 sm:p-7',
+                                palette.cardBorder,
+                              )}
+                            >
+                              {/* Dải sáng mảnh chạy dọc mép trên của thẻ khi hover */}
+                              <div
+                                aria-hidden="true"
+                                style={{ background: palette.topBarGradient }}
+                                className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-[2.5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                              />
 
-                          <SubjectWatermarkSignature slug={subject.slug} />
-
-                          <div className="relative z-10 flex flex-wrap items-start justify-between gap-3">
-                            <div className="flex items-center gap-2.5">
-                              <span
-                                className={cn('font-mono text-xs font-bold', palette.indexText)}
+                              {/* Quầng sáng Radial Spotlight & lưới chấm Ruled-Dot bám theo con trỏ chuột (taste-skill fx-spotlight) */}
+                              <div
+                                aria-hidden="true"
+                                data-testid={`card-spotlight-${subject.slug}`}
+                                style={{
+                                  background:
+                                    'radial-gradient(420px circle at var(--mx, 50%) var(--my, 35%), rgba(var(--subject-rgb), 0.11), transparent 70%)',
+                                }}
+                                className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                               >
-                                {galleryIndex}.
-                              </span>
-                              <span
-                                className={cn(
-                                  'rounded-full border px-3 py-1 font-mono text-[11px] font-semibold tracking-wider transition-colors duration-200',
-                                  palette.badgeClass,
-                                )}
-                              >
-                                {asset.categoryLabel}
-                              </span>
-                            </div>
-
-                            {/* Số chương/bài & Huy hiệu Tiến độ môn học */}
-                            <div className="flex flex-col items-end gap-1.5">
-                              <div className="flex flex-wrap items-center justify-end gap-2">
-                                <span className="font-mono text-[11px] text-[#4A5D58]">
-                                  {stats.chapterCount} chương · {stats.lessonCount} bài giảng
-                                </span>
-                                <span
-                                  data-testid={`subject-progress-badge-${subject.slug}`}
-                                  className={cn(
-                                    'lu-tabular-telemetry rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold',
-                                    palette.progressBadgeClass,
-                                  )}
-                                >
-                                  Đã học {subjectCompletedCount}/{stats.lessonCount} bài ·{' '}
-                                  {subjectPercent}%
-                                </span>
-                              </div>
-                              <div className="lu-fx-progress-track h-1.5 w-32 rounded-full bg-[#E7ECEA]">
                                 <div
-                                  className="lu-fx-progress-fill h-full rounded-full transition-[width] duration-500"
                                   style={{
-                                    width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
-                                    backgroundColor: palette.progressBarColor,
+                                    backgroundImage:
+                                      'radial-gradient(circle, rgba(var(--subject-rgb), 0.24) 1px, transparent 1.35px)',
+                                    backgroundSize: '16px 16px',
+                                    WebkitMaskImage:
+                                      'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
+                                    maskImage:
+                                      'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
                                   }}
+                                  className="h-full w-full"
                                 />
                               </div>
-                            </div>
-                          </div>
 
-                          <div className="relative z-10">
-                            <SubjectStageCanvas
-                              slug={subject.slug}
-                              isCardHovered={hoveredCardSlug === subject.slug}
-                            />
-                          </div>
+                              <SubjectWatermarkSignature slug={subject.slug} />
 
-                          <div className="relative z-10 space-y-4">
-                            <div className="space-y-2">
-                              <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] sm:text-[1.6rem]">
-                                <Link
-                                  to={ROUTES.subjectOverview(subject.slug)}
-                                  className={cn('transition-colors', palette.titleHover)}
-                                >
-                                  {subject.title}
-                                </Link>
-                              </h3>
-                              <p className="line-clamp-3 text-sm leading-relaxed text-[#4A5D58]">
-                                {asset.conciseDescription}
-                              </p>
-                            </div>
-
-                            {/* Dải Nhảy Nhanh Chương & Nút Xem nhanh lộ trình */}
-                            <div className="space-y-2.5 rounded-2xl border border-[#D8E0DD]/80 bg-[#F2F4F3]/65 p-3">
-                              <div className="flex flex-wrap items-center justify-between gap-2">
-                                <span className="font-mono text-[10px] font-semibold tracking-wider text-[#4A5D58] uppercase">
-                                  Chương trọng tâm
-                                </span>
-                                <button
-                                  type="button"
-                                  aria-expanded={isRoadmapOpen}
-                                  data-testid={`roadmap-toggle-${subject.slug}`}
-                                  onClick={() =>
-                                    setExpandedRoadmaps((prev) => ({
-                                      ...prev,
-                                      [subject.slug]: !prev[subject.slug],
-                                    }))
-                                  }
-                                  className={cn(
-                                    'inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors',
-                                    palette.indexText,
-                                    'hover:bg-[#FAFBF9]',
-                                  )}
-                                >
-                                  <span>
-                                    {isRoadmapOpen ? 'Thu gọn lộ trình' : 'Xem nhanh lộ trình'}
+                              <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-[#D8E0DD]/75 pb-3.5">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span
+                                    className={cn(
+                                      'lu-tabular-telemetry font-mono text-[10.5px] font-bold tracking-[0.14em] uppercase',
+                                      palette.indexText,
+                                    )}
+                                  >
+                                    SPECIMEN № {galleryIndex} //{' '}
+                                    {SPECIMEN_DOMAIN_LABELS[subject.slug] ?? 'MODULE'}
                                   </span>
-                                  <ChevronDown
+                                  <span
                                     className={cn(
-                                      'h-3 w-3 transition-transform duration-200',
-                                      isRoadmapOpen && 'rotate-180',
-                                    )}
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                              </div>
-
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                {highlightedChapters.map((chapter) => (
-                                  <Link
-                                    key={chapter.id}
-                                    to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
-                                    title={`Mở Chương ${chapter.number}: ${chapter.title}`}
-                                    className={cn(
-                                      'inline-flex max-w-[190px] items-center gap-1 truncate rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-all duration-150',
-                                      palette.chapterPillClass,
+                                      'rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] font-semibold tracking-wider transition-colors duration-200',
+                                      palette.badgeClass,
                                     )}
                                   >
-                                    <span className="font-mono text-[10px] font-bold">
-                                      Ch.{chapter.number}
+                                    {asset.categoryLabel}
+                                  </span>
+                                </div>
+
+                                {/* Thanh mật độ chương fx-bars + số bài giảng & huy hiệu tiến độ */}
+                                <div className="flex flex-col items-end gap-2">
+                                  <div className="flex flex-wrap items-center justify-end gap-2.5">
+                                    <SpecimenFxBars
+                                      chapters={subject.chapters.map((ch) => ({
+                                        id: ch.id,
+                                        title: `Chương ${ch.number}: ${ch.title}`,
+                                        totalLessons: ch.lessons.length,
+                                        completedLessons: ch.lessons.filter(
+                                          (ls) => completedLessons[ls.id],
+                                        ).length,
+                                      }))}
+                                      accentHex={palette.progressBarColor}
+                                    />
+                                    <div className="flex flex-col items-end gap-1">
+                                      <span className="lu-tabular-telemetry font-mono text-[11px] text-[#4A5D58]">
+                                        {stats.chapterCount} chương · {stats.lessonCount} bài giảng
+                                      </span>
+                                      <span
+                                        data-testid={`subject-progress-badge-${subject.slug}`}
+                                        className={cn(
+                                          'lu-tabular-telemetry rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold',
+                                          palette.progressBadgeClass,
+                                        )}
+                                      >
+                                        Đã học {subjectCompletedCount}/{stats.lessonCount} bài ·{' '}
+                                        {subjectPercent}%
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="lu-fx-progress-track h-1.5 w-36 rounded-full bg-[#E7ECEA]">
+                                    <div
+                                      className="lu-fx-progress-fill h-full rounded-full transition-[width] duration-500"
+                                      style={{
+                                        width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
+                                        backgroundColor: palette.progressBarColor,
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="relative z-10">
+                                <SubjectStageCanvas
+                                  slug={subject.slug}
+                                  isCardHovered={hoveredCardSlug === subject.slug}
+                                />
+                              </div>
+
+                              <div className="relative z-10 space-y-4">
+                                <div className="space-y-2">
+                                  <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] sm:text-[1.6rem]">
+                                    <Link
+                                      to={ROUTES.subjectOverview(subject.slug)}
+                                      className={cn('transition-colors', palette.titleHover)}
+                                    >
+                                      {subject.title}
+                                    </Link>
+                                  </h3>
+                                  <p className="line-clamp-3 text-sm leading-relaxed text-[#4A5D58]">
+                                    {asset.conciseDescription}
+                                  </p>
+                                </div>
+
+                                {/* Dải Nhảy Nhanh Chương & Nút Xem nhanh lộ trình */}
+                                <div className="space-y-2.5 rounded-2xl border border-[#D8E0DD]/80 bg-[#F2F4F3]/65 p-3">
+                                  <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <span className="font-mono text-[10px] font-semibold tracking-wider text-[#4A5D58] uppercase">
+                                      Chương trọng tâm
                                     </span>
-                                    <span className="truncate">{chapter.title}</span>
-                                  </Link>
-                                ))}
-                                {subject.chapters.length > highlightedChapters.length && (
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      setExpandedRoadmaps((prev) => ({
-                                        ...prev,
-                                        [subject.slug]: !prev[subject.slug],
-                                      }))
-                                    }
-                                    className="inline-flex cursor-pointer items-center rounded-lg border border-dashed border-[#CBD6D2] bg-[#FAFBF9] px-2.5 py-1 font-mono text-[10.5px] font-semibold text-[#4A5D58] transition-colors hover:border-[#1E332E] hover:text-[#182624]"
-                                  >
-                                    +{subject.chapters.length - highlightedChapters.length} chương
-                                  </button>
-                                )}
-                              </div>
+                                    <button
+                                      type="button"
+                                      aria-expanded={isRoadmapOpen}
+                                      data-testid={`roadmap-toggle-${subject.slug}`}
+                                      onClick={() =>
+                                        setExpandedRoadmaps((prev) => ({
+                                          ...prev,
+                                          [subject.slug]: !prev[subject.slug],
+                                        }))
+                                      }
+                                      className={cn(
+                                        'inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors',
+                                        palette.indexText,
+                                        'hover:bg-[#FAFBF9]',
+                                      )}
+                                    >
+                                      <span>
+                                        {isRoadmapOpen ? 'Thu gọn lộ trình' : 'Xem nhanh lộ trình'}
+                                      </span>
+                                      <ChevronDown
+                                        className={cn(
+                                          'h-3 w-3 transition-transform duration-200',
+                                          isRoadmapOpen && 'rotate-180',
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    </button>
+                                  </div>
 
-                              {isRoadmapOpen && (
-                                <div
-                                  data-testid={`roadmap-drawer-${subject.slug}`}
-                                  className="mt-2 max-h-48 space-y-1.5 overflow-y-auto border-t border-[#D8E0DD] pt-2.5 pr-1"
-                                >
-                                  {subject.chapters.map((chapter) => {
-                                    const chDone = chapter.lessons.filter(
-                                      (l) => completedLessons[l.id],
-                                    ).length;
-                                    return (
+                                  <div className="flex flex-wrap items-center gap-1.5">
+                                    {highlightedChapters.map((chapter) => (
                                       <Link
                                         key={chapter.id}
                                         to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
-                                        className="flex items-center justify-between gap-2 rounded-xl border border-transparent bg-[#FAFBF9] px-3 py-1.5 text-xs transition-colors hover:border-[#CBD6D2] hover:bg-white"
+                                        title={`Mở Chương ${chapter.number}: ${chapter.title}`}
+                                        className={cn(
+                                          'inline-flex max-w-[190px] items-center gap-1 truncate rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-all duration-150',
+                                          palette.chapterPillClass,
+                                        )}
                                       >
-                                        <span className="flex min-w-0 items-center gap-2">
-                                          <span
-                                            className={cn(
-                                              'shrink-0 font-mono text-[10.5px] font-bold',
-                                              palette.indexText,
-                                            )}
-                                          >
-                                            Ch.{chapter.number}
-                                          </span>
-                                          <span className="truncate font-medium text-[#182624]">
-                                            {chapter.title}
-                                          </span>
+                                        <span className="font-mono text-[10px] font-bold">
+                                          Ch.{chapter.number}
                                         </span>
-                                        <span className="shrink-0 font-mono text-[10.5px] text-[#4A5D58]">
-                                          {chDone}/{chapter.lessons.length} bài
-                                        </span>
+                                        <span className="truncate">{chapter.title}</span>
                                       </Link>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Chân thẻ: Huy hiệu Tiến độ gọn gàng (không cắt chữ) + Cụm nút Học tiếp & Vào học phần */}
-                            <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-[#D8E0DD] pt-4">
-                              <span
-                                data-testid={`subject-footer-progress-${subject.slug}`}
-                                className="inline-flex items-center gap-2 rounded-full border border-[#D8E0DD] bg-[#F2F4F3]/75 px-3 py-1 font-mono text-[11px] font-semibold whitespace-nowrap text-[#182624]"
-                              >
-                                <span
-                                  aria-hidden="true"
-                                  className="h-2 w-2 shrink-0 rounded-full"
-                                  style={{ backgroundColor: palette.progressBarColor }}
-                                />
-                                <span>
-                                  Tiến độ: {subjectPercent}% ({subjectCompletedCount}/
-                                  {stats.lessonCount} bài)
-                                </span>
-                              </span>
-
-                              <div className="ml-auto flex flex-wrap items-center gap-2">
-                                {resumeTarget && (
-                                  <Link
-                                    to={ROUTES.lesson(
-                                      subject.slug,
-                                      resumeTarget.chapter.slug,
-                                      resumeTarget.lesson.slug,
+                                    ))}
+                                    {subject.chapters.length > highlightedChapters.length && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setExpandedRoadmaps((prev) => ({
+                                            ...prev,
+                                            [subject.slug]: !prev[subject.slug],
+                                          }))
+                                        }
+                                        className="inline-flex cursor-pointer items-center rounded-lg border border-dashed border-[#CBD6D2] bg-[#FAFBF9] px-2.5 py-1 font-mono text-[10.5px] font-semibold text-[#4A5D58] transition-colors hover:border-[#1E332E] hover:text-[#182624]"
+                                      >
+                                        +{subject.chapters.length - highlightedChapters.length}{' '}
+                                        chương
+                                      </button>
                                     )}
-                                    title={`Mở ngay: ${resumeTarget.lesson.title}`}
-                                    className={cn(
-                                      'inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all duration-150 active:scale-[0.98]',
-                                      palette.secondaryBtnClass,
-                                    )}
-                                  >
-                                    <Play className="h-3 w-3 fill-current" aria-hidden="true" />
-                                    <span>Học tiếp</span>
-                                  </Link>
-                                )}
+                                  </div>
 
-                                <Link
-                                  to={ROUTES.courseOverview(subject.slug)}
-                                  aria-label={`Vào học phần ${subject.title}`}
-                                  className={cn(
-                                    'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-2xs transition-all duration-200 active:scale-[0.98]',
-                                    palette.ctaClass,
+                                  {isRoadmapOpen && (
+                                    <div
+                                      data-testid={`roadmap-drawer-${subject.slug}`}
+                                      className="mt-2 max-h-48 space-y-1.5 overflow-y-auto border-t border-[#D8E0DD] pt-2.5 pr-1"
+                                    >
+                                      {subject.chapters.map((chapter) => {
+                                        const chDone = chapter.lessons.filter(
+                                          (l) => completedLessons[l.id],
+                                        ).length;
+                                        return (
+                                          <Link
+                                            key={chapter.id}
+                                            to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
+                                            className="flex items-center justify-between gap-2 rounded-xl border border-transparent bg-[#FAFBF9] px-3 py-1.5 text-xs transition-colors hover:border-[#CBD6D2] hover:bg-white"
+                                          >
+                                            <span className="flex min-w-0 items-center gap-2">
+                                              <span
+                                                className={cn(
+                                                  'shrink-0 font-mono text-[10.5px] font-bold',
+                                                  palette.indexText,
+                                                )}
+                                              >
+                                                Ch.{chapter.number}
+                                              </span>
+                                              <span className="truncate font-medium text-[#182624]">
+                                                {chapter.title}
+                                              </span>
+                                            </span>
+                                            <span className="shrink-0 font-mono text-[10.5px] text-[#4A5D58]">
+                                              {chDone}/{chapter.lessons.length} bài
+                                            </span>
+                                          </Link>
+                                        );
+                                      })}
+                                    </div>
                                   )}
-                                >
-                                  <span>Vào học phần</span>
-                                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                                </Link>
+                                </div>
+
+                                {/* Chân thẻ: Huy hiệu Tiến độ gọn gàng (không cắt chữ) + Cụm nút Học tiếp & Vào học phần */}
+                                <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-[#D8E0DD] pt-4">
+                                  <span
+                                    data-testid={`subject-footer-progress-${subject.slug}`}
+                                    className="inline-flex items-center gap-2 rounded-full border border-[#D8E0DD] bg-[#F2F4F3]/75 px-3 py-1 font-mono text-[11px] font-semibold whitespace-nowrap text-[#182624]"
+                                  >
+                                    <span
+                                      aria-hidden="true"
+                                      className="h-2 w-2 shrink-0 rounded-full"
+                                      style={{ backgroundColor: palette.progressBarColor }}
+                                    />
+                                    <span>
+                                      Tiến độ: {subjectPercent}% ({subjectCompletedCount}/
+                                      {stats.lessonCount} bài)
+                                    </span>
+                                  </span>
+
+                                  <div className="ml-auto flex flex-wrap items-center gap-2">
+                                    {resumeTarget && (
+                                      <Link
+                                        to={ROUTES.lesson(
+                                          subject.slug,
+                                          resumeTarget.chapter.slug,
+                                          resumeTarget.lesson.slug,
+                                        )}
+                                        title={`Mở ngay: ${resumeTarget.lesson.title}`}
+                                        className={cn(
+                                          'inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition-all duration-150 active:scale-[0.98]',
+                                          palette.secondaryBtnClass,
+                                        )}
+                                      >
+                                        <Play className="h-3 w-3 fill-current" aria-hidden="true" />
+                                        <span>Học tiếp</span>
+                                      </Link>
+                                    )}
+
+                                    <Link
+                                      to={ROUTES.courseOverview(subject.slug)}
+                                      aria-label={`Vào học phần ${subject.title}`}
+                                      className={cn(
+                                        'inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-2xs transition-all duration-200 active:scale-[0.98]',
+                                        palette.ctaClass,
+                                      )}
+                                    >
+                                      <span>Vào học phần</span>
+                                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                                    </Link>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </article>
-                      </FadeIn>
-                    );
-                  })}
-                </div>
+                            </article>
+                          </FadeIn>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
+            </div>
+          </BlueprintSectionFrame>
         </div>
       </section>
 
@@ -1235,269 +1262,289 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
             className="relative z-20 scroll-mt-24 py-10 lg:py-14"
           >
             <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
-              <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-                <div className="space-y-2">
-                  <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#365E4E] uppercase dark:text-[#8EE5CE]">
-                    <Sparkles className="h-3.5 w-3.5 text-[#C89738]" aria-hidden="true" />
-                    <span>MY LEARNING ORBIT · QUỸ ĐẠO HỌC TẬP CÁ NHÂN</span>
-                  </div>
-                  <h2 className="font-serif text-3xl font-bold tracking-tight text-[var(--text-main)] sm:text-4xl">
-                    Tiếp tục học tập
-                  </h2>
-                </div>
-                <p className="font-mono text-xs text-[var(--text-muted)]">
-                  Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt của bạn.
-                </p>
-              </div>
-
-              {/* Lưới Bento 2 Cột x 2 Hàng Cân Xứng Tuyệt Đối (xóa sạch khoảng trắng thừa cột trái) */}
-              <div
-                data-testid="learning-bento-grid"
-                className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12"
+              <BlueprintSectionFrame
+                data-testid="orbit-blueprint-frame"
+                columnSeams={[0.5833]}
+                className="rounded-3xl border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
+                innerClassName="overflow-hidden rounded-3xl"
               >
-                {/* Cột Trái (7 cột): 2 Thẻ Bento xếp chồng khớp chiều cao với 2 thẻ bên phải */}
-                <div className="flex flex-col gap-6 lg:col-span-7">
-                  {/* Thẻ 1 (Hàng Trên): Bài Học Đang Đọc Dở & Lộ Trình Kế Tiếp */}
-                  <div
-                    role="region"
-                    aria-label="Tiếp tục học dở"
-                    className="lu-fx-card rounded-3xl p-6 sm:p-7"
-                  >
-                    {activeRecentLesson ? (
-                      <div className="space-y-5">
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
-                          <div className="flex flex-wrap items-center gap-2.5">
-                            <span className="rounded-lg bg-[#E7ECEA] px-3 py-1 font-mono text-xs font-semibold text-[#1E332E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
-                              {
-                                getCourseCinematicAsset(activeRecentLesson.subject.slug)
-                                  .categoryLabel
-                              }
-                            </span>
-                            <span className="text-xs font-medium text-[var(--text-muted)]">
-                              {activeRecentLesson.subject.title} · Chương{' '}
-                              {activeRecentLesson.chapter.number}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            <ProgressRing value={displayOrbitPercent} size={42} strokeWidth={4} />
-                            <div>
-                              <p className="font-mono text-sm font-bold text-[var(--text-main)]">
-                                Tiến trình: {displayOrbitPercent}%
-                              </p>
-                              <p className="text-[11px] text-[var(--text-muted)]">
-                                {completedCount > 0
-                                  ? `Đã hoàn thành ${completedCount}/${totalLessonCount} bài`
-                                  : 'Đang đọc dở trên trình duyệt'}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2.5">
-                          <p className="font-mono text-xs tracking-wider text-[#C89738] uppercase">
-                            BÀI HỌC ĐANG ĐỌC DỞ
-                          </p>
-                          <h3 className="font-serif text-2xl leading-snug font-bold text-[var(--text-main)] sm:text-[1.7rem]">
-                            {activeRecentLesson.lesson.title.startsWith('Bài')
-                              ? activeRecentLesson.lesson.title
-                              : `Bài ${activeRecentLesson.chapter.number}.${activeRecentLesson.lesson.number}: ${activeRecentLesson.lesson.title}`}
-                          </h3>
-                          <p className="text-sm leading-relaxed text-[var(--text-muted)]">
-                            {activeRecentLesson.lesson.description}
-                          </p>
-                        </div>
-
-                        <div className="space-y-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-3.5">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-medium text-[var(--text-main)]">
-                              Trạng thái đọc bài &amp; ghi chú học thuật
-                            </span>
-                            <span className="font-mono font-semibold text-[#1E332E] dark:text-[#8EE5CE]">
-                              {displayOrbitPercent}% hoàn thành
-                            </span>
-                          </div>
-                          <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--border-subtle)]">
-                            <div
-                              className="h-full rounded-full bg-[#1E332E] transition-all duration-500 dark:bg-[#499C7E]"
-                              style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {upNextQueue.length > 0 && (
-                          <div className="space-y-2" data-testid="up-next-queue">
-                            <p className="font-mono text-[11px] font-semibold tracking-wider text-[#4A5D58] uppercase">
-                              Lộ trình bài kế tiếp ({upNextQueue.length} bài)
-                            </p>
-                            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-                              {upNextQueue.map((item) => {
-                                const isDone = Boolean(completedLessons[item.lesson.id]);
-                                return (
-                                  <Link
-                                    key={item.lesson.id}
-                                    to={ROUTES.lesson(
-                                      item.subjectSlug,
-                                      item.chapter.slug,
-                                      item.lesson.slug,
-                                    )}
-                                    className="group/next flex flex-col justify-between gap-1.5 rounded-2xl border border-[#D8E0DD] bg-[#F2F4F3]/65 p-3 transition-all duration-150 hover:border-[#1E332E]/40 hover:bg-white hover:shadow-xs"
-                                  >
-                                    <div className="flex items-center justify-between gap-2">
-                                      <span className="font-mono text-[10.5px] font-bold text-[#1E332E]">
-                                        Bài {item.chapter.number}.{item.lesson.number}
-                                      </span>
-                                      {isDone ? (
-                                        <CheckCircle2
-                                          className="h-3.5 w-3.5 text-[#245746]"
-                                          aria-hidden="true"
-                                        />
-                                      ) : (
-                                        <span className="font-mono text-[10px] text-[#4A5D58]">
-                                          {item.lesson.estimatedMinutes} phút
-                                        </span>
-                                      )}
-                                    </div>
-                                    <p className="line-clamp-2 text-xs leading-snug font-semibold text-[#182624] group-hover/next:text-[#245746]">
-                                      {item.lesson.title}
-                                    </p>
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] pt-4">
-                          <div className="text-xs text-[var(--text-muted)]">
-                            Thời lượng ước tính:{' '}
-                            <strong className="text-[var(--text-main)]">
-                              {activeRecentLesson.lesson.estimatedMinutes} phút đọc sâu
-                            </strong>
-                          </div>
-
-                          <Link
-                            to={ROUTES.lesson(
-                              activeRecentLesson.subject.slug,
-                              activeRecentLesson.chapter.slug,
-                              activeRecentLesson.lesson.slug,
-                            )}
-                            className="inline-flex items-center gap-2.5 rounded-xl bg-[#365E4E] px-6 py-2.5 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#2B4C3E]"
-                          >
-                            <span>Tiếp tục đọc ngay</span>
-                            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                          </Link>
-                        </div>
+                <TelemetrySpecBar
+                  sectionCode="SEC. 03 // PERSONAL ORBIT"
+                  subtitle="QUỸ ĐẠO HỌC TẬP & MẠNG TRI THỨC LIÊN MÔN"
+                  items={[{ label: 'ĐÃ HỌC', value: `${completedCount}/${totalLessonCount}` }]}
+                />
+                <div className="p-6 sm:p-8 lg:p-10">
+                  <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                    <div className="space-y-2">
+                      <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#365E4E] uppercase dark:text-[#8EE5CE]">
+                        <Sparkles className="h-3.5 w-3.5 text-[#C89738]" aria-hidden="true" />
+                        <span>MY LEARNING ORBIT · QUỸ ĐẠO HỌC TẬP CÁ NHÂN</span>
                       </div>
-                    ) : null}
+                      <h2 className="font-serif text-3xl font-bold tracking-tight text-[var(--text-main)] sm:text-4xl">
+                        Tiếp tục học tập
+                      </h2>
+                    </div>
+                    <p className="font-mono text-xs text-[var(--text-muted)]">
+                      Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt của bạn.
+                    </p>
                   </div>
 
-                  {/* Thẻ 2 Mới (Hàng Dưới — Cột Trái): Ma Trận Tiến Độ & Phân Bố 4 Học Phần */}
+                  {/* Lưới Bento 2 Cột x 2 Hàng Cân Xứng Tuyệt Đối (xóa sạch khoảng trắng thừa cột trái) */}
                   <div
-                    role="region"
-                    aria-label="Ma Trận Tiến Độ 4 Học Phần"
-                    data-testid="progress-matrix-4-subjects"
-                    className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-6 sm:p-7"
+                    data-testid="learning-bento-grid"
+                    className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12"
                   >
-                    <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3.5">
-                      <div className="space-y-0.5">
-                        <p className="font-mono text-[11px] font-semibold tracking-wider text-[#8C6D3F] uppercase">
-                          OVERVIEW MATRIX · TỔNG QUAN PHÂN BỐ
-                        </p>
-                        <h3 className="font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
-                          Ma Trận Tiến Độ &amp; Phân Bố 4 Học Phần
-                        </h3>
-                      </div>
-                      <span className="rounded-full border border-[#D8E0DD] bg-[#F2F4F3] px-3 py-1 font-mono text-[11px] font-semibold text-[#1E332E]">
-                        {completedCount}/{totalLessonCount} bài toàn hệ
-                      </span>
-                    </div>
-
-                    <div className="grid flex-1 grid-cols-1 gap-3.5 sm:grid-cols-2">
-                      {subjectProgressMatrix.map((entry) => {
-                        const ch = entry.currentChapter;
-                        const chapterHref = ch
-                          ? `${ROUTES.subjectOverview(entry.subject.slug)}?chapter=${ch.slug}`
-                          : ROUTES.subjectOverview(entry.subject.slug);
-                        return (
-                          <div
-                            key={entry.subject.id}
-                            className="flex flex-col justify-between gap-3 rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9] p-4 transition-colors hover:border-[#1E332E]/40 hover:bg-white"
-                          >
-                            <div className="space-y-2.5">
-                              <div className="flex items-start justify-between gap-2">
-                                <Link
-                                  to={ROUTES.subjectOverview(entry.subject.slug)}
-                                  className="font-serif text-sm leading-snug font-bold text-[#182624] hover:text-[#245746]"
-                                >
-                                  {entry.subject.title}
-                                </Link>
-                                <span
-                                  className={cn(
-                                    'shrink-0 rounded-full border px-2 py-0.5 font-mono text-[10.5px] font-bold',
-                                    entry.palette.progressBadgeClass,
-                                  )}
-                                >
-                                  {entry.percent}%
+                    {/* Cột Trái (7 cột): 2 Thẻ Bento xếp chồng khớp chiều cao với 2 thẻ bên phải */}
+                    <div className="flex flex-col gap-6 lg:col-span-7">
+                      {/* Thẻ 1 (Hàng Trên): Bài Học Đang Đọc Dở & Lộ Trình Kế Tiếp */}
+                      <div
+                        role="region"
+                        aria-label="Tiếp tục học dở"
+                        className="lu-fx-card rounded-3xl p-6 sm:p-7"
+                      >
+                        {activeRecentLesson ? (
+                          <div className="space-y-5">
+                            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
+                              <div className="flex flex-wrap items-center gap-2.5">
+                                <span className="rounded-lg bg-[#E7ECEA] px-3 py-1 font-mono text-xs font-semibold text-[#1E332E] dark:bg-[#19332A] dark:text-[#A6E3CD]">
+                                  {
+                                    getCourseCinematicAsset(activeRecentLesson.subject.slug)
+                                      .categoryLabel
+                                  }
+                                </span>
+                                <span className="text-xs font-medium text-[var(--text-muted)]">
+                                  {activeRecentLesson.subject.title} · Chương{' '}
+                                  {activeRecentLesson.chapter.number}
                                 </span>
                               </div>
 
-                              <div className="space-y-1.5">
-                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E7ECEA]">
-                                  <div
-                                    className="h-full rounded-full transition-all duration-500"
-                                    style={{
-                                      width: `${Math.max(entry.percent, entry.done > 0 ? 8 : 0)}%`,
-                                      backgroundColor: entry.palette.progressBarColor,
-                                    }}
-                                  />
-                                </div>
-                                <div className="flex items-center justify-between font-mono text-[10.5px] text-[#4A5D58]">
-                                  <span>
-                                    {entry.done}/{entry.total} bài
-                                  </span>
-                                  <span className={entry.palette.indexText}>{entry.shortCode}</span>
+                              <div className="flex items-center gap-3">
+                                <ProgressRing
+                                  value={displayOrbitPercent}
+                                  size={42}
+                                  strokeWidth={4}
+                                />
+                                <div>
+                                  <p className="font-mono text-sm font-bold text-[var(--text-main)]">
+                                    Tiến trình: {displayOrbitPercent}%
+                                  </p>
+                                  <p className="text-[11px] text-[var(--text-muted)]">
+                                    {completedCount > 0
+                                      ? `Đã hoàn thành ${completedCount}/${totalLessonCount} bài`
+                                      : 'Đang đọc dở trên trình duyệt'}
+                                  </p>
                                 </div>
                               </div>
                             </div>
 
-                            <div className="flex items-center justify-between gap-2 border-t border-[#E7ECEA] pt-2.5">
-                              <span className="line-clamp-1 text-[11px] font-medium text-[#4A5D58]">
-                                {ch ? `Chương ${ch.number}: ${ch.title}` : 'Sẵn sàng khởi đầu'}
-                              </span>
+                            <div className="space-y-2.5">
+                              <p className="font-mono text-xs tracking-wider text-[#C89738] uppercase">
+                                BÀI HỌC ĐANG ĐỌC DỞ
+                              </p>
+                              <h3 className="font-serif text-2xl leading-snug font-bold text-[var(--text-main)] sm:text-[1.7rem]">
+                                {activeRecentLesson.lesson.title.startsWith('Bài')
+                                  ? activeRecentLesson.lesson.title
+                                  : `Bài ${activeRecentLesson.chapter.number}.${activeRecentLesson.lesson.number}: ${activeRecentLesson.lesson.title}`}
+                              </h3>
+                              <p className="text-sm leading-relaxed text-[var(--text-muted)]">
+                                {activeRecentLesson.lesson.description}
+                              </p>
+                            </div>
+
+                            <div className="space-y-2 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-sunken)]/70 p-3.5">
+                              <div className="flex items-center justify-between text-xs">
+                                <span className="font-medium text-[var(--text-main)]">
+                                  Trạng thái đọc bài &amp; ghi chú học thuật
+                                </span>
+                                <span className="font-mono font-semibold text-[#1E332E] dark:text-[#8EE5CE]">
+                                  {displayOrbitPercent}% hoàn thành
+                                </span>
+                              </div>
+                              <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--border-subtle)]">
+                                <div
+                                  className="h-full rounded-full bg-[#1E332E] transition-all duration-500 dark:bg-[#499C7E]"
+                                  style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            {upNextQueue.length > 0 && (
+                              <div className="space-y-2" data-testid="up-next-queue">
+                                <p className="font-mono text-[11px] font-semibold tracking-wider text-[#4A5D58] uppercase">
+                                  Lộ trình bài kế tiếp ({upNextQueue.length} bài)
+                                </p>
+                                <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+                                  {upNextQueue.map((item) => {
+                                    const isDone = Boolean(completedLessons[item.lesson.id]);
+                                    return (
+                                      <Link
+                                        key={item.lesson.id}
+                                        to={ROUTES.lesson(
+                                          item.subjectSlug,
+                                          item.chapter.slug,
+                                          item.lesson.slug,
+                                        )}
+                                        className="group/next flex flex-col justify-between gap-1.5 rounded-2xl border border-[#D8E0DD] bg-[#F2F4F3]/65 p-3 transition-all duration-150 hover:border-[#1E332E]/40 hover:bg-white hover:shadow-xs"
+                                      >
+                                        <div className="flex items-center justify-between gap-2">
+                                          <span className="font-mono text-[10.5px] font-bold text-[#1E332E]">
+                                            Bài {item.chapter.number}.{item.lesson.number}
+                                          </span>
+                                          {isDone ? (
+                                            <CheckCircle2
+                                              className="h-3.5 w-3.5 text-[#245746]"
+                                              aria-hidden="true"
+                                            />
+                                          ) : (
+                                            <span className="font-mono text-[10px] text-[#4A5D58]">
+                                              {item.lesson.estimatedMinutes} phút
+                                            </span>
+                                          )}
+                                        </div>
+                                        <p className="line-clamp-2 text-xs leading-snug font-semibold text-[#182624] group-hover/next:text-[#245746]">
+                                          {item.lesson.title}
+                                        </p>
+                                      </Link>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+
+                            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-subtle)] pt-4">
+                              <div className="text-xs text-[var(--text-muted)]">
+                                Thời lượng ước tính:{' '}
+                                <strong className="text-[var(--text-main)]">
+                                  {activeRecentLesson.lesson.estimatedMinutes} phút đọc sâu
+                                </strong>
+                              </div>
+
                               <Link
-                                to={chapterHref}
-                                className={cn(
-                                  'inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1 font-mono text-[10.5px] font-semibold transition-colors',
-                                  entry.palette.secondaryBtnClass,
+                                to={ROUTES.lesson(
+                                  activeRecentLesson.subject.slug,
+                                  activeRecentLesson.chapter.slug,
+                                  activeRecentLesson.lesson.slug,
                                 )}
+                                className="inline-flex items-center gap-2.5 rounded-xl bg-[#365E4E] px-6 py-2.5 text-sm font-medium text-white shadow-xs transition-all duration-200 hover:bg-[#2B4C3E]"
                               >
-                                <span>Mở chương</span>
-                                <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                                <span>Tiếp tục đọc ngay</span>
+                                <ArrowRight className="h-4 w-4" aria-hidden="true" />
                               </Link>
                             </div>
                           </div>
-                        );
-                      })}
+                        ) : null}
+                      </div>
+
+                      {/* Thẻ 2 Mới (Hàng Dưới — Cột Trái): Ma Trận Tiến Độ & Phân Bố 4 Học Phần */}
+                      <div
+                        role="region"
+                        aria-label="Ma Trận Tiến Độ 4 Học Phần"
+                        data-testid="progress-matrix-4-subjects"
+                        className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-6 sm:p-7"
+                      >
+                        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3.5">
+                          <div className="space-y-0.5">
+                            <p className="font-mono text-[11px] font-semibold tracking-wider text-[#8C6D3F] uppercase">
+                              OVERVIEW MATRIX · TỔNG QUAN PHÂN BỐ
+                            </p>
+                            <h3 className="font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
+                              Ma Trận Tiến Độ &amp; Phân Bố 4 Học Phần
+                            </h3>
+                          </div>
+                          <span className="rounded-full border border-[#D8E0DD] bg-[#F2F4F3] px-3 py-1 font-mono text-[11px] font-semibold text-[#1E332E]">
+                            {completedCount}/{totalLessonCount} bài toàn hệ
+                          </span>
+                        </div>
+
+                        <div className="grid flex-1 grid-cols-1 gap-3.5 sm:grid-cols-2">
+                          {subjectProgressMatrix.map((entry) => {
+                            const ch = entry.currentChapter;
+                            const chapterHref = ch
+                              ? `${ROUTES.subjectOverview(entry.subject.slug)}?chapter=${ch.slug}`
+                              : ROUTES.subjectOverview(entry.subject.slug);
+                            return (
+                              <div
+                                key={entry.subject.id}
+                                className="flex flex-col justify-between gap-3 rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9] p-4 transition-colors hover:border-[#1E332E]/40 hover:bg-white"
+                              >
+                                <div className="space-y-2.5">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <Link
+                                      to={ROUTES.subjectOverview(entry.subject.slug)}
+                                      className="font-serif text-sm leading-snug font-bold text-[#182624] hover:text-[#245746]"
+                                    >
+                                      {entry.subject.title}
+                                    </Link>
+                                    <span
+                                      className={cn(
+                                        'shrink-0 rounded-full border px-2 py-0.5 font-mono text-[10.5px] font-bold',
+                                        entry.palette.progressBadgeClass,
+                                      )}
+                                    >
+                                      {entry.percent}%
+                                    </span>
+                                  </div>
+
+                                  <div className="space-y-1.5">
+                                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#E7ECEA]">
+                                      <div
+                                        className="h-full rounded-full transition-all duration-500"
+                                        style={{
+                                          width: `${Math.max(entry.percent, entry.done > 0 ? 8 : 0)}%`,
+                                          backgroundColor: entry.palette.progressBarColor,
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="flex items-center justify-between font-mono text-[10.5px] text-[#4A5D58]">
+                                      <span>
+                                        {entry.done}/{entry.total} bài
+                                      </span>
+                                      <span className={entry.palette.indexText}>
+                                        {entry.shortCode}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center justify-between gap-2 border-t border-[#E7ECEA] pt-2.5">
+                                  <span className="line-clamp-1 text-[11px] font-medium text-[#4A5D58]">
+                                    {ch ? `Chương ${ch.number}: ${ch.title}` : 'Sẵn sàng khởi đầu'}
+                                  </span>
+                                  <Link
+                                    to={chapterHref}
+                                    className={cn(
+                                      'inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1 font-mono text-[10.5px] font-semibold transition-colors',
+                                      entry.palette.secondaryBtnClass,
+                                    )}
+                                  >
+                                    <span>Mở chương</span>
+                                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                                  </Link>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Cột Phải (5 cột): 2 Thẻ Bento xếp chồng tương ứng chiều cao */}
+                    <div className="flex flex-col gap-6 lg:col-span-5">
+                      {/* Hàng Trên Phải: Biểu đồ Radar Cấu trúc & Phân tích Năng lực Học phần */}
+                      <CurriculumRadarCard
+                        stats={radarSubjectStats}
+                        totalCompleted={completedCount}
+                        totalLessons={totalLessonCount}
+                      />
+
+                      {/* Hàng Dưới Phải: Mạng lưới Liên kết Tri thức Liên môn 120fps */}
+                      <div className="flex flex-1 flex-col [&>*]:flex-1">
+                        <KnowledgeConstellationCard />
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Cột Phải (5 cột): 2 Thẻ Bento xếp chồng tương ứng chiều cao */}
-                <div className="flex flex-col gap-6 lg:col-span-5">
-                  {/* Hàng Trên Phải: Biểu đồ Radar Cấu trúc & Phân tích Năng lực Học phần */}
-                  <CurriculumRadarCard
-                    stats={radarSubjectStats}
-                    totalCompleted={completedCount}
-                    totalLessons={totalLessonCount}
-                  />
-
-                  {/* Hàng Dưới Phải: Mạng lưới Liên kết Tri thức Liên môn 120fps */}
-                  <div className="flex flex-1 flex-col [&>*]:flex-1">
-                    <KnowledgeConstellationCard />
-                  </div>
-                </div>
-              </div>
+              </BlueprintSectionFrame>
             </div>
           </section>
         </>

@@ -167,12 +167,53 @@ export function KnowledgeConstellationCard() {
       ctx.clearRect(0, 0, width, height);
 
       const activeId = selectedIdRef.current;
+      const activeBridge = KNOWLEDGE_BRIDGE_NODES.find((b) => b.id === activeId);
       const anchorPositions = new Map(ANCHOR_SUBJECTS.map((a) => [a.id, getAnchorPos(a)]));
 
-      // 1. Vẽ liên kết nền nhẹ giữa 4 học phần
+      // Helper pElbow từ diagram.js: tuyến bo góc vuông kỹ thuật có bán kính uốn r
+      const traceRoundedElbow = (x1: number, y1: number, x2: number, y2: number, r = 8) => {
+        const mx = (x1 + x2) * 0.5;
+        const dx = Math.abs(mx - x1);
+        const dy = Math.abs(y2 - y1);
+        const rr = Math.min(r, dx, dy * 0.5);
+        const sx = mx >= x1 ? 1 : -1;
+        const sy = y2 >= y1 ? 1 : -1;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        if (rr < 1) {
+          ctx.lineTo(mx, y1);
+          ctx.lineTo(mx, y2);
+          ctx.lineTo(x2, y2);
+          return;
+        }
+        ctx.lineTo(mx - sx * rr, y1);
+        ctx.quadraticCurveTo(mx, y1, mx, y1 + sy * rr);
+        ctx.lineTo(mx, y2 - sy * rr);
+        ctx.quadraticCurveTo(mx, y2, mx + sx * rr, y2);
+        ctx.lineTo(x2, y2);
+      };
+
+      // 1. Mạng bus chữ thập trung tâm & đường pElbow nối tâm tọa độ ra 4 học phần (truyền xung dashed động)
+      const cxMid = width * 0.5;
+      const cyMid = height * 0.5;
+      for (const anchor of ANCHOR_SUBJECTS) {
+        const pt = anchorPositions.get(anchor.id)!;
+        const isLinked = activeBridge ? activeBridge.targets.includes(anchor.id) : true;
+        traceRoundedElbow(cxMid, cyMid, pt.x, pt.y, 10);
+        ctx.strokeStyle = isLinked ? `${anchor.color}66` : 'rgba(74, 93, 88, 0.14)';
+        ctx.lineWidth = isLinked ? 1.25 : 0.9;
+        ctx.setLineDash([4, 8]);
+        ctx.lineDashOffset = isLinked ? -time * 20 : 0;
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      ctx.lineDashOffset = 0;
+
+      // Vòng nối ngoại vi nhẹ giữa 4 học phần
       ctx.strokeStyle = 'rgba(74, 93, 88, 0.14)';
       ctx.lineWidth = 1;
-      ctx.setLineDash([3, 4]);
+      ctx.setLineDash([3, 5]);
       const cornerOrder: readonly ('CTDS' | 'HHAVE' | 'GTHMB' | 'GDH')[] = [
         'CTDS',
         'HHAVE',
@@ -218,18 +259,33 @@ export function KnowledgeConstellationCard() {
           ctx.beginPath();
           ctx.moveTo(bPos.x, bPos.y);
           ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, portX, portY);
-          ctx.strokeStyle = isActive ? bridge.color : 'rgba(74, 93, 88, 0.24)';
-          ctx.globalAlpha = isActive ? 0.42 : 0.34;
-          ctx.lineWidth = isActive ? 1.5 : 1.05;
+          ctx.strokeStyle = isActive ? bridge.color : 'rgba(74, 93, 88, 0.22)';
+          ctx.globalAlpha = isActive ? 0.36 : 0.28;
+          ctx.lineWidth = isActive ? 1.45 : 1.0;
           ctx.stroke();
+
+          // Dải dòng dữ liệu truyền liên tục (stroke-dashoffset stream trên nhánh đang kích hoạt)
+          if (isActive) {
+            ctx.beginPath();
+            ctx.moveTo(bPos.x, bPos.y);
+            ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, portX, portY);
+            ctx.strokeStyle = targetAnchor.color;
+            ctx.globalAlpha = 0.72;
+            ctx.lineWidth = 1.65;
+            ctx.setLineDash([5, 11]);
+            ctx.lineDashOffset = -time * 28;
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.lineDashOffset = 0;
+          }
 
           // Cổng kết nối .dg-port tại điểm tiếp xúc nút học phần
           ctx.beginPath();
-          ctx.arc(portX, portY, isActive ? 2.4 : 1.7, 0, Math.PI * 2);
+          ctx.arc(portX, portY, isActive ? 2.6 : 1.7, 0, Math.PI * 2);
           ctx.fillStyle = '#FAFBF9';
           ctx.fill();
           ctx.strokeStyle = isActive ? targetAnchor.color : 'rgba(74, 93, 88, 0.38)';
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1.1;
           ctx.stroke();
 
           // Xung truyền dữ liệu (dg-comet, dg-glow, dg-spark chu kỳ 3.2s lệch pha ripple) trên các nhánh đang chọn
@@ -287,20 +343,28 @@ export function KnowledgeConstellationCard() {
       }
       ctx.globalAlpha = 1;
 
-      // 3. Vẽ 4 nút Học phần (Subject Anchor Hubs)
-      const activeBridge = KNOWLEDGE_BRIDGE_NODES.find((b) => b.id === activeId);
+      // 3. Vẽ 4 nút Học phần (Subject Anchor Hubs) kèm lan tỏa is-hit theo nhánh liên kết
       for (const anchor of ANCHOR_SUBJECTS) {
         const pos = anchorPositions.get(anchor.id)!;
         const isLinked = activeBridge ? activeBridge.targets.includes(anchor.id) : true;
 
         if (isLinked) {
-          const glow = ctx.createRadialGradient(pos.x, pos.y, 4, pos.x, pos.y, 24);
-          glow.addColorStop(0, `${anchor.color}2E`);
+          const glow = ctx.createRadialGradient(pos.x, pos.y, 4, pos.x, pos.y, 26);
+          glow.addColorStop(0, `${anchor.color}36`);
           glow.addColorStop(1, 'rgba(255,255,255,0)');
           ctx.fillStyle = glow;
           ctx.beginPath();
-          ctx.arc(pos.x, pos.y, 24, 0, Math.PI * 2);
+          ctx.arc(pos.x, pos.y, 26, 0, Math.PI * 2);
           ctx.fill();
+
+          // Vòng cộng hưởng ngoại vi xung quanh các Anchor được liên kết (is-hit halo)
+          const pulsePhase = (time * 1.1) % 1;
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 17 + pulsePhase * 7, 0, Math.PI * 2);
+          ctx.strokeStyle = anchor.color;
+          ctx.globalAlpha = Math.max(0, (1 - pulsePhase) * 0.42);
+          ctx.lineWidth = 1.1;
+          ctx.stroke();
         }
 
         ctx.beginPath();
@@ -486,13 +550,28 @@ export function KnowledgeConstellationCard() {
                 onClick={() => setSelectedId(bridge.id)}
                 aria-pressed={isActive}
                 className={cn(
-                  'cursor-pointer rounded-full border px-2.5 py-1 text-[10.5px] font-semibold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
+                  'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold transition-[color,background-color,border-color,box-shadow] duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
                   isActive
                     ? bridge.pillActiveClass
                     : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#2D5266]/45 hover:text-[#182624]',
                 )}
               >
-                {bridge.shortLabel}
+                <span
+                  className="relative flex h-2 w-2 items-center justify-center"
+                  aria-hidden="true"
+                >
+                  {isActive && (
+                    <span
+                      className="lu-dg-pulse-ring absolute inset-0 rounded-full"
+                      style={{ backgroundColor: bridge.color }}
+                    />
+                  )}
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: isActive ? bridge.color : '#8AA098' }}
+                  />
+                </span>
+                <span>{bridge.shortLabel}</span>
               </button>
             );
           })}

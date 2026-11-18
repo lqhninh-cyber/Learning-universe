@@ -1486,7 +1486,7 @@ function drawHorizonAtmosphericGlow(
   ctx.restore();
 }
 
-/** 2 Dải Lụa Cực Quang Mềm mại phía trên đỉnh núi (Lục Bảo #34D399/18 & Lam Ngọc #38BDF8/16, mờ dần 2 mép) */
+/** Cực quang gấp nếp S-curve & tia đứng theo thuật toán aurora-curtains của taste-skill */
 function drawSoftAuroraRibbons(
   ctx: CanvasRenderingContext2D,
   palette: AtmospherePalette,
@@ -1496,58 +1496,252 @@ function drawSoftAuroraRibbons(
   parallaxX: number,
   parallaxY: number,
 ): void {
-  const ribbons = [
+  const step = Math.max(16, Math.round(width / 64));
+  const calmEnd = width * 0.44;
+  const curtainIntensity = 0.45 + 0.55 * palette.milkyWayIntensity + 0.15 * palette.rayIntensity;
+
+  const curtains = [
     {
-      baseY: height * 0.28,
-      thickness: height * 0.13,
-      amp: height * 0.038,
-      freq: 0.0042,
-      phase: 0.4,
-      speed: 0.28,
+      baseY: height * 0.26,
+      thickness: height * 0.145,
+      foldAmp: height * 0.042,
+      freq: 0.0052,
+      speed: 0.24,
+      phase: 0.35,
       rgb: palette.starIntensity >= 0.45 ? ([52, 211, 153] as const) : palette.rayCool,
-      peakAlpha: 0.18 * (0.45 + 0.55 * palette.milkyWayIntensity + 0.15 * palette.rayIntensity),
+      hemRgb: palette.rimGlow,
+      peakAlpha: Math.min(0.24, 0.2 * curtainIntensity),
     },
     {
-      baseY: height * 0.34,
-      thickness: height * 0.11,
-      amp: height * 0.032,
-      freq: 0.0051,
-      phase: 2.3,
-      speed: -0.22,
+      baseY: height * 0.33,
+      thickness: height * 0.115,
+      foldAmp: height * 0.034,
+      freq: 0.0064,
+      speed: -0.19,
+      phase: 2.15,
       rgb: [56, 189, 248] as const,
-      peakAlpha: 0.16 * (0.45 + 0.55 * palette.milkyWayIntensity + 0.15 * palette.rayIntensity),
+      hemRgb: palette.rayCool,
+      peakAlpha: Math.min(0.2, 0.17 * curtainIntensity),
     },
   ] as const;
 
-  const step = Math.max(24, Math.round(width / 44));
   ctx.save();
   ctx.translate(parallaxX * 0.5, parallaxY * 0.5);
 
-  for (const rb of ribbons) {
-    const grad = ctx.createLinearGradient(0, rb.baseY - rb.thickness, 0, rb.baseY + rb.thickness);
-    grad.addColorStop(0, rgbaString(rb.rgb, 0));
-    grad.addColorStop(0.5, rgbaString(rb.rgb, Math.min(0.22, rb.peakAlpha)));
-    grad.addColorStop(1, rgbaString(rb.rgb, 0));
-
+  for (const c of curtains) {
+    const hemPts: { x: number; y: number }[] = [];
     const topPts: { x: number; y: number }[] = [];
-    const botPts: { x: number; y: number }[] = [];
-    for (let x = -40; x <= width + 40; x += step) {
-      const wave = Math.sin(x * rb.freq + tSec * rb.speed + rb.phase) * rb.amp;
-      const pinch = 0.65 + 0.35 * Math.cos(x * 0.003 + rb.phase);
-      const halfThick = rb.thickness * 0.55 * pinch;
-      topPts.push({ x, y: rb.baseY + wave - halfThick });
-      botPts.push({ x, y: rb.baseY + wave + halfThick });
+
+    for (let x = -32; x <= width + 32; x += step) {
+      // Khúc gấp S-curve: sw = sin(sp + 0.45 * sin(sp)) từ aurora-curtains/effect.js
+      const sp = x * c.freq + tSec * c.speed + c.phase;
+      const foldS = Math.sin(sp + 0.45 * Math.sin(sp));
+      const dSw = Math.cos(sp + 0.45 * Math.sin(sp)) * (1 + 0.45 * Math.cos(sp));
+      const creaseGain = 0.72 + Math.min(0.95, Math.pow(Math.max(0, 1 - Math.abs(dSw)), 3) * 0.9);
+
+      const nx = x / Math.max(1, width);
+      // Giữ vùng tĩnh bên trái cho typography HomePage Hero rõ nét tuyệt đối
+      const calm = x < calmEnd ? 0.22 + 0.78 * Math.pow(Math.max(0, nx / 0.44), 1.6) : 1;
+
+      const hemY = c.baseY + foldS * c.foldAmp;
+      const curtainHeight = c.thickness * (0.68 + 0.32 * creaseGain) * calm;
+      hemPts.push({ x, y: hemY });
+      topPts.push({ x, y: hemY - curtainHeight });
     }
 
+    const grad = ctx.createLinearGradient(0, c.baseY - c.thickness, 0, c.baseY + c.foldAmp);
+    grad.addColorStop(0, rgbaString(c.rgb, 0));
+    grad.addColorStop(0.55, rgbaString(c.rgb, c.peakAlpha * 0.58));
+    grad.addColorStop(0.92, rgbaString(c.rgb, c.peakAlpha));
+    grad.addColorStop(1, rgbaString(c.hemRgb, 0));
+
     ctx.beginPath();
-    traceSmoothQuadraticCurve(ctx, topPts, true);
-    for (let i = botPts.length - 1; i >= 0; i -= 1) {
-      const p = botPts[i]!;
-      ctx.lineTo(p.x, p.y);
+    traceSmoothQuadraticCurve(ctx, hemPts, true);
+    for (let i = topPts.length - 1; i >= 0; i -= 1) {
+      const p = topPts[i];
+      if (p) ctx.lineTo(p.x, p.y);
     }
     ctx.closePath();
     ctx.fillStyle = grad;
     ctx.fill();
+
+    // Đường viền gấu lụa sáng sắc nét exp(-|d|*50) tại mép dưới nếp gấp
+    ctx.beginPath();
+    traceSmoothQuadraticCurve(ctx, hemPts, true);
+    ctx.lineWidth = 1.25;
+    ctx.strokeStyle = rgbaString(c.rgb, Math.min(0.38, c.peakAlpha * 1.45));
+    ctx.stroke();
+
+    // Các tia rèm đứng ở các điểm uốn sáng nếp gấp cực quang
+    for (let i = 2; i < hemPts.length - 2; i += 3) {
+      const pt = hemPts[i];
+      const topPt = topPts[i];
+      if (!pt || !topPt || pt.x < calmEnd * 0.65) continue;
+      const rayGrad = ctx.createLinearGradient(pt.x, topPt.y, pt.x, pt.y);
+      rayGrad.addColorStop(0, rgbaString(c.rgb, 0));
+      rayGrad.addColorStop(0.7, rgbaString(c.rgb, c.peakAlpha * 0.42));
+      rayGrad.addColorStop(1, rgbaString(c.hemRgb, c.peakAlpha * 0.25));
+      ctx.strokeStyle = rayGrad;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pt.x, pt.y);
+      ctx.lineTo(pt.x + 4, topPt.y);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/**
+ * Chùm tia sáng thể tích & hạt bụi bokeh phát tỏa sau Đài Thiên Cầu Đông Sơn
+ * (Chuyển thể trực tiếp từ god-rays/effect.js của taste-skill).
+ */
+function drawVolumetricGodRays(
+  ctx: CanvasRenderingContext2D,
+  originX: number,
+  originY: number,
+  palette: AtmospherePalette,
+  mouse: AtmosphereMouseState,
+  width: number,
+  height: number,
+  tSec: number,
+): void {
+  const rayStrength = Math.max(0.28, palette.rayIntensity);
+  const rayLength = Math.max(width, height) * 0.72;
+  const baseTilt = 1.88 + mouse.normX * 0.08;
+  const shaftCount = 11;
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+
+  for (let i = 0; i < shaftCount; i += 1) {
+    const progress = (i + 0.5) / shaftCount;
+    const angle = baseTilt + (progress - 0.5) * 1.15;
+    // Hàm điều biến 3 quãng tám từ god-rays: s1 * s2 * gate
+    const s1 = Math.sin(progress * 11.4 + tSec * 0.34);
+    const s2 = Math.cos(progress * 23.0 - tSec * 0.21 + 1.1);
+    const gate = 0.5 + 0.5 * Math.sin(progress * 6.28 + tSec * 0.14);
+    const shaftPower = Math.max(0, (0.45 + 0.55 * (s1 * 0.55 + s2 * 0.45)) * gate);
+    if (shaftPower <= 0.08) continue;
+
+    const halfSpread = 0.022 + (i % 3) * 0.014;
+    const len = rayLength * (0.76 + (i % 4) * 0.08);
+    const x1 = originX + Math.cos(angle - halfSpread) * len;
+    const y1 = originY + Math.sin(angle - halfSpread) * len;
+    const x2 = originX + Math.cos(angle + halfSpread) * len;
+    const y2 = originY + Math.sin(angle + halfSpread) * len;
+
+    const grad = ctx.createLinearGradient(
+      originX,
+      originY,
+      originX + Math.cos(angle) * len,
+      originY + Math.sin(angle) * len,
+    );
+    const alpha = Math.min(0.16, 0.055 * rayStrength * shaftPower);
+    const shaftColor = i % 2 === 0 ? palette.rayWarm : palette.rayCool;
+    grad.addColorStop(0, rgbaString(shaftColor, alpha * 1.45));
+    grad.addColorStop(0.45, rgbaString(shaftColor, alpha * 0.65));
+    grad.addColorStop(1, rgbaString(shaftColor, 0));
+
+    ctx.beginPath();
+    ctx.moveTo(originX, originY);
+    ctx.lineTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  // Hạt bụi tinh tú bokeh bay chậm dọc nón tia sáng (14 hạt cố định, không cấp phát mảng)
+  for (let k = 0; k < 14; k += 1) {
+    const seed = (k + 1) * 1.6180339;
+    const radial = ((tSec * 0.035 + seed * 0.37) % 1) * (rayLength * 0.58) + 38;
+    const rayAngle = baseTilt + Math.sin(seed * 7.3) * 0.46 + Math.sin(tSec * 0.25 + k) * 0.03;
+    const mx = originX + Math.cos(rayAngle) * radial;
+    const my = originY + Math.sin(rayAngle) * radial;
+    if (mx < 0 || mx > width || my < 0 || my > height * 0.85) continue;
+
+    const fadeDist = Math.max(0, 1 - radial / (rayLength * 0.62));
+    const twinkle = 0.5 + 0.5 * Math.sin(tSec * 1.2 + seed * 5.0);
+    const mAlpha = Math.min(0.32, (0.14 + 0.18 * twinkle) * fadeDist * rayStrength);
+    const r = 1.4 + (k % 3) * 1.1;
+
+    ctx.fillStyle = rgbaString(k % 3 === 0 ? palette.dawnCore : palette.cloudIvory, mAlpha);
+    ctx.beginPath();
+    ctx.arc(mx, my, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+/**
+ * 36 lát cắt địa hình 3D với đường gờ nhọn & tô che khuất thung lũng (hidden-line removal)
+ * theo thuật toán ridgeline/effect.js của taste-skill, đặt tại tầng núi Hoàng Liên Sơn.
+ */
+function drawElevationRidgelines(
+  ctx: CanvasRenderingContext2D,
+  palette: AtmospherePalette,
+  mouse: AtmosphereMouseState,
+  width: number,
+  height: number,
+  tSec: number,
+): void {
+  const rows = 28;
+  const hiRow = 10;
+  const cols = 48;
+  const ridgeSpanStart = width * 0.24;
+  const ridgeSpanWidth = width * 0.82;
+  const topY = height * 0.49;
+  const depthSpanY = height * 0.25;
+  const valleyFill = rgbaString(palette.sky1, 0.22);
+  const strokeBase = rgbaString(palette.facetCelestial, 0.22);
+  const strokeGold = rgbaString(palette.terraceRim, 0.55);
+
+  ctx.save();
+  for (let row = 0; row < rows; row += 1) {
+    const zNorm = row / (rows - 1);
+    const baseY = topY + zNorm * depthSpanY;
+    const isHighlight = row === hiRow;
+    const rowLift = height * 0.055 * (0.45 + 0.55 * (1 - zNorm));
+
+    ctx.beginPath();
+    for (let col = 0; col <= cols; col += 1) {
+      const u = col / cols;
+      const x = ridgeSpanStart + u * ridgeSpanWidth;
+      // Hàm bao đỉnh núi envAt từ ridgeline/effect.js
+      const d = (u - 0.58) / 0.34;
+      const env = Math.exp(-0.275 * d * d * d * d - 0.3 * d * d);
+
+      // Giao thoa sóng địa hình đa tần kèm biên gợn nhọn cusp rn = 1 - sqrt(nn^2 + 0.0025)
+      const n1 = Math.sin(u * 13.5 + row * 0.52 + tSec * 0.06);
+      const n2 = Math.cos(u * 27.0 - row * 0.88 + 0.7) * 0.45;
+      const rawNoise = (n1 + n2) / 1.45;
+      const cusp = 1 - Math.sqrt(rawNoise * rawNoise + 0.0025);
+
+      let mouseBoost = 1;
+      if (mouse.active) {
+        const md = Math.hypot(x - mouse.x, baseY - mouse.y);
+        if (md < 180) {
+          mouseBoost += Math.pow(1 - md / 180, 2) * 0.55;
+        }
+      }
+
+      const elevation = Math.max(0, cusp * env * rowLift * mouseBoost);
+      const y = baseY - elevation;
+
+      if (col === 0) ctx.moveTo(x, baseY + 6);
+      ctx.lineTo(x, y);
+      if (col === cols) ctx.lineTo(x, baseY + 6);
+    }
+
+    // Che khuất đường nền phía sau (hidden-line valley fill)
+    ctx.fillStyle = valleyFill;
+    ctx.fill();
+
+    ctx.lineWidth = isHighlight ? 1.15 : 0.72;
+    ctx.strokeStyle = isHighlight ? strokeGold : strokeBase;
+    ctx.stroke();
   }
   ctx.restore();
 }
@@ -1781,7 +1975,17 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
   // Ánh sáng khí quyển chân trời sau dãy núi (cx=0.58W, cy=0.55H, r=0.55W)
   drawHorizonAtmosphericGlow(ctx, palette, width, height, mountainParallaxX, mountainParallaxY);
 
-  // LỚP 2: Đài Thiên Cầu Mặt Trời Đông Sơn (73% x 32%, Core Radial Glow 220px, 8 Hạt Ngọc Tinh Tú)
+  // LỚP 2: Chùm Tia Sáng Thể Tích (god-rays) + Đài Thiên Cầu Mặt Trời Đông Sơn (73% x 32%)
+  drawVolumetricGodRays(
+    ctx,
+    activeGeometry.astrolabe.cx + astrolabeParallaxX,
+    activeGeometry.astrolabe.cy + astrolabeParallaxY,
+    palette,
+    mouse,
+    width,
+    height,
+    tSec,
+  );
   drawDongSonAstrolabe(
     ctx,
     activeGeometry,
@@ -1797,7 +2001,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
   // LỚP 3: Thấu Kính Chòm Sao Tam Giác & La Bàn Trỏ Chuột trên Bầu Trời (160px)
   drawSkyConstellationLens(ctx, world.stars, mouse, width, height, tSec);
 
-  // LỚP 4: 5 Tầng Núi Sương Mù Khí Quyển + Viền Sáng 1.2px + 24 Đường Đồng Mức Bậc Thang
+  // LỚP 4: 5 Tầng Núi Sương Mù Khí Quyển + Lát Cắt Ridgeline 3D + 24 Đường Đồng Mức Bậc Thang
   ctx.save();
   ctx.translate(mountainParallaxX, mountainParallaxY);
   if (
@@ -1816,7 +2020,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     );
   }
 
-  // LỚP 5: Xung Ánh Sáng Chạy Dọc Bậc Thang + Thấu Kính Trắc Địa (240px) & Sóng Vàng Kim
+  // LỚP 5: Lát cắt địa hình Ridgeline 3D + Xung Ánh Sáng Chạy Dọc Bậc Thang & Thấu Kính Trắc Địa
   const localMouse: AtmosphereMouseState = {
     ...mouse,
     x: mouse.x - mountainParallaxX,
@@ -1827,6 +2031,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     x: p.x - mountainParallaxX,
     y: p.y - mountainParallaxY,
   }));
+  drawElevationRidgelines(ctx, palette, localMouse, width, height, tSec);
   drawInteractiveMountainContours(ctx, activeGeometry, localMouse, localPulses, palette, tSec);
   ctx.restore();
 
