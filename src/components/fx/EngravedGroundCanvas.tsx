@@ -284,13 +284,70 @@ export function EngravedGroundCanvas({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Nét khắc tuyến tính 20° (line-engraving)
+      // Tâm sáng chuẩn độ: dao động Lissajous chậm hoặc bám theo vị trí con trỏ chuột mượt 120fps
+      const wanderX =
+        width *
+        (rosetteCenterX -
+          0.1 +
+          Math.sin(elapsedSec * 0.2513) * 0.18 +
+          Math.cos(elapsedSec * 0.13) * 0.05);
+      const wanderY =
+        height *
+        (rosetteCenterY + Math.cos(elapsedSec * 0.197) * 0.22 + Math.sin(elapsedSec * 0.11) * 0.04);
+      const focusX = pointerActive > 0.02 ? width * pointerX : wanderX;
+      const focusY = pointerActive > 0.02 ? height * pointerY : wanderY;
+      const radiusPx = Math.max(140, Math.min(width, height) * 0.42);
+      const invRadius = 1 / radiusPx;
+
+      // 1. Nét khắc tuyến tính 20° tĩnh + Hệ đường khắc ngang nổi 3D uốn cong & tách giãn quanh con trỏ
       if (cache.engravingPaths.length > 0) {
-        ctx.lineWidth = 0.72;
-        ctx.strokeStyle = 'rgba(30, 51, 46, 0.048)';
+        ctx.lineWidth = 0.7;
+        ctx.strokeStyle = 'rgba(30, 51, 46, 0.042)';
         for (let i = 0; i < cache.engravingPaths.length; i += 1) {
           const path = cache.engravingPaths[i];
           if (path) ctx.stroke(path);
+        }
+      }
+
+      if (showEngraving && width > 80 && height > 80) {
+        const horizPitch = 22;
+        const xStep = Math.max(24, Math.round(width / 46));
+        const domeSigma = Math.max(125, Math.min(width, height) * 0.34);
+        const invSigmaSq = 1 / (domeSigma * domeSigma);
+        const repelStrength = 14 + pointerActive * 16;
+
+        for (let baseY = horizPitch; baseY < height - 8; baseY += horizPitch) {
+          const dyFromFocus = baseY - focusY;
+          const nearBand = Math.abs(dyFromFocus) < domeSigma * 1.45;
+          ctx.beginPath();
+          let maxLift = 0;
+
+          for (let x = 0; x <= width + xStep; x += xStep) {
+            const sx = x > width ? width : x;
+            const nx = sx / width;
+            const calmMask = 1 - smoothstep(0.02, calmLeftFraction * 0.95, nx) * 0.72;
+            const dx = sx - focusX;
+            const d2 = dx * dx + dyFromFocus * dyFromFocus;
+            const dome = nearBand ? Math.exp(-d2 * invSigmaSq) : 0;
+            // Tách giãn trên/dưới quanh tâm chuột để tạo cảm giác khối cầu khắc chìm 3D
+            const signY = dyFromFocus === 0 ? 0 : dyFromFocus > 0 ? 1 : -1;
+            const spreadY = signY * dome * repelStrength;
+            const rippleY =
+              Math.sin(nx * 9.2 + baseY * 0.035 + elapsedSec * 0.45) * 2.1 * (1 - calmMask * 0.4);
+            const y = baseY + (spreadY + rippleY) * (0.42 + 0.58 * calmMask);
+
+            if (dome > maxLift) maxLift = dome;
+            if (x === 0) ctx.moveTo(sx, y);
+            else ctx.lineTo(sx, y);
+          }
+
+          const lineAlpha = 0.045 + maxLift * (0.04 + pointerActive * 0.05);
+          ctx.lineWidth = maxLift > 0.25 ? 0.95 : 0.7;
+          ctx.strokeStyle =
+            maxLift > 0.38 && pointerActive > 0.08
+              ? `rgba(140, 114, 72, ${Math.min(0.22, lineAlpha * 1.65).toFixed(3)})`
+              : `rgba(30, 51, 46, ${lineAlpha.toFixed(3)})`;
+          ctx.stroke();
         }
       }
 
@@ -309,19 +366,6 @@ export function EngravedGroundCanvas({
       }
 
       // 3. Điểm lưới chuẩn độ 16px & chữ thập 3px với vùng ánh sáng dạo Lissajous + con trỏ
-      const wanderX =
-        width *
-        (rosetteCenterX -
-          0.1 +
-          Math.sin(elapsedSec * 0.2513) * 0.18 +
-          Math.cos(elapsedSec * 0.13) * 0.05);
-      const wanderY =
-        height *
-        (rosetteCenterY + Math.cos(elapsedSec * 0.197) * 0.22 + Math.sin(elapsedSec * 0.11) * 0.04);
-      const focusX = pointerActive > 0.02 ? width * pointerX : wanderX;
-      const focusY = pointerActive > 0.02 ? height * pointerY : wanderY;
-      const radiusPx = Math.max(140, Math.min(width, height) * 0.42);
-      const invRadius = 1 / radiusPx;
 
       const { pointCount, px, py, calm, isCross } = cache;
       for (let i = 0; i < pointCount; i += 1) {

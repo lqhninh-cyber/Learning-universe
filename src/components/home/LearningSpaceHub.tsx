@@ -53,10 +53,10 @@ const SUBJECT_SHORT_CODES: Record<string, string> = {
 };
 
 const SPECIMEN_DOMAIN_LABELS: Record<string, string> = {
-  'cau-truc-dai-so': 'ALGEBRA',
-  'hinh-hoc-affine': 'GEOMETRY',
-  'giai-tich-ham-mot-bien': 'ANALYSIS',
-  'giao-duc-hoc': 'PEDAGOGY',
+  'cau-truc-dai-so': 'ALGEBRAIC STRUCTURES',
+  'hinh-hoc-affine': 'AFFINE & PROJECTIVE GEOMETRY',
+  'giai-tich-ham-mot-bien': 'SINGLE-VARIABLE ANALYSIS',
+  'giao-duc-hoc': 'PEDAGOGICAL SCIENCE',
 };
 
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
@@ -829,11 +829,12 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
           <BlueprintSectionFrame
             data-testid="atlas-blueprint-frame"
             columnSeams={[0.5]}
-            className="rounded-3xl border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
-            innerClassName="overflow-hidden rounded-3xl"
+            headerSeamTopPx={36}
+            className="rounded-[2px] border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
+            innerClassName="overflow-hidden rounded-[2px]"
           >
             <TelemetrySpecBar
-              sectionCode="SEC. 02 // SPECIMEN ATLAS"
+              sectionCode="DOC. LU-2026 // SPECIMEN ATLAS"
               subtitle="BẢN ĐỒ ĐA CHIỀU CÁC MÔN HỌC"
               items={[
                 { label: 'HIỂN THỊ', value: `${filteredSubjects.length}/${subjects.length}` },
@@ -960,10 +961,24 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 } as CSSProperties & { '--subject-rgb': string }
                               }
                               className={cn(
-                                'lu-fx-card group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-3xl p-6 sm:p-7',
+                                'lu-fx-card group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-[2px] border-[#CFD8D4] p-6 sm:p-7',
                                 palette.cardBorder,
                               )}
                             >
+                              {/* Dấu cộng chuẩn trực #8C7248 ở góc trên-trái và dưới-phải hồ sơ mẫu vật */}
+                              <span
+                                aria-hidden="true"
+                                className="pointer-events-none absolute top-2 left-2 z-20 font-mono text-[10px] leading-none text-[#8C7248]/70"
+                              >
+                                +
+                              </span>
+                              <span
+                                aria-hidden="true"
+                                className="pointer-events-none absolute right-2 bottom-2 z-20 font-mono text-[10px] leading-none text-[#8C7248]/70"
+                              >
+                                +
+                              </span>
+
                               {/* Dải sáng mảnh chạy dọc mép trên của thẻ khi hover */}
                               <div
                                 aria-hidden="true"
@@ -997,11 +1012,11 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
 
                               <SubjectWatermarkSignature slug={subject.slug} />
 
-                              <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-[#D8E0DD]/75 pb-3.5">
+                              <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-[#CFD8D4] pb-3.5">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span
                                     className={cn(
-                                      'lu-tabular-telemetry font-mono text-[10.5px] font-bold tracking-[0.14em] uppercase',
+                                      'lu-tabular-telemetry rounded-[2px] border border-[#CFD8D4] bg-[#F2F5F4]/95 px-2.5 py-1 font-mono text-[10px] font-bold tracking-[0.13em] uppercase',
                                       palette.indexText,
                                     )}
                                   >
@@ -1010,7 +1025,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   </span>
                                   <span
                                     className={cn(
-                                      'rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] font-semibold tracking-wider transition-colors duration-200',
+                                      'rounded-[2px] border px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider transition-colors duration-200',
                                       palette.badgeClass,
                                     )}
                                   >
@@ -1018,10 +1033,11 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   </span>
                                 </div>
 
-                                {/* Thanh mật độ chương fx-bars + số bài giảng & huy hiệu tiến độ */}
+                                {/* Thanh mật độ chương fx-bars (gợn sóng khi hover thẻ) + số bài giảng & huy hiệu tiến độ */}
                                 <div className="flex flex-col items-end gap-2">
                                   <div className="flex flex-wrap items-center justify-end gap-2.5">
                                     <SpecimenFxBars
+                                      isCardHovered={hoveredCardSlug === subject.slug}
                                       chapters={subject.chapters.map((ch) => ({
                                         id: ch.id,
                                         title: `Chương ${ch.number}: ${ch.title}`,
@@ -1039,7 +1055,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                       <span
                                         data-testid={`subject-progress-badge-${subject.slug}`}
                                         className={cn(
-                                          'lu-tabular-telemetry rounded-full border px-2 py-0.5 font-mono text-[10px] font-bold',
+                                          'lu-tabular-telemetry rounded-[2px] border px-2 py-0.5 font-mono text-[10px] font-bold',
                                           palette.progressBadgeClass,
                                         )}
                                       >
@@ -1048,9 +1064,9 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                       </span>
                                     </div>
                                   </div>
-                                  <div className="lu-fx-progress-track h-1.5 w-36 rounded-full bg-[#E7ECEA]">
+                                  <div className="lu-fx-progress-track h-1.5 w-36 bg-[#E7ECEA]">
                                     <div
-                                      className="lu-fx-progress-fill h-full rounded-full transition-[width] duration-500"
+                                      className="lu-fx-progress-fill h-full transition-[width] duration-500"
                                       style={{
                                         width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
                                         backgroundColor: palette.progressBarColor,
@@ -1082,11 +1098,14 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   </p>
                                 </div>
 
-                                {/* Dải Nhảy Nhanh Chương & Nút Xem nhanh lộ trình */}
-                                <div className="space-y-2.5 rounded-2xl border border-[#D8E0DD]/80 bg-[#F2F4F3]/65 p-3">
-                                  <div className="flex flex-wrap items-center justify-between gap-2">
-                                    <span className="font-mono text-[10px] font-semibold tracking-wider text-[#4A5D58] uppercase">
-                                      Chương trọng tâm
+                                {/* Bảng chỉ mục niên giám chương học (Almanac Index Table với đường chấm dẫn border-dotted) */}
+                                <div
+                                  data-testid={`almanac-chapter-index-${subject.slug}`}
+                                  className="space-y-2 rounded-[2px] border border-[#CFD8D4] bg-[#F4F6F5]/85 p-3"
+                                >
+                                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#CFD8D4] pb-1.5">
+                                    <span className="lu-tabular-telemetry font-mono text-[10px] font-semibold tracking-[0.14em] text-[#4A5D58] uppercase">
+                                      CHỈ MỤC NIÊN GIÁM CHƯƠNG HỌC
                                     </span>
                                     <button
                                       type="button"
@@ -1099,7 +1118,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                         }))
                                       }
                                       className={cn(
-                                        'inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors',
+                                        'inline-flex cursor-pointer items-center gap-1 rounded-[2px] px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors',
                                         palette.indexText,
                                         'hover:bg-[#FAFBF9]',
                                       )}
@@ -1117,44 +1136,64 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                     </button>
                                   </div>
 
-                                  <div className="flex flex-wrap items-center gap-1.5">
-                                    {highlightedChapters.map((chapter) => (
-                                      <Link
-                                        key={chapter.id}
-                                        to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
-                                        title={`Mở Chương ${chapter.number}: ${chapter.title}`}
-                                        className={cn(
-                                          'inline-flex max-w-[190px] items-center gap-1 truncate rounded-lg border px-2.5 py-1 text-[11px] font-medium transition-all duration-150',
-                                          palette.chapterPillClass,
-                                        )}
-                                      >
-                                        <span className="font-mono text-[10px] font-bold">
-                                          Ch.{chapter.number}
-                                        </span>
-                                        <span className="truncate">{chapter.title}</span>
-                                      </Link>
-                                    ))}
-                                    {subject.chapters.length > highlightedChapters.length && (
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          setExpandedRoadmaps((prev) => ({
-                                            ...prev,
-                                            [subject.slug]: !prev[subject.slug],
-                                          }))
-                                        }
-                                        className="inline-flex cursor-pointer items-center rounded-lg border border-dashed border-[#CBD6D2] bg-[#FAFBF9] px-2.5 py-1 font-mono text-[10.5px] font-semibold text-[#4A5D58] transition-colors hover:border-[#1E332E] hover:text-[#182624]"
-                                      >
-                                        +{subject.chapters.length - highlightedChapters.length}{' '}
-                                        chương
-                                      </button>
-                                    )}
+                                  <div className="divide-y divide-[#E2E8E5]">
+                                    {highlightedChapters.map((chapter) => {
+                                      const chDone = chapter.lessons.filter(
+                                        (l) => completedLessons[l.id],
+                                      ).length;
+                                      return (
+                                        <Link
+                                          key={chapter.id}
+                                          to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
+                                          title={`Mở Chương ${chapter.number}: ${chapter.title}`}
+                                          className="group/row flex items-baseline gap-2 py-1.5 text-xs transition-colors hover:bg-white/75"
+                                        >
+                                          <span
+                                            className={cn(
+                                              'lu-tabular-telemetry shrink-0 font-mono text-[10px] font-bold',
+                                              palette.indexText,
+                                            )}
+                                          >
+                                            Ch.{String(chapter.number).padStart(2, '0')}
+                                          </span>
+                                          <span className="max-w-[58%] truncate font-medium text-[#182624] group-hover/row:underline">
+                                            {chapter.title}
+                                          </span>
+                                          <span
+                                            aria-hidden="true"
+                                            className="mx-1 min-w-[16px] flex-1 border-b border-dotted border-[#9AA8A3]"
+                                          />
+                                          <span className="lu-tabular-telemetry shrink-0 font-mono text-[10.5px] font-medium text-[#4A5D58]">
+                                            {chDone > 0 ? `${chDone}/` : ''}
+                                            {String(chapter.lessons.length).padStart(2, '0')} bài
+                                          </span>
+                                        </Link>
+                                      );
+                                    })}
                                   </div>
+
+                                  {subject.chapters.length > highlightedChapters.length &&
+                                    !isRoadmapOpen && (
+                                      <div className="pt-0.5 text-right">
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            setExpandedRoadmaps((prev) => ({
+                                              ...prev,
+                                              [subject.slug]: true,
+                                            }))
+                                          }
+                                          className="inline-flex cursor-pointer items-center border border-dashed border-[#CFD8D4] bg-[#FAFBF9] px-2.5 py-1 font-mono text-[10px] font-semibold text-[#4A5D58] transition-colors hover:border-[#1E332E] hover:text-[#182624]"
+                                        >
+                                          + MỞ ĐẦY ĐỦ {subject.chapters.length} CHƯƠNG
+                                        </button>
+                                      </div>
+                                    )}
 
                                   {isRoadmapOpen && (
                                     <div
                                       data-testid={`roadmap-drawer-${subject.slug}`}
-                                      className="mt-2 max-h-48 space-y-1.5 overflow-y-auto border-t border-[#D8E0DD] pt-2.5 pr-1"
+                                      className="mt-1 max-h-48 divide-y divide-[#E2E8E5] overflow-y-auto border-t border-[#CFD8D4] pt-1.5 pr-1"
                                     >
                                       {subject.chapters.map((chapter) => {
                                         const chDone = chapter.lessons.filter(
@@ -1164,22 +1203,24 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                           <Link
                                             key={chapter.id}
                                             to={`${ROUTES.subjectOverview(subject.slug)}?chapter=${chapter.slug}`}
-                                            className="flex items-center justify-between gap-2 rounded-xl border border-transparent bg-[#FAFBF9] px-3 py-1.5 text-xs transition-colors hover:border-[#CBD6D2] hover:bg-white"
+                                            className="flex items-baseline gap-2 py-1.5 text-xs transition-colors hover:bg-white/80"
                                           >
-                                            <span className="flex min-w-0 items-center gap-2">
-                                              <span
-                                                className={cn(
-                                                  'shrink-0 font-mono text-[10.5px] font-bold',
-                                                  palette.indexText,
-                                                )}
-                                              >
-                                                Ch.{chapter.number}
-                                              </span>
-                                              <span className="truncate font-medium text-[#182624]">
-                                                {chapter.title}
-                                              </span>
+                                            <span
+                                              className={cn(
+                                                'lu-tabular-telemetry shrink-0 font-mono text-[10px] font-bold',
+                                                palette.indexText,
+                                              )}
+                                            >
+                                              Ch.{String(chapter.number).padStart(2, '0')}
                                             </span>
-                                            <span className="shrink-0 font-mono text-[10.5px] text-[#4A5D58]">
+                                            <span className="max-w-[58%] truncate font-medium text-[#182624]">
+                                              {chapter.title}
+                                            </span>
+                                            <span
+                                              aria-hidden="true"
+                                              className="mx-1 min-w-[16px] flex-1 border-b border-dotted border-[#9AA8A3]"
+                                            />
+                                            <span className="lu-tabular-telemetry shrink-0 font-mono text-[10.5px] text-[#4A5D58]">
                                               {chDone}/{chapter.lessons.length} bài
                                             </span>
                                           </Link>
@@ -1265,11 +1306,12 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
               <BlueprintSectionFrame
                 data-testid="orbit-blueprint-frame"
                 columnSeams={[0.5833]}
-                className="rounded-3xl border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
-                innerClassName="overflow-hidden rounded-3xl"
+                headerSeamTopPx={36}
+                className="rounded-[2px] border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
+                innerClassName="overflow-hidden rounded-[2px]"
               >
                 <TelemetrySpecBar
-                  sectionCode="SEC. 03 // PERSONAL ORBIT"
+                  sectionCode="DOC. LU-2026 // PERSONAL ORBIT"
                   subtitle="QUỸ ĐẠO HỌC TẬP & MẠNG TRI THỨC LIÊN MÔN"
                   items={[{ label: 'ĐÃ HỌC', value: `${completedCount}/${totalLessonCount}` }]}
                 />
@@ -1300,7 +1342,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                       <div
                         role="region"
                         aria-label="Tiếp tục học dở"
-                        className="lu-fx-card rounded-3xl p-6 sm:p-7"
+                        className="lu-fx-card rounded-[2px] border-[#CFD8D4] p-6 sm:p-7"
                       >
                         {activeRecentLesson ? (
                           <div className="space-y-5">
@@ -1440,7 +1482,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         role="region"
                         aria-label="Ma Trận Tiến Độ 4 Học Phần"
                         data-testid="progress-matrix-4-subjects"
-                        className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-6 sm:p-7"
+                        className="lu-fx-card flex flex-1 flex-col justify-between rounded-[2px] border-[#CFD8D4] p-6 sm:p-7"
                       >
                         <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3.5">
                           <div className="space-y-0.5">

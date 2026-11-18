@@ -1236,8 +1236,24 @@
 }
 
 .lu-fx-band-root:hover .lu-fx-band-track,
-.lu-fx-band-root:focus-within .lu-fx-band-track {
+.lu-fx-band-root:focus-within .lu-fx-band-track,
+.lu-fx-band-track[data-paused='true'] {
   animation-play-state: paused;
+}
+
+@keyframes lu-fx-bar-wave {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(1.16);
+  }
+}
+
+.lu-fx-bar-wave {
+  transform-origin: bottom;
+  animation: lu-fx-bar-wave 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
 }
 
 /* Taste-Skill fx-tabs: Smooth sliding capsule indicator */
@@ -1303,7 +1319,8 @@
 
   .lu-dg-stream,
   .lu-dg-stream-fast,
-  .lu-dg-pulse-ring {
+  .lu-dg-pulse-ring,
+  .lu-fx-bar-wave {
     animation: none;
   }
 }

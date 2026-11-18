@@ -13,7 +13,7 @@ import {
 import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import {
-  ArchitecturalBand,
+  AcademicAxiomBand,
   BlueprintSectionFrame,
   EngravedGroundCanvas,
   FlutedGlassSurface,
@@ -311,12 +311,13 @@ export function LearningSpacePage() {
             <BlueprintSectionFrame
               data-testid="hero-blueprint-frame"
               columnSeams={[0.54]}
+              headerSeamTopPx={36}
               showInnerKeyline
-              className="rounded-3xl border-[#CFD8D4] shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_20px_60px_rgba(24,38,36,0.06)] backdrop-blur-md"
-              innerClassName="overflow-hidden rounded-3xl"
+              className="rounded-[2px] border-[#CFD8D4] shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_20px_60px_rgba(24,38,36,0.06)] backdrop-blur-md"
+              innerClassName="overflow-hidden rounded-[2px]"
             >
               <TelemetrySpecBar
-                sectionCode="SEC. 01 // ACADEMIC SANCTUARY"
+                sectionCode="DOC. LU-2026 // ACADEMIC SANCTUARY"
                 subtitle="HỆ THỐNG HỌC PHẦN & ĐỊA ĐỒ TRI THỨC"
                 items={[
                   { label: 'HỌC PHẦN', value: String(subjects.length).padStart(2, '0') },
@@ -364,7 +365,7 @@ export function LearningSpacePage() {
                         tone="mineral"
                         ribs={18}
                         data-testid="hero-eyebrow-fluted"
-                        className="inline-flex w-fit rounded-full px-3.5 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#1E332E] uppercase"
+                        className="inline-flex w-fit rounded-[2px] px-3.5 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#1E332E] uppercase"
                       >
                         <span className="inline-flex items-center gap-2">
                           <Compass className="h-3.5 w-3.5 text-[#243E38]" aria-hidden="true" />
@@ -384,12 +385,12 @@ export function LearningSpacePage() {
                     </div>
 
                     {/* 3 Huy hiệu thống kê thấu kính gân trụ Fluted-Glass (taste-skill) */}
-                    <div className="flex flex-wrap items-center gap-3 text-xs">
+                    <div className="flex flex-wrap items-center gap-2.5 text-xs">
                       <FlutedGlassSurface
                         as="span"
                         tone="mineral"
                         ribs={12}
-                        className="inline-flex rounded-xl px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
+                        className="inline-flex rounded-[2px] px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
                       >
                         <span className="inline-flex items-center gap-1.5">
                           <Layers className="h-3.5 w-3.5 text-[#243E38]" aria-hidden="true" />
@@ -400,7 +401,7 @@ export function LearningSpacePage() {
                         as="span"
                         tone="vellum"
                         ribs={14}
-                        className="inline-flex rounded-xl px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
+                        className="inline-flex rounded-[2px] px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
                       >
                         <span className="inline-flex items-center gap-1.5">
                           <BookOpen className="h-3.5 w-3.5 text-[#3B6275]" aria-hidden="true" />
@@ -413,7 +414,7 @@ export function LearningSpacePage() {
                         as="span"
                         tone="brass"
                         ribs={14}
-                        className="inline-flex rounded-xl px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
+                        className="inline-flex rounded-[2px] px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
                       >
                         <span className="inline-flex items-center gap-1.5">
                           <GraduationCap
@@ -440,7 +441,7 @@ export function LearningSpacePage() {
                         role="search"
                         aria-label="Tìm kiếm nội dung học tập"
                       >
-                        <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-2xl border border-[#CBD6D2] bg-[#FAFBF9]/95 px-4 text-sm text-[#182624]">
+                        <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-[2px] border border-[#CFD8D4] bg-[#FAFBF9]/95 px-4 text-sm text-[#182624]">
                           <Search
                             className="mr-3 h-4 w-4 shrink-0 text-[#4A5D58]"
                             aria-hidden="true"
@@ -719,9 +720,9 @@ export function LearningSpacePage() {
           </div>
         </section>
 
-        {/* Dải ruy-băng kiến trúc công thức nền tảng (fx-band) giữa Hero & Hệ thống học phần */}
+        {/* Dải ruy-băng học thuật chuyển động ngang AcademicAxiomBand (fx-band) giữa Hero & Hệ thống học phần */}
         <div className="relative z-20 mx-auto w-full max-w-[1400px] px-6 pt-5 pb-1 lg:px-10">
-          <ArchitecturalBand className="rounded-xl" />
+          <AcademicAxiomBand className="rounded-[2px]" />
         </div>
 
         {/* Đường đồng mức nước chìm & Nội dung Không gian Học phần + Tiếp tục học tập */}

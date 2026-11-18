@@ -907,7 +907,7 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       data-testid={`subject-stage-${slug}`}
       style={{ background: theme.background }}
       className={cn(
-        'group/stage relative my-4 h-52 w-full overflow-hidden rounded-2xl border select-none',
+        'group/stage relative my-4 h-52 w-full overflow-hidden rounded-[2px] border border-[#CFD8D4] select-none',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
         theme.borderClass,
       )}
@@ -924,29 +924,46 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100"
         style={{
-          background: `radial-gradient(210px circle at var(--stage-mx, 50%) var(--stage-my, 50%), ${theme.dotColor}1f, transparent 70%)`,
+          background: `radial-gradient(220px circle at var(--stage-mx, 50%) var(--stage-my, 50%), ${theme.dotColor}28, transparent 70%)`,
         }}
       />
 
-      {/* 4 chốt reticle thước đo ở góc khung sân khấu 3D */}
+      {/* Thước chia độ dọc bên lề trái sân khấu 3D */}
+      <div
+        data-testid={`stage-vertical-ruler-${slug}`}
+        className="lu-tabular-telemetry pointer-events-none absolute top-0 bottom-0 left-0 z-20 flex w-7 flex-col justify-between border-r border-[#CFD8D4]/85 bg-[#FAFBF9]/45 py-2.5 pr-1 font-mono text-[8px] font-semibold"
+        style={{ color: theme.dotColor }}
+      >
+        {(['90°', '60°', '30°', '00°'] as const).map((deg, idx) => (
+          <div key={deg} className="flex w-full items-center justify-end gap-1">
+            <span className="opacity-70">{deg}</span>
+            <span
+              className="block h-px bg-current"
+              style={{ width: idx === 0 || idx === 3 ? '7px' : '5px', opacity: 0.65 }}
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* 4 góc chữ L bản vẽ chuẩn trực trên khung viewport 3D */}
       <span
-        className="pointer-events-none absolute top-2.5 left-2.5 z-20 h-2.5 w-2.5 border-t border-l opacity-55"
+        className="pointer-events-none absolute top-2 left-8 z-20 h-3 w-3 border-t-[1.5px] border-l-[1.5px] opacity-75"
         style={{ borderColor: theme.dotColor }}
       />
       <span
-        className="pointer-events-none absolute top-2.5 right-2.5 z-20 h-2.5 w-2.5 border-t border-r opacity-55"
+        className="pointer-events-none absolute top-2 right-2 z-20 h-3 w-3 border-t-[1.5px] border-r-[1.5px] opacity-75"
         style={{ borderColor: theme.dotColor }}
       />
       <span
-        className="pointer-events-none absolute bottom-2.5 left-2.5 z-20 h-2.5 w-2.5 border-b border-l opacity-55"
+        className="pointer-events-none absolute bottom-2 left-8 z-20 h-3 w-3 border-b-[1.5px] border-l-[1.5px] opacity-75"
         style={{ borderColor: theme.dotColor }}
       />
       <span
-        className="pointer-events-none absolute right-2.5 bottom-2.5 z-20 h-2.5 w-2.5 border-r border-b opacity-55"
+        className="pointer-events-none absolute right-2 bottom-2 z-20 h-3 w-3 border-r-[1.5px] border-b-[1.5px] opacity-75"
         style={{ borderColor: theme.dotColor }}
       />
       <span
-        className="lu-tabular-telemetry pointer-events-none absolute top-2 right-6 z-20 font-mono text-[9px] font-semibold tracking-[0.16em] uppercase opacity-50"
+        className="lu-tabular-telemetry pointer-events-none absolute top-2 right-6 z-20 font-mono text-[9px] font-semibold tracking-[0.16em] uppercase opacity-55"
         style={{ color: theme.dotColor }}
       >
         3D.STAGE // 120FPS

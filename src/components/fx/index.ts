@@ -7,6 +7,11 @@ export {
   type TelemetrySpecItem,
 } from './TelemetrySpecBar';
 export {
+  AcademicAxiomBand,
+  type AcademicAxiomBandProps,
+  type AcademicAxiomItem,
+} from './AcademicAxiomBand';
+export {
   ArchitecturalBand,
   type ArchitecturalBandProps,
   type ArchitecturalBandItem,

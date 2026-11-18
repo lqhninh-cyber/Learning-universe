@@ -440,11 +440,11 @@ export function CurriculumRadarCard({
   return (
     <div
       data-testid="curriculum-radar-card"
-      className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-5 sm:p-6"
+      className="lu-fx-card flex flex-1 flex-col justify-between rounded-[2px] border-[#CFD8D4] p-5 sm:p-6"
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="rounded-lg bg-[#EBF2EE] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#245746]">
+          <span className="border border-[#CFD8D4] bg-[#EBF2EE] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#245746]">
             CẤU TRÚC &amp; NĂNG LỰC HỌC PHẦN
           </span>
           <Radar className="h-4 w-4 text-[#245746]" aria-hidden="true" />

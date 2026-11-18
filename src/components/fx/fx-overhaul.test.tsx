@@ -8,7 +8,7 @@ import {
   renderAtmosphereFrame,
 } from '@/components/home/heroAtmosphereEngine';
 import {
-  ArchitecturalBand,
+  AcademicAxiomBand,
   BlueprintSectionFrame,
   EngravedGroundCanvas,
   FlutedGlassSurface,
@@ -53,43 +53,52 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
     expect(surface).toHaveTextContent('HỌC PHẦN TRỌNG TÂM');
   });
 
-  it('hiển thị BlueprintSectionFrame với 4 nút chữ thập góc + các nút chia cột', () => {
+  it('hiển thị BlueprintSectionFrame với 4 nút chữ thập 12x12px + giao điểm header và chia cột', () => {
     const { container } = render(
-      <BlueprintSectionFrame columnSeams={[0.5]}>
+      <BlueprintSectionFrame columnSeams={[0.5]} headerSeamTopPx={36}>
         <div>Nội dung bản vẽ</div>
       </BlueprintSectionFrame>,
     );
     expect(screen.getByTestId('blueprint-section-frame')).toHaveTextContent('Nội dung bản vẽ');
-    // 4 góc + 2 điểm chia cột trên/dưới = 6 SVG chữ thập 11x11px
-    const crosshairs = container.querySelectorAll('svg[width="11"][height="11"]');
-    expect(crosshairs).toHaveLength(6);
+    // 4 góc + 2 giao điểm đường chân header + 2 điểm chia cột trên/dưới = 8 SVG chữ thập 12x12px
+    const crosshairs = container.querySelectorAll('svg[width="12"][height="12"]');
+    expect(crosshairs).toHaveLength(8);
   });
 
-  it('hiển thị TelemetrySpecBar với mã vùng, thông số và tọa độ', () => {
+  it('hiển thị TelemetrySpecBar với mã bản vẽ, ô thước milimét và tọa độ chuột (X, Y)', () => {
     render(
       <TelemetrySpecBar
-        sectionCode="SEC. 01 // SANCTUARY"
+        sectionCode="DOC. LU-2026 // SANCTUARY"
         subtitle="TEST"
         items={[{ label: 'HỌC PHẦN', value: '04' }]}
       />,
     );
     const bar = screen.getByTestId('telemetry-spec-bar');
-    expect(bar).toHaveTextContent('SEC. 01 // SANCTUARY');
+    expect(bar).toHaveTextContent('DOC. LU-2026 // SANCTUARY');
     expect(bar).toHaveTextContent('HỌC PHẦN');
     expect(bar).toHaveTextContent('04');
+    expect(screen.getByTestId('telemetry-pointer-coords')).toHaveTextContent(
+      /\(\d{4},\s*\d{4}\)\s*PX/i,
+    );
   });
 
-  it('hiển thị ArchitecturalBand chứa các công thức tiên đề chuẩn', () => {
-    render(<ArchitecturalBand />);
+  it('hiển thị AcademicAxiomBand chứa công thức tiên đề, mốc lịch sử và nút tạm dừng', () => {
+    render(<AcademicAxiomBand />);
     const band = screen.getByTestId('architectural-band');
     expect(band).toHaveTextContent('G / ker φ ≅ Im φ');
-    expect(band).toHaveTextContent('det(A − λI) = 0');
+    expect(band).toHaveTextContent('1832 · É. GALOIS');
+
+    const toggleBtn = screen.getByTestId('axiom-band-toggle');
+    expect(toggleBtn).toHaveAttribute('aria-pressed', 'false');
+    fireEvent.click(toggleBtn);
+    expect(toggleBtn).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('hiển thị SpecimenFxBars cho từng chương và phản hồi hover/focus', () => {
+  it('hiển thị SpecimenFxBars cho từng chương, gợn sóng khi hover thẻ và hiện nhãn thanh khi focus', () => {
     render(
       <SpecimenFxBars
         accentHex="#245746"
+        isCardHovered
         chapters={[
           { id: 'c1', title: 'Chương 1: Nhóm', totalLessons: 4, completedLessons: 2 },
           { id: 'c2', title: 'Chương 2: Vành', totalLessons: 6, completedLessons: 0 },
@@ -97,6 +106,7 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
       />,
     );
     const bars = screen.getByTestId('specimen-fx-bars');
+    expect(bars.querySelectorAll('.lu-fx-bar-wave').length).toBe(2);
     const buttons = bars.querySelectorAll('button');
     expect(buttons).toHaveLength(2);
     fireEvent.mouseEnter(buttons[0]!);

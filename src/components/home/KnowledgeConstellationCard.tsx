@@ -288,57 +288,67 @@ export function KnowledgeConstellationCard() {
           ctx.lineWidth = 1.1;
           ctx.stroke();
 
-          // Xung truyền dữ liệu (dg-comet, dg-glow, dg-spark chu kỳ 3.2s lệch pha ripple) trên các nhánh đang chọn
-          if (isActive) {
-            const cycleSec = 3.2;
-            const u = ((time + tIdx * 0.55) % cycleSec) / cycleSec;
-            const evalCubic = (tVal: number) => {
-              const inv = 1 - tVal;
-              const c0 = inv * inv * inv;
-              const c1 = 3 * inv * inv * tVal;
-              const c2 = 3 * inv * tVal * tVal;
-              const c3 = tVal * tVal * tVal;
-              return {
-                x: c0 * bPos.x + c1 * cp1x + c2 * cp2x + c3 * portX,
-                y: c0 * bPos.y + c1 * cp1y + c2 * cp2y + c3 * portY,
-              };
+          // Xung truyền dữ liệu phát sáng 120fps (.dg-glow + .dg-comet + .dg-spark) chạy dọc dây dẫn
+          const cycleSec = isActive ? 2.6 : 4.2;
+          const phaseShift = tIdx * 0.58 + bridge.phase * 0.4;
+          const u = ((time + phaseShift) % cycleSec) / cycleSec;
+          const evalCubic = (tVal: number) => {
+            const inv = 1 - tVal;
+            const c0 = inv * inv * inv;
+            const c1 = 3 * inv * inv * tVal;
+            const c2 = 3 * inv * tVal * tVal;
+            const c3 = tVal * tVal * tVal;
+            return {
+              x: c0 * bPos.x + c1 * cp1x + c2 * cp2x + c3 * portX,
+              y: c0 * bPos.y + c1 * cp1y + c2 * cp2y + c3 * portY,
             };
+          };
 
-            const headPt = evalCubic(u);
-            const tailPt = evalCubic(Math.max(0, u - 0.26));
+          const headPt = evalCubic(u);
+          const tailPt = evalCubic(Math.max(0, u - (isActive ? 0.28 : 0.18)));
 
-            // Dải đuôi sáng .dg-comet & .dg-glow
-            const cometGrad = ctx.createLinearGradient(tailPt.x, tailPt.y, headPt.x, headPt.y);
-            cometGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
-            cometGrad.addColorStop(0.55, `${bridge.color}88`);
-            cometGrad.addColorStop(1, targetAnchor.color);
+          const cometGrad = ctx.createLinearGradient(tailPt.x, tailPt.y, headPt.x, headPt.y);
+          cometGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+          cometGrad.addColorStop(0.5, `${bridge.color}${isActive ? '99' : '44'}`);
+          cometGrad.addColorStop(1, targetAnchor.color);
 
-            ctx.globalAlpha = 0.95;
+          // Dải sáng quầng rộng (.dg-glow) dưới xung chạy dọc dây dẫn
+          if (isActive) {
+            ctx.globalAlpha = 0.24;
             ctx.beginPath();
             ctx.moveTo(tailPt.x, tailPt.y);
             ctx.lineTo(headPt.x, headPt.y);
-            ctx.strokeStyle = cometGrad;
-            ctx.lineWidth = 2.4;
+            ctx.strokeStyle = targetAnchor.color;
+            ctx.lineWidth = 7;
             ctx.lineCap = 'round';
             ctx.stroke();
-
-            // Quầng sáng đầu xung .dg-spark-halo & .dg-spark
-            ctx.globalAlpha = 1;
-            ctx.beginPath();
-            ctx.arc(headPt.x, headPt.y, 5.2, 0, Math.PI * 2);
-            ctx.fillStyle = `${targetAnchor.color}33`;
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(headPt.x, headPt.y, 3.0, 0, Math.PI * 2);
-            ctx.fillStyle = targetAnchor.color;
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(headPt.x, headPt.y, 1.35, 0, Math.PI * 2);
-            ctx.fillStyle = '#FAFBF9';
-            ctx.fill();
           }
+
+          ctx.globalAlpha = isActive ? 0.96 : 0.48;
+          ctx.beginPath();
+          ctx.moveTo(tailPt.x, tailPt.y);
+          ctx.lineTo(headPt.x, headPt.y);
+          ctx.strokeStyle = cometGrad;
+          ctx.lineWidth = isActive ? 2.4 : 1.5;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          // Quầng sáng đầu xung .dg-spark-halo & .dg-spark
+          ctx.globalAlpha = isActive ? 1 : 0.55;
+          ctx.beginPath();
+          ctx.arc(headPt.x, headPt.y, isActive ? 5.2 : 3.2, 0, Math.PI * 2);
+          ctx.fillStyle = `${targetAnchor.color}33`;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(headPt.x, headPt.y, isActive ? 3.0 : 1.9, 0, Math.PI * 2);
+          ctx.fillStyle = targetAnchor.color;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(headPt.x, headPt.y, isActive ? 1.35 : 0.85, 0, Math.PI * 2);
+          ctx.fillStyle = '#FAFBF9';
+          ctx.fill();
         });
       }
       ctx.globalAlpha = 1;
@@ -511,11 +521,11 @@ export function KnowledgeConstellationCard() {
   return (
     <div
       data-testid="knowledge-constellation-card"
-      className="lu-fx-card flex flex-1 flex-col justify-between rounded-3xl p-5 sm:p-6"
+      className="lu-fx-card flex flex-1 flex-col justify-between rounded-[2px] border-[#CFD8D4] p-5 sm:p-6"
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="rounded-lg bg-[#ECF1F4] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#2D5266]">
+          <span className="border border-[#CFD8D4] bg-[#ECF1F4] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#2D5266]">
             GIAO THOA LIÊN MÔN · 120FPS GRAPH
           </span>
           <Network className="h-4 w-4 text-[#2D5266]" aria-hidden="true" />
@@ -528,7 +538,7 @@ export function KnowledgeConstellationCard() {
         {/* Đồ thị Mạng lưới Tri thức Canvas 120fps trên nền chấm chuẩn độ lu-dg-ground-dots */}
         <div
           ref={containerRef}
-          className="lu-dg-ground-dots relative h-[222px] w-full overflow-hidden rounded-2xl border border-[#C9D7DF] bg-[#ECF1F4]/45"
+          className="lu-dg-ground-dots relative h-[222px] w-full overflow-hidden rounded-[2px] border border-[#CFD8D4] bg-[#ECF1F4]/45"
         >
           <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
         </div>
