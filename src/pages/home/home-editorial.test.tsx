@@ -5,7 +5,14 @@ import {
   ATMOSPHERIC_PALETTES,
   interpolateAtmospherePalette,
 } from '@/components/home/atmosphereThemes';
-import { ChladniManifestoSection } from '@/components/home/ChladniManifestoSection';
+import { KineticSoundStage } from '@/components/home/KineticSoundStage';
+import {
+  PENTATONIC_STRING_FREQS,
+  PENTATONIC_STRING_NOTES,
+  playMarbleClick,
+  playPegTap,
+  playStringPluck,
+} from '@/utils/pentatonicAudio';
 import {
   PIPELINE_LAYER_NAMES,
   buildAtmosphereSpriteCache,
@@ -618,30 +625,30 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByRole('tab', { name: /Toán học & Thiên văn/i }));
       expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 13');
 
-      // Cầu nối sương mượt Screen 1->2 và Screen 3 Tuyên ngôn × Đài cộng hưởng Chladni (không còn Hồ Sen)
+      // Cầu nối sương mượt Screen 1->2 và Screen 3 Sân khấu Máy Thả Bi Khoáng Thạch & Đàn Dây Ngũ Cung 120fps
       const shoreline = screen.getByTestId('shoreline-wave-bridge');
       expect(shoreline).toBeInTheDocument();
       expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
       expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
       expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
+      expect(screen.queryByTestId('chladni-manifesto-section')).not.toBeInTheDocument();
 
-      const chladniSection = screen.getByTestId('chladni-manifesto-section');
-      expect(chladniSection).toBeInTheDocument();
-      expect(screen.getByText(/SEC\. 03 \/\/ KIẾN TRÚC TRI THỨC/i)).toBeInTheDocument();
-      expect(
-        screen.getByRole('heading', { name: /Khi trực giác hình học gặp gỡ chiều sâu tiên đề\./i }),
-      ).toBeInTheDocument();
-      expect(screen.getByTestId('chladni-resonance-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('chladni-footer-seam')).toBeInTheDocument();
-      expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(3, 5)');
+      const kineticStage = screen.getByTestId('kinetic-sound-stage');
+      expect(kineticStage).toBeInTheDocument();
+      expect(screen.getByTestId('kinetic-play-hint')).toHaveTextContent(
+        'Nhấp để thả bi · Nhấn giữ tạo thác bi · Rê chuột ngang dây để gảy đàn',
+      );
+      expect(screen.getByTestId('kinetic-sound-canvas')).toBeInTheDocument();
+      expect(screen.getByTestId('kinetic-footer-seam')).toBeInTheDocument();
+      expect(screen.getByTestId('kinetic-marble-rain-btn')).toHaveTextContent('Thả mưa bi');
+      expect(screen.getByTestId('kinetic-shake-board-btn')).toHaveTextContent('Rung bảng');
+      expect(screen.getByTestId('kinetic-cycle-layout-btn')).toHaveTextContent('Xếp lại dây');
 
-      fireEvent.click(screen.getByRole('button', { name: 'Đông Sơn (6, 9)' }));
-      expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(6, 9)');
       expect(screen.getByRole('link', { name: /Bước vào Không gian học tập/i })).toHaveAttribute(
         'href',
         '/learning-space',
       );
-      expect(screen.getByRole('link', { name: /Khám phá Kho Thuật ngữ/i })).toHaveAttribute(
+      expect(screen.getByRole('link', { name: /Kho Thuật ngữ/i })).toHaveAttribute(
         'href',
         '/thuat-ngu',
       );
@@ -1007,8 +1014,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(formatAlidadeAngle(Math.PI / 2)).toBe('90° · π/2');
     });
 
-    it('ChladniManifestoSection vẽ đĩa cộng hưởng 3.600 hạt khoáng thạch, liên kết 3 trụ cột và tinh chỉnh (m, n) không lỗi', () => {
-      const fillStyles: string[] = [];
+    it('KineticSoundStage & pentatonicAudio vận hành 6 dây đàn hồi ngũ cung (D4-D5), 18-24 chốt đồng, tối đa 48 bi và chuyển đổi 3 sơ đồ', () => {
+      const drawnNotes: string[] = [];
+      const quadraticSpy = vi.fn();
       const noop = vi.fn();
       const gradMock = { addColorStop: noop };
       const ctxSpy = {
@@ -1026,18 +1034,24 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         closePath: noop,
         moveTo: noop,
         lineTo: noop,
+        quadraticCurveTo: quadraticSpy,
         arc: noop,
-        fill: function (this: { fillStyle: string }) {
-          fillStyles.push(this.fillStyle);
-        },
+        fill: noop,
         stroke: noop,
         clip: noop,
         setLineDash: noop,
+        fillText: (text: string) => {
+          drawnNotes.push(text);
+        },
         createRadialGradient: () => gradMock,
         globalAlpha: 1,
         fillStyle: '#000',
         strokeStyle: '#000',
         lineWidth: 1,
+        lineCap: 'round',
+        font: '10px monospace',
+        textAlign: 'center',
+        textBaseline: 'middle',
       } as unknown as CanvasRenderingContext2D;
 
       const getContextSpy = vi
@@ -1045,69 +1059,59 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         .mockReturnValue(ctxSpy);
 
       try {
+        // Kiểm tra thang âm Ngũ cung D-Major (D4, E4, G4, A4, B4, D5)
+        expect(PENTATONIC_STRING_NOTES).toEqual(['D4', 'E4', 'G4', 'A4', 'B4', 'D5']);
+        expect(PENTATONIC_STRING_FREQS).toEqual([293.66, 329.63, 392.0, 440.0, 493.88, 587.33]);
+        expect(() => playStringPluck(0, 0.8, 'pluck')).not.toThrow();
+        expect(() => playStringPluck(1, 0.7, 'chime')).not.toThrow();
+        expect(() => playPegTap(2, 0.5)).not.toThrow();
+        expect(() => playMarbleClick(0.6)).not.toThrow();
+
         render(
           <MemoryRouter>
-            <ChladniManifestoSection />
+            <KineticSoundStage />
           </MemoryRouter>,
         );
 
-        const canvas = screen.getByTestId('chladni-resonance-canvas');
+        const canvas = screen.getByTestId('kinetic-sound-canvas');
         expect(canvas).toBeInTheDocument();
-        expect(canvas).toHaveAttribute('data-particle-count', '3600');
-        expect(fillStyles).toContain('rgba(30, 51, 46, 0.84)');
-        expect(fillStyles).toContain('rgba(156, 122, 76, 0.88)');
-        expect(fillStyles).toContain('rgba(59, 122, 101, 0.82)');
+        expect(canvas).toHaveAttribute('data-max-marbles', '48');
+        expect(canvas).toHaveAttribute('data-string-count', '6');
+        const pegCount0 = Number(canvas.getAttribute('data-peg-count'));
+        expect(pegCount0).toBeGreaterThanOrEqual(18);
+        expect(pegCount0).toBeLessThanOrEqual(24);
 
-        // Dải thông số tổng kết bên cột trái
-        const summaryStrip = screen.getByTestId('chladni-summary-strip');
-        expect(summaryStrip).toHaveTextContent('40 DI SẢN XÁC THỰC');
-        expect(summaryStrip).toHaveTextContent('04 HỌC PHẦN');
-        expect(summaryStrip).toHaveTextContent('122 BÀI GIẢNG KATEX');
+        // 6 sợi dây đàn vẽ bằng quadraticCurveTo và hiển thị nhãn nốt D4..D5
+        expect(quadraticSpy.mock.calls.length).toBeGreaterThanOrEqual(6);
+        expect(drawnNotes).toEqual(expect.arrayContaining(['D4', 'E4', 'G4', 'A4', 'B4', 'D5']));
 
-        // Kiểm tra liên kết 2 chiều Trụ cột -> Chế độ sóng
-        const pillar1 = screen.getByTestId('chladni-pillar-1');
-        const pillar2 = screen.getByTestId('chladni-pillar-2');
-        const pillar3 = screen.getByTestId('chladni-pillar-3');
-        expect(pillar1).toHaveAttribute('aria-pressed', 'true');
-        expect(pillar1).toHaveTextContent('ĐANG HIỂN THỊ');
-
-        fireEvent.click(pillar2);
-        expect(pillar2).toHaveAttribute('aria-pressed', 'true');
-        expect(pillar2).toHaveTextContent('ĐANG HIỂN THỊ');
-        expect(pillar1).toHaveAttribute('aria-pressed', 'false');
-
-        fireEvent.click(pillar3);
-        expect(pillar3).toHaveAttribute('aria-pressed', 'true');
-        expect(pillar3).toHaveTextContent('ĐANG HIỂN THỊ');
-
-        // Kiểm tra 4 preset (m, n)
-        const presets: [string, string][] = [
-          ['Đối xứng (3, 5)', '(m, n) =(3, 5)'],
-          ['Giao thoa (4, 7)', '(m, n) =(4, 7)'],
-          ['Hội tụ (5, 8)', '(m, n) =(5, 8)'],
-          ['Đông Sơn (6, 9)', '(m, n) =(6, 9)'],
-        ];
-        for (const [label, expectedMode] of presets) {
-          const btn = screen.getByRole('button', { name: label });
-          fireEvent.click(btn);
-          expect(btn).toHaveAttribute('aria-pressed', 'true');
-          expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent(expectedMode);
-        }
-
-        // Đặt về (3, 5) rồi kiểm tra stepper m !== n trong [2..12]
-        fireEvent.click(screen.getByRole('button', { name: 'Đối xứng (3, 5)' }));
-        const incM = screen.getByRole('button', { name: 'Tăng m' });
-        fireEvent.click(incM);
-        expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(4, 5)');
-        // Bước tiếp phải nhảy qua m === n (5) sang 6
-        fireEvent.click(incM);
-        expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(6, 5)');
-
-        // Kiểm tra nút âm thanh Web Audio mặc định TẮT và bật được
-        const soundBtn = screen.getByTestId('chladni-sound-toggle');
+        // Kiểm tra nút chuyển âm sắc Đàn dây / Chuông gió và bật/tắt Âm thanh
+        const pluckBtn = screen.getByTestId('kinetic-voice-pluck');
+        const chimeBtn = screen.getByTestId('kinetic-voice-chime');
+        const soundBtn = screen.getByTestId('kinetic-sound-toggle');
+        expect(pluckBtn).toHaveAttribute('aria-pressed', 'true');
+        expect(chimeBtn).toHaveAttribute('aria-pressed', 'false');
         expect(soundBtn).toHaveAttribute('aria-pressed', 'false');
+
+        fireEvent.click(chimeBtn);
+        expect(chimeBtn).toHaveAttribute('aria-pressed', 'true');
+        expect(pluckBtn).toHaveAttribute('aria-pressed', 'false');
+
         fireEvent.click(soundBtn);
         expect(soundBtn).toHaveAttribute('aria-pressed', 'true');
+
+        // Kiểm tra 3 nút điều khiển sân khấu: Thả mưa bi, Rung bảng, Xếp lại dây (3 sơ đồ)
+        const stageCard = screen.getByTestId('kinetic-stage-card');
+        expect(stageCard).toHaveAttribute('data-layout-name', 'Vòm Cung Đông Sơn');
+
+        fireEvent.click(screen.getByTestId('kinetic-cycle-layout-btn'));
+        expect(stageCard).toHaveAttribute('data-layout-name', 'Thác Ngọc So Le');
+
+        fireEvent.click(screen.getByTestId('kinetic-cycle-layout-btn'));
+        expect(stageCard).toHaveAttribute('data-layout-name', 'Song Khê Giao Thoa');
+
+        fireEvent.click(screen.getByTestId('kinetic-marble-rain-btn'));
+        fireEvent.click(screen.getByTestId('kinetic-shake-board-btn'));
       } finally {
         getContextSpy.mockRestore();
       }

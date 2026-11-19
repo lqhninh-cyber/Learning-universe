@@ -82,13 +82,14 @@ describe('App routing smoke test', () => {
     ).toBeInTheDocument();
     expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-    // 3. Screen 3 — Tuyên ngôn Học thuật × Đài cộng hưởng sóng đứng Chladni 120fps (thay thế hoàn toàn Hồ Sen)
-    expect(screen.getByTestId('chladni-manifesto-section')).toBeInTheDocument();
-    expect(screen.getByTestId('chladni-resonance-canvas')).toBeInTheDocument();
-    expect(screen.getByTestId('chladni-footer-seam')).toBeInTheDocument();
+    // 3. Screen 3 — Sân khấu Máy Thả Bi Khoáng Thạch & Đàn Dây Ngũ Cung 120fps (thay thế hoàn toàn Chladni & Hồ Sen)
+    expect(screen.getByTestId('kinetic-sound-stage')).toBeInTheDocument();
+    expect(screen.getByTestId('kinetic-sound-canvas')).toBeInTheDocument();
+    expect(screen.getByTestId('kinetic-footer-seam')).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /Khi trực giác hình học gặp gỡ chiều sâu tiên đề\./i }),
+      screen.getByText(/Nhấp để thả bi · Nhấn giữ tạo thác bi · Rê chuột ngang dây để gảy đàn/i),
     ).toBeInTheDocument();
+    expect(screen.queryByTestId('chladni-manifesto-section')).not.toBeInTheDocument();
     expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
 

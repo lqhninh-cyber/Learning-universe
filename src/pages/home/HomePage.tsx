@@ -1,11 +1,11 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { type MouseEvent } from 'react';
 import { Link } from 'react-router';
-import { ChladniManifestoSection } from '@/components/home/ChladniManifestoSection';
 import { HeritageExhibitionPavilion } from '@/components/home/HeritageExhibitionPavilion';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { ShorelineWaveBridge } from '@/components/home/HomeScrollTransitions';
+import { KineticSoundStage } from '@/components/home/KineticSoundStage';
 import { ROUTES } from '@/shared/config/routes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
@@ -14,7 +14,7 @@ import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
  * TRANG CHỦ: 3 MÀN HÌNH BẠCH NGỌC KHOÁNG THẠCH LIỀN MẠCH
  * - Screen 1: Khởi Đầu Bình Minh Bạch Ngọc & Sơn Thủy Sương Lam 120fps (#EDF3F1)
  * - Screen 2: Phòng Trưng Bày Di Sản Bảo Tàng Thạch Cao Sáng (#EEF2F0 · #khong-gian-di-san)
- * - Screen 3: Tuyên Ngôn Học Thuật × Đài Cộng Hưởng Sóng Đứng Chladni 120fps (#F2F4F3)
+ * - Screen 3: Máy Thả Bi Khoáng Thạch & Đàn Dây Ngũ Cung 120fps (#F2F4F3)
  */
 export function HomePage() {
   const prefersReducedMotion = useReducedMotion();
@@ -127,9 +127,9 @@ export function HomePage() {
       <HeritageExhibitionPavilion />
 
       {/* =====================================================================
-        SCREEN 3: TUYÊN NGÔN HỌC THUẬT × ĐÀI CỘNG HƯỞNG SÓNG ĐỨNG CHLADNI 120FPS (#F2F4F3)
+        SCREEN 3: MÁY THẢ BI KHOÁNG THẠCH & ĐÀN DÂY NGŨ CUNG 120FPS (#F2F4F3)
         ===================================================================== */}
-      <ChladniManifestoSection />
+      <KineticSoundStage />
     </div>
   );
 }

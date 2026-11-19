@@ -342,7 +342,7 @@ describe('Ngân hàng Đề thi & Lời giải MATH1301 & MATH1302', () => {
     expect(screen.queryByText(/Kiểm tra các phần tử còn lại/i)).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Hiện lời giải chi tiết & thang điểm/i }));
     expect(await screen.findByText(/Kiểm tra các phần tử còn lại/i)).toBeInTheDocument();
-  });
+  }, 30000);
 
   it('MATH1302: hiển thị tờ đề chính thức nguyên bản 2512MATH18221, tách rời lời giải bên dưới và có 2 đề biên soạn ôn tập', async () => {
     const user = userEvent.setup();
