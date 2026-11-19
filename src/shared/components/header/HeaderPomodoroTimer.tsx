@@ -179,7 +179,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
             'absolute top-full right-0 z-50 mt-3 w-72 rounded-2xl border p-3.5 shadow-[0_16px_40px_rgba(24,38,36,0.12)] backdrop-blur-xl',
             isDark
               ? 'border-[#4E9B58]/30 bg-[#11221A]/96 text-[#F7F4EB]'
-              : 'border-[#D8E0DD] bg-[#FAFBF9]/95 text-[#182624]',
+              : 'border-[#D8E0DD] bg-[#FAFBF9]/95 text-[#182624] dark:border-[#1E3B2D] dark:bg-[#12241C]/96 dark:text-[#E6ECE7]',
           )}
         >
           <div className="mb-2.5 flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">

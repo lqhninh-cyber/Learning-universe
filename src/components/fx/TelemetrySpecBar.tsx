@@ -109,7 +109,7 @@ export function TelemetrySpecBar({
     <div
       data-testid={dataTestId}
       className={cn(
-        'lu-tabular-telemetry grid grid-cols-1 divide-y divide-[#CFD8D4] border-b border-[#CFD8D4] bg-[#EEF2EF]/92 text-[10px] tracking-[0.13em] text-[#35524B] uppercase lg:divide-x lg:divide-y-0',
+        'lu-tabular-telemetry grid grid-cols-1 divide-y divide-[#CFD8D4] border-b border-[#CFD8D4] bg-[#EEF2EF]/92 text-[10px] tracking-[0.13em] text-[#35524B] uppercase lg:divide-x lg:divide-y-0 dark:divide-[#1E3B2D] dark:border-[#1E3B2D] dark:bg-[#0E1A15]/92 dark:text-[#A7B5AC]',
         showLiveCoordinates ? 'lg:grid-cols-[auto_1fr_auto_auto]' : 'lg:grid-cols-[auto_1fr_auto]',
         className,
       )}
@@ -121,30 +121,32 @@ export function TelemetrySpecBar({
           className="inline-block h-2 w-2 shrink-0 rotate-45 border"
           style={{ borderColor: accentHex, backgroundColor: `${accentHex}28` }}
         />
-        <span className="font-semibold text-[#162623]">{sectionCode}</span>
-        {subtitle && <span className="hidden text-[#536D66] xl:inline">· {subtitle}</span>}
+        <span className="font-semibold text-[#162623] dark:text-[#E6ECE7]">{sectionCode}</span>
+        {subtitle && (
+          <span className="hidden text-[#536D66] xl:inline dark:text-[#98ABA3]">· {subtitle}</span>
+        )}
       </div>
 
-      {/* Ô 2: Thước chia vạch milimét SVG trải ngang */}
-      <div className="hidden items-center gap-2.5 px-4 py-1.5 md:flex" aria-hidden="true">
-        <span className="text-[8.5px] font-semibold text-[#8C7248]">MM</span>
+      {/* Ô 2: Thước chia vạch milimét SVG trải ngang (ẩn dưới 1024px để tránh gãy dòng) */}
+      <div className="hidden items-center gap-2.5 px-4 py-1.5 lg:flex" aria-hidden="true">
+        <span className="text-[8.5px] font-semibold text-[#8C7248] dark:text-[#D5B47A]">MM</span>
         <svg className="h-3.5 w-full min-w-[140px]" viewBox="0 0 300 14" preserveAspectRatio="none">
           <line x1="0" y1="12" x2="300" y2="12" stroke="#CFD8D4" strokeWidth="1" />
           <path d={RULER_MINOR_PATH} stroke="#9AA9A3" strokeWidth="0.75" fill="none" />
           <path d={RULER_MED_PATH} stroke="#637871" strokeWidth="0.9" fill="none" />
           <path d={RULER_MAJOR_PATH} stroke={accentHex} strokeWidth="1.2" fill="none" />
         </svg>
-        <span className="text-[8.5px] font-semibold text-[#637871]">30</span>
+        <span className="text-[8.5px] font-semibold text-[#637871] dark:text-[#98ABA3]">30</span>
       </div>
 
       {/* Ô 3: Tọa độ con trỏ chuột (X, Y) thời gian thực */}
       {showLiveCoordinates && (
         <div className="hidden items-center gap-2 px-4 py-2 lg:flex">
-          <span className="text-[9px] font-semibold text-[#8C7248]">XY</span>
+          <span className="text-[9px] font-semibold text-[#8C7248] dark:text-[#D5B47A]">XY</span>
           <span
             ref={coordRef}
             data-testid="telemetry-pointer-coords"
-            className="font-semibold text-[#314B44]"
+            className="font-semibold text-[#314B44] dark:text-[#C9D6D0]"
           >
             (0000, 0000) PX · 00%
           </span>
@@ -155,8 +157,8 @@ export function TelemetrySpecBar({
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-2 sm:px-5">
         {items.map((item) => (
           <span key={item.label} className="inline-flex items-center gap-1.5">
-            <span className="text-[#5F7770]">{item.label}</span>
-            <span className="font-semibold text-[#162623]">{item.value}</span>
+            <span className="text-[#5F7770] dark:text-[#98ABA3]">{item.label}</span>
+            <span className="font-semibold text-[#162623] dark:text-[#E6ECE7]">{item.value}</span>
           </span>
         ))}
       </div>

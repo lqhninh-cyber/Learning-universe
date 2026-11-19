@@ -351,7 +351,7 @@ export const Header: FC<HeaderProps> = ({
 
   const navItemClass = (active: boolean) =>
     cn(
-      'relative inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-[15px] font-semibold tracking-tight whitespace-nowrap transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98] xl:px-4',
+      'relative inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[14px] font-semibold tracking-tight whitespace-nowrap transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98] xl:gap-2 xl:px-3.5 xl:py-2 xl:text-[15px]',
       active
         ? isDark
           ? 'bg-[#9EC5B8]/18 text-[#EBF0EE]'
@@ -538,6 +538,24 @@ export const Header: FC<HeaderProps> = ({
           {/* Cụm điều khiển đọc nhanh A- / A+ / Chế độ Dịu mắt (Chỉ hiển thị khi đang ở Chi tiết Bài học) */}
           {isLessonPage && <HeaderQuickReaderControls isDark={isDark} />}
 
+          {/* Nút tìm kiếm nhỏ gọn riêng cho thiết bị di động (< 768px) */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsSearchOpen(true);
+              setIsAccountMenuOpen(false);
+            }}
+            aria-label="Tìm kiếm trên di động"
+            className={cn(
+              'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98] md:hidden',
+              isDark
+                ? 'border-[#9E845A]/30 bg-[#0D211D] text-[#9EC5B8] hover:border-[#9EC5B8]/50 hover:bg-[#112624]'
+                : 'border-[#D8E0DD] bg-[#EDF1EF] text-[#4A5D58] hover:border-[#9EC5B8]/60 hover:bg-[#FAFBF9] hover:text-[#182624] dark:border-[#9E845A]/30 dark:bg-[#0D211D] dark:text-[#9EC5B8]',
+            )}
+          >
+            <Search className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+
           {/* Ô tìm kiếm: thu gọn thành nút tròn 36px khi ở trang Chi tiết Bài học để tối ưu chiều ngang 1280px */}
           {isLessonPage ? (
             <button
@@ -567,7 +585,7 @@ export const Header: FC<HeaderProps> = ({
               }}
               aria-label="Mở tìm kiếm nhanh"
               className={cn(
-                'hidden h-10 w-[210px] cursor-pointer items-center justify-between gap-2 rounded-full border px-4 text-left text-[13px] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[240px]',
+                'hidden h-10 w-[168px] cursor-pointer items-center justify-between gap-1.5 rounded-full border px-3 text-left text-[12.5px] transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.99] md:inline-flex lg:w-[184px] xl:w-[228px] xl:gap-2 xl:px-4 xl:text-[13px]',
                 isDark
                   ? 'border-[#9E845A]/30 bg-[#0D211D] text-[#B8C7C2] hover:border-[#9EC5B8]/50 hover:bg-[#112624]'
                   : 'border-[#D8E0DD] bg-[#EDF1EF] text-[#182624] hover:border-[#9EC5B8]/60 hover:bg-[#FAFBF9] dark:border-[#9E845A]/30 dark:bg-[#0D211D] dark:text-[#B8C7C2]',

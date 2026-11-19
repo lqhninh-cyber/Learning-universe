@@ -99,8 +99,9 @@ export const EditorialChapterOpener: FC<EditorialChapterOpenerProps> = ({
     <header
       role="banner"
       aria-label={`Giới thiệu chương ${chapterNumber}: ${title}`}
+      style={{ borderTopColor: 'var(--subject-accent-ink, #245746)' }}
       className={cn(
-        'relative mb-8 overflow-hidden rounded-2xl border border-[#DCE7E1] bg-gradient-to-br from-[#FDFCF9] via-[#F7FAF8] to-[#EEF5F1] p-6 shadow-sm transition-all duration-300 md:rounded-3xl md:p-8 dark:border-[#1E3B2D] dark:bg-gradient-to-br dark:from-[#091A13] dark:via-[#0B1F17] dark:to-[#07150F]',
+        'relative mb-8 overflow-hidden rounded-2xl border border-t-[3px] border-[#DCE7E1] bg-gradient-to-br from-[#FAFBF9] via-[#F5F8F6] to-[#EDF2EF] p-6 shadow-sm transition-all duration-300 md:rounded-3xl md:p-8 dark:border-[#1E3B2D] dark:bg-gradient-to-br dark:from-[#0E1A15] dark:via-[#12241C] dark:to-[#0C1813]',
         className,
       )}
     >

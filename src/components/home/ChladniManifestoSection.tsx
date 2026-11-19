@@ -173,7 +173,7 @@ function drawChladniFrame(
 
   const cx = width * 0.5;
   const cy = height * 0.5;
-  const plateR = Math.max(88, Math.min(width, height) * 0.43);
+  const plateR = Math.max(76, Math.min(width - 48, height - 32, 360) * 0.5);
 
   // Nền đĩa tròn sứ tinh tế bên trong khung
   const plateBg = ctx.createRadialGradient(cx, cy, plateR * 0.08, cx, cy, plateR);
@@ -454,7 +454,7 @@ export function ChladniManifestoSection() {
 
       if (!document.hidden) {
         excitationRef.current = Math.max(0, excitationRef.current - dtSeconds * 1.45);
-        const plateR = Math.max(88, Math.min(width, height) * 0.43);
+        const plateR = Math.max(76, Math.min(width - 48, height - 32, 360) * 0.5);
         const cx = width * 0.5;
         const cy = height * 0.5;
         const pNormX = (pointerPxX - cx) / plateR;
@@ -524,7 +524,7 @@ export function ChladniManifestoSection() {
       id="tuyen-ngon-chladni"
       data-testid="chladni-manifesto-section"
       aria-label="Tuyên ngôn học thuật và Đài cộng hưởng sóng đứng Chladni"
-      className="relative border-t border-[#D4DFDA] bg-[#F2F4F3] text-[#142622]"
+      className="relative border-t border-[#D4DFDA] bg-[#F2F4F3] text-[#142622] dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
     >
       {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật 1px solid #D4DFDA */}
       <div
@@ -558,27 +558,27 @@ export function ChladniManifestoSection() {
           {/* CỘT TRÁI (5 cột): Tuyên Ngôn Phương Pháp Học Thuật */}
           <div className="space-y-8 lg:col-span-5">
             <div className="space-y-3">
-              <p className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#8C6228] uppercase">
+              <p className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#8C6228] uppercase dark:text-[#D5B47A]">
                 SEC. 03 // KIẾN TRÚC TRI THỨC
               </p>
-              <h2 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#142622] lg:text-4xl">
+              <h2 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#142622] lg:text-4xl dark:text-[#E6ECE7]">
                 Khi trực giác hình học gặp gỡ chiều sâu tiên đề.
               </h2>
             </div>
 
             {/* 3 Trụ cột ngắn gọn dạng đường kẻ mảnh */}
-            <ol className="divide-y divide-[#D8E1DD] border-y border-[#D8E1DD]">
+            <ol className="divide-y divide-[#D8E1DD] border-y border-[#D8E1DD] dark:divide-[#1E3B2D] dark:border-[#1E3B2D]">
               {MANIFESTO_PILLARS.map((pillar) => (
                 <li key={pillar.index} className="py-4 first:pt-4 last:pb-4">
                   <div className="flex items-baseline gap-2.5">
-                    <span className="font-mono text-xs font-bold text-[#8C6228] tabular-nums">
+                    <span className="font-mono text-xs font-bold text-[#8C6228] tabular-nums dark:text-[#D5B47A]">
                       {pillar.index} ·
                     </span>
-                    <h3 className="font-serif text-base font-bold text-[#142622]">
+                    <h3 className="font-serif text-base font-bold text-[#142622] dark:text-[#E6ECE7]">
                       {pillar.title}
                     </h3>
                   </div>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#2D423D]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-[#2D423D] dark:text-[#B9C8C1]">
                     {pillar.description}
                   </p>
                 </li>
@@ -589,7 +589,7 @@ export function ChladniManifestoSection() {
             <div className="flex flex-wrap items-center gap-3.5 pt-1">
               <Link
                 to={ROUTES.learningSpace}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#1E332E] px-5 py-3 text-sm font-semibold text-[#FAFBF9] shadow-[0_10px_24px_rgba(30,51,46,0.16)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#28443D] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#1E332E] px-5 py-3 text-sm font-semibold text-[#FAFBF9] shadow-[0_10px_24px_rgba(30,51,46,0.16)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#28443D] active:scale-[0.98] dark:bg-[#245746] dark:hover:bg-[#2E6E58]"
               >
                 <span>Bước vào Không gian học tập</span>
                 <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
@@ -597,10 +597,13 @@ export function ChladniManifestoSection() {
 
               <Link
                 to={ROUTES.glossary}
-                className="inline-flex items-center gap-2 rounded-xl border border-[#CFD9D5] bg-[#FAFBF9] px-5 py-3 text-sm font-semibold text-[#182624] shadow-xs transition-[transform,background-color,border-color] duration-200 hover:-translate-y-0.5 hover:border-[#9C7A4C]/65 hover:bg-[#E7ECEA] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-xl border border-[#CFD9D5] bg-[#FAFBF9] px-5 py-3 text-sm font-semibold text-[#182624] shadow-xs transition-[transform,background-color,border-color] duration-200 hover:-translate-y-0.5 hover:border-[#9C7A4C]/65 hover:bg-[#E7ECEA] active:scale-[0.98] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]"
               >
                 <span>Khám phá Kho Thuật ngữ</span>
-                <ArrowRight className="h-4 w-4 text-[#8C6228]" aria-hidden="true" />
+                <ArrowRight
+                  className="h-4 w-4 text-[#8C6228] dark:text-[#D5B47A]"
+                  aria-hidden="true"
+                />
               </Link>
             </div>
           </div>
@@ -609,7 +612,7 @@ export function ChladniManifestoSection() {
           <div className="lg:col-span-7">
             <div
               data-testid="chladni-resonance-card"
-              className="relative overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)]"
+              className="relative overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)] dark:border-[#1E3B2D] dark:bg-[#12241C]"
             >
               {/* 4 góc thước ngắm bản vẽ chữ L mảnh sát mép ngoài thẻ */}
               <span
@@ -630,16 +633,16 @@ export function ChladniManifestoSection() {
               />
 
               {/* Thanh đầu thẻ: Phương trình sóng đứng Chladni & tần số (m, n) */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4">
-                <span className="lu-fx-band-formula text-[#142622]">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4 dark:border-[#1E3B2D] dark:bg-[#0E1A15]">
+                <span className="lu-fx-band-formula text-[#142622] dark:text-[#E6ECE7]">
                   cos(nπx)cos(mπy) − cos(mπx)cos(nπy) = 0
                 </span>
                 <span
                   data-testid="chladni-mode-indicator"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE4E0] bg-[#FAFBF9] px-3 py-0.5 font-mono text-[11px] font-semibold text-[#8C6228] tabular-nums"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#DCE4E0] bg-[#FAFBF9] px-3 py-0.5 font-mono text-[11px] font-semibold text-[#8C6228] tabular-nums dark:border-[#244335] dark:bg-[#12241C] dark:text-[#D5B47A]"
                 >
                   <span>(m, n) =</span>
-                  <span className="text-[#142622]">
+                  <span className="text-[#142622] dark:text-[#E6ECE7]">
                     ({activePreset.m}, {activePreset.n})
                   </span>
                 </span>
@@ -648,7 +651,7 @@ export function ChladniManifestoSection() {
               {/* Sân khấu Canvas đĩa cộng hưởng 2.600 hạt khoáng thạch */}
               <div
                 ref={stageRef}
-                className="relative h-[340px] w-full overflow-hidden bg-[#FAFBF9] sm:h-[390px] lg:h-[420px]"
+                className="relative h-[320px] w-full overflow-hidden bg-[#FAFBF9] sm:h-[390px] lg:h-[420px] dark:bg-[#12241C]"
               >
                 <canvas
                   ref={canvasRef}
@@ -659,7 +662,7 @@ export function ChladniManifestoSection() {
               </div>
 
               {/* 4 nút chọn chế độ cộng hưởng đặt gọn dưới đáy khung */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4 dark:border-[#1E3B2D] dark:bg-[#0E1A15]">
                 <div
                   role="group"
                   aria-label="Chọn chế độ cộng hưởng sóng đứng Chladni"
@@ -676,8 +679,8 @@ export function ChladniManifestoSection() {
                         className={cn(
                           'cursor-pointer rounded-full border px-3 py-1.5 font-mono text-[11px] font-semibold transition-all duration-150 active:scale-[0.98]',
                           isSelected
-                            ? 'border-[#1E332E] bg-[#1E332E] text-[#FAFBF9] shadow-2xs'
-                            : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#2D423D] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] hover:text-[#142622]',
+                            ? 'border-[#1E332E] bg-[#1E332E] text-[#FAFBF9] shadow-2xs dark:border-[#6EB59B] dark:bg-[#245746] dark:text-[#FAFBF9]'
+                            : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#2D423D] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] hover:text-[#142622] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0] dark:hover:border-[#D5B47A] dark:hover:text-[#E6ECE7]',
                         )}
                       >
                         {preset.label}
@@ -685,7 +688,7 @@ export function ChladniManifestoSection() {
                     );
                   })}
                 </div>
-                <span className="hidden font-mono text-[10.5px] text-[#4A5D58] sm:inline">
+                <span className="hidden font-mono text-[10.5px] text-[#4A5D58] sm:inline dark:text-[#98ABA3]">
                   2.600 hạt khoáng thạch · Di chuột để khuấy sóng
                 </span>
               </div>
@@ -698,9 +701,9 @@ export function ChladniManifestoSection() {
       <div
         aria-hidden="true"
         data-testid="chladni-footer-seam"
-        className="w-full bg-[#F2F4F3] pt-1"
+        className="w-full bg-[#F2F4F3] pt-1 dark:bg-[#0E1A15]"
       >
-        <div className="h-[5px] w-full border-y border-[#9C7A4C]/40 bg-[#EAEFED]" />
+        <div className="h-[5px] w-full border-y border-[#9C7A4C]/40 bg-[#EAEFED] dark:bg-[#12241C]" />
       </div>
     </section>
   );

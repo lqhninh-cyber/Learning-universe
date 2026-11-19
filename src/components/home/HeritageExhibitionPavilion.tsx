@@ -296,7 +296,7 @@ export function HeritageExhibitionPavilion() {
       aria-label="Không gian Di sản Học thuật và Nghệ thuật"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative scroll-mt-24 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-24 pb-16 text-[#142622]"
+      className="relative scroll-mt-24 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-24 pb-16 text-[#142622] dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
     >
       {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật 1px solid #D4DFDA */}
       <div
@@ -352,16 +352,19 @@ export function HeritageExhibitionPavilion() {
         {/* ================================================================
           TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN (ALABASTER MUSEUM GALLERY)
           ================================================================ */}
-        <div className="mb-6 border-b border-[#D4DFDA] pb-5">
+        <div className="mb-6 border-b border-[#D4DFDA] pb-5 dark:border-[#1E3B2D]">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest text-[#8C6228] uppercase">
-              <Landmark className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
+            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest text-[#8C6228] uppercase dark:text-[#D5B47A]">
+              <Landmark
+                className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
+                aria-hidden="true"
+              />
               <span>BẢO TÀNG TRI THỨC &amp; VĂN HIẾN</span>
             </div>
-            <h2 className="font-serif text-[32px] leading-tight font-bold tracking-tight text-[#142622] lg:text-[40px]">
+            <h2 className="font-serif text-[32px] leading-tight font-bold tracking-tight text-[#142622] lg:text-[40px] dark:text-[#E6ECE7]">
               Di sản Học thuật &amp; Nghệ thuật
             </h2>
-            <p className="max-w-2xl text-sm leading-relaxed text-[#2D423D] sm:text-base">
+            <p className="max-w-2xl text-sm leading-relaxed text-[#2D423D] sm:text-base dark:text-[#B9C8C1]">
               Không gian triển lãm {totalCount} kiệt tác kiến trúc, hội họa và tư liệu lịch sử ghi
               dấu hành trình khoa bảng Việt Nam và cách mạng tư duy toán học – thiên văn nhân loại.
             </p>
@@ -378,7 +381,7 @@ export function HeritageExhibitionPavilion() {
               data-testid="heritage-art-frame"
               onMouseMove={handleFrameMouseMove}
               onMouseLeave={handleFrameMouseLeave}
-              className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-4 shadow-[0_16px_40px_rgba(24,38,36,0.06)] transition-colors duration-300 hover:border-[#9C7A4C]/70 md:p-6"
+              className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-4 shadow-[0_16px_40px_rgba(24,38,36,0.06)] transition-colors duration-300 hover:border-[#9C7A4C]/70 md:p-6 dark:border-[#1E3B2D] dark:bg-[#12241C]"
             >
               <div className="relative flex flex-1 items-center justify-center overflow-hidden">
                 {imageError || isHeritageInlineSvg(currentArtwork) ? (
@@ -406,7 +409,7 @@ export function HeritageExhibitionPavilion() {
               </div>
 
               {/* Dòng chú thích ngắn nằm gọn bên trong đáy thẻ trắng bên trái */}
-              <p className="mt-3 border-t border-[#E6ECE9] pt-3 font-serif text-[12px] text-[#4A5D58] italic">
+              <p className="mt-3 border-t border-[#E6ECE9] pt-3 font-serif text-[12px] text-[#4A5D58] italic dark:border-[#1E3B2D] dark:text-[#A7B5AC]">
                 {currentArtwork.caption}
               </p>
 
@@ -424,40 +427,40 @@ export function HeritageExhibitionPavilion() {
           <aside
             aria-label={`Hồ sơ học thuật: ${currentArtwork.title}`}
             className={cn(
-              'flex flex-col gap-5 rounded-2xl border border-[#D4DFDA] bg-[#FAFBF9] p-6 shadow-[0_16px_40px_rgba(24,38,36,0.05)] transition-opacity duration-[320ms] sm:p-7 lg:col-span-5',
+              'flex flex-col gap-5 rounded-2xl border border-[#D4DFDA] bg-[#FAFBF9] p-6 shadow-[0_16px_40px_rgba(24,38,36,0.05)] transition-opacity duration-[320ms] sm:p-7 lg:col-span-5 dark:border-[#1E3B2D] dark:bg-[#12241C]',
               isTransitioning ? 'opacity-65' : 'opacity-100',
             )}
           >
             <div className="space-y-4">
               {/* Số thứ tự + Thẻ Niên đại & Nguồn gốc */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] pb-3">
-                <span className="font-mono text-xs font-bold tracking-widest text-[#8C6228]">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] pb-3 dark:border-[#1E3B2D]">
+                <span className="font-mono text-xs font-bold tracking-widest text-[#8C6228] dark:text-[#D5B47A]">
                   {formattedIndex} / {formattedTotal}
                 </span>
-                <span className="inline-flex items-center rounded-full border border-[#DCE4E0] bg-[#F3F6F4] px-3 py-1 font-mono text-[11px] font-medium text-[#354E48]">
+                <span className="inline-flex items-center rounded-full border border-[#DCE4E0] bg-[#F3F6F4] px-3 py-1 font-mono text-[11px] font-medium text-[#354E48] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#B9C8C1]">
                   {currentArtwork.artistOrOrigin} · {currentArtwork.yearOrEra}
                 </span>
               </div>
 
               {/* Tên Tác phẩm */}
-              <h3 className="font-serif text-[26px] leading-snug font-bold text-[#142622] lg:text-[28px]">
+              <h3 className="font-serif text-[26px] leading-snug font-bold text-[#142622] lg:text-[28px] dark:text-[#E6ECE7]">
                 {currentArtwork.title}
               </h3>
 
               {/* Mục 1: Giá trị Học thuật & Biểu tượng */}
               <div className="space-y-1.5">
-                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase">
+                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase dark:text-[#D5B47A]">
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Giá trị Học thuật &amp; Biểu tượng</span>
                 </div>
-                <p className="text-sm leading-relaxed text-[#2D423D]">
+                <p className="text-sm leading-relaxed text-[#2D423D] dark:text-[#C9D6D0]">
                   {currentArtwork.academicSignificance}
                 </p>
               </div>
             </div>
 
             {/* Mục 2: Hộp Lược sử & Bối cảnh ra đời nền phụ #F3F6F4 viền #DCE4E0 */}
-            <div className="rounded-xl border border-[#DCE4E0] bg-[#F3F6F4] p-4">
+            <div className="rounded-xl border border-[#DCE4E0] bg-[#F3F6F4] p-4 dark:border-[#1E3B2D] dark:bg-[#0E1A15]">
               <div className="mb-3 flex items-center gap-2 border-b border-[#DCE4E0] pb-2 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Lược sử &amp; Bối cảnh ra đời</span>

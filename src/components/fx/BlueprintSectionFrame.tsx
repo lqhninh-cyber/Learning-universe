@@ -62,7 +62,11 @@ export function BlueprintSectionFrame({
   return (
     <div
       data-testid={dataTestId}
-      className={cn('relative border bg-[#FAFBF9]/70', borderClassName, className)}
+      className={cn(
+        'relative border bg-[#FAFBF9]/70 dark:border-[#1E3B2D] dark:bg-[#12241C]/88',
+        borderClassName,
+        className,
+      )}
     >
       {/* 4 nút chữ thập chuẩn trực 12x12px tại 4 góc ngoài */}
       <CrosshairNode

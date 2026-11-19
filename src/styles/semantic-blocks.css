@@ -39,31 +39,57 @@
 [data-theme='dark'],
 [data-reading-theme='dark'],
 .scoped-dark-mode {
-  --kb-def-accent: #8db6f2;
-  --kb-def-bg: rgba(26, 39, 64, 0.45);
-  --kb-def-header-bg: #1a2740;
-  --kb-def-border: #2b4068;
-  --kb-def-pill-bg: #233659;
-  --kb-def-pill-text: #c2daff;
+  --kb-def-accent: #7ba9c2;
+  --kb-def-bg: rgba(18, 36, 28, 0.72);
+  --kb-def-header-bg: #132820;
+  --kb-def-border: #254454;
+  --kb-def-pill-bg: #16303d;
+  --kb-def-pill-text: #a9d0e4;
 
-  --kb-thm-accent: #f19aa8;
-  --kb-thm-bg: rgba(58, 31, 39, 0.45);
-  --kb-thm-header-bg: #3a1f27;
-  --kb-thm-border: #5e303d;
-  --kb-thm-pill-bg: #4e2733;
-  --kb-thm-pill-text: #fad0d7;
+  --kb-thm-accent: #d19385;
+  --kb-thm-bg: rgba(34, 24, 21, 0.62);
+  --kb-thm-header-bg: #291c18;
+  --kb-thm-border: #4d2f28;
+  --kb-thm-pill-bg: #3b231d;
+  --kb-thm-pill-text: #efc2b7;
 
-  --kb-ex-accent: #7fd1a6;
+  --kb-ex-accent: #6eb59b;
   --kb-ex-bg: rgba(14, 30, 23, 0.85);
-  --kb-ex-header-bg: #15302a;
-  --kb-ex-border: #265143;
-  --kb-ex-pill-bg: #1d4238;
-  --kb-ex-pill-text: #a3e6c3;
+  --kb-ex-header-bg: #132c22;
+  --kb-ex-border: #1f4a3b;
+  --kb-ex-pill-bg: #173a2d;
+  --kb-ex-pill-text: #9ee0c7;
 
-  --kb-proof-border: #334155;
-  --kb-proof-bg: rgba(14, 30, 23, 0.55);
-  --kb-proof-label: #94a3b8;
-  --kb-proof-target: #cbd5e1;
+  --kb-proof-border: #274437;
+  --kb-proof-bg: rgba(14, 26, 21, 0.65);
+  --kb-proof-label: #98aba3;
+  --kb-proof-target: #dce6e1;
+}
+
+/* Hài hòa sắc khoáng thạch theo từng học phần */
+[data-subject='cau-truc-dai-so'] .semantic-block[data-kind='thm'],
+[data-subject='algebraic-structures'] .semantic-block[data-kind='thm'] {
+  --kb-thm-accent: #6b5335;
+  --kb-thm-border: #d8d0c0;
+  --kb-thm-bg: rgba(107, 83, 53, 0.045);
+  --kb-thm-header-bg: rgba(107, 83, 53, 0.075);
+  --kb-thm-pill-bg: rgba(107, 83, 53, 0.11);
+  --kb-thm-pill-text: #564228;
+}
+
+[data-subject='hinh-hoc-affine'] .semantic-block[data-kind='def'],
+[data-subject='affine-geometry'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #2d5266;
+}
+
+[data-subject='giai-tich-ham-mot-bien'] .semantic-block[data-kind='ex'],
+[data-subject='single-variable-calculus'] .semantic-block[data-kind='ex'] {
+  --kb-ex-accent: #245746;
+}
+
+[data-subject='giao-duc-hoc'] .semantic-block[data-kind='thm'],
+[data-subject='pedagogy'] .semantic-block[data-kind='thm'] {
+  --kb-thm-accent: #7a463b;
 }
 
 [data-theme='sepia'],

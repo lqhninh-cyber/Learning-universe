@@ -191,7 +191,7 @@ export function LearningSpacePage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-[var(--bg-page,#F2F4F3)] px-4 py-6 text-[#182624] sm:px-6 lg:px-8">
+    <div className="relative min-h-screen overflow-x-clip bg-[var(--bg-page,#F2F4F3)] px-4 py-6 text-[#182624] sm:px-6 lg:px-8 dark:bg-[#0E1A15] dark:text-[#E6ECE7]">
       {/* Hiệu ứng Vignette đài thiên văn cực nhẹ ở 4 mép ngoài viewport */}
       <div
         aria-hidden="true"
@@ -200,11 +200,11 @@ export function LearningSpacePage() {
         className="pointer-events-none fixed inset-0 z-40"
       />
 
-      {/* Trục Cánh Trái (Left Section Spy Rail cố định trên màn hình rộng 2xl+) */}
+      {/* Trục Cánh Trái (Left Section Spy Rail chỉ hiện từ >= 1540px để không đè khung 1400px trên laptop 13-14 inch) */}
       <nav
         aria-label="Điều hướng phân khu Không gian học tập"
         data-testid="learning-space-spy-rail"
-        className="fixed top-1/2 left-5 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 2xl:flex"
+        className="fixed top-1/2 left-5 z-30 hidden -translate-y-1/2 flex-col items-center gap-4 min-[1540px]:flex"
       >
         <div
           aria-hidden="true"
@@ -239,7 +239,7 @@ export function LearningSpacePage() {
       {/* Khung trưng bày học thuật bao quanh toàn bộ trang với 4 dấu ngoặc góc trắc địa */}
       <div
         data-testid="learning-space-perimeter-frame"
-        className="relative mx-auto min-h-[calc(100vh-3rem)] overflow-hidden rounded-[28px] border border-[#D8E0DD]/75 bg-[var(--bg-page,#F2F4F3)] pb-10 shadow-[0_12px_40px_rgba(24,38,36,0.03)]"
+        className="relative mx-auto min-h-[calc(100vh-3rem)] overflow-hidden rounded-[28px] border border-[#D8E0DD]/75 bg-[var(--bg-page,#F2F4F3)] pb-10 shadow-[0_12px_40px_rgba(24,38,36,0.03)] dark:border-[#1E3B2D] dark:bg-[#0E1A15]"
       >
         {/* Họa tiết Cánh Phải & Trái Ngoại Vi (Ambient Geodesic Wing & Side Ornaments) */}
         <div
@@ -366,76 +366,76 @@ export function LearningSpacePage() {
                     <div className="space-y-3">
                       <div
                         data-testid="hero-eyebrow-badge"
-                        className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#D4DFDA] bg-[#FAFBF9] px-3.5 py-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#354E48] uppercase shadow-[0_1px_2px_rgba(24,38,36,0.03)]"
+                        className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#D4DFDA] bg-[#FAFBF9] px-3.5 py-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#354E48] uppercase shadow-[0_1px_2px_rgba(24,38,36,0.03)] dark:border-[#1E3B2D] dark:bg-[#12241C] dark:text-[#B9C8C1]"
                       >
                         <Compass
-                          className="h-3.5 w-3.5 shrink-0 text-[#354E48]"
+                          className="h-3.5 w-3.5 shrink-0 text-[#354E48] dark:text-[#D5B47A]"
                           aria-hidden="true"
                         />
                         <span>ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN</span>
                       </div>
 
-                      <h1 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#162623] sm:text-4xl lg:text-5xl">
+                      <h1 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#162623] sm:text-4xl lg:text-5xl dark:text-[#E6ECE7]">
                         Không Gian Học Tập
                       </h1>
 
-                      <p className="max-w-2xl text-sm leading-relaxed text-[#3F524E] sm:text-base">
+                      <p className="max-w-2xl text-sm leading-relaxed text-[#3F524E] sm:text-base dark:text-[#B9C8C1]">
                         Toàn bộ kho tàng học phần Toán học và Khoa học Giáo dục, biểu đồ phân tích
                         năng lực, mạng lưới liên kết tri thức liên môn và quỹ đạo tiến độ học tập cá
                         nhân được tổ chức khoa học tại đây.
                       </p>
                     </div>
 
-                    {/* Thanh Chỉ Số Phân Đoạn Liền Khối (Unified Architectural Stat Strip) */}
+                    {/* Thanh Chỉ Số Phân Đoạn Liền Khối (Responsive grid trên mobile, inline-flex từ sm+) */}
                     <div
                       data-testid="hero-unified-stat-strip"
-                      className="inline-flex flex-wrap items-center divide-x divide-[#E0E7E4] overflow-hidden rounded-xl border border-[#D4DFDA] bg-[#FAFBF9] shadow-[0_2px_10px_rgba(24,38,36,0.035)]"
+                      className="grid w-full grid-cols-1 divide-y divide-[#E0E7E4] overflow-hidden rounded-xl border border-[#D4DFDA] bg-[#FAFBF9] shadow-[0_2px_10px_rgba(24,38,36,0.035)] sm:inline-flex sm:w-auto sm:flex-wrap sm:items-center sm:divide-x sm:divide-y-0 dark:divide-[#1E3B2D] dark:border-[#1E3B2D] dark:bg-[#12241C]"
                     >
-                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E]">
+                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E] dark:bg-[#12241C] dark:text-[#B9C8C1]">
                         <Layers
-                          className="h-3.5 w-3.5 shrink-0 text-[#4A635D]"
+                          className="h-3.5 w-3.5 shrink-0 text-[#4A635D] dark:text-[#D5B47A]"
                           aria-hidden="true"
                         />
                         <span className="font-mono">
-                          <span className="font-semibold text-[#182624] tabular-nums">
+                          <span className="font-semibold text-[#182624] tabular-nums dark:text-[#E6ECE7]">
                             {String(subjects.length).padStart(2, '0')}
                           </span>{' '}
                           học phần
                         </span>
                       </div>
-                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E]">
+                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E] dark:bg-[#12241C] dark:text-[#B9C8C1]">
                         <BookOpen
-                          className="h-3.5 w-3.5 shrink-0 text-[#4A635D]"
+                          className="h-3.5 w-3.5 shrink-0 text-[#4A635D] dark:text-[#D5B47A]"
                           aria-hidden="true"
                         />
                         <span className="font-mono">
-                          <span className="font-semibold text-[#182624] tabular-nums">
+                          <span className="font-semibold text-[#182624] tabular-nums dark:text-[#E6ECE7]">
                             {totalChapterCount}
                           </span>{' '}
                           chương ·{' '}
-                          <span className="font-semibold text-[#182624] tabular-nums">
+                          <span className="font-semibold text-[#182624] tabular-nums dark:text-[#E6ECE7]">
                             {totalLessonCount}
                           </span>{' '}
                           bài giảng
                         </span>
                       </div>
-                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E]">
+                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E] dark:bg-[#12241C] dark:text-[#B9C8C1]">
                         <span
                           aria-hidden="true"
-                          className="h-2 w-2 shrink-0 rounded-full bg-[#245746]"
+                          className="h-2 w-2 shrink-0 rounded-full bg-[#245746] dark:bg-[#6EB59B]"
                         />
                         <span className="font-mono">
                           Tiến độ cá nhân:{' '}
-                          <span className="font-semibold text-[#182624] tabular-nums">
+                          <span className="font-semibold text-[#182624] tabular-nums dark:text-[#E6ECE7]">
                             {displayOrbitPercent}%
                           </span>
                         </span>
                         <span
                           aria-hidden="true"
-                          className="h-1.5 w-14 overflow-hidden rounded-full bg-[#DCE4E0]"
+                          className="h-1.5 w-14 overflow-hidden rounded-full bg-[#DCE4E0] dark:bg-[#1E3B2D]"
                         >
                           <span
-                            className="block h-full rounded-full bg-[#245746] transition-[width] duration-500"
+                            className="block h-full rounded-full bg-[#245746] transition-[width] duration-500 dark:bg-[#6EB59B]"
                             style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
                           />
                         </span>
@@ -457,7 +457,7 @@ export function LearningSpacePage() {
                         role="search"
                         aria-label="Tìm kiếm nội dung học tập"
                       >
-                        <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-xl border border-[#CFD9D5] bg-[#FFFFFF] px-4 text-sm text-[#182624] shadow-[0_4px_16px_rgba(24,38,36,0.04)] focus-within:border-[#1E332E]">
+                        <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-xl border border-[#CFD9D5] bg-[#FFFFFF] px-4 text-sm text-[#182624] shadow-[0_4px_16px_rgba(24,38,36,0.04)] focus-within:border-[#1E332E] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7] dark:focus-within:border-[#6EB59B]">
                           <Search
                             className="mr-3 h-4 w-4 shrink-0 text-[#4A5D58]"
                             aria-hidden="true"
