@@ -1,4 +1,5 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { type MouseEvent } from 'react';
 import { Link } from 'react-router';
 import { ChladniManifestoSection } from '@/components/home/ChladniManifestoSection';
 import { HeritageExhibitionPavilion } from '@/components/home/HeritageExhibitionPavilion';
@@ -6,6 +7,7 @@ import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { ShorelineWaveBridge } from '@/components/home/HomeScrollTransitions';
 import { ROUTES } from '@/shared/config/routes';
+import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
 
 /**
@@ -15,6 +17,18 @@ import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
  * - Screen 3: Tuyên Ngôn Học Thuật × Đài Cộng Hưởng Sóng Đứng Chladni 120fps (#F2F4F3)
  */
 export function HomePage() {
+  const prefersReducedMotion = useReducedMotion();
+
+  const handleScrollToHeritage = (event: MouseEvent<HTMLAnchorElement>) => {
+    const target = document.getElementById('khong-gian-di-san');
+    if (!target || typeof target.scrollIntoView !== 'function') return;
+    event.preventDefault();
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  };
+
   return (
     <div className="relative overflow-x-clip bg-[#EDF3F1] text-[#142622]">
       {/* =====================================================================
@@ -88,6 +102,7 @@ export function HomePage() {
 
               <a
                 href="#khong-gian-di-san"
+                onClick={handleScrollToHeritage}
                 className="inline-flex items-center gap-2 rounded-xl border border-[#C6D4CF] bg-[#FAFBF9]/88 px-5 py-3 text-sm font-semibold text-[#182624] shadow-xs backdrop-blur-md transition-[transform,background-color,border-color] duration-200 hover:-translate-y-0.5 hover:border-[#9C7A4C]/60 hover:bg-[#FAFBF9] active:scale-[0.98]"
               >
                 <span>Thưởng lãm Di sản</span>

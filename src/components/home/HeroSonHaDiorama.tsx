@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from 'react';
 import { JADE_MIST_DAWN_PALETTE, rgbString } from '@/components/home/atmosphereThemes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
-import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
+import { computeFrameDelta } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
 export interface HeroSonHaDioramaProps {
@@ -71,18 +71,18 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps = {}) {
         return;
       }
 
-      const { dtSeconds } = computeFrameDelta(now, prevNow);
+      const { dtScale } = computeFrameDelta(now, prevNow);
       prevNow = now;
 
-      const smoothMouse = frameDampFactor(12, dtSeconds);
-      const smoothScroll = frameDampFactor(14, dtSeconds);
+      const smoothMouse = Math.min(1, 0.06 * dtScale);
+      const smoothScroll = Math.min(1, 0.09 * dtScale);
       currentX += (targetX - currentX) * smoothMouse;
       currentY += (targetY - currentY) * smoothMouse;
       currentScroll += (targetScroll - currentScroll) * smoothScroll;
 
       const sp = currentScroll;
       if (layer1Ref.current) {
-        layer1Ref.current.style.transform = `translate3d(${(-currentX * 8).toFixed(2)}px, ${(-currentY * 4 - sp * 10).toFixed(2)}px, 0px) scale(${(1 + sp * 0.04).toFixed(4)})`;
+        layer1Ref.current.style.transform = `translate3d(${(-currentX * 4).toFixed(2)}px, ${(-currentY * 2.5 - sp * 10).toFixed(2)}px, 0px) scale(${(1 + sp * 0.04).toFixed(4)})`;
       }
 
       rafId = window.requestAnimationFrame(tick);

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import {
@@ -37,6 +37,7 @@ import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import { getSubjects } from '@/content-runtime';
+import { createGlowSpriteCache } from '@/shared/lib/canvasSprites';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { HERITAGE_ARTWORKS, HeritageArtShowcase } from '@/pages/home/HeritageArtShowcase';
 import { HomePage } from '@/pages/home/HomePage';
@@ -684,18 +685,19 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(new Set(terrain.contours.map((c) => c.layerIndex))).toEqual(new Set([1, 2, 3, 4]));
       expect(new Set(terrain.contours.map((c) => c.tone))).toEqual(new Set(['gold', 'cyan']));
 
-      // Đài Thiên Cầu Đông Sơn (72% x 33%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo)
+      // Đài Thiên Cầu Đông Sơn (72% x 33%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo, 2 cung quỹ đạo mở rộng)
       expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.72, 2);
       expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.33, 2);
       expect(terrain.astrolabe.starRays).toBe(14);
       expect(terrain.astrolabe.rings).toHaveLength(4);
+      expect(terrain.astrolabe.expandedOrbitRadii).toHaveLength(2);
       expect(
         terrain.astrolabe.rings.every((r) => r.tickStepDeg === 5 && r.majorStepDeg === 30),
       ).toBe(true);
       expect(Math.abs(terrain.astrolabe.rings[0]!.angularSpeedRadSec)).toBeCloseTo(0.04, 3);
       expect(terrain.astrolabe.eclipticArcs).toHaveLength(2);
 
-      // Tinh vân / sương khí quyển & 3 lớp Biển Sương OffscreenCanvas
+      // Tinh vân / sương khí quyển & 5 tầng OffscreenCanvas núi FBM + 3 lớp Biển Sương
       expect(terrain.nebulaHalos.length).toBeGreaterThanOrEqual(5);
       expect(
         terrain.nebulaHalos.every(
@@ -713,12 +715,34 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(layerCache.height).toBe(900);
       expect(layerCache.phase).toBe('binh-minh-bach-ngoc');
       expect(layerCache.geometry.mountainLayers).toHaveLength(5);
+      expect(layerCache.mountainLayerSurfaces).toHaveLength(5);
       expect(layerCache.valleyMistLayers).toHaveLength(3);
 
-      // 2. Bầu trời 280 ngôi sao (gồm 15 sao chữ thập r=1.3px), 3 Đa diện Tinh Tú 3D, 25 tinh tú vàng & suối ánh sao
+      // 2. Đã xóa bỏ 3 đa diện trôi tự do; thay bằng 3 Khí cụ Hỗn thiên nghi neo quỹ đạo, 4 chim Lạc Bézier, 36 hạt phấn nắng & 12 caustics
       const world = createAtmosphereWorld();
+      expect('polyhedralConstellations3D' in world).toBe(false);
+      expect(world.orbitAstrolabeNodes).toHaveLength(3);
+      expect(world.orbitAstrolabeNodes.map((n) => [n.id, n.radiusPx])).toEqual([
+        ['armillary', 16],
+        ['vernier', 13],
+        ['lunar', 11],
+      ]);
+      expect(
+        world.orbitAstrolabeNodes.every(
+          (n) => Math.abs(n.angularSpeedRadSec) >= 0.03 && Math.abs(n.angularSpeedRadSec) <= 0.06,
+        ),
+      ).toBe(true);
+
+      expect(world.lacBirds).toHaveLength(4);
+      expect(world.lacBirds.every((b) => b.scale >= 0.65 && b.scale <= 1.15)).toBe(true);
+
+      expect(world.sunlitMotes).toHaveLength(36);
+      expect(world.sunlitMotes.every((m) => m.radius >= 0.8 && m.radius <= 2.0)).toBe(true);
+
+      expect(world.waterCaustics.length).toBeGreaterThanOrEqual(10);
+      expect(world.waterCaustics.length).toBeLessThanOrEqual(14);
+
       expect(world.stars).toHaveLength(280);
-      expect(world.polyhedralConstellations3D).toHaveLength(3);
       const flareStars = world.stars.filter((s) => s.crossFlare);
       expect(flareStars).toHaveLength(15);
       expect(
@@ -731,7 +755,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(world.mistRipples.length).toBeLessThanOrEqual(30);
       expect(world.mistRipples.every((r) => r.ny >= 0.76 && r.ny <= 0.98)).toBe(true);
 
-      // Chòm sao hình học toán học (4-5 cụm sao gồm Scorpion), bụi sao 3D (56 hạt) & sao băng định kỳ (5-9s)
+      // Chòm sao & sao băng
       expect(world.constellations).toHaveLength(5);
       expect(world.constellations.some((c) => c.id === 'scorpion')).toBe(true);
       expect(world.stardust3D).toHaveLength(56);
@@ -740,10 +764,73 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       spawnShootingStar(world, true);
       expect(world.shootingStars.some((s) => s.active && s.vx > 0)).toBe(true);
 
-      // Kiểm chứng renderAtmosphereFrame chạy an toàn trong môi trường Canvas giả lập
+      // Kiểm chứng renderAtmosphereFrame vẽ đàn chim Lạc Bézier & tia tiếp tuyến chuột gần thiên cầu an toàn
       const spriteCache = buildAtmosphereSpriteCache();
       expect(spriteCache).toHaveProperty('warmStarSprite');
       expect(typeof renderAtmosphereFrame).toBe('function');
+
+      const bezierSpy = vi.fn();
+      const noop = vi.fn();
+      const gradMock = { addColorStop: noop };
+      const frameCtxSpy = {
+        save: noop,
+        restore: noop,
+        setTransform: noop,
+        translate: noop,
+        scale: noop,
+        rotate: noop,
+        clearRect: noop,
+        fillRect: noop,
+        strokeRect: noop,
+        beginPath: noop,
+        closePath: noop,
+        moveTo: noop,
+        lineTo: noop,
+        quadraticCurveTo: noop,
+        bezierCurveTo: bezierSpy,
+        arc: noop,
+        ellipse: noop,
+        fill: noop,
+        stroke: noop,
+        clip: noop,
+        setLineDash: noop,
+        drawImage: noop,
+        createLinearGradient: () => gradMock,
+        createRadialGradient: () => gradMock,
+        globalAlpha: 1,
+        fillStyle: '#000',
+        strokeStyle: '#000',
+        lineWidth: 1,
+        lineCap: 'butt',
+        lineJoin: 'miter',
+      } as unknown as CanvasRenderingContext2D;
+
+      renderAtmosphereFrame({
+        ctx: frameCtxSpy,
+        width: 1440,
+        height: 900,
+        tSec: 3.2,
+        dtSeconds: 0.0083,
+        dtScale: 0.5,
+        scrollProgress: 0,
+        animate: true,
+        palette: ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'],
+        sprites: spriteCache,
+        glowSprites: createGlowSpriteCache(),
+        mouse: {
+          active: true,
+          x: 1440 * 0.72 - 90,
+          y: 900 * 0.33 - 40,
+          vx: 0,
+          vy: 0,
+          normX: 0.4,
+          normY: -0.3,
+        },
+        world,
+        terrainLayers: { prev: layerCache, next: layerCache, blend: 1 },
+      });
+      // 4 chim Lạc x 2 cung Bézier đối xứng = 8 lần gọi bezierCurveTo
+      expect(bezierSpy).toHaveBeenCalledTimes(8);
 
       // Sóng Ngân Trống Đồng (Harmonic Contour Pulse R: 0 -> 600px)
       spawnHarmonicContourPulse(world, 720, 480, 600);
@@ -756,6 +843,36 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(dawnPalette.sky4).toEqual([246, 239, 224]);
       const lerped = interpolateAtmospherePalette(dawnPalette, dawnPalette, 0.5);
       expect(lerped.sky0).toEqual(dawnPalette.sky0);
+    });
+
+    it('HomePage tuyệt đối không tự động cuộn từ Hero xuống Screen 2 theo timer, chỉ cuộn khi người dùng bấm Thưởng lãm Di sản', () => {
+      vi.useFakeTimers();
+      const origScrollIntoView = Element.prototype.scrollIntoView;
+      const scrollIntoViewSpy = vi.fn();
+      Element.prototype.scrollIntoView = scrollIntoViewSpy;
+      const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+
+      try {
+        render(
+          <MemoryRouter>
+            <HomePage />
+          </MemoryRouter>,
+        );
+
+        act(() => {
+          vi.advanceTimersByTime(30000);
+        });
+        expect(scrollIntoViewSpy).not.toHaveBeenCalled();
+        expect(scrollToSpy).not.toHaveBeenCalled();
+
+        const heritageCta = screen.getByRole('link', { name: /Thưởng lãm Di sản/i });
+        fireEvent.click(heritageCta);
+        expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+      } finally {
+        Element.prototype.scrollIntoView = origScrollIntoView;
+        scrollToSpy.mockRestore();
+        vi.useRealTimers();
+      }
     });
 
     it('HeritageArtShowcase cố định thẻ thẳng góc (rotate-0), nút bấm h-8 w-8 rounded-full và chuyển tác phẩm mượt', async () => {

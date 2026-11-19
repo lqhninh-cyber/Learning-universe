@@ -15,7 +15,6 @@ import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import {
   computeFrameDelta,
   createGlowSpriteCache,
-  frameDampFactor,
   getLowLatency2DContext,
 } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
@@ -26,9 +25,9 @@ export interface HeroPhysicsCanvasProps {
 
 /**
  * Canvas 2D Engine "Bình Minh Bạch Ngọc & Sơn Thủy Khắc Đồng" (120fps `dtScale` + `OffscreenCanvas` cache):
- * - Tiền kết xuất 5 tầng núi sương mù, 24-30 đường đồng mức & Đài Thiên Cầu Đông Sơn vào OffscreenCanvas (< 3ms/frame)
- * - Chùm tia nắng ban mai (god-rays), 3 khối đa diện nét khắc bản vẽ & gợn caustics mặt hồ sáng đáy màn hình
- * - Tương tác chuột (220px) làm sáng rực đồng mức màu Vàng Đồng (#A67936) & click phát sóng đồng tâm Trống Đồng
+ * - Tiền kết xuất 5 tầng núi FBM đỉnh nhọn Hoàng Liên Sơn, Rim Light nắng mai & 26 đường đồng mức vào OffscreenCanvas
+ * - Hệ Khí cụ Hỗn thiên nghi neo 2 cung quỹ đạo Đông Sơn (3 nút đo góc 0.03–0.06 rad/s) & 4 chim Lạc Bézier tiếp tuyến
+ * - Sương mù thung lũng trôi ngược chiều, 36 hạt phấn nắng vi mô, Parallax chuột 0.06 * dtScale & 12 vệt caustics mặt hồ
  */
 export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -149,10 +148,10 @@ export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps = {}) {
 
     const drawFrame = (nowMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
       if (animate) {
-        const smooth = frameDampFactor(10, dtSeconds);
-        const scrollSmooth = frameDampFactor(14, dtSeconds);
-        mouse.normX += (targetNormX - mouse.normX) * smooth;
-        mouse.normY += (targetNormY - mouse.normY) * smooth;
+        const smoothParallax = Math.min(1, 0.06 * dtScale);
+        const scrollSmooth = Math.min(1, 0.09 * dtScale);
+        mouse.normX += (targetNormX - mouse.normX) * smoothParallax;
+        mouse.normY += (targetNormY - mouse.normY) * smoothParallax;
         currentScroll += (targetScroll - currentScroll) * scrollSmooth;
         const velDecay = Math.pow(0.84, dtScale);
         mouse.vx *= velDecay;

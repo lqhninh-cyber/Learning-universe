@@ -1,6 +1,7 @@
 import { type AtmospherePalette } from '@/components/home/atmosphereThemes';
 import {
   buildHeroTerrainGeometry,
+  MOUNTAIN_PARALLAX_PAD_PX,
   traceSmoothQuadraticCurve,
   type HeroTerrainGeometry,
   type HeroTerrainLayerCache,
@@ -9,12 +10,12 @@ import {
 import { type GlowSpriteCache } from '@/shared/lib/canvasSprites';
 
 export const PIPELINE_LAYER_NAMES = [
-  '1_sky_nebula_and_cross_flare_stars',
-  '2_dong_son_celestial_astrolabe',
-  '3_sky_constellation_lens_and_compass',
-  '4_five_layer_mist_mountains_and_contours',
+  '1_sky_god_rays_and_sunlit_motes',
+  '2_dong_son_celestial_astrolabe_and_orbit_nodes',
+  '3_fbm_mountains_and_drifting_valley_mist',
+  '4_geometric_lac_birds_and_ridgelines',
   '5_interactive_topographic_lens_and_drum_pulse',
-  '6_mist_mirror_lake_and_ascending_starlight',
+  '6_reflective_water_caustics_and_lake_seal',
 ] as const;
 
 export interface StarMote {
@@ -121,32 +122,60 @@ export interface Stardust3DMote {
   readonly warm: boolean;
 }
 
-export interface Vec3Spec {
-  readonly x: number;
-  readonly y: number;
-  readonly z: number;
+/** Cụm khí cụ đo góc tí hon neo cố định và chuyển động chậm dọc theo 2 cung quỹ đạo Đông Sơn */
+export interface OrbitAstrolabeNode {
+  readonly id: 'armillary' | 'vernier' | 'lunar';
+  readonly name: string;
+  readonly orbitIndex: 0 | 1;
+  readonly radiusPx: number;
+  readonly initialAngleRad: number;
+  readonly angularSpeedRadSec: number;
 }
 
-/** Khối Đa Diện Tinh Tú 3D xoay chậm trên bầu trời */
-export interface PolyhedralConstellation3D {
+/** Cánh chim Lạc cách điệu dựng từ 2 cung Bézier bậc ba đối xứng sắc nét */
+export interface GeometricLacBird {
   readonly id: string;
-  readonly name: string;
-  readonly anchorNx: number;
-  readonly anchorNy: number;
-  readonly scalePx: number;
-  readonly rotSpeedX: number;
-  readonly rotSpeedY: number;
-  readonly rotSpeedZ: number;
+  readonly initialProgress: number;
+  readonly startNx: number;
+  readonly endNx: number;
+  readonly startNy: number;
+  readonly endNy: number;
+  readonly speed: number;
+  readonly scale: number;
   readonly phase: number;
-  readonly vertices: readonly Vec3Spec[];
-  readonly edges: readonly (readonly [number, number])[];
-  readonly faces: readonly (readonly number[])[];
+  readonly waveAmpRatio: number;
+}
+
+/** Hạt phấn nắng vi mô (r = 0.8px -> 2.0px) lơ lửng trong chùm tia sáng ban mai bên phải */
+export interface SunlitMote {
+  readonly nx: number;
+  readonly ny: number;
+  readonly radius: number;
+  readonly tone: 'cream' | 'gold';
+  readonly phase: number;
+  readonly opacitySpeed: number;
+  readonly swirlAmp: number;
+  readonly swirlFreq: number;
+}
+
+/** Vệt sóng khúc xạ ánh sáng mặt nước caustics dưới cột sáng Đài Thiên Cầu (10-14 vệt) */
+export interface WaterCausticStreak {
+  readonly offsetNx: number;
+  readonly depthRatio: number;
+  readonly halfWidthPx: number;
+  readonly speed: number;
+  readonly phase: number;
+  readonly alpha: number;
+  readonly warmCream: boolean;
 }
 
 export interface AtmosphereWorld {
   readonly stars: readonly StarMote[];
   readonly constellations: readonly MathematicalConstellation[];
-  readonly polyhedralConstellations3D: readonly PolyhedralConstellation3D[];
+  readonly orbitAstrolabeNodes: readonly OrbitAstrolabeNode[];
+  readonly lacBirds: readonly GeometricLacBird[];
+  readonly sunlitMotes: readonly SunlitMote[];
+  readonly waterCaustics: readonly WaterCausticStreak[];
   readonly shootingStars: ShootingStar[];
   nextShootingStarInSec: number;
   shootingStarCursor: number;
@@ -441,136 +470,121 @@ export function createAtmosphereWorld(): AtmosphereWorld {
     };
   });
 
-  // 3 Khối Đa Diện Tinh Tú 3D xoay chậm chiếu phối cảnh thật
-  const polyhedralConstellations3D: PolyhedralConstellation3D[] = [
+  // 3 cụm khí cụ đo góc tí hon neo cố định trên 2 cung quỹ đạo mở rộng từ Đài Thiên Cầu Đông Sơn (0.03 - 0.06 rad/s)
+  const orbitAstrolabeNodes: OrbitAstrolabeNode[] = [
     {
-      id: 'poly-octahedron-west',
-      name: 'Bát diện Tinh Tú',
-      anchorNx: 0.16,
-      anchorNy: 0.18,
-      scalePx: 46,
-      rotSpeedX: 0.08,
-      rotSpeedY: 0.13,
-      rotSpeedZ: 0.05,
-      phase: 0.4,
-      vertices: [
-        { x: 0, y: 1.05, z: 0 },
-        { x: 0, y: -1.05, z: 0 },
-        { x: 0.95, y: 0, z: 0 },
-        { x: -0.95, y: 0, z: 0 },
-        { x: 0, y: 0, z: 0.95 },
-        { x: 0, y: 0, z: -0.95 },
-      ],
-      edges: [
-        [0, 2],
-        [0, 3],
-        [0, 4],
-        [0, 5],
-        [1, 2],
-        [1, 3],
-        [1, 4],
-        [1, 5],
-        [2, 4],
-        [4, 3],
-        [3, 5],
-        [5, 2],
-      ],
-      faces: [
-        [0, 4, 2],
-        [0, 2, 5],
-        [0, 5, 3],
-        [0, 3, 4],
-        [1, 2, 4],
-        [1, 5, 2],
-        [1, 3, 5],
-        [1, 4, 3],
-      ],
+      id: 'armillary',
+      name: 'Nút Hỗn Thiên',
+      orbitIndex: 0,
+      radiusPx: 16,
+      initialAngleRad: 3.64,
+      angularSpeedRadSec: 0.036,
     },
     {
-      id: 'poly-tetrahedron-zenith',
-      name: 'Tứ diện Nhật Nguyệt',
-      anchorNx: 0.41,
-      anchorNy: 0.15,
-      scalePx: 44,
-      rotSpeedX: -0.07,
-      rotSpeedY: 0.11,
-      rotSpeedZ: 0.06,
-      phase: 1.9,
-      vertices: [
-        { x: 0, y: -1.0, z: 0 },
-        { x: 0.94, y: 0.35, z: 0.45 },
-        { x: -0.94, y: 0.35, z: 0.45 },
-        { x: 0, y: 0.35, z: -0.98 },
-      ],
-      edges: [
-        [0, 1],
-        [0, 2],
-        [0, 3],
-        [1, 2],
-        [2, 3],
-        [3, 1],
-      ],
-      faces: [
-        [0, 1, 2],
-        [0, 2, 3],
-        [0, 3, 1],
-        [1, 3, 2],
-      ],
+      id: 'vernier',
+      name: 'Nút Thước Ngắm Phương Vị',
+      orbitIndex: 1,
+      radiusPx: 13,
+      initialAngleRad: 3.24,
+      angularSpeedRadSec: 0.048,
     },
     {
-      id: 'poly-pentagonal-east',
-      name: 'Song chóp Ngũ giác Đông Sơn',
-      anchorNx: 0.89,
-      anchorNy: 0.17,
-      scalePx: 42,
-      rotSpeedX: 0.06,
-      rotSpeedY: -0.1,
-      rotSpeedZ: 0.07,
-      phase: 3.1,
-      vertices: [
-        { x: 0, y: -1.12, z: 0 },
-        { x: 0, y: 1.12, z: 0 },
-        ...Array.from({ length: 5 }, (_, k) => {
-          const ang = (k / 5) * Math.PI * 2;
-          return { x: Math.cos(ang) * 0.92, y: 0, z: Math.sin(ang) * 0.92 };
-        }),
-      ],
-      edges: [
-        [0, 2],
-        [0, 3],
-        [0, 4],
-        [0, 5],
-        [0, 6],
-        [1, 2],
-        [1, 3],
-        [1, 4],
-        [1, 5],
-        [1, 6],
-        [2, 3],
-        [3, 4],
-        [4, 5],
-        [5, 6],
-        [6, 2],
-      ],
-      faces: [
-        [0, 2, 3],
-        [0, 3, 4],
-        [0, 4, 5],
-        [0, 5, 6],
-        [0, 6, 2],
-        [1, 3, 2],
-        [1, 4, 3],
-        [1, 5, 4],
-        [1, 6, 5],
-        [1, 2, 6],
-      ],
+      id: 'lunar',
+      name: 'Nút Giao Điểm Pha Mặt Trăng',
+      orbitIndex: 0,
+      radiusPx: 11,
+      initialAngleRad: 3.04,
+      angularSpeedRadSec: 0.056,
     },
   ];
+
+  // Đàn 4 cánh chim Lạc cách điệu bay chéo chậm từ thung lũng trái lên phía nguồn sáng bên phải
+  const lacBirds: GeometricLacBird[] = [
+    {
+      id: 'lac-leader',
+      initialProgress: 0.36,
+      startNx: 0.14,
+      endNx: 1.06,
+      startNy: 0.43,
+      endNy: 0.16,
+      speed: 0.014,
+      scale: 1.15,
+      phase: 0.2,
+      waveAmpRatio: 0.014,
+    },
+    {
+      id: 'lac-wing-east',
+      initialProgress: 0.29,
+      startNx: 0.12,
+      endNx: 1.05,
+      startNy: 0.455,
+      endNy: 0.185,
+      speed: 0.014,
+      scale: 0.98,
+      phase: 1.35,
+      waveAmpRatio: 0.013,
+    },
+    {
+      id: 'lac-wing-west',
+      initialProgress: 0.24,
+      startNx: 0.1,
+      endNx: 1.04,
+      startNy: 0.415,
+      endNy: 0.145,
+      speed: 0.014,
+      scale: 0.84,
+      phase: 2.45,
+      waveAmpRatio: 0.012,
+    },
+    {
+      id: 'lac-distant',
+      initialProgress: 0.17,
+      startNx: 0.08,
+      endNx: 1.02,
+      startNy: 0.445,
+      endNy: 0.175,
+      speed: 0.014,
+      scale: 0.68,
+      phase: 3.55,
+      waveAmpRatio: 0.011,
+    },
+  ];
+
+  // 36 hạt phấn nắng vi mô (r = 0.8px -> 2.0px) lơ lửng trong chùm tia sáng ban mai bên phải
+  const sunlitMotes: SunlitMote[] = Array.from({ length: 36 }, (_, i) => ({
+    nx: 0.52 + seededRandom(i * 27.13 + 0.9) * 0.44,
+    ny: 0.08 + seededRandom(i * 28.41 + 1.7) * 0.64,
+    radius: 0.8 + seededRandom(i * 29.73 + 2.3) * 1.2,
+    tone: i % 2 === 0 ? 'cream' : 'gold',
+    phase: seededRandom(i * 30.19) * Math.PI * 2,
+    opacitySpeed: 0.85 + seededRandom(i * 31.67) * 1.25,
+    swirlAmp: 5 + seededRandom(i * 32.11) * 11,
+    swirlFreq: 0.35 + seededRandom(i * 33.47) * 0.45,
+  }));
+
+  // 12 vệt sóng khúc xạ caustics mảnh dao động ngang dưới cột phản chiếu của Đài Thiên Cầu
+  const waterCaustics: WaterCausticStreak[] = Array.from({ length: 12 }, (_, i) => {
+    const t = i / 11;
+    const spread = 0.04 + t * 0.15;
+    const side = (seededRandom(i * 34.71 + 0.4) - 0.5) * 2;
+    return {
+      offsetNx: side * spread,
+      depthRatio: 0.16 + t * 0.68,
+      halfWidthPx: 18 + (1 - t) * 24 + seededRandom(i * 35.19) * 30,
+      speed: 0.45 + seededRandom(i * 36.29) * 0.55,
+      phase: seededRandom(i * 37.83) * Math.PI * 2,
+      alpha: 0.24 + (1 - Math.abs(side) * 0.6) * 0.24,
+      warmCream: i % 3 !== 2,
+    };
+  });
 
   return {
     stars,
     constellations,
-    polyhedralConstellations3D,
+    orbitAstrolabeNodes,
+    lacBirds,
+    sunlitMotes,
+    waterCaustics,
     shootingStars,
     nextShootingStarInSec: 5.5,
     shootingStarCursor: 0,
@@ -897,6 +911,7 @@ function drawInteractiveMountainContours(
   activePulses: readonly HarmonicContourPulse[],
   _palette: AtmospherePalette,
   tSec: number,
+  targetLayerIndex?: 1 | 2 | 3 | 4,
 ): void {
   const lensRadius = 220;
   const hasPulses = activePulses.length > 0;
@@ -904,6 +919,7 @@ function drawInteractiveMountainContours(
 
   // 1. Dòng ánh nắng nhẹ chạy dọc bậc thang (Đồng Cổ & Trắng Sứ)
   for (const contour of geometry.contours) {
+    if (targetLayerIndex !== undefined && contour.layerIndex !== targetLayerIndex) continue;
     const ridgeIndex = contour.layerIndex * 1.35 + contour.tierIndex * 0.55;
     let activeSpan: { x: number; y: number }[] = [];
     let spanPeak = 0;
@@ -946,6 +962,7 @@ function drawInteractiveMountainContours(
   if (!mouse.active && !hasPulses) return;
 
   for (const contour of geometry.contours) {
+    if (targetLayerIndex !== undefined && contour.layerIndex !== targetLayerIndex) continue;
     const nearMouseY =
       mouse.active && mouse.y >= contour.minY - lensRadius && mouse.y <= contour.maxY + lensRadius;
     const nearPulseY =
@@ -1083,6 +1100,89 @@ function drawVolumetricValleyMist(
   }
 }
 
+/** Vẽ 2 dải sương thung lũng bán trong suốt trôi ngang ngược chiều nhau giữa tầng núi 2–3 và 3–4 */
+function drawInterMountainValleyMistBand(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  bandIndex: 0 | 1,
+  tSec: number,
+  parallaxX: number,
+  parallaxY: number,
+): void {
+  const centerY = height * (bandIndex === 0 ? 0.595 : 0.675) + parallaxY;
+  const bandH = height * (bandIndex === 0 ? 0.14 : 0.13);
+  const topY = centerY - bandH * 0.5;
+  const direction = bandIndex === 0 ? -1 : 1;
+  const speedPxSec = bandIndex === 0 ? 11 : 15;
+  const driftPhase = (((tSec * speedPxSec * direction) % width) + width) % width;
+
+  ctx.save();
+  // Lớp màn sương tuyến tính tổng thể từ trong suốt -> rgba(242, 247, 245, 0.55) -> trong suốt
+  const bandGrad = ctx.createLinearGradient(0, topY, 0, topY + bandH);
+  bandGrad.addColorStop(0, 'rgba(242, 247, 245, 0)');
+  bandGrad.addColorStop(0.42, 'rgba(242, 247, 245, 0.55)');
+  bandGrad.addColorStop(0.66, 'rgba(242, 247, 245, 0.34)');
+  bandGrad.addColorStop(1, 'rgba(242, 247, 245, 0)');
+  ctx.fillStyle = bandGrad;
+  ctx.fillRect(0, topY, width, bandH);
+
+  // Dải sương gợn sóng trôi ngang mềm mịn (2 chu kỳ bọc liền)
+  const wispCount = 5;
+  for (let i = 0; i < wispCount; i += 1) {
+    const baseRatio = (i + 0.35) / wispCount;
+    const rx = width * (0.2 + (i % 2) * 0.06);
+    const ry = bandH * (0.36 + (i % 3) * 0.06);
+    const wx = ((baseRatio * width + driftPhase) % (width + rx * 2)) - rx + parallaxX * 0.4;
+    const wy = centerY + Math.sin(i * 1.9 + bandIndex * 2.1) * (bandH * 0.14);
+
+    ctx.save();
+    ctx.translate(wx, wy);
+    ctx.scale(1, ry / Math.max(rx, 1));
+    const wispGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+    wispGrad.addColorStop(0, 'rgba(242, 247, 245, 0.48)');
+    wispGrad.addColorStop(0.55, 'rgba(242, 247, 245, 0.2)');
+    wispGrad.addColorStop(1, 'rgba(242, 247, 245, 0)');
+    ctx.fillStyle = wispGrad;
+    ctx.beginPath();
+    ctx.arc(0, 0, rx, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/** Vẽ 36 hạt phấn nắng vi mô (r = 0.8px -> 2.0px, #FFF9EA & #D4AF6A, opacity 0.15 -> 0.55) trong luồng nắng phải */
+function drawSunlitMotes(
+  ctx: CanvasRenderingContext2D,
+  motes: readonly SunlitMote[],
+  width: number,
+  height: number,
+  tSec: number,
+  parallaxX: number,
+  parallaxY: number,
+): void {
+  ctx.save();
+  for (const mote of motes) {
+    const swayX = Math.sin(tSec * mote.swirlFreq + mote.phase) * mote.swirlAmp;
+    const driftY = Math.cos(tSec * (mote.swirlFreq * 0.72) + mote.phase * 1.3) * 7;
+    const sx = mote.nx * width + swayX + parallaxX;
+    const sy = mote.ny * height + driftY + parallaxY;
+
+    const osc = 0.5 + 0.5 * Math.sin(tSec * mote.opacitySpeed + mote.phase);
+    const opacity = 0.15 + osc * 0.4;
+    ctx.fillStyle =
+      mote.tone === 'cream'
+        ? `rgba(255, 249, 234, ${opacity.toFixed(3)})`
+        : `rgba(212, 175, 106, ${opacity.toFixed(3)})`;
+
+    ctx.beginPath();
+    ctx.arc(sx, sy, mote.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawMistMirrorLakeAndStarlight(
   ctx: CanvasRenderingContext2D,
   world: AtmosphereWorld,
@@ -1092,70 +1192,63 @@ function drawMistMirrorLakeAndStarlight(
   terrainLayers: TerrainLayerTransition | undefined,
   width: number,
   height: number,
+  astrolabeCx: number,
   tSec: number,
-  dtScale: number,
-  animate: boolean,
 ): void {
-  const mistTop = height * 0.78;
-  const mistH = height - mistTop;
+  // Dải mặt nước tĩnh mờ sương ở 14% cuối cùng (0.86H -> 1.00H) dưới chân tầng núi 5
+  const lakeTop = height * 0.86;
+  const lakeH = height - lakeTop;
 
-  // Dải sương sáng mặt hồ tan êm không vết cắt ở đáy Hero (#B8CBC5 -> #EEF2F0 -> #F2F4F3)
-  const baseGrad = ctx.createLinearGradient(0, mistTop, 0, height);
+  const baseGrad = ctx.createLinearGradient(0, lakeTop, 0, height);
   baseGrad.addColorStop(0, 'rgba(184, 203, 197, 0)');
-  baseGrad.addColorStop(0.42, 'rgba(184, 203, 197, 0.62)');
-  baseGrad.addColorStop(0.76, 'rgba(238, 242, 240, 0.92)');
+  baseGrad.addColorStop(0.28, 'rgba(218, 229, 225, 0.58)');
+  baseGrad.addColorStop(0.68, 'rgba(238, 242, 240, 0.88)');
   baseGrad.addColorStop(1, '#EEF2F0');
   ctx.fillStyle = baseGrad;
-  ctx.fillRect(0, mistTop, width, mistH);
+  ctx.fillRect(0, lakeTop, width, lakeH);
+
+  // Cột ánh sáng vàng kem phản chiếu dịu nhẹ từ Đài Thiên Cầu Đông Sơn xuống mặt hồ
+  const reflectColHalfW = Math.max(115, width * 0.16);
+  const reflectGrad = ctx.createRadialGradient(
+    astrolabeCx,
+    lakeTop + lakeH * 0.34,
+    8,
+    astrolabeCx,
+    lakeTop + lakeH * 0.42,
+    reflectColHalfW,
+  );
+  reflectGrad.addColorStop(0, 'rgba(255, 246, 224, 0.46)');
+  reflectGrad.addColorStop(0.45, 'rgba(234, 206, 148, 0.2)');
+  reflectGrad.addColorStop(1, 'rgba(255, 246, 224, 0)');
+  ctx.save();
+  ctx.fillStyle = reflectGrad;
+  ctx.fillRect(Math.max(0, astrolabeCx - reflectColHalfW), lakeTop, reflectColHalfW * 2, lakeH);
+  ctx.restore();
 
   // 3 lớp Biển Sương Ban Mai OffscreenCanvas trôi ngang êm ái
   drawVolumetricValleyMist(ctx, terrainLayers, width, height, tSec);
 
-  // Hiệu ứng khúc xạ ánh sáng mặt nước caustics màu vàng kem mảnh (trên dải sương sáng)
-  const causticTop = height * 0.84;
-  const causticH = height * 0.1;
+  // 12 vệt sóng khúc xạ ánh sáng mặt nước (caustics) mảnh dao động ngang chậm
   ctx.save();
-  for (let row = 0; row < 5; row += 1) {
-    const rowY = causticTop + ((row + 0.5) / 5) * causticH;
-    const waveSpeed = 0.42 + row * 0.11;
-    const xStep = Math.max(24, Math.round(width / 42));
-    ctx.beginPath();
-    for (let x = 0; x <= width + xStep; x += xStep) {
-      const sx = x > width ? width : x;
-      const nx = sx / Math.max(width, 1);
-      // Giao thoa 2 sóng caustics lệch pha tạo sợi sáng khúc xạ lượn sóng
-      const w1 = Math.sin(nx * 14.5 + tSec * waveSpeed + row * 1.4) * 3.8;
-      const w2 = Math.cos(nx * 23.0 - tSec * (waveSpeed * 0.75) + row * 2.1) * 2.1;
-      const y = rowY + w1 + w2;
-      if (x === 0) ctx.moveTo(sx, y);
-      else ctx.lineTo(sx, y);
-    }
-    const causticGrad = ctx.createLinearGradient(0, rowY, width, rowY);
-    causticGrad.addColorStop(0, 'rgba(255, 248, 224, 0)');
-    causticGrad.addColorStop(0.28, 'rgba(255, 250, 232, 0.48)');
-    causticGrad.addColorStop(0.66, 'rgba(234, 206, 148, 0.4)');
-    causticGrad.addColorStop(1, 'rgba(255, 248, 224, 0)');
-    ctx.strokeStyle = causticGrad;
-    ctx.lineWidth = row % 2 === 0 ? 1.1 : 0.75;
-    ctx.stroke();
-  }
+  for (let i = 0; i < world.waterCaustics.length; i += 1) {
+    const streak = world.waterCaustics[i]!;
+    const oscX = Math.sin(tSec * streak.speed + streak.phase) * 14;
+    const cx = astrolabeCx + streak.offsetNx * width + oscX;
+    const cy = lakeTop + streak.depthRatio * (lakeH * 0.78);
+    if (cy > height * 0.975) continue;
 
-  // Vệt sáng caustics giao thoa ngang tinh tế trên mặt hồ sương
-  ctx.lineWidth = 0.85;
-  for (let i = 0; i < world.mistRipples.length; i += 1) {
-    const r = world.mistRipples[i]!;
-    const cx = r.nx * width + Math.sin(tSec * r.speed + r.phase) * 18;
-    const cy = height * 0.85 + (r.ny - 0.76) * (height * 0.42);
-    if (cy > height * 0.96) continue;
-    const w = r.halfWidth * 1.15;
-    const shimmer = 0.5 + 0.5 * Math.sin(tSec * (r.speed * 1.4) + r.phase);
-    const isCream = i % 2 === 0;
-    const rgb = isCream ? '255, 250, 232' : '214, 180, 118';
+    const w = streak.halfWidthPx;
+    const shimmer = 0.55 + 0.45 * Math.sin(tSec * (streak.speed * 1.35) + streak.phase);
+    const rgb = streak.warmCream ? '255, 248, 224' : '226, 196, 138';
+    const peakAlpha = Math.min(0.68, streak.alpha * shimmer * 1.25);
+
     const grad = ctx.createLinearGradient(cx - w, cy, cx + w, cy);
     grad.addColorStop(0, `rgba(${rgb}, 0)`);
-    grad.addColorStop(0.5, `rgba(${rgb}, ${Math.min(0.62, r.alpha * shimmer * 1.55).toFixed(3)})`);
+    grad.addColorStop(0.5, `rgba(${rgb}, ${peakAlpha.toFixed(3)})`);
     grad.addColorStop(1, `rgba(${rgb}, 0)`);
+
     ctx.strokeStyle = grad;
+    ctx.lineWidth = i % 3 === 0 ? 1.15 : 0.85;
     ctx.beginPath();
     ctx.moveTo(cx - w, cy);
     ctx.lineTo(cx + w, cy);
@@ -1163,42 +1256,14 @@ function drawMistMirrorLakeAndStarlight(
   }
   ctx.restore();
 
-  // Lớp sương khóa 12% cuối cùng của Canvas tan êm từ #B8CBC5 -> #EEF2F0 -> #F2F4F3 nối liền không vết cắt
-  const bottomSealTop = height * 0.88;
+  // Lớp sương khóa mép đáy tan êm không vết cắt vào màu nền Screen 2 (#EEF2F0 / #F2F4F3)
+  const bottomSealTop = height * 0.915;
   const bottomSealGrad = ctx.createLinearGradient(0, bottomSealTop, 0, height);
-  bottomSealGrad.addColorStop(0, 'rgba(184, 203, 197, 0)');
-  bottomSealGrad.addColorStop(0.45, 'rgba(238, 242, 240, 0.84)');
+  bottomSealGrad.addColorStop(0, 'rgba(238, 242, 240, 0)');
+  bottomSealGrad.addColorStop(0.52, 'rgba(238, 242, 240, 0.88)');
   bottomSealGrad.addColorStop(1, '#EEF2F0');
   ctx.fillStyle = bottomSealGrad;
   ctx.fillRect(0, bottomSealTop, width, height - bottomSealTop);
-
-  // Hạt bụi nắng mai nhẹ bay lên trong không khí sáng trong
-  for (const mote of world.ascendingStarlights) {
-    if (animate) {
-      mote.ny -= (mote.vy * dtScale) / 72;
-      if (mote.ny < 0.1) {
-        mote.ny = 0.86 + (mote.ny % 0.1) + 0.08;
-        if (mote.ny > 0.97) mote.ny = 0.92;
-      }
-    }
-
-    const swirlOffsetX = Math.sin(tSec * mote.swirlFreq + mote.phase) * mote.swirlAmp;
-    const sx = (mote.nx * width + swirlOffsetX + width) % width;
-    const sy = mote.ny * height;
-    const fadeBottom = Math.min(1, (0.98 - mote.ny) / 0.1);
-    const fadeTop = Math.min(1, (mote.ny - 0.1) / 0.18);
-    const alpha = Math.max(0.06, mote.alpha * fadeBottom * fadeTop * 0.55);
-
-    ctx.fillStyle = `rgba(255, 250, 235, ${(alpha * 1.3).toFixed(3)})`;
-    ctx.beginPath();
-    ctx.arc(sx, sy, mote.radius * 1.35, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = `rgba(166, 121, 54, ${(alpha * 0.55).toFixed(3)})`;
-    ctx.beginPath();
-    ctx.arc(sx, sy, mote.radius * 0.65, 0, Math.PI * 2);
-    ctx.fill();
-  }
 }
 
 /**
@@ -1321,120 +1386,296 @@ function drawElevationRidgelines(
   ctx.restore();
 }
 
-function rotatePoint3D(v: Vec3Spec, ax: number, ay: number, az: number): Vec3Spec {
-  const cx = Math.cos(ax);
-  const sx = Math.sin(ax);
-  const y1 = v.y * cx - v.z * sx;
-  const z1 = v.y * sx + v.z * cx;
-
-  const cy = Math.cos(ay);
-  const sy = Math.sin(ay);
-  const x2 = v.x * cy + z1 * sy;
-  const z2 = -v.x * sy + z1 * cy;
-
-  const cz = Math.cos(az);
-  const sz = Math.sin(az);
-  return {
-    x: x2 * cz - y1 * sz,
-    y: x2 * sz + y1 * cz,
-    z: z2,
-  };
-}
-
-/** 3 Khối Đa Diện Tinh Tú 3D xoay chậm chiếu phối cảnh thật (cạnh vàng kim mảnh + mặt tô mờ cyan) */
-function drawPolyhedralConstellations3D(
+/**
+ * Vẽ 2 cung quỹ đạo đồng tâm mở rộng siêu mảnh (lineWidth: 0.7px, nét đứt [3, 5], rgba(148, 107, 48, 0.24))
+ * cùng 3 cụm khí cụ đo góc tí hon (Armillary, Vernier, Lunar) & tia tiếp tuyến khi di chuột gần tâm (< 260px).
+ */
+function drawOrbitAstrolabeNodes(
   ctx: CanvasRenderingContext2D,
-  polyhedra: readonly PolyhedralConstellation3D[],
+  geometry: HeroTerrainGeometry,
+  nodes: readonly OrbitAstrolabeNode[],
   mouse: AtmosphereMouseState,
-  activePulses: readonly HarmonicContourPulse[],
-  width: number,
-  height: number,
   tSec: number,
+  parallaxX: number,
+  parallaxY: number,
 ): void {
-  const parallaxX = -mouse.normX * 7;
-  const parallaxY = -mouse.normY * 4;
+  const cx = geometry.astrolabe.cx + parallaxX;
+  const cy = geometry.astrolabe.cy + parallaxY;
+  const [r1, r2] = geometry.astrolabe.expandedOrbitRadii;
 
-  for (const poly of polyhedra) {
-    const cx = poly.anchorNx * width + parallaxX;
-    const cy = poly.anchorNy * height + parallaxY;
-    const scale = poly.scalePx * Math.max(0.72, Math.min(1.15, width / 1280));
+  // 1. 2 cung quỹ đạo đồng tâm mở rộng siêu mảnh hướng về trung tâm bầu trời
+  ctx.save();
+  ctx.lineWidth = 0.7;
+  ctx.setLineDash([3, 5]);
+  ctx.strokeStyle = 'rgba(148, 107, 48, 0.24)';
+  for (const orbitRadius of [r1, r2]) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.restore();
 
-    let boost = 0;
-    if (mouse.active) {
-      const distM = Math.hypot(mouse.x - cx, mouse.y - cy);
-      if (distM < 240) boost = 1 - distM / 240;
-    }
-    for (const p of activePulses) {
-      const distP = Math.hypot(cx - p.x, cy - p.y);
-      if (Math.abs(distP - p.radius) < 60) {
-        boost = Math.max(boost, Math.max(0, 1 - p.radius / p.maxRadius));
+  // 2. Tính tọa độ 3 cụm khí cụ neo trên 2 cung quỹ đạo & tìm nút gần con trỏ chuột nhất
+  let nearestNode: { x: number; y: number; tangentAngle: number } | null = null;
+  let nearestDist = Number.POSITIVE_INFINITY;
+  const pointerNearDial = mouse.active && Math.hypot(mouse.x - cx, mouse.y - cy) < 260;
+
+  for (const node of nodes) {
+    const orbitR = node.orbitIndex === 0 ? r1 : r2;
+    const angle = node.initialAngleRad + tSec * node.angularSpeedRadSec;
+    const nx = cx + Math.cos(angle) * orbitR;
+    const ny = cy + Math.sin(angle) * orbitR;
+    const tangentAngle = angle + Math.PI / 2;
+
+    if (pointerNearDial) {
+      const d = Math.hypot(mouse.x - nx, mouse.y - ny);
+      if (d < nearestDist) {
+        nearestDist = d;
+        nearestNode = { x: nx, y: ny, tangentAngle };
       }
     }
-
-    const ax = tSec * poly.rotSpeedX + poly.phase + (mouse.active ? mouse.normY * 0.18 : 0);
-    const ay = tSec * poly.rotSpeedY + poly.phase * 0.7 + (mouse.active ? mouse.normX * 0.22 : 0);
-    const az = tSec * poly.rotSpeedZ;
-
-    const proj = poly.vertices.map((v) => {
-      const rv = rotatePoint3D(v, ax, ay, az);
-      const persp = 3.2 / (3.2 - rv.z);
-      return {
-        x: cx + rv.x * scale * persp,
-        y: cy + rv.y * scale * persp,
-        z: rv.z,
-      };
-    });
 
     ctx.save();
-    // Mặt đa giác tô mờ rgba(125, 211, 252, 0.05) sắp xếp theo trục Z
-    const sortedFaces = [...poly.faces]
-      .map((indices) => {
-        const avgZ =
-          indices.reduce((sum, idx) => sum + (proj[idx]?.z ?? 0), 0) / Math.max(indices.length, 1);
-        return { indices, avgZ };
-      })
-      .sort((a, b) => a.avgZ - b.avgZ);
+    ctx.translate(nx, ny);
 
-    // Mặt đa giác tô trong nhẹ rgba(250, 251, 249, 0.25)
-    const faceAlpha = Math.min(0.42, 0.25 + boost * 0.12);
-    ctx.fillStyle = `rgba(250, 251, 249, ${faceAlpha.toFixed(3)})`;
-    for (const face of sortedFaces) {
-      if (face.indices.length < 3) continue;
+    // Hạt neo nhỏ trên đường quỹ đạo
+    ctx.beginPath();
+    ctx.arc(0, 0, node.radiusPx + 4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(250, 251, 249, 0.28)';
+    ctx.fill();
+
+    if (node.id === 'armillary') {
+      // Nút Hỗn Thiên (Armillary Node): 2 vòng elip vuông góc nghiêng 3D xoay nhẹ
+      const tilt1 = Math.max(4.8, node.radiusPx * Math.abs(Math.cos(tSec * 0.42)));
+      const tilt2 = Math.max(4.8, node.radiusPx * Math.abs(Math.sin(tSec * 0.42 + 0.55)));
+
+      ctx.save();
+      ctx.rotate(tSec * 0.18 + 0.35);
       ctx.beginPath();
-      const firstPt = proj[face.indices[0]!]!;
-      ctx.moveTo(firstPt.x, firstPt.y);
-      for (let i = 1; i < face.indices.length; i += 1) {
-        const pt = proj[face.indices[i]!]!;
-        ctx.lineTo(pt.x, pt.y);
+      ctx.ellipse(0, 0, node.radiusPx, tilt1, 0, 0, Math.PI * 2);
+      ctx.lineWidth = 1.05;
+      ctx.strokeStyle = '#2D5266';
+      ctx.stroke();
+
+      ctx.rotate(Math.PI / 2);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, node.radiusPx, tilt2, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = '#9C7A4C';
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBF9';
+      ctx.fill();
+      ctx.lineWidth = 0.85;
+      ctx.strokeStyle = '#9C7A4C';
+      ctx.stroke();
+    } else if (node.id === 'vernier') {
+      // Nút Thước Ngắm Phương Vị (Vernier Reticle): 12 vạch & kim chỉ tiếp tuyến vuông góc với bán kính
+      ctx.beginPath();
+      ctx.arc(0, 0, node.radiusPx, 0, Math.PI * 2);
+      ctx.lineWidth = 0.9;
+      ctx.strokeStyle = '#2D5266';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, node.radiusPx * 0.66, 0, Math.PI * 2);
+      ctx.lineWidth = 0.65;
+      ctx.strokeStyle = 'rgba(156, 122, 76, 0.45)';
+      ctx.stroke();
+
+      for (let tick = 0; tick < 12; tick += 1) {
+        const aTick = (tick / 12) * Math.PI * 2;
+        const innerT = tick % 3 === 0 ? node.radiusPx - 3.6 : node.radiusPx - 2.2;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(aTick) * innerT, Math.sin(aTick) * innerT);
+        ctx.lineTo(Math.cos(aTick) * node.radiusPx, Math.sin(aTick) * node.radiusPx);
+        ctx.lineWidth = tick % 3 === 0 ? 0.9 : 0.6;
+        ctx.strokeStyle = '#2D5266';
+        ctx.stroke();
       }
+
+      // Kim chỉ tiếp tuyến luôn xoay vuông góc với vectơ bán kính về tâm Đông Sơn
+      ctx.save();
+      ctx.rotate(tangentAngle);
+      ctx.beginPath();
+      ctx.moveTo(-node.radiusPx - 3.5, 0);
+      ctx.lineTo(node.radiusPx + 4.5, 0);
+      ctx.lineWidth = 1.05;
+      ctx.strokeStyle = '#9C7A4C';
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(node.radiusPx + 4.5, 0, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#9C7A4C';
+      ctx.fill();
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 2.0, 0, Math.PI * 2);
+      ctx.fillStyle = '#FAFBF9';
+      ctx.fill();
+    } else {
+      // Nút Giao Điểm Pha Mặt Trăng (Lunar Phase Node): Trăng lưỡi liềm tối giản bằng nét khắc đồng
+      ctx.beginPath();
+      ctx.arc(0, 0, node.radiusPx, 0, Math.PI * 2);
+      ctx.lineWidth = 0.75;
+      ctx.strokeStyle = 'rgba(156, 122, 76, 0.48)';
+      ctx.stroke();
+
+      ctx.save();
+      ctx.rotate(-0.45 + Math.sin(tSec * 0.25) * 0.12);
+      const rCrescent = node.radiusPx * 0.74;
+      ctx.beginPath();
+      ctx.arc(0, 0, rCrescent, -Math.PI * 0.55, Math.PI * 0.55, false);
+      ctx.arc(rCrescent * 0.46, 0, rCrescent * 0.84, Math.PI * 0.48, -Math.PI * 0.48, true);
       ctx.closePath();
+      ctx.fillStyle = 'rgba(250, 251, 249, 0.76)';
+      ctx.fill();
+      ctx.lineWidth = 1.05;
+      ctx.strokeStyle = '#9C7A4C';
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(-node.radiusPx * 0.45, 0, 1.35, 0, Math.PI * 2);
+      ctx.fillStyle = '#2D5266';
       ctx.fill();
     }
 
-    // Nét khắc bản vẽ mảnh sắc nét (lineWidth: 0.85px, rgba(45, 82, 102, 0.28))
-    const edgeAlpha = Math.min(0.62, 0.28 + boost * 0.28);
-    ctx.strokeStyle = `rgba(45, 82, 102, ${edgeAlpha.toFixed(3)})`;
-    ctx.lineWidth = 0.85 + boost * 0.35;
+    ctx.restore();
+  }
+
+  // 3. Tia tiếp tuyến mảnh mờ (rgba(156, 122, 76, 0.25)) nối vị trí chuột với nút khí cụ gần nhất khi ở gần tâm (< 260px)
+  if (pointerNearDial && nearestNode) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(156, 122, 76, 0.25)';
+    ctx.lineWidth = 0.85;
     ctx.beginPath();
-    for (const [a, b] of poly.edges) {
-      const pa = proj[a]!;
-      const pb = proj[b]!;
-      ctx.moveTo(pa.x, pa.y);
-      ctx.lineTo(pb.x, pb.y);
-    }
+    ctx.moveTo(mouse.x, mouse.y);
+    ctx.lineTo(nearestNode.x, nearestNode.y);
     ctx.stroke();
 
-    // Đỉnh khắc đồng trầm tinh tế
-    for (const pt of proj) {
-      const ptAlpha = Math.min(0.75, 0.36 + pt.z * 0.14 + boost * 0.3);
-      ctx.fillStyle = `rgba(148, 107, 48, ${ptAlpha.toFixed(3)})`;
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 1.35 + boost * 0.55, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    // Kéo dài nhẹ đường tiếp tuyến tại nút khí cụ
+    const tx = Math.cos(nearestNode.tangentAngle) * 24;
+    const ty = Math.sin(nearestNode.tangentAngle) * 24;
+    ctx.setLineDash([2.5, 3.5]);
+    ctx.beginPath();
+    ctx.moveTo(nearestNode.x - tx, nearestNode.y - ty);
+    ctx.lineTo(nearestNode.x + tx, nearestNode.y + ty);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    ctx.arc(nearestNode.x, nearestNode.y, 2.4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(156, 122, 76, 0.48)';
+    ctx.fill();
     ctx.restore();
   }
 }
+
+/**
+ * Vẽ đàn 4 cánh chim Lạc cách điệu theo phong cách bản vẽ trắc địa
+ * dựng từ 2 cung Bézier bậc ba đối xứng sắc nét kèm đường dẫn phụ nét đứt qua đầu cánh.
+ */
+function drawGeometricLacBirds(
+  ctx: CanvasRenderingContext2D,
+  birds: readonly GeometricLacBird[],
+  width: number,
+  height: number,
+  tSec: number,
+  parallaxX: number,
+  parallaxY: number,
+): void {
+  const samplePos = (bird: GeometricLacBird, p: number): { x: number; y: number } => {
+    const nx = bird.startNx + (bird.endNx - bird.startNx) * p;
+    const baseNy = bird.startNy + (bird.endNy - bird.startNy) * p;
+    const waveY = Math.sin(p * Math.PI * 3 + bird.phase) * bird.waveAmpRatio;
+    return {
+      x: nx * width + parallaxX,
+      y: (baseNy + waveY) * height + parallaxY,
+    };
+  };
+
+  ctx.save();
+  for (const bird of birds) {
+    const progress = (bird.initialProgress + tSec * bird.speed) % 1;
+    const pos = samplePos(bird, progress);
+    const lookAhead = samplePos(bird, (progress + 0.004) % 1);
+    const headingAngle = Math.atan2(lookAhead.y - pos.y, lookAhead.x - pos.x);
+    const s = bird.scale * Math.max(0.76, Math.min(1.12, width / 1280));
+    const flap = Math.sin(tSec * 2.6 + bird.phase);
+
+    const upperTipX = -10.5 * s;
+    const upperTipY = (-17.5 - flap * 4.8) * s;
+    const lowerTipX = -10.5 * s;
+    const lowerTipY = (17.5 - flap * 4.8) * s;
+
+    ctx.save();
+    ctx.translate(pos.x, pos.y);
+    ctx.rotate(headingAngle);
+
+    // Đường dẫn hình học phụ nét đứt siêu mờ (rgba(156, 122, 76, 0.18)) nối qua đầu cánh
+    ctx.save();
+    ctx.setLineDash([2.5, 4]);
+    ctx.lineWidth = 0.7;
+    ctx.strokeStyle = 'rgba(156, 122, 76, 0.18)';
+    ctx.beginPath();
+    ctx.moveTo(upperTipX - 4 * s, upperTipY - 2 * s);
+    ctx.quadraticCurveTo(9.5 * s, -flap * 2 * s, lowerTipX - 4 * s, lowerTipY + 2 * s);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    // Thân, mỏ dài và đuôi chim Lạc Đông Sơn + 2 cung Bézier bậc ba đối xứng sắc nét
+    ctx.strokeStyle = 'rgba(30, 51, 46, 0.52)';
+    ctx.lineWidth = 1.15;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Trục thân kéo dài từ đuôi chẻ tới mỏ nhọn Đông Sơn
+    ctx.beginPath();
+    ctx.moveTo(-14.5 * s, -2.0 * s);
+    ctx.lineTo(-9.5 * s, 0);
+    ctx.lineTo(-14.5 * s, 2.0 * s);
+    ctx.moveTo(-9.5 * s, 0);
+    ctx.lineTo(17.5 * s, 0);
+    ctx.stroke();
+
+    // Cung cánh trên (Cubic Bézier 1)
+    ctx.beginPath();
+    ctx.moveTo(3.2 * s, -0.7 * s);
+    ctx.bezierCurveTo(
+      5.5 * s,
+      (-9.2 - flap * 3.8) * s,
+      -2.2 * s,
+      (-18.5 - flap * 5.2) * s,
+      upperTipX,
+      upperTipY,
+    );
+    ctx.stroke();
+
+    // Cung cánh dưới đối xứng (Cubic Bézier 2)
+    ctx.beginPath();
+    ctx.moveTo(3.2 * s, 0.7 * s);
+    ctx.bezierCurveTo(
+      5.5 * s,
+      (9.2 - flap * 3.8) * s,
+      -2.2 * s,
+      (18.5 - flap * 5.2) * s,
+      lowerTipX,
+      lowerTipY,
+    );
+    ctx.stroke();
+
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+const MOUNTAIN_PARALLAX_X = [7, 7, 12, 15, 18] as const;
+const MOUNTAIN_PARALLAX_Y = [2.8, 3.2, 4.6, 5.8, 7] as const;
 
 /** Kết xuất toàn bộ khung hình Sơn Thủy Trắc Địa Phát Sáng & Vũ Trụ Đông Sơn 120fps (< 3ms/frame) */
 export function renderAtmosphereFrame(data: RenderContextData): void {
@@ -1444,7 +1685,6 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     height,
     tSec,
     dtSeconds,
-    dtScale,
     scrollProgress,
     animate,
     palette,
@@ -1472,33 +1712,26 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
   }
   const activePulses = world.pulses.filter((p) => p.active);
 
-  const astrolabeParallaxX = -mouse.normX * 14;
-  const astrolabeParallaxY = -mouse.normY * 8 - scrollProgress * 22;
-  const mountainParallaxX = -mouse.normX * 18;
-  const mountainParallaxY = -mouse.normY * 6 - scrollProgress * 12;
+  // Parallax chuột đa tầng chuẩn: bầu trời & thiên cầu ±4px, núi xa ±7px, núi trung ±12px, núi tiền cảnh & chim Lạc ±18px
+  const skyParallaxX = -mouse.normX * 4;
+  const skyParallaxY = -mouse.normY * 2.5 - scrollProgress * 10;
+  const foregroundParallaxX = -mouse.normX * 18;
+  const foregroundParallaxY = -mouse.normY * 7 - scrollProgress * 14;
 
-  // LỚP 1: 3 Khối Đa Diện Khắc Bản Vẽ 3D xoay chậm trên bầu trời sương ngọc ban mai
-  drawPolyhedralConstellations3D(
-    ctx,
-    world.polyhedralConstellations3D,
-    mouse,
-    activePulses,
-    width,
-    height,
-    tSec,
-  );
-
-  // LỚP 2: Chùm Tia Nắng Ban Mai (god-rays) + Đài Thiên Cầu Đông Sơn Khắc Vàng Cổ (72% x 33%)
+  // LỚP 1: Chùm Tia Nắng Ban Mai (god-rays) & 36 Hạt Phấn Nắng Vi Mô (#FFF9EA / #D4AF6A)
   drawVolumetricGodRays(
     ctx,
-    activeGeometry.astrolabe.cx + astrolabeParallaxX,
-    activeGeometry.astrolabe.cy + astrolabeParallaxY,
+    activeGeometry.astrolabe.cx + skyParallaxX,
+    activeGeometry.astrolabe.cy + skyParallaxY,
     palette,
     mouse,
     width,
     height,
     tSec,
   );
+  drawSunlitMotes(ctx, world.sunlitMotes, width, height, tSec, skyParallaxX, skyParallaxY);
+
+  // LỚP 2: Đài Thiên Cầu Đông Sơn + 2 Cung Quỹ Đạo Mở Rộng & 3 Cụm Khí Cụ Neo Quỹ Đạo
   drawDongSonAstrolabe(
     ctx,
     activeGeometry,
@@ -1507,47 +1740,93 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     mouse,
     palette,
     tSec,
-    astrolabeParallaxX,
-    astrolabeParallaxY,
+    skyParallaxX,
+    skyParallaxY,
+  );
+  drawOrbitAstrolabeNodes(
+    ctx,
+    activeGeometry,
+    world.orbitAstrolabeNodes,
+    mouse,
+    tSec,
+    skyParallaxX,
+    skyParallaxY,
   );
 
-  // LỚP 3 & 4: 5 Tầng Núi Sơn Thủy Sương Mù OffscreenCanvas + Lát Cắt Đồng Mức Ridgeline 3D
-  ctx.save();
-  ctx.translate(mountainParallaxX, mountainParallaxY);
-  if (
-    terrainLayers?.next?.mountainTopographyLayer ||
-    terrainLayers?.prev?.mountainTopographyLayer
-  ) {
-    drawBlendedOffscreenLayer(
-      ctx,
-      terrainLayers.prev?.mountainTopographyLayer,
-      terrainLayers.next?.mountainTopographyLayer,
-      terrainLayers.blend,
-      0,
-      0,
-      width,
-      height,
-    );
+  // LỚP 3 & 4: 5 Tầng Núi FBM + Rim Light Nắng Mai Parallax Đa Tầng & 2 Dải Sương Thung Lũng Ngược Chiều
+  for (let layerIdx = 0; layerIdx < 5; layerIdx += 1) {
+    const px = -mouse.normX * (MOUNTAIN_PARALLAX_X[layerIdx] ?? 12);
+    const py =
+      -mouse.normY * (MOUNTAIN_PARALLAX_Y[layerIdx] ?? 4.5) - scrollProgress * (8 + layerIdx * 1.5);
+
+    const prevSurf = terrainLayers?.prev?.mountainLayerSurfaces?.[layerIdx];
+    const nextSurf = terrainLayers?.next?.mountainLayerSurfaces?.[layerIdx];
+    if (prevSurf || nextSurf) {
+      drawBlendedOffscreenLayer(
+        ctx,
+        prevSurf,
+        nextSurf,
+        terrainLayers?.blend ?? 1,
+        -MOUNTAIN_PARALLAX_PAD_PX + px,
+        py,
+        width + MOUNTAIN_PARALLAX_PAD_PX * 2,
+        height,
+      );
+    }
+
+    if (layerIdx >= 1) {
+      const localMouse: AtmosphereMouseState = {
+        ...mouse,
+        x: mouse.x - px,
+        y: mouse.y - py,
+      };
+      const localPulses = activePulses.map((p) => ({
+        ...p,
+        x: p.x - px,
+        y: p.y - py,
+      }));
+      ctx.save();
+      ctx.translate(px, py);
+      drawInteractiveMountainContours(
+        ctx,
+        activeGeometry,
+        localMouse,
+        localPulses,
+        palette,
+        tSec,
+        layerIdx as 1 | 2 | 3 | 4,
+      );
+      if (layerIdx === 2) {
+        drawElevationRidgelines(ctx, palette, localMouse, width, height, tSec);
+      }
+      ctx.restore();
+    }
+
+    // Chèn Dải Sương Thung Lũng 1 giữa tầng núi 2–3 (layerIdx === 1 -> 1-based layer 2)
+    if (layerIdx === 1) {
+      drawInterMountainValleyMistBand(ctx, width, height, 0, tSec, px * 0.85, py * 0.85);
+    }
+
+    // Chèn Dải Sương Thung Lũng 2 trôi ngược chiều giữa tầng núi 3–4 (layerIdx === 2 -> 1-based layer 3)
+    if (layerIdx === 2) {
+      drawInterMountainValleyMistBand(ctx, width, height, 1, tSec, px * 0.85, py * 0.85);
+    }
   }
 
-  // LỚP 5: Lát cắt địa hình Ridgeline 3D + Tương tác Chuột 220px màu Vàng Đồng (#A67936) & Sóng Trống Đồng
-  const localMouse: AtmosphereMouseState = {
-    ...mouse,
-    x: mouse.x - mountainParallaxX,
-    y: mouse.y - mountainParallaxY,
-  };
-  const localPulses = activePulses.map((p) => ({
-    ...p,
-    x: p.x - mountainParallaxX,
-    y: p.y - mountainParallaxY,
-  }));
-  drawElevationRidgelines(ctx, palette, localMouse, width, height, tSec);
-  drawInteractiveMountainContours(ctx, activeGeometry, localMouse, localPulses, palette, tSec);
-  ctx.restore();
+  // Đàn 4 Chim Lạc Bézier Tiếp Tuyến trên mặt phẳng tiền cảnh (±18px)
+  drawGeometricLacBirds(
+    ctx,
+    world.lacBirds,
+    width,
+    height,
+    tSec,
+    foregroundParallaxX,
+    foregroundParallaxY,
+  );
 
   drawHarmonicPulseRings(ctx, activePulses);
 
-  // LỚP 6: Dải Sương Sáng Mặt Hồ 14% cuối màn hình (#DDE7E4 -> #EDF2F0) + Gợn Caustics Vàng Kem
+  // LỚP 6: Dải Mặt Nước Tĩnh Mờ Sương 14% cuối Hero & 12 Vệt Caustics Khúc Xạ dưới cột sáng Thiên Cầu
   drawMistMirrorLakeAndStarlight(
     ctx,
     world,
@@ -1557,8 +1836,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     terrainLayers,
     width,
     height,
+    activeGeometry.astrolabe.cx + skyParallaxX,
     tSec,
-    dtScale,
-    animate,
   );
 }

@@ -152,12 +152,14 @@ export function HeritageExhibitionPavilion() {
   }, []);
 
   const goToIndex = useCallback(
-    (nextIdx: number) => {
+    (nextIdx: number, isUserAction = true) => {
       if (totalCount <= 0) return;
       const wrapped = ((nextIdx % totalCount) + totalCount) % totalCount;
       if (wrapped === safeIndex && !imageError) return;
 
-      hasInteractedIndexRef.current = true;
+      if (isUserAction) {
+        hasInteractedIndexRef.current = true;
+      }
 
       if (transitionTimerRef.current) {
         window.clearTimeout(transitionTimerRef.current);
@@ -178,14 +180,17 @@ export function HeritageExhibitionPavilion() {
     [imageError, prefersReducedMotion, safeIndex, totalCount],
   );
 
-  // Tự động cuộn mượt để căn giữa thumbnail đang được chọn trên dải Filmstrip
+  // Chỉ căn giữa thumbnail theo chiều ngang trong nội bộ Filmstrip khi người dùng chủ động chọn (tuyệt đối không dùng scrollIntoView gây cuộn dọc cả trang)
   useEffect(() => {
     if (!hasInteractedIndexRef.current) return;
+    hasInteractedIndexRef.current = false;
+    const strip = filmstripRef.current;
     const activeThumb = thumbRefs.current[safeIndex];
-    activeThumb?.scrollIntoView?.({
+    if (!strip || !activeThumb || typeof strip.scrollTo !== 'function') return;
+    const targetLeft = activeThumb.offsetLeft - (strip.clientWidth - activeThumb.clientWidth) / 2;
+    strip.scrollTo({
+      left: Math.max(0, targetLeft),
       behavior: prefersReducedMotion ? 'auto' : 'smooth',
-      inline: 'center',
-      block: 'nearest',
     });
   }, [prefersReducedMotion, safeIndex]);
 
@@ -200,11 +205,11 @@ export function HeritageExhibitionPavilion() {
   );
 
   const handleNext = useCallback(() => {
-    goToIndex(safeIndex + 1);
+    goToIndex(safeIndex + 1, true);
   }, [goToIndex, safeIndex]);
 
   const handlePrev = useCallback(() => {
-    goToIndex(safeIndex - 1);
+    goToIndex(safeIndex - 1, true);
   }, [goToIndex, safeIndex]);
 
   useEffect(() => {
@@ -216,9 +221,9 @@ export function HeritageExhibitionPavilion() {
 
   useEffect(() => {
     if (isPaused || isLightboxOpen || totalCount <= 1) return;
-    const timer = window.setInterval(handleNext, ROTATION_INTERVAL_MS);
+    const timer = window.setInterval(() => goToIndex(safeIndex + 1, false), ROTATION_INTERVAL_MS);
     return () => window.clearInterval(timer);
-  }, [handleNext, isLightboxOpen, isPaused, totalCount]);
+  }, [goToIndex, isLightboxOpen, isPaused, safeIndex, totalCount]);
 
   useEffect(() => {
     if (!isLightboxOpen) return;
