@@ -82,16 +82,12 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
     );
   });
 
-  it('hiển thị AcademicAxiomBand chứa công thức tiên đề, mốc lịch sử và nút tạm dừng', () => {
+  it('hiển thị AcademicAxiomBand chứa công thức tiên đề, mốc lịch sử và trôi liên tục không có nút Tạm dừng', () => {
     render(<AcademicAxiomBand />);
     const band = screen.getByTestId('architectural-band');
     expect(band).toHaveTextContent('G / ker φ ≅ Im φ');
     expect(band).toHaveTextContent('1832 · É. GALOIS');
-
-    const toggleBtn = screen.getByTestId('axiom-band-toggle');
-    expect(toggleBtn).toHaveAttribute('aria-pressed', 'false');
-    fireEvent.click(toggleBtn);
-    expect(toggleBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByTestId('axiom-band-toggle')).not.toBeInTheDocument();
   });
 
   it('hiển thị SpecimenFxBars cho từng chương, gợn sóng khi hover thẻ và hiện nhãn thanh khi focus', () => {

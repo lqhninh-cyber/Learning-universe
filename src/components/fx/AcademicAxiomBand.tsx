@@ -1,5 +1,3 @@
-import { Pause, Play } from 'lucide-react';
-import { useState } from 'react';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { cn } from '@/shared/lib/cn';
 
@@ -120,8 +118,8 @@ function BandSequence({
 
 /**
  * Dải Băng Học Thuật Chuyển Động Ngang (chuyển thể từ fx-band của taste-skill).
- * Trình chiếu liên tục các tiên đề, công thức toán học & mốc lịch sử toán học với hai biên mờ dần,
- * tự tạm dừng khi rê chuột/focus và kèm nút bấm Tạm dừng / Tiếp tục trực tiếp.
+ * Trình chiếu liên tục 120fps các tiên đề, công thức toán học & mốc lịch sử toán học
+ * trải rộng 100% chiều ngang với hiệu ứng làm mờ hai biên trái/phải.
  */
 export function AcademicAxiomBand({
   items = DEFAULT_AXIOM_ITEMS,
@@ -129,7 +127,6 @@ export function AcademicAxiomBand({
   'data-testid': dataTestId = 'architectural-band',
 }: AcademicAxiomBandProps) {
   const reducedMotion = useReducedMotion();
-  const [isPaused, setIsPaused] = useState(false);
 
   return (
     <div
@@ -138,48 +135,22 @@ export function AcademicAxiomBand({
       role="region"
       aria-label="Dải tiên đề, công thức và mốc lịch sử toán học"
       className={cn(
-        'lu-fx-band-root relative flex h-10 w-full items-center overflow-hidden border-y border-[#CFD8D4] bg-[#F4F7F5]',
+        'lu-fx-band-root relative flex h-10 w-full items-center overflow-hidden border-y border-[#CFD8D4] bg-[#F4F7F5] dark:border-[#1E3B2D] dark:bg-[#12241C]',
         className,
       )}
     >
-      <div className="lu-fx-band-mask flex h-full min-w-0 flex-1 items-center overflow-hidden">
+      <div className="lu-fx-band-mask flex h-full w-full min-w-0 flex-1 items-center overflow-hidden">
         {reducedMotion ? (
           <div className="flex w-full items-center justify-start overflow-x-auto px-4">
             <BandSequence items={items} />
           </div>
         ) : (
-          <div data-paused={isPaused ? 'true' : 'false'} className="lu-fx-band-track items-center">
+          <div className="lu-fx-band-track items-center">
             <BandSequence items={items} />
             <BandSequence items={items} ariaHidden />
           </div>
         )}
       </div>
-
-      {!reducedMotion && (
-        <div className="relative z-10 flex h-full shrink-0 items-center border-l border-[#D8E1DD] bg-[#F4F7F5] pl-4">
-          <button
-            type="button"
-            data-testid="axiom-band-toggle"
-            aria-pressed={isPaused}
-            aria-label={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
-            title={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
-            onClick={() => setIsPaused((prev) => !prev)}
-            className="inline-flex h-full shrink-0 cursor-pointer items-center gap-1.5 bg-[#F4F7F5] pr-3 font-mono text-[10px] font-semibold tracking-[0.12em] text-[#2B463F] uppercase transition-colors hover:text-[#162623] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E332E]"
-          >
-            {isPaused ? (
-              <>
-                <Play className="h-3 w-3 text-[#245746]" aria-hidden="true" />
-                <span className="hidden sm:inline">Chạy</span>
-              </>
-            ) : (
-              <>
-                <Pause className="h-3 w-3 text-[#8C7248]" aria-hidden="true" />
-                <span className="hidden sm:inline">Tạm dừng</span>
-              </>
-            )}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

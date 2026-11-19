@@ -1248,12 +1248,7 @@
   width: max-content;
   will-change: transform;
   animation: lu-band-marquee 52s linear infinite;
-}
-
-.lu-fx-band-root:hover .lu-fx-band-track,
-.lu-fx-band-root:focus-within .lu-fx-band-track,
-.lu-fx-band-track[data-paused='true'] {
-  animation-play-state: paused;
+  animation-play-state: running;
 }
 
 @keyframes lu-fx-bar-wave {

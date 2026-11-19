@@ -482,7 +482,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByText(/SPECIMEN № 01 \/\/ ALGEBRAIC STRUCTURES/)).toBeInTheDocument();
       expect(screen.getByTestId('stage-vertical-ruler-cau-truc-dai-so')).toBeInTheDocument();
       expect(screen.getByTestId('almanac-chapter-index-cau-truc-dai-so')).toBeInTheDocument();
-      expect(screen.getByTestId('axiom-band-toggle')).toBeInTheDocument();
+      expect(screen.queryByTestId('axiom-band-toggle')).not.toBeInTheDocument();
       expect(screen.getAllByTestId('specimen-fx-bars').length).toBeGreaterThanOrEqual(4);
 
       fireEvent.click(screen.getByRole('button', { name: 'Định lý Lagrange' }));
