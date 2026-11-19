@@ -78,5 +78,39 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     fireEvent.change(input, { target: { value: 'tu-khoa-khong-ton-tai-xyz' } });
 
     expect(screen.getByText(/Không tìm thấy thuật ngữ nào/i)).toBeInTheDocument();
+    expect(screen.getByTestId('glossary-empty-state')).toBeInTheDocument();
+
+    const resetBtn = screen.getByRole('button', { name: /Đặt lại bộ lọc/i });
+    fireEvent.click(resetBtn);
+    expect(screen.getByText('Nhóm bốn Klein')).toBeInTheDocument();
+  });
+
+  it('hiển thị Almanac Spec Header, thanh chỉ mục A–Z và nút sao chép kết nối Island Notice', () => {
+    render(
+      <MemoryRouter>
+        <GlossaryPage />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByTestId('glossary-almanac-header')).toBeInTheDocument();
+    expect(screen.getByText(/DOC\. LU-2026 \/\/ LEXICON ALMANAC/i)).toBeInTheDocument();
+
+    const azRail = screen.getByTestId('glossary-az-rail');
+    expect(azRail).toBeInTheDocument();
+
+    // Chữ 'N' có mục "Nhóm bốn Klein" -> kích hoạt; chữ 'Z' không có mục -> vô hiệu hóa
+    const letterN = screen.getByRole('button', { name: 'Đi tới nhóm chữ N' });
+    expect(letterN).not.toBeDisabled();
+    const letterZ = screen.getByRole('button', { name: 'Đi tới nhóm chữ Z' });
+    expect(letterZ).toBeDisabled();
+    expect(letterZ).toHaveClass('opacity-30', 'pointer-events-none');
+
+    // Liên kết Đọc tại bài giảng và nút sao chép định nghĩa
+    const lessonLinks = screen.getAllByRole('link', { name: /Đọc tại bài giảng/i });
+    expect(lessonLinks.length).toBeGreaterThan(0);
+
+    const copyBtn = screen.getByRole('button', { name: /Sao chép định nghĩa Nhóm bốn Klein/i });
+    fireEvent.click(copyBtn);
+    expect(copyBtn).toBeInTheDocument();
   });
 });
