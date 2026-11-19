@@ -1,10 +1,5 @@
 import { useEffect, useRef } from 'react';
-import {
-  ATMOSPHERIC_PALETTES,
-  interpolateAtmospherePalette,
-  type AtmospherePalette,
-  type AtmosphericPhase,
-} from '@/components/home/atmosphereThemes';
+import { JADE_MIST_DAWN_PALETTE } from '@/components/home/atmosphereThemes';
 import {
   buildAtmosphereSpriteCache,
   createAtmosphereWorld,
@@ -26,77 +21,30 @@ import {
 import { cn } from '@/shared/lib/cn';
 
 export interface HeroPhysicsCanvasProps {
-  readonly phase?: AtmosphericPhase;
   readonly className?: string;
 }
 
 /**
- * Canvas 2D Engine "Sơn Thủy Trắc Địa Phát Sáng & Vũ Trụ Đông Sơn" (120fps `dtScale` + `OffscreenCanvas` cache):
- * - Đồng bộ 600ms bảng màu & cache địa hình, Ngân Hà và 3 lớp Biển Mây Bồng Bềnh theo 4 thời khắc
- * - 24 đường đồng mức phát sáng (lineWidth 0.85px) trên 4 tầng núi kèm xung ánh sáng chạy dọc bậc thang
- * - Đài Thiên Cầu Đông Sơn 14 cánh rực sáng (Core Radial Glow 220px, 8 Hạt Ngọc Tinh Tú), 3 Khối Đa Diện Tinh Tú 3D & Dòng Suối Ánh Sao
- * - Tương tác chuột (240px) làm rực sáng gấp đôi & gợn sóng đàn hồi, click phát xung sóng vàng kim lan tỏa toàn cảnh quan
+ * Canvas 2D Engine "Bình Minh Bạch Ngọc & Sơn Thủy Khắc Đồng" (120fps `dtScale` + `OffscreenCanvas` cache):
+ * - Tiền kết xuất 5 tầng núi sương mù, 24-30 đường đồng mức & Đài Thiên Cầu Đông Sơn vào OffscreenCanvas (< 3ms/frame)
+ * - Chùm tia nắng ban mai (god-rays), 3 khối đa diện nét khắc bản vẽ & gợn caustics mặt hồ sáng đáy màn hình
+ * - Tương tác chuột (220px) làm sáng rực đồng mức màu Vàng Đồng (#A67936) & click phát sóng đồng tâm Trống Đồng
  */
-export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhysicsCanvasProps) {
+export function HeroPhysicsCanvas({ className }: HeroPhysicsCanvasProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  const paletteTransitionRef = useRef<{
-    fromPhase: AtmosphericPhase;
-    toPhase: AtmosphericPhase;
-    from: AtmospherePalette;
-    to: AtmospherePalette;
-    current: AtmospherePalette;
-    elapsedSec: number;
-  }>({
-    fromPhase: phase,
-    toPhase: phase,
-    from: ATMOSPHERIC_PALETTES[phase],
-    to: ATMOSPHERIC_PALETTES[phase],
-    current: ATMOSPHERIC_PALETTES[phase],
-    elapsedSec: 0.6,
-  });
-
   const terrainCacheRef = useRef<{
-    from: HeroTerrainLayerCache | null;
-    to: HeroTerrainLayerCache | null;
+    cache: HeroTerrainLayerCache | null;
     width: number;
     height: number;
     dpr: number;
-    fromPhase: AtmosphericPhase;
-    toPhase: AtmosphericPhase;
   }>({
-    from: null,
-    to: null,
+    cache: null,
     width: 0,
     height: 0,
     dpr: 1,
-    fromPhase: phase,
-    toPhase: phase,
   });
-
-  useEffect(() => {
-    const tr = paletteTransitionRef.current;
-    const target = ATMOSPHERIC_PALETTES[phase];
-    const prevPhase = tr.toPhase;
-    paletteTransitionRef.current = {
-      fromPhase: prevPhase,
-      toPhase: phase,
-      from: tr.current,
-      to: target,
-      current: prefersReducedMotion ? target : tr.current,
-      elapsedSec: prefersReducedMotion ? 0.6 : 0,
-    };
-
-    const tc = terrainCacheRef.current;
-    if (tc.width > 0 && tc.height > 0 && tc.toPhase !== phase) {
-      const nextCache = buildHeroTerrainLayerCache(tc.width, tc.height, phase, target, tc.dpr);
-      tc.fromPhase = tc.toPhase;
-      tc.toPhase = phase;
-      tc.from = prefersReducedMotion ? nextCache : tc.to;
-      tc.to = nextCache;
-    }
-  }, [phase, prefersReducedMotion]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -123,30 +71,17 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
 
-      const tr = paletteTransitionRef.current;
       const tc = terrainCacheRef.current;
       tc.width = width;
       tc.height = height;
       tc.dpr = dpr;
-      tc.fromPhase = tr.fromPhase;
-      tc.toPhase = tr.toPhase;
-      tc.to = buildHeroTerrainLayerCache(
+      tc.cache = buildHeroTerrainLayerCache(
         width,
         height,
-        tr.toPhase,
-        ATMOSPHERIC_PALETTES[tr.toPhase],
+        'binh-minh-bach-ngoc',
+        JADE_MIST_DAWN_PALETTE,
         dpr,
       );
-      tc.from =
-        tr.fromPhase !== tr.toPhase
-          ? buildHeroTerrainLayerCache(
-              width,
-              height,
-              tr.fromPhase,
-              ATMOSPHERIC_PALETTES[tr.fromPhase],
-              dpr,
-            )
-          : tc.to;
     };
 
     resize();
@@ -204,7 +139,6 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       const clickY = event.clientY - rect.top;
       if (clickX < 0 || clickX > width || clickY < 0 || clickY > height) return;
 
-      // Sóng Vàng Kim Trống Đồng lan tỏa toàn cảnh quan (R >= 720px) làm bừng sáng đồng mức, thiên cầu & đa diện 3D
       spawnHarmonicContourPulse(
         world,
         clickX,
@@ -214,13 +148,6 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
     };
 
     const drawFrame = (nowMs: number, dtSeconds: number, dtScale: number, animate: boolean) => {
-      const tr = paletteTransitionRef.current;
-      if (tr.elapsedSec < 0.6) {
-        tr.elapsedSec = Math.min(0.6, tr.elapsedSec + dtSeconds);
-        const eased = 1 - Math.pow(1 - tr.elapsedSec / 0.6, 3);
-        tr.current = interpolateAtmospherePalette(tr.from, tr.to, eased);
-      }
-
       if (animate) {
         const smooth = frameDampFactor(10, dtSeconds);
         const scrollSmooth = frameDampFactor(14, dtSeconds);
@@ -233,7 +160,6 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
       }
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const blend = tr.elapsedSec >= 0.6 ? 1 : 1 - Math.pow(1 - tr.elapsedSec / 0.6, 3);
       const tc = terrainCacheRef.current;
       renderAtmosphereFrame({
         ctx,
@@ -244,12 +170,12 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
         dtScale,
         scrollProgress: currentScroll,
         animate,
-        palette: tr.current,
+        palette: JADE_MIST_DAWN_PALETTE,
         sprites,
         glowSprites,
         mouse,
         world,
-        terrainLayers: tc.to ? { prev: tc.from, next: tc.to, blend } : undefined,
+        terrainLayers: tc.cache ? { prev: tc.cache, next: tc.cache, blend: 1 } : undefined,
       });
     };
 
@@ -336,7 +262,7 @@ export function HeroPhysicsCanvas({ phase = 'dem-ngan-ha', className }: HeroPhys
     <canvas
       ref={canvasRef}
       data-testid="hero-physics-canvas"
-      data-phase={phase}
+      data-phase="binh-minh-bach-ngoc"
       data-pipeline-layers="6"
       data-landscape-style="topographic-dong-son"
       aria-hidden="true"

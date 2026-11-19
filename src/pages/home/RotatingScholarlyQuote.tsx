@@ -235,20 +235,20 @@ export function RotatingScholarlyQuote({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       className={cn(
-        'group relative w-full overflow-hidden rounded-2xl border border-[#E5C158]/30 bg-[#081520]/70 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#E5C158]/55',
+        'group relative w-full overflow-hidden rounded-2xl border border-[#D2DDD8] bg-[#FAFBF9]/85 shadow-[0_20px_50px_rgba(24,38,36,0.09)] backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-[#B9C9C2]',
         isDock ? 'px-4 py-3.5 sm:px-5 sm:py-4' : 'p-6',
         className,
       )}
     >
-      {/* Thanh tiến trình vàng 1.5px chạy dọc mép trên báo hiệu thời gian chuyển câu (tạm dừng khi hover) */}
+      {/* Thanh tiến trình đồng cổ 2px chạy dọc mép trên báo hiệu thời gian chuyển câu (tạm dừng khi hover) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-[#E5C158]/15"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-[#D2DDD8]/70"
       >
         <div
           ref={progressBarRef}
           data-testid="quote-progress-bar"
-          className="h-full w-full origin-left bg-gradient-to-r from-[#C99B3B] via-[#E5C158] to-[#F6D383] will-change-transform"
+          className="h-full w-full origin-left bg-[#9C7A4C] will-change-transform"
           style={{ transform: 'scaleX(0)' }}
         />
       </div>
@@ -256,19 +256,19 @@ export function RotatingScholarlyQuote({
       {/* Header: Phân loại & Điều khiển luân phiên */}
       <div
         className={cn(
-          'flex items-center justify-between gap-3 border-b border-[#E5C158]/20',
+          'flex items-center justify-between gap-3 border-b border-[#D2DDD8]/90',
           isDock ? 'pb-2' : 'pb-3',
         )}
       >
         <div className="flex items-center gap-2">
-          <Quote className="h-3.5 w-3.5 text-[#E5C158]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#E5C158] uppercase">
+          <Quote className="h-3.5 w-3.5 text-[#9C7A4C]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#2B4B43] uppercase">
             DANH NGÔN HỌC THUẬT
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[11px] font-medium text-[#F7F3E8]/85">
+          <span className="lu-tabular-telemetry font-mono text-[11px] font-medium text-[#46605A]">
             {formattedIndex} / {formattedTotal}
           </span>
           <div className="flex items-center gap-1">
@@ -276,7 +276,7 @@ export function RotatingScholarlyQuote({
               type="button"
               onClick={handlePrev}
               aria-label="Câu danh ngôn trước"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E5C158]/30 bg-[#0D2130]/80 text-[#F7F3E8] transition-colors hover:border-[#E5C158] hover:text-white"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D0DCD7] bg-[#FAFBF9] text-[#1E332E] transition-colors hover:border-[#9C7A4C] hover:bg-[#EDF2F0]"
             >
               <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -284,7 +284,7 @@ export function RotatingScholarlyQuote({
               type="button"
               onClick={() => setIsPaused((prev) => !prev)}
               aria-label={isPaused ? 'Tiếp tục tự động chuyển câu' : 'Tạm dừng tự động chuyển câu'}
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E5C158]/30 bg-[#0D2130]/80 text-[#F7F3E8] transition-colors hover:border-[#E5C158] hover:text-white"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D0DCD7] bg-[#FAFBF9] text-[#1E332E] transition-colors hover:border-[#9C7A4C] hover:bg-[#EDF2F0]"
             >
               {isPaused ? (
                 <Play className="h-3 w-3" aria-hidden="true" />
@@ -296,7 +296,7 @@ export function RotatingScholarlyQuote({
               type="button"
               onClick={handleNext}
               aria-label="Câu danh ngôn tiếp theo"
-              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#E5C158]/30 bg-[#0D2130]/80 text-[#F7F3E8] transition-colors hover:border-[#E5C158] hover:text-white"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-lg border border-[#D0DCD7] bg-[#FAFBF9] text-[#1E332E] transition-colors hover:border-[#9C7A4C] hover:bg-[#EDF2F0]"
             >
               <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -307,14 +307,14 @@ export function RotatingScholarlyQuote({
       {/* Nội dung trích dẫn với hiệu ứng mờ dần & trượt nhẹ translateY(6px -> 0) */}
       <blockquote
         className={cn(
-          'transition-all duration-300 ease-out will-change-transform',
+          'transition-[transform,opacity] duration-300 ease-out will-change-transform',
           isDock ? 'mt-2.5' : 'mt-3.5',
           isFading ? 'translate-y-[6px] opacity-0' : 'translate-y-0 opacity-100',
         )}
       >
         <p
           className={cn(
-            'font-serif text-[#FFF9F0] italic',
+            'font-serif text-[#182624] italic',
             isDock
               ? 'mb-1.5 text-[14.5px] leading-relaxed sm:text-[15.5px]'
               : 'mb-3.5 text-[17px] leading-[1.65] lg:text-[18px]',
@@ -322,14 +322,14 @@ export function RotatingScholarlyQuote({
         >
           &ldquo;{currentQuote.content}&rdquo;
         </p>
-        <div className="mt-2 flex w-full flex-wrap items-center justify-end gap-2.5 border-t border-[#E5C158]/18 pt-2">
+        <div className="mt-2 flex w-full flex-wrap items-center justify-end gap-2.5 border-t border-[#D2DDD8]/80 pt-2">
           <span
             data-testid="quote-discipline-badge"
-            className="inline-flex items-center rounded-full border border-[#E5C158]/30 bg-[#E5C158]/10 px-2.5 py-0.5 font-mono text-[10px] font-medium tracking-wide text-[#F6D383]"
+            className="inline-flex items-center rounded-full border border-[#D0DCD7] bg-[#EDF2F0] px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wide text-[#2B4B43]"
           >
             {currentQuote.discipline}
           </span>
-          <footer className="text-right font-mono text-xs text-[#E5C158]">
+          <footer className="text-right font-mono text-xs font-medium text-[#8C6228]">
             — {currentQuote.author}
             {currentQuote.roleOrEra ? ` · ${currentQuote.roleOrEra}` : ''}
           </footer>

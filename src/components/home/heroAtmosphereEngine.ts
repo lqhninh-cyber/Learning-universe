@@ -1,4 +1,4 @@
-import { rgbaString, type AtmospherePalette } from '@/components/home/atmosphereThemes';
+import { type AtmospherePalette } from '@/components/home/atmosphereThemes';
 import {
   buildHeroTerrainGeometry,
   traceSmoothQuadraticCurve,
@@ -6,7 +6,7 @@ import {
   type HeroTerrainLayerCache,
   type TerrainSurface,
 } from '@/components/home/heroTerrainBuilder';
-import { drawGlowSprite, type GlowSpriteCache } from '@/shared/lib/canvasSprites';
+import { type GlowSpriteCache } from '@/shared/lib/canvasSprites';
 
 export const PIPELINE_LAYER_NAMES = [
   '1_sky_nebula_and_cross_flare_stars',
@@ -646,56 +646,13 @@ function drawBlendedOffscreenLayer(
   }
 }
 
-function drawCrossFlareStar(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  flareLen: number,
-  alpha: number,
-): void {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-
-  // Tia khúc xạ ngang (mờ dần ra hai đầu)
-  const hGrad = ctx.createLinearGradient(x - flareLen, y, x + flareLen, y);
-  hGrad.addColorStop(0, 'rgba(255, 253, 247, 0)');
-  hGrad.addColorStop(0.5, 'rgba(255, 253, 247, 0.92)');
-  hGrad.addColorStop(1, 'rgba(255, 253, 247, 0)');
-  ctx.strokeStyle = hGrad;
-  ctx.lineWidth = 0.7;
-  ctx.beginPath();
-  ctx.moveTo(x - flareLen, y);
-  ctx.lineTo(x + flareLen, y);
-  ctx.stroke();
-
-  // Tia khúc xạ dọc (mờ dần ra hai đầu)
-  const vGrad = ctx.createLinearGradient(x, y - flareLen, x, y + flareLen);
-  vGrad.addColorStop(0, 'rgba(255, 253, 247, 0)');
-  vGrad.addColorStop(0.5, 'rgba(255, 253, 247, 0.92)');
-  vGrad.addColorStop(1, 'rgba(255, 253, 247, 0)');
-  ctx.strokeStyle = vGrad;
-  ctx.lineWidth = 0.7;
-  ctx.beginPath();
-  ctx.moveTo(x, y - flareLen);
-  ctx.lineTo(x, y + flareLen);
-  ctx.stroke();
-
-  // Tâm sao r = 1.3px, #FFFDF7
-  ctx.fillStyle = '#FFFDF7';
-  ctx.beginPath();
-  ctx.arc(x, y, 1.3, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.restore();
-}
-
 function drawDongSonAstrolabe(
   ctx: CanvasRenderingContext2D,
   geometry: HeroTerrainGeometry,
   terrainLayers: TerrainLayerTransition | undefined,
   activePulses: readonly HarmonicContourPulse[],
   mouse: AtmosphereMouseState,
-  palette: AtmospherePalette,
+  _palette: AtmospherePalette,
   tSec: number,
   parallaxX: number,
   parallaxY: number,
@@ -715,15 +672,18 @@ function drawDongSonAstrolabe(
   }
   const ringBrightness = 1 + hoverBoost;
 
-  // 0. Quầng Hào Quang Tâm Điểm (Core Radial Glow r = 220px) phía sau Thiên Cầu Đông Sơn
-  const coreGlowRadius = 220 * scale;
+  // 0. Quầng nắng ấm trong trẻo phía sau Thiên Cầu Đông Sơn (rgba(255, 246, 224, 0.85) -> rgba(218, 182, 118, 0.18) -> transparent)
+  const coreGlowRadius = 235 * scale;
   const coreGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, coreGlowRadius);
   coreGlow.addColorStop(
     0,
-    `rgba(235, 190, 105, ${Math.min(0.45, 0.22 * (1 + hoverBoost * 0.65)).toFixed(3)})`,
+    `rgba(255, 246, 224, ${Math.min(0.95, 0.85 + hoverBoost * 0.1).toFixed(3)})`,
   );
-  coreGlow.addColorStop(0.45, rgbaString(palette.rayCool, 0.08 * (1 + hoverBoost * 0.6)));
-  coreGlow.addColorStop(1, 'rgba(56, 189, 248, 0)');
+  coreGlow.addColorStop(
+    0.46,
+    `rgba(218, 182, 118, ${Math.min(0.32, 0.18 * (1 + hoverBoost * 0.5)).toFixed(3)})`,
+  );
+  coreGlow.addColorStop(1, 'rgba(218, 182, 118, 0)');
   ctx.save();
   ctx.fillStyle = coreGlow;
   ctx.beginPath();
@@ -731,16 +691,20 @@ function drawDongSonAstrolabe(
   ctx.fill();
   ctx.restore();
 
-  // 1. 2 cung quỹ đạo elip lớn cắt chéo qua bầu trời & các điểm nút hoàng đạo
+  // 1. 2 cung quỹ đạo elip lớn khắc mảnh bằng chỉ Đồng Trầm & Lam Phiến
   ctx.save();
-  for (const arc of astrolabe.eclipticArcs) {
+  for (let aIdx = 0; aIdx < astrolabe.eclipticArcs.length; aIdx += 1) {
+    const arc = astrolabe.eclipticArcs[aIdx]!;
     ctx.save();
     ctx.translate(arc.cx + parallaxX, arc.cy + parallaxY);
     ctx.rotate(arc.rotationRad);
     ctx.beginPath();
     ctx.ellipse(0, 0, arc.rx, arc.ry, 0, 0, Math.PI * 2);
-    ctx.lineWidth = 0.75 + hoverBoost * 0.35;
-    ctx.strokeStyle = `rgba(243, 201, 120, ${(0.22 * ringBrightness).toFixed(3)})`;
+    ctx.lineWidth = 0.75 + hoverBoost * 0.3;
+    ctx.strokeStyle =
+      aIdx === 0
+        ? `rgba(148, 107, 48, ${Math.min(0.55, 0.24 * ringBrightness).toFixed(3)})`
+        : `rgba(45, 82, 102, ${Math.min(0.45, 0.2 * ringBrightness).toFixed(3)})`;
     ctx.stroke();
     ctx.restore();
 
@@ -748,19 +712,19 @@ function drawDongSonAstrolabe(
       const nx = node.x + parallaxX;
       const ny = node.y + parallaxY;
       ctx.beginPath();
-      ctx.arc(nx, ny, 2.3, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 243, 209, ${(0.42 * ringBrightness).toFixed(3)})`;
+      ctx.arc(nx, ny, 2.1, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(148, 107, 48, ${Math.min(0.68, 0.42 * ringBrightness).toFixed(3)})`;
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(nx, ny, 5, 0, Math.PI * 2);
+      ctx.arc(nx, ny, 4.8, 0, Math.PI * 2);
       ctx.lineWidth = 0.6;
-      ctx.strokeStyle = `rgba(243, 201, 120, ${(0.26 * ringBrightness).toFixed(3)})`;
+      ctx.strokeStyle = `rgba(45, 82, 102, ${Math.min(0.42, 0.24 * ringBrightness).toFixed(3)})`;
       ctx.stroke();
     }
   }
   ctx.restore();
 
-  // 2. Ngôi sao Đông Sơn 14 cánh rực rỡ ở tâm (xoay cực chậm)
+  // 2. Ngôi sao Đông Sơn 14 cánh khắc vàng cổ (xoay cực chậm)
   const nextCache = terrainLayers?.next;
   const spriteSize = nextCache?.astrolabeRingSpriteSize ?? 460;
   const starSurf = nextCache?.astrolabeStarSprite;
@@ -770,7 +734,7 @@ function drawDongSonAstrolabe(
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(tSec * 0.015);
-    ctx.globalAlpha = Math.min(1, 0.92 + hoverBoost * 0.25);
+    ctx.globalAlpha = Math.min(1, 0.92 + hoverBoost * 0.12);
     ctx.drawImage(starSurf as CanvasImageSource, -sw * 0.5, -sw * 0.5, sw, sw);
     ctx.restore();
   } else {
@@ -786,15 +750,54 @@ function drawDongSonAstrolabe(
       else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
     }
     ctx.closePath();
-    ctx.fillStyle = 'rgba(243, 201, 120, 0.14)';
+    ctx.fillStyle = 'rgba(218, 182, 118, 0.14)';
     ctx.fill();
     ctx.lineWidth = 0.95;
-    ctx.strokeStyle = 'rgba(243, 201, 120, 0.62)';
+    ctx.strokeStyle = 'rgba(148, 107, 48, 0.42)';
     ctx.stroke();
     ctx.restore();
   }
 
-  // 3. 4 vòng tròn đồng tâm khắc vạch chia độ + 8 Hạt Ngọc Tinh Tú phát sáng (r = 2.5px, #FFF3D1)
+  // 3. 4 vòng tròn đồng tâm khắc vạch chia độ + 6 Hạt Ngọc Khoáng Thạch xoay chậm 120fps
+  const mineralPearls: readonly {
+    readonly ringIdx: number;
+    readonly offset: number;
+    readonly speed: number;
+    readonly color: string;
+    readonly haloRgba: string;
+  }[] = [
+    {
+      ringIdx: 0,
+      offset: 0.4,
+      speed: 0.16,
+      color: '#9C7A4C',
+      haloRgba: 'rgba(156, 122, 76, 0.28)',
+    },
+    {
+      ringIdx: 1,
+      offset: 2.1,
+      speed: -0.13,
+      color: '#2D5266',
+      haloRgba: 'rgba(45, 82, 102, 0.24)',
+    },
+    { ringIdx: 1, offset: 5.2, speed: -0.13, color: '#245746', haloRgba: 'rgba(36, 87, 70, 0.24)' },
+    { ringIdx: 2, offset: 1.1, speed: 0.11, color: '#7A463B', haloRgba: 'rgba(122, 70, 59, 0.24)' },
+    {
+      ringIdx: 2,
+      offset: 4.3,
+      speed: 0.11,
+      color: '#A67936',
+      haloRgba: 'rgba(166, 121, 54, 0.28)',
+    },
+    {
+      ringIdx: 3,
+      offset: 2.8,
+      speed: -0.09,
+      color: '#4C7369',
+      haloRgba: 'rgba(76, 115, 105, 0.24)',
+    },
+  ];
+
   for (let idx = 0; idx < astrolabe.rings.length; idx += 1) {
     const ring = astrolabe.rings[idx]!;
     const angle = tSec * ring.angularSpeedRadSec;
@@ -806,7 +809,7 @@ function drawDongSonAstrolabe(
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(angle);
-      ctx.globalAlpha = Math.min(1, 0.92 + hoverBoost * 0.35);
+      ctx.globalAlpha = Math.min(1, 0.92 + hoverBoost * 0.15);
       const drawSize = spriteSize + elasticWave * 2;
       ctx.drawImage(
         ringSurf as CanvasImageSource,
@@ -820,41 +823,23 @@ function drawDongSonAstrolabe(
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, effectiveRadius, 0, Math.PI * 2);
-      ctx.lineWidth = ring.lineWidth + 0.15;
-      ctx.strokeStyle = `rgba(243, 201, 120, ${Math.min(0.85, 0.5 * ringBrightness).toFixed(3)})`;
+      ctx.lineWidth = ring.lineWidth + 0.1;
+      ctx.strokeStyle =
+        idx % 2 === 0
+          ? `rgba(148, 107, 48, ${Math.min(0.65, 0.42 * ringBrightness).toFixed(3)})`
+          : `rgba(45, 82, 102, ${Math.min(0.55, 0.28 * ringBrightness).toFixed(3)})`;
       ctx.stroke();
       ctx.restore();
     }
 
-    // Khi di chuột trong 240px -> bổ sung hào quang vành khuyên gấp đôi độ rực
     if (hoverBoost > 0.04) {
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, effectiveRadius, 0, Math.PI * 2);
-      ctx.lineWidth = 1.45;
-      ctx.strokeStyle = `rgba(245, 212, 132, ${(0.42 * hoverBoost).toFixed(3)})`;
+      ctx.lineWidth = 1.25;
+      ctx.strokeStyle = `rgba(166, 121, 54, ${(0.38 * hoverBoost).toFixed(3)})`;
       ctx.stroke();
       ctx.restore();
-    }
-
-    // 2 Hạt Ngọc Tinh Tú (#FFF3D1, r = 2.5px) trên mỗi vòng -> 8 hạt chuyển động tròn quanh Thiên Cầu
-    for (const offset of [idx * 0.85, idx * 0.85 + Math.PI]) {
-      const pearlAngle = angle * 1.8 + offset + tSec * (idx % 2 === 0 ? 0.18 : -0.15);
-      const px = cx + Math.cos(pearlAngle) * effectiveRadius;
-      const py = cy + Math.sin(pearlAngle) * effectiveRadius;
-      const pearlHalo = ctx.createRadialGradient(px, py, 0.5, px, py, 9);
-      pearlHalo.addColorStop(0, 'rgba(255, 243, 209, 0.85)');
-      pearlHalo.addColorStop(0.45, 'rgba(243, 201, 120, 0.32)');
-      pearlHalo.addColorStop(1, 'rgba(243, 201, 120, 0)');
-      ctx.fillStyle = pearlHalo;
-      ctx.beginPath();
-      ctx.arc(px, py, 9, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#FFF3D1';
-      ctx.beginPath();
-      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-      ctx.fill();
     }
 
     // Phản hồi ngân vang khi Sóng Trống Đồng R(t) giao thoa qua bán kính vòng thiên cầu
@@ -869,109 +854,39 @@ function drawDongSonAstrolabe(
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, effectiveRadius, 0, Math.PI * 2);
-      ctx.lineWidth = 1.4;
-      ctx.strokeStyle = `rgba(245, 212, 132, ${(0.55 * fade).toFixed(3)})`;
+      ctx.lineWidth = 1.35;
+      ctx.strokeStyle = `rgba(166, 121, 54, ${(0.58 * fade).toFixed(3)})`;
       ctx.stroke();
       ctx.restore();
     }
   }
-}
 
-function drawSkyConstellationLens(
-  ctx: CanvasRenderingContext2D,
-  stars: readonly StarMote[],
-  mouse: AtmosphereMouseState,
-  width: number,
-  height: number,
-  tSec: number,
-): void {
-  if (!mouse.active) return;
-
-  const lensRadius = 160;
-  const maxLinkDist = 132;
-  const starParallaxX = -mouse.normX * 7;
-  const starParallaxY = -mouse.normY * 4;
-
-  // Thu thập các sao nằm trong bán kính 160px quanh con trỏ
-  const nearby: { x: number; y: number; dist: number }[] = [];
-  for (const star of stars) {
-    const sx = star.nx * width + starParallaxX;
-    const sy = star.ny * height + starParallaxY;
-    const dx = sx - mouse.x;
-    const dy = sy - mouse.y;
-    const d2 = dx * dx + dy * dy;
-    if (d2 <= lensRadius * lensRadius) {
-      nearby.push({ x: sx, y: sy, dist: Math.sqrt(d2) });
-    }
-  }
-
-  // Nối mạng lưới tam giác hình học mảnh (0.6px, rgba(180, 225, 255, alpha))
-  if (nearby.length >= 2) {
-    ctx.save();
-    ctx.lineWidth = 0.6;
-    for (let i = 0; i < nearby.length; i += 1) {
-      const a = nearby[i]!;
-      let connections = 0;
-      for (let j = i + 1; j < nearby.length && connections < 4; j += 1) {
-        const b = nearby[j]!;
-        const pairDist = Math.hypot(a.x - b.x, a.y - b.y);
-        if (pairDist <= maxLinkDist) {
-          const avgLensFade = 1 - ((a.dist + b.dist) * 0.5) / lensRadius;
-          const distFade = 1 - pairDist / maxLinkDist;
-          const alpha = Math.max(0.06, Math.min(0.42, avgLensFade * distFade * 0.55));
-          ctx.strokeStyle = `rgba(180, 225, 255, ${alpha.toFixed(3)})`;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-          connections += 1;
-        }
-      }
-    }
-
-    // Điểm nút sao được chiếu sáng nhẹ trong chòm sao
-    for (const pt of nearby) {
-      const alpha = 0.35 + (1 - pt.dist / lensRadius) * 0.45;
-      ctx.fillStyle = `rgba(220, 240, 255, ${alpha.toFixed(3)})`;
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-
-  // Vòng la bàn nhỏ tinh tế đi theo con trỏ khi ở vùng bầu trời
-  if (mouse.y < height * 0.72) {
-    ctx.save();
-    ctx.translate(mouse.x, mouse.y);
+  // Vẽ 6 hạt ngọc khoáng thạch xoay chậm 120fps trên các vòng thiên cầu
+  for (const pearl of mineralPearls) {
+    const ring = astrolabe.rings[pearl.ringIdx];
+    if (!ring) continue;
+    const angle = tSec * ring.angularSpeedRadSec;
+    const elasticWave =
+      hoverBoost > 0.05 ? Math.sin(tSec * 3.2 - pearl.ringIdx * 1.1) * 2.2 * hoverBoost : 0;
+    const effectiveRadius = ring.radius + elasticWave;
+    const pearlAngle = angle * 1.4 + pearl.offset + tSec * pearl.speed;
+    const px = cx + Math.cos(pearlAngle) * effectiveRadius;
+    const py = cy + Math.sin(pearlAngle) * effectiveRadius;
 
     ctx.beginPath();
-    ctx.arc(0, 0, 18, 0, Math.PI * 2);
-    ctx.lineWidth = 0.6;
-    ctx.strokeStyle = 'rgba(180, 225, 255, 0.28)';
-    ctx.stroke();
+    ctx.arc(px, py, 6.2, 0, Math.PI * 2);
+    ctx.fillStyle = pearl.haloRgba;
+    ctx.fill();
 
-    ctx.rotate(tSec * 0.25);
-    ctx.setLineDash([3, 5]);
     ctx.beginPath();
-    ctx.arc(0, 0, 28, 0, Math.PI * 2);
-    ctx.lineWidth = 0.55;
-    ctx.strokeStyle = 'rgba(229, 193, 118, 0.24)';
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.arc(px, py, 2.7, 0, Math.PI * 2);
+    ctx.fillStyle = pearl.color;
+    ctx.fill();
 
-    // 4 kim chữ thập trắc địa ngắn
-    for (let k = 0; k < 4; k += 1) {
-      const ang = (k * Math.PI) / 2;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(ang) * 14, Math.sin(ang) * 14);
-      ctx.lineTo(Math.cos(ang) * 21, Math.sin(ang) * 21);
-      ctx.lineWidth = 0.65;
-      ctx.strokeStyle = 'rgba(229, 193, 118, 0.34)';
-      ctx.stroke();
-    }
-
-    ctx.restore();
+    ctx.beginPath();
+    ctx.arc(px - 0.7, py - 0.7, 0.9, 0, Math.PI * 2);
+    ctx.fillStyle = '#FAFBF9';
+    ctx.fill();
   }
 }
 
@@ -980,16 +895,14 @@ function drawInteractiveMountainContours(
   geometry: HeroTerrainGeometry,
   mouse: AtmosphereMouseState,
   activePulses: readonly HarmonicContourPulse[],
-  palette: AtmospherePalette,
+  _palette: AtmospherePalette,
   tSec: number,
 ): void {
-  const lensRadius = 240;
+  const lensRadius = 220;
   const hasPulses = activePulses.length > 0;
   const pulseBand = 54;
-  const pulseRgb = palette.terraceRim;
 
-  // 1. Hiệu ứng Xung Ánh Sáng Chạy Dọc Bậc Thang (Flowing Contour Pulses)
-  // Sử dụng hàm sóng Math.sin(x * 0.012 - t * 1.8 + ridgeIndex) trên toàn bộ đường đồng mức
+  // 1. Dòng ánh nắng nhẹ chạy dọc bậc thang (Đồng Cổ & Trắng Sứ)
   for (const contour of geometry.contours) {
     const ridgeIndex = contour.layerIndex * 1.35 + contour.tierIndex * 0.55;
     let activeSpan: { x: number; y: number }[] = [];
@@ -1001,12 +914,15 @@ function drawInteractiveMountainContours(
         spanPeak = 0;
         return;
       }
-      const alpha = Math.min(0.65, 0.28 + spanPeak * 0.37);
+      const alpha = Math.min(0.45, 0.16 + spanPeak * 0.24);
       ctx.save();
       ctx.beginPath();
       traceSmoothQuadraticCurve(ctx, activeSpan, true);
-      ctx.lineWidth = 1.15;
-      ctx.strokeStyle = rgbaString(contour.tone === 'gold' ? [245, 208, 125] : pulseRgb, alpha);
+      ctx.lineWidth = 0.9;
+      ctx.strokeStyle =
+        contour.tone === 'gold'
+          ? `rgba(166, 121, 54, ${alpha.toFixed(3)})`
+          : `rgba(255, 252, 240, ${(alpha * 1.15).toFixed(3)})`;
       ctx.stroke();
       ctx.restore();
       activeSpan = [];
@@ -1014,9 +930,9 @@ function drawInteractiveMountainContours(
     };
 
     for (const pt of contour.points) {
-      const wave = Math.sin(pt.x * 0.012 - tSec * 1.8 + ridgeIndex);
-      if (wave > 0.38) {
-        const crest = (wave - 0.38) / 0.62;
+      const wave = Math.sin(pt.x * 0.012 - tSec * 1.6 + ridgeIndex);
+      if (wave > 0.45) {
+        const crest = (wave - 0.45) / 0.55;
         activeSpan.push({ x: pt.x, y: pt.y });
         if (crest > spanPeak) spanPeak = crest;
       } else {
@@ -1026,7 +942,7 @@ function drawInteractiveMountainContours(
     flushFlowSpan();
   }
 
-  // 2. Tương tác Thấu Kính Chuột (240px -> gấp đôi độ rực & gợn sóng đàn hồi) + Sóng Vàng Kim khi Click
+  // 2. Tương tác Chuột bán kính 220px -> sáng rực màu Vàng Đồng (#A67936) & uốn gợn nhẹ + Sóng Trống Đồng
   if (!mouse.active && !hasPulses) return;
 
   for (const contour of geometry.contours) {
@@ -1053,12 +969,12 @@ function drawInteractiveMountainContours(
         return;
       }
 
-      const alpha = Math.min(0.92, spanPeakStrength * (spanHasPulse ? 0.85 : 0.78));
+      const alpha = Math.min(0.95, spanPeakStrength * (spanHasPulse ? 0.92 : 0.86));
       ctx.save();
       ctx.beginPath();
       traceSmoothQuadraticCurve(ctx, activeSpan, true);
-      ctx.lineWidth = spanHasPulse ? 1.65 : 1.45;
-      ctx.strokeStyle = `rgba(245, 208, 125, ${alpha.toFixed(3)})`;
+      ctx.lineWidth = spanHasPulse ? 1.55 : 1.35;
+      ctx.strokeStyle = `rgba(166, 121, 54, ${alpha.toFixed(3)})`; // #A67936 Vàng Đồng
       ctx.stroke();
       ctx.restore();
 
@@ -1124,14 +1040,14 @@ function drawHarmonicPulseRings(
     ctx.beginPath();
     ctx.arc(pulse.x, pulse.y, pulse.radius, 0, Math.PI * 2);
     ctx.lineWidth = 1.45;
-    ctx.strokeStyle = `rgba(245, 208, 125, ${(fade * 0.52).toFixed(3)})`;
+    ctx.strokeStyle = `rgba(166, 121, 54, ${(fade * 0.62).toFixed(3)})`;
     ctx.stroke();
 
     if (pulse.radius > 28) {
       ctx.beginPath();
       ctx.arc(pulse.x, pulse.y, pulse.radius - 22, 0, Math.PI * 2);
-      ctx.lineWidth = 0.75;
-      ctx.strokeStyle = `rgba(125, 211, 252, ${(fade * 0.34).toFixed(3)})`;
+      ctx.lineWidth = 0.8;
+      ctx.strokeStyle = `rgba(45, 82, 102, ${(fade * 0.36).toFixed(3)})`;
       ctx.stroke();
     }
     ctx.restore();
@@ -1170,9 +1086,9 @@ function drawVolumetricValleyMist(
 function drawMistMirrorLakeAndStarlight(
   ctx: CanvasRenderingContext2D,
   world: AtmosphereWorld,
-  palette: AtmospherePalette,
-  sprites: AtmosphereSpriteCache,
-  glowSprites: GlowSpriteCache,
+  _palette: AtmospherePalette,
+  _sprites: AtmosphereSpriteCache,
+  _glowSprites: GlowSpriteCache,
   terrainLayers: TerrainLayerTransition | undefined,
   width: number,
   height: number,
@@ -1180,66 +1096,64 @@ function drawMistMirrorLakeAndStarlight(
   dtScale: number,
   animate: boolean,
 ): void {
-  const mistTop = height * 0.72;
+  const mistTop = height * 0.78;
   const mistH = height - mistTop;
 
-  // Chuyển êm xuống nền thung lũng trước khi trải 3 lớp biển mây bồng bềnh
+  // Dải sương sáng mặt hồ ở 14-22% cuối màn hình (#DDE7E4 -> #EDF2F0)
   const baseGrad = ctx.createLinearGradient(0, mistTop, 0, height);
-  baseGrad.addColorStop(0, rgbaString(palette.bottomMistDeep, 0));
-  baseGrad.addColorStop(0.35, rgbaString(palette.bottomMistDeep, 0.42));
-  baseGrad.addColorStop(0.82, 'rgba(18, 27, 40, 0.88)');
-  baseGrad.addColorStop(1, '#121B28');
+  baseGrad.addColorStop(0, 'rgba(221, 231, 228, 0)');
+  baseGrad.addColorStop(0.42, 'rgba(221, 231, 228, 0.74)');
+  baseGrad.addColorStop(0.84, 'rgba(237, 242, 240, 0.92)');
+  baseGrad.addColorStop(1, '#EDF2F0');
   ctx.fillStyle = baseGrad;
   ctx.fillRect(0, mistTop, width, mistH);
 
-  // 3 lớp Biển Mây Bồng Bềnh OffscreenCanvas (#1B3548, #27475E, ánh vàng #D4A359/15)
+  // 3 lớp Biển Sương Ban Mai OffscreenCanvas trôi ngang êm ái
   drawVolumetricValleyMist(ctx, terrainLayers, width, height, tSec);
 
-  // Dòng Suối / Mặt Hồ Sương Khói uốn lượn nhẹ ở trung tâm thung lũng (x: 0.35W -> 0.68W, y: 0.76H -> 0.98H)
+  // Hiệu ứng khúc xạ ánh sáng mặt nước caustics màu vàng kem mảnh (14% đáy Hero)
+  const causticTop = height * 0.855;
+  const causticH = height - causticTop;
   ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(width * 0.48, height * 0.76);
-  ctx.bezierCurveTo(
-    width * 0.56,
-    height * 0.81,
-    width * 0.42,
-    height * 0.88,
-    width * 0.35,
-    height * 0.985,
-  );
-  ctx.lineTo(width * 0.68, height * 0.985);
-  ctx.bezierCurveTo(
-    width * 0.62,
-    height * 0.88,
-    width * 0.61,
-    height * 0.81,
-    width * 0.55,
-    height * 0.76,
-  );
-  ctx.closePath();
-  const streamGrad = ctx.createLinearGradient(0, height * 0.76, 0, height * 0.99);
-  streamGrad.addColorStop(0, 'rgba(56, 189, 248, 0.06)');
-  streamGrad.addColorStop(0.45, 'rgba(243, 201, 120, 0.14)');
-  streamGrad.addColorStop(0.85, 'rgba(125, 211, 252, 0.12)');
-  streamGrad.addColorStop(1, 'rgba(18, 27, 40, 0.04)');
-  ctx.fillStyle = streamGrad;
-  ctx.fill();
-  ctx.restore();
+  for (let row = 0; row < 5; row += 1) {
+    const rowY = causticTop + ((row + 0.5) / 5) * causticH;
+    const waveSpeed = 0.42 + row * 0.11;
+    const xStep = Math.max(24, Math.round(width / 42));
+    ctx.beginPath();
+    for (let x = 0; x <= width + xStep; x += xStep) {
+      const sx = x > width ? width : x;
+      const nx = sx / Math.max(width, 1);
+      // Giao thoa 2 sóng caustics lệch pha tạo sợi sáng khúc xạ lượn sóng
+      const w1 = Math.sin(nx * 14.5 + tSec * waveSpeed + row * 1.4) * 3.8;
+      const w2 = Math.cos(nx * 23.0 - tSec * (waveSpeed * 0.75) + row * 2.1) * 2.1;
+      const y = rowY + w1 + w2;
+      if (x === 0) ctx.moveTo(sx, y);
+      else ctx.lineTo(sx, y);
+    }
+    const causticGrad = ctx.createLinearGradient(0, rowY, width, rowY);
+    causticGrad.addColorStop(0, 'rgba(255, 248, 224, 0)');
+    causticGrad.addColorStop(0.28, 'rgba(255, 250, 232, 0.52)');
+    causticGrad.addColorStop(0.66, 'rgba(234, 206, 148, 0.44)');
+    causticGrad.addColorStop(1, 'rgba(255, 248, 224, 0)');
+    ctx.strokeStyle = causticGrad;
+    ctx.lineWidth = row % 2 === 0 ? 1.15 : 0.75;
+    ctx.stroke();
+  }
 
-  // 24 vệt sóng ngang lấp lánh ánh vàng kim (#F3C978) & lam băng (#7DD3FC) phản chiếu từ Thiên Cầu
-  ctx.save();
-  ctx.lineWidth = 0.75;
+  // Vệt sáng caustics giao thoa ngang tinh tế trên mặt hồ sương
+  ctx.lineWidth = 0.85;
   for (let i = 0; i < world.mistRipples.length; i += 1) {
     const r = world.mistRipples[i]!;
     const cx = r.nx * width + Math.sin(tSec * r.speed + r.phase) * 18;
-    const cy = r.ny * height;
-    const w = r.halfWidth;
-    const shimmer = 0.55 + 0.45 * Math.sin(tSec * (r.speed * 1.4) + r.phase);
-    const isGold = i % 2 === 0;
-    const rgb = isGold ? '243, 201, 120' : '125, 211, 252';
+    const cy = height * 0.86 + (r.ny - 0.76) * (height * 0.55);
+    if (cy > height - 3) continue;
+    const w = r.halfWidth * 1.15;
+    const shimmer = 0.5 + 0.5 * Math.sin(tSec * (r.speed * 1.4) + r.phase);
+    const isCream = i % 2 === 0;
+    const rgb = isCream ? '255, 250, 232' : '214, 180, 118';
     const grad = ctx.createLinearGradient(cx - w, cy, cx + w, cy);
     grad.addColorStop(0, `rgba(${rgb}, 0)`);
-    grad.addColorStop(0.5, `rgba(${rgb}, ${(r.alpha * shimmer).toFixed(3)})`);
+    grad.addColorStop(0.5, `rgba(${rgb}, ${Math.min(0.65, r.alpha * shimmer * 1.65).toFixed(3)})`);
     grad.addColorStop(1, `rgba(${rgb}, 0)`);
     ctx.strokeStyle = grad;
     ctx.beginPath();
@@ -1249,472 +1163,125 @@ function drawMistMirrorLakeAndStarlight(
   }
   ctx.restore();
 
-  // 25 hạt tinh tú vàng ấm (r = 1.5px) bay từ mặt nước lên bầu trời theo gió xoáy nhẹ
+  // Hạt bụi nắng mai nhẹ bay lên trong không khí sáng trong
   for (const mote of world.ascendingStarlights) {
     if (animate) {
-      mote.ny -= (mote.vy * dtScale) / 60;
-      if (mote.ny < 0.06) {
-        mote.ny = 0.85 + (mote.ny % 0.12) + 0.12;
-        if (mote.ny > 0.98) mote.ny = 0.92;
+      mote.ny -= (mote.vy * dtScale) / 72;
+      if (mote.ny < 0.1) {
+        mote.ny = 0.86 + (mote.ny % 0.1) + 0.08;
+        if (mote.ny > 0.97) mote.ny = 0.92;
       }
     }
 
     const swirlOffsetX = Math.sin(tSec * mote.swirlFreq + mote.phase) * mote.swirlAmp;
     const sx = (mote.nx * width + swirlOffsetX + width) % width;
     const sy = mote.ny * height;
-
     const fadeBottom = Math.min(1, (0.98 - mote.ny) / 0.1);
-    const fadeTop = Math.min(1, (mote.ny - 0.06) / 0.18);
-    const alpha = Math.max(0.08, mote.alpha * fadeBottom * fadeTop);
+    const fadeTop = Math.min(1, (mote.ny - 0.1) / 0.18);
+    const alpha = Math.max(0.06, mote.alpha * fadeBottom * fadeTop * 0.55);
 
-    if (sprites.warmStarSprite) {
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.drawImage(sprites.warmStarSprite as CanvasImageSource, sx - 6, sy - 6, 12, 12);
-      ctx.restore();
-    } else {
-      drawGlowSprite(ctx, glowSprites.gold, sx, sy, 6, alpha, 'rgba(255, 224, 148, 0.85)');
-    }
-
-    ctx.fillStyle = `rgba(255, 236, 178, ${alpha.toFixed(3)})`;
+    ctx.fillStyle = `rgba(255, 250, 235, ${(alpha * 1.3).toFixed(3)})`;
     ctx.beginPath();
-    ctx.arc(sx, sy, mote.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-/** Vẽ 5 Chòm sao Hình học Toán học (lineWidth 0.45px mặc định; bừng sáng & tỏa tia sáng nhỏ khi chuột gần) */
-function drawMathematicalConstellations(
-  ctx: CanvasRenderingContext2D,
-  constellations: readonly MathematicalConstellation[],
-  mouse: AtmosphereMouseState,
-  width: number,
-  height: number,
-  tSec: number,
-  starIntensity: number,
-): void {
-  const parallaxX = -mouse.normX * 7;
-  const parallaxY = -mouse.normY * 4;
-  const hoverRadius = 195;
-
-  ctx.save();
-  for (let cIdx = 0; cIdx < constellations.length; cIdx += 1) {
-    const constellation = constellations[cIdx]!;
-    const cx = constellation.centerNx * width + parallaxX;
-    const cy = constellation.centerNy * height + parallaxY;
-
-    let proximity = 0;
-    if (mouse.active) {
-      let minDist = Math.hypot(mouse.x - cx, mouse.y - cy);
-      for (const v of constellation.vertices) {
-        const vx = v.nx * width + parallaxX;
-        const vy = v.ny * height + parallaxY;
-        const vd = Math.hypot(mouse.x - vx, mouse.y - vy);
-        if (vd < minDist) minDist = vd;
-      }
-      if (minDist < hoverRadius) {
-        proximity = 1 - minDist / hoverRadius;
-      }
-    }
-
-    const baseScale = 0.45 + 0.55 * starIntensity;
-    const lineAlpha = (0.16 + proximity * 0.56) * baseScale;
-    ctx.strokeStyle = `rgba(225, 195, 120, ${lineAlpha.toFixed(3)})`;
-    ctx.lineWidth = 0.45 + proximity * 0.5;
-    ctx.beginPath();
-    for (const [a, b] of constellation.edges) {
-      const va = constellation.vertices[a]!;
-      const vb = constellation.vertices[b]!;
-      ctx.moveTo(va.nx * width + parallaxX, va.ny * height + parallaxY);
-      ctx.lineTo(vb.nx * width + parallaxX, vb.ny * height + parallaxY);
-    }
-    ctx.stroke();
-
-    // Đỉnh sao neo của chòm sao + các hạt tia sáng nhỏ li ti khi chuột di chuyển gần
-    for (let vIdx = 0; vIdx < constellation.vertices.length; vIdx += 1) {
-      const v = constellation.vertices[vIdx]!;
-      const vx = v.nx * width + parallaxX;
-      const vy = v.ny * height + parallaxY;
-      const dotAlpha = (0.38 + proximity * 0.58) * baseScale;
-
-      ctx.fillStyle = `rgba(255, 245, 214, ${dotAlpha.toFixed(3)})`;
-      ctx.beginPath();
-      ctx.arc(vx, vy, 1.15 + proximity * 0.85, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (proximity > 0.08) {
-        for (let s = 0; s < 3; s += 1) {
-          const sparkAngle = tSec * 1.4 + cIdx * 1.3 + vIdx * 0.9 + (s * Math.PI * 2) / 3;
-          const sparkDist = 4 + proximity * 9 * (0.55 + 0.45 * Math.sin(tSec * 3.1 + s + vIdx));
-          const sx = vx + Math.cos(sparkAngle) * sparkDist;
-          const sy = vy + Math.sin(sparkAngle) * sparkDist;
-          const sparkAlpha = proximity * (0.45 + 0.35 * Math.sin(tSec * 4.2 + s));
-          ctx.fillStyle = `rgba(255, 253, 247, ${Math.max(0.08, sparkAlpha).toFixed(3)})`;
-          ctx.beginPath();
-          ctx.arc(sx, sy, 0.85, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-    }
-  }
-  ctx.restore();
-}
-
-/** Cập nhật và vẽ Vệt Sao Băng Định Kỳ (mỗi 5s-9s, #FFFDF7 + đuôi linearGradient mờ dần) */
-function updateAndDrawShootingStars(
-  ctx: CanvasRenderingContext2D,
-  world: AtmosphereWorld,
-  width: number,
-  height: number,
-  dtScale: number,
-  animate: boolean,
-): void {
-  const dt = dtScale / 60;
-  if (animate) {
-    world.nextShootingStarInSec -= dt;
-    if (world.nextShootingStarInSec <= 0) {
-      spawnShootingStar(world);
-      world.nextShootingStarInSec = 5 + Math.random() * 4;
-    }
-
-    for (const star of world.shootingStars) {
-      if (!star.active) continue;
-      star.ageSec += dt;
-      star.nx += star.vx * dt;
-      star.ny += star.vy * dt;
-      if (star.ageSec >= star.durationSec) {
-        star.active = false;
-      }
-    }
-  }
-
-  ctx.save();
-  for (const star of world.shootingStars) {
-    if (!star.active) continue;
-    const progress = Math.max(0, Math.min(1, star.ageSec / star.durationSec));
-    const envelope = Math.sin(progress * Math.PI);
-    const hx = star.nx * width;
-    const hy = star.ny * height;
-    const velMag = Math.hypot(star.vx * width, star.vy * height) || 1;
-    const dirX = (star.vx * width) / velMag;
-    const dirY = (star.vy * height) / velMag;
-    const tx = hx - dirX * star.lengthPx * (0.45 + 0.55 * progress);
-    const ty = hy - dirY * star.lengthPx * (0.45 + 0.55 * progress);
-
-    const tailGrad = ctx.createLinearGradient(tx, ty, hx, hy);
-    tailGrad.addColorStop(0, 'rgba(255, 253, 247, 0)');
-    tailGrad.addColorStop(0.55, `rgba(185, 225, 255, ${(0.32 * envelope).toFixed(3)})`);
-    tailGrad.addColorStop(1, `rgba(255, 253, 247, ${(0.95 * envelope).toFixed(3)})`);
-
-    ctx.strokeStyle = tailGrad;
-    ctx.lineWidth = 1.6;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(tx, ty);
-    ctx.lineTo(hx, hy);
-    ctx.stroke();
-
-    ctx.fillStyle = `rgba(255, 253, 247, ${(0.96 * envelope).toFixed(3)})`;
-    ctx.beginPath();
-    ctx.arc(hx, hy, 1.85, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-/** Vẽ trường hạt bụi sao 3D (56 hạt) chuyển động theo quỹ đạo elip nhẹ quanh tâm thiên thể */
-function draw3DStardustDrift(
-  ctx: CanvasRenderingContext2D,
-  stardust: readonly Stardust3DMote[],
-  centerX: number,
-  centerY: number,
-  width: number,
-  height: number,
-  tSec: number,
-  starIntensity: number,
-): void {
-  const baseScale = 0.5 + 0.5 * starIntensity;
-  ctx.save();
-  for (const mote of stardust) {
-    const theta = mote.phase + tSec * mote.speed;
-    const lx = Math.cos(theta) * (mote.orbitRx * width);
-    const ly = Math.sin(theta) * (mote.orbitRy * height);
-    const cosTilt = Math.cos(mote.tilt);
-    const sinTilt = Math.sin(mote.tilt);
-    const x = centerX + lx * cosTilt - ly * sinTilt;
-    const y = centerY + lx * sinTilt + ly * cosTilt;
-    if (y > height * 0.84) continue;
-
-    const shimmer = 0.72 + 0.28 * Math.sin(tSec * (1.2 + mote.zDepth) + mote.phase);
-    const alpha = mote.alpha * shimmer * baseScale;
-    ctx.fillStyle = mote.warm
-      ? `rgba(243, 229, 171, ${alpha.toFixed(3)})`
-      : `rgba(185, 225, 255, ${alpha.toFixed(3)})`;
-    ctx.beginPath();
-    ctx.arc(x, y, mote.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-/** Luồng sáng khí quyển chân trời phía sau dãy núi (cx=0.58W, cy=0.55H, r=0.55W) */
-function drawHorizonAtmosphericGlow(
-  ctx: CanvasRenderingContext2D,
-  palette: AtmospherePalette,
-  width: number,
-  height: number,
-  parallaxX: number,
-  parallaxY: number,
-): void {
-  const cx = width * 0.58 + parallaxX * 0.6;
-  const cy = height * 0.55 + parallaxY * 0.6;
-  const radius = width * 0.55;
-
-  const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, radius);
-  const coolAlpha = 0.24 + palette.rayIntensity * 0.08; // ~0.32 ở Đêm Ngân Hà
-  const warmAlpha = 0.12 + palette.rayIntensity * 0.04; // ~0.16 ở Đêm Ngân Hà
-  grad.addColorStop(0, `rgba(45, 115, 155, ${Math.min(0.42, coolAlpha).toFixed(3)})`);
-  grad.addColorStop(0.38, rgbaString(palette.dawnCore, Math.min(0.28, warmAlpha)));
-  grad.addColorStop(0.72, rgbaString(palette.rayCool, 0.09));
-  grad.addColorStop(1, 'rgba(45, 115, 155, 0)');
-
-  ctx.save();
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-/** Cực quang gấp nếp S-curve & tia đứng theo thuật toán aurora-curtains của taste-skill */
-function drawSoftAuroraRibbons(
-  ctx: CanvasRenderingContext2D,
-  palette: AtmospherePalette,
-  width: number,
-  height: number,
-  tSec: number,
-  parallaxX: number,
-  parallaxY: number,
-): void {
-  const step = Math.max(16, Math.round(width / 64));
-  const calmEnd = width * 0.44;
-  const curtainIntensity = 0.45 + 0.55 * palette.milkyWayIntensity + 0.15 * palette.rayIntensity;
-
-  const curtains = [
-    {
-      baseY: height * 0.26,
-      thickness: height * 0.145,
-      foldAmp: height * 0.042,
-      freq: 0.0052,
-      speed: 0.24,
-      phase: 0.35,
-      rgb: palette.starIntensity >= 0.45 ? ([52, 211, 153] as const) : palette.rayCool,
-      hemRgb: palette.rimGlow,
-      peakAlpha: Math.min(0.24, 0.2 * curtainIntensity),
-    },
-    {
-      baseY: height * 0.33,
-      thickness: height * 0.115,
-      foldAmp: height * 0.034,
-      freq: 0.0064,
-      speed: -0.19,
-      phase: 2.15,
-      rgb: [56, 189, 248] as const,
-      hemRgb: palette.rayCool,
-      peakAlpha: Math.min(0.2, 0.17 * curtainIntensity),
-    },
-  ] as const;
-
-  ctx.save();
-  ctx.translate(parallaxX * 0.5, parallaxY * 0.5);
-
-  for (const c of curtains) {
-    const hemPts: { x: number; y: number }[] = [];
-    const topPts: { x: number; y: number }[] = [];
-
-    for (let x = -32; x <= width + 32; x += step) {
-      // Khúc gấp S-curve: sw = sin(sp + 0.45 * sin(sp)) từ aurora-curtains/effect.js
-      const sp = x * c.freq + tSec * c.speed + c.phase;
-      const foldS = Math.sin(sp + 0.45 * Math.sin(sp));
-      const dSw = Math.cos(sp + 0.45 * Math.sin(sp)) * (1 + 0.45 * Math.cos(sp));
-      const creaseGain = 0.72 + Math.min(0.95, Math.pow(Math.max(0, 1 - Math.abs(dSw)), 3) * 0.9);
-
-      const nx = x / Math.max(1, width);
-      // Giữ vùng tĩnh bên trái cho typography HomePage Hero rõ nét tuyệt đối
-      const calm = x < calmEnd ? 0.22 + 0.78 * Math.pow(Math.max(0, nx / 0.44), 1.6) : 1;
-
-      const hemY = c.baseY + foldS * c.foldAmp;
-      const curtainHeight = c.thickness * (0.68 + 0.32 * creaseGain) * calm;
-      hemPts.push({ x, y: hemY });
-      topPts.push({ x, y: hemY - curtainHeight });
-    }
-
-    const grad = ctx.createLinearGradient(0, c.baseY - c.thickness, 0, c.baseY + c.foldAmp);
-    grad.addColorStop(0, rgbaString(c.rgb, 0));
-    grad.addColorStop(0.55, rgbaString(c.rgb, c.peakAlpha * 0.58));
-    grad.addColorStop(0.92, rgbaString(c.rgb, c.peakAlpha));
-    grad.addColorStop(1, rgbaString(c.hemRgb, 0));
-
-    ctx.beginPath();
-    traceSmoothQuadraticCurve(ctx, hemPts, true);
-    for (let i = topPts.length - 1; i >= 0; i -= 1) {
-      const p = topPts[i];
-      if (p) ctx.lineTo(p.x, p.y);
-    }
-    ctx.closePath();
-    ctx.fillStyle = grad;
+    ctx.arc(sx, sy, mote.radius * 1.35, 0, Math.PI * 2);
     ctx.fill();
 
-    // Đường viền gấu lụa sáng sắc nét exp(-|d|*50) tại mép dưới nếp gấp
+    ctx.fillStyle = `rgba(166, 121, 54, ${(alpha * 0.55).toFixed(3)})`;
     ctx.beginPath();
-    traceSmoothQuadraticCurve(ctx, hemPts, true);
-    ctx.lineWidth = 1.25;
-    ctx.strokeStyle = rgbaString(c.rgb, Math.min(0.38, c.peakAlpha * 1.45));
-    ctx.stroke();
-
-    // Các tia rèm đứng ở các điểm uốn sáng nếp gấp cực quang
-    for (let i = 2; i < hemPts.length - 2; i += 3) {
-      const pt = hemPts[i];
-      const topPt = topPts[i];
-      if (!pt || !topPt || pt.x < calmEnd * 0.65) continue;
-      const rayGrad = ctx.createLinearGradient(pt.x, topPt.y, pt.x, pt.y);
-      rayGrad.addColorStop(0, rgbaString(c.rgb, 0));
-      rayGrad.addColorStop(0.7, rgbaString(c.rgb, c.peakAlpha * 0.42));
-      rayGrad.addColorStop(1, rgbaString(c.hemRgb, c.peakAlpha * 0.25));
-      ctx.strokeStyle = rayGrad;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(pt.x, pt.y);
-      ctx.lineTo(pt.x + 4, topPt.y);
-      ctx.stroke();
-    }
+    ctx.arc(sx, sy, mote.radius * 0.65, 0, Math.PI * 2);
+    ctx.fill();
   }
-  ctx.restore();
 }
 
 /**
- * Chùm tia sáng thể tích & hạt bụi bokeh phát tỏa sau Đài Thiên Cầu Đông Sơn
- * (Chuyển thể trực tiếp từ god-rays/effect.js của taste-skill).
+ * 5 chùm tia nắng ban mai nghiêng mềm (god-rays, rgba(255, 250, 235, 0.35) mờ dần hai biên)
+ * tỏa chéo từ góc phải bầu trời xuống thung lũng.
  */
 function drawVolumetricGodRays(
   ctx: CanvasRenderingContext2D,
   originX: number,
-  originY: number,
-  palette: AtmospherePalette,
+  _originY: number,
+  _palette: AtmospherePalette,
   mouse: AtmosphereMouseState,
   width: number,
   height: number,
   tSec: number,
 ): void {
-  const rayStrength = Math.max(0.28, palette.rayIntensity);
-  const rayLength = Math.max(width, height) * 0.72;
-  const baseTilt = 1.88 + mouse.normX * 0.08;
-  const shaftCount = 11;
+  const rayOriginX = Math.max(originX + width * 0.12, width * 0.86);
+  const rayOriginY = -height * 0.12;
+  const rayLength = Math.hypot(width, height) * 0.95;
+  const baseTilt = 2.18 + mouse.normX * 0.04;
+  const shaftCount = 5;
 
   ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-
   for (let i = 0; i < shaftCount; i += 1) {
     const progress = (i + 0.5) / shaftCount;
-    const angle = baseTilt + (progress - 0.5) * 1.15;
-    // Hàm điều biến 3 quãng tám từ god-rays: s1 * s2 * gate
-    const s1 = Math.sin(progress * 11.4 + tSec * 0.34);
-    const s2 = Math.cos(progress * 23.0 - tSec * 0.21 + 1.1);
-    const gate = 0.5 + 0.5 * Math.sin(progress * 6.28 + tSec * 0.14);
-    const shaftPower = Math.max(0, (0.45 + 0.55 * (s1 * 0.55 + s2 * 0.45)) * gate);
-    if (shaftPower <= 0.08) continue;
+    const sway = Math.sin(tSec * 0.22 + i * 1.35) * 0.018;
+    const angle = baseTilt + (progress - 0.5) * 0.52 + sway;
+    const halfSpread = 0.042 + (i % 2) * 0.016;
+    const len = rayLength * (0.85 + (i % 3) * 0.06);
 
-    const halfSpread = 0.022 + (i % 3) * 0.014;
-    const len = rayLength * (0.76 + (i % 4) * 0.08);
-    const x1 = originX + Math.cos(angle - halfSpread) * len;
-    const y1 = originY + Math.sin(angle - halfSpread) * len;
-    const x2 = originX + Math.cos(angle + halfSpread) * len;
-    const y2 = originY + Math.sin(angle + halfSpread) * len;
+    const x1 = rayOriginX + Math.cos(angle - halfSpread) * len;
+    const y1 = rayOriginY + Math.sin(angle - halfSpread) * len;
+    const x2 = rayOriginX + Math.cos(angle + halfSpread) * len;
+    const y2 = rayOriginY + Math.sin(angle + halfSpread) * len;
 
-    const grad = ctx.createLinearGradient(
-      originX,
-      originY,
-      originX + Math.cos(angle) * len,
-      originY + Math.sin(angle) * len,
+    const beamGrad = ctx.createLinearGradient(
+      rayOriginX,
+      rayOriginY,
+      rayOriginX + Math.cos(angle) * len,
+      rayOriginY + Math.sin(angle) * len,
     );
-    const alpha = Math.min(0.16, 0.055 * rayStrength * shaftPower);
-    const shaftColor = i % 2 === 0 ? palette.rayWarm : palette.rayCool;
-    grad.addColorStop(0, rgbaString(shaftColor, alpha * 1.45));
-    grad.addColorStop(0.45, rgbaString(shaftColor, alpha * 0.65));
-    grad.addColorStop(1, rgbaString(shaftColor, 0));
+    const pulse = 0.85 + 0.15 * Math.sin(tSec * 0.35 + i * 1.8);
+    const peakAlpha = Math.min(0.35, (0.28 + (i % 2) * 0.07) * pulse);
+    beamGrad.addColorStop(0, `rgba(255, 250, 235, ${peakAlpha.toFixed(3)})`);
+    beamGrad.addColorStop(0.55, `rgba(255, 250, 235, ${(peakAlpha * 0.48).toFixed(3)})`);
+    beamGrad.addColorStop(1, 'rgba(255, 250, 235, 0)');
 
     ctx.beginPath();
-    ctx.moveTo(originX, originY);
+    ctx.moveTo(rayOriginX, rayOriginY);
     ctx.lineTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.closePath();
-    ctx.fillStyle = grad;
+    ctx.fillStyle = beamGrad;
     ctx.fill();
   }
-
-  // Hạt bụi tinh tú bokeh bay chậm dọc nón tia sáng (14 hạt cố định, không cấp phát mảng)
-  for (let k = 0; k < 14; k += 1) {
-    const seed = (k + 1) * 1.6180339;
-    const radial = ((tSec * 0.035 + seed * 0.37) % 1) * (rayLength * 0.58) + 38;
-    const rayAngle = baseTilt + Math.sin(seed * 7.3) * 0.46 + Math.sin(tSec * 0.25 + k) * 0.03;
-    const mx = originX + Math.cos(rayAngle) * radial;
-    const my = originY + Math.sin(rayAngle) * radial;
-    if (mx < 0 || mx > width || my < 0 || my > height * 0.85) continue;
-
-    const fadeDist = Math.max(0, 1 - radial / (rayLength * 0.62));
-    const twinkle = 0.5 + 0.5 * Math.sin(tSec * 1.2 + seed * 5.0);
-    const mAlpha = Math.min(0.32, (0.14 + 0.18 * twinkle) * fadeDist * rayStrength);
-    const r = 1.4 + (k % 3) * 1.1;
-
-    ctx.fillStyle = rgbaString(k % 3 === 0 ? palette.dawnCore : palette.cloudIvory, mAlpha);
-    ctx.beginPath();
-    ctx.arc(mx, my, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
   ctx.restore();
 }
 
 /**
- * 36 lát cắt địa hình 3D với đường gờ nhọn & tô che khuất thung lũng (hidden-line removal)
- * theo thuật toán ridgeline/effect.js của taste-skill, đặt tại tầng núi Hoàng Liên Sơn.
+ * Lát cắt địa hình ridgeline mảnh hòa nhập vào 5 tầng núi sương lam ban mai.
  */
 function drawElevationRidgelines(
   ctx: CanvasRenderingContext2D,
-  palette: AtmospherePalette,
+  _palette: AtmospherePalette,
   mouse: AtmosphereMouseState,
   width: number,
   height: number,
   tSec: number,
 ): void {
-  const rows = 28;
-  const hiRow = 10;
-  const cols = 48;
-  const ridgeSpanStart = width * 0.24;
-  const ridgeSpanWidth = width * 0.82;
-  const topY = height * 0.49;
-  const depthSpanY = height * 0.25;
-  const valleyFill = rgbaString(palette.sky1, 0.22);
-  const strokeBase = rgbaString(palette.facetCelestial, 0.22);
-  const strokeGold = rgbaString(palette.terraceRim, 0.55);
+  const rows = 20;
+  const hiRow = 7;
+  const cols = 44;
+  const ridgeSpanStart = width * 0.28;
+  const ridgeSpanWidth = width * 0.76;
+  const topY = height * 0.52;
+  const depthSpanY = height * 0.24;
 
   ctx.save();
   for (let row = 0; row < rows; row += 1) {
     const zNorm = row / (rows - 1);
     const baseY = topY + zNorm * depthSpanY;
     const isHighlight = row === hiRow;
-    const rowLift = height * 0.055 * (0.45 + 0.55 * (1 - zNorm));
+    const rowLift = height * 0.044 * (0.45 + 0.55 * (1 - zNorm));
 
     ctx.beginPath();
     for (let col = 0; col <= cols; col += 1) {
       const u = col / cols;
       const x = ridgeSpanStart + u * ridgeSpanWidth;
-      // Hàm bao đỉnh núi envAt từ ridgeline/effect.js
       const d = (u - 0.58) / 0.34;
       const env = Math.exp(-0.275 * d * d * d * d - 0.3 * d * d);
 
-      // Giao thoa sóng địa hình đa tần kèm biên gợn nhọn cusp rn = 1 - sqrt(nn^2 + 0.0025)
-      const n1 = Math.sin(u * 13.5 + row * 0.52 + tSec * 0.06);
+      const n1 = Math.sin(u * 13.5 + row * 0.52 + tSec * 0.05);
       const n2 = Math.cos(u * 27.0 - row * 0.88 + 0.7) * 0.45;
       const rawNoise = (n1 + n2) / 1.45;
       const cusp = 1 - Math.sqrt(rawNoise * rawNoise + 0.0025);
@@ -1722,8 +1289,8 @@ function drawElevationRidgelines(
       let mouseBoost = 1;
       if (mouse.active) {
         const md = Math.hypot(x - mouse.x, baseY - mouse.y);
-        if (md < 180) {
-          mouseBoost += Math.pow(1 - md / 180, 2) * 0.55;
+        if (md < 220) {
+          mouseBoost += Math.pow(1 - md / 220, 2) * 0.45;
         }
       }
 
@@ -1735,12 +1302,11 @@ function drawElevationRidgelines(
       if (col === cols) ctx.lineTo(x, baseY + 6);
     }
 
-    // Che khuất đường nền phía sau (hidden-line valley fill)
-    ctx.fillStyle = valleyFill;
+    ctx.fillStyle = 'rgba(230, 239, 236, 0.08)';
     ctx.fill();
 
-    ctx.lineWidth = isHighlight ? 1.15 : 0.72;
-    ctx.strokeStyle = isHighlight ? strokeGold : strokeBase;
+    ctx.lineWidth = isHighlight ? 0.95 : 0.65;
+    ctx.strokeStyle = isHighlight ? 'rgba(255, 252, 240, 0.52)' : 'rgba(156, 122, 76, 0.14)';
     ctx.stroke();
   }
   ctx.restore();
@@ -1775,11 +1341,9 @@ function drawPolyhedralConstellations3D(
   width: number,
   height: number,
   tSec: number,
-  starIntensity: number,
 ): void {
   const parallaxX = -mouse.normX * 7;
   const parallaxY = -mouse.normY * 4;
-  const baseScale = 0.5 + 0.5 * starIntensity;
 
   for (const poly of polyhedra) {
     const cx = poly.anchorNx * width + parallaxX;
@@ -1822,8 +1386,9 @@ function drawPolyhedralConstellations3D(
       })
       .sort((a, b) => a.avgZ - b.avgZ);
 
-    const faceAlpha = Math.min(0.14, (0.05 + boost * 0.07) * baseScale);
-    ctx.fillStyle = `rgba(125, 211, 252, ${faceAlpha.toFixed(3)})`;
+    // Mặt đa giác tô trong nhẹ rgba(250, 251, 249, 0.25)
+    const faceAlpha = Math.min(0.42, 0.25 + boost * 0.12);
+    ctx.fillStyle = `rgba(250, 251, 249, ${faceAlpha.toFixed(3)})`;
     for (const face of sortedFaces) {
       if (face.indices.length < 3) continue;
       ctx.beginPath();
@@ -1837,10 +1402,10 @@ function drawPolyhedralConstellations3D(
       ctx.fill();
     }
 
-    // Cạnh nối màu vàng kim mảnh rgba(243, 201, 120, 0.35)
-    const edgeAlpha = Math.min(0.85, (0.35 + boost * 0.42) * baseScale);
-    ctx.strokeStyle = `rgba(243, 201, 120, ${edgeAlpha.toFixed(3)})`;
-    ctx.lineWidth = 0.7 + boost * 0.45;
+    // Nét khắc bản vẽ mảnh sắc nét (lineWidth: 0.85px, rgba(45, 82, 102, 0.28))
+    const edgeAlpha = Math.min(0.62, 0.28 + boost * 0.28);
+    ctx.strokeStyle = `rgba(45, 82, 102, ${edgeAlpha.toFixed(3)})`;
+    ctx.lineWidth = 0.85 + boost * 0.35;
     ctx.beginPath();
     for (const [a, b] of poly.edges) {
       const pa = proj[a]!;
@@ -1850,12 +1415,12 @@ function drawPolyhedralConstellations3D(
     }
     ctx.stroke();
 
-    // Đỉnh sao sáng rõ
+    // Đỉnh khắc đồng trầm tinh tế
     for (const pt of proj) {
-      const ptAlpha = Math.min(1, (0.58 + pt.z * 0.22 + boost * 0.35) * baseScale);
-      ctx.fillStyle = `rgba(255, 243, 209, ${ptAlpha.toFixed(3)})`;
+      const ptAlpha = Math.min(0.75, 0.36 + pt.z * 0.14 + boost * 0.3);
+      ctx.fillStyle = `rgba(148, 107, 48, ${ptAlpha.toFixed(3)})`;
       ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 1.45 + boost * 0.9, 0, Math.PI * 2);
+      ctx.arc(pt.x, pt.y, 1.35 + boost * 0.55, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
@@ -1898,46 +1463,12 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
   }
   const activePulses = world.pulses.filter((p) => p.active);
 
-  const nebulaParallaxX = -mouse.normX * 10;
-  const nebulaParallaxY = -mouse.normY * 6 - scrollProgress * 18;
   const astrolabeParallaxX = -mouse.normX * 14;
   const astrolabeParallaxY = -mouse.normY * 8 - scrollProgress * 22;
   const mountainParallaxX = -mouse.normX * 18;
   const mountainParallaxY = -mouse.normY * 6 - scrollProgress * 12;
 
-  // LỚP 1: Dải Ngân Hà (5 lớp tinh vân chéo) + Cực Quang Lụa Mềm + 280 Ngôi Sao + 15 Sao Chữ Thập
-  if (terrainLayers?.next?.nebulaLayer || terrainLayers?.prev?.nebulaLayer) {
-    drawBlendedOffscreenLayer(
-      ctx,
-      terrainLayers.prev?.nebulaLayer,
-      terrainLayers.next?.nebulaLayer,
-      terrainLayers.blend,
-      nebulaParallaxX,
-      nebulaParallaxY,
-      width,
-      height,
-    );
-  }
-
-  drawSoftAuroraRibbons(ctx, palette, width, height, tSec, nebulaParallaxX, nebulaParallaxY);
-
-  for (const star of world.stars) {
-    const sx = star.nx * width - mouse.normX * 7;
-    const sy = star.ny * height - mouse.normY * 4;
-    const twinkle = 0.62 + 0.38 * Math.sin(tSec * star.speed + star.phase);
-    const alpha = Math.max(0.08, star.baseAlpha * twinkle * (0.45 + 0.55 * palette.starIntensity));
-
-    if (star.crossFlare) {
-      drawCrossFlareStar(ctx, sx, sy, star.flareLength, alpha);
-    } else {
-      ctx.fillStyle = `rgba(255, 253, 247, ${alpha.toFixed(3)})`;
-      ctx.beginPath();
-      ctx.arc(sx, sy, star.baseRadius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  // LỚP 1.5: 3 Khối Đa Diện Tinh Tú 3D xoay chậm + 5 Chòm sao Hình học + Bụi sao 3D + Sao băng định kỳ
+  // LỚP 1: 3 Khối Đa Diện Khắc Bản Vẽ 3D xoay chậm trên bầu trời sương ngọc ban mai
   drawPolyhedralConstellations3D(
     ctx,
     world.polyhedralConstellations3D,
@@ -1946,36 +1477,9 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     width,
     height,
     tSec,
-    palette.starIntensity,
   );
 
-  drawMathematicalConstellations(
-    ctx,
-    world.constellations,
-    mouse,
-    width,
-    height,
-    tSec,
-    palette.starIntensity,
-  );
-
-  draw3DStardustDrift(
-    ctx,
-    world.stardust3D,
-    activeGeometry.astrolabe.cx + astrolabeParallaxX,
-    activeGeometry.astrolabe.cy + astrolabeParallaxY,
-    width,
-    height,
-    tSec,
-    palette.starIntensity,
-  );
-
-  updateAndDrawShootingStars(ctx, world, width, height, dtScale, animate);
-
-  // Ánh sáng khí quyển chân trời sau dãy núi (cx=0.58W, cy=0.55H, r=0.55W)
-  drawHorizonAtmosphericGlow(ctx, palette, width, height, mountainParallaxX, mountainParallaxY);
-
-  // LỚP 2: Chùm Tia Sáng Thể Tích (god-rays) + Đài Thiên Cầu Mặt Trời Đông Sơn (73% x 32%)
+  // LỚP 2: Chùm Tia Nắng Ban Mai (god-rays) + Đài Thiên Cầu Đông Sơn Khắc Vàng Cổ (72% x 33%)
   drawVolumetricGodRays(
     ctx,
     activeGeometry.astrolabe.cx + astrolabeParallaxX,
@@ -1998,10 +1502,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     astrolabeParallaxY,
   );
 
-  // LỚP 3: Thấu Kính Chòm Sao Tam Giác & La Bàn Trỏ Chuột trên Bầu Trời (160px)
-  drawSkyConstellationLens(ctx, world.stars, mouse, width, height, tSec);
-
-  // LỚP 4: 5 Tầng Núi Sương Mù Khí Quyển + Lát Cắt Ridgeline 3D + 24 Đường Đồng Mức Bậc Thang
+  // LỚP 3 & 4: 5 Tầng Núi Sơn Thủy Sương Mù OffscreenCanvas + Lát Cắt Đồng Mức Ridgeline 3D
   ctx.save();
   ctx.translate(mountainParallaxX, mountainParallaxY);
   if (
@@ -2020,7 +1521,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
     );
   }
 
-  // LỚP 5: Lát cắt địa hình Ridgeline 3D + Xung Ánh Sáng Chạy Dọc Bậc Thang & Thấu Kính Trắc Địa
+  // LỚP 5: Lát cắt địa hình Ridgeline 3D + Tương tác Chuột 220px màu Vàng Đồng (#A67936) & Sóng Trống Đồng
   const localMouse: AtmosphereMouseState = {
     ...mouse,
     x: mouse.x - mountainParallaxX,
@@ -2037,7 +1538,7 @@ export function renderAtmosphereFrame(data: RenderContextData): void {
 
   drawHarmonicPulseRings(ctx, activePulses);
 
-  // LỚP 6: 3 Lớp Biển Mây Bồng Bềnh + Dòng Suối Ánh Sao (0.35W->0.68W) + 25 Tinh Tú Vàng Ấm
+  // LỚP 6: Dải Sương Sáng Mặt Hồ 14% cuối màn hình (#DDE7E4 -> #EDF2F0) + Gợn Caustics Vàng Kem
   drawMistMirrorLakeAndStarlight(
     ctx,
     world,

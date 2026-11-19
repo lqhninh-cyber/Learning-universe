@@ -171,7 +171,7 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
       textBaseline: 'alphabetic',
     } as unknown as CanvasRenderingContext2D;
 
-    const palette = ATMOSPHERIC_PALETTES['dem-ngan-ha'];
+    const palette = ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'];
     const world = createAtmosphereWorld();
     const sprites = buildAtmosphereSpriteCache();
     const glowSprites = createGlowSpriteCache();

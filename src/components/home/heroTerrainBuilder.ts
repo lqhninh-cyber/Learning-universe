@@ -335,8 +335,8 @@ function buildTerracedContours(
         tierIndex: tier,
         depth: layer.depth,
         tone,
-        baseAlpha: isIndexContour ? 0.3 : tone === 'gold' ? 0.24 : 0.2,
-        lineWidth: 0.85,
+        baseAlpha: tone === 'gold' ? (isIndexContour ? 0.3 : 0.26) : isIndexContour ? 0.48 : 0.42,
+        lineWidth: 0.75,
         minY,
         maxY,
         points: pts,
@@ -349,8 +349,8 @@ function buildTerracedContours(
 }
 
 function buildDongSonAstrolabe(width: number, height: number): AstrolabeSpec {
-  const cx = width * 0.73;
-  const cy = height * 0.32;
+  const cx = width * 0.72;
+  const cy = height * 0.33;
   const scale = Math.max(0.56, Math.min(width, height) / 900);
 
   const rings: readonly AstrolabeRingSpec[] = [
@@ -625,8 +625,8 @@ function mixRgb(
 
 function renderMountainTopographyOffscreen(
   geometry: HeroTerrainGeometry,
-  phase: AtmosphericPhase,
-  palette: AtmospherePalette,
+  _phase: AtmosphericPhase,
+  _palette: AtmospherePalette,
   dpr: number,
 ): TerrainSurface | null {
   const surf = makeOffscreenSurface(
@@ -637,51 +637,30 @@ function renderMountainTopographyOffscreen(
   if (!ctx) return null;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const isNightLike = phase === 'dem-ngan-ha' || phase === 'hoang-hon';
+  // 5 tầng núi sơn thủy sương mù tách lớp rõ ràng từ xa đến gần (Bình Minh Bạch Ngọc)
+  const layerPeakPalette: readonly (readonly [number, number, number])[] = [
+    [200, 218, 212], // Tầng 1 (xa nhất): #C8DAD4
+    [165, 192, 184], // Tầng 2: #A5C0B8
+    [120, 155, 146], // Tầng 3: #789B92
+    [76, 115, 105], // Tầng 4: #4C7369
+    [43, 75, 67], // Tầng 5 (tiền cảnh đáy): #2B4B43
+  ];
 
-  // Tách độ sáng rõ rệt giữa 5 tầng núi từ xa (nhuốm lam sáng/khí quyển) đến gần (lam trầm sâu), không bị bệt đen
-  const layerPeakPalette: readonly (readonly [number, number, number])[] = isNightLike
-    ? [
-        mixRgb(palette.facetCelestial, [72, 134, 178], 0.55), // Xa nhất: lam ngọc sáng sương
-        mixRgb(palette.facetCelestial, palette.facetMid, 0.42),
-        mixRgb(palette.facetMid, [42, 86, 124], 0.4),
-        mixRgb(palette.facetMid, palette.facetAbyss, 0.45),
-        mixRgb(palette.facetAbyss, [22, 46, 70], 0.5),
-      ]
-    : [
-        mixRgb(palette.facetCelestial, palette.cloudPearl, 0.35),
-        mixRgb(palette.facetCelestial, palette.facetMid, 0.35),
-        palette.facetMid,
-        mixRgb(palette.facetMid, palette.facetAbyss, 0.5),
-        palette.facetAbyss,
-      ];
+  const layerBasePalette: readonly (readonly [number, number, number])[] = [
+    [230, 239, 236], // Tan vào sương #E6EFEC
+    [210, 225, 220], // #D2E1DC
+    [177, 199, 192], // #B1C7C0
+    [126, 157, 149], // #7E9D95
+    [221, 231, 228], // Tan vào dải sương sáng mặt hồ #DDE7E4
+  ];
 
-  const layerBasePalette: readonly (readonly [number, number, number])[] = isNightLike
-    ? [
-        [52, 98, 132],
-        [44, 84, 114],
-        [35, 68, 96],
-        [27, 54, 78],
-        [22, 44, 66],
-      ]
-    : [
-        palette.cloudPearl,
-        palette.cloudSlate,
-        palette.facetMid,
-        palette.bottomMistDeep,
-        palette.bottomMistDeep,
-      ];
-
-  const mistBandRgb: readonly [number, number, number] = isNightLike
-    ? mixRgb([39, 71, 94], palette.rayCool, 0.25) // #27475E pha ánh lam khí quyển
-    : palette.cloudPearl;
+  const mistBandRgb: readonly [number, number, number] = [230, 239, 236]; // #E6EFEC
 
   for (const layer of geometry.mountainLayers) {
-    const peakRgb = layerPeakPalette[layer.index] ?? [42, 86, 124];
-    const skirtRgb = layerBasePalette[layer.index] ?? [35, 68, 96];
-    const sunlitRgb = mixRgb(peakRgb, palette.dawnCore, layer.index <= 1 ? 0.28 : 0.16);
+    const peakRgb = layerPeakPalette[layer.index] ?? [120, 155, 146];
+    const skirtRgb = layerBasePalette[layer.index] ?? [177, 199, 192];
 
-    // 1. Khối núi đa tầng có chiều sâu quang học (lưng núi nhận ánh sáng chân trời chuyển dần xuống thung lũng sương)
+    // 1. Khối núi đa tầng có chiều sâu khí quyển sáng trong
     ctx.save();
     ctx.beginPath();
     traceSmoothQuadraticCurve(ctx, layer.points, true);
@@ -689,80 +668,52 @@ function renderMountainTopographyOffscreen(
     ctx.lineTo(-48, geometry.height);
     ctx.closePath();
 
-    const grad = ctx.createLinearGradient(0, layer.baseY - 46, 0, layer.skirtY + 75);
-    grad.addColorStop(0, rgbaString(sunlitRgb, layer.index === 0 ? 0.78 : 0.92));
-    grad.addColorStop(0.28, rgbaString(peakRgb, 0.92));
-    grad.addColorStop(0.68, rgbaString(skirtRgb, 0.9));
-    grad.addColorStop(1, rgbaString(mistBandRgb, 0.36));
+    const grad = ctx.createLinearGradient(0, layer.baseY - 40, 0, layer.skirtY + 75);
+    grad.addColorStop(0, rgbaString(peakRgb, layer.index === 0 ? 0.88 : 0.96));
+    grad.addColorStop(0.58, rgbaString(mixRgb(peakRgb, skirtRgb, 0.55), 0.95));
+    grad.addColorStop(1, rgbaString(skirtRgb, layer.index === 4 ? 0.92 : 0.72));
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // 1.5. Đường viền sáng mảnh tách biệt hoàn toàn đỉnh núi & bầu trời:
-    // Sống núi cao nhất (layer 0): lineWidth 1.2px, rgba(160, 215, 245, 0.38) + viền hổ phách nhẹ ở tầng 1-2
-    if (layer.index === 0) {
-      const topRimColor =
-        phase === 'dem-ngan-ha'
-          ? 'rgba(160, 215, 245, 0.38)'
-          : rgbaString(mixRgb(palette.rayCool, [255, 244, 214], 0.4), 0.42);
-      ctx.save();
-      ctx.beginPath();
-      traceSmoothQuadraticCurve(ctx, layer.points, true);
-      ctx.strokeStyle = topRimColor;
-      ctx.lineWidth = 1.2;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-      ctx.restore();
-    } else if (layer.index <= 2) {
-      const rimIntensity = layer.index === 1 ? 0.28 : 0.22;
-      const rimGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
-      const focusStop = Math.max(0.15, Math.min(0.85, geometry.astrolabe.cx / geometry.width));
-      const warmRimRgb = mixRgb([243, 229, 171], palette.rimGlow, 0.45);
-      rimGrad.addColorStop(0, rgbaString(warmRimRgb, rimIntensity * 0.28));
-      rimGrad.addColorStop(
-        Math.max(0.05, focusStop - 0.28),
-        rgbaString(warmRimRgb, rimIntensity * 0.65),
-      );
-      rimGrad.addColorStop(focusStop, rgbaString(warmRimRgb, rimIntensity));
-      rimGrad.addColorStop(
-        Math.min(0.95, focusStop + 0.24),
-        rgbaString(warmRimRgb, rimIntensity * 0.7),
-      );
-      rimGrad.addColorStop(1, rgbaString(warmRimRgb, rimIntensity * 0.24));
+    // 1.5. Viền sáng nắng mai dọc sống núi rgba(255, 252, 240, 0.65)
+    ctx.save();
+    ctx.beginPath();
+    traceSmoothQuadraticCurve(ctx, layer.points, true);
+    const rimGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
+    const focusStop = Math.max(0.18, Math.min(0.84, geometry.astrolabe.cx / geometry.width));
+    const rimPeakAlpha = layer.index === 0 ? 0.68 : layer.index <= 2 ? 0.65 : 0.45;
+    rimGrad.addColorStop(0, `rgba(255, 252, 240, ${(rimPeakAlpha * 0.35).toFixed(3)})`);
+    rimGrad.addColorStop(focusStop, `rgba(255, 252, 240, ${rimPeakAlpha.toFixed(3)})`);
+    rimGrad.addColorStop(1, `rgba(255, 252, 240, ${(rimPeakAlpha * 0.42).toFixed(3)})`);
+    ctx.strokeStyle = rimGrad;
+    ctx.lineWidth = layer.index === 0 ? 1.35 : 1.05;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.restore();
 
-      ctx.save();
-      ctx.beginPath();
-      traceSmoothQuadraticCurve(ctx, layer.points, true);
-      ctx.strokeStyle = rimGrad;
-      ctx.lineWidth = layer.index === 1 ? 1.05 : 0.9;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    // 2. Đường đồng mức ruộng bậc thang chuẩn taste-skill (contour-lines & ridgeline):
-    // - Phân tách đường đồng mức chỉ số (indexEvery = 3) đậm sắc khoáng thạch và đường trung gian mảnh
-    // - Khử răng cưa Moiré theo độ dốc |dy/dx| và làm dịu vùng calm dưới khối chữ Hero
+    // 2. 24-30 đường đồng mức ruộng bậc thang siêu mảnh (lineWidth: 0.75px):
+    // Đồng Cổ rgba(156, 122, 76, 0.26) xen Trắng Sứ rgba(255, 255, 255, 0.45)
     if (layer.index >= 1) {
       ctx.clip();
       const layerContours = geometry.contours.filter((c) => c.layerIndex === layer.index);
-      const goldRgb = mixRgb([212, 175, 105], palette.terraceRim, 0.35);
-      const cyanRgb = mixRgb([110, 185, 220], palette.rayCool, 0.35);
+      const bronzeRgb: readonly [number, number, number] = [156, 122, 76];
+      const porcelainRgb: readonly [number, number, number] = [255, 255, 255];
 
       for (const contour of layerContours) {
-        const isIdxLine = contour.tierIndex === 0 || (contour.tierIndex + 1) % 3 === 0;
         const contourGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
-        const baseColor = contour.tone === 'gold' ? goldRgb : cyanRgb;
-        const aFull = contour.baseAlpha;
-        // Dịu nhẹ ở vùng chữ bên trái (calmX = 0.24) và sắc nét dần về sườn núi phải (focus = 0.72)
+        const isBronze = contour.tone === 'gold';
+        const baseColor = isBronze ? bronzeRgb : porcelainRgb;
+        const aFull = isBronze ? 0.26 : 0.45;
+        // Làm dịu vùng calm dưới cột chữ bên trái và sắc nét dần sang sườn núi bên phải
         contourGrad.addColorStop(0, rgbaString(baseColor, aFull * 0.32));
-        contourGrad.addColorStop(0.24, rgbaString(baseColor, aFull * 0.42));
-        contourGrad.addColorStop(0.58, rgbaString(baseColor, aFull * (isIdxLine ? 1.15 : 0.92)));
-        contourGrad.addColorStop(0.84, rgbaString(baseColor, aFull * (isIdxLine ? 1.22 : 1.0)));
-        contourGrad.addColorStop(1, rgbaString(baseColor, aFull * 0.48));
+        contourGrad.addColorStop(0.26, rgbaString(baseColor, aFull * 0.48));
+        contourGrad.addColorStop(0.62, rgbaString(baseColor, aFull));
+        contourGrad.addColorStop(0.86, rgbaString(baseColor, Math.min(0.62, aFull * 1.1)));
+        contourGrad.addColorStop(1, rgbaString(baseColor, aFull * 0.55));
 
         ctx.beginPath();
         traceSmoothQuadraticCurve(ctx, contour.points, true);
-        ctx.lineWidth = contour.lineWidth * (isIdxLine ? 1.24 : 0.94);
+        ctx.lineWidth = contour.lineWidth;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.strokeStyle = contourGrad;
@@ -771,13 +722,13 @@ function renderMountainTopographyOffscreen(
     }
     ctx.restore();
 
-    // 3. Lớp Sương Mù Thung Lũng tách lớp chiều sâu ở chân mỗi tầng núi
-    const mistTop = layer.skirtY - 48;
-    const mistBottom = Math.min(geometry.height * 0.88, layer.skirtY + 64);
+    // 3. Lớp Sương Mù Bạch Ngọc tách lớp chiều sâu ở chân mỗi tầng núi
+    const mistTop = layer.skirtY - 46;
+    const mistBottom = Math.min(geometry.height * 0.9, layer.skirtY + 62);
     const mistGrad = ctx.createLinearGradient(0, mistTop, 0, mistBottom);
-    const mistAlpha = isNightLike ? 0.34 - layer.index * 0.03 : 0.38 - layer.index * 0.03;
+    const mistAlpha = Math.max(0.18, 0.44 - layer.index * 0.05);
     mistGrad.addColorStop(0, rgbaString(mistBandRgb, 0));
-    mistGrad.addColorStop(0.5, rgbaString(mistBandRgb, Math.max(0.14, mistAlpha)));
+    mistGrad.addColorStop(0.5, rgbaString(mistBandRgb, mistAlpha));
     mistGrad.addColorStop(1, rgbaString(mistBandRgb, 0));
     ctx.fillStyle = mistGrad;
     ctx.fillRect(-40, mistTop, geometry.width + 80, mistBottom - mistTop);
@@ -786,13 +737,13 @@ function renderMountainTopographyOffscreen(
   return surf;
 }
 
-/** Pre-render 3 lớp Biển Mây Bồng Bềnh seamless (OffscreenCanvas) cho vùng đáy 0.72H -> 1.0H */
+/** Pre-render 3 lớp Biển Sương Ban Mai seamless (OffscreenCanvas) cho vùng đáy 0.72H -> 1.0H */
 function renderValleyMistLayerOffscreen(
   width: number,
   height: number,
   layerIndex: 0 | 1 | 2,
-  phase: AtmosphericPhase,
-  palette: AtmospherePalette,
+  _phase: AtmosphericPhase,
+  _palette: AtmospherePalette,
   dpr: number,
 ): TerrainSurface | null {
   const bandHeight = Math.ceil(height * 0.32);
@@ -801,18 +752,9 @@ function renderValleyMistLayerOffscreen(
   if (!ctx) return null;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const isNightLike = phase === 'dem-ngan-ha' || phase === 'hoang-hon';
-  const coolCloudA: readonly [number, number, number] = isNightLike
-    ? [27, 53, 72] // #1B3548
-    : mixRgb([27, 53, 72], palette.cloudSlate, 0.55);
-  const coolCloudB: readonly [number, number, number] = isNightLike
-    ? [39, 71, 94] // #27475E
-    : mixRgb([39, 71, 94], palette.cloudPearl, 0.6);
-  const warmCloudGold: readonly [number, number, number] = mixRgb(
-    [212, 163, 89],
-    palette.dawnCore,
-    0.35,
-  );
+  const mistJadeA: readonly [number, number, number] = [221, 231, 228]; // #DDE7E4
+  const mistJadeB: readonly [number, number, number] = [237, 242, 240]; // #EDF2F0
+  const warmDawnMist: readonly [number, number, number] = [255, 246, 224]; // #FFF6E0
 
   const puffCount = 12 + layerIndex * 3;
   const baseYRatio = 0.34 + layerIndex * 0.16;
@@ -823,10 +765,9 @@ function renderValleyMistLayerOffscreen(
     const rx = Math.max(90, (width / puffCount) * (1.25 + (i % 3) * 0.25));
     const ry = bandHeight * (0.28 + (i % 2) * 0.08);
     const isWarm = i % 3 === 0;
-    const rgb = isWarm ? warmCloudGold : i % 2 === 0 ? coolCloudB : coolCloudA;
-    const alpha = isWarm ? 0.15 : 0.24 - layerIndex * 0.03;
+    const rgb = isWarm ? warmDawnMist : i % 2 === 0 ? mistJadeB : mistJadeA;
+    const alpha = isWarm ? 0.24 : 0.32 - layerIndex * 0.04;
 
-    // Vẽ lặp qua biên trái/phải để cuộn ngang seamless không bị vết cắt
     for (const offsetX of [-width, 0, width]) {
       const px = cx + offsetX;
       if (px + rx < -20 || px - rx > width + 20) continue;
@@ -861,20 +802,20 @@ function renderAstrolabeStarOffscreen(
   const half = size * 0.5;
   ctx.translate(half, half);
 
-  // Vòng tròn tâm sáng rõ
+  // Vòng tròn tâm khắc nét Đồng Trầm & Lam Phiến
   ctx.beginPath();
   ctx.arc(0, 0, astrolabe.starInnerRadius * 0.55, 0, Math.PI * 2);
-  ctx.lineWidth = 0.8;
-  ctx.strokeStyle = 'rgba(243, 201, 120, 0.55)';
+  ctx.lineWidth = 0.85;
+  ctx.strokeStyle = 'rgba(45, 82, 102, 0.28)';
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(0, 0, astrolabe.starInnerRadius, 0, Math.PI * 2);
-  ctx.lineWidth = 0.85;
-  ctx.strokeStyle = 'rgba(243, 201, 120, 0.52)';
+  ctx.lineWidth = 0.9;
+  ctx.strokeStyle = 'rgba(148, 107, 48, 0.42)';
   ctx.stroke();
 
-  // Ngôi sao Đông Sơn 14 cánh rực rỡ chuẩn tỷ lệ hình học
+  // Ngôi sao Đông Sơn 14 cánh khắc nét Đồng Trầm cổ điển
   const totalPoints = astrolabe.starRays * 2;
   ctx.beginPath();
   for (let i = 0; i <= totalPoints; i += 1) {
@@ -889,10 +830,10 @@ function renderAstrolabeStarOffscreen(
     }
   }
   ctx.closePath();
-  ctx.fillStyle = 'rgba(243, 201, 120, 0.14)';
+  ctx.fillStyle = 'rgba(218, 182, 118, 0.14)';
   ctx.fill();
   ctx.lineWidth = 0.95;
-  ctx.strokeStyle = 'rgba(243, 201, 120, 0.62)';
+  ctx.strokeStyle = 'rgba(148, 107, 48, 0.42)';
   ctx.stroke();
 
   return surf;
@@ -914,11 +855,15 @@ function renderAstrolabeRingOffscreen(
   const half = spriteLogicalSize * 0.5;
   ctx.translate(half, half);
 
-  // Vòng tròn đồng tâm sáng sắc nét (0.45 - 0.65 alpha)
+  // Luân phiên chỉ Đồng Trầm rgba(148, 107, 48, 0.42) & Lam Phiến rgba(45, 82, 102, 0.28)
+  const isBronzeRing = ring.index % 2 === 0;
+  const primaryStroke = isBronzeRing ? 'rgba(148, 107, 48, 0.42)' : 'rgba(45, 82, 102, 0.28)';
+  const minorTickStroke = isBronzeRing ? 'rgba(148, 107, 48, 0.3)' : 'rgba(45, 82, 102, 0.22)';
+
   ctx.beginPath();
   ctx.arc(0, 0, ring.radius, 0, Math.PI * 2);
-  ctx.lineWidth = ring.lineWidth + 0.15;
-  ctx.strokeStyle = 'rgba(243, 201, 120, 0.48)';
+  ctx.lineWidth = ring.lineWidth + 0.1;
+  ctx.strokeStyle = primaryStroke;
   ctx.stroke();
 
   // Khắc vạch chia độ: mỗi 5° một vạch ngắn 3px, mỗi 30° một vạch dài 7px kèm chấm tròn nhỏ
@@ -935,13 +880,13 @@ function renderAstrolabeRingOffscreen(
     ctx.moveTo(cos * innerR, sin * innerR);
     ctx.lineTo(cos * outerR, sin * outerR);
     ctx.lineWidth = isMajor ? 0.95 : 0.6;
-    ctx.strokeStyle = isMajor ? 'rgba(243, 201, 120, 0.64)' : 'rgba(243, 201, 120, 0.45)';
+    ctx.strokeStyle = isMajor ? primaryStroke : minorTickStroke;
     ctx.stroke();
 
     if (isMajor) {
       ctx.beginPath();
-      ctx.arc(cos * (outerR + 3.5), sin * (outerR + 3.5), 1.35, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 243, 209, 0.62)';
+      ctx.arc(cos * (outerR + 3.5), sin * (outerR + 3.5), 1.3, 0, Math.PI * 2);
+      ctx.fillStyle = isBronzeRing ? 'rgba(148, 107, 48, 0.52)' : 'rgba(45, 82, 102, 0.38)';
       ctx.fill();
     }
   }

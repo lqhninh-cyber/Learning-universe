@@ -42,7 +42,7 @@ describe('App routing smoke test', () => {
       '/learning-space',
     );
 
-    // 1. Hero Section — Toàn cảnh thoáng đãng + Thanh dock chân Hero (Danh ngôn & Thời khắc)
+    // 1. Hero Section — Toàn cảnh thoáng đãng Bình Minh Bạch Ngọc & Thẻ Danh ngôn
     expect(await screen.findByRole('heading', { name: /Đi một ngày đàng/i })).toBeInTheDocument();
     expect(screen.getByText(/— Tục ngữ Việt Nam/i)).toBeInTheDocument();
     expect(
@@ -55,7 +55,7 @@ describe('App routing smoke test', () => {
       'data-landscape',
       'hoang-lien-son',
     );
-    expect(screen.getByTestId('atmospheric-time-dial')).toBeInTheDocument();
+    expect(screen.queryByTestId('atmospheric-time-dial')).not.toBeInTheDocument();
     expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
     expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
     expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();

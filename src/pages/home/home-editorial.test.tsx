@@ -542,26 +542,13 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const diorama = screen.getByTestId('son-ha-diorama');
       const canvas = screen.getByTestId('hero-physics-canvas');
       expect(diorama).toHaveAttribute('data-landscape', 'hoang-lien-son');
-      expect(diorama).toHaveAttribute('data-phase', 'dem-ngan-ha');
-      expect(canvas).toHaveAttribute('data-phase', 'dem-ngan-ha');
+      expect(diorama).toHaveAttribute('data-phase', 'binh-minh-bach-ngoc');
+      expect(canvas).toHaveAttribute('data-phase', 'binh-minh-bach-ngoc');
       expect(screen.getByTestId('hero-text-contrast-scrim')).toBeInTheDocument();
 
-      // Kiểm chứng La Bàn 4 Thời Khắc (Đêm Ngân Hà · Bình Minh · Nắng Ngọc · Hoàng Hôn)
-      expect(screen.getByTestId('atmospheric-time-dial')).toBeInTheDocument();
-      expect(screen.getByTestId('time-phase-dem-ngan-ha')).toHaveAttribute('aria-pressed', 'true');
-
-      fireEvent.click(screen.getByTestId('time-phase-binh-minh'));
-      expect(diorama).toHaveAttribute('data-phase', 'binh-minh');
-      expect(canvas).toHaveAttribute('data-phase', 'binh-minh');
-      expect(screen.getByTestId('time-phase-binh-minh')).toHaveAttribute('aria-pressed', 'true');
-
-      fireEvent.click(screen.getByTestId('time-phase-nang-ngoc'));
-      expect(diorama).toHaveAttribute('data-phase', 'nang-ngoc');
-      expect(canvas).toHaveAttribute('data-phase', 'nang-ngoc');
-
-      fireEvent.click(screen.getByTestId('time-phase-hoang-hon'));
-      expect(diorama).toHaveAttribute('data-phase', 'hoang-hon');
-      expect(canvas).toHaveAttribute('data-phase', 'hoang-hon');
+      // Đã xóa bỏ hoàn toàn thanh chọn THỜI KHẮC
+      expect(screen.queryByTestId('atmospheric-time-dial')).not.toBeInTheDocument();
+      expect(screen.queryByText(/Đêm Ngân Hà/i)).not.toBeInTheDocument();
 
       expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
       expect(screen.getByTestId('fansipan-peaks')).toHaveAttribute(
@@ -632,11 +619,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
   });
 
   describe('Hero Diorama, Physics Canvas & Sơn Thủy Trắc Địa + Thiên Cầu Đông Sơn Engine', () => {
-    it('HeroSonHaDiorama & HeroPhysicsCanvas vận hành chuẩn 5 tầng núi sương mù, 21 đồng mức, Thiên Cầu Đông Sơn & 3 tương tác 120fps', () => {
+    it('HeroSonHaDiorama & HeroPhysicsCanvas vận hành chuẩn 5 tầng núi sương mù, 24-28 đồng mức 0.75px, Thiên Cầu Đông Sơn & tương tác 120fps', () => {
       const { container } = render(
         <div className="relative h-96 w-full">
-          <HeroSonHaDiorama phase="dem-ngan-ha" />
-          <HeroPhysicsCanvas phase="dem-ngan-ha" />
+          <HeroSonHaDiorama />
+          <HeroPhysicsCanvas />
         </div>,
       );
 
@@ -653,24 +640,24 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
       expect(canvas).toHaveAttribute('data-landscape-style', 'topographic-dong-son');
 
-      // Hai lớp tương phản AAA (>10:1) & dải hòa tan đáy Screen 2 nằm trên Canvas (z-10)
+      // Hai lớp tương phản AAA & dải sương mặt hồ đáy Hero nằm trên Canvas (z-10)
       expect(screen.getByTestId('hero-bottom-mist-transition').className).toContain('z-10');
       expect(screen.getByTestId('hero-text-contrast-scrim').className).toContain('z-10');
       expect(screen.getByTestId('hero-quote-contrast-scrim').className).toContain('z-10');
 
-      // 1. 5 Tầng núi sương mù Fourier mượt, 22-28 đường đồng mức phát sáng (0.85px) trên 4 tầng núi & Đài Thiên Cầu Đông Sơn
+      // 1. 5 Tầng núi sương mù Fourier mượt, 22-28 đường đồng mức (0.75px) trên 4 tầng núi & Đài Thiên Cầu Đông Sơn
       expect(PIPELINE_LAYER_NAMES).toHaveLength(6);
       const terrain = buildHeroTerrainGeometry(1440, 900);
       expect(terrain.mountainLayers).toHaveLength(5);
       expect(terrain.contours.length).toBeGreaterThanOrEqual(22);
       expect(terrain.contours.length).toBeLessThanOrEqual(28);
-      expect(terrain.contours.every((c) => c.lineWidth === 0.85)).toBe(true);
+      expect(terrain.contours.every((c) => c.lineWidth === 0.75)).toBe(true);
       expect(new Set(terrain.contours.map((c) => c.layerIndex))).toEqual(new Set([1, 2, 3, 4]));
       expect(new Set(terrain.contours.map((c) => c.tone))).toEqual(new Set(['gold', 'cyan']));
 
-      // Đài Thiên Cầu Đông Sơn (73% x 32%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo)
-      expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.73, 2);
-      expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.32, 2);
+      // Đài Thiên Cầu Đông Sơn (72% x 33%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo)
+      expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.72, 2);
+      expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.33, 2);
       expect(terrain.astrolabe.starRays).toBe(14);
       expect(terrain.astrolabe.rings).toHaveLength(4);
       expect(
@@ -679,7 +666,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(Math.abs(terrain.astrolabe.rings[0]!.angularSpeedRadSec)).toBeCloseTo(0.04, 3);
       expect(terrain.astrolabe.eclipticArcs).toHaveLength(2);
 
-      // Tinh vân Dải Ngân Hà (5+ lớp bán kính 250-450px, độ mờ 0.03-0.06) & 3 lớp Biển Mây Bồng Bềnh
+      // Tinh vân / sương khí quyển & 3 lớp Biển Sương OffscreenCanvas
       expect(terrain.nebulaHalos.length).toBeGreaterThanOrEqual(5);
       expect(
         terrain.nebulaHalos.every(
@@ -690,12 +677,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const layerCache = buildHeroTerrainLayerCache(
         1440,
         900,
-        'dem-ngan-ha',
-        ATMOSPHERIC_PALETTES['dem-ngan-ha'],
+        'binh-minh-bach-ngoc',
+        ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'],
       );
       expect(layerCache.width).toBe(1440);
       expect(layerCache.height).toBe(900);
-      expect(layerCache.phase).toBe('dem-ngan-ha');
+      expect(layerCache.phase).toBe('binh-minh-bach-ngoc');
       expect(layerCache.geometry.mountainLayers).toHaveLength(5);
       expect(layerCache.valleyMistLayers).toHaveLength(3);
 
@@ -733,19 +720,13 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       spawnHarmonicContourPulse(world, 720, 480, 600);
       expect(world.pulses.some((p) => p.active && p.maxRadius === 600)).toBe(true);
 
-      // Kiểm chứng nội suy 600ms bảng màu khí quyển
-      const lerped = interpolateAtmospherePalette(
-        ATMOSPHERIC_PALETTES['dem-ngan-ha'],
-        ATMOSPHERIC_PALETTES['nang-ngoc'],
-        0.5,
-      );
-      expect(lerped.sky0[0]).toBe(
-        Math.round(
-          (ATMOSPHERIC_PALETTES['dem-ngan-ha'].sky0[0] +
-            ATMOSPHERIC_PALETTES['nang-ngoc'].sky0[0]) /
-            2,
-        ),
-      );
+      // Kiểm chứng bảng màu Bình Minh Bạch Ngọc & nội suy khí quyển
+      const dawnPalette = ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'];
+      expect(dawnPalette.sky0).toEqual([237, 243, 241]);
+      expect(dawnPalette.sky2).toEqual([221, 234, 230]);
+      expect(dawnPalette.sky4).toEqual([246, 239, 224]);
+      const lerped = interpolateAtmospherePalette(dawnPalette, dawnPalette, 0.5);
+      expect(lerped.sky0).toEqual(dawnPalette.sky0);
     });
 
     it('HeritageArtShowcase cố định thẻ thẳng góc (rotate-0), nút bấm h-8 w-8 rounded-full và chuyển tác phẩm mượt', async () => {

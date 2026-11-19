@@ -51,12 +51,12 @@ export function ShorelineWaveBridge({
       aria-hidden="true"
       className="pointer-events-none relative z-10 -mt-24 h-[126px] w-full overflow-hidden select-none sm:-mt-28 sm:h-[144px] lg:h-[156px]"
     >
-      {/* Dải sương mây vùng cao hòa tan mềm từ chân mây Hoàng Liên Sơn (#112233) xuống Screen 2 (#121B28) */}
+      {/* Dải sương mây vùng cao hòa tan mềm từ mặt hồ Bạch Ngọc (#EDF2F0) xuống Screen 2 (#121B28) */}
       <div
         className="absolute inset-x-0 top-0 h-28"
         style={{
           background: isPavilion
-            ? 'linear-gradient(180deg, rgba(17, 34, 51, 0) 0%, rgba(17, 34, 51, 0.72) 52%, #121B28 100%)'
+            ? 'linear-gradient(180deg, rgba(237, 242, 240, 0) 0%, rgba(190, 206, 202, 0.52) 44%, #121B28 100%)'
             : 'linear-gradient(180deg, rgba(248, 246, 240, 0) 0%, rgba(230, 226, 214, 0.34) 55%, rgba(248, 246, 240, 0.72) 100%)',
         }}
       />
@@ -69,8 +69,8 @@ export function ShorelineWaveBridge({
       >
         <defs>
           <linearGradient id={cloudBackGradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={isPavilion ? '#112233' : '#C5D3DC'} stopOpacity="0.62" />
-            <stop offset="100%" stopColor={isPavilion ? '#121B28' : '#E6E2D6'} stopOpacity="0.88" />
+            <stop offset="0%" stopColor={isPavilion ? '#DDE7E4' : '#C5D3DC'} stopOpacity="0.72" />
+            <stop offset="100%" stopColor={isPavilion ? '#121B28' : '#E6E2D6'} stopOpacity="0.92" />
           </linearGradient>
           <linearGradient id={cloudCrestStrokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#D4A359" stopOpacity="0" />

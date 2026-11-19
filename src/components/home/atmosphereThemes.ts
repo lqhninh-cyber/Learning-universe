@@ -1,39 +1,4 @@
-export type AtmosphericPhase = 'dem-ngan-ha' | 'binh-minh' | 'nang-ngoc' | 'hoang-hon';
-
-export interface AtmosphericPhaseOption {
-  readonly id: AtmosphericPhase;
-  readonly label: string;
-  readonly description: string;
-  readonly swatchGradient: string;
-}
-
-export const ATMOSPHERIC_PHASE_OPTIONS: readonly AtmosphericPhaseOption[] = [
-  {
-    id: 'dem-ngan-ha',
-    label: 'Đêm Ngân Hà',
-    description:
-      'Lam Ngọc Vũ Trụ sâu thẳm, ánh vàng Hoàng Kim trên đỉnh Fansipan & hổ phách ấm chân trời',
-    swatchGradient: 'linear-gradient(135deg, #060C18 0%, #0F263A 58%, #E5C158 100%)',
-  },
-  {
-    id: 'binh-minh',
-    label: 'Bình Minh',
-    description: 'Chân trời cam hồng hừng đông, biển mây nhuộm vàng sớm & tia nắng rực rỡ',
-    swatchGradient: 'linear-gradient(135deg, #352148 0%, #FF8FA3 58%, #FFD166 100%)',
-  },
-  {
-    id: 'nang-ngoc',
-    label: 'Nắng Ngọc',
-    description: 'Bầu trời xanh ngọc bích trong trẻo, núi đá xanh lam & ruộng lúa vàng ngọc',
-    swatchGradient: 'linear-gradient(135deg, #0D3B4C 0%, #4895EF 68%, #F4D35E 100%)',
-  },
-  {
-    id: 'hoang-hon',
-    label: 'Hoàng Hôn',
-    description: 'Sắc chiều đỏ chu sa, tím khói & hổ phách ấm vùng cao',
-    swatchGradient: 'linear-gradient(135deg, #3D2645 0%, #C83E37 58%, #E9C46A 100%)',
-  },
-];
+export type AtmosphericPhase = 'binh-minh-bach-ngoc';
 
 export type RgbTriplet = readonly [number, number, number];
 
@@ -68,127 +33,43 @@ export interface AtmospherePalette {
   readonly contrastScrimAlpha: number;
 }
 
+/**
+ * Bảng màu sáng "Bình Minh Bạch Ngọc & Sơn Thủy Sương Lam" —
+ * đồng bộ 100% với hệ màu Bạch Ngọc Khoáng Thạch & Đá Phiến Trầm của Learning Universe.
+ */
+export const JADE_MIST_DAWN_PALETTE: AtmospherePalette = {
+  sky0: [237, 243, 241], // #EDF3F1 Bạch Ngọc Sương
+  sky1: [229, 239, 236], // Chuyển sắc sương ngọc
+  sky2: [221, 234, 230], // #DDEAE6 Lam Ngọc Dịu
+  sky3: [234, 237, 230], // Khí quyển sương sớm chân núi
+  sky4: [246, 239, 224], // #F6EFE0 Nắng Mai Vàng Kem
+  dawnCore: [255, 246, 224], // Quầng nắng ấm trong trẻo
+  dawnEdge: [218, 182, 118], // Vàng đồng dịu
+  facetCelestial: [200, 218, 212], // #C8DAD4 Tầng núi xa
+  facetDawn: [255, 252, 240], // Viền nắng mai sống núi
+  facetMid: [120, 155, 146], // #789B92 Tầng núi trung cảnh
+  facetAbyss: [43, 75, 67], // #2B4B43 Tầng núi tiền cảnh
+  rimGlow: [255, 252, 240], // Nắng mai sống núi
+  terracePoolA: [156, 122, 76], // Đồng cổ #9C7A4C
+  terracePoolB: [255, 255, 255], // Trắng sứ
+  terraceRim: [166, 121, 54], // Vàng đồng #A67936 khi tương tác
+  cloudIvory: [255, 250, 235], // Mây sáng ban mai
+  cloudPearl: [230, 239, 236], // #E6EFEC Sương ngọc
+  cloudSlate: [177, 199, 192], // #B1C7C0 Sương lam
+  cloudRim: [255, 252, 240], // Mép sương đón nắng
+  rayWarm: [255, 250, 235], // Tia nắng ban mai
+  rayCool: [221, 234, 230], // Sương lam ngọc
+  pineTop: [76, 115, 105], // #4C7369
+  pineBot: [43, 75, 67], // #2B4B43
+  bottomMistDeep: [237, 242, 240], // #EDF2F0 Dải sương mặt hồ đáy Hero
+  starIntensity: 0.12,
+  milkyWayIntensity: 0.1,
+  rayIntensity: 1.0,
+  contrastScrimAlpha: 0.82,
+};
+
 export const ATMOSPHERIC_PALETTES: Record<AtmosphericPhase, AtmospherePalette> = {
-  'dem-ngan-ha': {
-    sky0: [10, 21, 38], // #0A1526 (Xanh Chàm Đêm Hoàng Gia)
-    sky1: [16, 35, 58], // Chuyển sắc chàm sâu
-    sky2: [22, 46, 71], // #162E47 (Chàm Huyền Bí)
-    sky3: [44, 68, 92], // Tầng mây lam trầm
-    sky4: [86, 82, 92], // Chân trời hổ phách dịu
-    dawnCore: [217, 155, 82], // #D99B52 (Ánh Hổ Phách chân trời)
-    dawnEdge: [200, 109, 81], // #C86D51 (Sắc đào cam ấm áp)
-    facetCelestial: [94, 152, 198], // Đón ánh sao Ngân Hà
-    facetDawn: [229, 184, 91], // #E5B85B (Vàng Hoàng Kim vách núi)
-    facetMid: [24, 52, 78],
-    facetAbyss: [10, 20, 34],
-    rimGlow: [229, 184, 91], // #E5B85B
-    terracePoolA: [36, 82, 114],
-    terracePoolB: [217, 155, 82],
-    terraceRim: [229, 184, 91], // #E5B85B
-    cloudIvory: [250, 245, 232], // #FAF5E8
-    cloudPearl: [226, 230, 236],
-    cloudSlate: [126, 146, 170],
-    cloudRim: [229, 184, 91], // #E5B85B
-    rayWarm: [217, 155, 82],
-    rayCool: [120, 174, 218],
-    pineTop: [22, 46, 68],
-    pineBot: [8, 18, 30],
-    bottomMistDeep: [17, 34, 51], // #112233 Deep Indigo Mist nối vào #121B28 Screen 2
-    starIntensity: 1.0,
-    milkyWayIntensity: 1.0,
-    rayIntensity: 1.0,
-    contrastScrimAlpha: 0.28,
-  },
-  'binh-minh': {
-    sky0: [24, 24, 52], // Sắc tím chàm đỉnh trời giữ chữ sáng rõ
-    sky1: [77, 49, 86],
-    sky2: [176, 86, 118],
-    sky3: [255, 143, 163], // #FF8FA3
-    sky4: [255, 209, 102], // #FFD166
-    dawnCore: [255, 209, 102], // #FFD166
-    dawnEdge: [255, 143, 163], // #FF8FA3
-    facetCelestial: [216, 134, 152],
-    facetDawn: [255, 209, 102],
-    facetMid: [58, 42, 74],
-    facetAbyss: [22, 18, 38],
-    rimGlow: [255, 209, 102],
-    terracePoolA: [255, 143, 163],
-    terracePoolB: [255, 209, 102],
-    terraceRim: [255, 236, 179],
-    cloudIvory: [255, 246, 230],
-    cloudPearl: [255, 214, 218],
-    cloudSlate: [128, 108, 144],
-    cloudRim: [255, 209, 102],
-    rayWarm: [255, 209, 102],
-    rayCool: [255, 143, 163],
-    pineTop: [46, 33, 62],
-    pineBot: [20, 14, 30],
-    bottomMistDeep: [28, 34, 54],
-    starIntensity: 0.36,
-    milkyWayIntensity: 0.22,
-    rayIntensity: 1.35,
-    contrastScrimAlpha: 0.44,
-  },
-  'nang-ngoc': {
-    sky0: [13, 59, 76], // #0D3B4C
-    sky1: [22, 88, 116],
-    sky2: [42, 122, 176],
-    sky3: [72, 149, 239], // #4895EF
-    sky4: [142, 202, 230],
-    dawnCore: [255, 240, 176],
-    dawnEdge: [114, 214, 224],
-    facetCelestial: [78, 148, 176],
-    facetDawn: [224, 202, 110],
-    facetMid: [25, 80, 102],
-    facetAbyss: [10, 41, 56],
-    rimGlow: [244, 211, 94],
-    terracePoolA: [42, 157, 143], // Xanh ngọc lục
-    terracePoolB: [233, 196, 106], // Vàng lúa chín
-    terraceRim: [255, 243, 176],
-    cloudIvory: [255, 255, 252],
-    cloudPearl: [224, 242, 254],
-    cloudSlate: [110, 158, 184],
-    cloudRim: [255, 230, 156],
-    rayWarm: [255, 238, 170],
-    rayCool: [144, 224, 239],
-    pineTop: [18, 66, 78],
-    pineBot: [8, 32, 42],
-    bottomMistDeep: [18, 42, 58],
-    starIntensity: 0.14,
-    milkyWayIntensity: 0.08,
-    rayIntensity: 1.2,
-    contrastScrimAlpha: 0.5,
-  },
-  'hoang-hon': {
-    sky0: [24, 18, 36],
-    sky1: [61, 38, 69], // #3D2645
-    sky2: [124, 46, 66],
-    sky3: [200, 62, 55], // #C83E37
-    sky4: [233, 196, 106], // #E9C46A
-    dawnCore: [233, 196, 106], // #E9C46A
-    dawnEdge: [200, 62, 55], // #C83E37
-    facetCelestial: [139, 73, 91],
-    facetDawn: [233, 196, 106],
-    facetMid: [53, 31, 59],
-    facetAbyss: [22, 13, 29],
-    rimGlow: [233, 196, 106],
-    terracePoolA: [200, 62, 55],
-    terracePoolB: [233, 196, 106],
-    terraceRim: [244, 211, 140],
-    cloudIvory: [255, 240, 212],
-    cloudPearl: [216, 152, 160],
-    cloudSlate: [74, 51, 82],
-    cloudRim: [231, 111, 81],
-    rayWarm: [233, 196, 106],
-    rayCool: [200, 62, 55],
-    pineTop: [38, 22, 46],
-    pineBot: [16, 9, 22],
-    bottomMistDeep: [17, 34, 51], // #112233 Deep Indigo Mist nối mượt vào #121B28 Screen 2
-    starIntensity: 0.56,
-    milkyWayIntensity: 0.42,
-    rayIntensity: 1.25,
-    contrastScrimAlpha: 0.42,
-  },
+  'binh-minh-bach-ngoc': JADE_MIST_DAWN_PALETTE,
 };
 
 function lerp(a: number, b: number, t: number): number {
@@ -211,9 +92,6 @@ export function rgbaString(rgb: RgbTriplet, alpha: number): string {
   return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha.toFixed(3)})`;
 }
 
-/**
- * Nội suy mượt toàn bộ bảng màu khí quyển giữa 2 thời khắc thiên nhiên (t ∈ [0, 1]).
- */
 export function interpolateAtmospherePalette(
   from: AtmospherePalette,
   to: AtmospherePalette,
