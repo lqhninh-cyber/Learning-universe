@@ -13,6 +13,7 @@ import {
   playCushionBounce,
   playPocketDrop,
   playRackClear,
+  playTrickShotReward,
   setBilliardSoundEnabled,
 } from '@/utils/billiardAudio';
 import {
@@ -1067,6 +1068,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(() => playCushionBounce(0.6)).not.toThrow();
         expect(() => playPocketDrop(2)).not.toThrow();
         expect(() => playRackClear()).not.toThrow();
+        expect(() => playTrickShotReward('bank')).not.toThrow();
+        expect(() => playTrickShotReward('double')).not.toThrow();
         setBilliardSoundEnabled(false);
 
         render(
@@ -1079,13 +1082,41 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(canvas).toBeInTheDocument();
         expect(canvas).toHaveAttribute('data-substeps', '6');
         expect(canvas).toHaveAttribute('data-target-balls', '6');
+        expect(canvas).toHaveAttribute('data-pocket-jaws', '12');
 
-        // 6 bi mục tiêu đánh số 1..6 được vẽ lên bàn và 6 chấm trạng thái hiển thị đầy đủ
+        // Khay rãnh đựng bi đã ăn & 6 bi mục tiêu đánh số 1..6
+        expect(screen.getByTestId('billiards-pocketed-rack')).toBeInTheDocument();
         expect(drawnNumbers).toEqual(expect.arrayContaining(['1', '2', '3', '4', '5', '6']));
         for (let num = 1; num <= 6; num += 1) {
           const dot = screen.getByTestId(`billiard-status-dot-${num}`);
           expect(dot).toHaveAttribute('data-pocketed', 'false');
         }
+
+        // Bộ chọn điểm chạm tâm bi cái (38x38px Spin Selector)
+        const spinSelector = screen.getByTestId('billiards-spin-selector');
+        expect(spinSelector).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-spin-label')).toHaveTextContent('Tâm bi');
+        fireEvent.doubleClick(spinSelector);
+        expect(spinSelector).toHaveAttribute('data-spin-x', '0.00');
+        expect(spinSelector).toHaveAttribute('data-spin-y', '0.00');
+
+        // 3 chế độ chơi: Tự do · Thứ tự 1->6 · 2 Người
+        const freeModeBtn = screen.getByTestId('billiards-mode-free');
+        const seqModeBtn = screen.getByTestId('billiards-mode-sequential');
+        const twoPlayerBtn = screen.getByTestId('billiards-mode-two-player');
+        expect(freeModeBtn).toHaveAttribute('aria-pressed', 'true');
+
+        fireEvent.click(seqModeBtn);
+        expect(seqModeBtn).toHaveAttribute('aria-pressed', 'true');
+
+        fireEvent.click(twoPlayerBtn);
+        expect(twoPlayerBtn).toHaveAttribute('aria-pressed', 'true');
+        expect(screen.getByTestId('billiards-turn-badge')).toHaveTextContent('Lượt P1');
+        expect(screen.getByTestId('billiards-p1-score')).toHaveTextContent('P1:0');
+        expect(screen.getByTestId('billiards-p2-score')).toHaveTextContent('P2:0');
+
+        fireEvent.click(freeModeBtn);
+        expect(freeModeBtn).toHaveAttribute('aria-pressed', 'true');
 
         // Chỉ số Số cơ, Combo, Kỷ lục và nút Âm thanh
         expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:0');

@@ -382,6 +382,54 @@ class BilliardAudioEngine {
       return false;
     }
   }
+
+  /**
+   * 6. Tiếng chuông thưởng Ngũ cung kép khi thực hiện pha đánh đẹp (BANK SHOT! / DOUBLE POT! / COMBO ×N!).
+   */
+  public playTrickShotReward(kind: 'bank' | 'double' | 'combo' = 'bank'): boolean {
+    if (!this.enabled) return false;
+    const ctx = this.unlock();
+    if (!ctx || !this.masterGain) return false;
+
+    const now = ctx.currentTime;
+    const notes =
+      kind === 'double'
+        ? ([783.99, 1174.66] as const) // G5 -> D6
+        : kind === 'bank'
+          ? ([659.25, 987.77] as const) // E5 -> B5
+          : ([587.33, 880.0] as const); // D5 -> A5
+
+    try {
+      notes.forEach((freq, idx) => {
+        const startT = now + idx * 0.055;
+        const osc = ctx.createOscillator();
+        const overtone = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startT);
+
+        overtone.type = 'triangle';
+        overtone.frequency.setValueAtTime(freq * 2, startT);
+
+        gain.gain.setValueAtTime(0.0001, startT);
+        gain.gain.linearRampToValueAtTime(0.17, startT + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0006, startT + 0.75);
+
+        osc.connect(gain);
+        overtone.connect(gain);
+        gain.connect(this.masterGain!);
+
+        osc.start(startT);
+        overtone.start(startT);
+        osc.stop(startT + 0.78);
+        overtone.stop(startT + 0.45);
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
 
 export const billiardAudio = new BilliardAudioEngine();
@@ -416,4 +464,8 @@ export function playPocketDrop(comboCount: number): boolean {
 
 export function playRackClear(): boolean {
   return billiardAudio.playRackClear();
+}
+
+export function playTrickShotReward(kind: 'bank' | 'double' | 'combo' = 'bank'): boolean {
+  return billiardAudio.playTrickShotReward(kind);
 }
