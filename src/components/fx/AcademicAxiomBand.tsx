@@ -156,27 +156,29 @@ export function AcademicAxiomBand({
       </div>
 
       {!reducedMotion && (
-        <button
-          type="button"
-          data-testid="axiom-band-toggle"
-          aria-pressed={isPaused}
-          aria-label={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
-          title={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
-          onClick={() => setIsPaused((prev) => !prev)}
-          className="relative z-10 inline-flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-l border-[#CFD8D4] bg-[#F4F7F5] px-3 font-mono text-[10px] font-semibold tracking-[0.12em] text-[#2B463F] uppercase transition-colors hover:bg-[#FAFBF9] hover:text-[#162623] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E332E]"
-        >
-          {isPaused ? (
-            <>
-              <Play className="h-3 w-3 text-[#245746]" aria-hidden="true" />
-              <span className="hidden sm:inline">Chạy</span>
-            </>
-          ) : (
-            <>
-              <Pause className="h-3 w-3 text-[#8C7248]" aria-hidden="true" />
-              <span className="hidden sm:inline">Tạm dừng</span>
-            </>
-          )}
-        </button>
+        <div className="relative z-10 flex h-full shrink-0 items-center border-l border-[#D8E1DD] bg-[#F4F7F5] pl-4">
+          <button
+            type="button"
+            data-testid="axiom-band-toggle"
+            aria-pressed={isPaused}
+            aria-label={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
+            title={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
+            onClick={() => setIsPaused((prev) => !prev)}
+            className="inline-flex h-full shrink-0 cursor-pointer items-center gap-1.5 bg-[#F4F7F5] pr-3 font-mono text-[10px] font-semibold tracking-[0.12em] text-[#2B463F] uppercase transition-colors hover:text-[#162623] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E332E]"
+          >
+            {isPaused ? (
+              <>
+                <Play className="h-3 w-3 text-[#245746]" aria-hidden="true" />
+                <span className="hidden sm:inline">Chạy</span>
+              </>
+            ) : (
+              <>
+                <Pause className="h-3 w-3 text-[#8C7248]" aria-hidden="true" />
+                <span className="hidden sm:inline">Tạm dừng</span>
+              </>
+            )}
+          </button>
+        </div>
       )}
     </div>
   );

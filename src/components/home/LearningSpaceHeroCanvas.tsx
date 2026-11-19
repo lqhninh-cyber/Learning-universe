@@ -741,9 +741,9 @@ function drawBlueprintSymbolsInCanvas(
     }
 
     const pulse = symbolPulseBuf[i]!;
-    const baseOpacity = 0.28 + 0.1 * Math.sin(1.1 * time + spec.phase); // 0.18 <-> 0.38
-    const sweepOpacity = baseOpacity + pulse * (0.75 - baseOpacity);
-    const finalOpacity = Math.max(sweepOpacity, Math.min(0.92, baseOpacity + prox * 0.58));
+    const baseOpacity = Math.max(0.34, 0.4 + 0.08 * Math.sin(1.1 * time + spec.phase)); // >= 0.34
+    const sweepOpacity = baseOpacity + pulse * (0.82 - baseOpacity);
+    const finalOpacity = Math.max(0.34, sweepOpacity, Math.min(0.92, baseOpacity + prox * 0.52));
     const circleR = 16 + 3 * pulse;
 
     // Đường tiếp tuyến nét đứt siêu mảnh nối từ mép đĩa ra vòng tròn ký hiệu
@@ -818,7 +818,7 @@ function drawBlueprintSymbolsInCanvas(
     ctx.save();
     ctx.translate(nxPos, nyPos);
     ctx.rotate(tiltRad);
-    ctx.font = `italic 600 ${Math.round(16 + Math.max(prox * 2, pulse * 1.5))}px "Crimson Pro", Georgia, serif`;
+    ctx.font = `600 ${Math.round(16 + Math.max(prox * 2, pulse * 1.5))}px 'STIX Two Math', 'Cambria Math', 'Segoe UI Symbol', serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle =

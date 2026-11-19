@@ -30,6 +30,7 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
 
     const dialog = screen.getByRole('dialog', { name: /Thiên Cầu Khuê Văn Các/i });
     expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveClass('bg-[#F2F4F3]', 'fixed', 'inset-0', 'overflow-hidden');
 
     // Tuyệt đối không có bất kỳ văn bản chữ hay nút bấm nào
     expect(dialog.textContent).toBe('');
@@ -193,7 +194,7 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
     expect(mouseMoveRemove).toBeDefined();
   });
 
-  it('khởi tạo Canvas 2D với kênh alpha: true (không dùng alpha: false) và nền bg-transparent để lộ trang bên dưới', () => {
+  it('khởi tạo Canvas 2D với kênh alpha: true và khóa nền đồng nhất bg-[#F2F4F3] fixed inset-0 overflow-hidden', () => {
     const getContextSpy = vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
 
     const { container } = render(
@@ -204,7 +205,13 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
     );
 
     const dialog = screen.getByRole('dialog', { name: /Thiên Cầu Khuê Văn Các/i });
-    expect(dialog).toHaveClass('bg-transparent', 'pointer-events-auto');
+    expect(dialog).toHaveClass(
+      'bg-[#F2F4F3]',
+      'fixed',
+      'inset-0',
+      'overflow-hidden',
+      'pointer-events-auto',
+    );
     expect(screen.getByTestId('underlying-page')).toBeInTheDocument();
 
     const canvas = container.querySelector('canvas');

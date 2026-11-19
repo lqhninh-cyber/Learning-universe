@@ -432,7 +432,7 @@ export function LearningSpacePage() {
                         </span>
                         <span
                           aria-hidden="true"
-                          className="h-1.5 w-10 overflow-hidden rounded-full bg-[#E3EAE7]"
+                          className="h-1.5 w-14 overflow-hidden rounded-full bg-[#DCE4E0]"
                         >
                           <span
                             className="block h-full rounded-full bg-[#245746] transition-[width] duration-500"

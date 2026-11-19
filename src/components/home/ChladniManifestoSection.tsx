@@ -216,16 +216,36 @@ function drawChladniFrame(
   ctx.lineWidth = 0.75;
   ctx.stroke();
 
-  for (let deg = 0; deg < 360; deg += 5) {
-    const rad = (deg * Math.PI) / 180;
-    const isMajor = deg % 30 === 0;
+  // Vòng chia độ cơ khí cực mảnh (0.6px, 72 vạch chia) bao sát vành ngoài đĩa Chladni
+  ctx.beginPath();
+  ctx.arc(cx, cy, plateR + 10.5, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(156, 122, 76, 0.25)';
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+
+  for (let i = 0; i < 72; i += 1) {
+    const rad = (i * 5 * Math.PI) / 180;
+    const isMajor = i % 6 === 0;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
     const inner = plateR + 0.5;
     const outer = plateR + (isMajor ? 8.5 : 4.2);
     ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(rad) * inner, cy + Math.sin(rad) * inner);
-    ctx.lineTo(cx + Math.cos(rad) * outer, cy + Math.sin(rad) * outer);
+    ctx.moveTo(cx + cos * inner, cy + sin * inner);
+    ctx.lineTo(cx + cos * outer, cy + sin * outer);
     ctx.strokeStyle = isMajor ? 'rgba(140, 98, 40, 0.56)' : 'rgba(30, 51, 46, 0.22)';
     ctx.lineWidth = isMajor ? 1.0 : 0.6;
+    ctx.stroke();
+
+    // 72 vạch chia độ cơ khí siêu mảnh trên vành đồng ngoài cùng
+    ctx.beginPath();
+    ctx.moveTo(cx + cos * (plateR + 10.5), cy + sin * (plateR + 10.5));
+    ctx.lineTo(
+      cx + cos * (plateR + (isMajor ? 14.5 : 12.8)),
+      cy + sin * (plateR + (isMajor ? 14.5 : 12.8)),
+    );
+    ctx.strokeStyle = 'rgba(156, 122, 76, 0.25)';
+    ctx.lineWidth = 0.6;
     ctx.stroke();
   }
 
@@ -591,26 +611,26 @@ export function ChladniManifestoSection() {
               data-testid="chladni-resonance-card"
               className="relative overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)]"
             >
-              {/* 4 góc thước ngắm bản vẽ chữ L mảnh */}
+              {/* 4 góc thước ngắm bản vẽ chữ L mảnh sát mép ngoài thẻ */}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute top-2.5 left-2.5 z-20 h-3 w-3 border-t-[1.5px] border-l-[1.5px] border-[#9C7A4C]/70"
+                className="pointer-events-none absolute top-2 left-2 z-20 h-3 w-3 border-t-[1.5px] border-l-[1.5px] border-[#9C7A4C]/70"
               />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute top-2.5 right-2.5 z-20 h-3 w-3 border-t-[1.5px] border-r-[1.5px] border-[#9C7A4C]/70"
+                className="pointer-events-none absolute top-2 right-2 z-20 h-3 w-3 border-t-[1.5px] border-r-[1.5px] border-[#9C7A4C]/70"
               />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute bottom-2.5 left-2.5 z-20 h-3 w-3 border-b-[1.5px] border-l-[1.5px] border-[#9C7A4C]/70"
+                className="pointer-events-none absolute bottom-2 left-2 z-20 h-3 w-3 border-b-[1.5px] border-l-[1.5px] border-[#9C7A4C]/70"
               />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute right-2.5 bottom-2.5 z-20 h-3 w-3 border-r-[1.5px] border-b-[1.5px] border-[#9C7A4C]/70"
+                className="pointer-events-none absolute right-2 bottom-2 z-20 h-3 w-3 border-r-[1.5px] border-b-[1.5px] border-[#9C7A4C]/70"
               />
 
               {/* Thanh đầu thẻ: Phương trình sóng đứng Chladni & tần số (m, n) */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] bg-[#F7F9F8] px-5 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4">
                 <span className="lu-fx-band-formula text-[#142622]">
                   cos(nπx)cos(mπy) − cos(mπx)cos(nπy) = 0
                 </span>
@@ -639,7 +659,7 @@ export function ChladniManifestoSection() {
               </div>
 
               {/* 4 nút chọn chế độ cộng hưởng đặt gọn dưới đáy khung */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#E2E8E5] bg-[#F7F9F8] px-4 py-3 sm:px-5">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4">
                 <div
                   role="group"
                   aria-label="Chọn chế độ cộng hưởng sóng đứng Chladni"

@@ -372,7 +372,7 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
       onTouchStart={handleDismiss}
       onKeyDown={handleDismiss}
       className={cn(
-        'fixed inset-0 z-[100] bg-transparent transition-opacity duration-500 ease-out select-none',
+        'fixed inset-0 z-[100] overflow-hidden bg-[#F2F4F3] transition-opacity duration-500 ease-out select-none',
         isDismissing || isAutoFading ? 'opacity-0' : 'opacity-100',
         isDismissing ? 'pointer-events-none cursor-default' : 'pointer-events-auto cursor-pointer',
       )}

@@ -584,7 +584,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const showcase = screen.getByTestId('heritage-art-showcase');
       expect(showcase).toHaveAttribute('id', 'khong-gian-di-san');
       expect(showcase.className).toContain('bg-[#EEF2F0]');
-      expect(showcase.className).toContain('pt-28');
+      expect(showcase.className).toContain('pt-24');
+      expect(showcase.className).toContain('pb-16');
       expect(showcase.className).toContain('scroll-mt-24');
       expect(showcase.textContent).toContain('Khuê Văn Các');
       expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);

@@ -296,7 +296,7 @@ export function HeritageExhibitionPavilion() {
       aria-label="Không gian Di sản Học thuật và Nghệ thuật"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative scroll-mt-24 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-28 pb-20 text-[#142622] md:pt-32"
+      className="relative scroll-mt-24 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-24 pb-16 text-[#142622]"
     >
       {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật 1px solid #D4DFDA */}
       <div
@@ -352,8 +352,8 @@ export function HeritageExhibitionPavilion() {
         {/* ================================================================
           TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN (ALABASTER MUSEUM GALLERY)
           ================================================================ */}
-        <div className="mb-10 border-b border-[#D4DFDA] pb-7">
-          <div className="space-y-2.5">
+        <div className="mb-6 border-b border-[#D4DFDA] pb-5">
+          <div className="space-y-2">
             <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest text-[#8C6228] uppercase">
               <Landmark className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
               <span>BẢO TÀNG TRI THỨC &amp; VĂN HIẾN</span>
@@ -378,30 +378,37 @@ export function HeritageExhibitionPavilion() {
               data-testid="heritage-art-frame"
               onMouseMove={handleFrameMouseMove}
               onMouseLeave={handleFrameMouseLeave}
-              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-4 shadow-[0_16px_40px_rgba(24,38,36,0.06)] transition-colors duration-300 hover:border-[#9C7A4C]/70 md:p-6"
+              className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-4 shadow-[0_16px_40px_rgba(24,38,36,0.06)] transition-colors duration-300 hover:border-[#9C7A4C]/70 md:p-6"
             >
-              {imageError || isHeritageInlineSvg(currentArtwork) ? (
-                <div
-                  data-testid="heritage-svg-fallback"
-                  className="h-full w-full overflow-hidden rounded-xl"
-                >
-                  <HeritageFallbackIllustration artwork={currentArtwork} />
-                </div>
-              ) : (
-                <img
-                  ref={imgMotionRef}
-                  src={currentArtwork.imageSrc}
-                  alt={currentArtwork.alt}
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                  onError={() => setImageError(true)}
-                  style={{ backfaceVisibility: 'hidden' }}
-                  className={cn(
-                    'mx-auto h-full w-full object-contain transition-opacity duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform select-none',
-                    isTransitioning ? 'opacity-0' : 'opacity-100',
-                  )}
-                />
-              )}
+              <div className="relative flex flex-1 items-center justify-center overflow-hidden">
+                {imageError || isHeritageInlineSvg(currentArtwork) ? (
+                  <div
+                    data-testid="heritage-svg-fallback"
+                    className="h-full max-h-[380px] w-full overflow-hidden rounded-xl lg:max-h-[410px]"
+                  >
+                    <HeritageFallbackIllustration artwork={currentArtwork} />
+                  </div>
+                ) : (
+                  <img
+                    ref={imgMotionRef}
+                    src={currentArtwork.imageSrc}
+                    alt={currentArtwork.alt}
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    onError={() => setImageError(true)}
+                    style={{ backfaceVisibility: 'hidden' }}
+                    className={cn(
+                      'mx-auto max-h-[380px] w-full object-contain transition-opacity duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform select-none lg:max-h-[410px]',
+                      isTransitioning ? 'opacity-0' : 'opacity-100',
+                    )}
+                  />
+                )}
+              </div>
+
+              {/* Dòng chú thích ngắn nằm gọn bên trong đáy thẻ trắng bên trái */}
+              <p className="mt-3 border-t border-[#E6ECE9] pt-3 font-serif text-[12px] text-[#4A5D58] italic">
+                {currentArtwork.caption}
+              </p>
 
               {/* Ánh sáng viền đồng dịu bám theo con trỏ */}
               <div
@@ -411,20 +418,13 @@ export function HeritageExhibitionPavilion() {
                 className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300"
               />
             </div>
-
-            {/* Thanh chú thích đặt ngoài khung tranh để không che hình */}
-            <div className="mt-3 px-1">
-              <p className="font-serif text-xs text-[#354E48] italic sm:text-sm">
-                {currentArtwork.caption}
-              </p>
-            </div>
           </div>
 
           {/* Cột Phải (5 cột): Thẻ Thuyết Minh Bảo Tàng Nền Trắng Sứ #FAFBF9 */}
           <aside
             aria-label={`Hồ sơ học thuật: ${currentArtwork.title}`}
             className={cn(
-              'flex flex-col justify-between rounded-2xl border border-[#D4DFDA] bg-[#FAFBF9] p-6 shadow-[0_16px_40px_rgba(24,38,36,0.05)] transition-opacity duration-[320ms] sm:p-7 lg:col-span-5',
+              'flex flex-col gap-5 rounded-2xl border border-[#D4DFDA] bg-[#FAFBF9] p-6 shadow-[0_16px_40px_rgba(24,38,36,0.05)] transition-opacity duration-[320ms] sm:p-7 lg:col-span-5',
               isTransitioning ? 'opacity-65' : 'opacity-100',
             )}
           >
@@ -457,7 +457,7 @@ export function HeritageExhibitionPavilion() {
             </div>
 
             {/* Mục 2: Hộp Lược sử & Bối cảnh ra đời nền phụ #F3F6F4 viền #DCE4E0 */}
-            <div className="mt-6 rounded-xl border border-[#DCE4E0] bg-[#F3F6F4] p-4">
+            <div className="rounded-xl border border-[#DCE4E0] bg-[#F3F6F4] p-4">
               <div className="mb-3 flex items-center gap-2 border-b border-[#DCE4E0] pb-2 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Lược sử &amp; Bối cảnh ra đời</span>
