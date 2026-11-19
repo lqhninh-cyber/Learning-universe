@@ -11,6 +11,7 @@ import {
   playBallClack,
   playCueStrike,
   playCushionBounce,
+  playMarbleRoll,
   playPocketDrop,
   playRackClear,
   playTrickShotReward,
@@ -628,7 +629,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByRole('tab', { name: /Toán học & Thiên văn/i }));
       expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 13');
 
-      // Cầu nối sương mượt Screen 1->2 và Screen 3 Bàn Bida Khoáng Thạch 6 Bi 120fps
+      // Cầu nối sương mượt Screen 1->2 và Screen 3 Bàn Bida 8 Ball Pool Khoáng Thạch 120fps
       const shoreline = screen.getByTestId('shoreline-wave-bridge');
       expect(shoreline).toBeInTheDocument();
       expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
@@ -638,13 +639,13 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       const billiardsStage = screen.getByTestId('mineral-billiards-stage');
       expect(billiardsStage).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-play-hint')).toHaveTextContent(
-        'Kéo ngược từ bi cái để ngắm & chỉnh lực · Thả để đánh · Kéo về tâm để hủy',
-      );
+      expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
+      expect(screen.getByTestId('billiards-status-pill')).toHaveTextContent('Khai cuộc');
+      expect(screen.getByTestId('billiards-power-slider')).toBeInTheDocument();
       expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Xếp ván mới');
-      expect(screen.getByTestId('billiards-ball-in-hand-btn')).toHaveTextContent('Đặt lại bi cái');
+      expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Ván mới');
+      expect(screen.getByTestId('billiards-rules-btn')).toHaveTextContent('Luật nhanh');
 
       expect(screen.getByRole('link', { name: /Bước vào Không gian học tập/i })).toHaveAttribute(
         'href',
@@ -1016,7 +1017,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(formatAlidadeAngle(Math.PI / 2)).toBe('90° · π/2');
     });
 
-    it('MineralBilliardsStage & billiardAudio vận hành bàn bida 6 bi khoáng thạch, SUBSTEPS=6, tia ngắm Ghost Ball, Ball-in-Hand và 5 hiệu ứng âm thanh', () => {
+    it('MineralBilliardsStage & billiardAudio vận hành bàn bida 8 Ball Pool 15 bi, SUBSTEPS=6, 12 chấu lỗ, Spin Popup, Thanh lực dọc & Đấu AI', () => {
       const drawnNumbers: string[] = [];
       const noop = vi.fn();
       const gradMock = { addColorStop: noop };
@@ -1031,6 +1032,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         fillRect: noop,
         strokeRect: noop,
         rect: noop,
+        roundRect: noop,
+        ellipse: noop,
+        quadraticCurveTo: noop,
         beginPath: noop,
         closePath: noop,
         moveTo: noop,
@@ -1060,7 +1064,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         .mockReturnValue(ctxSpy);
 
       try {
-        // Kiểm tra 5 hàm tổng hợp âm thanh Web Audio API & thang nốt combo Ngũ cung (D5..D6)
+        // Kiểm tra toàn bộ hàm tổng hợp âm thanh Web Audio API (gồm roll máng bi & trick-shot)
         expect(BILLIARD_COMBO_NOTES).toEqual([587.33, 659.25, 783.99, 880.0, 987.77, 1174.66]);
         setBilliardSoundEnabled(true);
         expect(() => playCueStrike(0.75)).not.toThrow();
@@ -1070,6 +1074,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(() => playRackClear()).not.toThrow();
         expect(() => playTrickShotReward('bank')).not.toThrow();
         expect(() => playTrickShotReward('double')).not.toThrow();
+        expect(() => playMarbleRoll(0.65)).not.toThrow();
         setBilliardSoundEnabled(false);
 
         render(
@@ -1081,72 +1086,90 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         const canvas = screen.getByTestId('mineral-billiards-canvas');
         expect(canvas).toBeInTheDocument();
         expect(canvas).toHaveAttribute('data-substeps', '6');
-        expect(canvas).toHaveAttribute('data-target-balls', '6');
+        expect(canvas).toHaveAttribute('data-target-balls', '15');
         expect(canvas).toHaveAttribute('data-pocket-jaws', '12');
 
-        // Khay rãnh đựng bi đã ăn & 6 bi mục tiêu đánh số 1..6
-        expect(screen.getByTestId('billiards-pocketed-rack')).toBeInTheDocument();
-        expect(drawnNumbers).toEqual(expect.arrayContaining(['1', '2', '3', '4', '5', '6']));
-        for (let num = 1; num <= 6; num += 1) {
-          const dot = screen.getByTestId(`billiard-status-dot-${num}`);
-          expect(dot).toHaveAttribute('data-pocketed', 'false');
-        }
+        // 15 bi trơn/sọc/bi 8 (1..15) được vẽ trên Canvas
+        expect(drawnNumbers).toEqual(
+          expect.arrayContaining([
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+            '11',
+            '12',
+            '13',
+            '14',
+            '15',
+          ]),
+        );
 
-        // Bộ chọn điểm chạm tâm bi cái (38x38px Spin Selector)
+        // Bảng tỷ số 3 phần phía trên: Bạn (7 ô) - Điều khiển trung tâm - Máy AI (7 ô)
+        expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-p1-card')).toHaveAttribute('data-active', 'true');
+        expect(screen.getByTestId('billiards-p2-card')).toHaveAttribute('data-active', 'false');
+        expect(screen.getByTestId('p1-slots')).toBeInTheDocument();
+        expect(screen.getByTestId('p2-slots')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-status-pill')).toHaveTextContent('Khai cuộc');
+
+        // 3 chế độ chơi: Đấu Máy (mặc định) · 2 Người · Tập tự do
+        const vsAiBtn = screen.getByTestId('billiards-mode-vs-ai');
+        const twoPlayerBtn = screen.getByTestId('billiards-mode-two-player');
+        const freeModeBtn = screen.getByTestId('billiards-mode-free');
+        expect(vsAiBtn).toHaveAttribute('aria-pressed', 'true');
+
+        fireEvent.click(twoPlayerBtn);
+        expect(twoPlayerBtn).toHaveAttribute('aria-pressed', 'true');
+        expect(screen.getByTestId('billiards-p2-card')).toHaveTextContent('Người chơi 2');
+
+        fireEvent.click(freeModeBtn);
+        expect(freeModeBtn).toHaveAttribute('aria-pressed', 'true');
+        expect(screen.queryByTestId('billiards-p2-card')).not.toBeInTheDocument();
+
+        fireEvent.click(vsAiBtn);
+        expect(vsAiBtn).toHaveAttribute('aria-pressed', 'true');
+
+        // Popover chỉnh xoáy bi cái 112x112px
+        expect(screen.queryByTestId('billiards-spin-popover')).not.toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('billiards-spin-popup-trigger'));
+        expect(screen.getByTestId('billiards-spin-popover')).toBeInTheDocument();
         const spinSelector = screen.getByTestId('billiards-spin-selector');
-        expect(spinSelector).toBeInTheDocument();
-        expect(screen.getByTestId('billiards-spin-label')).toHaveTextContent('Tâm bi');
+        expect(screen.getByTestId('billiards-spin-tip')).toBeInTheDocument();
         fireEvent.doubleClick(spinSelector);
         expect(spinSelector).toHaveAttribute('data-spin-x', '0.00');
         expect(spinSelector).toHaveAttribute('data-spin-y', '0.00');
 
-        // 3 chế độ chơi: Tự do · Thứ tự 1->6 · 2 Người
-        const freeModeBtn = screen.getByTestId('billiards-mode-free');
-        const seqModeBtn = screen.getByTestId('billiards-mode-sequential');
-        const twoPlayerBtn = screen.getByTestId('billiards-mode-two-player');
-        expect(freeModeBtn).toHaveAttribute('aria-pressed', 'true');
-
-        fireEvent.click(seqModeBtn);
-        expect(seqModeBtn).toHaveAttribute('aria-pressed', 'true');
-
-        fireEvent.click(twoPlayerBtn);
-        expect(twoPlayerBtn).toHaveAttribute('aria-pressed', 'true');
-        expect(screen.getByTestId('billiards-turn-badge')).toHaveTextContent('Lượt P1');
-        expect(screen.getByTestId('billiards-p1-score')).toHaveTextContent('P1:0');
-        expect(screen.getByTestId('billiards-p2-score')).toHaveTextContent('P2:0');
-
-        fireEvent.click(freeModeBtn);
-        expect(freeModeBtn).toHaveAttribute('aria-pressed', 'true');
-
-        // Chỉ số Số cơ, Combo, Kỷ lục và nút Âm thanh
-        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:0');
-        expect(screen.getByTestId('billiards-combo-count')).toHaveTextContent('Combo:x0');
-        expect(screen.getByTestId('billiards-best-record')).toHaveTextContent('Kỷ lục:');
+        // Nút Luật nhanh & Âm thanh
+        fireEvent.click(screen.getByTestId('billiards-rules-btn'));
+        expect(screen.getByTestId('billiards-rules-popover')).toBeInTheDocument();
 
         const soundBtn = screen.getByTestId('billiards-sound-toggle');
         expect(soundBtn).toHaveAttribute('aria-pressed', 'false');
         fireEvent.click(soundBtn);
         expect(soundBtn).toHaveAttribute('aria-pressed', 'true');
 
-        // Kiểm tra chế độ Đặt lại bi cái (Ball-in-Hand) và đặt bi trên bàn
-        const ballInHandBtn = screen.getByTestId('billiards-ball-in-hand-btn');
-        fireEvent.click(ballInHandBtn);
-        expect(screen.getByTestId('billiards-ball-in-hand-banner')).toHaveTextContent(
-          'Bi cái rơi lỗ — Bấm chọn vị trí đặt lại',
-        );
+        // Kéo xoay gậy ngắm trên mặt bàn & kéo Thanh lực dọc bên trái để đánh
+        fireEvent.pointerDown(canvas, { clientX: 280, clientY: 220, pointerId: 1 });
+        fireEvent.pointerMove(canvas, { clientX: 300, clientY: 205, pointerId: 1 });
+        fireEvent.pointerUp(canvas, { clientX: 300, clientY: 205, pointerId: 1 });
 
-        fireEvent.pointerDown(canvas, { clientX: 160, clientY: 160, pointerId: 1 });
-        expect(screen.queryByTestId('billiards-ball-in-hand-banner')).not.toBeInTheDocument();
+        const powerSlider = screen.getByTestId('billiards-power-slider');
+        expect(powerSlider).toHaveAttribute('data-power', '0');
+        fireEvent.pointerDown(powerSlider, { clientX: 20, clientY: 100, pointerId: 2 });
+        fireEvent.pointerMove(powerSlider, { clientX: 20, clientY: 180, pointerId: 2 });
+        expect(Number(powerSlider.getAttribute('data-power'))).toBeGreaterThanOrEqual(50);
+        fireEvent.pointerUp(powerSlider, { clientX: 20, clientY: 180, pointerId: 2 });
+        expect(powerSlider).toHaveAttribute('data-power', '0');
 
-        // Kéo ngắm và thả để đánh (tăng Số cơ lên 1)
-        fireEvent.pointerDown(canvas, { clientX: 220, clientY: 240, pointerId: 1 });
-        fireEvent.pointerMove(canvas, { clientX: 120, clientY: 240, pointerId: 1 });
-        fireEvent.pointerUp(canvas, { clientX: 120, clientY: 240, pointerId: 1 });
-        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:1');
-
-        // Nút Xếp ván mới đặt lại Số cơ về 0
+        // Nút Ván mới đưa trạng thái về Khai cuộc
         fireEvent.click(screen.getByTestId('billiards-new-rack-btn'));
-        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:0');
+        expect(screen.getByTestId('billiards-status-pill')).toHaveTextContent('Khai cuộc');
       } finally {
         getContextSpy.mockRestore();
       }

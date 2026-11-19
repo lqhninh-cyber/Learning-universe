@@ -82,15 +82,14 @@ describe('App routing smoke test', () => {
     ).toBeInTheDocument();
     expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-    // 3. Screen 3 — Trò chơi Bida Khoáng Thạch 6 Bi 120fps (thay thế hoàn toàn sân khấu thả bi & Hồ Sen)
+    // 3. Screen 3 — Trò chơi Bida Khoáng Thạch chuẩn 8 Ball Pool 120fps (thay thế hoàn toàn sân khấu thả bi & Hồ Sen)
     expect(screen.getByTestId('mineral-billiards-stage')).toBeInTheDocument();
     expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
     expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /Kéo ngược từ bi cái để ngắm & chỉnh lực · Thả để đánh · Kéo về tâm để hủy/i,
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
+    expect(screen.getByTestId('billiards-power-slider')).toBeInTheDocument();
+    expect(screen.getByTestId('billiards-mode-vs-ai')).toBeInTheDocument();
+    expect(screen.getByTestId('billiards-rules-btn')).toBeInTheDocument();
     expect(screen.queryByTestId('kinetic-sound-stage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('chladni-manifesto-section')).not.toBeInTheDocument();
     expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();

@@ -28,6 +28,7 @@ class BilliardAudioEngine {
   private enabled = false;
   private lastClackMs = -9999;
   private lastCushionMs = -9999;
+  private lastRollMs = -9999;
 
   private nowMs(): number {
     if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -430,6 +431,44 @@ class BilliardAudioEngine {
       return false;
     }
   }
+
+  /**
+   * 7. Tiếng bi lạch cạch nhỏ khi lăn chạm nhau trong máng hồi bi cơ khí bên phải bàn.
+   */
+  public playMarbleRoll(intensity = 0.5): boolean {
+    const nowMs = this.nowMs();
+    if (nowMs - this.lastRollMs < 40) {
+      return false;
+    }
+    this.lastRollMs = nowMs;
+
+    if (!this.enabled) return false;
+    const ctx = this.unlock();
+    if (!ctx || !this.masterGain) return false;
+
+    const clamped = Math.max(0.1, Math.min(1, intensity));
+    const now = ctx.currentTime;
+
+    try {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(920 + clamped * 380, now);
+      osc.frequency.exponentialRampToValueAtTime(420, now + 0.028);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.11 * clamped, now + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.0006, now + 0.03);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(now);
+      osc.stop(now + 0.032);
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
 
 export const billiardAudio = new BilliardAudioEngine();
@@ -468,4 +507,8 @@ export function playRackClear(): boolean {
 
 export function playTrickShotReward(kind: 'bank' | 'double' | 'combo' = 'bank'): boolean {
   return billiardAudio.playTrickShotReward(kind);
+}
+
+export function playMarbleRoll(intensity = 0.5): boolean {
+  return billiardAudio.playMarbleRoll(intensity);
 }
