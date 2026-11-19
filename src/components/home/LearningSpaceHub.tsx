@@ -823,19 +823,20 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
       <section
         id="khong-gian-mon-hoc"
         aria-label="Không gian Học phần"
-        className="relative z-20 scroll-mt-24 pt-10 pb-10 lg:pt-12 lg:pb-12"
+        className="relative z-20 scroll-mt-24 pt-3 pb-10 lg:pt-4 lg:pb-12"
       >
         <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
           <BlueprintSectionFrame
             data-testid="atlas-blueprint-frame"
-            columnSeams={[0.5]}
-            headerSeamTopPx={36}
+            crosshairColor="#9C7A4C"
+            crosshairOpacity={0.65}
             className="rounded-[2px] border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
             innerClassName="overflow-hidden rounded-[2px]"
           >
             <TelemetrySpecBar
               sectionCode="DOC. LU-2026 // SPECIMEN ATLAS"
               subtitle="BẢN ĐỒ ĐA CHIỀU CÁC MÔN HỌC"
+              showLiveCoordinates={false}
               items={[
                 { label: 'HIỂN THỊ', value: `${filteredSubjects.length}/${subjects.length}` },
                 { label: 'TIẾN ĐỘ', value: `${completedCount}/${totalLessonCount}` },
@@ -1076,7 +1077,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 </div>
                               </div>
 
-                              <div className="relative z-10">
+                              <div className="relative z-10 overflow-hidden">
                                 <SubjectStageCanvas
                                   slug={subject.slug}
                                   isCardHovered={hoveredCardSlug === subject.slug}
@@ -1305,14 +1306,15 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
             <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
               <BlueprintSectionFrame
                 data-testid="orbit-blueprint-frame"
-                columnSeams={[0.5833]}
-                headerSeamTopPx={36}
+                crosshairColor="#9C7A4C"
+                crosshairOpacity={0.65}
                 className="rounded-[2px] border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
                 innerClassName="overflow-hidden rounded-[2px]"
               >
                 <TelemetrySpecBar
                   sectionCode="DOC. LU-2026 // PERSONAL ORBIT"
                   subtitle="QUỸ ĐẠO HỌC TẬP & MẠNG TRI THỨC LIÊN MÔN"
+                  showLiveCoordinates={false}
                   items={[{ label: 'ĐÃ HỌC', value: `${completedCount}/${totalLessonCount}` }]}
                 />
                 <div className="p-6 sm:p-8 lg:p-10">

@@ -6,6 +6,9 @@ import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSp
 interface StageInteraction {
   readonly rotOffsetX: number;
   readonly rotOffsetY: number;
+  readonly hoverMix: number;
+  readonly pulseTime: number;
+  readonly resonanceWave: number;
 }
 
 interface Vec3 {
@@ -599,7 +602,7 @@ function drawCalculusStage(
   drawGlowingNode(ctx, px, py, 4.4, '#245746', 'rgba(59, 122, 101, 0.48)');
 }
 
-// 4. Giáo dục học: 3 Mặt phẳng giao thoa sư phạm 3D nghiêng + Quỹ đạo nhân cách thăng tiến
+// 4. Giáo dục học: Hệ Sinh Thái Sư Phạm & Đường Xoắn Ốc Trưởng Thành (120fps)
 function drawPedagogyStage(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -607,81 +610,367 @@ function drawPedagogyStage(
   t: number,
   interaction: StageInteraction,
 ): void {
-  const cx = width * 0.5;
-  const cy = height * 0.54;
-  const fov = Math.min(width, height) * 1.15;
-  const tiltX = 0.72 + interaction.rotOffsetY * 0.35;
-  const tiltY = t * 0.24 + interaction.rotOffsetX * 0.45;
+  const fit = Math.min(1, height / 210);
+  const cx = Math.max(120 * fit, width * 0.34);
+  const cy = height * 0.5;
+  const hover = interaction.hoverMix;
 
-  const planes = [
-    { ox: -0.36, oy: 0.08, oz: -0.22, r: 0.52, fill: 'rgba(122, 70, 59, 0.16)', stroke: '#7A463B' },
-    { ox: 0.36, oy: 0.06, oz: -0.18, r: 0.5, fill: 'rgba(140, 109, 63, 0.15)', stroke: '#8C6D3F' },
-    { ox: 0, oy: -0.14, oz: 0.32, r: 0.54, fill: 'rgba(158, 99, 86, 0.18)', stroke: '#9E6356' },
+  // Hào quang đất nung dịu phía sau lõi Tam giác Sư phạm
+  const warmAura = ctx.createRadialGradient(cx, cy, 4, cx, cy, 128 * fit);
+  warmAura.addColorStop(0, `rgba(122, 70, 59, ${(0.12 + hover * 0.06).toFixed(3)})`);
+  warmAura.addColorStop(0.55, 'rgba(158, 99, 86, 0.05)');
+  warmAura.addColorStop(1, 'rgba(243, 236, 233, 0)');
+  ctx.fillStyle = warmAura;
+  ctx.fillRect(0, 0, width, height);
+
+  // =========================================================================
+  // LỚP 1 — 3 VÀNH SINH THÁI GIÁO DỤC ĐỒNG TÂM (Ecological Rings: r = 34, 60, 86px)
+  // =========================================================================
+  const ecoRings = [
+    {
+      ox: cx,
+      oy: cy,
+      r: 34 * fit,
+      dashed: false,
+      ticks: false,
+      stroke: `rgba(122, 70, 59, ${(0.28 + hover * 0.08).toFixed(3)})`,
+      lineWidth: 1.0,
+      label: 'SƯ PHẠM',
+      labelAngle: (-142 * Math.PI) / 180,
+      labelAlign: 'right' as CanvasTextAlign,
+    },
+    {
+      ox: cx + 6 * fit,
+      oy: cy - 1 * fit,
+      r: 60 * fit,
+      dashed: true,
+      ticks: false,
+      stroke: `rgba(158, 99, 86, ${(0.25 + hover * 0.08).toFixed(3)})`,
+      lineWidth: 1.0,
+      label: 'NHÀ TRƯỜNG',
+      labelAngle: (94 * Math.PI) / 180,
+      labelAlign: 'center' as CanvasTextAlign,
+    },
+    {
+      ox: cx + 12 * fit,
+      oy: cy - 2 * fit,
+      r: 86 * fit,
+      dashed: false,
+      ticks: true,
+      stroke: `rgba(122, 70, 59, ${(0.16 + hover * 0.08).toFixed(3)})`,
+      lineWidth: 0.9,
+      label: 'HƯỚNG NGHIỆP',
+      labelAngle: (-42 * Math.PI) / 180,
+      labelAlign: 'left' as CanvasTextAlign,
+    },
   ] as const;
 
-  const projectedPlanes = planes
-    .map((plane, idx) => {
-      const centerW = rotatePoint3D({ x: plane.ox, y: plane.oy, z: plane.oz }, tiltX, tiltY, 0);
-      const pts = Array.from({ length: 40 }, (_, s) => {
-        const a = (s / 40) * Math.PI * 2;
-        const v: Vec3 = {
-          x: plane.ox + Math.cos(a) * plane.r,
-          y: plane.oy + Math.sin(a) * 0.08 * (idx === 2 ? -1 : 1),
-          z: plane.oz + Math.sin(a) * plane.r,
-        };
-        return projectPoint3D(rotatePoint3D(v, tiltX, tiltY, 0), cx, cy, fov);
-      });
-      return { centerW, pts, fill: plane.fill, stroke: plane.stroke };
-    })
-    .sort((a, b) => a.centerW.z - b.centerW.z);
+  ctx.save();
+  ctx.font = '500 8.5px "JetBrains Mono Variable", ui-monospace, monospace';
+  ctx.textBaseline = 'middle';
 
-  for (const plane of projectedPlanes) {
+  for (const ring of ecoRings) {
     ctx.beginPath();
-    plane.pts.forEach((pt, idx) => {
-      if (idx === 0) ctx.moveTo(pt.x, pt.y);
-      else ctx.lineTo(pt.x, pt.y);
-    });
-    ctx.closePath();
-    ctx.fillStyle = plane.fill;
-    ctx.fill();
-    ctx.strokeStyle = plane.stroke;
-    ctx.globalAlpha = 0.72;
-    ctx.lineWidth = 1.4;
+    if (ring.dashed) ctx.setLineDash([4, 4]);
+    else ctx.setLineDash([]);
+    ctx.arc(ring.ox, ring.oy, ring.r, 0, Math.PI * 2);
+    ctx.strokeStyle = ring.stroke;
+    ctx.lineWidth = ring.lineWidth;
     ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (ring.ticks) {
+      const tickCount = 36;
+      const tickSpin = t * 0.035;
+      ctx.beginPath();
+      for (let k = 0; k < tickCount; k += 1) {
+        const a = (k / tickCount) * Math.PI * 2 + tickSpin;
+        const innerTick = k % 3 === 0 ? ring.r - 4.2 * fit : ring.r - 2.2 * fit;
+        ctx.moveTo(ring.ox + Math.cos(a) * innerTick, ring.oy + Math.sin(a) * innerTick);
+        ctx.lineTo(ring.ox + Math.cos(a) * ring.r, ring.oy + Math.sin(a) * ring.r);
+      }
+      ctx.strokeStyle = `rgba(122, 70, 59, ${(0.2 + hover * 0.08).toFixed(3)})`;
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    }
+
+    const lx = ring.ox + Math.cos(ring.labelAngle) * (ring.r + 5.5 * fit);
+    const ly = ring.oy + Math.sin(ring.labelAngle) * (ring.r + 5.5 * fit);
+    ctx.globalAlpha = 0.65 + hover * 0.16;
+    ctx.fillStyle = '#7A463B';
+    ctx.textAlign = ring.labelAlign;
+    ctx.fillText(ring.label, lx, ly);
     ctx.globalAlpha = 1;
   }
 
-  // Quỹ đạo phát triển nhân cách đi lên xuyên qua giao điểm 3 mặt phẳng sư phạm
-  const curveTilt = Math.max(-24, Math.min(24, interaction.rotOffsetY * 18));
-  const p0 = { x: width * 0.17, y: height * 0.8 };
-  const p1 = { x: width * 0.42, y: height * 0.62 + curveTilt };
-  const p2 = { x: width * 0.62, y: height * 0.4 - curveTilt };
-  const p3 = { x: width * 0.84, y: height * 0.2 };
+  // Sóng cộng hưởng dịu lan tỏa từ tâm ra ngoài vòng sinh thái ngoài khi rê chuột vào thẻ GDH
+  if (interaction.resonanceWave > 0.001 || hover > 0.04) {
+    const waveProg = interaction.resonanceWave > 0.001 ? interaction.resonanceWave : (t * 0.45) % 1;
+    const waveRadius = (26 + waveProg * 70) * fit;
+    const waveFade = Math.sin(waveProg * Math.PI) * Math.max(hover * 0.85, 0.75);
+    if (waveFade > 0.01) {
+      ctx.beginPath();
+      ctx.arc(cx + 8 * fit * waveProg, cy - 1.5 * fit * waveProg, waveRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(122, 70, 59, ${(0.34 * waveFade).toFixed(3)})`;
+      ctx.lineWidth = 1.4 - waveProg * 0.5;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(
+        cx + 8 * fit * waveProg,
+        cy - 1.5 * fit * waveProg,
+        Math.max(12, waveRadius * 0.84),
+        0,
+        Math.PI * 2,
+      );
+      ctx.strokeStyle = `rgba(212, 163, 89, ${(0.24 * waveFade).toFixed(3)})`;
+      ctx.lineWidth = 0.9;
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+
+  // =========================================================================
+  // LỚP 2 — TAM GIÁC SƯ PHẠM TƯƠNG TÁC HAI CHIỀU (Didactic Triangle Core)
+  // =========================================================================
+  const triR = 54 * fit;
+  const oscRad =
+    Math.sin(t * 0.72) * ((2.6 * Math.PI) / 180) +
+    Math.max(-0.06, Math.min(0.06, interaction.rotOffsetX * 0.03)) +
+    Math.max(-0.04, Math.min(0.04, interaction.rotOffsetY * 0.04));
+
+  const triVertices = [
+    {
+      label: 'GIÁO VIÊN',
+      angle: -Math.PI / 2 + oscRad,
+      color: '#7A463B',
+      glow: 'rgba(122, 70, 59, 0.34)',
+      radius: 4.3,
+      labelDx: 0,
+      labelDy: -10.5 * fit,
+      align: 'center' as CanvasTextAlign,
+      ripple: false,
+    },
+    {
+      label: 'NGƯỜI HỌC',
+      angle: (5 * Math.PI) / 6 + oscRad,
+      color: '#9E6356',
+      glow: 'rgba(158, 99, 86, 0.32)',
+      radius: 4.0,
+      labelDx: -3 * fit,
+      labelDy: 12.5 * fit,
+      align: 'center' as CanvasTextAlign,
+      ripple: true,
+    },
+    {
+      label: 'TRI THỨC',
+      angle: Math.PI / 6 + oscRad,
+      color: '#B67B65',
+      glow: 'rgba(182, 123, 101, 0.32)',
+      radius: 4.0,
+      labelDx: 4 * fit,
+      labelDy: 12.5 * fit,
+      align: 'center' as CanvasTextAlign,
+      ripple: false,
+    },
+  ].map((v) => ({
+    ...v,
+    x: cx + Math.cos(v.angle) * triR,
+    y: cy + Math.sin(v.angle) * triR,
+  }));
+
+  // Vùng nền mờ trong Tam giác Sư phạm
+  ctx.beginPath();
+  ctx.moveTo(triVertices[0]!.x, triVertices[0]!.y);
+  ctx.lineTo(triVertices[1]!.x, triVertices[1]!.y);
+  ctx.lineTo(triVertices[2]!.x, triVertices[2]!.y);
+  ctx.closePath();
+  ctx.fillStyle = `rgba(122, 70, 59, ${(0.042 + hover * 0.025).toFixed(3)})`;
+  ctx.fill();
+
+  // Các cung cong đôi (bidirectional curved arcs) + 2 hạt xung chạy ngược chiều (#7A463B & #D4A359)
+  const edges: readonly (readonly [number, number])[] = [
+    [0, 1],
+    [1, 2],
+    [2, 0],
+  ];
+
+  for (let eIdx = 0; eIdx < edges.length; eIdx += 1) {
+    const [ia, ib] = edges[eIdx]!;
+    const a = triVertices[ia]!;
+    const b = triVertices[ib]!;
+    const mx = (a.x + b.x) * 0.5;
+    const my = (a.y + b.y) * 0.5;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    let nx = -dy / len;
+    let ny = dx / len;
+    if ((mx - cx) * nx + (my - cy) * ny < 0) {
+      nx = -nx;
+      ny = -ny;
+    }
+
+    const ctrlOutX = mx + nx * 11 * fit;
+    const ctrlOutY = my + ny * 11 * fit;
+    const ctrlInX = mx - nx * 7 * fit;
+    const ctrlInY = my - ny * 7 * fit;
+
+    // Cung thuận (Tác động sư phạm)
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(ctrlOutX, ctrlOutY, b.x, b.y);
+    ctx.strokeStyle = `rgba(122, 70, 59, ${(0.34 + hover * 0.14).toFixed(3)})`;
+    ctx.lineWidth = 1.15;
+    ctx.stroke();
+
+    // Cung nghịch (Phản hồi & Tự lĩnh hội)
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.quadraticCurveTo(ctrlInX, ctrlInY, b.x, b.y);
+    ctx.strokeStyle = `rgba(212, 163, 89, ${(0.36 + hover * 0.16).toFixed(3)})`;
+    ctx.lineWidth = 1.0;
+    ctx.stroke();
+
+    // Hạt xung 1 (#7A463B, r = 2px): chạy chiều A -> B
+    const uFwd = (interaction.pulseTime * 0.42 + eIdx * 0.31) % 1;
+    const invFwd = 1 - uFwd;
+    const pxFwd = invFwd * invFwd * a.x + 2 * invFwd * uFwd * ctrlOutX + uFwd * uFwd * b.x;
+    const pyFwd = invFwd * invFwd * a.y + 2 * invFwd * uFwd * ctrlOutY + uFwd * uFwd * b.y;
+    drawGlowingNode(
+      ctx,
+      pxFwd,
+      pyFwd,
+      2,
+      '#7A463B',
+      `rgba(122, 70, 59, ${(0.3 + hover * 0.2).toFixed(3)})`,
+    );
+
+    // Hạt xung 2 (#D4A359, r = 2px): chạy ngược chiều B -> A
+    const uRev = 1 - ((interaction.pulseTime * 0.42 + eIdx * 0.31 + 0.5) % 1);
+    const invRev = 1 - uRev;
+    const pxRev = invRev * invRev * a.x + 2 * invRev * uRev * ctrlInX + uRev * uRev * b.x;
+    const pyRev = invRev * invRev * a.y + 2 * invRev * uRev * ctrlInY + uRev * uRev * b.y;
+    drawGlowingNode(
+      ctx,
+      pxRev,
+      pyRev,
+      2,
+      '#D4A359',
+      `rgba(212, 163, 89, ${(0.36 + hover * 0.24).toFixed(3)})`,
+    );
+  }
+
+  // =========================================================================
+  // LỚP 3 — ĐƯỜNG XOẮN ỐC PHÁT TRIỂN & 5 NÚT MẦM NĂNG LỰC (Growth Spiral)
+  // =========================================================================
+  const maxRightReach = Math.max(135, width - cx - 32);
+  const maxSpiralR = Math.min(maxRightReach * 0.78, 220);
+  const spiralDrift = Math.max(26, maxRightReach - maxSpiralR * 0.92);
+  const spiralYScale = Math.min(0.45, (height * 0.29) / Math.max(80, maxSpiralR));
+  const spiralExp = 2.35;
+  const spiralExpDenom = Math.exp(spiralExp) - 1;
+
+  const sampleGrowthSpiral = (u: number): { x: number; y: number } => {
+    const expNorm = (Math.exp(spiralExp * u) - 1) / spiralExpDenom;
+    const r = maxSpiralR * expNorm;
+    const theta = 1.05 * Math.PI - u * 1.18 * Math.PI;
+    const driftX = spiralDrift * Math.pow(u, 1.35);
+    return {
+      x: cx + r * Math.cos(theta) + driftX,
+      y: cy + r * spiralYScale * Math.sin(theta),
+    };
+  };
+
+  const spiralEnd = sampleGrowthSpiral(0.98);
+  const spiralGrad = ctx.createLinearGradient(cx, cy, spiralEnd.x, spiralEnd.y);
+  spiralGrad.addColorStop(0, '#7A463B');
+  spiralGrad.addColorStop(1, '#C48B76');
 
   ctx.beginPath();
-  ctx.moveTo(p0.x, p0.y);
-  ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-  ctx.strokeStyle = 'rgba(122, 70, 59, 0.22)';
-  ctx.lineWidth = 5;
+  const spiralSteps = 72;
+  for (let s = 0; s <= spiralSteps; s += 1) {
+    const pt = sampleGrowthSpiral((s / spiralSteps) * 0.98);
+    if (s === 0) ctx.moveTo(pt.x, pt.y);
+    else ctx.lineTo(pt.x, pt.y);
+  }
+  ctx.strokeStyle = spiralGrad;
+  ctx.lineWidth = 1.35;
+  ctx.lineCap = 'round';
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.moveTo(p0.x, p0.y);
-  ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-  ctx.strokeStyle = '#7A463B';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  // 5 điểm nút phát triển (r = 2.2px -> 4.2px) & nét phân nhánh mầm cây đối xứng chuẩn hình học
+  const sproutPositions = [0.22, 0.42, 0.62, 0.81, 0.97] as const;
+  for (let i = 0; i < sproutPositions.length; i += 1) {
+    const u = sproutPositions[i]!;
+    const p = sampleGrowthSpiral(u);
+    const pNext = sampleGrowthSpiral(Math.min(1, u + 0.015));
+    const tx = pNext.x - p.x;
+    const ty = pNext.y - p.y;
+    const tLen = Math.hypot(tx, ty) || 1;
+    const tangentAngle = Math.atan2(ty / tLen, tx / tLen);
 
-  const u = (t * 0.36) % 1;
-  const inv = 1 - u;
-  const bx =
-    inv * inv * inv * p0.x + 3 * inv * inv * u * p1.x + 3 * inv * u * u * p2.x + u * u * u * p3.x;
-  const by =
-    inv * inv * inv * p0.y + 3 * inv * inv * u * p1.y + 3 * inv * u * u * p2.y + u * u * u * p3.y;
+    const branchLen = (6.5 + i * 2.1) * fit;
+    const branchAlpha = 0.48 + hover * 0.36;
+    for (const side of [-1, 1] as const) {
+      const leafAngle = tangentAngle + side * ((38 * Math.PI) / 180);
+      const midAngle = tangentAngle + side * ((20 * Math.PI) / 180);
+      const lx = p.x + Math.cos(leafAngle) * branchLen;
+      const ly = p.y + Math.sin(leafAngle) * branchLen;
+      const ctrlX = p.x + Math.cos(midAngle) * (branchLen * 0.62);
+      const ctrlY = p.y + Math.sin(midAngle) * (branchLen * 0.62);
 
-  drawGlowingNode(ctx, p0.x, p0.y, 3.4, '#7A463B', 'rgba(122, 70, 59, 0.28)');
-  drawGlowingNode(ctx, p3.x, p3.y, 3.8, '#8C6D3F', 'rgba(140, 109, 63, 0.38)');
-  drawGlowingNode(ctx, bx, by, 4.6, '#9E6356', 'rgba(158, 99, 86, 0.48)');
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.quadraticCurveTo(ctrlX, ctrlY, lx, ly);
+      ctx.strokeStyle = `rgba(122, 70, 59, ${branchAlpha.toFixed(3)})`;
+      ctx.lineWidth = 0.85;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(lx, ly, 1.05 + hover * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(196, 139, 118, ${Math.min(0.95, 0.62 + hover * 0.3).toFixed(3)})`;
+      ctx.fill();
+    }
+
+    const nodeR = 2.2 + i * 0.5;
+    const nodeColor = i < 2 ? '#7A463B' : i < 4 ? '#9E6356' : '#C48B76';
+    const nodeGlowAlpha = 0.24 + hover * 0.34;
+    drawGlowingNode(
+      ctx,
+      p.x,
+      p.y,
+      nodeR,
+      nodeColor,
+      `rgba(196, 139, 118, ${nodeGlowAlpha.toFixed(3)})`,
+    );
+  }
+
+  // Tâm khởi nguồn Tam giác Sư phạm
+  drawGlowingNode(ctx, cx, cy, 2.5, '#7A463B', 'rgba(122, 70, 59, 0.26)');
+
+  // Vẽ 3 đỉnh Tam giác Sư phạm & nhãn ở trên cùng để sắc nét tuyệt đối
+  ctx.save();
+  ctx.font = '600 8.5px "JetBrains Mono Variable", ui-monospace, monospace';
+  ctx.textBaseline = 'middle';
+  for (const v of triVertices) {
+    if (v.ripple) {
+      const rippleP = (t * 0.55) % 1;
+      const rippleR = (5.5 + rippleP * 11.5) * fit;
+      const rippleAlpha = (1 - rippleP) * (0.4 + hover * 0.2);
+      ctx.beginPath();
+      ctx.arc(v.x, v.y, rippleR, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(158, 99, 86, ${rippleAlpha.toFixed(3)})`;
+      ctx.lineWidth = 1.0;
+      ctx.stroke();
+    }
+
+    drawGlowingNode(ctx, v.x, v.y, v.radius, v.color, v.glow);
+    ctx.fillStyle = v.color;
+    ctx.textAlign = v.align;
+    ctx.fillText(v.label, v.x + v.labelDx, v.y + v.labelDy);
+  }
+  ctx.restore();
 }
 
 export interface SubjectStageCanvasProps {
@@ -733,6 +1022,10 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
     let isVisible = true;
     let rafId = 0;
     let elapsed = 0;
+    let pulseElapsed = 0.8;
+    let hoverMix = 0;
+    let wasHovered = false;
+    let resonanceWave = 0;
     let prevNow = performance.now();
 
     let dragging = false;
@@ -748,10 +1041,16 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       const interaction: StageInteraction = {
         rotOffsetX: currentOffsetX,
         rotOffsetY: currentOffsetY,
+        hoverMix,
+        pulseTime: pulseElapsed,
+        resonanceWave,
       };
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
+      ctx.beginPath();
+      ctx.rect(0, 0, width, height);
+      ctx.clip();
 
       const cx = width * 0.5;
       const cy = height * 0.5;
@@ -872,16 +1171,32 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
     }
 
     const tick = (now: number) => {
-      const { dtSeconds } = computeFrameDelta(now, prevNow);
+      const { dtSeconds, dtScale } = computeFrameDelta(now, prevNow);
       prevNow = now;
       if (isVisible && !document.hidden) {
         const hovered = isCardHoveredRef.current;
-        const speedMultiplier = dragging ? 0.55 : hovered ? 1.65 : 1;
-        elapsed += dtSeconds * speedMultiplier;
+        if (hovered && !wasHovered && resonanceWave <= 0.01) {
+          resonanceWave = 0.02;
+        }
+        wasHovered = hovered;
+
+        const hoverDamp = Math.min(1, 0.14 * dtScale);
+        hoverMix += ((hovered ? 1 : 0) - hoverMix) * hoverDamp;
+
+        const pulseRate = 1 + 0.6 * hoverMix;
+        pulseElapsed += (dtScale / 60) * pulseRate;
+
+        if (resonanceWave > 0) {
+          resonanceWave += (dtScale / 60) * 0.92;
+          if (resonanceWave >= 1) resonanceWave = 0;
+        }
+
+        const speedMultiplier = dragging ? 0.55 : hovered ? 1.6 : 1;
+        elapsed += (dtScale / 60) * speedMultiplier;
         const smoothRate = Math.min(1, dtSeconds * 9);
         currentOffsetX += (targetOffsetX - currentOffsetX) * smoothRate;
         currentOffsetY += (targetOffsetY - currentOffsetY) * smoothRate;
-        const targetScale = hovered ? 1.12 : 1.0;
+        const targetScale = slug === 'giao-duc-hoc' ? 1.0 : hovered ? 1.12 : 1.0;
         currentModelScale += (targetScale - currentModelScale) * Math.min(1, dtSeconds * 7.5);
         render(elapsed);
       }
@@ -962,12 +1277,6 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
         className="pointer-events-none absolute right-2 bottom-2 z-20 h-3 w-3 border-r-[1.5px] border-b-[1.5px] opacity-75"
         style={{ borderColor: theme.dotColor }}
       />
-      <span
-        className="lu-tabular-telemetry pointer-events-none absolute top-2 right-6 z-20 font-mono text-[9px] font-semibold tracking-[0.16em] uppercase opacity-55"
-        style={{ color: theme.dotColor }}
-      >
-        3D.STAGE // 120FPS
-      </span>
 
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full touch-none" />
     </div>

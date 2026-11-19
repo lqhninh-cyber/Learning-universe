@@ -299,10 +299,10 @@ export function EngravedGroundCanvas({
       const radiusPx = Math.max(140, Math.min(width, height) * 0.42);
       const invRadius = 1 / radiusPx;
 
-      // 1. Nét khắc tuyến tính 20° tĩnh + Hệ đường khắc ngang nổi 3D uốn cong & tách giãn quanh con trỏ
+      // 1. Nét khắc tuyến tính 20° tĩnh + Hệ đường khắc ngang ruled-grounds tinh tế (opacity 0.08 - 0.14)
       if (cache.engravingPaths.length > 0) {
         ctx.lineWidth = 0.7;
-        ctx.strokeStyle = 'rgba(30, 51, 46, 0.042)';
+        ctx.strokeStyle = 'rgba(30, 51, 46, 0.036)';
         for (let i = 0; i < cache.engravingPaths.length; i += 1) {
           const path = cache.engravingPaths[i];
           if (path) ctx.stroke(path);
@@ -341,11 +341,11 @@ export function EngravedGroundCanvas({
             else ctx.lineTo(sx, y);
           }
 
-          const lineAlpha = 0.045 + maxLift * (0.04 + pointerActive * 0.05);
-          ctx.lineWidth = maxLift > 0.25 ? 0.95 : 0.7;
+          const lineAlpha = Math.min(0.125, 0.042 + maxLift * (0.045 + pointerActive * 0.038));
+          ctx.lineWidth = maxLift > 0.25 ? 0.85 : 0.68;
           ctx.strokeStyle =
             maxLift > 0.38 && pointerActive > 0.08
-              ? `rgba(140, 114, 72, ${Math.min(0.22, lineAlpha * 1.65).toFixed(3)})`
+              ? `rgba(140, 114, 72, ${Math.min(0.14, lineAlpha * 1.15).toFixed(3)})`
               : `rgba(30, 51, 46, ${lineAlpha.toFixed(3)})`;
           ctx.stroke();
         }
@@ -356,17 +356,16 @@ export function EngravedGroundCanvas({
         for (let i = 0; i < cache.rosettePaths.length; i += 1) {
           const ring = cache.rosettePaths[i];
           if (!ring) continue;
-          ctx.lineWidth = i === 1 ? 0.9 : 0.65;
+          ctx.lineWidth = i === 1 ? 0.85 : 0.65;
           ctx.strokeStyle =
             i === 1
-              ? `rgba(140, 114, 72, ${(0.085 + pointerActive * 0.045).toFixed(3)})`
-              : 'rgba(30, 51, 46, 0.065)';
+              ? `rgba(140, 114, 72, ${(0.075 + pointerActive * 0.035).toFixed(3)})`
+              : 'rgba(30, 51, 46, 0.055)';
           ctx.stroke(ring);
         }
       }
 
-      // 3. Điểm lưới chuẩn độ 16px & chữ thập 3px với vùng ánh sáng dạo Lissajous + con trỏ
-
+      // 3. Điểm lưới chuẩn độ 16px & chữ thập 3px tinh gọn với vùng ánh sáng dạo Lissajous + con trỏ
       const { pointCount, px, py, calm, isCross } = cache;
       for (let i = 0; i < pointCount; i += 1) {
         const x = px[i] ?? 0;
@@ -375,16 +374,16 @@ export function EngravedGroundCanvas({
         const distNorm = Math.hypot(x - focusX, y - focusY) * invRadius;
         const spot = Math.max(0, 1 - distNorm);
         const lit = spot * spot * (1 - calmVal * 0.72);
-        const baseAlpha = (0.145 + lit * 0.34) * (1 - calmVal * 0.58);
+        const baseAlpha = (0.095 + lit * 0.2) * (1 - calmVal * 0.65);
 
         if (baseAlpha <= 0.02) continue;
 
         if (isCross[i] === 1) {
           const half = 3;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 0.95;
           ctx.strokeStyle =
             lit > 0.28
-              ? `rgba(140, 114, 72, ${Math.min(0.62, baseAlpha + 0.16).toFixed(3)})`
+              ? `rgba(140, 114, 72, ${Math.min(0.36, baseAlpha + 0.08).toFixed(3)})`
               : `rgba(30, 51, 46, ${baseAlpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(x - half, y);
@@ -395,9 +394,9 @@ export function EngravedGroundCanvas({
         } else {
           ctx.fillStyle =
             lit > 0.36
-              ? `rgba(140, 114, 72, ${Math.min(0.55, baseAlpha + 0.12).toFixed(3)})`
-              : `rgba(30, 51, 46, ${(baseAlpha * 0.85).toFixed(3)})`;
-          const dotRadius = lit > 0.35 ? 1.15 : 0.85;
+              ? `rgba(140, 114, 72, ${Math.min(0.32, baseAlpha + 0.06).toFixed(3)})`
+              : `rgba(30, 51, 46, ${(baseAlpha * 0.8).toFixed(3)})`;
+          const dotRadius = lit > 0.35 ? 1.05 : 0.85;
           ctx.fillRect(x - dotRadius * 0.5, y - dotRadius * 0.5, dotRadius * 2, dotRadius * 2);
         }
       }

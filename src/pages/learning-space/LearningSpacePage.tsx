@@ -4,7 +4,6 @@ import {
   BookOpen,
   Compass,
   FolderKanban,
-  GraduationCap,
   Layers,
   Search,
   Sparkles,
@@ -16,7 +15,6 @@ import {
   AcademicAxiomBand,
   BlueprintSectionFrame,
   EngravedGroundCanvas,
-  FlutedGlassSurface,
   TelemetrySpecBar,
 } from '@/components/fx';
 import { TopographicWaterlinesBackdrop } from '@/components/home/HomeScrollTransitions';
@@ -305,13 +303,13 @@ export function LearningSpacePage() {
         <section
           id="khoi-dau"
           aria-label="Không gian Học tập"
-          className="relative z-30 scroll-mt-24 pt-20 pb-4 sm:pt-24"
+          className="relative z-30 scroll-mt-24 pt-20 pb-1 sm:pt-24"
         >
           <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
             <BlueprintSectionFrame
               data-testid="hero-blueprint-frame"
-              columnSeams={[0.54]}
-              headerSeamTopPx={36}
+              crosshairColor="#9C7A4C"
+              crosshairOpacity={0.65}
               showInnerKeyline
               className="rounded-[2px] border-[#CFD8D4] shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_20px_60px_rgba(24,38,36,0.06)] backdrop-blur-md"
               innerClassName="overflow-hidden rounded-[2px]"
@@ -329,14 +327,20 @@ export function LearningSpacePage() {
               <div
                 style={{
                   background:
-                    'radial-gradient(640px circle at 14% 18%, rgba(220, 236, 229, 0.92), transparent 64%), radial-gradient(620px circle at 48% 92%, rgba(239, 232, 216, 0.85), transparent 62%), radial-gradient(560px circle at 88% 28%, rgba(226, 235, 240, 0.94), transparent 65%), linear-gradient(135deg, rgba(250, 251, 249, 0.94) 0%, rgba(240, 245, 243, 0.92) 55%, rgba(244, 247, 245, 0.95) 100%)',
+                    'radial-gradient(640px circle at 14% 18%, rgba(220, 236, 229, 0.92), transparent 64%), radial-gradient(620px circle at 48% 92%, rgba(239, 232, 216, 0.85), transparent 62%), radial-gradient(560px circle at 88% 28%, rgba(226, 235, 240, 0.94), transparent 65%), linear-gradient(135deg, rgba(250, 251, 249, 0.96) 0%, rgba(240, 245, 243, 0.94) 55%, rgba(244, 247, 245, 0.96) 100%)',
                 }}
                 className="relative min-h-[420px] p-8 text-[#162623] lg:p-11"
               >
-                {/* Lớp Lưới chuẩn độ Ruled-Grounds & Khắc Tuyến Tính Line-Engraving 120fps (taste-skill) */}
+                {/* Lớp Lưới chuẩn độ Ruled-Grounds & Khắc Tuyến Tính 120fps được che mượt vùng đọc bên trái */}
                 <div
                   aria-hidden="true"
                   data-testid="hero-blueprint-grid"
+                  style={{
+                    WebkitMaskImage:
+                      'linear-gradient(90deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.12) 42%, rgba(0,0,0,0.85) 68%, rgba(0,0,0,1) 100%)',
+                    maskImage:
+                      'linear-gradient(90deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.12) 42%, rgba(0,0,0,0.85) 68%, rgba(0,0,0,1) 100%)',
+                  }}
                   className="pointer-events-none absolute inset-0 overflow-hidden select-none"
                 >
                   <EngravedGroundCanvas
@@ -360,18 +364,16 @@ export function LearningSpacePage() {
                     </div>
 
                     <div className="space-y-3">
-                      <FlutedGlassSurface
-                        as="div"
-                        tone="mineral"
-                        ribs={18}
-                        data-testid="hero-eyebrow-fluted"
-                        className="inline-flex w-fit rounded-[2px] px-3.5 py-1 font-mono text-[11px] font-semibold tracking-wider text-[#1E332E] uppercase"
+                      <div
+                        data-testid="hero-eyebrow-badge"
+                        className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#D4DFDA] bg-[#FAFBF9] px-3.5 py-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#354E48] uppercase shadow-[0_1px_2px_rgba(24,38,36,0.03)]"
                       >
-                        <span className="inline-flex items-center gap-2">
-                          <Compass className="h-3.5 w-3.5 text-[#243E38]" aria-hidden="true" />
-                          <span>ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN</span>
-                        </span>
-                      </FlutedGlassSurface>
+                        <Compass
+                          className="h-3.5 w-3.5 shrink-0 text-[#354E48]"
+                          aria-hidden="true"
+                        />
+                        <span>ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN</span>
+                      </div>
 
                       <h1 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#162623] sm:text-4xl lg:text-5xl">
                         Không Gian Học Tập
@@ -384,49 +386,63 @@ export function LearningSpacePage() {
                       </p>
                     </div>
 
-                    {/* 3 Huy hiệu thống kê thấu kính gân trụ Fluted-Glass (taste-skill) */}
-                    <div className="flex flex-wrap items-center gap-2.5 text-xs">
-                      <FlutedGlassSurface
-                        as="span"
-                        tone="mineral"
-                        ribs={12}
-                        className="inline-flex rounded-[2px] px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
-                      >
-                        <span className="inline-flex items-center gap-1.5">
-                          <Layers className="h-3.5 w-3.5 text-[#243E38]" aria-hidden="true" />
-                          <span>{String(subjects.length).padStart(2, '0')} học phần</span>
+                    {/* Thanh Chỉ Số Phân Đoạn Liền Khối (Unified Architectural Stat Strip) */}
+                    <div
+                      data-testid="hero-unified-stat-strip"
+                      className="inline-flex flex-wrap items-center divide-x divide-[#E0E7E4] overflow-hidden rounded-xl border border-[#D4DFDA] bg-[#FAFBF9] shadow-[0_2px_10px_rgba(24,38,36,0.035)]"
+                    >
+                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E]">
+                        <Layers
+                          className="h-3.5 w-3.5 shrink-0 text-[#4A635D]"
+                          aria-hidden="true"
+                        />
+                        <span className="font-mono">
+                          <span className="font-semibold text-[#182624] tabular-nums">
+                            {String(subjects.length).padStart(2, '0')}
+                          </span>{' '}
+                          học phần
                         </span>
-                      </FlutedGlassSurface>
-                      <FlutedGlassSurface
-                        as="span"
-                        tone="vellum"
-                        ribs={14}
-                        className="inline-flex rounded-[2px] px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
-                      >
-                        <span className="inline-flex items-center gap-1.5">
-                          <BookOpen className="h-3.5 w-3.5 text-[#3B6275]" aria-hidden="true" />
-                          <span>
-                            {totalChapterCount} chương · {totalLessonCount} bài giảng
+                      </div>
+                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E]">
+                        <BookOpen
+                          className="h-3.5 w-3.5 shrink-0 text-[#4A635D]"
+                          aria-hidden="true"
+                        />
+                        <span className="font-mono">
+                          <span className="font-semibold text-[#182624] tabular-nums">
+                            {totalChapterCount}
+                          </span>{' '}
+                          chương ·{' '}
+                          <span className="font-semibold text-[#182624] tabular-nums">
+                            {totalLessonCount}
+                          </span>{' '}
+                          bài giảng
+                        </span>
+                      </div>
+                      <div className="inline-flex items-center gap-2 bg-[#FAFBF9] px-3.5 py-2 text-xs text-[#3F524E]">
+                        <span
+                          aria-hidden="true"
+                          className="h-2 w-2 shrink-0 rounded-full bg-[#245746]"
+                        />
+                        <span className="font-mono">
+                          Tiến độ cá nhân:{' '}
+                          <span className="font-semibold text-[#182624] tabular-nums">
+                            {displayOrbitPercent}%
                           </span>
                         </span>
-                      </FlutedGlassSurface>
-                      <FlutedGlassSurface
-                        as="span"
-                        tone="brass"
-                        ribs={14}
-                        className="inline-flex rounded-[2px] px-3.5 py-1.5 font-mono font-semibold text-[#182624]"
-                      >
-                        <span className="inline-flex items-center gap-1.5">
-                          <GraduationCap
-                            className="h-3.5 w-3.5 text-[#8C7248]"
-                            aria-hidden="true"
+                        <span
+                          aria-hidden="true"
+                          className="h-1.5 w-10 overflow-hidden rounded-full bg-[#E3EAE7]"
+                        >
+                          <span
+                            className="block h-full rounded-full bg-[#245746] transition-[width] duration-500"
+                            style={{ width: `${Math.max(displayOrbitPercent, 6)}%` }}
                           />
-                          <span>Tiến độ cá nhân: {displayOrbitPercent}%</span>
                         </span>
-                      </FlutedGlassSurface>
+                      </div>
                     </div>
 
-                    {/* Ô Tìm kiếm Spotlight Tức thời theo kiến trúc taste-skill fx-search + Từ khóa gợi ý nhanh */}
+                    {/* Ô Tìm kiếm Spotlight Tức thời nền trắng sứ #FFFFFF & Chip gợi ý nhanh nền sứ sạch */}
                     <div
                       ref={searchContainerRef}
                       className="lu-fx-search relative max-w-2xl space-y-2.5"
@@ -441,7 +457,7 @@ export function LearningSpacePage() {
                         role="search"
                         aria-label="Tìm kiếm nội dung học tập"
                       >
-                        <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-[2px] border border-[#CFD8D4] bg-[#FAFBF9]/95 px-4 text-sm text-[#182624]">
+                        <div className="lu-fx-search-field relative flex h-12 w-full items-center rounded-xl border border-[#CFD9D5] bg-[#FFFFFF] px-4 text-sm text-[#182624] shadow-[0_4px_16px_rgba(24,38,36,0.04)] focus-within:border-[#1E332E]">
                           <Search
                             className="mr-3 h-4 w-4 shrink-0 text-[#4A5D58]"
                             aria-hidden="true"
@@ -483,7 +499,7 @@ export function LearningSpacePage() {
                         </div>
                       </form>
 
-                      {/* Hàng Từ khóa gợi ý nhanh (Quick Search Chips) */}
+                      {/* Hàng Từ khóa gợi ý nhanh (Quick Search Chips — nền sứ đặc sạch tuyệt đối) */}
                       <div
                         data-testid="quick-search-chips"
                         className="flex flex-wrap items-center gap-1.5"
@@ -500,8 +516,8 @@ export function LearningSpacePage() {
                               onClick={() => handleQuickChipSelect(chip)}
                               className={
                                 isActive
-                                  ? 'cursor-pointer rounded-full border border-[#1E332E] bg-[#1E332E] px-2.5 py-1 text-[11px] font-semibold text-[#FAFBF9] shadow-2xs transition-all'
-                                  : 'cursor-pointer rounded-full border border-[#CBD6D2] bg-[#FAFBF9]/85 px-2.5 py-1 text-[11px] font-medium text-[#3F524E] transition-all hover:border-[#1E332E] hover:bg-white hover:text-[#182624] active:scale-[0.98]'
+                                  ? 'cursor-pointer rounded-full border border-[#1E332E] bg-[#1E332E] px-2.5 py-1 text-[11px] font-semibold text-[#FAFBF9] shadow-2xs transition-colors'
+                                  : 'cursor-pointer rounded-full border border-[#D8E1DD] bg-[#FAFBF9] px-2.5 py-1 text-[11px] font-medium text-[#2C423D] transition-colors hover:bg-[#EDF2F0] hover:text-[#182624] active:scale-[0.98]'
                               }
                             >
                               {chip}
@@ -721,7 +737,7 @@ export function LearningSpacePage() {
         </section>
 
         {/* Dải ruy-băng học thuật chuyển động ngang AcademicAxiomBand (fx-band) giữa Hero & Hệ thống học phần */}
-        <div className="relative z-20 mx-auto w-full max-w-[1400px] px-6 pt-5 pb-1 lg:px-10">
+        <div className="relative z-20 mx-auto my-5 w-full max-w-[1400px] px-6 lg:px-10">
           <AcademicAxiomBand className="rounded-[2px]" />
         </div>
 

@@ -109,7 +109,8 @@ export function TelemetrySpecBar({
     <div
       data-testid={dataTestId}
       className={cn(
-        'lu-tabular-telemetry grid grid-cols-1 divide-y divide-[#CFD8D4] border-b border-[#CFD8D4] bg-[#EEF2EF]/92 text-[10px] tracking-[0.13em] text-[#35524B] uppercase lg:grid-cols-[auto_1fr_auto_auto] lg:divide-x lg:divide-y-0',
+        'lu-tabular-telemetry grid grid-cols-1 divide-y divide-[#CFD8D4] border-b border-[#CFD8D4] bg-[#EEF2EF]/92 text-[10px] tracking-[0.13em] text-[#35524B] uppercase lg:divide-x lg:divide-y-0',
+        showLiveCoordinates ? 'lg:grid-cols-[auto_1fr_auto_auto]' : 'lg:grid-cols-[auto_1fr_auto]',
         className,
       )}
     >

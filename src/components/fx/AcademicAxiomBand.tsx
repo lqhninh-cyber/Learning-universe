@@ -67,6 +67,20 @@ export interface AcademicAxiomBandProps {
   readonly 'data-testid'?: string;
 }
 
+function renderFormulaGlyphs(formula: string) {
+  if (formula === '∫ₐᵇ f(x) dx = lim ∑ f(ξᵢ)Δxᵢ') {
+    return (
+      <>
+        <span>
+          ∫<sub>a</sub>
+          <sup>b</sup> f(x) dx = lim ∑ f(ξ<sub>i</sub>)Δx<sub>i</sub>
+        </span>
+      </>
+    );
+  }
+  return formula;
+}
+
 function BandSequence({
   items,
   ariaHidden = false,
@@ -83,15 +97,17 @@ function BandSequence({
         >
           <span
             className={cn(
-              'lu-tabular-telemetry border px-1.5 py-0.5 font-mono text-[9.5px] font-semibold tracking-[0.12em] uppercase',
+              'lu-tabular-telemetry rounded-[2px] border px-1.5 py-0.5 font-mono text-[9.5px] font-semibold tracking-[0.12em] uppercase',
               item.kind === 'milestone'
-                ? 'border-[#D7CCB8] bg-[#FAF8F4] text-[#8C7248]'
-                : 'border-[#CFD8D4] bg-[#F5F7F6] text-[#245746]',
+                ? 'border-[#DCD1BE] bg-[#FAF8F4] text-[#8C7248]'
+                : 'border-[#CFD8D4] bg-[#FAFBF9] text-[#245746]',
             )}
           >
             {item.code}
           </span>
-          <span className="font-mono font-semibold text-[#162623]">{item.formula}</span>
+          <span className="lu-fx-band-formula text-[#162623]">
+            {renderFormulaGlyphs(item.formula)}
+          </span>
           <span className="text-[#4F6861]">· {item.label}</span>
           <span className="ml-2 text-[#B8C4BF]" aria-hidden="true">
             ◆
@@ -122,7 +138,7 @@ export function AcademicAxiomBand({
       role="region"
       aria-label="Dải tiên đề, công thức và mốc lịch sử toán học"
       className={cn(
-        'lu-fx-band-root relative flex h-10 w-full items-center overflow-hidden border-y border-[#CFD8D4] bg-[#E8ECEA]/85 backdrop-blur-xs',
+        'lu-fx-band-root relative flex h-10 w-full items-center overflow-hidden border-y border-[#CFD8D4] bg-[#F4F7F5]',
         className,
       )}
     >
@@ -147,7 +163,7 @@ export function AcademicAxiomBand({
           aria-label={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
           title={isPaused ? 'Tiếp tục chạy dải tiên đề' : 'Tạm dừng dải tiên đề'}
           onClick={() => setIsPaused((prev) => !prev)}
-          className="relative z-10 inline-flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-l border-[#CFD8D4] bg-[#F2F5F4]/95 px-3 font-mono text-[10px] font-semibold tracking-[0.12em] text-[#2B463F] uppercase transition-colors hover:bg-white hover:text-[#162623] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E332E]"
+          className="relative z-10 inline-flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-l border-[#CFD8D4] bg-[#F4F7F5] px-3 font-mono text-[10px] font-semibold tracking-[0.12em] text-[#2B463F] uppercase transition-colors hover:bg-[#FAFBF9] hover:text-[#162623] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E332E]"
         >
           {isPaused ? (
             <>

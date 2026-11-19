@@ -10,6 +10,7 @@ export interface BlueprintSectionFrameProps {
   /** Vị trí thanh ngăn Telemetry đầu khung (px từ trên xuống) để gắn giao điểm chữ thập */
   readonly headerSeamTopPx?: number;
   readonly crosshairColor?: string;
+  readonly crosshairOpacity?: number;
   readonly borderClassName?: string;
   readonly showInnerKeyline?: boolean;
   readonly 'data-testid'?: string;
@@ -51,32 +52,51 @@ export function BlueprintSectionFrame({
   columnSeams,
   headerSeamTopPx,
   crosshairColor = '#8C7248',
+  crosshairOpacity = 1,
   borderClassName = 'border-[#CFD8D4]',
   showInnerKeyline = false,
   'data-testid': dataTestId = 'blueprint-section-frame',
 }: BlueprintSectionFrameProps) {
+  const crosshairStyle = crosshairOpacity !== 1 ? { opacity: crosshairOpacity } : undefined;
+
   return (
     <div
       data-testid={dataTestId}
       className={cn('relative border bg-[#FAFBF9]/70', borderClassName, className)}
     >
-      {/* 4 nút chữ thập chuẩn trực 12x12px #8C7248 tại 4 góc ngoài */}
-      <CrosshairNode positionClass="-top-[6px] -left-[6px]" color={crosshairColor} />
-      <CrosshairNode positionClass="-top-[6px] -right-[6px]" color={crosshairColor} />
-      <CrosshairNode positionClass="-bottom-[6px] -left-[6px]" color={crosshairColor} />
-      <CrosshairNode positionClass="-bottom-[6px] -right-[6px]" color={crosshairColor} />
+      {/* 4 nút chữ thập chuẩn trực 12x12px tại 4 góc ngoài */}
+      <CrosshairNode
+        positionClass="-top-[6px] -left-[6px]"
+        color={crosshairColor}
+        style={crosshairStyle}
+      />
+      <CrosshairNode
+        positionClass="-top-[6px] -right-[6px]"
+        color={crosshairColor}
+        style={crosshairStyle}
+      />
+      <CrosshairNode
+        positionClass="-bottom-[6px] -left-[6px]"
+        color={crosshairColor}
+        style={crosshairStyle}
+      />
+      <CrosshairNode
+        positionClass="-bottom-[6px] -right-[6px]"
+        color={crosshairColor}
+        style={crosshairStyle}
+      />
 
       {/* Giao điểm chữ thập hai bên đường chân thanh Telemetry đầu khung */}
       {headerSeamTopPx !== undefined && (
         <>
           <CrosshairNode
             positionClass="-left-[6px] -translate-y-1/2"
-            style={{ top: `${headerSeamTopPx}px` }}
+            style={{ top: `${headerSeamTopPx}px`, ...crosshairStyle }}
             color={crosshairColor}
           />
           <CrosshairNode
             positionClass="-right-[6px] -translate-y-1/2"
-            style={{ top: `${headerSeamTopPx}px` }}
+            style={{ top: `${headerSeamTopPx}px`, ...crosshairStyle }}
             color={crosshairColor}
           />
         </>
@@ -89,12 +109,12 @@ export function BlueprintSectionFrame({
           <span key={pct} aria-hidden="true" className="hidden lg:contents">
             <CrosshairNode
               positionClass="-top-[6px] -translate-x-1/2"
-              style={{ left: pct }}
+              style={{ left: pct, ...crosshairStyle }}
               color={crosshairColor}
             />
             <CrosshairNode
               positionClass="-bottom-[6px] -translate-x-1/2"
-              style={{ left: pct }}
+              style={{ left: pct, ...crosshairStyle }}
               color={crosshairColor}
             />
           </span>

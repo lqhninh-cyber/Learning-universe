@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   ATMOSPHERIC_PALETTES,
   interpolateAtmospherePalette,
@@ -34,6 +34,7 @@ import {
 } from '@/components/home/heroTerrainBuilder';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
+import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import { getSubjects } from '@/content-runtime';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { HERITAGE_ARTWORKS, HeritageArtShowcase } from '@/pages/home/HeritageArtShowcase';
@@ -424,7 +425,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         screen.getByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
       ).toBeInTheDocument();
       expect(screen.getByText(/ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN$/i)).toBeInTheDocument();
-      expect(screen.getByText(/^04 học phần$/i)).toBeInTheDocument();
+      const statStrip = screen.getByTestId('hero-unified-stat-strip');
+      expect(statStrip).toHaveTextContent(/04 học phần/i);
+      expect(statStrip).toHaveTextContent(/\d+ chương · \d+ bài giảng/i);
+      expect(statStrip).toHaveTextContent(/Tiến độ cá nhân:\s*\d+%/i);
       expect(screen.queryByText(/học phần cốt lõi/i)).not.toBeInTheDocument();
       expect(screen.getByText(/^HỆ THỐNG HỌC PHẦN$/i)).toBeInTheDocument();
       expect(screen.queryByText(/SPATIAL SUBJECT GALLERY/i)).not.toBeInTheDocument();
@@ -466,16 +470,27 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       ).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Vào học phần Giáo dục học/i })).toBeInTheDocument();
 
-      // Nút ViewModeToggle & Quick search chips & Hệ kiến trúc fx (Blueprint, EngravedGround, FlutedGlass, Band, Specimen)
+      // Nút ViewModeToggle & Quick search chips & Hệ kiến trúc fx tinh gọn (Unified Stat Strip, không còn fluted-glass gây sọc)
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
       expect(screen.getByTestId('quick-search-chips')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-blueprint-frame')).toBeInTheDocument();
+      const heroFrame = screen.getByTestId('hero-blueprint-frame');
+      expect(heroFrame).toBeInTheDocument();
+      // Hero chỉ giữ đúng 4 dấu + kim loại ở 4 góc ngoài cùng (không trùng cặp ở đường ngăn dưới DOC. LU-2026)
+      expect(heroFrame.querySelectorAll('svg[width="12"][height="12"]')).toHaveLength(4);
       expect(screen.getByTestId('engraved-ground-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-eyebrow-fluted')).toBeInTheDocument();
+      expect(screen.getByTestId('hero-eyebrow-badge')).toBeInTheDocument();
+      expect(screen.queryByTestId('hero-eyebrow-fluted')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('fluted-glass-surface')).not.toBeInTheDocument();
+      expect(screen.getByTestId('hero-unified-stat-strip')).toBeInTheDocument();
       expect(screen.getByTestId('architectural-band')).toBeInTheDocument();
       expect(screen.getByTestId('atlas-blueprint-frame')).toBeInTheDocument();
       expect(screen.getByTestId('orbit-blueprint-frame')).toBeInTheDocument();
       expect(screen.getByText(/DOC\. LU-2026 \/\/ ACADEMIC SANCTUARY/i)).toBeInTheDocument();
+      // Chỉ giữ duy nhất 1 bộ đếm tọa độ XY ở thanh Telemetry trên cùng Hero (không lặp lại ở SPECIMEN ATLAS)
+      expect(screen.getAllByTestId('telemetry-pointer-coords')).toHaveLength(1);
+      // Xóa nhãn thừa 3D.STAGE // 120FPS và khóa overflow-hidden trên cả 4 sân khấu học phần
+      expect(screen.queryByText(/3D\.STAGE \/\/ 120FPS/i)).not.toBeInTheDocument();
+      expect(screen.getByTestId('subject-stage-giao-duc-hoc')).toHaveClass('overflow-hidden');
       expect(screen.getByText(/SPECIMEN № 01 \/\/ ALGEBRAIC STRUCTURES/)).toBeInTheDocument();
       expect(screen.getByTestId('stage-vertical-ruler-cau-truc-dai-so')).toBeInTheDocument();
       expect(screen.getByTestId('almanac-chapter-index-cau-truc-dai-so')).toBeInTheDocument();
@@ -749,6 +764,75 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByTestId('heritage-stack-card-2'));
       expect(await screen.findByText(new RegExp(`02 / ${expectedTotal}`))).toBeInTheDocument();
       expect(screen.getAllByText(HERITAGE_ARTWORKS[1]!.title).length).toBeGreaterThan(0);
+    });
+
+    it('SubjectStageCanvas Giáo dục học vẽ 3 vành sinh thái, Tam giác Sư phạm 2 chiều & Đường xoắn ốc trưởng thành (không có 3D.STAGE // 120FPS)', () => {
+      const drawnLabels: string[] = [];
+      const noop = vi.fn();
+      const gradMock = { addColorStop: noop };
+      const ctxSpy = {
+        save: noop,
+        restore: noop,
+        setTransform: noop,
+        translate: noop,
+        scale: noop,
+        rotate: noop,
+        clearRect: noop,
+        fillRect: noop,
+        strokeRect: noop,
+        rect: noop,
+        beginPath: noop,
+        closePath: noop,
+        moveTo: noop,
+        lineTo: noop,
+        quadraticCurveTo: noop,
+        bezierCurveTo: noop,
+        arc: noop,
+        ellipse: noop,
+        fill: noop,
+        stroke: noop,
+        clip: noop,
+        setLineDash: noop,
+        drawImage: noop,
+        fillText: (text: string) => {
+          drawnLabels.push(text);
+        },
+        measureText: () => ({ width: 24 }),
+        createLinearGradient: () => gradMock,
+        createRadialGradient: () => gradMock,
+        globalAlpha: 1,
+        fillStyle: '#000',
+        strokeStyle: '#000',
+        lineWidth: 1,
+        lineCap: 'butt',
+        lineJoin: 'miter',
+        font: '12px sans-serif',
+        textAlign: 'left',
+        textBaseline: 'alphabetic',
+      } as unknown as CanvasRenderingContext2D;
+
+      const getContextSpy = vi
+        .spyOn(HTMLCanvasElement.prototype, 'getContext')
+        .mockReturnValue(ctxSpy);
+
+      try {
+        render(<SubjectStageCanvas slug="giao-duc-hoc" isCardHovered />);
+        const stage = screen.getByTestId('subject-stage-giao-duc-hoc');
+        expect(stage).toHaveClass('overflow-hidden');
+        expect(screen.queryByText(/3D\.STAGE \/\/ 120FPS/i)).not.toBeInTheDocument();
+        expect(drawnLabels).toEqual(
+          expect.arrayContaining([
+            'SƯ PHẠM',
+            'NHÀ TRƯỜNG',
+            'HƯỚNG NGHIỆP',
+            'GIÁO VIÊN',
+            'NGƯỜI HỌC',
+            'TRI THỨC',
+          ]),
+        );
+      } finally {
+        getContextSpy.mockRestore();
+      }
     });
 
     it('heroSculptureGeometry: phân tầng 3 khu vực bán kính theo R_dial, ánh sáng Blinn-Phong, 4 hạt khoáng thạch và Alidade angleLerp', () => {
