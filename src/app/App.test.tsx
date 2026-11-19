@@ -82,13 +82,16 @@ describe('App routing smoke test', () => {
     ).toBeInTheDocument();
     expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-    // 3. Screen 3 — Sân khấu Máy Thả Bi Khoáng Thạch & Đàn Dây Ngũ Cung 120fps (thay thế hoàn toàn Chladni & Hồ Sen)
-    expect(screen.getByTestId('kinetic-sound-stage')).toBeInTheDocument();
-    expect(screen.getByTestId('kinetic-sound-canvas')).toBeInTheDocument();
-    expect(screen.getByTestId('kinetic-footer-seam')).toBeInTheDocument();
+    // 3. Screen 3 — Trò chơi Bida Khoáng Thạch 6 Bi 120fps (thay thế hoàn toàn sân khấu thả bi & Hồ Sen)
+    expect(screen.getByTestId('mineral-billiards-stage')).toBeInTheDocument();
+    expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
+    expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
     expect(
-      screen.getByText(/Nhấp để thả bi · Nhấn giữ tạo thác bi · Rê chuột ngang dây để gảy đàn/i),
+      screen.getByText(
+        /Kéo ngược từ bi cái để ngắm & chỉnh lực · Thả để đánh · Kéo về tâm để hủy/i,
+      ),
     ).toBeInTheDocument();
+    expect(screen.queryByTestId('kinetic-sound-stage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('chladni-manifesto-section')).not.toBeInTheDocument();
     expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();

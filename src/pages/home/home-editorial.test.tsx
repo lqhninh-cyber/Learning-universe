@@ -5,14 +5,16 @@ import {
   ATMOSPHERIC_PALETTES,
   interpolateAtmospherePalette,
 } from '@/components/home/atmosphereThemes';
-import { KineticSoundStage } from '@/components/home/KineticSoundStage';
+import { MineralBilliardsStage } from '@/components/home/MineralBilliardsStage';
 import {
-  PENTATONIC_STRING_FREQS,
-  PENTATONIC_STRING_NOTES,
-  playMarbleClick,
-  playPegTap,
-  playStringPluck,
-} from '@/utils/pentatonicAudio';
+  BILLIARD_COMBO_NOTES,
+  playBallClack,
+  playCueStrike,
+  playCushionBounce,
+  playPocketDrop,
+  playRackClear,
+  setBilliardSoundEnabled,
+} from '@/utils/billiardAudio';
 import {
   PIPELINE_LAYER_NAMES,
   buildAtmosphereSpriteCache,
@@ -625,24 +627,23 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByRole('tab', { name: /Toán học & Thiên văn/i }));
       expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 13');
 
-      // Cầu nối sương mượt Screen 1->2 và Screen 3 Sân khấu Máy Thả Bi Khoáng Thạch & Đàn Dây Ngũ Cung 120fps
+      // Cầu nối sương mượt Screen 1->2 và Screen 3 Bàn Bida Khoáng Thạch 6 Bi 120fps
       const shoreline = screen.getByTestId('shoreline-wave-bridge');
       expect(shoreline).toBeInTheDocument();
       expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
       expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
       expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
-      expect(screen.queryByTestId('chladni-manifesto-section')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('kinetic-sound-stage')).not.toBeInTheDocument();
 
-      const kineticStage = screen.getByTestId('kinetic-sound-stage');
-      expect(kineticStage).toBeInTheDocument();
-      expect(screen.getByTestId('kinetic-play-hint')).toHaveTextContent(
-        'Nhấp để thả bi · Nhấn giữ tạo thác bi · Rê chuột ngang dây để gảy đàn',
+      const billiardsStage = screen.getByTestId('mineral-billiards-stage');
+      expect(billiardsStage).toBeInTheDocument();
+      expect(screen.getByTestId('billiards-play-hint')).toHaveTextContent(
+        'Kéo ngược từ bi cái để ngắm & chỉnh lực · Thả để đánh · Kéo về tâm để hủy',
       );
-      expect(screen.getByTestId('kinetic-sound-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('kinetic-footer-seam')).toBeInTheDocument();
-      expect(screen.getByTestId('kinetic-marble-rain-btn')).toHaveTextContent('Thả mưa bi');
-      expect(screen.getByTestId('kinetic-shake-board-btn')).toHaveTextContent('Rung bảng');
-      expect(screen.getByTestId('kinetic-cycle-layout-btn')).toHaveTextContent('Xếp lại dây');
+      expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
+      expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
+      expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Xếp ván mới');
+      expect(screen.getByTestId('billiards-ball-in-hand-btn')).toHaveTextContent('Đặt lại bi cái');
 
       expect(screen.getByRole('link', { name: /Bước vào Không gian học tập/i })).toHaveAttribute(
         'href',
@@ -1014,9 +1015,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(formatAlidadeAngle(Math.PI / 2)).toBe('90° · π/2');
     });
 
-    it('KineticSoundStage & pentatonicAudio vận hành 6 dây đàn hồi ngũ cung (D4-D5), 18-24 chốt đồng, tối đa 48 bi và chuyển đổi 3 sơ đồ', () => {
-      const drawnNotes: string[] = [];
-      const quadraticSpy = vi.fn();
+    it('MineralBilliardsStage & billiardAudio vận hành bàn bida 6 bi khoáng thạch, SUBSTEPS=6, tia ngắm Ghost Ball, Ball-in-Hand và 5 hiệu ứng âm thanh', () => {
+      const drawnNumbers: string[] = [];
       const noop = vi.fn();
       const gradMock = { addColorStop: noop };
       const ctxSpy = {
@@ -1034,15 +1034,15 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         closePath: noop,
         moveTo: noop,
         lineTo: noop,
-        quadraticCurveTo: quadraticSpy,
         arc: noop,
         fill: noop,
         stroke: noop,
         clip: noop,
         setLineDash: noop,
         fillText: (text: string) => {
-          drawnNotes.push(text);
+          drawnNumbers.push(text);
         },
+        createLinearGradient: () => gradMock,
         createRadialGradient: () => gradMock,
         globalAlpha: 1,
         fillStyle: '#000',
@@ -1059,59 +1059,63 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         .mockReturnValue(ctxSpy);
 
       try {
-        // Kiểm tra thang âm Ngũ cung D-Major (D4, E4, G4, A4, B4, D5)
-        expect(PENTATONIC_STRING_NOTES).toEqual(['D4', 'E4', 'G4', 'A4', 'B4', 'D5']);
-        expect(PENTATONIC_STRING_FREQS).toEqual([293.66, 329.63, 392.0, 440.0, 493.88, 587.33]);
-        expect(() => playStringPluck(0, 0.8, 'pluck')).not.toThrow();
-        expect(() => playStringPluck(1, 0.7, 'chime')).not.toThrow();
-        expect(() => playPegTap(2, 0.5)).not.toThrow();
-        expect(() => playMarbleClick(0.6)).not.toThrow();
+        // Kiểm tra 5 hàm tổng hợp âm thanh Web Audio API & thang nốt combo Ngũ cung (D5..D6)
+        expect(BILLIARD_COMBO_NOTES).toEqual([587.33, 659.25, 783.99, 880.0, 987.77, 1174.66]);
+        setBilliardSoundEnabled(true);
+        expect(() => playCueStrike(0.75)).not.toThrow();
+        expect(() => playBallClack(0.85)).not.toThrow();
+        expect(() => playCushionBounce(0.6)).not.toThrow();
+        expect(() => playPocketDrop(2)).not.toThrow();
+        expect(() => playRackClear()).not.toThrow();
+        setBilliardSoundEnabled(false);
 
         render(
           <MemoryRouter>
-            <KineticSoundStage />
+            <MineralBilliardsStage />
           </MemoryRouter>,
         );
 
-        const canvas = screen.getByTestId('kinetic-sound-canvas');
+        const canvas = screen.getByTestId('mineral-billiards-canvas');
         expect(canvas).toBeInTheDocument();
-        expect(canvas).toHaveAttribute('data-max-marbles', '48');
-        expect(canvas).toHaveAttribute('data-string-count', '6');
-        const pegCount0 = Number(canvas.getAttribute('data-peg-count'));
-        expect(pegCount0).toBeGreaterThanOrEqual(18);
-        expect(pegCount0).toBeLessThanOrEqual(24);
+        expect(canvas).toHaveAttribute('data-substeps', '6');
+        expect(canvas).toHaveAttribute('data-target-balls', '6');
 
-        // 6 sợi dây đàn vẽ bằng quadraticCurveTo và hiển thị nhãn nốt D4..D5
-        expect(quadraticSpy.mock.calls.length).toBeGreaterThanOrEqual(6);
-        expect(drawnNotes).toEqual(expect.arrayContaining(['D4', 'E4', 'G4', 'A4', 'B4', 'D5']));
+        // 6 bi mục tiêu đánh số 1..6 được vẽ lên bàn và 6 chấm trạng thái hiển thị đầy đủ
+        expect(drawnNumbers).toEqual(expect.arrayContaining(['1', '2', '3', '4', '5', '6']));
+        for (let num = 1; num <= 6; num += 1) {
+          const dot = screen.getByTestId(`billiard-status-dot-${num}`);
+          expect(dot).toHaveAttribute('data-pocketed', 'false');
+        }
 
-        // Kiểm tra nút chuyển âm sắc Đàn dây / Chuông gió và bật/tắt Âm thanh
-        const pluckBtn = screen.getByTestId('kinetic-voice-pluck');
-        const chimeBtn = screen.getByTestId('kinetic-voice-chime');
-        const soundBtn = screen.getByTestId('kinetic-sound-toggle');
-        expect(pluckBtn).toHaveAttribute('aria-pressed', 'true');
-        expect(chimeBtn).toHaveAttribute('aria-pressed', 'false');
+        // Chỉ số Số cơ, Combo, Kỷ lục và nút Âm thanh
+        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:0');
+        expect(screen.getByTestId('billiards-combo-count')).toHaveTextContent('Combo:x0');
+        expect(screen.getByTestId('billiards-best-record')).toHaveTextContent('Kỷ lục:');
+
+        const soundBtn = screen.getByTestId('billiards-sound-toggle');
         expect(soundBtn).toHaveAttribute('aria-pressed', 'false');
-
-        fireEvent.click(chimeBtn);
-        expect(chimeBtn).toHaveAttribute('aria-pressed', 'true');
-        expect(pluckBtn).toHaveAttribute('aria-pressed', 'false');
-
         fireEvent.click(soundBtn);
         expect(soundBtn).toHaveAttribute('aria-pressed', 'true');
 
-        // Kiểm tra 3 nút điều khiển sân khấu: Thả mưa bi, Rung bảng, Xếp lại dây (3 sơ đồ)
-        const stageCard = screen.getByTestId('kinetic-stage-card');
-        expect(stageCard).toHaveAttribute('data-layout-name', 'Vòm Cung Đông Sơn');
+        // Kiểm tra chế độ Đặt lại bi cái (Ball-in-Hand) và đặt bi trên bàn
+        const ballInHandBtn = screen.getByTestId('billiards-ball-in-hand-btn');
+        fireEvent.click(ballInHandBtn);
+        expect(screen.getByTestId('billiards-ball-in-hand-banner')).toHaveTextContent(
+          'Bi cái rơi lỗ — Bấm chọn vị trí đặt lại',
+        );
 
-        fireEvent.click(screen.getByTestId('kinetic-cycle-layout-btn'));
-        expect(stageCard).toHaveAttribute('data-layout-name', 'Thác Ngọc So Le');
+        fireEvent.pointerDown(canvas, { clientX: 160, clientY: 160, pointerId: 1 });
+        expect(screen.queryByTestId('billiards-ball-in-hand-banner')).not.toBeInTheDocument();
 
-        fireEvent.click(screen.getByTestId('kinetic-cycle-layout-btn'));
-        expect(stageCard).toHaveAttribute('data-layout-name', 'Song Khê Giao Thoa');
+        // Kéo ngắm và thả để đánh (tăng Số cơ lên 1)
+        fireEvent.pointerDown(canvas, { clientX: 220, clientY: 240, pointerId: 1 });
+        fireEvent.pointerMove(canvas, { clientX: 120, clientY: 240, pointerId: 1 });
+        fireEvent.pointerUp(canvas, { clientX: 120, clientY: 240, pointerId: 1 });
+        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:1');
 
-        fireEvent.click(screen.getByTestId('kinetic-marble-rain-btn'));
-        fireEvent.click(screen.getByTestId('kinetic-shake-board-btn'));
+        // Nút Xếp ván mới đặt lại Số cơ về 0
+        fireEvent.click(screen.getByTestId('billiards-new-rack-btn'));
+        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ:0');
       } finally {
         getContextSpy.mockRestore();
       }
