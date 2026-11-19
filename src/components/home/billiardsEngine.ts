@@ -1,21 +1,40 @@
 import {
   playBallClack,
   playCushionBounce,
+  playJawRattle,
   playMarbleRoll,
   playPocketDrop,
   playTrickShotReward,
+  updateBilliardRollingSound,
 } from '@/utils/billiardAudio';
+import {
+  applyCushionEnglishBounce,
+  BALL_RESTITUTION,
+  CUSHION_RESTITUTION,
+  INITIAL_RACK_GAP_PX,
+  integrateClothSlideToRollSubstep,
+  JAW_RADIUS_PX,
+  JAW_RESTITUTION,
+  MAX_SHOT_SPEED_PX_PER_FRAME,
+  resolveRigidBallPairCollision,
+  STOP_SPEED_PX_PER_FRAME,
+  SUBSTEPS,
+} from '@/utils/billiardPhysics';
+
+export {
+  BALL_RESTITUTION,
+  CUSHION_RESTITUTION,
+  INITIAL_RACK_GAP_PX,
+  JAW_RADIUS_PX,
+  JAW_RESTITUTION,
+  MAX_SHOT_SPEED_PX_PER_FRAME,
+  STOP_SPEED_PX_PER_FRAME,
+  SUBSTEPS,
+};
 
 export type BilliardGameMode = 'vs-ai' | 'two-player' | 'free';
 export type BallGroup = 'solids' | 'stripes';
 
-export const SUBSTEPS = 6;
-export const BALL_RESTITUTION = 0.96;
-export const CUSHION_RESTITUTION = 0.86;
-export const JAW_RESTITUTION = 0.78;
-export const JAW_RADIUS_PX = 3.5;
-export const STOP_SPEED_PX_PER_FRAME = 0.08;
-export const MAX_SHOT_SPEED_PX_PER_FRAME = 24.0;
 export const POCKET_SINK_DURATION_SEC = 0.19;
 export const STRIKE_ANIM_DURATION_SEC = 0.07;
 export const CHALK_DUST_DURATION_SEC = 0.35;
@@ -130,6 +149,11 @@ export interface BilliardBall {
   y: number;
   vx: number;
   vy: number;
+  /** Vận tốc lăn tương đương bề mặt cầu tiếp xúc mặt nỉ (lăn thuần túy khi sx == vx, sy == vy). */
+  sx: number;
+  sy: number;
+  /** Độ xoáy ngang Ép phê omega_z trong [-1, 1]. */
+  omegaZ: number;
   // Ma trận trực chuẩn 3x3 định hướng 3D (frontVec, poleVec, rightVec)
   fx: number;
   fy: number;
@@ -249,6 +273,7 @@ export interface AiTurnPlan {
   targetPower: number;
   placeX: number | null;
   placeY: number | null;
+  calledPocketId: number | null;
 }
 
 export interface TableMetrics {
@@ -288,6 +313,10 @@ export interface GhostBallRaycastResult {
   readonly targetDirY: number;
   readonly cueDeflectX: number;
   readonly cueDeflectY: number;
+  readonly cueCurveCtrlX: number;
+  readonly cueCurveCtrlY: number;
+  readonly cueCurveEndX: number;
+  readonly cueCurveEndY: number;
 }
 
 export interface BilliardsWorld {
@@ -323,7 +352,12 @@ export interface BilliardsWorld {
   activeShotDirY: number;
   cueHasHitBallThisTurn: boolean;
   firstHitBallIdThisTurn: number | null;
+  railOrPocketAfterFirstHitThisTurn: boolean;
   pocketedIdsThisTurn: number[];
+  eightBallPocketedId: number | null;
+  calledEightPocketId: number | null;
+  isDraggingCueInKitchen: boolean;
+  cueBallHovered: boolean;
   scratchedThisTurn: boolean;
   isBreakShot: boolean;
   p1Group: BallGroup | null;
@@ -490,7 +524,7 @@ function shuffleInPlace<T>(items: T[]): T[] {
  */
 export function buildOfficial15BallRack(metrics: TableMetrics): BilliardBall[] {
   const r = metrics.ballRadius;
-  const spacing = r * 2 + 0.6;
+  const spacing = r * 2 + INITIAL_RACK_GAP_PX;
   const colGapY = spacing;
   const rowGapX = (Math.sqrt(3) / 2) * spacing;
 
@@ -542,6 +576,9 @@ export function buildOfficial15BallRack(metrics: TableMetrics): BilliardBall[] {
       y,
       vx: 0,
       vy: 0,
+      sx: 0,
+      sy: 0,
+      omegaZ: 0,
       fx: 0,
       fy: 0,
       fz: 1,
@@ -722,7 +759,12 @@ export function createBilliardsWorld(
     activeShotDirY: 0,
     cueHasHitBallThisTurn: false,
     firstHitBallIdThisTurn: null,
+    railOrPocketAfterFirstHitThisTurn: false,
     pocketedIdsThisTurn: [],
+    eightBallPocketedId: null,
+    calledEightPocketId: null,
+    isDraggingCueInKitchen: false,
+    cueBallHovered: false,
     scratchedThisTurn: false,
     isBreakShot: true,
     p1Group: null,
@@ -750,6 +792,7 @@ export function createBilliardsWorld(
       targetPower: 0.65,
       placeX: null,
       placeY: null,
+      calledPocketId: null,
     },
     shakeRemainingSec: 0,
     shotInProgress: false,
@@ -758,6 +801,42 @@ export function createBilliardsWorld(
     combo: 0,
     currentPlayer: 1,
     rackCleared: false,
+  };
+}
+
+export function isShootingForEightBall(world: BilliardsWorld, player: 1 | 2): boolean {
+  if (world.gameMode === 'free' || world.rackCleared) return false;
+  const group = getPlayerGroup(world, player);
+  if (group === null || !hasClearedGroup(world, group)) return false;
+  const eight = world.balls.find((b) => b.id === 8);
+  return Boolean(eight && !eight.pocketed);
+}
+
+export function isInBreakKitchen(world: BilliardsWorld): boolean {
+  return (
+    world.isBreakShot &&
+    world.shots === 0 &&
+    !world.shotInProgress &&
+    !world.rackCleared &&
+    !world.strikeAnim.active
+  );
+}
+
+export function clampBreakCueBallPlacement(
+  world: BilliardsWorld,
+  rawX: number,
+  rawY: number,
+): { x: number; y: number } {
+  const { metrics } = world;
+  const r = metrics.ballRadius;
+  const minX = metrics.feltLeft + r + 5;
+  const maxX = Math.max(minX, metrics.headStringX);
+  const minY = metrics.feltTop + r + 5;
+  const maxY = metrics.feltBottom - r - 5;
+
+  return {
+    x: Math.max(minX, Math.min(maxX, rawX)),
+    y: Math.max(minY, Math.min(maxY, rawY)),
   };
 }
 
@@ -872,6 +951,10 @@ export function computeGhostBallRaycast(
   let targetDirY = 0;
   let cueDeflectX: number;
   let cueDeflectY: number;
+  let cueCurveCtrlX: number;
+  let cueCurveCtrlY: number;
+  let cueCurveEndX: number;
+  let cueCurveEndY: number;
 
   if (hitBall) {
     const nx = hitBall.x - ghostX;
@@ -892,14 +975,22 @@ export function computeGhostBallRaycast(
       ty = spinY >= 0 ? dirY : -dirY;
     }
 
-    const spinPullX = spinY >= 0 ? dirX * spinY * 0.72 : -targetDirX * Math.abs(spinY) * 0.85;
-    const spinPullY = spinY >= 0 ? dirY * spinY * 0.72 : -targetDirY * Math.abs(spinY) * 0.85;
+    const spinPullX = spinY >= 0 ? dirX * spinY * 0.88 : -dirX * Math.abs(spinY) * 0.94;
+    const spinPullY = spinY >= 0 ? dirY * spinY * 0.88 : -dirY * Math.abs(spinY) * 0.94;
 
-    const rawCueX = tx * 0.75 + spinPullX;
-    const rawCueY = ty * 0.75 + spinPullY;
+    const rawCueX = tx * 0.65 + spinPullX;
+    const rawCueY = ty * 0.65 + spinPullY;
     const cLen = Math.hypot(rawCueX, rawCueY) || 1;
     cueDeflectX = rawCueX / cLen;
     cueDeflectY = rawCueY / cLen;
+
+    // Đường cong parabol quadraticCurveTo mô phỏng pha chuyển tiếp trượt -> lăn (Cù lê tiến lên / Trô giật lùi)
+    const stunStrength = tLen > 1e-4 ? 0.56 : 0.12;
+    const curveLen = GHOST_CUE_VECTOR_LEN_PX * (1 + Math.abs(spinY) * 0.28);
+    cueCurveCtrlX = ghostX + tx * (curveLen * stunStrength);
+    cueCurveCtrlY = ghostY + ty * (curveLen * stunStrength);
+    cueCurveEndX = ghostX + cueDeflectX * curveLen;
+    cueCurveEndY = ghostY + cueDeflectY * curveLen;
   } else {
     const dotN = dirX * cushionNormalX + dirY * cushionNormalY;
     const rx = dirX - 2 * dotN * cushionNormalX;
@@ -907,6 +998,10 @@ export function computeGhostBallRaycast(
     const baseAng = Math.atan2(ry, rx) + spinX * ENGLISH_MAX_DEFLECT_RAD;
     cueDeflectX = Math.cos(baseAng);
     cueDeflectY = Math.sin(baseAng);
+    cueCurveCtrlX = ghostX + cueDeflectX * (GHOST_CUE_VECTOR_LEN_PX * 0.5);
+    cueCurveCtrlY = ghostY + cueDeflectY * (GHOST_CUE_VECTOR_LEN_PX * 0.5);
+    cueCurveEndX = ghostX + cueDeflectX * GHOST_CUE_VECTOR_LEN_PX;
+    cueCurveEndY = ghostY + cueDeflectY * GHOST_CUE_VECTOR_LEN_PX;
   }
 
   return {
@@ -917,6 +1012,10 @@ export function computeGhostBallRaycast(
     targetDirY,
     cueDeflectX,
     cueDeflectY,
+    cueCurveCtrlX,
+    cueCurveCtrlY,
+    cueCurveEndX,
+    cueCurveEndY,
   };
 }
 
@@ -997,11 +1096,13 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
       targetPower: 0.65,
       placeX: null,
       placeY: null,
+      calledPocketId: null,
     };
   }
 
   let placeX: number | null = null;
   let placeY: number | null = null;
+  const isAiShootingEight = isShootingForEightBall(world, 2);
   const legalTargets = balls.filter((b) => isBallLegalTarget(world, b, 2));
   const fallbackTargets =
     legalTargets.length > 0 ? legalTargets : balls.filter((b) => b.id > 0 && !b.pocketed);
@@ -1059,6 +1160,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
   let bestScore = -Infinity;
   let bestAngle = 0;
   let bestPower = 0.65;
+  let bestPocketId: number | null = isAiShootingEight ? (metrics.pockets[0]?.id ?? 0) : null;
 
   for (const tBall of fallbackTargets) {
     for (const pocket of metrics.pockets) {
@@ -1123,6 +1225,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
       if (score > bestScore) {
         bestScore = score;
         bestAngle = Math.atan2(dirCGY, dirCGX);
+        bestPocketId = isAiShootingEight ? pocket.id : null;
         bestPower = Math.max(
           0.42,
           Math.min(0.86, 0.36 + (distCG + distTP) / (metrics.feltWidth * 1.65)),
@@ -1131,8 +1234,42 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
     }
   }
 
-  // Nhánh dự phòng khi toàn bộ đường ăn lỗ bị che (snooker):
-  // 1) Tìm bi mục tiêu hợp lệ có đường đánh chạm trực tiếp thông thoáng
+  // Chiến thuật Safety Shot khi không có cơ ăn lỗ tỷ lệ cao (bestScore < 500):
+  // Đánh chạm bi hợp lệ dội băng an toàn thay vì bắn bừa hoặc phạm lỗi không chạm băng
+  if (bestScore < 500 && !isAiShootingEight && fallbackTargets.length > 0) {
+    let bestSafetyDist = Infinity;
+    for (const tBall of fallbackTargets) {
+      if (
+        isSegmentClear(
+          evalCueX,
+          evalCueY,
+          tBall.x,
+          tBall.y,
+          balls,
+          0,
+          tBall.id,
+          metrics.ballRadius * 1.92,
+        )
+      ) {
+        const distToRail = Math.min(
+          tBall.x - metrics.feltLeft,
+          metrics.feltRight - tBall.x,
+          tBall.y - metrics.feltTop,
+          metrics.feltBottom - tBall.y,
+        );
+        const cueDist = Math.hypot(tBall.x - evalCueX, tBall.y - evalCueY);
+        const safetyCost = cueDist * 0.55 + distToRail * 0.9;
+        if (safetyCost < bestSafetyDist) {
+          bestSafetyDist = safetyCost;
+          bestAngle = Math.atan2(tBall.y - evalCueY, tBall.x - evalCueX);
+          bestPower = Math.max(0.36, Math.min(0.48, 0.32 + cueDist / (metrics.feltWidth * 1.8)));
+          bestScore = 550;
+        }
+      }
+    }
+  }
+
+  // Nhánh dự phòng snooker 1: chạm trực tiếp bi hợp lệ thông thoáng
   if (bestScore === -Infinity && fallbackTargets.length > 0) {
     let bestDirectDist = Infinity;
     for (const tBall of fallbackTargets) {
@@ -1243,6 +1380,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
     targetPower: bestPower,
     placeX,
     placeY,
+    calledPocketId: isAiShootingEight ? bestPocketId : null,
   };
 }
 
@@ -1410,6 +1548,9 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
     }
     world.isBreakShot = false;
     world.pocketedIdsThisTurn = [];
+    world.calledEightPocketId = null;
+    world.eightBallPocketedId = null;
+    world.railOrPocketAfterFirstHitThisTurn = false;
     return;
   }
 
@@ -1428,25 +1569,37 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
         )
         .every((b) => b.pocketed);
 
-    // Nếu chưa dọn hết nhóm của mình hoặc rơi kèm bi cái -> thua ngay
-    if (!shooterClearedBeforeTurn || world.scratchedThisTurn) {
+    const wrongCalledPocket =
+      world.calledEightPocketId !== null && world.eightBallPocketedId !== world.calledEightPocketId;
+
+    // Nếu chưa dọn hết nhóm, rơi kèm bi cái, hoặc đánh nhầm lỗ đã chỉ định -> thua ngay
+    if (!shooterClearedBeforeTurn || world.scratchedThisTurn || wrongCalledPocket) {
       world.rackCleared = true;
       world.winner = opponent;
       world.winReason =
         shooter === 1
           ? world.scratchedThisTurn
             ? 'Rơi bi cái khi đánh bi 8'
-            : 'Rơi bi 8 trước khi dọn hết nhóm'
-          : 'Đối thủ phạm lỗi bi 8';
+            : wrongCalledPocket
+              ? 'Đưa Bi 8 nhầm lỗ đã chỉ định'
+              : 'Rơi bi 8 trước khi dọn hết nhóm'
+          : wrongCalledPocket
+            ? 'Máy AI đưa Bi 8 nhầm lỗ đã chỉ định'
+            : 'Đối thủ phạm lỗi bi 8';
     } else {
       world.rackCleared = true;
       world.winner = shooter;
       world.winReason =
-        shooter === 1 ? 'Đưa Bi số 8 vào lỗ hợp lệ!' : 'Máy AI đưa Bi số 8 vào lỗ hợp lệ!';
+        shooter === 1
+          ? 'Đưa Bi số 8 vào đúng lỗ đã chỉ định!'
+          : 'Máy AI đưa Bi số 8 vào đúng lỗ đã chỉ định!';
     }
     world.ballInHand = false;
     world.isBreakShot = false;
     world.pocketedIdsThisTurn = [];
+    world.calledEightPocketId = null;
+    world.eightBallPocketedId = null;
+    world.railOrPocketAfterFirstHitThisTurn = false;
     return;
   }
 
@@ -1474,6 +1627,12 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
   } else if (world.firstHitBallIdThisTurn === 8 && !world.isBreakShot) {
     foulText = 'Chạm Bi 8 khi bàn đang mở — Đặt bi tự do';
     toastFoulText = 'PHẠM LỖI · CHẠM BI 8 SỚM';
+  }
+
+  // Luật chạm băng sau va chạm (No-Rail Foul): trừ cú khai cuộc, sau chạm bi hợp lệ đầu tiên phải có ít nhất 1 bi chạm băng hoặc rơi lỗ
+  if (!foulText && !world.isBreakShot && !world.railOrPocketAfterFirstHitThisTurn) {
+    foulText = 'Không chạm băng sau va chạm — Đặt bi tự do';
+    toastFoulText = 'PHẠM LỖI · KHÔNG CHẠM BĂNG SAU VA CHẠM';
   }
 
   // 3. Phân nhóm tự động sau cú khai cuộc (khi bàn đang mở và ăn hợp lệ >= 1 bi không phạm lỗi)
@@ -1538,10 +1697,13 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
 
   world.isBreakShot = false;
   world.pocketedIdsThisTurn = [];
+  world.calledEightPocketId = null;
+  world.eightBallPocketedId = null;
+  world.railOrPocketAfterFirstHitThisTurn = false;
 }
 
 /**
- * Chạy 1 bước vật lý SUBSTEPS=6 ở 120fps (`dtScale`) + máng hồi bi cơ khí bên phải.
+ * Chạy 1 bước vật lý SUBSTEPS=8 (Trượt -> Lăn mặt nỉ + độ dốc mép lỗ + ma sát băng) ở 120fps (`dtScale`).
  * Trả về true nếu trạng thái HUD React cần đồng bộ.
  */
 export function stepBilliardsPhysicsFrame(
@@ -1555,8 +1717,8 @@ export function stepBilliardsPhysicsFrame(
   const r = metrics.ballRadius;
   const twoR = r * 2;
   const subDtScale = dtScale / SUBSTEPS;
-  const subFriction = Math.pow(0.986, subDtScale);
-  const pocketCaptureDist = metrics.pocketRadius * 0.92;
+  const pocketCaptureDist = metrics.pocketRadius * 0.85;
+  const pocketShelfOuter = metrics.pocketRadius * 1.15;
   const pocketMouthAllowance = metrics.pocketRadius * 1.16;
 
   if (world.shakeRemainingSec > 0) {
@@ -1591,6 +1753,9 @@ export function stepBilliardsPhysicsFrame(
         ball.pocketed = false;
         ball.vx = 0;
         ball.vy = 0;
+        ball.sx = 0;
+        ball.sy = 0;
+        ball.omegaZ = 0;
         const safePos = clampValidCueBallPlacement(world, metrics.headStringX, metrics.centerY);
         ball.x = safePos.x;
         ball.y = safePos.y;
@@ -1632,7 +1797,7 @@ export function stepBilliardsPhysicsFrame(
     // Chạm đáy máng hồi bi
     if (rb.y > railFloorY) {
       if (rb.vy > 45) {
-        playMarbleRoll(Math.min(1, rb.vy / 340));
+        playMarbleRoll(Math.min(1, rb.vy / 340), 0.82);
       }
       rb.y = railFloorY;
       rb.vy = Math.abs(rb.vy) > 40 ? -rb.vy * 0.25 : 0;
@@ -1645,7 +1810,7 @@ export function stepBilliardsPhysicsFrame(
         const minStackY = below.y - rr * 2.02;
         if (rb.y > minStackY) {
           if (rb.vy - below.vy > 40) {
-            playMarbleRoll(Math.min(1, (rb.vy - below.vy) / 320));
+            playMarbleRoll(Math.min(1, (rb.vy - below.vy) / 320), 0.82);
           }
           rb.y = minStackY;
           rb.vy = below.vy * 0.3;
@@ -1654,33 +1819,36 @@ export function stepBilliardsPhysicsFrame(
     }
   }
 
-  // 4. Vật lý SUBSTEPS = 6 trên mặt nỉ
+  // 4. Vật lý Trượt -> Lăn SUBSTEPS = 8 trên mặt nỉ + độ dốc miệng lỗ + nảy băng xoáy English
   if (!world.strikeAnim.active) {
     for (let step = 0; step < SUBSTEPS; step += 1) {
       for (const ball of world.balls) {
         if (ball.pocketed || ball.sinking) continue;
 
-        const dx = ball.vx * subDtScale;
-        const dy = ball.vy * subDtScale;
-        ball.x += dx;
-        ball.y += dy;
-        advanceBallRolling3D(ball, dx, dy, r);
+        const { rollDx, rollDy } = integrateClothSlideToRollSubstep(ball, subDtScale);
+        advanceBallRolling3D(ball, rollDx, rollDy, r);
 
-        ball.vx *= subFriction;
-        ball.vy *= subFriction;
-
-        const speed = Math.hypot(ball.vx, ball.vy);
-        if (speed > 0 && speed < STOP_SPEED_PX_PER_FRAME) {
-          ball.vx = 0;
-          ball.vy = 0;
-        }
-
-        // Kiểm tra rơi vào 1 trong 6 lỗ
+        // Độ dốc trọng lực miệng lỗ (Pocket Shelf Gravity: 0.85R..1.15R -> hút nhẹ hoặc mấp mé trên miệng lỗ)
         let droppedPocket: PocketNode | null = null;
         for (const pocket of metrics.pockets) {
-          if (Math.hypot(ball.x - pocket.x, ball.y - pocket.y) < pocketCaptureDist) {
+          const pdx = pocket.x - ball.x;
+          const pdy = pocket.y - ball.y;
+          const pDist = Math.hypot(pdx, pdy);
+          if (pDist < pocketCaptureDist) {
             droppedPocket = pocket;
             break;
+          }
+          if (pDist < pocketShelfOuter && pDist > 0.001) {
+            const curSpeed = Math.hypot(ball.vx, ball.vy);
+            if (curSpeed >= STOP_SPEED_PX_PER_FRAME || pDist < metrics.pocketRadius * 0.96) {
+              const slopeFactor =
+                (pocketShelfOuter - pDist) / (pocketShelfOuter - pocketCaptureDist);
+              const pullAccel = 0.088 * slopeFactor * subDtScale;
+              ball.vx += (pdx / pDist) * pullAccel;
+              ball.vy += (pdy / pDist) * pullAccel;
+              ball.sx += (pdx / pDist) * pullAccel * 0.5;
+              ball.sy += (pdy / pDist) * pullAccel * 0.5;
+            }
           }
         }
 
@@ -1688,12 +1856,19 @@ export function stepBilliardsPhysicsFrame(
           const dropPan = computeStereoPan(droppedPocket.x, metrics);
           ball.vx = 0;
           ball.vy = 0;
+          ball.sx = 0;
+          ball.sy = 0;
+          ball.omegaZ = 0;
           ball.sinking = true;
           ball.sinkProgress = 0;
           ball.sinkTargetX = droppedPocket.x;
           ball.sinkTargetY = droppedPocket.y;
           ball.sinkAngle = Math.atan2(ball.y - droppedPocket.y, ball.x - droppedPocket.x);
           spawnPocketRipple(world, droppedPocket.x, droppedPocket.y, metrics.pocketRadius * 1.9);
+
+          if (world.firstHitBallIdThisTurn !== null) {
+            world.railOrPocketAfterFirstHitThisTurn = true;
+          }
 
           if (ball.id === 0) {
             world.combo = 0;
@@ -1708,6 +1883,9 @@ export function stepBilliardsPhysicsFrame(
             triggerFeltToast(world, 'BI CÁI RƠI LỖ · ĐẶT BI TỰ DO', 'foul');
             playCushionBounce(0.5, dropPan);
           } else {
+            if (ball.id === 8) {
+              world.eightBallPocketedId = droppedPocket.id;
+            }
             world.pocketedIdsThisTurn.push(ball.id);
             world.combo += 1;
             const nonEightCount = world.pocketedIdsThisTurn.filter((id) => id !== 8).length;
@@ -1759,7 +1937,10 @@ export function stepBilliardsPhysicsFrame(
               ball.vx -= (1 + JAW_RESTITUTION) * vn * jnx;
               ball.vy -= (1 + JAW_RESTITUTION) * vn * jny;
               ball.cushionBouncesThisTurn += 1;
-              playCushionBounce(Math.min(1, Math.abs(vn) / 14), computeStereoPan(ball.x, metrics));
+              if (world.firstHitBallIdThisTurn !== null) {
+                world.railOrPocketAfterFirstHitThisTurn = true;
+              }
+              playJawRattle(Math.min(1, Math.abs(vn) / 14), computeStereoPan(ball.x, metrics));
             }
           }
         }
@@ -1774,38 +1955,31 @@ export function stepBilliardsPhysicsFrame(
         if (ball.x - r < metrics.feltLeft) {
           ball.x = metrics.feltLeft + r;
           cushionImpact = Math.max(cushionImpact, Math.abs(ball.vx));
-          ball.vx = Math.abs(ball.vx) * CUSHION_RESTITUTION;
+          applyCushionEnglishBounce(ball, 1, 0, Math.abs(ball.vx));
           hitRail = true;
         } else if (ball.x + r > metrics.feltRight) {
           ball.x = metrics.feltRight - r;
           cushionImpact = Math.max(cushionImpact, Math.abs(ball.vx));
-          ball.vx = -Math.abs(ball.vx) * CUSHION_RESTITUTION;
+          applyCushionEnglishBounce(ball, -1, 0, Math.abs(ball.vx));
           hitRail = true;
         }
 
         if (ball.y - r < metrics.feltTop) {
           ball.y = metrics.feltTop + r;
           cushionImpact = Math.max(cushionImpact, Math.abs(ball.vy));
-          ball.vy = Math.abs(ball.vy) * CUSHION_RESTITUTION;
+          applyCushionEnglishBounce(ball, 0, 1, Math.abs(ball.vy));
           hitRail = true;
         } else if (ball.y + r > metrics.feltBottom) {
           ball.y = metrics.feltBottom - r;
           cushionImpact = Math.max(cushionImpact, Math.abs(ball.vy));
-          ball.vy = -Math.abs(ball.vy) * CUSHION_RESTITUTION;
+          applyCushionEnglishBounce(ball, 0, -1, Math.abs(ball.vy));
           hitRail = true;
         }
 
         if (hitRail) {
           ball.cushionBouncesThisTurn += 1;
-          if (ball.id === 0 && Math.abs(world.activeCueSpinX) > 0.02) {
-            const spd = Math.hypot(ball.vx, ball.vy);
-            if (spd > 0.2) {
-              const ang =
-                Math.atan2(ball.vy, ball.vx) + world.activeCueSpinX * ENGLISH_MAX_DEFLECT_RAD;
-              ball.vx = Math.cos(ang) * spd;
-              ball.vy = Math.sin(ang) * spd;
-              world.activeCueSpinX *= 0.52;
-            }
+          if (world.firstHitBallIdThisTurn !== null) {
+            world.railOrPocketAfterFirstHitThisTurn = true;
           }
           if (cushionImpact > 0.45) {
             playCushionBounce(Math.min(1, cushionImpact / 14), computeStereoPan(ball.x, metrics));
@@ -1813,7 +1987,7 @@ export function stepBilliardsPhysicsFrame(
         }
       }
 
-      // Va chạm Bi – Bi + bảo toàn động lượng 2D (0.96) + xung lực Cù lê / Trô
+      // Va chạm Bi – Bi vật lý Rigid-Sphere (bảo toàn động lượng 2D 0.96 + 3.5% Collision-Induced Throw)
       for (let i = 0; i < world.balls.length; i += 1) {
         const a = world.balls[i]!;
         if (a.pocketed || a.sinking) continue;
@@ -1836,47 +2010,17 @@ export function stepBilliardsPhysicsFrame(
             b.x += nx * overlap;
             b.y += ny * overlap;
 
-            const rvx = b.vx - a.vx;
-            const rvy = b.vy - a.vy;
-            const velAlongNormal = rvx * nx + rvy * ny;
-
-            if (velAlongNormal < 0) {
-              const preSpeed =
-                a.id === 0 ? Math.hypot(a.vx, a.vy) : b.id === 0 ? Math.hypot(b.vx, b.vy) : 0;
-              const impulse = -(1 + BALL_RESTITUTION) * velAlongNormal * 0.5;
-              a.vx -= impulse * nx;
-              a.vy -= impulse * ny;
-              b.vx += impulse * nx;
-              b.vy += impulse * ny;
-
+            const impactSpeed = resolveRigidBallPairCollision(a, b, nx, ny);
+            if (impactSpeed > 0) {
               if (a.id === 0 || b.id === 0) {
-                const cue = a.id === 0 ? a : b;
                 const target = a.id === 0 ? b : a;
-                const toTargetX = a.id === 0 ? nx : -nx;
-                const toTargetY = a.id === 0 ? ny : -ny;
-
                 if (world.firstHitBallIdThisTurn === null) {
                   world.firstHitBallIdThisTurn = target.id;
                 }
-
-                if (!world.cueHasHitBallThisTurn && Math.abs(world.activeCueSpinY) > 0.03) {
-                  world.cueHasHitBallThisTurn = true;
-                  const spinImpulse =
-                    Math.max(1.8, preSpeed * 0.44) * Math.abs(world.activeCueSpinY);
-                  if (world.activeCueSpinY > 0) {
-                    cue.vx += world.activeShotDirX * spinImpulse;
-                    cue.vy += world.activeShotDirY * spinImpulse;
-                  } else {
-                    cue.vx -= toTargetX * spinImpulse * 1.12;
-                    cue.vy -= toTargetY * spinImpulse * 1.12;
-                  }
-                  world.activeCueSpinY *= 0.2;
-                } else {
-                  world.cueHasHitBallThisTurn = true;
-                }
+                world.cueHasHitBallThisTurn = true;
               }
 
-              const impactNorm = Math.min(1, Math.abs(velAlongNormal) / 15);
+              const impactNorm = Math.min(1, impactSpeed / 15);
               if (impactNorm > 0.06) {
                 const contactX = (a.x + b.x) * 0.5;
                 spawnCollisionSparks(world, contactX, (a.y + b.y) * 0.5, 5);
@@ -1889,12 +2033,30 @@ export function stepBilliardsPhysicsFrame(
     }
   }
 
+  // Cập nhật âm thanh lăn êm trên vải nỉ (Brown noise ~240Hz tự giảm về 0 khi bi dừng hẳn)
+  let rollingSpeedSum = 0;
+  let maxBallSpeed = 0;
+  if (!world.strikeAnim.active) {
+    for (const b of world.balls) {
+      if (b.pocketed || b.sinking) continue;
+      const spd = Math.hypot(b.vx, b.vy);
+      if (spd > STOP_SPEED_PX_PER_FRAME) {
+        rollingSpeedSum += spd;
+        if (spd > maxBallSpeed) maxBallSpeed = spd;
+      }
+    }
+  }
+  const rollingEnergyNorm =
+    rollingSpeedSum > 0 ? Math.min(1, Math.max(maxBallSpeed / 18, rollingSpeedSum / 65)) : 0;
+  updateBilliardRollingSound(rollingEnergyNorm);
+
   // 5. Kết thúc lượt đánh khi toàn bộ bi đã đứng yên
   if (world.shotInProgress && !world.strikeAnim.active) {
     const stillMoving = world.balls.some(
       (b) => !b.pocketed && (b.sinking || Math.hypot(b.vx, b.vy) > STOP_SPEED_PX_PER_FRAME),
     );
     if (!stillMoving) {
+      updateBilliardRollingSound(0);
       world.shotInProgress = false;
       resolveTurnOutcome(world);
       // Hướng lại góc ngắm ban đầu hướng vào bi hợp lệ đầu tiên cho mượt mà
@@ -2787,6 +2949,9 @@ export function renderBilliardsStageFrame(
       y: rb.y,
       vx: 0,
       vy: 0,
+      sx: 0,
+      sy: 0,
+      omegaZ: 0,
       fx,
       fy,
       fz,
@@ -2805,6 +2970,55 @@ export function renderBilliardsStageFrame(
       sinkAngle: 0,
     };
     drawSinglePoolBall3D(ctx, fakeBall, returnBallRadius, lightCenterX, lightCenterY, true);
+  }
+
+  // Vùng "Trong Bếp" (Behind the Head String) khi chuẩn bị khai cuộc (có thể kéo đặt lại bi cái)
+  if (isInBreakKitchen(world)) {
+    const kitchenW = Math.max(0, metrics.headStringX - feltLeft);
+    ctx.save();
+    ctx.fillStyle = 'rgba(217, 180, 104, 0.06)';
+    ctx.fillRect(feltLeft, metrics.feltTop, kitchenW, metrics.feltHeight);
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = 'rgba(217, 180, 104, 0.42)';
+    ctx.lineWidth = 1.4;
+    ctx.strokeRect(
+      feltLeft + 1,
+      metrics.feltTop + 1,
+      Math.max(0, kitchenW - 2),
+      Math.max(0, metrics.feltHeight - 2),
+    );
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  // Vòng chọn lỗ đánh Bi số 8 (Call Pocket trên 6 miệng lỗ màu Đồng Cổ nhấp nháy nhẹ)
+  if (isShootingForEightBall(world, world.currentPlayer)) {
+    const nowSec = typeof performance !== 'undefined' ? performance.now() * 0.004 : 0;
+    const pulse = 0.5 + 0.5 * Math.sin(nowSec);
+    ctx.save();
+    for (const pocket of metrics.pockets) {
+      const isSelected = world.calledEightPocketId === pocket.id;
+      ctx.beginPath();
+      ctx.arc(
+        pocket.x,
+        pocket.y,
+        metrics.pocketRadius + (isSelected ? 4.5 : 3.5 + pulse * 1.8),
+        0,
+        Math.PI * 2,
+      );
+      if (isSelected) {
+        ctx.fillStyle = 'rgba(59, 122, 101, 0.24)';
+        ctx.fill();
+        ctx.strokeStyle = '#F3D27A';
+        ctx.lineWidth = 2.6;
+        ctx.stroke();
+      } else {
+        ctx.strokeStyle = `rgba(194, 149, 72, ${(0.42 + pulse * 0.34).toFixed(3)})`;
+        ctx.lineWidth = 2.0;
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
   }
 
   // Vệt phấn trượt trên nỉ khi đánh lực > 65% hoặc xoáy mạnh (fade-out 240ms)
@@ -3058,16 +3272,18 @@ export function renderBilliardsStageFrame(
       ctx.lineWidth = 2.0;
       ctx.stroke();
 
-      // Tia lệch hướng bi cái (length = 42px, nét đứt mảnh, điều chỉnh theo Cù lê / Trô)
+      // Tia lệch hướng bi cái (đường cong parabol quadraticCurveTo khi áp Cù lê tiến / Trô giật)
       ctx.beginPath();
       ctx.setLineDash([4, 4]);
       ctx.moveTo(raycast.ghostX, raycast.ghostY);
-      ctx.lineTo(
-        raycast.ghostX + raycast.cueDeflectX * GHOST_CUE_VECTOR_LEN_PX,
-        raycast.ghostY + raycast.cueDeflectY * GHOST_CUE_VECTOR_LEN_PX,
+      ctx.quadraticCurveTo(
+        raycast.cueCurveCtrlX,
+        raycast.cueCurveCtrlY,
+        raycast.cueCurveEndX,
+        raycast.cueCurveEndY,
       );
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.72)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.78)';
+      ctx.lineWidth = 1.65;
       ctx.stroke();
       ctx.setLineDash([]);
 

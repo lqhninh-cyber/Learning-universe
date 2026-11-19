@@ -15,7 +15,10 @@ export const BILLIARD_COMBO_NOTES: readonly number[] = [
 ] as const;
 
 export const BALL_CLACK_COOLDOWN_MS = 25;
+export const BREAK_CLUSTER_COOLDOWN_MS = 7;
+export const BREAK_CLUSTER_WINDOW_MS = 85;
 export const CUSHION_COOLDOWN_MS = 30;
+export const MAX_ROLLING_BED_GAIN = 0.028;
 
 interface WebkitWindow extends Window {
   readonly webkitAudioContext?: typeof AudioContext;
@@ -24,11 +27,14 @@ interface WebkitWindow extends Window {
 class BilliardAudioEngine {
   private ctx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
+  private rollingGain: GainNode | null = null;
+  private rollingSourceStarted = false;
   private noiseBuffer: AudioBuffer | null = null;
   private enabled = false;
   private lastClackMs = -9999;
   private lastCushionMs = -9999;
   private lastRollMs = -9999;
+  private recentClackTimes: number[] = [];
 
   private nowMs(): number {
     if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -41,6 +47,8 @@ class BilliardAudioEngine {
     this.enabled = next;
     if (next) {
       this.unlock();
+    } else {
+      this.updateRollingNoise(0);
     }
   }
 
@@ -49,7 +57,7 @@ class BilliardAudioEngine {
   }
 
   /**
-   * Khởi tạo lười (Lazy Init) AudioContext & bộ đệm white-noise ngắn ngay khi người dùng tương tác.
+   * Khởi tạo lười (Lazy Init) AudioContext, bộ đệm noise va chạm & nền bi lăn trên mặt nỉ (<= 0.028).
    */
   public unlock(): AudioContext | null {
     if (typeof window === 'undefined') return null;
@@ -84,6 +92,44 @@ class BilliardAudioEngine {
             data[i] = Math.random() * 2 - 1;
           }
           this.noiseBuffer = buf;
+
+          // Bộ đệm tiếng nỉ lăn êm (1.5s loop brown noise -> lowpass 240Hz)
+          if (
+            typeof ctx.createBufferSource === 'function' &&
+            typeof ctx.createBiquadFilter === 'function'
+          ) {
+            try {
+              const rollLen = Math.max(2048, Math.floor(ctx.sampleRate * 1.5));
+              const rollBuf = ctx.createBuffer(1, rollLen, ctx.sampleRate);
+              const rollData = rollBuf.getChannelData(0);
+              let lastOut = 0;
+              for (let i = 0; i < rollLen; i += 1) {
+                const white = Math.random() * 2 - 1;
+                lastOut = (lastOut + 0.04 * white) / 1.04;
+                rollData[i] = Math.max(-0.9, Math.min(0.9, lastOut * 3.2));
+              }
+
+              const rollSrc = ctx.createBufferSource();
+              rollSrc.buffer = rollBuf;
+              rollSrc.loop = true;
+
+              const rollFilter = ctx.createBiquadFilter();
+              rollFilter.type = 'lowpass';
+              rollFilter.frequency.setValueAtTime(240, ctx.currentTime);
+
+              const rGain = ctx.createGain();
+              rGain.gain.setValueAtTime(0, ctx.currentTime);
+
+              rollSrc.connect(rollFilter);
+              rollFilter.connect(rGain);
+              rGain.connect(master);
+              rollSrc.start(ctx.currentTime);
+              this.rollingGain = rGain;
+              this.rollingSourceStarted = true;
+            } catch {
+              this.rollingGain = null;
+            }
+          }
         }
 
         this.ctx = ctx;
@@ -98,6 +144,27 @@ class BilliardAudioEngine {
     }
 
     return this.ctx;
+  }
+
+  /**
+   * Điều chỉnh âm lượng tiếng bi lăn trên mặt nỉ theo tổng động năng (tự tắt về 0 khi bi đứng yên, trần <= 0.028).
+   */
+  public updateRollingNoise(kineticEnergyNorm: number): void {
+    if (!this.ctx || !this.rollingGain || !this.rollingSourceStarted) return;
+    const clamped =
+      !this.enabled || kineticEnergyNorm <= 0.002
+        ? 0
+        : Math.min(MAX_ROLLING_BED_GAIN, Math.max(0, kineticEnergyNorm) * MAX_ROLLING_BED_GAIN);
+    try {
+      const now = this.ctx.currentTime;
+      if (typeof this.rollingGain.gain.setTargetAtTime === 'function') {
+        this.rollingGain.gain.setTargetAtTime(clamped, now, 0.045);
+      } else {
+        this.rollingGain.gain.setValueAtTime(clamped, now);
+      }
+    } catch {
+      // Bỏ qua trong môi trường hạn chế
+    }
   }
 
   /**
@@ -177,16 +244,21 @@ class BilliardAudioEngine {
   }
 
   /**
-   * 2. Tiếng hai viên bi khoáng thạch va chạm sắc gọn:
-   * - 2 sóng cộng hưởng ngắn (1850Hz và 3400Hz, 0.032s)
-   * - Xung noise cao tần tỷ lệ trực tiếp với impactSpeed, cooldown 25ms.
+   * 2. Tiếng hai viên bi khoáng thạch va chạm sắc gọn & Âm Thanh Phá Bi Đa Thanh:
+   * - Khi phát hiện >= 4 va chạm trong cửa sổ 85ms: kích hoạt lệch vi tần ±8% và phân bổ stereo nhẹ tách lớp rõ nét.
    */
   public playBallClack(impactSpeed: number, pan = 0): boolean {
     const nowMs = this.nowMs();
-    if (nowMs - this.lastClackMs < BALL_CLACK_COOLDOWN_MS) {
+    this.recentClackTimes = this.recentClackTimes.filter(
+      (t) => nowMs - t <= BREAK_CLUSTER_WINDOW_MS,
+    );
+    const isBreakScatter = this.recentClackTimes.length >= 3;
+    const minCooldown = isBreakScatter ? BREAK_CLUSTER_COOLDOWN_MS : BALL_CLACK_COOLDOWN_MS;
+    if (nowMs - this.lastClackMs < minCooldown) {
       return false;
     }
     this.lastClackMs = nowMs;
+    this.recentClackTimes.push(nowMs);
 
     if (!this.enabled) return false;
     const ctx = this.unlock();
@@ -194,6 +266,10 @@ class BilliardAudioEngine {
 
     const clamped = Math.max(0.08, Math.min(1, impactSpeed));
     const now = ctx.currentTime;
+    const pitchJitter = isBreakScatter ? 0.92 + Math.random() * 0.16 : 0.98 + Math.random() * 0.04;
+    const stereoPan = isBreakScatter
+      ? Math.max(-0.85, Math.min(0.85, pan + (Math.random() - 0.5) * 0.48))
+      : pan;
 
     try {
       const osc1 = ctx.createOscillator();
@@ -201,20 +277,21 @@ class BilliardAudioEngine {
       const clackGain = ctx.createGain();
 
       osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(1850, now);
-      osc1.frequency.exponentialRampToValueAtTime(1420, now + 0.032);
+      osc1.frequency.setValueAtTime(1850 * pitchJitter, now);
+      osc1.frequency.exponentialRampToValueAtTime(1420 * pitchJitter, now + 0.032);
 
       osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(3400, now);
-      osc2.frequency.exponentialRampToValueAtTime(2650, now + 0.032);
+      osc2.frequency.setValueAtTime(3400 * pitchJitter, now);
+      osc2.frequency.exponentialRampToValueAtTime(2650 * pitchJitter, now + 0.032);
 
+      const peakGain = (isBreakScatter ? 0.22 : 0.28) * clamped;
       clackGain.gain.setValueAtTime(0.0001, now);
-      clackGain.gain.linearRampToValueAtTime(0.28 * clamped, now + 0.0018);
+      clackGain.gain.linearRampToValueAtTime(peakGain, now + 0.0018);
       clackGain.gain.exponentialRampToValueAtTime(0.0006, now + 0.032);
 
       osc1.connect(clackGain);
       osc2.connect(clackGain);
-      this.connectWithPan(ctx, clackGain, pan);
+      this.connectWithPan(ctx, clackGain, stereoPan);
 
       osc1.start(now);
       osc2.start(now);
@@ -226,7 +303,7 @@ class BilliardAudioEngine {
         noise.buffer = this.noiseBuffer;
         const highpass = ctx.createBiquadFilter();
         highpass.type = 'highpass';
-        highpass.frequency.setValueAtTime(2800, now);
+        highpass.frequency.setValueAtTime(2800 * pitchJitter, now);
 
         const nGain = ctx.createGain();
         nGain.gain.setValueAtTime(0.0001, now);
@@ -235,7 +312,7 @@ class BilliardAudioEngine {
 
         noise.connect(highpass);
         highpass.connect(nGain);
-        this.connectWithPan(ctx, nGain, pan);
+        this.connectWithPan(ctx, nGain, stereoPan);
         noise.start(now);
         noise.stop(now + 0.02);
       }
@@ -247,8 +324,7 @@ class BilliardAudioEngine {
   }
 
   /**
-   * 3. Tiếng bật băng nỉ êm trầm:
-   * - lowpass 240Hz, sine 95Hz -> 48Hz (0.08s).
+   * 3. Tiếng bật băng nỉ êm trầm (95Hz -> 48Hz).
    */
   public playCushionBounce(impactSpeed: number, pan = 0): boolean {
     const nowMs = this.nowMs();
@@ -293,9 +369,7 @@ class BilliardAudioEngine {
   }
 
   /**
-   * 4. Tiếng bi rơi lỗ:
-   * - 2 nhịp 'cộc-cộc' gỗ trầm lệch nhau 60ms
-   * - Hòa kèm 1 nốt chuông Ngũ cung tăng dần cao độ theo comboCount (D5, E5, G5, A5, B5, D6).
+   * 4. Tiếng bi rơi hốc da êm sâu + nốt chuông Ngũ cung theo combo.
    */
   public playPocketDrop(comboCount: number, pan = 0): boolean {
     if (!this.enabled) return false;
@@ -310,27 +384,32 @@ class BilliardAudioEngine {
     const chimeFreq = BILLIARD_COMBO_NOTES[safeComboIdx] ?? 587.33;
 
     try {
-      // 2 nhịp 'cộc-cộc' gỗ trầm lệch nhau 60ms
+      // 2 nhịp rơi vào hốc da êm sâu ('thud-thud' lowpass 360Hz, lệch 60ms)
       for (const [idx, delaySec] of [
         [0, 0],
         [1, 0.06],
       ] as const) {
-        const woodOsc = ctx.createOscillator();
-        const woodGain = ctx.createGain();
+        const leatherOsc = ctx.createOscillator();
+        const leatherFilter = ctx.createBiquadFilter();
+        const leatherGain = ctx.createGain();
         const startT = now + delaySec;
 
-        woodOsc.type = 'triangle';
-        woodOsc.frequency.setValueAtTime(idx === 0 ? 165 : 138, startT);
-        woodOsc.frequency.exponentialRampToValueAtTime(68, startT + 0.048);
+        leatherOsc.type = 'triangle';
+        leatherOsc.frequency.setValueAtTime(idx === 0 ? 115 : 96, startT);
+        leatherOsc.frequency.exponentialRampToValueAtTime(46, startT + 0.062);
 
-        woodGain.gain.setValueAtTime(0.0001, startT);
-        woodGain.gain.linearRampToValueAtTime(idx === 0 ? 0.22 : 0.17, startT + 0.004);
-        woodGain.gain.exponentialRampToValueAtTime(0.0008, startT + 0.05);
+        leatherFilter.type = 'lowpass';
+        leatherFilter.frequency.setValueAtTime(360, startT);
 
-        woodOsc.connect(woodGain);
-        this.connectWithPan(ctx, woodGain, pan);
-        woodOsc.start(startT);
-        woodOsc.stop(startT + 0.055);
+        leatherGain.gain.setValueAtTime(0.0001, startT);
+        leatherGain.gain.linearRampToValueAtTime(idx === 0 ? 0.24 : 0.17, startT + 0.005);
+        leatherGain.gain.exponentialRampToValueAtTime(0.0008, startT + 0.068);
+
+        leatherOsc.connect(leatherFilter);
+        leatherFilter.connect(leatherGain);
+        this.connectWithPan(ctx, leatherGain, pan);
+        leatherOsc.start(startT);
+        leatherOsc.stop(startT + 0.072);
       }
 
       // Nốt chuông Ngũ cung theo comboCount
@@ -454,9 +533,51 @@ class BilliardAudioEngine {
   }
 
   /**
-   * 7. Tiếng bi lạch cạch nhỏ khi lăn chạm nhau trong máng hồi bi cơ khí bên phải bàn (mặc định pan = +0.8).
+   * 7. Tiếng "lắc miệng lỗ" (Pocket Jaw Rattle) gọn & đanh hơn tiếng bật băng dài.
    */
-  public playMarbleRoll(intensity = 0.5, pan = 0.8): boolean {
+  public playJawRattle(impactSpeed: number, pan = 0): boolean {
+    if (!this.enabled) return false;
+    const ctx = this.unlock();
+    if (!ctx || !this.masterGain) return false;
+
+    const clamped = Math.max(0.1, Math.min(1, impactSpeed));
+    const now = ctx.currentTime;
+
+    try {
+      const clickOsc = ctx.createOscillator();
+      const bodyOsc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      clickOsc.type = 'triangle';
+      clickOsc.frequency.setValueAtTime(2450, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(1680, now + 0.022);
+
+      bodyOsc.type = 'sine';
+      bodyOsc.frequency.setValueAtTime(320, now);
+      bodyOsc.frequency.exponentialRampToValueAtTime(165, now + 0.032);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.22 * clamped, now + 0.002);
+      gain.gain.exponentialRampToValueAtTime(0.0007, now + 0.034);
+
+      clickOsc.connect(gain);
+      bodyOsc.connect(gain);
+      this.connectWithPan(ctx, gain, pan);
+
+      clickOsc.start(now);
+      bodyOsc.start(now);
+      clickOsc.stop(now + 0.036);
+      bodyOsc.stop(now + 0.036);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * 8. Tiếng bi lạch cạch nhỏ khi lăn chạm nhau trong máng hồi bi cơ khí bên phải bàn (mặc định pan = +0.82).
+   */
+  public playMarbleRoll(intensity = 0.5, pan = 0.82): boolean {
     const nowMs = this.nowMs();
     if (nowMs - this.lastRollMs < 40) {
       return false;
@@ -518,6 +639,10 @@ export function playCushionBounce(impactSpeed: number, pan = 0): boolean {
   return billiardAudio.playCushionBounce(impactSpeed, pan);
 }
 
+export function playJawRattle(impactSpeed: number, pan = 0): boolean {
+  return billiardAudio.playJawRattle(impactSpeed, pan);
+}
+
 export function playPocketDrop(comboCount: number, pan = 0): boolean {
   return billiardAudio.playPocketDrop(comboCount, pan);
 }
@@ -530,6 +655,10 @@ export function playTrickShotReward(kind: 'bank' | 'double' | 'combo' = 'bank'):
   return billiardAudio.playTrickShotReward(kind);
 }
 
-export function playMarbleRoll(intensity = 0.5, pan = 0.8): boolean {
+export function playMarbleRoll(intensity = 0.5, pan = 0.82): boolean {
   return billiardAudio.playMarbleRoll(intensity, pan);
+}
+
+export function updateBilliardRollingSound(kineticEnergyNorm: number): void {
+  billiardAudio.updateRollingNoise(kineticEnergyNorm);
 }

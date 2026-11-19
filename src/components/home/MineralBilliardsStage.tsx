@@ -15,6 +15,7 @@ import { Link } from 'react-router';
 import {
   ALL_POOL_BALL_SPECS,
   buildOfficial15BallRack,
+  clampBreakCueBallPlacement,
   clampValidCueBallPlacement,
   computeAiShotPlan,
   computeStereoPan,
@@ -22,7 +23,8 @@ import {
   createBilliardsWorld,
   FINE_AIM_STEP_RAD,
   isCueBallPlacementValid,
-  MAX_SHOT_SPEED_PX_PER_FRAME,
+  isInBreakKitchen,
+  isShootingForEightBall,
   normalizeAngleDiff,
   PRECISION_AIM_FACTOR,
   renderBilliardsStageFrame,
@@ -32,7 +34,9 @@ import {
   stepBilliardsPhysicsFrame,
   STRIPE_BALL_SPECS,
   STRIKE_ANIM_DURATION_SEC,
+  SUBSTEPS,
   TABLE_SHAKE_DURATION_SEC,
+  triggerFeltToast,
   type BallGroup,
   type BilliardBall,
   type BilliardGameMode,
@@ -49,7 +53,9 @@ import {
   playRackClear,
   setBilliardSoundEnabled,
   unlockBilliardAudio,
+  updateBilliardRollingSound,
 } from '@/utils/billiardAudio';
+import { computeShotLaunchSpeed, initializeCueBallShot } from '@/utils/billiardPhysics';
 
 export interface MineralBilliardsStageProps {
   readonly className?: string;
@@ -178,6 +184,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [spin, setSpin] = useState<{ readonly x: number; readonly y: number }>({ x: 0, y: 0 });
   const [isSpinOpen, setIsSpinOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [isShootingEight, setIsShootingEight] = useState(false);
+  const [calledEightPocketId, setCalledEightPocketId] = useState<number | null>(null);
+  const [isHoverCueBallInKitchen, setIsHoverCueBallInKitchen] = useState(false);
   const [activeToast, setActiveToast] = useState<{
     readonly text: string;
     readonly tone: 'info' | 'foul' | 'reward';
@@ -238,6 +247,8 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     setRackCleared(w.rackCleared);
     setWinner(w.winner);
     setWinReason(w.winReason);
+    setIsShootingEight(isShootingForEightBall(w, w.currentPlayer));
+    setCalledEightPocketId(w.calledEightPocketId);
     setAiStatusText(
       w.aiPlan.phase !== 'idle'
         ? w.aiPlan.phase === 'aiming'
@@ -286,14 +297,22 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         b.cushionBouncesThisTurn = 0;
       }
 
-      cueBall.vx = strike.dirX * strike.launchSpeed;
-      cueBall.vy = strike.dirY * strike.launchSpeed;
+      const shotAngle = Math.atan2(strike.dirY, strike.dirX);
+      const launch = initializeCueBallShot(
+        cueBall,
+        shotAngle,
+        strike.power,
+        strike.spinX,
+        strike.spinY,
+      );
       w.activeCueSpinX = strike.spinX * (0.35 + strike.power * 0.65);
       w.activeCueSpinY = strike.spinY * (0.35 + strike.power * 0.65);
-      w.activeShotDirX = strike.dirX;
-      w.activeShotDirY = strike.dirY;
+      w.activeShotDirX = launch.dirX;
+      w.activeShotDirY = launch.dirY;
       w.cueHasHitBallThisTurn = false;
       w.firstHitBallIdThisTurn = null;
+      w.railOrPocketAfterFirstHitThisTurn = false;
+      w.eightBallPocketedId = null;
       w.pocketedIdsThisTurn = [];
       w.scratchedThisTurn = false;
       w.foulMessage = null;
@@ -327,6 +346,18 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         return false;
       }
 
+      if (
+        isShootingForEightBall(w, w.currentPlayer) &&
+        w.calledEightPocketId === null &&
+        !(w.gameMode === 'vs-ai' && w.currentPlayer === 2)
+      ) {
+        w.dragPullPower = 0;
+        setSliderPower(0);
+        triggerFeltToast(w, 'CHỌN LỖ ĐÁNH BI SỐ 8', 'info');
+        syncReactHudFromWorld();
+        return false;
+      }
+
       const clampedPower = Math.max(0.08, Math.min(1, powerNorm));
       const shotAngle = angleRad ?? w.aimAngle;
 
@@ -346,7 +377,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
       const dirX = Math.cos(shotAngle);
       const dirY = Math.sin(shotAngle);
-      const launchSpeed = (0.16 + clampedPower * 0.84) * MAX_SHOT_SPEED_PX_PER_FRAME;
+      const launchSpeed = computeShotLaunchSpeed(clampedPower);
 
       w.aimAngle = shotAngle;
       w.dragPullPower = 0;
@@ -405,6 +436,13 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       w.currentPlayer = 1;
       w.rackCleared = false;
       w.hoverPlaceValid = true;
+      w.calledEightPocketId = null;
+      w.eightBallPocketedId = null;
+      w.railOrPocketAfterFirstHitThisTurn = false;
+      w.isDraggingCueInKitchen = false;
+      w.cueBallHovered = false;
+      setIsHoverCueBallInKitchen(false);
+      updateBilliardRollingSound(0);
       lastFreeShotRef.current = null;
       setHasFreeRetry(false);
       setActiveToast(null);
@@ -430,6 +468,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     w.strikeAnim.active = false;
     w.dragPullPower = 0;
     w.foulMessage = null;
+    w.calledEightPocketId = null;
+    w.eightBallPocketedId = null;
+    w.railOrPocketAfterFirstHitThisTurn = false;
+    updateBilliardRollingSound(0);
     setSliderPower(0);
     setActiveToast(null);
     syncReactHudFromWorld();
@@ -464,6 +506,8 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       if (next) {
         unlockBilliardAudio();
         playCueStrike(0.45);
+      } else {
+        updateBilliardRollingSound(0);
       }
       return next;
     });
@@ -667,6 +711,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       ) {
         if (w.aiPlan.phase === 'idle') {
           w.aiPlan = computeAiShotPlan(w);
+          if (w.aiPlan.calledPocketId !== null) {
+            w.calledEightPocketId = w.aiPlan.calledPocketId;
+          }
           if (w.ballInHand && w.aiPlan.placeX !== null && w.aiPlan.placeY !== null) {
             const cue = w.balls[0];
             if (cue) {
@@ -749,6 +796,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     return () => {
       isDisposed = true;
       stopLoop();
+      updateBilliardRollingSound(0);
       observer?.disconnect();
       resizeObserver?.disconnect();
       if (toastTimerRef.current !== null) {
@@ -803,12 +851,46 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       cueBall.y = placed.y;
       cueBall.vx = 0;
       cueBall.vy = 0;
+      cueBall.sx = 0;
+      cueBall.sy = 0;
+      cueBall.omegaZ = 0;
       cueBall.pocketed = false;
       cueBall.sinking = false;
       w.ballInHand = false;
       w.hoverPlaceValid = true;
       w.foulMessage = null;
       syncReactHudFromWorld();
+      return;
+    }
+
+    // Chọn lỗ đánh Bi số 8 (Call Pocket) khi người chơi chuẩn bị đánh Bi số 8
+    if (isShootingForEightBall(w, w.currentPlayer)) {
+      let clickedPocket = null;
+      let minPocketDist = w.metrics.pocketRadius * 2.15;
+      for (const pocket of w.metrics.pockets) {
+        const pd = Math.hypot(pt.x - pocket.x, pt.y - pocket.y);
+        if (pd <= minPocketDist) {
+          minPocketDist = pd;
+          clickedPocket = pocket;
+        }
+      }
+      if (clickedPocket) {
+        w.calledEightPocketId = clickedPocket.id;
+        triggerFeltToast(w, `ĐÃ CHỌN LỖ #${clickedPocket.id + 1} CHO BI 8`, 'info');
+        syncReactHudFromWorld();
+        return;
+      }
+    }
+
+    // Kéo đặt lại bi cái "Trong Bếp" (Behind the Head String) trước cú khai cuộc
+    const distFromCue = Math.hypot(pt.x - cueBall.x, pt.y - cueBall.y);
+    if (isInBreakKitchen(w) && distFromCue <= w.metrics.ballRadius * 1.95) {
+      w.isDraggingCueInKitchen = true;
+      try {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      } catch {
+        // Bỏ qua trong JSDOM
+      }
       return;
     }
 
@@ -824,7 +906,6 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     w.isPrecisionAim = Boolean(event.shiftKey);
 
     // Chạm nhanh ở vị trí xa bi cái lập tức xoay gậy hướng về phía đó nếu bấm ngoài vùng sát bi
-    const distFromCue = Math.hypot(pt.x - cueBall.x, pt.y - cueBall.y);
     if (distFromCue > w.metrics.ballRadius * 2.2) {
       w.aimAngle = Math.atan2(pt.y - cueBall.y, pt.x - cueBall.x);
     }
@@ -847,7 +928,27 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       return;
     }
 
-    if (!w.isDraggingAim) return;
+    if (w.isDraggingCueInKitchen) {
+      const cueBall = w.balls[0];
+      if (cueBall) {
+        const clamped = clampBreakCueBallPlacement(w, pt.x, pt.y);
+        cueBall.x = clamped.x;
+        cueBall.y = clamped.y;
+      }
+      return;
+    }
+
+    if (!w.isDraggingAim) {
+      const cueBall = w.balls[0];
+      const hovered =
+        Boolean(cueBall && !cueBall.pocketed && isInBreakKitchen(w)) &&
+        Math.hypot(pt.x - cueBall!.x, pt.y - cueBall!.y) <= w.metrics.ballRadius * 1.95;
+      if (w.cueBallHovered !== hovered) {
+        w.cueBallHovered = hovered;
+        setIsHoverCueBallInKitchen(hovered);
+      }
+      return;
+    }
     w.isPrecisionAim = Boolean(event.shiftKey);
     const cueBall = w.balls[0];
     if (!cueBall) return;
@@ -865,6 +966,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const handleCanvasPointerUp = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const w = getWorld();
     w.isDraggingAim = false;
+    w.isDraggingCueInKitchen = false;
     try {
       if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId);
@@ -947,15 +1049,19 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       ? aiStatusText
       : ballInHand
         ? 'Đặt bi tự do'
-        : isBreakShot
-          ? 'Khai cuộc'
-          : gameMode === 'vs-ai'
-            ? currentPlayer === 1
-              ? 'Lượt bạn'
-              : 'Lượt Máy'
-            : gameMode === 'two-player'
-              ? `Lượt P${currentPlayer}`
-              : `${shots} cơ`;
+        : isShootingEight && !(gameMode === 'vs-ai' && currentPlayer === 2)
+          ? calledEightPocketId === null
+            ? 'Chọn lỗ đánh Bi 8'
+            : `Lỗ Bi 8: #${calledEightPocketId + 1}`
+          : isBreakShot
+            ? 'Khai cuộc'
+            : gameMode === 'vs-ai'
+              ? currentPlayer === 1
+                ? 'Lượt bạn'
+                : 'Lượt Máy'
+              : gameMode === 'two-player'
+                ? `Lượt P${currentPlayer}`
+                : `${shots} cơ`;
 
   const isPlayerOneActive = !rackCleared && currentPlayer === 1;
   const isPlayerTwoActive = !rackCleared && currentPlayer === 2 && gameMode !== 'free';
@@ -1278,6 +1384,33 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                   XOÁY
                 </span>
 
+                {/* Nút vi chỉnh góc ngắm siêu gọn (↺ / ↻ ±0.15°) ngay dưới nhãn XOÁY */}
+                <div
+                  className="mt-0.5 inline-flex items-center gap-1"
+                  aria-label="Vi chỉnh góc ngắm"
+                >
+                  <button
+                    type="button"
+                    data-testid="billiards-fine-aim-minus"
+                    aria-label="Vi chỉnh góc ngắm -0.15 độ"
+                    title="Vi chỉnh góc ngắm -0.15° (hoặc giữ Shift + lăn chuột)"
+                    onClick={() => nudgeAimAngle(-FINE_AIM_STEP_RAD)}
+                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFD9D5] bg-[#FAFBF9] font-mono text-[11px] font-bold text-[#2D423D] transition-colors hover:border-[#9C7A4C] active:scale-95 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
+                  >
+                    ↺
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="billiards-fine-aim-plus"
+                    aria-label="Vi chỉnh góc ngắm +0.15 độ"
+                    title="Vi chỉnh góc ngắm +0.15° (hoặc giữ Shift + lăn chuột)"
+                    onClick={() => nudgeAimAngle(FINE_AIM_STEP_RAD)}
+                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFD9D5] bg-[#FAFBF9] font-mono text-[11px] font-bold text-[#2D423D] transition-colors hover:border-[#9C7A4C] active:scale-95 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
+                  >
+                    ↻
+                  </button>
+                </div>
+
                 {isSpinOpen && (
                   <div
                     data-testid="billiards-spin-popover"
@@ -1457,35 +1590,13 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 </div>
               </div>
 
-              {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh + nút vi chỉnh góc ngắm (- / +) ±0.15° */}
+              {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh */}
               <span
                 data-testid="billiards-power-readout"
                 className="font-mono text-[11px] font-semibold text-[#1E332E] tabular-nums dark:text-[#C9D6D0]"
               >
                 {powerReadoutText}
               </span>
-              <div className="inline-flex items-center gap-1" aria-label="Vi chỉnh góc ngắm">
-                <button
-                  type="button"
-                  data-testid="billiards-fine-aim-minus"
-                  aria-label="Vi chỉnh góc ngắm -0.15 độ"
-                  title="Vi chỉnh góc ngắm -0.15° (hoặc giữ Shift + lăn chuột)"
-                  onClick={() => nudgeAimAngle(-FINE_AIM_STEP_RAD)}
-                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFD9D5] bg-[#FAFBF9] font-mono text-[11px] font-bold text-[#2D423D] transition-colors hover:border-[#9C7A4C] active:scale-95 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
-                >
-                  −
-                </button>
-                <button
-                  type="button"
-                  data-testid="billiards-fine-aim-plus"
-                  aria-label="Vi chỉnh góc ngắm +0.15 độ"
-                  title="Vi chỉnh góc ngắm +0.15° (hoặc giữ Shift + lăn chuột)"
-                  onClick={() => nudgeAimAngle(FINE_AIM_STEP_RAD)}
-                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFD9D5] bg-[#FAFBF9] font-mono text-[11px] font-bold text-[#2D423D] transition-colors hover:border-[#9C7A4C] active:scale-95 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
-                >
-                  +
-                </button>
-              </div>
             </div>
 
             {/* BÀN BIDA 3D & MÁNG HỒI BI HAI RAY TRONG SUỐT NỔI KHỐI */}
@@ -1502,7 +1613,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
               <canvas
                 ref={canvasRef}
                 data-testid="mineral-billiards-canvas"
-                data-substeps="6"
+                data-substeps={SUBSTEPS}
                 data-target-balls={ALL_POOL_BALL_SPECS.length - 1}
                 data-pocket-jaws="12"
                 aria-label="Bàn Bida 8 Ball Pool Khoáng Thạch 15 Bi"
@@ -1519,7 +1630,12 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                   w.isPrecisionAim = Boolean(e.shiftKey);
                   w.aimAngle += (e.deltaY > 0 ? 1 : -1) * step;
                 }}
-                className="block h-full w-full cursor-crosshair touch-none bg-transparent select-none"
+                className={cn(
+                  'block h-full w-full touch-none bg-transparent select-none',
+                  isHoverCueBallInKitchen
+                    ? 'cursor-grab active:cursor-grabbing'
+                    : 'cursor-crosshair',
+                )}
               />
 
               {/* Toast thông báo nổi 1.6s trên mép trên giữa mặt nỉ */}
@@ -1644,12 +1760,19 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                     Luật 8 Ball Pool &amp; Điều khiển
                   </p>
                   <ul className="space-y-1">
-                    <li>• Kéo trên bàn để xoay góc ngắm (giữ Shift để vi chỉnh 0.25x).</li>
+                    <li>
+                      • Trước khai cuộc, kéo bi cái trong vùng bếp (25% đầu bàn) để chọn điểm phá
+                      bi.
+                    </li>
+                    <li>• Kéo trên bàn để xoay góc ngắm (Shift hoặc ↺/↻ để vi chỉnh ±0.15°).</li>
                     <li>• Kéo thanh lực bên trái xuống (hoặc giữ Space) và thả để đánh.</li>
                     <li>
-                      • Ăn bi hợp lệ đầu tiên sau khai cuộc để nhận nhóm Trơn (1–7) hoặc Sọc (9–15).
+                      • Sau khi chạm bi mục tiêu, ít nhất 1 bi phải chạm băng hoặc rơi lỗ (No-Rail
+                      Foul).
                     </li>
-                    <li>• Dọn hết 7 bi nhóm mình rồi đưa Bi 8 Đen vào lỗ để thắng.</li>
+                    <li>
+                      • Dọn hết 7 bi nhóm mình rồi bấm chọn 1 lỗ chỉ định trước khi đưa Bi 8 vào lỗ.
+                    </li>
                   </ul>
                 </div>
               )}
