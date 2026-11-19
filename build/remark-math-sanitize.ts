@@ -66,6 +66,97 @@ function runMergePass(children: AstNodeLike[]): { next: AstNodeLike[]; changed: 
 
     if (!current) continue;
 
+    // 0a. Sửa phân số tỉ số đơn/kép bị vỡ dấu sao từ HTML->MDX: *1***/***MPQ* hoặc *CAB***/***DAB*
+    if (
+      current.type === 'emphasis' &&
+      Array.isArray(current.children) &&
+      current.children.length === 1 &&
+      current.children[0]?.type === 'text' &&
+      typeof current.children[0].value === 'string' &&
+      /^(?:1|[A-Z]{3,4})$/.test(current.children[0].value.trim()) &&
+      next?.type === 'text' &&
+      next.value === '**/**' &&
+      next2?.type === 'emphasis' &&
+      Array.isArray(next2.children) &&
+      next2.children.length === 1 &&
+      next2.children[0]?.type === 'text' &&
+      typeof next2.children[0].value === 'string' &&
+      /^[A-Z]{3,4}$/.test(next2.children[0].value.trim())
+    ) {
+      const rawNum = current.children[0].value.trim();
+      const rawDen = next2.children[0].value.trim();
+      const numTex = /^[A-Z]{3,4}$/.test(rawNum) ? `(${rawNum})` : rawNum;
+      const denTex = `(${rawDen})`;
+      nextChildren.push(createInlineMathNode(`\\dfrac{${numTex}}{${denTex}}`));
+      i += 2;
+      changed = true;
+      continue;
+    }
+
+    // 0b. Sửa mẫu phân số tỉ số đơn bị tách giữa text và inlineMath: " (MPQ)/((MPQ) " + inlineMath("- 1)")
+    if (
+      current.type === 'text' &&
+      typeof current.value === 'string' &&
+      next?.type === 'inlineMath' &&
+      typeof next.value === 'string'
+    ) {
+      const fracLead = current.value.match(/^(.*?)(\([A-Z]{3,4}\))\/\((\([A-Z]{3,4}\))\s*$/);
+      const fracTail = next.value.trim().match(/^([+-]\s*\d+)\)$/);
+      if (fracLead && fracTail) {
+        const [, prefix = '', numTuple = '', denTuple = ''] = fracLead;
+        const [, tailExpr = ''] = fracTail;
+        if (prefix.length > 0) {
+          nextChildren.push({ type: 'text', value: prefix });
+        }
+        nextChildren.push(createInlineMathNode(`\\dfrac{${numTuple}}{${denTuple} ${tailExpr}}`));
+        i += 1;
+        changed = true;
+        continue;
+      }
+    }
+
+    // 0c. Gộp bộ điểm tỉ số đứng ngay trước inlineMath bắt đầu bằng dấu "=": "(MQP) " + inlineMath("= ...")
+    if (
+      current.type === 'text' &&
+      typeof current.value === 'string' &&
+      next?.type === 'inlineMath' &&
+      typeof next.value === 'string' &&
+      /^\s*=/.test(next.value)
+    ) {
+      const tupleLead = current.value.match(/^(.*?)(\([A-Z]{3,4}\))\s*$/);
+      if (tupleLead) {
+        const [, prefix = '', tuple = ''] = tupleLead;
+        if (prefix.length > 0) {
+          nextChildren.push({ type: 'text', value: prefix });
+        }
+        nextChildren.push(createInlineMathNode(`${tuple} ${next.value.trimStart()}`));
+        i += 1;
+        changed = true;
+        continue;
+      }
+    }
+
+    // 0d. Gộp bộ điểm tỉ số đứng ngay sau inlineMath kết thúc bằng toán tử (=, +, -): inlineMath("(QPM) = 1 -") + text(" (MPQ).")
+    if (
+      current.type === 'inlineMath' &&
+      typeof current.value === 'string' &&
+      /[=+-]\s*$/.test(current.value) &&
+      next?.type === 'text' &&
+      typeof next.value === 'string'
+    ) {
+      const tupleTrail = next.value.match(/^\s*(\([A-Z]{3,4}\))(.*)$/);
+      if (tupleTrail) {
+        const [, tuple = '', rest = ''] = tupleTrail;
+        nextChildren.push(createInlineMathNode(`${current.value.trimEnd()} ${tuple}`));
+        if (rest.length > 0) {
+          nextChildren.push({ type: 'text', value: rest });
+        }
+        i += 1;
+        changed = true;
+        continue;
+      }
+    }
+
     // 1. Sửa mẫu *f*$^{-1}$ -> emphasis('f') + inlineMath('^{-1}')
     if (
       current.type === 'emphasis' &&
@@ -148,16 +239,16 @@ function runMergePass(children: AstNodeLike[]): { next: AstNodeLike[]; changed: 
       continue;
     }
 
-    // 5. Gộp inlineMath bị ngắt bởi khoảng trắng quanh toán tử ở rìa ($x_{i} =$ $t_{0}$)
+    // 5. Gộp inlineMath bị ngắt bởi khoảng trắng quanh toán tử ở rìa ($x_{i} =$ $t_{0}$) hoặc vế phải bắt đầu bằng '='
     if (
       current.type === 'inlineMath' &&
       typeof current.value === 'string' &&
-      /[=+\-*/]\s*$/.test(current.value) &&
       next?.type === 'text' &&
       typeof next.value === 'string' &&
       /^\s*$/.test(next.value) &&
       next2?.type === 'inlineMath' &&
-      typeof next2.value === 'string'
+      typeof next2.value === 'string' &&
+      (/[=+\-*/]\s*$/.test(current.value) || /^\s*=/.test(next2.value))
     ) {
       nextChildren.push(createInlineMathNode(joinLatexParts(current.value, next2.value, true)));
       i += 2;
@@ -209,6 +300,10 @@ export const remarkMathSanitizePre: Plugin<[], Root> = function remarkMathSaniti
  */
 export const remarkMathSanitizePost: Plugin<[], Root> = function remarkMathSanitizePost() {
   return (tree: Root) => {
+    visit(tree, (node) => {
+      mergeBrokenHtmlSubSupChildren(node as unknown as AstNodeLike);
+    });
+
     visit(tree, ['math', 'inlineMath'], (node) => {
       const mathNode = node as unknown as AstNodeLike;
       if (typeof mathNode.value === 'string') {

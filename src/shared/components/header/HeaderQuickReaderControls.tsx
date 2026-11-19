@@ -111,7 +111,7 @@ export const HeaderQuickReaderControls: FC<HeaderQuickReaderControlsProps> = ({
         }
         title="Chế độ Sáng/Tối (Phím D)"
         className={cn(
-          'inline-flex h-7 cursor-pointer items-center justify-center gap-1 rounded-full px-2 text-[12px] font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
+          'inline-flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-full px-2.5 text-[12px] leading-normal font-semibold whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none',
           readerSettings.isDarkMode
             ? 'bg-[#1E332E] text-[#FCD34D] shadow-2xs'
             : darkActive
@@ -124,7 +124,9 @@ export const HeaderQuickReaderControls: FC<HeaderQuickReaderControlsProps> = ({
         ) : (
           <Moon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
         )}
-        <span className="hidden xl:inline">{readerSettings.isDarkMode ? 'Sáng' : 'Tối'}</span>
+        <span className="hidden whitespace-nowrap xl:inline">
+          {readerSettings.isDarkMode ? 'Sáng' : 'Tối'}
+        </span>
       </button>
 
       {/* 3. Chế độ Dịu mắt (Giấy Dó ấm) */}

@@ -345,9 +345,10 @@ export const Header: FC<HeaderProps> = ({
   const chapterTooltipTitle = currentLessonLocation
     ? `Chương ${currentLessonLocation.chapter.number}: ${currentLessonLocation.chapter.title}`
     : undefined;
-  const lessonContextTitle =
+  const lessonContextTitle = (
     currentLessonLocation?.lesson.title ??
-    (pathname === '/dev/mdx' ? 'Trình kiểm thử MDX & KaTeX' : 'Nội dung bài học');
+    (pathname === '/dev/mdx' ? 'Trình kiểm thử MDX & KaTeX' : 'Nội dung bài học')
+  ).normalize('NFC');
 
   const navItemClass = (active: boolean) =>
     cn(
@@ -494,7 +495,7 @@ export const Header: FC<HeaderProps> = ({
               <span
                 title={lessonContextTitle}
                 className={cn(
-                  'max-w-[440px] truncate text-[14.5px] font-bold xl:max-w-[520px]',
+                  'max-w-[440px] truncate py-0.5 text-[14.5px] leading-normal font-bold xl:max-w-[520px]',
                   isDark ? 'text-[#F7F4EB]' : 'text-[#142B21] dark:text-[#F7F4EB]',
                 )}
               >

@@ -108,25 +108,28 @@ function BaseTheoryBlock({
   const semanticKind = kind === 'Definition' ? 'def' : 'thm';
   const resolvedAnchor = anchorId ?? id ?? `${semanticKind}-${generatedId}`;
   const headingLabel = number ? `${label} ${number}` : label;
+  const trimmedTitle = title?.trim();
+  const displayTitle =
+    trimmedTitle && trimmedTitle.toLowerCase() !== label.toLowerCase() ? trimmedTitle : undefined;
 
   return (
     <>
       <section
         id={resolvedAnchor}
         data-kind={semanticKind}
-        aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
+        aria-label={displayTitle ? `${headingLabel}: ${displayTitle}` : headingLabel}
         className="semantic-block my-5 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
       >
         <header className="semantic-block-header flex flex-wrap items-center justify-between gap-2 px-5 py-3">
           <div className="flex flex-wrap items-baseline gap-2.5">
             <span className="kb-pill font-serif">{headingLabel}</span>
-            {title && (
+            {displayTitle && (
               <>
                 <span className="text-stone-400 dark:text-stone-500" aria-hidden="true">
                   ·
                 </span>
                 <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#F5F2EB]">
-                  {title}
+                  {displayTitle}
                 </h4>
               </>
             )}

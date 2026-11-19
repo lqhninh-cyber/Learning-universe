@@ -239,7 +239,7 @@ export function GlossaryPage() {
                 ALMANAC // TỪ ĐIỂN KÝ HIỆU &amp; KHÁI NIỆM CHUẨN KATEX
               </p>
               <h1 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#142622] sm:text-4xl dark:text-[#E6ECE7]">
-                Ký hiệu &amp; Thuật ngữ Toán học
+                Ký hiệu &amp; Thuật ngữ Học thuật
               </h1>
               <p className="max-w-3xl text-sm leading-relaxed text-[#2D423D] sm:text-base dark:text-[#B9C8C1]">
                 Niên giám tra cứu nhanh định nghĩa chuẩn KaTeX, trực giác hình học – đại số và liên
@@ -263,7 +263,7 @@ export function GlossaryPage() {
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Tìm kiếm theo tên tiếng Việt, tiếng Anh, ký hiệu (\cong, V_4...) hoặc môn học..."
+                  placeholder="Tìm theo tiếng Việt, tiếng Anh, ký hiệu (≅, V₄, ∇...) hoặc môn học..."
                   className="h-11 w-full rounded-xl border border-[#CFD9D5] bg-[#FFFFFF] pr-10 pl-10 text-sm text-[#142622] placeholder-[#5C706A]/75 shadow-[0_2px_10px_rgba(24,38,36,0.03)] transition-colors focus:border-[#1E332E] focus:ring-1 focus:ring-[#1E332E] focus:outline-hidden dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7] dark:placeholder-[#8CA097] dark:focus:border-[#6EB59B] dark:focus:ring-[#6EB59B]"
                 />
                 {query && (
@@ -523,20 +523,22 @@ export function GlossaryPage() {
                           <span className="truncate font-mono text-[10.5px] text-[#5C706A] dark:text-[#8CA097]">
                             #{entry.id}
                           </span>
-                          <Link
-                            to={entry.relatedLesson}
-                            className="group/link inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#CFD9D5] bg-[#FFFFFF] px-3 py-1.5 text-xs font-semibold text-[#1E332E] transition-all duration-150 hover:border-[#9C7A4C] hover:bg-[#EDF2F0] hover:text-[#142622] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7] dark:hover:border-[#6EB59B] dark:hover:bg-[#1B3328]"
-                          >
-                            <BookOpen
-                              className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
-                              aria-hidden="true"
-                            />
-                            <span>Đọc tại bài giảng</span>
-                            <ArrowRight
-                              className="h-3.5 w-3.5 transition-transform duration-150 group-hover/link:translate-x-0.5"
-                              aria-hidden="true"
-                            />
-                          </Link>
+                          {entry.relatedLesson && (
+                            <Link
+                              to={entry.relatedLesson}
+                              className="group/link inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#CFD9D5] bg-[#FFFFFF] px-3 py-1.5 text-xs font-semibold text-[#1E332E] transition-all duration-150 hover:border-[#9C7A4C] hover:bg-[#EDF2F0] hover:text-[#142622] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7] dark:hover:border-[#6EB59B] dark:hover:bg-[#1B3328]"
+                            >
+                              <BookOpen
+                                className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
+                                aria-hidden="true"
+                              />
+                              <span>Đọc tại bài giảng</span>
+                              <ArrowRight
+                                className="h-3.5 w-3.5 transition-transform duration-150 group-hover/link:translate-x-0.5"
+                                aria-hidden="true"
+                              />
+                            </Link>
+                          )}
                         </div>
                       </article>
                     );

@@ -36,6 +36,11 @@ function BaseExampleBlock({
   const spec = NUMBERED_BLOCKS[kind];
   const resolvedAnchor = anchorId ?? id ?? `${spec.slug}-${generatedId}`;
   const headingLabel = number ? `${spec.label} ${number}` : spec.label;
+  const trimmedTitle = title?.trim();
+  const displayTitle =
+    trimmedTitle && trimmedTitle.toLowerCase() !== spec.label.toLowerCase()
+      ? trimmedTitle
+      : undefined;
   const isCounterexample = kind === 'Counterexample';
 
   const { isOpen, toggle } = useSkimmableOpen(true);
@@ -47,7 +52,7 @@ function BaseExampleBlock({
       data-kind="ex"
       data-counterexample={isCounterexample ? 'true' : undefined}
       open={isPrinting || isOpen}
-      aria-label={title ? `${headingLabel}: ${title}` : headingLabel}
+      aria-label={displayTitle ? `${headingLabel}: ${displayTitle}` : headingLabel}
       className="semantic-block ex-block my-6 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
     >
       <summary
@@ -70,9 +75,9 @@ function BaseExampleBlock({
           >
             {headingLabel}
           </span>
-          {title && (
+          {displayTitle && (
             <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#E8F1EC]">
-              {title}
+              {displayTitle}
             </h4>
           )}
         </div>

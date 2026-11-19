@@ -12,15 +12,17 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     );
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /Ký hiệu & Thuật ngữ Toán học/i }),
+      screen.getByRole('heading', { level: 1, name: /Ký hiệu & Thuật ngữ Học thuật/i }),
     ).toBeInTheDocument();
 
-    expect(screen.getByPlaceholderText(/Tìm kiếm theo tên/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Tìm theo tiếng Việt/i)).toBeInTheDocument();
 
-    // Hiển thị một số thuật ngữ tiêu biểu
+    // Hiển thị một số thuật ngữ tiêu biểu (cả 4 môn học đã được mở rộng cân đối)
     expect(screen.getByText('Nhóm bốn Klein')).toBeInTheDocument();
     expect(screen.getByText('Không gian Affine')).toBeInTheDocument();
     expect(screen.getByText('Đẳng cấu')).toBeInTheDocument();
+    expect(screen.getByText('Dãy Cauchy')).toBeInTheDocument();
+    expect(screen.getByText('Tam giác sư phạm')).toBeInTheDocument();
   });
 
   it('lọc thuật ngữ khi nhập từ khóa tìm kiếm tiếng Việt không dấu', () => {
@@ -30,7 +32,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
       </MemoryRouter>,
     );
 
-    const input = screen.getByPlaceholderText(/Tìm kiếm theo tên/i);
+    const input = screen.getByPlaceholderText(/Tìm theo tiếng Việt/i);
     fireEvent.change(input, { target: { value: 'nhom bon klein' } });
 
     expect(screen.getByText('Nhóm bốn Klein')).toBeInTheDocument();
@@ -58,13 +60,23 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     expect(screen.getByText('Không gian Affine')).toBeInTheDocument();
     expect(screen.queryByText('Nhóm bốn Klein')).not.toBeInTheDocument();
 
-    // Nhấn tab Giải tích hàm một biến
+    // Nhấn tab Giải tích hàm một biến (>= 14 mục)
     const calculusTab = screen.getByRole('button', { name: /Giải tích hàm một biến/i });
+    expect(calculusTab).toHaveTextContent('(14)');
     fireEvent.click(calculusTab);
 
     expect(screen.getByText('Định lý giá trị trung bình Lagrange')).toBeInTheDocument();
+    expect(screen.getByText('Dãy Cauchy')).toBeInTheDocument();
     expect(screen.queryByText('Nhóm bốn Klein')).not.toBeInTheDocument();
     expect(screen.queryByText('Không gian Affine')).not.toBeInTheDocument();
+
+    // Nhấn tab Giáo dục học (>= 12 mục)
+    const pedagogyTab = screen.getByRole('button', { name: /Giáo dục học/i });
+    expect(pedagogyTab).toHaveTextContent('(14)');
+    fireEvent.click(pedagogyTab);
+
+    expect(screen.getByText('Hoạt động sư phạm')).toBeInTheDocument();
+    expect(screen.getByText('Vùng phát triển gần (ZPD)')).toBeInTheDocument();
   });
 
   it('hiển thị thông báo khi không tìm thấy kết quả phù hợp', () => {
@@ -74,7 +86,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
       </MemoryRouter>,
     );
 
-    const input = screen.getByPlaceholderText(/Tìm kiếm theo tên/i);
+    const input = screen.getByPlaceholderText(/Tìm theo tiếng Việt/i);
     fireEvent.change(input, { target: { value: 'tu-khoa-khong-ton-tai-xyz' } });
 
     expect(screen.getByText(/Không tìm thấy thuật ngữ nào/i)).toBeInTheDocument();

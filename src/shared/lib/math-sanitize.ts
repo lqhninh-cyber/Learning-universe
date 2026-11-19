@@ -524,7 +524,7 @@ function expandCollapsedTableLine(rawLine: string): string[] {
  *    để bộ tách cột GFM không bao giờ chia nhầm cột trong biểu thức giá trị tuyệt đối hoặc cấp của nhóm.
  */
 export function preprocessMarkdownTables(markdown: string): string {
-  if (!markdown || !markdown.includes('|')) return markdown;
+  if (!markdown || (!markdown.includes('|') && !markdown.includes('**/**'))) return markdown;
 
   const lineEnding = markdown.includes('\r\n') ? '\r\n' : '\n';
   const rawLines = markdown.split(/\r?\n/);
@@ -607,9 +607,19 @@ export function preprocessMarkdownTables(markdown: string): string {
     }
   }
 
-  const finalLines = expandedLines.map((line, idx) =>
-    tableRowMask[idx] ? protectMathPipesInLine(line) : line,
-  );
+  const finalLines = expandedLines.map((line, idx) => {
+    const withProtectedPipes = tableRowMask[idx] ? protectMathPipesInLine(line) : line;
+    if (!withProtectedPipes.includes('**/**')) {
+      return withProtectedPipes;
+    }
+    return withProtectedPipes.replace(
+      /\*(1|[A-Z]{3,4})\*\*\*\/\*\*\*([A-Z]{3,4})\*/g,
+      (_m, rawNum: string, rawDen: string) => {
+        const numTex = /^[A-Z]{3,4}$/.test(rawNum) ? `(${rawNum})` : rawNum;
+        return `$\\dfrac{${numTex}}{(${rawDen})}$`;
+      },
+    );
+  });
 
   return finalLines.join(lineEnding);
 }

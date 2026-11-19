@@ -86,4 +86,24 @@ describe('Khối kiến thức ngữ nghĩa (Semantic Blocks)', () => {
     fireEvent.click(proofTrigger);
     expect(proofTrigger).toHaveAttribute('aria-expanded', 'true');
   });
+
+  it('không lặp nhãn khi title trùng với tên loại khối (ví dụ title="Định nghĩa" hoặc title="Định lý")', () => {
+    const { container } = render(
+      <ReadingSettingsProvider>
+        <Definition number="1.5.1" title="Định nghĩa">
+          Nội dung định nghĩa.
+        </Definition>
+        <Theorem number="1.5.2" title="Định lý">
+          Nội dung định lý.
+        </Theorem>
+      </ReadingSettingsProvider>,
+    );
+
+    const headers = Array.from(container.querySelectorAll('.semantic-block-header'));
+    expect(headers).toHaveLength(2);
+    expect(headers[0]?.textContent?.trim()).toBe('Định nghĩa 1.5.1');
+    expect(headers[1]?.textContent?.trim()).toBe('Định lý 1.5.2');
+    expect(headers[0]?.querySelector('h4')).toBeNull();
+    expect(headers[1]?.querySelector('h4')).toBeNull();
+  });
 });

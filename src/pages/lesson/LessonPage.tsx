@@ -19,10 +19,8 @@ import {
   LessonToc,
   SourcePanel,
 } from '@/features/lesson-reader';
-import { FoliageReadingProgress } from '@/components/reader/FoliageReadingProgress';
 import {
   EditorialChapterOpener,
-  LessonSemanticLegend,
   type ChapterCloItem,
   type ChapterDifficultyLevel,
 } from '@/components/lesson';
@@ -691,6 +689,7 @@ function LessonPageContent() {
                 difficultyLevel={getDifficultyLevel(lesson.level, subject.slug)}
                 clos={getLessonClos(lesson.tags, subject.slug)}
                 curriculumSource={getCurriculumSource(subject.slug)}
+                collapsibleMeta
                 prerequisites={
                   lesson.prerequisites.length > 0 ? (
                     <div
@@ -784,8 +783,6 @@ function LessonPageContent() {
                 readingTheme={readingTheme}
               />
 
-              <LessonSemanticLegend readingTheme={readingTheme} />
-
               {isAuthenticated && isNotesOpen && (
                 <div className="mt-6">
                   <LessonNotesPanel
@@ -862,9 +859,6 @@ function LessonPageContent() {
             <LessonToc lessonMeta={compiled?.lessonMeta ?? null} readingTheme={readingTheme} />
           </aside>
         </div>
-
-        {/* Vạch tiến độ mầm cây sinh trưởng công thái học */}
-        <FoliageReadingProgress articleContainerRef={articleRef} />
       </FadeIn>
     </div>
   );
