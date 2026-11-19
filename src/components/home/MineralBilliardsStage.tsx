@@ -84,12 +84,12 @@ interface PlayerRackSlotsProps {
 function PlayerRackSlots({ group, pocketedIds, testIdPrefix }: PlayerRackSlotsProps) {
   if (group === null) {
     return (
-      <div className="flex items-center gap-1" data-testid={`${testIdPrefix}-slots`}>
+      <div className="flex items-center gap-1.5" data-testid={`${testIdPrefix}-slots`}>
         {Array.from({ length: 7 }, (_, idx) => (
           <span
             key={idx}
             aria-hidden="true"
-            className="inline-block h-3.5 w-3.5 rounded-full border border-dashed border-[#8BA098]/70 bg-transparent dark:border-[#3E5C50]"
+            className="inline-block h-[18px] w-[18px] rounded-full border border-dashed border-[#8BA098]/75 bg-[#EEF2F0]/45 shadow-inner sm:h-5 sm:w-5 dark:border-[#3E5C50] dark:bg-[#0D1A14]/50"
           />
         ))}
       </div>
@@ -98,7 +98,7 @@ function PlayerRackSlots({ group, pocketedIds, testIdPrefix }: PlayerRackSlotsPr
 
   const specs = group === 'solids' ? SOLID_BALL_SPECS : STRIPE_BALL_SPECS;
   return (
-    <div className="flex items-center gap-1" data-testid={`${testIdPrefix}-slots`}>
+    <div className="flex items-center gap-1.5" data-testid={`${testIdPrefix}-slots`}>
       {specs.map((spec) => {
         const isPocketed = pocketedIds.includes(spec.number);
         return (
@@ -108,22 +108,31 @@ function PlayerRackSlots({ group, pocketedIds, testIdPrefix }: PlayerRackSlotsPr
             data-pocketed={isPocketed ? 'true' : 'false'}
             title={`Bi ${spec.number} (${spec.name}): ${isPocketed ? 'Đã ăn' : 'Còn trên bàn'}`}
             style={{
-              backgroundColor: spec.isStripe ? '#F8F9F7' : spec.colorHex,
-              borderColor: spec.colorHex,
+              backgroundColor: isPocketed ? undefined : spec.isStripe ? '#F8F9F7' : spec.colorHex,
+              borderColor: isPocketed ? undefined : spec.colorHex,
             }}
             className={cn(
-              'relative inline-flex h-4 w-4 items-center justify-center overflow-hidden rounded-full border font-mono text-[8px] font-bold transition-all duration-200',
-              isPocketed ? 'scale-90 opacity-30' : 'shadow-2xs',
+              'relative inline-flex h-[18px] w-[18px] items-center justify-center overflow-hidden rounded-full border font-mono text-[8.5px] font-bold transition-all duration-200 sm:h-5 sm:w-5',
+              isPocketed
+                ? 'scale-90 border-[#9BAEA6]/55 bg-[#DDE6E2]/55 opacity-25 shadow-inner dark:border-[#2C473C] dark:bg-[#0B1611]'
+                : 'shadow-[0_2px_4px_rgba(18,34,28,0.18)]',
             )}
           >
-            {spec.isStripe && (
+            {spec.isStripe && !isPocketed && (
               <span
                 aria-hidden="true"
                 style={{ backgroundColor: spec.colorHex }}
-                className="pointer-events-none absolute inset-x-0 h-[52%]"
+                className="pointer-events-none absolute inset-x-0 h-[54%]"
               />
             )}
-            <span className="relative z-10 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[#FAFBF9]/95 text-[#141817]">
+            <span
+              className={cn(
+                'relative z-10 flex h-3 w-3 items-center justify-center rounded-full leading-none',
+                isPocketed
+                  ? 'bg-transparent text-[#5E706A] dark:text-[#7E968D]'
+                  : 'bg-[#FAFBF9]/95 text-[#141817]',
+              )}
+            >
               {spec.number}
             </span>
           </span>
@@ -163,8 +172,16 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [spin, setSpin] = useState<{ readonly x: number; readonly y: number }>({ x: 0, y: 0 });
   const [isSpinOpen, setIsSpinOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [tableDim, setTableDim] = useState<{ readonly w: number; readonly h: number }>({
+    w: 1180,
+    h: 615,
+  });
+  const [isMobileSlider, setIsMobileSlider] = useState<boolean>(
+    () => typeof window !== 'undefined' && window.innerWidth > 0 && window.innerWidth < 768,
+  );
 
   const sectionRef = useRef<HTMLElement>(null);
+  const playfieldRowRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const powerSliderRef = useRef<HTMLDivElement>(null);
@@ -172,6 +189,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const spinPopupWrapperRef = useRef<HTMLDivElement>(null);
 
   const isDraggingSliderRef = useRef(false);
+  const sliderStartXRef = useRef(0);
   const sliderStartYRef = useRef(0);
   const isDraggingSpinRef = useRef(false);
   const spaceChargingRef = useRef(false);
@@ -179,7 +197,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const worldRef = useRef<BilliardsWorld | null>(null);
   const getWorld = useCallback((): BilliardsWorld => {
     if (!worldRef.current) {
-      worldRef.current = createBilliardsWorld(1020, 490, 'vs-ai');
+      worldRef.current = createBilliardsWorld(1180, 615, 'vs-ai');
     }
     return worldRef.current;
   }, []);
@@ -416,15 +434,31 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     const section = sectionRef.current;
     if (!canvas || !wrapper || typeof window === 'undefined') return;
 
-    const ctx = getLowLatency2DContext(canvas, { alpha: false });
+    // Bắt buộc dùng alpha: true để clearRect giữ nền trong suốt (xóa sạch nền đen #000000 quanh bàn & giữa 2 ray)
+    const ctx = getLowLatency2DContext(canvas, { alpha: true });
     if (!ctx) return;
 
     const w = getWorld();
 
     const updateSize = () => {
-      const rect = wrapper.getBoundingClientRect();
-      const nextW = Math.max(400, Math.floor(rect.width || 1020));
-      const nextH = Math.max(220, Math.floor(rect.height || Math.round(nextW * 0.48)));
+      const viewportW = window.innerWidth > 0 ? window.innerWidth : 1280;
+      const compactMobile = viewportW < 768;
+      setIsMobileSlider(compactMobile);
+
+      const rowRect = playfieldRowRef.current?.getBoundingClientRect();
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const rawAvailW =
+        rowRect && rowRect.width > 0
+          ? rowRect.width - (compactMobile ? 0 : 72)
+          : wrapperRect.width > 0
+            ? wrapperRect.width
+            : 1180;
+      const availW = Math.max(360, rawAvailW);
+      const viewportH = window.innerHeight > 0 ? window.innerHeight : 900;
+      const maxTableH = Math.min(viewportH * 0.68, 660);
+
+      const nextW = Math.max(360, Math.floor(Math.min(availW, maxTableH * 1.92)));
+      const nextH = Math.max(200, Math.floor(nextW / 1.92));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       const prevMetrics = w.metrics;
@@ -445,6 +479,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       canvas.height = Math.round(nextH * dpr);
       canvas.style.width = `${nextW}px`;
       canvas.style.height = `${nextH}px`;
+      setTableDim((prev) => (prev.w === nextW && prev.h === nextH ? prev : { w: nextW, h: nextH }));
     };
 
     updateSize();
@@ -609,6 +644,14 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       observer.observe(section);
     }
 
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && playfieldRowRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        updateSize();
+      });
+      resizeObserver.observe(playfieldRowRef.current);
+    }
+
     window.addEventListener('resize', updateSize, { passive: true });
     renderBilliardsStageFrame(ctx, w, isDarkModeActive());
     startLoop();
@@ -617,6 +660,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       isDisposed = true;
       stopLoop();
       observer?.disconnect();
+      resizeObserver?.disconnect();
       window.removeEventListener('resize', updateSize);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
@@ -734,7 +778,17 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     }
   };
 
-  // Thanh kéo lực dọc bên trái bàn (Vertical Power Cue Slider)
+  // Thanh kéo lực dọc bên trái bàn (hoặc ngang dưới bàn trên Mobile < 768px)
+  const computeSliderPowerFromPointer = (clientX: number, clientY: number): number => {
+    const rect = powerSliderRef.current?.getBoundingClientRect();
+    if (isMobileSlider) {
+      const travelX = rect && rect.width > 0 ? Math.max(120, rect.width * 0.78) : 210;
+      return Math.max(0, Math.min(1, (clientX - sliderStartXRef.current) / travelX));
+    }
+    const travelY = rect && rect.height > 0 ? Math.max(120, rect.height * 0.78) : 210;
+    return Math.max(0, Math.min(1, (clientY - sliderStartYRef.current) / travelY));
+  };
+
   const handleSliderPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     unlockBilliardAudio();
     const w = getWorld();
@@ -742,15 +796,14 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
 
     isDraggingSliderRef.current = true;
+    sliderStartXRef.current = event.clientX;
     sliderStartYRef.current = event.clientY;
     try {
       event.currentTarget.setPointerCapture(event.pointerId);
     } catch {
       // Bỏ qua trong JSDOM
     }
-    const rect = powerSliderRef.current?.getBoundingClientRect();
-    const travel = rect ? Math.max(120, rect.height * 0.78) : 210;
-    const p = Math.max(0, Math.min(1, (event.clientY - sliderStartYRef.current) / travel));
+    const p = computeSliderPowerFromPointer(event.clientX, event.clientY);
     w.dragPullPower = p;
     setSliderPower(p);
   };
@@ -758,9 +811,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const handleSliderPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDraggingSliderRef.current) return;
     const w = getWorld();
-    const rect = powerSliderRef.current?.getBoundingClientRect();
-    const travel = rect ? Math.max(120, rect.height * 0.78) : 210;
-    const p = Math.max(0, Math.min(1, (event.clientY - sliderStartYRef.current) / travel));
+    const p = computeSliderPowerFromPointer(event.clientX, event.clientY);
     w.dragPullPower = p;
     setSliderPower(p);
   };
@@ -813,6 +864,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const isPlayerOneActive = !rackCleared && currentPlayer === 1;
   const isPlayerTwoActive = !rackCleared && currentPlayer === 2 && gameMode !== 'free';
 
+  const verticalSliderH = Math.max(260, Math.min(420, Math.round(tableDim.h * 0.74)));
+  const powerReadoutText =
+    sliderPower < 0.02 ? (isMobileSlider ? 'KÉO →' : 'KÉO ↓') : `${Math.round(sliderPower * 100)}%`;
+
   return (
     <section
       ref={sectionRef}
@@ -828,7 +883,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-20 mx-auto flex max-w-[1400px] justify-between px-6 lg:px-10"
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 mx-auto flex max-w-[1480px] justify-between px-4 md:px-6 lg:px-8"
       >
         <svg
           width="12"
@@ -852,13 +907,13 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         </svg>
       </div>
 
-      <div className="mx-auto max-w-[1400px] px-4 pt-12 pb-18 sm:px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-[1480px] px-4 pt-10 pb-14 md:px-6 lg:px-8">
         <div
           data-testid="billiards-stage-card"
           data-game-mode={gameMode}
-          className="relative overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)] dark:border-[#243B32] dark:bg-[#12241C]"
+          className="relative flex flex-col gap-2.5 overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)] md:gap-3 dark:border-[#243B32] dark:bg-[#12241C]"
         >
-          {/* 4 góc thước ngắm bản vẽ chữ L mảnh đẩy sát mép ngoài (inset-1.5) */}
+          {/* 4 góc thước ngắm bản vẽ chữ L mảnh sát mép (inset-1.5) */}
           <span
             aria-hidden="true"
             className="pointer-events-none absolute top-1.5 left-1.5 z-20 h-3 w-3 border-t-[1.5px] border-l-[1.5px] border-[#9C7A4C]/70"
@@ -876,12 +931,12 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
             className="pointer-events-none absolute right-1.5 bottom-1.5 z-20 h-3 w-3 border-r-[1.5px] border-b-[1.5px] border-[#9C7A4C]/70"
           />
 
-          {/* 4.A. TOP MATCH HUD 3 PHẦN CÂN ĐỐI CHUẨN 8 BALL POOL */}
+          {/* 4.A. TOP MATCH HUD 3 PHẦN THOÁNG RỘNG (cách >= 16px khỏi góc thước ┌ ┐) */}
           <div
             data-testid="billiards-match-hud"
-            className="grid grid-cols-1 items-center gap-3 border-b border-[#E2E8E5] bg-[#F7F9F8] px-6 py-4 lg:grid-cols-12 dark:border-[#243B32] dark:bg-[#0E1A15]"
+            className="grid grid-cols-1 items-center gap-3 border-b border-[#E2E8E5] bg-[#F7F9F8] px-7 py-4 md:py-5 lg:grid-cols-12 dark:border-[#243B32] dark:bg-[#0E1A15]"
           >
-            {/* Bên trái: Bạn / P1 (+ 7 ô bi ở chế độ Đấu Máy/2 Người; ẩn 7 ô trống ở Tập tự do) */}
+            {/* Bên trái: Bạn / P1 (+ 7 ô bi 18-20px ở chế độ Đấu Máy/2 Người; ẩn ở Tập tự do) */}
             <div className="flex items-center justify-between gap-2.5 lg:col-span-4 lg:justify-start">
               {gameMode === 'free' ? (
                 <div
@@ -1086,11 +1141,26 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
             </div>
           </div>
 
-          {/* KHU VỰC CỤM ĐIỀU KHIỂN TRÁI (XOÁY + THANH LỰC DỌC) & BÀN BIDA 3D + MÁNG RAY HỞ */}
-          <div className="relative flex items-center gap-3 bg-[#FAFBF9] p-3 sm:gap-5 sm:p-6 dark:bg-[#0D1A14]">
-            {/* CỘT ĐIỀU KHIỂN TRÁI: NÚT XOÁY Ở ĐỈNH + THANH LỰC DỌC CÓ 5 VẠCH CHIA */}
-            <div className="flex shrink-0 flex-col items-center gap-2.5">
-              {/* Nút chỉnh xoáy bi cái (di dời hoàn toàn khỏi góc bàn) */}
+          {/* KHU VỰC CỤM ĐIỀU KHIỂN (TRÁI DESKTOP / DƯỚI BÀN MOBILE) & BÀN BIDA NỔI KHỐI TRONG SUỐT */}
+          <div
+            ref={playfieldRowRef}
+            className={cn(
+              'relative flex bg-transparent px-4 py-3.5 md:px-6 md:py-4',
+              isMobileSlider
+                ? 'flex-col items-center gap-3'
+                : 'flex-row items-center justify-center gap-2.5 md:gap-3.5',
+            )}
+          >
+            {/* CỤM ĐIỀU KHIỂN XOÁY + THANH KÉO LỰC (trái bàn trên Desktop, ngang dưới bàn trên Mobile) */}
+            <div
+              className={cn(
+                'relative z-20 flex shrink-0 items-center',
+                isMobileSlider
+                  ? 'order-2 w-full justify-center gap-3'
+                  : 'order-1 w-14 flex-col gap-2.5 pl-2',
+              )}
+            >
+              {/* Nút chỉnh xoáy bi cái (căn thẳng trục dọc tuyệt đối với tâm thanh kéo lực) */}
               <div ref={spinPopupWrapperRef} className="relative flex flex-col items-center gap-1">
                 <button
                   type="button"
@@ -1115,7 +1185,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 {isSpinOpen && (
                   <div
                     data-testid="billiards-spin-popover"
-                    className="absolute top-0 left-full z-40 ml-3 flex flex-col items-center gap-2 rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-3 shadow-2xl dark:border-[#244335] dark:bg-[#12241C]"
+                    className={cn(
+                      'absolute z-40 flex flex-col items-center gap-2 rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-3 shadow-2xl dark:border-[#244335] dark:bg-[#12241C]',
+                      isMobileSlider ? 'bottom-full left-0 mb-2' : 'top-0 left-full ml-3',
+                    )}
                   >
                     <span className="font-mono text-[10px] font-bold tracking-wider whitespace-nowrap text-[#8C6228] uppercase dark:text-[#D5B47A]">
                       Cù lê · Trô · Ép phê
@@ -1185,84 +1258,128 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 )}
               </div>
 
-              {/* Thanh Kéo Lực Dọc kèm 5 vạch chia nấc lực mảnh bên lề */}
-              <div className="flex items-stretch gap-1.5">
-                <div
-                  aria-hidden="true"
-                  data-testid="billiards-power-ticks"
-                  className="hidden flex-col justify-between py-2 font-mono text-[8.5px] font-medium text-[#5E706A] tabular-nums sm:flex dark:text-[#839A91]"
-                >
-                  <span>0%</span>
-                  <span>25%</span>
-                  <span>50%</span>
-                  <span>75%</span>
-                  <span>100%</span>
-                </div>
+              {/* Thanh Kéo Lực: Vertical w-11 (~74% bàn, 260-420px) + 5 vạch khắc mảnh 6px bên trái trên Desktop; Ngang trên Mobile */}
+              <div className="relative flex items-center justify-center">
+                {!isMobileSlider && (
+                  <div
+                    aria-hidden="true"
+                    data-testid="billiards-power-ticks"
+                    className="pointer-events-none absolute inset-y-3 right-full mr-[6px] flex flex-col justify-between"
+                  >
+                    <span className="h-[1px] w-1.5 bg-[#9C7A4C]/50" />
+                    <span className="h-[1px] w-1.5 bg-[#9C7A4C]/50" />
+                    <span className="h-[1px] w-1.5 bg-[#9C7A4C]/50" />
+                    <span className="h-[1px] w-1.5 bg-[#9C7A4C]/50" />
+                    <span className="h-[1px] w-1.5 bg-[#9C7A4C]/50" />
+                  </div>
+                )}
 
                 <div
                   ref={powerSliderRef}
                   role="slider"
                   tabIndex={0}
                   data-testid="billiards-power-slider"
+                  data-orientation={isMobileSlider ? 'horizontal' : 'vertical'}
                   data-power={Math.round(sliderPower * 100)}
-                  aria-label="Thanh kéo lực đánh bida (Kéo xuống để nạp lực, thả để đánh)"
+                  aria-label="Thanh kéo lực đánh bida (Kéo để nạp lực, thả để đánh)"
                   aria-valuemin={0}
                   aria-valuemax={100}
                   aria-valuenow={Math.round(sliderPower * 100)}
-                  title="Nhấn giữ và kéo xuống để chỉnh lực đánh · Thả để đánh · Trả lên đỉnh để hủy"
-                  style={{ touchAction: 'none' }}
+                  title="Nhấn giữ và kéo để chỉnh lực đánh · Thả để đánh · Trả về đầu để hủy"
+                  style={
+                    isMobileSlider
+                      ? { width: '210px', height: '40px', touchAction: 'none' }
+                      : { height: `${verticalSliderH}px`, touchAction: 'none' }
+                  }
                   onPointerDown={handleSliderPointerDown}
                   onPointerMove={handleSliderPointerMove}
                   onPointerUp={handleSliderPointerUp}
                   onPointerCancel={handleSliderPointerUp}
-                  className="relative flex h-[200px] w-9 cursor-ns-resize touch-none flex-col items-center justify-start overflow-hidden rounded-full border border-[#B9C9C2] bg-[#182924] p-1 shadow-inner select-none sm:h-[250px] sm:w-10 dark:border-[#244335]"
+                  className={cn(
+                    'relative flex touch-none items-center justify-start overflow-hidden rounded-full border border-[#B9C9C2] bg-[#182924] p-1 shadow-inner select-none dark:border-[#244335]',
+                    isMobileSlider
+                      ? 'cursor-ew-resize flex-row'
+                      : 'max-h-[420px] min-h-[260px] w-11 cursor-ns-resize flex-col',
+                  )}
                 >
                   {/* Dải màu nền lực mượt */}
                   <div
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-1.5 rounded-full opacity-35"
                     style={{
-                      background: 'linear-gradient(180deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
+                      background: isMobileSlider
+                        ? 'linear-gradient(90deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)'
+                        : 'linear-gradient(180deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
                     }}
                   />
-                  {/* Mức lực đang nạp chạy theo khoảng kéo */}
+                  {/* Mức lực đang nạp */}
                   <div
                     aria-hidden="true"
-                    style={{
-                      height: `${Math.round(sliderPower * 100)}%`,
-                      background: 'linear-gradient(180deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
-                    }}
-                    className="pointer-events-none absolute inset-x-1.5 top-1.5 rounded-full transition-[height] duration-75"
+                    style={
+                      isMobileSlider
+                        ? {
+                            width: `${Math.round(sliderPower * 100)}%`,
+                            background:
+                              'linear-gradient(90deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
+                          }
+                        : {
+                            height: `${Math.round(sliderPower * 100)}%`,
+                            background:
+                              'linear-gradient(180deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
+                          }
+                    }
+                    className={cn(
+                      'pointer-events-none absolute rounded-full transition-all duration-75',
+                      isMobileSlider ? 'inset-y-1.5 left-1.5' : 'inset-x-1.5 top-1.5',
+                    )}
                   />
-                  {/* Đầu gậy cơ thu nhỏ trượt theo tay kéo */}
-                  <div
-                    aria-hidden="true"
-                    style={{ transform: `translateY(${Math.round(sliderPower * 175)}px)` }}
-                    className="relative z-10 flex w-6 flex-col items-center"
-                  >
-                    <span className="h-1.5 w-3.5 rounded-t-sm bg-[#49768F]" />
-                    <span className="h-1 w-3.5 bg-[#FAFBF9]" />
-                    <span className="h-2.5 w-4 rounded-b-sm bg-[#E6D3B3] ring-1 ring-[#C29548]" />
-                    <span className="mt-1 h-11 w-2 rounded-b-full bg-gradient-to-b from-[#E6D3B3] to-[#9C7A4C] opacity-85" />
-                  </div>
-                  {/* Chữ gợi ý mảnh khi lực 0% */}
-                  {sliderPower < 0.02 && (
-                    <span className="pointer-events-none relative z-10 mt-auto mb-2 font-mono text-[9px] font-semibold tracking-tight text-[#DCEAE6]/85">
-                      ↓ Kéo
-                    </span>
+                  {/* Đầu gậy cơ thu nhỏ trượt theo tay kéo (không chữ đè trong rãnh) */}
+                  {isMobileSlider ? (
+                    <div
+                      aria-hidden="true"
+                      style={{ transform: `translateX(${Math.round(sliderPower * 155)}px)` }}
+                      className="relative z-10 flex h-6 flex-row items-center"
+                    >
+                      <span className="h-3.5 w-1.5 rounded-l-sm bg-[#49768F]" />
+                      <span className="h-3.5 w-1 bg-[#FAFBF9]" />
+                      <span className="h-4 w-2.5 rounded-r-sm bg-[#E6D3B3] ring-1 ring-[#C29548]" />
+                    </div>
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        transform: `translateY(${Math.round(sliderPower * Math.max(120, verticalSliderH - 72))}px)`,
+                      }}
+                      className="relative z-10 flex w-6 flex-col items-center"
+                    >
+                      <span className="h-1.5 w-3.5 rounded-t-sm bg-[#49768F]" />
+                      <span className="h-1 w-3.5 bg-[#FAFBF9]" />
+                      <span className="h-2.5 w-4 rounded-b-sm bg-[#E6D3B3] ring-1 ring-[#C29548]" />
+                      <span className="mt-1 h-11 w-2 rounded-b-full bg-gradient-to-b from-[#E6D3B3] to-[#9C7A4C] opacity-85" />
+                    </div>
                   )}
                 </div>
               </div>
 
-              <span className="font-mono text-[10px] font-bold text-[#354E48] tabular-nums dark:text-[#98ABA3]">
-                {Math.round(sliderPower * 100)}%
+              {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh */}
+              <span
+                data-testid="billiards-power-readout"
+                className="font-mono text-[11px] font-semibold text-[#1E332E] tabular-nums dark:text-[#C9D6D0]"
+              >
+                {powerReadoutText}
               </span>
             </div>
 
-            {/* BÀN BIDA 3D & MÁNG HỒI BI HAI THANH RAY KIM LOẠI HỞ */}
+            {/* BÀN BIDA 3D & MÁNG HỒI BI HAI RAY TRONG SUỐT NỔI KHỐI */}
             <div
               ref={tableWrapperRef}
-              className="relative mx-auto aspect-[2.14/1] max-h-[510px] min-h-[240px] w-full flex-1 overflow-visible rounded-xl"
+              style={{
+                maxWidth: `${tableDim.w}px`,
+                height: isMobileSlider ? undefined : `${tableDim.h}px`,
+                aspectRatio: '1.92 / 1',
+                backgroundColor: 'transparent',
+              }}
+              className="relative order-1 mx-auto flex w-full flex-1 items-center justify-center overflow-visible bg-transparent md:order-2"
             >
               <canvas
                 ref={canvasRef}
@@ -1271,7 +1388,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 data-target-balls={ALL_POOL_BALL_SPECS.length - 1}
                 data-pocket-jaws="12"
                 aria-label="Bàn Bida 8 Ball Pool Khoáng Thạch 15 Bi"
-                style={{ touchAction: 'none' }}
+                style={{ touchAction: 'none', backgroundColor: 'transparent' }}
                 onPointerDown={handleCanvasPointerDown}
                 onPointerMove={handleCanvasPointerMove}
                 onPointerUp={handleCanvasPointerUp}
@@ -1282,7 +1399,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                   if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
                   w.aimAngle += (e.deltaY > 0 ? 1 : -1) * 0.015;
                 }}
-                className="block h-full w-full cursor-crosshair touch-none select-none"
+                className="block h-full w-full cursor-crosshair touch-none bg-transparent select-none"
               />
 
               {/* Thông báo Đặt bi tự do (Ball-in-Hand) */}
@@ -1336,7 +1453,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
           </div>
 
           {/* 5. THANH ĐÁY GỌN GÀNG: Ván mới · Luật nhanh · Điều hướng trang */}
-          <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-[#E2E8E5] bg-[#F7F9F8] px-5 py-3.5 sm:px-6 dark:border-[#243B32] dark:bg-[#0E1A15]">
+          <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-[#E2E8E5] bg-[#F7F9F8] px-4 py-3 md:px-6 dark:border-[#243B32] dark:bg-[#0E1A15]">
             <div className="relative flex flex-wrap items-center gap-2">
               <button
                 type="button"

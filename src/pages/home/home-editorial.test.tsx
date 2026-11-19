@@ -1120,8 +1120,14 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
           ]),
         );
 
-        // Kiểm chứng khoảng cách xếp tam giác >= 2 * R_ball + 0.59px để 15 bi đứng yên 100% trước cú phá bi
-        const rackMetrics = computeTableMetrics(1020, 490);
+        // Kiểm chứng khoảng cách xếp tam giác >= 2 * R_ball + 0.59px & tỷ lệ đồng bộ R_ball = feltWidth * 0.0172
+        const rackMetrics = computeTableMetrics(1200, 625);
+        expect(rackMetrics.ballRadius / rackMetrics.feltWidth).toBeCloseTo(0.0172, 3);
+        expect(rackMetrics.pocketRadius / rackMetrics.ballRadius).toBeCloseTo(1.65, 2);
+        expect(rackMetrics.returnRailW).toBe(Math.round(rackMetrics.ballRadius * 2 + 10));
+        expect(rackMetrics.returnRailBottomY - rackMetrics.returnRailTopY).toBe(
+          rackMetrics.tableHeight,
+        );
         const rackBalls = buildOfficial15BallRack(rackMetrics);
         expect(rackBalls).toHaveLength(16);
         for (let i = 1; i < rackBalls.length; i += 1) {
@@ -1208,9 +1214,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(spinSelector).toHaveAttribute('data-spin-x', '0.00');
         expect(spinSelector).toHaveAttribute('data-spin-y', '0.00');
 
-        // 5 vạch chia lực bên trái thanh lực dọc & gợi ý ↓ Kéo
-        expect(screen.getByTestId('billiards-power-ticks')).toHaveTextContent('0%25%50%75%100%');
-        expect(screen.getByText('↓ Kéo')).toBeInTheDocument();
+        // 5 vạch khắc mảnh bên trái thanh lực dọc & chỉ số duy nhất KÉO ↓ -> XX% dưới đáy thanh
+        expect(screen.getByTestId('billiards-power-ticks').children).toHaveLength(5);
+        expect(screen.getByTestId('billiards-power-readout')).toHaveTextContent('KÉO ↓');
+        expect(canvas).toHaveClass('bg-transparent');
 
         // Nút Luật nhanh & Âm thanh
         fireEvent.click(screen.getByTestId('billiards-rules-btn'));
@@ -1229,9 +1236,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         const powerSlider = screen.getByTestId('billiards-power-slider');
         expect(powerSlider).toHaveAttribute('data-power', '0');
         fireEvent.pointerDown(powerSlider, { clientX: 20, clientY: 100, pointerId: 2 });
-        fireEvent.pointerMove(powerSlider, { clientX: 20, clientY: 180, pointerId: 2 });
+        fireEvent.pointerMove(powerSlider, { clientX: 20, clientY: 220, pointerId: 2 });
         expect(Number(powerSlider.getAttribute('data-power'))).toBeGreaterThanOrEqual(50);
-        fireEvent.pointerUp(powerSlider, { clientX: 20, clientY: 180, pointerId: 2 });
+        expect(screen.getByTestId('billiards-power-readout').textContent).toMatch(/^\d+%$/);
+        fireEvent.pointerUp(powerSlider, { clientX: 20, clientY: 220, pointerId: 2 });
         expect(powerSlider).toHaveAttribute('data-power', '0');
 
         // Nút Ván mới đưa trạng thái về Khai cuộc
