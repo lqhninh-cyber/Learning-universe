@@ -890,7 +890,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(formatAlidadeAngle(Math.PI / 2)).toBe('90° · π/2');
     });
 
-    it('ChladniManifestoSection vẽ đĩa cộng hưởng 2.600 hạt khoáng thạch và chuyển đổi 4 chế độ (m, n) không lỗi', () => {
+    it('ChladniManifestoSection vẽ đĩa cộng hưởng 3.600 hạt khoáng thạch, liên kết 3 trụ cột và tinh chỉnh (m, n) không lỗi', () => {
       const fillStyles: string[] = [];
       const noop = vi.fn();
       const gradMock = { addColorStop: noop };
@@ -936,9 +936,34 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
         const canvas = screen.getByTestId('chladni-resonance-canvas');
         expect(canvas).toBeInTheDocument();
-        expect(fillStyles).toContain('rgba(30, 51, 46, 0.82)');
+        expect(canvas).toHaveAttribute('data-particle-count', '3600');
+        expect(fillStyles).toContain('rgba(30, 51, 46, 0.84)');
         expect(fillStyles).toContain('rgba(156, 122, 76, 0.88)');
+        expect(fillStyles).toContain('rgba(59, 122, 101, 0.82)');
 
+        // Dải thông số tổng kết bên cột trái
+        const summaryStrip = screen.getByTestId('chladni-summary-strip');
+        expect(summaryStrip).toHaveTextContent('40 DI SẢN XÁC THỰC');
+        expect(summaryStrip).toHaveTextContent('04 HỌC PHẦN');
+        expect(summaryStrip).toHaveTextContent('122 BÀI GIẢNG KATEX');
+
+        // Kiểm tra liên kết 2 chiều Trụ cột -> Chế độ sóng
+        const pillar1 = screen.getByTestId('chladni-pillar-1');
+        const pillar2 = screen.getByTestId('chladni-pillar-2');
+        const pillar3 = screen.getByTestId('chladni-pillar-3');
+        expect(pillar1).toHaveAttribute('aria-pressed', 'true');
+        expect(pillar1).toHaveTextContent('ĐANG HIỂN THỊ');
+
+        fireEvent.click(pillar2);
+        expect(pillar2).toHaveAttribute('aria-pressed', 'true');
+        expect(pillar2).toHaveTextContent('ĐANG HIỂN THỊ');
+        expect(pillar1).toHaveAttribute('aria-pressed', 'false');
+
+        fireEvent.click(pillar3);
+        expect(pillar3).toHaveAttribute('aria-pressed', 'true');
+        expect(pillar3).toHaveTextContent('ĐANG HIỂN THỊ');
+
+        // Kiểm tra 4 preset (m, n)
         const presets: [string, string][] = [
           ['Đối xứng (3, 5)', '(m, n) =(3, 5)'],
           ['Giao thoa (4, 7)', '(m, n) =(4, 7)'],
@@ -951,6 +976,21 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
           expect(btn).toHaveAttribute('aria-pressed', 'true');
           expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent(expectedMode);
         }
+
+        // Đặt về (3, 5) rồi kiểm tra stepper m !== n trong [2..12]
+        fireEvent.click(screen.getByRole('button', { name: 'Đối xứng (3, 5)' }));
+        const incM = screen.getByRole('button', { name: 'Tăng m' });
+        fireEvent.click(incM);
+        expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(4, 5)');
+        // Bước tiếp phải nhảy qua m === n (5) sang 6
+        fireEvent.click(incM);
+        expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(6, 5)');
+
+        // Kiểm tra nút âm thanh Web Audio mặc định TẮT và bật được
+        const soundBtn = screen.getByTestId('chladni-sound-toggle');
+        expect(soundBtn).toHaveAttribute('aria-pressed', 'false');
+        fireEvent.click(soundBtn);
+        expect(soundBtn).toHaveAttribute('aria-pressed', 'true');
       } finally {
         getContextSpy.mockRestore();
       }
