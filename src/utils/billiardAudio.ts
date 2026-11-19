@@ -101,11 +101,32 @@ class BilliardAudioEngine {
   }
 
   /**
+   * Định tuyến âm thanh qua StereoPannerNode (-0.85..+0.85) trước khi vào Master Gain -> Compressor.
+   * An toàn khi trình duyệt hoặc môi trường test không cung cấp `createStereoPanner`.
+   */
+  private connectWithPan(ctx: AudioContext, source: AudioNode, pan = 0): void {
+    if (!this.masterGain) return;
+    const clampedPan = Math.max(-0.85, Math.min(0.85, Number.isFinite(pan) ? pan : 0));
+    if (Math.abs(clampedPan) > 0.01 && typeof ctx.createStereoPanner === 'function') {
+      try {
+        const panner = ctx.createStereoPanner();
+        panner.pan.setValueAtTime(clampedPan, ctx.currentTime);
+        source.connect(panner);
+        panner.connect(this.masterGain);
+        return;
+      } catch {
+        // Fallback nếu createStereoPanner lỗi
+      }
+    }
+    source.connect(this.masterGain);
+  }
+
+  /**
    * 1. Tiếng đầu cơ chạm bi cái:
    * - Xung triangle trầm 140Hz -> 55Hz (0.06s)
    * - Kết hợp tiếng 'tách' lơ phấn ngắn qua bandpass noise (2200Hz, 0.025s).
    */
-  public playCueStrike(power: number): boolean {
+  public playCueStrike(power: number, pan = 0): boolean {
     if (!this.enabled) return false;
     const ctx = this.unlock();
     if (!ctx || !this.masterGain) return false;
@@ -125,7 +146,7 @@ class BilliardAudioEngine {
       oscGain.gain.exponentialRampToValueAtTime(0.0008, now + 0.06);
 
       osc.connect(oscGain);
-      oscGain.connect(this.masterGain);
+      this.connectWithPan(ctx, oscGain, pan);
       osc.start(now);
       osc.stop(now + 0.065);
 
@@ -144,7 +165,7 @@ class BilliardAudioEngine {
 
         noise.connect(bandpass);
         bandpass.connect(noiseGain);
-        noiseGain.connect(this.masterGain);
+        this.connectWithPan(ctx, noiseGain, pan);
         noise.start(now);
         noise.stop(now + 0.028);
       }
@@ -160,7 +181,7 @@ class BilliardAudioEngine {
    * - 2 sóng cộng hưởng ngắn (1850Hz và 3400Hz, 0.032s)
    * - Xung noise cao tần tỷ lệ trực tiếp với impactSpeed, cooldown 25ms.
    */
-  public playBallClack(impactSpeed: number): boolean {
+  public playBallClack(impactSpeed: number, pan = 0): boolean {
     const nowMs = this.nowMs();
     if (nowMs - this.lastClackMs < BALL_CLACK_COOLDOWN_MS) {
       return false;
@@ -193,7 +214,7 @@ class BilliardAudioEngine {
 
       osc1.connect(clackGain);
       osc2.connect(clackGain);
-      clackGain.connect(this.masterGain);
+      this.connectWithPan(ctx, clackGain, pan);
 
       osc1.start(now);
       osc2.start(now);
@@ -214,7 +235,7 @@ class BilliardAudioEngine {
 
         noise.connect(highpass);
         highpass.connect(nGain);
-        nGain.connect(this.masterGain);
+        this.connectWithPan(ctx, nGain, pan);
         noise.start(now);
         noise.stop(now + 0.02);
       }
@@ -229,7 +250,7 @@ class BilliardAudioEngine {
    * 3. Tiếng bật băng nỉ êm trầm:
    * - lowpass 240Hz, sine 95Hz -> 48Hz (0.08s).
    */
-  public playCushionBounce(impactSpeed: number): boolean {
+  public playCushionBounce(impactSpeed: number, pan = 0): boolean {
     const nowMs = this.nowMs();
     if (nowMs - this.lastCushionMs < CUSHION_COOLDOWN_MS) {
       return false;
@@ -261,7 +282,7 @@ class BilliardAudioEngine {
 
       osc.connect(filter);
       filter.connect(gain);
-      gain.connect(this.masterGain);
+      this.connectWithPan(ctx, gain, pan);
 
       osc.start(now);
       osc.stop(now + 0.085);
@@ -276,7 +297,7 @@ class BilliardAudioEngine {
    * - 2 nhịp 'cộc-cộc' gỗ trầm lệch nhau 60ms
    * - Hòa kèm 1 nốt chuông Ngũ cung tăng dần cao độ theo comboCount (D5, E5, G5, A5, B5, D6).
    */
-  public playPocketDrop(comboCount: number): boolean {
+  public playPocketDrop(comboCount: number, pan = 0): boolean {
     if (!this.enabled) return false;
     const ctx = this.unlock();
     if (!ctx || !this.masterGain) return false;
@@ -307,7 +328,7 @@ class BilliardAudioEngine {
         woodGain.gain.exponentialRampToValueAtTime(0.0008, startT + 0.05);
 
         woodOsc.connect(woodGain);
-        woodGain.connect(this.masterGain);
+        this.connectWithPan(ctx, woodGain, pan);
         woodOsc.start(startT);
         woodOsc.stop(startT + 0.055);
       }
@@ -329,7 +350,7 @@ class BilliardAudioEngine {
 
       chimeOsc.connect(chimeGain);
       overtoneOsc.connect(chimeGain);
-      chimeGain.connect(this.masterGain);
+      this.connectWithPan(ctx, chimeGain, pan);
 
       chimeOsc.start(now + 0.02);
       overtoneOsc.start(now + 0.02);
@@ -433,9 +454,9 @@ class BilliardAudioEngine {
   }
 
   /**
-   * 7. Tiếng bi lạch cạch nhỏ khi lăn chạm nhau trong máng hồi bi cơ khí bên phải bàn.
+   * 7. Tiếng bi lạch cạch nhỏ khi lăn chạm nhau trong máng hồi bi cơ khí bên phải bàn (mặc định pan = +0.8).
    */
-  public playMarbleRoll(intensity = 0.5): boolean {
+  public playMarbleRoll(intensity = 0.5, pan = 0.8): boolean {
     const nowMs = this.nowMs();
     if (nowMs - this.lastRollMs < 40) {
       return false;
@@ -461,7 +482,7 @@ class BilliardAudioEngine {
       gain.gain.exponentialRampToValueAtTime(0.0006, now + 0.03);
 
       osc.connect(gain);
-      gain.connect(this.masterGain);
+      this.connectWithPan(ctx, gain, pan);
       osc.start(now);
       osc.stop(now + 0.032);
       return true;
@@ -485,20 +506,20 @@ export function unlockBilliardAudio(): AudioContext | null {
   return billiardAudio.unlock();
 }
 
-export function playCueStrike(power: number): boolean {
-  return billiardAudio.playCueStrike(power);
+export function playCueStrike(power: number, pan = 0): boolean {
+  return billiardAudio.playCueStrike(power, pan);
 }
 
-export function playBallClack(impactSpeed: number): boolean {
-  return billiardAudio.playBallClack(impactSpeed);
+export function playBallClack(impactSpeed: number, pan = 0): boolean {
+  return billiardAudio.playBallClack(impactSpeed, pan);
 }
 
-export function playCushionBounce(impactSpeed: number): boolean {
-  return billiardAudio.playCushionBounce(impactSpeed);
+export function playCushionBounce(impactSpeed: number, pan = 0): boolean {
+  return billiardAudio.playCushionBounce(impactSpeed, pan);
 }
 
-export function playPocketDrop(comboCount: number): boolean {
-  return billiardAudio.playPocketDrop(comboCount);
+export function playPocketDrop(comboCount: number, pan = 0): boolean {
+  return billiardAudio.playPocketDrop(comboCount, pan);
 }
 
 export function playRackClear(): boolean {
@@ -509,6 +530,6 @@ export function playTrickShotReward(kind: 'bank' | 'double' | 'combo' = 'bank'):
   return billiardAudio.playTrickShotReward(kind);
 }
 
-export function playMarbleRoll(intensity = 0.5): boolean {
-  return billiardAudio.playMarbleRoll(intensity);
+export function playMarbleRoll(intensity = 0.5, pan = 0.8): boolean {
+  return billiardAudio.playMarbleRoll(intensity, pan);
 }

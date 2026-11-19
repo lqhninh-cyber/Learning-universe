@@ -1,14 +1,37 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
-import { type MouseEvent } from 'react';
+import { lazy, Suspense, type MouseEvent } from 'react';
 import { Link } from 'react-router';
 import { HeritageExhibitionPavilion } from '@/components/home/HeritageExhibitionPavilion';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { ShorelineWaveBridge } from '@/components/home/HomeScrollTransitions';
-import { MineralBilliardsStage } from '@/components/home/MineralBilliardsStage';
 import { ROUTES } from '@/shared/config/routes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
+
+const MineralBilliardsStage = lazy(() =>
+  import('@/components/home/MineralBilliardsStage').then((mod) => ({
+    default: mod.MineralBilliardsStage,
+  })),
+);
+
+function BilliardsStageSkeleton() {
+  return (
+    <section
+      aria-label="Đang tải Sân khấu Bida 8 Ball Pool Khoáng Thạch"
+      data-testid="billiards-stage-skeleton"
+      className="relative scroll-mt-20 border-t border-[#D4DFDA] bg-[#F2F4F3] dark:border-[#1E3B2D] dark:bg-[#0E1A15]"
+    >
+      <div className="mx-auto w-full max-w-[1480px] px-4 pt-10 pb-14 md:px-6 lg:px-8">
+        <div className="flex min-h-[620px] items-center justify-center rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)] dark:border-[#243B32] dark:bg-[#12241C]">
+          <span className="font-mono text-xs tracking-wider text-[#4A5D58] uppercase dark:text-[#98ABA3]">
+            Đang chuẩn bị bàn Bida Khoáng Thạch 2.5D…
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /**
  * TRANG CHỦ: 3 MÀN HÌNH BẠCH NGỌC KHOÁNG THẠCH LIỀN MẠCH
@@ -127,9 +150,11 @@ export function HomePage() {
       <HeritageExhibitionPavilion />
 
       {/* =====================================================================
-        SCREEN 3: BIDA KHOÁNG THẠCH 6 BI 120FPS (#F2F4F3)
+        SCREEN 3: BIDA 8 BALL POOL KHOÁNG THẠCH STUDIO 2.5D (REACT.LAZY)
         ===================================================================== */}
-      <MineralBilliardsStage />
+      <Suspense fallback={<BilliardsStageSkeleton />}>
+        <MineralBilliardsStage />
+      </Suspense>
     </div>
   );
 }

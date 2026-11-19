@@ -17,21 +17,27 @@ import {
   buildOfficial15BallRack,
   clampValidCueBallPlacement,
   computeAiShotPlan,
+  computeStereoPan,
   computeTableMetrics,
   createBilliardsWorld,
+  FINE_AIM_STEP_RAD,
+  isCueBallPlacementValid,
   MAX_SHOT_SPEED_PX_PER_FRAME,
   normalizeAngleDiff,
   PRECISION_AIM_FACTOR,
   renderBilliardsStageFrame,
   SOLID_BALL_SPECS,
   spawnChalkDustBurst,
+  spawnChalkStreak,
   stepBilliardsPhysicsFrame,
   STRIPE_BALL_SPECS,
   STRIKE_ANIM_DURATION_SEC,
   TABLE_SHAKE_DURATION_SEC,
   type BallGroup,
+  type BilliardBall,
   type BilliardGameMode,
   type BilliardsWorld,
+  type ReturnRailBall,
   type StrikeAnimationState,
 } from '@/components/home/billiardsEngine';
 import { ROUTES } from '@/shared/config/routes';
@@ -172,6 +178,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [spin, setSpin] = useState<{ readonly x: number; readonly y: number }>({ x: 0, y: 0 });
   const [isSpinOpen, setIsSpinOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [activeToast, setActiveToast] = useState<{
+    readonly text: string;
+    readonly tone: 'info' | 'foul' | 'reward';
+  } | null>(null);
+  const [hasFreeRetry, setHasFreeRetry] = useState(false);
   const [tableDim, setTableDim] = useState<{ readonly w: number; readonly h: number }>({
     w: 1180,
     h: 615,
@@ -193,6 +204,18 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const sliderStartYRef = useRef(0);
   const isDraggingSpinRef = useRef(false);
   const spaceChargingRef = useRef(false);
+  const lastToastSeqRef = useRef(0);
+  const toastTimerRef = useRef<number | null>(null);
+
+  const lastFreeShotRef = useRef<{
+    readonly balls: BilliardBall[];
+    readonly returnRailQueue: ReturnRailBall[];
+    readonly combo: number;
+    readonly shots: number;
+    readonly aimAngle: number;
+    readonly ballInHand: boolean;
+    readonly rackCleared: boolean;
+  } | null>(null);
 
   const worldRef = useRef<BilliardsWorld | null>(null);
   const getWorld = useCallback((): BilliardsWorld => {
@@ -224,6 +247,20 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     );
     const pocketedIds = w.balls.filter((b) => b.id >= 1 && b.pocketed).map((b) => b.id);
     setPocketedBallIds(pocketedIds);
+
+    if (w.toastEvent.active && w.toastEvent.seq !== lastToastSeqRef.current) {
+      lastToastSeqRef.current = w.toastEvent.seq;
+      setActiveToast({ text: w.toastEvent.text, tone: w.toastEvent.tone });
+      if (toastTimerRef.current !== null && typeof window !== 'undefined') {
+        window.clearTimeout(toastTimerRef.current);
+      }
+      if (typeof window !== 'undefined') {
+        toastTimerRef.current = window.setTimeout(() => {
+          setActiveToast(null);
+          toastTimerRef.current = null;
+        }, 1600);
+      }
+    }
 
     if (w.rackCleared) {
       playRackClear();
@@ -264,7 +301,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       const tipContactX = cueBall.x - strike.dirX * w.metrics.ballRadius;
       const tipContactY = cueBall.y - strike.dirY * w.metrics.ballRadius;
       spawnChalkDustBurst(w, tipContactX, tipContactY, strike.dirX, strike.dirY);
-      playCueStrike(strike.power);
+      if (strike.power > 0.65 || Math.hypot(strike.spinX, strike.spinY) > 0.35) {
+        spawnChalkStreak(w, cueBall.x, cueBall.y, strike.dirX, strike.dirY, 34);
+      }
+      playCueStrike(strike.power, computeStereoPan(cueBall.x, w.metrics));
 
       if (strike.power > 0.8) {
         w.shakeRemainingSec = TABLE_SHAKE_DURATION_SEC;
@@ -289,6 +329,21 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
       const clampedPower = Math.max(0.08, Math.min(1, powerNorm));
       const shotAngle = angleRad ?? w.aimAngle;
+
+      // Lưu snapshot trước cú đánh gần nhất khi ở chế độ Tập tự do để cho phép Thử lại cú vừa rồi
+      if (w.gameMode === 'free') {
+        lastFreeShotRef.current = {
+          balls: w.balls.map((b) => ({ ...b })),
+          returnRailQueue: w.returnRailQueue.map((rb) => ({ ...rb })),
+          combo: w.combo,
+          shots: w.shots,
+          aimAngle: shotAngle,
+          ballInHand: w.ballInHand,
+          rackCleared: w.rackCleared,
+        };
+        setHasFreeRetry(true);
+      }
+
       const dirX = Math.cos(shotAngle);
       const dirY = Math.sin(shotAngle);
       const launchSpeed = (0.16 + clampedPower * 0.84) * MAX_SHOT_SPEED_PX_PER_FRAME;
@@ -349,10 +404,45 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       w.combo = 0;
       w.currentPlayer = 1;
       w.rackCleared = false;
+      w.hoverPlaceValid = true;
+      lastFreeShotRef.current = null;
+      setHasFreeRetry(false);
+      setActiveToast(null);
       setSliderPower(0);
       syncReactHudFromWorld();
     },
     [getWorld, syncReactHudFromWorld],
+  );
+
+  const handleRetryLastShot = useCallback(() => {
+    const snap = lastFreeShotRef.current;
+    const w = getWorld();
+    if (!snap || w.gameMode !== 'free') return;
+
+    w.balls = snap.balls.map((b) => ({ ...b }));
+    w.returnRailQueue = snap.returnRailQueue.map((rb) => ({ ...rb }));
+    w.combo = snap.combo;
+    w.shots = snap.shots;
+    w.aimAngle = snap.aimAngle;
+    w.ballInHand = snap.ballInHand;
+    w.rackCleared = snap.rackCleared;
+    w.shotInProgress = false;
+    w.strikeAnim.active = false;
+    w.dragPullPower = 0;
+    w.foulMessage = null;
+    setSliderPower(0);
+    setActiveToast(null);
+    syncReactHudFromWorld();
+  }, [getWorld, syncReactHudFromWorld]);
+
+  const nudgeAimAngle = useCallback(
+    (deltaRad: number) => {
+      const w = getWorld();
+      if (w.shotInProgress || w.rackCleared || w.ballInHand || w.strikeAnim.active) return;
+      if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
+      w.aimAngle += deltaRad;
+    },
+    [getWorld],
   );
 
   const handleNewRack = useCallback(() => {
@@ -661,6 +751,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       stopLoop();
       observer?.disconnect();
       resizeObserver?.disconnect();
+      if (toastTimerRef.current !== null) {
+        window.clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = null;
+      }
       window.removeEventListener('resize', updateSize);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
@@ -712,6 +806,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       cueBall.pocketed = false;
       cueBall.sinking = false;
       w.ballInHand = false;
+      w.hoverPlaceValid = true;
       w.foulMessage = null;
       syncReactHudFromWorld();
       return;
@@ -740,6 +835,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     const pt = getCanvasPoint(event);
 
     if (w.ballInHand && !(w.gameMode === 'vs-ai' && w.currentPlayer === 2)) {
+      w.hoverPlaceValid = isCueBallPlacementValid(w, pt.x, pt.y);
       const placed = clampValidCueBallPlacement(w, pt.x, pt.y);
       w.hoverPlaceX = placed.x;
       w.hoverPlaceY = placed.y;
@@ -1361,13 +1457,35 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 </div>
               </div>
 
-              {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh */}
+              {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh + nút vi chỉnh góc ngắm (- / +) ±0.15° */}
               <span
                 data-testid="billiards-power-readout"
                 className="font-mono text-[11px] font-semibold text-[#1E332E] tabular-nums dark:text-[#C9D6D0]"
               >
                 {powerReadoutText}
               </span>
+              <div className="inline-flex items-center gap-1" aria-label="Vi chỉnh góc ngắm">
+                <button
+                  type="button"
+                  data-testid="billiards-fine-aim-minus"
+                  aria-label="Vi chỉnh góc ngắm -0.15 độ"
+                  title="Vi chỉnh góc ngắm -0.15° (hoặc giữ Shift + lăn chuột)"
+                  onClick={() => nudgeAimAngle(-FINE_AIM_STEP_RAD)}
+                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFD9D5] bg-[#FAFBF9] font-mono text-[11px] font-bold text-[#2D423D] transition-colors hover:border-[#9C7A4C] active:scale-95 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  data-testid="billiards-fine-aim-plus"
+                  aria-label="Vi chỉnh góc ngắm +0.15 độ"
+                  title="Vi chỉnh góc ngắm +0.15° (hoặc giữ Shift + lăn chuột)"
+                  onClick={() => nudgeAimAngle(FINE_AIM_STEP_RAD)}
+                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded border border-[#CFD9D5] bg-[#FAFBF9] font-mono text-[11px] font-bold text-[#2D423D] transition-colors hover:border-[#9C7A4C] active:scale-95 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
+                >
+                  +
+                </button>
+              </div>
             </div>
 
             {/* BÀN BIDA 3D & MÁNG HỒI BI HAI RAY TRONG SUỐT NỔI KHỐI */}
@@ -1397,20 +1515,43 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                   const w = getWorld();
                   if (w.shotInProgress || w.rackCleared || w.ballInHand) return;
                   if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
-                  w.aimAngle += (e.deltaY > 0 ? 1 : -1) * 0.015;
+                  const step = e.shiftKey ? FINE_AIM_STEP_RAD : 0.015;
+                  w.isPrecisionAim = Boolean(e.shiftKey);
+                  w.aimAngle += (e.deltaY > 0 ? 1 : -1) * step;
                 }}
                 className="block h-full w-full cursor-crosshair touch-none bg-transparent select-none"
               />
 
-              {/* Thông báo Đặt bi tự do (Ball-in-Hand) */}
-              {ballInHand && !rackCleared && !(gameMode === 'vs-ai' && currentPlayer === 2) && (
+              {/* Toast thông báo nổi 1.6s trên mép trên giữa mặt nỉ */}
+              {activeToast && (
                 <div
-                  data-testid="billiards-ball-in-hand-banner"
-                  className="pointer-events-none absolute top-3 left-1/2 z-20 -translate-x-1/2 rounded-full border border-[#D5B47A]/80 bg-[#142622]/90 px-4 py-1.5 font-mono text-xs font-semibold text-[#FAFBF9] shadow-lg backdrop-blur-xs"
+                  data-testid="billiards-felt-toast"
+                  data-tone={activeToast.tone}
+                  className={cn(
+                    'pointer-events-none absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-full border px-4 py-1.5 font-mono text-[11px] font-bold tracking-wider whitespace-nowrap shadow-lg backdrop-blur-xs',
+                    activeToast.tone === 'foul'
+                      ? 'border-[#E08A7B]/80 bg-[#5C1E1A]/92 text-[#FFF3F1]'
+                      : activeToast.tone === 'reward'
+                        ? 'border-[#D5B47A] bg-[#1E332E]/94 text-[#F3D27A]'
+                        : 'border-[#CFD9D5]/70 bg-[#142622]/90 text-[#FAFBF9]',
+                  )}
                 >
-                  {foulBanner ?? 'Đặt bi tự do — Bấm chọn vị trí trên bàn'}
+                  {activeToast.text}
                 </div>
               )}
+
+              {/* Thông báo Đặt bi tự do (Ball-in-Hand) */}
+              {!activeToast &&
+                ballInHand &&
+                !rackCleared &&
+                !(gameMode === 'vs-ai' && currentPlayer === 2) && (
+                  <div
+                    data-testid="billiards-ball-in-hand-banner"
+                    className="pointer-events-none absolute top-3 left-1/2 z-20 -translate-x-1/2 rounded-full border border-[#D5B47A]/80 bg-[#142622]/90 px-4 py-1.5 font-mono text-xs font-semibold text-[#FAFBF9] shadow-lg backdrop-blur-xs"
+                  >
+                    {foulBanner ?? 'Đặt bi tự do — Bấm chọn vị trí trên bàn'}
+                  </div>
+                )}
 
               {/* Thông báo kết thúc ván */}
               {rackCleared && (
@@ -1467,6 +1608,18 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 />
                 <span>Ván mới</span>
               </button>
+
+              {gameMode === 'free' && (
+                <button
+                  type="button"
+                  data-testid="billiards-retry-shot-btn"
+                  disabled={!hasFreeRetry}
+                  onClick={handleRetryLastShot}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-3.5 py-1.5 font-mono text-xs font-semibold text-[#182624] shadow-2xs transition-all hover:border-[#3B7A65] hover:bg-[#EDF2F0] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#6EB59B]"
+                >
+                  <span>Thử lại cú vừa rồi</span>
+                </button>
+              )}
 
               <button
                 type="button"
