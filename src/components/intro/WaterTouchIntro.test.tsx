@@ -57,7 +57,7 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
     expect(screen.getByRole('dialog', { name: /Thiên Cầu Khuê Văn Các/i })).toBeInTheDocument();
   });
 
-  it('nhấn chuột bất kỳ đâu lập tức lưu cờ sessionStorage, đặt pointer-events-none và unmount sau 0.45s', () => {
+  it('nhấn chuột bất kỳ đâu lập tức lưu cờ sessionStorage, đặt pointer-events-none và unmount sau 0.5s (fade-out 500ms)', () => {
     vi.useFakeTimers();
     const onFinish = vi.fn();
     render(<WaterTouchIntro onFinish={onFinish} />);
@@ -66,11 +66,11 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
     fireEvent.click(dialog);
 
     expect(sessionStorage.getItem('lu_intro_seen')).toBe('true');
-    expect(dialog).toHaveClass('pointer-events-none');
+    expect(dialog).toHaveClass('pointer-events-none', 'opacity-0', 'duration-500', 'ease-out');
     expect(onFinish).not.toHaveBeenCalled();
 
     act(() => {
-      vi.advanceTimersByTime(450);
+      vi.advanceTimersByTime(500);
     });
 
     expect(onFinish).toHaveBeenCalledTimes(1);
@@ -89,7 +89,7 @@ describe('WaterTouchIntro Component (Thiên Cầu Khuê Văn Các)', () => {
     expect(sessionStorage.getItem('lu_intro_seen')).toBe('true');
 
     act(() => {
-      vi.advanceTimersByTime(450);
+      vi.advanceTimersByTime(500);
     });
 
     expect(
@@ -352,7 +352,7 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     expect(shadowBlurs).toHaveLength(0);
     expect(
       (mockCtx.drawImage as ReturnType<typeof vi.fn>).mock.calls.length > 0 ||
-        fillStyles.includes('rgba(200, 62, 55, 0.25)'),
+        fillStyles.includes('rgba(156, 122, 76, 0.25)'),
     ).toBe(true);
     expect(fillRectMock.mock.calls.length).toBeGreaterThanOrEqual(3);
 
@@ -361,10 +361,10 @@ describe('KhueVanCanvas Math & Portal Choreography', () => {
     expect(lineWidths).toContain(0.85);
     expect(strokeStyles.some((s) => s.includes('0.850'))).toBe(true);
 
-    // 16 sợi Dòng chảy tơ sơn mài & tô lấp mờ Đĩa Poincaré
-    expect(fillStyles).toContain('rgba(200, 62, 55, 0.04)');
-    expect(fillStyles).toContain('rgba(197, 162, 98, 0.28)');
-    expect(fillStyles).toContain('rgba(200, 62, 55, 0.18)');
+    // 16 sợi Dòng chảy tơ khoáng thạch & tô lấp mờ Đĩa Poincaré (hệ màu Bạch Ngọc Khoáng Thạch)
+    expect(fillStyles).toContain('rgba(30, 51, 46, 0.04)');
+    expect(fillStyles).toContain('rgba(156, 122, 76, 0.24)');
+    expect(fillStyles).toContain('rgba(30, 51, 46, 0.14)');
 
     // Kiểm tra dịch chuyển Parallax 3 lớp: (-4, 2), (10, -5), và tâm (cx+18, cy-9) = (978, 531)
     expect(translations).toContainEqual([-4, 2]);

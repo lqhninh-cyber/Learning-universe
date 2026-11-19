@@ -185,14 +185,14 @@ export function HeroSonHaDiorama({ className }: HeroSonHaDioramaProps = {}) {
         </svg>
       </div>
 
-      {/* Dải sương sáng mặt hồ ở 14% cuối màn hình (#DDE7E4 -> #EDF2F0) */}
+      {/* Dải sương mờ 12% cuối Hero tan êm từ #B8CBC5 -> #EEF2F0 -> #F2F4F3 nối liền vào Bảo tàng 32 Di sản */}
       <div
         data-testid="hero-bottom-mist-transition"
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[14%]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[12%]"
         style={{
           background:
-            'linear-gradient(180deg, rgba(221, 231, 228, 0) 0%, rgba(221, 231, 228, 0.72) 56%, #EDF2F0 100%)',
+            'linear-gradient(180deg, rgba(184, 203, 197, 0) 0%, rgba(184, 203, 197, 0.36) 36%, rgba(238, 242, 240, 0.86) 74%, #EEF2F0 100%)',
         }}
       />
 

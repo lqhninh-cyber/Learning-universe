@@ -24,7 +24,7 @@ describe('App routing smoke test', () => {
     useLearningStore.getState().resetLearningStore();
   });
 
-  it('hiển thị trang chủ 3 màn hình thuần khiết (Phong cảnh -> Bảo tàng Di sản -> Hồ Sen) tại /', async () => {
+  it('hiển thị trang chủ 3 màn hình Bạch Ngọc Khoáng Thạch liền mạch (Hero -> Bảo tàng Di sản -> Tuyên ngôn Chladni) tại /', async () => {
     renderWithProviders('/');
 
     expect(
@@ -70,12 +70,26 @@ describe('App routing smoke test', () => {
       '#khong-gian-di-san',
     );
 
-    // 2. Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng (#khong-gian-di-san) tách riêng khỏi Screen 1
-    expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
+    // 2. Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng Thạch Cao Sáng (#khong-gian-di-san)
+    const heritageShowcase = screen.getByTestId('heritage-art-showcase');
+    expect(heritageShowcase).toBeInTheDocument();
+    expect(heritageShowcase.className).toContain('bg-[#EEF2F0]');
+    expect(heritageShowcase.className).toContain('pt-28');
+    expect(heritageShowcase.className).toContain('scroll-mt-24');
     expect(
       screen.getByRole('heading', { name: /Di sản Học thuật & Nghệ thuật/i }),
     ).toBeInTheDocument();
     expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
+
+    // 3. Screen 3 — Tuyên ngôn Học thuật × Đài cộng hưởng sóng đứng Chladni 120fps (thay thế hoàn toàn Hồ Sen)
+    expect(screen.getByTestId('chladni-manifesto-section')).toBeInTheDocument();
+    expect(screen.getByTestId('chladni-resonance-canvas')).toBeInTheDocument();
+    expect(screen.getByTestId('chladni-footer-seam')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Khi trực giác hình học gặp gỡ chiều sâu tiên đề\./i }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
 
     // Không gian Học phần & Quỹ đạo cá nhân đã được tách hoàn toàn sang /learning-space
     expect(screen.queryByRole('heading', { name: /Không gian Học phần/i })).not.toBeInTheDocument();

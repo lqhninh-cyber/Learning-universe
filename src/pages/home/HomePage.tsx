@@ -1,60 +1,20 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { ChladniManifestoSection } from '@/components/home/ChladniManifestoSection';
 import { HeritageExhibitionPavilion } from '@/components/home/HeritageExhibitionPavilion';
 import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
 import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
-import {
-  LakeshoreLotusTransition,
-  ShorelineWaveBridge,
-} from '@/components/home/HomeScrollTransitions';
+import { ShorelineWaveBridge } from '@/components/home/HomeScrollTransitions';
 import { ROUTES } from '@/shared/config/routes';
-import { GrandLotusLake } from './GrandLotusLake';
 import { RotatingScholarlyQuote } from './RotatingScholarlyQuote';
 
 /**
- * TRANG CHỦ: 3 MÀN HÌNH CHUYÊN BIỆT KHÔNG CHE KHUẤT
- * - Screen 1: Khởi Đầu Bình Minh Bạch Ngọc & Sơn Thủy Sương Lam 120fps (Luminous Mineral Panorama)
- * - Screen 2: Phòng Trưng Bày Di Sản Bảo Tàng (#khong-gian-di-san)
- * - Screen 3: Đại Cảnh Hồ Sen Tri Thức (#khong-gian-ho-sen)
+ * TRANG CHỦ: 3 MÀN HÌNH BẠCH NGỌC KHOÁNG THẠCH LIỀN MẠCH
+ * - Screen 1: Khởi Đầu Bình Minh Bạch Ngọc & Sơn Thủy Sương Lam 120fps (#EDF3F1)
+ * - Screen 2: Phòng Trưng Bày Di Sản Bảo Tàng Thạch Cao Sáng (#EEF2F0 · #khong-gian-di-san)
+ * - Screen 3: Tuyên Ngôn Học Thuật × Đài Cộng Hưởng Sóng Đứng Chladni 120fps (#F2F4F3)
  */
 export function HomePage() {
-  const [pageScrollProgress, setPageScrollProgress] = useState(0);
-
-  // Theo dõi tiến trình cuộn trang cho Đại cảnh Hồ Sen Tri Thức ở Screen 3
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    let rafId = 0;
-    const updateScroll = () => {
-      rafId = 0;
-      const docHeight = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        window.innerHeight,
-        1,
-      );
-      const ratio = Math.min(1, Math.max(0, window.scrollY / docHeight));
-      setPageScrollProgress(ratio);
-    };
-
-    const onScroll = () => {
-      if (rafId === 0) {
-        rafId = window.requestAnimationFrame(updateScroll);
-      }
-    };
-
-    updateScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      if (rafId !== 0) {
-        window.cancelAnimationFrame(rafId);
-      }
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, []);
-
   return (
     <div className="relative overflow-x-clip bg-[#EDF3F1] text-[#142622]">
       {/* =====================================================================
@@ -143,21 +103,18 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* CẦU NỐI 1: Dải sương mặt hồ Bình Minh Bạch Ngọc (#EDF2F0) hòa tan êm ái vào Phòng Trưng Bày Di Sản (#121B28) */}
-      <ShorelineWaveBridge variant="pavilion" bottomColor="#121B28" />
+      {/* CẦU NỐI 1: Dải sương mặt hồ Bình Minh Bạch Ngọc (#B8CBC5 -> #EEF2F0) hòa tan êm ái vào Phòng Trưng Bày Di Sản (#EEF2F0) */}
+      <ShorelineWaveBridge variant="pavilion" bottomColor="#EEF2F0" />
 
       {/* =====================================================================
-        SCREEN 2: PHÒNG TRƯNG BÀY DI SẢN BẢO TÀNG (#khong-gian-di-san)
+        SCREEN 2: PHÒNG TRƯNG BÀY DI SẢN BẢO TÀNG THẠCH CAO SÁNG (#EEF2F0 · #khong-gian-di-san)
         ===================================================================== */}
       <HeritageExhibitionPavilion />
 
-      {/* CẦU NỐI 2: Dải chạng vạng bờ hồ & ánh vàng phản chiếu nối Screen 2 (#081A15) -> Hồ Sen (#061510) */}
-      <LakeshoreLotusTransition />
-
       {/* =====================================================================
-        SCREEN 3: ĐẠI CẢNH HỒ SEN TRI THỨC (#061510 -> #040E0B)
+        SCREEN 3: TUYÊN NGÔN HỌC THUẬT × ĐÀI CỘNG HƯỞNG SÓNG ĐỨNG CHLADNI 120FPS (#F2F4F3)
         ===================================================================== */}
-      <GrandLotusLake pageScrollProgress={pageScrollProgress} />
+      <ChladniManifestoSection />
     </div>
   );
 }

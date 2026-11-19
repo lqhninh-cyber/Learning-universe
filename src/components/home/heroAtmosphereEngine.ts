@@ -700,11 +700,11 @@ function drawDongSonAstrolabe(
     ctx.rotate(arc.rotationRad);
     ctx.beginPath();
     ctx.ellipse(0, 0, arc.rx, arc.ry, 0, 0, Math.PI * 2);
-    ctx.lineWidth = 0.75 + hoverBoost * 0.3;
+    ctx.lineWidth = 0.8 + hoverBoost * 0.3;
     ctx.strokeStyle =
       aIdx === 0
-        ? `rgba(148, 107, 48, ${Math.min(0.55, 0.24 * ringBrightness).toFixed(3)})`
-        : `rgba(45, 82, 102, ${Math.min(0.45, 0.2 * ringBrightness).toFixed(3)})`;
+        ? `rgba(148, 107, 48, ${Math.min(0.62, 0.32 * ringBrightness).toFixed(3)})`
+        : `rgba(45, 82, 102, ${Math.min(0.5, 0.24 * ringBrightness).toFixed(3)})`;
     ctx.stroke();
     ctx.restore();
 
@@ -712,8 +712,8 @@ function drawDongSonAstrolabe(
       const nx = node.x + parallaxX;
       const ny = node.y + parallaxY;
       ctx.beginPath();
-      ctx.arc(nx, ny, 2.1, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(148, 107, 48, ${Math.min(0.68, 0.42 * ringBrightness).toFixed(3)})`;
+      ctx.arc(nx, ny, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(148, 107, 48, ${Math.min(0.74, 0.52 * ringBrightness).toFixed(3)})`;
       ctx.fill();
       ctx.beginPath();
       ctx.arc(nx, ny, 4.8, 0, Math.PI * 2);
@@ -750,10 +750,10 @@ function drawDongSonAstrolabe(
       else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
     }
     ctx.closePath();
-    ctx.fillStyle = 'rgba(218, 182, 118, 0.14)';
+    ctx.fillStyle = 'rgba(218, 182, 118, 0.17)';
     ctx.fill();
-    ctx.lineWidth = 0.95;
-    ctx.strokeStyle = 'rgba(148, 107, 48, 0.42)';
+    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = 'rgba(148, 107, 48, 0.52)';
     ctx.stroke();
     ctx.restore();
   }
@@ -826,8 +826,8 @@ function drawDongSonAstrolabe(
       ctx.lineWidth = ring.lineWidth + 0.1;
       ctx.strokeStyle =
         idx % 2 === 0
-          ? `rgba(148, 107, 48, ${Math.min(0.65, 0.42 * ringBrightness).toFixed(3)})`
-          : `rgba(45, 82, 102, ${Math.min(0.55, 0.28 * ringBrightness).toFixed(3)})`;
+          ? `rgba(148, 107, 48, ${Math.min(0.72, 0.52 * ringBrightness).toFixed(3)})`
+          : `rgba(45, 82, 102, ${Math.min(0.6, 0.34 * ringBrightness).toFixed(3)})`;
       ctx.stroke();
       ctx.restore();
     }
@@ -1099,21 +1099,21 @@ function drawMistMirrorLakeAndStarlight(
   const mistTop = height * 0.78;
   const mistH = height - mistTop;
 
-  // Dải sương sáng mặt hồ ở 14-22% cuối màn hình (#DDE7E4 -> #EDF2F0)
+  // Dải sương sáng mặt hồ tan êm không vết cắt ở đáy Hero (#B8CBC5 -> #EEF2F0 -> #F2F4F3)
   const baseGrad = ctx.createLinearGradient(0, mistTop, 0, height);
-  baseGrad.addColorStop(0, 'rgba(221, 231, 228, 0)');
-  baseGrad.addColorStop(0.42, 'rgba(221, 231, 228, 0.74)');
-  baseGrad.addColorStop(0.84, 'rgba(237, 242, 240, 0.92)');
-  baseGrad.addColorStop(1, '#EDF2F0');
+  baseGrad.addColorStop(0, 'rgba(184, 203, 197, 0)');
+  baseGrad.addColorStop(0.42, 'rgba(184, 203, 197, 0.62)');
+  baseGrad.addColorStop(0.76, 'rgba(238, 242, 240, 0.92)');
+  baseGrad.addColorStop(1, '#EEF2F0');
   ctx.fillStyle = baseGrad;
   ctx.fillRect(0, mistTop, width, mistH);
 
   // 3 lớp Biển Sương Ban Mai OffscreenCanvas trôi ngang êm ái
   drawVolumetricValleyMist(ctx, terrainLayers, width, height, tSec);
 
-  // Hiệu ứng khúc xạ ánh sáng mặt nước caustics màu vàng kem mảnh (14% đáy Hero)
-  const causticTop = height * 0.855;
-  const causticH = height - causticTop;
+  // Hiệu ứng khúc xạ ánh sáng mặt nước caustics màu vàng kem mảnh (trên dải sương sáng)
+  const causticTop = height * 0.84;
+  const causticH = height * 0.1;
   ctx.save();
   for (let row = 0; row < 5; row += 1) {
     const rowY = causticTop + ((row + 0.5) / 5) * causticH;
@@ -1132,11 +1132,11 @@ function drawMistMirrorLakeAndStarlight(
     }
     const causticGrad = ctx.createLinearGradient(0, rowY, width, rowY);
     causticGrad.addColorStop(0, 'rgba(255, 248, 224, 0)');
-    causticGrad.addColorStop(0.28, 'rgba(255, 250, 232, 0.52)');
-    causticGrad.addColorStop(0.66, 'rgba(234, 206, 148, 0.44)');
+    causticGrad.addColorStop(0.28, 'rgba(255, 250, 232, 0.48)');
+    causticGrad.addColorStop(0.66, 'rgba(234, 206, 148, 0.4)');
     causticGrad.addColorStop(1, 'rgba(255, 248, 224, 0)');
     ctx.strokeStyle = causticGrad;
-    ctx.lineWidth = row % 2 === 0 ? 1.15 : 0.75;
+    ctx.lineWidth = row % 2 === 0 ? 1.1 : 0.75;
     ctx.stroke();
   }
 
@@ -1145,15 +1145,15 @@ function drawMistMirrorLakeAndStarlight(
   for (let i = 0; i < world.mistRipples.length; i += 1) {
     const r = world.mistRipples[i]!;
     const cx = r.nx * width + Math.sin(tSec * r.speed + r.phase) * 18;
-    const cy = height * 0.86 + (r.ny - 0.76) * (height * 0.55);
-    if (cy > height - 3) continue;
+    const cy = height * 0.85 + (r.ny - 0.76) * (height * 0.42);
+    if (cy > height * 0.96) continue;
     const w = r.halfWidth * 1.15;
     const shimmer = 0.5 + 0.5 * Math.sin(tSec * (r.speed * 1.4) + r.phase);
     const isCream = i % 2 === 0;
     const rgb = isCream ? '255, 250, 232' : '214, 180, 118';
     const grad = ctx.createLinearGradient(cx - w, cy, cx + w, cy);
     grad.addColorStop(0, `rgba(${rgb}, 0)`);
-    grad.addColorStop(0.5, `rgba(${rgb}, ${Math.min(0.65, r.alpha * shimmer * 1.65).toFixed(3)})`);
+    grad.addColorStop(0.5, `rgba(${rgb}, ${Math.min(0.62, r.alpha * shimmer * 1.55).toFixed(3)})`);
     grad.addColorStop(1, `rgba(${rgb}, 0)`);
     ctx.strokeStyle = grad;
     ctx.beginPath();
@@ -1162,6 +1162,15 @@ function drawMistMirrorLakeAndStarlight(
     ctx.stroke();
   }
   ctx.restore();
+
+  // Lớp sương khóa 12% cuối cùng của Canvas tan êm từ #B8CBC5 -> #EEF2F0 -> #F2F4F3 nối liền không vết cắt
+  const bottomSealTop = height * 0.88;
+  const bottomSealGrad = ctx.createLinearGradient(0, bottomSealTop, 0, height);
+  bottomSealGrad.addColorStop(0, 'rgba(184, 203, 197, 0)');
+  bottomSealGrad.addColorStop(0.45, 'rgba(238, 242, 240, 0.84)');
+  bottomSealGrad.addColorStop(1, '#EEF2F0');
+  ctx.fillStyle = bottomSealGrad;
+  ctx.fillRect(0, bottomSealTop, width, height - bottomSealTop);
 
   // Hạt bụi nắng mai nhẹ bay lên trong không khí sáng trong
   for (const mote of world.ascendingStarlights) {

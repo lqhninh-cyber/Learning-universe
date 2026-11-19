@@ -23,7 +23,7 @@ import {
 
 export const INTRO_TOTAL_DURATION_S = 7.5;
 export const INTRO_REDUCED_DURATION_S = 1.5;
-export const PORTAL_DISMISS_DURATION_S = 0.45;
+export const PORTAL_DISMISS_DURATION_S = 0.5;
 export const POINCARE_BOUNDARY_COUNT = 16;
 
 interface KhueGradientCache {
@@ -64,17 +64,17 @@ export interface ComputedPortalTransform {
 }
 
 const COLORS = {
-  paperCenter: '#FFFDF9',
-  paperMid: '#F7F4EB',
-  paperEdge: '#EDE8D8',
-  paperCornerDeep: '#E5DEC9',
-  warmCenterGlow: 'rgba(229, 195, 120, 0.22)',
-  cinnabar: '#C83E37',
-  cinnabarGlow: 'rgba(200, 62, 55, 0.12)',
-  cinnabarNanFill: 'rgba(200, 62, 55, 0.05)',
-  goldBright: '#C5A262',
-  goldDark: '#8A6A2F',
-  jadeLight: '#4E9B58',
+  paperCenter: '#FAFBF9',
+  paperMid: '#F5F7F6',
+  paperEdge: '#F2F4F3',
+  paperCornerDeep: '#E8EEEC',
+  warmCenterGlow: 'rgba(250, 251, 249, 0.85)',
+  slateDeep: '#1E332E',
+  slateGlow: 'rgba(30, 51, 46, 0.12)',
+  slateNanFill: 'rgba(30, 51, 46, 0.045)',
+  bronze: '#9C7A4C',
+  bronzeDeep: '#7A623C',
+  slateBlue: '#2D5266',
 } as const;
 
 interface KhueStar {
@@ -491,27 +491,27 @@ function drawDoubleOctagramFrame(
 ): void {
   // Hình vuông 1 (0°)
   if (sq1Progress > 0) {
-    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.strokeStyle = COLORS.slateDeep;
     ctx.lineWidth = 1.5;
     strokeProgressiveSquarePath(ctx, squareHalf, 0, sq1Progress);
 
-    ctx.strokeStyle = COLORS.goldBright;
+    ctx.strokeStyle = COLORS.bronze;
     ctx.lineWidth = 0.8;
     strokeProgressiveSquarePath(ctx, squareHalf - 4, 0, sq1Progress);
   }
 
   // Hình vuông 2 (xoay 45°)
   if (sq2Progress > 0) {
-    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.strokeStyle = COLORS.slateDeep;
     ctx.lineWidth = 1.5;
     strokeProgressiveSquarePath(ctx, squareHalf, Math.PI / 4, sq2Progress);
 
-    ctx.strokeStyle = COLORS.goldBright;
+    ctx.strokeStyle = COLORS.bronze;
     ctx.lineWidth = 0.8;
     strokeProgressiveSquarePath(ctx, squareHalf - 4, Math.PI / 4, sq2Progress);
   }
 
-  // Họa tiết 8 đỉnh góc nhọn Octagram: phân giác ngắn + chấm tròn vàng đính ở đỉnh góc
+  // Họa tiết 8 đỉnh góc nhọn Octagram: phân giác ngắn + chấm tròn đồng cổ đính ở đỉnh góc
   const tipProgress = clamp01((sq2Progress - 0.35) / 0.65);
   if (tipProgress > 0) {
     const outerCornerR = squareHalf * Math.SQRT2;
@@ -530,20 +530,20 @@ function drawDoubleOctagramFrame(
       ctx.globalAlpha *= localP;
 
       // Đường phân giác ngắn hướng vào đỉnh tam giác góc
-      ctx.strokeStyle = COLORS.goldDark;
+      ctx.strokeStyle = COLORS.slateBlue;
       ctx.lineWidth = 0.9;
       ctx.beginPath();
       ctx.moveTo(bisectorStartR, 0);
       ctx.lineTo(bisectorStartR + (bisectorEndR - bisectorStartR) * localP, 0);
       ctx.stroke();
 
-      // Chấm tròn vàng đính ở đỉnh góc
-      ctx.fillStyle = COLORS.goldBright;
+      // Chấm tròn đồng cổ đính ở đỉnh góc
+      ctx.fillStyle = COLORS.bronze;
       ctx.beginPath();
       ctx.arc(outerCornerR - 5.5, 0, 2.3 * localP, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.strokeStyle = COLORS.cinnabar;
+      ctx.strokeStyle = COLORS.slateDeep;
       ctx.lineWidth = 0.75;
       ctx.beginPath();
       ctx.arc(outerCornerR - 5.5, 0, 3.6 * localP, 0, Math.PI * 2);
@@ -554,7 +554,7 @@ function drawDoubleOctagramFrame(
   }
 }
 
-/** A. Vẽ Khung Viền Sắc Phong, Triện Góc Hồi Văn & Thước Tọa Độ mỗi 40px */
+/** A. Vẽ Khung Bản Vẽ Bạch Ngọc, 4 Thước Ngắm Chữ L + Chữ Thập Mảnh 12x12px (#9C7A4C, 0.6) & Thước Tọa Độ */
 function drawImperialBorderAndFretwork(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -576,19 +576,19 @@ function drawImperialBorderAndFretwork(
   ctx.save();
   ctx.globalAlpha *= borderP;
 
-  ctx.strokeStyle = 'rgba(197, 162, 98, 0.6)';
+  ctx.strokeStyle = 'rgba(156, 122, 76, 0.34)';
   ctx.lineWidth = 1;
   ctx.strokeRect(inset, inset, outerW, outerH);
 
-  ctx.strokeStyle = 'rgba(200, 62, 55, 0.4)';
+  ctx.strokeStyle = 'rgba(30, 51, 46, 0.16)';
   ctx.lineWidth = 0.75;
   ctx.strokeRect(innerInset, innerInset, innerW, innerH);
   ctx.restore();
 
-  // 4 góc Triện Hồi Văn (~36x36px) tự phác nét
-  const fretP = easeInOutQuart(clamp01((artTime - 0.4) / 1.5));
-  const fretSize = width >= 768 ? 36 : 26;
-  if (fretP > 0) {
+  // 4 dấu thước ngắm trắc địa chữ L + dấu cộng mảnh 12x12px (#9C7A4C, opacity: 0.6)
+  const reticleP = easeInOutQuart(clamp01((artTime - 0.35) / 1.2));
+  const armLen = width >= 768 ? 16 : 12;
+  if (reticleP > 0) {
     const corners: readonly { x: number; y: number; sx: number; sy: number }[] = [
       { x: innerInset, y: innerInset, sx: 1, sy: 1 },
       { x: width - innerInset, y: innerInset, sx: -1, sy: 1 },
@@ -596,45 +596,35 @@ function drawImperialBorderAndFretwork(
       { x: innerInset, y: height - innerInset, sx: 1, sy: -1 },
     ];
 
-    const scaleRatio = fretSize / 36;
-    const totalFretDash = 220;
-
     for (const c of corners) {
       ctx.save();
       ctx.translate(c.x, c.y);
-      ctx.scale(c.sx * scaleRatio, c.sy * scaleRatio);
-      ctx.strokeStyle = COLORS.cinnabar;
-      ctx.lineWidth = 1.35 / scaleRatio;
-      ctx.setLineDash([totalFretDash * fretP, totalFretDash]);
+      ctx.globalAlpha *= 0.6 * reticleP;
+      ctx.strokeStyle = COLORS.bronze;
+      ctx.lineWidth = 1.25;
 
+      // Dấu thước ngắm chữ L mảnh ôm góc bản vẽ
+      const curArm = armLen * reticleP;
       ctx.beginPath();
-      ctx.moveTo(0, 36);
+      ctx.moveTo(0, c.sy * curArm);
       ctx.lineTo(0, 0);
-      ctx.lineTo(36, 0);
-
-      ctx.moveTo(8, 0);
-      ctx.lineTo(8, 16);
-      ctx.lineTo(28, 16);
-      ctx.lineTo(28, 7);
-      ctx.lineTo(15, 7);
-      ctx.lineTo(15, 11);
-
-      ctx.moveTo(0, 8);
-      ctx.lineTo(16, 8);
-      ctx.lineTo(16, 28);
-      ctx.lineTo(7, 28);
-      ctx.lineTo(7, 15);
-      ctx.lineTo(11, 15);
+      ctx.lineTo(c.sx * curArm, 0);
       ctx.stroke();
 
-      if (fretP > 0.7) {
-        ctx.setLineDash([]);
-        ctx.fillStyle = COLORS.goldBright;
-        ctx.globalAlpha *= clamp01((fretP - 0.7) / 0.3);
-        ctx.beginPath();
-        ctx.arc(21, 21, 1.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      // Dấu cộng chuẩn trực 12x12px (-6..+6)
+      const crossHalf = 6 * reticleP;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.moveTo(-crossHalf, 0);
+      ctx.lineTo(crossHalf, 0);
+      ctx.moveTo(0, -crossHalf);
+      ctx.lineTo(0, crossHalf);
+      ctx.stroke();
+
+      ctx.fillStyle = COLORS.bronze;
+      ctx.beginPath();
+      ctx.arc(0, 0, 1.15 * reticleP, 0, Math.PI * 2);
+      ctx.fill();
       ctx.restore();
     }
   }
@@ -644,13 +634,13 @@ function drawImperialBorderAndFretwork(
   if (tickP > 0) {
     ctx.save();
     ctx.globalAlpha *= tickP;
-    const marginGuard = fretSize + 10;
+    const marginGuard = armLen + 14;
 
     let idx = 0;
     for (let x = innerInset + marginGuard; x <= width - innerInset - marginGuard; x += 40) {
       const isMajor = idx % 4 === 0;
       const len = isMajor ? 7 : 4;
-      ctx.strokeStyle = isMajor ? COLORS.goldDark : 'rgba(197, 162, 98, 0.6)';
+      ctx.strokeStyle = isMajor ? 'rgba(45, 82, 102, 0.52)' : 'rgba(156, 122, 76, 0.42)';
       ctx.lineWidth = isMajor ? 1.0 : 0.75;
 
       ctx.beginPath();
@@ -666,7 +656,7 @@ function drawImperialBorderAndFretwork(
     for (let y = innerInset + marginGuard; y <= height - innerInset - marginGuard; y += 40) {
       const isMajor = idx % 4 === 0;
       const len = isMajor ? 7 : 4;
-      ctx.strokeStyle = isMajor ? COLORS.goldDark : 'rgba(197, 162, 98, 0.6)';
+      ctx.strokeStyle = isMajor ? 'rgba(45, 82, 102, 0.52)' : 'rgba(156, 122, 76, 0.42)';
       ctx.lineWidth = isMajor ? 1.0 : 0.75;
 
       ctx.beginPath();
@@ -707,22 +697,22 @@ function drawLateralAstrolabeArc(
   ctx.save();
   ctx.globalAlpha *= p;
 
-  // Dải nền vàng nhạt dày dặn giữa 2 cung thước đo
+  // Dải nền khoáng thạch dịu giữa 2 cung thước đo
   ctx.beginPath();
   ctx.arc(0, 0, radius + bandOffset, a0, a1);
   ctx.arc(0, 0, radius, a1, a0, true);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(197, 162, 98, 0.08)';
+  ctx.fillStyle = 'rgba(156, 122, 76, 0.08)';
   ctx.fill();
 
-  // Hai cung viền dày dặn (vàng thếp & đỏ chu sa)
-  ctx.strokeStyle = COLORS.goldBright;
+  // Hai cung viền (Đồng Cổ & Đá Phiến Trầm)
+  ctx.strokeStyle = COLORS.bronze;
   ctx.lineWidth = 1.4;
   ctx.beginPath();
   ctx.arc(0, 0, radius + bandOffset, a0, a1);
   ctx.stroke();
 
-  ctx.strokeStyle = 'rgba(200, 62, 55, 0.75)';
+  ctx.strokeStyle = 'rgba(30, 51, 46, 0.62)';
   ctx.lineWidth = 1.15;
   ctx.beginPath();
   ctx.arc(0, 0, radius, a0, a1);
@@ -730,7 +720,7 @@ function drawLateralAstrolabeArc(
 
   // Hai vạch chặn đầu cung (End brackets)
   for (const capAngle of [a0, a1]) {
-    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.strokeStyle = COLORS.slateDeep;
     ctx.lineWidth = 1.3;
     ctx.beginPath();
     ctx.moveTo(Math.cos(capAngle) * (radius - 3), Math.sin(capAngle) * (radius - 3));
@@ -753,7 +743,7 @@ function drawLateralAstrolabeArc(
     const innerTick = radius - (isMajor ? 4 : 0);
     const outerTick = radius + (isMajor ? bandOffset + 4 : bandOffset * 0.65);
 
-    ctx.strokeStyle = isMid ? COLORS.cinnabar : isMajor ? COLORS.goldDark : COLORS.goldBright;
+    ctx.strokeStyle = isMid ? COLORS.slateDeep : isMajor ? COLORS.slateBlue : COLORS.bronze;
     ctx.lineWidth = isMid ? 1.5 : isMajor ? 1.15 : 0.75;
     ctx.beginPath();
     ctx.moveTo(Math.cos(rad) * innerTick, Math.sin(rad) * innerTick);
@@ -761,7 +751,7 @@ function drawLateralAstrolabeArc(
     ctx.stroke();
 
     if (isMajor) {
-      ctx.fillStyle = isMid ? COLORS.cinnabar : COLORS.goldDark;
+      ctx.fillStyle = isMid ? COLORS.slateDeep : COLORS.bronze;
       ctx.beginPath();
       ctx.arc(
         Math.cos(rad) * (radius + bandOffset + 7),
@@ -808,7 +798,7 @@ function drawFullViewportCartographyGrid(
   const axisP = easeOutCubic(clamp01((artTime - 0.5) / 1.5));
   if (axisP > 0) {
     ctx.save();
-    ctx.strokeStyle = 'rgba(197, 162, 98, 0.35)';
+    ctx.strokeStyle = 'rgba(156, 122, 76, 0.3)';
     ctx.lineWidth = 0.85;
     ctx.setLineDash([4, 6]);
 
@@ -847,7 +837,7 @@ function drawFullViewportCartographyGrid(
     ctx.rotate(orbitTime * 0.025);
     ctx.globalAlpha *= outerRingP;
 
-    ctx.strokeStyle = 'rgba(197, 162, 98, 0.42)';
+    ctx.strokeStyle = 'rgba(156, 122, 76, 0.38)';
     ctx.lineWidth = 0.9;
     ctx.setLineDash([8, 6]);
     ctx.beginPath();
@@ -860,7 +850,7 @@ function drawFullViewportCartographyGrid(
     ctx.globalAlpha *= outerRingP;
     for (let k = 0; k < 2; k++) {
       const headTheta = orbitTime * 0.22 + k * Math.PI + Math.PI / 6;
-      const isCinnabar = k % 2 === 0;
+      const isSlate = k % 2 === 0;
       drawCometTrail(
         ctx,
         headTheta,
@@ -868,8 +858,8 @@ function drawFullViewportCartographyGrid(
         0.28,
         12,
         3.0,
-        isCinnabar ? COLORS.cinnabar : COLORS.goldBright,
-        isCinnabar ? '200, 62, 55' : '197, 162, 98',
+        isSlate ? COLORS.slateDeep : COLORS.bronze,
+        isSlate ? '30, 51, 46' : '156, 122, 76',
         (theta) => [Math.cos(theta) * rOuter1, Math.sin(theta) * rOuter1],
       );
     }
@@ -885,7 +875,7 @@ function drawFullViewportCartographyGrid(
     ctx.rotate(-orbitTime * 0.018);
     ctx.globalAlpha *= outerRingP;
 
-    ctx.strokeStyle = 'rgba(138, 106, 47, 0.34)';
+    ctx.strokeStyle = 'rgba(45, 82, 102, 0.32)';
     ctx.lineWidth = 0.8;
     ctx.setLineDash([2, 8]);
     ctx.beginPath();
@@ -898,7 +888,7 @@ function drawFullViewportCartographyGrid(
     ctx.globalAlpha *= outerRingP;
     for (let k = 0; k < 2; k++) {
       const headTheta = -orbitTime * 0.16 + k * Math.PI + Math.PI / 3;
-      const isJade = k % 2 === 0;
+      const isBlue = k % 2 === 0;
       drawCometTrail(
         ctx,
         headTheta,
@@ -906,8 +896,8 @@ function drawFullViewportCartographyGrid(
         0.24,
         12,
         2.8,
-        isJade ? COLORS.jadeLight : COLORS.goldDark,
-        isJade ? '78, 155, 88' : '138, 106, 47',
+        isBlue ? COLORS.slateBlue : COLORS.bronzeDeep,
+        isBlue ? '45, 82, 102' : '122, 98, 60',
         (theta) => [Math.cos(theta) * rOuter2, Math.sin(theta) * rOuter2],
       );
     }
@@ -1014,7 +1004,7 @@ function drawLacquerSilkFilaments(
     }
     ctx.closePath();
 
-    ctx.fillStyle = idx % 2 === 0 ? 'rgba(197, 162, 98, 0.28)' : 'rgba(200, 62, 55, 0.18)';
+    ctx.fillStyle = idx % 2 === 0 ? 'rgba(156, 122, 76, 0.24)' : 'rgba(30, 51, 46, 0.14)';
     ctx.fill();
   }
 
@@ -1074,8 +1064,8 @@ function drawAmbientStarfieldAndDust(
       ctx.save();
       ctx.globalAlpha *= wingP;
 
-      // Đường gấp khúc phân nhánh mở bằng nét vàng mảnh 0.75px
-      ctx.strokeStyle = 'rgba(197, 162, 98, 0.58)';
+      // Đường gấp khúc phân nhánh mở bằng nét đồng cổ mảnh 0.75px
+      ctx.strokeStyle = 'rgba(156, 122, 76, 0.48)';
       ctx.lineWidth = 0.75;
       for (let eIdx = 0; eIdx < cluster.edges.length; eIdx++) {
         const edge = cluster.edges[eIdx];
@@ -1105,19 +1095,19 @@ function drawAmbientStarfieldAndDust(
 
         if (pt.isPrimary) {
           // Vòng tròn nhỏ bao quanh sao chính
-          ctx.strokeStyle = 'rgba(197, 162, 98, 0.75)';
+          ctx.strokeStyle = 'rgba(156, 122, 76, 0.65)';
           ctx.lineWidth = 0.85;
           ctx.beginPath();
           ctx.arc(pt.x, pt.y, rad * 2.15, 0, Math.PI * 2);
           ctx.stroke();
 
-          ctx.fillStyle = COLORS.cinnabarGlow;
+          ctx.fillStyle = COLORS.slateGlow;
           ctx.beginPath();
           ctx.arc(pt.x, pt.y, rad * 2.8, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        ctx.fillStyle = pt.isJade ? COLORS.jadeLight : COLORS.cinnabar;
+        ctx.fillStyle = pt.isJade ? COLORS.slateBlue : COLORS.slateDeep;
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, rad, 0, Math.PI * 2);
         ctx.fill();
@@ -1134,18 +1124,18 @@ function drawAmbientStarfieldAndDust(
     }
   }
 
-  // 2. 40 hạt bụi vàng & chu sa lấp lánh trôi nổi
+  // 2. 40 hạt bụi khoáng thạch & đồng cổ trôi nổi
   const dustReveal = clamp01(artTime / 1.4);
   if (dustReveal > 0) {
     for (const mote of AMBIENT_DUST) {
       const px = mote.baseX * width + Math.sin(twinkleTime * 0.45 + mote.phase) * mote.driftX;
       const py = mote.baseY * height + Math.cos(twinkleTime * 0.38 + mote.phase) * mote.driftY;
       const twinkleAlpha =
-        0.2 + 0.55 * (0.5 + 0.5 * Math.sin(twinkleTime * mote.twinkleSpeed + mote.phase));
+        0.18 + 0.45 * (0.5 + 0.5 * Math.sin(twinkleTime * mote.twinkleSpeed + mote.phase));
 
       ctx.save();
       ctx.globalAlpha = dustReveal * twinkleAlpha;
-      ctx.fillStyle = mote.isCinnabar ? COLORS.cinnabar : COLORS.goldBright;
+      ctx.fillStyle = mote.isCinnabar ? COLORS.slateBlue : COLORS.bronze;
       ctx.beginPath();
       ctx.arc(px, py, mote.radius, 0, Math.PI * 2);
       ctx.fill();
@@ -1183,7 +1173,7 @@ function drawArmillaryCometRings(
     const cosA = Math.cos(ring.angle);
     const sinA = Math.sin(ring.angle);
 
-    ctx.strokeStyle = 'rgba(197, 162, 98, 0.75)';
+    ctx.strokeStyle = 'rgba(156, 122, 76, 0.65)';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
     ctx.ellipse(0, 0, majorR, minorR, ring.angle, 0, Math.PI * 2);
@@ -1199,8 +1189,8 @@ function drawArmillaryCometRings(
       0.72,
       12,
       2.7,
-      ring.isCinnabar ? COLORS.cinnabar : COLORS.goldBright,
-      ring.isCinnabar ? '200, 62, 55' : '197, 162, 98',
+      ring.isCinnabar ? COLORS.slateDeep : COLORS.bronze,
+      ring.isCinnabar ? '30, 51, 46' : '156, 122, 76',
       (theta) => {
         const lx = Math.cos(theta) * majorR;
         const ly = Math.sin(theta) * minorR;
@@ -1249,7 +1239,7 @@ function drawPoincareLayer(
         currIdx = nextIdx;
       }
       ctx.closePath();
-      ctx.fillStyle = 'rgba(200, 62, 55, 0.04)';
+      ctx.fillStyle = 'rgba(30, 51, 46, 0.04)';
       ctx.fill('evenodd');
     }
   }
@@ -1293,11 +1283,11 @@ function drawPoincareLattice(
   ctx.save();
   ctx.globalAlpha *= coreFade * latticeP;
 
-  // Tầng chính: xoay thuận (time * 0.15), nét Đỏ Chu Sa #C83E37 (1.2px, opacity 0.75) + tô lấp mờ 0.04
-  drawPoincareLayer(ctx, diskR, liveTime * 0.15, COLORS.cinnabar, 1.2, 0.75, true);
+  // Tầng chính: xoay thuận (time * 0.15), nét Đá Phiến Trầm #1E332E (1.2px, opacity 0.75) + tô lấp mờ 0.04
+  drawPoincareLayer(ctx, diskR, liveTime * 0.15, COLORS.slateDeep, 1.2, 0.75, true);
 
-  // Tầng phụ: xoay nghịch (-time * 0.1), nét Vàng Thếp #C5A262 (0.85px, opacity 0.65)
-  drawPoincareLayer(ctx, diskR, -liveTime * 0.1, COLORS.goldBright, 0.85, 0.65, false);
+  // Tầng phụ: xoay nghịch (-time * 0.1), nét Đồng Cổ #9C7A4C (0.85px, opacity 0.65)
+  drawPoincareLayer(ctx, diskR, -liveTime * 0.1, COLORS.bronze, 0.85, 0.65, false);
 
   ctx.restore();
 }
@@ -1325,12 +1315,12 @@ function drawCompassConstruction(
   ctx.save();
   ctx.globalAlpha *= coreFade * compassP;
 
-  // 4 đường tròn dựng hình phụ trợ nét đứt siêu mảnh #8A6A2F
+  // 4 đường tròn dựng hình phụ trợ nét đứt siêu mảnh Đá Lam Phiến #2D5266
   ctx.save();
   ctx.setLineDash([3, 4]);
-  ctx.strokeStyle = COLORS.goldDark;
+  ctx.strokeStyle = COLORS.slateBlue;
   ctx.lineWidth = 0.85;
-  ctx.globalAlpha *= 0.68;
+  ctx.globalAlpha *= 0.58;
 
   for (let k = 0; k < 4; k++) {
     const centerTheta = constructionRot + k * (Math.PI / 2);
@@ -1342,7 +1332,7 @@ function drawCompassConstruction(
   }
   ctx.restore();
 
-  // Hiệu ứng tia quét Compa: vệt quạt sáng mờ & kim bán kính vàng mảnh
+  // Hiệu ứng tia quét Compa: vệt quạt sáng mờ & kim bán kính đồng cổ mảnh
   const fanSlices = 14;
   const fanSpan = 0.88;
   const sliceSpan = fanSpan / fanSlices;
@@ -1351,8 +1341,8 @@ function drawCompassConstruction(
   for (let s = 0; s < fanSlices; s++) {
     const a1 = sweepAngle - s * sliceSpan;
     const a0 = sweepAngle - (s + 1) * sliceSpan;
-    const fanAlpha = 0.15 * (1 - s / fanSlices);
-    ctx.fillStyle = `rgba(197, 162, 98, ${fanAlpha.toFixed(3)})`;
+    const fanAlpha = 0.13 * (1 - s / fanSlices);
+    ctx.fillStyle = `rgba(156, 122, 76, ${fanAlpha.toFixed(3)})`;
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.arc(0, 0, sweepRadius, a0, a1);
@@ -1360,19 +1350,19 @@ function drawCompassConstruction(
     ctx.fill();
   }
 
-  ctx.strokeStyle = COLORS.goldBright;
+  ctx.strokeStyle = COLORS.bronze;
   ctx.lineWidth = 1.15;
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(Math.cos(sweepAngle) * sweepRadius, Math.sin(sweepAngle) * sweepRadius);
   ctx.stroke();
 
-  // 8 giao điểm hình học: 4 nút tâm tròn (0.5*R1, Đỏ Chu Sa) & 4 giao điểm Vesica (0.5*sqrt(2)*R1, Xanh Men Ngọc)
+  // 8 giao điểm hình học: 4 nút tâm tròn (0.5*R1, Đá Phiến Trầm) & 4 giao điểm Vesica (0.5*sqrt(2)*R1, Đá Lam Phiến)
   const vesicaR = locusR * Math.SQRT2;
   for (let idx = 0; idx < 8; idx++) {
-    const isJade = idx % 2 === 1;
+    const isBlue = idx % 2 === 1;
     const nodeTheta = constructionRot + idx * (Math.PI / 4);
-    const nodeR = isJade ? vesicaR : locusR;
+    const nodeR = isBlue ? vesicaR : locusR;
     const nx = Math.cos(nodeTheta) * nodeR;
     const ny = Math.sin(nodeTheta) * nodeR;
 
@@ -1384,14 +1374,14 @@ function drawCompassConstruction(
     const gemR = (2.1 + 1.3 * intensity) * compassP;
     const haloR = (4.2 + 3.4 * sweepFlare) * compassP;
 
-    ctx.fillStyle = isJade
-      ? `rgba(78, 155, 88, ${(0.18 + 0.28 * intensity).toFixed(3)})`
-      : `rgba(200, 62, 55, ${(0.18 + 0.28 * intensity).toFixed(3)})`;
+    ctx.fillStyle = isBlue
+      ? `rgba(45, 82, 102, ${(0.16 + 0.24 * intensity).toFixed(3)})`
+      : `rgba(30, 51, 46, ${(0.16 + 0.24 * intensity).toFixed(3)})`;
     ctx.beginPath();
     ctx.arc(nx, ny, haloR, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = isJade ? COLORS.jadeLight : COLORS.cinnabar;
+    ctx.fillStyle = isBlue ? COLORS.slateBlue : COLORS.slateDeep;
     ctx.beginPath();
     ctx.arc(nx, ny, gemR, 0, Math.PI * 2);
     ctx.fill();
@@ -1439,25 +1429,25 @@ function drawCentralGoldenRosette(
     else ctx.lineTo(px, py);
   }
   ctx.closePath();
-  ctx.fillStyle = 'rgba(197, 162, 98, 0.14)';
+  ctx.fillStyle = 'rgba(156, 122, 76, 0.14)';
   ctx.fill();
-  ctx.strokeStyle = COLORS.goldBright;
+  ctx.strokeStyle = COLORS.bronze;
   ctx.lineWidth = 1.25;
   ctx.stroke();
   ctx.restore();
 
-  // Hạt ngọc tâm Đỏ Chu Sa #C83E37 tỏa quầng sáng ấm qua sprite đệm sẵn 120fps (không dùng shadowBlur)
+  // Hạt ngọc tâm Đá Phiến Trầm #1E332E tỏa quầng đồng cổ ấm qua sprite đệm sẵn 120fps
   const jewelR = Math.max(3.6, r1 * 0.048) * sealP;
   drawGlowSprite(
     ctx,
-    getKhueGlowSprites().cinnabar,
+    getKhueGlowSprites().gold,
     0,
     0,
     jewelR * 2.8,
-    0.78,
-    'rgba(200, 62, 55, 0.25)',
+    0.72,
+    'rgba(156, 122, 76, 0.25)',
   );
-  ctx.fillStyle = COLORS.cinnabar;
+  ctx.fillStyle = COLORS.slateDeep;
   ctx.beginPath();
   ctx.arc(0, 0, jewelR, 0, Math.PI * 2);
   ctx.fill();
@@ -1517,7 +1507,7 @@ function drawAstrolabeRing(
   ctx.rotate(rotationRad);
   ctx.globalAlpha *= p;
 
-  ctx.strokeStyle = ringStyle === 'middle' ? 'rgba(138, 106, 47, 0.5)' : 'rgba(197, 162, 98, 0.6)';
+  ctx.strokeStyle = ringStyle === 'middle' ? 'rgba(45, 82, 102, 0.44)' : 'rgba(156, 122, 76, 0.5)';
   ctx.lineWidth = ringStyle === 'middle' ? 1.15 : 0.9;
   ctx.beginPath();
   ctx.arc(0, 0, radius, 0, Math.PI * 2);
@@ -1526,7 +1516,7 @@ function drawAstrolabeRing(
   if (ringStyle === 'middle') {
     ctx.save();
     ctx.setLineDash([3, 5]);
-    ctx.strokeStyle = 'rgba(200, 62, 55, 0.28)';
+    ctx.strokeStyle = 'rgba(30, 51, 46, 0.26)';
     ctx.lineWidth = 0.85;
     ctx.beginPath();
     ctx.arc(0, 0, radius - 5, 0, Math.PI * 2);
@@ -1545,10 +1535,10 @@ function drawAstrolabeRing(
     const outerR = radius + tickLen * 0.5;
 
     ctx.strokeStyle = isCardinal
-      ? COLORS.cinnabar
+      ? COLORS.slateDeep
       : isMajor
-        ? COLORS.goldDark
-        : 'rgba(197, 162, 98, 0.65)';
+        ? COLORS.slateBlue
+        : 'rgba(156, 122, 76, 0.55)';
     ctx.lineWidth = isCardinal ? 1.35 : isMajor ? 1.0 : 0.7;
 
     ctx.beginPath();
@@ -1603,7 +1593,7 @@ function drawKhueConstellation(
   });
 
   const totalEdges = KHUE_CONSTELLATION_EDGES.length;
-  ctx.strokeStyle = 'rgba(138, 106, 47, 0.45)';
+  ctx.strokeStyle = 'rgba(45, 82, 102, 0.36)';
   ctx.lineWidth = 0.85;
 
   for (let i = 0; i < totalEdges; i++) {
@@ -1636,13 +1626,13 @@ function drawKhueConstellation(
     const radius = (item.star.tier === 2 ? 3.2 : 2.1) * starP * twinkle;
 
     if (item.star.tier === 2) {
-      ctx.fillStyle = item.star.isCinnabar ? 'rgba(200, 62, 55, 0.16)' : 'rgba(197, 162, 98, 0.22)';
+      ctx.fillStyle = item.star.isCinnabar ? 'rgba(30, 51, 46, 0.14)' : 'rgba(156, 122, 76, 0.2)';
       ctx.beginPath();
       ctx.arc(item.x, item.y, radius * 2.6, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    ctx.fillStyle = item.star.isCinnabar ? COLORS.cinnabar : COLORS.goldBright;
+    ctx.fillStyle = item.star.isCinnabar ? COLORS.slateDeep : COLORS.bronze;
     ctx.beginPath();
     ctx.arc(item.x, item.y, radius, 0, Math.PI * 2);
     ctx.fill();
@@ -1715,7 +1705,8 @@ export function renderKhueVanCanvas(
 
     const warmGlowGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, rOuter1);
     warmGlowGrad.addColorStop(0, COLORS.warmCenterGlow);
-    warmGlowGrad.addColorStop(1, 'rgba(229, 195, 120, 0)');
+    warmGlowGrad.addColorStop(0.55, 'rgba(156, 122, 76, 0.06)');
+    warmGlowGrad.addColorStop(1, 'rgba(242, 244, 243, 0)');
 
     cachedGrad = { width, height, rOuter1, bgGrad, warmGlowGrad };
     khueGradientCache.set(ctx, cachedGrad);
@@ -1783,8 +1774,8 @@ export function renderKhueVanCanvas(
       angularRate: 0.42,
       phaseOffset: 0.35,
       arcSpanRad: 0.46,
-      color: COLORS.goldBright,
-      trailRgb: '197, 162, 98',
+      color: COLORS.bronze,
+      trailRgb: '156, 122, 76',
     },
   );
   drawAstrolabeRing(
@@ -1799,8 +1790,8 @@ export function renderKhueVanCanvas(
       angularRate: -0.34,
       phaseOffset: Math.PI / 4,
       arcSpanRad: 0.42,
-      color: COLORS.jadeLight,
-      trailRgb: '78, 155, 88',
+      color: COLORS.slateBlue,
+      trailRgb: '45, 82, 102',
     },
   );
   drawAstrolabeRing(
@@ -1815,8 +1806,8 @@ export function renderKhueVanCanvas(
       angularRate: 0.26,
       phaseOffset: 1.1,
       arcSpanRad: 0.36,
-      color: COLORS.cinnabar,
-      trailRgb: '200, 62, 55',
+      color: COLORS.slateDeep,
+      trailRgb: '30, 51, 46',
     },
   );
 
@@ -1835,15 +1826,15 @@ export function renderKhueVanCanvas(
   ctx.scale(portal.sceneScale, portal.sceneScale);
   ctx.rotate(portal.sceneRotation);
 
-  // 2 vòng sóng mảnh màu vàng thếp lan nhẹ trong 1.1s đầu
+  // 2 vòng sóng mảnh màu đồng cổ lan nhẹ trong 1.1s đầu
   for (let w = 0; w < 2; w++) {
     const waveDelay = w * 0.2;
     const wp = clamp01((artTime - waveDelay) / 1.1);
     if (wp > 0 && wp < 1) {
       ctx.save();
-      ctx.strokeStyle = COLORS.goldBright;
+      ctx.strokeStyle = COLORS.bronze;
       ctx.lineWidth = 1;
-      ctx.globalAlpha = (1 - wp) * 0.75;
+      ctx.globalAlpha = (1 - wp) * 0.72;
       ctx.beginPath();
       ctx.arc(0, 0, r1 * (0.15 + 1.15 * easeOutCubic(wp)), 0, Math.PI * 2);
       ctx.stroke();
@@ -1851,31 +1842,31 @@ export function renderKhueVanCanvas(
     }
   }
 
-  // Khung Đất Vuông NÉT KÉP (2 hình vuông xoay 45° + phân giác & chấm vàng tại 8 đỉnh)
+  // Khung Đất Vuông NÉT KÉP (2 hình vuông xoay 45° + phân giác & chấm đồng cổ tại 8 đỉnh)
   const sq1P = clamp01((artTime - 0.6) / 0.95);
   const sq2P = clamp01((artTime - 0.95) / 0.95);
   drawDoubleOctagramFrame(ctx, squareHalf, sq1P, sq2P);
 
-  // Vòng tròn "Trời tròn" R₁ viền kép Đỏ Chu Sa & Vàng Đồng
+  // Vòng tròn "Trời tròn" R₁ viền kép Đá Phiến Trầm & Đá Lam Phiến
   const circleProgress = easeInOutQuart(clamp01((artTime - 1.1) / 1.1));
   if (circleProgress > 0) {
     const startAngle = -Math.PI / 2;
     const endAngle = startAngle + Math.PI * 2 * circleProgress;
 
-    ctx.strokeStyle = COLORS.cinnabar;
+    ctx.strokeStyle = COLORS.slateDeep;
     ctx.lineWidth = 1.9;
     ctx.beginPath();
     ctx.arc(0, 0, r1, startAngle, endAngle);
     ctx.stroke();
 
-    ctx.strokeStyle = COLORS.goldDark;
+    ctx.strokeStyle = COLORS.bronze;
     ctx.lineWidth = 1.15;
     ctx.beginPath();
     ctx.arc(0, 0, r1 * 0.92, startAngle, endAngle);
     ctx.stroke();
   }
 
-  // 8 Nan Gỗ Khuê Văn: tô nền mờ rgba(200,62,55,0.05) + vạch khóa ngang song tiện cổ truyền ở giữa
+  // 8 Nan Gỗ Khuê Văn: tô nền mờ khoáng thạch + vạch khóa ngang song tiện cổ truyền ở giữa
   const barsProgress = easeOutCubic(clamp01((artTime - 2.05) / 0.95));
   if (barsProgress > 0) {
     const barEndR = squareHalf - 4;
@@ -1888,11 +1879,11 @@ export function renderKhueVanCanvas(
       ctx.rotate(k * (Math.PI / 4));
 
       // Tô nền mờ giữa 2 thanh nan
-      ctx.fillStyle = COLORS.cinnabarNanFill;
+      ctx.fillStyle = COLORS.slateNanFill;
       ctx.fillRect(r1, -3, Math.max(0, currentEndR - r1), 6);
 
-      // 2 thanh nan song song #C83E37
-      ctx.strokeStyle = COLORS.cinnabar;
+      // 2 thanh nan song song Đá Phiến Trầm #1E332E
+      ctx.strokeStyle = COLORS.slateDeep;
       ctx.lineWidth = 1.15;
       for (const offset of [-3, 3]) {
         ctx.beginPath();
@@ -1902,7 +1893,7 @@ export function renderKhueVanCanvas(
       }
 
       // Đường tim mảnh ở giữa
-      ctx.strokeStyle = 'rgba(138, 106, 47, 0.55)';
+      ctx.strokeStyle = 'rgba(45, 82, 102, 0.5)';
       ctx.lineWidth = 0.65;
       ctx.beginPath();
       ctx.moveTo(r1, 0);
@@ -1912,14 +1903,14 @@ export function renderKhueVanCanvas(
       // Vạch khóa ngang nhỏ ở giữa (họa tiết song tiện cổ truyền)
       if (lockP > 0) {
         ctx.globalAlpha *= lockP;
-        ctx.strokeStyle = COLORS.goldDark;
+        ctx.strokeStyle = COLORS.bronze;
         ctx.lineWidth = 1.15;
         ctx.beginPath();
         ctx.moveTo(midBarR, -5);
         ctx.lineTo(midBarR, 5);
         ctx.stroke();
 
-        ctx.strokeStyle = COLORS.cinnabar;
+        ctx.strokeStyle = COLORS.slateDeep;
         ctx.lineWidth = 0.85;
         ctx.beginPath();
         ctx.moveTo(midBarR - 2.8, -3.6);
@@ -1933,7 +1924,7 @@ export function renderKhueVanCanvas(
     }
   }
 
-  // TÂM KHUÊ VĂN CÁC: HỖN THIÊN NGHI + ĐĨA POINCARÉ MỘNG GỖ + COMPA + ẤN TÂM HOA THỊ VÀNG
+  // TÂM KHUÊ VĂN CÁC: HỖN THIÊN NGHI + ĐĨA POINCARÉ + COMPA + ẤN TÂM HOA THỊ ĐỒNG CỔ
   drawCentralCelestialMechanism(ctx, r1, artTime, liveTime);
 
   ctx.restore();
@@ -1949,14 +1940,14 @@ export function renderKhueVanCanvas(
     ctx.restore();
 
     ctx.save();
-    ctx.strokeStyle = COLORS.cinnabar;
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = COLORS.slateDeep;
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
     ctx.arc(cx, cy, portal.portalRadius, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = COLORS.goldBright;
-    ctx.lineWidth = 1.25;
+    ctx.strokeStyle = COLORS.bronze;
+    ctx.lineWidth = 1.2;
     ctx.beginPath();
     ctx.arc(cx, cy, portal.portalRadius + 3.5, 0, Math.PI * 2);
     ctx.stroke();

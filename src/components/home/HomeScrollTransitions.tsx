@@ -51,12 +51,12 @@ export function ShorelineWaveBridge({
       aria-hidden="true"
       className="pointer-events-none relative z-10 -mt-24 h-[126px] w-full overflow-hidden select-none sm:-mt-28 sm:h-[144px] lg:h-[156px]"
     >
-      {/* Dải sương mây vùng cao hòa tan mềm từ mặt hồ Bạch Ngọc (#EDF2F0) xuống Screen 2 (#121B28) */}
+      {/* Dải sương mờ hòa tan liền mạch từ Hero (#B8CBC5 -> #EEF2F0) xuống Phòng Triển Lãm Sáng (#EEF2F0) */}
       <div
         className="absolute inset-x-0 top-0 h-28"
         style={{
           background: isPavilion
-            ? 'linear-gradient(180deg, rgba(237, 242, 240, 0) 0%, rgba(190, 206, 202, 0.52) 44%, #121B28 100%)'
+            ? 'linear-gradient(180deg, rgba(184, 203, 197, 0) 0%, rgba(184, 203, 197, 0.34) 44%, #EEF2F0 100%)'
             : 'linear-gradient(180deg, rgba(248, 246, 240, 0) 0%, rgba(230, 226, 214, 0.34) 55%, rgba(248, 246, 240, 0.72) 100%)',
         }}
       />
@@ -69,15 +69,15 @@ export function ShorelineWaveBridge({
       >
         <defs>
           <linearGradient id={cloudBackGradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={isPavilion ? '#DDE7E4' : '#C5D3DC'} stopOpacity="0.72" />
-            <stop offset="100%" stopColor={isPavilion ? '#121B28' : '#E6E2D6'} stopOpacity="0.92" />
+            <stop offset="0%" stopColor={isPavilion ? '#B8CBC5' : '#C5D3DC'} stopOpacity="0.46" />
+            <stop offset="100%" stopColor={isPavilion ? '#EEF2F0' : '#E6E2D6'} stopOpacity="0.88" />
           </linearGradient>
           <linearGradient id={cloudCrestStrokeGradId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#D4A359" stopOpacity="0" />
-            <stop offset="28%" stopColor="#E5C158" stopOpacity={isPavilion ? '0.16' : '0.5'} />
-            <stop offset="52%" stopColor="#F7F3E8" stopOpacity={isPavilion ? '0.18' : '0.55'} />
-            <stop offset="78%" stopColor="#4EA8DE" stopOpacity={isPavilion ? '0.16' : '0.48'} />
-            <stop offset="100%" stopColor="#D4A359" stopOpacity="0" />
+            <stop offset="0%" stopColor="#9C7A4C" stopOpacity="0" />
+            <stop offset="28%" stopColor="#9C7A4C" stopOpacity={isPavilion ? '0.2' : '0.5'} />
+            <stop offset="52%" stopColor="#FAFBF9" stopOpacity={isPavilion ? '0.55' : '0.55'} />
+            <stop offset="78%" stopColor="#2D5266" stopOpacity={isPavilion ? '0.16' : '0.48'} />
+            <stop offset="100%" stopColor="#9C7A4C" stopOpacity="0" />
           </linearGradient>
         </defs>
 
@@ -94,7 +94,7 @@ export function ShorelineWaveBridge({
           <path
             d="M -120 68 C 140 94, 380 38, 660 68 C 940 96, 1180 42, 1440 68 C 1510 76, 1550 72, 1580 68 L 1580 140 L -120 140 Z"
             className={
-              isPavilion ? 'fill-[#112233]/82' : 'fill-[#E6E2D6]/75 dark:fill-[#1A293C]/70'
+              isPavilion ? 'fill-[#E2ECE8]/80' : 'fill-[#E6E2D6]/75 dark:fill-[#1A293C]/70'
             }
           />
           <path

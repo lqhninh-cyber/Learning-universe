@@ -54,6 +54,7 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
   });
 
   const [isDismissing, setIsDismissing] = useState<boolean>(false);
+  const [isAutoFading, setIsAutoFading] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -161,6 +162,7 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
       mouseTargetRef.current = { x: 0, y: 0 };
       mouseCurrentRef.current = { x: 0, y: 0 };
       setIsDismissing(false);
+      setIsAutoFading(false);
       setIsVisible(true);
     };
 
@@ -168,17 +170,23 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
     return () => window.removeEventListener(EVENT_OPEN_INTRO, handleReopen);
   }, []);
 
-  // Tự động hoàn tất sau 7.5s (hoặc 1.5s khi bật prefers-reduced-motion) nếu không có tương tác
+  // Tự động hoàn tất sau 7.5s (hoặc 1.5s khi bật prefers-reduced-motion) kèm hiệu ứng tan mờ 500ms ease-out
   useEffect(() => {
     if (!isVisible) return;
 
     const totalMs =
       (prefersReducedMotion ? INTRO_REDUCED_DURATION_S : INTRO_TOTAL_DURATION_S) * 1000;
+    const fadeStartMs = Math.max(0, totalMs - 500);
+    const fadeTimer = window.setTimeout(() => {
+      setIsAutoFading(true);
+    }, fadeStartMs);
+
     autoTimerRef.current = window.setTimeout(() => {
       finishUnmount();
     }, totalMs);
 
     return () => {
+      window.clearTimeout(fadeTimer);
       if (autoTimerRef.current !== null) {
         window.clearTimeout(autoTimerRef.current);
         autoTimerRef.current = null;
@@ -364,7 +372,8 @@ export const WaterTouchIntro: FC<WaterTouchIntroProps> = ({ onFinish }) => {
       onTouchStart={handleDismiss}
       onKeyDown={handleDismiss}
       className={cn(
-        'fixed inset-0 z-[100] bg-transparent select-none',
+        'fixed inset-0 z-[100] bg-transparent transition-opacity duration-500 ease-out select-none',
+        isDismissing || isAutoFading ? 'opacity-0' : 'opacity-100',
         isDismissing ? 'pointer-events-none cursor-default' : 'pointer-events-auto cursor-pointer',
       )}
     >

@@ -650,8 +650,8 @@ function renderMountainTopographyOffscreen(
     [230, 239, 236], // Tan vào sương #E6EFEC
     [210, 225, 220], // #D2E1DC
     [177, 199, 192], // #B1C7C0
-    [126, 157, 149], // #7E9D95
-    [221, 231, 228], // Tan vào dải sương sáng mặt hồ #DDE7E4
+    [138, 168, 160], // #8AA8A0
+    [184, 203, 197], // Tan êm vào dải sương sáng đáy Hero #B8CBC5 -> #EEF2F0
   ];
 
   const mistBandRgb: readonly [number, number, number] = [230, 239, 236]; // #E6EFEC
@@ -692,24 +692,24 @@ function renderMountainTopographyOffscreen(
     ctx.restore();
 
     // 2. 24-30 đường đồng mức ruộng bậc thang siêu mảnh (lineWidth: 0.75px):
-    // Đồng Cổ rgba(156, 122, 76, 0.26) xen Trắng Sứ rgba(255, 255, 255, 0.45)
+    // Đồng Cổ rgba(140, 102, 48, 0.30) xen Trắng Sứ rgba(255, 255, 255, 0.48)
     if (layer.index >= 1) {
       ctx.clip();
       const layerContours = geometry.contours.filter((c) => c.layerIndex === layer.index);
-      const bronzeRgb: readonly [number, number, number] = [156, 122, 76];
+      const bronzeRgb: readonly [number, number, number] = [140, 102, 48];
       const porcelainRgb: readonly [number, number, number] = [255, 255, 255];
 
       for (const contour of layerContours) {
         const contourGrad = ctx.createLinearGradient(0, 0, geometry.width, 0);
         const isBronze = contour.tone === 'gold';
         const baseColor = isBronze ? bronzeRgb : porcelainRgb;
-        const aFull = isBronze ? 0.26 : 0.45;
+        const aFull = isBronze ? 0.3 : 0.48;
         // Làm dịu vùng calm dưới cột chữ bên trái và sắc nét dần sang sườn núi bên phải
-        contourGrad.addColorStop(0, rgbaString(baseColor, aFull * 0.32));
-        contourGrad.addColorStop(0.26, rgbaString(baseColor, aFull * 0.48));
+        contourGrad.addColorStop(0, rgbaString(baseColor, aFull * 0.34));
+        contourGrad.addColorStop(0.26, rgbaString(baseColor, aFull * 0.54));
         contourGrad.addColorStop(0.62, rgbaString(baseColor, aFull));
-        contourGrad.addColorStop(0.86, rgbaString(baseColor, Math.min(0.62, aFull * 1.1)));
-        contourGrad.addColorStop(1, rgbaString(baseColor, aFull * 0.55));
+        contourGrad.addColorStop(0.86, rgbaString(baseColor, Math.min(0.64, aFull * 1.12)));
+        contourGrad.addColorStop(1, rgbaString(baseColor, aFull * 0.6));
 
         ctx.beginPath();
         traceSmoothQuadraticCurve(ctx, contour.points, true);
@@ -811,11 +811,11 @@ function renderAstrolabeStarOffscreen(
 
   ctx.beginPath();
   ctx.arc(0, 0, astrolabe.starInnerRadius, 0, Math.PI * 2);
-  ctx.lineWidth = 0.9;
-  ctx.strokeStyle = 'rgba(148, 107, 48, 0.42)';
+  ctx.lineWidth = 0.95;
+  ctx.strokeStyle = 'rgba(148, 107, 48, 0.52)';
   ctx.stroke();
 
-  // Ngôi sao Đông Sơn 14 cánh khắc nét Đồng Trầm cổ điển
+  // Ngôi sao Đông Sơn 14 cánh khắc nét Đồng Trầm cổ điển sắc nét (0.52)
   const totalPoints = astrolabe.starRays * 2;
   ctx.beginPath();
   for (let i = 0; i <= totalPoints; i += 1) {
@@ -830,10 +830,10 @@ function renderAstrolabeStarOffscreen(
     }
   }
   ctx.closePath();
-  ctx.fillStyle = 'rgba(218, 182, 118, 0.14)';
+  ctx.fillStyle = 'rgba(218, 182, 118, 0.17)';
   ctx.fill();
-  ctx.lineWidth = 0.95;
-  ctx.strokeStyle = 'rgba(148, 107, 48, 0.42)';
+  ctx.lineWidth = 1.0;
+  ctx.strokeStyle = 'rgba(148, 107, 48, 0.52)';
   ctx.stroke();
 
   return surf;
@@ -855,10 +855,10 @@ function renderAstrolabeRingOffscreen(
   const half = spriteLogicalSize * 0.5;
   ctx.translate(half, half);
 
-  // Luân phiên chỉ Đồng Trầm rgba(148, 107, 48, 0.42) & Lam Phiến rgba(45, 82, 102, 0.28)
+  // Luân phiên chỉ Đồng Trầm rgba(148, 107, 48, 0.52) & Lam Phiến rgba(45, 82, 102, 0.34)
   const isBronzeRing = ring.index % 2 === 0;
-  const primaryStroke = isBronzeRing ? 'rgba(148, 107, 48, 0.42)' : 'rgba(45, 82, 102, 0.28)';
-  const minorTickStroke = isBronzeRing ? 'rgba(148, 107, 48, 0.3)' : 'rgba(45, 82, 102, 0.22)';
+  const primaryStroke = isBronzeRing ? 'rgba(148, 107, 48, 0.52)' : 'rgba(45, 82, 102, 0.34)';
+  const minorTickStroke = isBronzeRing ? 'rgba(148, 107, 48, 0.38)' : 'rgba(45, 82, 102, 0.26)';
 
   ctx.beginPath();
   ctx.arc(0, 0, ring.radius, 0, Math.PI * 2);

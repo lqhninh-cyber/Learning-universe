@@ -5,6 +5,7 @@ import {
   ATMOSPHERIC_PALETTES,
   interpolateAtmospherePalette,
 } from '@/components/home/atmosphereThemes';
+import { ChladniManifestoSection } from '@/components/home/ChladniManifestoSection';
 import {
   PIPELINE_LAYER_NAMES,
   buildAtmosphereSpriteCache,
@@ -535,7 +536,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
     });
 
-    it('HomePage tái cấu trúc 3 màn hình: Toàn cảnh Lam Ngọc Hoàng Kim -> Bảo tàng Di sản 3 tầng -> Hồ Sen Đêm', async () => {
+    it('HomePage tái cấu trúc 3 màn hình Bạch Ngọc Khoáng Thạch liền mạch: Hero Bình Minh -> Bảo tàng Di sản sáng -> Tuyên ngôn × Đài Chladni', async () => {
       render(
         <MemoryRouter>
           <HomePage />
@@ -579,9 +580,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('quote-progress-bar')).toBeInTheDocument();
       expect(screen.getByTestId('quote-discipline-badge')).toHaveTextContent(/Triết học Giáo dục/i);
 
-      // Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng 3 tầng (#khong-gian-di-san)
+      // Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng Thạch Cao Sáng (#khong-gian-di-san)
       const showcase = screen.getByTestId('heritage-art-showcase');
       expect(showcase).toHaveAttribute('id', 'khong-gian-di-san');
+      expect(showcase.className).toContain('bg-[#EEF2F0]');
+      expect(showcase.className).toContain('pt-28');
+      expect(showcase.className).toContain('scroll-mt-24');
       expect(showcase.textContent).toContain('Khuê Văn Các');
       expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
       expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
@@ -625,11 +629,33 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByRole('button', { name: /Đóng xem toàn màn hình/i }));
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-      // Cầu nối mây Screen 1->2 và bờ hồ Screen 2->3
+      // Cầu nối sương mượt Screen 1->2 và Screen 3 Tuyên ngôn × Đài cộng hưởng Chladni (không còn Hồ Sen)
       const shoreline = screen.getByTestId('shoreline-wave-bridge');
       expect(shoreline).toBeInTheDocument();
       expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
-      expect(screen.getByTestId('lakeshore-lotus-transition')).toBeInTheDocument();
+      expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
+
+      const chladniSection = screen.getByTestId('chladni-manifesto-section');
+      expect(chladniSection).toBeInTheDocument();
+      expect(screen.getByText(/SEC\. 03 \/\/ KIẾN TRÚC TRI THỨC/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: /Khi trực giác hình học gặp gỡ chiều sâu tiên đề\./i }),
+      ).toBeInTheDocument();
+      expect(screen.getByTestId('chladni-resonance-canvas')).toBeInTheDocument();
+      expect(screen.getByTestId('chladni-footer-seam')).toBeInTheDocument();
+      expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(3, 5)');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Đông Sơn (6, 9)' }));
+      expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent('(m, n) =(6, 9)');
+      expect(screen.getByRole('link', { name: /Bước vào Không gian học tập/i })).toHaveAttribute(
+        'href',
+        '/learning-space',
+      );
+      expect(screen.getByRole('link', { name: /Khám phá Kho Thuật ngữ/i })).toHaveAttribute(
+        'href',
+        '/thuat-ngu',
+      );
     });
   });
 
@@ -874,6 +900,72 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(Math.cos(wrapped)).toBeLessThan(-0.99);
       expect(formatAlidadeAngle((3 * Math.PI) / 4)).toBe('135° · 3π/4');
       expect(formatAlidadeAngle(Math.PI / 2)).toBe('90° · π/2');
+    });
+
+    it('ChladniManifestoSection vẽ đĩa cộng hưởng 2.600 hạt khoáng thạch và chuyển đổi 4 chế độ (m, n) không lỗi', () => {
+      const fillStyles: string[] = [];
+      const noop = vi.fn();
+      const gradMock = { addColorStop: noop };
+      const ctxSpy = {
+        save: noop,
+        restore: noop,
+        setTransform: noop,
+        translate: noop,
+        scale: noop,
+        rotate: noop,
+        clearRect: noop,
+        fillRect: noop,
+        strokeRect: noop,
+        rect: noop,
+        beginPath: noop,
+        closePath: noop,
+        moveTo: noop,
+        lineTo: noop,
+        arc: noop,
+        fill: function (this: { fillStyle: string }) {
+          fillStyles.push(this.fillStyle);
+        },
+        stroke: noop,
+        clip: noop,
+        setLineDash: noop,
+        createRadialGradient: () => gradMock,
+        globalAlpha: 1,
+        fillStyle: '#000',
+        strokeStyle: '#000',
+        lineWidth: 1,
+      } as unknown as CanvasRenderingContext2D;
+
+      const getContextSpy = vi
+        .spyOn(HTMLCanvasElement.prototype, 'getContext')
+        .mockReturnValue(ctxSpy);
+
+      try {
+        render(
+          <MemoryRouter>
+            <ChladniManifestoSection />
+          </MemoryRouter>,
+        );
+
+        const canvas = screen.getByTestId('chladni-resonance-canvas');
+        expect(canvas).toBeInTheDocument();
+        expect(fillStyles).toContain('rgba(30, 51, 46, 0.82)');
+        expect(fillStyles).toContain('rgba(156, 122, 76, 0.88)');
+
+        const presets: [string, string][] = [
+          ['Đối xứng (3, 5)', '(m, n) =(3, 5)'],
+          ['Giao thoa (4, 7)', '(m, n) =(4, 7)'],
+          ['Hội tụ (5, 8)', '(m, n) =(5, 8)'],
+          ['Đông Sơn (6, 9)', '(m, n) =(6, 9)'],
+        ];
+        for (const [label, expectedMode] of presets) {
+          const btn = screen.getByRole('button', { name: label });
+          fireEvent.click(btn);
+          expect(btn).toHaveAttribute('aria-pressed', 'true');
+          expect(screen.getByTestId('chladni-mode-indicator')).toHaveTextContent(expectedMode);
+        }
+      } finally {
+        getContextSpy.mockRestore();
+      }
     });
   });
 });
