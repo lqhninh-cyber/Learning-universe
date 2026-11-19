@@ -12,9 +12,11 @@ import {
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   HERITAGE_ARTWORKS,
+  HERITAGE_CATEGORY_TABS,
   HeritageFallbackIllustration,
   isHeritageInlineSvg,
   type HeritageArtwork,
+  type HeritageCategory,
 } from '@/components/home/HeritageArtShowcase';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
@@ -104,6 +106,7 @@ export function HeritageExhibitionPavilion() {
   const prefersReducedMotion = useReducedMotion();
   const drumPatternId = useId().replace(/:/g, '');
 
+  const [activeCategory, setActiveCategory] = useState<'all' | HeritageCategory>('all');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -130,12 +133,23 @@ export function HeritageExhibitionPavilion() {
     lastNow: 0,
   });
 
-  const artworks = HERITAGE_ARTWORKS;
+  const artworks =
+    activeCategory === 'all'
+      ? HERITAGE_ARTWORKS
+      : HERITAGE_ARTWORKS.filter((item) => item.category === activeCategory);
   const totalCount = artworks.length;
+  const totalCatalogCount = HERITAGE_ARTWORKS.length;
   const safeIndex = Math.min(currentIndex, Math.max(totalCount - 1, 0));
   const currentArtwork = artworks[safeIndex] ?? artworks[0]!;
   const formattedIndex = String(safeIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalCount).padStart(2, '0');
+
+  const handleSelectCategory = useCallback((nextCategory: 'all' | HeritageCategory) => {
+    setActiveCategory(nextCategory);
+    setCurrentIndex(0);
+    setImageError(false);
+    setIsTransitioning(false);
+  }, []);
 
   const goToIndex = useCallback(
     (nextIdx: number) => {
@@ -296,7 +310,7 @@ export function HeritageExhibitionPavilion() {
       aria-label="Không gian Di sản Học thuật và Nghệ thuật"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative scroll-mt-24 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-24 pb-16 text-[#142622] dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
+      className="relative scroll-mt-28 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-28 pb-16 text-[#142622] lg:pt-32 dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
     >
       {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật 1px solid #D4DFDA */}
       <div
@@ -350,9 +364,9 @@ export function HeritageExhibitionPavilion() {
 
       <div className="lu-container-wide relative z-10">
         {/* ================================================================
-          TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN (ALABASTER MUSEUM GALLERY)
+          TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN & THANH LỌC 4 NHÓM (ALABASTER MUSEUM GALLERY)
           ================================================================ */}
-        <div className="mb-6 border-b border-[#D4DFDA] pb-5 dark:border-[#1E3B2D]">
+        <div className="mb-6 flex flex-col gap-5 border-b border-[#D4DFDA] pb-5 lg:flex-row lg:items-end lg:justify-between dark:border-[#1E3B2D]">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest text-[#8C6228] uppercase dark:text-[#D5B47A]">
               <Landmark
@@ -365,9 +379,43 @@ export function HeritageExhibitionPavilion() {
               Di sản Học thuật &amp; Nghệ thuật
             </h2>
             <p className="max-w-2xl text-sm leading-relaxed text-[#2D423D] sm:text-base dark:text-[#B9C8C1]">
-              Không gian triển lãm {totalCount} kiệt tác kiến trúc, hội họa và tư liệu lịch sử ghi
-              dấu hành trình khoa bảng Việt Nam và cách mạng tư duy toán học – thiên văn nhân loại.
+              Không gian triển lãm {totalCatalogCount} kiệt tác kiến trúc, hội họa và tư liệu lịch
+              sử xác thực ghi dấu hành trình khoa bảng Việt Nam và cách mạng tư duy toán học – thiên
+              văn nhân loại.
             </p>
+          </div>
+
+          {/* Thanh lọc 4 nhóm phân loại di sản */}
+          <div
+            role="tablist"
+            aria-label="Phân loại tác phẩm di sản"
+            className="flex flex-wrap items-center gap-2"
+          >
+            {HERITAGE_CATEGORY_TABS.map((tab) => {
+              const isSelected = activeCategory === tab.id;
+              const tabCount =
+                tab.id === 'all'
+                  ? totalCatalogCount
+                  : HERITAGE_ARTWORKS.filter((item) => item.category === tab.id).length;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => handleSelectCategory(tab.id)}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[11.5px] font-semibold transition-all duration-150',
+                    isSelected
+                      ? 'border-[#1E332E] bg-[#1E332E] text-[#FAFBF9] shadow-xs dark:border-[#6EB59B] dark:bg-[#245746] dark:text-[#FAFBF9]'
+                      : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#2D423D] hover:border-[#9C7A4C] hover:text-[#142622] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0] dark:hover:border-[#D5B47A]',
+                  )}
+                >
+                  <span>{tab.label}</span>
+                  <span className="tabular-nums opacity-75">({tabCount})</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 

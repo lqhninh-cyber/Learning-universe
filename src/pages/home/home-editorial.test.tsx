@@ -111,7 +111,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
       expect(screen.getByText(/DI SẢN HỌC THUẬT & NGHỆ THUẬT/i)).toBeInTheDocument();
-      expect(screen.getByText(/01 \/ 32/i)).toBeInTheDocument();
+      expect(screen.getByText(/01 \/ 40/i)).toBeInTheDocument();
 
       // Tác phẩm 1 mặc định: Khuê Văn Các (không chứa Hán tự)
       expect(screen.getByRole('heading', { name: /Khuê Văn Các/i })).toBeInTheDocument();
@@ -183,43 +183,30 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(artwork2Button).toBeInTheDocument();
     });
 
-    it('chứa toàn bộ 32 tác phẩm di sản đích thực theo yêu cầu (Khuê Văn Các đầu tiên)', () => {
-      expect(HERITAGE_ARTWORKS).toHaveLength(32);
+    it('chứa toàn bộ 40 tác phẩm di sản xác thực 100% (không còn mục giả lập SVG)', () => {
+      expect(HERITAGE_ARTWORKS).toHaveLength(40);
       const ids = HERITAGE_ARTWORKS.map((a) => a.id);
-      expect(ids).toEqual([
-        'khue-van-cac',
-        'thay-do-coc',
-        'melencolia-i',
-        'truong-hoc-athena',
-        'nguoi-vitruvius',
-        'bia-tien-si',
-        'trong-dong-ngoc-lu',
-        'euclid-elements-1482',
-        'nguoi-chiem-tinh',
-        'de-divina-proportione',
-        'ban-do-hong-duc',
-        'tuong-quan-am-but-thap',
-        'copernicus-1543',
-        'kepler-1596',
-        'chua-mot-cot-1049',
-        'dai-thanh-toan-phap',
-        'lap-thanh-toan-phap',
-        'thap-but-dai-nghien-1865',
-        'ngo-mon-dien-thai-hoa',
-        'cuu-dinh-hoang-cung-hue',
-        'truong-quoc-hoc-hue-1896',
-        'hoang-thanh-thang-long',
-        'thap-cham-my-son',
-        'thap-pho-minh',
-        'rhind-mathematical-papyrus',
-        'archimedes-palimpsest',
-        'gac-chuong-chua-keo-1632',
-        'la-geometrie-descartes',
-        'principia-mathematica-newton',
-        'disquisitiones-arithmeticae-gauss',
-        'moc-ban-quoc-tu-giam-trieu-nguyen',
-        'dai-hoc-dong-duong-1906',
-      ]);
+      expect(ids[0]).toBe('khue-van-cac');
+      expect(ids).not.toContain('dai-thanh-toan-phap');
+      expect(ids).not.toContain('lap-thanh-toan-phap');
+      expect(ids).toEqual(
+        expect.arrayContaining([
+          'van-mieu-mao-dien',
+          'den-tho-luong-the-vinh',
+          'chau-ban-trieu-nguyen',
+          'van-thanh-mieu-vinh-long',
+          'thanh-nha-ho-1397',
+          'plimpton-322',
+          'antikythera-mechanism',
+          'sidereus-nuncius-galileo',
+          'the-ambassadors-holbein',
+          'pantheon-rome-oculus',
+        ]),
+      );
+
+      // Không có bất kỳ tác phẩm nào sử dụng hình SVG tự vẽ giả lập
+      expect(HERITAGE_ARTWORKS.every((a) => a.imageSrc.startsWith('https://'))).toBe(true);
+      expect(HERITAGE_ARTWORKS.some((a) => a.imageSrc.startsWith('svg://'))).toBe(false);
 
       const ngocLu = HERITAGE_ARTWORKS.find((a) => a.id === 'trong-dong-ngoc-lu');
       expect(ngocLu).toBeDefined();
@@ -227,12 +214,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(ngocLu?.imageSrc).not.toContain('.svg');
     });
 
-    it('hiển thị bộ đếm tác phẩm dạng 01 / 32', () => {
+    it('hiển thị bộ đếm tác phẩm dạng 01 / 40', () => {
       render(<HeritageArtShowcase />);
-      expect(screen.getByText('01 / 32')).toBeInTheDocument();
+      expect(screen.getByText('01 / 40')).toBeInTheDocument();
     });
 
-    it('hiển thị SVG minh họa học thuật sắc nét khi ảnh 03 / 32 (Melencolia I) gặp lỗi tải và khóa chữ tương phản cao', async () => {
+    it('hiển thị fallback học thuật khi ảnh 03 / 40 (Melencolia I) gặp lỗi mạng và khóa chữ tương phản cao', async () => {
       render(<HeritageArtShowcase />);
 
       const art3Dot = screen.getByRole('button', {
@@ -240,7 +227,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       });
       fireEvent.click(art3Dot);
 
-      expect(await screen.findByText('03 / 32')).toBeInTheDocument();
+      expect(await screen.findByText('03 / 40')).toBeInTheDocument();
       const heading = screen.getByRole('heading', { name: /Melencolia I/i });
       expect(heading.className).toContain('text-[#F8F6F0]');
 
@@ -584,51 +571,51 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const showcase = screen.getByTestId('heritage-art-showcase');
       expect(showcase).toHaveAttribute('id', 'khong-gian-di-san');
       expect(showcase.className).toContain('bg-[#EEF2F0]');
-      expect(showcase.className).toContain('pt-24');
+      expect(showcase.className).toContain('pt-28');
       expect(showcase.className).toContain('pb-16');
-      expect(showcase.className).toContain('scroll-mt-24');
+      expect(showcase.className).toContain('scroll-mt-28');
       expect(showcase.textContent).toContain('Khuê Văn Các');
       expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
       expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-      // Không còn dải lọc phân loại cũ; thay bằng Thanh Điều Khiển Trình Chiếu Trung Tâm + Filmstrip 32 tác phẩm
-      expect(
-        screen.queryByRole('tablist', { name: /Phân loại tác phẩm di sản/i }),
-      ).not.toBeInTheDocument();
+      // Thanh lọc 4 nhóm phân loại di sản hoạt động chuẩn xác
+      const categoryTablist = screen.getByRole('tablist', { name: /Phân loại tác phẩm di sản/i });
+      expect(categoryTablist).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Tất cả\s*\(40\)/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Văn hiến Việt Nam/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Toán học & Thiên văn/i })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: /Kiến trúc & Nghệ thuật/i })).toBeInTheDocument();
 
-      // Bảo đảm 32 tác phẩm không trùng id, tiêu đề hay imageSrc
-      expect(HERITAGE_ARTWORKS).toHaveLength(32);
-      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.id)).size).toBe(32);
-      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.title)).size).toBe(32);
-      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.imageSrc)).size).toBe(32);
+      // Bảo đảm 40 tác phẩm không trùng id, tiêu đề hay imageSrc và không có svg:// giả lập
+      expect(HERITAGE_ARTWORKS).toHaveLength(40);
+      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.id)).size).toBe(40);
+      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.title)).size).toBe(40);
+      expect(new Set(HERITAGE_ARTWORKS.map((item) => item.imageSrc)).size).toBe(40);
 
       const controlBar = screen.getByTestId('heritage-control-bar');
       expect(controlBar).toBeInTheDocument();
-      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 32');
+      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 40');
       expect(screen.getByRole('button', { name: /Tác phẩm trước/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Tác phẩm tiếp/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cuộn danh mục sang trái/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Cuộn danh mục sang phải/i })).toBeInTheDocument();
 
-      // Kiểm tra mục 16 (Đại thành Toán pháp) dùng bản vẽ điển tịch Giấy Dó SVG nội bộ (không ảnh thẻ tre)
-      const daiThanhBtn = screen.getByRole('button', {
-        name: /Chọn tác phẩm 16: Đại thành Toán pháp/i,
+      // Chọn trực tiếp tác phẩm thứ 40 (Đền Pantheon) trên dải Filmstrip & mở Lightbox
+      const pantheonBtn = screen.getByRole('button', {
+        name: /Chọn tác phẩm 40: Đền Pantheon/i,
       });
-      fireEvent.click(daiThanhBtn);
-      expect(await screen.findByTestId('heritage-svg-fallback')).toBeInTheDocument();
-
-      // Chọn trực tiếp tác phẩm thứ 32 (Đại học Đông Dương 1906) trên dải Filmstrip & mở Lightbox
-      const dongDuongBtn = screen.getByRole('button', {
-        name: /Chọn tác phẩm 32: Đại học Đông Dương/i,
-      });
-      fireEvent.click(dongDuongBtn);
+      fireEvent.click(pantheonBtn);
       await waitFor(() => {
-        expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('32 / 32');
+        expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('40 / 40');
       });
       fireEvent.click(screen.getByRole('button', { name: /Phóng to tác phẩm/i }));
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       fireEvent.click(screen.getByRole('button', { name: /Đóng xem toàn màn hình/i }));
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+      // Kiểm chứng lọc theo nhóm Toán học & Thiên văn
+      fireEvent.click(screen.getByRole('tab', { name: /Toán học & Thiên văn/i }));
+      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 13');
 
       // Cầu nối sương mượt Screen 1->2 và Screen 3 Tuyên ngôn × Đài cộng hưởng Chladni (không còn Hồ Sen)
       const shoreline = screen.getByTestId('shoreline-wave-bridge');

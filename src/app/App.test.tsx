@@ -74,9 +74,9 @@ describe('App routing smoke test', () => {
     const heritageShowcase = screen.getByTestId('heritage-art-showcase');
     expect(heritageShowcase).toBeInTheDocument();
     expect(heritageShowcase.className).toContain('bg-[#EEF2F0]');
-    expect(heritageShowcase.className).toContain('pt-24');
+    expect(heritageShowcase.className).toContain('pt-28');
     expect(heritageShowcase.className).toContain('pb-16');
-    expect(heritageShowcase.className).toContain('scroll-mt-24');
+    expect(heritageShowcase.className).toContain('scroll-mt-28');
     expect(
       screen.getByRole('heading', { name: /Di sản Học thuật & Nghệ thuật/i }),
     ).toBeInTheDocument();
