@@ -5,6 +5,12 @@ import {
   ATMOSPHERIC_PALETTES,
   interpolateAtmospherePalette,
 } from '@/components/home/atmosphereThemes';
+import {
+  buildOfficial15BallRack,
+  computeAiShotPlan,
+  computeTableMetrics,
+  createBilliardsWorld,
+} from '@/components/home/billiardsEngine';
 import { MineralBilliardsStage } from '@/components/home/MineralBilliardsStage';
 import {
   BILLIARD_COMBO_NOTES,
@@ -1088,6 +1094,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(canvas).toHaveAttribute('data-substeps', '6');
         expect(canvas).toHaveAttribute('data-target-balls', '15');
         expect(canvas).toHaveAttribute('data-pocket-jaws', '12');
+        expect(screen.getByTestId('mineral-billiards-stage')).toHaveAttribute(
+          'data-hide-cursor-ring',
+          'true',
+        );
 
         // 15 bi trơn/sọc/bi 8 (1..15) được vẽ trên Canvas
         expect(drawnNumbers).toEqual(
@@ -1110,6 +1120,50 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
           ]),
         );
 
+        // Kiểm chứng khoảng cách xếp tam giác >= 2 * R_ball + 0.59px để 15 bi đứng yên 100% trước cú phá bi
+        const rackMetrics = computeTableMetrics(1020, 490);
+        const rackBalls = buildOfficial15BallRack(rackMetrics);
+        expect(rackBalls).toHaveLength(16);
+        for (let i = 1; i < rackBalls.length; i += 1) {
+          for (let j = i + 1; j < rackBalls.length; j += 1) {
+            const bi = rackBalls[i]!;
+            const bj = rackBalls[j]!;
+            const dist = Math.hypot(bi.x - bj.x, bi.y - bj.y);
+            expect(dist).toBeGreaterThanOrEqual(rackMetrics.ballRadius * 2 + 0.55);
+          }
+        }
+
+        // Kiểm chứng AI nhánh dự phòng khi bi mục tiêu bị snooker toàn bộ vẫn tính được cú đánh không treo lượt
+        const snookerWorld = createBilliardsWorld(1020, 490, 'vs-ai');
+        snookerWorld.isBreakShot = false;
+        snookerWorld.currentPlayer = 2;
+        snookerWorld.p1Group = 'solids';
+        snookerWorld.p2Group = 'stripes';
+        const aiCue = snookerWorld.balls[0]!;
+        aiCue.x = rackMetrics.feltLeft + 80;
+        aiCue.y = rackMetrics.centerY;
+        for (const b of snookerWorld.balls) {
+          if (b.id === 0) continue;
+          if (b.id !== 9 && b.id !== 1 && b.id !== 2 && b.id !== 3) {
+            b.pocketed = true;
+          }
+        }
+        const stripeTarget = snookerWorld.balls.find((b) => b.id === 9)!;
+        stripeTarget.x = rackMetrics.feltLeft + 260;
+        stripeTarget.y = rackMetrics.centerY;
+        const b1 = snookerWorld.balls.find((b) => b.id === 1)!;
+        const b2 = snookerWorld.balls.find((b) => b.id === 2)!;
+        const b3 = snookerWorld.balls.find((b) => b.id === 3)!;
+        b1.x = rackMetrics.feltLeft + 170;
+        b1.y = rackMetrics.centerY;
+        b2.x = rackMetrics.feltLeft + 170;
+        b2.y = rackMetrics.centerY - rackMetrics.ballRadius * 2.3;
+        b3.x = rackMetrics.feltLeft + 170;
+        b3.y = rackMetrics.centerY + rackMetrics.ballRadius * 2.3;
+        const snookerPlan = computeAiShotPlan(snookerWorld);
+        expect(Number.isFinite(snookerPlan.targetAngle)).toBe(true);
+        expect(snookerPlan.targetPower).toBeGreaterThanOrEqual(0.4);
+
         // Bảng tỷ số 3 phần phía trên: Bạn (7 ô) - Điều khiển trung tâm - Máy AI (7 ô)
         expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
         expect(screen.getByTestId('billiards-p1-card')).toHaveAttribute('data-active', 'true');
@@ -1128,22 +1182,35 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(twoPlayerBtn).toHaveAttribute('aria-pressed', 'true');
         expect(screen.getByTestId('billiards-p2-card')).toHaveTextContent('Người chơi 2');
 
+        // Ở Tập tự do: ẩn 7 vòng tròn rỗng, thay bằng Số cơ · Combo · Kỷ lục và Đã ăn X / 15
         fireEvent.click(freeModeBtn);
         expect(freeModeBtn).toHaveAttribute('aria-pressed', 'true');
         expect(screen.queryByTestId('billiards-p2-card')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('p1-slots')).not.toBeInTheDocument();
+        expect(screen.getByTestId('billiards-free-stats')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-shot-count')).toHaveTextContent('Số cơ: 0');
+        expect(screen.getByTestId('billiards-combo-count')).toHaveTextContent('Combo: x0');
+        expect(screen.getByTestId('billiards-best-record')).toHaveTextContent('Kỷ lục:');
+        expect(screen.getByTestId('billiards-free-progress')).toHaveTextContent('Đã ăn: 0 / 15');
 
         fireEvent.click(vsAiBtn);
         expect(vsAiBtn).toHaveAttribute('aria-pressed', 'true');
 
-        // Popover chỉnh xoáy bi cái 112x112px
+        // Nút XOÁY chuyển sang đỉnh cột trái & Popover chỉnh xoáy bi cái 116x116px
+        expect(screen.getByText('XOÁY')).toBeInTheDocument();
         expect(screen.queryByTestId('billiards-spin-popover')).not.toBeInTheDocument();
         fireEvent.click(screen.getByTestId('billiards-spin-popup-trigger'));
         expect(screen.getByTestId('billiards-spin-popover')).toBeInTheDocument();
         const spinSelector = screen.getByTestId('billiards-spin-selector');
+        expect(spinSelector).toHaveStyle({ width: '116px', height: '116px' });
         expect(screen.getByTestId('billiards-spin-tip')).toBeInTheDocument();
         fireEvent.doubleClick(spinSelector);
         expect(spinSelector).toHaveAttribute('data-spin-x', '0.00');
         expect(spinSelector).toHaveAttribute('data-spin-y', '0.00');
+
+        // 5 vạch chia lực bên trái thanh lực dọc & gợi ý ↓ Kéo
+        expect(screen.getByTestId('billiards-power-ticks')).toHaveTextContent('0%25%50%75%100%');
+        expect(screen.getByText('↓ Kéo')).toBeInTheDocument();
 
         // Nút Luật nhanh & Âm thanh
         fireEvent.click(screen.getByTestId('billiards-rules-btn'));

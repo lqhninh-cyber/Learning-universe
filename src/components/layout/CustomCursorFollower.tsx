@@ -139,7 +139,7 @@ export function CustomCursorFollower() {
       return baseScale;
     };
 
-    const syncDataAttributes = (contextMode: 'reading' | 'interactive' | 'default') => {
+    const syncDataAttributes = (contextMode: 'reading' | 'interactive' | 'default' | 'hidden') => {
       const effectiveScale = getEffectiveTargetScale();
       ringEl.dataset.cursorContext = contextMode;
       ringEl.dataset.cursorPressed = isPressed ? 'true' : 'false';
@@ -150,6 +150,14 @@ export function CustomCursorFollower() {
 
     const evaluateTargetContext = (target: EventTarget | null) => {
       const el = target instanceof Element ? target : null;
+
+      if (el?.closest('[data-hide-cursor-ring="true"]')) {
+        baseScale = 0.5;
+        targetOpacity = 0;
+        activeBorderColor = DEFAULT_BORDER_COLOR;
+        syncDataAttributes('hidden');
+        return;
+      }
 
       if (isReadingOrFormulaContext(el)) {
         baseScale = 0.5;

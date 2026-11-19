@@ -21,7 +21,8 @@ export const STRIKE_ANIM_DURATION_SEC = 0.07;
 export const CHALK_DUST_DURATION_SEC = 0.35;
 export const TABLE_SHAKE_DURATION_SEC = 0.13;
 export const TABLE_SHAKE_AMP_PX = 2.5;
-export const GHOST_CUE_VECTOR_LEN_PX = 56;
+export const GHOST_CUE_VECTOR_LEN_PX = 42;
+export const OBJECT_GUIDE_VECTOR_LEN_PX = 64;
 export const PRECISION_AIM_FACTOR = 0.25;
 export const ENGLISH_MAX_DEFLECT_RAD = (18 * Math.PI) / 180;
 export const RETURN_RAIL_DELAY_SEC = 0.22;
@@ -222,7 +223,10 @@ export interface AiTurnPlan {
 export interface TableMetrics {
   width: number;
   height: number;
+  tableLeft: number;
+  tableTop: number;
   tableWidth: number;
+  tableHeight: number;
   railWidth: number;
   cushionBevelPx: number;
   feltLeft: number;
@@ -307,27 +311,39 @@ export function normalizeAngleDiff(diff: number): number {
 }
 
 export function computeTableMetrics(width: number, height: number): TableMetrics {
-  const safeW = Math.max(400, width);
-  const safeH = Math.max(210, height);
+  const safeW = Math.max(420, width);
+  const safeH = Math.max(220, height);
 
-  // Dành hành lang bên phải cho Máng hồi bi cơ khí chuẩn 8 Ball Pool
-  const returnRailW = Math.max(28, Math.min(36, Math.round(safeW * 0.036)));
-  const returnRailGap = 10;
-  const tableWidth = Math.max(320, safeW - returnRailW - returnRailGap - 8);
-  const railWidth = Math.max(
-    20,
-    Math.min(34, Math.round(Math.min(tableWidth * 0.036, safeH * 0.072))),
+  // Khoảng đệm xung quanh thành gỗ để chuôi gậy cơ dài chuẩn vươn tự nhiên không bị cắt sát mép
+  const tableLeft = Math.max(22, Math.round(safeW * 0.032));
+  const tableTop = Math.max(18, Math.round(safeH * 0.045));
+  const tableBottomPad = tableTop;
+
+  // Dành hành lang bên phải cho Máng hồi bi hai thanh ray cơ khí chuẩn 8 Ball Pool
+  const returnRailW = Math.max(30, Math.min(38, Math.round(safeW * 0.038)));
+  const returnRailGap = Math.max(14, Math.round(safeW * 0.016));
+  const returnRailRightPad = Math.max(14, Math.round(safeW * 0.016));
+
+  const tableWidth = Math.max(
+    320,
+    safeW - tableLeft - returnRailGap - returnRailW - returnRailRightPad,
   );
-  const cushionBevelPx = Math.max(5.5, Math.min(9.5, Math.round(railWidth * 0.28)));
+  const tableHeight = Math.max(170, safeH - tableTop - tableBottomPad);
 
-  const feltLeft = railWidth;
-  const feltTop = railWidth;
-  const feltRight = tableWidth - railWidth;
-  const feltBottom = safeH - railWidth;
+  const railWidth = Math.max(
+    18,
+    Math.min(32, Math.round(Math.min(tableWidth * 0.036, tableHeight * 0.072))),
+  );
+  const cushionBevelPx = Math.max(5.5, Math.min(9.0, Math.round(railWidth * 0.28)));
+
+  const feltLeft = tableLeft + railWidth;
+  const feltTop = tableTop + railWidth;
+  const feltRight = tableLeft + tableWidth - railWidth;
+  const feltBottom = tableTop + tableHeight - railWidth;
   const feltWidth = Math.max(240, feltRight - feltLeft);
-  const feltHeight = Math.max(120, feltBottom - feltTop);
+  const feltHeight = Math.max(115, feltBottom - feltTop);
 
-  const ballRadius = Math.max(8.5, Math.min(13.5, feltHeight * 0.033));
+  const ballRadius = Math.max(8.5, Math.min(13.5, feltHeight * 0.035));
   const pocketRadius = ballRadius * 1.68;
 
   // Vạch khai cuộc thẳng tại 25% và chấm khai cuộc tại 75%
@@ -370,15 +386,21 @@ export function computeTableMetrics(width: number, height: number): TableMetrics
     r: JAW_RADIUS_PX,
   }));
 
-  const returnRailX = tableWidth + returnRailGap;
-  const returnRailTopY = railWidth * 0.65;
-  const returnRailBottomY = safeH - railWidth * 0.45;
-  const returnBallRadius = Math.max(8, Math.min(11.5, returnRailW * 0.34));
+  const returnRailX = tableLeft + tableWidth + returnRailGap;
+  const returnRailTopY = tableTop + railWidth * 0.55;
+  const returnRailBottomY = tableTop + tableHeight - railWidth * 0.3;
+  // Tính bán kính bi trong máng sao cho luôn chứa đủ 15 bi gọn gàng không tràn khung
+  const usableStackHeight = Math.max(120, returnRailBottomY - returnRailTopY - 24);
+  const maxFitRadiusFor15 = usableStackHeight / (15 * 2.04);
+  const returnBallRadius = Math.max(5.5, Math.min(10.5, maxFitRadiusFor15, returnRailW * 0.35));
 
   return {
     width: safeW,
     height: safeH,
+    tableLeft,
+    tableTop,
     tableWidth,
+    tableHeight,
     railWidth,
     cushionBevelPx,
     feltLeft,
@@ -416,12 +438,13 @@ function shuffleInPlace<T>(items: T[]): T[] {
  * Xếp Tam Giác 15 Bi chuẩn 8 Ball Pool (5 hàng 1-2-3-4-5):
  * - Bi 8 Đen nằm chính giữa hàng 3 (index 4).
  * - Hai góc đáy hàng 5 bắt buộc 1 Trơn và 1 Sọc.
- * - Các vị trí còn lại xáo trộn tự nhiên.
+ * - Khóa khoảng cách tâm giữa các bi = 2 * R_ball + 0.6px để 15 bi đứng yên tuyệt đối 100% trước cú phá bi.
  */
 export function buildOfficial15BallRack(metrics: TableMetrics): BilliardBall[] {
   const r = metrics.ballRadius;
-  const rowGapX = r * Math.sqrt(3) * 1.025;
-  const colGapY = r * 2.04;
+  const spacing = r * 2 + 0.6;
+  const colGapY = spacing;
+  const rowGapX = (Math.sqrt(3) / 2) * spacing;
 
   const cueSpec = ALL_POOL_BALL_SPECS[0]!;
   const eightSpec = ALL_POOL_BALL_SPECS.find((s) => s.number === 8)!;
@@ -1008,11 +1031,105 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
     }
   }
 
-  // Nếu mọi đường ăn trực tiếp đều bị cắt gắt, AI đánh nhẹ hướng thẳng vào tâm bi mục tiêu hợp lệ gần nhất
+  // Nhánh dự phòng khi toàn bộ đường ăn lỗ bị che (snooker):
+  // 1) Tìm bi mục tiêu hợp lệ có đường đánh chạm trực tiếp thông thoáng
   if (bestScore === -Infinity && fallbackTargets.length > 0) {
-    const nearest = fallbackTargets[0]!;
+    let bestDirectDist = Infinity;
+    for (const tBall of fallbackTargets) {
+      if (
+        isSegmentClear(
+          evalCueX,
+          evalCueY,
+          tBall.x,
+          tBall.y,
+          balls,
+          0,
+          tBall.id,
+          metrics.ballRadius * 1.92,
+        )
+      ) {
+        const d = Math.hypot(tBall.x - evalCueX, tBall.y - evalCueY);
+        if (d < bestDirectDist) {
+          bestDirectDist = d;
+          bestAngle = Math.atan2(tBall.y - evalCueY, tBall.x - evalCueX);
+          bestPower = 0.54;
+          bestScore = 1;
+        }
+      }
+    }
+  }
+
+  // 2) Nếu toàn bộ bi mục tiêu đều bị che đường thẳng -> tính cú đánh bật 1 băng chạm bi mục tiêu
+  if (bestScore === -Infinity && fallbackTargets.length > 0) {
+    const rPad = metrics.ballRadius;
+    const cushionPlanes = [
+      { axis: 'y' as const, plane: metrics.feltTop + rPad },
+      { axis: 'y' as const, plane: metrics.feltBottom - rPad },
+      { axis: 'x' as const, plane: metrics.feltLeft + rPad },
+      { axis: 'x' as const, plane: metrics.feltRight - rPad },
+    ];
+
+    let bestBankDist = Infinity;
+    for (const tBall of fallbackTargets) {
+      for (const c of cushionPlanes) {
+        const refX = c.axis === 'x' ? 2 * c.plane - tBall.x : tBall.x;
+        const refY = c.axis === 'y' ? 2 * c.plane - tBall.y : tBall.y;
+        const dxR = refX - evalCueX;
+        const dyR = refY - evalCueY;
+
+        let tHit = -1;
+        if (c.axis === 'x' && Math.abs(dxR) > 1e-4) {
+          tHit = (c.plane - evalCueX) / dxR;
+        } else if (c.axis === 'y' && Math.abs(dyR) > 1e-4) {
+          tHit = (c.plane - evalCueY) / dyR;
+        }
+
+        if (tHit <= 0.05 || tHit >= 0.95) continue;
+        const bx = evalCueX + dxR * tHit;
+        const by = evalCueY + dyR * tHit;
+        if (
+          bx < metrics.feltLeft + rPad ||
+          bx > metrics.feltRight - rPad ||
+          by < metrics.feltTop + rPad ||
+          by > metrics.feltBottom - rPad
+        ) {
+          continue;
+        }
+
+        const leg1Clear = isSegmentClear(
+          evalCueX,
+          evalCueY,
+          bx,
+          by,
+          balls,
+          0,
+          tBall.id,
+          rPad * 1.9,
+        );
+        const leg2Clear = isSegmentClear(bx, by, tBall.x, tBall.y, balls, 0, tBall.id, rPad * 1.9);
+        if (leg1Clear && leg2Clear) {
+          const totalDist =
+            Math.hypot(bx - evalCueX, by - evalCueY) + Math.hypot(tBall.x - bx, tBall.y - by);
+          if (totalDist < bestBankDist) {
+            bestBankDist = totalDist;
+            bestAngle = Math.atan2(by - evalCueY, bx - evalCueX);
+            bestPower = 0.68;
+            bestScore = 1;
+          }
+        }
+      }
+    }
+  }
+
+  // 3) Phương án cuối cùng (mọi đường 1 băng cũng kín): hướng về bi hợp lệ gần nhất
+  if (bestScore === -Infinity && fallbackTargets.length > 0) {
+    const sorted = [...fallbackTargets].sort(
+      (a, b) =>
+        Math.hypot(a.x - evalCueX, a.y - evalCueY) - Math.hypot(b.x - evalCueX, b.y - evalCueY),
+    );
+    const nearest = sorted[0]!;
     bestAngle = Math.atan2(nearest.y - evalCueY, nearest.x - evalCueX);
-    bestPower = 0.56;
+    bestPower = 0.6;
   }
 
   // Thêm sai số tự nhiên nhỏ (±1.2°) để AI chơi chân thực như người
@@ -1642,7 +1759,7 @@ export function stepBilliardsPhysicsFrame(
 }
 
 /**
- * Vẽ 1 viên bi khoáng thạch với khối cầu 3D, dải băng sọc ~52% đường kính (9-15) và lõi số lăn 2 mặt.
+ * Vẽ 1 viên bi khoáng thạch sắc nét với bóng AO, dải băng sọc ~54% đường kính (9-15), lõi số 2 mặt & viền 0.6px.
  */
 function drawSinglePoolBall3D(
   ctx: CanvasRenderingContext2D,
@@ -1661,10 +1778,10 @@ function drawSinglePoolBall3D(
   ctx.save();
   ctx.globalAlpha = alpha;
 
-  // Bóng đổ mềm hướng tâm xuống mặt nỉ
+  // Bóng tiếp xúc mềm (ambient occlusion) ngay dưới chân bi (+2px, +3px)
   ctx.beginPath();
-  ctx.arc(ball.x + 2.2, ball.y + 3.0, radius * 1.03, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(7, 15, 12, 0.36)';
+  ctx.arc(ball.x + 2, ball.y + 3, radius * 1.02, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(6, 12, 10, 0.38)';
   ctx.fill();
 
   // Clip hình cầu cho thân bi + dải sọc + lõi số
@@ -1674,7 +1791,7 @@ function drawSinglePoolBall3D(
   ctx.clip();
 
   if (spec.isStripe) {
-    // Bi Sọc (9-15): nền Trắng Sứ #F8F9F7 + dải băng màu quấn quanh xích đạo dày ~52% đường kính bi
+    // Bi Sọc (9-15): nền Trắng Sứ #F8F9F7 + dải băng màu sắc cạnh dày ~54% đường kính bi
     const baseGrad = ctx.createRadialGradient(
       ball.x - radius * 0.32,
       ball.y - radius * 0.32,
@@ -1690,23 +1807,17 @@ function drawSinglePoolBall3D(
     ctx.fillRect(ball.x - radius, ball.y - radius, radius * 2, radius * 2);
 
     const poleAngle = Math.atan2(rollPy, rollPx);
-    const bandHalfThick = radius * 0.52;
+    const bandHalfThick = radius * 0.54;
     const bandShift = rollPz * radius * 0.28;
 
     ctx.save();
     ctx.translate(ball.x, ball.y);
     ctx.rotate(poleAngle - Math.PI * 0.5);
 
-    const bandGrad = ctx.createRadialGradient(
-      -radius * 0.3,
-      bandShift - radius * 0.25,
-      radius * 0.08,
-      0,
-      bandShift,
-      radius,
-    );
-    bandGrad.addColorStop(0, spec.lightHex);
-    bandGrad.addColorStop(0.58, spec.colorHex);
+    const bandGrad = ctx.createLinearGradient(-radius, 0, radius, 0);
+    bandGrad.addColorStop(0, spec.shadowHex);
+    bandGrad.addColorStop(0.32, spec.lightHex);
+    bandGrad.addColorStop(0.55, spec.colorHex);
     bandGrad.addColorStop(1, spec.shadowHex);
     ctx.fillStyle = bandGrad;
     ctx.fillRect(-radius * 1.2, bandShift - bandHalfThick, radius * 2.4, bandHalfThick * 2);
@@ -1728,7 +1839,7 @@ function drawSinglePoolBall3D(
     ctx.fillRect(ball.x - radius, ball.y - radius, radius * 2, radius * 2);
   }
 
-  // Vẽ lõi số 2 mặt đối xứng (lăn ra sau sẽ hiện mặt đối diện)
+  // Vẽ lõi trắng chứa số rộng hơn nhẹ (0.44 * R) + chữ số đậm sắc nét (system-ui)
   if (ball.id >= 1) {
     const useFront = rollFz >= 0;
     const vx = useFront ? rollFx : -rollFx;
@@ -1738,7 +1849,7 @@ function drawSinglePoolBall3D(
     if (vz > 0.08) {
       const spotX = ball.x + vx * radius * 0.52;
       const spotY = ball.y + vy * radius * 0.52;
-      const foreshorten = Math.max(0.32, vz);
+      const foreshorten = Math.max(0.34, vz);
       const rotAngle = Math.atan2(vy, vx);
       const coreR = radius * 0.44;
 
@@ -1749,10 +1860,10 @@ function drawSinglePoolBall3D(
 
       ctx.beginPath();
       ctx.arc(0, 0, coreR, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(250, 251, 249, 0.95)';
+      ctx.fillStyle = '#FAFBF9';
       ctx.fill();
 
-      ctx.font = `700 ${Math.max(7.5, Math.round(radius * 0.62))}px "JetBrains Mono", monospace`;
+      ctx.font = `700 ${Math.max(8, Math.round(radius * 0.64))}px system-ui, -apple-system, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#141817';
@@ -1760,13 +1871,13 @@ function drawSinglePoolBall3D(
       ctx.restore();
     }
   } else {
-    // Vệt điểm chạm lăn 3D màu Đá Phiến/Đất Nung trên Bi Cái
+    // Vệt điểm chạm lăn 3D màu Đất Nung trên Bi Cái
     if (rollFz > 0.05) {
       const dotX = ball.x + rollFx * radius * 0.5;
       const dotY = ball.y + rollFy * radius * 0.5;
       ctx.beginPath();
       ctx.arc(dotX, dotY, Math.max(1.4, radius * 0.14 * rollFz), 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(181, 68, 60, 0.72)';
+      ctx.fillStyle = 'rgba(181, 68, 60, 0.78)';
       ctx.fill();
     }
   }
@@ -1797,15 +1908,23 @@ function drawSinglePoolBall3D(
     0,
     Math.PI * 2,
   );
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.72)';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
   ctx.fill();
 
   ctx.restore();
+
+  // Viền mảnh 0.6px quanh chu vi để từng viên tách bạch rõ khi xếp tam giác 15 bi
+  ctx.beginPath();
+  ctx.arc(ball.x, ball.y, radius - 0.3, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(10, 18, 15, 0.35)';
+  ctx.lineWidth = 0.6;
+  ctx.stroke();
+
   ctx.restore();
 }
 
 /**
- * Kết xuất toàn bộ Bàn Bida 3D vát băng, Máng hồi bi cơ khí, 16 bi lăn 3D, Gậy cơ & Tia ngắm chuẩn 8 Ball Pool.
+ * Kết xuất toàn bộ Bàn Bida 3D vát băng, Máng hồi bi 2 ray kim loại hở, 16 bi lăn 3D sắc nét, Gậy cơ vót thon & Tia ngắm chuẩn 8 Ball Pool.
  */
 export function renderBilliardsStageFrame(
   ctx: CanvasRenderingContext2D,
@@ -1816,7 +1935,10 @@ export function renderBilliardsStageFrame(
   const {
     width,
     height,
+    tableLeft,
+    tableTop,
     tableWidth,
+    tableHeight,
     railWidth,
     cushionBevelPx,
     feltLeft,
@@ -1839,11 +1961,12 @@ export function renderBilliardsStageFrame(
     returnBallRadius,
   } = metrics;
 
-  ctx.setTransform(world.dpr, 0, 0, world.dpr, 0, 0);
+  const tableRight = tableLeft + tableWidth;
+  const tableBottom = tableTop + tableHeight;
 
-  // Nền ngoài quanh bàn khớp thẻ bọc (#EEF2F0 / #0D1A14)
-  ctx.fillStyle = isDarkTheme ? '#0D1A14' : '#EEF2F0';
-  ctx.fillRect(0, 0, width, height);
+  ctx.setTransform(world.dpr, 0, 0, world.dpr, 0, 0);
+  // Nền trong suốt để hiển thị đúng nền giấy #FAFBF9 / #0D1A14 phía sau bàn và giữa 2 thanh ray máng bi
+  ctx.clearRect(0, 0, width, height);
 
   ctx.save();
   if (world.shakeRemainingSec > 0) {
@@ -1855,43 +1978,73 @@ export function renderBilliardsStageFrame(
     );
   }
 
-  // 1. MÁNG HỒI BI CƠ KHÍ BÊN PHẢI THÀNH BÀN (Mechanical Ball Return Rail)
+  // 1. MÁNG HỒI BI HAI THANH RAY KIM LOẠI HỞ BÊN PHẢI BÀN (Dual-Rail Metallic Ball Return)
   ctx.save();
-  // Đường ống nối từ hông phải thành bàn sang máng
-  ctx.fillStyle = '#251D19';
-  ctx.fillRect(
-    tableWidth - 4,
-    returnRailTopY - 2,
-    returnRailX - tableWidth + returnRailW * 0.5,
-    12,
-  );
-
-  // Rãnh máng tối bên dưới bi
-  ctx.fillStyle = '#0D1412';
-  ctx.beginPath();
-  ctx.roundRect(returnRailX, returnRailTopY, returnRailW, returnRailBottomY - returnRailTopY, 10);
-  ctx.fill();
-
-  // Hai đường ray kim loại đôi mảnh màu Đá Phiến / Đồng Cổ
-  const trackLeft = returnRailX + returnRailW * 0.24;
-  const trackRight = returnRailX + returnRailW * 0.76;
-  ctx.strokeStyle = '#6B7D77';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(trackLeft, returnRailTopY + 6);
-  ctx.lineTo(trackLeft, returnRailBottomY - 6);
-  ctx.moveTo(trackRight, returnRailTopY + 6);
-  ctx.lineTo(trackRight, returnRailBottomY - 6);
-  ctx.stroke();
-
-  ctx.strokeStyle = '#9C7A4C';
-  ctx.lineWidth = 1.4;
-  ctx.beginPath();
-  ctx.roundRect(returnRailX, returnRailTopY, returnRailW, returnRailBottomY - returnRailTopY, 10);
-  ctx.stroke();
-
-  // Các viên bi đã ăn lăn trượt & xếp chồng trong máng hồi bi
   const railCenterX = returnRailX + returnRailW * 0.5;
+  const trackHalfSpan = Math.max(returnBallRadius * 0.78, returnRailW * 0.25);
+  const leftTrackX = railCenterX - trackHalfSpan;
+  const rightTrackX = railCenterX + trackHalfSpan;
+  const chuteStartY = returnRailTopY + 18;
+  const chuteEndY = returnRailBottomY - 6;
+
+  // Khúc cua ống dẫn bo cong góc trên phải nối từ thành gỗ vào máng ray
+  const elbowStartX = tableRight - 6;
+  const elbowY = returnRailTopY + 3;
+  ctx.beginPath();
+  ctx.moveTo(elbowStartX, elbowY);
+  ctx.quadraticCurveTo(railCenterX, elbowY, railCenterX, chuteStartY + 2);
+  ctx.strokeStyle = isDarkTheme ? '#2E3D37' : '#3B4C47';
+  ctx.lineWidth = Math.max(12, returnBallRadius * 1.45);
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(elbowStartX, elbowY);
+  ctx.quadraticCurveTo(railCenterX, elbowY, railCenterX, chuteStartY + 2);
+  ctx.strokeStyle = 'rgba(184, 146, 90, 0.45)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Đai cổ đồng nối ống vào thành bàn
+  ctx.fillStyle = '#9C7A4C';
+  ctx.fillRect(tableRight - 3, elbowY - 7, 6, 14);
+
+  // Các thanh giằng ngang mảnh nối 2 ray (giữ nguyên khoảng trống giữa 2 ray nhìn xuyên ra nền giấy)
+  for (const tieRatio of [0.22, 0.55, 0.88] as const) {
+    const ty = chuteStartY + (chuteEndY - chuteStartY) * tieRatio;
+    ctx.strokeStyle = isDarkTheme ? 'rgba(130, 152, 144, 0.35)' : 'rgba(59, 76, 71, 0.35)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(leftTrackX - 1, ty);
+    ctx.lineTo(rightTrackX + 1, ty);
+    ctx.stroke();
+  }
+
+  // Hai thanh ray kim loại song song (Đá Phiến & Đồng Cổ xước)
+  const railGrad = ctx.createLinearGradient(0, chuteStartY, 0, chuteEndY);
+  railGrad.addColorStop(0, '#9C7A4C');
+  railGrad.addColorStop(0.18, isDarkTheme ? '#6F827B' : '#4E5F5A');
+  railGrad.addColorStop(0.85, isDarkTheme ? '#4E5F5A' : '#34423E');
+  railGrad.addColorStop(1, '#9C7A4C');
+
+  for (const rx of [leftTrackX, rightTrackX] as const) {
+    ctx.beginPath();
+    ctx.moveTo(rx, chuteStartY);
+    ctx.lineTo(rx, chuteEndY);
+    ctx.strokeStyle = railGrad;
+    ctx.lineWidth = 3.6;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(rx - 0.6, chuteStartY + 2);
+    ctx.lineTo(rx - 0.6, chuteEndY - 2);
+    ctx.strokeStyle = 'rgba(230, 210, 175, 0.48)';
+    ctx.lineWidth = 0.9;
+    ctx.stroke();
+  }
+
+  // Các viên bi đã ăn lăn rõ nét giữa 2 thanh ray và xếp gọn ở đáy máng
   for (const rb of world.returnRailQueue) {
     if (rb.pendingSec > 0) continue;
     const fakeBall: BilliardBall = {
@@ -1926,10 +2079,25 @@ export function renderBilliardsStageFrame(
       fakeBall.pz,
     );
   }
+
+  // Chốt chặn cao su đáy máng (#141817) + ngàm Đồng Cổ
+  ctx.fillStyle = '#141817';
+  ctx.beginPath();
+  ctx.roundRect(leftTrackX - 4, chuteEndY - 3, rightTrackX - leftTrackX + 8, 8, 3);
+  ctx.fill();
+  ctx.strokeStyle = '#9C7A4C';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
   ctx.restore();
 
-  // 2. KHUNG THÀNH GỖ 3D (Outer Wood Rails: Đá Phiến – Óc Chó trầm #2A211C -> #181310)
-  const woodGrad = ctx.createLinearGradient(0, 0, 0, height);
+  // 2. KHUNG THÀNH GỖ 3D + BÓNG ĐỔ MỀM XUNG QUANH BÀN (Outer Wood Rails: #2A211C -> #181310)
+  ctx.save();
+  ctx.shadowColor = isDarkTheme ? 'rgba(0, 0, 0, 0.45)' : 'rgba(20, 38, 34, 0.18)';
+  ctx.shadowBlur = 18;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 6;
+
+  const woodGrad = ctx.createLinearGradient(0, tableTop, 0, tableBottom);
   woodGrad.addColorStop(0, '#332822');
   woodGrad.addColorStop(0.18, '#2A211C');
   woodGrad.addColorStop(0.84, '#1D1714');
@@ -1937,18 +2105,19 @@ export function renderBilliardsStageFrame(
 
   ctx.fillStyle = woodGrad;
   ctx.beginPath();
-  ctx.roundRect(0, 0, tableWidth, height, 18);
+  ctx.roundRect(tableLeft, tableTop, tableWidth, tableHeight, 18);
   ctx.fill();
+  ctx.restore();
 
   // Đường vát cạnh bắt sáng trên và bóng đổ dưới thành gỗ
   ctx.strokeStyle = 'rgba(255, 246, 224, 0.14)';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.roundRect(1.5, 1.5, tableWidth - 3, height - 3, 17);
+  ctx.roundRect(tableLeft + 1.5, tableTop + 1.5, tableWidth - 3, tableHeight - 3, 17);
   ctx.stroke();
 
   // 3. 4 ỐP GÓC BO TRÒN & 2 ỐP LỖ GIỮA BẰNG KIM LOẠI ĐỒNG CỔ XƯỚC (#9C7A4C -> #6B5335)
-  const bronzeGrad = ctx.createLinearGradient(0, 0, tableWidth, height);
+  const bronzeGrad = ctx.createLinearGradient(tableLeft, tableTop, tableRight, tableBottom);
   bronzeGrad.addColorStop(0, '#B8925A');
   bronzeGrad.addColorStop(0.5, '#9C7A4C');
   bronzeGrad.addColorStop(1, '#6B5335');
@@ -1959,12 +2128,11 @@ export function renderBilliardsStageFrame(
   ctx.strokeStyle = 'rgba(255, 246, 224, 0.25)';
   ctx.lineWidth = 1;
 
-  // 4 ốp góc bo tròn
   for (const [cx, cy, sx, sy] of [
-    [0, 0, 1, 1],
-    [tableWidth, 0, -1, 1],
-    [0, height, 1, -1],
-    [tableWidth, height, -1, -1],
+    [tableLeft, tableTop, 1, 1],
+    [tableRight, tableTop, -1, 1],
+    [tableLeft, tableBottom, 1, -1],
+    [tableRight, tableBottom, -1, -1],
   ] as const) {
     ctx.beginPath();
     ctx.moveTo(cx + sx * cornerRadius, cy);
@@ -1983,16 +2151,16 @@ export function renderBilliardsStageFrame(
   // 2 ốp lỗ giữa bằng Đồng Cổ xước
   const midX = feltLeft + feltWidth * 0.5;
   const midPlateW = pocketRadius * 2.25;
-  for (const py of [0, height - railWidth]) {
+  for (const py of [tableTop, tableBottom - railWidth]) {
     ctx.beginPath();
     ctx.roundRect(midX - midPlateW * 0.5, py, midPlateW, railWidth, 4);
     ctx.fill();
     ctx.stroke();
   }
 
-  // 18 Chấm định vị Kim Cương (Diamond Sights) mảnh màu vàng đồng dọc 4 thành bàn (4x3 + 2x3 = 18)
+  // 18 Chấm định vị Kim Cương (Diamond Sights) mảnh màu vàng đồng dọc 4 thành bàn
   const drawDiamondSight = (dx: number, dy: number) => {
-    const s = 3.3;
+    const s = 3.2;
     ctx.beginPath();
     ctx.moveTo(dx, dy - s);
     ctx.lineTo(dx + s, dy);
@@ -2003,25 +2171,23 @@ export function renderBilliardsStageFrame(
     ctx.fill();
   };
 
-  const topRailY = railWidth * 0.44;
-  const botRailY = height - railWidth * 0.44;
-  const leftRailX = railWidth * 0.44;
-  const rightRailX = tableWidth - railWidth * 0.44;
+  const topRailY = tableTop + railWidth * 0.44;
+  const botRailY = tableBottom - railWidth * 0.44;
+  const leftRailX = tableLeft + railWidth * 0.44;
+  const rightRailX = tableRight - railWidth * 0.44;
 
-  // 12 chấm dọc 2 băng dài (chia làm 2 đoạn x 3 chấm)
   for (const i of [1, 2, 3, 5, 6, 7] as const) {
     const sx = feltLeft + (feltWidth * i) / 8;
     drawDiamondSight(sx, topRailY);
     drawDiamondSight(sx, botRailY);
   }
-  // 6 chấm dọc 2 băng ngắn (mỗi bên 3 chấm)
   for (const j of [1, 2, 3] as const) {
     const sy = feltTop + (feltHeight * j) / 4;
     drawDiamondSight(leftRailX, sy);
     drawDiamondSight(rightRailX, sy);
   }
 
-  // 4. MẶT NỈ BÀN (#214E42 -> #193D34) & BÓNG ĐỔ MỀM TỪ BĂNG (10–14px inner drop shadow)
+  // 4. MẶT NỈ BÀN (#214E42 -> #193D34)
   const feltAreaLeft = feltLeft - cushionBevelPx;
   const feltAreaTop = feltTop - cushionBevelPx;
   const feltAreaW = feltWidth + cushionBevelPx * 2;
@@ -2068,7 +2234,6 @@ export function renderBilliardsStageFrame(
     readonly pts: readonly (readonly [number, number])[];
     readonly lightEdge: readonly [number, number, number, number];
   }[] = [
-    // Băng trên trái
     {
       pts: [
         [feltLeft + cornerGap - bevel, feltTop - bevel],
@@ -2078,7 +2243,6 @@ export function renderBilliardsStageFrame(
       ],
       lightEdge: [feltLeft + cornerGap, feltTop, midX - sideGap, feltTop],
     },
-    // Băng trên phải
     {
       pts: [
         [midX + sideGap - bevel * 0.5, feltTop - bevel],
@@ -2088,7 +2252,6 @@ export function renderBilliardsStageFrame(
       ],
       lightEdge: [midX + sideGap, feltTop, feltRight - cornerGap, feltTop],
     },
-    // Băng dưới trái
     {
       pts: [
         [feltLeft + cornerGap, feltBottom],
@@ -2098,7 +2261,6 @@ export function renderBilliardsStageFrame(
       ],
       lightEdge: [feltLeft + cornerGap, feltBottom, midX - sideGap, feltBottom],
     },
-    // Băng dưới phải
     {
       pts: [
         [midX + sideGap, feltBottom],
@@ -2108,7 +2270,6 @@ export function renderBilliardsStageFrame(
       ],
       lightEdge: [midX + sideGap, feltBottom, feltRight - cornerGap, feltBottom],
     },
-    // Băng trái
     {
       pts: [
         [feltLeft - bevel, feltTop + cornerGap - bevel],
@@ -2118,7 +2279,6 @@ export function renderBilliardsStageFrame(
       ],
       lightEdge: [feltLeft, feltTop + cornerGap, feltLeft, feltBottom - cornerGap],
     },
-    // Băng phải
     {
       pts: [
         [feltRight, feltTop + cornerGap],
@@ -2130,7 +2290,6 @@ export function renderBilliardsStageFrame(
     },
   ];
 
-  // Đổ bóng mềm từ 6 đoạn băng lên mặt nỉ (12px inner shadow)
   for (const trap of trapezoids) {
     ctx.save();
     ctx.beginPath();
@@ -2157,7 +2316,6 @@ export function renderBilliardsStageFrame(
     ctx.fill();
     ctx.restore();
 
-    // Đường sáng mép vát mũi băng
     ctx.strokeStyle = 'rgba(130, 195, 175, 0.25)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -2166,9 +2324,8 @@ export function renderBilliardsStageFrame(
     ctx.stroke();
   }
 
-  // 6. 6 HỐC LỖ KHOÉT SÂU (#09100E) + VIỀN DA/ĐỒNG BÁN NGUYỆT & 12 CHỐT BO MIỆNG LỖ
+  // 6. 6 HỐC LỖ KHOÉT SÂU (#09100E) + 12 CHỐT BO MIỆNG LỖ
   for (const pocket of pockets) {
-    // Hốc khoét ăn sâu vào thành gỗ
     ctx.beginPath();
     ctx.arc(pocket.x, pocket.y, pocketRadius + 3.5, 0, Math.PI * 2);
     ctx.fillStyle = '#5B452A';
@@ -2222,7 +2379,7 @@ export function renderBilliardsStageFrame(
     ctx.restore();
   }
 
-  // 8. VẼ 16 VIÊN BI KHOÁNG THẠCH LĂN 3D
+  // 8. VẼ 16 VIÊN BI KHOÁNG THẠCH LĂN 3D SẮC NÉT
   for (const ball of world.balls) {
     if (ball.pocketed) continue;
     const scale = ball.sinking ? Math.max(0.2, 1 - ball.sinkProgress * 0.78) : 1;
@@ -2241,8 +2398,8 @@ export function renderBilliardsStageFrame(
     );
   }
 
-  // 9. TIA NGẮM CHUẨN 8 BALL POOL + GẬY CƠ LUÔN HIỆN KHI ĐẾN LƯỢT
-  const drawCueStickAt = (
+  // 9. TIA NGẮM & BI ẢO CHUẨN 8 BALL POOL + GẬY CƠ THON DÀI 4 KHÚC (~52% BÀN)
+  const drawTaperedCueStickAt = (
     originX: number,
     originY: number,
     shotDirX: number,
@@ -2250,39 +2407,112 @@ export function renderBilliardsStageFrame(
     tipOffsetPx: number,
   ) => {
     const cueAngle = Math.atan2(-shotDirY, -shotDirX);
-    const cueLength = Math.min(235, feltWidth * 0.31);
+    const cueLength = Math.max(250, Math.round(feltWidth * 0.52));
+    const tipR = 2.1;
+    const buttR = 5.2;
+    const radiusAt = (distFromTip: number) => {
+      const t = Math.max(0, Math.min(1, distFromTip / cueLength));
+      return tipR + (buttR - tipR) * t;
+    };
+
+    const tipLen = 3.5;
+    const ferruleEnd = tipLen + 6.0;
+    const shaftEnd = cueLength * 0.58;
+    const bumperStart = cueLength - 6.5;
+
+    // Đổ bóng mềm lệch xuống dưới (rgba(8, 16, 14, 0.42), offsetY: 5px) để gậy cơ nổi 3D
+    ctx.save();
+    ctx.translate(originX, originY + 5);
+    ctx.rotate(cueAngle);
+    ctx.beginPath();
+    ctx.moveTo(tipOffsetPx, -tipR);
+    ctx.lineTo(tipOffsetPx + cueLength, -buttR);
+    ctx.lineTo(tipOffsetPx + cueLength, buttR);
+    ctx.lineTo(tipOffsetPx, tipR);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(8, 16, 14, 0.42)';
+    ctx.fill();
+    ctx.restore();
 
     ctx.save();
     ctx.translate(originX, originY);
     ctx.rotate(cueAngle);
 
+    // 4. Đầu da phủ lơ màu Lam Ngọc (#49768F, dài 3.5px)
+    const tipX = tipOffsetPx;
     ctx.beginPath();
-    ctx.moveTo(tipOffsetPx + 2, 4);
-    ctx.lineTo(tipOffsetPx + cueLength + 2, 5);
-    ctx.strokeStyle = 'rgba(6, 12, 10, 0.42)';
-    ctx.lineWidth = 6.5;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-
-    const cueGrad = ctx.createLinearGradient(tipOffsetPx, 0, tipOffsetPx + cueLength, 0);
-    cueGrad.addColorStop(0, '#3B7A65'); // Đầu lơ Ngọc Bích
-    cueGrad.addColorStop(0.02, '#FAFBF9'); // Đầu bịt sứ
-    cueGrad.addColorStop(0.045, '#9C7A4C'); // Khâu đồng
-    cueGrad.addColorStop(0.55, '#D2B486'); // Ngọn gỗ Phong sáng
-    cueGrad.addColorStop(0.58, '#9C7A4C'); // Vạch khảm đồng
-    cueGrad.addColorStop(1, '#1A2B26'); // Chuôi Đá Phiến Trầm
-
-    ctx.beginPath();
-    ctx.moveTo(tipOffsetPx, -2.0);
-    ctx.lineTo(tipOffsetPx + cueLength, -4.6);
-    ctx.lineTo(tipOffsetPx + cueLength, 4.6);
-    ctx.lineTo(tipOffsetPx, 2.0);
+    ctx.arc(tipX + 1.2, 0, tipR, Math.PI * 0.5, Math.PI * 1.5);
+    ctx.lineTo(tipX + tipLen, -radiusAt(tipLen));
+    ctx.lineTo(tipX + tipLen, radiusAt(tipLen));
     ctx.closePath();
-    ctx.fillStyle = cueGrad;
+    ctx.fillStyle = '#49768F';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(156, 122, 76, 0.55)';
+
+    // 3. Phíp đầu gậy Trắng Sứ (#FAFBF9, dài 6px)
+    ctx.beginPath();
+    ctx.moveTo(tipX + tipLen, -radiusAt(tipLen));
+    ctx.lineTo(tipX + ferruleEnd, -radiusAt(ferruleEnd));
+    ctx.lineTo(tipX + ferruleEnd, radiusAt(ferruleEnd));
+    ctx.lineTo(tipX + tipLen, radiusAt(tipLen));
+    ctx.closePath();
+    ctx.fillStyle = '#FAFBF9';
+    ctx.fill();
+
+    // 2. Thân gậy gỗ phong sáng (#E6D3B3 -> #C9AE82) + vệt bắt sáng dọc thân
+    const shaftGrad = ctx.createLinearGradient(0, -4, 0, 4);
+    shaftGrad.addColorStop(0, '#F3E7CF');
+    shaftGrad.addColorStop(0.45, '#E6D3B3');
+    shaftGrad.addColorStop(1, '#C9AE82');
+    ctx.beginPath();
+    ctx.moveTo(tipX + ferruleEnd, -radiusAt(ferruleEnd));
+    ctx.lineTo(tipX + shaftEnd, -radiusAt(shaftEnd));
+    ctx.lineTo(tipX + shaftEnd, radiusAt(shaftEnd));
+    ctx.lineTo(tipX + ferruleEnd, radiusAt(ferruleEnd));
+    ctx.closePath();
+    ctx.fillStyle = shaftGrad;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(tipX + ferruleEnd + 2, -radiusAt(ferruleEnd) * 0.45);
+    ctx.lineTo(tipX + shaftEnd - 2, -radiusAt(shaftEnd) * 0.45);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
     ctx.lineWidth = 0.8;
     ctx.stroke();
+
+    // 1. Chuôi gỗ Đá Phiến trầm (#1E2D29) khảm 3 vòng nhẫn Đồng Cổ (#C29548) + Đế cao su đen (#111816)
+    const handleGrad = ctx.createLinearGradient(0, -5.2, 0, 5.2);
+    handleGrad.addColorStop(0, '#2C413C');
+    handleGrad.addColorStop(0.45, '#1E2D29');
+    handleGrad.addColorStop(1, '#121C19');
+    ctx.beginPath();
+    ctx.moveTo(tipX + shaftEnd, -radiusAt(shaftEnd));
+    ctx.lineTo(tipX + bumperStart, -radiusAt(bumperStart));
+    ctx.lineTo(tipX + bumperStart, radiusAt(bumperStart));
+    ctx.lineTo(tipX + shaftEnd, radiusAt(shaftEnd));
+    ctx.closePath();
+    ctx.fillStyle = handleGrad;
+    ctx.fill();
+
+    // 3 vòng nhẫn Đồng Cổ (#C29548)
+    for (const ringPos of [
+      shaftEnd + 1.5,
+      (shaftEnd + bumperStart) * 0.52,
+      bumperStart - 3.5,
+    ] as const) {
+      const rr = radiusAt(ringPos);
+      ctx.fillStyle = '#C29548';
+      ctx.fillRect(tipX + ringPos, -rr, 2.2, rr * 2);
+    }
+
+    // Đế cao su đen (#111816) ở cuối chuôi
+    ctx.beginPath();
+    ctx.moveTo(tipX + bumperStart, -radiusAt(bumperStart));
+    ctx.lineTo(tipX + cueLength, -buttR);
+    ctx.lineTo(tipX + cueLength, buttR);
+    ctx.lineTo(tipX + bumperStart, radiusAt(bumperStart));
+    ctx.closePath();
+    ctx.fillStyle = '#111816';
+    ctx.fill();
 
     ctx.restore();
   };
@@ -2311,28 +2541,28 @@ export function renderBilliardsStageFrame(
     const isIllegalHit =
       raycast.hitBall !== null && !isBallLegalTarget(world, raycast.hitBall, world.currentPlayer);
 
-    // Đường ngắm nét Trắng tinh khiết 2px có viền tối mảnh bao ngoài (rgba(12, 22, 19, 0.65), 3.6px)
+    // Tia ngắm chính Trắng Sứ #FFFFFF (1.8px) bọc viền tối mỏng (rgba(10, 20, 17, 0.55), 3.4px)
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(cueBall.x, cueBall.y);
     ctx.lineTo(raycast.ghostX, raycast.ghostY);
-    ctx.strokeStyle = 'rgba(12, 22, 19, 0.65)';
-    ctx.lineWidth = 3.6;
+    ctx.strokeStyle = 'rgba(10, 20, 17, 0.55)';
+    ctx.lineWidth = 3.4;
     ctx.lineCap = 'round';
     ctx.stroke();
 
     ctx.strokeStyle = isIllegalHit ? '#E05247' : '#FFFFFF';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.8;
     ctx.stroke();
 
-    // Vòng tròn Bi Ảo (Ghost Ball) hoặc Biểu tượng vòng tròn dấu chéo đỏ (⊘) khi ngắm nhầm bi đối thủ
+    // Vòng Bi Ảo (Ghost Ball) hoặc Biểu tượng vòng tròn dấu chéo đỏ (⊘) khi ngắm nhầm bi đối thủ
     if (isIllegalHit) {
       ctx.beginPath();
       ctx.arc(raycast.ghostX, raycast.ghostY, ballRadius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(224, 82, 71, 0.2)';
+      ctx.fillStyle = 'rgba(224, 82, 71, 0.22)';
       ctx.fill();
       ctx.strokeStyle = '#E05247';
-      ctx.lineWidth = 2.2;
+      ctx.lineWidth = 2.1;
       ctx.stroke();
 
       const slashR = ballRadius * 0.66;
@@ -2343,15 +2573,17 @@ export function renderBilliardsStageFrame(
     } else {
       ctx.beginPath();
       ctx.arc(raycast.ghostX, raycast.ghostY, ballRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(12, 22, 19, 0.65)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(10, 20, 17, 0.55)';
       ctx.lineWidth = 3.4;
       ctx.stroke();
 
       ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.8;
       ctx.stroke();
 
-      // Tia lệch hướng bi cái (ngắn, điều chỉnh theo Cù lê / Trô)
+      // Tia lệch hướng bi cái (length = 42px, nét đứt mảnh, điều chỉnh theo Cù lê / Trô)
       ctx.beginPath();
       ctx.setLineDash([4, 4]);
       ctx.moveTo(raycast.ghostX, raycast.ghostY);
@@ -2359,34 +2591,48 @@ export function renderBilliardsStageFrame(
         raycast.ghostX + raycast.cueDeflectX * GHOST_CUE_VECTOR_LEN_PX,
         raycast.ghostY + raycast.cueDeflectY * GHOST_CUE_VECTOR_LEN_PX,
       );
-      ctx.strokeStyle = 'rgba(250, 251, 249, 0.62)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.72)';
       ctx.lineWidth = 1.4;
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Tia bật dự đoán hướng bi mục tiêu (dài sắc nét)
+      // Tia bật bi mục tiêu sắc nét (length = 64px có mũi tên mảnh ở đầu)
       if (raycast.hitBall) {
-        const guideLen = ballRadius * 5.2;
         const startX = raycast.hitBall.x;
         const startY = raycast.hitBall.y;
-        const endX = startX + raycast.targetDirX * guideLen;
-        const endY = startY + raycast.targetDirY * guideLen;
+        const tdx = raycast.targetDirX;
+        const tdy = raycast.targetDirY;
+        const endX = startX + tdx * OBJECT_GUIDE_VECTOR_LEN_PX;
+        const endY = startY + tdy * OBJECT_GUIDE_VECTOR_LEN_PX;
+        const arrowLen = 7.5;
+        const arrowSpread = 4.2;
+        const perpX = -tdy;
+        const perpY = tdx;
+        const backX = endX - tdx * arrowLen;
+        const backY = endY - tdy * arrowLen;
 
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(endX, endY);
-        ctx.strokeStyle = 'rgba(12, 22, 19, 0.65)';
-        ctx.lineWidth = 3.6;
+        ctx.strokeStyle = 'rgba(10, 20, 17, 0.55)';
+        ctx.lineWidth = 3.4;
         ctx.stroke();
 
         ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.8;
         ctx.stroke();
 
+        // Mũi tên mảnh đầu tia bật mục tiêu
         ctx.beginPath();
-        ctx.arc(endX, endY, 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
+        ctx.moveTo(backX + perpX * arrowSpread, backY + perpY * arrowSpread);
+        ctx.lineTo(endX, endY);
+        ctx.lineTo(backX - perpX * arrowSpread, backY - perpY * arrowSpread);
+        ctx.strokeStyle = 'rgba(10, 20, 17, 0.55)';
+        ctx.lineWidth = 3.2;
+        ctx.stroke();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 1.7;
+        ctx.stroke();
       }
     }
 
@@ -2402,12 +2648,18 @@ export function renderBilliardsStageFrame(
 
     // Gậy cơ luôn hiển thị sát bi cái và lùi ra sau theo thanh lực dọc bên trái
     const tipOffset = ballRadius + 7 + world.dragPullPower * 52;
-    drawCueStickAt(cueBall.x, cueBall.y, dirX, dirY, tipOffset);
+    drawTaperedCueStickAt(cueBall.x, cueBall.y, dirX, dirY, tipOffset);
   } else if (world.strikeAnim.active && cueBall && !cueBall.pocketed) {
     const progress = Math.min(1, world.strikeAnim.elapsedSec / world.strikeAnim.durationSec);
     const eased = 1 - Math.pow(1 - progress, 3);
     const tipOffset = world.strikeAnim.pullBackOffsetPx * (1 - eased) + ballRadius * eased;
-    drawCueStickAt(cueBall.x, cueBall.y, world.strikeAnim.dirX, world.strikeAnim.dirY, tipOffset);
+    drawTaperedCueStickAt(
+      cueBall.x,
+      cueBall.y,
+      world.strikeAnim.dirX,
+      world.strikeAnim.dirY,
+      tipOffset,
+    );
   }
 
   // 10. Tia sáng va chạm, bụi phấn lơ #DCEAE6 & chữ nổi pha đánh đẹp
