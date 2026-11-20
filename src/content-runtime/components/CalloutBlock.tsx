@@ -22,23 +22,23 @@ const CALLOUT_STYLES: Record<
   Remark: {
     defaultTitle: 'Nhận xét',
     containerClass:
-      'border-[var(--bg-muted)] bg-[var(--bg-surface)]/25 dark:border-[#1E3B2E] dark:bg-[#0E1E17] dark:text-[#E8F1EC]',
-    iconClass: 'text-[var(--accent-primary)] dark:text-[#A1D1B7]',
-    titleClass: 'text-[var(--text-primary)] dark:text-[#E8F1EC]',
+      'border-[var(--border-hairline)] border-l-[3px] border-l-[var(--accent-heritage)] bg-[var(--bg-surface)] text-[var(--text-main)]',
+    iconClass: 'text-[var(--accent-heritage)]',
+    titleClass: 'text-[var(--text-main)]',
     Icon: Lightbulb,
   },
   Note: {
     defaultTitle: 'Ghi chú',
     containerClass:
-      'border-[var(--bg-muted)] bg-[var(--accent-verandah)]/10 dark:border-[#1E3B2E] dark:bg-[#0E1E17] dark:text-[#E8F1EC]',
-    iconClass: 'text-[var(--accent-verandah)] dark:text-[#A1D1B7]',
-    titleClass: 'text-[var(--text-primary)] dark:text-[#E8F1EC]',
+      'border-[var(--border-hairline)] border-l-[3px] border-l-[var(--accent-heritage)] bg-[var(--bg-surface)] text-[var(--text-main)]',
+    iconClass: 'text-[var(--accent-heritage)]',
+    titleClass: 'text-[var(--text-main)]',
     Icon: Info,
   },
   Warning: {
     defaultTitle: 'Lưu ý quan trọng',
     containerClass:
-      'border-l-4 border-[var(--cinnabar-text)] bg-[var(--cinnabar-bg)] text-[var(--cinnabar-text)] border-y-transparent border-r-transparent',
+      'border-[var(--border-hairline)] border-l-[3px] border-l-[var(--cinnabar-text)] bg-[var(--bg-surface)] text-[var(--text-main)]',
     iconClass: 'text-[var(--cinnabar-text)]',
     titleClass: 'text-[var(--cinnabar-text)] font-bold',
     Icon: AlertTriangle,
@@ -57,13 +57,13 @@ function BaseCalloutBlock({
   return (
     <aside
       aria-label={heading}
-      className={cn('my-5 rounded-xl border p-4 sm:p-5', style.containerClass)}
+      className={cn('my-5 rounded-lg border p-4 sm:p-5', style.containerClass)}
     >
       <div className="mb-2 flex items-center gap-2">
         <IconComponent className={cn('h-4 w-4 shrink-0', style.iconClass)} aria-hidden="true" />
         <p className={cn('text-sm font-semibold', style.titleClass)}>{heading}</p>
       </div>
-      <div className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)] dark:text-[#E8F1EC]">
+      <div className="space-y-2 text-sm leading-relaxed text-[var(--text-secondary)]">
         {children}
       </div>
     </aside>

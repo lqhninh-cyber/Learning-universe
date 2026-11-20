@@ -1,0 +1,759 @@
+import type { LessonMeta } from '@schemas/index';
+import {
+  ArrowUpRight,
+  BookMarked,
+  Download,
+  Edit3,
+  Eye,
+  FileText,
+  ListTree,
+  Search,
+  Sparkles,
+  X,
+} from 'lucide-react';
+import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router';
+import { MathRenderer } from '@/content-runtime';
+import {
+  getAllGlossaryEntries,
+  InlineMathText,
+  KatexMath,
+  type MathGlossaryEntry,
+  type MathGlossarySubject,
+} from '@/features/math-glossary';
+import { ROUTES } from '@/shared/config/routes';
+import { cn } from '@/shared/lib/cn';
+import { matchesVietnameseQuery, stripDiacritics } from '@/shared/lib/vietnamese';
+
+export type SplitStudyTab = 'toc' | 'glossary' | 'notes';
+
+export interface SplitStudyPaneProps {
+  readonly lessonId: string;
+  readonly lessonSlug: string;
+  readonly lessonTitle: string;
+  readonly lessonDescription?: string;
+  readonly subjectSlug: string;
+  readonly subjectTitle: string;
+  readonly lessonMeta: LessonMeta | null;
+  readonly activeTab: SplitStudyTab;
+  readonly onTabChange: (tab: SplitStudyTab) => void;
+  readonly onClose?: () => void;
+  readonly onSelectAnchor?: () => void;
+  readonly className?: string;
+}
+
+const NOTES_STORAGE_PREFIX = 'lu_split_study_note:';
+
+function mapSubjectSlugToGlossarySubject(slug: string): MathGlossarySubject | null {
+  if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') return 'cau-truc-dai-so';
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') return 'hinh-hoc-affine';
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
+    return 'giai-tich-ham-mot-bien';
+  }
+  if (slug === 'giao-duc-hoc' || slug === 'pedagogy') return 'giao-duc-hoc';
+  return null;
+}
+
+function readStoredNote(lessonId: string): string {
+  if (typeof window === 'undefined') return '';
+  try {
+    return window.localStorage.getItem(`${NOTES_STORAGE_PREFIX}${lessonId}`) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function writeStoredNote(lessonId: string, body: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (body.length === 0) {
+      window.localStorage.removeItem(`${NOTES_STORAGE_PREFIX}${lessonId}`);
+    } else {
+      window.localStorage.setItem(`${NOTES_STORAGE_PREFIX}${lessonId}`, body);
+    }
+  } catch {
+    // Bỏ qua lỗi quota hoặc private mode
+  }
+}
+
+interface PreviewSegment {
+  readonly kind: 'display-math' | 'heading' | 'bullet' | 'paragraph';
+  readonly text: string;
+  readonly level?: number;
+}
+
+function parseNotePreviewSegments(markdown: string): readonly PreviewSegment[] {
+  const segments: PreviewSegment[] = [];
+  // Tách khối công thức display $$ ... $$ trước
+  const parts = markdown.split(/(\$\$[\s\S]*?\$\$)/g);
+
+  for (const part of parts) {
+    if (!part) continue;
+    if (part.startsWith('$$') && part.endsWith('$$') && part.length > 4) {
+      const math = part.slice(2, -2).trim();
+      if (math) {
+        segments.push({ kind: 'display-math', text: math });
+      }
+      continue;
+    }
+
+    const lines = part.split(/\r?\n/);
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) continue;
+      const headingMatch = line.match(/^(#{1,3})\s+(.+)$/);
+      if (headingMatch?.[1] && headingMatch[2]) {
+        segments.push({
+          kind: 'heading',
+          level: headingMatch[1].length,
+          text: headingMatch[2].trim(),
+        });
+        continue;
+      }
+      const bulletMatch = line.match(/^[-*•]\s+(.+)$/);
+      if (bulletMatch?.[1]) {
+        segments.push({ kind: 'bullet', text: bulletMatch[1].trim() });
+        continue;
+      }
+      segments.push({ kind: 'paragraph', text: line });
+    }
+  }
+
+  return segments;
+}
+
+function getBlockKindBadge(name: string): { readonly label: string; readonly accentClass: string } {
+  if (name === 'Definition') {
+    return {
+      label: 'Định nghĩa',
+      accentClass: 'bg-[var(--bg-workspace)] text-[var(--accent-heritage)]',
+    };
+  }
+  if (
+    name === 'Theorem' ||
+    name === 'Proposition' ||
+    name === 'Lemma' ||
+    name === 'Corollary' ||
+    name === 'Property'
+  ) {
+    return {
+      label: 'Định lý',
+      accentClass: 'bg-[var(--accent-os)]/10 text-[var(--accent-os)]',
+    };
+  }
+  return {
+    label: 'Ví dụ',
+    accentClass: 'bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
+  };
+}
+
+/**
+ * Ngăn kéo học tập chia đôi 3 Tab (Split-Pane Study Drawer) cho Academic OS:
+ * 1. Mục lục: Scroll-Spy đề mục + Tóm tắt Định lý / Định nghĩa trong bài.
+ * 2. Thuật ngữ: Lọc ngữ cảnh theo môn & từ khóa xuất hiện trong bài, hỗ trợ tìm không dấu tiếng Việt.
+ * 3. Sổ tay: Ghi chú KaTeX riêng từng bài (localStorage debounce 300ms), Soạn thảo / Xem trước & xuất .md.
+ */
+export function SplitStudyPane({
+  lessonId,
+  lessonSlug,
+  lessonTitle,
+  lessonDescription = '',
+  subjectSlug,
+  subjectTitle,
+  lessonMeta,
+  activeTab,
+  onTabChange,
+  onClose,
+  onSelectAnchor,
+  className,
+}: SplitStudyPaneProps) {
+  const headings = useMemo(() => lessonMeta?.headings ?? [], [lessonMeta?.headings]);
+  const blocks = useMemo(() => lessonMeta?.blocks ?? [], [lessonMeta?.blocks]);
+
+  // --- 1. Scroll-Spy cho Tab Mục lục ---
+  const [activeAnchorId, setActiveAnchorId] = useState<string>('');
+
+  useEffect(() => {
+    const allIds = [...headings.map((h) => h.id), ...blocks.map((b) => b.anchorId)];
+    if (allIds.length === 0 || typeof window === 'undefined') return;
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY + 120;
+      let current = '';
+      for (const id of allIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY;
+          if (top <= scrollY) {
+            current = id;
+          }
+        }
+      }
+      if (current) {
+        setActiveAnchorId(current);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof window.IntersectionObserver === 'function') {
+      const visible = new Set<string>();
+      observer = new window.IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const targetId = entry.target.id;
+            if (!targetId) continue;
+            if (entry.isIntersecting) visible.add(targetId);
+            else visible.delete(targetId);
+          }
+          const first = allIds.find((id) => visible.has(id));
+          if (first) setActiveAnchorId(first);
+        },
+        { rootMargin: '-64px 0px -65% 0px', threshold: [0, 1] },
+      );
+      for (const id of allIds) {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      }
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer?.disconnect();
+    };
+  }, [headings, blocks]);
+
+  const handleAnchorClick = (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    setActiveAnchorId(id);
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (typeof window !== 'undefined' && window.history?.pushState) {
+          window.history.pushState(null, '', `#${id}`);
+        }
+      }
+    }
+    onSelectAnchor?.();
+  };
+
+  // --- 2. Ngữ cảnh Thuật ngữ cho Tab Thuật ngữ ---
+  const [glossaryQuery, setGlossaryQuery] = useState('');
+  const [glossaryScope, setGlossaryScope] = useState<'subject' | 'all'>('subject');
+
+  const glossarySubject = useMemo(
+    () => mapSubjectSlugToGlossarySubject(subjectSlug),
+    [subjectSlug],
+  );
+  const allGlossaryEntries = useMemo(() => getAllGlossaryEntries(), []);
+
+  const lessonContextHaystack = useMemo(() => {
+    const raw = [
+      lessonTitle,
+      lessonDescription,
+      ...headings.map((h) => h.text),
+      ...blocks.map((b) => `${b.label} ${b.title ?? ''}`),
+    ].join(' ');
+    return stripDiacritics(raw).toLowerCase();
+  }, [blocks, headings, lessonDescription, lessonTitle]);
+
+  const contextualGlossary = useMemo(() => {
+    const base =
+      glossaryScope === 'subject' && glossarySubject
+        ? allGlossaryEntries.filter((entry) => entry.subject === glossarySubject)
+        : allGlossaryEntries;
+
+    const scored = base
+      .filter((entry) => {
+        if (!glossaryQuery.trim()) return true;
+        const searchable = `${entry.nameVi} ${entry.nameEn} ${entry.brief} ${entry.intuition} ${entry.patterns.join(' ')}`;
+        return matchesVietnameseQuery(searchable, glossaryQuery);
+      })
+      .map((entry) => {
+        const normalizedName = stripDiacritics(entry.nameVi).toLowerCase();
+        const hitInLesson =
+          (normalizedName.length >= 3 && lessonContextHaystack.includes(normalizedName)) ||
+          entry.patterns.some((pat) => {
+            const norm = stripDiacritics(pat).toLowerCase().trim();
+            return norm.length >= 3 && lessonContextHaystack.includes(norm);
+          });
+        return { entry, hitInLesson };
+      })
+      .sort((a, b) => Number(b.hitInLesson) - Number(a.hitInLesson));
+
+    return scored.slice(0, 24);
+  }, [allGlossaryEntries, glossaryQuery, glossaryScope, glossarySubject, lessonContextHaystack]);
+
+  // --- 3. Sổ tay ghi chú KaTeX riêng từng bài (debounce 300ms) ---
+  const [noteBody, setNoteBody] = useState<string>(() => readStoredNote(lessonId));
+  const [noteMode, setNoteMode] = useState<'edit' | 'preview'>('edit');
+  const [saveState, setSaveState] = useState<'saved' | 'saving'>('saved');
+  const prevLessonIdRef = useRef<string>(lessonId);
+
+  useEffect(() => {
+    if (prevLessonIdRef.current !== lessonId) {
+      prevLessonIdRef.current = lessonId;
+      setNoteBody(readStoredNote(lessonId));
+      setSaveState('saved');
+    }
+  }, [lessonId]);
+
+  useEffect(() => {
+    if (saveState !== 'saving') return;
+    const timer = window.setTimeout(() => {
+      writeStoredNote(lessonId, noteBody);
+      setSaveState('saved');
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [lessonId, noteBody, saveState]);
+
+  const handleNoteChange = (nextVal: string) => {
+    setNoteBody(nextVal);
+    setSaveState('saving');
+  };
+
+  const handleNoteBlur = () => {
+    writeStoredNote(lessonId, noteBody);
+    setSaveState('saved');
+  };
+
+  const handleExportMarkdown = () => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    const header = `# Ghi chú: ${lessonTitle}\n> Học phần: ${subjectTitle}\n\n`;
+    const content = `${header}${noteBody.trim() || '_Chưa có nội dung ghi chú._'}\n`;
+    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${lessonSlug}-ghi-chu.md`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const previewSegments = useMemo(() => parseNotePreviewSegments(noteBody), [noteBody]);
+
+  return (
+    <div
+      data-testid="split-study-pane"
+      className={cn('flex h-full flex-col bg-[var(--bg-shell)] text-[var(--text-main)]', className)}
+    >
+      {/* Header + 3 Tab chuyển nhanh tức thì */}
+      <div className="shrink-0 border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 pt-2.5 pb-2">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <span className="font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+            Công cụ học tập
+          </span>
+          {onClose && (
+            <button
+              type="button"
+              data-testid="split-pane-close-btn"
+              onClick={onClose}
+              aria-label="Đóng bảng chia đôi công cụ"
+              className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          )}
+        </div>
+
+        <div
+          role="tablist"
+          aria-label="Ngăn kéo công cụ học tập chia đôi"
+          className="grid grid-cols-3 gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-shell)] p-1"
+        >
+          {(
+            [
+              { id: 'toc', label: 'Mục lục', Icon: ListTree, testId: 'split-tab-toc' },
+              {
+                id: 'glossary',
+                label: 'Thuật ngữ',
+                Icon: BookMarked,
+                testId: 'split-tab-glossary',
+              },
+              { id: 'notes', label: 'Sổ tay', Icon: FileText, testId: 'split-tab-notes' },
+            ] as const
+          ).map(({ id, label, Icon, testId }) => {
+            const isSelected = activeTab === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                data-testid={testId}
+                aria-selected={isSelected}
+                onClick={() => onTabChange(id)}
+                className={cn(
+                  'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-semibold transition-colors',
+                  isSelected
+                    ? 'bg-[var(--bg-workspace)] text-[var(--text-main)] shadow-2xs'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Nội dung từng Tab */}
+      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
+        {/* TAB 1: MỤC LỤC + TÓM TẮT ĐỊNH LÝ / ĐỊNH NGHĨA */}
+        {activeTab === 'toc' && (
+          <nav aria-label="Mục lục bài học" data-testid="split-panel-toc" className="space-y-5">
+            {/* Danh sách đề mục (Scroll-Spy) */}
+            <div className="space-y-1.5">
+              <p className="px-1 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                Đề mục bài giảng
+              </p>
+              {headings.length === 0 ? (
+                <p className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 text-xs text-[var(--text-muted)]">
+                  Bài học đang tải hoặc không có mục con.
+                </p>
+              ) : (
+                <ul className="space-y-0.5 border-l border-[var(--border-hairline)]">
+                  {headings.map((heading) => {
+                    const isActive = activeAnchorId === heading.id;
+                    return (
+                      <li key={heading.id}>
+                        <a
+                          href={`#${heading.id}`}
+                          onClick={(e) => handleAnchorClick(e, heading.id)}
+                          className={cn(
+                            '-ml-px block border-l-2 py-1.5 pr-2 text-xs leading-snug transition-colors',
+                            heading.depth >= 3 ? 'pl-5' : 'pl-3',
+                            isActive
+                              ? 'border-[var(--accent-os)] bg-[var(--bg-workspace)] font-semibold text-[var(--text-main)]'
+                              : 'border-transparent text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)]',
+                          )}
+                        >
+                          <MathRenderer content={heading.text} />
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+
+            {/* Tóm tắt Định lý / Định nghĩa trong bài */}
+            <div className="space-y-2 border-t border-[var(--border-hairline)] pt-4">
+              <div className="flex items-center justify-between px-1">
+                <p className="font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                  Định nghĩa &amp; Định lý ({blocks.length})
+                </p>
+              </div>
+              {blocks.length === 0 ? (
+                <p className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 text-xs text-[var(--text-muted)]">
+                  Chưa có khối định nghĩa hoặc định lý được đánh số trong bài này.
+                </p>
+              ) : (
+                <ul className="space-y-1.5">
+                  {blocks.map((block) => {
+                    const isActive = activeAnchorId === block.anchorId;
+                    const badge = getBlockKindBadge(block.name);
+                    return (
+                      <li key={block.anchorId}>
+                        <a
+                          href={`#${block.anchorId}`}
+                          onClick={(e) => handleAnchorClick(e, block.anchorId)}
+                          className={cn(
+                            'block rounded-lg border px-3 py-2 text-xs transition-colors',
+                            isActive
+                              ? 'border-[var(--accent-os)] bg-[var(--bg-workspace)] text-[var(--text-main)]'
+                              : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)]/80 text-[var(--text-secondary)] hover:border-[var(--border-strong)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]',
+                          )}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-mono text-[11px] font-semibold text-[var(--text-main)]">
+                              {block.label}
+                            </span>
+                            <span
+                              className={cn(
+                                'rounded px-1.5 py-0.5 font-mono text-[9.5px] font-semibold',
+                                badge.accentClass,
+                              )}
+                            >
+                              {badge.label}
+                            </span>
+                          </div>
+                          {block.title &&
+                            block.title.toLowerCase() !== badge.label.toLowerCase() && (
+                              <p className="mt-1 line-clamp-2 text-[11.5px] leading-snug text-[var(--text-secondary)]">
+                                <MathRenderer content={block.title} />
+                              </p>
+                            )}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </nav>
+        )}
+
+        {/* TAB 2: THUẬT NGỮ NGỮ CẢNH */}
+        {activeTab === 'glossary' && (
+          <div data-testid="split-panel-glossary" className="space-y-3">
+            <div className="space-y-2">
+              <div className="relative">
+                <Search
+                  className="pointer-events-none absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-muted)]"
+                  aria-hidden="true"
+                />
+                <input
+                  type="search"
+                  data-testid="split-glossary-search"
+                  value={glossaryQuery}
+                  onChange={(e) => setGlossaryQuery(e.target.value)}
+                  placeholder="Tra nhanh thuật ngữ (không dấu)..."
+                  aria-label="Tra nhanh thuật ngữ trong bài"
+                  className="h-8 w-full rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] pr-7 pl-8 text-xs text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent-os)] focus:outline-none"
+                />
+                {glossaryQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setGlossaryQuery('')}
+                    aria-label="Xóa từ khóa thuật ngữ"
+                    className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  >
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-2">
+                <div className="inline-flex rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-0.5 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setGlossaryScope('subject')}
+                    className={cn(
+                      'cursor-pointer rounded px-2 py-0.5 font-medium transition-colors',
+                      glossaryScope === 'subject'
+                        ? 'bg-[var(--accent-os)] text-white'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                    )}
+                  >
+                    Môn hiện tại
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGlossaryScope('all')}
+                    className={cn(
+                      'cursor-pointer rounded px-2 py-0.5 font-medium transition-colors',
+                      glossaryScope === 'all'
+                        ? 'bg-[var(--accent-os)] text-white'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                    )}
+                  >
+                    Toàn kho
+                  </button>
+                </div>
+
+                <Link
+                  to={ROUTES.glossary}
+                  className="inline-flex items-center gap-1 font-mono text-[10.5px] font-semibold text-[var(--accent-os)] hover:underline"
+                >
+                  <span>Mở Kho Thuật ngữ</span>
+                  <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+
+            {contextualGlossary.length === 0 ? (
+              <p className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4 text-center text-xs text-[var(--text-muted)]">
+                Không tìm thấy thuật ngữ phù hợp. Thử chuyển sang &ldquo;Toàn kho&rdquo;.
+              </p>
+            ) : (
+              <div className="space-y-2.5">
+                {contextualGlossary.map(({ entry, hitInLesson }) => (
+                  <GlossarySplitCard key={entry.id} entry={entry} hitInLesson={hitInLesson} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: SỔ TAY GHI CHÚ KATEX RIÊNG TỪNG BÀI */}
+        {activeTab === 'notes' && (
+          <div data-testid="split-panel-notes" className="flex h-full flex-col gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="inline-flex rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-0.5 text-xs">
+                <button
+                  type="button"
+                  data-testid="split-notes-mode-edit"
+                  onClick={() => setNoteMode('edit')}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-colors',
+                    noteMode === 'edit'
+                      ? 'bg-[var(--accent-os)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                  )}
+                >
+                  <Edit3 className="h-3 w-3" aria-hidden="true" />
+                  <span>Soạn thảo</span>
+                </button>
+                <button
+                  type="button"
+                  data-testid="split-notes-mode-preview"
+                  onClick={() => setNoteMode('preview')}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-colors',
+                    noteMode === 'preview'
+                      ? 'bg-[var(--accent-os)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                  )}
+                >
+                  <Eye className="h-3 w-3" aria-hidden="true" />
+                  <span>Xem trước (KaTeX)</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                data-testid="split-notes-export"
+                onClick={handleExportMarkdown}
+                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1 font-mono text-[11px] font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
+              >
+                <Download className="h-3 w-3" aria-hidden="true" />
+                <span>Xuất .md</span>
+              </button>
+            </div>
+
+            {noteMode === 'edit' ? (
+              <div className="flex flex-1 flex-col gap-2">
+                <textarea
+                  data-testid="split-notes-textarea"
+                  value={noteBody}
+                  onChange={(e) => handleNoteChange(e.target.value)}
+                  onBlur={handleNoteBlur}
+                  rows={14}
+                  aria-label="Sổ tay ghi chú KaTeX cho bài học"
+                  placeholder={
+                    'Ghi chú ý chính, chứng minh tóm tắt hoặc công thức toán học...\n\nVí dụ:\n- Nhóm thương $G/H$ với $H \\trianglelefteq G$\n- Định lý Lagrange:\n$$|G| = [G:H] \\cdot |H|$$'
+                  }
+                  className="min-h-[260px] w-full flex-1 resize-y rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 font-mono text-xs leading-relaxed text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent-os)] focus:outline-none"
+                />
+                <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)]">
+                  <span>Hỗ trợ công thức `$ ... $` và `$$ ... $$`</span>
+                  <span data-testid="split-notes-save-status" className="font-mono">
+                    {saveState === 'saving' ? 'Đang lưu...' : 'Đã lưu tự động'}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div
+                data-testid="split-notes-preview"
+                className="min-h-[260px] flex-1 space-y-3 overflow-y-auto rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3.5 text-sm leading-relaxed text-[var(--text-main)]"
+              >
+                {previewSegments.length === 0 ? (
+                  <p className="text-xs text-[var(--text-muted)] italic">
+                    Sổ tay chưa có nội dung. Chuyển sang mục Soạn thảo để bắt đầu ghi chép.
+                  </p>
+                ) : (
+                  previewSegments.map((seg, index) => {
+                    if (seg.kind === 'display-math') {
+                      return (
+                        <div key={index} className="overflow-x-auto py-1">
+                          <KatexMath math={seg.text} display />
+                        </div>
+                      );
+                    }
+                    if (seg.kind === 'heading') {
+                      return (
+                        <h4
+                          key={index}
+                          className="font-serif text-sm font-bold text-[var(--text-main)]"
+                        >
+                          <InlineMathText text={seg.text} />
+                        </h4>
+                      );
+                    }
+                    if (seg.kind === 'bullet') {
+                      return (
+                        <div key={index} className="flex items-start gap-2 text-xs leading-relaxed">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-os)]" />
+                          <p className="min-w-0 flex-1">
+                            <InlineMathText text={seg.text} />
+                          </p>
+                        </div>
+                      );
+                    }
+                    return (
+                      <p key={index} className="text-xs leading-relaxed">
+                        <InlineMathText text={seg.text} />
+                      </p>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function GlossarySplitCard({
+  entry,
+  hitInLesson,
+}: {
+  readonly entry: MathGlossaryEntry;
+  readonly hitInLesson: boolean;
+}) {
+  return (
+    <article
+      data-testid={`split-glossary-card-${entry.id}`}
+      className="space-y-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-colors hover:border-[var(--accent-os)]/40"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <h4 className="font-serif text-xs font-bold text-[var(--text-main)]">{entry.nameVi}</h4>
+            {hitInLesson && (
+              <span className="inline-flex items-center gap-0.5 rounded bg-[var(--accent-os)]/10 px-1.5 py-0.5 font-mono text-[9.5px] font-semibold text-[var(--accent-os)]">
+                <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                <span>Trong bài</span>
+              </span>
+            )}
+          </div>
+          <p className="text-[11px] text-[var(--text-muted)]">{entry.nameEn}</p>
+        </div>
+
+        <span className="max-w-[120px] shrink-0 overflow-x-auto rounded border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 text-[11px] text-[var(--text-main)]">
+          <KatexMath math={entry.formula || entry.symbol} />
+        </span>
+      </div>
+
+      <p className="text-[11.5px] leading-relaxed text-[var(--text-secondary)]">
+        <strong className="font-semibold text-[var(--text-main)]">Bản chất: </strong>
+        <InlineMathText text={entry.brief} />
+      </p>
+
+      {entry.intuition && (
+        <p className="rounded border-l-2 border-[var(--accent-heritage)] bg-[var(--bg-surface)] px-2.5 py-1.5 text-[11px] leading-relaxed text-[var(--text-secondary)]">
+          <strong className="font-semibold text-[var(--accent-heritage)]">Trực quan: </strong>
+          <InlineMathText text={entry.intuition} />
+        </p>
+      )}
+
+      <div className="flex justify-end pt-0.5">
+        <Link
+          to={`${ROUTES.glossary}?q=${encodeURIComponent(entry.nameVi)}`}
+          className="inline-flex items-center gap-1 font-mono text-[10.5px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-os)]"
+        >
+          <span>Mở trong Kho Thuật ngữ</span>
+          <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+        </Link>
+      </div>
+    </article>
+  );
+}

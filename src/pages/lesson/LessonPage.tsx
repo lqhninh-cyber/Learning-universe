@@ -1,5 +1,5 @@
-import { ArrowLeft, BookOpen, Link2, ListTree, PanelLeft, PanelLeftOpen } from 'lucide-react';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { ArrowLeft, BookOpen, CheckCircle2, Link2, PanelLeft, PanelRight } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   type CompiledLessonModule,
@@ -9,6 +9,22 @@ import {
   LessonMdxView,
   loadLessonModule,
 } from '@/content-runtime';
+import {
+  EditorialChapterOpener,
+  SplitStudyPane,
+  type ChapterCloItem,
+  type ChapterDifficultyLevel,
+  type SplitStudyTab,
+} from '@/components/lesson';
+import {
+  FONT_SCALE_MAX,
+  FONT_SCALE_MIN,
+  getIslandSubjectByIdOrSlug,
+  writeLessonReadingPosition,
+} from '@/context/island-helpers';
+import { useIsland } from '@/context/IslandContext';
+import { useLayout } from '@/context/LayoutContext';
+import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { useLearningStore } from '@/features/learning';
 import {
   DevEditorialBar,
@@ -16,24 +32,13 @@ import {
   LessonNotesPanel,
   LessonPrevNextNav,
   LessonSidebar,
-  LessonToc,
   SourcePanel,
 } from '@/features/lesson-reader';
-import {
-  EditorialChapterOpener,
-  type ChapterCloItem,
-  type ChapterDifficultyLevel,
-} from '@/components/lesson';
-import { writeLessonReadingPosition } from '@/context/island-helpers';
-import { useIsland } from '@/context/IslandContext';
-import { useLayout } from '@/context/LayoutContext';
-import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { InPageSearchNavigator, useInPageSearch } from '@/features/search';
-import { HeaderQuickReaderControls } from '@/shared/components/header/HeaderQuickReaderControls';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
-import { Badge, Breadcrumb, Button, Card, Drawer, Skeleton } from '@/shared/ui';
+import { Badge, Button, Card, Drawer, Skeleton } from '@/shared/ui';
 
 function getCurriculumSource(slug: string): string {
   if (slug === 'giao-duc-hoc') {
@@ -59,6 +64,19 @@ function getDifficultyLevel(
   if (level === 'basic') return 'Nền tảng';
   if (level === 'advanced') return 'Chuyên sâu';
   return 'Trung cấp';
+}
+
+function getCloFallbackDescription(slug: string): string {
+  if (slug === 'giao-duc-hoc') {
+    return 'Phân tích cơ sở lý luận và nghiệp vụ sư phạm giải quyết tình huống thực tế';
+  }
+  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
+    return 'Chứng minh giới hạn và phân tích tính chất giải tích bằng ngôn ngữ Epsilon';
+  }
+  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
+    return 'Khảo sát cấu trúc hình học afin, phương trình m-phẳng và ánh xạ afin';
+  }
+  return 'Phân tích cấu trúc đại số và chứng minh các mệnh đề học thuật';
 }
 
 function getLessonClos(tags: readonly string[], slug: string): readonly ChapterCloItem[] {
@@ -122,17 +140,16 @@ function getLessonClos(tags: readonly string[], slug: string): readonly ChapterC
   ];
 }
 
-function getCloFallbackDescription(slug: string): string {
-  if (slug === 'giao-duc-hoc') {
-    return 'Phân tích cơ sở lý luận và nghiệp vụ sư phạm giải quyết tình huống thực tế';
+function readInitialLeftSidebarOpen(): boolean {
+  if (typeof window === 'undefined') return true;
+  try {
+    const saved = window.localStorage.getItem('lu_sidebar_collapsed');
+    if (saved === 'true') return false;
+    if (saved === 'false') return true;
+  } catch {
+    // Bỏ qua lỗi lưu trữ cục bộ
   }
-  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
-    return 'Chứng minh giới hạn và phân tích tính chất giải tích bằng ngôn ngữ Epsilon';
-  }
-  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
-    return 'Khảo sát cấu trúc hình học afin, phương trình m-phẳng và ánh xạ afin';
-  }
-  return 'Phân tích cấu trúc đại số và chứng minh các mệnh đề học thuật';
+  return window.innerWidth >= 1280;
 }
 
 function LessonPageContent() {
@@ -154,33 +171,36 @@ function LessonPageContent() {
   const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const openNoteLessonId = useLearningStore((state) => state.openNoteLessonId);
   const setOpenNoteLessonId = useLearningStore((state) => state.setOpenNoteLessonId);
+  const isLessonCompleted = useLearningStore((state) =>
+    Boolean(lessonId && state.completedLessons[lessonId]),
+  );
+  const toggleLessonCompleted = useLearningStore((state) => state.toggleLessonCompleted);
 
   const [loadedMap, setLoadedMap] = useState<Readonly<Record<string, CompiledLessonModule>>>({});
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(readInitialLeftSidebarOpen);
   const [isSidebarDrawerOpen, setIsSidebarDrawerOpen] = useState(false);
-  const [isTocDrawerOpen, setIsTocDrawerOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return localStorage.getItem('lu_sidebar_collapsed') === 'true';
-      } catch {
-        return false;
-      }
-    }
-    return false;
-  });
+  const [isSplitPaneOpen, setIsSplitPaneOpen] = useState<boolean>(true);
+  const [isMobileSplitOpen, setIsMobileSplitOpen] = useState<boolean>(false);
+  const [splitTab, setSplitTab] = useState<SplitStudyTab>('toc');
 
   const { theme, fontSize, typographyClasses } = useReadingSettings();
-  const { readerSettings, toggleDarkMode, toggleZenMode, setZenMode, triggerIslandNotice } =
-    useIsland();
+  const {
+    readerSettings,
+    increaseFontScale,
+    decreaseFontScale,
+    toggleDarkMode,
+    toggleZenMode,
+    setZenMode,
+    triggerIslandNotice,
+  } = useIsland();
   const readingTheme = readerSettings.isDarkMode ? 'dark' : theme === 'dark' ? 'light' : theme;
   const isEyeComfort =
     readerSettings.eyeComfortWarmth && readingTheme !== 'dark' && readingTheme !== 'sepia';
   const isZenMode = readerSettings.isZenMode;
-  const isFocusMode = isZenMode;
   const articleRef = useRef<HTMLElement>(null);
 
-  // Hỗ trợ phím tắt D (Sáng/Tối), Z (Zen Mode) và Escape
+  // Phím tắt trình đọc: D (Sáng/Tối), Z (Zen Mode), Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
@@ -214,9 +234,14 @@ function LessonPageContent() {
           text: nextZen ? 'Đã bật chế độ tập trung Zen' : 'Đã tắt chế độ tập trung Zen',
           type: 'info',
         });
-      } else if (e.key === 'Escape' && isZenMode) {
-        e.preventDefault();
-        setZenMode(false);
+      } else if (e.key === 'Escape') {
+        if (isMobileSplitOpen) {
+          e.preventDefault();
+          setIsMobileSplitOpen(false);
+        } else if (isZenMode) {
+          e.preventDefault();
+          setZenMode(false);
+        }
       }
     };
 
@@ -225,31 +250,72 @@ function LessonPageContent() {
   }, [
     readerSettings.isDarkMode,
     isZenMode,
+    isMobileSplitOpen,
     toggleDarkMode,
     toggleZenMode,
     setZenMode,
     triggerIslandNotice,
   ]);
 
-  const handleToggleSidebarCollapse = () => {
-    setIsSidebarCollapsed((prev) => {
+  const handleToggleLeftSidebar = useCallback(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1280) {
+      setIsSidebarDrawerOpen((prev) => !prev);
+      return;
+    }
+    setIsLeftSidebarOpen((prev) => {
       const next = !prev;
       try {
-        localStorage.setItem('lu_sidebar_collapsed', String(next));
+        window.localStorage.setItem('lu_sidebar_collapsed', String(!next));
       } catch {
-        // Ignore storage errors
+        // Bỏ qua lỗi lưu trữ cục bộ
       }
       return next;
     });
-  };
+  }, []);
 
-  const isNotesOpen = Boolean(lessonId && openNoteLessonId === lessonId);
-  const handleToggleNotes = () => {
-    if (!lessonId) {
+  const handleToggleSplitPane = useCallback(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsMobileSplitOpen((prev) => !prev);
       return;
     }
+    setIsSplitPaneOpen((prev) => !prev);
+  }, []);
+
+  const handleTopBarComplete = useCallback(() => {
+    if (!lessonId) return;
+    const wasCompleted = Boolean(useLearningStore.getState().completedLessons[lessonId]);
+    if (!toggleLessonCompleted(lessonId)) {
+      return;
+    }
+
+    const loc = getLessonById(lessonId);
+    const shortLesson = loc ? `Bài ${loc.chapter.number}.${loc.lesson.number}` : 'bài học';
+    if (wasCompleted) {
+      triggerIslandNotice({ text: `Đã bỏ đánh dấu ${shortLesson}`, type: 'info' });
+      return;
+    }
+
+    if (loc) {
+      const updatedMap = useLearningStore.getState().completedLessons;
+      const allLessons = loc.subject.chapters.flatMap((ch) => ch.lessons);
+      const doneInSubject = allLessons.filter((item) => Boolean(updatedMap[item.id])).length;
+      const pct = allLessons.length > 0 ? Math.round((doneInSubject / allLessons.length) * 100) : 0;
+      const subjectCode = getIslandSubjectByIdOrSlug(loc.subject.slug)?.code ?? loc.subject.title;
+      triggerIslandNotice({
+        text: `Đã hoàn thành ${shortLesson} · Tiến độ ${subjectCode}: ${pct}%`,
+        type: 'success',
+      });
+      return;
+    }
+
+    triggerIslandNotice({ text: `Đã hoàn thành ${shortLesson}`, type: 'success' });
+  }, [lessonId, toggleLessonCompleted, triggerIslandNotice]);
+
+  const isNotesOpen = Boolean(lessonId && openNoteLessonId === lessonId);
+  const handleToggleNotes = useCallback(() => {
+    if (!lessonId) return;
     setOpenNoteLessonId(isNotesOpen ? null : lessonId);
-  };
+  }, [isNotesOpen, lessonId, setOpenNoteLessonId]);
 
   const compiled = lessonId ? loadedMap[lessonId] : undefined;
 
@@ -258,15 +324,137 @@ function LessonPageContent() {
     contentReadyKey: lessonId ? `${lessonId}:${compiled ? 'ready' : 'loading'}` : 'none',
   });
 
+  // Gắn 4 công cụ trình đọc gọn nhẹ lên góc phải TopContextBar (topBarRightSlot)
   const { setTopBarRightSlot } = useLayout();
-  const isDarkReading = readingTheme === 'dark';
+  const scalePercent = Math.round(readerSettings.fontScale * 100);
+  const isMinScale = readerSettings.fontScale <= FONT_SCALE_MIN;
+  const isMaxScale = readerSettings.fontScale >= FONT_SCALE_MAX;
+
+  const topBarToolsNode = useMemo(
+    () => (
+      <div
+        role="group"
+        aria-label="Công cụ trình đọc bài giảng"
+        data-testid="quick-reader-controls"
+        className="flex items-center gap-1.5"
+      >
+        {/* 1. Bật/tắt Mục lục học phần bên trái */}
+        <button
+          type="button"
+          data-testid="lesson-sidebar-toggle"
+          onClick={handleToggleLeftSidebar}
+          aria-pressed={isLeftSidebarOpen || isSidebarDrawerOpen}
+          aria-label="Bật hoặc tắt mục lục học phần"
+          title="Mục lục học phần"
+          className={cn(
+            'inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-lg border px-2 text-xs font-medium transition-colors',
+            isLeftSidebarOpen || isSidebarDrawerOpen
+              ? 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-main)]'
+              : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+          )}
+        >
+          <PanelLeft className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="hidden 2xl:inline">Học phần</span>
+        </button>
+
+        {/* 2. Bộ chỉnh cỡ chữ siêu gọn: A- / 100% / A+ */}
+        <div className="hidden items-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-0.5 sm:flex">
+          <button
+            type="button"
+            onClick={decreaseFontScale}
+            disabled={isMinScale}
+            aria-label="Giảm cỡ chữ"
+            title="Giảm cỡ chữ"
+            className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[11px] font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            A-
+          </button>
+          <span
+            data-testid="quick-reader-scale-badge"
+            aria-live="polite"
+            className="min-w-[36px] text-center font-mono text-[11px] font-medium text-[var(--text-muted)] tabular-nums select-none"
+          >
+            {scalePercent}%
+          </span>
+          <button
+            type="button"
+            onClick={increaseFontScale}
+            disabled={isMaxScale}
+            aria-label="Tăng cỡ chữ"
+            title="Tăng cỡ chữ"
+            className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[11px] font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] disabled:cursor-not-allowed disabled:opacity-35"
+          >
+            A+
+          </button>
+        </div>
+
+        {/* 3. Nút Chia đôi công cụ (Split-Pane) */}
+        <button
+          type="button"
+          data-testid="lesson-split-pane-toggle"
+          onClick={handleToggleSplitPane}
+          aria-pressed={isSplitPaneOpen || isMobileSplitOpen}
+          aria-label="Bật hoặc tắt ngăn chia đôi công cụ học tập"
+          title="Chia đôi công cụ (Mục lục · Thuật ngữ · Sổ tay)"
+          className={cn(
+            'inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+            isSplitPaneOpen || isMobileSplitOpen
+              ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white shadow-2xs'
+              : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)]',
+          )}
+        >
+          <PanelRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="hidden md:inline">Chia đôi</span>
+        </button>
+
+        {/* 4. Nút Đánh dấu hoàn thành bài */}
+        {lessonId && (
+          <button
+            type="button"
+            data-testid="lesson-topbar-complete-btn"
+            onClick={handleTopBarComplete}
+            aria-pressed={isLessonCompleted}
+            aria-label={isLessonCompleted ? 'Đã hoàn thành bài học' : 'Đánh dấu hoàn thành'}
+            title={isLessonCompleted ? 'Đã hoàn thành bài học' : 'Đánh dấu hoàn thành bài học'}
+            className={cn(
+              'inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+              isLessonCompleted
+                ? 'border-[#1B5E4A] bg-[#1B5E4A] text-white dark:border-[#52B394] dark:bg-[#52B394] dark:text-[#0D1110]'
+                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)] hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]',
+            )}
+          >
+            <CheckCircle2 className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span className="hidden lg:inline">
+              {isLessonCompleted ? 'Đã hoàn thành' : 'Hoàn thành'}
+            </span>
+          </button>
+        )}
+      </div>
+    ),
+    [
+      decreaseFontScale,
+      handleToggleLeftSidebar,
+      handleToggleSplitPane,
+      handleTopBarComplete,
+      increaseFontScale,
+      isLeftSidebarOpen,
+      isLessonCompleted,
+      isMaxScale,
+      isMinScale,
+      isMobileSplitOpen,
+      isSidebarDrawerOpen,
+      isSplitPaneOpen,
+      lessonId,
+      scalePercent,
+    ],
+  );
 
   useEffect(() => {
-    setTopBarRightSlot(<HeaderQuickReaderControls isDark={isDarkReading} />);
+    setTopBarRightSlot(topBarToolsNode);
     return () => {
       setTopBarRightSlot(null);
     };
-  }, [isDarkReading, setTopBarRightSlot]);
+  }, [setTopBarRightSlot, topBarToolsNode]);
 
   useEffect(() => {
     if (subjectId && lessonId) {
@@ -275,9 +463,7 @@ function LessonPageContent() {
   }, [subjectId, lessonId, recordLessonVisit]);
 
   useEffect(() => {
-    if (!lessonId || typeof window === 'undefined') {
-      return;
-    }
+    if (!lessonId || typeof window === 'undefined') return;
 
     let rafId = 0;
     let lastSavedKey = '';
@@ -285,9 +471,7 @@ function LessonPageContent() {
     const updateReadingPosition = () => {
       rafId = 0;
       const articleEl = articleRef.current;
-      if (!articleEl) {
-        return;
-      }
+      if (!articleEl) return;
 
       const rect = articleEl.getBoundingClientRect();
       const articleTop = rect.top + window.scrollY;
@@ -319,26 +503,20 @@ function LessonPageContent() {
     };
 
     const handleScroll = () => {
-      if (rafId !== 0) {
-        return;
-      }
+      if (rafId !== 0) return;
       rafId = window.requestAnimationFrame(updateReadingPosition);
     };
 
     rafId = window.requestAnimationFrame(updateReadingPosition);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      if (rafId !== 0) {
-        window.cancelAnimationFrame(rafId);
-      }
+      if (rafId !== 0) window.cancelAnimationFrame(rafId);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [lessonId, compiled]);
 
   useEffect(() => {
-    if (!lessonId || loadedMap[lessonId]) {
-      return;
-    }
+    if (!lessonId || loadedMap[lessonId]) return;
 
     let cancelled = false;
     loadLessonModule(lessonId)
@@ -359,7 +537,7 @@ function LessonPageContent() {
     };
   }, [lessonId, loadedMap]);
 
-  // Hạng mục 7: Dự đoán nạp trước bài học tiếp theo (Predictive Lesson Prefetching)
+  // Dự đoán nạp trước bài học tiếp theo
   useEffect(() => {
     if (!subjectSlug || !lessonId) return;
     const { next } = getAdjacentLessons(subjectSlug, lessonId);
@@ -403,8 +581,10 @@ function LessonPageContent() {
     return (
       <FadeIn className="mx-auto max-w-xl py-12 text-center">
         <Card className="space-y-4 p-8">
-          <h1 className="text-2xl font-bold text-stone-900">Không tìm thấy bài học bạn yêu cầu</h1>
-          <p className="text-sm text-stone-600">
+          <h1 className="text-2xl font-bold text-[var(--text-main)]">
+            Không tìm thấy bài học bạn yêu cầu
+          </h1>
+          <p className="text-sm text-[var(--text-secondary)]">
             Bài học không tồn tại hoặc đường dẫn đã thay đổi.
           </p>
           <div className="flex justify-center gap-3 pt-2">
@@ -425,249 +605,93 @@ function LessonPageContent() {
   return (
     <div
       id="reading-container"
+      data-subject={subject.slug}
       data-eye-comfort={isEyeComfort ? 'true' : undefined}
-      className={cn(readingTheme === 'dark' && 'dark')}
+      className={cn(
+        'min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)] transition-colors duration-200',
+        readingTheme === 'dark' && 'dark',
+        readingTheme === 'sepia' && 'bg-[#F4EEDF] text-[#231F18]',
+        isEyeComfort && 'bg-[#F5F3EE]',
+      )}
     >
-      <FadeIn
-        className={cn(
-          'mx-auto w-full pb-16 transition-all duration-300',
-          readingTheme === 'dark'
-            ? 'dark bg-[#0E1A15] text-[#E6ECE7]'
-            : readingTheme === 'sepia'
-              ? 'bg-[#F4EEDF] text-[#231F18]'
-              : isEyeComfort
-                ? 'bg-[#EAE8E1] text-[#182624]'
-                : 'bg-[var(--bg-page)] text-[var(--text-main)]',
-          isFocusMode
-            ? 'max-w-[1040px] px-4 pt-2 sm:px-6'
-            : 'w-full max-w-[1680px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
-        )}
-      >
-        {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
-        {isFocusMode && (
-          <button
-            type="button"
-            onClick={toggleZenMode}
-            className="fixed top-4 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-stone-300/90 bg-white/95 px-3.5 py-1.5 text-xs font-semibold text-stone-800 shadow-md backdrop-blur-md transition-all duration-200 hover:border-amber-700 hover:bg-amber-50 hover:text-amber-950 hover:shadow-lg dark:border-[#2C4D3B] dark:bg-[#13261D] dark:text-[#E2ECE6]"
-            title="Thoát chế độ đọc tập trung (Phím Esc hoặc Z)"
-            aria-label="Thoát chế độ tập trung"
+      {/* Nút thoát Zen Mode nổi */}
+      {isZenMode && (
+        <button
+          type="button"
+          onClick={toggleZenMode}
+          className="fixed top-14 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-1.5 text-xs font-semibold text-[var(--text-main)] shadow-md backdrop-blur-md transition-colors hover:border-[var(--accent-os)]"
+          title="Thoát chế độ đọc tập trung (Phím Esc hoặc Z)"
+          aria-label="Thoát chế độ tập trung"
+        >
+          <span aria-hidden="true">✕</span>
+          <span>Thoát tập trung</span>
+          <kbd className="ml-1 rounded border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
+            Esc
+          </kbd>
+        </button>
+      )}
+
+      {/* Drawer Mục lục học phần bên trái trên màn hình < 1280px */}
+      <div className="xl:hidden">
+        <Drawer
+          open={isSidebarDrawerOpen}
+          onOpenChange={setIsSidebarDrawerOpen}
+          side="left"
+          title={`Chương & Bài học — ${subject.title}`}
+          trigger={<span className="hidden" aria-hidden="true" />}
+        >
+          <LessonSidebar
+            subject={subject}
+            activeLessonId={lesson.id}
+            readingTheme={readingTheme}
+            onSelectLesson={() => setIsSidebarDrawerOpen(false)}
+          />
+        </Drawer>
+      </div>
+
+      {/* Bố cục 3 cột linh hoạt Academic OS: Left Course TOC | Center Monograph | Right Split-Pane */}
+      <div className="flex min-h-[calc(100vh-3rem)] w-full items-start">
+        {/* CỘT TRÁI: Mục lục Học phần docked (>= 1280px) */}
+        {!isZenMode && isLeftSidebarOpen && (
+          <aside
+            data-testid="lesson-left-sidebar"
+            aria-label="Danh mục điều hướng bài học"
+            className="sticky top-12 hidden h-[calc(100vh-3rem)] w-[272px] shrink-0 overflow-y-auto border-r border-[var(--border-hairline)] bg-[var(--bg-shell)] p-3.5 xl:block print:hidden"
           >
-            <span className="font-bold text-[var(--gold-text)]" aria-hidden="true">
-              ✕
-            </span>
-            <span>Thoát tập trung</span>
-            <kbd className="ml-1 rounded border border-stone-300/70 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] text-stone-600 dark:border-[#284E3A] dark:bg-[#163023] dark:text-[#A1D1B7]">
-              Esc
-            </kbd>
-          </button>
-        )}
-
-        {import.meta.env.DEV && (
-          <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
-        )}
-
-        <div
-          className={cn(
-            'flex flex-col justify-between gap-4 border-b pb-4 transition-all duration-300 lg:flex-row lg:items-center',
-            readingTheme === 'dark' ? 'border-[#2A4035]' : 'border-[#D8E0DD]',
-            isFocusMode && 'border-transparent pb-1',
-          )}
-        >
-          <div className="flex items-center gap-3">
-            {!isFocusMode && isSidebarCollapsed && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleToggleSidebarCollapse}
-                className={cn(
-                  'hidden items-center gap-1.5 text-xs shadow-2xs transition-colors lg:inline-flex',
-                  readingTheme === 'dark'
-                    ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7] hover:bg-[#1E3B2E]'
-                    : 'border-stone-300 bg-stone-50/90 text-stone-700 hover:text-stone-900',
-                )}
-                title="Mở lại danh sách bài học (Thanh bên)"
-                aria-label="Mở lại danh sách bài học"
-              >
-                <PanelLeftOpen
-                  className={cn(
-                    'h-4 w-4',
-                    readingTheme === 'dark' ? 'text-[#E5C378]' : 'text-subject-700',
-                  )}
-                  aria-hidden="true"
-                />
-                <span>Hiện danh mục bài</span>
-              </Button>
-            )}
-
-            <Breadcrumb
-              items={[
-                { label: 'Trang chủ', href: ROUTES.home },
-                { label: subject.title, href: ROUTES.subjectOverview(subject.slug) },
-                {
-                  label:
-                    chapter.title.startsWith('Chương ') ||
-                    chapter.title.startsWith('Chuyên đề ') ||
-                    chapter.title.startsWith('Khối ')
-                      ? chapter.title
-                      : `Chương ${chapter.number}: ${chapter.title}`,
-                  href: ROUTES.subjectOverview(subject.slug),
-                },
-                {
-                  label:
-                    lesson.title.startsWith('Bài ') ||
-                    lesson.title.startsWith('Thực hành ') ||
-                    lesson.title.startsWith('Chuyên đề ')
-                      ? lesson.title
-                      : `Bài ${chapter.number}.${lesson.number}: ${lesson.title}`,
-                },
-              ]}
+            <LessonSidebar
+              subject={subject}
+              activeLessonId={lesson.id}
+              readingTheme={readingTheme}
+              onToggleCollapse={handleToggleLeftSidebar}
             />
-          </div>
+          </aside>
+        )}
 
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Nút mở danh sách bài học trên mobile & tablet (< lg) */}
-            {!isFocusMode && (
-              <div className="lg:hidden">
-                <Drawer
-                  open={isSidebarDrawerOpen}
-                  onOpenChange={setIsSidebarDrawerOpen}
-                  side="left"
-                  title={`Chương & Bài học — ${subject.title}`}
-                  trigger={
-                    <Button variant="outline" size="sm">
-                      <PanelLeft className="h-4 w-4" aria-hidden="true" />
-                      <span>Danh sách bài học</span>
-                    </Button>
-                  }
-                >
-                  <LessonSidebar
-                    subject={subject}
-                    activeLessonId={lesson.id}
-                    readingTheme={readingTheme}
-                    onSelectLesson={() => setIsSidebarDrawerOpen(false)}
-                  />
-                </Drawer>
+        {/* CỘT GIỮA: Vùng đọc chuyên khảo Pure Monograph Typography (max-w-[760px]) */}
+        <main className="min-w-0 flex-1 bg-[var(--bg-workspace)]">
+          <div className="mx-auto w-full max-w-[760px] px-6 py-8 lg:px-10">
+            {import.meta.env.DEV && (
+              <div className="mb-4">
+                <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
               </div>
             )}
 
-            {/* Nút mở mục lục bài học trên mobile, tablet & laptop vừa (< xl) */}
-            {!isFocusMode && (
-              <div className="xl:hidden">
-                <Drawer
-                  open={isTocDrawerOpen}
-                  onOpenChange={setIsTocDrawerOpen}
-                  side="right"
-                  title="Mục lục & Định lý trong bài"
-                  trigger={
-                    <Button variant="outline" size="sm">
-                      <ListTree className="h-4 w-4" aria-hidden="true" />
-                      <span>Mục lục bài</span>
-                    </Button>
-                  }
-                >
-                  <LessonToc
-                    lessonMeta={compiled?.lessonMeta ?? null}
-                    readingTheme={readingTheme}
-                    onSelectAnchor={() => setIsTocDrawerOpen(false)}
-                  />
-                </Drawer>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Bố cục 3 cột chuẩn Widescreen: Sidebar (320px) | Main Content (1040px) | TOC (290px) */}
-        <div
-          className={cn(
-            'grid grid-cols-1 items-start gap-6 transition-all duration-300 xl:gap-9',
-            isZenMode
-              ? 'mx-auto max-w-[1040px]'
-              : isSidebarCollapsed
-                ? 'xl:grid-cols-[minmax(0,1fr)_290px]'
-                : 'lg:grid-cols-[290px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)_290px]',
-          )}
-        >
-          {/* CỘT TRÁI (Danh mục bài học / Sidebar Navigation) */}
-          {!isSidebarCollapsed && (
-            <aside
-              className={cn(
-                'sticky top-16 hidden max-h-[calc(100vh-5rem)] w-full self-start overflow-y-auto rounded-2xl border p-4 shadow-sm transition-all duration-300 lg:block print:hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-track]:bg-transparent',
-                isZenMode
-                  ? 'pointer-events-none m-0 hidden w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0 shadow-none'
-                  : 'translate-x-0 opacity-100',
-                readingTheme === 'dark'
-                  ? 'border-[#1E3B2E] bg-[#12241C] text-[#ECE8DF]'
-                  : readingTheme === 'sepia'
-                    ? 'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18]'
-                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#182624]',
-              )}
-              aria-label="Danh mục điều hướng bài học"
-            >
-              <LessonSidebar
-                subject={subject}
-                activeLessonId={lesson.id}
-                readingTheme={readingTheme}
-                onToggleCollapse={handleToggleSidebarCollapse}
-              />
-            </aside>
-          )}
-
-          {/* CỘT GIỮA (Nội dung bài học - Main Content Reader) */}
-          <main className="mx-auto w-full min-w-0 py-4 transition-colors duration-300 lg:py-6">
-            {isFocusMode && (
-              <div
-                className={cn(
-                  'mb-6 flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs shadow-2xs',
-                  readingTheme === 'dark'
-                    ? 'border-[#2A4035] bg-[#12241C] text-[#E6ECE7]'
-                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#182624]',
-                )}
-              >
-                <span className="flex items-center gap-2 font-medium">
-                  <BookOpen
-                    className={cn(
-                      'h-3.5 w-3.5',
-                      readingTheme === 'dark' ? 'text-[#E5C378]' : 'text-[#2D5266]',
-                    )}
-                    aria-hidden="true"
-                  />
+            {isZenMode && (
+              <div className="mb-6 flex items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2.5 text-xs">
+                <span className="flex items-center gap-2 font-medium text-[var(--text-secondary)]">
+                  <BookOpen className="h-3.5 w-3.5 text-[var(--accent-os)]" aria-hidden="true" />
                   <span>
-                    Đang bật <strong>Chế độ đọc tập trung (Zen Mode)</strong> (Nhấn phím{' '}
-                    <kbd
-                      className={cn(
-                        'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
-                        readingTheme === 'dark'
-                          ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7]'
-                          : 'border-[#D8E0DD] bg-[#E7ECEA] text-[#182624]',
-                      )}
-                    >
-                      Z
-                    </kbd>{' '}
-                    hoặc{' '}
-                    <kbd
-                      className={cn(
-                        'rounded border px-1.5 py-0.5 font-mono text-[10px] font-bold',
-                        readingTheme === 'dark'
-                          ? 'border-[#2A4035] bg-[#182E24] text-[#E6ECE7]'
-                          : 'border-[#D8E0DD] bg-[#E7ECEA] text-[#182624]',
-                      )}
-                    >
-                      Esc
-                    </kbd>{' '}
-                    để thoát).
+                    Đang bật <strong className="text-[var(--text-main)]">Chế độ tập trung</strong>{' '}
+                    (Nhấn phím <kbd className="font-mono font-bold">Z</kbd> hoặc{' '}
+                    <kbd className="font-mono font-bold">Esc</kbd> để thoát).
                   </span>
                 </span>
                 <button
                   type="button"
                   onClick={toggleZenMode}
-                  className={cn(
-                    'cursor-pointer font-semibold underline',
-                    readingTheme === 'dark'
-                      ? 'text-[#E5C378] hover:text-[#F6D383]'
-                      : 'text-[#182624] hover:text-[#2D5266]',
-                  )}
+                  className="cursor-pointer font-semibold text-[var(--accent-os)] underline"
                 >
-                  Thoát tập trung (Esc)
+                  Thoát
                 </button>
               </div>
             )}
@@ -679,17 +703,9 @@ function LessonPageContent() {
               data-reading-size={fontSize}
               style={{ '--lu-reading-scale': String(readerSettings.fontScale) } as CSSProperties}
               className={cn(
-                'lesson-content mx-auto w-full max-w-[1040px] text-[clamp(18px,1.12vw,20px)] leading-[1.8] transition-[background-color,border-color,color,box-shadow] duration-300',
+                'lesson-content w-full text-[clamp(17px,1.08vw,19px)] leading-[1.82] text-[var(--text-main)]',
                 typographyClasses,
-                isEyeComfort
-                  ? 'rounded-3xl border border-[#D8D3C6] bg-[#F5F3EE] text-[#182624] shadow-[var(--shadow-editorial)]'
-                  : 'rounded-3xl border border-[#D8E0DD] bg-[#FAFBF9] text-[#182624] shadow-[var(--shadow-editorial)]',
-                readingTheme === 'dark' &&
-                  'dark border-[#2A4035] bg-[#12241C] text-[#E6ECE7] shadow-none',
-                readingTheme === 'sepia' &&
-                  'border-[#DECDB0] bg-[#FBF8EF] text-[#231F18] shadow-sm',
                 fontSize === 'lg' && 'reader-scale-lg',
-                isFocusMode ? 'p-8 sm:p-12 lg:p-14' : 'p-8 lg:p-12',
               )}
             >
               <EditorialChapterOpener
@@ -704,27 +720,9 @@ function LessonPageContent() {
                 collapsibleMeta
                 prerequisites={
                   lesson.prerequisites.length > 0 ? (
-                    <div
-                      className={cn(
-                        'clear-both mt-3 flex flex-wrap items-center gap-2.5 rounded-xl border p-3 text-xs md:text-sm',
-                        readingTheme === 'dark'
-                          ? 'border-[#2A4035] bg-[#182E24]/80 text-[#E6ECE7]'
-                          : 'border-[#D8E0DD] bg-[#E7ECEA]/70 text-[#182624]',
-                      )}
-                    >
-                      <div
-                        className={cn(
-                          'flex shrink-0 items-center gap-1.5 font-semibold',
-                          readingTheme === 'dark' ? 'text-[#E6ECE7]' : 'text-[#182624]',
-                        )}
-                      >
-                        <Link2
-                          className={cn(
-                            'h-4 w-4',
-                            readingTheme === 'dark' ? 'text-[#C5A262]' : 'text-[#2D5266]',
-                          )}
-                          aria-hidden="true"
-                        />
+                    <div className="clear-both mt-3 flex flex-wrap items-center gap-2.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3 text-xs md:text-sm">
+                      <div className="flex shrink-0 items-center gap-1.5 font-semibold text-[var(--text-main)]">
+                        <Link2 className="h-4 w-4 text-[var(--accent-os)]" aria-hidden="true" />
                         <span>Kiến thức tiên quyết:</span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
@@ -745,12 +743,7 @@ function LessonPageContent() {
                                 prereq.chapter.slug,
                                 prereq.lesson.slug,
                               )}
-                              className={cn(
-                                'inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs shadow-2xs transition-colors',
-                                readingTheme === 'dark'
-                                  ? 'border border-[#2A4035] bg-[#091510] font-medium text-[#E5C378] hover:border-[#E5C378] hover:bg-[#182E24]'
-                                  : 'border border-[#D8E0DD] bg-[#FAFBF9] font-semibold text-[#182624] hover:border-[#2D5266] hover:bg-white hover:text-[#2D5266]',
-                              )}
+                              className="inline-flex items-center gap-1 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1 text-xs font-medium text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
                             >
                               <span>
                                 Bài {prereq.chapter.number}.{prereq.lesson.number}:{' '}
@@ -771,12 +764,7 @@ function LessonPageContent() {
                 )}
               </EditorialChapterOpener>
 
-              <div
-                className={cn(
-                  'clear-both mb-5 flex flex-wrap items-center gap-2.5 border-b pb-4',
-                  readingTheme === 'dark' ? 'border-[#2A4035]' : 'border-stone-200/60',
-                )}
-              >
+              <div className="clear-both mb-5 flex flex-wrap items-center gap-2.5 border-b border-[var(--border-hairline)] pb-4">
                 <LessonActionBar
                   lessonId={lesson.id}
                   isNotesOpen={isNotesOpen}
@@ -810,7 +798,7 @@ function LessonPageContent() {
                 {loadError ? (
                   <div
                     role="alert"
-                    className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+                    className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300"
                   >
                     {loadError}
                   </div>
@@ -827,19 +815,9 @@ function LessonPageContent() {
 
               <SourcePanel lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
 
-              <footer
-                className={cn(
-                  'mt-10 border-t pt-6 print:hidden',
-                  readingTheme === 'dark' ? 'border-[#2A4035]' : 'border-[#D8E0DD]',
-                )}
-              >
+              <footer className="mt-10 border-t border-[var(--border-hairline)] pt-6 print:hidden">
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                  <p
-                    className={cn(
-                      'text-xs',
-                      readingTheme === 'dark' ? 'text-[#A7B5AC]' : 'text-[var(--text-muted)]',
-                    )}
-                  >
+                  <p className="text-xs text-[var(--text-muted)]">
                     Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.
                   </p>
                   <LessonActionBar
@@ -853,25 +831,65 @@ function LessonPageContent() {
                 <LessonPrevNextNav subjectSlug={subject.slug} lessonId={lesson.id} />
               </footer>
             </article>
-          </main>
+          </div>
+        </main>
 
-          {/* CỘT PHẢI (Mục lục bài học & Cột chú giải lề - Sidenotes Column) */}
+        {/* CỘT PHẢI: Ngăn kéo Chia đôi 3 Tab (Desktop docked sticky top-12) */}
+        {!isZenMode && isSplitPaneOpen && (
           <aside
             data-sidenotes-column
-            className={cn(
-              'custom-scrollbar sticky top-16 hidden max-h-[calc(100vh-5rem)] w-full scrollbar-thin self-start overflow-y-auto pl-2 transition-[opacity,transform] duration-300 xl:block print:hidden',
-              isZenMode
-                ? 'pointer-events-none m-0 hidden w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
-                : 'translate-x-0 opacity-100',
-              readingTheme === 'dark' ? 'text-[#A7B5AC]' : '',
-            )}
+            data-testid="split-pane-desktop"
             role="complementary"
-            aria-label="Cột biên tập lề và mục lục"
+            aria-label="Ngăn kéo chia đôi công cụ học tập"
+            className="sticky top-12 hidden h-[calc(100vh-3rem)] w-[340px] shrink-0 border-l border-[var(--border-hairline)] bg-[var(--bg-shell)] lg:block xl:w-[380px] print:hidden"
           >
-            <LessonToc lessonMeta={compiled?.lessonMeta ?? null} readingTheme={readingTheme} />
+            <SplitStudyPane
+              lessonId={lesson.id}
+              lessonSlug={lesson.slug}
+              lessonTitle={lesson.title}
+              lessonDescription={lesson.description}
+              subjectSlug={subject.slug}
+              subjectTitle={subject.title}
+              lessonMeta={compiled?.lessonMeta ?? null}
+              activeTab={splitTab}
+              onTabChange={setSplitTab}
+              onClose={() => setIsSplitPaneOpen(false)}
+            />
           </aside>
+        )}
+      </div>
+
+      {/* Mobile Slide-Over Drawer cho SplitStudyPane (< 1024px) */}
+      {isMobileSplitOpen && (
+        <div
+          data-testid="split-pane-mobile-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Bảng chia đôi công cụ học tập"
+          className="fixed inset-0 z-50 flex justify-end lg:hidden print:hidden"
+        >
+          <div
+            aria-hidden="true"
+            onClick={() => setIsMobileSplitOpen(false)}
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
+          />
+          <div className="relative z-10 h-full w-[min(92vw,380px)] border-l border-[var(--border-hairline)] bg-[var(--bg-shell)] shadow-xl">
+            <SplitStudyPane
+              lessonId={lesson.id}
+              lessonSlug={lesson.slug}
+              lessonTitle={lesson.title}
+              lessonDescription={lesson.description}
+              subjectSlug={subject.slug}
+              subjectTitle={subject.title}
+              lessonMeta={compiled?.lessonMeta ?? null}
+              activeTab={splitTab}
+              onTabChange={setSplitTab}
+              onClose={() => setIsMobileSplitOpen(false)}
+              onSelectAnchor={() => setIsMobileSplitOpen(false)}
+            />
+          </div>
         </div>
-      </FadeIn>
+      )}
     </div>
   );
 }

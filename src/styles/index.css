@@ -119,11 +119,19 @@
 }
 
 .katex-display {
-  font-size: 1.18em !important;
+  font-size: 1.15em !important;
   margin: 1.25em 0 !important;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.5rem 0;
+  padding: 0.45rem 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.katex-display > .katex {
+  max-width: none;
+  display: inline-block;
+  text-align: center;
 }
 
 :root {

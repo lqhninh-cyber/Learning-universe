@@ -430,6 +430,16 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('archival-module-hinh-hoc-affine')).toBeInTheDocument();
       expect(screen.getByTestId('archival-module-giai-tich-ham-mot-bien')).toBeInTheDocument();
       expect(screen.getByTestId('archival-module-giao-duc-hoc')).toBeInTheDocument();
+      expect(screen.getByTestId('archival-subject-badge-cau-truc-dai-so')).toHaveTextContent(
+        'CTĐS',
+      );
+      expect(screen.getByTestId('archival-subject-badge-hinh-hoc-affine')).toHaveTextContent(
+        'HHAVE',
+      );
+      expect(screen.getByTestId('archival-subject-badge-giai-tich-ham-mot-bien')).toHaveTextContent(
+        'GTHMB',
+      );
+      expect(screen.getByTestId('archival-subject-badge-giao-duc-hoc')).toHaveTextContent('GDH');
       expect(screen.queryByText(/MATH1301|MATH1302|MATH1303|EDUC2802/i)).not.toBeInTheDocument();
 
       // Có các bộ lọc CLO

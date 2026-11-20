@@ -118,17 +118,17 @@ function BaseTheoryBlock({
         id={resolvedAnchor}
         data-kind={semanticKind}
         aria-label={displayTitle ? `${headingLabel}: ${displayTitle}` : headingLabel}
-        className="semantic-block my-5 scroll-mt-24 overflow-hidden rounded-xl shadow-xs transition-all duration-200 dark:shadow-none"
+        className="semantic-block my-5 scroll-mt-20 overflow-hidden rounded-lg transition-colors duration-150"
       >
         <header className="semantic-block-header flex flex-wrap items-center justify-between gap-2 px-5 py-3">
           <div className="flex flex-wrap items-baseline gap-2.5">
-            <span className="kb-pill font-serif">{headingLabel}</span>
+            <span className="kb-pill font-mono">{headingLabel}</span>
             {displayTitle && (
               <>
-                <span className="text-stone-400 dark:text-stone-500" aria-hidden="true">
+                <span className="text-[var(--text-muted)]" aria-hidden="true">
                   ·
                 </span>
-                <h4 className="font-serif text-base font-bold text-stone-900 dark:text-[#F5F2EB]">
+                <h4 className="font-serif text-base font-bold text-[var(--text-main)]">
                   {displayTitle}
                 </h4>
               </>
@@ -136,7 +136,7 @@ function BaseTheoryBlock({
           </div>
           <SourceAttributionBadge original={original} source={source} page={page} />
         </header>
-        <div className="semantic-block-body space-y-4 p-5 text-[18px] leading-[1.85] text-[#18221D] lg:p-6 dark:text-[#ECE8DF] [&_p]:mb-4 [&_p:last-child]:mb-0">
+        <div className="semantic-block-body space-y-4 p-5 text-[var(--text-main)] lg:px-6 lg:py-5 [&_p]:mb-4 [&_p:last-child]:mb-0">
           {children}
         </div>
       </section>

@@ -117,6 +117,21 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
       within(tocNav).getByRole('link', { name: /1\. Từ phép biến hình đến các tiên đề của Nhóm/i }),
     ).toHaveAttribute('href', '#1-tu-phep-bien-hinh-den-cac-tien-de-cua-nhom');
 
+    // Kiểm tra thanh công cụ trình đọc trên TopContextBar & chuyển đổi 3 tab Split-Pane (Mục lục / Thuật ngữ / Sổ tay)
+    expect(screen.getByTestId('lesson-sidebar-toggle')).toBeInTheDocument();
+    const splitToggle = screen.getByTestId('lesson-split-pane-toggle');
+    expect(splitToggle).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('split-study-pane')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('split-tab-glossary'));
+    expect(screen.getByTestId('split-panel-glossary')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('split-tab-notes'));
+    expect(screen.getByTestId('split-panel-notes')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('split-tab-toc'));
+    expect(screen.getByTestId('split-panel-toc')).toBeInTheDocument();
+
     // Ở chế độ Khách (Guest), bấm "Đánh dấu hoàn thành" mở hộp thoại LoginPromptDialog (D1)
     const completeButtons = screen.getAllByRole('button', { name: /Đánh dấu hoàn thành/i });
     await user.click(completeButtons[0]!);

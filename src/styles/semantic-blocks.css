@@ -8,124 +8,157 @@
    ============================================================================ */
 
 :root {
-  --kb-def-accent: #2d5266;
-  --kb-def-bg: rgba(45, 82, 102, 0.038);
-  --kb-def-header-bg: rgba(45, 82, 102, 0.055);
-  --kb-def-border: #c9d7df;
-  --kb-def-pill-bg: rgba(45, 82, 102, 0.09);
-  --kb-def-pill-text: #223f4f;
+  /* Swiss Editorial Monograph Blocks — Sứ Bạch (Ceramic Light) */
+  --kb-def-accent: #1d4f6e;
+  --kb-def-bg: var(--bg-surface, #f8fafb);
+  --kb-def-header-bg: transparent;
+  --kb-def-border: var(--border-hairline, #e3e8ec);
+  --kb-def-pill-bg: rgba(29, 79, 110, 0.08);
+  --kb-def-pill-text: #1d4f6e;
 
-  --kb-thm-accent: #7a463b;
-  --kb-thm-bg: rgba(122, 70, 59, 0.038);
-  --kb-thm-header-bg: rgba(122, 70, 59, 0.055);
-  --kb-thm-border: #d8c8c1;
-  --kb-thm-pill-bg: rgba(122, 70, 59, 0.09);
-  --kb-thm-pill-text: #61372e;
+  --kb-thm-accent: var(--accent-os, #17332c);
+  --kb-thm-bg: var(--bg-surface, #f8fafb);
+  --kb-thm-header-bg: transparent;
+  --kb-thm-border: var(--border-hairline, #e3e8ec);
+  --kb-thm-pill-bg: rgba(23, 51, 44, 0.08);
+  --kb-thm-pill-text: var(--accent-os, #17332c);
 
-  --kb-ex-accent: #245746;
-  --kb-ex-bg: rgba(36, 87, 70, 0.035);
-  --kb-ex-header-bg: rgba(36, 87, 70, 0.055);
-  --kb-ex-border: #c6dbd0;
-  --kb-ex-pill-bg: rgba(36, 87, 70, 0.09);
-  --kb-ex-pill-text: #1b4336;
+  --kb-ex-accent: #1b5e4a;
+  --kb-ex-bg: var(--bg-surface, #f8fafb);
+  --kb-ex-header-bg: transparent;
+  --kb-ex-border: var(--border-hairline, #e3e8ec);
+  --kb-ex-pill-bg: rgba(27, 94, 74, 0.08);
+  --kb-ex-pill-text: #1b5e4a;
 
-  --kb-proof-border: var(--border-subtle, #d8e0dd);
-  --kb-proof-bg: rgba(231, 236, 234, 0.36);
-  --kb-proof-label: #4a5d58;
-  --kb-proof-target: #182624;
+  --kb-proof-border: var(--border-strong, #c8d2d7);
+  --kb-proof-bg: transparent;
+  --kb-proof-label: var(--text-secondary, #4a5955);
+  --kb-proof-target: var(--text-main, #111a18);
 }
 
 .dark,
 [data-theme='dark'],
 [data-reading-theme='dark'],
 .scoped-dark-mode {
-  --kb-def-accent: #7ba9c2;
-  --kb-def-bg: rgba(18, 36, 28, 0.72);
-  --kb-def-header-bg: #132820;
-  --kb-def-border: #254454;
-  --kb-def-pill-bg: #16303d;
-  --kb-def-pill-text: #a9d0e4;
+  /* Swiss Editorial Monograph Blocks — Than Đá (Obsidian Studio) */
+  --kb-def-accent: #64a8d1;
+  --kb-def-bg: var(--bg-surface, #181f1d);
+  --kb-def-header-bg: transparent;
+  --kb-def-border: var(--border-hairline, #242e2b);
+  --kb-def-pill-bg: rgba(100, 168, 209, 0.14);
+  --kb-def-pill-text: #8cc4e6;
 
-  --kb-thm-accent: #d19385;
-  --kb-thm-bg: rgba(34, 24, 21, 0.62);
-  --kb-thm-header-bg: #291c18;
-  --kb-thm-border: #4d2f28;
-  --kb-thm-pill-bg: #3b231d;
-  --kb-thm-pill-text: #efc2b7;
+  --kb-thm-accent: var(--accent-os, #52b394);
+  --kb-thm-bg: var(--bg-surface, #181f1d);
+  --kb-thm-header-bg: transparent;
+  --kb-thm-border: var(--border-hairline, #242e2b);
+  --kb-thm-pill-bg: rgba(82, 179, 148, 0.14);
+  --kb-thm-pill-text: #7fd4b7;
 
-  --kb-ex-accent: #6eb59b;
-  --kb-ex-bg: rgba(14, 30, 23, 0.85);
-  --kb-ex-header-bg: #132c22;
-  --kb-ex-border: #1f4a3b;
-  --kb-ex-pill-bg: #173a2d;
-  --kb-ex-pill-text: #9ee0c7;
+  --kb-ex-accent: #52b394;
+  --kb-ex-bg: var(--bg-surface, #181f1d);
+  --kb-ex-header-bg: transparent;
+  --kb-ex-border: var(--border-hairline, #242e2b);
+  --kb-ex-pill-bg: rgba(82, 179, 148, 0.14);
+  --kb-ex-pill-text: #7fd4b7;
 
-  --kb-proof-border: #274437;
-  --kb-proof-bg: rgba(14, 26, 21, 0.65);
-  --kb-proof-label: #98aba3;
-  --kb-proof-target: #dce6e1;
+  --kb-proof-border: #33423d;
+  --kb-proof-bg: transparent;
+  --kb-proof-label: #9eb0aa;
+  --kb-proof-target: #eff4f2;
 }
 
-/* Hài hòa sắc khoáng thạch theo từng học phần */
-[data-subject='cau-truc-dai-so'] .semantic-block[data-kind='thm'],
-[data-subject='algebraic-structures'] .semantic-block[data-kind='thm'] {
-  --kb-thm-accent: #6b5335;
-  --kb-thm-border: #d8d0c0;
-  --kb-thm-bg: rgba(107, 83, 53, 0.045);
-  --kb-thm-header-bg: rgba(107, 83, 53, 0.075);
-  --kb-thm-pill-bg: rgba(107, 83, 53, 0.11);
-  --kb-thm-pill-text: #564228;
+/* Định nghĩa nhận màu nhận diện học phần (CTĐS #8C5828 · HHAVE #1D4F6E · GTHMB #1B5E4A · GDH #8F3D35) */
+[data-subject='cau-truc-dai-so'] .semantic-block[data-kind='def'],
+[data-subject='algebraic-structures'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #8c5828;
+  --kb-def-pill-bg: rgba(140, 88, 40, 0.1);
+  --kb-def-pill-text: #8c5828;
+}
+
+.dark [data-subject='cau-truc-dai-so'] .semantic-block[data-kind='def'],
+.dark [data-subject='algebraic-structures'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #d99b5e;
+  --kb-def-pill-bg: rgba(217, 155, 94, 0.14);
+  --kb-def-pill-text: #e4b17e;
 }
 
 [data-subject='hinh-hoc-affine'] .semantic-block[data-kind='def'],
 [data-subject='affine-geometry'] .semantic-block[data-kind='def'] {
-  --kb-def-accent: #2d5266;
+  --kb-def-accent: #1d4f6e;
+  --kb-def-pill-bg: rgba(29, 79, 110, 0.1);
+  --kb-def-pill-text: #1d4f6e;
 }
 
-[data-subject='giai-tich-ham-mot-bien'] .semantic-block[data-kind='ex'],
-[data-subject='single-variable-calculus'] .semantic-block[data-kind='ex'] {
-  --kb-ex-accent: #245746;
+.dark [data-subject='hinh-hoc-affine'] .semantic-block[data-kind='def'],
+.dark [data-subject='affine-geometry'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #64a8d1;
+  --kb-def-pill-bg: rgba(100, 168, 209, 0.14);
+  --kb-def-pill-text: #8cc4e6;
 }
 
-[data-subject='giao-duc-hoc'] .semantic-block[data-kind='thm'],
-[data-subject='pedagogy'] .semantic-block[data-kind='thm'] {
-  --kb-thm-accent: #7a463b;
+[data-subject='giai-tich-ham-mot-bien'] .semantic-block[data-kind='def'],
+[data-subject='single-variable-calculus'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #1b5e4a;
+  --kb-def-pill-bg: rgba(27, 94, 74, 0.1);
+  --kb-def-pill-text: #1b5e4a;
+}
+
+.dark [data-subject='giai-tich-ham-mot-bien'] .semantic-block[data-kind='def'],
+.dark [data-subject='single-variable-calculus'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #52b394;
+  --kb-def-pill-bg: rgba(82, 179, 148, 0.14);
+  --kb-def-pill-text: #7fd4b7;
+}
+
+[data-subject='giao-duc-hoc'] .semantic-block[data-kind='def'],
+[data-subject='pedagogy'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #8f3d35;
+  --kb-def-pill-bg: rgba(143, 61, 53, 0.1);
+  --kb-def-pill-text: #8f3d35;
+}
+
+.dark [data-subject='giao-duc-hoc'] .semantic-block[data-kind='def'],
+.dark [data-subject='pedagogy'] .semantic-block[data-kind='def'] {
+  --kb-def-accent: #df7b70;
+  --kb-def-pill-bg: rgba(223, 123, 112, 0.14);
+  --kb-def-pill-text: #ea9990;
 }
 
 [data-theme='sepia'],
 [data-reading-theme='sepia'] {
-  --kb-def-accent: #24477a;
-  --kb-def-bg: rgba(231, 236, 238, 0.5);
-  --kb-def-header-bg: #e4e9ec;
-  --kb-def-border: #b9c6d1;
-  --kb-def-pill-bg: #d5e0ea;
-  --kb-def-pill-text: #1b3761;
+  --kb-def-accent: #1d4f6e;
+  --kb-def-bg: #f6efe0;
+  --kb-def-header-bg: transparent;
+  --kb-def-border: #dfd3ba;
+  --kb-def-pill-bg: rgba(29, 79, 110, 0.1);
+  --kb-def-pill-text: #1d4f6e;
 
-  --kb-thm-accent: #8b2635;
-  --kb-thm-bg: rgba(246, 229, 226, 0.55);
-  --kb-thm-header-bg: #f3dfdc;
-  --kb-thm-border: #d9b7b3;
-  --kb-thm-pill-bg: #ecd0cc;
-  --kb-thm-pill-text: #6e1a26;
+  --kb-thm-accent: #17332c;
+  --kb-thm-bg: #f6efe0;
+  --kb-thm-header-bg: transparent;
+  --kb-thm-border: #dfd3ba;
+  --kb-thm-pill-bg: rgba(23, 51, 44, 0.1);
+  --kb-thm-pill-text: #17332c;
 
-  --kb-ex-accent: #1f5b41;
-  --kb-ex-bg: rgba(232, 240, 229, 0.6);
-  --kb-ex-header-bg: #e0ece0;
-  --kb-ex-border: #b6cebc;
-  --kb-ex-pill-bg: #cee2d2;
-  --kb-ex-pill-text: #174631;
+  --kb-ex-accent: #1b5e4a;
+  --kb-ex-bg: #f6efe0;
+  --kb-ex-header-bg: transparent;
+  --kb-ex-border: #dfd3ba;
+  --kb-ex-pill-bg: rgba(27, 94, 74, 0.1);
+  --kb-ex-pill-text: #1b5e4a;
 
-  --kb-proof-border: #b9a47e;
-  --kb-proof-bg: rgba(251, 248, 239, 0.72);
+  --kb-proof-border: #c5b494;
+  --kb-proof-bg: transparent;
   --kb-proof-label: #5a5242;
-  --kb-proof-target: #3d3629;
+  --kb-proof-target: #231f18;
 }
 
 /* --- 1 & 2. Khối Định nghĩa (def) & Định lý / Tính chất / Hệ quả / Bổ đề / Mệnh đề (thm) --- */
 
 .semantic-block[data-kind='def'] {
   border: 1px solid var(--kb-def-border);
-  border-left: 4px solid var(--kb-def-accent);
+  border-left: 3px solid var(--kb-def-accent);
   background-color: var(--kb-def-bg);
 }
 
@@ -137,12 +170,12 @@
 .semantic-block[data-kind='def'] .kb-pill {
   background-color: var(--kb-def-pill-bg);
   color: var(--kb-def-pill-text);
-  border: 1px solid var(--kb-def-border);
+  border: 1px solid transparent;
 }
 
 .semantic-block[data-kind='thm'] {
   border: 1px solid var(--kb-thm-border);
-  border-left: 4px solid var(--kb-thm-accent);
+  border-left: 3px solid var(--kb-thm-accent);
   background-color: var(--kb-thm-bg);
 }
 
@@ -154,7 +187,7 @@
 .semantic-block[data-kind='thm'] .kb-pill {
   background-color: var(--kb-thm-pill-bg);
   color: var(--kb-thm-pill-text);
-  border: 1px solid var(--kb-thm-border);
+  border: 1px solid transparent;
 }
 
 .kb-pill {
@@ -198,7 +231,7 @@
 
 details.ex-block[data-kind='ex'] {
   border: 1px solid var(--kb-ex-border);
-  border-left: 4px solid var(--kb-ex-accent);
+  border-left: 3px solid var(--kb-ex-accent);
   background-color: var(--kb-ex-bg);
 }
 
@@ -260,16 +293,16 @@ details.ex-block[data-kind='ex'][open] > .ex-block-body {
   }
 }
 
-/* --- 4. Khối Chứng minh (data-kind="proof") --- */
+/* --- 4. Khối Chứng minh (data-kind="proof") — Nền trong suốt, viền trái mảnh 2px --- */
 
 .semantic-proof-block[data-kind='proof'] {
-  border-left: 3px dashed var(--kb-proof-border);
+  border-left: 2px solid var(--kb-proof-border);
   background-color: transparent;
 }
 
 .semantic-proof-block[data-kind='proof'] .semantic-proof-card {
-  background-color: var(--kb-proof-bg);
-  border-color: var(--kb-proof-border);
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .semantic-proof-kicker {

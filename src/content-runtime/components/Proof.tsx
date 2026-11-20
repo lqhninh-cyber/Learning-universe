@@ -66,18 +66,16 @@ export function Proof({
             )}
           </span>
         }
-        className="semantic-proof-card border-[#CFDADB] bg-white/40 dark:border-[#1E3B2E] dark:bg-[#0E1E17]/60"
-        contentClassName="bg-[#F7FAFA]/80 text-[18px] leading-[1.85] text-[#18221D] dark:bg-[#0E1E17] dark:text-[#ECE8DF] [&_p]:mb-4 [&_p:last-child]:mb-0"
+        className="semantic-proof-card border-transparent bg-transparent"
+        contentClassName="bg-transparent text-[var(--text-main)] [&_p]:mb-4 [&_p:last-child]:mb-0"
       >
         <div className="space-y-3">{children}</div>
         <div
-          className="mt-3 flex items-center justify-end gap-1.5 text-sm font-semibold text-stone-700 select-none dark:text-stone-300"
+          className="mt-3 flex items-center justify-end gap-1.5 text-sm font-semibold text-[var(--text-muted)] select-none"
           aria-label="Kết thúc chứng minh"
           title="Điều phải chứng minh (Q.E.D.)"
         >
-          <span className="font-mono text-[10px] tracking-[0.18em] text-stone-500 uppercase dark:text-stone-400">
-            Q.E.D.
-          </span>
+          <span className="font-mono text-[10px] tracking-[0.18em] uppercase">Q.E.D.</span>
           <span className="kb-halmos text-base leading-none font-bold" aria-hidden="true">
             ∎
           </span>
@@ -87,7 +85,7 @@ export function Proof({
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
             data-qed-glyph="vietnamese-lozenge"
-            className="ml-0.5 inline-block h-3.5 w-3.5 align-middle text-stone-600 opacity-80 dark:text-stone-300"
+            className="ml-0.5 inline-block h-3.5 w-3.5 align-middle text-[var(--text-muted)] opacity-80"
           >
             <path
               d="M12 2L22 12L12 22L2 12L12 2Z"
