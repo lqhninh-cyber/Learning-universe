@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { WaterTouchIntro } from '@/components/intro';
+import { AppShell } from '@/components/layout/AppShell';
 import { Footer } from '@/components/layout/Footer';
 import { IslandProvider, useIsland } from '@/context/IslandContext';
+import { LayoutProvider } from '@/context/LayoutContext';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { AuthModal, AuthProvider, PendingNoticeDialog } from '@/features/auth';
 import { LoginPromptDialog } from '@/features/learning';
@@ -10,7 +12,6 @@ import { PaperGrain } from '@/shared/components/PaperGrain';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { Container } from '@/shared/ui';
-import { Header } from './Header';
 
 export function RootHydrateFallback() {
   return null;
@@ -27,24 +28,44 @@ function RootLayoutContent() {
 
   const { theme } = useReadingSettings();
   const { setRoutePathname, readerSettings } = useIsland();
-  const isDarkLesson = isLessonPage && (readerSettings.isDarkMode || theme === 'dark');
-  const isSepiaLesson = isLessonPage && !readerSettings.isDarkMode && theme === 'sepia';
+  const isDarkApp = theme === 'dark' || (isLessonPage && readerSettings.isDarkMode);
+  const isSepiaLesson = isLessonPage && !isDarkApp && theme === 'sepia';
   const isEyeComfort =
-    isLessonPage && readerSettings.eyeComfortWarmth && !isDarkLesson && !isSepiaLesson;
+    isLessonPage && readerSettings.eyeComfortWarmth && !isDarkApp && !isSepiaLesson;
 
   useEffect(() => {
     setRoutePathname(pathname);
   }, [pathname, setRoutePathname]);
 
   useEffect(() => {
-    if (!hash && typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+    if (typeof window === 'undefined') return;
+    if (hash) {
+      const targetId = hash.replace(/^#/, '');
+      const tryScroll = () => {
+        const el = document.getElementById(targetId);
+        if (el && typeof el.scrollIntoView === 'function') {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      };
+      tryScroll();
+      const timer = window.setTimeout(tryScroll, 180);
+      return () => window.clearTimeout(timer);
+    }
+    if (typeof window.scrollTo === 'function') {
       try {
         window.scrollTo({ top: 0, behavior: 'instant' });
       } catch {
         // Bỏ qua trong môi trường jsdom khi kiểm thử
       }
     }
+    return undefined;
   }, [pathname, hash]);
+
+  const mainClassName = isHomePage
+    ? 'overflow-x-clip'
+    : isCourseDetailPage
+      ? 'overflow-x-clip pb-12'
+      : 'pt-4 pb-12 sm:pt-6';
 
   return (
     <div
@@ -53,14 +74,14 @@ function RootLayoutContent() {
       data-eye-comfort={isEyeComfort ? 'true' : undefined}
       data-theme={theme}
       className={cn(
-        'flex min-h-screen flex-col overflow-x-clip transition-colors duration-300',
-        isDarkLesson
-          ? 'scoped-dark-mode dark bg-[#0E1A15] text-[#E6ECE7]'
+        'min-h-screen overflow-x-clip transition-colors duration-200',
+        isDarkApp
+          ? 'scoped-dark-mode dark bg-[var(--bg-workspace)] text-[var(--text-main)]'
           : isSepiaLesson
             ? 'scoped-sepia-mode bg-[#F4EEDF] text-[#231F18]'
             : isEyeComfort
-              ? 'bg-[#EAE8E1] text-[#182624]'
-              : 'bg-[var(--bg-page)] text-[var(--text-main)]',
+              ? 'bg-[#EAE8E1] text-[#111A18]'
+              : 'bg-[var(--bg-workspace)] text-[var(--text-main)]',
       )}
     >
       {/* SKIP TO MAIN CONTENT LINK CHO BÀN PHÍM & SCREEN READER (WCAG 2.1 SC 2.4.1) */}
@@ -74,38 +95,29 @@ function RootLayoutContent() {
       {/* 0. TACTILE DO PAPER GRAIN SVG NOISE OVERLAY */}
       <PaperGrain />
 
-      {/* 1. STICKY FROSTED NAVIGATION BAR WITH DUAL-SPATIAL MEGA MENU */}
-      <Header isDarkLesson={isDarkLesson} readingTheme={isLessonPage ? theme : 'light'} />
-
-      {/* 2. MAIN OUTLET CONTAINER */}
-      {isHomePage ? (
-        <main id="main-content" className="flex-1 overflow-x-clip">
+      {/* 1. ACADEMIC OS APP SHELL (LeftRail + TopContextBar + Main Workspace + Footer + CommandPalette ⌘K) */}
+      <AppShell
+        isLessonPage={isLessonPage}
+        isDark={isDarkApp}
+        mainClassName={mainClassName}
+        footer={<Footer isDarkLesson={isDarkApp} />}
+      >
+        {isHomePage ? (
           <Outlet />
-        </main>
-      ) : isCourseDetailPage ? (
-        <main id="main-content" className="flex-1 overflow-x-clip pb-12">
+        ) : (
           <Container size="wide">
             <Outlet />
           </Container>
-        </main>
-      ) : (
-        <main id="main-content" className="flex-1 pt-24 pb-12 sm:pt-28">
-          <Container size="wide">
-            <Outlet />
-          </Container>
-        </main>
-      )}
+        )}
+      </AppShell>
 
-      {/* 3. AUTH & NOTIFICATION MODALS */}
+      {/* 2. AUTH & NOTIFICATION MODALS */}
       <AuthModal />
       <PendingNoticeDialog />
       <LoginPromptDialog />
 
-      {/* 4. CHẠM MẶT NƯỚC (TOUCH THE WATER) INTRO OVERLAY */}
+      {/* 3. CHẠM MẶT NƯỚC (TOUCH THE WATER) INTRO OVERLAY */}
       <WaterTouchIntro />
-
-      {/* 5. MINIMALIST SCHOLARLY FOOTER */}
-      <Footer isDarkLesson={isDarkLesson} />
     </div>
   );
 }
@@ -113,11 +125,13 @@ function RootLayoutContent() {
 export function RootLayout() {
   return (
     <AuthProvider>
-      <IslandProvider>
-        <ReadingSettingsProvider>
-          <RootLayoutContent />
-        </ReadingSettingsProvider>
-      </IslandProvider>
+      <LayoutProvider>
+        <IslandProvider>
+          <ReadingSettingsProvider>
+            <RootLayoutContent />
+          </ReadingSettingsProvider>
+        </IslandProvider>
+      </LayoutProvider>
     </AuthProvider>
   );
 }

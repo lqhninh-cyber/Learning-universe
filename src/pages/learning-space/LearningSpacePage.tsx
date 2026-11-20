@@ -303,7 +303,7 @@ export function LearningSpacePage() {
         <section
           id="khoi-dau"
           aria-label="Không gian Học tập"
-          className="relative z-30 scroll-mt-24 pt-20 pb-1 sm:pt-24"
+          className="relative z-30 scroll-mt-16 pt-6 pb-1 sm:pt-8"
         >
           <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
             <BlueprintSectionFrame

@@ -6,76 +6,81 @@
 [data-theme='light'],
 [data-theme='mist-blue-sage'],
 [data-theme='bach-do'] {
-  /* LIGHT MODE ("Bạch Ngọc Khoáng Thạch & Trắng Sứ Dịu" — Balanced Mineral & Soft Porcelain) */
-  --bg-page: #f2f4f3;
-  --bg-surface: #fafbf9;
-  --bg-subtle: #e7ecea;
-  --bg-sunken: #e7ecea;
-  --border-subtle: #d8e0dd;
+  /* LIGHT MODE ("Sứ Bạch — Ceramic Light" — Tương phản WCAG AAA > 14:1) */
+  --bg-shell: #f3f5f6;
+  --bg-workspace: #ffffff;
+  --bg-page: #ffffff;
+  --bg-surface: #f8fafb;
+  --bg-subtle: #f8fafb;
+  --bg-sunken: #edf1f3;
+  --border-hairline: #e3e8ec;
+  --border-subtle: #e3e8ec;
   --border-control: #6b847d;
 
-  --text-main: #182624;
-  --text-muted: #4a5d58;
+  --text-main: #111a18;
+  --text-primary: #111a18;
+  --text-secondary: #4a5955;
+  --text-muted: #72817d;
+
+  --accent-os: #17332c;
+  --accent-heritage: #9e763b;
 
   --gold-badge: #e5c378;
-  --gold-line: #9e845a;
-  --gold-text: #7a623c;
+  --gold-line: #9e763b;
+  --gold-text: #7a5c2e;
 
-  --indigo-link: #2d5266;
+  --indigo-link: #1d4f6e;
 
-  --cinnabar-text: #7a463b;
-  --cinnabar-bg: rgba(122, 70, 59, 0.055);
+  --cinnabar-text: #8f3d35;
+  --cinnabar-bg: rgba(143, 61, 53, 0.06);
 
-  --shadow-editorial: 0 1px 2px rgba(24, 38, 36, 0.04), 0 8px 24px rgba(24, 38, 36, 0.05);
+  --shadow-editorial: 0 1px 2px rgba(17, 26, 24, 0.04), 0 8px 24px rgba(17, 26, 24, 0.05);
   --selection-bg: #dbe6e2;
 
   /* Compatibility tokens */
-  --bg-main: #f2f4f3;
-  --surface-primary: #fafbf9;
-  --surface-secondary: #e7ecea;
-  --surface-tertiary: #dce4e1;
-  --primary: #2d5266;
-  --primary-hover: #234152;
-  --secondary: #4a5d58;
-  --accent: #9e845a;
-  --text-primary: #182624;
-  --text-secondary: #4a5d58;
+  --bg-main: #ffffff;
+  --surface-primary: #f8fafb;
+  --surface-secondary: #f3f5f6;
+  --surface-tertiary: #e3e8ec;
+  --primary: #17332c;
+  --primary-hover: #21463c;
+  --secondary: #4a5955;
+  --accent: #9e763b;
 
   /* Semantic Colors */
-  --success: #4f7967;
-  --warning: #987343;
-  --danger: #a65d59;
-  --info: #527b8a;
+  --success: #1b5e4a;
+  --warning: #9e763b;
+  --danger: #8f3d35;
+  --info: #1d4f6e;
 
   /* Subject Accents */
-  --math-accent: #71889a;
-  --math-light: #e5edf1;
-  --edu-accent: #718c7e;
-  --edu-light: #e8efeb;
+  --math-accent: #1d4f6e;
+  --math-light: #f3f8fb;
+  --edu-accent: #8f3d35;
+  --edu-light: #fbf4f3;
 
   /* Lotus Pond & Footer Design Tokens */
-  --lake-deep: #081a13;
-  --lake-text: #f1f5f3;
-  --lake-text-muted: #cbd5ce;
-  --lake-accent: #e5b25d;
+  --lake-deep: #0d1110;
+  --lake-text: #eff4f2;
+  --lake-text-muted: #9eada8;
+  --lake-accent: #d4af6a;
   --lotus-rose: #d9778d;
 
-  /* Compatibility aliases (Đồng bộ Bạch Ngọc Khoáng Thạch) */
-  --bg-canvas: #f2f4f3;
-  --bg-muted: #e7ecea;
-  --border-hairline: #d8e0dd;
-  --accent-primary: #2d5266;
-  --accent-verandah: #3b7a65;
-  --accent-wood: #9e845a;
-  --accent-interactive: #2d5266;
+  /* Compatibility aliases */
+  --bg-canvas: #ffffff;
+  --bg-muted: #f3f5f6;
+  --accent-primary: #17332c;
+  --accent-verandah: #1b5e4a;
+  --accent-wood: #9e763b;
+  --accent-interactive: #1d4f6e;
 
   /* Scholar Suite aliases */
-  --scholar-bg: #f2f4f3;
-  --scholar-surface: #fafbf9;
-  --scholar-text: #182624;
-  --scholar-muted: #4a5d58;
-  --scholar-accent: #2d5266;
-  --scholar-hairline: #d8e0dd;
+  --scholar-bg: #ffffff;
+  --scholar-surface: #f8fafb;
+  --scholar-text: #111a18;
+  --scholar-muted: #4a5955;
+  --scholar-accent: #17332c;
+  --scholar-hairline: #e3e8ec;
 
   /* Hallmark (Atelier · Vellum · Almanac · Blueprint) Typography & Surface Tokens */
   --tracking-display: -0.022em;
@@ -89,18 +94,18 @@
   --rule-double: 4px;
   --lit-edge: inset 0 1px 0 rgba(255, 255, 255, 0.88);
   --shadow-card-mineral:
-    0 0 0 1px rgba(24, 38, 36, 0.045), 0 1px 2px rgba(24, 38, 36, 0.05),
-    0 12px 28px -12px rgba(24, 38, 36, 0.09);
+    0 0 0 1px rgba(17, 26, 24, 0.045), 0 1px 2px rgba(17, 26, 24, 0.05),
+    0 12px 28px -12px rgba(17, 26, 24, 0.09);
 
-  /* 4 Sắc Khoáng Thạch Môn Học Chuẩn (CTĐS · HHAVE · GTHMB · GDH) */
-  --mineral-ctds: #6b5335;
-  --mineral-ctds-lit: #9c7a4c;
-  --mineral-hhave: #2d5266;
-  --mineral-hhave-lit: #49768f;
-  --mineral-gthmb: #245746;
-  --mineral-gthmb-lit: #3b7a65;
-  --mineral-gdh: #7a463b;
-  --mineral-gdh-lit: #9e6356;
+  /* 4 Sắc Học Phần Chuẩn Academic OS (CTĐS · HHAVE · GTHMB · GDH) */
+  --mineral-ctds: #8c5828;
+  --mineral-ctds-lit: #d99b5e;
+  --mineral-hhave: #1d4f6e;
+  --mineral-hhave-lit: #64a8d1;
+  --mineral-gthmb: #1b5e4a;
+  --mineral-gthmb-lit: #52b394;
+  --mineral-gdh: #8f3d35;
+  --mineral-gdh-lit: #df7b70;
 
   /* Hallmark & Taste-Skill Motion Tokens */
   --dur-micro: 120ms;
@@ -114,51 +119,56 @@
 [data-theme='dark'],
 [data-reading-theme='dark'],
 [data-theme='muc-nho'] {
-  /* DARK MODE (Đá Phiến Trầm & Đen Rêu Sơn Mài) */
-  --bg-page: #0e1a15;
-  --bg-surface: #12241c;
-  --bg-subtle: #182e24;
-  --bg-sunken: #091510;
-  --border-subtle: #2a4035;
-  --border-control: #3d6151;
+  /* DARK MODE ("Than Đá — Obsidian Studio") */
+  --bg-shell: #0d1110;
+  --bg-workspace: #121716;
+  --bg-page: #121716;
+  --bg-surface: #181f1d;
+  --bg-subtle: #181f1d;
+  --bg-sunken: #0b0e0d;
+  --border-hairline: #242e2b;
+  --border-subtle: #242e2b;
+  --border-control: #3b8a72;
 
-  --text-main: #e6ece7;
-  --text-muted: #a7b5ac;
+  --text-main: #eff4f2;
+  --text-primary: #eff4f2;
+  --text-secondary: #9eada8;
+  --text-muted: #6c7c77;
 
-  --gold-badge: #e5c378;
-  --gold-line: #c5a262;
-  --gold-text: #e5c378;
+  --accent-os: #3b8a72;
+  --accent-heritage: #d4af6a;
 
-  --indigo-link: #9db8de;
+  --gold-badge: #d4af6a;
+  --gold-line: #d4af6a;
+  --gold-text: #d4af6a;
 
-  --cinnabar-text: #e08a8a;
-  --cinnabar-bg: rgba(224, 138, 138, 0.12);
+  --indigo-link: #64a8d1;
 
-  --shadow-editorial: 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.4);
-  --selection-bg: #1b3d2f;
+  --cinnabar-text: #df7b70;
+  --cinnabar-bg: rgba(223, 123, 112, 0.12);
+
+  --shadow-editorial: 0 2px 4px rgba(0, 0, 0, 0.35), 0 12px 32px rgba(0, 0, 0, 0.45);
+  --selection-bg: #1e3d33;
 
   /* Compatibility aliases */
-  --bg-main: #0e1a15;
-  --surface-primary: #12241c;
-  --surface-secondary: #12241c;
-  --surface-tertiary: #182e24;
-  --bg-canvas: #0e1a15;
-  --bg-muted: rgba(230, 236, 231, 0.08);
-  --border-hairline: #2a4035;
-  --text-primary: #e6ece7;
-  --text-secondary: #a7b5ac;
-  --accent-primary: #e5c378;
-  --accent-verandah: #52b788;
-  --accent-wood: #c5a262;
-  --accent-interactive: #9db8de;
+  --bg-main: #121716;
+  --surface-primary: #181f1d;
+  --surface-secondary: #181f1d;
+  --surface-tertiary: #202a27;
+  --bg-canvas: #121716;
+  --bg-muted: rgba(239, 244, 242, 0.08);
+  --accent-primary: #3b8a72;
+  --accent-verandah: #52b394;
+  --accent-wood: #d4af6a;
+  --accent-interactive: #64a8d1;
 
   /* Scholar Suite aliases */
-  --scholar-bg: #0e1a15;
-  --scholar-surface: #12241c;
-  --scholar-text: #e6ece7;
-  --scholar-muted: #a7b5ac;
-  --scholar-accent: #e5c378;
-  --scholar-hairline: #2a4035;
+  --scholar-bg: #121716;
+  --scholar-surface: #181f1d;
+  --scholar-text: #eff4f2;
+  --scholar-muted: #9eada8;
+  --scholar-accent: #3b8a72;
+  --scholar-hairline: #242e2b;
 }
 
 [data-theme='sepia'],
@@ -314,41 +324,45 @@ span.academic-dropcap {
 
 .scoped-dark-mode,
 [data-reading-theme='dark'] {
-  --reading-canvas: #0e1a15;
-  --reading-surface: #12241c;
-  --reading-text: #e6ece7;
-  --reading-text-muted: #a7b5ac;
-  --reading-border: #2a4035;
-  --reading-accent: #e5c378;
+  --reading-canvas: #121716;
+  --reading-surface: #181f1d;
+  --reading-text: #eff4f2;
+  --reading-text-muted: #9eada8;
+  --reading-border: #242e2b;
+  --reading-accent: #d4af6a;
 
-  /* Ghi đè biến CSS cục bộ trong phạm vi bài đọc */
-  --bg-page: #0e1a15;
-  --bg-subtle: #182e24;
-  --bg-sunken: #091510;
-  --text-main: #e6ece7;
-  --bg-main: #0e1a15;
-  --surface-primary: #12241c;
-  --surface-secondary: #12241c;
-  --surface-tertiary: #182e24;
-  --bg-canvas: #0e1a15;
-  --bg-surface: #12241c;
-  --border-subtle: #2a4035;
-  --border-hairline: #2a4035;
-  --text-primary: #e6ece7;
-  --text-secondary: #a7b5ac;
-  --text-muted: #a7b5ac;
-  --primary: #e5c378;
-  --primary-hover: #f6d383;
-  --secondary: #5e8a75;
-  --accent: #e5c378;
+  /* Ghi đè biến CSS cục bộ trong phạm vi bài đọc đồng bộ Obsidian Studio */
+  --bg-shell: #0d1110;
+  --bg-workspace: #121716;
+  --bg-page: #121716;
+  --bg-subtle: #181f1d;
+  --bg-sunken: #0b0e0d;
+  --text-main: #eff4f2;
+  --bg-main: #121716;
+  --surface-primary: #181f1d;
+  --surface-secondary: #181f1d;
+  --surface-tertiary: #202a27;
+  --bg-canvas: #121716;
+  --bg-surface: #181f1d;
+  --border-subtle: #242e2b;
+  --border-hairline: #242e2b;
+  --text-primary: #eff4f2;
+  --text-secondary: #9eada8;
+  --text-muted: #6c7c77;
+  --accent-os: #3b8a72;
+  --accent-heritage: #d4af6a;
+  --primary: #3b8a72;
+  --primary-hover: #52b394;
+  --secondary: #9eada8;
+  --accent: #d4af6a;
 
   /* Scholar Suite tokens */
-  --scholar-bg: #0e1a15;
-  --scholar-surface: #12241c;
-  --scholar-text: #e6ece7;
-  --scholar-muted: #a7b5ac;
-  --scholar-accent: #e5c378;
-  --scholar-hairline: #2a4035;
+  --scholar-bg: #121716;
+  --scholar-surface: #181f1d;
+  --scholar-text: #eff4f2;
+  --scholar-muted: #9eada8;
+  --scholar-accent: #3b8a72;
+  --scholar-hairline: #242e2b;
 }
 
 /* 1. Typography & Khối văn bản trong Đêm Học Giả */

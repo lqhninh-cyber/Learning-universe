@@ -17,28 +17,28 @@ export const ISLAND_SUBJECT_CATALOG: readonly IslandSubjectMeta[] = [
     slug: 'cau-truc-dai-so',
     code: 'CTĐS',
     name: 'Cấu trúc đại số',
-    accentColor: '#9C7A4C',
+    accentColor: '#8C5828',
   },
   {
     id: 'affine-geometry',
     slug: 'hinh-hoc-affine',
     code: 'HHAVE',
     name: 'Hình học Affine và Euclide',
-    accentColor: '#49768F',
+    accentColor: '#1D4F6E',
   },
   {
     id: 'single-variable-calculus',
     slug: 'giai-tich-ham-mot-bien',
     code: 'GTHMB',
     name: 'Giải tích hàm một biến',
-    accentColor: '#3B7A65',
+    accentColor: '#1B5E4A',
   },
   {
     id: 'giao-duc-hoc',
     slug: 'giao-duc-hoc',
     code: 'GDH',
     name: 'Giáo dục học',
-    accentColor: '#9E6356',
+    accentColor: '#8F3D35',
   },
 ] as const;
 

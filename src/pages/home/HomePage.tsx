@@ -59,7 +59,7 @@ export function HomePage() {
         ===================================================================== */}
       <section
         aria-label="Không gian Khởi đầu Learning Universe"
-        className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden bg-[#EDF3F1] pt-24 pb-10 md:pt-28 md:pb-14"
+        className="relative flex min-h-[calc(100vh-3rem)] w-full flex-col justify-between overflow-hidden bg-[#EDF3F1] pt-10 pb-10 md:pt-14 md:pb-14"
       >
         {/* LAYER 1: Bầu trời Sương Ngọc Ban Mai & lớp phủ bảo toàn độ tương phản AAA */}
         <HeroSonHaDiorama />

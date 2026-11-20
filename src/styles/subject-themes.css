@@ -19,86 +19,146 @@
   --subject-950: oklch(0.19 0.035 260);
 }
 
-/* Môn 1: Cấu trúc đại số — Đá Hổ Phách & Đồng Nâu (#9C7A4C / #6B5335) */
+/* Môn 1: Cấu trúc đại số (CTĐS) — Hổ Phách Nâu (#8C5828 | tint #FDF8F3 | dark #D99B5E) */
 [data-subject='algebraic-structures'],
 [data-subject='cau-truc-dai-so'] {
-  --subject-hue: 68;
-  --subject-accent: #9c7a4c;
-  --subject-accent-ink: #6b5335;
-  --subject-surface: #f3f0e8;
-  --subject-border: #d8d0c0;
-  --subject-50: oklch(0.968 0.014 68);
-  --subject-100: oklch(0.938 0.028 68);
-  --subject-200: oklch(0.878 0.048 68);
-  --subject-300: oklch(0.785 0.072 68);
-  --subject-400: oklch(0.675 0.088 68);
-  --subject-500: oklch(0.585 0.095 68);
-  --subject-600: oklch(0.495 0.085 68);
-  --subject-700: oklch(0.425 0.072 68);
-  --subject-800: oklch(0.36 0.058 68);
-  --subject-900: oklch(0.305 0.046 68);
-  --subject-950: oklch(0.225 0.032 68);
+  --subject-hue: 56;
+  --subject-accent: #8c5828;
+  --subject-accent-ink: #6a411c;
+  --subject-tint: #fdf8f3;
+  --subject-surface: #fdf8f3;
+  --subject-border: #e7d7c5;
+  --subject-dark: #d99b5e;
+  --subject-50: oklch(0.974 0.012 56);
+  --subject-100: oklch(0.942 0.026 56);
+  --subject-200: oklch(0.882 0.048 56);
+  --subject-300: oklch(0.79 0.075 56);
+  --subject-400: oklch(0.68 0.095 56);
+  --subject-500: oklch(0.57 0.105 56);
+  --subject-600: oklch(0.475 0.092 56);
+  --subject-700: oklch(0.405 0.078 56);
+  --subject-800: oklch(0.345 0.062 56);
+  --subject-900: oklch(0.29 0.048 56);
+  --subject-950: oklch(0.215 0.032 56);
 }
 
-/* Môn 2: Hình học Affine và Euclide — Đá Lam Phiến (#49768F / #2D5266) */
+.dark [data-subject='algebraic-structures'],
+.dark [data-subject='cau-truc-dai-so'],
+[data-theme='dark'] [data-subject='algebraic-structures'],
+[data-theme='dark'] [data-subject='cau-truc-dai-so'],
+[data-reading-theme='dark'] [data-subject='algebraic-structures'],
+[data-reading-theme='dark'] [data-subject='cau-truc-dai-so'] {
+  --subject-accent: #d99b5e;
+  --subject-accent-ink: #ebbc8c;
+  --subject-tint: #1d1813;
+  --subject-surface: #1d1813;
+  --subject-border: #3a2d20;
+}
+
+/* Môn 2: Hình học Affine & Euclide (HHAVE) — Lam Phiến (#1D4F6E | tint #F3F8FB | dark #64A8D1) */
 [data-subject='affine-geometry'],
 [data-subject='hinh-hoc-affine'] {
-  --subject-hue: 232;
-  --subject-accent: #49768f;
-  --subject-accent-ink: #2d5266;
-  --subject-surface: #ecf1f4;
-  --subject-border: #c9d7df;
-  --subject-50: oklch(0.968 0.012 232);
-  --subject-100: oklch(0.938 0.024 232);
-  --subject-200: oklch(0.875 0.042 232);
-  --subject-300: oklch(0.775 0.062 232);
-  --subject-400: oklch(0.66 0.075 232);
-  --subject-500: oklch(0.555 0.078 232);
-  --subject-600: oklch(0.465 0.072 232);
-  --subject-700: oklch(0.395 0.062 232);
-  --subject-800: oklch(0.335 0.05 232);
-  --subject-900: oklch(0.285 0.04 232);
-  --subject-950: oklch(0.215 0.028 232);
+  --subject-hue: 236;
+  --subject-accent: #1d4f6e;
+  --subject-accent-ink: #153c54;
+  --subject-tint: #f3f8fb;
+  --subject-surface: #f3f8fb;
+  --subject-border: #c9dce7;
+  --subject-dark: #64a8d1;
+  --subject-50: oklch(0.972 0.01 236);
+  --subject-100: oklch(0.94 0.022 236);
+  --subject-200: oklch(0.878 0.042 236);
+  --subject-300: oklch(0.778 0.065 236);
+  --subject-400: oklch(0.665 0.08 236);
+  --subject-500: oklch(0.55 0.085 236);
+  --subject-600: oklch(0.45 0.078 236);
+  --subject-700: oklch(0.38 0.066 236);
+  --subject-800: oklch(0.32 0.052 236);
+  --subject-900: oklch(0.27 0.04 236);
+  --subject-950: oklch(0.205 0.028 236);
 }
 
-/* Môn 3: Giải tích hàm một biến — Đá Ngọc Bích (#3B7A65 / #245746) */
+.dark [data-subject='affine-geometry'],
+.dark [data-subject='hinh-hoc-affine'],
+[data-theme='dark'] [data-subject='affine-geometry'],
+[data-theme='dark'] [data-subject='hinh-hoc-affine'],
+[data-reading-theme='dark'] [data-subject='affine-geometry'],
+[data-reading-theme='dark'] [data-subject='hinh-hoc-affine'] {
+  --subject-accent: #64a8d1;
+  --subject-accent-ink: #8ec3e3;
+  --subject-tint: #131c22;
+  --subject-surface: #131c22;
+  --subject-border: #233845;
+}
+
+/* Môn 3: Giải tích hàm một biến (GTHMB) — Ngọc Lục (#1B5E4A | tint #F2F9F6 | dark #52B394) */
 [data-subject='single-variable-calculus'],
 [data-subject='giai-tich-ham-mot-bien'] {
-  --subject-hue: 162;
-  --subject-accent: #3b7a65;
-  --subject-accent-ink: #245746;
-  --subject-surface: #ebf2ee;
-  --subject-border: #c6dbd0;
-  --subject-50: oklch(0.968 0.014 162);
-  --subject-100: oklch(0.938 0.028 162);
-  --subject-200: oklch(0.875 0.046 162);
-  --subject-300: oklch(0.775 0.068 162);
-  --subject-400: oklch(0.66 0.082 162);
-  --subject-500: oklch(0.545 0.085 162);
-  --subject-600: oklch(0.46 0.078 162);
-  --subject-700: oklch(0.39 0.066 162);
-  --subject-800: oklch(0.33 0.054 162);
-  --subject-900: oklch(0.28 0.042 162);
-  --subject-950: oklch(0.21 0.03 162);
+  --subject-hue: 164;
+  --subject-accent: #1b5e4a;
+  --subject-accent-ink: #134737;
+  --subject-tint: #f2f9f6;
+  --subject-surface: #f2f9f6;
+  --subject-border: #c5dfd4;
+  --subject-dark: #52b394;
+  --subject-50: oklch(0.972 0.012 164);
+  --subject-100: oklch(0.94 0.026 164);
+  --subject-200: oklch(0.878 0.046 164);
+  --subject-300: oklch(0.778 0.07 164);
+  --subject-400: oklch(0.665 0.086 164);
+  --subject-500: oklch(0.545 0.09 164);
+  --subject-600: oklch(0.45 0.082 164);
+  --subject-700: oklch(0.38 0.068 164);
+  --subject-800: oklch(0.32 0.055 164);
+  --subject-900: oklch(0.27 0.042 164);
+  --subject-950: oklch(0.205 0.03 164);
 }
 
-/* Môn 4: Giáo dục học — Đá Đất Nung (#9E6356 / #7A463B) */
+.dark [data-subject='single-variable-calculus'],
+.dark [data-subject='giai-tich-ham-mot-bien'],
+[data-theme='dark'] [data-subject='single-variable-calculus'],
+[data-theme='dark'] [data-subject='giai-tich-ham-mot-bien'],
+[data-reading-theme='dark'] [data-subject='single-variable-calculus'],
+[data-reading-theme='dark'] [data-subject='giai-tich-ham-mot-bien'] {
+  --subject-accent: #52b394;
+  --subject-accent-ink: #7ecdb3;
+  --subject-tint: #111f1a;
+  --subject-surface: #111f1a;
+  --subject-border: #1f3b31;
+}
+
+/* Môn 4: Giáo dục học (GDH) — Đất Nung Chu Sa (#8F3D35 | tint #FBF4F3 | dark #DF7B70) */
 [data-subject='giao-duc-hoc'],
 [data-subject='pedagogy'] {
-  --subject-hue: 32;
-  --subject-accent: #9e6356;
-  --subject-accent-ink: #7a463b;
-  --subject-surface: #f3ece9;
-  --subject-border: #d8c8c1;
-  --subject-50: oklch(0.968 0.014 32);
-  --subject-100: oklch(0.938 0.028 32);
-  --subject-200: oklch(0.875 0.046 32);
-  --subject-300: oklch(0.775 0.068 32);
-  --subject-400: oklch(0.665 0.082 32);
-  --subject-500: oklch(0.565 0.085 32);
-  --subject-600: oklch(0.475 0.078 32);
-  --subject-700: oklch(0.405 0.066 32);
-  --subject-800: oklch(0.345 0.054 32);
-  --subject-900: oklch(0.295 0.042 32);
-  --subject-950: oklch(0.22 0.03 32);
+  --subject-hue: 26;
+  --subject-accent: #8f3d35;
+  --subject-accent-ink: #6e2d27;
+  --subject-tint: #fbf4f3;
+  --subject-surface: #fbf4f3;
+  --subject-border: #e4ccc9;
+  --subject-dark: #df7b70;
+  --subject-50: oklch(0.972 0.012 26);
+  --subject-100: oklch(0.94 0.026 26);
+  --subject-200: oklch(0.878 0.046 26);
+  --subject-300: oklch(0.778 0.072 26);
+  --subject-400: oklch(0.665 0.092 26);
+  --subject-500: oklch(0.555 0.1 26);
+  --subject-600: oklch(0.46 0.092 26);
+  --subject-700: oklch(0.39 0.078 26);
+  --subject-800: oklch(0.33 0.062 26);
+  --subject-900: oklch(0.28 0.048 26);
+  --subject-950: oklch(0.21 0.032 26);
+}
+
+.dark [data-subject='giao-duc-hoc'],
+.dark [data-subject='pedagogy'],
+[data-theme='dark'] [data-subject='giao-duc-hoc'],
+[data-theme='dark'] [data-subject='pedagogy'],
+[data-reading-theme='dark'] [data-subject='giao-duc-hoc'],
+[data-reading-theme='dark'] [data-subject='pedagogy'] {
+  --subject-accent: #df7b70;
+  --subject-accent-ink: #eba199;
+  --subject-tint: #211514;
+  --subject-surface: #211514;
+  --subject-border: #3f2624;
 }

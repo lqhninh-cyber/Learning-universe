@@ -32,7 +32,10 @@ describe('App routing smoke test', () => {
         name: /LEARNING UNIVERSE/i,
       }),
     ).toBeInTheDocument();
-    // Floating Capsule Island Header: Wordmark LEARNING UNIVERSE, nút Tìm kiếm ⌘K, Avatar và liên kết Không gian học tập
+    // Academic OS AppShell: LeftRail + TopContextBar, nút Tìm nhanh ⌘K, Tài khoản và liên kết Không gian học tập
+    expect(screen.getByTestId('app-shell')).toBeInTheDocument();
+    expect(screen.getByTestId('left-rail')).toBeInTheDocument();
+    expect(screen.getByTestId('top-context-bar')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Mở tìm kiếm nhanh/i })).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Tài khoản và cài đặt giao diện/i }),

@@ -19,6 +19,8 @@ export interface HeaderAccountMenuProps {
   readonly onOpenAuthModal: () => void;
   readonly onEnableLearnerMode: () => void;
   readonly onSignOut: () => Promise<void>;
+  readonly placement?: 'header' | 'rail';
+  readonly collapsed?: boolean;
 }
 
 export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
@@ -35,28 +37,53 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
   onOpenAuthModal,
   onEnableLearnerMode,
   onSignOut,
+  placement = 'header',
+  collapsed = false,
 }) => {
   const fontOptions: ReadonlyArray<{ readonly id: ReadingFontSize; readonly label: string }> = [
     { id: 'sm', label: 'A−' },
     { id: 'base', label: 'A' },
     { id: 'lg', label: 'A+' },
   ];
+  const isRail = placement === 'rail';
 
   return (
-    <div className="relative hidden md:block">
+    <div className={cn('relative', isRail ? 'w-full' : 'hidden md:block')}>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-label="Tài khoản và cài đặt giao diện"
+        title="Tài khoản & Hồ sơ học tập"
         className={cn(
-          'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#388E3C] focus-visible:outline-none active:scale-[0.98]',
-          isDark
-            ? 'border-[#4E9B58]/25 bg-[#182E24] text-[#F7F4EB] hover:border-[#4E9B58]/50 hover:bg-[#1E3B2E]'
-            : 'border-[#1B3D2F]/14 bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/30 hover:bg-white dark:border-[#4E9B58]/25 dark:bg-[#182E24] dark:text-[#F7F4EB]',
+          'cursor-pointer transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none active:scale-[0.98]',
+          isRail
+            ? collapsed
+              ? 'mx-auto flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-[var(--text-secondary)] hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]'
+              : 'flex h-9 w-full items-center justify-between gap-2 rounded-lg border border-transparent px-2.5 text-[13px] font-medium text-[var(--text-secondary)] hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]'
+            : cn(
+                'flex h-10 w-10 items-center justify-center rounded-full border',
+                isDark
+                  ? 'border-[#4E9B58]/25 bg-[#182E24] text-[#F7F4EB] hover:border-[#4E9B58]/50 hover:bg-[#1E3B2E]'
+                  : 'border-[#1B3D2F]/14 bg-[var(--bg-page)] text-[#142B21] hover:border-[#1B3D2F]/30 hover:bg-white dark:border-[#4E9B58]/25 dark:bg-[#182E24] dark:text-[#F7F4EB]',
+              ),
         )}
       >
-        <User className="h-4 w-4" aria-hidden="true" />
+        {isRail && !collapsed ? (
+          <>
+            <span className="flex min-w-0 items-center gap-2.5">
+              <User className="h-4 w-4 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />
+              <span className="truncate">{isUserLoggedIn ? 'Hồ sơ học tập' : 'Tài khoản'}</span>
+            </span>
+            {completedCount > 0 && (
+              <span className="shrink-0 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)] tabular-nums">
+                {completedCount}
+              </span>
+            )}
+          </>
+        ) : (
+          <User className="h-4 w-4" aria-hidden="true" />
+        )}
       </button>
 
       {isOpen && (
@@ -64,12 +91,15 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
           role="menu"
           aria-label="Menu tài khoản và giao diện"
           className={cn(
-            'absolute top-full right-0 mt-3 w-64 rounded-3xl p-4 shadow-2xl backdrop-blur-xl',
-            isDark
-              ? 'border border-[#4E9B58]/25 bg-[#11221A]/96 text-[#F7F4EB]'
-              : isSepia
-                ? 'border border-[#1B3D2F]/16 bg-[#FBF7EC]/98 text-[#231F18]'
-                : 'border border-[#1B3D2F]/14 bg-[#FCFDFC]/96 text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#11221A]/96 dark:text-[#F7F4EB]',
+            'absolute z-50 w-64 rounded-2xl p-4 shadow-2xl backdrop-blur-xl',
+            isRail ? 'bottom-0 left-full ml-3' : 'top-full right-0 mt-3',
+            isRail
+              ? 'border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]'
+              : isDark
+                ? 'border border-[#4E9B58]/25 bg-[#11221A]/96 text-[#F7F4EB]'
+                : isSepia
+                  ? 'border border-[#1B3D2F]/16 bg-[#FBF7EC]/98 text-[#231F18]'
+                  : 'border border-[#1B3D2F]/14 bg-[#FCFDFC]/96 text-[#142B21] dark:border-[#4E9B58]/25 dark:bg-[#11221A]/96 dark:text-[#F7F4EB]',
           )}
         >
           {/* Mục 1: Thông tin học tập cá nhân */}

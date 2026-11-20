@@ -201,7 +201,7 @@ export function GlossaryPage() {
   );
 
   return (
-    <FadeIn className="min-h-screen bg-[var(--bg-page,#F2F4F3)] pt-24 pb-20 text-[#142622] dark:bg-[#0E1A15] dark:text-[#E6ECE7]">
+    <FadeIn className="min-h-screen bg-[var(--bg-workspace)] pt-4 pb-20 text-[var(--text-main)]">
       <div className="mx-auto max-w-[1400px] space-y-7 px-6 lg:px-10">
         <Breadcrumb
           items={[

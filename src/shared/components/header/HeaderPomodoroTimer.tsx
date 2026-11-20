@@ -5,6 +5,8 @@ import { cn } from '@/shared/lib/cn';
 
 export interface HeaderPomodoroTimerProps {
   readonly isDark?: boolean;
+  readonly placement?: 'header' | 'rail';
+  readonly collapsed?: boolean;
 }
 
 const CUSTOM_MINUTES_STORAGE_KEY = 'lu_pomodoro_custom_minutes';
@@ -41,7 +43,11 @@ function formatMmSs(totalSec: number): string {
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = false }) => {
+export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
+  isDark = false,
+  placement = 'header',
+  collapsed = false,
+}) => {
   const {
     pomodoro,
     startPomodoro,
@@ -101,8 +107,10 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
     };
   }, [isOpen]);
 
+  const isRail = placement === 'rail';
+
   return (
-    <div ref={rootRef} className="relative hidden md:block">
+    <div ref={rootRef} className={cn('relative', isRail ? 'w-full' : 'hidden md:block')}>
       <button
         type="button"
         data-testid="pomodoro-trigger"
@@ -113,19 +121,85 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
             ? `Bộ đếm Nhịp học tập đang còn ${formatMmSs(pomodoro.remainingSeconds)}`
             : 'Mở bộ đếm Nhịp học tập'
         }
-        title="Nhịp học tập"
-        className={cn(
-          'inline-flex h-9 cursor-pointer items-center justify-center rounded-full border transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9E845A] focus-visible:outline-none active:scale-[0.98]',
+        title={
           isActive
-            ? isDark
-              ? 'gap-1.5 border-[#9EC5B8]/40 bg-[#9EC5B8]/15 px-3 text-[#EBF0EE]'
-              : 'gap-1.5 border-[#1E332E]/25 bg-[#1E332E]/10 px-3 text-[#1E332E]'
-            : isDark
-              ? 'w-9 border-[#9E845A]/30 bg-[#182E24] text-[#EBF0EE] hover:border-[#9EC5B8]/50 hover:bg-[#1E3B2E]'
-              : 'w-9 border-[#D8E0DD] bg-[#EDF1EF]/80 text-[#182624] hover:bg-[#E2E8E5]',
+            ? `Nhịp học tập · Còn ${formatMmSs(pomodoro.remainingSeconds)}`
+            : 'Nhịp học tập (Pomodoro)'
+        }
+        className={cn(
+          'cursor-pointer transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent-heritage)] focus-visible:outline-none active:scale-[0.98]',
+          isRail
+            ? collapsed
+              ? cn(
+                  'relative mx-auto flex h-9 w-9 items-center justify-center rounded-lg border',
+                  isActive
+                    ? 'border-[var(--accent-heritage)]/50 bg-[var(--bg-workspace)] text-[var(--accent-heritage)]'
+                    : 'border-transparent text-[var(--text-secondary)] hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]',
+                )
+              : cn(
+                  'flex h-9 w-full items-center justify-between gap-2 rounded-lg border px-2.5 text-[13px] font-medium',
+                  isActive
+                    ? 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]'
+                    : 'border-transparent text-[var(--text-secondary)] hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]',
+                )
+            : cn(
+                'inline-flex h-9 items-center justify-center rounded-full border',
+                isActive
+                  ? isDark
+                    ? 'gap-1.5 border-[#9EC5B8]/40 bg-[#9EC5B8]/15 px-3 text-[#EBF0EE]'
+                    : 'gap-1.5 border-[#1E332E]/25 bg-[#1E332E]/10 px-3 text-[#1E332E]'
+                  : isDark
+                    ? 'w-9 border-[#9E845A]/30 bg-[#182E24] text-[#EBF0EE] hover:border-[#9EC5B8]/50 hover:bg-[#1E3B2E]'
+                    : 'w-9 border-[#D8E0DD] bg-[#EDF1EF]/80 text-[#182624] hover:bg-[#E2E8E5]',
+              ),
         )}
       >
-        {isActive ? (
+        {isRail ? (
+          collapsed ? (
+            <>
+              <Hourglass className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {isActive && (
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-[var(--accent-heritage)]',
+                    isRunning && 'animate-pulse',
+                  )}
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <span className="flex min-w-0 items-center gap-2.5">
+                <Hourglass
+                  className={cn(
+                    'h-4 w-4 shrink-0',
+                    isActive ? 'text-[var(--accent-heritage)]' : 'text-[var(--text-muted)]',
+                  )}
+                  aria-hidden="true"
+                />
+                <span className="truncate">Nhịp học tập</span>
+              </span>
+              {isActive && (
+                <span className="inline-flex shrink-0 items-center gap-1.5">
+                  <span
+                    className={cn(
+                      'h-1.5 w-1.5 rounded-full bg-[var(--accent-heritage)]',
+                      isRunning && 'animate-pulse',
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span
+                    data-testid="pomodoro-countdown"
+                    className="font-mono text-xs font-semibold text-[var(--accent-heritage)] tabular-nums"
+                  >
+                    {formatMmSs(pomodoro.remainingSeconds)}
+                  </span>
+                </span>
+              )}
+            </>
+          )
+        ) : isActive ? (
           <>
             <svg className="h-4 w-4 shrink-0 -rotate-90" viewBox="0 0 18 18" aria-hidden="true">
               <circle
@@ -176,10 +250,13 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({ isDark = fal
           aria-label="Chọn nhịp học tập"
           onClick={(event) => event.stopPropagation()}
           className={cn(
-            'absolute top-full right-0 z-50 mt-3 w-72 rounded-2xl border p-3.5 shadow-[0_16px_40px_rgba(24,38,36,0.12)] backdrop-blur-xl',
-            isDark
-              ? 'border-[#4E9B58]/30 bg-[#11221A]/96 text-[#F7F4EB]'
-              : 'border-[#D8E0DD] bg-[#FAFBF9]/95 text-[#182624] dark:border-[#1E3B2D] dark:bg-[#12241C]/96 dark:text-[#E6ECE7]',
+            'absolute z-50 w-72 rounded-2xl border p-3.5 shadow-[0_16px_40px_rgba(17,26,24,0.16)] backdrop-blur-xl',
+            isRail ? 'bottom-0 left-full ml-3' : 'top-full right-0 mt-3',
+            isRail
+              ? 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]'
+              : isDark
+                ? 'border-[#4E9B58]/30 bg-[#11221A]/96 text-[#F7F4EB]'
+                : 'border-[#D8E0DD] bg-[#FAFBF9]/95 text-[#182624] dark:border-[#1E3B2D] dark:bg-[#12241C]/96 dark:text-[#E6ECE7]',
           )}
         >
           <div className="mb-2.5 flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">

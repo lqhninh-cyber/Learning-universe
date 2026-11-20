@@ -28,6 +28,12 @@ export {
   type LessonReadingPosition,
 } from './island-helpers';
 export {
+  LayoutProvider,
+  useLayout,
+  type LayoutContextValue,
+  type LayoutProviderProps,
+} from './LayoutContext';
+export {
   ReadingSettingsProvider,
   useReadingSettings,
   type ReadingSettingsContextValue,

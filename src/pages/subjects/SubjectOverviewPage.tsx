@@ -351,7 +351,7 @@ export function SubjectOverviewPage() {
   };
 
   return (
-    <FadeIn className="mx-auto w-[min(94vw,1520px)]">
+    <FadeIn className="mx-auto w-full max-w-[1520px]">
       <div
         className="space-y-8"
         style={getSubjectThemeVars(universeTheme)}

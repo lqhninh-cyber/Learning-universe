@@ -181,7 +181,7 @@ const ReadingSettingsInternalProvider: FC<ReadingSettingsProviderProps> = ({
     if (typeof document === 'undefined') return;
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
-      document.documentElement.removeAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', 'dark');
     } else if (theme === 'sepia') {
       document.documentElement.classList.remove('dark');
       document.documentElement.setAttribute('data-theme', 'sepia');

@@ -26,8 +26,10 @@ import {
 } from '@/components/lesson';
 import { writeLessonReadingPosition } from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
+import { useLayout } from '@/context/LayoutContext';
 import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
 import { InPageSearchNavigator, useInPageSearch } from '@/features/search';
+import { HeaderQuickReaderControls } from '@/shared/components/header/HeaderQuickReaderControls';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
@@ -256,6 +258,16 @@ function LessonPageContent() {
     contentReadyKey: lessonId ? `${lessonId}:${compiled ? 'ready' : 'loading'}` : 'none',
   });
 
+  const { setTopBarRightSlot } = useLayout();
+  const isDarkReading = readingTheme === 'dark';
+
+  useEffect(() => {
+    setTopBarRightSlot(<HeaderQuickReaderControls isDark={isDarkReading} />);
+    return () => {
+      setTopBarRightSlot(null);
+    };
+  }, [isDarkReading, setTopBarRightSlot]);
+
   useEffect(() => {
     if (subjectId && lessonId) {
       recordLessonVisit(subjectId, lessonId);
@@ -428,7 +440,7 @@ function LessonPageContent() {
                 : 'bg-[var(--bg-page)] text-[var(--text-main)]',
           isFocusMode
             ? 'max-w-[1040px] px-4 pt-2 sm:px-6'
-            : 'w-[min(96vw,1680px)] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
+            : 'w-full max-w-[1680px] space-y-6 px-4 pt-0 sm:px-6 lg:px-8',
         )}
       >
         {/* Nút nhỏ cố định ở góc trên cùng bên phải màn hình: ✕ Thoát chế độ tập trung */}
@@ -579,7 +591,7 @@ function LessonPageContent() {
           {!isSidebarCollapsed && (
             <aside
               className={cn(
-                'sticky top-24 hidden max-h-[calc(100vh-7rem)] w-full self-start overflow-y-auto rounded-2xl border p-4 shadow-sm transition-all duration-300 lg:block print:hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-track]:bg-transparent',
+                'sticky top-16 hidden max-h-[calc(100vh-5rem)] w-full self-start overflow-y-auto rounded-2xl border p-4 shadow-sm transition-all duration-300 lg:block print:hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-track]:bg-transparent',
                 isZenMode
                   ? 'pointer-events-none m-0 hidden w-0 max-w-0 -translate-x-8 overflow-hidden border-0 p-0 opacity-0 shadow-none'
                   : 'translate-x-0 opacity-100',
@@ -847,7 +859,7 @@ function LessonPageContent() {
           <aside
             data-sidenotes-column
             className={cn(
-              'custom-scrollbar sticky top-24 hidden max-h-[calc(100vh-7rem)] w-full scrollbar-thin self-start overflow-y-auto pl-2 transition-[opacity,transform] duration-300 xl:block print:hidden',
+              'custom-scrollbar sticky top-16 hidden max-h-[calc(100vh-5rem)] w-full scrollbar-thin self-start overflow-y-auto pl-2 transition-[opacity,transform] duration-300 xl:block print:hidden',
               isZenMode
                 ? 'pointer-events-none m-0 hidden w-0 max-w-0 translate-x-8 overflow-hidden border-0 p-0 opacity-0'
                 : 'translate-x-0 opacity-100',

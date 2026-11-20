@@ -22,7 +22,7 @@ export function SubjectsListPage() {
   });
 
   return (
-    <FadeIn className="mx-auto w-[min(94vw,1560px)] space-y-8 bg-[var(--bg-page)] text-[var(--text-main)]">
+    <FadeIn className="mx-auto w-full max-w-[1560px] space-y-8 bg-[var(--bg-page)] text-[var(--text-main)]">
       {/* Tiêu đề đầu trang */}
       <div className="space-y-4">
         <Breadcrumb
