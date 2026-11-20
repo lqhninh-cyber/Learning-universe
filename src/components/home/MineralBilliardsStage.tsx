@@ -1043,9 +1043,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       const { dtSeconds, dtScale } = computeFrameDelta(now, prevNow);
       prevNow = now;
 
-      // Nạp lực khi người chơi giữ Space
+      // Nạp lực khi người chơi giữ Space (tốc độ 0.78/s giúp dễ canh chuẩn mức lực 25%–75%)
       if (spaceChargingRef.current && !w.shotInProgress && !w.strikeAnim.active) {
-        w.dragPullPower = Math.min(1, w.dragPullPower + dtSeconds * 0.95);
+        w.dragPullPower = Math.min(1, w.dragPullPower + dtSeconds * 0.78);
         setSliderPower(w.dragPullPower);
       }
 
@@ -1471,6 +1471,17 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
           ? 'KÉO →'
           : 'KÉO ↓'
         : `${Math.round(sliderPower * 100)}%`;
+
+  const powerTierLabel =
+    sliderPower >= 0.9
+      ? 'PHÁ'
+      : sliderPower >= 0.7
+        ? 'MẠNH'
+        : sliderPower >= 0.35
+          ? 'VỪA'
+          : sliderPower >= CANCEL_POWER_THRESHOLD
+            ? 'NHẸ'
+            : null;
 
   const spinModeDescription = (() => {
     const vert =
@@ -2190,12 +2201,22 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
               </div>
 
               {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh */}
-              <span
-                data-testid="billiards-power-readout"
-                className="font-mono text-[11px] font-semibold text-[#1E332E] tabular-nums dark:text-[#C9D6D0]"
-              >
-                {powerReadoutText}
-              </span>
+              <div className="flex min-h-[28px] flex-col items-center leading-tight">
+                <span
+                  data-testid="billiards-power-readout"
+                  className="font-mono text-[11px] font-semibold text-[#1E332E] tabular-nums dark:text-[#C9D6D0]"
+                >
+                  {powerReadoutText}
+                </span>
+                {powerTierLabel && (
+                  <span
+                    data-testid="billiards-power-tier"
+                    className="font-mono text-[8.5px] font-bold tracking-wider text-[#8C6228] dark:text-[#D5B47A]"
+                  >
+                    {powerTierLabel}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* BÀN BIDA 3D & MÁNG HỒI BI HAI RAY TRONG SUỐT NỔI KHỐI */}

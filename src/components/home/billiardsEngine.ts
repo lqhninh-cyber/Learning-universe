@@ -4279,7 +4279,7 @@ export function renderBilliardsStageFrame(
   if (canShowPlayerOrAiCue) {
     const dirX = Math.cos(world.aimAngle);
     const dirY = Math.sin(world.aimAngle);
-    const previewPower = Math.max(0.45, world.dragPullPower);
+    const previewPower = world.dragPullPower >= 0.08 ? world.dragPullPower : 0.5;
     const raycast = computeGhostBallRaycast(
       cueBall,
       dirX,
