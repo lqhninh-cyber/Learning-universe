@@ -1,17 +1,16 @@
 import {
-  ArrowRight,
-  ArrowUpRight,
   Bot,
   HelpCircle,
+  Lock,
   RotateCcw,
   Trophy,
+  Unlock,
   User,
   Users,
   Volume2,
   VolumeX,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router';
 import {
   ALL_POOL_BALL_SPECS,
   buildOfficial15BallRack,
@@ -48,7 +47,6 @@ import {
   type ReturnRailBall,
   type StrikeAnimationState,
 } from '@/components/home/billiardsEngine';
-import { ROUTES } from '@/shared/config/routes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
@@ -189,6 +187,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [spin, setSpin] = useState<{ readonly x: number; readonly y: number }>({ x: 0, y: 0 });
   const [isSpinOpen, setIsSpinOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [isScreenLocked, setIsScreenLocked] = useState(false);
   const [guidelineMode, setGuidelineMode] = useState<GuidelineMode>('full');
   const [aiDifficulty, setAiDifficulty] = useState<AiDifficulty>('club');
   const [proCallShot, setProCallShot] = useState(false);
@@ -212,6 +211,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   );
 
   const sectionRef = useRef<HTMLElement>(null);
+  const stageCardRef = useRef<HTMLDivElement>(null);
   const playfieldRowRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -616,6 +616,141 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     w.spinY = 0;
     setSpin({ x: 0, y: 0 });
   }, [getWorld]);
+
+  // Khóa màn hình tập trung không giật bố cục (Zero-Shift Scroll Lock & Focus Mode)
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+    const handleGlobalLockShortcuts = (event: KeyboardEvent) => {
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+
+      if (
+        event.key === 'Escape' &&
+        isScreenLocked &&
+        !spaceChargingRef.current &&
+        !isDraggingSliderRef.current
+      ) {
+        event.preventDefault();
+        setIsScreenLocked(false);
+        return;
+      }
+
+      if (
+        (event.key === 'l' || event.key === 'L') &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey
+      ) {
+        const rect = sectionRef.current?.getBoundingClientRect();
+        const inView =
+          !rect || (rect.width === 0 && rect.height === 0)
+            ? true
+            : rect.top < window.innerHeight && rect.bottom > 0;
+        if (isScreenLocked || inView) {
+          event.preventDefault();
+          setIsScreenLocked((prev) => !prev);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalLockShortcuts);
+    if (!isScreenLocked) {
+      return () => {
+        window.removeEventListener('keydown', handleGlobalLockShortcuts);
+      };
+    }
+
+    const docEl = document.documentElement;
+    const bodyEl = document.body;
+    const origDocOverflow = docEl.style.overflow;
+    const origBodyOverflow = bodyEl.style.overflow;
+    const origBodyPaddingRight = bodyEl.style.paddingRight;
+    let isLockedApplied = false;
+    let lockTimer: number | null = null;
+
+    const applyScrollLock = () => {
+      if (isLockedApplied) return;
+      isLockedApplied = true;
+      const scrollbarWidth = Math.max(0, window.innerWidth - docEl.clientWidth);
+      docEl.style.overflow = 'hidden';
+      bodyEl.style.overflow = 'hidden';
+      bodyEl.style.paddingRight = `${scrollbarWidth}px`;
+    };
+
+    const targetEl = stageCardRef.current ?? sectionRef.current;
+    const stageRect = targetEl?.getBoundingClientRect();
+    const needsCentering = Boolean(
+      stageRect && stageRect.height > 0 && (stageRect.top < 74 || stageRect.top > 120),
+    );
+
+    if (needsCentering && stageRect) {
+      const targetY = Math.max(0, stageRect.top + window.scrollY - 82);
+      if (typeof window.scrollTo === 'function') {
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
+      lockTimer = window.setTimeout(() => {
+        lockTimer = null;
+        applyScrollLock();
+      }, 260);
+    } else {
+      applyScrollLock();
+    }
+
+    const isInsideInteractiveControl = (target: EventTarget | null): boolean => {
+      if (!(target instanceof Node)) return false;
+      return Boolean(
+        canvasRef.current?.contains(target) ||
+        powerSliderRef.current?.contains(target) ||
+        spinPopupWrapperRef.current?.contains(target),
+      );
+    };
+
+    const preventBackgroundWheel = (event: WheelEvent) => {
+      if (!isInsideInteractiveControl(event.target)) {
+        event.preventDefault();
+      }
+    };
+
+    const preventBackgroundTouchMove = (event: TouchEvent) => {
+      if (!isInsideInteractiveControl(event.target)) {
+        event.preventDefault();
+      }
+    };
+
+    const preventScrollKeys = (event: KeyboardEvent) => {
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+      if (
+        event.code === 'Space' ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown' ||
+        event.key === 'PageUp' ||
+        event.key === 'PageDown' ||
+        event.key === 'Home' ||
+        event.key === 'End'
+      ) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('wheel', preventBackgroundWheel, { passive: false });
+    window.addEventListener('touchmove', preventBackgroundTouchMove, { passive: false });
+    window.addEventListener('keydown', preventScrollKeys);
+
+    return () => {
+      if (lockTimer !== null) {
+        window.clearTimeout(lockTimer);
+      }
+      window.removeEventListener('keydown', handleGlobalLockShortcuts);
+      window.removeEventListener('wheel', preventBackgroundWheel);
+      window.removeEventListener('touchmove', preventBackgroundTouchMove);
+      window.removeEventListener('keydown', preventScrollKeys);
+      docEl.style.overflow = origDocOverflow;
+      bodyEl.style.overflow = origBodyOverflow;
+      bodyEl.style.paddingRight = origBodyPaddingRight;
+    };
+  }, [isScreenLocked]);
 
   // Đóng popup chỉnh xoáy khi bấm ra ngoài
   useEffect(() => {
@@ -1213,13 +1348,157 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       ref={sectionRef}
       id="ban-bida-khoang-thach"
       data-testid="mineral-billiards-stage"
+      data-screen-locked={isScreenLocked ? 'true' : 'false'}
       data-hide-cursor-ring="true"
       aria-label="Bàn Bida 8 Ball Pool Khoáng Thạch 120fps"
       className={cn(
-        'relative scroll-mt-20 border-t border-[#D4DFDA] bg-[#F2F4F3] text-[#142622] dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]',
+        'relative scroll-mt-20 overflow-x-clip border-t border-[#D4DFDA] bg-[#F2F4F3] text-[#142622] dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]',
         className,
       )}
     >
+      {/* 3.1. Lớp nền Bản Vẽ Kiến Trúc & Thiên Cầu Đồng Tâm (Ambient Drafting Layer, pointer-events-none) */}
+      <div
+        aria-hidden="true"
+        data-testid="billiards-salon-backdrop"
+        className="pointer-events-none absolute inset-0 overflow-hidden select-none"
+      >
+        {/* Lưới điểm & kẻ bản vẽ siêu mảnh 36x36px mờ dần ra 4 mép */}
+        <div
+          className="absolute inset-0 opacity-100 dark:hidden"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, rgba(30, 51, 46, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(30, 51, 46, 0.04) 1px, transparent 1px), radial-gradient(circle, rgba(30, 51, 46, 0.09) 0.9px, transparent 0.9px)',
+            backgroundSize: '36px 36px',
+            maskImage: 'radial-gradient(ellipse 82% 78% at 50% 50%, #000 45%, transparent 100%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 82% 78% at 50% 50%, #000 45%, transparent 100%)',
+          }}
+        />
+        <div
+          className="absolute inset-0 hidden dark:block"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, rgba(212, 175, 106, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(212, 175, 106, 0.04) 1px, transparent 1px), radial-gradient(circle, rgba(212, 175, 106, 0.09) 0.9px, transparent 0.9px)',
+            backgroundSize: '36px 36px',
+            maskImage: 'radial-gradient(ellipse 82% 78% at 50% 50%, #000 45%, transparent 100%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 82% 78% at 50% 50%, #000 45%, transparent 100%)',
+          }}
+        />
+
+        {/* Quầng sáng khuếch tán ấm nhẹ phía sau thẻ bàn tạo cảm giác phòng trưng bày */}
+        <div
+          className="absolute top-1/2 left-1/2 h-[880px] w-[1440px] -translate-x-1/2 -translate-y-1/2 dark:hidden"
+          style={{
+            background:
+              'radial-gradient(ellipse 56% 52% at 50% 50%, rgba(250, 251, 249, 0.92) 0%, rgba(250, 251, 249, 0.42) 55%, rgba(250, 251, 249, 0) 100%)',
+          }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 hidden h-[880px] w-[1440px] -translate-x-1/2 -translate-y-1/2 dark:block"
+          style={{
+            background:
+              'radial-gradient(ellipse 56% 52% at 50% 50%, rgba(28, 62, 48, 0.34) 0%, rgba(14, 26, 21, 0.1) 58%, rgba(14, 26, 21, 0) 100%)',
+          }}
+        />
+
+        {/* SVG trang trí 2 vòng cung thiên cầu lớn + 2 trục ngắm ngang với dấu chấm kim cương */}
+        <svg
+          data-testid="billiards-salon-backdrop-svg"
+          viewBox="0 0 1800 920"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
+          className="absolute inset-0 h-full w-full"
+        >
+          <circle cx="900" cy="460" r="680" stroke="rgba(156, 122, 76, 0.14)" strokeWidth="0.85" />
+          <circle
+            cx="900"
+            cy="460"
+            r="810"
+            stroke="rgba(156, 122, 76, 0.14)"
+            strokeWidth="0.8"
+            strokeDasharray="6 6"
+          />
+          <line
+            x1="0"
+            y1="270"
+            x2="1800"
+            y2="270"
+            stroke="rgba(156, 122, 76, 0.11)"
+            strokeWidth="0.8"
+          />
+          <line
+            x1="0"
+            y1="650"
+            x2="1800"
+            y2="650"
+            stroke="rgba(156, 122, 76, 0.11)"
+            strokeWidth="0.8"
+          />
+          {[84, 154, 1646, 1716].map((dx) => (
+            <g key={dx}>
+              <path
+                d={`M${dx} 265 L${dx + 5} 270 L${dx} 275 L${dx - 5} 270 Z`}
+                fill="rgba(156, 122, 76, 0.3)"
+              />
+              <path
+                d={`M${dx} 645 L${dx + 5} 650 L${dx} 655 L${dx - 5} 650 Z`}
+                fill="rgba(156, 122, 76, 0.3)"
+              />
+            </g>
+          ))}
+        </svg>
+      </div>
+
+      {/* Focus Vignette làm dịu xung quanh khi kích hoạt Khóa màn hình */}
+      <div
+        aria-hidden="true"
+        data-testid="billiards-focus-vignette"
+        className={cn(
+          'pointer-events-none fixed inset-0 z-10 bg-[#142622]/12 backdrop-blur-[1.5px] transition-opacity duration-300 dark:bg-black/40',
+          isScreenLocked ? 'opacity-100' : 'opacity-0',
+        )}
+      />
+
+      {/* Hai thanh thước kiến trúc dọc lề trái/phải (chỉ hiện trên màn hình siêu rộng >= 1540px) */}
+      <div
+        aria-hidden="true"
+        data-testid="billiards-ruler-left"
+        className="pointer-events-none absolute top-1/2 left-5 z-10 hidden -translate-y-1/2 flex-col items-center gap-3 select-none min-[1540px]:flex"
+      >
+        <div className="flex flex-col gap-1.5 opacity-60">
+          {Array.from({ length: 7 }, (_, i) => (
+            <span
+              key={i}
+              className={cn('block h-[1px] bg-[#9C7A4C]', i % 3 === 0 ? 'w-3' : 'w-1.5')}
+            />
+          ))}
+        </div>
+        <span className="font-mono text-[10px] tracking-[0.24em] text-[#7D8C87]/70 uppercase [writing-mode:vertical-rl] dark:text-[#8CA39A]/65">
+          SALON 03 // 9-FT MINERAL TABLE
+        </span>
+        <span className="font-mono text-[9px] text-[#9C7A4C]/70">◆ ◆ ◆</span>
+      </div>
+
+      <div
+        aria-hidden="true"
+        data-testid="billiards-ruler-right"
+        className="pointer-events-none absolute top-1/2 right-5 z-10 hidden -translate-y-1/2 flex-col items-center gap-3 select-none min-[1540px]:flex"
+      >
+        <span className="font-mono text-[9px] text-[#9C7A4C]/70">◆ ◆ ◆</span>
+        <span className="font-mono text-[10px] tracking-[0.24em] text-[#7D8C87]/70 uppercase [writing-mode:vertical-rl] dark:text-[#8CA39A]/65">
+          WPA 8-BALL // 15 BALLS · 120FPS
+        </span>
+        <div className="flex flex-col items-end gap-1.5 opacity-60">
+          {Array.from({ length: 7 }, (_, i) => (
+            <span
+              key={i}
+              className={cn('block h-[1px] bg-[#9C7A4C]', i % 3 === 0 ? 'w-3' : 'w-1.5')}
+            />
+          ))}
+        </div>
+      </div>
+
       {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật */}
       <div
         aria-hidden="true"
@@ -1247,11 +1526,35 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         </svg>
       </div>
 
-      <div className="mx-auto w-full max-w-[1480px] px-4 pt-10 pb-14 md:px-6 lg:px-8">
+      <div className="relative z-20 mx-auto w-full max-w-[1480px] px-4 pt-8 pb-14 md:px-6 lg:px-8">
+        {/* 3.2. Tiêu đề khung kiến trúc siêu thanh mảnh phía trên thẻ bàn */}
         <div
+          data-testid="billiards-salon-eyebrow"
+          className="mb-4 flex items-center justify-center gap-3 font-mono text-[11px] tracking-[0.2em] text-[#6D7D78] uppercase select-none sm:gap-4 dark:text-[#8CA39A]"
+        >
+          <span className="h-[1px] max-w-[110px] flex-1 bg-gradient-to-r from-transparent to-[#9C7A4C]/55" />
+          <span aria-hidden="true" className="text-[10px] text-[#9C7A4C]">
+            ◇
+          </span>
+          <span className="text-center whitespace-nowrap">
+            SẢNH THƯ GIÃN · BIDA KHOÁNG THẠCH 8-BALL
+          </span>
+          <span aria-hidden="true" className="text-[10px] text-[#9C7A4C]">
+            ◇
+          </span>
+          <span className="h-[1px] max-w-[110px] flex-1 bg-gradient-to-l from-transparent to-[#9C7A4C]/55" />
+        </div>
+
+        <div
+          ref={stageCardRef}
           data-testid="billiards-stage-card"
           data-game-mode={gameMode}
-          className="relative flex flex-col gap-2.5 overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] shadow-[0_18px_48px_rgba(24,38,36,0.06)] md:gap-3 dark:border-[#243B32] dark:bg-[#12241C]"
+          className={cn(
+            'relative flex flex-col gap-2.5 overflow-hidden rounded-2xl border bg-[#FAFBF9] transition-[border-color,box-shadow] duration-300 md:gap-3 dark:bg-[#12241C]',
+            isScreenLocked
+              ? 'border-[#9C7A4C]/65 shadow-[0_24px_64px_rgba(20,38,34,0.14)]'
+              : 'border-[#CFD9D5] shadow-[0_18px_48px_rgba(24,38,36,0.06)] dark:border-[#243B32]',
+          )}
         >
           {/* 4 góc thước ngắm bản vẽ chữ L mảnh sát mép (inset-1.5) */}
           <span
@@ -1966,30 +2269,55 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                     <li>
                       • Dọn hết 7 bi nhóm mình rồi bấm chọn 1 lỗ chỉ định trước khi đưa Bi 8 vào lỗ.
                     </li>
+                    <li>
+                      • Nhấn phím L (hoặc nút Khóa màn hình) để giữ khung bàn cố định, nhấn Esc để
+                      mở lại.
+                    </li>
                   </ul>
                 </div>
               )}
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
-              <Link
-                to={ROUTES.learningSpace}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[#1E332E] px-4 py-2 text-xs font-semibold text-[#FAFBF9] shadow-[0_8px_20px_rgba(30,51,46,0.16)] transition-[transform,background-color] duration-200 hover:-translate-y-0.5 hover:bg-[#28443D] active:scale-[0.98] sm:text-sm dark:bg-[#245746] dark:hover:bg-[#2E6E58]"
+              <button
+                type="button"
+                data-testid="billiards-screen-lock-btn"
+                aria-pressed={isScreenLocked}
+                title={
+                  isScreenLocked
+                    ? 'Mở khóa cuộn trang (phím L hoặc Esc)'
+                    : 'Khóa màn hình cố định khung bàn khi chơi (phím L)'
+                }
+                onClick={() => setIsScreenLocked((prev) => !prev)}
+                className={cn(
+                  'inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs font-semibold shadow-2xs transition-all active:scale-[0.98]',
+                  isScreenLocked
+                    ? 'border-[#9C7A4C] bg-[#1E332E] text-[#FAFBF9] shadow-[0_6px_18px_rgba(30,51,46,0.24)]'
+                    : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#1E332E] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]',
+                )}
               >
-                <span>Bước vào Không gian học tập</span>
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-
-              <Link
-                to={ROUTES.glossary}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#CFD9D5] bg-[#FAFBF9] px-4 py-2 text-xs font-semibold text-[#182624] shadow-2xs transition-[transform,background-color,border-color] duration-200 hover:-translate-y-0.5 hover:border-[#9C7A4C]/65 hover:bg-[#E7ECEA] active:scale-[0.98] sm:text-sm dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]"
-              >
-                <span>Kho Thuật ngữ</span>
-                <ArrowRight
-                  className="h-4 w-4 text-[#8C6228] dark:text-[#D5B47A]"
-                  aria-hidden="true"
-                />
-              </Link>
+                {isScreenLocked ? (
+                  <>
+                    <Lock className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
+                    <span>Đã khóa màn hình · Mở</span>
+                    <span
+                      aria-hidden="true"
+                      className="h-2 w-2 animate-pulse rounded-full bg-[#D4AF6A]"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Unlock
+                      className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
+                      aria-hidden="true"
+                    />
+                    <span>Khóa màn hình</span>
+                    <kbd className="rounded border border-[#CFD9D5] bg-[#F2F4F3] px-1.5 py-0.5 text-[10px] font-bold text-[#4A5D58] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#98ABA3]">
+                      L
+                    </kbd>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>

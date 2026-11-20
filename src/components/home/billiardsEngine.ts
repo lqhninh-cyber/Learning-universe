@@ -3460,22 +3460,24 @@ function bakeStaticTableSurface(
     ctx.restore();
   }
 
-  // Quầng sáng đèn bàn bida hình elip (trải rộng ~65% theo trục ngang mặt nỉ, tối dần về 4 góc)
+  // Quầng sáng đèn bàn bida hình elip 5 điểm dừng chuyển mịn ra trong suốt (triệt tiêu hoàn toàn viền cứng)
   ctx.save();
   ctx.beginPath();
   ctx.rect(feltAreaLeft, feltAreaTop, feltAreaW, feltAreaH);
   ctx.clip();
   ctx.translate(feltCenterX, centerY);
-  const rxGlow = feltWidth * 0.34;
-  const ryGlow = feltHeight * 0.42;
+  const rxGlow = feltWidth * 0.36;
+  const ryGlow = feltHeight * 0.44;
   ctx.scale(rxGlow / Math.max(1, ryGlow), 1);
-  const lampGrad = ctx.createRadialGradient(0, 0, 4, 0, 0, ryGlow * 1.15);
-  lampGrad.addColorStop(0, 'rgba(245, 252, 248, 0.14)');
-  lampGrad.addColorStop(0.55, 'rgba(245, 252, 248, 0.045)');
-  lampGrad.addColorStop(1, 'rgba(10, 24, 19, 0.16)');
+  const lampGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, ryGlow * 1.25);
+  lampGrad.addColorStop(0, 'rgba(245, 252, 248, 0.13)');
+  lampGrad.addColorStop(0.28, 'rgba(245, 252, 248, 0.07)');
+  lampGrad.addColorStop(0.56, 'rgba(245, 252, 248, 0.03)');
+  lampGrad.addColorStop(0.82, 'rgba(245, 252, 248, 0.008)');
+  lampGrad.addColorStop(1, 'rgba(245, 252, 248, 0)');
   ctx.fillStyle = lampGrad;
   ctx.beginPath();
-  ctx.arc(0, 0, ryGlow * 1.25, 0, Math.PI * 2);
+  ctx.arc(0, 0, ryGlow * 1.28, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 

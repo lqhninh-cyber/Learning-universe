@@ -668,15 +668,13 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Ván mới');
       expect(screen.getByTestId('billiards-rules-btn')).toHaveTextContent('Luật nhanh');
-
-      expect(screen.getByRole('link', { name: /Bước vào Không gian học tập/i })).toHaveAttribute(
-        'href',
-        '/learning-space',
+      expect(screen.getByTestId('billiards-screen-lock-btn')).toHaveTextContent('Khóa màn hình');
+      expect(screen.getByTestId('billiards-salon-backdrop')).toBeInTheDocument();
+      expect(screen.getByTestId('billiards-salon-eyebrow')).toHaveTextContent(
+        /SẢNH THƯ GIÃN · BIDA KHOÁNG THẠCH 8-BALL/i,
       );
-      expect(screen.getByRole('link', { name: /Kho Thuật ngữ/i })).toHaveAttribute(
-        'href',
-        '/thuat-ngu',
-      );
+      expect(screen.queryByRole('link', { name: /Bước vào Không gian học tập/i })).toBeNull();
+      expect(screen.queryByRole('link', { name: /Kho Thuật ngữ/i })).toBeNull();
     });
   });
 
@@ -1490,9 +1488,46 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         fireEvent.click(screen.getByTestId('billiards-fine-aim-minus'));
         fireEvent.click(screen.getByTestId('billiards-fine-aim-plus'));
 
-        // Nút Luật nhanh & Âm thanh
+        // Nút Luật nhanh & Khóa màn hình (Zero-Shift Scroll Lock) & Bối cảnh Sảnh Kiến Trúc
+        expect(screen.queryByRole('link', { name: /Bước vào Không gian học tập/i })).toBeNull();
+        expect(screen.queryByRole('link', { name: /Kho Thuật ngữ/i })).toBeNull();
+        expect(screen.getByTestId('billiards-salon-backdrop')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-salon-backdrop-svg')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-salon-eyebrow')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-ruler-left')).toHaveTextContent(
+          'SALON 03 // 9-FT MINERAL TABLE',
+        );
+        expect(screen.getByTestId('billiards-ruler-right')).toHaveTextContent(
+          'WPA 8-BALL // 15 BALLS · 120FPS',
+        );
+        expect(screen.getByTestId('billiards-focus-vignette')).toBeInTheDocument();
+
+        const lockBtn = screen.getByTestId('billiards-screen-lock-btn');
+        expect(lockBtn).toHaveAttribute('aria-pressed', 'false');
+        expect(lockBtn).toHaveTextContent('Khóa màn hình');
+        fireEvent.click(lockBtn);
+        expect(lockBtn).toHaveAttribute('aria-pressed', 'true');
+        expect(lockBtn).toHaveTextContent('Đã khóa màn hình · Mở');
+        expect(screen.getByTestId('mineral-billiards-stage')).toHaveAttribute(
+          'data-screen-locked',
+          'true',
+        );
+        expect(document.documentElement.style.overflow).toBe('hidden');
+        expect(document.body.style.overflow).toBe('hidden');
+        expect(document.body.style.paddingRight).toMatch(/^\d+px$/);
+
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(lockBtn).toHaveAttribute('aria-pressed', 'false');
+        expect(document.documentElement.style.overflow).toBe('');
+        expect(document.body.style.overflow).toBe('');
+
+        fireEvent.keyDown(window, { key: 'l' });
+        expect(lockBtn).toHaveAttribute('aria-pressed', 'true');
+        fireEvent.keyDown(window, { key: 'L' });
+        expect(lockBtn).toHaveAttribute('aria-pressed', 'false');
+
         fireEvent.click(screen.getByTestId('billiards-rules-btn'));
-        expect(screen.getByTestId('billiards-rules-popover')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-rules-popover')).toHaveTextContent(/Nhấn phím L/i);
 
         const soundBtn = screen.getByTestId('billiards-sound-toggle');
         expect(soundBtn).toHaveAttribute('aria-pressed', 'false');
