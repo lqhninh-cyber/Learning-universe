@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
+import { IslandProvider } from '@/context/IslandContext';
 import {
   ATMOSPHERIC_PALETTES,
   interpolateAtmospherePalette,
@@ -438,51 +439,49 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
   });
 
   describe('LearningSpacePage & HomePage Integration with Scholarly Upgrades', () => {
-    it('LearningSpacePage hiển thị Sanctuary Banner chuẩn hóa, khối 3D thuần trang trí, Spotlight Hover, Biểu đồ Radar và Mạng lưới Liên kết Tri thức', () => {
+    it('LearningSpacePage tinh gọn theo chuẩn Swiss Neo-Editorial, giữ nguyên đa diện 3D, 4 học phần, Biểu đồ Radar và Mạng lưới Liên kết Tri thức', () => {
       render(
         <MemoryRouter>
           <LearningSpacePage />
         </MemoryRouter>,
       );
 
+      expect(screen.getByTestId('learning-space-page')).toBeInTheDocument();
       expect(
         screen.getByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
       ).toBeInTheDocument();
-      expect(screen.getByText(/ACADEMIC SANCTUARY · HỆ THỐNG HỌC PHẦN$/i)).toBeInTheDocument();
-      const statStrip = screen.getByTestId('hero-unified-stat-strip');
-      expect(statStrip).toHaveTextContent(/04 học phần/i);
-      expect(statStrip).toHaveTextContent(/\d+ chương · \d+ bài giảng/i);
-      expect(statStrip).toHaveTextContent(/Tiến độ cá nhân:\s*\d+%/i);
-      expect(screen.queryByText(/học phần cốt lõi/i)).not.toBeInTheDocument();
-      expect(screen.getByText(/^HỆ THỐNG HỌC PHẦN$/i)).toBeInTheDocument();
-      expect(screen.queryByText(/SPATIAL SUBJECT GALLERY/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/04 học phần/i)).toBeInTheDocument();
+      expect(screen.getByText(/Hoàn thành \d+%/i)).toBeInTheDocument();
 
-      // Khối Điêu khắc Đa diện & Thiên cầu 3D thuần trang trí (không còn nút pill 01. CTĐS .. 04. GDH)
+      // Đã gỡ bỏ hoàn toàn lớp trang trí kỹ thuật (blueprint, spy rail, engraved ground, specimen chrome)
+      expect(screen.queryByTestId('observatory-vignette')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('learning-space-perimeter-frame')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('geodesic-corner-brackets')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('learning-space-spy-rail')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ambient-geodesic-wings')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('hero-blueprint-grid')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('hero-blueprint-frame')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('engraved-ground-canvas')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('architectural-band')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('atlas-blueprint-frame')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('orbit-blueprint-frame')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('topographic-waterlines')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('golden-compass-spine')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('fx-search-glow')).not.toBeInTheDocument();
+      expect(screen.queryByText(/DOC\. LU-2026 \/\/ ACADEMIC SANCTUARY/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/SPECIMEN №/i)).not.toBeInTheDocument();
+
+      // Khối Điêu khắc Đa diện 3D thuần trang trí (có thể kéo xoay)
       expect(screen.getByTestId('learning-space-celestial-rings')).toBeInTheDocument();
       expect(screen.queryByTestId('orbital-subject-node-cau-truc-dai-so')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('orbital-subject-node-hinh-hoc-affine')).not.toBeInTheDocument();
-      expect(
-        screen.queryByTestId('orbital-subject-node-giai-tich-ham-mot-bien'),
-      ).not.toBeInTheDocument();
-      expect(screen.queryByTestId('orbital-subject-node-giao-duc-hoc')).not.toBeInTheDocument();
 
-      // Khung minh họa môn học tinh khiết, không nhãn mô tả góc
-      expect(screen.queryByText(/CAYLEY · ĐỐI XỨNG NHÓM/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/HYPERBOLOID · MỤC TIÊU AFFINE/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/TAYLOR · TÍCH PHÂN RIEMANN/i)).not.toBeInTheDocument();
-      expect(screen.queryByText(/Kéo để xoay 3D/i)).not.toBeInTheDocument();
-
-      expect(screen.getByTestId('topographic-waterlines')).toBeInTheDocument();
-      expect(screen.getByTestId('golden-compass-spine')).toBeInTheDocument();
-
-      // Dấu ấn chìm môn học, quầng sáng Spotlight & đủ lưới 4 môn học 2 cột trong chế độ Atlas
+      // Lưới 4 môn học 2 cột trong chế độ Atlas
       const atlasGrid = screen.getByTestId('atlas-subjects-grid');
-      expect(atlasGrid).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'gap-7');
+      expect(atlasGrid).toHaveClass('grid-cols-1', 'md:grid-cols-2');
       expect(screen.getByTestId('subject-watermark-cau-truc-dai-so')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-hinh-hoc-affine')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-giai-tich-ham-mot-bien')).toBeInTheDocument();
       expect(screen.getByTestId('subject-watermark-giao-duc-hoc')).toBeInTheDocument();
-      expect(screen.getByTestId('card-spotlight-cau-truc-dai-so')).toBeInTheDocument();
       expect(
         screen.getByRole('link', { name: /Vào học phần Cấu trúc đại số/i }),
       ).toBeInTheDocument();
@@ -494,31 +493,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       ).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Vào học phần Giáo dục học/i })).toBeInTheDocument();
 
-      // Nút ViewModeToggle & Quick search chips & Hệ kiến trúc fx tinh gọn (Unified Stat Strip, không còn fluted-glass gây sọc)
+      // Nút ViewModeToggle & Quick search chips & Chỉ mục chương
       expect(screen.getByTestId('homepage-view-mode-toggle')).toBeInTheDocument();
       expect(screen.getByTestId('quick-search-chips')).toBeInTheDocument();
-      const heroFrame = screen.getByTestId('hero-blueprint-frame');
-      expect(heroFrame).toBeInTheDocument();
-      // Hero chỉ giữ đúng 4 dấu + kim loại ở 4 góc ngoài cùng (không trùng cặp ở đường ngăn dưới DOC. LU-2026)
-      expect(heroFrame.querySelectorAll('svg[width="12"][height="12"]')).toHaveLength(4);
-      expect(screen.getByTestId('engraved-ground-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-eyebrow-badge')).toBeInTheDocument();
-      expect(screen.queryByTestId('hero-eyebrow-fluted')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('fluted-glass-surface')).not.toBeInTheDocument();
-      expect(screen.getByTestId('hero-unified-stat-strip')).toBeInTheDocument();
-      expect(screen.getByTestId('architectural-band')).toBeInTheDocument();
-      expect(screen.getByTestId('atlas-blueprint-frame')).toBeInTheDocument();
-      expect(screen.getByTestId('orbit-blueprint-frame')).toBeInTheDocument();
-      expect(screen.getByText(/DOC\. LU-2026 \/\/ ACADEMIC SANCTUARY/i)).toBeInTheDocument();
-      // Chỉ giữ duy nhất 1 bộ đếm tọa độ XY ở thanh Telemetry trên cùng Hero (không lặp lại ở SPECIMEN ATLAS)
-      expect(screen.getAllByTestId('telemetry-pointer-coords')).toHaveLength(1);
-      // Xóa nhãn thừa 3D.STAGE // 120FPS và khóa overflow-hidden trên cả 4 sân khấu học phần
-      expect(screen.queryByText(/3D\.STAGE \/\/ 120FPS/i)).not.toBeInTheDocument();
       expect(screen.getByTestId('subject-stage-giao-duc-hoc')).toHaveClass('overflow-hidden');
-      expect(screen.getByText(/SPECIMEN № 01 \/\/ ALGEBRAIC STRUCTURES/)).toBeInTheDocument();
-      expect(screen.getByTestId('stage-vertical-ruler-cau-truc-dai-so')).toBeInTheDocument();
       expect(screen.getByTestId('almanac-chapter-index-cau-truc-dai-so')).toBeInTheDocument();
-      expect(screen.queryByTestId('axiom-band-toggle')).not.toBeInTheDocument();
       expect(screen.getAllByTestId('specimen-fx-bars').length).toBeGreaterThanOrEqual(4);
 
       fireEvent.click(screen.getByRole('button', { name: 'Định lý Lagrange' }));
@@ -538,15 +517,6 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(matrixCard).toBeInTheDocument();
       expect(matrixCard).toHaveTextContent(/Ma Trận Tiến Độ & Phân Bố 4 Học Phần/i);
 
-      // Không còn 2 thẻ tiện ích cũ và không còn dải màu tối cuối trang
-      expect(
-        screen.queryByRole('heading', { name: /Ngân hàng Thuật ngữ KaTeX/i }),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole('heading', { name: /Phòng Lab Hình học 3D/i }),
-      ).not.toBeInTheDocument();
-      expect(screen.queryByTestId('learning-space-footer-transition')).not.toBeInTheDocument();
-
       // Mô hình 1 & Mô hình 2: Biểu đồ Radar Năng lực & Mạng lưới Liên kết Tri thức tương tác
       expect(screen.getByTestId('curriculum-radar-card')).toBeInTheDocument();
       fireEvent.click(screen.getByTestId('radar-axis-hinh-hoc-affine'));
@@ -559,84 +529,97 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       );
     });
 
-    it('HomePage tái cấu trúc 3 màn hình Bạch Ngọc Khoáng Thạch liền mạch: Hero Bình Minh -> Bảo tàng Di sản sáng -> Tuyên ngôn × Đài Chladni', async () => {
+    it('HomePage tái cấu trúc thành Workspace Dashboard 1 màn hình tối giản Academic OS (kèm chuyển tiếp Di sản 40 tác phẩm & Bida 8-Ball)', async () => {
       render(
         <MemoryRouter>
-          <HomePage />
+          <IslandProvider initialPathname="/">
+            <HomePage />
+          </IslandProvider>
         </MemoryRouter>,
       );
 
-      // Hero Screen 1
-      expect(screen.getByText(/Đi một ngày đàng/i)).toBeInTheDocument();
-      expect(screen.getByText(/học một sàng khôn/i)).toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Khám phá Không gian học tập/i })).toHaveAttribute(
+      // A. Header Row: Không gian Tổng quan + Danh ngôn 1 dòng có nút đổi câu + Ngày hôm nay
+      expect(screen.getByTestId('workspace-dashboard')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 1, name: /Không gian Tổng quan/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByTestId('dashboard-date')).toBeInTheDocument();
+
+      const quoteEl = screen.getByTestId('dashboard-quote-text');
+      const initialQuoteText = quoteEl.textContent ?? '';
+      fireEvent.click(screen.getByTestId('dashboard-quote-next'));
+      expect(screen.getByTestId('dashboard-quote-text').textContent).not.toBe(initialQuoteText);
+
+      // Đã gỡ bỏ Sơn Thủy cuộn dài khỏi luồng mặc định của /
+      expect(screen.queryByTestId('son-ha-diorama')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('hero-physics-canvas')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('shoreline-wave-bridge')).not.toBeInTheDocument();
+
+      // B. Bento Row 1: Tiếp tục học tập (7 cột) + Nhịp độ & Pomodoro nhanh (5 cột)
+      const resumeCard = screen.getByTestId('dashboard-resume-card');
+      expect(resumeCard).toHaveTextContent(/ĐANG HỌC DỞ/i);
+      expect(screen.getByRole('link', { name: /Vào bài học ngay/i })).toBeInTheDocument();
+
+      const metricsCard = screen.getByTestId('dashboard-metrics-card');
+      expect(metricsCard).toHaveTextContent(/Bài hoàn thành/i);
+      expect(metricsCard).toHaveTextContent(/Tiến độ tổng/i);
+      expect(metricsCard).toHaveTextContent(/Kho Thuật ngữ/i);
+      const pomodoroBar = screen.getByTestId('dashboard-pomodoro-bar');
+      expect(pomodoroBar).toHaveTextContent('25:00');
+      fireEvent.click(screen.getByTestId('dashboard-pomodoro-start'));
+      expect(pomodoroBar).toHaveTextContent(/Tạm dừng/i);
+
+      // C. Bento Row 2: Lưới 4 học phần đồng đều (CTĐS, HHAVE, GTHMB, GDH)
+      const subjectsGrid = screen.getByTestId('dashboard-subjects-grid');
+      expect(subjectsGrid).toHaveTextContent('CTĐS');
+      expect(subjectsGrid).toHaveTextContent('HHAVE');
+      expect(subjectsGrid).toHaveTextContent('GTHMB');
+      expect(subjectsGrid).toHaveTextContent('GDH');
+      expect(screen.getByTestId('dashboard-subject-card-cau-truc-dai-so')).toHaveAttribute(
         'href',
-        '/learning-space',
+        '/mon-hoc/cau-truc-dai-so',
       );
-      expect(screen.getByRole('link', { name: /Thưởng lãm Di sản/i })).toHaveAttribute(
+      expect(screen.getByTestId('dashboard-subject-card-hinh-hoc-affine')).toHaveAttribute(
         'href',
-        '#khong-gian-di-san',
+        '/mon-hoc/hinh-hoc-affine',
+      );
+      expect(screen.getByTestId('dashboard-subject-card-giai-tich-ham-mot-bien')).toHaveAttribute(
+        'href',
+        '/mon-hoc/giai-tich-ham-mot-bien',
+      );
+      expect(screen.getByTestId('dashboard-subject-card-giao-duc-hoc')).toHaveAttribute(
+        'href',
+        '/mon-hoc/giao-duc-hoc',
       );
 
-      const diorama = screen.getByTestId('son-ha-diorama');
-      const canvas = screen.getByTestId('hero-physics-canvas');
-      expect(diorama).toHaveAttribute('data-landscape', 'hoang-lien-son');
-      expect(diorama).toHaveAttribute('data-phase', 'binh-minh-bach-ngoc');
-      expect(canvas).toHaveAttribute('data-phase', 'binh-minh-bach-ngoc');
-      expect(screen.getByTestId('hero-text-contrast-scrim')).toBeInTheDocument();
+      // D. Bento Row 3: Di sản trong ngày (có nút shuffle) + Thuật ngữ KaTeX + Sảnh Bida 8-Ball
+      const heritageCard = screen.getByTestId('dashboard-heritage-card');
+      expect(heritageCard).toHaveTextContent(/Di sản trong ngày/i);
+      const initialHeritageTitle = heritageCard.querySelector('h3')?.textContent ?? '';
+      fireEvent.click(screen.getByTestId('dashboard-heritage-shuffle'));
+      expect(heritageCard.querySelector('h3')?.textContent).not.toBe(initialHeritageTitle);
 
-      // Đã xóa bỏ hoàn toàn thanh chọn THỜI KHẮC
-      expect(screen.queryByTestId('atmospheric-time-dial')).not.toBeInTheDocument();
-      expect(screen.queryByText(/Đêm Ngân Hà/i)).not.toBeInTheDocument();
-
-      expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
-      expect(screen.getByTestId('fansipan-peaks')).toHaveAttribute(
-        'data-terrain-mode',
-        'topographic-dong-son-6layer',
+      expect(screen.getByTestId('dashboard-glossary-card')).toHaveTextContent(
+        /Thuật ngữ ngẫu nhiên/i,
       );
-      expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
-      expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
-      expect(canvas).toHaveAttribute('data-landscape-style', 'topographic-dong-son');
-      expect(screen.getByTestId('hero-text-contrast-scrim')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-quote-contrast-scrim')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-bottom-mist-transition')).toBeInTheDocument();
-      expect(screen.getByTestId('quote-progress-bar')).toBeInTheDocument();
-      expect(screen.getByTestId('quote-discipline-badge')).toHaveTextContent(/Triết học Giáo dục/i);
+      expect(screen.getByTestId('dashboard-billiards-card')).toHaveTextContent(
+        /Sảnh Bida 8-Ball WPA/i,
+      );
 
-      // Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng Thạch Cao Sáng (#khong-gian-di-san)
+      // Khu vực chuyển tiếp — Phòng Trưng Bày 40 Di Sản (#khong-gian-di-san)
       const showcase = screen.getByTestId('heritage-art-showcase');
       expect(showcase).toHaveAttribute('id', 'khong-gian-di-san');
-      expect(showcase.className).toContain('bg-[#EEF2F0]');
-      expect(showcase.className).toContain('pt-28');
-      expect(showcase.className).toContain('pb-16');
-      expect(showcase.className).toContain('scroll-mt-28');
       expect(showcase.textContent).toContain('Khuê Văn Các');
       expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
       expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
 
-      // Thanh lọc 4 nhóm phân loại di sản hoạt động chuẩn xác
-      const categoryTablist = screen.getByRole('tablist', { name: /Phân loại tác phẩm di sản/i });
-      expect(categoryTablist).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Tất cả\s*\(40\)/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Văn hiến Việt Nam/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Toán học & Thiên văn/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Kiến trúc & Nghệ thuật/i })).toBeInTheDocument();
-
-      // Bảo đảm 40 tác phẩm không trùng id, tiêu đề hay imageSrc và không có svg:// giả lập
+      // Bảo đảm 40 tác phẩm không trùng id, tiêu đề hay imageSrc
       expect(HERITAGE_ARTWORKS).toHaveLength(40);
       expect(new Set(HERITAGE_ARTWORKS.map((item) => item.id)).size).toBe(40);
       expect(new Set(HERITAGE_ARTWORKS.map((item) => item.title)).size).toBe(40);
       expect(new Set(HERITAGE_ARTWORKS.map((item) => item.imageSrc)).size).toBe(40);
 
-      const controlBar = screen.getByTestId('heritage-control-bar');
-      expect(controlBar).toBeInTheDocument();
       expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 40');
-      expect(screen.getByRole('button', { name: /Tác phẩm trước/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Tác phẩm tiếp/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Cuộn danh mục sang trái/i })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Cuộn danh mục sang phải/i })).toBeInTheDocument();
-
-      // Chọn trực tiếp tác phẩm thứ 40 (Đền Pantheon) trên dải Filmstrip & mở Lightbox
       const pantheonBtn = screen.getByRole('button', {
         name: /Chọn tác phẩm 40: Đền Pantheon/i,
       });
@@ -649,36 +632,19 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByRole('button', { name: /Đóng xem toàn màn hình/i }));
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-      // Kiểm chứng lọc theo nhóm Toán học & Thiên văn
       fireEvent.click(screen.getByRole('tab', { name: /Toán học & Thiên văn/i }));
       expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 13');
 
-      // Cầu nối sương mượt Screen 1->2 và Screen 3 Bàn Bida 8 Ball Pool Khoáng Thạch 120fps
-      const shoreline = screen.getByTestId('shoreline-wave-bridge');
-      expect(shoreline).toBeInTheDocument();
-      expect(shoreline.querySelector('svg')).toHaveAttribute('viewBox', '0 0 1440 140');
-      expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
-      expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
-      expect(screen.queryByTestId('kinetic-sound-stage')).not.toBeInTheDocument();
-
+      // Khu vực chuyển tiếp — Sân khấu Bida 8-Ball WPA (#ban-bida-khoang-thach)
       const billiardsStage = await screen.findByTestId('mineral-billiards-stage');
       expect(billiardsStage).toBeInTheDocument();
       expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-status-pill')).toHaveTextContent('Khai cuộc');
       expect(screen.getByTestId('billiards-power-slider')).toBeInTheDocument();
       expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Ván mới');
       expect(screen.getByTestId('billiards-rules-btn')).toHaveTextContent('Luật & Trọng tài');
-      expect(screen.getByTestId('billiards-callshot-toggle')).toHaveTextContent('Luật: CLB');
-      expect(screen.getByTestId('billiards-safety-toggle')).toHaveTextContent('Chạy đạn (Safety)');
       expect(screen.getByTestId('billiards-screen-lock-btn')).toHaveTextContent('Khóa màn hình');
-      expect(screen.getByTestId('billiards-salon-backdrop')).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-salon-eyebrow')).toHaveTextContent(
-        /SẢNH THƯ GIÃN · BIDA KHOÁNG THẠCH 8-BALL/i,
-      );
-      expect(screen.queryByRole('link', { name: /Bước vào Không gian học tập/i })).toBeNull();
-      expect(screen.queryByRole('link', { name: /Kho Thuật ngữ/i })).toBeNull();
     });
   });
 
@@ -879,7 +845,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(lerped.sky0).toEqual(dawnPalette.sky0);
     });
 
-    it('HomePage tuyệt đối không tự động cuộn từ Hero xuống Screen 2 theo timer, chỉ cuộn khi người dùng bấm Thưởng lãm Di sản', () => {
+    it('HomePage tuyệt đối không tự động cuộn xuống phòng trưng bày theo timer, chỉ cuộn khi người dùng bấm Mở phòng trưng bày 40 Di sản', () => {
       vi.useFakeTimers();
       const origScrollIntoView = Element.prototype.scrollIntoView;
       const scrollIntoViewSpy = vi.fn();
@@ -889,7 +855,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       try {
         render(
           <MemoryRouter>
-            <HomePage />
+            <IslandProvider initialPathname="/">
+              <HomePage />
+            </IslandProvider>
           </MemoryRouter>,
         );
 
@@ -899,7 +867,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(scrollIntoViewSpy).not.toHaveBeenCalled();
         expect(scrollToSpy).not.toHaveBeenCalled();
 
-        const heritageCta = screen.getByRole('link', { name: /Thưởng lãm Di sản/i });
+        const heritageCta = screen.getByRole('button', { name: /Mở phòng trưng bày 40 Di sản/i });
         fireEvent.click(heritageCta);
         expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
       } finally {

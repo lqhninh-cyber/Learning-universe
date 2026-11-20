@@ -1,13 +1,5 @@
 import type { ManifestChapter, ManifestSubject } from '@schemas/index';
-import {
-  ArrowRight,
-  BookOpen,
-  FolderKanban,
-  Layers,
-  Search,
-  Sparkles,
-  X,
-} from 'lucide-react';
+import { ArrowRight, BookOpen, FolderKanban, Layers, Search, Sparkles, X } from 'lucide-react';
 import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { LearningSpaceHeroCanvas } from '@/components/home/LearningSpaceHeroCanvas';
@@ -237,10 +229,7 @@ export function LearningSpacePage() {
               </form>
 
               {/* Chip gợi ý nhanh */}
-              <div
-                data-testid="quick-search-chips"
-                className="flex flex-wrap items-center gap-1.5"
-              >
+              <div data-testid="quick-search-chips" className="flex flex-wrap items-center gap-1.5">
                 <span className="mr-1 font-mono text-[10.5px] font-medium text-[var(--text-muted)]">
                   Gợi ý:
                 </span>

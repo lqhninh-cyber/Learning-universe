@@ -97,16 +97,22 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
     expect(screen.getByTestId('quick-reader-controls')).toBeInTheDocument();
     expect(screen.getByTestId('header-reading-progress')).toBeInTheDocument();
 
-    // Thu gọn Rail bằng nút bấm & lưu localStorage
+    // Nút ⌘K trên TopContextBar ẩn ở desktop (md:hidden) khi Rail đang mở rộng (chống trùng lặp)
+    const topbarCmdBtn = screen.getByTestId('topbar-command-trigger');
+    expect(topbarCmdBtn.className).toContain('md:hidden');
+
+    // Thu gọn Rail bằng nút bấm & lưu localStorage -> TopContextBar hiển thị lại nút ⌘K
     fireEvent.click(screen.getByTestId('rail-collapse-toggle'));
     expect(rail).toHaveAttribute('data-collapsed', 'true');
     expect(rail.className).toContain('w-[60px]');
     expect(localStorage.getItem('lu_rail_collapsed')).toBe('true');
+    expect(screen.getByTestId('topbar-command-trigger').className).not.toContain('md:hidden');
 
-    // Mở rộng lại bằng phím tắt `[`
+    // Mở rộng lại bằng phím tắt `[` -> TopContextBar ẩn nút ⌘K trên desktop
     fireEvent.keyDown(window, { key: '[' });
     expect(rail).toHaveAttribute('data-collapsed', 'false');
     expect(localStorage.getItem('lu_rail_collapsed')).toBe('false');
+    expect(screen.getByTestId('topbar-command-trigger').className).toContain('md:hidden');
   });
 
   it('tích hợp đầy đủ tiện ích đáy Rail: Học tiếp, Pomodoro, chuyển Sáng/Tối Ceramic↔Obsidian và thông báo TopContextBar', () => {

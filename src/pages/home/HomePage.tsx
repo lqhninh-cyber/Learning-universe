@@ -13,7 +13,12 @@ import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { HERITAGE_ARTWORKS } from '@/components/home/HeritageArtShowcase';
 import { HeritageExhibitionPavilion } from '@/components/home/HeritageExhibitionPavilion';
-import { getLessonById, getSubjects, getSubjectStats, type LessonLocation } from '@/content-runtime';
+import {
+  getLessonById,
+  getSubjects,
+  getSubjectStats,
+  type LessonLocation,
+} from '@/content-runtime';
 import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
 import { useLearningStore } from '@/features/learning';
@@ -147,10 +152,8 @@ export function HomePage() {
 
   // Thống kê tổng & từng môn học
   const { totalLessons, completedCount, totalPercent, subjectCards } = useMemo(() => {
-    let total = 0;
     const cards = subjects.map((subject) => {
       const stats = getSubjectStats(subject);
-      total += stats.lessonCount;
       let done = 0;
       for (const ch of subject.chapters) {
         for (const ls of ch.lessons) {
@@ -174,6 +177,7 @@ export function HomePage() {
       };
     });
 
+    const total = cards.reduce((sum, card) => sum + card.lessonCount, 0);
     const completed = Object.keys(completedLessons).length;
     const overallPct = total > 0 ? Math.round((completed / total) * 100) : 0;
     return {
@@ -524,7 +528,10 @@ export function HomePage() {
           >
             <div className="flex items-center justify-between gap-2">
               <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-                <Landmark className="h-3.5 w-3.5 text-[var(--accent-heritage)]" aria-hidden="true" />
+                <Landmark
+                  className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
+                  aria-hidden="true"
+                />
                 <span>Di sản trong ngày</span>
               </span>
               <button

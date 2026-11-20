@@ -2,7 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { routes } from '@/app/router';
-import { CustomCursorFollower } from '@/components/layout/CustomCursorFollower';
 import { useLearningStore } from '@/features/learning';
 import { MotionProvider } from '@/shared/motion/MotionProvider';
 import { TooltipProvider } from '@/shared/ui/Tooltip';
@@ -12,7 +11,6 @@ function renderWithProviders(initialEntry: string) {
   return render(
     <MotionProvider>
       <TooltipProvider>
-        <CustomCursorFollower />
         <RouterProvider router={router} />
       </TooltipProvider>
     </MotionProvider>,
@@ -24,18 +22,24 @@ describe('App routing smoke test', () => {
     useLearningStore.getState().resetLearningStore();
   });
 
-  it('hiển thị trang chủ 3 màn hình Bạch Ngọc Khoáng Thạch liền mạch (Hero -> Bảo tàng Di sản -> Tuyên ngôn Chladni) tại /', async () => {
+  it('hiển thị Workspace Dashboard tối giản Academic OS tại / (không chặn intro, không vòng con trỏ thừa, giữ chuyển tiếp Di sản & Bida)', async () => {
     renderWithProviders('/');
 
     expect(
       await screen.findByRole('heading', {
-        name: /LEARNING UNIVERSE/i,
+        name: /Không gian Tổng quan/i,
       }),
     ).toBeInTheDocument();
-    // Academic OS AppShell: LeftRail + TopContextBar, nút Tìm nhanh ⌘K, Tài khoản và liên kết Không gian học tập
+
+    // Academic OS AppShell: LeftRail + TopContextBar, không có CustomCursorFollower hay WaterTouchIntro chặn đầu trang
     expect(screen.getByTestId('app-shell')).toBeInTheDocument();
     expect(screen.getByTestId('left-rail')).toBeInTheDocument();
     expect(screen.getByTestId('top-context-bar')).toBeInTheDocument();
+    expect(screen.queryByTestId('custom-cursor-follower')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('water-touch-intro')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('son-ha-diorama')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('hero-physics-canvas')).not.toBeInTheDocument();
+
     expect(screen.getByRole('button', { name: /Mở tìm kiếm nhanh/i })).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Tài khoản và cài đặt giao diện/i }),
@@ -45,90 +49,73 @@ describe('App routing smoke test', () => {
       '/learning-space',
     );
 
-    // 1. Hero Section — Toàn cảnh thoáng đãng Bình Minh Bạch Ngọc & Thẻ Danh ngôn
-    expect(await screen.findByRole('heading', { name: /Đi một ngày đàng/i })).toBeInTheDocument();
-    expect(screen.getByText(/— Tục ngữ Việt Nam/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /Không gian hỗ trợ Toán học và Khoa học Giáo dục, đồng hành cùng người học trên bước đường học tập/i,
-      ),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText('LEARNING UNIVERSE').length).toBeGreaterThan(0);
-    expect(screen.getByTestId('son-ha-diorama')).toHaveAttribute(
-      'data-landscape',
-      'hoang-lien-son',
-    );
-    expect(screen.queryByTestId('atmospheric-time-dial')).not.toBeInTheDocument();
-    expect(screen.getByTestId('fansipan-peaks')).toBeInTheDocument();
-    expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
-    expect(screen.getByTestId('hero-physics-canvas')).toBeInTheDocument();
-    expect(screen.getByTestId('dong-son-star-motif')).toBeInTheDocument();
-    expect(screen.getByTestId('rotating-scholarly-quote')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Khám phá Không gian học tập/i })).toHaveAttribute(
+    // Workspace Dashboard — 3 Hàng Bento cốt lõi
+    expect(screen.getByTestId('workspace-dashboard')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-quote-text')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-quote-next')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-resume-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-metrics-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-pomodoro-bar')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-subjects-grid')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-subject-card-cau-truc-dai-so')).toHaveAttribute(
       'href',
-      '/learning-space',
+      '/mon-hoc/cau-truc-dai-so',
     );
-    expect(screen.getByRole('link', { name: /Thưởng lãm Di sản/i })).toHaveAttribute(
+    expect(screen.getByTestId('dashboard-subject-card-hinh-hoc-affine')).toHaveAttribute(
       'href',
-      '#khong-gian-di-san',
+      '/mon-hoc/hinh-hoc-affine',
     );
+    expect(screen.getByTestId('dashboard-subject-card-giai-tich-ham-mot-bien')).toHaveAttribute(
+      'href',
+      '/mon-hoc/giai-tich-ham-mot-bien',
+    );
+    expect(screen.getByTestId('dashboard-subject-card-giao-duc-hoc')).toHaveAttribute(
+      'href',
+      '/mon-hoc/giao-duc-hoc',
+    );
+    expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-billiards-card')).toBeInTheDocument();
 
-    // 2. Screen 2 — Phòng Trưng Bày Di Sản Bảo Tàng Thạch Cao Sáng (#khong-gian-di-san)
-    const heritageShowcase = screen.getByTestId('heritage-art-showcase');
-    expect(heritageShowcase).toBeInTheDocument();
-    expect(heritageShowcase.className).toContain('bg-[#EEF2F0]');
-    expect(heritageShowcase.className).toContain('pt-28');
-    expect(heritageShowcase.className).toContain('pb-16');
-    expect(heritageShowcase.className).toContain('scroll-mt-28');
-    expect(
-      screen.getByRole('heading', { name: /Di sản Học thuật & Nghệ thuật/i }),
-    ).toBeInTheDocument();
+    // Khu vực chuyển tiếp Sảnh Thư giãn (40 Di sản & Bida 8-Ball)
+    expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
     expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
-
-    // 3. Screen 3 — Trò chơi Bida Khoáng Thạch chuẩn 8 Ball Pool 120fps (nạp lười React.lazy)
     expect(await screen.findByTestId('mineral-billiards-stage')).toBeInTheDocument();
     expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
-    expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
     expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
-    expect(screen.getByTestId('billiards-power-slider')).toBeInTheDocument();
-    expect(screen.getByTestId('billiards-mode-vs-ai')).toBeInTheDocument();
     expect(screen.getByTestId('billiards-rules-btn')).toBeInTheDocument();
-    expect(screen.queryByTestId('kinetic-sound-stage')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('chladni-manifesto-section')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('lakeshore-lotus-transition')).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(/Đại cảnh Hồ Sen Tri Thức/i)).not.toBeInTheDocument();
 
-    // Không gian Học phần & Quỹ đạo cá nhân đã được tách hoàn toàn sang /learning-space
+    // Không gian Học phần chi tiết nằm tại /learning-space
     expect(screen.queryByRole('heading', { name: /Không gian Học phần/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /Tiếp tục học tập/i })).not.toBeInTheDocument();
   });
 
-  it('hiển thị trang Không gian Học tập (/learning-space) với đầy đủ học phần, Radar và Mạng lưới tri thức', async () => {
+  it('hiển thị trang Không gian Học tập (/learning-space) sạch gọn chuẩn Swiss Editorial với đa diện 3D, 4 học phần, Radar và Mạng lưới tri thức', async () => {
     renderWithProviders('/learning-space');
 
-    // Academic Sanctuary Banner
     expect(
       await screen.findByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
     ).toBeInTheDocument();
-    expect(screen.getByTestId('observatory-vignette')).toBeInTheDocument();
-    expect(screen.getByTestId('learning-space-perimeter-frame')).toBeInTheDocument();
-    expect(screen.getByTestId('geodesic-corner-brackets')).toBeInTheDocument();
-    expect(screen.getByTestId('learning-space-spy-rail')).toBeInTheDocument();
-    expect(screen.getByTestId('ambient-geodesic-wings')).toBeInTheDocument();
-    expect(screen.getByTestId('hero-blueprint-grid')).toBeInTheDocument();
+    expect(screen.getByTestId('learning-space-page')).toBeInTheDocument();
+
+    // Đã thanh lọc toàn bộ lớp trang trí bản vẽ kỹ thuật dư thừa & vòng con trỏ phụ
+    expect(screen.queryByTestId('observatory-vignette')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('learning-space-perimeter-frame')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('geodesic-corner-brackets')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('learning-space-spy-rail')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('ambient-geodesic-wings')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('hero-blueprint-grid')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('engraved-ground-canvas')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('fx-search-glow')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('custom-cursor-follower')).not.toBeInTheDocument();
+    expect(screen.queryByText(/DOC\. LU-2026/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/SPECIMEN №/i)).not.toBeInTheDocument();
+
+    // Giữ nguyên khối đa diện 3D tương tác kéo xoay mượt mà
     expect(screen.getByTestId('hero-3d-column')).toBeInTheDocument();
-    expect(screen.queryByTestId('hero-telemetry-pills')).not.toBeInTheDocument();
-    expect(screen.queryByText(/Cấu trúc · 04 Hệ tiên đề/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Bài giảng chuẩn hóa/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Mô phỏng 120 FPS/i)).not.toBeInTheDocument();
     const ringsContainer = screen.getByTestId('learning-space-celestial-rings');
     expect(ringsContainer).toBeInTheDocument();
-    expect(ringsContainer).toHaveAttribute('data-sculpture-version', 'crystalline-astrolabe-v5');
-    expect(ringsContainer).not.toHaveAttribute('data-dual-locked');
-    expect(ringsContainer).not.toHaveAttribute('title');
     const heroCanvas = ringsContainer.querySelector('canvas');
     expect(heroCanvas).not.toBeNull();
-    expect(heroCanvas).not.toHaveAttribute('title');
     expect(heroCanvas).toHaveClass('cursor-grab');
     if (heroCanvas) {
       expect(heroCanvas).toHaveAttribute('data-dragging', 'false');
@@ -137,10 +124,6 @@ describe('App routing smoke test', () => {
       fireEvent.pointerMove(heroCanvas, { clientX: 180, clientY: 165, pointerId: 1 });
       fireEvent.pointerUp(heroCanvas, { clientX: 180, clientY: 165, pointerId: 1 });
       expect(heroCanvas).toHaveAttribute('data-dragging', 'false');
-    }
-    const glyphs = screen.getByTestId('hero-math-parallax-glyphs');
-    for (const symbol of ['∫', '∂', '∑', 'π', '∆', 'φ', '∀', '≃']) {
-      expect(glyphs).toHaveTextContent(symbol);
     }
 
     // Hệ thống học phần (3 Tabs phân loại & ô tìm kiếm tích hợp)
@@ -153,7 +136,6 @@ describe('App routing smoke test', () => {
       name: /Tìm kiếm môn học hoặc bài học/i,
     });
     expect(searchboxes).toHaveLength(1);
-    expect(screen.getByTestId('fx-search-glow')).toBeInTheDocument();
 
     const algebraLinks = screen.getAllByRole('link', { name: 'Cấu trúc đại số' });
     expect(algebraLinks[0]).toHaveAttribute('href', '/mon-hoc/cau-truc-dai-so');
@@ -161,25 +143,6 @@ describe('App routing smoke test', () => {
     const enterCourseLinks = screen.getAllByRole('link', { name: /Vào học phần/i });
     expect(enterCourseLinks.length).toBe(4);
     expect(enterCourseLinks[0]).toHaveAttribute('href', '/courses/cau-truc-dai-so');
-
-    // Vòng chuẩn độ ngữ cảnh 120fps (CustomCursorFollower)
-    const cursorFollower = screen.getByTestId('custom-cursor-follower');
-    const cursorRing = screen.getByTestId('custom-cursor-follower-ring');
-    expect(cursorFollower).toBeInTheDocument();
-    expect(cursorRing).toBeInTheDocument();
-
-    fireEvent.mouseMove(enterCourseLinks[0]!, { clientX: 240, clientY: 320 });
-    expect(cursorRing).toHaveAttribute('data-cursor-context', 'interactive');
-    expect(cursorRing).toHaveAttribute('data-target-scale', '1.35');
-    expect(cursorRing).toHaveAttribute('data-target-opacity', '1');
-
-    fireEvent.mouseDown(enterCourseLinks[0]!, { button: 0 });
-    expect(cursorRing).toHaveAttribute('data-cursor-pressed', 'true');
-    expect(cursorRing).toHaveAttribute('data-target-scale', '0.85');
-
-    fireEvent.mouseUp(enterCourseLinks[0]!, { button: 0 });
-    expect(cursorRing).toHaveAttribute('data-cursor-pressed', 'false');
-    expect(cursorRing).toHaveAttribute('data-target-scale', '1.35');
 
     // Quỹ đạo học tập cá nhân + Biểu đồ Radar + Mạng lưới Liên kết Tri thức
     expect(screen.getByRole('heading', { name: /Tiếp tục học tập/i })).toBeInTheDocument();
