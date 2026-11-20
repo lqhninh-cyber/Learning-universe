@@ -12,15 +12,9 @@ import { matchesVietnameseQuery } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { ProgressRing } from '@/shared/ui';
 import { CurriculumRadarCard, type RadarSubjectStat } from '@/components/home/CurriculumRadarCard';
-import { GoldenCompassSpineBridge } from '@/components/home/HomeScrollTransitions';
 import { KnowledgeConstellationCard } from '@/components/home/KnowledgeConstellationCard';
 import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
-import {
-  BlueprintSectionFrame,
-  SlidingTabBar,
-  SpecimenFxBars,
-  TelemetrySpecBar,
-} from '@/components/fx';
+import { SlidingTabBar, SpecimenFxBars } from '@/components/fx';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import {
   getInitialHomepageViewMode,
@@ -52,75 +46,83 @@ const SUBJECT_SHORT_CODES: Record<string, string> = {
   'giao-duc-hoc': 'GDH',
 };
 
-const SPECIMEN_DOMAIN_LABELS: Record<string, string> = {
-  'cau-truc-dai-so': 'ALGEBRAIC STRUCTURES',
-  'hinh-hoc-affine': 'AFFINE & PROJECTIVE GEOMETRY',
-  'giai-tich-ham-mot-bien': 'SINGLE-VARIABLE ANALYSIS',
-  'giao-duc-hoc': 'PEDAGOGICAL SCIENCE',
-};
-
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
-  subjectRgb: '156, 122, 76',
-  topBarGradient: 'linear-gradient(90deg, transparent 0%, #9C7A4C 50%, transparent 100%)',
-  cardBorder: 'border-[#D8E0DD] hover:border-[#9C7A4C]',
-  indexText: 'text-[#6B5335]',
-  badgeClass: 'border-[#D8D0C0] bg-[#F3F0E8] text-[#6B5335]',
-  titleHover: 'hover:text-[#6B5335]',
-  ctaClass: 'bg-[#6B5335] text-[#FAFBF9] hover:bg-[#57432B]',
+  subjectRgb: '140, 88, 40',
+  topBarGradient: 'linear-gradient(90deg, transparent 0%, #8C5828 50%, transparent 100%)',
+  cardBorder: 'border-[var(--border-hairline)] hover:border-[#8C5828] dark:hover:border-[#D99B5E]',
+  indexText: 'text-[#8C5828] dark:text-[#D99B5E]',
+  badgeClass:
+    'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
+  titleHover: 'hover:text-[#8C5828] dark:hover:text-[#D99B5E]',
+  ctaClass:
+    'bg-[#8C5828] text-white hover:bg-[#73471F] dark:bg-[#D99B5E] dark:text-[#121716] dark:hover:bg-[#E5AF78]',
   secondaryBtnClass:
-    'border-[#D8D0C0] bg-[#F3F0E8]/70 text-[#6B5335] hover:border-[#6B5335] hover:bg-[#F3F0E8]',
+    'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] hover:border-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
   chapterPillClass:
-    'border-[#D8D0C0] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#6B5335] hover:bg-[#F3F0E8] hover:text-[#6B5335]',
-  progressBarColor: '#6B5335',
-  progressBadgeClass: 'border-[#D8D0C0] bg-[#F3F0E8]/80 text-[#6B5335]',
+    'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#8C5828] hover:text-[#8C5828] dark:hover:border-[#D99B5E] dark:hover:text-[#D99B5E]',
+  progressBarColor: '#8C5828',
+  progressBadgeClass:
+    'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
 };
 
 const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
   'cau-truc-dai-so': DEFAULT_ATLAS_PALETTE,
   'hinh-hoc-affine': {
-    subjectRgb: '45, 82, 102',
-    topBarGradient: 'linear-gradient(90deg, transparent 0%, #2D5266 50%, transparent 100%)',
-    cardBorder: 'border-[#D8E0DD] hover:border-[#2D5266]',
-    indexText: 'text-[#2D5266]',
-    badgeClass: 'border-[#C9D7DF] bg-[#ECF1F4] text-[#2D5266]',
-    titleHover: 'hover:text-[#2D5266]',
-    ctaClass: 'bg-[#2D5266] text-[#FAFBF9] hover:bg-[#224050]',
+    subjectRgb: '29, 79, 110',
+    topBarGradient: 'linear-gradient(90deg, transparent 0%, #1D4F6E 50%, transparent 100%)',
+    cardBorder:
+      'border-[var(--border-hairline)] hover:border-[#1D4F6E] dark:hover:border-[#64A8D1]',
+    indexText: 'text-[#1D4F6E] dark:text-[#64A8D1]',
+    badgeClass:
+      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
+    titleHover: 'hover:text-[#1D4F6E] dark:hover:text-[#64A8D1]',
+    ctaClass:
+      'bg-[#1D4F6E] text-white hover:bg-[#163E57] dark:bg-[#64A8D1] dark:text-[#121716] dark:hover:bg-[#7BB7DB]',
     secondaryBtnClass:
-      'border-[#C9D7DF] bg-[#ECF1F4]/70 text-[#2D5266] hover:border-[#2D5266] hover:bg-[#ECF1F4]',
+      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] hover:border-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
     chapterPillClass:
-      'border-[#C9D7DF] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#2D5266] hover:bg-[#ECF1F4] hover:text-[#2D5266]',
-    progressBarColor: '#2D5266',
-    progressBadgeClass: 'border-[#C9D7DF] bg-[#ECF1F4]/80 text-[#2D5266]',
+      'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#1D4F6E] hover:text-[#1D4F6E] dark:hover:border-[#64A8D1] dark:hover:text-[#64A8D1]',
+    progressBarColor: '#1D4F6E',
+    progressBadgeClass:
+      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
   },
   'giai-tich-ham-mot-bien': {
-    subjectRgb: '36, 87, 70',
-    topBarGradient: 'linear-gradient(90deg, transparent 0%, #245746 50%, transparent 100%)',
-    cardBorder: 'border-[#D8E0DD] hover:border-[#245746]',
-    indexText: 'text-[#245746]',
-    badgeClass: 'border-[#C6DBD0] bg-[#EBF2EE] text-[#245746]',
-    titleHover: 'hover:text-[#245746]',
-    ctaClass: 'bg-[#245746] text-[#FAFBF9] hover:bg-[#1B4436]',
+    subjectRgb: '27, 94, 74',
+    topBarGradient: 'linear-gradient(90deg, transparent 0%, #1B5E4A 50%, transparent 100%)',
+    cardBorder:
+      'border-[var(--border-hairline)] hover:border-[#1B5E4A] dark:hover:border-[#52B394]',
+    indexText: 'text-[#1B5E4A] dark:text-[#52B394]',
+    badgeClass:
+      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
+    titleHover: 'hover:text-[#1B5E4A] dark:hover:text-[#52B394]',
+    ctaClass:
+      'bg-[#1B5E4A] text-white hover:bg-[#144A3A] dark:bg-[#52B394] dark:text-[#121716] dark:hover:bg-[#6AC2A5]',
     secondaryBtnClass:
-      'border-[#C6DBD0] bg-[#EBF2EE]/70 text-[#245746] hover:border-[#245746] hover:bg-[#EBF2EE]',
+      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] hover:border-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
     chapterPillClass:
-      'border-[#C6DBD0] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#245746] hover:bg-[#EBF2EE] hover:text-[#245746]',
-    progressBarColor: '#245746',
-    progressBadgeClass: 'border-[#C6DBD0] bg-[#EBF2EE]/80 text-[#245746]',
+      'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#1B5E4A] hover:text-[#1B5E4A] dark:hover:border-[#52B394] dark:hover:text-[#52B394]',
+    progressBarColor: '#1B5E4A',
+    progressBadgeClass:
+      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
   },
   'giao-duc-hoc': {
-    subjectRgb: '122, 70, 59',
-    topBarGradient: 'linear-gradient(90deg, transparent 0%, #7A463B 50%, transparent 100%)',
-    cardBorder: 'border-[#D8E0DD] hover:border-[#7A463B]',
-    indexText: 'text-[#7A463B]',
-    badgeClass: 'border-[#D8C8C1] bg-[#F3ECE9] text-[#7A463B]',
-    titleHover: 'hover:text-[#7A463B]',
-    ctaClass: 'bg-[#7A463B] text-[#FAFBF9] hover:bg-[#62372E]',
+    subjectRgb: '143, 61, 53',
+    topBarGradient: 'linear-gradient(90deg, transparent 0%, #8F3D35 50%, transparent 100%)',
+    cardBorder:
+      'border-[var(--border-hairline)] hover:border-[#8F3D35] dark:hover:border-[#DF7B70]',
+    indexText: 'text-[#8F3D35] dark:text-[#DF7B70]',
+    badgeClass:
+      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
+    titleHover: 'hover:text-[#8F3D35] dark:hover:text-[#DF7B70]',
+    ctaClass:
+      'bg-[#8F3D35] text-white hover:bg-[#753029] dark:bg-[#DF7B70] dark:text-[#121716] dark:hover:bg-[#E99288]',
     secondaryBtnClass:
-      'border-[#D8C8C1] bg-[#F3ECE9]/70 text-[#7A463B] hover:border-[#7A463B] hover:bg-[#F3ECE9]',
+      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] hover:border-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
     chapterPillClass:
-      'border-[#D8C8C1] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#7A463B] hover:bg-[#F3ECE9] hover:text-[#7A463B]',
-    progressBarColor: '#7A463B',
-    progressBadgeClass: 'border-[#D8C8C1] bg-[#F3ECE9]/80 text-[#7A463B]',
+      'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#8F3D35] hover:text-[#8F3D35] dark:hover:border-[#DF7B70] dark:hover:text-[#DF7B70]',
+    progressBarColor: '#8F3D35',
+    progressBadgeClass:
+      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
   },
 };
 
@@ -823,66 +825,39 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
       <section
         id="khong-gian-mon-hoc"
         aria-label="Không gian Học phần"
-        className="relative z-20 scroll-mt-24 pt-3 pb-10 lg:pt-4 lg:pb-12"
+        className="relative z-20 scroll-mt-16 space-y-6 pb-8"
       >
-        <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
-          <BlueprintSectionFrame
-            data-testid="atlas-blueprint-frame"
-            crosshairColor="#9C7A4C"
-            crosshairOpacity={0.65}
-            className="rounded-[2px] border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
-            innerClassName="overflow-hidden rounded-[2px]"
-          >
-            <TelemetrySpecBar
-              sectionCode="DOC. LU-2026 // SPECIMEN ATLAS"
-              subtitle="BẢN ĐỒ ĐA CHIỀU CÁC MÔN HỌC"
-              showLiveCoordinates={false}
-              items={[
-                { label: 'HIỂN THỊ', value: `${filteredSubjects.length}/${subjects.length}` },
-                { label: 'TIẾN ĐỘ', value: `${completedCount}/${totalLessonCount}` },
-              ]}
-            />
-            <div className="p-6 sm:p-8 lg:p-10">
-              {/* Header 2 tầng + Toolbar lọc phân nhánh */}
-              <div className="mb-8 pb-2">
-                <div className="space-y-1.5">
-                  <div className="inline-flex items-center gap-2 font-mono text-xs tracking-wider text-[var(--text-muted)] uppercase">
-                    <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>HỆ THỐNG HỌC PHẦN</span>
-                  </div>
-                  <h2 className="font-serif text-2xl font-semibold text-[var(--text-main)] md:text-3xl">
-                    Không gian Học phần
-                  </h2>
-                  <p className="mt-1.5 max-w-2xl font-sans text-sm leading-relaxed text-[var(--text-muted)]">
-                    Mỗi học phần là một kiến trúc tư duy độc lập với ngôn ngữ hình học riêng.
-                  </p>
+        <div>
+          <div className="space-y-6">
+            {/* Header + Toolbar lọc phân nhánh Swiss Editorial */}
+            <div className="flex flex-col justify-between gap-4 border-b border-[var(--border-hairline)] pb-5 md:flex-row md:items-end">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                  <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Hệ thống Học phần</span>
                 </div>
-
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)]/60 pt-3">
-                  <div className="flex items-center">
-                    <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
-                  </div>
-
-                  <div className="flex max-w-full flex-wrap items-center gap-2.5">
-                    <SlidingTabBar
-                      ariaLabel="Phân nhánh học thuật"
-                      activeId={activeBranch}
-                      onChange={(id) => setActiveBranch(id as HubBranchFilter)}
-                      tabs={[
-                        { id: 'all', label: 'Tất cả' },
-                        { id: 'math', label: 'Toán học' },
-                        { id: 'pedagogy', label: 'Khoa học Giáo dục' },
-                      ]}
-                    />
-                  </div>
-                </div>
-                {/* Dải phân cách hình học với chấm đồng thau giữa đường kẻ */}
-                <div aria-hidden="true" className="mt-6 flex items-center gap-3">
-                  <div className="h-px flex-1 bg-gradient-to-r from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#C89738]/75 ring-4 ring-[#C89738]/12" />
-                  <div className="h-px flex-1 bg-gradient-to-l from-[#D8E0DD]/30 via-[#CBD6D2] to-[#D8E0DD]" />
-                </div>
+                <h2 className="font-serif text-2xl font-semibold text-[var(--text-main)]">
+                  Không gian Học phần
+                </h2>
+                <p className="max-w-2xl text-sm text-[var(--text-secondary)]">
+                  Mỗi học phần là một kiến trúc tư duy độc lập với hệ màu nhận diện và lộ trình riêng.
+                </p>
               </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} />
+                <SlidingTabBar
+                  ariaLabel="Phân nhánh học thuật"
+                  activeId={activeBranch}
+                  onChange={(id) => setActiveBranch(id as HubBranchFilter)}
+                  tabs={[
+                    { id: 'all', label: 'Tất cả' },
+                    { id: 'math', label: 'Toán học' },
+                    { id: 'pedagogy', label: 'Khoa học Giáo dục' },
+                  ]}
+                />
+              </div>
+            </div>
 
               {viewMode === 'archival' ? (
                 <ArchivalIndexView
@@ -962,71 +937,37 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 } as CSSProperties & { '--subject-rgb': string }
                               }
                               className={cn(
-                                'lu-fx-card group relative flex h-full scroll-mt-24 flex-col justify-between overflow-hidden rounded-[2px] border-[#CFD8D4] p-6 sm:p-7',
+                                'group relative flex h-full scroll-mt-16 flex-col justify-between overflow-hidden rounded-xl border bg-[var(--bg-surface)] p-6 transition-all duration-150 hover:bg-[var(--bg-workspace)] hover:shadow-xs',
                                 palette.cardBorder,
                               )}
                             >
-                              {/* Dấu cộng chuẩn trực #8C7248 ở góc trên-trái và dưới-phải hồ sơ mẫu vật */}
-                              <span
-                                aria-hidden="true"
-                                className="pointer-events-none absolute top-2 left-2 z-20 font-mono text-[10px] leading-none text-[#8C7248]/70"
-                              >
-                                +
-                              </span>
-                              <span
-                                aria-hidden="true"
-                                className="pointer-events-none absolute right-2 bottom-2 z-20 font-mono text-[10px] leading-none text-[#8C7248]/70"
-                              >
-                                +
-                              </span>
-
                               {/* Dải sáng mảnh chạy dọc mép trên của thẻ khi hover */}
                               <div
                                 aria-hidden="true"
                                 style={{ background: palette.topBarGradient }}
-                                className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-[2.5px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                                className="pointer-events-none absolute top-0 right-0 left-0 z-20 h-[2px] opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                               />
-
-                              {/* Quầng sáng Radial Spotlight & lưới chấm Ruled-Dot bám theo con trỏ chuột (taste-skill fx-spotlight) */}
-                              <div
-                                aria-hidden="true"
-                                data-testid={`card-spotlight-${subject.slug}`}
-                                style={{
-                                  background:
-                                    'radial-gradient(420px circle at var(--mx, 50%) var(--my, 35%), rgba(var(--subject-rgb), 0.11), transparent 70%)',
-                                }}
-                                className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                              >
-                                <div
-                                  style={{
-                                    backgroundImage:
-                                      'radial-gradient(circle, rgba(var(--subject-rgb), 0.24) 1px, transparent 1.35px)',
-                                    backgroundSize: '16px 16px',
-                                    WebkitMaskImage:
-                                      'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
-                                    maskImage:
-                                      'radial-gradient(220px circle at var(--mx, 50%) var(--my, 35%), #000 15%, transparent 78%)',
-                                  }}
-                                  className="h-full w-full"
-                                />
-                              </div>
 
                               <SubjectWatermarkSignature slug={subject.slug} />
 
-                              <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-[#CFD8D4] pb-3.5">
+                              <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-[var(--border-hairline)] pb-3.5">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span
                                     className={cn(
-                                      'lu-tabular-telemetry rounded-[2px] border border-[#CFD8D4] bg-[#F2F5F4]/95 px-2.5 py-1 font-mono text-[10px] font-bold tracking-[0.13em] uppercase',
+                                      'inline-flex items-center gap-1.5 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-0.5 font-mono text-[11px] font-semibold',
                                       palette.indexText,
                                     )}
                                   >
-                                    SPECIMEN № {galleryIndex} //{' '}
-                                    {SPECIMEN_DOMAIN_LABELS[subject.slug] ?? 'MODULE'}
+                                    <span
+                                      className="h-2 w-2 rounded-full"
+                                      style={{ backgroundColor: palette.progressBarColor }}
+                                      aria-hidden="true"
+                                    />
+                                    <span>{SUBJECT_SHORT_CODES[subject.slug] ?? galleryIndex}</span>
                                   </span>
                                   <span
                                     className={cn(
-                                      'rounded-[2px] border px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider transition-colors duration-200',
+                                      'rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider transition-colors duration-200',
                                       palette.badgeClass,
                                     )}
                                   >
@@ -1034,7 +975,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   </span>
                                 </div>
 
-                                {/* Thanh mật độ chương fx-bars (gợn sóng khi hover thẻ) + số bài giảng & huy hiệu tiến độ */}
+                                {/* Thanh mật độ chương + số bài giảng & huy hiệu tiến độ */}
                                 <div className="flex flex-col items-end gap-2">
                                   <div className="flex flex-wrap items-center justify-end gap-2.5">
                                     <SpecimenFxBars
@@ -1050,13 +991,13 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                       accentHex={palette.progressBarColor}
                                     />
                                     <div className="flex flex-col items-end gap-1">
-                                      <span className="lu-tabular-telemetry font-mono text-[11px] text-[#4A5D58]">
+                                      <span className="font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
                                         {stats.chapterCount} chương · {stats.lessonCount} bài giảng
                                       </span>
                                       <span
                                         data-testid={`subject-progress-badge-${subject.slug}`}
                                         className={cn(
-                                          'lu-tabular-telemetry rounded-[2px] border px-2 py-0.5 font-mono text-[10px] font-bold',
+                                          'rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums',
                                           palette.progressBadgeClass,
                                         )}
                                       >
@@ -1065,9 +1006,9 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                       </span>
                                     </div>
                                   </div>
-                                  <div className="lu-fx-progress-track h-1.5 w-36 bg-[#E7ECEA]">
+                                  <div className="h-1.5 w-36 overflow-hidden rounded-full bg-[var(--border-hairline)]">
                                     <div
-                                      className="lu-fx-progress-fill h-full transition-[width] duration-500"
+                                      className="h-full rounded-full transition-[width] duration-500"
                                       style={{
                                         width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
                                         backgroundColor: palette.progressBarColor,
@@ -1086,7 +1027,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
 
                               <div className="relative z-10 space-y-4">
                                 <div className="space-y-2">
-                                  <h3 className="font-serif text-2xl font-bold tracking-tight text-[#182624] sm:text-[1.6rem]">
+                                  <h3 className="font-serif text-2xl font-semibold tracking-tight text-[var(--text-main)]">
                                     <Link
                                       to={ROUTES.subjectOverview(subject.slug)}
                                       className={cn('transition-colors', palette.titleHover)}
@@ -1094,19 +1035,19 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                       {subject.title}
                                     </Link>
                                   </h3>
-                                  <p className="line-clamp-3 text-sm leading-relaxed text-[#4A5D58]">
+                                  <p className="line-clamp-3 text-sm leading-relaxed text-[var(--text-secondary)]">
                                     {asset.conciseDescription}
                                   </p>
                                 </div>
 
-                                {/* Bảng chỉ mục niên giám chương học (Almanac Index Table với đường chấm dẫn border-dotted) */}
+                                {/* Bảng chỉ mục chương học */}
                                 <div
                                   data-testid={`almanac-chapter-index-${subject.slug}`}
-                                  className="space-y-2 rounded-[2px] border border-[#CFD8D4] bg-[#F4F6F5]/85 p-3"
+                                  className="space-y-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3"
                                 >
-                                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#CFD8D4] pb-1.5">
-                                    <span className="lu-tabular-telemetry font-mono text-[10px] font-semibold tracking-[0.14em] text-[#4A5D58] uppercase">
-                                      CHỈ MỤC NIÊN GIÁM CHƯƠNG HỌC
+                                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] pb-1.5">
+                                    <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                                      Lộ trình chương học
                                     </span>
                                     <button
                                       type="button"
@@ -1119,9 +1060,8 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                         }))
                                       }
                                       className={cn(
-                                        'inline-flex cursor-pointer items-center gap-1 rounded-[2px] px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors',
+                                        'inline-flex cursor-pointer items-center gap-1 rounded px-2 py-0.5 font-mono text-[10.5px] font-semibold transition-colors hover:bg-[var(--bg-surface)]',
                                         palette.indexText,
-                                        'hover:bg-[#FAFBF9]',
                                       )}
                                     >
                                       <span>
@@ -1137,7 +1077,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                     </button>
                                   </div>
 
-                                  <div className="divide-y divide-[#E2E8E5]">
+                                  <div className="divide-y divide-[var(--border-hairline)]">
                                     {highlightedChapters.map((chapter) => {
                                       const chDone = chapter.lessons.filter(
                                         (l) => completedLessons[l.id],
@@ -1290,62 +1230,44 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                 </>
               )}
             </div>
-          </BlueprintSectionFrame>
-        </div>
+          </div>
       </section>
 
       {viewMode === 'atlas' && (
-        <>
-          <GoldenCompassSpineBridge />
-
-          <section
-            id="quy-dao-hoc-tap"
-            aria-label="Không gian Tiếp tục học tập"
-            className="relative z-20 scroll-mt-24 py-10 lg:py-14"
-          >
-            <div className="mx-auto w-full max-w-[1400px] px-6 lg:px-10">
-              <BlueprintSectionFrame
-                data-testid="orbit-blueprint-frame"
-                crosshairColor="#9C7A4C"
-                crosshairOpacity={0.65}
-                className="rounded-[2px] border-[#CFD8D4] bg-[#FAFBF9]/72 backdrop-blur-sm"
-                innerClassName="overflow-hidden rounded-[2px]"
-              >
-                <TelemetrySpecBar
-                  sectionCode="DOC. LU-2026 // PERSONAL ORBIT"
-                  subtitle="QUỸ ĐẠO HỌC TẬP & MẠNG TRI THỨC LIÊN MÔN"
-                  showLiveCoordinates={false}
-                  items={[{ label: 'ĐÃ HỌC', value: `${completedCount}/${totalLessonCount}` }]}
-                />
-                <div className="p-6 sm:p-8 lg:p-10">
-                  <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-                    <div className="space-y-2">
-                      <div className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#365E4E] uppercase dark:text-[#8EE5CE]">
-                        <Sparkles className="h-3.5 w-3.5 text-[#C89738]" aria-hidden="true" />
-                        <span>MY LEARNING ORBIT · QUỸ ĐẠO HỌC TẬP CÁ NHÂN</span>
-                      </div>
-                      <h2 className="font-serif text-3xl font-bold tracking-tight text-[var(--text-main)] sm:text-4xl">
-                        Tiếp tục học tập
-                      </h2>
-                    </div>
-                    <p className="font-mono text-xs text-[var(--text-muted)]">
-                      Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt của bạn.
-                    </p>
+        <section
+          id="quy-dao-hoc-tap"
+          aria-label="Không gian Tiếp tục học tập"
+          className="relative z-20 scroll-mt-16 border-t border-[var(--border-hairline)] pt-8 pb-6"
+        >
+          <div>
+            <div className="space-y-6">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                    <Sparkles className="h-3.5 w-3.5 text-[var(--accent-heritage)]" aria-hidden="true" />
+                    <span>Quỹ đạo học tập &amp; Phân tích năng lực</span>
                   </div>
+                  <h2 className="font-serif text-2xl font-semibold tracking-tight text-[var(--text-main)]">
+                    Tiếp tục học tập
+                  </h2>
+                </div>
+                <p className="font-mono text-xs text-[var(--text-muted)]">
+                  Tiến độ học tập cá nhân được lưu an toàn trên trình duyệt của bạn.
+                </p>
+              </div>
 
-                  {/* Lưới Bento 2 Cột x 2 Hàng Cân Xứng Tuyệt Đối (xóa sạch khoảng trắng thừa cột trái) */}
+              {/* Lưới Bento 2 Cột cân xứng Swiss Editorial */}
+              <div
+                data-testid="learning-bento-grid"
+                className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12"
+              >
+                {/* Cột Trái (7 cột): Bài đang đọc dở + Tiến độ 4 học phần */}
+                <div className="flex flex-col gap-6 lg:col-span-7">
                   <div
-                    data-testid="learning-bento-grid"
-                    className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12"
+                    role="region"
+                    aria-label="Tiếp tục học dở"
+                    className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6"
                   >
-                    {/* Cột Trái (7 cột): 2 Thẻ Bento xếp chồng khớp chiều cao với 2 thẻ bên phải */}
-                    <div className="flex flex-col gap-6 lg:col-span-7">
-                      {/* Thẻ 1 (Hàng Trên): Bài Học Đang Đọc Dở & Lộ Trình Kế Tiếp */}
-                      <div
-                        role="region"
-                        aria-label="Tiếp tục học dở"
-                        className="lu-fx-card rounded-[2px] border-[#CFD8D4] p-6 sm:p-7"
-                      >
                         {activeRecentLesson ? (
                           <div className="space-y-5">
                             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
@@ -1586,12 +1508,11 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         <KnowledgeConstellationCard />
                       </div>
                     </div>
-                  </div>
                 </div>
-              </BlueprintSectionFrame>
+              </div>
             </div>
-          </section>
-        </>
+          </div>
+        </section>
       )}
     </>
   );

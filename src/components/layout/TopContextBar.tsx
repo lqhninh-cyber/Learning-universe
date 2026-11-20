@@ -127,7 +127,7 @@ function computePageReadingProgress(): number {
 
 export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, isDark = false }) => {
   const { pathname } = useLocation();
-  const { toggleMobileMenu, openCommandPalette, topBarRightSlot } = useLayout();
+  const { isRailCollapsed, toggleMobileMenu, openCommandPalette, topBarRightSlot } = useLayout();
   const { activeNotice, dismissIslandNotice, pomodoro } = useIsland();
   const progressBarRef = useRef<HTMLDivElement>(null);
 
@@ -263,7 +263,10 @@ export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, is
           onClick={openCommandPalette}
           aria-label="Mở bảng lệnh (⌘K)"
           title="Mở bảng lệnh trung tâm (⌘K)"
-          className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)] focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none active:scale-[0.98]"
+          className={cn(
+            'h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)] focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none active:scale-[0.98]',
+            isRailCollapsed ? 'inline-flex' : 'inline-flex md:hidden',
+          )}
         >
           <Search className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           <kbd className="hidden font-mono text-[10.5px] font-semibold text-[var(--text-muted)] sm:inline">

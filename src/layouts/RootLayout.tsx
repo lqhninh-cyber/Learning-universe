@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
-import { WaterTouchIntro } from '@/components/intro';
 import { AppShell } from '@/components/layout/AppShell';
 import { Footer } from '@/components/layout/Footer';
 import { IslandProvider, useIsland } from '@/context/IslandContext';
@@ -115,9 +114,6 @@ function RootLayoutContent() {
       <AuthModal />
       <PendingNoticeDialog />
       <LoginPromptDialog />
-
-      {/* 3. CHẠM MẶT NƯỚC (TOUCH THE WATER) INTRO OVERLAY */}
-      <WaterTouchIntro />
     </div>
   );
 }
