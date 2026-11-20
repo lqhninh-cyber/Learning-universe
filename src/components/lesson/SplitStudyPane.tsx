@@ -1,17 +1,6 @@
 import type { LessonMeta } from '@schemas/index';
-import {
-  ArrowUpRight,
-  BookMarked,
-  Download,
-  Edit3,
-  Eye,
-  FileText,
-  ListTree,
-  Search,
-  Sparkles,
-  X,
-} from 'lucide-react';
-import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowUpRight, BookMarked, ListTree, Search, Sparkles, X } from 'lucide-react';
+import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { MathRenderer } from '@/content-runtime';
 import {
@@ -25,15 +14,12 @@ import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { matchesVietnameseQuery, stripDiacritics } from '@/shared/lib/vietnamese';
 
-export type SplitStudyTab = 'toc' | 'glossary' | 'notes';
+export type SplitStudyTab = 'toc' | 'glossary';
 
 export interface SplitStudyPaneProps {
-  readonly lessonId: string;
-  readonly lessonSlug: string;
   readonly lessonTitle: string;
   readonly lessonDescription?: string;
   readonly subjectSlug: string;
-  readonly subjectTitle: string;
   readonly lessonMeta: LessonMeta | null;
   readonly activeTab: SplitStudyTab;
   readonly onTabChange: (tab: SplitStudyTab) => void;
@@ -41,8 +27,6 @@ export interface SplitStudyPaneProps {
   readonly onSelectAnchor?: () => void;
   readonly className?: string;
 }
-
-const NOTES_STORAGE_PREFIX = 'lu_split_study_note:';
 
 function mapSubjectSlugToGlossarySubject(slug: string): MathGlossarySubject | null {
   if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') return 'cau-truc-dai-so';
@@ -52,74 +36,6 @@ function mapSubjectSlugToGlossarySubject(slug: string): MathGlossarySubject | nu
   }
   if (slug === 'giao-duc-hoc' || slug === 'pedagogy') return 'giao-duc-hoc';
   return null;
-}
-
-function readStoredNote(lessonId: string): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return window.localStorage.getItem(`${NOTES_STORAGE_PREFIX}${lessonId}`) ?? '';
-  } catch {
-    return '';
-  }
-}
-
-function writeStoredNote(lessonId: string, body: string): void {
-  if (typeof window === 'undefined') return;
-  try {
-    if (body.length === 0) {
-      window.localStorage.removeItem(`${NOTES_STORAGE_PREFIX}${lessonId}`);
-    } else {
-      window.localStorage.setItem(`${NOTES_STORAGE_PREFIX}${lessonId}`, body);
-    }
-  } catch {
-    // Bỏ qua lỗi quota hoặc private mode
-  }
-}
-
-interface PreviewSegment {
-  readonly kind: 'display-math' | 'heading' | 'bullet' | 'paragraph';
-  readonly text: string;
-  readonly level?: number;
-}
-
-function parseNotePreviewSegments(markdown: string): readonly PreviewSegment[] {
-  const segments: PreviewSegment[] = [];
-  // Tách khối công thức display $$ ... $$ trước
-  const parts = markdown.split(/(\$\$[\s\S]*?\$\$)/g);
-
-  for (const part of parts) {
-    if (!part) continue;
-    if (part.startsWith('$$') && part.endsWith('$$') && part.length > 4) {
-      const math = part.slice(2, -2).trim();
-      if (math) {
-        segments.push({ kind: 'display-math', text: math });
-      }
-      continue;
-    }
-
-    const lines = part.split(/\r?\n/);
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-      if (!line) continue;
-      const headingMatch = line.match(/^(#{1,3})\s+(.+)$/);
-      if (headingMatch?.[1] && headingMatch[2]) {
-        segments.push({
-          kind: 'heading',
-          level: headingMatch[1].length,
-          text: headingMatch[2].trim(),
-        });
-        continue;
-      }
-      const bulletMatch = line.match(/^[-*•]\s+(.+)$/);
-      if (bulletMatch?.[1]) {
-        segments.push({ kind: 'bullet', text: bulletMatch[1].trim() });
-        continue;
-      }
-      segments.push({ kind: 'paragraph', text: line });
-    }
-  }
-
-  return segments;
 }
 
 function getBlockKindBadge(name: string): { readonly label: string; readonly accentClass: string } {
@@ -148,18 +64,14 @@ function getBlockKindBadge(name: string): { readonly label: string; readonly acc
 }
 
 /**
- * Ngăn kéo học tập chia đôi 3 Tab (Split-Pane Study Drawer) cho Academic OS:
+ * Ngăn kéo học tập chia đôi 2 Tab (Split-Pane Study Drawer) cho Academic OS:
  * 1. Mục lục: Scroll-Spy đề mục + Tóm tắt Định lý / Định nghĩa trong bài.
  * 2. Thuật ngữ: Lọc ngữ cảnh theo môn & từ khóa xuất hiện trong bài, hỗ trợ tìm không dấu tiếng Việt.
- * 3. Sổ tay: Ghi chú KaTeX riêng từng bài (localStorage debounce 300ms), Soạn thảo / Xem trước & xuất .md.
  */
 export function SplitStudyPane({
-  lessonId,
-  lessonSlug,
   lessonTitle,
   lessonDescription = '',
   subjectSlug,
-  subjectTitle,
   lessonMeta,
   activeTab,
   onTabChange,
@@ -287,62 +199,12 @@ export function SplitStudyPane({
     return scored.slice(0, 24);
   }, [allGlossaryEntries, glossaryQuery, glossaryScope, glossarySubject, lessonContextHaystack]);
 
-  // --- 3. Sổ tay ghi chú KaTeX riêng từng bài (debounce 300ms) ---
-  const [noteBody, setNoteBody] = useState<string>(() => readStoredNote(lessonId));
-  const [noteMode, setNoteMode] = useState<'edit' | 'preview'>('edit');
-  const [saveState, setSaveState] = useState<'saved' | 'saving'>('saved');
-  const prevLessonIdRef = useRef<string>(lessonId);
-
-  useEffect(() => {
-    if (prevLessonIdRef.current !== lessonId) {
-      prevLessonIdRef.current = lessonId;
-      setNoteBody(readStoredNote(lessonId));
-      setSaveState('saved');
-    }
-  }, [lessonId]);
-
-  useEffect(() => {
-    if (saveState !== 'saving') return;
-    const timer = window.setTimeout(() => {
-      writeStoredNote(lessonId, noteBody);
-      setSaveState('saved');
-    }, 300);
-    return () => window.clearTimeout(timer);
-  }, [lessonId, noteBody, saveState]);
-
-  const handleNoteChange = (nextVal: string) => {
-    setNoteBody(nextVal);
-    setSaveState('saving');
-  };
-
-  const handleNoteBlur = () => {
-    writeStoredNote(lessonId, noteBody);
-    setSaveState('saved');
-  };
-
-  const handleExportMarkdown = () => {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
-    const header = `# Ghi chú: ${lessonTitle}\n> Học phần: ${subjectTitle}\n\n`;
-    const content = `${header}${noteBody.trim() || '_Chưa có nội dung ghi chú._'}\n`;
-    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${lessonSlug}-ghi-chu.md`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  };
-
-  const previewSegments = useMemo(() => parseNotePreviewSegments(noteBody), [noteBody]);
-
   return (
     <div
       data-testid="split-study-pane"
       className={cn('flex h-full flex-col bg-[var(--bg-shell)] text-[var(--text-main)]', className)}
     >
-      {/* Header + 3 Tab chuyển nhanh tức thì */}
+      {/* Header + 2 Tab cân đối (Mục lục · Thuật ngữ) */}
       <div className="shrink-0 border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 pt-2.5 pb-2">
         <div className="mb-2 flex items-center justify-between gap-2">
           <span className="font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
@@ -364,7 +226,7 @@ export function SplitStudyPane({
         <div
           role="tablist"
           aria-label="Ngăn kéo công cụ học tập chia đôi"
-          className="grid grid-cols-3 gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-shell)] p-1"
+          className="grid grid-cols-2 gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-shell)] p-1"
         >
           {(
             [
@@ -375,7 +237,6 @@ export function SplitStudyPane({
                 Icon: BookMarked,
                 testId: 'split-tab-glossary',
               },
-              { id: 'notes', label: 'Sổ tay', Icon: FileText, testId: 'split-tab-notes' },
             ] as const
           ).map(({ id, label, Icon, testId }) => {
             const isSelected = activeTab === id;
@@ -402,8 +263,8 @@ export function SplitStudyPane({
         </div>
       </div>
 
-      {/* Nội dung từng Tab */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
+      {/* Nội dung từng Tab (cuộn siêu mảnh tiệp Dark/Light Mode) */}
+      <div className="os-thin-scrollbar min-h-0 flex-1 overflow-y-auto p-3.5">
         {/* TAB 1: MỤC LỤC + TÓM TẮT ĐỊNH LÝ / ĐỊNH NGHĨA */}
         {activeTab === 'toc' && (
           <nav aria-label="Mục lục bài học" data-testid="split-panel-toc" className="space-y-5">
@@ -576,123 +437,6 @@ export function SplitStudyPane({
                 {contextualGlossary.map(({ entry, hitInLesson }) => (
                   <GlossarySplitCard key={entry.id} entry={entry} hitInLesson={hitInLesson} />
                 ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 3: SỔ TAY GHI CHÚ KATEX RIÊNG TỪNG BÀI */}
-        {activeTab === 'notes' && (
-          <div data-testid="split-panel-notes" className="flex h-full flex-col gap-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="inline-flex rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-0.5 text-xs">
-                <button
-                  type="button"
-                  data-testid="split-notes-mode-edit"
-                  onClick={() => setNoteMode('edit')}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-colors',
-                    noteMode === 'edit'
-                      ? 'bg-[var(--accent-os)] text-white'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
-                  )}
-                >
-                  <Edit3 className="h-3 w-3" aria-hidden="true" />
-                  <span>Soạn thảo</span>
-                </button>
-                <button
-                  type="button"
-                  data-testid="split-notes-mode-preview"
-                  onClick={() => setNoteMode('preview')}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center gap-1 rounded-md px-2.5 py-1 font-medium transition-colors',
-                    noteMode === 'preview'
-                      ? 'bg-[var(--accent-os)] text-white'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
-                  )}
-                >
-                  <Eye className="h-3 w-3" aria-hidden="true" />
-                  <span>Xem trước (KaTeX)</span>
-                </button>
-              </div>
-
-              <button
-                type="button"
-                data-testid="split-notes-export"
-                onClick={handleExportMarkdown}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1 font-mono text-[11px] font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
-              >
-                <Download className="h-3 w-3" aria-hidden="true" />
-                <span>Xuất .md</span>
-              </button>
-            </div>
-
-            {noteMode === 'edit' ? (
-              <div className="flex flex-1 flex-col gap-2">
-                <textarea
-                  data-testid="split-notes-textarea"
-                  value={noteBody}
-                  onChange={(e) => handleNoteChange(e.target.value)}
-                  onBlur={handleNoteBlur}
-                  rows={14}
-                  aria-label="Sổ tay ghi chú KaTeX cho bài học"
-                  placeholder={
-                    'Ghi chú ý chính, chứng minh tóm tắt hoặc công thức toán học...\n\nVí dụ:\n- Nhóm thương $G/H$ với $H \\trianglelefteq G$\n- Định lý Lagrange:\n$$|G| = [G:H] \\cdot |H|$$'
-                  }
-                  className="min-h-[260px] w-full flex-1 resize-y rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 font-mono text-xs leading-relaxed text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent-os)] focus:outline-none"
-                />
-                <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)]">
-                  <span>Hỗ trợ công thức `$ ... $` và `$$ ... $$`</span>
-                  <span data-testid="split-notes-save-status" className="font-mono">
-                    {saveState === 'saving' ? 'Đang lưu...' : 'Đã lưu tự động'}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div
-                data-testid="split-notes-preview"
-                className="min-h-[260px] flex-1 space-y-3 overflow-y-auto rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3.5 text-sm leading-relaxed text-[var(--text-main)]"
-              >
-                {previewSegments.length === 0 ? (
-                  <p className="text-xs text-[var(--text-muted)] italic">
-                    Sổ tay chưa có nội dung. Chuyển sang mục Soạn thảo để bắt đầu ghi chép.
-                  </p>
-                ) : (
-                  previewSegments.map((seg, index) => {
-                    if (seg.kind === 'display-math') {
-                      return (
-                        <div key={index} className="overflow-x-auto py-1">
-                          <KatexMath math={seg.text} display />
-                        </div>
-                      );
-                    }
-                    if (seg.kind === 'heading') {
-                      return (
-                        <h4
-                          key={index}
-                          className="font-serif text-sm font-bold text-[var(--text-main)]"
-                        >
-                          <InlineMathText text={seg.text} />
-                        </h4>
-                      );
-                    }
-                    if (seg.kind === 'bullet') {
-                      return (
-                        <div key={index} className="flex items-start gap-2 text-xs leading-relaxed">
-                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-os)]" />
-                          <p className="min-w-0 flex-1">
-                            <InlineMathText text={seg.text} />
-                          </p>
-                        </div>
-                      );
-                    }
-                    return (
-                      <p key={index} className="text-xs leading-relaxed">
-                        <InlineMathText text={seg.text} />
-                      </p>
-                    );
-                  })
-                )}
               </div>
             )}
           </div>

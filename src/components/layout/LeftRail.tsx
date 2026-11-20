@@ -10,15 +10,8 @@ import {
   Sparkles,
   Sun,
 } from 'lucide-react';
-import {
-  type FC,
-  type MouseEvent as ReactMouseEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router';
 import { BrandLogo } from '@/components/common/BrandLogo';
 import { getLessonById, type LessonLocation } from '@/content-runtime';
 import {
@@ -71,8 +64,7 @@ function formatQuickResumeLabel(location: LessonLocation): string {
 }
 
 export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
-  const { pathname, hash } = useLocation();
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { isRailCollapsed, toggleRail, openCommandPalette } = useLayout();
   const { theme, toggleTheme } = useReadingSettings();
   const { activeSubject, readerSettings, setFontScale } = useIsland();
@@ -138,10 +130,8 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
     };
   }, [lastVisitedGlobal]);
 
-  const isLoungeActive =
-    pathname === ROUTES.home &&
-    (hash === '#khong-gian-di-san' || hash === '#ban-bida-khoang-thach');
-  const isHomeActive = pathname === ROUTES.home && !isLoungeActive;
+  const isLoungeActive = pathname === ROUTES.sanctuary;
+  const isHomeActive = pathname === ROUTES.home;
   const isLearningSpaceActive =
     pathname === ROUTES.learningSpace ||
     pathname === ROUTES.subjects ||
@@ -161,21 +151,6 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
     setIsAccountMenuOpen(false);
     signOutLearnerMode();
     await signOut();
-  };
-
-  const handleLoungeClick = (event: ReactMouseEvent<HTMLAnchorElement>) => {
-    if (pathname === ROUTES.home) {
-      event.preventDefault();
-      const target =
-        document.getElementById('ban-bida-khoang-thach') ??
-        document.getElementById('khong-gian-di-san');
-      if (target && typeof target.scrollIntoView === 'function') {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      return;
-    }
-    event.preventDefault();
-    void navigate('/#khong-gian-di-san');
   };
 
   const navItemClass = (active: boolean) =>
@@ -348,10 +323,10 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
         </Link>
 
         <Link
-          to="/#khong-gian-di-san"
-          onClick={handleLoungeClick}
+          to={ROUTES.sanctuaryTab('di-san')}
           aria-label="Sảnh Thư giãn"
           title={isRailCollapsed ? 'Sảnh Thư giãn (Di sản & Bida)' : undefined}
+          aria-current={isLoungeActive ? 'page' : undefined}
           className={navItemClass(isLoungeActive)}
         >
           {isLoungeActive && (

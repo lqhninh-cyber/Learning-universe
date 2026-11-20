@@ -1,7 +1,7 @@
 import { ArrowRight, BookOpen, Check, Copy, Lightbulb, RotateCcw, Search, X } from 'lucide-react';
 import { useCallback, useId, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
-import { BlueprintSectionFrame, TelemetrySpecBar } from '@/components/fx';
+import { getLessonBySlug, getSubjectBySlug, resolveLessonShortcut } from '@/content-runtime';
 import { useIsland } from '@/context/IslandContext';
 import {
   getAllGlossaryEntries,
@@ -15,13 +15,12 @@ import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { stripDiacritics } from '@/shared/lib/vietnamese';
 import { FadeIn } from '@/shared/motion/FadeIn';
-import { Breadcrumb } from '@/shared/ui';
 
 type SubjectFilter = 'all' | MathGlossarySubject;
 
-interface SubjectMineralStyle {
+interface SubjectAlmanacStyle {
   readonly label: string;
-  readonly shortLabel: string;
+  readonly code: string;
   readonly hex: string;
   readonly dotClass: string;
   readonly borderLeftClass: string;
@@ -29,50 +28,50 @@ interface SubjectMineralStyle {
   readonly activeFilterClass: string;
 }
 
-const SUBJECT_MINERAL_STYLES: Record<MathGlossarySubject, SubjectMineralStyle> = {
+const SUBJECT_ALMANAC_STYLES: Record<MathGlossarySubject, SubjectAlmanacStyle> = {
   'cau-truc-dai-so': {
     label: 'Cấu trúc đại số',
-    shortLabel: 'Cấu trúc đại số',
-    hex: '#6B5335',
-    dotClass: 'bg-[#6B5335] dark:bg-[#D5B47A]',
-    borderLeftClass: 'border-l-[#6B5335] dark:border-l-[#C9A467]',
+    code: 'CTĐS',
+    hex: '#8C5828',
+    dotClass: 'bg-[#8C5828] dark:bg-[#D99B5E]',
+    borderLeftClass: 'border-l-[#8C5828] dark:border-l-[#D99B5E]',
     badgeClass:
-      'border-[#D8D0C0] bg-[#F3F0E8] text-[#6B5335] dark:border-[#4A3B28] dark:bg-[#241D14] dark:text-[#E5C992]',
+      'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
     activeFilterClass:
-      'border-[#6B5335] bg-[#6B5335] text-[#FAFBF9] shadow-xs dark:border-[#C9A467] dark:bg-[#6B5335] dark:text-[#FAFBF9]',
+      'border-[#8C5828] bg-[#8C5828] text-white dark:border-[#D99B5E] dark:bg-[#D99B5E] dark:text-[#0D1110]',
   },
   'hinh-hoc-affine': {
     label: 'Hình học Affine & Euclide',
-    shortLabel: 'Hình học Affine & Euclide',
-    hex: '#2D5266',
-    dotClass: 'bg-[#2D5266] dark:bg-[#7BA9C2]',
-    borderLeftClass: 'border-l-[#2D5266] dark:border-l-[#6D9CB5]',
+    code: 'HHAVE',
+    hex: '#1D4F6E',
+    dotClass: 'bg-[#1D4F6E] dark:bg-[#64A8D1]',
+    borderLeftClass: 'border-l-[#1D4F6E] dark:border-l-[#64A8D1]',
     badgeClass:
-      'border-[#C9D7DF] bg-[#ECF1F4] text-[#2D5266] dark:border-[#254454] dark:bg-[#13222B] dark:text-[#9AC3D9]',
+      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
     activeFilterClass:
-      'border-[#2D5266] bg-[#2D5266] text-[#FAFBF9] shadow-xs dark:border-[#6D9CB5] dark:bg-[#2D5266] dark:text-[#FAFBF9]',
+      'border-[#1D4F6E] bg-[#1D4F6E] text-white dark:border-[#64A8D1] dark:bg-[#64A8D1] dark:text-[#0D1110]',
   },
   'giai-tich-ham-mot-bien': {
     label: 'Giải tích hàm một biến',
-    shortLabel: 'Giải tích hàm một biến',
-    hex: '#245746',
-    dotClass: 'bg-[#245746] dark:bg-[#6EB59B]',
-    borderLeftClass: 'border-l-[#245746] dark:border-l-[#5BA88D]',
+    code: 'GTHMB',
+    hex: '#1B5E4A',
+    dotClass: 'bg-[#1B5E4A] dark:bg-[#52B394]',
+    borderLeftClass: 'border-l-[#1B5E4A] dark:border-l-[#52B394]',
     badgeClass:
-      'border-[#C6DBD0] bg-[#EBF2EE] text-[#245746] dark:border-[#1F4A3B] dark:bg-[#102820] dark:text-[#8CD0B8]',
+      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
     activeFilterClass:
-      'border-[#245746] bg-[#245746] text-[#FAFBF9] shadow-xs dark:border-[#5BA88D] dark:bg-[#245746] dark:text-[#FAFBF9]',
+      'border-[#1B5E4A] bg-[#1B5E4A] text-white dark:border-[#52B394] dark:bg-[#52B394] dark:text-[#0D1110]',
   },
   'giao-duc-hoc': {
     label: 'Giáo dục học',
-    shortLabel: 'Giáo dục học',
-    hex: '#7A463B',
-    dotClass: 'bg-[#7A463B] dark:bg-[#D19385]',
-    borderLeftClass: 'border-l-[#7A463B] dark:border-l-[#C98A7C]',
+    code: 'GDH',
+    hex: '#8F3D35',
+    dotClass: 'bg-[#8F3D35] dark:bg-[#DF7B70]',
+    borderLeftClass: 'border-l-[#8F3D35] dark:border-l-[#DF7B70]',
     badgeClass:
-      'border-[#D8C8C1] bg-[#F3ECE9] text-[#7A463B] dark:border-[#4D2D26] dark:bg-[#261613] dark:text-[#E5ACA0]',
+      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
     activeFilterClass:
-      'border-[#7A463B] bg-[#7A463B] text-[#FAFBF9] shadow-xs dark:border-[#C98A7C] dark:bg-[#7A463B] dark:text-[#FAFBF9]',
+      'border-[#8F3D35] bg-[#8F3D35] text-white dark:border-[#DF7B70] dark:bg-[#DF7B70] dark:text-[#0D1110]',
   },
 };
 
@@ -87,6 +86,41 @@ function resolveIndexLetter(nameVi: string): string {
     return firstChar;
   }
   return '#';
+}
+
+function resolveTargetLessonLabel(entry: MathGlossaryEntry): string {
+  const rawUrl = entry.lessonUrl || entry.relatedLesson || '';
+  const pathOnly = rawUrl.split('#')[0]?.split('?')[0] ?? '';
+
+  const fullMatch = pathOnly.match(/^\/(?:mon-hoc|courses)\/([^/]+)\/([^/]+)\/([^/]+)\/?$/);
+  if (fullMatch?.[1] && fullMatch[2] && fullMatch[3]) {
+    const loc =
+      getLessonBySlug(fullMatch[1], fullMatch[2], fullMatch[3]) ??
+      resolveLessonShortcut(fullMatch[3]);
+    if (loc) {
+      const cleanTitle = loc.lesson.title.replace(/^Bài\s+\d+(?:\.\d+)?:\s*/i, '');
+      return `Bài ${loc.chapter.number}.${loc.lesson.number} · ${cleanTitle}`;
+    }
+  }
+
+  const shortcutMatch = pathOnly.match(/^\/bai-hoc\/([^/]+)\/?$/);
+  if (shortcutMatch?.[1]) {
+    const loc = resolveLessonShortcut(shortcutMatch[1]);
+    if (loc) {
+      const cleanTitle = loc.lesson.title.replace(/^Bài\s+\d+(?:\.\d+)?:\s*/i, '');
+      return `Bài ${loc.chapter.number}.${loc.lesson.number} · ${cleanTitle}`;
+    }
+  }
+
+  const subjectMatch = pathOnly.match(/^\/(?:mon-hoc|courses)\/([^/]+)\/?$/);
+  if (subjectMatch?.[1]) {
+    const subject = getSubjectBySlug(subjectMatch[1]);
+    if (subject) {
+      return `Tổng quan · ${subject.title}`;
+    }
+  }
+
+  return entry.courseName || SUBJECT_ALMANAC_STYLES[entry.subject].label;
 }
 
 export function GlossaryPage() {
@@ -171,7 +205,7 @@ export function GlossaryPage() {
 
   const handleCopyEntry = useCallback(
     async (entry: MathGlossaryEntry) => {
-      const meta = SUBJECT_MINERAL_STYLES[entry.subject];
+      const meta = SUBJECT_ALMANAC_STYLES[entry.subject];
       const anchorUrl =
         typeof window !== 'undefined'
           ? `${window.location.origin}${ROUTES.glossary}#term-${entry.id}`
@@ -201,151 +235,121 @@ export function GlossaryPage() {
   );
 
   return (
-    <FadeIn className="min-h-screen bg-[var(--bg-workspace)] pt-4 pb-20 text-[var(--text-main)]">
-      <div className="mx-auto max-w-[1400px] space-y-7 px-6 lg:px-10">
-        <Breadcrumb
-          items={[
-            { label: 'Trang chủ', href: ROUTES.home },
-            { label: 'Tra cứu thuật ngữ & ký hiệu' },
-          ]}
-        />
-
+    <FadeIn className="min-h-screen bg-[var(--bg-workspace)] pt-8 pb-20 text-[var(--text-main)]">
+      <div className="mx-auto max-w-[1240px] space-y-6 px-6 lg:px-10">
         {/* ================================================================
-            KHUNG ĐẦU TRANG NIÊN GIÁM (ALMANAC SPEC HEADER)
+            ĐẦU TRANG KHO THUẬT NGỮ CHUẨN SWISS ALMANAC (SỨ BẠCH & THAN ĐÁ)
             ================================================================ */}
-        <BlueprintSectionFrame
+        <section
           data-testid="glossary-almanac-header"
-          crosshairColor="#9C7A4C"
-          crosshairOpacity={0.75}
-          showInnerKeyline
-          borderClassName="border-[#CFD8D4] dark:border-[#1E3B2D]"
-          className="rounded-[2px] bg-[#FAFBF9] shadow-[0_14px_40px_rgba(24,38,36,0.05)] dark:bg-[#12241C] dark:shadow-[0_14px_40px_rgba(0,0,0,0.35)]"
-          innerClassName="overflow-hidden rounded-[2px]"
+          className="space-y-5 border-b border-[var(--border-hairline)] pb-6"
         >
-          <TelemetrySpecBar
-            sectionCode="DOC. LU-2026 // LEXICON ALMANAC"
-            subtitle="NIÊN GIÁM THUẬT NGỮ & KÝ HIỆU HỌC THUẬT"
-            items={[
-              { label: 'THUẬT NGỮ', value: String(allEntries.length).padStart(2, '0') },
-              { label: 'HỌC PHẦN', value: '04' },
-              { label: 'HIỂN THỊ', value: String(filteredEntries.length).padStart(2, '0') },
-            ]}
-            className="dark:divide-[#1E3B2D] dark:border-[#1E3B2D] dark:bg-[#0E1A15]/90 dark:text-[#A7B5AC] [&_span]:dark:text-[#E6ECE7]"
-          />
+          <header className="space-y-2">
+            <h1 className="font-serif text-3xl leading-tight font-semibold tracking-tight text-[var(--text-main)] sm:text-4xl">
+              Ký hiệu &amp; Thuật ngữ Học thuật
+            </h1>
+            <p className="max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)]">
+              Từ điển tra cứu nhanh định nghĩa chuẩn KaTeX, trực giác hình học – đại số và liên kết
+              thẳng tới bài giảng gốc trên cả 4 học phần.
+            </p>
+          </header>
 
-          <div className="space-y-6 p-6 sm:p-8">
-            <header className="space-y-2.5">
-              <p className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[#8C6228] uppercase dark:text-[#D5B47A]">
-                ALMANAC // TỪ ĐIỂN KÝ HIỆU &amp; KHÁI NIỆM CHUẨN KATEX
-              </p>
-              <h1 className="font-serif text-3xl leading-tight font-bold tracking-tight text-[#142622] sm:text-4xl dark:text-[#E6ECE7]">
-                Ký hiệu &amp; Thuật ngữ Học thuật
-              </h1>
-              <p className="max-w-3xl text-sm leading-relaxed text-[#2D423D] sm:text-base dark:text-[#B9C8C1]">
-                Niên giám tra cứu nhanh định nghĩa chuẩn KaTeX, trực giác hình học – đại số và liên
-                kết thẳng tới bài giảng gốc trên cả 4 học phần: Cấu trúc đại số, Hình học Affine
-                &amp; Euclide, Giải tích hàm một biến và Giáo dục học.
-              </p>
-            </header>
-
-            {/* Thanh tìm kiếm tức thời nền trắng sứ + Bộ lọc 4 sắc khoáng thạch */}
-            <div className="space-y-4">
-              <div className="relative max-w-2xl">
-                <label htmlFor={searchInputId} className="sr-only">
-                  Tìm kiếm thuật ngữ hoặc ký hiệu
-                </label>
-                <Search
-                  className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#4A5D58] dark:text-[#98ABA3]"
-                  aria-hidden="true"
-                />
-                <input
-                  id={searchInputId}
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Tìm theo tiếng Việt, tiếng Anh, ký hiệu (≅, V₄, ∇...) hoặc môn học..."
-                  className="h-11 w-full rounded-xl border border-[#CFD9D5] bg-[#FFFFFF] pr-10 pl-10 text-sm text-[#142622] placeholder-[#5C706A]/75 shadow-[0_2px_10px_rgba(24,38,36,0.03)] transition-colors focus:border-[#1E332E] focus:ring-1 focus:ring-[#1E332E] focus:outline-hidden dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7] dark:placeholder-[#8CA097] dark:focus:border-[#6EB59B] dark:focus:ring-[#6EB59B]"
-                />
-                {query && (
-                  <button
-                    type="button"
-                    onClick={() => setQuery('')}
-                    aria-label="Xóa từ khóa tìm kiếm"
-                    className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-md p-1 text-[#4A5D58] transition-colors hover:bg-[#EDF2F0] hover:text-[#142622] dark:text-[#A7B5AC] dark:hover:bg-[#1B3328] dark:hover:text-[#E6ECE7]"
-                  >
-                    <X className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
-                )}
-              </div>
-
-              {/* Bộ lọc nhanh theo 4 sắc khoáng thạch môn học */}
-              <div
-                role="group"
-                aria-label="Lọc theo môn học"
-                className="flex flex-wrap items-center gap-2"
-              >
+          {/* Thanh tìm kiếm tức thời + Bộ lọc 4 học phần */}
+          <div className="space-y-3.5">
+            <div className="relative max-w-2xl">
+              <label htmlFor={searchInputId} className="sr-only">
+                Tìm kiếm thuật ngữ hoặc ký hiệu
+              </label>
+              <Search
+                className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]"
+                aria-hidden="true"
+              />
+              <input
+                id={searchInputId}
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Tìm theo tiếng Việt, tiếng Anh, ký hiệu (≅, V₄, ∇...) hoặc môn học..."
+                className="h-11 w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] pr-10 pl-10 text-sm text-[var(--text-main)] transition-colors placeholder:text-[var(--text-muted)] focus:border-[var(--accent-os)] focus:bg-[var(--bg-workspace)] focus:outline-hidden"
+              />
+              {query && (
                 <button
                   type="button"
-                  aria-pressed={subjectFilter === 'all'}
-                  onClick={() => setSubjectFilter('all')}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium transition-all duration-150',
-                    subjectFilter === 'all'
-                      ? 'border-[#1E332E] bg-[#1E332E] text-[#FAFBF9] shadow-xs dark:border-[#6EB59B] dark:bg-[#245746] dark:text-[#FAFBF9]'
-                      : 'border-[#CFD9D5] bg-[#FFFFFF] text-[#2D423D] hover:border-[#9C7A4C] hover:text-[#142622] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#C9D6D0] dark:hover:border-[#6EB59B]',
-                  )}
+                  onClick={() => setQuery('')}
+                  aria-label="Xóa từ khóa tìm kiếm"
+                  className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-md p-1 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-shell)] hover:text-[var(--text-main)]"
                 >
-                  <span>Tất cả</span>
-                  <span className="tabular-nums opacity-75">({allEntries.length})</span>
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
+              )}
+            </div>
 
-                {(
-                  [
-                    'cau-truc-dai-so',
-                    'hinh-hoc-affine',
-                    'giai-tich-ham-mot-bien',
-                    'giao-duc-hoc',
-                  ] as const
-                ).map((subjectKey) => {
-                  const style = SUBJECT_MINERAL_STYLES[subjectKey];
-                  const isActive = subjectFilter === subjectKey;
-                  return (
-                    <button
-                      key={subjectKey}
-                      type="button"
-                      aria-pressed={isActive}
-                      onClick={() => setSubjectFilter(subjectKey)}
+            <div
+              role="group"
+              aria-label="Lọc theo môn học"
+              className="flex flex-wrap items-center gap-2"
+            >
+              <button
+                type="button"
+                aria-pressed={subjectFilter === 'all'}
+                onClick={() => setSubjectFilter('all')}
+                className={cn(
+                  'inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium transition-colors',
+                  subjectFilter === 'all'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <span>Tất cả</span>
+                <span className="tabular-nums opacity-75">({allEntries.length})</span>
+              </button>
+
+              {(
+                [
+                  'cau-truc-dai-so',
+                  'hinh-hoc-affine',
+                  'giai-tich-ham-mot-bien',
+                  'giao-duc-hoc',
+                ] as const
+              ).map((subjectKey) => {
+                const style = SUBJECT_ALMANAC_STYLES[subjectKey];
+                const isActive = subjectFilter === subjectKey;
+                return (
+                  <button
+                    key={subjectKey}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => setSubjectFilter(subjectKey)}
+                    className={cn(
+                      'inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium transition-colors',
+                      isActive
+                        ? style.activeFilterClass
+                        : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-main)]',
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
                       className={cn(
-                        'inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs font-medium transition-all duration-150',
-                        isActive
-                          ? style.activeFilterClass
-                          : 'border-[#CFD9D5] bg-[#FFFFFF] text-[#2D423D] hover:border-[#9C7A4C] hover:text-[#142622] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#C9D6D0] dark:hover:border-[#6EB59B]',
+                        'h-2 w-2 shrink-0 rounded-full',
+                        isActive ? 'bg-current opacity-85' : style.dotClass,
                       )}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={cn(
-                          'h-2 w-2 shrink-0 rounded-full',
-                          isActive ? 'bg-[#FAFBF9]' : style.dotClass,
-                        )}
-                      />
-                      <span>{style.shortLabel}</span>
-                      <span className="tabular-nums opacity-75">({subjectCounts[subjectKey]})</span>
-                    </button>
-                  );
-                })}
-              </div>
+                    />
+                    <span>{style.label}</span>
+                    <span className="tabular-nums opacity-75">({subjectCounts[subjectKey]})</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        </BlueprintSectionFrame>
+        </section>
 
         {/* ================================================================
-            THANH CHỈ MỤC A–Z CỐ ĐỊNH (STICKY A–Z INDEX RAIL)
+            THANH CHỈ MỤC A–Z GHIM NGAY DƯỚI TOPCONTEXTBAR (sticky top-12)
             ================================================================ */}
         <nav
           aria-label="Chỉ mục chữ cái A đến Z"
           data-testid="glossary-az-rail"
-          className="sticky top-20 z-20 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#D4DFDA] bg-[#FAFBF9]/95 px-3.5 py-2.5 shadow-[0_8px_24px_rgba(24,38,36,0.05)] backdrop-blur-md dark:border-[#1E3B2D] dark:bg-[#12241C]/95"
+          className="sticky top-12 z-20 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/95 px-3.5 py-2.5 backdrop-blur-sm"
         >
           <div className="flex flex-wrap items-center gap-1">
             {ALPHABET.map((letter) => {
@@ -362,9 +366,9 @@ export function GlossaryPage() {
                     'inline-flex h-7 w-7 items-center justify-center rounded-md font-mono text-xs font-semibold transition-colors',
                     hasItems
                       ? isSelected
-                        ? 'cursor-pointer bg-[#1E332E] text-[#FAFBF9] dark:bg-[#245746] dark:text-[#FAFBF9]'
-                        : 'cursor-pointer text-[#142622] hover:bg-[#E7ECEA] hover:text-[#8C6228] dark:text-[#E6ECE7] dark:hover:bg-[#1B3328] dark:hover:text-[#D5B47A]'
-                      : 'pointer-events-none text-[#5C706A] opacity-30 dark:text-[#7E948B]',
+                        ? 'cursor-pointer bg-[var(--accent-os)] text-white'
+                        : 'cursor-pointer text-[var(--text-main)] hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)]'
+                      : 'pointer-events-none text-[var(--text-muted)] opacity-30',
                   )}
                 >
                   {letter}
@@ -373,19 +377,16 @@ export function GlossaryPage() {
             })}
           </div>
 
-          <div className="flex items-center gap-3 font-mono text-[11px] text-[#4A5D58] dark:text-[#A7B5AC]">
+          <div className="flex items-center gap-3 font-mono text-[11px] text-[var(--text-muted)]">
             <span className="tabular-nums">
-              Hiển thị{' '}
-              <strong className="text-[#142622] dark:text-[#E6ECE7]">
-                {filteredEntries.length}
-              </strong>{' '}
+              Hiển thị <strong className="text-[var(--text-main)]">{filteredEntries.length}</strong>{' '}
               / {allEntries.length} mục
             </span>
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#CFD9D5] bg-[#FFFFFF] px-2.5 py-1 text-[11px] font-semibold text-[#1E332E] transition-colors hover:border-[#9C7A4C] hover:text-[#8C6228] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)]"
               >
                 <RotateCcw className="h-3 w-3" aria-hidden="true" />
                 <span>Đặt lại</span>
@@ -406,47 +407,50 @@ export function GlossaryPage() {
                 aria-label={`Nhóm thuật ngữ bắt đầu bằng chữ ${letter}`}
                 className="scroll-mt-28 space-y-4"
               >
-                {/* Tiêu đề nhóm chữ cái chuẩn Almanac */}
-                <div className="flex items-center gap-3 border-b border-[#D4DFDA] pb-2.5 dark:border-[#1E3B2D]">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#CFD9D5] bg-[#FAFBF9] font-serif text-xl font-bold text-[#142622] shadow-2xs dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7]">
+                <div className="flex items-center gap-3 border-b border-[var(--border-hairline)] pb-2.5">
+                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] font-serif text-xl font-bold text-[var(--text-main)]">
                     {letter}
                   </span>
-                  <span className="font-mono text-xs font-semibold tracking-wider text-[#8C6228] uppercase tabular-nums dark:text-[#D5B47A]">
+                  <span className="font-mono text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase tabular-nums">
                     {String(items.length).padStart(2, '0')} thuật ngữ
                   </span>
                 </div>
 
-                {/* Lưới 2 cột thẻ thuật ngữ */}
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                   {items.map((entry) => {
-                    const meta = SUBJECT_MINERAL_STYLES[entry.subject];
+                    const meta = SUBJECT_ALMANAC_STYLES[entry.subject];
                     const isCopied = copiedId === entry.id;
+                    const mathExpr = entry.symbol || entry.formula || '';
+                    const isShortFormula = mathExpr.length > 0 && mathExpr.length < 14;
+                    const targetLessonLabel = resolveTargetLessonLabel(entry);
+
                     return (
                       <article
                         key={entry.id}
                         id={`term-${entry.id}`}
                         data-testid={`lexicon-card-${entry.id}`}
                         className={cn(
-                          'group/card flex h-full scroll-mt-28 flex-col justify-between rounded-xl border border-l-[3px] border-[#D8E0DD] bg-[#FAFBF9] p-5 shadow-[0_2px_10px_rgba(24,38,36,0.03)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(24,38,36,0.07)] dark:border-[#1E3B2D] dark:bg-[#12241C] dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.35)]',
+                          'group/card flex h-full scroll-mt-28 flex-col justify-between rounded-xl border border-l-[3px] border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 transition-colors hover:border-[var(--text-muted)]/40 hover:bg-[var(--bg-workspace)]',
                           meta.borderLeftClass,
                         )}
                       >
                         <div className="space-y-3.5">
-                          {/* Hàng đầu: Ký hiệu KaTeX + Tên Việt/Anh + Huy hiệu môn & Sao chép */}
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex min-w-0 items-start gap-3">
-                              <div className="inline-flex min-h-12 min-w-[54px] shrink-0 items-center justify-center rounded-lg border border-[#DCE4E0] bg-[#F2F4F3] px-2.5 py-1.5 dark:border-[#244335] dark:bg-[#0E1A15]">
-                                <KatexMath
-                                  math={entry.symbol}
-                                  className="font-serif text-xl font-semibold text-[#142622] dark:text-[#E6ECE7]"
-                                />
-                              </div>
-
-                              <div className="min-w-0">
-                                <h2 className="font-serif text-[18px] leading-snug font-semibold text-[#142622] dark:text-[#E6ECE7]">
+                          {/* Hàng tiêu đề thoáng: Tên Việt/Anh + Pill môn học + Nút sao chép */}
+                          <div className="flex flex-wrap items-start justify-between gap-2.5">
+                            <div className="flex min-w-0 flex-1 items-start gap-3">
+                              {isShortFormula && (
+                                <div className="inline-flex min-h-10 min-w-[44px] shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1">
+                                  <KatexMath
+                                    math={mathExpr}
+                                    className="font-serif text-lg font-semibold text-[var(--text-main)]"
+                                  />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <h2 className="font-serif text-[18px] leading-snug font-semibold text-[var(--text-main)]">
                                   {entry.nameVi}
                                 </h2>
-                                <p className="mt-0.5 font-mono text-[11px] text-[#5C706A] dark:text-[#98ABA3]">
+                                <p className="mt-0.5 font-mono text-[11px] text-[var(--text-muted)]">
                                   {entry.nameEn}
                                 </p>
                               </div>
@@ -455,7 +459,7 @@ export function GlossaryPage() {
                             <div className="flex shrink-0 items-center gap-1.5">
                               <span
                                 className={cn(
-                                  'hidden items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] font-semibold sm:inline-flex',
+                                  'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] font-semibold',
                                   meta.badgeClass,
                                 )}
                               >
@@ -463,7 +467,7 @@ export function GlossaryPage() {
                                   aria-hidden="true"
                                   className={cn('h-1.5 w-1.5 rounded-full', meta.dotClass)}
                                 />
-                                {entry.courseName || meta.label}
+                                <span>{meta.code}</span>
                               </span>
 
                               <button
@@ -471,11 +475,11 @@ export function GlossaryPage() {
                                 onClick={() => void handleCopyEntry(entry)}
                                 aria-label={`Sao chép định nghĩa ${entry.nameVi}`}
                                 title="Sao chép định nghĩa & đường dẫn neo"
-                                className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-[#D8E0DD] bg-[#FFFFFF] text-[#4A5D58] transition-colors hover:border-[#9C7A4C] hover:text-[#142622] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#A7B5AC] dark:hover:border-[#6EB59B] dark:hover:text-[#E6ECE7]"
+                                className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--text-main)]"
                               >
                                 {isCopied ? (
                                   <Check
-                                    className="h-3.5 w-3.5 text-[#245746] dark:text-[#6EB59B]"
+                                    className="h-3.5 w-3.5 text-[#1B5E4A] dark:text-[#52B394]"
                                     aria-hidden="true"
                                   />
                                 ) : (
@@ -485,30 +489,27 @@ export function GlossaryPage() {
                             </div>
                           </div>
 
-                          {/* Huy hiệu môn học trên mobile */}
-                          <div className="sm:hidden">
-                            <span
-                              className={cn(
-                                'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] font-semibold',
-                                meta.badgeClass,
-                              )}
+                          {/* Công thức dài (>= 14 ký tự) tách thành khối riêng thoáng phía dưới tiêu đề */}
+                          {!isShortFormula && mathExpr && (
+                            <div
+                              data-testid={`lexicon-formula-block-${entry.id}`}
+                              className="os-thin-scrollbar overflow-x-auto rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2"
                             >
-                              <span
-                                aria-hidden="true"
-                                className={cn('h-1.5 w-1.5 rounded-full', meta.dotClass)}
+                              <KatexMath
+                                math={mathExpr}
+                                className="font-serif text-base font-semibold text-[var(--text-main)]"
                               />
-                              {entry.courseName || meta.label}
-                            </span>
-                          </div>
+                            </div>
+                          )}
 
                           {/* Định nghĩa súc tích chuẩn KaTeX */}
-                          <div className="text-[14.5px] leading-relaxed text-[#2D423D] dark:text-[#C9D6D0]">
+                          <div className="text-[14.5px] leading-relaxed text-[var(--text-secondary)]">
                             <InlineMathText text={entry.brief} />
                           </div>
 
                           {/* Hộp Trực quan & Bản chất */}
-                          <div className="space-y-1 rounded-lg border border-[#E2E8E5] bg-[#F3F6F4] p-3 text-[13.5px] leading-relaxed text-[#2D423D] dark:border-[#1E3B2D] dark:bg-[#0E1A15]/75 dark:text-[#B9C8C1]">
-                            <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                          <div className="space-y-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 text-[13.5px] leading-relaxed text-[var(--text-secondary)]">
+                            <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--accent-heritage)] uppercase">
                               <Lightbulb className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                               <span>Trực quan &amp; Bản chất</span>
                             </div>
@@ -518,18 +519,22 @@ export function GlossaryPage() {
                           </div>
                         </div>
 
-                        {/* Chân thẻ: Neo ID + Liên kết trực tiếp Đọc tại bài giảng → */}
-                        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#E4EAE7] pt-3 dark:border-[#1E3B2D]">
-                          <span className="truncate font-mono text-[10.5px] text-[#5C706A] dark:text-[#8CA097]">
-                            #{entry.id}
+                        {/* Chân thẻ: Tên/mã bài giảng đích (thay thế #slug) + Đọc tại bài giảng → */}
+                        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[var(--border-hairline)] pt-3">
+                          <span
+                            data-testid={`lexicon-lesson-label-${entry.id}`}
+                            className="truncate text-xs font-medium text-[var(--text-muted)]"
+                            title={targetLessonLabel}
+                          >
+                            {targetLessonLabel}
                           </span>
                           {entry.relatedLesson && (
                             <Link
                               to={entry.relatedLesson}
-                              className="group/link inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[#CFD9D5] bg-[#FFFFFF] px-3 py-1.5 text-xs font-semibold text-[#1E332E] transition-all duration-150 hover:border-[#9C7A4C] hover:bg-[#EDF2F0] hover:text-[#142622] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7] dark:hover:border-[#6EB59B] dark:hover:bg-[#1B3328]"
+                              className="group/link inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
                             >
                               <BookOpen
-                                className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
+                                className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
                                 aria-hidden="true"
                               />
                               <span>Đọc tại bài giảng</span>
@@ -550,15 +555,15 @@ export function GlossaryPage() {
         ) : (
           <div
             data-testid="glossary-empty-state"
-            className="rounded-2xl border border-[#D8E0DD] bg-[#FAFBF9] px-6 py-14 text-center shadow-[0_6px_24px_rgba(24,38,36,0.04)] dark:border-[#1E3B2D] dark:bg-[#12241C]"
+            className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-6 py-14 text-center"
           >
-            <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#CFD9D5] bg-[#F2F4F3] text-[#8C6228] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#D5B47A]">
+            <div className="mx-auto mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--accent-heritage)]">
               <Search className="h-5 w-5" aria-hidden="true" />
             </div>
-            <h2 className="font-serif text-xl font-bold text-[#142622] dark:text-[#E6ECE7]">
+            <h2 className="font-serif text-xl font-bold text-[var(--text-main)]">
               Không tìm thấy thuật ngữ nào
             </h2>
-            <p className="mx-auto mt-2 max-w-md text-sm text-[#4A5D58] dark:text-[#A7B5AC]">
+            <p className="mx-auto mt-2 max-w-md text-sm text-[var(--text-secondary)]">
               Không có kết quả phù hợp với từ khóa &ldquo;{query}&rdquo;. Hãy thử tìm bằng ký hiệu
               Toán học, thuật ngữ tiếng Anh hoặc đặt lại bộ lọc môn học.
             </p>
@@ -566,7 +571,7 @@ export function GlossaryPage() {
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#1E332E] px-5 py-2.5 text-sm font-semibold text-[#FAFBF9] shadow-xs transition-colors hover:bg-[#28443D] dark:bg-[#245746] dark:hover:bg-[#2D6B57]"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[var(--accent-os)] px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 <span>Đặt lại bộ lọc</span>

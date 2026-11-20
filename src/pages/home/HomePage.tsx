@@ -9,10 +9,9 @@ import {
   RefreshCw,
   RotateCcw,
 } from 'lucide-react';
-import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { HERITAGE_ARTWORKS } from '@/components/home/HeritageArtShowcase';
-import { HeritageExhibitionPavilion } from '@/components/home/HeritageExhibitionPavilion';
 import {
   getLessonById,
   getSubjects,
@@ -25,13 +24,6 @@ import { useLearningStore } from '@/features/learning';
 import { getAllGlossaryEntries, KatexMath } from '@/features/math-glossary';
 import { SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
 import { ROUTES } from '@/shared/config/routes';
-import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
-
-const MineralBilliardsStage = lazy(() =>
-  import('@/components/home/MineralBilliardsStage').then((mod) => ({
-    default: mod.MineralBilliardsStage,
-  })),
-);
 
 const SUBJECT_ACCENT_MAP: Record<
   string,
@@ -72,33 +64,13 @@ function getDaySeedIndex(length: number): number {
   return Math.abs(dayOfYear) % length;
 }
 
-function BilliardsStageSkeleton() {
-  return (
-    <section
-      id="ban-bida-khoang-thach"
-      aria-label="Đang tải Sân khấu Bida 8 Ball Pool Khoáng Thạch"
-      data-testid="billiards-stage-skeleton"
-      className="relative scroll-mt-16 border-t border-[var(--border-hairline)] bg-[var(--bg-shell)]"
-    >
-      <div className="mx-auto w-full max-w-[1240px] px-6 py-10 lg:px-10">
-        <div className="flex min-h-[520px] items-center justify-center rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]">
-          <span className="font-mono text-xs tracking-wider text-[var(--text-muted)] uppercase">
-            Đang chuẩn bị bàn Bida Khoáng Thạch 2.5D…
-          </span>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /**
  * TRANG CHỦ (/): WORKSPACE DASHBOARD — ACADEMIC OS (SỨ BẠCH & THAN ĐÁ)
- * - 1 màn hình tổng quan vào việc ngay: Chào mừng + Danh ngôn 1 dòng, Tiếp tục học tập,
+ * - Thuần túy 1 màn hình tổng quan tải tức thì: Chào mừng + Danh ngôn 1 dòng, Tiếp tục học tập,
  *   Nhịp độ & Pomodoro, Lưới 4 học phần, Di sản trong ngày, Thuật ngữ KaTeX & Sảnh Bida.
- * - Phía dưới là khu vực chuyển tiếp Sảnh Thư giãn (40 Di sản & Bida 8-Ball) trước khi tách sang /thu-gian ở Giai đoạn 4.
+ * - Bảo tàng 40 Di sản & Bida 8-Ball WPA đã được quy hoạch riêng sang `/thu-gian`.
  */
 export function HomePage() {
-  const prefersReducedMotion = useReducedMotion();
   const subjects = getSubjects();
   const allGlossaryEntries = useMemo(() => getAllGlossaryEntries(), []);
   const completedLessons = useLearningStore((state) => state.completedLessons);
@@ -136,19 +108,6 @@ export function HomePage() {
       return (prev + 3) % allGlossaryEntries.length;
     });
   }, [allGlossaryEntries.length]);
-
-  const scrollToSection = useCallback(
-    (sectionId: string) => {
-      const target = document.getElementById(sectionId);
-      if (target && typeof target.scrollIntoView === 'function') {
-        target.scrollIntoView({
-          behavior: prefersReducedMotion ? 'auto' : 'smooth',
-          block: 'start',
-        });
-      }
-    },
-    [prefersReducedMotion],
-  );
 
   // Thống kê tổng & từng môn học
   const { totalLessons, completedCount, totalPercent, subjectCards } = useMemo(() => {
@@ -224,11 +183,8 @@ export function HomePage() {
   return (
     <div
       data-testid="workspace-dashboard"
-      className="min-h-screen bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)]"
     >
-      {/* =====================================================================
-          WORKSPACE DASHBOARD — 1 MÀN HÌNH TỔNG QUAN TỐI GIẢN VÀO VIỆC NGAY
-          ===================================================================== */}
       <div className="mx-auto max-w-[1240px] space-y-6 px-6 py-8 lg:px-10">
         {/* A. THANH CHÀO MỪNG & DANH NGÔN 1 DÒNG */}
         <header className="flex flex-col justify-between gap-3 border-b border-[var(--border-hairline)] pb-5 sm:flex-row sm:items-end">
@@ -314,7 +270,6 @@ export function HomePage() {
                 </h2>
               )}
 
-              {/* Thanh tiến độ mảnh h-1.5 của học phần */}
               <div className="pt-1">
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
                   <div
@@ -387,7 +342,6 @@ export function HomePage() {
               </Link>
             </div>
 
-            {/* Thanh khởi động nhanh Phiên Pomodoro (25:00) */}
             <div
               data-testid="dashboard-pomodoro-bar"
               className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2.5"
@@ -564,14 +518,13 @@ export function HomePage() {
                   {currentHeritage.coreAcademicValue}
                 </p>
                 <div className="pt-1">
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('khong-gian-di-san')}
-                    className="inline-flex cursor-pointer items-center gap-1.5 text-xs font-semibold text-[var(--accent-heritage)] transition-opacity hover:opacity-80"
+                  <Link
+                    to={ROUTES.sanctuaryTab('di-san')}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-heritage)] transition-opacity hover:opacity-80"
                   >
                     <span>Mở phòng trưng bày 40 Di sản</span>
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -579,7 +532,6 @@ export function HomePage() {
 
           {/* Cột Phải (5 cột) — "Ôn nhanh & Giải lao" */}
           <div className="flex flex-col gap-3 lg:col-span-5">
-            {/* Thẻ con 1: Thuật ngữ ngẫu nhiên + KaTeX */}
             {currentGlossary && (
               <div
                 data-testid="dashboard-glossary-card"
@@ -622,7 +574,6 @@ export function HomePage() {
               </div>
             )}
 
-            {/* Thẻ con 2: Sảnh Bida 8-Ball WPA */}
             <div
               data-testid="dashboard-billiards-card"
               className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4"
@@ -640,28 +591,16 @@ export function HomePage() {
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => scrollToSection('ban-bida-khoang-thach')}
-                className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)]"
+              <Link
+                to={ROUTES.sanctuaryTab('bida')}
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)]"
               >
                 <span>Mở bàn</span>
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
+              </Link>
             </div>
           </div>
         </section>
-      </div>
-
-      {/* =====================================================================
-          KHU VỰC CHUYỂN TIẾP SẢNH THƯ GIÃN (40 DI SẢN & BIDA 8-BALL)
-          Giữ hoạt động trọn vẹn trước khi tách sang route /thu-gian ở Giai đoạn 4
-          ===================================================================== */}
-      <div className="border-t border-[var(--border-hairline)]">
-        <HeritageExhibitionPavilion />
-        <Suspense fallback={<BilliardsStageSkeleton />}>
-          <MineralBilliardsStage />
-        </Suspense>
       </div>
     </div>
   );

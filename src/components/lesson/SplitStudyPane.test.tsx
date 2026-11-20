@@ -1,8 +1,8 @@
 import type { LessonMeta } from '@schemas/index';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { MemoryRouter } from 'react-router';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { SplitStudyPane, type SplitStudyTab } from './SplitStudyPane';
 
 const MOCK_LESSON_META: LessonMeta = {
@@ -45,12 +45,9 @@ function ControlledSplitPane({ initialTab = 'toc' }: { readonly initialTab?: Spl
   return (
     <MemoryRouter>
       <SplitStudyPane
-        lessonId="test-lesson-group"
-        lessonSlug="dinh-nghia-nhom"
         lessonTitle="Định nghĩa nhóm và nhóm thương"
         lessonDescription="Tìm hiểu nhóm, phần tử đơn vị, phần tử nghịch đảo và định lý cơ bản."
         subjectSlug="cau-truc-dai-so"
-        subjectTitle="Cấu trúc đại số"
         lessonMeta={MOCK_LESSON_META}
         activeTab={tab}
         onTabChange={setTab}
@@ -59,13 +56,15 @@ function ControlledSplitPane({ initialTab = 'toc' }: { readonly initialTab?: Spl
   );
 }
 
-describe('SplitStudyPane (Ngăn kéo học tập chia đôi 3 Tab Academic OS)', () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
+describe('SplitStudyPane (Ngăn kéo học tập chia đôi 2 Tab: Mục lục & Thuật ngữ)', () => {
+  it('chỉ giữ đúng 2 tab Mục lục và Thuật ngữ (đã gỡ bỏ hoàn toàn tab Sổ tay)', () => {
+    render(<ControlledSplitPane initialTab="toc" />);
 
-  afterEach(() => {
-    vi.useRealTimers();
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs).toHaveLength(2);
+    expect(screen.getByTestId('split-tab-toc')).toBeInTheDocument();
+    expect(screen.getByTestId('split-tab-glossary')).toBeInTheDocument();
+    expect(screen.queryByTestId('split-tab-notes')).not.toBeInTheDocument();
   });
 
   it('Tab Mục lục hiển thị đầy đủ đề mục bài giảng có KaTeX và tóm tắt Định nghĩa / Định lý', () => {
@@ -92,39 +91,5 @@ describe('SplitStudyPane (Ngăn kéo học tập chia đôi 3 Tab Academic OS)',
 
     expect(screen.getByTestId('split-panel-glossary')).toHaveTextContent(/Bản chất:/i);
     expect(container.querySelectorAll('.katex').length).toBeGreaterThan(0);
-  });
-
-  it('Tab Sổ tay tự động lưu localStorage (debounce 300ms), chuyển đổi Soạn thảo ↔ Xem trước (KaTeX) và xuất file .md', () => {
-    vi.useFakeTimers();
-    const { container } = render(<ControlledSplitPane initialTab="notes" />);
-
-    const textarea = screen.getByTestId('split-notes-textarea');
-    fireEvent.change(textarea, {
-      target: {
-        value: '# Nhóm\n- Công thức nội dòng $a \\cdot e = a$\n$$|G| = [G:H] \\cdot |H|$$',
-      },
-    });
-
-    expect(screen.getByTestId('split-notes-save-status')).toHaveTextContent('Đang lưu...');
-    act(() => {
-      vi.advanceTimersByTime(320);
-    });
-    expect(screen.getByTestId('split-notes-save-status')).toHaveTextContent('Đã lưu tự động');
-    expect(localStorage.getItem('lu_split_study_note:test-lesson-group')).toContain('|G| = [G:H]');
-
-    // Chuyển sang Xem trước (KaTeX)
-    fireEvent.click(screen.getByTestId('split-notes-mode-preview'));
-    const preview = screen.getByTestId('split-notes-preview');
-    expect(preview).toBeInTheDocument();
-    expect(container.querySelectorAll('.katex').length).toBeGreaterThanOrEqual(2);
-
-    // Kiểm tra nút xuất .md hoạt động
-    const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-note');
-    const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
-    fireEvent.click(screen.getByTestId('split-notes-export'));
-    expect(createObjectURLSpy).toHaveBeenCalledTimes(1);
-    expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:mock-note');
-    createObjectURLSpy.mockRestore();
-    revokeObjectURLSpy.mockRestore();
   });
 });

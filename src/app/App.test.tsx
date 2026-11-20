@@ -77,13 +77,17 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-billiards-card')).toBeInTheDocument();
 
-    // Khu vực chuyển tiếp Sảnh Thư giãn (40 Di sản & Bida 8-Ball)
-    expect(screen.getByTestId('heritage-art-showcase')).toBeInTheDocument();
-    expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
-    expect(await screen.findByTestId('mineral-billiards-stage')).toBeInTheDocument();
-    expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
-    expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
-    expect(screen.getByTestId('billiards-rules-btn')).toBeInTheDocument();
+    // Bảo tàng 40 Di sản & Bida 8-Ball đã được tách hoàn toàn sang /thu-gian
+    expect(screen.getByRole('link', { name: /Mở phòng trưng bày 40 Di sản/i })).toHaveAttribute(
+      'href',
+      '/thu-gian?tab=di-san',
+    );
+    expect(screen.getByRole('link', { name: /Mở bàn/i })).toHaveAttribute(
+      'href',
+      '/thu-gian?tab=bida',
+    );
+    expect(screen.queryByTestId('heritage-art-showcase')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('mineral-billiards-stage')).not.toBeInTheDocument();
 
     // Không gian Học phần chi tiết nằm tại /learning-space
     expect(screen.queryByRole('heading', { name: /Không gian Học phần/i })).not.toBeInTheDocument();

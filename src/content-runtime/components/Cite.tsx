@@ -19,8 +19,8 @@ export function Cite({ source, page, note }: CiteProps) {
   const details = [shortName, page ? `tr. ${page}` : null, note ?? null].filter(Boolean).join(', ');
 
   const badge = (
-    <span className="mx-0.5 inline-flex items-baseline gap-1 rounded-md border border-stone-200 bg-stone-100/90 px-1.5 py-0.5 text-xs font-medium text-stone-700">
-      <BookMarked className="h-3 w-3 self-center text-stone-500" aria-hidden="true" />
+    <span className="mx-0.5 inline-flex items-baseline gap-1 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 text-xs font-medium text-[var(--text-secondary)]">
+      <BookMarked className="h-3 w-3 self-center text-[var(--text-muted)]" aria-hidden="true" />
       <span>[{details}]</span>
     </span>
   );

@@ -395,7 +395,7 @@ function LessonPageContent() {
           onClick={handleToggleSplitPane}
           aria-pressed={isSplitPaneOpen || isMobileSplitOpen}
           aria-label="Bật hoặc tắt ngăn chia đôi công cụ học tập"
-          title="Chia đôi công cụ (Mục lục · Thuật ngữ · Sổ tay)"
+          title="Chia đôi công cụ (Mục lục · Thuật ngữ)"
           className={cn(
             'inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
             isSplitPaneOpen || isMobileSplitOpen
@@ -656,7 +656,7 @@ function LessonPageContent() {
           <aside
             data-testid="lesson-left-sidebar"
             aria-label="Danh mục điều hướng bài học"
-            className="sticky top-12 hidden h-[calc(100vh-3rem)] w-[272px] shrink-0 overflow-y-auto border-r border-[var(--border-hairline)] bg-[var(--bg-shell)] p-3.5 xl:block print:hidden"
+            className="os-thin-scrollbar sticky top-12 hidden h-[calc(100vh-3rem)] w-[272px] shrink-0 overflow-y-auto border-r border-[var(--border-hairline)] bg-[var(--bg-shell)] p-3.5 xl:block print:hidden"
           >
             <LessonSidebar
               subject={subject}
@@ -844,12 +844,9 @@ function LessonPageContent() {
             className="sticky top-12 hidden h-[calc(100vh-3rem)] w-[340px] shrink-0 border-l border-[var(--border-hairline)] bg-[var(--bg-shell)] lg:block xl:w-[380px] print:hidden"
           >
             <SplitStudyPane
-              lessonId={lesson.id}
-              lessonSlug={lesson.slug}
               lessonTitle={lesson.title}
               lessonDescription={lesson.description}
               subjectSlug={subject.slug}
-              subjectTitle={subject.title}
               lessonMeta={compiled?.lessonMeta ?? null}
               activeTab={splitTab}
               onTabChange={setSplitTab}
@@ -875,12 +872,9 @@ function LessonPageContent() {
           />
           <div className="relative z-10 h-full w-[min(92vw,380px)] border-l border-[var(--border-hairline)] bg-[var(--bg-shell)] shadow-xl">
             <SplitStudyPane
-              lessonId={lesson.id}
-              lessonSlug={lesson.slug}
               lessonTitle={lesson.title}
               lessonDescription={lesson.description}
               subjectSlug={subject.slug}
-              subjectTitle={subject.title}
               lessonMeta={compiled?.lessonMeta ?? null}
               activeTab={splitTab}
               onTabChange={setSplitTab}

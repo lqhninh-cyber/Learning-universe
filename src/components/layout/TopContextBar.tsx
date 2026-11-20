@@ -63,6 +63,9 @@ function buildContextBreadcrumbs(pathname: string): readonly BreadcrumbSegment[]
   if (pathname === ROUTES.glossary || pathname === '/glossary') {
     return [{ label: 'Kho Thuật ngữ' }];
   }
+  if (pathname === ROUTES.sanctuary) {
+    return [{ label: 'Sảnh Thư giãn' }];
+  }
   if (pathname === ROUTES.adminUsers) {
     return [{ label: 'Quản trị' }, { label: 'Quản lý học viên' }];
   }

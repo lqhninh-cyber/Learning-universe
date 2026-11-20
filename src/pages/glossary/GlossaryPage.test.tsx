@@ -97,7 +97,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     expect(screen.getByText('Nhóm bốn Klein')).toBeInTheDocument();
   });
 
-  it('hiển thị Almanac Spec Header, thanh chỉ mục A–Z và nút sao chép kết nối Island Notice', () => {
+  it('hiển thị Swiss Almanac Header sạch gọn (không telemetry/blueprint thừa), thanh A–Z sticky top-12, tên bài đích thay #slug và nút sao chép', () => {
     render(
       <MemoryRouter>
         <GlossaryPage />
@@ -105,10 +105,11 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     );
 
     expect(screen.getByTestId('glossary-almanac-header')).toBeInTheDocument();
-    expect(screen.getByText(/DOC\. LU-2026 \/\/ LEXICON ALMANAC/i)).toBeInTheDocument();
+    expect(screen.queryByText(/DOC\. LU-2026 \/\/ LEXICON ALMANAC/i)).not.toBeInTheDocument();
 
     const azRail = screen.getByTestId('glossary-az-rail');
     expect(azRail).toBeInTheDocument();
+    expect(azRail.className).toContain('top-12');
 
     // Chữ 'N' có mục "Nhóm bốn Klein" -> kích hoạt; chữ 'Z' không có mục -> vô hiệu hóa
     const letterN = screen.getByRole('button', { name: 'Đi tới nhóm chữ N' });
@@ -116,6 +117,11 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     const letterZ = screen.getByRole('button', { name: 'Đi tới nhóm chữ Z' });
     expect(letterZ).toBeDisabled();
     expect(letterZ).toHaveClass('opacity-30', 'pointer-events-none');
+
+    // Chân thẻ không còn hiển thị mã #slug mà hiển thị tên/mã bài giảng đích
+    const kleinCard = screen.getByText('Nhóm bốn Klein').closest('article');
+    expect(kleinCard).not.toBeNull();
+    expect(kleinCard?.textContent).not.toMatch(/#[a-z0-9-]+/i);
 
     // Liên kết Đọc tại bài giảng và nút sao chép định nghĩa
     const lessonLinks = screen.getAllByRole('link', { name: /Đọc tại bài giảng/i });

@@ -51,6 +51,8 @@ export interface IslandPomodoroState {
   readonly presetLabel: string;
 }
 
+export const POMODORO_RETURN_PATH_KEY = 'lu_pomodoro_return_path';
+
 export interface IslandContextValue {
   readonly activeNotice: IslandNoticeState | null;
   readonly triggerIslandNotice: (payload: IslandNoticePayload) => void;
@@ -69,6 +71,8 @@ export interface IslandContextValue {
   readonly routePathname: string;
   readonly setRoutePathname: (pathname: string) => void;
   readonly pomodoro: IslandPomodoroState;
+  readonly pomodoroBreakPrompt: boolean;
+  readonly dismissPomodoroBreakPrompt: () => void;
   readonly startPomodoro: (minutes: number, presetLabel?: string) => void;
   readonly addPomodoroMinutes: (deltaMinutes: number) => void;
   readonly pausePomodoro: () => void;
@@ -112,6 +116,8 @@ const DEFAULT_ISLAND_CONTEXT: IslandContextValue = {
   routePathname: '/',
   setRoutePathname: () => {},
   pomodoro: DEFAULT_POMODORO,
+  pomodoroBreakPrompt: false,
+  dismissPomodoroBreakPrompt: () => {},
   startPomodoro: () => {},
   addPomodoroMinutes: () => {},
   pausePomodoro: () => {},
@@ -231,6 +237,11 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
   }, [eyeComfortWarmth]);
 
   const [pomodoro, setPomodoro] = useState<IslandPomodoroState>(DEFAULT_POMODORO);
+  const [pomodoroBreakPrompt, setPomodoroBreakPrompt] = useState(false);
+
+  const dismissPomodoroBreakPrompt = useCallback(() => {
+    setPomodoroBreakPrompt(false);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -446,6 +457,19 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
         if (prev.status !== 'running') return prev;
         if (prev.remainingSeconds <= 1) {
           queueMicrotask(() => {
+            try {
+              const currentPath =
+                routePathname || (typeof window !== 'undefined' ? window.location.pathname : '/');
+              const isLessonPath =
+                currentPath.startsWith('/bai-hoc/') ||
+                /^\/(?:mon-hoc|courses)\/[^/]+\/[^/]+\/[^/]+/.test(currentPath);
+              if (isLessonPath && typeof window !== 'undefined') {
+                window.sessionStorage.setItem(POMODORO_RETURN_PATH_KEY, currentPath);
+              }
+            } catch {
+              // Bỏ qua lỗi sessionStorage
+            }
+            setPomodoroBreakPrompt(true);
             triggerIslandNotice({
               text: `Hoàn thành nhịp học ${prev.presetLabel}! Hãy nghỉ ngơi vài phút.`,
               type: 'timer',
@@ -465,12 +489,13 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [pomodoro.status, triggerIslandNotice]);
+  }, [pomodoro.status, routePathname, triggerIslandNotice]);
 
   const startPomodoro = useCallback(
     (minutes: number, presetLabel = 'Tùy chỉnh') => {
       const safeMinutes = Math.max(1, Math.min(180, Math.round(minutes)));
       const totalSeconds = safeMinutes * 60;
+      setPomodoroBreakPrompt(false);
       setPomodoro({
         status: 'running',
         totalSeconds,
@@ -547,6 +572,8 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       routePathname,
       setRoutePathname,
       pomodoro,
+      pomodoroBreakPrompt,
+      dismissPomodoroBreakPrompt,
       startPomodoro,
       addPomodoroMinutes,
       pausePomodoro,
@@ -571,6 +598,8 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       routePathname,
       setRoutePathname,
       pomodoro,
+      pomodoroBreakPrompt,
+      dismissPomodoroBreakPrompt,
       startPomodoro,
       addPomodoroMinutes,
       pausePomodoro,

@@ -90,6 +90,13 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.sanctuary,
+        lazy: async () => {
+          const { SanctuaryPage } = await import('@/pages/sanctuary/SanctuaryPage');
+          return { Component: SanctuaryPage };
+        },
+      },
+      {
         path: ROUTES.adminUsers,
         lazy: async () => {
           const { ProtectedRoute } = await import('@/features/auth');

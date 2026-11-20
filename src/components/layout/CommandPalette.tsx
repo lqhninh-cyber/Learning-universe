@@ -167,8 +167,7 @@ function buildHeritageItems(): readonly OsCommandItem[] {
     subtitle: `${art.artistOrOrigin} · ${art.yearOrEra}`,
     badge: 'Di sản',
     dotColor: '#9E763B',
-    href: `/#khong-gian-di-san`,
-    scrollTargetId: 'khong-gian-di-san',
+    href: ROUTES.sanctuaryTab('di-san'),
     searchText: [
       art.title,
       art.shortTitle,
@@ -370,8 +369,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         subtitle: 'Sảnh thư giãn · Bàn bida 15 bi vật lý chuẩn WPA 120fps',
         badge: 'Thư giãn',
         dotColor: '#9E763B',
-        href: '/#ban-bida-khoang-thach',
-        scrollTargetId: 'ban-bida-khoang-thach',
+        href: ROUTES.sanctuaryTab('bida'),
         searchText: 'di toi bi da bida 8 ball pool sanh thu gian tro choi giai tri',
       },
     ];

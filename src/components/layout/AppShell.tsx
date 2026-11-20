@@ -2,7 +2,9 @@ import {
   BookMarked,
   BookOpen,
   Compass,
+  Gamepad2,
   Hourglass,
+  Landmark,
   LogIn,
   LogOut,
   Moon,
@@ -46,7 +48,14 @@ export const AppShell: FC<AppShellProps> = ({
   const { isMobileMenuOpen, setMobileMenuOpen, isCommandOpen, setCommandOpen, openCommandPalette } =
     useLayout();
   const { theme, toggleTheme, isZenMode } = useReadingSettings();
-  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro } = useIsland();
+  const {
+    pomodoro,
+    pomodoroBreakPrompt,
+    dismissPomodoroBreakPrompt,
+    startPomodoro,
+    pausePomodoro,
+    resumePomodoro,
+  } = useIsland();
   const { isAuthenticated, openAuthModal, signOut } = useAuth();
   const isStoreAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
@@ -73,14 +82,7 @@ export const AppShell: FC<AppShellProps> = ({
 
   const handleMobileLounge = () => {
     setMobileMenuOpen(false);
-    if (pathname === ROUTES.home) {
-      const target =
-        document.getElementById('ban-bida-khoang-thach') ??
-        document.getElementById('khong-gian-di-san');
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-    void navigate('/#khong-gian-di-san');
+    void navigate(ROUTES.sanctuaryTab('di-san'));
   };
 
   const handleMobilePomodoro = () => {
@@ -280,6 +282,59 @@ export const AppShell: FC<AppShellProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* TOAST CẦU NỐI POMODORO -> SẢNH THƯ GIÃN (GÓC DƯỚI PHẢI) */}
+      {pomodoroBreakPrompt && (
+        <aside
+          role="status"
+          aria-live="polite"
+          data-testid="pomodoro-break-toast"
+          className="fixed right-5 bottom-5 z-50 w-[min(92vw,340px)] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4 text-[var(--text-main)] shadow-lg print:hidden"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2.5">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--accent-heritage)]">
+                <Hourglass className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+              <div className="space-y-0.5">
+                <p className="text-xs font-semibold text-[var(--text-main)]">
+                  Hoàn thành phiên tập trung
+                </p>
+                <p className="text-[11.5px] text-[var(--text-secondary)]">
+                  Nghỉ 5 phút tại Sảnh Thư giãn?
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={dismissPomodoroBreakPrompt}
+              aria-label="Đóng gợi ý nghỉ giải lao"
+              className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          </div>
+
+          <div className="mt-3 flex items-center gap-2">
+            <Link
+              to={ROUTES.sanctuaryTab('bida')}
+              onClick={dismissPomodoroBreakPrompt}
+              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[var(--accent-os)] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95"
+            >
+              <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Đánh Bida</span>
+            </Link>
+            <Link
+              to={ROUTES.sanctuaryTab('di-san')}
+              onClick={dismissPomodoroBreakPrompt}
+              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)]"
+            >
+              <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Ngắm Di sản</span>
+            </Link>
+          </div>
+        </aside>
       )}
 
       {/* BẢNG LỆNH TRUNG TÂM TOÀN CỤC (⌘K) */}

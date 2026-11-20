@@ -1,8 +1,8 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { type ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { IslandProvider, useIsland } from '@/context/IslandContext';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { IslandProvider, POMODORO_RETURN_PATH_KEY, useIsland } from '@/context/IslandContext';
 import { LayoutProvider } from '@/context/LayoutContext';
 import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
 import { AuthProvider } from '@/features/auth';
@@ -86,7 +86,7 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
     );
     expect(within(rail).getByRole('link', { name: 'Sảnh Thư giãn' })).toHaveAttribute(
       'href',
-      '/#khong-gian-di-san',
+      '/thu-gian?tab=di-san',
     );
 
     // Breadcrumb ngữ cảnh & bộ điều khiển đọc bài trên TopContextBar
@@ -190,5 +190,46 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
     });
     expect(screen.queryByTestId('os-command-palette')).not.toBeInTheDocument();
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
+
+  it('hiện toast cầu nối Pomodoro -> Sảnh Thư giãn khi hết giờ tập trung và lưu lu_pomodoro_return_path khi đang ở bài học', async () => {
+    vi.useFakeTimers();
+    const lessonPath =
+      '/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/nua-nhom-vi-nhom-va-tien-de-nhom';
+
+    function QuickPomodoroTrigger() {
+      const { startPomodoro } = useIsland();
+      return (
+        <button type="button" onClick={() => startPomodoro(1, 'Kiểm thử')}>
+          Start 1m Pomodoro
+        </button>
+      );
+    }
+
+    try {
+      renderAppShell(lessonPath, { extraChild: <QuickPomodoroTrigger /> });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Start 1m Pomodoro' }));
+
+      await act(async () => {
+        vi.advanceTimersByTime(61_000);
+        await Promise.resolve();
+      });
+
+      const breakToast = screen.getByTestId('pomodoro-break-toast');
+      expect(breakToast).toBeInTheDocument();
+      expect(breakToast).toHaveTextContent(/Hoàn thành phiên tập trung/i);
+      expect(within(breakToast).getByRole('link', { name: /Đánh Bida/i })).toHaveAttribute(
+        'href',
+        '/thu-gian?tab=bida',
+      );
+      expect(within(breakToast).getByRole('link', { name: /Ngắm Di sản/i })).toHaveAttribute(
+        'href',
+        '/thu-gian?tab=di-san',
+      );
+      expect(sessionStorage.getItem(POMODORO_RETURN_PATH_KEY)).toBe(lessonPath);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

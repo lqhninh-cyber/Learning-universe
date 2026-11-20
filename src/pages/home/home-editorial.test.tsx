@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { IslandProvider } from '@/context/IslandContext';
@@ -616,45 +616,23 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         /Sảnh Bida 8-Ball WPA/i,
       );
 
-      // Khu vực chuyển tiếp — Phòng Trưng Bày 40 Di Sản (#khong-gian-di-san)
-      const showcase = screen.getByTestId('heritage-art-showcase');
-      expect(showcase).toHaveAttribute('id', 'khong-gian-di-san');
-      expect(showcase.textContent).toContain('Khuê Văn Các');
-      expect(showcase.textContent).not.toMatch(/[\u4E00-\u9FFF]/);
-      expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
-
-      // Bảo đảm 40 tác phẩm không trùng id, tiêu đề hay imageSrc
+      // Bảo đảm 40 tác phẩm di sản không trùng id, tiêu đề hay imageSrc
       expect(HERITAGE_ARTWORKS).toHaveLength(40);
       expect(new Set(HERITAGE_ARTWORKS.map((item) => item.id)).size).toBe(40);
       expect(new Set(HERITAGE_ARTWORKS.map((item) => item.title)).size).toBe(40);
       expect(new Set(HERITAGE_ARTWORKS.map((item) => item.imageSrc)).size).toBe(40);
 
-      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 40');
-      const pantheonBtn = screen.getByRole('button', {
-        name: /Chọn tác phẩm 40: Đền Pantheon/i,
-      });
-      fireEvent.click(pantheonBtn);
-      await waitFor(() => {
-        expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('40 / 40');
-      });
-      fireEvent.click(screen.getByRole('button', { name: /Phóng to tác phẩm/i }));
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      fireEvent.click(screen.getByRole('button', { name: /Đóng xem toàn màn hình/i }));
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-
-      fireEvent.click(screen.getByRole('tab', { name: /Toán học & Thiên văn/i }));
-      expect(screen.getByTestId('heritage-index-indicator')).toHaveTextContent('01 / 13');
-
-      // Khu vực chuyển tiếp — Sân khấu Bida 8-Ball WPA (#ban-bida-khoang-thach)
-      const billiardsStage = await screen.findByTestId('mineral-billiards-stage');
-      expect(billiardsStage).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-match-hud')).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-status-pill')).toHaveTextContent('Khai cuộc');
-      expect(screen.getByTestId('billiards-power-slider')).toBeInTheDocument();
-      expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
-      expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Ván mới');
-      expect(screen.getByTestId('billiards-rules-btn')).toHaveTextContent('Luật & Trọng tài');
-      expect(screen.getByTestId('billiards-screen-lock-btn')).toHaveTextContent('Khóa màn hình');
+      // Bảo tàng 40 Di sản & Bida 8-Ball đã được tách sạch sang /thu-gian, HomePage thuần túy 1 màn hình
+      expect(screen.getByRole('link', { name: /Mở phòng trưng bày 40 Di sản/i })).toHaveAttribute(
+        'href',
+        '/thu-gian?tab=di-san',
+      );
+      expect(screen.getByRole('link', { name: /Mở bàn/i })).toHaveAttribute(
+        'href',
+        '/thu-gian?tab=bida',
+      );
+      expect(screen.queryByTestId('heritage-art-showcase')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('mineral-billiards-stage')).not.toBeInTheDocument();
     });
   });
 
@@ -855,11 +833,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(lerped.sky0).toEqual(dawnPalette.sky0);
     });
 
-    it('HomePage tuyệt đối không tự động cuộn xuống phòng trưng bày theo timer, chỉ cuộn khi người dùng bấm Mở phòng trưng bày 40 Di sản', () => {
+    it('HomePage thuần túy 1 màn hình, không tự động cuộn trang và dẫn thẳng sang /thu-gian?tab=di-san', () => {
       vi.useFakeTimers();
-      const origScrollIntoView = Element.prototype.scrollIntoView;
-      const scrollIntoViewSpy = vi.fn();
-      Element.prototype.scrollIntoView = scrollIntoViewSpy;
       const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
 
       try {
@@ -874,14 +849,11 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         act(() => {
           vi.advanceTimersByTime(30000);
         });
-        expect(scrollIntoViewSpy).not.toHaveBeenCalled();
         expect(scrollToSpy).not.toHaveBeenCalled();
 
-        const heritageCta = screen.getByRole('button', { name: /Mở phòng trưng bày 40 Di sản/i });
-        fireEvent.click(heritageCta);
-        expect(scrollIntoViewSpy).toHaveBeenCalledTimes(1);
+        const heritageCta = screen.getByRole('link', { name: /Mở phòng trưng bày 40 Di sản/i });
+        expect(heritageCta).toHaveAttribute('href', '/thu-gian?tab=di-san');
       } finally {
-        Element.prototype.scrollIntoView = origScrollIntoView;
         scrollToSpy.mockRestore();
         vi.useRealTimers();
       }

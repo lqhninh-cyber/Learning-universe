@@ -134,6 +134,30 @@
   text-align: center;
 }
 
+/* Thanh cuộn siêu mảnh tiệp màu Ceramic Light & Obsidian Dark cho TOC & SplitStudyPane */
+.os-thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hairline) transparent;
+}
+
+.os-thin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.os-thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.os-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--border-hairline);
+  border-radius: 9999px;
+}
+
+.os-thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-muted);
+}
+
 :root {
   /* ==========================================================================
      HỆ MÀU ACADEMIC OS: "SỨ BẠCH & THAN ĐÁ" (CERAMIC ALABASTER / OBSIDIAN STUDIO)
