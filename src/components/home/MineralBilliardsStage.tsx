@@ -22,6 +22,7 @@ import {
   computeTableMetrics,
   createBilliardsWorld,
   FINE_AIM_STEP_RAD,
+  isCallPocketRequired,
   isCueBallPlacementValid,
   isInBreakKitchen,
   isShootingForEightBall,
@@ -37,10 +38,13 @@ import {
   SUBSTEPS,
   TABLE_SHAKE_DURATION_SEC,
   triggerFeltToast,
+  type AiDifficulty,
   type BallGroup,
+  type BallInHandScope,
   type BilliardBall,
   type BilliardGameMode,
   type BilliardsWorld,
+  type GuidelineMode,
   type ReturnRailBall,
   type StrikeAnimationState,
 } from '@/components/home/billiardsEngine';
@@ -181,11 +185,18 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [winReason, setWinReason] = useState<string | null>(null);
 
   const [sliderPower, setSliderPower] = useState(0);
+  const [isDraggingPower, setIsDraggingPower] = useState(false);
   const [spin, setSpin] = useState<{ readonly x: number; readonly y: number }>({ x: 0, y: 0 });
   const [isSpinOpen, setIsSpinOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [guidelineMode, setGuidelineMode] = useState<GuidelineMode>('full');
+  const [aiDifficulty, setAiDifficulty] = useState<AiDifficulty>('club');
+  const [proCallShot, setProCallShot] = useState(false);
+  const [ballInHandScope, setBallInHandScope] = useState<BallInHandScope>('full');
   const [isShootingEight, setIsShootingEight] = useState(false);
+  const [isCallRequired, setIsCallRequired] = useState(false);
   const [calledEightPocketId, setCalledEightPocketId] = useState<number | null>(null);
+  const [calledRegularPocketId, setCalledRegularPocketId] = useState<number | null>(null);
   const [isHoverCueBallInKitchen, setIsHoverCueBallInKitchen] = useState(false);
   const [activeToast, setActiveToast] = useState<{
     readonly text: string;
@@ -247,8 +258,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     setRackCleared(w.rackCleared);
     setWinner(w.winner);
     setWinReason(w.winReason);
+    setBallInHandScope(w.ballInHandScope);
     setIsShootingEight(isShootingForEightBall(w, w.currentPlayer));
+    setIsCallRequired(isCallPocketRequired(w, w.currentPlayer));
     setCalledEightPocketId(w.calledEightPocketId);
+    setCalledRegularPocketId(w.calledRegularPocketId);
     setAiStatusText(
       w.aiPlan.phase !== 'idle'
         ? w.aiPlan.phase === 'aiming'
@@ -304,6 +318,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         strike.power,
         strike.spinX,
         strike.spinY,
+        w.metrics.physicsScale,
       );
       w.activeCueSpinX = strike.spinX * (0.35 + strike.power * 0.65);
       w.activeCueSpinY = strike.spinY * (0.35 + strike.power * 0.65);
@@ -312,6 +327,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       w.cueHasHitBallThisTurn = false;
       w.firstHitBallIdThisTurn = null;
       w.railOrPocketAfterFirstHitThisTurn = false;
+      w.breakRailHitBallIds = [];
+      w.pocketedPocketMapThisTurn = {};
+      w.cueCrossedHeadStringThisTurn = false;
       w.eightBallPocketedId = null;
       w.pocketedIdsThisTurn = [];
       w.scratchedThisTurn = false;
@@ -319,11 +337,12 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
       const tipContactX = cueBall.x - strike.dirX * w.metrics.ballRadius;
       const tipContactY = cueBall.y - strike.dirY * w.metrics.ballRadius;
+      const spinMag = Math.min(1, Math.hypot(strike.spinX, strike.spinY));
       spawnChalkDustBurst(w, tipContactX, tipContactY, strike.dirX, strike.dirY);
-      if (strike.power > 0.65 || Math.hypot(strike.spinX, strike.spinY) > 0.35) {
+      if (strike.power > 0.65 || spinMag > 0.35) {
         spawnChalkStreak(w, cueBall.x, cueBall.y, strike.dirX, strike.dirY, 34);
       }
-      playCueStrike(strike.power, computeStereoPan(cueBall.x, w.metrics));
+      playCueStrike(strike.power, computeStereoPan(cueBall.x, w.metrics), spinMag);
 
       if (strike.power > 0.8) {
         w.shakeRemainingSec = TABLE_SHAKE_DURATION_SEC;
@@ -333,7 +352,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   );
 
   const launchShotWithPower = useCallback(
-    (powerNorm: number, angleRad?: number) => {
+    (
+      powerNorm: number,
+      angleRad?: number,
+      overrideSpin?: { readonly x: number; readonly y: number },
+    ) => {
       const w = getWorld();
       const cueBall = w.balls[0];
       if (
@@ -346,14 +369,24 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         return false;
       }
 
-      if (
-        isShootingForEightBall(w, w.currentPlayer) &&
-        w.calledEightPocketId === null &&
-        !(w.gameMode === 'vs-ai' && w.currentPlayer === 2)
-      ) {
+      const isHumanTurn = !(w.gameMode === 'vs-ai' && w.currentPlayer === 2);
+      const shootingEightNow = isShootingForEightBall(w, w.currentPlayer);
+      if (isHumanTurn && shootingEightNow && w.calledEightPocketId === null) {
         w.dragPullPower = 0;
         setSliderPower(0);
         triggerFeltToast(w, 'CHỌN LỖ ĐÁNH BI SỐ 8', 'info');
+        syncReactHudFromWorld();
+        return false;
+      }
+      if (
+        isHumanTurn &&
+        !shootingEightNow &&
+        isCallPocketRequired(w, w.currentPlayer) &&
+        w.calledRegularPocketId === null
+      ) {
+        w.dragPullPower = 0;
+        setSliderPower(0);
+        triggerFeltToast(w, 'CHỌN LỖ CHỈ ĐỊNH TRƯỚC KHI ĐÁNH', 'info');
         syncReactHudFromWorld();
         return false;
       }
@@ -377,7 +410,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
       const dirX = Math.cos(shotAngle);
       const dirY = Math.sin(shotAngle);
-      const launchSpeed = computeShotLaunchSpeed(clampedPower);
+      const launchSpeed = computeShotLaunchSpeed(clampedPower, undefined, w.metrics.physicsScale);
+      const shotSpinX = overrideSpin ? overrideSpin.x : w.spinX;
+      const shotSpinY = overrideSpin ? overrideSpin.y : w.spinY;
 
       w.aimAngle = shotAngle;
       w.dragPullPower = 0;
@@ -394,8 +429,8 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         power: clampedPower,
         launchSpeed,
         pullBackOffsetPx: w.metrics.ballRadius + 7 + clampedPower * 52,
-        spinX: w.spinX,
-        spinY: w.spinY,
+        spinX: shotSpinX,
+        spinY: shotSpinY,
       };
 
       if (prefersReducedMotion) {
@@ -437,8 +472,14 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       w.rackCleared = false;
       w.hoverPlaceValid = true;
       w.calledEightPocketId = null;
+      w.calledRegularPocketId = null;
       w.eightBallPocketedId = null;
       w.railOrPocketAfterFirstHitThisTurn = false;
+      w.breakRailHitBallIds = [];
+      w.pocketedPocketMapThisTurn = {};
+      w.ballInHandScope = 'full';
+      w.mustClearHeadStringThisTurn = false;
+      w.cueCrossedHeadStringThisTurn = false;
       w.isDraggingCueInKitchen = false;
       w.cueBallHovered = false;
       setIsHoverCueBallInKitchen(false);
@@ -451,6 +492,35 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     },
     [getWorld, syncReactHudFromWorld],
   );
+
+  const handleCycleGuideline = useCallback(() => {
+    const order: readonly GuidelineMode[] = ['full', 'club', 'pro'];
+    setGuidelineMode((prev) => {
+      const next = order[(order.indexOf(prev) + 1) % order.length] ?? 'full';
+      getWorld().guidelineMode = next;
+      return next;
+    });
+  }, [getWorld]);
+
+  const handleCycleAiDifficulty = useCallback(() => {
+    const order: readonly AiDifficulty[] = ['rookie', 'club', 'pro'];
+    setAiDifficulty((prev) => {
+      const next = order[(order.indexOf(prev) + 1) % order.length] ?? 'club';
+      getWorld().aiDifficulty = next;
+      return next;
+    });
+  }, [getWorld]);
+
+  const handleToggleProCallShot = useCallback(() => {
+    setProCallShot((prev) => {
+      const next = !prev;
+      const w = getWorld();
+      w.proCallShot = next;
+      w.calledRegularPocketId = null;
+      syncReactHudFromWorld();
+      return next;
+    });
+  }, [getWorld, syncReactHudFromWorld]);
 
   const handleRetryLastShot = useCallback(() => {
     const snap = lastFreeShotRef.current;
@@ -622,18 +692,34 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       if (event.key === 'Shift') {
         w.isPrecisionAim = true;
       }
-      if (
-        event.code === 'Space' &&
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+      const rect = section?.getBoundingClientRect();
+      const inView = rect ? rect.top < window.innerHeight && rect.bottom > 0 : false;
+      if (!inView) return;
+
+      if (event.key === 'Escape' && spaceChargingRef.current) {
+        spaceChargingRef.current = false;
+        w.dragPullPower = 0;
+        setSliderPower(0);
+        return;
+      }
+
+      const canControl =
         !w.shotInProgress &&
         !w.rackCleared &&
         !w.ballInHand &&
-        !(w.gameMode === 'vs-ai' && w.currentPlayer === 2)
-      ) {
-        const activeTag = document.activeElement?.tagName;
-        if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
-        const rect = section?.getBoundingClientRect();
-        const inView = rect ? rect.top < window.innerHeight && rect.bottom > 0 : false;
-        if (!inView) return;
+        !w.strikeAnim.active &&
+        !(w.gameMode === 'vs-ai' && w.currentPlayer === 2);
+
+      if (canControl && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+        event.preventDefault();
+        const step = event.shiftKey ? FINE_AIM_STEP_RAD : (0.75 * Math.PI) / 180;
+        w.aimAngle += event.key === 'ArrowRight' ? step : -step;
+        return;
+      }
+
+      if (event.code === 'Space' && canControl) {
         event.preventDefault();
         if (!spaceChargingRef.current) {
           spaceChargingRef.current = true;
@@ -712,7 +798,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         if (w.aiPlan.phase === 'idle') {
           w.aiPlan = computeAiShotPlan(w);
           if (w.aiPlan.calledPocketId !== null) {
-            w.calledEightPocketId = w.aiPlan.calledPocketId;
+            if (isShootingForEightBall(w, 2)) {
+              w.calledEightPocketId = w.aiPlan.calledPocketId;
+            } else if (w.proCallShot) {
+              w.calledRegularPocketId = w.aiPlan.calledPocketId;
+            }
           }
           if (w.ballInHand && w.aiPlan.placeX !== null && w.aiPlan.placeY !== null) {
             const cue = w.balls[0];
@@ -720,7 +810,12 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
               cue.x = w.aiPlan.placeX;
               cue.y = w.aiPlan.placeY;
             }
+            if (w.ballInHandScope === 'kitchen') {
+              w.mustClearHeadStringThisTurn = true;
+              w.cueCrossedHeadStringThisTurn = false;
+            }
             w.ballInHand = false;
+            w.ballInHandScope = 'full';
           }
           syncReactHudFromWorld();
         } else if (w.aiPlan.phase === 'aiming') {
@@ -742,8 +837,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
           if (t >= 1) {
             const chosenPower = w.aiPlan.targetPower;
             const chosenAngle = w.aiPlan.targetAngle;
+            const chosenSpin = { x: w.aiPlan.targetSpinX, y: w.aiPlan.targetSpinY };
             w.aiPlan.phase = 'idle';
-            launchShotWithPower(chosenPower, chosenAngle);
+            launchShotWithPower(chosenPower, chosenAngle, chosenSpin);
           }
         }
       }
@@ -856,17 +952,22 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       cueBall.omegaZ = 0;
       cueBall.pocketed = false;
       cueBall.sinking = false;
+      if (w.ballInHandScope === 'kitchen') {
+        w.mustClearHeadStringThisTurn = true;
+        w.cueCrossedHeadStringThisTurn = false;
+      }
       w.ballInHand = false;
+      w.ballInHandScope = 'full';
       w.hoverPlaceValid = true;
       w.foulMessage = null;
       syncReactHudFromWorld();
       return;
     }
 
-    // Chọn lỗ đánh Bi số 8 (Call Pocket) khi người chơi chuẩn bị đánh Bi số 8
-    if (isShootingForEightBall(w, w.currentPlayer)) {
+    // Chọn lỗ chỉ định (Call Pocket cho Bi 8 hoặc toàn bộ cơ trong chế độ Giải đấu WPA)
+    if (isCallPocketRequired(w, w.currentPlayer)) {
       let clickedPocket = null;
-      let minPocketDist = w.metrics.pocketRadius * 2.15;
+      let minPocketDist = w.metrics.pocketRadius * 2.25;
       for (const pocket of w.metrics.pockets) {
         const pd = Math.hypot(pt.x - pocket.x, pt.y - pocket.y);
         if (pd <= minPocketDist) {
@@ -875,8 +976,13 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         }
       }
       if (clickedPocket) {
-        w.calledEightPocketId = clickedPocket.id;
-        triggerFeltToast(w, `ĐÃ CHỌN LỖ #${clickedPocket.id + 1} CHO BI 8`, 'info');
+        if (isShootingForEightBall(w, w.currentPlayer)) {
+          w.calledEightPocketId = clickedPocket.id;
+          triggerFeltToast(w, `ĐÃ CHỌN LỖ #${clickedPocket.id + 1} CHO BI 8`, 'info');
+        } else {
+          w.calledRegularPocketId = clickedPocket.id;
+          triggerFeltToast(w, `ĐÃ CHỈ ĐỊNH LỖ #${clickedPocket.id + 1}`, 'info');
+        }
         syncReactHudFromWorld();
         return;
       }
@@ -994,6 +1100,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
 
     isDraggingSliderRef.current = true;
+    setIsDraggingPower(true);
     sliderStartXRef.current = event.clientX;
     sliderStartYRef.current = event.clientY;
     try {
@@ -1017,6 +1124,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const handleSliderPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDraggingSliderRef.current) return;
     isDraggingSliderRef.current = false;
+    setIsDraggingPower(false);
     try {
       if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId);
@@ -1048,27 +1156,57 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     : aiStatusText
       ? aiStatusText
       : ballInHand
-        ? 'Đặt bi tự do'
+        ? ballInHandScope === 'kitchen'
+          ? 'Đặt Trong Bếp'
+          : 'Đặt bi tự do'
         : isShootingEight && !(gameMode === 'vs-ai' && currentPlayer === 2)
           ? calledEightPocketId === null
             ? 'Chọn lỗ đánh Bi 8'
             : `Lỗ Bi 8: #${calledEightPocketId + 1}`
-          : isBreakShot
-            ? 'Khai cuộc'
-            : gameMode === 'vs-ai'
-              ? currentPlayer === 1
-                ? 'Lượt bạn'
-                : 'Lượt Máy'
-              : gameMode === 'two-player'
-                ? `Lượt P${currentPlayer}`
-                : `${shots} cơ`;
+          : isCallRequired && !(gameMode === 'vs-ai' && currentPlayer === 2)
+            ? calledRegularPocketId === null
+              ? 'Chọn lỗ chỉ định'
+              : `Lỗ chỉ định: #${calledRegularPocketId + 1}`
+            : isBreakShot
+              ? 'Khai cuộc'
+              : gameMode === 'vs-ai'
+                ? currentPlayer === 1
+                  ? 'Lượt bạn'
+                  : 'Lượt Máy'
+                : gameMode === 'two-player'
+                  ? `Lượt P${currentPlayer}`
+                  : `${shots} cơ`;
 
   const isPlayerOneActive = !rackCleared && currentPlayer === 1;
   const isPlayerTwoActive = !rackCleared && currentPlayer === 2 && gameMode !== 'free';
 
   const verticalSliderH = Math.max(260, Math.min(420, Math.round(tableDim.h * 0.74)));
   const powerReadoutText =
-    sliderPower < 0.02 ? (isMobileSlider ? 'KÉO →' : 'KÉO ↓') : `${Math.round(sliderPower * 100)}%`;
+    isDraggingPower && sliderPower > 0.005 && sliderPower < CANCEL_POWER_THRESHOLD
+      ? 'HỦY'
+      : sliderPower < 0.02
+        ? isMobileSlider
+          ? 'KÉO →'
+          : 'KÉO ↓'
+        : `${Math.round(sliderPower * 100)}%`;
+
+  const spinModeDescription = (() => {
+    const vert =
+      Math.abs(spin.y) < 0.12
+        ? 'Tâm · Stun (90°)'
+        : spin.y >= 0.48 && spin.y <= 0.72
+          ? 'Lăn tự nhiên (30°)'
+          : spin.y > 0
+            ? 'Cù lê (Follow)'
+            : 'Trô (Draw)';
+    const horiz = Math.abs(spin.x) < 0.14 ? '' : spin.x > 0 ? ' · Ép phải' : ' · Ép trái';
+    return `${vert}${horiz}`;
+  })();
+
+  const guidelineLabel =
+    guidelineMode === 'full' ? 'Tia: Đầy đủ' : guidelineMode === 'club' ? 'Tia: CLB' : 'Tia: Pro';
+  const aiDifficultyLabel =
+    aiDifficulty === 'rookie' ? 'AI: Tập sự' : aiDifficulty === 'pro' ? 'AI: Cơ thủ' : 'AI: CLB';
 
   return (
     <section
@@ -1468,6 +1606,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                         aria-hidden="true"
                         className="pointer-events-none absolute inset-y-3 left-1/2 w-[1px] -translate-x-1/2 bg-[#9C7A4C]/35"
                       />
+                      {/* Vòng giới hạn vùng chạm an toàn chống tạch cơ (~62% bán kính bi) */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute h-[72px] w-[72px] rounded-full border border-dashed border-[#3B7A65]/45"
+                      />
                       <span
                         data-testid="billiards-spin-tip"
                         style={{
@@ -1476,6 +1619,12 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                         className="pointer-events-none h-4 w-4 rounded-full border-2 border-[#FAFBF9] bg-[#B5443C] shadow-sm"
                       />
                     </div>
+                    <span
+                      data-testid="billiards-spin-mode-label"
+                      className="font-mono text-[10px] font-semibold whitespace-nowrap text-[#1E332E] dark:text-[#C9D6D0]"
+                    >
+                      {spinModeDescription}
+                    </span>
                     <button
                       type="button"
                       onClick={handleResetSpin}
@@ -1739,6 +1888,48 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
               <button
                 type="button"
+                data-testid="billiards-guideline-toggle"
+                data-guideline-mode={guidelineMode}
+                title="Đổi cấp độ tia ngắm (Đầy đủ · Câu lạc bộ · Pro)"
+                onClick={handleCycleGuideline}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-3 py-1.5 font-mono text-xs font-semibold text-[#182624] shadow-2xs transition-all hover:border-[#9C7A4C] hover:bg-[#EDF2F0] active:scale-[0.98] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]"
+              >
+                <span>{guidelineLabel}</span>
+              </button>
+
+              {gameMode === 'vs-ai' && (
+                <button
+                  type="button"
+                  data-testid="billiards-ai-level-toggle"
+                  data-ai-difficulty={aiDifficulty}
+                  title="Đổi trình độ Máy AI (Tập sự · Câu lạc bộ · Cơ thủ)"
+                  onClick={handleCycleAiDifficulty}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-3 py-1.5 font-mono text-xs font-semibold text-[#182624] shadow-2xs transition-all hover:border-[#9C7A4C] hover:bg-[#EDF2F0] active:scale-[0.98] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]"
+                >
+                  <span>{aiDifficultyLabel}</span>
+                </button>
+              )}
+
+              {gameMode !== 'free' && (
+                <button
+                  type="button"
+                  data-testid="billiards-callshot-toggle"
+                  aria-pressed={proCallShot}
+                  title="Chuyển chế độ chỉ định lỗ (Chuẩn Bi 8 hoặc WPA Toàn phần)"
+                  onClick={handleToggleProCallShot}
+                  className={cn(
+                    'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs font-semibold shadow-2xs transition-all active:scale-[0.98]',
+                    proCallShot
+                      ? 'border-[#9C7A4C] bg-[#FAF5EA] text-[#8C6228] dark:border-[#D5B47A] dark:bg-[#2A2215] dark:text-[#D5B47A]'
+                      : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#182624] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]',
+                  )}
+                >
+                  <span>{proCallShot ? 'Chỉ định: WPA' : 'Chỉ định: Bi 8'}</span>
+                </button>
+              )}
+
+              <button
+                type="button"
                 data-testid="billiards-rules-btn"
                 aria-expanded={isRulesOpen}
                 onClick={() => setIsRulesOpen((prev) => !prev)}
@@ -1757,15 +1948,17 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                   className="absolute bottom-11 left-0 z-30 w-80 rounded-xl border border-[#CFD9D5] bg-[#FAFBF9] p-3.5 text-xs leading-relaxed text-[#2D423D] shadow-xl dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
                 >
                   <p className="mb-1.5 font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
-                    Luật 8 Ball Pool &amp; Điều khiển
+                    Luật WPA 8-Ball &amp; Điều khiển
                   </p>
                   <ul className="space-y-1">
                     <li>
-                      • Trước khai cuộc, kéo bi cái trong vùng bếp (25% đầu bàn) để chọn điểm phá
-                      bi.
+                      • Khai cuộc hợp lệ: ăn ≥ 1 bi hoặc ≥ 4 bi chạm băng (rơi Bi 8 lúc phá sẽ đặt
+                      lại chấm đầu; rơi bi cái sẽ đặt Trong Bếp).
                     </li>
-                    <li>• Kéo trên bàn để xoay góc ngắm (Shift hoặc ↺/↻ để vi chỉnh ±0.15°).</li>
-                    <li>• Kéo thanh lực bên trái xuống (hoặc giữ Space) và thả để đánh.</li>
+                    <li>• Kéo trên bàn hoặc dùng ←/→ (Shift hoặc ↺/↻ để vi chỉnh ±0.15°).</li>
+                    <li>
+                      • Kéo thanh lực bên trái (hoặc giữ Space, nhấn Esc để hủy) và thả để đánh.
+                    </li>
                     <li>
                       • Sau khi chạm bi mục tiêu, ít nhất 1 bi phải chạm băng hoặc rơi lỗ (No-Rail
                       Foul).

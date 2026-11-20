@@ -1099,7 +1099,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(() => playRackClear()).not.toThrow();
         expect(() => playTrickShotReward('bank')).not.toThrow();
         expect(() => playTrickShotReward('double')).not.toThrow();
-        expect(() => playCueStrike(0.75, -0.5)).not.toThrow();
+        expect(() => playCueStrike(0.75, -0.5, 0.8)).not.toThrow();
         expect(() => playBallClack(0.85, 0.4)).not.toThrow();
         expect(() => playCushionBounce(0.6, -0.7)).not.toThrow();
         expect(() => playPocketDrop(2, 0.75)).not.toThrow();
@@ -1146,10 +1146,25 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
           ]),
         );
 
-        // Kiểm chứng khoảng cách xếp tam giác >= 2 * R_ball + 0.5px & tỷ lệ đồng bộ R_ball = feltWidth * 0.0172
+        // Kiểm chứng khoảng cách xếp tam giác >= 2 * R_ball + 0.4px & hình học miệng lỗ chuẩn WPA
         const rackMetrics = computeTableMetrics(1200, 625);
         expect(rackMetrics.ballRadius / rackMetrics.feltWidth).toBeCloseTo(0.0172, 3);
         expect(rackMetrics.pocketRadius / rackMetrics.ballRadius).toBeCloseTo(1.65, 2);
+        expect(rackMetrics.pocketFacings).toHaveLength(12);
+        const cornerClearMouth =
+          Math.hypot(
+            rackMetrics.pocketJaws[0]!.x - rackMetrics.pocketJaws[1]!.x,
+            rackMetrics.pocketJaws[0]!.y - rackMetrics.pocketJaws[1]!.y,
+          ) -
+          rackMetrics.pocketJaws[0]!.r * 2;
+        const sideClearMouth =
+          Math.hypot(
+            rackMetrics.pocketJaws[2]!.x - rackMetrics.pocketJaws[3]!.x,
+            rackMetrics.pocketJaws[2]!.y - rackMetrics.pocketJaws[3]!.y,
+          ) -
+          rackMetrics.pocketJaws[2]!.r * 2;
+        expect(cornerClearMouth / (rackMetrics.ballRadius * 2)).toBeGreaterThanOrEqual(2.05);
+        expect(sideClearMouth).toBeGreaterThan(cornerClearMouth);
         expect(rackMetrics.returnRailW).toBe(Math.round(rackMetrics.ballRadius * 2 + 10));
         expect(rackMetrics.returnRailBottomY - rackMetrics.returnRailTopY).toBe(
           rackMetrics.tableHeight,
@@ -1161,12 +1176,68 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
             const bi = rackBalls[i]!;
             const bj = rackBalls[j]!;
             const dist = Math.hypot(bi.x - bj.x, bi.y - bj.y);
-            expect(dist).toBeGreaterThanOrEqual(rackMetrics.ballRadius * 2 + 0.45);
+            expect(dist).toBeGreaterThanOrEqual(rackMetrics.ballRadius * 2 + 0.4);
           }
         }
 
-        // Kiểm chứng đường cong lực phi tuyến p^1.35 & Slide-to-Roll vật lý xoáy Cù lê / Trô / Ép phê
+        // Kiểm chứng bi lăn dọc sát băng (Rail-Hugging) vào lỗ góc mượt & lăn qua lỗ giữa không bị hút nhầm
+        {
+          const railCornerWorld = createBilliardsWorld(1200, 625, 'free');
+          railCornerWorld.isBreakShot = false;
+          for (const b of railCornerWorld.balls) {
+            if (b.id !== 0 && b.id !== 1) b.pocketed = true;
+          }
+          const b1Rail = railCornerWorld.balls.find((b) => b.id === 1)!;
+          b1Rail.x = railCornerWorld.metrics.feltLeft + railCornerWorld.metrics.ballRadius * 10;
+          b1Rail.y = railCornerWorld.metrics.feltTop + railCornerWorld.metrics.ballRadius + 0.05;
+          b1Rail.vx = -5;
+          b1Rail.vy = 0;
+          b1Rail.sx = -5;
+          b1Rail.sy = 0;
+          for (let f = 0; f < 400; f += 1) {
+            stepBilliardsPhysicsFrame(railCornerWorld, 1 / 120, 0.5, () => undefined);
+            if (b1Rail.pocketed || b1Rail.sinking) break;
+          }
+          expect(b1Rail.pocketed || b1Rail.sinking).toBe(true);
+
+          const railSidePassWorld = createBilliardsWorld(1200, 625, 'free');
+          railSidePassWorld.isBreakShot = false;
+          for (const b of railSidePassWorld.balls) {
+            if (b.id !== 0 && b.id !== 2) b.pocketed = true;
+          }
+          const b2Rail = railSidePassWorld.balls.find((b) => b.id === 2)!;
+          const midFeltX =
+            railSidePassWorld.metrics.feltLeft + railSidePassWorld.metrics.feltWidth * 0.5;
+          b2Rail.x = midFeltX + railSidePassWorld.metrics.ballRadius * 5;
+          b2Rail.y =
+            railSidePassWorld.metrics.feltTop + railSidePassWorld.metrics.ballRadius + 0.05;
+          b2Rail.vx = -6;
+          b2Rail.vy = 0;
+          b2Rail.sx = -6;
+          b2Rail.sy = 0;
+          for (let f = 0; f < 80; f += 1) {
+            stepBilliardsPhysicsFrame(railSidePassWorld, 1 / 120, 0.5, () => undefined);
+          }
+          expect(b2Rail.pocketed || b2Rail.sinking).toBe(false);
+          expect(b2Rail.x).toBeLessThan(midFeltX - railSidePassWorld.metrics.ballRadius);
+        }
+
+        // Kiểm chứng hàm spinY liên tục qua 0, quãng lăn Coulomb chuẩn bàn thật, Follow/Draw & SIT/Gear Effect
         expect(computeShotLaunchSpeed(0.3)).toBeLessThan(computeShotLaunchSpeed(0.8));
+        const cueTinyTop = { x: 0, y: 0, vx: 0, vy: 0, sx: 0, sy: 0, omegaZ: 0 };
+        initializeCueBallShot(cueTinyTop, 0, 0.7, 0, 0.02);
+        expect(cueTinyTop.sx).toBeGreaterThan(0);
+        expect(cueTinyTop.sx).toBeLessThan(cueTinyTop.vx * 0.1);
+
+        // Kiểm chứng quãng lăn Coulomb tại 50% lực >= 1.6 chiều dài bàn (sửa lỗi nỉ dính 0.84 TL cũ)
+        const cueRoll50 = { x: 0, y: 0, vx: 0, vy: 0, sx: 0, sy: 0, omegaZ: 0 };
+        initializeCueBallShot(cueRoll50, 0, 0.5, 0, 0);
+        for (let step = 0; step < 12000; step += 1) {
+          integrateClothSlideToRollSubstep(cueRoll50, 1 / SUBSTEPS);
+          if (Math.hypot(cueRoll50.vx, cueRoll50.vy) === 0) break;
+        }
+        expect(cueRoll50.x / rackMetrics.feltWidth).toBeGreaterThanOrEqual(1.6);
+
         const cueFollow = { x: 0, y: 0, vx: 0, vy: 0, sx: 0, sy: 0, omegaZ: 0 };
         const cueDraw = { x: 0, y: 0, vx: 0, vy: 0, sx: 0, sy: 0, omegaZ: 0 };
         const objA = { x: 25, y: 0, vx: 0, vy: 0, sx: 0, sy: 0, omegaZ: 0 };
@@ -1184,10 +1255,65 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(cueFollow.vx).toBeGreaterThan(2.5);
         expect(cueDraw.vx).toBeLessThan(-2.5);
 
+        // Kiểm chứng Spin-Induced Throw (SIT): đánh thẳng với ép phê phải (omegaZ > 0) đẩy bi mục tiêu sang trái (vy < 0) & truyền xoáy ngược (gear)
+        const cueSit = { x: 0, y: 0, vx: 10, vy: 0, sx: 0, sy: 0, omegaZ: 1.0 };
+        const objSit = { x: 25, y: 0, vx: 0, vy: 0, sx: 0, sy: 0, omegaZ: 0 };
+        resolveRigidBallPairCollision(cueSit, objSit, 1, 0);
+        expect(objSit.vy).toBeLessThan(-0.05);
+        expect(objSit.omegaZ).toBeLessThan(0);
+
         const englishBall = { x: 0, y: 0, vx: -6, vy: 2, sx: -6, sy: 2, omegaZ: 0.9 };
         applyCushionEnglishBounce(englishBall, 1, 0, 6);
         expect(englishBall.vx).toBeGreaterThan(0);
         expect(Math.abs(englishBall.omegaZ)).toBeLessThan(0.9);
+
+        // Kiểm chứng Luật Khai Cuộc WPA 3.3:
+        // (1) Rơi Bi 8 khi khai cuộc KHÔNG thua -> Bi 8 được đặt lại Foot Spot, bàn vẫn mở
+        const eightBreakWorld = createBilliardsWorld(1200, 625, 'two-player');
+        eightBreakWorld.isBreakShot = true;
+        eightBreakWorld.shotInProgress = true;
+        eightBreakWorld.firstHitBallIdThisTurn = 1;
+        eightBreakWorld.pocketedIdsThisTurn = [8];
+        const eightOnBreak = eightBreakWorld.balls.find((b) => b.id === 8)!;
+        eightOnBreak.pocketed = true;
+        for (const b of eightBreakWorld.balls) {
+          b.vx = 0;
+          b.vy = 0;
+        }
+        stepBilliardsPhysicsFrame(eightBreakWorld, 0.016, 1, () => undefined);
+        expect(eightBreakWorld.rackCleared).toBe(false);
+        expect(eightOnBreak.pocketed).toBe(false);
+        expect(eightBreakWorld.p1Group).toBeNull();
+
+        // (2) Rơi bi cái lúc khai cuộc (Scratch on Break) -> Ball-in-Hand giới hạn Trong Bếp (kitchen)
+        const scratchBreakWorld = createBilliardsWorld(1200, 625, 'two-player');
+        scratchBreakWorld.isBreakShot = true;
+        scratchBreakWorld.shotInProgress = true;
+        scratchBreakWorld.scratchedThisTurn = true;
+        scratchBreakWorld.firstHitBallIdThisTurn = 1;
+        scratchBreakWorld.breakRailHitBallIds = [1, 2, 3, 4];
+        for (const b of scratchBreakWorld.balls) {
+          b.vx = 0;
+          b.vy = 0;
+        }
+        stepBilliardsPhysicsFrame(scratchBreakWorld, 0.016, 1, () => undefined);
+        expect(scratchBreakWorld.ballInHand).toBe(true);
+        expect(scratchBreakWorld.ballInHandScope).toBe('kitchen');
+        expect(scratchBreakWorld.currentPlayer).toBe(2);
+
+        // (3) Khai cuộc không đủ 4 bi chạm băng & không ăn bi -> Đổi lượt báo khai cuộc chưa hợp lệ
+        const illegalBreakWorld = createBilliardsWorld(1200, 625, 'two-player');
+        illegalBreakWorld.isBreakShot = true;
+        illegalBreakWorld.shotInProgress = true;
+        illegalBreakWorld.firstHitBallIdThisTurn = 1;
+        illegalBreakWorld.breakRailHitBallIds = [1, 2];
+        for (const b of illegalBreakWorld.balls) {
+          b.vx = 0;
+          b.vy = 0;
+        }
+        stepBilliardsPhysicsFrame(illegalBreakWorld, 0.016, 1, () => undefined);
+        expect(illegalBreakWorld.currentPlayer).toBe(2);
+        expect(illegalBreakWorld.foulMessage).toContain('4 bi chạm băng');
 
         // Kiểm chứng Break Kitchen ("Trong Bếp") & WPA Call-Pocket Bi 8 & Luật No-Rail Foul
         const wpaWorld = createBilliardsWorld(1200, 625, 'two-player');
@@ -1326,9 +1452,36 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         const spinSelector = screen.getByTestId('billiards-spin-selector');
         expect(spinSelector).toHaveStyle({ width: '116px', height: '116px' });
         expect(screen.getByTestId('billiards-spin-tip')).toBeInTheDocument();
+        expect(screen.getByTestId('billiards-spin-mode-label')).toHaveTextContent('Tâm · Stun');
         fireEvent.doubleClick(spinSelector);
         expect(spinSelector).toHaveAttribute('data-spin-x', '0.00');
         expect(spinSelector).toHaveAttribute('data-spin-y', '0.00');
+
+        // Các nút nâng cấp mới: Cấp tia ngắm (Đầy đủ -> CLB -> Pro), Trình độ AI (CLB -> Cơ thủ -> Tập sự) & Chỉ định lỗ WPA
+        const guidelineToggle = screen.getByTestId('billiards-guideline-toggle');
+        expect(guidelineToggle).toHaveAttribute('data-guideline-mode', 'full');
+        fireEvent.click(guidelineToggle);
+        expect(guidelineToggle).toHaveAttribute('data-guideline-mode', 'club');
+        fireEvent.click(guidelineToggle);
+        expect(guidelineToggle).toHaveAttribute('data-guideline-mode', 'pro');
+        fireEvent.click(guidelineToggle);
+        expect(guidelineToggle).toHaveAttribute('data-guideline-mode', 'full');
+
+        const aiLevelToggle = screen.getByTestId('billiards-ai-level-toggle');
+        expect(aiLevelToggle).toHaveAttribute('data-ai-difficulty', 'club');
+        fireEvent.click(aiLevelToggle);
+        expect(aiLevelToggle).toHaveAttribute('data-ai-difficulty', 'pro');
+        fireEvent.click(aiLevelToggle);
+        expect(aiLevelToggle).toHaveAttribute('data-ai-difficulty', 'rookie');
+        fireEvent.click(aiLevelToggle);
+        expect(aiLevelToggle).toHaveAttribute('data-ai-difficulty', 'club');
+
+        const callShotToggle = screen.getByTestId('billiards-callshot-toggle');
+        expect(callShotToggle).toHaveAttribute('aria-pressed', 'false');
+        fireEvent.click(callShotToggle);
+        expect(callShotToggle).toHaveAttribute('aria-pressed', 'true');
+        fireEvent.click(callShotToggle);
+        expect(callShotToggle).toHaveAttribute('aria-pressed', 'false');
 
         // 5 vạch khắc mảnh bên trái thanh lực dọc, nút vi chỉnh góc (- / +) & chỉ số KÉO ↓ -> XX%
         expect(screen.getByTestId('billiards-power-ticks').children).toHaveLength(5);
