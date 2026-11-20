@@ -32,9 +32,7 @@ export interface PendingEightOnBreakDecision {
   readonly scratched: boolean;
 }
 
-export type PendingRefereeDecision =
-  | PendingIllegalBreakDecision
-  | PendingEightOnBreakDecision;
+export type PendingRefereeDecision = PendingIllegalBreakDecision | PendingEightOnBreakDecision;
 
 export interface RefereeLogEntry {
   readonly seq: number;
@@ -465,8 +463,7 @@ export function evaluateWpaShot(telemetry: ShotTelemetry): TurnEvaluationResult 
   // 3. KIỂM TRA RƠI BI SỐ 8 (THẮNG / THUA VÁN — WPA 3.9)
   // =========================================================================
   if (pocketedEight) {
-    const wrongCalledPocket =
-      calledPocketId !== null && pocketedEight.pocketId !== calledPocketId;
+    const wrongCalledPocket = calledPocketId !== null && pocketedEight.pocketId !== calledPocketId;
     const lost = Boolean(foulReason) || !shooterGroupClearedBeforeTurn || wrongCalledPocket;
 
     if (lost) {
@@ -476,7 +473,7 @@ export function evaluateWpaShot(telemetry: ShotTelemetry): TurnEvaluationResult 
           ? 'Đưa Bi 8 xuống lỗ trước khi dọn hết nhóm'
           : wrongCalledPocket
             ? 'Đưa Bi 8 nhầm lỗ đã chỉ định'
-            : foulReason ?? 'Phạm lỗi khi đánh Bi số 8';
+            : (foulReason ?? 'Phạm lỗi khi đánh Bi số 8');
       return {
         nextPlayer: opponent,
         continuesTurn: false,

@@ -1,18 +1,24 @@
 import {
+  BookOpen,
   Bot,
-  HelpCircle,
   Lock,
   RotateCcw,
+  Shield,
   Trophy,
   Unlock,
   User,
   Users,
   Volume2,
   VolumeX,
+  X,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  acceptStalemateRerack,
   ALL_POOL_BALL_SPECS,
+  applyEightOnBreakDecision,
+  applyIllegalBreakDecision,
+  areAllLegalTargetsInKitchen,
   buildOfficial15BallRack,
   clampBreakCueBallPlacement,
   clampValidCueBallPlacement,
@@ -20,6 +26,7 @@ import {
   computeStereoPan,
   computeTableMetrics,
   createBilliardsWorld,
+  evaluateAiIllegalBreakChoice,
   FINE_AIM_STEP_RAD,
   isCallPocketRequired,
   isCueBallPlacementValid,
@@ -43,9 +50,14 @@ import {
   type BilliardBall,
   type BilliardGameMode,
   type BilliardsWorld,
+  type EightOnBreakChoice,
   type GuidelineMode,
+  type IllegalBreakChoice,
+  type PendingRefereeDecision,
+  type RefereeLogEntry,
   type ReturnRailBall,
   type StrikeAnimationState,
+  type WpaRuleSet,
 } from '@/components/home/billiardsEngine';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, getLowLatency2DContext } from '@/shared/lib/canvasSprites';
@@ -190,7 +202,15 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [isScreenLocked, setIsScreenLocked] = useState(false);
   const [guidelineMode, setGuidelineMode] = useState<GuidelineMode>('full');
   const [aiDifficulty, setAiDifficulty] = useState<AiDifficulty>('club');
-  const [proCallShot, setProCallShot] = useState(false);
+  const [ruleSet, setRuleSet] = useState<WpaRuleSet>('club');
+  const [isSafetyActive, setIsSafetyActive] = useState(false);
+  const [pendingDecision, setPendingDecision] = useState<PendingRefereeDecision | null>(null);
+  const [mustShootOutOfKitchen, setMustShootOutOfKitchen] = useState(false);
+  const [stalemateOffered, setStalemateOffered] = useState(false);
+  const [refereeLog, setRefereeLog] = useState<readonly RefereeLogEntry[]>([]);
+  const [rulesActiveTab, setRulesActiveTab] = useState<'controls' | 'wpa-rules' | 'referee-log'>(
+    'controls',
+  );
   const [ballInHandScope, setBallInHandScope] = useState<BallInHandScope>('full');
   const [isShootingEight, setIsShootingEight] = useState(false);
   const [isCallRequired, setIsCallRequired] = useState(false);
@@ -259,16 +279,24 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     setWinner(w.winner);
     setWinReason(w.winReason);
     setBallInHandScope(w.ballInHandScope);
+    setRuleSet(w.ruleSet);
+    setIsSafetyActive(w.isSafetyActive);
+    setPendingDecision(w.pendingDecision);
+    setMustShootOutOfKitchen(w.mustShootOutOfKitchen);
+    setStalemateOffered(w.stalemateOffered);
+    setRefereeLog([...w.refereeLog]);
     setIsShootingEight(isShootingForEightBall(w, w.currentPlayer));
     setIsCallRequired(isCallPocketRequired(w, w.currentPlayer));
     setCalledEightPocketId(w.calledEightPocketId);
     setCalledRegularPocketId(w.calledRegularPocketId);
     setAiStatusText(
-      w.aiPlan.phase !== 'idle'
-        ? w.aiPlan.phase === 'aiming'
-          ? 'Máy đang ngắm...'
-          : 'Máy đang kéo lực...'
-        : null,
+      w.pendingDecision && w.gameMode === 'vs-ai' && w.pendingDecision.decidingPlayer === 2
+        ? 'Máy đang cân nhắc...'
+        : w.aiPlan.phase !== 'idle'
+          ? w.aiPlan.phase === 'aiming'
+            ? 'Máy đang ngắm...'
+            : 'Máy đang kéo lực...'
+          : null,
     );
     const pocketedIds = w.balls.filter((b) => b.id >= 1 && b.pocketed).map((b) => b.id);
     setPocketedBallIds(pocketedIds);
@@ -326,6 +354,8 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       w.activeShotDirY = launch.dirY;
       w.cueHasHitBallThisTurn = false;
       w.firstHitBallIdThisTurn = null;
+      w.firstHitWasInKitchenThisTurn = false;
+      w.allLegalTargetsInKitchenAtStart = areAllLegalTargetsInKitchen(w, w.currentPlayer);
       w.railOrPocketAfterFirstHitThisTurn = false;
       w.breakRailHitBallIds = [];
       w.pocketedPocketMapThisTurn = {};
@@ -364,7 +394,8 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         cueBall.pocketed ||
         w.shotInProgress ||
         w.rackCleared ||
-        w.strikeAnim.active
+        w.strikeAnim.active ||
+        w.pendingDecision !== null
       ) {
         return false;
       }
@@ -478,7 +509,15 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       w.breakRailHitBallIds = [];
       w.pocketedPocketMapThisTurn = {};
       w.ballInHandScope = 'full';
-      w.mustClearHeadStringThisTurn = false;
+      w.mustShootOutOfKitchen = false;
+      w.firstHitWasInKitchenThisTurn = false;
+      w.allLegalTargetsInKitchenAtStart = false;
+      w.isSafetyActive = false;
+      w.pendingDecision = null;
+      w.consecutiveNonPottingTurns = 0;
+      w.stalemateOffered = false;
+      w.refereeLog = [];
+      w.refereeLogSeq = 0;
       w.cueCrossedHeadStringThisTurn = false;
       w.isDraggingCueInKitchen = false;
       w.cueBallHovered = false;
@@ -511,15 +550,58 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     });
   }, [getWorld]);
 
-  const handleToggleProCallShot = useCallback(() => {
-    setProCallShot((prev) => {
-      const next = !prev;
-      const w = getWorld();
-      w.proCallShot = next;
+  const handleToggleRuleSet = useCallback(() => {
+    const w = getWorld();
+    const next: WpaRuleSet = w.ruleSet === 'club' ? 'wpa-pro' : 'club';
+    w.ruleSet = next;
+    w.calledRegularPocketId = null;
+    setRuleSet(next);
+    syncReactHudFromWorld();
+  }, [getWorld, syncReactHudFromWorld]);
+
+  const handleToggleSafety = useCallback(() => {
+    const w = getWorld();
+    if (
+      w.gameMode === 'free' ||
+      w.isBreakShot ||
+      w.shotInProgress ||
+      w.rackCleared ||
+      w.pendingDecision !== null
+    ) {
+      return;
+    }
+    if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
+    const next = !w.isSafetyActive;
+    w.isSafetyActive = next;
+    if (next) {
       w.calledRegularPocketId = null;
+    }
+    setIsSafetyActive(next);
+    syncReactHudFromWorld();
+  }, [getWorld, syncReactHudFromWorld]);
+
+  const handleResolveIllegalBreak = useCallback(
+    (choice: IllegalBreakChoice) => {
+      const w = getWorld();
+      applyIllegalBreakDecision(w, choice);
       syncReactHudFromWorld();
-      return next;
-    });
+    },
+    [getWorld, syncReactHudFromWorld],
+  );
+
+  const handleResolveEightOnBreak = useCallback(
+    (choice: EightOnBreakChoice) => {
+      const w = getWorld();
+      applyEightOnBreakDecision(w, choice);
+      syncReactHudFromWorld();
+    },
+    [getWorld, syncReactHudFromWorld],
+  );
+
+  const handleAcceptStalemate = useCallback(() => {
+    const w = getWorld();
+    acceptStalemateRerack(w);
+    syncReactHudFromWorld();
   }, [getWorld, syncReactHudFromWorld]);
 
   const handleRetryLastShot = useCallback(() => {
@@ -550,7 +632,15 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const nudgeAimAngle = useCallback(
     (deltaRad: number) => {
       const w = getWorld();
-      if (w.shotInProgress || w.rackCleared || w.ballInHand || w.strikeAnim.active) return;
+      if (
+        w.shotInProgress ||
+        w.rackCleared ||
+        w.ballInHand ||
+        w.strikeAnim.active ||
+        w.pendingDecision !== null
+      ) {
+        return;
+      }
       if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
       w.aimAngle += deltaRad;
     },
@@ -752,6 +842,42 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     };
   }, [isScreenLocked]);
 
+  // Trọng tài Máy AI tự chọn phương án tối ưu sau 650ms khi chờ quyết định Illegal Break / 8-Ball on Break
+  useEffect(() => {
+    if (
+      !pendingDecision ||
+      gameMode !== 'vs-ai' ||
+      pendingDecision.decidingPlayer !== 2 ||
+      typeof window === 'undefined'
+    ) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      const w = getWorld();
+      if (!w.pendingDecision || w.pendingDecision.decidingPlayer !== 2) return;
+      if (w.pendingDecision.type === 'illegal-break') {
+        applyIllegalBreakDecision(w, evaluateAiIllegalBreakChoice(w));
+      } else {
+        applyEightOnBreakDecision(w, 'spot-and-continue');
+      }
+      syncReactHudFromWorld();
+    }, 650);
+    return () => window.clearTimeout(timer);
+  }, [gameMode, getWorld, pendingDecision, syncReactHudFromWorld]);
+
+  // Đóng popup chỉnh xoáy / sổ tay trọng tài khi bấm ra ngoài hoặc nhấn Esc
+  useEffect(() => {
+    if (!isSpinOpen && !isRulesOpen) return;
+    const onKeyDownClose = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSpinOpen(false);
+        setIsRulesOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDownClose);
+    return () => window.removeEventListener('keydown', onKeyDownClose);
+  }, [isRulesOpen, isSpinOpen]);
+
   // Đóng popup chỉnh xoáy khi bấm ra ngoài
   useEffect(() => {
     if (!isSpinOpen) return;
@@ -845,6 +971,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         !w.rackCleared &&
         !w.ballInHand &&
         !w.strikeAnim.active &&
+        w.pendingDecision === null &&
         !(w.gameMode === 'vs-ai' && w.currentPlayer === 2);
 
       if (canControl && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
@@ -928,14 +1055,16 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         w.currentPlayer === 2 &&
         !w.shotInProgress &&
         !w.strikeAnim.active &&
-        !w.rackCleared
+        !w.rackCleared &&
+        w.pendingDecision === null
       ) {
         if (w.aiPlan.phase === 'idle') {
           w.aiPlan = computeAiShotPlan(w);
-          if (w.aiPlan.calledPocketId !== null) {
+          w.isSafetyActive = w.aiPlan.isSafety;
+          if (!w.aiPlan.isSafety && w.aiPlan.calledPocketId !== null) {
             if (isShootingForEightBall(w, 2)) {
               w.calledEightPocketId = w.aiPlan.calledPocketId;
-            } else if (w.proCallShot) {
+            } else if (w.ruleSet === 'wpa-pro') {
               w.calledRegularPocketId = w.aiPlan.calledPocketId;
             }
           }
@@ -946,7 +1075,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
               cue.y = w.aiPlan.placeY;
             }
             if (w.ballInHandScope === 'kitchen') {
-              w.mustClearHeadStringThisTurn = true;
+              w.mustShootOutOfKitchen = true;
               w.cueCrossedHeadStringThisTurn = false;
             }
             w.ballInHand = false;
@@ -1068,7 +1197,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     setIsRulesOpen(false);
 
     const w = getWorld();
-    if (w.rackCleared || w.strikeAnim.active || w.shotInProgress) return;
+    if (w.rackCleared || w.strikeAnim.active || w.shotInProgress || w.pendingDecision !== null) {
+      return;
+    }
     if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
 
     const pt = getCanvasPoint(event);
@@ -1088,7 +1219,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       cueBall.pocketed = false;
       cueBall.sinking = false;
       if (w.ballInHandScope === 'kitchen') {
-        w.mustClearHeadStringThisTurn = true;
+        w.mustShootOutOfKitchen = true;
         w.cueCrossedHeadStringThisTurn = false;
       }
       w.ballInHand = false;
@@ -1231,7 +1362,15 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const handleSliderPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     unlockBilliardAudio();
     const w = getWorld();
-    if (w.rackCleared || w.shotInProgress || w.strikeAnim.active || w.ballInHand) return;
+    if (
+      w.rackCleared ||
+      w.shotInProgress ||
+      w.strikeAnim.active ||
+      w.ballInHand ||
+      w.pendingDecision !== null
+    ) {
+      return;
+    }
     if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
 
     isDraggingSliderRef.current = true;
@@ -1288,29 +1427,37 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       : gameMode === 'vs-ai'
         ? 'Máy thắng!'
         : 'P2 thắng!'
-    : aiStatusText
-      ? aiStatusText
-      : ballInHand
-        ? ballInHandScope === 'kitchen'
-          ? 'Đặt Trong Bếp'
-          : 'Đặt bi tự do'
-        : isShootingEight && !(gameMode === 'vs-ai' && currentPlayer === 2)
-          ? calledEightPocketId === null
-            ? 'Chọn lỗ đánh Bi 8'
-            : `Lỗ Bi 8: #${calledEightPocketId + 1}`
-          : isCallRequired && !(gameMode === 'vs-ai' && currentPlayer === 2)
-            ? calledRegularPocketId === null
-              ? 'Chọn lỗ chỉ định'
-              : `Lỗ chỉ định: #${calledRegularPocketId + 1}`
-            : isBreakShot
-              ? 'Khai cuộc'
-              : gameMode === 'vs-ai'
-                ? currentPlayer === 1
-                  ? 'Lượt bạn'
-                  : 'Lượt Máy'
-                : gameMode === 'two-player'
-                  ? `Lượt P${currentPlayer}`
-                  : `${shots} cơ`;
+    : pendingDecision
+      ? gameMode === 'vs-ai' && pendingDecision.decidingPlayer === 2
+        ? 'Máy đang chọn phương án...'
+        : 'Trọng tài chờ quyết định'
+      : aiStatusText
+        ? aiStatusText
+        : ballInHand
+          ? ballInHandScope === 'kitchen'
+            ? 'Đặt Trong Bếp'
+            : 'Đặt bi tự do'
+          : isShootingEight && !(gameMode === 'vs-ai' && currentPlayer === 2)
+            ? calledEightPocketId === null
+              ? 'Chọn lỗ đánh Bi 8'
+              : `Lỗ Bi 8: #${calledEightPocketId + 1}`
+            : isCallRequired && !(gameMode === 'vs-ai' && currentPlayer === 2)
+              ? calledRegularPocketId === null
+                ? 'Chọn lỗ chỉ định'
+                : `Lỗ chỉ định: #${calledRegularPocketId + 1}`
+              : isSafetyActive
+                ? 'Chạy đạn (Safety)'
+                : mustShootOutOfKitchen
+                  ? 'Đánh bi ngoài vạch Bếp'
+                  : isBreakShot
+                    ? 'Khai cuộc'
+                    : gameMode === 'vs-ai'
+                      ? currentPlayer === 1
+                        ? 'Lượt bạn'
+                        : 'Lượt Máy'
+                      : gameMode === 'two-player'
+                        ? `Lượt P${currentPlayer}`
+                        : `${shots} cơ`;
 
   const isPlayerOneActive = !rackCleared && currentPlayer === 1;
   const isPlayerTwoActive = !rackCleared && currentPlayer === 2 && gameMode !== 'free';
@@ -2076,7 +2223,13 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 onPointerCancel={handleCanvasPointerUp}
                 onWheel={(e) => {
                   const w = getWorld();
-                  if (w.shotInProgress || w.rackCleared || w.ballInHand) return;
+                  if (
+                    w.shotInProgress ||
+                    w.rackCleared ||
+                    w.ballInHand ||
+                    w.pendingDecision !== null
+                  )
+                    return;
                   if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
                   const step = e.shiftKey ? FINE_AIM_STEP_RAD : 0.015;
                   w.isPrecisionAim = Boolean(e.shiftKey);
@@ -2110,6 +2263,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
               {/* Thông báo Đặt bi tự do (Ball-in-Hand) */}
               {!activeToast &&
+                !pendingDecision &&
                 ballInHand &&
                 !rackCleared &&
                 !(gameMode === 'vs-ai' && currentPlayer === 2) && (
@@ -2118,6 +2272,115 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                     className="pointer-events-none absolute top-3 left-1/2 z-20 -translate-x-1/2 rounded-full border border-[#D5B47A]/80 bg-[#142622]/90 px-4 py-1.5 font-mono text-xs font-semibold text-[#FAFBF9] shadow-lg backdrop-blur-xs"
                   >
                     {foulBanner ?? 'Đặt bi tự do — Bấm chọn vị trí trên bàn'}
+                  </div>
+                )}
+
+              {/* Banner đề xuất Xếp lại bàn khi bế tắc 6 lượt không ăn bi (WPA 1.12 Stalemate) */}
+              {!activeToast &&
+                !pendingDecision &&
+                !ballInHand &&
+                !rackCleared &&
+                stalemateOffered && (
+                  <div
+                    data-testid="billiards-stalemate-banner"
+                    className="absolute top-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 rounded-full border border-[#D5B47A] bg-[#142622]/94 py-1 pr-1.5 pl-4 font-mono text-[11px] font-semibold whitespace-nowrap text-[#FAFBF9] shadow-lg backdrop-blur-xs"
+                  >
+                    <span>6 lượt không ăn bi · Thế bế tắc (WPA 1.12)</span>
+                    <button
+                      type="button"
+                      data-testid="decision-stalemate-rerack"
+                      onClick={handleAcceptStalemate}
+                      className="cursor-pointer rounded-full bg-[#9C7A4C] px-3 py-1 text-[10.5px] font-bold text-[#FAFBF9] transition-colors hover:bg-[#B28B56]"
+                    >
+                      Hòa &amp; Xếp lại bàn
+                    </button>
+                  </div>
+                )}
+
+              {/* Thẻ Quyết định Trọng tài nổi giữa bàn (Illegal Break 3 phương án / 8-Ball on Break 2 phương án) */}
+              {pendingDecision &&
+                !rackCleared &&
+                !(gameMode === 'vs-ai' && pendingDecision.decidingPlayer === 2) && (
+                  <div
+                    data-testid="billiards-decision-modal"
+                    className="absolute inset-0 z-30 flex items-center justify-center bg-[#142622]/55 p-4 backdrop-blur-[2px]"
+                  >
+                    <div className="flex w-full max-w-md flex-col gap-3 rounded-2xl border border-[#9C7A4C] bg-[#FAFBF9] p-5 text-left shadow-2xl dark:bg-[#12241C]">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-mono text-[10px] font-bold tracking-widest text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                            Quyết định Trọng tài ·{' '}
+                            {pendingDecision.decidingPlayer === 1
+                              ? 'Người chơi 1'
+                              : gameMode === 'vs-ai'
+                                ? 'Máy AI'
+                                : 'Người chơi 2'}
+                          </p>
+                          <h3 className="mt-0.5 font-serif text-lg font-bold text-[#142622] dark:text-[#E6ECE7]">
+                            {pendingDecision.type === 'illegal-break'
+                              ? 'Khai cuộc không hợp lệ (WPA 3.3)'
+                              : pendingDecision.scratched
+                                ? 'Rơi Bi 8 & Bi cái khi phá (WPA 3.3c)'
+                                : 'Rơi Bi số 8 khi khai cuộc (WPA 3.3)'}
+                          </h3>
+                        </div>
+                      </div>
+                      <p className="text-xs leading-relaxed text-[#354E48] dark:text-[#B9C8C1]">
+                        {pendingDecision.type === 'illegal-break'
+                          ? 'Cú phá chưa đưa được bi nào vào lỗ và có dưới 4 bi chạm băng. Đối thủ được chọn 1 trong 3 phương án:'
+                          : pendingDecision.scratched
+                            ? 'Người phá rơi cả Bi 8 và Bi cái. Bạn được quyền Đặt bi Trong Bếp nếu đánh tiếp hoặc yêu cầu xếp lại bàn:'
+                            : 'Cú phá hợp lệ đưa Bi 8 vào lỗ. Người phá được chọn phương án xử lý:'}
+                      </p>
+
+                      {pendingDecision.type === 'illegal-break' ? (
+                        <div className="grid gap-2 sm:grid-cols-1">
+                          <button
+                            type="button"
+                            data-testid="decision-accept-table"
+                            onClick={() => handleResolveIllegalBreak('accept-table')}
+                            className="cursor-pointer rounded-xl border border-[#9C7A4C] bg-[#1E332E] px-4 py-2 text-left font-mono text-xs font-semibold text-[#FAFBF9] transition-colors hover:bg-[#28443D]"
+                          >
+                            1. Nhận bàn hiện tại và đánh tiếp
+                          </button>
+                          <button
+                            type="button"
+                            data-testid="decision-rebreak-self"
+                            onClick={() => handleResolveIllegalBreak('rebreak-self')}
+                            className="cursor-pointer rounded-xl border border-[#CFD9D5] bg-[#F2F4F3] px-4 py-2 text-left font-mono text-xs font-semibold text-[#142622] transition-colors hover:border-[#9C7A4C] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
+                          >
+                            2. Xếp lại bàn — Tôi phá lại
+                          </button>
+                          <button
+                            type="button"
+                            data-testid="decision-rebreak-opponent"
+                            onClick={() => handleResolveIllegalBreak('rebreak-opponent')}
+                            className="cursor-pointer rounded-xl border border-[#CFD9D5] bg-[#F2F4F3] px-4 py-2 text-left font-mono text-xs font-semibold text-[#142622] transition-colors hover:border-[#9C7A4C] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
+                          >
+                            3. Xếp lại bàn — Bắt đối thủ phá lại
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="grid gap-2 sm:grid-cols-1">
+                          <button
+                            type="button"
+                            data-testid="decision-spot-eight"
+                            onClick={() => handleResolveEightOnBreak('spot-and-continue')}
+                            className="cursor-pointer rounded-xl border border-[#9C7A4C] bg-[#1E332E] px-4 py-2 text-left font-mono text-xs font-semibold text-[#FAFBF9] transition-colors hover:bg-[#28443D]"
+                          >
+                            1. Đặt lại Bi 8 (Chấm đầu) &amp; đánh tiếp
+                          </button>
+                          <button
+                            type="button"
+                            data-testid="decision-rerack"
+                            onClick={() => handleResolveEightOnBreak('rerack')}
+                            className="cursor-pointer rounded-xl border border-[#CFD9D5] bg-[#F2F4F3] px-4 py-2 text-left font-mono text-xs font-semibold text-[#142622] transition-colors hover:border-[#9C7A4C] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
+                          >
+                            2. Xếp lại bàn mới và phá lại
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -2214,21 +2477,50 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
               )}
 
               {gameMode !== 'free' && (
-                <button
-                  type="button"
-                  data-testid="billiards-callshot-toggle"
-                  aria-pressed={proCallShot}
-                  title="Chuyển chế độ chỉ định lỗ (Chuẩn Bi 8 hoặc WPA Toàn phần)"
-                  onClick={handleToggleProCallShot}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs font-semibold shadow-2xs transition-all active:scale-[0.98]',
-                    proCallShot
-                      ? 'border-[#9C7A4C] bg-[#FAF5EA] text-[#8C6228] dark:border-[#D5B47A] dark:bg-[#2A2215] dark:text-[#D5B47A]'
-                      : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#182624] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]',
-                  )}
-                >
-                  <span>{proCallShot ? 'Chỉ định: WPA' : 'Chỉ định: Bi 8'}</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    data-testid="billiards-callshot-toggle"
+                    data-rule-set={ruleSet}
+                    aria-pressed={ruleSet === 'wpa-pro'}
+                    title="Chuyển bộ luật (Luật: CLB hoặc Luật: WPA Pro bắt buộc chỉ định lỗ)"
+                    onClick={handleToggleRuleSet}
+                    className={cn(
+                      'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs font-semibold shadow-2xs transition-all active:scale-[0.98]',
+                      ruleSet === 'wpa-pro'
+                        ? 'border-[#9C7A4C] bg-[#FAF5EA] text-[#8C6228] dark:border-[#D5B47A] dark:bg-[#2A2215] dark:text-[#D5B47A]'
+                        : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#182624] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]',
+                    )}
+                  >
+                    <span>{ruleSet === 'wpa-pro' ? 'Luật: WPA Pro' : 'Luật: CLB'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-testid="billiards-safety-toggle"
+                    aria-pressed={isSafetyActive}
+                    disabled={
+                      isBreakShot ||
+                      rackCleared ||
+                      pendingDecision !== null ||
+                      (gameMode === 'vs-ai' && currentPlayer === 2)
+                    }
+                    title="Tuyên bố Chạy đạn (Safety · WPA 3.6): cú đánh phòng thủ hợp lệ, không tính ăn bi & chuyển lượt"
+                    onClick={handleToggleSafety}
+                    className={cn(
+                      'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs font-semibold shadow-2xs transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45',
+                      isSafetyActive
+                        ? 'border-[#9C7A4C] bg-[#1E332E] text-[#F3D27A] dark:border-[#D5B47A] dark:bg-[#245746]'
+                        : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#182624] hover:border-[#9C7A4C] hover:bg-[#EDF2F0] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]',
+                    )}
+                  >
+                    <Shield
+                      className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
+                      aria-hidden="true"
+                    />
+                    <span>Chạy đạn (Safety)</span>
+                  </button>
+                </>
               )}
 
               <button
@@ -2238,42 +2530,293 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                 onClick={() => setIsRulesOpen((prev) => !prev)}
                 className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-3.5 py-1.5 font-mono text-xs font-semibold text-[#182624] shadow-2xs transition-all hover:border-[#9C7A4C] hover:bg-[#EDF2F0] active:scale-[0.98] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#E6ECE7] dark:hover:border-[#D5B47A]"
               >
-                <HelpCircle
+                <BookOpen
                   className="h-3.5 w-3.5 text-[#2D5266] dark:text-[#7FA8C0]"
                   aria-hidden="true"
                 />
-                <span>Luật nhanh</span>
+                <span>Luật &amp; Trọng tài</span>
               </button>
 
               {isRulesOpen && (
                 <div
-                  data-testid="billiards-rules-popover"
-                  className="absolute bottom-11 left-0 z-30 w-80 rounded-xl border border-[#CFD9D5] bg-[#FAFBF9] p-3.5 text-xs leading-relaxed text-[#2D423D] shadow-xl dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0]"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Sổ tay Luật WPA 8-Ball và Nhật ký Trọng tài"
+                  onClick={() => setIsRulesOpen(false)}
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-[#142622]/45 p-4 backdrop-blur-[2px]"
                 >
-                  <p className="mb-1.5 font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
-                    Luật WPA 8-Ball &amp; Điều khiển
-                  </p>
-                  <ul className="space-y-1">
-                    <li>
-                      • Khai cuộc hợp lệ: ăn ≥ 1 bi hoặc ≥ 4 bi chạm băng (rơi Bi 8 lúc phá sẽ đặt
-                      lại chấm đầu; rơi bi cái sẽ đặt Trong Bếp).
-                    </li>
-                    <li>• Kéo trên bàn hoặc dùng ←/→ (Shift hoặc ↺/↻ để vi chỉnh ±0.15°).</li>
-                    <li>
-                      • Kéo thanh lực bên trái (hoặc giữ Space, nhấn Esc để hủy) và thả để đánh.
-                    </li>
-                    <li>
-                      • Sau khi chạm bi mục tiêu, ít nhất 1 bi phải chạm băng hoặc rơi lỗ (No-Rail
-                      Foul).
-                    </li>
-                    <li>
-                      • Dọn hết 7 bi nhóm mình rồi bấm chọn 1 lỗ chỉ định trước khi đưa Bi 8 vào lỗ.
-                    </li>
-                    <li>
-                      • Nhấn phím L (hoặc nút Khóa màn hình) để giữ khung bàn cố định, nhấn Esc để
-                      mở lại.
-                    </li>
-                  </ul>
+                  <div
+                    data-testid="billiards-rules-popover"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-[#9C7A4C]/70 bg-[#FAFBF9] text-[#182624] shadow-2xl dark:border-[#D5B47A]/50 dark:bg-[#12241C] dark:text-[#E6ECE7]"
+                  >
+                    <div className="flex items-center justify-between gap-3 border-b border-[#DCE4E0] px-5 py-3.5 dark:border-[#243B32]">
+                      <div>
+                        <p className="font-mono text-[10px] font-bold tracking-widest text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                          Sổ Tay Chuyên Gia &amp; Nhật Ký Trọng Tài
+                        </p>
+                        <h3 className="font-serif text-lg font-bold text-[#142622] dark:text-[#E6ECE7]">
+                          Luật Thi Đấu WPA 8-Ball Chính Thức
+                        </h3>
+                      </div>
+                      <button
+                        type="button"
+                        data-testid="billiards-rules-close-btn"
+                        aria-label="Đóng sổ tay luật"
+                        onClick={() => setIsRulesOpen(false)}
+                        className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#CFD9D5] bg-[#F2F4F3] text-[#2D423D] transition-colors hover:border-[#9C7A4C] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#C9D6D0]"
+                      >
+                        <X className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+
+                    <div
+                      role="tablist"
+                      aria-label="Các mục sổ tay trọng tài"
+                      className="flex flex-wrap gap-1.5 border-b border-[#DCE4E0] bg-[#F2F4F3] px-5 py-2.5 dark:border-[#243B32] dark:bg-[#0E1A15]"
+                    >
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={rulesActiveTab === 'controls'}
+                        data-testid="rules-tab-controls"
+                        onClick={() => setRulesActiveTab('controls')}
+                        className={cn(
+                          'cursor-pointer rounded-full px-3 py-1 font-mono text-xs font-semibold transition-colors',
+                          rulesActiveTab === 'controls'
+                            ? 'bg-[#1E332E] text-[#FAFBF9] dark:bg-[#245746]'
+                            : 'text-[#354E48] hover:bg-[#E4ECE8] dark:text-[#98ABA3] dark:hover:bg-[#193026]',
+                        )}
+                      >
+                        Điều khiển
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={rulesActiveTab === 'wpa-rules'}
+                        data-testid="rules-tab-wpa"
+                        onClick={() => setRulesActiveTab('wpa-rules')}
+                        className={cn(
+                          'cursor-pointer rounded-full px-3 py-1 font-mono text-xs font-semibold transition-colors',
+                          rulesActiveTab === 'wpa-rules'
+                            ? 'bg-[#1E332E] text-[#FAFBF9] dark:bg-[#245746]'
+                            : 'text-[#354E48] hover:bg-[#E4ECE8] dark:text-[#98ABA3] dark:hover:bg-[#193026]',
+                        )}
+                      >
+                        Bộ Luật WPA 8-Ball
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={rulesActiveTab === 'referee-log'}
+                        data-testid="rules-tab-log"
+                        onClick={() => setRulesActiveTab('referee-log')}
+                        className={cn(
+                          'inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-semibold transition-colors',
+                          rulesActiveTab === 'referee-log'
+                            ? 'bg-[#1E332E] text-[#FAFBF9] dark:bg-[#245746]'
+                            : 'text-[#354E48] hover:bg-[#E4ECE8] dark:text-[#98ABA3] dark:hover:bg-[#193026]',
+                        )}
+                      >
+                        <span>Nhật ký Trọng tài</span>
+                        {refereeLog.length > 0 && (
+                          <span className="rounded-full bg-[#9C7A4C] px-1.5 py-0.5 text-[10px] text-[#FAFBF9]">
+                            {refereeLog.length}
+                          </span>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="overflow-y-auto px-5 py-4 text-xs leading-relaxed text-[#2D423D] dark:text-[#C9D6D0]">
+                      {rulesActiveTab === 'controls' && (
+                        <ul className="space-y-2">
+                          <li>
+                            • <strong>Xoay hướng ngắm:</strong> Kéo chuột trực tiếp trên mặt bàn
+                            hoặc dùng phím <kbd className="font-mono font-bold">← / →</kbd>.
+                          </li>
+                          <li>
+                            • <strong>Vi chỉnh ±0.15°:</strong> Giữ{' '}
+                            <kbd className="font-mono font-bold">Shift</kbd> khi kéo/lăn chuột hoặc
+                            bấm cặp nút <kbd className="font-mono font-bold">↺ / ↻</kbd> dưới nút
+                            Xoáy.
+                          </li>
+                          <li>
+                            • <strong>Chỉnh lực &amp; Đánh:</strong> Kéo thanh lực dọc bên trái
+                            (hoặc giữ <kbd className="font-mono font-bold">Space</kbd>, nhấn{' '}
+                            <kbd className="font-mono font-bold">Esc</kbd> để hủy) rồi thả.
+                          </li>
+                          <li>
+                            • <strong>Xoáy bi cái (Cù lê · Trô · Ép phê):</strong> Bấm bi trắng chấm
+                            đỏ bên trái để chọn điểm chạm; bấm đúp để về tâm (0, 0).
+                          </li>
+                          <li>
+                            • <strong>Chỉ định lỗ &amp; Chạy đạn:</strong> Bấm trực tiếp vào lỗ mục
+                            tiêu trên bàn khi đánh Bi 8 hoặc ở chế độ{' '}
+                            <span className="font-mono font-semibold">WPA Pro</span>; bật{' '}
+                            <span className="font-mono font-semibold">Chạy đạn (Safety)</span> khi
+                            muốn phòng thủ chuyển lượt.
+                          </li>
+                          <li>
+                            • <strong>Khóa màn hình (Focus Mode):</strong> Nhấn phím{' '}
+                            <kbd className="font-mono font-bold">L</kbd> hoặc nút Khóa màn hình để
+                            cố định khung bàn, nhấn <kbd className="font-mono font-bold">Esc</kbd>{' '}
+                            để mở lại.
+                          </li>
+                        </ul>
+                      )}
+
+                      {rulesActiveTab === 'wpa-rules' && (
+                        <div className="space-y-3">
+                          <section className="rounded-xl border border-[#DCE4E0] bg-[#F7F9F8] p-3 dark:border-[#243B32] dark:bg-[#0E1A15]">
+                            <h4 className="font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                              1. Khai cuộc hợp lệ &amp; Illegal Break (WPA 3.3)
+                            </h4>
+                            <p className="mt-1">
+                              Cú phá hợp lệ phải ăn được ít nhất <strong>1 bi mục tiêu</strong> hoặc
+                              có tối thiểu <strong>4 bi mục tiêu khác nhau</strong> chạm thành băng.
+                              Nếu không đạt (Illegal Break), đối thủ được chọn 1 trong 3 quyền:{' '}
+                              <em>Nhận bàn đánh tiếp</em>, <em>Tự phá lại</em>, hoặc{' '}
+                              <em>Bắt người vừa phá xếp bàn phá lại</em>. Rơi Bi 8 lúc phá không bị
+                              xử thua (nếu không kèm lỗi, người phá chọn Đặt lại Bi 8 tại chấm đầu
+                              hoặc Xếp lại bàn).
+                            </p>
+                          </section>
+
+                          <section className="rounded-xl border border-[#DCE4E0] bg-[#F7F9F8] p-3 dark:border-[#243B32] dark:bg-[#0E1A15]">
+                            <h4 className="font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                              2. Bàn Mở &amp; Phân nhóm bi (WPA 3.4)
+                            </h4>
+                            <p className="mt-1">
+                              Bàn luôn ở trạng thái <strong>Mở (Open Table)</strong> sau cú phá, kể
+                              cả khi ăn bi lúc phá. Nhóm bi (Trơn 1–7 hoặc Sọc 9–15) chỉ được chốt
+                              khi một cơ thủ ăn hợp lệ một bi được chỉ định sau cú phá (không phạm
+                              lỗi và không phải Bi 8). Ở chế độ <strong>WPA Pro</strong>, mọi cơ đều
+                              phải chỉ định lỗ trước khi đánh; ở chế độ <strong>CLB</strong>, chỉ
+                              bắt buộc chỉ định lỗ cho Bi số 8.
+                            </p>
+                          </section>
+
+                          <section className="rounded-xl border border-[#DCE4E0] bg-[#F7F9F8] p-3 dark:border-[#243B32] dark:bg-[#0E1A15]">
+                            <h4 className="font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                              3. Đặt bi Trong Bếp (Head String / Kitchen)
+                            </h4>
+                            <p className="mt-1">
+                              Khi người phá làm rơi bi cái lúc khai cuộc (Scratch on Break), đối thủ
+                              nhận Ball-in-Hand giới hạn <strong>Trong Bếp</strong> (vùng 25% đầu
+                              bàn). Cú đánh từ Trong Bếp bắt buộc chạm bi mục tiêu nằm ngoài vạch
+                              Bếp hoặc đưa bi cái vượt qua vạch Bếp trước khi va chạm bi trong Bếp
+                              (ngoại lệ khi mọi bi hợp lệ đều nằm Trong Bếp).
+                            </p>
+                          </section>
+
+                          <section className="rounded-xl border border-[#DCE4E0] bg-[#F7F9F8] p-3 dark:border-[#243B32] dark:bg-[#0E1A15]">
+                            <h4 className="font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                              4. Chạy đạn (Safety) &amp; Chỉ định lỗ (WPA 3.6–3.7)
+                            </h4>
+                            <p className="mt-1">
+                              Cơ thủ có thể tuyên bố <strong>Chạy đạn (Safety)</strong> để đánh một
+                              cú phòng thủ chiến thuật: vẫn phải chạm đúng bi hợp lệ và có bi chạm
+                              băng/rơi lỗ, nhưng không tính giữ lượt dù có bi rơi lỗ (bi ăn hợp lệ
+                              vẫn nằm dưới lỗ). Cú đánh vào nhầm lỗ chỉ định không phạm lỗi nhưng
+                              mất lượt và không được phân nhóm (bi nhầm lỗ giữ nguyên dưới lỗ).
+                            </p>
+                          </section>
+
+                          <section className="rounded-xl border border-[#DCE4E0] bg-[#F7F9F8] p-3 dark:border-[#243B32] dark:bg-[#0E1A15]">
+                            <h4 className="font-mono text-[11px] font-bold text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                              5. Đặt lại Bi 8 (Long-String) &amp; Thế bế tắc (WPA 1.12)
+                            </h4>
+                            <p className="mt-1">
+                              Khi cần đặt lại Bi số 8, trọng tài đặt Bi 8 tại{' '}
+                              <strong>Chấm đầu (Foot Spot)</strong>; nếu chấm bị bi khác chiếm, bi
+                              được tịnh tiến từng nấc dọc theo trục tâm về phía băng cuối đến vị trí
+                              trống gần nhất. Nếu diễn ra <strong>6 lượt liên tiếp</strong> không có
+                              bi mục tiêu nào rơi lỗ hợp lệ, trận đấu mở đề xuất{' '}
+                              <strong>Hòa &amp; Xếp lại bàn (Stalemate)</strong>.
+                            </p>
+                          </section>
+
+                          <section className="rounded-xl border border-[#E08A7B]/45 bg-[#FFF6F4] p-3 text-[#4E231D] dark:border-[#6A2B24] dark:bg-[#231412] dark:text-[#F0C8C2]">
+                            <h4 className="font-mono text-[11px] font-bold text-[#B5443C] uppercase dark:text-[#F08A80]">
+                              6. Lỗi xử thua &amp; Khác biệt với 9-Ball
+                            </h4>
+                            <p className="mt-1">
+                              Đưa Bi 8 vào lỗ khi chưa dọn hết nhóm, rơi bi cái/phạm lỗi trong cùng
+                              cú đánh ăn Bi 8, hoặc đưa Bi 8 sai lỗ đã chỉ định sẽ bị{' '}
+                              <strong>xử thua ngay lập tức</strong>. Lưu ý chuyên môn: Luật WPA
+                              8-Ball chính thức <strong>không áp dụng</strong> quy tắc &ldquo;3 lỗi
+                              liên tiếp bị xử thua&rdquo; (quy tắc 3-foul chỉ áp dụng ở 9-Ball).
+                            </p>
+                          </section>
+                        </div>
+                      )}
+
+                      {rulesActiveTab === 'referee-log' && (
+                        <div data-testid="billiards-referee-log-list" className="space-y-2">
+                          {refereeLog.length === 0 ? (
+                            <p className="py-6 text-center font-mono text-xs text-[#556B65] dark:text-[#98ABA3]">
+                              Chưa có biên bản nào trong ván hiện tại. Thực hiện cú khai cuộc để
+                              trọng tài ghi nhận từng lượt đánh.
+                            </p>
+                          ) : (
+                            [...refereeLog].reverse().map((entry) => {
+                              const badgeLabel =
+                                entry.verdict === 'foul'
+                                  ? 'Lỗi'
+                                  : entry.verdict === 'win'
+                                    ? 'Thắng'
+                                    : entry.verdict === 'loss'
+                                      ? 'Thua'
+                                      : entry.verdict === 'decision'
+                                        ? 'Trọng tài'
+                                        : 'Hợp lệ';
+                              const badgeClass =
+                                entry.verdict === 'foul' || entry.verdict === 'loss'
+                                  ? 'bg-[#B5443C]/15 text-[#B5443C] dark:text-[#F08A80]'
+                                  : entry.verdict === 'win' || entry.verdict === 'decision'
+                                    ? 'bg-[#9C7A4C]/18 text-[#8C6228] dark:text-[#D5B47A]'
+                                    : 'bg-[#3B7A65]/15 text-[#2C614F] dark:text-[#6EB59B]';
+                              return (
+                                <div
+                                  key={entry.seq}
+                                  className="flex items-start justify-between gap-3 rounded-xl border border-[#DCE4E0] bg-[#F7F9F8] px-3.5 py-2.5 dark:border-[#243B32] dark:bg-[#0E1A15]"
+                                >
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] font-bold">
+                                      <span className="text-[#8C6228] dark:text-[#D5B47A]">
+                                        Cơ #{entry.shotNumber}
+                                      </span>
+                                      <span>·</span>
+                                      <span>
+                                        {entry.player === 1
+                                          ? 'P1'
+                                          : gameMode === 'vs-ai'
+                                            ? 'Máy AI'
+                                            : 'P2'}
+                                      </span>
+                                      <span>·</span>
+                                      <span>{entry.actionLabel}</span>
+                                    </div>
+                                    <p className="mt-0.5 text-xs text-[#354E48] dark:text-[#B9C8C1]">
+                                      {entry.detail}
+                                    </p>
+                                  </div>
+                                  <span
+                                    className={cn(
+                                      'shrink-0 rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase',
+                                      badgeClass,
+                                    )}
+                                  >
+                                    {badgeLabel}
+                                  </span>
+                                </div>
+                              );
+                            })
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

@@ -25,6 +25,17 @@ import {
   SUBSTEPS,
   type RigidBallMotion,
 } from '@/utils/billiardPhysics';
+import {
+  computeLongStringSpotPosition,
+  evaluateWpaShot,
+  STALEMATE_TURN_THRESHOLD,
+  type EightOnBreakChoice,
+  type IllegalBreakChoice,
+  type PendingRefereeDecision,
+  type PocketedBallRecord,
+  type RefereeLogEntry,
+  type WpaRuleSet,
+} from '@/utils/billiardRules';
 
 export {
   BALL_RESTITUTION,
@@ -33,8 +44,14 @@ export {
   JAW_RADIUS_PX,
   JAW_RESTITUTION,
   MAX_SHOT_SPEED_PX_PER_FRAME,
+  STALEMATE_TURN_THRESHOLD,
   STOP_SPEED_PX_PER_FRAME,
   SUBSTEPS,
+  type EightOnBreakChoice,
+  type IllegalBreakChoice,
+  type PendingRefereeDecision,
+  type RefereeLogEntry,
+  type WpaRuleSet,
 };
 
 export type BilliardGameMode = 'vs-ai' | 'two-player' | 'free';
@@ -295,6 +312,7 @@ export interface AiTurnPlan {
   placeX: number | null;
   placeY: number | null;
   calledPocketId: number | null;
+  isSafety: boolean;
 }
 
 export interface TableMetrics {
@@ -355,7 +373,8 @@ export interface BilliardsWorld {
   gameMode: BilliardGameMode;
   guidelineMode: GuidelineMode;
   aiDifficulty: AiDifficulty;
-  proCallShot: boolean;
+  ruleSet: WpaRuleSet;
+  isSafetyActive: boolean;
   balls: BilliardBall[];
   returnRailQueue: ReturnRailBall[];
   ripples: PocketRipple[];
@@ -385,6 +404,8 @@ export interface BilliardsWorld {
   activeShotDirY: number;
   cueHasHitBallThisTurn: boolean;
   firstHitBallIdThisTurn: number | null;
+  firstHitWasInKitchenThisTurn: boolean;
+  allLegalTargetsInKitchenAtStart: boolean;
   railOrPocketAfterFirstHitThisTurn: boolean;
   breakRailHitBallIds: number[];
   pocketedIdsThisTurn: number[];
@@ -393,8 +414,13 @@ export interface BilliardsWorld {
   calledEightPocketId: number | null;
   calledRegularPocketId: number | null;
   ballInHandScope: BallInHandScope;
-  mustClearHeadStringThisTurn: boolean;
+  mustShootOutOfKitchen: boolean;
   cueCrossedHeadStringThisTurn: boolean;
+  pendingDecision: PendingRefereeDecision | null;
+  consecutiveNonPottingTurns: number;
+  stalemateOffered: boolean;
+  refereeLog: RefereeLogEntry[];
+  refereeLogSeq: number;
   isDraggingCueInKitchen: boolean;
   cueBallHovered: boolean;
   scratchedThisTurn: boolean;
@@ -865,7 +891,8 @@ export function createBilliardsWorld(
     gameMode: mode,
     guidelineMode: 'full',
     aiDifficulty: 'club',
-    proCallShot: false,
+    ruleSet: 'club',
+    isSafetyActive: false,
     balls: buildOfficial15BallRack(metrics),
     returnRailQueue: [],
     ripples: Array.from({ length: 16 }, () => ({
@@ -939,6 +966,8 @@ export function createBilliardsWorld(
     activeShotDirY: 0,
     cueHasHitBallThisTurn: false,
     firstHitBallIdThisTurn: null,
+    firstHitWasInKitchenThisTurn: false,
+    allLegalTargetsInKitchenAtStart: false,
     railOrPocketAfterFirstHitThisTurn: false,
     breakRailHitBallIds: [],
     pocketedIdsThisTurn: [],
@@ -947,8 +976,13 @@ export function createBilliardsWorld(
     calledEightPocketId: null,
     calledRegularPocketId: null,
     ballInHandScope: 'full',
-    mustClearHeadStringThisTurn: false,
+    mustShootOutOfKitchen: false,
     cueCrossedHeadStringThisTurn: false,
+    pendingDecision: null,
+    consecutiveNonPottingTurns: 0,
+    stalemateOffered: false,
+    refereeLog: [],
+    refereeLogSeq: 0,
     isDraggingCueInKitchen: false,
     cueBallHovered: false,
     scratchedThisTurn: false,
@@ -981,6 +1015,7 @@ export function createBilliardsWorld(
       placeX: null,
       placeY: null,
       calledPocketId: null,
+      isSafety: false,
     },
     shakeRemainingSec: 0,
     shotInProgress: false,
@@ -990,6 +1025,11 @@ export function createBilliardsWorld(
     currentPlayer: 1,
     rackCleared: false,
   };
+}
+
+export function pushRefereeLog(world: BilliardsWorld, entry: Omit<RefereeLogEntry, 'seq'>): void {
+  world.refereeLogSeq += 1;
+  world.refereeLog = [{ seq: world.refereeLogSeq, ...entry }, ...world.refereeLog].slice(0, 20);
 }
 
 export function isShootingForEightBall(world: BilliardsWorld, player: 1 | 2): boolean {
@@ -1003,49 +1043,55 @@ export function isShootingForEightBall(world: BilliardsWorld, player: 1 | 2): bo
 export function isCallPocketRequired(world: BilliardsWorld, player: 1 | 2): boolean {
   if (world.gameMode === 'free' || world.rackCleared || world.isBreakShot) return false;
   if (isShootingForEightBall(world, player)) return true;
-  return world.proCallShot;
+  return world.ruleSet === 'wpa-pro' && !world.isSafetyActive;
+}
+
+export function areAllLegalTargetsInKitchen(world: BilliardsWorld, player: 1 | 2): boolean {
+  const legal = world.balls.filter((b) => isBallLegalTarget(world, b, player));
+  if (legal.length === 0) return false;
+  return legal.every((b) => b.x <= world.metrics.headStringX + 0.5);
+}
+
+export function isBallKitchenExempted(
+  world: BilliardsWorld,
+  ball: BilliardBall,
+  player: 1 | 2,
+): boolean {
+  if (!world.mustShootOutOfKitchen) return true;
+  if (ball.x > world.metrics.headStringX + 0.5) return true;
+  const legal = world.balls.filter((b) => isBallLegalTarget(world, b, player));
+  if (legal.length === 0 || !legal.every((b) => b.x <= world.metrics.headStringX + 0.5)) {
+    return false;
+  }
+  let closestId = legal[0]!.id;
+  let closestDist = Math.abs(world.metrics.headStringX - legal[0]!.x);
+  for (const b of legal) {
+    const d = Math.abs(world.metrics.headStringX - b.x);
+    if (d < closestDist) {
+      closestDist = d;
+      closestId = b.id;
+    }
+  }
+  return ball.id === closestId;
 }
 
 /**
- * Đặt lại viên bi (ví dụ Bi 8 rơi ngay cú khai cuộc theo luật WPA 3.3) lên Chấm Chân Bàn (Foot Spot)
- * hoặc vị trí trống sát nhất phía sau dọc trục dọc bàn (Long String).
+ * Đặt lại viên bi (ví dụ Bi 8 rơi ngay cú khai cuộc theo luật WPA 3.3 & 1.4) lên Chấm Chân Bàn
+ * hoặc vị trí trống sát nhất dọc Long String theo từng bước 2px (khoảng cách >= 2*R + 1px).
  */
 export function spotBallOnLongString(world: BilliardsWorld, ball: BilliardBall): void {
   const { metrics, balls } = world;
-  const r = metrics.ballRadius;
-  const minClear = r * 2 + 0.6;
-  const isClearAt = (cx: number, cy: number) =>
-    balls.every((other) => {
-      if (other.id === ball.id || other.pocketed || other.sinking) return true;
-      return Math.hypot(other.x - cx, other.y - cy) >= minClear;
-    });
-
-  let spotX = metrics.footSpotX;
-  const spotY = metrics.centerY;
-  const maxX = metrics.feltRight - r - 2;
-  const minX = metrics.feltLeft + r + 2;
-
-  if (!isClearAt(spotX, spotY)) {
-    let found = false;
-    for (let x = metrics.footSpotX; x <= maxX; x += r * 0.32) {
-      if (isClearAt(x, spotY)) {
-        spotX = x;
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      for (let x = metrics.footSpotX; x >= minX; x -= r * 0.32) {
-        if (isClearAt(x, spotY)) {
-          spotX = x;
-          break;
-        }
-      }
-    }
-  }
-
-  ball.x = spotX;
-  ball.y = spotY;
+  const pos = computeLongStringSpotPosition(
+    ball.id,
+    metrics.ballRadius,
+    metrics.feltLeft,
+    metrics.feltRight,
+    metrics.centerY,
+    metrics.footSpotX,
+    balls,
+  );
+  ball.x = pos.x;
+  ball.y = pos.y;
   ball.vx = 0;
   ball.vy = 0;
   ball.sx = 0;
@@ -1055,6 +1101,244 @@ export function spotBallOnLongString(world: BilliardsWorld, ball: BilliardBall):
   ball.sinking = false;
   ball.sinkProgress = 0;
   world.returnRailQueue = world.returnRailQueue.filter((rb) => rb.id !== ball.id);
+}
+
+/**
+ * Áp dụng lựa chọn xử lý Phá bi không hợp lệ (WPA 3.3: Nhận bàn / Tự phá lại / Bắt đối thủ phá lại).
+ */
+export function applyIllegalBreakDecision(world: BilliardsWorld, choice: IllegalBreakChoice): void {
+  const decision = world.pendingDecision;
+  if (!decision || decision.type !== 'illegal-break') return;
+
+  if (choice === 'accept-table') {
+    world.pendingDecision = null;
+    world.currentPlayer = decision.decidingPlayer;
+    world.isBreakShot = false;
+    world.foulMessage = null;
+    pushRefereeLog(world, {
+      shotNumber: world.shots,
+      player: decision.decidingPlayer,
+      actionLabel: 'Quyết định trọng tài',
+      verdict: 'decision',
+      detail: 'Chấp nhận thế bàn hiện tại và tiếp tục đánh (Bàn Mở)',
+    });
+    triggerFeltToast(world, 'CHẤP NHẬN BÀN HIỆN TẠI · TIẾP TỤC ĐÁNH', 'info');
+    return;
+  }
+
+  const nextBreaker: 1 | 2 = choice === 'rebreak-self' ? decision.decidingPlayer : decision.breaker;
+  world.balls = buildOfficial15BallRack(world.metrics);
+  world.returnRailQueue = [];
+  world.pendingDecision = null;
+  world.currentPlayer = nextBreaker;
+  world.isBreakShot = true;
+  world.ballInHand = false;
+  world.ballInHandScope = 'full';
+  world.mustShootOutOfKitchen = false;
+  world.p1Group = null;
+  world.p2Group = null;
+  world.foulMessage = null;
+  world.shots = 0;
+  world.combo = 0;
+  world.consecutiveNonPottingTurns = 0;
+  world.stalemateOffered = false;
+  world.calledEightPocketId = null;
+  world.calledRegularPocketId = null;
+  world.isSafetyActive = false;
+  world.aimAngle = 0;
+  pushRefereeLog(world, {
+    shotNumber: 0,
+    player: nextBreaker,
+    actionLabel: 'Xếp lại bàn (Illegal Break)',
+    verdict: 'decision',
+    detail:
+      choice === 'rebreak-self'
+        ? 'Xếp lại 15 bi và giành quyền tự phá lại'
+        : 'Yêu cầu người phá trước xếp lại & phá lại',
+  });
+  triggerFeltToast(world, 'XẾP LẠI BÀN · PHÁ BI LẠI', 'info');
+}
+
+/**
+ * Áp dụng lựa chọn khi Bi 8 rơi ngay cú khai cuộc (WPA 3.3: Đặt lại Bi 8 Spot & đánh tiếp / Xếp lại bàn).
+ */
+export function applyEightOnBreakDecision(world: BilliardsWorld, choice: EightOnBreakChoice): void {
+  const decision = world.pendingDecision;
+  if (!decision || decision.type !== 'eight-on-break') return;
+
+  if (choice === 'spot-and-continue') {
+    const eightBall = world.balls.find((b) => b.id === 8);
+    if (eightBall) {
+      spotBallOnLongString(world, eightBall);
+    }
+    world.pendingDecision = null;
+    world.isBreakShot = false;
+    world.currentPlayer = decision.decidingPlayer;
+    world.foulMessage = decision.scratched
+      ? 'Bi 8 đã đặt lại · Đặt bi Trong Bếp (đánh bi ngoài vạch 25%)'
+      : null;
+    pushRefereeLog(world, {
+      shotNumber: world.shots,
+      player: decision.decidingPlayer,
+      actionLabel: 'Xử lý Bi 8 khai cuộc',
+      verdict: 'decision',
+      detail: decision.scratched
+        ? 'Đặt lại Bi 8 lên Long String · Đối thủ đặt bi Trong Bếp'
+        : 'Đặt lại Bi 8 lên Long String và tiếp tục lượt (Bàn Mở)',
+    });
+    triggerFeltToast(world, 'ĐẶT LẠI BI 8 LÊN CHẤM ĐẦU · TIẾP TỤC', 'info');
+    return;
+  }
+
+  world.balls = buildOfficial15BallRack(world.metrics);
+  world.returnRailQueue = [];
+  world.pendingDecision = null;
+  world.currentPlayer = decision.breaker;
+  world.isBreakShot = true;
+  world.ballInHand = false;
+  world.ballInHandScope = 'full';
+  world.mustShootOutOfKitchen = false;
+  world.p1Group = null;
+  world.p2Group = null;
+  world.foulMessage = null;
+  world.shots = 0;
+  world.combo = 0;
+  world.consecutiveNonPottingTurns = 0;
+  world.stalemateOffered = false;
+  world.calledEightPocketId = null;
+  world.calledRegularPocketId = null;
+  world.isSafetyActive = false;
+  world.aimAngle = 0;
+  pushRefereeLog(world, {
+    shotNumber: 0,
+    player: decision.breaker,
+    actionLabel: 'Xếp lại bàn (8-on-Break)',
+    verdict: 'decision',
+    detail: 'Xếp lại tam giác 15 bi và phá lại ván mới',
+  });
+  triggerFeltToast(world, 'XẾP LẠI BÀN · PHÁ BI LẠI', 'info');
+}
+
+/**
+ * Chấp nhận hòa & xếp lại bàn khi rơi vào Thế Bế Tắc (Stalemate — WPA 1.12).
+ */
+export function acceptStalemateRerack(world: BilliardsWorld): void {
+  const nextBreaker = world.currentPlayer;
+  world.balls = buildOfficial15BallRack(world.metrics);
+  world.returnRailQueue = [];
+  world.pendingDecision = null;
+  world.currentPlayer = nextBreaker;
+  world.isBreakShot = true;
+  world.ballInHand = false;
+  world.ballInHandScope = 'full';
+  world.mustShootOutOfKitchen = false;
+  world.p1Group = null;
+  world.p2Group = null;
+  world.foulMessage = null;
+  world.shots = 0;
+  world.combo = 0;
+  world.consecutiveNonPottingTurns = 0;
+  world.stalemateOffered = false;
+  world.calledEightPocketId = null;
+  world.calledRegularPocketId = null;
+  world.isSafetyActive = false;
+  world.aimAngle = 0;
+  pushRefereeLog(world, {
+    shotNumber: 0,
+    player: nextBreaker,
+    actionLabel: 'Thế Bế Tắc (Stalemate)',
+    verdict: 'decision',
+    detail: 'Hai bên đồng ý hòa ván do 6 lượt liên tiếp không ăn bi — Xếp lại bàn mới',
+  });
+  triggerFeltToast(world, 'HÒA BẾ TẮC · XẾP LẠI BÀN MỚI', 'info');
+}
+
+/**
+ * AI đánh giá thế bàn sau khi người chơi Phá bi lỗi để quyết định Nhận bàn hay Tự phá lại.
+ */
+export function evaluateAiIllegalBreakChoice(world: BilliardsWorld): IllegalBreakChoice {
+  const cueBall = world.balls[0];
+  if (!cueBall) return 'rebreak-self';
+  const { metrics, balls } = world;
+  const openTargets = balls.filter((b) => b.id >= 1 && b.id !== 8 && !b.pocketed);
+  let clearPots = 0;
+  for (const tBall of openTargets) {
+    for (const pocket of metrics.pockets) {
+      const dx = pocket.x - tBall.x;
+      const dy = pocket.y - tBall.y;
+      const d = Math.hypot(dx, dy) || 1;
+      const gx = tBall.x - (dx / d) * metrics.ballRadius * 2;
+      const gy = tBall.y - (dy / d) * metrics.ballRadius * 2;
+      const c2gX = gx - cueBall.x;
+      const c2gY = gy - cueBall.y;
+      const dCG = Math.hypot(c2gX, c2gY) || 1;
+      if ((c2gX * dx + c2gY * dy) / (dCG * d) < 0.35) continue;
+      if (
+        isSegmentClear(
+          cueBall.x,
+          cueBall.y,
+          gx,
+          gy,
+          balls,
+          0,
+          tBall.id,
+          metrics.ballRadius * 1.9,
+        ) &&
+        isSegmentClear(
+          tBall.x,
+          tBall.y,
+          pocket.x,
+          pocket.y,
+          balls,
+          0,
+          tBall.id,
+          metrics.ballRadius * 1.9,
+        )
+      ) {
+        clearPots += 1;
+        break;
+      }
+    }
+  }
+  return clearPots >= 2 ? 'accept-table' : 'rebreak-self';
+}
+
+export function detectPocketTargetedByRay(
+  hitBall: BilliardBall | null,
+  targetDirX: number,
+  targetDirY: number,
+  balls: readonly BilliardBall[],
+  metrics: TableMetrics,
+): number | null {
+  if (!hitBall) return null;
+  let bestPocketId: number | null = null;
+  let bestDist = Infinity;
+  for (const pocket of metrics.pockets) {
+    const vx = pocket.x - hitBall.x;
+    const vy = pocket.y - hitBall.y;
+    const proj = vx * targetDirX + vy * targetDirY;
+    if (proj <= 0) continue;
+    const perpDist = Math.hypot(vx - proj * targetDirX, vy - proj * targetDirY);
+    const acceptR = pocket.isCorner ? metrics.cornerDropRadius * 1.6 : metrics.sideDropRadius * 1.6;
+    if (perpDist <= acceptR && proj < bestDist) {
+      if (
+        isSegmentClear(
+          hitBall.x,
+          hitBall.y,
+          pocket.x,
+          pocket.y,
+          balls,
+          0,
+          hitBall.id,
+          metrics.ballRadius * 1.85,
+        )
+      ) {
+        bestDist = proj;
+        bestPocketId = pocket.id;
+      }
+    }
+  }
+  return bestPocketId;
 }
 
 export function isInBreakKitchen(world: BilliardsWorld): boolean {
@@ -1511,6 +1795,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
       placeX: null,
       placeY: null,
       calledPocketId: null,
+      isSafety: false,
     };
   }
 
@@ -1533,6 +1818,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
       placeX: null,
       placeY: null,
       calledPocketId: null,
+      isSafety: false,
     };
   }
 
@@ -1540,10 +1826,11 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
   let placeY: number | null = null;
   const isAiShootingEight = isShootingForEightBall(world, 2);
   const rawLegalTargets = balls.filter((b) => isBallLegalTarget(world, b, 2));
-  const kitchenFilteredTargets =
-    world.ballInHand && world.ballInHandScope === 'kitchen'
-      ? rawLegalTargets.filter((b) => b.x >= metrics.headStringX - metrics.ballRadius * 0.25)
-      : rawLegalTargets;
+  const enforceOutOfKitchen =
+    (world.ballInHand && world.ballInHandScope === 'kitchen') || world.mustShootOutOfKitchen;
+  const kitchenFilteredTargets = enforceOutOfKitchen
+    ? rawLegalTargets.filter((b) => isBallKitchenExempted(world, b, 2))
+    : rawLegalTargets;
   const legalTargets = kitchenFilteredTargets.length > 0 ? kitchenFilteredTargets : rawLegalTargets;
   const fallbackTargets =
     legalTargets.length > 0 ? legalTargets : balls.filter((b) => b.id > 0 && !b.pocketed);
@@ -1607,8 +1894,9 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
   let bestPower = 0.65;
   let bestSpinX = 0;
   let bestSpinY = 0;
+  let isAiSafetyShot = false;
   let bestPocketId: number | null =
-    isAiShootingEight || world.proCallShot ? (metrics.pockets[0]?.id ?? 0) : null;
+    isAiShootingEight || world.ruleSet === 'wpa-pro' ? (metrics.pockets[0]?.id ?? 0) : null;
 
   const spinCandidates: readonly number[] = aiDifficulty === 'pro' ? [0, 0.62, -0.68] : [0];
 
@@ -1717,7 +2005,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
           if (totalScore > bestScore) {
             bestScore = totalScore;
             bestAngle = Math.atan2(dirCGY, dirCGX);
-            bestPocketId = isAiShootingEight || world.proCallShot ? pocket.id : null;
+            bestPocketId = isAiShootingEight || world.ruleSet === 'wpa-pro' ? pocket.id : null;
             bestPower = basePower;
             bestSpinX = 0;
             bestSpinY = candSpinY;
@@ -1726,7 +2014,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
       } else if (baseScore > bestScore) {
         bestScore = baseScore;
         bestAngle = Math.atan2(dirCGY, dirCGX);
-        bestPocketId = isAiShootingEight || world.proCallShot ? pocket.id : null;
+        bestPocketId = isAiShootingEight || world.ruleSet === 'wpa-pro' ? pocket.id : null;
         bestPower = basePower;
         bestSpinX = 0;
         bestSpinY = 0;
@@ -1735,7 +2023,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
   }
 
   // Chiến thuật Safety Shot khi không có cơ ăn lỗ tỷ lệ cao (bestScore < 500):
-  // Đánh chạm bi hợp lệ dội băng an toàn thay vì bắn bừa hoặc phạm lỗi không chạm băng
+  // Đánh chạm bi hợp lệ dội băng an toàn + tuyên bố Safety chuẩn WPA
   if (bestScore < 500 && !isAiShootingEight && fallbackTargets.length > 0) {
     let bestSafetyDist = Infinity;
     for (const tBall of fallbackTargets) {
@@ -1764,6 +2052,7 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
           bestAngle = Math.atan2(tBall.y - evalCueY, tBall.x - evalCueX);
           bestPower = Math.max(0.36, Math.min(0.48, 0.32 + cueDist / (metrics.feltWidth * 1.8)));
           bestScore = 550;
+          isAiSafetyShot = true;
         }
       }
     }
@@ -1883,7 +2172,12 @@ export function computeAiShotPlan(world: BilliardsWorld): AiTurnPlan {
     targetSpinY: bestSpinY,
     placeX,
     placeY,
-    calledPocketId: isAiShootingEight || world.proCallShot ? bestPocketId : null,
+    calledPocketId: isAiSafetyShot
+      ? null
+      : isAiShootingEight || world.ruleSet === 'wpa-pro'
+        ? bestPocketId
+        : null,
+    isSafety: isAiSafetyShot,
   };
 }
 
@@ -2044,6 +2338,7 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
 
   const resetTurnTransient = () => {
     world.isBreakShot = false;
+    world.isSafetyActive = false;
     world.pocketedIdsThisTurn = [];
     world.pocketedPocketMapThisTurn = {};
     world.breakRailHitBallIds = [];
@@ -2051,19 +2346,26 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
     world.calledRegularPocketId = null;
     world.eightBallPocketedId = null;
     world.railOrPocketAfterFirstHitThisTurn = false;
-    world.mustClearHeadStringThisTurn = false;
     world.cueCrossedHeadStringThisTurn = false;
+    world.firstHitWasInKitchenThisTurn = false;
+    world.allLegalTargetsInKitchenAtStart = false;
   };
 
   if (world.gameMode === 'free') {
     if (world.scratchedThisTurn) {
       world.ballInHand = true;
       world.ballInHandScope = 'full';
+      world.mustShootOutOfKitchen = false;
       world.foulMessage = 'Bi cái rơi lỗ — Bấm chọn vị trí đặt lại';
       world.combo = 0;
       triggerFeltToast(world, 'BI CÁI RƠI LỖ · ĐẶT BI TỰ DO', 'foul');
     } else if (pocketedNonEightIds.length === 0 && !pocketedEight) {
       world.combo = 0;
+      world.foulMessage = null;
+      world.mustShootOutOfKitchen = false;
+    } else {
+      world.foulMessage = null;
+      world.mustShootOutOfKitchen = false;
     }
     const allCleared = world.balls.filter((b) => b.id >= 1).every((b) => b.pocketed);
     if (allCleared) {
@@ -2076,225 +2378,115 @@ function resolveTurnOutcome(world: BilliardsWorld): void {
     return;
   }
 
-  // Luật 8-Ball đối kháng WPA (Đấu Máy & 2 Người)
+  // Luật 8-Ball đối kháng WPA (Bộ máy trọng tài thuần evaluateWpaShot)
   const shooter = world.currentPlayer;
   const opponent: 1 | 2 = shooter === 1 ? 2 : 1;
   const shooterGroupBefore = getPlayerGroup(world, shooter);
+  const opponentGroupBefore = getPlayerGroup(world, opponent);
+  const shooterClearedBeforeTurn =
+    shooterGroupBefore !== null &&
+    world.balls
+      .filter(
+        (b) => b.spec.group === shooterGroupBefore && !world.pocketedIdsThisTurn.includes(b.id),
+      )
+      .every((b) => b.pocketed);
 
-  // 0. LUẬT KHAI CUỘC CHÍNH THỨC WPA 8-BALL (Rule 3.3)
-  if (world.isBreakShot) {
+  const firstHitBall =
+    world.firstHitBallIdThisTurn !== null
+      ? world.balls.find((b) => b.id === world.firstHitBallIdThisTurn)
+      : undefined;
+  const firstHitBallGroup =
+    firstHitBall === undefined
+      ? null
+      : firstHitBall.id === 8
+        ? 'eight'
+        : firstHitBall.spec.group === 'stripes'
+          ? 'stripes'
+          : 'solids';
+
+  const pocketedBalls: PocketedBallRecord[] = world.pocketedIdsThisTurn.map((id) => {
+    const ball = world.balls.find((item) => item.id === id);
+    const group = id === 8 ? 'eight' : ball?.spec.group === 'stripes' ? 'stripes' : 'solids';
+    const fallbackPocket =
+      id === 8 && world.eightBallPocketedId !== null ? world.eightBallPocketedId : 0;
+    return {
+      id,
+      group,
+      pocketId: world.pocketedPocketMapThisTurn[id] ?? fallbackPocket,
+    };
+  });
+
+  const activeCalledPocketId = isShootingForEightBall(world, shooter)
+    ? world.calledEightPocketId
+    : world.calledRegularPocketId;
+
+  const res = evaluateWpaShot({
+    gameMode: world.gameMode,
+    ruleSet: world.ruleSet,
+    shooter,
+    shotNumber: world.shots,
+    isBreakShot: world.isBreakShot,
+    scratched: world.scratchedThisTurn,
+    firstHitBallId: world.firstHitBallIdThisTurn,
+    firstHitBallGroup,
+    firstHitWasInKitchen: world.firstHitWasInKitchenThisTurn,
+    allLegalTargetsInKitchen: world.allLegalTargetsInKitchenAtStart,
+    mustShootOutOfKitchen: world.mustShootOutOfKitchen,
+    cueCrossedHeadStringBeforeFirstHit: world.cueCrossedHeadStringThisTurn,
+    pocketedBalls,
+    railHitAfterFirstContact: world.railOrPocketAfterFirstHitThisTurn,
+    breakRailHitCount: world.breakRailHitBallIds.length,
+    calledPocketId: activeCalledPocketId,
+    isSafetyCall: world.isSafetyActive,
+    shooterGroupBefore,
+    opponentGroupBefore,
+    shooterGroupClearedBeforeTurn: shooterClearedBeforeTurn,
+    consecutiveNonPottingTurns: world.consecutiveNonPottingTurns,
+  });
+
+  if (res.spotEightBall) {
     const eightBall = world.balls.find((b) => b.id === 8);
-    if (pocketedEight && eightBall) {
+    if (eightBall) {
       spotBallOnLongString(world, eightBall);
     }
-
-    const legalBreak = pocketedNonEightIds.length > 0 || world.breakRailHitBallIds.length >= 4;
-
-    if (world.scratchedThisTurn) {
-      world.combo = 0;
-      world.currentPlayer = opponent;
-      world.ballInHand = true;
-      world.ballInHandScope = 'kitchen';
-      world.foulMessage = pocketedEight
-        ? 'Bi 8 đặt lại chấm đầu · Bi cái rơi khai cuộc — Đặt Trong Bếp'
-        : 'Bi cái rơi lúc khai cuộc — Đặt bi Trong Bếp (vùng 25% đầu bàn)';
-      triggerFeltToast(
-        world,
-        pocketedEight
-          ? 'BI 8 ĐẶT LẠI · RƠI BI CÁI KHAI CUỘC · ĐẶT TRONG BẾP'
-          : 'RƠI BI CÁI KHAI CUỘC · ĐẶT BI TRONG BẾP',
-        'foul',
-      );
-      resetTurnTransient();
-      return;
-    }
-
-    if (!legalBreak && !pocketedEight) {
-      world.combo = 0;
-      world.currentPlayer = opponent;
-      world.ballInHand = false;
-      world.ballInHandScope = 'full';
-      world.foulMessage = 'Khai cuộc chưa đủ 4 bi chạm băng — Đổi lượt';
-      triggerFeltToast(world, 'KHAI CUỘC CHƯA ĐỦ 4 BI CHẠM BĂNG · ĐỔI LƯỢT', 'foul');
-      resetTurnTransient();
-      return;
-    }
-
-    if (pocketedEight) {
-      world.foulMessage = null;
-      world.ballInHand = false;
-      world.ballInHandScope = 'full';
-      triggerFeltToast(world, 'BI 8 RƠI KHAI CUỘC · ĐẶT LẠI CHẤM ĐẦU · BÀN MỞ', 'info');
-      resetTurnTransient();
-      return;
-    }
-
-    if (pocketedNonEightIds.length > 0) {
-      world.foulMessage = null;
-      world.ballInHand = false;
-      world.ballInHandScope = 'full';
-      triggerFeltToast(world, 'KHAI CUỘC HỢP LỆ · BÀN ĐANG MỞ', 'info');
-    } else {
-      world.combo = 0;
-      world.currentPlayer = opponent;
-      world.ballInHand = false;
-      world.ballInHandScope = 'full';
-      world.foulMessage = null;
-    }
-    resetTurnTransient();
-    return;
   }
 
-  // 1. Kiểm tra rơi Bi số 8 trong các lượt thi đấu thường (sau khai cuộc)
-  if (pocketedEight) {
-    const shooterClearedBeforeTurn =
-      shooterGroupBefore !== null &&
-      world.balls
-        .filter(
-          (b) => b.spec.group === shooterGroupBefore && !world.pocketedIdsThisTurn.includes(b.id),
-        )
-        .every((b) => b.pocketed);
-
-    const wrongCalledPocket =
-      world.calledEightPocketId !== null && world.eightBallPocketedId !== world.calledEightPocketId;
-
-    // Nếu chưa dọn hết nhóm, rơi kèm bi cái, hoặc đánh nhầm lỗ đã chỉ định -> thua ngay
-    if (!shooterClearedBeforeTurn || world.scratchedThisTurn || wrongCalledPocket) {
-      world.rackCleared = true;
-      world.winner = opponent;
-      world.winReason =
-        shooter === 1
-          ? world.scratchedThisTurn
-            ? 'Rơi bi cái khi đánh bi 8'
-            : wrongCalledPocket
-              ? 'Đưa Bi 8 nhầm lỗ đã chỉ định'
-              : 'Rơi bi 8 trước khi dọn hết nhóm'
-          : wrongCalledPocket
-            ? 'Máy AI đưa Bi 8 nhầm lỗ đã chỉ định'
-            : 'Đối thủ phạm lỗi bi 8';
-    } else {
-      world.rackCleared = true;
-      world.winner = shooter;
-      world.winReason =
-        shooter === 1
-          ? 'Đưa Bi số 8 vào đúng lỗ đã chỉ định!'
-          : 'Máy AI đưa Bi số 8 vào đúng lỗ đã chỉ định!';
-    }
-    world.ballInHand = false;
-    world.ballInHandScope = 'full';
-    resetTurnTransient();
-    return;
+  if (res.newlyAssignedGroup && cueBall) {
+    spawnFloatingText(
+      world,
+      cueBall.x,
+      Math.max(metrics.feltTop + 26, cueBall.y - 20),
+      res.newlyAssignedGroup === 'solids' ? 'NHÓM TRƠN (1–7)' : 'NHÓM SỌC (9–15)',
+      '#D9B468',
+    );
   }
 
-  // 2. Xác định lỗi chạm (Foul)
-  let foulText: string | null = null;
-  let toastFoulText: string | null = null;
-  if (world.scratchedThisTurn) {
-    foulText = 'Bi cái rơi lỗ — Đặt bi tự do';
-    toastFoulText = 'BI CÁI RƠI LỖ · ĐẶT BI TỰ DO';
-  } else if (world.firstHitBallIdThisTurn === null) {
-    foulText = 'Không chạm bi — Đặt bi tự do';
-    toastFoulText = 'PHẠM LỖI · KHÔNG CHẠM BI';
-  } else if (world.mustClearHeadStringThisTurn && !world.cueCrossedHeadStringThisTurn) {
-    foulText = 'Đánh từ Trong Bếp phải đưa bi cái vượt vạch 25% trước — Đặt bi tự do';
-    toastFoulText = 'PHẠM LỖI · PHẢI ĐÁNH RA NGOÀI VẠCH BẾP';
-  } else if (shooterGroupBefore !== null) {
-    const firstBall = world.balls.find((b) => b.id === world.firstHitBallIdThisTurn);
-    const mustHitEight = hasClearedGroup(world, shooterGroupBefore);
-    if (firstBall) {
-      if (mustHitEight && firstBall.id !== 8) {
-        foulText = 'Phải chạm Bi 8 trước — Đặt bi tự do';
-        toastFoulText = 'PHẠM LỖI · CHƯA CHẠM BI 8';
-      } else if (!mustHitEight && firstBall.spec.group !== shooterGroupBefore) {
-        foulText = 'Chạm sai nhóm bi — Đặt bi tự do';
-        toastFoulText = 'PHẠM LỖI · CHẠM SAI NHÓM BI';
-      }
-    }
-  } else if (world.firstHitBallIdThisTurn === 8) {
-    foulText = 'Chạm Bi 8 khi bàn đang mở — Đặt bi tự do';
-    toastFoulText = 'PHẠM LỖI · CHẠM BI 8 SỚM';
-  }
+  world.p1Group = res.assignedP1Group;
+  world.p2Group = res.assignedP2Group;
+  world.currentPlayer = res.nextPlayer;
+  world.ballInHand = res.ballInHand;
+  world.ballInHandScope = res.ballInHandScope;
+  world.mustShootOutOfKitchen = res.mustShootOutOfKitchen;
+  world.pendingDecision = res.pendingDecision;
+  world.foulMessage = res.foulReason;
+  world.consecutiveNonPottingTurns = res.nextConsecutiveNonPottingTurns;
+  world.stalemateOffered = res.stalemateReached;
 
-  // Luật chạm băng sau va chạm (No-Rail Foul): sau chạm bi hợp lệ đầu tiên phải có ít nhất 1 bi chạm băng hoặc rơi lỗ
-  if (!foulText && !world.railOrPocketAfterFirstHitThisTurn) {
-    foulText = 'Không chạm băng sau va chạm — Đặt bi tự do';
-    toastFoulText = 'PHẠM LỖI · KHÔNG CHẠM BĂNG SAU VA CHẠM';
-  }
-
-  // Lọc danh sách bi ăn hợp lệ theo chế độ Call-Shot (Giải đấu WPA chỉ tính bi rơi đúng lỗ đã chỉ định)
-  const validPocketedIds =
-    world.proCallShot && world.calledRegularPocketId !== null
-      ? pocketedNonEightIds.filter(
-          (id) => world.pocketedPocketMapThisTurn[id] === world.calledRegularPocketId,
-        )
-      : pocketedNonEightIds;
-
-  // 3. Phân nhóm tự động sau cú khai cuộc (khi bàn đang mở và ăn hợp lệ >= 1 bi không phạm lỗi)
-  if (!foulText && shooterGroupBefore === null && validPocketedIds.length > 0) {
-    const firstPocketed = world.balls.find((b) => b.id === validPocketedIds[0]);
-    if (
-      firstPocketed &&
-      (firstPocketed.spec.group === 'solids' || firstPocketed.spec.group === 'stripes')
-    ) {
-      const assigned: BallGroup = firstPocketed.spec.group;
-      const other: BallGroup = assigned === 'solids' ? 'stripes' : 'solids';
-      if (shooter === 1) {
-        world.p1Group = assigned;
-        world.p2Group = other;
-      } else {
-        world.p2Group = assigned;
-        world.p1Group = other;
-      }
-      if (cueBall) {
-        spawnFloatingText(
-          world,
-          cueBall.x,
-          Math.max(metrics.feltTop + 26, cueBall.y - 20),
-          assigned === 'solids' ? 'NHÓM TRƠN (1–7)' : 'NHÓM SỌC (9–15)',
-          '#D9B468',
-        );
-      }
-    }
-  }
-
-  const shooterGroupNow = getPlayerGroup(world, shooter);
-  const scoredOwnBall =
-    !foulText &&
-    validPocketedIds.some((id) => {
-      if (shooterGroupNow === null) return true;
-      const b = world.balls.find((item) => item.id === id);
-      return b?.spec.group === shooterGroupNow;
-    });
-
-  if (foulText) {
+  if (res.isFoul || !res.continuesTurn) {
     world.combo = 0;
-    world.currentPlayer = opponent;
-    world.ballInHand = true;
-    world.ballInHandScope = 'full';
-    world.foulMessage = foulText;
-    if (toastFoulText) {
-      triggerFeltToast(world, toastFoulText, 'foul');
-    }
-  } else if (scoredOwnBall) {
-    world.foulMessage = null;
-    world.ballInHand = false;
-    world.ballInHandScope = 'full';
-  } else {
-    world.combo = 0;
-    world.currentPlayer = opponent;
-    world.ballInHand = false;
-    world.ballInHandScope = 'full';
-    world.foulMessage = null;
-    if (
-      world.proCallShot &&
-      world.calledRegularPocketId !== null &&
-      pocketedNonEightIds.length > 0 &&
-      validPocketedIds.length === 0
-    ) {
-      triggerFeltToast(world, 'RƠI NHẦM LỖ CHỈ ĐỊNH · ĐỔI LƯỢT', 'info');
-    }
   }
 
+  if (res.winner !== null) {
+    world.rackCleared = true;
+    world.winner = res.winner;
+    world.winReason = res.winReason;
+  }
+
+  if (res.toastText) {
+    triggerFeltToast(world, res.toastText, res.toastTone);
+  }
+
+  pushRefereeLog(world, res.logEntry);
   resetTurnTransient();
 }
 
@@ -2462,6 +2654,7 @@ export function stepBilliardsPhysicsFrame(
             const target = a.id === 0 ? b : a;
             if (world.firstHitBallIdThisTurn === null) {
               world.firstHitBallIdThisTurn = target.id;
+              world.firstHitWasInKitchenThisTurn = target.x <= metrics.headStringX + 0.5;
             }
             world.cueHasHitBallThisTurn = true;
           }
@@ -3751,10 +3944,11 @@ export function renderBilliardsStageFrame(
     drawSinglePoolBall3D(ctx, fakeBall, returnBallRadius, lightCenterX, lightCenterY, true);
   }
 
-  // Vùng "Trong Bếp" (Behind the Head String) khi chuẩn bị khai cuộc hoặc khi đặt bi Trong Bếp sau Scratch on Break
+  // Vùng "Trong Bếp" (Behind the Head String) khi chuẩn bị khai cuộc, Ball-in-Hand Kitchen hoặc đang phải đánh ra ngoài vạch Bếp
   if (
     isInBreakKitchen(world) ||
-    (world.ballInHand && world.ballInHandScope === 'kitchen' && !world.rackCleared)
+    (world.ballInHand && world.ballInHandScope === 'kitchen' && !world.rackCleared) ||
+    (world.mustShootOutOfKitchen && !world.rackCleared)
   ) {
     const kitchenW = Math.max(0, metrics.headStringX - feltLeft);
     ctx.save();
@@ -3770,22 +3964,63 @@ export function renderBilliardsStageFrame(
       Math.max(0, metrics.feltHeight - 2),
     );
     ctx.setLineDash([]);
+    if (world.mustShootOutOfKitchen || (world.ballInHand && world.ballInHandScope === 'kitchen')) {
+      ctx.font = '700 9.5px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillStyle = 'rgba(240, 212, 152, 0.86)';
+      ctx.fillText(
+        world.mustShootOutOfKitchen ? 'TRONG BẾP · ĐÁNH BI NGOÀI VẠCH' : 'ĐẶT BI TRONG BẾP',
+        feltLeft + kitchenW * 0.5,
+        metrics.feltTop + 10,
+      );
+    }
     ctx.restore();
   }
 
-  // Vòng chọn lỗ chỉ định (Call Pocket cho Bi 8 hoặc toàn bộ cơ trong chế độ Giải đấu WPA)
+  // Vòng chọn lỗ chỉ định (Call Pocket cho Bi 8 hoặc toàn bộ cơ trong chế độ WPA Pro)
   if (isCallPocketRequired(world, world.currentPlayer)) {
     const nowSec = typeof performance !== 'undefined' ? performance.now() * 0.004 : 0;
     const pulse = 0.5 + 0.5 * Math.sin(nowSec);
     const activeCalledId = isShootingForEightBall(world, world.currentPlayer)
       ? world.calledEightPocketId
       : world.calledRegularPocketId;
+    const cueBallForSuggest = world.balls[0];
+    let suggestedPocketId: number | null = null;
+    if (
+      activeCalledId === null &&
+      world.ruleSet === 'wpa-pro' &&
+      !world.shotInProgress &&
+      !world.ballInHand &&
+      !world.strikeAnim.active &&
+      cueBallForSuggest &&
+      !cueBallForSuggest.pocketed
+    ) {
+      const suggestRaycast = computeGhostBallRaycast(
+        cueBallForSuggest,
+        Math.cos(world.aimAngle),
+        Math.sin(world.aimAngle),
+        world.spinX,
+        world.spinY,
+        world.balls,
+        metrics,
+        Math.max(0.45, world.dragPullPower),
+      );
+      suggestedPocketId = detectPocketTargetedByRay(
+        suggestRaycast.hitBall,
+        suggestRaycast.targetDirX,
+        suggestRaycast.targetDirY,
+        world.balls,
+        metrics,
+      );
+    }
     ctx.save();
     for (const pocket of metrics.pockets) {
       const holeR = pocket.isCorner
         ? metrics.cornerDropRadius * 1.06
         : metrics.sideDropRadius * 1.06;
       const isSelected = activeCalledId === pocket.id;
+      const isSuggested = !isSelected && suggestedPocketId === pocket.id;
       ctx.beginPath();
       ctx.arc(pocket.x, pocket.y, holeR + (isSelected ? 4.5 : 3.2 + pulse * 1.8), 0, Math.PI * 2);
       if (isSelected) {
@@ -3794,6 +4029,12 @@ export function renderBilliardsStageFrame(
         ctx.strokeStyle = '#F3D27A';
         ctx.lineWidth = 2.6;
         ctx.stroke();
+      } else if (isSuggested) {
+        ctx.setLineDash([4, 3]);
+        ctx.strokeStyle = 'rgba(213, 180, 122, 0.72)';
+        ctx.lineWidth = 2.0;
+        ctx.stroke();
+        ctx.setLineDash([]);
       } else {
         ctx.strokeStyle = `rgba(194, 149, 72, ${(0.42 + pulse * 0.34).toFixed(3)})`;
         ctx.lineWidth = 2.0;
@@ -4007,6 +4248,26 @@ export function renderBilliardsStageFrame(
     ctx.restore();
   };
 
+  // Huy hiệu "SAFETY" ngay gần bi cái khi người chơi hoặc AI bật chế độ Chạy đạn
+  if (world.isSafetyActive && cueBall && !cueBall.pocketed && !world.rackCleared) {
+    const bx = Math.max(metrics.feltLeft + 34, Math.min(metrics.feltRight - 34, cueBall.x));
+    const by = Math.max(metrics.feltTop + 18, cueBall.y - ballRadius - 18);
+    ctx.save();
+    ctx.fillStyle = 'rgba(18, 34, 28, 0.9)';
+    ctx.strokeStyle = 'rgba(213, 180, 122, 0.85)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.roundRect(bx - 27, by - 9, 54, 17, 4);
+    ctx.fill();
+    ctx.stroke();
+    ctx.font = '700 8.5px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#E8C57B';
+    ctx.fillText('SAFETY', bx, by);
+    ctx.restore();
+  }
+
   const canShowPlayerOrAiCue =
     cueBall &&
     !cueBall.pocketed &&
@@ -4031,7 +4292,10 @@ export function renderBilliardsStageFrame(
     );
 
     const isIllegalHit =
-      raycast.hitBall !== null && !isBallLegalTarget(world, raycast.hitBall, world.currentPlayer);
+      raycast.hitBall !== null &&
+      (!isBallLegalTarget(world, raycast.hitBall, world.currentPlayer) ||
+        (world.mustShootOutOfKitchen &&
+          !isBallKitchenExempted(world, raycast.hitBall, world.currentPlayer)));
 
     ctx.save();
     if (world.guidelineMode === 'pro') {

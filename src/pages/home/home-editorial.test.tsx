@@ -6,6 +6,8 @@ import {
   interpolateAtmospherePalette,
 } from '@/components/home/atmosphereThemes';
 import {
+  applyEightOnBreakDecision,
+  applyIllegalBreakDecision,
   buildOfficial15BallRack,
   clampBreakCueBallPlacement,
   computeAiShotPlan,
@@ -667,7 +669,9 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('mineral-billiards-canvas')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-footer-seam')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-new-rack-btn')).toHaveTextContent('Ván mới');
-      expect(screen.getByTestId('billiards-rules-btn')).toHaveTextContent('Luật nhanh');
+      expect(screen.getByTestId('billiards-rules-btn')).toHaveTextContent('Luật & Trọng tài');
+      expect(screen.getByTestId('billiards-callshot-toggle')).toHaveTextContent('Luật: CLB');
+      expect(screen.getByTestId('billiards-safety-toggle')).toHaveTextContent('Chạy đạn (Safety)');
       expect(screen.getByTestId('billiards-screen-lock-btn')).toHaveTextContent('Khóa màn hình');
       expect(screen.getByTestId('billiards-salon-backdrop')).toBeInTheDocument();
       expect(screen.getByTestId('billiards-salon-eyebrow')).toHaveTextContent(
@@ -1266,7 +1270,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(Math.abs(englishBall.omegaZ)).toBeLessThan(0.9);
 
         // Kiểm chứng Luật Khai Cuộc WPA 3.3:
-        // (1) Rơi Bi 8 khi khai cuộc KHÔNG thua -> Bi 8 được đặt lại Foot Spot, bàn vẫn mở
+        // (1) Rơi Bi 8 khi khai cuộc KHÔNG thua -> Bi 8 được đặt lại Foot Spot, chờ quyết định 2 phương án
         const eightBreakWorld = createBilliardsWorld(1200, 625, 'two-player');
         eightBreakWorld.isBreakShot = true;
         eightBreakWorld.shotInProgress = true;
@@ -1282,8 +1286,17 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(eightBreakWorld.rackCleared).toBe(false);
         expect(eightOnBreak.pocketed).toBe(false);
         expect(eightBreakWorld.p1Group).toBeNull();
+        expect(eightBreakWorld.pendingDecision).toEqual({
+          type: 'eight-on-break',
+          decidingPlayer: 1,
+          breaker: 1,
+          scratched: false,
+        });
+        applyEightOnBreakDecision(eightBreakWorld, 'spot-and-continue');
+        expect(eightBreakWorld.pendingDecision).toBeNull();
+        expect(eightBreakWorld.currentPlayer).toBe(1);
 
-        // (2) Rơi bi cái lúc khai cuộc (Scratch on Break) -> Ball-in-Hand giới hạn Trong Bếp (kitchen)
+        // (2) Rơi bi cái lúc khai cuộc (Scratch on Break) -> Ball-in-Hand giới hạn Trong Bếp (kitchen) & mustShootOutOfKitchen
         const scratchBreakWorld = createBilliardsWorld(1200, 625, 'two-player');
         scratchBreakWorld.isBreakShot = true;
         scratchBreakWorld.shotInProgress = true;
@@ -1297,9 +1310,10 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         stepBilliardsPhysicsFrame(scratchBreakWorld, 0.016, 1, () => undefined);
         expect(scratchBreakWorld.ballInHand).toBe(true);
         expect(scratchBreakWorld.ballInHandScope).toBe('kitchen');
+        expect(scratchBreakWorld.mustShootOutOfKitchen).toBe(true);
         expect(scratchBreakWorld.currentPlayer).toBe(2);
 
-        // (3) Khai cuộc không đủ 4 bi chạm băng & không ăn bi -> Đổi lượt báo khai cuộc chưa hợp lệ
+        // (3) Khai cuộc không đủ 4 bi chạm băng & không ăn bi -> Kích hoạt quyết định Illegal Break 3 phương án
         const illegalBreakWorld = createBilliardsWorld(1200, 625, 'two-player');
         illegalBreakWorld.isBreakShot = true;
         illegalBreakWorld.shotInProgress = true;
@@ -1311,7 +1325,15 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         }
         stepBilliardsPhysicsFrame(illegalBreakWorld, 0.016, 1, () => undefined);
         expect(illegalBreakWorld.currentPlayer).toBe(2);
-        expect(illegalBreakWorld.foulMessage).toContain('4 bi chạm băng');
+        expect(illegalBreakWorld.pendingDecision).toEqual({
+          type: 'illegal-break',
+          decidingPlayer: 2,
+          breaker: 1,
+        });
+        applyIllegalBreakDecision(illegalBreakWorld, 'accept-table');
+        expect(illegalBreakWorld.pendingDecision).toBeNull();
+        expect(illegalBreakWorld.currentPlayer).toBe(2);
+        expect(illegalBreakWorld.refereeLog.length).toBeGreaterThanOrEqual(2);
 
         // Kiểm chứng Break Kitchen ("Trong Bếp") & WPA Call-Pocket Bi 8 & Luật No-Rail Foul
         const wpaWorld = createBilliardsWorld(1200, 625, 'two-player');
@@ -1475,11 +1497,19 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         expect(aiLevelToggle).toHaveAttribute('data-ai-difficulty', 'club');
 
         const callShotToggle = screen.getByTestId('billiards-callshot-toggle');
+        expect(callShotToggle).toHaveTextContent('Luật: CLB');
+        expect(callShotToggle).toHaveAttribute('data-rule-set', 'club');
         expect(callShotToggle).toHaveAttribute('aria-pressed', 'false');
         fireEvent.click(callShotToggle);
+        expect(callShotToggle).toHaveTextContent('Luật: WPA Pro');
+        expect(callShotToggle).toHaveAttribute('data-rule-set', 'wpa-pro');
         expect(callShotToggle).toHaveAttribute('aria-pressed', 'true');
         fireEvent.click(callShotToggle);
         expect(callShotToggle).toHaveAttribute('aria-pressed', 'false');
+
+        const safetyToggle = screen.getByTestId('billiards-safety-toggle');
+        expect(safetyToggle).toHaveTextContent('Chạy đạn (Safety)');
+        expect(safetyToggle).toBeDisabled(); // Đang cú khai cuộc chưa được tuyên bố Safety
 
         // 5 vạch khắc mảnh bên trái thanh lực dọc, nút vi chỉnh góc (- / +) & chỉ số KÉO ↓ -> XX%
         expect(screen.getByTestId('billiards-power-ticks').children).toHaveLength(5);
@@ -1528,6 +1558,14 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
         fireEvent.click(screen.getByTestId('billiards-rules-btn'));
         expect(screen.getByTestId('billiards-rules-popover')).toHaveTextContent(/Nhấn phím L/i);
+        fireEvent.click(screen.getByTestId('rules-tab-wpa'));
+        expect(screen.getByTestId('billiards-rules-popover')).toHaveTextContent(
+          /không áp dụng.*3 lỗi liên tiếp/i,
+        );
+        fireEvent.click(screen.getByTestId('rules-tab-log'));
+        expect(screen.getByTestId('billiards-referee-log-list')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('billiards-rules-close-btn'));
+        expect(screen.queryByTestId('billiards-rules-popover')).not.toBeInTheDocument();
 
         const soundBtn = screen.getByTestId('billiards-sound-toggle');
         expect(soundBtn).toHaveAttribute('aria-pressed', 'false');
