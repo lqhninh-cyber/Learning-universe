@@ -10,7 +10,9 @@ interface AnchorSubjectNode {
   readonly nx: number;
   readonly ny: number;
   readonly color: string;
+  readonly darkColor: string;
   readonly bg: string;
+  readonly darkBg: string;
 }
 
 export interface KnowledgeBridgeNode {
@@ -28,10 +30,46 @@ export interface KnowledgeBridgeNode {
 }
 
 const ANCHOR_SUBJECTS: readonly AnchorSubjectNode[] = [
-  { id: 'CTDS', shortLabel: 'CTĐS', nx: 0.16, ny: 0.22, color: '#6B5335', bg: '#F3F0E8' },
-  { id: 'HHAVE', shortLabel: 'HHAVE', nx: 0.83, ny: 0.22, color: '#2D5266', bg: '#ECF1F4' },
-  { id: 'GTHMB', shortLabel: 'GTHMB', nx: 0.82, ny: 0.8, color: '#245746', bg: '#EBF2EE' },
-  { id: 'GDH', shortLabel: 'GDH', nx: 0.16, ny: 0.8, color: '#7A463B', bg: '#F3ECE9' },
+  {
+    id: 'CTDS',
+    shortLabel: 'CTĐS',
+    nx: 0.16,
+    ny: 0.22,
+    color: '#8C5828',
+    darkColor: '#D99B5E',
+    bg: '#FDF8F3',
+    darkBg: '#1D1813',
+  },
+  {
+    id: 'HHAVE',
+    shortLabel: 'HHAVE',
+    nx: 0.83,
+    ny: 0.22,
+    color: '#1D4F6E',
+    darkColor: '#64A8D1',
+    bg: '#F3F8FB',
+    darkBg: '#131C22',
+  },
+  {
+    id: 'GTHMB',
+    shortLabel: 'GTHMB',
+    nx: 0.82,
+    ny: 0.8,
+    color: '#1B5E4A',
+    darkColor: '#52B394',
+    bg: '#F2F9F6',
+    darkBg: '#111F1A',
+  },
+  {
+    id: 'GDH',
+    shortLabel: 'GDH',
+    nx: 0.16,
+    ny: 0.8,
+    color: '#8F3D35',
+    darkColor: '#DF7B70',
+    bg: '#FBF4F3',
+    darkBg: '#211514',
+  },
 ];
 
 const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
@@ -354,13 +392,23 @@ export function KnowledgeConstellationCard() {
       ctx.globalAlpha = 1;
 
       // 3. Vẽ 4 nút Học phần (Subject Anchor Hubs) kèm lan tỏa is-hit theo nhánh liên kết
+      const isDarkCanvas =
+        typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
       for (const anchor of ANCHOR_SUBJECTS) {
         const pos = anchorPositions.get(anchor.id)!;
         const isLinked = activeBridge ? activeBridge.targets.includes(anchor.id) : true;
+        const anchorStroke = isDarkCanvas ? anchor.darkColor : anchor.color;
+        const anchorFill = isLinked
+          ? isDarkCanvas
+            ? anchor.darkBg
+            : anchor.bg
+          : isDarkCanvas
+            ? '#181F1D'
+            : '#F2F4F3';
 
         if (isLinked) {
           const glow = ctx.createRadialGradient(pos.x, pos.y, 4, pos.x, pos.y, 26);
-          glow.addColorStop(0, `${anchor.color}36`);
+          glow.addColorStop(0, `${anchorStroke}36`);
           glow.addColorStop(1, 'rgba(255,255,255,0)');
           ctx.fillStyle = glow;
           ctx.beginPath();
@@ -371,7 +419,7 @@ export function KnowledgeConstellationCard() {
           const pulsePhase = (time * 1.1) % 1;
           ctx.beginPath();
           ctx.arc(pos.x, pos.y, 17 + pulsePhase * 7, 0, Math.PI * 2);
-          ctx.strokeStyle = anchor.color;
+          ctx.strokeStyle = anchorStroke;
           ctx.globalAlpha = Math.max(0, (1 - pulsePhase) * 0.42);
           ctx.lineWidth = 1.1;
           ctx.stroke();
@@ -379,9 +427,9 @@ export function KnowledgeConstellationCard() {
 
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, 16, 0, Math.PI * 2);
-        ctx.fillStyle = isLinked ? anchor.bg : '#F2F4F3';
+        ctx.fillStyle = anchorFill;
         ctx.fill();
-        ctx.strokeStyle = anchor.color;
+        ctx.strokeStyle = anchorStroke;
         ctx.globalAlpha = isLinked ? 1 : 0.4;
         ctx.lineWidth = isLinked ? 1.8 : 1.1;
         ctx.stroke();
@@ -389,7 +437,7 @@ export function KnowledgeConstellationCard() {
         ctx.font = '700 9.5px "JetBrains Mono", monospace';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = anchor.color;
+        ctx.fillStyle = anchorStroke;
         ctx.fillText(anchor.shortLabel, pos.x, pos.y);
       }
       ctx.globalAlpha = 1;

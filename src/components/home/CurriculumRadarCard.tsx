@@ -244,8 +244,14 @@ export function CurriculumRadarCard({
       });
 
       const footAreaGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, maxR);
-      footAreaGrad.addColorStop(0, 'rgba(36, 87, 70, 0.06)');
-      footAreaGrad.addColorStop(1, 'rgba(36, 87, 70, 0.22)');
+      footAreaGrad.addColorStop(
+        0,
+        isDarkDoc ? 'rgba(82, 179, 148, 0.1)' : 'rgba(36, 87, 70, 0.06)',
+      );
+      footAreaGrad.addColorStop(
+        1,
+        isDarkDoc ? 'rgba(82, 179, 148, 0.28)' : 'rgba(36, 87, 70, 0.22)',
+      );
 
       ctx.beginPath();
       footprintPts.forEach((pt, idx) => {
@@ -255,7 +261,7 @@ export function CurriculumRadarCard({
       ctx.closePath();
       ctx.fillStyle = footAreaGrad;
       ctx.fill();
-      ctx.strokeStyle = '#245746';
+      ctx.strokeStyle = isDarkDoc ? '#52B394' : '#245746';
       ctx.lineWidth = 1.8;
       ctx.lineJoin = 'round';
       ctx.stroke();
@@ -307,9 +313,9 @@ export function CurriculumRadarCard({
         else ctx.lineTo(pt.x, pt.y);
       });
       ctx.closePath();
-      ctx.fillStyle = 'rgba(156, 122, 76, 0.25)';
+      ctx.fillStyle = isDarkDoc ? 'rgba(212, 175, 106, 0.28)' : 'rgba(156, 122, 76, 0.25)';
       ctx.fill();
-      ctx.strokeStyle = '#9C7A4C';
+      ctx.strokeStyle = isDarkDoc ? '#D4AF6A' : '#9C7A4C';
       ctx.lineWidth = 1.85;
       ctx.stroke();
 

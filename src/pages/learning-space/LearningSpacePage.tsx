@@ -157,6 +157,13 @@ export function LearningSpacePage() {
           {/* Cột Trái (7 cột): Tiêu đề, mô tả 1 dòng, ô tìm kiếm lọc tức thời & chip gợi ý */}
           <div className="space-y-5 lg:col-span-7">
             <div className="space-y-2.5">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-[var(--text-secondary)] uppercase">
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-os)]"
+                  aria-hidden="true"
+                />
+                <span>Hệ thống học phần &amp; Đồ thị tri thức</span>
+              </div>
               <h1 className="font-serif text-3xl font-semibold tracking-tight text-[var(--text-main)] sm:text-4xl">
                 Không Gian Học Tập
               </h1>
@@ -167,15 +174,22 @@ export function LearningSpacePage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-[var(--text-muted)]">
-              <span>{String(subjects.length).padStart(2, '0')} học phần</span>
-              <span aria-hidden="true">·</span>
-              <span>{totalChapterCount} chương</span>
-              <span aria-hidden="true">·</span>
-              <span>{totalLessonCount} bài giảng</span>
-              <span aria-hidden="true">·</span>
-              <span className="font-semibold text-[var(--accent-os)] tabular-nums">
-                Hoàn thành {computedPercent}%
+            <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-[var(--text-muted)]">
+              <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
+                {String(subjects.length).padStart(2, '0')} học phần
+              </span>
+              <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
+                {totalChapterCount} chương
+              </span>
+              <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
+                {totalLessonCount} bài giảng
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-semibold text-[var(--accent-os)] tabular-nums">
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-os)]"
+                  aria-hidden="true"
+                />
+                <span>Hoàn thành {computedPercent}%</span>
               </span>
             </div>
 
@@ -443,10 +457,20 @@ export function LearningSpacePage() {
           {/* Cột Phải (5 cột): Mô hình đa diện 3D tương tác 120fps trên nền sạch */}
           <div
             data-testid="hero-3d-column"
-            className="hidden flex-col items-center justify-center rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 lg:col-span-5 lg:flex"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 48%, var(--bg-workspace) 0%, var(--bg-surface) 100%)',
+            }}
+            className="hidden flex-col items-center justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] md:flex lg:col-span-5"
           >
             <div className="relative w-full">
               <LearningSpaceHeroCanvas />
+            </div>
+            <div className="mt-2 flex w-full items-center justify-between border-t border-[var(--border-hairline)] pt-2.5 font-mono text-[10px] text-[var(--text-muted)]">
+              <span className="font-semibold tracking-wider text-[var(--text-secondary)] uppercase">
+                Đa diện 3D · 120FPS
+              </span>
+              <span>Kéo xoay · Chạm đỉnh kích hoạt xung</span>
             </div>
           </div>
         </section>

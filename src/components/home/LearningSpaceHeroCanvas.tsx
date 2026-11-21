@@ -228,19 +228,21 @@ function drawAstrolabeBackdropAndAlidade(
   const innerR = 178 * unitScale;
   const axisExtent = 198 * unitScale;
   const coreClearR = outerR * 0.36;
+  const isDarkDoc =
+    typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
 
   ctx.save();
 
   // Hai vòng chia độ ngoại vi đồng tâm R_dial = 185px & 178px (tỉ lệ unitScale)
   ctx.beginPath();
   ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(30, 58, 52, 0.24)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(158, 197, 184, 0.32)' : 'rgba(30, 58, 52, 0.24)';
   ctx.lineWidth = 0.85;
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-  ctx.strokeStyle = 'rgba(140, 109, 63, 0.26)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(212, 175, 106, 0.34)' : 'rgba(140, 109, 63, 0.26)';
   ctx.lineWidth = 0.7;
   ctx.stroke();
 
@@ -248,7 +250,7 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.beginPath();
   ctx.arc(cx, cy, outerR * 0.82, 0, Math.PI * 2);
   ctx.setLineDash([3, 5]);
-  ctx.strokeStyle = 'rgba(45, 82, 102, 0.14)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(100, 168, 209, 0.24)' : 'rgba(45, 82, 102, 0.14)';
   ctx.lineWidth = 0.65;
   ctx.stroke();
   ctx.setLineDash([]);
@@ -261,7 +263,7 @@ function drawAstrolabeBackdropAndAlidade(
     ctx.arc(cx, cy, outerR, sliceStart, radarAngle, false);
     ctx.arc(cx, cy, coreClearR, radarAngle, sliceStart, true);
     ctx.closePath();
-    ctx.fillStyle = 'rgba(36, 87, 70, 0.0055)';
+    ctx.fillStyle = isDarkDoc ? 'rgba(82, 179, 148, 0.008)' : 'rgba(36, 87, 70, 0.0055)';
     ctx.fill();
   }
 
@@ -270,7 +272,7 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.beginPath();
   ctx.moveTo(cx + sweepCos * coreClearR, cy + sweepSin * coreClearR);
   ctx.lineTo(cx + sweepCos * outerR, cy + sweepSin * outerR);
-  ctx.strokeStyle = 'rgba(156, 122, 76, 0.4)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(212, 175, 106, 0.55)' : 'rgba(156, 122, 76, 0.4)';
   ctx.lineWidth = 0.85;
   ctx.stroke();
 
@@ -287,10 +289,16 @@ function drawAstrolabeBackdropAndAlidade(
     ctx.moveTo(cx + t.cos * tickStart, cy + t.sin * tickStart);
     ctx.lineTo(cx + t.cos * outerR, cy + t.sin * outerR);
     ctx.strokeStyle = t.isMajor15
-      ? 'rgba(30, 58, 52, 0.42)'
+      ? isDarkDoc
+        ? 'rgba(158, 197, 184, 0.55)'
+        : 'rgba(30, 58, 52, 0.42)'
       : t.isMedium5
-        ? 'rgba(140, 109, 63, 0.30)'
-        : 'rgba(30, 58, 52, 0.18)';
+        ? isDarkDoc
+          ? 'rgba(212, 175, 106, 0.38)'
+          : 'rgba(140, 109, 63, 0.30)'
+        : isDarkDoc
+          ? 'rgba(158, 197, 184, 0.24)'
+          : 'rgba(30, 58, 52, 0.18)';
     ctx.lineWidth = t.isMajor15 ? 0.85 : 0.5;
     ctx.stroke();
 
@@ -299,7 +307,14 @@ function drawAstrolabeBackdropAndAlidade(
       const dotRadiusPos = outerR + 5.5 * unitScale;
       ctx.beginPath();
       ctx.arc(cx + t.cos * dotRadiusPos, cy + t.sin * dotRadiusPos, dotR, 0, Math.PI * 2);
-      ctx.fillStyle = deg % 90 === 0 ? 'rgba(140, 109, 63, 0.62)' : 'rgba(36, 87, 70, 0.42)';
+      ctx.fillStyle =
+        deg % 90 === 0
+          ? isDarkDoc
+            ? 'rgba(212, 175, 106, 0.78)'
+            : 'rgba(140, 109, 63, 0.62)'
+          : isDarkDoc
+            ? 'rgba(82, 179, 148, 0.55)'
+            : 'rgba(36, 87, 70, 0.42)';
       ctx.fill();
     }
   }

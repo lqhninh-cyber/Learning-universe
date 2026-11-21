@@ -137,9 +137,9 @@ export function SubjectWatermarkSignature({ slug }: { readonly slug: string }) {
         data-testid={`subject-watermark-${slug}`}
         viewBox="0 0 160 160"
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 text-[var(--text-main)] opacity-[0.045] select-none dark:opacity-[0.075]"
       >
-        <g stroke="#262B28" strokeWidth="2.5" fill="none">
+        <g stroke="currentColor" strokeWidth="2.5" fill="none">
           <rect x="20" y="20" width="90" height="90" rx="6" />
           <line x1="50" y1="20" x2="50" y2="110" />
           <line x1="80" y1="20" x2="80" y2="110" />
@@ -148,7 +148,7 @@ export function SubjectWatermarkSignature({ slug }: { readonly slug: string }) {
           <circle cx="126" cy="126" r="22" />
           <path d="M 96 126 L 150 126" />
         </g>
-        <text x="24" y="148" fill="#262B28" fontSize="22" fontFamily="serif" fontWeight="bold">
+        <text x="24" y="148" fill="currentColor" fontSize="22" fontFamily="serif" fontWeight="bold">
           G / ker φ ≅ Im φ
         </text>
       </svg>
@@ -161,14 +161,14 @@ export function SubjectWatermarkSignature({ slug }: { readonly slug: string }) {
         data-testid={`subject-watermark-${slug}`}
         viewBox="0 0 160 160"
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 text-[var(--text-main)] opacity-[0.045] select-none dark:opacity-[0.075]"
       >
-        <g stroke="#262B28" strokeWidth="3" fill="none">
+        <g stroke="currentColor" strokeWidth="3" fill="none">
           <line x1="75" y1="95" x2="75" y2="15" />
           <line x1="75" y1="95" x2="148" y2="120" />
           <line x1="75" y1="95" x2="18" y2="138" />
           <polygon points="75,35 130,114 35,126" strokeWidth="2" />
-          <circle cx="75" cy="95" r="5" fill="#262B28" />
+          <circle cx="75" cy="95" r="5" fill="currentColor" />
         </g>
       </svg>
     );
@@ -180,18 +180,18 @@ export function SubjectWatermarkSignature({ slug }: { readonly slug: string }) {
         data-testid={`subject-watermark-${slug}`}
         viewBox="0 0 160 160"
         aria-hidden="true"
-        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+        className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 text-[var(--text-main)] opacity-[0.045] select-none dark:opacity-[0.075]"
       >
         <path
           d="M 55 138 C 68 138, 72 115, 76 80 C 80 45, 84 22, 98 22"
-          stroke="#262B28"
+          stroke="currentColor"
           strokeWidth="5"
           fill="none"
           strokeLinecap="round"
         />
         <path
           d="M 15 120 C 45 115, 65 45, 95 60 C 120 72, 135 35, 152 28"
-          stroke="#262B28"
+          stroke="currentColor"
           strokeWidth="2.5"
           fill="none"
         />
@@ -204,9 +204,9 @@ export function SubjectWatermarkSignature({ slug }: { readonly slug: string }) {
       data-testid={`subject-watermark-${slug}`}
       viewBox="0 0 160 160"
       aria-hidden="true"
-      className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 opacity-[0.04] select-none"
+      className="pointer-events-none absolute right-4 bottom-4 h-36 w-36 text-[var(--text-main)] opacity-[0.045] select-none dark:opacity-[0.075]"
     >
-      <g stroke="#262B28" strokeWidth="3" fill="none">
+      <g stroke="currentColor" strokeWidth="3" fill="none">
         <circle cx="80" cy="56" r="38" />
         <circle cx="56" cy="100" r="38" />
         <circle cx="104" cy="100" r="38" />
@@ -928,7 +928,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               } as CSSProperties & { '--subject-rgb': string }
                             }
                             className={cn(
-                              'group relative flex h-full scroll-mt-16 flex-col justify-between overflow-hidden rounded-xl border bg-[var(--bg-surface)] p-6 transition-all duration-150 hover:bg-[var(--bg-workspace)] hover:shadow-xs',
+                              'group relative flex h-full scroll-mt-16 flex-col justify-between overflow-hidden rounded-xl border bg-[var(--bg-surface)] p-6 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]',
                               palette.cardBorder,
                             )}
                           >
@@ -1340,15 +1340,15 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                       item.chapter.slug,
                                       item.lesson.slug,
                                     )}
-                                    className="group/next flex flex-col justify-between gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-colors hover:border-[var(--accent-primary)] hover:shadow-xs"
+                                    className="group/next flex flex-col justify-between gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-all duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-os)]/50 hover:shadow-xs"
                                   >
                                     <div className="flex items-center justify-between gap-2">
-                                      <span className="font-mono text-[10.5px] font-bold text-[var(--accent-primary)]">
+                                      <span className="font-mono text-[10.5px] font-bold text-[var(--accent-os)]">
                                         Bài {item.chapter.number}.{item.lesson.number}
                                       </span>
                                       {isDone ? (
                                         <CheckCircle2
-                                          className="h-3.5 w-3.5 text-[var(--accent-primary)]"
+                                          className="h-3.5 w-3.5 text-[var(--accent-os)]"
                                           aria-hidden="true"
                                         />
                                       ) : (
@@ -1357,7 +1357,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                         </span>
                                       )}
                                     </div>
-                                    <p className="line-clamp-2 text-xs leading-snug font-semibold text-[var(--text-main)] group-hover/next:text-[var(--accent-primary)]">
+                                    <p className="line-clamp-2 text-xs leading-snug font-semibold text-[var(--text-main)] group-hover/next:text-[var(--accent-os)]">
                                       {item.lesson.title}
                                     </p>
                                   </Link>
@@ -1381,10 +1381,13 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               activeRecentLesson.chapter.slug,
                               activeRecentLesson.lesson.slug,
                             )}
-                            className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent-primary)] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-[var(--accent-primary-hover)] dark:text-[#0D1110]"
+                            className="group/read inline-flex items-center gap-2 rounded-lg bg-[var(--accent-os)] px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-all duration-150 hover:bg-[var(--accent-primary-hover)] active:scale-[0.98]"
                           >
                             <span>Tiếp tục đọc ngay</span>
-                            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                            <ArrowRight
+                              className="h-4 w-4 transition-transform duration-150 group-hover/read:translate-x-0.5"
+                              aria-hidden="true"
+                            />
                           </Link>
                         </div>
                       </div>
