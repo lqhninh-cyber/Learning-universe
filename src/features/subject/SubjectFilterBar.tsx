@@ -60,12 +60,12 @@ export function SubjectFilterBar({
   return (
     <section
       aria-label="Bộ lọc và phân loại bài học"
-      className="space-y-4 rounded-2xl border border-stone-200/90 bg-white p-4 shadow-2xs sm:p-5"
+      className="space-y-4 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4 shadow-2xs sm:p-5"
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="relative flex-1">
+        <div className="relative min-w-0 flex-1">
           <Search
-            className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-stone-400"
+            className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[var(--text-muted)]"
             aria-hidden="true"
           />
           <input
@@ -74,7 +74,7 @@ export function SubjectFilterBar({
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Lọc bài học theo tên, khái niệm hoặc từ khóa trong môn..."
             aria-label="Lọc bài học trong môn"
-            className="h-10 w-full rounded-xl border border-stone-200 bg-stone-50/70 pr-4 pl-10 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus:border-[var(--subject-accent-border,#6E6B7B)] focus:bg-white focus:outline-none"
+            className="h-10 w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] pr-4 pl-10 text-sm text-[var(--text-main)] transition-colors placeholder:text-[var(--text-muted)] focus:border-[var(--accent-os)] focus:bg-[var(--bg-workspace)] focus:outline-none"
           />
         </div>
 
@@ -94,8 +94,8 @@ export function SubjectFilterBar({
                 className={cn(
                   'cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
                   active
-                    ? 'bg-[var(--subject-accent-ink,#4338CA)] text-white shadow-2xs'
-                    : 'border border-stone-200 bg-white text-stone-700 hover:bg-stone-50',
+                    ? 'bg-[var(--accent-os)] text-[var(--bg-workspace)] shadow-2xs'
+                    : 'border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]',
                 )}
               >
                 {option.label}
@@ -106,9 +106,9 @@ export function SubjectFilterBar({
       </div>
 
       {availableTags.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 pt-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-hairline)] pt-3">
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="mr-1 inline-flex items-center gap-1 text-xs font-medium text-stone-500">
+            <span className="mr-1 inline-flex items-center gap-1 text-xs font-medium text-[var(--text-muted)]">
               <Filter className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Chủ đề phổ biến:</span>
             </span>
@@ -123,8 +123,8 @@ export function SubjectFilterBar({
                   className={cn(
                     'cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                     active
-                      ? 'border border-[var(--subject-accent-border,#A5B4FC)] bg-[var(--subject-accent-soft,#E0E7FF)] font-semibold text-[var(--subject-accent-ink,#312E81)]'
-                      : 'border border-stone-200/80 bg-stone-50 text-stone-600 hover:bg-stone-100',
+                      ? 'border border-[var(--accent-os)]/50 bg-[var(--accent-os)]/15 font-semibold text-[var(--accent-os)]'
+                      : 'border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-shell)] hover:text-[var(--text-main)]',
                   )}
                 >
                   #{tag}
@@ -136,7 +136,7 @@ export function SubjectFilterBar({
                 type="button"
                 onClick={() => setIsTagsExpanded((prev) => !prev)}
                 aria-expanded={isTagsExpanded}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-dashed border-stone-300 bg-white px-2 py-1 text-xs font-medium text-stone-600 transition-colors hover:border-stone-400 hover:bg-stone-50 hover:text-stone-900"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-dashed border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1 text-xs font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)]/50 hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
               >
                 {isTagsExpanded ? (
                   <>
@@ -153,9 +153,10 @@ export function SubjectFilterBar({
             )}
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-stone-500">
+          <div className="flex items-center gap-3 text-xs text-[var(--text-muted)]">
             <span>
-              Hiển thị <strong className="font-semibold text-stone-800">{shownCount}</strong> /{' '}
+              Hiển thị{' '}
+              <strong className="font-semibold text-[var(--text-main)]">{shownCount}</strong> /{' '}
               {totalCount} bài học
             </span>
             {hasActiveFilter && (

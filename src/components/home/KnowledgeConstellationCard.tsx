@@ -427,7 +427,15 @@ export function KnowledgeConstellationCard() {
         ctx.font = `${isActive ? '700' : '600'} 9.5px "Be Vietnam Pro", system-ui, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.fillStyle = isActive ? '#182624' : '#4A5D58';
+        const isDarkDoc =
+          typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+        ctx.fillStyle = isActive
+          ? isDarkDoc
+            ? '#EFF4F2'
+            : '#182624'
+          : isDarkDoc
+            ? '#9EB0AA'
+            : '#4A5D58';
         ctx.fillText(bridge.shortLabel, bPos.x, bPos.y + 9);
       }
 
@@ -521,24 +529,24 @@ export function KnowledgeConstellationCard() {
   return (
     <div
       data-testid="knowledge-constellation-card"
-      className="lu-fx-card flex flex-1 flex-col justify-between rounded-[2px] border-[#CFD8D4] p-5 sm:p-6"
+      className="flex flex-1 flex-col justify-between rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 sm:p-6"
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="border border-[#CFD8D4] bg-[#ECF1F4] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#2D5266]">
-            GIAO THOA LIÊN MÔN · 120FPS GRAPH
+          <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--accent-os)]">
+            GIAO THOA LIÊN MÔN
           </span>
-          <Network className="h-4 w-4 text-[#2D5266]" aria-hidden="true" />
+          <Network className="h-4 w-4 text-[var(--accent-os)]" aria-hidden="true" />
         </div>
 
         <h3 className="font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
           Mạng Lưới Liên Kết Tri Thức
         </h3>
 
-        {/* Đồ thị Mạng lưới Tri thức Canvas 120fps trên nền chấm chuẩn độ lu-dg-ground-dots */}
+        {/* Đồ thị Mạng lưới Tri thức Canvas 120fps */}
         <div
           ref={containerRef}
-          className="lu-dg-ground-dots relative h-[222px] w-full overflow-hidden rounded-[2px] border border-[#CFD8D4] bg-[#ECF1F4]/45"
+          className="relative h-[222px] w-full overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]"
         >
           <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
         </div>
@@ -560,25 +568,19 @@ export function KnowledgeConstellationCard() {
                 onClick={() => setSelectedId(bridge.id)}
                 aria-pressed={isActive}
                 className={cn(
-                  'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold transition-[color,background-color,border-color,box-shadow] duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
+                  'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10.5px] font-semibold transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none',
                   isActive
-                    ? bridge.pillActiveClass
-                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#2D5266]/45 hover:text-[#182624]',
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-main)]',
                 )}
               >
                 <span
                   className="relative flex h-2 w-2 items-center justify-center"
                   aria-hidden="true"
                 >
-                  {isActive && (
-                    <span
-                      className="lu-dg-pulse-ring absolute inset-0 rounded-full"
-                      style={{ backgroundColor: bridge.color }}
-                    />
-                  )}
                   <span
                     className="h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: isActive ? bridge.color : '#8AA098' }}
+                    style={{ backgroundColor: isActive ? '#FFFFFF' : bridge.color }}
                   />
                 </span>
                 <span>{bridge.shortLabel}</span>
@@ -591,18 +593,17 @@ export function KnowledgeConstellationCard() {
       {/* Hộp giải thích ngắn gọn sự giao thoa kiến thức giữa các môn */}
       <div
         data-testid="constellation-insight-panel"
-        className="mt-3 space-y-1.5 rounded-xl border border-[#C9D7DF] bg-[#ECF1F4]/60 px-3.5 py-2.5"
+        className="mt-3 space-y-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2.5"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-xs font-bold text-[#182624]">{activeBridge.title}</span>
-          <span
-            className="rounded-md border border-[#C9D7DF] bg-[#FAFBF9] px-1.5 py-0.5 font-mono text-[10px] font-bold"
-            style={{ color: activeBridge.color }}
-          >
+          <span className="text-xs font-bold text-[var(--text-main)]">{activeBridge.title}</span>
+          <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[var(--accent-heritage)]">
             {activeBridge.relationLabel}
           </span>
         </div>
-        <p className="text-[11.5px] leading-relaxed text-[#3F524E]">{activeBridge.explanation}</p>
+        <p className="text-[11.5px] leading-relaxed text-[var(--text-secondary)]">
+          {activeBridge.explanation}
+        </p>
       </div>
     </div>
   );

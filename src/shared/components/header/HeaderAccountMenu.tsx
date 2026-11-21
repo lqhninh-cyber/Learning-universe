@@ -103,36 +103,32 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
           )}
         >
           {/* Mục 1: Thông tin học tập cá nhân */}
-          <div className="space-y-1.5 border-b border-[var(--border-subtle)] pb-3">
-            <div className="flex items-center gap-2 text-xs font-semibold">
-              <BookOpen
-                className="h-3.5 w-3.5 text-[#1B3D2F] dark:text-[#E5C378]"
-                aria-hidden="true"
-              />
+          <div className="space-y-1.5 border-b border-[var(--border-hairline)] pb-3">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-main)]">
+              <BookOpen className="h-3.5 w-3.5 text-[var(--accent-os)]" aria-hidden="true" />
               <span>Thông tin học tập cá nhân</span>
             </div>
-            <p className="text-xs text-[#55676B] dark:text-[#A7B5AC]">
-              Đã hoàn thành{' '}
-              <strong className="text-[#142B21] dark:text-[#F7F4EB]">{completedCount}</strong> bài
-              học trên trình duyệt này.
+            <p className="text-xs text-[var(--text-secondary)]">
+              Đã hoàn thành <strong className="text-[var(--text-main)]">{completedCount}</strong>{' '}
+              bài học trên trình duyệt này.
             </p>
           </div>
 
           {/* Mục 2: Cài đặt giao diện (Cỡ chữ đọc bài) */}
-          <div className="space-y-2 border-b border-[var(--border-subtle)] py-3">
-            <div className="flex items-center justify-between text-xs font-semibold">
+          <div className="space-y-2 border-b border-[var(--border-hairline)] py-3">
+            <div className="flex items-center justify-between text-xs font-semibold text-[var(--text-main)]">
               <span className="inline-flex items-center gap-2">
                 <SlidersHorizontal
-                  className="h-3.5 w-3.5 text-[#1B3D2F] dark:text-[#E5C378]"
+                  className="h-3.5 w-3.5 text-[var(--accent-os)]"
                   aria-hidden="true"
                 />
                 <span>Cỡ chữ bài đọc</span>
               </span>
-              <span className="font-mono text-[11px] font-medium text-[#9A7B3E]">
+              <span className="font-mono text-[11px] font-medium text-[var(--accent-heritage)]">
                 {FONT_SIZE_LABELS[fontSize]}
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-page)] p-1">
+            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-1">
               {fontOptions.map((opt) => (
                 <button
                   key={opt.id}
@@ -141,8 +137,8 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
                   className={cn(
                     'cursor-pointer rounded-lg py-1 text-xs font-semibold transition-colors',
                     fontSize === opt.id
-                      ? 'bg-[#1B3D2F] text-white'
-                      : 'text-[#55676B] hover:text-[#142B21] dark:text-[#A7B5AC] dark:hover:text-[#F7F4EB]',
+                      ? 'bg-[var(--accent-os)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                   )}
                 >
                   {opt.label}
@@ -153,16 +149,13 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
 
           {/* Liên kết Quản trị viên (nếu có quyền Admin) */}
           {isAdmin && (
-            <div className="border-b border-[var(--border-subtle)] py-2">
+            <div className="border-b border-[var(--border-hairline)] py-2">
               <Link
                 to={ROUTES.adminUsers}
                 onClick={onClose}
-                className="flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium transition-colors hover:bg-[#1B3D2F]/8 dark:hover:bg-white/5"
+                className="flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium text-[var(--text-main)] transition-colors hover:bg-[var(--bg-surface)]"
               >
-                <Users
-                  className="h-3.5 w-3.5 text-[#55676B] dark:text-[#A7B5AC]"
-                  aria-hidden="true"
-                />
+                <Users className="h-3.5 w-3.5 text-[var(--text-muted)]" aria-hidden="true" />
                 <span>Quản lý học viên</span>
               </Link>
             </div>
@@ -174,13 +167,10 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
               <button
                 type="button"
                 onClick={() => void onSignOut()}
-                className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-colors hover:bg-[#1B3D2F]/8 dark:hover:bg-white/5"
+                className="flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-medium text-[var(--text-main)] transition-colors hover:bg-[var(--bg-surface)]"
               >
                 <span>Đăng xuất</span>
-                <LogOut
-                  className="h-3.5 w-3.5 text-[#55676B] dark:text-[#A7B5AC]"
-                  aria-hidden="true"
-                />
+                <LogOut className="h-3.5 w-3.5 text-[var(--text-muted)]" aria-hidden="true" />
               </button>
             ) : (
               <div className="space-y-1.5">
@@ -190,7 +180,7 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
                     onClose();
                     onOpenAuthModal();
                   }}
-                  className="flex w-full cursor-pointer items-center justify-between rounded-xl bg-[#1B3D2F] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#25523F]"
+                  className="flex w-full cursor-pointer items-center justify-between rounded-xl bg-[var(--accent-os)] px-3.5 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-95"
                 >
                   <span>Đăng nhập đồng bộ</span>
                   <LogIn className="h-3.5 w-3.5" aria-hidden="true" />
@@ -201,7 +191,7 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
                     onEnableLearnerMode();
                     onClose();
                   }}
-                  className="w-full cursor-pointer rounded-xl px-3 py-1.5 text-center text-[11px] font-medium text-[#55676B] transition-colors hover:bg-[#1B3D2F]/6 hover:text-[#142B21] dark:text-[#A7B5AC] dark:hover:text-[#F7F4EB]"
+                  className="w-full cursor-pointer rounded-xl px-3 py-1.5 text-center text-[11px] font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
                 >
                   Bật lưu tiến độ trình duyệt
                 </button>

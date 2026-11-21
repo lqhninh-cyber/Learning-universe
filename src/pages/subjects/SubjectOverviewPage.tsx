@@ -585,25 +585,25 @@ export function SubjectOverviewPage() {
 
                       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {/* Tài liệu 1: Giáo trình */}
-                        <div className="hover:border-subject-300 flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-5 shadow-2xs transition-all">
+                        <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-5 shadow-2xs transition-all hover:border-[var(--accent-os)]/50">
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-subject-700 text-xs font-bold tracking-wider uppercase">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-bold tracking-wider text-[var(--accent-os)] uppercase">
                                 Giáo trình chính khóa
                               </span>
                               <Badge variant="subject">PDF Bản chuẩn</Badge>
                             </div>
-                            <h3 className="text-base font-bold text-stone-900">
+                            <h3 className="text-base font-bold text-[var(--text-main)]">
                               Giáo trình Giải tích hàm một biến (GV. Trần Trí Dũng)
                             </h3>
-                            <p className="text-xs leading-relaxed text-stone-600">
+                            <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                               Nền tảng Giải tích thực từ tiên đề trường R, giới hạn dãy/hàm, tính
                               liên tục, phép tính vi phân, tích phân Riemann đến lý thuyết chuỗi số
                               và chuỗi hàm.
                             </p>
                           </div>
 
-                          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
+                          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-[var(--border-hairline)] pt-4">
                             <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
                               <a
                                 href={EXTERNAL_LINKS.giaiTichHamMotBienPdf}
@@ -628,24 +628,24 @@ export function SubjectOverviewPage() {
                         </div>
 
                         {/* Tài liệu 2: Nội dung ôn tập & Đề thi mẫu */}
-                        <div className="hover:border-subject-300 flex flex-col justify-between rounded-2xl border border-stone-200/90 bg-white p-5 shadow-2xs transition-all">
+                        <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-5 shadow-2xs transition-all hover:border-[var(--accent-os)]/50">
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-bold tracking-wider text-amber-700 uppercase">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-bold tracking-wider text-[var(--accent-heritage)] uppercase">
                                 Tài liệu ôn thi cuối khóa
                               </span>
                               <Badge variant="neutral">Trọng tâm &amp; Đề mẫu</Badge>
                             </div>
-                            <h3 className="text-base font-bold text-stone-900">
+                            <h3 className="text-base font-bold text-[var(--text-main)]">
                               Nội dung ôn tập &amp; Đề thi mẫu cuối khóa
                             </h3>
-                            <p className="text-xs leading-relaxed text-stone-600">
+                            <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                               Hệ thống trọng tâm lý thuyết, bài tập ôn thi và 5 câu tự luận đề mẫu
                               học phần Giải tích hàm một biến.
                             </p>
                           </div>
 
-                          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
+                          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-[var(--border-hairline)] pt-4">
                             <Button asChild variant="subject" size="sm" className="gap-1.5 text-xs">
                               <Link to="/mon-hoc/giai-tich-ham-mot-bien/on-tap-cuoi-khoa-va-de-thi-mau/de-cuong-trong-tam-ly-thuyet-va-cam-nang-bai-tap-on-thi">
                                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
@@ -666,25 +666,25 @@ export function SubjectOverviewPage() {
                         </div>
 
                         {/* Tài liệu 3: Ôn tập & Đề thi thực chiến */}
-                        <div className="border-subject-300 from-subject-50/50 hover:border-subject-400 flex flex-col justify-between rounded-2xl border bg-gradient-to-br via-white to-amber-50/30 p-5 shadow-2xs transition-all">
+                        <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-[var(--accent-os)]/40 bg-[var(--bg-surface)] p-5 shadow-2xs transition-all hover:border-[var(--accent-os)]">
                           <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-subject-800 text-xs font-bold tracking-wider uppercase">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-bold tracking-wider text-[var(--accent-os)] uppercase">
                                 Ôn tập thực chiến
                               </span>
                               <Badge variant="subject">6 Bộ đề · 41 Bài</Badge>
                             </div>
-                            <h3 className="text-base font-bold text-stone-900">
+                            <h3 className="text-base font-bold text-[var(--text-main)]">
                               Đề thi Kết thúc Học phần qua các năm (2018 – 2026)
                             </h3>
-                            <p className="text-xs leading-relaxed text-stone-600">
+                            <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
                               Kho 6 bộ đề thi chính thức kèm biểu điểm chi tiết, gợi ý định lý trọng
                               tâm và toàn bộ lời giải thực chiến từng bước được số hóa 100% bằng
                               KaTeX.
                             </p>
                           </div>
 
-                          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-stone-100 pt-4">
+                          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-[var(--border-hairline)] pt-4">
                             <Button
                               asChild
                               variant="subject"
@@ -717,32 +717,32 @@ export function SubjectOverviewPage() {
               <div className="space-y-6">
                 {/* 3.1 Dành cho môn Giáo dục học: Tình huống sư phạm & Rubric đánh giá */}
                 {subject.slug === 'giao-duc-hoc' && (
-                  <Card className="border-teal-200/90 bg-white p-6 shadow-xs sm:p-8">
+                  <Card className="border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-6 shadow-xs sm:p-8">
                     <div className="space-y-6">
-                      <div className="flex flex-col gap-3 border-b border-stone-100 pb-4 md:flex-row md:items-center md:justify-between">
+                      <div className="flex flex-col gap-3 border-b border-[var(--border-hairline)] pb-4 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-0.5 text-xs font-bold text-teal-800">
+                            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent-os)]/35 bg-[var(--accent-os)]/10 px-2.5 py-0.5 text-xs font-bold text-[var(--accent-os)]">
                               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                               <span>Không gian Thực hành Sư phạm</span>
                             </span>
                             <Badge variant="neutral">Công cụ tương tác</Badge>
                           </div>
-                          <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+                          <h2 className="text-xl font-bold tracking-tight text-[var(--text-main)] sm:text-2xl">
                             Bộ Tiêu chí Rubric, Tình huống Thực tế &amp; Nguyên tắc Giáo dục
                           </h2>
                         </div>
 
                         {/* Tabs chuyển đổi giữa 4 công cụ */}
-                        <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-stone-200 bg-stone-50 p-1 text-xs font-medium">
+                        <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-1 text-xs font-medium">
                           <button
                             type="button"
                             onClick={() => setActivePedagogyTab('rubrics')}
                             className={cn(
-                              'rounded-lg px-3 py-1.5 transition-all',
+                              'cursor-pointer rounded-lg px-3 py-1.5 transition-all',
                               activePedagogyTab === 'rubrics'
-                                ? 'bg-white font-bold text-teal-900 shadow-2xs'
-                                : 'text-stone-600 hover:text-stone-900',
+                                ? 'bg-[var(--bg-workspace)] font-bold text-[var(--accent-os)] shadow-2xs'
+                                : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                             )}
                           >
                             Rubric A.1.2 &amp; A.1.9
@@ -751,10 +751,10 @@ export function SubjectOverviewPage() {
                             type="button"
                             onClick={() => setActivePedagogyTab('principles')}
                             className={cn(
-                              'rounded-lg px-3 py-1.5 transition-all',
+                              'cursor-pointer rounded-lg px-3 py-1.5 transition-all',
                               activePedagogyTab === 'principles'
-                                ? 'bg-white font-bold text-teal-900 shadow-2xs'
-                                : 'text-stone-600 hover:text-stone-900',
+                                ? 'bg-[var(--bg-workspace)] font-bold text-[var(--accent-os)] shadow-2xs'
+                                : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                             )}
                           >
                             6 Nguyên tắc GD
@@ -763,10 +763,10 @@ export function SubjectOverviewPage() {
                             type="button"
                             onClick={() => setActivePedagogyTab('cases')}
                             className={cn(
-                              'rounded-lg px-3 py-1.5 transition-all',
+                              'cursor-pointer rounded-lg px-3 py-1.5 transition-all',
                               activePedagogyTab === 'cases'
-                                ? 'bg-white font-bold text-teal-900 shadow-2xs'
-                                : 'text-stone-600 hover:text-stone-900',
+                                ? 'bg-[var(--bg-workspace)] font-bold text-[var(--accent-os)] shadow-2xs'
+                                : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                             )}
                           >
                             Tình huống thực tế
@@ -775,10 +775,10 @@ export function SubjectOverviewPage() {
                             type="button"
                             onClick={() => setActivePedagogyTab('legal')}
                             className={cn(
-                              'rounded-lg px-3 py-1.5 transition-all',
+                              'cursor-pointer rounded-lg px-3 py-1.5 transition-all',
                               activePedagogyTab === 'legal'
-                                ? 'bg-white font-bold text-teal-900 shadow-2xs'
-                                : 'text-stone-600 hover:text-stone-900',
+                                ? 'bg-[var(--bg-workspace)] font-bold text-[var(--accent-os)] shadow-2xs'
+                                : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                             )}
                           >
                             Trích dẫn Pháp quy

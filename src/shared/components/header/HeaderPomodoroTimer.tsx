@@ -259,10 +259,10 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                 : 'border-[#D8E0DD] bg-[#FAFBF9]/95 text-[#182624] dark:border-[#1E3B2D] dark:bg-[#12241C]/96 dark:text-[#E6ECE7]',
           )}
         >
-          <div className="mb-2.5 flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
+          <div className="mb-2.5 flex items-center justify-between border-b border-[var(--border-hairline)] pb-2">
             <div>
-              <p className="text-xs font-bold">Nhịp học tập</p>
-              <p className="text-[11px] text-[#4A5D58] dark:text-[#A7B5AC]">
+              <p className="text-xs font-bold text-[var(--text-main)]">Nhịp học tập</p>
+              <p className="text-[11px] text-[var(--text-muted)]">
                 {isActive
                   ? `${pomodoro.presetLabel} · Còn ${formatMmSs(pomodoro.remainingSeconds)}`
                   : 'Chọn chu kỳ tập trung tối giản'}
@@ -280,17 +280,10 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                   startPomodoro(preset.minutes, preset.label);
                   setIsOpen(false);
                 }}
-                className={cn(
-                  'flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-colors',
-                  isDark
-                    ? 'bg-[#182E24]/80 text-[#EBF0EE] hover:bg-[#1E3B2E]'
-                    : 'bg-[#EDF1EF]/70 text-[#182624] hover:bg-[#E2E8E5]',
-                )}
+                className="flex w-full cursor-pointer items-center justify-between rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-left text-xs text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)]/40 hover:bg-[var(--bg-shell)]"
               >
                 <span className="font-semibold">{preset.minutes} phút</span>
-                <span className="text-[11px] text-[#4A5D58] dark:text-[#A7B5AC]">
-                  {preset.label}
-                </span>
+                <span className="text-[11px] text-[var(--text-muted)]">{preset.label}</span>
               </button>
             ))}
           </div>
@@ -298,21 +291,15 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
           {/* Phân khu Tùy chỉnh thời gian (Custom Duration Stepper & Input) */}
           <div
             onClick={(event) => event.stopPropagation()}
-            className={cn(
-              'mt-2 border-t pt-3',
-              isDark ? 'border-[#4E9B58]/25' : 'border-[#D8E0DD]',
-            )}
+            className="mt-2.5 border-t border-[var(--border-hairline)] pt-3"
           >
-            <p className="mb-2 text-[11px] font-semibold tracking-wide text-[#4A5D58] uppercase dark:text-[#A7B5AC]">
+            <p className="mb-2 text-[11px] font-semibold tracking-wide text-[var(--text-muted)] uppercase">
               Tùy chỉnh thời gian
             </p>
             <div className="flex items-center justify-between gap-2">
               <label
                 htmlFor="pomodoro-custom-minutes-input"
-                className={cn(
-                  'text-[12px] font-medium',
-                  isDark ? 'text-[#A7B5AC]' : 'text-[#4A5D58]',
-                )}
+                className="text-[12px] font-medium text-[var(--text-secondary)]"
               >
                 Tự chọn (phút)
               </label>
@@ -325,12 +312,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                     event.stopPropagation();
                     updateCustomMinutes(customMinutes - 5);
                   }}
-                  className={cn(
-                    'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border text-xs font-bold transition-colors',
-                    isDark
-                      ? 'border-[#4E9B58]/30 bg-[#182E24] text-[#EBF0EE] hover:bg-[#1E3B2E]'
-                      : 'border-[#CBD6D2] bg-[#EDF1EF] text-[#182624] hover:bg-[#E2E8E5]',
-                  )}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-xs font-bold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-shell)]"
                 >
                   -5
                 </button>
@@ -357,12 +339,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                     }
                   }}
                   aria-label="Số phút tự chọn"
-                  className={cn(
-                    'h-8 w-14 rounded-lg border text-center text-[13px] font-bold tabular-nums focus:outline-none',
-                    isDark
-                      ? 'border-[#4E9B58]/35 bg-[#182E24] text-[#F7F4EB] focus:border-[#6EE7B7]'
-                      : 'border-[#CBD6D2] bg-[#EDF1EF] text-[#182624] focus:border-[#1E332E]',
-                  )}
+                  className="h-8 w-14 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-center text-[13px] font-bold text-[var(--text-main)] tabular-nums focus:border-[var(--accent-os)] focus:outline-none"
                 />
 
                 <button
@@ -372,12 +349,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                     event.stopPropagation();
                     updateCustomMinutes(customMinutes + 5);
                   }}
-                  className={cn(
-                    'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border text-xs font-bold transition-colors',
-                    isDark
-                      ? 'border-[#4E9B58]/30 bg-[#182E24] text-[#EBF0EE] hover:bg-[#1E3B2E]'
-                      : 'border-[#CBD6D2] bg-[#EDF1EF] text-[#182624] hover:bg-[#E2E8E5]',
-                  )}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-xs font-bold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-shell)]"
                 >
                   +5
                 </button>
@@ -391,7 +363,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                 event.stopPropagation();
                 handleStartCustomTimer();
               }}
-              className="mt-2.5 w-full cursor-pointer rounded-xl bg-[#1E332E] py-2 text-[13px] font-semibold text-[#FAFBF9] transition-colors hover:bg-[#26403A]"
+              className="mt-2.5 w-full cursor-pointer rounded-xl bg-[var(--accent-os)] py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-95"
             >
               Bắt đầu hẹn giờ
             </button>
@@ -400,14 +372,11 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
           {isActive && (
             <div
               data-testid="pomodoro-active-controls"
-              className={cn(
-                'mt-2.5 space-y-2 border-t pt-2.5',
-                isDark ? 'border-[#4E9B58]/25' : 'border-[#D8E0DD]',
-              )}
+              className="mt-2.5 space-y-2 border-t border-[var(--border-hairline)] pt-2.5"
             >
-              <div className="flex items-center justify-between text-[11px] font-medium text-[#4A5D58] dark:text-[#A7B5AC]">
+              <div className="flex items-center justify-between text-[11px] font-medium text-[var(--text-secondary)]">
                 <span>Phiên: {pomodoro.presetLabel}</span>
-                <span className="font-mono font-semibold tabular-nums">
+                <span className="font-mono font-semibold text-[var(--text-main)] tabular-nums">
                   {formatMmSs(pomodoro.remainingSeconds)}
                 </span>
               </div>
@@ -419,7 +388,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                     if (isRunning) pausePomodoro();
                     else resumePomodoro();
                   }}
-                  className="inline-flex flex-1 cursor-pointer items-center justify-center gap-1 rounded-xl bg-[#1E332E] px-2.5 py-1.5 text-xs font-semibold text-[#FAFBF9] transition-colors hover:bg-[#26403A]"
+                  className="inline-flex flex-1 cursor-pointer items-center justify-center gap-1 rounded-xl bg-[var(--accent-os)] px-2.5 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95"
                 >
                   {isRunning ? (
                     <>
@@ -440,12 +409,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                     event.stopPropagation();
                     addPomodoroMinutes(5);
                   }}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center justify-center rounded-xl border px-2.5 py-1.5 text-xs font-semibold transition-colors',
-                    isDark
-                      ? 'border-[#4E9B58]/30 bg-[#182E24] text-[#EBF0EE] hover:bg-[#1E3B2E]'
-                      : 'border-[#D8E0DD] bg-[#EDF1EF]/80 text-[#182624] hover:bg-[#E2E8E5]',
-                  )}
+                  className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:bg-[var(--bg-shell)]"
                 >
                   +5 phút
                 </button>
@@ -457,12 +421,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
                     resetPomodoro();
                     setIsOpen(false);
                   }}
-                  className={cn(
-                    'inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl border px-2.5 py-1.5 text-xs font-semibold transition-colors',
-                    isDark
-                      ? 'border-[#4E9B58]/30 text-[#EBF0EE] hover:bg-white/10'
-                      : 'border-[#D8E0DD] text-[#4A5D58] hover:bg-[#EDF1EF] hover:text-[#182624]',
-                  )}
+                  className="inline-flex cursor-pointer items-center justify-center gap-1 rounded-xl border border-[var(--border-hairline)] px-2.5 py-1.5 text-xs font-semibold text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
                 >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Đặt lại</span>

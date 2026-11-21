@@ -771,11 +771,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     const targetEl = stageCardRef.current ?? sectionRef.current;
     const stageRect = targetEl?.getBoundingClientRect();
     const needsCentering = Boolean(
-      stageRect && stageRect.height > 0 && (stageRect.top < 74 || stageRect.top > 120),
+      stageRect && stageRect.height > 0 && (stageRect.top < 48 || stageRect.top > 96),
     );
 
     if (needsCentering && stageRect) {
-      const targetY = Math.max(0, stageRect.top + window.scrollY - 82);
+      const targetY = Math.max(0, stageRect.top + window.scrollY - 54);
       if (typeof window.scrollTo === 'function') {
         window.scrollTo({ top: targetY, behavior: 'smooth' });
       }
@@ -1510,7 +1510,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       data-hide-cursor-ring="true"
       aria-label="Bàn Bida 8 Ball Pool Khoáng Thạch 120fps"
       className={cn(
-        'relative scroll-mt-20 overflow-x-clip border-t border-[#D4DFDA] bg-[#F2F4F3] text-[#142622] dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]',
+        'relative scroll-mt-14 overflow-x-clip border-t border-[var(--border-hairline)] bg-[var(--bg-shell)] text-[var(--text-main)]',
         className,
       )}
     >

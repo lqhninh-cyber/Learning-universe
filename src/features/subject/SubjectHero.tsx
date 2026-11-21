@@ -67,7 +67,7 @@ export function SubjectHero({
       aria-label={`Không gian học phần ${subject.title}`}
       data-testid="subject-universe-hero"
       data-subject-universe={theme.id}
-      className="relative right-1/2 left-1/2 -mr-[50vw] -ml-[50vw] flex min-h-[380px] w-screen flex-col overflow-hidden lg:min-h-[420px]"
+      className="relative flex min-h-[360px] w-full flex-col overflow-hidden rounded-2xl border border-[var(--border-hairline)] lg:min-h-[400px]"
       style={{ ...getSubjectThemeVars(theme), background: theme.background }}
     >
       {/* CẢNH NỀN CANVAS 120FPS ĐỘC BẢN CHO TỪNG MÔN HỌC */}
@@ -78,7 +78,7 @@ export function SubjectHero({
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-between px-6 pt-24 pb-8 sm:px-10 sm:pt-28 lg:px-12 lg:pb-10">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-between px-5 pt-8 pb-7 sm:px-8 sm:pt-10 lg:px-10 lg:pb-8">
         {/* BỐ CỤC TRÊN: VÙNG 1 (CỘT THÔNG TIN BÊN TRÁI) + VÙNG 2 (SÂN KHẤU ĐỒ HỌA TRỐNG HOÀN TOÀN BÊN PHẢI) */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-8">
           {/* VÙNG 1 — CỘT THÔNG TIN BÊN TRÁI */}

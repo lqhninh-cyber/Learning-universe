@@ -50,35 +50,38 @@ export function AuthModal() {
   return (
     <DialogPrimitive.Root open={isAuthModalOpen} onOpenChange={(open) => !open && closeAuthModal()}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-stone-950/45 backdrop-blur-xs" />
-        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-stone-200 bg-[#FBF9F5] p-6 shadow-2xl focus:outline-none">
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/55 backdrop-blur-xs" />
+        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-6 text-[var(--text-main)] shadow-2xl focus:outline-none">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-stone-300/80 bg-white shadow-xs">
-              <GraduationCap className="h-6 w-6 text-stone-800" aria-hidden="true" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] shadow-xs">
+              <GraduationCap className="h-6 w-6 text-[var(--accent-os)]" aria-hidden="true" />
             </div>
             <DialogPrimitive.Close asChild>
               <button
                 type="button"
                 aria-label="Đóng hộp thoại đăng nhập"
-                className="rounded-lg p-1.5 text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700"
+                className="rounded-lg p-1.5 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </DialogPrimitive.Close>
           </div>
 
-          <DialogPrimitive.Title className="mt-4 font-serif text-xl font-bold tracking-tight text-stone-900">
+          <DialogPrimitive.Title className="mt-4 font-serif text-xl font-bold tracking-tight text-[var(--text-main)]">
             Đăng nhập Không gian Học viên
           </DialogPrimitive.Title>
 
-          <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-stone-600">
+          <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
             Đăng nhập bằng tài khoản Google để kích hoạt tính năng lưu tiến độ học tập, ghi chú bài
             giảng và danh sách bài học yêu thích.
           </DialogPrimitive.Description>
 
           {errorMessage && (
-            <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
-              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-red-600" aria-hidden="true" />
+            <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+              <ShieldAlert
+                className="mt-0.5 h-4 w-4 shrink-0 text-red-600 dark:text-red-400"
+                aria-hidden="true"
+              />
               <span>{errorMessage}</span>
             </div>
           )}
@@ -88,16 +91,16 @@ export function AuthModal() {
               type="button"
               disabled={isSubmitting}
               onClick={handleGoogleSignIn}
-              className="flex w-full items-center justify-center gap-3 rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm font-medium text-stone-800 shadow-xs transition-colors hover:bg-stone-50 hover:text-stone-900 focus:ring-2 focus:ring-stone-400/50 focus:outline-none disabled:opacity-60"
+              className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-3 text-sm font-medium text-[var(--text-main)] shadow-xs transition-colors hover:border-[var(--accent-os)]/50 hover:bg-[var(--bg-shell)] focus:ring-2 focus:ring-[var(--accent-os)]/40 focus:outline-none disabled:opacity-60"
             >
               <GoogleIcon className="h-5 w-5 shrink-0" />
               <span>{isSubmitting ? 'Đang kết nối...' : 'Đăng nhập với Google'}</span>
             </button>
           </div>
 
-          <div className="mt-4 rounded-xl border border-stone-200/90 bg-stone-100/60 p-3 text-xs leading-relaxed text-stone-600">
-            <div className="flex items-center gap-1.5 font-medium text-stone-800">
-              <CheckCircle2 className="h-3.5 w-3.5 text-stone-700" aria-hidden="true" />
+          <div className="mt-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+            <div className="flex items-center gap-1.5 font-medium text-[var(--text-main)]">
+              <CheckCircle2 className="h-3.5 w-3.5 text-[var(--accent-os)]" aria-hidden="true" />
               <span>Chính sách Học thuật Mở (Quyết định D1):</span>
             </div>
             <p className="mt-1">
@@ -108,8 +111,8 @@ export function AuthModal() {
           </div>
 
           {(isMockMode || import.meta.env.DEV) && (
-            <div className="mt-5 border-t border-stone-200 pt-4">
-              <div className="text-[11px] font-semibold tracking-wider text-stone-500 uppercase">
+            <div className="mt-5 border-t border-[var(--border-hairline)] pt-4">
+              <div className="text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                 Chuyển nhanh tài khoản mẫu (Kiểm thử & Phát triển):
               </div>
               <div className="mt-2.5 grid grid-cols-1 gap-2 sm:grid-cols-3">

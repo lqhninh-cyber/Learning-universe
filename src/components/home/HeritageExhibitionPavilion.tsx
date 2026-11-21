@@ -50,13 +50,13 @@ function FilmstripThumbnailButton({
       aria-label={`Chọn tác phẩm ${displayIndex + 1}: ${artwork.shortTitle}`}
       aria-pressed={isActive}
       className={cn(
-        'group relative flex w-[136px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-xl bg-[#FAFBF9] text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[#9C7A4C] focus-visible:outline-none sm:w-[152px]',
+        'group relative flex w-[136px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-xl bg-[var(--bg-workspace)] text-left transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent-heritage)] focus-visible:outline-none sm:w-[152px]',
         isActive
-          ? 'border-2 border-[#9C7A4C] shadow-[0_8px_22px_rgba(24,38,36,0.08)]'
-          : 'border border-[#CFD9D5] opacity-90 hover:border-[#9C7A4C]/65 hover:opacity-100',
+          ? 'border-2 border-[var(--accent-heritage)] shadow-sm'
+          : 'border border-[var(--border-hairline)] opacity-90 hover:border-[var(--accent-heritage)]/65 hover:opacity-100',
       )}
     >
-      <div className="relative h-20 w-full overflow-hidden bg-[#E7ECEA]">
+      <div className="relative h-20 w-full overflow-hidden bg-[var(--bg-shell)]">
         {showInlineSvg ? (
           <div className="h-full w-full">
             <HeritageFallbackIllustration artwork={artwork} compact />
@@ -76,18 +76,19 @@ function FilmstripThumbnailButton({
           className={cn(
             'absolute top-1.5 left-1.5 rounded px-1.5 py-0.5 font-mono text-[10px] font-bold backdrop-blur-sm',
             isActive
-              ? 'border border-[#9C7A4C]/55 bg-[#FAFBF9]/95 text-[#1E332E] shadow-2xs'
-              : 'border border-[#CFD9D5]/90 bg-[#FAFBF9]/88 text-[#354E48]',
+              ? 'border border-[var(--accent-heritage)]/60 bg-[var(--bg-workspace)]/95 text-[var(--text-main)] shadow-2xs'
+              : 'border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/88 text-[var(--text-secondary)]',
           )}
         >
           {numStr}
         </span>
       </div>
-      <div className="px-2.5 py-2">
+      <div className="min-w-0 px-2.5 py-2">
         <p
+          title={artwork.title}
           className={cn(
-            'truncate font-serif text-xs font-semibold',
-            isActive ? 'text-[#142622]' : 'text-[#2D423D]',
+            'block truncate font-serif text-xs font-semibold',
+            isActive ? 'text-[var(--text-main)]' : 'text-[var(--text-secondary)]',
           )}
         >
           {artwork.shortTitle}
@@ -315,39 +316,12 @@ export function HeritageExhibitionPavilion() {
       aria-label="Không gian Di sản Học thuật và Nghệ thuật"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="relative scroll-mt-28 overflow-hidden border-t border-[#D4DFDA] bg-[#EEF2F0] pt-28 pb-16 text-[#142622] lg:pt-32 dark:border-[#1E3B2D] dark:bg-[#0E1A15] dark:text-[#E6ECE7]"
+      className="relative scroll-mt-16 overflow-hidden bg-[var(--bg-workspace)] pt-8 pb-14 text-[var(--text-main)]"
     >
-      {/* Dấu cộng chuẩn trực (+) trên đường ngăn kỹ thuật 1px solid #D4DFDA */}
-      <div
-        aria-hidden="true"
-        className="lu-container-wide pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-between"
-      >
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          className="-mt-[6px] opacity-65"
-        >
-          <path d="M6 0V12M0 6H12" stroke="#9C7A4C" strokeWidth="1.25" />
-          <circle cx="6" cy="6" r="1.15" fill="#9C7A4C" />
-        </svg>
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          className="-mt-[6px] opacity-65"
-        >
-          <path d="M6 0V12M0 6H12" stroke="#9C7A4C" strokeWidth="1.25" />
-          <circle cx="6" cy="6" r="1.15" fill="#9C7A4C" />
-        </svg>
-      </div>
-
-      {/* Họa tiết đồng tâm Trống Đồng Đông Sơn khắc chìm dịu trên nền Bạch Ngọc */}
+      {/* Họa tiết đồng tâm Trống Đồng Đông Sơn khắc chìm dịu */}
       <svg
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.05] select-none"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.04] select-none"
       >
         <defs>
           <pattern id={drumPatternId} width="240" height="240" patternUnits="userSpaceOnUse">
@@ -367,23 +341,20 @@ export function HeritageExhibitionPavilion() {
         <rect width="100%" height="100%" fill={`url(#${drumPatternId})`} />
       </svg>
 
-      <div className="lu-container-wide relative z-10">
+      <div className="relative z-10 mx-auto max-w-[1240px] px-6 lg:px-10">
         {/* ================================================================
-          TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN & THANH LỌC 4 NHÓM (ALABASTER MUSEUM GALLERY)
+          TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN & THANH LỌC 4 NHÓM
           ================================================================ */}
-        <div className="mb-6 flex flex-col gap-5 border-b border-[#D4DFDA] pb-5 lg:flex-row lg:items-end lg:justify-between dark:border-[#1E3B2D]">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest text-[#8C6228] uppercase dark:text-[#D5B47A]">
-              <Landmark
-                className="h-3.5 w-3.5 text-[#8C6228] dark:text-[#D5B47A]"
-                aria-hidden="true"
-              />
+        <div className="mb-6 flex flex-col gap-5 border-b border-[var(--border-hairline)] pb-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0 space-y-2">
+            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest text-[var(--accent-heritage)] uppercase">
+              <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
               <span>BẢO TÀNG TRI THỨC &amp; VĂN HIẾN</span>
             </div>
-            <h2 className="font-serif text-[32px] leading-tight font-bold tracking-tight text-[#142622] lg:text-[40px] dark:text-[#E6ECE7]">
+            <h1 className="font-serif text-[28px] leading-tight font-bold tracking-tight text-[var(--text-main)] lg:text-[36px]">
               Di sản Học thuật &amp; Nghệ thuật
-            </h2>
-            <p className="max-w-2xl text-sm leading-relaxed text-[#2D423D] sm:text-base dark:text-[#B9C8C1]">
+            </h1>
+            <p className="max-w-2xl text-sm leading-relaxed text-[var(--text-secondary)]">
               Không gian triển lãm {totalCatalogCount} kiệt tác kiến trúc, hội họa và tư liệu lịch
               sử xác thực ghi dấu hành trình khoa bảng Việt Nam và cách mạng tư duy toán học – thiên
               văn nhân loại.
@@ -412,8 +383,8 @@ export function HeritageExhibitionPavilion() {
                   className={cn(
                     'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[11.5px] font-semibold transition-all duration-150',
                     isSelected
-                      ? 'border-[#1E332E] bg-[#1E332E] text-[#FAFBF9] shadow-xs dark:border-[#6EB59B] dark:bg-[#245746] dark:text-[#FAFBF9]'
-                      : 'border-[#CFD9D5] bg-[#FAFBF9] text-[#2D423D] hover:border-[#9C7A4C] hover:text-[#142622] dark:border-[#244335] dark:bg-[#12241C] dark:text-[#C9D6D0] dark:hover:border-[#D5B47A]',
+                      ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white shadow-xs'
+                      : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[var(--accent-heritage)] hover:text-[var(--text-main)]',
                   )}
                 >
                   <span>{tab.label}</span>
@@ -427,14 +398,14 @@ export function HeritageExhibitionPavilion() {
         {/* ================================================================
           TẦNG 2: SÂN KHẤU TRIỂN LÃM CHÍNH (GRID 12 CỘT: 7 TRANH + 5 HỒ SƠ)
           ================================================================ */}
-        <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-12">
-          {/* Cột Trái (7 cột): Khung Trưng Bày Bảo Tàng Nền Trắng Sứ #FAFBF9 */}
-          <div className="flex flex-col lg:col-span-7">
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12">
+          {/* Cột Trái (7 cột): Khung Trưng Bày Bảo Tàng */}
+          <div className="flex min-w-0 flex-col lg:col-span-7">
             <div
               data-testid="heritage-art-frame"
               onMouseMove={handleFrameMouseMove}
               onMouseLeave={handleFrameMouseLeave}
-              className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-4 shadow-[0_16px_40px_rgba(24,38,36,0.06)] transition-colors duration-300 hover:border-[#9C7A4C]/70 md:p-6 dark:border-[#1E3B2D] dark:bg-[#12241C]"
+              className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-colors duration-300 hover:border-[var(--accent-heritage)]/60 md:p-6"
             >
               <div className="relative flex flex-1 items-center justify-center overflow-hidden">
                 {imageError || isHeritageInlineSvg(currentArtwork) ? (
@@ -449,6 +420,7 @@ export function HeritageExhibitionPavilion() {
                     ref={imgMotionRef}
                     src={currentArtwork.imageSrc}
                     alt={currentArtwork.alt}
+                    loading="lazy"
                     decoding="async"
                     referrerPolicy="no-referrer"
                     onError={() => setImageError(true)}
@@ -461,12 +433,10 @@ export function HeritageExhibitionPavilion() {
                 )}
               </div>
 
-              {/* Dòng chú thích ngắn nằm gọn bên trong đáy thẻ trắng bên trái */}
-              <p className="mt-3 border-t border-[#E6ECE9] pt-3 font-serif text-[12px] text-[#4A5D58] italic dark:border-[#1E3B2D] dark:text-[#A7B5AC]">
+              <p className="mt-3 border-t border-[var(--border-hairline)] pt-3 font-serif text-[12px] text-[var(--text-muted)] italic">
                 {currentArtwork.caption}
               </p>
 
-              {/* Ánh sáng viền đồng dịu bám theo con trỏ */}
               <div
                 ref={glareRef}
                 data-testid="heritage-foil-glare"
@@ -476,72 +446,69 @@ export function HeritageExhibitionPavilion() {
             </div>
           </div>
 
-          {/* Cột Phải (5 cột): Thẻ Thuyết Minh Bảo Tàng Nền Trắng Sứ #FAFBF9 */}
+          {/* Cột Phải (5 cột): Thẻ Thuyết Minh Bảo Tàng */}
           <aside
             aria-label={`Hồ sơ học thuật: ${currentArtwork.title}`}
             className={cn(
-              'flex flex-col gap-5 rounded-2xl border border-[#D4DFDA] bg-[#FAFBF9] p-6 shadow-[0_16px_40px_rgba(24,38,36,0.05)] transition-opacity duration-[320ms] sm:p-7 lg:col-span-5 dark:border-[#1E3B2D] dark:bg-[#12241C]',
+              'flex min-w-0 flex-col gap-5 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-6 transition-opacity duration-[320ms] sm:p-7 lg:col-span-5',
               isTransitioning ? 'opacity-65' : 'opacity-100',
             )}
           >
             <div className="space-y-4">
-              {/* Số thứ tự + Thẻ Niên đại & Nguồn gốc */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E2E8E5] pb-3 dark:border-[#1E3B2D]">
-                <span className="font-mono text-xs font-bold tracking-widest text-[#8C6228] dark:text-[#D5B47A]">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] pb-3">
+                <span className="font-mono text-xs font-bold tracking-widest text-[var(--accent-heritage)]">
                   {formattedIndex} / {formattedTotal}
                 </span>
-                <span className="inline-flex items-center rounded-full border border-[#DCE4E0] bg-[#F3F6F4] px-3 py-1 font-mono text-[11px] font-medium text-[#354E48] dark:border-[#244335] dark:bg-[#0E1A15] dark:text-[#B9C8C1]">
+                <span className="inline-flex items-center rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1 font-mono text-[11px] font-medium text-[var(--text-secondary)]">
                   {currentArtwork.artistOrOrigin} · {currentArtwork.yearOrEra}
                 </span>
               </div>
 
-              {/* Tên Tác phẩm */}
-              <h3 className="font-serif text-[26px] leading-snug font-bold text-[#142622] lg:text-[28px] dark:text-[#E6ECE7]">
+              <h2 className="font-serif text-[24px] leading-snug font-bold text-[var(--text-main)] lg:text-[26px]">
                 {currentArtwork.title}
-              </h3>
+              </h2>
 
-              {/* Mục 1: Giá trị Học thuật & Biểu tượng */}
               <div className="space-y-1.5">
-                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase dark:text-[#D5B47A]">
+                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--accent-heritage)] uppercase">
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Giá trị Học thuật &amp; Biểu tượng</span>
                 </div>
-                <p className="text-sm leading-relaxed text-[#2D423D] dark:text-[#C9D6D0]">
+                <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                   {currentArtwork.academicSignificance}
                 </p>
               </div>
             </div>
 
-            {/* Mục 2: Hộp Lược sử & Bối cảnh ra đời nền phụ #F3F6F4 viền #DCE4E0 */}
-            <div className="rounded-xl border border-[#DCE4E0] bg-[#F3F6F4] p-4 dark:border-[#1E3B2D] dark:bg-[#0E1A15]">
-              <div className="mb-3 flex items-center gap-2 border-b border-[#DCE4E0] pb-2 font-mono text-[11px] font-semibold tracking-wider text-[#8C6228] uppercase">
+            {/* Mục 2: Hộp Lược sử & Bối cảnh ra đời */}
+            <div className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4">
+              <div className="mb-3 flex items-center gap-2 border-b border-[var(--border-hairline)] pb-2 font-mono text-[11px] font-semibold tracking-wider text-[var(--accent-heritage)] uppercase">
                 <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Lược sử &amp; Bối cảnh ra đời</span>
               </div>
 
-              <dl className="space-y-2 text-xs leading-relaxed text-[#2D423D]">
+              <dl className="space-y-2 text-xs leading-relaxed text-[var(--text-secondary)]">
                 <div>
-                  <dt className="inline font-mono text-[11px] font-semibold text-[#1E332E]">
+                  <dt className="inline font-mono text-[11px] font-semibold text-[var(--text-main)]">
                     Tác phẩm gốc:{' '}
                   </dt>
-                  <dd className="inline font-serif font-medium text-[#142622]">
+                  <dd className="inline font-serif font-medium text-[var(--text-main)]">
                     {currentArtwork.originalTitle}
                   </dd>
                 </div>
                 <div>
-                  <dt className="inline font-mono text-[11px] font-semibold text-[#1E332E]">
+                  <dt className="inline font-mono text-[11px] font-semibold text-[var(--text-main)]">
                     Niên đại &amp; Thời kỳ:{' '}
                   </dt>
                   <dd className="inline">{currentArtwork.eraAndPeriod}</dd>
                 </div>
                 <div>
-                  <dt className="inline font-mono text-[11px] font-semibold text-[#1E332E]">
+                  <dt className="inline font-mono text-[11px] font-semibold text-[var(--text-main)]">
                     Chất liệu &amp; Kỹ thuật:{' '}
                   </dt>
                   <dd className="inline">{currentArtwork.materialAndTechnique}</dd>
                 </div>
                 <div>
-                  <dt className="inline font-mono text-[11px] font-semibold text-[#1E332E]">
+                  <dt className="inline font-mono text-[11px] font-semibold text-[var(--text-main)]">
                     Nơi lưu trữ gốc:{' '}
                   </dt>
                   <dd className="inline">{currentArtwork.archivalLocation}</dd>
@@ -552,19 +519,19 @@ export function HeritageExhibitionPavilion() {
         </div>
 
         {/* ================================================================
-          THANH ĐIỀU KHIỂN TRÌNH CHIẾU TRUNG TÂM TÔNG SÁNG SỨ BẠCH NGỌC
+          THANH ĐIỀU KHIỂN TRÌNH CHIẾU TRUNG TÂM
           ================================================================ */}
         <div
           data-testid="heritage-control-bar"
-          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+          className="mt-7 flex flex-wrap items-center justify-center gap-2.5"
         >
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Tác phẩm trước"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-4 py-2 text-xs font-semibold text-[#182624] shadow-xs transition-all hover:border-[#9C7A4C] hover:bg-white active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 text-xs font-semibold text-[var(--text-main)] transition-all hover:border-[var(--accent-heritage)] hover:bg-[var(--bg-workspace)] active:scale-[0.98] sm:text-sm"
           >
-            <ChevronLeft className="h-4 w-4 text-[#8C6228]" aria-hidden="true" />
+            <ChevronLeft className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
             <span>Tác phẩm trước</span>
           </button>
 
@@ -572,16 +539,16 @@ export function HeritageExhibitionPavilion() {
             type="button"
             onClick={() => setIsPaused((prev) => !prev)}
             aria-label={isPaused ? 'Tự động chiếu' : 'Tạm dừng'}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-4 py-2 text-xs font-semibold text-[#182624] shadow-xs transition-all hover:border-[#9C7A4C] hover:bg-white active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 text-xs font-semibold text-[var(--text-main)] transition-all hover:border-[var(--accent-heritage)] hover:bg-[var(--bg-workspace)] active:scale-[0.98] sm:text-sm"
           >
             {isPaused ? (
               <>
-                <Play className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
+                <Play className="h-3.5 w-3.5 text-[var(--accent-heritage)]" aria-hidden="true" />
                 <span>Tự động chiếu</span>
               </>
             ) : (
               <>
-                <Pause className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
+                <Pause className="h-3.5 w-3.5 text-[var(--accent-heritage)]" aria-hidden="true" />
                 <span>Tạm dừng</span>
               </>
             )}
@@ -589,7 +556,7 @@ export function HeritageExhibitionPavilion() {
 
           <span
             data-testid="heritage-index-indicator"
-            className="inline-flex items-center rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-4 py-2 font-mono text-xs font-bold tracking-widest text-[#8C6228] shadow-2xs sm:text-sm"
+            className="inline-flex items-center rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 font-mono text-xs font-bold tracking-widest text-[var(--accent-heritage)] sm:text-sm"
           >
             {formattedIndex} / {formattedTotal}
           </span>
@@ -598,50 +565,50 @@ export function HeritageExhibitionPavilion() {
             type="button"
             onClick={handleNext}
             aria-label="Tác phẩm tiếp"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-4 py-2 text-xs font-semibold text-[#182624] shadow-xs transition-all hover:border-[#9C7A4C] hover:bg-white active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 text-xs font-semibold text-[var(--text-main)] transition-all hover:border-[var(--accent-heritage)] hover:bg-[var(--bg-workspace)] active:scale-[0.98] sm:text-sm"
           >
             <span>Tác phẩm tiếp</span>
-            <ChevronRight className="h-4 w-4 text-[#8C6228]" aria-hidden="true" />
+            <ChevronRight className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
           </button>
 
           <button
             type="button"
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`Phóng to tác phẩm ${currentArtwork.title}`}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#CFD9D5] bg-[#FAFBF9] px-4 py-2 text-xs font-semibold text-[#182624] shadow-xs transition-all hover:border-[#9C7A4C] hover:bg-white active:scale-[0.98] sm:text-sm"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 text-xs font-semibold text-[var(--text-main)] transition-all hover:border-[var(--accent-heritage)] hover:bg-[var(--bg-workspace)] active:scale-[0.98] sm:text-sm"
           >
-            <Maximize2 className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
+            <Maximize2 className="h-3.5 w-3.5 text-[var(--accent-heritage)]" aria-hidden="true" />
             <span>Xem toàn màn hình</span>
           </button>
         </div>
 
         {/* ================================================================
-          TẦNG 3: THANH FILMSTRIP 32 THU NHỎ TƯƠNG TÁC TÔNG SÁNG
+          TẦNG 3: THANH FILMSTRIP 40 THU NHỎ TƯƠNG TÁC
           ================================================================ */}
-        <div className="mt-7 border-t border-[#D4DFDA] pt-6">
+        <div className="mt-7 border-t border-[var(--border-hairline)] pt-6">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <span className="font-mono text-[11px] font-semibold tracking-widest text-[#8C6228] uppercase">
+            <span className="font-mono text-[11px] font-semibold tracking-widest text-[var(--accent-heritage)] uppercase">
               DANH MỤC TRIỂN LÃM ({formattedTotal} TÁC PHẨM)
             </span>
-            <span className="font-mono text-[11px] text-[#4A5D58]">
+            <span className="font-mono text-[11px] text-[var(--text-muted)]">
               Bấm chọn tác phẩm hoặc trượt ngang để chiêm ngưỡng hồ sơ chi tiết
             </span>
           </div>
 
-          <div className="relative flex items-center gap-2.5">
+          <div className="relative flex min-w-0 items-center gap-2.5">
             <button
               type="button"
               onClick={() => scrollFilmstripBy(-FILMSTRIP_SCROLL_STEP_PX)}
               aria-label="Cuộn danh mục sang trái"
-              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#CFD9D5] bg-[#FAFBF9] text-[#182624] shadow-xs transition-all hover:border-[#9C7A4C] hover:bg-white sm:h-10 sm:w-10"
+              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-main)] transition-all hover:border-[var(--accent-heritage)] hover:bg-[var(--bg-workspace)] sm:h-10 sm:w-10"
             >
-              <ChevronLeft className="h-4 w-4 text-[#8C6228]" aria-hidden="true" />
+              <ChevronLeft className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
             </button>
 
             <div
               ref={filmstripRef}
               data-testid="heritage-filmstrip"
-              className="flex flex-1 [scrollbar-width:none] gap-3 overflow-x-auto scroll-smooth pb-1 [&::-webkit-scrollbar]:hidden"
+              className="flex min-w-0 flex-1 [scrollbar-width:none] gap-3 overflow-x-auto scroll-smooth pb-1 [&::-webkit-scrollbar]:hidden"
               role="list"
               aria-label={`Dải thu nhỏ ${totalCount} tác phẩm di sản`}
             >
@@ -667,33 +634,33 @@ export function HeritageExhibitionPavilion() {
               type="button"
               onClick={() => scrollFilmstripBy(FILMSTRIP_SCROLL_STEP_PX)}
               aria-label="Cuộn danh mục sang phải"
-              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[#CFD9D5] bg-[#FAFBF9] text-[#182624] shadow-xs transition-all hover:border-[#9C7A4C] hover:bg-white sm:h-10 sm:w-10"
+              className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-main)] transition-all hover:border-[var(--accent-heritage)] hover:bg-[var(--bg-workspace)] sm:h-10 sm:w-10"
             >
-              <ChevronRight className="h-4 w-4 text-[#8C6228]" aria-hidden="true" />
+              <ChevronRight className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Hộp thoại Phóng to Toàn Màn Hình (Lightbox Modal Tông Sứ Bảo Tàng) */}
+      {/* Hộp thoại Phóng to Toàn Màn Hình (Lightbox Modal) */}
       {isLightboxOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={`Xem toàn màn hình: ${currentArtwork.title}`}
           onClick={() => setIsLightboxOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#142622]/75 p-4 backdrop-blur-md sm:p-8"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md sm:p-8"
         >
           <div
             onClick={(event) => event.stopPropagation()}
-            className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[#CFD9D5] bg-[#FAFBF9] p-4 text-[#142622] shadow-2xl sm:p-6"
+            className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4 text-[var(--text-main)] shadow-2xl sm:p-6"
           >
-            <div className="mb-3 flex items-center justify-between gap-4 border-b border-[#E2E8E5] pb-3">
-              <div>
-                <p className="font-mono text-xs font-semibold text-[#8C6228]">
+            <div className="mb-3 flex items-center justify-between gap-4 border-b border-[var(--border-hairline)] pb-3">
+              <div className="min-w-0">
+                <p className="font-mono text-xs font-semibold text-[var(--accent-heritage)]">
                   {formattedIndex} / {formattedTotal} · {currentArtwork.artistOrOrigin}
                 </p>
-                <h3 className="font-serif text-lg font-bold text-[#142622] sm:text-xl">
+                <h3 className="truncate font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
                   {currentArtwork.title}
                 </h3>
               </div>
@@ -701,13 +668,13 @@ export function HeritageExhibitionPavilion() {
                 type="button"
                 onClick={() => setIsLightboxOpen(false)}
                 aria-label="Đóng xem toàn màn hình"
-                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#CFD9D5] bg-[#F3F6F4] text-[#182624] transition-colors hover:border-[#9C7A4C] hover:bg-white"
+                className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
 
-            <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-xl border border-[#E2E8E5] bg-[#EEF2F0] p-3">
+            <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-shell)] p-3">
               {imageError || isHeritageInlineSvg(currentArtwork) ? (
                 <div className="aspect-[16/10] w-full max-w-4xl overflow-hidden rounded-lg">
                   <HeritageFallbackIllustration artwork={currentArtwork} />
@@ -716,32 +683,42 @@ export function HeritageExhibitionPavilion() {
                 <img
                   src={currentArtwork.imageSrc}
                   alt={currentArtwork.alt}
+                  decoding="async"
                   referrerPolicy="no-referrer"
+                  onError={() => setImageError(true)}
                   className="max-h-[68vh] w-auto max-w-full rounded-lg object-contain select-none"
                 />
               )}
             </div>
 
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3 pt-1">
-              <p className="font-serif text-xs text-[#354E48] italic">{currentArtwork.caption}</p>
+              <p className="font-serif text-xs text-[var(--text-secondary)] italic">
+                {currentArtwork.caption}
+              </p>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handlePrev}
                   aria-label="Xem tác phẩm trước"
-                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[#CFD9D5] bg-[#FAFBF9] px-3 py-1.5 text-xs font-semibold text-[#182624] transition-colors hover:border-[#9C7A4C] hover:bg-white"
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)]"
                 >
-                  <ChevronLeft className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
+                  <ChevronLeft
+                    className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
+                    aria-hidden="true"
+                  />
                   <span>Trước</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleNext}
                   aria-label="Xem tác phẩm tiếp theo"
-                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[#CFD9D5] bg-[#FAFBF9] px-3 py-1.5 text-xs font-semibold text-[#182624] transition-colors hover:border-[#9C7A4C] hover:bg-white"
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)]"
                 >
                   <span>Sau</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-[#8C6228]" aria-hidden="true" />
+                  <ChevronRight
+                    className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
+                    aria-hidden="true"
+                  />
                 </button>
               </div>
             </div>

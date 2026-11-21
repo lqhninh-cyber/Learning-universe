@@ -12,17 +12,17 @@ export function PendingNoticeDialog() {
       onOpenChange={(open) => !open && closePendingNotice()}
     >
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-stone-950/45 backdrop-blur-xs" />
-        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-stone-200 bg-[#FBF9F5] p-6 shadow-2xl focus:outline-none">
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/55 backdrop-blur-xs" />
+        <DialogPrimitive.Content className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-6 text-[var(--text-main)] shadow-2xl focus:outline-none">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-200 bg-amber-50">
-              <Clock className="h-5 w-5 text-amber-700" aria-hidden="true" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-300/60 bg-amber-50 dark:border-amber-700/50 dark:bg-amber-950/40">
+              <Clock className="h-5 w-5 text-amber-700 dark:text-amber-300" aria-hidden="true" />
             </div>
             <DialogPrimitive.Close asChild>
               <button
                 type="button"
                 aria-label="Đóng thông báo"
-                className="rounded-lg p-1.5 text-stone-400 transition-colors hover:bg-stone-100 hover:text-stone-700"
+                className="rounded-lg p-1.5 text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -32,28 +32,30 @@ export function PendingNoticeDialog() {
           <div className="mt-4 flex items-center gap-2">
             <Badge
               variant="draft"
-              className="border-amber-300 bg-amber-100/70 font-semibold text-amber-800"
+              className="border-amber-300 bg-amber-100/70 font-semibold text-amber-800 dark:border-amber-700/60 dark:bg-amber-950/50 dark:text-amber-200"
             >
               Chờ duyệt
             </Badge>
-            <span className="text-xs text-stone-500">Đăng ký ngày</span>
-            <span className="text-xs font-medium text-stone-700">
+            <span className="text-xs text-[var(--text-muted)]">Đăng ký ngày</span>
+            <span className="text-xs font-medium text-[var(--text-secondary)]">
               {user ? new Intl.DateTimeFormat('vi-VN').format(new Date(user.createdAt)) : ''}
             </span>
           </div>
 
-          <DialogPrimitive.Title className="mt-2 font-serif text-xl font-bold tracking-tight text-stone-900">
+          <DialogPrimitive.Title className="mt-2 font-serif text-xl font-bold tracking-tight text-[var(--text-main)]">
             Tài khoản đang chờ phê duyệt
           </DialogPrimitive.Title>
 
-          <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-stone-600">
+          <DialogPrimitive.Description className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
             Tài khoản của bạn ({user?.email}) hiện đang trong danh sách chờ Ban biên tập xét duyệt.
             Bạn hiện có thể đọc công khai toàn bộ tài liệu lý thuyết, định lý và bài tập.
           </DialogPrimitive.Description>
 
-          <div className="mt-4 rounded-xl border border-stone-200 bg-white p-3.5 text-xs leading-relaxed text-stone-600 shadow-xs">
-            <div className="font-semibold text-stone-800">Quyền hạn trong thời gian chờ:</div>
-            <ul className="mt-1.5 list-inside list-disc space-y-1 text-stone-600">
+          <div className="mt-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3.5 text-xs leading-relaxed text-[var(--text-secondary)] shadow-xs">
+            <div className="font-semibold text-[var(--text-main)]">
+              Quyền hạn trong thời gian chờ:
+            </div>
+            <ul className="mt-1.5 list-inside list-disc space-y-1 text-[var(--text-secondary)]">
               <li>Đọc toàn bộ bài học, định lý, chứng minh Toán học.</li>
               <li>Sử dụng hệ thống tra cứu thuật ngữ và đồ họa tương tác.</li>
               <li>

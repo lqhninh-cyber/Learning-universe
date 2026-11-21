@@ -31,36 +31,40 @@ const RADAR_AXES: readonly RadarAxisConfig[] = [
     axisLabel: 'Cấu trúc & Tiên đề',
     shortLabel: 'CTĐS',
     angleRad: -Math.PI / 2, // Top
-    color: '#6B5335',
-    rgb: '156, 122, 76',
-    pillClass: 'border-[#D8D0C0] bg-[#F3F0E8] text-[#6B5335]',
+    color: '#8C5828',
+    rgb: '140, 88, 40',
+    pillClass:
+      'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
   },
   {
     slug: 'hinh-hoc-affine',
     axisLabel: 'Không gian & Biến hình',
     shortLabel: 'HHAVE',
     angleRad: 0, // Right
-    color: '#2D5266',
-    rgb: '73, 118, 143',
-    pillClass: 'border-[#C9D7DF] bg-[#ECF1F4] text-[#2D5266]',
+    color: '#1D4F6E',
+    rgb: '29, 79, 110',
+    pillClass:
+      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
   },
   {
     slug: 'giai-tich-ham-mot-bien',
     axisLabel: 'Giới hạn & Liên tục',
     shortLabel: 'GTHMB',
     angleRad: Math.PI / 2, // Bottom
-    color: '#245746',
-    rgb: '59, 122, 101',
-    pillClass: 'border-[#C6DBD0] bg-[#EBF2EE] text-[#245746]',
+    color: '#1B5E4A',
+    rgb: '27, 94, 74',
+    pillClass:
+      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
   },
   {
     slug: 'giao-duc-hoc',
     axisLabel: 'Lý luận & Sư phạm',
     shortLabel: 'GDH',
     angleRad: Math.PI, // Left
-    color: '#7A463B',
-    rgb: '158, 99, 86',
-    pillClass: 'border-[#D8C8C1] bg-[#F3ECE9] text-[#7A463B]',
+    color: '#8F3D35',
+    rgb: '143, 61, 53',
+    pillClass:
+      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
   },
 ];
 
@@ -154,20 +158,28 @@ export function CurriculumRadarCard({
 
       const { cx, cy, maxR } = getCenterRadius();
       const focusedSlug = activeSlugRef.current;
+      const isDarkDoc =
+        typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
 
       // 4 vòng tròn đồng tâm đo tỷ lệ kèm nhãn chuẩn độ (fx-chart grid)
       for (const ringRatio of [0.25, 0.5, 0.75, 1.0]) {
         const r = maxR * ringRatio;
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = ringRatio === 1 ? 'rgba(30, 58, 52, 0.24)' : 'rgba(30, 58, 52, 0.11)';
+        ctx.strokeStyle = isDarkDoc
+          ? ringRatio === 1
+            ? 'rgba(158, 176, 170, 0.28)'
+            : 'rgba(158, 176, 170, 0.14)'
+          : ringRatio === 1
+            ? 'rgba(30, 58, 52, 0.24)'
+            : 'rgba(30, 58, 52, 0.11)';
         ctx.setLineDash(ringRatio === 0.5 || ringRatio === 0.25 ? [3, 4] : []);
         ctx.lineWidth = ringRatio === 1 ? 1.25 : 0.85;
         ctx.stroke();
 
         if (ringRatio === 0.5 || ringRatio === 1.0) {
           ctx.font = '500 8.5px "JetBrains Mono", monospace';
-          ctx.fillStyle = 'rgba(74, 93, 88, 0.55)';
+          ctx.fillStyle = isDarkDoc ? 'rgba(158, 176, 170, 0.72)' : 'rgba(74, 93, 88, 0.55)';
           ctx.textAlign = 'left';
           ctx.textBaseline = 'bottom';
           ctx.fillText(`${Math.round(ringRatio * 100)}%`, cx + 4, cy - r - 2);
@@ -178,7 +190,7 @@ export function CurriculumRadarCard({
       // Tia quét Radar mềm mại 120fps
       const sweepAngle = time * 0.55;
       const sweepGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, maxR);
-      sweepGrad.addColorStop(0, 'rgba(36, 87, 70, 0.14)');
+      sweepGrad.addColorStop(0, isDarkDoc ? 'rgba(82, 179, 148, 0.18)' : 'rgba(36, 87, 70, 0.14)');
       sweepGrad.addColorStop(1, 'rgba(36, 87, 70, 0)');
       ctx.beginPath();
       ctx.moveTo(cx, cy);
@@ -195,7 +207,11 @@ export function CurriculumRadarCard({
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo(ex, ey);
-        ctx.strokeStyle = isFocused ? axis.color : 'rgba(74, 93, 88, 0.28)';
+        ctx.strokeStyle = isFocused
+          ? axis.color
+          : isDarkDoc
+            ? 'rgba(158, 176, 170, 0.3)'
+            : 'rgba(74, 93, 88, 0.28)';
         ctx.lineWidth = isFocused ? 1.8 : 1;
         ctx.stroke();
 
@@ -205,7 +221,13 @@ export function CurriculumRadarCard({
         ctx.font = `${isFocused ? '700' : '600'} 10px "JetBrains Mono", monospace`;
         ctx.textAlign = idx === 1 ? 'left' : idx === 3 ? 'right' : 'center';
         ctx.textBaseline = idx === 0 ? 'bottom' : idx === 2 ? 'top' : 'middle';
-        ctx.fillStyle = isFocused ? axis.color : '#4A5D58';
+        ctx.fillStyle = isFocused
+          ? isDarkDoc
+            ? '#EFF4F2'
+            : axis.color
+          : isDarkDoc
+            ? '#9EB0AA'
+            : '#4A5D58';
         ctx.fillText(axis.shortLabel, lx, ly);
       });
 
@@ -440,14 +462,14 @@ export function CurriculumRadarCard({
   return (
     <div
       data-testid="curriculum-radar-card"
-      className="lu-fx-card flex flex-1 flex-col justify-between rounded-[2px] border-[#CFD8D4] p-5 sm:p-6"
+      className="flex flex-1 flex-col justify-between rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 sm:p-6"
     >
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <span className="border border-[#CFD8D4] bg-[#EBF2EE] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[#245746]">
+          <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--accent-os)]">
             CẤU TRÚC &amp; NĂNG LỰC HỌC PHẦN
           </span>
-          <Radar className="h-4 w-4 text-[#245746]" aria-hidden="true" />
+          <Radar className="h-4 w-4 text-[var(--accent-os)]" aria-hidden="true" />
         </div>
 
         <h3 className="font-serif text-lg font-bold text-[var(--text-main)] sm:text-xl">
@@ -455,21 +477,21 @@ export function CurriculumRadarCard({
         </h3>
 
         {/* Chú giải 2 lớp đa giác */}
-        <div className="flex flex-wrap items-center gap-3 font-mono text-[10.5px] text-[#4A5D58]">
+        <div className="flex flex-wrap items-center gap-3 font-mono text-[10.5px] text-[var(--text-muted)]">
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-xs border border-[#245746] bg-[#245746]/25" />
+            <span className="h-2.5 w-2.5 rounded-xs border border-[#1B5E4A] bg-[#1B5E4A]/25 dark:border-[#52B394] dark:bg-[#52B394]/30" />
             Quy mô học phần
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-xs border border-[#9C7A4C] bg-[#9C7A4C]/35" />
+            <span className="h-2.5 w-2.5 rounded-xs border border-[var(--accent-heritage)] bg-[var(--accent-heritage)]/35" />
             Tiến độ cá nhân
           </span>
         </div>
 
-        {/* Canvas Radar 120fps trên nền chấm chuẩn độ lu-dg-ground-dots */}
+        {/* Canvas Radar 120fps */}
         <div
           ref={containerRef}
-          className="lu-dg-ground-dots relative h-[218px] w-full overflow-hidden rounded-2xl border border-[#D8E0DD] bg-[#F2F4F3]/60"
+          className="relative h-[218px] w-full overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]"
         >
           <canvas ref={canvasRef} aria-hidden="true" className="block h-full w-full" />
         </div>
@@ -487,10 +509,10 @@ export function CurriculumRadarCard({
                 onClick={() => setActiveSlug(axis.slug)}
                 aria-pressed={isSelected}
                 className={cn(
-                  'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-2 py-1 font-mono text-[10px] font-bold transition-[color,background-color,border-color,box-shadow] duration-150 focus-visible:ring-2 focus-visible:ring-[#1E332E] focus-visible:outline-none',
+                  'inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border px-2 py-1 font-mono text-[10px] font-bold transition-[color,background-color,border-color] duration-150 focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none',
                   isSelected
                     ? axis.pillClass
-                    : 'border-[#D8E0DD] bg-[#FAFBF9] text-[#4A5D58] hover:border-[#1E332E]/40 hover:text-[#182624]',
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-main)]',
                 )}
               >
                 <span
@@ -508,24 +530,21 @@ export function CurriculumRadarCard({
         {activeStat && (
           <div
             data-testid="radar-detail-panel"
-            className="space-y-1 rounded-xl border border-[#D8E0DD] bg-[#F2F4F3]/75 px-3 py-2.5 text-xs"
+            className="space-y-1 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2.5 text-xs"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="font-semibold text-[#182624]">{activeAxis.axisLabel}</span>
-              <span
-                className="font-mono text-[10.5px] font-bold"
-                style={{ color: activeAxis.color }}
-              >
+              <span className="font-semibold text-[var(--text-main)]">{activeAxis.axisLabel}</span>
+              <span className="font-mono text-[10.5px] font-bold text-[var(--accent-heritage)]">
                 {activeWeight}% khối lượng
               </span>
             </div>
-            <p className="text-[11px] text-[#4A5D58]">
+            <p className="text-[11px] text-[var(--text-secondary)]">
               {activeStat.title} ·{' '}
-              <strong className="font-medium text-[#182624]">
+              <strong className="font-medium text-[var(--text-main)]">
                 {activeStat.chapters} chương · {activeStat.lessons} bài
               </strong>
             </p>
-            <p className="font-mono text-[10.5px] text-[#3F524E]">
+            <p className="font-mono text-[10.5px] text-[var(--text-muted)]">
               Tiến độ cá nhân: {activeStat.completed}/{activeStat.lessons} bài ({activeStat.percent}
               %)
             </p>
@@ -534,22 +553,22 @@ export function CurriculumRadarCard({
       </div>
 
       {/* Chỉ số tổng hợp bên dưới */}
-      <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[var(--border-subtle)] pt-3 text-center">
-        <div className="rounded-xl bg-[#F2F4F3]/75 px-2 py-1.5">
-          <p className="font-mono text-xs font-bold text-[#182624]">
+      <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[var(--border-hairline)] pt-3 text-center">
+        <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1.5">
+          <p className="font-mono text-xs font-bold text-[var(--text-main)]">
             {totalCompleted}/{totalLessons}
           </p>
-          <p className="text-[10px] text-[#4A5D58]">Bài hoàn thành</p>
+          <p className="text-[10px] text-[var(--text-muted)]">Bài hoàn thành</p>
         </div>
-        <div className="rounded-xl bg-[#F2F4F3]/75 px-2 py-1.5">
-          <p className="font-mono text-xs font-bold text-[#245746]">{coveragePercent}%</p>
-          <p className="text-[10px] text-[#4A5D58]">Độ bao phủ</p>
+        <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1.5">
+          <p className="font-mono text-xs font-bold text-[var(--accent-os)]">{coveragePercent}%</p>
+          <p className="text-[10px] text-[var(--text-muted)]">Độ bao phủ</p>
         </div>
-        <div className="rounded-xl bg-[#F2F4F3]/75 px-2 py-1.5">
-          <p className="font-mono text-xs font-bold text-[#6B5335]">
+        <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1.5">
+          <p className="font-mono text-xs font-bold text-[var(--accent-heritage)]">
             {mathLessons} / {pedLessons}
           </p>
-          <p className="text-[10px] text-[#4A5D58]">Toán / Sư phạm</p>
+          <p className="text-[10px] text-[var(--text-muted)]">Toán / Sư phạm</p>
         </div>
       </div>
     </div>
