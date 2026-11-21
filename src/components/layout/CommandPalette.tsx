@@ -513,7 +513,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
       onClick={() => onOpenChange(false)}
     >
       <div
-        className="w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)] shadow-2xl"
+        className="lu-glass-bar w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--glass-border)] text-[var(--text-main)] shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         {/* Thanh nhập liệu tìm kiếm toàn cục */}

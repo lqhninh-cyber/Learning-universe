@@ -341,6 +341,27 @@ export function HeritageExhibitionPavilion() {
         <rect width="100%" height="100%" fill={`url(#${drumPatternId})`} />
       </svg>
 
+      {/* Adaptive Exhibition Aura: Ánh sáng phòng triển lãm thích ứng chiết xuất từ tác phẩm đang xem */}
+      {!imageError && !isHeritageInlineSvg(currentArtwork) && (
+        <div
+          aria-hidden="true"
+          data-testid="heritage-adaptive-aura"
+          className="lu-canopy-mask pointer-events-none absolute inset-x-0 top-0 h-[560px] overflow-hidden select-none"
+        >
+          <img
+            key={currentArtwork.id}
+            src={currentArtwork.imageSrc}
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+            className={cn(
+              'h-full w-full scale-110 object-cover blur-[60px] transition-opacity duration-500 ease-out',
+              isTransitioning ? 'opacity-0' : 'opacity-[0.07] dark:opacity-[0.11]',
+            )}
+          />
+        </div>
+      )}
+
       <div className="relative z-10 mx-auto max-w-[1240px] px-6 lg:px-10">
         {/* ================================================================
           TẦNG 1: TIÊU ĐỀ KHU VỰC DI SẢN & THANH LỌC 4 NHÓM

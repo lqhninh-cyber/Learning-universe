@@ -2,6 +2,7 @@ import type { ManifestChapter, ManifestSubject } from '@schemas/index';
 import { ArrowRight, BookOpen, FolderKanban, Layers, Search, Sparkles, X } from 'lucide-react';
 import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
 import { LearningSpaceHeroCanvas } from '@/components/home/LearningSpaceHeroCanvas';
 import { LearningSpaceHub } from '@/components/home/LearningSpaceHub';
 import { getSubjects } from '@/content-runtime';
@@ -151,9 +152,18 @@ export function LearningSpacePage() {
   return (
     <div
       data-testid="learning-space-page"
-      className="lu-atelier-backdrop min-h-screen bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="relative min-h-screen bg-[var(--bg-workspace)] text-[var(--text-main)]"
     >
-      <div className="mx-auto max-w-[1240px] space-y-8 px-6 py-8 lg:px-10">
+      {/* Dải sương khí quyển mảnh 180–200px hòa tan mượt xuống mặt phẳng học thuật */}
+      <AtmosphericCanopy
+        variant="learning-space"
+        backgroundOnly
+        enableCelestialOverlay={false}
+        testId="learning-space-atmospheric-wash"
+        className="h-[180px] sm:h-[200px]"
+      />
+
+      <div className="relative z-10 mx-auto max-w-[1240px] space-y-8 px-6 py-8 lg:px-10">
         {/* KHỐI ĐẦU TRANG 2 CỘT CÂN ĐỐI SWISS NEO-EDITORIAL */}
         <section
           id="khoi-dau"
@@ -454,14 +464,10 @@ export function LearningSpacePage() {
             </div>
           </div>
 
-          {/* Cột Phải (5 cột): Mô hình đa diện 3D tương tác 120fps trên nền sạch */}
+          {/* Cột Phải (5 cột): Mô hình đa diện 3D đặt nổi tự do trên dải khí quyển (không viền hộp cứng) */}
           <div
             data-testid="hero-3d-column"
-            style={{
-              background:
-                'radial-gradient(circle at 50% 50%, var(--bg-workspace) 0%, var(--bg-surface) 100%)',
-            }}
-            className="hidden flex-col items-center justify-center rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] md:flex lg:col-span-5"
+            className="hidden flex-col items-center justify-center p-2 md:flex lg:col-span-5"
           >
             <div className="relative w-full">
               <LearningSpaceHeroCanvas />

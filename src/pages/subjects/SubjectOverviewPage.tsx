@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
+import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
 import {
   BlueprintSectionFrame,
   SlidingTabBar,
@@ -351,9 +352,18 @@ export function SubjectOverviewPage() {
   };
 
   return (
-    <FadeIn className="mx-auto w-full max-w-[1520px]">
+    <FadeIn className="relative mx-auto w-full max-w-[1520px]">
+      {/* Dải khí quyển mảnh 170–195px đúng sắc từng học phần (CTĐS / HHAVE / GTHMB / GDH) */}
+      <AtmosphericCanopy
+        variant="subject"
+        subjectSlug={subject.slug}
+        backgroundOnly
+        enableCelestialOverlay={false}
+        testId="subject-atmospheric-wash"
+        className="h-[170px] rounded-t-2xl sm:h-[195px]"
+      />
       <div
-        className="space-y-8"
+        className="relative z-10 space-y-8"
         style={getSubjectThemeVars(universeTheme)}
         data-subject-universe={universeTheme.id}
       >

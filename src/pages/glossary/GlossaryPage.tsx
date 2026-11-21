@@ -349,7 +349,7 @@ export function GlossaryPage() {
         <nav
           aria-label="Chỉ mục chữ cái A đến Z"
           data-testid="glossary-az-rail"
-          className="sticky top-12 z-20 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/95 px-3.5 py-2.5 backdrop-blur-sm"
+          className="lu-glass-bar sticky top-12 z-20 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--glass-border)] px-3.5 py-2.5"
         >
           <div className="flex flex-wrap items-center gap-1">
             {ALPHABET.map((letter) => {

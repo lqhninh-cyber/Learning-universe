@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { type CSSProperties, type MouseEvent, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
+import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
 import {
   HERITAGE_ARTWORKS,
   HeritageFallbackIllustration,
@@ -39,6 +40,7 @@ interface SubjectVisualStyle {
   readonly rgb: string;
   readonly pillClass: string;
   readonly formulaBadge: string;
+  readonly watercolorWash: string;
 }
 
 const SUBJECT_ACCENT_MAP: Record<string, SubjectVisualStyle> = {
@@ -50,6 +52,8 @@ const SUBJECT_ACCENT_MAP: Record<string, SubjectVisualStyle> = {
     pillClass:
       'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
     formulaBadge: 'G / ker φ ≅ Im φ',
+    watercolorWash:
+      'radial-gradient(68% 92% at 24% 26%, rgba(140, 88, 40, 0.15) 0%, transparent 72%), radial-gradient(60% 84% at 82% 76%, rgba(158, 118, 59, 0.12) 0%, transparent 74%)',
   },
   'hinh-hoc-affine': {
     code: 'HHAVE',
@@ -59,6 +63,8 @@ const SUBJECT_ACCENT_MAP: Record<string, SubjectVisualStyle> = {
     pillClass:
       'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
     formulaBadge: 'Aff(E) ⋉ GL(V)',
+    watercolorWash:
+      'radial-gradient(68% 92% at 26% 24%, rgba(29, 79, 110, 0.16) 0%, transparent 72%), radial-gradient(58% 82% at 80% 74%, rgba(100, 168, 209, 0.12) 0%, transparent 74%)',
   },
   'giai-tich-ham-mot-bien': {
     code: 'GTHMB',
@@ -68,6 +74,8 @@ const SUBJECT_ACCENT_MAP: Record<string, SubjectVisualStyle> = {
     pillClass:
       'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
     formulaBadge: '∫ f(x)dx = F(b) − F(a)',
+    watercolorWash:
+      'radial-gradient(68% 92% at 28% 26%, rgba(27, 94, 74, 0.15) 0%, transparent 72%), radial-gradient(60% 82% at 78% 72%, rgba(82, 179, 148, 0.12) 0%, transparent 74%)',
   },
   'giao-duc-hoc': {
     code: 'GDH',
@@ -77,6 +85,8 @@ const SUBJECT_ACCENT_MAP: Record<string, SubjectVisualStyle> = {
     pillClass:
       'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
     formulaBadge: 'Tri thức ↔ Sư phạm',
+    watercolorWash:
+      'radial-gradient(68% 92% at 26% 28%, rgba(143, 61, 53, 0.15) 0%, transparent 72%), radial-gradient(58% 82% at 80% 74%, rgba(223, 123, 112, 0.12) 0%, transparent 74%)',
   },
 };
 
@@ -117,7 +127,7 @@ function updateCardSpotlight(event: MouseEvent<HTMLElement>): void {
 }
 
 /**
- * Minh họa hình học tương tác riêng cho từng thẻ trong lưới 4 học phần tại Trang Tổng quan (/).
+ * Minh họa hình học tương tác riêng cho từng thẻ trong lưới 4 học phần tại Tầng 3.
  */
 function SubjectMiniVisualStage({
   slug,
@@ -138,9 +148,9 @@ function SubjectMiniVisualStage({
           <polygon
             points="72,18 96,32 96,60 72,74 48,60 48,32"
             strokeWidth="1.35"
-            strokeOpacity="0.78"
+            strokeOpacity="0.82"
             fill={color}
-            fillOpacity="0.07"
+            fillOpacity="0.06"
           />
           <line x1="72" y1="18" x2="72" y2="74" strokeOpacity="0.35" strokeWidth="0.9" />
           <line x1="48" y1="32" x2="96" y2="60" strokeOpacity="0.35" strokeWidth="0.9" />
@@ -179,7 +189,7 @@ function SubjectMiniVisualStage({
           stroke={color}
           fill="none"
         >
-          <circle cx="194" cy="46" r="24" strokeWidth="1.3" strokeOpacity="0.75" />
+          <circle cx="194" cy="46" r="24" strokeWidth="1.3" strokeOpacity="0.78" />
           <rect
             x="178"
             y="30"
@@ -187,7 +197,7 @@ function SubjectMiniVisualStage({
             height="32"
             rx="3"
             strokeWidth="1.15"
-            strokeOpacity="0.55"
+            strokeOpacity="0.58"
             fill={color}
             fillOpacity="0.06"
           />
@@ -204,7 +214,7 @@ function SubjectMiniVisualStage({
         aria-hidden="true"
         className="h-full w-full overflow-visible transition-transform duration-500 ease-out group-hover:scale-105"
       >
-        <g stroke={color} strokeOpacity="0.32" strokeDasharray="3 3" fill="none">
+        <g stroke={color} strokeOpacity="0.34" strokeDasharray="3 3" fill="none">
           <line x1="28" y1="54" x2="126" y2="20" />
           <line x1="28" y1="54" x2="138" y2="52" />
           <line x1="28" y1="54" x2="118" y2="78" />
@@ -224,7 +234,7 @@ function SubjectMiniVisualStage({
           fillOpacity="0.05"
           stroke={color}
           strokeWidth="1.2"
-          strokeOpacity="0.7"
+          strokeOpacity="0.72"
         />
 
         <g
@@ -264,7 +274,15 @@ function SubjectMiniVisualStage({
         aria-hidden="true"
         className="h-full w-full overflow-visible transition-transform duration-500 ease-out group-hover:scale-105"
       >
-        <line x1="18" y1="72" x2="242" y2="72" stroke={color} strokeOpacity="0.3" strokeWidth="1" />
+        <line
+          x1="18"
+          y1="72"
+          x2="242"
+          y2="72"
+          stroke={color}
+          strokeOpacity="0.32"
+          strokeWidth="1"
+        />
         {[34, 54, 74, 94, 114, 134, 154, 174, 194].map((x, idx) => {
           const h = [22, 34, 44, 48, 40, 28, 22, 30, 42][idx] ?? 28;
           return (
@@ -348,7 +366,10 @@ function SubjectMiniVisualStage({
 }
 
 /**
- * TRANG CHỦ (/): WORKSPACE DASHBOARD — KINETIC MATHEMATICAL ATELIER
+ * TRANG CHỦ (/): BỐ CỤC 3 TẦNG TRỤC Z — THIÊN CẢNH KÍNH MỜ × SWISS EDITORIAL
+ * - Tầng 1: Mái Vòm Khí Quyển (Atmospheric Canopy) hòa tan đáy mượt, chữ dọc nghệ thuật lề phải.
+ * - Tầng 2: Cầu Nối Kính Mờ (Floating Glass Dock) gối lề âm lên chân Tầng 1 (7 + 5).
+ * - Tầng 3: Mặt Phẳng Học Thuật sạch (Grounded Academic Grid) trên nền phẳng var(--bg-workspace).
  */
 export function HomePage() {
   const subjects = getSubjects();
@@ -411,6 +432,8 @@ export function HomePage() {
         pillClass:
           'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]',
         formulaBadge: subject.shortTitle,
+        watercolorWash:
+          'radial-gradient(64% 90% at 30% 30%, rgba(23, 51, 44, 0.14) 0%, transparent 72%)',
       };
       return {
         subject,
@@ -424,6 +447,7 @@ export function HomePage() {
         rgb: style.rgb,
         pillClass: style.pillClass,
         formulaBadge: style.formulaBadge,
+        watercolorWash: style.watercolorWash,
       };
     });
 
@@ -468,7 +492,6 @@ export function HomePage() {
       )
     : ROUTES.learningSpace;
 
-  // 4 tác phẩm tiêu biểu gần vị trí hiện tại để chọn nhanh trên filmstrip
   const featuredHeritageStrip = useMemo(() => {
     const len = HERITAGE_ARTWORKS.length;
     if (len === 0) return [];
@@ -486,22 +509,36 @@ export function HomePage() {
     ? Math.min(1, Math.max(0, 1 - pomodoro.remainingSeconds / pomodoroTotalSec))
     : 0;
   const isHeritageFallback = failedHeritageId === currentHeritage.id;
+  const heritageNumberLabel = String(heritageIndex + 1).padStart(2, '0');
 
   return (
     <div
       data-testid="workspace-dashboard"
-      className="lu-atelier-backdrop min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)]"
     >
-      <div className="mx-auto max-w-[1240px] space-y-6 px-6 py-7 lg:px-10">
-        {/* A. THANH CHÀO MỪNG & DANH NGÔN 1 DÒNG (SẠCH GỌN, KHÔNG CHỮ THỪA) */}
-        <header className="flex flex-col justify-between gap-3 border-b border-[var(--border-hairline)] pb-4 sm:flex-row sm:items-end">
-          <div className="min-w-0 space-y-1">
-            <h1 className="font-serif text-2xl font-semibold tracking-tight text-[var(--text-main)] sm:text-[1.75rem]">
+      {/* ========================================================================
+          TẦNG 1: MÁI VÒM KHÍ QUYỂN (ATMOSPHERIC CANOPY) — TRÀN SÁT MÉP TRÊN (-mt-12)
+          ======================================================================== */}
+      <AtmosphericCanopy
+        variant="dashboard"
+        enableCelestialOverlay
+        enableParallax
+        showScrim
+        testId="dashboard-atmospheric-canopy"
+        className="-mt-12 min-h-[235px] pt-16 pb-8 sm:min-h-[270px] sm:pt-20 md:min-h-[330px] md:pb-24 lg:min-h-[360px] lg:pt-24 lg:pb-28"
+      >
+        <header className="relative mx-auto flex max-w-[1240px] items-start justify-between gap-6 px-6 lg:px-10">
+          <div className="max-w-2xl min-w-0 space-y-3">
+            <h1 className="font-serif text-[32px] leading-[1.12] font-semibold tracking-tight text-[var(--text-main)] sm:text-[38px] lg:text-[44px]">
               <span className="sr-only">LEARNING UNIVERSE — </span>
               Không gian Tổng quan
             </h1>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-secondary)]">
-              <p data-testid="dashboard-quote-text" className="font-serif text-[13.5px] italic">
+
+            <div className="flex flex-wrap items-center gap-2.5 text-sm text-[var(--text-secondary)]">
+              <p
+                data-testid="dashboard-quote-text"
+                className="font-serif text-[14.5px] leading-relaxed italic sm:text-[15.5px]"
+              >
                 &ldquo;{currentQuote.content}&rdquo; —{' '}
                 <span className="font-sans text-xs font-medium text-[var(--text-muted)] not-italic">
                   {currentQuote.author}
@@ -513,7 +550,7 @@ export function HomePage() {
                 onClick={handleNextQuote}
                 aria-label="Đổi câu danh ngôn học thuật mới"
                 title="Đổi câu danh ngôn"
-                className="group/quote inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10.5px] font-medium whitespace-nowrap text-[var(--text-secondary)] transition-all duration-150 hover:border-[var(--accent-os)]/40 hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] active:scale-95"
+                className="group/quote inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] px-2.5 py-0.5 font-mono text-[10.5px] font-medium whitespace-nowrap text-[var(--text-secondary)] transition-all duration-150 hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)] active:scale-95"
               >
                 <RefreshCw
                   className="h-3 w-3 transition-transform duration-300 group-hover/quote:rotate-180"
@@ -522,34 +559,51 @@ export function HomePage() {
                 <span>Câu khác</span>
               </button>
             </div>
+
+            <div className="flex flex-wrap items-center gap-2 pt-0.5">
+              <time
+                data-testid="dashboard-date"
+                className="rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 py-1 font-mono text-[11px] whitespace-nowrap text-[var(--text-secondary)]"
+              >
+                {todayFormatted}
+              </time>
+              <button
+                type="button"
+                onClick={openCommandPalette}
+                className="hidden cursor-pointer items-center gap-1.5 rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] px-3 py-1 text-xs font-medium text-[var(--text-secondary)] transition-all duration-150 hover:border-[var(--accent-os)]/45 hover:text-[var(--text-main)] active:scale-[0.98] sm:inline-flex"
+              >
+                <Search className="h-3.5 w-3.5 text-[var(--text-muted)]" aria-hidden="true" />
+                <kbd className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)]">
+                  ⌘K
+                </kbd>
+              </button>
+            </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2">
-            <time
-              data-testid="dashboard-date"
-              className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-[11px] whitespace-nowrap text-[var(--text-secondary)]"
-            >
-              {todayFormatted}
-            </time>
-            <button
-              type="button"
-              onClick={openCommandPalette}
-              className="hidden cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)] transition-all duration-150 hover:border-[var(--accent-os)]/45 hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] active:scale-[0.98] sm:inline-flex"
-            >
-              <Search className="h-3.5 w-3.5 text-[var(--text-muted)]" aria-hidden="true" />
-              <kbd className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)]">
-                ⌘K
-              </kbd>
-            </button>
-          </div>
+          {/* Dải chữ dọc nghệ thuật ở lề phải Tầng 1 (ẩn dưới lg để không chạm tiêu đề) */}
+          <aside
+            aria-hidden="true"
+            data-testid="canopy-vertical-label"
+            className="lu-vertical-label hidden shrink-0 items-center gap-3 pt-1 font-mono text-[10.5px] font-medium tracking-[0.22em] text-[var(--text-secondary)] uppercase opacity-55 select-none lg:flex"
+          >
+            <span>DI SẢN #{heritageNumberLabel} · 40</span>
+            <span className="h-6 w-px bg-[var(--text-muted)]/40" />
+            <span>{currentHeritage.shortTitle}</span>
+          </aside>
         </header>
+      </AtmosphericCanopy>
 
-        {/* B. HÀNG BENTO 1 — SÂN KHẤU HỌC TIẾP TƯƠNG TÁC & ĐỒNG HỒ RADIAL TẬP TRUNG (7 : 5) */}
+      {/* ========================================================================
+          TẦNG 2 & TẦNG 3: CẦU NỐI KÍNH MỜ GỐI LỀ ÂM → MẶT PHẲNG HỌC THUẬT SẠCH
+          ======================================================================== */}
+      <div className="mx-auto max-w-[1240px] space-y-7 px-6 pb-10 lg:px-10">
+        {/* TẦNG 2: CẦU NỐI KÍNH MỜ (FLOATING GLASS DOCK — 7 : 5) */}
         <section
           aria-label="Hành động chính và tiến độ học tập"
-          className="grid grid-cols-1 gap-5 lg:grid-cols-12"
+          data-testid="floating-glass-dock"
+          className="relative z-20 mt-2 grid grid-cols-1 gap-5 md:-mt-14 lg:-mt-20 lg:grid-cols-12"
         >
-          {/* Cột Trái (7 cột) — Sân khấu "Tiếp tục học tập" kèm Canvas Toán học sống động & Lộ trình bước chương */}
+          {/* Cột Trái (7 cột) — Thẻ Kính Mờ 'Đang học dở' với mô hình đa diện thoáng viền */}
           <div
             data-testid="dashboard-resume-card"
             onMouseMove={updateCardSpotlight}
@@ -559,15 +613,14 @@ export function HomePage() {
               {
                 borderLeftWidth: '3px',
                 borderLeftColor: resumeAccentColor,
-                '--spot-glow': `rgba(${resumeCardStats?.rgb ?? '140, 88, 40'}, 0.11)`,
-                '--spot-glow-dark': `rgba(${resumeCardStats?.rgb ?? '140, 88, 40'}, 0.22)`,
+                '--spot-glow': `rgba(${resumeCardStats?.rgb ?? '140, 88, 40'}, 0.10)`,
+                '--spot-glow-dark': `rgba(${resumeCardStats?.rgb ?? '140, 88, 40'}, 0.20)`,
               } as CSSProperties
             }
-            className="lu-bento-interactive group/resume flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] sm:p-6 lg:col-span-7"
+            className="lu-glass-dock lu-bento-interactive group/resume flex min-w-0 flex-col justify-between gap-4 rounded-2xl border p-5 sm:p-6 lg:col-span-7"
           >
             <div className="relative z-10 grid grid-cols-1 items-center gap-5 sm:grid-cols-12">
-              {/* Cột Nội dung bài đang đọc (7/12) */}
-              <div className="flex flex-col justify-between space-y-3 sm:col-span-7">
+              <div className="flex min-w-0 flex-col justify-between space-y-3 sm:col-span-7">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                     <span
@@ -604,64 +657,62 @@ export function HomePage() {
                   </h2>
                 )}
 
-                {/* Thanh bước bài học trong chương hiện tại (Interactive Chapter Step-Track) */}
+                {/* Thanh bước bài học trong chương hiện tại */}
                 {resumeLocation && (
-                  <div className="space-y-1.5 pt-0.5">
-                    <div
-                      className="flex flex-wrap items-center gap-1.5"
-                      aria-label="Các bài trong chương hiện tại"
-                    >
-                      {resumeLocation.chapter.lessons.slice(0, 6).map((ls) => {
-                        const isCurrent = ls.id === resumeLocation.lesson.id;
-                        const isDone = Boolean(completedLessons[ls.id]);
-                        return (
-                          <Link
-                            key={ls.id}
-                            to={ROUTES.lesson(
-                              resumeLocation.subject.slug,
-                              resumeLocation.chapter.slug,
-                              ls.slug,
-                            )}
-                            title={ls.title}
-                            className={cn(
-                              'inline-flex h-6 items-center gap-1 rounded-md border px-2 font-mono text-[10.5px] font-semibold transition-all duration-150',
-                              isCurrent
-                                ? 'border-transparent text-white shadow-2xs'
-                                : isDone
-                                  ? 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--accent-os)]'
-                                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)]/70 text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)]',
-                            )}
-                            style={isCurrent ? { backgroundColor: resumeAccentColor } : undefined}
-                          >
-                            {isDone && !isCurrent && (
-                              <Check className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
-                            )}
-                            <span>
-                              {resumeLocation.chapter.number}.{ls.number}
-                            </span>
-                          </Link>
-                        );
-                      })}
-                    </div>
+                  <div
+                    className="flex flex-wrap items-center gap-1.5 pt-0.5"
+                    aria-label="Các bài trong chương hiện tại"
+                  >
+                    {resumeLocation.chapter.lessons.slice(0, 6).map((ls) => {
+                      const isCurrent = ls.id === resumeLocation.lesson.id;
+                      const isDone = Boolean(completedLessons[ls.id]);
+                      return (
+                        <Link
+                          key={ls.id}
+                          to={ROUTES.lesson(
+                            resumeLocation.subject.slug,
+                            resumeLocation.chapter.slug,
+                            ls.slug,
+                          )}
+                          title={ls.title}
+                          className={cn(
+                            'inline-flex h-6 items-center gap-1 rounded-md border px-2 font-mono text-[10.5px] font-semibold transition-all duration-150',
+                            isCurrent
+                              ? 'border-transparent text-white shadow-2xs'
+                              : isDone
+                                ? 'border-[var(--border-hairline)] bg-[var(--bg-workspace)]/80 text-[var(--accent-os)]'
+                                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)]/60 text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)]',
+                          )}
+                          style={isCurrent ? { backgroundColor: resumeAccentColor } : undefined}
+                        >
+                          {isDone && !isCurrent && (
+                            <Check className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+                          )}
+                          <span>
+                            {resumeLocation.chapter.number}.{ls.number}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
 
-              {/* Cột Sân khấu Đồ họa Toán học tương tác 120fps (5/12) */}
-              <div className="relative overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] sm:col-span-5">
+              {/* Khung mô hình xem trước nổi thoáng không bị bó viền cứng */}
+              <div className="relative min-w-0 overflow-hidden sm:col-span-5">
                 <SubjectStageCanvas
                   slug={resumeLocation?.subject.slug ?? 'cau-truc-dai-so'}
                   isCardHovered={isResumeStageHovered}
                 />
                 {resumeCardStats && (
-                  <span className="pointer-events-none absolute right-2 bottom-2 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)]/90 px-2 py-0.5 font-mono text-[9.5px] font-semibold text-[var(--text-secondary)] backdrop-blur-xs">
+                  <span className="pointer-events-none absolute right-2 bottom-1.5 font-mono text-[9.5px] font-semibold text-[var(--text-muted)]">
                     {resumeCardStats.formulaBadge}
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-hairline)] pt-3.5">
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--glass-border)] pt-3.5">
               <Link
                 to={resumeHref}
                 className="group/cta inline-flex items-center gap-2 rounded-lg bg-[var(--accent-os)] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition-all duration-150 hover:bg-[var(--accent-primary-hover)] active:scale-[0.98]"
@@ -686,16 +737,15 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Cột Phải (5 cột) — Đồng hồ Radial 4 Vòng Học phần & Nhịp Pomodoro trực quan */}
+          {/* Cột Phải (5 cột) — Thẻ Kính Mờ 'Chỉ số tiến độ & Pomodoro' */}
           <div
             data-testid="dashboard-metrics-card"
             onMouseMove={updateCardSpotlight}
-            className="lu-bento-interactive flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] lg:col-span-5"
+            className="lu-glass-dock lu-bento-interactive flex min-w-0 flex-col justify-between gap-4 rounded-2xl border p-5 lg:col-span-5"
           >
-            {/* Khối trên: Vòng đồng tâm 4 học phần (Radial Mastery Dial) + 3 chỉ số */}
             <div className="relative z-10 flex items-center gap-4">
-              {/* Vòng đồng tâm SVG 4 quỹ đạo môn học */}
-              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]">
+              {/* Vòng đồng tâm 4 quỹ đạo môn học */}
+              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/85">
                 <svg viewBox="0 0 96 96" className="h-20 w-20 -rotate-90" aria-hidden="true">
                   {subjectCards.map((card, idx) => {
                     const r = 38 - idx * 6.5;
@@ -732,9 +782,9 @@ export function HomePage() {
                 </div>
               </div>
 
-              {/* 3 Ô chỉ số tinh gọn */}
+              {/* 3 Ô chỉ số sắc nét chuẩn tabular-nums */}
               <div className="grid min-w-0 flex-1 grid-cols-2 gap-2">
-                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2.5">
+                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/85 p-2.5">
                   <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Bài hoàn thành
                   </p>
@@ -746,7 +796,7 @@ export function HomePage() {
                   </p>
                 </div>
 
-                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2.5">
+                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/85 p-2.5">
                   <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Tiến độ tổng
                   </p>
@@ -757,7 +807,7 @@ export function HomePage() {
 
                 <Link
                   to={ROUTES.glossary}
-                  className="group col-span-2 flex items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 transition-colors hover:border-[var(--accent-os)]/40"
+                  className="group col-span-2 flex items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/85 px-3 py-2 transition-colors hover:border-[var(--accent-os)]/40"
                 >
                   <span className="font-mono text-[10px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Kho Thuật ngữ
@@ -770,10 +820,10 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Khối dưới: Thanh Pomodoro có vòng đếm ngược trực quan */}
+            {/* Thanh Pomodoro tích hợp vòng đếm ngược trực quan */}
             <div
               data-testid="dashboard-pomodoro-bar"
-              className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2.5"
+              className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/85 px-3.5 py-2.5"
             >
               <div className="flex items-center gap-2.5">
                 <div className="relative flex h-8 w-8 shrink-0 items-center justify-center">
@@ -870,8 +920,10 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* C. HÀNG BENTO 2 — LƯỚI 4 HỌC PHẦN VỚI ĐỒ HỌA HÌNH HỌC TƯƠNG TÁC ĐỘC BẢN */}
-        <section aria-label="Bốn học phần trọng tâm" className="space-y-3">
+        {/* ========================================================================
+            TẦNG 3: MẶT PHẲNG HỌC THUẬT (GROUNDED ACADEMIC GRID — PHẲNG SẠCH, KHÔNG KÍNH MỜ)
+            ======================================================================== */}
+        <section aria-label="Bốn học phần trọng tâm" className="space-y-3 pt-1">
           <div className="flex items-center justify-between">
             <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
               Học phần trọng tâm
@@ -897,21 +949,12 @@ export function HomePage() {
                 key={item.subject.slug}
                 to={ROUTES.subjectOverview(item.subject.slug)}
                 data-testid={`dashboard-subject-card-${item.subject.slug}`}
-                onMouseMove={updateCardSpotlight}
-                style={
-                  {
-                    '--spot-glow': `rgba(${item.rgb}, 0.13)`,
-                    '--spot-glow-dark': `rgba(${item.rgb}, 0.25)`,
-                  } as CSSProperties
-                }
-                className="lu-bento-interactive group flex flex-col justify-between gap-3.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 hover:-translate-y-1 hover:border-[var(--border-strong)] hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]"
+                className="group flex min-w-0 flex-col justify-between gap-3.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]"
               >
-                {/* Sân khấu Hình học Vector sống động riêng cho từng môn */}
+                {/* Khung minh họa với vệt loang màu nước siêu nhẹ đúng mã màu môn (opacity 12%–16%) */}
                 <div
-                  style={{
-                    background: `radial-gradient(circle at 50% 50%, rgba(${item.rgb}, 0.09) 0%, transparent 75%)`,
-                  }}
-                  className="relative z-10 h-24 w-full overflow-hidden rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/80 px-2 py-1"
+                  style={{ backgroundImage: item.watercolorWash }}
+                  className="relative h-24 w-full overflow-hidden rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1"
                 >
                   <SubjectMiniVisualStage slug={item.subject.slug} color={item.color} />
                   <span className="pointer-events-none absolute right-2 bottom-1.5 font-mono text-[9px] font-medium text-[var(--text-muted)] opacity-80">
@@ -919,8 +962,7 @@ export function HomePage() {
                   </span>
                 </div>
 
-                {/* Đầu đề & Nhãn mã môn */}
-                <div className="relative z-10 space-y-2">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <span
                       className={cn(
@@ -949,8 +991,7 @@ export function HomePage() {
                   </h3>
                 </div>
 
-                {/* Thanh tiến độ mảnh dưới đáy */}
-                <div className="relative z-10 h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
                   <div
                     className="h-full rounded-full transition-[width] duration-300"
                     style={{
@@ -964,18 +1005,17 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* D. HÀNG BENTO 3 — BẢO TÀNG ÁNH SÁNG, SÂN KHẤU CÔNG THỨC KATEX & BÀN BIDA 8-BALL MINI (7 : 5) */}
+        {/* TẦNG 3 (HÀNG DƯỚI): DI SẢN TRONG NGÀY (7/12) + THUẬT NGỮ NGẪU NHIÊN & SẢNH BIDA (5/12) */}
         <section
           aria-label="Di sản học thuật, thuật ngữ và giải lao"
           className="grid grid-cols-1 gap-5 lg:grid-cols-12"
         >
-          {/* Cột Trái (7 cột) — "Di sản trong ngày" kèm Filmstrip 4 tác phẩm chọn nhanh */}
+          {/* Cột Trái (7 cột) — Di sản trong ngày (phẳng sạch) */}
           <div
             data-testid="dashboard-heritage-card"
-            onMouseMove={updateCardSpotlight}
-            className="lu-bento-interactive group/heritage flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] lg:col-span-7"
+            className="group/heritage flex min-w-0 flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 transition-colors duration-200 hover:border-[var(--border-strong)] lg:col-span-7"
           >
-            <div className="relative z-10 flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                   <Landmark
@@ -985,7 +1025,7 @@ export function HomePage() {
                   <span>Di sản trong ngày</span>
                 </span>
                 <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent-heritage)] tabular-nums">
-                  #{String(heritageIndex + 1).padStart(2, '0')} / {HERITAGE_ARTWORKS.length}
+                  #{heritageNumberLabel} / {HERITAGE_ARTWORKS.length}
                 </span>
               </div>
 
@@ -1004,8 +1044,8 @@ export function HomePage() {
               </button>
             </div>
 
-            <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-shell)] shadow-xs sm:w-44">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-shell)] sm:w-44">
                 {isHeritageFallback ? (
                   <HeritageFallbackIllustration artwork={currentHeritage} compact />
                 ) : (
@@ -1039,7 +1079,6 @@ export function HomePage() {
                   {currentHeritage.coreAcademicValue}
                 </p>
 
-                {/* Dải 4 nút chọn nhanh tác phẩm ngay trên thẻ */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                   <div className="flex items-center gap-1">
                     {featuredHeritageStrip.map(({ idx, artwork }) => {
@@ -1078,15 +1117,14 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Cột Phải (5 cột) — Sân khấu Công thức KaTeX & Bàn Bida 8-Ball Mini */}
-          <div className="flex flex-col gap-3.5 lg:col-span-5">
+          {/* Cột Phải (5 cột) — Thuật ngữ ngẫu nhiên & Sảnh Bida 8-Ball (phẳng sạch) */}
+          <div className="flex min-w-0 flex-col gap-3.5 lg:col-span-5">
             {currentGlossary && (
               <div
                 data-testid="dashboard-glossary-card"
-                onMouseMove={updateCardSpotlight}
-                className="lu-bento-interactive flex flex-1 flex-col justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)]"
+                className="flex flex-1 flex-col justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-colors duration-200 hover:border-[var(--border-strong)]"
               >
-                <div className="relative z-10 flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                     <BookMarked
                       className="h-3.5 w-3.5 text-[var(--accent-os)]"
@@ -1109,10 +1147,9 @@ export function HomePage() {
 
                 <Link
                   to={`${ROUTES.glossary}?q=${encodeURIComponent(currentGlossary.nameVi)}`}
-                  className="group relative z-10 flex items-center gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-colors hover:border-[var(--accent-os)]/45"
+                  className="group flex items-center gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-colors hover:border-[var(--accent-os)]/45"
                 >
-                  {/* Sân khấu công thức KaTeX nổi bật */}
-                  <div className="lu-atelier-backdrop flex h-14 min-w-[78px] shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-sm text-[var(--text-main)] shadow-2xs">
+                  <div className="flex h-14 min-w-[78px] shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-sm text-[var(--text-main)]">
                     <KatexMath math={currentGlossary.formula || currentGlossary.symbol} />
                   </div>
 
@@ -1133,14 +1170,11 @@ export function HomePage() {
               </div>
             )}
 
-            {/* Thẻ Bida 8-Ball kèm minh họa mặt bàn Bida Emerald & tia ngắm */}
             <div
               data-testid="dashboard-billiards-card"
-              onMouseMove={updateCardSpotlight}
-              className="lu-bento-interactive group/billiards flex items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3.5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)]"
+              className="group/billiards flex items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3.5 transition-colors duration-200 hover:border-[var(--border-strong)]"
             >
-              <div className="relative z-10 flex min-w-0 items-center gap-3">
-                {/* Minh họa mặt bàn Bida 8-Ball thu nhỏ sống động */}
+              <div className="flex min-w-0 items-center gap-3">
                 <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-[#8C6D3F]/50 bg-[#163D31] shadow-inner">
                   <svg viewBox="0 0 80 48" className="h-full w-full" aria-hidden="true">
                     <rect
@@ -1154,7 +1188,6 @@ export function HomePage() {
                       strokeOpacity="0.45"
                       strokeWidth="1"
                     />
-                    {/* Đường ngắm cơ tới bi số 8 */}
                     <line
                       x1="22"
                       y1="28"
@@ -1166,7 +1199,6 @@ export function HomePage() {
                       strokeDasharray="2.5 2.5"
                       className="lu-dg-stream-fast"
                     />
-                    {/* Bi cái (Cue ball) */}
                     <circle
                       cx="22"
                       cy="28"
@@ -1175,7 +1207,6 @@ export function HomePage() {
                       className="transition-transform duration-300 group-hover/billiards:translate-x-1"
                     />
                     <circle cx="22" cy="28" r="1.1" fill="#C93B2B" />
-                    {/* Bi số 8 */}
                     <g className="transition-transform duration-300 group-hover/billiards:translate-x-1.5 group-hover/billiards:-translate-y-0.5">
                       <circle
                         cx="56"
@@ -1212,7 +1243,7 @@ export function HomePage() {
 
               <Link
                 to={ROUTES.sanctuaryTab('bida')}
-                className="group/bida relative z-10 inline-flex shrink-0 items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-all duration-150 hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)] active:scale-[0.98]"
+                className="group/bida inline-flex shrink-0 items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-all duration-150 hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)] active:scale-[0.98]"
               >
                 <span>Mở bàn</span>
                 <ArrowRight
