@@ -1,5 +1,5 @@
 import { Bell, CheckCircle2, ChevronRight, Hourglass, Menu, Search, Sparkles } from 'lucide-react';
-import { type FC, useEffect, useMemo, useRef, useState } from 'react';
+import { type FC, useEffect, useMemo, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
 import {
   getLessonBySlug,
@@ -136,25 +136,6 @@ export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, is
 
   const breadcrumbs = useMemo(() => buildContextBreadcrumbs(pathname), [pathname]);
   const isPomodoroActive = pomodoro.status !== 'idle';
-  const isHomeRoute = pathname === ROUTES.home;
-
-  const [isScrolled, setIsScrolled] = useState<boolean>(() =>
-    typeof window !== 'undefined' ? window.scrollY > 16 : false,
-  );
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const syncScroll = () => {
-      setIsScrolled(window.scrollY > 16);
-    };
-    syncScroll();
-    window.addEventListener('scroll', syncScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', syncScroll);
-    };
-  }, [pathname]);
-
-  const isTransparentCanopyTop = isHomeRoute && !isScrolled;
 
   useEffect(() => {
     if (!isLessonPage || typeof window === 'undefined') return;
@@ -186,13 +167,7 @@ export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, is
   return (
     <header
       data-testid="top-context-bar"
-      data-transparent={isTransparentCanopyTop ? 'true' : 'false'}
-      className={cn(
-        'sticky top-0 z-30 flex h-12 shrink-0 items-center justify-between gap-3 border-b px-3 transition-colors duration-200 sm:px-5 print:hidden',
-        isTransparentCanopyTop
-          ? 'border-transparent bg-transparent'
-          : 'lu-glass-bar border-[var(--border-hairline)]',
-      )}
+      className="lu-glass-bar sticky top-0 z-30 flex h-12 shrink-0 items-center justify-between gap-3 border-b border-[var(--border-hairline)] px-3 transition-colors duration-200 sm:px-5 print:hidden"
     >
       {/* TRÁI: Hamburger (Mobile) + Breadcrumb ngữ cảnh */}
       <div className="flex min-w-0 flex-1 items-center gap-2">

@@ -6,6 +6,8 @@ import { TopContextBar } from '@/components/layout/TopContextBar';
 import {
   buildAtmosphericFallbackMesh,
   DASHBOARD_CANOPY_ASSETS,
+  SANCTUARY_BANNER_ASSET,
+  SUBJECT_PORTAL_ASSETS,
   SUBJECT_WASH_ASSETS,
 } from '@/config/atmosphereAssets';
 import { IslandProvider } from '@/context/IslandContext';
@@ -15,7 +17,7 @@ import { HomePage } from '@/pages/home/HomePage';
 import { LearningSpacePage } from '@/pages/learning-space/LearningSpacePage';
 import { AtmosphericCanopy } from './AtmosphericCanopy';
 
-describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột', () => {
+describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Photography)', () => {
   beforeEach(() => {
     document.documentElement.classList.remove('dark');
     document.documentElement.removeAttribute('data-theme');
@@ -27,10 +29,10 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
     document.documentElement.removeAttribute('data-theme');
   });
 
-  it('AtmosphericCanopy nạp đúng ảnh Sáng/Tối độc lập và tự chuyển sang Fallback CSS mượt khi thiếu file ảnh ngoài', async () => {
+  it('AtmosphericCanopy nạp ảnh chụp thật Sáng/Tối độc lập, hỗ trợ chế độ fullBleedPhoto và Fallback CSS không vỡ ảnh', async () => {
     const { container } = render(
       <ReadingSettingsProvider>
-        <AtmosphericCanopy variant="dashboard" testId="test-canopy">
+        <AtmosphericCanopy variant="dashboard" fullBleedPhoto testId="test-canopy">
           <h1>Tiêu đề thử nghiệm</h1>
         </AtmosphericCanopy>
       </ReadingSettingsProvider>,
@@ -39,20 +41,21 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
     const canopy = screen.getByTestId('test-canopy');
     expect(canopy).toHaveAttribute('data-atmosphere-theme', 'light');
     expect(screen.getByTestId('test-canopy-fallback')).toBeInTheDocument();
-    expect(screen.getByTestId('test-canopy-celestial')).toBeInTheDocument();
+    expect(screen.getByTestId('test-canopy-scrim')).toBeInTheDocument();
+    expect(container.querySelector('.lu-canopy-mask')).toBeNull();
 
     const lightImg = container.querySelector('img');
     expect(lightImg).not.toBeNull();
     expect(lightImg).toHaveAttribute('src', DASHBOARD_CANOPY_ASSETS.light);
 
-    // Giả lập chưa đặt file ảnh ngoài -> onError ẩn sạch <img>, không bao giờ hiện icon ảnh vỡ
+    // Giả lập lỗi tải ảnh -> onError ẩn sạch <img>, fallback CSS giàu chiều sâu vẫn bảo vệ nền
     if (lightImg) {
       fireEvent.error(lightImg);
     }
     expect(container.querySelector('img')).toBeNull();
     expect(screen.getByTestId('test-canopy-fallback')).toBeInTheDocument();
 
-    // Chuyển sang Chế độ Tối độc lập -> nạp dashboard-canopy-dark.webp (không dùng invert)
+    // Chuyển sang Chế độ Tối độc lập -> nạp dashboard-canopy-dark.webp (không dùng filter invert)
     act(() => {
       document.documentElement.classList.add('dark');
     });
@@ -64,7 +67,24 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
     expect(darkImg).toHaveAttribute('src', DASHBOARD_CANOPY_ASSETS.dark);
   });
 
-  it('cung cấp đầy đủ cấu hình ảnh và fallback màu nước độc lập cho 4 học phần', () => {
+  it('cung cấp đầy đủ 7 đường dẫn ảnh chụp thật (.webp) và fallback gradient giàu chiều sâu cho Hero, 4 Cổng Học Phần và Sảnh Thư Giãn', () => {
+    expect(DASHBOARD_CANOPY_ASSETS.light).toBe('/assets/atmosphere/dashboard-canopy-light.webp');
+    expect(DASHBOARD_CANOPY_ASSETS.dark).toBe('/assets/atmosphere/dashboard-canopy-dark.webp');
+    expect(SANCTUARY_BANNER_ASSET.src).toBe('/assets/atmosphere/sanctuary-banner.webp');
+    expect(SANCTUARY_BANNER_ASSET.fallbackGradient).toContain('#17332C');
+
+    // Dashboard fallback phải đậm chiều sâu để thẻ Kính Mờ phía trên nổi khối rõ nét (không bợt trắng)
+    const dashboardLightFallback = buildAtmosphericFallbackMesh({
+      variant: 'dashboard',
+      isDark: false,
+    });
+    const dashboardDarkFallback = buildAtmosphericFallbackMesh({
+      variant: 'dashboard',
+      isDark: true,
+    });
+    expect(dashboardLightFallback).toContain('#1E3D35');
+    expect(dashboardDarkFallback).toContain('#0D1917');
+
     const slugs = [
       'cau-truc-dai-so',
       'hinh-hoc-affine',
@@ -73,6 +93,9 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
     ] as const;
 
     for (const slug of slugs) {
+      expect(SUBJECT_PORTAL_ASSETS[slug]?.src).toMatch(/^\/assets\/atmosphere\/portal-.*\.webp$/);
+      expect(SUBJECT_PORTAL_ASSETS[slug]?.fallbackGradient).toContain('linear-gradient');
+      expect(SUBJECT_PORTAL_ASSETS[slug]?.alt.length).toBeGreaterThan(10);
       expect(SUBJECT_WASH_ASSETS[slug]?.src).toContain('/assets/atmosphere/subject-wash-');
       const lightMesh = buildAtmosphericFallbackMesh({
         variant: 'subject',
@@ -89,7 +112,7 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
     }
   });
 
-  it('TopContextBar trong suốt tại đỉnh trang / (scrollY <= 16) và chuyển sang kính mờ khi cuộn trang', () => {
+  it('TopContextBar giữ bề mặt lu-glass-bar sắc gọn trên / để không đè xung đột với góc bo của Hero Frame', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <LayoutProvider>
@@ -101,19 +124,11 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
     );
 
     const bar = screen.getByTestId('top-context-bar');
-    expect(bar).toHaveAttribute('data-transparent', 'true');
-    expect(bar.className).toContain('bg-transparent');
-
-    act(() => {
-      Object.defineProperty(window, 'scrollY', { value: 48, writable: true, configurable: true });
-      fireEvent.scroll(window);
-    });
-
-    expect(bar).toHaveAttribute('data-transparent', 'false');
     expect(bar.className).toContain('lu-glass-bar');
+    expect(bar.className).toContain('border-b');
   });
 
-  it('HomePage vận hành đủ 3 tầng Trục Z: Mái Vòm Khí Quyển + Cầu Nối Kính Mờ (Tầng 2) + Mặt Phẳng Học Thuật sạch (Tầng 3)', () => {
+  it('HomePage vận hành đủ 4 khối Spatial Editorial Portal: Hero tràn viền + 3 thẻ tương phản chất liệu + 4 Cổng Học Phần + Banner Sảnh Thư Giãn', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <LayoutProvider>
@@ -126,22 +141,58 @@ describe('Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism) — 6 Trụ Cột
       </MemoryRouter>,
     );
 
-    // Tầng 1: Mái Vòm Khí Quyển & dải chữ dọc nghệ thuật
+    // Khối A: Khung Hero tràn viền (rounded-[28px]) + Scrim định hướng + Floating Action Pill
+    const heroFrame = screen.getByTestId('spatial-hero-frame');
+    expect(heroFrame.className).toContain('rounded-[28px]');
     expect(screen.getByTestId('dashboard-atmospheric-canopy')).toBeInTheDocument();
-    expect(screen.getByTestId('canopy-vertical-label')).toHaveClass('lu-vertical-label');
+    expect(screen.getByTestId('dashboard-atmospheric-canopy-scrim')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-floating-pill')).toBeInTheDocument();
 
-    // Tầng 2: Cầu Nối Kính Mờ (chỉ 2 thẻ kính mờ gối lề âm)
-    expect(screen.getByTestId('floating-glass-dock')).toBeInTheDocument();
-    expect(screen.getByTestId('dashboard-resume-card')).toHaveClass('lu-glass-dock');
-    expect(screen.getByTestId('dashboard-metrics-card')).toHaveClass('lu-glass-dock');
+    // Khối B: 3 Thẻ Tương Phản Chất Liệu gác lề âm trực tiếp lên chân ảnh Hero
+    const dock = screen.getByTestId('three-material-dock');
+    expect(dock.className).toContain('-mt-10');
+    expect(dock.className).toContain('lg:-mt-28');
 
-    // Tầng 3: Mặt Phẳng Học Thuật sạch — KHÔNG dùng kính mờ
-    expect(screen.getByTestId('dashboard-subject-card-cau-truc-dai-so')).not.toHaveClass(
-      'lu-glass-dock',
+    const resumeCard = screen.getByTestId('dashboard-resume-card');
+    expect(resumeCard).toHaveAttribute('data-material', 'ceramic');
+    expect(resumeCard).not.toHaveClass('lu-glass-dock');
+
+    const metricsCard = screen.getByTestId('dashboard-metrics-card');
+    expect(metricsCard).toHaveAttribute('data-material', 'frosted-glass');
+    expect(metricsCard.className).toContain('backdrop-blur-xl');
+
+    const quickHubCard = screen.getByTestId('dashboard-quick-hub-card');
+    expect(quickHubCard).toHaveAttribute('data-material', 'deep-emerald');
+    expect(quickHubCard.className).toContain('bg-[#17332C]');
+
+    // Khối C: 4 Thẻ Cổng Học Phần tràn viền có ảnh chụp thật
+    const ctdsPortal = screen.getByTestId('dashboard-subject-card-cau-truc-dai-so');
+    expect(ctdsPortal.className).toContain('h-[240px]');
+    expect(ctdsPortal.querySelector('img')).toHaveAttribute(
+      'src',
+      '/assets/atmosphere/portal-ctds.webp',
     );
-    expect(screen.getByTestId('dashboard-heritage-card')).not.toHaveClass('lu-glass-dock');
-    expect(screen.getByTestId('dashboard-glossary-card')).not.toHaveClass('lu-glass-dock');
-    expect(screen.getByTestId('dashboard-billiards-card')).not.toHaveClass('lu-glass-dock');
+    expect(
+      screen.getByTestId('dashboard-subject-card-hinh-hoc-affine').querySelector('img'),
+    ).toHaveAttribute('src', '/assets/atmosphere/portal-hhave.webp');
+    expect(
+      screen.getByTestId('dashboard-subject-card-giai-tich-ham-mot-bien').querySelector('img'),
+    ).toHaveAttribute('src', '/assets/atmosphere/portal-gthmb.webp');
+    expect(
+      screen.getByTestId('dashboard-subject-card-giao-duc-hoc').querySelector('img'),
+    ).toHaveAttribute('src', '/assets/atmosphere/portal-gdh.webp');
+
+    // Khối D: Editorial Overlap Card Di sản + Thuật ngữ KaTeX + Banner Sảnh Thư Giãn Xanh Rừng
+    expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();
+    expect(screen.getByTestId('heritage-overlap-badge')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
+
+    const sanctuaryBanner = screen.getByTestId('dashboard-sanctuary-banner');
+    expect(sanctuaryBanner.className).toContain('bg-[#17332C]');
+    expect(sanctuaryBanner.querySelector('img')).toHaveAttribute(
+      'src',
+      '/assets/atmosphere/sanctuary-banner.webp',
+    );
   });
 
   it('LearningSpacePage hiển thị dải sương khí quyển đầu trang và mô hình 3D đặt nổi không viền hộp cứng', () => {

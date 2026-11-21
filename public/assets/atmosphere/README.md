@@ -1,21 +1,15 @@
-# Bộ Ảnh Nghệ Thuật Khí Quyển (`public/assets/atmosphere/`)
+# Bộ Ảnh Chụp Thật 0% AI — Spatial Editorial Portal (`public/assets/atmosphere/`)
 
-Thư mục này chứa các tệp ảnh nền ngoài (External Curated Assets) cho kiến trúc **Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism × Swiss Editorial)** của Learning Universe.
+Toàn bộ ảnh tại thư mục này là **ảnh chụp thật độ phân giải cao, miễn phí bản quyền** (Wikimedia Commons CC0 / CC BY / CC BY-SA), đã được tối ưu sang định dạng `.webp` cho Trang Tổng quan (`/`) phong cách _Spaces That Inspire × Pomaii_.
 
-Chỉ cần đặt tệp ảnh đúng tên dưới đây vào thư mục này — giao diện sẽ tự động nạp mượt với hiệu ứng hiện mờ `450ms` và hòa tan đáy (không cần sửa mã nguồn React). Nếu tệp chưa tồn tại, hệ thống tự động dùng nền **Watercolor Mesh Fallback** đồng bộ màu Sứ Bạch / Than Đá.
+## Danh sách 7 ảnh chụp thật chính
 
-## Danh sách tên tệp chuẩn
-
-| Tên tệp                                | Vị trí sử dụng                                                | Thông số khuyến nghị                                                                                                                                                        |
-| :------------------------------------- | :------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dashboard-canopy-light.webp`          | Tầng 1 Trang Tổng quan (`/`) — Chế độ Sáng (_Ceramic Light_)  | `2560×1100px` (hoặc `1920×840px`), `< 350KB`. Màu nước / thủy mặc sáng tông Bạch Ngọc – Lam Sương – Lục Nhạt, **không ám vàng**; 35% vùng đáy thoáng sáng tan về `#FFFFFF`. |
-| `dashboard-canopy-dark.webp`           | Tầng 1 Trang Tổng quan (`/`) — Chế độ Tối (_Obsidian Studio_) | `2560×1100px` (hoặc `1920×840px`), `< 350KB`. Bản đêm độc lập: Than Đá – Lục Thông trầm – Lam Đêm – ánh đồng mờ; 35% vùng đáy chìm sâu về `#121716`.                        |
-| `subject-wash-ctds.webp` _(tùy chọn)_  | Dải khí quyển đầu trang Cấu trúc đại số                       | `1920×400px`, `< 120KB`, vệt loang Nâu Hổ Phách (`#8C5828`).                                                                                                                |
-| `subject-wash-hhave.webp` _(tùy chọn)_ | Dải khí quyển đầu trang Hình học Affine & Euclide             | `1920×400px`, `< 120KB`, vệt loang Lam Phổ (`#1D4F6E`).                                                                                                                     |
-| `subject-wash-gthmb.webp` _(tùy chọn)_ | Dải khí quyển đầu trang Giải tích hàm một biến                | `1920×400px`, `< 120KB`, vệt loang Lục Thông (`#1B5E4A`).                                                                                                                   |
-| `subject-wash-gdh.webp` _(tùy chọn)_   | Dải khí quyển đầu trang Giáo dục học                          | `1920×400px`, `< 120KB`, vệt loang Son Gạch Trầm (`#8F3D35`).                                                                                                               |
-
-## Lưu ý bố cục ảnh (Safe Zones)
-
-- **45% vùng bên trái:** ít chi tiết rối hoặc sáng/tối đồng nhất để tiêu đề Serif và danh ngôn nổi bật.
-- **35% vùng đáy:** sáng dần về `#FFFFFF` (bản Sáng) hoặc tối dần về `#121716` (bản Tối) để khớp hoàn hảo với mặt nạ hòa tan viền.
+| Tệp ảnh                       | Vai trò                                          | Nguồn ảnh chụp thật & Giấy phép                                             |
+| :---------------------------- | :----------------------------------------------- | :-------------------------------------------------------------------------- |
+| `dashboard-canopy-light.webp` | Khung Hero Trang Tổng quan (Sáng)                | Hồ núi Lago di Braies, Dolomites (CC BY 3.0)                                |
+| `dashboard-canopy-dark.webp`  | Khung Hero Trang Tổng quan (Tối)                 | Hoàng hôn xanh & trăng lưỡi liềm trên hồ Sandy Lake (CC BY 4.0)             |
+| `portal-ctds.webp`            | Cổng học phần Cấu trúc đại số (`#8C5828`)        | Mái vòm hình học đa giác Bảo tàng Louvre Abu Dhabi (CC BY 3.0)              |
+| `portal-hhave.webp`           | Cổng học phần Hình học Affine (`#1D4F6E`)        | Đường nét phối cảnh kiến trúc Nhà hát Opera Oslo (CC BY-SA 4.0)             |
+| `portal-gthmb.webp`           | Cổng học phần Giải tích hàm một biến (`#1B5E4A`) | Đường cong hồ nước phẳng lặng & rừng thông Emerald Bay (CC BY 2.0)          |
+| `portal-gdh.webp`             | Cổng học phần Giáo dục học (`#8F3D35`)           | Phòng đọc Long Room Thư viện Đại học Trinity Dublin — Diliff (CC BY-SA 4.0) |
+| `sanctuary-banner.webp`       | Banner đáy Sảnh Thư Giãn (`#17332C`)             | Vườn rêu tĩnh lặng chùa Saihō-ji, Kyoto (CC BY 2.0)                         |

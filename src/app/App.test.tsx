@@ -49,12 +49,16 @@ describe('App routing smoke test', () => {
       '/learning-space',
     );
 
-    // Workspace Dashboard — 3 Hàng Bento cốt lõi
+    // Workspace Dashboard — Spatial Editorial Portal (4 Khối: Hero + 3-Material Dock + 4 Cổng Học Phần + Văn hiến & Sảnh Thư Giãn)
     expect(screen.getByTestId('workspace-dashboard')).toBeInTheDocument();
+    expect(screen.getByTestId('spatial-hero-frame')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-floating-pill')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-quote-text')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-quote-next')).toBeInTheDocument();
+    expect(screen.getByTestId('three-material-dock')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-resume-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-metrics-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-quick-hub-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-pomodoro-bar')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subjects-grid')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subject-card-cau-truc-dai-so')).toHaveAttribute(
@@ -74,17 +78,22 @@ describe('App routing smoke test', () => {
       '/mon-hoc/giao-duc-hoc',
     );
     expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();
+    expect(screen.getByTestId('heritage-overlap-badge')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
-    expect(screen.getByTestId('dashboard-billiards-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-sanctuary-banner')).toBeInTheDocument();
 
     // Bảo tàng 40 Di sản & Bida 8-Ball đã được tách hoàn toàn sang /thu-gian
-    expect(screen.getByRole('link', { name: /Mở phòng trưng bày 40 Di sản/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Xem phòng trưng bày 40 Di sản/i })).toHaveAttribute(
       'href',
       '/thu-gian?tab=di-san',
     );
-    expect(screen.getByRole('link', { name: /Mở bàn/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Mở bàn Bida 8-Ball/i })).toHaveAttribute(
       'href',
       '/thu-gian?tab=bida',
+    );
+    expect(screen.getByRole('link', { name: /Bảo tàng 40 Di sản/i })).toHaveAttribute(
+      'href',
+      '/thu-gian?tab=di-san',
     );
     expect(screen.queryByTestId('heritage-art-showcase')).not.toBeInTheDocument();
     expect(screen.queryByTestId('mineral-billiards-stage')).not.toBeInTheDocument();

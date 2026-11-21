@@ -1,12 +1,9 @@
 /**
- * Cấu hình trung tâm cho bộ ảnh nền khí quyển ngoài (External Curated Assets)
- * thuộc kiến trúc Thiên Cảnh Kính Mờ (Atmospheric Glassmorphism × Swiss Editorial).
+ * Cấu hình trung tâm cho bộ ảnh chụp thật 0% AI (External Curated Real Photography)
+ * trong `public/assets/atmosphere/` — phong cách Spatial Editorial Portal (Spaces That Inspire × Pomaii).
  *
- * - Toàn bộ ảnh đặt tại `public/assets/atmosphere/`.
- * - Chủ dự án có thể thay đổi tranh bất kỳ lúc nào bằng cách ghi đè file cùng tên
- *   mà không cần sửa mã nguồn React.
- * - Khi file ảnh chưa được đặt vào thư mục hoặc tải lỗi, hệ thống tự động chuyển
- *   sang lớp Fallback CSS Watercolor Mesh đồng bộ hoàn toàn với Ceramic Light / Obsidian Studio.
+ * - Toàn bộ 7 tệp ảnh chụp thật được tối ưu cục bộ dạng `.webp` (miễn phí bản quyền Wikimedia Commons).
+ * - Khi thiếu ảnh hoặc trong môi trường offline/test, hệ thống tự dùng Fallback CSS gradient giàu chiều sâu.
  */
 
 export interface CanopyThemePair {
@@ -25,11 +22,66 @@ export interface SubjectWashAssetConfig {
   readonly objectPosition?: string;
 }
 
+export interface SubjectPortalAssetConfig {
+  readonly slug: string;
+  readonly shortCode: string;
+  readonly src: string;
+  readonly accentHex: string;
+  readonly darkAccentHex: string;
+  readonly fallbackGradient: string;
+  readonly alt: string;
+}
+
 export const ATMOSPHERE_BASE_PATH = '/assets/atmosphere' as const;
 
 export const DASHBOARD_CANOPY_ASSETS: CanopyThemePair = {
   light: `${ATMOSPHERE_BASE_PATH}/dashboard-canopy-light.webp`,
   dark: `${ATMOSPHERE_BASE_PATH}/dashboard-canopy-dark.webp`,
+};
+
+export const SANCTUARY_BANNER_ASSET = {
+  src: `${ATMOSPHERE_BASE_PATH}/sanctuary-banner.webp`,
+  alt: 'Vườn rêu tĩnh lặng chùa Saihō-ji (Kyoto) trong ánh nắng dịu chiều',
+  fallbackGradient: 'radial-gradient(80% 110% at 24% 50%, #245243 0%, #17332C 58%, #0E1F1A 100%)',
+} as const;
+
+export const SUBJECT_PORTAL_ASSETS: Readonly<Record<string, SubjectPortalAssetConfig>> = {
+  'cau-truc-dai-so': {
+    slug: 'cau-truc-dai-so',
+    shortCode: 'CTĐS',
+    src: `${ATMOSPHERE_BASE_PATH}/portal-ctds.webp`,
+    accentHex: '#8C5828',
+    darkAccentHex: '#D99B5E',
+    fallbackGradient: 'linear-gradient(135deg, #2D1F14 0%, #5A3A1E 50%, #1C140E 100%)',
+    alt: 'Mái vòm hình học đối xứng đa giác Bảo tàng Louvre Abu Dhabi',
+  },
+  'hinh-hoc-affine': {
+    slug: 'hinh-hoc-affine',
+    shortCode: 'HHAVE',
+    src: `${ATMOSPHERE_BASE_PATH}/portal-hhave.webp`,
+    accentHex: '#1D4F6E',
+    darkAccentHex: '#64A8D1',
+    fallbackGradient: 'linear-gradient(135deg, #102433 0%, #1D4F6E 52%, #0D1922 100%)',
+    alt: 'Phối cảnh kiến trúc tuyến tính hiện đại Nhà hát Opera Oslo',
+  },
+  'giai-tich-ham-mot-bien': {
+    slug: 'giai-tich-ham-mot-bien',
+    shortCode: 'GTHMB',
+    src: `${ATMOSPHERE_BASE_PATH}/portal-gthmb.webp`,
+    accentHex: '#1B5E4A',
+    darkAccentHex: '#52B394',
+    fallbackGradient: 'linear-gradient(135deg, #0E2921 0%, #1B5E4A 52%, #0B1B16 100%)',
+    alt: 'Đường cong mặt hồ phẳng lặng và rừng thông Emerald Bay lúc bình minh',
+  },
+  'giao-duc-hoc': {
+    slug: 'giao-duc-hoc',
+    shortCode: 'GDH',
+    src: `${ATMOSPHERE_BASE_PATH}/portal-gdh.webp`,
+    accentHex: '#8F3D35',
+    darkAccentHex: '#DF7B70',
+    fallbackGradient: 'linear-gradient(135deg, #321614 0%, #6A2E28 52%, #1D0F0E 100%)',
+    alt: 'Phòng đọc Long Room Thư viện Đại học Trinity Dublin ngập ánh sáng tự nhiên',
+  },
 };
 
 export const SUBJECT_WASH_ASSETS: Readonly<Record<string, SubjectWashAssetConfig>> = {
@@ -80,11 +132,13 @@ export function getSubjectWashAsset(slug?: string): SubjectWashAssetConfig | nul
   return SUBJECT_WASH_ASSETS[slug] ?? null;
 }
 
+export function getSubjectPortalAsset(slug?: string): SubjectPortalAssetConfig | null {
+  if (!slug) return null;
+  return SUBJECT_PORTAL_ASSETS[slug] ?? null;
+}
+
 /**
- * Tạo lớp nền CSS đa sắc loang màu nước (Layered Watercolor Mesh Fallback)
- * đảm bảo giao diện luôn đạt chất cảm hội họa tinh tế ngay cả khi chưa có ảnh ngoài.
- * - Ceramic Light: Bạch Ngọc – Lam Sương – Lục Nhạt – vệt đồng siêu mảnh (tuyệt đối không ám vàng).
- * - Obsidian Studio: Than Đá – Lục Thông trầm – Lam Đêm – ánh đồng mờ.
+ * Tạo lớp nền CSS đa sắc giàu chiều sâu (Fallback Gradient) phòng môi trường offline/test.
  */
 export function buildAtmosphericFallbackMesh(options: {
   readonly variant: 'dashboard' | 'learning-space' | 'subject';
@@ -129,22 +183,20 @@ export function buildAtmosphericFallbackMesh(options: {
     ].join(', ');
   }
 
-  // Dashboard Canopy (Tầng 1 Trang Tổng quan): Bạch Ngọc – Lam Sương – Lục Nhạt (Sáng) / Than Đá – Lục Thông – Lam Đêm (Tối)
+  // Dashboard Spatial Hero Fallback: sắc độ đậm sâu ở nửa dưới để kính mờ xuyên qua nổi khối rõ nét
   if (isDark) {
     return [
-      'radial-gradient(64% 92% at 80% 18%, rgba(59, 138, 114, 0.30) 0%, rgba(27, 94, 74, 0.12) 45%, transparent 78%)',
-      'radial-gradient(56% 88% at 48% 10%, rgba(29, 79, 110, 0.26) 0%, rgba(29, 79, 110, 0.08) 48%, transparent 76%)',
-      'radial-gradient(42% 72% at 16% 24%, rgba(212, 175, 106, 0.12) 0%, transparent 70%)',
-      'radial-gradient(48% 76% at 66% 58%, rgba(100, 168, 209, 0.11) 0%, transparent 74%)',
-      'linear-gradient(180deg, #0D1514 0%, #101B19 52%, #121716 100%)',
+      'radial-gradient(64% 92% at 82% 24%, rgba(59, 138, 114, 0.34) 0%, rgba(27, 94, 74, 0.14) 48%, transparent 80%)',
+      'radial-gradient(58% 88% at 24% 80%, rgba(29, 79, 110, 0.36) 0%, transparent 76%)',
+      'radial-gradient(42% 72% at 58% 64%, rgba(212, 175, 106, 0.16) 0%, transparent 72%)',
+      'linear-gradient(135deg, #0D1917 0%, #132823 54%, #0B1412 100%)',
     ].join(', ');
   }
 
   return [
-    'radial-gradient(66% 96% at 82% 16%, rgba(164, 206, 200, 0.56) 0%, rgba(196, 224, 220, 0.22) 48%, transparent 80%)',
-    'radial-gradient(58% 90% at 46% 8%, rgba(182, 208, 226, 0.52) 0%, rgba(210, 226, 236, 0.18) 50%, transparent 78%)',
-    'radial-gradient(44% 72% at 14% 22%, rgba(212, 232, 225, 0.48) 0%, transparent 74%)',
-    'radial-gradient(36% 64% at 68% 44%, rgba(158, 118, 59, 0.10) 0%, transparent 72%)',
-    'linear-gradient(180deg, #E8F1F3 0%, #F1F7F6 48%, #FFFFFF 100%)',
+    'radial-gradient(68% 96% at 78% 28%, rgba(44, 112, 92, 0.44) 0%, rgba(29, 79, 110, 0.22) 52%, transparent 82%)',
+    'radial-gradient(56% 88% at 24% 78%, rgba(23, 51, 44, 0.56) 0%, transparent 78%)',
+    'radial-gradient(44% 70% at 54% 18%, rgba(158, 186, 198, 0.46) 0%, transparent 72%)',
+    'linear-gradient(135deg, #1E3D35 0%, #2B5350 48%, #162E2A 100%)',
   ].join(', ');
 }

@@ -18,6 +18,8 @@ export interface AtmosphericCanopyProps {
   readonly variant: 'dashboard' | 'learning-space' | 'subject';
   /** Slug môn học khi variant === 'subject' */
   readonly subjectSlug?: string;
+  /** Bật chế độ ảnh tràn viền sắc nét (không hòa tan trắng nửa dưới, dùng scrim định hướng) */
+  readonly fullBleedPhoto?: boolean;
   /** Bật lớp nét thiên cầu động 120fps phủ nhẹ lên tranh nền */
   readonly enableCelestialOverlay?: boolean;
   /** Bật parallax vi mô translate3d theo con trỏ chuột (tắt khi prefers-reduced-motion) */
@@ -47,6 +49,7 @@ function readDomDarkState(): boolean {
 export function AtmosphericCanopy({
   variant,
   subjectSlug,
+  fullBleedPhoto = false,
   enableCelestialOverlay = true,
   enableParallax = false,
   showScrim = variant === 'dashboard',
@@ -65,6 +68,7 @@ export function AtmosphericCanopy({
   const hostRef = useRef<HTMLDivElement | null>(null);
   const parallaxLayerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   // Theo dõi đồng bộ lớp `.dark` / `data-theme` trên <html> để phản hồi tức thì khi đổi Sáng ↔ Tối
   useEffect(() => {
@@ -102,6 +106,15 @@ export function AtmosphericCanopy({
 
   const isAssetFailed = assetSrc ? Boolean(failedMap[assetSrc]) : true;
   const isAssetLoaded = assetSrc ? Boolean(loadedMap[assetSrc]) : false;
+
+  // Nếu ảnh đã có sẵn trong bộ nhớ đệm trình duyệt (reload / điều hướng quay lại), hiển thị ngay không chờ sự kiện onLoad
+  useEffect(() => {
+    if (!assetSrc || isAssetLoaded || isAssetFailed) return;
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setLoadedMap((prev) => (prev[assetSrc] ? prev : { ...prev, [assetSrc]: true }));
+    }
+  }, [assetSrc, isAssetFailed, isAssetLoaded]);
 
   // Parallax vi mô chỉ tác động lên transform: translate3d() (không chạm blur/width/height/shadow)
   useEffect(() => {
@@ -353,12 +366,17 @@ export function AtmosphericCanopy({
     };
   }, [enableCelestialOverlay, isDark, prefersReducedMotion, subjectWash, variant]);
 
-  const objectPosition = subjectWash?.objectPosition ?? 'center 35%';
+  const objectPosition = fullBleedPhoto
+    ? 'center center'
+    : (subjectWash?.objectPosition ?? 'center 35%');
 
   const canopyBackdrop = (
     <div
       aria-hidden="true"
-      className="lu-canopy-mask pointer-events-none absolute inset-0 overflow-hidden select-none"
+      className={cn(
+        'pointer-events-none absolute inset-0 overflow-hidden select-none',
+        !fullBleedPhoto && 'lu-canopy-mask',
+      )}
     >
       <div
         ref={parallaxLayerRef}
@@ -369,16 +387,17 @@ export function AtmosphericCanopy({
         }
         className="absolute inset-0"
       >
-        {/* Lớp 0: Nền Fallback CSS đa sắc loang màu nước (luôn sẵn sàng, 0 vỡ ảnh) */}
+        {/* Lớp 0: Nền Fallback CSS đa sắc giàu chiều sâu (luôn sẵn sàng, 0 vỡ ảnh) */}
         <div
           data-testid={`${testId}-fallback`}
           style={{ backgroundImage: fallbackMesh }}
           className="absolute inset-0 transition-opacity duration-500"
         />
 
-        {/* Lớp 1: Tranh nghệ thuật ngoài (External Curated Asset) — tự ẩn sạch nếu chưa có file */}
+        {/* Lớp 1: Ảnh chụp thật ngoài (External Curated Asset) — tự ẩn sạch nếu chưa có file */}
         {assetSrc && !isAssetFailed && (
           <img
+            ref={imgRef}
             key={assetSrc}
             src={assetSrc}
             alt=""
@@ -406,21 +425,35 @@ export function AtmosphericCanopy({
         )}
       </div>
 
-      {/* Lớp sương đệm đáy đồng bộ nền var(--bg-workspace) triệt tiêu tuyệt đối color banding */}
-      <div
-        style={{
-          background:
-            'linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--bg-workspace) 62%, transparent) 55%, var(--bg-workspace) 100%)',
-        }}
-        className="pointer-events-none absolute right-0 bottom-0 left-0 h-[30%]"
-      />
-
-      {/* Lớp sương đệm bảo vệ độ tương phản chữ bên trái (--canopy-scrim) */}
-      {showScrim && (
+      {/* Chế độ Spatial Full-Bleed Photo: chỉ phủ scrim định hướng giữ nửa dưới ảnh sắc nét cho kính mờ */}
+      {fullBleedPhoto ? (
         <div
-          style={{ background: 'var(--canopy-scrim)' }}
+          data-testid={`${testId}-scrim`}
+          style={{
+            background:
+              'linear-gradient(105deg, rgba(14, 24, 22, 0.72) 0%, rgba(14, 24, 22, 0.38) 52%, rgba(14, 24, 22, 0.15) 100%)',
+          }}
           className="pointer-events-none absolute inset-0"
         />
+      ) : (
+        <>
+          {/* Lớp sương đệm đáy đồng bộ nền var(--bg-workspace) cho các dải wash đầu trang */}
+          <div
+            style={{
+              background:
+                'linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--bg-workspace) 62%, transparent) 55%, var(--bg-workspace) 100%)',
+            }}
+            className="pointer-events-none absolute right-0 bottom-0 left-0 h-[30%]"
+          />
+
+          {/* Lớp sương đệm bảo vệ độ tương phản chữ bên trái (--canopy-scrim) */}
+          {showScrim && (
+            <div
+              style={{ background: 'var(--canopy-scrim)' }}
+              className="pointer-events-none absolute inset-0"
+            />
+          )}
+        </>
       )}
     </div>
   );
