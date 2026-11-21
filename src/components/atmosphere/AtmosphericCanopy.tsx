@@ -20,6 +20,8 @@ export interface AtmosphericCanopyProps {
   readonly subjectSlug?: string;
   /** Bật chế độ ảnh tràn viền sắc nét (không hòa tan trắng nửa dưới, dùng scrim định hướng) */
   readonly fullBleedPhoto?: boolean;
+  /** Lớp phủ scrim định hướng tùy chỉnh (dùng cho sắc thái sáng/chiều/tối/đêm ở chế độ fullBleedPhoto) */
+  readonly scrimGradient?: string;
   /** Bật lớp nét thiên cầu động 120fps phủ nhẹ lên tranh nền */
   readonly enableCelestialOverlay?: boolean;
   /** Bật parallax vi mô translate3d theo con trỏ chuột (tắt khi prefers-reduced-motion) */
@@ -50,6 +52,7 @@ export function AtmosphericCanopy({
   variant,
   subjectSlug,
   fullBleedPhoto = false,
+  scrimGradient,
   enableCelestialOverlay = true,
   enableParallax = false,
   showScrim = variant === 'dashboard',
@@ -431,9 +434,10 @@ export function AtmosphericCanopy({
           data-testid={`${testId}-scrim`}
           style={{
             background:
+              scrimGradient ??
               'linear-gradient(105deg, rgba(14, 24, 22, 0.72) 0%, rgba(14, 24, 22, 0.38) 52%, rgba(14, 24, 22, 0.15) 100%)',
           }}
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 transition-[background] duration-500"
         />
       ) : (
         <>

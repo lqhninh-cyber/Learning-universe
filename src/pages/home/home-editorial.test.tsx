@@ -547,14 +547,15 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         </MemoryRouter>,
       );
 
-      // A. Spatial Hero Frame: Không gian Tổng quan + Danh ngôn có nút đổi câu + Ngày hôm nay + Floating Action Pill
+      // A. Hero thích ứng khung giờ (KHÔNG lặp thanh tìm kiếm) + Danh ngôn + Ngày hôm nay
       expect(screen.getByTestId('workspace-dashboard')).toBeInTheDocument();
       expect(screen.getByTestId('spatial-hero-frame')).toBeInTheDocument();
       expect(
         screen.getByRole('heading', { level: 1, name: /Không gian Tổng quan/i }),
       ).toBeInTheDocument();
+      expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
       expect(screen.getByTestId('dashboard-date')).toBeInTheDocument();
-      expect(screen.getByTestId('hero-floating-pill')).toBeInTheDocument();
+      expect(screen.queryByTestId('hero-floating-pill')).not.toBeInTheDocument();
 
       const quoteEl = screen.getByTestId('dashboard-quote-text');
       const initialQuoteText = quoteEl.textContent ?? '';

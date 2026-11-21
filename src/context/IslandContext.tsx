@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { ReadingFontSize } from '@/context/ReadingSettingsContext';
+import { useWorkspaceStore } from '@/features/workspace';
 import {
   clampFontScale,
   FONT_SCALE_DEFAULT,
@@ -469,6 +470,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
             } catch {
               // Bỏ qua lỗi sessionStorage
             }
+            useWorkspaceStore.getState().recordPomodoroCompleted();
             setPomodoroBreakPrompt(true);
             triggerIslandNotice({
               text: `Hoàn thành nhịp học ${prev.presetLabel}! Hãy nghỉ ngơi vài phút.`,

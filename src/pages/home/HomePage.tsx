@@ -1,26 +1,36 @@
 import {
   ArrowRight,
   ArrowUpRight,
-  BookMarked,
   Check,
   Compass,
   Gamepad2,
   Hourglass,
   Landmark,
+  MoonStar,
   Pause,
   Play,
   RefreshCw,
   RotateCcw,
-  Search,
+  Sparkles,
+  Sun,
+  Sunrise,
+  Sunset,
 } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
+import { GlossaryFlashcardCard } from '@/components/home/GlossaryFlashcardCard';
 import {
   HERITAGE_ARTWORKS,
   HeritageFallbackIllustration,
 } from '@/components/home/HeritageArtShowcase';
-import { getSubjectPortalAsset, SANCTUARY_BANNER_ASSET } from '@/config/atmosphereAssets';
+import { StudyPlannerWidget } from '@/components/home/StudyPlannerWidget';
+import { StudyRhythmCard } from '@/components/home/StudyRhythmCard';
+import {
+  SubjectMathCard,
+  type SubjectMathCardRecentLesson,
+} from '@/components/home/SubjectMathCard';
+import { SANCTUARY_BANNER_ASSET } from '@/config/atmosphereAssets';
 import {
   getLessonById,
   getSubjects,
@@ -29,45 +39,21 @@ import {
 } from '@/content-runtime';
 import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
-import { useLayout } from '@/context/LayoutContext';
+import { getHeritageMathConnection } from '@/data/heritageMathConnections';
+import { useOptionalAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
-import { getAllGlossaryEntries, InlineMathText, KatexMath } from '@/features/math-glossary';
+import { getAllGlossaryEntries } from '@/features/math-glossary';
+import {
+  computeStudyActivityMetrics,
+  getVietnameseTimeGreeting,
+  selectActiveWorkspaceBucket,
+  useWorkspaceStore,
+  WORKSPACE_SUBJECT_META,
+  type DayPeriod,
+} from '@/features/workspace';
 import { SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
-
-interface SubjectPortalStyle {
-  readonly code: string;
-  readonly color: string;
-  readonly pillClass: string;
-}
-
-const SUBJECT_STYLE_MAP: Record<string, SubjectPortalStyle> = {
-  'cau-truc-dai-so': {
-    code: 'CTĐS',
-    color: '#8C5828',
-    pillClass:
-      'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
-  },
-  'hinh-hoc-affine': {
-    code: 'HHAVE',
-    color: '#1D4F6E',
-    pillClass:
-      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
-  },
-  'giai-tich-ham-mot-bien': {
-    code: 'GTHMB',
-    color: '#1B5E4A',
-    pillClass:
-      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
-  },
-  'giao-duc-hoc': {
-    code: 'GDH',
-    color: '#8F3D35',
-    pillClass:
-      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
-  },
-};
 
 function formatVietnameseToday(): string {
   try {
@@ -98,35 +84,76 @@ function getDaySeedIndex(length: number): number {
   return Math.abs(dayOfYear) % length;
 }
 
+function renderPeriodIcon(period: DayPeriod) {
+  if (period === 'morning')
+    return <Sunrise className="h-3.5 w-3.5 text-[#E6C27A]" aria-hidden="true" />;
+  if (period === 'afternoon')
+    return <Sun className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />;
+  if (period === 'evening')
+    return <Sunset className="h-3.5 w-3.5 text-[#D99B5E]" aria-hidden="true" />;
+  return <MoonStar className="h-3.5 w-3.5 text-[#8BC5B0]" aria-hidden="true" />;
+}
+
 /**
- * TRANG TỔNG QUAN (/): SPATIAL EDITORIAL PORTAL (SPACES THAT INSPIRE × POMAII)
- * - Khối A: Khung Hero Kiến trúc – Thiên nhiên tràn viền (ảnh chụp thật 0% AI + Floating Action Pill).
- * - Khối B: Hàng 3 thẻ tương phản chất liệu (Sứ Trắng | Kính Mờ xuyên ảnh thật | Xanh Than Đặc) gác trực tiếp lên chân ảnh Hero.
- * - Khối C: 4 Thẻ Cổng Học Phần tràn viền (Full-Bleed Subject Portal Cards).
- * - Khối D: Khối Biên tập Văn hiến (Editorial Overlap Card + Thuật ngữ KaTeX) & Banner đáy Sảnh Thư Giãn Xanh Rừng.
+ * TRANG TỔNG QUAN (/): ACADEMIC OS PERSONALIZED WORKSPACE
+ * - Khối A: Khung Hero thích ứng theo khung giờ (Sáng/Chiều/Tối/Đêm) + lời chào cá nhân hóa, KHÔNG lặp thanh tìm kiếm.
+ * - Khối B: 3 thẻ tương phản chất liệu (Sứ Trắng | Kính Mờ xuyên ảnh thật | Xanh Than Đặc).
+ * - Khối C: 4 Thẻ Học Phần với đồ họa vector toán học siêu mảnh (SVG thuần, 0% ảnh phong cảnh) + bài học gần nhất theo môn.
+ * - Khối D: Lịch biểu (Calendar) + Mốc kỳ thi + To-Do List cá nhân hóa theo tài khoản & Nhịp chuyên cần (Streak, Nhiệt đồ 28 ngày, Mục tiêu tuần).
+ * - Khối E: Di sản trong ngày (kèm dòng liên hệ Toán học/Sư phạm 40/40) + Thuật ngữ KaTeX (có chế độ Flashcard) & Banner Sảnh Thư Giãn.
  */
 export function HomePage() {
   const subjects = getSubjects();
   const allGlossaryEntries = useMemo(() => getAllGlossaryEntries(), []);
+  const auth = useOptionalAuth();
+  const user = auth?.user ?? null;
   const completedLessons = useLearningStore((state) => state.completedLessons);
+  const lastVisitedBySubject = useLearningStore((state) => state.lastVisitedBySubject);
   const lastVisitedGlobal = useLearningStore((state) => state.lastVisitedGlobal);
+  const isStoreAuth = useLearningStore((state) => state.isAuthenticated);
+  const storeLearnerName = useLearningStore((state) => state.learnerName);
+  const workspaceBucket = useWorkspaceStore(selectActiveWorkspaceBucket);
   const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro, resetPomodoro } = useIsland();
-  const { openCommandPalette } = useLayout();
 
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [heritageIndex, setHeritageIndex] = useState(() =>
     getDaySeedIndex(HERITAGE_ARTWORKS.length),
   );
   const [failedHeritageId, setFailedHeritageId] = useState<string | null>(null);
-  const [failedPortals, setFailedPortals] = useState<Record<string, boolean>>({});
   const [sanctuaryImgFailed, setSanctuaryImgFailed] = useState(false);
   const [glossaryIndex, setGlossaryIndex] = useState(() =>
     getDaySeedIndex(Math.max(1, allGlossaryEntries.length)),
   );
 
   const todayFormatted = useMemo(() => formatVietnameseToday(), []);
+  const personalizedDisplayName =
+    user?.fullName ||
+    (isStoreAuth && storeLearnerName && storeLearnerName !== 'Sinh viên Sư phạm Toán'
+      ? storeLearnerName
+      : null);
+
+  const timeGreeting = useMemo(
+    () => getVietnameseTimeGreeting(new Date(), personalizedDisplayName),
+    [personalizedDisplayName],
+  );
+
+  const activityMetrics = useMemo(
+    () =>
+      computeStudyActivityMetrics({
+        completedLessons,
+        tasks: workspaceBucket.tasks,
+        pomodoroLogs: workspaceBucket.pomodoroLogs,
+      }),
+    [completedLessons, workspaceBucket.pomodoroLogs, workspaceBucket.tasks],
+  );
+
   const currentQuote = SCHOLARLY_QUOTES[quoteIndex] ?? SCHOLARLY_QUOTES[0]!;
   const currentHeritage = HERITAGE_ARTWORKS[heritageIndex] ?? HERITAGE_ARTWORKS[0]!;
+  const currentHeritageMath = useMemo(
+    () => getHeritageMathConnection(currentHeritage.id),
+    [currentHeritage.id],
+  );
+  const currentHeritageSubjectMeta = WORKSPACE_SUBJECT_META[currentHeritageMath.subjectSlug];
   const currentGlossary = allGlossaryEntries[glossaryIndex] ?? allGlossaryEntries[0];
 
   const handleNextQuote = useCallback(() => {
@@ -158,13 +185,44 @@ export function HomePage() {
         }
       }
       const percent = stats.lessonCount > 0 ? Math.round((done / stats.lessonCount) * 100) : 0;
-      const style = SUBJECT_STYLE_MAP[subject.slug] ?? {
+      const style = WORKSPACE_SUBJECT_META[subject.slug as keyof typeof WORKSPACE_SUBJECT_META] ?? {
         code: subject.slug.toUpperCase().slice(0, 5),
+        shortLabel: subject.title,
         color: '#17332C',
         pillClass:
           'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]',
       };
-      const portalAsset = getSubjectPortalAsset(subject.slug);
+
+      // Tìm bài gần nhất của riêng môn này (ưu tiên lịch sử cá nhân, dự phòng bài đầu tiên)
+      const visitedEntry =
+        lastVisitedBySubject[subject.id] ?? lastVisitedBySubject[subject.slug] ?? null;
+      const visitedLoc = visitedEntry?.lessonId ? getLessonById(visitedEntry.lessonId) : null;
+      let recentLesson: SubjectMathCardRecentLesson | null = null;
+
+      if (visitedLoc && visitedLoc.subject.slug === subject.slug) {
+        recentLesson = {
+          title: visitedLoc.lesson.title,
+          label: `Bài ${visitedLoc.chapter.number}.${visitedLoc.lesson.number} · ${visitedLoc.lesson.title}`,
+          to: ROUTES.lesson(
+            visitedLoc.subject.slug,
+            visitedLoc.chapter.slug,
+            visitedLoc.lesson.slug,
+          ),
+          isResuming: true,
+        };
+      } else {
+        const firstChapter = subject.chapters[0];
+        const firstLesson = firstChapter?.lessons[0];
+        if (firstChapter && firstLesson) {
+          recentLesson = {
+            title: firstLesson.title,
+            label: `Bài ${firstChapter.number}.${firstLesson.number} · ${firstLesson.title}`,
+            to: ROUTES.lesson(subject.slug, firstChapter.slug, firstLesson.slug),
+            isResuming: false,
+          };
+        }
+      }
+
       return {
         subject,
         chapterCount: stats.chapterCount,
@@ -174,7 +232,7 @@ export function HomePage() {
         code: style.code,
         color: style.color,
         pillClass: style.pillClass,
-        portalAsset,
+        recentLesson,
       };
     });
 
@@ -187,7 +245,7 @@ export function HomePage() {
       totalPercent: overallPct,
       subjectCards: cards,
     };
-  }, [completedLessons, subjects]);
+  }, [completedLessons, lastVisitedBySubject, subjects]);
 
   const resumeLocation = useMemo<LessonLocation | null>(() => {
     if (lastVisitedGlobal?.lessonId) {
@@ -230,29 +288,34 @@ export function HomePage() {
     >
       <div className="mx-auto max-w-[1320px] space-y-8 px-4 py-5 sm:px-6 lg:px-8">
         {/* ========================================================================
-            KHỐI A & KHỐI B: KHUNG HERO TRÀN VIỀN + HÀNG 3 THẺ TƯƠNG PHẢN CHẤT LIỆU
+            KHỐI A & KHỐI B: HERO THÍCH ỨNG KHUNG GIỜ + 3 THẺ TƯƠNG PHẢN CHẤT LIỆU
             ======================================================================== */}
         <div className="relative">
-          {/* KHỐI A — KHUNG HERO KIẾN TRÚC – THIÊN NHIÊN TRÀN VIỀN (Spatial Hero Frame) */}
+          {/* KHỐI A — KHUNG HERO THÍCH ỨNG THEO KHUNG GIỜ (KHÔNG LẶP THANH TÌM KIẾM) */}
           <section
             aria-label="Không gian Tổng quan"
             data-testid="spatial-hero-frame"
+            data-day-period={timeGreeting.period}
             className="relative overflow-hidden rounded-[28px] border border-[var(--border-hairline)] shadow-[0_24px_60px_-24px_rgba(17,26,24,0.18)]"
           >
             <AtmosphericCanopy
               variant="dashboard"
               fullBleedPhoto
+              scrimGradient={timeGreeting.scrimGradient}
               enableCelestialOverlay={false}
               enableParallax
               testId="dashboard-atmospheric-canopy"
-              className="min-h-[320px] md:min-h-[380px] lg:min-h-[450px]"
+              className="min-h-[300px] md:min-h-[360px] lg:min-h-[420px]"
             >
-              <div className="flex flex-col justify-between gap-5 p-6 pb-16 sm:p-8 sm:pb-20 md:pb-28 lg:p-12 lg:pb-36">
-                {/* Hàng trên gọn: Nhãn ngữ cảnh kính mờ + ngày hiện tại (không lặp nút ⌘K) */}
+              <div className="flex flex-col justify-between gap-5 p-6 pb-16 sm:p-8 sm:pb-20 md:pb-28 lg:p-11 lg:pb-34">
+                {/* Hàng trên: Nhãn khung giờ thích ứng + ngày hiện tại */}
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF6A]" aria-hidden="true" />
-                    <span>Learning Universe · Academic OS</span>
+                  <span
+                    data-testid="hero-period-badge"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md"
+                  >
+                    {renderPeriodIcon(timeGreeting.period)}
+                    <span>{timeGreeting.badgeLabel} · Không gian Tổng quan</span>
                   </span>
                   <time
                     data-testid="dashboard-date"
@@ -262,17 +325,24 @@ export function HomePage() {
                   </time>
                 </div>
 
-                {/* Khối tiêu đề Serif cỡ lớn & Danh ngôn học thuật sát gọn */}
-                <div className="max-w-2xl space-y-3">
-                  <h1 className="font-serif text-3xl leading-[1.12] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[46px]">
-                    <span className="sr-only">LEARNING UNIVERSE — </span>
-                    Không gian Tổng quan
+                {/* Khối lời chào thích ứng theo khung giờ + danh ngôn học thuật */}
+                <div className="max-w-2xl space-y-2.5">
+                  <h1
+                    data-testid="hero-time-greeting"
+                    className="font-serif text-3xl leading-[1.12] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[44px]"
+                  >
+                    <span className="sr-only">LEARNING UNIVERSE — Không gian Tổng quan — </span>
+                    {timeGreeting.headline}
                   </h1>
 
-                  <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-xs font-medium text-white/80 sm:text-sm">
+                    {timeGreeting.subtitle}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
                     <p
                       data-testid="dashboard-quote-text"
-                      className="font-serif text-[14.5px] leading-relaxed text-white/85 italic sm:text-[15.5px]"
+                      className="font-serif text-[14px] leading-relaxed text-white/85 italic sm:text-[15px]"
                     >
                       &ldquo;{currentQuote.content}&rdquo; —{' '}
                       <span className="font-sans text-xs font-medium text-white/70 not-italic">
@@ -296,33 +366,24 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {/* Thanh Tìm kiếm & Lối tắt Dạng Viên Thuốc (Floating Action Pill — Pomaii/Poulls) */}
-                <div
-                  data-testid="hero-floating-pill"
-                  className="flex w-full max-w-xl items-center justify-between gap-2 rounded-full border border-white/55 bg-white/90 p-1.5 pl-4 shadow-lg backdrop-blur-md dark:border-white/15 dark:bg-[#121716]/85"
-                >
-                  <button
-                    type="button"
-                    onClick={openCommandPalette}
-                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 py-1.5 text-left text-xs text-[var(--text-secondary)] transition-colors hover:text-[var(--text-main)] sm:text-[13px]"
-                  >
-                    <Search
-                      className="h-4 w-4 shrink-0 text-[var(--text-muted)]"
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">
-                      Tìm nhanh bài giảng, định lý, thuật ngữ (⌘K)...
-                    </span>
-                  </button>
+                {/* Hành động trọng tâm duy nhất trên Hero (đã gỡ thanh tìm kiếm trùng lặp) */}
+                <div className="flex flex-wrap items-center gap-2.5">
                   <Link
                     to={resumeHref}
-                    className="group/cta inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#17332C] px-3 py-2 text-xs font-semibold text-white shadow-xs transition-all duration-150 hover:bg-[#21463C] active:scale-[0.98] sm:px-4"
+                    className="group/cta inline-flex items-center gap-2 rounded-full bg-[#17332C] px-5 py-2.5 text-xs font-semibold text-white shadow-md ring-1 ring-white/25 transition-all duration-150 hover:bg-[#21463C] active:scale-[0.98]"
                   >
                     <span>Vào bài học ngay</span>
                     <ArrowRight
                       className="h-3.5 w-3.5 transition-transform duration-150 group-hover/cta:translate-x-0.5"
                       aria-hidden="true"
                     />
+                  </Link>
+                  <Link
+                    to={ROUTES.learningSpace}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-black/45"
+                  >
+                    <Compass className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
+                    <span>Bản đồ học phần</span>
                   </Link>
                 </div>
               </div>
@@ -335,7 +396,7 @@ export function HomePage() {
             data-testid="three-material-dock"
             className="relative z-20 -mt-10 grid grid-cols-1 gap-4 px-3 sm:px-6 md:-mt-20 lg:-mt-28 lg:grid-cols-12 lg:px-8"
           >
-            {/* THẺ 1 (5/12) — CHẤT LIỆU SỨ TRẮNG SẠCH: Đang học dở (không còn hộp xám thước đo cũ) */}
+            {/* THẺ 1 (5/12) — CHẤT LIỆU SỨ TRẮNG SẠCH: Đang học dở */}
             <div
               data-testid="dashboard-resume-card"
               data-material="ceramic"
@@ -379,7 +440,6 @@ export function HomePage() {
                   </h2>
                 )}
 
-                {/* Hàng nút chọn nhanh các bài trong chương */}
                 {resumeLocation && (
                   <div
                     className="flex flex-wrap items-center gap-1.5 pt-0.5"
@@ -443,7 +503,7 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* THẺ 2 (4/12) — CHẤT LIỆU KÍNH MỜ XUYÊN ẢNH THẬT: Nhịp độ, Chỉ số & Pomodoro */}
+            {/* THẺ 2 (4/12) — CHẤT LIỆU KÍNH MỜ XUYÊN ẢNH THẬT: Chỉ số & Pomodoro */}
             <div
               data-testid="dashboard-metrics-card"
               data-material="frosted-glass"
@@ -484,7 +544,7 @@ export function HomePage() {
                 </Link>
               </div>
 
-              {/* Thanh khởi động nhanh Pomodoro nối thẳng state Pomodoro hiện có */}
+              {/* Thanh khởi động nhanh Pomodoro */}
               <div
                 data-testid="dashboard-pomodoro-bar"
                 className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/55 bg-white/60 px-3 py-2.5 dark:border-white/10 dark:bg-[#181F1D]/72"
@@ -549,7 +609,7 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* THẺ 3 (3/12) — CHẤT LIỆU XANH THAN ĐẶC: Điểm neo điều phối nhanh */}
+            {/* THẺ 3 (3/12) — CHẤT LIỆU XANH THAN ĐẶC: Điều phối nhanh */}
             <div
               data-testid="dashboard-quick-hub-card"
               data-material="deep-emerald"
@@ -598,7 +658,7 @@ export function HomePage() {
         </div>
 
         {/* ========================================================================
-            KHỐI C — 4 THẺ CỔNG HỌC PHẦN TRÀN VIỀN (Full-Bleed Subject Portal Cards)
+            KHỐI C — 4 THẺ HỌC PHẦN TOÁN HỌC (SVG VECTOR SIÊU MẢNH + BÀI GẦN NHẤT)
             ======================================================================== */}
         <section aria-label="Bốn học phần trọng tâm" className="space-y-3.5">
           <div className="flex items-center justify-between gap-3">
@@ -621,98 +681,52 @@ export function HomePage() {
             data-testid="dashboard-subjects-grid"
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
           >
-            {subjectCards.map((item) => {
-              const portal = item.portalAsset;
-              const isPortalFailed = Boolean(failedPortals[item.subject.slug]);
-              return (
-                <Link
-                  key={item.subject.slug}
-                  to={ROUTES.subjectOverview(item.subject.slug)}
-                  data-testid={`dashboard-subject-card-${item.subject.slug}`}
-                  style={{
-                    backgroundImage:
-                      portal?.fallbackGradient ??
-                      'linear-gradient(135deg, #17332C 0%, #0D1A17 100%)',
-                  }}
-                  className="group relative flex h-[240px] min-w-0 cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-[var(--border-hairline)] p-4 shadow-xs transition-shadow duration-200 hover:shadow-lg"
-                >
-                  {/* Ảnh chụp thật tràn viền phóng nhẹ khi hover */}
-                  {portal && !isPortalFailed && (
-                    <img
-                      src={portal.src}
-                      alt={portal.alt}
-                      loading="lazy"
-                      decoding="async"
-                      onError={() =>
-                        setFailedPortals((prev) => ({ ...prev, [item.subject.slug]: true }))
-                      }
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                    />
-                  )}
-
-                  {/* Lớp phủ tối dịu từ đáy lên bảo đảm tương phản chữ trắng > 7:1 */}
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0D1A17]/90 via-[#0D1A17]/35 to-[#0D1A17]/10"
-                  />
-
-                  {/* Góc trên: Pill mã môn kính mờ + Badge % tiến độ */}
-                  <div className="relative z-10 flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/35 px-2.5 py-1 font-mono text-[11px] font-semibold text-white backdrop-blur-md">
-                      <span
-                        className="h-2 w-2 rounded-full"
-                        style={{ backgroundColor: item.color }}
-                        aria-hidden="true"
-                      />
-                      <span>{item.code}</span>
-                    </span>
-                    <span className="rounded-full border border-white/15 bg-black/35 px-2.5 py-1 font-mono text-[11px] font-semibold text-white tabular-nums backdrop-blur-md">
-                      {item.percent}%
-                    </span>
-                  </div>
-
-                  {/* Đáy thẻ: Tên học phần Serif trắng + số chương/bài */}
-                  <div className="relative z-10 space-y-1 pb-1.5">
-                    <h3 className="drop-shadow-2xs font-serif text-lg leading-snug font-medium text-white">
-                      {item.subject.title}
-                    </h3>
-                    <div className="flex items-center justify-between text-xs text-white/75">
-                      <span className="font-mono text-[11px] tabular-nums">
-                        {item.chapterCount} chương · {item.lessonCount} bài
-                      </span>
-                      <ArrowRight
-                        className="h-3.5 w-3.5 text-white/80 transition-transform duration-200 group-hover:translate-x-1"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Thanh tiến độ siêu mảnh (h-1) sắc nhấn từng môn chạy sát đáy thẻ */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute right-0 bottom-0 left-0 z-10 h-1 bg-white/15"
-                  >
-                    <div
-                      className="h-full transition-[width] duration-300"
-                      style={{
-                        width: `${item.completedCount > 0 ? Math.max(item.percent, 8) : 6}%`,
-                        backgroundColor: item.color,
-                      }}
-                    />
-                  </div>
-                </Link>
-              );
-            })}
+            {subjectCards.map((item) => (
+              <SubjectMathCard
+                key={item.subject.slug}
+                slug={item.subject.slug}
+                code={item.code}
+                title={item.subject.title}
+                color={item.color}
+                pillClass={item.pillClass}
+                chapterCount={item.chapterCount}
+                lessonCount={item.lessonCount}
+                completedCount={item.completedCount}
+                percent={item.percent}
+                overviewHref={ROUTES.subjectOverview(item.subject.slug)}
+                recentLesson={item.recentLesson}
+              />
+            ))}
           </div>
         </section>
 
         {/* ========================================================================
-            KHỐI D — BIÊN TẬP VĂN HIẾN & BANNER ĐÁY SẢNH THƯ GIÃN XANH RỪNG
+            KHỐI D — KHÔNG GIAN CÁ NHÂN HÓA THEO TÀI KHOẢN:
+            LỊCH BIỂU + MỐC KỲ THI + TO-DO LIST (8/12) | STREAK + NHIỆT ĐỒ + MỤC TIÊU TUẦN (4/12)
+            ======================================================================== */}
+        <section aria-label="Kế hoạch cá nhân hóa và nhịp chuyên cần" className="space-y-3.5">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+              Lịch biểu & Nhịp học cá nhân
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <div className="lg:col-span-8">
+              <StudyPlannerWidget activityByDate={activityMetrics.activityByDate} />
+            </div>
+            <div className="lg:col-span-4">
+              <StudyRhythmCard metrics={activityMetrics} />
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================
+            KHỐI E — DI SẢN LIÊN HỆ TOÁN HỌC + THUẬT NGỮ FLASHCARD & BANNER SẢNH THƯ GIÃN
             ======================================================================== */}
         <section aria-label="Di sản học thuật, thuật ngữ và Sảnh Thư Giãn" className="space-y-5">
-          {/* Hàng 1: Di sản trong ngày (Editorial Overlap Card 7/12) + Thuật ngữ KaTeX (5/12) */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-            {/* Cột Trái (7/12) — Di sản trong ngày (Editorial Overlap Card) */}
+            {/* Cột Trái (7/12) — Di sản trong ngày + Dòng liên hệ Toán học / Sư phạm */}
             <div
               data-testid="dashboard-heritage-card"
               className="group/heritage flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 lg:col-span-7"
@@ -742,7 +756,6 @@ export function HomePage() {
               </div>
 
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                {/* Ảnh Di sản sắc nét + Thẻ badge nhỏ chồng góc dưới (Blockfolio Overlap) */}
                 <div className="relative shrink-0 pb-2 sm:w-48">
                   <div className="h-36 w-full overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-shell)]">
                     {isHeritageFallback ? (
@@ -774,7 +787,7 @@ export function HomePage() {
                   </div>
                 </div>
 
-                <div className="min-w-0 flex-1 space-y-2">
+                <div className="min-w-0 flex-1 space-y-2.5">
                   <div>
                     <p className="truncate font-mono text-[10.5px] text-[var(--text-muted)]">
                       {currentHeritage.artistOrOrigin}
@@ -786,10 +799,35 @@ export function HomePage() {
                       {currentHeritage.title}
                     </h3>
                   </div>
+
                   <p className="line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">
                     {currentHeritage.coreAcademicValue}
                   </p>
-                  <div className="pt-1">
+
+                  {/* Dòng liên hệ Toán học / Sư phạm gắn chặt với 4 học phần */}
+                  <div
+                    data-testid="heritage-math-connection"
+                    className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 text-[11.5px] leading-relaxed text-[var(--text-secondary)]"
+                  >
+                    <div className="mb-1 flex items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[var(--accent-os)] uppercase">
+                        <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
+                        <span>Liên hệ học phần</span>
+                      </span>
+                      <Link
+                        to={ROUTES.subjectOverview(currentHeritageMath.subjectSlug)}
+                        className={cn(
+                          'rounded border px-1.5 py-0.5 font-mono text-[9.5px] font-bold transition-opacity hover:opacity-85',
+                          currentHeritageSubjectMeta.pillClass,
+                        )}
+                      >
+                        {currentHeritageMath.subjectCode} ↗
+                      </Link>
+                    </div>
+                    <p>{currentHeritageMath.connection}</p>
+                  </div>
+
+                  <div className="pt-0.5">
                     <Link
                       to={ROUTES.sanctuaryTab('di-san')}
                       className="group/hlink inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-heritage)] transition-opacity hover:opacity-85"
@@ -805,78 +843,18 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* Cột Phải (5/12) — Thuật ngữ ngẫu nhiên KaTeX */}
+            {/* Cột Phải (5/12) — Thuật ngữ ngẫu nhiên KaTeX có chế độ Flashcard ôn nhanh */}
             {currentGlossary && (
-              <div
-                data-testid="dashboard-glossary-card"
-                className="flex min-w-0 flex-col justify-between gap-3 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 lg:col-span-5"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-                    <BookMarked
-                      className="h-3.5 w-3.5 text-[var(--accent-os)]"
-                      aria-hidden="true"
-                    />
-                    <span>Thuật ngữ ngẫu nhiên</span>
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleShuffleGlossary}
-                    aria-label="Đổi thuật ngữ ngẫu nhiên"
-                    className="group/gbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)] active:scale-95"
-                  >
-                    <RefreshCw
-                      className="h-3.5 w-3.5 transition-transform duration-300 group-hover/gbtn:rotate-180"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
-
-                <Link
-                  to={`${ROUTES.glossary}?q=${encodeURIComponent(currentGlossary.nameVi)}`}
-                  className="group flex flex-1 flex-col justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3.5 transition-colors hover:border-[var(--accent-os)]/45"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-[var(--text-main)] group-hover:text-[var(--accent-os)]">
-                        {currentGlossary.nameVi}
-                      </p>
-                      <p className="truncate font-mono text-[11px] text-[var(--text-muted)]">
-                        {currentGlossary.nameEn}
-                      </p>
-                    </div>
-                    <span className="shrink-0 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1.5 text-sm text-[var(--text-main)]">
-                      <KatexMath math={currentGlossary.formula || currentGlossary.symbol} />
-                    </span>
-                  </div>
-
-                  {currentGlossary.brief && (
-                    <p className="line-clamp-2 border-t border-[var(--border-hairline)] pt-2 text-xs leading-relaxed text-[var(--text-secondary)]">
-                      <InlineMathText text={currentGlossary.brief} />
-                    </p>
-                  )}
-                </Link>
-
-                <div className="flex justify-end">
-                  <Link
-                    to={ROUTES.glossary}
-                    className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[var(--accent-os)] hover:underline"
-                  >
-                    <span>Tra cứu trên Kho Thuật ngữ</span>
-                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                  </Link>
-                </div>
-              </div>
+              <GlossaryFlashcardCard entry={currentGlossary} onShuffle={handleShuffleGlossary} />
             )}
           </div>
 
-          {/* Hàng 2 — Banner Đáy Sảnh Thư Giãn Xanh Rừng (Pomaii Deep Emerald Sanctuary Banner) */}
+          {/* Hàng 2 — Banner Đáy Sảnh Thư Giãn Xanh Rừng */}
           <div
             data-testid="dashboard-sanctuary-banner"
             style={{ backgroundImage: SANCTUARY_BANNER_ASSET.fallbackGradient }}
             className="relative min-h-[180px] overflow-hidden rounded-[24px] border border-white/10 bg-[#17332C] text-white shadow-[0_20px_50px_-20px_rgba(17,26,24,0.28)]"
           >
-            {/* Ảnh thiên nhiên tĩnh lặng bên trái hòa tan ngang mượt vào nền đặc #17332C bên phải */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-y-0 left-0 w-full md:w-[52%]"

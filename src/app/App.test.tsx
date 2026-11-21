@@ -49,10 +49,11 @@ describe('App routing smoke test', () => {
       '/learning-space',
     );
 
-    // Workspace Dashboard — Spatial Editorial Portal (4 Khối: Hero + 3-Material Dock + 4 Cổng Học Phần + Văn hiến & Sảnh Thư Giãn)
+    // Workspace Dashboard — Cá nhân hóa theo tài khoản (Hero thích ứng không lặp tìm kiếm + 3-Material Dock + 4 Thẻ Toán học SVG + Lịch/To-Do + Di sản & Sảnh Thư Giãn)
     expect(screen.getByTestId('workspace-dashboard')).toBeInTheDocument();
     expect(screen.getByTestId('spatial-hero-frame')).toBeInTheDocument();
-    expect(screen.getByTestId('hero-floating-pill')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
+    expect(screen.queryByTestId('hero-floating-pill')).not.toBeInTheDocument();
     expect(screen.getByTestId('dashboard-quote-text')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-quote-next')).toBeInTheDocument();
     expect(screen.getByTestId('three-material-dock')).toBeInTheDocument();
@@ -61,6 +62,8 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('dashboard-quick-hub-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-pomodoro-bar')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subjects-grid')).toBeInTheDocument();
+    expect(screen.getByTestId('study-planner-widget')).toBeInTheDocument();
+    expect(screen.getByTestId('study-rhythm-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subject-card-cau-truc-dai-so')).toHaveAttribute(
       'href',
       '/mon-hoc/cau-truc-dai-so',

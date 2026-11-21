@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useLearningStore } from '@/features/learning';
+import { useWorkspaceStore } from '@/features/workspace';
 import { isSupabaseConfigured, supabase } from '@/services/supabase/client';
 import { fetchUserLearningData } from '@/services/supabase/learning-sync';
+import { fetchUserWorkspaceData } from '@/services/supabase/workspace-sync';
 import { AuthContext } from './auth-context-def';
 import { DEMO_PENDING_STUDENT } from './mock-users';
 import type { AuthContextValue, UserProfile, UserRole, UserStatus } from './types';
@@ -42,19 +44,26 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isPendingNoticeOpen, setIsPendingNoticeOpen] = useState<boolean>(false);
 
-  // Đồng bộ với learningStore: chỉ khi là Học viên đã duyệt hoặc Admin mới kích hoạt lưu tiến độ
+  // Đồng bộ với learningStore & workspaceStore: tách biệt dữ liệu theo từng tài khoản
   useEffect(() => {
     if (user && (user.role === 'admin' || user.status === 'approved')) {
       useLearningStore
         .getState()
         .enableLearnerMode(user.fullName || user.email || undefined, user.id);
+      useWorkspaceStore.getState().setActiveAccount(user.id);
       void fetchUserLearningData(user.id).then((cloudData) => {
         if (cloudData) {
           useLearningStore.getState().mergeCloudLearningData(cloudData);
         }
       });
+      void fetchUserWorkspaceData(user.id).then((cloudWorkspace) => {
+        if (cloudWorkspace) {
+          useWorkspaceStore.getState().mergeCloudWorkspaceData(user.id, cloudWorkspace);
+        }
+      });
     } else {
       useLearningStore.getState().signOutLearnerMode();
+      useWorkspaceStore.getState().setActiveAccount(null);
     }
     saveStoredUser(user);
   }, [user]);

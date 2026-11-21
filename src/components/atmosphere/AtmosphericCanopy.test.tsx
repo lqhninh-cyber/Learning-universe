@@ -128,7 +128,7 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
     expect(bar.className).toContain('border-b');
   });
 
-  it('HomePage vận hành đủ 4 khối Spatial Editorial Portal: Hero tràn viền + 3 thẻ tương phản chất liệu + 4 Cổng Học Phần + Banner Sảnh Thư Giãn', () => {
+  it('HomePage vận hành đủ các khối Academic OS cá nhân hóa: Hero thích ứng (không lặp tìm kiếm) + 3 thẻ chất liệu + 4 Thẻ Toán học SVG + Lịch biểu/To-Do + Banner Sảnh Thư Giãn', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <LayoutProvider>
@@ -141,12 +141,13 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
       </MemoryRouter>,
     );
 
-    // Khối A: Khung Hero tràn viền (rounded-[28px]) + Scrim định hướng + Floating Action Pill
+    // Khối A: Khung Hero tràn viền thích ứng khung giờ (KHÔNG lặp thanh tìm kiếm)
     const heroFrame = screen.getByTestId('spatial-hero-frame');
     expect(heroFrame.className).toContain('rounded-[28px]');
     expect(screen.getByTestId('dashboard-atmospheric-canopy')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-atmospheric-canopy-scrim')).toBeInTheDocument();
-    expect(screen.getByTestId('hero-floating-pill')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
+    expect(screen.queryByTestId('hero-floating-pill')).not.toBeInTheDocument();
 
     // Khối B: 3 Thẻ Tương Phản Chất Liệu gác lề âm trực tiếp lên chân ảnh Hero
     const dock = screen.getByTestId('three-material-dock');
@@ -165,26 +166,22 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
     expect(quickHubCard).toHaveAttribute('data-material', 'deep-emerald');
     expect(quickHubCard.className).toContain('bg-[#17332C]');
 
-    // Khối C: 4 Thẻ Cổng Học Phần tràn viền có ảnh chụp thật
-    const ctdsPortal = screen.getByTestId('dashboard-subject-card-cau-truc-dai-so');
-    expect(ctdsPortal.className).toContain('h-[240px]');
-    expect(ctdsPortal.querySelector('img')).toHaveAttribute(
-      'src',
-      '/assets/atmosphere/portal-ctds.webp',
-    );
-    expect(
-      screen.getByTestId('dashboard-subject-card-hinh-hoc-affine').querySelector('img'),
-    ).toHaveAttribute('src', '/assets/atmosphere/portal-hhave.webp');
-    expect(
-      screen.getByTestId('dashboard-subject-card-giai-tich-ham-mot-bien').querySelector('img'),
-    ).toHaveAttribute('src', '/assets/atmosphere/portal-gthmb.webp');
-    expect(
-      screen.getByTestId('dashboard-subject-card-giao-duc-hoc').querySelector('img'),
-    ).toHaveAttribute('src', '/assets/atmosphere/portal-gdh.webp');
+    // Khối C: 4 Thẻ Học Phần dùng đồ họa vector toán học SVG thuần (KHÔNG dùng ảnh phong cảnh)
+    const subjectsGrid = screen.getByTestId('dashboard-subjects-grid');
+    expect(subjectsGrid.querySelectorAll('img')).toHaveLength(0);
+    expect(screen.getByTestId('subject-svg-cau-truc-dai-so')).toBeInTheDocument();
+    expect(screen.getByTestId('subject-svg-hinh-hoc-affine')).toBeInTheDocument();
+    expect(screen.getByTestId('subject-svg-giai-tich-ham-mot-bien')).toBeInTheDocument();
+    expect(screen.getByTestId('subject-svg-giao-duc-hoc')).toBeInTheDocument();
 
-    // Khối D: Editorial Overlap Card Di sản + Thuật ngữ KaTeX + Banner Sảnh Thư Giãn Xanh Rừng
+    // Khối D: Lịch biểu, Mốc thi, To-Do & Nhịp chuyên cần cá nhân hóa
+    expect(screen.getByTestId('study-planner-widget')).toBeInTheDocument();
+    expect(screen.getByTestId('study-rhythm-card')).toBeInTheDocument();
+
+    // Khối E: Editorial Overlap Card Di sản (có liên hệ toán học) + Thuật ngữ Flashcard + Banner Sảnh Thư Giãn
     expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();
     expect(screen.getByTestId('heritage-overlap-badge')).toBeInTheDocument();
+    expect(screen.getByTestId('heritage-math-connection')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
 
     const sanctuaryBanner = screen.getByTestId('dashboard-sanctuary-banner');
