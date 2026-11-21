@@ -460,8 +460,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(
         screen.getByRole('heading', { level: 1, name: /^Không Gian Học Tập$/i }),
       ).toBeInTheDocument();
-      expect(screen.getByText(/04 học phần/i)).toBeInTheDocument();
-      expect(screen.getByText(/Hoàn thành \d+%/i)).toBeInTheDocument();
+      expect(screen.queryByText(/04 học phần/i)).not.toBeInTheDocument();
 
       // Đã gỡ bỏ hoàn toàn lớp trang trí kỹ thuật (blueprint, spy rail, engraved ground, specimen chrome)
       expect(screen.queryByTestId('observatory-vignette')).not.toBeInTheDocument();

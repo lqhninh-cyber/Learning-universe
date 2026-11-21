@@ -1375,6 +1375,86 @@
   animation: lu-dg-node-pulse 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+/* ==========================================================================
+   KINETIC MATHEMATICAL ATELIER — BENTO SPOTLIGHT & GEOMETRIC SURFACES
+   ========================================================================== */
+
+@keyframes lu-orbit-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes lu-orbit-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.lu-atelier-backdrop {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--text-muted) 16%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 24px 24px;
+}
+
+.lu-bento-interactive {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 220ms ease;
+}
+
+.lu-bento-interactive::before {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 260ms ease;
+  background: radial-gradient(
+    460px circle at var(--spot-x, 50%) var(--spot-y, 0%),
+    var(--spot-glow, rgba(23, 51, 44, 0.08)),
+    transparent 68%
+  );
+}
+
+.dark .lu-bento-interactive::before {
+  background: radial-gradient(
+    460px circle at var(--spot-x, 50%) var(--spot-y, 0%),
+    var(--spot-glow-dark, rgba(82, 179, 148, 0.14)),
+    transparent 68%
+  );
+}
+
+.lu-bento-interactive:hover::before {
+  opacity: 1;
+}
+
+.lu-orbit-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lu-orbit-slow 28s linear infinite;
+}
+
+.lu-orbit-ring-reverse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lu-orbit-reverse 22s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lu-fx-band-track {
     animation: none;
@@ -1384,7 +1464,9 @@
   .lu-dg-stream,
   .lu-dg-stream-fast,
   .lu-dg-pulse-ring,
-  .lu-fx-bar-wave {
+  .lu-fx-bar-wave,
+  .lu-orbit-ring,
+  .lu-orbit-ring-reverse {
     animation: none;
   }
 }

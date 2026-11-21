@@ -1,6 +1,6 @@
 import type { ManifestChapter, ManifestLesson, ManifestSubject } from '@schemas/index';
 import { ArrowRight, CheckCircle2, ChevronDown, Compass, Play, Sparkles } from 'lucide-react';
-import { type CSSProperties, useState } from 'react';
+import { type CSSProperties, type MouseEvent, useState } from 'react';
 import { Link } from 'react-router';
 import { getLessonById, getSubjects, getSubjectStats } from '@/content-runtime';
 import { type AcademicBranch, getCourseCinematicAsset } from '@/data/cinematicAssets';
@@ -918,6 +918,17 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         >
                           <article
                             id={`atlas-subject-${subject.slug}`}
+                            onMouseMove={(event: MouseEvent<HTMLElement>) => {
+                              const rect = event.currentTarget.getBoundingClientRect();
+                              event.currentTarget.style.setProperty(
+                                '--spot-x',
+                                `${Math.round(event.clientX - rect.left)}px`,
+                              );
+                              event.currentTarget.style.setProperty(
+                                '--spot-y',
+                                `${Math.round(event.clientY - rect.top)}px`,
+                              );
+                            }}
                             onMouseEnter={() => setHoveredCardSlug(subject.slug)}
                             onMouseLeave={() => handleCardMouseLeave(subject.slug)}
                             style={
@@ -925,10 +936,12 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 viewTransitionName: `subject-card-${subject.slug}`,
                                 transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                                 '--subject-rgb': palette.subjectRgb,
+                                '--spot-glow': `rgba(${palette.subjectRgb}, 0.12)`,
+                                '--spot-glow-dark': `rgba(${palette.subjectRgb}, 0.24)`,
                               } as CSSProperties & { '--subject-rgb': string }
                             }
                             className={cn(
-                              'group relative flex h-full scroll-mt-16 flex-col justify-between overflow-hidden rounded-xl border bg-[var(--bg-surface)] p-6 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]',
+                              'lu-bento-interactive group relative flex h-full scroll-mt-16 flex-col justify-between overflow-hidden rounded-xl border bg-[var(--bg-surface)] p-6 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]',
                               palette.cardBorder,
                             )}
                           >
@@ -941,7 +954,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
 
                             <SubjectWatermarkSignature slug={subject.slug} />
 
-                            <div className="relative z-10 flex flex-wrap items-start justify-between gap-3 border-b border-[var(--border-hairline)] pb-3.5">
+                            <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-hairline)] pb-3.5">
                               <div className="flex flex-wrap items-center gap-2">
                                 <span
                                   className={cn(
@@ -966,50 +979,39 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 </span>
                               </div>
 
-                              {/* Thanh mật độ chương + số bài giảng & huy hiệu tiến độ */}
-                              <div className="flex flex-col items-end gap-2">
-                                <div className="flex flex-wrap items-center justify-end gap-2.5">
-                                  <SpecimenFxBars
-                                    isCardHovered={hoveredCardSlug === subject.slug}
-                                    chapters={subject.chapters.map((ch) => ({
-                                      id: ch.id,
-                                      title: `Chương ${ch.number}: ${ch.title}`,
-                                      totalLessons: ch.lessons.length,
-                                      completedLessons: ch.lessons.filter(
-                                        (ls) => completedLessons[ls.id],
-                                      ).length,
-                                    }))}
-                                    accentHex={palette.progressBarColor}
-                                  />
-                                  <div className="flex flex-col items-end gap-1">
-                                    <span className="font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
-                                      {stats.chapterCount} chương · {stats.lessonCount} bài giảng
-                                    </span>
-                                    <span
-                                      data-testid={`subject-progress-badge-${subject.slug}`}
-                                      className={cn(
-                                        'rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums',
-                                        palette.progressBadgeClass,
-                                      )}
-                                    >
-                                      Đã học {subjectCompletedCount}/{stats.lessonCount} bài ·{' '}
-                                      {subjectPercent}%
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="h-1.5 w-36 overflow-hidden rounded-full bg-[var(--border-hairline)]">
-                                  <div
-                                    className="h-full rounded-full transition-[width] duration-500"
-                                    style={{
-                                      width: `${Math.max(subjectPercent, subjectCompletedCount > 0 ? 6 : 0)}%`,
-                                      backgroundColor: palette.progressBarColor,
-                                    }}
-                                  />
-                                </div>
+                              {/* Thanh mật độ chương & huy hiệu tiến độ gọn gàng */}
+                              <div className="flex flex-wrap items-center justify-end gap-2.5">
+                                <SpecimenFxBars
+                                  isCardHovered={hoveredCardSlug === subject.slug}
+                                  chapters={subject.chapters.map((ch) => ({
+                                    id: ch.id,
+                                    title: `Chương ${ch.number}: ${ch.title}`,
+                                    totalLessons: ch.lessons.length,
+                                    completedLessons: ch.lessons.filter(
+                                      (ls) => completedLessons[ls.id],
+                                    ).length,
+                                  }))}
+                                  accentHex={palette.progressBarColor}
+                                />
+                                <span
+                                  data-testid={`subject-progress-badge-${subject.slug}`}
+                                  className={cn(
+                                    'rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums',
+                                    palette.progressBadgeClass,
+                                  )}
+                                >
+                                  {subjectCompletedCount}/{stats.lessonCount} bài · {subjectPercent}
+                                  %
+                                </span>
                               </div>
                             </div>
 
-                            <div className="relative z-10 overflow-hidden">
+                            <div
+                              style={{
+                                background: `radial-gradient(circle at 50% 50%, rgba(${palette.subjectRgb}, 0.08) 0%, transparent 78%)`,
+                              }}
+                              className="relative z-10 overflow-hidden rounded-xl"
+                            >
                               <SubjectStageCanvas
                                 slug={subject.slug}
                                 isCardHovered={hoveredCardSlug === subject.slug}

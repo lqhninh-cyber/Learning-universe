@@ -4,8 +4,7 @@ import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from 'rea
 import { Link, useNavigate } from 'react-router';
 import { LearningSpaceHeroCanvas } from '@/components/home/LearningSpaceHeroCanvas';
 import { LearningSpaceHub } from '@/components/home/LearningSpaceHub';
-import { getSubjects, getSubjectStats } from '@/content-runtime';
-import { useLearningStore } from '@/features/learning';
+import { getSubjects } from '@/content-runtime';
 import { InlineMathText, KatexMath, searchGlossary } from '@/features/math-glossary';
 import { searchContent } from '@/features/search';
 import { ROUTES } from '@/shared/config/routes';
@@ -18,6 +17,23 @@ const QUICK_SEARCH_CHIPS: readonly string[] = [
   'Siêu mặt bậc hai',
   'Khai triển Taylor',
   'Tình huống sư phạm',
+];
+
+const HERO_SUBJECT_ORBITS: ReadonlyArray<{
+  readonly slug: string;
+  readonly code: string;
+  readonly label: string;
+  readonly color: string;
+}> = [
+  { slug: 'cau-truc-dai-so', code: 'CTĐS', label: 'Cấu trúc đại số', color: '#8C5828' },
+  { slug: 'hinh-hoc-affine', code: 'HHAVE', label: 'Hình học Affine', color: '#1D4F6E' },
+  {
+    slug: 'giai-tich-ham-mot-bien',
+    code: 'GTHMB',
+    label: 'Giải tích hàm một biến',
+    color: '#1B5E4A',
+  },
+  { slug: 'giao-duc-hoc', code: 'GDH', label: 'Giáo dục học', color: '#8F3D35' },
 ];
 
 interface ChapterSearchHit {
@@ -35,7 +51,6 @@ export function LearningSpacePage() {
   const subjects = getSubjects();
   const navigate = useNavigate();
   const searchListboxId = useId();
-  const completedLessons = useLearningStore((state) => state.completedLessons);
 
   const [hubQuery, setHubQuery] = useState('');
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
@@ -73,15 +88,6 @@ export function LearningSpacePage() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
-
-  const totalChapterCount = subjects.reduce(
-    (sum, sub) => sum + getSubjectStats(sub).chapterCount,
-    0,
-  );
-  const totalLessonCount = subjects.reduce((sum, sub) => sum + getSubjectStats(sub).lessonCount, 0);
-  const completedCount = Object.keys(completedLessons).length;
-  const computedPercent =
-    totalLessonCount > 0 ? Math.round((completedCount / totalLessonCount) * 100) : 0;
 
   const hasSearchQuery = hubQuery.trim().length > 0;
   const instantSearchResults = useMemo(() => searchContent(hubQuery, 12), [hubQuery]);
@@ -145,7 +151,7 @@ export function LearningSpacePage() {
   return (
     <div
       data-testid="learning-space-page"
-      className="min-h-screen bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="lu-atelier-backdrop min-h-screen bg-[var(--bg-workspace)] text-[var(--text-main)]"
     >
       <div className="mx-auto max-w-[1240px] space-y-8 px-6 py-8 lg:px-10">
         {/* KHỐI ĐẦU TRANG 2 CỘT CÂN ĐỐI SWISS NEO-EDITORIAL */}
@@ -154,43 +160,37 @@ export function LearningSpacePage() {
           aria-label="Không gian Học tập"
           className="grid grid-cols-1 items-center gap-8 border-b border-[var(--border-hairline)] pb-8 lg:grid-cols-12"
         >
-          {/* Cột Trái (7 cột): Tiêu đề, mô tả 1 dòng, ô tìm kiếm lọc tức thời & chip gợi ý */}
+          {/* Cột Trái (7 cột): Tiêu đề, mô tả tinh gọn, dải nhảy nhanh 4 môn, ô tìm kiếm lọc tức thời */}
           <div className="space-y-5 lg:col-span-7">
-            <div className="space-y-2.5">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-[var(--text-secondary)] uppercase">
-                <span
-                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-os)]"
-                  aria-hidden="true"
-                />
-                <span>Hệ thống học phần &amp; Đồ thị tri thức</span>
-              </div>
+            <div className="space-y-2">
               <h1 className="font-serif text-3xl font-semibold tracking-tight text-[var(--text-main)] sm:text-4xl">
                 Không Gian Học Tập
               </h1>
               <p className="max-w-xl text-sm leading-relaxed text-[var(--text-secondary)]">
-                Hệ thống {subjects.length} học phần Toán học và Khoa học Giáo dục với{' '}
-                {totalChapterCount} chương, {totalLessonCount} bài giảng chuẩn hóa và bản đồ phân
-                tích tiến độ cá nhân.
+                Kiến trúc lý thuyết tiên đề, mô phỏng trực quan và bản đồ liên kết tri thức giữa
+                Toán học đại học với Khoa học Giáo dục.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-[var(--text-muted)]">
-              <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
-                {String(subjects.length).padStart(2, '0')} học phần
-              </span>
-              <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
-                {totalChapterCount} chương
-              </span>
-              <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">
-                {totalLessonCount} bài giảng
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-[11px] font-semibold text-[var(--accent-os)] tabular-nums">
-                <span
-                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-os)]"
-                  aria-hidden="true"
-                />
-                <span>Hoàn thành {computedPercent}%</span>
-              </span>
+            {/* Dải nhảy nhanh 4 quỹ đạo học phần */}
+            <div className="flex flex-wrap items-center gap-2">
+              {HERO_SUBJECT_ORBITS.map((orbit) => (
+                <a
+                  key={orbit.slug}
+                  href={`#atlas-subject-${orbit.slug}`}
+                  className="group inline-flex items-center gap-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] transition-all duration-150 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] hover:shadow-2xs"
+                >
+                  <span
+                    className="h-2 w-2 rounded-full transition-transform duration-150 group-hover:scale-125"
+                    style={{ backgroundColor: orbit.color }}
+                    aria-hidden="true"
+                  />
+                  <span className="font-mono text-[10.5px] font-bold text-[var(--text-main)]">
+                    {orbit.code}
+                  </span>
+                  <span className="hidden sm:inline">{orbit.label}</span>
+                </a>
+              ))}
             </div>
 
             {/* Ô Tìm kiếm lọc tức thời môn / chương / bài / thuật ngữ */}
@@ -459,18 +459,12 @@ export function LearningSpacePage() {
             data-testid="hero-3d-column"
             style={{
               background:
-                'radial-gradient(circle at 50% 48%, var(--bg-workspace) 0%, var(--bg-surface) 100%)',
+                'radial-gradient(circle at 50% 50%, var(--bg-workspace) 0%, var(--bg-surface) 100%)',
             }}
-            className="hidden flex-col items-center justify-between rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] md:flex lg:col-span-5"
+            className="hidden flex-col items-center justify-center rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] md:flex lg:col-span-5"
           >
             <div className="relative w-full">
               <LearningSpaceHeroCanvas />
-            </div>
-            <div className="mt-2 flex w-full items-center justify-between border-t border-[var(--border-hairline)] pt-2.5 font-mono text-[10px] text-[var(--text-muted)]">
-              <span className="font-semibold tracking-wider text-[var(--text-secondary)] uppercase">
-                Đa diện 3D · 120FPS
-              </span>
-              <span>Kéo xoay · Chạm đỉnh kích hoạt xung</span>
             </div>
           </div>
         </section>

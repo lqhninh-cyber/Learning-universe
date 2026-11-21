@@ -1,8 +1,7 @@
 import {
   ArrowRight,
   BookMarked,
-  Clock,
-  Gamepad2,
+  Check,
   Hourglass,
   Landmark,
   Pause,
@@ -11,12 +10,13 @@ import {
   RotateCcw,
   Search,
 } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { type CSSProperties, type MouseEvent, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import {
   HERITAGE_ARTWORKS,
   HeritageFallbackIllustration,
 } from '@/components/home/HeritageArtShowcase';
+import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import {
   getLessonById,
   getSubjects,
@@ -32,52 +32,51 @@ import { SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 
-const SUBJECT_ACCENT_MAP: Record<
-  string,
-  {
-    readonly code: string;
-    readonly color: string;
-    readonly tint: string;
-    readonly domainLabel: string;
-    readonly pillClass: string;
-    readonly focusNote: string;
-  }
-> = {
+interface SubjectVisualStyle {
+  readonly code: string;
+  readonly color: string;
+  readonly darkColor: string;
+  readonly rgb: string;
+  readonly pillClass: string;
+  readonly formulaBadge: string;
+}
+
+const SUBJECT_ACCENT_MAP: Record<string, SubjectVisualStyle> = {
   'cau-truc-dai-so': {
     code: 'CTĐS',
     color: '#8C5828',
-    tint: '#FDF8F3',
-    domainLabel: 'Đại số trừu tượng',
+    darkColor: '#D99B5E',
+    rgb: '140, 88, 40',
     pillClass:
       'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
-    focusNote: 'Nhóm · Vành · Trường & Định lý đẳng cấu',
+    formulaBadge: 'G / ker φ ≅ Im φ',
   },
   'hinh-hoc-affine': {
     code: 'HHAVE',
     color: '#1D4F6E',
-    tint: '#F3F8FB',
-    domainLabel: 'Hình học & Tuyến tính',
+    darkColor: '#64A8D1',
+    rgb: '29, 79, 110',
     pillClass:
       'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
-    focusNote: 'Không gian Affine · Euclide & Siêu mặt bậc hai',
+    formulaBadge: 'Aff(E) ⋉ GL(V)',
   },
   'giai-tich-ham-mot-bien': {
     code: 'GTHMB',
     color: '#1B5E4A',
-    tint: '#F2F9F6',
-    domainLabel: 'Giải tích thực',
+    darkColor: '#52B394',
+    rgb: '27, 94, 74',
     pillClass:
       'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
-    focusNote: 'Giới hạn · Vi tích phân Riemann & Chuỗi hàm',
+    formulaBadge: '∫ f(x)dx = F(b) − F(a)',
   },
   'giao-duc-hoc': {
     code: 'GDH',
     color: '#8F3D35',
-    tint: '#FBF4F3',
-    domainLabel: 'Khoa học Giáo dục',
+    darkColor: '#DF7B70',
+    rgb: '143, 61, 53',
     pillClass:
       'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
-    focusNote: 'Lý luận dạy học · Sư phạm & Nghiệp vụ chủ nhiệm',
+    formulaBadge: 'Tri thức ↔ Sư phạm',
   },
 };
 
@@ -110,11 +109,246 @@ function getDaySeedIndex(length: number): number {
   return Math.abs(dayOfYear) % length;
 }
 
+function updateCardSpotlight(event: MouseEvent<HTMLElement>): void {
+  const el = event.currentTarget;
+  const rect = el.getBoundingClientRect();
+  el.style.setProperty('--spot-x', `${Math.round(event.clientX - rect.left)}px`);
+  el.style.setProperty('--spot-y', `${Math.round(event.clientY - rect.top)}px`);
+}
+
 /**
- * TRANG CHỦ (/): WORKSPACE DASHBOARD — ACADEMIC OS (SỨ BẠCH & THAN ĐÁ)
- * - Thuần túy 1 màn hình tổng quan tải tức thì: Chào mừng + Danh ngôn 1 dòng, Tiếp tục học tập,
- *   Nhịp độ & Pomodoro, Lưới 4 học phần, Di sản trong ngày, Thuật ngữ KaTeX & Sảnh Bida.
- * - Bảo tàng 40 Di sản & Bida 8-Ball WPA đã được quy hoạch riêng sang `/thu-gian`.
+ * Minh họa hình học tương tác riêng cho từng thẻ trong lưới 4 học phần tại Trang Tổng quan (/).
+ */
+function SubjectMiniVisualStage({
+  slug,
+  color,
+}: {
+  readonly slug: string;
+  readonly color: string;
+}) {
+  if (slug === 'cau-truc-dai-so') {
+    return (
+      <svg
+        viewBox="0 0 260 92"
+        aria-hidden="true"
+        className="h-full w-full overflow-visible transition-transform duration-500 ease-out group-hover:scale-105"
+      >
+        <g className="lu-orbit-ring" stroke={color} fill="none">
+          <circle cx="72" cy="46" r="32" strokeOpacity="0.22" strokeDasharray="3 3" />
+          <polygon
+            points="72,18 96,32 96,60 72,74 48,60 48,32"
+            strokeWidth="1.35"
+            strokeOpacity="0.78"
+            fill={color}
+            fillOpacity="0.07"
+          />
+          <line x1="72" y1="18" x2="72" y2="74" strokeOpacity="0.35" strokeWidth="0.9" />
+          <line x1="48" y1="32" x2="96" y2="60" strokeOpacity="0.35" strokeWidth="0.9" />
+          <line x1="96" y1="32" x2="48" y2="60" strokeOpacity="0.35" strokeWidth="0.9" />
+          {[
+            [72, 18],
+            [96, 32],
+            [96, 60],
+            [72, 74],
+            [48, 60],
+            [48, 32],
+          ].map(([cx, cy], idx) => (
+            <circle
+              key={idx}
+              cx={cx}
+              cy={cy}
+              r="2.8"
+              fill={idx % 2 === 0 ? color : 'var(--bg-workspace)'}
+              stroke={color}
+              strokeWidth="1.3"
+            />
+          ))}
+        </g>
+
+        <path
+          d="M 110 46 C 126 32, 142 32, 158 46"
+          fill="none"
+          stroke={color}
+          strokeWidth="1.2"
+          strokeOpacity="0.65"
+          className="lu-dg-stream"
+        />
+
+        <g
+          className="origin-[194px_46px] transition-transform duration-500 ease-out group-hover:rotate-12"
+          stroke={color}
+          fill="none"
+        >
+          <circle cx="194" cy="46" r="24" strokeWidth="1.3" strokeOpacity="0.75" />
+          <rect
+            x="178"
+            y="30"
+            width="32"
+            height="32"
+            rx="3"
+            strokeWidth="1.15"
+            strokeOpacity="0.55"
+            fill={color}
+            fillOpacity="0.06"
+          />
+          <circle cx="194" cy="46" r="3.5" fill={color} />
+        </g>
+      </svg>
+    );
+  }
+
+  if (slug === 'hinh-hoc-affine') {
+    return (
+      <svg
+        viewBox="0 0 260 92"
+        aria-hidden="true"
+        className="h-full w-full overflow-visible transition-transform duration-500 ease-out group-hover:scale-105"
+      >
+        <g stroke={color} strokeOpacity="0.32" strokeDasharray="3 3" fill="none">
+          <line x1="28" y1="54" x2="126" y2="20" />
+          <line x1="28" y1="54" x2="138" y2="52" />
+          <line x1="28" y1="54" x2="118" y2="78" />
+        </g>
+        <circle cx="28" cy="54" r="3.2" fill={color} />
+        <polygon
+          points="86,31 98,52 80,68"
+          fill={color}
+          fillOpacity="0.09"
+          stroke={color}
+          strokeWidth="1.35"
+          className="origin-[88px_50px] transition-transform duration-500 group-hover:translate-x-1"
+        />
+        <polygon
+          points="126,20 138,52 118,78"
+          fill={color}
+          fillOpacity="0.05"
+          stroke={color}
+          strokeWidth="1.2"
+          strokeOpacity="0.7"
+        />
+
+        <g
+          className="origin-[196px_46px] transition-transform duration-500 ease-out group-hover:rotate-[-6deg]"
+          stroke={color}
+          fill="none"
+        >
+          <ellipse
+            cx="196"
+            cy="46"
+            rx="40"
+            ry="22"
+            fill={color}
+            fillOpacity="0.07"
+            strokeWidth="1.35"
+          />
+          <ellipse
+            cx="196"
+            cy="46"
+            rx="40"
+            ry="9"
+            strokeWidth="1"
+            strokeDasharray="3 3"
+            strokeOpacity="0.6"
+          />
+          <ellipse cx="196" cy="46" rx="14" ry="22" strokeWidth="1" strokeOpacity="0.55" />
+          <circle cx="196" cy="46" r="3" fill={color} />
+        </g>
+      </svg>
+    );
+  }
+
+  if (slug === 'giai-tich-ham-mot-bien') {
+    return (
+      <svg
+        viewBox="0 0 260 92"
+        aria-hidden="true"
+        className="h-full w-full overflow-visible transition-transform duration-500 ease-out group-hover:scale-105"
+      >
+        <line x1="18" y1="72" x2="242" y2="72" stroke={color} strokeOpacity="0.3" strokeWidth="1" />
+        {[34, 54, 74, 94, 114, 134, 154, 174, 194].map((x, idx) => {
+          const h = [22, 34, 44, 48, 40, 28, 22, 30, 42][idx] ?? 28;
+          return (
+            <rect
+              key={x}
+              x={x}
+              y={72 - h}
+              width="16"
+              height={h}
+              rx="2"
+              fill={color}
+              fillOpacity={0.08 + (idx % 3) * 0.04}
+              stroke={color}
+              strokeOpacity="0.38"
+              strokeWidth="0.9"
+            />
+          );
+        })}
+        <path
+          d="M 22 64 C 52 24, 92 14, 132 36 C 166 56, 198 42, 238 18"
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 22 64 C 52 24, 92 14, 132 36 C 166 56, 198 42, 238 18"
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="lu-dg-stream"
+        />
+        <circle
+          cx="102"
+          cy="24"
+          r="3.5"
+          fill="var(--bg-workspace)"
+          stroke={color}
+          strokeWidth="2"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      viewBox="0 0 260 92"
+      aria-hidden="true"
+      className="h-full w-full overflow-visible transition-transform duration-500 ease-out group-hover:scale-105"
+    >
+      <g
+        className="origin-[84px_46px] transition-transform duration-500 ease-out group-hover:rotate-12"
+        stroke={color}
+        fill="none"
+      >
+        <circle cx="84" cy="34" r="20" fill={color} fillOpacity="0.07" strokeWidth="1.35" />
+        <circle cx="71" cy="54" r="20" fill={color} fillOpacity="0.07" strokeWidth="1.35" />
+        <circle cx="97" cy="54" r="20" fill={color} fillOpacity="0.07" strokeWidth="1.35" />
+        <circle cx="84" cy="47" r="3" fill={color} />
+      </g>
+      <path
+        d="M 122 46 L 156 46"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeDasharray="3 3"
+        strokeOpacity="0.6"
+      />
+      <g className="lu-orbit-ring-reverse" stroke={color} fill="none">
+        <circle cx="194" cy="46" r="25" strokeOpacity="0.28" strokeDasharray="3 3" />
+        <polygon
+          points="194,23 201,39 217,46 201,53 194,69 187,53 171,46 187,39"
+          fill={color}
+          fillOpacity="0.08"
+          strokeWidth="1.25"
+        />
+        <circle cx="194" cy="46" r="3.2" fill={color} />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * TRANG CHỦ (/): WORKSPACE DASHBOARD — KINETIC MATHEMATICAL ATELIER
  */
 export function HomePage() {
   const subjects = getSubjects();
@@ -125,6 +359,7 @@ export function HomePage() {
   const { openCommandPalette } = useLayout();
 
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const [isResumeStageHovered, setIsResumeStageHovered] = useState(false);
   const [heritageIndex, setHeritageIndex] = useState(() =>
     getDaySeedIndex(HERITAGE_ARTWORKS.length),
   );
@@ -171,11 +406,11 @@ export function HomePage() {
       const style = SUBJECT_ACCENT_MAP[subject.slug] ?? {
         code: subject.slug.toUpperCase().slice(0, 5),
         color: '#17332C',
-        tint: '#F8FAFB',
-        domainLabel: 'Học phần',
+        darkColor: '#52B394',
+        rgb: '23, 51, 44',
         pillClass:
           'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]',
-        focusNote: subject.description,
+        formulaBadge: subject.shortTitle,
       };
       return {
         subject,
@@ -185,9 +420,10 @@ export function HomePage() {
         percent,
         code: style.code,
         color: style.color,
-        domainLabel: style.domainLabel,
+        darkColor: style.darkColor,
+        rgb: style.rgb,
         pillClass: style.pillClass,
-        focusNote: style.focusNote,
+        formulaBadge: style.formulaBadge,
       };
     });
 
@@ -216,22 +452,6 @@ export function HomePage() {
     return { subject: firstSubject, chapter: firstChapter, lesson: firstLesson };
   }, [lastVisitedGlobal, subjects]);
 
-  // Tìm bài học kế tiếp ngay sau bài đang đọc dở để hiển thị gợi ý lộ trình
-  const nextUpLocation = useMemo<LessonLocation | null>(() => {
-    if (!resumeLocation) return null;
-    const flat: LessonLocation[] = [];
-    for (const ch of resumeLocation.subject.chapters) {
-      for (const ls of ch.lessons) {
-        flat.push({ subject: resumeLocation.subject, chapter: ch, lesson: ls });
-      }
-    }
-    const idx = flat.findIndex((item) => item.lesson.id === resumeLocation.lesson.id);
-    if (idx >= 0 && idx + 1 < flat.length) {
-      return flat[idx + 1] ?? null;
-    }
-    return null;
-  }, [resumeLocation]);
-
   const resumeSubjectMeta = resumeLocation
     ? (getIslandSubjectByIdOrSlug(resumeLocation.subject.slug) ??
       getIslandSubjectByIdOrSlug(resumeLocation.subject.id))
@@ -248,37 +468,38 @@ export function HomePage() {
       )
     : ROUTES.learningSpace;
 
+  // 4 tác phẩm tiêu biểu gần vị trí hiện tại để chọn nhanh trên filmstrip
+  const featuredHeritageStrip = useMemo(() => {
+    const len = HERITAGE_ARTWORKS.length;
+    if (len === 0) return [];
+    const base = Math.floor(heritageIndex / 4) * 4;
+    return [0, 1, 2, 3].map((offset) => {
+      const idx = (base + offset) % len;
+      return { idx, artwork: HERITAGE_ARTWORKS[idx]! };
+    });
+  }, [heritageIndex]);
+
   const isPomodoroActive = pomodoro.status !== 'idle';
   const isPomodoroRunning = pomodoro.status === 'running';
+  const pomodoroTotalSec = Math.max(1, pomodoro.totalSeconds || 1500);
+  const pomodoroProgressRatio = isPomodoroActive
+    ? Math.min(1, Math.max(0, 1 - pomodoro.remainingSeconds / pomodoroTotalSec))
+    : 0;
   const isHeritageFallback = failedHeritageId === currentHeritage.id;
 
   return (
     <div
       data-testid="workspace-dashboard"
-      className="min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="lu-atelier-backdrop min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)]"
     >
       <div className="mx-auto max-w-[1240px] space-y-6 px-6 py-7 lg:px-10">
-        {/* A. THANH CHÀO MỪNG & DANH NGÔN 1 DÒNG */}
-        <header className="flex flex-col justify-between gap-3.5 border-b border-[var(--border-hairline)] pb-5 sm:flex-row sm:items-end">
-          <div className="min-w-0 space-y-1.5">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-0.5 font-mono text-[10px] font-semibold tracking-wider text-[var(--text-secondary)] uppercase">
-                <span
-                  className="h-1.5 w-1.5 rounded-full bg-[var(--accent-os)]"
-                  aria-hidden="true"
-                />
-                <span>Academic OS · Bàn làm việc</span>
-              </span>
-              <span className="hidden font-mono text-[11px] text-[var(--text-muted)] sm:inline">
-                4 học phần · {totalLessons} bài giảng chuẩn hóa
-              </span>
-            </div>
-
-            <h1 className="font-serif text-2xl font-semibold tracking-tight text-[var(--text-main)] sm:text-[1.7rem]">
+        {/* A. THANH CHÀO MỪNG & DANH NGÔN 1 DÒNG (SẠCH GỌN, KHÔNG CHỮ THỪA) */}
+        <header className="flex flex-col justify-between gap-3 border-b border-[var(--border-hairline)] pb-4 sm:flex-row sm:items-end">
+          <div className="min-w-0 space-y-1">
+            <h1 className="font-serif text-2xl font-semibold tracking-tight text-[var(--text-main)] sm:text-[1.75rem]">
               <span className="sr-only">LEARNING UNIVERSE — </span>
               Không gian Tổng quan
             </h1>
-
             <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-secondary)]">
               <p data-testid="dashboard-quote-text" className="font-serif text-[13.5px] italic">
                 &ldquo;{currentQuote.content}&rdquo; —{' '}
@@ -303,7 +524,7 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="flex shrink-0 flex-wrap items-center gap-2.5">
+          <div className="flex shrink-0 items-center gap-2">
             <time
               data-testid="dashboard-date"
               className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-[11px] whitespace-nowrap text-[var(--text-secondary)]"
@@ -316,39 +537,37 @@ export function HomePage() {
               className="hidden cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)] transition-all duration-150 hover:border-[var(--accent-os)]/45 hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] active:scale-[0.98] sm:inline-flex"
             >
               <Search className="h-3.5 w-3.5 text-[var(--text-muted)]" aria-hidden="true" />
-              <span>Tra cứu</span>
-              <kbd className="py-0.2 rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1 font-mono text-[10px] font-semibold text-[var(--text-muted)]">
+              <kbd className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)]">
                 ⌘K
               </kbd>
             </button>
           </div>
         </header>
 
-        {/* B. HÀNG BENTO 1 — HÀNH ĐỘNG CHÍNH (7 : 5) */}
+        {/* B. HÀNG BENTO 1 — SÂN KHẤU HỌC TIẾP TƯƠNG TÁC & ĐỒNG HỒ RADIAL TẬP TRUNG (7 : 5) */}
         <section
           aria-label="Hành động chính và tiến độ học tập"
           className="grid grid-cols-1 gap-5 lg:grid-cols-12"
         >
-          {/* Cột Trái (7 cột) — Thẻ "Tiếp tục học tập" */}
+          {/* Cột Trái (7 cột) — Sân khấu "Tiếp tục học tập" kèm Canvas Toán học sống động & Lộ trình bước chương */}
           <div
             data-testid="dashboard-resume-card"
-            style={{
-              borderLeftWidth: '3px',
-              borderLeftColor: resumeAccentColor,
-            }}
-            className="group/resume relative flex flex-col justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] sm:p-6 lg:col-span-7"
+            onMouseMove={updateCardSpotlight}
+            onMouseEnter={() => setIsResumeStageHovered(true)}
+            onMouseLeave={() => setIsResumeStageHovered(false)}
+            style={
+              {
+                borderLeftWidth: '3px',
+                borderLeftColor: resumeAccentColor,
+                '--spot-glow': `rgba(${resumeCardStats?.rgb ?? '140, 88, 40'}, 0.11)`,
+                '--spot-glow-dark': `rgba(${resumeCardStats?.rgb ?? '140, 88, 40'}, 0.22)`,
+              } as CSSProperties
+            }
+            className="lu-bento-interactive group/resume flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] sm:p-6 lg:col-span-7"
           >
-            {/* Dải sắc môn học mảnh ở đỉnh thẻ */}
-            <div
-              aria-hidden="true"
-              style={{
-                background: `linear-gradient(90deg, ${resumeAccentColor} 0%, transparent 80%)`,
-              }}
-              className="pointer-events-none absolute top-0 right-0 left-0 h-[2px] opacity-60 transition-opacity duration-200 group-hover/resume:opacity-100"
-            />
-
-            <div className="space-y-2.5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="relative z-10 grid grid-cols-1 items-center gap-5 sm:grid-cols-12">
+              {/* Cột Nội dung bài đang đọc (7/12) */}
+              <div className="flex flex-col justify-between space-y-3 sm:col-span-7">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                     <span
@@ -365,84 +584,87 @@ export function HomePage() {
                         resumeCardStats.pillClass,
                       )}
                     >
-                      {resumeCardStats.code}
+                      {resumeCardStats.code} · {resumeCardStats.percent}%
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-2 font-mono text-[11px] font-medium text-[var(--text-muted)] tabular-nums">
-                  {resumeLocation && (
-                    <span className="inline-flex items-center gap-1 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-0.5 text-[10.5px]">
-                      <Clock className="h-3 w-3 text-[var(--text-muted)]" aria-hidden="true" />
-                      <span>~{resumeLocation.lesson.estimatedMinutes} phút</span>
-                    </span>
-                  )}
-                  {resumeCardStats && (
-                    <span>
-                      {resumeCardStats.completedCount}/{resumeCardStats.lessonCount} bài (
-                      {resumeCardStats.percent}%)
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {resumeLocation ? (
-                <>
-                  <p className="text-xs font-medium text-[var(--text-secondary)]">
-                    {resumeLocation.subject.title} · Chương {resumeLocation.chapter.number}:{' '}
-                    {resumeLocation.chapter.title}
-                  </p>
-                  <h2 className="font-serif text-lg leading-snug font-semibold text-[var(--text-main)] sm:text-xl">
-                    {resumeLocation.lesson.title}
+                {resumeLocation ? (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-[var(--text-secondary)]">
+                      {resumeLocation.subject.title} · Chương {resumeLocation.chapter.number}
+                    </p>
+                    <h2 className="font-serif text-lg leading-snug font-semibold text-[var(--text-main)] sm:text-xl">
+                      {resumeLocation.lesson.title}
+                    </h2>
+                  </div>
+                ) : (
+                  <h2 className="font-serif text-lg font-semibold text-[var(--text-main)]">
+                    Bắt đầu hành trình học tập
                   </h2>
-                </>
-              ) : (
-                <h2 className="font-serif text-lg font-semibold text-[var(--text-main)]">
-                  Bắt đầu hành trình học tập
-                </h2>
-              )}
+                )}
 
-              <div className="pt-1">
-                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
-                  <div
-                    className="h-full rounded-full transition-[width] duration-300"
-                    style={{
-                      width: `${Math.max(resumeCardStats?.percent ?? 0, resumeCardStats?.completedCount ? 6 : 4)}%`,
-                      backgroundColor: resumeAccentColor,
-                    }}
-                  />
-                </div>
+                {/* Thanh bước bài học trong chương hiện tại (Interactive Chapter Step-Track) */}
+                {resumeLocation && (
+                  <div className="space-y-1.5 pt-0.5">
+                    <div
+                      className="flex flex-wrap items-center gap-1.5"
+                      aria-label="Các bài trong chương hiện tại"
+                    >
+                      {resumeLocation.chapter.lessons.slice(0, 6).map((ls) => {
+                        const isCurrent = ls.id === resumeLocation.lesson.id;
+                        const isDone = Boolean(completedLessons[ls.id]);
+                        return (
+                          <Link
+                            key={ls.id}
+                            to={ROUTES.lesson(
+                              resumeLocation.subject.slug,
+                              resumeLocation.chapter.slug,
+                              ls.slug,
+                            )}
+                            title={ls.title}
+                            className={cn(
+                              'inline-flex h-6 items-center gap-1 rounded-md border px-2 font-mono text-[10.5px] font-semibold transition-all duration-150',
+                              isCurrent
+                                ? 'border-transparent text-white shadow-2xs'
+                                : isDone
+                                  ? 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--accent-os)]'
+                                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)]/70 text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)]',
+                            )}
+                            style={isCurrent ? { backgroundColor: resumeAccentColor } : undefined}
+                          >
+                            {isDone && !isCurrent && (
+                              <Check className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+                            )}
+                            <span>
+                              {resumeLocation.chapter.number}.{ls.number}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {nextUpLocation && (
-                <div className="flex items-center justify-between gap-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs">
-                  <span className="min-w-0 truncate text-[var(--text-secondary)]">
-                    <strong className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)] uppercase">
-                      Kế tiếp:{' '}
-                    </strong>
-                    <span className="font-medium text-[var(--text-main)]">
-                      Bài {nextUpLocation.chapter.number}.{nextUpLocation.lesson.number} —{' '}
-                      {nextUpLocation.lesson.title}
-                    </span>
+              {/* Cột Sân khấu Đồ họa Toán học tương tác 120fps (5/12) */}
+              <div className="relative overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] sm:col-span-5">
+                <SubjectStageCanvas
+                  slug={resumeLocation?.subject.slug ?? 'cau-truc-dai-so'}
+                  isCardHovered={isResumeStageHovered}
+                />
+                {resumeCardStats && (
+                  <span className="pointer-events-none absolute right-2 bottom-2 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)]/90 px-2 py-0.5 font-mono text-[9.5px] font-semibold text-[var(--text-secondary)] backdrop-blur-xs">
+                    {resumeCardStats.formulaBadge}
                   </span>
-                  <Link
-                    to={ROUTES.lesson(
-                      nextUpLocation.subject.slug,
-                      nextUpLocation.chapter.slug,
-                      nextUpLocation.lesson.slug,
-                    )}
-                    className="shrink-0 font-mono text-[10.5px] font-semibold text-[var(--accent-os)] hover:underline"
-                  >
-                    Xem →
-                  </Link>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-hairline)] pt-3.5">
               <Link
                 to={resumeHref}
-                className="group/cta inline-flex items-center gap-2 rounded-lg bg-[var(--accent-os)] px-4 py-2.5 text-xs font-semibold text-white shadow-2xs transition-all duration-150 hover:bg-[var(--accent-primary-hover)] active:scale-[0.98]"
+                className="group/cta inline-flex items-center gap-2 rounded-lg bg-[var(--accent-os)] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition-all duration-150 hover:bg-[var(--accent-primary-hover)] active:scale-[0.98]"
               >
                 <span>Vào bài học ngay</span>
                 <ArrowRight
@@ -464,94 +686,125 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Cột Phải (5 cột) — Thẻ "Nhịp độ & Chỉ số" + Pomodoro nhanh */}
+          {/* Cột Phải (5 cột) — Đồng hồ Radial 4 Vòng Học phần & Nhịp Pomodoro trực quan */}
           <div
             data-testid="dashboard-metrics-card"
-            className="flex flex-col justify-between gap-3.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] lg:col-span-5"
+            onMouseMove={updateCardSpotlight}
+            className="lu-bento-interactive flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] lg:col-span-5"
           >
-            <div className="space-y-3">
-              <div className="grid grid-cols-3 gap-2.5">
-                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3">
-                  <p className="font-mono text-[10px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
+            {/* Khối trên: Vòng đồng tâm 4 học phần (Radial Mastery Dial) + 3 chỉ số */}
+            <div className="relative z-10 flex items-center gap-4">
+              {/* Vòng đồng tâm SVG 4 quỹ đạo môn học */}
+              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]">
+                <svg viewBox="0 0 96 96" className="h-20 w-20 -rotate-90" aria-hidden="true">
+                  {subjectCards.map((card, idx) => {
+                    const r = 38 - idx * 6.5;
+                    const c = 2 * Math.PI * r;
+                    const ratio = Math.max(0.08, card.percent / 100);
+                    return (
+                      <g key={card.subject.slug}>
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r={r}
+                          fill="none"
+                          stroke="var(--border-hairline)"
+                          strokeWidth="3.2"
+                        />
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r={r}
+                          fill="none"
+                          stroke={card.color}
+                          strokeWidth="3.2"
+                          strokeLinecap="round"
+                          strokeDasharray={`${(c * ratio).toFixed(1)} ${c.toFixed(1)}`}
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="font-mono text-xs font-bold text-[var(--text-main)] tabular-nums">
+                    {totalPercent}%
+                  </span>
+                </div>
+              </div>
+
+              {/* 3 Ô chỉ số tinh gọn */}
+              <div className="grid min-w-0 flex-1 grid-cols-2 gap-2">
+                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2.5">
+                  <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Bài hoàn thành
                   </p>
-                  <p className="mt-1.5 font-mono text-base font-semibold text-[var(--text-main)] tabular-nums">
+                  <p className="mt-1 font-mono text-sm font-semibold text-[var(--text-main)] tabular-nums">
                     {completedCount}
-                    <span className="text-xs font-normal text-[var(--text-muted)]">
+                    <span className="text-[11px] font-normal text-[var(--text-muted)]">
                       /{totalLessons}
                     </span>
                   </p>
                 </div>
 
-                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3">
-                  <p className="font-mono text-[10px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
+                <div className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2.5">
+                  <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Tiến độ tổng
                   </p>
-                  <p className="mt-1.5 font-mono text-base font-semibold text-[var(--accent-os)] tabular-nums">
+                  <p className="mt-1 font-mono text-sm font-semibold text-[var(--accent-os)] tabular-nums">
                     {totalPercent}%
                   </p>
                 </div>
 
                 <Link
                   to={ROUTES.glossary}
-                  className="group rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-all duration-150 hover:-translate-y-0.5 hover:border-[var(--accent-os)]/40"
+                  className="group col-span-2 flex items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 transition-colors hover:border-[var(--accent-os)]/40"
                 >
-                  <p className="font-mono text-[10px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
+                  <span className="font-mono text-[10px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Kho Thuật ngữ
-                  </p>
-                  <p className="mt-1.5 font-mono text-base font-semibold text-[var(--text-main)] tabular-nums group-hover:text-[var(--accent-os)]">
-                    {allGlossaryEntries.length}+
-                  </p>
+                  </span>
+                  <span className="inline-flex items-center gap-1 font-mono text-xs font-semibold text-[var(--text-main)] tabular-nums group-hover:text-[var(--accent-os)]">
+                    <span>{allGlossaryEntries.length}+ mục</span>
+                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                  </span>
                 </Link>
-              </div>
-
-              {/* Thanh phân bổ quy mô 4 học phần */}
-              <div className="space-y-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2">
-                <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
-                  {subjectCards.map((card) => (
-                    <div
-                      key={card.subject.slug}
-                      title={`${card.subject.title}: ${card.lessonCount} bài`}
-                      style={{
-                        width: `${totalLessons > 0 ? (card.lessonCount / totalLessons) * 100 : 25}%`,
-                        backgroundColor: card.color,
-                      }}
-                      className="h-full border-r border-[var(--bg-workspace)] last:border-r-0"
-                    />
-                  ))}
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-1.5 font-mono text-[10px] text-[var(--text-muted)]">
-                  {subjectCards.map((card) => (
-                    <span key={card.subject.slug} className="inline-flex items-center gap-1">
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ backgroundColor: card.color }}
-                        aria-hidden="true"
-                      />
-                      <span className="font-semibold text-[var(--text-secondary)]">
-                        {card.code}
-                      </span>
-                      <span className="tabular-nums">
-                        {card.completedCount}/{card.lessonCount}
-                      </span>
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
 
+            {/* Khối dưới: Thanh Pomodoro có vòng đếm ngược trực quan */}
             <div
               data-testid="dashboard-pomodoro-bar"
-              className="flex flex-wrap items-center justify-between gap-2.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2.5"
+              className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2.5"
             >
               <div className="flex items-center gap-2.5">
-                <Hourglass
-                  className={cn(
-                    'h-4 w-4 shrink-0 text-[var(--accent-heritage)]',
-                    isPomodoroRunning && 'animate-pulse',
-                  )}
-                  aria-hidden="true"
-                />
+                <div className="relative flex h-8 w-8 shrink-0 items-center justify-center">
+                  <svg viewBox="0 0 32 32" className="absolute inset-0 h-8 w-8 -rotate-90">
+                    <circle
+                      cx="16"
+                      cy="16"
+                      r="13.5"
+                      fill="none"
+                      stroke="var(--border-hairline)"
+                      strokeWidth="2.2"
+                    />
+                    <circle
+                      cx="16"
+                      cy="16"
+                      r="13.5"
+                      fill="none"
+                      stroke="var(--accent-heritage)"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeDasharray={`${(84.8 * (isPomodoroActive ? Math.max(0.08, 1 - pomodoroProgressRatio) : 1)).toFixed(1)} 84.8`}
+                    />
+                  </svg>
+                  <Hourglass
+                    className={cn(
+                      'h-3.5 w-3.5 text-[var(--accent-heritage)]',
+                      isPomodoroRunning && 'animate-pulse',
+                    )}
+                    aria-hidden="true"
+                  />
+                </div>
                 <div className="leading-tight">
                   <p className="text-xs font-medium text-[var(--text-main)]">
                     Nhịp học tập Pomodoro
@@ -562,7 +815,7 @@ export function HomePage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-1.5">
+              <div className="flex items-center gap-1.5">
                 {isPomodoroActive ? (
                   <>
                     <button
@@ -586,7 +839,7 @@ export function HomePage() {
                       type="button"
                       onClick={resetPomodoro}
                       aria-label="Đặt lại phiên tập trung"
-                      className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-[var(--border-hairline)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
+                      className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-[var(--border-hairline)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
                     >
                       <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
@@ -617,17 +870,17 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* C. HÀNG BENTO 2 — LƯỚI 4 HỌC PHẦN (CTĐS · HHAVE · GTHMB · GDH) */}
+        {/* C. HÀNG BENTO 2 — LƯỚI 4 HỌC PHẦN VỚI ĐỒ HỌA HÌNH HỌC TƯƠNG TÁC ĐỘC BẢN */}
         <section aria-label="Bốn học phần trọng tâm" className="space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-              Học phần trọng tâm ({subjectCards.length})
+              Học phần trọng tâm
             </h2>
             <Link
               to={ROUTES.learningSpace}
               className="group/all inline-flex items-center gap-1 font-mono text-[11px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-main)]"
             >
-              <span>Xem tất cả &amp; Bản đồ 3D</span>
+              <span>Mở bản đồ đầy đủ</span>
               <ArrowRight
                 className="h-3 w-3 transition-transform duration-150 group-hover/all:translate-x-0.5"
                 aria-hidden="true"
@@ -644,16 +897,30 @@ export function HomePage() {
                 key={item.subject.slug}
                 to={ROUTES.subjectOverview(item.subject.slug)}
                 data-testid={`dashboard-subject-card-${item.subject.slug}`}
-                className="group relative flex flex-col justify-between gap-4 overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4.5 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]"
+                onMouseMove={updateCardSpotlight}
+                style={
+                  {
+                    '--spot-glow': `rgba(${item.rgb}, 0.13)`,
+                    '--spot-glow-dark': `rgba(${item.rgb}, 0.25)`,
+                  } as CSSProperties
+                }
+                className="lu-bento-interactive group flex flex-col justify-between gap-3.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 hover:-translate-y-1 hover:border-[var(--border-strong)] hover:bg-[var(--bg-workspace)] hover:shadow-[var(--shadow-bento-hover)]"
               >
-                {/* Dải màu nhận diện môn học trên đỉnh thẻ */}
-                <span
-                  aria-hidden="true"
-                  style={{ backgroundColor: item.color }}
-                  className="pointer-events-none absolute top-0 right-0 left-0 h-[2px] opacity-65 transition-opacity duration-200 group-hover:opacity-100"
-                />
+                {/* Sân khấu Hình học Vector sống động riêng cho từng môn */}
+                <div
+                  style={{
+                    background: `radial-gradient(circle at 50% 50%, rgba(${item.rgb}, 0.09) 0%, transparent 75%)`,
+                  }}
+                  className="relative z-10 h-24 w-full overflow-hidden rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/80 px-2 py-1"
+                >
+                  <SubjectMiniVisualStage slug={item.subject.slug} color={item.color} />
+                  <span className="pointer-events-none absolute right-2 bottom-1.5 font-mono text-[9px] font-medium text-[var(--text-muted)] opacity-80">
+                    {item.formulaBadge}
+                  </span>
+                </div>
 
-                <div className="space-y-2.5">
+                {/* Đầu đề & Nhãn mã môn */}
+                <div className="relative z-10 space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <span
                       className={cn(
@@ -668,27 +935,7 @@ export function HomePage() {
                       />
                       <span>{item.code}</span>
                     </span>
-                    <span className="font-mono text-[10.5px] text-[var(--text-muted)]">
-                      {item.domainLabel}
-                    </span>
-                  </div>
-
-                  <div className="space-y-1">
-                    <h3 className="font-serif text-[16px] leading-snug font-semibold text-[var(--text-main)] transition-colors group-hover:text-[var(--accent-os)]">
-                      {item.subject.title}
-                    </h3>
-                    <p className="line-clamp-1 text-xs text-[var(--text-secondary)]">
-                      {item.focusNote}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2 border-t border-[var(--border-hairline)] pt-2.5">
-                  <div className="flex items-center justify-between font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
-                    <span>
-                      {item.chapterCount} chương · {item.lessonCount} bài
-                    </span>
-                    <span className="inline-flex items-center gap-1 font-semibold text-[var(--text-secondary)] group-hover:text-[var(--text-main)]">
+                    <span className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[var(--text-secondary)] tabular-nums">
                       <span>{item.percent}%</span>
                       <ArrowRight
                         className="h-3 w-3 transition-transform duration-150 group-hover:translate-x-0.5"
@@ -696,33 +943,40 @@ export function HomePage() {
                       />
                     </span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
-                    <div
-                      className="h-full rounded-full transition-[width] duration-300"
-                      style={{
-                        width: `${Math.max(item.percent, item.completedCount > 0 ? 8 : 0)}%`,
-                        backgroundColor: item.color,
-                      }}
-                    />
-                  </div>
+
+                  <h3 className="font-serif text-[16.5px] leading-snug font-semibold text-[var(--text-main)] transition-colors group-hover:text-[var(--accent-os)]">
+                    {item.subject.title}
+                  </h3>
+                </div>
+
+                {/* Thanh tiến độ mảnh dưới đáy */}
+                <div className="relative z-10 h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
+                  <div
+                    className="h-full rounded-full transition-[width] duration-300"
+                    style={{
+                      width: `${Math.max(item.percent, item.completedCount > 0 ? 10 : 6)}%`,
+                      backgroundColor: item.color,
+                    }}
+                  />
                 </div>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* D. HÀNG BENTO 3 — VĂN HIẾN & THƯ GIÃN (7 : 5) */}
+        {/* D. HÀNG BENTO 3 — BẢO TÀNG ÁNH SÁNG, SÂN KHẤU CÔNG THỨC KATEX & BÀN BIDA 8-BALL MINI (7 : 5) */}
         <section
           aria-label="Di sản học thuật, thuật ngữ và giải lao"
           className="grid grid-cols-1 gap-5 lg:grid-cols-12"
         >
-          {/* Cột Trái (7 cột) — "Di sản trong ngày" */}
+          {/* Cột Trái (7 cột) — "Di sản trong ngày" kèm Filmstrip 4 tác phẩm chọn nhanh */}
           <div
             data-testid="dashboard-heritage-card"
-            className="group/heritage flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] lg:col-span-7"
+            onMouseMove={updateCardSpotlight}
+            className="lu-bento-interactive group/heritage flex flex-col justify-between gap-4 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)] lg:col-span-7"
           >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="relative z-10 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                   <Landmark
                     className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
@@ -750,8 +1004,8 @@ export function HomePage() {
               </button>
             </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="h-32 w-full shrink-0 overflow-hidden rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-shell)] sm:w-40">
+            <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="relative h-36 w-full shrink-0 overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-shell)] shadow-xs sm:w-44">
                 {isHeritageFallback ? (
                   <HeritageFallbackIllustration artwork={currentHeritage} compact />
                 ) : (
@@ -764,21 +1018,51 @@ export function HomePage() {
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/heritage:scale-105"
                   />
                 )}
+                <span className="pointer-events-none absolute bottom-2 left-2 rounded bg-black/65 px-2 py-0.5 font-mono text-[9.5px] font-medium text-white backdrop-blur-xs">
+                  {currentHeritage.yearOrEra}
+                </span>
               </div>
-              <div className="min-w-0 flex-1 space-y-1.5">
-                <p className="truncate font-mono text-[11px] text-[var(--text-muted)]">
-                  {currentHeritage.yearOrEra} · {currentHeritage.artistOrOrigin}
-                </p>
-                <h3
-                  title={currentHeritage.title}
-                  className="truncate font-serif text-base font-semibold text-[var(--text-main)]"
-                >
-                  {currentHeritage.title}
-                </h3>
+
+              <div className="min-w-0 flex-1 space-y-2">
+                <div>
+                  <p className="truncate font-mono text-[10.5px] text-[var(--text-muted)]">
+                    {currentHeritage.artistOrOrigin}
+                  </p>
+                  <h3
+                    title={currentHeritage.title}
+                    className="truncate font-serif text-lg font-semibold text-[var(--text-main)]"
+                  >
+                    {currentHeritage.title}
+                  </h3>
+                </div>
                 <p className="line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">
                   {currentHeritage.coreAcademicValue}
                 </p>
-                <div className="pt-1">
+
+                {/* Dải 4 nút chọn nhanh tác phẩm ngay trên thẻ */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                  <div className="flex items-center gap-1">
+                    {featuredHeritageStrip.map(({ idx, artwork }) => {
+                      const active = idx === heritageIndex;
+                      return (
+                        <button
+                          key={artwork.id}
+                          type="button"
+                          onClick={() => setHeritageIndex(idx)}
+                          title={artwork.title}
+                          className={cn(
+                            'cursor-pointer rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold transition-all',
+                            active
+                              ? 'border-[var(--accent-heritage)] bg-[var(--accent-heritage)] text-white'
+                              : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-muted)] hover:border-[var(--accent-heritage)]/50 hover:text-[var(--text-main)]',
+                          )}
+                        >
+                          {String(idx + 1).padStart(2, '0')}
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <Link
                     to={ROUTES.sanctuaryTab('di-san')}
                     className="group/hlink inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-heritage)] transition-opacity hover:opacity-85"
@@ -794,14 +1078,15 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Cột Phải (5 cột) — "Ôn nhanh & Giải lao" */}
+          {/* Cột Phải (5 cột) — Sân khấu Công thức KaTeX & Bàn Bida 8-Ball Mini */}
           <div className="flex flex-col gap-3.5 lg:col-span-5">
             {currentGlossary && (
               <div
                 data-testid="dashboard-glossary-card"
-                className="flex flex-1 flex-col justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)]"
+                onMouseMove={updateCardSpotlight}
+                className="lu-bento-interactive flex flex-1 flex-col justify-between gap-2.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)]"
               >
-                <div className="flex items-center justify-between gap-2">
+                <div className="relative z-10 flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                     <BookMarked
                       className="h-3.5 w-3.5 text-[var(--accent-os)]"
@@ -824,55 +1109,110 @@ export function HomePage() {
 
                 <Link
                   to={`${ROUTES.glossary}?q=${encodeURIComponent(currentGlossary.nameVi)}`}
-                  className="group flex flex-col gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2.5 transition-colors hover:border-[var(--accent-os)]/40"
+                  className="group relative z-10 flex items-center gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 transition-colors hover:border-[var(--accent-os)]/45"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-xs font-semibold text-[var(--text-main)] group-hover:text-[var(--accent-os)]">
-                        {currentGlossary.nameVi}
-                      </p>
-                      <p className="truncate text-[11px] text-[var(--text-muted)]">
-                        {currentGlossary.nameEn}
-                      </p>
-                    </div>
-                    <span className="shrink-0 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 text-xs text-[var(--text-main)]">
-                      <KatexMath math={currentGlossary.formula || currentGlossary.symbol} />
-                    </span>
+                  {/* Sân khấu công thức KaTeX nổi bật */}
+                  <div className="lu-atelier-backdrop flex h-14 min-w-[78px] shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-sm text-[var(--text-main)] shadow-2xs">
+                    <KatexMath math={currentGlossary.formula || currentGlossary.symbol} />
                   </div>
-                  {currentGlossary.brief && (
-                    <p className="line-clamp-1 border-t border-[var(--border-hairline)] pt-1.5 text-[11px] text-[var(--text-secondary)]">
-                      <InlineMathText text={currentGlossary.brief} />
+
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <p className="truncate text-xs font-semibold text-[var(--text-main)] group-hover:text-[var(--accent-os)]">
+                      {currentGlossary.nameVi}
                     </p>
-                  )}
+                    <p className="truncate font-mono text-[10.5px] text-[var(--text-muted)]">
+                      {currentGlossary.nameEn}
+                    </p>
+                    {currentGlossary.brief && (
+                      <p className="line-clamp-1 text-[11px] text-[var(--text-secondary)]">
+                        <InlineMathText text={currentGlossary.brief} />
+                      </p>
+                    )}
+                  </div>
                 </Link>
               </div>
             )}
 
+            {/* Thẻ Bida 8-Ball kèm minh họa mặt bàn Bida Emerald & tia ngắm */}
             <div
               data-testid="dashboard-billiards-card"
-              className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-4 transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)]"
+              onMouseMove={updateCardSpotlight}
+              className="lu-bento-interactive group/billiards flex items-center justify-between gap-3 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3.5 hover:border-[var(--border-strong)] hover:shadow-[var(--shadow-bento-hover)]"
             >
-              <div className="flex min-w-0 items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--accent-heritage)] shadow-2xs">
-                  <Gamepad2 className="h-4.5 w-4.5" aria-hidden="true" />
-                </span>
+              <div className="relative z-10 flex min-w-0 items-center gap-3">
+                {/* Minh họa mặt bàn Bida 8-Ball thu nhỏ sống động */}
+                <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-lg border border-[#8C6D3F]/50 bg-[#163D31] shadow-inner">
+                  <svg viewBox="0 0 80 48" className="h-full w-full" aria-hidden="true">
+                    <rect
+                      x="3"
+                      y="3"
+                      width="74"
+                      height="42"
+                      rx="4"
+                      fill="none"
+                      stroke="#C5A262"
+                      strokeOpacity="0.45"
+                      strokeWidth="1"
+                    />
+                    {/* Đường ngắm cơ tới bi số 8 */}
+                    <line
+                      x1="22"
+                      y1="28"
+                      x2="56"
+                      y2="18"
+                      stroke="#FAFBF9"
+                      strokeOpacity="0.55"
+                      strokeWidth="1"
+                      strokeDasharray="2.5 2.5"
+                      className="lu-dg-stream-fast"
+                    />
+                    {/* Bi cái (Cue ball) */}
+                    <circle
+                      cx="22"
+                      cy="28"
+                      r="5"
+                      fill="#FAFBF9"
+                      className="transition-transform duration-300 group-hover/billiards:translate-x-1"
+                    />
+                    <circle cx="22" cy="28" r="1.1" fill="#C93B2B" />
+                    {/* Bi số 8 */}
+                    <g className="transition-transform duration-300 group-hover/billiards:translate-x-1.5 group-hover/billiards:-translate-y-0.5">
+                      <circle
+                        cx="56"
+                        cy="18"
+                        r="5.5"
+                        fill="#101514"
+                        stroke="#C5A262"
+                        strokeWidth="0.7"
+                      />
+                      <circle cx="56" cy="18" r="2.6" fill="#FAFBF9" />
+                      <text
+                        x="56"
+                        y="19.6"
+                        textAnchor="middle"
+                        fontSize="4.6"
+                        fontWeight="bold"
+                        fill="#101514"
+                      >
+                        8
+                      </text>
+                    </g>
+                  </svg>
+                </div>
+
                 <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <p className="text-xs font-semibold text-[var(--text-main)]">
-                      Sảnh Bida 8-Ball WPA
-                    </p>
-                    <span className="py-0.2 rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 font-mono text-[9.5px] font-semibold text-[var(--accent-heritage)]">
-                      120FPS
-                    </span>
-                  </div>
+                  <p className="text-xs font-semibold text-[var(--text-main)]">
+                    Sảnh Bida 8-Ball WPA
+                  </p>
                   <p className="truncate text-[11px] text-[var(--text-muted)]">
-                    Nghỉ giải lao 5 phút · Bàn 15 bi chuẩn WPA
+                    Giải lao · Bàn 15 bi vật lý chuẩn WPA
                   </p>
                 </div>
               </div>
+
               <Link
                 to={ROUTES.sanctuaryTab('bida')}
-                className="group/bida inline-flex shrink-0 items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-all duration-150 hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)] active:scale-[0.98]"
+                className="group/bida relative z-10 inline-flex shrink-0 items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-all duration-150 hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)] active:scale-[0.98]"
               >
                 <span>Mở bàn</span>
                 <ArrowRight
