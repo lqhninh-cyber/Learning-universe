@@ -87,7 +87,9 @@ export function AtmosphericCanopy({
     if (variant === 'dashboard') {
       return isDark ? DASHBOARD_CANOPY_ASSETS.dark : DASHBOARD_CANOPY_ASSETS.light;
     }
-    if (variant === 'subject' && subjectWash) {
+    // Các tranh loang màu nước học phần (subject-wash-*.webp) dùng nền giấy trắng sáng -> áp dụng cho Light Mode;
+    // ở Dark Mode tự chuyển sang dải sương Obsidian riêng biệt để không gây vệt trắng đục.
+    if (variant === 'subject' && subjectWash && !isDark) {
       return subjectWash.src;
     }
     return null;
