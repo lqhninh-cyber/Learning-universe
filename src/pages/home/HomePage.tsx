@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   ArrowUpRight,
+  CalendarDays,
   Check,
   Compass,
   FilePenLine,
@@ -9,6 +10,8 @@ import {
   Landmark,
   MoonStar,
   Pause,
+  PenTool,
+  Pin,
   Play,
   RefreshCw,
   RotateCcw,
@@ -20,11 +23,13 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
+import { DashboardAnalyticsCard } from '@/components/home/DashboardAnalyticsCard';
 import { GlossaryFlashcardCard } from '@/components/home/GlossaryFlashcardCard';
 import {
   HERITAGE_ARTWORKS,
   HeritageFallbackIllustration,
 } from '@/components/home/HeritageArtShowcase';
+import { RecentStudioShelf } from '@/components/home/RecentStudioShelf';
 import { StudyPlannerWidget } from '@/components/home/StudyPlannerWidget';
 import { StudyRhythmCard } from '@/components/home/StudyRhythmCard';
 import {
@@ -45,7 +50,9 @@ import { useOptionalAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import { getAllGlossaryEntries } from '@/features/math-glossary';
 import {
+  computeDaysUntilDate,
   computeStudyActivityMetrics,
+  formatCountdownLabel,
   getVietnameseTimeGreeting,
   selectActiveWorkspaceBucket,
   useWorkspaceStore,
@@ -282,22 +289,53 @@ export function HomePage() {
   const isHeritageFallback = failedHeritageId === currentHeritage.id;
   const heritageNumberLabel = String(heritageIndex + 1).padStart(2, '0');
 
+  const nearestMilestone = useMemo(() => {
+    const upcoming = workspaceBucket.milestones
+      .map((m) => ({ milestone: m, daysUntil: computeDaysUntilDate(m.examDate) }))
+      .filter((item) => item.daysUntil >= 0 && item.daysUntil <= 30)
+      .sort((a, b) => a.daysUntil - b.daysUntil);
+    return upcoming[0] ?? null;
+  }, [workspaceBucket.milestones]);
+
+  const pendingTasksCount = useMemo(
+    () => workspaceBucket.tasks.filter((t) => !t.completed).length,
+    [workspaceBucket.tasks],
+  );
+
+  const subjectAnalyticsData = useMemo(
+    () =>
+      subjectCards.map((c) => ({
+        slug: c.subject.slug,
+        code: c.code,
+        title: c.subject.title,
+        color: c.color,
+        completedCount: c.completedCount,
+        lessonCount: c.lessonCount,
+        percent: c.percent,
+      })),
+    [subjectCards],
+  );
+
+  const miniRingRadius = 11;
+  const miniRingCirc = 2 * Math.PI * miniRingRadius;
+  const miniRingFill = (Math.max(0, Math.min(100, totalPercent)) / 100) * miniRingCirc;
+
   return (
     <div
       data-testid="workspace-dashboard"
-      className="min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="min-h-[calc(100vh-3rem)] bg-[#EEF1EE] text-[var(--text-main)] dark:bg-[#0C1210]"
     >
-      <div className="mx-auto max-w-[1320px] space-y-8 px-4 py-5 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1340px] space-y-8 px-4 py-5 sm:px-6 lg:px-8">
         {/* ========================================================================
-            KHỐI A & KHỐI B: HERO THÍCH ỨNG KHUNG GIỜ + 3 THẺ TƯƠNG PHẢN CHẤT LIỆU
+            TẦNG 1: SÂN KHẤU KỂ CHUYỆN CHUYỂN TẦNG MỀM + 3 THẺ BENTO BO TRÒN LỚN
             ======================================================================== */}
         <div className="relative">
-          {/* KHỐI A — KHUNG HERO THÍCH ỨNG THEO KHUNG GIỜ (KHÔNG LẶP THANH TÌM KIẾM) */}
+          {/* KHỐI A — KHUNG HERO THÍCH ỨNG KHUNG GIỜ + SÓNG MÂY CHUYỂN TẦNG MỀM */}
           <section
             aria-label="Không gian Tổng quan"
             data-testid="spatial-hero-frame"
             data-day-period={timeGreeting.period}
-            className="relative overflow-hidden rounded-[28px] border border-[var(--border-hairline)] shadow-[0_24px_60px_-24px_rgba(17,26,24,0.18)]"
+            className="relative overflow-hidden rounded-[28px] border border-black/[0.06] shadow-[0_26px_64px_-26px_rgba(15,45,35,0.28)] dark:border-white/[0.08]"
           >
             <AtmosphericCanopy
               variant="dashboard"
@@ -306,14 +344,43 @@ export function HomePage() {
               enableCelestialOverlay={false}
               enableParallax
               testId="dashboard-atmospheric-canopy"
-              className="min-h-[300px] md:min-h-[360px] lg:min-h-[420px]"
+              className="min-h-[320px] md:min-h-[380px] lg:min-h-[440px]"
             >
-              <div className="flex flex-col justify-between gap-5 p-6 pb-16 sm:p-8 sm:pb-20 md:pb-28 lg:p-11 lg:pb-34">
-                {/* Hàng trên: Nhãn khung giờ thích ứng + ngày hiện tại */}
-                <div className="flex flex-wrap items-center gap-2.5">
+              {/* Chòm sao hình học siêu mảnh góc trên-phải gợi tinh thần Learning Universe */}
+              <svg
+                viewBox="0 0 320 180"
+                fill="none"
+                aria-hidden="true"
+                className="pointer-events-none absolute top-4 right-5 hidden h-40 w-72 opacity-40 md:block"
+              >
+                <path
+                  d="M36 92L112 44L198 76L278 28M112 44L148 128L198 76M148 128L252 132L278 28"
+                  stroke="rgba(255,255,255,0.45)"
+                  strokeWidth="1"
+                  strokeDasharray="3 4"
+                />
+                <circle cx="36" cy="92" r="2.5" fill="#D4AF6A" />
+                <circle cx="112" cy="44" r="3" fill="#FFFFFF" />
+                <circle cx="198" cy="76" r="2.5" fill="#6EE7B7" />
+                <circle cx="148" cy="128" r="2.2" fill="#FFFFFF" />
+                <circle cx="252" cy="132" r="2.5" fill="#D4AF6A" />
+                <circle cx="278" cy="28" r="3.2" fill="#6EE7B7" />
+                <circle
+                  cx="198"
+                  cy="76"
+                  r="18"
+                  stroke="rgba(255,255,255,0.22)"
+                  strokeWidth="0.9"
+                  strokeDasharray="2 3"
+                />
+              </svg>
+
+              <div className="relative z-10 flex flex-col justify-between gap-5 p-6 pb-20 sm:p-8 sm:pb-24 md:pb-32 lg:p-11 lg:pb-38">
+                {/* Hàng trên: Nhãn khung giờ + ngày hôm nay + pill kỳ thi sắp tới (nếu có) */}
+                <div className="flex flex-wrap items-center gap-2">
                   <span
                     data-testid="hero-period-badge"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md"
                   >
                     {renderPeriodIcon(timeGreeting.period)}
                     <span>{timeGreeting.badgeLabel} · Không gian Tổng quan</span>
@@ -324,6 +391,18 @@ export function HomePage() {
                   >
                     {todayFormatted}
                   </time>
+                  {nearestMilestone && (
+                    <a
+                      href="#lich-bieu-hoc-tap"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#F0C87D]/45 bg-[#17332C]/75 px-3 py-1 font-mono text-[10.5px] font-semibold text-[#F5D89B] backdrop-blur-md transition-colors hover:bg-[#17332C]"
+                    >
+                      <Pin className="h-3 w-3 shrink-0" aria-hidden="true" />
+                      <span className="max-w-[190px] truncate">
+                        {formatCountdownLabel(nearestMilestone.daysUntil)} ·{' '}
+                        {nearestMilestone.milestone.title}
+                      </span>
+                    </a>
+                  )}
                 </div>
 
                 {/* Khối lời chào thích ứng theo khung giờ + danh ngôn học thuật */}
@@ -336,7 +415,7 @@ export function HomePage() {
                     {timeGreeting.headline}
                   </h1>
 
-                  <p className="text-xs font-medium text-white/80 sm:text-sm">
+                  <p className="text-xs font-medium text-white/82 sm:text-sm">
                     {timeGreeting.subtitle}
                   </p>
 
@@ -367,11 +446,11 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {/* Hành động trọng tâm duy nhất trên Hero (đã gỡ thanh tìm kiếm trùng lặp) */}
+                {/* Hành động trọng tâm trên Hero */}
                 <div className="flex flex-wrap items-center gap-2.5">
                   <Link
                     to={resumeHref}
-                    className="group/cta inline-flex items-center gap-2 rounded-full bg-[#17332C] px-5 py-2.5 text-xs font-semibold text-white shadow-md ring-1 ring-white/25 transition-all duration-150 hover:bg-[#21463C] active:scale-[0.98]"
+                    className="group/cta inline-flex items-center gap-2 rounded-full bg-[#0F7656] px-5 py-2.5 text-xs font-semibold text-white shadow-[0_12px_28px_-10px_rgba(15,118,86,0.7)] ring-1 ring-white/25 transition-all duration-150 hover:bg-[#138A63] active:scale-[0.98]"
                   >
                     <span>Vào bài học ngay</span>
                     <ArrowRight
@@ -386,22 +465,47 @@ export function HomePage() {
                     <Compass className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
                     <span>Bản đồ học phần</span>
                   </Link>
+                  <a
+                    href="#lich-bieu-hoc-tap"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-white/20"
+                  >
+                    <CalendarDays className="h-3.5 w-3.5 text-[#6EE7B7]" aria-hidden="true" />
+                    <span>Lịch biểu hôm nay</span>
+                  </a>
                 </div>
               </div>
+
+              {/* Dải sóng mây hữu cơ 2 lớp chuyển tầng mềm từ ảnh Hero sang nền Xám-Ngà Sứ */}
+              <svg
+                viewBox="0 0 1440 120"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                data-testid="hero-soft-wave-divider"
+                className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-14 w-full sm:h-18 lg:h-24"
+              >
+                <path
+                  d="M0,62 C220,12 460,104 740,56 C1020,8 1240,86 1440,42 L1440,120 L0,120 Z"
+                  className="fill-[#EEF1EE]/45 dark:fill-[#0C1210]/45"
+                />
+                <path
+                  d="M0,84 C260,36 540,116 840,70 C1100,30 1300,92 1440,62 L1440,120 L0,120 Z"
+                  className="fill-[#EEF1EE] dark:fill-[#0C1210]"
+                />
+              </svg>
             </AtmosphericCanopy>
           </section>
 
-          {/* KHỐI B — HÀNG 3 THẺ TƯƠNG PHẢN CHẤT LIỆU GÁC TRỰC TIẾP LÊN CHÂN ẢNH HERO */}
+          {/* KHỐI B — HÀNG 3 THẺ BENTO BO TRÒN LỚN (26px) GÁC MỀM LÊN DẢI SÓNG HERO */}
           <section
             aria-label="Hành động chính, tiến độ và điều phối nhanh"
             data-testid="three-material-dock"
-            className="relative z-20 -mt-10 grid grid-cols-1 gap-4 px-3 sm:px-6 md:-mt-20 lg:-mt-28 lg:grid-cols-12 lg:px-8"
+            className="relative z-20 -mt-10 grid grid-cols-1 gap-4 px-2 sm:px-5 md:-mt-20 lg:-mt-28 lg:grid-cols-12 lg:px-7"
           >
-            {/* THẺ 1 (5/12) — CHẤT LIỆU SỨ TRẮNG SẠCH: Đang học dở */}
+            {/* THẺ 1 (5/12) — SỨ TRẮNG BO TRÒN LỚN: Đang học dở */}
             <div
               data-testid="dashboard-resume-card"
               data-material="ceramic"
-              className="flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-5 shadow-[0_18px_40px_-15px_rgba(17,26,24,0.12)] lg:col-span-5 dark:bg-[#161E1C]"
+              className="flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_18px_42px_-18px_rgba(16,45,35,0.16)] lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
             >
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -416,7 +520,7 @@ export function HomePage() {
                   {resumeCardStats && (
                     <span
                       className={cn(
-                        'rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold tabular-nums',
+                        'rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-bold tabular-nums',
                         resumeCardStats.pillClass,
                       )}
                     >
@@ -459,12 +563,12 @@ export function HomePage() {
                           )}
                           title={ls.title}
                           className={cn(
-                            'inline-flex h-6 items-center gap-1 rounded-md border px-2 font-mono text-[10.5px] font-semibold transition-all duration-150',
+                            'inline-flex h-6 items-center gap-1 rounded-full border px-2.5 font-mono text-[10.5px] font-semibold transition-all duration-150',
                             isCurrent
                               ? 'border-transparent text-white shadow-2xs'
                               : isDone
-                                ? 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--accent-os)]'
-                                : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)]',
+                                ? 'border-[#0F7656]/25 bg-[#EAF5F0] text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]'
+                                : 'border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)] dark:bg-[#0F1715]',
                           )}
                           style={isCurrent ? { backgroundColor: resumeAccentColor } : undefined}
                         >
@@ -482,7 +586,7 @@ export function HomePage() {
               </div>
 
               <div className="flex items-center justify-between gap-3 border-t border-[var(--border-hairline)] pt-3">
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--border-hairline)]">
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#EAF0ED] dark:bg-[#1D2A26]">
                   <div
                     className="h-full rounded-full transition-[width] duration-300"
                     style={{
@@ -493,7 +597,7 @@ export function HomePage() {
                 </div>
                 <Link
                   to={resumeHref}
-                  className="group/read inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[var(--accent-os)] px-3.5 py-1.5 text-xs font-semibold text-white transition-all duration-150 hover:bg-[var(--accent-primary-hover)] active:scale-[0.98]"
+                  className="group/read inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#0F7656] px-4 py-1.5 text-xs font-semibold text-white shadow-xs transition-all duration-150 hover:bg-[#0D664A] active:scale-[0.98]"
                 >
                   <span>Tiếp tục đọc</span>
                   <ArrowRight
@@ -504,18 +608,18 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* THẺ 2 (4/12) — CHẤT LIỆU KÍNH MỜ XUYÊN ẢNH THẬT: Chỉ số & Pomodoro */}
+            {/* THẺ 2 (4/12) — KÍNH MỜ BO TRÒN LỚN: Chỉ số có vòng tròn tiến độ & Pomodoro */}
             <div
               data-testid="dashboard-metrics-card"
               data-material="frosted-glass"
-              className="flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-white/65 bg-white/68 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_18px_40px_-15px_rgba(17,26,24,0.14)] backdrop-blur-xl backdrop-saturate-150 lg:col-span-4 dark:border-white/12 dark:bg-[#121716]/72"
+              className="flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-white/75 bg-white/76 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_18px_42px_-16px_rgba(16,45,35,0.16)] backdrop-blur-xl backdrop-saturate-150 lg:col-span-4 dark:border-white/12 dark:bg-[#121B18]/78"
             >
               <div className="grid grid-cols-3 gap-2">
-                <div className="rounded-xl border border-white/55 bg-white/60 p-2.5 dark:border-white/10 dark:bg-[#181F1D]/72">
+                <div className="rounded-[18px] border border-white/65 bg-white/70 p-2.5 dark:border-white/10 dark:bg-[#182320]/75">
                   <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Bài hoàn thành
                   </p>
-                  <p className="mt-1 font-mono text-sm font-bold text-[var(--text-main)] tabular-nums">
+                  <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums">
                     {completedCount}
                     <span className="text-[11px] font-normal text-[var(--text-muted)]">
                       /{totalLessons}
@@ -523,23 +627,52 @@ export function HomePage() {
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-white/55 bg-white/60 p-2.5 dark:border-white/10 dark:bg-[#181F1D]/72">
+                <div className="rounded-[18px] border border-white/65 bg-white/70 p-2.5 dark:border-white/10 dark:bg-[#182320]/75">
                   <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Tiến độ tổng
                   </p>
-                  <p className="mt-1 font-mono text-sm font-bold text-[var(--accent-os)] tabular-nums">
-                    {totalPercent}%
-                  </p>
+                  <div className="mt-1 flex items-center gap-1.5">
+                    <svg
+                      viewBox="0 0 28 28"
+                      className="h-6 w-6 shrink-0 -rotate-90"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        cx="14"
+                        cy="14"
+                        r={miniRingRadius}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        className="text-[#DCE6E2] dark:text-[#23322D]"
+                      />
+                      {totalPercent > 0 && (
+                        <circle
+                          cx="14"
+                          cy="14"
+                          r={miniRingRadius}
+                          fill="none"
+                          stroke="#0F7656"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeDasharray={`${miniRingFill} ${miniRingCirc}`}
+                        />
+                      )}
+                    </svg>
+                    <p className="font-mono text-sm font-bold text-[#0F7656] tabular-nums dark:text-[#4AD1A3]">
+                      {totalPercent}%
+                    </p>
+                  </div>
                 </div>
 
                 <Link
                   to={ROUTES.glossary}
-                  className="group rounded-xl border border-white/55 bg-white/60 p-2.5 transition-colors hover:border-[var(--accent-os)]/50 dark:border-white/10 dark:bg-[#181F1D]/72"
+                  className="group rounded-[18px] border border-white/65 bg-white/70 p-2.5 transition-colors hover:border-[#0F7656]/50 dark:border-white/10 dark:bg-[#182320]/75"
                 >
                   <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
                     Kho Thuật ngữ
                   </p>
-                  <p className="mt-1 font-mono text-sm font-bold text-[var(--text-main)] tabular-nums group-hover:text-[var(--accent-os)]">
+                  <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums group-hover:text-[#0F7656] dark:group-hover:text-[#4AD1A3]">
                     {allGlossaryEntries.length}+
                   </p>
                 </Link>
@@ -548,19 +681,18 @@ export function HomePage() {
               {/* Thanh khởi động nhanh Pomodoro */}
               <div
                 data-testid="dashboard-pomodoro-bar"
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/55 bg-white/60 px-3 py-2.5 dark:border-white/10 dark:bg-[#181F1D]/72"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-[18px] border border-white/65 bg-white/75 px-3.5 py-2.5 dark:border-white/10 dark:bg-[#182320]/75"
               >
-                <div className="flex items-center gap-2">
-                  <Hourglass
-                    className={cn(
-                      'h-4 w-4 shrink-0 text-[var(--accent-heritage)]',
-                      isPomodoroRunning && 'animate-pulse',
-                    )}
-                    aria-hidden="true"
-                  />
+                <div className="flex items-center gap-2.5">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">
+                    <Hourglass
+                      className={cn('h-4 w-4 shrink-0', isPomodoroRunning && 'animate-pulse')}
+                      aria-hidden="true"
+                    />
+                  </span>
                   <div className="leading-tight">
                     <p className="text-[11.5px] font-semibold text-[var(--text-main)]">Pomodoro</p>
-                    <p className="font-mono text-[11px] font-bold text-[var(--accent-heritage)] tabular-nums">
+                    <p className="font-mono text-xs font-bold text-[#C27824] tabular-nums dark:text-[#E5A95C]">
                       {isPomodoroActive ? formatMmSs(pomodoro.remainingSeconds) : '25:00'}
                     </p>
                   </div>
@@ -572,7 +704,7 @@ export function HomePage() {
                       <button
                         type="button"
                         onClick={isPomodoroRunning ? pausePomodoro : resumePomodoro}
-                        className="inline-flex cursor-pointer items-center gap-1 rounded-lg bg-[var(--accent-os)] px-2.5 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-95"
+                        className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-95"
                       >
                         {isPomodoroRunning ? (
                           <>
@@ -590,7 +722,7 @@ export function HomePage() {
                         type="button"
                         onClick={resetPomodoro}
                         aria-label="Đặt lại phiên tập trung"
-                        className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+                        className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-white text-[var(--text-secondary)] hover:text-[var(--text-main)] dark:bg-[#141D1A]"
                       >
                         <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                       </button>
@@ -600,7 +732,7 @@ export function HomePage() {
                       type="button"
                       data-testid="dashboard-pomodoro-start"
                       onClick={() => startPomodoro(25, 'Tiêu chuẩn')}
-                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)] active:scale-[0.98]"
+                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#0D664A] active:scale-[0.98]"
                     >
                       <Play className="h-3 w-3" aria-hidden="true" />
                       <span>Tập trung</span>
@@ -610,14 +742,20 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* THẺ 3 (3/12) — CHẤT LIỆU XANH THAN ĐẶC: Điều phối nhanh */}
+            {/* THẺ 3 (3/12) — THẺ NHẤN NGỌC LỤC BẢO RỰC NÉT KIỂU QUIXOTIC: Điều phối nhanh */}
             <div
               data-testid="dashboard-quick-hub-card"
               data-material="deep-emerald"
-              className="flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-white/10 bg-[#17332C] p-5 text-white shadow-[0_18px_40px_-15px_rgba(17,26,24,0.22)] lg:col-span-3 dark:bg-[#1F443A]"
+              className="relative flex min-w-0 flex-col justify-between gap-3.5 overflow-hidden rounded-[26px] border border-white/15 bg-[#17332C] bg-gradient-to-br from-[#127D59] via-[#154C3B] to-[#17332C] p-5 text-white shadow-[0_20px_44px_-16px_rgba(15,82,58,0.42)] lg:col-span-3"
             >
-              <div className="space-y-1.5">
-                <p className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#D4AF6A] uppercase">
+              {/* Vòng sáng trang trí siêu mịn kiểu thẻ Quixotic */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-10 -right-10 h-36 w-36 rounded-full bg-[#4AD1A3]/18 blur-2xl"
+              />
+
+              <div className="relative z-10 space-y-1">
+                <p className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#A7F3D0] uppercase">
                   ĐIỀU PHỐI NHANH
                 </p>
                 <h2 className="font-serif text-lg leading-snug font-semibold text-white">
@@ -625,13 +763,13 @@ export function HomePage() {
                 </h2>
               </div>
 
-              <div className="space-y-2">
+              <div className="relative z-10 grid grid-cols-1 gap-1.5">
                 <Link
                   to={ROUTES.learningSpace}
-                  className="group/q1 flex items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/8 px-3 py-2 text-xs font-medium text-white/95 transition-colors hover:bg-white/16"
+                  className="group/q1 flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
                 >
                   <span className="flex min-w-0 items-center gap-2">
-                    <Compass className="h-3.5 w-3.5 shrink-0 text-[#D4AF6A]" aria-hidden="true" />
+                    <Compass className="h-3.5 w-3.5 shrink-0 text-[#A7F3D0]" aria-hidden="true" />
                     <span className="truncate">Không gian học tập</span>
                   </span>
                   <ArrowUpRight
@@ -641,12 +779,26 @@ export function HomePage() {
                 </Link>
 
                 <Link
+                  to={ROUTES.mathInk}
+                  className="group/qink flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <PenTool className="h-3.5 w-3.5 shrink-0 text-[#A7F3D0]" aria-hidden="true" />
+                    <span className="truncate">Bảng viết</span>
+                  </span>
+                  <ArrowUpRight
+                    className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/qink:translate-x-0.5 group-hover/qink:-translate-y-0.5"
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                <Link
                   to={ROUTES.examBuilder}
-                  className="group/qexam flex items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/8 px-3 py-2 text-xs font-medium text-white/95 transition-colors hover:bg-white/16"
+                  className="group/qexam flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <FilePenLine
-                      className="h-3.5 w-3.5 shrink-0 text-[#D4AF6A]"
+                      className="h-3.5 w-3.5 shrink-0 text-[#F0C87D]"
                       aria-hidden="true"
                     />
                     <span className="truncate">Soạn đề</span>
@@ -659,10 +811,10 @@ export function HomePage() {
 
                 <Link
                   to={ROUTES.sanctuaryTab('bida')}
-                  className="group/q2 flex items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/8 px-3 py-2 text-xs font-medium text-white/95 transition-colors hover:bg-white/16"
+                  className="group/q2 flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
                 >
                   <span className="flex min-w-0 items-center gap-2">
-                    <Gamepad2 className="h-3.5 w-3.5 shrink-0 text-[#D4AF6A]" aria-hidden="true" />
+                    <Gamepad2 className="h-3.5 w-3.5 shrink-0 text-[#F0C87D]" aria-hidden="true" />
                     <span className="truncate">Sảnh Bida 8-Ball</span>
                   </span>
                   <ArrowUpRight
@@ -676,16 +828,37 @@ export function HomePage() {
         </div>
 
         {/* ========================================================================
-            KHỐI C — 4 THẺ HỌC PHẦN TOÁN HỌC (SVG VECTOR SIÊU MẢNH + BÀI GẦN NHẤT)
+            TẦNG 2 — BIỂU ĐỒ CỘT BO TRÒN + VÒNG TRÒN TIẾN ĐỘ (7/12) & KỆ STUDIO GẦN ĐÂY (5/12)
+            ======================================================================== */}
+        <section
+          aria-label="Phân tích nhịp học trực quan và Studio gần đây"
+          className="grid grid-cols-1 gap-5 lg:grid-cols-12"
+        >
+          <div className="lg:col-span-7">
+            <DashboardAnalyticsCard
+              metrics={activityMetrics}
+              subjectProgress={subjectAnalyticsData}
+              totalPercent={totalPercent}
+              completedCount={completedCount}
+              totalLessons={totalLessons}
+            />
+          </div>
+          <div className="lg:col-span-5">
+            <RecentStudioShelf />
+          </div>
+        </section>
+
+        {/* ========================================================================
+            TẦNG 3 — 4 THẺ HỌC PHẦN TOÁN HỌC BO TRÒN MỀM (SVG VECTOR + VÒNG TIẾN ĐỘ)
             ======================================================================== */}
         <section aria-label="Bốn học phần trọng tâm" className="space-y-3.5">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3 px-1">
             <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
               Học phần trọng tâm
             </h2>
             <Link
               to={ROUTES.learningSpace}
-              className="group/all inline-flex items-center gap-1 font-mono text-[11px] font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-main)]"
+              className="group/all inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 font-mono text-[11px] font-semibold text-[#0F7656] shadow-2xs transition-colors hover:bg-[#EAF5F0] dark:bg-[#141D1A] dark:text-[#4AD1A3]"
             >
               <span>Mở bản đồ đầy đủ</span>
               <ArrowRight
@@ -719,35 +892,54 @@ export function HomePage() {
         </section>
 
         {/* ========================================================================
-            KHỐI D — KHÔNG GIAN CÁ NHÂN HÓA THEO TÀI KHOẢN:
-            LỊCH BIỂU + MỐC KỲ THI + TO-DO LIST (8/12) | STREAK + NHIỆT ĐỒ + MỤC TIÊU TUẦN (4/12)
+            TẦNG 4 — KHÔNG GIAN LỊCH BIỂU & NHỊP HỌC RIÊNG RỘNG TRỌN MÀN HÌNH (12/12)
             ======================================================================== */}
-        <section aria-label="Kế hoạch cá nhân hóa và nhịp chuyên cần" className="space-y-3.5">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-              Lịch biểu & Nhịp học cá nhân
-            </h2>
+        <section
+          id="lich-bieu-hoc-tap"
+          aria-label="Kế hoạch cá nhân hóa và nhịp chuyên cần"
+          data-testid="calendar-studio-section"
+          className="scroll-mt-16 space-y-4"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 px-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#0F7656] shadow-2xs dark:bg-[#141D1A] dark:text-[#4AD1A3]">
+                <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+              <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                Không gian Lịch biểu & Nhịp học cá nhân
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[var(--text-secondary)]">
+              <span className="rounded-full bg-white px-3 py-1 shadow-2xs dark:bg-[#141D1A]">
+                <strong className="text-[#0F7656] dark:text-[#4AD1A3]">{pendingTasksCount}</strong>{' '}
+                việc đang chờ
+              </span>
+              <span className="rounded-full bg-white px-3 py-1 shadow-2xs dark:bg-[#141D1A]">
+                Chuỗi{' '}
+                <strong className="text-[var(--accent-heritage)]">
+                  {activityMetrics.currentStreak} ngày
+                </strong>
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-            <div className="lg:col-span-8">
-              <StudyPlannerWidget activityByDate={activityMetrics.activityByDate} />
-            </div>
-            <div className="lg:col-span-4">
-              <StudyRhythmCard metrics={activityMetrics} />
-            </div>
-          </div>
+          {/* Lịch biểu + Kế hoạch trải rộng trọn 12 cột thoáng đãng như 1 màn hình lịch chuyên dụng */}
+          <StudyPlannerWidget activityByDate={activityMetrics.activityByDate} />
+
+          {/* Dải ngang Nhịp chuyên cần + Nhiệt đồ 28 ngày + Mục tiêu tuần nối liền bên dưới */}
+          <StudyRhythmCard metrics={activityMetrics} layout="horizontal" />
         </section>
 
         {/* ========================================================================
-            KHỐI E — DI SẢN LIÊN HỆ TOÁN HỌC + THUẬT NGỮ FLASHCARD & BANNER SẢNH THƯ GIÃN
+            TẦNG 5 — DI SẢN LIÊN HỆ TOÁN HỌC + THUẬT NGỮ FLASHCARD & BANNER SẢNH THƯ GIÃN
             ======================================================================== */}
         <section aria-label="Di sản học thuật, thuật ngữ và Sảnh Thư Giãn" className="space-y-5">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
             {/* Cột Trái (7/12) — Di sản trong ngày + Dòng liên hệ Toán học / Sư phạm */}
             <div
               data-testid="dashboard-heritage-card"
-              className="group/heritage flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 lg:col-span-7"
+              className="group/heritage flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-7 dark:border-white/[0.07] dark:bg-[#141D1A]"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
@@ -764,7 +956,7 @@ export function HomePage() {
                   onClick={handleShuffleHeritage}
                   aria-label="Đổi tác phẩm di sản ngẫu nhiên"
                   title="Đổi tác phẩm khác"
-                  className="group/hbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--text-main)] active:scale-95"
+                  className="group/hbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--text-main)] active:scale-95 dark:bg-[#0F1715]"
                 >
                   <RefreshCw
                     className="h-3.5 w-3.5 transition-transform duration-300 group-hover/hbtn:rotate-180"
@@ -774,8 +966,8 @@ export function HomePage() {
               </div>
 
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                <div className="relative shrink-0 pb-2 sm:w-48">
-                  <div className="h-36 w-full overflow-hidden rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-shell)]">
+                <div className="relative shrink-0 pb-2 sm:w-52">
+                  <div className="h-40 w-full overflow-hidden rounded-[20px] border border-black/[0.06] bg-[var(--bg-shell)] shadow-xs dark:border-white/[0.08]">
                     {isHeritageFallback ? (
                       <HeritageFallbackIllustration artwork={currentHeritage} compact />
                     ) : (
@@ -791,7 +983,7 @@ export function HomePage() {
                   </div>
                   <div
                     data-testid="heritage-overlap-badge"
-                    className="absolute right-2.5 bottom-0 inline-flex items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1 font-mono text-[10px] font-semibold text-[var(--text-main)] shadow-md"
+                    className="absolute right-2.5 bottom-0 inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white px-3 py-1 font-mono text-[10px] font-semibold text-[var(--text-main)] shadow-md dark:border-white/[0.1] dark:bg-[#18221F]"
                   >
                     <span className="text-[var(--accent-heritage)] tabular-nums">
                       {heritageNumberLabel}/{HERITAGE_ARTWORKS.length}
@@ -825,17 +1017,17 @@ export function HomePage() {
                   {/* Dòng liên hệ Toán học / Sư phạm gắn chặt với 4 học phần */}
                   <div
                     data-testid="heritage-math-connection"
-                    className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 text-[11.5px] leading-relaxed text-[var(--text-secondary)]"
+                    className="rounded-[18px] bg-[#F6F8F7] px-3.5 py-2.5 text-[11.5px] leading-relaxed text-[var(--text-secondary)] dark:bg-[#0F1715]"
                   >
                     <div className="mb-1 flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[var(--accent-os)] uppercase">
+                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[#0F7656] uppercase dark:text-[#4AD1A3]">
                         <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
                         <span>Liên hệ học phần</span>
                       </span>
                       <Link
                         to={ROUTES.subjectOverview(currentHeritageMath.subjectSlug)}
                         className={cn(
-                          'rounded border px-1.5 py-0.5 font-mono text-[9.5px] font-bold transition-opacity hover:opacity-85',
+                          'rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold transition-opacity hover:opacity-85',
                           currentHeritageSubjectMeta.pillClass,
                         )}
                       >
@@ -867,11 +1059,11 @@ export function HomePage() {
             )}
           </div>
 
-          {/* Hàng 2 — Banner Đáy Sảnh Thư Giãn Xanh Rừng */}
+          {/* Hàng 2 — Banner Đáy Sảnh Thư Giãn Bo Tròn Mềm Ngọc Lục Bảo */}
           <div
             data-testid="dashboard-sanctuary-banner"
             style={{ backgroundImage: SANCTUARY_BANNER_ASSET.fallbackGradient }}
-            className="relative min-h-[180px] overflow-hidden rounded-[24px] border border-white/10 bg-[#17332C] text-white shadow-[0_20px_50px_-20px_rgba(17,26,24,0.28)]"
+            className="relative min-h-[188px] overflow-hidden rounded-[28px] border border-white/10 bg-[#17332C] text-white shadow-[0_24px_56px_-22px_rgba(15,45,35,0.34)]"
           >
             <div
               aria-hidden="true"
@@ -891,7 +1083,7 @@ export function HomePage() {
               <div
                 style={{
                   background:
-                    'linear-gradient(90deg, rgba(23, 51, 44, 0.25) 0%, rgba(23, 51, 44, 0.72) 62%, #17332C 100%)',
+                    'linear-gradient(90deg, rgba(18, 92, 68, 0.25) 0%, rgba(23, 51, 44, 0.78) 62%, #17332C 100%)',
                 }}
                 className="absolute inset-0"
               />
@@ -899,13 +1091,13 @@ export function HomePage() {
 
             <div className="relative z-10 flex flex-col justify-between gap-5 p-6 sm:p-8 md:pl-[44%] lg:flex-row lg:items-center">
               <div className="max-w-xl space-y-2">
-                <p className="font-mono text-[10.5px] font-semibold tracking-[0.16em] text-[#D4AF6A] uppercase">
+                <p className="font-mono text-[10.5px] font-semibold tracking-[0.16em] text-[#A7F3D0] uppercase">
                   SẢNH THƯ GIÃN · POMODORO BREAK
                 </p>
                 <h2 className="font-serif text-xl leading-snug font-semibold text-white sm:text-2xl">
                   Nghỉ nhịp 5 phút giữa các phiên chứng minh
                 </h2>
-                <p className="text-xs leading-relaxed text-white/80 sm:text-[13px]">
+                <p className="text-xs leading-relaxed text-white/82 sm:text-[13px]">
                   Thư giãn nhẹ giữa các khối lý thuyết với Bảo tàng 40 Di sản Học thuật và bàn Bida
                   8-Ball vật lý 120fps chuẩn luật WPA.
                 </p>
@@ -914,9 +1106,9 @@ export function HomePage() {
               <div className="flex shrink-0 flex-wrap items-center gap-2.5">
                 <Link
                   to={ROUTES.sanctuaryTab('bida')}
-                  className="group/sbida inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-[#17332C] shadow-sm transition-all duration-150 hover:bg-[#F3F5F6] active:scale-[0.98]"
+                  className="group/sbida inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-[#17332C] shadow-sm transition-all duration-150 hover:bg-[#EAF5F0] active:scale-[0.98]"
                 >
-                  <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  <Gamepad2 className="h-3.5 w-3.5 text-[#0F7656]" aria-hidden="true" />
                   <span>Mở bàn Bida 8-Ball</span>
                   <ArrowRight
                     className="h-3.5 w-3.5 transition-transform duration-150 group-hover/sbida:translate-x-0.5"
@@ -928,7 +1120,7 @@ export function HomePage() {
                   to={ROUTES.sanctuaryTab('di-san')}
                   className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/20"
                 >
-                  <Landmark className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
+                  <Landmark className="h-3.5 w-3.5 text-[#F0C87D]" aria-hidden="true" />
                   <span>Bảo tàng 40 Di sản</span>
                 </Link>
               </div>

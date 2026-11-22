@@ -369,10 +369,10 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
     <section
       aria-label="Lịch biểu học tập, mốc kỳ thi và danh sách việc cần làm"
       data-testid="study-planner-widget"
-      className="grid min-w-0 grid-cols-1 overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] shadow-[0_10px_28px_-18px_rgba(17,26,24,0.14)] lg:grid-cols-12 dark:bg-[#161E1C]"
+      className="grid min-w-0 grid-cols-1 overflow-hidden rounded-[28px] border border-black/[0.05] bg-white shadow-[0_16px_42px_-22px_rgba(16,45,35,0.16)] lg:grid-cols-12 dark:border-white/[0.07] dark:bg-[#141D1A]"
     >
-      {/* CỘT TRÁI (5/12): MINI CALENDAR + MỐC ĐẾM NGƯỢC KỲ THI */}
-      <div className="flex flex-col justify-between gap-4 border-b border-[var(--border-hairline)] bg-[var(--bg-surface)]/65 p-5 lg:col-span-5 lg:border-r lg:border-b-0">
+      {/* CỘT TRÁI (5/12): LỊCH THÁNG RỘNG RÃI + MỐC ĐẾM NGƯỢC KỲ THI */}
+      <div className="flex flex-col justify-between gap-5 border-b border-[var(--border-hairline)] bg-[#F7FAF8] p-5 sm:p-6 lg:col-span-5 lg:border-r lg:border-b-0 dark:bg-[#101816]">
         <div className="space-y-3">
           {/* Header tháng */}
           <div className="flex items-center justify-between gap-2">
@@ -423,7 +423,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
               ))}
             </div>
 
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-1.5">
               {monthCells.map((cell) => {
                 const isToday = cell.dateKey === todayKey;
                 const isSelected = cell.dateKey === selectedDateKey;
@@ -439,13 +439,13 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
                     onClick={() => handleSelectDay(cell.dateKey)}
                     aria-pressed={isSelected}
                     className={cn(
-                      'relative flex h-8 cursor-pointer flex-col items-center justify-center rounded-lg font-mono text-[11px] tabular-nums transition-colors',
+                      'relative flex h-10 cursor-pointer flex-col items-center justify-center rounded-xl font-mono text-xs tabular-nums transition-all duration-150',
                       !cell.inCurrentMonth && 'opacity-35',
                       isSelected
-                        ? 'bg-[var(--accent-os)] font-bold text-white shadow-2xs'
+                        ? 'bg-[#0F7656] font-bold text-white shadow-[0_8px_18px_-6px_rgba(15,118,86,0.55)]'
                         : isToday
-                          ? 'border border-[var(--accent-os)]/50 bg-[var(--bg-workspace)] font-bold text-[var(--accent-os)]'
-                          : 'text-[var(--text-main)] hover:bg-[var(--bg-workspace)]',
+                          ? 'border border-[#0F7656]/55 bg-white font-bold text-[#0F7656] shadow-2xs dark:bg-[#141D1A] dark:text-[#4AD1A3]'
+                          : 'text-[var(--text-main)] hover:bg-white dark:hover:bg-[#192521]',
                     )}
                   >
                     <span>{cell.dayNumber}</span>
@@ -675,7 +675,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
       </div>
 
       {/* CỘT PHẢI (7/12): DANH SÁCH TO-DO LIST HỌC THUẬT CÁ NHÂN HÓA */}
-      <div className="flex min-w-0 flex-col justify-between gap-4 p-5 lg:col-span-7">
+      <div className="flex min-w-0 flex-col justify-between gap-4 p-5 sm:p-6 lg:col-span-7">
         <div className="space-y-3.5">
           {/* Header + Trạng thái tài khoản cá nhân hóa */}
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -741,7 +741,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
               <button
                 type="submit"
                 data-testid="todo-add-submit"
-                className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg bg-[var(--accent-os)] px-3.5 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-[0.98]"
+                className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-4 py-2 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#0D664A] active:scale-[0.98]"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Thêm</span>
@@ -873,10 +873,10 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
                       setFilterMode(tab.id);
                     }}
                     className={cn(
-                      'cursor-pointer rounded-lg px-2.5 py-1 font-mono text-[11px] font-medium transition-colors',
+                      'cursor-pointer rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-colors',
                       isActive
-                        ? 'bg-[var(--accent-os)] text-white'
-                        : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                        ? 'bg-[#0F7656] text-white'
+                        : 'bg-[#F2F6F4] text-[var(--text-secondary)] hover:text-[var(--text-main)] dark:bg-[#0F1715]',
                     )}
                   >
                     {tab.label}
@@ -889,7 +889,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
               <button
                 type="button"
                 onClick={() => setSelectedDateKey(null)}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-[var(--accent-os)]/40 bg-[var(--bg-surface)] px-2.5 py-0.5 font-mono text-[10.5px] font-semibold text-[var(--accent-os)]"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-[#0F7656]/40 bg-[#EAF5F0] px-2.5 py-0.5 font-mono text-[10.5px] font-semibold text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]"
               >
                 <span>Ngày {formatShortVietnameseDate(selectedDateKey)}</span>
                 <X className="h-3 w-3" aria-hidden="true" />
@@ -900,7 +900,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
           {/* Danh sách nhiệm vụ */}
           <div
             data-testid="todo-list-container"
-            className="max-h-[260px] space-y-2 overflow-y-auto pr-0.5"
+            className="max-h-[340px] space-y-2 overflow-y-auto pr-0.5"
           >
             {filteredTasks.length === 0 ? (
               <div className="rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-surface)]/50 px-4 py-6 text-center">

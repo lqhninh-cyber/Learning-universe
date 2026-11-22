@@ -192,30 +192,36 @@ export const SubjectMathCard: FC<SubjectMathCardProps> = ({
   overviewHref,
   recentLesson,
 }) => {
+  const ringRadius = 14;
+  const ringCirc = 2 * Math.PI * ringRadius;
+  const ringFill = (Math.max(0, Math.min(100, percent)) / 100) * ringCirc;
+
   return (
     <article
       data-subject-card-style="math-vector"
-      className="group/card relative flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] shadow-[0_8px_24px_-16px_rgba(17,26,24,0.14)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:shadow-[0_16px_34px_-18px_rgba(17,26,24,0.2)] dark:bg-[#161E1C]"
+      className="group/card relative flex min-w-0 flex-col justify-between overflow-hidden rounded-[26px] border border-black/[0.05] bg-white shadow-[0_12px_32px_-20px_rgba(16,45,35,0.16)] transition-all duration-200 hover:-translate-y-1 hover:border-black/[0.1] hover:shadow-[0_20px_42px_-22px_rgba(16,45,35,0.22)] dark:border-white/[0.07] dark:bg-[#141D1A] dark:hover:border-white/[0.14]"
     >
-      {/* Dải màu định danh siêu mảnh sát mép trên theo học phần */}
-      <div
-        aria-hidden="true"
-        className="h-[3px] w-full shrink-0"
-        style={{ backgroundColor: color }}
-      />
-
       {/* Phần thân chính dẫn tới trang tổng quan học phần */}
       <Link
         to={overviewHref}
         data-testid={`dashboard-subject-card-${slug}`}
-        className="relative flex flex-1 flex-col justify-between gap-4 p-4 focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none focus-visible:ring-inset"
+        className="relative flex flex-1 flex-col justify-between gap-4 p-5 focus-visible:ring-2 focus-visible:ring-[#0F7656] focus-visible:outline-none focus-visible:ring-inset"
       >
+        {/* Vầng sáng dịu nhẹ theo màu học phần góc trên phải */}
+        <div
+          aria-hidden="true"
+          style={{
+            background: `radial-gradient(circle at 88% 12%, ${color}1A 0%, transparent 62%)`,
+          }}
+          className="pointer-events-none absolute inset-0 opacity-85 transition-opacity duration-300 group-hover/card:opacity-100"
+        />
+
         <SubjectMathWatermark slug={slug} color={color} />
 
         <div className="relative z-10 flex items-center justify-between gap-2">
           <span
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 font-mono text-[10.5px] font-bold tracking-wide',
+              'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px] font-bold tracking-wide',
               pillClass,
             )}
           >
@@ -227,14 +233,41 @@ export const SubjectMathCard: FC<SubjectMathCardProps> = ({
             <span>{code}</span>
           </span>
 
-          <span className="font-mono text-[11px] font-semibold text-[var(--text-secondary)] tabular-nums">
-            {percent}%
-          </span>
+          {/* Vòng tròn tiến độ mini kiểu Travelie */}
+          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center">
+            <svg viewBox="0 0 36 36" className="h-full w-full -rotate-90" aria-hidden="true">
+              <circle
+                cx="18"
+                cy="18"
+                r={ringRadius}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.2"
+                className="text-[#E6ECE9] dark:text-[#1F2C28]"
+              />
+              {percent > 0 && (
+                <circle
+                  cx="18"
+                  cy="18"
+                  r={ringRadius}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth="3.2"
+                  strokeLinecap="round"
+                  strokeDasharray={`${ringFill} ${ringCirc}`}
+                  className="transition-all duration-500"
+                />
+              )}
+            </svg>
+            <span className="absolute font-mono text-[9px] font-bold text-[var(--text-main)] tabular-nums">
+              {percent}%
+            </span>
+          </div>
         </div>
 
         <div className="relative z-10 space-y-2.5">
           <div>
-            <h3 className="font-serif text-[17px] leading-snug font-semibold text-[var(--text-main)] transition-colors group-hover/card:text-[var(--accent-os)]">
+            <h3 className="font-serif text-[17.5px] leading-snug font-semibold text-[var(--text-main)] transition-colors group-hover/card:text-[#0F7656] dark:group-hover/card:text-[#4AD1A3]">
               {title}
             </h3>
             <p className="mt-1 font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
@@ -242,7 +275,7 @@ export const SubjectMathCard: FC<SubjectMathCardProps> = ({
             </p>
           </div>
 
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#EAF0ED] dark:bg-[#1E2B27]">
             <div
               className="h-full rounded-full transition-[width] duration-300"
               style={{
@@ -256,34 +289,36 @@ export const SubjectMathCard: FC<SubjectMathCardProps> = ({
 
       {/* Dải cá nhân hóa đáy thẻ: Bài gần nhất của riêng học phần này */}
       {recentLesson && (
-        <Link
-          to={recentLesson.to}
-          data-testid={`dashboard-subject-recent-${slug}`}
-          title={recentLesson.title}
-          className="group/recent flex items-center justify-between gap-2 border-t border-[var(--border-hairline)] bg-[var(--bg-surface)]/80 px-4 py-2.5 text-xs transition-colors hover:bg-[var(--bg-surface)] focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none focus-visible:ring-inset"
-        >
-          <span className="flex min-w-0 items-center gap-1.5">
-            {recentLesson.isResuming ? (
-              <PlayCircle className="h-3.5 w-3.5 shrink-0" style={{ color }} aria-hidden="true" />
-            ) : (
-              <BookOpenCheck
-                className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]"
-                aria-hidden="true"
-              />
-            )}
-            <span className="truncate text-[11.5px] text-[var(--text-secondary)] group-hover/recent:text-[var(--text-main)]">
-              <strong className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)]">
-                {recentLesson.isResuming ? 'Gần nhất' : 'Bắt đầu'}:{' '}
-              </strong>
-              {recentLesson.label}
+        <div className="px-3 pb-3">
+          <Link
+            to={recentLesson.to}
+            data-testid={`dashboard-subject-recent-${slug}`}
+            title={recentLesson.title}
+            className="group/recent flex items-center justify-between gap-2 rounded-2xl bg-[#F4F7F5] px-3.5 py-2.5 text-xs transition-colors hover:bg-[#EBF4F0] focus-visible:ring-2 focus-visible:ring-[#0F7656] focus-visible:outline-none dark:bg-[#0F1715] dark:hover:bg-[#142520]"
+          >
+            <span className="flex min-w-0 items-center gap-1.5">
+              {recentLesson.isResuming ? (
+                <PlayCircle className="h-3.5 w-3.5 shrink-0" style={{ color }} aria-hidden="true" />
+              ) : (
+                <BookOpenCheck
+                  className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]"
+                  aria-hidden="true"
+                />
+              )}
+              <span className="truncate text-[11.5px] text-[var(--text-secondary)] group-hover/recent:text-[var(--text-main)]">
+                <strong className="font-mono text-[10.5px] font-semibold text-[var(--text-muted)]">
+                  {recentLesson.isResuming ? 'Gần nhất' : 'Bắt đầu'}:{' '}
+                </strong>
+                {recentLesson.label}
+              </span>
             </span>
-          </span>
 
-          <ArrowRight
-            className="h-3 w-3 shrink-0 text-[var(--text-muted)] transition-transform duration-150 group-hover/recent:translate-x-0.5 group-hover/recent:text-[var(--text-main)]"
-            aria-hidden="true"
-          />
-        </Link>
+            <ArrowRight
+              className="h-3 w-3 shrink-0 text-[var(--text-muted)] transition-transform duration-150 group-hover/recent:translate-x-0.5 group-hover/recent:text-[var(--text-main)]"
+              aria-hidden="true"
+            />
+          </Link>
+        </div>
       )}
     </article>
   );

@@ -9,16 +9,17 @@ import { cn } from '@/shared/lib/cn';
 
 export interface StudyRhythmCardProps {
   readonly metrics: StudyActivityMetrics;
+  readonly layout?: 'vertical' | 'horizontal';
 }
 
 const HEATMAP_LEVEL_CLASSES: Readonly<Record<0 | 1 | 2 | 3, string>> = {
-  0: 'bg-[var(--bg-shell)] border border-[var(--border-hairline)]',
-  1: 'bg-[#C4E1D5] dark:bg-[#193B30]',
-  2: 'bg-[#5BA88E] dark:bg-[#2A6F59]',
-  3: 'bg-[#17332C] dark:bg-[#52B394]',
+  0: 'bg-[#E9EFEC] dark:bg-[#1A2421]',
+  1: 'bg-[#A7DEC8] dark:bg-[#193B30]',
+  2: 'bg-[#3AA981] dark:bg-[#2A6F59]',
+  3: 'bg-[#0F7656] dark:bg-[#4AD1A3]',
 };
 
-export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics }) => {
+export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics, layout = 'vertical' }) => {
   const bucket = useWorkspaceStore(selectActiveWorkspaceBucket);
   const updateWeeklyGoal = useWorkspaceStore((state) => state.updateWeeklyGoal);
 
@@ -54,18 +55,25 @@ export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics }) => {
     setIsEditingGoal(false);
   };
 
+  const isHorizontal = layout === 'horizontal';
+
   return (
     <section
       aria-label="Chuỗi ngày học, bản đồ nhiệt chuyên cần và mục tiêu tuần"
       data-testid="study-rhythm-card"
-      className="flex min-w-0 flex-col justify-between gap-4 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-5 shadow-[0_10px_28px_-18px_rgba(17,26,24,0.14)] dark:bg-[#161E1C]"
+      className={cn(
+        'min-w-0 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]',
+        isHorizontal
+          ? 'grid grid-cols-1 items-center gap-5 lg:grid-cols-12'
+          : 'flex flex-col justify-between gap-4',
+      )}
     >
       {/* 1. CHUỖI NGÀY HỌC (STREAK) */}
-      <div className="space-y-3">
+      <div className={cn('space-y-3', isHorizontal && 'lg:col-span-3')}>
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--accent-heritage)]">
-              <Flame className="h-4 w-4" aria-hidden="true" />
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">
+              <Flame className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
               <p className="font-mono text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
@@ -73,7 +81,7 @@ export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics }) => {
               </p>
               <p
                 data-testid="study-streak-value"
-                className="font-serif text-xl leading-tight font-semibold text-[var(--text-main)] tabular-nums"
+                className="font-serif text-2xl leading-tight font-semibold text-[var(--text-main)] tabular-nums"
               >
                 {metrics.currentStreak}{' '}
                 <span className="font-sans text-xs font-normal text-[var(--text-secondary)]">
@@ -83,25 +91,67 @@ export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics }) => {
             </div>
           </div>
 
-          <span className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)] tabular-nums">
+          <span className="rounded-full bg-[#F2F6F4] px-2.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)] tabular-nums dark:bg-[#0F1715]">
             Kỷ lục: {metrics.bestStreak}d
           </span>
         </div>
 
-        {/* 2. BẢN ĐỒ NHIỆT CHUYÊN CẦN MINI 28 NGÀY (4 TUẦN × 7 NGÀY) */}
-        <div className="space-y-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)]/75 p-3">
+        {!isHorizontal && (
+          <div className="space-y-1.5 rounded-[18px] bg-[#F6F8F7] p-3 dark:bg-[#0F1715]">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                Nhiệt đồ 28 ngày
+              </span>
+              <span className="font-mono text-[10px] text-[var(--text-secondary)] tabular-nums">
+                {metrics.activeDaysLast28}/28 ngày có học
+              </span>
+            </div>
+
+            <div
+              data-testid="study-activity-heatmap"
+              className="grid grid-cols-7 gap-1 sm:grid-cols-14"
+              aria-label="Lưới 28 ngày hoạt động học tập gần nhất"
+            >
+              {metrics.heatmapDays.map((cell) => (
+                <span
+                  key={cell.dateKey}
+                  data-level={cell.level}
+                  title={`${cell.shortLabel}: ${cell.count} hoạt động`}
+                  className={cn(
+                    'aspect-square w-full rounded-[5px] transition-transform duration-150 hover:scale-110',
+                    HEATMAP_LEVEL_CLASSES[cell.level],
+                  )}
+                />
+              ))}
+            </div>
+
+            <div className="flex items-center justify-end gap-1 pt-0.5 font-mono text-[9.5px] text-[var(--text-muted)]">
+              <span>Ít</span>
+              <span className="h-2.5 w-2.5 rounded-[3px] bg-[#E9EFEC] dark:bg-[#1A2421]" />
+              <span className="h-2.5 w-2.5 rounded-[3px] bg-[#A7DEC8] dark:bg-[#193B30]" />
+              <span className="h-2.5 w-2.5 rounded-[3px] bg-[#3AA981] dark:bg-[#2A6F59]" />
+              <span className="h-2.5 w-2.5 rounded-[3px] bg-[#0F7656] dark:bg-[#4AD1A3]" />
+              <span>Nhiều</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 2. BẢN ĐỒ NHIỆT 28 NGÀY (Khi ở chế độ nằm ngang toàn màn hình lịch) */}
+      {isHorizontal && (
+        <div className="space-y-2 rounded-[20px] bg-[#F6F8F7] p-3.5 lg:col-span-5 dark:bg-[#0F1715]">
           <div className="flex items-center justify-between gap-2">
             <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-              Nhiệt đồ 28 ngày
+              Nhiệt đồ chuyên cần 28 ngày
             </span>
-            <span className="font-mono text-[10px] text-[var(--text-secondary)] tabular-nums">
+            <span className="font-mono text-[10.5px] font-semibold text-[#0F7656] tabular-nums dark:text-[#4AD1A3]">
               {metrics.activeDaysLast28}/28 ngày có học
             </span>
           </div>
 
           <div
             data-testid="study-activity-heatmap"
-            className="grid grid-cols-7 gap-1 sm:grid-cols-14"
+            className="grid grid-cols-14 gap-1.5"
             aria-label="Lưới 28 ngày hoạt động học tập gần nhất"
           >
             {metrics.heatmapDays.map((cell) => (
@@ -110,28 +160,33 @@ export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics }) => {
                 data-level={cell.level}
                 title={`${cell.shortLabel}: ${cell.count} hoạt động`}
                 className={cn(
-                  'aspect-square w-full rounded-[4px] transition-transform duration-150 hover:scale-110',
+                  'aspect-square w-full rounded-[6px] transition-transform duration-150 hover:scale-110',
                   HEATMAP_LEVEL_CLASSES[cell.level],
                 )}
               />
             ))}
           </div>
 
-          <div className="flex items-center justify-end gap-1 pt-0.5 font-mono text-[9.5px] text-[var(--text-muted)]">
+          <div className="flex items-center justify-end gap-1 font-mono text-[9.5px] text-[var(--text-muted)]">
             <span>Ít</span>
-            <span className="h-2.5 w-2.5 rounded-[3px] border border-[var(--border-hairline)] bg-[var(--bg-shell)]" />
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#C4E1D5] dark:bg-[#193B30]" />
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#5BA88E] dark:bg-[#2A6F59]" />
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#17332C] dark:bg-[#52B394]" />
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#E9EFEC] dark:bg-[#1A2421]" />
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#A7DEC8] dark:bg-[#193B30]" />
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#3AA981] dark:bg-[#2A6F59]" />
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#0F7656] dark:bg-[#4AD1A3]" />
             <span>Nhiều</span>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 3. MỤC TIÊU HỌC TẬP THEO TUẦN */}
       <div
         data-testid="weekly-study-goal-card"
-        className="space-y-3 border-t border-[var(--border-hairline)] pt-3.5"
+        className={cn(
+          'space-y-3',
+          isHorizontal
+            ? 'lg:col-span-4 lg:border-l lg:border-[var(--border-hairline)] lg:pl-5'
+            : 'border-t border-[var(--border-hairline)] pt-3.5',
+        )}
       >
         <div className="flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
