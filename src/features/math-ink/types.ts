@@ -32,7 +32,66 @@ export type ShapeToolKind =
   | 'pentagon'
   | 'hexagon';
 
-export type InkActiveTool = 'pen' | 'shape' | 'eraser' | 'select' | 'text';
+export type InkActiveTool = 'pen' | 'shape' | 'eraser' | 'select' | 'text' | 'stamp' | 'laser';
+
+export type VariationTableMode = 'variation' | 'sign';
+export type VariationMarkerKind = 'zero' | 'double-bar' | 'bar' | 'none';
+export type VariationSignValue = '+' | '-' | '0';
+
+export interface InkVariationTableItem {
+  readonly id: string;
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly mode: VariationTableMode;
+  readonly color: string;
+  readonly xLabel: string;
+  readonly derivativeLabel: string;
+  readonly valueLabel: string;
+  /** Các mốc giá trị trên dòng x (tối thiểu 2 mốc, VD: ['-∞', '-1', '1', '+∞']) */
+  readonly xPoints: readonly string[];
+  /** Ký hiệu tại các mốc bên trong (chỉ số 1..xPoints.length-2): 0, ||, |, hoặc trống */
+  readonly pointMarkers: readonly VariationMarkerKind[];
+  /** Dấu trên từng khoảng giữa hai mốc liên tiếp (độ dài = xPoints.length - 1) */
+  readonly intervalSigns: readonly VariationSignValue[];
+  /** Giá trị trên dòng y tại mỗi mốc (độ dài = xPoints.length; với || có thể ghi dạng 'trái | phải', VD: '+∞ | -∞') */
+  readonly yValues: readonly string[];
+}
+
+export type GeometryStampKind =
+  | 'right-angle'
+  | 'tick-1'
+  | 'tick-2'
+  | 'tick-3'
+  | 'angle-arc-1'
+  | 'angle-arc-2'
+  | 'parallel-1'
+  | 'parallel-2'
+  | 'dot-point';
+
+export interface InkStampItem {
+  readonly id: string;
+  readonly kind: GeometryStampKind;
+  readonly x: number;
+  readonly y: number;
+  readonly size: number;
+  readonly rotationDeg: number;
+  readonly color: string;
+  readonly lineWidth: number;
+  readonly label?: string;
+}
+
+export type WorksheetFitMode = 'contain' | 'top-half' | 'full-width';
+
+export interface InkWorksheetBackground {
+  readonly id: string;
+  readonly title: string;
+  readonly dataUrl: string;
+  readonly opacity: number;
+  readonly fitMode: WorksheetFitMode;
+  readonly locked: boolean;
+}
 
 export type Solid3DPresetKind =
   'pyramid-tri' | 'pyramid-quad' | 'prism-tri' | 'box' | 'cone' | 'cylinder' | 'sphere' | 'oxyz';
@@ -171,8 +230,11 @@ export interface InkPage {
   readonly shapes: readonly InkShapeItem[];
   readonly solids3d: readonly Ink3DSolidItem[];
   readonly graphs: readonly InkGraphItem[];
+  readonly variationTables: readonly InkVariationTableItem[];
+  readonly stamps: readonly InkStampItem[];
   readonly texts: readonly InkTextItem[];
   readonly images: readonly InkImageItem[];
+  readonly worksheetBackground?: InkWorksheetBackground | null;
 }
 
 export interface InkFolder {

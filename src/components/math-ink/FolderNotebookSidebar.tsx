@@ -517,6 +517,9 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                 pg.shapes.length +
                 pg.solids3d.length +
                 pg.graphs.length +
+                (pg.variationTables?.length ?? 0) +
+                (pg.stamps?.length ?? 0) +
+                pg.images.length +
                 pg.texts.length;
               return (
                 <div
@@ -535,9 +538,14 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                   >
                     <div
                       style={{ backgroundColor: activeNotebook.paper.backgroundColor }}
-                      className="flex h-20 w-full items-center justify-center rounded-lg border border-[var(--border-hairline)] font-mono text-[10px] text-[var(--text-muted)]"
+                      className="flex h-20 w-full flex-col items-center justify-center gap-0.5 rounded-lg border border-[var(--border-hairline)] font-mono text-[10px] text-[var(--text-muted)]"
                     >
-                      {itemCount > 0 ? `${itemCount} phần tử` : 'Trang trống'}
+                      {pg.worksheetBackground && (
+                        <span className="rounded bg-[var(--accent-os)]/12 px-1.5 py-0.5 text-[9px] font-semibold text-[var(--accent-os)]">
+                          Phiếu đề nền
+                        </span>
+                      )}
+                      <span>{itemCount > 0 ? `${itemCount} phần tử` : 'Trang trống'}</span>
                     </div>
                     <span className="font-mono text-[10.5px] font-semibold text-[var(--text-main)]">
                       Trang {idx + 1}

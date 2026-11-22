@@ -10,8 +10,11 @@ import {
   type InkNotebook,
   type InkPage,
   type InkShapeItem,
+  type InkStampItem,
   type InkStroke,
   type InkTextItem,
+  type InkVariationTableItem,
+  type InkWorksheetBackground,
   type PaperConfig,
   type PenPreset,
 } from './types';
@@ -28,15 +31,33 @@ function makeId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-export function createBlankInkPage(id?: string): InkPage {
+export function createBlankInkPage(
+  id?: string,
+  worksheetBackground: InkWorksheetBackground | null = null,
+): InkPage {
   return {
     id: id ?? makeId('page'),
     strokes: [],
     shapes: [],
     solids3d: [],
     graphs: [],
+    variationTables: [],
+    stamps: [],
     texts: [],
     images: [],
+    worksheetBackground,
+  };
+}
+
+function normalizePage(page: InkPage): InkPage {
+  if (Array.isArray(page.variationTables) && Array.isArray(page.stamps)) {
+    return page;
+  }
+  return {
+    ...page,
+    variationTables: Array.isArray(page.variationTables) ? page.variationTables : [],
+    stamps: Array.isArray(page.stamps) ? page.stamps : [],
+    worksheetBackground: page.worksheetBackground ?? null,
   };
 }
 
@@ -101,9 +122,16 @@ function createInitialBucket(): UserInkBucket {
 
 function normalizeBucket(raw: UserInkBucket | undefined): UserInkBucket {
   if (!raw) return createInitialBucket();
+  const normalizedNotebooks =
+    raw.notebooks.length > 0
+      ? raw.notebooks.map((nb) => ({
+          ...nb,
+          pages: nb.pages.map(normalizePage),
+        }))
+      : [createDefaultNotebook()];
   return {
     folders: Array.isArray(raw.folders) ? raw.folders : [...DEFAULT_INK_FOLDERS],
-    notebooks: raw.notebooks.length > 0 ? raw.notebooks : [createDefaultNotebook()],
+    notebooks: normalizedNotebooks,
     activeNotebookId: raw.activeNotebookId,
   };
 }
@@ -146,6 +174,12 @@ export interface InkNotebookState {
   updateSolid3D: (solidId: string, patch: Partial<Ink3DSolidItem>) => void;
   addGraph: (graph: InkGraphItem) => void;
   updateGraph: (graphId: string, patch: Partial<InkGraphItem>) => void;
+  addVariationTable: (table: InkVariationTableItem) => void;
+  updateVariationTable: (tableId: string, patch: Partial<InkVariationTableItem>) => void;
+  addStamp: (stamp: InkStampItem) => void;
+  updateStamp: (stampId: string, patch: Partial<InkStampItem>) => void;
+  setWorksheetBackground: (bg: InkWorksheetBackground | null) => void;
+  addPagesWithWorksheets: (worksheets: readonly InkWorksheetBackground[]) => void;
   addText: (text: InkTextItem) => void;
   addImage: (image: InkImageItem) => void;
 
@@ -523,7 +557,12 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       },
 
       clearActivePage: () => {
-        get().commitPageMutation((page) => createBlankInkPage(page.id));
+        get().commitPageMutation((page) =>
+          createBlankInkPage(
+            page.id,
+            page.worksheetBackground?.locked ? page.worksheetBackground : null,
+          ),
+        );
       },
 
       commitPageMutation: (updater) => {
@@ -599,6 +638,90 @@ export const useInkNotebookStore = create<InkNotebookState>()(
           ...page,
           graphs: page.graphs.map((g) => (g.id === graphId ? { ...g, ...patch } : g)),
         }));
+      },
+
+      addVariationTable: (table) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          variationTables: [...(page.variationTables ?? []), table],
+        }));
+      },
+
+      updateVariationTable: (tableId, patch) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          variationTables: (page.variationTables ?? []).map((t) =>
+            t.id === tableId ? { ...t, ...patch } : t,
+          ),
+        }));
+      },
+
+      addStamp: (stamp) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          stamps: [...(page.stamps ?? []), stamp],
+        }));
+      },
+
+      updateStamp: (stampId, patch) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          stamps: (page.stamps ?? []).map((st) => (st.id === stampId ? { ...st, ...patch } : st)),
+        }));
+      },
+
+      setWorksheetBackground: (bg) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          worksheetBackground: bg,
+        }));
+      },
+
+      addPagesWithWorksheets: (worksheets) => {
+        if (worksheets.length === 0) return;
+        const state = get();
+        const key = state.activeAccountKey;
+        const bucket = normalizeBucket(state.buckets[key]);
+        const nowIso = new Date().toISOString();
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [key]: {
+              ...bucket,
+              notebooks: bucket.notebooks.map((nb) => {
+                if (nb.id !== bucket.activeNotebookId) return nb;
+                const current = nb.pages[nb.activePageIndex];
+                const canReuseCurrent = current && !current.worksheetBackground;
+                const [first, ...rest] = worksheets;
+                const updatedPages = [...nb.pages];
+                let insertIdx = nb.activePageIndex;
+
+                if (canReuseCurrent && first) {
+                  updatedPages[nb.activePageIndex] = {
+                    ...current,
+                    worksheetBackground: first,
+                  };
+                  const extraPages = rest.map((ws) => createBlankInkPage(undefined, ws));
+                  updatedPages.splice(nb.activePageIndex + 1, 0, ...extraPages);
+                } else {
+                  const newPages = worksheets.map((ws) => createBlankInkPage(undefined, ws));
+                  insertIdx = nb.activePageIndex + 1;
+                  updatedPages.splice(insertIdx, 0, ...newPages);
+                }
+
+                return {
+                  ...nb,
+                  pages: updatedPages,
+                  activePageIndex: insertIdx,
+                  updatedAt: nowIso,
+                };
+              }),
+            },
+          },
+          undoStack: [],
+          redoStack: [],
+        });
       },
 
       addText: (text) => {

@@ -7,6 +7,12 @@ export {
   type PageRenderOptions,
 } from './canvasRenderer';
 export {
+  doesStampHitPoint,
+  GEOMETRY_STAMP_PRESETS,
+  renderGeometryStampOnCanvas,
+  type GeometryStampPreset,
+} from './geometryStampEngine';
+export {
   createBlankInkPage,
   DEFAULT_INK_FOLDERS,
   INK_GUEST_ACCOUNT_KEY,
@@ -39,6 +45,13 @@ export {
   type SpecialGraphPoint,
 } from './mathExprParser';
 export {
+  buildMultiPagePdfBytes,
+  dataUrlToUint8Array,
+  downloadPdfFile,
+  renderExamTextToWorksheetDataUrl,
+  type PdfPageImageSpec,
+} from './pdfExporter';
+export {
   evaluateSolidConstructions,
   getSolidPresetSchema,
   renderSolid3DOnCanvas,
@@ -56,6 +69,7 @@ export {
   PAGE_DIMENSIONS,
   SCRBLE_COLOR_PALETTE,
   type EraserMode,
+  type GeometryStampKind,
   type GraphFunctionEntry,
   type Ink3DSolidItem,
   type InkActiveTool,
@@ -67,8 +81,11 @@ export {
   type InkPoint,
   type InkRecognitionMode,
   type InkShapeItem,
+  type InkStampItem,
   type InkStroke,
   type InkTextItem,
+  type InkVariationTableItem,
+  type InkWorksheetBackground,
   type PaperConfig,
   type PaperOrientation,
   type PaperPattern,
@@ -79,4 +96,16 @@ export {
   type ShapeToolKind,
   type Solid3DConstruction,
   type Solid3DPresetKind,
+  type VariationMarkerKind,
+  type VariationSignValue,
+  type VariationTableMode,
+  type WorksheetFitMode,
 } from './types';
+export {
+  computeVariationAnchors,
+  renderVariationTableOnCanvas,
+  VARIATION_TABLE_PRESETS,
+  type EvaluatedVariationAnchor,
+  type VariationTablePreset,
+  type VariationVerticalSlot,
+} from './variationTableEngine';

@@ -2,11 +2,15 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
+  buildMultiPagePdfBytes,
   compileMathExpression,
   computeDefiniteIntegral,
+  computeVariationAnchors,
+  doesStampHitPoint,
   eraseStrokeSegment,
   evaluateSolidConstructions,
   findSpecialGraphPoints,
+  GEOMETRY_STAMP_PRESETS,
   getSolidPresetSchema,
   recognizeInkGesture,
   resolveSolidVertexLabel,
@@ -17,6 +21,7 @@ import {
   snapPointToRulerEdge,
   SOLID_3D_PRESETS,
   useInkNotebookStore,
+  VARIATION_TABLE_PRESETS,
   type InkPoint,
 } from '@/features/math-ink';
 import { MathInkPage } from '@/pages/math-ink/MathInkPage';
@@ -313,5 +318,150 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     fireEvent.click(screen.getByTestId('sidebar-tab-pages'));
     fireEvent.click(screen.getByTestId('ink-add-page-btn'));
     expect(selectActiveNotebook(useInkNotebookStore.getState()).pages).toHaveLength(2);
+  });
+
+  it('Ý 3, 4, 5, 6: Bảng biến thiên & Xét dấu, 9 Con dấu hình học, Bút Laser + Xuất PDF đa trang và Phiếu bài tập nền khóa', () => {
+    // Ý 3: Engine Bảng biến thiên tính đúng cực đại, cực tiểu & tiệm cận đứng ||
+    expect(VARIATION_TABLE_PRESETS).toHaveLength(4);
+    const cubicAnchors = computeVariationAnchors(VARIATION_TABLE_PRESETS[0]!);
+    expect(cubicAnchors[0]!.leftSlot).toBe('low'); // -∞ đi lên
+    expect(cubicAnchors[1]!.leftSlot).toBe('high'); // cực đại
+    expect(cubicAnchors[2]!.leftSlot).toBe('low'); // cực tiểu
+    expect(cubicAnchors[3]!.leftSlot).toBe('high'); // +∞
+
+    const rationalAnchors = computeVariationAnchors(VARIATION_TABLE_PRESETS[2]!);
+    expect(rationalAnchors[1]!.isDoubleBar).toBe(true);
+    expect(rationalAnchors[1]!.leftLabel).toBe('+∞');
+    expect(rationalAnchors[1]!.rightLabel).toBe('-∞');
+
+    // Ý 4: Con dấu hình học đủ 9 mẫu và hit-test chính xác
+    expect(GEOMETRY_STAMP_PRESETS).toHaveLength(9);
+    expect(
+      doesStampHitPoint(
+        {
+          id: 'st-ra',
+          kind: 'right-angle',
+          x: 200,
+          y: 200,
+          size: 36,
+          rotationDeg: 0,
+          color: '#DC2626',
+          lineWidth: 2,
+        },
+        208,
+        205,
+      ),
+    ).toBe(true);
+
+    // Ý 5: Bộ xuất PDF 1.4 đa trang sinh header, /Count 2, xref và %%EOF chuẩn xác
+    const dummyJpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0xff, 0xd9]);
+    const pdfBytes = buildMultiPagePdfBytes([
+      {
+        jpegBytes: dummyJpeg,
+        pixelWidth: 960,
+        pixelHeight: 1358,
+        pageWidthPt: 595.28,
+        pageHeightPt: 841.89,
+      },
+      {
+        jpegBytes: dummyJpeg,
+        pixelWidth: 960,
+        pixelHeight: 1358,
+        pageWidthPt: 595.28,
+        pageHeightPt: 841.89,
+      },
+    ]);
+    const pdfText = new TextDecoder('latin1').decode(pdfBytes);
+    expect(pdfText.startsWith('%PDF-1.4')).toBe(true);
+    expect(pdfText).toContain('/Count 2');
+    expect(pdfText).toContain('xref');
+    expect(pdfText.trim().endsWith('%%EOF')).toBe(true);
+
+    // Ý 6: Phiếu bài tập nền khóa vẫn được giữ khi xóa sạch nét nháp & hỗ trợ nạp nhiều trang
+    const store = useInkNotebookStore.getState();
+    store.addPagesWithWorksheets([
+      {
+        id: 'ws-1',
+        title: 'Đề kiểm tra trang 1',
+        dataUrl: 'data:image/png;base64,iVBORw0KGgo=',
+        opacity: 0.9,
+        fitMode: 'top-half',
+        locked: true,
+      },
+      {
+        id: 'ws-2',
+        title: 'Đề kiểm tra trang 2',
+        dataUrl: 'data:image/png;base64,iVBORw0KGgo=',
+        opacity: 0.9,
+        fitMode: 'contain',
+        locked: true,
+      },
+    ]);
+    expect(selectActiveNotebook(useInkNotebookStore.getState()).pages).toHaveLength(2);
+    store.addStroke({
+      id: 'st-draft',
+      penKind: 'fountain',
+      color: '#111827',
+      width: 2,
+      opacity: 1,
+      points: [
+        { x: 10, y: 10 },
+        { x: 50, y: 50 },
+      ],
+    });
+    store.clearActivePage();
+    const afterClear = selectActiveInkPage(useInkNotebookStore.getState());
+    expect(afterClear.strokes).toHaveLength(0);
+    expect(afterClear.worksheetBackground?.id).toBe('ws-1');
+
+    // Tương tác trực tiếp trên giao diện MathInkPage cho cả 4 tính năng
+    render(
+      <MemoryRouter initialEntries={['/bang-viet']}>
+        <MathInkPage />
+      </MemoryRouter>,
+    );
+
+    // Chèn Bảng biến thiên phân thức (||) -> chỉnh sang Bảng xét dấu
+    fireEvent.click(screen.getByTestId('ink-variation-btn'));
+    expect(screen.getByTestId('variation-table-popover')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('vt-preset-rational-asymptote'));
+    fireEvent.click(screen.getByTestId('insert-variation-table-confirm'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).variationTables).toHaveLength(1);
+    expect(
+      selectActiveInkPage(useInkNotebookStore.getState()).variationTables[0]!.pointMarkers[0],
+    ).toBe('double-bar');
+
+    fireEvent.click(screen.getByTestId('selected-edit-vt-btn'));
+    fireEvent.click(screen.getByTestId('vt-mode-sign'));
+    fireEvent.click(screen.getByTestId('insert-variation-table-confirm'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).variationTables[0]!.mode).toBe(
+      'sign',
+    );
+
+    // Chọn Con dấu góc vuông và chạm lên canvas để đóng dấu
+    fireEvent.click(screen.getByTestId('ink-stamps-btn'));
+    expect(screen.getByTestId('geometry-stamps-popover')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('stamp-preset-right-angle'));
+    expect(screen.getByTestId('ink-stamp-bar')).toBeInTheDocument();
+    fireEvent.pointerDown(screen.getByTestId('math-ink-canvas'), { clientX: 150, clientY: 180 });
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).stamps).toHaveLength(1);
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).stamps[0]!.kind).toBe('right-angle');
+
+    // Bật Bút Laser trình chiếu: vẽ tia laser không làm tăng nét lưu trong vở
+    fireEvent.click(screen.getByTestId('ink-laser-btn'));
+    expect(screen.getByTestId('ink-laser-bar')).toBeInTheDocument();
+    fireEvent.pointerDown(screen.getByTestId('math-ink-canvas'), { clientX: 200, clientY: 220 });
+    fireEvent.pointerMove(screen.getByTestId('math-ink-canvas'), { clientX: 260, clientY: 250 });
+    fireEvent.pointerUp(screen.getByTestId('math-ink-canvas'), { clientX: 260, clientY: 250 });
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).strokes).toHaveLength(0);
+
+    // Mở hộp Phiếu bài tập nền khóa và chỉnh độ mờ / gỡ nền
+    fireEvent.click(screen.getByTestId('ink-worksheet-btn'));
+    expect(screen.getByTestId('worksheet-bg-popover')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('worksheet-fit-contain'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).worksheetBackground?.fitMode).toBe(
+      'contain',
+    );
+    expect(screen.getByTestId('ink-export-pdf')).toBeInTheDocument();
   });
 });

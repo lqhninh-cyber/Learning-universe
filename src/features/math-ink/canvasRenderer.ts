@@ -1,3 +1,4 @@
+import { renderGeometryStampOnCanvas } from './geometryStampEngine';
 import {
   compileMathExpression,
   computeDefiniteIntegral,
@@ -10,8 +11,10 @@ import type {
   InkPoint,
   InkShapeItem,
   InkStroke,
+  InkWorksheetBackground,
   PaperConfig,
 } from './types';
+import { renderVariationTableOnCanvas } from './variationTableEngine';
 
 function isDarkHex(hex: string): boolean {
   const clean = hex.replace('#', '');
@@ -543,6 +546,40 @@ export interface PageRenderOptions {
   readonly spacerLineY?: number | null;
 }
 
+function drawWorksheetBackground(
+  ctx: CanvasRenderingContext2D,
+  bg: InkWorksheetBackground,
+  img: HTMLImageElement | undefined,
+  pageW: number,
+  pageH: number,
+): void {
+  if (!img || !img.complete || img.naturalWidth <= 0 || img.naturalHeight <= 0) return;
+
+  const padX = 28;
+  const padY = 28;
+  const availW = Math.max(120, pageW - padX * 2);
+  const availH =
+    bg.fitMode === 'top-half'
+      ? Math.max(120, pageH * 0.48 - padY)
+      : Math.max(120, pageH - padY * 2);
+
+  let drawW = availW;
+  let drawH = (img.naturalHeight / img.naturalWidth) * drawW;
+
+  if (bg.fitMode !== 'full-width' && drawH > availH) {
+    drawH = availH;
+    drawW = (img.naturalWidth / img.naturalHeight) * drawH;
+  }
+
+  const drawX = (pageW - drawW) / 2;
+  const drawY = bg.fitMode === 'top-half' ? padY : (pageH - drawH) / 2;
+
+  ctx.save();
+  ctx.globalAlpha = Math.max(0.15, Math.min(1, bg.opacity));
+  ctx.drawImage(img, drawX, drawY, drawW, drawH);
+  ctx.restore();
+}
+
 /**
  * Kết xuất toàn bộ 1 trang sổ toán học lên Canvas 2D.
  */
@@ -554,6 +591,17 @@ export function renderInkPageToCanvas(
   const darkPaper = isDarkHex(paper.backgroundColor);
 
   drawPaperBackground(ctx, width, height, paper);
+
+  // 0. Lớp nền phiếu bài tập / đề bài khóa cố định (nằm dưới mọi nét bút & hình vẽ)
+  if (page.worksheetBackground) {
+    drawWorksheetBackground(
+      ctx,
+      page.worksheetBackground,
+      opts.imageCache?.get(page.worksheetBackground.id),
+      width,
+      height,
+    );
+  }
 
   // 1. Ảnh đính kèm
   for (const imgItem of page.images) {
@@ -568,6 +616,11 @@ export function renderInkPageToCanvas(
     renderFunctionGraphOnCanvas(ctx, graph, darkPaper);
   }
 
+  // 2b. Bảng biến thiên & Bảng xét dấu
+  for (const table of page.variationTables ?? []) {
+    renderVariationTableOnCanvas(ctx, table, darkPaper);
+  }
+
   // 3. Hình không gian 3D
   for (const solid of page.solids3d) {
     renderSolid3DOnCanvas(ctx, solid);
@@ -576,6 +629,21 @@ export function renderInkPageToCanvas(
   // 4. Hình học 2D & đường thẳng / mũi tên
   for (const shape of page.shapes) {
     drawInkShape(ctx, shape);
+  }
+
+  // 4b. Con dấu ký hiệu Hình học phẳng (Góc vuông, Vạch bằng nhau, Cung góc, Song song, Điểm)
+  for (const stamp of page.stamps ?? []) {
+    renderGeometryStampOnCanvas(ctx, stamp);
+    if (opts.selectedIds?.has(stamp.id)) {
+      ctx.save();
+      ctx.strokeStyle = '#1D4ED8';
+      ctx.lineWidth = 1.25;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.arc(stamp.x, stamp.y, Math.max(18, stamp.size * 0.62), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
   }
 
   // 5. Các nét mực viết tay (dạ quang vẽ trước để không che chữ mực đậm)

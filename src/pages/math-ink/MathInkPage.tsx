@@ -4,6 +4,8 @@ import {
   Compass,
   Download,
   Eraser,
+  FileDown,
+  FileImage,
   FilePenLine,
   ImagePlus,
   Maximize2,
@@ -11,6 +13,7 @@ import {
   Minus,
   PanelLeft,
   Plus,
+  Pointer,
   Redo2,
   RotateCw,
   Ruler,
@@ -18,6 +21,8 @@ import {
   SlidersHorizontal,
   Sparkles,
   SquareDashed,
+  Stamp,
+  Table2,
   Trash2,
   TrendingUp,
   Undo2,
@@ -38,6 +43,10 @@ import { useNavigate } from 'react-router';
 import { FolderNotebookSidebar } from '@/components/math-ink/FolderNotebookSidebar';
 import { FunctionGraphPopover } from '@/components/math-ink/FunctionGraphPopover';
 import {
+  GeometryStampsPopover,
+  type StampToolConfig,
+} from '@/components/math-ink/GeometryStampsPopover';
+import {
   EraserModePopover,
   InkModePopover,
   PaperSettingsPopover,
@@ -46,15 +55,22 @@ import {
   ShapePickerPopover,
 } from '@/components/math-ink/InkToolbarPopovers';
 import { Solid3DPopover } from '@/components/math-ink/Solid3DPopover';
+import { VariationTablePopover } from '@/components/math-ink/VariationTablePopover';
+import { WorksheetBackgroundPopover } from '@/components/math-ink/WorksheetBackgroundPopover';
 import { useExamBuilderStore } from '@/features/exam-builder';
 import { InlineMathText } from '@/features/math-glossary';
 import {
+  buildMultiPagePdfBytes,
+  dataUrlToUint8Array,
   doesCircleHitStroke,
   doesShapeHitPoint,
+  doesStampHitPoint,
+  downloadPdfFile,
   eraseStrokeSegment,
   isPointInPolygon,
   PAGE_DIMENSIONS,
   recognizeInkGesture,
+  renderExamTextToWorksheetDataUrl,
   renderInkPageToCanvas,
   selectActiveInkBucket,
   selectActiveInkFolders,
@@ -72,6 +88,8 @@ import {
   type InkRecognitionMode,
   type InkShapeItem,
   type InkStroke,
+  type InkVariationTableItem,
+  type InkWorksheetBackground,
   type RulerState,
   type SelectionMode,
   type ShapeToolKind,
@@ -80,7 +98,29 @@ import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 
 type OpenPopoverKey =
-  null | 'paper' | 'pen' | 'ink-mode' | 'shapes' | 'solid3d' | 'graph' | 'eraser' | 'selection';
+  | null
+  | 'paper'
+  | 'pen'
+  | 'ink-mode'
+  | 'shapes'
+  | 'solid3d'
+  | 'graph'
+  | 'variation'
+  | 'stamps'
+  | 'worksheet'
+  | 'eraser'
+  | 'selection';
+
+const LASER_COLOR_OPTIONS = [
+  { id: 'red', label: 'Đỏ rực', hex: '#EF4444' },
+  { id: 'emerald', label: 'Xanh lá', hex: '#22C55E' },
+  { id: 'blue', label: 'Xanh dương', hex: '#3B82F6' },
+] as const;
+
+interface LaserTrailStroke {
+  readonly color: string;
+  readonly points: { readonly x: number; readonly y: number; readonly t: number }[];
+}
 
 function makeLocalId(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
@@ -110,6 +150,10 @@ function shiftPageItemsBelowY(page: InkPage, anchorY: number, dy: number): InkPa
     ),
     solids3d: page.solids3d.map((s) => (s.y >= anchorY ? { ...s, y: s.y + dy } : s)),
     graphs: page.graphs.map((g) => (g.y >= anchorY ? { ...g, y: g.y + dy } : g)),
+    variationTables: (page.variationTables ?? []).map((t) =>
+      t.y >= anchorY ? { ...t, y: t.y + dy } : t,
+    ),
+    stamps: (page.stamps ?? []).map((st) => (st.y >= anchorY ? { ...st, y: st.y + dy } : st)),
     texts: page.texts.map((t) => (t.y >= anchorY ? { ...t, y: t.y + dy } : t)),
     images: page.images.map((im) => (im.y >= anchorY ? { ...im, y: im.y + dy } : im)),
   };
@@ -139,6 +183,12 @@ function translateSelectedOnPage(
     ),
     graphs: page.graphs.map((g) =>
       selectedIds.has(g.id) ? { ...g, x: g.x + dx, y: g.y + dy } : g,
+    ),
+    variationTables: (page.variationTables ?? []).map((t) =>
+      selectedIds.has(t.id) ? { ...t, x: t.x + dx, y: t.y + dy } : t,
+    ),
+    stamps: (page.stamps ?? []).map((st) =>
+      selectedIds.has(st.id) ? { ...st, x: st.x + dx, y: st.y + dy } : st,
     ),
     texts: page.texts.map((t) => (selectedIds.has(t.id) ? { ...t, x: t.x + dx, y: t.y + dy } : t)),
     images: page.images.map((im) =>
@@ -178,6 +228,11 @@ export function MathInkPage() {
   const addSolid3D = useInkNotebookStore((s) => s.addSolid3D);
   const updateSolid3D = useInkNotebookStore((s) => s.updateSolid3D);
   const addGraph = useInkNotebookStore((s) => s.addGraph);
+  const addVariationTable = useInkNotebookStore((s) => s.addVariationTable);
+  const updateVariationTable = useInkNotebookStore((s) => s.updateVariationTable);
+  const addStamp = useInkNotebookStore((s) => s.addStamp);
+  const setWorksheetBackground = useInkNotebookStore((s) => s.setWorksheetBackground);
+  const addPagesWithWorksheets = useInkNotebookStore((s) => s.addPagesWithWorksheets);
   const addText = useInkNotebookStore((s) => s.addText);
   const addImage = useInkNotebookStore((s) => s.addImage);
   const undo = useInkNotebookStore((s) => s.undo);
@@ -187,6 +242,11 @@ export function MathInkPage() {
 
   const attachImageToActiveExam = useExamBuilderStore((s) => s.attachImageToActiveExam);
   const updateActiveExam = useExamBuilderStore((s) => s.updateActiveExam);
+  const activeExamTitle = useExamBuilderStore((s) => {
+    const examBucket = s.buckets[s.activeAccountKey];
+    const doc = examBucket?.exams.find((ex) => ex.id === examBucket.activeExamId);
+    return doc?.title ?? null;
+  });
 
   const [activeTool, setActiveTool] = useState<InkActiveTool>('pen');
   const [inkMode, setInkMode] = useState<InkRecognitionMode>('ink');
@@ -195,9 +255,20 @@ export function MathInkPage() {
   const [selectionMode, setSelectionMode] = useState<SelectionMode>('rect');
   const [openPopover, setOpenPopover] = useState<OpenPopoverKey>(null);
   const [editingSolidId, setEditingSolidId] = useState<string | null>(null);
+  const [editingTableId, setEditingTableId] = useState<string | null>(null);
+  const [stampConfig, setStampConfig] = useState<StampToolConfig>({
+    kind: 'right-angle',
+    size: 36,
+    rotationDeg: 0,
+    color: '#DC2626',
+    label: 'A',
+  });
+  const [laserColor, setLaserColor] = useState<string>(LASER_COLOR_OPTIONS[0].hex);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
   const [resizingBox, setResizingBox] = useState<{
     readonly id: string;
-    readonly kind: 'solid3d' | 'graph' | 'image' | 'shape';
+    readonly kind: 'solid3d' | 'graph' | 'variation' | 'image' | 'shape';
     readonly x: number;
     readonly y: number;
     readonly width: number;
@@ -239,6 +310,9 @@ export function MathInkPage() {
   } | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const laserCanvasRef = useRef<HTMLCanvasElement>(null);
+  const laserStrokesRef = useRef<LaserTrailStroke[]>([]);
+  const laserRafRef = useRef<number | null>(null);
   const pageHostRef = useRef<HTMLDivElement>(null);
   const imageUploadRef = useRef<HTMLInputElement>(null);
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
@@ -249,6 +323,7 @@ export function MathInkPage() {
       | 'none'
       | 'draw-stroke'
       | 'draw-shape'
+      | 'laser'
       | 'erase'
       | 'select-rect'
       | 'select-lasso'
@@ -275,7 +350,7 @@ export function MathInkPage() {
 
   const dims = PAGE_DIMENSIONS[activeNotebook.paper.orientation];
 
-  // Nạp ảnh đính kèm vào bộ nhớ đệm để Canvas vẽ sắc nét
+  // Nạp ảnh đính kèm & nền phiếu bài tập vào bộ nhớ đệm để Canvas vẽ sắc nét
   useEffect(() => {
     for (const im of activePage.images) {
       if (!imageCacheRef.current.has(im.id)) {
@@ -285,7 +360,118 @@ export function MathInkPage() {
         imageCacheRef.current.set(im.id, img);
       }
     }
-  }, [activePage.images]);
+    const bg = activePage.worksheetBackground;
+    if (bg && !imageCacheRef.current.has(bg.id)) {
+      const img = new Image();
+      img.onload = () => setImageCacheTick((t) => t + 1);
+      img.src = bg.dataUrl;
+      imageCacheRef.current.set(bg.id, img);
+    }
+  }, [activePage.images, activePage.worksheetBackground]);
+
+  // Vòng kết xuất tia Laser trình chiếu (tự mờ biến mất sau 1.5 giây, không lưu vào vở)
+  const ensureLaserLoop = useCallback(() => {
+    if (laserRafRef.current !== null) return;
+    const LASER_TTL_MS = 1500;
+
+    const tick = () => {
+      const canvas = laserCanvasRef.current;
+      if (!canvas) {
+        laserRafRef.current = null;
+        return;
+      }
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        laserRafRef.current = null;
+        return;
+      }
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const targetW = Math.round(dims.width * dpr);
+      const targetH = Math.round(dims.height * dpr);
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, dims.width, dims.height);
+
+      const now = performance.now();
+      const alive: LaserTrailStroke[] = [];
+
+      for (const trail of laserStrokesRef.current) {
+        const freshPts = trail.points.filter((p) => now - p.t < LASER_TTL_MS);
+        if (freshPts.length === 0) continue;
+        alive.push({ color: trail.color, points: freshPts });
+
+        if (freshPts.length === 1) {
+          const p = freshPts[0]!;
+          const alpha = Math.max(0, 1 - (now - p.t) / LASER_TTL_MS);
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.shadowColor = trail.color;
+          ctx.shadowBlur = 16;
+          ctx.fillStyle = trail.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+          continue;
+        }
+
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        for (let i = 1; i < freshPts.length; i += 1) {
+          const prev = freshPts[i - 1]!;
+          const cur = freshPts[i]!;
+          const life = Math.max(0, 1 - (now - cur.t) / LASER_TTL_MS);
+          // Quầng phát sáng ngoài
+          ctx.globalAlpha = life * 0.72;
+          ctx.strokeStyle = trail.color;
+          ctx.shadowColor = trail.color;
+          ctx.shadowBlur = 14;
+          ctx.lineWidth = 2.5 + life * 5.5;
+          ctx.beginPath();
+          ctx.moveTo(prev.x, prev.y);
+          ctx.lineTo(cur.x, cur.y);
+          ctx.stroke();
+
+          // Lõi sáng trắng sắc nét ở trung tâm tia laser
+          ctx.globalAlpha = life * 0.95;
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.shadowBlur = 0;
+          ctx.lineWidth = Math.max(1, life * 2.2);
+          ctx.beginPath();
+          ctx.moveTo(prev.x, prev.y);
+          ctx.lineTo(cur.x, cur.y);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      laserStrokesRef.current = alive;
+      if (alive.length > 0) {
+        laserRafRef.current = window.requestAnimationFrame(tick);
+      } else {
+        laserRafRef.current = null;
+      }
+    };
+
+    laserRafRef.current = window.requestAnimationFrame(tick);
+  }, [dims.height, dims.width]);
+
+  useEffect(() => {
+    return () => {
+      if (laserRafRef.current !== null) {
+        window.cancelAnimationFrame(laserRafRef.current);
+      }
+    };
+  }, []);
 
   // Vẽ lại toàn bộ trang Canvas HiDPI mỗi khi trạng thái thay đổi
   useEffect(() => {
@@ -349,6 +535,8 @@ export function MathInkPage() {
           shapes: page.shapes.filter((s) => !selectedIds.has(s.id)),
           solids3d: page.solids3d.filter((s) => !selectedIds.has(s.id)),
           graphs: page.graphs.filter((g) => !selectedIds.has(g.id)),
+          variationTables: (page.variationTables ?? []).filter((t) => !selectedIds.has(t.id)),
+          stamps: (page.stamps ?? []).filter((st) => !selectedIds.has(st.id)),
           texts: page.texts.filter((t) => !selectedIds.has(t.id)),
           images: page.images.filter((im) => !selectedIds.has(im.id)),
         }));
@@ -373,10 +561,23 @@ export function MathInkPage() {
 
   const findHitObjectId = useCallback(
     (pt: InkPoint): string | null => {
+      const stamps = activePage.stamps ?? [];
+      for (let i = stamps.length - 1; i >= 0; i -= 1) {
+        if (doesStampHitPoint(stamps[i]!, pt.x, pt.y)) {
+          return stamps[i]!.id;
+        }
+      }
       for (let i = activePage.solids3d.length - 1; i >= 0; i -= 1) {
         const s = activePage.solids3d[i]!;
         if (pt.x >= s.x && pt.x <= s.x + s.width && pt.y >= s.y && pt.y <= s.y + s.height) {
           return s.id;
+        }
+      }
+      const variationTables = activePage.variationTables ?? [];
+      for (let i = variationTables.length - 1; i >= 0; i -= 1) {
+        const vt = variationTables[i]!;
+        if (pt.x >= vt.x && pt.x <= vt.x + vt.width && pt.y >= vt.y && pt.y <= vt.y + vt.height) {
+          return vt.id;
         }
       }
       for (let i = activePage.graphs.length - 1; i >= 0; i -= 1) {
@@ -425,6 +626,12 @@ export function MathInkPage() {
           const nextGraphs = page.graphs.filter(
             (g) => !(pt.x >= g.x && pt.x <= g.x + g.width && pt.y >= g.y && pt.y <= g.y + g.height),
           );
+          const origTables = page.variationTables ?? [];
+          const nextTables = origTables.filter(
+            (t) => !(pt.x >= t.x && pt.x <= t.x + t.width && pt.y >= t.y && pt.y <= t.y + t.height),
+          );
+          const origStamps = page.stamps ?? [];
+          const nextStamps = origStamps.filter((st) => !doesStampHitPoint(st, pt.x, pt.y));
           const nextTexts = page.texts.filter(
             (t) => !(pt.x >= t.x - 10 && pt.x <= t.x + 180 && pt.y >= t.y - 24 && pt.y <= t.y + 24),
           );
@@ -433,6 +640,8 @@ export function MathInkPage() {
             nextShapes.length === page.shapes.length &&
             nextSolids.length === page.solids3d.length &&
             nextGraphs.length === page.graphs.length &&
+            nextTables.length === origTables.length &&
+            nextStamps.length === origStamps.length &&
             nextTexts.length === page.texts.length
           ) {
             return page;
@@ -443,6 +652,8 @@ export function MathInkPage() {
             shapes: nextShapes,
             solids3d: nextSolids,
             graphs: nextGraphs,
+            variationTables: nextTables,
+            stamps: nextStamps,
             texts: nextTexts,
           };
         }
@@ -466,6 +677,45 @@ export function MathInkPage() {
     if (openPopover) setOpenPopover(null);
     e.currentTarget.setPointerCapture?.(e.pointerId);
     const rawPt = toCanvasPoint(e);
+
+    // 0. Bút Laser trình chiếu (không lưu nét, tự mờ sau 1.5s)
+    if (activeTool === 'laser') {
+      const now = performance.now();
+      laserStrokesRef.current.push({
+        color: laserColor,
+        points: [{ x: rawPt.x, y: rawPt.y, t: now }],
+      });
+      interactionRef.current = {
+        ...interactionRef.current,
+        mode: 'laser',
+        startX: rawPt.x,
+        startY: rawPt.y,
+        lastX: rawPt.x,
+        lastY: rawPt.y,
+      };
+      ensureLaserLoop();
+      return;
+    }
+
+    // 0b. Con dấu ký hiệu Hình học phẳng (đóng dấu tức thì tại vị trí chạm)
+    if (activeTool === 'stamp') {
+      const needsLabel =
+        stampConfig.kind === 'dot-point' ||
+        stampConfig.kind === 'angle-arc-1' ||
+        stampConfig.kind === 'angle-arc-2';
+      addStamp({
+        id: makeLocalId('stamp'),
+        kind: stampConfig.kind,
+        x: Math.round(rawPt.x),
+        y: Math.round(rawPt.y),
+        size: stampConfig.size,
+        rotationDeg: stampConfig.rotationDeg,
+        color: stampConfig.color,
+        lineWidth: 2,
+        label: needsLabel ? stampConfig.label : undefined,
+      });
+      return;
+    }
 
     // 1. Công cụ chèn chữ / KaTeX
     if (activeTool === 'text') {
@@ -602,6 +852,17 @@ export function MathInkPage() {
     if (state.mode === 'none') return;
     const rawPt = toCanvasPoint(e);
 
+    if (state.mode === 'laser') {
+      const currentTrail = laserStrokesRef.current[laserStrokesRef.current.length - 1];
+      if (currentTrail && Math.hypot(rawPt.x - state.lastX, rawPt.y - state.lastY) >= 2) {
+        currentTrail.points.push({ x: rawPt.x, y: rawPt.y, t: performance.now() });
+        state.lastX = rawPt.x;
+        state.lastY = rawPt.y;
+        ensureLaserLoop();
+      }
+      return;
+    }
+
     if (state.mode === 'draw-stroke' && state.strokeDraft) {
       const pt = ruler.visible ? (snapPointToRulerEdge(rawPt.x, rawPt.y, ruler) ?? rawPt) : rawPt;
       const dist = Math.hypot(pt.x - state.lastX, pt.y - state.lastY);
@@ -724,6 +985,14 @@ export function MathInkPage() {
         const cy = g.y + g.height / 2;
         if (cx >= rx1 && cx <= rx2 && cy >= ry1 && cy <= ry2) picked.add(g.id);
       }
+      for (const vt of activePage.variationTables ?? []) {
+        const cx = vt.x + vt.width / 2;
+        const cy = vt.y + vt.height / 2;
+        if (cx >= rx1 && cx <= rx2 && cy >= ry1 && cy <= ry2) picked.add(vt.id);
+      }
+      for (const st of activePage.stamps ?? []) {
+        if (st.x >= rx1 && st.x <= rx2 && st.y >= ry1 && st.y <= ry2) picked.add(st.id);
+      }
       setSelectedIds(picked);
       setSelectionRect(null);
     } else if (state.mode === 'select-lasso' && state.lassoDraft.length >= 3) {
@@ -740,6 +1009,12 @@ export function MathInkPage() {
       }
       for (const g of activePage.graphs) {
         if (isPointInPolygon(g.x + g.width / 2, g.y + g.height / 2, poly)) picked.add(g.id);
+      }
+      for (const vt of activePage.variationTables ?? []) {
+        if (isPointInPolygon(vt.x + vt.width / 2, vt.y + vt.height / 2, poly)) picked.add(vt.id);
+      }
+      for (const st of activePage.stamps ?? []) {
+        if (isPointInPolygon(st.x, st.y, poly)) picked.add(st.id);
       }
       setSelectedIds(picked);
       setLassoPoints([]);
@@ -832,6 +1107,78 @@ export function MathInkPage() {
     setPendingTextBox(null);
   };
 
+  const handleInsertVariationTable = (
+    tableInput: Omit<InkVariationTableItem, 'id' | 'x' | 'y'>,
+  ) => {
+    const id = makeLocalId('vt');
+    const offset = ((activePage.variationTables?.length ?? 0) % 4) * 26;
+    addVariationTable({
+      ...tableInput,
+      id,
+      x: Math.round(dims.width * 0.5 - tableInput.width / 2) + offset,
+      y: 160 + offset,
+    });
+    setActiveTool('select');
+    setSelectedIds(new Set([id]));
+  };
+
+  const handleUploadWorksheetImages = (files: FileList) => {
+    const imageFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
+    if (imageFiles.length === 0) return;
+
+    const readOne = (file: File): Promise<InkWorksheetBackground | null> =>
+      new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result !== 'string') {
+            resolve(null);
+            return;
+          }
+          resolve({
+            id: makeLocalId('ws'),
+            title: file.name.replace(/\.[^.]+$/, ''),
+            dataUrl: reader.result,
+            opacity: 0.92,
+            fitMode: 'top-half',
+            locked: true,
+          });
+        };
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+      });
+
+    void Promise.all(imageFiles.map(readOne)).then((results) => {
+      const valid = results.filter((w): w is InkWorksheetBackground => w !== null);
+      if (valid.length === 0) return;
+      if (valid.length === 1) {
+        setWorksheetBackground(valid[0]!);
+      } else {
+        addPagesWithWorksheets(valid);
+      }
+    });
+  };
+
+  const handleImportActiveExamAsWorksheet = () => {
+    const currentExam = useExamBuilderStore.getState();
+    const activeExamDoc =
+      currentExam.buckets[currentExam.activeAccountKey]?.exams.find(
+        (ex) => ex.id === currentExam.buckets[currentExam.activeAccountKey]?.activeExamId,
+      ) ?? null;
+    if (!activeExamDoc) return;
+
+    const dataUrl = renderExamTextToWorksheetDataUrl(activeExamDoc.title, activeExamDoc.rawMarkup);
+    if (!dataUrl) return;
+    setWorksheetBackground({
+      id: makeLocalId('ws-exam'),
+      title: activeExamDoc.title || 'Đề từ Xưởng Soạn Đề',
+      dataUrl,
+      opacity: 0.95,
+      fitMode: 'top-half',
+      locked: true,
+    });
+    setOpenPopover(null);
+  };
+
   const handleExportPng = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -842,6 +1189,75 @@ export function MathInkPage() {
     document.body.appendChild(link);
     link.click();
     link.remove();
+  };
+
+  const handleExportNotebookPdf = async () => {
+    if (isExportingPdf || activeNotebook.pages.length === 0) return;
+    setIsExportingPdf(true);
+    try {
+      const loadImage = (id: string, dataUrl: string): Promise<void> => {
+        const existing = imageCacheRef.current.get(id);
+        if (existing && existing.complete && existing.naturalWidth > 0) {
+          return Promise.resolve();
+        }
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            imageCacheRef.current.set(id, img);
+            resolve();
+          };
+          img.onerror = () => resolve();
+          img.src = dataUrl;
+        });
+      };
+
+      const isLandscape = activeNotebook.paper.orientation === 'landscape';
+      const pageWidthPt = isLandscape ? 841.89 : 595.28;
+      const pageHeightPt = isLandscape ? 595.28 : 841.89;
+      const scale = 1.5;
+
+      const offscreen = document.createElement('canvas');
+      offscreen.width = Math.round(dims.width * scale);
+      offscreen.height = Math.round(dims.height * scale);
+      const offCtx = offscreen.getContext('2d');
+      if (!offCtx) return;
+
+      const pdfPages = [];
+      for (const pg of activeNotebook.pages) {
+        const preloadTasks: Promise<void>[] = pg.images.map((im) => loadImage(im.id, im.dataUrl));
+        if (pg.worksheetBackground) {
+          preloadTasks.push(loadImage(pg.worksheetBackground.id, pg.worksheetBackground.dataUrl));
+        }
+        if (preloadTasks.length > 0) {
+          await Promise.all(preloadTasks);
+        }
+
+        offCtx.setTransform(scale, 0, 0, scale, 0, 0);
+        renderInkPageToCanvas(offCtx, {
+          width: dims.width,
+          height: dims.height,
+          paper: activeNotebook.paper,
+          page: pg,
+          imageCache: imageCacheRef.current,
+        });
+
+        const jpegUrl = offscreen.toDataURL('image/jpeg', 0.92);
+        pdfPages.push({
+          jpegBytes: dataUrlToUint8Array(jpegUrl),
+          pixelWidth: offscreen.width,
+          pixelHeight: offscreen.height,
+          pageWidthPt,
+          pageHeightPt,
+        });
+      }
+
+      const pdfBytes = buildMultiPagePdfBytes(pdfPages);
+      const safeTitle =
+        activeNotebook.title.toLowerCase().replace(/[^a-z0-9]+/gi, '-') || 'vo-toan-hoc';
+      downloadPdfFile(pdfBytes, `${safeTitle}.pdf`);
+    } finally {
+      setIsExportingPdf(false);
+    }
   };
 
   const handleSendToExamBuilder = () => {
@@ -896,6 +1312,23 @@ export function MathInkPage() {
     return activePage.solids3d.find((s) => s.id === editingSolidId) ?? null;
   }, [activePage.solids3d, editingSolidId]);
 
+  const selectedTable = useMemo(() => {
+    if (selectedIds.size !== 1) return null;
+    const onlyId = Array.from(selectedIds)[0];
+    return (activePage.variationTables ?? []).find((t) => t.id === onlyId) ?? null;
+  }, [activePage.variationTables, selectedIds]);
+
+  const editingTable = useMemo(() => {
+    if (!editingTableId) return null;
+    return (activePage.variationTables ?? []).find((t) => t.id === editingTableId) ?? null;
+  }, [activePage.variationTables, editingTableId]);
+
+  const selectedStamp = useMemo(() => {
+    if (selectedIds.size !== 1) return null;
+    const onlyId = Array.from(selectedIds)[0];
+    return (activePage.stamps ?? []).find((st) => st.id === onlyId) ?? null;
+  }, [activePage.stamps, selectedIds]);
+
   const selectedResizable = useMemo(() => {
     if (selectedIds.size !== 1) return null;
     const onlyId = Array.from(selectedIds)[0];
@@ -910,6 +1343,18 @@ export function MathInkPage() {
         y: solid.y,
         width: solid.width,
         height: solid.height,
+      };
+    }
+
+    const table = (activePage.variationTables ?? []).find((t) => t.id === onlyId);
+    if (table) {
+      return {
+        kind: 'variation' as const,
+        id: table.id,
+        x: table.x,
+        y: table.y,
+        width: table.width,
+        height: table.height,
       };
     }
 
@@ -954,7 +1399,14 @@ export function MathInkPage() {
     }
 
     return null;
-  }, [activePage.graphs, activePage.images, activePage.shapes, activePage.solids3d, selectedIds]);
+  }, [
+    activePage.graphs,
+    activePage.images,
+    activePage.shapes,
+    activePage.solids3d,
+    activePage.variationTables,
+    selectedIds,
+  ]);
 
   const handleRotateSelectedSolid = (deltaYaw: number) => {
     if (!selectedSolid) return;
@@ -966,10 +1418,34 @@ export function MathInkPage() {
     }));
   };
 
+  const handleRotateSelectedStamp = (deltaDeg: number) => {
+    if (!selectedStamp) return;
+    commitPageMutation((page) => ({
+      ...page,
+      stamps: (page.stamps ?? []).map((st) =>
+        st.id === selectedStamp.id
+          ? { ...st, rotationDeg: (st.rotationDeg + deltaDeg + 360) % 360 }
+          : st,
+      ),
+    }));
+  };
+
+  const handleScaleSelectedStamp = (deltaSize: number) => {
+    if (!selectedStamp) return;
+    commitPageMutation((page) => ({
+      ...page,
+      stamps: (page.stamps ?? []).map((st) =>
+        st.id === selectedStamp.id
+          ? { ...st, size: Math.min(96, Math.max(18, st.size + deltaSize)) }
+          : st,
+      ),
+    }));
+  };
+
   const applyResizedBox = useCallback(
     (box: {
       readonly id: string;
-      readonly kind: 'solid3d' | 'graph' | 'image' | 'shape';
+      readonly kind: 'solid3d' | 'graph' | 'variation' | 'image' | 'shape';
       readonly x: number;
       readonly y: number;
       readonly width: number;
@@ -989,6 +1465,22 @@ export function MathInkPage() {
                     height: Math.round(box.height),
                   }
                 : s,
+            ),
+          };
+        }
+        if (box.kind === 'variation') {
+          return {
+            ...page,
+            variationTables: (page.variationTables ?? []).map((t) =>
+              t.id === box.id
+                ? {
+                    ...t,
+                    x: Math.round(box.x),
+                    y: Math.round(box.y),
+                    width: Math.round(box.width),
+                    height: Math.round(box.height),
+                  }
+                : t,
             ),
           };
         }
@@ -1470,6 +1962,100 @@ export function MathInkPage() {
             )}
           </div>
 
+          {/* Ý 3: BẢNG BIẾN THIÊN & BẢNG XÉT DẤU NHANH */}
+          <div className="relative">
+            <button
+              type="button"
+              data-testid="ink-variation-btn"
+              onClick={() => {
+                setEditingTableId(null);
+                togglePopover('variation');
+              }}
+              title="Tạo & chèn Bảng biến thiên / Bảng xét dấu chuẩn Toán THPT"
+              className={cn(
+                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                openPopover === 'variation'
+                  ? 'border-[#17332C] bg-[#17332C] text-white'
+                  : 'border-[#8C5828]/35 bg-[#FDF8F3] text-[#8C5828] hover:bg-[#F5EADC] dark:border-[#D4AF6A]/35 dark:bg-[#1D1813] dark:text-[#D4AF6A]',
+              )}
+            >
+              <Table2 className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden xl:inline">Bảng biến thiên</span>
+              <span className="xl:hidden">BBT</span>
+            </button>
+            {openPopover === 'variation' && (
+              <div className="absolute top-10 right-0 z-50">
+                <VariationTablePopover
+                  key={editingTable?.id ?? 'new-vt'}
+                  initialTable={editingTable}
+                  onInsert={handleInsertVariationTable}
+                  onUpdateExisting={(tableId, patch) => {
+                    updateVariationTable(tableId, patch);
+                    setEditingTableId(null);
+                  }}
+                  onClose={() => {
+                    setEditingTableId(null);
+                    setOpenPopover(null);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Ý 4: CON DẤU KÝ HIỆU HÌNH HỌC PHẲNG */}
+          <div className="relative">
+            <button
+              type="button"
+              data-testid="ink-stamps-btn"
+              onClick={() => togglePopover('stamps')}
+              title="Con dấu ký hiệu hình học: góc vuông, vạch bằng nhau, cung góc, song song, điểm"
+              aria-label="Con dấu ký hiệu hình học"
+              className={cn(
+                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                activeTool === 'stamp' || openPopover === 'stamps'
+                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+              )}
+            >
+              <Stamp className="h-4 w-4" aria-hidden="true" />
+            </button>
+            {openPopover === 'stamps' && (
+              <div className="absolute top-10 right-0 z-50">
+                <GeometryStampsPopover
+                  config={stampConfig}
+                  onChange={setStampConfig}
+                  onSelectAndActivate={(next) => {
+                    setStampConfig(next);
+                    setActiveTool('stamp');
+                    setOpenPopover(null);
+                  }}
+                  onClose={() => setOpenPopover(null)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Ý 5: BÚT LASER TRÌNH CHIẾU (Tự mờ sau 1.5s) */}
+          <button
+            type="button"
+            data-testid="ink-laser-btn"
+            onClick={() => {
+              setOpenPopover(null);
+              setActiveTool((prev) => (prev === 'laser' ? 'pen' : 'laser'));
+            }}
+            title="Bút Laser trình chiếu (nét phát sáng tự mờ biến mất sau 1.5 giây, không làm bẩn vở)"
+            aria-pressed={activeTool === 'laser'}
+            aria-label="Bút Laser trình chiếu"
+            className={cn(
+              'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+              activeTool === 'laser'
+                ? 'border-[#DC2626] bg-[#DC2626] text-white shadow-xs'
+                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[#DC2626]',
+            )}
+          >
+            <Pointer className="h-4 w-4" aria-hidden="true" />
+          </button>
+
           {/* Tẩy (Stroke / Segment) */}
           <div className="relative">
             <button
@@ -1549,8 +2135,43 @@ export function MathInkPage() {
           </div>
         </div>
 
-        {/* PHẢI: Chèn ảnh, Zoom, Gửi sang Soạn đề, Xuất PNG, Toàn màn hình */}
+        {/* PHẢI: Phiếu đề nền, Chèn ảnh, Zoom, Gửi sang Soạn đề, Xuất PNG & PDF đa trang, Toàn màn hình */}
         <div className="flex flex-wrap items-center gap-1.5">
+          {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA */}
+          <div className="relative">
+            <button
+              type="button"
+              data-testid="ink-worksheet-btn"
+              onClick={() => togglePopover('worksheet')}
+              title="Gắn ảnh phiếu bài tập hoặc nạp đề từ Xưởng Soạn Đề làm nền khóa để giải trực tiếp"
+              className={cn(
+                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                openPopover === 'worksheet' || activePage.worksheetBackground
+                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)]/12 text-[var(--accent-os)]'
+                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+              )}
+            >
+              <FileImage className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden xl:inline">Phiếu đề</span>
+            </button>
+            {openPopover === 'worksheet' && (
+              <div className="absolute top-10 right-0 z-50">
+                <WorksheetBackgroundPopover
+                  background={activePage.worksheetBackground}
+                  activeExamTitle={activeExamTitle}
+                  onUploadImages={handleUploadWorksheetImages}
+                  onImportActiveExam={handleImportActiveExamAsWorksheet}
+                  onUpdateBackground={(patch) => {
+                    if (!activePage.worksheetBackground) return;
+                    setWorksheetBackground({ ...activePage.worksheetBackground, ...patch });
+                  }}
+                  onRemoveBackground={() => setWorksheetBackground(null)}
+                  onClose={() => setOpenPopover(null)}
+                />
+              </div>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={() => imageUploadRef.current?.click()}
@@ -1608,10 +2229,23 @@ export function MathInkPage() {
             data-testid="ink-export-png"
             onClick={handleExportPng}
             title="Tải ảnh PNG độ nét cao của trang hiện tại"
-            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-[#17332C] px-2.5 text-xs font-semibold text-white hover:bg-[#21463C]"
+            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">PNG</span>
+          </button>
+
+          {/* Ý 5: XUẤT TOÀN BỘ QUYỂN VỞ RA PDF ĐA TRANG */}
+          <button
+            type="button"
+            data-testid="ink-export-pdf"
+            disabled={isExportingPdf}
+            onClick={() => void handleExportNotebookPdf()}
+            title={`Xuất toàn bộ ${activeNotebook.pages.length} trang vở thành 1 file PDF chuẩn A4`}
+            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-[#17332C] px-2.5 text-xs font-semibold text-white hover:bg-[#21463C] disabled:opacity-60"
+          >
+            <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="hidden sm:inline">{isExportingPdf ? 'Đang xuất...' : 'PDF'}</span>
           </button>
 
           <button
@@ -1660,7 +2294,79 @@ export function MathInkPage() {
 
         {/* BÀN VIẾT CANVAS TƯƠNG TÁC */}
         <div className="os-thin-scrollbar relative flex-1 overflow-auto p-5 sm:p-8">
-          {/* Thanh nổi thao tác nhanh khi đang chọn đối tượng (Di chuyển, Thu/Phóng, Xoay, Dựng hình 3D, Xóa) */}
+          {/* Thanh nổi cho Bút Laser trình chiếu */}
+          {activeTool === 'laser' && (
+            <div
+              data-testid="ink-laser-bar"
+              className="sticky top-2 z-20 mx-auto mb-3 flex w-fit flex-wrap items-center gap-2 rounded-full border border-[#DC2626]/35 bg-[var(--bg-workspace)]/95 px-3.5 py-1.5 text-xs shadow-lg backdrop-blur-md"
+            >
+              <span className="inline-flex items-center gap-1.5 font-semibold text-[#DC2626]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[#DC2626]" />
+                <span>Chế độ Laser trình chiếu (tự mờ sau 1.5s)</span>
+              </span>
+              <div className="flex items-center gap-1 border-l border-[var(--border-hairline)] pl-2">
+                {LASER_COLOR_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setLaserColor(opt.hex)}
+                    title={opt.label}
+                    style={{ backgroundColor: opt.hex }}
+                    className={cn(
+                      'h-4 w-4 cursor-pointer rounded-full border border-white/60',
+                      laserColor === opt.hex && 'ring-2 ring-[var(--text-main)] ring-offset-1',
+                    )}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTool('pen')}
+                className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 text-[11px] font-medium hover:text-[var(--accent-os)]"
+              >
+                Quay lại bút
+              </button>
+            </div>
+          )}
+
+          {/* Thanh nổi khi đang ở chế độ Đóng dấu Hình học */}
+          {activeTool === 'stamp' && (
+            <div
+              data-testid="ink-stamp-bar"
+              className="sticky top-2 z-20 mx-auto mb-3 flex w-fit flex-wrap items-center gap-2 rounded-full border border-[var(--accent-os)]/35 bg-[var(--bg-workspace)]/95 px-3.5 py-1.5 text-xs shadow-lg backdrop-blur-md"
+            >
+              <span className="font-semibold text-[var(--accent-os)]">
+                Đang đóng dấu · Chạm vào giấy để gắn ({stampConfig.rotationDeg}°)
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setStampConfig((c) => ({ ...c, rotationDeg: (c.rotationDeg - 15 + 360) % 360 }))
+                }
+                className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10.5px]"
+              >
+                -15°
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setStampConfig((c) => ({ ...c, rotationDeg: (c.rotationDeg + 15) % 360 }))
+                }
+                className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10.5px]"
+              >
+                +15°
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTool('pen')}
+                className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 text-[11px] font-medium hover:text-[var(--accent-os)]"
+              >
+                Xong
+              </button>
+            </div>
+          )}
+
+          {/* Thanh nổi thao tác nhanh khi đang chọn đối tượng (Di chuyển, Thu/Phóng, Xoay, Dựng hình 3D, Bảng biến thiên, Xóa) */}
           {selectedIds.size > 0 && (
             <div
               data-testid="ink-selection-bar"
@@ -1729,6 +2435,56 @@ export function MathInkPage() {
                 </div>
               )}
 
+              {selectedTable && (
+                <div className="inline-flex items-center gap-1 border-l border-[var(--border-hairline)] pl-1.5">
+                  <button
+                    type="button"
+                    data-testid="selected-edit-vt-btn"
+                    onClick={() => {
+                      setEditingTableId(selectedTable.id);
+                      setOpenPopover('variation');
+                    }}
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#8C5828]/40 bg-[#FDF8F3] px-2 py-0.5 text-[10.5px] font-semibold text-[#8C5828] hover:bg-[#F5EADC] dark:border-[#D4AF6A]/35 dark:bg-[#1D1813] dark:text-[#D4AF6A]"
+                  >
+                    <Table2 className="h-3 w-3" aria-hidden="true" />
+                    <span>Chỉnh bảng</span>
+                  </button>
+                </div>
+              )}
+
+              {selectedStamp && (
+                <div className="inline-flex items-center gap-1 border-l border-[var(--border-hairline)] pl-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleScaleSelectedStamp(-6)}
+                    className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10.5px]"
+                  >
+                    - Cỡ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleScaleSelectedStamp(6)}
+                    className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10.5px]"
+                  >
+                    + Cỡ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRotateSelectedStamp(-15)}
+                    className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10.5px]"
+                  >
+                    -15°
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRotateSelectedStamp(15)}
+                    className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10.5px]"
+                  >
+                    +15°
+                  </button>
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={() => {
@@ -1738,6 +2494,10 @@ export function MathInkPage() {
                     shapes: page.shapes.filter((s) => !selectedIds.has(s.id)),
                     solids3d: page.solids3d.filter((s) => !selectedIds.has(s.id)),
                     graphs: page.graphs.filter((g) => !selectedIds.has(g.id)),
+                    variationTables: (page.variationTables ?? []).filter(
+                      (t) => !selectedIds.has(t.id),
+                    ),
+                    stamps: (page.stamps ?? []).filter((st) => !selectedIds.has(st.id)),
                     texts: page.texts.filter((t) => !selectedIds.has(t.id)),
                     images: page.images.filter((im) => !selectedIds.has(im.id)),
                   }));
@@ -1778,10 +2538,19 @@ export function MathInkPage() {
                 'h-full w-full touch-none select-none',
                 activeTool === 'pen' && 'cursor-crosshair',
                 activeTool === 'shape' && 'cursor-crosshair',
+                activeTool === 'stamp' && 'cursor-copy',
+                activeTool === 'laser' && 'cursor-crosshair',
                 activeTool === 'eraser' && 'cursor-cell',
                 activeTool === 'select' && 'cursor-move',
                 activeTool === 'text' && 'cursor-text',
               )}
+            />
+
+            {/* Lớp phủ tia Laser trình chiếu 60fps (trong suốt, không chặn con trỏ) */}
+            <canvas
+              ref={laserCanvasRef}
+              data-testid="math-ink-laser-canvas"
+              className="pointer-events-none absolute inset-0 z-15 h-full w-full"
             />
 
             {/* Khung thu/phóng trực tiếp 4 góc cho Hình 3D, Đồ thị, Ảnh & Hình 2D đang chọn */}
