@@ -2,6 +2,7 @@ import {
   BookMarked,
   BookOpen,
   Compass,
+  FilePenLine,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
@@ -139,6 +140,7 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
     pathname.startsWith('/courses/') ||
     pathname.startsWith('/bai-hoc/');
   const isGlossaryActive = pathname === ROUTES.glossary || pathname === '/glossary';
+  const isExamBuilderActive = pathname === ROUTES.examBuilder;
 
   const handleSelectFontSize = (scale: ReadingFontSize) => {
     setFontScale(readingSizeToFontScale(scale));
@@ -320,6 +322,23 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
           )}
           <BookMarked className="h-4 w-4 shrink-0" aria-hidden="true" />
           {!isRailCollapsed && <span className="truncate">Kho Thuật ngữ</span>}
+        </Link>
+
+        <Link
+          to={ROUTES.examBuilder}
+          aria-label="Soạn đề Toán"
+          title={isRailCollapsed ? 'Soạn đề Toán' : undefined}
+          aria-current={isExamBuilderActive ? 'page' : undefined}
+          className={navItemClass(isExamBuilderActive)}
+        >
+          {isExamBuilderActive && (
+            <span
+              aria-hidden="true"
+              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
+            />
+          )}
+          <FilePenLine className="h-4 w-4 shrink-0" aria-hidden="true" />
+          {!isRailCollapsed && <span className="truncate">Soạn đề Toán</span>}
         </Link>
 
         <Link

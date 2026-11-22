@@ -2,6 +2,7 @@ import {
   BookMarked,
   BookOpen,
   Compass,
+  FilePenLine,
   Gamepad2,
   Hourglass,
   Landmark,
@@ -194,6 +195,14 @@ export const AppShell: FC<AppShellProps> = ({
               >
                 <BookMarked className="h-4 w-4 text-[var(--text-muted)]" aria-hidden="true" />
                 <span>Kho Thuật ngữ</span>
+              </Link>
+              <Link
+                to={ROUTES.examBuilder}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-sm font-medium text-[var(--text-main)] hover:bg-[var(--bg-workspace)]"
+              >
+                <FilePenLine className="h-4 w-4 text-[var(--text-muted)]" aria-hidden="true" />
+                <span>Soạn đề Toán</span>
               </Link>
               <button
                 type="button"

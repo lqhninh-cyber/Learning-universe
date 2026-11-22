@@ -90,6 +90,13 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.examBuilder,
+        lazy: async () => {
+          const { ExamBuilderPage } = await import('@/pages/exam-builder/ExamBuilderPage');
+          return { Component: ExamBuilderPage };
+        },
+      },
+      {
         path: ROUTES.sanctuary,
         lazy: async () => {
           const { SanctuaryPage } = await import('@/pages/sanctuary/SanctuaryPage');

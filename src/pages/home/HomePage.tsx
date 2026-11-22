@@ -3,6 +3,7 @@ import {
   ArrowUpRight,
   Check,
   Compass,
+  FilePenLine,
   Gamepad2,
   Hourglass,
   Landmark,
@@ -635,6 +636,23 @@ export function HomePage() {
                   </span>
                   <ArrowUpRight
                     className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/q1:translate-x-0.5 group-hover/q1:-translate-y-0.5"
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                <Link
+                  to={ROUTES.examBuilder}
+                  className="group/qexam flex items-center justify-between gap-2 rounded-xl border border-white/12 bg-white/8 px-3 py-2 text-xs font-medium text-white/95 transition-colors hover:bg-white/16"
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <FilePenLine
+                      className="h-3.5 w-3.5 shrink-0 text-[#D4AF6A]"
+                      aria-hidden="true"
+                    />
+                    <span className="truncate">Soạn đề Toán</span>
+                  </span>
+                  <ArrowUpRight
+                    className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/qexam:translate-x-0.5 group-hover/qexam:-translate-y-0.5"
                     aria-hidden="true"
                   />
                 </Link>

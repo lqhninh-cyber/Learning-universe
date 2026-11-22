@@ -363,6 +363,16 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         },
       },
       {
+        id: 'action-goto-exam-builder',
+        group: 'actions',
+        title: 'Mở Xưởng Soạn Đề Toán',
+        subtitle: 'Soạn đề 3 phần chuẩn PDF (A–D, Đúng/Sai, Trả lời ngắn), KaTeX & in A4',
+        badge: 'Soạn đề',
+        dotColor: '#1B5E4A',
+        href: ROUTES.examBuilder,
+        searchText: 'soan de tao de kiem tra toan trac nghiem dung sai tra loi ngan latex pdf in',
+      },
+      {
         id: 'action-goto-billiards',
         group: 'actions',
         title: 'Đi tới Bida 8-Ball Khoáng Thạch',

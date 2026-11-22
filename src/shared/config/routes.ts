@@ -14,6 +14,7 @@ export const ROUTES = {
     `/mon-hoc/${subjectSlug}/${chapterSlug}/${lessonSlug}`,
   lessonShortcut: (lessonOrChapterSlug: string) => `/bai-hoc/${lessonOrChapterSlug}`,
   glossary: '/thuat-ngu',
+  examBuilder: '/soan-de',
   sanctuary: '/thu-gian',
   sanctuaryTab: (tab: 'di-san' | 'bida') => `/thu-gian?tab=${tab}`,
   adminUsers: '/admin/users',

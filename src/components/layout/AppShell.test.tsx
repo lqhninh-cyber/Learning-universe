@@ -84,6 +84,10 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
       'href',
       '/thuat-ngu',
     );
+    expect(within(rail).getByRole('link', { name: 'Soạn đề Toán' })).toHaveAttribute(
+      'href',
+      '/soan-de',
+    );
     expect(within(rail).getByRole('link', { name: 'Sảnh Thư giãn' })).toHaveAttribute(
       'href',
       '/thu-gian?tab=di-san',

@@ -1514,3 +1514,35 @@
     animation: none;
   }
 }
+
+/* ==========================================================================
+   CHUẨN IN ẤN A4 CHO XƯỞNG SOẠN ĐỀ TOÁN (/soan-de)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 16mm 18mm 16mm 20mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .lu-exam-paper {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .lu-exam-question {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
