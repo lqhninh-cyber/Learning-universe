@@ -158,17 +158,37 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     expect(screen.getByTestId('subject-svg-giao-duc-hoc')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subject-recent-cau-truc-dai-so')).toBeInTheDocument();
 
-    // 3. Thêm & hoàn thành 1 nhiệm vụ To-Do -> tự động cập nhật chuỗi ngày học
+    // 3. Kiểm tra nút + Thêm lúc trống hiện nhắc nhẹ + gợi ý nhanh, rồi thêm, sửa & hoàn thành To-Do
+    fireEvent.click(screen.getByTestId('todo-add-submit'));
+    expect(screen.getByTestId('todo-form-notice')).toHaveTextContent(/Nhập nội dung nhiệm vụ/i);
+
     const todoInput = screen.getByTestId('todo-title-input');
     fireEvent.change(todoInput, { target: { value: 'Chứng minh Định lý đẳng cấu thứ nhất' } });
+    fireEvent.change(screen.getByTestId('todo-time-input'), { target: { value: '20:30' } });
+    fireEvent.click(screen.getByTestId('todo-priority-toggle'));
     fireEvent.submit(screen.getByTestId('todo-add-form'));
 
+    expect(screen.getByTestId('todo-form-notice')).toHaveTextContent(/Đã thêm vào lịch/i);
     const todoItems = screen.getAllByTestId('todo-item');
     expect(todoItems).toHaveLength(1);
     expect(todoItems[0]).toHaveTextContent('Chứng minh Định lý đẳng cấu thứ nhất');
+    expect(todoItems[0]).toHaveTextContent('20:30');
 
-    const checkBtn = within(todoItems[0]!).getByRole('button', {
-      name: /Đánh dấu hoàn thành: Chứng minh Định lý đẳng cấu thứ nhất/i,
+    // Sửa trực tiếp nhiệm vụ vừa thêm
+    const editBtn = within(todoItems[0]!).getByRole('button', {
+      name: /Sửa nhiệm vụ: Chứng minh Định lý đẳng cấu thứ nhất/i,
+    });
+    fireEvent.click(editBtn);
+    fireEvent.change(screen.getByLabelText('Sửa tên nhiệm vụ'), {
+      target: { value: 'Chứng minh Định lý đẳng cấu thứ nhất (Đã rà)' },
+    });
+    fireEvent.submit(screen.getByTestId('todo-edit-form'));
+    expect(screen.getAllByTestId('todo-item')[0]).toHaveTextContent(
+      'Chứng minh Định lý đẳng cấu thứ nhất (Đã rà)',
+    );
+
+    const checkBtn = within(screen.getAllByTestId('todo-item')[0]!).getByRole('button', {
+      name: /Đánh dấu hoàn thành: Chứng minh Định lý đẳng cấu thứ nhất \(Đã rà\)/i,
     });
     fireEvent.click(checkBtn);
     expect(screen.getByTestId('study-streak-value')).toHaveTextContent('1');

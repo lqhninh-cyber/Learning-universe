@@ -8,6 +8,8 @@ export interface StudyTaskItem {
   readonly title: string;
   /** Định dạng `YYYY-MM-DD` theo múi giờ địa phương */
   readonly dueDate: string;
+  /** Giờ dự kiến tùy chọn dạng `HH:mm` (VD: `20:00`) */
+  readonly dueTime?: string | null;
   readonly subjectSlug: WorkspaceSubjectSlug | null;
   readonly priority: TaskPriority;
   readonly completed: boolean;

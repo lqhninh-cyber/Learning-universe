@@ -47,6 +47,15 @@ function generateLocalId(prefix: string): string {
 export interface AddTaskInput {
   readonly title: string;
   readonly dueDate?: string;
+  readonly dueTime?: string | null;
+  readonly subjectSlug?: WorkspaceSubjectSlug | null;
+  readonly priority?: TaskPriority;
+}
+
+export interface UpdateTaskInput {
+  readonly title?: string;
+  readonly dueDate?: string;
+  readonly dueTime?: string | null;
   readonly subjectSlug?: WorkspaceSubjectSlug | null;
   readonly priority?: TaskPriority;
 }
@@ -65,6 +74,7 @@ export interface WorkspaceState {
 
   setActiveAccount: (userId: string | null) => void;
   addTask: (input: AddTaskInput) => StudyTaskItem | null;
+  updateTask: (taskId: string, patch: UpdateTaskInput) => void;
   toggleTask: (taskId: string) => void;
   toggleTaskPriority: (taskId: string) => void;
   deleteTask: (taskId: string) => void;
@@ -113,6 +123,7 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           id: generateLocalId('task'),
           title: trimmed,
           dueDate,
+          dueTime: input.dueTime?.trim() || null,
           subjectSlug: input.subjectSlug ?? null,
           priority: input.priority ?? 'normal',
           completed: false,
@@ -136,6 +147,49 @@ export const useWorkspaceStore = create<WorkspaceState>()(
           void syncStudyTaskToSupabase(accountKey, newTask);
         }
         return newTask;
+      },
+
+      updateTask: (taskId, patch) => {
+        const state = get();
+        const accountKey = state.activeAccountKey;
+        const currentBucket = state.buckets[accountKey];
+        if (!currentBucket) return;
+
+        const nowIso = new Date().toISOString();
+        let updatedTask: StudyTaskItem | null = null;
+        const nextTasks = currentBucket.tasks.map((task) => {
+          if (task.id !== taskId) return task;
+          const nextTitle = patch.title !== undefined ? patch.title.trim() : task.title;
+          if (!nextTitle) return task;
+          updatedTask = {
+            ...task,
+            title: nextTitle,
+            dueDate: patch.dueDate?.trim() || task.dueDate,
+            dueTime:
+              patch.dueTime !== undefined ? patch.dueTime?.trim() || null : (task.dueTime ?? null),
+            subjectSlug: patch.subjectSlug !== undefined ? patch.subjectSlug : task.subjectSlug,
+            priority: patch.priority ?? task.priority,
+            updatedAt: nowIso,
+          };
+          return updatedTask;
+        });
+
+        if (!updatedTask) return;
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [accountKey]: {
+              ...currentBucket,
+              tasks: nextTasks,
+              updatedAt: nowIso,
+            },
+          },
+        });
+
+        if (accountKey !== GUEST_ACCOUNT_KEY) {
+          void syncStudyTaskToSupabase(accountKey, updatedTask);
+        }
       },
 
       toggleTask: (taskId) => {

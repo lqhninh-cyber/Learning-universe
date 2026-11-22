@@ -3,15 +3,18 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Clock,
   Cloud,
   Flag,
   HardDrive,
+  Pencil,
   Pin,
   Plus,
+  Sparkles,
   Trash2,
   X,
 } from 'lucide-react';
-import { type FC, type FormEvent, useMemo, useState } from 'react';
+import { type FC, type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useOptionalAuth } from '@/features/auth';
 import {
   computeDaysUntilDate,
@@ -22,6 +25,8 @@ import {
   toLocalDateKey,
   useWorkspaceStore,
   WORKSPACE_SUBJECT_META,
+  type StudyTaskItem,
+  type TaskPriority,
   type WorkspaceSubjectSlug,
 } from '@/features/workspace';
 import { cn } from '@/shared/lib/cn';
@@ -44,6 +49,28 @@ const SUBJECT_OPTIONS: readonly {
   { value: 'hinh-hoc-affine', label: 'HHAVE' },
   { value: 'giai-tich-ham-mot-bien', label: 'GTHMB' },
   { value: 'giao-duc-hoc', label: 'GDH' },
+];
+
+const QUICK_TASK_TEMPLATES: readonly {
+  readonly title: string;
+  readonly subjectSlug: WorkspaceSubjectSlug | null;
+  readonly priority: TaskPriority;
+}[] = [
+  {
+    title: 'Ôn lại định lý trọng tâm & chứng minh',
+    subjectSlug: 'cau-truc-dai-so',
+    priority: 'high',
+  },
+  {
+    title: 'Giải 3 bài tập tự luyện trong chương',
+    subjectSlug: 'hinh-hoc-affine',
+    priority: 'normal',
+  },
+  {
+    title: 'Hoàn thành 1 phiên Pomodoro 25 phút',
+    subjectSlug: null,
+    priority: 'normal',
+  },
 ];
 
 interface CalendarDayCell {
@@ -90,6 +117,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
   const activeAccountKey = useWorkspaceStore((state) => state.activeAccountKey);
   const bucket = useWorkspaceStore(selectActiveWorkspaceBucket);
   const addTask = useWorkspaceStore((state) => state.addTask);
+  const updateTask = useWorkspaceStore((state) => state.updateTask);
   const toggleTask = useWorkspaceStore((state) => state.toggleTask);
   const toggleTaskPriority = useWorkspaceStore((state) => state.toggleTaskPriority);
   const deleteTask = useWorkspaceStore((state) => state.deleteTask);
@@ -104,16 +132,52 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
   const [filterMode, setFilterMode] = useState<TaskFilterMode>('all');
 
-  // Form thêm To-Do
+  // Form thêm To-Do vào lịch biểu
   const [taskTitle, setTaskTitle] = useState('');
   const [taskSubject, setTaskSubject] = useState<'' | WorkspaceSubjectSlug>('');
   const [taskDueDate, setTaskDueDate] = useState(todayKey);
+  const [taskDueTime, setTaskDueTime] = useState('');
+  const [taskPriority, setTaskPriority] = useState<TaskPriority>('normal');
+  const [formNotice, setFormNotice] = useState<{
+    readonly type: 'hint' | 'success';
+    readonly text: string;
+  } | null>(null);
+  const [showQuickTemplates, setShowQuickTemplates] = useState(false);
+
+  // Sửa nhanh 1 nhiệm vụ trực tiếp
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDueDate, setEditDueDate] = useState(todayKey);
+  const [editDueTime, setEditDueTime] = useState('');
+  const [editSubject, setEditSubject] = useState<'' | WorkspaceSubjectSlug>('');
 
   // Form ghim mốc kỳ thi / hạn nộp
   const [isExamFormOpen, setIsExamFormOpen] = useState(false);
   const [examTitle, setExamTitle] = useState('');
   const [examDate, setExamDate] = useState(todayKey);
   const [examSubject, setExamSubject] = useState<'' | WorkspaceSubjectSlug>('cau-truc-dai-so');
+
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const noticeTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (noticeTimerRef.current !== null) {
+        window.clearTimeout(noticeTimerRef.current);
+      }
+    };
+  }, []);
+
+  const flashNotice = (type: 'hint' | 'success', text: string) => {
+    setFormNotice({ type, text });
+    if (noticeTimerRef.current !== null) {
+      window.clearTimeout(noticeTimerRef.current);
+    }
+    noticeTimerRef.current = window.setTimeout(() => {
+      setFormNotice(null);
+      noticeTimerRef.current = null;
+    }, 2800);
+  };
 
   const monthCells = useMemo(() => buildMonthGrid(viewYear, viewMonth), [viewYear, viewMonth]);
 
@@ -157,6 +221,17 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
     return [...bucket.milestones].sort((a, b) => a.examDate.localeCompare(b.examDate)).slice(0, 4);
   }, [bucket.milestones]);
 
+  const syncCalendarViewToDate = (dateKey: string) => {
+    const match = dateKey.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return;
+    const year = Number(match[1]);
+    const month = Number(match[2]) - 1;
+    if (Number.isFinite(year) && Number.isFinite(month) && month >= 0 && month <= 11) {
+      setViewYear(year);
+      setViewMonth(month);
+    }
+  };
+
   const handlePrevMonth = () => {
     if (viewMonth === 0) {
       setViewYear((y) => y - 1);
@@ -180,6 +255,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
     setViewMonth(todayDate.getMonth());
     setSelectedDateKey(todayKey);
     setTaskDueDate(todayKey);
+    setExamDate(todayKey);
   };
 
   const handleSelectDay = (dateKey: string) => {
@@ -192,15 +268,85 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
     }
   };
 
+  const commitNewTask = (payload: {
+    readonly title: string;
+    readonly dueDate: string;
+    readonly dueTime?: string | null;
+    readonly subjectSlug: WorkspaceSubjectSlug | null;
+    readonly priority: TaskPriority;
+  }) => {
+    const created = addTask(payload);
+    if (!created) return;
+
+    syncCalendarViewToDate(created.dueDate);
+    if (filterMode === 'done') {
+      setFilterMode('all');
+    } else if (filterMode === 'today' && created.dueDate !== todayKey) {
+      setFilterMode('all');
+    } else if (filterMode === 'upcoming' && created.dueDate <= todayKey) {
+      setFilterMode('all');
+    }
+    if (selectedDateKey && selectedDateKey !== created.dueDate) {
+      setSelectedDateKey(created.dueDate);
+    }
+    flashNotice('success', `Đã thêm vào lịch ngày ${formatShortVietnameseDate(created.dueDate)}`);
+  };
+
   const handleAddTask = (event: FormEvent) => {
     event.preventDefault();
-    if (!taskTitle.trim()) return;
-    addTask({
-      title: taskTitle,
-      dueDate: taskDueDate || selectedDateKey || todayKey,
+    const trimmed = taskTitle.trim();
+    if (!trimmed) {
+      setShowQuickTemplates(true);
+      flashNotice('hint', 'Nhập nội dung nhiệm vụ hoặc chọn nhanh một gợi ý bên dưới.');
+      titleInputRef.current?.focus();
+      return;
+    }
+
+    const effectiveDate = taskDueDate || selectedDateKey || todayKey;
+    commitNewTask({
+      title: trimmed,
+      dueDate: effectiveDate,
+      dueTime: taskDueTime || null,
       subjectSlug: taskSubject || null,
+      priority: taskPriority,
     });
     setTaskTitle('');
+    setTaskDueTime('');
+    setTaskPriority('normal');
+    setShowQuickTemplates(false);
+  };
+
+  const handleQuickAddTemplate = (template: (typeof QUICK_TASK_TEMPLATES)[number]) => {
+    const effectiveDate = taskDueDate || selectedDateKey || todayKey;
+    commitNewTask({
+      title: template.title,
+      dueDate: effectiveDate,
+      dueTime: taskDueTime || null,
+      subjectSlug: taskSubject || template.subjectSlug,
+      priority: template.priority,
+    });
+    setShowQuickTemplates(false);
+  };
+
+  const startEditTask = (task: StudyTaskItem) => {
+    setEditingTaskId(task.id);
+    setEditTitle(task.title);
+    setEditDueDate(task.dueDate);
+    setEditDueTime(task.dueTime ?? '');
+    setEditSubject(task.subjectSlug ?? '');
+  };
+
+  const handleSaveTaskEdit = (event: FormEvent) => {
+    event.preventDefault();
+    if (!editingTaskId || !editTitle.trim()) return;
+    updateTask(editingTaskId, {
+      title: editTitle.trim(),
+      dueDate: editDueDate || todayKey,
+      dueTime: editDueTime || null,
+      subjectSlug: editSubject || null,
+    });
+    setEditingTaskId(null);
+    flashNotice('success', 'Đã cập nhật lịch biểu.');
   };
 
   const handleAddMilestone = (event: FormEvent) => {
@@ -211,8 +357,10 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
       examDate,
       subjectSlug: examSubject || null,
     });
+    syncCalendarViewToDate(examDate);
     setExamTitle('');
     setIsExamFormOpen(false);
+    flashNotice('success', `Đã ghim mốc kỳ thi ngày ${formatShortVietnameseDate(examDate)}`);
   };
 
   const isSignedAccount = activeAccountKey !== GUEST_ACCOUNT_KEY;
@@ -334,6 +482,44 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
               })}
             </div>
           </div>
+
+          {/* Thanh hành động nhanh khi chọn một ngày cụ thể trên lịch */}
+          {selectedDateKey && (
+            <div
+              data-testid="calendar-selected-day-bar"
+              className="flex flex-wrap items-center justify-between gap-1.5 rounded-xl border border-[var(--accent-os)]/30 bg-[var(--bg-workspace)] px-2.5 py-2 text-[11px]"
+            >
+              <span className="font-mono font-semibold text-[var(--accent-os)]">
+                Ngày {formatShortVietnameseDate(selectedDateKey)}
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  data-testid="calendar-day-add-task"
+                  onClick={() => {
+                    setTaskDueDate(selectedDateKey);
+                    setShowQuickTemplates(true);
+                    titleInputRef.current?.focus();
+                  }}
+                  className="inline-flex cursor-pointer items-center gap-0.5 rounded-md bg-[var(--accent-os)] px-2 py-0.5 font-mono text-[10px] font-semibold text-white hover:opacity-95"
+                >
+                  <Plus className="h-3 w-3" aria-hidden="true" />
+                  <span>Thêm việc</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExamDate(selectedDateKey);
+                    setIsExamFormOpen(true);
+                  }}
+                  className="inline-flex cursor-pointer items-center gap-0.5 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+                >
+                  <Pin className="h-2.5 w-2.5" aria-hidden="true" />
+                  <span>Mốc thi</span>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Chú thích dấu chấm lịch */}
           <div className="flex flex-wrap items-center gap-3 pt-1 font-mono text-[10px] text-[var(--text-muted)]">
@@ -525,53 +711,145 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
             )}
           </div>
 
-          {/* Form thêm việc nhanh */}
+          {/* Form thêm việc vào lịch biểu (2 tầng thoáng rộng, luôn phản hồi rõ ràng) */}
           <form
             onSubmit={handleAddTask}
             data-testid="todo-add-form"
-            className="flex flex-col gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-2.5 sm:flex-row sm:items-center"
+            className={cn(
+              'space-y-2 rounded-xl border bg-[var(--bg-surface)] p-2.5 transition-colors',
+              formNotice?.type === 'hint'
+                ? 'border-[#B45309]/55 ring-2 ring-[#B45309]/15'
+                : 'border-[var(--border-hairline)] focus-within:border-[var(--accent-os)]/50',
+            )}
           >
-            <input
-              type="text"
-              data-testid="todo-title-input"
-              value={taskTitle}
-              onChange={(e) => setTaskTitle(e.target.value)}
-              placeholder="VD: Chứng minh Định lý Lagrange, làm bài tập Chương 5..."
-              aria-label="Nội dung nhiệm vụ học tập mới"
-              className="min-w-0 flex-1 bg-transparent px-2 py-1 text-xs text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none sm:text-[13px]"
-            />
-
-            <div className="flex flex-wrap items-center gap-1.5">
-              <select
-                value={taskSubject}
-                onChange={(e) => setTaskSubject(e.target.value as '' | WorkspaceSubjectSlug)}
-                aria-label="Học phần cho nhiệm vụ"
-                className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1.5 font-mono text-[11px] text-[var(--text-secondary)] focus:border-[var(--accent-os)] focus:outline-none"
-              >
-                {SUBJECT_OPTIONS.map((opt) => (
-                  <option key={opt.label} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-
+            {/* Tầng 1: Ô nhập nội dung rộng rãi + nút + Thêm */}
+            <div className="flex items-center gap-2">
               <input
-                type="date"
-                value={taskDueDate}
-                onChange={(e) => setTaskDueDate(e.target.value)}
-                aria-label="Ngày hạn nhiệm vụ"
-                className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1.5 font-mono text-[11px] text-[var(--text-secondary)] focus:border-[var(--accent-os)] focus:outline-none"
+                ref={titleInputRef}
+                type="text"
+                data-testid="todo-title-input"
+                value={taskTitle}
+                onChange={(e) => {
+                  setTaskTitle(e.target.value);
+                  if (formNotice?.type === 'hint') setFormNotice(null);
+                }}
+                placeholder="VD: Chứng minh Định lý Lagrange, làm bài tập Chương 5..."
+                aria-label="Nội dung nhiệm vụ học tập mới"
+                className="min-w-0 flex-1 rounded-lg bg-[var(--bg-workspace)] px-3 py-2 text-xs text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:ring-1 focus:ring-[var(--accent-os)] focus:outline-none sm:text-[13px]"
               />
 
               <button
                 type="submit"
                 data-testid="todo-add-submit"
-                className="inline-flex cursor-pointer items-center gap-1 rounded-lg bg-[var(--accent-os)] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-[0.98]"
+                className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-lg bg-[var(--accent-os)] px-3.5 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-[0.98]"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Thêm</span>
               </button>
             </div>
+
+            {/* Tầng 2: Chọn Học phần, Ngày hạn, Giờ dự kiến, Ưu tiên & Gợi ý nhanh */}
+            <div className="flex flex-wrap items-center justify-between gap-1.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <select
+                  value={taskSubject}
+                  onChange={(e) => setTaskSubject(e.target.value as '' | WorkspaceSubjectSlug)}
+                  aria-label="Học phần cho nhiệm vụ"
+                  className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1 font-mono text-[11px] text-[var(--text-secondary)] focus:border-[var(--accent-os)] focus:outline-none"
+                >
+                  {SUBJECT_OPTIONS.map((opt) => (
+                    <option key={opt.label} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type="date"
+                  value={taskDueDate}
+                  onChange={(e) => setTaskDueDate(e.target.value)}
+                  aria-label="Ngày hạn nhiệm vụ"
+                  className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1 font-mono text-[11px] text-[var(--text-secondary)] focus:border-[var(--accent-os)] focus:outline-none"
+                />
+
+                <div className="inline-flex items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1">
+                  <Clock className="h-3 w-3 text-[var(--text-muted)]" aria-hidden="true" />
+                  <input
+                    type="time"
+                    data-testid="todo-time-input"
+                    value={taskDueTime}
+                    onChange={(e) => setTaskDueTime(e.target.value)}
+                    aria-label="Giờ dự kiến"
+                    className="bg-transparent font-mono text-[11px] text-[var(--text-secondary)] focus:outline-none"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  data-testid="todo-priority-toggle"
+                  onClick={() => setTaskPriority((p) => (p === 'high' ? 'normal' : 'high'))}
+                  aria-pressed={taskPriority === 'high'}
+                  title="Đặt mức ưu tiên cao"
+                  className={cn(
+                    'inline-flex cursor-pointer items-center gap-1 rounded-lg border px-2 py-1 font-mono text-[10.5px] font-medium transition-colors',
+                    taskPriority === 'high'
+                      ? 'border-[#B45309]/45 bg-[#FDF8F3] text-[#B45309] dark:border-[#F59E0B]/40 dark:bg-[#241B12] dark:text-[#F59E0B]'
+                      : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-muted)] hover:text-[var(--text-main)]',
+                  )}
+                >
+                  <Flag className="h-3 w-3" aria-hidden="true" />
+                  <span>Ưu tiên</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                data-testid="todo-quick-templates-toggle"
+                onClick={() => setShowQuickTemplates((v) => !v)}
+                className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 font-mono text-[10.5px] font-medium text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-workspace)] hover:text-[var(--accent-os)]"
+              >
+                <Sparkles className="h-3 w-3" aria-hidden="true" />
+                <span>Gợi ý nhanh</span>
+              </button>
+            </div>
+
+            {/* Phản hồi rõ ràng khi bấm + Thêm lúc trống hoặc khi thêm thành công */}
+            {formNotice && (
+              <p
+                role="status"
+                data-testid="todo-form-notice"
+                className={cn(
+                  'rounded-lg px-2.5 py-1 text-[11px] font-medium',
+                  formNotice.type === 'hint'
+                    ? 'bg-[#FDF8F3] text-[#8C5828] dark:bg-[#231A12] dark:text-[#E5B87A]'
+                    : 'bg-[#EDF7F3] text-[#1B5E4A] dark:bg-[#13261F] dark:text-[#6EE7B7]',
+                )}
+              >
+                {formNotice.text}
+              </p>
+            )}
+
+            {/* Gợi ý thêm nhanh 1-click */}
+            {(showQuickTemplates || bucket.tasks.length === 0) && (
+              <div
+                data-testid="todo-quick-templates"
+                className="flex flex-wrap items-center gap-1.5 border-t border-[var(--border-hairline)] pt-2"
+              >
+                <span className="font-mono text-[10px] text-[var(--text-muted)]">Thêm nhanh:</span>
+                {QUICK_TASK_TEMPLATES.map((tpl) => (
+                  <button
+                    key={tpl.title}
+                    type="button"
+                    data-testid="todo-quick-template-btn"
+                    onClick={() => handleQuickAddTemplate(tpl)}
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-0.5 text-[11px] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
+                  >
+                    <Plus className="h-2.5 w-2.5" aria-hidden="true" />
+                    <span>{tpl.title}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </form>
 
           {/* Thanh lọc chế độ xem */}
@@ -631,7 +909,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
                     ? `Chưa có nhiệm vụ nào cho ngày ${formatShortVietnameseDate(selectedDateKey)}.`
                     : filterMode === 'done'
                       ? 'Chưa có nhiệm vụ hoàn thành nào.'
-                      : 'Danh sách đang trống. Hãy thêm một mục tiêu chứng minh hoặc bài tập cho hôm nay.'}
+                      : 'Danh sách đang trống. Nhập mục tiêu phía trên hoặc bấm một gợi ý nhanh để thêm vào lịch.'}
                 </p>
               </div>
             ) : (
@@ -640,6 +918,73 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
                   ? WORKSPACE_SUBJECT_META[task.subjectSlug]
                   : null;
                 const isTodayDue = task.dueDate === todayKey;
+
+                if (editingTaskId === task.id) {
+                  return (
+                    <form
+                      key={task.id}
+                      onSubmit={handleSaveTaskEdit}
+                      data-testid="todo-edit-form"
+                      className="space-y-2 rounded-xl border border-[var(--accent-os)]/50 bg-[var(--bg-surface)] p-2.5"
+                    >
+                      <input
+                        type="text"
+                        autoFocus
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        aria-label="Sửa tên nhiệm vụ"
+                        className="w-full rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1.5 text-xs text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
+                      />
+                      <div className="flex flex-wrap items-center justify-between gap-1.5">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <select
+                            value={editSubject}
+                            onChange={(e) =>
+                              setEditSubject(e.target.value as '' | WorkspaceSubjectSlug)
+                            }
+                            aria-label="Sửa học phần"
+                            className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-1 font-mono text-[10.5px]"
+                          >
+                            {SUBJECT_OPTIONS.map((opt) => (
+                              <option key={opt.label} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            type="date"
+                            value={editDueDate}
+                            onChange={(e) => setEditDueDate(e.target.value)}
+                            aria-label="Sửa ngày hạn"
+                            className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-1 font-mono text-[10.5px]"
+                          />
+                          <input
+                            type="time"
+                            value={editDueTime}
+                            onChange={(e) => setEditDueTime(e.target.value)}
+                            aria-label="Sửa giờ dự kiến"
+                            className="rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-1 font-mono text-[10.5px]"
+                          />
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setEditingTaskId(null)}
+                            className="cursor-pointer rounded-md px-2 py-1 text-[11px] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                          >
+                            Hủy
+                          </button>
+                          <button
+                            type="submit"
+                            className="cursor-pointer rounded-md bg-[var(--accent-os)] px-2.5 py-1 text-[11px] font-semibold text-white"
+                          >
+                            Lưu
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  );
+                }
 
                 return (
                   <div
@@ -701,11 +1046,26 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
                           >
                             {isTodayDue ? 'Hôm nay' : formatShortVietnameseDate(task.dueDate)}
                           </span>
+                          {task.dueTime && (
+                            <span className="inline-flex items-center gap-0.5 font-mono text-[10px] text-[var(--text-muted)] tabular-nums">
+                              <Clock className="h-2.5 w-2.5" aria-hidden="true" />
+                              <span>{task.dueTime}</span>
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex shrink-0 items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => startEditTask(task)}
+                        aria-label={`Sửa nhiệm vụ: ${task.title}`}
+                        title="Sửa nhiệm vụ"
+                        className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] opacity-65 transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)] hover:opacity-100"
+                      >
+                        <Pencil className="h-3 w-3" aria-hidden="true" />
+                      </button>
                       <button
                         type="button"
                         onClick={() => toggleTaskPriority(task.id)}

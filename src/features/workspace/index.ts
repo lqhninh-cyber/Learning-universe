@@ -15,6 +15,7 @@ export {
   useWorkspaceStore,
   type AddMilestoneInput,
   type AddTaskInput,
+  type UpdateTaskInput,
   type WorkspaceState,
 } from './workspace-store';
 export {
