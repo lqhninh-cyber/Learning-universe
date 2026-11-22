@@ -203,7 +203,7 @@ export const AppShell: FC<AppShellProps> = ({
                 className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-sm font-medium text-[var(--text-main)] hover:bg-[var(--bg-workspace)]"
               >
                 <FilePenLine className="h-4 w-4 text-[var(--text-muted)]" aria-hidden="true" />
-                <span>Soạn đề Toán</span>
+                <span>Soạn đề</span>
               </Link>
               <Link
                 to={ROUTES.mathInk}
@@ -211,7 +211,7 @@ export const AppShell: FC<AppShellProps> = ({
                 className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-sm font-medium text-[var(--text-main)] hover:bg-[var(--bg-workspace)]"
               >
                 <PenTool className="h-4 w-4 text-[var(--text-muted)]" aria-hidden="true" />
-                <span>Bảng viết Toán</span>
+                <span>Bảng viết</span>
               </Link>
               <button
                 type="button"

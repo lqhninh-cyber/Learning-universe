@@ -328,8 +328,8 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
 
         <Link
           to={ROUTES.examBuilder}
-          aria-label="Soạn đề Toán"
-          title={isRailCollapsed ? 'Soạn đề Toán' : undefined}
+          aria-label="Soạn đề"
+          title={isRailCollapsed ? 'Soạn đề' : undefined}
           aria-current={isExamBuilderActive ? 'page' : undefined}
           className={navItemClass(isExamBuilderActive)}
         >
@@ -340,13 +340,13 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
             />
           )}
           <FilePenLine className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Soạn đề Toán</span>}
+          {!isRailCollapsed && <span className="truncate">Soạn đề</span>}
         </Link>
 
         <Link
           to={ROUTES.mathInk}
-          aria-label="Bảng viết Toán"
-          title={isRailCollapsed ? 'Bảng viết Toán (Ink & 3D & Đồ thị)' : undefined}
+          aria-label="Bảng viết"
+          title={isRailCollapsed ? 'Bảng viết (Ink & 3D & Đồ thị)' : undefined}
           aria-current={isMathInkActive ? 'page' : undefined}
           className={navItemClass(isMathInkActive)}
         >
@@ -357,7 +357,7 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
             />
           )}
           <PenTool className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Bảng viết Toán</span>}
+          {!isRailCollapsed && <span className="truncate">Bảng viết</span>}
         </Link>
 
         <Link

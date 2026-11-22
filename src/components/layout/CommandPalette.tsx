@@ -365,7 +365,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
       {
         id: 'action-goto-exam-builder',
         group: 'actions',
-        title: 'Mở Xưởng Soạn Đề Toán',
+        title: 'Mở Soạn đề',
         subtitle: 'Soạn đề 3 phần chuẩn PDF (A–D, Đúng/Sai, Trả lời ngắn), KaTeX & in A4',
         badge: 'Soạn đề',
         dotColor: '#1B5E4A',
@@ -375,7 +375,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
       {
         id: 'action-goto-math-ink',
         group: 'actions',
-        title: 'Mở Bảng viết Toán (Math Ink Studio)',
+        title: 'Mở Bảng viết (Math Ink Studio)',
         subtitle: 'Vở ô ly viết tay, hình không gian 3D nét đứt, đồ thị f(x) & tích phân',
         badge: 'Bảng viết',
         dotColor: '#1D4F6E',

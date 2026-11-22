@@ -17,8 +17,9 @@ import {
   Triangle,
   Type,
 } from 'lucide-react';
-import { type FC } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import {
+  drawInkStroke,
   SCRBLE_COLOR_PALETTE,
   type EraserMode,
   type InkRecognitionMode,
@@ -145,11 +146,56 @@ const PEN_TYPES: readonly {
   readonly label: string;
   readonly icon: typeof Pen;
 }[] = [
-  { id: 'ballpoint', label: 'Bút bi', icon: Pen },
+  { id: 'ballpoint', label: 'Bút thường', icon: Pen },
   { id: 'fountain', label: 'Bút máy', icon: PenTool },
   { id: 'pencil', label: 'Bút chì', icon: Pencil },
   { id: 'highlighter', label: 'Dạ quang', icon: Highlighter },
 ];
+
+const PenStrokePreviewCanvas: FC<{ readonly preset: PenPreset }> = ({ preset }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const w = 236;
+    const h = 40;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const points = Array.from({ length: 34 }, (_, i) => {
+      const t = i / 33;
+      return {
+        x: 14 + t * (w - 28),
+        y: h / 2 - Math.sin(t * Math.PI * 2.2) * 11,
+        pressure: 0.5,
+      };
+    });
+
+    drawInkStroke(ctx, {
+      id: 'preview',
+      penKind: preset.penKind,
+      color: preset.color,
+      width: Math.min(18, preset.width),
+      opacity: preset.penKind === 'highlighter' ? 0.36 : preset.penKind === 'pencil' ? 0.78 : 1,
+      points,
+    });
+  }, [preset.color, preset.penKind, preset.width]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ width: '100%', height: 40 }}
+      className="block rounded-lg bg-[var(--bg-surface)]/55"
+    />
+  );
+};
 
 export const PenSettingsPopover: FC<{
   readonly preset: PenPreset;
@@ -223,17 +269,8 @@ export const PenSettingsPopover: FC<{
         <span>Cỡ nét</span>
         <span>{preset.width.toFixed(1)} px</span>
       </div>
-      {/* Đường lượn sóng xem trước cỡ nét giống Scrble Ink */}
-      <svg viewBox="0 0 220 34" className="h-8 w-full">
-        <path
-          d="M 8 20 Q 58 2, 110 17 T 212 16"
-          fill="none"
-          stroke={preset.color}
-          strokeWidth={Math.min(20, preset.width)}
-          strokeLinecap="round"
-          opacity={preset.penKind === 'highlighter' ? 0.38 : 1}
-        />
-      </svg>
+      {/* Đường lượn sóng xem trước hình dáng ngòi thật (tròn đều vs bút máy vát chéo) */}
+      <PenStrokePreviewCanvas preset={preset} />
       <input
         type="range"
         min={1}

@@ -64,10 +64,10 @@ function buildContextBreadcrumbs(pathname: string): readonly BreadcrumbSegment[]
     return [{ label: 'Kho Thuật ngữ' }];
   }
   if (pathname === ROUTES.examBuilder) {
-    return [{ label: 'Soạn đề Toán' }];
+    return [{ label: 'Soạn đề' }];
   }
   if (pathname === ROUTES.mathInk) {
-    return [{ label: 'Bảng viết Toán' }];
+    return [{ label: 'Bảng viết' }];
   }
   if (pathname === ROUTES.sanctuary) {
     return [{ label: 'Sảnh Thư giãn' }];

@@ -287,12 +287,12 @@ export const DEFAULT_PAPER_CONFIG: PaperConfig = {
 };
 
 export const DEFAULT_PEN_PRESETS: readonly PenPreset[] = [
-  { id: 'pen-black', penKind: 'fountain', color: '#111827', width: 2.6 },
-  { id: 'pen-blue', penKind: 'fountain', color: '#1D4ED8', width: 2.6 },
-  { id: 'pen-red', penKind: 'fountain', color: '#DC2626', width: 2.8 },
-  { id: 'pen-emerald', penKind: 'ballpoint', color: '#1B5E4A', width: 2.6 },
-  { id: 'pen-amber', penKind: 'ballpoint', color: '#D97706', width: 2.6 },
-  { id: 'pen-violet', penKind: 'ballpoint', color: '#6D28D9', width: 2.4 },
+  { id: 'pen-black', penKind: 'ballpoint', color: '#111827', width: 2.8 },
+  { id: 'pen-blue', penKind: 'ballpoint', color: '#1D4ED8', width: 2.8 },
+  { id: 'pen-red', penKind: 'fountain', color: '#DC2626', width: 3.0 },
+  { id: 'pen-emerald', penKind: 'ballpoint', color: '#1B5E4A', width: 2.8 },
+  { id: 'pen-amber', penKind: 'fountain', color: '#D97706', width: 3.0 },
+  { id: 'pen-violet', penKind: 'ballpoint', color: '#6D28D9', width: 2.6 },
   { id: 'hl-green', penKind: 'highlighter', color: '#22C55E', width: 18 },
   { id: 'hl-amber', penKind: 'highlighter', color: '#FACC15', width: 18 },
   { id: 'hl-cyan', penKind: 'highlighter', color: '#06B6D4', width: 18 },

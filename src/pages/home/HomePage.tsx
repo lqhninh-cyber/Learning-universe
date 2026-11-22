@@ -649,7 +649,7 @@ export function HomePage() {
                       className="h-3.5 w-3.5 shrink-0 text-[#D4AF6A]"
                       aria-hidden="true"
                     />
-                    <span className="truncate">Soạn đề Toán</span>
+                    <span className="truncate">Soạn đề</span>
                   </span>
                   <ArrowUpRight
                     className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/qexam:translate-x-0.5 group-hover/qexam:-translate-y-0.5"

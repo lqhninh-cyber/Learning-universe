@@ -101,6 +101,147 @@ export function drawPaperBackground(
   ctx.restore();
 }
 
+/** Làm mịn nhẹ chuỗi điểm vẽ tay để loại bỏ rung chuột mà vẫn giữ chính xác điểm đầu/cuối */
+function smoothStrokePoints(pts: readonly InkPoint[]): InkPoint[] {
+  if (pts.length <= 2) return [...pts];
+  const out: InkPoint[] = [pts[0]!];
+  for (let i = 1; i < pts.length - 1; i += 1) {
+    const prev = pts[i - 1]!;
+    const cur = pts[i]!;
+    const next = pts[i + 1]!;
+    out.push({
+      x: prev.x * 0.2 + cur.x * 0.6 + next.x * 0.2,
+      y: prev.y * 0.2 + cur.y * 0.6 + next.y * 0.2,
+      pressure: cur.pressure ?? 0.5,
+    });
+  }
+  out.push(pts[pts.length - 1]!);
+  return out;
+}
+
+/** Lấy mẫu mịn dọc đường cong bậc hai qua trung điểm để ngòi bút máy uốn lượn không gãy khúc */
+function sampleSmoothCurve(pts: readonly InkPoint[]): InkPoint[] {
+  if (pts.length <= 1) return [...pts];
+  const smooth = smoothStrokePoints(pts);
+  if (smooth.length === 2) {
+    const a = smooth[0]!;
+    const b = smooth[1]!;
+    const dist = Math.hypot(b.x - a.x, b.y - a.y);
+    const steps = Math.max(1, Math.ceil(dist / 2.2));
+    const sampled: InkPoint[] = [];
+    for (let s = 0; s <= steps; s += 1) {
+      const t = s / steps;
+      sampled.push({
+        x: a.x + (b.x - a.x) * t,
+        y: a.y + (b.y - a.y) * t,
+        pressure: (a.pressure ?? 0.5) + ((b.pressure ?? 0.5) - (a.pressure ?? 0.5)) * t,
+      });
+    }
+    return sampled;
+  }
+
+  const sampled: InkPoint[] = [smooth[0]!];
+  let prevX = smooth[0]!.x;
+  let prevY = smooth[0]!.y;
+  let prevP = smooth[0]!.pressure ?? 0.5;
+
+  for (let i = 1; i < smooth.length; i += 1) {
+    const ctrl = smooth[i]!;
+    const isLast = i === smooth.length - 1;
+    const endX = isLast ? ctrl.x : (ctrl.x + smooth[i + 1]!.x) / 2;
+    const endY = isLast ? ctrl.y : (ctrl.y + smooth[i + 1]!.y) / 2;
+    const endP = isLast
+      ? (ctrl.pressure ?? 0.5)
+      : ((ctrl.pressure ?? 0.5) + (smooth[i + 1]!.pressure ?? 0.5)) / 2;
+
+    const approxLen =
+      Math.hypot(ctrl.x - prevX, ctrl.y - prevY) + Math.hypot(endX - ctrl.x, endY - ctrl.y);
+    const steps = Math.max(1, Math.min(28, Math.ceil(approxLen / 2.2)));
+
+    for (let s = 1; s <= steps; s += 1) {
+      const t = s / steps;
+      const omt = 1 - t;
+      const x = omt * omt * prevX + 2 * omt * t * ctrl.x + t * t * endX;
+      const y = omt * omt * prevY + 2 * omt * t * ctrl.y + t * t * endY;
+      const pressure = prevP + (endP - prevP) * t;
+      sampled.push({ x, y, pressure });
+    }
+
+    prevX = endX;
+    prevY = endY;
+    prevP = endP;
+  }
+
+  return sampled;
+}
+
+/**
+ * Kết xuất nét bút máy ngòi dẹt nghiêng (Calligraphy Chisel Nib góc -34°, giống Scrble Ink):
+ * - Nét đi lên-phải (↗) thanh mảnh, nét đi xuống-phải (↘) & sổ dọc (↓) đậm bản rộng.
+ * - Hai đầu nét vát chéo sắc nét theo đúng góc ngòi bút máy.
+ */
+function drawFountainCalligraphyStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke): void {
+  const NIB_ANGLE_RAD = (-34 * Math.PI) / 180;
+  const cosA = Math.cos(NIB_ANGLE_RAD);
+  const sinA = Math.sin(NIB_ANGLE_RAD);
+
+  const nibFullLength = Math.max(2.6, stroke.width * 2.05);
+  const minRibbonWidth = Math.max(1.15, stroke.width * 0.42);
+  const dense = sampleSmoothCurve(stroke.points);
+
+  if (dense.length === 1) {
+    const p = dense[0]!;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(NIB_ANGLE_RAD);
+    ctx.fillRect(-nibFullLength / 2, -minRibbonWidth / 2, nibFullLength, minRibbonWidth);
+    ctx.restore();
+    return;
+  }
+
+  // 1. Nét lõi thanh mảnh bảo đảm đoạn trùng góc ngòi (-34°) không bao giờ bị đứt nét
+  ctx.lineWidth = minRibbonWidth;
+  ctx.lineCap = 'butt';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(dense[0]!.x, dense[0]!.y);
+  for (let i = 1; i < dense.length; i += 1) {
+    ctx.lineTo(dense[i]!.x, dense[i]!.y);
+  }
+  ctx.stroke();
+
+  // 2. Quét lưỡi ngòi dẹt dọc đường cong tạo dải ruy-băng thanh-đậm & hai đầu vát chéo chuẩn xác
+  ctx.lineWidth = 0.45;
+  ctx.lineJoin = 'miter';
+  for (let i = 0; i < dense.length - 1; i += 1) {
+    const p0 = dense[i]!;
+    const p1 = dense[i + 1]!;
+    const scale0 = 0.86 + (p0.pressure ?? 0.5) * 0.28;
+    const scale1 = 0.86 + (p1.pressure ?? 0.5) * 0.28;
+    const h0 = (nibFullLength * scale0) / 2;
+    const h1 = (nibFullLength * scale1) / 2;
+
+    const ax0 = p0.x - cosA * h0;
+    const ay0 = p0.y - sinA * h0;
+    const bx0 = p0.x + cosA * h0;
+    const by0 = p0.y + sinA * h0;
+
+    const ax1 = p1.x - cosA * h1;
+    const ay1 = p1.y - sinA * h1;
+    const bx1 = p1.x + cosA * h1;
+    const by1 = p1.y + sinA * h1;
+
+    ctx.beginPath();
+    ctx.moveTo(ax0, ay0);
+    ctx.lineTo(bx0, by0);
+    ctx.lineTo(bx1, by1);
+    ctx.lineTo(ax1, ay1);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+}
+
 export function drawInkStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke): void {
   const pts = stroke.points;
   if (pts.length === 0) return;
@@ -116,6 +257,13 @@ export function drawInkStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke):
     ctx.lineCap = 'butt';
   }
 
+  // Bút máy thư pháp (Fountain): ngòi dẹt nghiêng thanh-đậm chuẩn Scrble Ink
+  if (stroke.penKind === 'fountain') {
+    drawFountainCalligraphyStroke(ctx, stroke);
+    ctx.restore();
+    return;
+  }
+
   if (pts.length === 1) {
     ctx.beginPath();
     ctx.arc(pts[0]!.x, pts[0]!.y, Math.max(1, stroke.width / 2), 0, Math.PI * 2);
@@ -124,39 +272,20 @@ export function drawInkStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke):
     return;
   }
 
-  // Bút máy thư pháp (Fountain): biến thiên độ dày mượt theo áp lực / tốc độ nét
-  if (stroke.penKind === 'fountain' && pts.length > 2) {
-    for (let i = 1; i < pts.length; i += 1) {
-      const prev = pts[i - 1]!;
-      const cur = pts[i]!;
-      const dist = Math.hypot(cur.x - prev.x, cur.y - prev.y);
-      const pressure = cur.pressure && cur.pressure > 0 ? cur.pressure : 0.5;
-      const speedFactor = Math.max(0.62, Math.min(1.22, 1.15 - dist * 0.015));
-      const dynamicWidth = Math.max(1, stroke.width * (0.65 + pressure * 0.65) * speedFactor);
-
-      ctx.lineWidth = dynamicWidth;
-      ctx.beginPath();
-      ctx.moveTo(prev.x, prev.y);
-      ctx.lineTo(cur.x, cur.y);
-      ctx.stroke();
-    }
-    ctx.restore();
-    return;
-  }
-
-  // Nét mực mịn bằng đường cong bậc hai qua trung điểm (quadratic Bezier)
+  // Bút thường (Ballpoint), Bút chì & Dạ quang: đường cong làm mịn tròn đều sắc nét
+  const smooth = smoothStrokePoints(pts);
   ctx.lineWidth = stroke.width;
   ctx.beginPath();
-  ctx.moveTo(pts[0]!.x, pts[0]!.y);
+  ctx.moveTo(smooth[0]!.x, smooth[0]!.y);
 
-  for (let i = 1; i < pts.length - 1; i += 1) {
-    const cur = pts[i]!;
-    const next = pts[i + 1]!;
+  for (let i = 1; i < smooth.length - 1; i += 1) {
+    const cur = smooth[i]!;
+    const next = smooth[i + 1]!;
     const midX = (cur.x + next.x) / 2;
     const midY = (cur.y + next.y) / 2;
     ctx.quadraticCurveTo(cur.x, cur.y, midX, midY);
   }
-  const last = pts[pts.length - 1]!;
+  const last = smooth[smooth.length - 1]!;
   ctx.lineTo(last.x, last.y);
   ctx.stroke();
 

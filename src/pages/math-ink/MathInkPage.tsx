@@ -1772,8 +1772,16 @@ export function MathInkPage() {
                   }}
                   title={
                     isSelected
-                      ? 'Nhấn lần nữa để chỉnh ngòi, bảng màu & cỡ nét'
-                      : `Chọn ${isHighlighter ? 'dạ quang' : 'bút'}`
+                      ? 'Nhấn lần nữa để chỉnh ngòi (Bút thường / Bút máy), bảng màu & cỡ nét'
+                      : `Chọn ${
+                          preset.penKind === 'highlighter'
+                            ? 'dạ quang'
+                            : preset.penKind === 'fountain'
+                              ? 'bút máy'
+                              : preset.penKind === 'pencil'
+                                ? 'bút chì'
+                                : 'bút thường'
+                        }`
                   }
                   aria-label={`Chọn bút ${preset.id}`}
                   className={cn(
