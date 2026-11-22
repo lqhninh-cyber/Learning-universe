@@ -6,6 +6,7 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  PenTool,
   PlayCircle,
   Search,
   Sparkles,
@@ -141,6 +142,7 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
     pathname.startsWith('/bai-hoc/');
   const isGlossaryActive = pathname === ROUTES.glossary || pathname === '/glossary';
   const isExamBuilderActive = pathname === ROUTES.examBuilder;
+  const isMathInkActive = pathname === ROUTES.mathInk;
 
   const handleSelectFontSize = (scale: ReadingFontSize) => {
     setFontScale(readingSizeToFontScale(scale));
@@ -339,6 +341,23 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
           )}
           <FilePenLine className="h-4 w-4 shrink-0" aria-hidden="true" />
           {!isRailCollapsed && <span className="truncate">Soạn đề Toán</span>}
+        </Link>
+
+        <Link
+          to={ROUTES.mathInk}
+          aria-label="Bảng viết Toán"
+          title={isRailCollapsed ? 'Bảng viết Toán (Ink & 3D & Đồ thị)' : undefined}
+          aria-current={isMathInkActive ? 'page' : undefined}
+          className={navItemClass(isMathInkActive)}
+        >
+          {isMathInkActive && (
+            <span
+              aria-hidden="true"
+              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
+            />
+          )}
+          <PenTool className="h-4 w-4 shrink-0" aria-hidden="true" />
+          {!isRailCollapsed && <span className="truncate">Bảng viết Toán</span>}
         </Link>
 
         <Link

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useExamBuilderStore } from '@/features/exam-builder';
 import { useLearningStore } from '@/features/learning';
+import { useInkNotebookStore } from '@/features/math-ink';
 import { useWorkspaceStore } from '@/features/workspace';
 import { isSupabaseConfigured, supabase } from '@/services/supabase/client';
 import { fetchUserLearningData } from '@/services/supabase/learning-sync';
@@ -53,6 +54,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
         .enableLearnerMode(user.fullName || user.email || undefined, user.id);
       useWorkspaceStore.getState().setActiveAccount(user.id);
       useExamBuilderStore.getState().setActiveAccount(user.id);
+      useInkNotebookStore.getState().setActiveAccount(user.id);
       void fetchUserLearningData(user.id).then((cloudData) => {
         if (cloudData) {
           useLearningStore.getState().mergeCloudLearningData(cloudData);
@@ -67,6 +69,7 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       useLearningStore.getState().signOutLearnerMode();
       useWorkspaceStore.getState().setActiveAccount(null);
       useExamBuilderStore.getState().setActiveAccount(null);
+      useInkNotebookStore.getState().setActiveAccount(null);
     }
     saveStoredUser(user);
   }, [user]);

@@ -9,6 +9,7 @@ import {
   LogIn,
   LogOut,
   Moon,
+  PenTool,
   Search,
   Sparkles,
   Sun,
@@ -203,6 +204,14 @@ export const AppShell: FC<AppShellProps> = ({
               >
                 <FilePenLine className="h-4 w-4 text-[var(--text-muted)]" aria-hidden="true" />
                 <span>Soạn đề Toán</span>
+              </Link>
+              <Link
+                to={ROUTES.mathInk}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 text-sm font-medium text-[var(--text-main)] hover:bg-[var(--bg-workspace)]"
+              >
+                <PenTool className="h-4 w-4 text-[var(--text-muted)]" aria-hidden="true" />
+                <span>Bảng viết Toán</span>
               </Link>
               <button
                 type="button"

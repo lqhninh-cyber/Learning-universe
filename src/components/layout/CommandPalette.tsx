@@ -373,6 +373,17 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         searchText: 'soan de tao de kiem tra toan trac nghiem dung sai tra loi ngan latex pdf in',
       },
       {
+        id: 'action-goto-math-ink',
+        group: 'actions',
+        title: 'Mở Bảng viết Toán (Math Ink Studio)',
+        subtitle: 'Vở ô ly viết tay, hình không gian 3D nét đứt, đồ thị f(x) & tích phân',
+        badge: 'Bảng viết',
+        dotColor: '#1D4F6E',
+        href: ROUTES.mathInk,
+        searchText:
+          'bang viet scrble ink vo o ly ve do thi ham so hinh khong gian 3d chop lang tru',
+      },
+      {
         id: 'action-goto-billiards',
         group: 'actions',
         title: 'Đi tới Bida 8-Ball Khoáng Thạch',

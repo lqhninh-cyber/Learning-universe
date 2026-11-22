@@ -97,6 +97,13 @@ export const routes: RouteObject[] = [
         },
       },
       {
+        path: ROUTES.mathInk,
+        lazy: async () => {
+          const { MathInkPage } = await import('@/pages/math-ink/MathInkPage');
+          return { Component: MathInkPage };
+        },
+      },
+      {
         path: ROUTES.sanctuary,
         lazy: async () => {
           const { SanctuaryPage } = await import('@/pages/sanctuary/SanctuaryPage');
