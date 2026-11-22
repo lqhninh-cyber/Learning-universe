@@ -63,6 +63,41 @@ export interface InkShapeItem {
   readonly width: number;
 }
 
+export type Solid3DConstruction =
+  | {
+      readonly id: string;
+      readonly kind: 'midpoint';
+      readonly fromVertex: string;
+      readonly toVertex: string;
+      readonly label: string;
+      readonly color?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'centroid';
+      readonly vertices: readonly string[];
+      readonly label: string;
+      readonly color?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'altitude';
+      readonly apexVertex: string;
+      /** `'base-plane'` = hạ vuông góc xuống mặt đáy, hoặc ID của điểm mục tiêu (đỉnh/trung điểm/trọng tâm) */
+      readonly footTarget: string;
+      readonly footLabel: string;
+      readonly showRightAngle?: boolean;
+      readonly color?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'segment';
+      readonly fromPoint: string;
+      readonly toPoint: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color?: string;
+    };
+
 export interface Ink3DSolidItem {
   readonly id: string;
   readonly preset: Solid3DPresetKind;
@@ -77,6 +112,10 @@ export interface Ink3DSolidItem {
   readonly showLabels: boolean;
   readonly showAuxLines: boolean;
   readonly dashedHidden: boolean;
+  /** Bảng đổi tên đỉnh tùy chỉnh theo ID đỉnh (VD: `{ S: 'P', A: 'M', B: 'N' }`) */
+  readonly customLabels?: Readonly<Record<string, string>>;
+  /** Danh sách các yếu tố dựng hình phụ: trung điểm, trọng tâm, đường cao, đoạn nối */
+  readonly constructions?: readonly Solid3DConstruction[];
 }
 
 export interface GraphFunctionEntry {
@@ -136,9 +175,20 @@ export interface InkPage {
   readonly images: readonly InkImageItem[];
 }
 
+export interface InkFolder {
+  readonly id: string;
+  readonly name: string;
+  /** `null` = thư mục gốc; chuỗi ID = thư mục cha để chia nhiều cấp mục */
+  readonly parentId: string | null;
+  readonly color: string;
+  readonly createdAt: string;
+}
+
 export interface InkNotebook {
   readonly id: string;
   readonly title: string;
+  /** ID thư mục chứa vở (`null` = Chưa phân mục / thư mục gốc) */
+  readonly folderId?: string | null;
   readonly paper: PaperConfig;
   readonly pages: readonly InkPage[];
   readonly activePageIndex: number;

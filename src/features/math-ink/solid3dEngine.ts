@@ -1,4 +1,4 @@
-import type { Ink3DSolidItem, Solid3DPresetKind } from './types';
+import type { Ink3DSolidItem, Solid3DConstruction, Solid3DPresetKind } from './types';
 
 export interface Vec3 {
   readonly x: number;
@@ -16,7 +16,7 @@ export interface SolidVertex {
 export interface SolidEdge {
   readonly from: string;
   readonly to: string;
-  /** Cạnh phụ (đường cao, đường chéo đáy) */
+  /** Cạnh phụ (đường cao mặc định, đường chéo đáy) */
   readonly aux?: boolean;
   /** Cạnh mũi tên (cho hệ trục Oxyz) */
   readonly arrow?: boolean;
@@ -25,6 +25,8 @@ export interface SolidEdge {
 }
 
 export interface SolidFace {
+  readonly id: string;
+  readonly label: string;
   readonly vertices: readonly string[];
 }
 
@@ -34,6 +36,15 @@ export interface Solid3DPresetMeta {
   readonly shortName: string;
   readonly defaultYaw: number;
   readonly defaultPitch: number;
+}
+
+export interface Solid3DPresetSchema {
+  readonly kind: Solid3DPresetKind;
+  readonly vertices: readonly SolidVertex[];
+  readonly edges: readonly SolidEdge[];
+  readonly faces: readonly SolidFace[];
+  readonly basePlaneY: number;
+  readonly supportsConstructions: boolean;
 }
 
 export const SOLID_3D_PRESETS: readonly Solid3DPresetMeta[] = [
@@ -95,15 +106,12 @@ export const SOLID_3D_PRESETS: readonly Solid3DPresetMeta[] = [
   },
 ];
 
-interface PolyhedronModel {
-  readonly vertices: readonly SolidVertex[];
-  readonly edges: readonly SolidEdge[];
-  readonly faces: readonly SolidFace[];
-}
-
-function getPolyhedronModel(kind: Solid3DPresetKind): PolyhedronModel | null {
+export function getSolidPresetSchema(kind: Solid3DPresetKind): Solid3DPresetSchema {
   if (kind === 'pyramid-tri') {
     return {
+      kind,
+      basePlaneY: -0.75,
+      supportsConstructions: true,
       vertices: [
         { id: 'S', label: 'S', pos: { x: -0.05, y: 1.05, z: 0.05 } },
         { id: 'A', label: 'A', pos: { x: 0.05, y: -0.75, z: -0.85 } },
@@ -121,16 +129,19 @@ function getPolyhedronModel(kind: Solid3DPresetKind): PolyhedronModel | null {
         { from: 'S', to: 'H', aux: true, forceDashed: true },
       ],
       faces: [
-        { vertices: ['A', 'C', 'B'] },
-        { vertices: ['S', 'B', 'C'] },
-        { vertices: ['S', 'C', 'A'] },
-        { vertices: ['S', 'A', 'B'] },
+        { id: 'face-abc', label: 'Đáy ABC', vertices: ['A', 'C', 'B'] },
+        { id: 'face-sbc', label: 'Mặt SBC', vertices: ['S', 'B', 'C'] },
+        { id: 'face-sca', label: 'Mặt SCA', vertices: ['S', 'C', 'A'] },
+        { id: 'face-sab', label: 'Mặt SAB', vertices: ['S', 'A', 'B'] },
       ],
     };
   }
 
   if (kind === 'pyramid-quad') {
     return {
+      kind,
+      basePlaneY: -0.72,
+      supportsConstructions: true,
       vertices: [
         { id: 'S', label: 'S', pos: { x: 0, y: 1.1, z: 0 } },
         { id: 'A', label: 'A', pos: { x: -0.72, y: -0.72, z: -0.72 } },
@@ -153,17 +164,20 @@ function getPolyhedronModel(kind: Solid3DPresetKind): PolyhedronModel | null {
         { from: 'S', to: 'O', aux: true, forceDashed: true },
       ],
       faces: [
-        { vertices: ['A', 'D', 'C', 'B'] },
-        { vertices: ['S', 'B', 'C'] },
-        { vertices: ['S', 'C', 'D'] },
-        { vertices: ['S', 'D', 'A'] },
-        { vertices: ['S', 'A', 'B'] },
+        { id: 'face-abcd', label: 'Đáy ABCD', vertices: ['A', 'D', 'C', 'B'] },
+        { id: 'face-sbc', label: 'Mặt SBC', vertices: ['S', 'B', 'C'] },
+        { id: 'face-scd', label: 'Mặt SCD', vertices: ['S', 'C', 'D'] },
+        { id: 'face-sda', label: 'Mặt SDA', vertices: ['S', 'D', 'A'] },
+        { id: 'face-sab', label: 'Mặt SAB', vertices: ['S', 'A', 'B'] },
       ],
     };
   }
 
   if (kind === 'prism-tri') {
     return {
+      kind,
+      basePlaneY: -0.78,
+      supportsConstructions: true,
       vertices: [
         { id: 'A', label: 'A', pos: { x: 0.05, y: -0.78, z: -0.78 } },
         { id: 'B', label: 'B', pos: { x: -0.88, y: -0.78, z: 0.62 } },
@@ -184,17 +198,20 @@ function getPolyhedronModel(kind: Solid3DPresetKind): PolyhedronModel | null {
         { from: 'C', to: 'C1' },
       ],
       faces: [
-        { vertices: ['A', 'C', 'B'] },
-        { vertices: ['A1', 'B1', 'C1'] },
-        { vertices: ['B', 'C', 'C1', 'B1'] },
-        { vertices: ['C', 'A', 'A1', 'C1'] },
-        { vertices: ['A', 'B', 'B1', 'A1'] },
+        { id: 'face-abc', label: 'Đáy ABC', vertices: ['A', 'C', 'B'] },
+        { id: 'face-a1b1c1', label: "Đáy A'B'C'", vertices: ['A1', 'B1', 'C1'] },
+        { id: 'face-bcc1b1', label: "Mặt BCC'B'", vertices: ['B', 'C', 'C1', 'B1'] },
+        { id: 'face-caa1c1', label: "Mặt CAA'C'", vertices: ['C', 'A', 'A1', 'C1'] },
+        { id: 'face-abb1a1', label: "Mặt ABB'A'", vertices: ['A', 'B', 'B1', 'A1'] },
       ],
     };
   }
 
   if (kind === 'box') {
     return {
+      kind,
+      basePlaneY: -0.68,
+      supportsConstructions: true,
       vertices: [
         { id: 'A', label: 'A', pos: { x: -0.72, y: -0.68, z: -0.62 } },
         { id: 'B', label: 'B', pos: { x: -0.72, y: -0.68, z: 0.62 } },
@@ -222,18 +239,21 @@ function getPolyhedronModel(kind: Solid3DPresetKind): PolyhedronModel | null {
         { from: 'B', to: 'D', aux: true, forceDashed: true },
       ],
       faces: [
-        { vertices: ['A', 'D', 'C', 'B'] },
-        { vertices: ['A1', 'B1', 'C1', 'D1'] },
-        { vertices: ['B', 'C', 'C1', 'B1'] },
-        { vertices: ['C', 'D', 'D1', 'C1'] },
-        { vertices: ['D', 'A', 'A1', 'D1'] },
-        { vertices: ['A', 'B', 'B1', 'A1'] },
+        { id: 'face-abcd', label: 'Đáy ABCD', vertices: ['A', 'D', 'C', 'B'] },
+        { id: 'face-top', label: "Đáy A'B'C'D'", vertices: ['A1', 'B1', 'C1', 'D1'] },
+        { id: 'face-front', label: "Mặt BCC'B'", vertices: ['B', 'C', 'C1', 'B1'] },
+        { id: 'face-right', label: "Mặt CDD'C'", vertices: ['C', 'D', 'D1', 'C1'] },
+        { id: 'face-back', label: "Mặt DAA'D'", vertices: ['D', 'A', 'A1', 'D1'] },
+        { id: 'face-left', label: "Mặt ABB'A'", vertices: ['A', 'B', 'B1', 'A1'] },
       ],
     };
   }
 
   if (kind === 'oxyz') {
     return {
+      kind,
+      basePlaneY: 0,
+      supportsConstructions: false,
       vertices: [
         { id: 'O', label: 'O', pos: { x: 0, y: 0, z: 0 } },
         { id: 'X', label: 'x', pos: { x: -0.75, y: -0.45, z: 0.95 } },
@@ -249,20 +269,69 @@ function getPolyhedronModel(kind: Solid3DPresetKind): PolyhedronModel | null {
     };
   }
 
-  return null;
+  if (kind === 'cone') {
+    return {
+      kind,
+      basePlaneY: -0.78,
+      supportsConstructions: false,
+      vertices: [
+        { id: 'S', label: 'S', pos: { x: 0, y: 1.05, z: 0 } },
+        { id: 'O', label: 'O', pos: { x: 0, y: -0.78, z: 0 }, aux: true },
+        { id: 'A', label: 'A', pos: { x: 0.92, y: -0.78, z: 0 } },
+        { id: 'R', label: 'R', pos: { x: 0.45, y: -0.78, z: 0 }, aux: true },
+      ],
+      edges: [],
+      faces: [],
+    };
+  }
+
+  if (kind === 'cylinder') {
+    return {
+      kind,
+      basePlaneY: -0.78,
+      supportsConstructions: false,
+      vertices: [
+        { id: 'O1', label: "O'", pos: { x: 0, y: 0.78, z: 0 }, aux: true },
+        { id: 'O', label: 'O', pos: { x: 0, y: -0.78, z: 0 }, aux: true },
+        { id: 'R', label: 'R', pos: { x: 0.45, y: -0.78, z: 0 }, aux: true },
+      ],
+      edges: [],
+      faces: [],
+    };
+  }
+
+  return {
+    kind: 'sphere',
+    basePlaneY: 0,
+    supportsConstructions: false,
+    vertices: [
+      { id: 'O', label: 'O', pos: { x: 0, y: 0, z: 0 }, aux: true },
+      { id: 'R', label: 'R', pos: { x: 0.5, y: 0.5, z: 0 }, aux: true },
+    ],
+    edges: [],
+    faces: [],
+  };
+}
+
+export function resolveSolidVertexLabel(
+  vertexId: string,
+  defaultLabel: string,
+  customLabels?: Readonly<Record<string, string>>,
+): string {
+  if (!customLabels) return defaultLabel;
+  const custom = customLabels[vertexId];
+  return custom !== undefined ? custom : defaultLabel;
 }
 
 export function rotatePoint3D(p: Vec3, yawDeg: number, pitchDeg: number): Vec3 {
   const yaw = (yawDeg * Math.PI) / 180;
   const pitch = (pitchDeg * Math.PI) / 180;
 
-  // Xoay quanh trục Y (yaw)
   const cosY = Math.cos(yaw);
   const sinY = Math.sin(yaw);
   const x1 = p.x * cosY + p.z * sinY;
   const z1 = -p.x * sinY + p.z * cosY;
 
-  // Xoay quanh trục X (pitch)
   const cosP = Math.cos(pitch);
   const sinP = Math.sin(pitch);
   const y2 = p.y * cosP - z1 * sinP;
@@ -302,6 +371,90 @@ function drawArrowTip(
   ctx.stroke();
 }
 
+export interface EvaluatedConstructionPoint {
+  readonly id: string;
+  readonly label: string;
+  readonly pos: Vec3;
+  readonly color: string;
+}
+
+/**
+ * Tính tọa độ 3D chính xác cho các phần tử dựng hình phụ:
+ * - Trung điểm cạnh: (A + B) / 2
+ * - Trọng tâm mặt/tam giác: trung bình cộng tọa độ các đỉnh
+ * - Chân đường cao hạ xuống mặt đáy (y = basePlaneY) hoặc tới điểm mục tiêu
+ */
+export function evaluateSolidConstructions(
+  schema: Solid3DPresetSchema,
+  constructions: readonly Solid3DConstruction[] | undefined,
+  defaultColor: string,
+): {
+  readonly allPoints3D: ReadonlyMap<string, Vec3>;
+  readonly constructedPoints: readonly EvaluatedConstructionPoint[];
+} {
+  const allPoints3D = new Map<string, Vec3>();
+  for (const v of schema.vertices) {
+    allPoints3D.set(v.id, v.pos);
+  }
+
+  const constructedPoints: EvaluatedConstructionPoint[] = [];
+  if (!constructions || constructions.length === 0) {
+    return { allPoints3D, constructedPoints };
+  }
+
+  for (const c of constructions) {
+    if (c.kind === 'midpoint') {
+      const a = allPoints3D.get(c.fromVertex);
+      const b = allPoints3D.get(c.toVertex);
+      if (!a || !b) continue;
+      const pos: Vec3 = {
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2,
+        z: (a.z + b.z) / 2,
+      };
+      allPoints3D.set(c.id, pos);
+      constructedPoints.push({ id: c.id, label: c.label, pos, color: c.color ?? defaultColor });
+    } else if (c.kind === 'centroid') {
+      const pts = c.vertices
+        .map((vid) => allPoints3D.get(vid))
+        .filter((v): v is Vec3 => Boolean(v));
+      if (pts.length < 2) continue;
+      const sum = pts.reduce((acc, p) => ({ x: acc.x + p.x, y: acc.y + p.y, z: acc.z + p.z }), {
+        x: 0,
+        y: 0,
+        z: 0,
+      });
+      const pos: Vec3 = {
+        x: sum.x / pts.length,
+        y: sum.y / pts.length,
+        z: sum.z / pts.length,
+      };
+      allPoints3D.set(c.id, pos);
+      constructedPoints.push({ id: c.id, label: c.label, pos, color: c.color ?? defaultColor });
+    } else if (c.kind === 'altitude') {
+      const apex = allPoints3D.get(c.apexVertex);
+      if (!apex) continue;
+      let footPos: Vec3;
+      if (c.footTarget === 'base-plane') {
+        footPos = { x: apex.x, y: schema.basePlaneY, z: apex.z };
+      } else {
+        const target = allPoints3D.get(c.footTarget);
+        if (!target) continue;
+        footPos = target;
+      }
+      allPoints3D.set(c.id, footPos);
+      constructedPoints.push({
+        id: c.id,
+        label: c.footLabel,
+        pos: footPos,
+        color: c.color ?? defaultColor,
+      });
+    }
+  }
+
+  return { allPoints3D, constructedPoints };
+}
+
 function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem): void {
   const cx = item.x + item.width / 2;
   const cy = item.y + item.height / 2;
@@ -316,8 +469,11 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
+  const labelOf = (id: string, fallback: string) =>
+    resolveSolidVertexLabel(id, fallback, item.customLabels);
+
   const drawLabel = (text: string, lx: number, ly: number) => {
-    if (!item.showLabels) return;
+    if (!item.showLabels || !text.trim()) return;
     ctx.save();
     ctx.font = 'italic 600 14px "Times New Roman", Georgia, serif';
     ctx.fillStyle = item.color;
@@ -329,19 +485,16 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
     const topY = cy - scale * 1.05;
     const baseY = cy + scale * 0.78;
 
-    // Cung trước (nét liền)
     ctx.setLineDash([]);
     ctx.beginPath();
     ctx.ellipse(cx, baseY, rx, ry, 0, 0, Math.PI, false);
     ctx.stroke();
 
-    // Cung sau bị che khuất (nét đứt)
     ctx.setLineDash(item.dashedHidden ? [6, 5] : []);
     ctx.beginPath();
     ctx.ellipse(cx, baseY, rx, ry, 0, Math.PI, Math.PI * 2, false);
     ctx.stroke();
 
-    // Hai đường sinh biên
     ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(cx, topY);
@@ -350,7 +503,6 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
     ctx.lineTo(cx + rx, baseY);
     ctx.stroke();
 
-    // Trục chiều cao SO & bán kính OA (nét đứt)
     if (item.showAuxLines) {
       ctx.setLineDash([5, 4]);
       ctx.beginPath();
@@ -359,15 +511,23 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
       ctx.lineTo(cx + rx, baseY);
       ctx.stroke();
       ctx.setLineDash([]);
+      // Dấu góc vuông tại tâm O
+      const sq = 10;
+      ctx.beginPath();
+      ctx.moveTo(cx, baseY - sq);
+      ctx.lineTo(cx + sq, baseY - sq);
+      ctx.lineTo(cx + sq, baseY);
+      ctx.stroke();
+
       ctx.beginPath();
       ctx.arc(cx, baseY, 2.5, 0, Math.PI * 2);
       ctx.fill();
-      drawLabel('O', cx - 14, baseY + 14);
-      drawLabel('R', cx + rx * 0.45, baseY - 5);
+      drawLabel(labelOf('O', 'O'), cx - 14, baseY + 14);
+      drawLabel(labelOf('R', 'R'), cx + rx * 0.45, baseY - 5);
     }
 
-    drawLabel('S', cx - 4, topY - 8);
-    drawLabel('A', cx + rx + 6, baseY + 4);
+    drawLabel(labelOf('S', 'S'), cx - 4, topY - 8);
+    drawLabel(labelOf('A', 'A'), cx + rx + 6, baseY + 4);
     return;
   }
 
@@ -375,24 +535,20 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
     const topY = cy - scale * 0.78;
     const baseY = cy + scale * 0.78;
 
-    // Đáy trên (nét liền toàn phần)
     ctx.setLineDash([]);
     ctx.beginPath();
     ctx.ellipse(cx, topY, rx, ry, 0, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Đáy dưới cung trước (nét liền)
     ctx.beginPath();
     ctx.ellipse(cx, baseY, rx, ry, 0, 0, Math.PI, false);
     ctx.stroke();
 
-    // Đáy dưới cung sau (nét đứt)
     ctx.setLineDash(item.dashedHidden ? [6, 5] : []);
     ctx.beginPath();
     ctx.ellipse(cx, baseY, rx, ry, 0, Math.PI, Math.PI * 2, false);
     ctx.stroke();
 
-    // Hai đường sinh biên
     ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(cx - rx, topY);
@@ -413,14 +569,14 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
       ctx.arc(cx, topY, 2.5, 0, Math.PI * 2);
       ctx.arc(cx, baseY, 2.5, 0, Math.PI * 2);
       ctx.fill();
-      drawLabel("O'", cx - 16, topY + 4);
-      drawLabel('O', cx - 14, baseY + 14);
-      drawLabel('R', cx + rx * 0.45, baseY - 5);
+      drawLabel(labelOf('O1', "O'"), cx - 16, topY + 4);
+      drawLabel(labelOf('O', 'O'), cx - 14, baseY + 14);
+      drawLabel(labelOf('R', 'R'), cx + rx * 0.45, baseY - 5);
     }
     return;
   }
 
-  // Mặt cầu (sphere)
+  // Mặt cầu
   const radius = scale * 1.05;
   const eqRy = Math.max(12, radius * Math.sin(pitchRad));
 
@@ -429,12 +585,10 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
   ctx.arc(cx, cy, radius, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Xích đạo cung trước
   ctx.beginPath();
   ctx.ellipse(cx, cy, radius, eqRy, 0, 0, Math.PI, false);
   ctx.stroke();
 
-  // Xích đạo cung sau (nét đứt)
   ctx.setLineDash(item.dashedHidden ? [6, 5] : []);
   ctx.beginPath();
   ctx.ellipse(cx, cy, radius, eqRy, 0, Math.PI, Math.PI * 2, false);
@@ -450,14 +604,16 @@ function drawCurvedSolid3D(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem):
     ctx.beginPath();
     ctx.arc(cx, cy, 2.8, 0, Math.PI * 2);
     ctx.fill();
-    drawLabel('O', cx - 15, cy + 5);
-    drawLabel('R', cx + radius * 0.36, cy - radius * 0.42);
+    drawLabel(labelOf('O', 'O'), cx - 15, cy + 5);
+    drawLabel(labelOf('R', 'R'), cx + radius * 0.36, cy - radius * 0.42);
   }
 }
 
 /**
- * Kết xuất hình học không gian 3D lên Canvas 2D với cơ chế tự tính cạnh khuất (nét đứt)
- * dựa trên pháp tuyến mặt phẳng (back-face visibility).
+ * Kết xuất Hình học không gian 3D lên Canvas 2D:
+ * - Tự tính cạnh khuất vẽ bằng nét đứt (back-face visibility).
+ * - Hỗ trợ đổi tên đỉnh tùy ý HOẶC ẩn toàn bộ nhãn đỉnh để người dùng tự viết tay.
+ * - Hỗ trợ dựng trung điểm, trọng tâm, đường cao (có ký hiệu góc vuông 3D) và đoạn nối thiết diện.
  */
 export function renderSolid3DOnCanvas(ctx: CanvasRenderingContext2D, item: Ink3DSolidItem): void {
   ctx.save();
@@ -468,40 +624,36 @@ export function renderSolid3DOnCanvas(ctx: CanvasRenderingContext2D, item: Ink3D
     return;
   }
 
-  const model = getPolyhedronModel(item.preset);
-  if (!model) {
-    ctx.restore();
-    return;
-  }
-
+  const schema = getSolidPresetSchema(item.preset);
   const cx = item.x + item.width / 2;
   const cy = item.y + item.height / 2;
   const scale = Math.min(item.width, item.height) * 0.4;
 
-  const rotatedMap = new Map<string, Vec3>();
+  const { allPoints3D, constructedPoints } = evaluateSolidConstructions(
+    schema,
+    item.constructions,
+    item.color,
+  );
+
   const projectedMap = new Map<
     string,
     { readonly x: number; readonly y: number; readonly z: number }
   >();
-
-  for (const v of model.vertices) {
-    const r = rotatePoint3D(v.pos, item.yaw, item.pitch);
-    rotatedMap.set(v.id, r);
-    projectedMap.set(v.id, projectToBox(r, cx, cy, scale));
+  for (const [pid, pos] of allPoints3D.entries()) {
+    const rot = rotatePoint3D(pos, item.yaw, item.pitch);
+    projectedMap.set(pid, projectToBox(rot, cx, cy, scale));
   }
 
-  // Xác định các mặt đang hướng về phía người nhìn (front-facing)
   const frontFaceEdgeKeys = new Set<string>();
   const edgeKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
 
-  for (const face of model.faces) {
+  for (const face of schema.faces) {
     if (face.vertices.length < 3) continue;
     const p0 = projectedMap.get(face.vertices[0]!);
     const p1 = projectedMap.get(face.vertices[1]!);
     const p2 = projectedMap.get(face.vertices[2]!);
     if (!p0 || !p1 || !p2) continue;
 
-    // Tích có hướng 2D trên màn hình (trục Y hướng xuống) -> mặt hướng ra trước có cross < 0
     const cross = (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);
     if (cross < 0) {
       for (let i = 0; i < face.vertices.length; i += 1) {
@@ -518,14 +670,15 @@ export function renderSolid3DOnCanvas(ctx: CanvasRenderingContext2D, item: Ink3D
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
-  for (const edge of model.edges) {
+  // 1. Vẽ các cạnh gốc của khối đa diện / hệ trục
+  for (const edge of schema.edges) {
     if (edge.aux && !item.showAuxLines) continue;
     const a = projectedMap.get(edge.from);
     const b = projectedMap.get(edge.to);
     if (!a || !b) continue;
 
     const isVisibleByFaces =
-      model.faces.length === 0 || frontFaceEdgeKeys.has(edgeKey(edge.from, edge.to));
+      schema.faces.length === 0 || frontFaceEdgeKeys.has(edgeKey(edge.from, edge.to));
     const shouldDash = Boolean(edge.forceDashed) || (item.dashedHidden && !isVisibleByFaces);
 
     ctx.setLineDash(shouldDash ? [6, 5] : []);
@@ -540,13 +693,109 @@ export function renderSolid3DOnCanvas(ctx: CanvasRenderingContext2D, item: Ink3D
     }
   }
 
+  // 2. Vẽ đường cao & đoạn nối dựng thêm (constructions)
+  if (item.constructions) {
+    for (const c of item.constructions) {
+      if (c.kind === 'altitude') {
+        const apex2d = projectedMap.get(c.apexVertex);
+        const foot2d = projectedMap.get(c.id);
+        const apex3d = allPoints3D.get(c.apexVertex);
+        const foot3d = allPoints3D.get(c.id);
+        if (!apex2d || !foot2d || !apex3d || !foot3d) continue;
+
+        ctx.save();
+        ctx.strokeStyle = c.color ?? '#DC2626';
+        ctx.lineWidth = Math.max(1.6, item.lineWidth * 0.9);
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.moveTo(apex2d.x, apex2d.y);
+        ctx.lineTo(foot2d.x, foot2d.y);
+        ctx.stroke();
+
+        // Ký hiệu góc vuông 3D chuẩn tại chân đường cao
+        if (c.showRightAngle !== false) {
+          const upDir3d: Vec3 = {
+            x: foot3d.x + (apex3d.x - foot3d.x) * 0.14,
+            y: foot3d.y + (apex3d.y - foot3d.y) * 0.14,
+            z: foot3d.z + (apex3d.z - foot3d.z) * 0.14,
+          };
+          const horizDir3d: Vec3 = {
+            x: foot3d.x + 0.18,
+            y: foot3d.y,
+            z: foot3d.z,
+          };
+          const corner3d: Vec3 = {
+            x: upDir3d.x + 0.18,
+            y: upDir3d.y,
+            z: upDir3d.z,
+          };
+
+          const pUp = projectToBox(rotatePoint3D(upDir3d, item.yaw, item.pitch), cx, cy, scale);
+          const pHoriz = projectToBox(
+            rotatePoint3D(horizDir3d, item.yaw, item.pitch),
+            cx,
+            cy,
+            scale,
+          );
+          const pCorner = projectToBox(
+            rotatePoint3D(corner3d, item.yaw, item.pitch),
+            cx,
+            cy,
+            scale,
+          );
+
+          ctx.setLineDash([]);
+          ctx.lineWidth = 1.25;
+          ctx.beginPath();
+          ctx.moveTo(pUp.x, pUp.y);
+          ctx.lineTo(pCorner.x, pCorner.y);
+          ctx.lineTo(pHoriz.x, pHoriz.y);
+          ctx.stroke();
+        }
+        ctx.restore();
+      } else if (c.kind === 'segment') {
+        const a = projectedMap.get(c.fromPoint);
+        const b = projectedMap.get(c.toPoint);
+        if (!a || !b) continue;
+        ctx.save();
+        ctx.strokeStyle = c.color ?? '#1D4ED8';
+        ctx.lineWidth = Math.max(1.7, item.lineWidth);
+        ctx.setLineDash(c.style === 'dashed' ? [6, 4] : []);
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+
   ctx.setLineDash([]);
 
-  // Hiển thị tên đỉnh chuẩn ký hiệu sách giáo khoa Toán
+  // 3. Vẽ các điểm dựng phụ (Trung điểm, Trọng tâm, Chân đường cao)
+  for (const cp of constructedPoints) {
+    const p2d = projectedMap.get(cp.id);
+    if (!p2d) continue;
+    ctx.save();
+    ctx.fillStyle = cp.color;
+    ctx.beginPath();
+    ctx.arc(p2d.x, p2d.y, 3.2, 0, Math.PI * 2);
+    ctx.fill();
+    if (item.showLabels && cp.label.trim()) {
+      ctx.font = 'italic 700 13.5px "Times New Roman", Georgia, serif';
+      ctx.fillText(cp.label, p2d.x + 6, p2d.y - 5);
+    }
+    ctx.restore();
+  }
+
+  // 4. Vẽ tên các đỉnh gốc (hỗ trợ customLabels hoặc ẩn sạch khi !item.showLabels)
   if (item.showLabels) {
+    ctx.fillStyle = item.color;
     ctx.font = 'italic 600 14px "Times New Roman", Georgia, serif';
-    for (const v of model.vertices) {
+    for (const v of schema.vertices) {
       if (v.aux && !item.showAuxLines) continue;
+      const label = resolveSolidVertexLabel(v.id, v.label, item.customLabels);
+      if (!label.trim()) continue;
       const p = projectedMap.get(v.id);
       if (!p) continue;
       const dx = p.x - cx;
@@ -554,7 +803,7 @@ export function renderSolid3DOnCanvas(ctx: CanvasRenderingContext2D, item: Ink3D
       const len = Math.hypot(dx, dy) || 1;
       const ox = (dx / len) * 14 - 4;
       const oy = (dy / len) * 14 + 5;
-      ctx.fillText(v.label, p.x + ox, p.y + oy);
+      ctx.fillText(label, p.x + ox, p.y + oy);
     }
   }
 

@@ -1,13 +1,14 @@
 import {
   Box,
   Check,
-  Copy,
+  Compass,
   Download,
   Eraser,
   FilePenLine,
   ImagePlus,
   Maximize2,
   Minimize2,
+  Minus,
   PanelLeft,
   Plus,
   Redo2,
@@ -34,6 +35,7 @@ import {
   useState,
 } from 'react';
 import { useNavigate } from 'react-router';
+import { FolderNotebookSidebar } from '@/components/math-ink/FolderNotebookSidebar';
 import { FunctionGraphPopover } from '@/components/math-ink/FunctionGraphPopover';
 import {
   EraserModePopover,
@@ -55,6 +57,7 @@ import {
   recognizeInkGesture,
   renderInkPageToCanvas,
   selectActiveInkBucket,
+  selectActiveInkFolders,
   selectActiveInkPage,
   selectActiveNotebook,
   selectActivePenPreset,
@@ -147,6 +150,7 @@ function translateSelectedOnPage(
 export function MathInkPage() {
   const navigate = useNavigate();
   const bucket = useInkNotebookStore(selectActiveInkBucket);
+  const folders = useInkNotebookStore(selectActiveInkFolders);
   const activeNotebook = useInkNotebookStore(selectActiveNotebook);
   const activePage = useInkNotebookStore(selectActiveInkPage);
   const penPresets = useInkNotebookStore((s) => s.penPresets);
@@ -157,6 +161,11 @@ export function MathInkPage() {
   const selectNotebook = useInkNotebookStore((s) => s.selectNotebook);
   const createNotebook = useInkNotebookStore((s) => s.createNotebook);
   const renameActiveNotebook = useInkNotebookStore((s) => s.renameActiveNotebook);
+  const deleteNotebook = useInkNotebookStore((s) => s.deleteNotebook);
+  const moveNotebookToFolder = useInkNotebookStore((s) => s.moveNotebookToFolder);
+  const createFolder = useInkNotebookStore((s) => s.createFolder);
+  const renameFolder = useInkNotebookStore((s) => s.renameFolder);
+  const deleteFolder = useInkNotebookStore((s) => s.deleteFolder);
   const updatePaperConfig = useInkNotebookStore((s) => s.updatePaperConfig);
   const selectPage = useInkNotebookStore((s) => s.selectPage);
   const addPage = useInkNotebookStore((s) => s.addPage);
@@ -167,6 +176,7 @@ export function MathInkPage() {
   const addStroke = useInkNotebookStore((s) => s.addStroke);
   const addShape = useInkNotebookStore((s) => s.addShape);
   const addSolid3D = useInkNotebookStore((s) => s.addSolid3D);
+  const updateSolid3D = useInkNotebookStore((s) => s.updateSolid3D);
   const addGraph = useInkNotebookStore((s) => s.addGraph);
   const addText = useInkNotebookStore((s) => s.addText);
   const addImage = useInkNotebookStore((s) => s.addImage);
@@ -184,6 +194,15 @@ export function MathInkPage() {
   const [eraserMode, setEraserMode] = useState<EraserMode>('stroke');
   const [selectionMode, setSelectionMode] = useState<SelectionMode>('rect');
   const [openPopover, setOpenPopover] = useState<OpenPopoverKey>(null);
+  const [editingSolidId, setEditingSolidId] = useState<string | null>(null);
+  const [resizingBox, setResizingBox] = useState<{
+    readonly id: string;
+    readonly kind: 'solid3d' | 'graph' | 'image' | 'shape';
+    readonly x: number;
+    readonly y: number;
+    readonly width: number;
+    readonly height: number;
+  } | null>(null);
 
   const [showPagesSidebar, setShowPagesSidebar] = useState(true);
   const [zoom, setZoom] = useState(0.85);
@@ -872,6 +891,71 @@ export function MathInkPage() {
     return activePage.solids3d.find((s) => s.id === onlyId) ?? null;
   }, [activePage.solids3d, selectedIds]);
 
+  const editingSolid = useMemo(() => {
+    if (!editingSolidId) return null;
+    return activePage.solids3d.find((s) => s.id === editingSolidId) ?? null;
+  }, [activePage.solids3d, editingSolidId]);
+
+  const selectedResizable = useMemo(() => {
+    if (selectedIds.size !== 1) return null;
+    const onlyId = Array.from(selectedIds)[0];
+    if (!onlyId) return null;
+
+    const solid = activePage.solids3d.find((s) => s.id === onlyId);
+    if (solid) {
+      return {
+        kind: 'solid3d' as const,
+        id: solid.id,
+        x: solid.x,
+        y: solid.y,
+        width: solid.width,
+        height: solid.height,
+      };
+    }
+
+    const graph = activePage.graphs.find((g) => g.id === onlyId);
+    if (graph) {
+      return {
+        kind: 'graph' as const,
+        id: graph.id,
+        x: graph.x,
+        y: graph.y,
+        width: graph.width,
+        height: graph.height,
+      };
+    }
+
+    const image = activePage.images.find((im) => im.id === onlyId);
+    if (image) {
+      return {
+        kind: 'image' as const,
+        id: image.id,
+        x: image.x,
+        y: image.y,
+        width: image.width,
+        height: image.height,
+      };
+    }
+
+    const shape = activePage.shapes.find((sh) => sh.id === onlyId);
+    if (shape) {
+      const minX = Math.min(shape.x1, shape.x2);
+      const minY = Math.min(shape.y1, shape.y2);
+      const w = Math.max(24, Math.abs(shape.x2 - shape.x1));
+      const h = Math.max(24, Math.abs(shape.y2 - shape.y1));
+      return {
+        kind: 'shape' as const,
+        id: shape.id,
+        x: minX,
+        y: minY,
+        width: w,
+        height: h,
+      };
+    }
+
+    return null;
+  }, [activePage.graphs, activePage.images, activePage.shapes, activePage.solids3d, selectedIds]);
+
   const handleRotateSelectedSolid = (deltaYaw: number) => {
     if (!selectedSolid) return;
     commitPageMutation((page) => ({
@@ -880,6 +964,186 @@ export function MathInkPage() {
         s.id === selectedSolid.id ? { ...s, yaw: (s.yaw + deltaYaw + 360) % 360 } : s,
       ),
     }));
+  };
+
+  const applyResizedBox = useCallback(
+    (box: {
+      readonly id: string;
+      readonly kind: 'solid3d' | 'graph' | 'image' | 'shape';
+      readonly x: number;
+      readonly y: number;
+      readonly width: number;
+      readonly height: number;
+    }) => {
+      commitPageMutation((page) => {
+        if (box.kind === 'solid3d') {
+          return {
+            ...page,
+            solids3d: page.solids3d.map((s) =>
+              s.id === box.id
+                ? {
+                    ...s,
+                    x: Math.round(box.x),
+                    y: Math.round(box.y),
+                    width: Math.round(box.width),
+                    height: Math.round(box.height),
+                  }
+                : s,
+            ),
+          };
+        }
+        if (box.kind === 'graph') {
+          return {
+            ...page,
+            graphs: page.graphs.map((g) =>
+              g.id === box.id
+                ? {
+                    ...g,
+                    x: Math.round(box.x),
+                    y: Math.round(box.y),
+                    width: Math.round(box.width),
+                    height: Math.round(box.height),
+                  }
+                : g,
+            ),
+          };
+        }
+        if (box.kind === 'image') {
+          return {
+            ...page,
+            images: page.images.map((im) =>
+              im.id === box.id
+                ? {
+                    ...im,
+                    x: Math.round(box.x),
+                    y: Math.round(box.y),
+                    width: Math.round(box.width),
+                    height: Math.round(box.height),
+                  }
+                : im,
+            ),
+          };
+        }
+        return {
+          ...page,
+          shapes: page.shapes.map((sh) => {
+            if (sh.id !== box.id) return sh;
+            const oldMinX = Math.min(sh.x1, sh.x2);
+            const oldMinY = Math.min(sh.y1, sh.y2);
+            const oldSpanX = Math.abs(sh.x2 - sh.x1);
+            const oldSpanY = Math.abs(sh.y2 - sh.y1);
+            const mapX = (val: number) =>
+              oldSpanX < 2
+                ? box.x + box.width / 2
+                : box.x + ((val - oldMinX) / oldSpanX) * box.width;
+            const mapY = (val: number) =>
+              oldSpanY < 2
+                ? box.y + box.height / 2
+                : box.y + ((val - oldMinY) / oldSpanY) * box.height;
+            return {
+              ...sh,
+              x1: Math.round(mapX(sh.x1)),
+              y1: Math.round(mapY(sh.y1)),
+              x2: Math.round(mapX(sh.x2)),
+              y2: Math.round(mapY(sh.y2)),
+            };
+          }),
+        };
+      });
+    },
+    [commitPageMutation],
+  );
+
+  const handleScaleSelected = (factor: number) => {
+    if (!selectedResizable) return;
+    const minSize =
+      selectedResizable.kind === 'graph' ? 180 : selectedResizable.kind === 'shape' ? 32 : 110;
+    const maxW = dims.width - 40;
+    const maxH = dims.height - 40;
+    const nextW = Math.min(maxW, Math.max(minSize, Math.round(selectedResizable.width * factor)));
+    const nextH =
+      selectedResizable.kind === 'solid3d'
+        ? nextW
+        : Math.min(maxH, Math.max(minSize, Math.round(selectedResizable.height * factor)));
+    const cx = selectedResizable.x + selectedResizable.width / 2;
+    const cy = selectedResizable.y + selectedResizable.height / 2;
+    const nextX = Math.max(12, Math.min(dims.width - nextW - 12, Math.round(cx - nextW / 2)));
+    const nextY = Math.max(12, Math.min(dims.height - nextH - 12, Math.round(cy - nextH / 2)));
+    applyResizedBox({
+      ...selectedResizable,
+      x: nextX,
+      y: nextY,
+      width: nextW,
+      height: nextH,
+    });
+  };
+
+  const startCornerResize = (
+    corner: 'nw' | 'ne' | 'sw' | 'se',
+    e: ReactPointerEvent<HTMLButtonElement>,
+  ) => {
+    if (!selectedResizable) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const startClientX = e.clientX;
+    const startClientY = e.clientY;
+    const init = { ...selectedResizable };
+    const aspect = init.height / Math.max(1, init.width);
+    const minSize = init.kind === 'graph' ? 180 : init.kind === 'shape' ? 32 : 110;
+    const maxW = dims.width - 32;
+    const maxH = dims.height - 32;
+
+    let latestBox = { ...init };
+    setResizingBox(latestBox);
+
+    const onMove = (ev: PointerEvent) => {
+      const dx = (ev.clientX - startClientX) / zoom;
+      const dy = (ev.clientY - startClientY) / zoom;
+
+      let nextW = init.width + (corner.includes('e') ? dx : -dx);
+      let nextH = init.height + (corner.includes('s') ? dy : -dy);
+
+      if (init.kind === 'solid3d') {
+        const size = Math.min(maxW, Math.max(minSize, Math.round(Math.max(nextW, nextH))));
+        nextW = size;
+        nextH = size;
+      } else if (init.kind === 'image') {
+        nextW = Math.min(maxW, Math.max(minSize, Math.round(nextW)));
+        nextH = Math.min(maxH, Math.max(minSize, Math.round(nextW * aspect)));
+      } else {
+        nextW = Math.min(maxW, Math.max(minSize, Math.round(nextW)));
+        nextH = Math.min(maxH, Math.max(minSize, Math.round(nextH)));
+      }
+
+      const nextX = corner.includes('w') ? init.x + (init.width - nextW) : init.x;
+      const nextY = corner.includes('n') ? init.y + (init.height - nextH) : init.y;
+
+      latestBox = {
+        ...init,
+        x: Math.max(8, Math.min(dims.width - nextW - 8, nextX)),
+        y: Math.max(8, Math.min(dims.height - nextH - 8, nextY)),
+        width: nextW,
+        height: nextH,
+      };
+      setResizingBox(latestBox);
+    };
+
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      setResizingBox(null);
+      if (
+        latestBox.x !== init.x ||
+        latestBox.y !== init.y ||
+        latestBox.width !== init.width ||
+        latestBox.height !== init.height
+      ) {
+        applyResizedBox(latestBox);
+      }
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
   };
 
   return (
@@ -906,8 +1170,8 @@ export function MathInkPage() {
           <button
             type="button"
             onClick={() => setShowPagesSidebar((p) => !p)}
-            title="Ẩn/hiện danh sách trang"
-            aria-label="Ẩn hoặc hiện danh sách trang"
+            title="Ẩn/hiện thư mục & danh sách trang"
+            aria-label="Ẩn hoặc hiện thư mục và danh sách trang"
             className={cn(
               'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
               showPagesSidebar
@@ -933,8 +1197,8 @@ export function MathInkPage() {
 
           <button
             type="button"
-            onClick={() => createNotebook()}
-            title="Tạo vở mới"
+            onClick={() => createNotebook(undefined, activeNotebook.folderId ?? null)}
+            title="Tạo vở mới trong thư mục hiện tại"
             aria-label="Tạo vở ghi chép mới"
             className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
           >
@@ -1145,8 +1409,11 @@ export function MathInkPage() {
             <button
               type="button"
               data-testid="ink-solid3d-btn"
-              onClick={() => togglePopover('solid3d')}
-              title="Chèn Hình học không gian 3D tương tác (tự động nét đứt cạnh khuất)"
+              onClick={() => {
+                setEditingSolidId(null);
+                togglePopover('solid3d');
+              }}
+              title="Chèn Hình học không gian 3D tương tác (đặt tên đỉnh, hình trơn, dựng trung điểm/trọng tâm/đường cao)"
               className={cn(
                 'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
                 openPopover === 'solid3d'
@@ -1160,8 +1427,17 @@ export function MathInkPage() {
             {openPopover === 'solid3d' && (
               <div className="absolute top-10 right-0 z-50 sm:left-0">
                 <Solid3DPopover
+                  key={editingSolid?.id ?? 'new-solid'}
+                  initialSolid={editingSolid}
                   onInsert={handleInsertSolid3D}
-                  onClose={() => setOpenPopover(null)}
+                  onUpdateExisting={(solidId, patch) => {
+                    updateSolid3D(solidId, patch);
+                    setEditingSolidId(null);
+                  }}
+                  onClose={() => {
+                    setEditingSolidId(null);
+                    setOpenPopover(null);
+                  }}
                 />
               </div>
             )}
@@ -1355,116 +1631,85 @@ export function MathInkPage() {
       </header>
 
       {/* ========================================================================
-          KHU VỰC CHÍNH: CỘT TRANG VỞ (SCRBLE SIDEBAR) + TRANG GIẤY VIẾT CANVAS
+          KHU VỰC CHÍNH: CỘT THƯ MỤC ĐA CẤP & TRANG VỞ + TRANG GIẤY VIẾT CANVAS
           ======================================================================== */}
       <div className="flex min-h-0 flex-1 overflow-hidden">
-        {/* CỘT TRANG THUMBNAIL BÊN TRÁI (GIỐNG ẢNH 8 CỦA SCRBLE INK) */}
+        {/* CỘT THƯ MỤC ĐA CẤP & TRANG THUMBNAIL BÊN TRÁI */}
         {showPagesSidebar && (
-          <aside
-            data-testid="ink-pages-sidebar"
-            className="os-thin-scrollbar flex w-44 shrink-0 flex-col gap-2.5 overflow-y-auto border-r border-[var(--border-hairline)] bg-[var(--bg-surface)] p-3 print:hidden"
-          >
-            <input
-              type="text"
-              value={activeNotebook.title}
-              onChange={(e) => renameActiveNotebook(e.target.value)}
-              aria-label="Tên vở ghi chép"
-              className="w-full rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1 text-xs font-semibold text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
-            />
-
-            <div className="flex items-center justify-between font-mono text-[10px] text-[var(--text-muted)]">
-              <span>
-                Trang {activeNotebook.activePageIndex + 1} / {activeNotebook.pages.length}
-              </span>
-              <button
-                type="button"
-                data-testid="ink-add-page-btn"
-                onClick={addPage}
-                className="inline-flex cursor-pointer items-center gap-0.5 font-semibold text-[var(--accent-os)] hover:underline"
-              >
-                <Plus className="h-3 w-3" aria-hidden="true" />
-                <span>Thêm</span>
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              {activeNotebook.pages.map((pg, idx) => {
-                const isActive = idx === activeNotebook.activePageIndex;
-                const itemCount =
-                  pg.strokes.length +
-                  pg.shapes.length +
-                  pg.solids3d.length +
-                  pg.graphs.length +
-                  pg.texts.length;
-                return (
-                  <div
-                    key={pg.id}
-                    className={cn(
-                      'group relative rounded-xl border p-2 transition-all',
-                      isActive
-                        ? 'border-[var(--accent-os)] bg-[var(--bg-workspace)] shadow-xs'
-                        : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)]/60 hover:border-[var(--border-strong)]',
-                    )}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => selectPage(idx)}
-                      className="flex w-full cursor-pointer flex-col items-start gap-1 text-left"
-                    >
-                      <div
-                        style={{ backgroundColor: activeNotebook.paper.backgroundColor }}
-                        className="flex h-20 w-full items-center justify-center rounded-lg border border-[var(--border-hairline)] font-mono text-[10px] text-[var(--text-muted)]"
-                      >
-                        {itemCount > 0 ? `${itemCount} phần tử` : 'Trang trống'}
-                      </div>
-                      <span className="font-mono text-[10.5px] font-semibold text-[var(--text-main)]">
-                        Trang {idx + 1}
-                      </span>
-                    </button>
-
-                    <div className="mt-1 flex items-center justify-end gap-1">
-                      <button
-                        type="button"
-                        title="Nhân bản trang"
-                        onClick={() => {
-                          selectPage(idx);
-                          duplicateActivePage();
-                        }}
-                        className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
-                      >
-                        <Copy className="h-3 w-3" aria-hidden="true" />
-                      </button>
-                      {activeNotebook.pages.length > 1 && (
-                        <button
-                          type="button"
-                          title="Xóa trang"
-                          onClick={() => deletePage(idx)}
-                          className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[#8F3D35]"
-                        >
-                          <Trash2 className="h-3 w-3" aria-hidden="true" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </aside>
+          <FolderNotebookSidebar
+            folders={folders}
+            notebooks={bucket.notebooks}
+            activeNotebook={activeNotebook}
+            onSelectNotebook={selectNotebook}
+            onCreateNotebook={createNotebook}
+            onRenameActiveNotebook={renameActiveNotebook}
+            onDeleteNotebook={deleteNotebook}
+            onMoveNotebook={moveNotebookToFolder}
+            onCreateFolder={createFolder}
+            onRenameFolder={renameFolder}
+            onDeleteFolder={deleteFolder}
+            onSelectPage={selectPage}
+            onAddPage={addPage}
+            onDuplicatePage={(idx) => {
+              selectPage(idx);
+              duplicateActivePage();
+            }}
+            onDeletePage={deletePage}
+          />
         )}
 
         {/* BÀN VIẾT CANVAS TƯƠNG TÁC */}
         <div className="os-thin-scrollbar relative flex-1 overflow-auto p-5 sm:p-8">
-          {/* Thanh nổi thao tác nhanh khi đang chọn đối tượng (VD: xoay hình 3D hoặc xóa) */}
+          {/* Thanh nổi thao tác nhanh khi đang chọn đối tượng (Di chuyển, Thu/Phóng, Xoay, Dựng hình 3D, Xóa) */}
           {selectedIds.size > 0 && (
             <div
               data-testid="ink-selection-bar"
-              className="sticky top-2 z-20 mx-auto mb-3 flex w-fit items-center gap-2 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/95 px-3.5 py-1.5 text-xs shadow-lg backdrop-blur-md"
+              className="sticky top-2 z-20 mx-auto mb-3 flex w-fit flex-wrap items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/95 px-3.5 py-1.5 text-xs shadow-lg backdrop-blur-md"
             >
               <span className="font-mono text-[11px] font-semibold text-[var(--accent-os)]">
                 Đang chọn {selectedIds.size} mục · Kéo để di chuyển
               </span>
+
+              {selectedResizable && (
+                <div className="inline-flex items-center gap-1 border-l border-[var(--border-hairline)] pl-1.5">
+                  <button
+                    type="button"
+                    data-testid="selected-scale-down"
+                    onClick={() => handleScaleSelected(0.85)}
+                    title="Thu nhỏ đối tượng (-15%)"
+                    className="inline-flex cursor-pointer items-center gap-0.5 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10.5px] font-medium hover:text-[var(--accent-os)]"
+                  >
+                    <Minus className="h-3 w-3" aria-hidden="true" />
+                    <span>Thu nhỏ</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="selected-scale-up"
+                    onClick={() => handleScaleSelected(1.15)}
+                    title="Phóng to đối tượng (+15%)"
+                    className="inline-flex cursor-pointer items-center gap-0.5 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[10.5px] font-medium hover:text-[var(--accent-os)]"
+                  >
+                    <Plus className="h-3 w-3" aria-hidden="true" />
+                    <span>Phóng to</span>
+                  </button>
+                </div>
+              )}
+
               {selectedSolid && (
-                <>
+                <div className="inline-flex items-center gap-1 border-l border-[var(--border-hairline)] pl-1.5">
+                  <button
+                    type="button"
+                    data-testid="selected-edit-solid-btn"
+                    onClick={() => {
+                      setEditingSolidId(selectedSolid.id);
+                      setOpenPopover('solid3d');
+                    }}
+                    title="Đổi tên đỉnh, bật/tắt nhãn, thêm trung điểm / trọng tâm / đường cao"
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#1D4F6E]/40 bg-[#F3F8FB] px-2 py-0.5 text-[10.5px] font-semibold text-[#1D4F6E] hover:bg-[#E4F0F7] dark:border-[#64A8D1]/35 dark:bg-[#131C22] dark:text-[#64A8D1]"
+                  >
+                    <Compass className="h-3 w-3" aria-hidden="true" />
+                    <span>Chỉnh đỉnh / Dựng hình</span>
+                  </button>
                   <button
                     type="button"
                     onClick={() => handleRotateSelectedSolid(-15)}
@@ -1481,8 +1726,9 @@ export function MathInkPage() {
                     <RotateCw className="h-3 w-3" aria-hidden="true" />
                     <span>+15°</span>
                   </button>
-                </>
+                </div>
               )}
+
               <button
                 type="button"
                 onClick={() => {
@@ -1537,6 +1783,58 @@ export function MathInkPage() {
                 activeTool === 'text' && 'cursor-text',
               )}
             />
+
+            {/* Khung thu/phóng trực tiếp 4 góc cho Hình 3D, Đồ thị, Ảnh & Hình 2D đang chọn */}
+            {(resizingBox ?? selectedResizable) &&
+              (() => {
+                const box = resizingBox ?? selectedResizable!;
+                return (
+                  <div
+                    data-testid="ink-resize-frame"
+                    style={{
+                      left: `${(box.x / dims.width) * 100}%`,
+                      top: `${(box.y / dims.height) * 100}%`,
+                      width: `${(box.width / dims.width) * 100}%`,
+                      height: `${(box.height / dims.height) * 100}%`,
+                    }}
+                    className="pointer-events-none absolute z-10 rounded-md border-2 border-dashed border-[var(--accent-os)]/75"
+                  >
+                    {resizingBox && (
+                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded bg-[#17332C] px-1.5 py-0.5 font-mono text-[9.5px] whitespace-nowrap text-white shadow-sm">
+                        {Math.round(box.width)} × {Math.round(box.height)} px
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      data-testid="resize-handle-nw"
+                      aria-label="Kéo góc trên trái để thu phóng"
+                      onPointerDown={(e) => startCornerResize('nw', e)}
+                      className="pointer-events-auto absolute -top-2 -left-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                    />
+                    <button
+                      type="button"
+                      data-testid="resize-handle-ne"
+                      aria-label="Kéo góc trên phải để thu phóng"
+                      onPointerDown={(e) => startCornerResize('ne', e)}
+                      className="pointer-events-auto absolute -top-2 -right-2 h-4 w-4 cursor-nesw-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                    />
+                    <button
+                      type="button"
+                      data-testid="resize-handle-sw"
+                      aria-label="Kéo góc dưới trái để thu phóng"
+                      onPointerDown={(e) => startCornerResize('sw', e)}
+                      className="pointer-events-auto absolute -bottom-2 -left-2 h-4 w-4 cursor-nesw-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                    />
+                    <button
+                      type="button"
+                      data-testid="resize-handle-se"
+                      aria-label="Kéo góc dưới phải để thu phóng"
+                      onPointerDown={(e) => startCornerResize('se', e)}
+                      className="pointer-events-auto absolute -right-2 -bottom-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                    />
+                  </div>
+                );
+              })()}
 
             {/* Lớp phủ công thức KaTeX sắc nét cho các nhãn toán học đã chèn */}
             {activePage.texts

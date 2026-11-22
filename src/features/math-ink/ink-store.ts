@@ -4,6 +4,7 @@ import {
   DEFAULT_PAPER_CONFIG,
   DEFAULT_PEN_PRESETS,
   type Ink3DSolidItem,
+  type InkFolder,
   type InkGraphItem,
   type InkImageItem,
   type InkNotebook,
@@ -18,6 +19,7 @@ import {
 export const INK_GUEST_ACCOUNT_KEY = 'guest';
 
 export interface UserInkBucket {
+  readonly folders: readonly InkFolder[];
   readonly notebooks: readonly InkNotebook[];
   readonly activeNotebookId: string;
 }
@@ -38,10 +40,42 @@ export function createBlankInkPage(id?: string): InkPage {
   };
 }
 
-function createDefaultNotebook(): InkNotebook {
+export const DEFAULT_INK_FOLDERS: readonly InkFolder[] = Object.freeze([
+  {
+    id: 'folder-hinh-hoc',
+    name: 'Hình học không gian',
+    parentId: null,
+    color: '#1D4F6E',
+    createdAt: '2026-11-22T00:00:00.000Z',
+  },
+  {
+    id: 'folder-giai-tich',
+    name: 'Giải tích & Đồ thị',
+    parentId: null,
+    color: '#1B5E4A',
+    createdAt: '2026-11-22T00:00:00.000Z',
+  },
+  {
+    id: 'folder-dai-so',
+    name: 'Cấu trúc đại số',
+    parentId: null,
+    color: '#8C5828',
+    createdAt: '2026-11-22T00:00:00.000Z',
+  },
+  {
+    id: 'folder-giang-day',
+    name: 'Giáo án & Bài tập',
+    parentId: null,
+    color: '#8F3D35',
+    createdAt: '2026-11-22T00:00:00.000Z',
+  },
+]);
+
+function createDefaultNotebook(folderId: string | null = 'folder-hinh-hoc'): InkNotebook {
   return {
     id: 'nb-default-math',
     title: 'Vở Toán — Nháp & Hình không gian',
+    folderId,
     paper: { ...DEFAULT_PAPER_CONFIG },
     pages: [createBlankInkPage('page-initial-1')],
     activePageIndex: 0,
@@ -51,6 +85,7 @@ function createDefaultNotebook(): InkNotebook {
 
 const DEFAULT_NOTEBOOK_SINGLETON: InkNotebook = Object.freeze(createDefaultNotebook());
 const FALLBACK_INK_BUCKET: UserInkBucket = Object.freeze({
+  folders: DEFAULT_INK_FOLDERS,
   notebooks: Object.freeze([DEFAULT_NOTEBOOK_SINGLETON]),
   activeNotebookId: DEFAULT_NOTEBOOK_SINGLETON.id,
 });
@@ -58,8 +93,18 @@ const FALLBACK_INK_BUCKET: UserInkBucket = Object.freeze({
 function createInitialBucket(): UserInkBucket {
   const nb = createDefaultNotebook();
   return {
+    folders: [...DEFAULT_INK_FOLDERS],
     notebooks: [nb],
     activeNotebookId: nb.id,
+  };
+}
+
+function normalizeBucket(raw: UserInkBucket | undefined): UserInkBucket {
+  if (!raw) return createInitialBucket();
+  return {
+    folders: Array.isArray(raw.folders) ? raw.folders : [...DEFAULT_INK_FOLDERS],
+    notebooks: raw.notebooks.length > 0 ? raw.notebooks : [createDefaultNotebook()],
+    activeNotebookId: raw.activeNotebookId,
   };
 }
 
@@ -68,16 +113,24 @@ export interface InkNotebookState {
   readonly buckets: Readonly<Record<string, UserInkBucket>>;
   readonly penPresets: readonly PenPreset[];
   readonly activePenPresetId: string;
-  /** Lịch sử Undo/Redo trong phiên (không lưu localStorage để giữ dung lượng nhỏ gọn) */
   readonly undoStack: readonly InkPage[];
   readonly redoStack: readonly InkPage[];
 
   setActiveAccount: (userId: string | null) => void;
+
+  // Quản lý thư mục đa cấp (Folders & Sub-folders)
+  createFolder: (name: string, parentId?: string | null, color?: string) => InkFolder | null;
+  renameFolder: (folderId: string, name: string) => void;
+  deleteFolder: (folderId: string) => void;
+  moveNotebookToFolder: (notebookId: string, folderId: string | null) => void;
+
+  // Quản lý vở ghi chép
   selectNotebook: (notebookId: string) => void;
-  createNotebook: (title?: string) => InkNotebook;
+  createNotebook: (title?: string, folderId?: string | null) => InkNotebook;
   renameActiveNotebook: (title: string) => void;
   deleteNotebook: (notebookId: string) => void;
 
+  // Quản lý trang vở & kiểu giấy
   updatePaperConfig: (patch: Partial<PaperConfig>) => void;
   selectPage: (index: number) => void;
   addPage: () => void;
@@ -85,11 +138,14 @@ export interface InkNotebookState {
   deletePage: (index: number) => void;
   clearActivePage: () => void;
 
+  // Chỉnh sửa nội dung trên trang hiện tại
   commitPageMutation: (updater: (page: InkPage) => InkPage) => void;
   addStroke: (stroke: InkStroke) => void;
   addShape: (shape: InkShapeItem) => void;
   addSolid3D: (solid: Ink3DSolidItem) => void;
+  updateSolid3D: (solidId: string, patch: Partial<Ink3DSolidItem>) => void;
   addGraph: (graph: InkGraphItem) => void;
+  updateGraph: (graphId: string, patch: Partial<InkGraphItem>) => void;
   addText: (text: InkTextItem) => void;
   addImage: (image: InkImageItem) => void;
 
@@ -104,6 +160,12 @@ export interface InkNotebookState {
 
 export function selectActiveInkBucket(state: InkNotebookState): UserInkBucket {
   return state.buckets[state.activeAccountKey] ?? FALLBACK_INK_BUCKET;
+}
+
+export function selectActiveInkFolders(state: InkNotebookState): readonly InkFolder[] {
+  const bucket = state.buckets[state.activeAccountKey];
+  if (!bucket || !Array.isArray(bucket.folders)) return DEFAULT_INK_FOLDERS;
+  return bucket.folders;
 }
 
 export function selectActiveNotebook(state: InkNotebookState): InkNotebook {
@@ -147,10 +209,109 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         );
       },
 
+      createFolder: (name, parentId = null, color = '#1D4F6E') => {
+        const trimmed = name.trim();
+        if (!trimmed) return null;
+
+        const state = get();
+        const key = state.activeAccountKey;
+        const bucket = normalizeBucket(state.buckets[key]);
+        const folder: InkFolder = {
+          id: makeId('folder'),
+          name: trimmed,
+          parentId: parentId ?? null,
+          color,
+          createdAt: new Date().toISOString(),
+        };
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [key]: {
+              ...bucket,
+              folders: [...bucket.folders, folder],
+            },
+          },
+        });
+        return folder;
+      },
+
+      renameFolder: (folderId, name) => {
+        const trimmed = name.trim();
+        if (!trimmed) return;
+        const state = get();
+        const key = state.activeAccountKey;
+        const bucket = normalizeBucket(state.buckets[key]);
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [key]: {
+              ...bucket,
+              folders: bucket.folders.map((f) => (f.id === folderId ? { ...f, name: trimmed } : f)),
+            },
+          },
+        });
+      },
+
+      deleteFolder: (folderId) => {
+        const state = get();
+        const key = state.activeAccountKey;
+        const bucket = normalizeBucket(state.buckets[key]);
+        const target = bucket.folders.find((f) => f.id === folderId);
+        if (!target) return;
+
+        // Gom tất cả thư mục con cháu để xóa sạch cây thư mục con, nhưng giữ nguyên vở (đẩy lên thư mục cha)
+        const toRemove = new Set<string>([folderId]);
+        let added = true;
+        while (added) {
+          added = false;
+          for (const f of bucket.folders) {
+            if (f.parentId && toRemove.has(f.parentId) && !toRemove.has(f.id)) {
+              toRemove.add(f.id);
+              added = true;
+            }
+          }
+        }
+
+        const fallbackFolderId = target.parentId ?? null;
+        set({
+          buckets: {
+            ...state.buckets,
+            [key]: {
+              ...bucket,
+              folders: bucket.folders.filter((f) => !toRemove.has(f.id)),
+              notebooks: bucket.notebooks.map((nb) =>
+                nb.folderId && toRemove.has(nb.folderId)
+                  ? { ...nb, folderId: fallbackFolderId }
+                  : nb,
+              ),
+            },
+          },
+        });
+      },
+
+      moveNotebookToFolder: (notebookId, folderId) => {
+        const state = get();
+        const key = state.activeAccountKey;
+        const bucket = normalizeBucket(state.buckets[key]);
+        set({
+          buckets: {
+            ...state.buckets,
+            [key]: {
+              ...bucket,
+              notebooks: bucket.notebooks.map((nb) =>
+                nb.id === notebookId ? { ...nb, folderId: folderId ?? null } : nb,
+              ),
+            },
+          },
+        });
+      },
+
       selectNotebook: (notebookId) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         if (!bucket.notebooks.some((n) => n.id === notebookId)) return;
         set({
           buckets: {
@@ -162,13 +323,18 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         });
       },
 
-      createNotebook: (title) => {
+      createNotebook: (title, folderId) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
+        const activeNb = bucket.notebooks.find((n) => n.id === bucket.activeNotebookId);
+        const resolvedFolderId =
+          folderId !== undefined ? folderId : (activeNb?.folderId ?? bucket.folders[0]?.id ?? null);
+
         const nb: InkNotebook = {
           id: makeId('nb'),
           title: title?.trim() || `Vở ghi chép ${bucket.notebooks.length + 1}`,
+          folderId: resolvedFolderId,
           paper: { ...DEFAULT_PAPER_CONFIG },
           pages: [createBlankInkPage()],
           activePageIndex: 0,
@@ -178,6 +344,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
           buckets: {
             ...state.buckets,
             [key]: {
+              ...bucket,
               notebooks: [nb, ...bucket.notebooks],
               activeNotebookId: nb.id,
             },
@@ -191,7 +358,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       renameActiveNotebook: (title) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const nowIso = new Date().toISOString();
         set({
           buckets: {
@@ -209,7 +376,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       deleteNotebook: (notebookId) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const remaining = bucket.notebooks.filter((n) => n.id !== notebookId);
         const nextList = remaining.length > 0 ? remaining : [createDefaultNotebook()];
         const nextActiveId =
@@ -218,6 +385,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
           buckets: {
             ...state.buckets,
             [key]: {
+              ...bucket,
               notebooks: nextList,
               activeNotebookId: nextActiveId,
             },
@@ -230,7 +398,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       updatePaperConfig: (patch) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const nowIso = new Date().toISOString();
         set({
           buckets: {
@@ -250,7 +418,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       selectPage: (index) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         set({
           buckets: {
             ...state.buckets,
@@ -271,7 +439,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       addPage: () => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const nowIso = new Date().toISOString();
         set({
           buckets: {
@@ -298,7 +466,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       duplicateActivePage: () => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const nowIso = new Date().toISOString();
         set({
           buckets: {
@@ -328,7 +496,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       deletePage: (index) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const nowIso = new Date().toISOString();
         set({
           buckets: {
@@ -361,7 +529,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       commitPageMutation: (updater) => {
         const state = get();
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const activeNb =
           bucket.notebooks.find((n) => n.id === bucket.activeNotebookId) ?? bucket.notebooks[0]!;
         const currentPage = activeNb.pages[activeNb.activePageIndex] ?? activeNb.pages[0]!;
@@ -412,10 +580,24 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         }));
       },
 
+      updateSolid3D: (solidId, patch) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          solids3d: page.solids3d.map((s) => (s.id === solidId ? { ...s, ...patch } : s)),
+        }));
+      },
+
       addGraph: (graph) => {
         get().commitPageMutation((page) => ({
           ...page,
           graphs: [...page.graphs, graph],
+        }));
+      },
+
+      updateGraph: (graphId, patch) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          graphs: page.graphs.map((g) => (g.id === graphId ? { ...g, ...patch } : g)),
         }));
       },
 
@@ -438,7 +620,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         if (state.undoStack.length === 0) return;
         const previousPage = state.undoStack[state.undoStack.length - 1]!;
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const activeNb =
           bucket.notebooks.find((n) => n.id === bucket.activeNotebookId) ?? bucket.notebooks[0]!;
         const currentPage = activeNb.pages[activeNb.activePageIndex] ?? activeNb.pages[0]!;
@@ -470,7 +652,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         if (state.redoStack.length === 0) return;
         const nextPage = state.redoStack[state.redoStack.length - 1]!;
         const key = state.activeAccountKey;
-        const bucket = state.buckets[key] ?? createInitialBucket();
+        const bucket = normalizeBucket(state.buckets[key]);
         const activeNb =
           bucket.notebooks.find((n) => n.id === bucket.activeNotebookId) ?? bucket.notebooks[0]!;
         const currentPage = activeNb.pages[activeNb.activePageIndex] ?? activeNb.pages[0]!;

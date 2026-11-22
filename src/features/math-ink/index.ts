@@ -8,8 +8,10 @@ export {
 } from './canvasRenderer';
 export {
   createBlankInkPage,
+  DEFAULT_INK_FOLDERS,
   INK_GUEST_ACCOUNT_KEY,
   selectActiveInkBucket,
+  selectActiveInkFolders,
   selectActiveInkPage,
   selectActiveNotebook,
   selectActivePenPreset,
@@ -37,10 +39,15 @@ export {
   type SpecialGraphPoint,
 } from './mathExprParser';
 export {
+  evaluateSolidConstructions,
+  getSolidPresetSchema,
   renderSolid3DOnCanvas,
+  resolveSolidVertexLabel,
   rotatePoint3D,
   SOLID_3D_PRESETS,
+  type EvaluatedConstructionPoint,
   type Solid3DPresetMeta,
+  type Solid3DPresetSchema,
   type Vec3,
 } from './solid3dEngine';
 export {
@@ -52,6 +59,7 @@ export {
   type GraphFunctionEntry,
   type Ink3DSolidItem,
   type InkActiveTool,
+  type InkFolder,
   type InkGraphItem,
   type InkImageItem,
   type InkNotebook,
@@ -69,5 +77,6 @@ export {
   type RulerState,
   type SelectionMode,
   type ShapeToolKind,
+  type Solid3DConstruction,
   type Solid3DPresetKind,
 } from './types';

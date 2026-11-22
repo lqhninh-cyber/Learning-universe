@@ -5,9 +5,13 @@ import {
   compileMathExpression,
   computeDefiniteIntegral,
   eraseStrokeSegment,
+  evaluateSolidConstructions,
   findSpecialGraphPoints,
+  getSolidPresetSchema,
   recognizeInkGesture,
+  resolveSolidVertexLabel,
   rotatePoint3D,
+  selectActiveInkFolders,
   selectActiveInkPage,
   selectActiveNotebook,
   snapPointToRulerEdge,
@@ -17,7 +21,7 @@ import {
 } from '@/features/math-ink';
 import { MathInkPage } from '@/pages/math-ink/MathInkPage';
 
-describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Hình 3D & Đồ Thị Hàm Số', () => {
+describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa cấp, Hình 3D nâng cao & Đồ Thị Hàm Số', () => {
   beforeEach(() => {
     useInkNotebookStore.getState().resetInkStore();
     window.localStorage.clear();
@@ -94,20 +98,108 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Hình 3D & Đồ 
     expect(snapped!.y).toBeCloseTo(172, 2);
   });
 
-  it('động cơ Hình học không gian 3D đủ 8 mẫu khối chuẩn và phép quay 3D bảo toàn độ dài vectơ', () => {
+  it('động cơ Hình 3D: đủ 8 mẫu khối, bảo toàn độ dài khi quay, đổi tên đỉnh và tính chính xác tọa độ Trung điểm / Trọng tâm / Đường cao', () => {
     expect(SOLID_3D_PRESETS).toHaveLength(8);
     const p = { x: 1, y: 2, z: -1.5 };
     const origNorm = Math.hypot(p.x, p.y, p.z);
     const rotated = rotatePoint3D(p, 47, 23);
     const rotNorm = Math.hypot(rotated.x, rotated.y, rotated.z);
     expect(rotNorm).toBeCloseTo(origNorm, 6);
+
+    expect(resolveSolidVertexLabel('S', 'S', { S: 'P' })).toBe('P');
+    expect(resolveSolidVertexLabel('A', 'A', { A: '' })).toBe('');
+
+    const schema = getSolidPresetSchema('pyramid-quad');
+    const evalResult = evaluateSolidConstructions(
+      schema,
+      [
+        {
+          id: 'm1',
+          kind: 'midpoint',
+          fromVertex: 'S',
+          toVertex: 'A',
+          label: 'M',
+          color: '#DC2626',
+        },
+        {
+          id: 'g1',
+          kind: 'centroid',
+          vertices: ['S', 'A', 'B'],
+          label: 'G',
+          color: '#2563EB',
+        },
+        {
+          id: 'h1',
+          kind: 'altitude',
+          apexVertex: 'S',
+          footTarget: 'base-plane',
+          footLabel: 'H',
+          color: '#1B5E4A',
+          showRightAngle: true,
+        },
+        {
+          id: 'seg1',
+          kind: 'segment',
+          fromPoint: 'm1',
+          toPoint: 'g1',
+          style: 'solid',
+          color: '#7C3AED',
+        },
+      ],
+      '#111827',
+    );
+
+    const vS = schema.vertices.find((v) => v.id === 'S')!.pos;
+    const vA = schema.vertices.find((v) => v.id === 'A')!.pos;
+    const vB = schema.vertices.find((v) => v.id === 'B')!.pos;
+
+    const mid = evalResult.allPoints3D.get('m1')!;
+    expect(mid.x).toBeCloseTo((vS.x + vA.x) / 2, 5);
+    expect(mid.y).toBeCloseTo((vS.y + vA.y) / 2, 5);
+    expect(mid.z).toBeCloseTo((vS.z + vA.z) / 2, 5);
+
+    const centroid = evalResult.allPoints3D.get('g1')!;
+    expect(centroid.x).toBeCloseTo((vS.x + vA.x + vB.x) / 3, 5);
+    expect(centroid.y).toBeCloseTo((vS.y + vA.y + vB.y) / 3, 5);
+    expect(centroid.z).toBeCloseTo((vS.z + vA.z + vB.z) / 3, 5);
+
+    const footH = evalResult.allPoints3D.get('h1')!;
+    expect(footH.x).toBeCloseTo(vS.x, 5);
+    expect(footH.y).toBeCloseTo(schema.basePlaneY, 5);
+    expect(footH.z).toBeCloseTo(vS.z, 5);
+    expect(evalResult.constructedPoints).toHaveLength(3);
   });
 
-  it('tách biệt vở ghi chép theo từng tài khoản (user.id), hỗ trợ đa trang và Undo/Redo', () => {
+  it('quản lý Thư mục đa cấp (tạo mục cha/con, di chuyển vở, xóa thư mục không mất vở) và tách biệt theo tài khoản', () => {
     const store = useInkNotebookStore.getState();
 
     store.setActiveAccount('student-a');
-    store.renameActiveNotebook('Vở Giải tích của A');
+    const parentFolder = store.createFolder('Hình học 11', null, '#1D4F6E');
+    expect(parentFolder).not.toBeNull();
+    const childFolder = store.createFolder(
+      'Chương 3: Quan hệ vuông góc',
+      parentFolder!.id,
+      '#1B5E4A',
+    );
+    expect(childFolder).not.toBeNull();
+    expect(
+      selectActiveInkFolders(useInkNotebookStore.getState()).some((f) => f.id === childFolder!.id),
+    ).toBe(true);
+
+    store.createNotebook('Bài tập Khoảng cách', childFolder!.id);
+    const createdNb = selectActiveNotebook(useInkNotebookStore.getState());
+    expect(createdNb.folderId).toBe(childFolder!.id);
+
+    // Xóa thư mục con -> vở bên trong được giữ nguyên và tự chuyển lên thư mục cha
+    store.deleteFolder(childFolder!.id);
+    const updatedNb = selectActiveNotebook(useInkNotebookStore.getState());
+    expect(updatedNb.title).toBe('Bài tập Khoảng cách');
+    expect(updatedNb.folderId).toBe(parentFolder!.id);
+
+    // Di chuyển vở sang gốc và kiểm tra Undo/Redo trên trang
+    store.moveNotebookToFolder(updatedNb.id, null);
+    expect(selectActiveNotebook(useInkNotebookStore.getState()).folderId).toBeNull();
+
     store.addPage();
     expect(selectActiveNotebook(useInkNotebookStore.getState()).pages).toHaveLength(2);
 
@@ -136,7 +228,7 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Hình 3D & Đồ 
     expect(selectActiveNotebook(useInkNotebookStore.getState()).pages).toHaveLength(1);
   });
 
-  it('MathInkPage vận hành đầy đủ đổi giấy vở, bật thước kẻ, chèn Hình không gian 3D, chèn Đồ thị hàm số f(x) và thêm trang', () => {
+  it('MathInkPage vận hành đầy đủ Thư mục đa cấp, Hình 3D (đổi tên đỉnh, hình trơn, trung điểm/trọng tâm/đường cao, thu phóng), Đồ thị f(x) và thêm trang', () => {
     render(
       <MemoryRouter initialEntries={['/bang-viet']}>
         <MathInkPage />
@@ -146,24 +238,70 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Hình 3D & Đồ 
     expect(screen.getByTestId('math-ink-page')).toBeInTheDocument();
     expect(screen.getByTestId('math-ink-canvas')).toBeInTheDocument();
 
-    // 1. Đổi kiểu giấy sang Chấm bi
+    // 1. Tạo thư mục mới trong thanh bên trái
+    fireEvent.click(screen.getByTestId('ink-new-folder-btn'));
+    fireEvent.change(screen.getByTestId('ink-new-folder-input'), {
+      target: { value: 'Ôn thi Học kỳ 2' },
+    });
+    fireEvent.submit(screen.getByTestId('ink-new-folder-form'));
+    expect(
+      selectActiveInkFolders(useInkNotebookStore.getState()).some(
+        (f) => f.name === 'Ôn thi Học kỳ 2',
+      ),
+    ).toBe(true);
+
+    // 2. Đổi kiểu giấy sang Chấm bi & bật Thước kẻ
     fireEvent.click(screen.getByTestId('ink-paper-btn'));
     expect(screen.getByTestId('paper-settings-popover')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('paper-pattern-dotted'));
     expect(selectActiveNotebook(useInkNotebookStore.getState()).paper.pattern).toBe('dotted');
 
-    // 2. Bật Thước kẻ tương tác
     fireEvent.click(screen.getByTestId('ink-ruler-toggle'));
     expect(screen.getByTestId('ink-canvas-ruler')).toBeInTheDocument();
 
-    // 3. Mở bảng Hình 3D, chọn Hình chóp S.ABCD và chèn vào trang
+    // 3. Mở bảng Hình 3D: đổi kích thước, đổi tên đỉnh S -> P, thêm Trung điểm / Trọng tâm / Đường cao / Nối đoạn
     fireEvent.click(screen.getByTestId('ink-solid3d-btn'));
     expect(screen.getByTestId('solid-3d-popover')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('solid-preset-pyramid-quad'));
-    fireEvent.click(screen.getByTestId('insert-solid-3d-confirm'));
-    expect(selectActiveInkPage(useInkNotebookStore.getState()).solids3d).toHaveLength(1);
+    fireEvent.change(screen.getByTestId('solid-size-slider'), { target: { value: '360' } });
 
-    // 4. Mở bảng Đồ thị hàm số, nhập x^2 - 4, bật tô tích phân và chèn vào trang
+    fireEvent.click(screen.getByTestId('solid-tab-labels'));
+    fireEvent.change(screen.getByTestId('solid-vertex-input-S'), { target: { value: 'P' } });
+
+    fireEvent.click(screen.getByTestId('solid-tab-constructions'));
+    fireEvent.click(screen.getByTestId('add-midpoint-btn'));
+    fireEvent.click(screen.getByText('Trọng tâm'));
+    fireEvent.click(screen.getByTestId('add-centroid-btn'));
+    fireEvent.click(screen.getByText('Đường cao'));
+    fireEvent.click(screen.getByTestId('add-altitude-btn'));
+    fireEvent.click(screen.getByText('Nối đoạn'));
+    fireEvent.click(screen.getByTestId('add-segment-btn'));
+
+    fireEvent.click(screen.getByTestId('insert-solid-3d-confirm'));
+
+    const insertedSolid = selectActiveInkPage(useInkNotebookStore.getState()).solids3d[0];
+    expect(insertedSolid).toBeDefined();
+    expect(insertedSolid!.width).toBe(360);
+    expect(insertedSolid!.customLabels?.S).toBe('P');
+    expect(insertedSolid!.constructions).toHaveLength(4);
+
+    // 4. Thu/phóng trực tiếp hình 3D đang chọn và bật chế độ hình không tên (trơn) ngay trên trang
+    expect(screen.getByTestId('ink-resize-frame')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('selected-scale-up'));
+    const scaledUpWidth = selectActiveInkPage(useInkNotebookStore.getState()).solids3d[0]!.width;
+    expect(scaledUpWidth).toBeGreaterThan(360);
+
+    fireEvent.click(screen.getByTestId('selected-scale-down'));
+    const scaledDownWidth = selectActiveInkPage(useInkNotebookStore.getState()).solids3d[0]!.width;
+    expect(scaledDownWidth).toBeLessThan(scaledUpWidth);
+
+    fireEvent.click(screen.getByTestId('selected-edit-solid-btn'));
+    fireEvent.click(screen.getByTestId('solid-tab-labels'));
+    fireEvent.click(screen.getByTestId('solid-blank-labels-btn'));
+    fireEvent.click(screen.getByTestId('insert-solid-3d-confirm'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).solids3d[0]!.showLabels).toBe(false);
+
+    // 5. Mở bảng Đồ thị hàm số, nhập x^2 - 4, bật tô tích phân và chèn vào trang
     fireEvent.click(screen.getByTestId('ink-graph-btn'));
     expect(screen.getByTestId('function-graph-popover')).toBeInTheDocument();
     fireEvent.change(screen.getByTestId('graph-fn-input-0'), { target: { value: 'x^2 - 4' } });
@@ -171,7 +309,8 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Hình 3D & Đồ 
     fireEvent.click(screen.getByTestId('insert-graph-confirm'));
     expect(selectActiveInkPage(useInkNotebookStore.getState()).graphs).toHaveLength(1);
 
-    // 5. Thêm trang mới
+    // 6. Chuyển sang tab Trang vở và thêm trang mới
+    fireEvent.click(screen.getByTestId('sidebar-tab-pages'));
     fireEvent.click(screen.getByTestId('ink-add-page-btn'));
     expect(selectActiveNotebook(useInkNotebookStore.getState()).pages).toHaveLength(2);
   });
