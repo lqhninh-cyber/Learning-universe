@@ -153,14 +153,14 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
     expect(screen.getByTestId('pomodoro-countdown')).toHaveTextContent('25:00');
   });
 
-  it('mở CommandPalette bằng Ctrl+K, tìm không dấu tiếng Việt (nhom thuong, bi da, khue van), điều hướng phím và đóng bằng Esc', () => {
+  it('mở CommandPalette bằng Ctrl+K, tìm không dấu tiếng Việt (nhom thuong, bi da, khue van), điều hướng phím và đóng bằng Esc', async () => {
     renderAppShell('/');
 
     expect(screen.queryByTestId('os-command-palette')).not.toBeInTheDocument();
 
-    // Mở bằng Ctrl+K
+    // Mở bằng Ctrl+K (CommandPalette nạp lười qua React.lazy)
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
-    const dialog = screen.getByTestId('os-command-palette');
+    const dialog = await screen.findByTestId('os-command-palette');
     expect(dialog).toBeInTheDocument();
 
     const input = screen.getByRole('combobox');
@@ -188,7 +188,7 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
 
     // Mở lại bằng nút ⌘K, thực thi lệnh đổi chế độ Sáng/Tối bằng Enter
     fireEvent.click(screen.getByTestId('topbar-command-trigger'));
-    const inputAgain = screen.getByRole('combobox');
+    const inputAgain = await screen.findByRole('combobox');
     fireEvent.change(inputAgain, { target: { value: 'che do toi' } });
     act(() => {
       fireEvent.keyDown(inputAgain, { key: 'Enter' });
@@ -233,6 +233,40 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
         '/thu-gian?tab=di-san',
       );
       expect(sessionStorage.getItem(POMODORO_RETURN_PATH_KEY)).toBe(lessonPath);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('cô lập nhịp tick 1Hz của Pomodoro khỏi IslandContext (không gây re-render cho consumer của useIsland)', async () => {
+    vi.useFakeTimers();
+    const islandRenderSpy = vi.fn();
+
+    function IslandConsumerProbe() {
+      const { activeSubject, startPomodoro } = useIsland();
+      islandRenderSpy(activeSubject?.code ?? null);
+      return (
+        <button type="button" onClick={() => startPomodoro(2, 'Tập trung 2p')}>
+          Start 2m Probe
+        </button>
+      );
+    }
+
+    try {
+      renderAppShell('/', { extraChild: <IslandConsumerProbe /> });
+      const initialRenders = islandRenderSpy.mock.calls.length;
+
+      fireEvent.click(screen.getByRole('button', { name: 'Start 2m Probe' }));
+
+      // Qua 5 giây đếm ngược Pomodoro, HeaderPomodoroTimer cập nhật mỗi giây nhưng consumer useIsland KHÔNG re-render theo từng giây
+      await act(async () => {
+        vi.advanceTimersByTime(5_000);
+        await Promise.resolve();
+      });
+
+      expect(screen.getByTestId('pomodoro-countdown')).toHaveTextContent('01:55');
+      // Chỉ tối đa 1-2 lần do thông báo nổi auto-dismiss, tuyệt đối không tăng 5+ lần theo 5 nhịp 1Hz
+      expect(islandRenderSpy.mock.calls.length - initialRenders).toBeLessThanOrEqual(2);
     } finally {
       vi.useRealTimers();
     }

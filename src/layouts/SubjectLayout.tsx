@@ -1,5 +1,5 @@
 import { Outlet, useParams } from 'react-router';
-import { getSubjectBySlug } from '@/content-runtime';
+import { getSubjectBySlug } from '@/content-runtime/manifest';
 import { resolveSubjectThemeId } from '@/shared/theme/subject-themes';
 import { SubjectThemeProvider } from '@/shared/theme/SubjectThemeProvider';
 

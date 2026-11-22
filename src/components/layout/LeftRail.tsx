@@ -15,7 +15,8 @@ import {
 import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { BrandLogo } from '@/components/common/BrandLogo';
-import { getLessonById, type LessonLocation } from '@/content-runtime';
+import { preloadCommandPalette } from '@/components/layout/command-palette-loader';
+import { getLessonById, type LessonLocation } from '@/content-runtime/manifest';
 import {
   fontScaleToReadingSize,
   getIslandSubjectByIdOrSlug,
@@ -46,7 +47,7 @@ interface QuickResumeMeta {
 function readPersistedLastVisited(): LastVisitedEntry | null {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = window.localStorage.getItem('learning-universe-storage-v1');
+    const raw = window.localStorage.getItem('learning-universe-progress-v1');
     if (!raw) return null;
     const parsed = JSON.parse(raw) as {
       state?: { lastVisitedGlobal?: LastVisitedEntry | null };
@@ -225,6 +226,8 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
           type="button"
           data-testid="rail-command-trigger"
           onClick={openCommandPalette}
+          onMouseEnter={preloadCommandPalette}
+          onFocus={preloadCommandPalette}
           aria-label="Mở tìm kiếm nhanh"
           title="Tìm nhanh (⌘K)"
           className={cn(

@@ -22,16 +22,6 @@ export interface SubjectWashAssetConfig {
   readonly objectPosition?: string;
 }
 
-export interface SubjectPortalAssetConfig {
-  readonly slug: string;
-  readonly shortCode: string;
-  readonly src: string;
-  readonly accentHex: string;
-  readonly darkAccentHex: string;
-  readonly fallbackGradient: string;
-  readonly alt: string;
-}
-
 export const ATMOSPHERE_BASE_PATH = '/assets/atmosphere' as const;
 
 export const DASHBOARD_CANOPY_ASSETS: CanopyThemePair = {
@@ -44,45 +34,6 @@ export const SANCTUARY_BANNER_ASSET = {
   alt: 'Vườn rêu tĩnh lặng chùa Saihō-ji (Kyoto) trong ánh nắng dịu chiều',
   fallbackGradient: 'radial-gradient(80% 110% at 24% 50%, #245243 0%, #17332C 58%, #0E1F1A 100%)',
 } as const;
-
-export const SUBJECT_PORTAL_ASSETS: Readonly<Record<string, SubjectPortalAssetConfig>> = {
-  'cau-truc-dai-so': {
-    slug: 'cau-truc-dai-so',
-    shortCode: 'CTĐS',
-    src: `${ATMOSPHERE_BASE_PATH}/portal-ctds.webp`,
-    accentHex: '#8C5828',
-    darkAccentHex: '#D99B5E',
-    fallbackGradient: 'linear-gradient(135deg, #2D1F14 0%, #5A3A1E 50%, #1C140E 100%)',
-    alt: 'Mái vòm hình học đối xứng đa giác Bảo tàng Louvre Abu Dhabi',
-  },
-  'hinh-hoc-affine': {
-    slug: 'hinh-hoc-affine',
-    shortCode: 'HHAVE',
-    src: `${ATMOSPHERE_BASE_PATH}/portal-hhave.webp`,
-    accentHex: '#1D4F6E',
-    darkAccentHex: '#64A8D1',
-    fallbackGradient: 'linear-gradient(135deg, #102433 0%, #1D4F6E 52%, #0D1922 100%)',
-    alt: 'Phối cảnh kiến trúc tuyến tính hiện đại Nhà hát Opera Oslo',
-  },
-  'giai-tich-ham-mot-bien': {
-    slug: 'giai-tich-ham-mot-bien',
-    shortCode: 'GTHMB',
-    src: `${ATMOSPHERE_BASE_PATH}/portal-gthmb.webp`,
-    accentHex: '#1B5E4A',
-    darkAccentHex: '#52B394',
-    fallbackGradient: 'linear-gradient(135deg, #0E2921 0%, #1B5E4A 52%, #0B1B16 100%)',
-    alt: 'Đường cong mặt hồ phẳng lặng và rừng thông Emerald Bay lúc bình minh',
-  },
-  'giao-duc-hoc': {
-    slug: 'giao-duc-hoc',
-    shortCode: 'GDH',
-    src: `${ATMOSPHERE_BASE_PATH}/portal-gdh.webp`,
-    accentHex: '#8F3D35',
-    darkAccentHex: '#DF7B70',
-    fallbackGradient: 'linear-gradient(135deg, #321614 0%, #6A2E28 52%, #1D0F0E 100%)',
-    alt: 'Phòng đọc Long Room Thư viện Đại học Trinity Dublin ngập ánh sáng tự nhiên',
-  },
-};
 
 export const SUBJECT_WASH_ASSETS: Readonly<Record<string, SubjectWashAssetConfig>> = {
   'cau-truc-dai-so': {
@@ -130,11 +81,6 @@ export const SUBJECT_WASH_ASSETS: Readonly<Record<string, SubjectWashAssetConfig
 export function getSubjectWashAsset(slug?: string): SubjectWashAssetConfig | null {
   if (!slug) return null;
   return SUBJECT_WASH_ASSETS[slug] ?? null;
-}
-
-export function getSubjectPortalAsset(slug?: string): SubjectPortalAssetConfig | null {
-  if (!slug) return null;
-  return SUBJECT_PORTAL_ASSETS[slug] ?? null;
 }
 
 /**

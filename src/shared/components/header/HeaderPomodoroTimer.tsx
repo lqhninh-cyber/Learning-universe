@@ -1,6 +1,6 @@
 import { Hourglass, Pause, Play, RotateCcw } from 'lucide-react';
 import { type FC, useEffect, useRef, useState } from 'react';
-import { useIsland } from '@/context/IslandContext';
+import { usePomodoro } from '@/context/PomodoroContext';
 import { cn } from '@/shared/lib/cn';
 
 export interface HeaderPomodoroTimerProps {
@@ -55,7 +55,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
     pausePomodoro,
     resumePomodoro,
     resetPomodoro,
-  } = useIsland();
+  } = usePomodoro();
   const [isOpen, setIsOpen] = useState(false);
   const [customMinutes, setCustomMinutes] = useState<number>(() => readStoredCustomMinutes());
   const rootRef = useRef<HTMLDivElement>(null);

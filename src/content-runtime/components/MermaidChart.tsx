@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from 'react';
+import { useReadingSettings } from '@/context/ReadingSettingsContext';
 import { cn } from '@/shared/lib/cn';
 import { Chapter0KnowledgeMap } from './Chapter0KnowledgeMap';
 import { Chapter1KnowledgeMap } from './Chapter1KnowledgeMap';
@@ -48,11 +49,16 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
   const isNativeMap =
     isChapter0 || isChapter1 || isChapter3 || isChapter5 || isChapter6 || isChapter7;
 
+  const { theme } = useReadingSettings();
+  const isDark =
+    theme === 'dark' ||
+    (typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
   const [svgHtml, setSvgHtml] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(!isTestOrSsr && !isNativeMap);
   const rawId = useId();
-  const safeId = `mermaid-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const safeId = `mermaid-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}-${isDark ? 'dark' : 'light'}`;
 
   useEffect(() => {
     let isMounted = true;
@@ -69,9 +75,9 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
 
         mermaid.initialize({
           startOnLoad: false,
-          theme: 'neutral',
+          theme: isDark ? 'dark' : 'neutral',
           fontFamily: 'inherit',
-          securityLevel: 'loose',
+          securityLevel: 'strict',
           flowchart: {
             useMaxWidth: true,
             htmlLabels: true,
@@ -88,6 +94,7 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
         const { svg } = await mermaid.render(safeId, chart);
         if (isMounted) {
           setSvgHtml(svg);
+          setError(null);
           setIsLoading(false);
         }
       } catch (err) {
@@ -108,7 +115,7 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
         el.remove();
       }
     };
-  }, [chart, isNativeMap, safeId]);
+  }, [chart, isDark, isNativeMap, safeId]);
 
   if (isChapter0) {
     return <Chapter0KnowledgeMap className={className} title={title} />;
@@ -138,25 +145,27 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
     <div
       data-testid="mermaid-chart"
       className={cn(
-        'my-8 overflow-hidden rounded-2xl border border-stone-200/90 bg-[#faf8f2]/80 shadow-sm transition-all duration-200',
+        'my-8 overflow-hidden rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-main)] shadow-sm transition-all duration-200',
         className,
       )}
     >
       {/* Khung tiêu đề học thuật duy nhất: "Bản đồ tri thức" */}
-      <div className="border-b border-stone-200/80 bg-white/70 px-5 py-3">
-        <span className="font-serif text-[15px] font-semibold text-stone-900">{title}</span>
+      <div className="border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)]/80 px-5 py-3">
+        <span className="font-serif text-[15px] font-semibold text-[var(--text-main)]">
+          {title}
+        </span>
       </div>
 
       {/* Nội dung đồ họa vector trực quan */}
       <div className="p-6">
         {isLoading && (
-          <div className="flex items-center justify-center py-12 text-sm text-stone-500">
+          <div className="flex items-center justify-center py-12 text-sm text-[var(--text-muted)]">
             <span className="animate-pulse">Đang kết xuất đồ họa vector...</span>
           </div>
         )}
 
         {!isLoading && error && (
-          <div className="rounded-xl border border-stone-200 bg-white/80 p-6 text-center text-xs text-stone-600">
+          <div className="rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-6 text-center text-xs text-[var(--text-secondary)]">
             <p className="font-medium">
               Sơ đồ đang được tối ưu hóa hiển thị. Vui lòng tải lại trang.
             </p>
@@ -172,7 +181,7 @@ export function MermaidChart({ chart, className, title = 'Bản đồ tri thức
 
         {!isLoading && !error && !svgHtml && (
           // Dành cho môi trường test Vitest không có DOM SVG
-          <div className="py-6 text-center text-xs text-stone-500 italic">
+          <div className="py-6 text-center text-xs text-[var(--text-muted)] italic">
             [Bản đồ tri thức trực quan — Đại số trừu tượng]
           </div>
         )}

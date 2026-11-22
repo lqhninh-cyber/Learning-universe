@@ -42,9 +42,9 @@ import {
   getSubjects,
   getSubjectStats,
   type LessonLocation,
-} from '@/content-runtime';
+} from '@/content-runtime/manifest';
 import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
-import { useIsland } from '@/context/IslandContext';
+import { usePomodoro } from '@/context/PomodoroContext';
 import { getHeritageMathConnection } from '@/data/heritageMathConnections';
 import { useOptionalAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
@@ -102,6 +102,76 @@ function renderPeriodIcon(period: DayPeriod) {
   return <MoonStar className="h-3.5 w-3.5 text-[#8BC5B0]" aria-hidden="true" />;
 }
 
+function DashboardPomodoroBar() {
+  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro, resetPomodoro } = usePomodoro();
+  const isPomodoroActive = pomodoro.status !== 'idle';
+  const isPomodoroRunning = pomodoro.status === 'running';
+
+  return (
+    <div
+      data-testid="dashboard-pomodoro-bar"
+      className="flex flex-wrap items-center justify-between gap-2 rounded-[18px] border border-white/65 bg-white/75 px-3.5 py-2.5 dark:border-white/10 dark:bg-[#182320]/75"
+    >
+      <div className="flex items-center gap-2.5">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">
+          <Hourglass
+            className={cn('h-4 w-4 shrink-0', isPomodoroRunning && 'animate-pulse')}
+            aria-hidden="true"
+          />
+        </span>
+        <div className="leading-tight">
+          <p className="text-[11.5px] font-semibold text-[var(--text-main)]">Pomodoro</p>
+          <p className="font-mono text-xs font-bold text-[#C27824] tabular-nums dark:text-[#E5A95C]">
+            {isPomodoroActive ? formatMmSs(pomodoro.remainingSeconds) : '25:00'}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1.5">
+        {isPomodoroActive ? (
+          <>
+            <button
+              type="button"
+              onClick={isPomodoroRunning ? pausePomodoro : resumePomodoro}
+              className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-95"
+            >
+              {isPomodoroRunning ? (
+                <>
+                  <Pause className="h-3 w-3" aria-hidden="true" />
+                  <span>Tạm dừng</span>
+                </>
+              ) : (
+                <>
+                  <Play className="h-3 w-3" aria-hidden="true" />
+                  <span>Tiếp tục</span>
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={resetPomodoro}
+              aria-label="Đặt lại phiên tập trung"
+              className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-white text-[var(--text-secondary)] hover:text-[var(--text-main)] dark:bg-[#141D1A]"
+            >
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            data-testid="dashboard-pomodoro-start"
+            onClick={() => startPomodoro(25, 'Tiêu chuẩn')}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#0D664A] active:scale-[0.98]"
+          >
+            <Play className="h-3 w-3" aria-hidden="true" />
+            <span>Tập trung</span>
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
  * TRANG TỔNG QUAN (/): ACADEMIC OS PERSONALIZED WORKSPACE
  * - Khối A: Khung Hero thích ứng theo khung giờ (Sáng/Chiều/Tối/Đêm) + lời chào cá nhân hóa, KHÔNG lặp thanh tìm kiếm.
@@ -121,7 +191,6 @@ export function HomePage() {
   const isStoreAuth = useLearningStore((state) => state.isAuthenticated);
   const storeLearnerName = useLearningStore((state) => state.learnerName);
   const workspaceBucket = useWorkspaceStore(selectActiveWorkspaceBucket);
-  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro, resetPomodoro } = useIsland();
 
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [heritageIndex, setHeritageIndex] = useState(() =>
@@ -284,8 +353,6 @@ export function HomePage() {
       )
     : ROUTES.learningSpace;
 
-  const isPomodoroActive = pomodoro.status !== 'idle';
-  const isPomodoroRunning = pomodoro.status === 'running';
   const isHeritageFallback = failedHeritageId === currentHeritage.id;
   const heritageNumberLabel = String(heritageIndex + 1).padStart(2, '0');
 
@@ -678,68 +745,8 @@ export function HomePage() {
                 </Link>
               </div>
 
-              {/* Thanh khởi động nhanh Pomodoro */}
-              <div
-                data-testid="dashboard-pomodoro-bar"
-                className="flex flex-wrap items-center justify-between gap-2 rounded-[18px] border border-white/65 bg-white/75 px-3.5 py-2.5 dark:border-white/10 dark:bg-[#182320]/75"
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">
-                    <Hourglass
-                      className={cn('h-4 w-4 shrink-0', isPomodoroRunning && 'animate-pulse')}
-                      aria-hidden="true"
-                    />
-                  </span>
-                  <div className="leading-tight">
-                    <p className="text-[11.5px] font-semibold text-[var(--text-main)]">Pomodoro</p>
-                    <p className="font-mono text-xs font-bold text-[#C27824] tabular-nums dark:text-[#E5A95C]">
-                      {isPomodoroActive ? formatMmSs(pomodoro.remainingSeconds) : '25:00'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  {isPomodoroActive ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={isPomodoroRunning ? pausePomodoro : resumePomodoro}
-                        className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-95"
-                      >
-                        {isPomodoroRunning ? (
-                          <>
-                            <Pause className="h-3 w-3" aria-hidden="true" />
-                            <span>Tạm dừng</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="h-3 w-3" aria-hidden="true" />
-                            <span>Tiếp tục</span>
-                          </>
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={resetPomodoro}
-                        aria-label="Đặt lại phiên tập trung"
-                        className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-white text-[var(--text-secondary)] hover:text-[var(--text-main)] dark:bg-[#141D1A]"
-                      >
-                        <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      data-testid="dashboard-pomodoro-start"
-                      onClick={() => startPomodoro(25, 'Tiêu chuẩn')}
-                      className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#0D664A] active:scale-[0.98]"
-                    >
-                      <Play className="h-3 w-3" aria-hidden="true" />
-                      <span>Tập trung</span>
-                    </button>
-                  )}
-                </div>
-              </div>
+              {/* Thanh khởi động nhanh Pomodoro (cô lập 1Hz re-render) */}
+              <DashboardPomodoroBar />
             </div>
 
             {/* THẺ 3 (3/12) — THẺ NHẤN NGỌC LỤC BẢO RỰC NÉT KIỂU QUIXOTIC: Điều phối nhanh */}

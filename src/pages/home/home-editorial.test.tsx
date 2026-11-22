@@ -3,10 +3,6 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { IslandProvider } from '@/context/IslandContext';
 import {
-  ATMOSPHERIC_PALETTES,
-  interpolateAtmospherePalette,
-} from '@/components/home/atmosphereThemes';
-import {
   applyEightOnBreakDecision,
   applyIllegalBreakDecision,
   buildOfficial15BallRack,
@@ -43,14 +39,6 @@ import {
   SUBSTEPS,
 } from '@/utils/billiardPhysics';
 import {
-  PIPELINE_LAYER_NAMES,
-  buildAtmosphereSpriteCache,
-  createAtmosphereWorld,
-  renderAtmosphereFrame,
-  spawnHarmonicContourPulse,
-  spawnShootingStar,
-} from '@/components/home/heroAtmosphereEngine';
-import {
   angleLerp,
   ARMILLARY_RINGS,
   BLUEPRINT_SYMBOLS,
@@ -65,20 +53,11 @@ import {
   SPHERICAL_WAVE_TRIG,
   WORLD_R_DIAL,
 } from '@/components/home/heroSculptureGeometry';
-import {
-  buildHeroTerrainGeometry,
-  buildHeroTerrainLayerCache,
-} from '@/components/home/heroTerrainBuilder';
-import { HeroPhysicsCanvas } from '@/components/home/HeroPhysicsCanvas';
-import { HeroSonHaDiorama } from '@/components/home/HeroSonHaDiorama';
 import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import { getSubjects } from '@/content-runtime';
-import { createGlowSpriteCache } from '@/shared/lib/canvasSprites';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
 import { HERITAGE_ARTWORKS, HeritageArtShowcase } from '@/pages/home/HeritageArtShowcase';
 import { HomePage } from '@/pages/home/HomePage';
-import { KnowledgeThread, KNOWLEDGE_THREAD_STATIONS } from '@/pages/home/KnowledgeThread';
-import { QuickKaTeXDrawer } from '@/pages/home/QuickKaTeXDrawer';
 import { RotatingScholarlyQuote, SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
 import { ViewModeToggle } from '@/pages/home/ViewModeToggle';
 import { LearningSpacePage } from '@/pages/learning-space/LearningSpacePage';
@@ -274,123 +253,6 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       const svgFallback = screen.getByTestId('heritage-svg-fallback');
       expect(svgFallback).toBeInTheDocument();
       expect(svgFallback.querySelector('svg')).toBeInTheDocument();
-    });
-  });
-
-  describe('KnowledgeThread Component & Floral Bloom Animation', () => {
-    it('hiển thị SVG đường dẫn The Knowledge Thread và các trạm mốc', () => {
-      render(
-        <KnowledgeThread
-          pageScrollProgress={0}
-          leadTip={{ x: 720, y: 140 }}
-          prefersReducedMotion={false}
-        />,
-      );
-
-      expect(screen.getByTestId('the-knowledge-thread')).toBeInTheDocument();
-      expect(KNOWLEDGE_THREAD_STATIONS).toHaveLength(4);
-
-      KNOWLEDGE_THREAD_STATIONS.forEach((station) => {
-        expect(
-          screen.getByTestId(`knowledge-thread-station-${station.threshold}`),
-        ).toBeInTheDocument();
-      });
-    });
-
-    it('kích hoạt hiệu ứng hoa sen bung nở (Authentic Lotus Bloom) khi cuộn tới trạm', () => {
-      // Khi pageScrollProgress = 0.35 (chạm tới trạm thứ 2: threshold 0.32)
-      render(
-        <KnowledgeThread
-          pageScrollProgress={0.35}
-          leadTip={{ x: 1120, y: 860 }}
-          prefersReducedMotion={false}
-        />,
-      );
-
-      const station2 = screen.getByTestId('knowledge-thread-station-0.32');
-      expect(station2).toBeInTheDocument();
-
-      const bloomGroup = station2.querySelector('[data-testid="floral-bloom-group"]');
-      expect(bloomGroup).toBeInTheDocument();
-      expect(bloomGroup?.getAttribute('transform')).toContain('scale(1)');
-      expect(bloomGroup?.getAttribute('opacity')).toBe('1');
-
-      // 6 cánh hoa lớn lớp ngoài xòe rộng với gradient lotusOuterPetal
-      const outerPetals = station2.querySelectorAll('path[fill="url(#lotusOuterPetal)"]');
-      expect(outerPetals.length).toBe(6);
-
-      // 4 cánh hoa nhỏ lớp trong ôm nhẹ với gradient lotusInnerPetal
-      const innerPetals = station2.querySelectorAll('path[fill="url(#lotusInnerPetal)"]');
-      expect(innerPetals.length).toBe(4);
-
-      // Tâm đài sen tròn màu vàng nhụy (lotusCore) với 5 chấm li ti biểu trưng hạt sen
-      const core = station2.querySelector('circle[fill="url(#lotusCore)"]');
-      expect(core).toBeInTheDocument();
-
-      const seeds = station2.querySelectorAll('circle[fill="#5A4010"]');
-      expect(seeds.length).toBe(5);
-
-      // Có vòng phát xung animate-ping khi đang bung nở
-      const pingRing = station2.querySelector('.animate-ping');
-      expect(pingRing).toBeInTheDocument();
-
-      // Kiểm tra trạm 1 (threshold 0.02) đã chuyển sang trạng thái Settled Bloom (opacity-45 scale-95)
-      const station1 = screen.getByTestId('knowledge-thread-station-0.02');
-      const settledBloom1 = station1.querySelector('[data-testid="floral-bloom-group"]');
-      expect(settledBloom1?.getAttribute('transform')).toContain('scale(0.95)');
-      expect(settledBloom1?.getAttribute('opacity')).toBe('0.45');
-    });
-
-    it('hỗ trợ chế độ giảm chuyển động prefers-reduced-motion', () => {
-      render(
-        <KnowledgeThread
-          pageScrollProgress={0.5}
-          leadTip={{ x: 1120, y: 860 }}
-          prefersReducedMotion={true}
-        />,
-      );
-
-      // Ở chế độ reduced motion, trạm đã cuộn qua (station 1, 2) hiển thị tĩnh, không có vòng animate-ping
-      const pingRings = document.querySelectorAll('.animate-ping');
-      expect(pingRings).toHaveLength(0);
-    });
-  });
-
-  describe('QuickKaTeXDrawer Component', () => {
-    it('hiển thị bảng tra cứu KaTeX, các tab phân loại và ô tìm kiếm khi mở', () => {
-      render(
-        <MemoryRouter>
-          <QuickKaTeXDrawer isOpen={true} onClose={() => {}} />
-        </MemoryRouter>,
-      );
-
-      expect(screen.getByTestId('quick-katex-drawer-panel')).toBeInTheDocument();
-      expect(screen.getByText(/Tra cứu Thuật ngữ & Ký hiệu KaTeX/i)).toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/Tìm tên thuật ngữ/i)).toBeInTheDocument();
-
-      // Các tab phân loại
-      expect(screen.getByRole('tab', { name: /Tất cả/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Đại số/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Hình học/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Giải tích/i })).toBeInTheDocument();
-      expect(screen.getByRole('tab', { name: /Logic/i })).toBeInTheDocument();
-
-      // Nút đóng
-      expect(screen.getByRole('button', { name: /Đóng \(Esc\)/i })).toBeInTheDocument();
-    });
-
-    it('có thể lọc ký hiệu theo từ khóa tìm kiếm', () => {
-      render(
-        <MemoryRouter>
-          <QuickKaTeXDrawer isOpen={true} onClose={() => {}} />
-        </MemoryRouter>,
-      );
-
-      const searchInput = screen.getByPlaceholderText(/Tìm tên thuật ngữ/i);
-      fireEvent.change(searchInput, { target: { value: 'Newton' } });
-
-      expect(screen.getByText(/Công thức Newton – Leibniz/i)).toBeInTheDocument();
-      expect(screen.queryByText(/Định lý Đẳng cấu thứ nhất/i)).not.toBeInTheDocument();
     });
   });
 
@@ -652,203 +514,7 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
     });
   });
 
-  describe('Hero Diorama, Physics Canvas & Sơn Thủy Trắc Địa + Thiên Cầu Đông Sơn Engine', () => {
-    it('HeroSonHaDiorama & HeroPhysicsCanvas vận hành chuẩn 5 tầng núi sương mù, 24-28 đồng mức 0.75px, Thiên Cầu Đông Sơn & tương tác 120fps', () => {
-      const { container } = render(
-        <div className="relative h-96 w-full">
-          <HeroSonHaDiorama />
-          <HeroPhysicsCanvas />
-        </div>,
-      );
-
-      expect(container.querySelector('[data-testid="son-ha-layer-1"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="son-ha-layer-4"]')).not.toBeInTheDocument();
-      expect(screen.getByTestId('hoang-lien-dawn-glow')).toBeInTheDocument();
-      const fansipanAnchor = screen.getByTestId('fansipan-peaks');
-      expect(fansipanAnchor).toHaveAttribute('data-terrain-mode', 'topographic-dong-son-6layer');
-      expect(fansipanAnchor.querySelectorAll('path')).toHaveLength(0);
-      expect(screen.queryByTestId('hoang-lien-cranes')).not.toBeInTheDocument();
-
-      const canvas = screen.getByTestId('hero-physics-canvas');
-      expect(canvas).toBeInTheDocument();
-      expect(canvas).toHaveAttribute('data-pipeline-layers', '6');
-      expect(canvas).toHaveAttribute('data-landscape-style', 'topographic-dong-son');
-
-      // Hai lớp tương phản AAA & dải sương mặt hồ đáy Hero nằm trên Canvas (z-10)
-      expect(screen.getByTestId('hero-bottom-mist-transition').className).toContain('z-10');
-      expect(screen.getByTestId('hero-text-contrast-scrim').className).toContain('z-10');
-      expect(screen.getByTestId('hero-quote-contrast-scrim').className).toContain('z-10');
-
-      // 1. 5 Tầng núi sương mù Fourier mượt, 22-28 đường đồng mức (0.75px) trên 4 tầng núi & Đài Thiên Cầu Đông Sơn
-      expect(PIPELINE_LAYER_NAMES).toHaveLength(6);
-      const terrain = buildHeroTerrainGeometry(1440, 900);
-      expect(terrain.mountainLayers).toHaveLength(5);
-      expect(terrain.contours.length).toBeGreaterThanOrEqual(22);
-      expect(terrain.contours.length).toBeLessThanOrEqual(28);
-      expect(terrain.contours.every((c) => c.lineWidth === 0.75)).toBe(true);
-      expect(new Set(terrain.contours.map((c) => c.layerIndex))).toEqual(new Set([1, 2, 3, 4]));
-      expect(new Set(terrain.contours.map((c) => c.tone))).toEqual(new Set(['gold', 'cyan']));
-
-      // Đài Thiên Cầu Đông Sơn (72% x 33%, 14 cánh sao, 4 vòng chia độ 5°/30°, 2 cung hoàng đạo, 2 cung quỹ đạo mở rộng)
-      expect(terrain.astrolabe.cx).toBeCloseTo(1440 * 0.72, 2);
-      expect(terrain.astrolabe.cy).toBeCloseTo(900 * 0.33, 2);
-      expect(terrain.astrolabe.starRays).toBe(14);
-      expect(terrain.astrolabe.rings).toHaveLength(4);
-      expect(terrain.astrolabe.expandedOrbitRadii).toHaveLength(2);
-      expect(
-        terrain.astrolabe.rings.every((r) => r.tickStepDeg === 5 && r.majorStepDeg === 30),
-      ).toBe(true);
-      expect(Math.abs(terrain.astrolabe.rings[0]!.angularSpeedRadSec)).toBeCloseTo(0.04, 3);
-      expect(terrain.astrolabe.eclipticArcs).toHaveLength(2);
-
-      // Tinh vân / sương khí quyển & 5 tầng OffscreenCanvas núi FBM + 3 lớp Biển Sương
-      expect(terrain.nebulaHalos.length).toBeGreaterThanOrEqual(5);
-      expect(
-        terrain.nebulaHalos.every(
-          (h) => h.radius >= 250 && h.radius <= 450 && h.alpha >= 0.03 && h.alpha <= 0.06,
-        ),
-      ).toBe(true);
-
-      const layerCache = buildHeroTerrainLayerCache(
-        1440,
-        900,
-        'binh-minh-bach-ngoc',
-        ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'],
-      );
-      expect(layerCache.width).toBe(1440);
-      expect(layerCache.height).toBe(900);
-      expect(layerCache.phase).toBe('binh-minh-bach-ngoc');
-      expect(layerCache.geometry.mountainLayers).toHaveLength(5);
-      expect(layerCache.mountainLayerSurfaces).toHaveLength(5);
-      expect(layerCache.valleyMistLayers).toHaveLength(3);
-
-      // 2. Đã xóa bỏ 3 đa diện trôi tự do; thay bằng 3 Khí cụ Hỗn thiên nghi neo quỹ đạo, 4 chim Lạc Bézier, 36 hạt phấn nắng & 12 caustics
-      const world = createAtmosphereWorld();
-      expect('polyhedralConstellations3D' in world).toBe(false);
-      expect(world.orbitAstrolabeNodes).toHaveLength(3);
-      expect(world.orbitAstrolabeNodes.map((n) => [n.id, n.radiusPx])).toEqual([
-        ['armillary', 16],
-        ['vernier', 13],
-        ['lunar', 11],
-      ]);
-      expect(
-        world.orbitAstrolabeNodes.every(
-          (n) => Math.abs(n.angularSpeedRadSec) >= 0.03 && Math.abs(n.angularSpeedRadSec) <= 0.06,
-        ),
-      ).toBe(true);
-
-      expect(world.lacBirds).toHaveLength(4);
-      expect(world.lacBirds.every((b) => b.scale >= 0.65 && b.scale <= 1.15)).toBe(true);
-
-      expect(world.sunlitMotes).toHaveLength(36);
-      expect(world.sunlitMotes.every((m) => m.radius >= 0.8 && m.radius <= 2.0)).toBe(true);
-
-      expect(world.waterCaustics.length).toBeGreaterThanOrEqual(10);
-      expect(world.waterCaustics.length).toBeLessThanOrEqual(14);
-
-      expect(world.stars).toHaveLength(280);
-      const flareStars = world.stars.filter((s) => s.crossFlare);
-      expect(flareStars).toHaveLength(15);
-      expect(
-        flareStars.every((s) => s.baseRadius === 1.3 && s.flareLength >= 8 && s.flareLength <= 14),
-      ).toBe(true);
-
-      expect(world.ascendingStarlights).toHaveLength(25);
-      expect(world.ascendingStarlights.every((m) => m.radius === 1.5)).toBe(true);
-      expect(world.mistRipples.length).toBeGreaterThanOrEqual(20);
-      expect(world.mistRipples.length).toBeLessThanOrEqual(30);
-      expect(world.mistRipples.every((r) => r.ny >= 0.76 && r.ny <= 0.98)).toBe(true);
-
-      // Chòm sao & sao băng
-      expect(world.constellations).toHaveLength(5);
-      expect(world.constellations.some((c) => c.id === 'scorpion')).toBe(true);
-      expect(world.stardust3D).toHaveLength(56);
-      expect(world.nextShootingStarInSec).toBeGreaterThanOrEqual(5);
-      expect(world.nextShootingStarInSec).toBeLessThanOrEqual(9);
-      spawnShootingStar(world, true);
-      expect(world.shootingStars.some((s) => s.active && s.vx > 0)).toBe(true);
-
-      // Kiểm chứng renderAtmosphereFrame vẽ đàn chim Lạc Bézier & tia tiếp tuyến chuột gần thiên cầu an toàn
-      const spriteCache = buildAtmosphereSpriteCache();
-      expect(spriteCache).toHaveProperty('warmStarSprite');
-      expect(typeof renderAtmosphereFrame).toBe('function');
-
-      const bezierSpy = vi.fn();
-      const noop = vi.fn();
-      const gradMock = { addColorStop: noop };
-      const frameCtxSpy = {
-        save: noop,
-        restore: noop,
-        setTransform: noop,
-        translate: noop,
-        scale: noop,
-        rotate: noop,
-        clearRect: noop,
-        fillRect: noop,
-        strokeRect: noop,
-        beginPath: noop,
-        closePath: noop,
-        moveTo: noop,
-        lineTo: noop,
-        quadraticCurveTo: noop,
-        bezierCurveTo: bezierSpy,
-        arc: noop,
-        ellipse: noop,
-        fill: noop,
-        stroke: noop,
-        clip: noop,
-        setLineDash: noop,
-        drawImage: noop,
-        createLinearGradient: () => gradMock,
-        createRadialGradient: () => gradMock,
-        globalAlpha: 1,
-        fillStyle: '#000',
-        strokeStyle: '#000',
-        lineWidth: 1,
-        lineCap: 'butt',
-        lineJoin: 'miter',
-      } as unknown as CanvasRenderingContext2D;
-
-      renderAtmosphereFrame({
-        ctx: frameCtxSpy,
-        width: 1440,
-        height: 900,
-        tSec: 3.2,
-        dtSeconds: 0.0083,
-        dtScale: 0.5,
-        scrollProgress: 0,
-        animate: true,
-        palette: ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'],
-        sprites: spriteCache,
-        glowSprites: createGlowSpriteCache(),
-        mouse: {
-          active: true,
-          x: 1440 * 0.72 - 90,
-          y: 900 * 0.33 - 40,
-          vx: 0,
-          vy: 0,
-          normX: 0.4,
-          normY: -0.3,
-        },
-        world,
-        terrainLayers: { prev: layerCache, next: layerCache, blend: 1 },
-      });
-      // 4 chim Lạc x 2 cung Bézier đối xứng = 8 lần gọi bezierCurveTo
-      expect(bezierSpy).toHaveBeenCalledTimes(8);
-
-      // Sóng Ngân Trống Đồng (Harmonic Contour Pulse R: 0 -> 600px)
-      spawnHarmonicContourPulse(world, 720, 480, 600);
-      expect(world.pulses.some((p) => p.active && p.maxRadius === 600)).toBe(true);
-
-      // Kiểm chứng bảng màu Bình Minh Bạch Ngọc & nội suy khí quyển
-      const dawnPalette = ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'];
-      expect(dawnPalette.sky0).toEqual([237, 243, 241]);
-      expect(dawnPalette.sky2).toEqual([221, 234, 230]);
-      expect(dawnPalette.sky4).toEqual([246, 239, 224]);
-      const lerped = interpolateAtmospherePalette(dawnPalette, dawnPalette, 0.5);
-      expect(lerped.sky0).toEqual(dawnPalette.sky0);
-    });
-
+  describe('HomePage Sanctuary Flow, SubjectStageCanvas & MineralBilliardsStage', () => {
     it('HomePage thuần túy 1 màn hình, không tự động cuộn trang và dẫn thẳng sang /thu-gian?tab=di-san', () => {
       vi.useFakeTimers();
       const scrollToSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);

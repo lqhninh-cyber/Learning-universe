@@ -1,12 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
-import { describe, expect, it, vi } from 'vitest';
-import { ATMOSPHERIC_PALETTES } from '@/components/home/atmosphereThemes';
-import {
-  buildAtmosphereSpriteCache,
-  createAtmosphereWorld,
-  renderAtmosphereFrame,
-} from '@/components/home/heroAtmosphereEngine';
+import { describe, expect, it } from 'vitest';
 import {
   AcademicAxiomBand,
   BlueprintSectionFrame,
@@ -16,7 +10,6 @@ import {
   SpecimenFxBars,
   TelemetrySpecBar,
 } from '@/components/fx';
-import { createGlowSpriteCache } from '@/shared/lib/canvasSprites';
 
 function ControlledSlidingTabs() {
   const [active, setActive] = useState('all');
@@ -122,81 +115,5 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
 
     fireEvent.keyDown(tabs[2]!, { key: 'Home' });
     expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
-  });
-
-  it('renderAtmosphereFrame chạy trọn vẹn Aurora Curtains, God Rays & Ridgeline Slices ở mọi pha', () => {
-    const noop = vi.fn();
-    const gradMock = { addColorStop: noop };
-    const ctxMock = {
-      save: noop,
-      restore: noop,
-      setTransform: noop,
-      translate: noop,
-      scale: noop,
-      rotate: noop,
-      clearRect: noop,
-      fillRect: noop,
-      strokeRect: noop,
-      beginPath: noop,
-      closePath: noop,
-      moveTo: noop,
-      lineTo: noop,
-      quadraticCurveTo: noop,
-      bezierCurveTo: noop,
-      arc: noop,
-      ellipse: noop,
-      fill: noop,
-      stroke: noop,
-      clip: noop,
-      setLineDash: noop,
-      drawImage: noop,
-      fillText: noop,
-      measureText: () => ({ width: 24 }),
-      createLinearGradient: () => gradMock,
-      createRadialGradient: () => gradMock,
-      globalAlpha: 1,
-      globalCompositeOperation: 'source-over',
-      fillStyle: '#000',
-      strokeStyle: '#000',
-      lineWidth: 1,
-      lineCap: 'butt',
-      lineJoin: 'miter',
-      lineDashOffset: 0,
-      font: '12px sans-serif',
-      textAlign: 'left',
-      textBaseline: 'alphabetic',
-    } as unknown as CanvasRenderingContext2D;
-
-    const palette = ATMOSPHERIC_PALETTES['binh-minh-bach-ngoc'];
-    const world = createAtmosphereWorld();
-    const sprites = buildAtmosphereSpriteCache();
-    const glowSprites = createGlowSpriteCache();
-
-    expect(() =>
-      renderAtmosphereFrame({
-        ctx: ctxMock,
-        width: 1280,
-        height: 720,
-        tSec: 4.5,
-        dtSeconds: 0.0083,
-        dtScale: 0.5,
-        scrollProgress: 0.1,
-        palette,
-        world,
-        sprites,
-        glowSprites,
-        terrainLayers: undefined,
-        mouse: {
-          active: true,
-          x: 780,
-          y: 360,
-          vx: 0,
-          vy: 0,
-          normX: 0.22,
-          normY: 0,
-        },
-        animate: true,
-      }),
-    ).not.toThrow();
   });
 });

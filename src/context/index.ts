@@ -1,5 +1,7 @@
 export {
   IslandProvider,
+  POMODORO_BREAK_AUTOSTART_KEY,
+  POMODORO_RETURN_PATH_KEY,
   useIsland,
   type IslandContextValue,
   type IslandNoticePayload,
@@ -10,6 +12,19 @@ export {
   type IslandReaderSettings,
   type PomodoroStatus,
 } from './IslandContext';
+export {
+  PomodoroProvider,
+  usePomodoro,
+  usePomodoroActions,
+  usePomodoroState,
+  type PomodoroActionsContextValue,
+  type PomodoroContextValue,
+  type PomodoroProviderProps,
+  type PomodoroStateContextValue,
+  type SanctuaryBreakDuration,
+  type SanctuaryBreakState,
+  type SanctuaryBreakStatus,
+} from './PomodoroContext';
 export {
   clampFontScale,
   FONT_SCALE_DEFAULT,

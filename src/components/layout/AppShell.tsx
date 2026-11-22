@@ -15,20 +15,116 @@ import {
   Sun,
   X,
 } from 'lucide-react';
-import { type FC, type ReactNode, useEffect } from 'react';
+import { Suspense, type FC, type ReactNode, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { BrandLogo } from '@/components/common/BrandLogo';
 import { ISLAND_SUBJECT_CATALOG } from '@/context/island-helpers';
-import { useIsland } from '@/context/IslandContext';
 import { useLayout } from '@/context/LayoutContext';
+import { usePomodoro } from '@/context/PomodoroContext';
 import { useReadingSettings } from '@/context/ReadingSettingsContext';
 import { useAuth } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
-import { CommandPalette } from './CommandPalette';
+import { LazyCommandPalette, preloadCommandPalette } from './command-palette-loader';
 import { LeftRail } from './LeftRail';
 import { TopContextBar } from './TopContextBar';
+
+const MobileDrawerPomodoroButton: FC = () => {
+  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro } = usePomodoro();
+
+  const handleMobilePomodoro = () => {
+    if (pomodoro.status === 'running') {
+      pausePomodoro();
+    } else if (pomodoro.status === 'paused') {
+      resumePomodoro();
+    } else {
+      startPomodoro(25, 'Tiêu chuẩn');
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleMobilePomodoro}
+      className="flex min-h-[44px] w-full cursor-pointer items-center justify-between rounded-lg px-3 text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]"
+    >
+      <span className="flex items-center gap-2.5">
+        <Hourglass className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
+        <span>
+          {pomodoro.status === 'running'
+            ? 'Tạm dừng Pomodoro'
+            : pomodoro.status === 'paused'
+              ? 'Tiếp tục Pomodoro'
+              : 'Bắt đầu Pomodoro 25p'}
+        </span>
+      </span>
+    </button>
+  );
+};
+
+const PomodoroBreakToast: FC = () => {
+  const { pomodoroBreakPrompt, dismissPomodoroBreakPrompt, startBreakTimer } = usePomodoro();
+
+  if (!pomodoroBreakPrompt) return null;
+
+  const handleEnterSanctuaryBreak = () => {
+    startBreakTimer(5);
+    dismissPomodoroBreakPrompt();
+  };
+
+  return (
+    <aside
+      role="status"
+      aria-live="polite"
+      data-testid="pomodoro-break-toast"
+      className="fixed right-5 bottom-5 z-50 w-[min(92vw,340px)] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4 text-[var(--text-main)] shadow-lg print:hidden"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2.5">
+          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--accent-heritage)]">
+            <Hourglass className="h-3.5 w-3.5" aria-hidden="true" />
+          </span>
+          <div className="space-y-0.5">
+            <p className="text-xs font-semibold text-[var(--text-main)]">
+              Hoàn thành phiên tập trung
+            </p>
+            <p className="text-[11.5px] text-[var(--text-secondary)]">
+              Nghỉ 5 phút tại Sảnh Thư giãn?
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={dismissPomodoroBreakPrompt}
+          aria-label="Đóng gợi ý nghỉ giải lao"
+          className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
+        >
+          <X className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
+      </div>
+
+      <div className="mt-3 flex items-center gap-2">
+        <Link
+          to={ROUTES.sanctuaryTab('bida')}
+          onClick={handleEnterSanctuaryBreak}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[var(--accent-os)] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95"
+        >
+          <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>Đánh Bida</span>
+        </Link>
+        <Link
+          to={ROUTES.sanctuaryTab('di-san')}
+          onClick={handleEnterSanctuaryBreak}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)]"
+        >
+          <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>Ngắm Di sản</span>
+        </Link>
+      </div>
+    </aside>
+  );
+};
 
 export interface AppShellProps {
   readonly children: ReactNode;
@@ -50,14 +146,6 @@ export const AppShell: FC<AppShellProps> = ({
   const { isMobileMenuOpen, setMobileMenuOpen, isCommandOpen, setCommandOpen, openCommandPalette } =
     useLayout();
   const { theme, toggleTheme, isZenMode } = useReadingSettings();
-  const {
-    pomodoro,
-    pomodoroBreakPrompt,
-    dismissPomodoroBreakPrompt,
-    startPomodoro,
-    pausePomodoro,
-    resumePomodoro,
-  } = useIsland();
   const { isAuthenticated, openAuthModal, signOut } = useAuth();
   const isStoreAuthenticated = useLearningStore((state) => state.isAuthenticated);
   const signOutLearnerMode = useLearningStore((state) => state.signOutLearnerMode);
@@ -85,16 +173,6 @@ export const AppShell: FC<AppShellProps> = ({
   const handleMobileLounge = () => {
     setMobileMenuOpen(false);
     void navigate(ROUTES.sanctuaryTab('di-san'));
-  };
-
-  const handleMobilePomodoro = () => {
-    if (pomodoro.status === 'running') {
-      pausePomodoro();
-    } else if (pomodoro.status === 'paused') {
-      resumePomodoro();
-    } else {
-      startPomodoro(25, 'Tiêu chuẩn');
-    }
   };
 
   const handleSignOut = async () => {
@@ -159,6 +237,8 @@ export const AppShell: FC<AppShellProps> = ({
                   setMobileMenuOpen(false);
                   openCommandPalette();
                 }}
+                onMouseEnter={preloadCommandPalette}
+                onFocus={preloadCommandPalette}
                 className="flex h-10 w-full cursor-pointer items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 text-xs font-medium text-[var(--text-secondary)]"
               >
                 <span className="flex items-center gap-2">
@@ -245,22 +325,7 @@ export const AppShell: FC<AppShellProps> = ({
             </nav>
 
             <div className="space-y-1.5 border-t border-[var(--border-hairline)] p-3">
-              <button
-                type="button"
-                onClick={handleMobilePomodoro}
-                className="flex min-h-[44px] w-full cursor-pointer items-center justify-between rounded-lg px-3 text-xs font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Hourglass className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
-                  <span>
-                    {pomodoro.status === 'running'
-                      ? 'Tạm dừng Pomodoro'
-                      : pomodoro.status === 'paused'
-                        ? 'Tiếp tục Pomodoro'
-                        : 'Bắt đầu Pomodoro 25p'}
-                  </span>
-                </span>
-              </button>
+              <MobileDrawerPomodoroButton />
 
               <button
                 type="button"
@@ -303,60 +368,14 @@ export const AppShell: FC<AppShellProps> = ({
       )}
 
       {/* TOAST CẦU NỐI POMODORO -> SẢNH THƯ GIÃN (GÓC DƯỚI PHẢI) */}
-      {pomodoroBreakPrompt && (
-        <aside
-          role="status"
-          aria-live="polite"
-          data-testid="pomodoro-break-toast"
-          className="fixed right-5 bottom-5 z-50 w-[min(92vw,340px)] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-4 text-[var(--text-main)] shadow-lg print:hidden"
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-2.5">
-              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--accent-heritage)]">
-                <Hourglass className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-              <div className="space-y-0.5">
-                <p className="text-xs font-semibold text-[var(--text-main)]">
-                  Hoàn thành phiên tập trung
-                </p>
-                <p className="text-[11.5px] text-[var(--text-secondary)]">
-                  Nghỉ 5 phút tại Sảnh Thư giãn?
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={dismissPomodoroBreakPrompt}
-              aria-label="Đóng gợi ý nghỉ giải lao"
-              className="inline-flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
-            >
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
-          </div>
+      <PomodoroBreakToast />
 
-          <div className="mt-3 flex items-center gap-2">
-            <Link
-              to={ROUTES.sanctuaryTab('bida')}
-              onClick={dismissPomodoroBreakPrompt}
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-[var(--accent-os)] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95"
-            >
-              <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Đánh Bida</span>
-            </Link>
-            <Link
-              to={ROUTES.sanctuaryTab('di-san')}
-              onClick={dismissPomodoroBreakPrompt}
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 text-xs font-semibold text-[var(--text-main)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--accent-heritage)]"
-            >
-              <Landmark className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Ngắm Di sản</span>
-            </Link>
-          </div>
-        </aside>
+      {/* BẢNG LỆNH TRUNG TÂM TOÀN CỤC (⌘K — Lazy-loaded khi mở) */}
+      {isCommandOpen && (
+        <Suspense fallback={null}>
+          <LazyCommandPalette open={isCommandOpen} onOpenChange={setCommandOpen} />
+        </Suspense>
       )}
-
-      {/* BẢNG LỆNH TRUNG TÂM TOÀN CỤC (⌘K) */}
-      <CommandPalette open={isCommandOpen} onOpenChange={setCommandOpen} />
     </div>
   );
 };

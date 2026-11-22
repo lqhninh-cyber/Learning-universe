@@ -7,7 +7,6 @@ import {
   buildAtmosphericFallbackMesh,
   DASHBOARD_CANOPY_ASSETS,
   SANCTUARY_BANNER_ASSET,
-  SUBJECT_PORTAL_ASSETS,
   SUBJECT_WASH_ASSETS,
 } from '@/config/atmosphereAssets';
 import { IslandProvider } from '@/context/IslandContext';
@@ -93,9 +92,6 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
     ] as const;
 
     for (const slug of slugs) {
-      expect(SUBJECT_PORTAL_ASSETS[slug]?.src).toMatch(/^\/assets\/atmosphere\/portal-.*\.webp$/);
-      expect(SUBJECT_PORTAL_ASSETS[slug]?.fallbackGradient).toContain('linear-gradient');
-      expect(SUBJECT_PORTAL_ASSETS[slug]?.alt.length).toBeGreaterThan(10);
       expect(SUBJECT_WASH_ASSETS[slug]?.src).toContain('/assets/atmosphere/subject-wash-');
       const lightMesh = buildAtmosphericFallbackMesh({
         variant: 'subject',

@@ -194,8 +194,6 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const [winner, setWinner] = useState<1 | 2 | null>(null);
   const [winReason, setWinReason] = useState<string | null>(null);
 
-  const [sliderPower, setSliderPower] = useState(0);
-  const [isDraggingPower, setIsDraggingPower] = useState(false);
   const [spin, setSpin] = useState<{ readonly x: number; readonly y: number }>({ x: 0, y: 0 });
   const [isSpinOpen, setIsSpinOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -236,8 +234,80 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const powerSliderRef = useRef<HTMLDivElement>(null);
+  const powerFillRef = useRef<HTMLDivElement>(null);
+  const powerCueTipRef = useRef<HTMLDivElement>(null);
+  const powerReadoutRef = useRef<HTMLSpanElement>(null);
+  const powerTierRef = useRef<HTMLSpanElement>(null);
   const spinPadRef = useRef<HTMLDivElement>(null);
   const spinPopupWrapperRef = useRef<HTMLDivElement>(null);
+
+  const isMobileSliderRef = useRef(isMobileSlider);
+  const verticalSliderH = Math.max(260, Math.min(420, Math.round(tableDim.h * 0.74)));
+  const verticalSliderHRef = useRef(verticalSliderH);
+  useEffect(() => {
+    isMobileSliderRef.current = isMobileSlider;
+  }, [isMobileSlider]);
+  useEffect(() => {
+    verticalSliderHRef.current = verticalSliderH;
+  }, [verticalSliderH]);
+
+  const syncPowerSliderDom = useCallback((rawPower: number, isDragging = false) => {
+    const clamped = Math.max(0, Math.min(1, rawPower));
+    const pct = Math.round(clamped * 100);
+    const mobile = isMobileSliderRef.current;
+
+    const sliderEl = powerSliderRef.current;
+    if (sliderEl) {
+      sliderEl.setAttribute('data-power', String(pct));
+      sliderEl.setAttribute('aria-valuenow', String(pct));
+    }
+
+    const fillEl = powerFillRef.current;
+    if (fillEl) {
+      if (mobile) {
+        fillEl.style.width = `${pct}%`;
+        fillEl.style.height = '';
+      } else {
+        fillEl.style.height = `${pct}%`;
+        fillEl.style.width = '';
+      }
+    }
+
+    const cueTipEl = powerCueTipRef.current;
+    if (cueTipEl) {
+      cueTipEl.style.transform = mobile
+        ? `translateX(${Math.round(clamped * 155)}px)`
+        : `translateY(${Math.round(clamped * Math.max(120, verticalSliderHRef.current - 72))}px)`;
+    }
+
+    const readoutEl = powerReadoutRef.current;
+    if (readoutEl) {
+      readoutEl.textContent =
+        isDragging && clamped > 0.005 && clamped < CANCEL_POWER_THRESHOLD
+          ? 'HỦY'
+          : clamped < 0.02
+            ? mobile
+              ? 'KÉO →'
+              : 'KÉO ↓'
+            : `${pct}%`;
+    }
+
+    const tierEl = powerTierRef.current;
+    if (tierEl) {
+      const tierText =
+        clamped >= 0.9
+          ? 'PHÁ'
+          : clamped >= 0.7
+            ? 'MẠNH'
+            : clamped >= 0.35
+              ? 'VỪA'
+              : clamped >= CANCEL_POWER_THRESHOLD
+                ? 'NHẸ'
+                : '';
+      tierEl.textContent = tierText;
+      tierEl.hidden = tierText.length === 0;
+    }
+  }, []);
 
   const isDraggingSliderRef = useRef(false);
   const sliderStartXRef = useRef(0);
@@ -404,7 +474,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       const shootingEightNow = isShootingForEightBall(w, w.currentPlayer);
       if (isHumanTurn && shootingEightNow && w.calledEightPocketId === null) {
         w.dragPullPower = 0;
-        setSliderPower(0);
+        syncPowerSliderDom(0, false);
         triggerFeltToast(w, 'CHỌN LỖ ĐÁNH BI SỐ 8', 'info');
         syncReactHudFromWorld();
         return false;
@@ -416,7 +486,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
         w.calledRegularPocketId === null
       ) {
         w.dragPullPower = 0;
-        setSliderPower(0);
+        syncPowerSliderDom(0, false);
         triggerFeltToast(w, 'CHỌN LỖ CHỈ ĐỊNH TRƯỚC KHI ĐÁNH', 'info');
         syncReactHudFromWorld();
         return false;
@@ -447,7 +517,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
 
       w.aimAngle = shotAngle;
       w.dragPullPower = 0;
-      setSliderPower(0);
+      syncPowerSliderDom(0, false);
       w.shotInProgress = true;
       w.shots += 1;
 
@@ -475,7 +545,13 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       syncReactHudFromWorld();
       return true;
     },
-    [executeCueBallContact, getWorld, prefersReducedMotion, syncReactHudFromWorld],
+    [
+      executeCueBallContact,
+      getWorld,
+      prefersReducedMotion,
+      syncPowerSliderDom,
+      syncReactHudFromWorld,
+    ],
   );
 
   const resetRackForMode = useCallback(
@@ -526,10 +602,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       lastFreeShotRef.current = null;
       setHasFreeRetry(false);
       setActiveToast(null);
-      setSliderPower(0);
+      syncPowerSliderDom(0, false);
       syncReactHudFromWorld();
     },
-    [getWorld, syncReactHudFromWorld],
+    [getWorld, syncPowerSliderDom, syncReactHudFromWorld],
   );
 
   const handleCycleGuideline = useCallback(() => {
@@ -624,10 +700,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     w.eightBallPocketedId = null;
     w.railOrPocketAfterFirstHitThisTurn = false;
     updateBilliardRollingSound(0);
-    setSliderPower(0);
+    syncPowerSliderDom(0, false);
     setActiveToast(null);
     syncReactHudFromWorld();
-  }, [getWorld, syncReactHudFromWorld]);
+  }, [getWorld, syncPowerSliderDom, syncReactHudFromWorld]);
 
   const nudgeAimAngle = useCallback(
     (deltaRad: number) => {
@@ -962,7 +1038,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       if (event.key === 'Escape' && spaceChargingRef.current) {
         spaceChargingRef.current = false;
         w.dragPullPower = 0;
-        setSliderPower(0);
+        syncPowerSliderDom(0, false);
         return;
       }
 
@@ -1000,7 +1076,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
           launchShotWithPower(w.dragPullPower);
         } else {
           w.dragPullPower = 0;
-          setSliderPower(0);
+          syncPowerSliderDom(0, false);
         }
       }
     };
@@ -1043,10 +1119,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       const { dtSeconds, dtScale } = computeFrameDelta(now, prevNow);
       prevNow = now;
 
-      // Nạp lực khi người chơi giữ Space (tốc độ 0.78/s giúp dễ canh chuẩn mức lực 25%–75%)
+      // Nạp lực khi người chơi giữ Space (cập nhật trực tiếp qua DOM ref — 0 React re-render ở 120fps)
       if (spaceChargingRef.current && !w.shotInProgress && !w.strikeAnim.active) {
         w.dragPullPower = Math.min(1, w.dragPullPower + dtSeconds * 0.78);
-        setSliderPower(w.dragPullPower);
+        syncPowerSliderDom(w.dragPullPower, false);
       }
 
       // Chạy AI Bot tự động (xoay gậy 650ms -> kéo lực 450ms -> tung cú đánh) khi đến lượt Máy
@@ -1097,7 +1173,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
           w.aiPlan.elapsedSec += dtSeconds;
           const t = Math.min(1, w.aiPlan.elapsedSec / AI_CHARGE_DURATION_SEC);
           w.dragPullPower = w.aiPlan.targetPower * t;
-          setSliderPower(w.dragPullPower);
+          syncPowerSliderDom(w.dragPullPower, false);
           if (t >= 1) {
             const chosenPower = w.aiPlan.targetPower;
             const chosenAngle = w.aiPlan.targetAngle;
@@ -1172,6 +1248,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     getWorld,
     launchShotWithPower,
     prefersReducedMotion,
+    syncPowerSliderDom,
     syncReactHudFromWorld,
   ]);
 
@@ -1374,7 +1451,6 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     if (w.gameMode === 'vs-ai' && w.currentPlayer === 2) return;
 
     isDraggingSliderRef.current = true;
-    setIsDraggingPower(true);
     sliderStartXRef.current = event.clientX;
     sliderStartYRef.current = event.clientY;
     try {
@@ -1384,7 +1460,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     }
     const p = computeSliderPowerFromPointer(event.clientX, event.clientY);
     w.dragPullPower = p;
-    setSliderPower(p);
+    syncPowerSliderDom(p, true);
   };
 
   const handleSliderPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -1392,13 +1468,12 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
     const w = getWorld();
     const p = computeSliderPowerFromPointer(event.clientX, event.clientY);
     w.dragPullPower = p;
-    setSliderPower(p);
+    syncPowerSliderDom(p, true);
   };
 
   const handleSliderPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDraggingSliderRef.current) return;
     isDraggingSliderRef.current = false;
-    setIsDraggingPower(false);
     try {
       if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId);
@@ -1413,7 +1488,7 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
       launchShotWithPower(power);
     } else {
       w.dragPullPower = 0;
-      setSliderPower(0);
+      syncPowerSliderDom(0, false);
     }
   };
 
@@ -1462,26 +1537,9 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
   const isPlayerOneActive = !rackCleared && currentPlayer === 1;
   const isPlayerTwoActive = !rackCleared && currentPlayer === 2 && gameMode !== 'free';
 
-  const verticalSliderH = Math.max(260, Math.min(420, Math.round(tableDim.h * 0.74)));
-  const powerReadoutText =
-    isDraggingPower && sliderPower > 0.005 && sliderPower < CANCEL_POWER_THRESHOLD
-      ? 'HỦY'
-      : sliderPower < 0.02
-        ? isMobileSlider
-          ? 'KÉO →'
-          : 'KÉO ↓'
-        : `${Math.round(sliderPower * 100)}%`;
-
-  const powerTierLabel =
-    sliderPower >= 0.9
-      ? 'PHÁ'
-      : sliderPower >= 0.7
-        ? 'MẠNH'
-        : sliderPower >= 0.35
-          ? 'VỪA'
-          : sliderPower >= CANCEL_POWER_THRESHOLD
-            ? 'NHẸ'
-            : null;
+  useEffect(() => {
+    syncPowerSliderDom(getWorld().dragPullPower, isDraggingSliderRef.current);
+  }, [getWorld, isMobileSlider, syncPowerSliderDom, verticalSliderH]);
 
   const spinModeDescription = (() => {
     const vert =
@@ -2119,11 +2177,11 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                   tabIndex={0}
                   data-testid="billiards-power-slider"
                   data-orientation={isMobileSlider ? 'horizontal' : 'vertical'}
-                  data-power={Math.round(sliderPower * 100)}
+                  data-power={0}
                   aria-label="Thanh kéo lực đánh bida (Kéo để nạp lực, thả để đánh)"
                   aria-valuemin={0}
                   aria-valuemax={100}
-                  aria-valuenow={Math.round(sliderPower * 100)}
+                  aria-valuenow={0}
                   title="Nhấn giữ và kéo để chỉnh lực đánh · Thả để đánh · Trả về đầu để hủy"
                   style={
                     isMobileSlider
@@ -2151,33 +2209,35 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                         : 'linear-gradient(180deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
                     }}
                   />
-                  {/* Mức lực đang nạp */}
+                  {/* Mức lực đang nạp (cập nhật trực tiếp qua DOM ref — 0 re-render) */}
                   <div
+                    ref={powerFillRef}
                     aria-hidden="true"
                     style={
                       isMobileSlider
                         ? {
-                            width: `${Math.round(sliderPower * 100)}%`,
+                            width: '0%',
                             background:
                               'linear-gradient(90deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
                           }
                         : {
-                            height: `${Math.round(sliderPower * 100)}%`,
+                            height: '0%',
                             background:
                               'linear-gradient(180deg, #3B7A65 0%, #C29548 55%, #B5443C 100%)',
                           }
                     }
                     className={cn(
-                      'pointer-events-none absolute rounded-full transition-all duration-75',
+                      'pointer-events-none absolute rounded-full',
                       isMobileSlider ? 'inset-y-1.5 left-1.5' : 'inset-x-1.5 top-1.5',
                     )}
                   />
                   {/* Đầu gậy cơ thu nhỏ trượt theo tay kéo (không chữ đè trong rãnh) */}
                   {isMobileSlider ? (
                     <div
+                      ref={powerCueTipRef}
                       aria-hidden="true"
-                      style={{ transform: `translateX(${Math.round(sliderPower * 155)}px)` }}
-                      className="relative z-10 flex h-6 flex-row items-center"
+                      style={{ transform: 'translateX(0px)' }}
+                      className="relative z-10 flex h-6 flex-row items-center will-change-transform"
                     >
                       <span className="h-3.5 w-1.5 rounded-l-sm bg-[#49768F]" />
                       <span className="h-3.5 w-1 bg-[#FAFBF9]" />
@@ -2185,11 +2245,10 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
                     </div>
                   ) : (
                     <div
+                      ref={powerCueTipRef}
                       aria-hidden="true"
-                      style={{
-                        transform: `translateY(${Math.round(sliderPower * Math.max(120, verticalSliderH - 72))}px)`,
-                      }}
-                      className="relative z-10 flex w-6 flex-col items-center"
+                      style={{ transform: 'translateY(0px)' }}
+                      className="relative z-10 flex w-6 flex-col items-center will-change-transform"
                     >
                       <span className="h-1.5 w-3.5 rounded-t-sm bg-[#49768F]" />
                       <span className="h-1 w-3.5 bg-[#FAFBF9]" />
@@ -2203,19 +2262,18 @@ export function MineralBilliardsStage({ className }: MineralBilliardsStageProps 
               {/* Chỉ số lực duy nhất sắc nét dưới đáy thanh */}
               <div className="flex min-h-[28px] flex-col items-center leading-tight">
                 <span
+                  ref={powerReadoutRef}
                   data-testid="billiards-power-readout"
                   className="font-mono text-[11px] font-semibold text-[#1E332E] tabular-nums dark:text-[#C9D6D0]"
                 >
-                  {powerReadoutText}
+                  {isMobileSlider ? 'KÉO →' : 'KÉO ↓'}
                 </span>
-                {powerTierLabel && (
-                  <span
-                    data-testid="billiards-power-tier"
-                    className="font-mono text-[8.5px] font-bold tracking-wider text-[#8C6228] dark:text-[#D5B47A]"
-                  >
-                    {powerTierLabel}
-                  </span>
-                )}
+                <span
+                  ref={powerTierRef}
+                  hidden
+                  data-testid="billiards-power-tier"
+                  className="font-mono text-[8.5px] font-bold tracking-wider text-[#8C6228] dark:text-[#D5B47A]"
+                />
               </div>
             </div>
 

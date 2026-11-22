@@ -10,7 +10,14 @@ import {
   type ReactNode,
 } from 'react';
 import type { ReadingFontSize } from '@/context/ReadingSettingsContext';
-import { useWorkspaceStore } from '@/features/workspace';
+import {
+  POMODORO_BREAK_AUTOSTART_KEY,
+  POMODORO_RETURN_PATH_KEY,
+  PomodoroProvider,
+  usePomodoroActions,
+  type IslandPomodoroState,
+  type PomodoroStatus,
+} from '@/context/PomodoroContext';
 import {
   clampFontScale,
   FONT_SCALE_DEFAULT,
@@ -20,6 +27,13 @@ import {
   resolveActiveSubjectFromPath,
   type IslandSubjectMeta,
 } from './island-helpers';
+
+export {
+  POMODORO_BREAK_AUTOSTART_KEY,
+  POMODORO_RETURN_PATH_KEY,
+  type IslandPomodoroState,
+  type PomodoroStatus,
+};
 
 export type IslandNoticeType = 'success' | 'info' | 'timer';
 
@@ -43,17 +57,6 @@ export interface IslandReaderSettings {
   readonly isZenMode: boolean;
 }
 
-export type PomodoroStatus = 'idle' | 'running' | 'paused';
-
-export interface IslandPomodoroState {
-  readonly status: PomodoroStatus;
-  readonly totalSeconds: number;
-  readonly remainingSeconds: number;
-  readonly presetLabel: string;
-}
-
-export const POMODORO_RETURN_PATH_KEY = 'lu_pomodoro_return_path';
-
 export interface IslandContextValue {
   readonly activeNotice: IslandNoticeState | null;
   readonly triggerIslandNotice: (payload: IslandNoticePayload) => void;
@@ -71,8 +74,6 @@ export interface IslandContextValue {
   readonly activeSubject: IslandSubjectMeta | null;
   readonly routePathname: string;
   readonly setRoutePathname: (pathname: string) => void;
-  readonly pomodoro: IslandPomodoroState;
-  readonly pomodoroBreakPrompt: boolean;
   readonly dismissPomodoroBreakPrompt: () => void;
   readonly startPomodoro: (minutes: number, presetLabel?: string) => void;
   readonly addPomodoroMinutes: (deltaMinutes: number) => void;
@@ -86,13 +87,6 @@ const EYE_COMFORT_STORAGE_KEY = 'lu_eye_comfort_warmth';
 const THEME_STORAGE_KEY = 'lu_reading_theme';
 const ZEN_MODE_STORAGE_KEY = 'lu_zen_mode';
 const NOTICE_AUTO_DISMISS_MS = 2200;
-
-const DEFAULT_POMODORO: IslandPomodoroState = {
-  status: 'idle',
-  totalSeconds: 25 * 60,
-  remainingSeconds: 25 * 60,
-  presetLabel: 'Tiêu chuẩn',
-};
 
 const DEFAULT_ISLAND_CONTEXT: IslandContextValue = {
   activeNotice: null,
@@ -116,8 +110,6 @@ const DEFAULT_ISLAND_CONTEXT: IslandContextValue = {
   activeSubject: null,
   routePathname: '/',
   setRoutePathname: () => {},
-  pomodoro: DEFAULT_POMODORO,
-  pomodoroBreakPrompt: false,
   dismissPomodoroBreakPrompt: () => {},
   startPomodoro: () => {},
   addPomodoroMinutes: () => {},
@@ -237,12 +229,12 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     eyeComfortWarmthRef.current = eyeComfortWarmth;
   }, [eyeComfortWarmth]);
 
-  const [pomodoro, setPomodoro] = useState<IslandPomodoroState>(DEFAULT_POMODORO);
-  const [pomodoroBreakPrompt, setPomodoroBreakPrompt] = useState(false);
+  const pomodoroActions = usePomodoroActions();
+  const routePathnameRef = useRef(routePathname);
 
-  const dismissPomodoroBreakPrompt = useCallback(() => {
-    setPomodoroBreakPrompt(false);
-  }, []);
+  useEffect(() => {
+    routePathnameRef.current = routePathname;
+  }, [routePathname]);
 
   useEffect(() => {
     return () => {
@@ -447,102 +439,16 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
     return () => window.removeEventListener('lu_zen_mode_change', handleZenEvent);
   }, []);
 
-  // Bộ đếm Pomodoro chạy ngầm bền vững khi người học chuyển trang
+  // Đăng ký cầu nối route + thông báo vào PomodoroProvider (không đọc state ticking -> 0 re-render 1Hz)
   useEffect(() => {
-    if (pomodoro.status !== 'running' || typeof window === 'undefined') {
-      return;
-    }
-
-    const timer = window.setInterval(() => {
-      setPomodoro((prev) => {
-        if (prev.status !== 'running') return prev;
-        if (prev.remainingSeconds <= 1) {
-          queueMicrotask(() => {
-            try {
-              const currentPath =
-                routePathname || (typeof window !== 'undefined' ? window.location.pathname : '/');
-              const isLessonPath =
-                currentPath.startsWith('/bai-hoc/') ||
-                /^\/(?:mon-hoc|courses)\/[^/]+\/[^/]+\/[^/]+/.test(currentPath);
-              if (isLessonPath && typeof window !== 'undefined') {
-                window.sessionStorage.setItem(POMODORO_RETURN_PATH_KEY, currentPath);
-              }
-            } catch {
-              // Bỏ qua lỗi sessionStorage
-            }
-            useWorkspaceStore.getState().recordPomodoroCompleted();
-            setPomodoroBreakPrompt(true);
-            triggerIslandNotice({
-              text: `Hoàn thành nhịp học ${prev.presetLabel}! Hãy nghỉ ngơi vài phút.`,
-              type: 'timer',
-            });
-          });
-          return {
-            ...prev,
-            status: 'idle',
-            remainingSeconds: prev.totalSeconds,
-          };
-        }
-        return {
-          ...prev,
-          remainingSeconds: prev.remainingSeconds - 1,
-        };
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [pomodoro.status, routePathname, triggerIslandNotice]);
-
-  const startPomodoro = useCallback(
-    (minutes: number, presetLabel = 'Tùy chỉnh') => {
-      const safeMinutes = Math.max(1, Math.min(180, Math.round(minutes)));
-      const totalSeconds = safeMinutes * 60;
-      setPomodoroBreakPrompt(false);
-      setPomodoro({
-        status: 'running',
-        totalSeconds,
-        remainingSeconds: totalSeconds,
-        presetLabel,
-      });
-      triggerIslandNotice({
-        text: `⏳ Bắt đầu nhịp học tập ${safeMinutes} phút (${presetLabel})`,
-        type: 'timer',
-      });
-    },
-    [triggerIslandNotice],
-  );
-
-  const addPomodoroMinutes = useCallback(
-    (deltaMinutes: number) => {
-      const deltaSeconds = Math.round(deltaMinutes * 60);
-      if (deltaSeconds <= 0) return;
-      setPomodoro((prev) => {
-        if (prev.status === 'idle') return prev;
-        return {
-          ...prev,
-          totalSeconds: prev.totalSeconds + deltaSeconds,
-          remainingSeconds: prev.remainingSeconds + deltaSeconds,
-        };
-      });
-      triggerIslandNotice({
-        text: `⏳ Đã cộng thêm ${deltaMinutes} phút vào nhịp học tập`,
-        type: 'timer',
-      });
-    },
-    [triggerIslandNotice],
-  );
-
-  const pausePomodoro = useCallback(() => {
-    setPomodoro((prev) => (prev.status === 'running' ? { ...prev, status: 'paused' } : prev));
-  }, []);
-
-  const resumePomodoro = useCallback(() => {
-    setPomodoro((prev) => (prev.status === 'paused' ? { ...prev, status: 'running' } : prev));
-  }, []);
-
-  const resetPomodoro = useCallback(() => {
-    setPomodoro(DEFAULT_POMODORO);
-  }, []);
+    pomodoroActions.registerHost({
+      getRoutePathname: () => routePathnameRef.current,
+      triggerIslandNotice,
+    });
+    return () => {
+      pomodoroActions.registerHost(null);
+    };
+  }, [pomodoroActions, triggerIslandNotice]);
 
   const setRoutePathname = useCallback((nextPath: string) => {
     setRoutePathnameState((prev) => (prev === nextPath ? prev : nextPath));
@@ -573,14 +479,12 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       activeSubject,
       routePathname,
       setRoutePathname,
-      pomodoro,
-      pomodoroBreakPrompt,
-      dismissPomodoroBreakPrompt,
-      startPomodoro,
-      addPomodoroMinutes,
-      pausePomodoro,
-      resumePomodoro,
-      resetPomodoro,
+      dismissPomodoroBreakPrompt: pomodoroActions.dismissPomodoroBreakPrompt,
+      startPomodoro: pomodoroActions.startPomodoro,
+      addPomodoroMinutes: pomodoroActions.addPomodoroMinutes,
+      pausePomodoro: pomodoroActions.pausePomodoro,
+      resumePomodoro: pomodoroActions.resumePomodoro,
+      resetPomodoro: pomodoroActions.resetPomodoro,
     }),
     [
       activeNotice,
@@ -599,14 +503,7 @@ const IslandInternalProvider: FC<IslandProviderProps> = ({ children, initialPath
       activeSubject,
       routePathname,
       setRoutePathname,
-      pomodoro,
-      pomodoroBreakPrompt,
-      dismissPomodoroBreakPrompt,
-      startPomodoro,
-      addPomodoroMinutes,
-      pausePomodoro,
-      resumePomodoro,
-      resetPomodoro,
+      pomodoroActions,
     ],
   );
 
@@ -618,7 +515,11 @@ export const IslandProvider: FC<IslandProviderProps> = ({ children, ...props }) 
   if (existing) {
     return <>{children}</>;
   }
-  return <IslandInternalProvider {...props}>{children}</IslandInternalProvider>;
+  return (
+    <PomodoroProvider>
+      <IslandInternalProvider {...props}>{children}</IslandInternalProvider>
+    </PomodoroProvider>
+  );
 };
 
 // eslint-disable-next-line react-refresh/only-export-components

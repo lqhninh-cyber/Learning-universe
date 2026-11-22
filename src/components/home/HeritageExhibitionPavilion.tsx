@@ -1,7 +1,9 @@
 import {
+  ArrowRight,
   BookOpen,
   ChevronLeft,
   ChevronRight,
+  Compass,
   Landmark,
   Maximize2,
   Pause,
@@ -10,6 +12,7 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import {
   HERITAGE_ARTWORKS,
   HERITAGE_CATEGORY_TABS,
@@ -18,9 +21,41 @@ import {
   type HeritageArtwork,
   type HeritageCategory,
 } from '@/components/home/HeritageArtShowcase';
+import { getHeritageMathConnection } from '@/data/heritageMathConnections';
+import { ROUTES } from '@/shared/config/routes';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import { computeFrameDelta, frameDampFactor } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
+
+const HERITAGE_SUBJECT_DISPLAY: Record<
+  'CTĐS' | 'HHAVE' | 'GTHMB' | 'GDH',
+  { readonly title: string; readonly dotClass: string; readonly badgeClass: string }
+> = {
+  CTĐS: {
+    title: 'Cấu trúc đại số',
+    dotClass: 'bg-[#8C5828] dark:bg-[#D99B5E]',
+    badgeClass:
+      'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
+  },
+  HHAVE: {
+    title: 'Hình học Affine & Euclide',
+    dotClass: 'bg-[#1D4F6E] dark:bg-[#64A8D1]',
+    badgeClass:
+      'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
+  },
+  GTHMB: {
+    title: 'Giải tích hàm một biến',
+    dotClass: 'bg-[#1B5E4A] dark:bg-[#52B394]',
+    badgeClass:
+      'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
+  },
+  GDH: {
+    title: 'Giáo dục học',
+    dotClass: 'bg-[#8F3D35] dark:bg-[#DF7B70]',
+    badgeClass:
+      'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
+  },
+};
 
 const ROTATION_INTERVAL_MS = 20000;
 const SLIDE_TRANSITION_MS = 320;
@@ -142,6 +177,8 @@ export function HeritageExhibitionPavilion() {
   const totalCatalogCount = HERITAGE_ARTWORKS.length;
   const safeIndex = Math.min(currentIndex, Math.max(totalCount - 1, 0));
   const currentArtwork = artworks[safeIndex] ?? artworks[0]!;
+  const currentMathConnection = getHeritageMathConnection(currentArtwork.id);
+  const currentSubjectStyle = HERITAGE_SUBJECT_DISPLAY[currentMathConnection.subjectCode];
   const formattedIndex = String(safeIndex + 1).padStart(2, '0');
   const formattedTotal = String(totalCount).padStart(2, '0');
 
@@ -497,6 +534,49 @@ export function HeritageExhibitionPavilion() {
                 <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
                   {currentArtwork.academicSignificance}
                 </p>
+              </div>
+
+              {/* Khối Góc nhìn Toán học & Học phần liên quan (40/40 tác phẩm) */}
+              <div
+                data-testid="heritage-math-connection"
+                className="space-y-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3.5"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--accent-os)] uppercase">
+                    <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    <span>Góc nhìn Toán học &amp; Học phần liên quan</span>
+                  </div>
+                  <span
+                    className={cn(
+                      'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] font-semibold',
+                      currentSubjectStyle.badgeClass,
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={cn('h-1.5 w-1.5 rounded-full', currentSubjectStyle.dotClass)}
+                    />
+                    <span>{currentMathConnection.subjectCode}</span>
+                  </span>
+                </div>
+
+                <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
+                  {currentMathConnection.connection}
+                </p>
+
+                <div className="pt-0.5">
+                  <Link
+                    to={ROUTES.subjectOverview(currentMathConnection.subjectSlug)}
+                    data-testid="heritage-math-subject-link"
+                    className="group/subject inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-os)] transition-opacity hover:opacity-85"
+                  >
+                    <span>Mở học phần {currentSubjectStyle.title}</span>
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform duration-150 group-hover/subject:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </div>
               </div>
             </div>
 

@@ -26,8 +26,8 @@ import { useLocation, useNavigate } from 'react-router';
 import { HERITAGE_ARTWORKS } from '@/components/home/HeritageArtShowcase';
 import { getSubjects } from '@/content-runtime/manifest';
 import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
-import { useIsland } from '@/context/IslandContext';
 import { useLayout } from '@/context/LayoutContext';
+import { usePomodoro } from '@/context/PomodoroContext';
 import { useReadingSettings } from '@/context/ReadingSettingsContext';
 import { getAllGlossaryEntries } from '@/features/math-glossary';
 import { ROUTES } from '@/shared/config/routes';
@@ -242,7 +242,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
   const { pathname, search } = useLocation();
   const { theme, toggleTheme } = useReadingSettings();
   const { isRailCollapsed, toggleRail } = useLayout();
-  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro } = useIsland();
+  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro } = usePomodoro();
 
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);

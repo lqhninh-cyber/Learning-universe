@@ -89,26 +89,10 @@ export function SplitStudyPane({
     const allIds = [...headings.map((h) => h.id), ...blocks.map((b) => b.anchorId)];
     if (allIds.length === 0 || typeof window === 'undefined') return;
 
-    const handleScroll = () => {
-      const scrollY = window.scrollY + 120;
-      let current = '';
-      for (const id of allIds) {
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY;
-          if (top <= scrollY) {
-            current = id;
-          }
-        }
-      }
-      if (current) {
-        setActiveAnchorId(current);
-      }
-    };
+    const firstId = allIds[0] ?? '';
+    const lastId = allIds[allIds.length - 1] ?? firstId;
 
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
+    // Xác định mục đang hiển thị bằng IntersectionObserver (tránh getBoundingClientRect lặp trên mọi frame cuộn)
     let observer: IntersectionObserver | null = null;
     if (typeof window.IntersectionObserver === 'function') {
       const visible = new Set<string>();
@@ -120,8 +104,10 @@ export function SplitStudyPane({
             if (entry.isIntersecting) visible.add(targetId);
             else visible.delete(targetId);
           }
-          const first = allIds.find((id) => visible.has(id));
-          if (first) setActiveAnchorId(first);
+          const firstVisible = allIds.find((id) => visible.has(id));
+          if (firstVisible) {
+            setActiveAnchorId(firstVisible);
+          }
         },
         { rootMargin: '-64px 0px -65% 0px', threshold: [0, 1] },
       );
@@ -131,8 +117,33 @@ export function SplitStudyPane({
       }
     }
 
+    // Fallback siêu nhẹ được throttle bằng requestAnimationFrame chỉ xử lý mép đầu / mép cuối trang
+    let edgeRafId = 0;
+    const syncBoundaryEdges = () => {
+      edgeRafId = 0;
+      const scrollY = window.scrollY;
+      if (scrollY <= 32) {
+        if (firstId) setActiveAnchorId(firstId);
+        return;
+      }
+      const docEl = document.documentElement;
+      const maxScroll = docEl.scrollHeight - window.innerHeight;
+      if (maxScroll > 0 && scrollY >= maxScroll - 32) {
+        if (lastId) setActiveAnchorId(lastId);
+      }
+    };
+
+    const onScrollEdge = () => {
+      if (edgeRafId !== 0) return;
+      edgeRafId = window.requestAnimationFrame(syncBoundaryEdges);
+    };
+
+    syncBoundaryEdges();
+    window.addEventListener('scroll', onScrollEdge, { passive: true });
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      if (edgeRafId !== 0) window.cancelAnimationFrame(edgeRafId);
+      window.removeEventListener('scroll', onScrollEdge);
       observer?.disconnect();
     };
   }, [headings, blocks]);

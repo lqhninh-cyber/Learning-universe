@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, CheckCircle2, Link2, PanelLeft, PanelRight } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Link2, PanelLeft, PanelRight } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router';
 import {
@@ -24,7 +24,7 @@ import {
 } from '@/context/island-helpers';
 import { useIsland } from '@/context/IslandContext';
 import { useLayout } from '@/context/LayoutContext';
-import { ReadingSettingsProvider, useReadingSettings } from '@/context/ReadingSettingsContext';
+import { useReadingSettings } from '@/context/ReadingSettingsContext';
 import { useLearningStore } from '@/features/learning';
 import {
   DevEditorialBar,
@@ -604,7 +604,6 @@ function LessonPageContent() {
 
   return (
     <div
-      id="reading-container"
       data-subject={subject.slug}
       data-eye-comfort={isEyeComfort ? 'true' : undefined}
       className={cn(
@@ -614,18 +613,18 @@ function LessonPageContent() {
         isEyeComfort && 'bg-[#F5F3EE]',
       )}
     >
-      {/* Nút thoát Zen Mode nổi */}
+      {/* Nút thoát Zen Mode duy nhất */}
       {isZenMode && (
         <button
           type="button"
           onClick={toggleZenMode}
-          className="fixed top-14 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-1.5 text-xs font-semibold text-[var(--text-main)] shadow-md backdrop-blur-md transition-colors hover:border-[var(--accent-os)]"
+          className="fixed top-14 right-4 z-50 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)]/95 px-3.5 py-1.5 text-xs font-semibold text-[var(--text-main)] shadow-md backdrop-blur-md transition-colors hover:border-[var(--accent-os)]"
           title="Thoát chế độ đọc tập trung (Phím Esc hoặc Z)"
           aria-label="Thoát chế độ tập trung"
         >
           <span aria-hidden="true">✕</span>
           <span>Thoát tập trung</span>
-          <kbd className="ml-1 rounded border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
+          <kbd className="ml-1 rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-muted)]">
             Esc
           </kbd>
         </button>
@@ -668,31 +667,15 @@ function LessonPageContent() {
         )}
 
         {/* CỘT GIỮA: Vùng đọc chuyên khảo Pure Monograph Typography (max-w-[760px]) */}
-        <main className="min-w-0 flex-1 bg-[var(--bg-workspace)]">
+        <div
+          role="region"
+          aria-label="Nội dung bài giảng"
+          className="min-w-0 flex-1 bg-[var(--bg-workspace)]"
+        >
           <div className="mx-auto w-full max-w-[760px] px-6 py-8 lg:px-10">
             {import.meta.env.DEV && (
               <div className="mb-4">
                 <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
-              </div>
-            )}
-
-            {isZenMode && (
-              <div className="mb-6 flex items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2.5 text-xs">
-                <span className="flex items-center gap-2 font-medium text-[var(--text-secondary)]">
-                  <BookOpen className="h-3.5 w-3.5 text-[var(--accent-os)]" aria-hidden="true" />
-                  <span>
-                    Đang bật <strong className="text-[var(--text-main)]">Chế độ tập trung</strong>{' '}
-                    (Nhấn phím <kbd className="font-mono font-bold">Z</kbd> hoặc{' '}
-                    <kbd className="font-mono font-bold">Esc</kbd> để thoát).
-                  </span>
-                </span>
-                <button
-                  type="button"
-                  onClick={toggleZenMode}
-                  className="cursor-pointer font-semibold text-[var(--accent-os)] underline"
-                >
-                  Thoát
-                </button>
               </div>
             )}
 
@@ -832,9 +815,9 @@ function LessonPageContent() {
               </footer>
             </article>
           </div>
-        </main>
+        </div>
 
-        {/* CỘT PHẢI: Ngăn kéo Chia đôi 3 Tab (Desktop docked sticky top-12) */}
+        {/* CỘT PHẢI: Ngăn kéo Chia đôi 2 Tab (Desktop docked sticky top-12) */}
         {!isZenMode && isSplitPaneOpen && (
           <aside
             data-sidenotes-column
@@ -889,11 +872,7 @@ function LessonPageContent() {
 }
 
 export function LessonPage() {
-  return (
-    <ReadingSettingsProvider>
-      <LessonPageContent />
-    </ReadingSettingsProvider>
-  );
+  return <LessonPageContent />;
 }
 
 export default LessonPage;

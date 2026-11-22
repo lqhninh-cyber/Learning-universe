@@ -43,16 +43,19 @@ export function LessonNotesPanel({ lessonId, lessonTitle, onClose }: LessonNotes
   return (
     <Card
       aria-label={`Ghi chú cá nhân cho bài ${lessonTitle}`}
-      className="border-subject-200 bg-subject-50/35 p-5"
+      className="border-[var(--border-hairline)] bg-[var(--bg-surface)] p-5 text-[var(--text-main)]"
     >
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-sm font-semibold text-stone-900">
-            <FileEdit className="text-subject-600 h-4 w-4" aria-hidden="true" />
+          <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-main)]">
+            <FileEdit
+              className="text-subject-600 h-4 w-4 dark:text-[var(--accent-os)]"
+              aria-hidden="true"
+            />
             <span>Ghi chú cá nhân: {lessonTitle}</span>
           </div>
           {existingNote?.updatedAt && (
-            <span className="text-xs text-stone-500">
+            <span className="text-xs text-[var(--text-muted)]">
               Cập nhật lần cuối: {new Date(existingNote.updatedAt).toLocaleTimeString('vi-VN')}
             </span>
           )}
@@ -65,7 +68,7 @@ export function LessonNotesPanel({ lessonId, lessonTitle, onClose }: LessonNotes
           maxLength={10000}
           placeholder="Ghi lại ý tưởng chứng minh, câu hỏi cần trao đổi hoặc tóm tắt của riêng bạn..."
           aria-label="Nội dung ghi chú cá nhân"
-          className="focus:border-subject-500 w-full rounded-xl border border-stone-200 bg-white p-3 text-sm leading-relaxed text-stone-900 placeholder:text-stone-400 focus:outline-none"
+          className="w-full rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 text-sm leading-relaxed text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent-os)] focus:outline-none"
         />
 
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -88,7 +91,10 @@ export function LessonNotesPanel({ lessonId, lessonTitle, onClose }: LessonNotes
           </div>
 
           {savedFeedback && (
-            <span role="status" className="text-xs font-medium text-emerald-700">
+            <span
+              role="status"
+              className="text-xs font-medium text-emerald-700 dark:text-emerald-400"
+            >
               Đã lưu ghi chú thành công
             </span>
           )}

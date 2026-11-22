@@ -166,12 +166,12 @@ export const mdxComponents: MDXComponents = {
   ),
   blockquote: (props: ComponentPropsWithoutRef<'blockquote'>) => (
     <blockquote
-      className="my-6 rounded-r-lg border-l-4 border-amber-800/70 bg-[#faf8f2]/50 py-2 pr-4 pl-4 font-serif text-[15.5px] leading-relaxed text-stone-800 italic"
+      className="my-6 rounded-r-lg border-l-4 border-amber-800/70 bg-[#faf8f2]/70 py-2 pr-4 pl-4 font-serif text-[15.5px] leading-relaxed text-stone-800 italic dark:border-[var(--accent-heritage)] dark:bg-[var(--bg-surface)] dark:text-[var(--text-main)]"
       {...props}
     />
   ),
   hr: (props: ComponentPropsWithoutRef<'hr'>) => (
-    <hr className="my-8 border-stone-200" {...props} />
+    <hr className="my-8 border-[var(--border-hairline)]" {...props} />
   ),
   pre: (props: ComponentPropsWithoutRef<'pre'>) => {
     const child = props.children;

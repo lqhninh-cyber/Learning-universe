@@ -1,8 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppShell } from '@/components/layout/AppShell';
-import { IslandProvider, POMODORO_RETURN_PATH_KEY } from '@/context/IslandContext';
+import {
+  IslandProvider,
+  POMODORO_BREAK_AUTOSTART_KEY,
+  POMODORO_RETURN_PATH_KEY,
+} from '@/context/IslandContext';
 import { LayoutProvider } from '@/context/LayoutContext';
 import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
 import { AuthProvider } from '@/features/auth';
@@ -49,9 +53,14 @@ describe('SanctuaryPage (/thu-gian — Sảnh Thư giãn chuyên biệt)', () =>
     expect(diSanTab).toHaveAttribute('aria-selected', 'true');
     expect(bidaTab).toHaveAttribute('aria-selected', 'false');
 
-    // Phòng trưng bày 40 Di sản nạp lười thành công
+    // Phòng trưng bày 40 Di sản nạp lười thành công + khối Góc nhìn Toán học & Học phần liên quan
     expect(await screen.findByTestId('heritage-art-showcase')).toBeInTheDocument();
     expect(screen.getByTestId('heritage-filmstrip')).toBeInTheDocument();
+    expect(screen.getByTestId('heritage-math-connection')).toBeInTheDocument();
+    expect(screen.getByTestId('heritage-math-subject-link')).toHaveAttribute(
+      'href',
+      '/mon-hoc/hinh-hoc-affine',
+    );
     expect(screen.queryByTestId('mineral-billiards-stage')).not.toBeInTheDocument();
   });
 
@@ -86,5 +95,48 @@ describe('SanctuaryPage (/thu-gian — Sảnh Thư giãn chuyên biệt)', () =>
     expect(screen.getByTestId('sanctuary-page')).toHaveAttribute('data-active-tab', 'bida');
     expect(screen.getByTestId('left-rail')).toHaveAttribute('data-collapsed', 'true');
     expect(await screen.findByTestId('mineral-billiards-stage')).toBeInTheDocument();
+  });
+
+  it('tự động chạy Break Countdown 5p/10p khi đến từ Pomodoro và hiện thông báo thị giác nhẹ kèm nút quay về bài khi đếm về 00:00', async () => {
+    vi.useFakeTimers();
+    const lessonPath =
+      '/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/nua-nhom-vi-nhom-va-tien-de-nhom';
+    sessionStorage.setItem(POMODORO_RETURN_PATH_KEY, lessonPath);
+    sessionStorage.setItem(POMODORO_BREAK_AUTOSTART_KEY, '5');
+
+    try {
+      renderSanctuary('/thu-gian?tab=di-san');
+
+      const breakPill = screen.getByTestId('sanctuary-break-pill');
+      expect(breakPill).toHaveAttribute('data-break-status', 'running');
+      expect(screen.getByTestId('sanctuary-break-countdown')).toHaveTextContent('05:00');
+
+      // Chuyển nhanh sang 10 phút rồi quay lại 5 phút
+      fireEvent.click(screen.getByTestId('sanctuary-break-10m'));
+      expect(screen.getByTestId('sanctuary-break-countdown')).toHaveTextContent('10:00');
+
+      fireEvent.click(screen.getByTestId('sanctuary-break-5m'));
+      expect(screen.getByTestId('sanctuary-break-countdown')).toHaveTextContent('05:00');
+
+      // Tua hết 5 phút -> hiện thông báo thị giác nhẹ kèm nút quay về bài đang học
+      await act(async () => {
+        vi.advanceTimersByTime(301_000);
+        await Promise.resolve();
+      });
+
+      expect(screen.getByTestId('sanctuary-break-pill')).toHaveAttribute(
+        'data-break-status',
+        'done',
+      );
+      expect(screen.getByTestId('sanctuary-break-countdown')).toHaveTextContent('00:00');
+      const doneBanner = screen.getByTestId('sanctuary-break-done-banner');
+      expect(doneBanner).toBeInTheDocument();
+      expect(screen.getByTestId('sanctuary-break-done-return-btn')).toHaveAttribute(
+        'href',
+        lessonPath,
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

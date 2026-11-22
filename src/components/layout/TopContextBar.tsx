@@ -1,14 +1,16 @@
 import { Bell, CheckCircle2, ChevronRight, Hourglass, Menu, Search, Sparkles } from 'lucide-react';
 import { type FC, useEffect, useMemo, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
+import { preloadCommandPalette } from '@/components/layout/command-palette-loader';
 import {
   getLessonBySlug,
   getSubjectBySlug,
   resolveLessonShortcut,
   type LessonLocation,
-} from '@/content-runtime';
+} from '@/content-runtime/manifest';
 import { useIsland } from '@/context/IslandContext';
 import { useLayout } from '@/context/LayoutContext';
+import { usePomodoroState } from '@/context/PomodoroContext';
 import { HeaderQuickReaderControls } from '@/shared/components/header/HeaderQuickReaderControls';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
@@ -134,14 +136,28 @@ function computePageReadingProgress(): number {
   return Math.min(1, Math.max(0, window.scrollY / maxScroll));
 }
 
+const TopBarMobilePomodoroPill: FC = () => {
+  const { pomodoro } = usePomodoroState();
+  if (pomodoro.status === 'idle') return null;
+
+  return (
+    <span
+      data-testid="topbar-mobile-pomodoro"
+      className="inline-flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent-heritage)] tabular-nums md:hidden"
+    >
+      <Hourglass className="h-3 w-3 shrink-0" aria-hidden="true" />
+      <span>{formatMmSs(pomodoro.remainingSeconds)}</span>
+    </span>
+  );
+};
+
 export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, isDark = false }) => {
   const { pathname } = useLocation();
   const { isRailCollapsed, toggleMobileMenu, openCommandPalette, topBarRightSlot } = useLayout();
-  const { activeNotice, dismissIslandNotice, pomodoro } = useIsland();
+  const { activeNotice, dismissIslandNotice } = useIsland();
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   const breadcrumbs = useMemo(() => buildContextBreadcrumbs(pathname), [pathname]);
-  const isPomodoroActive = pomodoro.status !== 'idle';
 
   useEffect(() => {
     if (!isLessonPage || typeof window === 'undefined') return;
@@ -256,20 +272,14 @@ export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, is
       <div className="flex shrink-0 items-center gap-2">
         {topBarRightSlot ?? (isLessonPage ? <HeaderQuickReaderControls isDark={isDark} /> : null)}
 
-        {isPomodoroActive && (
-          <span
-            data-testid="topbar-mobile-pomodoro"
-            className="inline-flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-[11px] font-semibold text-[var(--accent-heritage)] tabular-nums md:hidden"
-          >
-            <Hourglass className="h-3 w-3 shrink-0" aria-hidden="true" />
-            <span>{formatMmSs(pomodoro.remainingSeconds)}</span>
-          </span>
-        )}
+        <TopBarMobilePomodoroPill />
 
         <button
           type="button"
           data-testid="topbar-command-trigger"
           onClick={openCommandPalette}
+          onMouseEnter={preloadCommandPalette}
+          onFocus={preloadCommandPalette}
           aria-label="Mở bảng lệnh (⌘K)"
           title="Mở bảng lệnh trung tâm (⌘K)"
           className={cn(

@@ -6,6 +6,21 @@ import { ROUTES } from '@/shared/config/routes';
 const devRoutes: RouteObject[] = import.meta.env.DEV
   ? [
       {
+        path: ROUTES.uiPreview,
+        lazy: async () => {
+          const { UiPreviewPage } = await import('@/pages/ui-preview/UiPreviewPage');
+          return { Component: UiPreviewPage };
+        },
+      },
+      {
+        path: ROUTES.colorSystemPreview,
+        lazy: async () => {
+          const { ColorSystemPreviewPage } =
+            await import('@/pages/color-system-preview/ColorSystemPreviewPage');
+          return { Component: ColorSystemPreviewPage };
+        },
+      },
+      {
         path: ROUTES.devUi,
         lazy: async () => {
           const { DevUiPage } = await import('@/pages/dev-ui/DevUiPage');
@@ -37,21 +52,6 @@ const devRoutes: RouteObject[] = import.meta.env.DEV
   : [];
 
 export const routes: RouteObject[] = [
-  {
-    path: ROUTES.uiPreview,
-    lazy: async () => {
-      const { UiPreviewPage } = await import('@/pages/ui-preview/UiPreviewPage');
-      return { Component: UiPreviewPage };
-    },
-  },
-  {
-    path: ROUTES.colorSystemPreview,
-    lazy: async () => {
-      const { ColorSystemPreviewPage } =
-        await import('@/pages/color-system-preview/ColorSystemPreviewPage');
-      return { Component: ColorSystemPreviewPage };
-    },
-  },
   {
     path: ROUTES.home,
     Component: RootLayout,
