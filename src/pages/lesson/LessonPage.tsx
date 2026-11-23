@@ -9,13 +9,8 @@ import {
   LessonMdxView,
   loadLessonModule,
 } from '@/content-runtime';
-import {
-  EditorialChapterOpener,
-  SplitStudyPane,
-  type ChapterCloItem,
-  type ChapterDifficultyLevel,
-  type SplitStudyTab,
-} from '@/components/lesson';
+import { EditorialChapterOpener, SplitStudyPane, type SplitStudyTab } from '@/components/lesson';
+import { getCurriculumSource, getDifficultyLevel, getLessonClos } from '@/data/curriculumMetadata';
 import {
   FONT_SCALE_MAX,
   FONT_SCALE_MIN,
@@ -39,106 +34,6 @@ import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Button, Card, Drawer, Skeleton } from '@/shared/ui';
 import { safeStorage } from '@/utils/safeStorage';
-
-function getCurriculumSource(slug: string): string {
-  if (slug === 'giao-duc-hoc') {
-    return 'Giáo trình Giáo dục học — Trường ĐH Sư phạm TP.HCM (HCMUE, K50–51)';
-  }
-  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
-    return 'Giáo trình Giải tích hàm một biến — PGS.TS. Trần Trí Dũng (NXB Giáo dục)';
-  }
-  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
-    return 'Giáo trình Hình học cao cấp — GS. Nguyễn Mộng Hy / TS. Huỳnh Việt Khánh (NXB Giáo dục)';
-  }
-  if (slug === 'cau-truc-dai-so' || slug === 'algebraic-structures') {
-    return 'Giáo trình Cấu trúc Đại số: Nhóm • Vành • Trường — TS. Huỳnh Việt Khánh (NXB Giáo dục)';
-  }
-  return 'Giáo trình chuẩn Đại học Sư phạm';
-}
-
-function getDifficultyLevel(
-  level: 'basic' | 'intermediate' | 'advanced',
-  slug: string,
-): ChapterDifficultyLevel {
-  if (slug === 'giao-duc-hoc') return 'Nghiệp vụ thực hành';
-  if (level === 'basic') return 'Nền tảng';
-  if (level === 'advanced') return 'Chuyên sâu';
-  return 'Trung cấp';
-}
-
-function getCloFallbackDescription(slug: string): string {
-  if (slug === 'giao-duc-hoc') {
-    return 'Phân tích cơ sở lý luận và nghiệp vụ sư phạm giải quyết tình huống thực tế';
-  }
-  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
-    return 'Chứng minh giới hạn và phân tích tính chất giải tích bằng ngôn ngữ Epsilon';
-  }
-  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
-    return 'Khảo sát cấu trúc hình học afin, phương trình m-phẳng và ánh xạ afin';
-  }
-  return 'Phân tích cấu trúc đại số và chứng minh các mệnh đề học thuật';
-}
-
-function getLessonClos(tags: readonly string[], slug: string): readonly ChapterCloItem[] {
-  const cloTags = tags.filter((t) => /^CLO/i.test(t));
-  if (cloTags.length > 0) {
-    return cloTags.map((tag) => {
-      const match = tag.match(/^CLO-?(\d+(?:\.\d+)?)(?:\s*[:-]\s*(.*))?$/i);
-      const code = match ? `CLO ${match[1]}` : tag;
-      const desc = match?.[2] || getCloFallbackDescription(slug);
-      return { code, description: desc };
-    });
-  }
-
-  if (slug === 'giao-duc-hoc') {
-    return [
-      {
-        code: 'CLO 1.1',
-        description:
-          'Phân tích bản chất hiện tượng giáo dục và chuẩn nghề nghiệp giáo viên THCS/THPT',
-      },
-      {
-        code: 'CLO 6.2',
-        description: 'Vận dụng 5 bước xử lý sư phạm và khung pháp quy giáo dục giải quyết xung đột',
-      },
-    ];
-  }
-  if (slug === 'giai-tich-ham-mot-bien' || slug === 'single-variable-calculus') {
-    return [
-      {
-        code: 'CLO 1.2',
-        description:
-          'Kỹ thuật định lượng và chứng minh giới hạn dãy số bằng ngôn ngữ ε–N (Epsilon)',
-      },
-      {
-        code: 'CLO 2.1',
-        description:
-          'Vận dụng tiêu chuẩn hội tụ Cauchy, Weierstrass và tính liên tục phân tích hàm số',
-      },
-    ];
-  }
-  if (slug === 'hinh-hoc-affine' || slug === 'affine-geometry') {
-    return [
-      {
-        code: 'CLO 2.1',
-        description:
-          'Xác định mục tiêu afin, phương và hệ phương trình tham số của m-phẳng trong không gian Afin',
-      },
-      {
-        code: 'CLO 3.2',
-        description:
-          'Vận dụng nhóm các phép biến đổi afin và tính chất bất biến trong nghiên cứu hình học',
-      },
-    ];
-  }
-  return [
-    {
-      code: 'CLO 1.1',
-      description:
-        'Nắm vững hệ thống tiên đề cấu trúc đại số: Nhóm, Vành, Trường và các định lý đẳng cấu',
-    },
-  ];
-}
 
 const SPLIT_PANE_STORAGE_KEY = 'lu_split_pane_open';
 

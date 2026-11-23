@@ -11,3 +11,4 @@ package-lock.json
 supabase/.temp/
 .agent/skills/hallmark/
 .agent/skills/taste-skill/
+src/data/generated/

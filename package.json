@@ -9,6 +9,8 @@
   },
   "scripts": {
     "dev": "vite",
+    "glossary:backlinks": "node scripts/generate-glossary-backlinks.mjs",
+    "prebuild": "npm run glossary:backlinks",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty",
@@ -22,7 +24,7 @@
     "content:new": "node scripts/content/new-lesson.ts",
     "content:approve": "node scripts/content/approve.ts",
     "content:report": "node scripts/content/report.ts",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run content:check && npm run test"
+    "check": "npm run glossary:backlinks && npm run format:check && npm run lint && npm run typecheck && npm run content:check && npm run test"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "5.3.0",
@@ -36,7 +38,6 @@
     "katex": "0.19.1",
     "lucide-react": "1.66.0",
     "mafs": "0.21.0",
-    "mermaid": "12.3.0",
     "motion": "14.9.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",

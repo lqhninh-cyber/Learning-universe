@@ -73,15 +73,18 @@ function serializeNodeToMathMarkdown(node: Node): string {
     return '';
   }
 
-  // Trích xuất chính xác công thức gốc LaTeX từ phần tử KaTeX đã render
+  // Trích xuất chính xác công thức gốc LaTeX từ phần tử KaTeX đã render (ưu tiên data-tex từ output:'html')
   if (el.classList.contains('katex-display')) {
-    const ann = el.querySelector('annotation[encoding="application/x-tex"]');
-    const tex = ann?.textContent?.trim();
+    const tex =
+      el.getAttribute('data-tex')?.trim() ||
+      el.querySelector('[data-tex]')?.getAttribute('data-tex')?.trim() ||
+      el.querySelector('annotation[encoding="application/x-tex"]')?.textContent?.trim();
     return tex ? `\n$$${tex}$$\n` : '';
   }
   if (el.classList.contains('katex')) {
-    const ann = el.querySelector('annotation[encoding="application/x-tex"]');
-    const tex = ann?.textContent?.trim();
+    const tex =
+      el.getAttribute('data-tex')?.trim() ||
+      el.querySelector('annotation[encoding="application/x-tex"]')?.textContent?.trim();
     return tex ? `$${tex}$` : (el.textContent ?? '');
   }
 

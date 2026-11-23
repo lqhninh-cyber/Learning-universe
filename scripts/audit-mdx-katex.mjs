@@ -40,7 +40,7 @@ const CHECKED_JSX_TAGS = new Set([
   'Hint',
   'KeyTakeaways',
   'Figure',
-  'MermaidChart',
+  'DiagramRenderer',
   'CayleyTable',
 ]);
 

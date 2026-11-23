@@ -36,7 +36,7 @@ export {
   type Chapter7KnowledgeMapProps,
 } from './components/Chapter7KnowledgeMap';
 export { CayleyTable, type CayleyTableProps } from './components/CayleyTable';
-export { MermaidChart, type MermaidChartProps } from './components/MermaidChart';
+export { DiagramRenderer, type DiagramRendererProps } from '@/components/diagrams/DiagramRenderer';
 export { Proof, type ProofProps } from './components/Proof';
 export { Ref, type RefProps } from './components/Ref';
 export {

@@ -3,6 +3,7 @@ import { useCallback, useId, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { getLessonBySlug, getSubjectBySlug, resolveLessonShortcut } from '@/content-runtime';
 import { useIsland } from '@/context/IslandContext';
+import { getBacklinksForTerm } from '@/data/glossaryBacklinks';
 import {
   getAllGlossaryEntries,
   InlineMathText,
@@ -137,6 +138,7 @@ export function GlossaryPage() {
   const [subjectFilter, setSubjectFilter] = useState<SubjectFilter>('all');
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [expandedBacklinks, setExpandedBacklinks] = useState<Record<string, boolean>>({});
 
   const allEntries = useMemo(() => getAllGlossaryEntries(), []);
 
@@ -423,6 +425,12 @@ export function GlossaryPage() {
                     const mathExpr = entry.symbol || entry.formula || '';
                     const isShortFormula = mathExpr.length > 0 && mathExpr.length < 14;
                     const targetLessonLabel = resolveTargetLessonLabel(entry);
+                    const backlinks = getBacklinksForTerm(entry.id);
+                    const isBacklinksExpanded = Boolean(expandedBacklinks[entry.id]);
+                    const visibleBacklinks = isBacklinksExpanded
+                      ? backlinks
+                      : backlinks.slice(0, 3);
+                    const hiddenBacklinkCount = Math.max(0, backlinks.length - 3);
 
                     return (
                       <article
@@ -517,6 +525,47 @@ export function GlossaryPage() {
                               <InlineMathText text={entry.intuition} />
                             </div>
                           </div>
+
+                          {/* Dải chỉ mục ngược tĩnh: Xuất hiện trong N bài giảng */}
+                          {backlinks.length > 0 && (
+                            <div
+                              data-testid={`lexicon-backlinks-${entry.id}`}
+                              className="flex flex-wrap items-center gap-1.5 pt-0.5"
+                            >
+                              <span className="font-mono text-[11px] font-medium text-[var(--text-muted)]">
+                                Xuất hiện trong{' '}
+                                <strong className="font-semibold text-[var(--text-main)] tabular-nums">
+                                  {backlinks.length}
+                                </strong>{' '}
+                                bài giảng:
+                              </span>
+                              {visibleBacklinks.map((item) => (
+                                <Link
+                                  key={item.lessonId}
+                                  to={item.href}
+                                  title={`${item.lessonCode} · ${item.lessonTitle} (${item.count} lần)`}
+                                  className="inline-flex items-center rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-0.5 font-mono text-[10.5px] font-semibold text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
+                                >
+                                  {item.lessonCode}
+                                </Link>
+                              ))}
+                              {hiddenBacklinkCount > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setExpandedBacklinks((prev) => ({
+                                      ...prev,
+                                      [entry.id]: !prev[entry.id],
+                                    }))
+                                  }
+                                  aria-expanded={isBacklinksExpanded}
+                                  className="inline-flex cursor-pointer items-center rounded-md border border-dashed border-[var(--border-strong)] bg-transparent px-2 py-0.5 font-mono text-[10.5px] font-semibold text-[var(--text-muted)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
+                                >
+                                  {isBacklinksExpanded ? 'Thu gọn' : `+${hiddenBacklinkCount}`}
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </div>
 
                         {/* Chân thẻ: Tên/mã bài giảng đích (thay thế #slug) + Đọc tại bài giảng → */}

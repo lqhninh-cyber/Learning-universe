@@ -17,7 +17,7 @@ const SKIP_WALKER_SELECTOR = [
   'input',
   'select',
   'button',
-  '.mermaid',
+  '[data-diagram-renderer]',
   '.viz',
   '[data-inpage-nav]',
   '[aria-hidden="true"]',

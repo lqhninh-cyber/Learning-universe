@@ -12,6 +12,7 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { defineConfig } from 'vitest/config';
 import {
   rehypeFixKatexNegations,
+  rehypePreserveMathTexPre,
   remarkMathSanitizePost,
   remarkMathSanitizePre,
 } from './build/remark-math-sanitize.ts';
@@ -52,11 +53,12 @@ export default defineConfig({
           remarkTheoremNumbering,
         ],
         rehypePlugins: [
+          rehypePreserveMathTexPre,
           [
             rehypeKatex,
             {
               macros: katexMacros,
-              output: 'htmlAndMathml',
+              output: 'html',
               strict: 'ignore',
               throwOnError: true,
             },
@@ -84,6 +86,7 @@ export default defineConfig({
     strictPort: true,
   },
   build: {
+    sourcemap: false,
     rolldownOptions: {
       output: {
         codeSplitting: {
@@ -103,10 +106,6 @@ export default defineConfig({
             {
               name: 'vendor-mafs',
               test: /node_modules[\\/](mafs|@use-gesture|use-resize-observer)[\\/]/,
-            },
-            {
-              name: 'vendor-mermaid',
-              test: /node_modules[\\/]mermaid[\\/]/,
             },
           ],
         },

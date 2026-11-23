@@ -20,13 +20,14 @@ export function RootHydrateFallback() {
 function RootLayoutContent() {
   const { pathname, hash } = useLocation();
   const isHomePage = pathname === ROUTES.home;
+  const isLearningSpacePage = pathname === ROUTES.learningSpace;
   const isCourseDetailPage = /^\/(mon-hoc|courses)\/[^/]+\/?$/.test(pathname);
   const isLessonPage =
     /^\/(mon-hoc|courses)\/[^/]+\/[^/]+\/[^/]+\/?$/.test(pathname) ||
     /^\/bai-hoc\/[^/]+\/?$/.test(pathname) ||
     pathname === '/dev/mdx';
   const isStudioPage = pathname === ROUTES.mathInk || pathname === ROUTES.examBuilder;
-  const isFullWidthWorkspace = isHomePage || isLessonPage || isStudioPage;
+  const isFullWidthWorkspace = isHomePage || isLearningSpacePage || isLessonPage || isStudioPage;
 
   const { theme } = useReadingSettings();
   const { setRoutePathname, readerSettings, triggerIslandNotice } = useIsland();

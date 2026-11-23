@@ -20,8 +20,8 @@ import { Chapter3KnowledgeMap } from './components/Chapter3KnowledgeMap';
 import { Chapter5KnowledgeMap } from './components/Chapter5KnowledgeMap';
 import { Chapter6KnowledgeMap } from './components/Chapter6KnowledgeMap';
 import { Chapter7KnowledgeMap } from './components/Chapter7KnowledgeMap';
+import { DiagramRenderer } from '@/components/diagrams/DiagramRenderer';
 import { CayleyTable } from './components/CayleyTable';
-import { MermaidChart } from './components/MermaidChart';
 import { Proof } from './components/Proof';
 import { Ref } from './components/Ref';
 import {
@@ -98,8 +98,7 @@ export const mdxComponents: MDXComponents = {
   Chapter6KnowledgeMap,
   Chapter7KnowledgeMap,
   CayleyTable,
-  MermaidChart,
-  Mermaid: MermaidChart,
+  DiagramRenderer,
 
   // 7. Figure Kit 2D tương tác cho Hình học Affine (nạp lười qua React.lazy)
   AffinePlane: LazyAffinePlane,
@@ -173,6 +172,13 @@ export const mdxComponents: MDXComponents = {
   hr: (props: ComponentPropsWithoutRef<'hr'>) => (
     <hr className="my-8 border-[var(--border-hairline)]" {...props} />
   ),
+  span: (props: ComponentPropsWithoutRef<'span'> & { 'data-katex-html'?: string }) => {
+    const { 'data-katex-html': katexHtml, children, ...rest } = props;
+    if (typeof katexHtml === 'string') {
+      return <span {...rest} dangerouslySetInnerHTML={{ __html: katexHtml }} />;
+    }
+    return <span {...rest}>{children}</span>;
+  },
   pre: (props: ComponentPropsWithoutRef<'pre'>) => {
     const child = props.children;
     if (isValidElement<{ className?: string; children?: unknown }>(child)) {
@@ -186,48 +192,7 @@ export const mdxComponents: MDXComponents = {
             ? childProps.children
             : String(childProps.children ?? '');
         const trimmed = code.trim();
-        if (
-          trimmed.includes('Tập hợp gốc X') ||
-          trimmed.includes('Công cụ số học trên Z') ||
-          trimmed.includes('Tiêu chuẩn xác định tốt')
-        ) {
-          return <Chapter0KnowledgeMap />;
-        }
-        if (
-          trimmed.includes('Nửa nhóm (Semigroup)') &&
-          trimmed.includes('Vị nhóm (Monoid)') &&
-          trimmed.includes('Nhóm (Group)')
-        ) {
-          return <Chapter1KnowledgeMap />;
-        }
-        if (
-          trimmed.includes('Lớp kề trái gH') &&
-          (trimmed.includes('Định lý Lagrange') || trimmed.includes('Phân hoạch: G = ⨆ gᵢH'))
-        ) {
-          return <Chapter3KnowledgeMap />;
-        }
-        if (
-          trimmed.includes('Định lý Đẳng cấu I') ||
-          trimmed.includes('Định lý Đẳng cấu II') ||
-          (trimmed.includes('Đồng cấu nhóm') && trimmed.includes('Định lý Đẳng cấu'))
-        ) {
-          return <Chapter5KnowledgeMap />;
-        }
-        if (
-          trimmed.includes('HỆ THỐNG HAI PHÉP TOÁN') ||
-          trimmed.includes('Nhóm cộng Abel (R, +)') ||
-          (trimmed.includes('VÀNH TỔNG QUÁT') && trimmed.includes('TRƯỜNG (Field)'))
-        ) {
-          return <Chapter6KnowledgeMap />;
-        }
-        if (
-          trimmed.includes('IdeanCacLoai') ||
-          trimmed.includes('Khái niệm và Phép toán Iđêan') ||
-          trimmed.includes('Iđêan trái: rI ⊆ I')
-        ) {
-          return <Chapter7KnowledgeMap />;
-        }
-        return <MermaidChart chart={trimmed} />;
+        return <DiagramRenderer chart={trimmed} />;
       }
     }
     return (

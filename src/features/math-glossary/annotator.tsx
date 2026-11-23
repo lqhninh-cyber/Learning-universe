@@ -33,7 +33,8 @@ const TEXT_MATCHERS: readonly TextPatternMatcher[] = (() => {
 })();
 
 /**
- * Trích xuất mã TeX thô từ các thuộc tính của phần tử KaTeX sinh ra từ rehype-katex.
+ * Trích xuất mã TeX thô từ thuộc tính `data-tex` (chế độ `output: 'html'`) hoặc `<annotation>`
+ * của phần tử KaTeX sinh ra từ rehype-katex.
  */
 export function extractLatexFromKatexNode(node: unknown): string | null {
   if (!node || typeof node !== 'object') {
@@ -42,6 +43,7 @@ export function extractLatexFromKatexNode(node: unknown): string | null {
 
   const el = node as {
     props?: {
+      'data-tex'?: string;
       encoding?: string;
       children?: unknown;
       className?: string;
@@ -49,8 +51,15 @@ export function extractLatexFromKatexNode(node: unknown): string | null {
   };
 
   if (el.props) {
+    if (typeof el.props['data-tex'] === 'string' && el.props['data-tex'].trim().length > 0) {
+      return el.props['data-tex'].trim();
+    }
     if (el.props.encoding === 'application/x-tex' && typeof el.props.children === 'string') {
       return el.props.children.trim();
+    }
+    // Tránh đệ quy lãng phí vào toàn bộ cây DOM bên trong .katex-html
+    if (typeof el.props.className === 'string' && el.props.className.includes('katex-html')) {
+      return null;
     }
     if (el.props.children) {
       if (Array.isArray(el.props.children)) {

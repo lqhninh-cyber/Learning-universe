@@ -16,14 +16,22 @@ import { TooltipProvider } from '@/shared/ui';
 import { LessonProvider } from './LessonContext';
 import { mdxComponents } from './mdx-components';
 
-function KatexDisplayBlock({
-  spanProps,
-}: {
-  readonly spanProps: ComponentPropsWithoutRef<'span'>;
-}) {
+type KatexSpanProps = ComponentPropsWithoutRef<'span'> & {
+  readonly 'data-katex-html'?: string;
+};
+
+function renderKatexOrRawSpan(props: KatexSpanProps) {
+  const { 'data-katex-html': katexHtml, children, ...rest } = props;
+  if (typeof katexHtml === 'string') {
+    return <span {...rest} dangerouslySetInnerHTML={{ __html: katexHtml }} />;
+  }
+  return <span {...rest}>{children}</span>;
+}
+
+function KatexDisplayBlock({ spanProps }: { readonly spanProps: KatexSpanProps }) {
   return (
     <span className="my-4 block overflow-x-auto rounded-xl bg-[var(--bg-subtle)]/60 px-5 py-1.5 transition-colors duration-200">
-      <span {...spanProps} />
+      {renderKatexOrRawSpan(spanProps)}
     </span>
   );
 }
@@ -68,7 +76,7 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
           {annotateChildren(props.children, currentCourseId)}
         </td>
       ),
-      span: (props: ComponentPropsWithoutRef<'span'>) => {
+      span: (props: KatexSpanProps) => {
         if (typeof props.className === 'string' && props.className.includes('katex-display')) {
           return <KatexDisplayBlock spanProps={props} />;
         }
@@ -81,13 +89,13 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
             if (entry) {
               return (
                 <MathGlossaryTerm entry={entry} currentCourseId={currentCourseId}>
-                  <span {...props} />
+                  {renderKatexOrRawSpan(props)}
                 </MathGlossaryTerm>
               );
             }
           }
         }
-        return <span {...props} />;
+        return renderKatexOrRawSpan(props);
       },
     };
   }, [isEnabled, currentCourseId]);

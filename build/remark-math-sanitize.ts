@@ -1,6 +1,6 @@
 import type { Root } from 'mdast';
 import type { Plugin } from 'unified';
-import { visit } from 'unist-util-visit';
+import { SKIP, visit } from 'unist-util-visit';
 import { normalizeMixedMathProse, sanitizeLatex } from '../src/shared/lib/math-sanitize.ts';
 
 interface AstTextChild {
@@ -401,15 +401,159 @@ function getHastText(node: HastNodeLike | undefined): string {
   return '';
 }
 
+const VOID_HTML_TAGS = new Set(['br', 'hr', 'img', 'input', 'wbr']);
+const SVG_PRESERVE_CASE_ATTRS = new Set(['viewBox', 'preserveAspectRatio', 'gradientUnits']);
+
+function escapeHtmlText(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeHtmlAttr(str: string): string {
+  return escapeHtmlText(str).replace(/"/g, '&quot;');
+}
+
+function toHtmlAttrName(propKey: string): string {
+  if (propKey === 'className') return 'class';
+  if (propKey === 'htmlFor') return 'for';
+  if (SVG_PRESERVE_CASE_ATTRS.has(propKey)) return propKey;
+  if (propKey.startsWith('data') || propKey.startsWith('aria')) {
+    return propKey.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+  }
+  return propKey.toLowerCase();
+}
+
+/** Tuần tự hóa cây con HAST của KaTeX (`span`/`svg`/`path`) sang chuỗi HTML gọn để tránh phình JSX trong bundle MDX. */
+function serializeHastNodesToHtml(nodes: readonly HastNodeLike[]): string {
+  let out = '';
+  for (const node of nodes) {
+    if (node.type === 'text') {
+      out += escapeHtmlText(node.value ?? '');
+      continue;
+    }
+    if (node.type !== 'element' || !node.tagName) continue;
+
+    let attrs = '';
+    if (node.properties) {
+      for (const [key, rawVal] of Object.entries(node.properties)) {
+        if (rawVal === undefined || rawVal === null || rawVal === false) continue;
+        const attrName = toHtmlAttrName(key);
+        if (rawVal === true) {
+          attrs += ` ${attrName}`;
+        } else if (Array.isArray(rawVal)) {
+          const joined = rawVal.join(' ').trim();
+          if (joined) attrs += ` ${attrName}="${escapeHtmlAttr(joined)}"`;
+        } else {
+          attrs += ` ${attrName}="${escapeHtmlAttr(String(rawVal))}"`;
+        }
+      }
+    }
+
+    if (VOID_HTML_TAGS.has(node.tagName)) {
+      out += `<${node.tagName}${attrs}>`;
+      continue;
+    }
+    const inner = Array.isArray(node.children) ? serializeHastNodesToHtml(node.children) : '';
+    out += `<${node.tagName}${attrs}>${inner}</${node.tagName}>`;
+  }
+  return out;
+}
+
+/**
+ * Plugin Rehype chạy NGAY TRƯỚC `rehypeKatex`:
+ * Lưu giữ chuỗi LaTeX gốc vào thẻ bọc tạm `<lu-tex-wrap data-tex="...">` vì `rehypeKatex`
+ * thay thế hoàn toàn phần tử gốc bằng kết quả HTML (khi dùng `output: 'html'`, không có `.katex-mathml`).
+ * Thẻ tạm sẽ được gỡ bỏ hoàn toàn ngay sau `rehypeKatex` trong `rehypeFixKatexNegations`.
+ */
+export const rehypePreserveMathTexPre: Plugin<[]> = function rehypePreserveMathTexPre() {
+  return (tree) => {
+    visit(tree, 'element', (rawNode, index, rawParent) => {
+      const node = rawNode as unknown as HastNodeLike;
+      const parent = rawParent as unknown as HastNodeLike | undefined;
+      if (!parent || !Array.isArray(parent.children) || typeof index !== 'number') {
+        return;
+      }
+      if (node.tagName === 'lu-tex-wrap') {
+        return SKIP;
+      }
+
+      // Trường hợp 1: <pre><code class="language-math ...">...</code></pre>
+      if (node.tagName === 'pre' && Array.isArray(node.children)) {
+        const mathCode = node.children.find(
+          (child) =>
+            child.type === 'element' &&
+            child.tagName === 'code' &&
+            hasHastClass(child, 'language-math'),
+        );
+        if (mathCode) {
+          const rawTex = getHastText(node).trim();
+          const wrapper: HastNodeLike = {
+            type: 'element',
+            tagName: 'lu-tex-wrap',
+            properties: { 'data-tex': rawTex },
+            children: [node],
+          };
+          parent.children[index] = wrapper;
+          return [SKIP, index + 1];
+        }
+      }
+
+      // Trường hợp 2: <code class="language-math math-inline"> hoặc <span class="math-display/math-inline">
+      if (
+        hasHastClass(node, 'language-math') ||
+        hasHastClass(node, 'math-display') ||
+        hasHastClass(node, 'math-inline')
+      ) {
+        const rawTex = getHastText(node).trim();
+        const wrapper: HastNodeLike = {
+          type: 'element',
+          tagName: 'lu-tex-wrap',
+          properties: { 'data-tex': rawTex },
+          children: [node],
+        };
+        parent.children[index] = wrapper;
+        return [SKIP, index + 1];
+      }
+
+      return undefined;
+    });
+  };
+};
+
 /**
  * Plugin Rehype hậu xử lý ngay sau `rehypeKatex`:
+ * 0. Gỡ bỏ `<lu-tex-wrap data-tex="...">` và chuyển `data-tex` trực tiếp lên phần tử `.katex` / `.katex-display`.
  * 1. Đồng bộ các class nội bộ giữa KaTeX 0.16.x (`rehype-katex`) và KaTeX 0.19.x (`katex.min.css`).
  * 2. Loại bỏ các thẻ `.rlap` / `.llap` chứa ký tự gạch chéo phủ định (`\uE020`, `\u0338`, `/`) và gắn `.lu-negated-rel` trực tiếp lên toán tử quan hệ (`=`, `∈`, `∣`, `≡`, `⊂`, `⊆`, `∼`, `∥`).
  */
 export const rehypeFixKatexNegations: Plugin<[]> = function rehypeFixKatexNegations() {
   return (tree) => {
-    visit(tree, 'element', (rawNode) => {
+    visit(tree, 'element', (rawNode, index, rawParent) => {
       const node = rawNode as unknown as HastNodeLike;
+      const parent = rawParent as unknown as HastNodeLike | undefined;
+
+      // 0. Gỡ thẻ bọc tạm lu-tex-wrap và gắn data-tex lên root KaTeX đã kết xuất
+      if (
+        node.tagName === 'lu-tex-wrap' &&
+        parent &&
+        Array.isArray(parent.children) &&
+        typeof index === 'number'
+      ) {
+        const rawTex =
+          typeof node.properties?.['data-tex'] === 'string' ? node.properties['data-tex'] : '';
+        const unwrapped = Array.isArray(node.children) ? node.children : [];
+        if (rawTex) {
+          for (const child of unwrapped) {
+            if (child.type === 'element') {
+              if (!child.properties) {
+                child.properties = {};
+              }
+              child.properties['data-tex'] = rawTex;
+            }
+          }
+        }
+        parent.children.splice(index, 1, ...unwrapped);
+        return index;
+      }
 
       // 1. Đồng bộ class KaTeX 0.16.x <-> 0.19.x
       const classes = node.properties?.className;
@@ -492,6 +636,26 @@ export const rehypeFixKatexNegations: Plugin<[]> = function rehypeFixKatexNegati
         }
         node.children = nextChildren;
       }
+    });
+
+    // 4. Nén cây con HAST bên trong `.katex` / `.katex-display` thành chuỗi HTML tĩnh gọn (`data-katex-html`)
+    // giúp cắt giảm ~65-75% dung lượng 103 chunk MDX và tăng tốc kết xuất React DOM.
+    visit(tree, 'element', (rawNode) => {
+      const node = rawNode as unknown as HastNodeLike;
+      if (
+        node.tagName === 'span' &&
+        (hasHastClass(node, 'katex-display') || hasHastClass(node, 'katex')) &&
+        Array.isArray(node.children) &&
+        node.children.length > 0
+      ) {
+        if (!node.properties) {
+          node.properties = {};
+        }
+        node.properties['data-katex-html'] = serializeHastNodesToHtml(node.children);
+        node.children = [];
+        return SKIP;
+      }
+      return undefined;
     });
   };
 };

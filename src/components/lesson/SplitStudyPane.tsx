@@ -3,6 +3,7 @@ import { ArrowUpRight, BookMarked, ListTree, Search, Sparkles, X } from 'lucide-
 import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { MathRenderer } from '@/content-runtime';
+import { getBacklinkTermIdsForLesson } from '@/data/glossaryBacklinks';
 import {
   buildExerciseStorageKey,
   useLearningStore,
@@ -215,7 +216,16 @@ export function SplitStudyPane({
   );
   const allGlossaryEntries = useMemo(() => getAllGlossaryEntries(), []);
 
-  const lessonContextHaystack = useMemo(() => {
+  const backlinkOrderMap = useMemo(() => {
+    const ids = getBacklinkTermIdsForLesson(lessonId);
+    const map = new Map<string, number>();
+    ids.forEach((id, idx) => map.set(id, idx));
+    return map;
+  }, [lessonId]);
+
+  // Fallback tối giản chỉ khi thiếu lessonId (ví dụ trong unit test render độc lập)
+  const fallbackHaystack = useMemo(() => {
+    if (backlinkOrderMap.size > 0) return '';
     const raw = [
       lessonTitle,
       lessonDescription,
@@ -223,7 +233,7 @@ export function SplitStudyPane({
       ...blocks.map((b) => `${b.label} ${b.title ?? ''}`),
     ].join(' ');
     return stripDiacritics(raw).toLowerCase();
-  }, [blocks, headings, lessonDescription, lessonTitle]);
+  }, [backlinkOrderMap.size, blocks, headings, lessonDescription, lessonTitle]);
 
   const contextualGlossary = useMemo(() => {
     const base =
@@ -238,19 +248,41 @@ export function SplitStudyPane({
         return matchesVietnameseQuery(searchable, glossaryQuery);
       })
       .map((entry) => {
+        const backlinkRank = backlinkOrderMap.get(entry.id);
+        if (backlinkOrderMap.size > 0) {
+          return {
+            entry,
+            hitInLesson: backlinkRank !== undefined,
+            rank: backlinkRank ?? Number.POSITIVE_INFINITY,
+          };
+        }
         const normalizedName = stripDiacritics(entry.nameVi).toLowerCase();
         const hitInLesson =
-          (normalizedName.length >= 3 && lessonContextHaystack.includes(normalizedName)) ||
+          (normalizedName.length >= 3 && fallbackHaystack.includes(normalizedName)) ||
           entry.patterns.some((pat) => {
             const norm = stripDiacritics(pat).toLowerCase().trim();
-            return norm.length >= 3 && lessonContextHaystack.includes(norm);
+            return norm.length >= 3 && fallbackHaystack.includes(norm);
           });
-        return { entry, hitInLesson };
+        return {
+          entry,
+          hitInLesson,
+          rank: hitInLesson ? 0 : Number.POSITIVE_INFINITY,
+        };
       })
-      .sort((a, b) => Number(b.hitInLesson) - Number(a.hitInLesson));
+      .sort((a, b) => {
+        if (a.hitInLesson !== b.hitInLesson) return Number(b.hitInLesson) - Number(a.hitInLesson);
+        return a.rank - b.rank;
+      });
 
     return scored.slice(0, 24);
-  }, [allGlossaryEntries, glossaryQuery, glossaryScope, glossarySubject, lessonContextHaystack]);
+  }, [
+    allGlossaryEntries,
+    backlinkOrderMap,
+    fallbackHaystack,
+    glossaryQuery,
+    glossaryScope,
+    glossarySubject,
+  ]);
 
   return (
     <div
@@ -569,7 +601,7 @@ function GlossarySplitCard({
             {hitInLesson && (
               <span className="inline-flex items-center gap-0.5 rounded bg-[var(--accent-os)]/10 px-1.5 py-0.5 font-mono text-[9.5px] font-semibold text-[var(--accent-os)]">
                 <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
-                <span>Trong bài</span>
+                <span>Có trong bài này</span>
               </span>
             )}
           </div>

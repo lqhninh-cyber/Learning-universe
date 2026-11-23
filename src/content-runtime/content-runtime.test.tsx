@@ -12,6 +12,7 @@ import {
   Chapter7KnowledgeMap,
   Cite,
   Definition,
+  DiagramRenderer,
   getLessonById,
   getLessonBySlug,
   getManifest,
@@ -19,7 +20,6 @@ import {
   LessonMdxView,
   LessonProvider,
   loadLessonModule,
-  MermaidChart,
 } from '@/content-runtime';
 import { TooltipProvider } from '@/shared/ui';
 
@@ -65,8 +65,10 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
       <LessonMdxView Content={compiled.default} lessonMeta={compiled.lessonMeta} />,
     );
 
-    // Kiểm tra KaTeX đã sinh MathML và hiển thị tiếng Việt trong \text{...}
-    expect(container.querySelector('.katex-mathml')).not.toBeNull();
+    // Kiểm tra KaTeX đã kết xuất HTML tinh gọn kèm data-tex gốc và hiển thị tiếng Việt trong \text{...}
+    expect(container.querySelector('.katex-html')).not.toBeNull();
+    expect(container.querySelector('[data-tex]')).not.toBeNull();
+    expect(container.querySelector('.katex-mathml')).toBeNull();
     expect(container.textContent).toContain('với mọi');
 
     // Kiểm tra các nhãn khối đã đánh số tự động (bao gồm cả thẻ khối và tham chiếu <Ref />)
@@ -103,7 +105,8 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
       <LessonMdxView Content={compiled.default} lessonMeta={compiled.lessonMeta} />,
     );
 
-    expect(container.querySelector('.katex-mathml')).not.toBeNull();
+    expect(container.querySelector('.katex-html')).not.toBeNull();
+    expect(container.querySelector('[data-tex]')).not.toBeNull();
     expect(screen.getByText('Quy tắc hình bình hành trong không gian Affine')).toBeInTheDocument();
   });
 
@@ -143,16 +146,20 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     expect(screen.getByText('[Tác giả kiểm thử, 2000, tr. 10]')).toBeInTheDocument();
   });
 
-  it('kết xuất khung Bản đồ tri thức chuẩn mực, không còn nút xem mã nguồn và không còn khối text thô', () => {
-    const mermaidCode = `flowchart TD
+  it('kết xuất khung Bản đồ tri thức SVG gọn nhẹ, không còn nút xem mã nguồn và không còn khối text thô', () => {
+    const diagramCode = `flowchart TD
       A["Vành"] --> B["Miền nguyên"]
       B --> C["Trường"]`;
 
-    render(<MermaidChart chart={mermaidCode} />);
+    const { container } = render(<DiagramRenderer chart={diagramCode} />);
 
-    // Kiểm tra đã kết xuất khung Bản đồ tri thức với tiêu đề mặc định
-    expect(screen.getByTestId('mermaid-chart')).toBeInTheDocument();
+    // Kiểm tra đã kết xuất khung Bản đồ tri thức SVG với tiêu đề mặc định
+    expect(screen.getByTestId('diagram-renderer')).toBeInTheDocument();
     expect(screen.getByText('Bản đồ tri thức')).toBeInTheDocument();
+    expect(container.querySelector('svg[viewBox]')).not.toBeNull();
+    expect(screen.getByText('Vành')).toBeInTheDocument();
+    expect(screen.getByText('Miền nguyên')).toBeInTheDocument();
+    expect(screen.getByText('Trường')).toBeInTheDocument();
 
     // Không còn nút chuyển đổi xem mã nguồn
     expect(screen.queryByRole('button', { name: /Xem mã nguồn/i })).toBeNull();

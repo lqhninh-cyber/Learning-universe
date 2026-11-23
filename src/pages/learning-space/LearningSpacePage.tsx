@@ -152,18 +152,18 @@ export function LearningSpacePage() {
   return (
     <div
       data-testid="learning-space-page"
-      className="relative min-h-screen bg-[var(--bg-workspace)] text-[var(--text-main)]"
+      className="relative min-h-screen w-full overflow-x-clip bg-[var(--bg-workspace)] text-[var(--text-main)]"
     >
-      {/* Dải sương khí quyển mảnh 180–200px hòa tan mượt xuống mặt phẳng học thuật */}
+      {/* Dải sương khí quyển trải trọn mép ngang (full-bleed) hòa tan mượt xuống var(--bg-workspace) */}
       <AtmosphericCanopy
         variant="learning-space"
         backgroundOnly
         enableCelestialOverlay={false}
         testId="learning-space-atmospheric-wash"
-        className="h-[180px] sm:h-[200px]"
+        className="inset-x-0 top-0 h-[210px] w-full sm:h-[240px]"
       />
 
-      <div className="relative z-10 mx-auto max-w-[1240px] space-y-8 px-6 py-8 lg:px-10">
+      <div className="relative z-10 mx-auto max-w-[1240px] space-y-8 px-6 pt-10 pb-16 lg:px-10">
         {/* KHỐI ĐẦU TRANG 2 CỘT CÂN ĐỐI SWISS NEO-EDITORIAL */}
         <section
           id="khoi-dau"
