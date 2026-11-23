@@ -588,30 +588,90 @@ export function HomePage() {
                     )}
                   </div>
 
-                  {/* Khối lời chào thích ứng theo khung giờ + danh ngôn học thuật */}
-                  <div className="max-w-2xl space-y-2.5">
-                    <h1
-                      data-testid="hero-time-greeting"
-                      className="font-serif text-3xl leading-[1.15] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[42px]"
-                    >
-                      <span className="sr-only">LEARNING UNIVERSE — Không gian Tổng quan — </span>
-                      &ldquo;Đi một ngày đàng, học một sàng khôn&rdquo;
-                      <span className="mt-1.5 block font-sans text-xs font-medium tracking-wide text-white/80 sm:text-sm">
-                        — Tục ngữ Việt Nam
+                  {/* Khối câu tục ngữ chủ đạo kiểu ấn phẩm di sản + danh ngôn học thuật */}
+                  <div className="max-w-2xl space-y-3.5">
+                    <div className="relative pl-4 sm:pl-5">
+                      {/* Thanh dọc ánh vàng đồng — ngọc bích tạo khung trích dẫn học thuật */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute top-1 bottom-1 left-0 w-[2.5px] rounded-full bg-gradient-to-b from-[#F5D38E] via-[#7DD9B4]/75 to-transparent"
+                      />
+                      {/* Dấu ngoặc kép thư pháp lớn làm nền mờ tinh tế */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -top-5 -left-1.5 font-serif text-6xl leading-none text-[#F5D38E]/22 select-none sm:text-7xl"
+                      >
+                        &ldquo;
                       </span>
-                    </h1>
 
-                    <p className="text-xs font-medium text-white/82 sm:text-sm">
-                      {timeGreeting.subtitle}
-                    </p>
+                      <h1
+                        data-testid="hero-time-greeting"
+                        className="relative font-serif text-[28px] leading-[1.18] tracking-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.45)] sm:text-[36px] lg:text-[42px]"
+                      >
+                        <span className="sr-only">LEARNING UNIVERSE — Không gian Tổng quan — </span>
+                        <span className="block font-medium text-white/95">Đi một ngày đàng,</span>
+                        <span className="mt-0.5 block pl-4 sm:pl-8">
+                          <span className="font-normal text-white/88 italic">học một </span>
+                          <span className="relative inline-block pr-1.5 font-semibold italic">
+                            <span className="bg-gradient-to-r from-[#FFF6D9] via-[#F4CE80] to-[#A6E9CE] bg-clip-text text-transparent">
+                              sàng khôn
+                            </span>
+                            {/* Nét bút uốn lượn ánh vàng đồng nhấn dưới cụm "sàng khôn" */}
+                            <svg
+                              aria-hidden="true"
+                              viewBox="0 0 180 12"
+                              preserveAspectRatio="none"
+                              className="pointer-events-none absolute -bottom-1 left-0 h-2.5 w-full overflow-visible"
+                            >
+                              <path
+                                d="M2 8.5 Q 52 2.5, 118 6.5 T 178 4.5"
+                                fill="none"
+                                stroke="url(#proverb-gold-stroke)"
+                                strokeWidth="2.2"
+                                strokeLinecap="round"
+                              />
+                              <defs>
+                                <linearGradient
+                                  id="proverb-gold-stroke"
+                                  x1="0%"
+                                  y1="0%"
+                                  x2="100%"
+                                  y2="0%"
+                                >
+                                  <stop offset="0%" stopColor="#F5D38E" stopOpacity="0.92" />
+                                  <stop offset="65%" stopColor="#A6E9CE" stopOpacity="0.82" />
+                                  <stop offset="100%" stopColor="#A6E9CE" stopOpacity="0.15" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                          </span>
+                        </span>
+                      </h1>
+
+                      <div className="mt-3 flex items-center gap-2.5 pl-4 sm:pl-8">
+                        <span
+                          aria-hidden="true"
+                          className="h-px w-8 bg-gradient-to-r from-[#F5D38E]/90 to-[#F5D38E]/15"
+                        />
+                        <span
+                          aria-hidden="true"
+                          className="text-[9px] text-[#F5D38E]/90 select-none"
+                        >
+                          ◆
+                        </span>
+                        <span className="font-mono text-[10.5px] font-semibold tracking-[0.22em] text-[#F5D89B]/95 uppercase">
+                          Tục ngữ Việt Nam
+                        </span>
+                      </div>
+                    </div>
 
                     <div className="flex flex-wrap items-center gap-2 pt-0.5">
                       <p
                         data-testid="dashboard-quote-text"
-                        className="font-serif text-[14px] leading-relaxed text-white/85 italic sm:text-[15px]"
+                        className="font-serif text-[13.5px] leading-relaxed text-white/82 italic sm:text-[14.5px]"
                       >
                         &ldquo;{currentQuote.content}&rdquo; —{' '}
-                        <span className="font-sans text-xs font-medium text-white/70 not-italic">
+                        <span className="font-sans text-xs font-medium text-white/68 not-italic">
                           {currentQuote.author}
                         </span>
                       </p>
