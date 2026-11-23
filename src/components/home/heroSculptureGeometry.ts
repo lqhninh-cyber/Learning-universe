@@ -21,8 +21,11 @@ export interface ArmillaryRingSpec {
   readonly speedY: number;
   readonly speedZ: number;
   readonly ringColor: string;
+  readonly darkRingColor: string;
   readonly cometColor: string;
+  readonly darkCometColor: string;
   readonly cometRgb: string;
+  readonly darkCometRgb: string;
   readonly spokeCount: number;
   readonly strokeWidth: number;
   readonly cometOffset: number;
@@ -229,8 +232,11 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     speedY: 0.16,
     speedZ: 0.08,
     ringColor: '#6B5335',
+    darkRingColor: '#D4AF6A',
     cometColor: '#9C7A4C',
+    darkCometColor: '#F5D078',
     cometRgb: '156, 122, 76',
+    darkCometRgb: '245, 208, 120',
     spokeCount: 36,
     strokeWidth: 1.4,
     cometOffset: 0.4,
@@ -246,8 +252,11 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     speedY: -0.21,
     speedZ: -0.1,
     ringColor: '#2D5266',
+    darkRingColor: '#64A8D1',
     cometColor: '#49768F',
+    darkCometColor: '#93D5FA',
     cometRgb: '73, 118, 143',
+    darkCometRgb: '147, 213, 250',
     spokeCount: 36,
     strokeWidth: 1.32,
     cometOffset: 2.1,
@@ -263,8 +272,11 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     speedY: 0.25,
     speedZ: 0.12,
     ringColor: '#245746',
+    darkRingColor: '#52B394',
     cometColor: '#3B7A65',
+    darkCometColor: '#86E6C6',
     cometRgb: '59, 122, 101',
+    darkCometRgb: '134, 230, 198',
     spokeCount: 24,
     strokeWidth: 1.25,
     cometOffset: 4.0,
@@ -280,8 +292,11 @@ export const ARMILLARY_RINGS: readonly ArmillaryRingSpec[] = [
     speedY: -0.29,
     speedZ: -0.14,
     ringColor: '#7A463B',
+    darkRingColor: '#DF7B70',
     cometColor: '#9E6356',
+    darkCometColor: '#F5A49B',
     cometRgb: '158, 99, 86',
+    darkCometRgb: '245, 164, 155',
     spokeCount: 24,
     strokeWidth: 1.18,
     cometOffset: 5.2,

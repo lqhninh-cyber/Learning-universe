@@ -215,6 +215,12 @@ function projectPolyhedronIntoBuffers(
   frontOut.sort((a, b) => a.avgZ - b.avgZ);
 }
 
+function readDomDarkState(): boolean {
+  if (typeof document === 'undefined') return false;
+  const root = document.documentElement;
+  return root.classList.contains('dark') || root.getAttribute('data-theme') === 'dark';
+}
+
 function drawAstrolabeBackdropAndAlidade(
   ctx: CanvasRenderingContext2D,
   cx: number,
@@ -222,35 +228,34 @@ function drawAstrolabeBackdropAndAlidade(
   minDim: number,
   alphaCurr: number,
   radarAngle: number,
+  isDarkDoc: boolean,
 ): void {
   const unitScale = minDim / 460;
   const outerR = 185 * unitScale;
   const innerR = 178 * unitScale;
   const axisExtent = 198 * unitScale;
   const coreClearR = outerR * 0.36;
-  const isDarkDoc =
-    typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
 
   ctx.save();
 
   // Hai vòng chia độ ngoại vi đồng tâm R_dial = 185px & 178px (tỉ lệ unitScale)
   ctx.beginPath();
   ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
-  ctx.strokeStyle = isDarkDoc ? 'rgba(158, 197, 184, 0.32)' : 'rgba(30, 58, 52, 0.24)';
-  ctx.lineWidth = 0.85;
+  ctx.strokeStyle = isDarkDoc ? 'rgba(148, 209, 188, 0.38)' : 'rgba(30, 58, 52, 0.24)';
+  ctx.lineWidth = isDarkDoc ? 0.95 : 0.85;
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-  ctx.strokeStyle = isDarkDoc ? 'rgba(212, 175, 106, 0.34)' : 'rgba(140, 109, 63, 0.26)';
-  ctx.lineWidth = 0.7;
+  ctx.strokeStyle = isDarkDoc ? 'rgba(229, 195, 120, 0.40)' : 'rgba(140, 109, 63, 0.26)';
+  ctx.lineWidth = isDarkDoc ? 0.8 : 0.7;
   ctx.stroke();
 
   // Vòng phân cách Tầng 2 (0.48..0.78) và Tầng 3 (0.88..1.0)
   ctx.beginPath();
   ctx.arc(cx, cy, outerR * 0.82, 0, Math.PI * 2);
   ctx.setLineDash([3, 5]);
-  ctx.strokeStyle = isDarkDoc ? 'rgba(100, 168, 209, 0.24)' : 'rgba(45, 82, 102, 0.14)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(118, 186, 224, 0.28)' : 'rgba(45, 82, 102, 0.14)';
   ctx.lineWidth = 0.65;
   ctx.stroke();
   ctx.setLineDash([]);
@@ -263,7 +268,7 @@ function drawAstrolabeBackdropAndAlidade(
     ctx.arc(cx, cy, outerR, sliceStart, radarAngle, false);
     ctx.arc(cx, cy, coreClearR, radarAngle, sliceStart, true);
     ctx.closePath();
-    ctx.fillStyle = isDarkDoc ? 'rgba(82, 179, 148, 0.008)' : 'rgba(36, 87, 70, 0.0055)';
+    ctx.fillStyle = isDarkDoc ? 'rgba(82, 179, 148, 0.014)' : 'rgba(36, 87, 70, 0.0055)';
     ctx.fill();
   }
 
@@ -272,8 +277,8 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.beginPath();
   ctx.moveTo(cx + sweepCos * coreClearR, cy + sweepSin * coreClearR);
   ctx.lineTo(cx + sweepCos * outerR, cy + sweepSin * outerR);
-  ctx.strokeStyle = isDarkDoc ? 'rgba(212, 175, 106, 0.55)' : 'rgba(156, 122, 76, 0.4)';
-  ctx.lineWidth = 0.85;
+  ctx.strokeStyle = isDarkDoc ? 'rgba(229, 195, 120, 0.72)' : 'rgba(156, 122, 76, 0.4)';
+  ctx.lineWidth = isDarkDoc ? 1.0 : 0.85;
   ctx.stroke();
 
   // 360 vạch chia độ mảnh 0.5px, mỗi 15° vạch dài hơn kèm chấm mốc tọa độ nhỏ
@@ -290,16 +295,16 @@ function drawAstrolabeBackdropAndAlidade(
     ctx.lineTo(cx + t.cos * outerR, cy + t.sin * outerR);
     ctx.strokeStyle = t.isMajor15
       ? isDarkDoc
-        ? 'rgba(158, 197, 184, 0.55)'
+        ? 'rgba(174, 224, 207, 0.68)'
         : 'rgba(30, 58, 52, 0.42)'
       : t.isMedium5
         ? isDarkDoc
-          ? 'rgba(212, 175, 106, 0.38)'
+          ? 'rgba(229, 195, 120, 0.48)'
           : 'rgba(140, 109, 63, 0.30)'
         : isDarkDoc
-          ? 'rgba(158, 197, 184, 0.24)'
+          ? 'rgba(148, 209, 188, 0.28)'
           : 'rgba(30, 58, 52, 0.18)';
-    ctx.lineWidth = t.isMajor15 ? 0.85 : 0.5;
+    ctx.lineWidth = t.isMajor15 ? 0.9 : 0.5;
     ctx.stroke();
 
     if (t.isMajor15) {
@@ -310,10 +315,10 @@ function drawAstrolabeBackdropAndAlidade(
       ctx.fillStyle =
         deg % 90 === 0
           ? isDarkDoc
-            ? 'rgba(212, 175, 106, 0.78)'
+            ? 'rgba(229, 195, 120, 0.88)'
             : 'rgba(140, 109, 63, 0.62)'
           : isDarkDoc
-            ? 'rgba(82, 179, 148, 0.55)'
+            ? 'rgba(102, 214, 176, 0.66)'
             : 'rgba(36, 87, 70, 0.42)';
       ctx.fill();
     }
@@ -332,8 +337,14 @@ function drawAstrolabeBackdropAndAlidade(
     ctx.lineTo(cx - cos * coreClearR, cy - sin * coreClearR);
     ctx.moveTo(cx + cos * coreClearR, cy + sin * coreClearR);
     ctx.lineTo(cx + cos * reach, cy + sin * reach);
-    ctx.strokeStyle = isCardinal ? 'rgba(30, 58, 52, 0.14)' : 'rgba(140, 109, 63, 0.11)';
-    ctx.lineWidth = isCardinal ? 0.7 : 0.55;
+    ctx.strokeStyle = isCardinal
+      ? isDarkDoc
+        ? 'rgba(148, 209, 188, 0.24)'
+        : 'rgba(30, 58, 52, 0.14)'
+      : isDarkDoc
+        ? 'rgba(229, 195, 120, 0.18)'
+        : 'rgba(140, 109, 63, 0.11)';
+    ctx.lineWidth = isCardinal ? 0.75 : 0.55;
     ctx.stroke();
 
     const perpX = -sin;
@@ -347,8 +358,14 @@ function drawAstrolabeBackdropAndAlidade(
         ctx.beginPath();
         ctx.moveTo(px - perpX * halfLen, py - perpY * halfLen);
         ctx.lineTo(px + perpX * halfLen, py + perpY * halfLen);
-        ctx.strokeStyle = isCardinal ? 'rgba(30, 58, 52, 0.24)' : 'rgba(140, 109, 63, 0.2)';
-        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = isCardinal
+          ? isDarkDoc
+            ? 'rgba(148, 209, 188, 0.38)'
+            : 'rgba(30, 58, 52, 0.24)'
+          : isDarkDoc
+            ? 'rgba(229, 195, 120, 0.32)'
+            : 'rgba(140, 109, 63, 0.2)';
+        ctx.lineWidth = 0.65;
         ctx.stroke();
       }
     }
@@ -359,7 +376,7 @@ function drawAstrolabeBackdropAndAlidade(
   const vernierR = outerR + 1.5 * unitScale;
   ctx.beginPath();
   ctx.arc(cx, cy, vernierR, alphaCurr - vernierHalfSpan, alphaCurr + vernierHalfSpan);
-  ctx.strokeStyle = '#1E332E';
+  ctx.strokeStyle = isDarkDoc ? '#88DEC0' : '#1E332E';
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
@@ -373,8 +390,15 @@ function drawAstrolabeBackdropAndAlidade(
     ctx.beginPath();
     ctx.moveTo(cx + cS * (vernierR - 1), cy + sS * (vernierR - 1));
     ctx.lineTo(cx + cS * (vernierR + len), cy + sS * (vernierR + len));
-    ctx.strokeStyle = sub === 0 ? '#9C7A4C' : 'rgba(30, 51, 46, 0.58)';
-    ctx.lineWidth = sub === 0 ? 1.15 : 0.7;
+    ctx.strokeStyle =
+      sub === 0
+        ? isDarkDoc
+          ? '#E5C378'
+          : '#9C7A4C'
+        : isDarkDoc
+          ? 'rgba(166, 224, 205, 0.75)'
+          : 'rgba(30, 51, 46, 0.58)';
+    ctx.lineWidth = sub === 0 ? 1.2 : 0.7;
     ctx.stroke();
   }
 
@@ -389,7 +413,7 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.lineTo(cx + cosA * (outerR + 3 * unitScale), cy + sinA * (outerR + 3 * unitScale));
   ctx.moveTo(cx - cosA * (outerR * 0.78), cy - sinA * (outerR * 0.78));
   ctx.lineTo(cx - cosA * (outerR + 2 * unitScale), cy - sinA * (outerR + 2 * unitScale));
-  ctx.strokeStyle = 'rgba(30, 51, 46, 0.25)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(148, 209, 188, 0.34)' : 'rgba(30, 51, 46, 0.25)';
   ctx.setLineDash([2, 3]);
   ctx.lineWidth = 0.7;
   ctx.stroke();
@@ -404,10 +428,10 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.lineTo(cx + cosA * baseR + perpX * halfBase, cy + sinA * baseR + perpY * halfBase);
   ctx.lineTo(cx + cosA * baseR - perpX * halfBase, cy + sinA * baseR - perpY * halfBase);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(250, 251, 249, 0.85)';
+  ctx.fillStyle = isDarkDoc ? 'rgba(18, 23, 22, 0.90)' : 'rgba(250, 251, 249, 0.85)';
   ctx.fill();
-  ctx.strokeStyle = '#1E332E';
-  ctx.lineWidth = 1.25;
+  ctx.strokeStyle = isDarkDoc ? '#9EE2CA' : '#1E332E';
+  ctx.lineWidth = 1.3;
   ctx.stroke();
 
   // Con chạy đối xứng ở góc α_curr + π
@@ -415,7 +439,7 @@ function drawAstrolabeBackdropAndAlidade(
   const oppSpan = (8 * Math.PI) / 180;
   ctx.beginPath();
   ctx.arc(cx, cy, vernierR, oppAngle - oppSpan, oppAngle + oppSpan);
-  ctx.strokeStyle = 'rgba(30, 51, 46, 0.45)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(148, 209, 188, 0.56)' : 'rgba(30, 51, 46, 0.45)';
   ctx.lineWidth = 1.1;
   ctx.stroke();
 
@@ -426,10 +450,10 @@ function drawAstrolabeBackdropAndAlidade(
   ctx.lineTo(cx - cosA * cBaseR + perpX * cHalf, cy - sinA * cBaseR + perpY * cHalf);
   ctx.lineTo(cx - cosA * cBaseR - perpX * cHalf, cy - sinA * cBaseR - perpY * cHalf);
   ctx.closePath();
-  ctx.fillStyle = '#FAFBF9';
+  ctx.fillStyle = isDarkDoc ? '#181F1D' : '#FAFBF9';
   ctx.fill();
-  ctx.strokeStyle = '#8C6D3F';
-  ctx.lineWidth = 1.0;
+  ctx.strokeStyle = isDarkDoc ? '#E5C378' : '#8C6D3F';
+  ctx.lineWidth = 1.05;
   ctx.stroke();
 
   // Nhãn giá trị góc độ/radian trượt gọn theo kim chỉ góc
@@ -438,7 +462,7 @@ function drawAstrolabeBackdropAndAlidade(
   const lx = cx + cosA * labelR;
   const ly = cy + sinA * labelR;
   ctx.font = '500 9.5px "JetBrains Mono Variable", ui-monospace, monospace';
-  ctx.fillStyle = '#4A5D58';
+  ctx.fillStyle = isDarkDoc ? '#C6DDD5' : '#4A5D58';
   ctx.textBaseline = 'middle';
   ctx.textAlign = cosA > 0.25 ? 'left' : cosA < -0.25 ? 'right' : 'center';
   ctx.fillText(labelText, lx, ly);
@@ -458,6 +482,7 @@ function drawArmillaryRingHalf(
   rotZ: number,
   time: number,
   drawFrontHalf: boolean,
+  isDarkDoc: boolean,
   outerProjBuf: ProjectedPoint[],
   innerProjBuf: ProjectedPoint[],
   satWorldOut: Vec3,
@@ -467,6 +492,10 @@ function drawArmillaryRingHalf(
   tmpPt: ProjectedPoint,
 ): void {
   const segments = 96;
+  const activeRingColor = isDarkDoc ? ring.darkRingColor : ring.ringColor;
+  const activeCometColor = isDarkDoc ? ring.darkCometColor : ring.cometColor;
+  const activeCometRgb = isDarkDoc ? ring.darkCometRgb : ring.cometRgb;
+  const activeInnerRimColor = isDarkDoc ? '#E5C378' : '#8C6D3F';
 
   for (let i = 0; i <= segments; i += 1) {
     const theta = (i / segments) * Math.PI * 2;
@@ -497,9 +526,13 @@ function drawArmillaryRingHalf(
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
-    ctx.strokeStyle = ring.ringColor;
-    ctx.globalAlpha = drawFrontHalf ? Math.min(0.88, 0.58 + avgZ * 0.3) : 0.32;
-    ctx.lineWidth = drawFrontHalf ? ring.strokeWidth : 0.7;
+    ctx.strokeStyle = activeRingColor;
+    ctx.globalAlpha = drawFrontHalf
+      ? Math.min(isDarkDoc ? 0.94 : 0.88, (isDarkDoc ? 0.68 : 0.58) + avgZ * 0.3)
+      : isDarkDoc
+        ? 0.42
+        : 0.32;
+    ctx.lineWidth = drawFrontHalf ? ring.strokeWidth : isDarkDoc ? 0.85 : 0.7;
     ctx.stroke();
 
     if (ring.isDoubleRim) {
@@ -508,8 +541,8 @@ function drawArmillaryRingHalf(
       ctx.beginPath();
       ctx.moveTo(ip1.x, ip1.y);
       ctx.lineTo(ip2.x, ip2.y);
-      ctx.strokeStyle = '#8C6D3F';
-      ctx.globalAlpha = drawFrontHalf ? 0.58 : 0.22;
+      ctx.strokeStyle = activeInnerRimColor;
+      ctx.globalAlpha = drawFrontHalf ? (isDarkDoc ? 0.7 : 0.58) : isDarkDoc ? 0.3 : 0.22;
       ctx.lineWidth = drawFrontHalf ? 0.9 : 0.55;
       ctx.stroke();
     }
@@ -542,8 +575,8 @@ function drawArmillaryRingHalf(
     ctx.beginPath();
     ctx.moveTo(tmpPt.x, tmpPt.y);
     ctx.lineTo(ox, oy);
-    ctx.strokeStyle = deg % 90 === 0 ? '#8C6D3F' : ring.ringColor;
-    ctx.globalAlpha = drawFrontHalf ? 0.62 : 0.22;
+    ctx.strokeStyle = deg % 90 === 0 ? activeInnerRimColor : activeRingColor;
+    ctx.globalAlpha = drawFrontHalf ? (isDarkDoc ? 0.72 : 0.62) : isDarkDoc ? 0.3 : 0.22;
     ctx.lineWidth = drawFrontHalf ? (ring.isDoubleRim ? 0.9 : 0.75) : 0.5;
     ctx.stroke();
   }
@@ -588,7 +621,7 @@ function drawArmillaryRingHalf(
     ctx.beginPath();
     ctx.moveTo(p0x, p0y);
     ctx.lineTo(tmpPt.x, tmpPt.y);
-    ctx.strokeStyle = `rgba(${ring.cometRgb}, ${(falloff * (drawFrontHalf ? 0.86 : 0.34)).toFixed(3)})`;
+    ctx.strokeStyle = `rgba(${activeCometRgb}, ${(falloff * (drawFrontHalf ? 0.9 : 0.4)).toFixed(3)})`;
     ctx.lineWidth = (drawFrontHalf ? 2.8 : 1.7) * (1 - t0 * 0.82);
     ctx.lineCap = 'round';
     ctx.globalAlpha = 1;
@@ -599,19 +632,19 @@ function drawArmillaryRingHalf(
   if (satWorldOut.z >= 0 === drawFrontHalf) {
     const haloScale = drawFrontHalf ? 1 : 0.72;
     const haloR = 7 * haloScale;
-    ctx.globalAlpha = drawFrontHalf ? 0.22 : 0.1;
-    ctx.fillStyle = ring.cometColor;
+    ctx.globalAlpha = drawFrontHalf ? (isDarkDoc ? 0.3 : 0.22) : 0.14;
+    ctx.fillStyle = activeCometColor;
     ctx.beginPath();
     ctx.arc(satProjOut.x, satProjOut.y, haloR, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.globalAlpha = drawFrontHalf ? 0.96 : 0.38;
-    ctx.fillStyle = ring.cometColor;
+    ctx.globalAlpha = drawFrontHalf ? 0.98 : 0.45;
+    ctx.fillStyle = activeCometColor;
     ctx.beginPath();
     ctx.arc(satProjOut.x, satProjOut.y, 3.6 * haloScale, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.globalAlpha = drawFrontHalf ? 0.98 : 0.5;
+    ctx.globalAlpha = drawFrontHalf ? 0.98 : 0.55;
     ctx.fillStyle = '#FAFBF9';
     ctx.beginPath();
     ctx.arc(satProjOut.x, satProjOut.y, 1.5 * haloScale, 0, Math.PI * 2);
@@ -627,6 +660,7 @@ function drawSphericalHarmonicWaves(
   cy: number,
   dialR: number,
   time: number,
+  isDarkDoc: boolean,
   wavePrimaryBuf: ProjectedPoint[],
   waveSymBuf: ProjectedPoint[],
 ): void {
@@ -651,7 +685,7 @@ function drawSphericalHarmonicWaves(
 
   // Vạch pha siêu mảnh nối các đỉnh bụng sóng đối pha quanh vành biên ngoài
   ctx.save();
-  ctx.strokeStyle = 'rgba(59, 122, 101, 0.2)';
+  ctx.strokeStyle = isDarkDoc ? 'rgba(82, 179, 148, 0.34)' : 'rgba(59, 122, 101, 0.2)';
   ctx.lineWidth = 0.55;
   ctx.beginPath();
   for (let i = 0; i < HARMONIC_WAVE_POINTS; i += 5) {
@@ -662,15 +696,15 @@ function drawSphericalHarmonicWaves(
   }
   ctx.stroke();
 
-  // Đường sóng thứ hai: Hổ Phách Trầm
+  // Đường sóng thứ hai: Hổ Phách Trầm / Vàng Hổ Phách sáng
   ctx.beginPath();
   ctx.moveTo(waveSymBuf[0]!.x, waveSymBuf[0]!.y);
   for (let i = 1; i < HARMONIC_WAVE_POINTS; i += 1) {
     ctx.lineTo(waveSymBuf[i]!.x, waveSymBuf[i]!.y);
   }
   ctx.closePath();
-  ctx.strokeStyle = 'rgba(156, 122, 76, 0.34)';
-  ctx.lineWidth = 0.9;
+  ctx.strokeStyle = isDarkDoc ? 'rgba(229, 195, 120, 0.56)' : 'rgba(156, 122, 76, 0.34)';
+  ctx.lineWidth = isDarkDoc ? 1.0 : 0.9;
   ctx.stroke();
 
   // Đường sóng thứ nhất: Ngọc Bích Khoáng Thạch
@@ -680,8 +714,8 @@ function drawSphericalHarmonicWaves(
     ctx.lineTo(wavePrimaryBuf[i]!.x, wavePrimaryBuf[i]!.y);
   }
   ctx.closePath();
-  ctx.strokeStyle = 'rgba(59, 122, 101, 0.44)';
-  ctx.lineWidth = 1.1;
+  ctx.strokeStyle = isDarkDoc ? 'rgba(102, 214, 176, 0.72)' : 'rgba(59, 122, 101, 0.44)';
+  ctx.lineWidth = isDarkDoc ? 1.2 : 1.1;
   ctx.stroke();
 
   ctx.restore();
@@ -703,6 +737,7 @@ function drawBlueprintSymbolsInCanvas(
   dtScale: number,
   radarAngle: number,
   updatePulse: boolean,
+  isDarkDoc: boolean,
   symbolPulseBuf: Float64Array,
   smoothProxBuf: Float64Array,
   smoothPushXBuf: Float64Array,
@@ -756,9 +791,17 @@ function drawBlueprintSymbolsInCanvas(
     }
 
     const pulse = symbolPulseBuf[i]!;
-    const baseOpacity = Math.max(0.34, 0.4 + 0.08 * Math.sin(1.1 * time + spec.phase)); // >= 0.34
-    const sweepOpacity = baseOpacity + pulse * (0.82 - baseOpacity);
-    const finalOpacity = Math.max(0.34, sweepOpacity, Math.min(0.92, baseOpacity + prox * 0.52));
+    const minBaseOpacity = isDarkDoc ? 0.62 : 0.34;
+    const baseOpacity = Math.max(
+      minBaseOpacity,
+      (isDarkDoc ? 0.68 : 0.4) + 0.08 * Math.sin(1.1 * time + spec.phase),
+    );
+    const sweepOpacity = baseOpacity + pulse * ((isDarkDoc ? 0.96 : 0.82) - baseOpacity);
+    const finalOpacity = Math.max(
+      minBaseOpacity,
+      sweepOpacity,
+      Math.min(0.98, baseOpacity + prox * 0.52),
+    );
     const circleR = 16 + 3 * pulse;
 
     // Đường tiếp tuyến nét đứt siêu mảnh nối từ mép đĩa ra vòng tròn ký hiệu
@@ -778,7 +821,9 @@ function drawBlueprintSymbolsInCanvas(
       ctx.setLineDash([2, 4]);
       ctx.moveTo(guideStartX, guideStartY);
       ctx.lineTo(guideEndX, guideEndY);
-      ctx.strokeStyle = `rgba(30, 51, 46, ${(0.08 + prox * 0.24 + pulse * 0.14).toFixed(3)})`;
+      ctx.strokeStyle = isDarkDoc
+        ? `rgba(148, 209, 188, ${(0.2 + prox * 0.34 + pulse * 0.22).toFixed(3)})`
+        : `rgba(30, 51, 46, ${(0.08 + prox * 0.24 + pulse * 0.14).toFixed(3)})`;
       ctx.lineWidth = 0.65 + pulse * 0.2;
       ctx.stroke();
       ctx.setLineDash([]);
@@ -790,7 +835,9 @@ function drawBlueprintSymbolsInCanvas(
         const dotY = guideEndY + (guideStartY - guideEndY) * travel;
         ctx.beginPath();
         ctx.arc(dotX, dotY, 3.1, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(156, 122, 76, ${(0.38 * pulse).toFixed(3)})`;
+        ctx.fillStyle = isDarkDoc
+          ? `rgba(229, 195, 120, ${(0.56 * pulse).toFixed(3)})`
+          : `rgba(156, 122, 76, ${(0.38 * pulse).toFixed(3)})`;
         ctx.fill();
 
         ctx.beginPath();
@@ -804,14 +851,19 @@ function drawBlueprintSymbolsInCanvas(
     ctx.beginPath();
     ctx.arc(nxPos, nyPos, circleR, 0, Math.PI * 2);
     if (pulse > 0.02) {
-      ctx.strokeStyle = `rgba(156, 122, 76, ${(0.15 + 0.55 * pulse).toFixed(3)})`;
-      ctx.lineWidth = 0.9 + pulse * 0.65 + prox * 0.35;
+      ctx.strokeStyle = isDarkDoc
+        ? `rgba(229, 195, 120, ${(0.34 + 0.62 * pulse).toFixed(3)})`
+        : `rgba(156, 122, 76, ${(0.15 + 0.55 * pulse).toFixed(3)})`;
+      ctx.lineWidth = 0.95 + pulse * 0.65 + prox * 0.35;
     } else {
-      ctx.strokeStyle =
-        prox > 0.08
+      ctx.strokeStyle = isDarkDoc
+        ? prox > 0.08
+          ? `rgba(127, 214, 184, ${(0.32 + prox * 0.55).toFixed(3)})`
+          : 'rgba(148, 209, 188, 0.28)'
+        : prox > 0.08
           ? `rgba(30, 51, 46, ${(0.1 + prox * 0.45).toFixed(3)})`
           : 'rgba(30, 51, 46, 0.10)';
-      ctx.lineWidth = 0.8 + prox * 0.45;
+      ctx.lineWidth = 0.85 + prox * 0.45;
     }
     ctx.stroke();
 
@@ -825,7 +877,17 @@ function drawBlueprintSymbolsInCanvas(
       0,
       Math.PI * 2,
     );
-    ctx.fillStyle = pulse > 0.25 ? '#9C7A4C' : prox > 0.2 ? '#1E332E' : 'rgba(156, 122, 76, 0.58)';
+    ctx.fillStyle = isDarkDoc
+      ? pulse > 0.25
+        ? '#F5D078'
+        : prox > 0.2
+          ? '#9EE2CA'
+          : 'rgba(229, 195, 120, 0.78)'
+      : pulse > 0.25
+        ? '#9C7A4C'
+        : prox > 0.2
+          ? '#1E332E'
+          : 'rgba(156, 122, 76, 0.58)';
     ctx.fill();
 
     // Ký hiệu toán học xoay nhẹ ±6°
@@ -836,8 +898,11 @@ function drawBlueprintSymbolsInCanvas(
     ctx.font = `600 ${Math.round(16 + Math.max(prox * 2, pulse * 1.5))}px 'STIX Two Math', 'Cambria Math', 'Segoe UI Symbol', serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle =
-      prox > 0.05 || pulse > 0.02
+    ctx.fillStyle = isDarkDoc
+      ? prox > 0.05 || pulse > 0.02
+        ? `rgba(244, 250, 247, ${finalOpacity.toFixed(3)})`
+        : `rgba(222, 237, 232, ${baseOpacity.toFixed(3)})`
+      : prox > 0.05 || pulse > 0.02
         ? `rgba(30, 51, 46, ${finalOpacity.toFixed(3)})`
         : `rgba(30, 51, 46, ${baseOpacity.toFixed(3)})`;
     ctx.fillText(spec.symbol, 0, 1);
@@ -1104,6 +1169,7 @@ export function LearningSpaceHeroCanvas() {
       checkResonance: boolean,
       facetHover: number,
     ) => {
+      const isDarkDoc = readDomDarkState();
       ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
@@ -1116,11 +1182,17 @@ export function LearningSpaceHeroCanvas() {
       const dialR = 185 * unitScale;
       const radarAngle = (time * RADAR_SPEED) % (Math.PI * 2);
 
-      // Hào quang tinh thể nền cực nhẹ
-      const subtleBackdropGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, 195 * unitScale);
-      subtleBackdropGlow.addColorStop(0, 'rgba(245, 208, 120, 0.14)');
-      subtleBackdropGlow.addColorStop(0.45, 'rgba(59, 122, 101, 0.05)');
-      subtleBackdropGlow.addColorStop(1, 'rgba(242, 244, 243, 0)');
+      // Hào quang tinh thể nền cực nhẹ (tăng độ trong trẻo trên Obsidian Dark Mode)
+      const subtleBackdropGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, 205 * unitScale);
+      if (isDarkDoc) {
+        subtleBackdropGlow.addColorStop(0, 'rgba(245, 208, 120, 0.20)');
+        subtleBackdropGlow.addColorStop(0.45, 'rgba(82, 179, 148, 0.11)');
+        subtleBackdropGlow.addColorStop(1, 'rgba(18, 23, 22, 0)');
+      } else {
+        subtleBackdropGlow.addColorStop(0, 'rgba(245, 208, 120, 0.14)');
+        subtleBackdropGlow.addColorStop(0.45, 'rgba(59, 122, 101, 0.05)');
+        subtleBackdropGlow.addColorStop(1, 'rgba(242, 244, 243, 0)');
+      }
       ctx.fillStyle = subtleBackdropGlow;
       ctx.fillRect(0, 0, width, height);
 
@@ -1141,6 +1213,7 @@ export function LearningSpaceHeroCanvas() {
         dtScale,
         radarAngle,
         checkResonance,
+        isDarkDoc,
         symbolPulseBuf,
         blueprintSmoothProx,
         blueprintSmoothPushX,
@@ -1148,20 +1221,31 @@ export function LearningSpaceHeroCanvas() {
       );
 
       // D, Backdrop & Radar Sweep. Đĩa Chuẩn Độ Trắc Địa 360° & Kim Chỉ Góc Alidade theo con trỏ
-      drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr, radarAngle);
+      drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr, radarAngle, isDarkDoc);
 
       // Tầng 3 (0.88 -> 1.0 * R_dial): Sóng Đứng Điều Hòa ôm sát mép trong đĩa chuẩn độ
-      drawSphericalHarmonicWaves(ctx, cx, cy, dialR, time, wavePrimaryProj, waveSymProj);
+      drawSphericalHarmonicWaves(
+        ctx,
+        cx,
+        cy,
+        dialR,
+        time,
+        isDarkDoc,
+        wavePrimaryProj,
+        waveSymProj,
+      );
 
       // Sóng giao thoa nhẹ khi tương tác chuột vào vùng mô hình
       for (const wave of hoverWaves) {
         if (!wave.active) continue;
         const p = wave.progress;
         const radius = (22 + p * 168) * unitScale;
-        const alpha = (1 - p) * (1 - p) * 0.42;
+        const alpha = (1 - p) * (1 - p) * (isDarkDoc ? 0.56 : 0.42);
         ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(36, 87, 70, ${alpha.toFixed(3)})`;
+        ctx.strokeStyle = isDarkDoc
+          ? `rgba(102, 214, 176, ${alpha.toFixed(3)})`
+          : `rgba(36, 87, 70, ${alpha.toFixed(3)})`;
         ctx.lineWidth = 1.0 - p * 0.45;
         ctx.stroke();
       }
@@ -1199,6 +1283,7 @@ export function LearningSpaceHeroCanvas() {
           ang.rotZ,
           time,
           false,
+          isDarkDoc,
           ringOuterProj,
           ringInnerProj,
           satWorldPositions[idx]!,
@@ -1268,16 +1353,16 @@ export function LearningSpaceHeroCanvas() {
         ctx.lineTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.closePath();
-        ctx.fillStyle = 'rgba(36, 87, 70, 0.04)';
+        ctx.fillStyle = isDarkDoc ? 'rgba(82, 179, 148, 0.08)' : 'rgba(36, 87, 70, 0.04)';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(30, 58, 52, 0.18)';
-        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = isDarkDoc ? 'rgba(127, 214, 184, 0.34)' : 'rgba(30, 58, 52, 0.18)';
+        ctx.lineWidth = isDarkDoc ? 0.75 : 0.6;
         ctx.stroke();
       }
       ctx.setLineDash([]);
       ctx.restore();
 
-      // LỚP 2b: Lõi Tinh Thể Hổ Phách Cắt Giác Sắc Nét (#F5D078 -> #B87D28 -> #7C5216)
+      // LỚP 2b: Lõi Tinh Thể Hổ Phách Cắt Giác Sắc Nét
       for (let i = 0; i < crystalBackFaces.length; i += 1) {
         const f = crystalBackFaces[i]!;
         const { p0, p1, p2 } = f;
@@ -1286,10 +1371,10 @@ export function LearningSpaceHeroCanvas() {
         ctx.lineTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.closePath();
-        ctx.fillStyle = 'rgba(184, 125, 40, 0.22)';
+        ctx.fillStyle = isDarkDoc ? 'rgba(229, 184, 75, 0.30)' : 'rgba(184, 125, 40, 0.22)';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(124, 82, 22, 0.32)';
-        ctx.lineWidth = 0.7;
+        ctx.strokeStyle = isDarkDoc ? 'rgba(245, 208, 120, 0.48)' : 'rgba(124, 82, 22, 0.32)';
+        ctx.lineWidth = 0.75;
         ctx.stroke();
       }
 
@@ -1297,7 +1382,17 @@ export function LearningSpaceHeroCanvas() {
         const f = crystalFrontFaces[i]!;
         const { p0, p1, p2 } = f;
         const grad = ctx.createLinearGradient(p0.x, p0.y, (p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5);
-        if (f.light > 0.52) {
+        if (isDarkDoc) {
+          if (f.light > 0.52) {
+            grad.addColorStop(0, '#FFF1B8');
+            grad.addColorStop(0.55, '#E8B34A');
+            grad.addColorStop(1, '#A97422');
+          } else {
+            grad.addColorStop(0, '#F5D078');
+            grad.addColorStop(0.5, '#D19633');
+            grad.addColorStop(1, '#8F601B');
+          }
+        } else if (f.light > 0.52) {
           grad.addColorStop(0, '#F5D078');
           grad.addColorStop(0.55, '#B87D28');
           grad.addColorStop(1, '#7C5216');
@@ -1312,13 +1407,19 @@ export function LearningSpaceHeroCanvas() {
         ctx.lineTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.closePath();
-        ctx.globalAlpha = 0.78 + f.light * 0.2;
+        ctx.globalAlpha = isDarkDoc ? 0.86 + f.light * 0.14 : 0.78 + f.light * 0.2;
         ctx.fillStyle = grad;
         ctx.fill();
 
-        ctx.globalAlpha = 0.85;
-        ctx.strokeStyle = f.specular > 0.25 ? '#FFF8E1' : '#7C5216';
-        ctx.lineWidth = 0.95;
+        ctx.globalAlpha = isDarkDoc ? 0.92 : 0.85;
+        ctx.strokeStyle = isDarkDoc
+          ? f.specular > 0.2
+            ? '#FFFBEB'
+            : '#D9A74A'
+          : f.specular > 0.25
+            ? '#FFF8E1'
+            : '#7C5216';
+        ctx.lineWidth = isDarkDoc ? 1.05 : 0.95;
         ctx.stroke();
 
         if (f.light > 0.34) {
@@ -1327,7 +1428,7 @@ export function LearningSpaceHeroCanvas() {
           ctx.beginPath();
           ctx.moveTo(p0.x + (midEdgeX - p0.x) * 0.16, p0.y + (midEdgeY - p0.y) * 0.16);
           ctx.lineTo(p0.x + (midEdgeX - p0.x) * 0.76, p0.y + (midEdgeY - p0.y) * 0.76);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${(0.35 + f.specular * 0.52).toFixed(2)})`;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${(0.38 + f.specular * 0.52).toFixed(2)})`;
           ctx.lineWidth = 0.75;
           ctx.stroke();
         }
@@ -1336,11 +1437,11 @@ export function LearningSpaceHeroCanvas() {
 
       // Tia Sáng Khe Tinh Thể (Seam Glow): ánh hổ phách ấm hắt ra giữa các khe mặt vừa nở
       const icoScreenRadius = ICO_TIER1_SCALE * (fov / 3.35);
-      const seamGlowRadius = icoScreenRadius * (1.14 + 0.14 * facetExpansion);
-      const seamAlpha = 0.18 + 0.28 * facetExpansion;
+      const seamGlowRadius = icoScreenRadius * (1.16 + 0.14 * facetExpansion);
+      const seamAlpha = (isDarkDoc ? 0.25 : 0.18) + (isDarkDoc ? 0.3 : 0.28) * facetExpansion;
       const seamGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, seamGlowRadius);
-      seamGrad.addColorStop(0, `rgba(235, 182, 92, ${seamAlpha.toFixed(3)})`);
-      seamGrad.addColorStop(0.55, `rgba(245, 208, 120, ${(seamAlpha * 0.42).toFixed(3)})`);
+      seamGrad.addColorStop(0, `rgba(245, 198, 102, ${seamAlpha.toFixed(3)})`);
+      seamGrad.addColorStop(0.55, `rgba(245, 208, 120, ${(seamAlpha * 0.46).toFixed(3)})`);
       seamGrad.addColorStop(1, 'rgba(235, 182, 92, 0)');
       ctx.fillStyle = seamGrad;
       ctx.beginPath();
@@ -1355,11 +1456,21 @@ export function LearningSpaceHeroCanvas() {
         const oppMidY = (p1.y + p2.y) * 0.5;
         const faceGrad = ctx.createLinearGradient(p0.x, p0.y, oppMidX, oppMidY);
 
-        const jadeAlpha = 0.14 + f.light * 0.1 + f.fresnel * 0.05;
-        const porcelainAlpha = Math.min(0.42, 0.14 + f.light * 0.16 + f.specular * 0.35);
-        faceGrad.addColorStop(0, `rgba(255, 255, 255, ${porcelainAlpha.toFixed(3)})`);
-        faceGrad.addColorStop(0.55, `rgba(45, 118, 96, ${jadeAlpha.toFixed(3)})`);
-        faceGrad.addColorStop(1, `rgba(27, 59, 51, ${(0.08 + (1 - f.light) * 0.1).toFixed(3)})`);
+        if (isDarkDoc) {
+          // Chế độ tối: giữ các mặt ngọc bích bắt sáng đồng đều, không chìm đen vào nền #121716
+          const ambientLight = 0.24 + f.light * 0.76;
+          const jadeAlpha = 0.22 + ambientLight * 0.14 + f.fresnel * 0.08;
+          const pearlAlpha = Math.min(0.46, 0.16 + ambientLight * 0.18 + f.specular * 0.32);
+          faceGrad.addColorStop(0, `rgba(220, 248, 238, ${pearlAlpha.toFixed(3)})`);
+          faceGrad.addColorStop(0.55, `rgba(74, 176, 143, ${jadeAlpha.toFixed(3)})`);
+          faceGrad.addColorStop(1, `rgba(42, 112, 90, ${(0.16 + (1 - ambientLight) * 0.1).toFixed(3)})`);
+        } else {
+          const jadeAlpha = 0.14 + f.light * 0.1 + f.fresnel * 0.05;
+          const porcelainAlpha = Math.min(0.42, 0.14 + f.light * 0.16 + f.specular * 0.35);
+          faceGrad.addColorStop(0, `rgba(255, 255, 255, ${porcelainAlpha.toFixed(3)})`);
+          faceGrad.addColorStop(0.55, `rgba(45, 118, 96, ${jadeAlpha.toFixed(3)})`);
+          faceGrad.addColorStop(1, `rgba(27, 59, 51, ${(0.08 + (1 - f.light) * 0.1).toFixed(3)})`);
+        }
 
         ctx.beginPath();
         ctx.moveTo(p0.x, p0.y);
@@ -1370,18 +1481,18 @@ export function LearningSpaceHeroCanvas() {
         ctx.fill();
 
         if (f.specular > 0.4) {
-          ctx.fillStyle = `rgba(255, 253, 245, ${(f.specular * 0.48).toFixed(3)})`;
+          ctx.fillStyle = `rgba(255, 253, 245, ${(f.specular * (isDarkDoc ? 0.38 : 0.48)).toFixed(3)})`;
           ctx.fill();
         }
 
-        ctx.strokeStyle = '#1B3B33';
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = isDarkDoc ? 'rgba(136, 222, 192, 0.82)' : '#1B3B33';
+        ctx.lineWidth = isDarkDoc ? 1.3 : 1.2;
         ctx.lineJoin = 'round';
         ctx.stroke();
 
         if (f.specular > 0.4) {
-          ctx.strokeStyle = `rgba(255, 253, 245, ${Math.min(0.95, 0.52 + f.specular * 0.42).toFixed(3)})`;
-          ctx.lineWidth = 0.9;
+          ctx.strokeStyle = `rgba(255, 253, 245, ${Math.min(0.95, 0.56 + f.specular * 0.4).toFixed(3)})`;
+          ctx.lineWidth = 0.95;
           ctx.stroke();
         }
       }
@@ -1402,6 +1513,7 @@ export function LearningSpaceHeroCanvas() {
           ang.rotZ,
           time,
           true,
+          isDarkDoc,
           ringOuterProj,
           ringInnerProj,
           satWorldPositions[idx]!,
@@ -1418,6 +1530,9 @@ export function LearningSpaceHeroCanvas() {
         let pairIdx = 0;
         for (let a = 0; a < ARMILLARY_RINGS.length; a += 1) {
           const pa = satProjPositions[a]!;
+          const pulseRgb = isDarkDoc
+            ? ARMILLARY_RINGS[a]!.darkCometRgb
+            : ARMILLARY_RINGS[a]!.cometRgb;
           for (let b = a + 1; b < ARMILLARY_RINGS.length; b += 1) {
             const pb = satProjPositions[b]!;
             const dist = Math.hypot(pa.x - pb.x, pa.y - pb.y);
@@ -1426,7 +1541,7 @@ export function LearningSpaceHeroCanvas() {
               spawnResonancePulse(
                 (pa.x + pb.x) * 0.5,
                 (pa.y + pb.y) * 0.5,
-                ARMILLARY_RINGS[a]!.cometRgb,
+                pulseRgb,
                 true,
                 pb.x - pa.x,
                 pb.y - pa.y,
@@ -1440,7 +1555,7 @@ export function LearningSpaceHeroCanvas() {
             nowMs >= axisCooldownUntil[a]!
           ) {
             axisCooldownUntil[a] = nowMs + RESONANCE_COOLDOWN_MS;
-            spawnResonancePulse(pa.x, pa.y, ARMILLARY_RINGS[a]!.cometRgb, false, 0, 0);
+            spawnResonancePulse(pa.x, pa.y, pulseRgb, false, 0, 0);
           }
         }
       }
@@ -1481,6 +1596,19 @@ export function LearningSpaceHeroCanvas() {
     };
 
     renderFrame(0.65, 0.65, 1, false, 0);
+    let themeObserver: MutationObserver | undefined;
+    if (typeof MutationObserver !== 'undefined') {
+      themeObserver = new MutationObserver(() => {
+        if (prefersReducedMotion || !isVisible || document.hidden) {
+          renderFrame(elapsed || 0.65, coreSpinPhase || 0.65, 1, false, facetHoverMix);
+        }
+      });
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'data-theme'],
+      });
+    }
+
     if (prefersReducedMotion) {
       return () => {
         heroSection.removeEventListener('pointermove', handleHeroPointerMove);
@@ -1488,6 +1616,7 @@ export function LearningSpaceHeroCanvas() {
         container.removeEventListener('pointerenter', handleSculptureEnter);
         container.removeEventListener('pointermove', handleSculptureMove);
         container.removeEventListener('pointerleave', handleSculptureLeave);
+        themeObserver?.disconnect();
         resizeObserver?.disconnect();
         intersectionObserver?.disconnect();
       };
@@ -1571,6 +1700,7 @@ export function LearningSpaceHeroCanvas() {
       container.removeEventListener('pointerenter', handleSculptureEnter);
       container.removeEventListener('pointermove', handleSculptureMove);
       container.removeEventListener('pointerleave', handleSculptureLeave);
+      themeObserver?.disconnect();
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
     };
@@ -1668,7 +1798,11 @@ export function LearningSpaceHeroCanvas() {
           stroke="#3B7A65"
           strokeWidth="0.9"
         />
-        <polygon points="180,96 244,142 220,224 140,224 116,142" stroke="#1B3B33" strokeWidth="1" />
+        <polygon
+          points="180,96 244,142 220,224 140,224 116,142"
+          className="stroke-[#1B3B33] dark:stroke-[#7FD6B8]"
+          strokeWidth="1"
+        />
         <polygon points="180,126 220,192 140,192" stroke="#9E6356" strokeWidth="1" />
       </svg>
 

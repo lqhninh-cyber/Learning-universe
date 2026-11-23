@@ -19,34 +19,61 @@ interface Vec3 {
 
 interface StageTheme {
   readonly background: string;
+  readonly darkBackground: string;
   readonly borderClass: string;
+  readonly darkBorderClass: string;
   readonly dotColor: string;
+  readonly dotColorDark: string;
 }
 
 const DEFAULT_STAGE_THEME: StageTheme = {
   background: 'linear-gradient(135deg, #F3F0E8 0%, #E9E4D8 100%)',
+  darkBackground: 'linear-gradient(135deg, #1D1813 0%, #14120F 100%)',
   borderClass: 'border-[#D8D0C0]',
+  darkBorderClass: 'dark:border-[#3A2D20]',
   dotColor: '#6B5335',
+  dotColorDark: '#D99B5E',
 };
 
 const STAGE_THEMES: Record<string, StageTheme> = {
   'cau-truc-dai-so': DEFAULT_STAGE_THEME,
   'hinh-hoc-affine': {
     background: 'linear-gradient(135deg, #ECF1F4 0%, #E0E9EE 100%)',
+    darkBackground: 'linear-gradient(135deg, #121A21 0%, #0E141A 100%)',
     borderClass: 'border-[#C9D7DF]',
+    darkBorderClass: 'dark:border-[#233845]',
     dotColor: '#2D5266',
+    dotColorDark: '#64A8D1',
   },
   'giai-tich-ham-mot-bien': {
     background: 'linear-gradient(135deg, #EBF2EE 0%, #DFECE5 100%)',
+    darkBackground: 'linear-gradient(135deg, #101C18 0%, #0D1512 100%)',
     borderClass: 'border-[#C6DBD0]',
+    darkBorderClass: 'dark:border-[#1F3B31]',
     dotColor: '#245746',
+    dotColorDark: '#52B394',
   },
   'giao-duc-hoc': {
     background: 'linear-gradient(135deg, #F3ECE9 0%, #E9DFDB 100%)',
+    darkBackground: 'linear-gradient(135deg, #1D1413 0%, #141010 100%)',
     borderClass: 'border-[#D8C8C1]',
+    darkBorderClass: 'dark:border-[#3F2624]',
     dotColor: '#7A463B',
+    dotColorDark: '#DF7B70',
   },
 };
+
+function readDomDarkState(): boolean {
+  if (typeof document === 'undefined') return false;
+  const root = document.documentElement;
+  return (
+    root.classList.contains('dark') ||
+    root.getAttribute('data-theme') === 'dark' ||
+    (typeof document.body !== 'undefined' &&
+      document.body !== null &&
+      document.body.classList.contains('dark'))
+  );
+}
 
 function rotatePoint3D(v: Vec3, ax: number, ay: number, az: number): Vec3 {
   const cx = Math.cos(ax);
@@ -112,15 +139,16 @@ function drawAlgebraStage(
   height: number,
   t: number,
   interaction: StageInteraction,
+  isDark: boolean,
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.5;
   const rMain = Math.min(width, height) * 0.35;
 
   const glow = ctx.createRadialGradient(cx, cy, 4, cx, cy, rMain * 1.5);
-  glow.addColorStop(0, 'rgba(156, 122, 76, 0.16)');
-  glow.addColorStop(0.6, 'rgba(107, 83, 53, 0.06)');
-  glow.addColorStop(1, 'rgba(243, 240, 232, 0)');
+  glow.addColorStop(0, isDark ? 'rgba(217, 155, 94, 0.24)' : 'rgba(156, 122, 76, 0.16)');
+  glow.addColorStop(0.6, isDark ? 'rgba(212, 175, 106, 0.10)' : 'rgba(107, 83, 53, 0.06)');
+  glow.addColorStop(1, isDark ? 'rgba(29, 24, 19, 0)' : 'rgba(243, 240, 232, 0)');
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, width, height);
 
@@ -144,7 +172,7 @@ function drawAlgebraStage(
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
-    ctx.strokeStyle = 'rgba(107, 83, 53, 0.46)';
+    ctx.strokeStyle = isDark ? 'rgba(217, 155, 94, 0.58)' : 'rgba(107, 83, 53, 0.46)';
     ctx.lineWidth = 1.3;
     ctx.stroke();
 
@@ -152,7 +180,7 @@ function drawAlgebraStage(
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(chord.x, chord.y);
-      ctx.strokeStyle = 'rgba(156, 122, 76, 0.30)';
+      ctx.strokeStyle = isDark ? 'rgba(229, 195, 120, 0.36)' : 'rgba(156, 122, 76, 0.30)';
       ctx.lineWidth = 0.95;
       ctx.stroke();
     }
@@ -162,7 +190,7 @@ function drawAlgebraStage(
       ctx.setLineDash([4, 4]);
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(opposite.x, opposite.y);
-      ctx.strokeStyle = 'rgba(107, 83, 53, 0.28)';
+      ctx.strokeStyle = isDark ? 'rgba(217, 155, 94, 0.34)' : 'rgba(107, 83, 53, 0.28)';
       ctx.lineWidth = 1;
       ctx.stroke();
       ctx.setLineDash([]);
@@ -181,13 +209,20 @@ function drawAlgebraStage(
       pStart.x + (pEnd.x - pStart.x) * segT,
       pStart.y + (pEnd.y - pStart.y) * segT,
       4.4,
-      '#9C7A4C',
-      'rgba(156, 122, 76, 0.45)',
+      isDark ? '#F0C782' : '#9C7A4C',
+      isDark ? 'rgba(240, 199, 130, 0.62)' : 'rgba(156, 122, 76, 0.45)',
     );
   }
 
   for (const node of outerNodes) {
-    drawGlowingNode(ctx, node.x, node.y, 3.6, '#8B6D43', 'rgba(156, 122, 76, 0.24)');
+    drawGlowingNode(
+      ctx,
+      node.x,
+      node.y,
+      3.6,
+      isDark ? '#D99B5E' : '#8B6D43',
+      isDark ? 'rgba(217, 155, 94, 0.42)' : 'rgba(156, 122, 76, 0.24)',
+    );
   }
 
   // Bát diện 3D tô bóng từng mặt (Z-sorted translucent planes)
@@ -251,21 +286,40 @@ function drawAlgebraStage(
     ctx.lineTo(face.pc.x, face.pc.y);
     ctx.closePath();
 
-    const alpha = face.front ? 0.16 + face.light * 0.24 : 0.06;
-    const red = Math.round(138 + face.light * 65);
-    const green = Math.round(104 + face.light * 56);
-    const blue = Math.round(58 + face.light * 38);
+    const alpha = isDark
+      ? face.front
+        ? 0.22 + face.light * 0.28
+        : 0.08
+      : face.front
+        ? 0.16 + face.light * 0.24
+        : 0.06;
+    const red = isDark ? Math.round(186 + face.light * 60) : Math.round(138 + face.light * 65);
+    const green = isDark ? Math.round(134 + face.light * 58) : Math.round(104 + face.light * 56);
+    const blue = isDark ? Math.round(72 + face.light * 44) : Math.round(58 + face.light * 38);
     ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha.toFixed(3)})`;
     ctx.fill();
 
-    ctx.strokeStyle = face.front ? 'rgba(107, 83, 53, 0.88)' : 'rgba(156, 122, 76, 0.36)';
+    ctx.strokeStyle = isDark
+      ? face.front
+        ? 'rgba(240, 199, 130, 0.92)'
+        : 'rgba(217, 155, 94, 0.45)'
+      : face.front
+        ? 'rgba(107, 83, 53, 0.88)'
+        : 'rgba(156, 122, 76, 0.36)';
     ctx.lineWidth = face.front ? 1.45 : 0.9;
     ctx.stroke();
   }
 
   for (const pt of projected) {
     if (pt.z > 0) {
-      drawGlowingNode(ctx, pt.x, pt.y, 2.7, '#6B5335', 'rgba(156, 122, 76, 0.38)');
+      drawGlowingNode(
+        ctx,
+        pt.x,
+        pt.y,
+        2.7,
+        isDark ? '#F0C782' : '#6B5335',
+        isDark ? 'rgba(240, 199, 130, 0.56)' : 'rgba(156, 122, 76, 0.38)',
+      );
     }
   }
 }
@@ -277,14 +331,15 @@ function drawAffineStage(
   height: number,
   t: number,
   interaction: StageInteraction,
+  isDark: boolean,
 ): void {
   const cx = width * 0.5;
   const cy = height * 0.52;
   const fov = Math.min(width, height) * 1.12;
 
   const bgGlow = ctx.createRadialGradient(cx, cy, 4, cx, cy, width * 0.45);
-  bgGlow.addColorStop(0, 'rgba(73, 118, 143, 0.16)');
-  bgGlow.addColorStop(1, 'rgba(236, 241, 244, 0)');
+  bgGlow.addColorStop(0, isDark ? 'rgba(100, 168, 209, 0.22)' : 'rgba(73, 118, 143, 0.16)');
+  bgGlow.addColorStop(1, isDark ? 'rgba(18, 26, 33, 0)' : 'rgba(236, 241, 244, 0)');
   ctx.fillStyle = bgGlow;
   ctx.fillRect(0, 0, width, height);
 
@@ -354,8 +409,8 @@ function drawAffineStage(
     ctx.lineTo(b.pts[2].x, b.pts[2].y);
     ctx.lineTo(b.pts[3].x, b.pts[3].y);
     ctx.closePath();
-    const alpha = b.avgZ > 0 ? 0.14 : 0.05;
-    ctx.fillStyle = `rgba(73, 118, 143, ${alpha})`;
+    const alpha = isDark ? (b.avgZ > 0 ? 0.18 : 0.07) : b.avgZ > 0 ? 0.14 : 0.05;
+    ctx.fillStyle = isDark ? `rgba(100, 168, 209, ${alpha})` : `rgba(73, 118, 143, ${alpha})`;
     ctx.fill();
   }
 
@@ -368,8 +423,14 @@ function drawAffineStage(
     ctx.beginPath();
     ctx.moveTo(a1.x, a1.y);
     ctx.lineTo(b1.x, b1.y);
-    ctx.strokeStyle = avgZ1 > 0 ? '#2D5266' : '#49768F';
-    ctx.globalAlpha = avgZ1 > 0 ? 0.78 : 0.3;
+    ctx.strokeStyle = isDark
+      ? avgZ1 > 0
+        ? '#7EC2EB'
+        : '#4E8FB5'
+      : avgZ1 > 0
+        ? '#2D5266'
+        : '#49768F';
+    ctx.globalAlpha = avgZ1 > 0 ? (isDark ? 0.85 : 0.78) : isDark ? 0.42 : 0.3;
     ctx.lineWidth = avgZ1 > 0 ? 1.3 : 0.8;
     ctx.stroke();
 
@@ -408,8 +469,8 @@ function drawAffineStage(
     ctx.beginPath();
     ctx.moveTo(a2.x, a2.y);
     ctx.lineTo(b2.x, b2.y);
-    ctx.strokeStyle = '#6B5335';
-    ctx.globalAlpha = 0.24;
+    ctx.strokeStyle = isDark ? '#D4AF6A' : '#6B5335';
+    ctx.globalAlpha = isDark ? 0.36 : 0.24;
     ctx.lineWidth = 0.9;
     ctx.stroke();
   }
@@ -438,7 +499,7 @@ function drawAffineStage(
       if (s === 0) ctx.moveTo(pt.x, pt.y);
       else ctx.lineTo(pt.x, pt.y);
     }
-    ctx.strokeStyle = 'rgba(45, 82, 102, 0.68)';
+    ctx.strokeStyle = isDark ? 'rgba(126, 194, 235, 0.74)' : 'rgba(45, 82, 102, 0.68)';
     ctx.lineWidth = 1.15;
     ctx.stroke();
   }
@@ -463,13 +524,13 @@ function drawAffineStage(
   ctx.lineTo(e13Tip.x, e13Tip.y);
   ctx.lineTo(e3Tip.x, e3Tip.y);
   ctx.closePath();
-  ctx.fillStyle = 'rgba(156, 122, 76, 0.16)';
+  ctx.fillStyle = isDark ? 'rgba(212, 175, 106, 0.22)' : 'rgba(156, 122, 76, 0.16)';
   ctx.fill();
 
   const axes: readonly { vec: Vec3; color: string; label: string }[] = [
-    { vec: e1Vec, color: '#2D5266', label: 'e₁' },
-    { vec: e2Vec, color: '#49768F', label: 'e₂' },
-    { vec: e3Vec, color: '#6B5335', label: 'e₃' },
+    { vec: e1Vec, color: isDark ? '#7EC2EB' : '#2D5266', label: 'e₁' },
+    { vec: e2Vec, color: isDark ? '#A4D8F7' : '#49768F', label: 'e₂' },
+    { vec: e3Vec, color: isDark ? '#E5C378' : '#6B5335', label: 'e₃' },
   ];
   ctx.font = '600 11px "JetBrains Mono", monospace';
   for (const axis of axes) {
@@ -481,11 +542,25 @@ function drawAffineStage(
     ctx.lineWidth = 1.95;
     ctx.stroke();
 
-    drawGlowingNode(ctx, tip.x, tip.y, 3.1, axis.color, 'rgba(73, 118, 143, 0.35)');
+    drawGlowingNode(
+      ctx,
+      tip.x,
+      tip.y,
+      3.1,
+      axis.color,
+      isDark ? 'rgba(126, 194, 235, 0.48)' : 'rgba(73, 118, 143, 0.35)',
+    );
     ctx.fillStyle = axis.color;
     ctx.fillText(axis.label, tip.x + 6, tip.y - 4);
   }
-  drawGlowingNode(ctx, origin.x, origin.y, 3.5, '#2D5266', 'rgba(45, 82, 102, 0.42)');
+  drawGlowingNode(
+    ctx,
+    origin.x,
+    origin.y,
+    3.5,
+    isDark ? '#7EC2EB' : '#2D5266',
+    isDark ? 'rgba(126, 194, 235, 0.56)' : 'rgba(45, 82, 102, 0.42)',
+  );
 }
 
 // 3. Giải tích hàm một biến: Dải tích phân Riemann bán trong suốt & Sóng đa thức Taylor
@@ -495,12 +570,13 @@ function drawCalculusStage(
   height: number,
   t: number,
   interaction: StageInteraction,
+  isDark: boolean,
 ): void {
   const midY = height * 0.56;
   const leftPad = width * 0.08;
   const spanX = width * 0.84;
 
-  ctx.strokeStyle = 'rgba(36, 87, 70, 0.24)';
+  ctx.strokeStyle = isDark ? 'rgba(127, 214, 184, 0.32)' : 'rgba(36, 87, 70, 0.24)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(leftPad, midY);
@@ -518,9 +594,9 @@ function drawCalculusStage(
 
   // Dải diện tích tích phân gradient mượt bên dưới đồ thị
   const areaGrad = ctx.createLinearGradient(0, height * 0.18, 0, height * 0.88);
-  areaGrad.addColorStop(0, 'rgba(59, 122, 101, 0.22)');
-  areaGrad.addColorStop(0.55, 'rgba(59, 122, 101, 0.07)');
-  areaGrad.addColorStop(1, 'rgba(156, 122, 76, 0.15)');
+  areaGrad.addColorStop(0, isDark ? 'rgba(82, 179, 148, 0.28)' : 'rgba(59, 122, 101, 0.22)');
+  areaGrad.addColorStop(0.55, isDark ? 'rgba(82, 179, 148, 0.10)' : 'rgba(59, 122, 101, 0.07)');
+  areaGrad.addColorStop(1, isDark ? 'rgba(217, 155, 94, 0.18)' : 'rgba(156, 122, 76, 0.15)');
 
   ctx.beginPath();
   ctx.moveTo(leftPad, midY);
@@ -545,8 +621,22 @@ function drawCalculusStage(
     const y = val >= 0 ? midY - val : midY;
     const h = Math.abs(val);
 
-    ctx.fillStyle = val >= 0 ? 'rgba(59, 122, 101, 0.17)' : 'rgba(156, 122, 76, 0.14)';
-    ctx.strokeStyle = val >= 0 ? 'rgba(36, 87, 70, 0.38)' : 'rgba(156, 122, 76, 0.38)';
+    ctx.fillStyle =
+      val >= 0
+        ? isDark
+          ? 'rgba(82, 179, 148, 0.22)'
+          : 'rgba(59, 122, 101, 0.17)'
+        : isDark
+          ? 'rgba(217, 155, 94, 0.18)'
+          : 'rgba(156, 122, 76, 0.14)';
+    ctx.strokeStyle =
+      val >= 0
+        ? isDark
+          ? 'rgba(127, 214, 184, 0.52)'
+          : 'rgba(36, 87, 70, 0.38)'
+        : isDark
+          ? 'rgba(229, 195, 120, 0.48)'
+          : 'rgba(156, 122, 76, 0.38)';
     ctx.lineWidth = 0.9;
     ctx.fillRect(x + 2, y, barW - 4, h);
     ctx.strokeRect(x + 2, y, barW - 4, h);
@@ -565,7 +655,7 @@ function drawCalculusStage(
     if (s === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
-  ctx.strokeStyle = 'rgba(156, 122, 76, 0.72)';
+  ctx.strokeStyle = isDark ? 'rgba(229, 195, 120, 0.85)' : 'rgba(156, 122, 76, 0.72)';
   ctx.setLineDash([4, 4]);
   ctx.lineWidth = 1.3;
   ctx.stroke();
@@ -580,7 +670,7 @@ function drawCalculusStage(
     if (s === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
-  ctx.strokeStyle = '#245746';
+  ctx.strokeStyle = isDark ? '#6AD8B3' : '#245746';
   ctx.lineWidth = 2.15;
   ctx.stroke();
 
@@ -595,11 +685,18 @@ function drawCalculusStage(
   ctx.beginPath();
   ctx.moveTo(px - 42, py - 42 * slopePx);
   ctx.lineTo(px + 42, py + 42 * slopePx);
-  ctx.strokeStyle = '#6B5335';
+  ctx.strokeStyle = isDark ? '#E5C378' : '#6B5335';
   ctx.lineWidth = 1.65;
   ctx.stroke();
 
-  drawGlowingNode(ctx, px, py, 4.4, '#245746', 'rgba(59, 122, 101, 0.48)');
+  drawGlowingNode(
+    ctx,
+    px,
+    py,
+    4.4,
+    isDark ? '#7FD6B8' : '#245746',
+    isDark ? 'rgba(127, 214, 184, 0.62)' : 'rgba(59, 122, 101, 0.48)',
+  );
 }
 
 // 4. Giáo dục học: Hệ Sinh Thái Sư Phạm & Đường Xoắn Ốc Trưởng Thành (120fps)
@@ -609,6 +706,7 @@ function drawPedagogyStage(
   height: number,
   t: number,
   interaction: StageInteraction,
+  isDark: boolean,
 ): void {
   const fit = Math.min(1, height / 210);
   const cx = Math.max(120 * fit, width * 0.34);
@@ -617,9 +715,14 @@ function drawPedagogyStage(
 
   // Hào quang đất nung dịu phía sau lõi Tam giác Sư phạm
   const warmAura = ctx.createRadialGradient(cx, cy, 4, cx, cy, 128 * fit);
-  warmAura.addColorStop(0, `rgba(122, 70, 59, ${(0.12 + hover * 0.06).toFixed(3)})`);
-  warmAura.addColorStop(0.55, 'rgba(158, 99, 86, 0.05)');
-  warmAura.addColorStop(1, 'rgba(243, 236, 233, 0)');
+  warmAura.addColorStop(
+    0,
+    isDark
+      ? `rgba(223, 123, 112, ${(0.18 + hover * 0.08).toFixed(3)})`
+      : `rgba(122, 70, 59, ${(0.12 + hover * 0.06).toFixed(3)})`,
+  );
+  warmAura.addColorStop(0.55, isDark ? 'rgba(235, 155, 142, 0.07)' : 'rgba(158, 99, 86, 0.05)');
+  warmAura.addColorStop(1, isDark ? 'rgba(29, 20, 19, 0)' : 'rgba(243, 236, 233, 0)');
   ctx.fillStyle = warmAura;
   ctx.fillRect(0, 0, width, height);
 
@@ -633,7 +736,9 @@ function drawPedagogyStage(
       r: 34 * fit,
       dashed: false,
       ticks: false,
-      stroke: `rgba(122, 70, 59, ${(0.28 + hover * 0.08).toFixed(3)})`,
+      stroke: isDark
+        ? `rgba(223, 123, 112, ${(0.42 + hover * 0.1).toFixed(3)})`
+        : `rgba(122, 70, 59, ${(0.28 + hover * 0.08).toFixed(3)})`,
       lineWidth: 1.0,
       label: 'SƯ PHẠM',
       labelAngle: (-142 * Math.PI) / 180,
@@ -645,7 +750,9 @@ function drawPedagogyStage(
       r: 60 * fit,
       dashed: true,
       ticks: false,
-      stroke: `rgba(158, 99, 86, ${(0.25 + hover * 0.08).toFixed(3)})`,
+      stroke: isDark
+        ? `rgba(235, 155, 142, ${(0.38 + hover * 0.1).toFixed(3)})`
+        : `rgba(158, 99, 86, ${(0.25 + hover * 0.08).toFixed(3)})`,
       lineWidth: 1.0,
       label: 'NHÀ TRƯỜNG',
       labelAngle: (94 * Math.PI) / 180,
@@ -657,7 +764,9 @@ function drawPedagogyStage(
       r: 86 * fit,
       dashed: false,
       ticks: true,
-      stroke: `rgba(122, 70, 59, ${(0.16 + hover * 0.08).toFixed(3)})`,
+      stroke: isDark
+        ? `rgba(223, 123, 112, ${(0.28 + hover * 0.1).toFixed(3)})`
+        : `rgba(122, 70, 59, ${(0.16 + hover * 0.08).toFixed(3)})`,
       lineWidth: 0.9,
       label: 'HƯỚNG NGHIỆP',
       labelAngle: (-42 * Math.PI) / 180,
@@ -689,15 +798,17 @@ function drawPedagogyStage(
         ctx.moveTo(ring.ox + Math.cos(a) * innerTick, ring.oy + Math.sin(a) * innerTick);
         ctx.lineTo(ring.ox + Math.cos(a) * ring.r, ring.oy + Math.sin(a) * ring.r);
       }
-      ctx.strokeStyle = `rgba(122, 70, 59, ${(0.2 + hover * 0.08).toFixed(3)})`;
+      ctx.strokeStyle = isDark
+        ? `rgba(235, 155, 142, ${(0.34 + hover * 0.1).toFixed(3)})`
+        : `rgba(122, 70, 59, ${(0.2 + hover * 0.08).toFixed(3)})`;
       ctx.lineWidth = 0.7;
       ctx.stroke();
     }
 
     const lx = ring.ox + Math.cos(ring.labelAngle) * (ring.r + 5.5 * fit);
     const ly = ring.oy + Math.sin(ring.labelAngle) * (ring.r + 5.5 * fit);
-    ctx.globalAlpha = 0.65 + hover * 0.16;
-    ctx.fillStyle = '#7A463B';
+    ctx.globalAlpha = isDark ? 0.86 + hover * 0.14 : 0.65 + hover * 0.16;
+    ctx.fillStyle = isDark ? '#F0A49B' : '#7A463B';
     ctx.textAlign = ring.labelAlign;
     ctx.fillText(ring.label, lx, ly);
     ctx.globalAlpha = 1;
@@ -711,7 +822,9 @@ function drawPedagogyStage(
     if (waveFade > 0.01) {
       ctx.beginPath();
       ctx.arc(cx + 8 * fit * waveProg, cy - 1.5 * fit * waveProg, waveRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(122, 70, 59, ${(0.34 * waveFade).toFixed(3)})`;
+      ctx.strokeStyle = isDark
+        ? `rgba(223, 123, 112, ${(0.48 * waveFade).toFixed(3)})`
+        : `rgba(122, 70, 59, ${(0.34 * waveFade).toFixed(3)})`;
       ctx.lineWidth = 1.4 - waveProg * 0.5;
       ctx.stroke();
 
@@ -723,7 +836,9 @@ function drawPedagogyStage(
         0,
         Math.PI * 2,
       );
-      ctx.strokeStyle = `rgba(212, 163, 89, ${(0.24 * waveFade).toFixed(3)})`;
+      ctx.strokeStyle = isDark
+        ? `rgba(229, 195, 120, ${(0.36 * waveFade).toFixed(3)})`
+        : `rgba(212, 163, 89, ${(0.24 * waveFade).toFixed(3)})`;
       ctx.lineWidth = 0.9;
       ctx.stroke();
     }
@@ -743,8 +858,8 @@ function drawPedagogyStage(
     {
       label: 'GIÁO VIÊN',
       angle: -Math.PI / 2 + oscRad,
-      color: '#7A463B',
-      glow: 'rgba(122, 70, 59, 0.34)',
+      color: isDark ? '#DF7B70' : '#7A463B',
+      glow: isDark ? 'rgba(223, 123, 112, 0.5)' : 'rgba(122, 70, 59, 0.34)',
       radius: 4.3,
       labelDx: 0,
       labelDy: -10.5 * fit,
@@ -754,8 +869,8 @@ function drawPedagogyStage(
     {
       label: 'NGƯỜI HỌC',
       angle: (5 * Math.PI) / 6 + oscRad,
-      color: '#9E6356',
-      glow: 'rgba(158, 99, 86, 0.32)',
+      color: isDark ? '#EB9B8E' : '#9E6356',
+      glow: isDark ? 'rgba(235, 155, 142, 0.48)' : 'rgba(158, 99, 86, 0.32)',
       radius: 4.0,
       labelDx: -3 * fit,
       labelDy: 12.5 * fit,
@@ -765,8 +880,8 @@ function drawPedagogyStage(
     {
       label: 'TRI THỨC',
       angle: Math.PI / 6 + oscRad,
-      color: '#B67B65',
-      glow: 'rgba(182, 123, 101, 0.32)',
+      color: isDark ? '#F2B89F' : '#B67B65',
+      glow: isDark ? 'rgba(242, 184, 159, 0.48)' : 'rgba(182, 123, 101, 0.32)',
       radius: 4.0,
       labelDx: 4 * fit,
       labelDy: 12.5 * fit,
@@ -785,10 +900,12 @@ function drawPedagogyStage(
   ctx.lineTo(triVertices[1]!.x, triVertices[1]!.y);
   ctx.lineTo(triVertices[2]!.x, triVertices[2]!.y);
   ctx.closePath();
-  ctx.fillStyle = `rgba(122, 70, 59, ${(0.042 + hover * 0.025).toFixed(3)})`;
+  ctx.fillStyle = isDark
+    ? `rgba(223, 123, 112, ${(0.08 + hover * 0.04).toFixed(3)})`
+    : `rgba(122, 70, 59, ${(0.042 + hover * 0.025).toFixed(3)})`;
   ctx.fill();
 
-  // Các cung cong đôi (bidirectional curved arcs) + 2 hạt xung chạy ngược chiều (#7A463B & #D4A359)
+  // Các cung cong đôi (bidirectional curved arcs) + 2 hạt xung chạy ngược chiều
   const edges: readonly (readonly [number, number])[] = [
     [0, 1],
     [1, 2],
@@ -820,7 +937,9 @@ function drawPedagogyStage(
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.quadraticCurveTo(ctrlOutX, ctrlOutY, b.x, b.y);
-    ctx.strokeStyle = `rgba(122, 70, 59, ${(0.34 + hover * 0.14).toFixed(3)})`;
+    ctx.strokeStyle = isDark
+      ? `rgba(223, 123, 112, ${(0.5 + hover * 0.16).toFixed(3)})`
+      : `rgba(122, 70, 59, ${(0.34 + hover * 0.14).toFixed(3)})`;
     ctx.lineWidth = 1.15;
     ctx.stroke();
 
@@ -828,11 +947,13 @@ function drawPedagogyStage(
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.quadraticCurveTo(ctrlInX, ctrlInY, b.x, b.y);
-    ctx.strokeStyle = `rgba(212, 163, 89, ${(0.36 + hover * 0.16).toFixed(3)})`;
+    ctx.strokeStyle = isDark
+      ? `rgba(229, 195, 120, ${(0.52 + hover * 0.18).toFixed(3)})`
+      : `rgba(212, 163, 89, ${(0.36 + hover * 0.16).toFixed(3)})`;
     ctx.lineWidth = 1.0;
     ctx.stroke();
 
-    // Hạt xung 1 (#7A463B, r = 2px): chạy chiều A -> B
+    // Hạt xung 1: chạy chiều A -> B
     const uFwd = (interaction.pulseTime * 0.42 + eIdx * 0.31) % 1;
     const invFwd = 1 - uFwd;
     const pxFwd = invFwd * invFwd * a.x + 2 * invFwd * uFwd * ctrlOutX + uFwd * uFwd * b.x;
@@ -842,11 +963,13 @@ function drawPedagogyStage(
       pxFwd,
       pyFwd,
       2,
-      '#7A463B',
-      `rgba(122, 70, 59, ${(0.3 + hover * 0.2).toFixed(3)})`,
+      isDark ? '#DF7B70' : '#7A463B',
+      isDark
+        ? `rgba(223, 123, 112, ${(0.45 + hover * 0.25).toFixed(3)})`
+        : `rgba(122, 70, 59, ${(0.3 + hover * 0.2).toFixed(3)})`,
     );
 
-    // Hạt xung 2 (#D4A359, r = 2px): chạy ngược chiều B -> A
+    // Hạt xung 2: chạy ngược chiều B -> A
     const uRev = 1 - ((interaction.pulseTime * 0.42 + eIdx * 0.31 + 0.5) % 1);
     const invRev = 1 - uRev;
     const pxRev = invRev * invRev * a.x + 2 * invRev * uRev * ctrlInX + uRev * uRev * b.x;
@@ -856,8 +979,10 @@ function drawPedagogyStage(
       pxRev,
       pyRev,
       2,
-      '#D4A359',
-      `rgba(212, 163, 89, ${(0.36 + hover * 0.24).toFixed(3)})`,
+      isDark ? '#E5C378' : '#D4A359',
+      isDark
+        ? `rgba(229, 195, 120, ${(0.5 + hover * 0.25).toFixed(3)})`
+        : `rgba(212, 163, 89, ${(0.36 + hover * 0.24).toFixed(3)})`,
     );
   }
 
@@ -884,8 +1009,8 @@ function drawPedagogyStage(
 
   const spiralEnd = sampleGrowthSpiral(0.98);
   const spiralGrad = ctx.createLinearGradient(cx, cy, spiralEnd.x, spiralEnd.y);
-  spiralGrad.addColorStop(0, '#7A463B');
-  spiralGrad.addColorStop(1, '#C48B76');
+  spiralGrad.addColorStop(0, isDark ? '#DF7B70' : '#7A463B');
+  spiralGrad.addColorStop(1, isDark ? '#F2B89F' : '#C48B76');
 
   ctx.beginPath();
   const spiralSteps = 72;
@@ -923,31 +1048,54 @@ function drawPedagogyStage(
       ctx.beginPath();
       ctx.moveTo(p.x, p.y);
       ctx.quadraticCurveTo(ctrlX, ctrlY, lx, ly);
-      ctx.strokeStyle = `rgba(122, 70, 59, ${branchAlpha.toFixed(3)})`;
+      ctx.strokeStyle = isDark
+        ? `rgba(235, 155, 142, ${Math.min(0.95, branchAlpha + 0.14).toFixed(3)})`
+        : `rgba(122, 70, 59, ${branchAlpha.toFixed(3)})`;
       ctx.lineWidth = 0.85;
       ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(lx, ly, 1.05 + hover * 0.35, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(196, 139, 118, ${Math.min(0.95, 0.62 + hover * 0.3).toFixed(3)})`;
+      ctx.fillStyle = isDark
+        ? `rgba(242, 184, 159, ${Math.min(0.95, 0.74 + hover * 0.22).toFixed(3)})`
+        : `rgba(196, 139, 118, ${Math.min(0.95, 0.62 + hover * 0.3).toFixed(3)})`;
       ctx.fill();
     }
 
     const nodeR = 2.2 + i * 0.5;
-    const nodeColor = i < 2 ? '#7A463B' : i < 4 ? '#9E6356' : '#C48B76';
-    const nodeGlowAlpha = 0.24 + hover * 0.34;
+    const nodeColor = isDark
+      ? i < 2
+        ? '#DF7B70'
+        : i < 4
+          ? '#EB9B8E'
+          : '#F2B89F'
+      : i < 2
+        ? '#7A463B'
+        : i < 4
+          ? '#9E6356'
+          : '#C48B76';
+    const nodeGlowAlpha = isDark ? 0.36 + hover * 0.36 : 0.24 + hover * 0.34;
     drawGlowingNode(
       ctx,
       p.x,
       p.y,
       nodeR,
       nodeColor,
-      `rgba(196, 139, 118, ${nodeGlowAlpha.toFixed(3)})`,
+      isDark
+        ? `rgba(242, 184, 159, ${nodeGlowAlpha.toFixed(3)})`
+        : `rgba(196, 139, 118, ${nodeGlowAlpha.toFixed(3)})`,
     );
   }
 
   // Tâm khởi nguồn Tam giác Sư phạm
-  drawGlowingNode(ctx, cx, cy, 2.5, '#7A463B', 'rgba(122, 70, 59, 0.26)');
+  drawGlowingNode(
+    ctx,
+    cx,
+    cy,
+    2.5,
+    isDark ? '#DF7B70' : '#7A463B',
+    isDark ? 'rgba(223, 123, 112, 0.4)' : 'rgba(122, 70, 59, 0.26)',
+  );
 
   // Vẽ 3 đỉnh Tam giác Sư phạm & nhãn ở trên cùng để sắc nét tuyệt đối
   ctx.save();
@@ -960,7 +1108,9 @@ function drawPedagogyStage(
       const rippleAlpha = (1 - rippleP) * (0.4 + hover * 0.2);
       ctx.beginPath();
       ctx.arc(v.x, v.y, rippleR, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(158, 99, 86, ${rippleAlpha.toFixed(3)})`;
+      ctx.strokeStyle = isDark
+        ? `rgba(235, 155, 142, ${(rippleAlpha * 1.15).toFixed(3)})`
+        : `rgba(158, 99, 86, ${rippleAlpha.toFixed(3)})`;
       ctx.lineWidth = 1.0;
       ctx.stroke();
     }
@@ -989,6 +1139,8 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isCardHoveredRef = useRef(isCardHovered);
   const [isDragging, setIsDragging] = useState(false);
+  const [isDark, setIsDark] = useState<boolean>(readDomDarkState);
+  const isDarkRef = useRef<boolean>(isDark);
   const prefersReducedMotion = useReducedMotion();
   const theme = STAGE_THEMES[slug] ?? DEFAULT_STAGE_THEME;
 
@@ -1038,6 +1190,7 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
     let currentModelScale = 1.0;
 
     const render = (time: number) => {
+      const darkActive = isDarkRef.current;
       const interaction: StageInteraction = {
         rotOffsetX: currentOffsetX,
         rotOffsetY: currentOffsetY,
@@ -1061,17 +1214,42 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       }
 
       if (slug === 'hinh-hoc-affine') {
-        drawAffineStage(ctx, width, height, time, interaction);
+        drawAffineStage(ctx, width, height, time, interaction, darkActive);
       } else if (slug === 'giai-tich-ham-mot-bien') {
-        drawCalculusStage(ctx, width, height, time, interaction);
+        drawCalculusStage(ctx, width, height, time, interaction, darkActive);
       } else if (slug === 'giao-duc-hoc') {
-        drawPedagogyStage(ctx, width, height, time, interaction);
+        drawPedagogyStage(ctx, width, height, time, interaction, darkActive);
       } else {
-        drawAlgebraStage(ctx, width, height, time, interaction);
+        drawAlgebraStage(ctx, width, height, time, interaction, darkActive);
       }
 
       ctx.restore();
     };
+
+    const syncThemeState = () => {
+      const next = readDomDarkState();
+      if (next !== isDarkRef.current) {
+        isDarkRef.current = next;
+        setIsDark(next);
+        render(prefersReducedMotion ? 0.8 : elapsed);
+      }
+    };
+    syncThemeState();
+
+    let themeObserver: MutationObserver | undefined;
+    if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+      themeObserver = new MutationObserver(syncThemeState);
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'data-theme'],
+      });
+      if (document.body) {
+        themeObserver.observe(document.body, {
+          attributes: true,
+          attributeFilter: ['class', 'data-theme'],
+        });
+      }
+    }
 
     const onPointerDown = (event: PointerEvent) => {
       dragging = true;
@@ -1167,6 +1345,7 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
         container.removeEventListener('pointerleave', onPointerLeave);
         resizeObserver?.disconnect();
         intersectionObserver?.disconnect();
+        themeObserver?.disconnect();
       };
     }
 
@@ -1213,41 +1392,46 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       container.removeEventListener('pointerleave', onPointerLeave);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
+      themeObserver?.disconnect();
     };
   }, [prefersReducedMotion, slug]);
+
+  const stageBg = isDark ? theme.darkBackground : theme.background;
+  const stageDot = isDark ? theme.dotColorDark : theme.dotColor;
 
   return (
     <div
       ref={containerRef}
       data-testid={`subject-stage-${slug}`}
-      style={{ background: theme.background }}
+      style={{ background: stageBg }}
       className={cn(
         'group/stage relative my-4 h-52 w-full overflow-hidden rounded-[2px] border border-[#CFD8D4] select-none',
         isDragging ? 'cursor-grabbing' : 'cursor-grab',
         theme.borderClass,
+        theme.darkBorderClass,
       )}
       aria-hidden="true"
     >
       {/* Lưới tọa độ Ruled-Ground & spotlight bám con trỏ chuột (taste-skill) */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-24"
+        className="pointer-events-none absolute inset-0 opacity-24 dark:opacity-28"
         style={{
-          backgroundImage: `radial-gradient(${theme.dotColor} 0.75px, transparent 0.85px)`,
+          backgroundImage: `radial-gradient(${stageDot} 0.75px, transparent 0.85px)`,
           backgroundSize: '16px 16px',
         }}
       />
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover/stage:opacity-100"
         style={{
-          background: `radial-gradient(220px circle at var(--stage-mx, 50%) var(--stage-my, 50%), ${theme.dotColor}28, transparent 70%)`,
+          background: `radial-gradient(220px circle at var(--stage-mx, 50%) var(--stage-my, 50%), ${stageDot}28, transparent 70%)`,
         }}
       />
 
       {/* Thước chia độ dọc bên lề trái sân khấu 3D */}
       <div
         data-testid={`stage-vertical-ruler-${slug}`}
-        className="lu-tabular-telemetry pointer-events-none absolute top-0 bottom-0 left-0 z-20 flex w-7 flex-col justify-between border-r border-[#CFD8D4]/85 bg-[#FAFBF9]/45 py-2.5 pr-1 font-mono text-[8px] font-semibold"
-        style={{ color: theme.dotColor }}
+        className="lu-tabular-telemetry pointer-events-none absolute top-0 bottom-0 left-0 z-20 flex w-7 flex-col justify-between border-r border-[#CFD8D4]/85 bg-[#FAFBF9]/45 py-2.5 pr-1 font-mono text-[8px] font-semibold dark:border-[#242E2B]/90 dark:bg-[#0D1110]/72"
+        style={{ color: stageDot }}
       >
         {(['90°', '60°', '30°', '00°'] as const).map((deg, idx) => (
           <div key={deg} className="flex w-full items-center justify-end gap-1">
@@ -1263,19 +1447,19 @@ export function SubjectStageCanvas({ slug, isCardHovered = false }: SubjectStage
       {/* 4 góc chữ L bản vẽ chuẩn trực trên khung viewport 3D */}
       <span
         className="pointer-events-none absolute top-2 left-8 z-20 h-3 w-3 border-t-[1.5px] border-l-[1.5px] opacity-75"
-        style={{ borderColor: theme.dotColor }}
+        style={{ borderColor: stageDot }}
       />
       <span
         className="pointer-events-none absolute top-2 right-2 z-20 h-3 w-3 border-t-[1.5px] border-r-[1.5px] opacity-75"
-        style={{ borderColor: theme.dotColor }}
+        style={{ borderColor: stageDot }}
       />
       <span
         className="pointer-events-none absolute bottom-2 left-8 z-20 h-3 w-3 border-b-[1.5px] border-l-[1.5px] opacity-75"
-        style={{ borderColor: theme.dotColor }}
+        style={{ borderColor: stageDot }}
       />
       <span
         className="pointer-events-none absolute right-2 bottom-2 z-20 h-3 w-3 border-r-[1.5px] border-b-[1.5px] opacity-75"
-        style={{ borderColor: theme.dotColor }}
+        style={{ borderColor: stageDot }}
       />
 
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full touch-none" />
