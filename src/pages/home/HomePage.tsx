@@ -592,10 +592,13 @@ export function HomePage() {
                   <div className="max-w-2xl space-y-2.5">
                     <h1
                       data-testid="hero-time-greeting"
-                      className="font-serif text-3xl leading-[1.12] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[44px]"
+                      className="font-serif text-3xl leading-[1.15] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[42px]"
                     >
                       <span className="sr-only">LEARNING UNIVERSE — Không gian Tổng quan — </span>
-                      {timeGreeting.headline}
+                      &ldquo;Đi một ngày đàng, học một sàng khôn&rdquo;
+                      <span className="mt-1.5 block font-sans text-xs font-medium tracking-wide text-white/80 sm:text-sm">
+                        — Tục ngữ Việt Nam
+                      </span>
                     </h1>
 
                     <p className="text-xs font-medium text-white/82 sm:text-sm">
