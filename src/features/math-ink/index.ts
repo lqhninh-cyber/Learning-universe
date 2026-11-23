@@ -4,6 +4,8 @@ export {
   drawPaperBackground,
   renderFunctionGraphOnCanvas,
   renderInkPageToCanvas,
+  smoothStrokePoints,
+  stabilizeInkPoint,
   type PageRenderOptions,
 } from './canvasRenderer';
 export {
@@ -54,6 +56,7 @@ export {
 export {
   evaluateSolidConstructions,
   getSolidPresetSchema,
+  hitTestSolid3DScene,
   renderSolid3DOnCanvas,
   resolveSolidVertexLabel,
   rotatePoint3D,
@@ -61,6 +64,7 @@ export {
   type EvaluatedConstructionPoint,
   type Solid3DPresetMeta,
   type Solid3DPresetSchema,
+  type Solid3DSceneHit,
   type Vec3,
 } from './solid3dEngine';
 export {

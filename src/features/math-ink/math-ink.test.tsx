@@ -12,14 +12,17 @@ import {
   findSpecialGraphPoints,
   GEOMETRY_STAMP_PRESETS,
   getSolidPresetSchema,
+  hitTestSolid3DScene,
   recognizeInkGesture,
   resolveSolidVertexLabel,
   rotatePoint3D,
   selectActiveInkFolders,
   selectActiveInkPage,
   selectActiveNotebook,
+  smoothStrokePoints,
   snapPointToRulerEdge,
   SOLID_3D_PRESETS,
+  stabilizeInkPoint,
   useInkNotebookStore,
   VARIATION_TABLE_PRESETS,
   type InkPoint,
@@ -103,8 +106,33 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     expect(snapped!.y).toBeCloseTo(172, 2);
   });
 
-  it('động cơ Hình 3D: đủ 8 mẫu khối, bảo toàn độ dài khi quay, đổi tên đỉnh và tính chính xác tọa độ Trung điểm / Trọng tâm / Đường cao', () => {
-    expect(SOLID_3D_PRESETS).toHaveLength(8);
+  it('động cơ Hình 3D & Chữ viết mượt: đủ 9 mẫu khối (gồm Mặt phẳng α), bộ ổn định nét Streamline, Điểm tỉ lệ, Điểm thuộc mặt, Hình chiếu cạnh & Mặt phẳng thiết diện', () => {
+    expect(SOLID_3D_PRESETS).toHaveLength(9);
+
+    // Kiểm tra bộ ổn định chữ viết tay (Streamline) và làm mịn bảo toàn góc nhọn
+    const stabilized = stabilizeInkPoint(
+      { x: 100, y: 100, pressure: 0.55 },
+      { x: 120, y: 110 },
+      0.65,
+      16,
+    );
+    expect(stabilized.x).toBeGreaterThan(100);
+    expect(stabilized.x).toBeLessThan(120);
+    expect(stabilized.pressure).toBeGreaterThan(0.25);
+
+    const zigZagCurve: InkPoint[] = [
+      { x: 0, y: 0 },
+      { x: 10, y: 3 },
+      { x: 20, y: -2 },
+      { x: 30, y: 2 },
+      { x: 40, y: 0 },
+    ];
+    const smoothed = smoothStrokePoints(zigZagCurve, 0.75);
+    expect(smoothed).toHaveLength(5);
+    expect(smoothed[0]).toEqual(zigZagCurve[0]);
+    expect(smoothed[4]).toEqual(zigZagCurve[4]);
+    expect(Math.abs(smoothed[2]!.y)).toBeLessThan(Math.abs(zigZagCurve[2]!.y));
+
     const p = { x: 1, y: 2, z: -1.5 };
     const origNorm = Math.hypot(p.x, p.y, p.z);
     const rotated = rotatePoint3D(p, 47, 23);
@@ -127,11 +155,29 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
           color: '#DC2626',
         },
         {
+          id: 'r1',
+          kind: 'ratio-point',
+          fromPoint: 'S',
+          toPoint: 'B',
+          ratio: 1 / 3,
+          label: 'N',
+          color: '#DC2626',
+        },
+        {
+          id: 'fp1',
+          kind: 'free-point',
+          anchorPoints: ['A', 'B', 'C'],
+          weights: [1, 1, 1],
+          label: 'I',
+          color: '#0891B2',
+        },
+        {
           id: 'g1',
           kind: 'centroid',
           vertices: ['S', 'A', 'B'],
           label: 'G',
           color: '#2563EB',
+          showMedians: true,
         },
         {
           id: 'h1',
@@ -141,6 +187,24 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
           footLabel: 'H',
           color: '#1B5E4A',
           showRightAngle: true,
+        },
+        {
+          id: 'hk1',
+          kind: 'altitude',
+          apexVertex: 'A',
+          footTarget: 'S',
+          targetEdgeTo: 'B',
+          footLabel: 'K',
+          color: '#D97706',
+          showRightAngle: true,
+        },
+        {
+          id: 'pln1',
+          kind: 'plane',
+          points: ['m1', 'r1', 'C'],
+          label: 'α',
+          color: '#1D4ED8',
+          fillOpacity: 0.24,
         },
         {
           id: 'seg1',
@@ -163,6 +227,11 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     expect(mid.y).toBeCloseTo((vS.y + vA.y) / 2, 5);
     expect(mid.z).toBeCloseTo((vS.z + vA.z) / 2, 5);
 
+    const ratioPt = evalResult.allPoints3D.get('r1')!;
+    expect(ratioPt.x).toBeCloseTo(vS.x + (vB.x - vS.x) / 3, 5);
+    expect(ratioPt.y).toBeCloseTo(vS.y + (vB.y - vS.y) / 3, 5);
+    expect(ratioPt.z).toBeCloseTo(vS.z + (vB.z - vS.z) / 3, 5);
+
     const centroid = evalResult.allPoints3D.get('g1')!;
     expect(centroid.x).toBeCloseTo((vS.x + vA.x + vB.x) / 3, 5);
     expect(centroid.y).toBeCloseTo((vS.y + vA.y + vB.y) / 3, 5);
@@ -172,7 +241,32 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     expect(footH.x).toBeCloseTo(vS.x, 5);
     expect(footH.y).toBeCloseTo(schema.basePlaneY, 5);
     expect(footH.z).toBeCloseTo(vS.z, 5);
-    expect(evalResult.constructedPoints).toHaveLength(3);
+
+    // Hình chiếu vuông góc K của A lên cạnh SB phải nằm trên đoạn SB
+    const footK = evalResult.allPoints3D.get('hk1')!;
+    expect(footK).toBeDefined();
+    expect(evalResult.constructedPoints).toHaveLength(6);
+
+    // Kiểm tra hit-test trực tiếp trên hình 3D (GeoGebra picking)
+    const sampleSolid = {
+      id: 's-test',
+      preset: 'pyramid-quad' as const,
+      x: 0,
+      y: 0,
+      width: 300,
+      height: 300,
+      yaw: 32,
+      pitch: 20,
+      color: '#111827',
+      lineWidth: 2,
+      showLabels: true,
+      showAuxLines: true,
+      dashedHidden: true,
+    };
+    // Điểm đỉnh S nằm phía trên tâm (150, ~30)
+    const hitNearTop = hitTestSolid3DScene(sampleSolid, 146, 30, 45);
+    expect(hitNearTop).not.toBeNull();
+    expect(hitNearTop?.kind).toBe('point');
   });
 
   it('quản lý Thư mục đa cấp (tạo mục cha/con, di chuyển vở, xóa thư mục không mất vở) và tách biệt theo tài khoản', () => {
@@ -275,10 +369,14 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
 
     fireEvent.click(screen.getByTestId('solid-tab-constructions'));
     fireEvent.click(screen.getByTestId('add-midpoint-btn'));
+    fireEvent.click(screen.getByTestId('point-ratio-1/3'));
+    fireEvent.click(screen.getByTestId('add-midpoint-btn'));
     fireEvent.click(screen.getByText('Trọng tâm'));
     fireEvent.click(screen.getByTestId('add-centroid-btn'));
     fireEvent.click(screen.getByText('Đường cao'));
     fireEvent.click(screen.getByTestId('add-altitude-btn'));
+    fireEvent.click(screen.getByTestId('const-mode-plane'));
+    fireEvent.click(screen.getByTestId('add-plane-btn'));
     fireEvent.click(screen.getByText('Nối đoạn'));
     fireEvent.click(screen.getByTestId('add-segment-btn'));
 
@@ -288,7 +386,9 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     expect(insertedSolid).toBeDefined();
     expect(insertedSolid!.width).toBe(360);
     expect(insertedSolid!.customLabels?.S).toBe('P');
-    expect(insertedSolid!.constructions).toHaveLength(4);
+    expect(insertedSolid!.constructions).toHaveLength(6);
+    expect(insertedSolid!.constructions?.some((c) => c.kind === 'ratio-point')).toBe(true);
+    expect(insertedSolid!.constructions?.some((c) => c.kind === 'plane')).toBe(true);
 
     // 4. Thu/phóng trực tiếp hình 3D đang chọn và bật chế độ hình không tên (trơn) ngay trên trang
     expect(screen.getByTestId('ink-resize-frame')).toBeInTheDocument();

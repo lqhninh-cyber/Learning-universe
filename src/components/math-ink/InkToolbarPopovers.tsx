@@ -169,12 +169,12 @@ const PenStrokePreviewCanvas: FC<{ readonly preset: PenPreset }> = ({ preset }) 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    const points = Array.from({ length: 34 }, (_, i) => {
-      const t = i / 33;
+    const points = Array.from({ length: 36 }, (_, i) => {
+      const t = i / 35;
       return {
         x: 14 + t * (w - 28),
         y: h / 2 - Math.sin(t * Math.PI * 2.2) * 11,
-        pressure: 0.5,
+        pressure: 0.42 + 0.34 * Math.sin(t * Math.PI),
       };
     });
 
@@ -184,9 +184,10 @@ const PenStrokePreviewCanvas: FC<{ readonly preset: PenPreset }> = ({ preset }) 
       color: preset.color,
       width: Math.min(18, preset.width),
       opacity: preset.penKind === 'highlighter' ? 0.36 : preset.penKind === 'pencil' ? 0.78 : 1,
+      streamline: preset.streamline ?? 0.58,
       points,
     });
-  }, [preset.color, preset.penKind, preset.width]);
+  }, [preset.color, preset.penKind, preset.streamline, preset.width]);
 
   return (
     <canvas
@@ -282,6 +283,52 @@ export const PenSettingsPopover: FC<{
         className="w-full accent-[var(--accent-os)]"
       />
     </div>
+
+    <div className="space-y-1.5 border-t border-[var(--border-hairline)] pt-2">
+      <div className="flex items-center justify-between font-mono text-[10px] text-[var(--text-muted)]">
+        <span>Độ mượt chữ viết (Khử rung)</span>
+        <span>{Math.round((preset.streamline ?? 0.58) * 100)}%</span>
+      </div>
+      <div className="grid grid-cols-3 gap-1">
+        {(
+          [
+            { label: 'Tự nhiên', val: 0.25 },
+            { label: 'Mượt chuẩn', val: 0.58 },
+            { label: 'Thư pháp', val: 0.82 },
+          ] as const
+        ).map((item) => {
+          const curStreamline = preset.streamline ?? 0.58;
+          const active = Math.abs(curStreamline - item.val) < 0.08;
+          return (
+            <button
+              key={item.label}
+              type="button"
+              data-testid={`pen-streamline-${Math.round(item.val * 100)}`}
+              onClick={() => onChange({ streamline: item.val })}
+              className={cn(
+                'cursor-pointer rounded-md border py-1 text-[10px] font-medium transition-colors',
+                active
+                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                  : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+              )}
+            >
+              {item.label}
+            </button>
+          );
+        })}
+      </div>
+      <input
+        type="range"
+        data-testid="pen-streamline-slider"
+        min={0}
+        max={0.9}
+        step={0.04}
+        value={preset.streamline ?? 0.58}
+        onChange={(e) => onChange({ streamline: Number(e.target.value) })}
+        aria-label="Độ mượt chữ viết"
+        className="w-full accent-[var(--accent-os)]"
+      />
+    </div>
   </div>
 );
 
@@ -345,6 +392,7 @@ const SHAPE_LIST: readonly {
   { id: 'circle', label: 'Đường tròn', icon: Circle },
   { id: 'ellipse', label: 'Elip', icon: Circle },
   { id: 'rect', label: 'Chữ nhật', icon: Square },
+  { id: 'parallelogram', label: 'Mặt phẳng (α)', icon: Diamond },
   { id: 'triangle', label: 'Tam giác', icon: Triangle },
   { id: 'right-triangle', label: 'TG vuông', icon: Triangle },
   { id: 'diamond', label: 'Hình thoi', icon: Diamond },

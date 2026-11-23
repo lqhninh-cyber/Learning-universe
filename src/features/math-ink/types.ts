@@ -26,6 +26,7 @@ export type ShapeToolKind =
   | 'circle'
   | 'ellipse'
   | 'rect'
+  | 'parallelogram'
   | 'triangle'
   | 'right-triangle'
   | 'diamond'
@@ -94,7 +95,15 @@ export interface InkWorksheetBackground {
 }
 
 export type Solid3DPresetKind =
-  'pyramid-tri' | 'pyramid-quad' | 'prism-tri' | 'box' | 'cone' | 'cylinder' | 'sphere' | 'oxyz';
+  | 'pyramid-tri'
+  | 'pyramid-quad'
+  | 'prism-tri'
+  | 'box'
+  | 'cone'
+  | 'cylinder'
+  | 'sphere'
+  | 'oxyz'
+  | 'plane-alpha';
 
 export interface InkPoint {
   readonly x: number;
@@ -109,6 +118,8 @@ export interface InkStroke {
   readonly width: number;
   readonly opacity: number;
   readonly points: readonly InkPoint[];
+  /** Hệ số làm mượt đường cong chữ viết (0 -> 0.9, mặc định 0.55) */
+  readonly streamline?: number;
 }
 
 export interface InkShapeItem {
@@ -133,10 +144,36 @@ export type Solid3DConstruction =
     }
   | {
       readonly id: string;
+      readonly kind: 'ratio-point';
+      /** ID điểm bắt đầu (đỉnh gốc hoặc điểm đã dựng) */
+      readonly fromPoint: string;
+      /** ID điểm kết thúc (đỉnh gốc hoặc điểm đã dựng) */
+      readonly toPoint: string;
+      /** Tỉ số chia đoạn AM/AB = ratio (0.05 -> 0.95, VD: 1/3, 2/3, 1/4, 3/4) */
+      readonly ratio: number;
+      readonly label: string;
+      readonly color?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'free-point';
+      /** Các điểm neo tổ hợp affine (VD: ['A', 'B', 'C'] để đặt điểm thuộc mặt phẳng (ABC)) */
+      readonly anchorPoints: readonly string[];
+      /** Trọng số tương ứng với anchorPoints (nếu bỏ trống sẽ tự chia đều) */
+      readonly weights?: readonly number[];
+      /** Độ lệch 3D bổ sung trong hệ tọa độ khối */
+      readonly offset3D?: { readonly x: number; readonly y: number; readonly z: number };
+      readonly label: string;
+      readonly color?: string;
+    }
+  | {
+      readonly id: string;
       readonly kind: 'centroid';
       readonly vertices: readonly string[];
       readonly label: string;
       readonly color?: string;
+      /** Tự động kẻ các đường trung tuyến / hai đường chéo nét đứt giao nhau tại tâm */
+      readonly showMedians?: boolean;
     }
   | {
       readonly id: string;
@@ -144,6 +181,8 @@ export type Solid3DConstruction =
       readonly apexVertex: string;
       /** `'base-plane'` = hạ vuông góc xuống mặt đáy, hoặc ID của điểm mục tiêu (đỉnh/trung điểm/trọng tâm) */
       readonly footTarget: string;
+      /** Nếu có targetEdgeTo, hạ hình chiếu vuông góc từ apexVertex xuống đoạn [footTarget, targetEdgeTo] */
+      readonly targetEdgeTo?: string;
       readonly footLabel: string;
       readonly showRightAngle?: boolean;
       readonly color?: string;
@@ -155,6 +194,21 @@ export type Solid3DConstruction =
       readonly toPoint: string;
       readonly style: 'solid' | 'dashed';
       readonly color?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'plane';
+      /** Danh sách 3 đến 6 điểm tạo thành mặt phẳng / thiết diện (VD: ['M', 'N', 'P'] hoặc ['S', 'A', 'C']) */
+      readonly points: readonly string[];
+      /** Nhãn góc mặt phẳng (VD: 'α', 'β', 'P', 'Q', '(MNP)') */
+      readonly label?: string;
+      readonly color?: string;
+      /** Độ đậm màu tô mặt phẳng (0.08 -> 0.45, mặc định 0.22) */
+      readonly fillOpacity?: number;
+      /** Kiểu viền bao mặt phẳng: 'auto' | 'solid' | 'dashed' */
+      readonly borderStyle?: 'auto' | 'solid' | 'dashed';
+      /** Hiển thị cung góc ký hiệu tên mặt phẳng chuẩn sách giáo khoa */
+      readonly showPlaneArc?: boolean;
     };
 
 export interface Ink3DSolidItem {
@@ -262,6 +316,8 @@ export interface PenPreset {
   readonly penKind: PenKind;
   readonly color: string;
   readonly width: number;
+  /** Hệ số làm mượt & khử rung chữ viết tay (0 -> 0.9, mặc định 0.55) */
+  readonly streamline?: number;
 }
 
 export interface RulerState {
@@ -287,15 +343,15 @@ export const DEFAULT_PAPER_CONFIG: PaperConfig = {
 };
 
 export const DEFAULT_PEN_PRESETS: readonly PenPreset[] = [
-  { id: 'pen-black', penKind: 'ballpoint', color: '#111827', width: 2.8 },
-  { id: 'pen-blue', penKind: 'ballpoint', color: '#1D4ED8', width: 2.8 },
-  { id: 'pen-red', penKind: 'fountain', color: '#DC2626', width: 3.0 },
-  { id: 'pen-emerald', penKind: 'ballpoint', color: '#1B5E4A', width: 2.8 },
-  { id: 'pen-amber', penKind: 'fountain', color: '#D97706', width: 3.0 },
-  { id: 'pen-violet', penKind: 'ballpoint', color: '#6D28D9', width: 2.6 },
-  { id: 'hl-green', penKind: 'highlighter', color: '#22C55E', width: 18 },
-  { id: 'hl-amber', penKind: 'highlighter', color: '#FACC15', width: 18 },
-  { id: 'hl-cyan', penKind: 'highlighter', color: '#06B6D4', width: 18 },
+  { id: 'pen-black', penKind: 'ballpoint', color: '#111827', width: 2.8, streamline: 0.58 },
+  { id: 'pen-blue', penKind: 'ballpoint', color: '#1D4ED8', width: 2.8, streamline: 0.58 },
+  { id: 'pen-red', penKind: 'fountain', color: '#DC2626', width: 3.0, streamline: 0.68 },
+  { id: 'pen-emerald', penKind: 'ballpoint', color: '#1B5E4A', width: 2.8, streamline: 0.58 },
+  { id: 'pen-amber', penKind: 'fountain', color: '#D97706', width: 3.0, streamline: 0.68 },
+  { id: 'pen-violet', penKind: 'ballpoint', color: '#6D28D9', width: 2.6, streamline: 0.58 },
+  { id: 'hl-green', penKind: 'highlighter', color: '#22C55E', width: 18, streamline: 0.45 },
+  { id: 'hl-amber', penKind: 'highlighter', color: '#FACC15', width: 18, streamline: 0.45 },
+  { id: 'hl-cyan', penKind: 'highlighter', color: '#06B6D4', width: 18, streamline: 0.45 },
 ];
 
 export const SCRBLE_COLOR_PALETTE: readonly string[] = [

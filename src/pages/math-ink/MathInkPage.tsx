@@ -84,6 +84,7 @@ import {
   selectActiveNotebook,
   selectActivePenPreset,
   snapPointToRulerEdge,
+  stabilizeInkPoint,
   useInkNotebookStore,
   type EraserMode,
   type Ink3DSolidItem,
@@ -369,6 +370,7 @@ export function MathInkPage() {
     startY: number;
     lastX: number;
     lastY: number;
+    lastTimeMs: number;
     strokeDraft: InkStroke | null;
     shapeDraft: InkShapeItem | null;
     lassoDraft: InkPoint[];
@@ -378,6 +380,7 @@ export function MathInkPage() {
     startY: 0,
     lastX: 0,
     lastY: 0,
+    lastTimeMs: 0,
     strokeDraft: null,
     shapeDraft: null,
     lassoDraft: [],
@@ -769,7 +772,7 @@ export function MathInkPage() {
       return;
     }
 
-    // 2. Công cụ Bút viết (hỗ trợ hút thẳng theo cạnh Thước kẻ!)
+    // 2. Công cụ Bút viết (hỗ trợ hút thẳng theo cạnh Thước kẻ & bộ ổn định nét Streamline!)
     if (activeTool === 'pen') {
       const pt = ruler.visible ? (snapPointToRulerEdge(rawPt.x, rawPt.y, ruler) ?? rawPt) : rawPt;
       const stroke: InkStroke = {
@@ -783,6 +786,7 @@ export function MathInkPage() {
             : activePenPreset.penKind === 'pencil'
               ? 0.78
               : 1,
+        streamline: activePenPreset.streamline ?? 0.58,
         points: [pt],
       };
       interactionRef.current = {
@@ -792,6 +796,7 @@ export function MathInkPage() {
         startY: pt.y,
         lastX: pt.x,
         lastY: pt.y,
+        lastTimeMs: performance.now(),
         strokeDraft: stroke,
       };
       setActiveStroke(stroke);
@@ -910,11 +915,22 @@ export function MathInkPage() {
     }
 
     if (state.mode === 'draw-stroke' && state.strokeDraft) {
-      const pt = ruler.visible ? (snapPointToRulerEdge(rawPt.x, rawPt.y, ruler) ?? rawPt) : rawPt;
+      const rawCandidate = ruler.visible
+        ? (snapPointToRulerEdge(rawPt.x, rawPt.y, ruler) ?? rawPt)
+        : rawPt;
+      const nowMs = performance.now();
+      const dtMs = Math.max(4, nowMs - (state.lastTimeMs || nowMs - 16));
+      const prevPt = state.strokeDraft.points[state.strokeDraft.points.length - 1] ?? rawCandidate;
+      const streamlineVal = ruler.visible ? 0 : (state.strokeDraft.streamline ?? 0.58);
+      const pt =
+        streamlineVal > 0.02
+          ? stabilizeInkPoint(prevPt, rawCandidate, streamlineVal, dtMs)
+          : rawCandidate;
       const dist = Math.hypot(pt.x - state.lastX, pt.y - state.lastY);
-      if (dist < 1.5) return;
+      if (dist < 1.15) return;
       state.lastX = pt.x;
       state.lastY = pt.y;
+      state.lastTimeMs = nowMs;
       const nextStroke: InkStroke = {
         ...state.strokeDraft,
         points: [...state.strokeDraft.points, pt],
@@ -982,7 +998,23 @@ export function MathInkPage() {
     const rawPt = toCanvasPoint(e);
 
     if (state.mode === 'draw-stroke' && state.strokeDraft) {
-      const finished = state.strokeDraft;
+      const endCandidate = ruler.visible
+        ? (snapPointToRulerEdge(rawPt.x, rawPt.y, ruler) ?? rawPt)
+        : rawPt;
+      const draftPts = state.strokeDraft.points;
+      const lastDraftPt = draftPts[draftPts.length - 1];
+      const finalPoints =
+        lastDraftPt &&
+        Math.hypot(endCandidate.x - lastDraftPt.x, endCandidate.y - lastDraftPt.y) >= 1.4
+          ? [
+              ...draftPts,
+              { ...endCandidate, pressure: Math.min(0.45, lastDraftPt.pressure ?? 0.45) },
+            ]
+          : draftPts;
+      const finished: InkStroke = {
+        ...state.strokeDraft,
+        points: finalPoints,
+      };
       const recognized = recognizeInkGesture(finished.points, inkMode);
       if (recognized) {
         addShape({
@@ -1078,6 +1110,7 @@ export function MathInkPage() {
       startY: 0,
       lastX: 0,
       lastY: 0,
+      lastTimeMs: 0,
       strokeDraft: null,
       shapeDraft: null,
       lassoDraft: [],

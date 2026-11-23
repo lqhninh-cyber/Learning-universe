@@ -101,40 +101,129 @@ export function drawPaperBackground(
   ctx.restore();
 }
 
-/** Làm mịn nhẹ chuỗi điểm vẽ tay để loại bỏ rung chuột mà vẫn giữ chính xác điểm đầu/cuối */
-function smoothStrokePoints(pts: readonly InkPoint[]): InkPoint[] {
-  if (pts.length <= 2) return [...pts];
-  const out: InkPoint[] = [pts[0]!];
-  for (let i = 1; i < pts.length - 1; i += 1) {
-    const prev = pts[i - 1]!;
-    const cur = pts[i]!;
-    const next = pts[i + 1]!;
-    out.push({
-      x: prev.x * 0.2 + cur.x * 0.6 + next.x * 0.2,
-      y: prev.y * 0.2 + cur.y * 0.6 + next.y * 0.2,
-      pressure: cur.pressure ?? 0.5,
-    });
+/**
+ * Bộ lọc ổn định nét bút thời gian thực (Spring-String Streamline Filter):
+ * - Khử rung tay khi viết bằng chuột / touchpad ở tốc độ chậm.
+ * - Tự động bắt kịp đầu bút khi vẩy nét nhanh để không bị trễ.
+ * - Tự nội suy áp lực bút tự nhiên từ vận tốc di chuyển khi thiết bị không có cảm ứng lực.
+ */
+export function stabilizeInkPoint(
+  prev: InkPoint,
+  raw: InkPoint,
+  streamline = 0.58,
+  dtMs = 16,
+): InkPoint {
+  const clampedStreamline = Math.max(0, Math.min(0.92, streamline));
+  const dx = raw.x - prev.x;
+  const dy = raw.y - prev.y;
+  const dist = Math.hypot(dx, dy);
+
+  // Vận tốc tức thời (px/ms) để tự điều biến độ mở bộ lọc và áp lực giả lập
+  const safeDt = Math.max(4, Math.min(80, dtMs));
+  const velocity = dist / safeDt;
+
+  // Khi lia nhanh (dist lớn), tăng hệ số alpha để nét bám sát mũi bút
+  const dynamicAlpha = Math.max(
+    0.16,
+    Math.min(1, 1 - clampedStreamline * 0.76 + Math.min(0.28, dist / 95)),
+  );
+
+  const x = prev.x + dx * dynamicAlpha;
+  const y = prev.y + dy * dynamicAlpha;
+
+  const rawPressure = raw.pressure;
+  const hasHardwarePressure =
+    typeof rawPressure === 'number' && Math.abs(rawPressure - 0.5) > 0.015 && rawPressure > 0.05;
+
+  let pressure: number;
+  if (hasHardwarePressure) {
+    const prevP = prev.pressure ?? rawPressure;
+    pressure = prevP * 0.45 + rawPressure * 0.55;
+  } else {
+    // Giả lập lực nhấn tự nhiên từ tốc độ viết: nét uốn chậm đậm vừa, nét vẩy nhanh thanh nhẹ
+    const targetP = Math.max(0.3, Math.min(0.88, 0.76 - velocity * 0.24));
+    const prevP = prev.pressure ?? 0.56;
+    pressure = prevP * 0.64 + targetP * 0.36;
   }
-  out.push(pts[pts.length - 1]!);
-  return out;
+
+  return { x, y, pressure };
 }
 
-/** Lấy mẫu mịn dọc đường cong bậc hai qua trung điểm để ngòi bút máy uốn lượn không gãy khúc */
-function sampleSmoothCurve(pts: readonly InkPoint[]): InkPoint[] {
+/**
+ * Làm mịn đa tầng bảo toàn góc nhọn (Corner-Preserving Multi-Pass Smoothing):
+ * - Loại bỏ hoàn toàn răng cưa vi mô khi viết chữ cái uốn lượn (a, e, g, s, ∫, α, β, φ).
+ * - Tự động phát hiện và giữ sắc nét các góc gập chủ ý (> 105° như số 7, 4, Σ, Δ, dấu căn).
+ */
+export function smoothStrokePoints(pts: readonly InkPoint[], streamline = 0.58): InkPoint[] {
+  if (pts.length <= 2) return [...pts];
+  const strength = Math.max(0, Math.min(0.92, streamline));
+  if (strength <= 0.03) return [...pts];
+
+  const passes = strength >= 0.72 ? 3 : strength >= 0.38 ? 2 : 1;
+  let current: InkPoint[] = [...pts];
+
+  for (let pass = 0; pass < passes; pass += 1) {
+    const nextPass: InkPoint[] = [current[0]!];
+    const neighborWeight = 0.14 + strength * 0.14; // 0.14 -> 0.27
+
+    for (let i = 1; i < current.length - 1; i += 1) {
+      const prev = current[i - 1]!;
+      const cur = current[i]!;
+      const next = current[i + 1]!;
+
+      const ux = cur.x - prev.x;
+      const uy = cur.y - prev.y;
+      const vx = next.x - cur.x;
+      const vy = next.y - cur.y;
+      const lenU = Math.hypot(ux, uy);
+      const lenV = Math.hypot(vx, vy);
+
+      // Bảo toàn góc nhọn chủ ý (cosTheta < -0.22 tương ứng góc rẽ > 103°)
+      let localNeighborW = neighborWeight;
+      if (lenU > 1.2 && lenV > 1.2) {
+        const cosTheta = (ux * vx + uy * vy) / (lenU * lenV);
+        if (cosTheta < -0.22) {
+          localNeighborW *= 0.18;
+        } else if (cosTheta < 0.25) {
+          localNeighborW *= 0.55;
+        }
+      }
+      const localCenterW = 1 - localNeighborW * 2;
+
+      const pPrev = prev.pressure ?? 0.55;
+      const pCur = cur.pressure ?? 0.55;
+      const pNext = next.pressure ?? 0.55;
+
+      nextPass.push({
+        x: prev.x * localNeighborW + cur.x * localCenterW + next.x * localNeighborW,
+        y: prev.y * localNeighborW + cur.y * localCenterW + next.y * localNeighborW,
+        pressure: pPrev * 0.2 + pCur * 0.6 + pNext * 0.2,
+      });
+    }
+
+    nextPass.push(current[current.length - 1]!);
+    current = nextPass;
+  }
+
+  return current;
+}
+
+/** Lấy mẫu mịn dọc đường cong сплайн bậc hai qua trung điểm để ngòi bút uốn lượn mượt mà */
+function sampleSmoothCurve(pts: readonly InkPoint[], streamline = 0.58, stepPx = 1.8): InkPoint[] {
   if (pts.length <= 1) return [...pts];
-  const smooth = smoothStrokePoints(pts);
+  const smooth = smoothStrokePoints(pts, streamline);
   if (smooth.length === 2) {
     const a = smooth[0]!;
     const b = smooth[1]!;
     const dist = Math.hypot(b.x - a.x, b.y - a.y);
-    const steps = Math.max(1, Math.ceil(dist / 2.2));
+    const steps = Math.max(1, Math.ceil(dist / stepPx));
     const sampled: InkPoint[] = [];
     for (let s = 0; s <= steps; s += 1) {
       const t = s / steps;
       sampled.push({
         x: a.x + (b.x - a.x) * t,
         y: a.y + (b.y - a.y) * t,
-        pressure: (a.pressure ?? 0.5) + ((b.pressure ?? 0.5) - (a.pressure ?? 0.5)) * t,
+        pressure: (a.pressure ?? 0.55) + ((b.pressure ?? 0.55) - (a.pressure ?? 0.55)) * t,
       });
     }
     return sampled;
@@ -143,7 +232,7 @@ function sampleSmoothCurve(pts: readonly InkPoint[]): InkPoint[] {
   const sampled: InkPoint[] = [smooth[0]!];
   let prevX = smooth[0]!.x;
   let prevY = smooth[0]!.y;
-  let prevP = smooth[0]!.pressure ?? 0.5;
+  let prevP = smooth[0]!.pressure ?? 0.55;
 
   for (let i = 1; i < smooth.length; i += 1) {
     const ctrl = smooth[i]!;
@@ -151,12 +240,12 @@ function sampleSmoothCurve(pts: readonly InkPoint[]): InkPoint[] {
     const endX = isLast ? ctrl.x : (ctrl.x + smooth[i + 1]!.x) / 2;
     const endY = isLast ? ctrl.y : (ctrl.y + smooth[i + 1]!.y) / 2;
     const endP = isLast
-      ? (ctrl.pressure ?? 0.5)
-      : ((ctrl.pressure ?? 0.5) + (smooth[i + 1]!.pressure ?? 0.5)) / 2;
+      ? (ctrl.pressure ?? 0.55)
+      : ((ctrl.pressure ?? 0.55) + (smooth[i + 1]!.pressure ?? 0.55)) / 2;
 
     const approxLen =
       Math.hypot(ctrl.x - prevX, ctrl.y - prevY) + Math.hypot(endX - ctrl.x, endY - ctrl.y);
-    const steps = Math.max(1, Math.min(28, Math.ceil(approxLen / 2.2)));
+    const steps = Math.max(1, Math.min(32, Math.ceil(approxLen / stepPx)));
 
     for (let s = 1; s <= steps; s += 1) {
       const t = s / steps;
@@ -176,18 +265,117 @@ function sampleSmoothCurve(pts: readonly InkPoint[]): InkPoint[] {
 }
 
 /**
- * Kết xuất nét bút máy ngòi dẹt nghiêng (Calligraphy Chisel Nib góc -34°, giống Scrble Ink):
+ * Kết xuất nét Bút thường / Bút Gel Toán học (Variable-Width Tapered Gel Ink):
+ * - Tự động vuốt thon nhẹ ở đầu nét và đuôi nét (tapered terminals) giúp chữ viết thanh thoát.
+ * - Điều biến độ dày mượt theo lực nhấn / vận tốc (±22%) trên một dải băng liên tục không ngấn.
+ */
+function drawBallpointGelStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke): void {
+  const dense = sampleSmoothCurve(stroke.points, stroke.streamline ?? 0.58, 1.8);
+  if (dense.length <= 2) {
+    const p0 = dense[0]!;
+    const p1 = dense[dense.length - 1]!;
+    ctx.lineWidth = stroke.width;
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+    ctx.lineTo(p1.x, p1.y);
+    ctx.stroke();
+    return;
+  }
+
+  // Tính chiều dài tích lũy dọc nét để tạo độ vuốt thon (taper) tự nhiên ở đầu và đuôi
+  const cumLen: number[] = [0];
+  let totalLen = 0;
+  for (let i = 1; i < dense.length; i += 1) {
+    totalLen += Math.hypot(dense[i]!.x - dense[i - 1]!.x, dense[i]!.y - dense[i - 1]!.y);
+    cumLen.push(totalLen);
+  }
+
+  if (totalLen < 4.5) {
+    ctx.lineWidth = stroke.width;
+    ctx.beginPath();
+    ctx.moveTo(dense[0]!.x, dense[0]!.y);
+    for (let i = 1; i < dense.length; i += 1) {
+      ctx.lineTo(dense[i]!.x, dense[i]!.y);
+    }
+    ctx.stroke();
+    return;
+  }
+
+  const baseRadius = Math.max(0.65, stroke.width / 2);
+  const startTaperDist = Math.min(7, totalLen * 0.16);
+  const endTaperDist = Math.min(14, totalLen * 0.25);
+
+  const leftSide: { x: number; y: number }[] = [];
+  const rightSide: { x: number; y: number }[] = [];
+
+  for (let i = 0; i < dense.length; i += 1) {
+    const cur = dense[i]!;
+    const prev = dense[Math.max(0, i - 1)]!;
+    const next = dense[Math.min(dense.length - 1, i + 1)]!;
+
+    let tx = next.x - prev.x;
+    let ty = next.y - prev.y;
+    const tLen = Math.hypot(tx, ty);
+    if (tLen > 1e-4) {
+      tx /= tLen;
+      ty /= tLen;
+    } else {
+      tx = 1;
+      ty = 0;
+    }
+
+    const nx = -ty;
+    const ny = tx;
+
+    const dStart = cumLen[i]!;
+    const dEnd = totalLen - dStart;
+    const startFactor =
+      startTaperDist > 0.5 && dStart < startTaperDist ? 0.58 + 0.42 * (dStart / startTaperDist) : 1;
+    const endFactor =
+      endTaperDist > 0.5 && dEnd < endTaperDist
+        ? 0.42 + 0.58 * Math.pow(dEnd / endTaperDist, 0.85)
+        : 1;
+
+    const pFactor = 0.82 + (cur.pressure ?? 0.55) * 0.32;
+    const r = baseRadius * startFactor * endFactor * pFactor;
+
+    leftSide.push({ x: cur.x + nx * r, y: cur.y + ny * r });
+    rightSide.push({ x: cur.x - nx * r, y: cur.y - ny * r });
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(leftSide[0]!.x, leftSide[0]!.y);
+  for (let i = 1; i < leftSide.length; i += 1) {
+    ctx.lineTo(leftSide[i]!.x, leftSide[i]!.y);
+  }
+  for (let i = rightSide.length - 1; i >= 0; i -= 1) {
+    ctx.lineTo(rightSide[i]!.x, rightSide[i]!.y);
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // Bo tròn hai đầu mút nét mực
+  const firstPt = dense[0]!;
+  const lastPt = dense[dense.length - 1]!;
+  ctx.beginPath();
+  ctx.arc(firstPt.x, firstPt.y, baseRadius * 0.56, 0, Math.PI * 2);
+  ctx.arc(lastPt.x, lastPt.y, baseRadius * 0.42, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/**
+ * Kết xuất nét bút máy ngòi dẹt nghiêng (Calligraphy Chisel Nib góc -34°, nâng cấp độ mịn cao):
  * - Nét đi lên-phải (↗) thanh mảnh, nét đi xuống-phải (↘) & sổ dọc (↓) đậm bản rộng.
- * - Hai đầu nét vát chéo sắc nét theo đúng góc ngòi bút máy.
+ * - Vuốt thon nhẹ ở đuôi nét và khử hoàn toàn ngấn răng cưa ở các vòng cong chữ viết.
  */
 function drawFountainCalligraphyStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke): void {
   const NIB_ANGLE_RAD = (-34 * Math.PI) / 180;
   const cosA = Math.cos(NIB_ANGLE_RAD);
   const sinA = Math.sin(NIB_ANGLE_RAD);
 
-  const nibFullLength = Math.max(2.6, stroke.width * 2.05);
-  const minRibbonWidth = Math.max(1.15, stroke.width * 0.42);
-  const dense = sampleSmoothCurve(stroke.points);
+  const nibFullLength = Math.max(2.6, stroke.width * 2.08);
+  const minRibbonWidth = Math.max(1.1, stroke.width * 0.4);
+  const dense = sampleSmoothCurve(stroke.points, stroke.streamline ?? 0.68, 1.45);
 
   if (dense.length === 1) {
     const p = dense[0]!;
@@ -199,9 +387,9 @@ function drawFountainCalligraphyStroke(ctx: CanvasRenderingContext2D, stroke: In
     return;
   }
 
-  // 1. Nét lõi thanh mảnh bảo đảm đoạn trùng góc ngòi (-34°) không bao giờ bị đứt nét
+  // 1. Nét lõi thanh mảnh bảo đảm đoạn trùng góc ngòi (-34°) luôn liền mạch sắc nét
   ctx.lineWidth = minRibbonWidth;
-  ctx.lineCap = 'butt';
+  ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.beginPath();
   ctx.moveTo(dense[0]!.x, dense[0]!.y);
@@ -210,14 +398,23 @@ function drawFountainCalligraphyStroke(ctx: CanvasRenderingContext2D, stroke: In
   }
   ctx.stroke();
 
-  // 2. Quét lưỡi ngòi dẹt dọc đường cong tạo dải ruy-băng thanh-đậm & hai đầu vát chéo chuẩn xác
-  ctx.lineWidth = 0.45;
-  ctx.lineJoin = 'miter';
-  for (let i = 0; i < dense.length - 1; i += 1) {
+  // 2. Quét lưỡi ngòi dẹt với mật độ cao + vuốt nhẹ ở điểm kết thúc nét
+  const n = dense.length;
+  const tailCount = Math.min(10, Math.floor(n * 0.2));
+  ctx.lineWidth = 0.35;
+  ctx.lineJoin = 'round';
+  for (let i = 0; i < n - 1; i += 1) {
     const p0 = dense[i]!;
     const p1 = dense[i + 1]!;
-    const scale0 = 0.86 + (p0.pressure ?? 0.5) * 0.28;
-    const scale1 = 0.86 + (p1.pressure ?? 0.5) * 0.28;
+    const tailFactor0 =
+      tailCount > 2 && n - 1 - i < tailCount ? 0.62 + 0.38 * ((n - 1 - i) / tailCount) : 1;
+    const tailFactor1 =
+      tailCount > 2 && n - 2 - i < tailCount
+        ? 0.62 + 0.38 * (Math.max(0, n - 2 - i) / tailCount)
+        : 1;
+
+    const scale0 = (0.84 + (p0.pressure ?? 0.55) * 0.32) * tailFactor0;
+    const scale1 = (0.84 + (p1.pressure ?? 0.55) * 0.32) * tailFactor1;
     const h0 = (nibFullLength * scale0) / 2;
     const h1 = (nibFullLength * scale1) / 2;
 
@@ -257,7 +454,7 @@ export function drawInkStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke):
     ctx.lineCap = 'butt';
   }
 
-  // Bút máy thư pháp (Fountain): ngòi dẹt nghiêng thanh-đậm chuẩn Scrble Ink
+  // Bút máy thư pháp (Fountain): ngòi dẹt nghiêng thanh-đậm chuẩn thư pháp Toán học
   if (stroke.penKind === 'fountain') {
     drawFountainCalligraphyStroke(ctx, stroke);
     ctx.restore();
@@ -272,22 +469,42 @@ export function drawInkStroke(ctx: CanvasRenderingContext2D, stroke: InkStroke):
     return;
   }
 
-  // Bút thường (Ballpoint), Bút chì & Dạ quang: đường cong làm mịn tròn đều sắc nét
-  const smooth = smoothStrokePoints(pts);
-  ctx.lineWidth = stroke.width;
-  ctx.beginPath();
-  ctx.moveTo(smooth[0]!.x, smooth[0]!.y);
-
-  for (let i = 1; i < smooth.length - 1; i += 1) {
-    const cur = smooth[i]!;
-    const next = smooth[i + 1]!;
-    const midX = (cur.x + next.x) / 2;
-    const midY = (cur.y + next.y) / 2;
-    ctx.quadraticCurveTo(cur.x, cur.y, midX, midY);
+  // Bút thường / Bút Gel (Ballpoint): dải băng vuốt thon hai đầu & điều biến độ dày mượt
+  if (stroke.penKind === 'ballpoint') {
+    drawBallpointGelStroke(ctx, stroke);
+    ctx.restore();
+    return;
   }
-  const last = smooth[smooth.length - 1]!;
-  ctx.lineTo(last.x, last.y);
-  ctx.stroke();
+
+  // Bút chì (Pencil) & Dạ quang (Highlighter): đường cong spline đa tầng
+  const smooth = smoothStrokePoints(pts, stroke.streamline ?? 0.5);
+  const traceCurve = () => {
+    ctx.beginPath();
+    ctx.moveTo(smooth[0]!.x, smooth[0]!.y);
+    for (let i = 1; i < smooth.length - 1; i += 1) {
+      const cur = smooth[i]!;
+      const next = smooth[i + 1]!;
+      const midX = (cur.x + next.x) / 2;
+      const midY = (cur.y + next.y) / 2;
+      ctx.quadraticCurveTo(cur.x, cur.y, midX, midY);
+    }
+    const last = smooth[smooth.length - 1]!;
+    ctx.lineTo(last.x, last.y);
+    ctx.stroke();
+  };
+
+  if (stroke.penKind === 'pencil') {
+    // Lớp bột than chì mờ bên ngoài + lõi chì sắc bên trong
+    ctx.globalAlpha = stroke.opacity * 0.34;
+    ctx.lineWidth = stroke.width * 1.28;
+    traceCurve();
+    ctx.globalAlpha = stroke.opacity * 0.92;
+    ctx.lineWidth = stroke.width * 0.84;
+    traceCurve();
+  } else {
+    ctx.lineWidth = stroke.width;
+    traceCurve();
+  }
 
   ctx.restore();
 }
@@ -369,6 +586,29 @@ export function drawInkShape(ctx: CanvasRenderingContext2D, shape: InkShapeItem)
     }
   } else if (kind === 'rect') {
     ctx.strokeRect(minX, minY, w, h);
+  } else if (kind === 'parallelogram') {
+    const shear = Math.min(w * 0.24, Math.max(12, h * 0.42));
+    ctx.beginPath();
+    ctx.moveTo(minX + shear, minY);
+    ctx.lineTo(minX + w, minY);
+    ctx.lineTo(minX + w - shear, minY + h);
+    ctx.lineTo(minX, minY + h);
+    ctx.closePath();
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = shape.color;
+    ctx.fill();
+    ctx.restore();
+    ctx.stroke();
+
+    // Cung góc mặt phẳng (α) ở góc trái dưới chuẩn sách giáo khoa Hình học
+    if (w > 48 && h > 32) {
+      const arcR = Math.min(22, w * 0.18, h * 0.34);
+      const slopeAngle = Math.atan2(-h, shear);
+      ctx.beginPath();
+      ctx.arc(minX, minY + h, arcR, slopeAngle, 0);
+      ctx.stroke();
+    }
   } else if (kind === 'circle') {
     const r = Math.max(2, Math.min(w, h) / 2);
     ctx.beginPath();
