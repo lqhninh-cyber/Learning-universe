@@ -24,6 +24,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
 import { DashboardAnalyticsCard } from '@/components/home/DashboardAnalyticsCard';
+import { DashboardHeroOrbModel } from '@/components/home/DashboardHeroOrbModel';
 import { GlossaryFlashcardCard } from '@/components/home/GlossaryFlashcardCard';
 import {
   HERITAGE_ARTWORKS,
@@ -108,65 +109,158 @@ function DashboardPomodoroBar() {
   const isPomodoroRunning = pomodoro.status === 'running';
 
   return (
-    <div
-      data-testid="dashboard-pomodoro-bar"
-      className="flex flex-wrap items-center justify-between gap-2 rounded-[18px] border border-white/65 bg-white/75 px-3.5 py-2.5 dark:border-white/10 dark:bg-[#182320]/75"
-    >
-      <div className="flex items-center gap-2.5">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">
-          <Hourglass
-            className={cn('h-4 w-4 shrink-0', isPomodoroRunning && 'animate-pulse')}
-            aria-hidden="true"
-          />
-        </span>
-        <div className="leading-tight">
-          <p className="text-[11.5px] font-semibold text-[var(--text-main)]">Pomodoro</p>
-          <p className="font-mono text-xs font-bold text-[#C27824] tabular-nums dark:text-[#E5A95C]">
-            {isPomodoroActive ? formatMmSs(pomodoro.remainingSeconds) : '25:00'}
-          </p>
+    <div className="space-y-2.5">
+      {/* Mô hình Sóng Điều Hòa Nhịp Tập Trung lấp đầy chiều sâu thẻ kính mờ (cô lập 1Hz) */}
+      <div
+        data-testid="dashboard-focus-wave"
+        className="relative overflow-hidden rounded-[18px] border border-white/65 bg-gradient-to-r from-[#0F7656]/[0.06] via-white/60 to-[#D4AF6A]/[0.09] px-3.5 py-2.5 dark:border-white/10 dark:from-[#4AD1A3]/[0.08] dark:via-[#141E1B]/70 dark:to-[#D4AF6A]/[0.08]"
+      >
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+            <span
+              className={cn(
+                'h-1.5 w-1.5 rounded-full',
+                isPomodoroRunning
+                  ? 'animate-ping bg-[#0F7656] dark:bg-[#4AD1A3]'
+                  : 'bg-[#0F7656]/70 dark:bg-[#4AD1A3]/70',
+              )}
+              aria-hidden="true"
+            />
+            <span>
+              {isPomodoroRunning ? 'Nhịp tập trung đang chạy' : 'Sóng điều hòa tập trung'}
+            </span>
+          </span>
+          <span className="font-mono text-[9.5px] font-semibold text-[#0F7656] dark:text-[#4AD1A3]">
+            {isPomodoroRunning ? 'ACTIVE' : '25m · 5m'}
+          </span>
         </div>
+
+        <svg
+          viewBox="0 0 320 42"
+          fill="none"
+          aria-hidden="true"
+          className="h-9 w-full overflow-visible"
+        >
+          <defs>
+            <linearGradient id="focus-wave-fill" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#0F7656" stopOpacity="0.06" />
+              <stop offset="50%" stopColor="#0F7656" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#D4AF6A" stopOpacity="0.16" />
+            </linearGradient>
+            <linearGradient id="focus-wave-stroke" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#0F7656" stopOpacity="0.55" />
+              <stop offset="55%" stopColor="#16A073" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#C27824" stopOpacity="0.88" />
+            </linearGradient>
+          </defs>
+          {/* Đường chuẩn giữa */}
+          <line
+            x1="0"
+            y1="22"
+            x2="320"
+            y2="22"
+            stroke="currentColor"
+            strokeOpacity="0.14"
+            strokeDasharray="3 4"
+          />
+          {/* Dải sóng hậu cảnh trôi chậm */}
+          <path
+            d="M0 24C28 10 56 34 86 20C116 6 144 34 174 22C204 10 232 34 262 20C290 8 308 26 334 22L334 42L0 42Z"
+            fill="url(#focus-wave-fill)"
+            className="lu-wave-drift-slow"
+          />
+          <path
+            d="M0 26C32 36 62 12 94 24C126 36 156 12 188 22C220 32 250 12 282 22C302 28 318 18 334 20"
+            stroke="#D4AF6A"
+            strokeOpacity={isPomodoroRunning ? '0.78' : '0.45'}
+            strokeWidth="1.2"
+            strokeDasharray="4 4"
+            className="lu-wave-drift-slow"
+          />
+          {/* Sóng chính sắc nét */}
+          <path
+            d="M0 22C28 8 56 34 86 20C116 6 144 34 174 20C204 6 232 34 262 18C290 6 308 26 334 20"
+            stroke="url(#focus-wave-stroke)"
+            strokeWidth={isPomodoroRunning ? '2.1' : '1.7'}
+            strokeLinecap="round"
+            className="lu-wave-drift"
+          />
+          {/* 3 nút giao sóng phát sáng */}
+          <circle cx="86" cy="20" r="2.6" fill="#0F7656" />
+          <circle cx="174" cy="20" r="3" fill="#16A073" />
+          <circle
+            cx="174"
+            cy="20"
+            r="6.5"
+            stroke="#16A073"
+            strokeOpacity={isPomodoroRunning ? '0.65' : '0.35'}
+            strokeWidth="1"
+            className="lu-dg-pulse-ring"
+          />
+          <circle cx="262" cy="18" r="2.6" fill="#C27824" />
+        </svg>
       </div>
 
-      <div className="flex items-center gap-1.5">
-        {isPomodoroActive ? (
-          <>
+      <div
+        data-testid="dashboard-pomodoro-bar"
+        className="flex flex-wrap items-center justify-between gap-2 rounded-[18px] border border-white/65 bg-white/75 px-3.5 py-2.5 dark:border-white/10 dark:bg-[#182320]/75"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">
+            <Hourglass
+              className={cn('h-4 w-4 shrink-0', isPomodoroRunning && 'animate-pulse')}
+              aria-hidden="true"
+            />
+          </span>
+          <div className="leading-tight">
+            <p className="text-[11.5px] font-semibold text-[var(--text-main)]">Pomodoro</p>
+            <p className="font-mono text-xs font-bold text-[#C27824] tabular-nums dark:text-[#E5A95C]">
+              {isPomodoroActive ? formatMmSs(pomodoro.remainingSeconds) : '25:00'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          {isPomodoroActive ? (
+            <>
+              <button
+                type="button"
+                onClick={isPomodoroRunning ? pausePomodoro : resumePomodoro}
+                className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-95"
+              >
+                {isPomodoroRunning ? (
+                  <>
+                    <Pause className="h-3 w-3" aria-hidden="true" />
+                    <span>Tạm dừng</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-3 w-3" aria-hidden="true" />
+                    <span>Tiếp tục</span>
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={resetPomodoro}
+                aria-label="Đặt lại phiên tập trung"
+                className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-white text-[var(--text-secondary)] hover:text-[var(--text-main)] dark:bg-[#141D1A]"
+              >
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </>
+          ) : (
             <button
               type="button"
-              onClick={isPomodoroRunning ? pausePomodoro : resumePomodoro}
-              className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95 active:scale-95"
+              data-testid="dashboard-pomodoro-start"
+              onClick={() => startPomodoro(25, 'Tiêu chuẩn')}
+              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#0D664A] active:scale-[0.98]"
             >
-              {isPomodoroRunning ? (
-                <>
-                  <Pause className="h-3 w-3" aria-hidden="true" />
-                  <span>Tạm dừng</span>
-                </>
-              ) : (
-                <>
-                  <Play className="h-3 w-3" aria-hidden="true" />
-                  <span>Tiếp tục</span>
-                </>
-              )}
+              <Play className="h-3 w-3" aria-hidden="true" />
+              <span>Tập trung</span>
             </button>
-            <button
-              type="button"
-              onClick={resetPomodoro}
-              aria-label="Đặt lại phiên tập trung"
-              className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-white text-[var(--text-secondary)] hover:text-[var(--text-main)] dark:bg-[#141D1A]"
-            >
-              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
-          </>
-        ) : (
-          <button
-            type="button"
-            data-testid="dashboard-pomodoro-start"
-            onClick={() => startPomodoro(25, 'Tiêu chuẩn')}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#0D664A] active:scale-[0.98]"
-          >
-            <Play className="h-3 w-3" aria-hidden="true" />
-            <span>Tập trung</span>
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -390,14 +484,64 @@ export function HomePage() {
   return (
     <div
       data-testid="workspace-dashboard"
-      className="min-h-[calc(100vh-3rem)] bg-[#EEF1EE] text-[var(--text-main)] dark:bg-[#0C1210]"
+      className="lu-dashboard-atmosphere relative min-h-[calc(100vh-3rem)] overflow-x-clip text-[var(--text-main)]"
     >
-      <div className="mx-auto max-w-[1340px] space-y-8 px-4 py-5 sm:px-6 lg:px-8">
+      {/* Dải đường trắc địa & quỹ đạo kiến trúc nền phủ toàn trang (0% che khuất nội dung) */}
+      <svg
+        viewBox="0 0 1440 1600"
+        fill="none"
+        preserveAspectRatio="xMidYMin slice"
+        aria-hidden="true"
+        data-testid="dashboard-ambient-backdrop"
+        className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.42] dark:opacity-[0.26]"
+      >
+        <circle
+          cx="1260"
+          cy="420"
+          r="320"
+          stroke="#0F7656"
+          strokeOpacity="0.14"
+          strokeWidth="1"
+          strokeDasharray="5 8"
+        />
+        <circle
+          cx="1260"
+          cy="420"
+          r="210"
+          stroke="#C27824"
+          strokeOpacity="0.14"
+          strokeWidth="0.9"
+        />
+        <circle
+          cx="140"
+          cy="1040"
+          r="280"
+          stroke="#1D4F6E"
+          strokeOpacity="0.14"
+          strokeWidth="1"
+          strokeDasharray="4 7"
+        />
+        <path
+          d="M-60 660C240 580 540 740 860 640C1140 552 1320 620 1500 560"
+          stroke="#0F7656"
+          strokeOpacity="0.11"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M-40 1240C300 1160 620 1320 960 1220C1200 1150 1360 1210 1500 1170"
+          stroke="#8C5828"
+          strokeOpacity="0.1"
+          strokeWidth="1.1"
+          strokeDasharray="6 8"
+        />
+      </svg>
+
+      <div className="relative z-10 mx-auto max-w-[1340px] space-y-8 px-4 py-5 sm:px-6 lg:px-8">
         {/* ========================================================================
             TẦNG 1: SÂN KHẤU KỂ CHUYỆN CHUYỂN TẦNG MỀM + 3 THẺ BENTO BO TRÒN LỚN
             ======================================================================== */}
         <div className="relative">
-          {/* KHỐI A — KHUNG HERO THÍCH ỨNG KHUNG GIỜ + SÓNG MÂY CHUYỂN TẦNG MỀM */}
+          {/* KHỐI A — KHUNG HERO THÍCH ỨNG KHUNG GIỜ + MÔ HÌNH THIÊN CẦU 3D + SÓNG MÂY */}
           <section
             aria-label="Không gian Tổng quan"
             data-testid="spatial-hero-frame"
@@ -411,134 +555,119 @@ export function HomePage() {
               enableCelestialOverlay={false}
               enableParallax
               testId="dashboard-atmospheric-canopy"
-              className="min-h-[320px] md:min-h-[380px] lg:min-h-[440px]"
+              className="min-h-[320px] md:min-h-[390px] lg:min-h-[450px]"
             >
-              {/* Chòm sao hình học siêu mảnh góc trên-phải gợi tinh thần Learning Universe */}
-              <svg
-                viewBox="0 0 320 180"
-                fill="none"
-                aria-hidden="true"
-                className="pointer-events-none absolute top-4 right-5 hidden h-40 w-72 opacity-40 md:block"
-              >
-                <path
-                  d="M36 92L112 44L198 76L278 28M112 44L148 128L198 76M148 128L252 132L278 28"
-                  stroke="rgba(255,255,255,0.45)"
-                  strokeWidth="1"
-                  strokeDasharray="3 4"
-                />
-                <circle cx="36" cy="92" r="2.5" fill="#D4AF6A" />
-                <circle cx="112" cy="44" r="3" fill="#FFFFFF" />
-                <circle cx="198" cy="76" r="2.5" fill="#6EE7B7" />
-                <circle cx="148" cy="128" r="2.2" fill="#FFFFFF" />
-                <circle cx="252" cy="132" r="2.5" fill="#D4AF6A" />
-                <circle cx="278" cy="28" r="3.2" fill="#6EE7B7" />
-                <circle
-                  cx="198"
-                  cy="76"
-                  r="18"
-                  stroke="rgba(255,255,255,0.22)"
-                  strokeWidth="0.9"
-                  strokeDasharray="2 3"
-                />
-              </svg>
-
-              <div className="relative z-10 flex flex-col justify-between gap-5 p-6 pb-20 sm:p-8 sm:pb-24 md:pb-32 lg:p-11 lg:pb-38">
-                {/* Hàng trên: Nhãn khung giờ + ngày hôm nay + pill kỳ thi sắp tới (nếu có) */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <span
-                    data-testid="hero-period-badge"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md"
-                  >
-                    {renderPeriodIcon(timeGreeting.period)}
-                    <span>{timeGreeting.badgeLabel} · Không gian Tổng quan</span>
-                  </span>
-                  <time
-                    data-testid="dashboard-date"
-                    className="rounded-full border border-white/20 bg-black/25 px-3 py-1 font-mono text-[11px] whitespace-nowrap text-white/85 backdrop-blur-md"
-                  >
-                    {todayFormatted}
-                  </time>
-                  {nearestMilestone && (
-                    <a
-                      href="#lich-bieu-hoc-tap"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#F0C87D]/45 bg-[#17332C]/75 px-3 py-1 font-mono text-[10.5px] font-semibold text-[#F5D89B] backdrop-blur-md transition-colors hover:bg-[#17332C]"
+              <div className="relative z-10 flex flex-col justify-between gap-6 p-6 pb-20 sm:p-8 sm:pb-24 md:flex-row md:items-center md:justify-between md:pb-32 lg:p-11 lg:pb-38">
+                <div className="flex max-w-2xl flex-col justify-between gap-5">
+                  {/* Hàng trên: Nhãn khung giờ + ngày hôm nay + pill kỳ thi sắp tới (nếu có) */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      data-testid="hero-period-badge"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md"
                     >
-                      <Pin className="h-3 w-3 shrink-0" aria-hidden="true" />
-                      <span className="max-w-[190px] truncate">
-                        {formatCountdownLabel(nearestMilestone.daysUntil)} ·{' '}
-                        {nearestMilestone.milestone.title}
-                      </span>
-                    </a>
-                  )}
-                </div>
-
-                {/* Khối lời chào thích ứng theo khung giờ + danh ngôn học thuật */}
-                <div className="max-w-2xl space-y-2.5">
-                  <h1
-                    data-testid="hero-time-greeting"
-                    className="font-serif text-3xl leading-[1.12] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[44px]"
-                  >
-                    <span className="sr-only">LEARNING UNIVERSE — Không gian Tổng quan — </span>
-                    {timeGreeting.headline}
-                  </h1>
-
-                  <p className="text-xs font-medium text-white/82 sm:text-sm">
-                    {timeGreeting.subtitle}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                    <p
-                      data-testid="dashboard-quote-text"
-                      className="font-serif text-[14px] leading-relaxed text-white/85 italic sm:text-[15px]"
+                      {renderPeriodIcon(timeGreeting.period)}
+                      <span>{timeGreeting.badgeLabel} · Không gian Tổng quan</span>
+                    </span>
+                    <time
+                      data-testid="dashboard-date"
+                      className="rounded-full border border-white/20 bg-black/25 px-3 py-1 font-mono text-[11px] whitespace-nowrap text-white/85 backdrop-blur-md"
                     >
-                      &ldquo;{currentQuote.content}&rdquo; —{' '}
-                      <span className="font-sans text-xs font-medium text-white/70 not-italic">
-                        {currentQuote.author}
-                      </span>
+                      {todayFormatted}
+                    </time>
+                    {nearestMilestone && (
+                      <a
+                        href="#lich-bieu-hoc-tap"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[#F0C87D]/45 bg-[#17332C]/75 px-3 py-1 font-mono text-[10.5px] font-semibold text-[#F5D89B] backdrop-blur-md transition-colors hover:bg-[#17332C]"
+                      >
+                        <Pin className="h-3 w-3 shrink-0" aria-hidden="true" />
+                        <span className="max-w-[190px] truncate">
+                          {formatCountdownLabel(nearestMilestone.daysUntil)} ·{' '}
+                          {nearestMilestone.milestone.title}
+                        </span>
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Khối lời chào thích ứng theo khung giờ + danh ngôn học thuật */}
+                  <div className="max-w-2xl space-y-2.5">
+                    <h1
+                      data-testid="hero-time-greeting"
+                      className="font-serif text-3xl leading-[1.12] font-semibold tracking-tight text-white drop-shadow-xs sm:text-4xl lg:text-[44px]"
+                    >
+                      <span className="sr-only">LEARNING UNIVERSE — Không gian Tổng quan — </span>
+                      {timeGreeting.headline}
+                    </h1>
+
+                    <p className="text-xs font-medium text-white/82 sm:text-sm">
+                      {timeGreeting.subtitle}
                     </p>
-                    <button
-                      type="button"
-                      data-testid="dashboard-quote-next"
-                      onClick={handleNextQuote}
-                      aria-label="Đổi câu danh ngôn học thuật mới"
-                      title="Đổi câu danh ngôn"
-                      className="group/quote inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border border-white/25 bg-black/30 px-2.5 py-0.5 font-mono text-[10.5px] font-medium whitespace-nowrap text-white/90 backdrop-blur-md transition-all duration-150 hover:bg-black/45 active:scale-95"
+
+                    <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                      <p
+                        data-testid="dashboard-quote-text"
+                        className="font-serif text-[14px] leading-relaxed text-white/85 italic sm:text-[15px]"
+                      >
+                        &ldquo;{currentQuote.content}&rdquo; —{' '}
+                        <span className="font-sans text-xs font-medium text-white/70 not-italic">
+                          {currentQuote.author}
+                        </span>
+                      </p>
+                      <button
+                        type="button"
+                        data-testid="dashboard-quote-next"
+                        onClick={handleNextQuote}
+                        aria-label="Đổi câu danh ngôn học thuật mới"
+                        title="Đổi câu danh ngôn"
+                        className="group/quote inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border border-white/25 bg-black/30 px-2.5 py-0.5 font-mono text-[10.5px] font-medium whitespace-nowrap text-white/90 backdrop-blur-md transition-all duration-150 hover:bg-black/45 active:scale-95"
+                      >
+                        <RefreshCw
+                          className="h-3 w-3 transition-transform duration-300 group-hover/quote:rotate-180"
+                          aria-hidden="true"
+                        />
+                        <span>Câu khác</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Hành động trọng tâm trên Hero */}
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <Link
+                      to={resumeHref}
+                      className="group/cta inline-flex items-center gap-2 rounded-full bg-[#0F7656] px-5 py-2.5 text-xs font-semibold text-white shadow-[0_12px_28px_-10px_rgba(15,118,86,0.7)] ring-1 ring-white/25 transition-all duration-150 hover:bg-[#138A63] active:scale-[0.98]"
                     >
-                      <RefreshCw
-                        className="h-3 w-3 transition-transform duration-300 group-hover/quote:rotate-180"
+                      <span>Vào bài học ngay</span>
+                      <ArrowRight
+                        className="h-3.5 w-3.5 transition-transform duration-150 group-hover/cta:translate-x-0.5"
                         aria-hidden="true"
                       />
-                      <span>Câu khác</span>
-                    </button>
+                    </Link>
+                    <Link
+                      to={ROUTES.learningSpace}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-black/45"
+                    >
+                      <Compass className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
+                      <span>Bản đồ học phần</span>
+                    </Link>
+                    <a
+                      href="#lich-bieu-hoc-tap"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-white/20"
+                    >
+                      <CalendarDays className="h-3.5 w-3.5 text-[#6EE7B7]" aria-hidden="true" />
+                      <span>Lịch biểu hôm nay</span>
+                    </a>
                   </div>
                 </div>
 
-                {/* Hành động trọng tâm trên Hero */}
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <Link
-                    to={resumeHref}
-                    className="group/cta inline-flex items-center gap-2 rounded-full bg-[#0F7656] px-5 py-2.5 text-xs font-semibold text-white shadow-[0_12px_28px_-10px_rgba(15,118,86,0.7)] ring-1 ring-white/25 transition-all duration-150 hover:bg-[#138A63] active:scale-[0.98]"
-                  >
-                    <span>Vào bài học ngay</span>
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform duration-150 group-hover/cta:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                  <Link
-                    to={ROUTES.learningSpace}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-black/45"
-                  >
-                    <Compass className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
-                    <span>Bản đồ học phần</span>
-                  </Link>
-                  <a
-                    href="#lich-bieu-hoc-tap"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-white/20"
-                  >
-                    <CalendarDays className="h-3.5 w-3.5 text-[#6EE7B7]" aria-hidden="true" />
-                    <span>Lịch biểu hôm nay</span>
-                  </a>
+                {/* Cột phải Hero: Mô hình Thiên cầu Đa diện 3D tương tác nổi trên khung cảnh thiên nhiên */}
+                <div className="hidden shrink-0 flex-col items-center md:flex">
+                  <DashboardHeroOrbModel
+                    dayPeriod={timeGreeting.period}
+                    className="h-[224px] w-[244px] lg:h-[268px] lg:w-[294px]"
+                  />
+                  <span className="-mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/28 px-3 py-0.5 font-mono text-[9.5px] font-medium tracking-wider text-white/80 backdrop-blur-md">
+                    <Sparkles className="h-2.5 w-2.5 text-[#F5D078]" aria-hidden="true" />
+                    <span>Thiên cầu Tri thức 3D · Kéo xoay</span>
+                  </span>
                 </div>
               </div>
 
@@ -572,9 +701,35 @@ export function HomePage() {
             <div
               data-testid="dashboard-resume-card"
               data-material="ceramic"
-              className="flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_18px_42px_-18px_rgba(16,45,35,0.16)] lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
+              className="relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_18px_42px_-18px_rgba(16,45,35,0.16)] lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
             >
-              <div className="space-y-3">
+              {/* Vầng sáng khoáng thạch nhẹ + nét cung quỹ đạo góc trên phải */}
+              <div
+                aria-hidden="true"
+                style={{
+                  background: `radial-gradient(circle at 92% 8%, ${resumeAccentColor}18 0%, transparent 56%)`,
+                }}
+                className="pointer-events-none absolute inset-0"
+              />
+              <svg
+                viewBox="0 0 180 120"
+                fill="none"
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-2 -right-3 h-28 w-40 opacity-[0.14] dark:opacity-[0.2]"
+              >
+                <circle
+                  cx="136"
+                  cy="38"
+                  r="42"
+                  stroke={resumeAccentColor}
+                  strokeWidth="1"
+                  strokeDasharray="4 4"
+                />
+                <circle cx="136" cy="38" r="24" stroke={resumeAccentColor} strokeWidth="0.9" />
+                <path d="M94 38H176M136 0V82" stroke={resumeAccentColor} strokeWidth="0.7" />
+              </svg>
+
+              <div className="relative z-10 space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                     <span
@@ -755,11 +910,47 @@ export function HomePage() {
               data-material="deep-emerald"
               className="relative flex min-w-0 flex-col justify-between gap-3.5 overflow-hidden rounded-[26px] border border-white/15 bg-[#17332C] bg-gradient-to-br from-[#127D59] via-[#154C3B] to-[#17332C] p-5 text-white shadow-[0_20px_44px_-16px_rgba(15,82,58,0.42)] lg:col-span-3"
             >
-              {/* Vòng sáng trang trí siêu mịn kiểu thẻ Quixotic */}
+              {/* Vòng sáng & mô hình la bàn thiên cầu kiến trúc trang trí nền thẻ Ngọc Lục Bảo */}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -top-10 -right-10 h-36 w-36 rounded-full bg-[#4AD1A3]/18 blur-2xl"
               />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-[#F0C87D]/12 blur-2xl"
+              />
+              <svg
+                viewBox="0 0 180 180"
+                fill="none"
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-6 -right-8 h-40 w-40 opacity-25"
+              >
+                <g className="lu-orbit-ring">
+                  <circle
+                    cx="90"
+                    cy="90"
+                    r="64"
+                    stroke="#A7F3D0"
+                    strokeWidth="0.9"
+                    strokeDasharray="4 6"
+                  />
+                </g>
+                <circle
+                  cx="90"
+                  cy="90"
+                  r="44"
+                  stroke="#F0C87D"
+                  strokeWidth="0.85"
+                  strokeOpacity="0.8"
+                />
+                <path
+                  d="M90 18V162M18 90H162"
+                  stroke="#A7F3D0"
+                  strokeWidth="0.65"
+                  strokeOpacity="0.55"
+                />
+                <circle cx="134" cy="90" r="2.8" fill="#F0C87D" />
+              </svg>
 
               <div className="relative z-10 space-y-1">
                 <p className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#A7F3D0] uppercase">
@@ -946,9 +1137,14 @@ export function HomePage() {
             {/* Cột Trái (7/12) — Di sản trong ngày + Dòng liên hệ Toán học / Sư phạm */}
             <div
               data-testid="dashboard-heritage-card"
-              className="group/heritage flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-7 dark:border-white/[0.07] dark:bg-[#141D1A]"
+              className="group/heritage relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-7 dark:border-white/[0.07] dark:bg-[#141D1A]"
             >
-              <div className="flex items-center justify-between gap-2">
+              {/* Hào quang triển lãm ấm phía sau khung tranh di sản */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-12 -left-10 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(212,175,106,0.18)_0%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(212,175,106,0.14)_0%,transparent_72%)]"
+              />
+              <div className="relative z-10 flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
                   <Landmark
                     className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
@@ -1095,6 +1291,43 @@ export function HomePage() {
                 className="absolute inset-0"
               />
             </div>
+
+            {/* Mô hình quỹ đạo phản xạ bida & xoắn ốc tỷ lệ vàng bên phải Banner Sảnh Thư Giãn */}
+            <svg
+              viewBox="0 0 420 200"
+              fill="none"
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 right-0 hidden h-full w-[44%] opacity-28 lg:block"
+            >
+              <circle
+                cx="336"
+                cy="102"
+                r="76"
+                stroke="#A7F3D0"
+                strokeWidth="0.9"
+                strokeDasharray="4 6"
+                className="lu-orbit-ring"
+              />
+              <circle
+                cx="336"
+                cy="102"
+                r="46"
+                stroke="#F0C87D"
+                strokeWidth="0.9"
+                strokeOpacity="0.7"
+              />
+              <path
+                d="M40 166L172 44L290 132L374 58"
+                stroke="#6EE7B7"
+                strokeWidth="1.2"
+                strokeDasharray="5 6"
+                className="lu-dg-stream"
+              />
+              <circle cx="172" cy="44" r="5" fill="#F0C87D" fillOpacity="0.85" />
+              <circle cx="290" cy="132" r="4.5" fill="#FFFFFF" fillOpacity="0.9" />
+              <circle cx="374" cy="58" r="6" stroke="#A7F3D0" strokeWidth="1.2" />
+              <circle cx="374" cy="58" r="2.5" fill="#A7F3D0" />
+            </svg>
 
             <div className="relative z-10 flex flex-col justify-between gap-5 p-6 sm:p-8 md:pl-[44%] lg:flex-row lg:items-center">
               <div className="max-w-xl space-y-2">

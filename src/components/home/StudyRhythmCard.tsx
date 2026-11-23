@@ -62,14 +62,20 @@ export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics, layout = 'v
       aria-label="Chuỗi ngày học, bản đồ nhiệt chuyên cần và mục tiêu tuần"
       data-testid="study-rhythm-card"
       className={cn(
-        'min-w-0 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]',
+        'relative min-w-0 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]',
         isHorizontal
           ? 'grid grid-cols-1 items-center gap-5 lg:grid-cols-12'
           : 'flex flex-col justify-between gap-4',
       )}
     >
+      {/* Vầng sáng ấm nhẹ sau khối Chuỗi chuyên cần */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-10 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(194,120,36,0.14)_0%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(229,169,92,0.12)_0%,transparent_72%)]"
+      />
+
       {/* 1. CHUỖI NGÀY HỌC (STREAK) */}
-      <div className={cn('space-y-3', isHorizontal && 'lg:col-span-3')}>
+      <div className={cn('relative z-10 space-y-3', isHorizontal && 'lg:col-span-3')}>
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#FDF4E7] text-[#C27824] dark:bg-[#261D12] dark:text-[#E5A95C]">

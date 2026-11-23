@@ -1479,6 +1479,71 @@
   animation: lu-orbit-reverse 22s linear infinite;
 }
 
+@keyframes lu-wave-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-14px, 0, 0);
+  }
+}
+
+@keyframes lu-float-gentle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0);
+  }
+}
+
+.lu-wave-drift {
+  animation: lu-wave-drift 7s ease-in-out infinite;
+}
+
+.lu-wave-drift-slow {
+  animation: lu-wave-drift 11s ease-in-out infinite reverse;
+}
+
+.lu-float-gentle {
+  animation: lu-float-gentle 5.5s ease-in-out infinite;
+}
+
+.lu-dashboard-atmosphere {
+  background-color: #eef1ee;
+  background-image:
+    radial-gradient(54% 38% at 10% 4%, rgba(15, 118, 86, 0.085) 0%, transparent 72%),
+    radial-gradient(46% 34% at 92% 16%, rgba(212, 175, 106, 0.11) 0%, transparent 70%),
+    radial-gradient(52% 38% at 82% 54%, rgba(29, 79, 110, 0.075) 0%, transparent 72%),
+    radial-gradient(48% 36% at 14% 78%, rgba(15, 118, 86, 0.07) 0%, transparent 74%),
+    radial-gradient(circle at 1px 1px, rgba(23, 51, 44, 0.07) 1px, transparent 0);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    28px 28px;
+}
+
+:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *) .lu-dashboard-atmosphere,
+.dark .lu-dashboard-atmosphere {
+  background-color: #0c1210;
+  background-image:
+    radial-gradient(54% 38% at 10% 4%, rgba(52, 168, 126, 0.13) 0%, transparent 72%),
+    radial-gradient(46% 34% at 92% 16%, rgba(212, 175, 106, 0.09) 0%, transparent 70%),
+    radial-gradient(52% 38% at 82% 54%, rgba(100, 168, 209, 0.09) 0%, transparent 72%),
+    radial-gradient(48% 36% at 14% 78%, rgba(82, 179, 148, 0.1) 0%, transparent 74%),
+    radial-gradient(circle at 1px 1px, rgba(158, 176, 170, 0.08) 1px, transparent 0);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    28px 28px;
+}
+
 /* ==========================================================================
    THIÊN CẢNH KÍNH MỜ (ATMOSPHERIC GLASSMORPHISM × SWISS EDITORIAL)
    ========================================================================== */
@@ -1534,7 +1599,10 @@
   .lu-dg-pulse-ring,
   .lu-fx-bar-wave,
   .lu-orbit-ring,
-  .lu-orbit-ring-reverse {
+  .lu-orbit-ring-reverse,
+  .lu-wave-drift,
+  .lu-wave-drift-slow,
+  .lu-float-gentle {
     animation: none;
   }
 }

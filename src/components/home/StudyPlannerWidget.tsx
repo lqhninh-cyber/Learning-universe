@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { type FC, type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { PLANNER_EMPTY_ASSET } from '@/config/atmosphereAssets';
 import { useOptionalAuth } from '@/features/auth';
 import {
   computeDaysUntilDate,
@@ -156,6 +157,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
   const [examTitle, setExamTitle] = useState('');
   const [examDate, setExamDate] = useState(todayKey);
   const [examSubject, setExamSubject] = useState<'' | WorkspaceSubjectSlug>('cau-truc-dai-so');
+  const [emptyArtworkFailed, setEmptyArtworkFailed] = useState(false);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const noticeTimerRef = useRef<number | null>(null);
@@ -372,7 +374,7 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
       className="grid min-w-0 grid-cols-1 overflow-hidden rounded-[28px] border border-black/[0.05] bg-white shadow-[0_16px_42px_-22px_rgba(16,45,35,0.16)] lg:grid-cols-12 dark:border-white/[0.07] dark:bg-[#141D1A]"
     >
       {/* CỘT TRÁI (5/12): LỊCH THÁNG RỘNG RÃI + MỐC ĐẾM NGƯỢC KỲ THI */}
-      <div className="flex flex-col justify-between gap-5 border-b border-[var(--border-hairline)] bg-[#F7FAF8] p-5 sm:p-6 lg:col-span-5 lg:border-r lg:border-b-0 dark:bg-[#101816]">
+      <div className="lu-atelier-backdrop relative flex flex-col justify-between gap-5 border-b border-[var(--border-hairline)] bg-[#F7FAF8] p-5 sm:p-6 lg:col-span-5 lg:border-r lg:border-b-0 dark:bg-[#101816]">
         <div className="space-y-3">
           {/* Header tháng */}
           <div className="flex items-center justify-between gap-2">
@@ -903,14 +905,42 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
             className="max-h-[340px] space-y-2 overflow-y-auto pr-0.5"
           >
             {filteredTasks.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-[var(--border-hairline)] bg-[var(--bg-surface)]/50 px-4 py-6 text-center">
-                <p className="text-xs font-medium text-[var(--text-secondary)]">
-                  {selectedDateKey
-                    ? `Chưa có nhiệm vụ nào cho ngày ${formatShortVietnameseDate(selectedDateKey)}.`
-                    : filterMode === 'done'
-                      ? 'Chưa có nhiệm vụ hoàn thành nào.'
-                      : 'Danh sách đang trống. Nhập mục tiêu phía trên hoặc bấm một gợi ý nhanh để thêm vào lịch.'}
-                </p>
+              <div
+                data-testid="todo-empty-illustration"
+                className="group/empty flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[var(--border-hairline)] bg-gradient-to-br from-[#F7FAF8] via-white to-[#F6F1E7]/50 p-4 sm:flex-row sm:text-left dark:from-[#101916] dark:via-[#141D1A] dark:to-[#1B1914]/60"
+              >
+                <div
+                  style={{ backgroundImage: PLANNER_EMPTY_ASSET.fallbackGradient }}
+                  className="relative h-28 w-full shrink-0 overflow-hidden rounded-xl border border-black/[0.06] shadow-2xs sm:w-44 dark:border-white/[0.08]"
+                >
+                  {!emptyArtworkFailed && (
+                    <img
+                      src={PLANNER_EMPTY_ASSET.src}
+                      alt={PLANNER_EMPTY_ASSET.alt}
+                      loading="lazy"
+                      decoding="async"
+                      onError={() => setEmptyArtworkFailed(true)}
+                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/empty:scale-105 dark:brightness-[0.82]"
+                    />
+                  )}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
+                  />
+                </div>
+                <div className="space-y-1.5 text-center sm:text-left">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#EAF5F0] px-2.5 py-0.5 font-mono text-[10px] font-semibold text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]">
+                    <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                    <span>Khởi tạo phiên học mới</span>
+                  </span>
+                  <p className="text-xs leading-relaxed font-medium text-[var(--text-secondary)]">
+                    {selectedDateKey
+                      ? `Chưa có nhiệm vụ nào cho ngày ${formatShortVietnameseDate(selectedDateKey)}.`
+                      : filterMode === 'done'
+                        ? 'Chưa có nhiệm vụ hoàn thành nào.'
+                        : 'Danh sách đang trống. Nhập mục tiêu phía trên hoặc bấm một gợi ý nhanh để thêm vào lịch.'}
+                  </p>
+                </div>
               </div>
             ) : (
               filteredTasks.map((task) => {

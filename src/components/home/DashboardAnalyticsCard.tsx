@@ -153,8 +153,21 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
           {chartMode === 'week' ? (
             <div
               data-testid="analytics-week-bars"
-              className="flex h-[184px] items-end justify-between gap-2.5 rounded-[20px] bg-[#F6F8F7] px-4 pt-9 pb-3.5 sm:gap-3.5 dark:bg-[#0F1715]"
+              className="relative flex h-[196px] items-end justify-between gap-2.5 overflow-hidden rounded-[20px] border border-black/[0.04] bg-[#F6F8F7] px-4 pt-9 pb-3.5 sm:gap-3.5 dark:border-white/[0.06] dark:bg-[#0F1715]"
             >
+              {/* Lưới chia độ chuẩn bản vẽ phía sau biểu đồ cột */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-4 top-8 bottom-9 flex flex-col justify-between"
+              >
+                <span className="block border-t border-dashed border-[#0F7656]/12 dark:border-[#4AD1A3]/12" />
+                <span className="block border-t border-dashed border-[#0F7656]/10 dark:border-[#4AD1A3]/10" />
+                <span className="block border-t border-dashed border-[#0F7656]/10 dark:border-[#4AD1A3]/10" />
+              </div>
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-10 left-1/2 h-28 w-44 -translate-x-1/2 rounded-full bg-[#0F7656]/[0.07] blur-2xl dark:bg-[#4AD1A3]/[0.09]"
+              />
               {last7Days.items.map((cell, idx) => {
                 const isPeak = idx === last7Days.peakIndex;
                 const isActive = hoveredIndex === null ? isPeak : hoveredIndex === idx;
@@ -169,7 +182,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                     key={cell.dateKey}
                     onMouseEnter={() => setHoveredIndex(idx)}
                     onMouseLeave={() => setHoveredIndex(null)}
-                    className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-2"
+                    className="group relative z-10 flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-2"
                   >
                     <div className="relative flex h-full w-full items-end justify-center">
                       {/* Bong bóng số nổi trên đỉnh cột nổi bật giống Quixotic */}
@@ -208,8 +221,16 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
           ) : (
             <div
               data-testid="analytics-subject-bars"
-              className="flex h-[184px] items-end justify-between gap-4 rounded-[20px] bg-[#F6F8F7] px-5 pt-9 pb-3.5 dark:bg-[#0F1715]"
+              className="relative flex h-[196px] items-end justify-between gap-4 overflow-hidden rounded-[20px] border border-black/[0.04] bg-[#F6F8F7] px-5 pt-9 pb-3.5 dark:border-white/[0.06] dark:bg-[#0F1715]"
             >
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-5 top-8 bottom-9 flex flex-col justify-between"
+              >
+                <span className="block border-t border-dashed border-[#0F7656]/12 dark:border-[#4AD1A3]/12" />
+                <span className="block border-t border-dashed border-[#0F7656]/10 dark:border-[#4AD1A3]/10" />
+                <span className="block border-t border-dashed border-[#0F7656]/10 dark:border-[#4AD1A3]/10" />
+              </div>
               {subjectProgress.map((item, idx) => {
                 const heightPct = item.percent > 0 ? Math.max(22, item.percent) : 14;
                 const isActive = hoveredIndex === idx;
@@ -218,7 +239,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                     key={item.slug}
                     onMouseEnter={() => setHoveredIndex(idx)}
                     onMouseLeave={() => setHoveredIndex(null)}
-                    className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-2"
+                    className="relative z-10 flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-2"
                   >
                     <div className="relative flex h-full w-full items-end justify-center">
                       <span
@@ -253,16 +274,27 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
           )}
         </div>
 
-        {/* VÒNG TRÒN PHÂN BỔ TIẾN ĐỘ KIỂU TRAVELIE */}
+        {/* VÒNG TRÒN PHÂN BỔ TIẾN ĐỘ KIỂU TRAVELIE + VÀNH CHIA ĐỘ THIÊN CẦU */}
         <div
           data-testid="analytics-donut-chart"
-          className="flex flex-col items-center gap-4 rounded-[20px] bg-[#F6F8F7] p-4 sm:flex-row md:col-span-5 md:flex-col lg:flex-row dark:bg-[#0F1715]"
+          className="relative flex flex-col items-center gap-4 overflow-hidden rounded-[20px] border border-black/[0.04] bg-[#F6F8F7] p-4 sm:flex-row md:col-span-5 md:flex-col lg:flex-row dark:border-white/[0.06] dark:bg-[#0F1715]"
         >
-          <div className="relative h-28 w-28 shrink-0">
-            <svg viewBox="0 0 108 108" className="h-full w-full -rotate-90" aria-hidden="true">
+          <div className="relative h-30 w-30 shrink-0">
+            <svg viewBox="0 0 116 116" className="h-full w-full -rotate-90" aria-hidden="true">
+              {/* Vành chia độ trắc địa siêu mảnh xung quanh biểu đồ vòng */}
               <circle
-                cx="54"
-                cy="54"
+                cx="58"
+                cy="58"
+                r="53"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="0.9"
+                strokeDasharray="2 5"
+                className="text-[#0F7656]/28 dark:text-[#4AD1A3]/25"
+              />
+              <circle
+                cx="58"
+                cy="58"
                 r="42"
                 fill="none"
                 stroke="currentColor"
@@ -274,8 +306,8 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                   seg.completedCount > 0 && (
                     <circle
                       key={seg.slug}
-                      cx="54"
-                      cy="54"
+                      cx="58"
+                      cy="58"
                       r="42"
                       fill="none"
                       stroke={seg.color}

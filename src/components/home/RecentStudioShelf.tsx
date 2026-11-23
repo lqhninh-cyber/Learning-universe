@@ -1,6 +1,7 @@
 import { ArrowUpRight, FilePenLine, Folder, PenTool, Plus } from 'lucide-react';
-import { type FC, useMemo } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { STUDIO_PREVIEW_ASSETS } from '@/config/atmosphereAssets';
 import { selectActiveExamBucket, useExamBuilderStore } from '@/features/exam-builder';
 import {
   selectActiveInkBucket,
@@ -11,6 +12,8 @@ import { ROUTES } from '@/shared/config/routes';
 
 export const RecentStudioShelf: FC = () => {
   const navigate = useNavigate();
+  const [inkImgFailed, setInkImgFailed] = useState(false);
+  const [examImgFailed, setExamImgFailed] = useState(false);
 
   const inkBucket = useInkNotebookStore(selectActiveInkBucket);
   const inkFolders = useInkNotebookStore(selectActiveInkFolders);
@@ -82,6 +85,73 @@ export const RecentStudioShelf: FC = () => {
           <span className="rounded-full bg-[#EAF5F0] px-2.5 py-1 font-mono text-[10px] font-bold text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]">
             {inkBucket.notebooks.length} vở · {examBucket.exams.length} đề
           </span>
+        </div>
+
+        {/* Dải thẻ ảnh minh họa trực quan cho Bảng viết & Soạn đề */}
+        <div data-testid="studio-visual-preview-strip" className="grid grid-cols-2 gap-2.5">
+          <button
+            type="button"
+            onClick={() => void navigate(ROUTES.mathInk)}
+            style={{ backgroundImage: STUDIO_PREVIEW_ASSETS.mathInk.fallbackGradient }}
+            className="group/prev1 relative h-[86px] w-full cursor-pointer overflow-hidden rounded-[18px] border border-black/[0.06] text-left shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-white/[0.08]"
+          >
+            {!inkImgFailed && (
+              <img
+                src={STUDIO_PREVIEW_ASSETS.mathInk.src}
+                alt={STUDIO_PREVIEW_ASSETS.mathInk.alt}
+                loading="lazy"
+                decoding="async"
+                onError={() => setInkImgFailed(true)}
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/prev1:scale-105 dark:brightness-[0.82]"
+              />
+            )}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-[#0D211B]/80 via-[#0D211B]/25 to-transparent"
+            />
+            <div className="absolute inset-x-2.5 bottom-2 flex items-center justify-between gap-1 text-white">
+              <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wide">
+                <PenTool className="h-3 w-3 text-[#93D5FA]" aria-hidden="true" />
+                <span>Bảng viết</span>
+              </span>
+              <ArrowUpRight
+                className="h-3.5 w-3.5 text-white/80 transition-transform duration-150 group-hover/prev1:translate-x-0.5 group-hover/prev1:-translate-y-0.5"
+                aria-hidden="true"
+              />
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => void navigate(ROUTES.examBuilder)}
+            style={{ backgroundImage: STUDIO_PREVIEW_ASSETS.examBuilder.fallbackGradient }}
+            className="group/prev2 relative h-[86px] w-full cursor-pointer overflow-hidden rounded-[18px] border border-black/[0.06] text-left shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-white/[0.08]"
+          >
+            {!examImgFailed && (
+              <img
+                src={STUDIO_PREVIEW_ASSETS.examBuilder.src}
+                alt={STUDIO_PREVIEW_ASSETS.examBuilder.alt}
+                loading="lazy"
+                decoding="async"
+                onError={() => setExamImgFailed(true)}
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/prev2:scale-105 dark:brightness-[0.82]"
+              />
+            )}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-[#0D211B]/80 via-[#0D211B]/25 to-transparent"
+            />
+            <div className="absolute inset-x-2.5 bottom-2 flex items-center justify-between gap-1 text-white">
+              <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wide">
+                <FilePenLine className="h-3 w-3 text-[#F5D078]" aria-hidden="true" />
+                <span>Soạn đề</span>
+              </span>
+              <ArrowUpRight
+                className="h-3.5 w-3.5 text-white/80 transition-transform duration-150 group-hover/prev2:translate-x-0.5 group-hover/prev2:-translate-y-0.5"
+                aria-hidden="true"
+              />
+            </div>
+          </button>
         </div>
 
         {/* 1. Vở Bảng viết gần nhất */}

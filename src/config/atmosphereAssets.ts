@@ -35,6 +35,25 @@ export const SANCTUARY_BANNER_ASSET = {
   fallbackGradient: 'radial-gradient(80% 110% at 24% 50%, #245243 0%, #17332C 58%, #0E1F1A 100%)',
 } as const;
 
+export const STUDIO_PREVIEW_ASSETS = {
+  mathInk: {
+    src: `${ATMOSPHERE_BASE_PATH}/studio-ink-desk.jpg`,
+    alt: 'Bàn phác thảo hình học không gian với vở ô ly và bút bảng viết toán',
+    fallbackGradient: 'linear-gradient(135deg, #EAF3F6 0%, #DFECE9 54%, #F6EFE2 100%)',
+  },
+  examBuilder: {
+    src: `${ATMOSPHERE_BASE_PATH}/studio-exam-folio.jpg`,
+    alt: 'Tập hồ sơ soạn đề toán học kèm thước đồng và dải ruy-băng ngọc lục bảo',
+    fallbackGradient: 'linear-gradient(135deg, #F6F1E7 0%, #E7EFEA 55%, #DCE6E2 100%)',
+  },
+} as const;
+
+export const PLANNER_EMPTY_ASSET = {
+  src: `${ATMOSPHERE_BASE_PATH}/planner-scholar-desk.jpg`,
+  alt: 'Sổ lịch học tập đặt bên đồng hồ cát đồng và viên ngọc lục bảo dưới nắng sáng',
+  fallbackGradient: 'linear-gradient(135deg, #F4F7F4 0%, #E7EFEA 55%, #F6EFE2 100%)',
+} as const;
+
 export const SUBJECT_WASH_ASSETS: Readonly<Record<string, SubjectWashAssetConfig>> = {
   'cau-truc-dai-so': {
     slug: 'cau-truc-dai-so',

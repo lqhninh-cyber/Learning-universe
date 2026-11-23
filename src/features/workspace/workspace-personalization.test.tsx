@@ -144,13 +144,16 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
   it('HomePage không lặp tìm kiếm ở Hero, dùng SVG toán học (0 ảnh phong cảnh) cho 4 môn và vận hành đầy đủ To-Do, Lịch, Mốc thi, Mục tiêu tuần & Flashcard', () => {
     renderHome();
 
-    // 1. Hero có lời chào thích ứng, sóng chuyển tầng mềm & KHÔNG lặp thanh tìm kiếm
+    // 1. Hero có lời chào thích ứng, nền khí quyển, mô hình Thiên cầu 3D, sóng điều hòa tập trung & KHÔNG lặp thanh tìm kiếm
+    expect(screen.getByTestId('dashboard-ambient-backdrop')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-hero-orb-model')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-focus-wave')).toBeInTheDocument();
     expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
     expect(screen.getByTestId('hero-period-badge')).toBeInTheDocument();
     expect(screen.getByTestId('hero-soft-wave-divider')).toBeInTheDocument();
     expect(screen.queryByTestId('hero-floating-pill')).not.toBeInTheDocument();
 
-    // 1b. Biểu đồ cột bo tròn & vòng tròn tiến độ + Kệ Studio gần đây (Bảng viết & Soạn đề)
+    // 1b. Biểu đồ cột bo tròn & vòng tròn tiến độ + Kệ Studio gần đây kèm 2 ảnh minh họa
     expect(screen.getByTestId('dashboard-analytics-card')).toBeInTheDocument();
     expect(screen.getByTestId('analytics-week-bars')).toBeInTheDocument();
     expect(screen.getByTestId('analytics-donut-chart')).toBeInTheDocument();
@@ -158,8 +161,11 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     expect(screen.getByTestId('analytics-subject-bars')).toBeInTheDocument();
 
     expect(screen.getByTestId('recent-studio-shelf')).toBeInTheDocument();
+    const studioStrip = screen.getByTestId('studio-visual-preview-strip');
+    expect(studioStrip.querySelectorAll('img')).toHaveLength(2);
     expect(screen.getByTestId('studio-recent-exam')).toBeInTheDocument();
     expect(screen.getByTestId('calendar-studio-section')).toBeInTheDocument();
+    expect(screen.getByTestId('todo-empty-illustration')).toBeInTheDocument();
 
     // 2. 4 thẻ môn học dùng đồ họa vector toán học SVG thuần, KHÔNG có thẻ <img> phong cảnh và có lối tắt bài gần nhất
     const subjectsGrid = screen.getByTestId('dashboard-subjects-grid');
