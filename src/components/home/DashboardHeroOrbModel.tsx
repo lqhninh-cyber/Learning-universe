@@ -1,17 +1,6 @@
+import { Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import {
-  addVec3,
-  crossVec3,
-  CRYSTAL_FACES,
-  CRYSTAL_VERTICES,
-  dotVec3,
-  ICO_FACES,
-  ICO_VERTICES,
-  LIGHT_DIR,
-  scaleVec3,
-  subVec3,
-  type Vec3,
-} from '@/components/home/heroSculptureGeometry';
+import type { Vec3 } from '@/components/home/heroSculptureGeometry';
 import type { DayPeriod } from '@/features/workspace';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
 import {
@@ -21,118 +10,119 @@ import {
 } from '@/shared/lib/canvasSprites';
 import { cn } from '@/shared/lib/cn';
 
+export type HeroSculptureMode = 'torus-knot' | 'lorenz' | 'helicoid';
+
 export interface DashboardHeroOrbModelProps {
   readonly dayPeriod: DayPeriod;
   readonly className?: string;
 }
 
-interface PeriodPalette {
-  readonly wireStroke: string;
-  readonly backWireStroke: string;
-  readonly faceRgb: readonly [number, number, number];
-  readonly coreRgb: readonly [number, number, number];
-  readonly coreGlow: string;
-  readonly dialStroke: string;
-  readonly glyphFill: string;
-  readonly auraInner: string;
-  readonly auraMid: string;
+interface SculptureModeMeta {
+  readonly id: HeroSculptureMode;
+  readonly label: string;
+  readonly formula: string;
 }
 
-const PERIOD_PALETTES: Readonly<Record<DayPeriod, PeriodPalette>> = {
-  morning: {
-    wireStroke: 'rgba(255, 244, 214, 0.88)',
-    backWireStroke: 'rgba(140, 232, 201, 0.34)',
-    faceRgb: [148, 226, 200],
-    coreRgb: [248, 214, 134],
-    coreGlow: 'rgba(248, 214, 134, 0.42)',
-    dialStroke: 'rgba(255, 246, 224, 0.34)',
-    glyphFill: 'rgba(255, 250, 236, 0.9)',
-    auraInner: 'rgba(246, 208, 126, 0.24)',
-    auraMid: 'rgba(110, 231, 183, 0.14)',
-  },
-  afternoon: {
-    wireStroke: 'rgba(196, 249, 230, 0.9)',
-    backWireStroke: 'rgba(126, 220, 190, 0.36)',
-    faceRgb: [120, 222, 190],
-    coreRgb: [245, 208, 120],
-    coreGlow: 'rgba(245, 208, 120, 0.4)',
-    dialStroke: 'rgba(218, 250, 238, 0.34)',
-    glyphFill: 'rgba(244, 252, 249, 0.92)',
-    auraInner: 'rgba(110, 231, 183, 0.22)',
-    auraMid: 'rgba(245, 208, 120, 0.14)',
-  },
-  evening: {
-    wireStroke: 'rgba(255, 226, 184, 0.88)',
-    backWireStroke: 'rgba(134, 218, 190, 0.34)',
-    faceRgb: [232, 178, 122],
-    coreRgb: [247, 198, 118],
-    coreGlow: 'rgba(242, 182, 121, 0.44)',
-    dialStroke: 'rgba(255, 226, 184, 0.32)',
-    glyphFill: 'rgba(255, 244, 230, 0.9)',
-    auraInner: 'rgba(242, 182, 121, 0.24)',
-    auraMid: 'rgba(82, 179, 148, 0.14)',
-  },
-  night: {
-    wireStroke: 'rgba(176, 235, 248, 0.88)',
-    backWireStroke: 'rgba(110, 212, 190, 0.36)',
-    faceRgb: [124, 202, 224],
-    coreRgb: [245, 214, 134],
-    coreGlow: 'rgba(147, 213, 250, 0.42)',
-    dialStroke: 'rgba(186, 232, 246, 0.32)',
-    glyphFill: 'rgba(235, 248, 255, 0.92)',
-    auraInner: 'rgba(147, 213, 250, 0.22)',
-    auraMid: 'rgba(110, 231, 183, 0.14)',
-  },
-};
-
-const ORB_RINGS = [
+export const HERO_SCULPTURE_MODES: readonly SculptureModeMeta[] = [
   {
-    rx: 1.0,
-    ry: 0.92,
-    tiltX: 0.56,
-    tiltZ: 0.28,
-    speedY: 0.22,
-    speedZ: 0.08,
-    color: 'rgba(245, 208, 120, 0.55)',
-    cometHex: '#F5D078',
-    cometRgb: '245, 208, 120',
-    offset: 0.4,
-    dir: 1,
+    id: 'torus-knot',
+    label: 'Xoắn Torus',
+    formula: 'T(3,5) · φ-Ribbon',
   },
   {
-    rx: 0.86,
-    ry: 0.8,
-    tiltX: -0.52,
-    tiltZ: 0.92,
-    speedY: -0.26,
-    speedZ: -0.1,
-    color: 'rgba(147, 213, 250, 0.52)',
-    cometHex: '#93D5FA',
-    cometRgb: '147, 213, 250',
-    offset: 2.2,
-    dir: -1,
+    id: 'lorenz',
+    label: 'Hấp dẫn Lorenz',
+    formula: 'dx/dt = σ(y − x)',
   },
   {
-    rx: 0.74,
-    ry: 0.68,
-    tiltX: 0.4,
-    tiltZ: -0.76,
-    speedY: 0.31,
-    speedZ: 0.12,
-    color: 'rgba(134, 230, 198, 0.54)',
-    cometHex: '#86E6C6',
-    cometRgb: '134, 230, 198',
-    offset: 4.1,
-    dir: 1,
+    id: 'helicoid',
+    label: 'Mặt Yên Ngựa',
+    formula: 'z = x² − y²',
   },
 ] as const;
 
-const FLOATING_GLYPHS = [
-  { glyph: '∫', nx: 0.14, ny: 0.2, phase: 0.2 },
-  { glyph: '∑', nx: 0.88, ny: 0.22, phase: 1.7 },
-  { glyph: 'φ', nx: 0.16, ny: 0.82, phase: 3.1 },
-  { glyph: '≃', nx: 0.86, ny: 0.8, phase: 4.6 },
-] as const;
+interface CurveNode3D {
+  readonly torus: Vec3;
+  readonly lorenz: Vec3;
+  readonly helicoid: Vec3;
+  readonly u: number;
+}
+
+const CURVE_SAMPLES = 156;
+
+/**
+ * Tiền tính toán O(1) 156 điểm 3D chuẩn hóa cho 3 mặt/đường cong toán học kinh điển
+ * để nội suy hình thái (3D Morphing) mượt ở 120fps hoàn toàn khác biệt với Nhị thập diện ở /learning-space.
+ */
+const MORPH_CURVE_NODES: readonly CurveNode3D[] = (() => {
+  // 1. Tích phân quỹ đạo Hố hấp dẫn Lorenz (σ = 10, ρ = 28, β = 8/3)
+  const lorenzRaw: Vec3[] = [];
+  let lx = 0.1;
+  let ly = 0;
+  let lz = 0;
+  const dt = 0.0085;
+  // Bỏ qua 120 bước đầu để vào đúng mặt hút cánh bướm đôi
+  for (let w = 0; w < 140; w += 1) {
+    const dx = 10 * (ly - lx);
+    const dy = lx * (28 - lz) - ly;
+    const dz = lx * ly - (8 / 3) * lz;
+    lx += dx * dt;
+    ly += dy * dt;
+    lz += dz * dt;
+  }
+  for (let i = 0; i < CURVE_SAMPLES; i += 1) {
+    for (let sub = 0; sub < 4; sub += 1) {
+      const dx = 10 * (ly - lx);
+      const dy = lx * (28 - lz) - ly;
+      const dz = lx * ly - (8 / 3) * lz;
+      lx += dx * dt;
+      ly += dy * dt;
+      lz += dz * dt;
+    }
+    lorenzRaw.push({
+      x: lx * 0.056,
+      y: (lz - 25) * 0.052,
+      z: ly * 0.052,
+    });
+  }
+
+  return Array.from({ length: CURVE_SAMPLES }, (_, idx) => {
+    const u = idx / CURVE_SAMPLES;
+    const t = u * Math.PI * 2;
+
+    // Hình thái 1: Nút xoắn Torus T(3, 5) tỷ lệ vàng (3D Trefoil-Penta Torus Knot)
+    const p = 3;
+    const q = 5;
+    const rTube = 0.78 + 0.36 * Math.cos(q * t);
+    const torus: Vec3 = {
+      x: rTube * Math.cos(p * t),
+      y: rTube * Math.sin(p * t),
+      z: 0.46 * Math.sin(q * t),
+    };
+
+    // Hình thái 2: Quỹ đạo cánh bướm Lorenz 3D
+    const lorenz = lorenzRaw[idx] ?? { x: 0, y: 0, z: 0 };
+
+    // Hình thái 3: Mặt Yên Ngựa Hyperbolic Paraboloid & Đường xoắn Helicoid kép
+    const waveR = 1.05 * Math.sin(t * 2) + 0.25;
+    const hx = Math.cos(t * 3) * (0.55 + 0.48 * Math.cos(t));
+    const hz = Math.sin(t * 3) * (0.55 + 0.48 * Math.cos(t));
+    const hy = (hx * hx - hz * hz) * 0.68 + 0.25 * Math.sin(waveR * Math.PI);
+    const helicoid: Vec3 = { x: hx * 1.12, y: hy * 1.08, z: hz * 1.12 };
+
+    return { torus, lorenz, helicoid, u };
+  });
+})();
+
+// Lưới mặt cong kẻ 3D (Ruled Surface Struts) nối các nhánh đối xứng
+const SURFACE_RIB_INDICES: readonly (readonly [number, number])[] = Array.from(
+  { length: 26 },
+  (_, k) => {
+    const i = (k * 6) % CURVE_SAMPLES;
+    const j = (i + Math.floor(CURVE_SAMPLES * 0.382)) % CURVE_SAMPLES;
+    return [i, j] as const;
+  },
+);
 
 function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
   const cx = Math.cos(ax);
@@ -154,24 +144,33 @@ function rotateVec3(v: Vec3, ax: number, ay: number, az: number): Vec3 {
   };
 }
 
-function projectOrb(v: Vec3, cx: number, cy: number, scale: number) {
-  const dist = 4.4;
-  const k = scale / (dist - v.z);
-  return { x: cx + v.x * k, y: cy + v.y * k, z: v.z };
+function project3D(v: Vec3, cx: number, cy: number, scale: number) {
+  const dist = 3.85;
+  const k = scale / Math.max(1.2, dist - v.z);
+  return { x: cx + v.x * k, y: cy + v.y * k, z: v.z, k };
 }
 
 /**
- * Mô hình Thiên Cầu & Đa Diện Pha Lê 3D Tương Tác (120fps Canvas)
- * đặt nổi trên góc phải ảnh Hero Trang Tổng quan:
- * - Tương thích sáng/tối & đổi sắc thái ánh sáng theo khung giờ (Sáng/Chiều/Tối/Đêm)
- * - Hỗ trợ rê chuột tạo hiệu ứng nghiêng parallax & kéo xoay đa diện mượt
- * - Tạm dừng hoàn toàn khi cuộn khuất màn hình hoặc khi prefers-reduced-motion được bật
+ * Điêu Khắc Toán Học Tham Số 3D Đa Hình Thái (120fps Canvas) dành riêng cho Trang Tổng quan (/):
+ * - Khác biệt 100% với khối Nhị thập diện ở /learning-space.
+ * - Cho phép người dùng bấm chuyển đổi mượt (3D Morphing) giữa 3 mô hình:
+ *   1. Xoắn Torus T(3,5) & Dải lụa Möbius ánh kim
+ *   2. Hố hấp dẫn Lorenz 3D (Cánh bướm vi phân hỗn loạn)
+ *   3. Mặt Yên Ngựa Hyperbolic & Lưới kẻ không gian
+ * - Hỗ trợ kéo chuột xoay 360° và tự đổi hòa sắc theo khung giờ Sáng / Chiều / Tối / Đêm.
  */
 export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrbModelProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const prefersReducedMotion = useReducedMotion();
+
+  const [activeMode, setActiveMode] = useState<HeroSculptureMode>('torus-knot');
+  const activeModeRef = useRef<HeroSculptureMode>(activeMode);
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    activeModeRef.current = activeMode;
+  }, [activeMode]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -181,15 +180,14 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
     const ctx = getLowLatency2DContext(canvas);
     if (!ctx) return;
 
-    const palette = PERIOD_PALETTES[dayPeriod];
-    let width = Math.max(220, host.clientWidth || 280);
-    let height = Math.max(200, host.clientHeight || 250);
+    let width = Math.max(230, host.clientWidth || 280);
+    let height = Math.max(210, host.clientHeight || 250);
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(220, host.clientWidth || 280);
-      height = Math.max(200, host.clientHeight || 250);
+      width = Math.max(230, host.clientWidth || 280);
+      height = Math.max(210, host.clientHeight || 250);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -205,107 +203,24 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
     let hovered = false;
     let lastX = 0;
     let lastY = 0;
-    let targetRotX = 0.28;
-    let targetRotY = -0.35;
+    let targetRotX = 0.32;
+    let targetRotY = -0.25;
     let curRotX = targetRotX;
     let curRotY = targetRotY;
-    let hoverMix = 0;
 
-    const drawRingHalf = (
-      ring: (typeof ORB_RINGS)[number],
-      cx: number,
-      cy: number,
-      ringBaseR: number,
-      projScale: number,
-      time: number,
-      frontHalf: boolean,
-    ) => {
-      const steps = 64;
-      const ax = ring.tiltX + curRotX * 0.42;
-      const ay = time * ring.speedY + curRotY * 0.65;
-      const az = ring.tiltZ + time * ring.speedZ;
+    // Trọng số nội suy hình thái 3D (wTorus, wLorenz, wHelicoid)
+    let wTorus = 1;
+    let wLorenz = 0;
+    let wHelicoid = 0;
 
-      ctx.beginPath();
-      let started = false;
-      for (let i = 0; i <= steps; i += 1) {
-        const theta = (i / steps) * Math.PI * 2;
-        const raw: Vec3 = {
-          x: Math.cos(theta) * ring.rx * ringBaseR,
-          y: Math.sin(theta) * ring.ry * ringBaseR,
-          z: 0,
-        };
-        const r = rotateVec3(raw, ax, ay, az);
-        const isFront = r.z >= 0;
-        if (isFront !== frontHalf) {
-          started = false;
-          continue;
-        }
-        const p = projectOrb(r, cx, cy, projScale);
-        if (!started) {
-          ctx.moveTo(p.x, p.y);
-          started = true;
-        } else {
-          ctx.lineTo(p.x, p.y);
-        }
-      }
-      ctx.strokeStyle = ring.color;
-      ctx.globalAlpha = frontHalf ? 0.78 + hoverMix * 0.18 : 0.28;
-      ctx.lineWidth = frontHalf ? 1.25 : 0.85;
-      ctx.stroke();
-
-      // Vẽ hạt khoáng thạch & đuôi sao chổi trên quỹ đạo
-      const cometAngle = time * (0.68 + hoverMix * 0.25) * ring.dir + ring.offset;
-      const cometRaw: Vec3 = {
-        x: Math.cos(cometAngle) * ring.rx * ringBaseR,
-        y: Math.sin(cometAngle) * ring.ry * ringBaseR,
-        z: 0,
+    const getSamplePosition = (node: CurveNode3D, time: number): Vec3 => {
+      const breath = 1 + Math.sin(time * 1.4 + node.u * Math.PI * 4) * 0.045;
+      const base: Vec3 = {
+        x: (node.torus.x * wTorus + node.lorenz.x * wLorenz + node.helicoid.x * wHelicoid) * breath,
+        y: (node.torus.y * wTorus + node.lorenz.y * wLorenz + node.helicoid.y * wHelicoid) * breath,
+        z: (node.torus.z * wTorus + node.lorenz.z * wLorenz + node.helicoid.z * wHelicoid) * breath,
       };
-      const cometRot = rotateVec3(cometRaw, ax, ay, az);
-      if (cometRot.z >= 0 === frontHalf) {
-        const tailAngle = cometAngle - 0.36 * ring.dir;
-        const tailRot = rotateVec3(
-          {
-            x: Math.cos(tailAngle) * ring.rx * ringBaseR,
-            y: Math.sin(tailAngle) * ring.ry * ringBaseR,
-            z: 0,
-          },
-          ax,
-          ay,
-          az,
-        );
-        const headP = projectOrb(cometRot, cx, cy, projScale);
-        const tailP = projectOrb(tailRot, cx, cy, projScale);
-
-        const trailGrad = ctx.createLinearGradient(tailP.x, tailP.y, headP.x, headP.y);
-        trailGrad.addColorStop(0, `rgba(${ring.cometRgb}, 0)`);
-        trailGrad.addColorStop(1, `rgba(${ring.cometRgb}, ${frontHalf ? '0.92' : '0.45'})`);
-        ctx.beginPath();
-        ctx.moveTo(tailP.x, tailP.y);
-        ctx.lineTo(headP.x, headP.y);
-        ctx.strokeStyle = trailGrad;
-        ctx.lineWidth = frontHalf ? 2.4 : 1.4;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-
-        const halo = ctx.createRadialGradient(headP.x, headP.y, 0.5, headP.x, headP.y, 10);
-        halo.addColorStop(0, `rgba(${ring.cometRgb}, ${frontHalf ? '0.68' : '0.28'})`);
-        halo.addColorStop(1, `rgba(${ring.cometRgb}, 0)`);
-        ctx.fillStyle = halo;
-        ctx.beginPath();
-        ctx.arc(headP.x, headP.y, 10, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.globalAlpha = frontHalf ? 1 : 0.55;
-        ctx.beginPath();
-        ctx.arc(headP.x, headP.y, frontHalf ? 3.2 : 2.1, 0, Math.PI * 2);
-        ctx.fillStyle = ring.cometHex;
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(headP.x, headP.y, frontHalf ? 1.3 : 0.9, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
+      return base;
     };
 
     const renderFrame = (time: number) => {
@@ -314,183 +229,200 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
       ctx.clearRect(0, 0, width, height);
 
       const cx = width * 0.5;
-      const cy = height * 0.5;
+      const cy = height * 0.49;
       const minDim = Math.min(width, height);
-      const dialR = minDim * 0.44;
-      const ringBaseR = 1.42;
-      const projScale = minDim * 1.18;
+      const outerR = minDim * 0.44;
+      const projScale = minDim * 1.04;
 
-      // 1. Quầng sáng khí quyển mềm phía sau khối cầu
-      const aura = ctx.createRadialGradient(cx, cy, 4, cx, cy, dialR * 1.18);
-      aura.addColorStop(0, palette.auraInner);
-      aura.addColorStop(0.55, palette.auraMid);
+      // 1. Hào quang đa tầng phía sau tượng điêu khắc 3D
+      const aura = ctx.createRadialGradient(cx, cy, 4, cx, cy, outerR * 1.22);
+      if (dayPeriod === 'morning' || dayPeriod === 'evening') {
+        aura.addColorStop(0, 'rgba(245, 208, 120, 0.28)');
+        aura.addColorStop(0.52, 'rgba(74, 209, 163, 0.16)');
+      } else {
+        aura.addColorStop(0, 'rgba(110, 231, 183, 0.26)');
+        aura.addColorStop(0.52, 'rgba(147, 213, 250, 0.16)');
+      }
       aura.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = aura;
       ctx.beginPath();
-      ctx.arc(cx, cy, dialR * 1.18, 0, Math.PI * 2);
+      ctx.arc(cx, cy, outerR * 1.22, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Vành trắc địa thiên cầu chia độ 72 vạch mảnh xoay chậm
-      const tickRot = time * 0.045;
-      ctx.strokeStyle = palette.dialStroke;
-      ctx.lineWidth = 0.85;
+      // 2. Khung vòm Nhật Quỹ / Chân trời 12 cung giờ học thuật (khác hẳn la bàn 360 độ của /learning-space)
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255, 248, 228, 0.24)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([8, 6]);
       ctx.beginPath();
-      ctx.arc(cx, cy, dialR, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.setLineDash([2, 6]);
-      ctx.arc(cx, cy, dialR * 0.87, 0, Math.PI * 2);
+      ctx.arc(cx, cy, outerR, -Math.PI * 0.82, Math.PI * 0.82);
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.beginPath();
-      for (let i = 0; i < 72; i += 1) {
-        const a = (i / 72) * Math.PI * 2 + tickRot;
-        const inner = i % 6 === 0 ? dialR - 7 : i % 3 === 0 ? dialR - 4.5 : dialR - 2.5;
-        ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
-        ctx.lineTo(cx + Math.cos(a) * dialR, cy + Math.sin(a) * dialR);
+      // 8 điểm sao chòm sao kiến trúc quanh vòm ngoài
+      for (let s = 0; s < 8; s += 1) {
+        const ang = (s / 8) * Math.PI * 2 + time * 0.05;
+        const sx = cx + Math.cos(ang) * outerR;
+        const sy = cy + Math.sin(ang) * outerR;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s % 2 === 0 ? 2.1 : 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = s % 2 === 0 ? '#F5D078' : 'rgba(167, 243, 208, 0.75)';
+        ctx.fill();
       }
-      ctx.strokeStyle = palette.dialStroke;
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
+      ctx.restore();
 
-      // 3. Nửa sau 3 vòng thiên cầu
-      for (const ring of ORB_RINGS) {
-        drawRingHalf(ring, cx, cy, ringBaseR, projScale, time, false);
+      // 3. Tính tọa độ xoay 3D của 156 đỉnh đường cong tham số + dải lụa kép (Ribbon Offset)
+      const ax = curRotX + Math.sin(time * 0.35) * 0.12;
+      const ay = curRotY + time * 0.38;
+      const az = Math.cos(time * 0.24) * 0.14;
+
+      const mainPts = MORPH_CURVE_NODES.map((node) => {
+        const p3 = rotateVec3(getSamplePosition(node, time), ax, ay, az);
+        return {
+          ...project3D(p3, cx, cy, projScale),
+          u: node.u,
+          p3,
+        };
+      });
+
+      // Dải biên song song tạo bề mặt lụa Möbius 3D có chiều rộng
+      const ribbonPts = MORPH_CURVE_NODES.map((node, idx) => {
+        const base = getSamplePosition(node, time);
+        const twistAngle = node.u * Math.PI * 6 + time * 0.9;
+        const offset: Vec3 = {
+          x: base.x + Math.cos(twistAngle) * 0.13,
+          y: base.y + Math.sin(twistAngle) * 0.13,
+          z: base.z + Math.sin(twistAngle * 0.5) * 0.11,
+        };
+        const p3 = rotateVec3(offset, ax, ay, az);
+        return {
+          ...project3D(p3, cx, cy, projScale),
+          main: mainPts[idx]!,
+        };
+      });
+
+      // 4. Vẽ các thanh giằng mặt kẻ (Ruled Surface Geodesic Struts)
+      for (const [i, j] of SURFACE_RIB_INDICES) {
+        const a = mainPts[i]!;
+        const b = mainPts[j]!;
+        const avgZ = (a.z + b.z) * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = avgZ >= 0 ? 'rgba(245, 208, 120, 0.24)' : 'rgba(147, 213, 250, 0.12)';
+        ctx.lineWidth = avgZ >= 0 ? 0.9 : 0.65;
+        ctx.stroke();
       }
 
-      // 4. Lõi tinh thể ánh kim xoay ngược bên trong khối nhị thập diện
-      const coreScale = 0.34;
-      const coreVerts = CRYSTAL_VERTICES.map((v) =>
-        rotateVec3(
-          scaleVec3(v, coreScale),
-          -time * 0.42 + curRotX * 0.8,
-          -time * 0.58 + curRotY * 0.8,
-          time * 0.2,
-        ),
-      );
-      const coreProj = coreVerts.map((v) => projectOrb(v, cx, cy, projScale));
+      // 5. Vẽ các mặt tứ giác của Dải Lụa 3D (Z-sorted Translucent Ribbon Quads)
+      const quads = mainPts.map((curr, idx) => {
+        const nextIdx = (idx + 1) % CURVE_SAMPLES;
+        const next = mainPts[nextIdx]!;
+        const rCurr = ribbonPts[idx]!;
+        const rNext = ribbonPts[nextIdx]!;
+        const avgZ = (curr.z + next.z) * 0.5;
+        return { curr, next, rCurr, rNext, avgZ, u: curr.u, idx };
+      });
+      quads.sort((a, b) => a.avgZ - b.avgZ);
 
-      const coreGlow = ctx.createRadialGradient(cx, cy, 2, cx, cy, minDim * 0.2);
-      coreGlow.addColorStop(0, palette.coreGlow);
-      coreGlow.addColorStop(1, 'rgba(245, 208, 120, 0)');
-      ctx.fillStyle = coreGlow;
+      for (const q of quads) {
+        const depthNorm = Math.max(0, Math.min(1, (q.avgZ + 1.2) / 2.4));
+        const hueMix = Math.sin(q.u * Math.PI * 2 + time * 0.8) * 0.5 + 0.5;
+        const r = Math.round(74 + hueMix * 171);
+        const g = Math.round(209 - hueMix * 10);
+        const b = Math.round(168 - hueMix * 48);
+        const fillAlpha = 0.08 + depthNorm * 0.24;
+
+        // Mặt lụa bán trong suốt
+        ctx.beginPath();
+        ctx.moveTo(q.curr.x, q.curr.y);
+        ctx.lineTo(q.next.x, q.next.y);
+        ctx.lineTo(q.rNext.x, q.rNext.y);
+        ctx.lineTo(q.rCurr.x, q.rCurr.y);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${fillAlpha.toFixed(3)})`;
+        ctx.fill();
+
+        // Thanh ngang trên mặt lụa mỗi 3 bước
+        if (q.idx % 3 === 0) {
+          ctx.beginPath();
+          ctx.moveTo(q.curr.x, q.curr.y);
+          ctx.lineTo(q.rCurr.x, q.rCurr.y);
+          ctx.strokeStyle = `rgba(255, 248, 224, ${(0.14 + depthNorm * 0.25).toFixed(3)})`;
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+        }
+
+        // Đường sống chính phát sáng
+        ctx.beginPath();
+        ctx.moveTo(q.curr.x, q.curr.y);
+        ctx.lineTo(q.next.x, q.next.y);
+        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${(0.35 + depthNorm * 0.6).toFixed(3)})`;
+        ctx.lineWidth = 1.3 + depthNorm * 1.4;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Đường viền lụa phụ ánh kim
+        ctx.beginPath();
+        ctx.moveTo(q.rCurr.x, q.rCurr.y);
+        ctx.lineTo(q.rNext.x, q.rNext.y);
+        ctx.strokeStyle = `rgba(245, 208, 120, ${(0.22 + depthNorm * 0.45).toFixed(3)})`;
+        ctx.lineWidth = 0.85 + depthNorm * 0.6;
+        ctx.stroke();
+      }
+
+      // 6. 4 Hạt Xung Năng Lượng (4 màu học phần) chạy dọc theo ống xoắn 3D
+      const pulseColors = [
+        { hex: '#F5D078', rgb: '245, 208, 120', speed: 0.16, offset: 0 },
+        { hex: '#93D5FA', rgb: '147, 213, 250', speed: 0.16, offset: 0.25 },
+        { hex: '#6EE7B7', rgb: '110, 231, 183', speed: 0.16, offset: 0.5 },
+        { hex: '#F5A49B', rgb: '245, 164, 155', speed: 0.16, offset: 0.75 },
+      ] as const;
+
+      for (const pulse of pulseColors) {
+        const prog = ((time * pulse.speed + pulse.offset) % 1) * CURVE_SAMPLES;
+        const i0 = Math.floor(prog) % CURVE_SAMPLES;
+        const i1 = (i0 + 1) % CURVE_SAMPLES;
+        const frac = prog - Math.floor(prog);
+        const p0 = mainPts[i0]!;
+        const p1 = mainPts[i1]!;
+        const px = p0.x + (p1.x - p0.x) * frac;
+        const py = p0.y + (p1.y - p0.y) * frac;
+
+        const glow = ctx.createRadialGradient(px, py, 0.5, px, py, 12);
+        glow.addColorStop(0, `rgba(${pulse.rgb}, 0.85)`);
+        glow.addColorStop(1, `rgba(${pulse.rgb}, 0)`);
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(px, py, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(px, py, 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = pulse.hex;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(px, py, 1.4, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+      }
+
+      // 7. Hạt nhân ánh sáng tỷ lệ vàng tại tâm đối xứng
+      const centerPulse = 4.2 + Math.sin(time * 2.4) * 1.1;
+      const coreHalo = ctx.createRadialGradient(cx, cy, 1, cx, cy, 24);
+      coreHalo.addColorStop(0, 'rgba(255, 248, 220, 0.75)');
+      coreHalo.addColorStop(0.45, 'rgba(245, 208, 120, 0.25)');
+      coreHalo.addColorStop(1, 'rgba(245, 208, 120, 0)');
+      ctx.fillStyle = coreHalo;
       ctx.beginPath();
-      ctx.arc(cx, cy, minDim * 0.2, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 24, 0, Math.PI * 2);
       ctx.fill();
 
-      const sortedCore = CRYSTAL_FACES.map(([i, j, k]) => {
-        const v0 = coreVerts[i]!;
-        const v1 = coreVerts[j]!;
-        const v2 = coreVerts[k]!;
-        const centroid = scaleVec3(addVec3(addVec3(v0, v1), v2), 1 / 3);
-        const normal = crossVec3(subVec3(v1, v0), subVec3(v2, v0));
-        const nLen = Math.hypot(normal.x, normal.y, normal.z) || 1;
-        const lambert = Math.max(0.18, dotVec3(scaleVec3(normal, 1 / nLen), LIGHT_DIR));
-        return {
-          p0: coreProj[i]!,
-          p1: coreProj[j]!,
-          p2: coreProj[k]!,
-          z: centroid.z,
-          lambert,
-        };
-      }).sort((a, b) => a.z - b.z);
-
-      for (const f of sortedCore) {
-        const [cr, cg, cb] = palette.coreRgb;
-        ctx.beginPath();
-        ctx.moveTo(f.p0.x, f.p0.y);
-        ctx.lineTo(f.p1.x, f.p1.y);
-        ctx.lineTo(f.p2.x, f.p2.y);
-        ctx.closePath();
-        ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${(0.28 + f.lambert * 0.42).toFixed(3)})`;
-        ctx.fill();
-        ctx.strokeStyle = `rgba(255, 248, 224, ${(0.35 + f.lambert * 0.4).toFixed(3)})`;
-        ctx.lineWidth = 0.7;
-        ctx.stroke();
-      }
-
-      // 5. Khối Nhị Thập Diện Kính Mờ (Translucent Glass Icosahedron)
-      const icoScale = 0.64 + hoverMix * 0.04;
-      const icoVerts = ICO_VERTICES.map((v) =>
-        rotateVec3(
-          scaleVec3(v, icoScale),
-          time * 0.24 + curRotX,
-          time * 0.36 + curRotY,
-          time * 0.1,
-        ),
-      );
-      const icoProj = icoVerts.map((v) => projectOrb(v, cx, cy, projScale));
-
-      const sortedIco = ICO_FACES.map(([i, j, k]) => {
-        const v0 = icoVerts[i]!;
-        const v1 = icoVerts[j]!;
-        const v2 = icoVerts[k]!;
-        const centroid = scaleVec3(addVec3(addVec3(v0, v1), v2), 1 / 3);
-        const normal = crossVec3(subVec3(v1, v0), subVec3(v2, v0));
-        const nLen = Math.hypot(normal.x, normal.y, normal.z) || 1;
-        const unitN = scaleVec3(normal, 1 / nLen);
-        const lambert = Math.max(0.16, dotVec3(unitN, LIGHT_DIR));
-        return {
-          p0: icoProj[i]!,
-          p1: icoProj[j]!,
-          p2: icoProj[k]!,
-          z: centroid.z,
-          front: normal.z >= 0,
-          lambert,
-        };
-      }).sort((a, b) => a.z - b.z);
-
-      const [fr, fg, fb] = palette.faceRgb;
-      for (const face of sortedIco) {
-        ctx.beginPath();
-        ctx.moveTo(face.p0.x, face.p0.y);
-        ctx.lineTo(face.p1.x, face.p1.y);
-        ctx.lineTo(face.p2.x, face.p2.y);
-        ctx.closePath();
-        ctx.fillStyle = face.front
-          ? `rgba(${fr}, ${fg}, ${fb}, ${(0.08 + face.lambert * 0.16).toFixed(3)})`
-          : `rgba(${fr}, ${fg}, ${fb}, 0.03)`;
-        ctx.fill();
-        ctx.strokeStyle = face.front ? palette.wireStroke : palette.backWireStroke;
-        ctx.lineWidth = face.front ? 1.15 : 0.7;
-        ctx.stroke();
-      }
-
-      // Chấm sáng tại các đỉnh mặt trước của khối đa diện
-      for (const p of icoProj) {
-        if (p.z > 0.1) {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 1.9, 0, Math.PI * 2);
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fill();
-        }
-      }
-
-      // 6. Nửa trước 3 vòng thiên cầu
-      for (const ring of ORB_RINGS) {
-        drawRingHalf(ring, cx, cy, ringBaseR, projScale, time, true);
-      }
-
-      // 7. 4 ký hiệu toán học lơ lửng theo quỹ đạo Lissajous vi mô
-      ctx.font = '500 13px "KaTeX_Main", Georgia, serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      for (const item of FLOATING_GLYPHS) {
-        const gx = item.nx * width + Math.cos(time * 0.7 + item.phase) * 4;
-        const gy = item.ny * height + Math.sin(time * 0.9 + item.phase) * 5;
-        ctx.beginPath();
-        ctx.arc(gx, gy, 13, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(12, 26, 22, 0.34)';
-        ctx.fill();
-        ctx.strokeStyle = palette.dialStroke;
-        ctx.lineWidth = 0.85;
-        ctx.stroke();
-
-        ctx.fillStyle = palette.glyphFill;
-        ctx.fillText(item.glyph, gx, gy + 0.5);
-      }
+      ctx.beginPath();
+      ctx.arc(cx, cy, centerPulse, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFF9E6';
+      ctx.fill();
 
       ctx.restore();
     };
@@ -504,7 +436,7 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
         try {
           host.setPointerCapture(event.pointerId);
         } catch {
-          // Bỏ qua khi không hỗ trợ pointer capture
+          // Bỏ qua nếu môi trường không hỗ trợ
         }
       }
     };
@@ -515,8 +447,8 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
         const dy = event.clientY - lastY;
         lastX = event.clientX;
         lastY = event.clientY;
-        targetRotY += dx * 0.012;
-        targetRotX = Math.max(-1.1, Math.min(1.1, targetRotX + dy * 0.01));
+        targetRotY += dx * 0.013;
+        targetRotX = Math.max(-1.2, Math.min(1.2, targetRotX + dy * 0.011));
         if (prefersReducedMotion) {
           curRotX = targetRotX;
           curRotY = targetRotY;
@@ -528,8 +460,8 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
       if (rect.width > 0 && rect.height > 0) {
         const nx = (event.clientX - rect.left) / rect.width - 0.5;
         const ny = (event.clientY - rect.top) / rect.height - 0.5;
-        targetRotY = -0.35 + nx * 0.55;
-        targetRotX = 0.28 + ny * 0.45;
+        targetRotY = -0.25 + nx * 0.65;
+        targetRotX = 0.32 + ny * 0.5;
       }
     };
 
@@ -580,7 +512,12 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
       io.observe(host);
     }
 
+    // Đồng bộ trọng số ngay cho frame tĩnh đầu tiên
+    wTorus = activeModeRef.current === 'torus-knot' ? 1 : 0;
+    wLorenz = activeModeRef.current === 'lorenz' ? 1 : 0;
+    wHelicoid = activeModeRef.current === 'helicoid' ? 1 : 0;
     renderFrame(0.8);
+
     if (prefersReducedMotion) {
       return () => {
         host.removeEventListener('pointerdown', onPointerDown);
@@ -598,11 +535,18 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
       const { dtSeconds } = computeFrameDelta(now, prevNow);
       prevNow = now;
       if (isVisible && !document.hidden) {
-        elapsed += dtSeconds * (hovered ? 1.35 : 1);
-        const damp = frameDampFactor(7.5, dtSeconds);
+        elapsed += dtSeconds * (hovered ? 1.3 : 1);
+        const damp = frameDampFactor(7, dtSeconds);
         curRotX += (targetRotX - curRotX) * damp;
         curRotY += (targetRotY - curRotY) * damp;
-        hoverMix += ((hovered ? 1 : 0) - hoverMix) * damp;
+
+        // Nội suy mượt giữa 3 hình thái 3D (Morphing)
+        const mode = activeModeRef.current;
+        const morphRate = frameDampFactor(5.5, dtSeconds);
+        wTorus += ((mode === 'torus-knot' ? 1 : 0) - wTorus) * morphRate;
+        wLorenz += ((mode === 'lorenz' ? 1 : 0) - wLorenz) * morphRate;
+        wHelicoid += ((mode === 'helicoid' ? 1 : 0) - wHelicoid) * morphRate;
+
         renderFrame(elapsed);
       }
       rafId = window.requestAnimationFrame(tick);
@@ -622,19 +566,66 @@ export function DashboardHeroOrbModel({ dayPeriod, className }: DashboardHeroOrb
     };
   }, [dayPeriod, prefersReducedMotion]);
 
+  // Khi prefersReducedMotion bật và đổi mode, vẽ lại ngay
+  useEffect(() => {
+    if (!prefersReducedMotion) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const evt = new PointerEvent('pointermove', { clientX: 0, clientY: 0 });
+    hostRef.current?.dispatchEvent(evt);
+  }, [activeMode, prefersReducedMotion]);
+
+  const currentMeta =
+    HERO_SCULPTURE_MODES.find((m) => m.id === activeMode) ?? HERO_SCULPTURE_MODES[0]!;
+
   return (
-    <div
-      ref={hostRef}
-      data-testid="dashboard-hero-orb-model"
-      title="Kéo xoay mô hình Thiên cầu Đa diện 3D"
-      className={cn(
-        'relative select-none',
-        isDragging ? 'cursor-grabbing' : 'cursor-grab',
-        className,
-      )}
-      aria-hidden="true"
-    >
-      <canvas ref={canvasRef} className="block h-full w-full touch-none" />
+    <div className={cn('flex flex-col items-center gap-1.5', className)}>
+      <div
+        ref={hostRef}
+        data-testid="dashboard-hero-orb-model"
+        data-sculpture-mode={activeMode}
+        title="Kéo xoay 360° hoặc bấm nút bên dưới để biến đổi hình thái mặt cong 3D"
+        className={cn(
+          'relative h-[220px] w-[248px] select-none lg:h-[256px] lg:w-[292px]',
+          isDragging ? 'cursor-grabbing' : 'cursor-grab',
+        )}
+        aria-hidden="true"
+      >
+        <canvas ref={canvasRef} className="block h-full w-full touch-none" />
+      </div>
+
+      {/* Bộ nút chuyển đổi 3 hình thái mặt cong 3D ngay dưới mô hình */}
+      <div
+        role="group"
+        aria-label="Chọn hình thái điêu khắc toán học 3D"
+        className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-black/35 p-1 backdrop-blur-md"
+      >
+        {HERO_SCULPTURE_MODES.map((mode) => {
+          const isSelected = mode.id === activeMode;
+          return (
+            <button
+              key={mode.id}
+              type="button"
+              data-testid={`hero-sculpture-mode-${mode.id}`}
+              aria-pressed={isSelected}
+              onClick={() => setActiveMode(mode.id)}
+              className={cn(
+                'cursor-pointer rounded-full px-2.5 py-0.5 font-mono text-[9.5px] font-semibold transition-all duration-150',
+                isSelected
+                  ? 'bg-[#0F7656] text-white shadow-2xs ring-1 ring-[#A7F3D0]/40'
+                  : 'text-white/75 hover:bg-white/10 hover:text-white',
+              )}
+            >
+              {mode.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] font-medium tracking-wider text-white/80">
+        <Sparkles className="h-2.5 w-2.5 text-[#F5D078]" aria-hidden="true" />
+        <span>{currentMeta.formula} · Kéo xoay 3D</span>
+      </span>
     </div>
   );
 }

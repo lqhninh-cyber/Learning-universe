@@ -26,6 +26,8 @@ export interface SubjectMathCardProps {
 
 interface SubjectStageVisualSpec {
   readonly stageSurfaceClass: string;
+  readonly washUrl: string;
+  readonly topBarGradient: string;
   readonly inkTextClass: string;
   readonly dotColor: string;
   readonly darkDotColor: string;
@@ -36,9 +38,11 @@ interface SubjectStageVisualSpec {
 
 const DEFAULT_STAGE_VISUAL: SubjectStageVisualSpec = {
   stageSurfaceClass:
-    'border-[#E6D9C7]/80 bg-gradient-to-br from-[#FBF6EE] via-[#F6EEE1] to-[#EFE5D4] dark:border-[#3A2D20] dark:from-[#211A13] dark:via-[#191510] dark:to-[#13110E]',
+    'border-[#E6D9C7]/90 bg-gradient-to-br from-[#FBF6EE] via-[#F5ECE0] to-[#EDE1CE] dark:border-[#3A2D20] dark:from-[#231B13] dark:via-[#1A1510] dark:to-[#13110E]',
+  washUrl: '/assets/atmosphere/subject-wash-ctds.webp',
+  topBarGradient: 'linear-gradient(90deg, #8C5828 0%, #D4AF6A 55%, #8C5828 100%)',
   inkTextClass: 'text-[#8C5828] dark:text-[#D99B5E]',
-  dotColor: 'rgba(140, 88, 40, 0.24)',
+  dotColor: 'rgba(140, 88, 40, 0.25)',
   darkDotColor: 'rgba(217, 155, 94, 0.26)',
   progressBgClass: 'bg-[#8C5828] dark:bg-[#D99B5E]',
   ringStrokeClass: 'text-[#8C5828] dark:text-[#D99B5E]',
@@ -49,9 +53,11 @@ const SUBJECT_STAGE_VISUALS: Readonly<Record<string, SubjectStageVisualSpec>> = 
   'cau-truc-dai-so': DEFAULT_STAGE_VISUAL,
   'hinh-hoc-affine': {
     stageSurfaceClass:
-      'border-[#C8DCE7]/80 bg-gradient-to-br from-[#F1F7FA] via-[#E8F1F6] to-[#DDEAF1] dark:border-[#233845] dark:from-[#121D26] dark:via-[#101820] dark:to-[#0D1319]',
+      'border-[#C8DCE7]/90 bg-gradient-to-br from-[#F1F7FA] via-[#E6F0F6] to-[#DAE7F0] dark:border-[#233845] dark:from-[#131F28] dark:via-[#101820] dark:to-[#0D1319]',
+    washUrl: '/assets/atmosphere/subject-wash-hhave.webp',
+    topBarGradient: 'linear-gradient(90deg, #1D4F6E 0%, #64A8D1 55%, #1D4F6E 100%)',
     inkTextClass: 'text-[#1D4F6E] dark:text-[#64A8D1]',
-    dotColor: 'rgba(29, 79, 110, 0.24)',
+    dotColor: 'rgba(29, 79, 110, 0.25)',
     darkDotColor: 'rgba(100, 168, 209, 0.26)',
     progressBgClass: 'bg-[#1D4F6E] dark:bg-[#64A8D1]',
     ringStrokeClass: 'text-[#1D4F6E] dark:text-[#64A8D1]',
@@ -59,9 +65,11 @@ const SUBJECT_STAGE_VISUALS: Readonly<Record<string, SubjectStageVisualSpec>> = 
   },
   'giai-tich-ham-mot-bien': {
     stageSurfaceClass:
-      'border-[#C4DFD3]/80 bg-gradient-to-br from-[#EFF7F3] via-[#E5F2EC] to-[#D9EBE2] dark:border-[#1F3B31] dark:from-[#10201A] dark:via-[#0E1915] dark:to-[#0C1411]',
+      'border-[#C4DFD3]/90 bg-gradient-to-br from-[#EFF7F3] via-[#E3F1EB] to-[#D6E9E0] dark:border-[#1F3B31] dark:from-[#10221C] dark:via-[#0E1915] dark:to-[#0C1411]',
+    washUrl: '/assets/atmosphere/subject-wash-gthmb.webp',
+    topBarGradient: 'linear-gradient(90deg, #1B5E4A 0%, #4AD1A3 55%, #1B5E4A 100%)',
     inkTextClass: 'text-[#1B5E4A] dark:text-[#52B394]',
-    dotColor: 'rgba(27, 94, 74, 0.24)',
+    dotColor: 'rgba(27, 94, 74, 0.25)',
     darkDotColor: 'rgba(82, 179, 148, 0.26)',
     progressBgClass: 'bg-[#1B5E4A] dark:bg-[#52B394]',
     ringStrokeClass: 'text-[#1B5E4A] dark:text-[#52B394]',
@@ -69,9 +77,11 @@ const SUBJECT_STAGE_VISUALS: Readonly<Record<string, SubjectStageVisualSpec>> = 
   },
   'giao-duc-hoc': {
     stageSurfaceClass:
-      'border-[#E4CCC8]/80 bg-gradient-to-br from-[#FAF2F0] via-[#F4E7E4] to-[#ECDCD8] dark:border-[#3F2624] dark:from-[#221514] dark:via-[#1A1212] dark:to-[#140F0F]',
+      'border-[#E4CCC8]/90 bg-gradient-to-br from-[#FAF2F0] via-[#F3E5E2] to-[#EAD8D4] dark:border-[#3F2624] dark:from-[#241615] dark:via-[#1A1212] dark:to-[#140F0F]',
+    washUrl: '/assets/atmosphere/subject-wash-gdh.webp',
+    topBarGradient: 'linear-gradient(90deg, #8F3D35 0%, #DF7B70 55%, #8F3D35 100%)',
     inkTextClass: 'text-[#8F3D35] dark:text-[#DF7B70]',
-    dotColor: 'rgba(143, 61, 53, 0.24)',
+    dotColor: 'rgba(143, 61, 53, 0.25)',
     darkDotColor: 'rgba(223, 123, 112, 0.26)',
     progressBgClass: 'bg-[#8F3D35] dark:bg-[#DF7B70]',
     ringStrokeClass: 'text-[#8F3D35] dark:text-[#DF7B70]',
@@ -505,6 +515,13 @@ export const SubjectMathCard: FC<SubjectMathCardProps> = ({
       data-subject-card-style="math-vector"
       className="group/card relative flex min-w-0 flex-col justify-between overflow-hidden rounded-[26px] border border-black/[0.05] bg-white shadow-[0_12px_32px_-20px_rgba(16,45,35,0.16)] transition-all duration-200 hover:-translate-y-1 hover:border-black/[0.1] hover:shadow-[0_20px_42px_-22px_rgba(16,45,35,0.22)] dark:border-white/[0.07] dark:bg-[#141D1A] dark:hover:border-white/[0.14]"
     >
+      {/* Dải gờ màu học phần trên đỉnh thẻ */}
+      <div
+        aria-hidden="true"
+        style={{ background: visual.topBarGradient }}
+        className="pointer-events-none h-1.5 w-full opacity-85"
+      />
+
       {/* Phần thân chính dẫn tới trang tổng quan học phần */}
       <Link
         to={overviewHref}
@@ -515,19 +532,26 @@ export const SubjectMathCard: FC<SubjectMathCardProps> = ({
         <div
           aria-hidden="true"
           style={{
-            background: `radial-gradient(circle at 88% 12%, ${color}14 0%, transparent 58%)`,
+            background: `radial-gradient(circle at 88% 12%, ${color}1A 0%, transparent 58%)`,
           }}
-          className="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-300 group-hover/card:opacity-100"
+          className="pointer-events-none absolute inset-0 opacity-75 transition-opacity duration-300 group-hover/card:opacity-100"
         />
 
-        {/* Sân khấu mô hình toán học mini sống động (0 thẻ <img>, 100% vector động) */}
+        {/* Sân khấu mô hình toán học mini kết hợp nền tranh loang màu nước (0 thẻ <img>, 100% vector + CSS wash) */}
         <div
           className={cn(
-            'relative h-[108px] w-full overflow-hidden rounded-[18px] border transition-colors duration-200',
+            'relative h-[120px] w-full overflow-hidden rounded-[18px] border shadow-inner transition-colors duration-200',
             visual.stageSurfaceClass,
             visual.inkTextClass,
           )}
         >
+          {/* Lớp tranh màu nước khoáng thạch cục bộ qua CSS backgroundImage (không tạo thẻ <img>) */}
+          <div
+            aria-hidden="true"
+            style={{ backgroundImage: `url('${visual.washUrl}')` }}
+            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-50 mix-blend-multiply transition-transform duration-700 ease-out group-hover/card:scale-105 dark:opacity-15 dark:mix-blend-screen"
+          />
+
           {/* Lưới điểm bản vẽ siêu mịn */}
           <div
             aria-hidden="true"

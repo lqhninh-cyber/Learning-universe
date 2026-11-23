@@ -658,16 +658,9 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {/* Cột phải Hero: Mô hình Thiên cầu Đa diện 3D tương tác nổi trên khung cảnh thiên nhiên */}
+                {/* Cột phải Hero: Điêu khắc Toán học Tham số 3D Đa Hình Thái (Torus Knot / Lorenz / Helicoid) */}
                 <div className="hidden shrink-0 flex-col items-center md:flex">
-                  <DashboardHeroOrbModel
-                    dayPeriod={timeGreeting.period}
-                    className="h-[224px] w-[244px] lg:h-[268px] lg:w-[294px]"
-                  />
-                  <span className="-mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/28 px-3 py-0.5 font-mono text-[9.5px] font-medium tracking-wider text-white/80 backdrop-blur-md">
-                    <Sparkles className="h-2.5 w-2.5 text-[#F5D078]" aria-hidden="true" />
-                    <span>Thiên cầu Tri thức 3D · Kéo xoay</span>
-                  </span>
+                  <DashboardHeroOrbModel dayPeriod={timeGreeting.period} />
                 </div>
               </div>
 
@@ -703,30 +696,46 @@ export function HomePage() {
               data-material="ceramic"
               className="relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_18px_42px_-18px_rgba(16,45,35,0.16)] lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
             >
-              {/* Vầng sáng khoáng thạch nhẹ + nét cung quỹ đạo góc trên phải */}
+              {/* Dải sắc độ học phần viền đỉnh thẻ + hoa văn bản vẽ cổ điển góc phải */}
               <div
                 aria-hidden="true"
                 style={{
-                  background: `radial-gradient(circle at 92% 8%, ${resumeAccentColor}18 0%, transparent 56%)`,
+                  background: `linear-gradient(90deg, ${resumeAccentColor} 0%, #0F7656 55%, #D4AF6A 100%)`,
+                }}
+                className="pointer-events-none absolute inset-x-0 top-0 h-1.5 opacity-85"
+              />
+              <div
+                aria-hidden="true"
+                style={{
+                  background: `radial-gradient(circle at 90% 12%, ${resumeAccentColor}22 0%, transparent 58%)`,
                 }}
                 className="pointer-events-none absolute inset-0"
               />
               <svg
-                viewBox="0 0 180 120"
+                viewBox="0 0 200 130"
                 fill="none"
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-2 -right-3 h-28 w-40 opacity-[0.14] dark:opacity-[0.2]"
+                className="pointer-events-none absolute -top-1 -right-2 h-32 w-48 opacity-[0.2] dark:opacity-[0.28]"
               >
                 <circle
-                  cx="136"
-                  cy="38"
-                  r="42"
+                  cx="148"
+                  cy="42"
+                  r="44"
                   stroke={resumeAccentColor}
                   strokeWidth="1"
                   strokeDasharray="4 4"
+                  className="lu-orbit-ring"
                 />
-                <circle cx="136" cy="38" r="24" stroke={resumeAccentColor} strokeWidth="0.9" />
-                <path d="M94 38H176M136 0V82" stroke={resumeAccentColor} strokeWidth="0.7" />
+                <circle cx="148" cy="42" r="28" stroke={resumeAccentColor} strokeWidth="0.9" />
+                <polygon
+                  points="148,16 172,42 148,68 124,42"
+                  fill={resumeAccentColor}
+                  fillOpacity="0.1"
+                  stroke={resumeAccentColor}
+                  strokeWidth="1"
+                />
+                <path d="M100 42H192M148 0V88" stroke={resumeAccentColor} strokeWidth="0.7" />
+                <circle cx="148" cy="42" r="3" fill={resumeAccentColor} />
               </svg>
 
               <div className="relative z-10 space-y-3">
@@ -837,8 +846,31 @@ export function HomePage() {
               className="flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-white/75 bg-white/76 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_18px_42px_-16px_rgba(16,45,35,0.16)] backdrop-blur-xl backdrop-saturate-150 lg:col-span-4 dark:border-white/12 dark:bg-[#121B18]/78"
             >
               <div className="grid grid-cols-3 gap-2">
-                <div className="rounded-[18px] border border-white/65 bg-white/70 p-2.5 dark:border-white/10 dark:bg-[#182320]/75">
-                  <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
+                {/* Ô 1: Sắc Hổ Phách — Bài hoàn thành + họa tiết trang sách chìm */}
+                <div className="relative overflow-hidden rounded-[18px] border border-[#E7D7C5]/70 bg-gradient-to-br from-[#FDF8F1]/90 via-white/80 to-[#F9F1E4]/75 p-2.5 dark:border-[#3A2D20] dark:from-[#211A13]/85 dark:via-[#182320]/80 dark:to-[#1D1711]/80">
+                  <svg
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-2 -bottom-2 h-11 w-11 text-[#8C5828]/15 dark:text-[#D99B5E]/20"
+                  >
+                    <rect
+                      x="10"
+                      y="10"
+                      width="24"
+                      height="28"
+                      rx="4"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M16 18H28M16 24H28M16 30H22"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <p className="font-mono text-[9.5px] font-semibold tracking-wider text-[#8C5828] uppercase dark:text-[#D99B5E]">
                     Bài hoàn thành
                   </p>
                   <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums">
@@ -849,8 +881,9 @@ export function HomePage() {
                   </p>
                 </div>
 
-                <div className="rounded-[18px] border border-white/65 bg-white/70 p-2.5 dark:border-white/10 dark:bg-[#182320]/75">
-                  <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
+                {/* Ô 2: Sắc Ngọc Lục Bảo — Tiến độ tổng */}
+                <div className="relative overflow-hidden rounded-[18px] border border-[#C5DFD4]/75 bg-gradient-to-br from-[#EFF9F4]/90 via-white/80 to-[#E4F3EC]/75 p-2.5 dark:border-[#1F3B31] dark:from-[#12241D]/85 dark:via-[#182320]/80 dark:to-[#10201A]/80">
+                  <p className="font-mono text-[9.5px] font-semibold tracking-wider text-[#0F7656] uppercase dark:text-[#4AD1A3]">
                     Tiến độ tổng
                   </p>
                   <div className="mt-1 flex items-center gap-1.5">
@@ -866,7 +899,7 @@ export function HomePage() {
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="3"
-                        className="text-[#DCE6E2] dark:text-[#23322D]"
+                        className="text-[#CDE3DA] dark:text-[#23322D]"
                       />
                       {totalPercent > 0 && (
                         <circle
@@ -887,14 +920,28 @@ export function HomePage() {
                   </div>
                 </div>
 
+                {/* Ô 3: Sắc Lam Ngọc — Kho Thuật ngữ + họa tiết la bàn chìm */}
                 <Link
                   to={ROUTES.glossary}
-                  className="group rounded-[18px] border border-white/65 bg-white/70 p-2.5 transition-colors hover:border-[#0F7656]/50 dark:border-white/10 dark:bg-[#182320]/75"
+                  className="group relative overflow-hidden rounded-[18px] border border-[#C9DCE7]/75 bg-gradient-to-br from-[#F0F7FB]/90 via-white/80 to-[#E5F0F6]/75 p-2.5 transition-colors hover:border-[#1D4F6E]/50 dark:border-[#233845] dark:from-[#131F27]/85 dark:via-[#182320]/80 dark:to-[#111C24]/80"
                 >
-                  <p className="font-mono text-[9.5px] font-medium tracking-wider text-[var(--text-muted)] uppercase">
+                  <svg
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -right-2 -bottom-2 h-11 w-11 text-[#1D4F6E]/15 dark:text-[#64A8D1]/20"
+                  >
+                    <circle cx="24" cy="24" r="14" stroke="currentColor" strokeWidth="2" />
+                    <polygon
+                      points="24,14 29,24 24,34 19,24"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    />
+                  </svg>
+                  <p className="font-mono text-[9.5px] font-semibold tracking-wider text-[#1D4F6E] uppercase dark:text-[#64A8D1]">
                     Kho Thuật ngữ
                   </p>
-                  <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums group-hover:text-[#0F7656] dark:group-hover:text-[#4AD1A3]">
+                  <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums group-hover:text-[#1D4F6E] dark:group-hover:text-[#64A8D1]">
                     {allGlossaryEntries.length}+
                   </p>
                 </Link>
@@ -1047,20 +1094,39 @@ export function HomePage() {
         </section>
 
         {/* ========================================================================
-            TẦNG 3 — 4 THẺ HỌC PHẦN TOÁN HỌC BO TRÒN MỀM (SVG VECTOR + VÒNG TIẾN ĐỘ)
+            TẦNG 3 — 4 THẺ HỌC PHẦN TOÁN HỌC BO TRÒN MỀM (NỀN TRANH MÀU NƯỚC + MÔ HÌNH ĐỘNG)
             ======================================================================== */}
-        <section aria-label="Bốn học phần trọng tâm" className="space-y-3.5">
-          <div className="flex items-center justify-between gap-3 px-1">
-            <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-              Học phần trọng tâm
-            </h2>
+        <section aria-label="Bốn học phần trọng tâm" className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.04] bg-white/75 px-4 py-3 shadow-2xs backdrop-blur-md dark:border-white/[0.06] dark:bg-[#141D1A]/80">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F7656] to-[#17332C] text-[#F5D078] shadow-xs">
+                <Compass className="h-4.5 w-4.5" aria-hidden="true" />
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-mono text-[10.5px] font-bold tracking-[0.14em] text-[#0F7656] uppercase dark:text-[#4AD1A3]">
+                    Học phần trọng tâm
+                  </h2>
+                  <span aria-hidden="true" className="text-xs text-[#D4AF6A]">
+                    ◆
+                  </span>
+                  <span className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline">
+                    4 chuyên khảo · 122 bài giảng chuẩn LaTeX
+                  </span>
+                </div>
+                <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
+                  Bản đồ Mô hình Toán học &amp; Khoa học Giáo dục
+                </p>
+              </div>
+            </div>
+
             <Link
               to={ROUTES.learningSpace}
-              className="group/all inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 font-mono text-[11px] font-semibold text-[#0F7656] shadow-2xs transition-colors hover:bg-[#EAF5F0] dark:bg-[#141D1A] dark:text-[#4AD1A3]"
+              className="group/all inline-flex items-center gap-1.5 rounded-full border border-[#0F7656]/25 bg-[#EAF5F0] px-3.5 py-1.5 font-mono text-[11px] font-semibold text-[#0F7656] shadow-2xs transition-all hover:bg-[#0F7656] hover:text-white dark:border-[#4AD1A3]/25 dark:bg-[#132C24] dark:text-[#4AD1A3] dark:hover:bg-[#286D57] dark:hover:text-white"
             >
               <span>Mở bản đồ đầy đủ</span>
               <ArrowRight
-                className="h-3 w-3 transition-transform duration-150 group-hover/all:translate-x-0.5"
+                className="h-3.5 w-3.5 transition-transform duration-150 group-hover/all:translate-x-0.5"
                 aria-hidden="true"
               />
             </Link>
@@ -1098,24 +1164,34 @@ export function HomePage() {
           data-testid="calendar-studio-section"
           className="scroll-mt-16 space-y-4"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 px-1">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-xl bg-white text-[#0F7656] shadow-2xs dark:bg-[#141D1A] dark:text-[#4AD1A3]">
-                <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.04] bg-white/75 px-4 py-3 shadow-2xs backdrop-blur-md dark:border-white/[0.06] dark:bg-[#141D1A]/80">
+            <div className="flex items-center gap-3">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F7656] to-[#1D4F6E] text-white shadow-xs">
+                <CalendarDays className="h-4.5 w-4.5" aria-hidden="true" />
               </span>
-              <h2 className="font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-                Không gian Lịch biểu & Nhịp học cá nhân
-              </h2>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-mono text-[10.5px] font-bold tracking-[0.14em] text-[#0F7656] uppercase dark:text-[#4AD1A3]">
+                    Không gian Lịch biểu &amp; Nhịp học cá nhân
+                  </h2>
+                  <span aria-hidden="true" className="text-xs text-[#D4AF6A]">
+                    ◆
+                  </span>
+                </div>
+                <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
+                  Kế hoạch Ôn tập, Đếm ngược Kỳ thi &amp; Bản đồ Nhiệt 28 ngày
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[var(--text-secondary)]">
-              <span className="rounded-full bg-white px-3 py-1 shadow-2xs dark:bg-[#141D1A]">
+              <span className="rounded-full border border-[#0F7656]/20 bg-[#EAF5F0]/80 px-3 py-1 font-medium shadow-2xs dark:border-[#4AD1A3]/20 dark:bg-[#132C24]">
                 <strong className="text-[#0F7656] dark:text-[#4AD1A3]">{pendingTasksCount}</strong>{' '}
                 việc đang chờ
               </span>
-              <span className="rounded-full bg-white px-3 py-1 shadow-2xs dark:bg-[#141D1A]">
+              <span className="rounded-full border border-[#D4AF6A]/35 bg-[#FDF8F1] px-3 py-1 font-medium shadow-2xs dark:border-[#D99B5E]/25 dark:bg-[#221A12]">
                 Chuỗi{' '}
-                <strong className="text-[var(--accent-heritage)]">
+                <strong className="text-[#8C5828] dark:text-[#F5D078]">
                   {activityMetrics.currentStreak} ngày
                 </strong>
               </span>

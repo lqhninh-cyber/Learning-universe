@@ -86,12 +86,39 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
     [last7Days.items],
   );
 
+  // Đường cong xu hướng Spline nối 7 đỉnh hoạt động trong tuần (viewBox 280 x 110)
+  const weeklyTrendGeometry = useMemo(() => {
+    const pts = last7Days.items.map((cell, idx) => {
+      const x = 20 + idx * 40;
+      const ratio = cell.count > 0 ? Math.min(1, cell.count / last7Days.maxCount) : 0.08;
+      const y = 94 - ratio * 68;
+      return { x, y, count: cell.count };
+    });
+    if (pts.length === 0) return { linePath: '', areaPath: '', pts: [] };
+    let d = `M ${pts[0]!.x} ${pts[0]!.y}`;
+    for (let i = 0; i < pts.length - 1; i += 1) {
+      const curr = pts[i]!;
+      const next = pts[i + 1]!;
+      const cpx1 = curr.x + (next.x - curr.x) * 0.45;
+      const cpx2 = curr.x + (next.x - curr.x) * 0.55;
+      d += ` C ${cpx1.toFixed(1)} ${curr.y.toFixed(1)}, ${cpx2.toFixed(1)} ${next.y.toFixed(1)}, ${next.x} ${next.y}`;
+    }
+    const last = pts[pts.length - 1]!;
+    const areaPath = `${d} L ${last.x} 106 L ${pts[0]!.x} 106 Z`;
+    return { linePath: d, areaPath, pts };
+  }, [last7Days]);
+
   return (
     <section
       aria-label="Biểu đồ nhịp học và phân bổ tiến độ học phần"
       data-testid="dashboard-analytics-card"
-      className="flex min-w-0 flex-col justify-between gap-5 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]"
+      className="relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]"
     >
+      {/* Dải trang trí góc trên phải thẻ phân tích */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-14 -right-14 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(15,118,86,0.12)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(74,209,163,0.12)_0%,transparent_70%)]"
+      />
       {/* Header + Bộ chuyển chế độ viên thuốc kiểu Quixotic */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -168,6 +195,40 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                 aria-hidden="true"
                 className="pointer-events-none absolute -top-10 left-1/2 h-28 w-44 -translate-x-1/2 rounded-full bg-[#0F7656]/[0.07] blur-2xl dark:bg-[#4AD1A3]/[0.09]"
               />
+              {/* Đường cong xu hướng Spline + vùng sáng phủ mềm trên biểu đồ cột */}
+              {weeklyTrendGeometry.linePath && (
+                <svg
+                  viewBox="0 0 280 110"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-3 top-6 bottom-8 z-[5] h-[calc(100%-3.5rem)] w-[calc(100%-1.5rem)]"
+                >
+                  <defs>
+                    <linearGradient id="weekly-spline-area" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#0F7656" stopOpacity="0.2" />
+                      <stop offset="100%" stopColor="#0F7656" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d={weeklyTrendGeometry.areaPath} fill="url(#weekly-spline-area)" />
+                  <path
+                    d={weeklyTrendGeometry.linePath}
+                    fill="none"
+                    stroke="#D4AF6A"
+                    strokeWidth="1.6"
+                    strokeDasharray="4 3"
+                    strokeLinecap="round"
+                  />
+                  {weeklyTrendGeometry.pts.map((pt, i) => (
+                    <circle
+                      key={i}
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={pt.count > 0 ? 2.8 : 1.8}
+                      fill={pt.count > 0 ? '#D4AF6A' : '#9EB0AA'}
+                    />
+                  ))}
+                </svg>
+              )}
               {last7Days.items.map((cell, idx) => {
                 const isPeak = idx === last7Days.peakIndex;
                 const isActive = hoveredIndex === null ? isPeak : hoveredIndex === idx;

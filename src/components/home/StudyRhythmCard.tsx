@@ -68,11 +68,20 @@ export const StudyRhythmCard: FC<StudyRhythmCardProps> = ({ metrics, layout = 'v
           : 'flex flex-col justify-between gap-4',
       )}
     >
-      {/* Vầng sáng ấm nhẹ sau khối Chuỗi chuyên cần */}
+      {/* Vầng sáng ấm & sóng trang trí nền sau khối Chuỗi chuyên cần */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-10 -left-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(194,120,36,0.14)_0%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(229,169,92,0.12)_0%,transparent_72%)]"
+        className="pointer-events-none absolute -top-10 -left-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(194,120,36,0.18)_0%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(229,169,92,0.15)_0%,transparent_72%)]"
       />
+      <svg
+        viewBox="0 0 180 120"
+        fill="none"
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-4 -left-4 h-28 w-44 opacity-[0.14] dark:opacity-[0.2]"
+      >
+        <circle cx="48" cy="76" r="44" stroke="#C27824" strokeWidth="1" strokeDasharray="4 4" />
+        <circle cx="48" cy="76" r="28" stroke="#0F7656" strokeWidth="0.9" />
+      </svg>
 
       {/* 1. CHUỖI NGÀY HỌC (STREAK) */}
       <div className={cn('relative z-10 space-y-3', isHorizontal && 'lg:col-span-3')}>

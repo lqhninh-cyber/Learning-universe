@@ -538,6 +538,58 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
               <span>Đã học</span>
             </span>
           </div>
+
+          {/* La bàn Nhật Quỹ & Nhịp Độ Tháng (Trang trí học thuật cố định bên cột Lịch) */}
+          <div
+            data-testid="calendar-sundial-ornament"
+            className="mt-2 flex items-center justify-between gap-3 rounded-2xl border border-[#D4AF6A]/30 bg-gradient-to-r from-[#FDF9F1] via-white to-[#EFF7F3] px-3.5 py-2.5 shadow-2xs dark:border-[#D99B5E]/20 dark:from-[#1B1712] dark:via-[#141D1A] dark:to-[#11221C]"
+          >
+            <div className="flex items-center gap-2.5">
+              <svg
+                viewBox="0 0 44 44"
+                fill="none"
+                aria-hidden="true"
+                className="h-10 w-10 shrink-0 text-[#8C5828] dark:text-[#F5D078]"
+              >
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="19"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeDasharray="3 3"
+                  className="lu-orbit-ring"
+                />
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="13"
+                  stroke="#0F7656"
+                  strokeWidth="1"
+                  strokeOpacity="0.55"
+                />
+                <polygon
+                  points="22,8 25,22 22,36 19,22"
+                  fill="currentColor"
+                  fillOpacity="0.22"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                />
+                <circle cx="22" cy="22" r="2.5" fill="#0F7656" />
+              </svg>
+              <div>
+                <p className="font-mono text-[9.5px] font-bold tracking-wider text-[#8C5828] uppercase dark:text-[#F5D078]">
+                  La bàn Nhật quỹ
+                </p>
+                <p className="text-[11.5px] font-semibold text-[var(--text-main)]">
+                  {Object.keys(activityByDate).length} ngày ghi nhận dấu ấn học tập
+                </p>
+              </div>
+            </div>
+            <span className="rounded-full bg-[#0F7656]/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#0F7656] tabular-nums dark:bg-[#4AD1A3]/15 dark:text-[#4AD1A3]">
+              {bucket.milestones.length} mốc
+            </span>
+          </div>
         </div>
 
         {/* MỐC ĐẾM NGƯỢC KỲ THI / HẠN NỘP */}
@@ -676,41 +728,65 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
         </div>
       </div>
 
-      {/* CỘT PHẢI (7/12): DANH SÁCH TO-DO LIST HỌC THUẬT CÁ NHÂN HÓA */}
+      {/* CỘT PHẢI (7/12): BANNER TRANH BÀN HỌC CỐ ĐỊNH + DANH SÁCH TO-DO LIST HỌC THUẬT CÁ NHÂN HÓA */}
       <div className="flex min-w-0 flex-col justify-between gap-4 p-5 sm:p-6 lg:col-span-7">
         <div className="space-y-3.5">
-          {/* Header + Trạng thái tài khoản cá nhân hóa */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 className="font-serif text-lg font-semibold text-[var(--text-main)]">
-                Kế hoạch & Việc cần làm
-              </h2>
-              <p className="font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
-                {pendingCount} việc đang chờ · {bucket.tasks.length - pendingCount} đã hoàn thành
-              </p>
-            </div>
-
-            {isSignedAccount ? (
-              <span
-                data-testid="workspace-account-scope"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-[10.5px] font-medium text-[var(--accent-os)]"
-              >
-                <Cloud className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span className="max-w-[160px] truncate">
-                  Riêng tư · {user?.fullName || 'Học viên'}
-                </span>
-              </span>
-            ) : (
-              <button
-                type="button"
-                data-testid="workspace-account-scope"
-                onClick={openAuthModal}
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-[10.5px] font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)]"
-              >
-                <HardDrive className="h-3 w-3 shrink-0" aria-hidden="true" />
-                <span>Lưu cục bộ · Đăng nhập đồng bộ</span>
-              </button>
+          {/* Banner nghệ thuật cố định đầu khung Kế hoạch (luôn hiển thị sinh động dù danh sách rỗng hay đã có việc) */}
+          <div
+            style={{ backgroundImage: PLANNER_EMPTY_ASSET.fallbackGradient }}
+            className="group/pbanner relative overflow-hidden rounded-2xl border border-black/[0.06] p-4 text-white shadow-xs dark:border-white/[0.08]"
+          >
+            {!emptyArtworkFailed && (
+              <img
+                src={PLANNER_EMPTY_ASSET.src}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                onError={() => setEmptyArtworkFailed(true)}
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover/pbanner:scale-105"
+              />
             )}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#122D25]/92 via-[#17332C]/80 to-[#17332C]/45"
+            />
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span className="inline-flex items-center gap-1 font-mono text-[9.5px] font-semibold tracking-[0.14em] text-[#F5D078] uppercase">
+                  <Sparkles className="h-2.5 w-2.5" aria-hidden="true" />
+                  <span>Sổ tay điều phối học thuật</span>
+                </span>
+                <h2 className="mt-0.5 font-serif text-lg font-semibold text-white">
+                  Kế hoạch &amp; Việc cần làm
+                </h2>
+                <p className="font-mono text-[11px] text-white/80 tabular-nums">
+                  {pendingCount} việc đang chờ · {bucket.tasks.length - pendingCount} đã hoàn thành
+                </p>
+              </div>
+
+              {isSignedAccount ? (
+                <span
+                  data-testid="workspace-account-scope"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-2.5 py-1 font-mono text-[10.5px] font-medium text-[#A7F3D0] backdrop-blur-md"
+                >
+                  <Cloud className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span className="max-w-[160px] truncate">
+                    Riêng tư · {user?.fullName || 'Học viên'}
+                  </span>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  data-testid="workspace-account-scope"
+                  onClick={openAuthModal}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-2.5 py-1 font-mono text-[10.5px] font-medium text-white/90 backdrop-blur-md transition-colors hover:border-[#A7F3D0] hover:text-white"
+                >
+                  <HardDrive className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span>Lưu cục bộ · Đăng nhập đồng bộ</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Form thêm việc vào lịch biểu (2 tầng thoáng rộng, luôn phản hồi rõ ràng) */}

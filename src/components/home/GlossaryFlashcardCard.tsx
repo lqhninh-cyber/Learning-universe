@@ -17,6 +17,8 @@ export interface GlossaryFlashcardCardProps {
 
 interface GlossarySubjectTheme {
   readonly code: string;
+  readonly washUrl: string;
+  readonly topBarGradient: string;
   readonly inkClass: string;
   readonly pillClass: string;
   readonly stageGradClass: string;
@@ -25,6 +27,8 @@ interface GlossarySubjectTheme {
 const GLOSSARY_SUBJECT_THEMES: Readonly<Record<MathGlossarySubject, GlossarySubjectTheme>> = {
   'cau-truc-dai-so': {
     code: 'CTĐS',
+    washUrl: '/assets/atmosphere/subject-wash-ctds.webp',
+    topBarGradient: 'linear-gradient(90deg, #8C5828 0%, #D4AF6A 55%, #0F7656 100%)',
     inkClass: 'text-[#8C5828] dark:text-[#D99B5E]',
     pillClass:
       'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
@@ -33,6 +37,8 @@ const GLOSSARY_SUBJECT_THEMES: Readonly<Record<MathGlossarySubject, GlossarySubj
   },
   'hinh-hoc-affine': {
     code: 'HHAVE',
+    washUrl: '/assets/atmosphere/subject-wash-hhave.webp',
+    topBarGradient: 'linear-gradient(90deg, #1D4F6E 0%, #64A8D1 55%, #0F7656 100%)',
     inkClass: 'text-[#1D4F6E] dark:text-[#64A8D1]',
     pillClass:
       'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
@@ -41,6 +47,8 @@ const GLOSSARY_SUBJECT_THEMES: Readonly<Record<MathGlossarySubject, GlossarySubj
   },
   'giai-tich-ham-mot-bien': {
     code: 'GTHMB',
+    washUrl: '/assets/atmosphere/subject-wash-gthmb.webp',
+    topBarGradient: 'linear-gradient(90deg, #1B5E4A 0%, #4AD1A3 55%, #D4AF6A 100%)',
     inkClass: 'text-[#1B5E4A] dark:text-[#52B394]',
     pillClass:
       'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
@@ -49,6 +57,8 @@ const GLOSSARY_SUBJECT_THEMES: Readonly<Record<MathGlossarySubject, GlossarySubj
   },
   'giao-duc-hoc': {
     code: 'GDH',
+    washUrl: '/assets/atmosphere/subject-wash-gdh.webp',
+    topBarGradient: 'linear-gradient(90deg, #8F3D35 0%, #DF7B70 55%, #D4AF6A 100%)',
     inkClass: 'text-[#8F3D35] dark:text-[#DF7B70]',
     pillClass:
       'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
@@ -175,8 +185,14 @@ export const GlossaryFlashcardCard: FC<GlossaryFlashcardCardProps> = ({ entry, o
   return (
     <div
       data-testid="dashboard-glossary-card"
-      className="flex min-w-0 flex-col justify-between gap-4 rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
+      className="relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
     >
+      {/* Dải gờ màu chuyên ngành trên đỉnh thẻ Thuật ngữ */}
+      <div
+        aria-hidden="true"
+        style={{ background: domainTheme.topBarGradient }}
+        className="pointer-events-none absolute inset-x-0 top-0 h-1.5 opacity-85"
+      />
       <div className="flex items-center justify-between gap-2">
         <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
           <BookMarked
@@ -295,11 +311,17 @@ export const GlossaryFlashcardCard: FC<GlossaryFlashcardCardProps> = ({ entry, o
         <Link
           to={`${ROUTES.glossary}?q=${encodeURIComponent(entry.nameVi)}`}
           className={cn(
-            'lu-atelier-backdrop group relative flex flex-1 flex-col justify-center gap-3.5 overflow-hidden rounded-[20px] border border-black/[0.04] bg-gradient-to-br p-4 transition-all duration-200 hover:border-black/[0.09] dark:border-white/[0.06] dark:hover:border-white/[0.12]',
+            'lu-atelier-backdrop group relative flex flex-1 flex-col justify-center gap-3.5 overflow-hidden rounded-[20px] border border-black/[0.05] bg-gradient-to-br p-4 transition-all duration-200 hover:border-black/[0.1] dark:border-white/[0.07] dark:hover:border-white/[0.14]',
             domainTheme.stageGradClass,
             domainTheme.inkClass,
           )}
         >
+          {/* Lớp tranh màu nước khoáng thạch cục bộ hòa trộn dịu phía sau công thức */}
+          <div
+            aria-hidden="true"
+            style={{ backgroundImage: `url('${domainTheme.washUrl}')` }}
+            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40 mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-105 dark:opacity-15 dark:mix-blend-screen"
+          />
           <GlossaryDomainArtwork subject={entry.subject} />
           <div className="relative z-10 space-y-1 text-[var(--text-main)]">
             <div className="flex items-start justify-between gap-2">
