@@ -1224,16 +1224,7 @@ export function LearningSpaceHeroCanvas() {
       drawAstrolabeBackdropAndAlidade(ctx, cx, cy, minDim, alphaCurr, radarAngle, isDarkDoc);
 
       // Tầng 3 (0.88 -> 1.0 * R_dial): Sóng Đứng Điều Hòa ôm sát mép trong đĩa chuẩn độ
-      drawSphericalHarmonicWaves(
-        ctx,
-        cx,
-        cy,
-        dialR,
-        time,
-        isDarkDoc,
-        wavePrimaryProj,
-        waveSymProj,
-      );
+      drawSphericalHarmonicWaves(ctx, cx, cy, dialR, time, isDarkDoc, wavePrimaryProj, waveSymProj);
 
       // Sóng giao thoa nhẹ khi tương tác chuột vào vùng mô hình
       for (const wave of hoverWaves) {
@@ -1463,7 +1454,10 @@ export function LearningSpaceHeroCanvas() {
           const pearlAlpha = Math.min(0.46, 0.16 + ambientLight * 0.18 + f.specular * 0.32);
           faceGrad.addColorStop(0, `rgba(220, 248, 238, ${pearlAlpha.toFixed(3)})`);
           faceGrad.addColorStop(0.55, `rgba(74, 176, 143, ${jadeAlpha.toFixed(3)})`);
-          faceGrad.addColorStop(1, `rgba(42, 112, 90, ${(0.16 + (1 - ambientLight) * 0.1).toFixed(3)})`);
+          faceGrad.addColorStop(
+            1,
+            `rgba(42, 112, 90, ${(0.16 + (1 - ambientLight) * 0.1).toFixed(3)})`,
+          );
         } else {
           const jadeAlpha = 0.14 + f.light * 0.1 + f.fresnel * 0.05;
           const porcelainAlpha = Math.min(0.42, 0.14 + f.light * 0.16 + f.specular * 0.35);

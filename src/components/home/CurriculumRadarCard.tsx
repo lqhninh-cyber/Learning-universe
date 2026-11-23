@@ -21,8 +21,11 @@ interface RadarAxisConfig {
   readonly shortLabel: string;
   readonly angleRad: number;
   readonly color: string;
+  readonly darkColor: string;
   readonly rgb: string;
+  readonly darkRgb: string;
   readonly pillClass: string;
+  readonly dotBgClass: string;
 }
 
 const RADAR_AXES: readonly RadarAxisConfig[] = [
@@ -32,9 +35,12 @@ const RADAR_AXES: readonly RadarAxisConfig[] = [
     shortLabel: 'CTĐS',
     angleRad: -Math.PI / 2, // Top
     color: '#8C5828',
+    darkColor: '#D99B5E',
     rgb: '140, 88, 40',
+    darkRgb: '217, 155, 94',
     pillClass:
       'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
+    dotBgClass: 'bg-[#8C5828] dark:bg-[#D99B5E]',
   },
   {
     slug: 'hinh-hoc-affine',
@@ -42,9 +48,12 @@ const RADAR_AXES: readonly RadarAxisConfig[] = [
     shortLabel: 'HHAVE',
     angleRad: 0, // Right
     color: '#1D4F6E',
+    darkColor: '#64A8D1',
     rgb: '29, 79, 110',
+    darkRgb: '100, 168, 209',
     pillClass:
       'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
+    dotBgClass: 'bg-[#1D4F6E] dark:bg-[#64A8D1]',
   },
   {
     slug: 'giai-tich-ham-mot-bien',
@@ -52,9 +61,12 @@ const RADAR_AXES: readonly RadarAxisConfig[] = [
     shortLabel: 'GTHMB',
     angleRad: Math.PI / 2, // Bottom
     color: '#1B5E4A',
+    darkColor: '#52B394',
     rgb: '27, 94, 74',
+    darkRgb: '82, 179, 148',
     pillClass:
       'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
+    dotBgClass: 'bg-[#1B5E4A] dark:bg-[#52B394]',
   },
   {
     slug: 'giao-duc-hoc',
@@ -62,11 +74,26 @@ const RADAR_AXES: readonly RadarAxisConfig[] = [
     shortLabel: 'GDH',
     angleRad: Math.PI, // Left
     color: '#8F3D35',
+    darkColor: '#DF7B70',
     rgb: '143, 61, 53',
+    darkRgb: '223, 123, 112',
     pillClass:
       'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
+    dotBgClass: 'bg-[#8F3D35] dark:bg-[#DF7B70]',
   },
 ];
+
+function readDomDarkState(): boolean {
+  if (typeof document === 'undefined') return false;
+  const root = document.documentElement;
+  return (
+    root.classList.contains('dark') ||
+    root.getAttribute('data-theme') === 'dark' ||
+    (typeof document.body !== 'undefined' &&
+      document.body !== null &&
+      document.body.classList.contains('dark'))
+  );
+}
 
 export interface CurriculumRadarCardProps {
   readonly stats: readonly RadarSubjectStat[];
@@ -158,8 +185,7 @@ export function CurriculumRadarCard({
 
       const { cx, cy, maxR } = getCenterRadius();
       const focusedSlug = activeSlugRef.current;
-      const isDarkDoc =
-        typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+      const isDarkDoc = readDomDarkState();
 
       // 4 vòng tròn đồng tâm đo tỷ lệ kèm nhãn chuẩn độ (fx-chart grid)
       for (const ringRatio of [0.25, 0.5, 0.75, 1.0]) {
@@ -202,15 +228,16 @@ export function CurriculumRadarCard({
       // 4 trục tọa độ
       RADAR_AXES.forEach((axis, idx) => {
         const isFocused = focusedSlug === axis.slug;
+        const axisColor = isDarkDoc ? axis.darkColor : axis.color;
         const ex = cx + Math.cos(axis.angleRad) * (maxR + 4);
         const ey = cy + Math.sin(axis.angleRad) * (maxR + 4);
         ctx.beginPath();
         ctx.moveTo(cx, cy);
         ctx.lineTo(ex, ey);
         ctx.strokeStyle = isFocused
-          ? axis.color
+          ? axisColor
           : isDarkDoc
-            ? 'rgba(158, 176, 170, 0.3)'
+            ? 'rgba(158, 176, 170, 0.34)'
             : 'rgba(74, 93, 88, 0.28)';
         ctx.lineWidth = isFocused ? 1.8 : 1;
         ctx.stroke();
@@ -221,13 +248,7 @@ export function CurriculumRadarCard({
         ctx.font = `${isFocused ? '700' : '600'} 10px "JetBrains Mono", monospace`;
         ctx.textAlign = idx === 1 ? 'left' : idx === 3 ? 'right' : 'center';
         ctx.textBaseline = idx === 0 ? 'bottom' : idx === 2 ? 'top' : 'middle';
-        ctx.fillStyle = isFocused
-          ? isDarkDoc
-            ? '#EFF4F2'
-            : axis.color
-          : isDarkDoc
-            ? '#9EB0AA'
-            : '#4A5D58';
+        ctx.fillStyle = isFocused ? axisColor : isDarkDoc ? '#A8BBB4' : '#4A5D58';
         ctx.fillText(axis.shortLabel, lx, ly);
       });
 
@@ -279,8 +300,11 @@ export function CurriculumRadarCard({
       const tailY = pStart.y + (pEnd.y - pStart.y) * tailT;
 
       const cometGrad = ctx.createLinearGradient(tailX, tailY, sparkX, sparkY);
-      cometGrad.addColorStop(0, 'rgba(36, 87, 70, 0)');
-      cometGrad.addColorStop(1, 'rgba(59, 122, 101, 0.95)');
+      cometGrad.addColorStop(0, isDarkDoc ? 'rgba(82, 179, 148, 0)' : 'rgba(36, 87, 70, 0)');
+      cometGrad.addColorStop(
+        1,
+        isDarkDoc ? 'rgba(127, 214, 184, 0.96)' : 'rgba(59, 122, 101, 0.95)',
+      );
       ctx.beginPath();
       ctx.moveTo(tailX, tailY);
       ctx.lineTo(sparkX, sparkY);
@@ -291,7 +315,7 @@ export function CurriculumRadarCard({
 
       ctx.beginPath();
       ctx.arc(sparkX, sparkY, 4.5, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(59, 122, 101, 0.24)';
+      ctx.fillStyle = isDarkDoc ? 'rgba(127, 214, 184, 0.34)' : 'rgba(59, 122, 101, 0.24)';
       ctx.fill();
       ctx.beginPath();
       ctx.arc(sparkX, sparkY, 2.0, 0, Math.PI * 2);
@@ -324,10 +348,12 @@ export function CurriculumRadarCard({
         const fPt = footprintPts[idx]!;
         const mPt = masteryPts[idx]!;
         const isFocused = focusedSlug === axis.slug;
+        const axisColor = isDarkDoc ? axis.darkColor : axis.color;
+        const axisRgb = isDarkDoc ? axis.darkRgb : axis.rgb;
 
         if (isFocused) {
           const aura = ctx.createRadialGradient(fPt.x, fPt.y, 1, fPt.x, fPt.y, 16);
-          aura.addColorStop(0, `rgba(${axis.rgb}, 0.44)`);
+          aura.addColorStop(0, `rgba(${axisRgb}, ${isDarkDoc ? '0.52' : '0.44'})`);
           aura.addColorStop(1, 'rgba(255, 255, 255, 0)');
           ctx.fillStyle = aura;
           ctx.beginPath();
@@ -344,7 +370,7 @@ export function CurriculumRadarCard({
           ctx.moveTo(fPt.x, fPt.y);
           ctx.lineTo(elbowMidX, elbowMidY);
           ctx.lineTo(tickEndX, elbowMidY);
-          ctx.strokeStyle = axis.color;
+          ctx.strokeStyle = axisColor;
           ctx.lineWidth = 1.25;
           ctx.setLineDash([3, 3]);
           ctx.lineDashOffset = -time * 18;
@@ -354,13 +380,13 @@ export function CurriculumRadarCard({
 
           ctx.beginPath();
           ctx.arc(tickEndX, elbowMidY, 2.2, 0, Math.PI * 2);
-          ctx.fillStyle = axis.color;
+          ctx.fillStyle = axisColor;
           ctx.fill();
         }
 
         ctx.beginPath();
         ctx.arc(fPt.x, fPt.y, isFocused ? 5.2 : 3.8, 0, Math.PI * 2);
-        ctx.fillStyle = axis.color;
+        ctx.fillStyle = axisColor;
         ctx.fill();
         ctx.beginPath();
         ctx.arc(fPt.x, fPt.y, isFocused ? 2.1 : 1.5, 0, Math.PI * 2);
@@ -369,13 +395,13 @@ export function CurriculumRadarCard({
 
         ctx.beginPath();
         ctx.arc(mPt.x, mPt.y, 3.1, 0, Math.PI * 2);
-        ctx.fillStyle = '#9C7A4C';
+        ctx.fillStyle = isDarkDoc ? '#E5C378' : '#9C7A4C';
         ctx.fill();
       });
 
       ctx.beginPath();
       ctx.arc(cx, cy, 3, 0, Math.PI * 2);
-      ctx.fillStyle = '#1E3A34';
+      ctx.fillStyle = isDarkDoc ? '#52B394' : '#1E3A34';
       ctx.fill();
 
       ctx.restore();
@@ -427,12 +453,30 @@ export function CurriculumRadarCard({
       io.observe(container);
     }
 
+    let themeObserver: MutationObserver | undefined;
+    if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+      themeObserver = new MutationObserver(() => {
+        drawRadar(prefersReducedMotion ? 0.5 : elapsed);
+      });
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'data-theme'],
+      });
+      if (document.body) {
+        themeObserver.observe(document.body, {
+          attributes: true,
+          attributeFilter: ['class', 'data-theme'],
+        });
+      }
+    }
+
     drawRadar(0.5);
     if (prefersReducedMotion) {
       return () => {
         container.removeEventListener('pointermove', handlePointerMove);
         ro?.disconnect();
         io?.disconnect();
+        themeObserver?.disconnect();
       };
     }
 
@@ -452,6 +496,7 @@ export function CurriculumRadarCard({
       container.removeEventListener('pointermove', handlePointerMove);
       ro?.disconnect();
       io?.disconnect();
+      themeObserver?.disconnect();
     };
   }, [prefersReducedMotion]);
 
@@ -523,8 +568,10 @@ export function CurriculumRadarCard({
               >
                 <span
                   aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full"
-                  style={{ backgroundColor: isSelected ? axis.color : '#8AA098' }}
+                  className={cn(
+                    'h-1.5 w-1.5 rounded-full',
+                    isSelected ? axis.dotBgClass : 'bg-[#8AA098] dark:bg-[#5E706A]',
+                  )}
                 />
                 <span>{axis.shortLabel}</span>
               </button>

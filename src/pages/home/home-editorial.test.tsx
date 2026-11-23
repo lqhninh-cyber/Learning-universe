@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { IslandProvider } from '@/context/IslandContext';
@@ -53,6 +53,7 @@ import {
   SPHERICAL_WAVE_TRIG,
   WORLD_R_DIAL,
 } from '@/components/home/heroSculptureGeometry';
+import { LearningSpaceHeroCanvas } from '@/components/home/LearningSpaceHeroCanvas';
 import { SubjectStageCanvas } from '@/components/home/SubjectStageCanvas';
 import { getSubjects } from '@/content-runtime';
 import { ArchivalIndexView } from '@/pages/home/ArchivalIndexView';
@@ -665,6 +666,12 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         '#3B7A65',
         '#9E6356',
       ]);
+      expect(ARMILLARY_RINGS.map((r) => r.darkCometColor)).toEqual([
+        '#F5D078',
+        '#93D5FA',
+        '#86E6C6',
+        '#F5A49B',
+      ]);
 
       const wrapped = angleLerp(Math.PI - 0.1, -Math.PI + 0.1, 0.5);
       expect(Math.abs(Math.sin(wrapped))).toBeCloseTo(0, 5);
@@ -1222,6 +1229,121 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
         fireEvent.click(screen.getByTestId('billiards-new-rack-btn'));
         expect(screen.getByTestId('billiards-status-pill')).toHaveTextContent('Khai cuộc');
       } finally {
+        getContextSpy.mockRestore();
+      }
+    });
+
+    it('SubjectStageCanvas, LearningSpaceHeroCanvas và ViewModeToggle áp dụng bảng màu tương phản cao trong chế độ tối (.dark)', () => {
+      const recordedStrokes: string[] = [];
+      const recordedFills: string[] = [];
+      const drawnLabels: string[] = [];
+      const noop = vi.fn();
+      const gradMock = { addColorStop: noop };
+
+      const createRecordingCtx = () => {
+        let currentFill = '#000';
+        let currentStroke = '#000';
+        const ctx = {
+          save: noop,
+          restore: noop,
+          setTransform: noop,
+          translate: noop,
+          scale: noop,
+          rotate: noop,
+          clearRect: noop,
+          fillRect: noop,
+          strokeRect: noop,
+          rect: noop,
+          beginPath: noop,
+          closePath: noop,
+          moveTo: noop,
+          lineTo: noop,
+          quadraticCurveTo: noop,
+          bezierCurveTo: noop,
+          arc: noop,
+          ellipse: noop,
+          fill: () => {
+            recordedFills.push(currentFill);
+          },
+          stroke: () => {
+            recordedStrokes.push(currentStroke);
+          },
+          clip: noop,
+          setLineDash: noop,
+          drawImage: noop,
+          fillText: (text: string) => {
+            drawnLabels.push(text);
+          },
+          measureText: () => ({ width: 24 }),
+          createLinearGradient: () => gradMock,
+          createRadialGradient: () => gradMock,
+          globalAlpha: 1,
+          lineDashOffset: 0,
+          lineWidth: 1,
+          lineCap: 'butt',
+          lineJoin: 'miter',
+          font: '12px sans-serif',
+          textAlign: 'left',
+          textBaseline: 'alphabetic',
+          get fillStyle() {
+            return currentFill;
+          },
+          set fillStyle(val: unknown) {
+            currentFill = typeof val === 'string' ? val : 'gradient';
+          },
+          get strokeStyle() {
+            return currentStroke;
+          },
+          set strokeStyle(val: unknown) {
+            currentStroke = typeof val === 'string' ? val : 'gradient';
+          },
+        };
+        return ctx as unknown as CanvasRenderingContext2D;
+      };
+
+      const prevClassName = document.documentElement.className;
+      document.documentElement.classList.add('dark');
+      const getContextSpy = vi
+        .spyOn(HTMLCanvasElement.prototype, 'getContext')
+        .mockImplementation(() => createRecordingCtx());
+
+      try {
+        render(
+          <>
+            <LearningSpaceHeroCanvas />
+            <SubjectStageCanvas slug="cau-truc-dai-so" />
+            <SubjectStageCanvas slug="giao-duc-hoc" isCardHovered />
+            <ViewModeToggle mode="atlas" onChange={vi.fn()} />
+          </>,
+        );
+
+        const algebraStage = screen.getByTestId('subject-stage-cau-truc-dai-so');
+        expect(algebraStage).toHaveClass('dark:border-[#3A2D20]');
+        expect(algebraStage.style.background).not.toMatch(/#F3F0E8|243,\s*240,\s*232/i);
+
+        const toggle = screen.getByTestId('homepage-view-mode-toggle');
+        expect(toggle).toHaveClass('dark:bg-[#181F1D]');
+
+        // Hero & Subject stage Canvas đều sử dụng bảng màu phát sáng thay cho mực tối Ceramic
+        expect(recordedFills).toEqual(expect.arrayContaining(['#F0C782', '#DF7B70']));
+        expect(recordedStrokes).toEqual(
+          expect.arrayContaining(['rgba(240, 199, 130, 0.92)', 'rgba(136, 222, 192, 0.82)']),
+        );
+        expect(drawnLabels).toEqual(
+          expect.arrayContaining([
+            'SƯ PHẠM',
+            'NHÀ TRƯỜNG',
+            'HƯỚNG NGHIỆP',
+            'GIÁO VIÊN',
+            'NGƯỜI HỌC',
+            'TRI THỨC',
+            '∫',
+            'π',
+          ]),
+        );
+      } finally {
+        cleanup();
+        document.documentElement.className = prevClassName;
         getContextSpy.mockRestore();
       }
     });

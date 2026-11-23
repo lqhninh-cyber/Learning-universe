@@ -27,6 +27,7 @@ type HubBranchFilter = 'all' | AcademicBranch;
 
 interface AtlasCardPalette {
   readonly subjectRgb: string;
+  readonly darkSubjectRgb: string;
   readonly topBarGradient: string;
   readonly cardBorder: string;
   readonly indexText: string;
@@ -36,6 +37,8 @@ interface AtlasCardPalette {
   readonly secondaryBtnClass: string;
   readonly chapterPillClass: string;
   readonly progressBarColor: string;
+  readonly darkProgressBarColor: string;
+  readonly progressBgClass: string;
   readonly progressBadgeClass: string;
 }
 
@@ -48,6 +51,7 @@ const SUBJECT_SHORT_CODES: Record<string, string> = {
 
 const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
   subjectRgb: '140, 88, 40',
+  darkSubjectRgb: '217, 155, 94',
   topBarGradient: 'linear-gradient(90deg, transparent 0%, #8C5828 50%, transparent 100%)',
   cardBorder: 'border-[var(--border-hairline)] hover:border-[#8C5828] dark:hover:border-[#D99B5E]',
   indexText: 'text-[#8C5828] dark:text-[#D99B5E]',
@@ -61,6 +65,8 @@ const DEFAULT_ATLAS_PALETTE: AtlasCardPalette = {
   chapterPillClass:
     'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#8C5828] hover:text-[#8C5828] dark:hover:border-[#D99B5E] dark:hover:text-[#D99B5E]',
   progressBarColor: '#8C5828',
+  darkProgressBarColor: '#D99B5E',
+  progressBgClass: 'bg-[#8C5828] dark:bg-[#D99B5E]',
   progressBadgeClass:
     'border-[#E7D7C5] bg-[#FDF8F3] text-[#8C5828] dark:border-[#3A2D20] dark:bg-[#1D1813] dark:text-[#D99B5E]',
 };
@@ -69,6 +75,7 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
   'cau-truc-dai-so': DEFAULT_ATLAS_PALETTE,
   'hinh-hoc-affine': {
     subjectRgb: '29, 79, 110',
+    darkSubjectRgb: '100, 168, 209',
     topBarGradient: 'linear-gradient(90deg, transparent 0%, #1D4F6E 50%, transparent 100%)',
     cardBorder:
       'border-[var(--border-hairline)] hover:border-[#1D4F6E] dark:hover:border-[#64A8D1]',
@@ -83,11 +90,14 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     chapterPillClass:
       'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#1D4F6E] hover:text-[#1D4F6E] dark:hover:border-[#64A8D1] dark:hover:text-[#64A8D1]',
     progressBarColor: '#1D4F6E',
+    darkProgressBarColor: '#64A8D1',
+    progressBgClass: 'bg-[#1D4F6E] dark:bg-[#64A8D1]',
     progressBadgeClass:
       'border-[#C9DCE7] bg-[#F3F8FB] text-[#1D4F6E] dark:border-[#233845] dark:bg-[#131C22] dark:text-[#64A8D1]',
   },
   'giai-tich-ham-mot-bien': {
     subjectRgb: '27, 94, 74',
+    darkSubjectRgb: '82, 179, 148',
     topBarGradient: 'linear-gradient(90deg, transparent 0%, #1B5E4A 50%, transparent 100%)',
     cardBorder:
       'border-[var(--border-hairline)] hover:border-[#1B5E4A] dark:hover:border-[#52B394]',
@@ -102,11 +112,14 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     chapterPillClass:
       'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#1B5E4A] hover:text-[#1B5E4A] dark:hover:border-[#52B394] dark:hover:text-[#52B394]',
     progressBarColor: '#1B5E4A',
+    darkProgressBarColor: '#52B394',
+    progressBgClass: 'bg-[#1B5E4A] dark:bg-[#52B394]',
     progressBadgeClass:
       'border-[#C5DFD4] bg-[#F2F9F6] text-[#1B5E4A] dark:border-[#1F3B31] dark:bg-[#111F1A] dark:text-[#52B394]',
   },
   'giao-duc-hoc': {
     subjectRgb: '143, 61, 53',
+    darkSubjectRgb: '223, 123, 112',
     topBarGradient: 'linear-gradient(90deg, transparent 0%, #8F3D35 50%, transparent 100%)',
     cardBorder:
       'border-[var(--border-hairline)] hover:border-[#8F3D35] dark:hover:border-[#DF7B70]',
@@ -121,6 +134,8 @@ const ATLAS_CARD_PALETTES: Record<string, AtlasCardPalette> = {
     chapterPillClass:
       'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#8F3D35] hover:text-[#8F3D35] dark:hover:border-[#DF7B70] dark:hover:text-[#DF7B70]',
     progressBarColor: '#8F3D35',
+    darkProgressBarColor: '#DF7B70',
+    progressBgClass: 'bg-[#8F3D35] dark:bg-[#DF7B70]',
     progressBadgeClass:
       'border-[#E4CCC9] bg-[#FBF4F3] text-[#8F3D35] dark:border-[#3F2624] dark:bg-[#211514] dark:text-[#DF7B70]',
   },
@@ -874,7 +889,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                         setActiveBranch('all');
                         onResetQuery();
                       }}
-                      className="mt-4 cursor-pointer rounded-xl bg-[#1E332E] px-5 py-2.5 text-xs font-medium text-[#FAFBF9] transition-colors hover:bg-[#182624]"
+                      className="mt-4 cursor-pointer rounded-xl bg-[#1E332E] px-5 py-2.5 text-xs font-medium text-[#FAFBF9] transition-colors hover:bg-[#182624] dark:bg-[#286D57] dark:text-[#EFF4F2] dark:hover:bg-[#318268]"
                     >
                       Khôi phục bộ lọc
                     </button>
@@ -937,7 +952,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                                 '--subject-rgb': palette.subjectRgb,
                                 '--spot-glow': `rgba(${palette.subjectRgb}, 0.12)`,
-                                '--spot-glow-dark': `rgba(${palette.subjectRgb}, 0.24)`,
+                                '--spot-glow-dark': `rgba(${palette.darkSubjectRgb}, 0.18)`,
                               } as CSSProperties & { '--subject-rgb': string }
                             }
                             className={cn(
@@ -963,8 +978,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                   )}
                                 >
                                   <span
-                                    className="h-2 w-2 rounded-full"
-                                    style={{ backgroundColor: palette.progressBarColor }}
+                                    className={cn('h-2 w-2 rounded-full', palette.progressBgClass)}
                                     aria-hidden="true"
                                   />
                                   <span>{SUBJECT_SHORT_CODES[subject.slug] ?? galleryIndex}</span>
@@ -992,6 +1006,7 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                     ).length,
                                   }))}
                                   accentHex={palette.progressBarColor}
+                                  darkAccentHex={palette.darkProgressBarColor}
                                 />
                                 <span
                                   data-testid={`subject-progress-badge-${subject.slug}`}
@@ -1172,8 +1187,10 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                                 >
                                   <span
                                     aria-hidden="true"
-                                    className="h-2 w-2 shrink-0 rounded-full"
-                                    style={{ backgroundColor: palette.progressBarColor }}
+                                    className={cn(
+                                      'h-2 w-2 shrink-0 rounded-full',
+                                      palette.progressBgClass,
+                                    )}
                                   />
                                   <span>
                                     Tiến độ: {subjectPercent}% ({subjectCompletedCount}/
@@ -1452,10 +1469,12 @@ export function LearningSpaceHub({ hubQuery, onResetQuery }: LearningSpaceHubPro
                               <div className="space-y-1.5">
                                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
                                   <div
-                                    className="h-full rounded-full transition-all duration-500"
+                                    className={cn(
+                                      'h-full rounded-full transition-all duration-500',
+                                      entry.palette.progressBgClass,
+                                    )}
                                     style={{
                                       width: `${Math.max(entry.percent, entry.done > 0 ? 8 : 0)}%`,
-                                      backgroundColor: entry.palette.progressBarColor,
                                     }}
                                   />
                                 </div>

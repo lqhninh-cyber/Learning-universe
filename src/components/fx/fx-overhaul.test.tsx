@@ -86,7 +86,8 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
   it('hiển thị SpecimenFxBars cho từng chương, gợn sóng khi hover thẻ và hiện nhãn thanh khi focus', () => {
     render(
       <SpecimenFxBars
-        accentHex="#245746"
+        accentHex="#8C5828"
+        darkAccentHex="#D99B5E"
         isCardHovered
         chapters={[
           { id: 'c1', title: 'Chương 1: Nhóm', totalLessons: 4, completedLessons: 2 },
@@ -95,6 +96,8 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
       />,
     );
     const bars = screen.getByTestId('specimen-fx-bars');
+    expect(bars.style.getPropertyValue('--fx-bar-accent')).toBe('#8C5828');
+    expect(bars.style.getPropertyValue('--fx-bar-accent-dark')).toBe('#D99B5E');
     expect(bars.querySelectorAll('.lu-fx-bar-wave').length).toBe(2);
     const buttons = bars.querySelectorAll('button');
     expect(buttons).toHaveLength(2);
@@ -102,8 +105,11 @@ describe('Hệ thống hiệu ứng & kiến trúc fx (taste-skill + hallmark)',
     expect(screen.getByRole('status')).toHaveTextContent('Ch.1: 2/4');
   });
 
-  it('SlidingTabBar điều hướng bằng click và bàn phím ArrowRight / End / Home', () => {
+  it('SlidingTabBar điều hướng bằng click, bàn phím và hỗ trợ token màu Dark Mode', () => {
     render(<ControlledSlidingTabs />);
+    const tablist = screen.getByTestId('sliding-tab-bar');
+    expect(tablist).toHaveClass('dark:bg-[#181F1D]');
+    expect(tablist.style.getPropertyValue('--fx-tab-accent-dark')).toBe('#286D57');
     const tabs = screen.getAllByRole('tab');
     expect(tabs[0]).toHaveAttribute('aria-selected', 'true');
 

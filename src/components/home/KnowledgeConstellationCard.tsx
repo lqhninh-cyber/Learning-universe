@@ -25,6 +25,8 @@ export interface KnowledgeBridgeNode {
   readonly nx: number;
   readonly ny: number;
   readonly color: string;
+  readonly darkColor: string;
+  readonly dotBgClass: string;
   readonly pillActiveClass: string;
   readonly phase: number;
 }
@@ -84,6 +86,8 @@ const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
     nx: 0.49,
     ny: 0.15,
     color: '#6B5335',
+    darkColor: '#D4AF6A',
+    dotBgClass: 'bg-[#6B5335] dark:bg-[#D4AF6A]',
     pillActiveClass: 'border-[#6B5335] bg-[#F3F0E8] text-[#6B5335]',
     phase: 0.2,
   },
@@ -98,6 +102,8 @@ const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
     nx: 0.5,
     ny: 0.34,
     color: '#2D5266',
+    darkColor: '#64A8D1',
+    dotBgClass: 'bg-[#2D5266] dark:bg-[#64A8D1]',
     pillActiveClass: 'border-[#2D5266] bg-[#ECF1F4] text-[#2D5266]',
     phase: 1.4,
   },
@@ -112,6 +118,8 @@ const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
     nx: 0.56,
     ny: 0.55,
     color: '#8C6D3F',
+    darkColor: '#E5C378',
+    dotBgClass: 'bg-[#8C6D3F] dark:bg-[#E5C378]',
     pillActiveClass: 'border-[#8C6D3F] bg-[#F3F0E8] text-[#6B5335]',
     phase: 2.6,
   },
@@ -126,6 +134,8 @@ const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
     nx: 0.84,
     ny: 0.51,
     color: '#245746',
+    darkColor: '#52B394',
+    dotBgClass: 'bg-[#245746] dark:bg-[#52B394]',
     pillActiveClass: 'border-[#245746] bg-[#EBF2EE] text-[#245746]',
     phase: 3.7,
   },
@@ -140,10 +150,24 @@ const KNOWLEDGE_BRIDGE_NODES: readonly KnowledgeBridgeNode[] = [
     nx: 0.31,
     ny: 0.62,
     color: '#7A463B',
+    darkColor: '#DF7B70',
+    dotBgClass: 'bg-[#7A463B] dark:bg-[#DF7B70]',
     pillActiveClass: 'border-[#7A463B] bg-[#F3ECE9] text-[#7A463B]',
     phase: 4.8,
   },
 ];
+
+function readDomDarkState(): boolean {
+  if (typeof document === 'undefined') return false;
+  const root = document.documentElement;
+  return (
+    root.classList.contains('dark') ||
+    root.getAttribute('data-theme') === 'dark' ||
+    (typeof document.body !== 'undefined' &&
+      document.body !== null &&
+      document.body.classList.contains('dark'))
+  );
+}
 
 /**
  * Mô hình 2 (Cột phải - Quỹ đạo học tập cá nhân):
@@ -204,6 +228,7 @@ export function KnowledgeConstellationCard() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
+      const isDarkDoc = readDomDarkState();
       const activeId = selectedIdRef.current;
       const activeBridge = KNOWLEDGE_BRIDGE_NODES.find((b) => b.id === activeId);
       const anchorPositions = new Map(ANCHOR_SUBJECTS.map((a) => [a.id, getAnchorPos(a)]));
@@ -235,11 +260,13 @@ export function KnowledgeConstellationCard() {
       // 1. Mạng bus chữ thập trung tâm & đường pElbow nối tâm tọa độ ra 4 học phần (truyền xung dashed động)
       const cxMid = width * 0.5;
       const cyMid = height * 0.5;
+      const gridMuteStroke = isDarkDoc ? 'rgba(158, 176, 170, 0.22)' : 'rgba(74, 93, 88, 0.14)';
       for (const anchor of ANCHOR_SUBJECTS) {
         const pt = anchorPositions.get(anchor.id)!;
         const isLinked = activeBridge ? activeBridge.targets.includes(anchor.id) : true;
+        const anchorStroke = isDarkDoc ? anchor.darkColor : anchor.color;
         traceRoundedElbow(cxMid, cyMid, pt.x, pt.y, 10);
-        ctx.strokeStyle = isLinked ? `${anchor.color}66` : 'rgba(74, 93, 88, 0.14)';
+        ctx.strokeStyle = isLinked ? `${anchorStroke}66` : gridMuteStroke;
         ctx.lineWidth = isLinked ? 1.25 : 0.9;
         ctx.setLineDash([4, 8]);
         ctx.lineDashOffset = isLinked ? -time * 20 : 0;
@@ -249,7 +276,7 @@ export function KnowledgeConstellationCard() {
       ctx.lineDashOffset = 0;
 
       // Vòng nối ngoại vi nhẹ giữa 4 học phần
-      ctx.strokeStyle = 'rgba(74, 93, 88, 0.14)';
+      ctx.strokeStyle = gridMuteStroke;
       ctx.lineWidth = 1;
       ctx.setLineDash([3, 5]);
       const cornerOrder: readonly ('CTDS' | 'HHAVE' | 'GTHMB' | 'GDH')[] = [
@@ -272,11 +299,13 @@ export function KnowledgeConstellationCard() {
       for (const bridge of KNOWLEDGE_BRIDGE_NODES) {
         const bPos = getBridgePos(bridge, time);
         const isActive = bridge.id === activeId;
+        const bridgeStroke = isDarkDoc ? bridge.darkColor : bridge.color;
 
         bridge.targets.forEach((targetId, tIdx) => {
           const targetAnchor = ANCHOR_SUBJECTS.find((a) => a.id === targetId);
           const aPos = anchorPositions.get(targetId);
           if (!aPos || !targetAnchor) return;
+          const targetStroke = isDarkDoc ? targetAnchor.darkColor : targetAnchor.color;
 
           // Thuật toán pCurve (diagram.js): đường cong Cubic Bezier S-curve mượt với cổng kết nối dg-port
           const dx = aPos.x - bPos.x;
@@ -297,8 +326,12 @@ export function KnowledgeConstellationCard() {
           ctx.beginPath();
           ctx.moveTo(bPos.x, bPos.y);
           ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, portX, portY);
-          ctx.strokeStyle = isActive ? bridge.color : 'rgba(74, 93, 88, 0.22)';
-          ctx.globalAlpha = isActive ? 0.36 : 0.28;
+          ctx.strokeStyle = isActive
+            ? bridgeStroke
+            : isDarkDoc
+              ? 'rgba(158, 176, 170, 0.34)'
+              : 'rgba(74, 93, 88, 0.22)';
+          ctx.globalAlpha = isActive ? (isDarkDoc ? 0.48 : 0.36) : isDarkDoc ? 0.36 : 0.28;
           ctx.lineWidth = isActive ? 1.45 : 1.0;
           ctx.stroke();
 
@@ -307,8 +340,8 @@ export function KnowledgeConstellationCard() {
             ctx.beginPath();
             ctx.moveTo(bPos.x, bPos.y);
             ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, portX, portY);
-            ctx.strokeStyle = targetAnchor.color;
-            ctx.globalAlpha = 0.72;
+            ctx.strokeStyle = targetStroke;
+            ctx.globalAlpha = isDarkDoc ? 0.82 : 0.72;
             ctx.lineWidth = 1.65;
             ctx.setLineDash([5, 11]);
             ctx.lineDashOffset = -time * 28;
@@ -320,9 +353,13 @@ export function KnowledgeConstellationCard() {
           // Cổng kết nối .dg-port tại điểm tiếp xúc nút học phần
           ctx.beginPath();
           ctx.arc(portX, portY, isActive ? 2.6 : 1.7, 0, Math.PI * 2);
-          ctx.fillStyle = '#FAFBF9';
+          ctx.fillStyle = isDarkDoc ? '#181F1D' : '#FAFBF9';
           ctx.fill();
-          ctx.strokeStyle = isActive ? targetAnchor.color : 'rgba(74, 93, 88, 0.38)';
+          ctx.strokeStyle = isActive
+            ? targetStroke
+            : isDarkDoc
+              ? 'rgba(158, 176, 170, 0.48)'
+              : 'rgba(74, 93, 88, 0.38)';
           ctx.lineWidth = 1.1;
           ctx.stroke();
 
@@ -347,22 +384,22 @@ export function KnowledgeConstellationCard() {
 
           const cometGrad = ctx.createLinearGradient(tailPt.x, tailPt.y, headPt.x, headPt.y);
           cometGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
-          cometGrad.addColorStop(0.5, `${bridge.color}${isActive ? '99' : '44'}`);
-          cometGrad.addColorStop(1, targetAnchor.color);
+          cometGrad.addColorStop(0.5, `${bridgeStroke}${isActive ? '99' : '44'}`);
+          cometGrad.addColorStop(1, targetStroke);
 
           // Dải sáng quầng rộng (.dg-glow) dưới xung chạy dọc dây dẫn
           if (isActive) {
-            ctx.globalAlpha = 0.24;
+            ctx.globalAlpha = isDarkDoc ? 0.32 : 0.24;
             ctx.beginPath();
             ctx.moveTo(tailPt.x, tailPt.y);
             ctx.lineTo(headPt.x, headPt.y);
-            ctx.strokeStyle = targetAnchor.color;
+            ctx.strokeStyle = targetStroke;
             ctx.lineWidth = 7;
             ctx.lineCap = 'round';
             ctx.stroke();
           }
 
-          ctx.globalAlpha = isActive ? 0.96 : 0.48;
+          ctx.globalAlpha = isActive ? 0.96 : isDarkDoc ? 0.58 : 0.48;
           ctx.beginPath();
           ctx.moveTo(tailPt.x, tailPt.y);
           ctx.lineTo(headPt.x, headPt.y);
@@ -372,15 +409,15 @@ export function KnowledgeConstellationCard() {
           ctx.stroke();
 
           // Quầng sáng đầu xung .dg-spark-halo & .dg-spark
-          ctx.globalAlpha = isActive ? 1 : 0.55;
+          ctx.globalAlpha = isActive ? 1 : isDarkDoc ? 0.65 : 0.55;
           ctx.beginPath();
           ctx.arc(headPt.x, headPt.y, isActive ? 5.2 : 3.2, 0, Math.PI * 2);
-          ctx.fillStyle = `${targetAnchor.color}33`;
+          ctx.fillStyle = `${targetStroke}38`;
           ctx.fill();
 
           ctx.beginPath();
           ctx.arc(headPt.x, headPt.y, isActive ? 3.0 : 1.9, 0, Math.PI * 2);
-          ctx.fillStyle = targetAnchor.color;
+          ctx.fillStyle = targetStroke;
           ctx.fill();
 
           ctx.beginPath();
@@ -392,17 +429,15 @@ export function KnowledgeConstellationCard() {
       ctx.globalAlpha = 1;
 
       // 3. Vẽ 4 nút Học phần (Subject Anchor Hubs) kèm lan tỏa is-hit theo nhánh liên kết
-      const isDarkCanvas =
-        typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
       for (const anchor of ANCHOR_SUBJECTS) {
         const pos = anchorPositions.get(anchor.id)!;
         const isLinked = activeBridge ? activeBridge.targets.includes(anchor.id) : true;
-        const anchorStroke = isDarkCanvas ? anchor.darkColor : anchor.color;
+        const anchorStroke = isDarkDoc ? anchor.darkColor : anchor.color;
         const anchorFill = isLinked
-          ? isDarkCanvas
+          ? isDarkDoc
             ? anchor.darkBg
             : anchor.bg
-          : isDarkCanvas
+          : isDarkDoc
             ? '#181F1D'
             : '#F2F4F3';
 
@@ -430,7 +465,7 @@ export function KnowledgeConstellationCard() {
         ctx.fillStyle = anchorFill;
         ctx.fill();
         ctx.strokeStyle = anchorStroke;
-        ctx.globalAlpha = isLinked ? 1 : 0.4;
+        ctx.globalAlpha = isLinked ? 1 : 0.45;
         ctx.lineWidth = isLinked ? 1.8 : 1.1;
         ctx.stroke();
 
@@ -446,10 +481,11 @@ export function KnowledgeConstellationCard() {
       for (const bridge of KNOWLEDGE_BRIDGE_NODES) {
         const bPos = getBridgePos(bridge, time);
         const isActive = bridge.id === activeId;
+        const bridgeColor = isDarkDoc ? bridge.darkColor : bridge.color;
 
         if (isActive) {
           const halo = ctx.createRadialGradient(bPos.x, bPos.y, 2, bPos.x, bPos.y, 18);
-          halo.addColorStop(0, `${bridge.color}40`);
+          halo.addColorStop(0, `${bridgeColor}48`);
           halo.addColorStop(1, 'rgba(255,255,255,0)');
           ctx.fillStyle = halo;
           ctx.beginPath();
@@ -459,30 +495,28 @@ export function KnowledgeConstellationCard() {
 
         ctx.beginPath();
         ctx.arc(bPos.x, bPos.y, isActive ? 6.2 : 4.4, 0, Math.PI * 2);
-        ctx.fillStyle = isActive ? bridge.color : '#FAFBF9';
+        ctx.fillStyle = isActive ? bridgeColor : isDarkDoc ? '#181F1D' : '#FAFBF9';
         ctx.fill();
-        ctx.strokeStyle = bridge.color;
+        ctx.strokeStyle = bridgeColor;
         ctx.lineWidth = isActive ? 2 : 1.4;
         ctx.stroke();
 
         if (isActive) {
           ctx.beginPath();
           ctx.arc(bPos.x, bPos.y, 2.2, 0, Math.PI * 2);
-          ctx.fillStyle = '#FAFBF9';
+          ctx.fillStyle = isDarkDoc ? '#121716' : '#FAFBF9';
           ctx.fill();
         }
 
         ctx.font = `${isActive ? '700' : '600'} 9.5px "Be Vietnam Pro", system-ui, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        const isDarkDoc =
-          typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
         ctx.fillStyle = isActive
           ? isDarkDoc
             ? '#EFF4F2'
             : '#182624'
           : isDarkDoc
-            ? '#9EB0AA'
+            ? '#A8BBB4'
             : '#4A5D58';
         ctx.fillText(bridge.shortLabel, bPos.x, bPos.y + 9);
       }
@@ -541,6 +575,23 @@ export function KnowledgeConstellationCard() {
       io.observe(container);
     }
 
+    let themeObserver: MutationObserver | undefined;
+    if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined') {
+      themeObserver = new MutationObserver(() => {
+        drawGraph(prefersReducedMotion ? 0.6 : elapsed);
+      });
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'data-theme'],
+      });
+      if (document.body) {
+        themeObserver.observe(document.body, {
+          attributes: true,
+          attributeFilter: ['class', 'data-theme'],
+        });
+      }
+    }
+
     drawGraph(0.6);
     if (prefersReducedMotion) {
       return () => {
@@ -548,6 +599,7 @@ export function KnowledgeConstellationCard() {
         container.removeEventListener('click', handleClick);
         ro?.disconnect();
         io?.disconnect();
+        themeObserver?.disconnect();
       };
     }
 
@@ -568,6 +620,7 @@ export function KnowledgeConstellationCard() {
       container.removeEventListener('click', handleClick);
       ro?.disconnect();
       io?.disconnect();
+      themeObserver?.disconnect();
     };
   }, [prefersReducedMotion]);
 
@@ -627,8 +680,10 @@ export function KnowledgeConstellationCard() {
                   aria-hidden="true"
                 >
                   <span
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: isActive ? '#FFFFFF' : bridge.color }}
+                    className={cn(
+                      'h-1.5 w-1.5 rounded-full',
+                      isActive ? 'bg-white' : bridge.dotBgClass,
+                    )}
                   />
                 </span>
                 <span>{bridge.shortLabel}</span>
