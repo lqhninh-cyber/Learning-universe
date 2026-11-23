@@ -1,12 +1,25 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import {
   syncBookmarkToSupabase,
   syncNoteToSupabase,
   syncProgressToSupabase,
 } from '@/services/supabase/learning-sync';
+import { safeStorage, STORAGE_KEYS } from '@/utils/safeStorage';
 
 export type PendingLearningActionType = 'complete' | 'bookmark' | 'note';
+
+export type ExercisePracticeStatus = 'todo' | 'review' | 'done';
+
+export function buildExerciseStorageKey(lessonId: string, exerciseId: string): string {
+  return `${lessonId}::${exerciseId}`;
+}
+
+export function getNextExerciseStatus(current: ExercisePracticeStatus): ExercisePracticeStatus {
+  if (current === 'todo') return 'review';
+  if (current === 'review') return 'done';
+  return 'todo';
+}
 
 export interface PendingLearningAction {
   readonly type: PendingLearningActionType;
@@ -33,7 +46,9 @@ export interface LearningState {
   readonly completedLessons: Readonly<Record<string, string>>;
   /** Bản đồ `lessonId -> createdAt (ISO)`. */
   readonly bookmarkedLessons: Readonly<Record<string, string>>;
-  /** Bản đồ `lessonId -> LessonNoteEntry`. */
+  /** Bản đồ `${lessonId}::${exerciseId} -> 'todo' | 'review' | 'done'`. */
+  readonly exerciseStatus: Readonly<Record<string, ExercisePracticeStatus>>;
+  /** Bản đồ `lessonId -> LessonNoteEntry` (giữ tương thích đồng bộ Supabase). */
   readonly lessonNotes: Readonly<Record<string, LessonNoteEntry>>;
   /** Bài học mở gần nhất theo từng `subjectId` (lưu cho cả Guest theo D1). */
   readonly lastVisitedBySubject: Readonly<Record<string, LastVisitedEntry>>;
@@ -41,18 +56,16 @@ export interface LearningState {
   readonly lastVisitedGlobal: LastVisitedEntry | null;
   /** Thao tác đang chờ xác nhận đăng nhập (D1). */
   readonly pendingPromptAction: PendingLearningAction | null;
-  /** Bài học đang mở khung ghi chú cá nhân. */
-  readonly openNoteLessonId: string | null;
   /** Bật hoặc tắt tự động chú thích ký hiệu & thuật ngữ trong bài học (Zen Mode). Mặc định `true`. */
   readonly glossaryAnnotationsEnabled: boolean;
 
   recordLessonVisit: (subjectId: string, lessonId: string) => void;
   toggleLessonCompleted: (lessonId: string) => boolean;
   toggleLessonBookmark: (lessonId: string) => boolean;
+  setExerciseStatus: (lessonId: string, exerciseId: string, status: ExercisePracticeStatus) => void;
+  cycleExerciseStatus: (lessonId: string, exerciseId: string) => ExercisePracticeStatus;
   toggleGlossaryAnnotations: () => void;
   setGlossaryAnnotationsEnabled: (enabled: boolean) => void;
-  requestNoteAccess: (lessonId: string) => boolean;
-  setOpenNoteLessonId: (lessonId: string | null) => void;
   saveLessonNote: (lessonId: string, body: string) => boolean;
   enableLearnerMode: (learnerName?: string, userId?: string) => void;
   mergeCloudLearningData: (data: {
@@ -60,6 +73,16 @@ export interface LearningState {
     readonly bookmarkedLessons?: Record<string, string>;
     readonly lessonNotes?: Record<string, LessonNoteEntry>;
   }) => void;
+  importLearningSnapshot: (
+    data: {
+      readonly completedLessons: Readonly<Record<string, string>>;
+      readonly bookmarkedLessons: Readonly<Record<string, string>>;
+      readonly exerciseStatus: Readonly<Record<string, ExercisePracticeStatus>>;
+      readonly lessonNotes?: Readonly<Record<string, LessonNoteEntry>>;
+      readonly glossaryAnnotationsEnabled?: boolean;
+    },
+    mode: 'merge' | 'replace',
+  ) => void;
   signOutLearnerMode: () => void;
   dismissPrompt: () => void;
   resetLearningStore: () => void;
@@ -71,11 +94,11 @@ const INITIAL_DATA = {
   learnerName: 'Sinh viên Sư phạm Toán',
   completedLessons: {} as Readonly<Record<string, string>>,
   bookmarkedLessons: {} as Readonly<Record<string, string>>,
+  exerciseStatus: {} as Readonly<Record<string, ExercisePracticeStatus>>,
   lessonNotes: {} as Readonly<Record<string, LessonNoteEntry>>,
   lastVisitedBySubject: {} as Readonly<Record<string, LastVisitedEntry>>,
   lastVisitedGlobal: null as LastVisitedEntry | null,
   pendingPromptAction: null as PendingLearningAction | null,
-  openNoteLessonId: null as string | null,
   glossaryAnnotationsEnabled: true,
 };
 
@@ -143,25 +166,33 @@ export const useLearningStore = create<LearningState>()(
         return true;
       },
 
+      setExerciseStatus: (lessonId, exerciseId, status) => {
+        const key = buildExerciseStorageKey(lessonId, exerciseId);
+        set((state) => {
+          const next = { ...state.exerciseStatus };
+          if (status === 'todo') {
+            delete next[key];
+          } else {
+            next[key] = status;
+          }
+          return { exerciseStatus: next };
+        });
+      },
+
+      cycleExerciseStatus: (lessonId, exerciseId) => {
+        const key = buildExerciseStorageKey(lessonId, exerciseId);
+        const current = get().exerciseStatus[key] ?? 'todo';
+        const nextStatus = getNextExerciseStatus(current);
+        get().setExerciseStatus(lessonId, exerciseId, nextStatus);
+        return nextStatus;
+      },
+
       toggleGlossaryAnnotations: () => {
         set((state) => ({ glossaryAnnotationsEnabled: !state.glossaryAnnotationsEnabled }));
       },
 
       setGlossaryAnnotationsEnabled: (enabled) => {
         set({ glossaryAnnotationsEnabled: enabled });
-      },
-
-      requestNoteAccess: (lessonId) => {
-        const state = get();
-        if (!state.isAuthenticated) {
-          set({ pendingPromptAction: { type: 'note', lessonId } });
-          return false;
-        }
-        return true;
-      },
-
-      setOpenNoteLessonId: (lessonId) => {
-        set({ openNoteLessonId: lessonId });
       },
 
       saveLessonNote: (lessonId, body) => {
@@ -196,14 +227,11 @@ export const useLearningStore = create<LearningState>()(
 
         const completedLessons = { ...state.completedLessons };
         const bookmarkedLessons = { ...state.bookmarkedLessons };
-        let openNoteLessonId = state.openNoteLessonId;
 
         if (pending?.type === 'complete') {
           completedLessons[pending.lessonId] = now;
         } else if (pending?.type === 'bookmark') {
           bookmarkedLessons[pending.lessonId] = now;
-        } else if (pending?.type === 'note') {
-          openNoteLessonId = pending.lessonId;
         }
 
         set({
@@ -212,7 +240,6 @@ export const useLearningStore = create<LearningState>()(
           learnerName: learnerName?.trim() || state.learnerName,
           completedLessons,
           bookmarkedLessons,
-          openNoteLessonId,
           pendingPromptAction: null,
         });
 
@@ -240,6 +267,41 @@ export const useLearningStore = create<LearningState>()(
         }));
       },
 
+      importLearningSnapshot: (data, mode) => {
+        set((state) => {
+          if (mode === 'replace') {
+            return {
+              completedLessons: { ...data.completedLessons },
+              bookmarkedLessons: { ...data.bookmarkedLessons },
+              exerciseStatus: { ...data.exerciseStatus },
+              lessonNotes: data.lessonNotes ? { ...data.lessonNotes } : {},
+              glossaryAnnotationsEnabled:
+                data.glossaryAnnotationsEnabled ?? state.glossaryAnnotationsEnabled,
+            };
+          }
+          return {
+            completedLessons: {
+              ...state.completedLessons,
+              ...data.completedLessons,
+            },
+            bookmarkedLessons: {
+              ...state.bookmarkedLessons,
+              ...data.bookmarkedLessons,
+            },
+            exerciseStatus: {
+              ...state.exerciseStatus,
+              ...data.exerciseStatus,
+            },
+            lessonNotes: {
+              ...state.lessonNotes,
+              ...(data.lessonNotes ?? {}),
+            },
+            glossaryAnnotationsEnabled:
+              data.glossaryAnnotationsEnabled ?? state.glossaryAnnotationsEnabled,
+          };
+        });
+      },
+
       signOutLearnerMode: () => {
         set({
           isAuthenticated: false,
@@ -257,13 +319,15 @@ export const useLearningStore = create<LearningState>()(
       },
     }),
     {
-      name: 'learning-universe-progress-v1',
+      name: STORAGE_KEYS.learningProgress,
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
         currentUserId: state.currentUserId,
         learnerName: state.learnerName,
         completedLessons: state.completedLessons,
         bookmarkedLessons: state.bookmarkedLessons,
+        exerciseStatus: state.exerciseStatus,
         lessonNotes: state.lessonNotes,
         lastVisitedBySubject: state.lastVisitedBySubject,
         lastVisitedGlobal: state.lastVisitedGlobal,

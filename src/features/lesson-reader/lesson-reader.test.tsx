@@ -168,9 +168,21 @@ describe('Bộ kết xuất Toán học MathRenderer & Mục lục bài học Le
 });
 
 describe('Thanh tác vụ bài học LessonActionBar & Chế độ Đọc Chuyên sâu (Dark Reading Mode)', () => {
-  it('xuất LessonActionBar và FloatingReadingController từ module index', () => {
+  it('xuất LessonActionBar, FloatingReadingController và đã gỡ hoàn toàn LessonNotesPanel khỏi module index', () => {
     expect(lessonReaderExports.LessonActionBar).toBeDefined();
     expect(lessonReaderExports.FloatingReadingController).toBeDefined();
+    expect('LessonNotesPanel' in lessonReaderExports).toBe(false);
+  });
+
+  it('LessonActionBar đầu bài chỉ gồm Lưu bài và Thuật ngữ nổi (không lặp Ghi chú hoặc Đánh dấu hoàn thành)', () => {
+    render(<lessonReaderExports.LessonActionBar lessonId="demo-lesson-1" readingTheme="light" />);
+
+    const toolbar = screen.getByTestId('lesson-action-bar');
+    expect(toolbar).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Lưu bài học/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Thuật ngữ:/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Ghi chú/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Đánh dấu hoàn thành/i })).not.toBeInTheDocument();
   });
 
   it('kết xuất FloatingReadingController dạng Pill Button công thái học và cho phép chuyển đổi chế độ đọc qua click và phím D', () => {

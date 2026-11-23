@@ -1,12 +1,38 @@
 import { type FC, type ReactNode } from 'react';
 import {
   resolveOptionColumns,
+  type ExamImageAttachment,
   type ExamPart,
   type ExamQuestion,
   type ParsedExamStructure,
 } from '@/features/exam-builder';
 import { InlineMathText } from '@/features/math-glossary';
 import { cn } from '@/shared/lib/cn';
+import { useResolvedMediaUrl } from '@/utils/useResolvedMediaUrl';
+
+const ResolvedExamFigure: FC<{
+  readonly image: ExamImageAttachment;
+  readonly questionNumber: number;
+}> = ({ image, questionNumber }) => {
+  const resolvedSrc = useResolvedMediaUrl(image.dataUrl);
+  if (!resolvedSrc) return null;
+
+  return (
+    <figure className="my-2 flex flex-col items-center">
+      <img
+        src={resolvedSrc}
+        alt={image.caption || `Hình minh họa Câu ${questionNumber}`}
+        style={{ width: `${Math.max(20, Math.min(100, image.widthPercent))}%` }}
+        className="h-auto max-h-[260px] object-contain"
+      />
+      {image.caption && (
+        <figcaption className="mt-1 text-[10.5pt] text-neutral-700 italic">
+          {image.caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+};
 
 export interface ExamPaperPreviewProps {
   readonly structure: ParsedExamStructure;
@@ -214,21 +240,9 @@ const ExamQuestionPaperItem: FC<{
         );
       })}
 
-      {/* Hình vẽ minh họa đính kèm (nếu có) */}
+      {/* Hình vẽ minh họa đính kèm (hỗ trợ cả DataURL và idb:// từ IndexedDB) */}
       {question.image && (
-        <figure className="my-2 flex flex-col items-center">
-          <img
-            src={question.image.dataUrl}
-            alt={question.image.caption || `Hình minh họa Câu ${question.number}`}
-            style={{ width: `${Math.max(20, Math.min(100, question.image.widthPercent))}%` }}
-            className="h-auto max-h-[260px] object-contain"
-          />
-          {question.image.caption && (
-            <figcaption className="mt-1 text-[10.5pt] text-neutral-700 italic">
-              {question.image.caption}
-            </figcaption>
-          )}
-        </figure>
+        <ResolvedExamFigure image={question.image} questionNumber={question.number} />
       )}
 
       {/* PHẦN I: Phương án A. B. C. D. tự động căn 4 cột / 2 cột / 1 cột */}

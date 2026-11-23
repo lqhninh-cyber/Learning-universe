@@ -1,4 +1,7 @@
 export {
+  buildExerciseStorageKey,
+  getNextExerciseStatus,
+  type ExercisePracticeStatus,
   type LastVisitedEntry,
   type LearningState,
   type LessonNoteEntry,

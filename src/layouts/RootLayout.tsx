@@ -11,6 +11,7 @@ import { PaperGrain } from '@/shared/components/PaperGrain';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { Container } from '@/shared/ui';
+import { onStorageWarning } from '@/utils/safeStorage';
 
 export function RootHydrateFallback() {
   return null;
@@ -24,9 +25,11 @@ function RootLayoutContent() {
     /^\/(mon-hoc|courses)\/[^/]+\/[^/]+\/[^/]+\/?$/.test(pathname) ||
     /^\/bai-hoc\/[^/]+\/?$/.test(pathname) ||
     pathname === '/dev/mdx';
+  const isStudioPage = pathname === ROUTES.mathInk || pathname === ROUTES.examBuilder;
+  const isFullWidthWorkspace = isHomePage || isLessonPage || isStudioPage;
 
   const { theme } = useReadingSettings();
-  const { setRoutePathname, readerSettings } = useIsland();
+  const { setRoutePathname, readerSettings, triggerIslandNotice } = useIsland();
   const isDarkApp = theme === 'dark' || (isLessonPage && readerSettings.isDarkMode);
   const isSepiaLesson = isLessonPage && !isDarkApp && theme === 'sepia';
   const isEyeComfort =
@@ -35,6 +38,16 @@ function RootLayoutContent() {
   useEffect(() => {
     setRoutePathname(pathname);
   }, [pathname, setRoutePathname]);
+
+  // Lắng nghe cảnh báo bộ nhớ cục bộ (QuotaExceededError / SecurityError) và hiển thị toast mềm không chặn thao tác
+  useEffect(() => {
+    return onStorageWarning((event) => {
+      triggerIslandNotice({
+        text: event.message,
+        type: 'info',
+      });
+    });
+  }, [triggerIslandNotice]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -60,7 +73,7 @@ function RootLayoutContent() {
     return undefined;
   }, [pathname, hash]);
 
-  const mainClassName = isHomePage
+  const mainClassName = isFullWidthWorkspace
     ? 'overflow-x-clip'
     : isCourseDetailPage
       ? 'overflow-x-clip pb-12'
@@ -101,7 +114,7 @@ function RootLayoutContent() {
         mainClassName={mainClassName}
         footer={<Footer isDarkLesson={isDarkApp} />}
       >
-        {isHomePage ? (
+        {isFullWidthWorkspace ? (
           <Outlet />
         ) : (
           <Container size="wide">

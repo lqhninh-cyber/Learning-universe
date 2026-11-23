@@ -14,10 +14,11 @@ import {
   Trash2,
   Wand2,
 } from 'lucide-react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ExamPaperPreview } from '@/components/exam-builder/ExamPaperPreview';
 import { ExamVisualEditor } from '@/components/exam-builder/ExamVisualEditor';
 import { MathToolbar } from '@/components/exam-builder/MathToolbar';
+import { useLayout } from '@/context/LayoutContext';
 import {
   exportExamToLatex,
   parseExamMarkupToStructure,
@@ -35,6 +36,7 @@ type EditorTabMode = 'smart-text' | 'visual-cards';
 type MobilePaneMode = 'editor' | 'preview';
 
 export function ExamBuilderPage() {
+  const { setRailCollapsed } = useLayout();
   const bucket = useExamBuilderStore(selectActiveExamBucket);
   const activeDoc = useExamBuilderStore(selectActiveExamDocument);
   const selectExam = useExamBuilderStore((state) => state.selectExam);
@@ -43,6 +45,16 @@ export function ExamBuilderPage() {
   const deleteExam = useExamBuilderStore((state) => state.deleteExam);
   const updateActiveExam = useExamBuilderStore((state) => state.updateActiveExam);
   const attachImageToActiveExam = useExamBuilderStore((state) => state.attachImageToActiveExam);
+
+  // Tự động thu gọn LeftRail về 60px khi vào Xưởng Soạn Đề trên desktop (người dùng vẫn tự mở lại được)
+  const didAutoCollapseRef = useRef(false);
+  useEffect(() => {
+    if (didAutoCollapseRef.current) return;
+    didAutoCollapseRef.current = true;
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      setRailCollapsed(true);
+    }
+  }, [setRailCollapsed]);
 
   const [editorTab, setEditorTab] = useState<EditorTabMode>('smart-text');
   const [mobilePane, setMobilePane] = useState<MobilePaneMode>('editor');
@@ -163,9 +175,9 @@ export function ExamBuilderPage() {
       data-testid="exam-builder-page"
       className="min-h-[calc(100vh-3rem)] bg-[var(--bg-workspace)] text-[var(--text-main)] print:min-h-0 print:bg-white"
     >
-      {/* THANH CÔNG CỤ STUDIO SOẠN ĐỀ (Ẩn hoàn toàn khi in PDF) */}
+      {/* THANH CÔNG CỤ STUDIO SOẠN ĐỀ (Tràn toàn bộ bề ngang viewport, ẩn hoàn toàn khi in PDF) */}
       <div className="border-b border-[var(--border-hairline)] bg-[var(--bg-surface)]/80 px-4 py-3.5 sm:px-6 print:hidden">
-        <div className="mx-auto max-w-[1440px] space-y-3">
+        <div className="w-full space-y-3">
           {/* Hàng 1: Danh sách đề của tài khoản + Tạo mới / Mẫu + Hành động xuất bản */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -407,8 +419,8 @@ export function ExamBuilderPage() {
         </div>
       </div>
 
-      {/* KHÔNG GIAN CHIA ĐÔI: KHUNG SOẠN BÊN TRÁI ↔ TỜ ĐỀ A4 XEM TRƯỚC TRỰC TIẾP BÊN PHẢI */}
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 xl:grid-cols-12 print:block print:max-w-none">
+      {/* KHÔNG GIAN CHIA ĐÔI TRÀN VIEWPORT: KHUNG SOẠN BÊN TRÁI ↔ TỜ ĐỀ A4 XEM TRƯỚC TRỰC TIẾP BÊN PHẢI */}
+      <div className="grid w-full grid-cols-1 xl:grid-cols-12 print:block print:max-w-none">
         {/* CỘT TRÁI: TRÌNH SOẠN ĐỀ (Ẩn hoàn toàn khi in) */}
         <div
           className={cn(

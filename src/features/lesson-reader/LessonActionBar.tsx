@@ -1,47 +1,34 @@
-import { BookOpenCheck, Bookmark, CheckCircle2, FileEdit } from 'lucide-react';
+import { BookOpenCheck, Bookmark } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getLessonById } from '@/content-runtime';
-import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
-import { useIsland } from '@/context/IslandContext';
 import type { ReadingTheme } from '@/context/ReadingSettingsContext';
 import { useLearningStore } from '@/features/learning';
 import { cn } from '@/shared/lib/cn';
+import { safeStorage } from '@/utils/safeStorage';
 
 export interface LessonActionBarProps {
   readonly lessonId: string;
-  readonly isNotesOpen: boolean;
-  readonly onToggleNotes: () => void;
   readonly readingTheme?: ReadingTheme;
   readonly onToggleReadingTheme?: () => void;
   readonly className?: string;
 }
 
+/**
+ * Thanh tác vụ đầu bài giảng siêu gọn:
+ * chỉ gồm `Lưu bài` và bật/tắt `Thuật ngữ nổi` (nút `Hoàn thành` duy nhất đặt ở TopContextBar).
+ */
 export function LessonActionBar({
   lessonId,
-  isNotesOpen,
-  onToggleNotes,
   readingTheme: propTheme,
   className,
 }: LessonActionBarProps) {
-  const isCompleted = useLearningStore((state) => Boolean(state.completedLessons[lessonId]));
   const isBookmarked = useLearningStore((state) => Boolean(state.bookmarkedLessons[lessonId]));
-  const hasNote = useLearningStore((state) => Boolean(state.lessonNotes[lessonId]?.body));
   const glossaryAnnotationsEnabled = useLearningStore((state) => state.glossaryAnnotationsEnabled);
-  const toggleLessonCompleted = useLearningStore((state) => state.toggleLessonCompleted);
   const toggleLessonBookmark = useLearningStore((state) => state.toggleLessonBookmark);
   const toggleGlossaryAnnotations = useLearningStore((state) => state.toggleGlossaryAnnotations);
-  const requestNoteAccess = useLearningStore((state) => state.requestNoteAccess);
-  const { triggerIslandNotice } = useIsland();
 
   const [internalTheme, setInternalTheme] = useState<ReadingTheme>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('lu_reading_theme');
-        if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
-      } catch {
-        // Bỏ qua lỗi storage
-      }
-    }
+    const saved = safeStorage.getItem('lu_reading_theme');
+    if (saved === 'dark' || saved === 'light' || saved === 'sepia') return saved;
     return 'light';
   });
 
@@ -54,7 +41,7 @@ export function LessonActionBar({
       if (custom.detail === 'light' || custom.detail === 'dark' || custom.detail === 'sepia') {
         setInternalTheme(custom.detail);
       } else {
-        const saved = localStorage.getItem('lu_reading_theme');
+        const saved = safeStorage.getItem('lu_reading_theme');
         if (saved === 'dark' || saved === 'light' || saved === 'sepia') {
           setInternalTheme(saved);
         }
@@ -67,12 +54,6 @@ export function LessonActionBar({
   const activeTheme = propTheme ?? internalTheme;
   const isDark = activeTheme === 'dark';
 
-  const handleNoteClick = () => {
-    if (requestNoteAccess(lessonId)) {
-      onToggleNotes();
-    }
-  };
-
   const buttonBaseClass = cn(
     'whitespace-nowrap px-3.5 py-1.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer shadow-2xs',
     isDark
@@ -80,71 +61,13 @@ export function LessonActionBar({
       : 'border-[#CFDADB] bg-[#F7FAFA] text-[#29383D] hover:bg-[#E1E9EA]',
   );
 
-  const handleCompleteClick = () => {
-    const wasCompleted = Boolean(useLearningStore.getState().completedLessons[lessonId]);
-    if (!toggleLessonCompleted(lessonId)) {
-      return;
-    }
-
-    const loc = getLessonById(lessonId);
-    const shortLesson = loc ? `Bài ${loc.chapter.number}.${loc.lesson.number}` : 'bài học';
-
-    if (wasCompleted) {
-      triggerIslandNotice({
-        text: `Đã bỏ đánh dấu ${shortLesson}`,
-        type: 'info',
-      });
-      return;
-    }
-
-    if (loc) {
-      const updatedMap = useLearningStore.getState().completedLessons;
-      const allLessons = loc.subject.chapters.flatMap((ch) => ch.lessons);
-      const doneInSubject = allLessons.filter((item) => Boolean(updatedMap[item.id])).length;
-      const pct = allLessons.length > 0 ? Math.round((doneInSubject / allLessons.length) * 100) : 0;
-      const subjectCode = getIslandSubjectByIdOrSlug(loc.subject.slug)?.code ?? loc.subject.title;
-      triggerIslandNotice({
-        text: `Đã hoàn thành ${shortLesson} · Tiến độ ${subjectCode}: ${pct}%`,
-        type: 'success',
-      });
-      return;
-    }
-
-    triggerIslandNotice({
-      text: `Đã hoàn thành ${shortLesson}`,
-      type: 'success',
-    });
-  };
-
   return (
     <div
       role="toolbar"
       aria-label="Thao tác học tập cá nhân"
+      data-testid="lesson-action-bar"
       className={cn('flex flex-wrap items-center gap-2.5 print:hidden', className)}
     >
-      <button
-        type="button"
-        onClick={handleCompleteClick}
-        aria-pressed={isCompleted}
-        aria-label={isCompleted ? 'Đã hoàn thành bài học' : 'Đánh dấu hoàn thành'}
-        className={cn(
-          buttonBaseClass,
-          isCompleted &&
-            (isDark
-              ? 'border-[#5E8A75] bg-[#5E8A75] text-white hover:bg-[#4d7362]'
-              : 'border-[#3F6570] bg-[#3F6570] text-white hover:bg-[#345761]'),
-        )}
-      >
-        <CheckCircle2
-          className={cn(
-            'h-4 w-4 shrink-0',
-            isCompleted ? 'text-white' : isDark ? 'text-[#5E8A75]' : 'text-[#3F6570]',
-          )}
-          aria-hidden="true"
-        />
-        <span>{isCompleted ? 'Đã hoàn thành' : 'Đánh dấu hoàn thành'}</span>
-      </button>
-
       <button
         type="button"
         onClick={() => toggleLessonBookmark(lessonId)}
@@ -164,29 +87,6 @@ export function LessonActionBar({
           aria-hidden="true"
         />
         <span>{isBookmarked ? 'Đã lưu bài' : 'Lưu bài'}</span>
-      </button>
-
-      <button
-        type="button"
-        onClick={handleNoteClick}
-        aria-expanded={isNotesOpen}
-        aria-label={hasNote ? 'Ghi chú cá nhân (Đã có)' : 'Ghi chú cá nhân'}
-        className={cn(
-          buttonBaseClass,
-          (isNotesOpen || hasNote) &&
-            (isDark
-              ? 'border-[#5E8A75] bg-[#5E8A75]/20 text-emerald-300 hover:bg-[#5E8A75]/30'
-              : 'border-[#3F6570] bg-[#3F6570]/10 text-[#3F6570] hover:bg-[#3F6570]/20'),
-        )}
-      >
-        <FileEdit
-          className={cn(
-            'h-4 w-4 shrink-0',
-            hasNote ? (isDark ? 'text-emerald-300' : 'text-[#3F6570]') : 'text-stone-400',
-          )}
-          aria-hidden="true"
-        />
-        <span>{hasNote ? 'Ghi chú (Đã có)' : 'Ghi chú'}</span>
       </button>
 
       <button

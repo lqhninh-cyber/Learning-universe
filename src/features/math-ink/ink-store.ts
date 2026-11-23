@@ -1,5 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { deleteMediaAsset, isInlineImageDataUrl, storeMediaDataUrl } from '@/utils/mediaDb';
+import { safeStorage, STORAGE_KEYS } from '@/utils/safeStorage';
 import {
   DEFAULT_PAPER_CONFIG,
   DEFAULT_PEN_PRESETS,
@@ -671,14 +673,28 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       },
 
       setWorksheetBackground: (bg) => {
-        get().commitPageMutation((page) => ({
-          ...page,
-          worksheetBackground: bg,
-        }));
+        const offloadedBg =
+          bg && isInlineImageDataUrl(bg.dataUrl)
+            ? { ...bg, dataUrl: storeMediaDataUrl(bg.dataUrl, `ink-ws-${bg.id}`) }
+            : bg;
+        get().commitPageMutation((page) => {
+          if (!offloadedBg && page.worksheetBackground) {
+            void deleteMediaAsset(page.worksheetBackground.dataUrl);
+          }
+          return {
+            ...page,
+            worksheetBackground: offloadedBg,
+          };
+        });
       },
 
       addPagesWithWorksheets: (worksheets) => {
         if (worksheets.length === 0) return;
+        const offloadedList = worksheets.map((ws) =>
+          isInlineImageDataUrl(ws.dataUrl)
+            ? { ...ws, dataUrl: storeMediaDataUrl(ws.dataUrl, `ink-ws-${ws.id}`) }
+            : ws,
+        );
         const state = get();
         const key = state.activeAccountKey;
         const bucket = normalizeBucket(state.buckets[key]);
@@ -693,7 +709,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
                 if (nb.id !== bucket.activeNotebookId) return nb;
                 const current = nb.pages[nb.activePageIndex];
                 const canReuseCurrent = current && !current.worksheetBackground;
-                const [first, ...rest] = worksheets;
+                const [first, ...rest] = offloadedList;
                 const updatedPages = [...nb.pages];
                 let insertIdx = nb.activePageIndex;
 
@@ -705,7 +721,7 @@ export const useInkNotebookStore = create<InkNotebookState>()(
                   const extraPages = rest.map((ws) => createBlankInkPage(undefined, ws));
                   updatedPages.splice(nb.activePageIndex + 1, 0, ...extraPages);
                 } else {
-                  const newPages = worksheets.map((ws) => createBlankInkPage(undefined, ws));
+                  const newPages = offloadedList.map((ws) => createBlankInkPage(undefined, ws));
                   insertIdx = nb.activePageIndex + 1;
                   updatedPages.splice(insertIdx, 0, ...newPages);
                 }
@@ -732,9 +748,12 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       },
 
       addImage: (image) => {
+        const offloadedImage = isInlineImageDataUrl(image.dataUrl)
+          ? { ...image, dataUrl: storeMediaDataUrl(image.dataUrl, `ink-img-${image.id}`) }
+          : image;
         get().commitPageMutation((page) => ({
           ...page,
-          images: [...page.images, image],
+          images: [...page.images, offloadedImage],
         }));
       },
 
@@ -824,13 +843,82 @@ export const useInkNotebookStore = create<InkNotebookState>()(
       },
     }),
     {
-      name: 'learning-universe-math-ink-v1',
-      partialize: (state) => ({
-        activeAccountKey: state.activeAccountKey,
-        buckets: state.buckets,
-        penPresets: state.penPresets,
-        activePenPresetId: state.activePenPresetId,
-      }),
+      name: STORAGE_KEYS.mathInk,
+      storage: createJSONStorage(() => safeStorage),
+      partialize: (state) => {
+        // Lazy-migrate mọi ảnh base64 cũ trong vở Bảng viết sang IndexedDB trước khi ghi localStorage
+        let changed = false;
+        const nextBuckets: Record<string, UserInkBucket> = {};
+        for (const [accountKey, bucket] of Object.entries(state.buckets)) {
+          let bucketChanged = false;
+          const migratedNotebooks = bucket.notebooks.map((nb) => {
+            let nbChanged = false;
+            const migratedPages = nb.pages.map((pg) => {
+              let pgChanged = false;
+              const nextImages = pg.images.map((im) => {
+                if (isInlineImageDataUrl(im.dataUrl)) {
+                  pgChanged = true;
+                  return {
+                    ...im,
+                    dataUrl: storeMediaDataUrl(im.dataUrl, `ink-img-${pg.id}-${im.id}`),
+                  };
+                }
+                return im;
+              });
+              let nextBg = pg.worksheetBackground;
+              if (nextBg && isInlineImageDataUrl(nextBg.dataUrl)) {
+                pgChanged = true;
+                nextBg = {
+                  ...nextBg,
+                  dataUrl: storeMediaDataUrl(nextBg.dataUrl, `ink-ws-${pg.id}-${nextBg.id}`),
+                };
+              }
+              if (pgChanged) {
+                nbChanged = true;
+                return { ...pg, images: nextImages, worksheetBackground: nextBg };
+              }
+              return pg;
+            });
+            if (nbChanged) {
+              bucketChanged = true;
+              return { ...nb, pages: migratedPages };
+            }
+            return nb;
+          });
+          if (bucketChanged) {
+            changed = true;
+            nextBuckets[accountKey] = { ...bucket, notebooks: migratedNotebooks };
+          } else {
+            nextBuckets[accountKey] = bucket;
+          }
+        }
+        return {
+          activeAccountKey: state.activeAccountKey,
+          buckets: changed ? nextBuckets : state.buckets,
+          penPresets: state.penPresets,
+          activePenPresetId: state.activePenPresetId,
+        };
+      },
+      onRehydrateStorage: () => (rehydrated) => {
+        if (!rehydrated) return;
+        let hasInline = false;
+        for (const bucket of Object.values(rehydrated.buckets)) {
+          for (const nb of bucket.notebooks) {
+            for (const pg of nb.pages) {
+              if (
+                pg.images.some((im) => isInlineImageDataUrl(im.dataUrl)) ||
+                (pg.worksheetBackground && isInlineImageDataUrl(pg.worksheetBackground.dataUrl))
+              ) {
+                hasInline = true;
+                break;
+              }
+            }
+          }
+        }
+        if (hasInline) {
+          useInkNotebookStore.setState((s) => ({ buckets: { ...s.buckets } }));
+        }
+      },
     },
   ),
 );

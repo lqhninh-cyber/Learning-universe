@@ -4,12 +4,18 @@ import { getBibliographyEntry } from './manifest';
 
 export interface LessonContextValue {
   readonly lessonMeta: LessonMeta | null;
+  readonly lessonId: string | null;
+  readonly lessonTitle: string | null;
+  readonly lessonPath: string | null;
   readonly resolveBlock: (id: string) => LessonBlockInfo | undefined;
   readonly resolveSource: (sourceId: string) => BibliographyEntry | undefined;
 }
 
 const defaultLessonContextValue: LessonContextValue = {
   lessonMeta: null,
+  lessonId: null,
+  lessonTitle: null,
+  lessonPath: null,
   resolveBlock: () => undefined,
   resolveSource: (sourceId: string) => getBibliographyEntry(sourceId),
 };

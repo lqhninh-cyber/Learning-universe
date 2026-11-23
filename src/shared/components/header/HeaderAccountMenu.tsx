@@ -1,9 +1,26 @@
-import { BookOpen, LogIn, LogOut, SlidersHorizontal, User, Users } from 'lucide-react';
-import type { FC } from 'react';
+import {
+  BookOpen,
+  Download,
+  HardDrive,
+  LogIn,
+  LogOut,
+  SlidersHorizontal,
+  Upload,
+  User,
+  Users,
+} from 'lucide-react';
+import { type ChangeEvent, type FC, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { FONT_SIZE_LABELS, type ReadingFontSize } from '@/context/ReadingSettingsContext';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
+import {
+  applyBackupSnapshot,
+  downloadBackupSnapshot,
+  parseAndValidateBackup,
+  type BackupRestoreMode,
+} from '@/utils/backupSnapshot';
+import { estimateLocalStorageUsage } from '@/utils/safeStorage';
 
 export interface HeaderAccountMenuProps {
   readonly isOpen: boolean;
@@ -46,6 +63,50 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
     { id: 'lg', label: 'A+' },
   ];
   const isRail = placement === 'rail';
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [restoreMode, setRestoreMode] = useState<BackupRestoreMode>('merge');
+  const [backupNotice, setBackupNotice] = useState<{
+    readonly tone: 'success' | 'error';
+    readonly text: string;
+  } | null>(null);
+  const [, setUsageRefreshTick] = useState(0);
+
+  const storageUsage = isOpen ? estimateLocalStorageUsage() : null;
+
+  const handleExportBackup = () => {
+    downloadBackupSnapshot();
+    setBackupNotice({
+      tone: 'success',
+      text: 'Đã tải về tệp sao lưu JSON tiến độ & bài tập.',
+    });
+  };
+
+  const handleImportFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const raw = typeof reader.result === 'string' ? reader.result : '';
+      const result = parseAndValidateBackup(raw);
+      if (!result.ok) {
+        setBackupNotice({ tone: 'error', text: result.error });
+        return;
+      }
+      const summary = applyBackupSnapshot(result.data, restoreMode);
+      setUsageRefreshTick((t) => t + 1);
+      setBackupNotice({
+        tone: 'success',
+        text: `Đã khôi phục (${restoreMode === 'merge' ? 'gộp' : 'thay thế'}): ${summary.completedCount} bài · ${summary.exerciseCount} bài tập.`,
+      });
+    };
+    reader.onerror = () => {
+      setBackupNotice({ tone: 'error', text: 'Không thể đọc tệp sao lưu đã chọn.' });
+    };
+    reader.readAsText(file);
+  };
 
   return (
     <div className={cn('relative', isRail ? 'w-full' : 'hidden md:block')}>
@@ -91,7 +152,7 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
           role="menu"
           aria-label="Menu tài khoản và giao diện"
           className={cn(
-            'absolute z-50 w-64 rounded-2xl p-4 shadow-2xl backdrop-blur-xl',
+            'absolute z-50 w-72 rounded-2xl p-4 shadow-2xl backdrop-blur-xl',
             isRail ? 'bottom-0 left-full ml-3' : 'top-full right-0 mt-3',
             isRail
               ? 'border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]'
@@ -146,6 +207,118 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
               ))}
             </div>
           </div>
+
+          {/* Mục 2b: Dung lượng bộ nhớ cục bộ & Sao lưu / Khôi phục JSON */}
+          {storageUsage && (
+            <div
+              data-testid="profile-storage-backup-section"
+              className="space-y-2.5 border-b border-[var(--border-hairline)] py-3"
+            >
+              <div className="flex items-center justify-between text-xs font-semibold text-[var(--text-main)]">
+                <span className="inline-flex items-center gap-1.5">
+                  <HardDrive className="h-3.5 w-3.5 text-[var(--accent-os)]" aria-hidden="true" />
+                  <span>Bộ nhớ cục bộ</span>
+                </span>
+                <span
+                  data-testid="profile-storage-usage-text"
+                  className={cn(
+                    'font-mono text-[10.5px] font-semibold tabular-nums',
+                    storageUsage.percentUsed >= 85
+                      ? 'text-red-600 dark:text-red-400'
+                      : storageUsage.percentUsed >= 65
+                        ? 'text-[#9E763B] dark:text-[#D4AF6A]'
+                        : 'text-[var(--text-muted)]',
+                  )}
+                >
+                  {Math.round(storageUsage.totalKB)} / {storageUsage.quotaKB} KB
+                </span>
+              </div>
+
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-surface)]">
+                <div
+                  className={cn(
+                    'h-full rounded-full transition-all duration-300',
+                    storageUsage.percentUsed >= 85
+                      ? 'bg-red-500'
+                      : storageUsage.percentUsed >= 65
+                        ? 'bg-[#9E763B]'
+                        : 'bg-[var(--accent-os)]',
+                  )}
+                  style={{ width: `${Math.max(2, Math.min(100, storageUsage.percentUsed))}%` }}
+                />
+              </div>
+
+              <p className="font-mono text-[10px] leading-snug text-[var(--text-muted)] tabular-nums">
+                Tiến độ {Math.round(storageUsage.progressKB + storageUsage.workspaceKB)} KB · Vở
+                viết {Math.round(storageUsage.mathInkKB)} KB · Đề thi{' '}
+                {Math.round(storageUsage.examBuilderKB)} KB
+              </p>
+
+              <div className="space-y-1.5 pt-0.5">
+                <button
+                  type="button"
+                  data-testid="backup-export-btn"
+                  onClick={handleExportBackup}
+                  className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1.5 text-[11.5px] font-medium text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)]/50 hover:text-[var(--accent-os)]"
+                >
+                  <span>Xuất bản sao lưu (.json)</span>
+                  <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                </button>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    data-testid="backup-import-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex flex-1 cursor-pointer items-center justify-between rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1.5 text-[11.5px] font-medium text-[var(--text-main)] transition-colors hover:border-[var(--accent-os)]/50 hover:text-[var(--accent-os)]"
+                  >
+                    <span>Khôi phục từ tệp (.json)</span>
+                    <Upload className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="backup-restore-mode-toggle"
+                    onClick={() =>
+                      setRestoreMode((prev) => (prev === 'merge' ? 'replace' : 'merge'))
+                    }
+                    title={
+                      restoreMode === 'merge'
+                        ? 'Chế độ Gộp: giữ tiến độ cũ và bổ sung từ tệp'
+                        : 'Chế độ Thay thế: ghi đè toàn bộ bằng tệp sao lưu'
+                    }
+                    className="shrink-0 cursor-pointer rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)] hover:border-[var(--accent-os)]/40 hover:text-[var(--text-main)]"
+                  >
+                    {restoreMode === 'merge' ? 'Gộp' : 'Thay thế'}
+                  </button>
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json,application/json"
+                  data-testid="backup-import-input"
+                  onChange={handleImportFileChange}
+                  className="hidden"
+                  aria-label="Chọn tệp sao lưu JSON để khôi phục"
+                />
+
+                {backupNotice && (
+                  <p
+                    role="status"
+                    data-testid="backup-status-notice"
+                    className={cn(
+                      'rounded-lg border px-2.5 py-1.5 text-[11px] leading-snug',
+                      backupNotice.tone === 'error'
+                        ? 'border-red-300 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300'
+                        : 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300',
+                    )}
+                  >
+                    {backupNotice.text}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Liên kết Quản trị viên (nếu có quyền Admin) */}
           {isAdmin && (

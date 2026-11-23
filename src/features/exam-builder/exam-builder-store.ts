@@ -1,5 +1,7 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { deleteMediaAsset, isInlineImageDataUrl, storeMediaDataUrl } from '@/utils/mediaDb';
+import { safeStorage, STORAGE_KEYS } from '@/utils/safeStorage';
 import { createAlgebraSampleExam, createDefaultSampleExam } from './sampleExams';
 import type { ExamDocument, ExamImageAttachment } from './types';
 
@@ -208,7 +210,10 @@ export const useExamBuilderStore = create<ExamBuilderState>()(
         const key = state.activeAccountKey;
         const bucket = state.buckets[key] ?? createInitialBucket();
         const id = generateExamId('hinh');
-        const created: ExamImageAttachment = { ...imageInput, id };
+        const offloadedUri = isInlineImageDataUrl(imageInput.dataUrl)
+          ? storeMediaDataUrl(imageInput.dataUrl, `exam-${id}`)
+          : imageInput.dataUrl;
+        const created: ExamImageAttachment = { ...imageInput, id, dataUrl: offloadedUri };
         const nowIso = new Date().toISOString();
 
         const nextExams = bucket.exams.map((exam) =>
@@ -240,7 +245,9 @@ export const useExamBuilderStore = create<ExamBuilderState>()(
         if (!bucket) return;
 
         const nextExams = bucket.exams.map((exam) => {
-          if (exam.id !== bucket.activeExamId || !exam.images[imageId]) return exam;
+          const existingImage = exam.images[imageId];
+          if (exam.id !== bucket.activeExamId || !existingImage) return exam;
+          void deleteMediaAsset(existingImage.dataUrl);
           const nextImages = { ...exam.images };
           delete nextImages[imageId];
           return {
@@ -269,11 +276,64 @@ export const useExamBuilderStore = create<ExamBuilderState>()(
       },
     }),
     {
-      name: 'learning-universe-exam-builder-v1',
-      partialize: (state) => ({
-        activeAccountKey: state.activeAccountKey,
-        buckets: state.buckets,
-      }),
+      name: STORAGE_KEYS.examBuilder,
+      storage: createJSONStorage(() => safeStorage),
+      partialize: (state) => {
+        // Tự động di chuyển (lazy migrate) ảnh base64 cũ sang IndexedDB trước khi ghi localStorage
+        let changed = false;
+        const nextBuckets: Record<string, UserExamBucket> = {};
+        for (const [accountKey, bucket] of Object.entries(state.buckets)) {
+          let bucketChanged = false;
+          const migratedExams = bucket.exams.map((exam) => {
+            let examChanged = false;
+            const migratedImages: Record<string, ExamImageAttachment> = {};
+            for (const [imgId, img] of Object.entries(exam.images)) {
+              if (isInlineImageDataUrl(img.dataUrl)) {
+                examChanged = true;
+                migratedImages[imgId] = {
+                  ...img,
+                  dataUrl: storeMediaDataUrl(img.dataUrl, `exam-${exam.id}-${imgId}`),
+                };
+              } else {
+                migratedImages[imgId] = img;
+              }
+            }
+            if (examChanged) {
+              bucketChanged = true;
+              return { ...exam, images: migratedImages };
+            }
+            return exam;
+          });
+          if (bucketChanged) {
+            changed = true;
+            nextBuckets[accountKey] = { ...bucket, exams: migratedExams };
+          } else {
+            nextBuckets[accountKey] = bucket;
+          }
+        }
+        return {
+          activeAccountKey: state.activeAccountKey,
+          buckets: changed ? nextBuckets : state.buckets,
+        };
+      },
+      onRehydrateStorage: () => (rehydrated) => {
+        if (!rehydrated) return;
+        let hasInline = false;
+        for (const bucket of Object.values(rehydrated.buckets)) {
+          for (const exam of bucket.exams) {
+            for (const img of Object.values(exam.images)) {
+              if (isInlineImageDataUrl(img.dataUrl)) {
+                hasInline = true;
+                break;
+              }
+            }
+          }
+        }
+        if (hasInline) {
+          // Kích hoạt một lần set nhẹ để partialize ghi đè lại localStorage bằng idb:// gọn nhẹ
+          useExamBuilderStore.setState((s) => ({ buckets: { ...s.buckets } }));
+        }
+      },
     },
   ),
 );

@@ -1,6 +1,6 @@
 import { ArrowLeft, CheckCircle2, Link2, PanelLeft, PanelRight } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useLocation, useParams } from 'react-router';
 import {
   type CompiledLessonModule,
   getAdjacentLessons,
@@ -29,7 +29,6 @@ import { useLearningStore } from '@/features/learning';
 import {
   DevEditorialBar,
   LessonActionBar,
-  LessonNotesPanel,
   LessonPrevNextNav,
   LessonSidebar,
   SourcePanel,
@@ -39,6 +38,7 @@ import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
 import { FadeIn } from '@/shared/motion/FadeIn';
 import { Badge, Button, Card, Drawer, Skeleton } from '@/shared/ui';
+import { safeStorage } from '@/utils/safeStorage';
 
 function getCurriculumSource(slug: string): string {
   if (slug === 'giao-duc-hoc') {
@@ -140,19 +140,25 @@ function getLessonClos(tags: readonly string[], slug: string): readonly ChapterC
   ];
 }
 
+const SPLIT_PANE_STORAGE_KEY = 'lu_split_pane_open';
+
 function readInitialLeftSidebarOpen(): boolean {
   if (typeof window === 'undefined') return true;
-  try {
-    const saved = window.localStorage.getItem('lu_sidebar_collapsed');
-    if (saved === 'true') return false;
-    if (saved === 'false') return true;
-  } catch {
-    // Bỏ qua lỗi lưu trữ cục bộ
-  }
+  const saved = safeStorage.getItem('lu_sidebar_collapsed');
+  if (saved === 'true') return false;
+  if (saved === 'false') return true;
   return window.innerWidth >= 1280;
 }
 
+function readInitialSplitPaneOpen(): boolean {
+  const saved = safeStorage.getItem(SPLIT_PANE_STORAGE_KEY);
+  if (saved === 'false') return false;
+  if (saved === 'true') return true;
+  return true;
+}
+
 function LessonPageContent() {
+  const { pathname } = useLocation();
   const { subjectSlug, chapterSlug, lessonSlug } = useParams<{
     subjectSlug: string;
     chapterSlug: string;
@@ -168,9 +174,6 @@ function LessonPageContent() {
   const subjectId = location?.subject.id;
 
   const recordLessonVisit = useLearningStore((state) => state.recordLessonVisit);
-  const isAuthenticated = useLearningStore((state) => state.isAuthenticated);
-  const openNoteLessonId = useLearningStore((state) => state.openNoteLessonId);
-  const setOpenNoteLessonId = useLearningStore((state) => state.setOpenNoteLessonId);
   const isLessonCompleted = useLearningStore((state) =>
     Boolean(lessonId && state.completedLessons[lessonId]),
   );
@@ -180,7 +183,7 @@ function LessonPageContent() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(readInitialLeftSidebarOpen);
   const [isSidebarDrawerOpen, setIsSidebarDrawerOpen] = useState(false);
-  const [isSplitPaneOpen, setIsSplitPaneOpen] = useState<boolean>(true);
+  const [isSplitPaneOpen, setIsSplitPaneOpen] = useState<boolean>(readInitialSplitPaneOpen);
   const [isMobileSplitOpen, setIsMobileSplitOpen] = useState<boolean>(false);
   const [splitTab, setSplitTab] = useState<SplitStudyTab>('toc');
 
@@ -264,13 +267,14 @@ function LessonPageContent() {
     }
     setIsLeftSidebarOpen((prev) => {
       const next = !prev;
-      try {
-        window.localStorage.setItem('lu_sidebar_collapsed', String(!next));
-      } catch {
-        // Bỏ qua lỗi lưu trữ cục bộ
-      }
+      safeStorage.setItem('lu_sidebar_collapsed', String(!next));
       return next;
     });
+  }, []);
+
+  const handleSetSplitPaneOpen = useCallback((nextOpen: boolean) => {
+    setIsSplitPaneOpen(nextOpen);
+    safeStorage.setItem(SPLIT_PANE_STORAGE_KEY, String(nextOpen));
   }, []);
 
   const handleToggleSplitPane = useCallback(() => {
@@ -278,7 +282,11 @@ function LessonPageContent() {
       setIsMobileSplitOpen((prev) => !prev);
       return;
     }
-    setIsSplitPaneOpen((prev) => !prev);
+    setIsSplitPaneOpen((prev) => {
+      const next = !prev;
+      safeStorage.setItem(SPLIT_PANE_STORAGE_KEY, String(next));
+      return next;
+    });
   }, []);
 
   const handleTopBarComplete = useCallback(() => {
@@ -311,12 +319,6 @@ function LessonPageContent() {
     triggerIslandNotice({ text: `Đã hoàn thành ${shortLesson}`, type: 'success' });
   }, [lessonId, toggleLessonCompleted, triggerIslandNotice]);
 
-  const isNotesOpen = Boolean(lessonId && openNoteLessonId === lessonId);
-  const handleToggleNotes = useCallback(() => {
-    if (!lessonId) return;
-    setOpenNoteLessonId(isNotesOpen ? null : lessonId);
-  }, [isNotesOpen, lessonId, setOpenNoteLessonId]);
-
   const compiled = lessonId ? loadedMap[lessonId] : undefined;
 
   const inPageSearch = useInPageSearch({
@@ -324,8 +326,16 @@ function LessonPageContent() {
     contentReadyKey: lessonId ? `${lessonId}:${compiled ? 'ready' : 'loading'}` : 'none',
   });
 
-  // Gắn 4 công cụ trình đọc gọn nhẹ lên góc phải TopContextBar (topBarRightSlot)
-  const { setTopBarRightSlot } = useLayout();
+  // Gắn 4 công cụ trình đọc gọn nhẹ lên góc phải TopContextBar & tự thu gọn LeftRail về 60px trên desktop
+  const { setTopBarRightSlot, setRailCollapsed } = useLayout();
+  const didAutoCollapseRailRef = useRef(false);
+  useEffect(() => {
+    if (didAutoCollapseRailRef.current) return;
+    didAutoCollapseRailRef.current = true;
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      setRailCollapsed(true);
+    }
+  }, [setRailCollapsed]);
   const scalePercent = Math.round(readerSettings.fontScale * 100);
   const isMinScale = readerSettings.fontScale <= FONT_SCALE_MIN;
   const isMaxScale = readerSettings.fontScale >= FONT_SCALE_MAX;
@@ -666,13 +676,13 @@ function LessonPageContent() {
           </aside>
         )}
 
-        {/* CỘT GIỮA: Vùng đọc chuyên khảo Pure Monograph Typography (max-w-[760px]) */}
+        {/* CỘT GIỮA: Vùng đọc chuyên khảo Pure Monograph Typography (max-w-[780px]) */}
         <div
           role="region"
           aria-label="Nội dung bài giảng"
           className="min-w-0 flex-1 bg-[var(--bg-workspace)]"
         >
-          <div className="mx-auto w-full max-w-[760px] px-6 py-8 lg:px-10">
+          <div className="mx-auto w-full max-w-[780px] px-6 py-8 lg:px-10">
             {import.meta.env.DEV && (
               <div className="mb-4">
                 <DevEditorialBar lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
@@ -748,12 +758,7 @@ function LessonPageContent() {
               </EditorialChapterOpener>
 
               <div className="clear-both mb-5 flex flex-wrap items-center gap-2.5 border-b border-[var(--border-hairline)] pb-4">
-                <LessonActionBar
-                  lessonId={lesson.id}
-                  isNotesOpen={isNotesOpen}
-                  onToggleNotes={handleToggleNotes}
-                  readingTheme={readingTheme}
-                />
+                <LessonActionBar lessonId={lesson.id} readingTheme={readingTheme} />
               </div>
 
               <InPageSearchNavigator
@@ -766,17 +771,6 @@ function LessonPageContent() {
                 readingTheme={readingTheme}
               />
 
-              {isAuthenticated && isNotesOpen && (
-                <div className="mt-6">
-                  <LessonNotesPanel
-                    key={lesson.id}
-                    lessonId={lesson.id}
-                    lessonTitle={lesson.title}
-                    onClose={() => setOpenNoteLessonId(null)}
-                  />
-                </div>
-              )}
-
               <div className="mt-8">
                 {loadError ? (
                   <div
@@ -786,7 +780,13 @@ function LessonPageContent() {
                     {loadError}
                   </div>
                 ) : compiled ? (
-                  <LessonMdxView Content={compiled.default} lessonMeta={compiled.lessonMeta} />
+                  <LessonMdxView
+                    Content={compiled.default}
+                    lessonMeta={compiled.lessonMeta}
+                    lessonId={lesson.id}
+                    lessonTitle={lesson.title}
+                    lessonPath={pathname}
+                  />
                 ) : (
                   <div className="space-y-4" aria-label="Đang tải nội dung bài học">
                     <Skeleton className="h-8 w-2/3" />
@@ -799,18 +799,6 @@ function LessonPageContent() {
               <SourcePanel lesson={lesson} lessonMeta={compiled?.lessonMeta ?? null} />
 
               <footer className="mt-10 border-t border-[var(--border-hairline)] pt-6 print:hidden">
-                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                  <p className="text-xs text-[var(--text-muted)]">
-                    Hoàn thành bài học này? Hãy đánh dấu để cập nhật tiến độ học phần.
-                  </p>
-                  <LessonActionBar
-                    lessonId={lesson.id}
-                    isNotesOpen={isNotesOpen}
-                    onToggleNotes={handleToggleNotes}
-                    readingTheme={readingTheme}
-                  />
-                </div>
-
                 <LessonPrevNextNav subjectSlug={subject.slug} lessonId={lesson.id} />
               </footer>
             </article>
@@ -827,13 +815,14 @@ function LessonPageContent() {
             className="sticky top-12 hidden h-[calc(100vh-3rem)] w-[340px] shrink-0 border-l border-[var(--border-hairline)] bg-[var(--bg-shell)] lg:block xl:w-[380px] print:hidden"
           >
             <SplitStudyPane
+              lessonId={lesson.id}
               lessonTitle={lesson.title}
               lessonDescription={lesson.description}
               subjectSlug={subject.slug}
               lessonMeta={compiled?.lessonMeta ?? null}
               activeTab={splitTab}
               onTabChange={setSplitTab}
-              onClose={() => setIsSplitPaneOpen(false)}
+              onClose={() => handleSetSplitPaneOpen(false)}
             />
           </aside>
         )}
@@ -855,6 +844,7 @@ function LessonPageContent() {
           />
           <div className="relative z-10 h-full w-[min(92vw,380px)] border-l border-[var(--border-hairline)] bg-[var(--bg-shell)] shadow-xl">
             <SplitStudyPane
+              lessonId={lesson.id}
               lessonTitle={lesson.title}
               lessonDescription={lesson.description}
               subjectSlug={subject.slug}

@@ -95,7 +95,7 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     expect(screen.getByTestId('specimen-fx-bars')).toBeInTheDocument();
   });
 
-  it('4. Trang bài học: hiển thị MDX, mục lục, hoàn thành bài (D1), ghi chú và chuyển bài tiếp theo', async () => {
+  it('4. Trang bài học: hiển thị MDX, mục lục, hoàn thành bài duy nhất ở TopContextBar (D1), không còn Ghi chú trùng lặp và chuyển bài tiếp theo', async () => {
     const user = userEvent.setup();
     renderRoute(
       '/mon-hoc/cau-truc-dai-so/nhom-va-cac-vi-du-co-ban/nua-nhom-vi-nhom-va-tien-de-nhom',
@@ -124,14 +124,28 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     expect(screen.getByTestId('split-study-pane')).toBeInTheDocument();
     expect(screen.queryByTestId('split-tab-notes')).not.toBeInTheDocument();
 
+    // Xác nhận đã gỡ hoàn toàn nút Ghi chú cá nhân & nút Đánh dấu hoàn thành trùng lặp khỏi LessonActionBar
+    const actionBar = screen.getByTestId('lesson-action-bar');
+    expect(within(actionBar).queryByRole('button', { name: /Ghi chú/i })).not.toBeInTheDocument();
+    expect(
+      within(actionBar).queryByRole('button', { name: /Đánh dấu hoàn thành/i }),
+    ).not.toBeInTheDocument();
+
     await user.click(screen.getByTestId('split-tab-glossary'));
     expect(screen.getByTestId('split-panel-glossary')).toBeInTheDocument();
 
     await user.click(screen.getByTestId('split-tab-toc'));
     expect(screen.getByTestId('split-panel-toc')).toBeInTheDocument();
 
-    // Ở chế độ Khách (Guest), bấm "Đánh dấu hoàn thành" mở hộp thoại LoginPromptDialog (D1)
+    // Đóng Split-Pane -> lưu bền vững lu_split_pane_open='false' vào localStorage
+    await user.click(splitToggle);
+    expect(localStorage.getItem('lu_split_pane_open')).toBe('false');
+    await user.click(splitToggle);
+    expect(localStorage.getItem('lu_split_pane_open')).toBe('true');
+
+    // Ở chế độ Khách (Guest), bấm nút "Đánh dấu hoàn thành" duy nhất trên TopContextBar -> mở LoginPromptDialog (D1)
     const completeButtons = screen.getAllByRole('button', { name: /Đánh dấu hoàn thành/i });
+    expect(completeButtons).toHaveLength(1);
     await user.click(completeButtons[0]!);
 
     expect(
@@ -143,17 +157,6 @@ describe('Giai đoạn 3 — Không gian học tập công khai & Điều hướ
     expect(
       (await screen.findAllByRole('button', { name: /Đã hoàn thành bài học/i })).length,
     ).toBeGreaterThan(0);
-
-    // Mở khung ghi chú cá nhân và lưu ghi chú
-    const noteButtons = screen.getAllByRole('button', { name: /Ghi chú cá nhân/i });
-    await user.click(noteButtons[0]!);
-
-    const noteTextarea = await screen.findByRole('textbox', {
-      name: /Nội dung ghi chú cá nhân/i,
-    });
-    await user.type(noteTextarea, 'Cần nhớ công thức nghịch đảo của một tích.');
-    await user.click(screen.getByRole('button', { name: /Lưu ghi chú/i }));
-    expect(await screen.findByText(/Đã lưu ghi chú thành công/i)).toBeInTheDocument();
 
     // Điều hướng sang Bài tiếp theo (Bài 1.2: Lũy thừa nguyên, nhóm hữu hạn và bảng Cayley)
     const nextLink = screen.getByRole('link', {

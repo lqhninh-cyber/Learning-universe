@@ -4,6 +4,11 @@ import { type MouseEvent, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { MathRenderer } from '@/content-runtime';
 import {
+  buildExerciseStorageKey,
+  useLearningStore,
+  type ExercisePracticeStatus,
+} from '@/features/learning';
+import {
   getAllGlossaryEntries,
   InlineMathText,
   KatexMath,
@@ -17,6 +22,7 @@ import { matchesVietnameseQuery, stripDiacritics } from '@/shared/lib/vietnamese
 export type SplitStudyTab = 'toc' | 'glossary';
 
 export interface SplitStudyPaneProps {
+  readonly lessonId?: string;
   readonly lessonTitle: string;
   readonly lessonDescription?: string;
   readonly subjectSlug: string;
@@ -57,6 +63,12 @@ function getBlockKindBadge(name: string): { readonly label: string; readonly acc
       accentClass: 'bg-[var(--accent-os)]/10 text-[var(--accent-os)]',
     };
   }
+  if (name === 'Exercise') {
+    return {
+      label: 'Bài tập',
+      accentClass: 'bg-[#1B5E4A]/12 text-[#1B5E4A] dark:bg-[#52B394]/15 dark:text-[#52B394]',
+    };
+  }
   return {
     label: 'Ví dụ',
     accentClass: 'bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
@@ -65,10 +77,11 @@ function getBlockKindBadge(name: string): { readonly label: string; readonly acc
 
 /**
  * Ngăn kéo học tập chia đôi 2 Tab (Split-Pane Study Drawer) cho Academic OS:
- * 1. Mục lục: Scroll-Spy đề mục + Tóm tắt Định lý / Định nghĩa trong bài.
+ * 1. Mục lục: Scroll-Spy đề mục + Tóm tắt Định lý / Định nghĩa / Bài tập kèm tiến độ tự luyện.
  * 2. Thuật ngữ: Lọc ngữ cảnh theo môn & từ khóa xuất hiện trong bài, hỗ trợ tìm không dấu tiếng Việt.
  */
 export function SplitStudyPane({
+  lessonId,
   lessonTitle,
   lessonDescription = '',
   subjectSlug,
@@ -81,6 +94,35 @@ export function SplitStudyPane({
 }: SplitStudyPaneProps) {
   const headings = useMemo(() => lessonMeta?.headings ?? [], [lessonMeta?.headings]);
   const blocks = useMemo(() => lessonMeta?.blocks ?? [], [lessonMeta?.blocks]);
+  const exerciseStatusMap = useLearningStore((state) => state.exerciseStatus);
+  const [onlyReviewExercises, setOnlyReviewExercises] = useState(false);
+
+  const exerciseStats = useMemo(() => {
+    const effectiveLessonId = lessonId ?? 'standalone-lesson';
+    const exerciseBlocks = blocks.filter((b) => b.name === 'Exercise');
+    let done = 0;
+    let review = 0;
+    for (const block of exerciseBlocks) {
+      const exId = block.anchorId || block.id || `exercise-${block.number}`;
+      const st: ExercisePracticeStatus =
+        exerciseStatusMap[buildExerciseStorageKey(effectiveLessonId, exId)] ?? 'todo';
+      if (st === 'done') done += 1;
+      else if (st === 'review') review += 1;
+    }
+    return { total: exerciseBlocks.length, done, review };
+  }, [blocks, exerciseStatusMap, lessonId]);
+
+  const visibleBlocks = useMemo(() => {
+    if (!onlyReviewExercises) return blocks;
+    const effectiveLessonId = lessonId ?? 'standalone-lesson';
+    return blocks.filter((block) => {
+      if (block.name !== 'Exercise') return false;
+      const exId = block.anchorId || block.id || `exercise-${block.number}`;
+      return (
+        (exerciseStatusMap[buildExerciseStorageKey(effectiveLessonId, exId)] ?? 'todo') === 'review'
+      );
+    });
+  }, [blocks, exerciseStatusMap, lessonId, onlyReviewExercises]);
 
   // --- 1. Scroll-Spy cho Tab Mục lục ---
   const [activeAnchorId, setActiveAnchorId] = useState<string>('');
@@ -314,22 +356,60 @@ export function SplitStudyPane({
               )}
             </div>
 
-            {/* Tóm tắt Định lý / Định nghĩa trong bài */}
+            {/* Tóm tắt Định lý / Định nghĩa / Bài tập trong bài */}
             <div className="space-y-2 border-t border-[var(--border-hairline)] pt-4">
-              <div className="flex items-center justify-between px-1">
-                <p className="font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-                  Định nghĩa &amp; Định lý ({blocks.length})
-                </p>
+              <div className="space-y-2 px-1">
+                <div className="flex flex-wrap items-center justify-between gap-1.5">
+                  <p className="font-mono text-[10.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                    Định nghĩa &amp; Định lý / Bài tập ({blocks.length})
+                  </p>
+                </div>
+
+                {exerciseStats.total > 0 && (
+                  <div className="flex flex-wrap items-center justify-between gap-1.5">
+                    <span
+                      data-testid="split-exercise-progress"
+                      className="inline-flex items-center gap-1 rounded-md border border-[#1B5E4A]/25 bg-[#1B5E4A]/10 px-2 py-0.5 font-mono text-[10.5px] font-semibold text-[#1B5E4A] tabular-nums dark:border-[#52B394]/30 dark:bg-[#52B394]/15 dark:text-[#52B394]"
+                    >
+                      Bài tập: {exerciseStats.done}/{exerciseStats.total} đã giải
+                    </span>
+
+                    <button
+                      type="button"
+                      data-testid="split-exercise-filter-review"
+                      aria-pressed={onlyReviewExercises}
+                      onClick={() => setOnlyReviewExercises((prev) => !prev)}
+                      className={cn(
+                        'inline-flex cursor-pointer items-center gap-1 rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold transition-colors',
+                        onlyReviewExercises
+                          ? 'border-[#9E763B] bg-[#9E763B] text-white'
+                          : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[#9E763B] hover:border-[#9E763B]/60 dark:text-[#D4AF6A]',
+                      )}
+                    >
+                      <span>Cần xem lại ({exerciseStats.review})</span>
+                    </button>
+                  </div>
+                )}
               </div>
-              {blocks.length === 0 ? (
+
+              {visibleBlocks.length === 0 ? (
                 <p className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 text-xs text-[var(--text-muted)]">
-                  Chưa có khối định nghĩa hoặc định lý được đánh số trong bài này.
+                  {onlyReviewExercises
+                    ? 'Chưa có bài tập nào gắn cờ "Cần xem lại" trong bài này.'
+                    : 'Chưa có khối định nghĩa hoặc định lý được đánh số trong bài này.'}
                 </p>
               ) : (
                 <ul className="space-y-1.5">
-                  {blocks.map((block) => {
+                  {visibleBlocks.map((block) => {
                     const isActive = activeAnchorId === block.anchorId;
                     const badge = getBlockKindBadge(block.name);
+                    const exId = block.anchorId || block.id || `exercise-${block.number}`;
+                    const exStatus: ExercisePracticeStatus | null =
+                      block.name === 'Exercise'
+                        ? (exerciseStatusMap[
+                            buildExerciseStorageKey(lessonId ?? 'standalone-lesson', exId)
+                          ] ?? 'todo')
+                        : null;
                     return (
                       <li key={block.anchorId}>
                         <a
@@ -343,12 +423,25 @@ export function SplitStudyPane({
                           )}
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="font-mono text-[11px] font-semibold text-[var(--text-main)]">
-                              {block.label}
+                            <span className="inline-flex min-w-0 items-center gap-1.5 font-mono text-[11px] font-semibold text-[var(--text-main)]">
+                              {exStatus !== null && (
+                                <span
+                                  aria-hidden="true"
+                                  className={cn(
+                                    'h-2 w-2 shrink-0 rounded-full',
+                                    exStatus === 'done'
+                                      ? 'bg-[#1B5E4A] dark:bg-[#52B394]'
+                                      : exStatus === 'review'
+                                        ? 'bg-[#9E763B] dark:bg-[#D4AF6A]'
+                                        : 'bg-stone-300 dark:bg-stone-600',
+                                  )}
+                                />
+                              )}
+                              <span className="truncate">{block.label}</span>
                             </span>
                             <span
                               className={cn(
-                                'rounded px-1.5 py-0.5 font-mono text-[9.5px] font-semibold',
+                                'shrink-0 rounded px-1.5 py-0.5 font-mono text-[9.5px] font-semibold',
                                 badge.accentClass,
                               )}
                             >

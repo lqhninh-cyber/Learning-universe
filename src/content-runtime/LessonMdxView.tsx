@@ -31,6 +31,9 @@ function KatexDisplayBlock({
 export interface LessonMdxViewProps {
   readonly Content: ComponentType<{ components?: MDXComponents }>;
   readonly lessonMeta?: LessonMeta | null;
+  readonly lessonId?: string | null;
+  readonly lessonTitle?: string | null;
+  readonly lessonPath?: string | null;
   readonly bibliography?: readonly BibliographyEntry[];
   readonly className?: string;
   readonly courseId?: string;
@@ -106,13 +109,22 @@ function LessonMdxArticle({ Content, className }: LessonMdxArticleProps) {
 export function LessonMdxView({
   Content,
   lessonMeta = null,
+  lessonId = null,
+  lessonTitle = null,
+  lessonPath = null,
   bibliography,
   className,
   courseId,
 }: LessonMdxViewProps) {
   return (
     <TooltipProvider>
-      <LessonProvider lessonMeta={lessonMeta} bibliography={bibliography}>
+      <LessonProvider
+        lessonMeta={lessonMeta}
+        lessonId={lessonId}
+        lessonTitle={lessonTitle}
+        lessonPath={lessonPath}
+        bibliography={bibliography}
+      >
         <MathGlossaryProvider courseId={courseId}>
           <SidenoteProvider>
             <LessonMdxArticle Content={Content} className={className} />

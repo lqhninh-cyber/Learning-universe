@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { safeStorage, STORAGE_KEYS } from '@/utils/safeStorage';
 import {
   deleteExamMilestoneFromSupabase,
   deleteStudyTaskFromSupabase,
@@ -464,7 +465,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
       },
     }),
     {
-      name: 'learning-universe-workspace-v1',
+      name: STORAGE_KEYS.workspace,
+      storage: createJSONStorage(() => safeStorage),
       partialize: (state) => ({
         activeAccountKey: state.activeAccountKey,
         buckets: state.buckets,

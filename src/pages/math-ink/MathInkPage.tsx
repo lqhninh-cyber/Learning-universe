@@ -1,6 +1,10 @@
 import {
+  ArrowLeft,
   Box,
   Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   Compass,
   Download,
   Eraser,
@@ -39,7 +43,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { FolderNotebookSidebar } from '@/components/math-ink/FolderNotebookSidebar';
 import { FunctionGraphPopover } from '@/components/math-ink/FunctionGraphPopover';
 import {
@@ -57,7 +61,9 @@ import {
 import { Solid3DPopover } from '@/components/math-ink/Solid3DPopover';
 import { VariationTablePopover } from '@/components/math-ink/VariationTablePopover';
 import { WorksheetBackgroundPopover } from '@/components/math-ink/WorksheetBackgroundPopover';
+import { useLayout } from '@/context/LayoutContext';
 import { useExamBuilderStore } from '@/features/exam-builder';
+import { buildExerciseStorageKey, useLearningStore } from '@/features/learning';
 import { InlineMathText } from '@/features/math-glossary';
 import {
   buildMultiPagePdfBytes,
@@ -96,6 +102,12 @@ import {
 } from '@/features/math-ink';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
+import {
+  clearExerciseHandoff,
+  readExerciseHandoff,
+  type InkExerciseHandoff,
+} from '@/utils/exerciseHandoff';
+import { resolveMediaDataUrl } from '@/utils/mediaDb';
 
 type OpenPopoverKey =
   | null
@@ -199,6 +211,29 @@ function translateSelectedOnPage(
 
 export function MathInkPage() {
   const navigate = useNavigate();
+  const { setRailCollapsed } = useLayout();
+  const [pinnedExercise, setPinnedExercise] = useState<InkExerciseHandoff | null>(() =>
+    readExerciseHandoff(),
+  );
+  const [isPinnedExerciseCollapsed, setIsPinnedExerciseCollapsed] = useState(false);
+
+  const pinnedExerciseKey = pinnedExercise
+    ? buildExerciseStorageKey(pinnedExercise.lessonId, pinnedExercise.exerciseId)
+    : null;
+  const pinnedExerciseStatus = useLearningStore((state) =>
+    pinnedExerciseKey ? (state.exerciseStatus[pinnedExerciseKey] ?? 'todo') : 'todo',
+  );
+  const setExerciseStatus = useLearningStore((state) => state.setExerciseStatus);
+
+  // Tự động thu gọn LeftRail về 60px khi vào Bảng viết trên desktop để mở rộng tối đa mặt giấy
+  const didAutoCollapseRailRef = useRef(false);
+  useEffect(() => {
+    if (didAutoCollapseRailRef.current) return;
+    didAutoCollapseRailRef.current = true;
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+      setRailCollapsed(true);
+    }
+  }, [setRailCollapsed]);
   const bucket = useInkNotebookStore(selectActiveInkBucket);
   const folders = useInkNotebookStore(selectActiveInkFolders);
   const activeNotebook = useInkNotebookStore(selectActiveNotebook);
@@ -350,23 +385,34 @@ export function MathInkPage() {
 
   const dims = PAGE_DIMENSIONS[activeNotebook.paper.orientation];
 
-  // Nạp ảnh đính kèm & nền phiếu bài tập vào bộ nhớ đệm để Canvas vẽ sắc nét
+  // Nạp ảnh đính kèm & nền phiếu bài tập (hỗ trợ cả DataURL và idb:// từ IndexedDB) vào bộ nhớ đệm Canvas
   useEffect(() => {
-    for (const im of activePage.images) {
-      if (!imageCacheRef.current.has(im.id)) {
+    let cancelled = false;
+
+    const loadIntoCache = (id: string, rawUrl: string) => {
+      if (imageCacheRef.current.has(id)) return;
+      void resolveMediaDataUrl(rawUrl).then((resolved) => {
+        if (cancelled || !resolved || imageCacheRef.current.has(id)) return;
         const img = new Image();
-        img.onload = () => setImageCacheTick((t) => t + 1);
-        img.src = im.dataUrl;
-        imageCacheRef.current.set(im.id, img);
-      }
+        img.onload = () => {
+          if (!cancelled) setImageCacheTick((t) => t + 1);
+        };
+        img.src = resolved;
+        imageCacheRef.current.set(id, img);
+      });
+    };
+
+    for (const im of activePage.images) {
+      loadIntoCache(im.id, im.dataUrl);
     }
     const bg = activePage.worksheetBackground;
-    if (bg && !imageCacheRef.current.has(bg.id)) {
-      const img = new Image();
-      img.onload = () => setImageCacheTick((t) => t + 1);
-      img.src = bg.dataUrl;
-      imageCacheRef.current.set(bg.id, img);
+    if (bg) {
+      loadIntoCache(bg.id, bg.dataUrl);
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [activePage.images, activePage.worksheetBackground]);
 
   // Vòng kết xuất tia Laser trình chiếu (tự mờ biến mất sau 1.5 giây, không lưu vào vở)
@@ -1195,19 +1241,21 @@ export function MathInkPage() {
     if (isExportingPdf || activeNotebook.pages.length === 0) return;
     setIsExportingPdf(true);
     try {
-      const loadImage = (id: string, dataUrl: string): Promise<void> => {
+      const loadImage = async (id: string, rawUrl: string): Promise<void> => {
         const existing = imageCacheRef.current.get(id);
         if (existing && existing.complete && existing.naturalWidth > 0) {
-          return Promise.resolve();
+          return;
         }
-        return new Promise((resolve) => {
+        const resolvedUrl = await resolveMediaDataUrl(rawUrl);
+        if (!resolvedUrl) return;
+        await new Promise<void>((resolve) => {
           const img = new Image();
           img.onload = () => {
             imageCacheRef.current.set(id, img);
             resolve();
           };
           img.onerror = () => resolve();
-          img.src = dataUrl;
+          img.src = resolvedUrl;
         });
       };
 
@@ -2302,6 +2350,98 @@ export function MathInkPage() {
 
         {/* BÀN VIẾT CANVAS TƯƠNG TÁC */}
         <div className="os-thin-scrollbar relative flex-1 overflow-auto p-5 sm:p-8">
+          {/* THẺ ĐỀ BÀI GHIM NỔI TỪ BÀI GIẢNG (Nháp trên Bảng viết ↗) */}
+          {pinnedExercise && (
+            <aside
+              data-testid="ink-pinned-exercise-card"
+              aria-label={`Đề bài đang nháp: ${pinnedExercise.exerciseLabel}`}
+              className="sticky top-2 z-30 mx-auto mb-4 w-full max-w-2xl rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/96 shadow-lg backdrop-blur-md"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] px-3.5 py-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className="inline-flex shrink-0 items-center rounded-md bg-[var(--accent-os)]/12 px-2 py-0.5 font-mono text-[10.5px] font-bold text-[var(--accent-os)]">
+                    {pinnedExercise.exerciseLabel}
+                  </span>
+                  <span className="truncate text-xs font-semibold text-[var(--text-main)]">
+                    {pinnedExercise.exerciseTitle || pinnedExercise.lessonTitle}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button
+                    type="button"
+                    data-testid="ink-handoff-mark-done-btn"
+                    aria-pressed={pinnedExerciseStatus === 'done'}
+                    onClick={() =>
+                      setExerciseStatus(
+                        pinnedExercise.lessonId,
+                        pinnedExercise.exerciseId,
+                        pinnedExerciseStatus === 'done' ? 'todo' : 'done',
+                      )
+                    }
+                    className={cn(
+                      'inline-flex h-6 cursor-pointer items-center gap-1 rounded-md border px-2 text-[11px] font-semibold transition-colors',
+                      pinnedExerciseStatus === 'done'
+                        ? 'border-[#1B5E4A] bg-[#1B5E4A] text-white dark:border-[#52B394] dark:bg-[#1B5E4A]'
+                        : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:border-[#1B5E4A] hover:text-[#1B5E4A]',
+                    )}
+                  >
+                    <CheckCircle2 className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <span>
+                      {pinnedExerciseStatus === 'done' ? 'Đã giải xong' : 'Đánh dấu đã giải'}
+                    </span>
+                  </button>
+
+                  <Link
+                    to={pinnedExercise.returnPath}
+                    data-testid="ink-handoff-return-btn"
+                    className="inline-flex h-6 items-center gap-1 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-[11px] font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-os)] hover:text-[var(--accent-os)]"
+                  >
+                    <ArrowLeft className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <span>Quay lại bài giảng</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    data-testid="ink-handoff-collapse-btn"
+                    onClick={() => setIsPinnedExerciseCollapsed((prev) => !prev)}
+                    aria-expanded={!isPinnedExerciseCollapsed}
+                    aria-label={isPinnedExerciseCollapsed ? 'Mở rộng đề bài' : 'Thu gọn đề bài'}
+                    className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+                  >
+                    {isPinnedExerciseCollapsed ? (
+                      <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                    ) : (
+                      <ChevronUp className="h-3.5 w-3.5" aria-hidden="true" />
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    data-testid="ink-handoff-close-btn"
+                    onClick={() => {
+                      clearExerciseHandoff();
+                      setPinnedExercise(null);
+                    }}
+                    aria-label="Đóng thẻ đề bài ghim"
+                    className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
+                  >
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+
+              {!isPinnedExerciseCollapsed && (
+                <div
+                  data-testid="ink-pinned-exercise-body"
+                  className="os-thin-scrollbar max-h-44 overflow-y-auto px-4 py-3 text-[13.5px] leading-relaxed whitespace-pre-line text-[var(--text-main)]"
+                >
+                  <InlineMathText text={pinnedExercise.promptText} />
+                </div>
+              )}
+            </aside>
+          )}
+
           {/* Thanh nổi cho Bút Laser trình chiếu */}
           {activeTool === 'laser' && (
             <div
