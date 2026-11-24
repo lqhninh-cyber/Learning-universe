@@ -45,6 +45,7 @@ export function createBlankInkPage(
     graphs: [],
     variationTables: [],
     stamps: [],
+    geoObjects: [],
     texts: [],
     images: [],
     worksheetBackground,
@@ -52,13 +53,18 @@ export function createBlankInkPage(
 }
 
 function normalizePage(page: InkPage): InkPage {
-  if (Array.isArray(page.variationTables) && Array.isArray(page.stamps)) {
+  if (
+    Array.isArray(page.variationTables) &&
+    Array.isArray(page.stamps) &&
+    Array.isArray(page.geoObjects)
+  ) {
     return page;
   }
   return {
     ...page,
     variationTables: Array.isArray(page.variationTables) ? page.variationTables : [],
     stamps: Array.isArray(page.stamps) ? page.stamps : [],
+    geoObjects: Array.isArray(page.geoObjects) ? page.geoObjects : [],
     worksheetBackground: page.worksheetBackground ?? null,
   };
 }
@@ -157,6 +163,7 @@ export interface InkNotebookState {
   // Quản lý vở ghi chép
   selectNotebook: (notebookId: string) => void;
   createNotebook: (title?: string, folderId?: string | null) => InkNotebook;
+  renameNotebook: (notebookId: string, title: string) => void;
   renameActiveNotebook: (title: string) => void;
   deleteNotebook: (notebookId: string) => void;
 
@@ -391,7 +398,9 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         return nb;
       },
 
-      renameActiveNotebook: (title) => {
+      renameNotebook: (notebookId, title) => {
+        const trimmed = title.trim();
+        if (!trimmed) return;
         const state = get();
         const key = state.activeAccountKey;
         const bucket = normalizeBucket(state.buckets[key]);
@@ -402,11 +411,18 @@ export const useInkNotebookStore = create<InkNotebookState>()(
             [key]: {
               ...bucket,
               notebooks: bucket.notebooks.map((nb) =>
-                nb.id === bucket.activeNotebookId ? { ...nb, title, updatedAt: nowIso } : nb,
+                nb.id === notebookId ? { ...nb, title: trimmed, updatedAt: nowIso } : nb,
               ),
             },
           },
         });
+      },
+
+      renameActiveNotebook: (title) => {
+        const state = get();
+        const key = state.activeAccountKey;
+        const bucket = normalizeBucket(state.buckets[key]);
+        get().renameNotebook(bucket.activeNotebookId, title);
       },
 
       deleteNotebook: (notebookId) => {

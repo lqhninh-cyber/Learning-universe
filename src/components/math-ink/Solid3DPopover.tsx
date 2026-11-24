@@ -19,8 +19,10 @@ import {
   useState,
 } from 'react';
 import {
+  formatRatioLabel,
   getSolidPresetSchema,
   hitTestSolid3DScene,
+  parseRatioInput,
   renderSolid3DOnCanvas,
   resolveSolidVertexLabel,
   SOLID_3D_PRESETS,
@@ -148,6 +150,7 @@ export const Solid3DPopover: FC<Solid3DPopoverProps> = ({
   const [pointFromId, setPointFromId] = useState<string>(primaryVertices[0]?.id ?? 'S');
   const [pointToId, setPointToId] = useState<string>(primaryVertices[1]?.id ?? 'A');
   const [pointRatio, setPointRatio] = useState<number>(0.5);
+  const [customRatioText, setCustomRatioText] = useState<string>('1/2');
   const [facePointFaceIdx, setFacePointFaceIdx] = useState(0);
   const [facePointPosIdx, setFacePointPosIdx] = useState(0);
   const [midpointLabel, setMidpointLabel] = useState('M');
@@ -347,20 +350,33 @@ export const Solid3DPopover: FC<Solid3DPopoverProps> = ({
 
     if (constType === 'midpoint') {
       if (hit.kind === 'edge-midpoint') {
-        const edgeIdx = primaryEdges.findIndex(
-          (e) =>
-            (e.from === hit.fromId && e.to === hit.toId) ||
-            (e.from === hit.toId && e.to === hit.fromId),
+        const label = midpointLabel.trim() || 'M';
+        const isMid = Math.abs(hit.ratio - 0.5) < 0.015;
+        const next: Solid3DConstruction = isMid
+          ? {
+              id: makeConstructionId('mid'),
+              kind: 'midpoint',
+              fromVertex: hit.fromId,
+              toVertex: hit.toId,
+              label,
+              color: constColor,
+            }
+          : {
+              id: makeConstructionId('rat'),
+              kind: 'ratio-point',
+              fromPoint: hit.fromId,
+              toPoint: hit.toId,
+              ratio: hit.ratio,
+              label,
+              color: constColor,
+            };
+        setConstructions((prev) => [...prev, next]);
+        setMidpointLabel(nextPointLabel(label));
+        setPointRatio(hit.ratio);
+        setCustomRatioText(hit.ratioLabel);
+        setLastCanvasHint(
+          `Đã chèn điểm ${label} ∈ ${hit.fromLabel}${hit.toLabel} (k = ${hit.ratioLabel})`,
         );
-        if (edgeIdx >= 0) {
-          setPointSource('edge');
-          setSelectedEdgeIdx(edgeIdx);
-        } else {
-          setPointSource('two-points');
-          setPointFromId(hit.fromId);
-          setPointToId(hit.toId);
-        }
-        setLastCanvasHint(`Đã chọn cạnh ${hit.fromLabel}${hit.toLabel} — Bấm "+ Thêm" để tạo điểm`);
       } else {
         setPointSource('two-points');
         if (pointFromId !== hit.id && pointToId !== hit.id) {
@@ -830,7 +846,7 @@ export const Solid3DPopover: FC<Solid3DPopoverProps> = ({
           <div className="pointer-events-none absolute top-2 left-2 rounded-md border border-[var(--accent-os)]/30 bg-[var(--bg-workspace)]/90 px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--accent-os)] shadow-sm">
             {hoveredHit.kind === 'point'
               ? `Đỉnh/Điểm ${hoveredHit.label} — Bấm để chọn`
-              : `Cạnh ${hoveredHit.fromLabel}${hoveredHit.toLabel} — Bấm để chọn nhanh`}
+              : `Cạnh ${hoveredHit.fromLabel}${hoveredHit.toLabel} · k = ${hoveredHit.ratioLabel} — Bấm để chèn điểm ngay`}
           </div>
         )}
         <div className="flex items-center justify-between border-t border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1 font-mono text-[10px] text-[var(--text-muted)]">
@@ -1203,28 +1219,76 @@ export const Solid3DPopover: FC<Solid3DPopoverProps> = ({
               </div>
 
               {pointSource !== 'face-point' && (
-                <div className="flex flex-wrap items-center justify-between gap-1 pt-0.5">
-                  <span className="font-mono text-[10px] text-[var(--text-muted)]">Tỉ số k:</span>
-                  <div className="flex items-center gap-1">
-                    {RATIO_PRESETS.map((r) => {
-                      const active = Math.abs(pointRatio - r.value) < 0.02;
-                      return (
-                        <button
-                          key={r.label}
-                          type="button"
-                          data-testid={`point-ratio-${r.label.split(' ')[0]}`}
-                          onClick={() => setPointRatio(r.value)}
-                          className={cn(
-                            'cursor-pointer rounded border px-1.5 py-0.5 font-mono text-[10px]',
-                            active
-                              ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                              : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
-                          )}
-                        >
-                          {r.label}
-                        </button>
-                      );
-                    })}
+                <div className="space-y-1.5 pt-0.5">
+                  <div className="flex flex-wrap items-center justify-between gap-1">
+                    <span className="font-mono text-[10px] text-[var(--text-muted)]">Tỉ số k:</span>
+                    <div className="flex items-center gap-1">
+                      {RATIO_PRESETS.map((r) => {
+                        const active = Math.abs(pointRatio - r.value) < 0.02;
+                        return (
+                          <button
+                            key={r.label}
+                            type="button"
+                            data-testid={`point-ratio-${r.label.split(' ')[0]}`}
+                            onClick={() => {
+                              setPointRatio(r.value);
+                              setCustomRatioText(formatRatioLabel(r.value));
+                            }}
+                            className={cn(
+                              'cursor-pointer rounded border px-1.5 py-0.5 font-mono text-[10px]',
+                              active
+                                ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
+                            )}
+                          >
+                            {r.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="range"
+                      aria-label="Thanh trượt tỉ số chia cạnh"
+                      min={0.05}
+                      max={0.95}
+                      step={0.01}
+                      value={pointRatio}
+                      onChange={(e) => {
+                        const nextVal = Number(e.target.value);
+                        setPointRatio(nextVal);
+                        setCustomRatioText(formatRatioLabel(nextVal));
+                      }}
+                      className="min-w-0 flex-1 accent-[var(--accent-os)]"
+                    />
+                    <input
+                      type="text"
+                      aria-label="Nhập tỉ số tùy chỉnh (VD: 1/5, 2/7, 0.35)"
+                      data-testid="solid-ratio-custom-input"
+                      value={customRatioText}
+                      onChange={(e) => setCustomRatioText(e.target.value)}
+                      onBlur={() => {
+                        const parsed = parseRatioInput(customRatioText);
+                        if (parsed !== null) {
+                          setPointRatio(parsed);
+                          setCustomRatioText(formatRatioLabel(parsed));
+                        } else {
+                          setCustomRatioText(formatRatioLabel(pointRatio));
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const parsed = parseRatioInput(customRatioText);
+                          if (parsed !== null) {
+                            setPointRatio(parsed);
+                            setCustomRatioText(formatRatioLabel(parsed));
+                          }
+                        }
+                      }}
+                      placeholder="1/5"
+                      className="w-14 rounded-md border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-0.5 text-center font-mono text-[10.5px]"
+                    />
                   </div>
                 </div>
               )}

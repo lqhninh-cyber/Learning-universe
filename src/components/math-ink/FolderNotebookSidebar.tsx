@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Check,
   ChevronDown,
   ChevronRight,
   Copy,
@@ -22,7 +23,8 @@ export interface FolderNotebookSidebarProps {
   readonly notebooks: readonly InkNotebook[];
   readonly activeNotebook: InkNotebook;
   readonly onSelectNotebook: (notebookId: string) => void;
-  readonly onCreateNotebook: (title?: string, folderId?: string | null) => void;
+  readonly onCreateNotebook: (title?: string, folderId?: string | null) => InkNotebook | void;
+  readonly onRenameNotebook?: (notebookId: string, title: string) => void;
   readonly onRenameActiveNotebook: (title: string) => void;
   readonly onDeleteNotebook: (notebookId: string) => void;
   readonly onMoveNotebook: (notebookId: string, folderId: string | null) => void;
@@ -43,6 +45,7 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
   activeNotebook,
   onSelectNotebook,
   onCreateNotebook,
+  onRenameNotebook,
   onRenameActiveNotebook,
   onDeleteNotebook,
   onMoveNotebook,
@@ -70,6 +73,10 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
   // Đổi tên thư mục inline
   const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [editingFolderName, setEditingFolderName] = useState('');
+
+  // Đổi tên file vở ghi chép inline (hỗ trợ bấm biểu tượng bút chì hoặc nhấp đúp tên file)
+  const [editingNotebookId, setEditingNotebookId] = useState<string | null>(null);
+  const [editingNotebookTitle, setEditingNotebookTitle] = useState('');
 
   // Đang mở hộp chuyển thư mục cho 1 vở
   const [movingNotebookId, setMovingNotebookId] = useState<string | null>(null);
@@ -112,9 +119,28 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
     setEditingFolderId(null);
   };
 
+  const commitRenameNotebook = (notebookId: string) => {
+    const trimmed = editingNotebookTitle.trim();
+    if (trimmed) {
+      if (onRenameNotebook) {
+        onRenameNotebook(notebookId, trimmed);
+      } else {
+        onSelectNotebook(notebookId);
+        onRenameActiveNotebook(trimmed);
+      }
+    }
+    setEditingNotebookId(null);
+  };
+
+  const handleRenameNotebookSubmit = (e: FormEvent, notebookId: string) => {
+    e.preventDefault();
+    commitRenameNotebook(notebookId);
+  };
+
   const renderNotebookRow = (nb: InkNotebook) => {
     const isActive = nb.id === activeNotebook.id;
     const isMoving = movingNotebookId === nb.id;
+    const isRenaming = editingNotebookId === nb.id;
 
     return (
       <div
@@ -128,53 +154,110 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
         )}
       >
         <div className="flex items-center justify-between gap-1.5">
-          <button
-            type="button"
-            onClick={() => onSelectNotebook(nb.id)}
-            className="flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 text-left"
-          >
-            <FileText
-              className={cn(
-                'h-3.5 w-3.5 shrink-0',
-                isActive ? 'text-[var(--accent-os)]' : 'text-[var(--text-muted)]',
-              )}
-              aria-hidden="true"
-            />
-            <span
-              className={cn(
-                'truncate text-[11.5px]',
-                isActive ? 'font-semibold text-[var(--accent-os)]' : 'text-[var(--text-main)]',
-              )}
+          {isRenaming ? (
+            <form
+              onSubmit={(e) => handleRenameNotebookSubmit(e, nb.id)}
+              className="flex min-w-0 flex-1 items-center gap-1"
             >
-              {nb.title}
-            </span>
-          </button>
-
-          <div className="flex shrink-0 items-center gap-0.5">
-            <span className="font-mono text-[9.5px] text-[var(--text-muted)] tabular-nums">
-              {nb.pages.length}tr
-            </span>
-            <button
-              type="button"
-              title="Chuyển sang thư mục khác"
-              aria-label={`Chuyển thư mục cho ${nb.title}`}
-              onClick={() => setMovingNotebookId(isMoving ? null : nb.id)}
-              className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-65 hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)] hover:opacity-100"
-            >
-              <Folder className="h-3 w-3" aria-hidden="true" />
-            </button>
-            {notebooks.length > 1 && (
+              <FileText
+                className="h-3.5 w-3.5 shrink-0 text-[var(--accent-os)]"
+                aria-hidden="true"
+              />
+              <input
+                type="text"
+                autoFocus
+                data-testid="sidebar-rename-notebook-input"
+                value={editingNotebookTitle}
+                onChange={(e) => setEditingNotebookTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    e.stopPropagation();
+                    setEditingNotebookId(null);
+                  }
+                }}
+                onBlur={() => commitRenameNotebook(nb.id)}
+                aria-label="Tên mới của vở ghi chép"
+                className="min-w-0 flex-1 rounded border border-[var(--accent-os)] bg-[var(--bg-workspace)] px-1.5 py-0.5 text-[11.5px] font-medium text-[var(--text-main)] focus:outline-none"
+              />
+              <button
+                type="submit"
+                onMouseDown={(e) => e.preventDefault()}
+                title="Lưu tên vở"
+                aria-label="Lưu tên vở"
+                className="inline-flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded bg-[var(--accent-os)] text-white"
+              >
+                <Check className="h-3 w-3" aria-hidden="true" />
+              </button>
+            </form>
+          ) : (
+            <>
               <button
                 type="button"
-                title="Xóa vở"
-                aria-label={`Xóa vở ${nb.title}`}
-                onClick={() => onDeleteNotebook(nb.id)}
-                className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-65 hover:bg-[var(--bg-surface)] hover:text-[#8F3D35] hover:opacity-100"
+                onClick={() => onSelectNotebook(nb.id)}
+                onDoubleClick={() => {
+                  setEditingNotebookId(nb.id);
+                  setEditingNotebookTitle(nb.title);
+                }}
+                title={`${nb.title} (Nhấp đúp hoặc bấm biểu tượng bút để đổi tên)`}
+                className="flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 text-left"
               >
-                <Trash2 className="h-3 w-3" aria-hidden="true" />
+                <FileText
+                  className={cn(
+                    'h-3.5 w-3.5 shrink-0',
+                    isActive ? 'text-[var(--accent-os)]' : 'text-[var(--text-muted)]',
+                  )}
+                  aria-hidden="true"
+                />
+                <span
+                  className={cn(
+                    'truncate text-[11.5px]',
+                    isActive ? 'font-semibold text-[var(--accent-os)]' : 'text-[var(--text-main)]',
+                  )}
+                >
+                  {nb.title}
+                </span>
               </button>
-            )}
-          </div>
+
+              <div className="flex shrink-0 items-center gap-0.5">
+                <span className="font-mono text-[9.5px] text-[var(--text-muted)] tabular-nums">
+                  {nb.pages.length}tr
+                </span>
+                <button
+                  type="button"
+                  data-testid={`rename-notebook-btn-${nb.id}`}
+                  title="Đổi tên file vở"
+                  aria-label={`Đổi tên vở ${nb.title}`}
+                  onClick={() => {
+                    setEditingNotebookId(nb.id);
+                    setEditingNotebookTitle(nb.title);
+                  }}
+                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-70 hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)] hover:opacity-100"
+                >
+                  <Pencil className="h-2.5 w-2.5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  title="Chuyển sang thư mục khác"
+                  aria-label={`Chuyển thư mục cho ${nb.title}`}
+                  onClick={() => setMovingNotebookId(isMoving ? null : nb.id)}
+                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-70 hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)] hover:opacity-100"
+                >
+                  <Folder className="h-3 w-3" aria-hidden="true" />
+                </button>
+                {notebooks.length > 1 && (
+                  <button
+                    type="button"
+                    title="Xóa vở"
+                    aria-label={`Xóa vở ${nb.title}`}
+                    onClick={() => onDeleteNotebook(nb.id)}
+                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-70 hover:bg-[var(--bg-surface)] hover:text-[#8F3D35] hover:opacity-100"
+                  >
+                    <Trash2 className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         {isMoving && (
@@ -284,7 +367,11 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                       aria-label={`Thêm vở mới vào ${folder.name}`}
                       onClick={() => {
                         setExpandedFolders((prev) => ({ ...prev, [folder.id]: true }));
-                        onCreateNotebook(undefined, folder.id);
+                        const created = onCreateNotebook(undefined, folder.id);
+                        if (created) {
+                          setEditingNotebookId(created.id);
+                          setEditingNotebookTitle(created.title);
+                        }
                       }}
                       className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)]"
                     >

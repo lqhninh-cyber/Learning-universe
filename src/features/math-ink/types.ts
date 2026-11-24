@@ -33,7 +33,203 @@ export type ShapeToolKind =
   | 'pentagon'
   | 'hexagon';
 
-export type InkActiveTool = 'pen' | 'shape' | 'eraser' | 'select' | 'text' | 'stamp' | 'laser';
+export type InkActiveTool =
+  'pen' | 'shape' | 'eraser' | 'select' | 'text' | 'stamp' | 'laser' | 'geo';
+
+export type GeoToolKind =
+  | 'move'
+  | 'point-free'
+  | 'point-on-object'
+  | 'midpoint'
+  | 'centroid'
+  | 'intersect'
+  | 'segment'
+  | 'line'
+  | 'ray'
+  | 'vector'
+  | 'perpendicular'
+  | 'parallel'
+  | 'perp-bisector'
+  | 'angle-bisector'
+  | 'tangent'
+  | 'polygon'
+  | 'circle-center-point'
+  | 'circle-3pts'
+  | 'ellipse';
+
+export type GeoPointObject =
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'free';
+      readonly x: number;
+      readonly y: number;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'on-segment';
+      /** ID của đối tượng GeoLineObject mà điểm trượt dọc theo */
+      readonly targetId: string;
+      /** Tỉ số chia đoạn t ∈ [0.02, 0.98] (cho đoạn/tia/đường thẳng) */
+      readonly t: number;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'on-circle';
+      /** ID của đối tượng GeoConicObject (đường tròn/elip) */
+      readonly targetId: string;
+      readonly angleRad: number;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'midpoint';
+      readonly p1Id: string;
+      readonly p2Id: string;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'centroid';
+      readonly pointIds: readonly string[];
+      readonly showMedians?: boolean;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'intersection';
+      readonly obj1Id: string;
+      readonly obj2Id: string;
+      readonly branch?: 0 | 1;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-point';
+      readonly pointMode: 'projection';
+      readonly sourcePointId: string;
+      readonly lineId: string;
+      readonly label: string;
+      readonly color: string;
+      readonly showLabel?: boolean;
+    };
+
+export type GeoLineObject =
+  | {
+      readonly id: string;
+      readonly kind: 'geo-line';
+      readonly lineMode: 'segment' | 'line' | 'ray' | 'vector' | 'perp-bisector';
+      readonly p1Id: string;
+      readonly p2Id: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly label?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-line';
+      readonly lineMode: 'perpendicular' | 'parallel';
+      readonly throughPointId: string;
+      readonly refLineId: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly label?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-line';
+      readonly lineMode: 'angle-bisector';
+      readonly p1Id: string;
+      readonly vertexId: string;
+      readonly p3Id: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly label?: string;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-line';
+      readonly lineMode: 'tangent';
+      readonly throughPointId: string;
+      readonly circleId: string;
+      readonly branch: 0 | 1;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly label?: string;
+    };
+
+export type GeoConicObject =
+  | {
+      readonly id: string;
+      readonly kind: 'geo-conic';
+      readonly conicMode: 'circle-center-point';
+      readonly centerId: string;
+      readonly throughId: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly fillOpacity?: number;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-conic';
+      readonly conicMode: 'circle-3pts';
+      readonly p1Id: string;
+      readonly p2Id: string;
+      readonly p3Id: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly fillOpacity?: number;
+    }
+  | {
+      readonly id: string;
+      readonly kind: 'geo-conic';
+      readonly conicMode: 'ellipse';
+      readonly centerId: string;
+      readonly axis1Id: string;
+      readonly axis2Id: string;
+      readonly style: 'solid' | 'dashed';
+      readonly color: string;
+      readonly width: number;
+      readonly fillOpacity?: number;
+    };
+
+export interface GeoPolygonObject {
+  readonly id: string;
+  readonly kind: 'geo-polygon';
+  readonly pointIds: readonly string[];
+  readonly color: string;
+  readonly fillOpacity: number;
+  readonly borderStyle: 'solid' | 'dashed';
+  readonly width: number;
+  readonly label?: string;
+}
+
+export type GeoObject = GeoPointObject | GeoLineObject | GeoConicObject | GeoPolygonObject;
 
 export type VariationTableMode = 'variation' | 'sign';
 export type VariationMarkerKind = 'zero' | 'double-bar' | 'bar' | 'none';
@@ -286,6 +482,7 @@ export interface InkPage {
   readonly graphs: readonly InkGraphItem[];
   readonly variationTables: readonly InkVariationTableItem[];
   readonly stamps: readonly InkStampItem[];
+  readonly geoObjects?: readonly GeoObject[];
   readonly texts: readonly InkTextItem[];
   readonly images: readonly InkImageItem[];
   readonly worksheetBackground?: InkWorksheetBackground | null;

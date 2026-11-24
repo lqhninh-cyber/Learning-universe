@@ -1,3 +1,4 @@
+import { evaluateGeoScene, renderGeoSceneOnCanvas, type GeoOverlayState } from './geoEngine';
 import { renderGeometryStampOnCanvas } from './geometryStampEngine';
 import {
   compileMathExpression,
@@ -913,6 +914,7 @@ export interface PageRenderOptions {
   readonly lassoPoints?: readonly InkPoint[];
   readonly selectedIds?: ReadonlySet<string>;
   readonly spacerLineY?: number | null;
+  readonly geoOverlay?: GeoOverlayState;
 }
 
 function drawWorksheetBackground(
@@ -1013,6 +1015,12 @@ export function renderInkPageToCanvas(
       ctx.stroke();
       ctx.restore();
     }
+  }
+
+  // 4c. Lớp Hình học động GeoGebra (Điểm, Tỉ lệ, Trung điểm, Giao điểm, Vuông góc/Song song, Đường tròn, Elip, Đa giác/Mặt phẳng)
+  if ((page.geoObjects && page.geoObjects.length > 0) || opts.geoOverlay?.hoveredHit) {
+    const geoScene = evaluateGeoScene(page.geoObjects);
+    renderGeoSceneOnCanvas(ctx, geoScene, width, height, opts.geoOverlay);
   }
 
   // 5. Các nét mực viết tay (dạ quang vẽ trước để không che chữ mực đậm)

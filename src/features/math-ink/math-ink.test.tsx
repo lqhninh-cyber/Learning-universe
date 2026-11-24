@@ -8,11 +8,14 @@ import {
   computeVariationAnchors,
   doesStampHitPoint,
   eraseStrokeSegment,
+  evaluateGeoScene,
   evaluateSolidConstructions,
   findSpecialGraphPoints,
   GEOMETRY_STAMP_PRESETS,
   getSolidPresetSchema,
+  hitTestGeoScene,
   hitTestSolid3DScene,
+  parseRatioInput,
   recognizeInkGesture,
   resolveSolidVertexLabel,
   rotatePoint3D,
@@ -21,6 +24,7 @@ import {
   selectActiveNotebook,
   smoothStrokePoints,
   snapPointToRulerEdge,
+  snapRatioToNiceFraction,
   SOLID_3D_PRESETS,
   stabilizeInkPoint,
   useInkNotebookStore,
@@ -563,5 +567,151 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
       'contain',
     );
     expect(screen.getByTestId('ink-export-pdf')).toBeInTheDocument();
+  });
+
+  it('Đổi tên file vở trực tiếp (sidebar & thanh công cụ), hộp Phiếu đề định vị fixed chống che khuất và Chế độ Dựng Hình Động GeoGebra', () => {
+    // 1. Kiểm thử bộ phân tích tỉ số linh hoạt & động cơ giải hình học động GeoGebra
+    expect(parseRatioInput('1/5')).toBeCloseTo(0.2, 4);
+    expect(parseRatioInput('2/5')).toBeCloseTo(0.4, 4);
+    expect(parseRatioInput('35%')).toBeCloseTo(0.35, 4);
+    expect(parseRatioInput('0.62')).toBeCloseTo(0.62, 4);
+    expect(snapRatioToNiceFraction(0.34).label).toBe('1/3');
+    expect(snapRatioToNiceFraction(0.51).label).toBe('1/2');
+
+    const scene = evaluateGeoScene([
+      {
+        id: 'pA',
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: 100,
+        y: 200,
+        label: 'A',
+        color: '#1D4ED8',
+      },
+      {
+        id: 'pB',
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: 300,
+        y: 200,
+        label: 'B',
+        color: '#1D4ED8',
+      },
+      {
+        id: 'pC',
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: 200,
+        y: 100,
+        label: 'C',
+        color: '#1D4ED8',
+      },
+      {
+        id: 'lAB',
+        kind: 'geo-line',
+        lineMode: 'segment',
+        p1Id: 'pA',
+        p2Id: 'pB',
+        style: 'solid',
+        color: '#1D4ED8',
+        width: 2,
+      },
+      {
+        id: 'pM',
+        kind: 'geo-point',
+        pointMode: 'on-segment',
+        targetId: 'lAB',
+        t: 0.25,
+        label: 'M',
+        color: '#DC2626',
+      },
+      {
+        id: 'pMid',
+        kind: 'geo-point',
+        pointMode: 'midpoint',
+        p1Id: 'pA',
+        p2Id: 'pC',
+        label: 'N',
+        color: '#DC2626',
+      },
+      {
+        id: 'pH',
+        kind: 'geo-point',
+        pointMode: 'projection',
+        sourcePointId: 'pC',
+        lineId: 'lAB',
+        label: 'H',
+        color: '#1B5E4A',
+      },
+      {
+        id: 'c3',
+        kind: 'geo-conic',
+        conicMode: 'circle-3pts',
+        p1Id: 'pA',
+        p2Id: 'pB',
+        p3Id: 'pC',
+        style: 'solid',
+        color: '#7C3AED',
+        width: 2,
+      },
+    ]);
+
+    expect(scene.points.get('pM')?.x).toBeCloseTo(150, 4);
+    expect(scene.points.get('pM')?.y).toBeCloseTo(200, 4);
+    expect(scene.points.get('pMid')?.x).toBeCloseTo(150, 4);
+    expect(scene.points.get('pMid')?.y).toBeCloseTo(150, 4);
+    expect(scene.points.get('pH')?.x).toBeCloseTo(200, 4);
+    expect(scene.points.get('pH')?.y).toBeCloseTo(200, 4);
+    // Đường tròn ngoại tiếp tam giác vuông cân A(100,200), B(300,200), C(200,100) có tâm (200, 200), R = 100
+    expect(scene.conics.get('c3')?.cx).toBeCloseTo(200, 3);
+    expect(scene.conics.get('c3')?.cy).toBeCloseTo(200, 3);
+    expect(scene.conics.get('c3')?.rx).toBeCloseTo(100, 3);
+
+    const edgeHit = hitTestGeoScene(scene, 166, 201, { skipPoints: true });
+    expect(edgeHit?.kind).toBe('line');
+    if (edgeHit?.kind === 'line') {
+      expect(edgeHit.ratioLabel).toBe('1/3');
+    }
+
+    // 2. Kiểm thử UI đổi tên file vở trên Sidebar & Thanh công cụ, Popover Phiếu đề fixed & Chế độ Dựng hình GeoGebra
+    render(
+      <MemoryRouter initialEntries={['/bang-viet']}>
+        <MathInkPage />
+      </MemoryRouter>,
+    );
+
+    const initialNb = selectActiveNotebook(useInkNotebookStore.getState());
+    fireEvent.click(screen.getByTestId(`rename-notebook-btn-${initialNb.id}`));
+    const sidebarInput = screen.getByTestId('sidebar-rename-notebook-input');
+    fireEvent.change(sidebarInput, { target: { value: 'Ôn thi Hình học Không gian' } });
+    fireEvent.submit(sidebarInput.closest('form')!);
+    expect(selectActiveNotebook(useInkNotebookStore.getState()).title).toBe(
+      'Ôn thi Hình học Không gian',
+    );
+
+    // Đổi tên nhanh ngay từ thanh công cụ trên cùng
+    fireEvent.click(screen.getByTestId('toolbar-rename-notebook-btn'));
+    const toolbarInput = screen.getByTestId('toolbar-rename-notebook-input');
+    fireEvent.change(toolbarInput, { target: { value: 'Chuyên đề Thiết diện 3D' } });
+    fireEvent.submit(toolbarInput.closest('form')!);
+    expect(selectActiveNotebook(useInkNotebookStore.getState()).title).toBe(
+      'Chuyên đề Thiết diện 3D',
+    );
+
+    // Hộp Phiếu đề được bọc trong ToolbarPopoverAnchor cố định (position: fixed, zIndex: 80) không bị che bởi LeftRail
+    fireEvent.click(screen.getByTestId('ink-worksheet-btn'));
+    const wsPopover = screen.getByTestId('worksheet-bg-popover');
+    expect(wsPopover.parentElement?.style.position).toBe('fixed');
+    expect(wsPopover.parentElement?.style.zIndex).toBe('80');
+
+    // Bật chế độ Dựng hình GeoGebra và dựng 1 đoạn thẳng AB trực tiếp trên canvas
+    fireEvent.click(screen.getByTestId('ink-geo-btn'));
+    expect(screen.getByTestId('geogebra-toolbar')).toBeInTheDocument();
+    const canvas = screen.getByTestId('math-ink-canvas');
+    fireEvent.pointerDown(canvas, { clientX: 120, clientY: 160 });
+    fireEvent.pointerDown(canvas, { clientX: 320, clientY: 160 });
+    const geoList = selectActiveInkPage(useInkNotebookStore.getState()).geoObjects ?? [];
+    expect(geoList.filter((o) => o.kind === 'geo-point')).toHaveLength(2);
+    expect(geoList.filter((o) => o.kind === 'geo-line')).toHaveLength(1);
   });
 });

@@ -16,6 +16,7 @@ import {
   Minimize2,
   Minus,
   PanelLeft,
+  Pencil,
   Plus,
   Pointer,
   Redo2,
@@ -46,6 +47,7 @@ import {
 import { Link, useNavigate } from 'react-router';
 import { FolderNotebookSidebar } from '@/components/math-ink/FolderNotebookSidebar';
 import { FunctionGraphPopover } from '@/components/math-ink/FunctionGraphPopover';
+import { GeoGebraToolbar } from '@/components/math-ink/GeoGebraToolbar';
 import {
   GeometryStampsPopover,
   type StampToolConfig,
@@ -59,6 +61,7 @@ import {
   ShapePickerPopover,
 } from '@/components/math-ink/InkToolbarPopovers';
 import { Solid3DPopover } from '@/components/math-ink/Solid3DPopover';
+import { ToolbarPopoverAnchor } from '@/components/math-ink/ToolbarPopoverAnchor';
 import { VariationTablePopover } from '@/components/math-ink/VariationTablePopover';
 import { WorksheetBackgroundPopover } from '@/components/math-ink/WorksheetBackgroundPopover';
 import { useLayout } from '@/context/LayoutContext';
@@ -73,7 +76,10 @@ import {
   doesStampHitPoint,
   downloadPdfFile,
   eraseStrokeSegment,
+  evaluateGeoScene,
+  hitTestGeoScene,
   isPointInPolygon,
+  nextGeoPointLabel,
   PAGE_DIMENSIONS,
   recognizeInkGesture,
   renderExamTextToWorksheetDataUrl,
@@ -87,6 +93,9 @@ import {
   stabilizeInkPoint,
   useInkNotebookStore,
   type EraserMode,
+  type GeoObject,
+  type GeoSceneHit,
+  type GeoToolKind,
   type Ink3DSolidItem,
   type InkActiveTool,
   type InkGraphItem,
@@ -246,6 +255,7 @@ export function MathInkPage() {
 
   const selectNotebook = useInkNotebookStore((s) => s.selectNotebook);
   const createNotebook = useInkNotebookStore((s) => s.createNotebook);
+  const renameNotebook = useInkNotebookStore((s) => s.renameNotebook);
   const renameActiveNotebook = useInkNotebookStore((s) => s.renameActiveNotebook);
   const deleteNotebook = useInkNotebookStore((s) => s.deleteNotebook);
   const moveNotebookToFolder = useInkNotebookStore((s) => s.moveNotebookToFolder);
@@ -301,6 +311,36 @@ export function MathInkPage() {
   });
   const [laserColor, setLaserColor] = useState<string>(LASER_COLOR_OPTIONS[0].hex);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  // Đổi tên file vở trực tiếp trên thanh công cụ trên cùng
+  const [isRenamingToolbarNb, setIsRenamingToolbarNb] = useState(false);
+  const [toolbarNbTitleDraft, setToolbarNbTitleDraft] = useState('');
+
+  // Trạng thái Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang Bảng viết
+  const [geoTool, setGeoTool] = useState<GeoToolKind>('segment');
+  const [geoLineStyle, setGeoLineStyle] = useState<'solid' | 'dashed'>('solid');
+  const [geoColor, setGeoColor] = useState<string>('#1D4ED8');
+  const [geoPendingPts, setGeoPendingPts] = useState<readonly string[]>([]);
+  const [geoPendingCurveId, setGeoPendingCurveId] = useState<string | null>(null);
+  const [geoHoveredHit, setGeoHoveredHit] = useState<GeoSceneHit | null>(null);
+  const [geoCursor, setGeoCursor] = useState<{ readonly x: number; readonly y: number } | null>(
+    null,
+  );
+  const [geoSelectedId, setGeoSelectedId] = useState<string | null>(null);
+  const geoDraggingPointIdRef = useRef<string | null>(null);
+
+  // Các điểm neo Popover chống che khuất bởi LeftRail / mép màn hình
+  const paperAnchorRef = useRef<HTMLDivElement>(null);
+  const penAnchorRef = useRef<HTMLDivElement>(null);
+  const inkModeAnchorRef = useRef<HTMLDivElement>(null);
+  const shapesAnchorRef = useRef<HTMLDivElement>(null);
+  const solid3dAnchorRef = useRef<HTMLDivElement>(null);
+  const graphAnchorRef = useRef<HTMLDivElement>(null);
+  const variationAnchorRef = useRef<HTMLDivElement>(null);
+  const stampsAnchorRef = useRef<HTMLDivElement>(null);
+  const eraserAnchorRef = useRef<HTMLDivElement>(null);
+  const selectionAnchorRef = useRef<HTMLDivElement>(null);
+  const worksheetAnchorRef = useRef<HTMLDivElement>(null);
 
   const [resizingBox, setResizingBox] = useState<{
     readonly id: string;
@@ -546,13 +586,33 @@ export function MathInkPage() {
       lassoPoints,
       selectedIds,
       spacerLineY,
+      geoOverlay:
+        activeTool === 'geo'
+          ? {
+              hoveredHit: geoHoveredHit,
+              selectedGeoId: geoSelectedId,
+              pendingPointIds: geoPendingPts,
+              cursor: geoCursor,
+              activeGeoTool: geoTool,
+              activeColor: geoColor,
+              activeLineStyle: geoLineStyle,
+            }
+          : undefined,
     });
   }, [
     activeNotebook.paper,
     activePage,
     activeStroke,
+    activeTool,
     dims.height,
     dims.width,
+    geoColor,
+    geoCursor,
+    geoHoveredHit,
+    geoLineStyle,
+    geoPendingPts,
+    geoSelectedId,
+    geoTool,
     imageCacheTick,
     lassoPoints,
     previewShape,
@@ -576,6 +636,21 @@ export function MathInkPage() {
       ) {
         e.preventDefault();
         redo();
+      } else if (e.key === 'Escape' && activeTool === 'geo') {
+        setGeoPendingPts([]);
+        setGeoPendingCurveId(null);
+        setGeoSelectedId(null);
+      } else if (
+        (e.key === 'Delete' || e.key === 'Backspace') &&
+        activeTool === 'geo' &&
+        geoSelectedId
+      ) {
+        e.preventDefault();
+        commitPageMutation((page) => ({
+          ...page,
+          geoObjects: (page.geoObjects ?? []).filter((o) => o.id !== geoSelectedId),
+        }));
+        setGeoSelectedId(null);
       } else if ((e.key === 'Delete' || e.key === 'Backspace') && selectedIds.size > 0) {
         e.preventDefault();
         commitPageMutation((page) => ({
@@ -594,7 +669,7 @@ export function MathInkPage() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [commitPageMutation, redo, selectedIds, undo]);
+  }, [activeTool, commitPageMutation, geoSelectedId, redo, selectedIds, undo]);
 
   const toCanvasPoint = useCallback(
     (e: ReactPointerEvent<HTMLCanvasElement>): InkPoint => {
@@ -722,10 +797,742 @@ export function MathInkPage() {
     [commitPageMutation, eraserMode],
   );
 
+  // ============================================================================
+  // ĐỘNG CƠ TƯƠNG TÁC DỰNG HÌNH ĐỘNG KIỂU GEOGEBRA TRỰC TIẾP TRÊN TRANG GIẤY
+  // ============================================================================
+  const geoObjects = useMemo(() => activePage.geoObjects ?? [], [activePage.geoObjects]);
+  const geoScene = useMemo(() => evaluateGeoScene(geoObjects), [geoObjects]);
+  const selectedGeoObject = useMemo(
+    () => (geoSelectedId ? (geoObjects.find((o) => o.id === geoSelectedId) ?? null) : null),
+    [geoObjects, geoSelectedId],
+  );
+
+  const geoStepHint = useMemo(() => {
+    const pCount = geoPendingPts.length;
+    if (geoTool === 'move')
+      return 'Kéo thả điểm tự do hoặc điểm trên cạnh để biến đổi hình động · Chạm đối tượng để chỉnh';
+    if (geoTool === 'point-free')
+      return 'Chạm bất kỳ đâu trên trang giấy để đặt Điểm tự do (A, B, C...)';
+    if (geoTool === 'point-on-object')
+      return 'Rê dọc đoạn thẳng hoặc đường tròn (tự hiển thị tỉ số k) rồi bấm để gắn điểm trượt';
+    if (geoTool === 'midpoint')
+      return pCount === 0
+        ? 'Chạm thẳng 1 đoạn thẳng (1 chạm) hoặc chọn lần lượt 2 điểm để dựng Trung điểm'
+        : 'Chọn điểm thứ hai để dựng Trung điểm';
+    if (geoTool === 'centroid')
+      return `Chọn đủ 3 điểm bất kỳ để dựng Trọng tâm G (đã chọn ${pCount}/3)`;
+    if (geoTool === 'intersect')
+      return geoPendingCurveId
+        ? 'Chọn đường / đường tròn thứ hai để lấy Giao điểm'
+        : 'Chạm trực tiếp vào chỗ giao nhau của 2 đường / đường tròn (hoặc chọn lần lượt 2 đường)';
+    if (geoTool === 'segment' || geoTool === 'line' || geoTool === 'ray' || geoTool === 'vector') {
+      return pCount === 0
+        ? 'Chọn điểm thứ nhất (tự bắt điểm có sẵn hoặc tạo điểm mới)'
+        : 'Chọn điểm thứ hai để hoàn tất đường';
+    }
+    if (geoTool === 'perpendicular' || geoTool === 'parallel') {
+      if (pCount > 0) return 'Bấm vào 1 đoạn thẳng hoặc đường thẳng làm phương chuẩn';
+      if (geoPendingCurveId) return 'Bấm vào 1 điểm mà đường đi qua';
+      return geoTool === 'perpendicular'
+        ? 'Chọn 1 điểm và 1 đường thẳng để dựng đường vuông góc / đường cao ⊥'
+        : 'Chọn 1 điểm và 1 đường thẳng để dựng đường song song';
+    }
+    if (geoTool === 'perp-bisector')
+      return pCount === 0
+        ? 'Chạm 1 đoạn thẳng hoặc chọn 2 điểm để dựng Đường trung trực'
+        : 'Chọn điểm thứ hai để dựng Đường trung trực';
+    if (geoTool === 'angle-bisector')
+      return `Chọn 3 điểm A, B, C theo thứ tự với B là đỉnh góc (đã chọn ${pCount}/3)`;
+    if (geoTool === 'tangent') {
+      if (pCount > 0) return 'Bấm vào đường tròn để dựng các tiếp tuyến đi qua điểm vừa chọn';
+      if (geoPendingCurveId) return 'Bấm vào 1 điểm để kẻ tiếp tuyến tới đường tròn';
+      return 'Chọn 1 điểm và 1 đường tròn để dựng Tiếp tuyến';
+    }
+    if (geoTool === 'polygon')
+      return pCount < 3
+        ? `Chạm lần lượt các đỉnh của đa giác / mặt phẳng (đã chọn ${pCount})`
+        : 'Chạm thêm đỉnh hoặc bấm lại đỉnh đầu tiên để khép kín & tô màu mặt phẳng';
+    if (geoTool === 'circle-center-point')
+      return pCount === 0 ? 'Chọn tâm O của đường tròn' : 'Chọn 1 điểm đi qua trên đường tròn';
+    if (geoTool === 'circle-3pts')
+      return `Chọn 3 điểm bất kỳ để dựng đường tròn ngoại tiếp (đã chọn ${pCount}/3)`;
+    if (geoTool === 'ellipse')
+      return pCount === 0
+        ? 'Chọn tâm O của hình Elip'
+        : pCount === 1
+          ? 'Chọn đỉnh bán trục lớn A'
+          : 'Chọn điểm xác định độ rộng bán trục nhỏ B';
+    return 'Chọn công cụ dựng hình trên thanh GeoGebra';
+  }, [geoPendingCurveId, geoPendingPts.length, geoTool]);
+
+  const appendGeoObjects = useCallback(
+    (items: readonly GeoObject[]) => {
+      if (items.length === 0) return;
+      commitPageMutation((page) => ({
+        ...page,
+        geoObjects: [...(page.geoObjects ?? []), ...items],
+      }));
+    },
+    [commitPageMutation],
+  );
+
+  const updateGeoObject = useCallback(
+    (id: string, patch: Partial<GeoObject>) => {
+      commitPageMutation((page) => ({
+        ...page,
+        geoObjects: (page.geoObjects ?? []).map((obj) =>
+          obj.id === id ? ({ ...obj, ...patch } as GeoObject) : obj,
+        ),
+      }));
+    },
+    [commitPageMutation],
+  );
+
+  const deleteGeoObject = useCallback(
+    (id: string) => {
+      commitPageMutation((page) => ({
+        ...page,
+        geoObjects: (page.geoObjects ?? []).filter((obj) => obj.id !== id),
+      }));
+      setGeoSelectedId((prev) => (prev === id ? null : prev));
+    },
+    [commitPageMutation],
+  );
+
+  const handleGeoPointerDown = (rawPt: InkPoint) => {
+    const curObjects = activePage.geoObjects ?? [];
+    const curScene = evaluateGeoScene(curObjects);
+    const hit = hitTestGeoScene(curScene, rawPt.x, rawPt.y, {
+      preferIntersection: geoTool === 'intersect',
+      skipPoints: geoTool === 'point-on-object',
+    });
+
+    // 1. Công cụ Di chuyển & Chỉnh sửa động
+    if (geoTool === 'move') {
+      if (hit?.kind === 'point') {
+        setGeoSelectedId(hit.id);
+        const ptObj = curObjects.find((o) => o.id === hit.id);
+        if (
+          ptObj?.kind === 'geo-point' &&
+          (ptObj.pointMode === 'free' ||
+            ptObj.pointMode === 'on-segment' ||
+            ptObj.pointMode === 'on-circle')
+        ) {
+          geoDraggingPointIdRef.current = hit.id;
+        }
+        return;
+      }
+      if (hit?.kind === 'line' || hit?.kind === 'conic') {
+        setGeoSelectedId(hit.id);
+        return;
+      }
+      // Kiểm tra chạm vào đa giác / mặt phẳng
+      for (const [polyId, poly] of curScene.polygons.entries()) {
+        if (isPointInPolygon(rawPt.x, rawPt.y, poly.vertices)) {
+          setGeoSelectedId(polyId);
+          return;
+        }
+      }
+      setGeoSelectedId(null);
+      return;
+    }
+
+    // Helper: lấy ID điểm đang trúng hoặc tự tạo nhanh 1 điểm tự do mới tại vị trí chạm (giống GeoGebra!)
+    const ensurePointAtCursor = (
+      extraPendingObjects: GeoObject[],
+      preferredLabels?: readonly string[],
+    ): string => {
+      if (hit?.kind === 'point') return hit.id;
+      const allSoFar = [...curObjects, ...extraPendingObjects];
+      const ptId = makeLocalId('gp');
+      const newPt: GeoObject = {
+        id: ptId,
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: Math.round(rawPt.x),
+        y: Math.round(rawPt.y),
+        label: nextGeoPointLabel(allSoFar, preferredLabels),
+        color: geoColor,
+      };
+      extraPendingObjects.push(newPt);
+      return ptId;
+    };
+
+    // 2. Đặt điểm tự do
+    if (geoTool === 'point-free') {
+      const label = nextGeoPointLabel(curObjects);
+      const id = makeLocalId('gp');
+      appendGeoObjects([
+        {
+          id,
+          kind: 'geo-point',
+          pointMode: 'free',
+          x: Math.round(rawPt.x),
+          y: Math.round(rawPt.y),
+          label,
+          color: geoColor,
+        },
+      ]);
+      setGeoSelectedId(id);
+      return;
+    }
+
+    // 3. Điểm trượt trên cạnh (tỉ số k linh hoạt mọi giá trị) hoặc trên đường tròn
+    if (geoTool === 'point-on-object') {
+      if (hit?.kind === 'line') {
+        const label = nextGeoPointLabel(curObjects, ['M', 'N', 'P', 'Q', 'E', 'F']);
+        const id = makeLocalId('gp');
+        appendGeoObjects([
+          {
+            id,
+            kind: 'geo-point',
+            pointMode: 'on-segment',
+            targetId: hit.id,
+            t: hit.snappedT,
+            label,
+            color: geoColor,
+          },
+        ]);
+        setGeoSelectedId(id);
+      } else if (hit?.kind === 'conic') {
+        const label = nextGeoPointLabel(curObjects, ['M', 'N', 'P', 'Q']);
+        const id = makeLocalId('gp');
+        appendGeoObjects([
+          {
+            id,
+            kind: 'geo-point',
+            pointMode: 'on-circle',
+            targetId: hit.id,
+            angleRad: hit.angleRad,
+            label,
+            color: geoColor,
+          },
+        ]);
+        setGeoSelectedId(id);
+      }
+      return;
+    }
+
+    // 4. Trung điểm / Tâm (chạm thẳng 1 đoạn thẳng 1 phát HOẶC chạm 2 điểm)
+    if (geoTool === 'midpoint') {
+      if (geoPendingPts.length === 0 && hit?.kind === 'line') {
+        const lineObj = curObjects.find((o) => o.id === hit.id);
+        if (
+          lineObj?.kind === 'geo-line' &&
+          (lineObj.lineMode === 'segment' ||
+            lineObj.lineMode === 'line' ||
+            lineObj.lineMode === 'ray' ||
+            lineObj.lineMode === 'vector')
+        ) {
+          const label = nextGeoPointLabel(curObjects, ['M', 'N', 'I', 'K', 'P']);
+          appendGeoObjects([
+            {
+              id: makeLocalId('gp'),
+              kind: 'geo-point',
+              pointMode: 'midpoint',
+              p1Id: lineObj.p1Id,
+              p2Id: lineObj.p2Id,
+              label,
+              color: geoColor,
+            },
+          ]);
+          return;
+        }
+      }
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingPts.length === 0) {
+        appendGeoObjects(created);
+        setGeoPendingPts([pid]);
+      } else if (geoPendingPts[0] !== pid) {
+        const label = nextGeoPointLabel([...curObjects, ...created], ['M', 'N', 'I', 'K', 'P']);
+        created.push({
+          id: makeLocalId('gp'),
+          kind: 'geo-point',
+          pointMode: 'midpoint',
+          p1Id: geoPendingPts[0]!,
+          p2Id: pid,
+          label,
+          color: geoColor,
+        });
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+      }
+      return;
+    }
+
+    // 5. Trọng tâm tam giác (3 điểm bất kỳ, tự kẻ trung tuyến nét đứt)
+    if (geoTool === 'centroid') {
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingPts.includes(pid)) return;
+      const nextPending = [...geoPendingPts, pid];
+      if (nextPending.length < 3) {
+        appendGeoObjects(created);
+        setGeoPendingPts(nextPending);
+      } else {
+        const label = nextGeoPointLabel([...curObjects, ...created], ['G', 'G₁', 'O']);
+        created.push({
+          id: makeLocalId('gp'),
+          kind: 'geo-point',
+          pointMode: 'centroid',
+          pointIds: nextPending,
+          showMedians: true,
+          label,
+          color: geoColor,
+        });
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+      }
+      return;
+    }
+
+    // 6. Giao điểm của 2 đường / đường tròn (1 chạm tự bắt giao điểm hoặc chọn lần lượt 2 đường)
+    if (geoTool === 'intersect') {
+      if (hit?.kind === 'intersection-snap') {
+        const label = nextGeoPointLabel(curObjects, ['I', 'J', 'K', 'E', 'F']);
+        appendGeoObjects([
+          {
+            id: makeLocalId('gp'),
+            kind: 'geo-point',
+            pointMode: 'intersection',
+            obj1Id: hit.obj1Id,
+            obj2Id: hit.obj2Id,
+            branch: hit.branch,
+            label,
+            color: geoColor,
+          },
+        ]);
+        setGeoPendingCurveId(null);
+        return;
+      }
+      if (hit?.kind === 'line' || hit?.kind === 'conic') {
+        if (!geoPendingCurveId) {
+          setGeoPendingCurveId(hit.id);
+        } else if (geoPendingCurveId !== hit.id) {
+          const label = nextGeoPointLabel(curObjects, ['I', 'J', 'K', 'E', 'F']);
+          appendGeoObjects([
+            {
+              id: makeLocalId('gp'),
+              kind: 'geo-point',
+              pointMode: 'intersection',
+              obj1Id: geoPendingCurveId,
+              obj2Id: hit.id,
+              branch: 0,
+              label,
+              color: geoColor,
+            },
+          ]);
+          setGeoPendingCurveId(null);
+        }
+      }
+      return;
+    }
+
+    // 7. Đoạn thẳng / Đường thẳng / Tia / Vectơ / Đường trung trực
+    if (
+      geoTool === 'segment' ||
+      geoTool === 'line' ||
+      geoTool === 'ray' ||
+      geoTool === 'vector' ||
+      geoTool === 'perp-bisector'
+    ) {
+      if (geoTool === 'perp-bisector' && geoPendingPts.length === 0 && hit?.kind === 'line') {
+        const lineObj = curObjects.find((o) => o.id === hit.id);
+        if (
+          lineObj?.kind === 'geo-line' &&
+          (lineObj.lineMode === 'segment' ||
+            lineObj.lineMode === 'line' ||
+            lineObj.lineMode === 'ray' ||
+            lineObj.lineMode === 'vector')
+        ) {
+          appendGeoObjects([
+            {
+              id: makeLocalId('gl'),
+              kind: 'geo-line',
+              lineMode: 'perp-bisector',
+              p1Id: lineObj.p1Id,
+              p2Id: lineObj.p2Id,
+              style: geoLineStyle,
+              color: geoColor,
+              width: 2,
+            },
+          ]);
+          return;
+        }
+      }
+
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingPts.length === 0) {
+        appendGeoObjects(created);
+        setGeoPendingPts([pid]);
+      } else if (geoPendingPts[0] !== pid) {
+        created.push({
+          id: makeLocalId('gl'),
+          kind: 'geo-line',
+          lineMode: geoTool,
+          p1Id: geoPendingPts[0]!,
+          p2Id: pid,
+          style: geoLineStyle,
+          color: geoColor,
+          width: 2.2,
+        });
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+      }
+      return;
+    }
+
+    // 8. Đường vuông góc (kèm tự tạo chân đường cao H) & Đường song song
+    if (geoTool === 'perpendicular' || geoTool === 'parallel') {
+      if (hit?.kind === 'line') {
+        if (geoPendingPts.length > 0) {
+          const throughPtId = geoPendingPts[0]!;
+          const newObjs: GeoObject[] = [
+            {
+              id: makeLocalId('gl'),
+              kind: 'geo-line',
+              lineMode: geoTool,
+              throughPointId: throughPtId,
+              refLineId: hit.id,
+              style: geoLineStyle,
+              color: geoColor,
+              width: 2,
+            },
+          ];
+          if (geoTool === 'perpendicular') {
+            newObjs.push({
+              id: makeLocalId('gp'),
+              kind: 'geo-point',
+              pointMode: 'projection',
+              sourcePointId: throughPtId,
+              lineId: hit.id,
+              label: nextGeoPointLabel(curObjects, ['H', 'K', 'H₁']),
+              color: geoColor,
+            });
+          }
+          appendGeoObjects(newObjs);
+          setGeoPendingPts([]);
+          setGeoPendingCurveId(null);
+        } else {
+          setGeoPendingCurveId(hit.id);
+        }
+        return;
+      }
+
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingCurveId) {
+        created.push({
+          id: makeLocalId('gl'),
+          kind: 'geo-line',
+          lineMode: geoTool,
+          throughPointId: pid,
+          refLineId: geoPendingCurveId,
+          style: geoLineStyle,
+          color: geoColor,
+          width: 2,
+        });
+        if (geoTool === 'perpendicular') {
+          created.push({
+            id: makeLocalId('gp'),
+            kind: 'geo-point',
+            pointMode: 'projection',
+            sourcePointId: pid,
+            lineId: geoPendingCurveId,
+            label: nextGeoPointLabel([...curObjects, ...created], ['H', 'K', 'H₁']),
+            color: geoColor,
+          });
+        }
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+        setGeoPendingCurveId(null);
+      } else {
+        appendGeoObjects(created);
+        setGeoPendingPts([pid]);
+      }
+      return;
+    }
+
+    // 9. Phân giác góc (3 điểm A, B, C)
+    if (geoTool === 'angle-bisector') {
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingPts.includes(pid)) return;
+      const nextPending = [...geoPendingPts, pid];
+      if (nextPending.length < 3) {
+        appendGeoObjects(created);
+        setGeoPendingPts(nextPending);
+      } else {
+        created.push({
+          id: makeLocalId('gl'),
+          kind: 'geo-line',
+          lineMode: 'angle-bisector',
+          p1Id: nextPending[0]!,
+          vertexId: nextPending[1]!,
+          p3Id: nextPending[2]!,
+          style: geoLineStyle,
+          color: geoColor,
+          width: 2,
+        });
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+      }
+      return;
+    }
+
+    // 10. Tiếp tuyến đường tròn (1 điểm + 1 đường tròn)
+    if (geoTool === 'tangent') {
+      if (hit?.kind === 'conic') {
+        if (geoPendingPts.length > 0) {
+          const throughPtId = geoPendingPts[0]!;
+          appendGeoObjects([
+            {
+              id: makeLocalId('gl'),
+              kind: 'geo-line',
+              lineMode: 'tangent',
+              throughPointId: throughPtId,
+              circleId: hit.id,
+              branch: 0,
+              style: geoLineStyle,
+              color: geoColor,
+              width: 2,
+            },
+            {
+              id: makeLocalId('gl'),
+              kind: 'geo-line',
+              lineMode: 'tangent',
+              throughPointId: throughPtId,
+              circleId: hit.id,
+              branch: 1,
+              style: geoLineStyle,
+              color: geoColor,
+              width: 2,
+            },
+          ]);
+          setGeoPendingPts([]);
+          setGeoPendingCurveId(null);
+        } else {
+          setGeoPendingCurveId(hit.id);
+        }
+        return;
+      }
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingCurveId) {
+        created.push(
+          {
+            id: makeLocalId('gl'),
+            kind: 'geo-line',
+            lineMode: 'tangent',
+            throughPointId: pid,
+            circleId: geoPendingCurveId,
+            branch: 0,
+            style: geoLineStyle,
+            color: geoColor,
+            width: 2,
+          },
+          {
+            id: makeLocalId('gl'),
+            kind: 'geo-line',
+            lineMode: 'tangent',
+            throughPointId: pid,
+            circleId: geoPendingCurveId,
+            branch: 1,
+            style: geoLineStyle,
+            color: geoColor,
+            width: 2,
+          },
+        );
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+        setGeoPendingCurveId(null);
+      } else {
+        appendGeoObjects(created);
+        setGeoPendingPts([pid]);
+      }
+      return;
+    }
+
+    // 11. Đa giác / Mặt phẳng tô màu bán trong suốt (khép kín khi bấm lại đỉnh đầu tiên)
+    if (geoTool === 'polygon') {
+      if (geoPendingPts.length >= 3 && hit?.kind === 'point' && hit.id === geoPendingPts[0]) {
+        const polyId = makeLocalId('gpoly');
+        const createdEdges: GeoObject[] = [];
+        for (let i = 0; i < geoPendingPts.length; i += 1) {
+          const p1Id = geoPendingPts[i]!;
+          const p2Id = geoPendingPts[(i + 1) % geoPendingPts.length]!;
+          const alreadyHasEdge = curObjects.some(
+            (o) =>
+              o.kind === 'geo-line' &&
+              o.lineMode === 'segment' &&
+              ((o.p1Id === p1Id && o.p2Id === p2Id) || (o.p1Id === p2Id && o.p2Id === p1Id)),
+          );
+          if (!alreadyHasEdge) {
+            createdEdges.push({
+              id: makeLocalId('gl'),
+              kind: 'geo-line',
+              lineMode: 'segment',
+              p1Id,
+              p2Id,
+              style: geoLineStyle,
+              color: geoColor,
+              width: 2,
+            });
+          }
+        }
+        appendGeoObjects([
+          ...createdEdges,
+          {
+            id: polyId,
+            kind: 'geo-polygon',
+            pointIds: geoPendingPts,
+            color: geoColor,
+            fillOpacity: 0.16,
+            borderStyle: geoLineStyle,
+            width: 2,
+          },
+        ]);
+        setGeoPendingPts([]);
+        setGeoSelectedId(polyId);
+        return;
+      }
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(created);
+      if (geoPendingPts.includes(pid)) return;
+      appendGeoObjects(created);
+      setGeoPendingPts([...geoPendingPts, pid]);
+      return;
+    }
+
+    // 12. Đường tròn (Tâm & Điểm)
+    if (geoTool === 'circle-center-point') {
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(
+        created,
+        geoPendingPts.length === 0 ? ['O', 'I', 'O₁'] : undefined,
+      );
+      if (geoPendingPts.length === 0) {
+        appendGeoObjects(created);
+        setGeoPendingPts([pid]);
+      } else if (geoPendingPts[0] !== pid) {
+        created.push({
+          id: makeLocalId('gc'),
+          kind: 'geo-conic',
+          conicMode: 'circle-center-point',
+          centerId: geoPendingPts[0]!,
+          throughId: pid,
+          style: geoLineStyle,
+          color: geoColor,
+          width: 2.1,
+        });
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+      }
+      return;
+    }
+
+    // 13. Đường tròn ngoại tiếp qua 3 điểm & Elip (Tâm + 2 trục)
+    if (geoTool === 'circle-3pts' || geoTool === 'ellipse') {
+      const created: GeoObject[] = [];
+      const pid = ensurePointAtCursor(
+        created,
+        geoTool === 'ellipse' && geoPendingPts.length === 0 ? ['O', 'I'] : undefined,
+      );
+      if (geoPendingPts.includes(pid)) return;
+      const nextPending = [...geoPendingPts, pid];
+      if (nextPending.length < 3) {
+        appendGeoObjects(created);
+        setGeoPendingPts(nextPending);
+      } else {
+        created.push(
+          geoTool === 'circle-3pts'
+            ? {
+                id: makeLocalId('gc'),
+                kind: 'geo-conic',
+                conicMode: 'circle-3pts',
+                p1Id: nextPending[0]!,
+                p2Id: nextPending[1]!,
+                p3Id: nextPending[2]!,
+                style: geoLineStyle,
+                color: geoColor,
+                width: 2.1,
+              }
+            : {
+                id: makeLocalId('gc'),
+                kind: 'geo-conic',
+                conicMode: 'ellipse',
+                centerId: nextPending[0]!,
+                axis1Id: nextPending[1]!,
+                axis2Id: nextPending[2]!,
+                style: geoLineStyle,
+                color: geoColor,
+                width: 2.1,
+              },
+        );
+        appendGeoObjects(created);
+        setGeoPendingPts([]);
+      }
+    }
+  };
+
+  const handleGeoPointerMove = (rawPt: InkPoint) => {
+    setGeoCursor({ x: rawPt.x, y: rawPt.y });
+
+    // Nếu đang kéo thả 1 điểm động (tự do hoặc trượt trên cạnh/đường tròn)
+    const dragId = geoDraggingPointIdRef.current;
+    if (dragId) {
+      const ptObj = (activePage.geoObjects ?? []).find((o) => o.id === dragId);
+      if (ptObj?.kind === 'geo-point') {
+        if (ptObj.pointMode === 'free') {
+          updateGeoObject(dragId, { x: Math.round(rawPt.x), y: Math.round(rawPt.y) });
+        } else if (ptObj.pointMode === 'on-segment') {
+          const line = geoScene.lines.get(ptObj.targetId);
+          if (line) {
+            const dx = line.p2.x - line.p1.x;
+            const dy = line.p2.y - line.p1.y;
+            const lenSq = dx * dx + dy * dy;
+            if (lenSq > 4) {
+              const rawT = ((rawPt.x - line.p1.x) * dx + (rawPt.y - line.p1.y) * dy) / lenSq;
+              const clampedT = Math.max(0.02, Math.min(0.98, rawT));
+              updateGeoObject(dragId, { t: Number(clampedT.toFixed(3)) });
+            }
+          }
+        } else if (ptObj.pointMode === 'on-circle') {
+          const conic = geoScene.conics.get(ptObj.targetId);
+          if (conic) {
+            const dx = rawPt.x - conic.cx;
+            const dy = rawPt.y - conic.cy;
+            const cosR = Math.cos(-conic.rotation);
+            const sinR = Math.sin(-conic.rotation);
+            const lx = dx * cosR - dy * sinR;
+            const ly = dx * sinR + dy * cosR;
+            const angleRad = Math.atan2(ly / Math.max(1, conic.ry), lx / Math.max(1, conic.rx));
+            updateGeoObject(dragId, { angleRad });
+          }
+        }
+      }
+      return;
+    }
+
+    const hit = hitTestGeoScene(geoScene, rawPt.x, rawPt.y, {
+      preferIntersection: geoTool === 'intersect',
+      skipPoints: geoTool === 'point-on-object',
+    });
+    setGeoHoveredHit(hit);
+  };
+
   const handleCanvasPointerDown = (e: ReactPointerEvent<HTMLCanvasElement>) => {
     if (openPopover) setOpenPopover(null);
     e.currentTarget.setPointerCapture?.(e.pointerId);
     const rawPt = toCanvasPoint(e);
+
+    // -1. Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy
+    if (activeTool === 'geo') {
+      handleGeoPointerDown(rawPt);
+      return;
+    }
 
     // 0. Bút Laser trình chiếu (không lưu nét, tự mờ sau 1.5s)
     if (activeTool === 'laser') {
@@ -899,6 +1706,10 @@ export function MathInkPage() {
   };
 
   const handleCanvasPointerMove = (e: ReactPointerEvent<HTMLCanvasElement>) => {
+    if (activeTool === 'geo') {
+      handleGeoPointerMove(toCanvasPoint(e));
+      return;
+    }
     const state = interactionRef.current;
     if (state.mode === 'none') return;
     const rawPt = toCanvasPoint(e);
@@ -993,6 +1804,10 @@ export function MathInkPage() {
   };
 
   const handleCanvasPointerUp = (e: ReactPointerEvent<HTMLCanvasElement>) => {
+    if (geoDraggingPointIdRef.current) {
+      geoDraggingPointIdRef.current = null;
+      return;
+    }
     const state = interactionRef.current;
     if (state.mode === 'none') return;
     const rawPt = toCanvasPoint(e);
@@ -1755,18 +2570,75 @@ export function MathInkPage() {
             <PanelLeft className="h-4 w-4" aria-hidden="true" />
           </button>
 
-          <select
-            aria-label="Chọn vở ghi chép"
-            value={activeNotebook.id}
-            onChange={(e) => selectNotebook(e.target.value)}
-            className="h-8 max-w-[160px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
-          >
-            {bucket.notebooks.map((nb) => (
-              <option key={nb.id} value={nb.id}>
-                {nb.title}
-              </option>
-            ))}
-          </select>
+          {isRenamingToolbarNb ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (toolbarNbTitleDraft.trim()) {
+                  renameNotebook(activeNotebook.id, toolbarNbTitleDraft.trim());
+                }
+                setIsRenamingToolbarNb(false);
+              }}
+              className="flex items-center gap-1"
+            >
+              <input
+                type="text"
+                autoFocus
+                data-testid="toolbar-rename-notebook-input"
+                value={toolbarNbTitleDraft}
+                onChange={(e) => setToolbarNbTitleDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') setIsRenamingToolbarNb(false);
+                }}
+                onBlur={() => {
+                  if (toolbarNbTitleDraft.trim()) {
+                    renameNotebook(activeNotebook.id, toolbarNbTitleDraft.trim());
+                  }
+                  setIsRenamingToolbarNb(false);
+                }}
+                aria-label="Đổi tên file vở đang mở"
+                className="h-8 w-[150px] rounded-lg border border-[var(--accent-os)] bg-[var(--bg-workspace)] px-2 text-xs font-medium text-[var(--text-main)] focus:outline-none"
+              />
+              <button
+                type="submit"
+                onMouseDown={(e) => e.preventDefault()}
+                title="Lưu tên vở"
+                aria-label="Lưu tên vở"
+                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-[var(--accent-os)] text-white"
+              >
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </form>
+          ) : (
+            <>
+              <select
+                aria-label="Chọn vở ghi chép"
+                value={activeNotebook.id}
+                onChange={(e) => selectNotebook(e.target.value)}
+                className="h-8 max-w-[150px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
+              >
+                {bucket.notebooks.map((nb) => (
+                  <option key={nb.id} value={nb.id}>
+                    {nb.title}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                data-testid="toolbar-rename-notebook-btn"
+                onClick={() => {
+                  setToolbarNbTitleDraft(activeNotebook.title);
+                  setIsRenamingToolbarNb(true);
+                }}
+                title="Đổi tên file vở đang mở"
+                aria-label="Đổi tên file vở đang mở"
+                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
+              >
+                <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </>
+          )}
 
           <button
             type="button"
@@ -1805,7 +2677,7 @@ export function MathInkPage() {
           </button>
 
           {/* Nút Cài đặt giấy vở (Scrble Paper) */}
-          <div className="relative">
+          <div ref={paperAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-paper-btn"
@@ -1823,9 +2695,9 @@ export function MathInkPage() {
               <span className="hidden sm:inline">Giấy</span>
             </button>
             {openPopover === 'paper' && (
-              <div className="absolute top-10 left-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={paperAnchorRef} preferAlign="left">
                 <PaperSettingsPopover paper={activeNotebook.paper} onChange={updatePaperConfig} />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
         </div>
@@ -1833,7 +2705,10 @@ export function MathInkPage() {
         {/* GIỮA: Chấm màu bút nhanh + Nhận dạng nét + Thước + Hình 2D + 3D + Đồ thị f(x) + Tẩy + Chọn */}
         <div className="flex flex-wrap items-center gap-1.5">
           {/* Chấm màu bút nhanh giống Scrble Ink */}
-          <div className="relative flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-1">
+          <div
+            ref={penAnchorRef}
+            className="relative flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-1"
+          >
             {penPresets.map((preset) => {
               const isSelected = activeTool === 'pen' && activePenPreset.id === preset.id;
               const isHighlighter = preset.penKind === 'highlighter';
@@ -1887,14 +2762,14 @@ export function MathInkPage() {
             })}
 
             {openPopover === 'pen' && (
-              <div className="absolute top-11 left-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={penAnchorRef} preferAlign="left">
                 <PenSettingsPopover preset={activePenPreset} onChange={updateActivePenPreset} />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
           {/* Chế độ nhận dạng mực (Ink / Shape / Line) */}
-          <div className="relative">
+          <div ref={inkModeAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-mode-btn"
@@ -1920,7 +2795,7 @@ export function MathInkPage() {
               </span>
             </button>
             {openPopover === 'ink-mode' && (
-              <div className="absolute top-10 left-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={inkModeAnchorRef} preferAlign="left">
                 <InkModePopover
                   mode={inkMode}
                   onChange={(m) => {
@@ -1929,7 +2804,7 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
@@ -1951,7 +2826,7 @@ export function MathInkPage() {
           </button>
 
           {/* Hình 2D, Nét đứt, Mũi tên & Chữ/KaTeX */}
-          <div className="relative">
+          <div ref={shapesAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-shapes-btn"
@@ -1968,7 +2843,7 @@ export function MathInkPage() {
               <Shapes className="h-4 w-4" aria-hidden="true" />
             </button>
             {openPopover === 'shapes' && (
-              <div className="absolute top-10 right-0 z-50 sm:left-0">
+              <ToolbarPopoverAnchor anchorRef={shapesAnchorRef} preferAlign="left">
                 <ShapePickerPopover
                   activeShape={activeShape}
                   onSelectShape={(kind) => {
@@ -1981,12 +2856,35 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
+          {/* CHẾ ĐỘ DỰNG HÌNH ĐỘNG KIỂU GEOGEBRA TRỰC TIẾP TRÊN TRANG */}
+          <button
+            type="button"
+            data-testid="ink-geo-btn"
+            onClick={() => {
+              setOpenPopover(null);
+              setGeoPendingPts([]);
+              setGeoPendingCurveId(null);
+              setActiveTool((prev) => (prev === 'geo' ? 'pen' : 'geo'));
+            }}
+            title="Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy (Điểm, Tỉ lệ, Trung điểm, Trọng tâm, Giao điểm, Vuông góc/Song song, Đường tròn, Elip, Mặt phẳng)"
+            aria-pressed={activeTool === 'geo'}
+            className={cn(
+              'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+              activeTool === 'geo'
+                ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white shadow-xs'
+                : 'border-[#1D4ED8]/35 bg-[#EFF5FE] text-[#1D4ED8] hover:bg-[#E0ECFD] dark:border-[#60A5FA]/35 dark:bg-[#121D2B] dark:text-[#93C5FD]',
+            )}
+          >
+            <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Dựng hình</span>
+          </button>
+
           {/* CẢI TIẾN ĐỘT PHÁ 1: HÌNH KHÔNG GIAN 3D */}
-          <div className="relative">
+          <div ref={solid3dAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-solid3d-btn"
@@ -1994,7 +2892,7 @@ export function MathInkPage() {
                 setEditingSolidId(null);
                 togglePopover('solid3d');
               }}
-              title="Chèn Hình học không gian 3D tương tác (đặt tên đỉnh, hình trơn, dựng trung điểm/trọng tâm/đường cao)"
+              title="Chèn Hình học không gian 3D tương tác (đặt tên đỉnh, hình trơn, dựng điểm tỉ lệ trượt cạnh, trọng tâm, đường cao, mặt phẳng)"
               className={cn(
                 'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
                 openPopover === 'solid3d'
@@ -2006,7 +2904,7 @@ export function MathInkPage() {
               <span>Hình 3D</span>
             </button>
             {openPopover === 'solid3d' && (
-              <div className="absolute top-10 right-0 z-50 sm:left-0">
+              <ToolbarPopoverAnchor anchorRef={solid3dAnchorRef} preferAlign="left">
                 <Solid3DPopover
                   key={editingSolid?.id ?? 'new-solid'}
                   initialSolid={editingSolid}
@@ -2020,12 +2918,12 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
           {/* CẢI TIẾN ĐỘT PHÁ 2: VẼ ĐỒ THỊ HÀM SỐ f(x) */}
-          <div className="relative">
+          <div ref={graphAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-graph-btn"
@@ -2042,17 +2940,17 @@ export function MathInkPage() {
               <span>Đồ thị f(x)</span>
             </button>
             {openPopover === 'graph' && (
-              <div className="absolute top-10 right-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={graphAnchorRef} preferAlign="right">
                 <FunctionGraphPopover
                   onInsert={handleInsertGraph}
                   onClose={() => setOpenPopover(null)}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
           {/* Ý 3: BẢNG BIẾN THIÊN & BẢNG XÉT DẤU NHANH */}
-          <div className="relative">
+          <div ref={variationAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-variation-btn"
@@ -2073,7 +2971,7 @@ export function MathInkPage() {
               <span className="xl:hidden">BBT</span>
             </button>
             {openPopover === 'variation' && (
-              <div className="absolute top-10 right-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={variationAnchorRef} preferAlign="right">
                 <VariationTablePopover
                   key={editingTable?.id ?? 'new-vt'}
                   initialTable={editingTable}
@@ -2087,12 +2985,12 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
           {/* Ý 4: CON DẤU KÝ HIỆU HÌNH HỌC PHẲNG */}
-          <div className="relative">
+          <div ref={stampsAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-stamps-btn"
@@ -2109,7 +3007,7 @@ export function MathInkPage() {
               <Stamp className="h-4 w-4" aria-hidden="true" />
             </button>
             {openPopover === 'stamps' && (
-              <div className="absolute top-10 right-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={stampsAnchorRef} preferAlign="right">
                 <GeometryStampsPopover
                   config={stampConfig}
                   onChange={setStampConfig}
@@ -2120,7 +3018,7 @@ export function MathInkPage() {
                   }}
                   onClose={() => setOpenPopover(null)}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
@@ -2146,7 +3044,7 @@ export function MathInkPage() {
           </button>
 
           {/* Tẩy (Stroke / Segment) */}
-          <div className="relative">
+          <div ref={eraserAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-eraser-btn"
@@ -2169,7 +3067,7 @@ export function MathInkPage() {
               <Eraser className="h-4 w-4" aria-hidden="true" />
             </button>
             {openPopover === 'eraser' && (
-              <div className="absolute top-10 right-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={eraserAnchorRef} preferAlign="right">
                 <EraserModePopover
                   mode={eraserMode}
                   onChange={(m) => {
@@ -2182,12 +3080,12 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
           {/* Chọn vùng / Lasso / Chèn khoảng trống */}
-          <div className="relative">
+          <div ref={selectionAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-select-btn"
@@ -2210,7 +3108,7 @@ export function MathInkPage() {
               <SquareDashed className="h-4 w-4" aria-hidden="true" />
             </button>
             {openPopover === 'selection' && (
-              <div className="absolute top-10 right-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={selectionAnchorRef} preferAlign="right">
                 <SelectionModePopover
                   mode={selectionMode}
                   onChange={(m) => {
@@ -2219,15 +3117,15 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
         </div>
 
         {/* PHẢI: Phiếu đề nền, Chèn ảnh, Zoom, Gửi sang Soạn đề, Xuất PNG & PDF đa trang, Toàn màn hình */}
         <div className="flex flex-wrap items-center gap-1.5">
-          {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA */}
-          <div className="relative">
+          {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA (định vị thông minh không bao giờ bị che khuất!) */}
+          <div ref={worksheetAnchorRef} className="relative">
             <button
               type="button"
               data-testid="ink-worksheet-btn"
@@ -2244,7 +3142,7 @@ export function MathInkPage() {
               <span className="hidden xl:inline">Phiếu đề</span>
             </button>
             {openPopover === 'worksheet' && (
-              <div className="absolute top-10 right-0 z-50">
+              <ToolbarPopoverAnchor anchorRef={worksheetAnchorRef} preferAlign="left">
                 <WorksheetBackgroundPopover
                   background={activePage.worksheetBackground}
                   activeExamTitle={activeExamTitle}
@@ -2257,7 +3155,7 @@ export function MathInkPage() {
                   onRemoveBackground={() => setWorksheetBackground(null)}
                   onClose={() => setOpenPopover(null)}
                 />
-              </div>
+              </ToolbarPopoverAnchor>
             )}
           </div>
 
@@ -2353,6 +3251,41 @@ export function MathInkPage() {
         </div>
       </header>
 
+      {/* THANH CÔNG CỤ DỰNG HÌNH ĐỘNG KIỂU GEOGEBRA (HIỆN KHI BẬT CHẾ ĐỘ DỰNG HÌNH) */}
+      {activeTool === 'geo' && (
+        <GeoGebraToolbar
+          activeGeoTool={geoTool}
+          onSelectGeoTool={(tool) => {
+            setGeoTool(tool);
+            setGeoPendingPts([]);
+            setGeoPendingCurveId(null);
+          }}
+          lineStyle={geoLineStyle}
+          onChangeLineStyle={setGeoLineStyle}
+          color={geoColor}
+          onChangeColor={setGeoColor}
+          stepHint={geoStepHint}
+          pendingCount={geoPendingPts.length + (geoPendingCurveId ? 1 : 0)}
+          onCancelPending={() => {
+            setGeoPendingPts([]);
+            setGeoPendingCurveId(null);
+          }}
+          selectedObject={selectedGeoObject}
+          onUpdateSelected={(patch) => {
+            if (geoSelectedId) updateGeoObject(geoSelectedId, patch);
+          }}
+          onDeleteSelected={() => {
+            if (geoSelectedId) deleteGeoObject(geoSelectedId);
+          }}
+          onExitGeoMode={() => {
+            setGeoPendingPts([]);
+            setGeoPendingCurveId(null);
+            setGeoHoveredHit(null);
+            setActiveTool('pen');
+          }}
+        />
+      )}
+
       {/* ========================================================================
           KHU VỰC CHÍNH: CỘT THƯ MỤC ĐA CẤP & TRANG VỞ + TRANG GIẤY VIẾT CANVAS
           ======================================================================== */}
@@ -2365,6 +3298,7 @@ export function MathInkPage() {
             activeNotebook={activeNotebook}
             onSelectNotebook={selectNotebook}
             onCreateNotebook={createNotebook}
+            onRenameNotebook={renameNotebook}
             onRenameActiveNotebook={renameActiveNotebook}
             onDeleteNotebook={deleteNotebook}
             onMoveNotebook={moveNotebookToFolder}
@@ -2715,6 +3649,12 @@ export function MathInkPage() {
               onPointerMove={handleCanvasPointerMove}
               onPointerUp={handleCanvasPointerUp}
               onPointerCancel={handleCanvasPointerUp}
+              onPointerLeave={() => {
+                if (activeTool === 'geo') {
+                  setGeoHoveredHit(null);
+                  setGeoCursor(null);
+                }
+              }}
               className={cn(
                 'h-full w-full touch-none select-none',
                 activeTool === 'pen' && 'cursor-crosshair',
@@ -2724,6 +3664,12 @@ export function MathInkPage() {
                 activeTool === 'eraser' && 'cursor-cell',
                 activeTool === 'select' && 'cursor-move',
                 activeTool === 'text' && 'cursor-text',
+                activeTool === 'geo' &&
+                  (geoTool === 'move'
+                    ? geoHoveredHit
+                      ? 'cursor-grab'
+                      : 'cursor-default'
+                    : 'cursor-crosshair'),
               )}
             />
 

@@ -1270,6 +1270,9 @@ export type Solid3DSceneHit =
       readonly toLabel: string;
       readonly x: number;
       readonly y: number;
+      /** Tỉ lệ chia cạnh liên tục tại vị trí con trỏ (tự hút nhẹ về 1/4, 1/3, 1/2, 2/3, 3/4) */
+      readonly ratio: number;
+      readonly ratioLabel: string;
     };
 
 /**
@@ -1355,29 +1358,68 @@ export function hitTestSolid3DScene(
 
   if (bestPoint) return bestPoint;
 
-  // Nếu không trúng trực tiếp đỉnh, kiểm tra trung điểm các cạnh để hỗ trợ bấm 1 chạm lên cạnh
+  // Nếu không trúng trực tiếp đỉnh, chiếu liên tục lên mọi cạnh gốc & đoạn nối dựng thêm
+  // để người dùng rê chuột chọn bất kỳ tỉ lệ nào dọc cạnh như GeoGebra!
   let bestEdgeHit: Solid3DSceneHit | null = null;
   let bestEdgeDist = edgeMidpointRadiusPx;
 
-  for (const edge of schema.edges) {
-    if (edge.aux && !item.showAuxLines) continue;
-    const a = projectedMap.get(edge.from);
-    const b = projectedMap.get(edge.to);
-    if (!a || !b) continue;
-    const mx = (a.x + b.x) / 2;
-    const my = (a.y + b.y) / 2;
-    const d = Math.hypot(canvasX - mx, canvasY - my);
+  const snapEdgeRatio = (rawT: number): { readonly ratio: number; readonly label: string } => {
+    const clamped = Math.max(0.06, Math.min(0.94, rawT));
+    const nice = [
+      { v: 0.25, lbl: '1/4' },
+      { v: 1 / 3, lbl: '1/3' },
+      { v: 0.5, lbl: '1/2' },
+      { v: 2 / 3, lbl: '2/3' },
+      { v: 0.75, lbl: '3/4' },
+    ];
+    for (const itemN of nice) {
+      if (Math.abs(clamped - itemN.v) <= 0.032) {
+        return { ratio: itemN.v, label: itemN.lbl };
+      }
+    }
+    return { ratio: Number(clamped.toFixed(2)), label: clamped.toFixed(2) };
+  };
+
+  const checkEdgeCandidate = (fromId: string, toId: string) => {
+    const a = projectedMap.get(fromId);
+    const b = projectedMap.get(toId);
+    if (!a || !b) return;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq < 16) return;
+    const rawT = ((canvasX - a.x) * dx + (canvasY - a.y) * dy) / lenSq;
+    if (rawT < 0.05 || rawT > 0.95) return;
+    const px = a.x + dx * rawT;
+    const py = a.y + dy * rawT;
+    const d = Math.hypot(canvasX - px, canvasY - py);
     if (d <= bestEdgeDist) {
       bestEdgeDist = d;
+      const snapped = snapEdgeRatio(rawT);
       bestEdgeHit = {
         kind: 'edge-midpoint',
-        fromId: edge.from,
-        toId: edge.to,
-        fromLabel: labelById.get(edge.from) ?? edge.from,
-        toLabel: labelById.get(edge.to) ?? edge.to,
-        x: mx,
-        y: my,
+        fromId,
+        toId,
+        fromLabel: labelById.get(fromId) ?? fromId,
+        toLabel: labelById.get(toId) ?? toId,
+        x: a.x + dx * snapped.ratio,
+        y: a.y + dy * snapped.ratio,
+        ratio: snapped.ratio,
+        ratioLabel: snapped.label,
       };
+    }
+  };
+
+  for (const edge of schema.edges) {
+    if (edge.aux && !item.showAuxLines) continue;
+    checkEdgeCandidate(edge.from, edge.to);
+  }
+
+  if (item.constructions) {
+    for (const c of item.constructions) {
+      if (c.kind === 'segment') {
+        checkEdgeCandidate(c.fromPoint, c.toPoint);
+      }
     }
   }
 
