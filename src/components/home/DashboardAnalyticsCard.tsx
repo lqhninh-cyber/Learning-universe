@@ -47,8 +47,8 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
   const last7Days = useMemo(() => {
     const slice = metrics.heatmapDays.slice(-7);
     const rawMax = Math.max(0, ...slice.map((c) => c.count));
-    // Giữ trần tỷ lệ tối thiểu = 3 để 1 hoạt động trông cân đối, không bị đẩy kịch trần
-    const scaleMax = Math.max(3, rawMax);
+    // Trần tỷ lệ chẵn (tối thiểu 4) để 3 mốc trục tung luôn nguyên chính xác (0, scaleMax/2, scaleMax)
+    const scaleMax = Math.max(4, Math.ceil(rawMax / 2) * 2);
     const peakIndex = slice.reduce(
       (bestIdx, item, idx) => (item.count >= (slice[bestIdx]?.count ?? -1) ? idx : bestIdx),
       Math.max(0, slice.length - 1),
@@ -100,18 +100,18 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
     <section
       aria-label="Biểu đồ nhịp học và phân bổ tiến độ học phần"
       data-testid="dashboard-analytics-card"
-      className="relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]"
+      className="relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-[26px] border border-[#17332C]/[0.07] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(23,51,44,0.12)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]"
     >
-      {/* Dải sáng nền tinh tế góc trên phải */}
+      {/* Dải màu giấy ấm & lục thông dịu nhẹ hòa nhập với toàn trang */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-14 -right-14 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(15,118,86,0.10)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(74,209,163,0.12)_0%,transparent_70%)]"
+        className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(158,118,59,0.08)_0%,rgba(23,51,44,0.04)_48%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(212,175,106,0.09)_0%,rgba(74,209,163,0.06)_50%,transparent_72%)]"
       />
 
-      {/* Header + Bộ chuyển chế độ viên thuốc */}
+      {/* Header + Bộ chuyển chế độ viên thuốc hòa sắc xanh thông trầm */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[#EAF5F0] text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-[#17332C]/[0.07] bg-[#F4F3EC] text-[#17332C] dark:border-white/[0.08] dark:bg-[#192622] dark:text-[#6EE7B7]">
             <BarChart3 className="h-4.5 w-4.5" aria-hidden="true" />
           </span>
           <div>
@@ -126,7 +126,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
           </div>
         </div>
 
-        <div className="inline-flex rounded-full border border-[var(--border-hairline)] bg-[#F2F5F3] p-1 dark:bg-[#0E1614]">
+        <div className="inline-flex rounded-full border border-[#17332C]/[0.08] bg-[#F3F2EC] p-1 dark:border-white/[0.07] dark:bg-[#0E1614]">
           <button
             type="button"
             data-testid="analytics-mode-week"
@@ -137,7 +137,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
             className={cn(
               'cursor-pointer rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all duration-150',
               chartMode === 'week'
-                ? 'bg-[#0F7656] text-white shadow-xs'
+                ? 'bg-[#17332C] text-[#F7F4EC] shadow-xs dark:bg-[#1F5E49] dark:text-white'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
             )}
           >
@@ -153,7 +153,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
             className={cn(
               'cursor-pointer rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all duration-150',
               chartMode === 'subjects'
-                ? 'bg-[#0F7656] text-white shadow-xs'
+                ? 'bg-[#17332C] text-[#F7F4EC] shadow-xs dark:bg-[#1F5E49] dark:text-white'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
             )}
           >
@@ -162,25 +162,25 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
         </div>
       </div>
 
-      {/* Nội dung chính: Biểu đồ Cột Rãnh Thanh Lịch (Trái) + Vòng Tròn Phân Bổ (Phải) */}
+      {/* Nội dung chính: Biểu đồ Cột Rãnh Ấm (Trái) + Vòng Tròn Phân Bổ (Phải) */}
       <div className="grid grid-cols-1 items-stretch gap-5 md:grid-cols-12">
-        {/* BIỂU ĐỒ CỘT KIẾN TRÚC RÃNH DỌC */}
+        {/* BIỂU ĐỒ CỘT KIẾN TRÚC RÃNH DỌC ĐỒNG BỘ SẮC GỐM SỨ & RỪNG THÔNG */}
         <div className="md:col-span-7">
           {chartMode === 'week' ? (
             <div
               data-testid="analytics-week-bars"
-              className="relative flex h-[212px] flex-col justify-between overflow-hidden rounded-[20px] border border-black/[0.05] bg-[#F7F9F8] px-4 pt-3 pb-3.5 dark:border-white/[0.06] dark:bg-[#0F1715]"
+              className="relative flex h-[212px] flex-col justify-between overflow-hidden rounded-[20px] border border-[#17332C]/[0.06] bg-[#F7F6F1]/90 px-4 pt-3 pb-3.5 dark:border-white/[0.06] dark:bg-[#101916]"
             >
-              {/* Thanh thông số tức thì phía trên (thay hoàn toàn tooltip mặc định thô của trình duyệt) */}
-              <div className="relative z-10 flex items-center justify-between gap-2 border-b border-black/[0.05] pb-2 dark:border-white/[0.06]">
+              {/* Thanh thông số tức thì phía trên */}
+              <div className="relative z-10 flex items-center justify-between gap-2 border-b border-[#17332C]/[0.07] pb-2 dark:border-white/[0.06]">
                 <div className="flex min-w-0 items-center gap-2 font-mono text-[11px]">
                   <span
                     aria-hidden="true"
                     className={cn(
                       'h-2 w-2 shrink-0 rounded-full transition-colors',
                       focusedDay && focusedDay.count > 0
-                        ? 'bg-[#0F7656] shadow-[0_0_0_3px_rgba(15,118,86,0.16)] dark:bg-[#4AD1A3]'
-                        : 'bg-[#B5C4BE] dark:bg-[#3A4D46]',
+                        ? 'bg-[#1E5945] shadow-[0_0_0_3px_rgba(30,89,69,0.14)] dark:bg-[#58D2A4]'
+                        : 'bg-[#C4C1B6] dark:bg-[#3A4D46]',
                     )}
                   />
                   {focusedDay ? (
@@ -196,7 +196,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                         className={cn(
                           'font-semibold tabular-nums',
                           focusedDay.count > 0
-                            ? 'text-[#0F7656] dark:text-[#4AD1A3]'
+                            ? 'text-[#1E5945] dark:text-[#6EE7B7]'
                             : 'text-[var(--text-muted)]',
                         )}
                       >
@@ -209,33 +209,33 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                     <span className="text-[var(--text-muted)]">7 ngày gần nhất</span>
                   )}
                 </div>
-                <span className="shrink-0 rounded-full bg-white px-2 py-0.5 font-mono text-[10px] font-medium text-[var(--text-muted)] tabular-nums ring-1 ring-black/[0.05] dark:bg-[#16221E] dark:ring-white/[0.07]">
+                <span className="shrink-0 rounded-full border border-[#9E763B]/20 bg-[#FBF8F1] px-2 py-0.5 font-mono text-[10px] font-medium text-[#7C5A2B] tabular-nums dark:border-[#D4AF6A]/20 dark:bg-[#1B221D] dark:text-[#E2C285]">
                   Đỉnh {last7Days.rawMax}/ngày
                 </span>
               </div>
 
-              {/* Khu vực cột + trục chia độ mảnh */}
+              {/* Khu vực cột + trục chia độ chính xác */}
               <div className="relative mt-3 flex min-h-0 flex-1 items-end gap-2">
-                {/* Cột chia độ trục tung bên trái */}
+                {/* Cột chia độ trục tung bên trái (chẵn tuyệt đối: 4 / 2 / 0) */}
                 <div
                   aria-hidden="true"
-                  className="flex h-[calc(100%-22px)] flex-col justify-between pr-1 pb-0.5 font-mono text-[9px] text-[var(--text-muted)]/75 tabular-nums select-none"
+                  className="flex h-[calc(100%-22px)] flex-col justify-between pr-1 pb-0.5 font-mono text-[9px] text-[#7A847E] tabular-nums select-none dark:text-[#6E8079]"
                 >
                   <span>{last7Days.scaleMax}</span>
-                  <span>{Math.ceil(last7Days.scaleMax / 2)}</span>
+                  <span>{last7Days.scaleMax / 2}</span>
                   <span>0</span>
                 </div>
 
                 {/* Vùng vẽ 7 cột rãnh đứng */}
                 <div className="relative flex h-full min-w-0 flex-1 items-end justify-between gap-2 sm:gap-3">
-                  {/* 3 đường lưới ngang siêu mảnh khớp chính xác trục tung */}
+                  {/* 3 đường lưới ngang mảnh ấm khớp chính xác trục tung */}
                   <div
                     aria-hidden="true"
                     className="pointer-events-none absolute inset-x-0 top-1 bottom-[22px] flex flex-col justify-between"
                   >
-                    <span className="block border-t border-dashed border-black/[0.06] dark:border-white/[0.07]" />
-                    <span className="block border-t border-dashed border-black/[0.05] dark:border-white/[0.06]" />
-                    <span className="block border-t border-black/[0.08] dark:border-white/[0.09]" />
+                    <span className="block border-t border-dashed border-[#17332C]/[0.07] dark:border-white/[0.07]" />
+                    <span className="block border-t border-dashed border-[#17332C]/[0.06] dark:border-white/[0.06]" />
+                    <span className="block border-t border-[#17332C]/[0.10] dark:border-white/[0.10]" />
                   </div>
 
                   {last7Days.items.map((cell, idx) => {
@@ -244,11 +244,9 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                     const isHighlighted = hoveredIndex === null ? isPeak : isHovered;
                     const isToday = idx === last7Days.items.length - 1;
                     const hasActivity = cell.count > 0;
+                    const exactPct = (cell.count / last7Days.scaleMax) * 100;
                     const barHeightPct = hasActivity
-                      ? Math.max(
-                          24,
-                          Math.min(100, Math.round((cell.count / last7Days.scaleMax) * 100)),
-                        )
+                      ? Math.max(18, Math.min(100, Math.round(exactPct)))
                       : 0;
 
                     return (
@@ -262,19 +260,19 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                         onBlur={() => setHoveredIndex(null)}
                         className="group relative z-10 flex h-full min-w-0 flex-1 cursor-pointer flex-col items-center justify-end gap-1.5 focus:outline-none"
                       >
-                        {/* Rãnh nền thẳng đứng đồng đều cho mọi ngày */}
+                        {/* Rãnh nền thẳng đứng sắc giấy kem dịu, hòa nhập hoàn toàn vào thẻ */}
                         <div
                           className={cn(
-                            'relative flex h-full w-6 max-w-full items-end justify-center rounded-[10px] bg-black/[0.035] p-[2px] transition-all duration-200 sm:w-7 dark:bg-white/[0.045]',
+                            'relative flex h-full w-6 max-w-full items-end justify-center rounded-[10px] border border-[#17332C]/[0.045] bg-[#ECEBE3]/75 p-[2px] transition-all duration-200 sm:w-7 dark:border-white/[0.05] dark:bg-white/[0.04]',
                             isHovered &&
-                              'bg-[#0F7656]/[0.07] ring-1 ring-[#0F7656]/25 dark:bg-[#4AD1A3]/[0.08] dark:ring-[#4AD1A3]/30',
+                              'border-[#17332C]/22 bg-[#E5EAE6]/85 dark:border-[#58D2A4]/35 dark:bg-[#192A24]',
                           )}
                         >
-                          {/* Nhãn số bám sát ngay trên đỉnh cột (chỉ hiện khi có hoạt động hoặc đang hover) */}
+                          {/* Nhãn số ceramic trắng viền mảnh bám sát ngay trên đỉnh cột */}
                           {isHighlighted && hasActivity && (
                             <span
-                              style={{ bottom: `calc(${barHeightPct}% + 5px)` }}
-                              className="pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 rounded-md bg-[#113128] px-1.5 py-0.5 font-mono text-[9.5px] leading-none font-bold whitespace-nowrap text-white shadow-sm dark:bg-[#4AD1A3] dark:text-[#082018]"
+                              style={{ bottom: `calc(${barHeightPct}% + 6px)` }}
+                              className="pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 rounded-md border border-[#17332C]/14 bg-white px-1.5 py-0.5 font-mono text-[9.5px] leading-none font-bold whitespace-nowrap text-[#17332C] shadow-[0_3px_10px_-3px_rgba(23,51,44,0.22)] dark:border-[#58D2A4]/30 dark:bg-[#192923] dark:text-[#DFF6EC]"
                             >
                               +{cell.count}
                             </span>
@@ -284,27 +282,30 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                             <div
                               style={{ height: `${barHeightPct}%` }}
                               className={cn(
-                                'relative w-full overflow-hidden rounded-[8px] transition-all duration-300',
+                                'relative w-full overflow-hidden rounded-[7px] transition-all duration-300',
                                 isHighlighted
-                                  ? 'bg-gradient-to-t from-[#0D664A] via-[#138A63] to-[#24BC8B] shadow-[0_8px_18px_-6px_rgba(15,118,86,0.55)]'
-                                  : 'bg-gradient-to-t from-[#5CB597] to-[#87CEB5] group-hover:from-[#12845F] group-hover:to-[#24BC8B] dark:from-[#1E5644] dark:to-[#2D7A62]',
+                                  ? 'bg-gradient-to-t from-[#17332C] via-[#1E5643] to-[#3B886C] shadow-[0_6px_14px_-5px_rgba(23,51,44,0.42)] dark:from-[#1B5744] dark:via-[#267D60] dark:to-[#4FD0A3]'
+                                  : 'bg-gradient-to-t from-[#7AA896] to-[#9BC2B2] group-hover:from-[#1B4C3C] group-hover:to-[#3B886C] dark:from-[#214B3E] dark:to-[#316B58]',
                               )}
                             >
-                              {/* Điểm nhấn ánh sáng mảnh trên đỉnh cột */}
+                              {/* Ánh vàng đồng nhẹ trên đỉnh cột nổi bật */}
                               <span
                                 aria-hidden="true"
-                                className="pointer-events-none absolute inset-x-1 top-1 h-[3px] rounded-full bg-white/35"
+                                className={cn(
+                                  'pointer-events-none absolute inset-x-1 top-1 h-[2.5px] rounded-full',
+                                  isPeak ? 'bg-[#F4D594]/70' : 'bg-white/30',
+                                )}
                               />
                             </div>
                           ) : (
-                            /* Ngày 0 hoạt động: vạch neo đáy tinh tế thay vì cục xám to thô */
+                            /* Ngày 0 hoạt động: vạch neo đáy sắc đá ấm rất thanh */
                             <span
                               aria-hidden="true"
                               className={cn(
-                                'mb-1 h-1 w-3 rounded-full transition-colors duration-200',
+                                'mb-1 h-[3px] w-3 rounded-full transition-colors duration-200',
                                 isHovered
-                                  ? 'bg-[#0F7656]/55 dark:bg-[#4AD1A3]/60'
-                                  : 'bg-[#C4D1CC] dark:bg-[#2B3B36]',
+                                  ? 'bg-[#8C5828]/55 dark:bg-[#D4AF6A]/65'
+                                  : 'bg-[#CFCDC2] dark:bg-[#2B3B36]',
                               )}
                             />
                           )}
@@ -315,9 +316,9 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                           className={cn(
                             'rounded-full px-1.5 py-0.5 font-mono text-[10px] leading-none font-semibold transition-colors',
                             isHovered
-                              ? 'bg-[#0F7656]/12 text-[#0F7656] dark:bg-[#4AD1A3]/15 dark:text-[#4AD1A3]'
+                              ? 'bg-[#17332C]/10 text-[#17332C] dark:bg-[#58D2A4]/15 dark:text-[#6EE7B7]'
                               : isToday
-                                ? 'text-[#0F7656] dark:text-[#4AD1A3]'
+                                ? 'text-[#1E5945] dark:text-[#6EE7B7]'
                                 : 'text-[var(--text-muted)]',
                           )}
                         >
@@ -332,10 +333,10 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
           ) : (
             <div
               data-testid="analytics-subject-bars"
-              className="relative flex h-[212px] flex-col justify-between overflow-hidden rounded-[20px] border border-black/[0.05] bg-[#F7F9F8] px-4 pt-3 pb-3.5 dark:border-white/[0.06] dark:bg-[#0F1715]"
+              className="relative flex h-[212px] flex-col justify-between overflow-hidden rounded-[20px] border border-[#17332C]/[0.06] bg-[#F7F6F1]/90 px-4 pt-3 pb-3.5 dark:border-white/[0.06] dark:bg-[#101916]"
             >
               {/* Thanh thông số học phần đang chọn */}
-              <div className="relative z-10 flex items-center justify-between gap-2 border-b border-black/[0.05] pb-2 dark:border-white/[0.06]">
+              <div className="relative z-10 flex items-center justify-between gap-2 border-b border-[#17332C]/[0.07] pb-2 dark:border-white/[0.06]">
                 {focusedSubject ? (
                   <div className="flex min-w-0 items-center gap-2 font-mono text-[11px]">
                     <span
@@ -353,7 +354,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                   </span>
                 )}
                 {focusedSubject && (
-                  <span className="shrink-0 rounded-full bg-white px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)] tabular-nums ring-1 ring-black/[0.05] dark:bg-[#16221E] dark:ring-white/[0.07]">
+                  <span className="shrink-0 rounded-full border border-[#17332C]/[0.07] bg-white px-2 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)] tabular-nums dark:border-white/[0.07] dark:bg-[#16221E]">
                     {focusedSubject.completedCount}/{focusedSubject.lessonCount} bài ·{' '}
                     {focusedSubject.percent}%
                   </span>
@@ -365,9 +366,9 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-x-2 top-1 bottom-[24px] flex flex-col justify-between"
                 >
-                  <span className="block border-t border-dashed border-black/[0.06] dark:border-white/[0.07]" />
-                  <span className="block border-t border-dashed border-black/[0.05] dark:border-white/[0.06]" />
-                  <span className="block border-t border-black/[0.08] dark:border-white/[0.09]" />
+                  <span className="block border-t border-dashed border-[#17332C]/[0.07] dark:border-white/[0.07]" />
+                  <span className="block border-t border-dashed border-[#17332C]/[0.06] dark:border-white/[0.06]" />
+                  <span className="block border-t border-[#17332C]/[0.10] dark:border-white/[0.10]" />
                 </div>
 
                 {subjectProgress.map((item, idx) => {
@@ -386,19 +387,19 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                     >
                       <div
                         className={cn(
-                          'relative flex h-full w-9 max-w-full items-end justify-center rounded-[12px] bg-black/[0.035] p-[2.5px] transition-all duration-200 sm:w-11 dark:bg-white/[0.045]',
-                          isActive && 'ring-1 ring-[#0F7656]/30 dark:ring-[#4AD1A3]/30',
+                          'relative flex h-full w-9 max-w-full items-end justify-center rounded-[12px] border border-[#17332C]/[0.045] bg-[#ECEBE3]/75 p-[2.5px] transition-all duration-200 sm:w-11 dark:border-white/[0.05] dark:bg-white/[0.04]',
+                          isActive && 'border-[#17332C]/25 dark:border-[#58D2A4]/35',
                         )}
                       >
                         <span
                           style={{
-                            bottom: hasProgress ? `calc(${heightPct}% + 5px)` : '10px',
+                            bottom: hasProgress ? `calc(${heightPct}% + 6px)` : '10px',
                           }}
                           className={cn(
-                            'pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 rounded-md px-1.5 py-0.5 font-mono text-[9.5px] leading-none font-bold whitespace-nowrap tabular-nums transition-transform',
+                            'pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 rounded-md border px-1.5 py-0.5 font-mono text-[9.5px] leading-none font-bold whitespace-nowrap tabular-nums transition-transform',
                             isActive
-                              ? 'scale-105 bg-[#17332C] text-white shadow-xs dark:bg-[#4AD1A3] dark:text-[#082018]'
-                              : 'bg-white/90 text-[var(--text-main)] shadow-2xs dark:bg-[#192420]',
+                              ? 'scale-105 border-[#17332C] bg-[#17332C] text-[#F7F4EC] shadow-xs dark:border-[#58D2A4] dark:bg-[#1F5E49] dark:text-white'
+                              : 'border-[#17332C]/10 bg-white/95 text-[var(--text-main)] shadow-2xs dark:border-white/10 dark:bg-[#192420]',
                           )}
                         >
                           {item.percent}%
@@ -411,19 +412,19 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                               backgroundColor: item.color,
                             }}
                             className={cn(
-                              'relative w-full overflow-hidden rounded-[9px] transition-all duration-300',
+                              'relative w-full overflow-hidden rounded-[8px] transition-all duration-300',
                               isActive && 'brightness-110',
                             )}
                           >
                             <span
                               aria-hidden="true"
-                              className="pointer-events-none absolute inset-x-1.5 top-1 h-[3px] rounded-full bg-white/30"
+                              className="pointer-events-none absolute inset-x-1.5 top-1 h-[2.5px] rounded-full bg-white/30"
                             />
                           </div>
                         ) : (
                           <span
                             aria-hidden="true"
-                            className="mb-1 h-1 w-4 rounded-full bg-[#C4D1CC] dark:bg-[#2B3B36]"
+                            className="mb-1 h-[3px] w-4 rounded-full bg-[#CFCDC2] dark:bg-[#2B3B36]"
                           />
                         )}
                       </div>
@@ -442,11 +443,11 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
         {/* VÒNG TRÒN PHÂN BỔ TIẾN ĐỘ + THANH MINI ĐỒNG BỘ HOVER */}
         <div
           data-testid="analytics-donut-chart"
-          className="relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-[20px] border border-black/[0.05] bg-[#F7F9F8] p-4 sm:flex-row md:col-span-5 md:flex-col lg:flex-row dark:border-white/[0.06] dark:bg-[#0F1715]"
+          className="relative flex flex-col items-center justify-center gap-4 overflow-hidden rounded-[20px] border border-[#17332C]/[0.06] bg-[#F7F6F1]/90 p-4 sm:flex-row md:col-span-5 md:flex-col lg:flex-row dark:border-white/[0.06] dark:bg-[#101916]"
         >
           <div className="relative h-30 w-30 shrink-0">
             <svg viewBox="0 0 116 116" className="h-full w-full -rotate-90" aria-hidden="true">
-              {/* Vành chia độ trắc địa siêu mảnh xung quanh biểu đồ vòng */}
+              {/* Vành chia độ trắc địa siêu mảnh đồng bộ sắc đồng-thông */}
               <circle
                 cx="58"
                 cy="58"
@@ -455,7 +456,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                 stroke="currentColor"
                 strokeWidth="0.9"
                 strokeDasharray="2 5"
-                className="text-[#0F7656]/25 dark:text-[#4AD1A3]/22"
+                className="text-[#9E763B]/30 dark:text-[#D4AF6A]/25"
               />
               <circle
                 cx="58"
@@ -464,7 +465,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="10"
-                className="text-[#E2EAE6] dark:text-[#1D2A26]"
+                className="text-[#E6E4DB] dark:text-[#1D2A26]"
               />
               {donutSegments.map(
                 (seg) =>
@@ -498,7 +499,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
 
           <div className="w-full min-w-0 flex-1 space-y-2">
             <p className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-              <PieChart className="h-3 w-3 text-[#0F7656] dark:text-[#4AD1A3]" aria-hidden="true" />
+              <PieChart className="h-3 w-3 text-[#1E5945] dark:text-[#6EE7B7]" aria-hidden="true" />
               <span>Phân bổ theo môn</span>
             </p>
             <ul className="space-y-2">
@@ -507,7 +508,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                   key={item.slug}
                   onMouseEnter={() => setHoveredSubjectSlug(item.slug)}
                   onMouseLeave={() => setHoveredSubjectSlug(null)}
-                  className="group space-y-1 rounded-lg px-1 py-0.5 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
+                  className="group space-y-1 rounded-lg px-1 py-0.5 transition-colors hover:bg-[#17332C]/[0.04] dark:hover:bg-white/[0.04]"
                 >
                   <div className="flex items-center justify-between gap-2 font-mono text-[11px]">
                     <span className="flex min-w-0 items-center gap-1.5 text-[var(--text-secondary)]">
@@ -525,7 +526,7 @@ export const DashboardAnalyticsCard: FC<DashboardAnalyticsCardProps> = ({
                     </span>
                   </div>
                   {/* Thanh tiến độ mini đồng bộ màu học phần */}
-                  <div className="h-1 w-full overflow-hidden rounded-full bg-black/[0.05] dark:bg-white/[0.07]">
+                  <div className="h-1 w-full overflow-hidden rounded-full bg-[#E6E4DB] dark:bg-white/[0.07]">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{

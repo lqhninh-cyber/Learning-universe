@@ -144,18 +144,17 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
   it('HomePage không lặp tìm kiếm ở Hero, dùng SVG toán học (0 ảnh phong cảnh) cho 4 môn và vận hành đầy đủ To-Do, Lịch, Mốc thi, Mục tiêu tuần & Flashcard', () => {
     renderHome();
 
-    // 1. Hero có lời chào thích ứng, nền khí quyển, mô hình Điêu khắc 3D Đa Hình Thái (Torus Knot / Lorenz / Helicoid), sóng điều hòa tập trung & KHÔNG lặp thanh tìm kiếm
+    // 1. Hero có câu tục ngữ, nền khí quyển, 1 mô hình Điêu khắc 3D độc bản thuần túy không chữ mô tả, sóng điều hòa tập trung & KHÔNG lặp thanh tìm kiếm
     expect(screen.getByTestId('dashboard-ambient-backdrop')).toBeInTheDocument();
     const heroOrb = screen.getByTestId('dashboard-hero-orb-model');
-    expect(heroOrb).toHaveAttribute('data-sculpture-mode', 'torus-knot');
-    fireEvent.click(screen.getByTestId('hero-sculpture-mode-lorenz'));
-    expect(heroOrb).toHaveAttribute('data-sculpture-mode', 'lorenz');
-    fireEvent.click(screen.getByTestId('hero-sculpture-mode-helicoid'));
-    expect(heroOrb).toHaveAttribute('data-sculpture-mode', 'helicoid');
+    expect(heroOrb).toBeInTheDocument();
+    expect(heroOrb.textContent?.trim()).toBe('');
     expect(screen.getByTestId('dashboard-focus-wave')).toBeInTheDocument();
     expect(screen.getByTestId('calendar-sundial-ornament')).toBeInTheDocument();
     expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
-    expect(screen.getByTestId('hero-period-badge')).toBeInTheDocument();
+    const periodBadge = screen.getByTestId('hero-period-badge');
+    expect(periodBadge).toBeInTheDocument();
+    expect(periodBadge).not.toHaveTextContent('Không gian Tổng quan');
     expect(screen.getByTestId('hero-soft-wave-divider')).toBeInTheDocument();
     expect(screen.queryByTestId('hero-floating-pill')).not.toBeInTheDocument();
 

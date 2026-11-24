@@ -566,7 +566,7 @@ export function HomePage() {
                       className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-3.5 py-1 font-mono text-[10.5px] font-semibold tracking-wider text-white/95 backdrop-blur-md"
                     >
                       {renderPeriodIcon(timeGreeting.period)}
-                      <span>{timeGreeting.badgeLabel} · Không gian Tổng quan</span>
+                      <span>{timeGreeting.badgeLabel}</span>
                     </span>
                     <time
                       data-testid="dashboard-date"
