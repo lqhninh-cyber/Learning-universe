@@ -2,12 +2,19 @@ import {
   BookMarked,
   BookOpen,
   CornerDownLeft,
+  Download,
+  FilePenLine,
+  FilePlus2,
+  FolderKanban,
   Gamepad2,
   Hourglass,
   Landmark,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  PenTool,
+  Presentation,
+  RotateCcw,
   Search,
   Sparkles,
   Sun,
@@ -29,12 +36,20 @@ import { getIslandSubjectByIdOrSlug } from '@/context/island-helpers';
 import { useLayout } from '@/context/LayoutContext';
 import { usePomodoro } from '@/context/PomodoroContext';
 import { useReadingSettings } from '@/context/ReadingSettingsContext';
+import { selectActiveExamBucket, useExamBuilderStore } from '@/features/exam-builder';
 import { getAllGlossaryEntries } from '@/features/math-glossary';
+import {
+  selectActiveInkBucket,
+  selectActiveInkFolders,
+  useInkNotebookStore,
+} from '@/features/math-ink';
 import { ROUTES } from '@/shared/config/routes';
+import { usePwaStatus } from '@/shared/hooks/usePwaStatus';
 import { cn } from '@/shared/lib/cn';
 import { normalizeSearchQuery, scoreTextMatch } from '@/utils/vietnamese-text';
 
-export type OsCommandGroupKey = 'actions' | 'lessons' | 'glossary' | 'heritage';
+export type OsCommandGroupKey = 'actions' | 'studio' | 'lessons' | 'glossary' | 'heritage';
+export type OsCommandScopeKey = 'all' | OsCommandGroupKey;
 
 export interface OsCommandItem {
   readonly id: string;
@@ -54,6 +69,15 @@ export interface CommandPaletteProps {
   readonly onOpenChange: (open: boolean) => void;
   readonly enableGlobalShortcut?: boolean;
 }
+
+const SCOPE_TABS: ReadonlyArray<{ readonly key: OsCommandScopeKey; readonly label: string }> = [
+  { key: 'all', label: 'Tất cả' },
+  { key: 'actions', label: 'Lệnh nhanh' },
+  { key: 'studio', label: 'Studio (Vở & Đề)' },
+  { key: 'lessons', label: 'Bài giảng' },
+  { key: 'glossary', label: 'Thuật ngữ' },
+  { key: 'heritage', label: 'Di sản' },
+];
 
 const SUBJECT_DOT_COLORS: Record<string, string> = {
   'cau-truc-dai-so': '#8C5828',
@@ -242,9 +266,21 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
   const { pathname, search } = useLocation();
   const { theme, toggleTheme } = useReadingSettings();
   const { isRailCollapsed, toggleRail } = useLayout();
-  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro } = usePomodoro();
+  const { pomodoro, startPomodoro, pausePomodoro, resumePomodoro, resetPomodoro } = usePomodoro();
+  const { canInstall, isStandalone, promptInstall } = usePwaStatus();
+
+  // Kết nối trực tiếp Vở Bảng viết & Đề thi trong Xưởng Soạn đề
+  const inkBucket = useInkNotebookStore(selectActiveInkBucket);
+  const inkFolders = useInkNotebookStore(selectActiveInkFolders);
+  const selectNotebook = useInkNotebookStore((s) => s.selectNotebook);
+  const createNotebook = useInkNotebookStore((s) => s.createNotebook);
+
+  const examBucket = useExamBuilderStore(selectActiveExamBucket);
+  const selectExam = useExamBuilderStore((s) => s.selectExam);
+  const createNewExam = useExamBuilderStore((s) => s.createNewExam);
 
   const [query, setQuery] = useState('');
+  const [activeScope, setActiveScope] = useState<OsCommandScopeKey>('all');
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Tự động đóng khi route thay đổi
@@ -257,12 +293,13 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     }
   }
 
-  // Đặt lại từ khóa và mục chọn mỗi khi mở modal
+  // Đặt lại từ khóa, phạm vi và mục chọn mỗi khi mở modal
   const [wasOpen, setWasOpen] = useState(open);
   if (open !== wasOpen) {
     setWasOpen(open);
     if (open) {
       setQuery('');
+      setActiveScope('all');
       setActiveIndex(0);
     }
   }
@@ -315,7 +352,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     const isPomodoroRunning = pomodoro.status === 'running';
     const isPomodoroPaused = pomodoro.status === 'paused';
 
-    return [
+    const list: OsCommandItem[] = [
       {
         id: 'action-toggle-theme',
         group: 'actions',
@@ -330,14 +367,40 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         },
       },
       {
-        id: 'action-toggle-rail',
+        id: 'action-new-ink-notebook',
         group: 'actions',
-        title: isRailCollapsed ? 'Mở rộng thanh điều hướng trái' : 'Thu gọn thanh điều hướng trái',
-        subtitle: 'Chuyển độ rộng Rail giữa 232px và 60px (Phím [)',
-        badge: 'Phím [',
-        searchText: 'thu gon mo rong thanh ben rail sidebar menu dieu huong',
+        title: 'Tạo vở Bảng viết mới',
+        subtitle: 'Khởi tạo ngay 1 quyển vở ô ly trắng & mở Bảng viết Toán học',
+        badge: 'Tạo mới',
+        dotColor: '#1D4F6E',
+        searchText: 'tao vo moi bang viet ghi chep nhap toan notebook math ink',
         onExecute: () => {
-          toggleRail();
+          createNotebook();
+          void navigate(ROUTES.mathInk);
+        },
+      },
+      {
+        id: 'action-teach-mode',
+        group: 'actions',
+        title: 'Mở Chế độ Tập giảng & Ghi hình bài giảng (.webm)',
+        subtitle: 'Bảng giảng toàn khung kèm đồng hồ 15p/45p, bút Laser & thu âm Offline',
+        badge: 'Tập giảng',
+        dotColor: '#1B5E4A',
+        href: `${ROUTES.mathInk}?mode=teach`,
+        searchText:
+          'tap giang ghi hinh quay video bai giang micro teaching laser thuyet trinh su pham',
+      },
+      {
+        id: 'action-new-exam',
+        group: 'actions',
+        title: 'Tạo đề kiểm tra mới trong Xưởng Soạn đề',
+        subtitle: 'Khởi tạo đề chuẩn THPT 2025 (A–D, Đúng/Sai, Trả lời ngắn) sẵn sàng xuất PDF',
+        badge: 'Tạo đề',
+        dotColor: '#1B5E4A',
+        searchText: 'tao de moi xuong soan de kiem tra de thi trac nghiem latex a4',
+        onExecute: () => {
+          createNewExam('blank');
+          void navigate(ROUTES.examBuilder);
         },
       },
       {
@@ -363,6 +426,40 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         },
       },
       {
+        id: 'action-pomodoro-45',
+        group: 'actions',
+        title: 'Bắt đầu Phiên học sâu Pomodoro (45 phút)',
+        subtitle: 'Chế độ nghiên cứu định lý, chứng minh đại số & giải đề chuyên sâu',
+        badge: '45 phút',
+        dotColor: '#9E763B',
+        searchText: 'phien hoc sau pomodoro 45 phut chuyen sau tap trung dai',
+        onExecute: () => {
+          startPomodoro(45, 'Chuyên sâu');
+        },
+      },
+      {
+        id: 'action-toggle-rail',
+        group: 'actions',
+        title: isRailCollapsed ? 'Mở rộng thanh điều hướng trái' : 'Thu gọn thanh điều hướng trái',
+        subtitle: 'Chuyển độ rộng Rail giữa 232px và 60px (Phím [)',
+        badge: 'Phím [',
+        searchText: 'thu gon mo rong thanh ben rail sidebar menu dieu huong',
+        onExecute: () => {
+          toggleRail();
+        },
+      },
+      {
+        id: 'action-goto-math-ink',
+        group: 'actions',
+        title: 'Mở Bảng viết (Math Ink Studio)',
+        subtitle: 'Vở ô ly viết tay, dựng hình GeoGebra, hình 3D nét đứt, đồ thị f(x) & công thức',
+        badge: 'Bảng viết',
+        dotColor: '#1D4F6E',
+        href: ROUTES.mathInk,
+        searchText:
+          'bang viet scrble ink vo o ly ve do thi ham so hinh khong gian 3d geogebra cong thuc',
+      },
+      {
         id: 'action-goto-exam-builder',
         group: 'actions',
         title: 'Mở Soạn đề',
@@ -371,17 +468,6 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         dotColor: '#1B5E4A',
         href: ROUTES.examBuilder,
         searchText: 'soan de tao de kiem tra toan trac nghiem dung sai tra loi ngan latex pdf in',
-      },
-      {
-        id: 'action-goto-math-ink',
-        group: 'actions',
-        title: 'Mở Bảng viết (Math Ink Studio)',
-        subtitle: 'Vở ô ly viết tay, hình không gian 3D nét đứt, đồ thị f(x) & tích phân',
-        badge: 'Bảng viết',
-        dotColor: '#1D4F6E',
-        href: ROUTES.mathInk,
-        searchText:
-          'bang viet scrble ink vo o ly ve do thi ham so hinh khong gian 3d chop lang tru',
       },
       {
         id: 'action-goto-billiards',
@@ -394,26 +480,153 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
         searchText: 'di toi bi da bida 8 ball pool sanh thu gian tro choi giai tri',
       },
     ];
+
+    if (pomodoro.status !== 'idle') {
+      list.push({
+        id: 'action-pomodoro-reset',
+        group: 'actions',
+        title: 'Đặt lại đồng hồ Pomodoro về 00:00',
+        subtitle: 'Kết thúc phiên đếm ngược hiện tại',
+        badge: 'Đặt lại',
+        searchText: 'dat lai huy dung pomodoro reset timer',
+        onExecute: () => {
+          resetPomodoro();
+        },
+      });
+    }
+
+    if (canInstall && !isStandalone) {
+      list.unshift({
+        id: 'action-install-pwa',
+        group: 'actions',
+        title: 'Cài đặt Ứng dụng Học Offline (PWA)',
+        subtitle: 'Ghim Learning Universe ra màn hình máy tính / điện thoại để học không cần mạng',
+        badge: 'Offline App',
+        dotColor: '#17332C',
+        searchText: 'cai dat ung dung app pwa offline ngoai tuyen giang duong',
+        onExecute: () => {
+          void promptInstall();
+        },
+      });
+    }
+
+    return list;
   }, [
+    canInstall,
+    createNewExam,
+    createNotebook,
     isDark,
     isRailCollapsed,
+    isStandalone,
+    navigate,
     pausePomodoro,
     pomodoro.status,
+    promptInstall,
+    resetPomodoro,
     resumePomodoro,
     startPomodoro,
     toggleRail,
     toggleTheme,
   ]);
 
+  const studioItems = useMemo<readonly OsCommandItem[]>(() => {
+    const folderMap = new Map(inkFolders.map((f) => [f.id, f.name]));
+    const notebookItems: OsCommandItem[] = inkBucket.notebooks.map((nb) => {
+      const folderName = nb.folderId
+        ? (folderMap.get(nb.folderId) ?? 'Thư mục riêng')
+        : 'Chưa phân mục';
+      const strokeAndObjCount = nb.pages.reduce(
+        (sum, pg) =>
+          sum +
+          pg.strokes.length +
+          pg.shapes.length +
+          pg.solids3d.length +
+          pg.graphs.length +
+          (pg.geoObjects?.length ?? 0) +
+          pg.texts.length,
+        0,
+      );
+      return {
+        id: `studio-nb-${nb.id}`,
+        group: 'studio',
+        title: nb.title,
+        subtitle: `Bảng viết · ${folderName} · ${nb.pages.length} trang (${strokeAndObjCount} mục)`,
+        badge: 'Vở viết',
+        dotColor: '#1D4F6E',
+        searchText: `${nb.title} ${folderName} vo bang viet ghi chep nhap toan studio`,
+        onExecute: () => {
+          selectNotebook(nb.id);
+          void navigate(ROUTES.mathInk);
+        },
+      };
+    });
+
+    const examItems: OsCommandItem[] = examBucket.exams.map((exam) => ({
+      id: `studio-exam-${exam.id}`,
+      group: 'studio',
+      title: exam.title,
+      subtitle: `Xưởng Soạn đề · ${exam.images.length} hình đính kèm · Chuẩn in A4 / LaTeX`,
+      badge: 'Đề soạn',
+      dotColor: '#1B5E4A',
+      searchText: `${exam.title} de thi de kiem tra xuong soan de studio`,
+      onExecute: () => {
+        selectExam(exam.id);
+        void navigate(ROUTES.examBuilder);
+      },
+    }));
+
+    return [...notebookItems, ...examItems];
+  }, [examBucket.exams, inkBucket.notebooks, inkFolders, navigate, selectExam, selectNotebook]);
+
   const groups = useMemo<readonly CommandGroupSection[]>(() => {
     const isEmpty = query.trim().length === 0;
-    const matchedActions = rankItems(osActionItems, query, 5);
-    const matchedLessons = rankItems(STATIC_LESSONS, query, isEmpty ? 4 : 6);
-    const matchedGlossary = rankItems(STATIC_GLOSSARY, query, isEmpty ? 3 : 6);
-    const matchedHeritage = rankItems(STATIC_HERITAGE, query, isEmpty ? 3 : 5);
+    const focusedLimit = 14;
+
+    const matchedActions =
+      activeScope === 'all' || activeScope === 'actions'
+        ? rankItems(
+            osActionItems,
+            query,
+            activeScope === 'actions' ? focusedLimit : isEmpty ? 5 : 6,
+          )
+        : [];
+    const matchedStudio =
+      activeScope === 'all' || activeScope === 'studio'
+        ? rankItems(studioItems, query, activeScope === 'studio' ? focusedLimit : isEmpty ? 3 : 6)
+        : [];
+    const matchedLessons =
+      activeScope === 'all' || activeScope === 'lessons'
+        ? rankItems(
+            STATIC_LESSONS,
+            query,
+            activeScope === 'lessons' ? focusedLimit : isEmpty ? 4 : 6,
+          )
+        : [];
+    const matchedGlossary =
+      activeScope === 'all' || activeScope === 'glossary'
+        ? rankItems(
+            STATIC_GLOSSARY,
+            query,
+            activeScope === 'glossary' ? focusedLimit : isEmpty ? 3 : 6,
+          )
+        : [];
+    const matchedHeritage =
+      activeScope === 'all' || activeScope === 'heritage'
+        ? rankItems(
+            STATIC_HERITAGE,
+            query,
+            activeScope === 'heritage' ? focusedLimit : isEmpty ? 3 : 5,
+          )
+        : [];
 
     const all: CommandGroupSection[] = [
       { key: 'actions', label: 'LỆNH NHANH OS', icon: Sparkles, items: matchedActions },
+      {
+        key: 'studio',
+        label: `STUDIO CÁ NHÂN (${inkBucket.notebooks.length} VỞ · ${examBucket.exams.length} ĐỀ)`,
+        icon: FolderKanban,
+        items: matchedStudio,
+      },
       {
         key: 'lessons',
         label: `BÀI GIẢNG (${STATIC_LESSONS.length} BÀI)`,
@@ -435,7 +648,14 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     ];
 
     return all.filter((section) => section.items.length > 0);
-  }, [osActionItems, query]);
+  }, [
+    activeScope,
+    examBucket.exams.length,
+    inkBucket.notebooks.length,
+    osActionItems,
+    query,
+    studioItems,
+  ]);
 
   const flatItems = useMemo(() => groups.flatMap((section) => section.items), [groups]);
 
@@ -475,6 +695,16 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
   );
 
   const handleInputKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      const idx = SCOPE_TABS.findIndex((t) => t.key === activeScope);
+      const nextIdx = event.shiftKey
+        ? (idx - 1 + SCOPE_TABS.length) % SCOPE_TABS.length
+        : (idx + 1) % SCOPE_TABS.length;
+      setActiveScope(SCOPE_TABS[nextIdx]!.key);
+      setActiveIndex(0);
+      return;
+    }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       if (flatItems.length > 0) {
@@ -500,28 +730,76 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
     return null;
   }
 
-  const renderActionIcon = (itemId: string) => {
-    if (itemId === 'action-toggle-theme') {
-      return isDark ? (
-        <Sun className="h-4 w-4 shrink-0" aria-hidden="true" />
-      ) : (
-        <Moon className="h-4 w-4 shrink-0" aria-hidden="true" />
+  const renderItemLeading = (item: OsCommandItem, isSelected: boolean) => {
+    if (item.group === 'actions') {
+      let icon = <Sparkles className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      if (item.id === 'action-toggle-theme') {
+        icon = isDark ? (
+          <Sun className="h-4 w-4 shrink-0" aria-hidden="true" />
+        ) : (
+          <Moon className="h-4 w-4 shrink-0" aria-hidden="true" />
+        );
+      } else if (item.id === 'action-toggle-rail') {
+        icon = isRailCollapsed ? (
+          <PanelLeftOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
+        ) : (
+          <PanelLeftClose className="h-4 w-4 shrink-0" aria-hidden="true" />
+        );
+      } else if (item.id === 'action-pomodoro' || item.id === 'action-pomodoro-45') {
+        icon = <Hourglass className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-pomodoro-reset') {
+        icon = <RotateCcw className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-goto-billiards') {
+        icon = <Gamepad2 className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-new-ink-notebook' || item.id === 'action-goto-math-ink') {
+        icon = <PenTool className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-teach-mode') {
+        icon = <Presentation className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-new-exam') {
+        icon = <FilePlus2 className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-goto-exam-builder') {
+        icon = <FilePenLine className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      } else if (item.id === 'action-install-pwa') {
+        icon = <Download className="h-4 w-4 shrink-0" aria-hidden="true" />;
+      }
+
+      return (
+        <span
+          className={cn(
+            'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]',
+            isSelected ? 'text-[var(--accent-os)]' : 'text-[var(--text-muted)]',
+          )}
+        >
+          {icon}
+        </span>
       );
     }
-    if (itemId === 'action-toggle-rail') {
-      return isRailCollapsed ? (
-        <PanelLeftOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
-      ) : (
-        <PanelLeftClose className="h-4 w-4 shrink-0" aria-hidden="true" />
+
+    if (item.group === 'studio') {
+      const isExam = item.id.startsWith('studio-exam-');
+      return (
+        <span
+          className={cn(
+            'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]',
+            isSelected ? 'text-[var(--accent-os)]' : 'text-[var(--text-secondary)]',
+          )}
+        >
+          {isExam ? (
+            <FilePenLine className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          ) : (
+            <PenTool className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          )}
+        </span>
       );
     }
-    if (itemId === 'action-pomodoro') {
-      return <Hourglass className="h-4 w-4 shrink-0" aria-hidden="true" />;
-    }
-    if (itemId === 'action-goto-billiards') {
-      return <Gamepad2 className="h-4 w-4 shrink-0" aria-hidden="true" />;
-    }
-    return <Sparkles className="h-4 w-4 shrink-0" aria-hidden="true" />;
+
+    return (
+      <span
+        className="h-2 w-2 shrink-0 rounded-full"
+        style={{ backgroundColor: item.dotColor ?? 'var(--accent-os)' }}
+        aria-hidden="true"
+      />
+    );
   };
 
   return (
@@ -530,18 +808,18 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
       aria-modal="true"
       aria-label="Bảng lệnh trung tâm Academic OS (⌘K)"
       data-testid="os-command-palette"
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 pt-16 backdrop-blur-xs transition-opacity sm:pt-24"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 px-4 pt-14 backdrop-blur-xs transition-opacity sm:pt-20"
       onClick={() => onOpenChange(false)}
     >
       <div
-        className="lu-glass-bar w-full max-w-[600px] overflow-hidden rounded-2xl border border-[var(--glass-border)] text-[var(--text-main)] shadow-2xl"
+        className="lu-glass-bar w-full max-w-[640px] overflow-hidden rounded-2xl border border-[var(--glass-border)] text-[var(--text-main)] shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         {/* Thanh nhập liệu tìm kiếm toàn cục */}
         <div className="flex items-center gap-3 border-b border-[var(--border-hairline)] px-4 py-3">
           <Search className="h-4 w-4 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />
           <label htmlFor={inputId} className="sr-only">
-            Tìm bài giảng, thuật ngữ, di sản hoặc chạy lệnh nhanh
+            Tìm bài giảng, thuật ngữ, vở bảng viết, đề soạn hoặc chạy lệnh nhanh
           </label>
           <input
             ref={inputRef}
@@ -559,7 +837,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
               setActiveIndex(0);
             }}
             onKeyDown={handleInputKeyDown}
-            placeholder="Tìm bài giảng, thuật ngữ, di sản hoặc lệnh nhanh (VD: nhom thuong, bi da)..."
+            placeholder="Tìm bài giảng, vở Bảng viết, đề soạn, thuật ngữ hoặc lệnh nhanh (VD: nhom thuong, tap giang)..."
             className="w-full bg-transparent text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none"
           />
 
@@ -587,12 +865,43 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
           </button>
         </div>
 
-        {/* Danh sách kết quả theo 4 nhóm */}
+        {/* Thanh lọc phân mục nhanh (hỗ trợ bấm chuột hoặc nhấn phím Tab) */}
+        <div
+          data-testid="os-cmd-filter-bar"
+          className="flex items-center gap-1 overflow-x-auto border-b border-[var(--border-hairline)] bg-[var(--bg-surface)]/55 px-3 py-1.5"
+        >
+          {SCOPE_TABS.map((tab) => {
+            const selected = activeScope === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                data-testid={`os-cmd-scope-${tab.key}`}
+                aria-pressed={selected}
+                onClick={() => {
+                  setActiveScope(tab.key);
+                  setActiveIndex(0);
+                  inputRef.current?.focus();
+                }}
+                className={cn(
+                  'shrink-0 cursor-pointer rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors',
+                  selected
+                    ? 'bg-[var(--accent-os)] text-white shadow-2xs'
+                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]',
+                )}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Danh sách kết quả đa nguồn */}
         <div
           id={listboxId}
           role="listbox"
           aria-label="Kết quả bảng lệnh"
-          className="custom-scrollbar max-h-[58vh] overflow-y-auto px-2 py-2"
+          className="custom-scrollbar max-h-[56vh] overflow-y-auto px-2 py-2"
         >
           {flatItems.length > 0 ? (
             <div className="space-y-3">
@@ -635,24 +944,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                             )}
                           >
                             <div className="flex min-w-0 flex-1 items-center gap-2.5">
-                              {item.group === 'actions' ? (
-                                <span
-                                  className={cn(
-                                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)]',
-                                    isSelected
-                                      ? 'text-[var(--accent-os)]'
-                                      : 'text-[var(--text-muted)]',
-                                  )}
-                                >
-                                  {renderActionIcon(item.id)}
-                                </span>
-                              ) : (
-                                <span
-                                  className="h-2 w-2 shrink-0 rounded-full"
-                                  style={{ backgroundColor: item.dotColor ?? 'var(--accent-os)' }}
-                                  aria-hidden="true"
-                                />
-                              )}
+                              {renderItemLeading(item, isSelected)}
 
                               <div className="min-w-0 flex-1">
                                 <p className="truncate text-[13.5px] font-medium text-[var(--text-main)]">
@@ -693,8 +985,8 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
                 Không tìm thấy kết quả phù hợp cho &ldquo;{query.trim()}&rdquo;
               </p>
               <p className="mt-1 text-xs text-[var(--text-muted)]">
-                Thử tìm không dấu như &ldquo;nhom thuong&rdquo;, &ldquo;lagrange&rdquo;, &ldquo;khue
-                van&rdquo; hoặc &ldquo;bi da&rdquo;.
+                Thử chuyển bộ lọc sang &ldquo;Tất cả&rdquo; hoặc gõ không dấu như &ldquo;nhom
+                thuong&rdquo;, &ldquo;tap giang&rdquo;, &ldquo;vo toan&rdquo;.
               </p>
             </div>
           )}
@@ -702,7 +994,7 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
 
         {/* Chân hộp lệnh */}
         <div className="flex items-center justify-between border-t border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 text-[11px] text-[var(--text-muted)]">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-1">
               <kbd className="rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-0.5 font-mono text-[10px]">
                 ↑
@@ -714,9 +1006,15 @@ export const CommandPalette: FC<CommandPaletteProps> = ({
             </span>
             <span className="inline-flex items-center gap-1">
               <kbd className="rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-0.5 font-mono text-[10px]">
+                Tab
+              </kbd>
+              <span>Lọc nhóm</span>
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <kbd className="rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-0.5 font-mono text-[10px]">
                 Enter
               </kbd>
-              <span>Mở</span>
+              <span>Thực thi</span>
             </span>
             <span className="inline-flex items-center gap-1">
               <kbd className="rounded border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-1.5 py-0.5 font-mono text-[10px]">

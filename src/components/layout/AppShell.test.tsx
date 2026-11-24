@@ -6,7 +6,10 @@ import { IslandProvider, POMODORO_RETURN_PATH_KEY, useIsland } from '@/context/I
 import { LayoutProvider } from '@/context/LayoutContext';
 import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
 import { AuthProvider } from '@/features/auth';
+import { useExamBuilderStore } from '@/features/exam-builder';
 import { useLearningStore } from '@/features/learning';
+import { selectActiveNotebook, useInkNotebookStore } from '@/features/math-ink';
+import { resetPwaStatusForTests } from '@/shared/hooks/usePwaStatus';
 import { TooltipProvider } from '@/shared/ui';
 import { AppShell } from './AppShell';
 
@@ -56,6 +59,9 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
     localStorage.clear();
     sessionStorage.clear();
     useLearningStore.getState().resetLearningStore();
+    useInkNotebookStore.getState().resetInkStore();
+    useExamBuilderStore.getState().resetExamBuilderStore();
+    resetPwaStatusForTests();
     document.documentElement.classList.remove('dark');
     document.documentElement.removeAttribute('data-theme');
   });
@@ -270,5 +276,71 @@ describe('Academic OS AppShell, LeftRail, TopContextBar & CommandPalette (⌘K)'
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('D1 & D2: Hiển thị huy hiệu Ngoại tuyến / nút Cài App PWA và điều hành đa năng Vở Bảng viết + Đề soạn + Tập giảng trong Ctrl+K', async () => {
+    // Chuẩn bị 1 vở Bảng viết riêng & 1 đề kiểm tra riêng
+    const customNb = useInkNotebookStore.getState().createNotebook('Vở Nháp Hình Học Affine');
+    useInkNotebookStore.getState().createNotebook('Vở Khác');
+    expect(selectActiveNotebook(useInkNotebookStore.getState()).id).not.toBe(customNb.id);
+
+    renderAppShell('/');
+
+    // 1. D1 — Mô phỏng mất mạng tại giảng đường -> hiện huy hiệu Ngoại tuyến; có mạng lại -> tự ẩn
+    const originalOnLine = Object.getOwnPropertyDescriptor(window.navigator, 'onLine');
+    Object.defineProperty(window.navigator, 'onLine', { configurable: true, get: () => false });
+    act(() => {
+      window.dispatchEvent(new Event('offline'));
+    });
+    expect(screen.getByTestId('topbar-offline-badge')).toHaveTextContent('Ngoại tuyến');
+
+    Object.defineProperty(window.navigator, 'onLine', { configurable: true, get: () => true });
+    act(() => {
+      window.dispatchEvent(new Event('online'));
+    });
+    expect(screen.queryByTestId('topbar-offline-badge')).not.toBeInTheDocument();
+    if (originalOnLine) {
+      Object.defineProperty(window.navigator, 'onLine', originalOnLine);
+    }
+
+    // Mô phỏng trình duyệt phát sự kiện cài đặt PWA (beforeinstallprompt)
+    const promptSpy = vi.fn().mockResolvedValue(undefined);
+    const installEvent = Object.assign(new Event('beforeinstallprompt', { cancelable: true }), {
+      prompt: promptSpy,
+      userChoice: Promise.resolve({ outcome: 'accepted' as const, platform: 'web' }),
+    });
+    act(() => {
+      window.dispatchEvent(installEvent);
+    });
+    const installBtn = screen.getByTestId('topbar-pwa-install-btn');
+    expect(installBtn).toBeInTheDocument();
+
+    // 2. D2 — Mở Ctrl+K, kiểm tra thanh lọc phân mục bằng phím Tab & chọn mở thẳng đúng Vở Bảng viết
+    fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+    const dialog = await screen.findByTestId('os-command-palette');
+    expect(screen.getByTestId('os-cmd-filter-bar')).toBeInTheDocument();
+
+    const input = screen.getByRole('combobox');
+    // Chuyển sang phân mục Studio bằng nút lọc
+    fireEvent.click(screen.getByTestId('os-cmd-scope-studio'));
+    expect(dialog).toHaveTextContent('Vở Nháp Hình Học Affine');
+
+    fireEvent.change(input, { target: { value: 'hinh hoc affine' } });
+    act(() => {
+      fireEvent.keyDown(input, { key: 'Enter' });
+    });
+
+    // Phải tự chuyển activeNotebook về đúng "Vở Nháp Hình Học Affine" và điều hướng tới /bang-viet
+    expect(selectActiveNotebook(useInkNotebookStore.getState()).id).toBe(customNb.id);
+    expect(screen.getByTestId('location-probe')).toHaveTextContent('/bang-viet');
+
+    // Mở lại Ctrl+K và kích hoạt lệnh nhanh "Tập giảng" -> điều hướng thẳng tới /bang-viet?mode=teach
+    fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+    const input2 = await screen.findByRole('combobox');
+    fireEvent.change(input2, { target: { value: 'tap giang' } });
+    act(() => {
+      fireEvent.keyDown(input2, { key: 'Enter' });
+    });
+    expect(screen.getByTestId('location-probe')).toHaveTextContent('/bang-viet?mode=teach');
   });
 });

@@ -1,0 +1,52 @@
+{
+  "name": "Learning Universe — Không gian Học thuật Sư phạm Toán",
+  "short_name": "Learning Universe",
+  "description": "Nền tảng học tập Cấu trúc Đại số, Hình học Affine, Giải tích, Bảng viết Toán & Xưởng Soạn đề hỗ trợ học Offline.",
+  "lang": "vi",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7F6F1",
+  "theme_color": "#17332C",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-laxanh.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Bảng viết Toán học",
+      "short_name": "Bảng viết",
+      "url": "/bang-viet",
+      "description": "Mở vở ô ly, dựng hình GeoGebra, hình 3D & tập giảng"
+    },
+    {
+      "name": "Xưởng Soạn đề",
+      "short_name": "Soạn đề",
+      "url": "/soan-de",
+      "description": "Soạn đề Toán chuẩn A4 & xuất PDF/LaTeX"
+    },
+    {
+      "name": "Kho Thuật ngữ Toán học",
+      "short_name": "Thuật ngữ",
+      "url": "/thuat-ngu",
+      "description": "Tra cứu nhanh định nghĩa và ký hiệu Toán học"
+    },
+    {
+      "name": "Không gian học tập",
+      "short_name": "Học phần",
+      "url": "/learning-space",
+      "description": "Đọc bài giảng chuyên sâu các học phần Sư phạm Toán"
+    }
+  ]
+}

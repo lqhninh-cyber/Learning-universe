@@ -12,6 +12,7 @@ import type {
   InkPoint,
   InkShapeItem,
   InkStroke,
+  InkTextItem,
   InkWorksheetBackground,
   PaperConfig,
 } from './types';
@@ -915,6 +916,595 @@ export interface PageRenderOptions {
   readonly selectedIds?: ReadonlySet<string>;
   readonly spacerLineY?: number | null;
   readonly geoOverlay?: GeoOverlayState;
+  /**
+   * Khi bật trên màn hình tương tác, các mục `page.texts` được hiển thị qua lớp phủ KaTeX HTML vector
+   * nên bỏ qua vẽ thô trên canvas để không bị bóng chữ LaTeX đè dưới công thức.
+   * Khi xuất PNG / PDF / Ghi hình bài giảng (mặc định `false`), động cơ sẽ vẽ công thức toán định dạng đẹp trực tiếp lên Canvas 2D.
+   */
+  readonly skipScreenMathTexts?: boolean;
+}
+
+const LATEX_SYMBOL_MAP: ReadonlyArray<readonly [RegExp, string]> = [
+  [/\\mathbb\{R\}|\\R\b/g, 'ℝ'],
+  [/\\mathbb\{Z\}|\\Z\b/g, 'ℤ'],
+  [/\\mathbb\{N\}|\\N\b/g, 'ℕ'],
+  [/\\mathbb\{Q\}|\\Q\b/g, 'ℚ'],
+  [/\\mathbb\{C\}|\\C\b/g, 'ℂ'],
+  [/\\operatorname\{([^}]*)\}/g, '$1'],
+  [/\\text\{([^}]*)\}/g, '$1'],
+  [/\\mathrm\{([^}]*)\}/g, '$1'],
+  [/\\iff\b|\\Leftrightarrow\b/g, '⇔'],
+  [/\\implies\b|\\Rightarrow\b/g, '⇒'],
+  [/\\Leftarrow\b/g, '⇐'],
+  [/\\mapsto\b/g, '↦'],
+  [/\\to\b|\\rightarrow\b/g, '→'],
+  [/\\leftarrow\b/g, '←'],
+  [/\\forall\b/g, '∀'],
+  [/\\exists\b/g, '∃'],
+  [/\\notin\b/g, '∉'],
+  [/\\in\b/g, '∈'],
+  [/\\subseteq\b/g, '⊆'],
+  [/\\subset\b/g, '⊂'],
+  [/\\supseteq\b/g, '⊇'],
+  [/\\supset\b/g, '⊃'],
+  [/\\cup\b/g, '∪'],
+  [/\\cap\b/g, '∩'],
+  [/\\setminus\b/g, '∖'],
+  [/\\emptyset\b|\\varnothing\b/g, '∅'],
+  [/\\infty\b/g, '∞'],
+  [/\\pm\b/g, '±'],
+  [/\\mp\b/g, '∓'],
+  [/\\cdot\b/g, '·'],
+  [/\\times\b/g, '×'],
+  [/\\div\b/g, '÷'],
+  [/\\le\b|\\leq\b/g, '≤'],
+  [/\\ge\b|\\geq\b/g, '≥'],
+  [/\\ne\b|\\neq\b/g, '≠'],
+  [/\\approx\b/g, '≈'],
+  [/\\equiv\b/g, '≡'],
+  [/\\cong\b/g, '≅'],
+  [/\\sim\b/g, '∼'],
+  [/\\perp\b/g, '⊥'],
+  [/\\parallel\b/g, '∥'],
+  [/\\triangle\b/g, '△'],
+  [/\\angle\b/g, '∠'],
+  [/\^\\circ|\\circ\b/g, '°'],
+  [/\\int\b/g, '∫'],
+  [/\\sum\b/g, '∑'],
+  [/\\prod\b/g, '∏'],
+  [/\\partial\b/g, '∂'],
+  [/\\nabla\b/g, '∇'],
+  [/\\ker\b/g, 'ker '],
+  [/\\im\b/g, 'Im '],
+  [/\\lim\b/g, 'lim'],
+  [/\\sin\b/g, 'sin'],
+  [/\\cos\b/g, 'cos'],
+  [/\\tan\b/g, 'tan'],
+  [/\\cot\b/g, 'cot'],
+  [/\\ln\b/g, 'ln'],
+  [/\\log\b/g, 'log'],
+  [/\\alpha\b/g, 'α'],
+  [/\\beta\b/g, 'β'],
+  [/\\gamma\b/g, 'γ'],
+  [/\\Gamma\b/g, 'Γ'],
+  [/\\delta\b/g, 'δ'],
+  [/\\Delta\b/g, 'Δ'],
+  [/\\varepsilon\b|\\epsilon\b/g, 'ε'],
+  [/\\zeta\b/g, 'ζ'],
+  [/\\eta\b/g, 'η'],
+  [/\\theta\b/g, 'θ'],
+  [/\\Theta\b/g, 'Θ'],
+  [/\\lambda\b/g, 'λ'],
+  [/\\Lambda\b/g, 'Λ'],
+  [/\\mu\b/g, 'μ'],
+  [/\\pi\b/g, 'π'],
+  [/\\Pi\b/g, 'Π'],
+  [/\\rho\b/g, 'ρ'],
+  [/\\sigma\b/g, 'σ'],
+  [/\\Sigma\b/g, 'Σ'],
+  [/\\tau\b/g, 'τ'],
+  [/\\varphi\b|\\phi\b/g, 'φ'],
+  [/\\Phi\b/g, 'Φ'],
+  [/\\psi\b/g, 'ψ'],
+  [/\\omega\b/g, 'ω'],
+  [/\\Omega\b/g, 'Ω'],
+  [/\\dots\b|\\ldots\b|\\cdots\b/g, '…'],
+  [/\\,|\\;|\\quad\b|\\qquad\b/g, ' '],
+  [/\\left|\\right/g, ''],
+];
+
+function extractBracedGroup(
+  src: string,
+  openIdx: number,
+): { content: string; nextIdx: number } | null {
+  if (src[openIdx] !== '{') return null;
+  let depth = 0;
+  for (let i = openIdx; i < src.length; i += 1) {
+    const ch = src[i];
+    if (ch === '{') depth += 1;
+    else if (ch === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        return { content: src.slice(openIdx + 1, i), nextIdx: i + 1 };
+      }
+    }
+  }
+  return { content: src.slice(openIdx + 1), nextIdx: src.length };
+}
+
+/**
+ * Chuyển chuỗi LaTeX sang chuỗi ký hiệu toán học Unicode sạch đẹp (phục vụ kiểm thử & fallback một dòng).
+ */
+export function formatLatexToReadableMath(raw: string): string {
+  let out = raw.trim();
+  if (out.startsWith('$$') && out.endsWith('$$') && out.length > 4) {
+    out = out.slice(2, -2).trim();
+  } else if (out.startsWith('$') && out.endsWith('$') && out.length > 2) {
+    out = out.slice(1, -1).trim();
+  } else {
+    out = out.replace(/\$\$([\s\S]+?)\$\$/g, '$1').replace(/\$([^$\n]+?)\$/g, '$1');
+  }
+
+  out = out.replace(/\\begin\{cases\}([\s\S]*?)\\end\{cases\}/g, (_m, body: string) =>
+    body
+      .split(/\\\\/)
+      .map((r) => `{ ${r.replace(/&/g, '  ').trim()}`)
+      .join('\n'),
+  );
+  out = out.replace(
+    /\\begin\{(?:p|b|v)?matrix\}([\s\S]*?)\\end\{(?:p|b|v)?matrix\}/g,
+    (_m, body: string) =>
+      body
+        .split(/\\\\/)
+        .map((r) => `[ ${r.replace(/&/g, '   ').trim()} ]`)
+        .join('\n'),
+  );
+
+  for (const [pattern, replacement] of LATEX_SYMBOL_MAP) {
+    out = out.replace(pattern, replacement);
+  }
+
+  // Biểu diễn fallback ngắn gọn cho phân số / căn / vectơ trong chuỗi thuần văn bản
+  out = out.replace(/\\(?:d|t)?frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)');
+  out = out.replace(/\\sqrt\[([^{}\]]*)\]\{([^{}]*)\}/g, 'ⁿ√($2)');
+  out = out.replace(/\\sqrt\{([^{}]*)\}/g, '√($1)');
+  out = out.replace(/\\(?:overrightarrow|vec)\{([^{}]*)\}/g, '$1⃗');
+  out = out.replace(/\\widehat\{([^{}]*)\}/g, '∠$1');
+
+  return out;
+}
+
+type MathCanvasToken =
+  | { readonly kind: 'text'; readonly value: string }
+  | { readonly kind: 'frac'; readonly num: string; readonly den: string }
+  | { readonly kind: 'sqrt'; readonly index?: string; readonly body: string }
+  | { readonly kind: 'vec'; readonly body: string }
+  | { readonly kind: 'hat'; readonly body: string }
+  | { readonly kind: 'sup'; readonly body: string }
+  | { readonly kind: 'sub'; readonly body: string };
+
+function tokenizeMathLine(line: string): readonly MathCanvasToken[] {
+  let normalized = line;
+  for (const [pattern, replacement] of LATEX_SYMBOL_MAP) {
+    normalized = normalized.replace(pattern, replacement);
+  }
+
+  const tokens: MathCanvasToken[] = [];
+  let buf = '';
+  let i = 0;
+
+  const flushBuf = () => {
+    if (buf) {
+      tokens.push({ kind: 'text', value: buf });
+      buf = '';
+    }
+  };
+
+  while (i < normalized.length) {
+    const rest = normalized.slice(i);
+
+    // \frac{num}{den} hoặc \dfrac{num}{den}
+    const fracMatch = rest.match(/^\\(?:d|t)?frac\s*/);
+    if (fracMatch) {
+      const g1Start = i + fracMatch[0].length;
+      const g1 = extractBracedGroup(normalized, g1Start);
+      if (g1) {
+        let g2Start = g1.nextIdx;
+        while (g2Start < normalized.length && normalized[g2Start] === ' ') g2Start += 1;
+        const g2 = extractBracedGroup(normalized, g2Start);
+        if (g2) {
+          flushBuf();
+          tokens.push({ kind: 'frac', num: g1.content, den: g2.content });
+          i = g2.nextIdx;
+          continue;
+        }
+      }
+    }
+
+    // \sqrt[n]{body} hoặc \sqrt{body}
+    if (rest.startsWith('\\sqrt')) {
+      let cursor = i + 5;
+      let rootIdx: string | undefined;
+      if (normalized[cursor] === '[') {
+        const closeBracket = normalized.indexOf(']', cursor + 1);
+        if (closeBracket !== -1) {
+          rootIdx = normalized.slice(cursor + 1, closeBracket);
+          cursor = closeBracket + 1;
+        }
+      }
+      const grp = extractBracedGroup(normalized, cursor);
+      if (grp) {
+        flushBuf();
+        tokens.push({ kind: 'sqrt', index: rootIdx, body: grp.content });
+        i = grp.nextIdx;
+        continue;
+      }
+    }
+
+    // \overrightarrow{AB} hoặc \vec{u}
+    const vecMatch = rest.match(/^\\(?:overrightarrow|vec)\s*/);
+    if (vecMatch) {
+      const grp = extractBracedGroup(normalized, i + vecMatch[0].length);
+      if (grp) {
+        flushBuf();
+        tokens.push({ kind: 'vec', body: grp.content });
+        i = grp.nextIdx;
+        continue;
+      }
+    }
+
+    // \widehat{ABC}
+    const hatMatch = rest.match(/^\\widehat\s*/);
+    if (hatMatch) {
+      const grp = extractBracedGroup(normalized, i + hatMatch[0].length);
+      if (grp) {
+        flushBuf();
+        tokens.push({ kind: 'hat', body: grp.content });
+        i = grp.nextIdx;
+        continue;
+      }
+    }
+
+    // Mũ ^{...} hoặc ^x, chỉ số dưới _{...} hoặc _x
+    if ((normalized[i] === '^' || normalized[i] === '_') && i + 1 < normalized.length) {
+      const isSup = normalized[i] === '^';
+      flushBuf();
+      if (normalized[i + 1] === '{') {
+        const grp = extractBracedGroup(normalized, i + 1);
+        if (grp) {
+          tokens.push({ kind: isSup ? 'sup' : 'sub', body: grp.content });
+          i = grp.nextIdx;
+          continue;
+        }
+      }
+      tokens.push({ kind: isSup ? 'sup' : 'sub', body: normalized[i + 1]! });
+      i += 2;
+      continue;
+    }
+
+    if (normalized[i] === '{' || normalized[i] === '}') {
+      i += 1;
+      continue;
+    }
+
+    buf += normalized[i]!;
+    i += 1;
+  }
+
+  flushBuf();
+  return tokens;
+}
+
+function setMathFont(ctx: CanvasRenderingContext2D, fontSize: number, isMath: boolean): void {
+  ctx.font = isMath
+    ? `italic 600 ${Math.max(9, Math.round(fontSize))}px "Times New Roman", Georgia, serif`
+    : `500 ${Math.max(9, Math.round(fontSize))}px "Be Vietnam Pro", system-ui, sans-serif`;
+}
+
+function measureMathTokensWidth(
+  ctx: CanvasRenderingContext2D,
+  tokens: readonly MathCanvasToken[],
+  fontSize: number,
+  isMath: boolean,
+): number {
+  let total = 0;
+  for (const tok of tokens) {
+    if (tok.kind === 'text') {
+      setMathFont(ctx, fontSize, isMath);
+      total += ctx.measureText(tok.value).width;
+    } else if (tok.kind === 'sup' || tok.kind === 'sub') {
+      const subTokens = tokenizeMathLine(tok.body);
+      total += measureMathTokensWidth(ctx, subTokens, fontSize * 0.72, true) + 1;
+    } else if (tok.kind === 'frac') {
+      const numW = measureMathTokensWidth(ctx, tokenizeMathLine(tok.num), fontSize * 0.82, true);
+      const denW = measureMathTokensWidth(ctx, tokenizeMathLine(tok.den), fontSize * 0.82, true);
+      total += Math.max(numW, denW) + 8;
+    } else if (tok.kind === 'sqrt') {
+      const bodyW = measureMathTokensWidth(ctx, tokenizeMathLine(tok.body), fontSize * 0.94, true);
+      total += bodyW + fontSize * 0.65 + 4;
+    } else if (tok.kind === 'vec' || tok.kind === 'hat') {
+      const bodyW = measureMathTokensWidth(ctx, tokenizeMathLine(tok.body), fontSize, true);
+      total += bodyW + 3;
+    }
+  }
+  return total;
+}
+
+function drawMathTokensAt(
+  ctx: CanvasRenderingContext2D,
+  tokens: readonly MathCanvasToken[],
+  startX: number,
+  baselineY: number,
+  fontSize: number,
+  isMath: boolean,
+  color: string,
+): number {
+  let cursorX = startX;
+  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+
+  for (const tok of tokens) {
+    if (tok.kind === 'text') {
+      setMathFont(ctx, fontSize, isMath);
+      ctx.fillText(tok.value, cursorX, baselineY);
+      cursorX += ctx.measureText(tok.value).width;
+      continue;
+    }
+
+    if (tok.kind === 'sup') {
+      const subSize = fontSize * 0.72;
+      const subTokens = tokenizeMathLine(tok.body);
+      cursorX = drawMathTokensAt(
+        ctx,
+        subTokens,
+        cursorX,
+        baselineY - fontSize * 0.38,
+        subSize,
+        true,
+        color,
+      );
+      cursorX += 1;
+      continue;
+    }
+
+    if (tok.kind === 'sub') {
+      const subSize = fontSize * 0.72;
+      const subTokens = tokenizeMathLine(tok.body);
+      cursorX = drawMathTokensAt(
+        ctx,
+        subTokens,
+        cursorX,
+        baselineY + fontSize * 0.24,
+        subSize,
+        true,
+        color,
+      );
+      cursorX += 1;
+      continue;
+    }
+
+    if (tok.kind === 'frac') {
+      const childSize = fontSize * 0.82;
+      const numTokens = tokenizeMathLine(tok.num);
+      const denTokens = tokenizeMathLine(tok.den);
+      const numW = measureMathTokensWidth(ctx, numTokens, childSize, true);
+      const denW = measureMathTokensWidth(ctx, denTokens, childSize, true);
+      const barW = Math.max(numW, denW) + 6;
+      const barY = baselineY - fontSize * 0.3;
+
+      drawMathTokensAt(
+        ctx,
+        numTokens,
+        cursorX + 1 + (barW - numW) / 2,
+        barY - 4,
+        childSize,
+        true,
+        color,
+      );
+      ctx.save();
+      ctx.lineWidth = Math.max(1.1, fontSize * 0.065);
+      ctx.beginPath();
+      ctx.moveTo(cursorX + 1, barY);
+      ctx.lineTo(cursorX + 1 + barW, barY);
+      ctx.stroke();
+      ctx.restore();
+
+      drawMathTokensAt(
+        ctx,
+        denTokens,
+        cursorX + 1 + (barW - denW) / 2,
+        barY + childSize * 0.92 + 2,
+        childSize,
+        true,
+        color,
+      );
+      cursorX += barW + 3;
+      continue;
+    }
+
+    if (tok.kind === 'sqrt') {
+      const bodySize = fontSize * 0.94;
+      const bodyTokens = tokenizeMathLine(tok.body);
+      const bodyW = measureMathTokensWidth(ctx, bodyTokens, bodySize, true);
+      const radW = fontSize * 0.56;
+      const topY = baselineY - fontSize * 0.84;
+
+      if (tok.index) {
+        setMathFont(ctx, fontSize * 0.55, true);
+        ctx.fillText(tok.index, cursorX, baselineY - fontSize * 0.45);
+      }
+
+      ctx.save();
+      ctx.lineWidth = Math.max(1.15, fontSize * 0.065);
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(cursorX + 1, baselineY - fontSize * 0.32);
+      ctx.lineTo(cursorX + radW * 0.42, baselineY + 1);
+      ctx.lineTo(cursorX + radW, topY);
+      ctx.lineTo(cursorX + radW + bodyW + 3, topY);
+      ctx.stroke();
+      ctx.restore();
+
+      drawMathTokensAt(ctx, bodyTokens, cursorX + radW + 1.5, baselineY, bodySize, true, color);
+      cursorX += radW + bodyW + 4;
+      continue;
+    }
+
+    if (tok.kind === 'vec') {
+      const bodyTokens = tokenizeMathLine(tok.body);
+      const bodyW = measureMathTokensWidth(ctx, bodyTokens, fontSize, true);
+      const arrowY = baselineY - fontSize * 0.86;
+      drawMathTokensAt(ctx, bodyTokens, cursorX + 1, baselineY, fontSize, true, color);
+      ctx.save();
+      ctx.lineWidth = Math.max(1.1, fontSize * 0.06);
+      ctx.beginPath();
+      ctx.moveTo(cursorX + 1, arrowY);
+      ctx.lineTo(cursorX + 1 + bodyW, arrowY);
+      ctx.lineTo(cursorX + 1 + bodyW - 4, arrowY - 2.6);
+      ctx.moveTo(cursorX + 1 + bodyW, arrowY);
+      ctx.lineTo(cursorX + 1 + bodyW - 4, arrowY + 2.6);
+      ctx.stroke();
+      ctx.restore();
+      cursorX += bodyW + 3;
+      continue;
+    }
+
+    if (tok.kind === 'hat') {
+      const bodyTokens = tokenizeMathLine(tok.body);
+      const bodyW = measureMathTokensWidth(ctx, bodyTokens, fontSize, true);
+      const hatTopY = baselineY - fontSize * 0.96;
+      const hatBaseY = baselineY - fontSize * 0.76;
+      drawMathTokensAt(ctx, bodyTokens, cursorX + 1, baselineY, fontSize, true, color);
+      ctx.save();
+      ctx.lineWidth = Math.max(1.1, fontSize * 0.06);
+      ctx.beginPath();
+      ctx.moveTo(cursorX + 1, hatBaseY);
+      ctx.lineTo(cursorX + 1 + bodyW / 2, hatTopY);
+      ctx.lineTo(cursorX + 1 + bodyW, hatBaseY);
+      ctx.stroke();
+      ctx.restore();
+      cursorX += bodyW + 3;
+    }
+  }
+
+  return cursorX;
+}
+
+/**
+ * Vẽ một mục công thức / nhãn văn bản toán học trực tiếp lên Canvas 2D
+ * (hỗ trợ phân số chồng tầng, căn thức, chỉ số trên/dưới, mũi tên vectơ, hệ phương trình ngoặc nhọn).
+ */
+export function drawFormattedMathTextOnCanvas(
+  ctx: CanvasRenderingContext2D,
+  textItem: InkTextItem,
+): void {
+  ctx.save();
+  let raw = textItem.text.trim();
+  if (!raw) {
+    ctx.restore();
+    return;
+  }
+
+  const autoMath =
+    textItem.isMath ||
+    raw.includes('$') ||
+    /\\(?:frac|dfrac|sqrt|int|sum|lim|overrightarrow|vec|begin|forall|exists|implies|iff)/.test(
+      raw,
+    );
+
+  if (raw.startsWith('$$') && raw.endsWith('$$') && raw.length > 4) {
+    raw = raw.slice(2, -2).trim();
+  } else if (raw.startsWith('$') && raw.endsWith('$') && raw.length > 2) {
+    raw = raw.slice(1, -1).trim();
+  } else {
+    raw = raw.replace(/\$\$([\s\S]+?)\$\$/g, '$1').replace(/\$([^$\n]+?)\$/g, '$1');
+  }
+
+  // Xử lý khối hệ phương trình \begin{cases} ... \end{cases} với dấu ngoặc nhọn cao
+  const casesMatch = raw.match(/^(.*?)\\begin\{cases\}([\s\S]*?)\\end\{cases\}(.*)$/);
+  if (casesMatch) {
+    const prefix = casesMatch[1]?.trim() ?? '';
+    const casesBody = casesMatch[2] ?? '';
+    const rows = casesBody
+      .split(/\\\\|\n/)
+      .map((r) => r.replace(/&/g, '   ').trim())
+      .filter(Boolean);
+    const lineStep = textItem.fontSize * 1.48;
+    const totalH = Math.max(textItem.fontSize, rows.length * lineStep);
+    let startX = textItem.x;
+    const centerY = textItem.y + ((rows.length - 1) * lineStep) / 2 - textItem.fontSize * 0.28;
+
+    if (prefix) {
+      startX =
+        drawMathTokensAt(
+          ctx,
+          tokenizeMathLine(prefix),
+          startX,
+          centerY + textItem.fontSize * 0.28,
+          textItem.fontSize,
+          true,
+          textItem.color,
+        ) + 6;
+    }
+
+    // Dấu ngoặc nhọn hệ phương trình
+    const topY = centerY - totalH / 2 + 2;
+    const botY = centerY + totalH / 2 - 2;
+    const braceW = Math.max(7, textItem.fontSize * 0.38);
+    ctx.strokeStyle = textItem.color;
+    ctx.lineWidth = Math.max(1.3, textItem.fontSize * 0.07);
+    ctx.beginPath();
+    ctx.moveTo(startX + braceW, topY);
+    ctx.quadraticCurveTo(startX + braceW * 0.35, topY, startX + braceW * 0.35, topY + 6);
+    ctx.lineTo(startX + braceW * 0.35, centerY - 4);
+    ctx.lineTo(startX, centerY);
+    ctx.lineTo(startX + braceW * 0.35, centerY + 4);
+    ctx.lineTo(startX + braceW * 0.35, botY - 6);
+    ctx.quadraticCurveTo(startX + braceW * 0.35, botY, startX + braceW, botY);
+    ctx.stroke();
+
+    rows.forEach((row, idx) => {
+      drawMathTokensAt(
+        ctx,
+        tokenizeMathLine(row),
+        startX + braceW + 5,
+        textItem.y + idx * lineStep,
+        textItem.fontSize * 0.94,
+        true,
+        textItem.color,
+      );
+    });
+    ctx.restore();
+    return;
+  }
+
+  // Ma trận cơ bản
+  const expanded = raw.replace(
+    /\\begin\{(?:p|b|v)?matrix\}([\s\S]*?)\\end\{(?:p|b|v)?matrix\}/g,
+    (_m, body: string) =>
+      body
+        .split(/\\\\/)
+        .map((r) => `( ${r.replace(/&/g, '   ').trim()} )`)
+        .join('\n'),
+  );
+
+  const lines = expanded.split('\n');
+  const hasTallFraction = /\\(?:d|t)?frac/.test(expanded);
+  const lineStep = textItem.fontSize * (hasTallFraction ? 2.05 : 1.42);
+  lines.forEach((line, idx) => {
+    const tokens = tokenizeMathLine(line);
+    drawMathTokensAt(
+      ctx,
+      tokens,
+      textItem.x,
+      textItem.y + idx * lineStep,
+      textItem.fontSize,
+      autoMath,
+      textItem.color,
+    );
+  });
+
+  ctx.restore();
 }
 
 function drawWorksheetBackground(
@@ -1031,18 +1621,11 @@ export function renderInkPageToCanvas(
     if (stroke.penKind !== 'highlighter') drawInkStroke(ctx, stroke);
   }
 
-  // 6. Ghi chú chữ / nhãn trên canvas (phục vụ xuất PNG & xem nhanh)
-  for (const textItem of page.texts) {
-    ctx.save();
-    ctx.fillStyle = textItem.color;
-    ctx.font = textItem.isMath
-      ? `italic 600 ${textItem.fontSize}px "Times New Roman", Georgia, serif`
-      : `500 ${textItem.fontSize}px "Be Vietnam Pro", system-ui, sans-serif`;
-    const lines = textItem.text.split('\n');
-    lines.forEach((line, idx) => {
-      ctx.fillText(line, textItem.x, textItem.y + idx * (textItem.fontSize * 1.35));
-    });
-    ctx.restore();
+  // 6. Ghi chú chữ / công thức toán định dạng đẹp trên canvas (khi xuất PNG, PDF hoặc ghi hình bài giảng)
+  if (!opts.skipScreenMathTexts) {
+    for (const textItem of page.texts) {
+      drawFormattedMathTextOnCanvas(ctx, textItem);
+    }
   }
 
   // 7. Nét đang vẽ & hình đang kéo xem trước

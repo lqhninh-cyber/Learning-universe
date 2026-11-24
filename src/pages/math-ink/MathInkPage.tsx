@@ -19,10 +19,12 @@ import {
   Pencil,
   Plus,
   Pointer,
+  Presentation,
   Redo2,
   RotateCw,
   Ruler,
   Shapes,
+  Sigma,
   SlidersHorizontal,
   Sparkles,
   SquareDashed,
@@ -44,7 +46,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { FolderNotebookSidebar } from '@/components/math-ink/FolderNotebookSidebar';
 import { FunctionGraphPopover } from '@/components/math-ink/FunctionGraphPopover';
 import { GeoGebraToolbar } from '@/components/math-ink/GeoGebraToolbar';
@@ -52,6 +54,10 @@ import {
   GeometryStampsPopover,
   type StampToolConfig,
 } from '@/components/math-ink/GeometryStampsPopover';
+import {
+  InkFormulaEditorPopover,
+  SmartInkMathContent,
+} from '@/components/math-ink/InkFormulaEditorPopover';
 import {
   EraserModePopover,
   InkModePopover,
@@ -61,6 +67,7 @@ import {
   ShapePickerPopover,
 } from '@/components/math-ink/InkToolbarPopovers';
 import { Solid3DPopover } from '@/components/math-ink/Solid3DPopover';
+import { TeachStudioBar } from '@/components/math-ink/TeachStudioBar';
 import { ToolbarPopoverAnchor } from '@/components/math-ink/ToolbarPopoverAnchor';
 import { VariationTablePopover } from '@/components/math-ink/VariationTablePopover';
 import { WorksheetBackgroundPopover } from '@/components/math-ink/WorksheetBackgroundPopover';
@@ -104,6 +111,7 @@ import {
   type InkRecognitionMode,
   type InkShapeItem,
   type InkStroke,
+  type InkTextItem,
   type InkVariationTableItem,
   type InkWorksheetBackground,
   type RulerState,
@@ -125,6 +133,7 @@ type OpenPopoverKey =
   | 'pen'
   | 'ink-mode'
   | 'shapes'
+  | 'formula'
   | 'solid3d'
   | 'graph'
   | 'variation'
@@ -221,6 +230,7 @@ function translateSelectedOnPage(
 
 export function MathInkPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setRailCollapsed } = useLayout();
   const [pinnedExercise, setPinnedExercise] = useState<InkExerciseHandoff | null>(() =>
     readExerciseHandoff(),
@@ -280,6 +290,8 @@ export function MathInkPage() {
   const setWorksheetBackground = useInkNotebookStore((s) => s.setWorksheetBackground);
   const addPagesWithWorksheets = useInkNotebookStore((s) => s.addPagesWithWorksheets);
   const addText = useInkNotebookStore((s) => s.addText);
+  const updateText = useInkNotebookStore((s) => s.updateText);
+  const deleteText = useInkNotebookStore((s) => s.deleteText);
   const addImage = useInkNotebookStore((s) => s.addImage);
   const undo = useInkNotebookStore((s) => s.undo);
   const redo = useInkNotebookStore((s) => s.redo);
@@ -302,6 +314,7 @@ export function MathInkPage() {
   const [openPopover, setOpenPopover] = useState<OpenPopoverKey>(null);
   const [editingSolidId, setEditingSolidId] = useState<string | null>(null);
   const [editingTableId, setEditingTableId] = useState<string | null>(null);
+  const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const [stampConfig, setStampConfig] = useState<StampToolConfig>({
     kind: 'right-angle',
     size: 36,
@@ -334,6 +347,7 @@ export function MathInkPage() {
   const penAnchorRef = useRef<HTMLDivElement>(null);
   const inkModeAnchorRef = useRef<HTMLDivElement>(null);
   const shapesAnchorRef = useRef<HTMLDivElement>(null);
+  const formulaAnchorRef = useRef<HTMLDivElement>(null);
   const solid3dAnchorRef = useRef<HTMLDivElement>(null);
   const graphAnchorRef = useRef<HTMLDivElement>(null);
   const variationAnchorRef = useRef<HTMLDivElement>(null);
@@ -355,6 +369,17 @@ export function MathInkPage() {
   const [zoom, setZoom] = useState(0.85);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [sentToExamNotice, setSentToExamNotice] = useState(false);
+  const [isTeachMode, setIsTeachMode] = useState<boolean>(
+    () => searchParams.get('mode') === 'teach',
+  );
+  const urlModeParam = searchParams.get('mode');
+  const [prevUrlModeParam, setPrevUrlModeParam] = useState<string | null>(urlModeParam);
+  if (urlModeParam !== prevUrlModeParam) {
+    setPrevUrlModeParam(urlModeParam);
+    if (urlModeParam === 'teach') {
+      setIsTeachMode(true);
+    }
+  }
 
   const [ruler, setRuler] = useState<RulerState>({
     visible: false,
@@ -586,6 +611,7 @@ export function MathInkPage() {
       lassoPoints,
       selectedIds,
       spacerLineY,
+      skipScreenMathTexts: true,
       geoOverlay:
         activeTool === 'geo'
           ? {
@@ -636,6 +662,16 @@ export function MathInkPage() {
       ) {
         e.preventDefault();
         redo();
+      } else if (isTeachMode && e.key === 'PageDown') {
+        e.preventDefault();
+        if (activeNotebook.activePageIndex < activeNotebook.pages.length - 1) {
+          selectPage(activeNotebook.activePageIndex + 1);
+        }
+      } else if (isTeachMode && e.key === 'PageUp') {
+        e.preventDefault();
+        if (activeNotebook.activePageIndex > 0) {
+          selectPage(activeNotebook.activePageIndex - 1);
+        }
       } else if (e.key === 'Escape' && activeTool === 'geo') {
         setGeoPendingPts([]);
         setGeoPendingCurveId(null);
@@ -669,7 +705,18 @@ export function MathInkPage() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [activeTool, commitPageMutation, geoSelectedId, redo, selectedIds, undo]);
+  }, [
+    activeNotebook.activePageIndex,
+    activeNotebook.pages.length,
+    activeTool,
+    commitPageMutation,
+    geoSelectedId,
+    isTeachMode,
+    redo,
+    selectPage,
+    selectedIds,
+    undo,
+  ]);
 
   const toCanvasPoint = useCallback(
     (e: ReactPointerEvent<HTMLCanvasElement>): InkPoint => {
@@ -1984,23 +2031,6 @@ export function MathInkPage() {
     e.target.value = '';
   };
 
-  const handleCommitTextBox = () => {
-    if (!pendingTextBox || !pendingTextBox.text.trim()) {
-      setPendingTextBox(null);
-      return;
-    }
-    addText({
-      id: makeLocalId('txt'),
-      x: pendingTextBox.x,
-      y: pendingTextBox.y,
-      text: pendingTextBox.text.trim(),
-      color: activePenPreset.color,
-      fontSize: 20,
-      isMath: pendingTextBox.isMath,
-    });
-    setPendingTextBox(null);
-  };
-
   const handleInsertVariationTable = (
     tableInput: Omit<InkVariationTableItem, 'id' | 'x' | 'y'>,
   ) => {
@@ -2073,10 +2103,30 @@ export function MathInkPage() {
     setOpenPopover(null);
   };
 
+  const renderActivePageExportDataUrl = useCallback((): string | null => {
+    const scale = 1.5;
+    const offscreen = document.createElement('canvas');
+    offscreen.width = Math.round(dims.width * scale);
+    offscreen.height = Math.round(dims.height * scale);
+    const offCtx = offscreen.getContext('2d');
+    if (!offCtx) {
+      return canvasRef.current ? canvasRef.current.toDataURL('image/png') : null;
+    }
+    offCtx.setTransform(scale, 0, 0, scale, 0, 0);
+    renderInkPageToCanvas(offCtx, {
+      width: dims.width,
+      height: dims.height,
+      paper: activeNotebook.paper,
+      page: activePage,
+      imageCache: imageCacheRef.current,
+      skipScreenMathTexts: false,
+    });
+    return offscreen.toDataURL('image/png');
+  }, [activeNotebook.paper, activePage, dims.height, dims.width]);
+
   const handleExportPng = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const dataUrl = canvas.toDataURL('image/png');
+    const dataUrl = renderActivePageExportDataUrl();
+    if (!dataUrl) return;
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = `${activeNotebook.title.toLowerCase().replace(/[^a-z0-9]+/gi, '-') || 'bang-viet-toan'}-trang-${activeNotebook.activePageIndex + 1}.png`;
@@ -2157,9 +2207,8 @@ export function MathInkPage() {
   };
 
   const handleSendToExamBuilder = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const dataUrl = canvas.toDataURL('image/png');
+    const dataUrl = renderActivePageExportDataUrl();
+    if (!dataUrl) return;
     const attached = attachImageToActiveExam({
       dataUrl,
       caption: `${activeNotebook.title} — Trang ${activeNotebook.activePageIndex + 1}`,
@@ -2224,6 +2273,17 @@ export function MathInkPage() {
     const onlyId = Array.from(selectedIds)[0];
     return (activePage.stamps ?? []).find((st) => st.id === onlyId) ?? null;
   }, [activePage.stamps, selectedIds]);
+
+  const selectedText = useMemo<InkTextItem | null>(() => {
+    if (selectedIds.size !== 1) return null;
+    const onlyId = Array.from(selectedIds)[0];
+    return activePage.texts.find((t) => t.id === onlyId) ?? null;
+  }, [activePage.texts, selectedIds]);
+
+  const editingText = useMemo<InkTextItem | null>(() => {
+    if (!editingTextId) return null;
+    return activePage.texts.find((t) => t.id === editingTextId) ?? null;
+  }, [activePage.texts, editingTextId]);
 
   const selectedResizable = useMemo(() => {
     if (selectedIds.size !== 1) return null;
@@ -2550,706 +2610,828 @@ export function MathInkPage() {
       />
 
       {/* ========================================================================
-          THANH CÔNG CỤ SCRBLE INK CẢI TIẾN (TOP RIBBON)
+          THANH CÔNG CỤ SCRBLE INK CẢI TIẾN HOẶC THANH TẬP GIẢNG & GHI HÌNH OFFLINE
           ======================================================================== */}
-      <header className="relative z-30 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 shadow-2xs print:hidden">
-        {/* TRÁI: Trang/Sổ, Undo/Redo, Giấy vở */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setShowPagesSidebar((p) => !p)}
-            title="Ẩn/hiện thư mục & danh sách trang"
-            aria-label="Ẩn hoặc hiện thư mục và danh sách trang"
-            className={cn(
-              'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-              showPagesSidebar
-                ? 'border-[var(--accent-os)]/40 bg-[var(--bg-surface)] text-[var(--accent-os)]'
-                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
-            )}
-          >
-            <PanelLeft className="h-4 w-4" aria-hidden="true" />
-          </button>
-
-          {isRenamingToolbarNb ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (toolbarNbTitleDraft.trim()) {
-                  renameNotebook(activeNotebook.id, toolbarNbTitleDraft.trim());
-                }
-                setIsRenamingToolbarNb(false);
-              }}
-              className="flex items-center gap-1"
+      {isTeachMode ? (
+        <TeachStudioBar
+          notebookTitle={activeNotebook.title}
+          pageIndex={activeNotebook.activePageIndex}
+          pageCount={activeNotebook.pages.length}
+          pageWidth={dims.width}
+          pageHeight={dims.height}
+          activePage={activePage}
+          mainCanvasRef={canvasRef}
+          laserCanvasRef={laserCanvasRef}
+          penPresets={penPresets}
+          activePenPresetId={activePenPreset.id}
+          activeTool={activeTool}
+          canUndo={undoCount > 0}
+          onSelectPen={(presetId) => {
+            selectPenPreset(presetId);
+            setActiveTool('pen');
+          }}
+          onSelectTool={(tool) => {
+            setOpenPopover(null);
+            setActiveTool(tool);
+          }}
+          onOpenFormulaPad={() => {
+            setPendingTextBox({
+              x: Math.round(dims.width * 0.24),
+              y: 170,
+              text: '',
+              isMath: true,
+            });
+          }}
+          onUndo={undo}
+          onSelectPage={selectPage}
+          onAddPage={addPage}
+          onExitTeachMode={() => {
+            setIsTeachMode(false);
+            if (searchParams.get('mode') === 'teach') {
+              const nextParams = new URLSearchParams(searchParams);
+              nextParams.delete('mode');
+              setSearchParams(nextParams, { replace: true });
+            }
+          }}
+        />
+      ) : (
+        <header className="relative z-30 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 shadow-2xs print:hidden">
+          {/* TRÁI: Trang/Sổ, Undo/Redo, Giấy vở */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setShowPagesSidebar((p) => !p)}
+              title="Ẩn/hiện thư mục & danh sách trang"
+              aria-label="Ẩn hoặc hiện thư mục và danh sách trang"
+              className={cn(
+                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                showPagesSidebar
+                  ? 'border-[var(--accent-os)]/40 bg-[var(--bg-surface)] text-[var(--accent-os)]'
+                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
+              )}
             >
-              <input
-                type="text"
-                autoFocus
-                data-testid="toolbar-rename-notebook-input"
-                value={toolbarNbTitleDraft}
-                onChange={(e) => setToolbarNbTitleDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Escape') setIsRenamingToolbarNb(false);
-                }}
-                onBlur={() => {
+              <PanelLeft className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            {isRenamingToolbarNb ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
                   if (toolbarNbTitleDraft.trim()) {
                     renameNotebook(activeNotebook.id, toolbarNbTitleDraft.trim());
                   }
                   setIsRenamingToolbarNb(false);
                 }}
-                aria-label="Đổi tên file vở đang mở"
-                className="h-8 w-[150px] rounded-lg border border-[var(--accent-os)] bg-[var(--bg-workspace)] px-2 text-xs font-medium text-[var(--text-main)] focus:outline-none"
-              />
-              <button
-                type="submit"
-                onMouseDown={(e) => e.preventDefault()}
-                title="Lưu tên vở"
-                aria-label="Lưu tên vở"
-                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-[var(--accent-os)] text-white"
+                className="flex items-center gap-1"
               >
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-            </form>
-          ) : (
-            <>
-              <select
-                aria-label="Chọn vở ghi chép"
-                value={activeNotebook.id}
-                onChange={(e) => selectNotebook(e.target.value)}
-                className="h-8 max-w-[150px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
-              >
-                {bucket.notebooks.map((nb) => (
-                  <option key={nb.id} value={nb.id}>
-                    {nb.title}
-                  </option>
-                ))}
-              </select>
+                <input
+                  type="text"
+                  autoFocus
+                  data-testid="toolbar-rename-notebook-input"
+                  value={toolbarNbTitleDraft}
+                  onChange={(e) => setToolbarNbTitleDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setIsRenamingToolbarNb(false);
+                  }}
+                  onBlur={() => {
+                    if (toolbarNbTitleDraft.trim()) {
+                      renameNotebook(activeNotebook.id, toolbarNbTitleDraft.trim());
+                    }
+                    setIsRenamingToolbarNb(false);
+                  }}
+                  aria-label="Đổi tên file vở đang mở"
+                  className="h-8 w-[150px] rounded-lg border border-[var(--accent-os)] bg-[var(--bg-workspace)] px-2 text-xs font-medium text-[var(--text-main)] focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  onMouseDown={(e) => e.preventDefault()}
+                  title="Lưu tên vở"
+                  aria-label="Lưu tên vở"
+                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-[var(--accent-os)] text-white"
+                >
+                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              </form>
+            ) : (
+              <>
+                <select
+                  aria-label="Chọn vở ghi chép"
+                  value={activeNotebook.id}
+                  onChange={(e) => selectNotebook(e.target.value)}
+                  className="h-8 max-w-[150px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
+                >
+                  {bucket.notebooks.map((nb) => (
+                    <option key={nb.id} value={nb.id}>
+                      {nb.title}
+                    </option>
+                  ))}
+                </select>
 
+                <button
+                  type="button"
+                  data-testid="toolbar-rename-notebook-btn"
+                  onClick={() => {
+                    setToolbarNbTitleDraft(activeNotebook.title);
+                    setIsRenamingToolbarNb(true);
+                  }}
+                  title="Đổi tên file vở đang mở"
+                  aria-label="Đổi tên file vở đang mở"
+                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
+                >
+                  <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              </>
+            )}
+
+            <button
+              type="button"
+              onClick={() => createNotebook(undefined, activeNotebook.folderId ?? null)}
+              title="Tạo vở mới trong thư mục hiện tại"
+              aria-label="Tạo vở ghi chép mới"
+              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            <div className="mx-0.5 h-5 w-px bg-[var(--border-hairline)]" />
+
+            <button
+              type="button"
+              data-testid="ink-undo-btn"
+              disabled={undoCount === 0}
+              onClick={undo}
+              title="Hoàn tác (Ctrl+Z)"
+              aria-label="Hoàn tác"
+              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
+            >
+              <Undo2 className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              data-testid="ink-redo-btn"
+              disabled={redoCount === 0}
+              onClick={redo}
+              title="Làm lại (Ctrl+Y)"
+              aria-label="Làm lại"
+              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
+            >
+              <Redo2 className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            {/* Nút Cài đặt giấy vở (Scrble Paper) */}
+            <div ref={paperAnchorRef} className="relative">
               <button
                 type="button"
-                data-testid="toolbar-rename-notebook-btn"
-                onClick={() => {
-                  setToolbarNbTitleDraft(activeNotebook.title);
-                  setIsRenamingToolbarNb(true);
-                }}
-                title="Đổi tên file vở đang mở"
-                aria-label="Đổi tên file vở đang mở"
-                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
+                data-testid="ink-paper-btn"
+                onClick={() => togglePopover('paper')}
+                title="Kiểu giấy, ô ly, lề đỏ & hướng trang"
+                aria-label="Cài đặt giấy vở"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                  openPopover === 'paper'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
               >
-                <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden sm:inline">Giấy</span>
               </button>
-            </>
-          )}
-
-          <button
-            type="button"
-            onClick={() => createNotebook(undefined, activeNotebook.folderId ?? null)}
-            title="Tạo vở mới trong thư mục hiện tại"
-            aria-label="Tạo vở ghi chép mới"
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" />
-          </button>
-
-          <div className="mx-0.5 h-5 w-px bg-[var(--border-hairline)]" />
-
-          <button
-            type="button"
-            data-testid="ink-undo-btn"
-            disabled={undoCount === 0}
-            onClick={undo}
-            title="Hoàn tác (Ctrl+Z)"
-            aria-label="Hoàn tác"
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
-          >
-            <Undo2 className="h-4 w-4" aria-hidden="true" />
-          </button>
-
-          <button
-            type="button"
-            data-testid="ink-redo-btn"
-            disabled={redoCount === 0}
-            onClick={redo}
-            title="Làm lại (Ctrl+Y)"
-            aria-label="Làm lại"
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
-          >
-            <Redo2 className="h-4 w-4" aria-hidden="true" />
-          </button>
-
-          {/* Nút Cài đặt giấy vở (Scrble Paper) */}
-          <div ref={paperAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-paper-btn"
-              onClick={() => togglePopover('paper')}
-              title="Kiểu giấy, ô ly, lề đỏ & hướng trang"
-              aria-label="Cài đặt giấy vở"
-              className={cn(
-                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
-                openPopover === 'paper'
-                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+              {openPopover === 'paper' && (
+                <ToolbarPopoverAnchor anchorRef={paperAnchorRef} preferAlign="left">
+                  <PaperSettingsPopover paper={activeNotebook.paper} onChange={updatePaperConfig} />
+                </ToolbarPopoverAnchor>
               )}
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden sm:inline">Giấy</span>
-            </button>
-            {openPopover === 'paper' && (
-              <ToolbarPopoverAnchor anchorRef={paperAnchorRef} preferAlign="left">
-                <PaperSettingsPopover paper={activeNotebook.paper} onChange={updatePaperConfig} />
-              </ToolbarPopoverAnchor>
-            )}
+            </div>
           </div>
-        </div>
 
-        {/* GIỮA: Chấm màu bút nhanh + Nhận dạng nét + Thước + Hình 2D + 3D + Đồ thị f(x) + Tẩy + Chọn */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {/* Chấm màu bút nhanh giống Scrble Ink */}
-          <div
-            ref={penAnchorRef}
-            className="relative flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-1"
-          >
-            {penPresets.map((preset) => {
-              const isSelected = activeTool === 'pen' && activePenPreset.id === preset.id;
-              const isHighlighter = preset.penKind === 'highlighter';
-              return (
-                <button
-                  key={preset.id}
-                  type="button"
-                  data-testid={`pen-preset-${preset.id}`}
-                  onClick={() => {
-                    if (isSelected) {
-                      togglePopover('pen');
-                    } else {
-                      selectPenPreset(preset.id);
+          {/* GIỮA: Chấm màu bút nhanh + Nhận dạng nét + Thước + Hình 2D + 3D + Đồ thị f(x) + Tẩy + Chọn */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {/* Chấm màu bút nhanh giống Scrble Ink */}
+            <div
+              ref={penAnchorRef}
+              className="relative flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-1"
+            >
+              {penPresets.map((preset) => {
+                const isSelected = activeTool === 'pen' && activePenPreset.id === preset.id;
+                const isHighlighter = preset.penKind === 'highlighter';
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    data-testid={`pen-preset-${preset.id}`}
+                    onClick={() => {
+                      if (isSelected) {
+                        togglePopover('pen');
+                      } else {
+                        selectPenPreset(preset.id);
+                        setActiveTool('pen');
+                        setOpenPopover(null);
+                      }
+                    }}
+                    title={
+                      isSelected
+                        ? 'Nhấn lần nữa để chỉnh ngòi (Bút thường / Bút máy), bảng màu & cỡ nét'
+                        : `Chọn ${
+                            preset.penKind === 'highlighter'
+                              ? 'dạ quang'
+                              : preset.penKind === 'fountain'
+                                ? 'bút máy'
+                                : preset.penKind === 'pencil'
+                                  ? 'bút chì'
+                                  : 'bút thường'
+                          }`
+                    }
+                    aria-label={`Chọn bút ${preset.id}`}
+                    className={cn(
+                      'flex cursor-pointer items-center justify-center rounded-full transition-transform',
+                      isSelected
+                        ? 'h-7 w-7 scale-105 ring-2 ring-[var(--accent-os)] ring-offset-1'
+                        : 'h-6 w-6 hover:scale-110',
+                    )}
+                  >
+                    <span
+                      style={{
+                        backgroundColor: preset.color,
+                        opacity: isHighlighter ? 0.65 : 1,
+                      }}
+                      className={cn(
+                        'rounded-full border border-black/15',
+                        isHighlighter ? 'h-4.5 w-4.5' : isSelected ? 'h-4 w-4' : 'h-3 w-3',
+                      )}
+                    />
+                  </button>
+                );
+              })}
+
+              {openPopover === 'pen' && (
+                <ToolbarPopoverAnchor anchorRef={penAnchorRef} preferAlign="left">
+                  <PenSettingsPopover preset={activePenPreset} onChange={updateActivePenPreset} />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
+
+            {/* Chế độ nhận dạng mực (Ink / Shape / Line) */}
+            <div ref={inkModeAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-mode-btn"
+                onClick={() => togglePopover('ink-mode')}
+                title="Chế độ nắn nét tự động (Ink to Shape / Line)"
+                aria-label="Chế độ nhận dạng nét mực"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                  inkMode !== 'ink' || openPopover === 'ink-mode'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden md:inline">
+                  {inkMode === 'ink'
+                    ? 'Mực tự do'
+                    : inkMode === 'line'
+                      ? 'Nắn thẳng'
+                      : inkMode === 'shape'
+                        ? 'Nắn hình'
+                        : 'Nắn hình+đường'}
+                </span>
+              </button>
+              {openPopover === 'ink-mode' && (
+                <ToolbarPopoverAnchor anchorRef={inkModeAnchorRef} preferAlign="left">
+                  <InkModePopover
+                    mode={inkMode}
+                    onChange={(m) => {
+                      setInkMode(m);
                       setActiveTool('pen');
                       setOpenPopover(null);
-                    }
-                  }}
-                  title={
-                    isSelected
-                      ? 'Nhấn lần nữa để chỉnh ngòi (Bút thường / Bút máy), bảng màu & cỡ nét'
-                      : `Chọn ${
-                          preset.penKind === 'highlighter'
-                            ? 'dạ quang'
-                            : preset.penKind === 'fountain'
-                              ? 'bút máy'
-                              : preset.penKind === 'pencil'
-                                ? 'bút chì'
-                                : 'bút thường'
-                        }`
-                  }
-                  aria-label={`Chọn bút ${preset.id}`}
-                  className={cn(
-                    'flex cursor-pointer items-center justify-center rounded-full transition-transform',
-                    isSelected
-                      ? 'h-7 w-7 scale-105 ring-2 ring-[var(--accent-os)] ring-offset-1'
-                      : 'h-6 w-6 hover:scale-110',
-                  )}
-                >
-                  <span
-                    style={{
-                      backgroundColor: preset.color,
-                      opacity: isHighlighter ? 0.65 : 1,
                     }}
-                    className={cn(
-                      'rounded-full border border-black/15',
-                      isHighlighter ? 'h-4.5 w-4.5' : isSelected ? 'h-4 w-4' : 'h-3 w-3',
-                    )}
                   />
-                </button>
-              );
-            })}
-
-            {openPopover === 'pen' && (
-              <ToolbarPopoverAnchor anchorRef={penAnchorRef} preferAlign="left">
-                <PenSettingsPopover preset={activePenPreset} onChange={updateActivePenPreset} />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
-
-          {/* Chế độ nhận dạng mực (Ink / Shape / Line) */}
-          <div ref={inkModeAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-mode-btn"
-              onClick={() => togglePopover('ink-mode')}
-              title="Chế độ nắn nét tự động (Ink to Shape / Line)"
-              aria-label="Chế độ nhận dạng nét mực"
-              className={cn(
-                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
-                inkMode !== 'ink' || openPopover === 'ink-mode'
-                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                </ToolbarPopoverAnchor>
               )}
-            >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden md:inline">
-                {inkMode === 'ink'
-                  ? 'Mực tự do'
-                  : inkMode === 'line'
-                    ? 'Nắn thẳng'
-                    : inkMode === 'shape'
-                      ? 'Nắn hình'
-                      : 'Nắn hình+đường'}
-              </span>
-            </button>
-            {openPopover === 'ink-mode' && (
-              <ToolbarPopoverAnchor anchorRef={inkModeAnchorRef} preferAlign="left">
-                <InkModePopover
-                  mode={inkMode}
-                  onChange={(m) => {
-                    setInkMode(m);
-                    setActiveTool('pen');
-                    setOpenPopover(null);
-                  }}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
+            </div>
 
-          {/* Thước kẻ tương tác */}
-          <button
-            type="button"
-            data-testid="ink-ruler-toggle"
-            onClick={() => setRuler((r) => ({ ...r, visible: !r.visible }))}
-            title="Bật/tắt Thước kẻ thẳng (vẽ sát mép thước sẽ tự hút thẳng)"
-            aria-pressed={ruler.visible}
-            className={cn(
-              'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-              ruler.visible
-                ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
-            )}
-          >
-            <Ruler className="h-4 w-4" aria-hidden="true" />
-          </button>
-
-          {/* Hình 2D, Nét đứt, Mũi tên & Chữ/KaTeX */}
-          <div ref={shapesAnchorRef} className="relative">
+            {/* Thước kẻ tương tác */}
             <button
               type="button"
-              data-testid="ink-shapes-btn"
-              onClick={() => togglePopover('shapes')}
-              title="Hình học 2D, nét đứt, vectơ & chèn chữ/KaTeX"
-              aria-label="Công cụ hình học 2D và chữ"
+              data-testid="ink-ruler-toggle"
+              onClick={() => setRuler((r) => ({ ...r, visible: !r.visible }))}
+              title="Bật/tắt Thước kẻ thẳng (vẽ sát mép thước sẽ tự hút thẳng)"
+              aria-pressed={ruler.visible}
               className={cn(
                 'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                activeTool === 'shape' || activeTool === 'text' || openPopover === 'shapes'
+                ruler.visible
                   ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                   : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
               )}
             >
-              <Shapes className="h-4 w-4" aria-hidden="true" />
+              <Ruler className="h-4 w-4" aria-hidden="true" />
             </button>
-            {openPopover === 'shapes' && (
-              <ToolbarPopoverAnchor anchorRef={shapesAnchorRef} preferAlign="left">
-                <ShapePickerPopover
-                  activeShape={activeShape}
-                  onSelectShape={(kind) => {
-                    setActiveShape(kind);
-                    setActiveTool('shape');
-                    setOpenPopover(null);
-                  }}
-                  onSelectTextTool={() => {
-                    setActiveTool('text');
-                    setOpenPopover(null);
-                  }}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
 
-          {/* CHẾ ĐỘ DỰNG HÌNH ĐỘNG KIỂU GEOGEBRA TRỰC TIẾP TRÊN TRANG */}
-          <button
-            type="button"
-            data-testid="ink-geo-btn"
-            onClick={() => {
-              setOpenPopover(null);
-              setGeoPendingPts([]);
-              setGeoPendingCurveId(null);
-              setActiveTool((prev) => (prev === 'geo' ? 'pen' : 'geo'));
-            }}
-            title="Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy (Điểm, Tỉ lệ, Trung điểm, Trọng tâm, Giao điểm, Vuông góc/Song song, Đường tròn, Elip, Mặt phẳng)"
-            aria-pressed={activeTool === 'geo'}
-            className={cn(
-              'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
-              activeTool === 'geo'
-                ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white shadow-xs'
-                : 'border-[#1D4ED8]/35 bg-[#EFF5FE] text-[#1D4ED8] hover:bg-[#E0ECFD] dark:border-[#60A5FA]/35 dark:bg-[#121D2B] dark:text-[#93C5FD]',
-            )}
-          >
-            <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Dựng hình</span>
-          </button>
+            {/* Hình 2D, Nét đứt, Mũi tên & Chữ/KaTeX */}
+            <div ref={shapesAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-shapes-btn"
+                onClick={() => togglePopover('shapes')}
+                title="Hình học 2D, nét đứt, vectơ & chèn chữ/KaTeX"
+                aria-label="Công cụ hình học 2D và chữ"
+                className={cn(
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  activeTool === 'shape' || activeTool === 'text' || openPopover === 'shapes'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <Shapes className="h-4 w-4" aria-hidden="true" />
+              </button>
+              {openPopover === 'shapes' && (
+                <ToolbarPopoverAnchor anchorRef={shapesAnchorRef} preferAlign="left">
+                  <ShapePickerPopover
+                    activeShape={activeShape}
+                    onSelectShape={(kind) => {
+                      setActiveShape(kind);
+                      setActiveTool('shape');
+                      setOpenPopover(null);
+                    }}
+                    onSelectTextTool={() => {
+                      setActiveTool('text');
+                      setOpenPopover(null);
+                    }}
+                  />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
 
-          {/* CẢI TIẾN ĐỘT PHÁ 1: HÌNH KHÔNG GIAN 3D */}
-          <div ref={solid3dAnchorRef} className="relative">
+            {/* HỘP CÔNG THỨC TOÁN HỌC TRỰC QUAN (KaTeX PAD & CHỈNH SỬA LẠI ĐƯỢC) */}
+            <div ref={formulaAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-formula-btn"
+                onClick={() => {
+                  setEditingTextId(selectedText ? selectedText.id : null);
+                  togglePopover('formula');
+                }}
+                title="Chèn hoặc chỉnh sửa Công thức Toán học trực quan (KaTeX, phân số, tích phân, hệ phương trình, ma trận)"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  openPopover === 'formula' || activeTool === 'text'
+                    ? 'border-[#6D28D9] bg-[#6D28D9] text-white shadow-xs'
+                    : 'border-[#6D28D9]/35 bg-[#F6F3FF] text-[#6D28D9] hover:bg-[#EDE7FE] dark:border-[#A78BFA]/35 dark:bg-[#191528] dark:text-[#C4B5FD]',
+                )}
+              >
+                <Sigma className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Công thức</span>
+              </button>
+              {openPopover === 'formula' && (
+                <ToolbarPopoverAnchor anchorRef={formulaAnchorRef} preferAlign="left">
+                  <InkFormulaEditorPopover
+                    key={editingText?.id ?? 'new-formula'}
+                    initialItem={editingText}
+                    defaultColor={activePenPreset.color}
+                    onSave={(payload) => {
+                      if (editingText) {
+                        updateText(editingText.id, payload);
+                      } else {
+                        const id = makeLocalId('txt');
+                        const offset = (activePage.texts.length % 6) * 28;
+                        addText({
+                          id,
+                          x: Math.round(dims.width * 0.24) + (offset % 56),
+                          y: 165 + offset,
+                          ...payload,
+                        });
+                        setActiveTool('select');
+                        setSelectedIds(new Set([id]));
+                      }
+                      setEditingTextId(null);
+                      setOpenPopover(null);
+                    }}
+                    onDelete={
+                      editingText
+                        ? () => {
+                            deleteText(editingText.id);
+                            setSelectedIds(new Set());
+                            setEditingTextId(null);
+                            setOpenPopover(null);
+                          }
+                        : undefined
+                    }
+                    onClose={() => {
+                      setEditingTextId(null);
+                      setOpenPopover(null);
+                    }}
+                  />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
+
+            {/* CHẾ ĐỘ DỰNG HÌNH ĐỘNG KIỂU GEOGEBRA TRỰC TIẾP TRÊN TRANG */}
             <button
               type="button"
-              data-testid="ink-solid3d-btn"
+              data-testid="ink-geo-btn"
               onClick={() => {
-                setEditingSolidId(null);
-                togglePopover('solid3d');
+                setOpenPopover(null);
+                setGeoPendingPts([]);
+                setGeoPendingCurveId(null);
+                setActiveTool((prev) => (prev === 'geo' ? 'pen' : 'geo'));
               }}
-              title="Chèn Hình học không gian 3D tương tác (đặt tên đỉnh, hình trơn, dựng điểm tỉ lệ trượt cạnh, trọng tâm, đường cao, mặt phẳng)"
+              title="Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy (Điểm, Tỉ lệ, Trung điểm, Trọng tâm, Giao điểm, Vuông góc/Song song, Đường tròn, Elip, Mặt phẳng)"
+              aria-pressed={activeTool === 'geo'}
               className={cn(
                 'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
-                openPopover === 'solid3d'
-                  ? 'border-[#17332C] bg-[#17332C] text-white'
-                  : 'border-[#1D4F6E]/35 bg-[#F3F8FB] text-[#1D4F6E] hover:bg-[#E4F0F7] dark:border-[#64A8D1]/35 dark:bg-[#131C22] dark:text-[#64A8D1]',
+                activeTool === 'geo'
+                  ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white shadow-xs'
+                  : 'border-[#1D4ED8]/35 bg-[#EFF5FE] text-[#1D4ED8] hover:bg-[#E0ECFD] dark:border-[#60A5FA]/35 dark:bg-[#121D2B] dark:text-[#93C5FD]',
               )}
             >
-              <Box className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Hình 3D</span>
+              <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Dựng hình</span>
             </button>
-            {openPopover === 'solid3d' && (
-              <ToolbarPopoverAnchor anchorRef={solid3dAnchorRef} preferAlign="left">
-                <Solid3DPopover
-                  key={editingSolid?.id ?? 'new-solid'}
-                  initialSolid={editingSolid}
-                  onInsert={handleInsertSolid3D}
-                  onUpdateExisting={(solidId, patch) => {
-                    updateSolid3D(solidId, patch);
-                    setEditingSolidId(null);
-                  }}
-                  onClose={() => {
-                    setEditingSolidId(null);
-                    setOpenPopover(null);
-                  }}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
 
-          {/* CẢI TIẾN ĐỘT PHÁ 2: VẼ ĐỒ THỊ HÀM SỐ f(x) */}
-          <div ref={graphAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-graph-btn"
-              onClick={() => togglePopover('graph')}
-              title="Nhập biểu thức hàm số & vẽ đồ thị Oxy, điểm đặc biệt, tích phân"
-              className={cn(
-                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
-                openPopover === 'graph'
-                  ? 'border-[#17332C] bg-[#17332C] text-white'
-                  : 'border-[#1B5E4A]/35 bg-[#F2F9F6] text-[#1B5E4A] hover:bg-[#E2F3EC] dark:border-[#52B394]/35 dark:bg-[#111F1A] dark:text-[#52B394]',
+            {/* CẢI TIẾN ĐỘT PHÁ 1: HÌNH KHÔNG GIAN 3D */}
+            <div ref={solid3dAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-solid3d-btn"
+                onClick={() => {
+                  setEditingSolidId(null);
+                  togglePopover('solid3d');
+                }}
+                title="Chèn Hình học không gian 3D tương tác (đặt tên đỉnh, hình trơn, dựng điểm tỉ lệ trượt cạnh, trọng tâm, đường cao, mặt phẳng)"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  openPopover === 'solid3d'
+                    ? 'border-[#17332C] bg-[#17332C] text-white'
+                    : 'border-[#1D4F6E]/35 bg-[#F3F8FB] text-[#1D4F6E] hover:bg-[#E4F0F7] dark:border-[#64A8D1]/35 dark:bg-[#131C22] dark:text-[#64A8D1]',
+                )}
+              >
+                <Box className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Hình 3D</span>
+              </button>
+              {openPopover === 'solid3d' && (
+                <ToolbarPopoverAnchor anchorRef={solid3dAnchorRef} preferAlign="left">
+                  <Solid3DPopover
+                    key={editingSolid?.id ?? 'new-solid'}
+                    initialSolid={editingSolid}
+                    onInsert={handleInsertSolid3D}
+                    onUpdateExisting={(solidId, patch) => {
+                      updateSolid3D(solidId, patch);
+                      setEditingSolidId(null);
+                    }}
+                    onClose={() => {
+                      setEditingSolidId(null);
+                      setOpenPopover(null);
+                    }}
+                  />
+                </ToolbarPopoverAnchor>
               )}
-            >
-              <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Đồ thị f(x)</span>
-            </button>
-            {openPopover === 'graph' && (
-              <ToolbarPopoverAnchor anchorRef={graphAnchorRef} preferAlign="right">
-                <FunctionGraphPopover
-                  onInsert={handleInsertGraph}
-                  onClose={() => setOpenPopover(null)}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
+            </div>
 
-          {/* Ý 3: BẢNG BIẾN THIÊN & BẢNG XÉT DẤU NHANH */}
-          <div ref={variationAnchorRef} className="relative">
+            {/* CẢI TIẾN ĐỘT PHÁ 2: VẼ ĐỒ THỊ HÀM SỐ f(x) */}
+            <div ref={graphAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-graph-btn"
+                onClick={() => togglePopover('graph')}
+                title="Nhập biểu thức hàm số & vẽ đồ thị Oxy, điểm đặc biệt, tích phân"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  openPopover === 'graph'
+                    ? 'border-[#17332C] bg-[#17332C] text-white'
+                    : 'border-[#1B5E4A]/35 bg-[#F2F9F6] text-[#1B5E4A] hover:bg-[#E2F3EC] dark:border-[#52B394]/35 dark:bg-[#111F1A] dark:text-[#52B394]',
+                )}
+              >
+                <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Đồ thị f(x)</span>
+              </button>
+              {openPopover === 'graph' && (
+                <ToolbarPopoverAnchor anchorRef={graphAnchorRef} preferAlign="right">
+                  <FunctionGraphPopover
+                    onInsert={handleInsertGraph}
+                    onClose={() => setOpenPopover(null)}
+                  />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
+
+            {/* Ý 3: BẢNG BIẾN THIÊN & BẢNG XÉT DẤU NHANH */}
+            <div ref={variationAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-variation-btn"
+                onClick={() => {
+                  setEditingTableId(null);
+                  togglePopover('variation');
+                }}
+                title="Tạo & chèn Bảng biến thiên / Bảng xét dấu chuẩn Toán THPT"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  openPopover === 'variation'
+                    ? 'border-[#17332C] bg-[#17332C] text-white'
+                    : 'border-[#8C5828]/35 bg-[#FDF8F3] text-[#8C5828] hover:bg-[#F5EADC] dark:border-[#D4AF6A]/35 dark:bg-[#1D1813] dark:text-[#D4AF6A]',
+                )}
+              >
+                <Table2 className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden xl:inline">Bảng biến thiên</span>
+                <span className="xl:hidden">BBT</span>
+              </button>
+              {openPopover === 'variation' && (
+                <ToolbarPopoverAnchor anchorRef={variationAnchorRef} preferAlign="right">
+                  <VariationTablePopover
+                    key={editingTable?.id ?? 'new-vt'}
+                    initialTable={editingTable}
+                    onInsert={handleInsertVariationTable}
+                    onUpdateExisting={(tableId, patch) => {
+                      updateVariationTable(tableId, patch);
+                      setEditingTableId(null);
+                    }}
+                    onClose={() => {
+                      setEditingTableId(null);
+                      setOpenPopover(null);
+                    }}
+                  />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
+
+            {/* Ý 4: CON DẤU KÝ HIỆU HÌNH HỌC PHẲNG */}
+            <div ref={stampsAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-stamps-btn"
+                onClick={() => togglePopover('stamps')}
+                title="Con dấu ký hiệu hình học: góc vuông, vạch bằng nhau, cung góc, song song, điểm"
+                aria-label="Con dấu ký hiệu hình học"
+                className={cn(
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  activeTool === 'stamp' || openPopover === 'stamps'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <Stamp className="h-4 w-4" aria-hidden="true" />
+              </button>
+              {openPopover === 'stamps' && (
+                <ToolbarPopoverAnchor anchorRef={stampsAnchorRef} preferAlign="right">
+                  <GeometryStampsPopover
+                    config={stampConfig}
+                    onChange={setStampConfig}
+                    onSelectAndActivate={(next) => {
+                      setStampConfig(next);
+                      setActiveTool('stamp');
+                      setOpenPopover(null);
+                    }}
+                    onClose={() => setOpenPopover(null)}
+                  />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
+
+            {/* Ý 5: BÚT LASER TRÌNH CHIẾU (Tự mờ sau 1.5s) */}
             <button
               type="button"
-              data-testid="ink-variation-btn"
+              data-testid="ink-laser-btn"
               onClick={() => {
-                setEditingTableId(null);
-                togglePopover('variation');
+                setOpenPopover(null);
+                setActiveTool((prev) => (prev === 'laser' ? 'pen' : 'laser'));
               }}
-              title="Tạo & chèn Bảng biến thiên / Bảng xét dấu chuẩn Toán THPT"
-              className={cn(
-                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
-                openPopover === 'variation'
-                  ? 'border-[#17332C] bg-[#17332C] text-white'
-                  : 'border-[#8C5828]/35 bg-[#FDF8F3] text-[#8C5828] hover:bg-[#F5EADC] dark:border-[#D4AF6A]/35 dark:bg-[#1D1813] dark:text-[#D4AF6A]',
-              )}
-            >
-              <Table2 className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden xl:inline">Bảng biến thiên</span>
-              <span className="xl:hidden">BBT</span>
-            </button>
-            {openPopover === 'variation' && (
-              <ToolbarPopoverAnchor anchorRef={variationAnchorRef} preferAlign="right">
-                <VariationTablePopover
-                  key={editingTable?.id ?? 'new-vt'}
-                  initialTable={editingTable}
-                  onInsert={handleInsertVariationTable}
-                  onUpdateExisting={(tableId, patch) => {
-                    updateVariationTable(tableId, patch);
-                    setEditingTableId(null);
-                  }}
-                  onClose={() => {
-                    setEditingTableId(null);
-                    setOpenPopover(null);
-                  }}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
-
-          {/* Ý 4: CON DẤU KÝ HIỆU HÌNH HỌC PHẲNG */}
-          <div ref={stampsAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-stamps-btn"
-              onClick={() => togglePopover('stamps')}
-              title="Con dấu ký hiệu hình học: góc vuông, vạch bằng nhau, cung góc, song song, điểm"
-              aria-label="Con dấu ký hiệu hình học"
+              title="Bút Laser trình chiếu (nét phát sáng tự mờ biến mất sau 1.5 giây, không làm bẩn vở)"
+              aria-pressed={activeTool === 'laser'}
+              aria-label="Bút Laser trình chiếu"
               className={cn(
                 'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                activeTool === 'stamp' || openPopover === 'stamps'
-                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                activeTool === 'laser'
+                  ? 'border-[#DC2626] bg-[#DC2626] text-white shadow-xs'
+                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[#DC2626]',
               )}
             >
-              <Stamp className="h-4 w-4" aria-hidden="true" />
+              <Pointer className="h-4 w-4" aria-hidden="true" />
             </button>
-            {openPopover === 'stamps' && (
-              <ToolbarPopoverAnchor anchorRef={stampsAnchorRef} preferAlign="right">
-                <GeometryStampsPopover
-                  config={stampConfig}
-                  onChange={setStampConfig}
-                  onSelectAndActivate={(next) => {
-                    setStampConfig(next);
-                    setActiveTool('stamp');
-                    setOpenPopover(null);
-                  }}
-                  onClose={() => setOpenPopover(null)}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
 
-          {/* Ý 5: BÚT LASER TRÌNH CHIẾU (Tự mờ sau 1.5s) */}
-          <button
-            type="button"
-            data-testid="ink-laser-btn"
-            onClick={() => {
-              setOpenPopover(null);
-              setActiveTool((prev) => (prev === 'laser' ? 'pen' : 'laser'));
-            }}
-            title="Bút Laser trình chiếu (nét phát sáng tự mờ biến mất sau 1.5 giây, không làm bẩn vở)"
-            aria-pressed={activeTool === 'laser'}
-            aria-label="Bút Laser trình chiếu"
-            className={cn(
-              'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-              activeTool === 'laser'
-                ? 'border-[#DC2626] bg-[#DC2626] text-white shadow-xs'
-                : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[#DC2626]',
-            )}
-          >
-            <Pointer className="h-4 w-4" aria-hidden="true" />
-          </button>
-
-          {/* Tẩy (Stroke / Segment) */}
-          <div ref={eraserAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-eraser-btn"
-              onClick={() => {
-                if (activeTool === 'eraser') togglePopover('eraser');
-                else {
-                  setActiveTool('eraser');
-                  setOpenPopover(null);
-                }
-              }}
-              title="Tẩy nét (nhấn lần 2 để chọn kiểu tẩy hoặc xóa trang)"
-              aria-label="Công cụ tẩy"
-              className={cn(
-                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                activeTool === 'eraser' || openPopover === 'eraser'
-                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
-              )}
-            >
-              <Eraser className="h-4 w-4" aria-hidden="true" />
-            </button>
-            {openPopover === 'eraser' && (
-              <ToolbarPopoverAnchor anchorRef={eraserAnchorRef} preferAlign="right">
-                <EraserModePopover
-                  mode={eraserMode}
-                  onChange={(m) => {
-                    setEraserMode(m);
+            {/* Tẩy (Stroke / Segment) */}
+            <div ref={eraserAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-eraser-btn"
+                onClick={() => {
+                  if (activeTool === 'eraser') togglePopover('eraser');
+                  else {
                     setActiveTool('eraser');
                     setOpenPopover(null);
-                  }}
-                  onClearPage={() => {
-                    clearActivePage();
-                    setOpenPopover(null);
-                  }}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
-
-          {/* Chọn vùng / Lasso / Chèn khoảng trống */}
-          <div ref={selectionAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-select-btn"
-              onClick={() => {
-                if (activeTool === 'select') togglePopover('selection');
-                else {
-                  setActiveTool('select');
-                  setOpenPopover(null);
-                }
-              }}
-              title="Chọn & di chuyển đối tượng / Chèn khoảng trống (nhấn lần 2 để đổi chế độ)"
-              aria-label="Công cụ chọn và di chuyển"
-              className={cn(
-                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
-                activeTool === 'select' || openPopover === 'selection'
-                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
-                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                  }
+                }}
+                title="Tẩy nét (nhấn lần 2 để chọn kiểu tẩy hoặc xóa trang)"
+                aria-label="Công cụ tẩy"
+                className={cn(
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  activeTool === 'eraser' || openPopover === 'eraser'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <Eraser className="h-4 w-4" aria-hidden="true" />
+              </button>
+              {openPopover === 'eraser' && (
+                <ToolbarPopoverAnchor anchorRef={eraserAnchorRef} preferAlign="right">
+                  <EraserModePopover
+                    mode={eraserMode}
+                    onChange={(m) => {
+                      setEraserMode(m);
+                      setActiveTool('eraser');
+                      setOpenPopover(null);
+                    }}
+                    onClearPage={() => {
+                      clearActivePage();
+                      setOpenPopover(null);
+                    }}
+                  />
+                </ToolbarPopoverAnchor>
               )}
-            >
-              <SquareDashed className="h-4 w-4" aria-hidden="true" />
-            </button>
-            {openPopover === 'selection' && (
-              <ToolbarPopoverAnchor anchorRef={selectionAnchorRef} preferAlign="right">
-                <SelectionModePopover
-                  mode={selectionMode}
-                  onChange={(m) => {
-                    setSelectionMode(m);
+            </div>
+
+            {/* Chọn vùng / Lasso / Chèn khoảng trống */}
+            <div ref={selectionAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-select-btn"
+                onClick={() => {
+                  if (activeTool === 'select') togglePopover('selection');
+                  else {
                     setActiveTool('select');
                     setOpenPopover(null);
-                  }}
-                />
-              </ToolbarPopoverAnchor>
-            )}
-          </div>
-        </div>
-
-        {/* PHẢI: Phiếu đề nền, Chèn ảnh, Zoom, Gửi sang Soạn đề, Xuất PNG & PDF đa trang, Toàn màn hình */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA (định vị thông minh không bao giờ bị che khuất!) */}
-          <div ref={worksheetAnchorRef} className="relative">
-            <button
-              type="button"
-              data-testid="ink-worksheet-btn"
-              onClick={() => togglePopover('worksheet')}
-              title="Gắn ảnh phiếu bài tập hoặc nạp đề từ Xưởng Soạn Đề làm nền khóa để giải trực tiếp"
-              className={cn(
-                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
-                openPopover === 'worksheet' || activePage.worksheetBackground
-                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)]/12 text-[var(--accent-os)]'
-                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                  }
+                }}
+                title="Chọn & di chuyển đối tượng / Chèn khoảng trống (nhấn lần 2 để đổi chế độ)"
+                aria-label="Công cụ chọn và di chuyển"
+                className={cn(
+                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  activeTool === 'select' || openPopover === 'selection'
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <SquareDashed className="h-4 w-4" aria-hidden="true" />
+              </button>
+              {openPopover === 'selection' && (
+                <ToolbarPopoverAnchor anchorRef={selectionAnchorRef} preferAlign="right">
+                  <SelectionModePopover
+                    mode={selectionMode}
+                    onChange={(m) => {
+                      setSelectionMode(m);
+                      setActiveTool('select');
+                      setOpenPopover(null);
+                    }}
+                  />
+                </ToolbarPopoverAnchor>
               )}
-            >
-              <FileImage className="h-3.5 w-3.5" aria-hidden="true" />
-              <span className="hidden xl:inline">Phiếu đề</span>
-            </button>
-            {openPopover === 'worksheet' && (
-              <ToolbarPopoverAnchor anchorRef={worksheetAnchorRef} preferAlign="left">
-                <WorksheetBackgroundPopover
-                  background={activePage.worksheetBackground}
-                  activeExamTitle={activeExamTitle}
-                  onUploadImages={handleUploadWorksheetImages}
-                  onImportActiveExam={handleImportActiveExamAsWorksheet}
-                  onUpdateBackground={(patch) => {
-                    if (!activePage.worksheetBackground) return;
-                    setWorksheetBackground({ ...activePage.worksheetBackground, ...patch });
-                  }}
-                  onRemoveBackground={() => setWorksheetBackground(null)}
-                  onClose={() => setOpenPopover(null)}
-                />
-              </ToolbarPopoverAnchor>
-            )}
+            </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => imageUploadRef.current?.click()}
-            title="Chèn ảnh từ máy tính"
-            aria-label="Chèn ảnh vào trang"
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]"
-          >
-            <ImagePlus className="h-4 w-4" aria-hidden="true" />
-          </button>
+          {/* PHẢI: Phiếu đề nền, Chèn ảnh, Zoom, Gửi sang Soạn đề, Xuất PNG & PDF đa trang, Toàn màn hình */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA (định vị thông minh không bao giờ bị che khuất!) */}
+            <div ref={worksheetAnchorRef} className="relative">
+              <button
+                type="button"
+                data-testid="ink-worksheet-btn"
+                onClick={() => togglePopover('worksheet')}
+                title="Gắn ảnh phiếu bài tập hoặc nạp đề từ Xưởng Soạn Đề làm nền khóa để giải trực tiếp"
+                className={cn(
+                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                  openPopover === 'worksheet' || activePage.worksheetBackground
+                    ? 'border-[var(--accent-os)] bg-[var(--accent-os)]/12 text-[var(--accent-os)]'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                )}
+              >
+                <FileImage className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden xl:inline">Phiếu đề</span>
+              </button>
+              {openPopover === 'worksheet' && (
+                <ToolbarPopoverAnchor anchorRef={worksheetAnchorRef} preferAlign="left">
+                  <WorksheetBackgroundPopover
+                    background={activePage.worksheetBackground}
+                    activeExamTitle={activeExamTitle}
+                    onUploadImages={handleUploadWorksheetImages}
+                    onImportActiveExam={handleImportActiveExamAsWorksheet}
+                    onUpdateBackground={(patch) => {
+                      if (!activePage.worksheetBackground) return;
+                      setWorksheetBackground({ ...activePage.worksheetBackground, ...patch });
+                    }}
+                    onRemoveBackground={() => setWorksheetBackground(null)}
+                    onClose={() => setOpenPopover(null)}
+                  />
+                </ToolbarPopoverAnchor>
+              )}
+            </div>
 
-          <div className="hidden items-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1 sm:inline-flex">
             <button
               type="button"
-              onClick={() => setZoom((z) => Math.max(0.5, Number((z - 0.1).toFixed(2))))}
-              aria-label="Thu nhỏ"
-              className="inline-flex h-7 w-6 cursor-pointer items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+              onClick={() => imageUploadRef.current?.click()}
+              title="Chèn ảnh từ máy tính"
+              aria-label="Chèn ảnh vào trang"
+              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]"
             >
-              <ZoomOut className="h-3.5 w-3.5" aria-hidden="true" />
+              <ImagePlus className="h-4 w-4" aria-hidden="true" />
             </button>
-            <span className="min-w-[40px] text-center font-mono text-[10.5px] font-semibold tabular-nums">
-              {Math.round(zoom * 100)}%
-            </span>
+
+            <div className="hidden items-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1 sm:inline-flex">
+              <button
+                type="button"
+                onClick={() => setZoom((z) => Math.max(0.5, Number((z - 0.1).toFixed(2))))}
+                aria-label="Thu nhỏ"
+                className="inline-flex h-7 w-6 cursor-pointer items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+              >
+                <ZoomOut className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <span className="min-w-[40px] text-center font-mono text-[10.5px] font-semibold tabular-nums">
+                {Math.round(zoom * 100)}%
+              </span>
+              <button
+                type="button"
+                onClick={() => setZoom((z) => Math.min(1.6, Number((z + 0.1).toFixed(2))))}
+                aria-label="Phóng to"
+                className="inline-flex h-7 w-6 cursor-pointer items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+              >
+                <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </div>
+
             <button
               type="button"
-              onClick={() => setZoom((z) => Math.min(1.6, Number((z + 0.1).toFixed(2))))}
-              aria-label="Phóng to"
-              className="inline-flex h-7 w-6 cursor-pointer items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+              data-testid="ink-send-to-exam"
+              onClick={handleSendToExamBuilder}
+              title="Xuất hình trang này và gắn trực tiếp vào đề đang soạn ở Xưởng Soạn Đề"
+              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--accent-heritage)]/45 bg-[#FDF8F3] px-2.5 text-xs font-semibold text-[#8C5828] transition-colors hover:bg-[#F7ECE0] dark:bg-[#1D1813] dark:text-[#D4AF6A]"
             >
-              <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
+              {sentToExamNotice ? (
+                <>
+                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Đã gửi!</span>
+                </>
+              ) : (
+                <>
+                  <FilePenLine className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span className="hidden lg:inline">Đưa vào Soạn đề</span>
+                </>
+              )}
+            </button>
+
+            {/* CHẾ ĐỘ TẬP GIẢNG & GHI HÌNH BÀI GIẢNG OFFLINE (.webm) */}
+            <button
+              type="button"
+              data-testid="ink-teach-mode-btn"
+              onClick={() => {
+                setOpenPopover(null);
+                setIsTeachMode(true);
+              }}
+              title="Bật Chế độ Tập giảng & Ghi hình bài giảng Offline (.webm) kèm Micro & bút Laser"
+              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[#1B5E4A]/40 bg-[#F2F9F6] px-2.5 text-xs font-semibold text-[#1B5E4A] transition-colors hover:bg-[#E2F3EC] dark:border-[#52B394]/35 dark:bg-[#111F1A] dark:text-[#52B394]"
+            >
+              <Presentation className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden lg:inline">Tập giảng</span>
+            </button>
+
+            <button
+              type="button"
+              data-testid="ink-export-png"
+              onClick={handleExportPng}
+              title="Tải ảnh PNG độ nét cao của trang hiện tại"
+              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
+            >
+              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">PNG</span>
+            </button>
+
+            {/* Ý 5: XUẤT TOÀN BỘ QUYỂN VỞ RA PDF ĐA TRANG */}
+            <button
+              type="button"
+              data-testid="ink-export-pdf"
+              disabled={isExportingPdf}
+              onClick={() => void handleExportNotebookPdf()}
+              title={`Xuất toàn bộ ${activeNotebook.pages.length} trang vở thành 1 file PDF chuẩn A4`}
+              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-[#17332C] px-2.5 text-xs font-semibold text-white hover:bg-[#21463C] disabled:opacity-60"
+            >
+              <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">{isExportingPdf ? 'Đang xuất...' : 'PDF'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleFullscreen}
+              title="Chế độ toàn màn hình"
+              aria-label="Toàn màn hình"
+              className="hidden h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] md:inline-flex"
+            >
+              {isFullscreen ? (
+                <Minimize2 className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Maximize2 className="h-4 w-4" aria-hidden="true" />
+              )}
             </button>
           </div>
-
-          <button
-            type="button"
-            data-testid="ink-send-to-exam"
-            onClick={handleSendToExamBuilder}
-            title="Xuất hình trang này và gắn trực tiếp vào đề đang soạn ở Xưởng Soạn Đề"
-            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--accent-heritage)]/45 bg-[#FDF8F3] px-2.5 text-xs font-semibold text-[#8C5828] transition-colors hover:bg-[#F7ECE0] dark:bg-[#1D1813] dark:text-[#D4AF6A]"
-          >
-            {sentToExamNotice ? (
-              <>
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Đã gửi!</span>
-              </>
-            ) : (
-              <>
-                <FilePenLine className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden lg:inline">Đưa vào Soạn đề</span>
-              </>
-            )}
-          </button>
-
-          <button
-            type="button"
-            data-testid="ink-export-png"
-            onClick={handleExportPng}
-            title="Tải ảnh PNG độ nét cao của trang hiện tại"
-            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
-          >
-            <Download className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">PNG</span>
-          </button>
-
-          {/* Ý 5: XUẤT TOÀN BỘ QUYỂN VỞ RA PDF ĐA TRANG */}
-          <button
-            type="button"
-            data-testid="ink-export-pdf"
-            disabled={isExportingPdf}
-            onClick={() => void handleExportNotebookPdf()}
-            title={`Xuất toàn bộ ${activeNotebook.pages.length} trang vở thành 1 file PDF chuẩn A4`}
-            className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-[#17332C] px-2.5 text-xs font-semibold text-white hover:bg-[#21463C] disabled:opacity-60"
-          >
-            <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">{isExportingPdf ? 'Đang xuất...' : 'PDF'}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={toggleFullscreen}
-            title="Chế độ toàn màn hình"
-            aria-label="Toàn màn hình"
-            className="hidden h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] md:inline-flex"
-          >
-            {isFullscreen ? (
-              <Minimize2 className="h-4 w-4" aria-hidden="true" />
-            ) : (
-              <Maximize2 className="h-4 w-4" aria-hidden="true" />
-            )}
-          </button>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* THANH CÔNG CỤ DỰNG HÌNH ĐỘNG KIỂU GEOGEBRA (HIỆN KHI BẬT CHẾ ĐỘ DỰNG HÌNH) */}
       {activeTool === 'geo' && (
@@ -3290,8 +3472,8 @@ export function MathInkPage() {
           KHU VỰC CHÍNH: CỘT THƯ MỤC ĐA CẤP & TRANG VỞ + TRANG GIẤY VIẾT CANVAS
           ======================================================================== */}
       <div className="flex min-h-0 flex-1 overflow-hidden">
-        {/* CỘT THƯ MỤC ĐA CẤP & TRANG THUMBNAIL BÊN TRÁI */}
-        {showPagesSidebar && (
+        {/* CỘT THƯ MỤC ĐA CẤP & TRANG THUMBNAIL BÊN TRÁI (Ẩn tự động khi Tập giảng để tối đa mặt bảng) */}
+        {showPagesSidebar && !isTeachMode && (
           <FolderNotebookSidebar
             folders={folders}
             notebooks={bucket.notebooks}
@@ -3567,6 +3749,47 @@ export function MathInkPage() {
                 </div>
               )}
 
+              {selectedText && (
+                <div className="inline-flex items-center gap-1 border-l border-[var(--border-hairline)] pl-1.5">
+                  <button
+                    type="button"
+                    data-testid="selected-edit-text-btn"
+                    onClick={() => {
+                      setEditingTextId(selectedText.id);
+                      setOpenPopover('formula');
+                    }}
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#6D28D9]/40 bg-[#F6F3FF] px-2 py-0.5 text-[10.5px] font-semibold text-[#6D28D9] hover:bg-[#EDE7FE] dark:border-[#A78BFA]/35 dark:bg-[#191528] dark:text-[#C4B5FD]"
+                  >
+                    <Sigma className="h-3 w-3" aria-hidden="true" />
+                    <span>Sửa công thức</span>
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="selected-text-smaller"
+                    onClick={() =>
+                      updateText(selectedText.id, {
+                        fontSize: Math.max(12, selectedText.fontSize - 3),
+                      })
+                    }
+                    className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10.5px] hover:text-[var(--accent-os)]"
+                  >
+                    - Cỡ
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="selected-text-larger"
+                    onClick={() =>
+                      updateText(selectedText.id, {
+                        fontSize: Math.min(48, selectedText.fontSize + 3),
+                      })
+                    }
+                    className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10.5px] hover:text-[var(--accent-os)]"
+                  >
+                    + Cỡ
+                  </button>
+                </div>
+              )}
+
               {selectedStamp && (
                 <div className="inline-flex items-center gap-1 border-l border-[var(--border-hairline)] pl-1.5">
                   <button
@@ -3649,6 +3872,22 @@ export function MathInkPage() {
               onPointerMove={handleCanvasPointerMove}
               onPointerUp={handleCanvasPointerUp}
               onPointerCancel={handleCanvasPointerUp}
+              onDoubleClick={(e) => {
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / Math.max(1, rect.width)) * dims.width;
+                const y = ((e.clientY - rect.top) / Math.max(1, rect.height)) * dims.height;
+                for (let i = activePage.texts.length - 1; i >= 0; i -= 1) {
+                  const t = activePage.texts[i]!;
+                  if (x >= t.x - 14 && x <= t.x + 260 && y >= t.y - 32 && y <= t.y + 36) {
+                    setSelectedIds(new Set([t.id]));
+                    setEditingTextId(t.id);
+                    setOpenPopover('formula');
+                    return;
+                  }
+                }
+              }}
               onPointerLeave={() => {
                 if (activeTool === 'geo') {
                   setGeoHoveredHit(null);
@@ -3732,78 +3971,123 @@ export function MathInkPage() {
                 );
               })()}
 
-            {/* Lớp phủ công thức KaTeX sắc nét cho các nhãn toán học đã chèn */}
-            {activePage.texts
-              .filter((t) => t.isMath && t.text.includes('$'))
-              .map((t) => (
+            {/* Lớp phủ công thức KaTeX & nhãn văn bản tương tác (nhấp đúp để sửa lại, kéo để di chuyển) */}
+            {activePage.texts.map((t) => {
+              const isSelected = selectedIds.has(t.id);
+              const isInteractiveMode = activeTool === 'select' || activeTool === 'text';
+              return (
                 <div
                   key={t.id}
+                  data-testid={`ink-text-chip-${t.id}`}
+                  title={
+                    isInteractiveMode
+                      ? 'Kéo để di chuyển · Nhấp đúp để chỉnh sửa công thức'
+                      : undefined
+                  }
                   style={{
                     left: `${(t.x / dims.width) * 100}%`,
-                    top: `${((t.y - t.fontSize) / dims.height) * 100}%`,
+                    top: `${((t.y - t.fontSize * 0.92) / dims.height) * 100}%`,
                     color: t.color,
-                    fontSize: `${Math.round(t.fontSize * zoom)}px`,
+                    fontSize: `${Math.max(11, Math.round(t.fontSize * zoom))}px`,
                   }}
-                  className="pointer-events-none absolute rounded bg-white/85 px-1.5 py-0.5 shadow-2xs"
+                  onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedIds(new Set([t.id]));
+                    setEditingTextId(t.id);
+                    setOpenPopover('formula');
+                  }}
+                  onPointerDown={(e) => {
+                    if (!isInteractiveMode) return;
+                    e.stopPropagation();
+                    setSelectedIds(new Set([t.id]));
+                    const startClientX = e.clientX;
+                    const startClientY = e.clientY;
+                    const initX = t.x;
+                    const initY = t.y;
+                    let moved = false;
+                    let latestX = initX;
+                    let latestY = initY;
+                    const onMove = (ev: PointerEvent) => {
+                      const dx = (ev.clientX - startClientX) / zoom;
+                      const dy = (ev.clientY - startClientY) / zoom;
+                      if (Math.hypot(dx, dy) < 2 && !moved) return;
+                      moved = true;
+                      latestX = Math.max(12, Math.min(dims.width - 40, Math.round(initX + dx)));
+                      latestY = Math.max(24, Math.min(dims.height - 20, Math.round(initY + dy)));
+                      updateText(t.id, { x: latestX, y: latestY });
+                    };
+                    const onUp = () => {
+                      window.removeEventListener('pointermove', onMove);
+                      window.removeEventListener('pointerup', onUp);
+                    };
+                    window.addEventListener('pointermove', onMove);
+                    window.addEventListener('pointerup', onUp);
+                  }}
+                  className={cn(
+                    'absolute z-10 rounded-md px-1.5 py-0.5 transition-shadow select-none',
+                    isInteractiveMode ? 'pointer-events-auto cursor-move' : 'pointer-events-none',
+                    isSelected
+                      ? 'bg-[var(--bg-workspace)]/90 shadow-sm ring-2 ring-[var(--accent-os)]'
+                      : isInteractiveMode
+                        ? 'hover:bg-[var(--bg-workspace)]/75 hover:ring-1 hover:ring-[var(--accent-os)]/50'
+                        : 'bg-transparent',
+                  )}
                 >
-                  <InlineMathText text={t.text} />
+                  <SmartInkMathContent text={t.text} isMath={t.isMath} />
                 </div>
-              ))}
+              );
+            })}
 
-            {/* Hộp nhập chữ / công thức KaTeX ngay tại vị trí vừa click */}
+            {/* Chỉnh sửa công thức trực tiếp khi đang ở Chế độ Tập giảng */}
+            {isTeachMode && openPopover === 'formula' && editingText && (
+              <div className="absolute top-6 left-1/2 z-30 -translate-x-1/2">
+                <InkFormulaEditorPopover
+                  key={editingText.id}
+                  initialItem={editingText}
+                  defaultColor={activePenPreset.color}
+                  onSave={(payload) => {
+                    updateText(editingText.id, payload);
+                    setEditingTextId(null);
+                    setOpenPopover(null);
+                  }}
+                  onDelete={() => {
+                    deleteText(editingText.id);
+                    setSelectedIds(new Set());
+                    setEditingTextId(null);
+                    setOpenPopover(null);
+                  }}
+                  onClose={() => {
+                    setEditingTextId(null);
+                    setOpenPopover(null);
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Hộp Công thức Toán học trực quan ngay tại vị trí vừa click (khi dùng công cụ Chữ / KaTeX) */}
             {pendingTextBox && (
               <div
                 style={{
-                  left: `${Math.min(72, (pendingTextBox.x / dims.width) * 100)}%`,
-                  top: `${Math.min(82, (pendingTextBox.y / dims.height) * 100)}%`,
+                  left: `${Math.max(2, Math.min(48, (pendingTextBox.x / dims.width) * 100))}%`,
+                  top: `${Math.max(2, Math.min(46, (pendingTextBox.y / dims.height) * 100))}%`,
                 }}
-                className="absolute z-30 w-64 space-y-2 rounded-xl border border-[var(--accent-os)] bg-[var(--bg-workspace)] p-2.5 shadow-xl"
+                className="absolute z-30"
               >
-                <input
-                  type="text"
-                  autoFocus
-                  value={pendingTextBox.text}
-                  onChange={(e) =>
-                    setPendingTextBox((prev) => (prev ? { ...prev, text: e.target.value } : null))
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleCommitTextBox();
-                    if (e.key === 'Escape') setPendingTextBox(null);
+                <InkFormulaEditorPopover
+                  defaultColor={activePenPreset.color}
+                  onSave={(payload) => {
+                    const id = makeLocalId('txt');
+                    addText({
+                      id,
+                      x: Math.round(pendingTextBox.x),
+                      y: Math.round(pendingTextBox.y),
+                      ...payload,
+                    });
+                    setPendingTextBox(null);
+                    setSelectedIds(new Set([id]));
                   }}
-                  placeholder="Nhập chữ hoặc $f(x)=x^2$..."
-                  className="w-full rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1.5 text-xs text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
+                  onClose={() => setPendingTextBox(null)}
                 />
-                <div className="flex items-center justify-between gap-2 text-[11px]">
-                  <label className="inline-flex cursor-pointer items-center gap-1 text-[var(--text-secondary)]">
-                    <input
-                      type="checkbox"
-                      checked={pendingTextBox.isMath}
-                      onChange={(e) =>
-                        setPendingTextBox((prev) =>
-                          prev ? { ...prev, isMath: e.target.checked } : null,
-                        )
-                      }
-                      className="accent-[var(--accent-os)]"
-                    />
-                    <span>KaTeX</span>
-                  </label>
-                  <div className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => setPendingTextBox(null)}
-                      className="cursor-pointer rounded px-2 py-1 text-[var(--text-muted)] hover:text-[var(--text-main)]"
-                    >
-                      Hủy
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleCommitTextBox}
-                      className="cursor-pointer rounded bg-[var(--accent-os)] px-2.5 py-1 font-semibold text-white"
-                    >
-                      Chèn
-                    </button>
-                  </div>
-                </div>
               </div>
             )}
 

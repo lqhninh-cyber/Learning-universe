@@ -1,7 +1,9 @@
 export {
+  drawFormattedMathTextOnCanvas,
   drawInkShape,
   drawInkStroke,
   drawPaperBackground,
+  formatLatexToReadableMath,
   renderFunctionGraphOnCanvas,
   renderInkPageToCanvas,
   smoothStrokePoints,

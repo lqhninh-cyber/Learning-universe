@@ -11,6 +11,7 @@ import {
   evaluateGeoScene,
   evaluateSolidConstructions,
   findSpecialGraphPoints,
+  formatLatexToReadableMath,
   GEOMETRY_STAMP_PRESETS,
   getSolidPresetSchema,
   hitTestGeoScene,
@@ -713,5 +714,81 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     const geoList = selectActiveInkPage(useInkNotebookStore.getState()).geoObjects ?? [];
     expect(geoList.filter((o) => o.kind === 'geo-point')).toHaveLength(2);
     expect(geoList.filter((o) => o.kind === 'geo-line')).toHaveLength(1);
+  });
+
+  it('C1 & C2: Hộp Công thức Toán học trực quan (nhấp đúp sửa lại, tăng giảm cỡ, chuẩn hóa xuất ảnh) và Chế độ Tập giảng & Ghi hình Offline', () => {
+    // Kiểm tra chuẩn hóa ký hiệu LaTeX sang Unicode toán học sạch cho Canvas/PDF export
+    const readable = formatLatexToReadableMath(
+      '$\\forall x \\in \\mathbb{R}, \\frac{x^2+1}{2} \\ge x \\implies \\sqrt{x^2} \\ge 0$',
+    );
+    expect(readable).toContain('∀');
+    expect(readable).toContain('∈');
+    expect(readable).toContain('ℝ');
+    expect(readable).toContain('(x^2+1)/(2)');
+    expect(readable).toContain('⇒');
+    expect(readable).toContain('√(x^2)');
+
+    render(
+      <MemoryRouter initialEntries={['/bang-viet']}>
+        <MathInkPage />
+      </MemoryRouter>,
+    );
+
+    // 1. C1 — Mở Hộp Công thức Toán trực quan, bấm phím chèn phân số + tích phân và đưa vào trang
+    fireEvent.click(screen.getByTestId('ink-formula-btn'));
+    expect(screen.getByTestId('ink-formula-editor-popover')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('formula-pad-int'));
+    fireEvent.click(screen.getByTestId('formula-cat-algebra'));
+    fireEvent.click(screen.getByTestId('formula-pad-implies'));
+    fireEvent.click(screen.getByTestId('ink-formula-submit-btn'));
+
+    const insertedTexts = selectActiveInkPage(useInkNotebookStore.getState()).texts;
+    expect(insertedTexts).toHaveLength(1);
+    const firstFormula = insertedTexts[0]!;
+    expect(firstFormula.text).toContain('\\int_{0}^{1}');
+    expect(firstFormula.isMath).toBe(true);
+
+    // Tăng cỡ chữ công thức ngay từ thanh chọn nhanh
+    const initialSize = firstFormula.fontSize;
+    fireEvent.click(screen.getByTestId('selected-text-larger'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).texts[0]!.fontSize).toBe(
+      initialSize + 3,
+    );
+
+    // Nhấp đúp trực tiếp vào chip công thức trên trang vở để mở lại hộp chỉnh sửa & cập nhật nội dung
+    const chip = screen.getByTestId(`ink-text-chip-${firstFormula.id}`);
+    fireEvent.doubleClick(chip);
+    const formulaInput = screen.getByTestId('ink-formula-input');
+    fireEvent.change(formulaInput, {
+      target: { value: 'G / \\ker\\varphi \\cong \\operatorname{Im}\\varphi' },
+    });
+    fireEvent.click(screen.getByTestId('ink-formula-submit-btn'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).texts[0]!.text).toBe(
+      'G / \\ker\\varphi \\cong \\operatorname{Im}\\varphi',
+    );
+
+    // 2. C2 — Bật Chế độ Tập giảng & Ghi hình bài giảng Offline
+    fireEvent.click(screen.getByTestId('ink-teach-mode-btn'));
+    expect(screen.getByTestId('ink-teach-studio-bar')).toBeInTheDocument();
+    expect(screen.getByTestId('teach-timer-readout')).toHaveTextContent('00:00');
+    expect(screen.getByTestId('teach-page-indicator')).toHaveTextContent('Trang 1/1');
+
+    // Thêm trang bảng mới và lật qua lại bằng nút & phím PageUp/PageDown
+    fireEvent.click(screen.getByTestId('teach-add-page'));
+    expect(screen.getByTestId('teach-page-indicator')).toHaveTextContent('Trang 2/2');
+    fireEvent.keyDown(window, { key: 'PageUp' });
+    expect(screen.getByTestId('teach-page-indicator')).toHaveTextContent('Trang 1/2');
+    fireEvent.keyDown(window, { key: 'PageDown' });
+    expect(screen.getByTestId('teach-page-indicator')).toHaveTextContent('Trang 2/2');
+
+    // Trong môi trường kiểm thử không có MediaRecorder, bấm Ghi bài giảng hiển thị thông báo thân thiện không văng lỗi
+    fireEvent.click(screen.getByTestId('teach-record-start'));
+    expect(screen.getByTestId('teach-status-banner')).toBeInTheDocument();
+
+    // Thoát chế độ Tập giảng quay về Bảng viết đầy đủ
+    fireEvent.click(screen.getByTestId('teach-exit-btn'));
+    expect(screen.queryByTestId('ink-teach-studio-bar')).not.toBeInTheDocument();
+    expect(screen.getByTestId('ink-teach-mode-btn')).toBeInTheDocument();
   });
 });

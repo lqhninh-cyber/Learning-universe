@@ -1,4 +1,14 @@
-import { Bell, CheckCircle2, ChevronRight, Hourglass, Menu, Search, Sparkles } from 'lucide-react';
+import {
+  Bell,
+  CheckCircle2,
+  ChevronRight,
+  Download,
+  Hourglass,
+  Menu,
+  Search,
+  Sparkles,
+  WifiOff,
+} from 'lucide-react';
 import { type FC, useEffect, useMemo, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
 import { preloadCommandPalette } from '@/components/layout/command-palette-loader';
@@ -13,6 +23,7 @@ import { useLayout } from '@/context/LayoutContext';
 import { usePomodoroState } from '@/context/PomodoroContext';
 import { HeaderQuickReaderControls } from '@/shared/components/header/HeaderQuickReaderControls';
 import { ROUTES } from '@/shared/config/routes';
+import { usePwaStatus } from '@/shared/hooks/usePwaStatus';
 import { cn } from '@/shared/lib/cn';
 
 export interface TopContextBarProps {
@@ -151,6 +162,39 @@ const TopBarMobilePomodoroPill: FC = () => {
   );
 };
 
+const TopBarPwaStatus: FC = () => {
+  const { isOnline, canInstall, isStandalone, promptInstall } = usePwaStatus();
+
+  return (
+    <>
+      {!isOnline && (
+        <span
+          role="status"
+          data-testid="topbar-offline-badge"
+          title="Đang ở chế độ Ngoại tuyến — Bảng viết, Soạn đề và bài giảng đã mở vẫn hoạt động bình thường trên máy"
+          className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/35 bg-amber-500/12 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300"
+        >
+          <WifiOff className="h-3 w-3 shrink-0" aria-hidden="true" />
+          <span>Ngoại tuyến</span>
+        </span>
+      )}
+
+      {canInstall && !isStandalone && (
+        <button
+          type="button"
+          data-testid="topbar-pwa-install-btn"
+          onClick={() => void promptInstall()}
+          title="Cài đặt Learning Universe làm ứng dụng độc lập hỗ trợ học Offline tại giảng đường"
+          className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--accent-os)]/35 bg-[var(--accent-os)]/10 px-2.5 text-xs font-semibold text-[var(--accent-os)] transition-colors hover:bg-[var(--accent-os)] hover:text-white active:scale-[0.98]"
+        >
+          <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="hidden sm:inline">Cài App</span>
+        </button>
+      )}
+    </>
+  );
+};
+
 export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, isDark = false }) => {
   const { pathname } = useLocation();
   const { isRailCollapsed, toggleMobileMenu, openCommandPalette, topBarRightSlot } = useLayout();
@@ -268,8 +312,10 @@ export const TopContextBar: FC<TopContextBarProps> = ({ isLessonPage = false, is
         </div>
       )}
 
-      {/* PHẢI: topBarRightSlot (công cụ đọc bài) · Pomodoro mobile · nút ⌘K */}
+      {/* PHẢI: Trạng thái Offline/PWA · topBarRightSlot (công cụ đọc bài) · Pomodoro mobile · nút ⌘K */}
       <div className="flex shrink-0 items-center gap-2">
+        <TopBarPwaStatus />
+
         {topBarRightSlot ?? (isLessonPage ? <HeaderQuickReaderControls isDark={isDark} /> : null)}
 
         <TopBarMobilePomodoroPill />

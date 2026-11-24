@@ -190,6 +190,8 @@ export interface InkNotebookState {
   setWorksheetBackground: (bg: InkWorksheetBackground | null) => void;
   addPagesWithWorksheets: (worksheets: readonly InkWorksheetBackground[]) => void;
   addText: (text: InkTextItem) => void;
+  updateText: (textId: string, patch: Partial<InkTextItem>) => void;
+  deleteText: (textId: string) => void;
   addImage: (image: InkImageItem) => void;
 
   undo: () => void;
@@ -760,6 +762,20 @@ export const useInkNotebookStore = create<InkNotebookState>()(
         get().commitPageMutation((page) => ({
           ...page,
           texts: [...page.texts, text],
+        }));
+      },
+
+      updateText: (textId, patch) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          texts: page.texts.map((t) => (t.id === textId ? { ...t, ...patch } : t)),
+        }));
+      },
+
+      deleteText: (textId) => {
+        get().commitPageMutation((page) => ({
+          ...page,
+          texts: page.texts.filter((t) => t.id !== textId),
         }));
       },
 
