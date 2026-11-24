@@ -5,6 +5,8 @@ export interface ToolbarPopoverAnchorProps {
   readonly anchorRef: RefObject<HTMLElement | null>;
   /** Canh lề ưu tiên trước khi tự động kẹp an toàn trong vùng nhìn thấy */
   readonly preferAlign?: 'left' | 'right';
+  /** Hướng bung ưu tiên theo chiều dọc (mặc định mở xuống dưới, riêng HUD đáy mở lên trên) */
+  readonly preferPlacement?: 'bottom' | 'top';
   readonly children: ReactNode;
 }
 
@@ -17,6 +19,7 @@ export interface ToolbarPopoverAnchorProps {
 export const ToolbarPopoverAnchor: FC<ToolbarPopoverAnchorProps> = ({
   anchorRef,
   preferAlign = 'left',
+  preferPlacement = 'bottom',
   children,
 }) => {
   const popRef = useRef<HTMLDivElement>(null);
@@ -45,6 +48,7 @@ export const ToolbarPopoverAnchor: FC<ToolbarPopoverAnchorProps> = ({
       const vw = window.innerWidth || 1280;
       const vh = window.innerHeight || 720;
       const popW = pop.offsetWidth || 320;
+      const popH = pop.offsetHeight || 260;
 
       // Kẹp an toàn phía bên phải LeftRail và trong mép phải khung nhìn
       const minLeft = Math.max(12, Math.round(pageLeft) + 10);
@@ -52,9 +56,16 @@ export const ToolbarPopoverAnchor: FC<ToolbarPopoverAnchorProps> = ({
       const desiredLeft = preferAlign === 'right' ? anchorRect.right - popW : anchorRect.left;
       const clampedLeft = Math.round(Math.max(minLeft, Math.min(desiredLeft, maxLeft)));
 
-      const desiredTop = Math.round(anchorRect.bottom + 8);
-      const clampedTop = Math.max(12, Math.min(desiredTop, Math.max(12, vh - 180)));
-      const maxHeight = Math.max(220, vh - clampedTop - 12);
+      let clampedTop: number;
+      let maxHeight: number;
+      if (preferPlacement === 'top') {
+        clampedTop = Math.max(12, Math.round(anchorRect.top - popH - 8));
+        maxHeight = Math.max(220, Math.round(anchorRect.top - 20));
+      } else {
+        const desiredTop = Math.round(anchorRect.bottom + 8);
+        clampedTop = Math.max(12, Math.min(desiredTop, Math.max(12, vh - 180)));
+        maxHeight = Math.max(220, vh - clampedTop - 12);
+      }
 
       setCoords({
         top: clampedTop,
@@ -74,7 +85,7 @@ export const ToolbarPopoverAnchor: FC<ToolbarPopoverAnchorProps> = ({
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition, true);
     };
-  }, [anchorRef, preferAlign]);
+  }, [anchorRef, preferAlign, preferPlacement]);
 
   return (
     <div
