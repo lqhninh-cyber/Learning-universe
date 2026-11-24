@@ -11,14 +11,17 @@ export {
   type PageRenderOptions,
 } from './canvasRenderer';
 export {
+  collectMovableFreePointIds,
   computeGeoIntersections,
   evaluateGeoScene,
   formatRatioLabel,
   hitTestGeoScene,
   nextGeoPointLabel,
   parseRatioInput,
+  removeGeoObjectsWithCascade,
   renderGeoSceneOnCanvas,
   snapRatioToNiceFraction,
+  translateGeoObjectsByTargets,
   type EvaluatedGeoConic,
   type EvaluatedGeoLine,
   type EvaluatedGeoPoint,

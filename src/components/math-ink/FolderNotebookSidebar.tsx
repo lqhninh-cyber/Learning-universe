@@ -203,14 +203,14 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
               >
                 <FileText
                   className={cn(
-                    'h-3.5 w-3.5 shrink-0',
+                    'h-4 w-4 shrink-0',
                     isActive ? 'text-[var(--accent-os)]' : 'text-[var(--text-muted)]',
                   )}
                   aria-hidden="true"
                 />
                 <span
                   className={cn(
-                    'truncate text-[11.5px]',
+                    'truncate text-[13px]',
                     isActive ? 'font-semibold text-[var(--accent-os)]' : 'text-[var(--text-main)]',
                   )}
                 >
@@ -219,7 +219,7 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
               </button>
 
               <div className="flex shrink-0 items-center gap-0.5">
-                <span className="font-mono text-[9.5px] text-[var(--text-muted)] tabular-nums">
+                <span className="font-mono text-[11px] text-[var(--text-muted)] tabular-nums">
                   {nb.pages.length}tr
                 </span>
                 <button
@@ -231,18 +231,18 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                     setEditingNotebookId(nb.id);
                     setEditingNotebookTitle(nb.title);
                   }}
-                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-70 hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)] hover:opacity-100"
+                  className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] opacity-80 hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)] hover:opacity-100"
                 >
-                  <Pencil className="h-2.5 w-2.5" aria-hidden="true" />
+                  <Pencil className="h-3 w-3" aria-hidden="true" />
                 </button>
                 <button
                   type="button"
                   title="Chuyển sang thư mục khác"
                   aria-label={`Chuyển thư mục cho ${nb.title}`}
                   onClick={() => setMovingNotebookId(isMoving ? null : nb.id)}
-                  className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-70 hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)] hover:opacity-100"
+                  className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] opacity-80 hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)] hover:opacity-100"
                 >
-                  <Folder className="h-3 w-3" aria-hidden="true" />
+                  <Folder className="h-3.5 w-3.5" aria-hidden="true" />
                 </button>
                 {notebooks.length > 1 && (
                   <button
@@ -250,9 +250,9 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                     title="Xóa vở"
                     aria-label={`Xóa vở ${nb.title}`}
                     onClick={() => onDeleteNotebook(nb.id)}
-                    className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] opacity-70 hover:bg-[var(--bg-surface)] hover:text-[#8F3D35] hover:opacity-100"
+                    className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] opacity-80 hover:bg-[var(--bg-surface)] hover:text-[#8F3D35] hover:opacity-100"
                   >
-                    <Trash2 className="h-3 w-3" aria-hidden="true" />
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -333,34 +333,34 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                     className="flex min-w-0 flex-1 cursor-pointer items-center gap-1.5 text-left"
                   >
                     {isExpanded ? (
-                      <ChevronDown className="h-3 w-3 shrink-0 text-[var(--text-muted)]" />
+                      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" />
                     ) : (
-                      <ChevronRight className="h-3 w-3 shrink-0 text-[var(--text-muted)]" />
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" />
                     )}
                     {isExpanded ? (
                       <FolderOpen
-                        className="h-3.5 w-3.5 shrink-0"
+                        className="h-4 w-4 shrink-0"
                         style={{ color: folder.color }}
                         aria-hidden="true"
                       />
                     ) : (
                       <Folder
-                        className="h-3.5 w-3.5 shrink-0"
+                        className="h-4 w-4 shrink-0"
                         style={{ color: folder.color }}
                         aria-hidden="true"
                       />
                     )}
-                    <span className="truncate text-xs font-semibold text-[var(--text-main)]">
+                    <span className="truncate text-[13px] font-semibold text-[var(--text-main)]">
                       {folder.name}
                     </span>
-                    <span className="font-mono text-[9.5px] text-[var(--text-muted)]">
+                    <span className="font-mono text-[11px] text-[var(--text-muted)]">
                       ({folderNotebooks.length})
                     </span>
                   </button>
                 )}
 
                 {!isEditing && (
-                  <div className="flex shrink-0 items-center gap-0.5 opacity-80 group-hover:opacity-100">
+                  <div className="flex shrink-0 items-center gap-0.5 opacity-85 group-hover:opacity-100">
                     <button
                       type="button"
                       title="Thêm vở mới vào mục này"
@@ -373,9 +373,9 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                           setEditingNotebookTitle(created.title);
                         }
                       }}
-                      className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)]"
+                      className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)]"
                     >
-                      <Plus className="h-3 w-3" aria-hidden="true" />
+                      <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
                     {depth < 2 && (
                       <button
@@ -387,9 +387,9 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                           setNewFolderColor(folder.color);
                           setNewFolderName('');
                         }}
-                        className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)]"
+                        className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--accent-os)]"
                       >
-                        <FolderPlus className="h-3 w-3" aria-hidden="true" />
+                        <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
                       </button>
                     )}
                     <button
@@ -400,18 +400,18 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                         setEditingFolderId(folder.id);
                         setEditingFolderName(folder.name);
                       }}
-                      className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
+                      className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-main)]"
                     >
-                      <Pencil className="h-2.5 w-2.5" aria-hidden="true" />
+                      <Pencil className="h-3 w-3" aria-hidden="true" />
                     </button>
                     <button
                       type="button"
                       title="Xóa thư mục (giữ lại vở)"
                       aria-label={`Xóa thư mục ${folder.name}`}
                       onClick={() => onDeleteFolder(folder.id)}
-                      className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[#8F3D35]"
+                      className="inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[#8F3D35]"
                     >
-                      <Trash2 className="h-2.5 w-2.5" aria-hidden="true" />
+                      <Trash2 className="h-3 w-3" aria-hidden="true" />
                     </button>
                   </div>
                 )}
@@ -438,22 +438,22 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
   return (
     <aside
       data-testid="ink-pages-sidebar"
-      className="os-thin-scrollbar flex w-64 shrink-0 flex-col overflow-hidden border-r border-[var(--border-hairline)] bg-[var(--bg-surface)] print:hidden"
+      className="os-thin-scrollbar flex w-[264px] shrink-0 flex-col overflow-hidden border-r border-[var(--border-hairline)] bg-[var(--bg-surface)] print:hidden"
     >
       {/* 2 Tab phân tách gọn: Thư mục & Vở ↔ Trang vở */}
-      <div className="grid grid-cols-2 gap-1 border-b border-[var(--border-hairline)] p-2">
+      <div className="grid grid-cols-2 gap-1.5 border-b border-[var(--border-hairline)] p-2.5">
         <button
           type="button"
           data-testid="sidebar-tab-folders"
           onClick={() => setSidebarTab('folders')}
           className={cn(
-            'inline-flex cursor-pointer items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-colors',
+            'inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-[13px] font-semibold transition-colors',
             sidebarTab === 'folders'
-              ? 'bg-[var(--accent-os)] text-white'
+              ? 'bg-[var(--accent-os)] text-white shadow-2xs'
               : 'bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
           )}
         >
-          <Folder className="h-3.5 w-3.5" aria-hidden="true" />
+          <Folder className="h-4 w-4" aria-hidden="true" />
           <span>Thư mục ({folders.length})</span>
         </button>
         <button
@@ -461,30 +461,33 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
           data-testid="sidebar-tab-pages"
           onClick={() => setSidebarTab('pages')}
           className={cn(
-            'inline-flex cursor-pointer items-center justify-center gap-1 rounded-lg py-1.5 text-xs font-semibold transition-colors',
+            'inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-xl text-[13px] font-semibold transition-colors',
             sidebarTab === 'pages'
-              ? 'bg-[var(--accent-os)] text-white'
+              ? 'bg-[var(--accent-os)] text-white shadow-2xs'
               : 'bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
           )}
         >
-          <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
           <span>Trang ({activeNotebook.pages.length})</span>
         </button>
       </div>
 
       {sidebarTab === 'folders' ? (
-        <div className="os-thin-scrollbar flex-1 space-y-2.5 overflow-y-auto p-2.5">
+        <div className="os-thin-scrollbar flex-1 space-y-3 overflow-y-auto p-2.5">
           {/* Tìm kiếm nhanh + nút tạo thư mục gốc */}
           <div className="flex items-center gap-1.5">
-            <div className="flex min-w-0 flex-1 items-center gap-1.5 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 py-1">
-              <Search className="h-3 w-3 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />
+            <div className="flex h-9 min-w-0 flex-1 items-center gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5">
+              <Search
+                className="h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]"
+                aria-hidden="true"
+              />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Tìm vở..."
                 aria-label="Tìm kiếm vở ghi chép"
-                className="min-w-0 flex-1 bg-transparent text-xs text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none"
+                className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none"
               />
             </div>
             <button
@@ -495,9 +498,9 @@ export const FolderNotebookSidebar: FC<FolderNotebookSidebarProps> = ({
                 setNewFolderParentId(null);
                 setNewFolderName('');
               }}
-              className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg bg-[var(--accent-os)] px-2 text-[11px] font-semibold text-white hover:opacity-95"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl bg-[var(--accent-os)] px-2.5 text-xs font-semibold text-white hover:opacity-95"
             >
-              <FolderPlus className="h-3.5 w-3.5" aria-hidden="true" />
+              <FolderPlus className="h-4 w-4" aria-hidden="true" />
               <span>Mục</span>
             </button>
           </div>

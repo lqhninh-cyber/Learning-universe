@@ -11,6 +11,7 @@ import {
   FileDown,
   FileImage,
   FilePenLine,
+  Hand,
   ImagePlus,
   Maximize2,
   Minimize2,
@@ -89,6 +90,7 @@ import {
   nextGeoPointLabel,
   PAGE_DIMENSIONS,
   recognizeInkGesture,
+  removeGeoObjectsWithCascade,
   renderExamTextToWorksheetDataUrl,
   renderInkPageToCanvas,
   selectActiveInkBucket,
@@ -98,6 +100,7 @@ import {
   selectActivePenPreset,
   snapPointToRulerEdge,
   stabilizeInkPoint,
+  translateGeoObjectsByTargets,
   useInkNotebookStore,
   type EraserMode,
   type GeoObject,
@@ -140,7 +143,8 @@ type OpenPopoverKey =
   | 'stamps'
   | 'worksheet'
   | 'eraser'
-  | 'selection';
+  | 'selection'
+  | 'zoom';
 
 const LASER_COLOR_OPTIONS = [
   { id: 'red', label: 'Đỏ rực', hex: '#EF4444' },
@@ -185,6 +189,11 @@ function shiftPageItemsBelowY(page: InkPage, anchorY: number, dy: number): InkPa
       t.y >= anchorY ? { ...t, y: t.y + dy } : t,
     ),
     stamps: (page.stamps ?? []).map((st) => (st.y >= anchorY ? { ...st, y: st.y + dy } : st)),
+    geoObjects: (page.geoObjects ?? []).map((obj) =>
+      obj.kind === 'geo-point' && obj.pointMode === 'free' && obj.y >= anchorY
+        ? { ...obj, y: Number((obj.y + dy).toFixed(2)) }
+        : obj,
+    ),
     texts: page.texts.map((t) => (t.y >= anchorY ? { ...t, y: t.y + dy } : t)),
     images: page.images.map((im) => (im.y >= anchorY ? { ...im, y: im.y + dy } : im)),
   };
@@ -221,6 +230,7 @@ function translateSelectedOnPage(
     stamps: (page.stamps ?? []).map((st) =>
       selectedIds.has(st.id) ? { ...st, x: st.x + dx, y: st.y + dy } : st,
     ),
+    geoObjects: translateGeoObjectsByTargets(page.geoObjects, selectedIds, dx, dy),
     texts: page.texts.map((t) => (selectedIds.has(t.id) ? { ...t, x: t.x + dx, y: t.y + dy } : t)),
     images: page.images.map((im) =>
       selectedIds.has(im.id) ? { ...im, x: im.x + dx, y: im.y + dy } : im,
@@ -340,7 +350,17 @@ export function MathInkPage() {
     null,
   );
   const [geoSelectedId, setGeoSelectedId] = useState<string | null>(null);
-  const geoDraggingPointIdRef = useRef<string | null>(null);
+  const geoDragStateRef = useRef<
+    | null
+    | { readonly mode: 'single-point'; readonly id: string }
+    | { readonly mode: 'rigid-group'; readonly targetId: string; lastX: number; lastY: number }
+    | { readonly mode: 'erase' }
+  >(null);
+  const geoPressStartRef = useRef<{
+    readonly ptId: string;
+    readonly x: number;
+    readonly y: number;
+  } | null>(null);
 
   // Các điểm neo Popover chống che khuất bởi LeftRail / mép màn hình
   const paperAnchorRef = useRef<HTMLDivElement>(null);
@@ -355,6 +375,8 @@ export function MathInkPage() {
   const eraserAnchorRef = useRef<HTMLDivElement>(null);
   const selectionAnchorRef = useRef<HTMLDivElement>(null);
   const worksheetAnchorRef = useRef<HTMLDivElement>(null);
+  const zoomAnchorRef = useRef<HTMLDivElement>(null);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   const [resizingBox, setResizingBox] = useState<{
     readonly id: string;
@@ -366,7 +388,11 @@ export function MathInkPage() {
   } | null>(null);
 
   const [showPagesSidebar, setShowPagesSidebar] = useState(true);
-  const [zoom, setZoom] = useState(0.85);
+  const [zoom, setZoom] = useState<number>(() =>
+    typeof window !== 'undefined' && window.innerWidth >= 1280 ? 1.05 : 0.95,
+  );
+  const [zoomInputDraft, setZoomInputDraft] = useState<string | null>(null);
+  const [isSpaceHeld, setIsSpaceHeld] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [sentToExamNotice, setSentToExamNotice] = useState(false);
   const [isTeachMode, setIsTeachMode] = useState<boolean>(
@@ -422,6 +448,7 @@ export function MathInkPage() {
   const interactionRef = useRef<{
     mode:
       | 'none'
+      | 'pan-viewport'
       | 'draw-stroke'
       | 'draw-shape'
       | 'laser'
@@ -436,6 +463,10 @@ export function MathInkPage() {
     lastX: number;
     lastY: number;
     lastTimeMs: number;
+    panStartClientX?: number;
+    panStartClientY?: number;
+    panStartScrollLeft?: number;
+    panStartScrollTop?: number;
     strokeDraft: InkStroke | null;
     shapeDraft: InkShapeItem | null;
     lassoDraft: InkPoint[];
@@ -647,11 +678,79 @@ export function MathInkPage() {
     spacerLineY,
   ]);
 
-  // Phím tắt chuyên nghiệp Ctrl+Z / Ctrl+Y / Delete
+  const clampZoom = useCallback((nextZoom: number): number => {
+    return Math.min(3.0, Math.max(0.35, Number(nextZoom.toFixed(2))));
+  }, []);
+
+  const fitZoomToWidth = useCallback(() => {
+    const vp = scrollViewportRef.current;
+    if (!vp || vp.clientWidth <= 100) {
+      setZoom(1.05);
+      return;
+    }
+    const ideal = (vp.clientWidth - 72) / dims.width;
+    setZoom(clampZoom(ideal));
+  }, [clampZoom, dims.width]);
+
+  const fitZoomToPage = useCallback(() => {
+    const vp = scrollViewportRef.current;
+    if (!vp || vp.clientWidth <= 100 || vp.clientHeight <= 100) {
+      setZoom(0.85);
+      return;
+    }
+    const ideal = Math.min(
+      (vp.clientWidth - 64) / dims.width,
+      (vp.clientHeight - 56) / dims.height,
+    );
+    setZoom(clampZoom(ideal));
+  }, [clampZoom, dims.height, dims.width]);
+
+  // Hỗ trợ Ctrl + Lăn chuột (hoặc chụm/tách 2 ngón Trackpad) để Zoom tự do mượt mà 35% -> 300%
+  useEffect(() => {
+    const vp = scrollViewportRef.current;
+    if (!vp) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.08 : 0.925;
+      setZoom((prev) => clampZoom(prev * factor));
+    };
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    return () => vp.removeEventListener('wheel', onWheel);
+  }, [clampZoom]);
+
+  // Phím tắt chuyên nghiệp Ctrl+Z / Ctrl+Y / Delete / Space kéo trang / Ctrl +/- / 0
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+      if (
+        target &&
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')
+      ) {
+        return;
+      }
+
+      if (e.code === 'Space' && !e.repeat && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsSpaceHeld(true);
+        return;
+      }
+
+      if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '+')) {
+        e.preventDefault();
+        setZoom((z) => clampZoom(z + 0.1));
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+        e.preventDefault();
+        setZoom((z) => clampZoom(z - 0.1));
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        setZoom(1);
+        return;
+      }
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
         e.preventDefault();
@@ -673,9 +772,14 @@ export function MathInkPage() {
           selectPage(activeNotebook.activePageIndex - 1);
         }
       } else if (e.key === 'Escape' && activeTool === 'geo') {
-        setGeoPendingPts([]);
-        setGeoPendingCurveId(null);
-        setGeoSelectedId(null);
+        if (geoPendingPts.length > 0 || geoPendingCurveId) {
+          setGeoPendingPts([]);
+          setGeoPendingCurveId(null);
+        } else if (geoTool !== 'move') {
+          setGeoTool('move');
+        } else {
+          setGeoSelectedId(null);
+        }
       } else if (
         (e.key === 'Delete' || e.key === 'Backspace') &&
         activeTool === 'geo' &&
@@ -684,7 +788,7 @@ export function MathInkPage() {
         e.preventDefault();
         commitPageMutation((page) => ({
           ...page,
-          geoObjects: (page.geoObjects ?? []).filter((o) => o.id !== geoSelectedId),
+          geoObjects: removeGeoObjectsWithCascade(page.geoObjects, [geoSelectedId]),
         }));
         setGeoSelectedId(null);
       } else if ((e.key === 'Delete' || e.key === 'Backspace') && selectedIds.size > 0) {
@@ -697,20 +801,34 @@ export function MathInkPage() {
           graphs: page.graphs.filter((g) => !selectedIds.has(g.id)),
           variationTables: (page.variationTables ?? []).filter((t) => !selectedIds.has(t.id)),
           stamps: (page.stamps ?? []).filter((st) => !selectedIds.has(st.id)),
+          geoObjects: removeGeoObjectsWithCascade(page.geoObjects, selectedIds),
           texts: page.texts.filter((t) => !selectedIds.has(t.id)),
           images: page.images.filter((im) => !selectedIds.has(im.id)),
         }));
         setSelectedIds(new Set());
       }
     };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        setIsSpaceHeld(false);
+      }
+    };
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+    };
   }, [
     activeNotebook.activePageIndex,
     activeNotebook.pages.length,
     activeTool,
+    clampZoom,
     commitPageMutation,
+    geoPendingCurveId,
+    geoPendingPts.length,
     geoSelectedId,
+    geoTool,
     isTeachMode,
     redo,
     selectPage,
@@ -769,6 +887,23 @@ export function MathInkPage() {
           return t.id;
         }
       }
+      if (activePage.geoObjects && activePage.geoObjects.length > 0) {
+        const gScene = evaluateGeoScene(activePage.geoObjects);
+        const gHit = hitTestGeoScene(gScene, pt.x, pt.y, {
+          includePolygons: true,
+          pointRadius: 16,
+          curveRadius: 13,
+        });
+        if (
+          gHit &&
+          (gHit.kind === 'point' ||
+            gHit.kind === 'line' ||
+            gHit.kind === 'conic' ||
+            gHit.kind === 'polygon')
+        ) {
+          return gHit.id;
+        }
+      }
       for (let i = activePage.shapes.length - 1; i >= 0; i -= 1) {
         if (doesShapeHitPoint(activePage.shapes[i]!, pt.x, pt.y, 12)) {
           return activePage.shapes[i]!.id;
@@ -788,6 +923,26 @@ export function MathInkPage() {
     (pt: InkPoint) => {
       const r = getEraserRadius(eraserMode);
       commitPageMutation((page) => {
+        const origGeo = page.geoObjects ?? [];
+        let nextGeo = origGeo;
+        if (origGeo.length > 0) {
+          const gScene = evaluateGeoScene(origGeo);
+          const gHit = hitTestGeoScene(gScene, pt.x, pt.y, {
+            includePolygons: true,
+            pointRadius: Math.max(16, r + 4),
+            curveRadius: Math.max(13, r + 2),
+          });
+          if (
+            gHit &&
+            (gHit.kind === 'point' ||
+              gHit.kind === 'line' ||
+              gHit.kind === 'conic' ||
+              gHit.kind === 'polygon')
+          ) {
+            nextGeo = removeGeoObjectsWithCascade(origGeo, [gHit.id]);
+          }
+        }
+
         if (eraserMode === 'stroke') {
           const nextStrokes = page.strokes.filter((st) => !doesCircleHitStroke(st, pt.x, pt.y, r));
           const nextShapes = page.shapes.filter((sh) => !doesShapeHitPoint(sh, pt.x, pt.y, r));
@@ -813,6 +968,7 @@ export function MathInkPage() {
             nextGraphs.length === page.graphs.length &&
             nextTables.length === origTables.length &&
             nextStamps.length === origStamps.length &&
+            nextGeo.length === origGeo.length &&
             nextTexts.length === page.texts.length
           ) {
             return page;
@@ -825,12 +981,13 @@ export function MathInkPage() {
             graphs: nextGraphs,
             variationTables: nextTables,
             stamps: nextStamps,
+            geoObjects: nextGeo,
             texts: nextTexts,
           };
         }
 
-        // Tẩy từng đoạn nét (Segment Eraser)
-        let changed = false;
+        // Tẩy từng đoạn nét (Segment Eraser) + xóa luôn điểm/đường dựng hình nếu chạm phải
+        let changed = nextGeo.length !== origGeo.length;
         const nextStrokes: InkStroke[] = [];
         for (const st of page.strokes) {
           const parts = eraseStrokeSegment(st, pt.x, pt.y, r);
@@ -838,7 +995,7 @@ export function MathInkPage() {
           nextStrokes.push(...parts);
         }
         if (!changed) return page;
-        return { ...page, strokes: nextStrokes };
+        return { ...page, strokes: nextStrokes, geoObjects: nextGeo };
       });
     },
     [commitPageMutation, eraserMode],
@@ -857,7 +1014,8 @@ export function MathInkPage() {
   const geoStepHint = useMemo(() => {
     const pCount = geoPendingPts.length;
     if (geoTool === 'move')
-      return 'Kéo thả điểm tự do hoặc điểm trên cạnh để biến đổi hình động · Chạm đối tượng để chỉnh';
+      return 'Kéo điểm động HOẶC nắm kéo nguyên đoạn thẳng AB, đường tròn, đa giác cùng lúc';
+    if (geoTool === 'eraser') return 'Chạm hoặc rê qua bất kỳ điểm / đường / hình nào để xóa ngay';
     if (geoTool === 'point-free')
       return 'Chạm bất kỳ đâu trên trang giấy để đặt Điểm tự do (A, B, C...)';
     if (geoTool === 'point-on-object')
@@ -874,15 +1032,18 @@ export function MathInkPage() {
         : 'Chạm trực tiếp vào chỗ giao nhau của 2 đường / đường tròn (hoặc chọn lần lượt 2 đường)';
     if (geoTool === 'segment' || geoTool === 'line' || geoTool === 'ray' || geoTool === 'vector') {
       return pCount === 0
-        ? 'Chọn điểm thứ nhất (tự bắt điểm có sẵn hoặc tạo điểm mới)'
-        : 'Chọn điểm thứ hai để hoàn tất đường';
+        ? 'Chạm điểm đầu (hoặc nhấn-kéo-thả liền mạch tới điểm cuối)'
+        : 'Chạm điểm thứ hai để hoàn tất đường';
     }
-    if (geoTool === 'perpendicular' || geoTool === 'parallel') {
+    if (geoTool === 'altitude' || geoTool === 'perpendicular' || geoTool === 'parallel') {
       if (pCount > 0) return 'Bấm vào 1 đoạn thẳng hoặc đường thẳng làm phương chuẩn';
       if (geoPendingCurveId) return 'Bấm vào 1 điểm mà đường đi qua';
+      if (geoTool === 'altitude') {
+        return 'Chọn 1 điểm và 1 cạnh để hạ Đoạn thẳng vuông góc (Đường cao AH ⊥ cạnh)';
+      }
       return geoTool === 'perpendicular'
-        ? 'Chọn 1 điểm và 1 đường thẳng để dựng đường vuông góc / đường cao ⊥'
-        : 'Chọn 1 điểm và 1 đường thẳng để dựng đường song song';
+        ? 'Chọn 1 điểm và 1 đường thẳng để dựng Đường thẳng vuông góc vô hạn ⊥'
+        : 'Chọn 1 điểm và 1 đường thẳng để dựng Đường song song';
     }
     if (geoTool === 'perp-bisector')
       return pCount === 0
@@ -898,9 +1059,11 @@ export function MathInkPage() {
     if (geoTool === 'polygon')
       return pCount < 3
         ? `Chạm lần lượt các đỉnh của đa giác / mặt phẳng (đã chọn ${pCount})`
-        : 'Chạm thêm đỉnh hoặc bấm lại đỉnh đầu tiên để khép kín & tô màu mặt phẳng';
+        : 'Chạm thêm đỉnh hoặc bấm nút Khép kín / chạm đỉnh đầu tiên để tô mặt phẳng';
     if (geoTool === 'circle-center-point')
-      return pCount === 0 ? 'Chọn tâm O của đường tròn' : 'Chọn 1 điểm đi qua trên đường tròn';
+      return pCount === 0
+        ? 'Chọn tâm O (hoặc nhấn-kéo-thả từ tâm O ra điểm trên đường tròn)'
+        : 'Chọn 1 điểm đi qua trên đường tròn';
     if (geoTool === 'circle-3pts')
       return `Chọn 3 điểm bất kỳ để dựng đường tròn ngoại tiếp (đã chọn ${pCount}/3)`;
     if (geoTool === 'ellipse')
@@ -939,12 +1102,55 @@ export function MathInkPage() {
     (id: string) => {
       commitPageMutation((page) => ({
         ...page,
-        geoObjects: (page.geoObjects ?? []).filter((obj) => obj.id !== id),
+        geoObjects: removeGeoObjectsWithCascade(page.geoObjects, [id]),
       }));
       setGeoSelectedId((prev) => (prev === id ? null : prev));
     },
     [commitPageMutation],
   );
+
+  const closePendingGeoPolygon = useCallback(() => {
+    if (geoPendingPts.length < 3) return;
+    const curObjects = activePage.geoObjects ?? [];
+    const polyId = makeLocalId('gpoly');
+    const createdEdges: GeoObject[] = [];
+    for (let i = 0; i < geoPendingPts.length; i += 1) {
+      const p1Id = geoPendingPts[i]!;
+      const p2Id = geoPendingPts[(i + 1) % geoPendingPts.length]!;
+      const alreadyHasEdge = curObjects.some(
+        (o) =>
+          o.kind === 'geo-line' &&
+          o.lineMode === 'segment' &&
+          ((o.p1Id === p1Id && o.p2Id === p2Id) || (o.p1Id === p2Id && o.p2Id === p1Id)),
+      );
+      if (!alreadyHasEdge) {
+        createdEdges.push({
+          id: makeLocalId('gl'),
+          kind: 'geo-line',
+          lineMode: 'segment',
+          p1Id,
+          p2Id,
+          style: geoLineStyle,
+          color: geoColor,
+          width: 2.1,
+        });
+      }
+    }
+    appendGeoObjects([
+      ...createdEdges,
+      {
+        id: polyId,
+        kind: 'geo-polygon',
+        pointIds: geoPendingPts,
+        color: geoColor,
+        fillOpacity: 0.16,
+        borderStyle: geoLineStyle,
+        width: 2.1,
+      },
+    ]);
+    setGeoPendingPts([]);
+    setGeoSelectedId(polyId);
+  }, [activePage.geoObjects, appendGeoObjects, geoColor, geoLineStyle, geoPendingPts]);
 
   const handleGeoPointerDown = (rawPt: InkPoint) => {
     const curObjects = activePage.geoObjects ?? [];
@@ -952,9 +1158,25 @@ export function MathInkPage() {
     const hit = hitTestGeoScene(curScene, rawPt.x, rawPt.y, {
       preferIntersection: geoTool === 'intersect',
       skipPoints: geoTool === 'point-on-object',
+      includePolygons: geoTool === 'move' || geoTool === 'eraser',
     });
 
-    // 1. Công cụ Di chuyển & Chỉnh sửa động
+    // 0. Công cụ Xóa nhanh ngay trong thanh Dựng hình (chạm hoặc kéo qua là xóa)
+    if (geoTool === 'eraser') {
+      geoDragStateRef.current = { mode: 'erase' };
+      if (
+        hit &&
+        (hit.kind === 'point' ||
+          hit.kind === 'line' ||
+          hit.kind === 'conic' ||
+          hit.kind === 'polygon')
+      ) {
+        deleteGeoObject(hit.id);
+      }
+      return;
+    }
+
+    // 1. Công cụ Di chuyển & Kéo nguyên đoạn thẳng AB / Đường tròn / Đa giác cùng lúc
     if (geoTool === 'move') {
       if (hit?.kind === 'point') {
         setGeoSelectedId(hit.id);
@@ -965,20 +1187,27 @@ export function MathInkPage() {
             ptObj.pointMode === 'on-segment' ||
             ptObj.pointMode === 'on-circle')
         ) {
-          geoDraggingPointIdRef.current = hit.id;
+          geoDragStateRef.current = { mode: 'single-point', id: hit.id };
+        } else {
+          // Kéo trung điểm M hoặc trọng tâm G sẽ tịnh tiến đồng thời toàn bộ đoạn / tam giác gốc!
+          geoDragStateRef.current = {
+            mode: 'rigid-group',
+            targetId: hit.id,
+            lastX: rawPt.x,
+            lastY: rawPt.y,
+          };
         }
         return;
       }
-      if (hit?.kind === 'line' || hit?.kind === 'conic') {
+      if (hit?.kind === 'line' || hit?.kind === 'conic' || hit?.kind === 'polygon') {
         setGeoSelectedId(hit.id);
+        geoDragStateRef.current = {
+          mode: 'rigid-group',
+          targetId: hit.id,
+          lastX: rawPt.x,
+          lastY: rawPt.y,
+        };
         return;
-      }
-      // Kiểm tra chạm vào đa giác / mặt phẳng
-      for (const [polyId, poly] of curScene.polygons.entries()) {
-        if (isPointInPolygon(rawPt.x, rawPt.y, poly.vertices)) {
-          setGeoSelectedId(polyId);
-          return;
-        }
       }
       setGeoSelectedId(null);
       return;
@@ -1214,6 +1443,7 @@ export function MathInkPage() {
       if (geoPendingPts.length === 0) {
         appendGeoObjects(created);
         setGeoPendingPts([pid]);
+        geoPressStartRef.current = { ptId: pid, x: rawPt.x, y: rawPt.y };
       } else if (geoPendingPts[0] !== pid) {
         created.push({
           id: makeLocalId('gl'),
@@ -1227,12 +1457,14 @@ export function MathInkPage() {
         });
         appendGeoObjects(created);
         setGeoPendingPts([]);
+        geoPressStartRef.current = null;
       }
       return;
     }
 
-    // 8. Đường vuông góc (kèm tự tạo chân đường cao H) & Đường song song
-    if (geoTool === 'perpendicular' || geoTool === 'parallel') {
+    // 8. Đoạn vuông góc (Đường cao AH) · Đường thẳng vuông góc vô hạn · Đường song song
+    if (geoTool === 'altitude' || geoTool === 'perpendicular' || geoTool === 'parallel') {
+      const needsFootPoint = geoTool === 'altitude' || geoTool === 'perpendicular';
       if (hit?.kind === 'line') {
         if (geoPendingPts.length > 0) {
           const throughPtId = geoPendingPts[0]!;
@@ -1245,10 +1477,10 @@ export function MathInkPage() {
               refLineId: hit.id,
               style: geoLineStyle,
               color: geoColor,
-              width: 2,
+              width: 2.1,
             },
           ];
-          if (geoTool === 'perpendicular') {
+          if (needsFootPoint) {
             newObjs.push({
               id: makeLocalId('gp'),
               kind: 'geo-point',
@@ -1279,9 +1511,9 @@ export function MathInkPage() {
           refLineId: geoPendingCurveId,
           style: geoLineStyle,
           color: geoColor,
-          width: 2,
+          width: 2.1,
         });
-        if (geoTool === 'perpendicular') {
+        if (needsFootPoint) {
           created.push({
             id: makeLocalId('gp'),
             kind: 'geo-point',
@@ -1402,47 +1634,10 @@ export function MathInkPage() {
       return;
     }
 
-    // 11. Đa giác / Mặt phẳng tô màu bán trong suốt (khép kín khi bấm lại đỉnh đầu tiên)
+    // 11. Đa giác / Mặt phẳng tô màu bán trong suốt (khép kín khi bấm lại đỉnh đầu tiên hoặc nút Khép kín)
     if (geoTool === 'polygon') {
       if (geoPendingPts.length >= 3 && hit?.kind === 'point' && hit.id === geoPendingPts[0]) {
-        const polyId = makeLocalId('gpoly');
-        const createdEdges: GeoObject[] = [];
-        for (let i = 0; i < geoPendingPts.length; i += 1) {
-          const p1Id = geoPendingPts[i]!;
-          const p2Id = geoPendingPts[(i + 1) % geoPendingPts.length]!;
-          const alreadyHasEdge = curObjects.some(
-            (o) =>
-              o.kind === 'geo-line' &&
-              o.lineMode === 'segment' &&
-              ((o.p1Id === p1Id && o.p2Id === p2Id) || (o.p1Id === p2Id && o.p2Id === p1Id)),
-          );
-          if (!alreadyHasEdge) {
-            createdEdges.push({
-              id: makeLocalId('gl'),
-              kind: 'geo-line',
-              lineMode: 'segment',
-              p1Id,
-              p2Id,
-              style: geoLineStyle,
-              color: geoColor,
-              width: 2,
-            });
-          }
-        }
-        appendGeoObjects([
-          ...createdEdges,
-          {
-            id: polyId,
-            kind: 'geo-polygon',
-            pointIds: geoPendingPts,
-            color: geoColor,
-            fillOpacity: 0.16,
-            borderStyle: geoLineStyle,
-            width: 2,
-          },
-        ]);
-        setGeoPendingPts([]);
-        setGeoSelectedId(polyId);
+        closePendingGeoPolygon();
         return;
       }
       const created: GeoObject[] = [];
@@ -1453,7 +1648,7 @@ export function MathInkPage() {
       return;
     }
 
-    // 12. Đường tròn (Tâm & Điểm)
+    // 12. Đường tròn (Tâm & Điểm — hỗ trợ cả chạm 2 lần hoặc nhấn-kéo-thả từ tâm O)
     if (geoTool === 'circle-center-point') {
       const created: GeoObject[] = [];
       const pid = ensurePointAtCursor(
@@ -1463,6 +1658,7 @@ export function MathInkPage() {
       if (geoPendingPts.length === 0) {
         appendGeoObjects(created);
         setGeoPendingPts([pid]);
+        geoPressStartRef.current = { ptId: pid, x: rawPt.x, y: rawPt.y };
       } else if (geoPendingPts[0] !== pid) {
         created.push({
           id: makeLocalId('gc'),
@@ -1476,6 +1672,7 @@ export function MathInkPage() {
         });
         appendGeoObjects(created);
         setGeoPendingPts([]);
+        geoPressStartRef.current = null;
       }
       return;
     }
@@ -1527,45 +1724,78 @@ export function MathInkPage() {
   const handleGeoPointerMove = (rawPt: InkPoint) => {
     setGeoCursor({ x: rawPt.x, y: rawPt.y });
 
-    // Nếu đang kéo thả 1 điểm động (tự do hoặc trượt trên cạnh/đường tròn)
-    const dragId = geoDraggingPointIdRef.current;
-    if (dragId) {
-      const ptObj = (activePage.geoObjects ?? []).find((o) => o.id === dragId);
-      if (ptObj?.kind === 'geo-point') {
-        if (ptObj.pointMode === 'free') {
-          updateGeoObject(dragId, { x: Math.round(rawPt.x), y: Math.round(rawPt.y) });
-        } else if (ptObj.pointMode === 'on-segment') {
-          const line = geoScene.lines.get(ptObj.targetId);
-          if (line) {
-            const dx = line.p2.x - line.p1.x;
-            const dy = line.p2.y - line.p1.y;
-            const lenSq = dx * dx + dy * dy;
-            if (lenSq > 4) {
-              const rawT = ((rawPt.x - line.p1.x) * dx + (rawPt.y - line.p1.y) * dy) / lenSq;
-              const clampedT = Math.max(0.02, Math.min(0.98, rawT));
-              updateGeoObject(dragId, { t: Number(clampedT.toFixed(3)) });
+    const drag = geoDragStateRef.current;
+    if (drag) {
+      if (drag.mode === 'erase') {
+        const hit = hitTestGeoScene(geoScene, rawPt.x, rawPt.y, { includePolygons: true });
+        if (
+          hit &&
+          (hit.kind === 'point' ||
+            hit.kind === 'line' ||
+            hit.kind === 'conic' ||
+            hit.kind === 'polygon')
+        ) {
+          deleteGeoObject(hit.id);
+        }
+        return;
+      }
+
+      if (drag.mode === 'rigid-group') {
+        const dx = rawPt.x - drag.lastX;
+        const dy = rawPt.y - drag.lastY;
+        if (Math.hypot(dx, dy) < 0.8) return;
+        drag.lastX = rawPt.x;
+        drag.lastY = rawPt.y;
+        commitPageMutation((page) => ({
+          ...page,
+          geoObjects: translateGeoObjectsByTargets(page.geoObjects, [drag.targetId], dx, dy),
+        }));
+        return;
+      }
+
+      if (drag.mode === 'single-point') {
+        const dragId = drag.id;
+        const ptObj = (activePage.geoObjects ?? []).find((o) => o.id === dragId);
+        if (ptObj?.kind === 'geo-point') {
+          if (ptObj.pointMode === 'free') {
+            updateGeoObject(dragId, {
+              x: Number(rawPt.x.toFixed(2)),
+              y: Number(rawPt.y.toFixed(2)),
+            });
+          } else if (ptObj.pointMode === 'on-segment') {
+            const line = geoScene.lines.get(ptObj.targetId);
+            if (line) {
+              const dx = line.p2.x - line.p1.x;
+              const dy = line.p2.y - line.p1.y;
+              const lenSq = dx * dx + dy * dy;
+              if (lenSq > 4) {
+                const rawT = ((rawPt.x - line.p1.x) * dx + (rawPt.y - line.p1.y) * dy) / lenSq;
+                const clampedT = Math.max(0.02, Math.min(0.98, rawT));
+                updateGeoObject(dragId, { t: Number(clampedT.toFixed(3)) });
+              }
+            }
+          } else if (ptObj.pointMode === 'on-circle') {
+            const conic = geoScene.conics.get(ptObj.targetId);
+            if (conic) {
+              const dx = rawPt.x - conic.cx;
+              const dy = rawPt.y - conic.cy;
+              const cosR = Math.cos(-conic.rotation);
+              const sinR = Math.sin(-conic.rotation);
+              const lx = dx * cosR - dy * sinR;
+              const ly = dx * sinR + dy * cosR;
+              const angleRad = Math.atan2(ly / Math.max(1, conic.ry), lx / Math.max(1, conic.rx));
+              updateGeoObject(dragId, { angleRad });
             }
           }
-        } else if (ptObj.pointMode === 'on-circle') {
-          const conic = geoScene.conics.get(ptObj.targetId);
-          if (conic) {
-            const dx = rawPt.x - conic.cx;
-            const dy = rawPt.y - conic.cy;
-            const cosR = Math.cos(-conic.rotation);
-            const sinR = Math.sin(-conic.rotation);
-            const lx = dx * cosR - dy * sinR;
-            const ly = dx * sinR + dy * cosR;
-            const angleRad = Math.atan2(ly / Math.max(1, conic.ry), lx / Math.max(1, conic.rx));
-            updateGeoObject(dragId, { angleRad });
-          }
         }
+        return;
       }
-      return;
     }
 
     const hit = hitTestGeoScene(geoScene, rawPt.x, rawPt.y, {
       preferIntersection: geoTool === 'intersect',
       skipPoints: geoTool === 'point-on-object',
+      includePolygons: geoTool === 'move' || geoTool === 'eraser',
     });
     setGeoHoveredHit(hit);
   };
@@ -1573,6 +1803,21 @@ export function MathInkPage() {
   const handleCanvasPointerDown = (e: ReactPointerEvent<HTMLCanvasElement>) => {
     if (openPopover) setOpenPopover(null);
     e.currentTarget.setPointerCapture?.(e.pointerId);
+
+    // Kéo bàn tay (Pan) khi giữ phím Space, nhấn chuột giữa, hoặc chọn công cụ Kéo trang
+    if (activeTool === 'pan' || isSpaceHeld || e.button === 1) {
+      const vp = scrollViewportRef.current;
+      interactionRef.current = {
+        ...interactionRef.current,
+        mode: 'pan-viewport',
+        panStartClientX: e.clientX,
+        panStartClientY: e.clientY,
+        panStartScrollLeft: vp?.scrollLeft ?? 0,
+        panStartScrollTop: vp?.scrollTop ?? 0,
+      };
+      return;
+    }
+
     const rawPt = toCanvasPoint(e);
 
     // -1. Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy
@@ -1753,11 +1998,19 @@ export function MathInkPage() {
   };
 
   const handleCanvasPointerMove = (e: ReactPointerEvent<HTMLCanvasElement>) => {
+    const state = interactionRef.current;
+    if (state.mode === 'pan-viewport') {
+      const vp = scrollViewportRef.current;
+      if (vp && state.panStartClientX !== undefined && state.panStartClientY !== undefined) {
+        vp.scrollLeft = (state.panStartScrollLeft ?? 0) - (e.clientX - state.panStartClientX);
+        vp.scrollTop = (state.panStartScrollTop ?? 0) - (e.clientY - state.panStartClientY);
+      }
+      return;
+    }
     if (activeTool === 'geo') {
       handleGeoPointerMove(toCanvasPoint(e));
       return;
     }
-    const state = interactionRef.current;
     if (state.mode === 'none') return;
     const rawPt = toCanvasPoint(e);
 
@@ -1851,12 +2104,91 @@ export function MathInkPage() {
   };
 
   const handleCanvasPointerUp = (e: ReactPointerEvent<HTMLCanvasElement>) => {
-    if (geoDraggingPointIdRef.current) {
-      geoDraggingPointIdRef.current = null;
+    if (geoDragStateRef.current) {
+      geoDragStateRef.current = null;
       return;
     }
+
+    // Hỗ trợ nhấn-kéo-thả liền mạch để vẽ Đoạn thẳng / Đường thẳng / Tia / Vectơ / Đường tròn trong 1 lần kéo
+    if (activeTool === 'geo' && geoPressStartRef.current && geoPendingPts.length === 1) {
+      const press = geoPressStartRef.current;
+      geoPressStartRef.current = null;
+      const releasePt = toCanvasPoint(e);
+      if (Math.hypot(releasePt.x - press.x, releasePt.y - press.y) >= 22) {
+        const curObjects = activePage.geoObjects ?? [];
+        const curScene = evaluateGeoScene(curObjects);
+        const hit = hitTestGeoScene(curScene, releasePt.x, releasePt.y);
+        const created: GeoObject[] = [];
+        let endPid: string;
+        if (hit?.kind === 'point' && hit.id !== press.ptId) {
+          endPid = hit.id;
+        } else {
+          endPid = makeLocalId('gp');
+          created.push({
+            id: endPid,
+            kind: 'geo-point',
+            pointMode: 'free',
+            x: Number(releasePt.x.toFixed(2)),
+            y: Number(releasePt.y.toFixed(2)),
+            label: nextGeoPointLabel(curObjects),
+            color: geoColor,
+          });
+        }
+        if (
+          geoTool === 'segment' ||
+          geoTool === 'line' ||
+          geoTool === 'ray' ||
+          geoTool === 'vector' ||
+          geoTool === 'perp-bisector'
+        ) {
+          created.push({
+            id: makeLocalId('gl'),
+            kind: 'geo-line',
+            lineMode: geoTool,
+            p1Id: press.ptId,
+            p2Id: endPid,
+            style: geoLineStyle,
+            color: geoColor,
+            width: 2.2,
+          });
+          appendGeoObjects(created);
+          setGeoPendingPts([]);
+          return;
+        }
+        if (geoTool === 'circle-center-point') {
+          created.push({
+            id: makeLocalId('gc'),
+            kind: 'geo-conic',
+            conicMode: 'circle-center-point',
+            centerId: press.ptId,
+            throughId: endPid,
+            style: geoLineStyle,
+            color: geoColor,
+            width: 2.1,
+          });
+          appendGeoObjects(created);
+          setGeoPendingPts([]);
+          return;
+        }
+      }
+    }
+
     const state = interactionRef.current;
     if (state.mode === 'none') return;
+    if (state.mode === 'pan-viewport') {
+      interactionRef.current = {
+        mode: 'none',
+        startX: 0,
+        startY: 0,
+        lastX: 0,
+        lastY: 0,
+        lastTimeMs: 0,
+        strokeDraft: null,
+        shapeDraft: null,
+        lassoDraft: [],
+      };
+      return;
+    }
     const rawPt = toCanvasPoint(e);
 
     if (state.mode === 'draw-stroke' && state.strokeDraft) {
@@ -1933,6 +2265,41 @@ export function MathInkPage() {
       for (const st of activePage.stamps ?? []) {
         if (st.x >= rx1 && st.x <= rx2 && st.y >= ry1 && st.y <= ry2) picked.add(st.id);
       }
+      for (const t of activePage.texts) {
+        if (t.x >= rx1 && t.x <= rx2 && t.y >= ry1 && t.y <= ry2) picked.add(t.id);
+      }
+      for (const im of activePage.images) {
+        const cx = im.x + im.width / 2;
+        const cy = im.y + im.height / 2;
+        if (cx >= rx1 && cx <= rx2 && cy >= ry1 && cy <= ry2) picked.add(im.id);
+      }
+      if (activePage.geoObjects && activePage.geoObjects.length > 0) {
+        const gScene = evaluateGeoScene(activePage.geoObjects);
+        for (const [id, pt] of gScene.points.entries()) {
+          if (pt.x >= rx1 && pt.x <= rx2 && pt.y >= ry1 && pt.y <= ry2) picked.add(id);
+        }
+        for (const [id, ln] of gScene.lines.entries()) {
+          const mx = (ln.p1.x + ln.p2.x) / 2;
+          const my = (ln.p1.y + ln.p2.y) / 2;
+          if (
+            (mx >= rx1 && mx <= rx2 && my >= ry1 && my <= ry2) ||
+            (ln.p1.x >= rx1 && ln.p1.x <= rx2 && ln.p1.y >= ry1 && ln.p1.y <= ry2) ||
+            (ln.p2.x >= rx1 && ln.p2.x <= rx2 && ln.p2.y >= ry1 && ln.p2.y <= ry2)
+          ) {
+            picked.add(id);
+          }
+        }
+        for (const [id, cnObj] of gScene.conics.entries()) {
+          if (cnObj.cx >= rx1 && cnObj.cx <= rx2 && cnObj.cy >= ry1 && cnObj.cy <= ry2) {
+            picked.add(id);
+          }
+        }
+        for (const [id, polyObj] of gScene.polygons.entries()) {
+          if (polyObj.vertices.some((v) => v.x >= rx1 && v.x <= rx2 && v.y >= ry1 && v.y <= ry2)) {
+            picked.add(id);
+          }
+        }
+      }
       setSelectedIds(picked);
       setSelectionRect(null);
     } else if (state.mode === 'select-lasso' && state.lassoDraft.length >= 3) {
@@ -1955,6 +2322,33 @@ export function MathInkPage() {
       }
       for (const st of activePage.stamps ?? []) {
         if (isPointInPolygon(st.x, st.y, poly)) picked.add(st.id);
+      }
+      for (const t of activePage.texts) {
+        if (isPointInPolygon(t.x, t.y, poly)) picked.add(t.id);
+      }
+      for (const im of activePage.images) {
+        if (isPointInPolygon(im.x + im.width / 2, im.y + im.height / 2, poly)) picked.add(im.id);
+      }
+      if (activePage.geoObjects && activePage.geoObjects.length > 0) {
+        const gScene = evaluateGeoScene(activePage.geoObjects);
+        for (const [id, pt] of gScene.points.entries()) {
+          if (isPointInPolygon(pt.x, pt.y, poly)) picked.add(id);
+        }
+        for (const [id, ln] of gScene.lines.entries()) {
+          if (
+            isPointInPolygon((ln.p1.x + ln.p2.x) / 2, (ln.p1.y + ln.p2.y) / 2, poly) ||
+            isPointInPolygon(ln.p1.x, ln.p1.y, poly) ||
+            isPointInPolygon(ln.p2.x, ln.p2.y, poly)
+          ) {
+            picked.add(id);
+          }
+        }
+        for (const [id, cnObj] of gScene.conics.entries()) {
+          if (isPointInPolygon(cnObj.cx, cnObj.cy, poly)) picked.add(id);
+        }
+        for (const [id, polyObj] of gScene.polygons.entries()) {
+          if (polyObj.vertices.some((v) => isPointInPolygon(v.x, v.y, poly))) picked.add(id);
+        }
       }
       setSelectedIds(picked);
       setLassoPoints([]);
@@ -2655,7 +3049,7 @@ export function MathInkPage() {
           }}
         />
       ) : (
-        <header className="relative z-30 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3 py-2 shadow-2xs print:hidden">
+        <header className="relative z-30 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-3.5 py-2 shadow-2xs print:hidden">
           {/* TRÁI: Trang/Sổ, Undo/Redo, Giấy vở */}
           <div className="flex flex-wrap items-center gap-1.5">
             <button
@@ -2664,7 +3058,7 @@ export function MathInkPage() {
               title="Ẩn/hiện thư mục & danh sách trang"
               aria-label="Ẩn hoặc hiện thư mục và danh sách trang"
               className={cn(
-                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                 showPagesSidebar
                   ? 'border-[var(--accent-os)]/40 bg-[var(--bg-surface)] text-[var(--accent-os)]'
                   : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)]',
@@ -2700,16 +3094,16 @@ export function MathInkPage() {
                     setIsRenamingToolbarNb(false);
                   }}
                   aria-label="Đổi tên file vở đang mở"
-                  className="h-8 w-[150px] rounded-lg border border-[var(--accent-os)] bg-[var(--bg-workspace)] px-2 text-xs font-medium text-[var(--text-main)] focus:outline-none"
+                  className="h-9 w-[176px] rounded-xl border border-[var(--accent-os)] bg-[var(--bg-workspace)] px-2.5 text-[13px] font-medium text-[var(--text-main)] focus:outline-none"
                 />
                 <button
                   type="submit"
                   onMouseDown={(e) => e.preventDefault()}
                   title="Lưu tên vở"
                   aria-label="Lưu tên vở"
-                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-[var(--accent-os)] text-white"
+                  className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl bg-[var(--accent-os)] text-white"
                 >
-                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                  <Check className="h-4 w-4" aria-hidden="true" />
                 </button>
               </form>
             ) : (
@@ -2718,7 +3112,7 @@ export function MathInkPage() {
                   aria-label="Chọn vở ghi chép"
                   value={activeNotebook.id}
                   onChange={(e) => selectNotebook(e.target.value)}
-                  className="h-8 max-w-[150px] rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-xs font-medium text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
+                  className="h-9 max-w-[180px] rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-[13px] font-medium text-[var(--text-main)] focus:border-[var(--accent-os)] focus:outline-none"
                 >
                   {bucket.notebooks.map((nb) => (
                     <option key={nb.id} value={nb.id}>
@@ -2736,9 +3130,9 @@ export function MathInkPage() {
                   }}
                   title="Đổi tên file vở đang mở"
                   aria-label="Đổi tên file vở đang mở"
-                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
+                  className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
                 >
-                  <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                  <Pencil className="h-4 w-4" aria-hidden="true" />
                 </button>
               </>
             )}
@@ -2748,12 +3142,12 @@ export function MathInkPage() {
               onClick={() => createNotebook(undefined, activeNotebook.folderId ?? null)}
               title="Tạo vở mới trong thư mục hiện tại"
               aria-label="Tạo vở ghi chép mới"
-              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
+              className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--accent-os)]"
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
             </button>
 
-            <div className="mx-0.5 h-5 w-px bg-[var(--border-hairline)]" />
+            <div className="mx-0.5 h-6 w-px bg-[var(--border-hairline)]" />
 
             <button
               type="button"
@@ -2762,7 +3156,7 @@ export function MathInkPage() {
               onClick={undo}
               title="Hoàn tác (Ctrl+Z)"
               aria-label="Hoàn tác"
-              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
+              className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
             >
               <Undo2 className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -2774,7 +3168,7 @@ export function MathInkPage() {
               onClick={redo}
               title="Làm lại (Ctrl+Y)"
               aria-label="Làm lại"
-              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
+              className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] disabled:opacity-35"
             >
               <Redo2 className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -2788,13 +3182,13 @@ export function MathInkPage() {
                 title="Kiểu giấy, ô ly, lề đỏ & hướng trang"
                 aria-label="Cài đặt giấy vở"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-2.5 text-[13px] font-medium transition-colors',
                   openPopover === 'paper'
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                 )}
               >
-                <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+                <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">Giấy</span>
               </button>
               {openPopover === 'paper' && (
@@ -2805,12 +3199,12 @@ export function MathInkPage() {
             </div>
           </div>
 
-          {/* GIỮA: Chấm màu bút nhanh + Nhận dạng nét + Thước + Hình 2D + 3D + Đồ thị f(x) + Tẩy + Chọn */}
+          {/* GIỮA: Chấm màu bút nhanh + Nhận dạng nét + Thước + Hình 2D + Công thức + Dựng hình + 3D + Đồ thị + Tẩy + Chọn + Kéo trang */}
           <div className="flex flex-wrap items-center gap-1.5">
-            {/* Chấm màu bút nhanh giống Scrble Ink */}
+            {/* Chấm màu bút nhanh rõ nét cho màn hình 24 inch */}
             <div
               ref={penAnchorRef}
-              className="relative flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-1"
+              className="relative flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 py-1"
             >
               {penPresets.map((preset) => {
                 const isSelected = activeTool === 'pen' && activePenPreset.id === preset.id;
@@ -2846,8 +3240,8 @@ export function MathInkPage() {
                     className={cn(
                       'flex cursor-pointer items-center justify-center rounded-full transition-transform',
                       isSelected
-                        ? 'h-7 w-7 scale-105 ring-2 ring-[var(--accent-os)] ring-offset-1'
-                        : 'h-6 w-6 hover:scale-110',
+                        ? 'h-7.5 w-7.5 scale-105 ring-2 ring-[var(--accent-os)] ring-offset-1'
+                        : 'h-7 w-7 hover:scale-110',
                     )}
                   >
                     <span
@@ -2857,7 +3251,7 @@ export function MathInkPage() {
                       }}
                       className={cn(
                         'rounded-full border border-black/15',
-                        isHighlighter ? 'h-4.5 w-4.5' : isSelected ? 'h-4 w-4' : 'h-3 w-3',
+                        isHighlighter ? 'h-5 w-5' : isSelected ? 'h-4.5 w-4.5' : 'h-3.5 w-3.5',
                       )}
                     />
                   </button>
@@ -2880,13 +3274,13 @@ export function MathInkPage() {
                 title="Chế độ nắn nét tự động (Ink to Shape / Line)"
                 aria-label="Chế độ nhận dạng nét mực"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-2.5 text-[13px] font-medium transition-colors',
                   inkMode !== 'ink' || openPopover === 'ink-mode'
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                 )}
               >
-                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden md:inline">
                   {inkMode === 'ink'
                     ? 'Mực tự do'
@@ -2919,7 +3313,7 @@ export function MathInkPage() {
               title="Bật/tắt Thước kẻ thẳng (vẽ sát mép thước sẽ tự hút thẳng)"
               aria-pressed={ruler.visible}
               className={cn(
-                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                 ruler.visible
                   ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                   : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
@@ -2937,7 +3331,7 @@ export function MathInkPage() {
                 title="Hình học 2D, nét đứt, vectơ & chèn chữ/KaTeX"
                 aria-label="Công cụ hình học 2D và chữ"
                 className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                   activeTool === 'shape' || activeTool === 'text' || openPopover === 'shapes'
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
@@ -2974,13 +3368,13 @@ export function MathInkPage() {
                 }}
                 title="Chèn hoặc chỉnh sửa Công thức Toán học trực quan (KaTeX, phân số, tích phân, hệ phương trình, ma trận)"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-[13px] font-semibold transition-colors',
                   openPopover === 'formula' || activeTool === 'text'
                     ? 'border-[#6D28D9] bg-[#6D28D9] text-white shadow-xs'
                     : 'border-[#6D28D9]/35 bg-[#F6F3FF] text-[#6D28D9] hover:bg-[#EDE7FE] dark:border-[#A78BFA]/35 dark:bg-[#191528] dark:text-[#C4B5FD]',
                 )}
               >
-                <Sigma className="h-3.5 w-3.5" aria-hidden="true" />
+                <Sigma className="h-4 w-4" aria-hidden="true" />
                 <span>Công thức</span>
               </button>
               {openPopover === 'formula' && (
@@ -3036,16 +3430,16 @@ export function MathInkPage() {
                 setGeoPendingCurveId(null);
                 setActiveTool((prev) => (prev === 'geo' ? 'pen' : 'geo'));
               }}
-              title="Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy (Điểm, Tỉ lệ, Trung điểm, Trọng tâm, Giao điểm, Vuông góc/Song song, Đường tròn, Elip, Mặt phẳng)"
+              title="Chế độ Dựng Hình Động GeoGebra trực tiếp trên trang giấy (Điểm, Tỉ lệ, Trung điểm, Trọng tâm, Giao điểm, Đường cao AH, Vuông góc/Song song, Đường tròn, Elip, Mặt phẳng)"
               aria-pressed={activeTool === 'geo'}
               className={cn(
-                'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-[13px] font-semibold transition-colors',
                 activeTool === 'geo'
                   ? 'border-[#1D4ED8] bg-[#1D4ED8] text-white shadow-xs'
                   : 'border-[#1D4ED8]/35 bg-[#EFF5FE] text-[#1D4ED8] hover:bg-[#E0ECFD] dark:border-[#60A5FA]/35 dark:bg-[#121D2B] dark:text-[#93C5FD]',
               )}
             >
-              <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+              <Compass className="h-4 w-4" aria-hidden="true" />
               <span>Dựng hình</span>
             </button>
 
@@ -3060,13 +3454,13 @@ export function MathInkPage() {
                 }}
                 title="Chèn Hình học không gian 3D tương tác (đặt tên đỉnh, hình trơn, dựng điểm tỉ lệ trượt cạnh, trọng tâm, đường cao, mặt phẳng)"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-[13px] font-semibold transition-colors',
                   openPopover === 'solid3d'
                     ? 'border-[#17332C] bg-[#17332C] text-white'
                     : 'border-[#1D4F6E]/35 bg-[#F3F8FB] text-[#1D4F6E] hover:bg-[#E4F0F7] dark:border-[#64A8D1]/35 dark:bg-[#131C22] dark:text-[#64A8D1]',
                 )}
               >
-                <Box className="h-3.5 w-3.5" aria-hidden="true" />
+                <Box className="h-4 w-4" aria-hidden="true" />
                 <span>Hình 3D</span>
               </button>
               {openPopover === 'solid3d' && (
@@ -3096,13 +3490,13 @@ export function MathInkPage() {
                 onClick={() => togglePopover('graph')}
                 title="Nhập biểu thức hàm số & vẽ đồ thị Oxy, điểm đặc biệt, tích phân"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-[13px] font-semibold transition-colors',
                   openPopover === 'graph'
                     ? 'border-[#17332C] bg-[#17332C] text-white'
                     : 'border-[#1B5E4A]/35 bg-[#F2F9F6] text-[#1B5E4A] hover:bg-[#E2F3EC] dark:border-[#52B394]/35 dark:bg-[#111F1A] dark:text-[#52B394]',
                 )}
               >
-                <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
+                <TrendingUp className="h-4 w-4" aria-hidden="true" />
                 <span>Đồ thị f(x)</span>
               </button>
               {openPopover === 'graph' && (
@@ -3126,15 +3520,15 @@ export function MathInkPage() {
                 }}
                 title="Tạo & chèn Bảng biến thiên / Bảng xét dấu chuẩn Toán THPT"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-3 text-[13px] font-semibold transition-colors',
                   openPopover === 'variation'
                     ? 'border-[#17332C] bg-[#17332C] text-white'
                     : 'border-[#8C5828]/35 bg-[#FDF8F3] text-[#8C5828] hover:bg-[#F5EADC] dark:border-[#D4AF6A]/35 dark:bg-[#1D1813] dark:text-[#D4AF6A]',
                 )}
               >
-                <Table2 className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden xl:inline">Bảng biến thiên</span>
-                <span className="xl:hidden">BBT</span>
+                <Table2 className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden 2xl:inline">Bảng biến thiên</span>
+                <span className="2xl:hidden">BBT</span>
               </button>
               {openPopover === 'variation' && (
                 <ToolbarPopoverAnchor anchorRef={variationAnchorRef} preferAlign="right">
@@ -3164,7 +3558,7 @@ export function MathInkPage() {
                 title="Con dấu ký hiệu hình học: góc vuông, vạch bằng nhau, cung góc, song song, điểm"
                 aria-label="Con dấu ký hiệu hình học"
                 className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                   activeTool === 'stamp' || openPopover === 'stamps'
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
@@ -3200,7 +3594,7 @@ export function MathInkPage() {
               aria-pressed={activeTool === 'laser'}
               aria-label="Bút Laser trình chiếu"
               className={cn(
-                'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                 activeTool === 'laser'
                   ? 'border-[#DC2626] bg-[#DC2626] text-white shadow-xs'
                   : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[#DC2626]',
@@ -3209,7 +3603,7 @@ export function MathInkPage() {
               <Pointer className="h-4 w-4" aria-hidden="true" />
             </button>
 
-            {/* Tẩy (Stroke / Segment) */}
+            {/* Tẩy liên thông (Xóa được cả Nét viết, Hình 2D, Điểm/Đường Dựng hình ngay lập tức!) */}
             <div ref={eraserAnchorRef} className="relative">
               <button
                 type="button"
@@ -3221,10 +3615,10 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }
                 }}
-                title="Tẩy nét (nhấn lần 2 để chọn kiểu tẩy hoặc xóa trang)"
+                title="Tẩy nét viết & xóa trực tiếp Điểm/Đường Dựng hình (nhấn lần 2 để chọn kiểu tẩy)"
                 aria-label="Công cụ tẩy"
                 className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                   activeTool === 'eraser' || openPopover === 'eraser'
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
@@ -3250,7 +3644,7 @@ export function MathInkPage() {
               )}
             </div>
 
-            {/* Chọn vùng / Lasso / Chèn khoảng trống */}
+            {/* Chọn vùng / Lasso / Kéo nguyên đoạn & nhóm đối tượng */}
             <div ref={selectionAnchorRef} className="relative">
               <button
                 type="button"
@@ -3262,10 +3656,10 @@ export function MathInkPage() {
                     setOpenPopover(null);
                   }
                 }}
-                title="Chọn & di chuyển đối tượng / Chèn khoảng trống (nhấn lần 2 để đổi chế độ)"
+                title="Chọn khung / Lasso & Di chuyển mọi đối tượng (kể cả Điểm, Đoạn thẳng AB, Công thức)"
                 aria-label="Công cụ chọn và di chuyển"
                 className={cn(
-                  'inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border transition-colors',
+                  'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
                   activeTool === 'select' || openPopover === 'selection'
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
@@ -3286,11 +3680,32 @@ export function MathInkPage() {
                 </ToolbarPopoverAnchor>
               )}
             </div>
+
+            {/* Bàn tay kéo trang (Pan) khi phóng lớn */}
+            <button
+              type="button"
+              data-testid="ink-pan-btn"
+              onClick={() => {
+                setOpenPopover(null);
+                setActiveTool((prev) => (prev === 'pan' ? 'pen' : 'pan'));
+              }}
+              aria-pressed={activeTool === 'pan'}
+              title="Bàn tay kéo trượt trang giấy (hoặc giữ phím Space + kéo chuột bất kỳ lúc nào)"
+              aria-label="Công cụ bàn tay kéo trang"
+              className={cn(
+                'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
+                activeTool === 'pan' || isSpaceHeld
+                  ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                  : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+              )}
+            >
+              <Hand className="h-4 w-4" aria-hidden="true" />
+            </button>
           </div>
 
-          {/* PHẢI: Phiếu đề nền, Chèn ảnh, Zoom, Gửi sang Soạn đề, Xuất PNG & PDF đa trang, Toàn màn hình */}
+          {/* PHẢI: Phiếu đề nền, Chèn ảnh, Zoom tự do (nhập % / thanh trượt / vừa khung), Soạn đề, Tập giảng, Xuất PNG & PDF */}
           <div className="flex flex-wrap items-center gap-1.5">
-            {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA (định vị thông minh không bao giờ bị che khuất!) */}
+            {/* Ý 6: PHIẾU BÀI TẬP / ĐỀ BÀI NỀN KHÓA */}
             <div ref={worksheetAnchorRef} className="relative">
               <button
                 type="button"
@@ -3298,13 +3713,13 @@ export function MathInkPage() {
                 onClick={() => togglePopover('worksheet')}
                 title="Gắn ảnh phiếu bài tập hoặc nạp đề từ Xưởng Soạn Đề làm nền khóa để giải trực tiếp"
                 className={cn(
-                  'inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border px-2.5 text-[13px] font-medium transition-colors',
                   openPopover === 'worksheet' || activePage.worksheetBackground
                     ? 'border-[var(--accent-os)] bg-[var(--accent-os)]/12 text-[var(--accent-os)]'
                     : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                 )}
               >
-                <FileImage className="h-3.5 w-3.5" aria-hidden="true" />
+                <FileImage className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden xl:inline">Phiếu đề</span>
               </button>
               {openPopover === 'worksheet' && (
@@ -3330,31 +3745,178 @@ export function MathInkPage() {
               onClick={() => imageUploadRef.current?.click()}
               title="Chèn ảnh từ máy tính"
               aria-label="Chèn ảnh vào trang"
-              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+              className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]"
             >
               <ImagePlus className="h-4 w-4" aria-hidden="true" />
             </button>
 
-            <div className="hidden items-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1 sm:inline-flex">
+            {/* BỘ ZOOM TÙY Ý (35% -> 300%, nhập số trực tiếp, thanh trượt mượt, Vừa ngang / Vừa trang, Ctrl+Lăn chuột) */}
+            <div
+              ref={zoomAnchorRef}
+              data-testid="ink-zoom-control"
+              className="relative inline-flex h-9 items-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1"
+            >
               <button
                 type="button"
-                onClick={() => setZoom((z) => Math.max(0.5, Number((z - 0.1).toFixed(2))))}
+                data-testid="ink-zoom-out"
+                onClick={() => {
+                  setZoomInputDraft(null);
+                  setZoom((z) => clampZoom(z - 0.1));
+                }}
                 aria-label="Thu nhỏ"
-                className="inline-flex h-7 w-6 cursor-pointer items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+                title="Thu nhỏ (-10% · Ctrl -)"
+                className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]"
               >
-                <ZoomOut className="h-3.5 w-3.5" aria-hidden="true" />
+                <ZoomOut className="h-4 w-4" aria-hidden="true" />
               </button>
-              <span className="min-w-[40px] text-center font-mono text-[10.5px] font-semibold tabular-nums">
-                {Math.round(zoom * 100)}%
-              </span>
+
+              <input
+                type="text"
+                inputMode="numeric"
+                data-testid="ink-zoom-input"
+                aria-label="Tỉ lệ thu phóng trang giấy (%)"
+                title="Nhập tỉ lệ % tùy ý (35–300) rồi nhấn Enter, hoặc dùng Ctrl + Lăn chuột"
+                value={zoomInputDraft ?? `${Math.round(zoom * 100)}%`}
+                onFocus={(e) => {
+                  setZoomInputDraft(String(Math.round(zoom * 100)));
+                  e.currentTarget.select();
+                }}
+                onChange={(e) => setZoomInputDraft(e.target.value)}
+                onBlur={() => {
+                  if (zoomInputDraft !== null) {
+                    const parsed = Number.parseFloat(zoomInputDraft.replace('%', '').trim());
+                    if (Number.isFinite(parsed) && parsed >= 20 && parsed <= 400) {
+                      setZoom(clampZoom(parsed / 100));
+                    }
+                  }
+                  setZoomInputDraft(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (zoomInputDraft !== null) {
+                      const parsed = Number.parseFloat(zoomInputDraft.replace('%', '').trim());
+                      if (Number.isFinite(parsed) && parsed >= 20 && parsed <= 400) {
+                        setZoom(clampZoom(parsed / 100));
+                      }
+                    }
+                    setZoomInputDraft(null);
+                    e.currentTarget.blur();
+                  } else if (e.key === 'Escape') {
+                    setZoomInputDraft(null);
+                    e.currentTarget.blur();
+                  }
+                }}
+                className="h-7 w-13 rounded-md bg-transparent text-center font-mono text-xs font-semibold text-[var(--text-main)] tabular-nums focus:bg-[var(--bg-workspace)] focus:ring-1 focus:ring-[var(--accent-os)] focus:outline-none"
+              />
+
               <button
                 type="button"
-                onClick={() => setZoom((z) => Math.min(1.6, Number((z + 0.1).toFixed(2))))}
-                aria-label="Phóng to"
-                className="inline-flex h-7 w-6 cursor-pointer items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+                data-testid="ink-zoom-menu-btn"
+                onClick={() => togglePopover('zoom')}
+                aria-label="Mở bảng chọn mức thu phóng"
+                title="Thanh trượt Zoom tự do & Vừa khung trang"
+                className="inline-flex h-7 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:text-[var(--text-main)]"
               >
-                <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
+                <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
+
+              <button
+                type="button"
+                data-testid="ink-zoom-in"
+                onClick={() => {
+                  setZoomInputDraft(null);
+                  setZoom((z) => clampZoom(z + 0.1));
+                }}
+                aria-label="Phóng to"
+                title="Phóng to (+10% · Ctrl +)"
+                className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]"
+              >
+                <ZoomIn className="h-4 w-4" aria-hidden="true" />
+              </button>
+
+              {openPopover === 'zoom' && (
+                <ToolbarPopoverAnchor anchorRef={zoomAnchorRef} preferAlign="right">
+                  <div
+                    data-testid="ink-zoom-popover"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="w-72 space-y-3 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3.5 text-xs text-[var(--text-main)] shadow-2xl"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[13px] font-semibold">Thu phóng trang giấy</span>
+                      <span className="rounded-md bg-[var(--bg-surface)] px-2 py-0.5 font-mono text-xs font-bold text-[var(--accent-os)]">
+                        {Math.round(zoom * 100)}%
+                      </span>
+                    </div>
+
+                    <input
+                      type="range"
+                      data-testid="ink-zoom-slider"
+                      min={35}
+                      max={300}
+                      step={1}
+                      value={Math.round(zoom * 100)}
+                      onChange={(e) => {
+                        setZoomInputDraft(null);
+                        setZoom(clampZoom(Number(e.target.value) / 100));
+                      }}
+                      aria-label="Thanh trượt thu phóng tự do"
+                      className="h-2 w-full cursor-pointer accent-[var(--accent-os)]"
+                    />
+
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {[50, 75, 100, 110, 125, 150, 200, 250].map((pct) => (
+                        <button
+                          key={pct}
+                          type="button"
+                          onClick={() => {
+                            setZoom(pct / 100);
+                            setOpenPopover(null);
+                          }}
+                          className={cn(
+                            'h-8 cursor-pointer rounded-lg border font-mono text-xs font-semibold transition-colors',
+                            Math.round(zoom * 100) === pct
+                              ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
+                              : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+                          )}
+                        >
+                          {pct}%
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-1.5 border-t border-[var(--border-hairline)] pt-2.5">
+                      <button
+                        type="button"
+                        data-testid="ink-zoom-fit-width"
+                        onClick={() => {
+                          fitZoomToWidth();
+                          setOpenPopover(null);
+                        }}
+                        className="h-8 cursor-pointer rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
+                      >
+                        Vừa chiều ngang
+                      </button>
+                      <button
+                        type="button"
+                        data-testid="ink-zoom-fit-page"
+                        onClick={() => {
+                          fitZoomToPage();
+                          setOpenPopover(null);
+                        }}
+                        className="h-8 cursor-pointer rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
+                      >
+                        Vừa cả trang
+                      </button>
+                    </div>
+
+                    <p className="text-[11px] leading-snug text-[var(--text-muted)]">
+                      Mẹo: Giữ <kbd className="font-mono font-semibold">Ctrl</kbd> + lăn chuột để
+                      zoom tự do · Giữ <kbd className="font-mono font-semibold">Space</kbd> + kéo để
+                      trượt trang.
+                    </p>
+                  </div>
+                </ToolbarPopoverAnchor>
+              )}
             </div>
 
             <button
@@ -3362,17 +3924,18 @@ export function MathInkPage() {
               data-testid="ink-send-to-exam"
               onClick={handleSendToExamBuilder}
               title="Xuất hình trang này và gắn trực tiếp vào đề đang soạn ở Xưởng Soạn Đề"
-              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--accent-heritage)]/45 bg-[#FDF8F3] px-2.5 text-xs font-semibold text-[#8C5828] transition-colors hover:bg-[#F7ECE0] dark:bg-[#1D1813] dark:text-[#D4AF6A]"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border border-[var(--accent-heritage)]/45 bg-[#FDF8F3] px-3 text-[13px] font-semibold text-[#8C5828] transition-colors hover:bg-[#F7ECE0] dark:bg-[#1D1813] dark:text-[#D4AF6A]"
             >
               {sentToExamNotice ? (
                 <>
-                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                  <Check className="h-4 w-4" aria-hidden="true" />
                   <span>Đã gửi!</span>
                 </>
               ) : (
                 <>
-                  <FilePenLine className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span className="hidden lg:inline">Đưa vào Soạn đề</span>
+                  <FilePenLine className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden 2xl:inline">Đưa vào Soạn đề</span>
+                  <span className="hidden lg:inline 2xl:hidden">Soạn đề</span>
                 </>
               )}
             </button>
@@ -3386,9 +3949,9 @@ export function MathInkPage() {
                 setIsTeachMode(true);
               }}
               title="Bật Chế độ Tập giảng & Ghi hình bài giảng Offline (.webm) kèm Micro & bút Laser"
-              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[#1B5E4A]/40 bg-[#F2F9F6] px-2.5 text-xs font-semibold text-[#1B5E4A] transition-colors hover:bg-[#E2F3EC] dark:border-[#52B394]/35 dark:bg-[#111F1A] dark:text-[#52B394]"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border border-[#1B5E4A]/40 bg-[#F2F9F6] px-3 text-[13px] font-semibold text-[#1B5E4A] transition-colors hover:bg-[#E2F3EC] dark:border-[#52B394]/35 dark:bg-[#111F1A] dark:text-[#52B394]"
             >
-              <Presentation className="h-3.5 w-3.5" aria-hidden="true" />
+              <Presentation className="h-4 w-4" aria-hidden="true" />
               <span className="hidden lg:inline">Tập giảng</span>
             </button>
 
@@ -3397,9 +3960,9 @@ export function MathInkPage() {
               data-testid="ink-export-png"
               onClick={handleExportPng}
               title="Tải ảnh PNG độ nét cao của trang hiện tại"
-              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 text-[13px] font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]"
             >
-              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              <Download className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">PNG</span>
             </button>
 
@@ -3410,9 +3973,9 @@ export function MathInkPage() {
               disabled={isExportingPdf}
               onClick={() => void handleExportNotebookPdf()}
               title={`Xuất toàn bộ ${activeNotebook.pages.length} trang vở thành 1 file PDF chuẩn A4`}
-              className="inline-flex h-8 cursor-pointer items-center gap-1 rounded-lg bg-[#17332C] px-2.5 text-xs font-semibold text-white hover:bg-[#21463C] disabled:opacity-60"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-xl bg-[#17332C] px-3 text-[13px] font-semibold text-white hover:bg-[#21463C] disabled:opacity-60"
             >
-              <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
+              <FileDown className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{isExportingPdf ? 'Đang xuất...' : 'PDF'}</span>
             </button>
 
@@ -3421,7 +3984,7 @@ export function MathInkPage() {
               onClick={toggleFullscreen}
               title="Chế độ toàn màn hình"
               aria-label="Toàn màn hình"
-              className="hidden h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] md:inline-flex"
+              className="hidden h-9 w-9 cursor-pointer items-center justify-center rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)] md:inline-flex"
             >
               {isFullscreen ? (
                 <Minimize2 className="h-4 w-4" aria-hidden="true" />
@@ -3451,7 +4014,9 @@ export function MathInkPage() {
           onCancelPending={() => {
             setGeoPendingPts([]);
             setGeoPendingCurveId(null);
+            geoPressStartRef.current = null;
           }}
+          onClosePolygon={closePendingGeoPolygon}
           selectedObject={selectedGeoObject}
           onUpdateSelected={(patch) => {
             if (geoSelectedId) updateGeoObject(geoSelectedId, patch);
@@ -3497,8 +4062,12 @@ export function MathInkPage() {
           />
         )}
 
-        {/* BÀN VIẾT CANVAS TƯƠNG TÁC */}
-        <div className="os-thin-scrollbar relative flex-1 overflow-auto p-5 sm:p-8">
+        {/* BÀN VIẾT CANVAS TƯƠNG TÁC (Hỗ trợ Ctrl+Lăn chuột Zoom tự do & Space+Kéo trượt trang) */}
+        <div
+          ref={scrollViewportRef}
+          data-testid="math-ink-scroll-viewport"
+          className="os-thin-scrollbar relative flex-1 overflow-auto p-5 sm:p-8"
+        >
           {/* THẺ ĐỀ BÀI GHIM NỔI TỪ BÀI GIẢNG (Nháp trên Bảng viết ↗) */}
           {pinnedExercise && (
             <aside
@@ -3825,6 +4394,7 @@ export function MathInkPage() {
 
               <button
                 type="button"
+                data-testid="selected-delete-btn"
                 onClick={() => {
                   commitPageMutation((page) => ({
                     ...page,
@@ -3836,12 +4406,13 @@ export function MathInkPage() {
                       (t) => !selectedIds.has(t.id),
                     ),
                     stamps: (page.stamps ?? []).filter((st) => !selectedIds.has(st.id)),
+                    geoObjects: removeGeoObjectsWithCascade(page.geoObjects, selectedIds),
                     texts: page.texts.filter((t) => !selectedIds.has(t.id)),
                     images: page.images.filter((im) => !selectedIds.has(im.id)),
                   }));
                   setSelectedIds(new Set());
                 }}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-md bg-[#8F3D35] px-2 py-0.5 text-[11px] font-semibold text-white"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-md bg-[#8F3D35] px-2.5 py-1 text-xs font-semibold text-white hover:bg-[#7A322B]"
               >
                 <Trash2 className="h-3 w-3" aria-hidden="true" />
                 <span>Xóa</span>
@@ -3857,164 +4428,265 @@ export function MathInkPage() {
             </div>
           )}
 
-          {/* TỜ GIẤY VỞ Ô LY TOÁN HỌC */}
-          <div
-            className="relative mx-auto overflow-hidden rounded-lg border border-[var(--border-hairline)] shadow-[0_18px_46px_-22px_rgba(17,26,24,0.3)]"
-            style={{
-              width: Math.round(dims.width * zoom),
-              height: Math.round(dims.height * zoom),
-            }}
-          >
-            <canvas
-              ref={canvasRef}
-              data-testid="math-ink-canvas"
-              onPointerDown={handleCanvasPointerDown}
-              onPointerMove={handleCanvasPointerMove}
-              onPointerUp={handleCanvasPointerUp}
-              onPointerCancel={handleCanvasPointerUp}
-              onDoubleClick={(e) => {
-                const canvas = canvasRef.current;
-                if (!canvas) return;
-                const rect = canvas.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / Math.max(1, rect.width)) * dims.width;
-                const y = ((e.clientY - rect.top) / Math.max(1, rect.height)) * dims.height;
-                for (let i = activePage.texts.length - 1; i >= 0; i -= 1) {
-                  const t = activePage.texts[i]!;
-                  if (x >= t.x - 14 && x <= t.x + 260 && y >= t.y - 32 && y <= t.y + 36) {
-                    setSelectedIds(new Set([t.id]));
-                    setEditingTextId(t.id);
-                    setOpenPopover('formula');
-                    return;
+          {/* TỜ GIẤY VỞ Ô LY TOÁN HỌC (w-fit mx-auto giúp cuộn ngang/dọc mượt mà ở mọi mức Zoom tới 300%) */}
+          <div className="mx-auto w-fit">
+            <div
+              className="relative overflow-hidden rounded-lg border border-[var(--border-hairline)] shadow-[0_18px_46px_-22px_rgba(17,26,24,0.3)]"
+              style={{
+                width: Math.round(dims.width * zoom),
+                height: Math.round(dims.height * zoom),
+              }}
+            >
+              <canvas
+                ref={canvasRef}
+                data-testid="math-ink-canvas"
+                onPointerDown={handleCanvasPointerDown}
+                onPointerMove={handleCanvasPointerMove}
+                onPointerUp={handleCanvasPointerUp}
+                onPointerCancel={handleCanvasPointerUp}
+                onDoubleClick={(e) => {
+                  const canvas = canvasRef.current;
+                  if (!canvas) return;
+                  const rect = canvas.getBoundingClientRect();
+                  const x = ((e.clientX - rect.left) / Math.max(1, rect.width)) * dims.width;
+                  const y = ((e.clientY - rect.top) / Math.max(1, rect.height)) * dims.height;
+                  for (let i = activePage.texts.length - 1; i >= 0; i -= 1) {
+                    const t = activePage.texts[i]!;
+                    if (x >= t.x - 14 && x <= t.x + 260 && y >= t.y - 32 && y <= t.y + 36) {
+                      setSelectedIds(new Set([t.id]));
+                      setEditingTextId(t.id);
+                      setOpenPopover('formula');
+                      return;
+                    }
                   }
-                }
-              }}
-              onPointerLeave={() => {
-                if (activeTool === 'geo') {
-                  setGeoHoveredHit(null);
-                  setGeoCursor(null);
-                }
-              }}
-              className={cn(
-                'h-full w-full touch-none select-none',
-                activeTool === 'pen' && 'cursor-crosshair',
-                activeTool === 'shape' && 'cursor-crosshair',
-                activeTool === 'stamp' && 'cursor-copy',
-                activeTool === 'laser' && 'cursor-crosshair',
-                activeTool === 'eraser' && 'cursor-cell',
-                activeTool === 'select' && 'cursor-move',
-                activeTool === 'text' && 'cursor-text',
-                activeTool === 'geo' &&
-                  (geoTool === 'move'
-                    ? geoHoveredHit
-                      ? 'cursor-grab'
-                      : 'cursor-default'
-                    : 'cursor-crosshair'),
-              )}
-            />
+                }}
+                onPointerLeave={() => {
+                  if (activeTool === 'geo') {
+                    setGeoHoveredHit(null);
+                    setGeoCursor(null);
+                  }
+                }}
+                className={cn(
+                  'h-full w-full touch-none select-none',
+                  (activeTool === 'pan' || isSpaceHeld) && 'cursor-grab active:cursor-grabbing',
+                  activeTool === 'pen' && !isSpaceHeld && 'cursor-crosshair',
+                  activeTool === 'shape' && !isSpaceHeld && 'cursor-crosshair',
+                  activeTool === 'stamp' && !isSpaceHeld && 'cursor-copy',
+                  activeTool === 'laser' && !isSpaceHeld && 'cursor-crosshair',
+                  activeTool === 'eraser' && !isSpaceHeld && 'cursor-cell',
+                  activeTool === 'select' && !isSpaceHeld && 'cursor-move',
+                  activeTool === 'text' && !isSpaceHeld && 'cursor-text',
+                  activeTool === 'geo' &&
+                    !isSpaceHeld &&
+                    (geoTool === 'move'
+                      ? geoHoveredHit
+                        ? 'cursor-grab active:cursor-grabbing'
+                        : 'cursor-default'
+                      : geoTool === 'eraser'
+                        ? 'cursor-cell'
+                        : 'cursor-crosshair'),
+                )}
+              />
 
-            {/* Lớp phủ tia Laser trình chiếu 60fps (trong suốt, không chặn con trỏ) */}
-            <canvas
-              ref={laserCanvasRef}
-              data-testid="math-ink-laser-canvas"
-              className="pointer-events-none absolute inset-0 z-15 h-full w-full"
-            />
+              {/* Lớp phủ tia Laser trình chiếu 60fps (trong suốt, không chặn con trỏ) */}
+              <canvas
+                ref={laserCanvasRef}
+                data-testid="math-ink-laser-canvas"
+                className="pointer-events-none absolute inset-0 z-15 h-full w-full"
+              />
 
-            {/* Khung thu/phóng trực tiếp 4 góc cho Hình 3D, Đồ thị, Ảnh & Hình 2D đang chọn */}
-            {(resizingBox ?? selectedResizable) &&
-              (() => {
-                const box = resizingBox ?? selectedResizable!;
+              {/* Khung thu/phóng trực tiếp 4 góc cho Hình 3D, Đồ thị, Ảnh & Hình 2D đang chọn */}
+              {(resizingBox ?? selectedResizable) &&
+                (() => {
+                  const box = resizingBox ?? selectedResizable!;
+                  return (
+                    <div
+                      data-testid="ink-resize-frame"
+                      style={{
+                        left: `${(box.x / dims.width) * 100}%`,
+                        top: `${(box.y / dims.height) * 100}%`,
+                        width: `${(box.width / dims.width) * 100}%`,
+                        height: `${(box.height / dims.height) * 100}%`,
+                      }}
+                      className="pointer-events-none absolute z-10 rounded-md border-2 border-dashed border-[var(--accent-os)]/75"
+                    >
+                      {resizingBox && (
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded bg-[#17332C] px-1.5 py-0.5 font-mono text-[9.5px] whitespace-nowrap text-white shadow-sm">
+                          {Math.round(box.width)} × {Math.round(box.height)} px
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        data-testid="resize-handle-nw"
+                        aria-label="Kéo góc trên trái để thu phóng"
+                        onPointerDown={(e) => startCornerResize('nw', e)}
+                        className="pointer-events-auto absolute -top-2 -left-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                      />
+                      <button
+                        type="button"
+                        data-testid="resize-handle-ne"
+                        aria-label="Kéo góc trên phải để thu phóng"
+                        onPointerDown={(e) => startCornerResize('ne', e)}
+                        className="pointer-events-auto absolute -top-2 -right-2 h-4 w-4 cursor-nesw-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                      />
+                      <button
+                        type="button"
+                        data-testid="resize-handle-sw"
+                        aria-label="Kéo góc dưới trái để thu phóng"
+                        onPointerDown={(e) => startCornerResize('sw', e)}
+                        className="pointer-events-auto absolute -bottom-2 -left-2 h-4 w-4 cursor-nesw-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                      />
+                      <button
+                        type="button"
+                        data-testid="resize-handle-se"
+                        aria-label="Kéo góc dưới phải để thu phóng"
+                        onPointerDown={(e) => startCornerResize('se', e)}
+                        className="pointer-events-auto absolute -right-2 -bottom-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
+                      />
+                    </div>
+                  );
+                })()}
+
+              {/* Lớp phủ công thức KaTeX & nhãn văn bản tương tác (nhấp đúp để sửa lại, kéo để di chuyển) */}
+              {activePage.texts.map((t) => {
+                const isSelected = selectedIds.has(t.id);
+                const isInteractiveMode = activeTool === 'select' || activeTool === 'text';
                 return (
                   <div
-                    data-testid="ink-resize-frame"
+                    key={t.id}
+                    data-testid={`ink-text-chip-${t.id}`}
+                    title={
+                      isInteractiveMode
+                        ? 'Kéo để di chuyển · Nhấp đúp để chỉnh sửa công thức'
+                        : undefined
+                    }
                     style={{
-                      left: `${(box.x / dims.width) * 100}%`,
-                      top: `${(box.y / dims.height) * 100}%`,
-                      width: `${(box.width / dims.width) * 100}%`,
-                      height: `${(box.height / dims.height) * 100}%`,
+                      left: `${(t.x / dims.width) * 100}%`,
+                      top: `${((t.y - t.fontSize * 0.92) / dims.height) * 100}%`,
+                      color: t.color,
+                      fontSize: `${Math.max(11, Math.round(t.fontSize * zoom))}px`,
                     }}
-                    className="pointer-events-none absolute z-10 rounded-md border-2 border-dashed border-[var(--accent-os)]/75"
-                  >
-                    {resizingBox && (
-                      <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded bg-[#17332C] px-1.5 py-0.5 font-mono text-[9.5px] whitespace-nowrap text-white shadow-sm">
-                        {Math.round(box.width)} × {Math.round(box.height)} px
-                      </div>
+                    onDoubleClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedIds(new Set([t.id]));
+                      setEditingTextId(t.id);
+                      setOpenPopover('formula');
+                    }}
+                    onPointerDown={(e) => {
+                      if (!isInteractiveMode) return;
+                      e.stopPropagation();
+                      setSelectedIds(new Set([t.id]));
+                      const startClientX = e.clientX;
+                      const startClientY = e.clientY;
+                      const initX = t.x;
+                      const initY = t.y;
+                      let moved = false;
+                      let latestX = initX;
+                      let latestY = initY;
+                      const onMove = (ev: PointerEvent) => {
+                        const dx = (ev.clientX - startClientX) / zoom;
+                        const dy = (ev.clientY - startClientY) / zoom;
+                        if (Math.hypot(dx, dy) < 2 && !moved) return;
+                        moved = true;
+                        latestX = Math.max(12, Math.min(dims.width - 40, Math.round(initX + dx)));
+                        latestY = Math.max(24, Math.min(dims.height - 20, Math.round(initY + dy)));
+                        updateText(t.id, { x: latestX, y: latestY });
+                      };
+                      const onUp = () => {
+                        window.removeEventListener('pointermove', onMove);
+                        window.removeEventListener('pointerup', onUp);
+                      };
+                      window.addEventListener('pointermove', onMove);
+                      window.addEventListener('pointerup', onUp);
+                    }}
+                    className={cn(
+                      'absolute z-10 rounded-md px-1.5 py-0.5 transition-shadow select-none',
+                      isInteractiveMode ? 'pointer-events-auto cursor-move' : 'pointer-events-none',
+                      isSelected
+                        ? 'bg-[var(--bg-workspace)]/90 shadow-sm ring-2 ring-[var(--accent-os)]'
+                        : isInteractiveMode
+                          ? 'hover:bg-[var(--bg-workspace)]/75 hover:ring-1 hover:ring-[var(--accent-os)]/50'
+                          : 'bg-transparent',
                     )}
-                    <button
-                      type="button"
-                      data-testid="resize-handle-nw"
-                      aria-label="Kéo góc trên trái để thu phóng"
-                      onPointerDown={(e) => startCornerResize('nw', e)}
-                      className="pointer-events-auto absolute -top-2 -left-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
-                    />
-                    <button
-                      type="button"
-                      data-testid="resize-handle-ne"
-                      aria-label="Kéo góc trên phải để thu phóng"
-                      onPointerDown={(e) => startCornerResize('ne', e)}
-                      className="pointer-events-auto absolute -top-2 -right-2 h-4 w-4 cursor-nesw-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
-                    />
-                    <button
-                      type="button"
-                      data-testid="resize-handle-sw"
-                      aria-label="Kéo góc dưới trái để thu phóng"
-                      onPointerDown={(e) => startCornerResize('sw', e)}
-                      className="pointer-events-auto absolute -bottom-2 -left-2 h-4 w-4 cursor-nesw-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
-                    />
-                    <button
-                      type="button"
-                      data-testid="resize-handle-se"
-                      aria-label="Kéo góc dưới phải để thu phóng"
-                      onPointerDown={(e) => startCornerResize('se', e)}
-                      className="pointer-events-auto absolute -right-2 -bottom-2 h-4 w-4 cursor-nwse-resize rounded-full border-2 border-white bg-[var(--accent-os)] shadow-md transition-transform hover:scale-125"
-                    />
+                  >
+                    <SmartInkMathContent text={t.text} isMath={t.isMath} />
                   </div>
                 );
-              })()}
+              })}
 
-            {/* Lớp phủ công thức KaTeX & nhãn văn bản tương tác (nhấp đúp để sửa lại, kéo để di chuyển) */}
-            {activePage.texts.map((t) => {
-              const isSelected = selectedIds.has(t.id);
-              const isInteractiveMode = activeTool === 'select' || activeTool === 'text';
-              return (
+              {/* Chỉnh sửa công thức trực tiếp khi đang ở Chế độ Tập giảng */}
+              {isTeachMode && openPopover === 'formula' && editingText && (
+                <div className="absolute top-6 left-1/2 z-30 -translate-x-1/2">
+                  <InkFormulaEditorPopover
+                    key={editingText.id}
+                    initialItem={editingText}
+                    defaultColor={activePenPreset.color}
+                    onSave={(payload) => {
+                      updateText(editingText.id, payload);
+                      setEditingTextId(null);
+                      setOpenPopover(null);
+                    }}
+                    onDelete={() => {
+                      deleteText(editingText.id);
+                      setSelectedIds(new Set());
+                      setEditingTextId(null);
+                      setOpenPopover(null);
+                    }}
+                    onClose={() => {
+                      setEditingTextId(null);
+                      setOpenPopover(null);
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Hộp Công thức Toán học trực quan ngay tại vị trí vừa click (khi dùng công cụ Chữ / KaTeX) */}
+              {pendingTextBox && (
                 <div
-                  key={t.id}
-                  data-testid={`ink-text-chip-${t.id}`}
-                  title={
-                    isInteractiveMode
-                      ? 'Kéo để di chuyển · Nhấp đúp để chỉnh sửa công thức'
-                      : undefined
-                  }
                   style={{
-                    left: `${(t.x / dims.width) * 100}%`,
-                    top: `${((t.y - t.fontSize * 0.92) / dims.height) * 100}%`,
-                    color: t.color,
-                    fontSize: `${Math.max(11, Math.round(t.fontSize * zoom))}px`,
+                    left: `${Math.max(2, Math.min(48, (pendingTextBox.x / dims.width) * 100))}%`,
+                    top: `${Math.max(2, Math.min(46, (pendingTextBox.y / dims.height) * 100))}%`,
                   }}
-                  onDoubleClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedIds(new Set([t.id]));
-                    setEditingTextId(t.id);
-                    setOpenPopover('formula');
+                  className="absolute z-30"
+                >
+                  <InkFormulaEditorPopover
+                    defaultColor={activePenPreset.color}
+                    onSave={(payload) => {
+                      const id = makeLocalId('txt');
+                      addText({
+                        id,
+                        x: Math.round(pendingTextBox.x),
+                        y: Math.round(pendingTextBox.y),
+                        ...payload,
+                      });
+                      setPendingTextBox(null);
+                      setSelectedIds(new Set([id]));
+                    }}
+                    onClose={() => setPendingTextBox(null)}
+                  />
+                </div>
+              )}
+
+              {/* THƯỚC KẺ TƯƠNG TÁC TRÊN TRANG VIẾT (KÉO DI CHUYỂN & XOAY GÓC) */}
+              {ruler.visible && (
+                <div
+                  data-testid="ink-canvas-ruler"
+                  style={{
+                    left: `${(ruler.x / dims.width) * 100}%`,
+                    top: `${(ruler.y / dims.height) * 100}%`,
+                    width: `${(ruler.length / dims.width) * 100}%`,
+                    transform: `translate(-50%, -50%) rotate(${ruler.angleDeg}deg)`,
                   }}
                   onPointerDown={(e) => {
-                    if (!isInteractiveMode) return;
                     e.stopPropagation();
-                    setSelectedIds(new Set([t.id]));
                     const startClientX = e.clientX;
                     const startClientY = e.clientY;
-                    const initX = t.x;
-                    const initY = t.y;
-                    let moved = false;
-                    let latestX = initX;
-                    let latestY = initY;
+                    const initX = ruler.x;
+                    const initY = ruler.y;
                     const onMove = (ev: PointerEvent) => {
                       const dx = (ev.clientX - startClientX) / zoom;
                       const dy = (ev.clientY - startClientY) / zoom;
-                      if (Math.hypot(dx, dy) < 2 && !moved) return;
-                      moved = true;
-                      latestX = Math.max(12, Math.min(dims.width - 40, Math.round(initX + dx)));
-                      latestY = Math.max(24, Math.min(dims.height - 20, Math.round(initY + dy)));
-                      updateText(t.id, { x: latestX, y: latestY });
+                      setRuler((prev) => ({ ...prev, x: initX + dx, y: initY + dy }));
                     };
                     const onUp = () => {
                       window.removeEventListener('pointermove', onMove);
@@ -4023,136 +4695,41 @@ export function MathInkPage() {
                     window.addEventListener('pointermove', onMove);
                     window.addEventListener('pointerup', onUp);
                   }}
-                  className={cn(
-                    'absolute z-10 rounded-md px-1.5 py-0.5 transition-shadow select-none',
-                    isInteractiveMode ? 'pointer-events-auto cursor-move' : 'pointer-events-none',
-                    isSelected
-                      ? 'bg-[var(--bg-workspace)]/90 shadow-sm ring-2 ring-[var(--accent-os)]'
-                      : isInteractiveMode
-                        ? 'hover:bg-[var(--bg-workspace)]/75 hover:ring-1 hover:ring-[var(--accent-os)]/50'
-                        : 'bg-transparent',
-                  )}
+                  className="absolute z-20 flex h-12 cursor-grab items-center justify-between rounded-md border border-[#17332C]/45 bg-[#FFFDF8]/82 px-3 font-mono text-[10px] text-[#17332C] shadow-md backdrop-blur-xs select-none active:cursor-grabbing"
                 >
-                  <SmartInkMathContent text={t.text} isMath={t.isMath} />
+                  <span className="font-bold">{ruler.angleDeg}°</span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={() =>
+                        setRuler((r) => ({ ...r, angleDeg: (r.angleDeg - 15 + 360) % 360 }))
+                      }
+                      className="cursor-pointer rounded border border-[#17332C]/25 bg-white/90 px-1.5 py-0.5 hover:bg-white"
+                    >
+                      -15°
+                    </button>
+                    <button
+                      type="button"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={() => setRuler((r) => ({ ...r, angleDeg: 0 }))}
+                      className="cursor-pointer rounded border border-[#17332C]/25 bg-white/90 px-1.5 py-0.5 hover:bg-white"
+                    >
+                      0°
+                    </button>
+                    <button
+                      type="button"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={() => setRuler((r) => ({ ...r, angleDeg: (r.angleDeg + 15) % 360 }))}
+                      className="cursor-pointer rounded border border-[#17332C]/25 bg-white/90 px-1.5 py-0.5 hover:bg-white"
+                    >
+                      +15°
+                    </button>
+                  </div>
+                  <span className="text-[10.5px] text-[#4A5955]">Vẽ sát mép trên</span>
                 </div>
-              );
-            })}
-
-            {/* Chỉnh sửa công thức trực tiếp khi đang ở Chế độ Tập giảng */}
-            {isTeachMode && openPopover === 'formula' && editingText && (
-              <div className="absolute top-6 left-1/2 z-30 -translate-x-1/2">
-                <InkFormulaEditorPopover
-                  key={editingText.id}
-                  initialItem={editingText}
-                  defaultColor={activePenPreset.color}
-                  onSave={(payload) => {
-                    updateText(editingText.id, payload);
-                    setEditingTextId(null);
-                    setOpenPopover(null);
-                  }}
-                  onDelete={() => {
-                    deleteText(editingText.id);
-                    setSelectedIds(new Set());
-                    setEditingTextId(null);
-                    setOpenPopover(null);
-                  }}
-                  onClose={() => {
-                    setEditingTextId(null);
-                    setOpenPopover(null);
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Hộp Công thức Toán học trực quan ngay tại vị trí vừa click (khi dùng công cụ Chữ / KaTeX) */}
-            {pendingTextBox && (
-              <div
-                style={{
-                  left: `${Math.max(2, Math.min(48, (pendingTextBox.x / dims.width) * 100))}%`,
-                  top: `${Math.max(2, Math.min(46, (pendingTextBox.y / dims.height) * 100))}%`,
-                }}
-                className="absolute z-30"
-              >
-                <InkFormulaEditorPopover
-                  defaultColor={activePenPreset.color}
-                  onSave={(payload) => {
-                    const id = makeLocalId('txt');
-                    addText({
-                      id,
-                      x: Math.round(pendingTextBox.x),
-                      y: Math.round(pendingTextBox.y),
-                      ...payload,
-                    });
-                    setPendingTextBox(null);
-                    setSelectedIds(new Set([id]));
-                  }}
-                  onClose={() => setPendingTextBox(null)}
-                />
-              </div>
-            )}
-
-            {/* THƯỚC KẺ TƯƠNG TÁC TRÊN TRANG VIẾT (KÉO DI CHUYỂN & XOAY GÓC) */}
-            {ruler.visible && (
-              <div
-                data-testid="ink-canvas-ruler"
-                style={{
-                  left: `${(ruler.x / dims.width) * 100}%`,
-                  top: `${(ruler.y / dims.height) * 100}%`,
-                  width: `${(ruler.length / dims.width) * 100}%`,
-                  transform: `translate(-50%, -50%) rotate(${ruler.angleDeg}deg)`,
-                }}
-                onPointerDown={(e) => {
-                  e.stopPropagation();
-                  const startClientX = e.clientX;
-                  const startClientY = e.clientY;
-                  const initX = ruler.x;
-                  const initY = ruler.y;
-                  const onMove = (ev: PointerEvent) => {
-                    const dx = (ev.clientX - startClientX) / zoom;
-                    const dy = (ev.clientY - startClientY) / zoom;
-                    setRuler((prev) => ({ ...prev, x: initX + dx, y: initY + dy }));
-                  };
-                  const onUp = () => {
-                    window.removeEventListener('pointermove', onMove);
-                    window.removeEventListener('pointerup', onUp);
-                  };
-                  window.addEventListener('pointermove', onMove);
-                  window.addEventListener('pointerup', onUp);
-                }}
-                className="absolute z-20 flex h-12 cursor-grab items-center justify-between rounded-md border border-[#17332C]/45 bg-[#FFFDF8]/82 px-3 font-mono text-[10px] text-[#17332C] shadow-md backdrop-blur-xs select-none active:cursor-grabbing"
-              >
-                <span className="font-bold">{ruler.angleDeg}°</span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={() =>
-                      setRuler((r) => ({ ...r, angleDeg: (r.angleDeg - 15 + 360) % 360 }))
-                    }
-                    className="cursor-pointer rounded border border-[#17332C]/25 bg-white/90 px-1.5 py-0.5 hover:bg-white"
-                  >
-                    -15°
-                  </button>
-                  <button
-                    type="button"
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={() => setRuler((r) => ({ ...r, angleDeg: 0 }))}
-                    className="cursor-pointer rounded border border-[#17332C]/25 bg-white/90 px-1.5 py-0.5 hover:bg-white"
-                  >
-                    0°
-                  </button>
-                  <button
-                    type="button"
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={() => setRuler((r) => ({ ...r, angleDeg: (r.angleDeg + 15) % 360 }))}
-                    className="cursor-pointer rounded border border-[#17332C]/25 bg-white/90 px-1.5 py-0.5 hover:bg-white"
-                  >
-                    +15°
-                  </button>
-                </div>
-                <span className="text-[9px] text-[#4A5955]">Vẽ sát mép trên</span>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

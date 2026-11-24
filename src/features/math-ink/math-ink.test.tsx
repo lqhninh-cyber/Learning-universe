@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
@@ -18,6 +18,7 @@ import {
   hitTestSolid3DScene,
   parseRatioInput,
   recognizeInkGesture,
+  removeGeoObjectsWithCascade,
   resolveSolidVertexLabel,
   rotatePoint3D,
   selectActiveInkFolders,
@@ -28,8 +29,10 @@ import {
   snapRatioToNiceFraction,
   SOLID_3D_PRESETS,
   stabilizeInkPoint,
+  translateGeoObjectsByTargets,
   useInkNotebookStore,
   VARIATION_TABLE_PRESETS,
+  type GeoObject,
   type InkPoint,
 } from '@/features/math-ink';
 import { MathInkPage } from '@/pages/math-ink/MathInkPage';
@@ -790,5 +793,158 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     fireEvent.click(screen.getByTestId('teach-exit-btn'));
     expect(screen.queryByTestId('ink-teach-studio-bar')).not.toBeInTheDocument();
     expect(screen.getByTestId('ink-teach-mode-btn')).toBeInTheDocument();
+  });
+
+  it('Tối ưu UX Bảng viết: Đoạn vuông góc (đường cao AH), kéo nguyên đoạn thẳng AB cùng lúc, tẩy ngoài chế độ Dựng hình và Zoom tự do (nhập % & Ctrl+Wheel)', () => {
+    // 1. Kiểm thử toán học: Đoạn vuông góc hữu hạn (altitude) + tự tạo đường gióng đáy khi tam giác tù + dịch chuyển nguyên đoạn AB
+    const baseObjs: GeoObject[] = [
+      {
+        id: 'pA',
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: 100,
+        y: 200,
+        label: 'A',
+        color: '#1D4ED8',
+      },
+      {
+        id: 'pB',
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: 300,
+        y: 200,
+        label: 'B',
+        color: '#1D4ED8',
+      },
+      {
+        id: 'pC',
+        kind: 'geo-point',
+        pointMode: 'free',
+        x: 360,
+        y: 80,
+        label: 'C',
+        color: '#1D4ED8',
+      },
+      {
+        id: 'segAB',
+        kind: 'geo-line',
+        lineMode: 'segment',
+        p1Id: 'pA',
+        p2Id: 'pB',
+        style: 'solid',
+        color: '#1D4ED8',
+        width: 2.2,
+        tickMarks: 2,
+      },
+      {
+        id: 'midM',
+        kind: 'geo-point',
+        pointMode: 'midpoint',
+        p1Id: 'pA',
+        p2Id: 'pB',
+        label: 'M',
+        color: '#DC2626',
+      },
+      {
+        id: 'altCH',
+        kind: 'geo-line',
+        lineMode: 'altitude',
+        throughPointId: 'pC',
+        refLineId: 'segAB',
+        style: 'dashed',
+        color: '#DC2626',
+        width: 2,
+      },
+    ];
+
+    const scene1 = evaluateGeoScene(baseObjs);
+    const altEval = scene1.lines.get('altCH')!;
+    // Đoạn vuông góc phải hữu hạn (infinite = false), đi từ C(360, 80) xuống chân H(360, 200)
+    expect(altEval.infinite).toBe(false);
+    expect(altEval.p1).toEqual({ x: 360, y: 80 });
+    expect(altEval.p2.x).toBeCloseTo(360, 4);
+    expect(altEval.p2.y).toBeCloseTo(200, 4);
+    // Vì H(360, 200) nằm ngoài đoạn AB [100..300], động cơ tự sinh đường gióng nét đứt nối từ B(300, 200) tới H(360, 200)
+    expect(altEval.baseExtension).toBeDefined();
+    expect(altEval.baseExtension?.from.x).toBeCloseTo(300, 4);
+    expect(altEval.baseExtension?.to.x).toBeCloseTo(360, 4);
+
+    // Kéo di chuyển nguyên đoạn thẳng AB đi (+40, -30): cả A, B và trung điểm M đều dịch chuyển đồng bộ đúng 1 lần!
+    const movedObjs = translateGeoObjectsByTargets(baseObjs, ['segAB', 'pA'], 40, -30);
+    const sceneMoved = evaluateGeoScene(movedObjs);
+    expect(sceneMoved.points.get('pA')?.x).toBeCloseTo(140, 4);
+    expect(sceneMoved.points.get('pA')?.y).toBeCloseTo(170, 4);
+    expect(sceneMoved.points.get('pB')?.x).toBeCloseTo(340, 4);
+    expect(sceneMoved.points.get('pB')?.y).toBeCloseTo(170, 4);
+    expect(sceneMoved.points.get('midM')?.x).toBeCloseTo(240, 4);
+    expect(sceneMoved.points.get('midM')?.y).toBeCloseTo(170, 4);
+
+    // Xóa điểm A kéo theo dọn sạch đoạn AB, trung điểm M và đường cao CH phụ thuộc vào AB (giữ lại điểm độc lập C, B)
+    const afterCascade = removeGeoObjectsWithCascade(movedObjs, ['pA']);
+    expect(afterCascade.map((o) => o.id)).toEqual(['pB', 'pC']);
+
+    // 2. Kiểm thử UI: Zoom tự do (nhập số % bất kỳ, thanh trượt, Ctrl+Wheel) & Tẩy xóa đối tượng dựng hình ngay từ công cụ Tẩy ngoài
+    useInkNotebookStore.getState().commitPageMutation((pg) => ({
+      ...pg,
+      geoObjects: [
+        {
+          id: 'ptFree1',
+          kind: 'geo-point',
+          pointMode: 'free',
+          x: 50,
+          y: 50,
+          label: 'P',
+          color: '#1D4ED8',
+        },
+      ],
+    }));
+
+    render(
+      <MemoryRouter initialEntries={['/bang-viet']}>
+        <MathInkPage />
+      </MemoryRouter>,
+    );
+
+    // Nhập tỉ lệ Zoom tùy ý 137% trực tiếp vào ô input
+    const zoomInput = screen.getByTestId('ink-zoom-input') as HTMLInputElement;
+    fireEvent.focus(zoomInput);
+    fireEvent.change(zoomInput, { target: { value: '137' } });
+    fireEvent.keyDown(zoomInput, { key: 'Enter' });
+    expect(zoomInput.value).toBe('137%');
+
+    // Mở Popover Zoom và kéo thanh trượt tới 185%
+    fireEvent.click(screen.getByTestId('ink-zoom-menu-btn'));
+    expect(screen.getByTestId('ink-zoom-popover')).toBeInTheDocument();
+    fireEvent.change(screen.getByTestId('ink-zoom-slider'), { target: { value: '185' } });
+    expect(zoomInput.value).toBe('185%');
+
+    // Ctrl + Lăn chuột trên vùng cuộn trang giấy
+    const viewport = screen.getByTestId('math-ink-scroll-viewport');
+    fireEvent.wheel(viewport, { deltaY: -100, ctrlKey: true });
+    expect(Number.parseInt(zoomInput.value, 10)).toBeGreaterThan(185);
+
+    // Chuyển sang công cụ Tẩy chung (KHÔNG cần vào chế độ Dựng hình) và chạm vào vị trí điểm P -> điểm P bị xóa sạch!
+    fireEvent.click(screen.getByTestId('ink-eraser-btn'));
+    const canvas = screen.getByTestId('math-ink-canvas');
+    // Trong jsdom getBoundingClientRect() trả 0x0 nên toCanvasPoint quy đổi clientX=0, clientY=0 -> (0,0); đặt điểm tại (4,4) nằm trong bán kính tẩy
+    act(() => {
+      useInkNotebookStore.getState().commitPageMutation((pg) => ({
+        ...pg,
+        geoObjects: [
+          {
+            id: 'ptOrigin',
+            kind: 'geo-point',
+            pointMode: 'free',
+            x: 4,
+            y: 4,
+            label: 'Q',
+            color: '#1D4ED8',
+          },
+        ],
+      }));
+    });
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).geoObjects).toHaveLength(1);
+    fireEvent.pointerDown(canvas, { clientX: 0, clientY: 0 });
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).geoObjects).toHaveLength(0);
   });
 });

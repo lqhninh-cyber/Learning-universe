@@ -34,10 +34,11 @@ export type ShapeToolKind =
   | 'hexagon';
 
 export type InkActiveTool =
-  'pen' | 'shape' | 'eraser' | 'select' | 'text' | 'stamp' | 'laser' | 'geo';
+  'pen' | 'shape' | 'eraser' | 'select' | 'pan' | 'text' | 'stamp' | 'laser' | 'geo';
 
 export type GeoToolKind =
   | 'move'
+  | 'eraser'
   | 'point-free'
   | 'point-on-object'
   | 'midpoint'
@@ -47,6 +48,7 @@ export type GeoToolKind =
   | 'line'
   | 'ray'
   | 'vector'
+  | 'altitude'
   | 'perpendicular'
   | 'parallel'
   | 'perp-bisector'
@@ -144,17 +146,20 @@ export type GeoLineObject =
       readonly color: string;
       readonly width: number;
       readonly label?: string;
+      /** Số vạch ký hiệu đoạn thẳng bằng nhau (0 = không, 1 = |, 2 = ||, 3 = |||) */
+      readonly tickMarks?: 0 | 1 | 2 | 3;
     }
   | {
       readonly id: string;
       readonly kind: 'geo-line';
-      readonly lineMode: 'perpendicular' | 'parallel';
+      readonly lineMode: 'altitude' | 'perpendicular' | 'parallel';
       readonly throughPointId: string;
       readonly refLineId: string;
       readonly style: 'solid' | 'dashed';
       readonly color: string;
       readonly width: number;
       readonly label?: string;
+      readonly tickMarks?: 0 | 1 | 2 | 3;
     }
   | {
       readonly id: string;

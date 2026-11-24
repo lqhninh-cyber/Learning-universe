@@ -350,7 +350,7 @@ export const InkModePopover: FC<{
   return (
     <div
       data-testid="ink-mode-popover"
-      className="w-60 space-y-1 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-1.5 shadow-2xl"
+      className="w-68 space-y-1 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2 shadow-2xl"
     >
       {options.map((opt) => (
         <button
@@ -358,17 +358,17 @@ export const InkModePopover: FC<{
           type="button"
           onClick={() => onChange(opt.id)}
           className={cn(
-            'flex w-full cursor-pointer flex-col rounded-lg px-2.5 py-2 text-left transition-colors',
+            'flex w-full cursor-pointer flex-col rounded-xl px-3 py-2 text-left transition-colors',
             mode === opt.id
               ? 'bg-[var(--accent-os)] text-white'
               : 'text-[var(--text-main)] hover:bg-[var(--bg-surface)]',
           )}
         >
-          <span className="text-xs font-semibold">{opt.label}</span>
+          <span className="text-[13px] font-semibold">{opt.label}</span>
           <span
             className={cn(
-              'text-[10.5px]',
-              mode === opt.id ? 'text-white/80' : 'text-[var(--text-muted)]',
+              'text-[11.5px]',
+              mode === opt.id ? 'text-white/85' : 'text-[var(--text-muted)]',
             )}
           >
             {opt.desc}
@@ -407,12 +407,12 @@ export const ShapePickerPopover: FC<{
 }> = ({ activeShape, onSelectShape, onSelectTextTool }) => (
   <div
     data-testid="shape-picker-popover"
-    className="w-[290px] space-y-2 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3 shadow-2xl"
+    className="w-[320px] space-y-2.5 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-3.5 shadow-2xl"
   >
     <button
       type="button"
       onClick={onSelectTextTool}
-      className="flex w-full cursor-pointer items-center gap-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2 text-xs font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]/50 hover:text-[var(--accent-os)]"
+      className="flex w-full cursor-pointer items-center gap-2 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-2.5 text-[13px] font-semibold text-[var(--text-main)] hover:border-[var(--accent-os)]/50 hover:text-[var(--accent-os)]"
     >
       <Type className="h-4 w-4 text-[var(--accent-os)]" aria-hidden="true" />
       <span>Chèn chữ / Công thức KaTeX (T)</span>
@@ -428,13 +428,13 @@ export const ShapePickerPopover: FC<{
             type="button"
             onClick={() => onSelectShape(item.id)}
             className={cn(
-              'flex cursor-pointer flex-col items-center gap-1 rounded-lg border px-1.5 py-2 text-[10px] font-medium transition-colors',
+              'flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-colors',
               active
                 ? 'border-[var(--accent-os)] bg-[var(--accent-os)] text-white'
                 : 'border-[var(--border-hairline)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
             )}
           >
-            <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+            <Icon className="h-4 w-4" aria-hidden="true" />
             <span className="truncate">{item.label}</span>
           </button>
         );
@@ -449,7 +449,7 @@ export const EraserModePopover: FC<{
   readonly onClearPage: () => void;
 }> = ({ mode, onChange, onClearPage }) => {
   const options: readonly { readonly id: EraserMode; readonly label: string }[] = [
-    { id: 'stroke', label: 'Tẩy nguyên nét (Stroke Eraser)' },
+    { id: 'stroke', label: 'Tẩy nguyên nét & điểm/đường dựng hình' },
     { id: 'segment-sm', label: 'Tẩy theo đoạn — Nhỏ' },
     { id: 'segment-md', label: 'Tẩy theo đoạn — Vừa' },
     { id: 'segment-lg', label: 'Tẩy theo đoạn — Lớn' },
@@ -458,7 +458,7 @@ export const EraserModePopover: FC<{
   return (
     <div
       data-testid="eraser-mode-popover"
-      className="w-60 space-y-1 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-1.5 shadow-2xl"
+      className="w-72 space-y-1 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2 shadow-2xl"
     >
       {options.map((opt) => (
         <button
@@ -466,21 +466,21 @@ export const EraserModePopover: FC<{
           type="button"
           onClick={() => onChange(opt.id)}
           className={cn(
-            'flex w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-medium transition-colors',
+            'flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-[13px] font-medium transition-colors',
             mode === opt.id
               ? 'bg-[var(--accent-os)] text-white'
               : 'text-[var(--text-main)] hover:bg-[var(--bg-surface)]',
           )}
         >
-          <Eraser className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <Eraser className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{opt.label}</span>
         </button>
       ))}
-      <div className="border-t border-[var(--border-hairline)] pt-1">
+      <div className="border-t border-[var(--border-hairline)] pt-1.5">
         <button
           type="button"
           onClick={onClearPage}
-          className="w-full cursor-pointer rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold text-[#8F3D35] hover:bg-[#FBF4F3] dark:hover:bg-[#241615]"
+          className="w-full cursor-pointer rounded-xl px-3 py-2 text-left text-[13px] font-semibold text-[#8F3D35] hover:bg-[#FBF4F3] dark:hover:bg-[#241615]"
         >
           Xóa sạch trang hiện tại
         </button>
@@ -498,7 +498,7 @@ export const SelectionModePopover: FC<{
     readonly label: string;
     readonly icon: typeof SquareDashed;
   }[] = [
-    { id: 'rect', label: 'Chọn khung chữ nhật', icon: SquareDashed },
+    { id: 'rect', label: 'Chọn khung chữ nhật (Mọi đối tượng)', icon: SquareDashed },
     { id: 'lasso', label: 'Chọn tự do (Lasso)', icon: Lasso },
     { id: 'spacer', label: 'Chèn khoảng trống (Spacer)', icon: ArrowUpDown },
   ];
@@ -506,7 +506,7 @@ export const SelectionModePopover: FC<{
   return (
     <div
       data-testid="selection-mode-popover"
-      className="w-56 space-y-1 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-1.5 shadow-2xl"
+      className="w-72 space-y-1 rounded-2xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] p-2 shadow-2xl"
     >
       {options.map((opt) => {
         const Icon = opt.icon;
@@ -516,13 +516,13 @@ export const SelectionModePopover: FC<{
             type="button"
             onClick={() => onChange(opt.id)}
             className={cn(
-              'flex w-full cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-left text-xs font-medium transition-colors',
+              'flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-[13px] font-medium transition-colors',
               mode === opt.id
                 ? 'bg-[var(--accent-os)] text-white'
                 : 'text-[var(--text-main)] hover:bg-[var(--bg-surface)]',
             )}
           >
-            <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span>{opt.label}</span>
           </button>
         );

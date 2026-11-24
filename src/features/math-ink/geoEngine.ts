@@ -29,6 +29,11 @@ export interface EvaluatedGeoLine {
     readonly dir1: Vec2;
     readonly dir2: Vec2;
   };
+  /** Đường gióng nét đứt kéo dài cạnh đáy khi chân đường cao H rơi ra ngoài đoạn thẳng đáy (tam giác tù) */
+  readonly baseExtension?: {
+    readonly from: Vec2;
+    readonly to: Vec2;
+  };
   readonly obj: GeoLineObject;
 }
 
@@ -382,25 +387,39 @@ export function evaluateGeoScene(objects: readonly GeoObject[] | undefined): Eva
           rightAngleAt: { vertex: mid, dir1: abDir, dir2: perpDir },
           obj,
         });
-      } else if (obj.lineMode === 'perpendicular') {
+      } else if (obj.lineMode === 'altitude' || obj.lineMode === 'perpendicular') {
         const pt = points.get(obj.throughPointId);
         const ref = lines.get(obj.refLineId);
         if (!pt || !ref) continue;
-        const { foot } = projectPointOntoLine(pt, ref.p1, ref.p2);
+        const { foot, t } = projectPointOntoLine(pt, ref.p1, ref.p2);
         const perpDir = { x: -ref.dir.y, y: ref.dir.x };
-        const toPt = normalize2(pt.x - foot.x, pt.y - foot.y);
-        const useDir = Math.hypot(pt.x - foot.x, pt.y - foot.y) > 2 ? toPt : perpDir;
+        const distToFoot = Math.hypot(pt.x - foot.x, pt.y - foot.y);
+        const toPt = distToFoot > 2 ? normalize2(pt.x - foot.x, pt.y - foot.y) : perpDir;
+        const isFiniteAltitude = obj.lineMode === 'altitude';
+
+        // Hướng ký hiệu góc vuông quay vào phía tâm đoạn đáy để hình luôn cân đối chuẩn SGK
+        const refMid = { x: (ref.p1.x + ref.p2.x) / 2, y: (ref.p1.y + ref.p2.y) / 2 };
+        const dotTowardMid = (refMid.x - foot.x) * ref.dir.x + (refMid.y - foot.y) * ref.dir.y;
+        const sqDir1 = dotTowardMid < -1 ? { x: -ref.dir.x, y: -ref.dir.y } : ref.dir;
+
+        let baseExtension: { readonly from: Vec2; readonly to: Vec2 } | undefined;
+        if (isFiniteAltitude && !ref.infinite && !ref.ray && distToFoot > 2) {
+          if (t < -0.01) {
+            baseExtension = { from: ref.p1, to: foot };
+          } else if (t > 1.01) {
+            baseExtension = { from: ref.p2, to: foot };
+          }
+        }
+
         lines.set(obj.id, {
           p1: { x: pt.x, y: pt.y },
-          p2:
-            foot.x === pt.x && foot.y === pt.y
-              ? { x: pt.x + perpDir.x * 100, y: pt.y + perpDir.y * 100 }
-              : foot,
-          dir: useDir,
-          infinite: true,
+          p2: distToFoot <= 1e-3 ? { x: pt.x + perpDir.x * 100, y: pt.y + perpDir.y * 100 } : foot,
+          dir: toPt,
+          infinite: !isFiniteAltitude,
           ray: false,
           vector: false,
-          rightAngleAt: { vertex: foot, dir1: ref.dir, dir2: useDir },
+          rightAngleAt: { vertex: foot, dir1: sqDir1, dir2: toPt },
+          baseExtension,
           obj,
         });
       } else if (obj.lineMode === 'parallel') {
@@ -546,7 +565,170 @@ export type GeoSceneHit =
       readonly branch: 0 | 1;
       readonly x: number;
       readonly y: number;
+    }
+  | {
+      readonly kind: 'polygon';
+      readonly id: string;
     };
+
+function isPointInsidePolygon2D(x: number, y: number, vertices: readonly Vec2[]): boolean {
+  if (vertices.length < 3) return false;
+  let inside = false;
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const xi = vertices[i]!.x;
+    const yi = vertices[i]!.y;
+    const xj = vertices[j]!.x;
+    const yj = vertices[j]!.y;
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi + 1e-9) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+/**
+ * Lấy danh sách ID phụ thuộc trực tiếp của một đối tượng GeoObject.
+ */
+function getDirectGeoDependencies(obj: GeoObject): readonly string[] {
+  if (obj.kind === 'geo-point') {
+    if (obj.pointMode === 'free') return [];
+    if (obj.pointMode === 'on-segment' || obj.pointMode === 'on-circle') return [obj.targetId];
+    if (obj.pointMode === 'midpoint') return [obj.p1Id, obj.p2Id];
+    if (obj.pointMode === 'centroid') return obj.pointIds;
+    if (obj.pointMode === 'intersection') return [obj.obj1Id, obj.obj2Id];
+    if (obj.pointMode === 'projection') return [obj.sourcePointId, obj.lineId];
+    return [];
+  }
+  if (obj.kind === 'geo-line') {
+    if (
+      obj.lineMode === 'segment' ||
+      obj.lineMode === 'line' ||
+      obj.lineMode === 'ray' ||
+      obj.lineMode === 'vector' ||
+      obj.lineMode === 'perp-bisector'
+    ) {
+      return [obj.p1Id, obj.p2Id];
+    }
+    if (
+      obj.lineMode === 'altitude' ||
+      obj.lineMode === 'perpendicular' ||
+      obj.lineMode === 'parallel'
+    ) {
+      return [obj.throughPointId, obj.refLineId];
+    }
+    if (obj.lineMode === 'angle-bisector') {
+      return [obj.p1Id, obj.vertexId, obj.p3Id];
+    }
+    if (obj.lineMode === 'tangent') {
+      return [obj.throughPointId, obj.circleId];
+    }
+    return [];
+  }
+  if (obj.kind === 'geo-conic') {
+    if (obj.conicMode === 'circle-center-point') return [obj.centerId, obj.throughId];
+    if (obj.conicMode === 'circle-3pts') return [obj.p1Id, obj.p2Id, obj.p3Id];
+    if (obj.conicMode === 'ellipse') return [obj.centerId, obj.axis1Id, obj.axis2Id];
+    return [];
+  }
+  return obj.pointIds;
+}
+
+/**
+ * Xóa tập đối tượng hình học kèm dọn sạch các đối tượng con phụ thuộc trực tiếp vào chúng
+ * (tránh để lại đối tượng mồ côi vô hình trong dữ liệu trang).
+ */
+export function removeGeoObjectsWithCascade(
+  objects: readonly GeoObject[] | undefined,
+  initialRemoveIds: ReadonlySet<string> | readonly string[],
+): readonly GeoObject[] {
+  if (!objects || objects.length === 0) return [];
+  const toRemove = new Set<string>(initialRemoveIds);
+  if (toRemove.size === 0) return objects;
+
+  let added = true;
+  while (added) {
+    added = false;
+    for (const obj of objects) {
+      if (toRemove.has(obj.id)) continue;
+      const deps = getDirectGeoDependencies(obj);
+      if (deps.some((depId) => toRemove.has(depId))) {
+        toRemove.add(obj.id);
+        added = true;
+      }
+    }
+  }
+
+  return objects.filter((obj) => !toRemove.has(obj.id));
+}
+
+/**
+ * Tìm toàn bộ các Điểm tự do (`pointMode === 'free'`) gốc tạo nên tập đối tượng được chọn
+ * để có thể kéo di chuyển nguyên đoạn thẳng AB, đường tròn, hoặc đa giác cùng lúc mà vẫn bảo toàn ràng buộc hình học!
+ */
+export function collectMovableFreePointIds(
+  objects: readonly GeoObject[] | undefined,
+  targetIds: ReadonlySet<string> | readonly string[],
+): ReadonlySet<string> {
+  const freeIds = new Set<string>();
+  if (!objects || objects.length === 0) return freeIds;
+
+  const byId = new Map<string, GeoObject>();
+  for (const obj of objects) {
+    byId.set(obj.id, obj);
+  }
+
+  const visited = new Set<string>();
+  const stack: string[] = [...targetIds];
+
+  while (stack.length > 0) {
+    const curId = stack.pop()!;
+    if (visited.has(curId)) continue;
+    visited.add(curId);
+
+    const obj = byId.get(curId);
+    if (!obj) continue;
+
+    if (obj.kind === 'geo-point' && obj.pointMode === 'free') {
+      freeIds.add(obj.id);
+      continue;
+    }
+
+    for (const depId of getDirectGeoDependencies(obj)) {
+      if (!visited.has(depId)) {
+        stack.push(depId);
+      }
+    }
+  }
+
+  return freeIds;
+}
+
+/**
+ * Tịnh tiến cứng (rigid-body translation) một hoặc nhiều đối tượng hình học động theo `(dx, dy)`
+ * bằng cách dịch chuyển đồng thời tất cả các điểm tự do gốc tạo nên chúng (mỗi điểm chỉ dịch đúng 1 lần).
+ */
+export function translateGeoObjectsByTargets(
+  objects: readonly GeoObject[] | undefined,
+  targetIds: ReadonlySet<string> | readonly string[],
+  dx: number,
+  dy: number,
+): readonly GeoObject[] {
+  if (!objects || objects.length === 0 || (dx === 0 && dy === 0)) {
+    return objects ?? [];
+  }
+  const freeIds = collectMovableFreePointIds(objects, targetIds);
+  if (freeIds.size === 0) return objects;
+
+  return objects.map((obj) => {
+    if (obj.kind === 'geo-point' && obj.pointMode === 'free' && freeIds.has(obj.id)) {
+      return {
+        ...obj,
+        x: Number((obj.x + dx).toFixed(2)),
+        y: Number((obj.y + dy).toFixed(2)),
+      };
+    }
+    return obj;
+  });
+}
 
 function distanceToEvaluatedLine(
   x: number,
@@ -577,12 +759,13 @@ export function hitTestGeoScene(
   opts?: {
     readonly skipPoints?: boolean;
     readonly preferIntersection?: boolean;
+    readonly includePolygons?: boolean;
     readonly pointRadius?: number;
     readonly curveRadius?: number;
   },
 ): GeoSceneHit | null {
-  const pointR = opts?.pointRadius ?? 14;
-  const curveR = opts?.curveRadius ?? 12;
+  const pointR = opts?.pointRadius ?? 16;
+  const curveR = opts?.curveRadius ?? 13;
 
   // 1. Nếu đang ở công cụ Giao điểm, ưu tiên bắt thẳng giao điểm thực của 2 đường/đường tròn gần con trỏ
   if (opts?.preferIntersection) {
@@ -670,7 +853,20 @@ export function hitTestGeoScene(
     }
   }
 
-  return bestCurve;
+  if (bestCurve) return bestCurve;
+
+  // 5. Bắt vùng trong Đa giác / Mặt phẳng (khi bật includePolygons cho Di chuyển / Chọn / Tẩy)
+  if (opts?.includePolygons) {
+    const polyEntries = [...scene.polygons.entries()];
+    for (let i = polyEntries.length - 1; i >= 0; i -= 1) {
+      const [id, poly] = polyEntries[i]!;
+      if (isPointInsidePolygon2D(x, y, poly.vertices)) {
+        return { kind: 'polygon', id };
+      }
+    }
+  }
+
+  return null;
 }
 
 function hexToRgba2D(hex: string, alpha: number): string {
@@ -706,11 +902,30 @@ function drawArrowTip2D(
 export interface GeoOverlayState {
   readonly hoveredHit?: GeoSceneHit | null;
   readonly selectedGeoId?: string | null;
+  readonly selectedIds?: ReadonlySet<string>;
   readonly pendingPointIds?: readonly string[];
   readonly cursor?: Vec2 | null;
   readonly activeGeoTool?: string;
   readonly activeColor?: string;
   readonly activeLineStyle?: 'solid' | 'dashed';
+}
+
+function drawHaloText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  fillColor: string,
+): void {
+  ctx.save();
+  ctx.lineJoin = 'round';
+  ctx.miterLimit = 2;
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+  ctx.lineWidth = 3.8;
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = fillColor;
+  ctx.fillText(text, x, y);
+  ctx.restore();
 }
 
 /**
@@ -724,6 +939,8 @@ export function renderGeoSceneOnCanvas(
   overlay?: GeoOverlayState,
 ): void {
   const maxSpan = Math.hypot(pageWidth, pageHeight) + 120;
+  const isIdSelected = (id: string): boolean =>
+    overlay?.selectedGeoId === id || Boolean(overlay?.selectedIds?.has(id));
 
   ctx.save();
   ctx.beginPath();
@@ -732,11 +949,15 @@ export function renderGeoSceneOnCanvas(
 
   // 1. Đa giác / Mặt phẳng tô màu bán trong suốt
   for (const [id, poly] of scene.polygons.entries()) {
-    const isSel = overlay?.selectedGeoId === id;
+    const isSel = isIdSelected(id);
+    const isHov = overlay?.hoveredHit?.kind === 'polygon' && overlay.hoveredHit.id === id;
     ctx.save();
-    ctx.fillStyle = hexToRgba2D(poly.obj.color, poly.obj.fillOpacity);
+    ctx.fillStyle = hexToRgba2D(
+      poly.obj.color,
+      isSel || isHov ? Math.min(0.32, poly.obj.fillOpacity + 0.08) : poly.obj.fillOpacity,
+    );
     ctx.strokeStyle = poly.obj.color;
-    ctx.lineWidth = isSel ? poly.obj.width + 1.2 : poly.obj.width;
+    ctx.lineWidth = isSel ? poly.obj.width + 1.4 : poly.obj.width;
     ctx.setLineDash(poly.obj.borderStyle === 'dashed' ? [7, 5] : []);
     ctx.beginPath();
     ctx.moveTo(poly.vertices[0]!.x, poly.vertices[0]!.y);
@@ -750,22 +971,28 @@ export function renderGeoSceneOnCanvas(
     if (poly.obj.label?.trim()) {
       const cx = poly.vertices.reduce((s, v) => s + v.x, 0) / poly.vertices.length;
       const cy = poly.vertices.reduce((s, v) => s + v.y, 0) / poly.vertices.length;
-      ctx.fillStyle = poly.obj.color;
-      ctx.font = 'italic 700 14px "Times New Roman", Georgia, serif';
+      ctx.font = 'italic 700 16px "Times New Roman", Georgia, serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(poly.obj.label.trim(), cx, cy);
+      drawHaloText(ctx, poly.obj.label.trim(), cx, cy, poly.obj.color);
     }
     ctx.restore();
   }
 
   // 2. Đường tròn & Elip
   for (const [id, conic] of scene.conics.entries()) {
-    const isSel = overlay?.selectedGeoId === id;
+    const isSel = isIdSelected(id);
     const isHov = overlay?.hoveredHit?.kind === 'conic' && overlay.hoveredHit.id === id;
     ctx.save();
+    if (isSel) {
+      ctx.strokeStyle = hexToRgba2D(conic.obj.color, 0.2);
+      ctx.lineWidth = conic.obj.width + 6;
+      ctx.beginPath();
+      ctx.ellipse(conic.cx, conic.cy, conic.rx, conic.ry, conic.rotation, 0, Math.PI * 2);
+      ctx.stroke();
+    }
     ctx.strokeStyle = conic.obj.color;
-    ctx.lineWidth = isSel || isHov ? conic.obj.width + 1.1 : conic.obj.width;
+    ctx.lineWidth = isSel || isHov ? conic.obj.width + 1.2 : conic.obj.width;
     ctx.setLineDash(conic.obj.style === 'dashed' ? [7, 5] : []);
     ctx.beginPath();
     ctx.ellipse(conic.cx, conic.cy, conic.rx, conic.ry, conic.rotation, 0, Math.PI * 2);
@@ -786,7 +1013,7 @@ export function renderGeoSceneOnCanvas(
       if (verts.length === 3) {
         ctx.save();
         ctx.strokeStyle = hexToRgba2D(pt.obj.color, 0.55);
-        ctx.lineWidth = 1.25;
+        ctx.lineWidth = 1.35;
         ctx.setLineDash([5, 4]);
         for (let i = 0; i < 3; i += 1) {
           const v = verts[i]!;
@@ -802,15 +1029,11 @@ export function renderGeoSceneOnCanvas(
     }
   }
 
-  // 4. Đoạn thẳng, Đường thẳng, Tia, Vectơ, Vuông góc, Song song, Trung trực, Phân giác, Tiếp tuyến
+  // 4. Đoạn thẳng, Đường cao (đoạn vuông góc), Đường thẳng, Tia, Vectơ, Song song, Trung trực, Phân giác, Tiếp tuyến
   for (const [id, line] of scene.lines.entries()) {
-    const isSel = overlay?.selectedGeoId === id;
+    const isSel = isIdSelected(id);
     const isHov = overlay?.hoveredHit?.kind === 'line' && overlay.hoveredHit.id === id;
     ctx.save();
-    ctx.strokeStyle = line.obj.color;
-    ctx.lineWidth = isSel || isHov ? line.obj.width + 1.1 : line.obj.width;
-    ctx.lineCap = 'round';
-    ctx.setLineDash(line.obj.style === 'dashed' ? [7, 5] : []);
 
     let start = line.p1;
     let end = line.p2;
@@ -820,6 +1043,36 @@ export function renderGeoSceneOnCanvas(
     } else if (line.ray) {
       end = { x: line.p1.x + line.dir.x * maxSpan, y: line.p1.y + line.dir.y * maxSpan };
     }
+
+    // Đường gióng nét đứt kéo dài cạnh đáy nếu chân đường cao rơi ngoài đoạn đáy (tam giác tù)
+    if (line.baseExtension) {
+      ctx.save();
+      ctx.strokeStyle = hexToRgba2D(line.obj.color, 0.55);
+      ctx.lineWidth = 1.35;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(line.baseExtension.from.x, line.baseExtension.from.y);
+      ctx.lineTo(line.baseExtension.to.x, line.baseExtension.to.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (isSel) {
+      ctx.save();
+      ctx.strokeStyle = hexToRgba2D(line.obj.color, 0.2);
+      ctx.lineWidth = line.obj.width + 6.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(start.x, start.y);
+      ctx.lineTo(end.x, end.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.strokeStyle = line.obj.color;
+    ctx.lineWidth = isSel || isHov ? line.obj.width + 1.2 : line.obj.width;
+    ctx.lineCap = 'round';
+    ctx.setLineDash(line.obj.style === 'dashed' ? [7, 5] : []);
 
     ctx.beginPath();
     ctx.moveTo(start.x, start.y);
@@ -834,19 +1087,52 @@ export function renderGeoSceneOnCanvas(
         line.p1.y,
         line.p2.x,
         line.p2.y,
-        Math.max(11, line.obj.width * 4.2),
+        Math.max(12, line.obj.width * 4.5),
       );
     }
 
-    // Ký hiệu góc vuông tự động cho đường vuông góc / đường trung trực / tiếp tuyến
+    // Ký hiệu vạch cạnh bằng nhau (1, 2, 3 vạch) trên đoạn thẳng
+    const tickMarks =
+      'tickMarks' in line.obj && typeof line.obj.tickMarks === 'number' ? line.obj.tickMarks : 0;
+    if (tickMarks > 0 && !line.infinite && !line.ray) {
+      const mx = (line.p1.x + line.p2.x) / 2;
+      const my = (line.p1.y + line.p2.y) / 2;
+      const nx = -line.dir.y;
+      const ny = line.dir.x;
+      const tickHalf = 6.5;
+      const spacing = 4.5;
+      ctx.setLineDash([]);
+      ctx.lineWidth = 1.65;
+      for (let k = 0; k < tickMarks; k += 1) {
+        const offset = (k - (tickMarks - 1) / 2) * spacing;
+        const cx = mx + line.dir.x * offset;
+        const cy = my + line.dir.y * offset;
+        ctx.beginPath();
+        ctx.moveTo(cx - nx * tickHalf, cy - ny * tickHalf);
+        ctx.lineTo(cx + nx * tickHalf, cy + ny * tickHalf);
+        ctx.stroke();
+      }
+    }
+
+    // Nhãn tên đoạn / đường (VD: a, b, h, d)
+    if (line.obj.label?.trim() && !line.infinite) {
+      const mx = (line.p1.x + line.p2.x) / 2 - line.dir.y * 13;
+      const my = (line.p1.y + line.p2.y) / 2 + line.dir.x * 13;
+      ctx.font = 'italic 600 15.5px "Times New Roman", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      drawHaloText(ctx, line.obj.label.trim(), mx, my, line.obj.color);
+    }
+
+    // Ký hiệu góc vuông tự động cho đoạn/đường vuông góc, trung trực, tiếp tuyến
     if (line.rightAngleAt) {
-      const sq = 11;
+      const sq = 12.5;
       const { vertex, dir1, dir2 } = line.rightAngleAt;
       const a = { x: vertex.x + dir1.x * sq, y: vertex.y + dir1.y * sq };
       const c = { x: vertex.x + (dir1.x + dir2.x) * sq, y: vertex.y + (dir1.y + dir2.y) * sq };
       const b = { x: vertex.x + dir2.x * sq, y: vertex.y + dir2.y * sq };
       ctx.setLineDash([]);
-      ctx.lineWidth = 1.3;
+      ctx.lineWidth = 1.45;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(c.x, c.y);
@@ -857,7 +1143,7 @@ export function renderGeoSceneOnCanvas(
     ctx.restore();
   }
 
-  // 5. Các bản vẽ xem trước (Rubber-band preview) khi đang bấm chọn nhiều điểm
+  // 5. Các bản vẽ xem trước (Rubber-band preview) khi đang bấm chọn hoặc kéo vẽ trực tiếp
   if (overlay?.pendingPointIds && overlay.pendingPointIds.length > 0 && overlay.cursor) {
     const pendingPts = overlay.pendingPointIds
       .map((pid) => scene.points.get(pid))
@@ -866,10 +1152,10 @@ export function renderGeoSceneOnCanvas(
     const color = overlay.activeColor ?? '#1D4ED8';
 
     ctx.save();
-    ctx.strokeStyle = hexToRgba2D(color, 0.7);
+    ctx.strokeStyle = hexToRgba2D(color, 0.72);
     ctx.fillStyle = hexToRgba2D(color, 0.12);
-    ctx.lineWidth = 1.6;
-    ctx.setLineDash([5, 4]);
+    ctx.lineWidth = 1.8;
+    ctx.setLineDash([6, 4]);
 
     if (overlay.activeGeoTool === 'polygon' && pendingPts.length >= 1) {
       ctx.beginPath();
@@ -896,6 +1182,20 @@ export function renderGeoSceneOnCanvas(
         ctx.arc(circum.cx, circum.cy, circum.r, 0, Math.PI * 2);
         ctx.stroke();
       }
+    } else if (
+      overlay.activeGeoTool === 'altitude' &&
+      pendingPts.length === 1 &&
+      overlay.hoveredHit?.kind === 'line'
+    ) {
+      const srcPt = pendingPts[0]!;
+      const targetLine = scene.lines.get(overlay.hoveredHit.id);
+      if (targetLine) {
+        const { foot } = projectPointOntoLine(srcPt, targetLine.p1, targetLine.p2);
+        ctx.beginPath();
+        ctx.moveTo(srcPt.x, srcPt.y);
+        ctx.lineTo(foot.x, foot.y);
+        ctx.stroke();
+      }
     } else if (pendingPts.length >= 1) {
       const last = pendingPts[pendingPts.length - 1]!;
       ctx.beginPath();
@@ -906,39 +1206,38 @@ export function renderGeoSceneOnCanvas(
     ctx.restore();
   }
 
-  // 6. Các Điểm hình học (phân biệt thị giác giữa điểm tự do, điểm trên cạnh & điểm dẫn xuất như GeoGebra)
+  // 6. Các Điểm hình học (tỉ lệ rõ nét trên màn 23.8" FHD + viền sáng trắng chống đè nét)
   for (const [id, pt] of scene.points.entries()) {
-    const isSel = overlay?.selectedGeoId === id || Boolean(overlay?.pendingPointIds?.includes(id));
+    const isSel = isIdSelected(id) || Boolean(overlay?.pendingPointIds?.includes(id));
     const isHov = overlay?.hoveredHit?.kind === 'point' && overlay.hoveredHit.id === id;
     const isConstrained = pt.obj.pointMode !== 'free';
 
     ctx.save();
     if (isSel || isHov) {
-      ctx.fillStyle = hexToRgba2D(pt.obj.color, 0.22);
+      ctx.fillStyle = hexToRgba2D(pt.obj.color, 0.24);
       ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 10, 0, Math.PI * 2);
+      ctx.arc(pt.x, pt.y, 11.5, 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.fillStyle = isConstrained ? '#FFFFFF' : pt.obj.color;
     ctx.strokeStyle = isConstrained ? pt.obj.color : '#FFFFFF';
-    ctx.lineWidth = isConstrained ? 2.1 : 1.5;
+    ctx.lineWidth = isConstrained ? 2.25 : 1.75;
     ctx.beginPath();
-    ctx.arc(pt.x, pt.y, isConstrained ? 4.4 : 4.6, 0, Math.PI * 2);
+    ctx.arc(pt.x, pt.y, isConstrained ? 5.0 : 5.3, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
     if (isConstrained) {
       ctx.fillStyle = pt.obj.color;
       ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+      ctx.arc(pt.x, pt.y, 2.3, 0, Math.PI * 2);
       ctx.fill();
     }
 
     if (pt.obj.showLabel !== false && pt.obj.label.trim()) {
-      ctx.font = 'italic 700 15px "Times New Roman", Georgia, serif';
-      ctx.fillStyle = pt.obj.color;
-      ctx.fillText(pt.obj.label, pt.x + 8, pt.y - 7);
+      ctx.font = 'italic 700 17px "Times New Roman", Georgia, serif';
+      drawHaloText(ctx, pt.obj.label, pt.x + 9, pt.y - 8, pt.obj.color);
     }
     ctx.restore();
   }
@@ -953,39 +1252,39 @@ export function renderGeoSceneOnCanvas(
       const px = hit.projX;
       const py = hit.projY;
       ctx.save();
-      ctx.fillStyle = 'rgba(29, 78, 216, 0.18)';
+      ctx.fillStyle = 'rgba(29, 78, 216, 0.2)';
       ctx.beginPath();
-      ctx.arc(px, py, 9, 0, Math.PI * 2);
+      ctx.arc(px, py, 10, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#1D4ED8';
       ctx.beginPath();
-      ctx.arc(px, py, 3.8, 0, Math.PI * 2);
+      ctx.arc(px, py, 4.2, 0, Math.PI * 2);
       ctx.fill();
 
       if (hit.kind === 'line') {
         const badge = `k = ${hit.ratioLabel}`;
-        ctx.font = '600 11px "JetBrains Mono Variable", monospace';
-        const tw = ctx.measureText(badge).width + 12;
+        ctx.font = '600 12px "JetBrains Mono Variable", monospace';
+        const tw = ctx.measureText(badge).width + 14;
         ctx.fillStyle = '#17332C';
         ctx.beginPath();
-        ctx.roundRect(px + 10, py - 24, tw, 20, 6);
+        ctx.roundRect(px + 11, py - 26, tw, 22, 6);
         ctx.fill();
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText(badge, px + 16, py - 10);
+        ctx.fillText(badge, px + 18, py - 11);
       }
       ctx.restore();
     } else if (hit.kind === 'intersection-snap') {
       ctx.save();
       ctx.strokeStyle = '#DC2626';
       ctx.fillStyle = 'rgba(220, 38, 38, 0.2)';
-      ctx.lineWidth = 1.8;
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(hit.x, hit.y, 9, 0, Math.PI * 2);
+      ctx.arc(hit.x, hit.y, 10, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#DC2626';
       ctx.beginPath();
-      ctx.arc(hit.x, hit.y, 3, 0, Math.PI * 2);
+      ctx.arc(hit.x, hit.y, 3.3, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }

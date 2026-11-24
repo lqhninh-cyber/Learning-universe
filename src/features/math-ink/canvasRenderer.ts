@@ -1607,10 +1607,15 @@ export function renderInkPageToCanvas(
     }
   }
 
-  // 4c. Lớp Hình học động GeoGebra (Điểm, Tỉ lệ, Trung điểm, Giao điểm, Vuông góc/Song song, Đường tròn, Elip, Đa giác/Mặt phẳng)
+  // 4c. Lớp Hình học động GeoGebra (Điểm, Tỉ lệ, Trung điểm, Giao điểm, Đường cao/Vuông góc/Song song, Đường tròn, Elip, Đa giác/Mặt phẳng)
   if ((page.geoObjects && page.geoObjects.length > 0) || opts.geoOverlay?.hoveredHit) {
     const geoScene = evaluateGeoScene(page.geoObjects);
-    renderGeoSceneOnCanvas(ctx, geoScene, width, height, opts.geoOverlay);
+    const effectiveOverlay = opts.geoOverlay
+      ? { ...opts.geoOverlay, selectedIds: opts.selectedIds }
+      : opts.selectedIds && opts.selectedIds.size > 0
+        ? { selectedIds: opts.selectedIds }
+        : undefined;
+    renderGeoSceneOnCanvas(ctx, geoScene, width, height, effectiveOverlay);
   }
 
   // 5. Các nét mực viết tay (dạ quang vẽ trước để không che chữ mực đậm)
