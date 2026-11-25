@@ -1,17 +1,18 @@
 ---
 id: khong-gian-affine
 title: Khái niệm Không gian Affine và Quy tắc Chasles
-description: Bài học mẫu kỹ thuật trình bày định nghĩa không gian affine trên trường K, quy tắc ba điểm Chasles và các tính chất cơ bản.
+description: Bài học trình bày định nghĩa không gian affine trên trường K, các thí dụ kinh điển, quy tắc Chasles, các tính chất cơ bản và hệ điểm độc lập.
 estimatedMinutes: 45
 level: basic
 prerequisites: []
 tags:
   - không gian affine
   - quy tắc Chasles
-  - hình học tuyên tính
+  - hình học tuyến tính
+  - hệ điểm độc lập
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '7-15'
+    pages: '5-8'
     sections: '§1'
 status: published
 version: 0.1.0
@@ -31,91 +32,200 @@ import MidpointBarycenterFigure from './figures/midpoint-barycenter-figure';
 Không gian affine là mô hình hình học thu được khi ta "quên đi" gốc tọa độ của một không gian vectơ, giúp mọi điểm có vai trò bình đẳng như nhau.
 
 <Definition id="def-khong-gian-affine" title="Không gian Affine">
-Cho $\mathbb{K}$-không gian vectơ $V$ và một tập hợp khác rỗng $\mathcal{A}$. Tập $\mathcal{A}$ được gọi là một **không gian affine** liên kết với không gian vectơ nền $V$ (ký hiệu $\overrightarrow{\mathcal{A}} = V$) nếu có một ánh xạ
+Cho một tập hợp khác rỗng $\mathcal{A}$ mà các phần tử của nó gọi là **điểm**, một không gian vectơ $V$ trên trường $\mathbb{K}$ và một ánh xạ
 
 $$
-\varphi: \mathcal{A} \times \mathcal{A} \to V, \quad (A, B) \mapsto \vect{AB},
+\varphi: \mathcal{A} \times \mathcal{A} \to V, \quad (M, N) \mapsto \varphi(M, N) = \vect{MN}.
 $$
 
-thỏa mãn hai tiên đề sau:
+Bộ ba $(\mathcal{A}, \varphi, V)$ được gọi là một **không gian affine** liên kết với không gian vectơ $V$ trên trường $\mathbb{K}$ (gọi tắt là không gian affine $\mathcal{A}$ trên trường $\mathbb{K}$) nếu thỏa mãn hai tiên đề sau:
 
-1. **Tiên đề Weyl (tồn tại và duy nhất điểm cuối):** $\text{Với mọi điểm } A \in \mathcal{A}$ và $\text{mọi vectơ } u \in V$, tồn tại duy nhất điểm $B \in \mathcal{A}$ sao cho $\vect{AB} = u$. Ta thường viết $B = A + u$.
-2. **Tiên đề Chasles (quy tắc ba điểm):** $\text{Với mọi } A, B, C \in \mathcal{A}$, ta có
+1. **Tiên đề Weyl (tồn tại và duy nhất điểm cuối):** Với mọi điểm $M \in \mathcal{A}$ và mọi vectơ $\vec{u} \in V$, tồn tại duy nhất điểm $N \in \mathcal{A}$ sao cho $\vect{MN} = \vec{u}$ (ta thường viết $N = M + \vec{u}$).
+2. **Tiên đề Chasles (quy tắc ba điểm):** Với mọi ba điểm $M, N, P \in \mathcal{A}$, ta luôn có
 
 $$
-\vect{AB} + \vect{BC} = \vect{AC}.
+\vect{MN} + \vect{NP} = \vect{MP}.
 $$
 
-Các phần tử của $\mathcal{A}$ được gọi là các **điểm**, các phần tử của $V$ được gọi là các **vectơ**, và số chiều của $\mathcal{A}$ được định nghĩa là $\dim \mathcal{A} = \dim V$.
+Không gian vectơ liên kết $V$ còn được ký hiệu là $\overrightarrow{\mathcal{A}}$ và gọi là **không gian vectơ nền** (hay **nền**) của không gian affine $\mathcal{A}$.
+
+- Nếu $\mathbb{K} = \R$ ($V$ là không gian vectơ thực), ta nói $\mathcal{A}$ là một **không gian affine thực**; nếu $\mathbb{K} = \C$ ($V$ là không gian vectơ phức), ta nói $\mathcal{A}$ là một **không gian affine phức**. Trong học phần này, khi không nói gì thêm, ta chủ yếu xét các không gian affine thực.
+- Không gian affine $\mathcal{A}$ được gọi là **$n$ chiều** nếu $\dim V = n$, ký hiệu là $\dim \mathcal{A} = n$ hay $\mathcal{A}^n$ (liên kết với không gian vectơ $V^n$).
 </Definition>
 
 <Figure caption="Hình 1.1: Minh họa tương tác Tiên đề Weyl và Quy tắc ba điểm Chasles (AB + BC = AC) trên mặt phẳng affine.">
   <WeylChaslesFigure />
 </Figure>
 
-## 2. Các hệ quả trực tiếp từ tiên đề
+## 2. Các Thí dụ Điển hình
+
+<Example id="ex-affine-euclide-pho-thong" title="Không gian hình học phổ thông hai chiều và ba chiều">
+Không gian Ơclit hai chiều $E^2$ và ba chiều $E^3$ đã học ở chương trình phổ thông lần lượt là những không gian affine thực hai chiều và ba chiều liên kết với các không gian vectơ tự do hai chiều $V^2$ và ba chiều $V^3$. Với phép dựng vectơ từ hai điểm, phép cộng vectơ và phép nhân vectơ với số thực quen thuộc, ánh xạ $(M, N) \mapsto \vect{MN}$ thỏa mãn hiển nhiên cả hai tiên đề Weyl và Chasles trong <Ref to="def-khong-gian-affine" />.
+</Example>
+
+<Example id="ex-affine-chinh-tac" title="Cấu trúc affine chính tắc trên một không gian vectơ">
+Cho $V$ là một không gian vectơ bất kỳ trên trường $\mathbb{K}$. Ta dùng chính tập hợp $V$ làm tập điểm $\mathcal{A}$ (mỗi vectơ của $V$ đồng thời được xem là một điểm của $\mathcal{A}$) và xét ánh xạ $f: V \times V \to V$ xác định bởi
+
+$$
+f(\vec{a}, \vec{b}) = \vec{b} - \vec{a} \in V \quad \text{với mọi } \vec{a}, \vec{b} \in V.
+$$
+
+Ánh xạ $f$ thỏa mãn đầy đủ hai tiên đề của không gian affine:
+
+1. **Tiên đề Weyl:** Với mọi "điểm" $\vec{a} \in V$ và mọi vectơ $\vec{u} \in V$, phương trình $f(\vec{a}, \vec{b}) = \vec{u} \iff \vec{b} - \vec{a} = \vec{u}$ có nghiệm duy nhất $\vec{b} = \vec{a} + \vec{u} \in V$.
+2. **Tiên đề Chasles:** Với mọi $\vec{a}, \vec{b}, \vec{c} \in V$, ta có $f(\vec{a}, \vec{b}) + f(\vec{b}, \vec{c}) = (\vec{b} - \vec{a}) + (\vec{c} - \vec{b}) = \vec{c} - \vec{a} = f(\vec{a}, \vec{c})$.
+
+Do đó $V$ trở thành một không gian affine liên kết với chính không gian vectơ nền $V$, thường ký hiệu là $\Aff(V)$.
+</Example>
+
+<Example id="ex-affine-rn" title="Không gian số thực n chiều">
+Xét tập hợp $\R^n$ gồm các bộ $n$ số thực có thứ tự $A = (a_1, a_2, \dots, a_n)$ được gọi là các điểm, cùng không gian vectơ thực $V^n$ mà mỗi vectơ $\vec{x}$ ứng với bộ số thực $(x_1, x_2, \dots, x_n)$ ($x_i \in \R$). Đặt ánh xạ $f: \R^n \times \R^n \to V^n$ cho tương ứng mỗi cặp điểm $A = (a_1, \dots, a_n), B = (b_1, \dots, b_n) \in \R^n$ với vectơ
+
+$$
+\vect{AB} = (b_1 - a_1, b_2 - a_2, \dots, b_n - a_n) \in V^n.
+$$
+
+Với mọi $A = (a_1, \dots, a_n) \in \R^n$ và $\vec{u} = (u_1, \dots, u_n) \in V^n$, điểm $B = (a_1 + u_1, \dots, a_n + u_n) \in \R^n$ là điểm duy nhất thỏa mãn $\vect{AB} = \vec{u}$; đồng thời $(b_i - a_i) + (c_i - b_i) = c_i - a_i$ với mọi $i = 1, \dots, n$. Vì vậy $\R^n$ là một không gian affine thực $n$ chiều.
+</Example>
+
+## 3. Một số Tính chất Đơn giản của Không gian Affine
 
 <Lemma id="lem-vecto-khong" title="Vectơ không và vectơ đối">
-Trong không gian affine $\mathcal{A}$ liên kết với $V$, với mọi điểm $A, B \in \mathcal{A}$ ta có:
+Trong không gian affine $\mathcal{A}$ liên kết với $V$, với mọi điểm $M, N \in \mathcal{A}$ ta có:
 
-1. $\vect{AA} = \vec{0}$ (và ngược lại, nếu $\vect{AB} = \vec{0}$ thì $A = B$).
-2. $\vect{BA} = -\vect{AB}$.
+1. $\vect{MM} = \vec{0}$.
+2. Nếu $\vect{MN} = \vec{0}$ thì $M \equiv N$.
+3. $\vect{MN} = -\vect{NM}$.
 </Lemma>
 
 <Proof of="lem-vecto-khong">
-1. Áp dụng tiên đề Chasles trong <Ref to="def-khong-gian-affine" /> cho ba điểm trùng nhau $A, A, A$:
+1. Lấy điểm $N \in \mathcal{A}$ bất kỳ. Theo tiên đề Chasles trong <Ref to="def-khong-gian-affine" />, ta có
 
 $$
-\vect{AA} + \vect{AA} = \vect{AA} \implies \vect{AA} = \vec{0}.
+\vect{MM} + \vect{MN} = \vect{MN},
 $$
 
-Ngược lại, nếu $\vect{AB} = \vec{0} = \vect{AA}$ thì theo tính duy nhất trong tiên đề Weyl, ta suy ra $B = A$.
+do đó suy ra $\vect{MM} = \vec{0}$.
 
-2. Thay $C = A$ vào đẳng thức Chasles $\vect{AB} + \vect{BC} = \vect{AC}$, ta được $\vect{AB} + \vect{BA} = \vect{AA} = \vec{0}$, suy ra $\vect{BA} = -\vect{AB}$.
+2. Nếu $\vect{MN} = \vec{0}$ thì kết hợp với tính chất 1 vừa chứng minh, ta có $\vect{MN} = \vec{0} = \vect{MM}$. Theo tính duy nhất trong tiên đề Weyl ứng với gốc $M$ và vectơ $\vec{0}$, ta suy ra $N \equiv M$.
+3. Theo tiên đề Chasles và tính chất 1, ta có $\vect{MN} + \vect{NM} = \vect{MM} = \vec{0}$, suy ra $\vect{MN} = -\vect{NM}$.
 </Proof>
 
 <Theorem id="thm-hinh-binh-hanh" title="Quy tắc hình bình hành trong không gian Affine">
-Với mọi bộ bốn điểm $A, B, C, D \in \mathcal{A}$, hai điều kiện sau là tương đương:
+Với mọi bộ bốn điểm $A, B, C, D \in \mathcal{A}$, ta có
 
 $$
-\vect{AB} = \vect{DC} \iff \vect{AD} = \vect{BC}.
+\vect{AB} = \vect{CD} \iff \vect{AC} = \vect{BD}
 $$
+
+(hay viết theo thứ tự đỉnh hình bình hành $ABCD$: $\vect{AB} = \vect{DC} \iff \vect{AD} = \vect{BC}$).
 </Theorem>
 
 <Proof of="thm-hinh-binh-hanh" defaultOpen={true}>
-Theo tiên đề Chasles (<Ref to="def-khong-gian-affine" />) và <Ref to="lem-vecto-khong" />, ta có:
+Cộng vectơ $\vect{BC}$ vào hai vế và áp dụng tiên đề Chasles (<Ref to="def-khong-gian-affine" />), ta được chuỗi tương đương:
 
 $$
-\vect{AB} - \vect{DC} = (\vect{AD} + \vect{DB}) - (\vect{DB} + \vect{BC}) = \vect{AD} - \vect{BC}.
+\vect{AB} = \vect{CD} \iff \vect{AB} + \vect{BC} = \vect{BC} + \vect{CD} \iff \vect{AC} = \vect{BD}.
 $$
 
-Do đó $\vect{AB} = \vect{DC}$ khi và chỉ khi $\vect{AD} = \vect{BC}$.
+Đổi vai trò hai điểm $C$ và $D$ trong đẳng thức trên, ta thu được ngay dạng $\vect{AB} = \vect{DC} \iff \vect{AD} = \vect{BC}$.
 </Proof>
 
 <Figure caption="Hình 1.2: Minh họa tương tác Định lý Hình bình hành (AB = DC ⇔ AD = BC).">
   <ParallelogramRuleFigure />
 </Figure>
 
-## 3. Ví dụ và Bài tập
+<Proposition id="prop-hieu-hai-vecto" title="Quy tắc trừ vectơ qua một điểm gốc bất kỳ">
+Với ba điểm bất kỳ $O, A, B \in \mathcal{A}$, ta luôn có
 
-<Example id="ex-affine-chinh-tac" title="Cấu trúc affine chính tắc trên không gian vectơ">
-Mọi không gian vectơ $V$ trên trường $\R$ đều mang cấu trúc không gian affine chính tắc $\Aff(V)$ khi đặt $\vect{uv} = v - u$ $\text{với mọi } u, v \in V$. Khi đó tiên đề Chasles trở thành hằng đẳng thức $(v - u) + (w - v) = w - u$.
-</Example>
+$$
+\vect{AB} = \vect{OB} - \vect{OA}.
+$$
+</Proposition>
+
+<Proof of="prop-hieu-hai-vecto">
+Theo tiên đề Chasles (<Ref to="def-khong-gian-affine" />) và tính chất vectơ đối (<Ref to="lem-vecto-khong" />), ta có
+
+$$
+\vect{AB} = \vect{AO} + \vect{OB} = -\vect{OA} + \vect{OB} = \vect{OB} - \vect{OA}.
+$$
+</Proof>
+
+## 4. Hệ Điểm Độc lập
+
+<Definition id="def-he-diem-doc-lap" title="Hệ điểm độc lập">
+Hệ $m + 1$ điểm $A_0, A_1, \dots, A_m$ ($m \ge 1$) của không gian affine $\mathcal{A}$ được gọi là **độc lập** (hay **độc lập affine**) nếu hệ $m$ vectơ
+
+$$
+\vect{A_0A_1}, \vect{A_0A_2}, \dots, \vect{A_0A_m}
+$$
+
+của không gian vectơ nền $\overrightarrow{\mathcal{A}}$ là hệ vectơ độc lập tuyến tính.
+
+Hệ gồm một điểm $A_0$ bất kỳ (tức trường hợp $m = 0$) luôn được xem là độc lập. Một hệ điểm không độc lập được gọi là **phụ thuộc** (hay **phụ thuộc affine**).
+</Definition>
+
+<Remark title="Vai trò bình đẳng của điểm gốc trong định nghĩa hệ điểm độc lập">
+Trong <Ref to="def-he-diem-doc-lap" />, điểm $A_0$ không đóng vai trò gì đặc biệt so với các điểm $A_i$ khác. Thật vậy, nếu hệ $m$ vectơ $\vect{A_0A_1}, \vect{A_0A_2}, \dots, \vect{A_0A_m}$ độc lập tuyến tính thì với bất kỳ chỉ số $i \in \{1, 2, \dots, m\}$, hệ $m$ vectơ xuất phát từ $A_i$:
+
+$$
+\vect{A_iA_0}, \vect{A_iA_1}, \dots, \vect{A_iA_{i-1}}, \vect{A_iA_{i+1}}, \dots, \vect{A_iA_m}
+$$
+
+cũng độc lập tuyến tính.
+
+*Chứng minh:* Giả sử tồn tại các vô hướng $\lambda_0, \lambda_1, \dots, \lambda_{i-1}, \lambda_{i+1}, \dots, \lambda_m \in \mathbb{K}$ sao cho
+
+$$
+\lambda_0 \vect{A_iA_0} + \sum_{\substack{k=1 \\ k \neq i}}^{m} \lambda_k \vect{A_iA_k} = \vec{0}.
+$$
+
+Áp dụng <Ref to="lem-vecto-khong" /> và <Ref to="prop-hieu-hai-vecto" /> với gốc $A_0$, ta thay $\vect{A_iA_0} = -\vect{A_0A_i}$ và $\vect{A_iA_k} = \vect{A_0A_k} - \vect{A_0A_i}$ ($k \neq i$) vào đẳng thức trên:
+
+$$
+\sum_{\substack{k=1 \\ k \neq i}}^{m} \lambda_k \vect{A_0A_k} - \left(\lambda_0 + \sum_{\substack{k=1 \\ k \neq i}}^{m} \lambda_k\right)\vect{A_0A_i} = \vec{0}.
+$$
+
+Vì hệ $\{\vect{A_0A_1}, \dots, \vect{A_0A_m}\}$ độc lập tuyến tính nên mọi hệ số đều bằng $0$: trước hết $\lambda_k = 0$ với mọi $k \in \{1, \dots, m\} \setminus \{i\}$, sau đó suy ra $\lambda_0 + 0 = 0 \implies \lambda_0 = 0$. Vậy hệ $m$ vectơ xuất phát từ $A_i$ độc lập tuyến tính.
+</Remark>
+
+<Theorem id="thm-so-diem-doc-lap-toi-da" title="Số lượng điểm độc lập trong không gian affine n chiều">
+Trong không gian affine $n$ chiều $\mathcal{A}^n$ luôn luôn có những hệ $m$ điểm độc lập với $0 \le m \le n + 1$ *(trong đó $m = 0$ ứng với hệ điểm rỗng được quy ước là độc lập, còn $m = 1$ ứng với hệ một điểm bất kỳ theo <Ref to="def-he-diem-doc-lap" />)*, và mọi hệ điểm gồm nhiều hơn $n + 1$ điểm đều không độc lập.
+</Theorem>
+
+<Proof of="thm-so-diem-doc-lap-toi-da" defaultOpen={true}>
+1. **Sự tồn tại hệ $m$ điểm độc lập với $0 \le m \le n + 1$:** Giả sử $V^n$ là không gian vectơ liên kết với không gian affine $\mathcal{A}^n$ và $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ là một cơ sở nào đó của $V^n$. Vì tập điểm $\mathcal{A}^n \neq \varnothing$ theo <Ref to="def-khong-gian-affine" />, ta có thể chọn một điểm $A_0 \in \mathcal{A}^n$. Tiếp theo, theo tiên đề Weyl, với mỗi $i = 1, 2, \dots, n$ ta chọn điểm $A_i \in \mathcal{A}^n$ sao cho
+
+$$
+\vect{A_0A_i} = \vec{e}_i \quad (i = 1, 2, \dots, n).
+$$
+
+Vì $\{\vec{e}_1, \dots, \vec{e}_n\}$ độc lập tuyến tính nên hệ $n + 1$ điểm $A_0, A_1, \dots, A_n$ là độc lập. Ngoài ra, nếu lấy bất kỳ $m$ điểm của hệ đó với $0 \le m \le n + 1$ thì ta thu được một hệ $m$ điểm độc lập (với $m \ge 2$ do hệ con của hệ vectơ độc lập tuyến tính vẫn độc lập tuyến tính; với $m = 1$ và $m = 0$ theo quy ước định nghĩa).
+
+2. **Mọi hệ nhiều hơn $n + 1$ điểm đều phụ thuộc:** Giả sử ta có một hệ gồm $p$ điểm $B_1, B_2, \dots, B_p$ trong $\mathcal{A}^n$ với $p > n + 1$. Khi đó $p - 1$ vectơ
+
+$$
+\vect{B_1B_2}, \vect{B_1B_3}, \dots, \vect{B_1B_p}
+$$
+
+thuộc không gian vectơ $V^n$ không thể độc lập tuyến tính vì $p - 1 > n = \dim V^n$. Do đó hệ $p$ điểm $B_1, B_2, \dots, B_p$ không độc lập.
+</Proof>
+
+## 5. Bài tập Vận dụng và Củng cố
 
 <Exercise id="exr-trung-diem" title="Biểu thức vectơ của trung điểm">
-Cho ba điểm $A, B, I \in \mathcal{A}$ trên không gian affine thực ($\operatorname{char}\mathbb{K} \neq 2$). Chứng minh rằng $\vect{IA} + \vect{IB} = \vec{0}$ khi và chỉ khi $\text{với mọi điểm } O \in \mathcal{A}$, ta có
+Cho ba điểm $A, B, I \in \mathcal{A}$ trên không gian affine thực ($\operatorname{char}\mathbb{K} \neq 2$). Chứng minh rằng $\vect{IA} + \vect{IB} = \vec{0}$ khi và chỉ khi với mọi điểm $O \in \mathcal{A}$, ta có
 
 $$
 \vect{OI} = \frac{1}{2}\bigl(\vect{OA} + \vect{OB}\bigr).
 $$
 
-
 <Hint>
-Sử dụng quy tắc Chasles (<Ref to="def-khong-gian-affine" />) để chèn điểm $O$ vào $\vect{IA} = \vect{OA} - \vect{OI}$ và $\vect{IB} = \vect{OB} - \vect{OI}$.
+Sử dụng <Ref to="prop-hieu-hai-vecto" /> để chèn điểm $O$ vào $\vect{IA} = \vect{OA} - \vect{OI}$ và $\vect{IB} = \vect{OB} - \vect{OI}$.
 </Hint>
 
 <Solution>
-Với điểm $O \in \mathcal{A}$ bất kỳ, theo <Ref to="def-khong-gian-affine" /> và <Ref to="lem-vecto-khong" />, ta viết:
+Với điểm $O \in \mathcal{A}$ bất kỳ, theo <Ref to="prop-hieu-hai-vecto" /> ta viết:
 
 $$
 \vect{IA} + \vect{IB} = (\vect{OA} - \vect{OI}) + (\vect{OB} - \vect{OI}) = \vect{OA} + \vect{OB} - 2\vect{OI}.
@@ -129,7 +239,71 @@ Vì vậy $\vect{IA} + \vect{IB} = \vec{0}$ tương đương với $2\vect{OI} =
   <MidpointBarycenterFigure />
 </Figure>
 
+<Exercise id="exr-s1-1" title="Bài tập 1.1 — Đặc trưng vectơ của hệ điểm độc lập">
+Chứng minh rằng trong không gian affine $\mathcal{A}^n$, một hệ $m + 1$ điểm $A_0, A_1, \dots, A_m$ là độc lập khi và chỉ khi với mọi điểm $O \in \mathcal{A}^n$ bất kỳ, từ hai đẳng thức
+
+$$
+\sum_{i=0}^{m} \lambda_i \vect{OA_i} = \vec{0} \quad \text{và} \quad \sum_{i=0}^{m} \lambda_i = 0
+$$
+
+ta suy ra $\lambda_0 = \lambda_1 = \dots = \lambda_m = 0$.
+
+<Hint>
+Với điểm $O$ bất kỳ, tách $\vect{OA_i} = \vect{OA_0} + \vect{A_0A_i}$ ($i = 1, \dots, m$) và thay điều kiện $\sum_{i=0}^{m} \lambda_i = 0$ để khử số hạng chứa $\vect{OA_0}$.
+</Hint>
+
+<Solution>
+Với trường hợp $m = 0$ (hệ một điểm $A_0$), hệ luôn độc lập và điều kiện $\sum_{i=0}^{0} \lambda_i = 0$ cho ngay $\lambda_0 = 0$ nên mệnh đề hiển nhiên đúng. Xét $m \ge 1$.
+
+Với mọi điểm $O \in \mathcal{A}^n$ và mọi bộ vô hướng $\lambda_0, \lambda_1, \dots, \lambda_m \in \mathbb{K}$ thỏa mãn $\sum_{i=0}^{m} \lambda_i = 0$, theo tiên đề Chasles ta có $\vect{OA_i} = \vect{OA_0} + \vect{A_0A_i}$, suy ra:
+
+$$
+\sum_{i=0}^{m} \lambda_i \vect{OA_i} = \lambda_0 \vect{OA_0} + \sum_{i=1}^{m} \lambda_i \bigl(\vect{OA_0} + \vect{A_0A_i}\bigr) = \left(\sum_{i=0}^{m} \lambda_i\right)\vect{OA_0} + \sum_{i=1}^{m} \lambda_i \vect{A_0A_i} = \sum_{i=1}^{m} \lambda_i \vect{A_0A_i}.
+$$
+
+- **Chiều thuận ($\Rightarrow$):** Giả sử hệ $A_0, A_1, \dots, A_m$ độc lập. Lấy điểm $O \in \mathcal{A}^n$ bất kỳ và giả sử $\sum_{i=0}^{m} \lambda_i \vect{OA_i} = \vec{0}$ cùng $\sum_{i=0}^{m} \lambda_i = 0$. Theo đồng nhất thức trên, ta có $\sum_{i=1}^{m} \lambda_i \vect{A_0A_i} = \vec{0}$. Do hệ vectơ $\{\vect{A_0A_1}, \dots, \vect{A_0A_m}\}$ độc lập tuyến tính nên $\lambda_1 = \lambda_2 = \dots = \lambda_m = 0$. Kết hợp với $\sum_{i=0}^{m} \lambda_i = 0$, ta suy ra $\lambda_0 = 0$.
+- **Chiều đảo ($\Leftarrow$):** Giả sử điều kiện trong đề bài nghiệm đúng với mọi $O \in \mathcal{A}^n$. Để chứng minh $\{\vect{A_0A_1}, \dots, \vect{A_0A_m}\}$ độc lập tuyến tính, xét tổ hợp $\sum_{i=1}^{m} \lambda_i \vect{A_0A_i} = \vec{0}$. Đặt $\lambda_0 = -\sum_{i=1}^{m} \lambda_i$, khi đó $\sum_{i=0}^{m} \lambda_i = 0$ và theo đồng nhất thức trên (với một điểm $O \in \mathcal{A}^n$ bất kỳ — chẳng hạn $O \equiv A_0$), ta có $\sum_{i=0}^{m} \lambda_i \vect{OA_i} = \sum_{i=1}^{m} \lambda_i \vect{A_0A_i} = \vec{0}$. Áp dụng giả thiết, ta được $\lambda_0 = \lambda_1 = \dots = \lambda_m = 0$. Vậy hệ $A_0, A_1, \dots, A_m$ độc lập.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s1-6" title="Bài tập 1.6 — Điều kiện cần và đủ để bốn điểm đồng phẳng">
+Trong không gian affine $\mathcal{A}$ có số chiều $\dim \mathcal{A} \ge 2$, chứng minh rằng điều kiện cần và đủ để bốn điểm $A_1, A_2, A_3, A_4$ thuộc cùng một mặt phẳng affine (tức hệ bốn điểm phụ thuộc affine) là với một điểm $P \in \mathcal{A}$ tùy ý, tồn tại các vô hướng $\alpha_1, \alpha_2, \alpha_3, \alpha_4$ không đồng thời bằng $0$ sao cho
+
+$$
+\alpha_1 \vect{PA_1} + \alpha_2 \vect{PA_2} + \alpha_3 \vect{PA_3} + \alpha_4 \vect{PA_4} = \vec{0} \quad \text{và} \quad \alpha_1 + \alpha_2 + \alpha_3 + \alpha_4 = 0.
+$$
+
+<Hint>
+Bốn điểm thuộc cùng một mặt phẳng affine trong không gian chiều $\ge 2$ khi và chỉ khi ba vectơ $\vect{A_1A_2}, \vect{A_1A_3}, \vect{A_1A_4}$ phụ thuộc tuyến tính; sau đó áp dụng <Ref to="prop-hieu-hai-vecto" /> với $\vect{A_1A_k} = \vect{PA_k} - \vect{PA_1}$.
+</Hint>
+
+<Solution>
+Trong không gian affine $\mathcal{A}$ ($\dim \mathcal{A} \ge 2$), bốn điểm $A_1, A_2, A_3, A_4$ cùng nằm trên một mặt phẳng affine ($2$-phẳng đi qua $A_1$ có phương là một không gian vectơ con $2$ chiều $W \subseteq \overrightarrow{\mathcal{A}}$) khi và chỉ khi $\dim \operatorname{span}\{\vect{A_1A_2}, \vect{A_1A_3}, \vect{A_1A_4}\} \le 2$, tức hệ ba vectơ $\vect{A_1A_2}, \vect{A_1A_3}, \vect{A_1A_4}$ **phụ thuộc tuyến tính** (nói cách khác, hệ bốn điểm $A_1, A_2, A_3, A_4$ không độc lập affine).
+
+- **Điều kiện cần ($\Rightarrow$):** Giả sử $A_1, A_2, A_3, A_4$ thuộc cùng một mặt phẳng affine. Khi đó tồn tại bộ ba vô hướng $(\alpha_2, \alpha_3, \alpha_4) \neq (0, 0, 0)$ sao cho
+
+$$
+\alpha_2 \vect{A_1A_2} + \alpha_3 \vect{A_1A_3} + \alpha_4 \vect{A_1A_4} = \vec{0}.
+$$
+
+Với điểm $P \in \mathcal{A}$ tùy ý, thay $\vect{A_1A_k} = \vect{PA_k} - \vect{PA_1}$ ($k = 2, 3, 4$) và đặt $\alpha_1 = -(\alpha_2 + \alpha_3 + \alpha_4)$, ta được $\alpha_1 + \alpha_2 + \alpha_3 + \alpha_4 = 0$, ít nhất một $\alpha_i \neq 0$ (vì $(\alpha_2, \alpha_3, \alpha_4) \neq (0, 0, 0)$), và
+
+$$
+\alpha_1 \vect{PA_1} + \alpha_2 \vect{PA_2} + \alpha_3 \vect{PA_3} + \alpha_4 \vect{PA_4} = \alpha_2(\vect{PA_2} - \vect{PA_1}) + \alpha_3(\vect{PA_3} - \vect{PA_1}) + \alpha_4(\vect{PA_4} - \vect{PA_1}) = \vec{0}.
+$$
+
+- **Điều kiện đủ ($\Leftarrow$):** Ngược lại, giả sử với một điểm $P \in \mathcal{A}$ nào đó tồn tại bộ $(\alpha_1, \alpha_2, \alpha_3, \alpha_4) \neq (0, 0, 0)$ thỏa mãn $\sum_{i=1}^{4} \alpha_i = 0$ và $\sum_{i=1}^{4} \alpha_i \vect{PA_i} = \vec{0}$. Thay $\alpha_1 = -(\alpha_2 + \alpha_3 + \alpha_4)$ vào đẳng thức vectơ, ta thu được
+
+$$
+\alpha_2(\vect{PA_2} - \vect{PA_1}) + \alpha_3(\vect{PA_3} - \vect{PA_1}) + \alpha_4(\vect{PA_4} - \vect{PA_1}) = \vec{0} \iff \alpha_2 \vect{A_1A_2} + \alpha_3 \vect{A_1A_3} + \alpha_4 \vect{A_1A_4} = \vec{0}.
+$$
+
+Nếu $\alpha_2 = \alpha_3 = \alpha_4 = 0$ thì $\alpha_1 = -(\alpha_2 + \alpha_3 + \alpha_4) = 0$, mâu thuẫn với giả thiết có ít nhất một $\alpha_i \neq 0$. Vậy $(\alpha_2, \alpha_3, \alpha_4) \neq (0, 0, 0)$, chứng tỏ ba vectơ $\vect{A_1A_2}, \vect{A_1A_3}, \vect{A_1A_4}$ phụ thuộc tuyến tính. Vì $\dim \mathcal{A} \ge 2$, không gian con $\operatorname{span}\{\vect{A_1A_2}, \vect{A_1A_3}, \vect{A_1A_4}\}$ (có chiều $\le 2$) luôn nằm trong một không gian vectơ con $2$ chiều $W \subseteq \overrightarrow{\mathcal{A}}$, nên bốn điểm $A_1, A_2, A_3, A_4$ cùng thuộc mặt phẳng affine đi qua $A_1$ có phương $W$.
+</Solution>
+</Exercise>
+
 <KeyTakeaways>
-- Không gian affine $\mathcal{A}$ gắn liền với không gian vectơ nền $V$ qua tiên đề Weyl và tiên đề Chasles (<Ref to="def-khong-gian-affine" />).
-- Đẳng thức hình bình hành $\vect{AB} = \vect{DC} \iff \vect{AD} = \vect{BC}$ (<Ref to="thm-hinh-binh-hanh" />) là công cụ cơ bản để chuyển đổi các quan hệ vectơ.
+- Không gian affine $(\mathcal{A}, \varphi, V)$ liên kết với không gian vectơ nền $V = \overrightarrow{\mathcal{A}}$ qua tiên đề Weyl và tiên đề Chasles (<Ref to="def-khong-gian-affine" />), có số chiều $\dim \mathcal{A} = \dim V$.
+- Các quy tắc tính toán nền tảng gồm đẳng thức hình bình hành $\vect{AB} = \vect{CD} \iff \vect{AC} = \vect{BD}$ (<Ref to="thm-hinh-binh-hanh" />) và quy tắc chèn gốc $\vect{AB} = \vect{OB} - \vect{OA}$ (<Ref to="prop-hieu-hai-vecto" />).
+- Hệ $m + 1$ điểm $A_0, A_1, \dots, A_m$ độc lập khi $m$ vectơ $\vect{A_0A_1}, \dots, \vect{A_0A_m}$ độc lập tuyến tính (<Ref to="def-he-diem-doc-lap" />); trong $\mathcal{A}^n$, một hệ điểm độc lập có tối đa $n + 1$ điểm (<Ref to="thm-so-diem-doc-lap-toi-da" />).
 </KeyTakeaways>

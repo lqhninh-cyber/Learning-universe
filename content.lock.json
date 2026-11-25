@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-20T17:35:14.436Z",
+  "updatedAt": "2026-11-25T19:12:46.726Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -717,25 +717,38 @@
       "path": "content/affine-geometry/01-khong-gian-affine/01-khong-gian-affine.mdx",
       "status": "published",
       "version": "0.1.0",
-      "sha256": "03e499743d7b6a1db98ccd128131027f218542568a634e0f6c779e81f027418f",
+      "sha256": "301a572a7f6edf1cb01105b303f2a1da272bbdd524b7bcd58a7a70d007127d90",
       "numberedBlocks": {
         "def-khong-gian-affine": "1.1.1",
+        "ex-affine-euclide-pho-thong": "1.1.1",
+        "ex-affine-chinh-tac": "1.1.2",
+        "ex-affine-rn": "1.1.3",
         "lem-vecto-khong": "1.1.2",
         "thm-hinh-binh-hanh": "1.1.3",
-        "ex-affine-chinh-tac": "1.1.1",
-        "exr-trung-diem": "1.1.1"
+        "prop-hieu-hai-vecto": "1.1.4",
+        "def-he-diem-doc-lap": "1.1.5",
+        "thm-so-diem-doc-lap-toi-da": "1.1.6",
+        "exr-trung-diem": "1.1.1",
+        "exr-s1-1": "1.1.2",
+        "exr-s1-6": "1.1.3"
       }
     },
     "toa-do-afin-va-muc-tieu-afin": {
       "path": "content/affine-geometry/01-khong-gian-affine/02-toa-do-afin-va-muc-tieu-afin.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "544881c085600cfe6fea680bd855dba796db393a74cb807ba784da0dc86e583b",
+      "sha256": "ce44378e011484d413ab32d1d7185e77db095e9bf61e81ef0908f80f52fd76df",
       "numberedBlocks": {
         "def-s2-1": "1.2.1",
-        "thm-s2-2": "1.2.2",
+        "def-toa-do-afin": "1.2.2",
+        "thm-s2-2": "1.2.3",
         "ex-s2-4": "1.2.1",
-        "exr-s2-1": "1.2.1"
+        "exr-s2-2": "1.2.1",
+        "exr-s2-3": "1.2.2",
+        "exr-s2-4": "1.2.3",
+        "exr-s2-5": "1.2.4",
+        "exr-s2-7": "1.2.5",
+        "exr-s2-8": "1.2.6"
       }
     },
     "cac-phang-trong-khong-gian-afin": {

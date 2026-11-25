@@ -1,7 +1,7 @@
 ---
 id: toa-do-afin-va-muc-tieu-afin
 title: "Tọa độ Affine và Mục tiêu Affine"
-description: "Mục tiêu affine, tọa độ điểm đối với mục tiêu và công thức đổi mục tiêu affine."
+description: "Mục tiêu affine, cơ sở nền, song ánh tọa độ điểm đối với mục tiêu và công thức ma trận đổi mục tiêu affine."
 estimatedMinutes: 45
 level: basic
 prerequisites: []
@@ -11,7 +11,7 @@ tags:
   - "đổi cơ sở"
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '16-24'
+    pages: '8-11'
     sections: '§2'
 status: published
 version: 1.0.0
@@ -22,97 +22,386 @@ authoring:
   draftedAt: '2026-11-03'
 ---
 
-## 1. Mục tiêu afin
+## 1. Mục tiêu Affine
 
-<Definition id="def-s2-1" title="Định nghĩa">
-Trong $\mathcal{A} ^{n}$ liên kết với $V ^{n}$, một tập hợp có thứ tự gồm $n+1$ điểm độc lập \{E$_{0}$, E$_{1}$,…, E$_{n}$\} gọi là một *mục tiêu afin* của $\mathcal{A} ^{n}$.
+<Definition id="def-s2-1" title="Mục tiêu affine">
+Cho không gian affine $n$ chiều $\mathcal{A}^n$ liên kết với không gian vectơ $V^n$. Một tập hợp có thứ tự gồm $n + 1$ điểm độc lập $\{E_0, E_1, E_2, \dots, E_n\}$ của $\mathcal{A}^n$ được gọi là một **mục tiêu affine** của $\mathcal{A}^n$.
 
-Điểm E$_{0}$ gọi là *gốc* của mục tiêu, các E$_{i}$ gọi là các *đỉnh thứ i*.
-
-Kí hiệu ${E_{0}; E_{i}}, i = 1..n$.
+- Điểm $E_0$ được gọi là **gốc** của mục tiêu; các điểm $E_i$ ($i = 1, 2, \dots, n$) được gọi là **đỉnh thứ $i$** của mục tiêu.
+- Ta ký hiệu mục tiêu affine nói trên là $\{E_0; E_i\}$ với $i = 1, 2, \dots, n$ (hay viết tường minh $\{E_0; E_1, E_2, \dots, E_n\}$).
 </Definition>
 
-<Remark title="Chú ý">
-Chú ý.
-
-Các vectơ $\vect{e_{i}} = \vect{E_{0}E_{i}}$ là một cơ sở của $V ^{n}$, gọi là *cơ sở nền* của mục tiêu.
-
-Mỗi mục tiêu chỉ có một cơ sở nền duy nhất, nhưng một cơ sở của $V ^{n}$ có thể là nền của nhiều mục tiêu khác nhau.
-
-Nếu chọn gốc O thì kí hiệu mục tiêu là \{O; $\vect{e_{i}}$\}.
-</Remark>
-
-## 2. Tọa độ afin của một điểm
-
-Với mục tiêu \{O; $\vect{e_{i}}$\} và điểm $X \in \mathcal{A}^{n}$, tồn tại duy nhất $(x_{1}, \dots ,x_{n}) \in \mathbb{K}^{n}$ sao cho
-
-Bộ $(x_{1}, \dots ,x_{n})$ gọi là *tọa độ afin* của X đối với mục tiêu đã chọn, kí hiệu X(x$_{i}$).
-
-Gốc E$_{0}$ có tọa độ (0,…,0); E$_{i}$ có tọa độ $(0, \dots ,1, \dots ,0)$ với số 1 ở vị trí thứ i.
-
-Nếu X(x$_{i}$), Y(y$_{i}$) thì $\vect{XY} = \vect{OY} - \vect{OX}$ có tọa độ $(y_{1}-x_{1}, \dots ,y_{n}-x_{n})$ đối với cơ sở \{$\vect{e_{i}}$\}.
-
-## 3. Đổi mục tiêu afin
-
-Cho hai mục tiêu \{E$_{0}$; E$_{i}$\} và \{E′$_{0}$; E′$_{i}$\} ứng với hai cơ sở nền \{$\vect{e_{i}}$\} và \{$\vect{e'_{i}}$\}.
-
-Giả sử E′$_{i}$ có tọa độ $(a_{i1}, \dots ,a_{in})$ đối với mục tiêu thứ nhất, $i = 0,1, \dots ,n$.
-
-Ma trận chuyển từ cơ sở \{$\vect{E_{0}E_{i}}$\} sang \{$\vect{E'_{0}E'_{i}}$\} là
-
-<Theorem id="thm-s2-2" title="Công thức đổi mục tiêu">
-Gọi [x], [x′] là ma trận cột tọa độ của cùng một điểm X đối với mục tiêu cũ và mới, [a$_{0}$] là cột tọa độ $(a_{01}, \dots ,a_{0n})$ của E′$_{0}$, và $C*$ là ma trận chuyển vị của C.
-
-Khi đó
- 
+<Remark title="Cơ sở nền của mục tiêu affine">
+Nếu trong không gian vectơ liên kết $V^n$ của $\mathcal{A}^n$ ta đặt các vectơ
 
 $$
-[x] = C*[x'] + [a_{0}], [x'] = (C*)^{-1}[x] - (C*)^{-1}[a_{0}].
+\vec{e}_i = \vect{E_0E_i} \quad (i = 1, 2, \dots, n),
+$$
+
+thì do hệ điểm $\{E_0, E_1, \dots, E_n\}$ độc lập nên $\{\vec{e}_i\}$ là một cơ sở của $V^n$; cơ sở này được gọi là **cơ sở nền** (hay **nền**) của mục tiêu $\{E_0; E_i\}$.
+
+Rõ ràng mỗi mục tiêu affine chỉ có một cơ sở nền duy nhất, nhưng ngược lại một cơ sở $\{\vec{e}_i\}$ của $V^n$ có thể là nền của vô số mục tiêu khác nhau trong $\mathcal{A}^n$ (tùy theo cách chọn gốc). Nếu chọn điểm $O \in \mathcal{A}^n$ làm gốc ứng với cơ sở nền $\{\vec{e}_i\}$, ta ký hiệu mục tiêu affine tương ứng là $\{O; \vec{e}_i\}$ với $i = 1, 2, \dots, n$ (hay $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$).
+</Remark>
+
+## 2. Tọa độ Affine của một Điểm
+
+<Definition id="def-toa-do-afin" title="Tọa độ affine của một điểm">
+Trong không gian affine $n$ chiều $\mathcal{A}^n$ trên trường $\mathbb{K}$, cho mục tiêu affine $\{O; \vec{e}_i\}$. Với mỗi điểm $X \in \mathcal{A}^n$, ta có vectơ $\vect{OX} \in \overrightarrow{\mathcal{A}^n} = V^n$, do đó tồn tại duy nhất bộ $n$ phần tử có thứ tự $(x_1, x_2, \dots, x_n) \in \mathbb{K}^n$ sao cho
+
+$$
+\vect{OX} = x_1\vec{e}_1 + x_2\vec{e}_2 + \dots + x_n\vec{e}_n.
+$$
+
+Bộ $n$ phần tử có thứ tự $(x_1, x_2, \dots, x_n)$ được gọi là **tọa độ affine** của điểm $X$ đối với mục tiêu affine đã chọn.
+
+Nếu viết theo mục tiêu điểm $\{E_0; E_i\}$ (với $\vec{e}_i = \vect{E_0E_i}$), tọa độ affine của $X$ chính là tọa độ của vectơ $\vect{E_0X}$ đối với cơ sở nền $\{\vec{e}_i\}$:
+
+$$
+\vect{E_0X} = x_1\vect{E_0E_1} + x_2\vect{E_0E_2} + \dots + x_n\vect{E_0E_n}.
+$$
+</Definition>
+
+Từ <Ref to="def-toa-do-afin" /> và tiên đề Weyl, ứng với một mục tiêu affine cố định $\{E_0; E_i\}$:
+
+- Mỗi điểm $X \in \mathcal{A}^n$ có duy nhất một bộ tọa độ affine $(x_1, x_2, \dots, x_n) \in \mathbb{K}^n$; **ngược lại**, mỗi bộ $n$ phần tử có thứ tự $(x_1, x_2, \dots, x_n) \in \mathbb{K}^n$ hoàn toàn xác định duy nhất một điểm $X \in \mathcal{A}^n$ nhận bộ đó làm tọa độ affine. Như vậy phép gắn tọa độ thiết lập một **song ánh** giữa $\mathcal{A}^n$ và $\mathbb{K}^n$.
+- Khi $(x_1, x_2, \dots, x_n)$ là tọa độ affine của $X$ đối với mục tiêu $\{O; \vec{e}_i\}$, ta ký hiệu $X(x_1, x_2, \dots, x_n)$, $X = (x_1, x_2, \dots, x_n)$, hoặc viết gọn $X(x_i)$ hay $X = (x_i)$.
+- Đối với mục tiêu $\{E_0; E_i\}$, gốc $E_0$ có tọa độ affine là $(0, 0, \dots, 0)$, còn mỗi đỉnh $E_i$ ($i = 1, \dots, n$) có tọa độ affine là $(0, \dots, 0, 1, 0, \dots, 0)$ trong đó số $1$ nằm ở vị trí thứ $i$ và các thành phần khác đều bằng $0$.
+
+<Remark title="Tọa độ của vectơ nối hai điểm">
+Nếu $X = (x_1, x_2, \dots, x_n)$ và $Y = (y_1, y_2, \dots, y_n)$ đối với mục tiêu $\{O; \vec{e}_i\}$ thì
+
+$$
+\vect{XY} = \vect{OY} - \vect{OX} = (y_1 - x_1)\vec{e}_1 + (y_2 - x_2)\vec{e}_2 + \dots + (y_n - x_n)\vec{e}_n.
+$$
+
+Vậy đối với cơ sở nền $\{\vec{e}_i\}$ của $\overrightarrow{\mathcal{A}^n}$, vectơ $\vect{XY}$ có tọa độ là
+
+$$
+\vect{XY} = (y_1 - x_1, y_2 - x_2, \dots, y_n - x_n).
+$$
+</Remark>
+
+## 3. Đổi Mục tiêu Affine
+
+Trong không gian affine $\mathcal{A}^n$, cho hai mục tiêu affine $\{E_0; E_i\}$ và $\{E'_0; E'_i\}$ lần lượt ứng với hai cơ sở nền $\{\vec{e}_i\}$ và $\{\vec{e}'_i\}$ ($i = 1, 2, \dots, n$). Giả sử các điểm của mục tiêu mới có tọa độ đối với mục tiêu cũ $\{E_0; E_i\}$ là
+
+$$
+E'_i = (a_{i1}, a_{i2}, \dots, a_{in}) \quad \text{với } i = 0, 1, 2, \dots, n.
+$$
+
+Khi đó với mỗi $i = 1, 2, \dots, n$, vectơ cơ sở mới $\vec{e}'_i = \vect{E'_0E'_i}$ có tọa độ đối với cơ sở cũ $\{\vect{E_0E_i}\}$ là $(a_{i1} - a_{01}, a_{i2} - a_{02}, \dots, a_{in} - a_{0n})$. Theo quy ước của giáo trình Nguyễn Mộng Hy, ma trận chuyển $C$ từ cơ sở $\{\vect{E_0E_i}\}$ sang cơ sở $\{\vect{E'_0E'_i}\}$ (viết tọa độ các vectơ mới theo hàng) là
+
+$$
+C = \begin{bmatrix}
+a_{11} - a_{01} & a_{12} - a_{02} & \dots & a_{1n} - a_{0n} \\
+a_{21} - a_{01} & a_{22} - a_{02} & \dots & a_{2n} - a_{0n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{n1} - a_{01} & a_{n2} - a_{02} & \dots & a_{nn} - a_{0n}
+\end{bmatrix}.
+$$
+
+Ma trận $C$ cũng được gọi là **ma trận chuyển từ mục tiêu $\{E_0; E_i\}$ sang mục tiêu $\{E'_0; E'_i\}$**. Vì $\{\vect{E'_0E'_i}\}$ là một cơ sở của $V^n$ nên $C$ luôn là **ma trận không suy biến** ($\det C \neq 0$).
+
+<Remark title="Xác định mục tiêu mới từ ma trận chuyển và một đỉnh">
+Nếu cho trước hai mục tiêu $\{E_0; E_i\}$ và $\{E'_0; E'_i\}$ thì ma trận chuyển $C$ hoàn toàn được xác định. Ngược lại, nếu cho trước ma trận chuyển không suy biến $C = [c_{ij}]$ và tọa độ của **một điểm $E'_k$ bất kỳ** ($k \in \{0, 1, \dots, n\}$) thuộc mục tiêu $\{E'_0; E'_i\}$ đối với mục tiêu cũ $\{E_0; E_i\}$, thì tọa độ của mọi điểm còn lại trong $\{E'_0; E'_i\}$ đều hoàn toàn được xác định (chẳng hạn nếu biết $E'_k$, với $k \ge 1$ ta suy ra ngay gốc $a_{0j} = a_{kj} - c_{kj}$, rồi từ đó tính $a_{ij} = a_{0j} + c_{ij}$ cho mọi $i = 1, \dots, n$).
+</Remark>
+
+<Theorem id="thm-s2-2" title="Công thức đổi mục tiêu tọa độ">
+Giả sử điểm $X \in \mathcal{A}^n$ lần lượt có tọa độ đối với hai mục tiêu $\{E_0; E_i\}$ và $\{E'_0; E'_i\}$ là $(x_1, x_2, \dots, x_n)$ và $(x'_1, x'_2, \dots, x'_n)$. Gọi $[x]$, $[x']$ là các ma trận cột tọa độ tương ứng của $X$, $[a_0]$ là ma trận cột tọa độ $(a_{01}, a_{02}, \dots, a_{0n})^{\mathsf{T}}$ của gốc mới $E'_0$ đối với $\{E_0; E_i\}$, và $C^*$ là **ma trận chuyển vị** của ma trận chuyển $C$ *(lưu ý: theo ký hiệu của giáo trình Nguyễn Mộng Hy, $C^* = C^{\mathsf{T}}$ là chuyển vị thông thường của ma trận $C$, không phải chuyển vị liên hợp)*.
+
+Khi đó ta có **các công thức đổi mục tiêu tọa độ**:
+
+$$
+[x] = C^*[x'] + [a_0] \quad \text{và} \quad [x'] = (C^*)^{-1}[x] - (C^*)^{-1}[a_0].
 $$
 </Theorem>
 
-<Proof of="thm-s2-2">
-Từ $\vect{E_{0}X} = \vect{E_{0}E'_{0}} + \vect{E'_{0}X}$ suy ra $[x] = [a_{0}] + [x]$, trong đó [x̄] là tọa độ của vectơ $\vect{E'_{0}X}$ đối với cơ sở \{$\vect{e_{i}}$\}.
+<Proof of="thm-s2-2" defaultOpen={true}>
+1. **Bước (1) — Phân tách vectơ vị trí qua gốc mới:** Theo quy tắc Chasles, với mọi điểm $X \in \mathcal{A}^n$ ta có
 
-Theo công thức đổi cơ sở, $[x] = C*[x']$.
+$$
+\vect{E_0X} = \vect{E_0E'_0} + \vect{E'_0X}. \tag{1}
+$$
+
+2. **Bước (2) — Chuyển sang tọa độ đối với cơ sở cũ:** Gọi $(\bar{x}_1, \bar{x}_2, \dots, \bar{x}_n)$ là tọa độ của vectơ $\vect{E'_0X}$ đối với cơ sở cũ $\{\vect{E_0E_i}\}$. Vì $\vect{E_0X}$ và $\vect{E_0E'_0}$ lần lượt có tọa độ $(x_1, \dots, x_n)$ và $(a_{01}, \dots, a_{0n})$ đối với $\{\vect{E_0E_i}\}$, từ `(1)` ta suy ra
+
+$$
+\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}
+=
+\begin{bmatrix} a_{01} \\ a_{02} \\ \vdots \\ a_{0n} \end{bmatrix}
++
+\begin{bmatrix} \bar{x}_1 \\ \bar{x}_2 \\ \vdots \\ \bar{x}_n \end{bmatrix}. \tag{2}
+$$
+
+3. **Bước (3) — Viết gọn dưới dạng ma trận cột:** Ký hiệu $[x], [a_0], [\bar{x}]$ lần lượt là các ma trận cột tọa độ của $\vect{E_0X}, \vect{E_0E'_0}, \vect{E'_0X}$ đối với cơ sở $\{\vec{e}_i\} = \{\vect{E_0E_i}\}$, đẳng thức `(2)` viết gọn thành
+
+$$
+[x] = [a_0] + [\bar{x}]. \tag{3}
+$$
+
+4. **Bước (4) — Áp dụng công thức đổi cơ sở không gian vectơ:** Theo định nghĩa tọa độ affine, $(x'_1, x'_2, \dots, x'_n)$ chính là tọa độ của vectơ $\vect{E'_0X}$ đối với cơ sở mới $\{\vect{E'_0E'_i}\}$. Vì $(\bar{x}_1, \dots, \bar{x}_n)$ và $(x'_1, \dots, x'_n)$ là hai bộ tọa độ của **cùng một vectơ** $\vect{E'_0X}$ đối với hai cơ sở $\{\vect{E_0E_i}\}$ và $\{\vect{E'_0E'_i}\}$ có ma trận chuyển (viết theo hàng) là $C = [c_{ij}]$, theo công thức đổi cơ sở trong đại số tuyến tính ta có
+
+$$
+[\bar{x}] = C^*[x']. \tag{4}
+$$
+
+5. **Bước (5) — Thiết lập công thức thuận:** Thay `(4)` vào `(3)`, ta thu được
+
+$$
+[x] = [a_0] + C^*[x'] \quad \text{hay} \quad [x] = C^*[x'] + [a_0]. \tag{5}
+$$
+
+6. **Bước (6) — Thiết lập công thức ngược:** Vì $C$ là ma trận chuyển từ cơ sở $\{\vect{E_0E_i}\}$ sang cơ sở $\{\vect{E'_0E'_i}\}$ với $\det C \neq 0$, nên $C^{-1}$ là ma trận chuyển ngược lại từ $\{\vect{E'_0E'_i}\}$ sang $\{\vect{E_0E_i}\}$ và $(C^{-1})^* = (C^*)^{-1}$. Nhân hai vế của `(5)` từ bên trái với $(C^*)^{-1}$ và chuyển vế, ta được
+
+$$
+[x'] = (C^*)^{-1}[x] - (C^*)^{-1}[a_0]. \tag{6}
+$$
 </Proof>
 
-<Example id="ex-s2-4" title="Ví dụ">
-Trong $\R ^{2}$ với mục tiêu chuẩn tắc, lấy mục tiêu mới E′$_{0}$(1,1), E′$_{1}$(2,1), E′$_{2}$(1,3).Khi đó $\vect{e'_{1}} = (1,0), \vect{e'_{2}} = (0,2)$ và $[a_{0}] = (1,1)$.Ma trận chuyển $C = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}$ (hàng i là $(a_{i1}-a_{01}, a_{i2}-a_{02})), det C = 2 \neq 0$.
-
-Công thức đổi mục tiêu cho x$_{1}$ = 1 + x′$_{1}$, x$_{2}$ = 1 + 2x′$_{2}$, và ngược lại 
+<Example id="ex-s2-4" title="Ví dụ minh họa đổi mục tiêu trên mặt phẳng">
+Trong $\R^2$ với mục tiêu chuẩn tắc, lấy mục tiêu mới $E'_0(1, 1)$, $E'_1(2, 1)$, $E'_2(1, 3)$. Khi đó $\vec{e}'_1 = \vect{E'_0E'_1} = (1, 0)$, $\vec{e}'_2 = \vect{E'_0E'_2} = (0, 2)$ và $[a_0] = (1, 1)^{\mathsf{T}}$. Ma trận chuyển (hàng thứ $i$ là $(a_{i1} - a_{01}, a_{i2} - a_{02})$) là
 
 $$
-\begin{cases} x'_{1} = x_{1} - 1 \\ x'_{2} = \frac{x_{2} - 1}{2}. \end{cases}
+C = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}, \quad \det C = 2 \neq 0.
 $$
 
-Điểm X(3, 5) có tọa độ mới (2, 2); kiểm tra: 
+Áp dụng <Ref to="thm-s2-2" />, công thức đổi mục tiêu thuận cho $x_1 = 1 + x'_1$, $x_2 = 1 + 2x'_2$, và công thức ngược là
 
 $$
-2(1,0) + 2(0,2) = (2,4) = \vect{E'_{0}X} = (3-1, 5-1).
+\begin{cases}
+x'_1 = x_1 - 1 \\[4pt]
+x'_2 = \dfrac{x_2 - 1}{2}.
+\end{cases}
+$$
+
+Chẳng hạn, điểm $X(3, 5)$ có tọa độ mới là $(2, 2)$; kiểm tra lại:
+
+$$
+2(1, 0) + 2(0, 2) = (2, 4) = \vect{E'_0X} = (3 - 1, 5 - 1).
 $$
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 4. Bài tập Vận dụng và Củng cố
 
-<Exercise id="exr-s2-1" title="Tọa độ afin, đổi mục tiêu afin (§2)">
-Trong A² có mục tiêu \{O; e₁, e₂\} (tọa độ gốc). Mục tiêu mới \{O'; e'₁, e'₂\} với O'(2,1), e'₁ = (1,1), e'₂ = (0,1). Tìm tọa độ mới của X(5,6).
-
+<Exercise id="exr-s2-2" title="Bài tập 1.2 — Tọa độ đỉnh và tâm các mặt bên của hình hộp">
+Trong không gian affine $\mathcal{A}^3$, cho hình hộp $ABCDA'B'C'D'$ có $AA' \parallel BB' \parallel CC' \parallel DD'$. Chọn mục tiêu affine $\{E_0; E_1, E_2, E_3\}$ như sau: $E_0 \equiv A$, $E_1 \equiv A'$, $E_2 \equiv B$, $E_3 \equiv D$. Hãy tìm tọa độ affine của các đỉnh còn lại và tọa độ tâm của các mặt bên của hình hộp.
 
 <Hint>
-Tọa độ mới (x'₁, x'₂) thỏa O'X = x'₁e'₁ + x'₂e'₂.
+Biểu diễn các vectơ vị trí từ gốc $A$ của từng đỉnh qua cơ sở nền $\vec{e}_1 = \vect{AA'}, \vec{e}_2 = \vect{AB}, \vec{e}_3 = \vect{AD}$; tâm của mỗi mặt bình hành là trung điểm đường chéo của mặt đó.
 </Hint>
 
 <Solution>
-O'X = (5-2, 6-1) = (3,5).
+Đặt cơ sở nền $\vec{e}_1 = \vect{AA'}$, $\vec{e}_2 = \vect{AB}$, $\vec{e}_3 = \vect{AD}$. Theo định nghĩa mục tiêu $\{A; A', B, D\}$, ta có $A(0, 0, 0)$, $A'(1, 0, 0)$, $B(0, 1, 0)$, $D(0, 0, 1)$.
 
-(3,5) = x'₁(1,1) + x'₂(0,1) nên x'₁ = 3 và x'₂ = 5 - 3 = 2.
+1. **Tọa độ bốn đỉnh còn lại ($C, B', D', C'$):**
+   - Do $ABCD$ là hình bình hành nên $\vect{AC} = \vect{AB} + \vect{AD} = \vec{e}_2 + \vec{e}_3 \implies C(0, 1, 1)$.
+   - Do các cạnh bên $AA', BB', CC', DD'$ song song và bằng nhau cùng hướng ($\vect{BB'} = \vect{CC'} = \vect{DD'} = \vect{AA'} = \vec{e}_1$):
+     - $\vect{AB'} = \vect{AB} + \vect{BB'} = \vec{e}_1 + \vec{e}_2 \implies B'(1, 1, 0)$.
+     - $\vect{AD'} = \vect{AD} + \vect{DD'} = \vec{e}_1 + \vec{e}_3 \implies D'(1, 0, 1)$.
+     - $\vect{AC'} = \vect{AC} + \vect{CC'} = \vec{e}_1 + \vec{e}_2 + \vec{e}_3 \implies C'(1, 1, 1)$.
 
-**Đáp án:** X(3, 2)
+2. **Tọa độ tâm các mặt bên của hình hộp:** Tâm $I$ của một hình bình hành $PQRS$ thỏa mãn $\vect{AI} = \frac{1}{2}(\vect{AP} + \vect{AR}) = \frac{1}{4}(\vect{AP} + \vect{AQ} + \vect{AR} + \vect{AS})$, nên có tọa độ bằng trung bình cộng tọa độ hai đỉnh đối diện:
+   - Tâm mặt bên $ABB'A'$ (trung điểm $AB'$): $I_{ABB'A'}\left(\dfrac{1}{2}, \dfrac{1}{2}, 0\right)$.
+   - Tâm mặt bên $BCC'B'$ (trung điểm $BC'$): $I_{BCC'B'}\left(\dfrac{1}{2}, 1, \dfrac{1}{2}\right)$.
+   - Tâm mặt bên $CDD'C'$ (trung điểm $CD'$): $I_{CDD'C'}\left(\dfrac{1}{2}, \dfrac{1}{2}, 1\right)$.
+   - Tâm mặt bên $DAA'D'$ (trung điểm $DA'$): $I_{DAA'D'}\left(\dfrac{1}{2}, 0, \dfrac{1}{2}\right)$.
+
+*(Nhận xét thêm: hai mặt đáy $ABCD$ và $A'B'C'D'$ lần lượt có tâm là $\left(0, \frac{1}{2}, \frac{1}{2}\right)$ và $\left(1, \frac{1}{2}, \frac{1}{2}\right)$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s2-3" title="Bài tập 1.3 — Công thức đổi mục tiêu khi tịnh tiến gốc tọa độ">
+Tìm công thức đổi mục tiêu từ $\{E_0; E_i\}$ sang $\{E'_0; E'_i\}$ khi biết tọa độ của điểm $E'_0$ đối với mục tiêu $\{E_0; E_i\}$ là $(a_1, a_2, \dots, a_n)$.
+
+<Hint>
+Xét phép tịnh tiến gốc mục tiêu giữ nguyên cơ sở nền ($\vect{E'_0E'_i} = \vect{E_0E_i}$, tức $C = I_n$), đồng thời đối chiếu dạng tổng quát trong <Ref to="thm-s2-2" /> khi cơ sở nền thay đổi theo ma trận chuyển $C$.
+</Hint>
+
+<Solution>
+Gọi $[a_0] = (a_1, a_2, \dots, a_n)^{\mathsf{T}}$ là ma trận cột tọa độ của gốc mới $E'_0$ đối với mục tiêu $\{E_0; E_i\}$.
+
+- **Trường hợp tịnh tiến gốc mục tiêu (giữ nguyên cơ sở nền $\vect{E'_0E'_i} = \vect{E_0E_i}$ với mọi $i = 1, \dots, n$):** Khi đó ma trận chuyển cơ sở là ma trận đơn vị cấp $n$: $C = I_n \implies C^* = I_n$ và $(C^*)^{-1} = I_n$. Thay vào <Ref to="thm-s2-2" />, ta thu được công thức tịnh tiến gốc tọa độ:
+
+$$
+x_i = x'_i + a_i \iff x'_i = x_i - a_i \quad (i = 1, 2, \dots, n).
+$$
+
+- **Dạng tổng quát khi biết thêm ma trận chuyển cơ sở không suy biến $C = [c_{ij}]$:** Theo <Ref to="thm-s2-2" />, ta có $[x] = C^*[x'] + [a_0]$ và $[x'] = (C^*)^{-1}\bigl([x] - [a_0]\bigr)$, hay viết tường minh theo tọa độ thành phần:
+
+$$
+x_i = \sum_{j=1}^{n} c_{ji} x'_j + a_i \quad (i = 1, 2, \dots, n).
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s2-4" title="Bài tập 1.4 — Đổi mục tiêu trên hình bình hành qua tâm giao hai đường chéo">
+Trong mặt phẳng affine $\mathcal{A}^2$, cho hình bình hành $ABCD$ có các đường chéo cắt nhau tại $O$. Tìm công thức đổi mục tiêu khi chọn mục tiêu cũ là $\{A; B, D\}$ và mục tiêu mới là $\{O; B, C\}$.
+
+<Hint>
+Xác định tọa độ của $O, B, C$ đối với $\{A; B, D\}$, lập ma trận chuyển $C$ có hai hàng là tọa độ của $\vect{OB}$ và $\vect{OC}$, sau đó áp dụng <Ref to="thm-s2-2" />.
+</Hint>
+
+<Solution>
+Đối với mục tiêu cũ $\{A; B, D\}$ (cơ sở nền $\vec{e}_1 = \vect{AB}, \vec{e}_2 = \vect{AD}$), ta có $A(0, 0)$, $B(1, 0)$, $D(0, 1)$. Vì $ABCD$ là hình bình hành có tâm $O$ là trung điểm của $AC$ nên $\vect{AC} = \vec{e}_1 + \vec{e}_2 \implies C(1, 1)$ và $O\left(\frac{1}{2}, \frac{1}{2}\right)$.
+
+Mục tiêu mới $\{O; B, C\}$ có gốc $O\left(\frac{1}{2}, \frac{1}{2}\right)$, tức $[a_0] = \begin{bmatrix} 1/2 \\ 1/2 \end{bmatrix}$, và hai vectơ cơ sở mới đối với $\{\vec{e}_1, \vec{e}_2\}$ là:
+
+$$
+\vect{OB} = \left(1 - \frac{1}{2},\; 0 - \frac{1}{2}\right) = \left(\frac{1}{2},\; -\frac{1}{2}\right), \qquad
+\vect{OC} = \left(1 - \frac{1}{2},\; 1 - \frac{1}{2}\right) = \left(\frac{1}{2},\; \frac{1}{2}\right).
+$$
+
+Do đó ma trận chuyển $C$ (theo hàng), chuyển vị $C^*$ và nghịch đảo $(C^*)^{-1}$ lần lượt là:
+
+$$
+C = \begin{bmatrix} 1/2 & -1/2 \\ 1/2 & 1/2 \end{bmatrix}, \quad
+C^* = \begin{bmatrix} 1/2 & 1/2 \\ -1/2 & 1/2 \end{bmatrix}, \quad
+\det C^* = \frac{1}{2} \neq 0, \quad
+(C^*)^{-1} = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}.
+$$
+
+Áp dụng <Ref to="thm-s2-2" />, công thức đổi mục tiêu thuận $[x] = C^*[x'] + [a_0]$ và ngược $[x'] = (C^*)^{-1}\bigl([x] - [a_0]\bigr)$ là:
+
+$$
+\begin{cases}
+x_1 = \dfrac{1}{2}x'_1 + \dfrac{1}{2}x'_2 + \dfrac{1}{2} \\[6pt]
+x_2 = -\dfrac{1}{2}x'_1 + \dfrac{1}{2}x'_2 + \dfrac{1}{2}
+\end{cases}
+\iff
+\begin{cases}
+x'_1 = x_1 - x_2 \\[4pt]
+x'_2 = x_1 + x_2 - 1.
+\end{cases}
+$$
+
+*Kiểm chứng ngược:* Thay tọa độ cũ $O(1/2, 1/2) \mapsto (0, 0)$, $B(1, 0) \mapsto (1, 0)$, $C(1, 1) \mapsto (0, 1)$, $A(0, 0) \mapsto (0, -1)$ (khớp $\vect{OA} = -\vect{OC}$) và $D(0, 1) \mapsto (-1, 0)$ (khớp $\vect{OD} = -\vect{OB}$).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s2-5" title="Bài tập 1.5 — Đổi mục tiêu qua trọng tâm tam giác và tọa độ các trung điểm">
+Trong mặt phẳng affine cho tam giác $ABC$ có trọng tâm $G$. Tìm công thức đổi mục tiêu khi chọn mục tiêu cũ là $\{A; B, C\}$ và mục tiêu mới là $\{G; B, C\}$. Áp dụng công thức đổi mục tiêu, hãy tìm tọa độ mới của trung điểm các cạnh $BC, CA, AB$ của tam giác $ABC$.
+
+<Hint>
+Trong mục tiêu $\{A; B, C\}$, trọng tâm $G$ thỏa mãn $\vect{AG} = \frac{1}{3}(\vect{AB} + \vect{AC})$ nên $G\left(\frac{1}{3}, \frac{1}{3}\right)$, còn ba trung điểm có tọa độ cũ lần lượt là $\left(\frac{1}{2}, \frac{1}{2}\right), \left(0, \frac{1}{2}\right), \left(\frac{1}{2}, 0\right)$.
+</Hint>
+
+<Solution>
+1. **Lập công thức đổi mục tiêu từ $\{A; B, C\}$ sang $\{G; B, C\}$:**
+   Đối với mục tiêu cũ $\{A; B, C\}$, ta có $A(0, 0)$, $B(1, 0)$, $C(0, 1)$ và trọng tâm $G\left(\frac{1}{3}, \frac{1}{3}\right)$ (do $3\vect{AG} = \vect{AA} + \vect{AB} + \vect{AC} = \vect{AB} + \vect{AC}$). Khi đó $[a_0] = \begin{bmatrix} 1/3 \\ 1/3 \end{bmatrix}$ và:
+
+$$
+\vect{GB} = \left(\frac{2}{3},\; -\frac{1}{3}\right), \qquad \vect{GC} = \left(-\frac{1}{3},\; \frac{2}{3}\right).
+$$
+
+   Ma trận chuyển $C$ là ma trận đối xứng:
+
+$$
+C = C^* = \begin{bmatrix} 2/3 & -1/3 \\ -1/3 & 2/3 \end{bmatrix}, \quad \det C = \frac{1}{3} \neq 0 \implies (C^*)^{-1} = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}.
+$$
+
+   Ta có $(C^*)^{-1}[a_0] = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}\begin{bmatrix} 1/3 \\ 1/3 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$. Vậy công thức đổi mục tiêu thuận và ngược là:
+
+$$
+\begin{cases}
+x_1 = \dfrac{2}{3}x'_1 - \dfrac{1}{3}x'_2 + \dfrac{1}{3} \\[6pt]
+x_2 = -\dfrac{1}{3}x'_1 + \dfrac{2}{3}x'_2 + \dfrac{1}{3}
+\end{cases}
+\iff
+\begin{cases}
+x'_1 = 2x_1 + x_2 - 1 \\[4pt]
+x'_2 = x_1 + 2x_2 - 1.
+\end{cases}
+$$
+
+2. **Tọa độ mới của trung điểm các cạnh $BC, CA, AB$:**
+   Gọi $M_a, M_b, M_c$ lần lượt là trung điểm của $BC, CA, AB$. Tọa độ của chúng đối với mục tiêu cũ $\{A; B, C\}$ và tọa độ mới suy ra từ hệ thức ngược trên là:
+   - Với $M_a$ (trung điểm $BC$): tọa độ cũ $\left(\dfrac{1}{2}, \dfrac{1}{2}\right) \implies$ tọa độ mới $M_a\left(\dfrac{1}{2}, \dfrac{1}{2}\right)$ *(kiểm tra: $\vect{GM_a} = \frac{1}{2}\vect{GB} + \frac{1}{2}\vect{GC}$)*.
+   - Với $M_b$ (trung điểm $CA$): tọa độ cũ $\left(0, \dfrac{1}{2}\right) \implies$ tọa độ mới $M_b\left(-\dfrac{1}{2}, 0\right)$ *(kiểm tra: $\vect{GM_b} = -\frac{1}{2}\vect{GB}$)*.
+   - Với $M_c$ (trung điểm $AB$): tọa độ cũ $\left(\dfrac{1}{2}, 0\right) \implies$ tọa độ mới $M_c\left(0, -\dfrac{1}{2}\right)$ *(kiểm tra: $\vect{GM_c} = -\frac{1}{2}\vect{GC}$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s2-7" title="Bài tập 1.7 — Tính tọa độ của điểm đối với mục tiêu affine mới">
+Trong mặt phẳng affine cho mục tiêu $R = \{O; \vec{e}_1, \vec{e}_2\}$. Đối với mục tiêu này cho các điểm $O'(2, -3)$, $A(1, 1)$, $B(3, -6)$ và $M(5, -1)$. Hãy tìm tọa độ của $M$ đối với mục tiêu affine $\{O'; A, B\}$.
+
+<Hint>
+Tính tọa độ các vectơ $\vect{O'A}, \vect{O'B}, \vect{O'M}$ đối với cơ sở $\{\vec{e}_1, \vec{e}_2\}$, kiểm tra $\det C \neq 0$, rồi giải hệ $[x] - [a_0] = C^*[x']$.
+</Hint>
+
+<Solution>
+Đối với cơ sở nền $\{\vec{e}_1, \vec{e}_2\}$ của mục tiêu $R$, ta có:
+
+$$
+\vect{O'A} = (1 - 2,\; 1 - (-3)) = (-1, 4), \qquad
+\vect{O'B} = (3 - 2,\; -6 - (-3)) = (1, -3), \qquad
+\vect{O'M} = (5 - 2,\; -1 - (-3)) = (3, 2).
+$$
+
+Ma trận chuyển từ $R$ sang $\{O'; A, B\}$ là $C = \begin{bmatrix} -1 & 4 \\ 1 & -3 \end{bmatrix}$ có $\det C = (-1)(-3) - 4 \cdot 1 = -1 \neq 0$, nên $\{O'; A, B\}$ là một mục tiêu affine của mặt phẳng.
+
+Gọi $(x'_1, x'_2)$ là tọa độ của $M$ đối với $\{O'; A, B\}$. Theo đẳng thức $\vect{O'M} = x'_1\vect{O'A} + x'_2\vect{O'B}$ (tức $C^*[x'] = [x] - [a_0]$), ta có hệ phương trình:
+
+$$
+\begin{cases}
+-x'_1 + x'_2 = 3 \\
+4x'_1 - 3x'_2 = 2
+\end{cases}
+\iff
+\begin{cases}
+x'_2 = x'_1 + 3 \\
+4x'_1 - 3(x'_1 + 3) = 2
+\end{cases}
+\iff
+\begin{cases}
+x'_1 = 11 \\
+x'_2 = 14.
+\end{cases}
+$$
+
+*Kiểm chứng ngược:* $11\vect{O'A} + 14\vect{O'B} = 11(-1, 4) + 14(1, -3) = (3, 2) = \vect{O'M}$, suy ra $M = O' + \vect{O'M} = (2 + 3, -3 + 2) = (5, -1)$. Vậy đối với mục tiêu $\{O'; A, B\}$, điểm $M$ có tọa độ là $(11, 14)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s2-8" title="Bài tập 1.8 — Đổi tọa độ điểm theo ba mục tiêu gắn với đỉnh hình bình hành">
+Cho hình bình hành $ABCD$ trong mặt phẳng với mục tiêu affine $\{A; B, D\}$. Đối với mục tiêu này, giả sử điểm $M$ có tọa độ là $(\alpha, \beta)$. Hãy tính tọa độ của điểm $M$ đối với các mục tiêu sau:
+
+a) $\{C; B, D\}$, $\qquad$ b) $\{B; C, A\}$, $\qquad$ c) $\{D; C, A\}$.
+
+<Hint>
+Từ giả thiết $\vect{AM} = \alpha\vect{AB} + \beta\vect{AD}$ và $\vect{AC} = \vect{AB} + \vect{AD}$, biểu diễn trực tiếp các vectơ $\vect{CM}, \vect{BM}, \vect{DM}$ theo hai vectơ cơ sở nền của từng mục tiêu mới (hoặc dùng <Ref to="thm-s2-2" />).
+</Hint>
+
+<Solution>
+Theo giả thiết, $\vect{AM} = \alpha\vect{AB} + \beta\vect{AD}$. Vì $ABCD$ là hình bình hành nên $\vect{AC} = \vect{AB} + \vect{AD}$, $\vect{BC} = \vect{AD}$ và $\vect{DC} = \vect{AB}$.
+
+- **a) Đối với mục tiêu $\{C; B, D\}$:** Hai vectơ cơ sở nền mới là $\vect{CB} = -\vect{AD}$ và $\vect{CD} = -\vect{AB}$. Ta biến đổi:
+
+$$
+\vect{CM} = \vect{AM} - \vect{AC} = (\alpha - 1)\vect{AB} + (\beta - 1)\vect{AD} = (1 - \beta)(-\vect{AD}) + (1 - \alpha)(-\vect{AB}) = (1 - \beta)\vect{CB} + (1 - \alpha)\vect{CD}.
+$$
+
+  Vậy đối với mục tiêu $\{C; B, D\}$, điểm $M$ có tọa độ là **$(1 - \beta,\; 1 - \alpha)$** *(kiểm tra tại $C(1,1) \mapsto (0,0)$, $B(1,0) \mapsto (1,0)$, $D(0,1) \mapsto (0,1)$)*.
+
+- **b) Đối với mục tiêu $\{B; C, A\}$:** Hai vectơ cơ sở nền mới là $\vect{BC} = \vect{AD}$ và $\vect{BA} = -\vect{AB}$. Ta có:
+
+$$
+\vect{BM} = \vect{AM} - \vect{AB} = (\alpha - 1)\vect{AB} + \beta\vect{AD} = \beta\vect{BC} + (1 - \alpha)\vect{BA}.
+$$
+
+  Vậy đối với mục tiêu $\{B; C, A\}$, điểm $M$ có tọa độ là **$(\beta,\; 1 - \alpha)$** *(kiểm tra tại $B(1,0) \mapsto (0,0)$, $C(1,1) \mapsto (1,0)$, $A(0,0) \mapsto (0,1)$)*.
+
+- **c) Đối với mục tiêu $\{D; C, A\}$:** Hai vectơ cơ sở nền mới là $\vect{DC} = \vect{AB}$ và $\vect{DA} = -\vect{AD}$. Ta có:
+
+$$
+\vect{DM} = \vect{AM} - \vect{AD} = \alpha\vect{AB} + (\beta - 1)\vect{AD} = \alpha\vect{DC} + (1 - \beta)\vect{DA}.
+$$
+
+  Vậy đối với mục tiêu $\{D; C, A\}$, điểm $M$ có tọa độ là **$(\alpha,\; 1 - \beta)$** *(kiểm tra tại $D(0,1) \mapsto (0,0)$, $C(1,1) \mapsto (1,0)$, $A(0,0) \mapsto (0,1)$)*.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Mục tiêu affine trong không gian n chiều gồm n+1 điểm độc lập (một gốc và n đỉnh).
-- Công thức đổi mục tiêu cho phép chuyển đổi tọa độ điểm giữa hai hệ quy chiếu qua ma trận chuyển cơ sở.
+- Một mục tiêu affine $\{E_0; E_i\}$ trong $\mathcal{A}^n$ gồm $n + 1$ điểm độc lập (gốc $E_0$ và $n$ đỉnh $E_i$), xác định duy nhất cơ sở nền $\{\vec{e}_i = \vect{E_0E_i}\}$ của $V^n$ (<Ref to="def-s2-1" />).
+- Phép gắn tọa độ $\vect{E_0X} = \sum_{i=1}^{n} x_i \vect{E_0E_i}$ thiết lập một song ánh $\mathcal{A}^n \leftrightarrow \mathbb{K}^n$ (<Ref to="def-toa-do-afin" />), trong đó vectơ nối hai điểm có tọa độ $\vect{XY} = (y_1 - x_1, \dots, y_n - x_n)$.
+- Khi đổi sang mục tiêu $\{E'_0; E'_i\}$ có ma trận chuyển cơ sở theo hàng $C = [a_{ij} - a_{0j}]$ ($\det C \neq 0$), tọa độ điểm biến đổi theo công thức $[x] = C^*[x'] + [a_0]$ và $[x'] = (C^*)^{-1}[x] - (C^*)^{-1}[a_0]$ (<Ref to="thm-s2-2" />).
 </KeyTakeaways>

@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 490,
+    "totalBacklinks": 492,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 115
   },
@@ -2156,7 +2156,7 @@
         "lessonTitle": "Khái niệm Không gian Affine và Quy tắc Chasles",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/khong-gian-affine",
-        "count": 13
+        "count": 30
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
@@ -2181,6 +2181,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
         "count": 5
+      },
+      {
+        "lessonId": "toa-do-afin-va-muc-tieu-afin",
+        "lessonCode": "HHAVE 1.2",
+        "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
+        "count": 4
       },
       {
         "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
@@ -2270,7 +2278,7 @@
         "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
-        "count": 10
+        "count": 23
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
@@ -2677,6 +2685,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
         "count": 2
+      },
+      {
+        "lessonId": "khong-gian-affine",
+        "lessonCode": "HHAVE 1.1",
+        "lessonTitle": "Khái niệm Không gian Affine và Quy tắc Chasles",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/khong-gian-affine",
+        "count": 1
       }
     ],
     "muc-tieu-truc-chuan": [
@@ -4388,10 +4404,12 @@
       "nhom-thuong-z-nz"
     ],
     "khong-gian-affine": [
-      "khong-gian-afin"
+      "khong-gian-afin",
+      "khong-gian-euclide"
     ],
     "toa-do-afin-va-muc-tieu-afin": [
-      "muc-tieu-afin"
+      "muc-tieu-afin",
+      "khong-gian-afin"
     ],
     "cac-phang-trong-khong-gian-afin": [
       "sieu-phang",

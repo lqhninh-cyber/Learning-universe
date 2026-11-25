@@ -95,10 +95,17 @@ describe('Giai đoạn 2 — Runtime Content Engine, KaTeX & Academic Components
     const compiled = await loadLessonModule('khong-gian-affine');
     expect(compiled.lessonMeta.blocks.map((b) => b.label)).toEqual([
       'Định nghĩa 1.1.1',
+      'Ví dụ 1.1.1',
+      'Ví dụ 1.1.2',
+      'Ví dụ 1.1.3',
       'Bổ đề 1.1.2',
       'Định lý 1.1.3',
-      'Ví dụ 1.1.1',
+      'Mệnh đề 1.1.4',
+      'Định nghĩa 1.1.5',
+      'Định lý 1.1.6',
       'Bài tập 1.1.1',
+      'Bài tập 1.1.2',
+      'Bài tập 1.1.3',
     ]);
 
     const { container } = render(
