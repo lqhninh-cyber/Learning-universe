@@ -2,17 +2,17 @@
 name: doc-to-md
 description: >-
   Chuyển đổi tài liệu bài giảng, giáo trình (.pdf, .docx, .pptx, .xlsx) từ thư mục đồng bộ Google
-  Drive Desktop sang Markdown bằng công cụ Microsoft MarkItDown cài đặt cô lập ngoài repo, kết hợp
-  cổng kiểm định Pha 0 và quy trình đối chiếu 2 pha để rà soát, bổ sung bài học MDX. Kích hoạt khi
-  người dùng yêu cầu trích xuất tài liệu sang Markdown, đối chiếu file gốc với bài giảng trong
-  content/, hoặc gọi trực tiếp skill doc-to-md.
+  Drive Desktop sang Markdown bằng công cụ Microsoft MarkItDown hoặc luồng cắt lát ảnh Vision
+  (pypdfium2, không cài ML nặng) ngoài repo, kết hợp cổng Pha 0 và quy trình đối chiếu 2 pha để rà
+  soát, bổ sung bài học MDX. Kích hoạt khi người dùng yêu cầu trích xuất tài liệu, đối chiếu giáo
+  trình với bài giảng trong content/, hoặc gọi trực tiếp skill doc-to-md.
 ---
 
-# Chuyển đổi Tài liệu sang Markdown & Đối chiếu Bài giảng (`doc-to-md`)
+# Chuyển đổi Tài liệu & Đối chiếu Bài giảng (`doc-to-md`)
 
-Sử dụng công cụ `microsoft/markitdown` đã cài đặt cô lập bên ngoài kho mã nguồn để trích xuất nội dung từ tài liệu gốc trên Google Drive Desktop sang Markdown phục vụ đối chiếu và bổ sung học liệu.
+Sử dụng bộ công cụ cô lập tại `D:\Tools\markitdown\` (ngoài kho mã nguồn `D:\Learning-universe`) để trích xuất và đối chiếu tài liệu gốc từ Google Drive Desktop cho cả 4 học phần.
 
-## 1. Đường dẫn gốc Google Drive Desktop & Ánh xạ 4 học phần
+## 1. Đường dẫn gốc Google Drive Desktop & Phân loại Pha 0 của 4 học phần
 
 - **Biến đường dẫn gốc tài liệu (`GDRIVE_DOCS_ROOT`)**:
 
@@ -20,22 +20,21 @@ Sử dụng công cụ `microsoft/markitdown` đã cài đặt cô lập bên ng
   $GDRIVE_DOCS_ROOT = "G:\Drive của tôi\Learning Universe - Tailieu"
   ```
 
-  _(Nếu ổ `G:` chưa gắn do Google Drive Desktop chưa chạy, quét nhanh `<Drive>:\Drive của tôi\Learning Universe - Tailieu` hoặc `<Drive>:\My Drive\Learning Universe - Tailieu` từ `D:` đến `Z:` trước khi báo người dùng)._
+  _(Nếu ổ `G:` chưa gắn, quét `<Drive>:\Drive của tôi\Learning Universe - Tailieu` hoặc `<Drive>:\My Drive\Learning Universe - Tailieu` từ `D:` đến `Z:` trước khi báo người dùng)._
 
-- **Cấu trúc nguồn của 4 học phần trong `$GDRIVE_DOCS_ROOT`**:
-  | Học phần                       | Thư mục trong repo                  | Nguồn tài liệu trên Google Drive (`$GDRIVE_DOCS_ROOT`)                                                                                       |
-  | :----------------------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-  | **Hình học Affine và Euclide** | `content/affine-geometry/`          | `Hinhhoccaocap.pdf` (~9.19 MB)                                                                                                               |
-  | **Cấu trúc đại số**            | `content/algebraic-structures/`     | `Giao_trinh_Cau_truc_dai_so.pdf` (~3.93 MB)                                                                                                  |
-  | **Giải tích hàm một biến**     | `content/single-variable-calculus/` | `giai-tich-ham-mot-bien\` (`GTHMB_Tran_Tri_Dung_2022.pdf`, `ND_on_thi_va_de_mau.pdf`, `exams\`)                                              |
-  | **Giáo dục học**               | `src/data/courses/giao-duc-hoc/`    | `giao-duc-hoc\` (`Giao_trinh_GDH_HCMUE.pdf`, `De_cuong_chi_tiet_EDUC2802.pdf`, `Gioi_thieu_hoc_phan_GDH.pdf`, các thông tư/mô-đun GDPT 2018) |
+- **Ánh xạ nguồn & Luồng xử lý đã kiểm định Pha 0**:
 
-## 2. Bộ đệm cục bộ & Lệnh thực thi cố định (Ngoài Repo)
+  | Học phần                       | Thư mục trong repo                  | Tệp nguồn chính trên Drive                                              | Kết quả Pha 0 & Luồng xử lý chuẩn                                                                                                                            |
+  | :----------------------------- | :---------------------------------- | :---------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | **Cấu trúc đại số**            | `content/algebraic-structures/`     | `Giao_trinh_Cau_truc_dai_so.pdf` (219 tr.)                              | **Dùng được ngay với MarkItDown** (`output\Giao_trinh_Cau_truc_dai_so.md`); chỉ cắt ảnh PNG trang lẻ nếu cần kiểm tra phân thức/biểu đồ phức tạp             |
+  | **Giải tích hàm một biến**     | `content/single-variable-calculus/` | `giai-tich-ham-mot-bien\GTHMB_Tran_Tri_Dung_2022.pdf` (90 tr.)          | **Có text nhưng vỡ CMap công thức Toán & tiếng Việt** → Không chép công thức từ `.md`; dùng **Nhánh Vision theo lát cắt**                                    |
+  | **Hình học Affine và Euclide** | `content/affine-geometry/`          | `Hinhhoccaocap.pdf` (285 tr.)                                           | **PDF scan ảnh (0/285 tr. text)** → Dùng **Nhánh Vision theo lát cắt** với bản đồ trang cố định `output\Hinhhoccaocap-page-map.md`                           |
+  | **Giáo dục học**               | `src/data/courses/giao-duc-hoc/`    | `giao-duc-hoc\Giao_trinh_GDH_HCMUE.pdf` (124 tr.) + các thông tư/mô-đun | `Giao_trinh_GDH_HCMUE.pdf` là **PDF scan ảnh (0/124 tr. text)** → Dùng **Nhánh Vision theo lát cắt**; các văn bản PDF phụ trợ chạy cổng Pha 0 trước khi dùng |
 
-- **Quy tắc cô lập kho mã nguồn**:
-  - **Tuyệt đối không** tạo `.venv` hoặc lưu tệp `.pdf`, `.md` tạm bên trong `D:\Learning-universe`.
-  - Luôn sao chép tệp nguồn từ `$GDRIVE_DOCS_ROOT` sang bộ đệm `D:\Tools\markitdown\input\` trước khi trích xuất (tránh lỗi đọc stream/timeout trên ổ ảo Google Drive), và lưu đầu ra tại `D:\Tools\markitdown\output\`.
-- **Lệnh sao đệm và trích xuất chuẩn**:
+## 2. Quy tắc cô lập kho mã nguồn & Lệnh MarkItDown (Cho tệp có lớp text chuẩn)
+
+- **Tuyệt đối không** tạo `.venv` hoặc lưu tệp `.pdf`, `.md`, `.png` tạm bên trong `D:\Learning-universe`.
+- Sao chép tệp nguồn từ `$GDRIVE_DOCS_ROOT` vào `D:\Tools\markitdown\input\` trước khi trích xuất sang `D:\Tools\markitdown\output\`:
   ```powershell
   Copy-Item -LiteralPath "$GDRIVE_DOCS_ROOT\<ten-tai-lieu>.pdf" -Destination "D:\Tools\markitdown\input\<ten-tai-lieu>.pdf" -Force
   & "D:\Tools\markitdown\.venv\Scripts\markitdown.exe" "D:\Tools\markitdown\input\<ten-tai-lieu>.pdf" -o "D:\Tools\markitdown\output\<ten-tai-lieu>.md"
@@ -43,34 +42,60 @@ Sử dụng công cụ `microsoft/markitdown` đã cài đặt cô lập bên ng
 
 ## 3. Cổng kiểm định chất lượng Pha 0 (Nguyên tắc dừng an toàn)
 
-Bản cài đặt `markitdown` mặc định **không tích hợp OCR**. Ngay sau khi trích xuất ra `.md`, bắt buộc kiểm tra 3 tiêu chí trước khi đối chiếu học thuật:
+Với mọi tệp tài liệu mới chưa phân loại ở Mục 1, bắt buộc kiểm tra 3 tiêu chí ngay sau khi chạy `markitdown`:
 
-1. **Dung lượng & mật độ dòng**: Phát hiện PDF scan ảnh (tệp `.md` rỗng, quá nhỏ so với số trang PDF, hoặc chỉ lặp lại chuỗi watermark phần mềm ghép PDF).
-2. **Độ nguyên vẹn tiếng Việt**: Không bị vỡ bảng mã cũ (TCVN3, VNI-Windows) hay mất dấu hàng loạt.
-3. **Độ chính xác ký hiệu Toán**: Đọc thử đoạn mẫu ~10 dòng có chứa định nghĩa/định lý và công thức để kiểm tra chỉ số, ký hiệu tập hợp, ánh xạ, vectơ.
+1. **Số trang có lớp text (`pdfplumber` / `pypdfium2`) & mật độ dòng `.md`**: Phát hiện PDF scan ảnh hoặc tệp chỉ chứa watermark.
+2. **Độ nguyên vẹn tiếng Việt**: Phát hiện lỗi bảng mã font cũ (TCVN3, VNI, LaTeX T5 hỏng CMap).
+3. **Độ chính xác ký hiệu Toán**: Đọc mẫu 6–10 dòng chứa định nghĩa/định lý/công thức để kiểm tra lượng từ, ký hiệu tập hợp, chỉ số, dấu phủ định.
 
-- **DỪNG AN TOÀN**: Nếu tệp nguồn là PDF scan không có lớp văn bản học thuật **hoặc** công thức Toán/tiếng Việt bị vỡ nặng không đọc được bản chất, **phải dừng ngay tại Pha 0 và báo cho người dùng kèm đoạn mẫu lỗi** để chuyển hướng OCR; **tuyệt đối không** tự suy diễn hay bịa lại công thức, mệnh đề, số trang (tuân thủ `academic-integrity`).
+- **DỪNG AN TOÀN / CHUYỂN NHÁNH VISION**: Nếu tệp là PDF scan hoặc bị vỡ CMap công thức Toán/tiếng Việt, **tuyệt đối không tự suy diễn công thức từ `.md`** (tuân thủ `academic-integrity`); chuyển sang **Mục 4 (Nhánh dự phòng Vision theo lát cắt)**.
 
-## 4. Quy trình đối chiếu 2 pha bắt buộc khi sửa bài học MDX
+## 4. Nhánh dự phòng cho PDF Scan / Vỡ CMap Toán (Vision theo lát cắt — Không cài ML nặng)
 
-Chỉ thực hiện khi tệp `.md` đã vượt qua cổng Pha 0. Luôn kiểm tra `status` ở frontmatter theo quy tắc `content-protection` trước khi chỉnh sửa tệp trong `content/`:
+Sử dụng trực tiếp `pypdfium2` + `Pillow` có sẵn qua script `D:\Tools\markitdown\render_slices.py` kết hợp khả năng đọc ảnh Vision của Agent:
 
-### Pha 1 — Lập mục lục dòng & Đối chiếu từng bài lẻ (Chỉ đọc)
+- **Bước A — Lập bản đồ số trang (`*-page-map.md`)**:
+  1. Render ảnh `.png` (~150–180 DPI) cho vùng Mục lục tiềm năng (đầu sách trang `1–8` và cuối sách `10` trang cuối):
+     ```powershell
+     & "D:\Tools\markitdown\.venv\Scripts\python.exe" "D:\Tools\markitdown\render_slices.py" `
+       "D:\Tools\markitdown\input\<ten-tai-lieu>.pdf" `
+       "D:\Tools\markitdown\output\<mon>_toc" `
+       "1-8,<n-9>-<n>" 165
+     ```
+  2. Đọc ảnh Mục lục bằng Vision (mở rộng tối đa 5 trang liền kề nếu lệch vị trí), kiểm chứng độ lệch giữa số trang in và số trang PDF, rồi lưu bảng ánh xạ `Bài học ↔ Khoảng số trang PDF (page start–end)` vào `D:\Tools\markitdown\output\<ten-tai-lieu>-page-map.md`.
+  3. _(Với học phần HHAVE, đọc trực tiếp bản đồ có sẵn tại `D:\Tools\markitdown\output\Hinhhoccaocap-page-map.md`)._
 
-1. Nếu giáo trình lớn chứa nhiều bài, lập tệp chỉ mục `D:\Tools\markitdown\output\<ten-tai-lieu>-index.md` ánh xạ từng bài `.mdx` với khoảng số dòng (`line start–end`) để chỉ đọc đúng phân đoạn cần thiết.
-2. Đọc phân đoạn `.md` của từng bài lẻ và lập **bảng đối chiếu 5 hạng mục** với tệp `.mdx` hiện có:
-   - **Định nghĩa** (`Definition`)
-   - **Định lý / Bổ đề / Mệnh đề / Hệ quả** kèm đầy đủ điều kiện giả thiết (`Theorem`, `Lemma`, `Proposition`, `Corollary`)
-   - **Chứng minh** — ghi rõ các bước lập luận bị thiếu hoặc bị cắt ngắn (`Proof`)
-   - **Ví dụ / Phản ví dụ / Chú ý** (`Example`, `Counterexample`, `Remark`, `Note`)
-   - **Bài tập & Lời giải** (`Exercise`, `Solution`, `Hint`)
+- **Bước B — Cắt lát & Đối chiếu từng bài lẻ (`1–2 bài/lượt`)**:
+  1. Tra `*-page-map.md` để lấy đúng khoảng trang lý thuyết và bài tập của 1–2 bài đang xử lý, render PNG vào `D:\Tools\markitdown\output\<mon>_pages\`:
+     ```powershell
+     & "D:\Tools\markitdown\.venv\Scripts\python.exe" "D:\Tools\markitdown\render_slices.py" `
+       "D:\Tools\markitdown\input\<ten-tai-lieu>.pdf" `
+       "D:\Tools\markitdown\output\<mon>_pages" `
+       "<page_ranges>" 165
+     ```
+  2. Đọc trực tiếp các ảnh `.png` vừa xuất bằng công cụ `read_file` (Vision) để thực hiện **Pha 1** và **Pha 2** ở Mục 5.
+  3. Xóa các ảnh `.png` tạm trong `D:\Tools\markitdown\output\<mon>_pages\` sau khi hoàn tất nghiệm thu bài học nếu cần tiết kiệm dung lượng ổ đĩa.
+
+## 5. Quy trình đối chiếu 2 pha bắt buộc khi sửa bài học MDX
+
+Luôn kiểm tra `status` ở frontmatter theo quy tắc `content-protection` (không tự ý sửa nội dung học thuật của bài `approved` hoặc `published` khi chưa có yêu cầu rõ ràng của chủ dự án), sau đó thực hiện nghiêm ngặt 2 pha:
+
+### Pha 1 — Đối chiếu chi tiết theo từng bài lẻ (Chỉ đọc)
+
+Lập **bảng đối chiếu 5 hạng mục** giữa tài liệu gốc (từ phân đoạn `.md` hoặc lát cắt ảnh PNG) và tệp `.mdx` hiện có trong `content/`:
+
+1. **Định nghĩa** (`Definition`)
+2. **Định lý / Bổ đề / Mệnh đề / Hệ quả** kèm đầy đủ điều kiện giả thiết (`Theorem`, `Lemma`, `Proposition`, `Corollary`)
+3. **Chứng minh** — chỉ rõ các bước lập luận bị thiếu hoặc bị cắt ngắn (`Proof`)
+4. **Ví dụ / Phản ví dụ / Chú ý** (`Example`, `Counterexample`, `Remark`, `Note`)
+5. **Bài tập & Lời giải** (`Exercise`, `Solution`, `Hint`)
 
 ### Pha 2 — Vá bổ sung nguyên vẹn & Kiểm toán KaTeX
 
-1. Chỉ sau khi đã xác nhận danh sách thiếu từ Pha 1 (và được người dùng duyệt khi cần) mới vá bổ sung vào `.mdx`.
-2. **Bảo toàn tính nguyên vẹn học thuật**: Không tự ý tóm lược hay cắt bớt chứng minh.
-3. Sau mỗi đợt sửa `.mdx`, **luôn chạy lệnh kiểm toán bắt buộc**:
+1. Chỉ sau khi đã xác định đủ danh sách thiếu từ Pha 1 (và được người dùng duyệt khi cần) mới vá bổ sung vào `.mdx`.
+2. **Bảo toàn tính nguyên vẹn học thuật**: Trình bày đầy đủ các bước biến đổi và lập luận; **không tóm lược hay cắt bớt chứng minh**.
+3. Sau mỗi đợt cập nhật `.mdx`, **bắt buộc chạy lệnh kiểm toán**:
    ```powershell
    node scripts/audit-mdx-katex.mjs
    ```
-   và xác nhận đạt **`0` lỗi KaTeX** trước khi nghiệm thu.
+   và xác nhận kết quả **`0` lỗi KaTeX / thẻ JSX học thuật** trước khi báo cáo hoàn tất.
