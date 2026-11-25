@@ -946,5 +946,39 @@ describe('Bảng Viết Toán Học (/bang-viet) — Math Ink, Thư mục đa c�
     expect(selectActiveInkPage(useInkNotebookStore.getState()).geoObjects).toHaveLength(1);
     fireEvent.pointerDown(canvas, { clientX: 0, clientY: 0 });
     expect(selectActiveInkPage(useInkNotebookStore.getState()).geoObjects).toHaveLength(0);
+
+    // 3. Kéo di chuyển & thao tác nhanh Điểm trực tiếp bằng con trỏ Chọn (V) KHÔNG cần bấm vào Dựng hình!
+    act(() => {
+      useInkNotebookStore.getState().commitPageMutation((pg) => ({
+        ...pg,
+        geoObjects: [
+          {
+            id: 'ptDirect',
+            kind: 'geo-point',
+            pointMode: 'free',
+            x: 5,
+            y: 5,
+            label: 'A',
+            color: '#1D4ED8',
+          },
+        ],
+      }));
+    });
+    // Nhấn phím tắt V để bật nhanh Con trỏ Chọn & Di chuyển đa năng (không mở thanh Dựng hình)
+    fireEvent.keyDown(window, { key: 'v' });
+    expect(screen.queryByTestId('geogebra-toolbar')).not.toBeInTheDocument();
+
+    // Bấm vào điểm A ở gần gốc (0,0) -> mở thanh thao tác nhanh ink-geo-quick-bar & cho phép đổi tên / xóa tức thì
+    fireEvent.pointerDown(canvas, { clientX: 0, clientY: 0 });
+    expect(screen.getByTestId('ink-geo-quick-bar')).toBeInTheDocument();
+    const renameInput = screen.getByLabelText('Đổi tên điểm') as HTMLInputElement;
+    fireEvent.change(renameInput, { target: { value: 'K' } });
+    const renamedObj = selectActiveInkPage(useInkNotebookStore.getState()).geoObjects?.[0];
+    expect(renamedObj?.kind === 'geo-point' ? renamedObj.label : '').toBe('K');
+    fireEvent.pointerUp(canvas, { clientX: 0, clientY: 0 });
+
+    // Xóa nhanh ngay từ thanh nổi
+    fireEvent.click(screen.getByTestId('ink-geo-quick-delete'));
+    expect(selectActiveInkPage(useInkNotebookStore.getState()).geoObjects).toHaveLength(0);
   });
 });

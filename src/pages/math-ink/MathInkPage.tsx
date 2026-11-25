@@ -10,6 +10,8 @@ import {
   Compass,
   Download,
   Eraser,
+  Eye,
+  EyeOff,
   FileDown,
   FileImage,
   FilePenLine,
@@ -18,6 +20,7 @@ import {
   Maximize2,
   Minimize2,
   Minus,
+  MousePointer2,
   PanelLeft,
   Pencil,
   Plus,
@@ -30,7 +33,6 @@ import {
   Sigma,
   SlidersHorizontal,
   Sparkles,
-  SquareDashed,
   Stamp,
   Table2,
   Trash2,
@@ -646,13 +648,13 @@ export function MathInkPage() {
       spacerLineY,
       skipScreenMathTexts: true,
       geoOverlay:
-        activeTool === 'geo'
+        activeTool === 'geo' || activeTool === 'select'
           ? {
               hoveredHit: geoHoveredHit,
               selectedGeoId: geoSelectedId,
-              pendingPointIds: geoPendingPts,
-              cursor: geoCursor,
-              activeGeoTool: geoTool,
+              pendingPointIds: activeTool === 'geo' ? geoPendingPts : [],
+              cursor: activeTool === 'geo' ? geoCursor : null,
+              activeGeoTool: activeTool === 'geo' ? geoTool : 'move',
               activeColor: geoColor,
               activeLineStyle: geoLineStyle,
             }
@@ -773,6 +775,10 @@ export function MathInkPage() {
         if (activeNotebook.activePageIndex > 0) {
           selectPage(activeNotebook.activePageIndex - 1);
         }
+      } else if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.toLowerCase() === 'v') {
+        e.preventDefault();
+        setActiveTool('select');
+        setOpenPopover(null);
       } else if (e.key === 'Escape' && activeTool === 'geo') {
         if (geoPendingPts.length > 0 || geoPendingCurveId) {
           setGeoPendingPts([]);
@@ -782,6 +788,9 @@ export function MathInkPage() {
         } else {
           setGeoSelectedId(null);
         }
+      } else if (e.key === 'Escape' && activeTool === 'select') {
+        setGeoSelectedId(null);
+        setSelectedIds(new Set());
       } else if (
         (e.key === 'Delete' || e.key === 'Backspace') &&
         activeTool === 'geo' &&
@@ -808,6 +817,7 @@ export function MathInkPage() {
           images: page.images.filter((im) => !selectedIds.has(im.id)),
         }));
         setSelectedIds(new Set());
+        setGeoSelectedId(null);
       }
     };
     const onKeyUp = (e: KeyboardEvent) => {
@@ -1943,7 +1953,7 @@ export function MathInkPage() {
       return;
     }
 
-    // 5. Công cụ Chọn vùng / Di chuyển / Chèn khoảng trống (Page Spacer)
+    // 5. Công cụ Chọn vùng / Con trỏ Di chuyển đa năng / Chèn khoảng trống (Page Spacer)
     if (activeTool === 'select') {
       if (selectionMode === 'spacer') {
         interactionRef.current = {
@@ -1957,6 +1967,55 @@ export function MathInkPage() {
         setSpacerLineY(rawPt.y);
         return;
       }
+
+      // Cho phép nắm kéo trực tiếp Điểm (tự do / trượt trên cạnh / trên đường tròn), Đoạn thẳng, Đường tròn, Đa giác ngay ngoài chế độ Dựng hình!
+      const curGeoObjects = activePage.geoObjects ?? [];
+      if (curGeoObjects.length > 0) {
+        const gHit = hitTestGeoScene(geoScene, rawPt.x, rawPt.y, {
+          includePolygons: true,
+          pointRadius: 16,
+          curveRadius: 13,
+        });
+        if (
+          gHit &&
+          (gHit.kind === 'point' ||
+            gHit.kind === 'line' ||
+            gHit.kind === 'conic' ||
+            gHit.kind === 'polygon') &&
+          !(selectedIds.size > 1 && selectedIds.has(gHit.id))
+        ) {
+          setGeoSelectedId(gHit.id);
+          setSelectedIds(new Set([gHit.id]));
+          if (gHit.kind === 'point') {
+            const ptObj = curGeoObjects.find((o) => o.id === gHit.id);
+            if (
+              ptObj?.kind === 'geo-point' &&
+              (ptObj.pointMode === 'free' ||
+                ptObj.pointMode === 'on-segment' ||
+                ptObj.pointMode === 'on-circle')
+            ) {
+              geoDragStateRef.current = { mode: 'single-point', id: gHit.id };
+            } else {
+              geoDragStateRef.current = {
+                mode: 'rigid-group',
+                targetId: gHit.id,
+                lastX: rawPt.x,
+                lastY: rawPt.y,
+              };
+            }
+          } else {
+            geoDragStateRef.current = {
+              mode: 'rigid-group',
+              targetId: gHit.id,
+              lastX: rawPt.x,
+              lastY: rawPt.y,
+            };
+          }
+          return;
+        }
+      }
+
+      setGeoSelectedId(null);
 
       const hitId = findHitObjectId(rawPt);
       if (hitId) {
@@ -2009,11 +2068,22 @@ export function MathInkPage() {
       }
       return;
     }
-    if (activeTool === 'geo') {
+    if (activeTool === 'geo' || geoDragStateRef.current) {
       handleGeoPointerMove(toCanvasPoint(e));
       return;
     }
-    if (state.mode === 'none') return;
+    if (state.mode === 'none') {
+      if (activeTool === 'select' && selectionMode !== 'spacer' && geoObjects.length > 0) {
+        const hoverPt = toCanvasPoint(e);
+        const hit = hitTestGeoScene(geoScene, hoverPt.x, hoverPt.y, {
+          includePolygons: true,
+          pointRadius: 16,
+          curveRadius: 13,
+        });
+        setGeoHoveredHit(hit);
+      }
+      return;
+    }
     const rawPt = toCanvasPoint(e);
 
     if (state.mode === 'laser') {
@@ -3463,7 +3533,7 @@ export function MathInkPage() {
                       setOpenPopover(null);
                     }
                   }}
-                  title="Chọn khung / Lasso & Di chuyển mọi đối tượng (kể cả Điểm, Đoạn thẳng AB, Công thức)"
+                  title="Con trỏ Chọn & Di chuyển (V) — kéo trực tiếp Điểm, Đoạn thẳng, Hình hoặc khoanh vùng"
                   aria-label="Công cụ chọn và di chuyển"
                   className={cn(
                     'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
@@ -3472,7 +3542,7 @@ export function MathInkPage() {
                       : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[var(--text-main)]',
                   )}
                 >
-                  <SquareDashed className="h-4 w-4" aria-hidden="true" />
+                  <MousePointer2 className="h-4 w-4" aria-hidden="true" />
                 </button>
                 {openPopover === 'selection' && (
                   <ToolbarPopoverAnchor anchorRef={selectionAnchorRef} preferAlign="left">
@@ -4015,6 +4085,104 @@ export function MathInkPage() {
               </aside>
             )}
 
+            {/* Thanh thao tác nhanh khi chọn Điểm / Đường / Hình bằng con trỏ ngoài chế độ Dựng hình */}
+            {activeTool === 'select' && selectedGeoObject && (
+              <div
+                data-testid="ink-geo-quick-bar"
+                className="sticky top-2 z-20 mx-auto mb-3 flex w-fit flex-wrap items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-workspace)]/96 px-3 py-1.5 text-[12px] shadow-lg backdrop-blur-md"
+              >
+                <span className="font-semibold text-[var(--accent-os)]">
+                  {selectedGeoObject.kind === 'geo-point'
+                    ? 'Điểm'
+                    : selectedGeoObject.kind === 'geo-line'
+                      ? 'Đường / Đoạn'
+                      : selectedGeoObject.kind === 'geo-conic'
+                        ? 'Đường tròn / Elip'
+                        : 'Đa giác'}
+                </span>
+
+                {selectedGeoObject.kind === 'geo-point' && (
+                  <>
+                    <input
+                      type="text"
+                      maxLength={8}
+                      value={selectedGeoObject.label}
+                      onChange={(e) =>
+                        updateGeoObject(selectedGeoObject.id, { label: e.target.value })
+                      }
+                      className="h-7 w-14 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-center font-serif text-[12.5px] font-bold text-[var(--text-main)] italic outline-none focus:border-[var(--accent-os)]"
+                      aria-label="Đổi tên điểm"
+                      title="Đổi tên điểm (ví dụ A, B, M, H...)"
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateGeoObject(selectedGeoObject.id, {
+                          showLabel: selectedGeoObject.showLabel === false,
+                        })
+                      }
+                      className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 text-[11.5px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-main)]"
+                      title={
+                        selectedGeoObject.showLabel === false ? 'Hiện tên điểm' : 'Ẩn tên điểm'
+                      }
+                    >
+                      {selectedGeoObject.showLabel === false ? (
+                        <EyeOff className="h-3.5 w-3.5" aria-hidden="true" />
+                      ) : (
+                        <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                      )}
+                      <span>Tên</span>
+                    </button>
+                  </>
+                )}
+
+                {(selectedGeoObject.kind === 'geo-line' ||
+                  selectedGeoObject.kind === 'geo-conic') && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateGeoObject(selectedGeoObject.id, {
+                        style: selectedGeoObject.style === 'dashed' ? 'solid' : 'dashed',
+                      })
+                    }
+                    className="inline-flex h-7 cursor-pointer items-center rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2.5 text-[11.5px] font-medium text-[var(--text-main)] hover:bg-[var(--bg-surface-hover)]"
+                    title="Chuyển nhanh giữa nét liền và nét đứt"
+                  >
+                    {selectedGeoObject.style === 'dashed' ? 'Nét đứt' : 'Nét liền'}
+                  </button>
+                )}
+
+                <span className="h-4 w-px bg-[var(--border-hairline)]" />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTool('geo');
+                    setGeoTool('move');
+                  }}
+                  className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 text-[11.5px] font-semibold text-blue-700 hover:bg-blue-100"
+                  title="Mở thanh Dựng hình để dựng thêm vuông góc, trung điểm, đường tròn..."
+                >
+                  <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Dựng hình</span>
+                </button>
+
+                <button
+                  type="button"
+                  data-testid="ink-geo-quick-delete"
+                  onClick={() => {
+                    deleteGeoObject(selectedGeoObject.id);
+                    setSelectedIds(new Set());
+                  }}
+                  className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2.5 text-[11.5px] font-semibold text-rose-700 hover:bg-rose-100"
+                  title="Xóa đối tượng đang chọn (hoặc nhấn Delete)"
+                >
+                  <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Xóa</span>
+                </button>
+              </div>
+            )}
+
             {/* Thanh nổi cho Bút Laser trình chiếu */}
             {activeTool === 'laser' && (
               <div
@@ -4316,7 +4484,7 @@ export function MathInkPage() {
                     }
                   }}
                   onPointerLeave={() => {
-                    if (activeTool === 'geo') {
+                    if (activeTool === 'geo' || activeTool === 'select') {
                       setGeoHoveredHit(null);
                       setGeoCursor(null);
                     }
@@ -4329,7 +4497,9 @@ export function MathInkPage() {
                     activeTool === 'stamp' && !isSpaceHeld && 'cursor-copy',
                     activeTool === 'laser' && !isSpaceHeld && 'cursor-crosshair',
                     activeTool === 'eraser' && !isSpaceHeld && 'cursor-cell',
-                    activeTool === 'select' && !isSpaceHeld && 'cursor-move',
+                    activeTool === 'select' &&
+                      !isSpaceHeld &&
+                      (geoHoveredHit ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'),
                     activeTool === 'text' && !isSpaceHeld && 'cursor-text',
                     activeTool === 'geo' &&
                       !isSpaceHeld &&
