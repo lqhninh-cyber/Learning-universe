@@ -1,17 +1,18 @@
 ---
 id: tam-ti-cu-cua-mot-he-diem
 title: "Tâm Tỉ Cự của một Hệ Điểm"
-description: "Tâm tỉ cự, tọa độ tỉ cự, tính chất kết hợp và bao affine của tập hợp điểm."
+description: "Sự tồn tại và duy nhất của tâm tỉ cự, trọng tâm, bao phẳng affine của hệ điểm, đặc trưng vectơ của m-phẳng và tính chất kết hợp tâm tỉ cự."
 estimatedMinutes: 45
 level: intermediate
 prerequisites: []
 tags:
   - "tâm tỉ cự"
+  - "trọng tâm"
   - "tọa độ tỉ cự"
   - "bao affine"
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '34-39'
+    pages: '23-26'
     sections: '§4'
 status: published
 version: 1.0.0
@@ -22,143 +23,350 @@ authoring:
   draftedAt: '2026-11-03'
 ---
 
-## 1. Định lí
+## 1. Sự Tồn tại và Duy nhất của Tâm Tỉ Cự
 
-<Theorem id="thm-s4-1" title="Định lí">
-Cho hệ k điểm P$_{1}$,…,P$_{k}$ của $\mathcal{A}$ và k phần tử $\lambda _{1}, \dots , \lambda _{k} \in \mathbb{K}$ sao cho $\sum_{i=1}^{k} \lambda _{i} \neq 0$.
+<Theorem id="thm-s4-1" title="Sự tồn tại và duy nhất của tâm tỉ cự">
+Cho hệ $k$ điểm $P_1, P_2, \dots, P_k$ của không gian affine $\mathcal{A}$ và $k$ phần tử $\lambda_1, \lambda_2, \dots, \lambda_k$ thuộc trường $\mathbb{K}$ sao cho
 
-Khi đó có một và chỉ một điểm $G \in \mathcal{A}$ sao cho $\sum_{i=1}^{k} \lambda _{i}\vect{GP_{i}} = \vec{0}$.
+$$
+\sum_{i=1}^{k} \lambda_i \neq 0.
+$$
+
+Khi đó có một và chỉ một điểm $G \in \mathcal{A}$ sao cho:
+
+$$
+\sum_{i=1}^{k} \lambda_i \overrightarrow{GP_i} = \vec{0}.
+$$
 </Theorem>
 
-<Proof of="thm-s4-1">
-Lấy điểm O tùy ý: $\sum_{i=1}^{k} \lambda _{i}\vect{GP_{i}} = \vec{0} \iff \sum_{i=1}^{k} \lambda _{i}(\vect{OP_{i}} - \vect{OG}) = \vec{0} \iff \sum_{i=1}^{k} \lambda _{i}\vect{OP_{i}} = (\sum_{i=1}^{k} \lambda _{i})\vect{OG}$.
-
-Do đó
- 
+<Proof of="thm-s4-1" defaultOpen={true}>
+Lấy một điểm $O$ tùy ý của không gian affine $\mathcal{A}$. Theo quy tắc hiệu hai vectơ xuất phát từ gốc $O$ ($\overrightarrow{GP_i} = \overrightarrow{OP_i} - \overrightarrow{OG}$), điểm $G$ được xác định bởi chuỗi biến đổi tương đương:
 
 $$
-\vect{OG} = (1 / \sum_{i=1}^{k} \lambda _{i}) · \sum_{i=1}^{k} \lambda _{i}\vect{OP_{i}}. (1)
+\sum_{i=1}^{k} \lambda_i \overrightarrow{GP_i} = \vec{0}
+\iff \sum_{i=1}^{k} \lambda_i (\overrightarrow{OP_i} - \overrightarrow{OG}) = \vec{0}
+\iff \sum_{i=1}^{k} \lambda_i \overrightarrow{OP_i} = \left(\sum_{i=1}^{k} \lambda_i\right)\overrightarrow{OG}.
 $$
 
- 
-Biểu thức $(1)$ cho G tồn tại và duy nhất.
+Do giả thiết $\sum_{i=1}^{k} \lambda_i \neq 0$, ta giải được duy nhất vectơ $\overrightarrow{OG}$:
+
+$$
+\overrightarrow{OG} = \frac{1}{\displaystyle\sum_{i=1}^{k} \lambda_i} \sum_{i=1}^{k} \lambda_i \overrightarrow{OP_i}. \tag{1}
+$$
+
+Theo tiên đề Weyl của không gian affine, với điểm $O$ cố định, vế phải của $(1)$ là một vectơ hoàn toàn xác định trong $\overrightarrow{\mathcal{A}}$, nên điểm $G$ tồn tại và được xác định duy nhất bởi biểu thức $(1)$ ở trên.
 </Proof>
 
-## 2. Định nghĩa
+## 2. Định nghĩa Tâm Tỉ Cự, Trọng Tâm và Trung Điểm
 
-<Definition id="def-s4-3" title="Định nghĩa">
-Điểm G trong định lí gọi là *tâm tỉ cự* của hệ điểm P$_{i}$ gắn với họ hệ số λ$_{i}$.
+<Definition id="def-s4-3" title="Tâm tỉ cự và trọng tâm của một hệ điểm">
+Điểm $G$ nói trong <Ref to="thm-s4-1" /> được gọi là **<GlossaryTerm termId="tam-ti-cu">tâm tỉ cự</GlossaryTerm>** của hệ điểm $P_i$ gắn với họ hệ số $\lambda_i$ ($i = 1, 2, \dots, k$).
 
-Trường hợp các λ$_{i}$ bằng nhau, G gọi là *trọng tâm* của hệ điểm.
+Trường hợp đặc biệt, nếu các hệ số $\lambda_i$ bằng nhau (với $\sum_{i=1}^{k} \lambda_i \neq 0$), điểm $G$ được gọi là **trọng tâm** của hệ điểm $P_1, P_2, \dots, P_k$.
 </Definition>
 
-<Remark title="Chú ý">
-Chú ý.
+<Remark title="Tính bất biến khi nhân hệ số và trường hợp trung điểm">
+- **a)** Nếu thay các hệ số $\lambda_1, \lambda_2, \dots, \lambda_k$ (với $\sum_{i=1}^{k} \lambda_i \neq 0$) bởi $c\lambda_1, c\lambda_2, \dots, c\lambda_k$ với $c \in \mathbb{K} \setminus \{0\}$ *(sách gốc ký hiệu nhân tử là $k \in \mathbb{K} \setminus \{0\}$)* thì tâm tỉ cự $G$ không thay đổi. Vậy trong trường hợp $G$ là trọng tâm (trên trường có đặc số không chia hết $k$, chẳng hạn $\mathbb{R}$ hoặc $\mathbb{C}$), ta có thể lấy tất cả các $\lambda_i = 1$, và khi đó trọng tâm $G$ của hệ điểm $P_1, P_2, \dots, P_k$ được xác định bởi hệ thức:
 
-a) Thay λ$_{i}$ bằng $k \lambda _{i} (k \neq 0)$ thì G không đổi; do đó với trọng tâm có thể lấy $\lambda _{i} = 1$ và $\vect{OG} = (\frac{1}{k})\sum_{i=1}^{k}\vect{OP_{i}}$.
+$$
+\overrightarrow{OG} = \frac{1}{k} \sum_{i=1}^{k} \overrightarrow{OP_i}.
+$$
 
-b) Khi $k = 2$, trọng tâm của P$_{1}$, P$_{2}$ gọi là *trung điểm* của cặp (P$_{1}$, P$_{2}$).
+- **b)** Khi $k = 2$, trọng tâm $G$ của hai điểm $P_1$ và $P_2$ còn được gọi là **trung điểm** của cặp điểm $(P_1, P_2)$, xác định bởi $\overrightarrow{OG} = \dfrac{1}{2}(\overrightarrow{OP_1} + \overrightarrow{OP_2})$ (hay $\overrightarrow{GP_1} + \overrightarrow{GP_2} = \vec{0}$).
 </Remark>
 
-## 3. Định lí
+## 3. Bao Phẳng Affine Sinh bởi Tập hợp các Tâm Tỉ Cự
 
-<Theorem id="thm-s4-4" title="Định lí">
-Tập hợp tất cả các tâm tỉ cự của hệ điểm P$_{0}$, P$_{1}$,…, P$_{k}$ với các họ hệ số khác nhau là cái phẳng có số chiều bé nhất chứa các điểm P$_{i}$ ấy.
-
-**Hệ quả.** Cho m-phẳng α đi qua $m+1$ điểm độc lập P$_{0}$,…,P$_{m}$.
-
-Khi đó α chính là tập hợp các tâm tỉ cự của hệ điểm đó gắn với các họ hệ số khác nhau.
+<Theorem id="thm-s4-4" title="Tập hợp các tâm tỉ cự là phẳng có số chiều bé nhất chứa hệ điểm">
+Tập hợp tất cả các tâm tỉ cự của hệ điểm $P_0, P_1, \dots, P_k$ với các họ hệ số khác nhau (có tổng khác $0$) chính là cái phẳng có số chiều bé nhất chứa các điểm $P_i$ ấy ($i = 0, 1, \dots, k$).
 </Theorem>
 
-## 4. Định lí
+<Proof of="thm-s4-4" defaultOpen={true}>
+Gọi $\alpha$ là cái phẳng có số chiều bé nhất chứa các điểm $P_0, P_1, \dots, P_k$. Khi đó các vectơ $\overrightarrow{P_0P_1}, \overrightarrow{P_0P_2}, \dots, \overrightarrow{P_0P_k}$ đều thuộc phương $\overrightarrow{\alpha}$ của phẳng $\alpha$, và không gian con sinh bởi hệ vectơ này chính là $\overrightarrow{\alpha}$ (vì cái phẳng đi qua $P_0$ nhận $\operatorname{span}\{\overrightarrow{P_0P_1}, \dots, \overrightarrow{P_0P_k}\}$ làm phương đã chứa trọn $P_0, P_1, \dots, P_k$).
 
-<Theorem id="thm-s4-5" title="Định lí">
-Cho m-phẳng α qua $m+1$ điểm độc lập P$_{0}$,…,P$_{m}$ và điểm O tùy ý.
+Giả sử (sau khi đánh số lại các điểm $P_1, \dots, P_k$ nếu cần) hệ vectơ $\overrightarrow{P_0P_1}, \overrightarrow{P_0P_2}, \dots, \overrightarrow{P_0P_s}$ với $s \le k$ là một hệ vectơ con độc lập tuyến tính tối đại của hệ $\{\overrightarrow{P_0P_1}, \dots, \overrightarrow{P_0P_k}\}$. Ta có $\dim \alpha = s$ *(nếu $s = 0$, tức mọi $P_i$ đều trùng $P_0$, các tổng từ $1$ đến $s$ dưới đây hiểu là tổng rỗng bằng $\vec{0}$ hoặc $0$)*.
 
-Điều kiện cần và đủ để $M \in \alpha$ là
- 
+1. **Chiều thuận ($G \in \alpha \implies G$ là tâm tỉ cự của $P_0, P_1, \dots, P_k$):**
+   Với mọi điểm $G \in \alpha$, vì $\{\overrightarrow{P_0P_1}, \dots, \overrightarrow{P_0P_s}\}$ là cơ sở của $\overrightarrow{\alpha}$ và $\overrightarrow{P_0G} = -\overrightarrow{GP_0}$, $\overrightarrow{P_0P_i} = \overrightarrow{GP_i} - \overrightarrow{GP_0}$, ta có chuỗi tương đương:
 
 $$
-\vect{OM} = \sum_{i=0}^{m} \lambda _{i}\vect{OP_{i}}, \sum_{i=0}^{m} \lambda _{i} = 1.
+\begin{aligned}
+G \in \alpha
+&\iff \overrightarrow{P_0G} \in \overrightarrow{\alpha}
+\iff \overrightarrow{P_0G} = \sum_{i=1}^{s} \lambda_i \overrightarrow{P_0P_i} \\
+&\iff -\overrightarrow{GP_0} = \sum_{i=1}^{s} \lambda_i (\overrightarrow{GP_i} - \overrightarrow{GP_0}) \\
+&\iff \left(1 - \sum_{i=1}^{s} \lambda_i\right)\overrightarrow{GP_0} + \sum_{i=1}^{s} \lambda_i \overrightarrow{GP_i} = \vec{0}.
+\end{aligned}
 $$
-</Theorem>
 
-<Proof of="thm-s4-5">
-$M \in \alpha \iff M$ là tâm tỉ cự của P$_{i}$ gắn với λ′$_{i}$ nào đó $\iff (\sum_{i=0}^{m} \lambda '_{i})\vect{OM} = \sum_{i=0}^{m} \lambda '_{i}\vect{OP_{i}}$; đặt $\lambda _{i} = \lambda '_{i} / \sum_{i=0}^{m} \lambda '_{i}$.
+   Đẳng thức này chứng tỏ $G$ là tâm tỉ cự của hệ điểm $P_0, P_1, \dots, P_k$ gắn với họ $k + 1$ hệ số:
+
+$$
+1 - \sum_{i=1}^{s} \lambda_i, \quad \lambda_1, \lambda_2, \dots, \lambda_s, \quad \underbrace{0, \dots, 0}_{k - s \text{ số } 0},
+$$
+
+   trong đó tổng tất cả các hệ số này bằng $\left(1 - \sum_{i=1}^{s} \lambda_i\right) + \sum_{i=1}^{s} \lambda_i = 1 \neq 0$.
+
+2. **Chiều đảo ($G$ là tâm tỉ cự của $P_0, P_1, \dots, P_k \implies G \in \alpha$):**
+   Ngược lại, giả sử $G$ là tâm tỉ cự của họ điểm $P_0, P_1, \dots, P_k$ gắn với họ hệ số $\lambda_0, \lambda_1, \dots, \lambda_k$ thỏa mãn $\sum_{i=0}^{k} \lambda_i \neq 0$. Áp dụng quy tắc Chasles $\overrightarrow{GP_i} = \overrightarrow{GP_0} + \overrightarrow{P_0P_i}$:
+
+$$
+\begin{aligned}
+\sum_{i=0}^{k} \lambda_i \overrightarrow{GP_i} = \vec{0}
+&\iff \sum_{i=0}^{k} \lambda_i (\overrightarrow{GP_0} + \overrightarrow{P_0P_i}) = \vec{0} \\
+&\iff \left(\sum_{i=0}^{k} \lambda_i\right)\overrightarrow{GP_0} + \sum_{i=0}^{k} \lambda_i \overrightarrow{P_0P_i} = \vec{0} \\
+&\iff \overrightarrow{P_0G} = \frac{1}{\displaystyle\sum_{i=0}^{k} \lambda_i} \sum_{i=0}^{k} \lambda_i \overrightarrow{P_0P_i}.
+\end{aligned}
+$$
+
+   Vì mỗi vectơ $\overrightarrow{P_0P_i} \in \overrightarrow{\alpha}$ ($i = 0, 1, \dots, k$, với $\overrightarrow{P_0P_0} = \vec{0}$) nên $\overrightarrow{P_0G} \in \overrightarrow{\alpha}$, suy ra $G \in \alpha$. Định lí đã được chứng minh trọn vẹn.
 </Proof>
 
-<Example id="ex-s4-7" title="Ví dụ">
-Trong $\R ^{2}$, P$_{1}$(0,0), P$_{2}$(4,0), P$_{3}$(0,6).
+<Corollary id="cor-s4-4" title="Biểu diễn m-phẳng đi qua m + 1 điểm độc lập bằng tâm tỉ cự">
+Cho <GlossaryTerm termId="m-phang">m-phẳng</GlossaryTerm> $\alpha$ đi qua $m + 1$ <GlossaryTerm termId="doc-lap-afin">điểm độc lập</GlossaryTerm> $P_0, P_1, \dots, P_m$. Khi đó $\alpha$ chính là tập hợp tất cả các tâm tỉ cự của hệ điểm $P_0, P_1, \dots, P_m$ gắn với các họ hệ số khác nhau (có tổng khác $0$).
+</Corollary>
 
-Trọng tâm $( \lambda _{i} = 1)$: 
+## 4. Đặc trưng Vectơ của Điểm thuộc $m$-Phẳng
 
-$$
-G = (\frac{1}{3})(4, 6) = (\frac{4}{3}, 2).
-$$
-
- Với họ hệ số (1, 2, 1): 
+<Theorem id="thm-s4-5" title="Điều kiện cần và đủ để một điểm thuộc m-phẳng qua m + 1 điểm độc lập">
+Cho $m$-phẳng $\alpha$ đi qua $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m$ và một điểm $O$ tùy ý của không gian affine $\mathcal{A}$. Điều kiện cần và đủ để điểm $M$ thuộc $\alpha$ là tồn tại các hệ số $\lambda_0, \lambda_1, \dots, \lambda_m \in \mathbb{K}$ sao cho:
 
 $$
-\vect{OG} = (\frac{1}{4})[(0,0) + 2(4,0) + (0,6)] = (2, \frac{3}{2}).
+\overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i} \qquad \text{trong đó} \qquad \sum_{i=0}^{m} \lambda_i = 1.
+$$
+</Theorem>
+
+<Proof of="thm-s4-5" defaultOpen={true}>
+Theo <Ref to="cor-s4-4" />, điểm $M \in \alpha$ khi và chỉ khi $M$ là tâm tỉ cự của hệ điểm $P_0, P_1, \dots, P_m$ gắn với một họ các hệ số $\lambda'_0, \lambda'_1, \dots, \lambda'_m \in \mathbb{K}$ nào đó có tổng $\sum_{i=0}^{m} \lambda'_i \neq 0$. Nghĩa là với một điểm $O$ tùy ý ta có:
+
+$$
+\begin{aligned}
+M \in \alpha
+&\iff \sum_{i=0}^{m} \lambda'_i \overrightarrow{MP_i} = \vec{0}
+\iff \sum_{i=0}^{m} \lambda'_i (\overrightarrow{OP_i} - \overrightarrow{OM}) = \vec{0} \\
+&\iff \left(\sum_{i=0}^{m} \lambda'_i\right)\overrightarrow{OM} = \sum_{i=0}^{m} \lambda'_i \overrightarrow{OP_i}.
+\end{aligned}
 $$
 
- Cả hai điểm đều thuộc mặt phẳng duy nhất qua ba điểm độc lập này (chính là $\R ^{2}$), phù hợp với định lí 3.
+Vì $\sum_{i=0}^{m} \lambda'_i \neq 0$, nếu đặt
+
+$$
+\lambda_i = \frac{\lambda'_i}{\displaystyle\sum_{j=0}^{m} \lambda'_j} \quad (i = 0, 1, \dots, m),
+$$
+
+thì ta được $\overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i}$ và $\sum_{i=0}^{m} \lambda_i = 1$. Ngược lại, mọi biểu diễn $\overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i}$ với $\sum_{i=0}^{m} \lambda_i = 1 \neq 0$ đều dẫn ngược về $\sum_{i=0}^{m} \lambda_i \overrightarrow{MP_i} = \vec{0}$, tức $M$ là tâm tỉ cự của $P_0, \dots, P_m$ nên $M \in \alpha$.
+</Proof>
+
+<Example id="ex-s4-7" title="Tính trọng tâm và tâm tỉ cự của hệ ba điểm trong R^2">
+Trong $\R^2$ với gốc $O(0, 0)$, xét ba điểm độc lập $P_1(0, 0)$, $P_2(4, 0)$, $P_3(0, 6)$:
+
+- **Trọng tâm** ($\lambda_1 = \lambda_2 = \lambda_3 = 1$, tổng bằng $3$):
+
+$$
+\overrightarrow{OG} = \frac{1}{3}\bigl[(0, 0) + (4, 0) + (0, 6)\bigr] = \left(\frac{4}{3},\; 2\right) \implies G\left(\frac{4}{3},\; 2\right).
+$$
+
+- **Tâm tỉ cự gắn với họ hệ số $(1, 2, 1)$** (tổng bằng $1 + 2 + 1 = 4 \neq 0$):
+
+$$
+\overrightarrow{OG'} = \frac{1}{4}\bigl[1\cdot(0, 0) + 2\cdot(4, 0) + 1\cdot(0, 6)\bigr] = \left(2,\; \frac{3}{2}\right) \implies G'\left(2,\; \frac{3}{2}\right).
+$$
+
+Cả hai điểm $G$ và $G'$ đều thuộc mặt phẳng duy nhất đi qua ba điểm độc lập $P_1, P_2, P_3$ (chính là $\R^2$), phù hợp với <Ref to="thm-s4-4" /> và <Ref to="cor-s4-4" />.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 5. Bài tập Vận dụng và Củng cố
 
-<Exercise id="exr-s4-1" title="Tâm tỉ cự của một hệ điểm (§4)">
-Trong A² cho P₁(0,0), P₂(4,0), P₃(0,6). Tìm tâm tỉ cự G của hệ điểm gắn với các hệ số (1, 2, 1).
+<Exercise id="exr-s4-27" title="Bài tập 1.27 — Hệ thức vectơ đặc trưng của tâm tỉ cự qua gốc S tùy ý">
+Cho $k$ điểm $M_1, M_2, \dots, M_k$ của không gian affine $\mathcal{A}^n$ và $m_1, m_2, \dots, m_k$ là $k$ số thuộc trường $\mathbb{K}$ thỏa mãn điều kiện $m_1 + m_2 + \dots + m_k \neq 0$.
 
+Với một điểm $S$ tùy ý của $\mathcal{A}^n$, ta xác định được một điểm $G$ duy nhất gọi là tâm tỉ cự của hệ điểm $M_1, M_2, \dots, M_k$ ứng với họ hệ số $m_1, m_2, \dots, m_k$ sao cho:
+
+$$
+\overrightarrow{SG} = \frac{m_1\overrightarrow{SM_1} + m_2\overrightarrow{SM_2} + \dots + m_k\overrightarrow{SM_k}}{m_1 + m_2 + \dots + m_k}.
+$$
+
+Chứng minh rằng khi đó ta có hệ thức:
+
+$$
+m_1\overrightarrow{GM_1} + m_2\overrightarrow{GM_2} + \dots + m_k\overrightarrow{GM_k} = \vec{0}
+$$
+
+(và do đó điểm $G$ không phụ thuộc vào cách chọn điểm $S$).
 
 <Hint>
-OG = (Σ[i=1|k] $ lambda$ ᵢ·OPᵢ)/(Σ[i=1|k] $ lambda$ ᵢ).
+Nhân chéo mẫu số $m_1 + \dots + m_k \neq 0$ lên vế trái rồi tách $(m_1 + \dots + m_k)\overrightarrow{SG} = \sum_{i=1}^{k} m_i\overrightarrow{SG}$ và dùng quy tắc hiệu $\overrightarrow{SM_i} - \overrightarrow{SG} = \overrightarrow{GM_i}$.
 </Hint>
 
 <Solution>
-Σ[i=1|k] $ lambda$ ᵢ = 4.
+Đặt $m = m_1 + m_2 + \dots + m_k \neq 0$. Nhân hai vế của đẳng thức xác định $\overrightarrow{SG}$ với $m$, ta có:
 
-OG = \{1·(0,0) + 2·(4,0) + 1·(0,6)|4\} = \{(8,6)|4\}.
+$$
+(m_1 + m_2 + \dots + m_k)\overrightarrow{SG} = m_1\overrightarrow{SM_1} + m_2\overrightarrow{SM_2} + \dots + m_k\overrightarrow{SM_k}.
+$$
 
-**Đáp án:** G(2, 3/2)
+Khai triển vế trái thành $\sum_{i=1}^{k} m_i\overrightarrow{SG}$ rồi chuyển sang vế phải và ghép từng cặp cùng hệ số $m_i$:
+
+$$
+\vec{0} = \sum_{i=1}^{k} m_i (\overrightarrow{SM_i} - \overrightarrow{SG}) = \sum_{i=1}^{k} m_i \overrightarrow{GM_i} = m_1\overrightarrow{GM_1} + m_2\overrightarrow{GM_2} + \dots + m_k\overrightarrow{GM_k}.
+$$
+
+Theo <Ref to="thm-s4-1" />, chỉ có duy nhất một điểm $G \in \mathcal{A}^n$ thỏa mãn hệ thức $\sum_{i=1}^{k} m_i\overrightarrow{GM_i} = \vec{0}$ (hệ thức này hoàn toàn không chứa $S$), nên vị trí điểm $G$ độc lập với việc chọn gốc $S$.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s4-2" title="Tâm tỉ cự của hệ điểm (§4)">
-Trên đường thẳng A¹ cho A(0) và B(6). Tìm  $ lambda$  để tâm tỉ cự của A, B với hệ số (1,  $ lambda$ ) có tọa độ 2.
+<Exercise id="exr-s4-28" title="Bài tập 1.28 — Công thức tọa độ affine của tâm tỉ cự một hệ điểm">
+Trong $\mathcal{A}^n$ với mục tiêu affine đã chọn, giả sử $k$ điểm $M_1, M_2, \dots, M_k$ có tọa độ là:
 
+$$
+M_i = (x_1^i, x_2^i, \dots, x_n^i) \quad \text{với } i = 1, 2, \dots, k,
+$$
+
+và tâm tỉ cự $G$ có tọa độ $(X_1, X_2, \dots, X_n)$ thỏa mãn hệ thức:
+
+$$
+m_1\overrightarrow{GM_1} + m_2\overrightarrow{GM_2} + \dots + m_k\overrightarrow{GM_k} = \vec{0} \quad \text{với } m_1 + m_2 + \dots + m_k \neq 0.
+$$
+
+Chứng minh rằng:
+
+$$
+X_j = \frac{m_1 x_j^1 + m_2 x_j^2 + \dots + m_k x_j^k}{m_1 + m_2 + \dots + m_k} \quad (j = 1, 2, \dots, n).
+$$
 
 <Hint>
-OG = (Σ[i=1|k] $ lambda$ ᵢ·OPᵢ)/(Σ[i=1|k] $ lambda$ ᵢ).
+Gọi $\{O; \vec{e}_1, \dots, \vec{e}_n\}$ là mục tiêu affine đã chọn; biểu diễn tọa độ của từng vectơ $\overrightarrow{GM_i} = (x_1^i - X_1, \dots, x_n^i - X_n)$ đối với cơ sở nền $\{\vec{e}_j\}$ (hoặc áp dụng công thức $(1)$ trong <Ref to="thm-s4-1" /> tại gốc $O$).
 </Hint>
 
 <Solution>
-Tọa độ G = (1·0 +  $ lambda$ ·6)/(1 +  $ lambda$ ).
+Đối với mục tiêu affine $\{O; \vec{e}_1, \dots, \vec{e}_n\}$ đã chọn, mỗi vectơ $\overrightarrow{GM_i}$ ($i = 1, \dots, k$) có tọa độ đối với cơ sở nền $\{\vec{e}_1, \dots, \vec{e}_n\}$ là:
 
-(6 $ lambda$ )/(1 +  $ lambda$ ) = 2 nên 6 $ lambda$  = 2 + 2 $ lambda$ ,  $ lambda$  = 1/2.
+$$
+\overrightarrow{GM_i} = (x_1^i - X_1,\; x_2^i - X_2,\; \dots,\; x_n^i - X_n).
+$$
 
-**Đáp án:**  $ lambda$  = 1/2
+Đẳng thức vectơ $\sum_{i=1}^{k} m_i\overrightarrow{GM_i} = \vec{0}$ tương đương với việc mọi thành phần tọa độ thứ $j$ ($j = 1, 2, \dots, n$) đều bằng $0$:
+
+$$
+\sum_{i=1}^{k} m_i (x_j^i - X_j) = 0
+\iff \sum_{i=1}^{k} m_i x_j^i - \left(\sum_{i=1}^{k} m_i\right) X_j = 0.
+$$
+
+Vì $\sum_{i=1}^{k} m_i = m_1 + m_2 + \dots + m_k \neq 0$, chia hai vế cho $\sum_{i=1}^{k} m_i$ ta thu được:
+
+$$
+X_j = \frac{m_1 x_j^1 + m_2 x_j^2 + \dots + m_k x_j^k}{m_1 + m_2 + \dots + m_k} \quad (j = 1, 2, \dots, n).
+$$
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s4-3" title="Trọng tâm tứ diện và tâm tỉ cự (§4, mục 5–6)">
-Trong A³ cho A(0,0,0), B(4,0,0), C(0,4,0), D(0,0,4). Gọi G là trọng tâm tứ diện ABCD và G_A là trọng tâm tam giác BCD. Chứng minh A, G, G_A thẳng hàng và tính tỉ số đơn (A G G_A).
-
+<Exercise id="exr-s4-29" title="Bài tập 1.29 — Biểu diễn m-phẳng qua m + 1 điểm độc lập bằng tâm tỉ cự">
+Cho $m$-phẳng $\alpha$ xác định bởi $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m$. Chứng minh rằng $\alpha$ là tập hợp các tâm tỉ cự của hệ điểm đó gắn với họ các hệ số khác nhau.
 
 <Hint>
-Trọng tâm là tâm tỉ cự với các hệ số bằng nhau. (MPQ) = k nếu MP = k·MQ.
+Sử dụng cơ sở $\{\overrightarrow{P_0P_1}, \dots, \overrightarrow{P_0P_m}\}$ của phương $\overrightarrow{\alpha}$ để chứng minh trực tiếp hai chiều bao hàm giữa $\alpha$ và tập hợp các tâm tỉ cự của $\{P_0, P_1, \dots, P_m\}$.
 </Hint>
 
 <Solution>
-G = (A + B + C + D)/4 = (1,1,1); G_A = (B + C + D)/3 = (4/3, 4/3, 4/3).
+Vì $P_0, P_1, \dots, P_m$ là $m + 1$ điểm độc lập trong $m$-phẳng $\alpha$, hệ $m$ vectơ $\{\overrightarrow{P_0P_1}, \overrightarrow{P_0P_2}, \dots, \overrightarrow{P_0P_m}\}$ độc lập tuyến tính và lập thành một cơ sở của phương $\overrightarrow{\alpha}$ ($\dim \overrightarrow{\alpha} = m$), đồng thời $\alpha$ đi qua $P_0$. Gọi $\mathcal{B}$ là tập hợp tất cả các tâm tỉ cự của $P_0, P_1, \dots, P_m$.
 
-AG = (1,1,1) và AG_A = (4/3, 4/3, 4/3) nên AG = (3/4)·AG_A.
+1. **Chứng minh $\alpha \subset \mathcal{B}$:** Lấy điểm $M \in \alpha$ bất kỳ. Khi đó $\overrightarrow{P_0M} \in \overrightarrow{\alpha}$, nên tồn tại các skalar $t_1, t_2, \dots, t_m \in \mathbb{K}$ sao cho:
 
-**Đáp án:** A, G, G_A thẳng hàng và (A G G_A) = 3/4 (AG : GG_A = 3 : 1)
+$$
+\overrightarrow{P_0M} = \sum_{i=1}^{m} t_i \overrightarrow{P_0P_i}
+\iff -\overrightarrow{MP_0} = \sum_{i=1}^{m} t_i (\overrightarrow{MP_i} - \overrightarrow{MP_0})
+\iff \left(1 - \sum_{i=1}^{m} t_i\right)\overrightarrow{MP_0} + \sum_{i=1}^{m} t_i \overrightarrow{MP_i} = \vec{0}.
+$$
+
+   Đặt $\lambda_0 = 1 - \sum_{i=1}^{m} t_i$ và $\lambda_i = t_i$ ($i = 1, \dots, m$). Ta có $\sum_{i=0}^{m} \lambda_i = 1 \neq 0$ và $\sum_{i=0}^{m} \lambda_i \overrightarrow{MP_i} = \vec{0}$, nghĩa là $M \in \mathcal{B}$.
+
+2. **Chứng minh $\mathcal{B} \subset \alpha$:** Ngược lại, nếu $M \in \mathcal{B}$ là tâm tỉ cự của $P_0, P_1, \dots, P_m$ gắn với họ hệ số $\lambda_0, \lambda_1, \dots, \lambda_m$ ($\sum_{i=0}^{m} \lambda_i \neq 0$), thì áp dụng công thức $(1)$ của <Ref to="thm-s4-1" /> tại gốc $O = P_0$ (lưu ý $\overrightarrow{P_0P_0} = \vec{0}$):
+
+$$
+\overrightarrow{P_0M} = \frac{1}{\displaystyle\sum_{i=0}^{m} \lambda_i} \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i} \in \operatorname{span}\{\overrightarrow{P_0P_1}, \dots, \overrightarrow{P_0P_m}\} = \overrightarrow{\alpha}.
+$$
+
+   Do đó $M \in \alpha$. Vậy $\alpha = \mathcal{B}$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s4-30" title="Bài tập 1.30 — Tính chất kết hợp (tâm tỉ cự bộ phận) của tâm tỉ cự">
+Trong $\mathcal{A}^n$, giả sử hệ $p$ điểm $M_1, M_2, \dots, M_p$ có $G$ là tâm tỉ cự ứng với họ các hệ số $m_1, m_2, \dots, m_p$ với $m_1 + m_2 + \dots + m_p \neq 0$, và $H$ là tâm tỉ cự của hệ con $M_1, M_2, \dots, M_k$ ($1 \le k < p$) ứng với các hệ số $m_1, m_2, \dots, m_k$ với $m_1 + m_2 + \dots + m_k \neq 0$.
+
+Chứng minh rằng tâm tỉ cự $G$ nói trên trùng với tâm tỉ cự $C$ của hệ điểm $(H, M_{k+1}, M_{k+2}, \dots, M_p)$ ứng với các hệ số:
+
+$$
+\left(\sum_{j=1}^{k} m_j,\; m_{k+1},\; m_{k+2},\; \dots,\; m_p\right) \quad \text{với } \sum_{j=1}^{k} m_j + m_{k+1} + m_{k+2} + \dots + m_p \neq 0.
+$$
+
+<Hint>
+Áp dụng kết quả <Ref to="exr-s4-27" /> với điểm gốc $S = G$ cho hệ con $M_1, \dots, M_k$ để thay tổng $\sum_{j=1}^{k} m_j \overrightarrow{GM_j}$ bằng $\left(\sum_{j=1}^{k} m_j\right)\overrightarrow{GH}$, rồi dùng tính duy nhất của tâm tỉ cự.
+</Hint>
+
+<Solution>
+Đặt $M_{(k)} = \sum_{j=1}^{k} m_j \neq 0$. Vì $H$ là tâm tỉ cự của hệ con $M_1, M_2, \dots, M_k$ gắn với họ hệ số $m_1, \dots, m_k$, áp dụng công thức $(1)$ trong <Ref to="thm-s4-1" /> tại điểm gốc $O = G$, ta được:
+
+$$
+\overrightarrow{GH} = \frac{1}{M_{(k)}} \sum_{j=1}^{k} m_j \overrightarrow{GM_j}
+\iff \sum_{j=1}^{k} m_j \overrightarrow{GM_j} = M_{(k)}\overrightarrow{GH}.
+$$
+
+Mặt khác, vì $G$ là tâm tỉ cự của toàn bộ hệ $p$ điểm $M_1, \dots, M_p$ gắn với $m_1, \dots, m_p$, ta có:
+
+$$
+\vec{0} = \sum_{i=1}^{p} m_i \overrightarrow{GM_i}
+= \left(\sum_{j=1}^{k} m_j \overrightarrow{GM_j}\right) + \sum_{i=k+1}^{p} m_i \overrightarrow{GM_i}
+= M_{(k)}\overrightarrow{GH} + m_{k+1}\overrightarrow{GM_{k+1}} + \dots + m_p\overrightarrow{GM_p}.
+$$
+
+Do tổng các hệ số $M_{(k)} + m_{k+1} + \dots + m_p = \sum_{i=1}^{p} m_i \neq 0$, đẳng thức trên chứng tỏ $G$ thỏa mãn đúng phương trình định nghĩa tâm tỉ cự của hệ điểm $(H, M_{k+1}, \dots, M_p)$ gắn với họ hệ số $(M_{(k)}, m_{k+1}, \dots, m_p)$. Theo tính duy nhất trong <Ref to="thm-s4-1" />, điểm $G$ bắt buộc trùng với tâm tỉ cự $C$ của hệ điểm đó ($G \equiv C$).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s4-31" title="Bài tập 1.31 — Tính bất biến khi nhân hệ số và xác định trọng tâm đoạn thẳng, tam giác">
+Trong $\mathcal{A}^n$, cho $G$ là tâm tỉ cự của hệ điểm $(P_1, P_2, \dots, P_k)$ gắn với họ các hệ số $\lambda_1, \lambda_2, \dots, \lambda_k$ ($\sum_{i=1}^{k} \lambda_i \neq 0$).
+
+a) Chứng minh rằng nếu thay tất cả các hệ số $\lambda_i$ bằng $c\lambda_i$ với $c \neq 0$ *(bản in gốc tr. 75 dùng ký hiệu $k\lambda_i$ với $k \neq 0$)* thì tâm tỉ cự $G$ nói trên không đổi.
+
+b) Trường hợp các hệ số $\lambda_1 = \lambda_2 = \dots = \lambda_k$, điểm $G$ gọi là trọng tâm của hệ điểm $P_1, P_2, \dots, P_k$. Hãy tìm trọng tâm của đoạn thẳng $AB$ và của tam giác $ABC$ *(trong không gian affine thực)*.
+
+<Hint>
+Ở câu a, nhân hai vế của $\sum_{i=1}^{k} \lambda_i \overrightarrow{GP_i} = \vec{0}$ với $c \neq 0$. Ở câu b, dùng câu a đưa về các hệ số bằng $1$ rồi áp dụng tính chất kết hợp tâm tỉ cự ở <Ref to="exr-s4-30" /> để liên hệ trọng tâm tam giác $ABC$ với trung điểm các cạnh.
+</Hint>
+
+<Solution>
+- **a) Tính bất biến khi nhân tất cả hệ số với $c \in \mathbb{K} \setminus \{0\}$:**
+  Vì $c \neq 0$ và $\sum_{i=1}^{k} \lambda_i \neq 0$ trên trường $\mathbb{K}$, tổng hệ số mới vẫn khác $0$:
+
+$$
+\sum_{i=1}^{k} (c\lambda_i) = c \sum_{i=1}^{k} \lambda_i \neq 0.
+$$
+
+  Hơn nữa, từ $\sum_{i=1}^{k} \lambda_i \overrightarrow{GP_i} = \vec{0}$, nhân vô hướng hai vế với $c$ ta được:
+
+$$
+c\left(\sum_{i=1}^{k} \lambda_i \overrightarrow{GP_i}\right) = c\vec{0} \iff \sum_{i=1}^{k} (c\lambda_i)\overrightarrow{GP_i} = \vec{0}.
+$$
+
+  Theo tính duy nhất trong <Ref to="thm-s4-1" />, điểm $G$ cũng chính là tâm tỉ cự của $(P_1, \dots, P_k)$ ứng với họ hệ số $(c\lambda_1, \dots, c\lambda_k)$.
+
+- **b) Trọng tâm của đoạn thẳng $AB$ và của tam giác $ABC$:**
+  Theo câu a, với $\lambda_1 = \dots = \lambda_k \neq 0$, chia cho $\lambda_1$ ta có thể chọn tất cả các hệ số bằng $1$:
+  1. **Đối với đoạn thẳng $AB$ (hệ $2$ điểm $A, B$ với hệ số $(1, 1)$):**
+     Trọng tâm $I$ của hệ $(A, B)$ thỏa mãn $\overrightarrow{IA} + \overrightarrow{IB} = \vec{0} \iff \overrightarrow{AI} = \dfrac{1}{2}\overrightarrow{AB}$ (hay $\overrightarrow{OI} = \dfrac{1}{2}(\overrightarrow{OA} + \overrightarrow{OB})$ với mọi gốc $O$). Vậy trọng tâm của đoạn thẳng $AB$ chính là **trung điểm $I$ của đoạn thẳng $AB$**.
+  2. **Đối với tam giác $ABC$ (hệ $3$ điểm không thẳng hàng $A, B, C$ với hệ số $(1, 1, 1)$):**
+     Trọng tâm $G$ thỏa mãn $\overrightarrow{GA} + \overrightarrow{GB} + \overrightarrow{GC} = \vec{0}$ (hay $\overrightarrow{OG} = \dfrac{1}{3}(\overrightarrow{OA} + \overrightarrow{OB} + \overrightarrow{OC})$). Gọi $M_a, M_b, M_c$ lần lượt là trung điểm của các cạnh $BC, CA, AB$ (tức tâm tỉ cự bộ phận của từng cặp đỉnh với hệ số $(1, 1)$, có tổng bằng $2 \neq 0$). Áp dụng tính chất kết hợp ở <Ref to="exr-s4-30" />, $G$ đồng thời là tâm tỉ cự của các cặp điểm $(A, M_a)$, $(B, M_b)$ và $(C, M_c)$ gắn với họ hệ số $(1, 2)$:
+
+$$
+\overrightarrow{GA} + 2\overrightarrow{GM_a} = \vec{0} \iff \overrightarrow{AG} = \frac{2}{3}\overrightarrow{AM_a},
+$$
+
+     và tương tự $\overrightarrow{BG} = \dfrac{2}{3}\overrightarrow{BM_b}$, $\overrightarrow{CG} = \dfrac{2}{3}\overrightarrow{CM_c}$. Vậy trọng tâm $G$ của tam giác $ABC$ chính là **giao điểm đồng quy của ba đường trung tuyến** $AM_a, BM_b, CM_c$, chia mỗi đường trung tuyến theo tỉ số $\dfrac{2}{3}$ kể từ đỉnh.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Tâm tỉ cự của hệ điểm với tổng hệ số khác 0 là điểm duy nhất thỏa mãn đẳng thức vectơ cơ bản.
-- Tính chất kết hợp tâm tỉ cự cho phép thay thế một nhóm điểm bằng tâm tỉ cự bộ phận của chúng.
+- Với mọi hệ điểm $P_1, \dots, P_k \in \mathcal{A}$ và họ hệ số $\lambda_1, \dots, \lambda_k \in \mathbb{K}$ có $\sum_{i=1}^{k} \lambda_i \neq 0$, tồn tại duy nhất tâm tỉ cự $G$ thỏa mãn $\sum_{i=1}^{k} \lambda_i \overrightarrow{GP_i} = \vec{0}$, xác định qua gốc $O$ tùy ý bởi $\overrightarrow{OG} = \bigl(\sum_{i=1}^{k} \lambda_i\bigr)^{-1} \sum_{i=1}^{k} \lambda_i \overrightarrow{OP_i}$ (<Ref to="thm-s4-1" />, <Ref to="def-s4-3" />).
+- Tập hợp mọi tâm tỉ cự của hệ điểm $P_0, \dots, P_k$ chính là cái phẳng chiều bé nhất chứa hệ điểm đó (<Ref to="thm-s4-4" />); riêng với $m$-phẳng $\alpha$ qua $m + 1$ điểm độc lập $P_0, \dots, P_m$, điểm $M \in \alpha \iff \overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i}$ với $\sum_{i=0}^{m} \lambda_i = 1$ (<Ref to="thm-s4-5" />).
+- Tâm tỉ cự bất biến khi nhân đồng thời các hệ số với $c \neq 0$ (<Ref to="exr-s4-31" />) và thỏa mãn tính chất kết hợp cho phép thay thế một nhóm điểm con bằng tâm tỉ cự bộ phận gắn với tổng hệ số của nhóm đó (<Ref to="exr-s4-30" />).
 </KeyTakeaways>

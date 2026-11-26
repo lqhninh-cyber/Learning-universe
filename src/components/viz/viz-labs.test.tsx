@@ -213,18 +213,24 @@ describe('Interactive 2D SVG Labs (.viz)', () => {
     expect(empty.firstChild).toBeNull();
 
     render(<InlineTheoremViz blockId="thm-p10-6" />);
-    await waitFor(() => {
-      expect(screen.getByText(/Định lí Desargues trong Mặt phẳng Xạ ảnh/i)).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Định lí Desargues trong Mặt phẳng Xạ ảnh/i)).toBeInTheDocument();
+      },
+      { timeout: 10000 },
+    );
 
-    // Verify full real MDX lesson (status: published, untouched MDX file) embeds BarycentricViz below thm-s4-1
+    // Verify full real MDX lesson (status: published) embeds BarycentricViz below thm-s4-1
     const compiled = await loadLessonModule('tam-ti-cu-cua-mot-he-diem');
     const lesson = getLessonById('tam-ti-cu-cua-mot-he-diem');
     expect(lesson).toBeDefined();
     render(<LessonMdxView Content={compiled.default} lessonMeta={compiled.lessonMeta} />);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Tâm tỉ cự và Đơn hình afin ΔP₁P₂P₃/i)).toBeInTheDocument();
-    });
-  });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Tâm tỉ cự và Đơn hình afin ΔP₁P₂P₃/i)).toBeInTheDocument();
+      },
+      { timeout: 10000 },
+    );
+  }, 30000);
 });

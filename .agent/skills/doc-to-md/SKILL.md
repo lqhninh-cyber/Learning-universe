@@ -65,16 +65,16 @@ Sử dụng trực tiếp `pypdfium2` + `Pillow` có sẵn qua script `D:\Tools\
   2. Đọc ảnh Mục lục bằng Vision (mở rộng tối đa 5 trang liền kề nếu lệch vị trí), kiểm chứng độ lệch giữa số trang in và số trang PDF, rồi lưu bảng ánh xạ `Bài học ↔ Khoảng số trang PDF (page start–end)` vào `D:\Tools\markitdown\output\<ten-tai-lieu>-page-map.md`.
   3. _(Với học phần HHAVE, đọc trực tiếp bản đồ có sẵn tại `D:\Tools\markitdown\output\Hinhhoccaocap-page-map.md`)._
 
-- **Bước B — Cắt lát & Đối chiếu từng bài lẻ (`1–2 bài/lượt`)**:
-  1. Tra `*-page-map.md` để lấy đúng khoảng trang lý thuyết và bài tập của 1–2 bài đang xử lý, render PNG vào `D:\Tools\markitdown\output\<mon>_pages\`:
+- **Bước B — Cắt lát & Đối chiếu theo lô (`Context Guard <= 16 trang/lượt`)**:
+  1. Tra `*-page-map.md` để lấy đúng khoảng trang lý thuyết và bài tập của 1–2 bài đang xử lý (giới hạn cứng tối đa `16 trang/lượt`), render PNG ở **`200 DPI`** vào `D:\Tools\markitdown\output\<mon>_pages\<ma_lo>\`:
      ```powershell
      & "D:\Tools\markitdown\.venv\Scripts\python.exe" "D:\Tools\markitdown\render_slices.py" `
        "D:\Tools\markitdown\input\<ten-tai-lieu>.pdf" `
-       "D:\Tools\markitdown\output\<mon>_pages" `
-       "<page_ranges>" 165
+       "D:\Tools\markitdown\output\<mon>_pages\<ma_lo>" `
+       "<page_ranges>" 200
      ```
-  2. Đọc trực tiếp các ảnh `.png` vừa xuất bằng công cụ `read_file` (Vision) để thực hiện **Pha 1** và **Pha 2** ở Mục 5.
-  3. Xóa các ảnh `.png` tạm trong `D:\Tools\markitdown\output\<mon>_pages\` sau khi hoàn tất nghiệm thu bài học nếu cần tiết kiệm dung lượng ổ đĩa.
+  2. Đọc trực tiếp các ảnh `.png` vừa xuất bằng công cụ `read_file` (Vision) để thực hiện **Pha 1** và **Pha 2** ở Mục 5 (hoặc chạy liền mạch theo **Giao thức 1-Shot** ở Mục 6).
+  3. Xóa sạch thư mục ảnh `.png` tạm `D:\Tools\markitdown\output\<mon>_pages\<ma_lo>\` sau khi hoàn tất nghiệm thu lô bài học.
 
 ## 5. Quy trình đối chiếu 2 pha bắt buộc khi sửa bài học MDX
 
@@ -92,10 +92,46 @@ Lập **bảng đối chiếu 5 hạng mục** giữa tài liệu gốc (từ ph
 
 ### Pha 2 — Vá bổ sung nguyên vẹn & Kiểm toán KaTeX
 
-1. Chỉ sau khi đã xác định đủ danh sách thiếu từ Pha 1 (và được người dùng duyệt khi cần) mới vá bổ sung vào `.mdx`.
+1. Chỉ sau khi đã xác định đủ danh sách thiếu từ Pha 1 (trong chế độ rà soát thủ công thì chờ người dùng duyệt; trong **Giao thức 1-Shot ở Mục 6** thì chuyển thẳng sang Pha 2) mới vá bổ sung vào `.mdx`.
 2. **Bảo toàn tính nguyên vẹn học thuật**: Trình bày đầy đủ các bước biến đổi và lập luận; **không tóm lược hay cắt bớt chứng minh**.
 3. Sau mỗi đợt cập nhật `.mdx`, **bắt buộc chạy lệnh kiểm toán**:
    ```powershell
    node scripts/audit-mdx-katex.mjs
    ```
    và xác nhận kết quả **`0` lỗi KaTeX / thẻ JSX học thuật** trước khi báo cáo hoàn tất.
+
+## 6. Giao thức Khôi phục Bài giảng Toán 1-Shot (Chuẩn hóa từ HHAVE 1.1–1.3)
+
+Khi thực hiện khôi phục chuẩn hóa các bài giảng Toán từ giáo trình gốc, áp dụng trọn vẹn **6 ràng buộc cố định** sau đây trong một lượt xử lý khép kín:
+
+1. **Vision & Context Guard:**
+   - Render ảnh PNG ở độ phân giải **`200 DPI`** bằng `D:\Tools\markitdown\render_slices.py` vào thư mục tạm theo lô `D:\Tools\markitdown\output\<mon>_pages\<ma_lo>\`.
+   - **Giới hạn cứng tối đa `16 trang/lượt`** (tổng số trang Lý thuyết + Bài tập của lô). Nếu tổng số trang vượt `16 trang`, tự động thu gọn phạm vi về **1 bài** (hoặc tách nửa Lý thuyết / nửa Bài tập nếu riêng 1 bài vượt 16 trang).
+
+2. **Điểm dừng an toàn duy nhất:**
+   - Tự động chạy liền mạch **Pha 1 (đối chiếu nội bộ)** → **Pha 2 (cập nhật `.mdx`)** mà không dừng chờ duyệt trung gian.
+   - **Chỉ dừng hỏi người dùng** nếu trang scan bị mờ, rách hoặc mất hẳn công thức không thể xác minh chắc chắn bằng lập luận toán học.
+
+3. **Chuẩn LaTeX/KaTeX bắt buộc:**
+   - **Cấm tuyệt đối** sử dụng macro `\vect{...}` trong tệp bài giảng `.mdx`.
+   - Dùng `\overrightarrow{...}` cho vectơ nối 2 điểm và không gian phương (`\overrightarrow{AB}`, `\overrightarrow{\mathcal{A}}`, `\overrightarrow{\alpha}`).
+   - Dùng `\vec{...}` cho vectơ đơn (`\vec{a}`, `\vec{e}_i`, `\vec{0}`).
+   - Escape ngoặc nhọn `\{ \}` cho tập hợp và mục tiêu affine (`\{E_0; E_i\}`, `\{\vec{e}_i\}`).
+   - Loại bỏ **100% ký tự Unicode toán học trần** ngoài biểu thức `$...$` (như `α`, `λ`, `μ`, `≤`, `∈`, `A²`, `P₁`, `Σ`...) và khắc phục triệt để mọi lỗi đứt câu, khuyết phương trình.
+
+4. **Chống cắt ngắn & Bảo toàn:**
+   - Khôi phục **100%** Định nghĩa, Định lý / Điều kiện giả thiết, **toàn bộ các bước Chứng minh trung gian** (không cắt gọt), Ví dụ / Thí dụ, Chú ý / Hệ quả và **trọn bộ Bài tập gốc** (nếu bản in gốc sai chính tả hoặc nhầm chỉ số, đính chính chuẩn xác kèm ghi chú ngắn trong ngoặc; đồng thời cập nhật chính xác trường `pages` trong frontmatter).
+   - Bảo toàn **100%** các component tương tác (`<...Figure />`, `<...Canvas />`), thẻ `<GlossaryTerm>`, và các `id` khối định lý/định nghĩa được tham chiếu bởi `InlineTheoremViz` (như `thm-s4-1`, `def-e1-3`, `def-e2-1`, `thm-p7-13`, `thm-p10-6`...).
+   - Thay thế các bài tập tự chế bị lỗi cú pháp hoặc trùng lặp bằng bài tập gốc (chỉ giữ lại bài tập tự chế nếu bài đó đang gắn trực tiếp component tương tác).
+
+5. **Kiểm chứng số học bằng Python:**
+   - Mọi bài toán và ví dụ có tính toán tọa độ, ma trận, khoảng cách, tỉ số, phương trình phẳng hoặc vị trí tương đối phải được kiểm tra ngược bằng script Python tạm ngoài repo (`D:\Tools\markitdown\.venv\Scripts\python.exe` dùng `fractions.Fraction`) trước khi ghi lời giải vào `.mdx`.
+
+6. **Dọn dẹp & Cổng kiểm định:**
+   - Xóa sạch thư mục ảnh tạm `D:\Tools\markitdown\output\<mon>_pages\<ma_lo>\` và script Python tạm sau khi hoàn tất (**TUYỆT ĐỐI giữ nguyên** `D:\Tools\markitdown\input\` và các tệp `*-page-map.md`).
+   - Đồng bộ lại khóa băm nội dung nếu bài có trạng thái `approved`/`published` (`npm.cmd run content:approve -- <lesson-id>`), chỉ mục thuật ngữ và cập nhật đồng bộ các bài test nhãn khối nếu có (`src/content-runtime/content-runtime.test.tsx`...).
+   - Chuẩn hóa định dạng (`npm.cmd run format`) và chạy cổng kiểm định:
+     ```powershell
+     node scripts/audit-mdx-katex.mjs && npm.cmd run check && npm.cmd run build
+     ```
+     đạt **`0` lỗi**, **pass `100%` test**, và đảm bảo `git status` sạch tệp tạm.

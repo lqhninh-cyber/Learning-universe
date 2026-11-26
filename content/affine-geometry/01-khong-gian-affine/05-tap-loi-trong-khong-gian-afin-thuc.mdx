@@ -1,17 +1,18 @@
 ---
 id: tap-loi-trong-khong-gian-afin-thuc
 title: "Tập Lồi trong Không gian Affine Thực"
-description: "Đoạn thẳng, tập lồi, tổ hợp lồi, bao lồi và đơn hình trong không gian thực."
+description: "Đoạn thẳng, tỉ số đơn của ba điểm thẳng hàng, tập lồi, đơn hình m chiều và hình hộp m chiều trong không gian affine thực."
 estimatedMinutes: 45
 level: intermediate
 prerequisites: []
 tags:
   - "tập lồi"
-  - "bao lồi"
+  - "tỉ số đơn"
   - "đơn hình"
+  - "hình hộp"
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '40-47'
+    pages: '26-31'
     sections: '§5'
 status: published
 version: 1.0.0
@@ -22,153 +23,487 @@ authoring:
   draftedAt: '2026-11-03'
 ---
 
-## 1. Đoạn thẳng
+## 1. Đoạn thẳng trong Không gian Affine Thực
 
-Cho hai điểm phân biệt P, Q của $\mathcal{A}$ thực.
+Cho hai điểm $P$ và $Q$ phân biệt của không gian affine thực $\mathcal{A}$. Theo đặc trưng vectơ của đường thẳng ở §4, điểm $M$ thuộc đường thẳng $d$ đi qua $P$ và $Q$ khi và chỉ khi với một điểm $O$ tùy ý ta có:
 
-Điểm M thuộc đường thẳng $PQ \iff$ với điểm O tùy ý, $\vect{OM} = \lambda \vect{OP} + μ\vect{OQ}$ với $\lambda + μ = 1$.
+$$
+\overrightarrow{OM} = \lambda\overrightarrow{OP} + \mu\overrightarrow{OQ} \quad \text{với } \lambda + \mu = 1,
+$$
 
-<Definition id="def-s5-1" title="Định nghĩa">
-*Đoạn thẳng PQ* là tập hợp các điểm M sao cho $\vect{OM} = \lambda \vect{OP} + (1- \lambda )\vect{OQ}$ với $0 \le \lambda \le 1$.
+hay viết theo một tham số thực duy nhất:
 
-P, Q gọi là hai *mút*; các điểm ứng với $0 < \lambda < 1$ gọi là điểm *ở giữa* P và Q.
+$$
+\overrightarrow{OM} = \lambda\overrightarrow{OP} + (1 - \lambda)\overrightarrow{OQ} \quad \text{với } \lambda \in \R.
+$$
+
+<Definition id="def-s5-1" title="Đoạn thẳng, hai mút và điểm ở giữa">
+Trong không gian affine thực $\mathcal{A}$, cho hai điểm $P$ và $Q$ phân biệt. Tập hợp những điểm $M \in \mathcal{A}$ sao cho với một điểm $O$ tùy ý ta có:
+
+$$
+\overrightarrow{OM} = \lambda\overrightarrow{OP} + (1 - \lambda)\overrightarrow{OQ} \quad \text{với } 0 \le \lambda \le 1
+$$
+
+được gọi là **đoạn thẳng $PQ$**.
+
+- Khi $\lambda = 1$ ta có điểm $P$, khi $\lambda = 0$ ta có điểm $Q$, còn những điểm khác của đoạn thẳng $PQ$ ứng với $0 < \lambda < 1$.
+- Hai điểm $P, Q$ được gọi là hai **mút** của đoạn thẳng $PQ$; những điểm khác của đoạn thẳng $PQ$ ($0 < \lambda < 1$) gọi là **ở giữa** $P$ và $Q$.
 </Definition>
 
-## 2. Tỉ số đơn của hệ ba điểm thẳng hàng
+*(Lưu ý: Chọn $O = Q$ trong công thức trên cho $\overrightarrow{QM} = \lambda\overrightarrow{QP}$ với $0 \le \lambda \le 1$, nên định nghĩa đoạn thẳng $PQ$ hoàn toàn không phụ thuộc vào cách chọn gốc $O$, đồng thời đoạn thẳng $PQ$ trùng với đoạn thẳng $QP$).*
 
-<Definition id="def-s5-2" title="Định nghĩa">
-Cho $P \neq Q$.
+## 2. Tỉ số Đơn của Hệ Ba Điểm Thẳng Hàng
 
-Điểm $M \neq Q$ thuộc đường thẳng PQ khi và chỉ khi có $k \in \R \ {1}$ để $\vect{MP} = k\vect{MQ}; k$ gọi là *tỉ số đơn* của ba điểm M, P, Q (theo thứ tự đó), kí hiệu $k =$ (MPQ).
+<Definition id="def-s5-2" title="Tỉ số đơn của hệ ba điểm thẳng hàng">
+Cho hai điểm $P$ và $Q$ phân biệt của không gian affine thực $\mathcal{A}$. Điểm $M$ thuộc đường thẳng $d$ đi qua $P$ và $Q$ đồng thời $M \neq Q$ khi và chỉ khi có số thực duy nhất $k \in \R \setminus \{1\}$ để:
 
-Trung điểm M của PQ có (MPQ) $= -1$.
+$$
+\overrightarrow{MP} = k\overrightarrow{MQ}.
+$$
+
+Khi đó $k$ được gọi là **tỉ số đơn của hệ ba điểm $M, P, Q$ thẳng hàng** lấy theo thứ tự đó, và được ký hiệu là $k = (MPQ)$.
 </Definition>
 
-Đổi thứ tự thì giá trị thay đổi: $(MQP) = \dfrac{1}{(MPQ)}$, $(PMQ) = \dfrac{(MPQ)}{(MPQ) - 1}$, $(QPM) = 1 - (MPQ)$.
+- Trung điểm $M$ của đoạn thẳng $PQ$ được xác định bởi tỉ số đơn $(MPQ) = -1$ (vì $\overrightarrow{MP} = -\overrightarrow{MQ}$).
+- Cần chú ý đúng thứ tự điểm trong định nghĩa: $(MPQ) = k \iff \overrightarrow{MP} = k\overrightarrow{MQ}$. Nếu thay đổi thứ tự các điểm trong cách viết tỉ số đơn thì giá trị của tỉ số đơn thay đổi theo các công thức hoán vị sau (với $M, P, Q$ đôi một phân biệt):
 
-Quy ước khi hai điểm trùng nhau: (MMQ) $= 0$, (MPM) $= \infty$, (MPP) $= 1$.
+$$
+(MPQ) = \frac{1}{(MQP)}, \qquad (PMQ) = \frac{(MPQ)}{(MPQ) - 1}, \qquad (QPM) = 1 - (MPQ).
+$$
 
-<Example id="ex-s5-3" title="Ví dụ">
-Trên trục $Ox, P(0,0), Q(4,0), M(6,0): \vect{MP} = (-6,0) = 3·(-2,0) = 3\vect{MQ}$ nên (MPQ) $= 3$.
+- Đối với trường hợp có hai điểm trong ba điểm $M, P, Q$ trùng nhau ($P \neq Q$), ta quy ước:
 
-Khi đó (PMQ) $= \frac{3}{2}$ (đúng vì $\vect{PM} = (6,0) = 1,5·\vect{PQ})$ và (QPM) $= 1 - 3 = -2$ (đúng vì $\vect{QP} = (-4,0) = -2·\vect{QM})$.
+$$
+(MMQ) = 0, \qquad (MPM) = \infty, \qquad (MPP) = 1.
+$$
+
+<Example id="ex-s5-3" title="Tính tỉ số đơn và kiểm chứng các công thức đổi thứ tự điểm">
+Trên trục tọa độ trong $\R^2$, xét $P(0, 0)$, $Q(4, 0)$ và $M(6, 0)$. Ta có $\overrightarrow{MP} = (-6, 0)$ và $\overrightarrow{MQ} = (-2, 0)$, nên $\overrightarrow{MP} = 3\overrightarrow{MQ}$, tức là $(MPQ) = 3$.
+
+Kiểm tra các công thức đổi thứ tự điểm:
+
+- $(MQP) = \dfrac{1}{(MPQ)} = \dfrac{1}{3}$ (khớp vì $\overrightarrow{MQ} = (-2, 0) = \dfrac{1}{3}(-6, 0) = \dfrac{1}{3}\overrightarrow{MP}$).
+- $(PMQ) = \dfrac{(MPQ)}{(MPQ) - 1} = \dfrac{3}{3 - 1} = \dfrac{3}{2}$ (khớp vì $\overrightarrow{PM} = (6, 0) = \dfrac{3}{2}(4, 0) = \dfrac{3}{2}\overrightarrow{PQ}$).
+- $(QPM) = 1 - (MPQ) = 1 - 3 = -2$ (khớp vì $\overrightarrow{QP} = (-4, 0) = -2(2, 0) = -2\overrightarrow{QM}$).
 </Example>
 
-## 3. Tập lồi
+## 3. Tập Lồi
 
-<Definition id="def-s5-4" title="Định nghĩa">
-Tập X trong không gian afin thực $\mathcal{A}$ gọi là *tập lồi* nếu với mọi $P, Q \in X$ thì đoạn thẳng PQ nằm hoàn toàn trong X.
+<Definition id="def-s5-4" title="Tập lồi trong không gian affine thực">
+Một tập $X$ trong không gian affine thực $\mathcal{A}$ được gọi là một **<GlossaryTerm termId="tap-loi">tập lồi</GlossaryTerm>** nếu với mọi cặp điểm $P, Q \in X$ *(khi $P \neq Q$)* thì đoạn thẳng $PQ$ nằm hoàn toàn trong $X$.
 </Definition>
 
-**Thí dụ.**
+<Example id="ex-s5-4b" title="Thí dụ: Mỗi m-phẳng trong không gian affine thực là một tập lồi">
+Mỗi <GlossaryTerm termId="m-phang">m-phẳng</GlossaryTerm> $\alpha$ trong không gian affine thực $\mathcal{A}$ đều là một tập lồi. Thật vậy, nếu $P, Q$ là hai điểm phân biệt bất kỳ thuộc $\alpha$ thì toàn bộ đường thẳng $PQ$ nằm trong $\alpha$ (do phương của đường thẳng $PQ$ sinh bởi $\overrightarrow{PQ} \in \overrightarrow{\alpha}$). Do đó đoạn thẳng $PQ$ nằm hoàn toàn trong $\alpha$, suy ra $\alpha$ là một tập lồi.
+</Example>
 
-Mỗi m-phẳng α trong $\mathcal{A}$ thực là tập lồi, vì nếu $P, Q \in \alpha$ phân biệt thì toàn bộ đường thẳng $PQ \subset \alpha$, nên đoạn $PQ \subset \alpha$.
+## 4. Đơn hình $m$ Chiều
 
-## 4. Đơn hình m chiều
+Trong không gian affine thực $n$ chiều $\mathcal{A}^n$, cho $m + 1$ <GlossaryTerm termId="doc-lap-afin">điểm độc lập</GlossaryTerm> $A_0, A_1, \dots, A_m$ ($0 \le m \le n$). Giả sử đối với một mục tiêu affine cho trước, các điểm $A_k$ có tọa độ là:
 
-Trong $\mathcal{A} ^{n}$ cho $m+1$ điểm độc lập $A_{0}, \dots ,A_{m} (0 \le m \le n), A_{i} = (a_{i1}, \dots ,a_{in})$.
+$$
+A_k = (a_{k1}, a_{k2}, \dots, a_{kn}) \quad \text{với } k = 0, 1, 2, \dots, m.
+$$
 
-Phương trình tham số của m-phẳng qua chúng là $x_{i} = a_{0i} + t_{1}(a_{1i} - a_{0i}) + \dots + t_{m}(a_{mi} - a_{0i})$.
+Phương trình tham số của $m$-phẳng $\mathcal{A}^m$ đi qua $m + 1$ điểm đó là:
 
-Đặt $t_{0} = 1 - t_{1} - \dots - t_{m}$, tức $t_{0} + t_{1} + \dots + t_{m} = 1$, ta được $x_{i} =$ t$_{0}$a$_{0i} +$ t$_{1}$a$_{1i} + \dots +$ t$_{m}$a$_{mi}$.
+$$
+x_i = a_{0i} + t_1(a_{1i} - a_{0i}) + t_2(a_{2i} - a_{0i}) + \dots + t_m(a_{mi} - a_{0i}) \quad (i = 1, 2, \dots, n). \tag{1}
+$$
 
-<Definition id="def-s5-5" title="Định nghĩa">
-Tập hợp các điểm $X \in \mathcal{A}^{n}$ có tọa độ thỏa $x_{i} =$ t$_{0}$a$_{0i} + \dots +$ t$_{m}$a$_{mi}$ với $t_{0} + \dots + t_{m} = 1$ và $t_{i} \ge 0 (i = 0..m)$ gọi là *đơn hình m chiều* (m-đơn hình), kí hiệu S(A$_{0}$,…,A$_{m}$); A$_{i}$ gọi là các *đỉnh*.
+Trong phương trình $(1)$, nếu ta đặt $t_0 = 1 - t_1 - t_2 - \dots - t_m$, hay:
 
-Tương đương: $\vect{OM} = \sum_{i=0}^{m} \lambda _{i}\vect{OP_{i}}$ với $\sum_{i=0}^{m} \lambda _{i} = 1, \lambda _{i} \ge 0$.
+$$
+t_0 + t_1 + t_2 + \dots + t_m = 1, \tag{2}
+$$
+
+thì phương trình tham số được viết lại một cách đối xứng dưới dạng:
+
+$$
+x_i = t_0 a_{0i} + t_1 a_{1i} + t_2 a_{2i} + \dots + t_m a_{mi} \quad (i = 1, 2, \dots, n). \tag{3}
+$$
+
+Phương trình $(3)$ kèm điều kiện $(2)$ tương đương với phương trình $(1)$, biểu diễn $m$-phẳng xác định bởi $m + 1$ điểm độc lập $A_0, \dots, A_m$. Từ đó ta xây dựng khái niệm *đơn hình*:
+
+<Definition id="def-s5-5" title="Đơn hình m chiều (m-đơn hình)">
+Tập hợp các điểm $X \in \mathcal{A}^n$ mà tọa độ $(x_1, x_2, \dots, x_n)$ thỏa mãn phương trình $(3)$:
+
+$$
+x_i = t_0 a_{0i} + t_1 a_{1i} + \dots + t_m a_{mi} \quad (i = 1, 2, \dots, n)
+$$
+
+với điều kiện $(2)$ là $t_0 + t_1 + \dots + t_m = 1$ và thêm điều kiện không âm $t_k \ge 0$ với mọi $k = 0, 1, 2, \dots, m$ được gọi là **đơn hình $m$ chiều** (hoặc **$m$-đơn hình**).
+
+- Các điểm $A_0, A_1, \dots, A_m$ được gọi là các **đỉnh** của đơn hình đó.
+- Một đơn hình hoàn toàn được xác định bởi hệ $m + 1$ đỉnh độc lập $A_0, A_1, \dots, A_m$ của nó và được ký hiệu là $S(A_0, A_1, \dots, A_m)$.
+- Đơn hình $0$ chiều là **một điểm**; đơn hình $1$ chiều, $2$ chiều, $3$ chiều lần lượt có tên gọi quen thuộc là **đoạn thẳng**, **tam giác**, **tứ diện**.
+- Mỗi đỉnh $A_k$ của đơn hình $S(A_0, A_1, \dots, A_m)$ ứng với bộ tham số $t_k = 1$ và $t_j = 0$ với mọi $j \neq k$.
 </Definition>
 
-Đơn hình 0 chiều là một điểm; 1, 2, 3 chiều lần lượt là *đoạn thẳng, tam giác, tứ diện*.
+<Remark title="Nhận xét: Định nghĩa vectơ không phụ thuộc mục tiêu của đơn hình m chiều">
+Ta có thể định nghĩa tương đương đơn hình $m$ chiều $S(P_0, P_1, \dots, P_m)$ trong $\mathcal{A}^n$ xác định bởi $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m$ là tập hợp những điểm $M \in \mathcal{A}^n$ sao cho với một điểm $O$ nào đó ta có:
 
-Đỉnh A$_{i}$ ứng với $t_{i} = 1$ và $t_{j} = 0 (j \neq i)$.
-
-<Theorem id="thm-s5-6" title="Định lí">
-Đơn hình m chiều là một tập lồi.
-</Theorem>
-
-<Proof of="thm-s5-6">
-Lấy $M, N \in S$ với $\vect{OM} = \sum_{i=0}^{m} \lambda _{i}\vect{OP_{i}}, \vect{ON} = \sum_{i=0}^{m}μ_{i}\vect{OP_{i}} (\sum_{i=0}^{m} \lambda _{i} = \sum_{i=0}^{m}μ_{i} = 1; \lambda _{i}, μ_{i} \ge 0)$.
-
-Điểm $X \in MN$ có $\vect{OX} = t\vect{OM} + (1-t)\vect{ON} = \sum_{i=0}^{m}[t \lambda _{i} + (1-t)μ_{i}]\vect{OP_{i}}, 0 \le t \le 1$.
-
-Các hệ số không âm và có tổng $t + (1-t) = 1$, nên $X \in S$.
-</Proof>
-
-## 5. Hình hộp m chiều
-
-<Definition id="def-s5-8" title="Định nghĩa">
-Cho $m+1$ điểm độc lập P$_{0}$,…,P$_{m}$ của $\mathcal{A} ^{n}$ thực.
-
-Tập hợp các điểm M sao cho $\vect{P_{0}M} = \sum_{i=1}^{m} \lambda _{i}\vect{P_{0}P_{i}}$ với $0 \le \lambda _{i} \le 1$ gọi là *hình hộp m chiều* (m-hộp); các P$_{i}$ gọi là đỉnh của m-hộp.
-</Definition>
-
-<Theorem id="thm-s5-9" title="Định lí">
-Hình hộp m chiều là một tập lồi.
-</Theorem>
-
-<Proof of="thm-s5-9">
-Với M, N có hệ số $\lambda _{i}, μ_{i} \in [0,1]$, điểm $X \in MN$ có $\vect{P_{0}X} = t\vect{P_{0}M} + (1-t)\vect{P_{0}N} = \sum_{i=1}^{m}[t \lambda _{i} + (1-t)μ_{i}]\vect{P_{0}P_{i}}$.
-
-Vì $0 \le t \le 1$ nên $0 \le t \lambda _{i} + (1-t)μ_{i} \le t + (1-t) = 1$, suy ra X thuộc m-hộp.
-</Proof>
-
-<Remark title="Chú ý">
-Chú ý.
-
-Một m-hộp có 2$^{m}$ đỉnh phân biệt; đỉnh P$_{0}$ ứng với mọi $\lambda _{i} = 0$, các đỉnh P$_{i}$ ứng với $\lambda _{i} = 1, \lambda _{j} = 0 (j \neq i)$.
-
-Gốc P$_{0}$ không đóng vai trò đặc biệt: mọi đỉnh đều có thể làm gốc.
-
-Hộp 0, 1, 2, 3 chiều lần lượt là *điểm, đoạn thẳng, hình bình hành, hình hộp*.
+$$
+\overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i} \quad \text{với } \sum_{i=0}^{m} \lambda_i = 1 \text{ và } \lambda_i \ge 0 \;\; (i = 0, 1, \dots, m).
+$$
 </Remark>
 
-<Example id="ex-s5-11" title="Ví dụ">
-Trong $\R ^{2}$, A$_{0}$(0,0), A$_{1}$(1,0), A$_{2}$(0,1).
+<Theorem id="thm-s5-6" title="Tính lồi của đơn hình m chiều">
+Đơn hình $m$ chiều là một tập lồi.
+</Theorem>
 
-Đơn hình $S(A_{0},A_{1},A_{2})$ là tam giác đặc; điểm $(\frac{1}{4}, \frac{1}{4})$ có $(t_{0},t_{1},t_{2}) = (\frac{1}{2}, \frac{1}{4}, \frac{1}{4})$ nên thuộc S, còn $(1,1)$ cần $t_{1} = t_{2} = 1, t_{0} = -1 < 0$ nên không thuộc S.
+<Proof of="thm-s5-6" defaultOpen={true}>
+Giả sử đơn hình $S(P_0, P_1, \dots, P_m)$ xác định bởi $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m$ trong không gian affine thực $\mathcal{A}^n$. Với một điểm $O$ tùy ý, lấy hai điểm bất kỳ $M, N \in S(P_0, P_1, \dots, P_m)$, tức là:
 
-Cùng ba điểm đó, 2-hộp $(0 \le \lambda _{1}, \lambda _{2} \le 1)$ là hình vuông đơn vị $[0,1]^{2}$, và $(1,1)$ thuộc hình hộp này.
+$$
+\begin{aligned}
+M \in S(P_0, P_1, \dots, P_m) &\iff \overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i} \quad \text{với } \sum_{i=0}^{m} \lambda_i = 1 \text{ và } \lambda_i \ge 0 \;\; (i = 0, \dots, m), \\
+N \in S(P_0, P_1, \dots, P_m) &\iff \overrightarrow{ON} = \sum_{i=0}^{m} \mu_i \overrightarrow{OP_i} \quad \text{với } \sum_{i=0}^{m} \mu_i = 1 \text{ và } \mu_i \ge 0 \;\; (i = 0, \dots, m).
+\end{aligned}
+$$
 
-Cả hai đều là tập lồi.
+Nếu một điểm $X$ thuộc đoạn thẳng $MN$ thì tồn tại $t \in [0, 1]$ sao cho:
+
+$$
+\overrightarrow{OX} = t\overrightarrow{OM} + (1 - t)\overrightarrow{ON} = \sum_{i=0}^{m} \bigl[t\lambda_i + (1 - t)\mu_i\bigr]\overrightarrow{OP_i}.
+$$
+
+Rõ ràng tổng các hệ số của $\overrightarrow{OP_i}$ bằng:
+
+$$
+\sum_{i=0}^{m} \bigl[t\lambda_i + (1 - t)\mu_i\bigr] = t\sum_{i=0}^{m} \lambda_i + (1 - t)\sum_{i=0}^{m} \mu_i = t + 1 - t = 1,
+$$
+
+và với mọi $i = 0, 1, \dots, m$ ta có $t\lambda_i + (1 - t)\mu_i \ge 0$ vì $\lambda_i \ge 0,\; \mu_i \ge 0,\; t \ge 0,\; 1 - t \ge 0$.
+
+Vậy mọi điểm $X$ thuộc đoạn thẳng $MN$ đều thuộc đơn hình $S(P_0, P_1, \dots, P_m)$, suy ra đơn hình $m$ chiều là một tập lồi.
+</Proof>
+
+## 5. Hình hộp $m$ Chiều
+
+<Definition id="def-s5-8" title="Hình hộp m chiều (m-hộp)">
+Cho $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m$ của không gian affine thực $\mathcal{A}^n$. Tập hợp những điểm $M \in \mathcal{A}^n$ sao cho:
+
+$$
+\overrightarrow{P_0M} = \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i} \quad \text{với } 0 \le \lambda_i \le 1 \;\; (i = 1, 2, \dots, m)
+$$
+
+được gọi là **hình hộp $m$ chiều**, hay gọi tắt là **$m$-hộp**, và được ký hiệu là $H(P_0, P_1, \dots, P_m)$. Các điểm $P_0, P_1, \dots, P_m$ là các đỉnh sinh ra $m$-hộp (mọi điểm ứng với $\lambda_i \in \{0, 1\}$ gọi là **đỉnh** của $m$-hộp).
+</Definition>
+
+<Theorem id="thm-s5-9" title="Tính lồi của hình hộp m chiều">
+Hình hộp $m$ chiều là một tập lồi.
+</Theorem>
+
+<Proof of="thm-s5-9" defaultOpen={true}>
+Thật vậy, nếu $M$ và $N$ là hai điểm tùy ý thuộc hình hộp $m$ chiều $H(P_0, P_1, \dots, P_m)$, ta có:
+
+$$
+\overrightarrow{P_0M} = \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i} \quad (0 \le \lambda_i \le 1),
+\qquad
+\overrightarrow{P_0N} = \sum_{i=1}^{m} \mu_i \overrightarrow{P_0P_i} \quad (0 \le \mu_i \le 1).
+$$
+
+Điểm $X$ thuộc đoạn thẳng $MN$ khi và chỉ khi tồn tại $t \in [0, 1]$ sao cho:
+
+$$
+\overrightarrow{P_0X} = t\overrightarrow{P_0M} + (1 - t)\overrightarrow{P_0N} = \sum_{i=1}^{m} \bigl[t\lambda_i + (1 - t)\mu_i\bigr]\overrightarrow{P_0P_i}.
+$$
+
+Với mỗi $i = 1, \dots, m$, vì $0 \le t \le 1$ và $0 \le \lambda_i, \mu_i \le 1$ nên ta có:
+
+$$
+0 \le t\lambda_i \le t \qquad \text{và} \qquad 0 \le (1 - t)\mu_i \le 1 - t
+$$
+
+*(đính chính lỗi in ở cuối tr. 30: sách gốc in nhầm thành $0 \le t, \lambda_i \le t$ và $0 \le t\lambda_i + (1 - t)\mu_i \le 1 - t$)*. Cộng vế theo vế hai bất đẳng thức trên ta được:
+
+$$
+0 \le t\lambda_i + (1 - t)\mu_i \le t + (1 - t) = 1 \quad (\forall i = 1, \dots, m).
+$$
+
+Điều đó chứng tỏ $X \in H(P_0, P_1, \dots, P_m)$. Vậy $m$-hộp là một tập lồi.
+</Proof>
+
+<Remark title="Giao các tập lồi, đỉnh, mặt bên và phân loại hình hộp m chiều">
+- **Giao của các tập lồi:** Người ta chứng minh được rằng **giao của một họ bất kỳ những tập lồi là một tập lồi** (vì nếu $P, Q$ cùng thuộc mọi tập lồi trong họ thì đoạn thẳng $PQ$ cũng nằm trong mọi tập lồi đó, nên nằm trong giao của chúng).
+- **Đỉnh và vai trò bình đẳng của điểm gốc:** Mỗi hình hộp $m$ chiều có đúng $2^m$ đỉnh phân biệt (ứng với các bộ $\lambda_i \in \{0, 1\}$). Đỉnh $P_0$ ứng với $\lambda_i = 0$ với mọi $i$; mỗi đỉnh $P_i$ ($1 \le i \le m$) ứng với $\lambda_i = 1$ và $\lambda_j = 0$ với mọi $j \neq i$ *(bản in gốc tr. 31 gõ nhầm ký hiệu sang $t_i = 1, t_j = 0$)*. Trong định nghĩa hình hộp, điểm gốc $P_0$ thực ra không đóng vai trò gì đặc biệt: mọi đỉnh khác của hình hộp đều có thể đóng vai trò điểm gốc.
+- **Tên gọi theo số chiều và các mặt bên:** Hình hộp $0$ chiều là **một điểm**, hình hộp $1$ chiều là **một đoạn thẳng**, hình hộp $2$ chiều là **một hình bình hành**, hình hộp $3$ chiều là **hình hộp** theo nghĩa thông thường. Nếu trong định nghĩa của hình hộp ta cho $p$ tham số nào đó bằng $0$ ($0 \le p \le m$; và tổng quát hơn khi đổi gốc sang các đỉnh khác, cố định $p$ tham số tại $0$ hoặc $1$) thì ta thu được một *hình hộp $(m - p)$ chiều*, gọi là **mặt bên $(m - p)$ chiều** của hình hộp $m$ chiều đã cho. Mặt bên $0$ chiều chính là **đỉnh**, còn mặt bên $1$ chiều được gọi là **cạnh** của hình hộp.
+- **Tóm tắt ký hiệu:** Với $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m \in \mathcal{A}^n$:
+
+$$
+M \in H(P_0, P_1, \dots, P_m) \iff \overrightarrow{P_0M} = \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i} \quad \text{với } 0 \le \lambda_i \le 1 \;\; (i = 1, \dots, m).
+$$
+</Remark>
+
+<Example id="ex-s5-11" title="So sánh 2-đơn hình (tam giác) và 2-hộp (hình vuông đơn vị) trong R^2">
+Trong $\R^2$, xét ba điểm độc lập $A_0(0, 0)$, $A_1(1, 0)$, $A_2(0, 1)$:
+
+- **$2$-đơn hình $S(A_0, A_1, A_2)$** là tam giác vuông cân đặc $\{(x_1, x_2) \mid x_1 \ge 0,\; x_2 \ge 0,\; x_1 + x_2 \le 1\}$. Điểm $\left(\dfrac{1}{4}, \dfrac{1}{4}\right)$ có bộ hệ số $(t_0, t_1, t_2) = \left(\dfrac{1}{2}, \dfrac{1}{4}, \dfrac{1}{4}\right)$ không âm và tổng bằng $1$ nên thuộc $S(A_0, A_1, A_2)$; trong khi điểm $(1, 1)$ đòi hỏi $t_1 = 1, t_2 = 1 \implies t_0 = 1 - 1 - 1 = -1 < 0$ nên không thuộc $S(A_0, A_1, A_2)$.
+- **$2$-hộp $H(A_0, A_1, A_2)$** ($0 \le \lambda_1, \lambda_2 \le 1$) là hình vuông đơn vị $[0, 1]^2$ có $2^2 = 4$ đỉnh $(0, 0), (1, 0), (0, 1), (1, 1)$, chứa cả điểm $(1, 1)$ ứng với $\lambda_1 = \lambda_2 = 1$. Cả hai tập hợp đều là tập lồi.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 6. Bài tập Vận dụng và Củng cố
 
-<Exercise id="exr-s5-1" title="Tỉ số đơn của ba điểm thẳng hàng (§5, mục 2)">
-Trên một đường thẳng của A¹ cho A, B, C có tọa độ lần lượt 0, 4, 6. Tính tỉ số đơn (CAB).
-
+<Exercise id="exr-s5-32" title="Bài tập 1.32 — Tập hợp các điểm chia đoạn PQ theo tỉ số đơn âm là một tập lồi">
+Chứng minh rằng với hai điểm $P$ và $Q$ phân biệt (trong không gian affine thực $\mathcal{A}$), tập hợp những điểm $M$ sao cho $\overrightarrow{MP} = k\overrightarrow{MQ}$ với $k < 0$ là một tập lồi.
 
 <Hint>
-(MPQ) = k nếu MP = k·MQ (M là điểm thứ nhất).
+Biến đổi đẳng thức $\overrightarrow{MP} = k\overrightarrow{MQ}$ qua một gốc $O$ tùy ý để chứng minh tập hợp đã cho chính là tập các điểm ở giữa $P$ và $Q$: $\{\, M \mid \overrightarrow{OM} = \lambda\overrightarrow{OP} + (1 - \lambda)\overrightarrow{OQ},\; 0 < \lambda < 1 \,\}$.
 </Hint>
 
 <Solution>
-CA = 0 - 6 = -6 và CB = 4 - 6 = -2.
+Gọi $E = \{\, M \in \mathcal{A} \mid \exists k < 0 : \overrightarrow{MP} = k\overrightarrow{MQ} \,\}$. Với điểm $O \in \mathcal{A}$ tùy ý và mỗi $k < 0$ (suy ra $1 - k > 1 > 0$), ta có:
 
-CA = k·CB nên k = (-6)/(-2) = 3.
+$$
+\overrightarrow{MP} = k\overrightarrow{MQ}
+\iff \overrightarrow{OP} - \overrightarrow{OM} = k(\overrightarrow{OQ} - \overrightarrow{OM})
+\iff (1 - k)\overrightarrow{OM} = \overrightarrow{OP} - k\overrightarrow{OQ}
+\iff \overrightarrow{OM} = \frac{1}{1 - k}\overrightarrow{OP} + \frac{-k}{1 - k}\overrightarrow{OQ}.
+$$
 
-**Đáp án:** (CAB) = 3
+Đặt $\lambda = \dfrac{1}{1 - k}$. Vì $k \in (-\infty, 0)$ nên $1 - k \in (1, +\infty)$, kéo theo $0 < \lambda < 1$ và $\dfrac{-k}{1 - k} = 1 - \lambda$. Ngược lại, với mọi $\lambda \in (0, 1)$, đặt $k = -\dfrac{1 - \lambda}{\lambda} < 0$ thì từ $\overrightarrow{OM} = \lambda\overrightarrow{OP} + (1 - \lambda)\overrightarrow{OQ}$ suy ra ngược lại $\overrightarrow{MP} = k\overrightarrow{MQ}$. Do đó $E$ chính là khoảng mở gồm mọi điểm ở giữa $P$ và $Q$:
+
+$$
+E = \{\, M \in \mathcal{A} \mid \overrightarrow{OM} = \lambda\overrightarrow{OP} + (1 - \lambda)\overrightarrow{OQ},\; 0 < \lambda < 1 \,\}.
+$$
+
+Lấy hai điểm bất kỳ $M_1, M_2 \in E$ ứng với $\lambda_1, \lambda_2 \in (0, 1)$. Mọi điểm $X$ trên đoạn thẳng $M_1 M_2$ có biểu diễn với $t \in [0, 1]$:
+
+$$
+\overrightarrow{OX} = t\overrightarrow{OM_1} + (1 - t)\overrightarrow{OM_2} = \bigl[t\lambda_1 + (1 - t)\lambda_2\bigr]\overrightarrow{OP} + \bigl[1 - \bigl(t\lambda_1 + (1 - t)\lambda_2\bigr)\bigr]\overrightarrow{OQ}.
+$$
+
+Vì $0 < \lambda_1, \lambda_2 < 1$ và $t \ge 0, 1 - t \ge 0$ không đồng thời bằng $0$ (do $t + (1 - t) = 1$), ta có:
+
+$$
+0 < \min(\lambda_1, \lambda_2) \le t\lambda_1 + (1 - t)\lambda_2 \le \max(\lambda_1, \lambda_2) < 1.
+$$
+
+Vậy $X \in E$ với mọi $t \in [0, 1]$, chứng tỏ $E$ là một tập lồi.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s5-2" title="Đoạn thẳng và tập lồi (§5, mục 1)">
-Cho P(1,2), Q(5,0). Trong hai điểm M(3,1) và N(7,-1), điểm nào thuộc đoạn thẳng PQ?
-
+<Exercise id="exr-s5-33" title="Bài tập 1.33 — Tập lồi chứa ba điểm không thẳng hàng thì chứa trọn tam giác tạo bởi chúng">
+Cho một hình lồi (tập lồi) $F$ chứa ba điểm $A, B, C$ không thẳng hàng. Chứng minh rằng tam giác $ABC$ (tức $2$-đơn hình $S(A, B, C)$) nằm hoàn toàn trong $F$.
 
 <Hint>
-M thuộc đoạn PQ khi M = P + t·PQ với 0  $ le$  t  $ le$  1.
+Lấy điểm $M \in S(A, B, C)$ với $\overrightarrow{OM} = \lambda_0\overrightarrow{OA} + \lambda_1\overrightarrow{OB} + \lambda_2\overrightarrow{OC}$ ($\lambda_i \ge 0, \lambda_0 + \lambda_1 + \lambda_2 = 1$). Nếu $M \neq A$ (tức $\lambda_1 + \lambda_2 > 0$), xét điểm $D$ trên đoạn $BC$ sao cho $M$ nằm trên đoạn $AD$.
 </Hint>
 
 <Solution>
-PQ = (4,-2). M: (3,1) = (1 + 4t, 2 - 2t) cho t = 1/2  $ in$  [0,1].
+Theo <Ref to="def-s5-5" /> và nhận xét về biểu diễn vectơ của đơn hình, mọi điểm $M$ thuộc tam giác $ABC = S(A, B, C)$ đều có dạng (với gốc $O$ tùy ý):
 
-N: (7,-1) = (1 + 4t, 2 - 2t) cho t = 3/2 &gt; 1.
+$$
+\overrightarrow{OM} = \lambda_0\overrightarrow{OA} + \lambda_1\overrightarrow{OB} + \lambda_2\overrightarrow{OC}, \quad \text{trong đó } \lambda_0, \lambda_1, \lambda_2 \ge 0 \text{ và } \lambda_0 + \lambda_1 + \lambda_2 = 1.
+$$
 
-**Đáp án:** M thuộc đoạn PQ (t = 1/2); N nằm trên đường thẳng PQ nhưng ngoài đoạn (t = 3/2).
+- **Trường hợp 1 ($\lambda_1 + \lambda_2 = 0$):** Vì $\lambda_1, \lambda_2 \ge 0$ nên $\lambda_1 = \lambda_2 = 0$ và $\lambda_0 = 1$, tức $M \equiv A \in F$.
+- **Trường hợp 2 ($\lambda_1 + \lambda_2 > 0$):** Đặt $s = \lambda_1 + \lambda_2 = 1 - \lambda_0 \in (0, 1]$, và xét điểm $D$ xác định bởi:
+
+$$
+\overrightarrow{OD} = \frac{\lambda_1}{s}\overrightarrow{OB} + \frac{\lambda_2}{s}\overrightarrow{OC}.
+$$
+
+  Vì $\dfrac{\lambda_1}{s} \ge 0$, $\dfrac{\lambda_2}{s} \ge 0$ và $\dfrac{\lambda_1}{s} + \dfrac{\lambda_2}{s} = 1$, theo <Ref to="def-s5-1" /> điểm $D$ thuộc đoạn thẳng $BC$. Do $B, C \in F$ và $F$ là tập lồi nên $BC \subset F$, suy ra $D \in F$.
+
+  Mặt khác, thế $s\overrightarrow{OD} = \lambda_1\overrightarrow{OB} + \lambda_2\overrightarrow{OC}$ vào biểu thức của $\overrightarrow{OM}$, ta được:
+
+$$
+\overrightarrow{OM} = \lambda_0\overrightarrow{OA} + (1 - \lambda_0)\overrightarrow{OD} \quad \text{với } 0 \le \lambda_0 < 1,
+$$
+
+  nghĩa là $M$ thuộc đoạn thẳng $AD$. Vì cả $A \in F$ và $D \in F$ đồng thời $F$ là tập lồi, toàn bộ đoạn thẳng $AD \subset F$, suy ra $M \in F$.
+
+Vậy $S(A, B, C) \subset F$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s5-34" title="Bài tập 1.34 — Chứng minh các công thức hoán vị thứ tự điểm của tỉ số đơn">
+Cho ba điểm thẳng hàng đôi một phân biệt $A, B, C$ có tỉ số đơn $(ABC) = \lambda$, nghĩa là $\overrightarrow{AB} = \lambda\overrightarrow{AC}$ ($\lambda \in \R \setminus \{0, 1\}$). Hãy chứng minh:
+
+a) $(ABC) = \dfrac{1}{(ACB)}$; $\qquad$ b) $(BAC) = \dfrac{(ABC)}{(ABC) - 1}$; $\qquad$ c) $(CBA) = 1 - (ABC)$.
+
+<Hint>
+Áp dụng đúng <Ref to="def-s5-2" /> cho từng thứ tự điểm: $(XYZ) = \mu \iff \overrightarrow{XY} = \mu\overrightarrow{XZ}$, rồi dùng quy tắc Chasles biểu diễn các vectơ tương ứng qua $\overrightarrow{AC}$.
+</Hint>
+
+<Solution>
+Vì $A, B, C$ đôi một phân biệt và $\overrightarrow{AB} = \lambda\overrightarrow{AC}$ nên $\lambda \neq 0$ (do $B \neq A$) và $\lambda \neq 1$ (do $B \neq C$).
+
+- **a)** Từ $\overrightarrow{AB} = \lambda\overrightarrow{AC}$ với $\lambda \neq 0$, nhân hai vế với $\dfrac{1}{\lambda}$ ta có:
+
+$$
+\overrightarrow{AC} = \frac{1}{\lambda}\overrightarrow{AB} \implies (ACB) = \frac{1}{\lambda} \implies (ABC) = \lambda = \frac{1}{(ACB)}.
+$$
+
+- **b)** Ta cần tính $(BAC)$, tức tìm hệ số tỉ lệ của $\overrightarrow{BA}$ theo $\overrightarrow{BC}$. Ta có $\overrightarrow{BA} = -\overrightarrow{AB} = -\lambda\overrightarrow{AC}$ và $\overrightarrow{BC} = \overrightarrow{AC} - \overrightarrow{AB} = (1 - \lambda)\overrightarrow{AC} = -(\lambda - 1)\overrightarrow{AC}$ (khác $\vec{0}$ vì $\lambda \neq 1$). Do đó:
+
+$$
+\overrightarrow{BA} = \frac{-\lambda}{-(\lambda - 1)}\overrightarrow{BC} = \frac{\lambda}{\lambda - 1}\overrightarrow{BC} \implies (BAC) = \frac{\lambda}{\lambda - 1} = \frac{(ABC)}{(ABC) - 1}.
+$$
+
+- **c)** Ta cần tính $(CBA)$, tức tìm hệ số tỉ lệ của $\overrightarrow{CB}$ theo $\overrightarrow{CA}$. Vì $\overrightarrow{CA} = -\overrightarrow{AC}$ và $\overrightarrow{CB} = \overrightarrow{AB} - \overrightarrow{AC} = (\lambda - 1)\overrightarrow{AC}$, ta được:
+
+$$
+\overrightarrow{CB} = (1 - \lambda)(-\overrightarrow{AC}) = (1 - \lambda)\overrightarrow{CA} \implies (CBA) = 1 - \lambda = 1 - (ABC).
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s5-35" title="Bài tập 1.35 — Định lí Thales tổng quát cho ba m-phẳng song song cắt hai đường thẳng">
+Cho ba $m$-phẳng $P, Q, R$ đôi một song song của không gian affine thực $\mathcal{A}^n$ lần lượt cắt hai đường thẳng $d_1$ và $d_2$ tại các điểm duy nhất $P_1, Q_1, R_1$ và $P_2, Q_2, R_2$. Chứng minh rằng:
+
+a) $(P_1 Q_1 R_1) = (P_2 Q_2 R_2)$;
+
+b) $\overrightarrow{Q_1 Q_2} = (1 - p)\overrightarrow{P_1 P_2} + p\overrightarrow{R_1 R_2}$, trong đó $p = (P_1 Q_1 R_1)$.
+
+<Hint>
+Gọi $V^m$ là không gian vectơ phương chung của ba $m$-phẳng $P, Q, R$. Để ý $\overrightarrow{P_1 P_2}, \overrightarrow{Q_1 Q_2}, \overrightarrow{R_1 R_2} \in V^m$ trong khi $\overrightarrow{P_1 R_1} \notin V^m$; biến đổi $\overrightarrow{Q_1 Q_2}$ theo quy tắc Chasles để rút ra đồng thời cả câu a và câu b.
+</Hint>
+
+<Solution>
+Vì $P, Q, R$ là ba $m$-phẳng đôi một song song nên chúng rời nhau từng đôi một và có cùng phương $V^m = \overrightarrow{P} = \overrightarrow{Q} = \overrightarrow{R}$. Do đó ba giao điểm $P_1, Q_1, R_1$ trên $d_1$ đôi một phân biệt, ba giao điểm $P_2, Q_2, R_2$ trên $d_2$ cũng đôi một phân biệt. Mặt khác, vì $d_1 \cap P = \{P_1\}$ chỉ gồm một điểm duy nhất nên vectơ chỉ phương $\overrightarrow{P_1 R_1}$ của $d_1$ không thể thuộc $V^m$: $\overrightarrow{P_1 R_1} \notin V^m$.
+
+Đặt $p_1 = (P_1 Q_1 R_1)$ và $p_2 = (P_2 Q_2 R_2)$, tức là:
+
+$$
+\overrightarrow{P_1 Q_1} = p_1 \overrightarrow{P_1 R_1}, \qquad \overrightarrow{P_2 Q_2} = p_2 \overrightarrow{P_2 R_2}.
+$$
+
+Theo quy tắc Chasles, ta có $\overrightarrow{P_2 R_2} = \overrightarrow{P_2 P_1} + \overrightarrow{P_1 R_1} + \overrightarrow{R_1 R_2} = \overrightarrow{P_1 R_1} + \overrightarrow{R_1 R_2} - \overrightarrow{P_1 P_2}$, và:
+
+$$
+\begin{aligned}
+\overrightarrow{Q_1 Q_2}
+&= \overrightarrow{Q_1 P_1} + \overrightarrow{P_1 P_2} + \overrightarrow{P_2 Q_2}
+= -p_1 \overrightarrow{P_1 R_1} + \overrightarrow{P_1 P_2} + p_2 \overrightarrow{P_2 R_2} \\
+&= -p_1 \overrightarrow{P_1 R_1} + \overrightarrow{P_1 P_2} + p_2(\overrightarrow{P_1 R_1} + \overrightarrow{R_1 R_2} - \overrightarrow{P_1 P_2}) \\
+&= (p_2 - p_1)\overrightarrow{P_1 R_1} + (1 - p_2)\overrightarrow{P_1 P_2} + p_2\overrightarrow{R_1 R_2}. \tag{*}
+\end{aligned}
+$$
+
+- **a)** Chuyển vế trong $(*)$, ta được:
+
+$$
+(p_2 - p_1)\overrightarrow{P_1 R_1} = \overrightarrow{Q_1 Q_2} - (1 - p_2)\overrightarrow{P_1 P_2} - p_2\overrightarrow{R_1 R_2}.
+$$
+
+  Vì $P_1, P_2 \in P \implies \overrightarrow{P_1 P_2} \in V^m$, $Q_1, Q_2 \in Q \implies \overrightarrow{Q_1 Q_2} \in V^m$ và $R_1, R_2 \in R \implies \overrightarrow{R_1 R_2} \in V^m$, toàn bộ vế phải thuộc không gian vectơ $V^m$. Nếu $p_2 - p_1 \neq 0$ thì chia cho $p_2 - p_1$ suy ra $\overrightarrow{P_1 R_1} \in V^m$, mâu thuẫn! Vậy bắt buộc $p_2 - p_1 = 0 \iff p_1 = p_2$, tức là $(P_1 Q_1 R_1) = (P_2 Q_2 R_2)$.
+
+- **b)** Thay $p_1 = p_2 = p = (P_1 Q_1 R_1)$ trực tiếp vào đẳng thức $(*)$, số hạng $(p_2 - p_1)\overrightarrow{P_1 R_1}$ triệt tiêu và ta nhận được ngay:
+
+$$
+\overrightarrow{Q_1 Q_2} = (1 - p)\overrightarrow{P_1 P_2} + p\overrightarrow{R_1 R_2}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s5-36" title="Bài tập 1.36 — Ba siêu phẳng cùng qua một (n - 2)-phẳng cắt hai đường thẳng song song">
+Cho ba <GlossaryTerm termId="sieu-phang">siêu phẳng</GlossaryTerm> phân biệt $P, Q, R$ của không gian affine thực $\mathcal{A}^n$ ($n \ge 2$) cùng đi qua một $(n - 2)$-phẳng $\Delta$. Chứng minh rằng nếu $P, Q, R$ cùng cắt hai đường thẳng song song $d_1$ và $d_2$ *(không cắt $\Delta$)* lần lượt tại $P_1, Q_1, R_1$ và $P_2, Q_2, R_2$ thì $(P_1 Q_1 R_1) = (P_2 Q_2 R_2)$.
+
+<Hint>
+Xét mặt phẳng ($2$-phẳng) $\pi = d_1 + d_2$ chứa hai đường thẳng song song $d_1, d_2$. Giao của $P, Q, R$ với $\pi$ là ba đường thẳng $P_1 P_2, Q_1 Q_2, R_1 R_2$ cùng nằm trong $\pi$: hoặc đôi một song song (khi $\pi \cap \Delta = \varnothing$), hoặc đồng quy tại điểm duy nhất $S \in \pi \cap \Delta$.
+</Hint>
+
+<Solution>
+Vì $P, Q, R$ là ba siêu phẳng phân biệt cùng chứa $(n - 2)$-phẳng $\Delta$ nên $P \cap Q = Q \cap R = R \cap P = \Delta$; mặt khác $d_1, d_2$ không cắt $\Delta$ và cắt mỗi siêu phẳng tại một điểm duy nhất nên $P_1, Q_1, R_1$ đôi một phân biệt và $P_2, Q_2, R_2$ đôi một phân biệt.
+
+Gọi $\pi = d_1 + d_2$ là $2$-phẳng xác định bởi hai đường thẳng song song $d_1 \parallel d_2$. Vì mỗi siêu phẳng $P, Q, R$ không chứa $\pi$ (do không chứa $d_1$) và chứa hai điểm phân biệt trên $d_1, d_2$, nên các giao $\pi \cap P = P_1 P_2$, $\pi \cap Q = Q_1 Q_2$, $\pi \cap R = R_1 R_2$ là ba đường thẳng phân biệt trong mặt phẳng $\pi$, có giao chung bằng $\pi \cap (P \cap Q \cap R) = \pi \cap \Delta$. Chỉ có hai trường hợp xảy ra:
+
+1. **Trường hợp $\pi \cap \Delta = \varnothing$:** Ba đường thẳng đồng phẳng $P_1 P_2, Q_1 Q_2, R_1 R_2$ trong $\pi$ đôi một không giao nhau nên đôi một song song. Áp dụng <Ref to="exr-s5-35" /> (câu a, với $m = 1$ trong không gian $2$ chiều $\pi$), ta có ngay $(P_1 Q_1 R_1) = (P_2 Q_2 R_2)$.
+
+2. **Trường hợp $\pi \cap \Delta \neq \varnothing$:** Vì $P_1 P_2$ và $Q_1 Q_2$ là hai đường thẳng phân biệt trong $\pi$ nên giao $(P_1 P_2) \cap (Q_1 Q_2) = \pi \cap \Delta$ chỉ gồm một điểm duy nhất $S$ ($S \notin d_1 \cup d_2$ vì $d_1 \cap \Delta = d_2 \cap \Delta = \varnothing$). Như vậy ba đường thẳng $P_1 P_2, Q_1 Q_2, R_1 R_2$ đồng quy tại $S$.
+
+   Do $S, P_1, P_2$ thẳng hàng và $S \neq P_1$, tồn tại $k \in \R \setminus \{0, 1\}$ sao cho $\overrightarrow{SP_2} = k\overrightarrow{SP_1}$. Tương tự $\overrightarrow{SQ_2} = m\overrightarrow{SQ_1}$. Khi đó:
+
+$$
+\overrightarrow{P_2 Q_2} = \overrightarrow{SQ_2} - \overrightarrow{SP_2} = m\overrightarrow{SQ_1} - k\overrightarrow{SP_1} = k\overrightarrow{P_1 Q_1} + (m - k)\overrightarrow{SQ_1}.
+$$
+
+   Vì $d_2 \parallel d_1$ nên $\overrightarrow{P_2 Q_2}$ cùng phương với $\overrightarrow{P_1 Q_1}$, suy ra $(m - k)\overrightarrow{SQ_1}$ cùng phương với $\overrightarrow{P_1 Q_1}$. Nhưng $S \notin d_1 = P_1 Q_1$ nên $\overrightarrow{SQ_1}$ và $\overrightarrow{P_1 Q_1}$ độc lập tuyến tính, buộc $m - k = 0 \iff m = k$, tức $\overrightarrow{SQ_2} = k\overrightarrow{SQ_1}$. Lý luận y hệt cho điểm $R_2$ được $\overrightarrow{SR_2} = k\overrightarrow{SR_1}$. Từ đó:
+
+$$
+\overrightarrow{P_2 Q_2} = k\overrightarrow{P_1 Q_1} \qquad \text{và} \qquad \overrightarrow{P_2 R_2} = k\overrightarrow{P_1 R_1}.
+$$
+
+   Gọi $\lambda = (P_1 Q_1 R_1)$ thì $\overrightarrow{P_1 Q_1} = \lambda\overrightarrow{P_1 R_1}$, nhân với $k \neq 0$ cho $\overrightarrow{P_2 Q_2} = \lambda\overrightarrow{P_2 R_2}$, nghĩa là $(P_2 Q_2 R_2) = \lambda = (P_1 Q_1 R_1)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s5-37" title="Bài tập 1.37 — Vị trí tương đối của hai siêu phẳng và phương trình chùm siêu phẳng">
+Trong $\mathcal{A}^n$ với mục tiêu affine cho trước, cho hai siêu phẳng $\alpha$ và $\alpha'$ có phương trình tổng quát lần lượt là:
+
+$$
+\alpha: \sum_{i=1}^{n} a_i x_i + b = 0 \qquad \text{và} \qquad \alpha': \sum_{i=1}^{n} c_i x_i + d = 0.
+$$
+
+a) Tìm điều kiện về các hệ số để $\alpha$ và $\alpha'$ cắt nhau, song song, trùng nhau.
+
+b) Chứng minh rằng phương trình tổng quát của các siêu phẳng đi qua giao $\alpha \cap \alpha'$ (nếu có) hoặc song song với $\alpha$ và $\alpha'$ *(kể cả trùng với $\alpha$ hoặc $\alpha'$)* nếu $\alpha \cap \alpha' = \varnothing$ có thể viết dưới dạng:
+
+$$
+\lambda\left(\sum_{i=1}^{n} a_i x_i + b\right) + \mu\left(\sum_{i=1}^{n} c_i x_i + d\right) = 0 \tag{*}
+$$
+
+với $\lambda$ và $\mu$ không đồng thời bằng $0$. *(Người ta gọi $(*)$ là phương trình của **chùm siêu phẳng** xác định bởi hai siêu phẳng $\alpha$ và $\alpha'$).*
+
+<Hint>
+Ở câu a, xét hạng của ma trận hệ số $A = \begin{bmatrix} a_1 & \dots & a_n \\ c_1 & \dots & c_n \end{bmatrix}$ và ma trận mở rộng $\overline{A}$. Ở câu b, chia hai trường hợp: $\operatorname{rank} A = 2$ ($\alpha$ cắt $\alpha'$ theo $(n - 2)$-phẳng) và $\operatorname{rank} A = 1, \operatorname{rank} \overline{A} = 2$ ($\alpha \parallel \alpha'$).
+</Hint>
+
+<Solution>
+Vì $\alpha, \alpha'$ là các siêu phẳng nên $(a_1, \dots, a_n) \neq (0, \dots, 0)$ và $(c_1, \dots, c_n) \neq (0, \dots, 0)$. Đặt ma trận hệ số và ma trận mở rộng của hệ ghép gồm hai phương trình:
+
+$$
+A = \begin{bmatrix} a_1 & a_2 & \dots & a_n \\ c_1 & c_2 & \dots & c_n \end{bmatrix},
+\qquad
+\overline{A} = \begin{bmatrix} a_1 & a_2 & \dots & a_n & b \\ c_1 & c_2 & \dots & c_n & d \end{bmatrix}.
+$$
+
+- **a) Điều kiện vị trí tương đối của $\alpha$ và $\alpha'$:**
+  1. **$\alpha$ và $\alpha'$ cắt nhau** (theo một $(n - 2)$-phẳng): khi và chỉ khi hai bộ hệ số $(a_1, \dots, a_n)$ và $(c_1, \dots, c_n)$ không tỉ lệ, tức là $\operatorname{rank} A = 2$ (khi đó $\operatorname{rank} \overline{A} = 2$, hệ luôn có nghiệm tạo thành $(n - 2)$-phẳng).
+  2. **$\alpha$ và $\alpha'$ song song ($\alpha \parallel \alpha'$):** khi và chỉ khi $\operatorname{rank} A = 1 < \operatorname{rank} \overline{A} = 2$, tức tồn tại $k \in \mathbb{K} \setminus \{0\}$ sao cho $c_i = k a_i$ với mọi $i = 1, \dots, n$ nhưng $d \neq k b$.
+  3. **$\alpha$ và $\alpha'$ trùng nhau ($\alpha \equiv \alpha'$):** khi và chỉ khi $\operatorname{rank} A = \operatorname{rank} \overline{A} = 1$, tức tồn tại $k \in \mathbb{K} \setminus \{0\}$ sao cho $c_i = k a_i$ ($i = 1, \dots, n$) và $d = k b$.
+
+- **b) Phương trình của chùm siêu phẳng:**
+  1. **Trường hợp 1 ($\alpha \cap \alpha' = \Delta \neq \varnothing$, với $\alpha \neq \alpha'$, tức $\operatorname{rank} A = 2$):**
+     Giả sử $\beta: \sum_{i=1}^{n} e_i x_i + r = 0$ (với $(e_1, \dots, e_n) \neq \vec{0}$) là một siêu phẳng bất kỳ chứa $(n - 2)$-phẳng $\Delta$. Khi đó phương $V_\Delta = \{\, u \in \mathbb{K}^n \mid \sum a_i u_i = 0,\; \sum c_i u_i = 0 \,\}$ nằm trong phương $\overrightarrow{\beta} = \{\, u \in \mathbb{K}^n \mid \sum e_i u_i = 0 \,\}$. Theo đại số tuyến tính (xem Bài tập 1.23 ở §3), dạng tuyến tính $\sum e_i u_i$ là hệ quả của hai dạng độc lập tuyến tính $\sum a_i u_i$ và $\sum c_i u_i$, nên tồn tại $(\lambda, \mu) \neq (0, 0)$ sao cho:
+
+$$
+e_i = \lambda a_i + \mu c_i \quad (\forall i = 1, \dots, n).
+$$
+
+     Lấy một điểm $M_0(x_1^0, \dots, x_n^0) \in \Delta$; vì $M_0$ đồng thời thuộc $\alpha, \alpha'$ và $\beta$ nên:
+
+$$
+r = -\sum_{i=1}^{n} e_i x_i^0 = -\lambda\sum_{i=1}^{n} a_i x_i^0 - \mu\sum_{i=1}^{n} c_i x_i^0 = \lambda b + \mu d.
+$$
+
+     Vậy phương trình của $\beta$ viết được đúng dưới dạng $(*)$. *(Ngược lại, với mọi $(\lambda, \mu) \neq (0, 0)$, do hai hàng của $A$ độc lập tuyến tính nên $(\lambda a_1 + \mu c_1, \dots, \lambda a_n + \mu c_n) \neq \vec{0}$, phương trình $(*)$ luôn xác định một siêu phẳng đi qua $\Delta$).*
+
+  2. **Trường hợp 2 ($\alpha \cap \alpha' = \varnothing$, tức $\alpha \parallel \alpha'$):**
+     Theo câu a, có $k \neq 0$ để $c_i = k a_i$ ($\forall i$) và $d - k b \neq 0$. Mọi siêu phẳng $\beta$ cùng phương với $\alpha$ và $\alpha'$ (tức song song với cả hai, hoặc trùng với $\alpha$ hay $\alpha'$) đều có phương trình viết được dưới dạng $\sum_{i=1}^{n} a_i x_i + r = 0$ (sau khi chia nhân tử tỉ lệ khác $0$). Mặt khác, phương trình $(*)$ khi thay $c_i = k a_i$ trở thành:
+
+$$
+(\lambda + k\mu)\sum_{i=1}^{n} a_i x_i + (\lambda b + \mu d) = 0.
+$$
+
+     Xét hệ phương trình tuyến tính hai ẩn $(\lambda, \mu)$:
+
+$$
+\begin{cases}
+\lambda + k\mu = 1 \\
+b\lambda + d\mu = r.
+\end{cases}
+$$
+
+     Định thức của hệ bằng $1 \cdot d - k \cdot b = d - k b \neq 0$, nên hệ luôn có nghiệm duy nhất $(\lambda, \mu) = \left(\dfrac{d - kr}{d - kb},\; \dfrac{r - b}{d - kb}\right) \neq (0, 0)$ (vì $\lambda + k\mu = 1 \neq 0$). Với bộ $(\lambda, \mu)$ này, phương trình $(*)$ trùng khít với phương trình của $\beta$. *(Lưu ý ở chiều ngược lại trong trường hợp $\alpha \parallel \alpha'$: cần loại trừ tỉ lệ suy biến duy nhất $\lambda + k\mu = 0$ để các hệ số của $x_i$ trong $(*)$ không đồng thời triệt tiêu).*
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Tập lồi chứa toàn bộ đoạn thẳng nối hai điểm bất kỳ thuộc tập.
-- Bao lồi của một tập hợp là tập hợp tất cả các tổ hợp lồi của các phần tử thuộc tập đó.
+- Trong không gian affine thực $\mathcal{A}$, đoạn thẳng $PQ$ gồm các điểm $M$ thỏa mãn $\overrightarrow{OM} = \lambda\overrightarrow{OP} + (1 - \lambda)\overrightarrow{OQ}$ với $0 \le \lambda \le 1$ (<Ref to="def-s5-1" />); trên đường thẳng $PQ$, tỉ số đơn $k = (MPQ)$ của hệ ba điểm thẳng hàng ($M \neq Q$) được xác định bởi $\overrightarrow{MP} = k\overrightarrow{MQ}$ (<Ref to="def-s5-2" />).
+- Tập $X \subset \mathcal{A}$ là tập lồi nếu với mọi $P, Q \in X$ thì đoạn thẳng $PQ \subset X$ (<Ref to="def-s5-4" />); mọi $m$-phẳng đều là tập lồi, và giao của một họ bất kỳ các tập lồi cũng là một tập lồi.
+- Với $m + 1$ điểm độc lập $P_0, \dots, P_m \in \mathcal{A}^n$, cả **đơn hình $m$ chiều** $S(P_0, \dots, P_m)$ ($\overrightarrow{OM} = \sum_{i=0}^{m} \lambda_i \overrightarrow{OP_i}$ với $\sum_{i=0}^{m} \lambda_i = 1, \lambda_i \ge 0$) lẫn **hình hộp $m$ chiều** $H(P_0, \dots, P_m)$ ($\overrightarrow{P_0M} = \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i}$ với $0 \le \lambda_i \le 1$, gồm $2^m$ đỉnh) đều là những tập lồi (<Ref to="thm-s5-6" />, <Ref to="thm-s5-9" />).
 </KeyTakeaways>

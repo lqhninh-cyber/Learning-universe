@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 493,
+    "totalBacklinks": 497,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 115
   },
@@ -2167,12 +2167,28 @@
         "count": 30
       },
       {
+        "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
+        "lessonCode": "HHAVE 1.5",
+        "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
+        "count": 19
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
         "lessonCode": "HHAVE 3.6",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-afin",
         "count": 13
+      },
+      {
+        "lessonId": "tam-ti-cu-cua-mot-he-diem",
+        "lessonCode": "HHAVE 1.4",
+        "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem",
+        "count": 6
       },
       {
         "lessonId": "khong-gian-euclide",
@@ -2188,14 +2204,6 @@
         "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
-        "count": 4
-      },
-      {
-        "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
-        "lessonCode": "HHAVE 1.5",
-        "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
         "count": 4
       },
       {
@@ -2297,6 +2305,22 @@
         "count": 4
       },
       {
+        "lessonId": "tam-ti-cu-cua-mot-he-diem",
+        "lessonCode": "HHAVE 1.4",
+        "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem",
+        "count": 3
+      },
+      {
+        "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
+        "lessonCode": "HHAVE 1.5",
+        "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
+        "count": 2
+      },
+      {
         "lessonId": "anh-xa-afin-va-phep-bien-doi-afin",
         "lessonCode": "HHAVE 1.6",
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
@@ -2377,6 +2401,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-afin",
         "count": 19
+      },
+      {
+        "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
+        "lessonCode": "HHAVE 1.5",
+        "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
+        "count": 16
       },
       {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
@@ -2474,7 +2506,7 @@
         "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem",
-        "count": 17
+        "count": 54
       }
     ],
     "tap-loi": [
@@ -2484,7 +2516,7 @@
         "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
-        "count": 14
+        "count": 33
       },
       {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
@@ -4425,11 +4457,15 @@
       "muc-tieu-afin"
     ],
     "tam-ti-cu-cua-mot-he-diem": [
-      "tam-ti-cu"
+      "tam-ti-cu",
+      "khong-gian-afin",
+      "muc-tieu-afin"
     ],
     "tap-loi-trong-khong-gian-afin-thuc": [
       "tap-loi",
-      "khong-gian-afin"
+      "khong-gian-afin",
+      "sieu-phang",
+      "muc-tieu-afin"
     ],
     "anh-xa-afin-va-phep-bien-doi-afin": [
       "phep-bien-doi-afin",
