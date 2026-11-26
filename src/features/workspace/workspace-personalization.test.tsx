@@ -144,11 +144,12 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
   it('HomePage không lặp tìm kiếm ở Hero, dùng SVG toán học (0 ảnh phong cảnh) cho 4 môn và vận hành đầy đủ To-Do, Lịch, Mốc thi, Mục tiêu tuần & Flashcard', () => {
     renderHome();
 
-    // 1. Hero có câu tục ngữ, nền khí quyển, 1 mô hình Điêu khắc 3D độc bản thuần túy không chữ mô tả, sóng điều hòa tập trung & KHÔNG lặp thanh tìm kiếm
+    // 1. Hero có câu tục ngữ, nền khí quyển, Chòm sao chương đang học (SVG tĩnh, bỏ khối 3D xoay cũ), sóng điều hòa tập trung & KHÔNG lặp thanh tìm kiếm
     expect(screen.getByTestId('dashboard-ambient-backdrop')).toBeInTheDocument();
-    const heroOrb = screen.getByTestId('dashboard-hero-orb-model');
-    expect(heroOrb).toBeInTheDocument();
-    expect(heroOrb.textContent?.trim()).toBe('');
+    expect(screen.queryByTestId('dashboard-hero-orb-model')).not.toBeInTheDocument();
+    const heroConstellation = screen.getByTestId('active-chapter-constellation');
+    expect(heroConstellation).toBeInTheDocument();
+    expect(within(heroConstellation).getAllByRole('link').length).toBeGreaterThan(0);
     expect(screen.getByTestId('dashboard-focus-wave')).toBeInTheDocument();
     expect(screen.getByTestId('calendar-sundial-ornament')).toBeInTheDocument();
     expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();

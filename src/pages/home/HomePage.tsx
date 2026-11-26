@@ -23,8 +23,8 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
+import { ActiveChapterConstellation } from '@/components/home/ActiveChapterConstellation';
 import { DashboardAnalyticsCard } from '@/components/home/DashboardAnalyticsCard';
-import { DashboardHeroOrbModel } from '@/components/home/DashboardHeroOrbModel';
 import { GlossaryFlashcardCard } from '@/components/home/GlossaryFlashcardCard';
 import {
   HERITAGE_ARTWORKS,
@@ -541,7 +541,7 @@ export function HomePage() {
             TẦNG 1: SÂN KHẤU KỂ CHUYỆN CHUYỂN TẦNG MỀM + 3 THẺ BENTO BO TRÒN LỚN
             ======================================================================== */}
         <div className="relative">
-          {/* KHỐI A — KHUNG HERO THÍCH ỨNG KHUNG GIỜ + MÔ HÌNH THIÊN CẦU 3D + SÓNG MÂY */}
+          {/* KHỐI A — KHUNG HERO THÍCH ỨNG KHUNG GIỜ + CHÒM SAO TIẾN ĐỘ CHƯƠNG + SÓNG MÂY */}
           <section
             aria-label="Không gian Tổng quan"
             data-testid="spatial-hero-frame"
@@ -721,9 +721,13 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {/* Cột phải Hero: Điêu khắc Toán học Tham số 3D Đa Hình Thái (Torus Knot / Lorenz / Helicoid) */}
-                <div className="hidden shrink-0 flex-col items-center md:flex">
-                  <DashboardHeroOrbModel dayPeriod={timeGreeting.period} />
+                {/* Cột phải Hero: Chòm sao tiến độ chương đang học (SVG tĩnh, 0% CPU nhàn rỗi) */}
+                <div className="hidden shrink-0 flex-col items-center justify-center md:flex">
+                  <ActiveChapterConstellation
+                    subjectsOverride={subjects}
+                    completedLessonsOverride={completedLessons}
+                    lastVisitedGlobalOverride={lastVisitedGlobal}
+                  />
                 </div>
               </div>
 

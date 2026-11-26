@@ -1824,3 +1824,73 @@
     }
   }
 }
+
+/* ==========================================================================
+   HERO ACTIVE CHAPTER CONSTELLATION — Static SVG, 0% idle CPU
+   ========================================================================== */
+@keyframes lu-constellation-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes lu-constellation-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.lu-constellation-reveal {
+  stroke-dashoffset: 0;
+  animation: lu-constellation-draw 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lu-constellation-active-ring {
+  animation: lu-constellation-breathe 3.6s ease-in-out infinite;
+}
+
+.lu-constellation-star-core {
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-highlighted='true'] > .lu-constellation-star-core {
+  transform: scale(1.25);
+}
+
+.lu-constellation-code {
+  fill: rgba(255, 250, 240, 0.72);
+  transition: fill 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-status='active'] > .lu-constellation-code,
+[data-highlighted='true'] > .lu-constellation-code {
+  fill: rgba(255, 250, 240, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-constellation-reveal {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .lu-constellation-active-ring {
+    animation: none !important;
+    opacity: 0.72;
+  }
+
+  .lu-constellation-star-core,
+  .lu-constellation-code {
+    transition: none !important;
+  }
+
+  [data-highlighted='true'] > .lu-constellation-star-core {
+    transform: none !important;
+  }
+}
