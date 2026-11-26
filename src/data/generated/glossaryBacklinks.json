@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 492,
+    "totalBacklinks": 493,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 115
   },
@@ -2151,6 +2151,14 @@
     ],
     "khong-gian-afin": [
       {
+        "lessonId": "cac-phang-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.3",
+        "lessonTitle": "Các Phẳng trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin",
+        "count": 31
+      },
+      {
         "lessonId": "khong-gian-affine",
         "lessonCode": "HHAVE 1.1",
         "lessonTitle": "Khái niệm Không gian Affine và Quy tắc Chasles",
@@ -2165,14 +2173,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-afin",
         "count": 13
-      },
-      {
-        "lessonId": "cac-phang-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.3",
-        "lessonTitle": "Các Phẳng trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin",
-        "count": 6
       },
       {
         "lessonId": "khong-gian-euclide",
@@ -2289,6 +2289,14 @@
         "count": 7
       },
       {
+        "lessonId": "cac-phang-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.3",
+        "lessonTitle": "Các Phẳng trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin",
+        "count": 4
+      },
+      {
         "lessonId": "anh-xa-afin-va-phep-bien-doi-afin",
         "lessonCode": "HHAVE 1.6",
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
@@ -2329,6 +2337,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/cuc-va-sieu-phang-doi-cuc",
         "count": 44
+      },
+      {
+        "lessonId": "cac-phang-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.3",
+        "lessonTitle": "Các Phẳng trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin",
+        "count": 38
       },
       {
         "lessonId": "phuong-trinh-cua-m-phang-trong-khong-gian-xa-anh",
@@ -2385,14 +2401,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-euclide",
         "count": 9
-      },
-      {
-        "lessonId": "cac-phang-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.3",
-        "lessonTitle": "Các Phẳng trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin",
-        "count": 7
       },
       {
         "lessonId": "anh-xa-xa-anh-va-bien-doi-xa-anh",
@@ -4413,7 +4421,8 @@
     ],
     "cac-phang-trong-khong-gian-afin": [
       "sieu-phang",
-      "khong-gian-afin"
+      "khong-gian-afin",
+      "muc-tieu-afin"
     ],
     "tam-ti-cu-cua-mot-he-diem": [
       "tam-ti-cu"
